@@ -10,10 +10,10 @@
 |---|---|---|
 | Clínica Médica | Cardiologia | 1 |
 | Cirurgia | Trauma | 4 |
-| Pediatria | Cardiologia Pediátrica e Cardiopatias Congênitas | 11 |
+| Pediatria | Cardiologia Pediátrica e Cardiopatias Congênitas | 17 |
 | Ginecologia e Obstetrícia | — | 0 |
 | Medicina Preventiva e Saúde Pública | Epidemiologia e Bioestatística; Vigilância Epidemiológica | 7 |
-| **TOTAL** | | **23** |
+| **TOTAL** | | **29** |
 
 ---
 
@@ -33,6 +33,8 @@
 | Classificou choque corretamente mas aplicou tratamento do grau errado (II → III) | 1x (Cir Q3) |
 | Sabia a resposta mas duvidou e escolheu errado (controle da fonte) | 1x (Cir Q4) |
 | Confusão velocidade de infusão do TXA com janela temporal + limiar FC borderline | 1x (Cir Q1) |
+| Não interpretar ECG (eixos e sobrecargas) nas cianogênicas | 1x (Ped Q16) |
+| Sopro da PCA confundido com sistólico isolado (PCA = contínuo) | 1x (Ped Q15) |
 
 ---
 
@@ -40,8 +42,8 @@
 
 | Tipo de Erro | Quantidade |
 |---|---|
-| Lacuna de conhecimento | 7 |
-| Conhecimento parcial | 4 |
+| Lacuna de conhecimento | 11 |
+| Conhecimento parcial | 6 |
 | Erro de aplicação | 11 |
 | Erro de leitura | 0 |
 | Armadilha do examinador | 0 |

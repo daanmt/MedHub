@@ -127,6 +127,14 @@
 - **Inocente:** sistólico, curta duração, ≤ 2+/6, sem irradiação, sem outros achados
 - **Patológico:** holossistólico, diastólico, contínuo ("em maquinaria"), ou com alterações de B2
 
+#### Estenose Fisiológica de Ramos Pulmonares (RN)
+- **Sopro mais comum em RN** nos primeiros dias a semanas de vida
+- Sistólico, suave, foco pulmonar + **irradiação bilateral para AMBAS as axilas**; desdobramento **variável** de B2
+- Fisiopatologia: ao nascer, fluxo pulmonar ↑ 8-10x → ramos pulmonares ainda não adaptaram calibre → turbulência relativa
+- Resolve espontaneamente em semanas a meses; teste do coraçãozinho normal
+
+> ⚠️ **Diferença da PCA:** sopro da PCA é **CONTÍNUO** (sistólico + diastólico, cruza B2). Sopro apenas sistólico com irradiação bilateral para axilas em RN = estenose fisiológica de ramos. PCA NUNCA causa cianose.
+
 ---
 
 ## 6. Cardiopatias Acianogênicas (shunt E→D, hiperfluxo pulmonar)
@@ -170,6 +178,9 @@ Tratamento: maioria fecha no 1° ano. CIA grande assintomática → cirurgia ele
 
 - Canal arterial = ducto arterioso (mesmo nome)
 - Canal arterial não fecha → shunt Ao→AP (E→D) → hiperfluxo pulmonar
+- **Repercussão hemodinâmica:** hiperfluxo pulmonar → ↑ retorno venoso ao AE/VE → **sobrecarga de volume do VE** (↑ pré-carga) → ↑ PDVEF → ↑ pressão capilar pulmonar → edema pulmonar
+- PCA NÃO reduz fluxo sistêmico — apenas acrescenta fluxo ao circuito pulmonar
+- Complicação no prematuro: displasia broncopulmonar (hipervolemia + inflamação pulmonar)
 - Sopro: **contínuo "em maquinaria"** — 2° EIC esquerdo; irradia para dorso, fúrcula, infraclavicular
 - Pulsos: **amplos "em martelo d'água"** (Pulso de Corrigan) + PA divergente
 - ECG/RX: sobrecarga de câmaras esquerdas + hiperfluxo
@@ -186,6 +197,8 @@ Tratamento: pequenos → espontâneo. Farmacológico: **indometacina ou ibuprofe
 **Prevalência em provas:** 1. Caso clínico → diagnóstico; 2. Conduta; 3. Manifestações clínicas
 
 - Estreitamento da aorta (usualmente junto ao canal arterial, após subclávia); acianogênica, normofluxo
+- **Anomalia congênita mais comumente associada: válvula aórtica bicúspide (VAB)** — presente em ~50-85% dos casos de CoAo
+- Síndrome de Turner: CoAo + VAB (par clássico); PCA não tem associação preferencial com CoAo
 - Clínica: pulsos **MMSS > MMII**, PA maior em MMSS, extremidades inferiores frias, **HAS secundária em MSD**
 - RN: canal mantém fluxo distal; fechamento → choque e má perfusão
 - Sopro sistólico com irradiação para área **interescapular**
@@ -302,6 +315,19 @@ Tratamento:
 
 ---
 
+### DATVP — Drenagem Anômala Total de Veias Pulmonares
+**Cianogênica de hiperfluxo — RX em "boneco de neve"**
+
+- As 4 veias pulmonares drenam para AD ou veias sistêmicas (não para AE) → mistura completa do sangue oxigenado com venoso → cianose desde o nascimento
+- CIA geralmente presente para passagem de sangue para o coração esquerdo
+- **Tipo supracardíaca** (mais comum): veia pulmonar comum drena para a VCS → dilatação → RX em **"boneco de neve" (figura de 8)**: sombra supracardíaca (veia dilatada) = "cabeça" + sombra cardíaca = "corpo"
+- Cianose persistente que não melhora com O₂ nem com VM → teste de hiperóxia negativo
+- Tratamento: cirúrgico (reimplante das veias pulmonares no AE)
+
+> ⚠️ **Padrão de prova:** RX com "padrão em boneco de neve" + cianose desde nascimento sem resposta a VM → DATVP supracardíaca. PCA é acianogênica — eliminá-la imediatamente se houver cianose.
+
+---
+
 ## 8. Cardiopatias Dependentes do Canal Arterial
 
 > **Toda vez que um neonato "descompensa nos 1°s dias" → cardiopatia dependente de canal → prostaglandina E IMEDIATA**
@@ -340,6 +366,7 @@ Tratamento:
 - **Cianose generalizada + hipofluxo + primeiras horas:** AP ou AT
 - **Cianose diferencial MMII + primeiros dias:** TGA
 - **Cianose + hiperfluxo + choque nas primeiras horas:** HCE
+- **Cianose + hiperfluxo + RX em boneco de neve:** DATVP supracardíaca
 - **Pulsos ausentes em MMII + SEM cianose + HAS em MMSS:** CoAo
 - **Pulsos ausentes em MMII + COM cianose em MMII:** TGA (via canal)
 - **Sopro em maquinaria + pulsos amplos:** PCA
@@ -366,7 +393,7 @@ Tratamento:
 
 **PCA** — Prematuro e rubéola congênita. Sopro contínuo em maquinaria. Pulsos em martelo d'água. Indometacina ou ibuprofeno para fechar.
 
-**CoAo** — MMSS > MMII em pulsos e PA. HAS secundária em criança. Sinal de Roesler no RX. Sopro em área interescapular.
+**CoAo** — MMSS > MMII em pulsos e PA. HAS secundária em criança. Sinal de Roesler no RX. Sopro em área interescapular. Anomalia mais associada: **válvula aórtica bicúspide (VAB)**.
 
 **T4F** — CIV + EP + aorta cavalgando + HVD. Posição de cócoras alivia crise. RX em bota. Crise: B.O.P.E.S.
 
@@ -381,6 +408,8 @@ Tratamento:
 **DSAVT** — Síndrome de Down. Acianogênica de hiperfluxo. ICC precoce.
 
 **Ebstein** — BRD + WPW. Cardiomegalia maciça ao RX.
+
+**DATVP** — Cianose desde nascimento + hiperfluxo. RX em "boneco de neve" (supracardíaca). CIA + mistura completa. Tratamento cirúrgico.
 
 ---
 

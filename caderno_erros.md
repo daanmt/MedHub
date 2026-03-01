@@ -609,6 +609,192 @@ O sopro em foco pulmonar aparece tanto na EP quanto na T4F. A CIANOSE separa as 
 
 ---
 
+#### PCA — hiperfluxo pulmonar sobrecarrega o VE (↑ pré-carga VE, ↑ PDVEF, ↑ pressão capilar) — PCA não reduz fluxo sistêmico
+
+**Complexidade:** Média
+**Elo quebrado:** Habilidade 2 — Entender as repercussões hemodinâmicas do hiperfluxo pulmonar no VE
+**Tipo de erro:** Lacuna de conhecimento
+
+**Caso:** Questão sobre repercussões pulmonares e sistêmicas da PCA em RN. Alternativas abordam direção do shunt, complicações pulmonares, efeitos no VE e na circulação sistêmica.
+
+**Habilidades sequenciais:**
+1. Reconhecer fisiopatologia da PCA: após nascimento, ↓ RVP → shunt Ao→AP (E→D) → hiperfluxo pulmonar
+2. Rastrear a sequência hemodinâmica: hiperfluxo pulmonar → ↑ retorno venoso ao AE/VE → sobrecarga de volume do VE (↑ pré-carga) → ↑ PDVEF → ↑ pressão capilar pulmonar
+3. Avaliar cada alternativa à luz dessa fisiopatologia
+
+**O que faltou:**
+Não sabia que o hiperfluxo pulmonar da PCA sobrecarrega o VE (não o VD), pois o excesso de sangue retorna dos pulmões ao AE/VE. Marcou alternativa que afirmava haver redução de fluxo sistêmico como fator protetor para HIE — a premissa é falsa.
+
+**Explicação correta:**
+Na PCA, shunt Ao→AP → hiperfluxo pulmonar → excesso de sangue retorna pelas veias pulmonares → AE → VE → ↑ pré-carga do VE → ↑ PDVEF → ↑ pressão capilar pulmonar → edema pulmonar. PCA não reduz o fluxo sistêmico — apenas acrescenta fluxo ao circuito pulmonar.
+
+**Armadilha / nuance:**
+A alternativa sobre HIE usa a lógica: "↓ fluxo sistêmico → ↓ PA cerebral → proteção para sangramento". O erro está na premissa falsa: PCA não reduz fluxo sistêmico.
+
+**Informações-chave para revisão:**
+- PCA: shunt Ao→AP → hiperfluxo pulmonar → sobrecarga de VE (não VD)
+- Sequência: hiperfluxo → ↑ retorno ao AE/VE → ↑ pré-carga VE → ↑ PDVEF → ↑ pressão capilar pulmonar → edema
+- PCA NÃO reduz fluxo sistêmico — adiciona fluxo pulmonar
+- Complicação no prematuro: displasia broncopulmonar (hipervolemia + inflamação pulmonar)
+- HIE em prematuro: multifatorial (fragilidade capilar), não protegida pela PCA
+
+---
+
+#### DATVP supracardíaca — RX "sinal do boneco de neve" + cianose que não melhora com VM
+
+**Complexidade:** Média
+**Elo quebrado:** Habilidade 2 — Reconhecer o "sinal do boneco de neve" como patognomônico da DATVP supracardíaca
+**Tipo de erro:** Lacuna de conhecimento
+
+**Caso:** RN a termo, cianose central persistente, SatO₂ 70% mantida após IOT + VM. RX com infiltrado peri-hilar + sombra supracardíaca aumentada ("padrão em boneco de neve"). Pede diagnóstico entre as cianogênicas.
+
+**Habilidades sequenciais:**
+1. Reconhecer que cianose persistente sem resposta a VM = cardiopatia cianogênica estrutural (shunt fixo)
+2. Identificar o "sinal do boneco de neve" no RX como patognomônico da DATVP supracardíaca
+3. Eliminar PCA: é acianogênica + é fisiológica nas primeiras horas de vida
+
+**O que faltou:**
+Lacuna total sobre DATVP e sobre o sinal do boneco de neve. Marcou PCA, que é acianogênica — PCA nas primeiras horas de vida é fisiológica e não causa cianose.
+
+**Explicação correta:**
+Na DATVP, as 4 veias pulmonares drenam para AD ou veias sistêmicas (não para o AE) → mistura completa → cianose desde o nascimento. Na forma supracardíaca, a veia pulmonar comum drena para a VCS → dilatação que forma a "cabeça" do boneco de neve; a sombra cardíaca forma o "corpo" → figura de 8. CIA presente para passagem de sangue ao coração esquerdo.
+
+**Armadilha / nuance:**
+PCA é o grande distrator no RN a termo nas primeiras horas. Mas PCA não causa cianose. Cianose persistente sem resposta a VM = estrutural.
+
+**Informações-chave para revisão:**
+- DATVP: 4 veias pulmonares não drenam para AE → mistura completa → cianose desde nascimento
+- Tipo supracardíaca: veia comum → VCS → RX em "boneco de neve" (figura de 8)
+- PCA: acianogênica; fisiológica no RN imediato (primeiras horas/dias)
+- Cianose que não responde a O₂/VM = cardiopatia estrutural = teste de hiperóxia negativo
+- Tratamento DATVP: cirúrgico (reimplante das veias pulmonares no AE)
+
+---
+
+#### Estenose fisiológica de ramos pulmonares — sopro mais comum do RN; PCA tem sopro CONTÍNUO (não sistólico)
+
+**Complexidade:** Média
+**Elo quebrado:** Habilidade 2 — Saber que o sopro da PCA é CONTÍNUO ("em maquinaria"), não sistólico isolado
+**Tipo de erro:** Conhecimento parcial
+
+**Caso:** RN 48h, teste do coraçãozinho normal, sopro sistólico suave ++/4+ em foco pulmonar, irradiação para ambas as axilas, desdobramento variável de B2, pulsos iguais nos 4 membros.
+
+**Habilidades sequenciais:**
+1. Caracterizar o sopro: sistólico (não contínuo), foco pulmonar, irradiação bilateral para axilas, desdobramento variável de B2
+2. Diferenciar da PCA: sopro de PCA é CONTÍNUO "em maquinaria" (sistólico + diastólico, cruza B2)
+3. Reconhecer estenose fisiológica de ramos pulmonares = sopro inocente mais comum em RN
+
+**O que faltou:**
+Não sabia que o sopro da PCA é contínuo — marcou PCA para um sopro sistólico. Também não conhecia a estenose fisiológica de ramos pulmonares.
+
+**Explicação correta:**
+Ao nascimento, fluxo pulmonar aumenta 8-10x. Ramos pulmonares ainda não adaptaram calibre → turbulência → sopro sistólico em foco pulmonar + irradiação bilateral para axilas. Desdobramento variável de B2: maior fluxo pulmonar atrasa fechamento da valva pulmonar. Sopro da PCA é CONTÍNUO — cruza a B2 (sistólico + diastólico).
+
+**Armadilha / nuance:**
+PCA nos primeiros dias pode ter sopro sistólico isolado (shunt E→D ainda não estabelecido), mas o sopro clássico é "em maquinaria". O conjunto sopro sistólico + irradiação bilateral para axilas + desdobramento variável = estenose fisiológica de ramos.
+
+**Informações-chave para revisão:**
+- Estenose fisiológica de ramos pulmonares: sopro mais comum em RN (primeiras semanas)
+- Características: sistólico, suave, foco pulmonar + irradiação bilateral para AMBAS as axilas
+- Desdobramento variável de B2: maior fluxo → atraso no fechamento da valva pulmonar
+- PCA: sopro CONTÍNUO "em maquinaria" (sistólico + diastólico, cruza B2)
+- Estenose fisiológica: resolve espontaneamente em semanas a meses
+
+---
+
+#### AT — ECG com eixo para ESQUERDA em cianótico neonatal = patognomônico; T4F/TGA/Truncus têm eixo para direita
+
+**Complexidade:** Alta
+**Elo quebrado:** Habilidade 3 — Interpretar eixo do ECG e associar ao diagnóstico de AT
+**Tipo de erro:** Lacuna de conhecimento
+
+**Caso:** RN 2 dias, SatO₂ 83%, cianose discreta, sem sopros. ECG com sobrecarga de VE + eixo desviado para esquerda. Pede diagnóstico entre cianogênicas (AT, T4F, TGA, Truncus).
+
+**Habilidades sequenciais:**
+1. Reconhecer cardiopatia cianogênica: cianose central desde o nascimento
+2. Interpretar ECG: qual ventrículo sobrecarregado + eixo elétrico (esquerda vs direita)
+3. Associar eixo para esquerda + sobrecarga VE em cianótico = AT (único com esse padrão)
+4. Eliminar: T4F = eixo direita + sobrecarga VD; TGA = eixo direita; Truncus = eixo direita
+
+**O que faltou:**
+Não interpreta sobrecargas e eixos no ECG. Sem essa habilidade, o diferencial entre as cianogênicas nessa questão é insolúvel.
+
+**Explicação correta:**
+Na AT, valva tricúspide atrésica → VD hipoplásico → VE é o ventrículo dominante → sobrecarga VE + eixo para esquerda. É o único cianogênico com esse padrão. Todas as demais cianogênicas (T4F, TGA, Truncus) têm eixo para direita por sobrecarga de VD.
+
+**Armadilha / nuance:**
+Sem ECG, todas as alternativas são igualmente plausíveis. O examinador testa exatamente esse sinal patognomônico para discriminar.
+
+**Informações-chave para revisão:**
+- AT: eixo para ESQUERDA + sobrecarga VE = patognomônico em cianótico neonatal
+- Mecanismo: VD hipoplásico → VE dominante → eixo elétrico para esquerda
+- T4F: eixo para DIREITA + sobrecarga VD
+- TGA: eixo para DIREITA
+- Truncus arteriosus: eixo para DIREITA
+- Regra: TODA cianogênica com eixo para esquerda = AT
+
+---
+
+#### CIV grande — diagnóstico pelo conjunto clínico + sopro holossistólico (de B1 a B2, sem gap)
+
+**Complexidade:** Média
+**Elo quebrado:** Habilidade 1/2 — Insegurança no diagnóstico de CIV + desconhecimento do padrão holossistólico
+**Tipo de erro:** Conhecimento parcial
+
+**Caso:** Lactente 2 meses, sudorese, taquipneia, cansaço às mamadas (ICC), SatO₂ 95% (acianótico), RX cardiomegalia + hiperfluxo, ECG sobrecarga biventricular. Pede representação esquemática do sopro.
+
+**Habilidades sequenciais:**
+1. Reconhecer CIV grande: ICC aos 2-3 meses + acianótico + hiperfluxo + sobrecarga biventricular
+2. Saber o tipo de sopro da CIV: holossistólico (preenche toda a sístole de B1 a B2, sem silêncio)
+3. Identificar a representação esquemática do sopro holossistólico
+
+**O que faltou:**
+Duas falhas: (1) insegurança no diagnóstico de CIV — questionou se seria CIV pois estava acianótico (CIV é acianogênica por ser shunt E→D); (2) não sabia o padrão esquemático do sopro holossistólico.
+
+**Explicação correta:**
+CIV é acianótica — cianose só aparece em Eisenmenger. ICC aos 2-3 meses + acianótico + hiperfluxo + sobrecarga biventricular = CIV grande. Sopro holossistólico: gradiente VE>VD durante toda a sístole → turbulência do início ao fim → B1 → B2 sem gap.
+
+**Armadilha / nuance:**
+DSAVT é o principal diferencial: ICC precoce + acianótico + sobrecarga biventricular + Down. Diferença: DSAVT manifesta antes do 1° mês; CIV aos 2-3 meses.
+
+**Informações-chave para revisão:**
+- CIV grande: ICC aos 2-3 meses (queda fisiológica da RVP) + acianótico + hiperfluxo + sobrecarga biventricular
+- CIV é ACIANOGÊNICA (shunt E→D — cianose só em Eisenmenger)
+- Sopro: holossistólico = preenche TODA a sístole (B1 → B2, sem gap)
+- Sopro holossistólico esquemático = bloco retangular do início ao fim da sístole
+- DSAVT: diferencial; manifesta antes do 1° mês; Down
+
+---
+
+#### CoAo — anomalia congênita mais comumente associada = válvula aórtica bicúspide (VAB), não PCA
+
+**Complexidade:** Baixa
+**Elo quebrado:** Habilidade 1 — Saber a associação anatômica mais comum da CoAo
+**Tipo de erro:** Lacuna de conhecimento
+
+**Caso:** Questão direta: qual a anomalia congênita mais comumente associada a pacientes com coarctação da aorta?
+
+**Habilidades sequenciais:**
+1. Saber que CoAo tem uma associação anatômica preferencial: válvula aórtica bicúspide (VAB)
+
+**O que faltou:**
+Lacuna pura — não sabia dessa associação. Marcou PCA por associação anatômica errônea (canal arterial é próximo à coarctação, mas não é a anomalia mais associada).
+
+**Explicação correta:**
+Válvula aórtica bicúspide (VAB) está presente em ~50-85% dos pacientes com CoAo. O mesmo par aparece na síndrome de Turner (CoAo + VAB). PCA, CIA e DSAVT não têm associação preferencial com CoAo.
+
+**Armadilha / nuance:**
+PCA induz por proximidade anatômica (canal arterial justa-ductal), mas a associação prevalente é com a VAB.
+
+**Informações-chave para revisão:**
+- CoAo: anomalia mais comumente associada = válvula aórtica bicúspide (VAB)
+- VAB presente em ~50-85% dos casos de CoAo
+- Síndrome de Turner: CoAo + VAB (par clássico)
+- PCA não tem associação preferencial com CoAo
+- CoAo + VAB = pensar em síndrome de Turner em meninas
+
+---
+
 ### Infectologia Pediátrica
 
 <!-- ENTRADAS AQUI -->

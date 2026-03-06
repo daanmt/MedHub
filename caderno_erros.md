@@ -64,7 +64,69 @@ perfil A servem exatamente para afastar essa hipótese e direcionar para efeito 
 
 ### Pneumologia
 
-<!-- ENTRADAS AQUI -->
+#### HIV Q1 — Neurotoxoplasmose vs Criptococose: semiologia do VI par e focalidade
+
+**Complexidade:** Média
+**Elo quebrado:** Habilidade 2 — Diferenciar neurologicamente abscesso focal (Toxo) de HIC difusa (Cripto)
+**Tipo de erro:** Conhecimento parcial
+
+**Caso:** Homem, HIV+, CD4 120, CV 50k, IgG+ para Toxo. Quadro agudo de febre, cefaleia, hemiparesia D e paralisia do VI par (abducente). Marcou Cripto pelo IgM negativo, mas o gabarito era Neurotoxo.
+
+**Habilidades sequenciais:**
+1. Reconhecer que hemiparesia (sinal focal) aponta para Neurotoxoplasmose (abscesso/efeito de massa).
+2. Entender que Neurocriptococose causa HIC geralmente sem sinais focais (hemiparesia fala contra).
+3. Interpretar a sorologia: Neurotoxo em HIV é quase sempre REATIVAÇÃO (IgG+), não primoinfecção (IgM- é esperado).
+4. Saber a semiologia do VI par: inerva o músculo reto lateral → paralisia causa diplopia e incapacidade da mirada LATERAL (não medial, não ptose).
+
+**O que faltou:**
+Suspeitou de Criptococco devido ao IgM negativo para Toxo, esquecendo que no HIV a neurotoxo é reativação. Também confundiu a semiologia do VI par (abducente) com o III par (oculomotor).
+
+**Explicação correta:**
+Neurotoxoplasmose causa sinais focais (abscessos). O VI par inerva o reto lateral; sua paralisia impede a **mirada lateral** e causa diplopia. Ptose (III par) não ocorre por lesão isolada do VI. Criptococose causa HIC (cefaleia + rebaixamento) e pode afetar o VI par por compressão, mas a hemiparesia é o dado que "mata" a questão a favor da Toxo.
+
+---
+
+#### TB Q1 — Sintomas respiratórios obrigam investigação de TB ativa antes de ILTB
+
+**Complexidade:** Baixa
+**Elo quebrado:** Habilidade 3 — Priorizar diagnóstico de doença ativa em sintomáticos
+**Tipo de erro:** Erro de aplicação
+
+**Caso:** Paciente HIV+, CD4 50, com sudorese, febre e tosse há 3 semanas. Conduta? Marcou associar isoniazida (profilaxia ILTB), gabarito era rastrear TB (investigação ativa).
+
+**Habilidades sequenciais:**
+1. Reconhecer "tosse há 3 semanas + febre" como definição de sintomático respiratório.
+2. Aplicar a regra de ouro: SEMPRE descartar TB ativa antes de tratar ILTB.
+3. Solicitar Rx tórax + Baciloscopia/TRM antes de qualquer profilaxia.
+
+**O que faltou:**
+Tentou fazer a profilaxia das oportunistas (ILTB) pelo CD4 baixo (<350), ignorando que o paciente já tinha clínica de doença ativa.
+
+**Explicação correta:**
+A isoniazida só é iniciada para ILTB após descartar TB doença. Como o paciente tem sintomas (tosse/febre/sudorese), ele deve ser investigado para TB pulmonar ativamente com Rx e escarro. Profilaxia de outras oportunistas (PCP/Toxo com Bactrim) seria adjunta, mas a conduta prioritária é o diagnóstico da suspeita atual.
+
+---
+
+#### HIV Q2 — Conduta no parto se CV < 1.000 (indetectável) na 34ª semana
+
+**Complexidade:** Média
+**Elo quebrado:** Habilidade 1 — Conhecer o protocolo de parto vaginal e AZT EV se CV indetectável
+**Tipo de erro:** Conhecimento parcial
+
+**Caso:** Gestante, 35 sem, HIV+ em TARV correta, CV indetectável (3 dias atrás). Via e conduta no parto? Marcou cesárea + AZT EV, gabarito era via obstétrica + manter TARV habitual oral.
+
+**Habilidades sequenciais:**
+1. Identificar CV < 1.000 na 34ª semana como o divisor de águas.
+2. Saber que se CV indetectável → não há indicação de cesárea eletiva pelo HIV (apenas obstétrica).
+3. Saber que se CV indetectável → **NÃO se usa AZT EV no parto**, apenas mantém-se a TARV oral da mãe.
+
+**O que faltou:**
+Confundiu a profilaxia da gestante (oral se indetectável) com a do RN (AZT oral por 4 semanas) e com os casos de alto risco (cesárea + AZT EV se CV ≥ 1.000).
+
+**Explicação correta:**
+Gestante com CV indetectável no 3º trimestre tem risco mínimo de transmissão. O parto pode ser vaginal se indicado obstétricamente e **não se faz AZT EV** (que é reservado para CV > 1.000 ou desconhecida). A via de parto é decisão obstétrica.
+
+---
 
 #### Asma Q1 — Tórax silente + hipercapnia = IOT imediata (O2 isolado é insuficiente)
 

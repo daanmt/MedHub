@@ -6,12 +6,12 @@
 
 ## Entradas por Área
 
-- **Clínica Médica** — Cardiologia; Pneumologia (Asma): **7 entradas**
+- **Clínica Médica** — Cardiologia; Pneumologia; Infectologia (Novo): **10 entradas**
 - **Cirurgia** — Trauma: **4 entradas**
 - **Pediatria** — Cardiologia Pediátrica e Cardiopatias Congênitas: **11 entradas**
 - **Ginecologia e Obstetrícia** — Climatério e TH; Sangramentos da Primeira Metade: **13 entradas**
 - **Medicina Preventiva e Saúde Pública** — Epidemiologia e Bioestatística; Vigilância Epidemiológica: **7 entradas**
-- **Total: 42 entradas**
+- **Total: 45 entradas**
 
 ---
 
@@ -48,6 +48,9 @@
 - **[ASMA]** Desconhecia atelectasia por absorção como mecanismo do excesso de O2 — 1x (Asma Q4)
 - **[ASMA]** Confundiu contexto de emergência com ambulatorial ao hierarquizar exames complementares — 1x (Asma Q5)
 - **[ASMA]** Generalizou MART/SABA: SABA permanece resgate quando LABA ≠ formoterol — 1x (Asma Q6)
+- **[INF]** Confunde reativação (IgG+) com primoinfecção (IgM+) na neurotoxo; semiologia VI par (mirada lateral) — 1x (HIV Q1)
+- **[INF]** Trata ILTB antes de investigar TB ativa em paciente sintomático (tosse/febre/sudorese) — 1x (TB Q1)
+- **[INF]** Indica AZT EV e cesárea para gestante com CV indetectável (indicação é vaginal + TARV oral) — 1x (HIV Q2)
 
 ---
 

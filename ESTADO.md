@@ -13,8 +13,8 @@ Ambiente de estudo para residência médica. Processa questões de prova, regist
 
 **Operação contínua** — cada sessão processa questões e/ou cria resumos.
 
-- **36+ entradas** no caderno de erros (5 áreas)
-- **21 resumos** em `Temas/` (5 áreas, 7+ subespecialidades) — inclui `Pneumologia/Asma.md` (novo)
+- **45 entradas** no caderno de erros (5 áreas)
+- **21 resumos** em `Temas/` — incluindo `Infectologia/TB.md` e `HIV.md` (consolidados)
 - **3 workflows** operacionais em `.agents/workflows/`
 
 ---
@@ -55,7 +55,7 @@ Ambiente de estudo para residência médica. Processa questões de prova, regist
 | Pediatria | 11 |
 | Medicina Preventiva | 7 |
 | Cirurgia | 4 |
-| Clínica Médica | 1 |
+| Clínica Médica | 10 |
 
 ---
 

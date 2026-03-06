@@ -1,5 +1,5 @@
 # ESTADO — IPUB (Preparação para Residência Médica)
-*Atualizado: 2026-03-05 (sessão 005) | Ferramenta: Antigravity*
+*Atualizado: 2026-03-06 (sessão 007) | Ferramenta: Antigravity*
 
 ---
 
@@ -61,6 +61,8 @@ Ambiente de estudo para residência médica. Processa questões de prova, regist
 
 ## Últimas sessões
 
+**2026-03-06 | Antigravity (sessão 007):** Expansão massiva de Infectologia (`Tuberculose.md` e `HIV.md`) a partir de 6 apostilas/flashcards. Refinamentos baseados em erros de prova (transmissão vertical, neuro-semiologia, rastreio de TB). Deletados PDFs de infectologia após consolidação.
+
 **2026-03-05 | Antigravity (sessão 006):** Eliminação da pasta `Extracted/`; `extract_pdfs.py` agora extrai para `%TEMP%` e possui `--delete-pdfs`/`--delete-temps` para limpeza automática pós-resumo. Workflow e `.gitignore` atualizados.
 
 **2026-03-05 | Antigravity (sessão 005):** Consolidação de ferramentas — `estilo-resumo.md` movido para `Tools/`; `referencia/` removida; `extract_asma.py` deletado; `CLAUDE.md` e workflows atualizados. Proibição de tabelas e fluxogramas ASCII adicionada ao `Tools/estilo-resumo.md`.
@@ -101,7 +103,7 @@ Ambiente de estudo para residência médica. Processa questões de prova, regist
 2. **Workflow relevante** em `.agents/workflows/` — o que fazer agora
 3. `Tools/estilo-resumo.md` — se for criar/editar resumo
 4. `Tools/comando de analise de questao.md` — se for analisar questões
-5. Sessão mais recente: `history/session_006.md`
+5. Sessão mais recente: `history/session_007.md`
 
 ---
 

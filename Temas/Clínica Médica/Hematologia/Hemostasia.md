@@ -1,119 +1,308 @@
 # Hemostasia
 
-## 1. Hemostasia
+## 1. Hemostasia — Visão Geral
 
-- Processo dinâmico → mantém sangue fluido e coibir sangramentos via tampão hemostático, subdividido em:
+- Processo dinâmico → mantém sangue fluido e coibe sangramentos via tampão hemostático.
 
-- **Hemostasia Primária:** Formação do tampão plaquetário. 
-    - Depende do **endotélio**, **Plaquetas** e **Fator de von Willebrand (FvW)**.
-    - Adesão: **FvW** liga o colágeno subendotelial à **Glicoproteína Ib (GpIb)** da plaqueta.
-    - Ativação/Secreção: Liberação de **ADP** e **Tromboxano A2 (TXA2)**.
-    - Agregação: Ligação entre plaquetas via **Glicoproteína IIb/IIIa (GpIIb/IIIa)** e **Fibrinogênio**.
+- **Hemostasia Primária:** Formação do tampão plaquetário.
+    - Depende de **endotélio**, **plaquetas** e **Fator de von Willebrand (FvW)**.
+    - Adesão: **FvW** liga colágeno subendotelial à **GP Ib** da plaqueta.
+    - Ativação/Secreção: liberação de **ADP** e **Tromboxano A2 (TXA2)**.
+    - Agregação: ligação entre plaquetas via **GP IIb/IIIa** + **Fibrinogênio**.
+    - ⭐ Clínica típica: **sangramentos cutaneomucosos** (petéquias, equimoses, epistaxe, gengivorragia, menorragia).
 
-- **Hemostasia Secundária:** Formação da rede de **Fibrina** (estabilização do tampão).
-    - **Via Intrínseca:** Inicia pelo contato (Fator XII). Avaliada pelo **TTPA**.
-    - **Via Extrínseca:** Inicia pelo Fator Tecidual (Lesão). Avaliada pelo **TAP**.
-    - **Via Comum:** Fator X ativa Protrombina (II) em Trombina (IIa), que converte Fibrinogênio (I) em Fibrina (Ia).
+- **Hemostasia Secundária:** Formação da rede de fibrina (estabilização do tampão).
+    - Via Intrínseca: contato (Fator XII) → avaliada pelo **TTPA**.
+    - Via Extrínseca: Fator Tecidual/lesão → avaliada pelo **TAP/RNI**.
+    - Via Comum: FX → Protrombina (II) → Trombina (IIa) → Fibrina.
+    - ⭐ Clínica típica: **sangramentos profundos** (hemartroses, hematomas musculares) — surgem horas após o trauma.
 
-- **Hemostasia Terciária:** Fibrinólise → Degradação do coágulo para recanalização vascular.
-    - Plasminogênio → Plasmina (via t-PA). 
-    - Plasmina degrada fibrina em **D-dímeros**.
+- **Hemostasia Terciária (Fibrinólise):** Plasminogênio → Plasmina (via t-PA) → degrada fibrina em **D-dímeros**.
 
 ---
 
 ## 2. Avaliação Laboratorial
 
-- **Contagem de Plaquetas:** Avalia quantidade (Normal: 150k - 450k).
-- **Tempo de Sangramento (TS):** Avalia função plaquetária e FvW (pouco usado hoje).
-- **Tempo de Atividade da Protrombina (TAP/RNI):**
-    - Avalia Via Extrínseca (Fator VII) e Comum (X, V, II, I).
-    - ⭐ Principal teste para monitorar o uso de **Varfarina**.
-- **Tempo de Tromboplastina Parcial Ativada (TTPA):**
-    - Avalia Via Intrínseca (XII, XI, IX, VIII) e Comum.
-    - ⭐ Principal teste para monitorar **Heparina Não Fracionada (HNF)**.
-- **Tempo de Trombina (TT):** Avalia a conversão final de fibrinogênio em fibrina. Sensível à presença de Heparina e Dabigatrana.
+- **Contagem de Plaquetas:** Normal 150–450 k/mm³. Abaixo de 100k define trombocitopenia.
+    - Trombocitopenia leve: > 70k | Moderada: 20–70k | Grave: < 20k.
+
+- **TAP / RNI:** Avalia via extrínseca (FVII) e comum (X, V, II, I).
+    - ⭐ Monitora **Varfarina**. Alvo habitual: RNI 2,0–3,0.
+
+- **TTPA:** Avalia via intrínseca (XII, XI, IX, VIII) e comum.
+    - ⭐ Monitora **Heparina Não Fracionada (HNF)**.
+
+- **Tempo de Trombina (TT):** Avalia conversão final de fibrinogênio em fibrina. Sensível à **Heparina** e **Dabigatrana**.
+
+- **D-dímero:** Produto de degradação de fibrina estabilizada. Elevado em CIVD, TEV, cirrose.
+
+- **Padrões laboratoriais por doença:**
+    - TAP e TTPA normais → DvW leve, deficiência de FXIII, plaquetopenia (PTI).
+    - TAP prolongado, TTPA normal → Deficiência de FVII; varfarina, doença hepática, CIVD precoce.
+    - TAP normal, TTPA prolongado → Hemofilia A/B, DvW; anticoagulante lúpico, heparina, inibidores de FVIII.
+    - TAP e TTPA prolongados → Deficiências de FX, V, II, I; CIVD, doença hepática grave.
+    - Fibrinogênio baixo + D-dímero elevado → CIVD, cirrose, LPA, trauma.
 
 ---
 
 ## 3. Drogas Antitrombóticas
 
-- **Varfarina (Cumarinico):**
-    - Mecanismo: Antagonista da Vitamina K (inibe fatores II, VII, IX, X e proteínas C e S).
-    - Monitorização: **RNI** (alvo geralmente 2,0 - 3,0).
-    - ⚠️ Padrão de prova: Nas primeiras 48h pode haver efeito pró-trombótico (queda rápida da Proteína C). Deve-se iniciar Heparina em conjunto ("ponte").
+- **Varfarina (Cumarínico):**
+    - Mecanismo: antagonista da Vitamina K → inibe fatores II, VII, IX, X e proteínas C e S.
+    - Monitorização: **RNI** (alvo 2,0–3,0).
+    - ⚠️ Padrão de prova: nas primeiras 48h pode ser pró-trombótica (queda rápida da Proteína C). Sempre iniciar com heparina em paralelo ("ponte").
     - Antídoto: Vitamina K (lento) ou Complexo Protrombínico/Plasma Fresco (rápido).
+    - ⚠️ Teratogênica — substituir por HBPM na gestação.
+
 - **Heparinas:**
-    - **HNF (Não Fracionada):** Liga-se à Antitrombina III. Meia-vida curta. Monitorar com **TTPA**. Antídoto: Protamina.
-    - **HBPM (Baixo Peso - Enoxaparina):** Inibe preferencialmente Fator Xa. Não precisa de monitoria (salvo obesos/renais: anti-Xa).
-    - **HIT (Trombocitopenia Induzida por Heparina):** Queda de >50% das plaquetas após 5-10 dias de uso. É pró-trombótica! Conduta: Suspender heparina e usar outro anticoagulante (ex: Fondaparinux).
-- **Anticoagulantes Orais Diretos (DOACs):**
+    - **HNF:** Liga-se à Antitrombina III. Meia-vida curta. Monitorar com **TTPA**. Antídoto: **Protamina**.
+    - **HBPM (Enoxaparina):** Inibe preferencialmente Fator Xa. Sem monitoria habitual (obesos/renais crônicos: anti-Xa).
+    - **HIT (Trombocitopenia Induzida por Heparina):** Queda > 50% das plaquetas após 5–10 dias. É **pró-trombótica** (não hemorrágica!). Conduta: suspender heparina + iniciar anticoagulante alternativo (ex: Fondaparinux/argatrobana).
+
+- **DOACs (Anticoagulantes Orais Diretos):**
     - Inibidores do Xa: **Rivaroxabana**, **Apixabana**, Edoxabana.
-    - Inibidor da Trombina (IIa): **Dabigatrana**.
-    - Vantagens: Dose fixa, sem monitoria, menos sangramento intracraniano.
+    - Inibidor da Trombina: **Dabigatrana**.
+    - Vantagens: dose fixa, sem monitoria rotineira, menos sangramento intracraniano.
+    - ⚠️ DOACs são **contraindicados** na SAF de alto risco — usar Varfarina.
 
 ---
 
-## 4. Distúrbios Plaquetários (Hemostasia Primária)
+## 4. Distúrbios Plaquetários Quantitativos
 
-- **Púrpura Trombocitopênica Imune (PTI):**
-    - Fisiopatologia: Autoanticorpos (IgG) contra GpIIb/IIIa. Destruição esplênica.
-    - Clínica: Plaquetopatia isolada, sangramento cutaneomucoso (petéquias, equimoses).
-    - ⭐ Diagnóstico de exclusão (mielograma se dúvida ou >60 anos).
-    - Tratamento: Indicado se plaquetas < 20k-30k ou sangramento ativo.
-        - 1ª Linha: Corticoides (Prednisona) ou Imunoglobulina IV (se urgência).
-        - 2ª Linha: Esplenectomia, Rituximabe ou Agonistas de receptor de Trombopoetina (Eltrombopag).
-- **Distúrbios Qualitativos (Plaquetopatias):**
-    - **Glanzmann:** Defeito na agregação (falta GpIIb/IIIa). Plaquetas normais, TS alargado.
-    - **Bernard-Soulier:** Defeito na adesão (falta GpIb). ⭐ **Plaquetas grandes e em menor número (trombocitopenia leve)**.
+### 4.1 Púrpura Trombocitopênica Imune (PTI)
+
+> ⭐ Doença hemostática mais cobrada nas provas. Mnemônico: **PPP — Plaquetopenia, Petéquias, Prednisona.**
+
+- **Fisiopatologia:**
+    - Autoanticorpos IgG contra antígenos plaquetários (principalmente GP IIb/IIIa).
+    - Destruição periférica pelos macrófagos esplênicos + inibição da trombocitopoese medular.
+    - Hiperplasia megacariocítica na medula (compensa destruição, mas não é suficiente).
+
+- **PTI primária** (sem causa identificável) vs **PTI secundária** (associada a LLC, LES, SAF, infecções por H. pylori, HIV, HCV, HBV, vacinação).
+
+- **Quadro clínico:**
+    - Plaquetopenia isolada com sangramentos cutaneomucosos (petéquias, equimoses, epistaxe, gengivorragia).
+    - Hemograma: plaquetopenia + **mais nada** (sem anemia, sem leucopenia).
+    - Baço palpável apenas à ponta em alguns casos — esplenomegalia importante sugere outro diagnóstico.
+    - Esfregaço: pouca quantidade de plaquetas; presença de macroplaquetas possível; esquizócitos e blastos devem sugerir diagnóstico alternativo.
+
+- **Classificação temporal:**
+    - Recém-diagnosticada: 0–3 meses.
+    - Persistente: 3–12 meses.
+    - Crônica: > 12 meses.
+
+- **Diferenças crianças vs adultos:**
+    - Crianças: pico 2–6 anos, ambos os sexos, instalação aguda, antecedente infeccioso/vacinal comum, resolução espontânea em 90% dos casos.
+    - Adultos: pico 40–45 anos, predomínio feminino (2–3:1), instalação insidiosa, cronificação em 90%.
+
+- **Síndrome de Evans:**
+    - Associação de **PTI + Anemia Hemolítica Autoimune** (Coombs direto positivo).
+    - Muito associada a LLC e doenças reumatológicas (LES, AR).
+
+- **Diagnóstico:**
+    - ⭐ É um **diagnóstico de exclusão**.
+    - Plaquetometria em **tubo de citrato** (afastar pseudoplaquetopenia por EDTA).
+    - Esfregaço de sangue periférico.
+    - Sorologias: HIV, HBV, HCV + detecção de H. pylori.
+    - Dosagem de imunoglobulinas (afastar imunodeficiências primárias).
+    - ⚠️ Mielograma **NÃO é indicado** na investigação inicial. Reservar se houver anemia, leucopenia, esplenomegalia, linfadenomegalias ou suspeita de outra doença hematológica.
+
+- **Indicação de tratamento:** Plaquetas < 20–30k/mm³ OU sangramento ativo.
+    - Plaquetas > 30k sem sangramento → apenas observação.
+
+- **Tratamento de 1ª linha:**
+    - **Corticoides** (Prednisona 1 mg/kg/dia → desmame em 4–6 semanas). Taxa de resposta > 75%.
+    - **Imunoglobulina IV humana:** mesma eficácia; mais cara e EV; ação mais rápida → preferida no sangramento ativo (associada ao corticoide).
+    - Imunoglobulina anti-D: opção em pacientes Rh positivos.
+    - ⚠️ **Transfusão de plaquetas:** **contraindicada** na PTI. Exceção: sangramento ativo ameaçador (associar às demais medidas). Antifibrinolíticos (ácido tranexâmico) úteis apenas em sangramentos mucosos.
+
+- **Tratamento de 2ª linha (refratários ou recidivantes):**
+    - **Esplenectomia:** taxa de resposta ~80%; via laparoscópica; indicada após falha da 1ª linha; idealmente aguardar 12 meses (possibilidade de remissão espontânea). Pré-operatório: vacinar para **pneumococo, HiB e meningococo** (mínimo 2 semanas antes).
+    - **Rituximabe** (anti-CD20): destrói linfócitos B → reduz produção de autoanticorpos.
+    - **Agonistas do receptor de trombopoietina:** Eltrombopag, Romiplostim → estimulam produção plaquetária.
+    - Outros imunossupressores: ciclosporina, azatioprina (evidência menor).
 
 ---
 
-## 5. Doença de Von Willebrand (DvW)
+## 5. Distúrbios Plaquetários Qualitativos (Plaquetopatias)
 
-- Distúrbio hemorrágico hereditário mais comum.
-- Deficiência quantitativa ou qualitativa do FvW (que estabiliza o Fator VIII).
-- Clínica: Sangramento mucoso (epistaxe, menorragia). Em casos graves, simula Hemofilia (queda de Fator VIII).
-- Tipos:
-    - Tipo 1: Deficiência quantitativa parcial (80% dos casos).
-    - Tipo 2: Deficiência qualitativa.
-    - Tipo 3: Deficiência quantitativa grave/total.
-- Tratamento:
-    - **DDAVP (Desmopressina):** Libera estoques de FvW do endotélio (útil no Tipo 1).
-    - Concentrado de Fator VIII e FvW (se DDAVP falhar ou tipos 2/3).
+- **Trombastenia de Glanzmann:**
+    - Herança: **autossômica recessiva**.
+    - Defeito: **GP IIb/IIIa** → falha na **agregação** plaquetária.
+    - Lab: contagem de plaquetas **normal**, tempo de sangramento alargado, agregação anormal (exceto à ristocetina).
 
----
+- **Síndrome de Bernard-Soulier:**
+    - Herança: **autossômica dominante ou recessiva**.
+    - Defeito: **GP Ib** → falha na **adesão** plaquetária (ligação ao FvW).
+    - Lab: ⭐ **plaquetas gigantes** + trombocitopenia leve; agregação **normal**, mas **diminuída à ristocetina**.
+    - Memória: "B de Bernard = B de Big (plaquetas grandes) e de Barrer (falha na adesão)".
 
-## 6. Hemofilias (Hemostasia Secundária)
-
-- Distúrbios recessivos ligados ao X (acometem homens).
-- **Hemofilia A:** Deficiência de **Fator VIII**.
-- **Hemofilia B:** Deficiência de **Fator IX**.
-- Clínica: Sangramentos profundos, **Hemartroses** (joelhos, cotovelos) e hematomas musculares.
-- Laboratório: **TTPA alargado** com TAP normal. Teste da mistura corrige o TTPA.
-- Tratamento: Reposição do fator deficiente. DDAVP pode ser usado na Hemofilia A leve.
+- Tratamento de ambas: transfusão de plaquetas, antifibrinolíticos, FVIIa recombinante; casos graves → transplante alogênico de medula óssea.
 
 ---
 
-## 7. Trombofilias
+## 6. Doença de Von Willebrand (DVW)
 
-- Tendência exagerada à trombose (Estados de Hipercoagulabilidade).
-- **Síndrome Antifosfolípide (SAF):** Trombofilia adquirida.
-    - Clínica: Tromboses repetidas (venosas ou arteriais) + Morbidade gestacional (abortos recorrentes).
-    - Lab: Anticoagulante lúpico, Anticardiolipina, Anti-beta-2-glicoproteína 1.
-    - ⚠️ Padrão de prova: O anticoagulante lúpico alarga o TTPA *in vitro* (paradoxo), mas na clínica causa trombose.
-    - Tratamento: Varfarina (alvo RNI 2-3). DOACs são contraindicados na SAF de alto risco.
-- **Trombofilias Hereditárias:**
-    - **Fator V de Leiden:** Trombofilia hereditária mais comum. Fator V resistente à clivagem pela Proteína C.
-    - **Deficiência de Antitrombina III:** A mais grave (maior risco trombótico).
-    - Outras: Mutação da Protrombina (G20210A), Deficiência de Proteína C e S.
+> ⭐ Doença hemorrágica hereditária **mais comum** no mundo.
+
+- **Funções do FvW:**
+    - Adesão plaquetária: FvW exposto → liga-se à **GP Ib**.
+    - Agregação plaquetária: ponte entre plaquetas via **GP IIb/IIIa**.
+    - Carreador do **Fator VIII** no plasma (estabiliza e prolonga meia-vida do FVIII).
+
+- **Tipos:**
+    - Tipo 1 (70% dos casos): deficiência quantitativa **parcial**. Herança AD. Quadros leves.
+    - Tipo 2 (20–30%): deficiência **qualitativa** (FvW presente, mas disfuncional). Herança AD. Quadros variáveis.
+    - Tipo 3 (1–5%): deficiência quantitativa **total** ou quase total. Herança AR. Quadros graves (simula hemofilia por queda do FVIII).
+
+- **Quadro clínico:**
+    - Sangramentos cutaneomucosos: epistaxe recorrente, menorragia, sangramento pós-procedimento dentário.
+    - Nos casos graves (tipo 3): hematomas profundos e hemartroses (por queda do FVIII).
+    - Lab: plaquetas **normais ou levemente diminuídas**; TTPA pode estar alargado (pelo impacto no FVIII).
+
+- **Diagnóstico:**
+    - Dosagem do **antígeno de FvW** (quantidade).
+    - **Cofator de ristocetina** (função): avalia agregação plaquetária induzida por ristocetina.
+    - Dosagem do **Fator VIII**.
+    - ⚠️ Padrão de prova: suspeitar de DVW se sangramentos mucosos + plaquetas normais + TTPA levemente alargado.
+
+- **Tratamento:**
+    - **DDAVP (Desmopressina):** libera estoques endoteliais de FvW e FVIII → eleva temporariamente os níveis.
+        - Útil no Tipo 1 (75% respondem). Fazer **teste de resposta** antes de usar terapeuticamente.
+        - Taquifilaxia após 3–5 dias (esgotamento dos estoques).
+        - Efeitos adversos: rubor, cefaleia, hipotensão, taquicardia, hiponatremia dilucional.
+    - **Concentrado de FvW/FVIII:** indicado nos tipos 2 e 3, falha ao DDAVP ou sangramento grave.
+    - ⚠️ Plasma Fresco Congelado e crioprecipitado: apenas se concentrados indisponíveis (risco infeccioso maior).
+    - Antifibrinolíticos (ácido tranexâmico): adjuvantes em sangramentos mucosos.
+
+- **DVW Adquirida:**
+    - **Uremia (IRC):** escórias nitrogenadas prejudicam função plaquetária e do FvW. Tratar com hemodiálise; em sangramento agudo → **DDAVP**.
+    - **Trombocitemia Essencial:** plaquetose > 1 milhão/mm³ adsorve o FvW → paradoxalmente, trombocitose causa sangramento.
 
 ---
 
-## 8. Armadilhas de Prova
+## 7. Hemofilias (Hemostasia Secundária)
 
-- 🔴 **Diferença Plaquetopatias:** Bernard-Soulier (Plaquetas Gigantes + Defeito Adesão/GpIb) vs Glanzmann (Agregação/GpIIb-IIIa).
-- 🔴 **Hemofilia vs DvW:** Hemofilia cursa com hemartrose (sangue profundo); DvW cursa com sangramento mucoso (superficial).
-- 🔴 **Monitorização:** Heparina HNF = TTPA; Varfarina = TAP/RNI.
-- 🔴 **SAF:** Única causa de TTPA alargado que gera TROMBOSE e não sangramento.
-- 🔴 **HIT:** Heparina causa queda de plaquetas mas o quadro clínico é de TROMBOSE, não sangramento.
-- 🔴 **Varfarina:** Nunca iniciar isoladamente se houver trombose aguda; sempre associar heparina nos primeiros dias.
+- Distúrbios recessivos **ligados ao X** → acometem principalmente homens.
+- **Hemofilia A:** deficiência de **Fator VIII** (~80% dos casos). Prevalência: 1:5–10 mil homens.
+- **Hemofilia B:** deficiência de **Fator IX**. Prevalência: 1:30–40 mil homens.
+- Hemofilia C (FXI): rara, vista em judeus Ashkenazi.
+
+- **Classificação por gravidade (baseada nos níveis do fator):**
+    - Grave: < 1% da atividade → sangramentos espontâneos.
+    - Moderada: 1–5% → sangramentos com trauma leve.
+    - Leve: 5–40% → sangramentos apenas com trauma ou cirurgia.
+
+- **Quadro clínico:**
+    - Sangramentos profundos: **hemartroses** (75% dos episódios) e hematomas musculares.
+    - Hemartroses: articulações **monoaxiais** (joelhos, cotovelos, tornozelos). Início quando a criança começa a andar (1–3 anos).
+    - Complicações: artropatia hemofílica crônica, pioartrite (articulação quente, febre → sugere infecção, artrocentese diagnóstica).
+    - ⚠️ NÃO artrocentese de rotina na hemartrose — apenas se suspeita infecção.
+
+- **Laboratório:**
+    - ⭐ **TTPA alargado** com TAP **normal**.
+    - Teste da mistura corrige o TTPA (se não corrigir → suspeitar de inibidor).
+    - Confirmação: dosagem de atividade do FVIII (hemofilia A) ou FIX (hemofilia B).
+
+- **Inibidores:**
+    - Autoanticorpos contra FVIII ou FIX que surgem como resposta à reposição.
+    - Conduta: doses maiores de fator e/ou uso de **FVIIa recombinante** (bypass).
+
+- **Tratamento:**
+    - ⭐ Concentrados liofilizados de **Fator VIII** (hemofilia A) ou **Fator IX** (hemofilia B).
+    - PFC e crioprecipitado: apenas se concentrados indisponíveis.
+    - **DDAVP:** útil apenas na **Hemofilia A leve** (libera FVIII endotelial). Sem efeito na Hemofilia B.
+    - Modalidades: profilático (regular, mantém níveis séricos) vs terapêutico (episódico, no sangramento ativo).
+    - Pré-operatório: repor o fator deficiente profilaticamente antes do procedimento.
+
+---
+
+## 8. Trombofilias
+
+- Estados de hipercoagulabilidade → tendência à trombose (venosa e/ou arterial).
+- Tríade de Virchow: **estase vascular** + **lesão endotelial** + **hipercoagulabilidade**.
+
+### 8.1 Síndrome Antifosfolípide (SAF) — Trombofilia Adquirida
+
+> ⭐ Trombofilia adquirida mais cobrada. Causa autoimune sistêmica.
+
+- **Fisiopatologia:** Autoanticorpos contra proteínas que se ligam a fosfolipídeos → disfunção endotelial → trombose e morbidade gestacional.
+- **Anticorpos (critérios laboratoriais):**
+    - **Anticoagulante lúpico** (mais específico).
+    - **Anticardiolipina** IgG ou IgM.
+    - **Anti-beta-2-glicoproteína-1**.
+    - ⚠️ Repetir em **2 ocasiões com intervalo ≥ 12 semanas** para confirmar.
+
+- **Diagnóstico:**
+    - ⭐ Mínimo **1 critério clínico + 1 critério laboratorial**.
+    - Critério clínico: evento trombótico (venoso, arterial ou pequenos vasos) OU morbidade gestacional.
+    - Morbidade gestacional: ≥ 3 abortos < 10 semanas consecutivos; OU ≥ 1 óbito fetal > 10 semanas; OU ≥ 1 parto prematuro < 34 semanas por pré-eclâmpsia grave/insuficiência placentária.
+    - ⚠️ Só anticorpos antifosfolípide positivos **sem** critério clínico **NÃO** confirma SAF.
+    - SAF primária (sem doença de base) vs SAF secundária (associada a LES principalmente).
+
+- **Quadro clínico:**
+    - Trombose venosa profunda de MMII (50% dos casos; manifestação mais comum).
+    - Eventos arteriais: AVC, AIT, IAM, isquemia mesentérica.
+    - Plaquetopenia moderada em até 50% (risco hemorrágico baixo).
+    - Anemia hemolítica autoimune (Coombs direto positivo) — menos frequente.
+    - Endocardite de Libman-Sacks: vegetações estéreis na valva mitral.
+    - Livedo reticular, tromboflebites.
+    - ⚠️ Padrão de prova: **anticoagulante lúpico alarga o TTPA in vitro**, mas na clínica causa **trombose** (paradoxo). Pode causar VDRL falso-positivo.
+
+- **SAF Catastrófica:**
+    - Trombose de **≥ 3 órgãos** em < 1 semana. Mortalidade ~50%.
+    - Tratamento: anticoagulação plena (heparina) + imunossupressão (corticoides em altas doses) + IVIG e/ou plasmaférese.
+
+- **Tratamento:**
+    - Evento trombótico confirmado → **anticoagulação por tempo indeterminado**.
+    - ⭐ Anticoagulante de escolha: **Varfarina** (RNI 2–3). DOACs **contraindicados** na SAF de alto risco (evidência insuficiente).
+    - Tromboses arteriais: associar antiplaquetários (AAS, clopidogrel).
+    - ⚠️ Varfarina é teratogênica → substituir por **HBPM** durante gestação.
+
+### 8.2 Trombofilias Hereditárias
+
+- **Fator V de Leiden:**
+    - ⭐ Trombofilia hereditária mais **comum** (~5% da população).
+    - FV mutante resistente à clivagem pela Proteína C ativada.
+    - Risco trombótico: heterozigose 3–5x; homozigose 18–80x.
+
+- **Mutação 20210A da Protrombina:**
+    - 2ª mais comum (~3% da população).
+    - Aumenta síntese de protrombina → hipercoagulabilidade.
+    - Risco: heterozigose ~3x.
+
+- **Deficiência de Proteína C:**
+    - Rara (0,3%). Anticoagulante natural.
+    - Homozigose → **púrpura neonatal fulminante**.
+
+- **Deficiência de Proteína S:**
+    - Rara (< 0,5%). Cofator da Proteína C.
+    - Homozigose → púrpura neonatal fulminante.
+
+- **Deficiência de Antitrombina:**
+    - ⭐ Mais **grave** (risco trombótico 16x no heterozigoto; homozigose → morte fetal).
+    - Prevalência: 0,02%.
+
+- ⚠️ Mutação da MTHFR: **NÃO** é trombofilia hereditária relevante. Não solicitar em pesquisa de trombofilias.
+
+---
+
+## 9. Armadilhas de Prova
+
+- 🔴 **PTI x Henoch-Schönlein:** na PTI há plaquetopenia + sangramento difuso. Na PHS, plaquetas são normais e a púrpura é gravitacional (glúteos/MMII) + dor abdominal + hematúria.
+- 🔴 **PTI: mielograma NÃO é indicado** na avaliação inicial. Só fazer se suspeita de outra doença hematológica (anemia, leucopenia, esplenomegalia, linfadenomegalias).
+- 🔴 **PTI: transfusão de plaquetas é CONTRAINDICADA** (exceto sangramento ativo ameaçador). Usar prednisona ± IVIG.
+- 🔴 **Esplenectomia na PTI:** é 2ª linha (falha ao corticoide), não indicada por plaquetopenia isolada. Vacinar 2 semanas antes (pneumo, HiB, meningo).
+- 🔴 **Bernard-Soulier:** plaquetas GIGANTES + defeito de adesão (GP Ib) vs Glanzmann: plaquetas normais + defeito de agregação (GP IIb/IIIa).
+- 🔴 **DVW x Hemofilia A:** DVW tem sangramento mucoso + plaquetas normais + TTPA pode alargar (porque carrega FVIII). Hemofilia A tem hemartroses + TTPA alargado + TAP normal.
+- 🔴 **DVW adquirida por uremia:** sangramentos mucosos + plaquetas quase normais + IRC. Conduta no sangramento agudo: **DDAVP** (não corticoides, não transfusão de plaquetas).
+- 🔴 **DDAVP:** útil na DVW tipo 1 e Hemofilia A **leve** (libera estoques endoteliais). Sem efeito na Hemofilia B.
+- 🔴 **Hemofilia B x Hemofilia A:** B = Fator IX (não FX, não VIII). DDAVP não funciona na Hemofilia B.
+- 🔴 **SAF:** TTPA alargado in vitro, mas clínica é de TROMBOSE (não sangramento). Única trombofilia que prolonga TTPA e causa trombose.
+- 🔴 **SAF catastrófica:** ≥ 3 órgãos em < 1 semana (não 5 órgãos). Mortalidade ~50%.
+- 🔴 **SAF na gestação:** Varfarina é teratogênica → usar **HBPM**.
+- 🔴 **DOACs são contraindicados na SAF** de alto risco → usar Varfarina.
+- 🔴 **Trombofilia hereditária mais comum:** Fator V de Leiden. **Mais grave:** Deficiência de Antitrombina.
+- 🔴 **HIT:** heparina causa queda de plaquetas, mas o quadro é de TROMBOSE (não sangramento). Suspender heparina + trocar por Fondaparinux.
+- 🔴 **Monitorização:** HNF = TTPA; Varfarina = TAP/RNI; HBPM = Anti-Xa (em selecionados).
+- 🔴 **Varfarina:** nunca iniciar isolada em trombose aguda — risco de efeito pró-trombótico inicial (queda da Proteína C). Sempre ponte com heparina.

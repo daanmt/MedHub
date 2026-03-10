@@ -1,5 +1,5 @@
 # ESTADO — IPUB (Preparação para Residência Médica)
-*Atualizado: 2026-03-06 (sessão 008) | Ferramenta: Antigravity*
+*Atualizado: 2026-03-09 (sessão 011) | Ferramenta: Antigravity*
 
 ---
 
@@ -12,7 +12,7 @@ Ambiente de estudo para residência médica. Processa questões de prova, regist
 **Leia `AGENTE.md` antes de qualquer ação.** Este arquivo contém o protocolo de boot e a ordem de leitura para garantir a continuidade do projeto.
 
 - **59 entradas** no caderno de erros (5 áreas)
-- **22 resumos** em `Temas/` — incluindo `Infectologia/TB.md`, `HIV.md`, `Hematologia/Hemostasia.md` e `Preventiva/Medidas de Saúde Coletiva.md`
+- **23 resumos** em `Temas/` — incluindo `Infectologia/TB.md`, `Pediatria/Emergências Pediátricas.md` e `Preventiva/Medidas de Saúde Coletiva.md`
 - **3 workflows** operacionais em `.agents/workflows/`
 
 ---
@@ -58,6 +58,10 @@ Ambiente de estudo para residência médica. Processa questões de prova, regist
 ---
 
 ## Últimas sessões
+
+**2026-03-10 | Antigravity (sessão 012):** Criação do resumo de `Pediatria/Emergências Pediátricas.md` (Arrritmias, PCR, TCE, Corpo Estranho e Afogamento). Foco em critérios PECARN e algoritmos PALS/Szpilman.
+
+**2026-03-09 | Antigravity (sessão 011):** Criação do resumo de `[GIN] Rastreamento Colo.md` integrando diretrizes 2016 (Pap) e 2025 (DNA-HPV). Mapeamento de 34 "armadilhas de prova" baseadas em questões de residência.
 
 **2026-03-09 | Antigravity (sessão 010):** Análise de 9 questões de Saúde Coletiva (indicadores de mortalidade). Atualização massiva do resumo de Preventiva e do caderno de erros (Total 59).
 

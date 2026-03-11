@@ -10,14 +10,17 @@
     -   Protocolos de RCP (BLS e PALS 2020-2024).
     -   Traumatismo Cranioencefálico (Critérios PECARN).
     -   Aspiração de Corpo Estranho e Afogamento (Szpilman).
-3.  **Governança:** Atualização de `ESTADO.md` e `HANDOFF.md`.
-4.  **Limpeza:** Deleção de PDFs e arquivos temporários de texto.
+3.  **Mapeamento de Erros:** Integração de 4 questões reais do usuário ao `caderno_erros.md` e refinamento da seção "Armadilhas de Prova".
+4.  **Governança:** Atualização de `ESTADO.md` (Total 63 erros) e `HANDOFF.md`.
+5.  **Limpeza:** Deleção de PDFs e arquivos temporários de texto.
 
 ## Takeaways (Armadilhas de Prova)
--   TSV vs Sinusal (Presença de P e variabilidade).
--   Manejo de Obstrução Total: Golpes em lactentes vs Heimlich em maiores.
--   PECARN: Diferenciação clara entre < 2 anos e > 2 anos.
--   Afogamento: A importância das 5 ventilações iniciais antes da RCP se houver pulso.
+-   **TSV Estável:** Vagal -> Adenosina (NÃO choque).
+-   **Taquicardia Sinusal:** P presente + febre = Tratar febre (Antitérmico).
+-   **Bradicardia Grave:** Persistente após O2 = Epinefrina 1:10.000 (NÃO Atropina).
+-   **Manejo de Obstrução Total:** Golpes em lactentes vs Heimlich em maiores.
+-   **PECARN:** Diferenciação clara entre < 2 anos e > 2 anos.
+-   **Afogamento:** A importância das 5 ventilações iniciais antes da RCP se houver pulso.
 
 ## Próximos Passos
 -   Análise do Caderno de Erros para temas de Pediatria.

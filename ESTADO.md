@@ -11,7 +11,7 @@ Ambiente de estudo para residência médica. Processa questões de prova, regist
 
 **Leia `AGENTE.md` antes de qualquer ação.** Este arquivo contém o protocolo de boot e a ordem de leitura para garantir a continuidade do projeto.
 
-- **59 entradas** no caderno de erros (5 áreas)
+- **63 entradas** no caderno de erros (5 áreas)
 - **23 resumos** em `Temas/` — incluindo `Infectologia/TB.md`, `Pediatria/Emergências Pediátricas.md` e `Preventiva/Medidas de Saúde Coletiva.md`
 - **3 workflows** operacionais em `.agents/workflows/`
 

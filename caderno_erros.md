@@ -11,6 +11,72 @@
 1. [Clínica Médica](#clínica-médica)
 2. [Cirurgia](#cirurgia)
 3. [Pediatria](#pediatria)
+
+---
+
+### Pediatria
+
+#### TSV Estável em Lactente — Sequência: Manobra Vagal → Adenosina
+
+**Complexidade:** Média
+**Elo quebrado:** Habilidade 3 — Priorizar tratamento farmacológico (Adenosina) antes da cardioversão em paciente estável
+**Tipo de erro:** Erro de aplicação
+
+**Caso:** Lactente 15m, FC 230bpm, QRS estreito, sem P. Estável (perfusão boa, consciente). Marcou cardioversão (D), mas o gabarito era Adenosina (B).
+
+**Habilidades sequenciais:**
+1. Diagnosticar Taquicardia Supraventricular (TSV) pela FC > 220 e QRS estreito.
+2. Identificar ESTABILIDADE clínica (bom estado geral, perfusão normal).
+3. Seguir o algoritmo: Vagal (bolsa de gelo) -> Adenosina. Cardioversão é apenas para INSTÁVEIS.
+
+**O que faltou:**
+Considerou a cardioversão elétrica como conduta inicial em paciente estável. Na TSV, se o paciente está bem, tenta-se reverter "quimicamente" ou por manobra vagal primeiro.
+
+**Explicação correta:**
+Na TSV estável, a conduta é manobra vagal (bolsa de gelo em lactentes) e, se falhar, Adenosina (0,1 mg/kg em flush rápido). A cardioversão elétrica sincronizada é reservada para casos de instabilidade (choque, alteração de consciência, sinais de insuficiência cardíaca) ou refratariedade extrema.
+
+**Armadilha / nuance:**
+O examinador descreve um paciente "corado e hidratado" com FC altíssima para testar se você se apavora com o número e indica o choque desnecessariamente.
+
+---
+
+#### TSVP em Adulto Estável — Manobra Vagal como Primeira Medida
+
+**Complexidade:** Baixa
+**Elo quebrado:** Habilidade 2 — Identificar a manobra vagal como conduta NÃO invasiva prioritária
+**Tipo de erro:** Erro de aplicação
+
+**Caso:** Mulher 22 anos, palpitações, FC 180bpm, estável. Marcou Adenosina (B), gabarito era Manobra Vagal (C).
+
+**O que faltou:**
+Pulou a etapa não farmacológica. Em pacientes estáveis com TSVP (QRS estreito e regular), a primeira medida deve ser sempre a manobra vagal por ser eficaz, rápida e não invasiva.
+
+---
+
+#### Bradicardia Sintomática Pediátrica — Adrenalina 1:10.000 (Não Atropina)
+
+**Complexidade:** Média
+**Elo quebrado:** Habilidade 3 — Escolher a droga correta para suporte circulatório em bradicardia persistente
+**Tipo de erro:** Conhecimento parcial
+
+**Caso:** Lactente com bradicardia grave (< 60 bpm) persistente após via aérea e O2 adequados. Marcou Atropina (A), gabarito era Epinefrina 1:10.000 (D).
+
+**Explicação correta:**
+Na pediatria, a bradicardia grave associada a sinais de má perfusão que não melhora com ventilação/oxigenação é tratada como PCR. A droga de escolha é a **Adrenalina** (Epinefrina). A Atropina é restrita a casos de aumento de tônus vagal ou BAV (Bloqueio Atrioventricular).
+- **Dose:** 1:10.000 (diluída) para uso IV/IO. 1:1.000 (pura) é apenas via traqueal.
+
+---
+
+#### Taquicardia Sinusal vs. TSV — Tratar a Causa (Febre)
+
+**Complexidade:** Baixa
+**Elo quebrado:** Habilidade 1 — Diferenciar taquicardia sinusal de arritmia patológica
+**Tipo de erro:** Erro de diagnóstico
+
+**Caso:** Criança 1 ano, febre e coriza, FC 200 bpm com ONDA P VISÍVEL. Marcou Manobra Vagal (B), gabarito era Antitérmico (C).
+
+**Armadilha:**
+A presença de **Onda P** e o contexto de febre definem Taquicardia Sinusal. NUNCA tratar o coração (vagal/adenosina) se a taquicardia é apenas uma resposta fisiológica. Trate a causa (febre, dor, anemia).
 4. [Ginecologia e Obstetrícia](#ginecologia-e-obstetrícia)
 5. [Medicina Preventiva e Saúde Pública](#medicina-preventiva-e-saúde-pública)
 

@@ -118,14 +118,22 @@ Mecanismo de trauma grave: Queda > 1m (< 2 anos) ou > 1,5m (> 2 anos); ejetado; 
 
 ---
 
-## 6. Armadilhas de Prova
+### 6.1 Questões do Usuário (Destaques)
 
-- 🔴 **TSV vs Taquicardia Sinusal:** Se houver onda P visível e FC variável com a febre/choro, o diagnóstico é **Sinusal**. Não fazer adenosina nem manobras vagais.
+- **Caso 1 (TSV Estável):** Lactente 15m, FC 230 bom estado geral. **Erro:** Tentar cardioversão inicial. **Correto:** Manobra vagal (bolsa de gelo) -> Adenosina.
+- **Caso 2 (TSVP Adulto):** Estável, FC 180. **Erro:** Adenosina direto. **Correto:** Manobra vagal primeiro por ser não invasiva.
+- **Caso 3 (Bradicardia Grave):** Lactente, FC < 60 mesmo após O2 e Ventilação. **Erro:** Atropina. **Correto:** Epinefrina (Adrenalina) 1:10.000. Atropina é para BAV ou tônus vagal.
+- **Caso 4 (Taquicardia Sinusal):** Febre, FC 200, **ONDA P VISÍVEL**. **Erro:** Manobra vagal. **Correto:** Antitérmico (tratar a causa).
+
+## 7. Armadilhas de Prova ⭐
+
+- 🔴 **TSV vs Taquicardia Sinusal:** Se houver onda P visível e FC variável com a febre/choro, o diagnóstico é **Sinusal**. Não fazer adenosina nem manobras vagais. Tratar a febre (**Antitérmico**).
+- 🔴 **TSV Estável:** A sequência é sempre **Não Invasiva (Vagal) → Farmacológica (Adenosina)**. Deixar Cardioversão Sincronizada para casos de **Instabilidade** (Choque, má perfusão).
+- 🔴 **Bradicardia Grave (< 60 bpm):** Se persistir mesmo após via aérea e oxigênio adequados, a droga de escolha é a **Adrenalina**. Manter compressões se má perfusão persistir. Atropina NÃO é a primeira escolha na PCR/Bradicardia hipóxica pediátrica.
+- 🔴 **Dose da Adrenalina IV/IO:** Use a solução **1:10.000** (diluída). A solução 1:1.000 é reservada para via traqueal.
 - 🔴 **Varredura digital:** Proibido no engasgo se o objeto não estiver visível.
 - 🔴 **Bradicardia no RN:** Pensar em BAV congênito por Lúpus materno (Anti-RO/Anti-LA).
 - 🔴 **Pulsos na RCP:** Lactente = braquial. Criança/Adol = carotídeo ou femoral.
 - 🔴 **DOPE:** Se o paciente intubado dessaturar subitamente, checar deslocamento e obstrução antes de alterar parâmetros do ventilador.
 - 🔴 **Afogamento:** Não usar Corticoide ou ATB de rotina. Somente se água nitidamente contaminada.
 - 🔴 **Pá do Desfibrilador:** Pediátrica se < 10kg ou < 1 ano. Adulto se > 10kg ou > 1 ano.
-
-*📝 Espaço reservado para inclusão de questões erradas*

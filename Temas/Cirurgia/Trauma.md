@@ -174,4 +174,108 @@ O choque é um estado de **má perfusão generalizada**, levando à deprivação
 
 ---
 
-### Trauma Abdominal
+## 2. Trauma Abdominal e Pélvico
+
+### Avaliação Inicial e Exames
+- **Trauma Fechado (Contuso):** Órgãos mais acometidos: **Baço** (40-55%) ⭐ > **Fígado** (35-45%) > Delgado (5-10%).
+  - Paciente **Estável**: Tomografia Computadorizada (TC) de abdome com contraste (melhor exame).
+  - Paciente **Instável**: FAST ou Lavado Peritoneal Diagnóstico (LPD). Se FAST/LPD +, conduta é **Laparotomia Exploradora**.
+  - **LPD Positivo:** >10ml sangue aspiração inicial; Hemácias >100.000; Leucócitos >500; Conteúdo entérico/bile/fibras.
+- **Trauma Penetrante:** Mais frequente que o contuso.
+  - **Arma de Fogo (FAF):** Delgado (50%) > Cólon (40%) > Fígado (30%). Maioria = Laparotomia.
+  - **Arma Branca (FAB):** Fígado (40%) > Delgado (30%) > Diafragma.
+    - Parede Anterior: **Exploração digital**. Se violou peritônio ou dúvida → Observação (exame físico + Hb 8/8h). Se peritonite, instabilidade, evisceração ou choque = Laparotomia.
+    - Flanco/Dorso: TC triplo contraste. Se duvidoso/tangencial, considerar videolaparoscopia.
+
+### Sinais de Alerta e Indicações Cirúrgicas
+- Indicação **IMEDIATA** de Laparotomia no trauma fechado: Peritonite, Instabilidade com FAST/LPD+, Pneumo/Retropneumoperitônio, Ruptura diafragmática.
+- Indicação **IMEDIATA** de Laparotomia no trauma penetrante: FAF transperitoneal, Instabilidade, Evisceração, Peritonite, Sangramento GI/GU.
+
+### Cirurgia de Controle de Danos (Damage Control)
+- **Objetivo:** Conter hemorragia, limitar contaminação e evitar a **Tríade Letal** (Acidose metabólica, Hipotermia, Coagulopatia) ⭐.
+- **Passos:**
+  1. Controle da hemorragia (empacotamento, ressecção, ligadura).
+  2. Controle da contaminação (ressecção/sutura sem anastomose primária).
+  3. Fechamento abdominal temporário (Peritoneostomia - evita sd compartimental).
+  4. UTI (24-48h) → Reabordagem para reparo definitivo.
+
+### Trauma de Órgãos Específicos
+
+#### Trauma Esplênico
+- Órgão mais lesado no trauma contuso.
+- **Sinal de Kehr:** Dor referida no ombro esquerdo (irritação do frênico pelo sangue).
+- **Tratamento:**
+  - Estável + Graus I a III: Conservador (UTI, Hb seriada, repouso).
+  - Estável + Blush arterial (extravasamento) ou Graus III/IV: **Arteriografia com Embolização**.
+  - Instável ou Falha do conservador ou Graus IV/V: **Laparotomia + Esplenectomia Total** (não se faz empacotamento).
+- **Pós-operatório:** Vacinação contra encapsulados (Pneumococo, Meningococo, Haemophilus) em 14 dias. Risco de Sepse Pós-Esplenectomia (OPSI).
+
+#### Trauma Hepático
+- Órgão mais lesado por FAB e 2º no trauma contuso.
+- **Tratamento:**
+  - Maioria = Conservador (estável). Embolização se blush arterial na TC.
+  - Laparotomia com hemorragia profusa: **Empacotamento Hepático** (Damage Control).
+  - **Manobra de Pringle ⭐:** Clampeamento do ligamento hepatoduodenal (artéria hepática + veia porta + colédoco) no forame de Winslow. Tempo seguro: até 60 min. Se o sangramento APARAR com Pringle, a fonte é porta/artéria. Se CONTINUAR, a fonte são veias supra-hepáticas ou cava retro-hepática (lesão gravíssima, letalidade 80%).
+- **Hemobilia:** Complicação tardia (Tríade de Sandbloom: Dor HD + HDA + Icterícia). Diagnóstico por angioTC, tratamento com arteriografia e embolização.
+
+#### Trauma do Trato Gastrointestinal
+- **Delgado:** Frequente em FAF. No contuso, pensar no **Sinal do cinto de segurança** (lesão de esmagamento contra coluna vertebral ou cisalhamento). 
+  - Pode causar a "Fratura de Chance" (lombar).
+  - Líquido livre na TC sem lesão de víscera maciça = suspeitar de delgado/mesentério (Lesão em "alça de balde").
+- **Colorretal:** Maioria por trauma penetrante.
+  - Lesão < 50% circunferência = Rafia primária.
+  - Lesão > 50% = Ressecção + Anastomose primária (se condições favoráveis) OU Cirurgia de Hartmann / Colostomia (se grave, choque, >6 CH, contaminação fecal importante).
+  - **Reto extraperitoneal:** Colostomia em alça de proteção + drenagem pré-sacral.
+
+#### Trauma Duodenopancreático
+- Mecanismo: "Golpe de guidão" em epigástrio ou esmagamento. Diagnóstico difícil.
+- **Duodeno:** Assinalado por retropneumoperitônio na TC ou ar delineando os rins. Tratamento conservador para hematomas intramurais ("mola em espiral" no RX contrastado). Maioria é tratada com rafia primária simples.
+- **Pâncreas:** O ponto crucial é a **integridade do ducto pancreático**.
+  - Sem lesão ductal = Observação ou desbridamento com drenagem.
+  - Lesão à esquerda dos vasos mesentéricos (corpo/cauda) = Pancreatectomia distal.
+  - Lesão à direita envolvendo ampola/cabeça = Duodenopancreatectomia (Whipple) ou Damage Control.
+
+#### Trauma Retroperitoneal
+- TC com duplo/triplo contraste é a escolha. FAST/LPD são inúteis.
+- **Zonas de Exploração:**
+  - Zona I (Central, Aorta/Cava): **Explorar SEMPRE** (tanto contuso quanto penetrante).
+  - Zona II (Lateral, Rins/Cólon): Explorar se penetrante ou se hematoma pulsátil/expansão/hematúria no contuso.
+  - Zona III (Pélvica): **NÃO explorar** (exceção: hemorragia exanguinante óbvia nas ilíacas).
+
+#### Trauma Urológico
+- **Renal:** TC é padrão-ouro.
+  - Instável/Exanguinando: Laparotomia. Hematuria + Choque = lesão grave (Grau IV/V).
+  - Estável + Grau I a III: Conservador.
+  - Estável + Grau IV vascular com extravasamento: Embolização seletiva.
+  - Exploração cirúrgica: hematoma expansivo/pulsátil, extravasamento persistente.
+- **Vesical:** Maioria associada a fratura pélvica. Diagnóstico: Cistografia retrógrada.
+  - Intraperitoneal: Lesão de cúpula (bexiga cheia). Contraste preenche cavidade. Tratamento: Laparotomia/Laparoscopia + Rafia. Consertar com fio absorvível.
+  - Extraperitoneal: Contraste contido na pelve a frente da bexiga. Tratamento: Conservador com sonda vesical (SVD) 14-21 dias.
+- **Uretral:**
+  - **Anterior** (bulbar): Tipo mais comum. Mecanismo: Queda a cavaleiro. Trauma direto.
+  - **Posterior** (membranosa): Alta energia, fratura de pelve associada. Próstata flutuante ao toque retal.
+  - Tríade: Uretrorragia, retenção urinária e bexigoma. Hematoma em asa de borboleta.
+  - Diagnóstico confirmador: Uretrocistografia retrógrada.
+  - Conduta aguda: **Cistostomia**. O reparo definitivo da uretra é feito tardiamente (3 a 6 meses).
+
+#### Fratura de Pelve
+- Mecanismo: Alta energia. Aumento tridimensional da pelve ("livro aberto"). Sangramento por **plexo venoso pré-sacral** e osso esponjoso.
+- Conduta no Choque por Fratura de Pelve:
+  1. Estabilização e Amarração com lençol nos trocanteres maiores (fecha a bacia e tampona por aumento da pressão).
+  2. Afastar outras causas de choque (FAST). Se FAST Positivo -> Laparotomia.
+  3. FAST Negativo e continua instável -> **Empacotamento Pélvico Pré-Peritoneal** + Fixação Externa.
+  4. Se persistir instabilidade após empacotamento, suspeitar de sangramento arterial → **Arteriografia com Angioembolização**.
+
+---
+
+## 3. Armadilhas de Prova Adicionais (Trauma Pélvico/Abdominal)
+
+- 🔴 **Lesão Diafragmática:** FAST/LPD/TC têm baixa sensibilidade. Frequentemente dx tardio, especialmente a hérnia traumática à esquerda (lado direito tem proteção hepática).
+- 🔴 **Cinto de Segurança no Trauma:** Marca no abdome + líquido livre sem lesão maciça = suspeitar alto de lesão em **intestino delgado/mesentério**.
+- 🔴 **Pringle e Sangramento:** Se a Manobra de Pringle não controlar o sangramento hepático, a lesão é nas veias **supra-hepáticas ou VCI retro-hepática** (e não na porta/artéria).
+- 🔴 **Hipotensão Permissiva:** Manter PA sistólica ~80-90 mmHg até controle da hemorragia (evitar estourar coágulos) ⭐. **NÃO INDICADA EM TCE**.
+- 🔴 **Hematúria e Rim:** O grau de hematúria (micro vs macro) **NÃO** tem correlação com a gravidade anatômica da lesão renal. Hematúria com Choque, porém, indica alta gravidade.
+- 🔴 **Trauma Uretral e SVD:** Na tríade uretral (uretrorragia + retenção urinária + bexigoma) ou fratura pélvica associada, é **proibido** a passagem de Sonda Vesical de Demora cegamente pelo risco de lesão iatrogênica/laceração total. Fazer **uretrocistografia** e, na confirmação, **cistostomia**.
+- 🔴 **Exploração Retroperitoneal:** O Hematoma Pélvico (Zona III) do trauma contuso por fratura de bacia quase nunca é explorado (para garantir o efeito de tamponamento). A conduta é fixar a bacia e o sangramento quase sempre para; se persistir -> angioembolização para hemorragia arterial.
+
+*📝 Espaço reservado para inclusão de questões erradas*

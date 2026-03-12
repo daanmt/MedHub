@@ -1,18 +1,18 @@
 ## 🎯 Front Ativo
-**Pediatria** —— Resumo de Emergências Pediátricas concluído (Arrritmias, PCR, TCE, Corpo Estranho e Afogamento).
+## 🎯 Front Ativo
+**Cirurgia** —— Resumo de Trauma (Trauma Abdominal e Pélvico).
 
 ## 📊 Status Atual
-- [x] Criação de `Emergências Pediátricas.md`.
-- [x] Extração e análise de 103 páginas de conteúdo.
-- [x] Integração de critérios PECARN e diretrizes PALS.
-- [x] Limpeza de arquivos temporários e PDFs.
+- [x] Inclusão da seção de Trauma Abdominal em `Trauma.md`.
+- [x] Resumo focado em provas (FAST/LPD, Manobra de Pringle, Lesões Uretrais, Damage Control).
+- [x] Limpeza básica de arquivos temporários (txt deletado; PDF aguardando remoção manual se necessário).
 
 ## 🛑 Obstáculos / Pendências
-- Recomenda-se integrar questões específicas do Caderno de Erros do usuário quando disponíveis para este tema.
+- Nenhuma. O arquivo `Trauma_abdominal.pdf` não pôde ser deletado via script e, se necessário, deverá ser removido manualmente.
 
 ## ⏭️ Próximo Passo Recomendado
-1. Realizar `git add .`, `git commit -m "sessao 012: resumo emergências pediátricas"` e `git push`.
-2. Seguir para o próximo tema de Pediatria ou revisar o caderno de erros.
+1. Mover para o próximo tema desejado (ex: Clínica Médica ou Preventiva).
+2. Continuar a análise de eventuais questões não incluídas no `caderno_erros.md`.
 
 ---
-*Atualizado em: 2026-03-10*
+*Atualizado em: 2026-03-11*

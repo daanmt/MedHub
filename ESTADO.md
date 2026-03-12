@@ -1,5 +1,5 @@
 # ESTADO — IPUB (Preparação para Residência Médica)
-*Atualizado: 2026-03-09 (sessão 011) | Ferramenta: Antigravity*
+*Atualizado: 2026-03-11 (sessão 013) | Ferramenta: Antigravity*
 
 ---
 
@@ -58,6 +58,8 @@ Ambiente de estudo para residência médica. Processa questões de prova, regist
 ---
 
 ## Últimas sessões
+
+**2026-03-11 | Antigravity (sessão 013):** Criação da seção de Trauma Abdominal em `Cirurgia/Trauma.md`. Inclusão de condutas para trauma contuso/penetrante, damage control, órgãos maciços/ocos, e armadilhas de prova.
 
 **2026-03-10 | Antigravity (sessão 012):** Criação do resumo de `Pediatria/Emergências Pediátricas.md` (Arrritmias, PCR, TCE, Corpo Estranho e Afogamento). Foco em critérios PECARN e algoritmos PALS/Szpilman.
 

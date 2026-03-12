@@ -1,18 +1,14 @@
-## 🎯 Front Ativo
-## 🎯 Front Ativo
-**Cirurgia** —— Resumo de Trauma (Trauma Abdominal e Pélvico).
+# HANDOFF — Ponto de Passagem de Bastão
 
-## 📊 Status Atual
-- [x] Inclusão da seção de Trauma Abdominal em `Trauma.md`.
-- [x] Resumo focado em provas (FAST/LPD, Manobra de Pringle, Lesões Uretrais, Damage Control).
-- [x] Limpeza básica de arquivos temporários (txt deletado; PDF aguardando remoção manual se necessário).
+> **Última atualização:** Sessão 014 (Analise de 11 Questões de Trauma)
 
-## 🛑 Obstáculos / Pendências
-- Nenhuma. O arquivo `Trauma_abdominal.pdf` não pôde ser deletado via script e, se necessário, deverá ser removido manualmente.
+## 📌 Status Atual
+- Inseridas 11 análises de erros nas categorias "Cirurgia/Trauma" referentes ao caderno de erros. 
+- Adicinou duas sessões de *Warning/Padrão de prova* no resumo de *Trauma.md*, que abordam diretamente a dificuldade reportada do usuário em criar os fluxogramas mentais sobre Laparotomia, FAST, Tomografia Computadorizada ao associar às estabilidades do trauma (Fluxograma de TAF) e Múltiplas Prioridades.
+- O cadernos de erros possui hoje 56 contagens de gaps mapeadas. 
 
-## ⏭️ Próximo Passo Recomendado
-1. Mover para o próximo tema desejado (ex: Clínica Médica ou Preventiva).
-2. Continuar a análise de eventuais questões não incluídas no `caderno_erros.md`.
+## 🚧 Obstáculos / Problemas Atuais
+- Nenhum. Todas as dúvidas de prioridades da sessão (e.g. controle IOT vs Cirurgia em queimados vs Peritonite atropelando o FAST) fram endereçadas no material do usuário.
 
----
-*Atualizado em: 2026-03-11*
+## ➡️ Próximo Passo Imediato (próxima sessão)
+- Averiguar os próximos temas disponíveis para criação ou solicitar outro pool de questões erradas nas áreas em que o usuário apresente maiores deficiências mapeáveis nos simulados.

@@ -59,6 +59,7 @@ Ambiente de estudo para residência médica. Processa questões de prova, regist
 
 ## Últimas sessões
 
+**2026-03-12 | Antigravity (sessão 014):** Análise de 11 erros de Trauma (ATLS, FAST, uretra, choque pediátrico) e adição de caixa de Alertas priorizando intervenções ("A atropela C").
 **2026-03-11 | Antigravity (sessão 013):** Criação da seção de Trauma Abdominal em `Cirurgia/Trauma.md`. Inclusão de condutas para trauma contuso/penetrante, damage control, órgãos maciços/ocos, e armadilhas de prova.
 
 **2026-03-10 | Antigravity (sessão 012):** Criação do resumo de `Pediatria/Emergências Pediátricas.md` (Arrritmias, PCR, TCE, Corpo Estranho e Afogamento). Foco em critérios PECARN e algoritmos PALS/Szpilman.

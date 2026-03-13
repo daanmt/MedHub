@@ -1,14 +1,15 @@
 # HANDOFF — Ponto de Passagem de Bastão
 
-> **Última atualização:** Sessão 014 (Analise de 11 Questões de Trauma)
+> **Última atualização:** Sessão 015 (Resumo de Sífilis na Gestação e Congênita)
 
 ## 📌 Status Atual
-- Inseridas 11 análises de erros nas categorias "Cirurgia/Trauma" referentes ao caderno de erros. 
-- Adicinou duas sessões de *Warning/Padrão de prova* no resumo de *Trauma.md*, que abordam diretamente a dificuldade reportada do usuário em criar os fluxogramas mentais sobre Laparotomia, FAST, Tomografia Computadorizada ao associar às estabilidades do trauma (Fluxograma de TAF) e Múltiplas Prioridades.
-- O cadernos de erros possui hoje 56 contagens de gaps mapeadas. 
+- Criada a página/resumo `[OBS] Sífilis na Gestação e Congênita.md` sob a pasta `Temas/GO/`.
+- O foco da aula original foi profundamente englobado nas seções de "Tratamento Adequado / Critério Parceiro" e no Diagnóstico do RN com base na profilaxia materna prévia. 
+- O material PDF da aula original `Sífili.pdf` e os subprodutos de texto `%temp%` foram removidos da máquina com sucesso em prol da saúde do armazenamento e limitação de uso do disco.
+- O cadernos de erros possui hoje 63 contagens de gaps mapeadas (sem alterações nesta rodada).
 
 ## 🚧 Obstáculos / Problemas Atuais
-- Nenhum. Todas as dúvidas de prioridades da sessão (e.g. controle IOT vs Cirurgia em queimados vs Peritonite atropelando o FAST) fram endereçadas no material do usuário.
+- Nenhum no momento. As armadilhas de prova elencadas abordaram testes treponêmicos como cura, e o falso raciocínio pediátrico em caso de parceiros não tratados.
 
 ## ➡️ Próximo Passo Imediato (próxima sessão)
-- Averiguar os próximos temas disponíveis para criação ou solicitar outro pool de questões erradas nas áreas em que o usuário apresente maiores deficiências mapeáveis nos simulados.
+- Averiguar os próximos PDFs disponíveis ou solicitar outro pool de apostilas/questões erradas para os simulados. Pode ser interessante conferir se restaram diretrizes de profilaxia de DSTs obstétricas.

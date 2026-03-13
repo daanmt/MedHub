@@ -221,7 +221,9 @@ O choque é um estado de **má perfusão generalizada**, levando à deprivação
 - **Tratamento:**
   - Maioria = Conservador (estável). Embolização se blush arterial na TC.
   - Laparotomia com hemorragia profusa: **Empacotamento Hepático** (Damage Control).
-  - **Manobra de Pringle ⭐:** Clampeamento do ligamento hepatoduodenal (artéria hepática + veia porta + colédoco) no forame de Winslow. Tempo seguro: até 60 min. Se o sangramento APARAR com Pringle, a fonte é porta/artéria. Se CONTINUAR, a fonte são veias supra-hepáticas ou cava retro-hepática (lesão gravíssima, letalidade 80%).
+  - **Manobra de Pringle ⭐:** Clampeamento do ligamento hepatoduodenal (artéria hepática + veia porta + colédoco) no forame de Winslow. Tempo seguro: até 60 min. 
+    - Se o sangramento PARAR com Pringle, a fonte é porta/artéria. 
+    Se CONTINUAR, a fonte são veias supra-hepáticas ou cava retro-hepática (lesão gravíssima, letalidade 80%).
 - **Hemobilia:** Complicação tardia (Tríade de Sandbloom: Dor HD + HDA + Icterícia). Diagnóstico por angioTC, tratamento com arteriografia e embolização.
 
 #### Trauma do Trato Gastrointestinal
@@ -294,4 +296,4 @@ O choque é um estado de **má perfusão generalizada**, levando à deprivação
 > 2. **Peritonite atropela o FAST / TC:** Sinais de peritonite ao exame físico são indicação ABSOLUTA de Laparotomia Exploradora. Não se perde tempo solicitando FAST ou Tomografia nestes casos.
 > 3. **Instabilidade atropela a Tomografia:** Nunca, sob nenhuma hipótese, se coloca paciente chocado na gantry do tomógrafo. O paciente ficará dependente da resposta terapêutica e exames rápidos à beira do leito (Hemácias, FAST, Sala de Trauma).
 
-*📝 Espaço reservado para inclusão de questões erradas*
+*📝 Espaço reservado para inclusão de questões erradas*

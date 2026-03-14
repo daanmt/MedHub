@@ -1,5 +1,5 @@
 # ESTADO — IPUB (Preparação para Residência Médica)
-*Atualizado: 2026-03-11 (sessão 013) | Ferramenta: Antigravity*
+*Atualizado: 2026-03-14 (sessão 016) | Ferramenta: Antigravity*
 
 ---
 
@@ -11,7 +11,7 @@ Ambiente de estudo para residência médica. Processa questões de prova, regist
 
 **Leia `AGENTE.md` antes de qualquer ação.** Este arquivo contém o protocolo de boot e a ordem de leitura para garantir a continuidade do projeto.
 
-- **63 entradas** no caderno de erros (5 áreas)
+- **67 entradas** no caderno de erros (5 áreas)
 - **24 resumos** em `Temas/` — incluindo `Infectologia/TB.md`, `GO/[OBS] Sífilis na Gestação e Congênita.md` e `Preventiva/Medidas de Saúde Coletiva.md`
 - **3 workflows** operacionais em `.agents/workflows/`
 
@@ -59,6 +59,7 @@ Ambiente de estudo para residência médica. Processa questões de prova, regist
 
 ## Últimas sessões
 
+**2026-03-14 | Antigravity (sessão 016):** Análise de 4 questões de Sífilis na Gestação. Atualização do caderno de erros, progresso e adição de armadilhas de prova no resumo `[OBS] Sífilis na Gestação e Congênita.md`.
 **2026-03-13 | Antigravity (sessão 015):** Escrita do resumo clínico de Sífilis na Gestação e Congênita. Condensação profunda dos critérios de Sífilis Congênita no neonato de mães do pré-natal (NTT - Notifique, Trie e Trate) e as atualizações do Ministério da Saúde sobre exclusão do fator parceiro no berçário. O arquivo finalizou em `[OBS] Sífilis na Gestação e Congênita.md`.
 **2026-03-12 | Antigravity (sessão 014):** Análise de 11 erros de Trauma (ATLS, FAST, uretra, choque pediátrico) e adição de caixa de Alertas priorizando intervenções ("A atropela C").
 **2026-03-11 | Antigravity (sessão 013):** Criação da seção de Trauma Abdominal em `Cirurgia/Trauma.md`. Inclusão de condutas para trauma contuso/penetrante, damage control, órgãos maciços/ocos, e armadilhas de prova.

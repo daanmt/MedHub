@@ -9,9 +9,9 @@
 - **Clínica Médica** — Cardiologia; Pneumologia; Infectologia (Novo): **10 entradas**
 - **Cirurgia** — Trauma: **15 entradas**
 - **Pediatria** — Cardiologia Pediátrica e Cardiopatias Congênitas: **11 entradas**
-- **Ginecologia e Obstetrícia** — Climatério e TH; Sangramentos da Primeira Metade: **13 entradas**
+- **Ginecologia e Obstetrícia** — Climatério e TH; Sangramentos da Primeira Metade; Infecções (Sífilis): **17 entradas**
 - **Medicina Preventiva e Saúde Pública** — Epidemiologia e Bioestatística; Vigilância Epidemiológica: **7 entradas**
-- **Total: 56 entradas**
+- **Total: 60 entradas**
 
 ---
 
@@ -51,6 +51,10 @@
 - **[OBS]** Cross-signalling hCG→TSH: hCG age como TSH agonista → hipertireoidismo (não hipotireoidismo) — 1x (OBS Sang Q5)
 - **[OBS]** Confundiu cariótipo 47XXY (trissomia = abortamento) com 69XXY (triploide = mola parcial) — 1x (OBS Sang Q6)
 - **[OBS]** Preditor de sucesso do MTX: β-hCG inicial (não tamanho da massa) — 1x (OBS Sang Q9)
+- **[OBS]** Aumento de duas titulações no VDRL de seguimento = reinfecção ativa — 1x (Sífilis Q1)
+- **[OBS]** Transmissão vertical na sífilis tardia cai para 10-30% (vs 70-100% na recente) — 1x (Sífilis Q2)
+- **[OBS]** Tratamento prévio com cicatriz documentada + TR reagente = Exige VDRL antes de tratar — 1x (Sífilis Q3)
+- **[OBS]** TTO anterior testado/referido SEM comprovação prévia de queda do VDRL + Título atual ativo = Tratar como Tardia — 1x (Sífilis Q4)
 - **[ASMA]** PaCO2 normal em crise = alarme; tórax silente + tratamento máximo = IOT (não O2 isolado) — 1x (Asma Q1)
 - **[ASMA]** Não diferenciou via inalatória (segura) vs sistêmica (efeitos CV) para β2-agonistas — 1x (Asma Q2)
 - **[ASMA]** Critérios numéricos de gravidade da crise (FR, FC, SpO2, PFE) — confusão moderada × grave — 1x (Asma Q3)
@@ -65,9 +69,9 @@
 
 ## Distribuição por Tipo de Erro
 
-- Lacuna de conhecimento: **18**
+- Lacuna de conhecimento: **19**
 - Conhecimento parcial: **11**
-- Erro de aplicação: **21**
+- Erro de aplicação: **23**
 - Erro de leitura: **1**
 - Armadilha do examinador: **1**
-- Incerteza sem erro de base: **2**
+- Incerteza sem erro de base: **3**

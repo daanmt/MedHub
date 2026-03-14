@@ -2161,6 +2161,121 @@ A questão usa "isoladamente" — pista importante. O tamanho da massa é um cri
 
 <!-- ENTRADAS AQUI -->
 
+#### Sífilis na Gestação — Aumento de VDRL configura reinfecção (retratar como tardia)
+
+**Complexidade:** Média
+**Elo quebrado:** Habilidade 2 — Identificar o aumento de duas titulações no VDRL como reinfecção
+**Tipo de erro:** Erro de aplicação
+
+**Caso:** Gestante em seguimento, tratada de sífilis tardia no 1º trimestre (VDRL inicial 1/8). Retorna com 28 semanas apresentando VDRL 1/32. A questão pedia a conduta e o usuário marcou "considerar cicatriz sorológica", o gabarito era "considerar falha de tratamento/reinfecção e prescrever 3 doses".
+
+**Habilidades sequenciais:**
+1. Avaliar a monitorização mensal do VDRL em gestantes tratadas.
+2. Identificar que o salto do VDRL de 1/8 para 1/32 significa aumento de 2 titulações (1/8 → 1/16 → 1/32).
+3. Associar o aumento de 2 titulações à falha de tratamento / reinfecção ativa.
+4. Indicar a posologia do novo tratamento: como é reinfecção de tempo indeterminado, indica-se sífilis tardia (3 doses de Benzatina).
+
+**O que faltou:**
+O usuário considerou como cicatriz sorológica, falhando em notar a matemática das titulações: o VDRL quadriplicou (subiu 2 diluições). Na cicatriz sorológica, o VDRL deveria se manter baixo ou continuar caindo (ex: 1/8 → 1/4 → 1/2).
+
+**Explicação correta:**
+A monitorização pós-tratamento na gestante busca identificar queda (resposta adequada) ou aumento (reinfecção/reativação). Um aumento de duas diluições num VDRL prévio (ex: de 1/8 para 1/32) confirma reinfecção, frequentemente pela não testagem/tratamento do parceiro. O retratamento deve ser feito imediatamente como Sífilis Tardia (2,4 milhões UI semanais por 3 semanas).
+
+**Armadilha / nuance:**
+O VDRL só tem função comparativa. Sem saber as regras de diluição (metades/dobros), o aluno não percebe que 1/32 é muito maior que 1/8 e trata estatisticamente a paciente como um "VDRL crônico".
+
+**Informações-chave para revisão:**
+- Cicatriz sorológica = títulos baixos e estáveis (VDRL ≤ 1:8 geralmente).
+- Reinfecção / Falha Terapêutica = elevação em DUAS titulações (aumentar em 4 vezes o título absoluto).
+- Retratamento em gestantes re-infectadas (sem tempo conhecido) = Esquema de Sífilis Tardia (3 doses).
+
+---
+
+#### Transmissão Vertical da Sífilis — Variabilidade de acordo com a Fase
+
+**Complexidade:** Baixa
+**Elo quebrado:** N/A (Usuário com incerteza em conceito decorado)
+**Tipo de erro:** Incerteza sem erro de base
+
+**Caso:** A questão pedia a afirmativa falsa. O aluno acertou, identificando o erro na alternativa que afirmava que "na sífilis terciária o risco de infecção fetal é de 70-90%". O gabarito é de que nas fases latente tardia e terciária é que a taxa cai para 10-30%.
+
+**Habilidades sequenciais:**
+1. Saber as taxas históricas de transmissão transplacentária da sífilis.
+2. Reconhecer a dicotomia das fases: doença recente = alta espiroquetemia placentária; doença tardia = baixa.
+
+**O que faltou:**
+Acertou com dúvidas sobre os números exatos e sobre a congênita assintomática.
+
+**Explicação correta:**
+Quanto mais RECENTE for a infecção materna (primária e secundária), maior é o nível de bactérias no sangue circulante, elevando a taxa de transmissão vertical a 70%—100%. Já nas sífilis LATENTE TARDIA e TERCIÁRIA, a chance de acometimento fetal despenca para 10 a 30%. Sabe-se ainda que 50% dos recém-nascidos com sífilis congênita são assintomáticos ao nascimento.
+
+**Armadilha / nuance:**
+Bancas adoram trocar a "virulência transmissiva": a sífilis tardia tem menos bactérias ativas no sangue que o cancro da sífilis primária, logo a transmissão vertical na Terciária/Tardia é muito menor (não 90%).
+
+**Informações-chave para revisão:**
+- TV na Sífilis Recente (Primária/Secundária): risco altíssimo **70% a 100%**.
+- TV na Sífilis Tardia / Terciária: risco muito menor **10% a 30%**.
+- Prognóstico fetal desastroso em sem-tratamento: **40%** evoluem para complicações neonatais severas/óbito/aborto.
+- **50% das sífilis congênitas** nascem perfeitas e totalmente assintomáticas!
+
+---
+
+#### Presença de Tratamento Anterior — VDRL antes de retratar
+
+**Complexidade:** Alta
+**Elo quebrado:** Habilidade 3 — Dominar a exceção à regra de "tratar imediatamente a gestante com Teste Rápido (TR) positivo"
+**Tipo de erro:** Erro de aplicação
+
+**Caso:** Gestante 8 sem, Teste Rápido positivo. Mostra cartão com tratamento *adequado* da sífilis na gestação anterior e seguimento de VDRL que estabilizou em 1/2 há 6 meses. O aluno indicou tratamento sumário (7.2M UI), mas o gabarito indicava aguardar resultado do novo VDRL (A).
+
+**Habilidades sequenciais:**
+1. Avaliar a presença de Teste Não-Treponêmico ou Treponêmico.
+2. Identificar que TR (Treponêmico) ficará reagente *para o resto da vida*.
+3. Distinguir a mulher "virgem de tratamento" X mulher "com tratamento passado comprovado + VDRL decaído (1:2)".
+4. Reconhecer a exceção de que, com tratamento adequado prévio documentado (cicatriz confirmada), um Teste Rápido positivo não denota infecção atual obrigatória a ponto de jogar penicilina às cegas. Pede-se o VDRL!
+
+**O que faltou:**
+O aluno aplicou cegamente o "Trate primeiro gestante com 1 teste", falhando em considerar a documentação da queda laboratorial de uma sífilis passada que transforma o VDRL atual na peça definidora de reinfecção ou não.
+
+**Explicação correta:**
+Embora a regra na obstetrícia dite "iniciar Penicilina após qualquer teste positivo", existe a exceção nobre: mulher com o **diagnóstico E tratamento pretérito integralmente documentados**, inclusive com a *comprovação da queda do VDRL*. Nela, o Teste Rápido é só memória imunológica (Cicatriz Sorológica). Logo, o certo é pedir um VDRL atual. Se der menor/igual ao 1:2 antigo: liberação (cicatriz). Se der ≥ 1/8, indica reinfecção sexual e aí sim se inicia retratamento.
+
+**Armadilha / nuance:**
+Se o aluno desconhece a regra, marca 7,2 milhões porque vê o Rápido Positivo. As bancas induzem esse erro ensinando o "nunca perca oportunidade de tratar gestante", omitindo do radar o caso da paciente com documentação exata de estar curada.
+
+**Informações-chave para revisão:**
+- Teste Treponêmico (Teste Rápido / FTA-ABS) Positivo + Ausência de História de TTO: Trata a gestante NA HORA.
+- TR Positivo + **TTO Anterior Documentado C/ QUEDA de VDRL**: Não caia de cara no frasco de Penicilina! Aguarde/Solicite o VDRL quantitativo atual para flagrar as reinfecções vs Cicatriz.
+
+---
+
+#### Teste Rápido Positivo + Ausência de Documentação da Queda de VDRL = Tardia e Tratar 
+
+**Complexidade:** Média
+**Elo quebrado:** Habilidade 2 — Exigir *os dois* critérios do VDRL decaído para assumir a Cicatriz Sorológica
+**Tipo de erro:** Erro de aplicação
+
+**Caso:** Gestante, VDRL 1/4 (e Teste rápido implicitamente pos). Refere tratamento *correto há 2 anos*, COM registro do remédio no cartão, **mas SEM registro das monitorizações posteriores de queda do VDRL**. Aluno marcou acompanhar VDRL seriado. Gabarito cravou "Retratar com 3 Doses Imediatamente".
+
+**Habilidades sequenciais:**
+1. Ler "foi tratada corretamente", mas procurar o pulo do gato: houve documentação da cura laboratorial? Não (paciente só tem registro da aplicação).
+2. Julgar a incompletude: "Pacientes sem registro da queda do VDRL não se provam curadas perante um teste reagente". 
+3. Interpretar aquele VDRL de 1/4 e a gestação atual como infecção de período desconhecido (Latente Tardia) -> Requerer tratamento amplo de 3 doses.
+
+**O que faltou:**
+O aluno apostou excessivamente na fidedignidade do "escreveu no cartão que tomou, está curada" sem comprovar o rigor laboratorial que é sagrado para o MS e bancas: sem exame em mãos provando o decaimento em até 1 ano, não há que se falar em "Cicatriz Sorológica", mas sim em doença não dominada.
+
+**Explicação correta:**
+Para podermos levantar a plaquinha da "Cicatriz Sorológica", a paciente *obrigatoriamente* precisa exibir: o tratamento feito **+** o declínio de duas titulações ou inativação total. Se ela tomou as injeções antigamente mas nunca mais conferiu o sangue, não podemos jurar eficácia. Diante de título reagente (1/4) e ignorância clínica retroativa, a regra geral e inegociável se aplica: Tratar como Sífilis Tardia / Indeterminada com as 3 ampolas (7.200.000 UI) para a blindagem do bebê.
+
+**Armadilha / nuance:**
+Frases como "A cliente garante e o enfermeiro escreveu que o remédio foi o certo há 2 anos". É um distrator. A cura da Sífilis se afere no laboratório e não na posologia registrada no braço do paciente. 
+
+**Informações-chave para revisão:**
+- Critérios para carimbar Cicatriz Sorológica: (A) Tratamento Adequado feito no passado **AND** (B) Queda documentada do VDRL em pelo menos 2 titulações/4 vezes no papel. E que permaneça ali, claro.
+- Perdeu o cartão do laboratório antigo mas o VDRL atual ou Teste Rápido vieram positivos? **Vai Tratar Integralmente SIM**, por tempo Indeterminado (Tardia - 3 doses).
+
+
 ### Obstetrícia — Trabalho de Parto e Parto
 
 <!-- ENTRADAS AQUI -->

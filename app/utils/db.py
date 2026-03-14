@@ -63,7 +63,7 @@ def get_caderno_erros():
             t.area as Área,
             t.tema as Tema,
             q.tipo_erro as Tipo,
-            q.elo_quebrado as Elo,
+            q.habilidades_sequenciais as Elo,
             q.enunciado as Questão,
             q.alternativa_correta as Correta,
             q.alternativa_marcada as Marcada,
@@ -155,11 +155,15 @@ def record_review(flashcard_id, rating):
         new_metrics['lapses'], new_metrics['last_review'], flashcard_id
     ))
     
-    # 4. Log da revisão
+    # 4. Log da revisão (Tabela nova no schema v3.6)
     cursor.execute('''
-        INSERT INTO flashcard_reviews (card_id, rating, review_date)
-        VALUES (?, ?, ?)
-    ''', (flashcard_id, rating, datetime.now()))
+        INSERT INTO fsrs_revlog (card_id, rating, state, due, stability, difficulty, elapsed_days, scheduled_days)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    ''', (
+        flashcard_id, rating, new_metrics['state'], new_metrics['due'], 
+        new_metrics['stability'], new_metrics['difficulty'], 
+        new_metrics['elapsed_days'], new_metrics['scheduled_days']
+    ))
     
     conn.commit()
     conn.close()
@@ -172,7 +176,7 @@ def get_erros_resumidos():
         SELECT 
             t.area || ' - ' || t.tema as TemaFull,
             q.tipo_erro,
-            q.elo_quebrado,
+            q.habilidades_sequenciais as elo_quebrado,
             q.armadilha_prova,
             q.id
         FROM questoes_erros q

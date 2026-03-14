@@ -72,7 +72,13 @@ def etl():
             faltou = extract_field(r'\*\*O que faltou:\*\*(.*?)(?=\n\*\*|\n---)', block_text, "N/A")
             
             # Explicação correta
-            explicacao = extract_field(r'\*\*Explicação correta:\*\*(.*?)(?=\n\*\*|\n---)', block_text, "N/A")
+            explicacao = extract_field(r'\*\*Explicação correta:\*\*(.*?)(?=\n\*\*|\n---)', block_text, "")
+            
+            # Informações-chave (pode servir como Conceito de Ouro se a explicação for curta)
+            chaves = extract_field(r'\*\*Informações-chave para revisão:\*\*(.*?)(?=\n---|<!--|\Z)', block_text, "")
+            
+            if not explicacao and chaves:
+                explicacao = chaves
             
             # Armadilha / nuance
             armadilha = extract_field(r'\*\*Armadilha / nuance:\*\*(.*?)(?=\n\*\*|\n---)', block_text, "N/A")

@@ -65,7 +65,6 @@ def get_caderno_erros():
             q.enunciado as Questão,
             q.alternativa_correta as Correta,
             q.alternativa_marcada as Marcada,
-            q.advanced_status as Status,
             q.armadilha_prova as Armadilha
         FROM questoes_erros q
         JOIN taxonomia_cronograma t ON q.tema_id = t.id

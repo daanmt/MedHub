@@ -44,7 +44,15 @@ def insert_questao(area, tema, enunciado, correta, chamada, erro, elo, armadilha
         # Se o enunciado limpo ficar vazio (improvável), usa o título
         contexto_clinico = enunciado_limpo if len(enunciado_limpo) > 10 else titulo
 
-        frente_texto = f"### [SIMULADO IPUB: {tema}]\n\n**CASO CLÍNICO:**\n{contexto_clinico}\n\n---\n**🧠 DESAFIO:** Qual a conduta/diagnóstico e qual o elo de conhecimento a ser restaurado?"
+        frente_texto = (
+            f"### [SIMULADO IPUB: {tema}]\n"
+            f"**🏥 ÁREA:** {area}\n"
+            f"**📋 TEMA:** {tema}\n"
+            f"\n**🩺 CASO CLÍNICO:**\n"
+            f"{contexto_clinico}\n"
+            f"\n---\n"
+            f"**🧠 DESAFIO:** Qual a conduta/diagnóstico correto e como você deve blindar o elo que falhou na tentativa anterior?"
+        )
         
         verso_texto = (
             f"✅ **RESPOSTA DIRETA:** {correta}\n\n"

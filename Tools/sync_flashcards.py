@@ -11,21 +11,36 @@ def get_tema_id(cursor, area_hint, tema_name):
     row = cursor.fetchone()
     return row[0] if row else None
 
-def sync_from_errors(cursor):
-    print("Gerando flashcards CLÍNICOS a partir do Caderno de Erros...")
-    # Buscamos mais detalhes para o verso
-    cursor.execute("SELECT id, tema_id, enunciado, elo_quebrado, armadilha_prova, alternativa_correta FROM questoes_erros")
+    # Buscamos mais detalhes para o verso, incluindo a área da taxonomia
+    cursor.execute('''
+        SELECT q.id, t.area, t.tema, q.enunciado, q.habilidades_sequenciais, q.armadilha_prova, q.alternativa_correta, q.explicacao_correta, q.o_que_faltou
+        FROM questoes_erros q
+        JOIN taxonomia_cronograma t ON q.tema_id = t.id
+    ''')
     erros = cursor.fetchall()
     
     count = 0
     for err in erros:
-        qid, tema_id, enunciado, elo, armadilha, correta = err
+        qid, area, tema, enunciado, habilidades, armadilha, correta, explicacao, faltou = err
         
         # Frente: O contexto clínico real (limpo de spoilers)
         enunciado_limpo = re.sub(r'(?i)(?:Marcou|Gabarito|Resposta|A questÃ£o era|O gabarito foi).*', '', enunciado).strip()
-        frente = f"### [SIMULADO IPUB: Erro Real]\n{enunciado_limpo}\n\n**🧠 DESAFIO:** Qual o diagnóstico/conduta e qual o elo de conhecimento a ser restaurado?"
-        # Verso: A solução pedagógica
-        verso = f"✅ **ALTERNATIVA CORRETA:** {correta}\n\n🧠 **ELO QUEBRADO:** {elo}\n\n🔴 **ARMADILHA:** {armadilha}"
+        frente = (
+            f"### [SIMULADO IPUB: {tema}]\n"
+            f"**🏥 ÁREA:** {area}\n"
+            f"**📋 TEMA:** {tema}\n"
+            f"\n**🩺 CASO CLÍNICO:**\n"
+            f"{enunciado_limpo}\n\n---\n"
+            f"**🧠 DESAFIO:** Qual o diagnóstico/conduta e como blindar o elo perdido?"
+        )
+        
+        # Verso: Doutrina IPUB Ouro
+        verso = (
+            f"✅ **RESPOSTA DIRETA:** {correta}\n\n"
+            f"🎯 **CONCEITO DE OURO (Regra Mestre):**\n*{explicacao[:150]}...*\n\n"
+            f"💔 **O PONTO DE FALHA (Elo Perdido):**\nO erro ocorreu em: *{habilidades[:100]}...*. {faltou}\n\n"
+            f"🔴 **ARMADILHA DO EXAMINADOR:**\n{armadilha}"
+        )
         
         # Como o estilo mudou radicalmente, vamos permitir re-gerar se o tipo for o mesmo mas a frente for diferente
         cursor.execute("SELECT id FROM flashcards WHERE questao_id = ?", (qid,))

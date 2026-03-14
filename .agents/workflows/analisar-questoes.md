@@ -39,10 +39,15 @@ Atualizar contadores em `progresso.md`.
 - Usar marcadores `⚠️ Padrão de prova:` e `🔴`
 - Não duplicar informação já presente
 
-### 6. Responder ao usuário
-Apresentar: análise + diagnóstico do erro + confirmação de registros.
+### 6. Popular Banco de Dados Relacional (Siamese Twins)
+- OBJETIVO OBRIGATÓRIO: Nenhuma questão vive no Markdown sem viver no DB.
+- Rodar o script CLI: `python Tools/insert_questao.py --area "..." --tema "..." --enunciado "..." --correta "..." --marcada "..." --erro "..." --elo "..." --armadilha "..."`
+- Preencher os parâmetros cirurgicamente com as tipologias mapeadas no passo 2.
 
-### 7. Fechamento (Obrigatório)
+### 7. Responder ao usuário
+Apresentar: análise + diagnóstico do erro + confirmação de registros (MD + SQLite).
+
+### 8. Fechamento (Obrigatório)
 Seguir o **Protocolo de Fechamento** em `AGENTE.md` e executar o workflow `registrar-sessao.md`.
 
 ## Regras

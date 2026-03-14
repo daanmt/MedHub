@@ -1,9 +1,9 @@
 # ESTADO — IPUB (Preparação para Residência Médica)
-*Atualizado: 2026-03-14 (sessão 024) | Ferramenta: Antigravity*
+*Atualizado: 2026-03-14 (sessão 025) | Ferramenta: Antigravity*
 
 ---
 
-Ambiente de estudo para residência médica. Processa questões de prova, registra padrões de erro em `caderno_erros.md`, e mantém resumos clínicos organizados por área/tema em `Temas/`. Portável para qualquer LLM via workflows em `.agents/workflows/`.
+Ambiente de estudo para residência médica. Processa questões de prova, registra padrões de erro em `caderno_erros.md`, e mantém resumos clínicos organizados por área/tema em `Temas/`. Portável para qualquer LLM via v3.0 architecture (Zero-DB).
 
 ---
 
@@ -12,12 +12,10 @@ Ambiente de estudo para residência médica. Processa questões de prova, regist
 **Leia `AGENTE.md` antes de qualquer ação.** Este arquivo contém o protocolo de boot e a ordem de leitura para garantir a continuidade do projeto.
 
 > [!IMPORTANT]
-> **SINGLE SOURCE OF TRUTH (SSOT):** O número exato e autêntico de erros e métricas do projeto **sempre será o exibido no Streamlit App** (`01_dashboard.py`). O Agente que ler o `ESTADO.md` não deve confiar cegamente nas "recontagens" estáticas de texto (que podem ficar defasadas e causar alucinações). Use sempre ferramentas como `parser.py` para obter o número real.
+> **SINGLE SOURCE OF TRUTH (SSOT):** O Markdown (`caderno_erros.md`) é a base absoluta. O App Streamlit (`01_dashboard.py`) reflete os dados via parser stateful. Ignorar o SQLite para leitura de UI; ele serve apenas para processamento futuro de ML.
 
-- **92 erros diagnosticados** no banco de dados (`ipub.db`)
-- **337 temas** no cronograma (51 concluídos | Semana 5 ativa)
+- **91 erros diagnosticados** no caderno (`caderno_erros.md`)
 - **25 resumos clínicos** consolidados em `Temas/`
-- **3 workflows** operacionais em `.agents/workflows/`
 - **25 sessões** de estudo catalogadas em `history/`
 
 ---
@@ -28,14 +26,9 @@ Ambiente de estudo para residência médica. Processa questões de prova, regist
 | Artefato | Arquivo |
 |---|---|
 | Estado do projeto | `ESTADO.md` (este arquivo) |
-| Workflows (3) | `.agents/workflows/*.md` |
-| Especificação de formatação | `Tools/estilo-resumo.md` |
-| Protocolo de análise | `Tools/comando de analise de questao.md` |
-| Script extração PDF | `Tools/extract_pdfs.py` |
-| Script Init DB SQLite | `init_db.py` |
-| Script API Helper LLM->DB | `Tools/insert_questao.py` |
-| Script ETL Markdown->DB | `etl_markdown_to_sqlite.py` |
-| Banco de Dados Relacional | `ipub.db` (92 Registros OK) |
+| Dashboard Streamlit | `streamlit_app.py` |
+| Parser Stateful | `app/utils/parser.py` |
+| Player Flashcards | `app/pages/02_flashcards.py` |
 | Session logs | `history/session_NNN.md` |
 
 ### Conteúdo

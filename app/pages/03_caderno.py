@@ -45,19 +45,11 @@ st.subheader("🧠 Estúdio de Flashcards (Inteligente)")
 
 # Lógica de carregamento de cards (Prioriza Cache JSON v5.0)
 from app.utils.flashcard_builder import load_or_generate_flashcards, CACHE_PATH
+from app.utils.parser import parse_caderno_erros
 import json
 
-# Busca erros brutos do banco para o builder
-from app.utils.db import get_connection
-conn = get_connection()
-conn.row_factory = sqlite3.Row
-cursor = conn.cursor()
-cursor.execute('''
-    SELECT q.*, t.area, t.tema FROM questoes_erros q 
-    JOIN taxonomia_cronograma t ON q.tema_id = t.id
-''')
-errors_brutos = [dict(r) for r in cursor.fetchall()]
-conn.close()
+# Busca erros brutos via PARSER (Zero DB Architecture)
+errors_brutos = parse_caderno_erros()
 
 # Painel de Controle
 with st.expander("⚙️ Gerenciador de Inteligência", expanded=False):
@@ -89,15 +81,13 @@ if 'flashcard_mode' not in st.session_state:
     st.session_state.flashcard_mode = 'front'
 
 if flashcards_raw:
-    # Filtra apenas os cards que têm reviews pendentes no FSRS (ou simula ordem)
-    # Para esta versão v5.0, vamos focar na exibição dos cards do cache
     total_raw = len(flashcards_raw)
     idx = st.session_state.fc_idx % total_raw
     card = flashcards_raw[idx]
 
     # Header de progresso
     st.markdown(f"**{card['area']} › {card['tema']}**")
-    st.progress((idx + 1) / total_raw)
+    st.progress(min((idx + 1) / total_raw, 1.0))
 
     # --- FRENTE ---
     if st.session_state.flashcard_mode == 'front':
@@ -124,20 +114,23 @@ if flashcards_raw:
         st.caption("Como foi o seu desempenho?")
         r_col1, r_col2, r_col3 = st.columns(3)
         
-        from app.utils.db import record_review
+        from app.utils.db import record_review, get_connection
         
         def next_fc():
             st.session_state.fc_idx = (st.session_state.fc_idx + 1) % total_raw
             st.session_state.flashcard_mode = 'front'
 
-        # Busca o ID do flashcard no banco para registrar o FSRS
+        # Busca o ID do flashcard no banco (Bridge para Backend FSRS)
         def get_db_card_id(error_id):
-            conn = get_connection()
-            c = conn.cursor()
-            c.execute("SELECT id FROM flashcards WHERE questao_id = ?", (error_id,))
-            res = c.fetchone()
-            conn.close()
-            return res[0] if res else None
+            try:
+                conn = get_connection()
+                c = conn.cursor()
+                c.execute("SELECT id FROM flashcards WHERE questao_id = ?", (error_id,))
+                res = c.fetchone()
+                conn.close()
+                return res[0] if res else None
+            except:
+                return None
 
         db_card_id = get_db_card_id(card['erro_origem'])
 

@@ -4,24 +4,33 @@ from pathlib import Path
 from .file_io import read_md, get_abs_path
 
 def parse_caderno_erros(rel_path="caderno_erros.md") -> list[dict]:
-    """Parse estruturado do caderno de erros lendo hierarquia H2/H3 e H4"""
+    """Parse estruturado do caderno de erros lendo campos da Doutrina IPUB v4.0/v5.0"""
     content = read_md(rel_path)
     entries = []
     
-    current_area = "Desconhecida"
-    current_tema = "Geral"
+    current_area = "Geral"
+    current_tema = "Miscelânea"
     current_error = None
     
-    for line in content.split('\n'):
+    # Mapeamento de campos amigáveis para o builder
+    field_map = {
+        "**Tipo de erro:**": "tipo_erro",
+        "**Elo quebrado:**": "elo_quebrado",
+        "**Armadilha de prova:**": "armadilha_prova",
+        "**Conceito de Ouro:**": "conceito_de_ouro",
+        "**Gabarito:**": "alternativa_correta",
+        "**Caso:**": "enunciado"
+    }
+    
+    lines = content.split('\n')
+    for i, line in enumerate(lines):
         if line.startswith('## '):
             current_area = line.replace('## ', '').strip()
-            current_tema = "Geral"
         elif line.startswith('### '):
             tema_candidate = line.replace('### ', '').strip()
-            # Heurística: se for area principal disfarçada de H3
-            if tema_candidate in ["Pediatria", "Cirurgia", "Clínica Médica", "Ginecologia e Obstetrícia", "Medicina Preventiva e Saúde Pública", "Preventiva", "GO"]:
+            # Heurística para áreas
+            if tema_candidate in ["Pediatria", "Cirurgia", "Clínica Médica", "Ginecologia e Obstetrícia", "Preventiva"]:
                 current_area = tema_candidate
-                current_tema = "Geral"
             else:
                 current_tema = tema_candidate
         elif line.startswith('#### '):
@@ -29,24 +38,41 @@ def parse_caderno_erros(rel_path="caderno_erros.md") -> list[dict]:
                 entries.append(current_error)
                 
             current_error = {
+                "id": len(entries) + 1,
                 "titulo": line.replace('#### ', '').strip(),
                 "area": current_area,
                 "tema": current_tema,
-                "tipo": "Não classificado",
-                "elo": "",
-                "complexidade": "",
-                "conteudo_bruto": line + "\n"
+                "tipo_erro": "N/A",
+                "elo_quebrado": "N/A",
+                "armadilha_prova": "N/A",
+                "conceito_de_ouro": "N/A",
+                "alternativa_correta": "N/A",
+                "enunciado": "",
+                "numero": len(entries) + 1
             }
         elif current_error is not None:
-            current_error["conteudo_bruto"] += line + "\n"
+            # Extração de campos via prefixo
+            matched = False
+            for prefix, key in field_map.items():
+                if line.strip().startswith(prefix):
+                    val = line.split(prefix, 1)[-1].strip()
+                    current_error[key] = val
+                    matched = True
+                    break
             
-            # Extrai os metadados principais mapeados
-            if "**Tipo de erro:**" in line:
-                current_error['tipo'] = line.split("**Tipo de erro:**")[-1].strip()
-            elif "**Elo quebrado:**" in line:
-                current_error['elo'] = line.split("**Elo quebrado:**")[-1].strip()
-            elif "**Complexidade:**" in line:
-                current_error['complexidade'] = line.split("**Complexidade:**")[-1].strip()
+            # Se não for campo marcado e tivermos um erro ativo, pode ser continuação do caso
+            if not matched and line.strip() and not line.startswith('#'):
+                # Heurística: se o enunciado já começou e não é outro campo, acumula
+                if current_error['enunciado'] and len(current_error['enunciado']) < 1000:
+                    current_error['enunciado'] += " " + line.strip()
+                elif not any(line.startswith(p) for p in field_map.keys()):
+                    # Se for a primeira linha após o título e não for campo, pode ser o início do caso
+                    pass
+                
+    if current_error:
+        entries.append(current_error)
+        
+    return entries
                 
     if current_error:
         entries.append(current_error)

@@ -8,12 +8,14 @@ st.title("🏠 Cronograma + Dashboard")
 st.markdown("Visão holística do seu rendimento e planejamento de estudos.")
 
 # --- CRONOGRAMA ---
-st.subheader("📅 Cronograma (Estratégia Med)")
+st.subheader("📅 Cronograma")
 
 @st.cache_data
 def load_cronograma():
     try:
-        df = pd.read_excel("Cronograma de Reta Final.xlsx", header=1)
+        # Garante o nome exato do arquivo sem espaços duplos acidentais
+        filename = "Cronograma de Reta Final.xlsx"
+        df = pd.read_excel(filename, header=1)
         # Limpa formatação vazia do Excel
         df = df.dropna(how='all', axis=1).fillna("")
         return df

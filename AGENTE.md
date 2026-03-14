@@ -17,7 +17,7 @@ Para garantir que a próxima sessão comece sem perda de informação:
 1.  **Atualizar HANDOFF.md**: Registre o que foi feito e o que falta.
 2.  **Atualizar ESTADO.md**: Se houve nova área/tema ou decisão estrutural.
 3.  **Registrar Sessão**: Criar novo arquivo em `history/session_NNN.md` seguindo o template.
-4.  **Git (se disponível)**: `git add .`, `git commit -m "sessao NNN: [resumo]"`, `git push`.
+4.  **Git (se disponível)**: `git add .` (Garantindo que `ipub.db` embarque), `git commit -m "sessao NNN: [resumo]"`, `git push`.
 
 ---
 *Assinado: Antigravity*

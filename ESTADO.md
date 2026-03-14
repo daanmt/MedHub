@@ -1,5 +1,5 @@
 # ESTADO — IPUB (Preparação para Residência Médica)
-*Atualizado: 2026-03-14 (sessão 019) | Ferramenta: Antigravity*
+*Atualizado: 2026-03-14 (sessão 020) | Ferramenta: Antigravity*
 
 ---
 
@@ -61,6 +61,7 @@ Ambiente de estudo para residência médica. Processa questões de prova, regist
 
 ## Últimas sessões
 
+**2026-03-14 | Antigravity (sessão 020):** Implementação da regra "Siamese Twins". Script genérico CLI `insert_questao.py` criado para salvar questões no SQLite de forma autônoma. Atualizado workflow macro `analisar-questoes.md` para embutir a fase de inserção DB.
 **2026-03-14 | Antigravity (sessão 019):** Análise da planilha EMED, detalhamento do modelo matemático de DSR no Roadmap e elaboração do schema do banco criando o script base `init_db.py`. O arquivo `ipub.db` foi instanciado com 5 tabelas (Cronograma taxonomia, Erros, Flashcards, FSRS Cards e FSRS Revlog).
 **2026-03-14 | Antigravity (sessão 018):** Inserção do modelo de métricas (Estratégia), lógica de aprendizado FSRS e arquitetura inicial de BD/Streamlit no Roadmap.
 **2026-03-14 | Antigravity (sessão 017):** Atuação como Senior PM para estruturação do `roadmap.md` do produto IPUB, dividindo a evolução em 4 Fases (MVP, Flashcards, Streamlit/BD e Simulados).
@@ -104,6 +105,7 @@ Ambiente de estudo para residência médica. Processa questões de prova, regist
 ## Decisões críticas (não reverter)
 
 - **Governança via AGENTE.md**: O boot e o fechamento seguem estritamente o `AGENTE.md`.
+- **Regra "Siamese Twins" (Híbrido Fase 2)**: DB (`ipub.db`) e Markdown devem ser atualizados em sincronia exata. Analisou uma questão? Ela deve figurar nos 2 lugares. **Script oficial:** `python Tools/insert_questao.py`.
 - `caderno_erros.md` atualizado a CADA questão — nunca em batch.
 - `progresso.md` derivado do caderno — atualizar junto.
 - Protocolo de análise (`Tools/comando de analise de questao.md`) carregado ANTES de analisar qualquer questão.

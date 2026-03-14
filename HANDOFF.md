@@ -1,13 +1,13 @@
 # HANDOFF — Ponto de Passagem de Bastão
 
-> **Última atualização:** Sessão 019 (Infraestrutura Relacional DB e FSRS)
+> **Última atualização:** Sessão 020 (Workflows Híbridos DB/Markdown)
 
 ## 📌 Status Atual
-- Foi instanciado o banco base `ipub.db` via `init_db.py` mapeando as 5 tabelas centrais (`taxonomia_cronograma`, `questoes_erros`, `flashcards`, `fsrs_cards`, `fsrs_revlog`).
-- O `roadmap.md` amadurecido especifica de forma tática o DSR de estabilidade e o banimento de learning steps nativos seguindo as recomendações oficiais do Open Spaced Repetition.
+- Os workflows principais do projeto e as regras do Agente foram oficialmente transfigurados para a Fase 2 (Híbrida).
+- Criada a infraestrutura segura via linha de comando (`insert_questao.py`), permitindo inserir novos inputs diretamente no SQLite sem risco de injection/queries manuais.
 
 ## 🚧 Obstáculos / Problemas Atuais
-- Entrar na fase de migração de dados puros: Necessário extrair em lote o antigo markdown `caderno_erros.md` da Fase 1 e fazer injeção (INSERT SQL) dessas 67 entradas preenchendo as chaves estrangerias certas das novas tabelas.
+- A Tabela de Questões do banco tem apenas 1 questão de teste populada, enquanto o `caderno_erros.md` contêm 67 registros. O abismo temporal precisa ser fechado o quanto antes para não perdermos a métrica real do FSRS.
 
 ## ➡️ Próximo Passo Imediato (próxima sessão)
-- Criar script "etl_markdown_to_sqlite.py" que faz parsing do arquivo de erros atual convertendo texto estruturado em chaves primárias dentro da tabela `questoes_erros`.
+- Criar script "etl_markdown_to_sqlite.py" com um LLM parser que consegue extrair inteligentemente em lote as 67 "Armadilhas de Prova" do arquivo `.md` e inserir de uma vez só no banco `ipub.db`.

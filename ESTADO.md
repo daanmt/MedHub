@@ -1,5 +1,5 @@
 # ESTADO — IPUB (Preparação para Residência Médica)
-*Atualizado: 2026-03-14 (sessão 020) | Ferramenta: Antigravity*
+*Atualizado: 2026-03-14 (sessão 021) | Ferramenta: Antigravity*
 
 ---
 
@@ -61,6 +61,7 @@ Ambiente de estudo para residência médica. Processa questões de prova, regist
 
 ## Últimas sessões
 
+**2026-03-14 | Antigravity (sessão 021):** Estudo da Wiki oficial do Otimizador FSRS (MLE e BPTT). O roadmap foi bifurcado para definir a fronteira arquitetural entre o Scheduler (agendamento em tempo real) e o Optimizer (script periódico de Machine Learning consumindo o histórico em lote da tabela `fsrs_revlog`).
 **2026-03-14 | Antigravity (sessão 020):** Implementação da regra "Siamese Twins". Script genérico CLI `insert_questao.py` criado para salvar questões no SQLite de forma autônoma. Atualizado workflow macro `analisar-questoes.md` para embutir a fase de inserção DB.
 **2026-03-14 | Antigravity (sessão 019):** Análise da planilha EMED, detalhamento do modelo matemático de DSR no Roadmap e elaboração do schema do banco criando o script base `init_db.py`. O arquivo `ipub.db` foi instanciado com 5 tabelas (Cronograma taxonomia, Erros, Flashcards, FSRS Cards e FSRS Revlog).
 **2026-03-14 | Antigravity (sessão 018):** Inserção do modelo de métricas (Estratégia), lógica de aprendizado FSRS e arquitetura inicial de BD/Streamlit no Roadmap.

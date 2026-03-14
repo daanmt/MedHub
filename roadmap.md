@@ -26,13 +26,10 @@
   - **Métricas Chave:** Nº de questões realizadas, Nº de Acertos, Percentual de Acertos (%). Ignorar métricas de vaidade (ex: custo por questão).
 - [ ] **Conversão Automatizada para Flashcards e Export (Anki / Texto):** 
   - Script autônomo do Agente que traduz os "Elos Quebrados" do `caderno_erros.md` em pares *Frente/Verso* precisos.
-- [ ] **Core Mnemônico (The FSRS v4 Algorithm):**
-  - Implementar rigorosamente o agendador FSRS como motor de datas. O usuário escolhe sua **Retenção Desejada (R)**.
-  - O sistema transitará as métricas base (Dias passados Δt) usando os preditores de FSRS clássicos:
-    - **Estabilidade (E):** Tempo (dias) para a Retenção cair a 90% (variável vital na fórmula, otimizada após +1.000 revisões).
-    - **Dificuldade (D):** Coeficiente de complexidade da questão.
-    - **Retenção (R):** Probabilidade momentânea de conseguir evocar o flashcard na hora da revisão.
-  - Proibição absoluta de learning steps (passos de aprendizado) maiores que 1 dia, seguindo as diretrizes do desenvolvedor do FSRS.
+- [ ] **Core Mnemônico FSRS v4 (Scheduler + Optimizer):**
+  - Implementar rigorosamente o motor FSRS de forma dupla, separando o Agendador operacional do Otimizador.
+  - **O Scheduler:** Transitará as métricas base (Dias passados Δt) usando previsores em tempo real de **E** (Estabilidade), **D** (Dificuldade) e **R** (Retenção Desejada definida pelo aluno). Proibição absoluta de learning steps maiores que 1 dia.
+  - **O Optimizer (Núcleo de Inteligência IPUB):** Script em PyTorch que roda periodicamente (ex: 1x semana). Usa BPTT (Backpropagation Through Time) e MLE (Maximum Likelihood Estimation) sobre o `fsrs_revlog` para reconstruir a curva de esquecimento, ajustando os coeficientes globais do usuário e garantindo o "Stochastic Shortest Path" de menos revisões com mais memória.
 
 ---
 
@@ -44,8 +41,8 @@
   - Substitução do repositório em texto para um banco leve e relacional estruturado nos moldes FSRS.
   - **Tabela `questoes`:** id, area, tema (taxonomia EMED), enunciado, alternativa_correta, alternativa_marcada, tipo_erro, elo_quebrado, data_resolucao.
   - **Tabela `flashcards`:** id, tipo, frente, verso, id_questao.
-  - **Tabela `fsrs_cards`:** core state do FSRS (id_card, state [New/Learning/Review/Relearning], *D* (Dificuldade), *S* (Estabilidade), *R* (Retrovabilidade projetada), last_review, due_date, reps, lapses).
-  - **Tabela `fsrs_revlog`:** Histórico atômico imutável (id_log, id_card, rating, delta_t, tempo_resposta) fundamental para rodar o Otimizador do FSRS no futuro.
+  - **Tabela `fsrs_cards`:** O espelho de curto-prazo. Core state do FSRS (id_card, state [New/Learning/Review/Relearning], *D* (Dificuldade), *S* (Estabilidade), *R* (Retrovabilidade projetada), last_review, due_date, reps, lapses).
+  - **Tabela `fsrs_revlog`:** O combustível do Otimizador. Histórico imutável de time-series (id_log, id_card, rating [1=Again, 2=Hard, 3=Good, 4=Easy], delta_t, last_delta_t). Obrigatório para que a API Machine Learning aplique a otimização estatística (MLE/BPTT).
   - **Tabela `dashboard_metricas`:** id_tema, questões_feitas, questoes_acertadas, percentual, updated_at.
 
 **Objetivos de Frontend (Streamlit App):**

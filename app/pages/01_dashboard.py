@@ -10,10 +10,11 @@ df_crono = get_cronograma()
 
 if not df_crono.empty:
     # Identifica a 'Semana Ativa' (Primeira semana que possui temas pendentes)
-    pending_weeks = df_crono[df_crono['Status'] != 'Concluído']['Semana'].unique().tolist()
+    pending_df = df_crono[df_crono['Status'] != 'Concluído']
+    pending_weeks = pending_df['Semana'].unique().tolist()
     
     if pending_weeks:
-        active_week = pending_weeks[0] # Pega a primeira da fila
+        active_week = pending_weeks[0]
         
         # Filtra apenas os temas PENDENTES da Semana Ativa
         df_display = df_crono[
@@ -33,33 +34,57 @@ if not df_crono.empty:
                 use_container_width=True
             )
         else:
-            # Caso raro de inconsistência, fallback para a próxima
             st.rerun()
     else:
         st.success("✨ Todas as tarefas foram concluídas! Você encerrou o cronograma.")
 else:
     st.warning("Cronograma não carregado. Utilize Tools/migrate_cronograma.py.")
 
-
-
 st.divider()
 
 # --- MÉTRICAS ---
-st.subheader("📊 Métricas Consolidadas")
+st.subheader("📊 Métricas de Performance")
 metrics = get_db_metrics()
-total_erros = metrics["total"]
+
+# Linha de Cards de Resumo
+col_m1, col_m2, col_m3, col_m4 = st.columns(4)
+with col_m1:
+    st.metric("Total de Erros", metrics["total_erros"], delta_color="inverse")
+with col_m2:
+    st.metric("Total de Acertos", metrics["total_acertos"])
+with col_m3:
+    st.metric("Questões Realizadas", metrics["total_questoes"])
+with col_m4:
+    st.metric("Desempenho Geral", f"{metrics['media_desempenho']:.1f}%")
+
+st.markdown("#### Detalhamento por Disciplina")
 df_areas = metrics["df_areas"]
 
-col1, col2 = st.columns([1, 2])
-with col1:
-    st.metric("Total de Erros Registrados", total_erros)
+if not df_areas.empty:
+    # Gráfico Comparativo: Acertos vs Erros
+    fig = px.bar(
+        df_areas, 
+        x="Área", 
+        y=["Acertos", "Erros"],
+        title="Performance por Área (Acertos vs Erros)",
+        barmode="group",
+        height=350,
+        template="plotly_dark",
+        color_discrete_map={"Acertos": "#2ECC71", "Erros": "#E74C3C"}
+    )
+    fig.update_layout(margin=dict(l=0, r=0, t=50, b=0))
+    st.plotly_chart(fig, use_container_width=True)
     
-with col2:
-    if not df_areas.empty:
-        fig = px.bar(df_areas, x="Erros", y="Área", orientation='h', title="Erros por Área", height=250, template='plotly_dark', color_discrete_sequence=['#378ADD'])
-        fig.update_layout(margin=dict(l=0, r=0, t=30, b=0), showlegend=False)
-        st.plotly_chart(fig, width="stretch")
-    else:
-        st.info("Nenhum erro computado nas métricas ainda.")
+    # Tabela de Performance
+    st.dataframe(
+        df_areas[['Área', 'Total', 'Acertos', 'Erros', 'Desempenho']],
+        column_config={
+            "Desempenho": st.column_config.NumberColumn("Aproveitamento", format="%.1f%%"),
+        },
+        hide_index=True,
+        use_container_width=True
+    )
+else:
+    st.info("Aguardando registro de questões para gerar estatísticas detalhadas.")
 
 st.divider()

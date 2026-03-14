@@ -40,7 +40,7 @@ def migrate():
             
             # Ponto de Parada Real: "Sífilis na Gestação e Sífilis Congênita (Teoria I)"
             # Segundo o Excel riscado, este é o último item concluído da Semana 5.
-            if "Sífilis na Gestação" in tema_clean and "Teoria I" in tema_clean:
+            if "Sífilis na Gestação" in tema_clean and "Sífilis Congênita" in tema_clean and "Teoria I" in tema_clean:
                 stop_reached = True
                 current_status = "Concluído"
                 print(f"Marcador Real de Parada encontrado: {tema_clean}")

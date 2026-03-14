@@ -8,21 +8,50 @@ def get_connection():
     return sqlite3.connect(DB_PATH)
 
 def get_db_metrics():
-    """Consulta limpa trazendo métricas 100% fieis de taxonomia_cronograma e questoes_erros"""
+    """Consulta métricas detalhadas: Erros, Acertos e Desempenho por Área"""
     conn = get_connection()
-    df = pd.read_sql('''
+    # Puxamos dados de acertos/realizações da taxonomia
+    df_tax = pd.read_sql('''
+        SELECT 
+            area as Área,
+            SUM(questoes_realizadas) as Total,
+            SUM(questoes_acertadas) as Acertos
+        FROM taxonomia_cronograma
+        GROUP BY area
+    ''', conn)
+    
+    # Puxamos dados de erros do caderno
+    df_erros = pd.read_sql('''
         SELECT 
             t.area as Área,
             COUNT(q.id) as Erros
         FROM taxonomia_cronograma t
-        LEFT JOIN questoes_erros q ON q.tema_id = t.id
+        JOIN questoes_erros q ON q.tema_id = t.id
         GROUP BY t.area
-        HAVING Erros > 0
-        ORDER BY Erros DESC
     ''', conn)
-    total = int(df['Erros'].sum()) if not df.empty else 0
+    
+    # Merge dos dados
+    df_final = pd.merge(df_tax, df_erros, on="Área", how="left").fillna(0)
+    df_final['Erros'] = df_final['Erros'].astype(int)
+    
+    # Cálculo de Desempenho (%) por Área
+    df_final['Desempenho'] = df_final.apply(
+        lambda x: (x['Acertos'] / x['Total'] * 100) if x['Total'] > 0 else 0, axis=1
+    )
+    
+    total_erros = int(df_final['Erros'].sum())
+    total_acertos = int(df_final['Acertos'].sum())
+    total_questoes = int(df_final['Total'].sum())
+    media_desempenho = (total_acertos / total_questoes * 100) if total_questoes > 0 else 0
+    
     conn.close()
-    return {"total": total, "df_areas": df}
+    return {
+        "total_erros": total_erros,
+        "total_acertos": total_acertos,
+        "total_questoes": total_questoes,
+        "media_desempenho": media_desempenho,
+        "df_areas": df_final.sort_values(by="Erros", ascending=False)
+    }
 
 def get_caderno_erros():
     """Traz todos os flashcards do caderno unindo relacionalmente com a taxonomia"""

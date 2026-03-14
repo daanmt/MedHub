@@ -36,24 +36,16 @@
 ## 🖥️ Fase 3: App Streamlit & Arquitetura de Banco de Dados (Em Planejamento)
 *Sair da interface da IDE (Markdown) para uma aplicação Web (Streamlit) sustentada por um RDBMS, democratizando o acesso e facilitando a interação diária.*
 
-**Objetivos de Banco de Dados (SQLite):**
-- [ ] **Modelagem Física e Migração (`ipub.db`):**
-  - Substitução do repositório em texto para um banco leve e relacional estruturado nos moldes FSRS.
-  - **Tabela `questoes`:** id, area, tema (taxonomia EMED), enunciado, alternativa_correta, alternativa_marcada, tipo_erro, elo_quebrado, data_resolucao.
-  - **Tabela `flashcards`:** id, tipo, frente, verso, id_questao.
-  - **Tabela `fsrs_cards`:** O espelho de curto-prazo. Core state do FSRS (id_card, state [New/Learning/Review/Relearning], *D* (Dificuldade), *S* (Estabilidade), *R* (Retrovabilidade projetada), last_review, due_date, reps, lapses).
-  - **Tabela `fsrs_revlog`:** O combustível do Otimizador. Histórico imutável de time-series (id_log, id_card, rating [1=Again, 2=Hard, 3=Good, 4=Easy], delta_t, last_delta_t). Obrigatório para que a API Machine Learning aplique a otimização estatística (MLE/BPTT).
-  - **Tabela `dashboard_metricas`:** id_tema, questões_feitas, questoes_acertadas, percentual, updated_at.
+**Objetivos de Banco de Dados (SQLite) - [Standby / Background ML]:**
+- O banco `ipub.db` será mantido estritamente para os cálculos de Machine Learning (Otimizador FSRS) em background, mas **NÃO** será a fonte de verdade visual. A persistência central retorna para o Markdown.
 
-**Objetivos de Frontend (Streamlit App):**
-- [ ] **UI Módulo 1 - Cockpit de Progresso (EMED 2026):**
-  - Tabela espelho visual importando o modelo do Excel original. Listagem de disciplinas por bloco, barras de progresso lineares com o percentual de acertos, highlights visuais se taxa < 70%.
-- [ ] **UI Módulo 2 - Input Dinâmico de Erro:** 
-  - Caixa de dump (para colar Ctrl+C/Ctrl+V do simulado). O backend aciona o workflow IPUB e já devolve a questão formatada, gerando o erro na Tabela `questoes` nativa do banco e criando a base do Flashcard automaticamente.
-- [ ] **UI Módulo 3 - Arena FSRS (Deck Mode):** 
-  - App minimalista de revisão, puxando apenas as cartas cujo `due_date` ≤ hoje. Botões (1-De Novo, 2-Difícil, 3-Bom, 4-Fácil). Clicar engatilha os coeficientes D e S da Tabela `fsrs_cards` calculando o intervalo futuro.
-- [ ] **UI Módulo 4 - Wiki Markdown Engine:** 
-  - Renderiza HTML clean dos resumos, possibilitando criação autônoma de flashcards a partir dos parágrafos com `🔴` das armadilhas de prova com 1 clique.
+**Objetivos de Frontend (Streamlit App) — Zero DB Architecture:**
+A interface gráfica obedecerá o princípio "Toda persistência é via os próprios `.md` existentes, com backup `.bak` automático". A pasta raiz será `app/` para não sujar o repositório LLM.
+- [ ] **Fase 1 — Base:** Configuração Multipages (`st.navigation`), parser raw dos markdowns e utilitários de I/O de arquivos.
+- [ ] **Fase 2 — Leitura:** `01_dashboard.py` (Métricas rápidas parseadas do caderno), `03_resumos.py` (Árvore de arquivos de `Temas/`) e `05_historico.py` (Histórico `history/`).
+- [ ] **Fase 3 — Escrita:** `02_caderno_erros.py` (Filtros e Forms de Inserção direta no `caderno_erros.md`) e Editor visual para os resumos.
+- [ ] **Fase 4 — Análise:** `04_progresso.py` renderizando Plotly (Acertos vs Erros e Heatmaps de sessão).
+- [ ] **Fase 5 — Polimento:** Componentes reutilizáveis (UI Dark Mode Hospitalar, sidebars).
 
 ---
 

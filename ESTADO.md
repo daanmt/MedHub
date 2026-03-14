@@ -1,5 +1,5 @@
 # ESTADO — IPUB (Preparação para Residência Médica)
-*Atualizado: 2026-03-14 (sessão 022) | Ferramenta: Antigravity*
+*Atualizado: 2026-03-14 (sessão 023) | Ferramenta: Antigravity*
 
 ---
 
@@ -63,6 +63,7 @@ Ambiente de estudo para residência médica. Processa questões de prova, regist
 
 ## Últimas sessões
 
+**2026-03-14 | Antigravity (sessão 023):** Mudança arquitetural (Pivô). O usuário definiu o documento `IPUB_Streamlit_Plano.md` estabelecendo uma interface em Streamlit puramente baseada em parse de Markdown ("Zero DB"). O SQLite fica isolado como motor futuro de Machine Learning. O Roadmap e Backlog foram reescritos em 5 Fases visando a construção do multipage app na subpasta `app/`.
 **2026-03-14 | Antigravity (sessão 022):** Desenvolvimento prático e execução do motor ETL (`etl_markdown_to_sqlite.py`). Migração massiva de 91 blocos de erros textuais do `caderno_erros.md` direto para relacional do SQLite. O banco `ipub.db` agora possui volume crítico (92 Flashcards e 14 Temas mapeados).
 **2026-03-14 | Antigravity (sessão 021):** Estudo da Wiki oficial do Otimizador FSRS (MLE e BPTT). O roadmap foi bifurcado para definir a fronteira arquitetural entre o Scheduler (agendamento em tempo real) e o Optimizer (script periódico de Machine Learning consumindo o histórico em lote da tabela `fsrs_revlog`).
 **2026-03-14 | Antigravity (sessão 020):** Implementação da regra "Siamese Twins". Script genérico CLI `insert_questao.py` criado para salvar questões no SQLite de forma autônoma. Atualizado workflow macro `analisar-questoes.md` para embutir a fase de inserção DB.

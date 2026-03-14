@@ -7,7 +7,7 @@
 - O banco local agora hospeda 92 flashcards integrados, 14 Temas de métricas do Estratégia Med, e está apto ao Otimizador ML. 
 
 ## 🚧 Obstáculos / Problemas Atuais
-- Não temos Interface Gráfica nenhuma. Toda essa matemática magnífica está trancada num arquivo terminal (binário do SQLite).
+- O modelo MVP em Streamlit exigirá parsers robóticos (Regex/Lógica) para engolir textos raw em Markdown e injetá-los no App. Precisaremos ser precisos na leitura.
 
 ## ➡️ Próximo Passo Imediato (próxima sessão)
-- Iniciar a **Fase 3: Streamlit**. Começar criando um arquivo `app.py` modular e desenhar através de subpastas a primeira de todas as UIs da ferramenta, recomendavelmente a *Arena FSRS* e o *Dashboard*.
+- Iniciar a **Fase 1 (Base)** do `IPUB_Streamlit_Plano.md`: criar estrutura `app/`, `requirements_streamlit.txt`, `.streamlit/config.toml` e `utils/file_io.py`.

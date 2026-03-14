@@ -44,7 +44,8 @@ st.subheader("🗓️ Sessões de Estudo Recentes")
 df_sessions = parse_sessions()
 if not df_sessions.empty:
     for idx, row in df_sessions.head(3).iterrows():
-        with st.expander(f"{row['data'].strftime('%Y-%m-%d')} - {row['arquivo']}"):
+        label = row['data'].strftime('%Y-%m-%d') if not pd.isnull(row['data']) else "Data Indefinida"
+        with st.expander(f"{label} - {row['arquivo']}"):
             content = read_md(f"history/{row['arquivo']}")
             st.markdown(content)
 else:

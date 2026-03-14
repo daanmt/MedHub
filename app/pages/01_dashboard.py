@@ -9,24 +9,34 @@ st.title("🏠 Cronograma + Dashboard")
 df_crono = get_cronograma()
 
 if not df_crono.empty:
-    # Filtra apenas os temas PENDENTES (Single Source of Truth)
-    # Ordenados pela posição original do Excel (pos_semana, pos_tema)
-    df_next = df_crono[df_crono['Status'] != 'Concluído'].copy()
+    # Identifica a 'Semana Ativa' (Primeira semana que possui temas pendentes)
+    pending_weeks = df_crono[df_crono['Status'] != 'Concluído']['Semana'].unique().tolist()
     
-    st.subheader("🎯 Próximas Tarefas")
-    
-    if not df_next.empty:
-        # Exibe os próximos temas (ex: top 15 para não poluir)
-        st.dataframe(
-            df_next[['Tema']].head(15),
-            column_config={
-                "Tema": st.column_config.TextColumn("Próximos Temas de Estudo", width="large"),
-            },
-            hide_index=True,
-            use_container_width=True
-        )
+    if pending_weeks:
+        active_week = pending_weeks[0] # Pega a primeira da fila
+        
+        # Filtra apenas os temas PENDENTES da Semana Ativa
+        df_display = df_crono[
+            (df_crono['Semana'] == active_week) & 
+            (df_crono['Status'] != 'Concluído')
+        ].copy()
+        
+        st.subheader(f"🎯 Próximas Tarefas: {active_week}")
+        
+        if not df_display.empty:
+            st.dataframe(
+                df_display[['Tema']],
+                column_config={
+                    "Tema": st.column_config.TextColumn("Tema de Estudo", width="large"),
+                },
+                hide_index=True,
+                use_container_width=True
+            )
+        else:
+            # Caso raro de inconsistência, fallback para a próxima
+            st.rerun()
     else:
-        st.success("✨ Todas as tarefas foram concluídas! Você está em dia com o cronograma.")
+        st.success("✨ Todas as tarefas foram concluídas! Você encerrou o cronograma.")
 else:
     st.warning("Cronograma não carregado. Utilize Tools/migrate_cronograma.py.")
 

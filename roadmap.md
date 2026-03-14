@@ -17,31 +17,41 @@
 
 ---
 
-## 🚀 Fase 2: Motor de Retenção e Espaçamento (Status: Próximo Passo)
-*Transformar o texto estático dos cadernos de erros e resumos em flashcards e algoritmos de repetição espaçada.*
+## 🚀 Fase 2: Motor de Retenção, Espaçamento e Tracking (Status: Próximo Passo)
+*Transformar texto estático em flashcards inteligentes (FSRS) e criar a tabela mestre de métricas vinculada ao cronograma.*
 
 **Objetivos:**
-- [ ] **Conversão Automatizada para Flashcards:** 
-  - Criar um script/workflow onde o Agente lê o `caderno_erros.md` e gera pares de *Front/Back* (Ex. Pergunta/Resposta) baseados no "Elo Quebrado" e na "Regra/Armadilha".
-- [ ] **Exportação Universal (Anki / Texto):** 
-  - Gerar arquivos `.csv` ou `.txt` formatados para importação num clique no Anki, ou para consumo futuro do nosso próprio Frontend.
-- [ ] **Flashcards de Resumos (Cloze Deletion):**
-  - Mapear os resumos na pasta `Temas/` e, através do Agente, extrair os tópicos marcados com `🔴` e `⭐` gerando flashcards de preenchimento de lacunas e de alta retenção.
+- [ ] **Integração com Tabela de Acompanhamento (Cronograma Estratégia Med):**
+  - Implementar o acompanhamento estruturado em blocos de disciplinas idênticos ao cronograma oficial (ex: *Cardiologia*, *Ginecologia - Sangramentos*).
+  - **Métricas Chave:** Nº de questões resolvidas, Nº de Acertos, Percentual de Acertos (%), Data da última revisão do bloco.
+  - Eliminar métricas subutilizadas (ex: custo por questão) para focar estritamente em **Tração Teórica**.
+- [ ] **Conversão Automatizada para Flashcards e Export (Anki / Texto):** 
+  - Script/Workflow onde o Agente traduz os "Elos Quebrados" do `caderno_erros.md` em pares *Front/Back* e *Cloze Deletions*.
+- [ ] **Core do Algoritmo Mnemônico — Implementar Lógica FSRS:**
+  - Garantir que a lógica de consumo de Flashcards seja baseada no modelo **FSRS** (Free Spaced Repetition Scheduler), superior ao modelo SM-2 legado do Anki padrão, para otimizar os dias de intervalo (Again, Hard, Good, Easy) respeitando a curva de esquecimento.
 
 ---
 
-## 🖥️ Fase 3: Interface do Usuário (UI) & Banco de Dados (Em Planejamento)
-*Sair da interface da IDE (Markdown) para uma aplicação Web (Streamlit), democratizando o acesso e facilitando a interação diária.*
+## 🖥️ Fase 3: App Streamlit & Arquitetura de Banco de Dados (Em Planejamento)
+*Sair da interface da IDE (Markdown) para uma aplicação Web (Streamlit) sustentada por um RDBMS, democratizando o acesso e facilitando a interação diária.*
 
-**Objetivos:**
-- [ ] **Migração de Arquivos para Banco de Dados Relacional:**
-  - Substituir/Espelhar os `.md` por um banco leve (SQLite ou PostgreSQL), estruturando as tabelas: `usuarios`, `questoes_resolvidas`, `flashcards`, `resumos_teoricos`.
-- [ ] **App Web IPUB UI (Streamlit):**
-  - **Módulo 1 - Input de Questões:** Área de texto simples onde o usuário cola a questão que errou. O backend (LLM) processa em background com o mesmo prompt de `comando de analise de questao.md` e salva no DB.
-  - **Módulo 2 - Painel de Flashcards:** Interface estilo Tinder (Swipe Right/Left, Hard/Good/Easy) para o usuário revisar seus flashcards gerados dinamicamente na Fase 2 direto pelo navegador.
-  - **Módulo 3 - Wiki Médica / Resumos:** Leitor estruturado dos resumos de `Temas/` em formato HTML bonitos.
-- [ ] **Dashboard de Progressão:** 
-  - Gráficos visuais importando os dados numéricos hoje presentes em `progresso.md` (distribuição de erros por área, taxa de sucesso).
+**Objetivos de Banco de Dados (SQLite):**
+- [ ] **Modelagem Física e Migração (`ipub.db`):**
+  - Substituir os `.md` por um banco local estruturado (SQLite garante portabilidade fácil num arquivo só).
+  - **Tabela `questoes`:** id, area, tema (baseado no Estratégia), enunciado, alternativa_correta, alternativa_marcada, tipo_erro, elo_quebrado, data_resolucao.
+  - **Tabela `flashcards`:** id, tipo (Frente/Verso ou Cloze), question, answer, source_tema.
+  - **Tabela `fsrs_logs`:** fk_flashcard, state (New/Learning/Review), difficulty, stability, last_review_date, next_review_date (Coração do algoritmo de revisão).
+  - **Tabela `metricas_cronograma`:** fk_tema, total_questions_done, total_correct, updated_at.
+
+**Objetivos de Frontend (Streamlit App):**
+- [ ] **UI/UX Módulo 1 - Painel Cronograma (Dashboard Principal):**
+  - Tabela interativa visual mostrando os Temas (Cardiologia, Pediatria), com barras de progresso percentuais (%) de acertos e highlights em vermelho para temas com taxa de retenção perigosa (< 70%).
+- [ ] **UI/UX Módulo 2 - Input "One-Click" de Questões:** 
+  - Área de texto limpa. O aluno cola o bloco cru copiado da plataforma (com alternativas e gabarito). Botão **[Analisar e Salvar]** aciona o Agente LLM via API no backend para preencher os dados do banco sem olhar pra IDE.
+- [ ] **UI/UX Módulo 3 - Flashcards Arena (Modo FSRS):** 
+  - Interface escura e focada. Aparece a frente da carta. Botão **[Revelar]**. Mostra o verso e renderiza os 4 botões FSRS (*Again*, *Hard*, *Good*, *Easy*) que disparam a função de "next_review_date" no banco de dados.
+- [ ] **UI/UX Módulo 4 - Leitor de Resumos (Wiki):** 
+  - Layout limpo renderizando o HTML dos arquivos da pasta `Temas/`, linkando palavras-chave para seus respectivos flashcards no banco.
 
 ---
 
@@ -58,8 +68,8 @@
 
 ---
 
-## 📝 Próximos Passos (Action Items para o Usuário e Agente)
+## 📝 Próximos Passos Imediatos (Diretrizes de Execução)
 
-1. **Definir o padrão de Flashcards:** (Agente + Usuário) Precisamos criar um prompt/script modelo para converter o formato atual das entradas do Caderno de Erros em algo como `[Frente] Qual o limiar de VDRL para reinfecção? | [Verso] Aumento de duas diluições.`
-2. **Iniciar Banco de Dados Local SQLite:** O Markdown baterá no teto de performance logo logo com 500+ questões. Precisamos escrever um script Python que leia as pastas atuais e popule um `.db`.
-3. **Hello World em Streamlit:** Criar o esqueleto básico do app local para o usuário já conseguir testar a visualização dos dados.
+1. **Setup Inicial do Banco (SQLite):** (Agente) Escrever o script Python `init_db.py` com o schema relacional (*questoes*, *flashcards*, *fsrs_logs*, *metricas_cronograma*).
+2. **Setup do FSRS Core:** (Agente) Importar ou transcrever a biblioteca pyFSRS (ou portar a matemática de stability/difficulty) para o backend do IPUB para agendar os flashcards.
+3. **Hello World do Streamlit:** (Agente + Usuário) Subir `app.py` integrando a visualização da Tabela de Acompanhamento puxando dados mockados ou reais da migração do DB, validando o pareamento com o cronograma do Estratégia.

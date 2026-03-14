@@ -1,109 +1,80 @@
-import streamlit as st
+from app.utils.parser import parse_caderno_erros
 import plotly.express as px
 import pandas as pd
-from app.utils.db import get_db_metrics, get_cronograma, update_cronograma_status
-from app.utils.file_io import read_md
 
 st.title("🏠 Dashboard")
 
-df_crono = get_cronograma()
+# Fonte de Verdade: Caderno de Erros (Zero-DB Architecture)
+entries = parse_caderno_erros()
 
-if not df_crono.empty:
-    # Identifica a 'Semana Ativa' (Primeira semana que possui temas pendentes)
-    pending_df = df_crono[df_crono['Status'] != 'Concluído']
-    pending_weeks = pending_df['Semana'].unique().tolist()
-    
-    if pending_weeks:
-        active_week = pending_weeks[0]
-        
-        # Filtra apenas os temas PENDENTES da Semana Ativa
-        df_display = df_crono[
-            (df_crono['Semana'] == active_week) & 
-            (df_crono['Status'] != 'Concluído')
-        ].copy()
-        
-        st.subheader(f"🎯 Próximas Tarefas: {active_week}")
-        
-        if not df_display.empty:
-            st.dataframe(
-                df_display[['Tema']],
-                column_config={
-                    "Tema": st.column_config.TextColumn("Tema de Estudo", width="large"),
-                },
-                hide_index=True,
-                width="stretch"
-            )
-        else:
-            st.rerun()
-    else:
-        st.success("✨ Todas as tarefas foram concluídas! Você encerrou o cronograma.")
-else:
-    st.warning("Cronograma não carregado. Utilize Tools/migrate_cronograma.py.")
+if not entries:
+    st.info("O seu caderno de erros está vazio ou não pôde ser lido.")
+    st.stop()
+
+# --- MÉTRICAS ---
+st.subheader("📊 Performance do Caderno")
+
+# Métricas Principais (Baseadas no Caderno)
+col_m1, col_m2 = st.columns(2)
+with col_m1:
+    st.metric("Total de Erros no Caderno", len(entries))
+with col_m2:
+    num_areas = len(set(e.get('area') for e in entries if e.get('area')))
+    st.metric("Disciplinas com Lacunas", num_areas)
 
 st.divider()
 
-# --- MÉTRICAS ---
-st.subheader("📊 Métricas de Performance")
-metrics = get_db_metrics()
+# Preparar dados para gráficos
+df = pd.DataFrame(entries)
+df_areas = df.groupby('area').size().reset_index(name='Erros').sort_values('Erros', ascending=True)
 
-# Linha de Cards de Resumo
-col_m1, col_m2, col_m3, col_m4 = st.columns(4)
-with col_m1:
-    st.metric("Total de Erros", metrics["total_erros"], delta_color="inverse")
-with col_m2:
-    st.metric("Total de Acertos", metrics["total_acertos"])
-with col_m3:
-    st.metric("Questões Realizadas", metrics["total_questoes"])
-with col_m4:
-    st.metric("Desempenho Geral", f"{metrics['media_desempenho']:.1f}%")
+# Linha de Gráficos
+c1, c2 = st.columns(2)
 
-st.markdown("#### Detalhamento por Disciplina")
-df_areas = metrics["df_areas"]
-
-if not df_areas.empty:
-    # Gráfico Comparativo: Barra Horizontal (Plan v2.0)
+with c1:
+    st.markdown("#### Distribuição por Área")
     fig = px.bar(
-        df_areas.sort_values('Erros'), 
-        x='Erros', y='Área',
+        df_areas, 
+        x='Erros', y='area',
         orientation='h',
         template='plotly_dark',
         color_discrete_sequence=['#378ADD'],
-        labels={'Erros': 'Erros', 'Área': 'Área'},
+        labels={'Erros': 'Erros', 'area': 'Área'},
+        height=350
     )
     fig.update_layout(
         margin=dict(l=0, r=20, t=30, b=0),
         showlegend=False,
-        height=300,
         plot_bgcolor='rgba(0,0,0,0)',
         paper_bgcolor='rgba(0,0,0,0)',
     )
-    fig.update_traces(hovertemplate='%{y}: %{x} erros<extra></extra>')
+    fig.update_traces(hovertemplate='<b>%{y}</b><br>%{x} erros registrados<extra></extra>')
     st.plotly_chart(fig, use_container_width=True)
-    
-    # Tabela de Performance
-    st.dataframe(
-        df_areas[['Área', 'Total', 'Acertos', 'Erros', 'Desempenho']],
-        column_config={
-            "Desempenho": st.column_config.NumberColumn("Aproveitamento", format="%.1f%%"),
-        },
-        hide_index=True,
-        width="stretch"
+
+with c2:
+    st.markdown("#### Visão Hierárquica")
+    fig_tree = px.treemap(
+        df, 
+        path=["area", "tema"], 
+        template="plotly_dark",
+        color_discrete_sequence=px.colors.qualitative.Pastel,
+        height=350
     )
-else:
-    st.info("Aguardando registro de questões para gerar estatísticas detalhadas.")
+    fig_tree.update_traces(
+        hovertemplate='<b>%{label}</b><br>Erros: %{value}<extra></extra>'
+    )
+    fig_tree.update_layout(margin=dict(l=0, r=0, t=30, b=0))
+    st.plotly_chart(fig_tree, use_container_width=True)
 
 st.divider()
 
-# --- SESSÕES RECENTES ---
-st.subheader("🗓️ Sessões Recentes")
-from app.utils.parser import parse_sessions
-df_sessions = parse_sessions()
-
-if not df_sessions.empty:
-    for idx, row in df_sessions.head(5).iterrows():
-        st.write(f"📄 **{row['data']}** — SESSÃO #{row['session_id']}")
-    st.caption("Veja o histórico completo na aba 'Análise'.")
-else:
-    st.caption("Nenhuma sessão registrada recentemente.")
+# Tabela detalhada
+st.markdown("#### Detalhamento Disciplinar")
+st.dataframe(
+    df_areas.sort_values('Erros', ascending=False),
+    column_config={"area": "Disciplina", "Erros": st.column_config.NumberColumn("Qtd Erros")},
+    hide_index=True,
+    use_container_width=True
+)
 
 st.divider()

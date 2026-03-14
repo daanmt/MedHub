@@ -4,73 +4,75 @@ from pathlib import Path
 from .file_io import read_md, get_abs_path
 
 def parse_caderno_erros(rel_path="caderno_erros.md") -> list[dict]:
-    """Parse estruturado do caderno de erros lendo campos da Doutrina IPUB v4.0/v5.0"""
+    """Parse estruturado e robusto do caderno de erros (Reforma v3.0 Stateful)"""
     content = read_md(rel_path)
     entries = []
     
     current_area = "Geral"
     current_tema = "Miscelânea"
-    current_error = None
-    
-    # Mapeamento de campos amigáveis para o builder
-    field_map = {
-        "**Tipo de erro:**": "tipo_erro",
-        "**Elo quebrado:**": "elo_quebrado",
-        "**Armadilha de prova:**": "armadilha_prova",
-        "**Conceito de Ouro:**": "conceito_de_ouro",
-        "**Gabarito:**": "alternativa_correta",
-        "**Caso:**": "enunciado"
-    }
     
     lines = content.split('\n')
-    for i, line in enumerate(lines):
+    current_entry = None
+    
+    for line in lines:
+        line_stripped = line.strip()
+        if not line_stripped:
+            continue
+            
+        # Rastreamento de Estado (Ressalva 1)
         if line.startswith('## '):
             current_area = line.replace('## ', '').strip()
-        elif line.startswith('### '):
-            tema_candidate = line.replace('### ', '').strip()
-            # Heurística para áreas
-            if tema_candidate in ["Pediatria", "Cirurgia", "Clínica Médica", "Ginecologia e Obstetrícia", "Preventiva"]:
-                current_area = tema_candidate
-            else:
-                current_tema = tema_candidate
-        elif line.startswith('#### '):
-            if current_error:
-                entries.append(current_error)
-                
-            current_error = {
+            continue
+        if line.startswith('### '):
+            current_tema = line.replace('### ', '').strip()
+            continue
+            
+        # Início de Entrada
+        if line.startswith('#### '):
+            if current_entry:
+                entries.append(current_entry)
+            current_entry = {
                 "id": len(entries) + 1,
                 "titulo": line.replace('#### ', '').strip(),
                 "area": current_area,
                 "tema": current_tema,
-                "tipo_erro": "N/A",
-                "elo_quebrado": "N/A",
-                "armadilha_prova": "N/A",
-                "conceito_de_ouro": "N/A",
-                "alternativa_correta": "N/A",
-                "enunciado": "",
-                "numero": len(entries) + 1
+                "numero": len(entries) + 1,
+                "raw_text": ""
             }
-        elif current_error is not None:
-            # Extração de campos via prefixo
-            matched = False
-            for prefix, key in field_map.items():
-                if line.strip().startswith(prefix):
-                    val = line.split(prefix, 1)[-1].strip()
-                    current_error[key] = val
-                    matched = True
-                    break
+            continue
             
-            # Se não for campo marcado e tivermos um erro ativo, pode ser continuação do caso
-            if not matched and line.strip() and not line.startswith('#'):
-                # Heurística: se o enunciado já começou e não é outro campo, acumula
-                if current_error['enunciado'] and len(current_error['enunciado']) < 1000:
-                    current_error['enunciado'] += " " + line.strip()
-                elif not any(line.startswith(p) for p in field_map.keys()):
-                    # Se for a primeira linha após o título e não for campo, pode ser o início do caso
-                    pass
-                
-    if current_error:
-        entries.append(current_error)
+        if current_entry:
+            current_entry["raw_text"] += line + "\n"
+            
+    if current_entry:
+        entries.append(current_entry)
+        
+    # Extração de campos via Regex Flexível (Ressalva 2)
+    for entry in entries:
+        raw = entry["raw_text"]
+        
+        # Elo quebrado
+        m_elo = re.search(r'\*\*Elo quebrado:\*\*\s*(.+)', raw)
+        entry["elo_quebrado"] = m_elo.group(1).strip() if m_elo else "N/A"
+        
+        # Caso / Enunciado
+        m_caso = re.search(r'\*\*Caso:\*\*\s*(.+?)(?=\n\*\*|\n---|\Z)', raw, re.DOTALL)
+        entry["caso"] = m_caso.group(1).strip() if m_caso else "N/A"
+        entry["enunciado"] = entry["caso"]
+        
+        # Explicação / Conceito de Ouro
+        m_expl = re.search(r'\*\*Explicação correta(?:\s*\(.*?\))?:\*\*\s*(.+?)(?=\n\*\*|\n---|\Z)', raw, re.DOTALL)
+        entry["explicacao_correta"] = m_expl.group(1).strip() if m_expl else "N/A"
+        entry["conceito_de_ouro"] = entry["explicacao_correta"]
+        
+        # Armadilha / Nuance
+        m_arm = re.search(r'\*\*Armadilha(?:\s*/\s*nuance)?:\*\*\s*(.+?)(?=\n\*\*|\n---|\Z)', raw, re.DOTALL)
+        entry["armadilha"] = m_arm.group(1).strip() if m_arm else "N/A"
+        entry["armadilha_prova"] = entry["armadilha"]
+        
+        # O que faltou
+        m_faltou = re.search(r'\*\*O que faltou:\*\*\s*(.+?)(?=\n\*\*|\n---|\Z)', raw, re.DOTALL)
+        entry["o_que_faltou"] = m_faltou.group(1).strip() if m_faltou else "N/A"
         
     return entries
                 
@@ -144,3 +146,28 @@ def parse_sessions(history_dir="history") -> pd.DataFrame:
         })
         
     return pd.DataFrame(sessions)
+
+def save_new_error(area, tema, titulo, elo, caso, explicacao, armadilha):
+    """Salva um novo erro diretamente no caderno_erros.md (Zero-DB Persistence)"""
+    file_path = get_abs_path("caderno_erros.md")
+    content = f"""
+#### {titulo}
+
+**Complexidade:** Média
+**Elo quebrado:** {elo}
+**Tipo de erro:** Erro de aplicação
+
+**Caso:** {caso}
+
+**Explicação correta:**
+{explicacao}
+
+**Armadilha / nuance:**
+{armadilha}
+
+---
+"""
+    # Append no final do arquivo
+    with open(file_path, "a", encoding="utf-8") as f:
+        f.write(content)
+    return True

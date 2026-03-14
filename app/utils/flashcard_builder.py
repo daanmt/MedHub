@@ -40,11 +40,11 @@ def build_flashcard_via_llm(entry: dict) -> dict:
     user_content = f"""
 ERRO #{entry.get('numero', '?')} — {entry.get('area', '')} › {entry.get('tema', '')}
 
-ELO QUEBRADO: {entry.get('elo_quebrado', '')}
-CONCEITO DE OURO / REGRA MESTRE: {entry.get('regra_mestre', '')}
-ARMADILHA DO EXAMINADOR: {entry.get('armadilha_prova', '')}
-RESPOSTA CORRETA: {entry.get('alternativa_correta', '')}
-CASO CLÍNICO (base): {entry.get('enunciado', '')[:300]}
+ELO QUEBRADO / HABILIDADE: {entry.get('elo_quebrado', '')}
+O QUE FALTOU: {entry.get('o_que_faltou', '')}
+EXPLICAÇÃO CORRETA: {entry.get('explicacao_correta', '')}
+ARMADILHA: {entry.get('armadilha', '')}
+CASO CLÍNICO (base): {entry.get('caso', '')[:400]}
 
 Gere o flashcard (JSON)."""
 

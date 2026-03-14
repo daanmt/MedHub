@@ -13,67 +13,56 @@ st.subheader("📅 Cronograma de Estudos")
 df_crono = get_cronograma()
 
 if not df_crono.empty:
-    # Seleção da Semana (Default: última semana com algo concluído ou 5)
+    # Seleção da Semana
     semanas_ordenadas = df_crono['Semana'].unique().tolist()
-    # Pega a semana de Sífilis (index 4 = Semana 5)
     default_index = 4 if len(semanas_ordenadas) > 4 else 0
+    selected_week = st.selectbox("📅 Selecione a Semana", semanas_ordenadas, index=default_index)
     
-    selected_week = st.selectbox("Selecione a Semana", semanas_ordenadas, index=default_index)
+    # Filtra apenas PENDENTES da semana selecionada
+    df_week = df_crono[
+        (df_crono['Semana'] == selected_week) & 
+        (df_crono['Status'] != 'Concluído')
+    ].copy()
     
-    # Filtra dados da semana
-    df_week = df_crono[df_crono['Semana'] == selected_week].copy()
+    st.markdown(f"### 🎯 To-Do da Semana: {selected_week}")
     
-    # Aplica formatação visual: Riscado se concluído
-    # O Streamlit data_editor não suporta markdown direto em células de texto, 
-    # então usamos um prefixo ou emoji para sinalizar visualmente o stike conforme solicitado.
-    # Como o usuário pediu "riscado tal como no excel", vou usar o caractere especial de tachado se possível ou emoji.
-    # No st.column_config.TextColumn, não há suporte nativo para CSS strikethrough.
-    # Truque: Usaremos unicode strikethrough para o efeito visual fiel.
-    
-    def strikethrough(text):
-        return "".join([char + "\u0336" for char in text])
-
-    # Aplicamos a transformação apenas para exibição
-    df_week['Tema_Display'] = df_week.apply(
-        lambda x: strikethrough(x['Tema']) if x['Status'] == "Concluído" else x['Tema'], axis=1
-    )
-    
-    st.markdown(f"### 📋 Temas da Semana: {selected_week}")
-    
-    # Visualização Simplificada e Estética
-    edited_week = st.data_editor(
-        df_week,
-        column_config={
-            "id": None,
-            "Semana": None,
-            "Tema": None, # Escondemos o original
-            "Tema_Display": st.column_config.TextColumn("Tema de Estudo", width="large"),
-            "Status": st.column_config.SelectboxColumn(
-                "Status",
-                options=["Pendente", "Lendo", "Concluído"],
-                required=True,
-                width="medium"
-            )
-        },
-        disabled=["Tema", "Tema_Display"],
-        hide_index=True,
-        use_container_width=True,
-        height=300,
-        key="weekly_editor"
-    )
-
-    if st.button("💾 Salvar Progresso Semanal"):
-        # Compara apenas os itens da semana
-        original_week = df_crono[df_crono['Semana'] == selected_week]
-        diff = edited_week[edited_week["Status"] != original_week["Status"].values]
+    if not df_week.empty:
+        # Coluna temporária para o Checkbox de conclusão
+        df_week['Concluído'] = False
         
-        if not diff.empty:
-            for _, row in diff.iterrows():
-                update_cronograma_status(row["id"], row["Status"])
-            st.success("✅ Progresso da semana atualizado!")
-            st.rerun()
+        edited_week = st.data_editor(
+            df_week,
+            column_config={
+                "id": None,
+                "Semana": None,
+                "Status": None, # Status removido por ser redundante (tudo aqui é pendente)
+                "Tema": st.column_config.TextColumn("Tema Pendente", width="large"),
+                "Concluído": st.column_config.CheckboxColumn(
+                    "Concluir",
+                    help="Marque para concluir o tema e removê-lo da lista",
+                    default=False,
+                )
+            },
+            disabled=["Tema"],
+            hide_index=True,
+            use_container_width=True,
+            height=300,
+            key="minimal_todo_editor"
+        )
+
+        if st.button("🚀 Confirmar Temas Concluídos"):
+            to_finish = edited_week[edited_week["Concluído"] == True]
+            if not to_finish.empty:
+                for _, row in to_finish.iterrows():
+                    update_cronograma_status(row["id"], "Concluído")
+                st.success(f"{len(to_finish)} tema(s) concluído(s)!")
+                st.rerun()
+            else:
+                st.info("Nenhum tema selecionado.")
+    else:
+        st.success("✨ Tudo pronto! Não há temas pendentes para esta semana.")
 else:
-    st.warning("Cronograma não encontrado.")
+    st.warning("Cronograma vazio ou não carregado.")
 
 
 st.divider()

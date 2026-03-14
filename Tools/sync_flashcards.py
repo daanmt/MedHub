@@ -40,7 +40,7 @@ def sync_from_errors(cursor):
     print(f"  {count} novos cards clínicos de erros gerados.")
 
 def sync_from_summaries(cursor):
-    print("Gerando flashcards de REVISÃO a partir dos Resumos Clínicos...")
+    print("Gerando flashcards de REVISÃO (High-Level) a partir dos Resumos Clínicos...")
     temas_dir = 'Temas'
     count = 0
     
@@ -63,7 +63,7 @@ def sync_from_summaries(cursor):
                 text = text.strip()
                 if len(text) < 5: continue
                 
-                # Prompts baseados no tipo de marcador
+                # Prompts de alto nível
                 prompt = "O que você sabe sobre este ponto?"
                 if emoji == '🔴': 
                     prompt = "Qual a **ARMADILHA CLÁSSICA** de prova sobre este tópico?"
@@ -76,24 +76,24 @@ def sync_from_summaries(cursor):
                 match_bold = re.match(r'\*\*(.*?)\*\*:(.*)', text)
                 if match_bold:
                     topico = match_bold.group(1)
-                    frente = f"**{tema_name}** | **{topico}**\n\n{prompt} {emoji}"
+                    frente = f"### [REVISÃO: {tema_name}]\n\n**TÓPICO:** {topico}\n\n**🧠 DESAFIO:** {prompt} {emoji}"
                     verso = text
                 else:
-                    frente = f"**{tema_name}**\n\n{prompt} {emoji}\n\nConecta com: {text[:50]}..."
+                    frente = f"### [REVISÃO: {tema_name}]\n\n**🧠 DESAFIO:** {prompt} {emoji}\n\n*Pista:* {text[:60]}..."
                     verso = text
                 
-                # Verifica duplicata pelo verso (conteúdo pedagógico único)
+                # Verifica duplicata
                 cursor.execute("SELECT id FROM flashcards WHERE verso = ? AND tema_id = ?", (verso, tema_id))
                 if not cursor.fetchone():
                     cursor.execute("INSERT INTO flashcards (tema_id, tipo, frente, verso) VALUES (?, ?, ?, ?)",
                                    (tema_id, 'Resumo', frente, verso))
                     card_id = cursor.lastrowid
                     cursor.execute('''
-                        INSERT INTO fsrs_cards (card_id, state, due, stability, difficulty, elapsed_days, scheduled_days, reps, lapses, last_review)
-                        VALUES (?, 0, ?, 0, 0, 0, 0, 0, 0, NULL)
+                        INSERT INTO fsrs_cards (card_id, state, due)
+                        VALUES (?, 0, ?)
                     ''', (card_id, datetime.now()))
                     count += 1
-    print(f"  {count} novos cards de revisão gerados.")
+    print(f"  {count} novos cards de revisão de alto nível gerados.")
 
 def main():
     conn = sqlite3.connect(DB_PATH)

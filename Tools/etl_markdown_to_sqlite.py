@@ -55,46 +55,50 @@ def etl():
         try:
             title = block_text.split('\n')[0].replace('####', '').strip()
             
-            # Extrações de campos chave usando lookaheads para não engolir o próximo bloco
+            # Extrações de campos chave usando lookaheads
             elo = extract_field(r'\*\*Elo quebrado:\*\*(.*?)(?=\n\*\*|\n---)', block_text, "N/A")
             erro = extract_field(r'\*\*Tipo de erro:\*\*(.*?)(?=\n\*\*|\n---)', block_text, "N/A")
+            complexidade = extract_field(r'\*\*Complexidade:\*\*(.*?)(?=\n\*\*|\n---)', block_text, "Média")
             
-            # Caso (A extração de alternativa correta/marcada vai ser heurística já que é texto livre)
-            caso_raw = extract_field(r'\*\*Caso:\*\*(.*?)(?=\n\*\*|\n---)', block_text, block_text[:200])
+            # Caso
+            caso = extract_field(r'\*\*Caso:\*\*(.*?)(?=\n\*\*|\n---)', block_text, "")
             
-            marcada = "N/A"
-            correta = "N/A"
-            m_match = re.search(r'[Mm]arcou\s+(.*?)(?:,|\n)', caso_raw)
-            if m_match: marcada = m_match.group(1).strip()
+            # Habilidades Sequenciais (pode ser múltipla linhas)
+            habilidades = extract_field(r'\*\*Habilidades sequenciais:\*\*(.*?)(?=\n\*\*|\n---)', block_text, "N/A")
             
-            c_match = re.search(r'gabarito\s*(?:era|foi|:)?\s*(.*?)(?:\.|\n|$)', caso_raw, re.IGNORECASE)
+            # O que faltou
+            faltou = extract_field(r'\*\*O que faltou:\*\*(.*?)(?=\n\*\*|\n---)', block_text, "N/A")
+            
+            # Explicação correta
+            explicacao = extract_field(r'\*\*Explicação correta:\*\*(.*?)(?=\n\*\*|\n---)', block_text, "N/A")
+            
+            # Armadilha / nuance
+            armadilha = extract_field(r'\*\*Armadilha / nuance:\*\*(.*?)(?=\n\*\*|\n---)', block_text, "N/A")
+            
+            # Heurística para gabarito se não estiver explícito
+            correta = "Ver Explicação"
+            c_match = re.search(r'gabarito\s*(?:era|foi|:)?\s*(.*?)(?:\.|\n|$)', block_text, re.IGNORECASE)
             if c_match: correta = c_match.group(1).strip()
             
-            armadilha_partes = []
-            a1 = extract_field(r'\*\*Armadilha(?:.*?):\*\*(.*?)(?=\n\*\*|\n---|<!--)', block_text, "")
-            a2 = extract_field(r'\*\*Explicação correta:\*\*(.*?)(?=\n\*\*|\n---|<!--)', block_text, "")
-            a3 = extract_field(r'\*\*Informações-chave para revisão:\*\*(.*?)(?=\n---|<!--|\Z)', block_text, "")
-            
-            if a2: armadilha_partes.append(f"**Explicação:**\n{a2}")
-            if a1: armadilha_partes.append(f"**Armadilha:**\n{a1}")
-            if a3: armadilha_partes.append(f"**Revisão:**\n{a3}")
-            
-            armadilha = "\n\n".join(armadilha_partes).strip()
-            if not armadilha: armadilha = "Referência no caderno original."
-            
-            # Limpa o enunciado pra não duplicar info
-            enunciado_limpo = re.sub(r'(?i)\.?\s*[Mm]arcou.*', '', caso_raw).strip()
+            marcada = "N/A"
+            m_match = re.search(r'[Mm]arcou\s+(.*?)(?:,|\n)', block_text)
+            if m_match: marcada = m_match.group(1).strip()
             
             # Dispara a inserção no banco de dados e a geração do flashcard
             insert_questao(
                 area=area,
                 tema=tema,
-                enunciado=f"{title}\n{enunciado_limpo}",
+                enunciado=caso if caso else title,
                 correta=correta,
-                chamada=marcada, # arg original na func
+                chamada=marcada,
                 erro=erro,
                 elo=elo,
-                armadilha=armadilha
+                armadilha=armadilha,
+                complexidade=complexidade,
+                habilidades=habilidades,
+                faltou=faltou,
+                explicacao=explicacao,
+                titulo=title
             )
             success_count += 1
             print(f"[OK] {title[:40]}...")

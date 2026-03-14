@@ -28,11 +28,15 @@ def init_db():
     CREATE TABLE IF NOT EXISTS questoes_erros (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         tema_id INTEGER,
+        titulo TEXT,
+        complexidade TEXT,
         enunciado TEXT,
         alternativa_correta TEXT,
         alternativa_marcada TEXT,
-        tipo_erro TEXT,              -- Ex: Lacuna de conhecimento, Erro de aplicação
-        elo_quebrado TEXT,
+        tipo_erro TEXT,
+        habilidades_sequenciais TEXT,
+        o_que_faltou TEXT,
+        explicacao_correta TEXT,
         armadilha_prova TEXT,
         data_registro DATETIME DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (tema_id) REFERENCES taxonomia_cronograma(id)

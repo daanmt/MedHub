@@ -8,46 +8,58 @@ st.title("🏠 Cronograma + Dashboard")
 st.markdown("Visão holística do seu rendimento e planejamento de estudos.")
 
 # --- CRONOGRAMA ---
-st.subheader("📅 Cronograma")
+st.subheader("📅 Cronograma de Estudos")
 
 df_crono = get_cronograma()
 
 if not df_crono.empty:
-    # Remove o ID da visualização mas mantém para referência
-    edited_df = st.data_editor(
-        df_crono,
+    # Seleção da Semana (Default: última semana com algo concluído ou 5)
+    semanas_ordenadas = df_crono['Semana'].unique().tolist()
+    # Pega a semana de Sífilis (index 4 = Semana 5)
+    default_index = 4 if len(semanas_ordenadas) > 4 else 0
+    
+    selected_week = st.selectbox("Selecione a Semana", semanas_ordenadas, index=default_index)
+    
+    # Filtra dados da semana
+    df_week = df_crono[df_crono['Semana'] == selected_week].copy()
+    
+    st.markdown(f"### 📋 Temas da Semana: {selected_week}")
+    
+    # Visualização Simplificada e Estética
+    # Usamos o data_editor mas configurado para ser a peça central
+    edited_week = st.data_editor(
+        df_week,
         column_config={
-            "id": None, 
-            "Semana": st.column_config.TextColumn("Semana", width="small"),
+            "id": None,
+            "Semana": None, # Esconde semana já que está no título
             "Tema": st.column_config.TextColumn("Tema de Estudo", width="large"),
             "Status": st.column_config.SelectboxColumn(
                 "Status",
-                help="Seu progresso",
                 options=["Pendente", "Lendo", "Concluído"],
                 required=True,
-                width="small"
+                width="medium"
             )
         },
-        disabled=["Semana", "Tema"],
+        disabled=["Tema"],
         hide_index=True,
         use_container_width=True,
-        height=500,
-        key="cronograma_editor"
+        height=300,
+        key="weekly_editor"
     )
 
-    # Lógica de salvamento (se houver alterações)
-    if st.button("💾 Salvar Evolução do Cronograma"):
-        # Compara o DataFrame original com o editado para encontrar mudanças
-        diff = edited_df[edited_df["Status"] != df_crono["Status"]]
+    if st.button("💾 Salvar Progresso Semanal"):
+        # Compara apenas os itens da semana
+        original_week = df_crono[df_crono['Semana'] == selected_week]
+        diff = edited_week[edited_week["Status"] != original_week["Status"].values]
+        
         if not diff.empty:
             for _, row in diff.iterrows():
                 update_cronograma_status(row["id"], row["Status"])
-            st.success(f"Progresso atualizado em {len(diff)} tema(s)!")
+            st.success("✅ Progresso da semana atualizado!")
             st.rerun()
-        else:
-            st.info("Nenhuma alteração detectada no cronograma.")
 else:
-    st.warning("Cronograma não encontrado no banco de dados. Execute a migração (Tools/migrate_cronograma.py).")
+    st.warning("Cronograma não encontrado.")
+
 
 st.divider()
 

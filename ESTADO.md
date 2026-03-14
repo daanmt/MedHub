@@ -15,7 +15,7 @@ Ambiente de estudo para residência médica. Processa questões de prova, regist
 > **SINGLE SOURCE OF TRUTH (SSOT):** O número exato e autêntico de erros e métricas do projeto **sempre será o exibido no Streamlit App** (`01_dashboard.py`). O Agente que ler o `ESTADO.md` não deve confiar cegamente nas "recontagens" estáticas de texto (que podem ficar defasadas e causar alucinações). Use sempre ferramentas como `parser.py` para obter o número real.
 
 - **92 erros diagnosticados** no banco de dados (`ipub.db`)
-- **337 temas de cronograma** rastreáveis e dinâmicos
+- **337 temas** no cronograma (51 concluídos | Semana 5 ativa)
 - **25 resumos clínicos** consolidados em `Temas/`
 - **3 workflows** operacionais em `.agents/workflows/`
 - **25 sessões** de estudo catalogadas em `history/`

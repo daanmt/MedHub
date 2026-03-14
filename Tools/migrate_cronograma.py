@@ -15,47 +15,45 @@ def migrate():
     df_raw = pd.read_excel(EXCEL_PATH, header=1)
     
     semanas = df_raw.columns.tolist()
-    # Descartamos a linha de áreas (PED, GO, etc) pois agora é irrelevante
     temas_df = df_raw.iloc[1:].fillna("")
 
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     cursor.execute("DELETE FROM cronograma_progresso")
     
-    # Marcador para Sífilis na Gestação e Sífilis Congênita (Teoria I)
-    # Segundo o usuário, tudo antes disso já foi resolvido.
-    target_theme = "Sífilis na Gestação e Sífilis Congênita (Teoria I)"
-    target_found = False
+    # Marcador exato para o ponto de parada (Semana 5, item Sífilis)
+    stop_theme = "Sífilis na Gestação e Sífilis Congênita (Teoria I)"
+    stop_reached = False
     
     count = 0
-    # Processamos coluna por coluna (Semana por Semana)
     for col_idx, semana in enumerate(semanas):
+        semana_str = str(semana).strip()
         for row_idx in range(len(temas_df)):
-            tema = str(temas_df.iloc[row_idx, col_idx]).strip()
+            tema_raw = str(temas_df.iloc[row_idx, col_idx])
+            # Normaliza: remove \n, strip, espaços duplos
+            tema_clean = " ".join(tema_raw.replace("\n", " ").split()).strip()
             
-            # Pula células vazias ou separadores de rotina
-            if not tema or tema.upper() in ["QUESTÕES", "PROVAS", "NAN"]:
+            if not tema_clean or tema_clean.upper() in ["QUESTÕES", "PROVAS", "NAN"]:
                 continue
             
-            # Lógica de status histórico
-            # Se ainda não encontramos Sífilis, marcamos como Concluído
-            # Se encontrarmos o tema alvo Exato (ou parcial aproximado), marcamos como Concluído e viramos a chave
-            current_status = "Concluído" if not target_found else "Pendente"
+            # Se já passamos do ponto de parada, tudo é Pendente
+            current_status = "Pendente" if stop_reached else "Concluído"
             
-            # Checagem de match (Flexibilidade para quebras de linha ou espaços)
-            if "Sífilis na Gestação" in tema and "Sífilis Congênita" in tema:
-                target_found = True
+            # Checagem flexível de Sífilis
+            if "Sífilis" in tema_clean and "Gestação" in tema_clean and "Congênita" in tema_clean:
+                stop_reached = True
                 current_status = "Concluído"
+                print(f"Marcador encontrado: {tema_clean}")
 
             cursor.execute('''
                 INSERT INTO cronograma_progresso (semana, tema, status, pos_semana, pos_tema)
                 VALUES (?, ?, ?, ?, ?)
-            ''', (str(semana).strip(), tema, current_status, col_idx, row_idx))
+            ''', (semana_str, tema_clean, current_status, col_idx, row_idx))
             count += 1
 
     conn.commit()
     conn.close()
-    print(f"Sucesso! {count} temas de estudo importados. Status histórico aplicado até Sífilis.")
+    print(f"Sucesso! {count} temas importados. Foco na Semana 5 (Sífilis concluído).")
 
 if __name__ == "__main__":
     migrate()

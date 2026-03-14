@@ -4,10 +4,31 @@ from app.utils.db import get_db_metrics
 from app.utils.file_io import read_md
 
 st.title("🏠 Cronograma + Dashboard")
-st.markdown("Visão holística do seu rendimento validado pelo Banco de Dados.")
+st.markdown("Visão holística do seu rendimento e planejamento de estudos.")
+
+# --- CRONOGRAMA ---
+st.subheader("📅 Cronograma (Estratégia Med)")
+
+@st.cache_data
+def load_cronograma():
+    try:
+        df = pd.read_excel("Cronograma de Reta Final.xlsx", header=1)
+        # Limpa formatação vazia do Excel
+        df = df.dropna(how='all', axis=1).fillna("")
+        return df
+    except Exception as e:
+        return pd.DataFrame()
+
+df_crono = load_cronograma()
+if not df_crono.empty:
+    st.dataframe(df_crono, width="stretch", height=400)
+else:
+    st.warning("Arquivo `Cronograma de Reta Final.xlsx` não encontrado na raiz ou formato inválido.")
+
+st.divider()
 
 # --- MÉTRICAS ---
-st.subheader("📊 Métricas Consolidadas (SQLite)")
+st.subheader("📊 Métricas Consolidadas")
 metrics = get_db_metrics()
 total_erros = metrics["total"]
 df_areas = metrics["df_areas"]
@@ -25,12 +46,3 @@ with col2:
         st.info("Nenhum erro computado nas métricas ainda.")
 
 st.divider()
-
-# --- STATUS ---
-st.subheader("📌 Status do Agente")
-estado_content = read_md("ESTADO.md")
-with st.expander("Ver `ESTADO.md` completo", expanded=False):
-    if estado_content:
-        st.markdown(estado_content)
-    else:
-        st.warning("Arquivo ESTADO.md não encontrado.")

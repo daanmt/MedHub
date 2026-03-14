@@ -1,7 +1,7 @@
 import streamlit as st
 import plotly.express as px
-from app.utils.parser import get_error_stats, parse_sessions
-from app.utils.file_io import read_md
+from utils.parser import get_error_stats, parse_sessions
+from utils.file_io import read_md
 
 st.title("🏠 Dashboard")
 st.markdown("Bem-vindo ao centro de controle do IPUB.")

@@ -2,7 +2,7 @@ import streamlit as st
 import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
-from app.utils.parser import get_error_stats, parse_sessions
+from utils.parser import get_error_stats, parse_sessions
 
 st.title("📈 Analytics e Progresso")
 st.markdown("Acompanhe o ganho de retenção e as sessões de estudo ao longo do tempo.")

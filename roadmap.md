@@ -17,40 +17,38 @@
 
 ---
 
-## 🚀 Fase 2: Motor de Retenção e Dash Dinâmico (Status: Concluído)
-*Transformar texto estático em banco de dados relacional e controle de cronograma.*
+## 🚀 Fase 2: Reforma v3.0 - Estabilização e Zero-DB (Status: Concluído)
+*Consolidar a arquitetura baseada em Markdown, eliminar over-engineering e estabilizar o player.*
 
 **Entregas Concluídas:**
-- [x] **Integração Absoluta com o Cronograma (Excel -> DB):** Planilha do Estratégia mapeada e editável via Dashboard.
-- [x] **Arquitetura SQLite (SSOT):** Centralização de erros e cronograma no `ipub.db`.
-- [x] **App Streamlit Minimalista:** 4 abas integradas (Dash, Resumos, Caderno DB, Histórico).
+- [x] **Arquitetura Zero-DB (SSOT):** O Markdown (`caderno_erros.md`) é a única fonte de verdade para leitura na UI.
+- [x] **Parser Stateful:** Herança robusta de Área/Tema via cabeçalhos MD.
+- [x] **Flashcard Anti-Crash:** Player ultra-estável baseado em shuffle de índices (fim do KeyError).
+- [x] **Dashboard Honesto:** Métricas 100% fiéis ao caderno, sem resíduos de FSRS fake.
+- [x] **Persistência Federada:** Registro de novos erros via escrita direta no MD.
 
 ---
 
-## 🔬 Fase 3: Motor de Retenção FSRS v4 (Status: Próximo Passo)
-*Implementar rigorosamente o motor FSRS de agendamento e otimização.*
+## 🔬 Fase 3: Motor de Retenção FSRS v4 Real (Status: Próximo Passo)
+*Implementar a matemática de agendamento (Stability/Difficulty) baseada em logs reais.*
 
 **Objetivos:**
-- [ ] **Scheduler:** Agendamento de revisões (Stability/Difficulty) no `fsrs_cards`.
-- [ ] **Optimizer:** Script em PyTorch para calibragem da curva de esquecimento.
-- [ ] **Interface de Revisão:** Aba no Streamlit para responder flashcards e coletar logs (Review Log).
+- [ ] **FSRS Real Integration:** Substituir o sistema de navegação simples por agendamento real via pesos de memória.
+- [ ] **Review Log (history/):** Persistir a performance de cada card no histórico para calibragem futura.
+- [ ] **Busca Semântica no App:** Implementar busca por palavras-chave em todos os resumos da pasta `Temas/`.
 
 ---
 
 ## 🧠 Fase 4: O Workflow Fechado — Simulados e Analytics (Visão de Futuro)
-*O sistema não apenas armazena, mas coordena ativamente as revisões do aluno.*
+*O sistema coordena ativamente as revisões do aluno.*
 
 **Objetivos:**
-- [ ] **Gerador de Simulados Personalizados:** 
-  - O sistema "puxa" do Banco de Dados questões e temas que o aluno tem alta taxa de erro (ex: Trauma Pediátrico) e monta um arquivo de 50 questões "Cirúrgicas" personalizadas focadas nas fraquezas (Weakness-based testing).
-- [ ] **Rotinas de Revisão Automática D-7 / D-30:**
-  - O Agente notifica o aluno no frontend: *"Hoje você tem 15 flashcards de Clínica Médica que completaram 7 dias e 3 conceitos de Ginecologia para revisar"*.
-- [ ] **Ataque Antecipado de Armadilhas:**
-  - Relatório semanal automatizado: *"Nos últimos 7 dias, 40% dos seus erros foram por desatenção a limiares numéricos, especialmente na área de Pediatria."* (Insights que um humano só perceberia meses depois).
+- [ ] **Gerador de Simulados Personalizados:** Questões focadas nas fraquezas (Weakness-based testing).
+- [ ] **Relatórios de Desempenho Metacognitivo:** Insights automáticos sobre padrões de erro (ex: desatenção a números).
 
 ---
 
 ## 📝 Próximos Passos Imediatos (Diretrizes de Execução)
 
-1. **Refinamentos UI/UX (P2):** Ampliar a inteligência do Streamlit, implementando filtros na tabela de erros e carregando dados do Cronograma EMED 2026.
-2. **Setup do FSRS Core:** (Agente) Importar ou transcrever a biblioteca pyFSRS (ou portar a matemática de stability/difficulty) para o backend do IPUB para agendar os flashcards.
+1. **Escalabilidade:** Expandir a base de erros para romper o marco de 100 entradas reais no caderno.
+2. **Setup do FSRS Core:** Importar lógica de pesos matemáticos para o backend para agendar os flashcards de forma real.

@@ -31,7 +31,7 @@ if not df_crono.empty:
                     "Tema": st.column_config.TextColumn("Tema de Estudo", width="large"),
                 },
                 hide_index=True,
-                use_container_width=True
+                width="stretch"
             )
         else:
             st.rerun()
@@ -73,7 +73,7 @@ if not df_areas.empty:
         color_discrete_map={"Acertos": "#2ECC71", "Erros": "#E74C3C"}
     )
     fig.update_layout(margin=dict(l=0, r=0, t=50, b=0))
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width='stretch')
     
     # Tabela de Performance
     st.dataframe(
@@ -82,7 +82,7 @@ if not df_areas.empty:
             "Desempenho": st.column_config.NumberColumn("Aproveitamento", format="%.1f%%"),
         },
         hide_index=True,
-        use_container_width=True
+        width="stretch"
     )
 else:
     st.info("Aguardando registro de questões para gerar estatísticas detalhadas.")

@@ -56,43 +56,59 @@ def next_card():
 card = st.session_state.current_card
 
 if card:
-    with st.container(border=True):
-        st.caption(f"🛡️ {card['area']} | 🏷️ {card['tema']}")
-        
-        if st.session_state.flashcard_mode == 'front':
-            st.markdown(f"### QUESTÃO:\n{card['frente']}")
-            if st.button("Mostrar Resposta 💡", use_container_width=True):
-                st.session_state.flashcard_mode = 'back'
-                st.rerun()
-        else:
-            st.markdown(f"### QUESTÃO:\n{card['frente']}")
+    total = due_count if due_count > 0 else 1 # Fallback para evitar divisão por zero
+    idx = st.session_state.get('fc_idx', 0)
+    
+    # Header de contexto e progresso
+    col_t1, col_t2 = st.columns([3, 1])
+    with col_t1:
+        st.markdown(f"**{card['area']} › {card['tema']}**")
+    with col_t2:
+        st.caption(f"Card {idx+1}/{due_count}")
+    
+    st.progress(min((idx + 1) / total, 1.0))
+
+    # --- FRENTE ---
+    if st.session_state.flashcard_mode == 'front':
+        with st.container(border=True):
+            tipo_label = {"elo_quebrado": "🔗 Elo Quebrado", "armadilha": "⚠️ Armadilha"}.get(
+                card.get('tipo', 'elo_quebrado'), "📋"
+            )
+            st.caption(f"{tipo_label} · Simulado IPUB")
             st.divider()
-            st.markdown(f"### RESPOSTA:\n{card['verso']}")
+            st.markdown(card['frente'])
             
-            st.write("---")
-            st.caption("Como foi o seu desempenho?")
-            r_col1, r_col2, r_col3, r_col4 = st.columns(4)
+        if st.button("Revelar Resposta 💡", use_container_width=True, type="primary"):
+            st.session_state.flashcard_mode = 'back'
+            st.rerun()
             
-            with r_col1:
-                if st.button("Errei (Again) 🔴", use_container_width=True):
-                    record_review(card['flashcard_id'], 1)
-                    next_card()
-                    st.rerun()
-            with r_col2:
-                if st.button("Difícil (Hard) 🟠", use_container_width=True):
-                    record_review(card['flashcard_id'], 2)
-                    next_card()
-                    st.rerun()
-            with r_col3:
-                if st.button("Bom (Good) 🟢", use_container_width=True):
-                    record_review(card['flashcard_id'], 3)
-                    next_card()
-                    st.rerun()
-            with r_col4:
-                if st.button("Fácil (Easy) 🔵", use_container_width=True):
-                    record_review(card['flashcard_id'], 4)
-                    next_card()
-                    st.rerun()
+    # --- VERSO ---
+    else:
+        with st.container(border=True):
+            st.markdown(card['verso'])
+            
+            # Tenta extrair regra mestre se não estiver no verso formatado
+            # (No novo motor v4.0 já está no verso, mas mantemos redundância visual se necessário)
+            
+        st.write("---")
+        st.caption("Como foi o seu desempenho?")
+        r_col1, r_col2, r_col3 = st.columns(3)
+        
+        with r_col1:
+            if st.button("Errei / Revisar 🔴", use_container_width=True):
+                record_review(card['flashcard_id'], 1)
+                next_card()
+                st.rerun()
+        with r_col2:
+            if st.button("Difícil 🟠", use_container_width=True):
+                record_review(card['flashcard_id'], 2)
+                next_card()
+                st.rerun()
+        with r_col3:
+            if st.button("Acertei! 🟢", use_container_width=True):
+                record_review(card['flashcard_id'], 3)
+                next_card()
+                st.rerun()
 else:
     st.info("Nenhum flashcard pendente para revisão no momento. Ótimo trabalho!")
 

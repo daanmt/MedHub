@@ -6,6 +6,38 @@ import os
 import re
 DB_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'ipub.db')
 
+def _extract_key_term(elo: str) -> str:
+    """Extrai o termo médico principal do elo para usar na pergunta."""
+    stopwords = ['habilidade', 'confundiu', 'esqueceu', 'não lembrou', 
+                 'erro ao', 'falhou em', 'priorizar', 'identificar', 'prioritário']
+    result = elo
+    for sw in stopwords:
+        result = result.lower().replace(sw, '').strip()
+    return result[:80]
+
+def _invert_elo_to_question(elo: str, tema: str) -> str:
+    """Transforma texto do elo quebrado em pergunta cirúrgica."""
+    elo_lower = elo.lower()
+    
+    # Padrões de limiar numérico
+    if any(x in elo_lower for x in ['limiar', 'ponto de corte', '< ', '> ', 'mg/dl', 'mg/kg', 'bpm']):
+        return f"Em {tema}: qual o valor limiar/dose correto para {_extract_key_term(elo)}?"
+    
+    # Padrões de sequência/prioridade
+    if any(x in elo_lower for x in ['antes', 'primeiro', 'prioritário', 'sequência', 'ordem']):
+        return f"Em {tema}: qual a sequência correta de conduta? (Dica: a ordem importa)"
+    
+    # Padrões de critério diagnóstico
+    if any(x in elo_lower for x in ['critério', 'diagnóstico', 'definição', 'classificação']):
+        return f"Quais os critérios diagnósticos / definição de {_extract_key_term(elo)}?"
+    
+    # Padrões de indicação/contraindicação
+    if any(x in elo_lower for x in ['indicação', 'contraindicação', 'quando', 'em quais']):
+        return f"Quais as indicações/contraindicações de {_extract_key_term(elo)} em {tema}?"
+    
+    # Fallback genérico mas cirúrgico
+    return f"Sobre {tema}: {elo.rstrip('.')}?"
+
 def insert_questao(area, tema, enunciado, correta, chamada, erro, elo, armadilha, 
                    complexidade="Média", habilidades="N/A", faltou="N/A", explicacao="N/A", titulo="Erro sem título"):
     # print(f"DEBUG: Tentando inserir no banco: {os.path.abspath(DB_PATH)}")
@@ -37,42 +69,45 @@ def insert_questao(area, tema, enunciado, correta, chamada, erro, elo, armadilha
               erro, habilidades, faltou, explicacao, armadilha))
         questao_id = cursor.lastrowid
 
-        # 2. Gerar Flashcard FSRS de ALTO NÍVEL (Doutrina IPUB Ouro) - SEM SPOILERS NA FRENTE
-        # Removemos frases que entregam a resposta (ex: "Marcou X, era Y")
+        # 2. Gerar Flashcards Doutrina IPUB v4.0 (A partir do Elo)
+        # Extrai contexto mínimo (1 linha)
         enunciado_limpo = re.sub(r'(?i)(?:Marcou|Gabarito|Resposta|A questÃ£o era|O gabarito foi).*', '', enunciado).strip()
+        caso_resumo = (enunciado_limpo.split('.')[0] if '.' in enunciado_limpo else enunciado_limpo)[:120]
         
-        # Se o enunciado limpo ficar vazio (improvável), usa o título
-        contexto_clinico = enunciado_limpo if len(enunciado_limpo) > 10 else titulo
-
-        frente_texto = (
-            f"### [SIMULADO IPUB: {tema}]\n"
-            f"**🏥 ÁREA:** {area}\n"
-            f"**📋 TEMA:** {tema}\n"
-            f"\n**🩺 CASO CLÍNICO:**\n"
-            f"{contexto_clinico}\n"
-            f"\n---\n"
-            f"**🧠 DESAFIO:** Qual a conduta/diagnóstico correto e como você deve blindar o elo que falhou na tentativa anterior?"
-        )
+        cards_to_insert = []
         
-        verso_texto = (
+        # --- Card 1: O Elo Quebrado (Obrigatorio) ---
+        pergunta_elo = _invert_elo_to_question(habilidades if habilidades != "N/A" else elo, tema)
+        frente_elo = f"**Contexto:** {caso_resumo}\n\n**Pergunta:** {pergunta_elo}"
+        
+        verso_elo = (
             f"✅ **RESPOSTA DIRETA:** {correta}\n\n"
-            f"🎯 **CONCEITO DE OURO (Regra Mestre):**\n*{explicacao[:150]}...*\n\n"
-            f"🪜 **CADEIA DE RACIOCÍNIO:**\n{habilidades}\n\n"
-            f"💔 **O PONTO DE FALHA (Elo Perdido):**\nO erro ocorreu em: *{elo}*. {faltou}\n\n"
-            f"🔴 **ARMADILHA DO EXAMINADOR:**\n{armadilha}"
+            f"🧠 **REGRA MESTRE:**\n{explicacao[:300] if explicacao != 'N/A' else 'Verificar caderno.'}"
         )
         
-        cursor.execute('''
-            INSERT INTO flashcards (questao_id, tema_id, tipo, frente, verso)
-            VALUES (?, ?, 'Erro', ?, ?)
-        ''', (questao_id, tema_id, frente_texto, verso_texto))
-        card_id = cursor.lastrowid
+        cards_to_insert.append(('elo_quebrado', frente_elo, verso_elo))
+        
+        # --- Card 2: A Armadilha (Se relevante) ---
+        if armadilha and len(armadilha) > 20 and armadilha != "N/A":
+            trigger_match = re.search(r'(?i)(?:descreve|apresenta|usa|coloca)\s+(.*?)(?=\s+para|\.|\Z)', armadilha)
+            trigger = trigger_match.group(1) if trigger_match else "este cenário"
+            
+            frente_arm = f"**⚠️ ARMADILHA:** O examinador costuma usar *{trigger}* para te induzir ao erro em {tema}."
+            verso_arm = f"**Gatilho:** {armadilha}\n\n**Como evitar:** Releia o ponto da regra mestre sobre este distrator."
+            cards_to_insert.append(('armadilha', frente_arm, verso_arm))
 
-        # 3. Inicializar o FSRS Card (New state)
-        cursor.execute('''
-            INSERT INTO fsrs_cards (card_id, state, due)
-            VALUES (?, 0, ?)
-        ''', (card_id, datetime.now()))
+        # Inserção dos cards
+        for tipo_card, frente, verso in cards_to_insert:
+            cursor.execute('''
+                INSERT INTO flashcards (questao_id, tema_id, tipo, frente, verso)
+                VALUES (?, ?, ?, ?, ?)
+            ''', (questao_id, tema_id, tipo_card, frente, verso))
+            card_id = cursor.lastrowid
+
+            cursor.execute('''
+                INSERT INTO fsrs_cards (card_id, state, due)
+                VALUES (?, 0, ?)
+            ''', (card_id, datetime.now()))
 
         # 4. Atualizar métricas do cronograma
         cursor.execute('''

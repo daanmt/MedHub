@@ -1,0 +1,50 @@
+[
+  {
+    "id": "1_elo",
+    "tipo": "elo_quebrado",
+    "area": "Pediatria",
+    "tema": "Taquicardia Supraventricular (TSV)",
+    "erro_origem": 1,
+    "frente_contexto": "Lactente 15m, FC 230bpm, QRS estreito, estável (bom sensório e perfusão).",
+    "frente_pergunta": "Qual a sequência de conduta prioritária ANTES de considerar a cardioversão elétrica?",
+    "verso_resposta": "1º Manobra vagal (bolsa de gelo na face). 2º Adenosina 0,1mg/kg IV (flush rápido).",
+    "verso_regra_mestre": "ESTABILIDADE manda no tratamento. CVE sincronizada é exclusiva para pacientes INSTÁVEIS na emergência pediátrica.",
+    "verso_armadilha": "O examinador usa a FC > 220 para te assustar, mas se a perfusão está boa, o paciente está ESTÁVEL."
+  },
+  {
+    "id": "2_elo",
+    "tipo": "elo_quebrado",
+    "area": "Ginecologia e Obstetrícia",
+    "tema": "Sífilis na Gestação",
+    "erro_origem": 2,
+    "frente_contexto": "Gestante com VDRL positivo (1:4), tratada adequadamente há 6 meses, títulos estáveis e parceiro tratado.",
+    "frente_pergunta": "Neste cenário de controle pós-tratamento, quando considerar FALHA terapêutica ou REINFECÇÃO?",
+    "verso_resposta": "Aumento de 2 títulos no VDRL (ex: 1:4 para 1:16) ou ausência de queda de 2 títulos em 3-6 meses.",
+    "verso_regra_mestre": "VDRL positivo não é sinônimo de sífilis ativa; avalie a curva de títulos (Cicatriz Sorológica vs. Nova Infecção).",
+    "verso_armadilha": "Tratar novamente apenas por ver um VDRL positivo baixo (ex: 1:2 ou 1:4) sem olhar o histórico de tratamento."
+  },
+  {
+    "id": "3_elo",
+    "tipo": "elo_quebrado",
+    "area": "Cirurgia",
+    "tema": "Trauma Abdominal Fechado",
+    "erro_origem": 3,
+    "frente_contexto": "Paciente estável após colisão frontal, dor abdominal leve, FAST negativo no atendimento inicial.",
+    "frente_pergunta": "O FAST negativo exclui a necessidade de Tomografia ou observação em caso de suspeita de lesão de víscera oca?",
+    "verso_resposta": "NÃO. O FAST tem baixa sensibilidade para lesão de víscera oca e retroperitônio.",
+    "verso_regra_mestre": "FAST (+) guia para laparotomia no instável. FAST (-) no estável com dor persistente EXIGE TC de abdome.",
+    "verso_armadilha": "Confiar no FAST negativo para dar alta precoce em traumas de alta energia com sinal do cinto de segurança."
+  },
+  {
+    "id": "4_elo",
+    "tipo": "elo_quebrado",
+    "area": "Clínica Médica",
+    "tema": "Diabetes Mellitus tipo 2",
+    "erro_origem": 4,
+    "frente_contexto": "Paciente com HbA1c 8.5% já em dose máxima de Metformina.",
+    "frente_pergunta": "Qual a prioridade na escolha da 2ª droga se o paciente tiver Insuficiência Cardíaca ou Doença Renal?",
+    "verso_resposta": "iSGLT2 (Gliflozinas) devido ao benefício cardiovascular e renal comprovado nestes fenótipos.",
+    "verso_regra_mestre": "O tratamento do DM2 moderno é guiado pela COMORBIDADE (IC/DRC/Doença CV) e não apenas pela meta de HbA1c.",
+    "verso_armadilha": "Focar apenas na HbA1c e esquecer de proteger o órgão-alvo com iSGLT2 ou análogos de GLP-1."
+  }
+]

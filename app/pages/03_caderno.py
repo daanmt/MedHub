@@ -40,43 +40,73 @@ with col_h2:
 
 st.divider()
 
-# --- BLOCO 2: PLAYER DE FLASHCARDS (ANKI UI) ---
-st.subheader("🧠 Estúdio de Flashcards (Ativo)")
+# --- BLOCO 2: PLAYER DE FLASHCARDS (HYPER-FLASHCARDS v5.0) ---
+st.subheader("🧠 Estúdio de Flashcards (Inteligente)")
 
-# Inicializa estado da sessão de flashcards
+# Lógica de carregamento de cards (Prioriza Cache JSON v5.0)
+from app.utils.flashcard_builder import load_or_generate_flashcards, CACHE_PATH
+import json
+
+# Busca erros brutos do banco para o builder
+from app.utils.db import get_connection
+conn = get_connection()
+conn.row_factory = sqlite3.Row
+cursor = conn.cursor()
+cursor.execute('''
+    SELECT q.*, t.area, t.tema FROM questoes_erros q 
+    JOIN taxonomia_cronograma t ON q.tema_id = t.id
+''')
+errors_brutos = [dict(r) for r in cursor.fetchall()]
+conn.close()
+
+# Painel de Controle
+with st.expander("⚙️ Gerenciador de Inteligência", expanded=False):
+    st.caption("Arquitetura v5.0: Geração via LLM Claude + Cache Local.")
+    sc_col1, sc_col2 = st.columns(2)
+    with sc_col1:
+        if st.button("➕ Gerar novos flashcards", use_container_width=True):
+            with st.spinner("Gerando lacunas..."):
+                load_or_generate_flashcards(errors_brutos, force_regen=False)
+                st.success("Novos cards gerados!")
+                st.rerun()
+    with sc_col2:
+        if st.button("🔄 Regenerar Tudo (LLM)", use_container_width=True):
+            with st.spinner("Refazendo base..."):
+                load_or_generate_flashcards(errors_brutos, force_regen=True)
+                st.success("Base v5.0 consolidada!")
+                st.rerun()
+
+# Carrega cards para o player
+flashcards_raw = []
+if CACHE_PATH.exists():
+    with open(CACHE_PATH, "r", encoding="utf-8") as f:
+        flashcards_raw = json.load(f)
+
+# Inicializa estado
+if 'fc_idx' not in st.session_state:
+    st.session_state.fc_idx = 0
 if 'flashcard_mode' not in st.session_state:
-    st.session_state.flashcard_mode = 'front' # 'front' ou 'back'
-if 'current_card' not in st.session_state:
-    st.session_state.current_card = get_next_due_card()
-
-def next_card():
-    st.session_state.current_card = get_next_due_card()
     st.session_state.flashcard_mode = 'front'
 
-card = st.session_state.current_card
+if flashcards_raw:
+    # Filtra apenas os cards que têm reviews pendentes no FSRS (ou simula ordem)
+    # Para esta versão v5.0, vamos focar na exibição dos cards do cache
+    total_raw = len(flashcards_raw)
+    idx = st.session_state.fc_idx % total_raw
+    card = flashcards_raw[idx]
 
-if card:
-    total = due_count if due_count > 0 else 1 # Fallback para evitar divisão por zero
-    idx = st.session_state.get('fc_idx', 0)
-    
-    # Header de contexto e progresso
-    col_t1, col_t2 = st.columns([3, 1])
-    with col_t1:
-        st.markdown(f"**{card['area']} › {card['tema']}**")
-    with col_t2:
-        st.caption(f"Card {idx+1}/{due_count}")
-    
-    st.progress(min((idx + 1) / total, 1.0))
+    # Header de progresso
+    st.markdown(f"**{card['area']} › {card['tema']}**")
+    st.progress((idx + 1) / total_raw)
 
     # --- FRENTE ---
     if st.session_state.flashcard_mode == 'front':
         with st.container(border=True):
-            tipo_label = {"elo_quebrado": "🔗 Elo Quebrado", "armadilha": "⚠️ Armadilha"}.get(
-                card.get('tipo', 'elo_quebrado'), "📋"
-            )
-            st.caption(f"{tipo_label} · Simulado IPUB")
+            st.caption("🔗 ELO QUEBRADO · MODO RETENÇÃO")
+            if card.get('frente_contexto'):
+                st.markdown(f"**Contexto:** {card['frente_contexto']}")
             st.divider()
-            st.markdown(card['frente'])
+            st.markdown(f"### {card['frente_pergunta']}")
             
         if st.button("Revelar Resposta 💡", use_container_width=True, type="primary"):
             st.session_state.flashcard_mode = 'back'
@@ -85,32 +115,49 @@ if card:
     # --- VERSO ---
     else:
         with st.container(border=True):
-            st.markdown(card['verso'])
-            
-            # Tenta extrair regra mestre se não estiver no verso formatado
-            # (No novo motor v4.0 já está no verso, mas mantemos redundância visual se necessário)
+            st.markdown(f"### {card['verso_resposta']}")
+            st.info(f"**Regra Mestre:** {card['verso_regra_mestre']}", icon="🧠")
+            if card.get('verso_armadilha'):
+                st.warning(f"**Gatilho do Examinador:** {card['verso_armadilha']}", icon="⚠️")
             
         st.write("---")
         st.caption("Como foi o seu desempenho?")
         r_col1, r_col2, r_col3 = st.columns(3)
         
+        from app.utils.db import record_review
+        
+        def next_fc():
+            st.session_state.fc_idx = (st.session_state.fc_idx + 1) % total_raw
+            st.session_state.flashcard_mode = 'front'
+
+        # Busca o ID do flashcard no banco para registrar o FSRS
+        def get_db_card_id(error_id):
+            conn = get_connection()
+            c = conn.cursor()
+            c.execute("SELECT id FROM flashcards WHERE questao_id = ?", (error_id,))
+            res = c.fetchone()
+            conn.close()
+            return res[0] if res else None
+
+        db_card_id = get_db_card_id(card['erro_origem'])
+
         with r_col1:
             if st.button("Errei / Revisar 🔴", use_container_width=True):
-                record_review(card['flashcard_id'], 1)
-                next_card()
+                if db_card_id: record_review(db_card_id, 1)
+                next_fc()
                 st.rerun()
         with r_col2:
             if st.button("Difícil 🟠", use_container_width=True):
-                record_review(card['flashcard_id'], 2)
-                next_card()
+                if db_card_id: record_review(db_card_id, 2)
+                next_fc()
                 st.rerun()
         with r_col3:
             if st.button("Acertei! 🟢", use_container_width=True):
-                record_review(card['flashcard_id'], 3)
-                next_card()
+                if db_card_id: record_review(db_card_id, 3)
+                next_fc()
                 st.rerun()
 else:
-    st.info("Nenhum flashcard pendente para revisão no momento. Ótimo trabalho!")
+    st.info("Nenhum flashcard v5.0 encontrado. Clique em 'Gerar novos flashcards' acima para iniciar a inteligência artificial.")
 
 st.divider()
 

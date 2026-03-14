@@ -1,5 +1,5 @@
 # ESTADO — IPUB (Preparação para Residência Médica)
-*Atualizado: 2026-03-14 (sessão 023) | Ferramenta: Antigravity*
+*Atualizado: 2026-03-14 (sessão 024) | Ferramenta: Antigravity*
 
 ---
 
@@ -71,7 +71,9 @@ Ambiente de estudo para residência médica. Processa questões de prova, regist
 
 ## Últimas sessões
 
-**2026-03-14 | Antigravity (sessão 025):** Implementação do Cronograma Dinâmico (Mini-DB). A planilha de Reta Final foi migrada para o SQLite (`cronograma_progresso`). O Dashboard agora permite a marcação de status (Pendente, Lendo, Concluído) em 337 temas mapeados, sincronizando o planejado com o executado via `st.data_editor`.
+**2026-03-14 | Antigravity (sessão 026):** **Salto para Fase 2 (Flashcards Inteligentes).** Refatoração da página do Caderno de Erros para "Flashcards e Caderno". Implementação do algoritmo FSRS (Free Spaced Repetition) para agendamento automático de revisões. Interface de 3 blocos (Hot Topics, Player Anki e Explorador de Lacunas) implantada. Sincronização de 1.555 acertos históricos do Excel EMED.
+
+**2026-03-14 | Antigravity (sessão 025):** Implementação do Cronograma Dinâmico (Mini-DB)...
 **2026-03-14 | Antigravity (sessão 024):** Auditoria de Governança e Refinamento de UI (P0 e P1). As métricas do Dashboard Streamlit foram corrigidas usando _Top-Down parser_ para garantir a acuidade matemática (exatos 92 erros rastreados). O `ESTADO.md` foi atualizado implementando a doutrina do **Single Source of Truth** (Streamlit > Texto Markdown Fixo). Ferramentas deprecadas limpas.
 **2026-03-14 | Antigravity (sessão 023):** Mudança arquitetural (Pivô). O usuário definiu o documento `IPUB_Streamlit_Plano.md` estabelecendo uma interface em Streamlit puramente baseada em parse de Markdown ("Zero DB"). O Sqlite fica isolado como motor futuro de Machine Learning. O Roadmap e Backlog foram reescritos em 5 Fases visando a construção do multipage app na subpasta `app/`.
 **2026-03-14 | Antigravity (sessão 022):** Desenvolvimento prático e execução do motor ETL (`etl_markdown_to_sqlite.py`). Migração massiva de blocos de erros textuais do `caderno_erros.md` direto para relacional do SQLite. O banco `ipub.db` agora possui volume crítico.

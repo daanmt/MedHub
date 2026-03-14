@@ -59,6 +59,14 @@ def insert_questao(area, tema, enunciado, correta, chamada, erro, elo, armadilha
             WHERE id = ?
         ''', (datetime.now().strftime('%Y-%m-%d'), tema_id))
         
+        # 5. Sincronização Ativa: Marca o tema como 'Concluído' no cronograma_progresso
+        # Fazemos um match flexível (LIKE) para garantir que o tema seja encontrado
+        cursor.execute('''
+            UPDATE cronograma_progresso 
+            SET status = 'Concluído', updated_at = CURRENT_TIMESTAMP
+            WHERE tema LIKE ?
+        ''', (f"%{tema}%",))
+
         # O cálculo percentual de acertos é recalculado a cada nova inserção
         cursor.execute('''
             UPDATE taxonomia_cronograma

@@ -23,16 +23,31 @@ if not df_crono.empty:
     # Filtra dados da semana
     df_week = df_crono[df_crono['Semana'] == selected_week].copy()
     
+    # Aplica formatação visual: Riscado se concluído
+    # O Streamlit data_editor não suporta markdown direto em células de texto, 
+    # então usamos um prefixo ou emoji para sinalizar visualmente o stike conforme solicitado.
+    # Como o usuário pediu "riscado tal como no excel", vou usar o caractere especial de tachado se possível ou emoji.
+    # No st.column_config.TextColumn, não há suporte nativo para CSS strikethrough.
+    # Truque: Usaremos unicode strikethrough para o efeito visual fiel.
+    
+    def strikethrough(text):
+        return "".join([char + "\u0336" for char in text])
+
+    # Aplicamos a transformação apenas para exibição
+    df_week['Tema_Display'] = df_week.apply(
+        lambda x: strikethrough(x['Tema']) if x['Status'] == "Concluído" else x['Tema'], axis=1
+    )
+    
     st.markdown(f"### 📋 Temas da Semana: {selected_week}")
     
     # Visualização Simplificada e Estética
-    # Usamos o data_editor mas configurado para ser a peça central
     edited_week = st.data_editor(
         df_week,
         column_config={
             "id": None,
-            "Semana": None, # Esconde semana já que está no título
-            "Tema": st.column_config.TextColumn("Tema de Estudo", width="large"),
+            "Semana": None,
+            "Tema": None, # Escondemos o original
+            "Tema_Display": st.column_config.TextColumn("Tema de Estudo", width="large"),
             "Status": st.column_config.SelectboxColumn(
                 "Status",
                 options=["Pendente", "Lendo", "Concluído"],
@@ -40,7 +55,7 @@ if not df_crono.empty:
                 width="medium"
             )
         },
-        disabled=["Tema"],
+        disabled=["Tema", "Tema_Display"],
         hide_index=True,
         use_container_width=True,
         height=300,

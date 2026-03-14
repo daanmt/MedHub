@@ -37,22 +37,21 @@ def insert_questao(area, tema, enunciado, correta, chamada, erro, elo, armadilha
               erro, habilidades, faltou, explicacao, armadilha))
         questao_id = cursor.lastrowid
 
-        # 2. Gerar Flashcard FSRS de ALTO NÍVEL (Análise Cognitiva) - SEM SPOILERS NA FRENTE
+        # 2. Gerar Flashcard FSRS de ALTO NÍVEL (Doutrina IPUB Ouro) - SEM SPOILERS NA FRENTE
         # Removemos frases que entregam a resposta (ex: "Marcou X, era Y")
         enunciado_limpo = re.sub(r'(?i)(?:Marcou|Gabarito|Resposta|A questÃ£o era|O gabarito foi).*', '', enunciado).strip()
         
         # Se o enunciado limpo ficar vazio (improvável), usa o título
         contexto_clinico = enunciado_limpo if len(enunciado_limpo) > 10 else titulo
 
-        frente_texto = f"### [SIMULADO IPUB: {tema}]\n\n**CASO CLÍNICO:**\n{contexto_clinico}\n\n---\n**🧠 DESAFIO:** Qual a conduta/diagnóstico correto e qual o elo quebrado na tentativa anterior?"
+        frente_texto = f"### [SIMULADO IPUB: {tema}]\n\n**CASO CLÍNICO:**\n{contexto_clinico}\n\n---\n**🧠 DESAFIO:** Qual a conduta/diagnóstico e qual o elo de conhecimento a ser restaurado?"
         
         verso_texto = (
-            f"✅ **GABARITO:** {correta}\n\n"
+            f"✅ **RESPOSTA DIRETA:** {correta}\n\n"
+            f"🎯 **CONCEITO DE OURO (Regra Mestre):**\n*{explicacao[:150]}...*\n\n"
             f"🪜 **CADEIA DE RACIOCÍNIO:**\n{habilidades}\n\n"
-            f"💔 **ELO QUEBRADO:** {elo}\n\n"
-            f"🧐 **O QUE FALTOU:** {faltou}\n\n"
-            f"💡 **EXPLICAÇÃO CORRETA:**\n{explicacao}\n\n"
-            f"🔴 **ARMADILHA/NUANCE:** {armadilha}"
+            f"💔 **O PONTO DE FALHA (Elo Perdido):**\nO erro ocorreu em: *{elo}*. {faltou}\n\n"
+            f"🔴 **ARMADILHA DO EXAMINADOR:**\n{armadilha}"
         )
         
         cursor.execute('''

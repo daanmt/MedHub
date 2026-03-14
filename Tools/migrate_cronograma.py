@@ -30,25 +30,21 @@ def migrate():
         semana_str = str(semana).strip()
         for row_idx in range(len(temas_df)):
             tema_raw = str(temas_df.iloc[row_idx, col_idx])
-            # Normaliza: remove \n, strip, espaços duplos
             tema_clean = " ".join(tema_raw.replace("\n", " ").split()).strip()
             
             if not tema_clean or tema_clean.upper() in ["QUESTÕES", "PROVAS", "NAN"]:
                 continue
             
-            # Se já passamos do ponto de parada, tudo é Pendente
+            # Status padrão baseado no marcador global
             current_status = "Pendente" if stop_reached else "Concluído"
             
-            # Checagem flexível de Sífilis - mas específica para TEORIA I
-            # Se encontrar Teoria I, marca como concluído e PARA o 'concluído automático'
-            if "Sífilis" in tema_clean and "Gestação" in tema_clean and "Teoria I" in tema_clean:
+            # Ponto de Parada Específico: Fim da Semana 5 (Doenças Inflamatórias do Tecido Conjuntivo I)
+            # Conferimos tanto o tema quanto a semana para evitar parar na semana 1 acidentalmente
+            target_semana = "09/03 a 13/03/26"
+            if target_semana in semana_str and "Inflamatória" in tema_clean and "Conjuntivo I" in tema_clean:
                 stop_reached = True
                 current_status = "Concluído"
-                print(f"Marcador final de conclusão encontrado: {tema_clean}")
-            
-            # Se for Sifilis Teoria II ou qualquer coisa depois de Teoria I ser encontrada, é Pendente
-            if stop_reached and tema_clean != "Sífilis na Gestação e Sífilis Congênita (Teoria I)":
-                current_status = "Pendente"
+                print(f"Marcador final de conclusão (Semana 5) encontrado: {tema_clean}")
 
             cursor.execute('''
                 INSERT INTO cronograma_progresso (semana, tema, status, pos_semana, pos_tema)

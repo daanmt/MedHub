@@ -20,8 +20,8 @@ with col2:
     if por_area:
         import pandas as pd
         df_areas = pd.DataFrame(list(por_area.items()), columns=["Área", "Erros"])
-        fig = px.bar(df_areas, x="Erros", y="Área", orientation='h', title="Erros por Área", height=250)
-        fig.update_layout(margin=dict(l=0, r=0, t=30, b=0))
+        fig = px.bar(df_areas, x="Erros", y="Área", orientation='h', title="Erros por Área", height=250, template='plotly_dark', color_discrete_sequence=['#378ADD'])
+        fig.update_layout(margin=dict(l=0, r=0, t=30, b=0), showlegend=False)
         st.plotly_chart(fig, use_container_width=True)
     else:
         st.info("Nenhum erro computado nas métricas ainda.")
@@ -45,8 +45,12 @@ df_sessions = parse_sessions()
 if not df_sessions.empty:
     for idx, row in df_sessions.head(3).iterrows():
         label = row['data'].strftime('%Y-%m-%d') if not pd.isnull(row['data']) else "Data Indefinida"
-        with st.expander(f"{label} - {row['arquivo']}"):
+        with st.expander(f"📄 {label} - {row['arquivo']}"):
             content = read_md(f"history/{row['arquivo']}")
-            st.markdown(content)
+            lines = [l for l in content.split('\\n')[2:] if l.strip()]
+            preview = ' '.join(lines[:3])[:200] + '...' if lines else ''
+            st.caption(preview)
+            if st.button("Ver completo", key=row['arquivo']):
+                st.markdown(content)
 else:
     st.info("Nenhuma sessão registrada no diretório history/.")

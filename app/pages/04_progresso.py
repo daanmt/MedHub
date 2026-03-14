@@ -25,7 +25,8 @@ if por_area:
         
     with c2:
         # Gráfico Treemap
-        fig_tree = px.treemap(df_areas, path=["Área"], values="Erros", title="Visão Hierárquica")
+        fig_tree = px.treemap(df_areas, path=["Área"], values="Erros", title="Visão Hierárquica", color="Erros", color_continuous_scale='RdBu_r')
+        fig_tree.update_traces(hovertemplate='<b>%{label}</b><br>Erros: %{value}<extra></extra>')
         st.plotly_chart(fig_tree, use_container_width=True)
 else:
     st.info("Não há dados de erros suficientes para gerar gráficos.")

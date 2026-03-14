@@ -18,10 +18,9 @@ if not df_crono.empty:
     if not df_next.empty:
         # Exibe os próximos temas (ex: top 15 para não poluir)
         st.dataframe(
-            df_next[['Semana', 'Tema']].head(15),
+            df_next[['Tema']].head(15),
             column_config={
-                "Semana": st.column_config.TextColumn("Semana", width="small"),
-                "Tema": st.column_config.TextColumn("Tema de Estudo", width="large"),
+                "Tema": st.column_config.TextColumn("Próximos Temas de Estudo", width="large"),
             },
             hide_index=True,
             use_container_width=True

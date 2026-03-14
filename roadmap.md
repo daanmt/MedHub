@@ -41,11 +41,11 @@
 
 **Objetivos de Frontend (Streamlit App) — Zero DB Architecture:**
 A interface gráfica obedecerá o princípio "Toda persistência é via os próprios `.md` existentes, com backup `.bak` automático". A pasta raiz será `app/` para não sujar o repositório LLM.
-- [ ] **Fase 1 — Base:** Configuração Multipages (`st.navigation`), parser raw dos markdowns e utilitários de I/O de arquivos.
-- [ ] **Fase 2 — Leitura:** `01_dashboard.py` (Métricas rápidas parseadas do caderno), `03_resumos.py` (Árvore de arquivos de `Temas/`) e `05_historico.py` (Histórico `history/`).
-- [ ] **Fase 3 — Escrita:** `02_caderno_erros.py` (Filtros e Forms de Inserção direta no `caderno_erros.md`) e Editor visual para os resumos.
-- [ ] **Fase 4 — Análise:** `04_progresso.py` renderizando Plotly (Acertos vs Erros e Heatmaps de sessão).
-- [ ] **Fase 5 — Polimento:** Componentes reutilizáveis (UI Dark Mode Hospitalar, sidebars).
+- [x] **Fase 1 — Base:** Configuração Multipages (`st.navigation`), parser raw dos markdowns e utilitários de I/O de arquivos.
+- [x] **Fase 2 — Leitura:** `01_dashboard.py` (Métricas rápidas parseadas do caderno), `03_resumos.py` (Árvore de arquivos de `Temas/`) e `05_historico.py` (Histórico `history/`).
+- [x] **Fase 3 — Escrita:** `02_caderno_erros.py` (Filtros e Forms de Inserção direta no `caderno_erros.md`) e Editor visual para os resumos.
+- [x] **Fase 4 — Análise:** `04_progresso.py` renderizando Plotly (Acertos vs Erros e Heatmaps de sessão).
+- [ ] **Fase 5 — Polimento:** Refinamentos "P2" (UX e Analytics Avançado com a planilha EMED).
 
 ---
 
@@ -64,6 +64,5 @@ A interface gráfica obedecerá o princípio "Toda persistência é via os próp
 
 ## 📝 Próximos Passos Imediatos (Diretrizes de Execução)
 
-1. **Setup Inicial do Banco (SQLite):** (Agente) Escrever o script Python `init_db.py` com o schema relacional (*questoes*, *flashcards*, *fsrs_logs*, *metricas_cronograma*).
+1. **Refinamentos UI/UX (P2):** Ampliar a inteligência do Streamlit, implementando filtros na tabela de erros e carregando dados do Cronograma EMED 2026.
 2. **Setup do FSRS Core:** (Agente) Importar ou transcrever a biblioteca pyFSRS (ou portar a matemática de stability/difficulty) para o backend do IPUB para agendar os flashcards.
-3. **Hello World do Streamlit:** (Agente + Usuário) Subir `app.py` integrando a visualização da Tabela de Acompanhamento puxando dados mockados ou reais da migração do DB, validando o pareamento com o cronograma do Estratégia.

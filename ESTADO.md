@@ -11,9 +11,13 @@ Ambiente de estudo para residência médica. Processa questões de prova, regist
 
 **Leia `AGENTE.md` antes de qualquer ação.** Este arquivo contém o protocolo de boot e a ordem de leitura para garantir a continuidade do projeto.
 
-- **67 entradas** no caderno de erros (5 áreas)
-- **24 resumos** em `Temas/` — incluindo `Infectologia/TB.md`, `GO/[OBS] Sífilis na Gestação e Congênita.md` e `Preventiva/Medidas de Saúde Coletiva.md`
+> [!IMPORTANT]
+> **SINGLE SOURCE OF TRUTH (SSOT):** O número exato e autêntico de erros e métricas do projeto **sempre será o exibido no Streamlit App** (`01_dashboard.py`). O Agente que ler o `ESTADO.md` não deve confiar cegamente nas "recontagens" estáticas de texto (que podem ficar defasadas e causar alucinações). Use sempre ferramentas como `parser.py` para obter o número real.
+
+- **92 entradas** no caderno de erros (5 áreas)
+- **25 resumos clínicos** consolidados em `Temas/`
 - **3 workflows** operacionais em `.agents/workflows/`
+- **23 sessões** de estudo catalogadas em `history/`
 
 ---
 
@@ -51,20 +55,23 @@ Ambiente de estudo para residência médica. Processa questões de prova, regist
 
 ## Áreas com mais entradas no caderno
 
-| Área | Entradas |
+*(Disclaimer: Valores sujeitos a desatualização. Sempre consulte o Dashboard Streamlit para ver a estatística exata)*
+
+| Área | Entradas (Última auditoria - Sessão 024) |
 |---|---|
-| Ginecologia e Obstetrícia | 13 |
-| Pediatria | 11 |
-| Medicina Preventiva | 7 |
-| Cirurgia | 4 |
-| Clínica Médica | 10 |
+| Clínica Médica | 24 |
+| Cirurgia | 24 |
+| Pediatria | 15 |
+| Ginecologia e Obstetrícia | 15 |
+| Medicina Preventiva | 14 |
 
 ---
 
 ## Últimas sessões
 
-**2026-03-14 | Antigravity (sessão 023):** Mudança arquitetural (Pivô). O usuário definiu o documento `IPUB_Streamlit_Plano.md` estabelecendo uma interface em Streamlit puramente baseada em parse de Markdown ("Zero DB"). O SQLite fica isolado como motor futuro de Machine Learning. O Roadmap e Backlog foram reescritos em 5 Fases visando a construção do multipage app na subpasta `app/`.
-**2026-03-14 | Antigravity (sessão 022):** Desenvolvimento prático e execução do motor ETL (`etl_markdown_to_sqlite.py`). Migração massiva de 91 blocos de erros textuais do `caderno_erros.md` direto para relacional do SQLite. O banco `ipub.db` agora possui volume crítico (92 Flashcards e 14 Temas mapeados).
+**2026-03-14 | Antigravity (sessão 024):** Auditoria de Governança e Refinamento de UI (P0 e P1). As métricas do Dashboard Streamlit foram corrigidas usando _Top-Down parser_ para garantir a acuidade matemática (exatos 92 erros rastreados). O `ESTADO.md` foi atualizado implementando a doutrina do **Single Source of Truth** (Streamlit > Texto Markdown Fixo). Ferramentas deprecadas limpas.
+**2026-03-14 | Antigravity (sessão 023):** Mudança arquitetural (Pivô). O usuário definiu o documento `IPUB_Streamlit_Plano.md` estabelecendo uma interface em Streamlit puramente baseada em parse de Markdown ("Zero DB"). O Sqlite fica isolado como motor futuro de Machine Learning. O Roadmap e Backlog foram reescritos em 5 Fases visando a construção do multipage app na subpasta `app/`.
+**2026-03-14 | Antigravity (sessão 022):** Desenvolvimento prático e execução do motor ETL (`etl_markdown_to_sqlite.py`). Migração massiva de blocos de erros textuais do `caderno_erros.md` direto para relacional do SQLite. O banco `ipub.db` agora possui volume crítico.
 **2026-03-14 | Antigravity (sessão 021):** Estudo da Wiki oficial do Otimizador FSRS (MLE e BPTT). O roadmap foi bifurcado para definir a fronteira arquitetural entre o Scheduler (agendamento em tempo real) e o Optimizer (script periódico de Machine Learning consumindo o histórico em lote da tabela `fsrs_revlog`).
 **2026-03-14 | Antigravity (sessão 020):** Implementação da regra "Siamese Twins". Script genérico CLI `insert_questao.py` criado para salvar questões no SQLite de forma autônoma. Atualizado workflow macro `analisar-questoes.md` para embutir a fase de inserção DB.
 **2026-03-14 | Antigravity (sessão 019):** Análise da planilha EMED, detalhamento do modelo matemático de DSR no Roadmap e elaboração do schema do banco criando o script base `init_db.py`. O arquivo `ipub.db` foi instanciado com 5 tabelas (Cronograma taxonomia, Erros, Flashcards, FSRS Cards e FSRS Revlog).

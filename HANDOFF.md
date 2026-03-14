@@ -1,13 +1,13 @@
 # HANDOFF — Ponto de Passagem de Bastão
 
-> **Última atualização:** Sessão 022 (Migração ETL Concluída)
+> **Última atualização:** Sessão 024 (Refinamento P0 e P1 do Streamlit)
 
 ## 📌 Status Atual
-- Foram purgados e transferidos os **91 erros textuais** do `caderno_erros.md` legado para a arquitetura SQL viva. 
-- O banco local agora hospeda 92 flashcards integrados, 14 Temas de métricas do Estratégia Med, e está apto ao Otimizador ML. 
+- A arquitetura visual "Zero BD" (Markdown-based) do Streamlit foi implementada (Fases 1 a 4). 
+- Parsers robustos (`app/utils/parser.py`) estão extraindo exatamente **92 erros catalogados**, **25 resumos clínicos** e **23 logs de sessão** do repositório físico, exibindo os gráficos via Dashboard (`streamlit_app.py`).
 
 ## 🚧 Obstáculos / Problemas Atuais
-- O modelo MVP em Streamlit exigirá parsers robóticos (Regex/Lógica) para engolir textos raw em Markdown e injetá-los no App. Precisaremos ser precisos na leitura.
+- A governança foi auditada, pois os arquivos de texto (`ESTADO.md` etc) não batiam com os gráficos do sistema. O `ESTADO.md` adotou a doutrina **Single Source of Truth**, onde o Streamlit manda nos números.
 
 ## ➡️ Próximo Passo Imediato (próxima sessão)
-- Iniciar a **Fase 1 (Base)** do `IPUB_Streamlit_Plano.md`: criar estrutura `app/`, `requirements_streamlit.txt`, `.streamlit/config.toml` e `utils/file_io.py`.
+- Iniciar os refinements P2 (Filtros avançados no `02_caderno_erros.py` e integração com os dados do cronograma EMED).

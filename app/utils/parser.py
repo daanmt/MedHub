@@ -94,8 +94,8 @@ def get_error_stats(rel_path="caderno_erros.md") -> dict:
         "raw_entries": entries
     }
 
-def parse_session_date(content: str, filename: str):
-    """Extrai a data de uma sessão via múltiplas heurísticas de regex"""
+def parse_session_date(content: str, filename: str = "") -> datetime | None:
+    """Extrai a data de uma sessão via múltiplas heurísticas de regex (v2.0 Fix)"""
     from datetime import datetime
     patterns = [
         r'\*\*Data:\*\*\s*(\d{4}-\d{2}-\d{2})',
@@ -103,42 +103,36 @@ def parse_session_date(content: str, filename: str):
         r'Data:\s*(\d{4}-\d{2}-\d{2})',
     ]
     for pat in patterns:
-        m = re.search(pat, content[:1000]) # Scan primeiras linhas
+        m = re.search(pat, content[:500])
         if m:
             try:
                 return datetime.strptime(m.group(1), '%Y-%m-%d')
             except:
                 pass
-                
-    # Fallback: nome do arquivo
-    m = re.search(r'(\d{4}-\d{2}-\d{2})', filename)
-    if m:
-        try:
-            return datetime.strptime(m.group(1), '%Y-%m-%d')
-        except:
-            pass
     return None
 
 def parse_sessions(history_dir="history") -> pd.DataFrame:
-    """Varre os logs de estudo md em history/ e constrói um DataFrame em memória"""
+    """Varre os logs de estudo md em history/ e constrói um DataFrame em memória (v2.0 Sorted)"""
     h_path = get_abs_path(history_dir)
     sessions = []
     
     if not h_path.exists():
         return pd.DataFrame()
         
-    for file in h_path.glob("session_*.md"):
+    # Busca arquivos session_NNN.md
+    files = list(h_path.glob("session_*.md"))
+    
+    # Ordenação por número extraído do nome (Plan v2.0 Fix)
+    files.sort(key=lambda f: int(re.search(r'(\d+)', f.name).group(1)), reverse=True)
+    
+    for file in files:
         content = file.read_text(encoding="utf-8")
         
         # Extrai data via regex profundo
         date_obj = parse_session_date(content, file.name)
-        date_str = date_obj.strftime('%Y-%m-%d') if date_obj else None
+        date_str = date_obj.strftime('%Y-%m-%d') if date_obj else "Desconhecida"
         
-        # Fallback de string para a ordenacao
-        if not date_str:
-            date_str = file.name[:10]
-            
-        # Extrai numero da sessão (ex: session_023 -> 23)
+        # Extrai numero da sessão
         num_match = re.search(r'session_(\d+)', file.name)
         session_id = int(num_match.group(1)) if num_match else 0
             
@@ -146,24 +140,7 @@ def parse_sessions(history_dir="history") -> pd.DataFrame:
             "arquivo": file.name,
             "session_id": session_id,
             "data": date_str,
-            "preview": content[:100] + "..."
+            "preview": content[:120].replace('\n', ' ') + "..."
         })
         
-    df = pd.DataFrame(sessions)
-    if not df.empty:
-        df['data'] = pd.to_datetime(df['data'], errors='coerce')
-        # Tenta resolver NaT com data mtime local
-        import os
-        from datetime import datetime
-        mask = df['data'].isnull()
-        if mask.any():
-            for idx in df[mask].index:
-                try:
-                    mtime = os.path.getmtime(h_path / df.at[idx, 'arquivo'])
-                    df.at[idx, 'data'] = datetime.fromtimestamp(mtime)
-                except:
-                    pass
-                    
-        # Para ordenação secundária, caso datas sejam iguais, usamos id
-        df = df.sort_values(by=["data", "session_id"], ascending=[False, False])
-    return df
+    return pd.DataFrame(sessions)

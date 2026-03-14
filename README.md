@@ -30,6 +30,6 @@ IPUB/
 
 ## Para começar
 
-1. Leia `ESTADO.md`
+1. Leia `AGENTE.md`
 2. Use o workflow apropriado em `.agents/workflows/`
 3. Rode o Dashboard: `streamlit run streamlit_app.py`

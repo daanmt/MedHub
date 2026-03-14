@@ -25,27 +25,21 @@ O usuário envia questões em qualquer formato. Não exigir formato específico.
 ### 2. Aplicar protocolo de análise
 Seguir integralmente o protocolo de `Tools/comando de analise de questao.md` (Etapas 1-7).
 
-### 3. Registrar no caderno de erros
-- Determinar Área e Tema
-- Inserir entrada em `caderno_erros.md` sob o tema correto
-- Formato: seguir o padrão já existente no caderno
+### 3. Popular Banco de Dados (Caderno de Erros DB)
+- **NÃO ADICIONE METRICAS TEXTUAIS!** O `caderno_erros.md` e `progresso.md` baseados em texto foram depreciados. O *Streamlit Dashboard* é a única Fonte Real da métrica.
+- O Agente DEVE popular os metadados do erro diretamente no SQLite usando rigorosamente a interface CLI contida em `Tools/insert_questao.py`:
+  - Execute: `python Tools/insert_questao.py --area "[Cirurgia|Pediatria|...]" --tema "[ex: Trauma]" --enunciado "[enunciado limpo]" --correta "[letra correta]" --marcada "[sua alternativa]" --erro "[tipo de erro diagnosticado]" --elo "[habilidade que faltou]" --armadilha "[explicação e resumo]"`
+  - *Dica para o Agente*: Faça escape adequado das aspas internas ao formatar o comando `run_command`.
 
-### 4. Atualizar progresso
-Atualizar contadores em `progresso.md`.
+### 4. Atualizar o Resumo Clínico de Área (Temas/)
+- Embora o erro de prova e as métricas residam no SQLite, o **Conteúdo** ainda é em Markdown.
+- Localizar o arquivo .md do Tema falho em `Temas/{Área}/{Subespecialidade}/`.
+- Inserir a explicação/armadilha no **local temático estrutural correto** daquele arquivo (não no final de forma solta).
+- Usar marcadores `⚠️ Padrão de prova:` e `🔴` nas anotações cruciais da residência.
+- Não duplicar informação genérica que já esteja descrita no resumo.
 
-### 5. Atualizar o resumo correspondente
-- Localizar o arquivo .md em `Temas/{Área}/{Subespecialidade}/`
-- Inserir no **local temático correto** (não no final)
-- Usar marcadores `⚠️ Padrão de prova:` e `🔴`
-- Não duplicar informação já presente
-
-### 6. Popular Banco de Dados Relacional (Siamese Twins)
-- OBJETIVO OBRIGATÓRIO: Nenhuma questão vive no Markdown sem viver no DB.
-- Rodar o script CLI: `python Tools/insert_questao.py --area "..." --tema "..." --enunciado "..." --correta "..." --marcada "..." --erro "..." --elo "..." --armadilha "..."`
-- Preencher os parâmetros cirurgicamente com as tipologias mapeadas no passo 2.
-
-### 7. Responder ao usuário
-Apresentar: análise + diagnóstico do erro + confirmação de registros (MD + SQLite).
+### 5. Responder ao usuário
+Apresentar: análise + diagnóstico do erro + confirmação de inserção no SQLite (`ipub.db`) + trecho que foi salvo no Resumo da Área.
 
 ### 8. Fechamento (Obrigatório)
 Seguir o **Protocolo de Fechamento** em `AGENTE.md` e executar o workflow `registrar-sessao.md`.

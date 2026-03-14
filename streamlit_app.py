@@ -8,15 +8,12 @@ st.set_page_config(
 )
 
 pages = {
-    "Estudo": [
-        st.Page("app/pages/01_dashboard.py",       title="Dashboard",        icon="🏠"),
-        st.Page("app/pages/02_caderno_erros.py",   title="Caderno de Erros", icon="📖"),
-        st.Page("app/pages/03_resumos.py",         title="Resumos por Área", icon="📚"),
-    ],
-    "Análise": [
-        st.Page("app/pages/04_progresso.py",       title="Progresso",        icon="📈"),
-        st.Page("app/pages/05_historico.py",       title="Histórico",        icon="🗓️"),
-    ],
+    "Principal": [
+        st.Page("app/pages/01_dashboard.py",       title="Cronograma + Dashboard", icon="🏠"),
+        st.Page("app/pages/02_resumos.py",         title="Resumos por Área",       icon="📚"),
+        st.Page("app/pages/03_caderno.py",         title="Caderno de Erros (DB)",  icon="📖"),
+        st.Page("app/pages/04_historico.py",       title="Progresso e Histórico",  icon="📈"),
+    ]
 }
 
 pg = st.navigation(pages)

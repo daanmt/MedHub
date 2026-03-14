@@ -1,25 +1,23 @@
 import streamlit as st
 import plotly.express as px
-from app.utils.parser import get_error_stats, parse_sessions
+from app.utils.db import get_db_metrics
 from app.utils.file_io import read_md
 
-st.title("🏠 Dashboard")
-st.markdown("Bem-vindo ao centro de controle do IPUB.")
+st.title("🏠 Cronograma + Dashboard")
+st.markdown("Visão holística do seu rendimento validado pelo Banco de Dados.")
 
-# --- 1. MÉTRICAS (Caderno de Erros) ---
-st.subheader("📊 Métricas de Erros")
-stats = get_error_stats()
-total_erros = stats.get("total", 0)
-por_area = stats.get("por_area", {})
+# --- MÉTRICAS ---
+st.subheader("📊 Métricas Consolidadas (SQLite)")
+metrics = get_db_metrics()
+total_erros = metrics["total"]
+df_areas = metrics["df_areas"]
 
 col1, col2 = st.columns([1, 2])
 with col1:
     st.metric("Total de Erros Registrados", total_erros)
     
 with col2:
-    if por_area:
-        import pandas as pd
-        df_areas = pd.DataFrame(list(por_area.items()), columns=["Área", "Erros"])
+    if not df_areas.empty:
         fig = px.bar(df_areas, x="Erros", y="Área", orientation='h', title="Erros por Área", height=250, template='plotly_dark', color_discrete_sequence=['#378ADD'])
         fig.update_layout(margin=dict(l=0, r=0, t=30, b=0), showlegend=False)
         st.plotly_chart(fig, width="stretch")
@@ -28,7 +26,7 @@ with col2:
 
 st.divider()
 
-# --- 2. ÚLTIMO ESTADO ---
+# --- STATUS ---
 st.subheader("📌 Status do Agente")
 estado_content = read_md("ESTADO.md")
 with st.expander("Ver `ESTADO.md` completo", expanded=False):
@@ -36,21 +34,3 @@ with st.expander("Ver `ESTADO.md` completo", expanded=False):
         st.markdown(estado_content)
     else:
         st.warning("Arquivo ESTADO.md não encontrado.")
-
-st.divider()
-
-# --- 3. SESSÕES RECENTES ---
-st.subheader("🗓️ Sessões de Estudo Recentes")
-df_sessions = parse_sessions()
-if not df_sessions.empty:
-    for idx, row in df_sessions.head(3).iterrows():
-        label = row['data'].strftime('%Y-%m-%d') if not pd.isnull(row['data']) else "Data Indefinida"
-        with st.expander(f"📄 {label} - {row['arquivo']}"):
-            content = read_md(f"history/{row['arquivo']}")
-            lines = [l for l in content.split('\\n')[2:] if l.strip()]
-            preview = ' '.join(lines[:3])[:200] + '...' if lines else ''
-            st.caption(preview)
-            if st.button("Ver completo", key=row['arquivo']):
-                st.markdown(content)
-else:
-    st.info("Nenhuma sessão registrada no diretório history/.")

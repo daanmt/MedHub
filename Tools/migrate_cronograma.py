@@ -39,11 +39,16 @@ def migrate():
             # Se já passamos do ponto de parada, tudo é Pendente
             current_status = "Pendente" if stop_reached else "Concluído"
             
-            # Checagem flexível de Sífilis
-            if "Sífilis" in tema_clean and "Gestação" in tema_clean and "Congênita" in tema_clean:
+            # Checagem flexível de Sífilis - mas específica para TEORIA I
+            # Se encontrar Teoria I, marca como concluído e PARA o 'concluído automático'
+            if "Sífilis" in tema_clean and "Gestação" in tema_clean and "Teoria I" in tema_clean:
                 stop_reached = True
                 current_status = "Concluído"
-                print(f"Marcador encontrado: {tema_clean}")
+                print(f"Marcador final de conclusão encontrado: {tema_clean}")
+            
+            # Se for Sifilis Teoria II ou qualquer coisa depois de Teoria I ser encontrada, é Pendente
+            if stop_reached and tema_clean != "Sífilis na Gestação e Sífilis Congênita (Teoria I)":
+                current_status = "Pendente"
 
             cursor.execute('''
                 INSERT INTO cronograma_progresso (semana, tema, status, pos_semana, pos_tema)

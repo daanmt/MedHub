@@ -4,7 +4,7 @@ import pandas as pd
 from app.utils.db import get_db_metrics, get_cronograma, update_cronograma_status
 from app.utils.file_io import read_md
 
-st.title("🏠 Cronograma + Dashboard")
+st.title("🏠 Dashboard")
 
 df_crono = get_cronograma()
 

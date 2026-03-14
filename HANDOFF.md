@@ -1,16 +1,15 @@
-# HANDOFF — Ponto de Passagem de Bastão
+# HANDOFF - IPUB
 
-> **Última atualização:** Sessão 025 (Reforma IPUB v3.0 - Estabilização Final)
+## Status Atual
+- **Resumo Concluído**: `Medidas de Saúde Coletiva.md` expandido com a Parte III (Demografia, Transições e Perfil Brasileiro).
+- **Pendência**: Aguardando questões do usuário sobre este tema.
 
-## 📌 Status Atual
-- **Reforma v3.0 Concluída:** A arquitetura "Zero-DB" foi estabilizada. O App Streamlit lê 100% dos dados via parser stateful do Markdown.
-- **Player Anti-Crash:** O player de flashcards foi reescrito (shuffle por índices) e está resiliente a trocas de contexto e filtros.
-- **Consolidação:** Dashboard, Flashcards, Caderno, Resumos e Progresso operacionais e sincronizados.
+## Última Ação
+- Registro da sessão 027 e limpeza de arquivos temporários.
 
-## 🚧 Obstáculos / Problemas Atuais
-- Nenhum bloqueio técnico crítico no momento. O sistema está em "steady state".
-- A sincronização automática via GitHub carece de testes de stress em ambiente real de produção.
+## Próximo Passo
+- **Para o Agente**: Ao iniciar, ler o `caderno_erros.md` e o resumo de Saúde Coletiva para estar pronto para analisar as questões que o usuário enviar.
+- **Contexto**: O usuário mencionou que enviaria questões em breve.
 
-## ➡️ Próximo Passo Imediato (próxima sessão)
-- Iniciar a expansão da base de erros (meta: 100+ entradas).
-- Refinar o `04_resumos.py` para busca semântica em todos os temas.
+## Bloqueios
+- Nenhum.

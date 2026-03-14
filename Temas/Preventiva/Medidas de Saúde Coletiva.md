@@ -326,3 +326,92 @@ Mudança no padrão de doenças: Infecciosas (DIP) dando lugar a Crônicas (DCNT
 - **Mortalidade Proporcional (Ranking):** 1. Aparelho Circulatório; 2. Neoplasias; 3. Aparelho Respiratório; 4. Causas Externas.
 - **Causas Externas:** Em questões, se unificados os acidentes, eles superam as agressões. Porém, se separados, as **agressões** (homicídios) costumam ocupar o 1º lugar.
 
+# Indicadores Demográficos
+
+⭐ **Esperança ou Expectativa de Vida ao Nascer**
+- **Definição**: Número esperado de anos a serem vividos por uma coorte (grupo que nasce no mesmo ano).
+- **Cálculo**: Baseado na média de idade com que a população morre naquele ano.
+- **Brasil (Dados 2019/2020)**:
+    - Média nacional: **76,6 anos**.
+    - Mulheres vivem ~7 anos a mais que homens (80,1 vs 73,1).
+    - Diferença Regional: SC (~80 anos) vs MA (~71 anos).
+- ⚠️ **Independe da estrutura etária**: Pode ser usado para comparar regiões sem padronização.
+- 🔴 **Sobremortalidade Masculina**: Principal causa entre 15-25 anos são as **Causas Externas**, o que reduz a esperança de vida dos homens.
+
+**Taxas de Fecundidade**
+- **Taxa de Fecundidade Geral (TFG)**: Média de nascidos vivos por mulheres em idade fértil (15-49 anos).
+    - ⚠️ **Pegadinha**: O denominador é apenas mulheres de 15-49 anos, NÃO a população total.
+- **Taxa de Fecundidade Total (TFT)**: Somatório das taxas específicas por idade. É o indicador mais acurado (não precisa padronizar).
+- **Brasil**: Em queda franca (1,76 filhos por mulher em 2015).
+
+**Crescimento Populacional**
+- **Crescimento Absoluto (Demográfico)**: (Nascimentos + Imigrações) - (Óbitos + Emigrações).
+- **Crescimento Vegetativo**: Nascimentos - Óbitos (desconsidera fluxos migratórios).
+
+**Estrutura Etária e Indicadores de Envelhecimento**
+- **Pirâmides Etárias**:
+    - **Base Larga + Ápice Estreito**: População jovem (baixa mediana de idade).
+    - **Estreitamento da Base + Alargamento do Ápice**: Envelhecimento populacional (aumento da mediana).
+- **Índice de Envelhecimento**: (Idosos ≥ 60 anos / Jovens < 15 anos) x 100.
+    - ⭐ **Destaque UNIFESP**: Banca que mais cobra este indicador.
+- **Razão de Dependência**: (Populares < 15 anos + Idosos ≥ 60 anos) / População de 15-59 anos (PEA).
+    - Reflete o encargo econômico sobre a parcela produtiva. No Brasil, tende a aumentar pelo crescimento da parcela idosa.
+
+# Indicadores Socioeconômicos
+
+⭐ **IDH (Índice de Desenvolvimento Humano)**
+- Mnemônico: **O IDH É ÉPICO!**
+    - **E**xpectativa de Vida (Longevidade).
+    - **E**scolaridade (Educação).
+    - **P** renda **I** **C**apita (**O** PIB per capita).
+- Varia de 0 a 1 (1 é o melhor).
+
+**IVS (Índice de Vulnerabilidade Social)**
+- Mede a ausência/insuficiência de ativos que deveriam ser providos pelo Estado.
+- **Dimensões**: Infraestrutura Urbana, Capital Humano e Renda/Trabalho.
+- Varia de 0 a 1 (1 é a vulnerabilidade máxima).
+- ⚠️ **Relação com IDH**: Inversamente proporcional.
+
+# Transições em Saúde
+
+**Transição Demográfica**
+- Passagem de altos coeficientes de mortalidade e natalidade para valores reduzidos.
+- **Fases (Medronho)**:
+    - **Fase 1 (Pré-transicional)**: Natalidade e Mortalidade altas (crescimento lento).
+    - **Fase 2 (Explosão Demográfica)**: Queda rápida da mortalidade (especialmente infantil), natalidade continua alta.
+    - **Fase 3 (Convergência)**: Natalidade começa a cair rápido. Inicia o envelhecimento populacional.
+    - **Fase 4 (Estabilização)**: Novo equilíbrio com taxas baixas. Pirâmide em forma de "Urna".
+- 🔴 **Brasil**: Transição acelerada. Atualmente na Fase 3 (convergência), caminhando para a 4.
+
+**Transição Epidemiológica (Omran)**
+- Substituição de Doenças Infectoparasitárias (DIP) por Doenças Crônicas Não Transmissíveis (DCNT) e Causas Externas.
+- 🔴 **Brasil: Transição Polarizada Prolongada**:
+    - **Tripla Carga de Doenças**: Coexistência de DIP, DCNT e Causas Externas.
+    - **Contratransição**: Retrocessos com reemergência de doenças (ex: Sarampo, Febre Amarela).
+
+# Perfil de Saúde no Brasil (Atualizado)
+
+**Mortalidade Proporcional por Grupos (Ranking)**
+1. **1º Aparelho Circulatório** (~27%).
+    - ⭐ Principal causa absoluta: **IAM** (1º) e **AVE** (2º).
+2. **2º Neoplasias** (~17%).
+3. **3º Aparelho Respiratório** (~12%).
+4. **4º Causas Externas** (~10,5%).
+
+**Causas Externas**
+- Ranking: **1º Agressões** > 2º Acidentes de Transporte > 3º Quedas/Traumatismos.
+- Perfil: Afeta majoritariamente **homens jovens (15-39 anos)**. É a principal causa de morte em adolescentes.
+
+**Mortalidade Infantil**
+- Coeficiente de Mortalidade Infantil (CMI) no Brasil: ~11,9 por 1.000 NV (2019).
+- **Componente Prevalente**: **Neonatal Precoce** (0-6 dias), refletindo problemas na assistência ao pré-natal e parto.
+- Redução mais acelerada ocorreu no Nordeste (Alagoas foi destaque).
+
+**Mortalidade Materna**
+- Razão de Mortalidade Materna (RMM): ~59,1 por 100 mil NV (2018). Limite OMS é 20.
+- **Causas Principais**: **Hipertensão** (1ª), Hemorragias, Infecção Puerperal e Aborto.
+- ⚠️ **Falha na Redução**: Devido à má qualidade do pré-natal/parto, excesso de cesarianas (Brasil 45-55%) e ilegalidade do aborto.
+
+**Atenção à Saúde**
+- O sistema brasileiro é **Fragmentado e Reativo** (foco em agudos).
+- Solução: **Redes de Atenção à Saúde (RAS)** com a **APS** como coordenadora e ordenadora do cuidado, visando o acompanhamento longitudinal das doenças crônicas.

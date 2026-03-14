@@ -48,7 +48,7 @@ def get_caderno_erros():
 def get_cronograma():
     """Retorna o DataFrame do progresso do cronograma"""
     conn = get_connection()
-    df = pd.read_sql('SELECT id, semana as Semana, area as Área, tema as Tema, status as Status FROM cronograma_progresso', conn)
+    df = pd.read_sql('SELECT id, semana as Semana, tema as Tema, status as Status FROM cronograma_progresso ORDER BY pos_semana, pos_tema', conn)
     conn.close()
     return df
 

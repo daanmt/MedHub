@@ -56,17 +56,25 @@ def sync_from_summaries(cursor):
                 content = f.read()
             
             # Procura por Armadilhas (🔴), Alertas (⚠️) e Destaques (⭐)
-            # Regex melhorada para pegar quase qualquer linha que tenha esses emojis
             alerts = re.findall(r'([🔴⚠️⭐])\s*(.*)', content)
             
             for emoji, text in alerts:
-                if len(text.strip()) < 5: continue
+                text = text.strip()
+                if len(text) < 5: continue
                 
-                frente = f"REVISÃO ({emoji}) [{tema_name}]"
-                verso = text.strip()
+                # Tentativa de criar uma pergunta melhor baseada no negrito inicial
+                # Ex: **Padrão de prova:** Texto... -> Qual o Padrão de prova em [Tema]?
+                match_bold = re.match(r'\*\*(.*?)\*\*:(.*)', text)
+                if match_bold:
+                    topico = match_bold.group(1)
+                    frente = f"Qual o ponto sobre **{topico}** em **{tema_name}**? {emoji}"
+                    verso = text # Mantém o texto completo no verso
+                else:
+                    frente = f"O que você sabe sobre este ponto em **{tema_name}**? {emoji}"
+                    verso = text
                 
-                # Verifica duplicata
-                cursor.execute("SELECT id FROM flashcards WHERE frente = ? AND tema_id = ?", (frente, tema_id))
+                # Verifica duplicata (pelo verso para permitir mudar a frente)
+                cursor.execute("SELECT id FROM flashcards WHERE verso = ? AND tema_id = ?", (verso, tema_id))
                 if not cursor.fetchone():
                     cursor.execute("INSERT INTO flashcards (tema_id, tipo, frente, verso) VALUES (?, ?, ?, ?)",
                                    (tema_id, 'Resumo', frente, verso))

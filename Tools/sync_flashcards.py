@@ -21,8 +21,9 @@ def sync_from_errors(cursor):
     for err in erros:
         qid, tema_id, enunciado, elo, armadilha, correta = err
         
-        # Frente: O contexto clínico real
-        frente = f"### CONTEXTO CLÍNICO (Questão Real)\n{enunciado}\n\n**Pergunta:** Qual foi o equívoco cometido aqui e qual o elo de conhecimento a ser restaurado?"
+        # Frente: O contexto clínico real (limpo de spoilers)
+        enunciado_limpo = re.sub(r'(?i)(?:Marcou|Gabarito|Resposta|A questÃ£o era|O gabarito foi).*', '', enunciado).strip()
+        frente = f"### [SIMULADO IPUB: Erro Real]\n{enunciado_limpo}\n\n**🧠 DESAFIO:** Qual o diagnóstico/conduta e qual o elo de conhecimento a ser restaurado?"
         # Verso: A solução pedagógica
         verso = f"✅ **ALTERNATIVA CORRETA:** {correta}\n\n🧠 **ELO QUEBRADO:** {elo}\n\n🔴 **ARMADILHA:** {armadilha}"
         

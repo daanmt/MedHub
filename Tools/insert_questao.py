@@ -2,12 +2,14 @@ import sqlite3
 import argparse
 import sys
 from datetime import datetime
-
 import os
+import re
 DB_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'ipub.db')
 
 def insert_questao(area, tema, enunciado, correta, chamada, erro, elo, armadilha, 
                    complexidade="Média", habilidades="N/A", faltou="N/A", explicacao="N/A", titulo="Erro sem título"):
+    # print(f"DEBUG: Tentando inserir no banco: {os.path.abspath(DB_PATH)}")
+    conn = None
     try:
         conn = sqlite3.connect(DB_PATH)
         cursor = conn.cursor()
@@ -35,8 +37,14 @@ def insert_questao(area, tema, enunciado, correta, chamada, erro, elo, armadilha
               erro, habilidades, faltou, explicacao, armadilha))
         questao_id = cursor.lastrowid
 
-        # 2. Gerar Flashcard FSRS de ALTO NÍVEL (Análise Cognitiva)
-        frente_texto = f"### [DESAFIO IPUB: {tema}]\n\n**CASO CLÍNICO:**\n{enunciado}\n\n---\n**🧠 DESAFIO:** Qual foi o elo quebrado neste raciocínio e qual a correção fundamental?"
+        # 2. Gerar Flashcard FSRS de ALTO NÍVEL (Análise Cognitiva) - SEM SPOILERS NA FRENTE
+        # Removemos frases que entregam a resposta (ex: "Marcou X, era Y")
+        enunciado_limpo = re.sub(r'(?i)(?:Marcou|Gabarito|Resposta|A questÃ£o era|O gabarito foi).*', '', enunciado).strip()
+        
+        # Se o enunciado limpo ficar vazio (improvável), usa o título
+        contexto_clinico = enunciado_limpo if len(enunciado_limpo) > 10 else titulo
+
+        frente_texto = f"### [SIMULADO IPUB: {tema}]\n\n**CASO CLÍNICO:**\n{contexto_clinico}\n\n---\n**🧠 DESAFIO:** Qual a conduta/diagnóstico correto e qual o elo quebrado na tentativa anterior?"
         
         verso_texto = (
             f"✅ **GABARITO:** {correta}\n\n"
@@ -84,9 +92,11 @@ def insert_questao(area, tema, enunciado, correta, chamada, erro, elo, armadilha
 
         conn.commit()
         print(f"Sucesso! Questão '{titulo}' inserida. Flashcard IPUB High-Level [ID: {card_id}] gerado.")
+        return True
 
     except Exception as e:
         print(f"Erro ao inserir no banco: {e}")
+        return False
     finally:
         if conn:
             conn.close()

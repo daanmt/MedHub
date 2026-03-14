@@ -13,6 +13,8 @@ def extract_field(pattern, text, default=""):
     return default
 
 def etl():
+    print(f"DEBUG: CWD: {os.getcwd()}")
+    print(f"DEBUG: sys.path: {sys.path}")
     print("Iniciando varredura ETL (Extract, Transform, Load) do caderno_erros.md...")
     try:
         with open('caderno_erros.md', 'r', encoding='utf-8') as f:

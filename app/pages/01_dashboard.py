@@ -1,7 +1,7 @@
 import streamlit as st
 import plotly.express as px
 import pandas as pd
-from app.utils.db import get_db_metrics
+from app.utils.db import get_db_metrics, get_cronograma, update_cronograma_status
 from app.utils.file_io import read_md
 
 st.title("🏠 Cronograma + Dashboard")
@@ -10,23 +10,41 @@ st.markdown("Visão holística do seu rendimento e planejamento de estudos.")
 # --- CRONOGRAMA ---
 st.subheader("📅 Cronograma")
 
-@st.cache_data
-def load_cronograma():
-    try:
-        # Garante o nome exato do arquivo sem espaços duplos acidentais
-        filename = "Cronograma de Reta Final.xlsx"
-        df = pd.read_excel(filename, header=1)
-        # Limpa formatação vazia do Excel
-        df = df.dropna(how='all', axis=1).fillna("")
-        return df
-    except Exception as e:
-        return pd.DataFrame()
+df_crono = get_cronograma()
 
-df_crono = load_cronograma()
 if not df_crono.empty:
-    st.dataframe(df_crono, width="stretch", height=400)
+    # Remove o ID da visualização mas mantém para referência
+    edited_df = st.data_editor(
+        df_crono,
+        column_config={
+            "id": None, # Esconde a coluna ID
+            "Status": st.column_config.SelectboxColumn(
+                "Status",
+                help="Seu progresso neste tema",
+                options=["Pendente", "Lendo", "Concluído"],
+                required=True,
+            )
+        },
+        disabled=["Semana", "Área", "Tema"],
+        hide_index=True,
+        width="stretch",
+        height=400,
+        key="cronograma_editor"
+    )
+
+    # Lógica de salvamento (se houver alterações)
+    if st.button("💾 Salvar Evolução do Cronograma"):
+        # Compara o DataFrame original com o editado para encontrar mudanças
+        diff = edited_df[edited_df["Status"] != df_crono["Status"]]
+        if not diff.empty:
+            for _, row in diff.iterrows():
+                update_cronograma_status(row["id"], row["Status"])
+            st.success(f"Progresso atualizado em {len(diff)} tema(s)!")
+            st.rerun()
+        else:
+            st.info("Nenhuma alteração detectada no cronograma.")
 else:
-    st.warning("Arquivo `Cronograma de Reta Final.xlsx` não encontrado na raiz ou formato inválido.")
+    st.warning("Cronograma não encontrado no banco de dados. Execute a migração (Tools/migrate_cronograma.py).")
 
 st.divider()
 

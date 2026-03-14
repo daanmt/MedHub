@@ -17,39 +17,27 @@
 
 ---
 
-## 🚀 Fase 2: Motor de Retenção (FSRS v4) e Dash de Progresso (Status: Próximo Passo)
-*Transformar texto estático em flashcards guiados pelo algoritmo mnemônico FSRS v4 state-of-the-art e criar a tabela mestre de métricas vinculada ao cronograma.*
+## 🚀 Fase 2: Motor de Retenção e Dash Dinâmico (Status: Concluído)
+*Transformar texto estático em banco de dados relacional e controle de cronograma.*
+
+**Entregas Concluídas:**
+- [x] **Integração Absoluta com o Cronograma (Excel -> DB):** Planilha do Estratégia mapeada e editável via Dashboard.
+- [x] **Arquitetura SQLite (SSOT):** Centralização de erros e cronograma no `ipub.db`.
+- [x] **App Streamlit Minimalista:** 4 abas integradas (Dash, Resumos, Caderno DB, Histórico).
+
+---
+
+## 🔬 Fase 3: Motor de Retenção FSRS v4 (Status: Próximo Passo)
+*Implementar rigorosamente o motor FSRS de agendamento e otimização.*
 
 **Objetivos:**
-- [ ] **Integração Absoluta com o Cronograma (Estratégia Med):**
-  - Implementar o painel de métricas consumindo a taxonomia de disciplinas exata da planilha `Dashboard EMED 2026.xlsx`.
-  - **Métricas Chave:** Nº de questões realizadas, Nº de Acertos, Percentual de Acertos (%). Ignorar métricas de vaidade (ex: custo por questão).
-- [ ] **Conversão Automatizada para Flashcards e Export (Anki / Texto):** 
-  - Script autônomo do Agente que traduz os "Elos Quebrados" do `caderno_erros.md` em pares *Frente/Verso* precisos.
-- [ ] **Core Mnemônico FSRS v4 (Scheduler + Optimizer):**
-  - Implementar rigorosamente o motor FSRS de forma dupla, separando o Agendador operacional do Otimizador.
-  - **O Scheduler:** Transitará as métricas base (Dias passados Δt) usando previsores em tempo real de **E** (Estabilidade), **D** (Dificuldade) e **R** (Retenção Desejada definida pelo aluno). Proibição absoluta de learning steps maiores que 1 dia.
-  - **O Optimizer (Núcleo de Inteligência IPUB):** Script em PyTorch que roda periodicamente (ex: 1x semana). Usa BPTT (Backpropagation Through Time) e MLE (Maximum Likelihood Estimation) sobre o `fsrs_revlog` para reconstruir a curva de esquecimento, ajustando os coeficientes globais do usuário e garantindo o "Stochastic Shortest Path" de menos revisões com mais memória.
+- [ ] **Scheduler:** Agendamento de revisões (Stability/Difficulty) no `fsrs_cards`.
+- [ ] **Optimizer:** Script em PyTorch para calibragem da curva de esquecimento.
+- [ ] **Interface de Revisão:** Aba no Streamlit para responder flashcards e coletar logs (Review Log).
 
 ---
 
-## 🖥️ Fase 3: App Streamlit & Arquitetura de Banco de Dados (Em Planejamento)
-*Sair da interface da IDE (Markdown) para uma aplicação Web (Streamlit) sustentada por um RDBMS, democratizando o acesso e facilitando a interação diária.*
-
-**Objetivos de Banco de Dados (SQLite) - [Standby / Background ML]:**
-- O banco `ipub.db` será mantido estritamente para os cálculos de Machine Learning (Otimizador FSRS) em background, mas **NÃO** será a fonte de verdade visual. A persistência central retorna para o Markdown.
-
-**Objetivos de Frontend (Streamlit App) — Zero DB Architecture:**
-A interface gráfica obedecerá o princípio "Toda persistência é via os próprios `.md` existentes, com backup `.bak` automático". A pasta raiz será `app/` para não sujar o repositório LLM.
-- [x] **Fase 1 — Base:** Configuração Multipages (`st.navigation`), parser raw dos markdowns e utilitários de I/O de arquivos.
-- [x] **Fase 2 — Leitura:** `01_dashboard.py` (Métricas rápidas parseadas do caderno), `03_resumos.py` (Árvore de arquivos de `Temas/`) e `05_historico.py` (Histórico `history/`).
-- [x] **Fase 3 — Escrita:** `02_caderno_erros.py` (Filtros e Forms de Inserção direta no `caderno_erros.md`) e Editor visual para os resumos.
-- [x] **Fase 4 — Análise:** `04_progresso.py` renderizando Plotly (Acertos vs Erros e Heatmaps de sessão).
-- [ ] **Fase 5 — Polimento:** Refinamentos "P2" (UX e Analytics Avançado com a planilha EMED).
-
----
-
-## 🧠 Fase 4: O Workflow Fechado — Simulados e Analytics Ativo (Visão de Futuro)
+## 🧠 Fase 4: O Workflow Fechado — Simulados e Analytics (Visão de Futuro)
 *O sistema não apenas armazena, mas coordena ativamente as revisões do aluno.*
 
 **Objetivos:**

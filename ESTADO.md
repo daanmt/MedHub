@@ -14,10 +14,11 @@ Ambiente de estudo para residência médica. Processa questões de prova, regist
 > [!IMPORTANT]
 > **SINGLE SOURCE OF TRUTH (SSOT):** O número exato e autêntico de erros e métricas do projeto **sempre será o exibido no Streamlit App** (`01_dashboard.py`). O Agente que ler o `ESTADO.md` não deve confiar cegamente nas "recontagens" estáticas de texto (que podem ficar defasadas e causar alucinações). Use sempre ferramentas como `parser.py` para obter o número real.
 
-- **92 entradas** no caderno de erros (5 áreas)
+- **92 erros diagnosticados** no banco de dados (`ipub.db`)
+- **337 temas de cronograma** rastreáveis e dinâmicos
 - **25 resumos clínicos** consolidados em `Temas/`
 - **3 workflows** operacionais em `.agents/workflows/`
-- **23 sessões** de estudo catalogadas em `history/`
+- **25 sessões** de estudo catalogadas em `history/`
 
 ---
 
@@ -41,8 +42,9 @@ Ambiente de estudo para residência médica. Processa questões de prova, regist
 | Artefato | Arquivo |
 |---|---|
 | Resumos clínicos | `Temas/{Área}/{Subespecialidade}/{Tema}.md` |
-| Caderno de erros | `caderno_erros.md` (único, 36+ entradas) |
-| Progresso | `progresso.md` |
+| Banco Principal (DB) | `ipub.db` (Erros + Cronograma) |
+| [Legado] Caderno | `caderno_erros.md` (Apenas leitura) |
+| [Legado] Progresso | `progresso.md` (Deprecado) |
 
 ### Material de referência (PDFs — não editáveis)
 | Artefato | Pasta |
@@ -69,6 +71,7 @@ Ambiente de estudo para residência médica. Processa questões de prova, regist
 
 ## Últimas sessões
 
+**2026-03-14 | Antigravity (sessão 025):** Implementação do Cronograma Dinâmico (Mini-DB). A planilha de Reta Final foi migrada para o SQLite (`cronograma_progresso`). O Dashboard agora permite a marcação de status (Pendente, Lendo, Concluído) em 337 temas mapeados, sincronizando o planejado com o executado via `st.data_editor`.
 **2026-03-14 | Antigravity (sessão 024):** Auditoria de Governança e Refinamento de UI (P0 e P1). As métricas do Dashboard Streamlit foram corrigidas usando _Top-Down parser_ para garantir a acuidade matemática (exatos 92 erros rastreados). O `ESTADO.md` foi atualizado implementando a doutrina do **Single Source of Truth** (Streamlit > Texto Markdown Fixo). Ferramentas deprecadas limpas.
 **2026-03-14 | Antigravity (sessão 023):** Mudança arquitetural (Pivô). O usuário definiu o documento `IPUB_Streamlit_Plano.md` estabelecendo uma interface em Streamlit puramente baseada em parse de Markdown ("Zero DB"). O Sqlite fica isolado como motor futuro de Machine Learning. O Roadmap e Backlog foram reescritos em 5 Fases visando a construção do multipage app na subpasta `app/`.
 **2026-03-14 | Antigravity (sessão 022):** Desenvolvimento prático e execução do motor ETL (`etl_markdown_to_sqlite.py`). Migração massiva de blocos de erros textuais do `caderno_erros.md` direto para relacional do SQLite. O banco `ipub.db` agora possui volume crítico.

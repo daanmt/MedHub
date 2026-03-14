@@ -36,6 +36,7 @@ def get_caderno_erros():
             q.enunciado as Questão,
             q.alternativa_correta as Correta,
             q.alternativa_marcada as Marcada,
+            q.advanced_status as Status,
             q.armadilha_prova as Armadilha
         FROM questoes_erros q
         JOIN taxonomia_cronograma t ON q.tema_id = t.id
@@ -43,3 +44,18 @@ def get_caderno_erros():
     ''', conn)
     conn.close()
     return df
+
+def get_cronograma():
+    """Retorna o DataFrame do progresso do cronograma"""
+    conn = get_connection()
+    df = pd.read_sql('SELECT id, semana as Semana, area as Área, tema as Tema, status as Status FROM cronograma_progresso', conn)
+    conn.close()
+    return df
+
+def update_cronograma_status(row_id, new_status):
+    """Atualiza o status de um tema no cronograma"""
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute('UPDATE cronograma_progresso SET status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?', (new_status, row_id))
+    conn.commit()
+    conn.close()

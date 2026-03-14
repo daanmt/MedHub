@@ -44,12 +44,13 @@ def parse_sessions(history_dir="history") -> pd.DataFrame:
     for file in h_path.glob("session_*.md"):
         content = file.read_text(encoding="utf-8")
         
-        # Extrai data
-        date_match = re.search(r'\\*\\*Data:\\*\\*\\s*([\\d-]+)', content)
-        date_str = date_match.group(1) if date_match else file.name[:10]
-        
-        # TODO: Refinar lendo qtd. questões e temas no futuro conforme necessidade
-        
+        if not date_match:
+            # Tenta pegar a data de modificação do arquivo como fallback se o nome do arquivo falhar
+            import os
+            from datetime import datetime
+            mtime = os.path.getmtime(file)
+            date_str = datetime.fromtimestamp(mtime).strftime('%Y-%m-%d')
+            
         sessions.append({
             "arquivo": file.name,
             "data": date_str,

@@ -1,5 +1,5 @@
 # ESTADO — IPUB (Preparação para Residência Médica)
-*Atualizado: 2026-03-14 (sessão 021) | Ferramenta: Antigravity*
+*Atualizado: 2026-03-14 (sessão 022) | Ferramenta: Antigravity*
 
 ---
 
@@ -28,7 +28,9 @@ Ambiente de estudo para residência médica. Processa questões de prova, regist
 | Protocolo de análise | `Tools/comando de analise de questao.md` |
 | Script extração PDF | `Tools/extract_pdfs.py` |
 | Script Init DB SQLite | `init_db.py` |
-| Banco de Dados Relacional | `ipub.db` |
+| Script API Helper LLM->DB | `Tools/insert_questao.py` |
+| Script ETL Markdown->DB | `etl_markdown_to_sqlite.py` |
+| Banco de Dados Relacional | `ipub.db` (92 Registros OK) |
 | Session logs | `history/session_NNN.md` |
 
 ### Conteúdo
@@ -61,6 +63,7 @@ Ambiente de estudo para residência médica. Processa questões de prova, regist
 
 ## Últimas sessões
 
+**2026-03-14 | Antigravity (sessão 022):** Desenvolvimento prático e execução do motor ETL (`etl_markdown_to_sqlite.py`). Migração massiva de 91 blocos de erros textuais do `caderno_erros.md` direto para relacional do SQLite. O banco `ipub.db` agora possui volume crítico (92 Flashcards e 14 Temas mapeados).
 **2026-03-14 | Antigravity (sessão 021):** Estudo da Wiki oficial do Otimizador FSRS (MLE e BPTT). O roadmap foi bifurcado para definir a fronteira arquitetural entre o Scheduler (agendamento em tempo real) e o Optimizer (script periódico de Machine Learning consumindo o histórico em lote da tabela `fsrs_revlog`).
 **2026-03-14 | Antigravity (sessão 020):** Implementação da regra "Siamese Twins". Script genérico CLI `insert_questao.py` criado para salvar questões no SQLite de forma autônoma. Atualizado workflow macro `analisar-questoes.md` para embutir a fase de inserção DB.
 **2026-03-14 | Antigravity (sessão 019):** Análise da planilha EMED, detalhamento do modelo matemático de DSR no Roadmap e elaboração do schema do banco criando o script base `init_db.py`. O arquivo `ipub.db` foi instanciado com 5 tabelas (Cronograma taxonomia, Erros, Flashcards, FSRS Cards e FSRS Revlog).

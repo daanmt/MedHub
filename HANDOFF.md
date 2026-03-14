@@ -1,13 +1,13 @@
 # HANDOFF — Ponto de Passagem de Bastão
 
-> **Última atualização:** Sessão 021 (Arquitetura Machine Learning FSRS)
+> **Última atualização:** Sessão 022 (Migração ETL Concluída)
 
 ## 📌 Status Atual
-- A inteligência do **FSRS Optimizer** foi incorporada ao ROADMAP. A arquitetura reflete que o PyTorch processará os datasets de séries temporais da nossa tabela `fsrs_revlog` para aplicar Estimativa de Máxima Verossimilhança (MLE) periodicamente.
-- O sistema dual (Scheduler diário vs Optimizer periódico) foi mapeado como o Santo Graal do nosso motor de flashcards.
+- Foram purgados e transferidos os **91 erros textuais** do `caderno_erros.md` legado para a arquitetura SQL viva. 
+- O banco local agora hospeda 92 flashcards integrados, 14 Temas de métricas do Estratégia Med, e está apto ao Otimizador ML. 
 
 ## 🚧 Obstáculos / Problemas Atuais
-- A Tabela de Questões do banco tem apenas 1 questão de teste populada, enquanto o `caderno_erros.md` contêm 67 registros críticos. Precisamos dessa massa de dados para o ML funcionar.
+- Não temos Interface Gráfica nenhuma. Toda essa matemática magnífica está trancada num arquivo terminal (binário do SQLite).
 
 ## ➡️ Próximo Passo Imediato (próxima sessão)
-- Criar script "etl_markdown_to_sqlite.py" com um LLM parser para extrair as 67 questões de forma autônoma e populá-las no SQLite de uma vez só.
+- Iniciar a **Fase 3: Streamlit**. Começar criando um arquivo `app.py` modular e desenhar através de subpastas a primeira de todas as UIs da ferramenta, recomendavelmente a *Arena FSRS* e o *Dashboard*.

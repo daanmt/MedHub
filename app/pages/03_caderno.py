@@ -5,8 +5,22 @@ from app.utils.db import (
     get_due_cards_count, 
     get_next_due_card, 
     record_review, 
-    get_erros_resumidos
+    get_erros_resumidos,
+    sync_git
 )
+
+# --- SIDEBAR: SINCRONIZAÇÃO ---
+with st.sidebar:
+    st.header("⚙️ Configurações")
+    if st.button("🔄 Sincronizar com GitHub", use_container_width=True):
+        with st.spinner("Sincronizando banco de dados..."):
+            success, message = sync_git()
+            if success:
+                st.success(message)
+            else:
+                st.error(message)
+    st.divider()
+    st.caption("IPUB v2.0 | FSRS Spaced Repetition")
 
 st.title("🗂️ Flashcards e Caderno de Erros")
 st.markdown("Integração total do seu estudo ativo com o algoritmo de repetição espaçada FSRS.")

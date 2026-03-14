@@ -181,3 +181,20 @@ def get_erros_resumidos():
     ''', conn)
     conn.close()
     return df
+
+def sync_git():
+    """Executa o commit e push do banco de dados para o GitHub"""
+    import subprocess
+    try:
+        # 1. Add
+        subprocess.run(["git", "add", "ipub.db"], check=True)
+        # 2. Commit
+        msg = f"update: progress sync {datetime.now().strftime('%Y-%m-%d %H:%M')}"
+        subprocess.run(["git", "commit", "-m", msg], check=True)
+        # 3. Push
+        subprocess.run(["git", "push"], check=True)
+        return True, "Sincronização concluída com sucesso!"
+    except subprocess.CalledProcessError as e:
+        return False, f"Erro no processo Git: {e}"
+    except Exception as e:
+        return False, f"Erro inesperado: {e}"

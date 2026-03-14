@@ -17,18 +17,21 @@ if not df_crono.empty:
     edited_df = st.data_editor(
         df_crono,
         column_config={
-            "id": None, # Esconde a coluna ID
+            "id": None, 
+            "Semana": st.column_config.TextColumn("Semana", width="small"),
+            "Tema": st.column_config.TextColumn("Tema de Estudo", width="large"),
             "Status": st.column_config.SelectboxColumn(
                 "Status",
-                help="Seu progresso neste tema",
+                help="Seu progresso",
                 options=["Pendente", "Lendo", "Concluído"],
                 required=True,
+                width="small"
             )
         },
-        disabled=["Semana", "Área", "Tema"],
+        disabled=["Semana", "Tema"],
         hide_index=True,
-        width="stretch",
-        height=400,
+        use_container_width=True,
+        height=500,
         key="cronograma_editor"
     )
 

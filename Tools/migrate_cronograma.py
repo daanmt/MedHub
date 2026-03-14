@@ -12,44 +12,50 @@ def migrate():
         return
 
     print("Lendo planilha do cronograma...")
-    # Header na linha 1 (0-indexed) é onde estão as semanas
-    # Header na linha 2 (0-indexed) é onde estão as áreas
     df_raw = pd.read_excel(EXCEL_PATH, header=1)
     
-    # Pegamos as semanas da primeira linha (são as colunas do df carregado com header=1)
     semanas = df_raw.columns.tolist()
-    
-    # As áreas estão na primeira linha de dados agora
-    areas = df_raw.iloc[0].tolist()
-    
-    # Os temas começam da linha 1 em diante
+    # Descartamos a linha de áreas (PED, GO, etc) pois agora é irrelevante
     temas_df = df_raw.iloc[1:].fillna("")
 
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
-
-    # Limpar tabela antes de re-popular (ou poderíamos fazer um merge inteligente, 
-    # mas para o setup inicial a limpeza é mais segura)
     cursor.execute("DELETE FROM cronograma_progresso")
     
+    # Marcador para Sífilis na Gestação e Sífilis Congênita (Teoria I)
+    # Segundo o usuário, tudo antes disso já foi resolvido.
+    target_theme = "Sífilis na Gestação e Sífilis Congênita (Teoria I)"
+    target_found = False
+    
     count = 0
+    # Processamos coluna por coluna (Semana por Semana)
     for col_idx, semana in enumerate(semanas):
-        area = areas[col_idx]
-        if str(area).lower() == "nan" or not area:
-            continue
-            
         for row_idx in range(len(temas_df)):
-            tema = temas_df.iloc[row_idx, col_idx]
-            if tema and str(tema).strip() and str(tema).upper() != "QUESTÕES" and str(tema).upper() != "PROVAS":
-                cursor.execute('''
-                    INSERT INTO cronograma_progresso (semana, area, tema, status)
-                    VALUES (?, ?, ?, ?)
-                ''', (str(semana).strip(), str(area).strip(), str(tema).strip(), 'Pendente'))
-                count += 1
+            tema = str(temas_df.iloc[row_idx, col_idx]).strip()
+            
+            # Pula células vazias ou separadores de rotina
+            if not tema or tema.upper() in ["QUESTÕES", "PROVAS", "NAN"]:
+                continue
+            
+            # Lógica de status histórico
+            # Se ainda não encontramos Sífilis, marcamos como Concluído
+            # Se encontrarmos o tema alvo Exato (ou parcial aproximado), marcamos como Concluído e viramos a chave
+            current_status = "Concluído" if not target_found else "Pendente"
+            
+            # Checagem de match (Flexibilidade para quebras de linha ou espaços)
+            if "Sífilis na Gestação" in tema and "Sífilis Congênita" in tema:
+                target_found = True
+                current_status = "Concluído"
+
+            cursor.execute('''
+                INSERT INTO cronograma_progresso (semana, tema, status, pos_semana, pos_tema)
+                VALUES (?, ?, ?, ?, ?)
+            ''', (str(semana).strip(), tema, current_status, col_idx, row_idx))
+            count += 1
 
     conn.commit()
     conn.close()
-    print(f"Sucesso! {count} temas de estudo importados para o ipub.db.")
+    print(f"Sucesso! {count} temas de estudo importados. Status histórico aplicado até Sífilis.")
 
 if __name__ == "__main__":
     migrate()

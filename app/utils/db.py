@@ -26,7 +26,7 @@ def get_db_metrics():
             t.area as Área,
             COUNT(q.id) as Erros
         FROM taxonomia_cronograma t
-        JOIN questoes_erros q ON q.tema_id = t.id
+        LEFT JOIN questoes_erros q ON q.tema_id = t.id
         GROUP BY t.area
     ''', conn)
     

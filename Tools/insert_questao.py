@@ -3,7 +3,8 @@ import argparse
 import sys
 from datetime import datetime
 
-DB_PATH = 'ipub.db'
+import os
+DB_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'ipub.db')
 
 def insert_questao(area, tema, enunciado, correta, chamada, erro, elo, armadilha):
     try:

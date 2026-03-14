@@ -38,13 +38,12 @@ def migrate():
             # Status padrão baseado no marcador global
             current_status = "Pendente" if stop_reached else "Concluído"
             
-            # Ponto de Parada Específico: Fim da Semana 5 (Doenças Inflamatórias do Tecido Conjuntivo I)
-            # Conferimos tanto o tema quanto a semana para evitar parar na semana 1 acidentalmente
-            target_semana = "09/03 a 13/03/26"
-            if target_semana in semana_str and "Inflamatória" in tema_clean and "Conjuntivo I" in tema_clean:
+            # Ponto de Parada Real: "Sífilis na Gestação e Sífilis Congênita (Teoria I)"
+            # Segundo o Excel riscado, este é o último item concluído da Semana 5.
+            if "Sífilis na Gestação" in tema_clean and "Teoria I" in tema_clean:
                 stop_reached = True
                 current_status = "Concluído"
-                print(f"Marcador final de conclusão (Semana 5) encontrado: {tema_clean}")
+                print(f"Marcador Real de Parada encontrado: {tema_clean}")
 
             cursor.execute('''
                 INSERT INTO cronograma_progresso (semana, tema, status, pos_semana, pos_tema)

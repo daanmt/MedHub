@@ -1,13 +1,13 @@
 # HANDOFF — Ponto de Passagem de Bastão
 
-> **Última atualização:** Sessão 017 (Construção do Roadmap do IPUB)
+> **Última atualização:** Sessão 019 (Infraestrutura Relacional DB e FSRS)
 
 ## 📌 Status Atual
-- Desenvolvido o escopo e visão do produto via `roadmap.md` abrangendo 4 Fases evolutivas do sistema (MVP atual -> BD SQLite -> Frontend Web -> Algoritmo de Simulados).
-- Caderno de erros mantido com 67 contagens. `ESTADO.md` alinhado com a nova diretiva de prioridades do PM.
+- Foi instanciado o banco base `ipub.db` via `init_db.py` mapeando as 5 tabelas centrais (`taxonomia_cronograma`, `questoes_erros`, `flashcards`, `fsrs_cards`, `fsrs_revlog`).
+- O `roadmap.md` amadurecido especifica de forma tática o DSR de estabilidade e o banimento de learning steps nativos seguindo as recomendações oficiais do Open Spaced Repetition.
 
 ## 🚧 Obstáculos / Problemas Atuais
-- Limitação futura de escalabilidade: manter mais de 500+ questões com respostas extensas num único arquivo Markdown exigirá a virada de chave urgente para o `SQLite` desenhado para a Fase 3.
+- Entrar na fase de migração de dados puros: Necessário extrair em lote o antigo markdown `caderno_erros.md` da Fase 1 e fazer injeção (INSERT SQL) dessas 67 entradas preenchendo as chaves estrangerias certas das novas tabelas.
 
 ## ➡️ Próximo Passo Imediato (próxima sessão)
-- Iniciar a **Fase 2**: Definir o padrão de script ou pipeline para transformar os textos das "Armadilhas de Provas" e "Elos Quebrados" em Flashcards operacionais. Ou criar a infra do banco local (`.db`).
+- Criar script "etl_markdown_to_sqlite.py" que faz parsing do arquivo de erros atual convertendo texto estruturado em chaves primárias dentro da tabela `questoes_erros`.

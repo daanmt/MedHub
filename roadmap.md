@@ -17,18 +17,22 @@
 
 ---
 
-## 🚀 Fase 2: Motor de Retenção, Espaçamento e Tracking (Status: Próximo Passo)
-*Transformar texto estático em flashcards inteligentes (FSRS) e criar a tabela mestre de métricas vinculada ao cronograma.*
+## 🚀 Fase 2: Motor de Retenção (FSRS v4) e Dash de Progresso (Status: Próximo Passo)
+*Transformar texto estático em flashcards guiados pelo algoritmo mnemônico FSRS v4 state-of-the-art e criar a tabela mestre de métricas vinculada ao cronograma.*
 
 **Objetivos:**
-- [ ] **Integração com Tabela de Acompanhamento (Cronograma Estratégia Med):**
-  - Implementar o acompanhamento estruturado em blocos de disciplinas idênticos ao cronograma oficial (ex: *Cardiologia*, *Ginecologia - Sangramentos*).
-  - **Métricas Chave:** Nº de questões resolvidas, Nº de Acertos, Percentual de Acertos (%), Data da última revisão do bloco.
-  - Eliminar métricas subutilizadas (ex: custo por questão) para focar estritamente em **Tração Teórica**.
+- [ ] **Integração Absoluta com o Cronograma (Estratégia Med):**
+  - Implementar o painel de métricas consumindo a taxonomia de disciplinas exata da planilha `Dashboard EMED 2026.xlsx`.
+  - **Métricas Chave:** Nº de questões realizadas, Nº de Acertos, Percentual de Acertos (%). Ignorar métricas de vaidade (ex: custo por questão).
 - [ ] **Conversão Automatizada para Flashcards e Export (Anki / Texto):** 
-  - Script/Workflow onde o Agente traduz os "Elos Quebrados" do `caderno_erros.md` em pares *Front/Back* e *Cloze Deletions*.
-- [ ] **Core do Algoritmo Mnemônico — Implementar Lógica FSRS:**
-  - Garantir que a lógica de consumo de Flashcards seja baseada no modelo **FSRS** (Free Spaced Repetition Scheduler), superior ao modelo SM-2 legado do Anki padrão, para otimizar os dias de intervalo (Again, Hard, Good, Easy) respeitando a curva de esquecimento.
+  - Script autônomo do Agente que traduz os "Elos Quebrados" do `caderno_erros.md` em pares *Frente/Verso* precisos.
+- [ ] **Core Mnemônico (The FSRS v4 Algorithm):**
+  - Implementar rigorosamente o agendador FSRS como motor de datas. O usuário escolhe sua **Retenção Desejada (R)**.
+  - O sistema transitará as métricas base (Dias passados Δt) usando os preditores de FSRS clássicos:
+    - **Estabilidade (E):** Tempo (dias) para a Retenção cair a 90% (variável vital na fórmula, otimizada após +1.000 revisões).
+    - **Dificuldade (D):** Coeficiente de complexidade da questão.
+    - **Retenção (R):** Probabilidade momentânea de conseguir evocar o flashcard na hora da revisão.
+  - Proibição absoluta de learning steps (passos de aprendizado) maiores que 1 dia, seguindo as diretrizes do desenvolvedor do FSRS.
 
 ---
 
@@ -37,21 +41,22 @@
 
 **Objetivos de Banco de Dados (SQLite):**
 - [ ] **Modelagem Física e Migração (`ipub.db`):**
-  - Substituir os `.md` por um banco local estruturado (SQLite garante portabilidade fácil num arquivo só).
-  - **Tabela `questoes`:** id, area, tema (baseado no Estratégia), enunciado, alternativa_correta, alternativa_marcada, tipo_erro, elo_quebrado, data_resolucao.
-  - **Tabela `flashcards`:** id, tipo (Frente/Verso ou Cloze), question, answer, source_tema.
-  - **Tabela `fsrs_logs`:** fk_flashcard, state (New/Learning/Review), difficulty, stability, last_review_date, next_review_date (Coração do algoritmo de revisão).
-  - **Tabela `metricas_cronograma`:** fk_tema, total_questions_done, total_correct, updated_at.
+  - Substitução do repositório em texto para um banco leve e relacional estruturado nos moldes FSRS.
+  - **Tabela `questoes`:** id, area, tema (taxonomia EMED), enunciado, alternativa_correta, alternativa_marcada, tipo_erro, elo_quebrado, data_resolucao.
+  - **Tabela `flashcards`:** id, tipo, frente, verso, id_questao.
+  - **Tabela `fsrs_cards`:** core state do FSRS (id_card, state [New/Learning/Review/Relearning], *D* (Dificuldade), *S* (Estabilidade), *R* (Retrovabilidade projetada), last_review, due_date, reps, lapses).
+  - **Tabela `fsrs_revlog`:** Histórico atômico imutável (id_log, id_card, rating, delta_t, tempo_resposta) fundamental para rodar o Otimizador do FSRS no futuro.
+  - **Tabela `dashboard_metricas`:** id_tema, questões_feitas, questoes_acertadas, percentual, updated_at.
 
 **Objetivos de Frontend (Streamlit App):**
-- [ ] **UI/UX Módulo 1 - Painel Cronograma (Dashboard Principal):**
-  - Tabela interativa visual mostrando os Temas (Cardiologia, Pediatria), com barras de progresso percentuais (%) de acertos e highlights em vermelho para temas com taxa de retenção perigosa (< 70%).
-- [ ] **UI/UX Módulo 2 - Input "One-Click" de Questões:** 
-  - Área de texto limpa. O aluno cola o bloco cru copiado da plataforma (com alternativas e gabarito). Botão **[Analisar e Salvar]** aciona o Agente LLM via API no backend para preencher os dados do banco sem olhar pra IDE.
-- [ ] **UI/UX Módulo 3 - Flashcards Arena (Modo FSRS):** 
-  - Interface escura e focada. Aparece a frente da carta. Botão **[Revelar]**. Mostra o verso e renderiza os 4 botões FSRS (*Again*, *Hard*, *Good*, *Easy*) que disparam a função de "next_review_date" no banco de dados.
-- [ ] **UI/UX Módulo 4 - Leitor de Resumos (Wiki):** 
-  - Layout limpo renderizando o HTML dos arquivos da pasta `Temas/`, linkando palavras-chave para seus respectivos flashcards no banco.
+- [ ] **UI Módulo 1 - Cockpit de Progresso (EMED 2026):**
+  - Tabela espelho visual importando o modelo do Excel original. Listagem de disciplinas por bloco, barras de progresso lineares com o percentual de acertos, highlights visuais se taxa < 70%.
+- [ ] **UI Módulo 2 - Input Dinâmico de Erro:** 
+  - Caixa de dump (para colar Ctrl+C/Ctrl+V do simulado). O backend aciona o workflow IPUB e já devolve a questão formatada, gerando o erro na Tabela `questoes` nativa do banco e criando a base do Flashcard automaticamente.
+- [ ] **UI Módulo 3 - Arena FSRS (Deck Mode):** 
+  - App minimalista de revisão, puxando apenas as cartas cujo `due_date` ≤ hoje. Botões (1-De Novo, 2-Difícil, 3-Bom, 4-Fácil). Clicar engatilha os coeficientes D e S da Tabela `fsrs_cards` calculando o intervalo futuro.
+- [ ] **UI Módulo 4 - Wiki Markdown Engine:** 
+  - Renderiza HTML clean dos resumos, possibilitando criação autônoma de flashcards a partir dos parágrafos com `🔴` das armadilhas de prova com 1 clique.
 
 ---
 

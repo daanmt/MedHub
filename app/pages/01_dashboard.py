@@ -61,19 +61,24 @@ st.markdown("#### Detalhamento por Disciplina")
 df_areas = metrics["df_areas"]
 
 if not df_areas.empty:
-    # Gráfico Comparativo: Acertos vs Erros
+    # Gráfico Comparativo: Barra Horizontal (Plan v2.0)
     fig = px.bar(
-        df_areas, 
-        x="Área", 
-        y=["Acertos", "Erros"],
-        title="Performance por Área (Acertos vs Erros)",
-        barmode="group",
-        height=350,
-        template="plotly_dark",
-        color_discrete_map={"Acertos": "#2ECC71", "Erros": "#E74C3C"}
+        df_areas.sort_values('Erros'), 
+        x='Erros', y='Área',
+        orientation='h',
+        template='plotly_dark',
+        color_discrete_sequence=['#378ADD'],
+        labels={'Erros': 'Erros', 'Área': 'Área'},
     )
-    fig.update_layout(margin=dict(l=0, r=0, t=50, b=0))
-    st.plotly_chart(fig, width='stretch')
+    fig.update_layout(
+        margin=dict(l=0, r=20, t=30, b=0),
+        showlegend=False,
+        height=300,
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+    )
+    fig.update_traces(hovertemplate='%{y}: %{x} erros<extra></extra>')
+    st.plotly_chart(fig, use_container_width=True)
     
     # Tabela de Performance
     st.dataframe(
@@ -86,5 +91,19 @@ if not df_areas.empty:
     )
 else:
     st.info("Aguardando registro de questões para gerar estatísticas detalhadas.")
+
+st.divider()
+
+# --- SESSÕES RECENTES ---
+st.subheader("🗓️ Sessões Recentes")
+from app.utils.parser import parse_sessions
+df_sessions = parse_sessions()
+
+if not df_sessions.empty:
+    for idx, row in df_sessions.head(5).iterrows():
+        st.write(f"📄 **{row['data']}** — SESSÃO #{row['session_id']}")
+    st.caption("Veja o histórico completo na aba 'Análise'.")
+else:
+    st.caption("Nenhuma sessão registrada recentemente.")
 
 st.divider()

@@ -12,34 +12,35 @@ def get_tema_id(cursor, area_hint, tema_name):
     return row[0] if row else None
 
 def sync_from_errors(cursor):
-    print("Gerando flashcards a partir do Caderno de Erros...")
-    cursor.execute("SELECT id, tema_id, enunciado, elo_quebrado, armadilha_prova FROM questoes_erros")
+    print("Gerando flashcards CLÍNICOS a partir do Caderno de Erros...")
+    # Buscamos mais detalhes para o verso
+    cursor.execute("SELECT id, tema_id, enunciado, elo_quebrado, armadilha_prova, alternativa_correta FROM questoes_erros")
     erros = cursor.fetchall()
     
     count = 0
     for err in erros:
-        qid, tema_id, enunciado, elo, armadilha = err
+        qid, tema_id, enunciado, elo, armadilha, correta = err
         
-        frente = f"DESAFIO DE ERRO: {enunciado[:200]}..."
-        verso = f"**ELO QUEBRADO:** {elo}\n\n**ARMADILHA:** {armadilha}"
+        # Frente: O contexto clínico real
+        frente = f"### CONTEXTO CLÍNICO (Questão Real)\n{enunciado}\n\n**Pergunta:** Qual foi o equívoco cometido aqui e qual o elo de conhecimento a ser restaurado?"
+        # Verso: A solução pedagógica
+        verso = f"✅ **ALTERNATIVA CORRETA:** {correta}\n\n🧠 **ELO QUEBRADO:** {elo}\n\n🔴 **ARMADILHA:** {armadilha}"
         
-        # Verifica se já existe
+        # Como o estilo mudou radicalmente, vamos permitir re-gerar se o tipo for o mesmo mas a frente for diferente
         cursor.execute("SELECT id FROM flashcards WHERE questao_id = ?", (qid,))
         if not cursor.fetchone():
             cursor.execute("INSERT INTO flashcards (questao_id, tema_id, tipo, frente, verso) VALUES (?, ?, ?, ?, ?)",
                            (qid, tema_id, 'Erro', frente, verso))
             card_id = cursor.lastrowid
-            
-            # Inicializa FSRS
             cursor.execute('''
                 INSERT INTO fsrs_cards (card_id, state, due, stability, difficulty, elapsed_days, scheduled_days, reps, lapses, last_review)
                 VALUES (?, 0, ?, 0, 0, 0, 0, 0, 0, NULL)
             ''', (card_id, datetime.now()))
             count += 1
-    print(f"  {count} novos cards de erros gerados.")
+    print(f"  {count} novos cards clínicos de erros gerados.")
 
 def sync_from_summaries(cursor):
-    print("Gerando flashcards a partir dos Resumos Clínicos...")
+    print("Gerando flashcards de REVISÃO a partir dos Resumos Clínicos...")
     temas_dir = 'Temas'
     count = 0
     
@@ -55,25 +56,33 @@ def sync_from_summaries(cursor):
             with open(path, 'r', encoding='utf-8') as f:
                 content = f.read()
             
-            # Procura por Armadilhas (🔴), Alertas (⚠️) e Destaques (⭐)
+            # Procura por marcadores 🔴, ⚠️, ⭐
             alerts = re.findall(r'([🔴⚠️⭐])\s*(.*)', content)
             
             for emoji, text in alerts:
                 text = text.strip()
                 if len(text) < 5: continue
                 
-                # Tentativa de criar uma pergunta melhor baseada no negrito inicial
-                # Ex: **Padrão de prova:** Texto... -> Qual o Padrão de prova em [Tema]?
+                # Prompts baseados no tipo de marcador
+                prompt = "O que você sabe sobre este ponto?"
+                if emoji == '🔴': 
+                    prompt = "Qual a **ARMADILHA CLÁSSICA** de prova sobre este tópico?"
+                elif emoji == '⚠️':
+                    prompt = "Qual o **PADRÃO DE PROVA** ou conduta essencial aqui?"
+                elif emoji == '⭐':
+                    prompt = "O que é **FUNDAMENTAL DOMINAR** sobre este assunto?"
+
+                # Extrai tópico em negrito se existir
                 match_bold = re.match(r'\*\*(.*?)\*\*:(.*)', text)
                 if match_bold:
                     topico = match_bold.group(1)
-                    frente = f"Qual o ponto sobre **{topico}** em **{tema_name}**? {emoji}"
-                    verso = text # Mantém o texto completo no verso
+                    frente = f"**{tema_name}** | **{topico}**\n\n{prompt} {emoji}"
+                    verso = text
                 else:
-                    frente = f"O que você sabe sobre este ponto em **{tema_name}**? {emoji}"
+                    frente = f"**{tema_name}**\n\n{prompt} {emoji}\n\nConecta com: {text[:50]}..."
                     verso = text
                 
-                # Verifica duplicata (pelo verso para permitir mudar a frente)
+                # Verifica duplicata pelo verso (conteúdo pedagógico único)
                 cursor.execute("SELECT id FROM flashcards WHERE verso = ? AND tema_id = ?", (verso, tema_id))
                 if not cursor.fetchone():
                     cursor.execute("INSERT INTO flashcards (tema_id, tipo, frente, verso) VALUES (?, ?, ?, ?)",
@@ -84,7 +93,7 @@ def sync_from_summaries(cursor):
                         VALUES (?, 0, ?, 0, 0, 0, 0, 0, 0, NULL)
                     ''', (card_id, datetime.now()))
                     count += 1
-    print(f"  {count} novos cards de resumos gerados.")
+    print(f"  {count} novos cards de revisão gerados.")
 
 def main():
     conn = sqlite3.connect(DB_PATH)

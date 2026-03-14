@@ -11,7 +11,7 @@ pages = {
     "Principal": [
         st.Page("app/pages/01_dashboard.py",       title="Dashboard", icon="🏠"),
         st.Page("app/pages/02_resumos.py",         title="Resumos",       icon="📚"),
-        st.Page("app/pages/03_caderno.py",         title="Caderno de Erros",  icon="📖"),
+        st.Page("app/pages/03_caderno.py",         title="Flashcards e Caderno",  icon="🗂️"),
         st.Page("app/pages/04_historico.py",       title="Progresso",  icon="📈"),
     ]
 }

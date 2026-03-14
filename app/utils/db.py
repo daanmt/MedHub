@@ -1,6 +1,8 @@
 import sqlite3
 import pandas as pd
 import os
+from datetime import datetime
+from app.utils.fsrs import FSRS
 
 DB_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'ipub.db')
 
@@ -87,3 +89,95 @@ def update_cronograma_status(row_id, new_status):
     cursor.execute('UPDATE cronograma_progresso SET status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?', (new_status, row_id))
     conn.commit()
     conn.close()
+
+def get_due_cards_count():
+    """Retorna quantos cards estão vencidos para hoje"""
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT COUNT(*) FROM fsrs_cards WHERE due <= ?", (datetime.now(),))
+    count = cursor.fetchone()[0]
+    conn.close()
+    return count
+
+def get_next_due_card():
+    """Busca o próximo card a ser revisado (Frente, Verso, CardID)"""
+    conn = get_connection()
+    # Pela lógica FSRS, buscamos o que venceu há mais tempo
+    df = pd.read_sql('''
+        SELECT 
+            f.id as flashcard_id,
+            f.frente,
+            f.verso,
+            fc.state,
+            fc.stability,
+            fc.difficulty,
+            fc.reps,
+            fc.lapses,
+            t.area,
+            t.tema
+        FROM fsrs_cards fc
+        JOIN flashcards f ON f.id = fc.card_id
+        JOIN taxonomia_cronograma t ON t.id = f.tema_id
+        WHERE fc.due <= ?
+        ORDER BY fc.due ASC
+        LIMIT 1
+    ''', conn, params=(datetime.now(),))
+    conn.close()
+    return df.iloc[0].to_dict() if not df.empty else None
+
+def record_review(flashcard_id, rating):
+    """Aplica o algoritmo FSRS e atualiza o banco de dados"""
+    conn = get_connection()
+    cursor = conn.cursor()
+    
+    # 1. Busca estado atual do card
+    df = pd.read_sql("SELECT * FROM fsrs_cards WHERE card_id = ?", conn, params=(flashcard_id,))
+    if df.empty:
+        fsrs = FSRS()
+        card_data = fsrs.init_card()
+        card_data['card_id'] = flashcard_id
+    else:
+        card_data = df.iloc[0].to_dict()
+
+    # 2. Calcula próximo estado via FSRS
+    fsrs = FSRS()
+    new_metrics = fsrs.evaluate(card_data, rating)
+    
+    # 3. Atualiza banco
+    cursor.execute('''
+        UPDATE fsrs_cards 
+        SET state = ?, due = ?, stability = ?, difficulty = ?, 
+            elapsed_days = ?, scheduled_days = ?, reps = ?, lapses = ?, last_review = ?
+        WHERE card_id = ?
+    ''', (
+        new_metrics['state'], new_metrics['due'], new_metrics['stability'], new_metrics['difficulty'],
+        new_metrics['elapsed_days'], new_metrics['scheduled_days'], new_metrics['reps'], 
+        new_metrics['lapses'], new_metrics['last_review'], flashcard_id
+    ))
+    
+    # 4. Log da revisão
+    cursor.execute('''
+        INSERT INTO flashcard_reviews (card_id, rating, review_date)
+        VALUES (?, ?, ?)
+    ''', (flashcard_id, rating, datetime.now()))
+    
+    conn.commit()
+    conn.close()
+    return new_metrics
+
+def get_erros_resumidos():
+    """Traz erros agrupados por tema para o Bloco 3"""
+    conn = get_connection()
+    df = pd.read_sql('''
+        SELECT 
+            t.area || ' - ' || t.tema as TemaFull,
+            q.tipo_erro,
+            q.elo_quebrado,
+            q.armadilha_prova,
+            q.id
+        FROM questoes_erros q
+        JOIN taxonomia_cronograma t ON q.tema_id = t.id
+        ORDER BY t.area, t.tema
+    ''', conn)
+    conn.close()
+    return df

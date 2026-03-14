@@ -1,5 +1,6 @@
 import streamlit as st
 import plotly.express as px
+import pandas as pd
 from app.utils.db import get_db_metrics
 from app.utils.file_io import read_md
 

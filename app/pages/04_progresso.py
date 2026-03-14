@@ -21,13 +21,13 @@ if por_area:
     with c1:
         # Gráfico Donut (Pie)
         fig_pie = px.pie(df_areas, values="Erros", names="Área", hole=0.4, title="Proporção de Erros")
-        st.plotly_chart(fig_pie, use_container_width=True)
+        st.plotly_chart(fig_pie, width="stretch")
         
     with c2:
         # Gráfico Treemap
         fig_tree = px.treemap(df_areas, path=["Área"], values="Erros", title="Visão Hierárquica", color="Erros", color_continuous_scale='RdBu_r')
         fig_tree.update_traces(hovertemplate='<b>%{label}</b><br>Erros: %{value}<extra></extra>')
-        st.plotly_chart(fig_tree, use_container_width=True)
+        st.plotly_chart(fig_tree, width="stretch")
 else:
     st.info("Não há dados de erros suficientes para gerar gráficos.")
 
@@ -43,9 +43,9 @@ if not df_sessions.empty:
     
     fig_time = px.bar(df_counts, x="data", y="qtd", title="Sessões de Estudo por Dia", labels={"data": "Data", "qtd": "Sessões registradas"})
     fig_time.update_traces(marker_color='#4A90D9')
-    st.plotly_chart(fig_time, use_container_width=True)
+    st.plotly_chart(fig_time, width="stretch")
     
     st.markdown("**Tabela de Dados Brutos (`history/`)**")
-    st.dataframe(df_sessions[["data", "arquivo", "preview"]], use_container_width=True)
+    st.dataframe(df_sessions[["data", "arquivo", "preview"]], width="stretch")
 else:
     st.info("Nenhuma sessão registrada. Crie entradas na aba Histórico para preencher o gráfico.")

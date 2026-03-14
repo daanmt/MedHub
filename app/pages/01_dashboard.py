@@ -22,7 +22,7 @@ with col2:
         df_areas = pd.DataFrame(list(por_area.items()), columns=["Área", "Erros"])
         fig = px.bar(df_areas, x="Erros", y="Área", orientation='h', title="Erros por Área", height=250, template='plotly_dark', color_discrete_sequence=['#378ADD'])
         fig.update_layout(margin=dict(l=0, r=0, t=30, b=0), showlegend=False)
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
     else:
         st.info("Nenhum erro computado nas métricas ainda.")
 

@@ -1,6 +1,6 @@
 import os
 import streamlit as st
-from app.utils.file_io import get_abs_path, read_md
+from utils.file_io import get_abs_path, read_md
 
 st.title("🗓️ Histórico de Sessões")
 st.markdown("Visualização das sessões de estudo passadas registradas pelo repositório.")

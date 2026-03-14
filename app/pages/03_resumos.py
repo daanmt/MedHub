@@ -1,6 +1,6 @@
 import os
 import streamlit as st
-from app.utils.file_io import get_abs_path, read_md
+from utils.file_io import get_abs_path, read_md
 
 st.title("📚 Resumos Clínicos")
 
@@ -46,7 +46,7 @@ with col_content:
         if modo_edicao:
             novo_conteudo = st.text_area("Editor Markdown Raw:", value=content, height=800)
             if st.button("💾 Salvar Alterações"):
-                from app.utils.file_io import write_md
+                from utils.file_io import write_md
                 write_md(file_rel_path, novo_conteudo)
                 st.success("Arquivo salvo com sucesso e backup `.bak` gerado!")
                 st.rerun()

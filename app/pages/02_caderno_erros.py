@@ -1,6 +1,6 @@
 import streamlit as st
 import re
-from app.utils.file_io import read_md, append_md
+from utils.file_io import read_md, append_md
 
 st.title("📖 Caderno de Erros")
 st.markdown("Visualização da base de erros legada do `caderno_erros.md`.")

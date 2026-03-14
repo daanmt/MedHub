@@ -1,5 +1,5 @@
 import streamlit as st
-from app.utils.file_io import read_md
+from utils.file_io import read_md
 
 def render_sidebar():
     """Renderiza a barra lateral global da aplicação"""

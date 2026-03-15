@@ -64,7 +64,7 @@ Ambiente de estudo para residência médica. Processa questões de prova, regist
 
 ## Últimas sessões
 
-**2026-03-14 | Antigravity (sessão 027):** Expansão do resumo `Medidas de Saúde Coletiva.md` incorporando indicadores demográficos, socioeconômicos e as transições demográfica/epidemiológica brasileira a partir da Parte III da apostila. Tripla carga de doenças e contratransição detalhadas.
+**2026-03-14 | Antigravity (sessão 027):** Expansão do resumo `Medidas de Saúde Coletiva.md` e registro de **34 acertos (100%)** nas questões da Parte III. Tripla carga de doenças e contratransição detalhadas. Limpeza concluída e banco de dados atualizado.
 **2026-03-14 | Antigravity (sessão 026):** **Salto para Fase 2 (Flashcards Inteligentes).** Refatoração da página do Caderno de Erros para "Flashcards e Caderno". Implementação do algoritmo FSRS (Free Spaced Repetition) para agendamento automático de revisões. Interface de 3 blocos (Hot Topics, Player Anki e Explorador de Lacunas) implantada. Sincronização de 1.555 acertos históricos do Excel EMED.
 
 **2026-03-14 | Antigravity (sessão 025):** Implementação do Cronograma Dinâmico (Mini-DB)...

@@ -5,7 +5,7 @@ Agente de estudo que analisa questões de prova, registra padrões de erro e man
 ## Estrutura
 
 ```
-IPUB/
+MedHub/
 ├── ESTADO.md              ← fonte de verdade (ler primeiro)
 ├── CLAUDE.md              ← pointer para Claude Code
 ├── ipub.db                ← Banco de Dados Principal (Erros + Cronograma)

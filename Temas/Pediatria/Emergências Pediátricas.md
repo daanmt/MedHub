@@ -11,7 +11,7 @@ As arritmias em crianças variam de processos fisiológicos benignos a emergênc
   - **Características:** Início gradual, FC variável com a atividade. Ondas P presentes e normais.
   - **Limites:** Geralmente < 220 bpm (lactentes) e < 180 bpm (crianças).
 
-### 1.2 Taquicardia Supraventricular (TSV) ⭐
+### 1.2 TSV ⭐
 Mecanismo mais comum é a reentrada nodal.
 - **Quadro Clínico:** Início súbito/abrupto. Palidez, sudorese, agitação ou irritabilidade.
 - **Eletrocardiograma (ECG):**
@@ -27,18 +27,18 @@ Mecanismo mais comum é a reentrada nodal.
 - **Tratamento — TSV Instável (Choque/Hipotensão):**
   - **Cardioversão Sincronizada:** 0,5 a 1 J/kg → se necessário → 2 J/kg.
 
-### 1.3 Bloqueio Atrioventricular (BAV) Congênito
+### 1.3 BAV Congênito
 - **Etiologia:** 60-90% associados a doenças autoimunes maternas (**Lúpus ou Sjögren**).
 - **Marcador:** Passagem transplacentária de anticorpos **Anti-Ro/SSA e Anti-La/SSB**.
 - ⚠️ **Padrão de prova:** Gestante com lúpus ou bradicardia fetal persistente → investigar BAV no RN. Tratamento: Marcapasso se FC < 55 bpm ou sintomático.
 
 ---
 
-## 2. Parada Cardiorrespiratória (PCR) e RCP
+## 2. PCR e RCP
 
 Diferente do adulto, a PCR pediátrica é geralmente secundária à **hipóxia progressiva** por insuficiência respiratória ou choque.
 
-### 2.1 Suporte Básico de Vida (BLS)
+### 2.1 BLS
 - **Sequência:** C-A-B (Compressões, Via aérea, Ventilação).
 - **C - Compressões:**
   - **Local:** Metade inferior do esterno (evitar xifoide).
@@ -57,22 +57,22 @@ Diferente do adulto, a PCR pediátrica é geralmente secundária à **hipóxia p
   - **Drogas:** Adrenalina (a cada 3-5min) e Amiodarona (se refratário após 3º choque).
 - **Não Chocáveis (Assistolia e AESP):**
   - Ritmos mais comuns na pediatria. **Epinefrina imediata.**
-  - **Protocolo Linha Reta (CAGADa):** **CA**bos, **GA**nho e **DA**erivações para confirmar assistolia.
+  - **Protocolo Linha Reta (CaGaDe):** **C**abos, **G**anho e **D**erivações para confirmar assistolia.
 
-### 2.3 Suporte Avançado (PALS)
-- **Via Aérea Avançada (IOT):** Após intubação, as compressões são **contínuas** (100-120/min) e ventilação é **assíncrona** (1 vent a cada 2-3s).
+### 2.3 PALS
+- **IOT:** Após intubação, as compressões são **contínuas** (100-120/min) e ventilação é **assíncrona** (1 vent a cada 2-3s).
 - **DOPE (Deterioração súbita pós-IOT):**
   - **D**eslocamento do tubo.
   - **O**bstrução (secreção/sangue).
   - **P**neumotórax (ausculta assimétrica).
   - **E**quipamento (falha de O2/ventilador).
-- **Acesso Intraósseo (IO):** Preferido se falha em 90s/3 tentativas de acesso venoso em emergência.
+- **IO:** Preferido se falha em 90s/3 tentativas de acesso venoso em emergência.
   - **Locais:** Tíbia proximal (mais comum), tíbia distal, fêmur distal ou esterno.
   - **Uso:** Pode administrar QUALQUER medicação, sangue e coletar exames.
 
 ---
 
-## 3. Traumatismo Cranioencefálico (TCE)
+## 3. TCE
 
 Classificação pelo Glasgow: Leve (13-15), Moderado (9-12), Grave (≤ 8).
 

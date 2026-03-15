@@ -3,9 +3,31 @@ import plotly.express as px
 import pandas as pd
 from app.utils.parser import parse_sessions, parse_caderno_erros
 from app.utils.file_io import read_md
+from app.utils.db import get_db_metrics
 
 st.title("📈 Progresso e Histórico")
-st.markdown("Análise de lacunas e timeline de estudos (Zero-DB).")
+st.markdown("Análise de lacunas e performance real (Híbrido Zero-DB + SQLite).")
+
+# --- PERFORMANCE REAL (Baseada no Banco de Dados) ---
+st.subheader("🎯 Aproveitamento por Disciplina")
+db_metrics = get_db_metrics()
+df_perf = db_metrics['df_areas']
+
+if not df_perf.empty:
+    fig_perf = px.bar(
+        df_perf, x="Área", y="Desempenho",
+        title="Aproveitamento (%) por Área de Estudo",
+        template="plotly_dark",
+        text_auto='.1f',
+        color="Desempenho",
+        color_continuous_scale="RdYlGn"
+    )
+    fig_perf.update_layout(yaxis_range=[0, 100])
+    st.plotly_chart(fig_perf, use_container_width=True)
+else:
+    st.info("Aguardando dados de performance no banco de dados.")
+
+st.divider()
 
 # --- DISTRIBUIÇÃO (Baseada no Caderno de Erros) ---
 st.subheader("📊 Distribuição de Lacunas")

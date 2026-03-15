@@ -1,7 +1,7 @@
 import streamlit as st
 
 st.set_page_config(
-    page_title="MedPRO - Residência Médica",
+    page_title="MedHub - Residência Médica",
     page_icon="🏥",
     layout="wide",
     initial_sidebar_state="expanded",

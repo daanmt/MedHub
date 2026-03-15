@@ -137,8 +137,8 @@ Ambiente de estudo para residência médica. Processa questões de prova, regist
 ## Contexto do repositório
 
 ```
-GitHub: github.com/daanmt/IPUB
-Local:  C:\Users\daanm\IPUB
+GitHub: github.com/daanmt/MedHub
+Local:  C:\Users\daanm\MedHub
 ```
 
 *Ao final de cada sessão: atualizar este arquivo e registrar em `history/`.*

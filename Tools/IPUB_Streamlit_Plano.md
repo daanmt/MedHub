@@ -1,7 +1,7 @@
 # Plano de Implementação — Streamlit UI para IPUB
 
 > **Destinatário:** Antigravity (implementação local)  
-> **Projeto:** [github.com/daanmt/IPUB](https://github.com/daanmt/IPUB)  
+> **Projeto:** [github.com/daanmt/MedHub](https://github.com/daanmt/MedHub)  
 > **Objetivo:** Interface gráfica local para o sistema de estudos de residência médica IPUB/UFRJ — navegação, edição e visualização dos arquivos `.md` do projeto sem necessidade de CLI ou editor de texto.
 
 ---

@@ -1,0 +1,92 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+@layer base {
+  :root {
+    /* MedHub Dark Theme — based on branding doc */
+    --background: 216 33% 3%;        /* #05070A */
+    --foreground: 213 60% 94%;       /* #F3F7FC */
+
+    --card: 212 27% 9%;             /* #11161D */
+    --card-foreground: 213 60% 94%; /* #F3F7FC */
+
+    --popover: 214 24% 11%;         /* #161C24 */
+    --popover-foreground: 213 60% 94%;
+
+    --primary: 222 100% 59%;        /* #2F6BFF */
+    --primary-foreground: 213 60% 94%;
+
+    --secondary: 212 20% 7%;        /* #0E1116 */
+    --secondary-foreground: 213 20% 71%; /* #A8B3C2 */
+
+    --muted: 212 20% 7%;            /* #0E1116 */
+    --muted-foreground: 213 13% 52%; /* #738093 */
+
+    --accent: 222 100% 59%;         /* #2F6BFF */
+    --accent-foreground: 213 60% 94%;
+
+    --destructive: 2 64% 58%;       /* #D9534F */
+    --destructive-foreground: 213 60% 94%;
+
+    --border: 212 25% 17%;          /* #202A36 */
+    --input: 212 25% 17%;           /* #202A36 */
+    --ring: 222 100% 59%;           /* #2F6BFF */
+
+    --radius: 0.875rem;
+
+    /* MedHub extended tokens */
+    --surface: 212 27% 9%;          /* #11161D */
+    --surface-elevated: 214 24% 11%; /* #161C24 */
+    --border-soft: 212 22% 22%;     /* #2A3544 */
+    --navy: 214 60% 14%;            /* #0B1F3A */
+    --navy-deep: 213 64% 18%;       /* #10294D */
+    --accent-soft: 222 100% 68%;    /* #5C8DFF */
+    --accent-hint: 213 100% 75%;    /* #7FB8FF */
+    --success: 157 69% 40%;         /* #1FA971 */
+    --warning: 38 62% 55%;          /* #D9A441 */
+    --danger: 2 64% 58%;            /* #D9534F */
+    --info: 222 100% 62%;           /* #3F7CFF */
+
+    --sidebar-background: 212 20% 7%;
+    --sidebar-foreground: 213 20% 71%;
+    --sidebar-primary: 222 100% 59%;
+    --sidebar-primary-foreground: 213 60% 94%;
+    --sidebar-accent: 212 27% 9%;
+    --sidebar-accent-foreground: 213 60% 94%;
+    --sidebar-border: 212 25% 17%;
+    --sidebar-ring: 222 100% 59%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    letter-spacing: -0.02em;
+    @apply text-foreground font-semibold;
+  }
+}
+
+@layer utilities {
+  .text-secondary-text {
+    color: hsl(var(--secondary-foreground));
+  }
+  .text-muted-text {
+    color: hsl(var(--muted-foreground));
+  }
+}

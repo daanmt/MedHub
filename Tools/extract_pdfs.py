@@ -1,5 +1,5 @@
 """
-extract_pdfs.py — Extrator de texto de PDFs para o projeto IPUB
+extract_pdfs.py — Extrator de texto de PDFs para o projeto MedHub
 
 Uso:
     # Extrair um PDF (arquivo temp criado automaticamente, path impresso no stdout):

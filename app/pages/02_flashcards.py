@@ -52,7 +52,7 @@ with st.sidebar:
         st.cache_data.clear()
         with st.spinner("Refazendo base completa..."):
             load_or_generate_flashcards(entries_raw, force_regen=True)
-        st.success("Base v3.0 regenerada.")
+        st.success("Base MedHub regenerada.")
         for key in ['fc_order', 'fc_idx', 'fc_verso']:
             st.session_state.pop(key, None)
         st.rerun()

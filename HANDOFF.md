@@ -1,4 +1,4 @@
-# HANDOFF - IPUB
+# HANDOFF - MedHub
 
 ## Status Atual
 - **Resumo Concluído**: `Medidas de Saúde Coletiva.md` expandido com a Parte III (Demografia, Transições e Perfil Brasileiro).

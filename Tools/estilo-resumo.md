@@ -1,4 +1,4 @@
-# Estilo IPUB — Spec de Formatação para Resumos
+# Estilo MedHub — Spec de Formatação para Resumos
 
 > Este documento define o padrão de formatação para todos os resumos em `Temas/`.
 > Qualquer agente que criar ou editar resumos DEVE seguir estas regras.

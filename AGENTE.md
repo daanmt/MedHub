@@ -1,4 +1,4 @@
-# AGENTE.md — Protocolo de Continuidade IPUB
+# AGENTE.md — Protocolo de Continuidade MedHub
 
 ## 1. PRINCÍPIO CENTRAL
 **Este projeto é uma jornada contínua.** Nunca comece do zero. Sua missão é herdar o estado da sessão anterior, executar a tarefa atual e preparar o terreno para a próxima.

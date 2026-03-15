@@ -1,4 +1,4 @@
-# Reforma Cirúrgica IPUB — v3.0
+# Reforma Cirúrgica MedHub — v3.0
 > **Para:** Claude Code  
 > **Contexto:** O Gemini over-engineered a app. Este plano desfaz a complexidade introduzida e estabelece uma arquitetura mínima e estável.
 

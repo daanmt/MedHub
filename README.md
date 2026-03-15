@@ -1,4 +1,4 @@
-# IPUB — Ambiente de Estudo para Residência Médica
+# MedHub — Ambiente de Estudo para Residência Médica
 
 Agente de estudo que analisa questões de prova, registra padrões de erro e mantém resumos clínicos organizados. Portável para qualquer LLM via workflows.
 

@@ -1,5 +1,5 @@
-# ESTADO — IPUB (Preparação para Residência Médica)
-*Atualizado: 2026-03-14 (sessão 025) | Ferramenta: Antigravity*
+# ESTADO — MedHub (Preparação para Residência Médica)
+*Atualizado: 2026-03-14 (sessão 027) | Ferramenta: Antigravity*
 
 ---
 

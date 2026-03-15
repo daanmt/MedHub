@@ -1,4 +1,4 @@
-# Product Roadmap: Sistema de Estudos IPUB
+# Product Roadmap: Sistema de Estudos MedHub
 
 > **Visão de Produto:** Um ecossistema de aprendizado ativo para residência médica que transforma passividade (ler) em hiper-retenção (testes, espaçamento e análise metacognitiva de erros). 
 > **Foco Core:** Automação do trabalho braçal de criar materiais, permitindo ao usuário focar exclusivamento no estudo e na resolução clínica.

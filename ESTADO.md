@@ -15,8 +15,8 @@ Ambiente de estudo para residência médica. Processa questões de prova, regist
 > **SINGLE SOURCE OF TRUTH (SSOT):** O Markdown (`caderno_erros.md`) é a base absoluta. O App Streamlit (`01_dashboard.py`) reflete os dados via parser stateful. Ignorar o SQLite para leitura de UI; ele serve apenas para processamento futuro de ML.
 
 - **91 erros diagnosticados** no caderno (`caderno_erros.md`)
-- **26 resumos clínicos** consolidados em `Temas/`
-- **27 sessões** de estudo catalogadas em `history/`
+- **27 resumos clínicos** consolidados em `Temas/`
+- **28 sessões** de estudo catalogadas em `history/`
 
 ---
 
@@ -64,8 +64,10 @@ Ambiente de estudo para residência médica. Processa questões de prova, regist
 
 ## Últimas sessões
 
+**2026-03-15 | Antigravity (sessão 030):** **Consolidação de Pancreatites**. Criação do resumo de `Pancreatite Aguda e Crônica.md` a partir de material do Estratégia MED. Foco em critérios de Atlanta 2012, sinais semiológicos (Cullen/Grey-Turner) e tríade da pancreatite crônica.
 **2026-03-15 | Antigravity (sessão 029):** **UI Refresh (Aesthetic Lovable)**. Implementado sistema de design Flat com `app/utils/styles.py`. Refatoração completa de todas as páginas para visual premium clinical. Arquitetura híbrida de botões FSRS implementada com sucesso.
 **2026-03-14 | Antigravity (sessão 028):** Bootstrap de contexto e rebranding concluído. Correção de erro no `streamlit_app.py` (removida referência à página inexistente `05_progresso.py` integrada ao Dashboard). Sincronização de alterações do usuário em Pediatria.
+
 
 **2026-03-14 | Antigravity (sessão 027):** Expansão do resumo `Medidas de Saúde Coletiva.md` e registro de **34 acertos (100%)** nas questões da Parte III. Tripla carga de doenças e contratransição detalhadas. Limpeza concluída e banco de dados atualizado.
 **2026-03-14 | Antigravity (sessão 026):** **Salto para Fase 2 (Flashcards Inteligentes).** Refatoração da página do Caderno de Erros para "Flashcards e Caderno". Implementação do algoritmo FSRS (Free Spaced Repetition) para agendamento automático de revisões. Interface de 3 blocos (Hot Topics, Player Anki e Explorador de Lacunas) implantada. Sincronização de 1.555 acertos históricos do Excel EMED.

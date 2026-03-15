@@ -1,5 +1,5 @@
 # ESTADO — MedHub (Preparação para Residência Médica)
-*Atualizado: 2026-03-14 (sessão 028) | Ferramenta: Antigravity*
+*Atualizado: 2026-03-15 (sessão 029) | Ferramenta: Antigravity*
 
 ---
 
@@ -64,6 +64,7 @@ Ambiente de estudo para residência médica. Processa questões de prova, regist
 
 ## Últimas sessões
 
+**2026-03-15 | Antigravity (sessão 029):** **UI Refresh (Aesthetic Lovable)**. Implementado sistema de design Flat com `app/utils/styles.py`. Refatoração completa de todas as páginas para visual premium clinical. Arquitetura híbrida de botões FSRS implementada com sucesso.
 **2026-03-14 | Antigravity (sessão 028):** Bootstrap de contexto e rebranding concluído. Correção de erro no `streamlit_app.py` (removida referência à página inexistente `05_progresso.py` integrada ao Dashboard). Sincronização de alterações do usuário em Pediatria.
 
 **2026-03-14 | Antigravity (sessão 027):** Expansão do resumo `Medidas de Saúde Coletiva.md` e registro de **34 acertos (100%)** nas questões da Parte III. Tripla carga de doenças e contratransição detalhadas. Limpeza concluída e banco de dados atualizado.

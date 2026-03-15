@@ -8,7 +8,7 @@ from app.utils.flashcard_builder import load_or_generate_flashcards, CACHE_PATH
 ROOT = Path(__file__).parent.parent.parent
 CADERNO_PATH = ROOT / "caderno_erros.md"
 
-st.set_page_config(page_title="Flashcards IPUB", layout="centered")
+st.set_page_config(page_title="Flashcards MedHub", layout="centered")
 
 # ── CSS CUSTOMIZADO (v3.0 Ultra-Clean) ──────────────────────────────────────
 st.markdown("""

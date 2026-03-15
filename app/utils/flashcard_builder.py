@@ -11,7 +11,7 @@ BASE_DIR = Path(__file__).parent.parent.parent
 DB_PATH = BASE_DIR / "ipub.db"
 CACHE_PATH = BASE_DIR / "flashcards_cache.json"
 
-SYSTEM_PROMPT = """Você é um especialista em criação de flashcards para residência médica (Método IPUB).
+SYSTEM_PROMPT = """Você é um especialista em criação de flashcards para residência médica (Método MedHub).
 Sua tarefa é transformar o ELO QUEBRADO de um erro de questão em um flashcard de retenção ativa de ALTO NÍVEL.
 
 REGRAS ABSOLUTAS:

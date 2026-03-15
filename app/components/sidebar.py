@@ -4,7 +4,7 @@ from app.utils.file_io import read_md
 def render_sidebar():
     """Renderiza a barra lateral global da aplicação"""
     with st.sidebar:
-        st.header("🏥 IPUB UI")
+        st.header("🏥 MedHub UI")
         st.markdown("*Sistema Local de Retenção*")
         st.divider()
         

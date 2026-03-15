@@ -1,27 +1,31 @@
 import streamlit as st
-from app.utils.parser import parse_caderno_erros
-import plotly.express as px
 import pandas as pd
+import plotly.express as px
+from app.utils.parser import parse_caderno_erros
+from app.utils.db import get_db_metrics
 
 st.title("🏠 Dashboard")
 
-# Fonte de Verdade: Caderno de Erros (Zero-DB Architecture)
+# 1. Fonte de Verdade: SQLite (Performance Real)
+db_data = get_db_metrics()
+
+# 2. Fonte de Verdade: Caderno de Erros (Zero-DB Layer)
 entries = parse_caderno_erros()
 
-if not entries:
-    st.info("O seu caderno de erros está vazio ou não pôde ser lido.")
-    st.stop()
+# --- MÉTRICAS DE PERFORMANCE ---
+st.subheader("🎯 Desempenho Global (DB)")
+m_col1, m_col2, m_col3 = st.columns(3)
+with m_col1:
+    st.metric("Questões Realizadas", db_data['total_questoes'])
+with m_col2:
+    st.metric("Total de Acertos", db_data['total_acertos'])
+with m_col3:
+    st.metric("Desempenho Geral", f"{db_data['media_desempenho']:.1f}%")
 
-# --- MÉTRICAS ---
-st.subheader("📊 Performance do Caderno")
+st.divider()
 
-# Métricas Principais (Baseadas no Caderno)
-col_m1, col_m2 = st.columns(2)
-with col_m1:
-    st.metric("Total de Erros no Caderno", len(entries))
-with col_m2:
-    num_areas = len(set(e.get('area') for e in entries if e.get('area')))
-    st.metric("Disciplinas com Lacunas", num_areas)
+# --- DETALHAMENTO DO CADERNO ---
+st.subheader("📖 Lacunas no Caderno de Erros")
 
 st.divider()
 

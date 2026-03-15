@@ -1,56 +1,49 @@
-import os
+from app.utils.styles import content_card
 import streamlit as st
-from app.utils.file_io import get_abs_path, read_md
+import os
 
 st.title("📚 Resumos Clínicos")
+st.markdown('<p style="color: #A8B3C2; margin-top: -15px; margin-bottom: 30px;">Acervo consolidado de temas de alta prevalência</p>', unsafe_allow_html=True)
 
-temas_dir = get_abs_path("Temas")
-if not temas_dir.exists():
-    st.warning("Diretório `Temas/` não encontrado.")
-    st.stop()
+# Listar arquivos
+TEMAS_DIR = "Temas"
+resumos = []
+for root, dirs, files in os.walk(TEMAS_DIR):
+    for f in files:
+        if f.endswith(".md"):
+            area = os.path.basename(root)
+            resumos.append({"area": area, "tema": f.replace(".md", ""), "path": os.path.join(root, f)})
 
-# Varredura hierárquica usando os.walk
-areas = [d for d in os.listdir(temas_dir) if os.path.isdir(temas_dir / d)]
-
-if not areas:
-    st.info("Nenhuma área de estudo encontrada na pasta Temas.")
-    st.stop()
-
-# Layout de navegação
-col_nav, col_content = st.columns([1, 3])
-
-with col_nav:
-    st.subheader("Navegação")
-    selected_area = st.radio("Selecione a Área:", areas)
+if not resumos:
+    st.info("Nenhum resumo encontrado.")
+else:
+    # Filtros Flat
+    areas = sorted(list(set(r['area'] for r in resumos)))
+    c1, c2 = st.columns([1, 2])
+    with c1:
+        selected_area = st.selectbox("Área", ["Todas"] + areas)
+    with c2:
+        search = st.text_input("Buscar tema")
     
-    area_path = temas_dir / selected_area
-    materiais = [f for f in os.listdir(area_path) if f.endswith('.md')]
-    
-    if materiais:
-        selected_file = st.radio("Selecione o Resumo:", materiais)
-    else:
-        selected_file = None
-        st.write("Vazio.")
+    st.divider()
 
-with col_content:
-    if selected_file:
-        file_rel_path = f"Temas/{selected_area}/{selected_file}"
-        content = read_md(file_rel_path)
-        
-        c1, c2 = st.columns([3, 1])
-        with c1:
-            st.subheader(selected_file.replace(".md", ""))
-        with c2:
-            modo_edicao = st.toggle("Modo Edição ✏️")
+    filtered = resumos
+    if selected_area != "Todas":
+        filtered = [r for r in filtered if r['area'] == selected_area]
+    if search:
+        filtered = [r for r in filtered if search.lower() in r['tema'].lower()]
 
-        if modo_edicao:
-            novo_conteudo = st.text_area("Editor Markdown Raw:", value=content, height=800)
-            if st.button("💾 Salvar Alterações"):
-                from app.utils.file_io import write_md
-                write_md(file_rel_path, novo_conteudo)
-                st.success("Arquivo salvo com sucesso e backup `.bak` gerado!")
-                st.rerun()
-        else:
-            st.markdown(content)
-    else:
-        st.info("Selecione um arquivo na barra lateral para visualizar.")
+    # Grid de cards
+    cols = st.columns(2)
+    for i, r in enumerate(filtered):
+        with cols[i % 2]:
+            content = f'<div style="color: #A8B3C2; font-size: 0.85rem; margin-bottom: 12px;">Consulte o guia completo de condutas e diagnósticos para {r["tema"]}.</div>'
+            content_card(
+                title=r['tema'],
+                subtitle=r['area'],
+                content=content
+            )
+            if st.button(f"Abrir: {r['tema']}", key=r['path']):
+                with open(r['path'], 'r', encoding='utf-8') as f:
+                    st.markdown(f.read())
+            st.markdown("<div style='margin-bottom: 24px;'></div>", unsafe_allow_html=True)

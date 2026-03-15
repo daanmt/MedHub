@@ -1,3 +1,4 @@
+from app.utils.styles import metric_card, content_card
 import streamlit as st
 import pandas as pd
 import plotly.express as px
@@ -6,26 +7,25 @@ from app.utils.db import get_db_metrics
 from app.utils.file_io import read_md
 
 st.title("🏥 MedHub Dashboard")
+st.markdown('<p style="color: #A8B3C2; margin-top: -15px; margin-bottom: 30px;">Visão geral do seu progresso de estudos</p>', unsafe_allow_html=True)
 
-# 1. Fonte de Verdade: SQLite (Performance Real)
+# 1. Fonte de Verdade
 db_data = get_db_metrics()
-
-# 2. Fonte de Verdade: Caderno de Erros (Zero-DB Layer)
 entries = parse_caderno_erros()
 
 # --- MÉTRICAS DE PERFORMANCE ---
 st.subheader("🎯 Desempenho Global")
 m_col1, m_col2, m_col3 = st.columns(3)
 with m_col1:
-    st.metric("Questões Realizadas", db_data['total_questoes'])
+    metric_card("Questões Realizadas", str(db_data['total_questoes']))
 with m_col2:
-    st.metric("Total de Acertos", db_data['total_acertos'])
+    metric_card("Total de Acertos", str(db_data['total_acertos']))
 with m_col3:
-    st.metric("Desempenho Geral", f"{db_data['media_desempenho']:.1f}%")
+    metric_card("Desempenho Geral", f"{db_data['media_desempenho']:.1f}%", delta="Em evolução", delta_type="up")
 
-st.divider()
+st.markdown("<br>", unsafe_allow_html=True)
 
-# --- APROVEITAMENTO POR ÁREA (Integrado de Progresso) ---
+# --- APROVEITAMENTO POR ÁREA ---
 st.subheader("📈 Aproveitamento por Disciplina")
 df_perf = db_data['df_areas']
 
@@ -38,10 +38,13 @@ if not df_perf.empty:
         color_continuous_scale="RdYlGn",
         height=350
     )
-    fig_perf.update_layout(yaxis_range=[0, 100], margin=dict(l=0, r=0, t=30, b=0))
+    fig_perf.update_layout(
+        yaxis_range=[0, 100], 
+        margin=dict(l=0, r=0, t=30, b=0),
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+    )
     st.plotly_chart(fig_perf, use_container_width=True)
-
-st.divider()
 
 # --- DISTRIBUIÇÃO DE LACUNAS ---
 st.subheader("📖 Lacunas no Caderno de Erros")
@@ -52,18 +55,18 @@ if entries:
 
     c1, c2 = st.columns(2)
     with c1:
-        st.markdown("#### Distribuição por Área")
+        st.markdown('<div style="font-size: 0.85rem; color: #A8B3C2; margin-bottom: 10px;">Distribuição por Área</div>', unsafe_allow_html=True)
         fig = px.bar(
             df_areas, 
             x='Erros', y='area',
             orientation='h',
             template='plotly_dark',
-            color_discrete_sequence=['#378ADD'],
+            color_discrete_sequence=['#2F6BFF'],
             labels={'Erros': 'Erros', 'area': 'Área'},
             height=350
         )
         fig.update_layout(
-            margin=dict(l=0, r=20, t=30, b=0),
+            margin=dict(l=0, r=20, t=0, b=0),
             showlegend=False,
             plot_bgcolor='rgba(0,0,0,0)',
             paper_bgcolor='rgba(0,0,0,0)',
@@ -71,7 +74,7 @@ if entries:
         st.plotly_chart(fig, use_container_width=True)
 
     with c2:
-        st.markdown("#### Visão Hierárquica")
+        st.markdown('<div style="font-size: 0.85rem; color: #A8B3C2; margin-bottom: 10px;">Visão Hierárquica</div>', unsafe_allow_html=True)
         fig_tree = px.treemap(
             df, 
             path=["area", "tema"], 
@@ -79,19 +82,16 @@ if entries:
             color_discrete_sequence=px.colors.qualitative.Pastel,
             height=350
         )
-        fig_tree.update_layout(margin=dict(l=0, r=0, t=30, b=0))
+        fig_tree.update_layout(margin=dict(l=0, r=0, t=0, b=0))
         st.plotly_chart(fig_tree, use_container_width=True)
 else:
     st.info("Nenhum erro registrado no caderno.")
 
-st.divider()
-
-# --- HISTÓRICO DE SESSÕES (Integrado de Progresso) ---
+# --- HISTÓRICO DE SESSÕES ---
 st.subheader("🗓️ Histórico de Sessões")
 df_sessions = parse_sessions()
 
 if not df_sessions.empty:
-    # Heatmap de volume
     df_sessions['dt'] = pd.to_datetime(df_sessions['data'], errors='coerce')
     df_counts = df_sessions.dropna(subset=['dt']).groupby(df_sessions['dt'].dt.date).size().reset_index(name='qtd')
     
@@ -101,11 +101,15 @@ if not df_sessions.empty:
         template="plotly_dark",
         height=300
     )
-    fig_time.update_traces(marker_color='#4A90D9')
-    fig_time.update_layout(margin=dict(l=0, r=0, t=30, b=0))
+    fig_time.update_traces(marker_color='#2F6BFF')
+    fig_time.update_layout(
+        margin=dict(l=0, r=0, t=30, b=0),
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+    )
     st.plotly_chart(fig_time, use_container_width=True)
     
-    st.markdown("#### Logs Recentes")
+    st.markdown('<div style="font-weight: 600; margin-bottom: 10px;">Logs Recentes</div>', unsafe_allow_html=True)
     for idx, row in df_sessions.head(10).iterrows():
         f_name = row['arquivo']
         preview = row.get('preview', 'Sem preview disponível.')

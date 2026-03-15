@@ -38,23 +38,45 @@ with st.expander("➕ Registrar novo erro", expanded=False):
 
 st.divider()
 
-# ── Listagem de Erros ───────────────────────────────────────────────────────
-filtered = entries
-if area_sel:
-    filtered = [e for e in filtered if e.get('area') in area_sel]
-if busca:
-    filtered = [e for e in filtered if busca.lower() in str(e).lower()]
-
-if filtered:
-    st.caption(f"Exibindo {len(filtered)} erros encontrados.")
-    for entry in reversed(filtered): # Mostrar os mais recentes primeiro
-        label = f"Erro #{entry.get('numero', '?')} — {entry.get('area')} › {entry.get('tema')}"
-        with st.expander(label):
-            st.markdown(f"**Caso:** {entry.get('caso')}")
-            st.divider()
-            st.error(f"**Elo Quebrado:** {entry.get('elo_quebrado')}")
-            st.info(f"🧠 **Regra mestre:** {entry.get('explicacao_correta')}")
-            if entry.get('armadilha') and entry.get('armadilha') != "N/A":
-                st.warning(f"⚠️ **Gatilho examinador:** {entry['armadilha']}")
+if not entries:
+    st.info("Nenhum erro registrado no caderno.")
 else:
-    st.info("Nenhum erro encontrado com os filtros aplicados.")
+    df = pd.DataFrame(entries)
+    
+    # Filtros Flat
+    c1, c2 = st.columns(2)
+    with c1:
+        area_filter = st.multiselect("Filtrar por Área", options=sorted(df['area'].unique()))
+    with c2:
+        # Assuming 'tema' is a column in your DataFrame
+        tema_filter = st.text_input("Buscar por Tema")
+    
+    filtered_df = df.copy()
+    if area_filter:
+        filtered_df = filtered_df[filtered_df['area'].isin(area_filter)]
+    if tema_filter:
+        filtered_df = filtered_df[filtered_df['tema'].str.contains(tema_filter, case=False, na=False)]
+
+    st.markdown(f"**{len(filtered_df)}** entradas encontradas", unsafe_allow_html=True)
+    st.divider()
+
+    # Display cards in reverse order (most recent first)
+    for idx, row in filtered_df.iloc[::-1].iterrows():
+        with st.container():
+            # Ensure 'erro', 'correto', 'complexidade', 'tipo_erro' columns exist or handle missing keys
+            # Using .get() for robustness if these keys might be missing in some entries
+            content = f"""
+            <div style="margin-bottom: 8px;"><b>Caso:</b> {row.get('caso', 'N/A')}</div>
+            <div style="margin-bottom: 8px;"><b>O que errei:</b> {row.get('elo_quebrado', 'N/A')}</div>
+            <div style="color: #1FA971; font-weight: 500;"><b>Explicação Correta:</b> {row.get('explicacao_correta', 'N/A')}</div>
+            """
+            # Add armadilha if it exists and is not "N/A"
+            if row.get('armadilha') and row.get('armadilha') != "N/A":
+                content += f"<div style='color: #FFC107; font-weight: 500; margin-top: 8px;'>⚠️ <b>Gatilho examinador:</b> {row['armadilha']}</div>"
+
+            content_card(
+                title=f"{row.get('titulo', 'Erro sem título')}", # Use 'titulo' from original structure
+                subtitle=f"{row.get('area', 'N/A')} • {row.get('tema', 'N/A')}", # Simplified subtitle
+                content=content
+            )
+            st.markdown("<div style='margin-bottom: 24px;'></div>", unsafe_allow_html=True)

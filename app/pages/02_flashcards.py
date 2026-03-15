@@ -1,34 +1,17 @@
+from app.utils.styles import flashcard_front, flashcard_back
 import streamlit as st
 import random
-import json
+import os
 from pathlib import Path
-from app.utils.parser import parse_caderno_erros, read_md
-from app.utils.flashcard_builder import load_or_generate_flashcards, CACHE_PATH
+from app.utils.parser import parse_caderno_erros
+from app.utils.flashcard_builder import load_or_generate_flashcards
 
-ROOT = Path(__file__).parent.parent.parent
-CADERNO_PATH = ROOT / "caderno_erros.md"
+st.title("🧠 Player de Flashcards")
 
-st.set_page_config(page_title="Flashcards MedHub", layout="centered")
-
-# ── CSS CUSTOMIZADO (v3.0 Ultra-Clean) ──────────────────────────────────────
-st.markdown("""
-<style>
-.stAlert { border-radius: 12px; border: none; }
-.contexto-clinico { color: #888; font-style: italic; font-size: 0.95rem; margin-bottom: 0.8rem; }
-.pergunta-cirurgica { font-size: 1.35rem; font-weight: 600; line-height: 1.4; color: #FFF; margin-bottom: 1.5rem; }
-.block-container { max-width: 700px; padding-top: 2rem; }
-</style>
-""", unsafe_allow_html=True)
-
-st.title("🧠 Flashcards")
-
-# ── Sidebar: Filtros e Inteligência ──────────────────────────────────────────
+# ── Sidebar: Governança e Filtros ──────────────────────────────────────────
 with st.sidebar:
     st.header("⚙️ Configurar")
-    
-    # Busca dados reais do caderno
     entries_raw = parse_caderno_erros()
-    # Carrega flashcards (com cache)
     all_cards = load_or_generate_flashcards(entries_raw)
     
     areas_list = sorted(set(c.get('area', 'Geral') for c in all_cards if c.get('area')))
@@ -36,97 +19,79 @@ with st.sidebar:
     embaralhar = st.toggle("Embaralhar", value=True)
     
     st.divider()
-    st.caption("Controle LLM (Claude 3.5)")
-    
     if st.button("➕ Gerar novos cards", use_container_width=True):
         st.cache_data.clear()
         with st.spinner("Gerando lacunas..."):
             load_or_generate_flashcards(entries_raw, force_regen=False)
         st.success("Novos cards gerados!")
-        # Reseta ordem para evitar crash de índice
-        for key in ['fc_order', 'fc_idx', 'fc_verso']:
-            st.session_state.pop(key, None)
-        st.rerun()
-    
-    if st.button("🔄 Regenerar tudo", use_container_width=True):
-        st.cache_data.clear()
-        with st.spinner("Refazendo base completa..."):
-            load_or_generate_flashcards(entries_raw, force_regen=True)
-        st.success("Base MedHub regenerada.")
         for key in ['fc_order', 'fc_idx', 'fc_verso']:
             st.session_state.pop(key, None)
         st.rerun()
 
-# ── Filtragem ───────────────────────────────────────────────────────────────
+# ── Lógica de Filtro e Estado ────────────────────────────────────────────────
 filtered = [c for c in all_cards if c.get('area') in area_filtro]
-
 if not filtered:
     st.info("Nenhum flashcard disponível para os filtros selecionados.")
     st.stop()
 
-# ── Ordem e Estado (FIX SHUFFLE CRASH) ──────────────────────────────────────
-# Sempre usamos o fc_order para referenciar o índice na lista 'filtered'
 if 'fc_order' not in st.session_state or len(st.session_state.fc_order) != len(filtered):
     order = list(range(len(filtered)))
-    if embaralhar:
-        random.shuffle(order)
+    if embaralhar: random.shuffle(order)
     st.session_state.fc_order = order
     st.session_state.fc_idx = 0
     st.session_state.fc_verso = False
 
-if 'fc_idx' not in st.session_state: st.session_state.fc_idx = 0
-if 'fc_verso' not in st.session_state: st.session_state.fc_verso = False
-
-# Proteção contra overflow
 st.session_state.fc_idx %= len(filtered)
 idx_ref = st.session_state.fc_order[st.session_state.fc_idx]
 card = filtered[idx_ref]
 total = len(filtered)
 
-# ── UI Player ───────────────────────────────────────────────────────────────
-st.caption(f"{card.get('area','')} › {card.get('tema','')}  ·  Erro #{card.get('erro_origem','')}")
-st.progress((st.session_state.fc_idx + 1) / total, text=f"Card {st.session_state.fc_idx + 1} de {total}")
+# ── UI Player (Flat Layout) ──────────────────────────────────────────────────
+st.progress((st.session_state.fc_idx + 1) / total, text=f"Progresso: {st.session_state.fc_idx + 1} de {total}")
 
-st.divider()
+def _advance():
+    st.session_state.fc_idx = (st.session_state.fc_idx + 1) % total
+    st.session_state.fc_verso = False
+    st.rerun()
 
 if not st.session_state.fc_verso:
     # FRENTE
-    if card.get('frente_contexto'):
-        st.markdown(f'<p class="contexto-clinico">{card["frente_contexto"]}</p>', unsafe_allow_html=True)
-    st.markdown(f'<p class="pergunta-cirurgica">{card["frente_pergunta"]}</p>', unsafe_allow_html=True)
-    
-    st.markdown("<br><br>", unsafe_allow_html=True)
+    flashcard_front(
+        category=f"{card.get('area','')} › {card.get('tema','')}  ·  Erro #{card.get('erro_origem','')}",
+        question=card["frente_pergunta"]
+    )
+    st.markdown("<br>", unsafe_allow_html=True)
     if st.button("Revelar resposta →", use_container_width=True, type="primary"):
         st.session_state.fc_verso = True
         st.rerun()
 else:
     # VERSO
-    st.markdown(f"**{card['verso_resposta']}**")
+    flashcard_back(
+        answer=card['verso_resposta'],
+        master_rule=card.get('verso_regra_mestre'),
+        trap=card.get('verso_armadilha')
+    )
+    
     st.markdown("<br>", unsafe_allow_html=True)
     
-    if card.get('verso_regra_mestre'):
-        st.info(f"🧠 **Regra mestre:** {card['verso_regra_mestre']}")
-    if card.get('verso_armadilha'):
-        st.warning(f"⚠️ **Gatilho examinador:** {card['verso_armadilha']}")
-        
-    st.divider()
-    
-    # Navegação Pura (FSRS backend only)
-    c1, c2, c3 = st.columns(3)
-    
-    def _next():
-        st.session_state.fc_idx = (st.session_state.fc_idx + 1) % total
-        st.session_state.fc_verso = False
-        st.rerun()
-        
-    def _prev():
-        st.session_state.fc_idx = (st.session_state.fc_idx - 1) % total
-        st.session_state.fc_verso = False
-        st.rerun()
+    # Hybrid FSRS Buttons (Standard Streamlit + CSS Targeting in styles.py)
+    col1, col2, col3, col4 = st.columns(4)
+    with col1:
+        if st.button("Novamente", use_container_width=True, key="fsrs_again"): _advance()
+    with col2:
+        if st.button("Difícil", use_container_width=True, key="fsrs_hard"): _advance()
+    with col3:
+        if st.button("Bom", use_container_width=True, key="fsrs_good"): _advance()
+    with col4:
+        if st.button("Fácil", use_container_width=True, key="fsrs_easy"): _advance()
 
-    with c1:
-        if st.button("← Voltar", use_container_width=True): _prev()
-    with c2:
-        if st.button("Próximo →", use_container_width=True, type="primary"): _next()
-    with c3:
-        if st.button("⏭️ Pular", use_container_width=True): _next()
+st.divider()
+with st.container():
+    c_prev, c_skip = st.columns([1, 1])
+    with c_prev:
+        if st.button("← Voltar anterior", use_container_width=True):
+            st.session_state.fc_idx = (st.session_state.fc_idx - 1) % total
+            st.session_state.fc_verso = False
+            st.rerun()
+    with c_skip:
+        if st.button("Pular card ⏭️", use_container_width=True): _advance()

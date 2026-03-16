@@ -1,5 +1,20 @@
 # Intoxicações Exógenas
 
+## 0. Fundamentos do Sistema Colinérgico ⭐
+---
+Ao contrário do sistema adrenérgico (Luta ou Fuga), o sistema colinérgico é o "Sistema do Repouso e Digestão" (Parassimpático).
+- **O Mensageiro:** Acetilcolina (ACh). Atua em dois tipos principais de receptores:
+- **Receptores Muscarínicos (M):**
+    - Localização: Órgãos efetores parassimpáticos (Coração, Glândulas, Pupila, Brônquios).
+    - **Efeito Agonista ("Molhado"):** Ativa as glândulas e relaxa esfíncteres. Bradicardia, Miose, Sialorreia, Sudorese, Broncorreia, Diarreia.
+    - **Efeito Antagonista ("Seco"):** Bloqueio muscarínico (Atropina). Taquicardia, Midríase, Pele seca, Retenção urinária, Constipação.
+- **Receptores Nicotínicos (N):**
+    - **Nm (Placa Motora):** Controla a contração muscular. Excesso de ACh gera **fasciculações** (tremor fino) e depois **paralisia/fraqueza**. ⭐
+    - **Nn (Gânglios):** Estimulação pode gerar picos de hipertensão e taquicardia no início da intoxicação (estímulo simpático ganglionar).
+- **Dinâmica das Intoxicações:**
+    - **Síndrome Colinérgica:** Excesso de ACh (Agonismo). O paciente "transborda".
+    - **Síndrome Anticolinérgica:** Bloqueio dos receptores Muscarínicos (Antagonismo). O paciente "seca".
+
 ## 1. Medidas Gerais de Descontaminação
 ---
 - **Descontaminação Gástrica:**
@@ -16,14 +31,16 @@
     - **Quadro:** Agitação, Midríase, Sudorese profusa, Taquicardia, Hipertensão, Hipertermia.
     - **Complicação:** IAM em jovens.
     - **Tratamento:** Benzodiazepínicos. ⚠️ **Evitar Propranolol** (risco de espasmo coronariano/hipertensão paradoxal).
-- **Síndrome Colinérgica:**
-    - **Causas:** Organofosforados e Carbamatos ("Chumbinho").
-    - **Quadro:** "Paciente Molhado e Miótico". Diarreia, Urina, Miose, Bradicardia, Broncorreia, Broncoespasmo, Lacrimejamento, Sialorreia. ⚠️ **Cheiro de alho.**
-    - **Tratamento:** **Atropina** (atropinizar até secar a broncorreia) + **Pralidoxima** (reativador de enzima - mais útil em Organofosforados).
-- **Síndrome Anticolinérgica:**
-    - **Causas:** Antidepressivos Tricíclicos (Amitriptilina), Anti-histamínicos, Escopolamina, Biperideno.
-    - **Quadro:** "Paciente Seco e Midriático". Pele seca/quente, Rubor facial, Midríase, Taquicardia, Retenção urinária, Delirium ("Agitado como uma lebre, cego como um morcego, seco como um osso, vermelho como uma beterraba").
-    - **Tratamento:** Suporte + Fisostigmina (casos graves selecionados). Tricíclicos com QRS largo (> 100ms) → **Bicarbonato de Sódio**. ⭐
+- **Síndrome Colinérgica (O "Paciente Molhado"):** ⭐
+    - **Causas:** Organofosforados e Carbamatos. Inibem a enzima que quebra a ACh → Excesso de ACh nos receptores M e N.
+    - **Quadro Muscarínico (DUMBELS):** **D**iarreia, **U**rina, **M**iose, **B**radicardia/Broncorreia, **E**mese, **L**acrimejamento, **S**alivação.
+    - **Quadro Nicotínico:** Fasciculações, Fraqueza muscular, Taquicardia inicial.
+    - **Tratamento:** **Atropina** (Antagonista Muscarínico competitivo) + **Pralidoxima** (Reativador da enzima - apenas para Organofosforados).
+- **Síndrome Anticolinérgica (O "Paciente Seco"):** ⭐
+    - **Causas:** Antidepressivos Tricíclicos, Anti-histamínicos, Atropina.
+    - **Mecanismo:** Bloqueio competitivo dos receptores Muscarínicos (o oposto da colinérgica).
+    - **Quadro:** Midríase, Taquicardia, Pele seca/quente, Retenção urinária. ⚠️ **Diferencial com Adrenérgica:** Na Anticolinérgica a pele está SECA; na Adrenérgica o paciente está suado.
+    - **Tratamento:** Suporte + Bicarbonato de sódio (se Tricíclicos com QRS largo).
 - **Síndrome Narcótica (Opioide):**
     - **Causas:** Morfina, Heroína, Fentanil, Codeína.
     - **Quadro:** **Miose puntiforme "cabeça de alfinete"** + Depressão Respiratória + Rebaixamento de consciência.
@@ -40,6 +57,7 @@
 - **Paracetamol:** N-acetilcisteína (Fluimucil).
 - **Organofosforados:** Atropina / Pralidoxima.
 - **Betabloqueadores:** Glucagon.
+- **Bloqueadores de Canais de Cálcio (BCC):** Gluconato de Cálcio. ⭐
 - **Antidepressivos Tricíclicos:** Bicarbonato de Sódio (se QRS largo).
 - **Metanol / Etilenoglicol:** Etanol ou Fomepizol.
 - **Ferro:** Deferoxamina.
@@ -52,5 +70,8 @@
 - 🔴 Administrar Flumazenil em intoxicação mista com Tricíclicos (risco altíssimo de convulsão intratável).
 - 🔴 Esperar miose na síndrome adrenérgica (ela causa midríase).
 - 🔴 Confundir intoxicação por Betabloqueador (Bradicardia) com Síndrome Colinérgica (Bradicardia + Broncorreia intensa).
+- 🔴 Ignorar que **Salicilatos (AAS)** cursam com Alcalose Respiratória precoce + Acidose Metabólica (Misto). ⭐
+- 🔴 Esquecer que **Nafazolina** em crianças é a causa clássica de toxíndrome simpatomimética após "gotas nasais".
+- 🔴 Tratar intoxicação por Anlodipino com Glucagon (o correto para BCC é Cálcio).
 
 *📝 Espaço reservado para inclusão de questões erradas*

@@ -1,5 +1,5 @@
 # ESTADO — MedHub (Preparação para Residência Médica)
-*Atualizado: 2026-03-15 (sessão 029) | Ferramenta: Antigravity*
+*Atualizado: 2026-03-16 (sessão 031) | Ferramenta: Antigravity*
 
 ---
 
@@ -14,9 +14,9 @@ Ambiente de estudo para residência médica. Processa questões de prova, regist
 > [!IMPORTANT]
 > **SINGLE SOURCE OF TRUTH (SSOT):** O Markdown (`caderno_erros.md`) é a base absoluta. O App Streamlit (`01_dashboard.py`) reflete os dados via parser stateful. Ignorar o SQLite para leitura de UI; ele serve apenas para processamento futuro de ML.
 
-- **91 erros diagnosticados** no caderno (`caderno_erros.md`)
-- **27 resumos clínicos** consolidados em `Temas/`
-- **28 sessões** de estudo catalogadas em `history/`
+- **98 erros diagnosticados** no caderno (`caderno_erros.md`)
+- **31 resumos clínicos** consolidados em `Temas/`
+- **31 sessões** de estudo catalogadas em `history/`
 
 ---
 
@@ -64,6 +64,7 @@ Ambiente de estudo para residência médica. Processa questões de prova, regist
 
 ## Últimas sessões
 
+**2026-03-16 | Antigravity (sessão 031):** **Expansão em Psiquiatria e Nefrologia**. Criação dos resumos de `Dependência Química.md`, `Intoxicações Exógenas.md` e `Lesão Renal Aguda.md`. Foco em alto rendimento (CAGE, Síndromes toxicológicas, Critérios KDIGO e diferenciação Pré-renal vs NTA).
 **2026-03-15 | Antigravity (sessão 030):** **Consolidação de Pancreatites**. Criação do resumo de `Pancreatite Aguda e Crônica.md` a partir de material do Estratégia MED. Foco em critérios de Atlanta 2012, sinais semiológicos (Cullen/Grey-Turner) e tríade da pancreatite crônica.
 **2026-03-15 | Antigravity (sessão 029):** **UI Refresh (Aesthetic Lovable)**. Implementado sistema de design Flat com `app/utils/styles.py`. Refatoração completa de todas as páginas para visual premium clinical. Arquitetura híbrida de botões FSRS implementada com sucesso.
 **2026-03-14 | Antigravity (sessão 028):** Bootstrap de contexto e rebranding concluído. Correção de erro no `streamlit_app.py` (removida referência à página inexistente `05_progresso.py` integrada ao Dashboard). Sincronização de alterações do usuário em Pediatria.

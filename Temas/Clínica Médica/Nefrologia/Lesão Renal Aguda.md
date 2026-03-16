@@ -23,14 +23,24 @@
 
 ## 3. Diferenciação: Pré-Renal vs. NTA ⭐⭐⭐
 ---
-| Parâmetro | Pré-Renal (Rim poupador) | NTA (Rim lesado) |
-|---|---|---|
-| **Na urinário** | < 20 mEq/L | > 40 mEq/L |
-| **FENa (Fraç. Excr. Sódio)** | **< 1%** | **> 1%** |
-| **FEUreia** | < 35% | > 35% |
-| **Osmolaridade Urinária** | > 500 mOsm/L (Urina concentrada) | < 350 mOsm/L (Urina diluída) |
-| **Sedimento Urinário** | Cilindros Hialinos | **Cilindros Granulosos** (Células mortas) |
-| **Ureia / Creatinina** | > 40 | < 20 |
+- **Sódio (Na) Urinário:**
+    - Pré-Renal: < 20 mEq/L (Rim poupador).
+    - NTA: > 40 mEq/L (Rim lesado).
+- **Fraçao de Excreção de Sódio (FENa):** ⭐
+    - Pré-Renal: **< 1%**.
+    - NTA: **> 1%**.
+- **FRAÇÃO de Excreção de Ureia (FEUreia):**
+    - Pré-Renal: < 35%.
+    - NTA: > 35%.
+- **Osmolaridade Urinária:**
+    - Pré-Renal: > 500 mOsm/L (Urina concentrada).
+    - NTA: < 350 mOsm/L (Urina diluída).
+- **Sedimento Urinário:**
+    - Pré-Renal: Cilindros Hialinos.
+    - NTA: **Cilindros Granulosos** (Células mortas).
+- **Relação Ureia / Creatinina:**
+    - Pré-Renal: > 40.
+    - NTA: < 20.
 
 > [!TIP]
 > Em pacientes usando **Diuréticos**, use a **FEUreia** em vez da FENa, pois o diurético altera a excreção de sódio mas pouco interfere na ureia.

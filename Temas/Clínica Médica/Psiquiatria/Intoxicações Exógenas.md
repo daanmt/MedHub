@@ -35,17 +35,15 @@
 
 ## 3. Antídotos Específicos (Tabela de Ouro) ⭐
 ---
-| Tóxico | Antídoto |
-|---|---|
-| Benzodiazepínicos | Flumazenil |
-| Opioides | Naloxona |
-| Paracetamol | N-acetilcisteína (Fluimucil) |
-| Organofosforados | Atropina / Pralidoxima |
-| Betabloqueadores | Glucagon |
-| Antidepressivos Tricíclicos | Bicarbonato de Sódio (se QRS largo) |
-| Metanol / Etilenoglicol | Etanol ou Fomepizol |
-| Ferro | Deferoxamina |
-| Lítio | Hemodiálise |
+- **Benzodiazepínicos:** Flumazenil.
+- **Opioides:** Naloxona.
+- **Paracetamol:** N-acetilcisteína (Fluimucil).
+- **Organofosforados:** Atropina / Pralidoxima.
+- **Betabloqueadores:** Glucagon.
+- **Antidepressivos Tricíclicos:** Bicarbonato de Sódio (se QRS largo).
+- **Metanol / Etilenoglicol:** Etanol ou Fomepizol.
+- **Ferro:** Deferoxamina.
+- **Lítio:** Hemodiálise.
 
 ## 4. Armadilhas de Prova
 ---

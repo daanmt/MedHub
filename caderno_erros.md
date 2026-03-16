@@ -6,15 +6,9 @@
 
 ---
 
-## Índice de Áreas
+## Pediatria
 
-1. [Clínica Médica](#clínica-médica)
-2. [Cirurgia](#cirurgia)
-3. [Pediatria](#pediatria)
-
----
-
-### Pediatria
+### Cardiologia Pediátrica e Arritmias
 
 #### TSV Estável em Lactente — Sequência: Manobra Vagal → Adenosina
 
@@ -448,12 +442,90 @@ Examinador usa o conhecimento parcial do GINA 2025 (MART substitui SABA) para in
 
 ### Gastroenterologia e Hepatologia
 
-### Gastroenterologia e Hepatologia
 
-<!-- ENTRADAS AQUI -->
+#### Doença Ulcerosa Péptica vs. Pancreatite Crônica — Caráter da Dor e Antiácidos
+
+**Complexidade:** Baixa
+**Elo quebrado:** Habilidade 1 — Diferenciar epigastralgia crônica ulcerosa de pancreática
+**Tipo de erro:** Erro de diagnóstico
+
+**Caso:** Homem 47a, metalúrgico, dor epigástrica há 8 anos que piora com gordura/pimenta e MELHORA com antiácidos. Períodos de acalmia prolongados. Marcou Pancreatite Crônica (A), gabarito: Úlcera Péptica (D).
+
+**Habilidades sequenciais:**
+1. Identificar dor epigástrica crônica e recorrente (ritmicidade).
+2. Valorizar a melhora com antiácidos (hidróxido de alumínio) como sinal cardeal de úlcera.
+3. Diferenciar do etilismo social (baixo risco para PC) do etilismo pesado (alto risco).
+
+**O que faltou:**
+Focou na duração do quadro (8 anos) e no uso de álcool, mas ignorou que a úlcera é muito mais comum e apresenta períodos de acalmia e resposta a antiácidos, enquanto a PC costuma cursar com perda de peso e dor mais contínua/em barra.
+
+**Informações-chave:**
+- Úlcera Péptica: Dor rítmica, melhora com antiácidos/alimentos (duodenal), acalmia.
+- Pancreatite Crônica: Dor contínua, perda de peso, esteatorreia, calcificações.
 
 ---
 
+#### Pancreatite Aguda — Critérios de Gravidade: Hemoconcentração e Azotemia
+
+**Complexidade:** Média
+**Elo quebrado:** Habilidade 1 — Identificar preditores laboratoriais de gravidade independentes
+**Tipo de erro:** Conhecimento parcial
+
+**Caso:** Paciente com PA, Htc 55% e Ureia 150. Marcou que amilase alta ou coleções indicam gravidade (B), gabarito: Hemoconcentração e Azotemia (D).
+
+**Habilidades sequenciais:**
+1. Saber que níveis de amilase/lipase NÃO correlacionam com gravidade. ⭐
+2. Identificar Hematócrito > 44% como marcador de perda para o 3º espaço (grave).
+3. Identificar Ureia > 20 mg/dL ou Cr > 2 mg/dL como falência orgânica/má perfusão renal.
+
+**Explicação correta:**
+A hemoconcentração (Htc alto) reflete a gravidade da inflamação e a falência de microcirculação. A azotemia (ureia elevada) é um dos melhores preditores de mortalidade precoce na PA.
+
+---
+
+#### Pancreatite Necrosante — Conduta na Necrose Estéril vs. Infectada
+
+**Complexidade:** Alta
+**Elo quebrado:** Habilidade 3 — Priorizar tratamento conservador na necrose estéril
+**Tipo de erro:** Erro de aplicação
+
+**Caso:** Paciente com 20 dias de história, TC com necrose, estável, sem febre. Marcou cirurgia (B), gabarito: Conservador + Nutrição Enteral (C).
+
+**Habilidades sequenciais:**
+1. Identificar necrose pancreática na TC.
+2. Avaliar status infeccioso: febre? gás na TC? Se não, é ESTÉRIL.
+3. Aplicar conduta: Necrose estéril = Conservador. Necrose infectada = ATB + Drenagem/Cirurgia postergada.
+
+**Armadilha:**
+O examinador descreve um quadro de 20 dias com necrose extensa para induzir o medo de "deixar passar" e levar o candidato a escolher cirurgia ou ATB profilático (proscrito!).
+
+---
+
+#### Pancreatite Biliar Microlitíase — Ecoendoscopia se USG Negativo
+
+**Complexidade:** Média
+**Elo quebrado:** Habilidade 3 — Escolher o exame de maior sensibilidade para microlitíase
+**Tipo de erro:** Erro de aplicação
+
+**Caso:** Mulher 31a, obesa, PA leve. USG normal. Próximo passo? Marcou TC (D), gabarito: Ecoendoscopia (A).
+
+**Explicação correta:**
+Se a causa não for álcool e o USG inicial for normal, deve-se suspeitar de microlitíase ou lama biliar. A Ecoendoscopia (USG endoscópico) é o padrão-ouro para detectar cálculos < 3mm que fogem ao USG transabdominal. A TC é PÉSSIMA para ver cálculos de colesterol.
+
+---
+
+#### Pancreatite Crônica — Complicações e Pâncreas Exócrino
+
+**Complexidade:** Baixa
+**Elo quebrado:** Habilidade 1 — Identificar complicações sistêmicas da insuficiência exócrina
+**Tipo de erro:** Conhecimento parcial
+
+**Caso:** PC com calcificações. O que NÃO é complicação? Marcou Anemia Megaloblástica (A), gabarito: Colangiocarcinoma (B).
+
+**O que faltou:**
+Saber que a má absorção de gorduras leva a má absorção de vitaminas lipossolúveis (D -> Osteoporose) e que a insuficiência exócrina também pode afetar a absorção de B12 -> Anemia Megaloblástica. Colangiocarcinoma é câncer de via biliar, não do pâncreas.
+
+---
 ## Cirurgia
 
 ### Trauma
@@ -1352,31 +1424,6 @@ O examinador pode usar o vômito como único sinal em ECG 15 para testar se o ca
 - **[PREV]** Desconhece que Método Indireto de padronização é para contingentes pequenos — 1x (Prev Q7)
 - **[PREV]** Tenta inferir risco de morte a partir de indicadores proporcionais; falha no APVP — 1x (Prev Q8)
 - **[PREV]** Acredita que puericultura de baixo risco pode ser exclusiva do enfermeiro — 1x (Prev Q9)
-
----
-
-## Distribuição por Tipo de Erro
-
-- Lacuna de conhecimento: **20**
-- Conhecimento parcial: **15**
-- Erro de aplicação: **18**
-- Erro de leitura: **2**
-- Armadilha do examinador: **1**
-- Incerteza sem erro de base: **2**
-
-### Infectologia
-
-<!-- ENTRADAS AQUI -->
-
-### Emergências e Medicina Intensiva
-
-<!-- ENTRADAS AQUI -->
-
-### Dermatologia
-
-<!-- ENTRADAS AQUI -->
-
----
 
 ## Cirurgia
 
@@ -2460,19 +2507,6 @@ A alternativa C (marcada) afirma que E+P tem risco MENOR que E isolado para CA m
 
 ---
 
----
-
-## Distribuição por Área
-
-- **Clínica Médica** — Cardiologia; Pneumologia; Infectologia; Hematologia: **15 entradas**
-- **Cirurgia** — Trauma: **4 entradas**
-- **Pediatria** — Cardiologia Pediátrica e Cardiopatias Congênitas: **11 entradas**
-- **Ginecologia e Obstetrícia** — Climatério e TH; Sangramentos da Primeira Metade: **13 entradas**
-- **Medicina Preventiva e Saúde Pública** — Epidemiologia e Bioestatística; Vigilância Epidemiológica: **16 entradas**
-- **Total: 59 entradas**
-
----
-
 ## Medicina Preventiva e Saúde Pública
 
 ### Epidemiologia e Bioestatística
@@ -2890,111 +2924,56 @@ Confusão frequente: inverter a ordem (analisar antes de processar) ou confundir
 
 <!-- ENTRADAS AQUI -->
 
----
 
-## Taxonomia de Áreas e Temas
+### Intoxicações Exógenas
 
-> Esta seção define os nomes canônicos para uso pelo agente.
-> Ao inserir uma entrada, o agente deve usar exatamente estes nomes.
-
-### Regra de classificação
-
-- Se o tema já existe: inserir sob ele
-- Se o tema não existe: criar novo H3 na área correta, usando nome descritivo e consistente
-- Se houver dúvida sobre a área: preferir a área da especialidade responsável pelo tratamento
-
-### Nomes canônicos de áreas (H2)
-
-- `Clínica Médica`
-- `Cirurgia`
-- `Pediatria`
-- `Ginecologia e Obstetrícia`
-- `Medicina Preventiva e Saúde Pública`
-
----
-
-### Gastroenterologia e Hepatologia
-
-#### Doença Ulcerosa Péptica vs. Pancreatite Crônica — Caráter da Dor e Antiácidos
-
-**Complexidade:** Baixa
-**Elo quebrado:** Habilidade 1 — Diferenciar epigastralgia crônica ulcerosa de pancreática
-**Tipo de erro:** Erro de diagnóstico
-
-**Caso:** Homem 47a, metalúrgico, dor epigástrica há 8 anos que piora com gordura/pimenta e MELHORA com antiácidos. Períodos de acalmia prolongados. Marcou Pancreatite Crônica (A), gabarito: Úlcera Péptica (D).
-
-**Habilidades sequenciais:**
-1. Identificar dor epigástrica crônica e recorrente (ritmicidade).
-2. Valorizar a melhora com antiácidos (hidróxido de alumínio) como sinal cardeal de úlcera.
-3. Diferenciar do etilismo social (baixo risco para PC) do etilismo pesado (alto risco).
-
-**O que faltou:**
-Focou na duração do quadro (8 anos) e no uso de álcool, mas ignorou que a úlcera é muito mais comum e apresenta períodos de acalmia e resposta a antiácidos, enquanto a PC costuma cursar com perda de peso e dor mais contínua/em barra.
-
-**Informações-chave:**
-- Úlcera Péptica: Dor rítmica, melhora com antiácidos/alimentos (duodenal), acalmia.
-- Pancreatite Crônica: Dor contínua, perda de peso, esteatorreia, calcificações.
-
----
-
-#### Pancreatite Aguda — Critérios de Gravidade: Hemoconcentração e Azotemia
+#### Nafazolina em Crianças — Síndrome Simpatomimética (com nuance de Receptores alfa-2)
 
 **Complexidade:** Média
-**Elo quebrado:** Habilidade 1 — Identificar preditores laboratoriais de gravidade independentes
+**Elo quebrado:** Habilidade 1 — Diagnosticar toxíndrome a partir de uso de descongestionante nasal em criança
 **Tipo de erro:** Conhecimento parcial
 
-**Caso:** Paciente com PA, Htc 55% e Ureia 150. Marcou que amilase alta ou coleções indicam gravidade (B), gabarito: Hemoconcentração e Azotemia (D).
-
-**Habilidades sequenciais:**
-1. Saber que níveis de amilase/lipase NÃO correlacionam com gravidade. ⭐
-2. Identificar Hematócrito > 44% como marcador de perda para o 3º espaço (grave).
-3. Identificar Ureia > 20 mg/dL ou Cr > 2 mg/dL como falência orgânica/má perfusão renal.
+**Caso:** Menino 1 ano, gotas nasais em casa, evolui com midríase, taquicardia, sudorese, hipertensão e convulsão. Marcou síndrome anticolinérgica (C), gabarito era simpatomimética (A).
 
 **Explicação correta:**
-A hemoconcentração (Htc alto) reflete a gravidade da inflamação e a falência de microcirculação. A azotemia (ureia elevada) é um dos melhores preditores de mortalidade precoce na PA.
+A **Nafazolina** é um derivado imidazólico simpatomimético. Em doses baixas/adultos causa vasoconstrição. Em crianças < 6 anos, pode causar tanto estimulação adrenérgica (toxíndrome simpatomimética: taquicardia, HAS, midríase) quanto, paradoxalmente, um efeito simpatolítico central (via receptores alfa-2 centrais, semelhante à clonidina: bradicardia, miose, depressão resp). A questão explorou o lado **simpatomimético**.
+
+**Armadilha / nuance:**
+O uso de "gotas nasais" em crianças é o gatilho clássico para intoxicação por Nafazolina/Fenilefrina. Se houver sudorese + hipertensão, afasta anticolinérgica (que é seca).
 
 ---
 
-#### Pancreatite Necrosante — Conduta na Necrose Estéril vs. Infectada
+#### Salicilato (AAS) — Distúrbio Misto: Alcalose Respiratória + Acidose Metabólica (AG↑)
 
 **Complexidade:** Alta
-**Elo quebrado:** Habilidade 3 — Priorizar tratamento conservador na necrose estéril
-**Tipo de erro:** Erro de aplicação
+**Elo quebrado:** Habilidade 2 — Interpretar gasometria com distúrbio misto patognomônico
+**Tipo de erro:** Erro de diagnóstico
 
-**Caso:** Paciente com 20 dias de história, TC com necrose, estável, sem febre. Marcou cirurgia (B), gabarito: Conservador + Nutrição Enteral (C).
-
-**Habilidades sequenciais:**
-1. Identificar necrose pancreática na TC.
-2. Avaliar status infeccioso: febre? gás na TC? Se não, é ESTÉRIL.
-3. Aplicar conduta: Necrose estéril = Conservador. Necrose infectada = ATB + Drenagem/Cirurgia postergada.
-
-**Armadilha:**
-O examinador descreve um quadro de 20 dias com necrose extensa para induzir o medo de "deixar passar" e levar o candidato a escolher cirurgia ou ATB profilático (proscrito!).
-
----
-
-#### Pancreatite Biliar Microlitíase — Ecoendoscopia se USG Negativo
-
-**Complexidade:** Média
-**Elo quebrado:** Habilidade 3 — Escolher o exame de maior sensibilidade para microlitíase
-**Tipo de erro:** Erro de aplicação
-
-**Caso:** Mulher 31a, obesa, PA leve. USG normal. Próximo passo? Marcou TC (D), gabarito: Ecoendoscopia (A).
+**Caso:** Homem, depressão, náuseas/vômitos e confusão. FC 108, FR 29. Gaso: pH 7,23, HCO3 10, pCO2 15, Na 135, Cl 98. Marcou Tricíclicos (B), gabarito: Salicilatos (A).
 
 **Explicação correta:**
-Se a causa não for álcool e o USG inicial for normal, deve-se suspeitar de microlitíase ou lama biliar. A Ecoendoscopia (USG endoscópico) é o padrão-ouro para detectar cálculos < 3mm que fogem ao USG transabdominal. A TC é PÉSSIMA para ver cálculos de colesterol.
-
----
-
-#### Pancreatite Crônica — Complicações e Pâncreas Exócrino
-
-**Complexidade:** Baixa
-**Elo quebrado:** Habilidade 1 — Identificar complicações sistêmicas da insuficiência exócrina
-**Tipo de erro:** Conhecimento parcial
-
-**Caso:** PC com calcificações. O que NÃO é complicação? Marcou Anemia Megaloblástica (A), gabarito: Colangiocarcinoma (B).
+A intoxicação por salicilatos é clássica por gerar um **distúrbio ácido-base misto**:
+1. **Alcalose Respiratória:** Estímulo direto do AAS no centro respiratório (hiperventilação precoce).
+2. **Acidose Metabólica com Anion Gap aumentado:** Pelo acúmulo de ácidos orgânicos e interferência no ciclo de Krebs.
+No caso: AG = 135 - (98 + 10) = 27 (Aumentado). CO2 esperado = (1,5 * 10) + 8 = 23 ± 2. Como o CO2 real (15) é muito MENOR que o esperado, há uma alcalose respiratória associada. Essa combinação é altamente sugestiva de Salicilatos.
 
 **O que faltou:**
-Saber que a má absorção de gorduras leva a má absorção de vitaminas lipossolúveis (D -> Osteoporose) e que a insuficiência exócrina também pode afetar a absorção de B12 -> Anemia Megaloblástica. Colangiocarcinoma é câncer de via biliar, não do pâncreas.
+O cálculo do CO2 esperado e do Anion Gap. Nos tricíclicos, o quadro é anticolinérgico clássico (seco, midriático) e a alteração de escolha no ECG é o QRS largo, não apenas taquicardia sinusal.
 
 ---
+
+#### Bloqueador de Canal de Cálcio (Anlodipino) — Antídoto: Gluconato de Cálcio
+
+**Complexidade:** Baixa
+**Elo quebrado:** Habilidade 3 — Diferenciar antídotos de Betabloqueadores e Antagonistas de Cálcio
+**Tipo de erro:** Conhecimento parcial
+
+**Caso:** Escolar ingeriu cartela de Anlodipino. Hipotenso (70x40) e sonolento. Marcou Glucagon (fazendo confusão com Betabloqueador), gabarito: Gluconato de Cálcio.
+
+**Explicação correta:**
+- Intoxicação por **Bloqueadores de Canais de Cálcio (BCC)** (ex: Anlodipino, Verapamil, Diltiazem): O tratamento de escolha é o **Cálcio** (Gluconato ou Cloreto de Cálcio).
+- Intoxicação por **Betabloqueadores**: O antídoto clássico é o **Glucagon**.
+Ambos causam bradicardia e hipotensão, mas o Anlodipino (di-hidropiridínico) costuma causar mais hipotensão do que bradicardia (pode ter taquicardia reflexa no início).
+
+**Informações-chave:**
+A lavagem gástrica e carvão ativado são úteis se < 1-2h da ingestão. BCC são altamente letais em crianças ("One pill can kill"). [Fim da inserção]

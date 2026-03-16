@@ -1,26 +1,23 @@
-# MedHub Handoff — Session 030
+# MedHub Handoff — Session 031
 
-**Data**: 2026-03-15
+**Data**: 2026-03-16
 **Agente**: Antigravity
 
 ## Status Atual
-- **Conteúdo**: Resumo de `Pancreatite Aguda e Crônica` finalizado e expandido com insights de erros. Novo resumo de `Doença Ulcerosa Péptica` criado.
-- **Caderno de Erros**: 7 novos erros de Gastroenterologia analisados e registrados (Total: 98).
-- **Infraestrutura**: Database `ipub.db` atualizada com as novas questões. Estética visual "Flat" (Lovable) mantida.
+- **Conteúdo**: Três novos resumos de alto rendimento criados: `Dependência Química.md`, `Intoxicações Exógenas.md` (Psiquiatria) e `Lesão Renal Aguda.md` (Nefrologia).
+- **Consolidação**: Material extraído de PDFs do Estratégia MED, focando em prevalência de prova.
+- **Governança**: PDFs originais e arquivos temporários deletados após processamento.
 
 ## Últimas Ações
-- Extração e síntese de informações de `Pancre.pdf`.
-- Análise de 7 questões erradas enviadas pelo usuário.
-- Atualização do `caderno_erros.md` seguindo o protocolo de habilidades sequenciais.
-- Criação/Atualização de Docs em `Temas/Clínica Médica/Gastroenterologia/`.
+- Extração de texto via `extract_pdfs.py`.
+- Síntese de conteúdo seguindo `Tools/estilo-resumo.md` (sem tabelas, bullets hierárquicos, emojis semânticos).
+- Adição de seções de "Armadilhas de Prova" baseadas em gatilhos de examinador (ex: Mioglobinúria vs Hematúria, Tiamina antes de Glicose).
+- Atualização do `ESTADO.md`.
 
 ## Próximos Passos
-1. **Revisão de Conteúdo**: O usuário pode revisar os novos arquivos MD na pasta de Gastro.
-2. **Ciclo de Questões**: Sugere-se nova bateria de Gastroenterologia ou transição para Ginecologia (próximo item da lista se houver).
-3. **FSRS**: Verificar integração do Dashboard com os novos dados de erro inseridos via script.
-
-## Bloqueios / Pendências
-- Nenhum bloqueio no momento.
+1. **Ciclo de Questões**: Realizar bateria de questões sobre os novos temas para alimentar o `caderno_erros.md`.
+2. **Flashcards**: Converter os pontos ⭐ dos novos resumos em flashcards via `sync_flashcards.py` (se aplicável).
+3. **Revisão de Nefro**: O resumo de LRA é denso; sugere-se revisar a tabela de diferenciação Pré-renal vs NTA.
 
 ---
 *Assinado: Antigravity*

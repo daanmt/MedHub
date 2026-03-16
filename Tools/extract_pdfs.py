@@ -89,60 +89,81 @@ def extract_pdf(pdf_path: str, out_path: str = None) -> str | None:
     return out_path
 
 
-def delete_temps(*temp_paths: str):
+def sanitize_path(path: str) -> str:
+    """Remove aspas e espaços extras que podem surgir de erros de escape no shell."""
+    return path.replace('"', '').replace("'", "").strip()
+
+
+def delete_temps(*temp_paths: str, dry_run: bool = False):
     """Deleta arquivos temporários de extração."""
     for path in temp_paths:
-        path = os.path.normpath(path)
+        path = os.path.normpath(sanitize_path(path))
         if os.path.exists(path):
-            os.remove(path)
-            print(f"[DEL] temp: {path}", file=sys.stderr)
+            if dry_run:
+                print(f"[DRY-RUN] Deletaria temp: {path}", file=sys.stderr)
+            else:
+                os.remove(path)
+                print(f"[DEL] temp: {path}", file=sys.stderr)
         else:
             print(f"[AVISO] Não encontrado: {path}", file=sys.stderr)
 
 
-def delete_pdfs_in_folder(folder: str):
+def delete_pdfs_in_folder(folder: str, dry_run: bool = False):
     """
     Deleta todos os arquivos .pdf/.PDF na pasta indicada (não recursivo).
     Usar após consolidar o resumo .md.
     """
-    folder = os.path.normpath(folder)
-    pdfs = glob.glob(os.path.join(folder, "*.pdf")) + glob.glob(os.path.join(folder, "*.PDF"))
+    folder = os.path.normpath(sanitize_path(folder))
+    if not os.path.isdir(folder):
+        print(f"[ERRO] Diretório não encontrado: {folder}", file=sys.stderr)
+        return
+
+    # glob no Windows costuma ser case-insensitive, mas garantimos ambos.
+    # Usamos set() para evitar duplicatas se o SO for case-insensitive.
+    pdfs = set(glob.glob(os.path.join(folder, "*.pdf"))) | set(glob.glob(os.path.join(folder, "*.PDF")))
+    
     if not pdfs:
         print(f"[INFO] Nenhum PDF encontrado em: {folder}", file=sys.stderr)
         return
+
     for pdf in pdfs:
-        os.remove(pdf)
-        print(f"[DEL] pdf: {pdf}", file=sys.stderr)
+        if dry_run:
+            print(f"[DRY-RUN] Deletaria pdf: {pdf}", file=sys.stderr)
+        else:
+            try:
+                os.remove(pdf)
+                print(f"[DEL] pdf: {pdf}", file=sys.stderr)
+            except Exception as e:
+                print(f"[ERRO] Falha ao deletar {pdf}: {e}", file=sys.stderr)
 
 
 if __name__ == "__main__":
-    args = sys.argv[1:]
+    import argparse
 
-    if not args or args[0] in ("-h", "--help"):
-        print(__doc__)
-        sys.exit(0)
+    parser = argparse.ArgumentParser(description="Extrator de texto de PDFs para MedHub")
+    parser.add_argument("pdfs", nargs="*", help="Arquivos PDF para extrair")
+    parser.add_argument("--delete-pdfs", metavar="PASTA", help="Deleta todos os PDFs em uma pasta")
+    parser.add_argument("--delete-temps", nargs="+", metavar="ARQUIVO", help="Deleta arquivos temporários específicos")
+    parser.add_argument("--dry-run", action="store_true", help="Simula as ações de deleção sem executá-las")
+    parser.add_argument("--out", help="Path de saída para extração (apenas se extrair um único PDF)")
 
-    # Modo limpeza de PDFs de uma pasta
-    if args[0] == "--delete-pdfs":
-        if len(args) < 2:
-            print("[ERRO] Informe a pasta: --delete-pdfs <pasta>", file=sys.stderr)
+    args = parser.parse_args()
+
+    # Executar deleções primeiro se solicitadas
+    if args.delete_pdfs:
+        delete_pdfs_in_folder(args.delete_pdfs, dry_run=args.dry_run)
+    
+    if args.delete_temps:
+        delete_temps(*args.delete_temps, dry_run=args.dry_run)
+
+    # Executar extrações se houver PDFs
+    if args.pdfs:
+        if args.out and len(args.pdfs) > 1:
+            print("[ERRO] --out só pode ser usado com um único PDF.", file=sys.stderr)
             sys.exit(1)
-        folder = args[1]
-        temp_files = args[3:] if len(args) > 3 and args[2] == "--delete-temps" else []
-        delete_pdfs_in_folder(folder)
-        if temp_files:
-            delete_temps(*temp_files)
-        sys.exit(0)
-
-    # Modo limpeza de arquivos temporários
-    if args[0] == "--delete-temps":
-        delete_temps(*args[1:])
-        sys.exit(0)
-
-    # Caso padrão: dois argumentos em que o segundo é .txt → PDF + saída explícita
-    if len(args) == 2 and args[1].lower().endswith(".txt"):
-        extract_pdf(args[0], args[1])
-    else:
-        # Um ou mais PDFs → saída em pasta temporária do sistema
-        for pdf_arg in args:
-            extract_pdf(pdf_arg)
+        
+        for pdf_path in args.pdfs:
+            extract_pdf(pdf_path, args.out)
+    
+    if not args.pdfs and not args.delete_pdfs and not args.delete_temps:
+        parser.print_help()

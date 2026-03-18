@@ -4,16 +4,15 @@
 **Agente**: Antigravity
 
 ## Status Atual
-- **Conteúdo**: Resumo de `[GIN] Rastreamento Colo.md` revisado, atualizado com Bio Mol (2025) e limpo de referências a questões.
-- **Governança**: Nova política de escrita estabelecida: insights de questões devem ser integrados naturalmente, sem citar números de questões no resumo.
-- **Estilo**: Resumo de Colo agora 100% em bullet points, conforme `estilo-resumo.md`.
+- **Conteúdo**: Resumo de `[GIN] Rastreamento Colo.md` expandido: agora cobre 9 erros de prova, incluindo seguimento pós-exérese (margens) e coleta em gestantes (escovado allowed).
+- **Governança**: Políticas de estilo (`estilo-resumo.md`) e análise (`comando de analise de questao.md`) blindadas contra referências "QX" nos textos técnicos.
+- **Estilo**: Resumo 100% refatorado para bullet points.
 
 ## Últimas Ações
-- Análise de 6 erros de Rastreamento de Colo.
-- Refatoração de tabelas para bullet points no resumo.
-- Remoção de tags "QX" do resumo.
-- Atualização de `Tools/estilo-resumo.md` e `Tools/comando de analise de questao.md`.
-- Registro da `session_032.md`.
+- Análise de 3 novas questões sobre Colo (total 9 na sessão).
+- Implementação de fluxogramas de margens comprometidas vs livres.
+- Esclarecimento sobre segurança do Pap na gestação.
+- Atualização final de todos os docs de controle.
 
 ## Próximos Passos
 1. **Auditoria de Estilo**: Verificar outros resumos em `Temas/` para remover referências legadas a questões (ex: "Foco do erro na Q...") e converter tabelas restantes.

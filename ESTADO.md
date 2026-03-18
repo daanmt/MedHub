@@ -64,7 +64,7 @@ Ambiente de estudo para residência médica. Processa questões de prova, regist
 
 ## Últimas sessões
 
-**2026-03-18 | Antigravity (sessão 032):** **Refinamento de Rastreamento de Colo e Governança**. Revisão do resumo `[GIN] Rastreamento Colo.md` com diretrizes 2025 e análise de 6 erros. Refatoração completa de tabelas para bullet points e remoção de referências explícitas a questões (ex: "Q1"). Atualização de `estilo-resumo.md` e `comando de analise de questao.md` com regras de integração natural de conteúdo.
+**2026-03-18 | Antigravity (sessão 032):** **Refinamento Avançado de Colo e Governança**. Revisão profunda do resumo `[GIN] Rastreamento Colo.md` com diretrizes 2025 e análise de 9 erros. Incluídos detalhes de coleta na gestação e seguimento pós-exérese por margens. Refatoração completa de tabelas para bullet points e proibição de referências explicitas a questões em resumos.
 **2026-03-16 | Antigravity (sessão 031):** **Expansão em Psiquiatria e Nefrologia**. Criação dos resumos de `Dependência Química.md`, `Intoxicações Exógenas.md` e `Lesão Renal Aguda.md`. Foco em alto rendimento (CAGE, Síndromes toxicológicas, Critérios KDIGO e diferenciação Pré-renal vs NTA).
 **2026-03-15 | Antigravity (sessão 030):** **Consolidação de Pancreatites**. Criação do resumo de `Pancreatite Aguda e Crônica.md` a partir de material do Estratégia MED. Foco em critérios de Atlanta 2012, sinais semiológicos (Cullen/Grey-Turner) e tríade da pancreatite crônica.
 **2026-03-15 | Antigravity (sessão 029):** **UI Refresh (Aesthetic Lovable)**. Implementado sistema de design Flat com `app/utils/styles.py`. Refatoração completa de todas as páginas para visual premium clinical. Arquitetura híbrida de botões FSRS implementada com sucesso.

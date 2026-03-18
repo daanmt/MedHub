@@ -93,12 +93,15 @@ DNA-HPV
     - ≥ 30 anos: Repetir em **6 meses**.
 - **LIE-BG**:
     - < 25 anos: Repetir em 3 anos.
-    - 25–29 anos: Repetir em **6 meses**.
-    - ≥ 30 anos: Repetir em **6 meses**.
+    - ≥ 25 anos: Repetir em **6 meses** (independente de ter 27 ou 32 anos).
 - **ASC-H**: Colposcopia imediata em qualquer idade.
 - **LIE-AG**: Colposcopia imediata em qualquer idade.
 - **AGC / AOI**: Colposcopia imediata (+ avaliar endométrio se ≥ 45 anos ou sangramento anormal).
 - **Carcinoma invasor**: Colposcopia imediata.
+
+> ⚠️ **Padrão de prova — ASCUS vs LIE-BG na faixa 25–29 anos**: ASCUS nessa faixa = repetir em **12 meses**. LIE-BG nessa faixa = repetir em **6 meses**. Trocar os intervalos é a armadilha clássica.
+
+> ⚠️ **Padrão de prova — Histórico de NIC tratado**: Se a paciente completou o seguimento pós-tratamento e recebeu **alta sem evidência de recidiva**, retorna ao fluxo de rastreio habitual. O resultado atual do Pap deve ser interpretado como se fosse o primeiro, **independente do histórico**.
 
 ### 🔴 PONTO CRÍTICO — ASC-US vs ASC-H
 - **ASC-US**:
@@ -198,11 +201,16 @@ LIE-BG (Pap)
     - ❌ Imiquimode
 - Parto vaginal somente contraindicado se **tumor prévio** (condiloma gigante obstruindo canal de parto).
 
+### Rastreio e Coleta na Gestação
+- A coleta do Pap na gestante inclui ecto **e** endocérvice — **escovado endocervical NÃO é contraindicado** e **não causa aborto**.
+- A gestação é oportunidade de rastreio: se a citologia estiver em atraso, colher na 1ª consulta de pré-natal.
+- 🔴 **Erro comum**: adiar a coleta para o pós-parto quando já há indicação de repetir. A gestante colhe igual à não-gestante.
+
 ### NIC na Gestação
 - **Biópsia**: realizada apenas se **suspeita de invasão** (achado sugestivo de câncer).
 - **NIC de qualquer grau** (I, II, III): conduta **expectante** — tratar lesão pré-invasiva após o parto.
     - 🔴 Risco de progressão durante a gestação é **mínimo** → aguardar puerpério para reavaliação (90 dias pós-parto).
-- Colposcopia é **permitida** na gestação.
+- Colposcopia é **permitida** em qualquer fase da gestação (colo mais vascularizado, cuidado com sangramento).
 
 ---
 
@@ -229,6 +237,21 @@ LIE-BG (Pap)
 
 > ⭐ Método excisional é **sempre preferido** ao destrutivo (permite análise histológica das margens e descarta invasão oculta).
 
+### Seguimento Pós-Exérese (EZT/CAF/Conização)
+
+> ⭐ O seguimento depende do resultado das **margens** no anatomopatológico da peça.
+
+- **Margens livres** ou comprometidas apenas por **NIC 1**:
+    - Citologia semestral por 1 ano → depois anual até completar **5 anos** de seguimento → alta para rastreio habitual.
+
+- **Margens comprometidas por NIC 2/3**:
+    - Citologia + colposcopia semestrais por **2 anos**.
+    - Depois citologia anual até completar **5 anos** de seguimento → alta para rastreio habitual.
+
+> 🔴 **A margem ectocervical comprometida não altera a conduta imediata, mas é o principal fator de risco para recidiva.** Outros fatores de risco: idade > 50 anos, grau da lesão tratada, HPV oncogênico persistente, tabagismo, multiparidade, imunossupressão.
+
+> ⚠️ **Padrão de prova — Alta após seguimento de NIC**: Se a paciente cumpriu os 5 anos de seguimento sem recidiva e recebeu alta, retorna ao rastreio trienal habitual. Novo resultado de Pap deve ser interpretado e manejado de forma independente, como se fosse a primeira atipia da paciente.
+
 ### 🔴 PONTO CRÍTICO — Microinvasão e Conização
 
 **Situação**: Biópsia de colo com resultado de "microinvasão estromal" → **qual próximo passo?**
@@ -250,15 +273,18 @@ LIE-BG (Pap)
 ## 🔴 Armadilhas de Prova
 
 - **ASC-H ≠ ASC-US**: ASC-H sempre vai pra colposcopia. Jamais repetir citologia em ASC-H.
+- **ASCUS 25–29 anos ≠ LIE-BG 25–29 anos**: ASCUS = 12 meses; LIE-BG = **6 meses**. Trocar é a armadilha clássica.
 - **LIE-BG com 1 negativo**: não volta ao trienal. Precisa de **2 negativos consecutivos** (a cada 6 meses).
 - **"Ver e tratar" com suspeita de invasão**: **CONTRAINDICADO**. Biópsia primeiro.
 - **NIC de qualquer grau na gestante**: conduta **expectante** até o puerpério (risco de progressão mínimo).
 - **Condiloma na gestante**: TCA, laser, CAF, crioterapia ✅ | Podofilina/imiquimode ❌.
+- **Pap na gestante**: coleta endo + ectocérvice; **escovado endocervical não causa aborto**. Gestante em atraso com rastreio → colher na primeira consulta de pré-natal, sem adiar.
 - **Achado microbiológico no Pap = IST**: tratar sempre, mesmo sem sintomas.
 - **Microinvasão na biópsia → não é hora de histerectomia → Conização** para estadiar.
+- **Seguimento pós-exérese**: mínimo de 5 anos. Margens comprometidas por NIC 2/3 = citologia + colposcopia semestrais por 2 anos, depois anual. Após alta formal, retorna ao rastreio habitual.
+- **Paciente com NIC tratado no passado e em alta**: se recebeu alta com seguimento adequado, o resultado atual do Pap é interpretado de forma independente — sem escalar a conduta pelo histórico.
 - **Colposcopia insatisfatória (ZT tipo 3)**: JEC não visível → investigar canal (curetagem endocervical).
 - **Ectopia cervical**: achado fisiológico. Não cauterizar de rotina. Só se causa sintomas persistentes e após excluir infecções. Sinorragia + ectopia friável = **investigar lesão/câncer, não cauterizar**.
-- **Grávida com NIC**: biópsia apenas se suspeita de invasão; lesão pré-invasiva → aguardar pós-parto.
 - **Encerramento do rastreio (2025)**: negativo aos 60 anos → liberada (próximo seria após os 64). Jamais liberada se teve LIE-AG ou adenocarcinoma in situ tratados (rastrear por 25 anos).
 - **Imunossuprimida (2025)**: qualquer HPV oncogênico → colposcopia direta (não diferencia tipo). Rastreamento **indefinido**.
 - **Cervicite folicular = Chlamydia até prova em contrário** → tratar empiricamente.

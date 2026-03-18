@@ -1,28 +1,45 @@
 import re
 import pandas as pd
 from pathlib import Path
+from datetime import datetime
 from .file_io import read_md, get_abs_path
+
+_SKIP_SECTIONS = {
+    'Distribuição por Tipo de Erro',
+    'Distribuição por Área',
+    'Taxonomia de Áreas e Temas',
+}
 
 def parse_caderno_erros(rel_path="caderno_erros.md") -> list[dict]:
     """Parse estruturado e robusto do caderno de erros (Reforma v3.0 Stateful)"""
     content = read_md(rel_path)
     entries = []
-    
+
     current_area = "Geral"
     current_tema = "Miscelânea"
-    
+    _in_skip = False
+
     lines = content.split('\n')
     current_entry = None
-    
+
     for line in lines:
         line_stripped = line.strip()
         if not line_stripped:
             continue
-            
+
         # Rastreamento de Estado (Ressalva 1)
         if line.startswith('## '):
-            current_area = line.replace('## ', '').strip()
+            section = line.replace('## ', '').strip()
+            if section in _SKIP_SECTIONS:
+                _in_skip = True
+            else:
+                _in_skip = False
+                current_area = section
             continue
+
+        if _in_skip:
+            continue
+
         if line.startswith('### '):
             current_tema = line.replace('### ', '').strip()
             continue
@@ -75,11 +92,6 @@ def parse_caderno_erros(rel_path="caderno_erros.md") -> list[dict]:
         entry["o_que_faltou"] = m_faltou.group(1).strip() if m_faltou else "N/A"
         
     return entries
-                
-    if current_error:
-        entries.append(current_error)
-        
-    return entries
 
 def get_error_stats(rel_path="caderno_erros.md") -> dict:
     """Faz o parse de métricas básicas agregadas para o Dashboard e Analytics."""
@@ -98,7 +110,6 @@ def get_error_stats(rel_path="caderno_erros.md") -> dict:
 
 def parse_session_date(content: str, filename: str = "") -> datetime | None:
     """Extrai a data de uma sessão via múltiplas heurísticas de regex (v2.0 Fix)"""
-    from datetime import datetime
     patterns = [
         r'\*\*Data:\*\*\s*(\d{4}-\d{2}-\d{2})',
         r'\*Data:\s*(\d{4}-\d{2}-\d{2})',

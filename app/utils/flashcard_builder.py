@@ -1,7 +1,6 @@
 import json
 import os
 import requests
-import sqlite3
 import re
 from pathlib import Path
 from datetime import datetime

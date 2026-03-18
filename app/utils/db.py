@@ -10,50 +10,27 @@ def get_connection():
     return sqlite3.connect(DB_PATH)
 
 def get_db_metrics():
-    """Consulta métricas detalhadas: Erros, Acertos e Desempenho por Área"""
+    """Consulta métricas de desempenho por área (1 linha por área após import fixado)."""
     conn = get_connection()
-    # Puxamos dados de acertos/realizações da taxonomia
-    df_tax = pd.read_sql('''
-        SELECT 
-            area as Área,
-            SUM(questoes_realizadas) as Total,
-            SUM(questoes_acertadas) as Acertos
+    df = pd.read_sql('''
+        SELECT
+            area AS "Área",
+            SUM(questoes_realizadas) AS "Total",
+            SUM(questoes_acertadas)  AS "Acertos"
         FROM taxonomia_cronograma
         GROUP BY area
+        HAVING SUM(questoes_realizadas) > 0
     ''', conn)
-    
-    # Puxamos dados de erros do caderno
-    df_erros = pd.read_sql('''
-        SELECT 
-            t.area as Área,
-            COUNT(q.id) as Erros
-        FROM taxonomia_cronograma t
-        LEFT JOIN questoes_erros q ON q.tema_id = t.id
-        GROUP BY t.area
-    ''', conn)
-    
-    # Merge dos dados
-    df_final = pd.merge(df_tax, df_erros, on="Área", how="left").fillna(0)
-    df_final['Erros'] = df_final['Erros'].astype(int)
-    
-    # Cálculo de Desempenho (%) por Área
-    df_final['Desempenho'] = df_final.apply(
-        lambda x: (x['Acertos'] / x['Total'] * 100) if x['Total'] > 0 else 0, axis=1
-    )
-    
-    total_erros = int(df_final['Erros'].sum())
-    total_acertos = int(df_final['Acertos'].sum())
-    total_questoes = int(df_final['Total'].sum())
-    media_desempenho = (total_acertos / total_questoes * 100) if total_questoes > 0 else 0
-    
     conn.close()
-    return {
-        "total_erros": total_erros,
-        "total_acertos": total_acertos,
-        "total_questoes": total_questoes,
-        "media_desempenho": media_desempenho,
-        "df_areas": df_final.sort_values(by="Erros", ascending=False)
-    }
+    if df.empty:
+        return {'total_questoes': 0, 'total_acertos': 0, 'media_desempenho': 0.0, 'df_areas': df}
+    df['Desempenho'] = (df['Acertos'] / df['Total'] * 100).round(1)
+    df = df.sort_values('Desempenho', ascending=True)
+    total_questoes = int(df['Total'].sum())
+    total_acertos  = int(df['Acertos'].sum())
+    media          = total_acertos / total_questoes * 100 if total_questoes > 0 else 0.0
+    return {'total_questoes': total_questoes, 'total_acertos': total_acertos,
+            'media_desempenho': round(media, 1), 'df_areas': df}
 
 def get_caderno_erros():
     """Traz todos os flashcards do caderno unindo relacionalmente com a taxonomia"""
@@ -185,6 +162,120 @@ def get_erros_resumidos():
     ''', conn)
     conn.close()
     return df
+
+def init_fsrs_cache_tables():
+    """Cria tabelas FSRS para os cards do flashcards_cache.json (se não existirem)."""
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS fsrs_cache_cards (
+            erro_origem INTEGER PRIMARY KEY,
+            state INTEGER DEFAULT 0,
+            stability REAL DEFAULT 0.0,
+            difficulty REAL DEFAULT 0.0,
+            scheduled_days INTEGER DEFAULT 0,
+            reps INTEGER DEFAULT 0,
+            lapses INTEGER DEFAULT 0,
+            last_review DATETIME,
+            due DATETIME
+        )
+    ''')
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS fsrs_cache_revlog (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            erro_origem INTEGER,
+            rating INTEGER,
+            state INTEGER,
+            stability REAL,
+            difficulty REAL,
+            scheduled_days INTEGER,
+            review_time DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+    ''')
+    conn.commit()
+    conn.close()
+
+
+def get_cache_fsrs_state(erro_origem: int) -> dict:
+    """Retorna o estado FSRS de um card do cache. Inicializa se não existir."""
+    init_fsrs_cache_tables()
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM fsrs_cache_cards WHERE erro_origem = ?", (erro_origem,))
+    row = cursor.fetchone()
+    conn.close()
+
+    if row is None:
+        fsrs = FSRS()
+        return {**fsrs.init_card(), 'erro_origem': erro_origem}
+
+    cols = ['erro_origem', 'state', 'stability', 'difficulty', 'scheduled_days',
+            'reps', 'lapses', 'last_review', 'due']
+    return dict(zip(cols, row))
+
+
+def record_cache_review(erro_origem: int, rating: int) -> dict:
+    """Aplica FSRS e persiste o estado atualizado para um card do cache."""
+    init_fsrs_cache_tables()
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM fsrs_cache_cards WHERE erro_origem = ?", (erro_origem,))
+    row = cursor.fetchone()
+
+    fsrs = FSRS()
+    if row is None:
+        card_data = fsrs.init_card()
+    else:
+        cols = ['erro_origem', 'state', 'stability', 'difficulty', 'scheduled_days',
+                'reps', 'lapses', 'last_review', 'due']
+        card_data = dict(zip(cols, row))
+
+    new_state = fsrs.evaluate(card_data, rating)
+
+    cursor.execute('''
+        INSERT INTO fsrs_cache_cards
+            (erro_origem, state, stability, difficulty, scheduled_days, reps, lapses, last_review, due)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ON CONFLICT(erro_origem) DO UPDATE SET
+            state=excluded.state, stability=excluded.stability, difficulty=excluded.difficulty,
+            scheduled_days=excluded.scheduled_days, reps=excluded.reps, lapses=excluded.lapses,
+            last_review=excluded.last_review, due=excluded.due
+    ''', (
+        erro_origem, new_state['state'], new_state['stability'], new_state['difficulty'],
+        new_state['scheduled_days'], new_state['reps'], new_state['lapses'],
+        new_state['last_review'], new_state['due']
+    ))
+
+    cursor.execute('''
+        INSERT INTO fsrs_cache_revlog (erro_origem, rating, state, stability, difficulty, scheduled_days)
+        VALUES (?, ?, ?, ?, ?, ?)
+    ''', (
+        erro_origem, rating, new_state['state'], new_state['stability'],
+        new_state['difficulty'], new_state['scheduled_days']
+    ))
+
+    conn.commit()
+    conn.close()
+    return new_state
+
+
+def get_cache_due_count() -> int:
+    """Quantos cards do cache estão vencidos para revisão hoje."""
+    try:
+        init_fsrs_cache_tables()
+        conn = get_connection()
+        cursor = conn.cursor()
+        cursor.execute(
+            "SELECT COUNT(*) FROM fsrs_cache_cards WHERE due <= ? AND state > 0",
+            (datetime.now(),)
+        )
+        count = cursor.fetchone()[0]
+        conn.close()
+        return count
+    except Exception:
+        return 0
+
 
 def sync_git():
     """Executa o commit e push do banco de dados para o GitHub"""

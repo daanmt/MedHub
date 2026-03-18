@@ -1,82 +1,86 @@
 import streamlit as st
+import pandas as pd
 from app.utils.parser import parse_caderno_erros, save_new_error
 
+entries = parse_caderno_erros()
+df = pd.DataFrame(entries) if entries else pd.DataFrame()
+
+# ── Sidebar ───────────────────────────────────────────────────────────────────
+with st.sidebar:
+    st.header("Filtros")
+    areas = sorted(df['area'].unique()) if not df.empty else []
+    area_filter = st.multiselect("Área", areas)
+    busca = st.text_input("Buscar", placeholder="Qualquer campo...")
+
+    st.divider()
+    with st.expander("➕ Novo erro"):
+        with st.form("form_novo_erro"):
+            area_f   = st.text_input("Área")
+            tema_f   = st.text_input("Tema")
+            titulo_f = st.text_input("Título")
+            elo_f    = st.text_input("Elo quebrado")
+            caso_f   = st.text_area("Caso clínico")
+            expl_f   = st.text_area("Explicação")
+            arm_f    = st.text_input("Armadilha (opcional)")
+            if st.form_submit_button("Salvar"):
+                if all([area_f, tema_f, titulo_f, elo_f, caso_f, expl_f]):
+                    save_new_error(area_f, tema_f, titulo_f, elo_f, caso_f, expl_f, arm_f)
+                    st.success("Salvo!")
+                    st.rerun()
+                else:
+                    st.error("Preencha todos os campos.")
+
+# ── Cabeçalho ─────────────────────────────────────────────────────────────────
 st.title("📖 Caderno de Erros")
 
-# Fonte de Verdade (Zero-DB)
-entries = parse_caderno_erros()
+if df.empty:
+    st.info("Nenhum erro registrado.")
+    st.stop()
 
-st.caption(f"{len(entries)} erros registrados para revisão.")
+# ── Filtragem ─────────────────────────────────────────────────────────────────
+filtered = df.copy()
+if area_filter:
+    filtered = filtered[filtered['area'].isin(area_filter)]
+if busca:
+    bl = busca.lower()
+    text_cols = ['titulo', 'elo_quebrado', 'caso', 'explicacao_correta', 'armadilha', 'o_que_faltou']
+    mask = pd.Series(False, index=filtered.index)
+    for col in text_cols:
+        if col in filtered.columns:
+            mask |= filtered[col].str.lower().str.contains(bl, na=False)
+    filtered = filtered[mask]
 
-# ── Sidebar: Filtros ─────────────────────────────────────────────────────────
-with st.sidebar:
-    st.header("🔍 Consultar")
-    areas = sorted(set(e.get('area', 'Geral') for e in entries if e.get('area')))
-    area_sel = st.multiselect("Filtrar por Área", areas)
-    busca = st.text_input("Buscar termo", placeholder="Ex: Púrpura, Adenosina...")
-
-# ── Formulário: Novo Erro ───────────────────────────────────────────────────
-with st.expander("➕ Registrar novo erro", expanded=False):
-    with st.form("form_novo_erro"):
-        col1, col2 = st.columns(2)
-        area_f = col1.text_input("Área (Ex: Pediatria)")
-        tema_f = col1.text_input("Tema (Ex: Cardiologia)")
-        titulo_f = col2.text_input("Título Curto do Erro")
-        elo_f = col2.text_input("Elo Quebrado (Habilidade)")
-        
-        caso_f = st.text_area("Caso Clínico (Resumo)")
-        expl_f = st.text_area("Explicação Correta / Regra Mestre")
-        arm_f = st.text_input("Armadilha / Nuance (Opcional)")
-        
-        if st.form_submit_button("Salvar no Caderno"):
-            if area_f and tema_f and titulo_f and elo_f and caso_f and expl_f:
-                save_new_error(area_f, tema_f, titulo_f, elo_f, caso_f, expl_f, arm_f)
-                st.success("Erro registrado com sucesso! Atualizando base...")
-                st.rerun()
-            else:
-                st.error("Por favor, preencha todos os campos obrigatórios.")
-
+st.caption(f"{len(filtered)} de {len(df)} entradas")
 st.divider()
 
-if not entries:
-    st.info("Nenhum erro registrado no caderno.")
-else:
-    df = pd.DataFrame(entries)
-    
-    # Filtros Flat
-    c1, c2 = st.columns(2)
-    with c1:
-        area_filter = st.multiselect("Filtrar por Área", options=sorted(df['area'].unique()))
-    with c2:
-        # Assuming 'tema' is a column in your DataFrame
-        tema_filter = st.text_input("Buscar por Tema")
-    
-    filtered_df = df.copy()
-    if area_filter:
-        filtered_df = filtered_df[filtered_df['area'].isin(area_filter)]
-    if tema_filter:
-        filtered_df = filtered_df[filtered_df['tema'].str.contains(tema_filter, case=False, na=False)]
+# ── Lista ─────────────────────────────────────────────────────────────────────
+for _, row in filtered.iloc[::-1].iterrows():
+    num    = row.get('numero', '')
+    titulo = row.get('titulo', 'Sem título')
+    area   = row.get('area', '')
+    tema   = row.get('tema', '')
 
-    st.markdown(f"**{len(filtered_df)}** entradas encontradas", unsafe_allow_html=True)
-    st.divider()
+    with st.expander(f"#{num} · {titulo}"):
+        st.caption(f"{area} › {tema}")
+        st.divider()
 
-    # Display cards in reverse order (most recent first)
-    for idx, row in filtered_df.iloc[::-1].iterrows():
-        with st.container():
-            # Ensure 'erro', 'correto', 'complexidade', 'tipo_erro' columns exist or handle missing keys
-            # Using .get() for robustness if these keys might be missing in some entries
-            content = f"""
-            <div style="margin-bottom: 8px;"><b>Caso:</b> {row.get('caso', 'N/A')}</div>
-            <div style="margin-bottom: 8px;"><b>O que errei:</b> {row.get('elo_quebrado', 'N/A')}</div>
-            <div style="color: #1FA971; font-weight: 500;"><b>Explicação Correta:</b> {row.get('explicacao_correta', 'N/A')}</div>
-            """
-            # Add armadilha if it exists and is not "N/A"
-            if row.get('armadilha') and row.get('armadilha') != "N/A":
-                content += f"<div style='color: #FFC107; font-weight: 500; margin-top: 8px;'>⚠️ <b>Gatilho examinador:</b> {row['armadilha']}</div>"
+        elo = row.get('elo_quebrado', '')
+        if elo and elo != 'N/A':
+            st.markdown(f"**Elo quebrado** — {elo}")
 
-            content_card(
-                title=f"{row.get('titulo', 'Erro sem título')}", # Use 'titulo' from original structure
-                subtitle=f"{row.get('area', 'N/A')} • {row.get('tema', 'N/A')}", # Simplified subtitle
-                content=content
-            )
-            st.markdown("<div style='margin-bottom: 24px;'></div>", unsafe_allow_html=True)
+        caso = row.get('caso', '')
+        if caso and caso != 'N/A':
+            st.markdown(f"**Caso**")
+            st.markdown(caso)
+
+        expl = row.get('explicacao_correta', '')
+        if expl and expl != 'N/A':
+            st.success(expl)
+
+        arm = row.get('armadilha', '')
+        if arm and arm != 'N/A':
+            st.warning(arm)
+
+        faltou = row.get('o_que_faltou', '')
+        if faltou and faltou != 'N/A':
+            st.caption(f"**O que faltou:** {faltou}")

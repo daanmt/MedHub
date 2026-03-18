@@ -160,12 +160,14 @@ def content_card(title, content, subtitle=None):
     """
     st.markdown(html, unsafe_allow_html=True)
 
-def flashcard_front(category, question):
+def flashcard_front(category, question, context=""):
     """Render a premium flashcard front."""
     header = f'<div style="font-style: italic; color: {COLORS["muted_fg"]}; font-size: 0.75rem; margin-bottom: 12px;">{category}</div>'
+    context_html = f'<div style="color: {COLORS["secondary_fg"]}; font-size: 0.85rem; margin-bottom: 10px;">{context}</div>' if context else ""
     st.markdown(f"""
     <div class="medhub-card" style="border-color: {COLORS['border_soft']}">
         {header}
+        {context_html}
         <div style="font-size: 1.15rem; font-weight: 500; line-height: 1.5;">{question}</div>
     </div>
     """, unsafe_allow_html=True)

@@ -78,7 +78,7 @@ Apos resolver a questao, aplique autocritica a cada habilidade:
 
 ## 4. O que Extrair para o Resumo
 
-Para cada questao analisada, insira no resumo:
+Para cada questão analisada, insira no resumo:
 
 1. **Habilidades sequenciais**: a cadeia completa de passos logicos
 2. **Informacoes-chave**: os conceitos centrais de cada passo
@@ -86,6 +86,22 @@ Para cada questao analisada, insira no resumo:
 4. **Diferenciacoes importantes**: o que distingue entidades semelhantes (pistas clinicas discriminatorias)
 5. **Nuances e armadilhas**: detalhes que mudam a resposta (ex: "hipertensao no paciente com gota" muda a droga de primeira linha)
 6. **Padroes de prova**: se a questao segue um modelo recorrente de cobranca
+
+### ⚠️ REGRA CRÍTICA: Como inserir no resumo
+
+O conteúdo extraído das questões deve ser incorporado **de forma natural e técnica** ao bloco temático correspondente no resumo, como se sempre tivesse feito parte da documentação clínica do tema.
+
+**NUNCA:**
+- Escrever "Foco do erro na Q1", "Q2 abordou...", "Questão 3 perguntou...", ou qualquer variante
+- Criar seções ou sub-seções separadas intituladas por questão
+- Deixar rastros de que o conteúdo veio de um erro em prova
+
+**SEMPRE:**
+- Identificar o **bloco temático correto** do resumo onde o conceito se encaixa (ex: erro sobre ASC-H → seção de "Condutas frente a Atipias Citológicas")
+- Inserir o conteúdo como um item de bullet, sub-bullet ou nota técnica integrada naturalmente ao texto existente
+- Se o conteúdo exige uma nova seção, criar a seção com título técnico descrevendo o tema, não a questão
+
+O resumo é um **documento técnico de referência**, não um caderno de erros. A origem do aprendizado (questão X da prova Y) é irrelevante para o produto final.
 
 ---
 

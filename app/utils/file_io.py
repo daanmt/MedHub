@@ -35,6 +35,6 @@ def append_md(rel_path: str, content: str) -> None:
         shutil.copy2(path, backup_path)
     
     with open(path, 'a', encoding='utf-8') as f:
-        if not content.startswith('\\n'):
-            f.write('\\n')
+        if not content.startswith('\n'):
+            f.write('\n')
         f.write(content)

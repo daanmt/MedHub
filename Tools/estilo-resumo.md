@@ -32,6 +32,7 @@
 - Headers de metadata no topo (fonte, autor, ano, versão)
 - Linguagem motivacional ou didática ("Vamos lá!", "Caro aluno")
 - Emojis decorativos (apenas ⭐, ⚠️, 🔴 com função semântica)
+- **Referências a questões de prova dentro do texto** — nunca escrever "Foco do erro na Q1", "Q2 na prova", "Questão 3 abordou...", etc. O conteúdo aprendido com questões deve ser incorporado de forma natural ao tema, como se sempre tivesse feito parte do resumo. O resumo é um documento técnico de referência, não um caderno de erros.
 
 ---
 

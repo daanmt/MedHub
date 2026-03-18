@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -c \":*)",
+      "Bash(python -c \"import sqlite3, os; db_path = r''C:\\\\Users\\\\daanm\\\\MedHub\\\\ipub.db''; print\\(f''DB exists: {os.path.exists\\(db_path\\)}''\\); conn = sqlite3.connect\\(db_path\\) if os.path.exists\\(db_path\\) else None; result = [\\(r[0], conn.execute\\(''SELECT COUNT\\(*\\) FROM ''+r[0]\\).fetchone\\(\\)[0]\\) for r in conn.execute\\(\"\"SELECT name FROM sqlite_master WHERE type=''table''\"\"\\).fetchall\\(\\)] if conn else []; print\\(''Tables and row counts:''\\); [print\\(f''  {name}: {count}''\\) for name, count in result]; conn.close\\(\\) if conn else None\")",
+      "Bash(find C:UsersdaanmMedHub -name 04_resumos.py -o -name *resumos*)",
+      "Bash(find C:UsersdaanmMedHubapppages -type f -name *.py)",
+      "Bash(python -c \"import sys; [print\\(l.encode\\(''''ascii'''',''''replace''''\\).decode\\(\\)\\) for l in sys.stdin]\")",
+      "Bash(python:*)"
+    ]
+  }
+}

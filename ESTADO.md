@@ -1,5 +1,5 @@
 # ESTADO — MedHub (Preparação para Residência Médica)
-*Atualizado: 2026-03-18 (sessão 032) | Ferramenta: Antigravity*
+*Atualizado: 2026-03-20 (sessão 033) | Ferramenta: Antigravity*
 
 ---
 
@@ -15,8 +15,8 @@ Ambiente de estudo para residência médica. Processa questões de prova, regist
 > **SINGLE SOURCE OF TRUTH (SSOT):** O Markdown (`caderno_erros.md`) é a base absoluta. O App Streamlit (`01_dashboard.py`) reflete os dados via parser stateful. Ignorar o SQLite para leitura de UI; ele serve apenas para processamento futuro de ML.
 
 - **98 erros diagnosticados** no caderno (`caderno_erros.md`)
-- **31 resumos clínicos** consolidados em `Temas/`
-- **32 sessões** de estudo catalogadas em `history/`
+- **34 resumos clínicos** consolidados em `Temas/`
+- **33 sessões** de estudo catalogadas em `history/`
 
 ---
 
@@ -64,6 +64,7 @@ Ambiente de estudo para residência médica. Processa questões de prova, regist
 
 ## Últimas sessões
 
+**2026-03-20 | Antigravity (sessão 033):** **Consolidação de Diabetes Agudo**. Criação do resumo clínico `Diabetes Mellitus - Complicações Agudas.md` a partir de material do Estratégia MED. Cobertura completa de CAD (adulto/pediatria), EHH e Hipoglicemia. Seguida a política de "Zero PDF" com limpeza automática de arquivos temporários e deleção da apostila original.
 **2026-03-18 | Antigravity (sessão 032):** **Refinamento Avançado de Colo e Governança**. Revisão profunda do resumo `[GIN] Rastreamento Colo.md` com diretrizes 2025 e análise de 9 erros. Incluídos detalhes de coleta na gestação e seguimento pós-exérese por margens. Refatoração completa de tabelas para bullet points e proibição de referências explicitas a questões em resumos.
 **2026-03-16 | Antigravity (sessão 031):** **Expansão em Psiquiatria e Nefrologia**. Criação dos resumos de `Dependência Química.md`, `Intoxicações Exógenas.md` e `Lesão Renal Aguda.md`. Foco em alto rendimento (CAGE, Síndromes toxicológicas, Critérios KDIGO e diferenciação Pré-renal vs NTA).
 **2026-03-15 | Antigravity (sessão 030):** **Consolidação de Pancreatites**. Criação do resumo de `Pancreatite Aguda e Crônica.md` a partir de material do Estratégia MED. Foco em critérios de Atlanta 2012, sinais semiológicos (Cullen/Grey-Turner) e tríade da pancreatite crônica.

@@ -1,23 +1,23 @@
-# MedHub Handoff — Session 032
+# MedHub Handoff — Session 033
 
-**Data**: 2026-03-18
+**Data**: 2026-03-20
 **Agente**: Antigravity
 
 ## Status Atual
-- **Conteúdo**: Resumo de `[GIN] Rastreamento Colo.md` expandido: agora cobre 9 erros de prova, incluindo seguimento pós-exérese (margens) e coleta em gestantes (escovado allowed).
-- **Governança**: Políticas de estilo (`estilo-resumo.md`) e análise (`comando de analise de questao.md`) blindadas contra referências "QX" nos textos técnicos.
-- **Estilo**: Resumo 100% refatorado para bullet points.
+- **Conteúdo**: Resumo de `Diabetes Mellitus - Complicações Agudas.md` criado do zero a partir do material do Estratégia MED. Cobre CAD (adulto e pediatria), EHH e Hipoglicemia.
+- **Governança**: Workflow `criar-resumo.md` seguido rigorosamente. PDF original e arquivos temporários de extração foram removidos após a consolidação.
+- **Estilo**: Resumo 100% em bullet points hierárquicos, uso de ⭐, ⚠️ e 🔴 conforme `estilo-resumo.md`.
 
 ## Últimas Ações
-- Análise de 3 novas questões sobre Colo (total 9 na sessão).
-- Implementação de fluxogramas de margens comprometidas vs livres.
-- Esclarecimento sobre segurança do Pap na gestação.
-- Atualização final de todos os docs de controle.
+- Extração de texto de `Diabet.pdf`.
+- Redação do resumo completo em `Temas/Clínica Médica/Endocrinologia/Diabetes Mellitus - Complicações Agudas.md`.
+- Limpeza de arquivos temporários e deleção do PDF original da pasta do tema.
+- Sincronização de metadados no `ESTADO.md`.
 
 ## Próximos Passos
-1. **Auditoria de Estilo**: Verificar outros resumos em `Temas/` para remover referências legadas a questões (ex: "Foco do erro na Q...") e converter tabelas restantes.
-2. **Ciclo de Questões**: Aplicar os novos conhecimentos integrados de Rastreamento de Colo (especialmente 2025 e condutas em gestantes).
-3. **Flashcards**: Sincronizar os novos pontos do resumo de Colo no sistema de flashcards.
+1. **Análise de Questões**: Resolver questões de Diabetes (Complicações Agudas) para validar o resumo e adicionar novas "Armadilhas de Prova" no espaço reservado.
+2. **Flashcards**: Gerar flashcards a partir dos pontos fundamentais (⭐) do novo resumo.
+3. **Auditoria**: Verificar se há outros PDFs remanescentes em pastas de temas para manter a política de "Zero PDF" após consolidação.
 
 ---
 *Assinado: Antigravity*

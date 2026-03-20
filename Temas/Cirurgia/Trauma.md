@@ -195,9 +195,15 @@ O choque é um estado de **má perfusão generalizada**, levando à deprivação
 - **Objetivo:** Conter hemorragia, limitar contaminação e evitar a **Tríade Letal** (Acidose metabólica, Hipotermia, Coagulopatia) ⭐.
 - **Passos:**
   1. Controle da hemorragia (empacotamento, ressecção, ligadura).
-  2. Controle da contaminação (ressecção/sutura sem anastomose primária).
+  2. Controle da contaminação (ressecção/sutura **sem anastomose primária**).
   3. Fechamento abdominal temporário (Peritoneostomia - evita sd compartimental).
   4. UTI (24-48h) → Reabordagem para reparo definitivo.
+- **Regras de ressecção intestinal no Damage Control:**
+    - **3 lesões próximas no delgado** → enterectomia única envolvendo todos os segmentos (não fazer 3 enterorrafias separadas).
+    - **Lesão de cólon transverso > 75%** → colectomia **segmentar** do transverso (não colectomia total).
+    - Paciente instável (acidose, hipotermia, vasopressores) → cotos sepultados + peritoneostomia. Anastomoses ficam para o 2º tempo.
+
+> ⚠️ **Padrão de prova — Damage Control e anastomoses:** Paciente com pH < 7,2, temperatura < 34°C, coagulopatia ou vasopressores = **sem anastomose**. Resseca e deixa os extremos fechados (cotos sepultados). A anastomose é feita na reabordagem, em condições hemodinâmicas estáveis.
 
 ### Trauma de Órgãos Específicos
 
@@ -239,9 +245,24 @@ O choque é um estado de **má perfusão generalizada**, levando à deprivação
 - Mecanismo: "Golpe de guidão" em epigástrio ou esmagamento. Diagnóstico difícil.
 - **Duodeno:** Assinalado por retropneumoperitônio na TC ou ar delineando os rins. Tratamento conservador para hematomas intramurais ("mola em espiral" no RX contrastado). Maioria é tratada com rafia primária simples.
 - **Pâncreas:** O ponto crucial é a **integridade do ducto pancreático**.
-  - Sem lesão ductal = Observação ou desbridamento com drenagem.
-  - Lesão à esquerda dos vasos mesentéricos (corpo/cauda) = Pancreatectomia distal.
-  - Lesão à direita envolvendo ampola/cabeça = Duodenopancreatectomia (Whipple) ou Damage Control.
+  - **Classificação AAST das lesões pancreáticas:**
+      - **Grau I**: Contusão menor ou lacerão superficial, sem lesão ductal.
+      - **Grau II**: Laceração maior parenquimatosa, **sem lesão ductal** ou perda de tecido. ⭐
+      - **Grau III**: Lacerão com **transsecção distal** (à esquerda dos vasos mesentéricos) + lesão ductal.
+      - **Grau IV**: Transsecção proximal ou lesão parenquimatosa envolvendo a **ampola de Vater**.
+      - **Grau V**: Ruptura maçiça da cabeça do pâncreas.
+  - **Tratamento conforme lesão ductal:**
+      - Sem lesão ductal (Graus I/II): desbridamento/rafia + drenagem externa com succão fechada.
+      - **Ducto distal** (Graus III — à esquerda dos vasos mesentéricos superiores): **pancreatectomia distal** (corpocaudal) ± esplenectomia + drenagem.
+      - **Ducto proximal** (Grau IV — à direita dos vasos mesentéricos superiores): desbridamento + ampla drenagem + jejunostomia. Se lesão duodenal combinada ou destruição da cabeça: **duodenopancreatectomia (Whipple)**.
+  - **Pseudocisto pancreático:** Complicacão tardia. Tratamento se sintomático, crescimento rápido ou infeco.
+      - **Drenagem endoscópica transmural** (pig tail via cistogastrostomia ou cistoduodenostomia) = opção **menos invasiva e preferencial** quando há boa interface ("janela") entre o cisto e a parede do estômago/duodeno, a cisto tem parede madura e ≥ 6 cm.
+      - Punce percutanea guiada (radiologia intervencionista): quando não há janela endóscopia adequada.
+      - Cirurgia (anastomose cistojenal em Y de Roux): casos selecionados, resistência às outras vias.
+
+> ⚠️ **Padrão de prova — Classificacão pancreática:** Grau II = laceracão MAIOR, sem ducto. Grau III = transsecção distal, COM ducto. Confundir os dois é armadilha clássica.
+
+> ⚠️ **Padrão de prova — Ducto distal:** Tratamento é **pancreatectomia distal** (não CPRE). CPRE + stent está indicado nas lesões da ampola de Vater ou como adjuvante na drenagem de fístula pancreática pós-operatória proximal.
 
 #### Trauma Retroperitoneal
 - TC com duplo/triplo contraste é a escolha. FAST/LPD são inúteis.
@@ -256,9 +277,17 @@ O choque é um estado de **má perfusão generalizada**, levando à deprivação
   - Estável + Grau I a III: Conservador.
   - Estável + Grau IV vascular com extravasamento: Embolização seletiva.
   - Exploração cirúrgica: hematoma expansivo/pulsátil, extravasamento persistente.
-- **Vesical:** Maioria associada a fratura pélvica. Diagnóstico: Cistografia retrógrada.
-  - Intraperitoneal: Lesão de cúpula (bexiga cheia). Contraste preenche cavidade. Tratamento: Laparotomia/Laparoscopia + Rafia. Consertar com fio absorvível.
-  - Extraperitoneal: Contraste contido na pelve a frente da bexiga. Tratamento: Conservador com sonda vesical (SVD) 14-21 dias.
+  - **Classificação AAST das lesões renais:**
+      - **Grau I**: Contusão renal ou hematoma subcapsular não expansivo, sem laceração parenquimatosa.
+      - **Grau II**: Hematoma perirrenal contido ou laceração < 1 cm, sem extravasamento.
+      - **Grau III**: Laceração > 1 cm **sem** extravasamento urinário.
+      - **Grau IV**: Laceração até o sistema coletor + extravasamento **OU** lesão vascular segmentar/hilar com **hemorragia contida** (hematoma retroperitoneal). ⭐
+      - **Grau V**: Avulsão do pedículo/lesão hilar com desvascularização total.
+- **Vesical:** Maioria associada a fratura pélvica. Diagnóstico: Cistografia retrógrada ou TC com contraste vesical.
+  - **Intraperitoneal:** Lesão de cúpula (bexiga cheia). TC: contraste ao redor das alças ("floco de neve"). Tratamento: **Laparotomia ou Laparoscopia** (se estável) + Rafia + SVD 10-14 dias.
+  - **Extraperitoneal:** Contraste contido na pelve. **Sinal do Molar**: extravasamento pelo espaço de Retzius circundando a bexiga, aspecto de dente molar; pode ir para escroto/períneo. Tratamento: **SVD 10-21 dias** (conservador).
+      - **Indicações de cirurgia na extraperitoneal:** trígono comprometido (risco de estenose ureteral + fístula); fragmento ósseo penetrando parede vesical; falha do tratamento conservador; laparotomia indicada por outra razão.
+  - **Fio de sutura vesical = absorvível.** Poliglactina (Vicryl), PGA, PDO = correto. **Fios inabsorvíveis (Nylon-Poliamida, Prolene-Polipropileno, Ethibond-Poliéster) atraem cálcio** → formação de cálculos vesicais.
 - **Uretral:**
   - **Anterior** (bulbar): Tipo mais comum. Mecanismo: Queda a cavaleiro. Trauma direto.
   - **Posterior** (membranosa): Alta energia, fratura de pelve associada. Próstata flutuante ao toque retal.
@@ -285,7 +314,14 @@ O choque é um estado de **má perfusão generalizada**, levando à deprivação
 - 🔴 **Hipotensão Permissiva:** Manter PA sistólica ~80-90 mmHg até controle da hemorragia (evitar estourar coágulos) ⭐. **NÃO INDICADA EM TCE**.
 - 🔴 **Hematúria e Rim:** O grau de hematúria (micro vs macro) **NÃO** tem correlação com a gravidade anatômica da lesão renal. Hematúria com Choque, porém, indica alta gravidade.
 - 🔴 **Trauma Uretral e SVD:** Na tríade uretral (uretrorragia + retenção urinária + bexigoma) ou fratura pélvica associada, é **proibido** a passagem de Sonda Vesical de Demora cegamente pelo risco de lesão iatrogênica/laceração total. Fazer **uretrocistografia** e, na confirmação, **cistostomia**.
-- 🔴 **Exploração Retroperitoneal:** O Hematoma Pélvico (Zona III) do trauma contuso por fratura de bacia quase nunca é explorado (para garantir o efeito de tamponamento). A conduta é fixar a bacia e o sangramento quase sempre para; se persistir -> angioembolização para hemorragia arterial.
+- 🔴 **Exploração Retroperitoneal:** O Hematoma Pélvico (Zona III) do trauma contuso por fratura de bacia quase nunca é explorado (para garantir o efeito de tamponamento). A conduta é fixar a bacia e o sangramento quase sempre para; se persistir → angioembolização para hemorragia arterial.
+- 🔴 **Bexiga extra vs. intraperitoneal:** Extra = contraste paravesical + **Sinal do Molar** (espaço de Retzius) = SVD. Intra = contraste entre aleas intestinais ("floco de neve") = cirurgia. Liquid livre isolado na TC sem lesão de víscera maciça = suspeitar de bexiga intraperitoneal.
+- 🔴 **Trígono vesical comprometido muda a conduta:** Mesmo na ruptura extraperitoneal, o envolvimento do trígono indica **reparo cirúrgico** (risco de estenose ureteral e fístula).
+- 🔴 **Fio de sutura da bexiga = absorvível.** Vicryl (poliglactina) = OK. **Nylon (poliamida), Prolene (polipropileno), Ethibond (poliéster) = calcificam** → cálculos vesicais.
+- 🔴 **Damage Control e múltiplas lesões intestinais:** 3 lesões próximas no delgado = **1 enterectomia única** (não 3 suturas). Cólon transverso > 75% = **colectomia segmentar** (não total). Paciente instável = cotos sepultados + peritoneostomia (anastomose fica para o 2º tempo).
+- 🔴 **Classificação pancreática AAST:** Grau II = laceração maior, **sem** ducto. Grau III = transsecção **distal**, **com** ducto = pancreatectomia distal. Grau IV = ducto proximal/ampola. Confundir II e III é armadilha clássica.
+- 🔴 **Pseudocisto pancreático:** Parede madura + aderente ao estômago/duodeno + ≥ 6 cm + "janela" = **drenagem endoscópica transmural** (pig tail) = opção menos invasiva. Sem janela = percutanea guiada.
+- 🔴 **Classificação renal AAST:** Grau III = laceração > 1 cm, sem ducto/extravazamento. Grau IV = lesão vascular com **hemorragia contida** (hematoma retroperitoneal isolado). Não confundir.
 
 > ⚠️ **Padrão de prova — A Regra de Ouro da Estabilidade vs. Instabilidade (Fluxograma TAF e TAA):** A estabilidade hemodinâmica do paciente dita *absolutamente tudo*.
 > - **Estável:** Pode fazer TC (só vai para cirurgia se houver achados na TC ou falha do manejo conservador).

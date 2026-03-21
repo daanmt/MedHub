@@ -1,23 +1,23 @@
-# MedHub Handoff — Session 033
+# MedHub Handoff — Session 034
 
 **Data**: 2026-03-20
 **Agente**: Antigravity
 
 ## Status Atual
-- **Conteúdo**: Resumo de `Diabetes Mellitus - Complicações Agudas.md` criado do zero a partir do material do Estratégia MED. Cobre CAD (adulto e pediatria), EHH e Hipoglicemia.
-- **Governança**: Workflow `criar-resumo.md` seguido rigorosamente. PDF original e arquivos temporários de extração foram removidos após a consolidação.
-- **Estilo**: Resumo 100% em bullet points hierárquicos, uso de ⭐, ⚠️ e 🔴 conforme `estilo-resumo.md`.
+- **Conteúdo**: Resumo de `Diabetes Mellitus - Complicações Agudas.md` auditado e refinado com 6 correções técnicas. 2 novas entradas no `caderno_erros.md` (Total 100).
+- **Governança**: `insert_questao.py` executado para as duas novas questões. Banco `ipub.db` sincronizado.
+- **Estilo**: Seção 2.7 do resumo (Comparativo) refatorada para remover formato emulando tabelas.
 
 ## Últimas Ações
-- Extração de texto de `Diabet.pdf`.
-- Redação do resumo completo em `Temas/Clínica Médica/Endocrinologia/Diabetes Mellitus - Complicações Agudas.md`.
-- Limpeza de arquivos temporários e deleção do PDF original da pasta do tema.
-- Sincronização de metadados no `ESTADO.md`.
+- Análise de 2 questões de DM (CAD e Manejo/HAS).
+- Audit completo do resumo clínico (fórmulas e doses corrigidas).
+- Registro do erro de insulinoterapia (< 200 mg/dL) e Efeito do Avental Branco no caderno.
+- Sincronização de 2 novos erros no SQLite via CLI oficial.
 
 ## Próximos Passos
-1. **Análise de Questões**: Resolver questões de Diabetes (Complicações Agudas) para validar o resumo e adicionar novas "Armadilhas de Prova" no espaço reservado.
-2. **Flashcards**: Gerar flashcards a partir dos pontos fundamentais (⭐) do novo resumo.
-3. **Auditoria**: Verificar se há outros PDFs remanescentes em pastas de temas para manter a política de "Zero PDF" após consolidação.
+1. **Fase 2 do Roadmap**: Iniciar a conversão de tópicos do `caderno_erros.md` (agora com 100 entradas) em flashcards usando o gerador FSRS.
+2. **Revisão Clínica**: Iniciar o tema de "Diabetes tipo 1 e tipo 2 — Diagnóstico e Crônicas" para fechar o bloco de Endocrinologia.
+3. **Audit de Estilo**: Continuar a varredura em outros resumos para garantir que não existam listas que emulam tabelas.
 
 ---
 *Assinado: Antigravity*

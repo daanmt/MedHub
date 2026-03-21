@@ -129,9 +129,10 @@
 - Hipovolemia sem choque: 15–20 mL/kg/h por ~2 horas
 - Euvolêmico: taxa guiada por parâmetros clínicos
 
-- Após 2–3 h de hidratação inicial → calcular sódio corrigido:
-  - Na < 135 mEq/L → manter SF 0,9% a 250–500 mL/h
-  - Na ≥ 135 mEq/L → trocar para SF 0,45% a 250–500 mL/h
+- Após 2–3 h de hidratação inicial → calcular **sódio corrigido** (não o sódio medido direto):
+  - Na corrigido < 135 mEq/L → manter SF 0,9% a 250–500 mL/h
+  - Na corrigido ≥ 135 mEq/L → trocar para SF 0,45% a 250–500 mL/h
+  - ⭐ Usar Na corrigido: Na medido + 1,6 × [(glicemia − 100) ÷ 100]
 
 #### Pilar 2 — Avaliação e Correção da Calemia (antes da insulina!)
 
@@ -152,7 +153,8 @@
 - Monitorar glicemia a cada hora; meta de redução: **50–70 mg/dL/h**
   - Redução > 70 mg/dL/h → reduzir taxa pela metade
   - Redução < 50 mg/dL/h → duplicar taxa
-- ⭐ Ao atingir glicemia de 200 mg/dL → **acrescentar soro glicosado** + reduzir insulina para 0,05–0,1 UI/kg/h (manter 150–200 mg/dL)
+- ⭐ Ao atingir glicemia de 200 mg/dL (CAD não resolvida) → **acrescentar soro glicosado** (SG 5% + SF 0,45%) + reduzir insulina para **0,02–0,05 UI/kg/h** (manter glicemia 150–200 mg/dL até resolução)
+  - ⚠️ Padrão de prova: reduzir insulina para 0,02–0,05 UI/kg/h, **não suspender** — a CAD pode não estar resolvida mesmo com glicemia < 200 mg/dL
 - ⭐ Manter insulina até **resolução da CAD** (não apenas por glicemia)
 - CAD leve: pode usar análogos ultrarrápidos SC a cada 1–2h
 
@@ -294,17 +296,20 @@
 
 ### 2.7 Comparativo CAD × EHH
 
-- Tempo de evolução: CAD < 24h | EHH 2 dias–2 semanas
-- Náuseas/vômitos: CAD comum | EHH pouco comum
-- Dor abdominal: CAD comum | EHH rara
-- Respiração de Kussmaul: CAD presente | EHH ausente
-- Hálito cetônico: CAD presente | EHH ausente
-- Alterações neurológicas: CAD variável | EHH coma em 25–50%
-- Insuficiência renal: CAD rara | EHH comum
-- Glicemia: CAD > 250 | EHH > 600
-- pH: CAD ≤ 7,30 | EHH > 7,30
-- HCO₃: CAD ≤ 18 | EHH > 18
-- Cetose: CAD sim | EHH ausente/leve
+**Instalação e sintomas:**
+- Tempo de evolução: CAD **< 24 h** (aguda); EHH **2 dias–2 semanas** (insidiosa)
+- Náuseas/vômitos: frequentes na CAD; incomuns no EHH
+- Dor abdominal: frequente na CAD; rara no EHH
+- Respiração de Kussmaul: presente na CAD; **ausente** no EHH
+- Hálito cetônico: presente na CAD; **ausente** no EHH
+- Alterações neurológicas: variáveis na CAD; coma em **25–50%** no EHH
+
+**Parâmetros laboratoriais:**
+- Glicemia: CAD **> 250 mg/dL**; EHH **> 600 mg/dL**
+- pH arterial: CAD **≤ 7,30**; EHH **> 7,30**
+- HCO₃: CAD **≤ 18 mEq/L**; EHH **> 18 mEq/L**
+- Cetose: presente na CAD; ausente ou leve no EHH
+- Insuficiência renal: rara na CAD; **comum** no EHH
 
 ---
 
@@ -349,9 +354,11 @@
 - Neuropatia autonômica
 - Longo tempo de DM, idade avançada
 - Uso de insulina ou **secretagogos** (sulfonilureias, glinidas)
+  - ⚠️ Sulfonilureias de longa ação (ex: glibenclamida, gliclazida MR) → maior risco de hipoglicemia **noturna** (episódios ocorrem durante o sono, manifestando-se como taquicardia e sudorese ao despertar)
+  - DRC reduz excreção dos metabólitos → ↑ meia-vida → risco ainda maior
 - Refeições irregulares / baixa ingesta calórica
 - Exercício físico
-- **Consumo alcoólico** (etanol inibe gliconeogênese, não inibe glicogenólise → esgota glicogênio hepático)
+- **Consumo alcoólico** (etanol inibe gliconeogênese, não inibe glicogenólise → depleta glicogênio hepático)
 - Doença renal crônica (↓ TFG → ↑ meia-vida de secretagogos)
 - História recente de hipoglicemia
 
@@ -367,6 +374,8 @@
 - Cefaleia, tontura, fraqueza, sonolência, delírio, confusão, convulsão, coma
 
 - ⚠️ Padrão de prova: idosos e diabéticos de longa data → predominam sintomas **neuroglicopênicos** (neuropatia autonômica reduz sintomas adrenérgicos)
+- ⚠️ Padrão de prova: taquicardia e sudorese **noturnas** em diabético em uso de sulfonilureia = hipoglicemia noturna até prova em contrário → confirmar com aferição de glicemia capilar durante o episódio (Tríade de Whipple)
+- ⚠️ **Efeito do Avental Branco** em diabético com HAS: PA elevada no consultório com PA domiciliar em meta → NÃO adicionar anti-hipertensivos sem confirmar PA fora do contexto clínico (MRPA ou medida em casa por familiar confiável)
 
 **Tríade de Whipple:**
 1. Sintomas compatíveis com hipoglicemia
@@ -414,7 +423,8 @@
 - 🔴 Hipoglicemia relativa: diabético crônico mal controlado pode ter sintomas com glicemia > 70 mg/dL
 - 🔴 Sulfonilureias e DRC: ↑ meia-vida do secretagogo → maior risco de hipoglicemia
 - 🔴 Etanol → inibe gliconeogênese (não glicogenólise) → hipoglicemia por depleção do glicogênio hepático
+- 🔴 Sulfonilureia + taquicardia/sudorese **noturna** = hipoglicemia noturna; confirmar com glicemia capilar (Tríade de Whipple) antes de modificar anti-hipertensivos
+- 🔴 PA elevada no consultório com PA domiciliar em meta em diabético = **Efeito do Avental Branco** → não adicionar anti-hipertensivo; conduta é confirmar PA por MRPA
+- 🔴 Na CAD, ao atingir glicemia < 200 mg/dL com acidose ainda não resolvida: acrescentar SG **e** reduzir insulina para **0,02–0,05 UI/kg/h** — não suspender; não manter dose plena
 
 ---
-
-*📝 Espaço reservado para inclusão de questões erradas*

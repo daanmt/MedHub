@@ -896,7 +896,60 @@ Sensibilizadores de insulina = drogas que aumentam a sensibilidade dos tecidos �
 **Armadilha / nuance:**
 A questão é contextualizada (paciente com DM2 que precisa "melhorar o controle"), por isso as alternativas com arGLP-1 e iSGLT-2 parecem boa resposta. O filtro é "efeito DIRETO na sensibilidade insulínica" — que elimina secretagogos e glicosúricos.
 
-⚠️ **Padrão de prova:** O comentário da equipe no fórum reconheceu ambiguidade: o melhor tratamento CLÍNICO seria outra combinação (D), mas o que a questão pede (sensibilizadores diretos) é a letra A. Leia o enunciado com precisão antes de responder.
+⚠️ **Padrão de prova:** O comentário da equipe no fórum reconheceu ambiguidade: o melhor tratamento CLÍNICO seria outra combinação (D), mas o que a questão pede (sensibilizadores diretos) é a letra A. Leia o enunciado com 
+
+---
+
+#### CAD — Ajuste de Insulina e Soro ao atingir Glicemia < 200 mg/dL
+
+**Complexidade:** Média
+**Elo quebrado:** Habilidade 4 — Ajustar dose de insulina e adicionar SG ao atingir glicemia < 200 mg/dL
+**Tipo de erro:** Erro de aplicação
+
+**Caso:** Mulher 23a, tto CAD há 3h. Peso 60kg. Na 141, K 3.8, Glicemia 194, pH 7.20, HCO3 13. Recebendo SF 0.9% + KCl 20mEq/h a 250mL/h e Insulina IR 6 UI/h. Pede o ajuste imediato.
+
+**Habilidades sequenciais:**
+1. Identificar que a CAD não está resolvida (pH 7.20 e HCO3 13 — critério ADA < 7.30 e < 15/18).
+2. Avaliar o sódio: Na medido 141 (Na corrigido > 135) → trocar SF 0.9% por SF 0.45%.
+3. Reconhecer glicemia < 200 mg/dL (194 mg/dL): obriga adição de Glicose (SG 5%) para evitar hipoglicemia enquanto se mantém a insulina para tratar a cetose.
+4. Ajustar dose de insulina: reduzir para 0,02–0,05 UI/kg/h (para 60 kg = 1,2 a 3,0 UI/h).
+
+**O que faltou:**
+Manutenção da dose plena de insulina (6 UI/h) e ausência de soro glicosado apesar da queda da glicemia abaixo de 200 mg/dL. O raciocínio ignorou a necessidade de "frear" a queda da glicose sem interromper o tratamento da acidose/cetose.
+
+**Explicação correta:**
+Na CAD, a glicemia costuma normalizar antes da acidose. Quando a glicemia atinge < 200 mg/dL (ou 250 no EHH), deve-se: (1) Adicionar SG 5% à hidratação; (2) Reduzir a BIC de insulina para 0,02–0,05 UI/kg/h. O objetivo é manter a glicemia entre 150–200 mg/dL até que o pH e o HCO3 normalizem, permitindo o desligamento seguro da insulina.
+
+**Armadilha / nuance:**
+O examinador fornece um pH ainda baixo para garantir que o candidato não desligue a insulina (erro comum), mas testa se ele sabe fazer a transição para o soro glicosado e dose menor.
+
+---
+
+#### DM2/HAS — Efeito do Avental Branco e Hipoglicemia por Secretagogos
+
+**Complexidade:** Média
+**Elo quebrado:** Habilidade 3 — Reconhecer o Efeito do Avental Branco em paciente com medidas residenciais na meta
+**Tipo de erro:** Lacuna de conhecimento
+
+**Caso:** Mulher 58a, DM2 e HAS. Queixa de taquicardia/sudorese na madrugada. HbA1c 6.3%. PA consultório 156/84, PA em casa 120/80. Pede a conduta INADEQUADA.
+
+**Habilidades sequenciais:**
+1. Interpretar sintomas noturnos (sudorese/taquicardia) + HbA1c baixa (6.3%) como hipoglicemia noturna.
+2. Identificar a Gliclazida (sulfonilureia) como causa provável da hipoglicemia.
+3. Avaliar a pressão arterial: PA em casa (120/80) está na meta (< 130/80 em DM).
+4. Reconhecer a PA elevada no consultório como "Efeito do Avental Branco".
+5. Concluir que acrescentar anti-hipertensivo (Anlodipino) é inadequado/desnecessário.
+
+**O que faltou:**
+Considerar a PA do consultório como hipertensão real e ignorar o relato confiável da PA em casa. Não associou os sintomas da madrugada à hipoglicemia causada pela Gliclazida, o que tornaria a redução da dose uma conduta adequada (e não inadequada).
+
+**Explicação correta:**
+O **Efeito do Avental Branco** ocorre quando a PA é elevada apenas no ambiente médico. No DM, a meta é < 130/80 mmHg; se a paciente mantém 120/80 em casa, o tratamento está otimizado. Sudorese/palpitações ao despertar em uso de secretagogos (Gliclazida) indicam hipoglicemia de rebote; a A1c de 6.3% reforça o controle rígido com risco de hipo.
+
+**Armadilha / nuance:**
+O examinador usa a PA de 156/84 para "empurrar" o candidato a tratar a pressão, testando se ele valoriza a medida residencial (MRPA/casa) sobre a de consultório em casos de discordância clara.
+
+---
 
 **Informações-chave para revisão:**
 - Sensibilizadores diretos = **Metformina** (hepática) + **Pioglitazona** (periférica)

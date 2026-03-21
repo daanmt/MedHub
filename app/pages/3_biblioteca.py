@@ -63,7 +63,7 @@ with tab1:
             for i, r in enumerate(filtered):
                 with c[i%3]:
                     st.markdown(f"<div style='border:1px solid #202A36; padding:15px; border-radius:8px; margin-bottom:10px; background:#11161D;'><b>{r['tema']}</b><br><small style='color:#738093;'>{r['area']}</small></div>", unsafe_allow_html=True)
-                    if st.button("Ler", key=f"r_{r['path']}", use_container_width=True):
+                    if st.button("Ler", key=f"r_{r['path']}", width='stretch'):
                         st.session_state.resumo_aberto = r
                         st.rerun()
 

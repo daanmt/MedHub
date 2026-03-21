@@ -120,7 +120,7 @@ with tab2:
             if not st.session_state.fc_verso:
                 st.markdown(f'<div style="background:#11161D; border:1px solid #202A36; padding:20px; border-radius:12px; font-size:1.1rem;">{card["frente"]}</div>', unsafe_allow_html=True)
                 st.markdown("<br>", unsafe_allow_html=True)
-                if st.button("Revelar", type='primary', use_container_width=True):
+                if st.button("Revelar", type='primary', width='stretch'):
                     st.session_state.fc_verso = True
                     st.rerun()
                 if st.button("⏭️ Pular"): _avancar(0)
@@ -128,7 +128,7 @@ with tab2:
                 st.markdown(f'<div style="background:#1A1F26; border:1px solid #2F6BFF; border-left:4px solid #2F6BFF; padding:20px; border-radius:12px; font-size:1.1rem;">{card["verso"]}</div>', unsafe_allow_html=True)
                 st.markdown("<br>", unsafe_allow_html=True)
                 b1, b2, b3, b4 = st.columns(4)
-                if b1.button("Novamente", use_container_width=True): _avancar(1)
-                if b2.button("Difícil (1d)", use_container_width=True): _avancar(2)
-                if b3.button("Bom (3d)", use_container_width=True): _avancar(3)
-                if b4.button("Fácil (7d)", use_container_width=True): _avancar(4)
+                if b1.button("Novamente", width='stretch'): _avancar(1)
+                if b2.button("Difícil (1d)", width='stretch'): _avancar(2)
+                if b3.button("Bom (3d)", width='stretch'): _avancar(3)
+                if b4.button("Fácil (7d)", width='stretch'): _avancar(4)

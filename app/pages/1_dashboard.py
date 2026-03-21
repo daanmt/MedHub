@@ -46,7 +46,7 @@ if df is not None and not df.empty:
         
         fig = px.bar(df_area, x='perf', y='area', orientation='h', template='plotly_dark', color_discrete_sequence=['#2F6BFF'])
         fig.update_layout(xaxis_range=[0, 100], margin=dict(l=0, r=20, t=10, b=0), plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)')
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width='stretch')
 
     with c2:
         st.subheader("🚨 Foco Crítico (Revisão)")

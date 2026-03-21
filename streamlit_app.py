@@ -12,6 +12,7 @@ pages = {
         st.Page("app/pages/1_dashboard.py",    title="Dashboard & Métricas", icon="📊"),
         st.Page("app/pages/2_estudo.py",       title="Caderno & Retenção FSRS", icon="🧠"),
         st.Page("app/pages/3_biblioteca.py",   title="Biblioteca & PDFs", icon="📚"),
+        st.Page("app/pages/4_simulados.py",    title="Simulados RAG", icon="🎯"),
     ],
 }
 

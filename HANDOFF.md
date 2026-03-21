@@ -1,23 +1,27 @@
-# MedHub Handoff — Session 034
+# MedHub Handoff — Session 035
 
-**Data**: 2026-03-20
+**Data**: 2026-03-21
 **Agente**: Antigravity
 
 ## Status Atual
-- **Conteúdo**: Resumo de `Diabetes Mellitus - Complicações Agudas.md` auditado e refinado com 6 correções técnicas. 2 novas entradas no `caderno_erros.md` (Total 100).
-- **Governança**: `insert_questao.py` executado para as duas novas questões. Banco `ipub.db` sincronizado.
-- **Estilo**: Seção 2.7 do resumo (Comparativo) refatorada para remover formato emulando tabelas.
+- **Conteúdo**: Resumo `[OBS] Sífilis na Gestação e Congênita.md` (GO) reestruturado e expandido com:
+    - Bloco sobre interpretação do **LCR/líquor** (critérios de neurossífilis, parâmetros, por que glicose não conta).
+    - Tabela de diagnóstico diferencial **STORCH** (sinais-chave por agente).
+    - Fluxograma de conduta (NTT) reescrito com lógica mais clara.
+    - Critério "adequadamente tratada" corrigido: **INÍCIO** ≥ 30 dias, não término.
+    - Nova armadilha sobre os 30 dias (a mais clássica da sífilis congênita).
+- **Banco de Dados**: 1 nova questão inserida no SQLite via `insert_questao.py` (ID: 189) — GO, Sífilis Congênita.
+- **Workflows**: `analisar-questoes.md` e `criar-resumo.md` refinados para suportar abordagem ativa de estudo (insights durante o estudo + meta de ~300 linhas).
 
 ## Últimas Ações
-- Análise de 2 questões de DM (CAD e Manejo/HAS).
-- Audit completo do resumo clínico (fórmulas e doses corrigidas).
-- Registro do erro de insulinoterapia (< 200 mg/dL) e Efeito do Avental Branco no caderno.
-- Sincronização de 2 novos erros no SQLite via CLI oficial.
+- Input do usuário: anotações de estudo ativo + 1 questão errada (mãe "inadequadamente tratada" por <30 dias).
+- Reescrita completa do resumo de Sífilis integrando todos os insights.
+- Refinamento dos dois workflows principais para refletir os novos princípios metodológicos.
 
 ## Próximos Passos
-1. **Fase 2 do Roadmap**: Iniciar a conversão de tópicos do `caderno_erros.md` (agora com 100 entradas) em flashcards usando o gerador FSRS.
-2. **Revisão Clínica**: Iniciar o tema de "Diabetes tipo 1 e tipo 2 — Diagnóstico e Crônicas" para fechar o bloco de Endocrinologia.
-3. **Audit de Estilo**: Continuar a varredura em outros resumos para garantir que não existam listas que emulam tabelas.
+1. Estudar as **STORCH** em detalhe e expandir individualmente (usuário sinalizou intenção).
+2. Continuar a cadeia de GO: próximos temas do pré-natal.
+3. Fase 2 do Roadmap: conversão de entradas do caderno em flashcards FSRS.
 
 ---
 *Assinado: Antigravity*

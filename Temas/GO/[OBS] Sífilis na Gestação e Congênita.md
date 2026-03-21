@@ -4,7 +4,7 @@
 
 - **Definição:** Infecção sistêmica crônica causada pelo *Treponema pallidum* (espiroqueta gram-negativa, não cultivável in vitro). Possui tratamento curativo.
 - **Evento Sentinela:** A ocorrência de sífilis congênita é um marcador de falha na qualidade da assistência do pré-natal.
-- **Transmissão:** Principalmente sexual. A transmissão vertical (transplacentária) gira em torno de 80%, sendo maior nas fases recentes (70-100%) do que nas tardias (10-30%). Quanto mais recente a doença materna e mais avançada a gestação (maior permeabilidade placentária), **maior a taxa de transmissão**. A gravidade fetal, por outro lado, é maior se a infecção ocorrer no início da gravidez. A infecção no canal de parto e aleitamento só ocorrem se houver lesão ativa no sítio anatômico.
+- **Transmissão:** Principalmente sexual. A transmissão vertical (transplacentária) gira em torno de 80%, sendo maior nas fases recentes (70-100%) do que nas tardias (10-30%). Quanto mais recente a doença materna e mais avançada a gestação (maior permeabilidade placentária), **maior a taxa de transmissão vertical** — mas a **gravidade fetal é inversamente proporcional**: infecção precoce na gestação = maior dano neurológico. A infecção no canal de parto e aleitamento só ocorrem se houver lesão ativa no sítio anatômico.
 
 ### Estadiamento Clínico
 - **Sífilis Recente (< 1 ano):**
@@ -12,7 +12,7 @@
     - **Secundária (6 sem a 6 meses após cancro):** Roséola (tronco/raiz), sifílides palmoplantares, condiloma plano (úmido/vegetante), alopecia em clareira, madarose. Micropoliadenopatia e sintomas constitucionais.
     - **Latente Recente:** Assintomática, com infecção adquirida comprovadamente há menos de 1 ano.
 - **Sífilis Tardia (> 1 ano):**
-    - **Latente Tardia ou de Duração Ignorada:** Assintomática. **É a forma mais comum de diagnóstico na gestante (exame de rotina).**
+    - **Latente Tardia ou de Duração Ignorada:** Assintomática. **É a forma mais comum de diagnóstico na gestante (exame de rotina).** Como o tempo de infecção é difícil de precisar, nesses casos classifica-se como tardia e trata-se como tal (3 doses).
     - **Terciária:** Gomas, aortite sifilítica, aneurisma de aorta, neurossífilis (tabes dorsalis).
 
 ### Diagnóstico
@@ -21,7 +21,7 @@
 - **Testes Treponêmicos (Teste Rápido, FTA-Abs):** Detectam anticorpos específicos. São os **primeiros** testes imunológicos a ficar reagentes e permanecem reagentes pelo resto da vida (não servem para monitorar cura).
 - **Testes Não Treponêmicos (VDRL, RPR):** Detectam anticorpos anticardiolipina. São **quantificáveis** (títulos) e usados para **diagnóstico e monitorização do tratamento**. Podem dar falso-positivo (LES, hanseníase, SAF, etc).
 
-> ⚠️ **Padrão de prova — Tratamento imediato:** A regra de ouro na gestação é que **NÃO SE AGUARDA O TESTE CONFIRMATÓRIO**. Um único teste positivo (seja Treponêmico ou Não Treponêmico) já indica tratamento IMEDIATO para sífilis (e simultâneo do parceiro) para evitar transmissão vertical.  Deve-se solicitar o segundo teste apenas para documentação/confirmação.
+> ⚠️ **Padrão de prova — Tratamento imediato:** Na gestação, **NÃO SE AGUARDA O TESTE CONFIRMATÓRIO**. Um único teste positivo (Treponêmico ou Não Treponêmico) já indica tratamento IMEDIATO para sífilis e do parceiro simultaneamente. O segundo teste serve apenas para documentação.
 
 ---
 
@@ -31,67 +31,127 @@ A **Benzilpenicilina Benzatina (Benzetacil)** intramuscular é a ÚNICA droga co
 
 - **Doses por estadiamento:**
     - **Sífilis Recente (Primária, Secundária, Latente Recente):** 2,4 milhões UI, IM (dose única — 1,2 milhão UI em cada glúteo).
-    - **Sífilis Tardia (Latente Tardia, Duração Ignorada, Terciária):** 7,2 milhões UI, IM, dividido em 3 doses semanais de 2,4 milhões UI (intervalo estrito de 7 dias, se pular, recomeça).
-- **Alergia à Penicilina:** É **contraindicado** usar alternativas (ceftriaxona/eritromicina). Deve-se fazer **Dessensibilização** em ambiente hospitalar (via oral em doses crescentes) seguida da aplicação da penicilina.
-- **Parcerias Sexuais:** Testar e tratar as parcerias dos últimos 90 dias com **pelo menos 1 dose** de 2,4 milhões UI de Penicilina Benzatina, **mesmo com exames negativos**.
+    - **Sífilis Tardia (Latente Tardia, Duração Ignorada, Terciária):** 7,2 milhões UI, IM, dividido em 3 doses semanais de 2,4 milhões UI. Intervalo estrito de **7 dias** — se ultrapassar **9 dias**, o tratamento deve ser **recomeçado do zero**.
+- **Alergia à Penicilina:** Contraindicado usar alternativas. Deve-se fazer **Dessensibilização** em ambiente hospitalar (via oral em doses crescentes) seguida da aplicação da penicilina.
+- **Parcerias Sexuais:** Testar e tratar parceiros dos últimos 90 dias com **pelo menos 1 dose** de 2,4 milhões UI de Penicilina Benzatina, **mesmo com exames negativos**. Esse tratamento do parceiro **não é parâmetro para definir sífilis congênita no RN** (o MS retirou esse critério).
 
-### Critérios de Gestante "Adequadamente Tratada"
-Se faltar QUALQUER UM dos fatores, o recém-nascido (RN) será considerado fruto de "Mãe Inadequadamente Tratada":
+### ⭐ Critérios de Gestante "Adequadamente Tratada"
+Se faltar QUALQUER UM dos fatores, o RN será classificado como sífilis congênita:
 - Tratada exclusivamente com Penicilina Benzatina.
-- Início do tratamento finalizado até **30 dias** antes do parto.
+- Tratamento iniciado até **30 dias** antes do parto.
 - Esquema completo de acordo com o estágio.
-- Intervalo mantido correto entre as doses (Tardia).
+- Intervalo mantido correto entre as doses.
 - Documentação da queda do VDRL (se houve tempo hábil para isso).
 - Avaliação de risco de reinfecção afastada.
-- ⭐ **Detalhe crucial:** A ausência de tratamento do parceiro **NÃO ENTRA MAIS** como critério de inadequação materna no MS atual. O tratamento do parceiro segue indicado para quebrar a cadeia, mas não define sífilis congênita no RN.
 
-> ⚠️ **Padrão de prova — Reação de Jarisch-Herxheimer:** Exacerbação de lesões de pele, febre, dor, nas primeiras 12-24h após a **1ª dose** da penicilina, por lise maciça de espiroquetas. Mais comum na secundária. **É benigna e autolimitada**. Conduta: suportivo (paracetamol/dipirona). **NÃO interromper o antibiótico** e não é alergia.
+> ⚠️ **Padrão de prova — "Iniciado" não "Terminado":** O critério é que o tratamento tenha sido **iniciado** ≥ 30 dias antes do parto. A mãe ainda precisa concluir o esquema conforme o estágio — mas a contagem regressiva começa na 1ª dose. Questões costumam mostrar mãe que "tomou as 3 doses" mas cuja 1ª foi < 30 dias do parto: **inadequadamente tratada**.
+
+> ⚠️ **Padrão de prova — Reação de Jarisch-Herxheimer:** Exacerbação de lesões de pele, febre, dor, nas primeiras 12–24h após a **1ª dose** da penicilina, por lise maciça de espiroquetas. Mais comum na secundária. **É benigna e autolimitada**. Conduta: suportivo (paracetamol/dipirona). **Não interromper o antibiótico** — não é alergia.
 
 ### Monitorização Pós-Tratamento
 - **VDRL / RPR mensal** durante a gestação.
-- **Resposta Adequada:** Queda em 2 diluições (ex: 1:64 para 1:16) em até 6 meses (se recente) ou 12 meses (se tardia).
-- **Retratamento (Reinfecção/Reativação):** Aumento do título em 2 diluições (ex: 1:4 para 1:16), retorno dos sintomas ou não redução dos títulos no prazo de meses estipulado. Se ocorrer, realizar repetição do esquema (Tardia - 3 doses) e, de preferência, puncionar líquor para rastrear neurossífilis.
-- **Cicatriz Sorológica:** Títulos baixos remanescentes com documentação prévia da doença e do tratamento com a queda ideal. 
+- **Leitura do VDRL:** O VDRL detecta anticorpos anticardiolipina — quanto maior o título (denominador), maior a carga antigênica. Ex: 1:64 = muito anticorpo; 1:4 = pouco. A queda no denominador = melhora.
+- **Resposta Adequada:** Queda em 2 diluições (ex: 1:64 → 1:16) em até 6 meses (recente) ou 12 meses (tardia).
+- **Retratamento (Reinfecção/Reativação):** Aumento do título em 2 diluições (ex: 1:4 → 1:16), retorno dos sintomas ou não redução no prazo estipulado. Repetir esquema (Tardia - 3 doses) e considerar punção de líquor.
+- **Cicatriz Sorológica:** Títulos baixos remanescentes com documentação prévia de doença + tratamento + queda ideal. Conduta expectante.
 
 ---
 
 ## 3. Sífilis Congênita
 
-A avaliação em berçário/sala de parto exige seguir firmemente os passos determinantes em neonatologia.
+### Quem é considerado Sífilis Congênita?
+- Todo filho de mãe **não tratada ou inadequadamente tratada** (diagnóstico automático, antes de qualquer exame do neonato).
+- VDRL do RN (veia periférica, never cordão) **> 2 diluições acima** do materno no momento do parto (ex: mãe 1:4, filho 1:16 ou mais).
+- Alterações compatíveis em exame físico, líquor ou RX associadas a VDRL **em qualquer titulação**, independente do tratamento da mãe.
 
-- **Quem tem Sífilis Congênita?**
-    - Todo filho de mãe NÃO tratada ou INADEQUADAMENTE tratada. (Ponto final: tem a doença antes de qualquer exame do neonato ser visto).
-    - VDRL reagente do recém-nascido do cordão ou periférico sendo o título **maior** (em pelo menos duas titulações) do que o título materno no momento do parto (Ex: Mãe 1:4; Filho > 1:16).
-    - Alterações compatíveis em exame físico, líquor, ou RX associadas a VDRL em **qualquer titulação**, independente do tratamento da mãe.
-- **Manifestações Precoces (< 2 anos):** Sintomas de infecção/inflamação ativa. A maioria dos fetos nasce assintomático, ou prematuro com baixo peso, e hepatoesplenomegalia e icterícia (Gerais a outras STORCH).
-    - **Sinais CHAVES da Sífilis:** Pênfigo palmoplantar (bolhas maculares contagiosas), lesões ósseas inflamatórias (metafisite e a "Pseudoparalisia de Parrot" - dor imobilizante dos membros), e Rinite sanguinolenta.
-- **Manifestações Tardias (> 2 anos):** Cicatrizes anatômicas crônicas e sequelares.
-    - **Tríade de Hutchinson:** Ceratite Intersticial, Surdez (VIII par), Dentes de Hutchinson (esculpidos e em barril formados errados).
-    - Tíbia em sabre, Fronte olímpica, Nariz em sela e Articulações de Clutton (sinovite estéril no joelho).
+### Manifestações Clínicas
 
-### Fluxograma Conduta Inicial no Recém-Nascido: NOTIFIQUE, TRIE e TRATE (NTT)
+**Precoces (< 2 anos)** — inflamação/infecção ativa. A maioria nasce assintomática ou prematura. Sinais gerais compartilhados com outras STORCH:
+- Hepatoesplenomegalia, icterícia colestática, anemia hemolítica, trombocitopenia, lesões oculares, síndrome nefrótica.
 
-- Regra inicial: O sangue colhido deve ser sempre de veia periférica, **não o sangue de cordão umbilical** pelo risco de cruzar anticorpos maternos.
-- Se MÃE FOI ADEQUADAMENTE TRATADA: Maneja-se baseado essencialmente pelo VDRL da criança ser maior ou não, seguimento é factível.
-- **Se MÃE FOI INADEQUADAMENTE TRATADA / NÃO TRATADA:** O bebê é assumido como Sífilis Congênita. 
-    1. Notificar compulsóriamente.
-    2. Coletar **Tripé Exames:** VDRL do RN (periferia), Hemograma + RX de ossos longos, Líquor (LCR).
-    3. Tratar a depender dos resultados:
-        - **Cenário A:** **TODOS** exames rigorosamente normais + líquor normal + VDRL não reagente 👉 Tratamento de prevenção garantida: Penicilina G Benzatina (Dose única) 50.000 UI/Kg IM, e seguimento ambulatorial mensal. (O diagnóstico mantém Sífilis congênita).
-        - **Cenário B:** VDRL reagente **OU** algum exame/RX foi alterado 👉 Internação + Tratamento por 10 dias com **Penicilina Cristalina EV** (ou Procaína IM diária se não houver envolvimento liquórico confirmado).
-        - **Cenário C:** Líquor alterado (Cels > 25/mm3; Ptn > 150mg/dl ou VDRL reagente no Líquor) **OU** Líquor IMPOSSÍVEL de ser colhido 👉 A criança é classificada como possuidora de **Neurossífilis** obrigatoriamente e será tratada **EXCLUSIVAMENTE** com Penicilina Cristalina 50.000 UI/Kg EV de 12/12h nos primeiros 7 dias e após 8/8h até 10 dias. O líquor será reavaliado durante meses a frente (Aos 6 meses). Se a dose da terapia EV for perdida/atrasar > 24hrs (ex perca de acesso sem recuperação), deve-se re-começar do zero o dia 1 de 10. 
+**Sinais Específicos da Sífilis (Precoces):**
+- ⭐ **Pênfigo palmoplantar:** bolhas maculares palmoplantares — altamente contagiosas.
+- ⭐ **Lesões ósseas inflamatórias (Metafisite + Pseudoparalisia de Parrot):** dor intensa ao movimento passivo, RN "imóvel" dos membros; sem dano neurológico.
+- ⭐ **Rinite sanguinolenta:** coriza serossanguinolenta, muito contagiosa.
+
+**Tardias (> 2 anos)** — sequelas anatômicas:
+- ⭐ **Tríade de Hutchinson:** Ceratite intersticial + Surdez (VIII par) + Dentes de Hutchinson (em barril/esculpidos).
+- Tíbia em sabre, Fronte olímpica, Nariz em sela, Articulações de Clutton (sinovite estéril no joelho).
+
+### Diagnóstico Diferencial: STORCH
+
+- **Toxoplasmose:** Tétrade de Sabin — calcificações difusas, coriorretinite, hidro/microcefalia, retardo mental.
+- **Rubéola:** Cardiopatia congênita, catarata, surdez.
+- **CMV:** Calcificações periventriculares, petéquias, surdez.
+- **Herpes:** Vesículas, conjuntivite, síndrome neurológica.
+- **Varicela:** Lesões cicatriciais + malformações de membros.
+- **Zika:** Microcefalia, microftalmia, PTC (padrão cortical típico).
+- **HIV:** Assintomático → imunodepressão tardia.
+- **Sífilis:** Pênfigo palmoplantar, lesão óssea, rinite, Tríade de Hutchinson (ver acima).
+
+> As manifestações compartilhadas (hepatoesplenomegalia, icterícia, petéquias, RCIU) não distinguem — use os sinais-chave de cada agente.
+
+### ⭐ Interpretação do Líquor (LCR) na Sífilis Congênita
+
+O LCR é coletado em **todos** os RNs com suspeita de sífilis congênita (mãe não tratada ou inadequadamente tratada). Ele define se há **neurossífilis** e, consequentemente, o antibiótico de escolha.
+
+**Critérios de LCR alterado (neurossífilis) — basta UM:**
+- VDRL reagente no líquor
+- Celularidade > **25 células/mm³** (predomínio linfomonocitário)
+- Proteínas > **150 mg/dL**
+
+**Por que esses parâmetros?**
+- Na neurossífilis, o *T. pallidum* invade as meninges e o SNC → resposta inflamatória local → pleocitose (lymphos/monos) e aumento de proteínas. O VDRL liquórico confirma infecção local.
+- A **glicose** NÃO é critério — não serve para definir neurossífilis (pode estar normal mesmo com inflamação sifilítica).
+- Priorizamos **sensibilidade** sobre especificidade: o tratamento é acessível e a neurossífilis não tratada deixa sequelas graves.
+
+**Se o LCR for impossível de coletar:** Assume-se neurossífilis automaticamente — tratar com Penicilina Cristalina por 10 dias.
 
 ---
 
-## 4. Armadilhas de Prova
+## 4. Fluxograma de Conduta no RN (NTT: Notificar, Triar, Tratar)
 
-- 🔴 **Esperando Confirmação para Iniciar Remédio:** Questões gostam de apresentar VDRL 1:4 inicial ou o Teste Rápido isolado e as opções sugerem "esperar resultado da sorologia definitiva para iniciar". Na gestação: UM Teste = Tratar AGORA.
-  - ⭐ **Exceção de Ouro (Cicatriz Documentada):** Se a gestante tem diagnóstico prévio e TRATAMENTO COMPROVADO no cartão + registro de *queda do VDRL* (cicatriz), o Teste Rápido positivo nela é apenas "memória". Nesses casos selecionados, **DEVE-SE pedir o VDRL atual ANTES de tratar** para flagrar se de fato subiu (reinfecção) ou se manteve baixo (cicatriz 1:1, 1:2).
-  - 🔴 **Garante que Tratou, Mas Não Tem a Queda:** A "exceção de ouro" acima CAI SE a paciente apenas relata que tomou Penicilina no passado, mas NUNCA documentou a inativação do VDRL. Se ela está no pré-natal hoje com 1/4 e não provou que zerou/caiu antes: Trate como Sífilis Tardia (3 Injeções!). O tratamento não a exime da conduta se faltar a matemática da cura prévia.
-- 🔴 **Matemática da Reinfecção (O Salto do VDRL):** Na monitorização mensal, caso a título suba em DUAS diluições, o diagnóstico é ativado novamente! Exemplo: a gestante encerrou tratamento com VDRL de 1/8. Numa consulta futura, ele marca 1/32 (isto é: 1/8 > 1/16 > 1/32). Quadruplicou! Indica imediato Retratamento (Tardia - 3 doses semanas).
-- 🔴 **Mito da TV na Sífilis Terciária:** A transmissão vertical de 100% não é linear ao longo da vida da gestante. Quanto mais avançada ou tardia (latente / terciária) a doença, menor a carga bacteriana circulante = a transmissão vertical cai drasticamente para 10 a 30% e 50% dos neonatos vão nascer sãos. 
-- 🔴 **Falso choque alérgico:** Descrever a reação de Jarisch-Herxheimer algumas horas pós-dose injetada, a alternativa errada indicará a "interrupção do antibiótico" e a identificação como "choque ou r-alérgica cruzada grave". É um processo patológico natural de morrião rápido da bactéria e liberação de exsudatos orgânicos.
-- 🔴 **Teste treponêmico como cura / segmento:** A banca relata gestante grávida e relata seu FTA-Abs ou Teste Rápido sendo persistente nas consultas de pré-natal após o tratamento, inferindo reinfecção. É pegadinha. O teste Treponêmico continuará sempre positivo. O correto para avaliar a linha de base e a cura é ver o decaimento VDRL.
-- 🔴 **Neurossífilis pela exclusão (Sem líquor):** No bebê de mãe sem tratamento adequado, se a alternativa citar que você perfurou sem sucesso o espaço subaracnóide (líquor indisponível) por três vezes — o paciente ganha "passe livre" para internação de 10 dias de Penicilina Cristalina Endovenosa ("Assume-se neuro"). 
-- 🔴 **O Pulso do Gato / Dor aos movimentos na Neonatologia:** A "Pseudoparalisia de Parrot" - onde o recém nascido não possui danos neurológicos mas não move as pernas/braços e emite gritos de dor intensa quando um técnico limpa e vira o bebê. Deriva da Osteocondrite pela bactéria sendo clássica da apresentação precoce, exigindo procura de sífilis.
-- 🔴 **Fator Parceiro e Classificação Pediátrica:** O Ministério da Saúde excluiu o "Ausência Mencionada de Tratamento Simultâneo do parceiro" da ficha de justificativa para internar o RN e considerá-lo Congênita em berçário. O foco restou somente para quão bem a mulher se medicou em tempo hábil. 
+- ⭐ Sangue do RN: sempre **veia periférica** (não cordão umbilical — risco de cruzar anticorpos maternos).
+- Exames do "Tripé": VDRL periférico do RN + Hemograma + RX ossos longos + **LCR**.
+- Complementares adicionais: função hepática, RX tórax, avaliação oftalmológica, triagem auditiva neonatal.
+
+**PASSO 1 — MÃE INADEQUADAMENTE TRATADA (ou não tratada):**
+→ RN = Sífilis Congênita. Notificar compulsoriamente. Triar e tratar sempre.
+- Se **todos** os exames normais (hemograma, RX, LCR) **+ VDRL não reagente** → Penicilina G Benzatina 50.000 UI/kg IM, dose única.
+- Se **VDRL reagente** ou **qualquer exame alterado** (sem neurossífilis) → Penicilina Cristalina EV 50.000 UI/kg (12/12h por 7 dias, depois 8/8h até completar 10 dias) ou Procaína IM 50.000 UI/kg diária por 10 dias.
+- Se **LCR alterado** ou **LCR impossível de coletar** → Penicilina Cristalina EV exclusiva, 10 dias. Se interrupção > 24h: reiniciar do zero.
+
+**PASSO 2 — MÃE ADEQUADAMENTE TRATADA:**
+→ RN = "Exposto à Sífilis". Avaliar VDRL e exame físico.
+- VDRL negativo (mesmo sintomático) → Não é sífilis congênita. Investigar outro diagnóstico ou seguimento ambulatorial.
+- VDRL positivo **> 2 diluições acima da mãe** → Sífilis congênita → NTT.
+- VDRL positivo **≤ 2 diluições da mãe** com sintomas → Sífilis congênita → NTT.
+- VDRL positivo **≤ 2 diluições da mãe** assintomático → Seguimento ambulatorial.
+
+> ⚠️ **Cicatriz Sorológica no RN:** Se tratamento OK, documentado, VDRL/EF normais e persiste reagente com baixa titulação → Cicatriz sorológica. Alta com seguimento ambulatorial leve.
+
+---
+
+## 5. Seguimento Ambulatorial
+
+- **Puericultura:** 1ª semana, 1º, 2º, 4º, 6º, 9º, 12º e 18º meses (Protocolo MS) ou mensal até 6 meses e bimensal de 6 a 12 meses (SBP).
+- **VDRL:** No 1º, 3º, 6º, 12º e 18º mês. Interromper seguimento se **dois VDRLs negativos consecutivos**.
+- Se título elevou ou não negativou até o 6º mês → Reinvestigar a criança.
+- **Sífilis Congênita confirmada:** Avaliação semestral de oftalmo, neuro e audiologia por 2 anos. Se neurossífilis: LCR a cada 6 meses até normalização.
+
+---
+
+## 6. Armadilhas de Prova
+
+- 🔴 **"30 dias antes do parto" = INÍCIO do tratamento, não término.** Mãe que completou 3 doses mas cuja 1ª dose foi há 20 dias do parto = inadequadamente tratada. Essa é a pegadinha mais clássica da sífilis congênita.
+- 🔴 **Tratamento do parceiro não define sífilis congênita no RN.** O MS retirou esse critério. Questões antigas podem sugerir o contrário.
+- 🔴 **Esperando Confirmação para Iniciar Remédio:** Na gestação, UN Teste = Tratar AGORA. Não aguardar sorologia definitiva.
+- 🔴 **Exceção da Cicatriz:** Se a gestante tem diagnóstico prévio com tratamento comprovado NO CARTÃO + registro de queda do VDRL: aguardar VDRL atual antes de retratar. Mas se disse que "se tratou" sem documentação de inativação → Tratar como Sífilis Tardia (3 doses).
+- 🔴 **Falso choque alérgico (Jarisch-Herxheimer):** Febre e rash nas primeiras 12–24h da 1ª dose = lise de espiroquetas. Conduta: suportivo. Nunca interromper. Não é alergia.
+- 🔴 **Teste Treponêmico não monitora cura.** FTA-Abs/Teste Rápido sempre positivo pós-infecção. Monitorar com VDRL.
+- 🔴 **Matemática da Reinfecção:** VDRL que sobe 2 diluições na monitorização = Retratamento + considerar punção.
+- 🔴 **Glicose do líquor NÃO é critério de neurossífilis.** Critérios: VDRL reagente no LCR, celularidade > 25/mm³ OU proteínas > 150 mg/dL.
+- 🔴 **LCR impossível de coletar = inferir neurossífilis.** Tratar com Cristalina 10 dias. Se interrupção > 24h, reiniciar do zero.
+- 🔴 **Pseudoparalisia de Parrot:** RN "imóvel" e com dor ao toque/movimento. Não é dano neurológico — é osteocondrite sifilítica. Clássico da apresentação precoce.
+- 🔴 **Sangue do RN = veia periférica, nunca cordão.** Sangue de cordão contamina com anticorpos maternos e falseia resultados.
+- 🔴 **Transmissão vs. Gravidade (inversamente proporcionais):** A sífilis recente transmite mais (até 100%), mas a gravidade fetal é maior se a infecção materna ocorreu no início da gestação.

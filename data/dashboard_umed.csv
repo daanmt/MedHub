@@ -1,0 +1,128 @@
+Sim,,,,,,,
+,,Sim,,PREENCHER,PREENCHER,PREENCHER,NAO PREENCHER!
+,Tarefa,Assunto,Tipo de Tarefa,Realizada?,Questões Feitas,Acertos,% Acertos
+,1,Imunizações,Teoria I,,,,#DIV/0!
+,2,Imunizações,Teoria II,,,,#DIV/0!
+,3,Imunizações,Teoria III,,,,#DIV/0!
+,4,Imunizações,Revisão,,,,#DIV/0!
+,5,Doenças Exantemáticas,Teoria I,,,,#DIV/0!
+,6,Doenças Exantemáticas,Teoria II,,,,#DIV/0!
+,7,Doenças Exantemáticas,Revisão,,,,#DIV/0!
+,8,Icterícia e Sepse Neonatal,Teoria I,,,,#DIV/0!
+,9,Icterícia e Sepse Neonatal,Teoria II,,,,#DIV/0!
+,10,Icterícia e Sepse Neonatal,Revisão,,,,#DIV/0!
+,11,Emergências Pediátricas,Teoria I,Sim,28,24,"85,71%"
+,12,Emergências Pediátricas,Teoria II,Sim,28,28,"100,00%"
+,13,Emergências Pediátricas,Teoria III,Sim,23,22,"95,65%"
+,14,Emergências Pediátricas,Revisão,,,,#DIV/0!
+,15,"Imunizações
+Doenças Exantemáticas
+Icterícia e Sepse Neonatal
+Emergências Pediátricas",Revisão por Questões,,,,#DIV/0!
+,16,Cardiopatias Congênitas,Teoria I,Sim,20,16,"80,00%"
+,17,Cardiopatias Congênitas,Teoria II,Sim,20,13,"65,00%"
+,18,Cardiopatias Congênitas,Revisão,Sim,40,34,"85,00%"
+,19,Cuidados Neonatais,Teoria I,Sim,24,17,"70,83%"
+,20,Cuidados Neonatais,Teoria II,Sim,20,15,"75,00%"
+,21,Cuidados Neonatais,Revisão,Sim,40,34,"85,00%"
+,22,Asma,Teoria I,,,,#DIV/0!
+,23,Asma,Teoria II,,,,#DIV/0!
+,24,Asma,Teoria III,,,,#DIV/0!
+,25,Asma,Revisão,,,,#DIV/0!
+,26,Aleitamento Materno,Teoria I,,,,#DIV/0!
+,27,Aleitamento Materno,Teoria II,,,,#DIV/0!
+,28,Aleitamento Materno,Revisão,,,,#DIV/0!
+,29,"Cardiopatias Congênitas
+Cuidados Neonatais
+Asma
+Aleitamento Materno",Revisão por Questões,,,,#DIV/0!
+,30,Diarreia,Teoria I,,,,#DIV/0!
+,31,Diarreia,Teoria II,,,,#DIV/0!
+,32,Diarreia,Revisão,,,,#DIV/0!
+,33,Pneumonias na Infância,Teoria I,,,,#DIV/0!
+,34,Pneumonias na Infância,Teoria II,,,,#DIV/0!
+,35,Pneumonias na Infância,Revisão,,,,#DIV/0!
+,36,Choque em Pediatria,Teoria I,,,,#DIV/0!
+,37,Choque em Pediatria,Teoria II,,,,#DIV/0!
+,38,Choque em Pediatria,Revisão,,,,#DIV/0!
+,39,Alergia Alimentar,Teoria,,,,#DIV/0!
+,40,Alergia Alimentar,Revisão,,,,#DIV/0!
+,41,"Diarreia
+Pneumonias na Infância
+Choque em Pediatria
+Alergia Alimentar",Revisão por Questões,,,,#DIV/0!
+,42,Reanimação Neonatal,Teoria,,,,#DIV/0!
+,43,Reanimação Neonatal,Revisão,,,,#DIV/0!
+,44,Crescimento,Teoria,,,,#DIV/0!
+,45,"Constipação Intestinal
+Hiperplasia Adrenal Congênita",Teoria,,,,#DIV/0!
+,46,Crescimento,Revisão,,,,#DIV/0!
+,47,"Doença Celíaca em Pediatria
+Febre Reumática",Teoria,,,,
+,48,Tópicos em Pediatria,Teoria,,,,#DIV/0!
+,49,Tópicos em Pediatria,Revisão,,,,#DIV/0!
+,50,"Reanimação Neonatal
+Crescimento
+Tópicos em Pediatria",Revisão por Questões,,,,#DIV/0!
+,51,Diagnóstico Nutricional,Teoria,,,,#DIV/0!
+,52,Diagnóstico Nutricional,Revisão,,,,#DIV/0!
+,53,"Vitaminas
+Doença do Refluxo Gastroesofágico em Pediatria",Teoria,,,,#DIV/0!
+,54,Desnutrição na Infância,Teoria I,,,,#DIV/0!
+,55,Desnutrição na Infância,Teoria II,,,,#DIV/0!
+,56,"Febre Sem Sinais Localizatórios
+Hipertensão Arterial na Criança e Adolescente
+Coqueluche",Teoria,,,,#DIV/0!
+,57,Desnutrição na Infância,Revisão,,,,#DIV/0!
+,58,Obesidade Infantil e na Adolescência,Teoria I,,,,#DIV/0!
+,59,Obesidade Infantil e na Adolescência,Teoria II,,,,#DIV/0!
+,60,Obesidade Infantil e na Adolescência,Revisão,,,,#DIV/0!
+,61,Infecção de Trato Urinário em Pediatria,Teoria,,,,#DIV/0!
+,62,"Diagnóstico Nutricional
+Desnutrição na Infância
+Obesidade Infantil e na Adolescência",Revisão por Questões,,,,#DIV/0!
+,63,Infecção de Trato Urinário em Pediatria,Revisão,,,,#DIV/0!
+,64,Bronquiolite,Teoria,,,,#DIV/0!
+,65,Bronquiolite,Revisão,,,,#DIV/0!
+,66,Anafilaxia e Urticária,Teoria I,,,,#DIV/0!
+,67,Anafilaxia e Urticária,Teoria II,,,,#DIV/0!
+,68,Anafilaxia e Urticária,Revisão,,,,#DIV/0!
+,69,Puberdade ,Teoria,,,,#DIV/0!
+,70,Puberdade ,Revisão,,,,#DIV/0!
+,71,Doença de Kawasaki,Teoria,,,,#DIV/0!
+,72,"Infecção de Trato Urinário em Pediatria
+Bronquiolite
+Anafilaxia e Urticária
+Puberdade ",Revisão por Questões,,,,#DIV/0!
+,73,Doença de Kawasaki,Revisão,,,,#DIV/0!
+,74,Distúrbios Metabólicos do Neonato,Teoria I,,,,#DIV/0!
+,75,Distúrbios Metabólicos do Neonato,Teoria II,,,,#DIV/0!
+,76,Distúrbios Metabólicos do Neonato,Revisão,,,,#DIV/0!
+,77,Síndromes Genéticas e Erros Inatos do Metabolismo,Teoria I,,,,#DIV/0!
+,78,Síndromes Genéticas e Erros Inatos do Metabolismo,Teoria II,,,,#DIV/0!
+,79,Síndromes Genéticas e Erros Inatos do Metabolismo,Teoria III,,,,#DIV/0!
+,80,Síndromes Genéticas e Erros Inatos do Metabolismo,Revisão,,,,#DIV/0!
+,81,Tuberculose,Teoria I,,,,#DIV/0!
+,82,Tuberculose,Teoria II,,,,#DIV/0!
+,83,Tuberculose,Revisão,,,,#DIV/0!
+,84,Distúrbios Respiratórios do Período Neonatal,Teoria I,,,,#DIV/0!
+,85,"Doença de Kawasaki
+Distúrbios Metabólicos do Neonato
+Síndromes Genéticas e Erros Inatos do Metabolismo
+Tuberculose",Revisão por Questões,,,,#DIV/0!
+,86,Distúrbios Respiratórios do Período Neonatal,Teoria II,,,,#DIV/0!
+,87,Distúrbios Respiratórios do Período Neonatal,Revisão,,,,#DIV/0!
+,88,Desenvolvimento Neuropsicomotor,Teoria I,,,,#DIV/0!
+,89,Desenvolvimento Neuropsicomotor,Teoria II,,,,#DIV/0!
+,90,Desenvolvimento Neuropsicomotor,Teoria III,,,,#DIV/0!
+,91,Desenvolvimento Neuropsicomotor,Revisão,,,,#DIV/0!
+,92,Infecções Congênitas,Teoria I,,,,#DIV/0!
+,93,Infecções Congênitas,Teoria II,,,,#DIV/0!
+,94,Infecções Congênitas,Revisão,,,,#DIV/0!
+,95,Fibrose Cística,Teoria,,,,#DIV/0!
+,96,Fibrose Cística,Revisão,,,,#DIV/0!
+,97,"Distúrbios Respiratórios do Período Neonatal
+Desenvolvimento Neuropsicomotor
+Infecções Congênitas
+Fibrose Cística",Revisão por Questões,,,,#DIV/0!
+,Total,,,9,243,203,"83,54%"

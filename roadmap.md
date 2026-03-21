@@ -23,9 +23,8 @@
 **Entregas Concluídas:**
 - [x] **Arquitetura Zero-DB (SSOT):** O Markdown (`caderno_erros.md`) é a única fonte de verdade para leitura na UI.
 - [x] **Parser Stateful:** Herança robusta de Área/Tema via cabeçalhos MD.
-- [x] **Flashcard Anti-Crash:** Player ultra-estável baseado em shuffle de índices (fim do KeyError).
 - [x] **Dashboard Honesto:** Métricas 100% fiéis ao caderno, sem resíduos de FSRS fake.
-- [x] **Persistência Federada:** Registro de novos erros via escrita direta no MD.
+- [x] **O Grande Expurgo (Audit 2026):** Remoção/arquivamento do caderno histórico (`caderno_erros.md`) e da sujeira da pasta Tools (`*.xlsx`, `etl_*.py`), transferindo o protagonismo 100% para o `ipub.db` + UI.
 
 ---
 
@@ -33,6 +32,7 @@
 *Implementar a matemática de agendamento (Stability/Difficulty) baseada em logs reais.*
 
 **Objetivos:**
+- [ ] **Flashcards Bridge (ETL Autônomo):** Modificar `insert_questao.py` para gerar drafts de revisão automaticamente na tabela de Flashcards a partir dos erros, reduzindo a fricção de criação em 50%.
 - [ ] **FSRS Real Integration:** Substituir o sistema de navegação simples por agendamento real via pesos de memória.
 - [ ] **Review Log (history/):** Persistir a performance de cada card no histórico para calibragem futura.
 - [ ] **Busca Semântica no App:** Implementar busca por palavras-chave em todos os resumos da pasta `Temas/`.

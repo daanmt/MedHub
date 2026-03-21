@@ -185,6 +185,7 @@
   },
   "active": "ec5741a543f1deb9",
   "lastOpenFiles": [
+    "Tools/absorver_sheets_v2.py",
     "app/pages/05_revisoes.py",
     "Tools/absorver_sheets.py",
     "data/cronograma_umed.csv",
@@ -196,7 +197,6 @@
     "history/legacy/Tools_Archive/import_performance_excel.py",
     "history/legacy/Tools_Archive/etl_markdown_to_sqlite.py",
     "history/legacy/Tools_Archive/cronograma_preview.csv",
-    "history/legacy/Tools_Archive/Dashboard EMED 2026.xlsx",
     "history/legacy/Tools_Archive/IPUB_Streamlit_Plano.md",
     "history/legacy/Tools_Archive/IPUB_Reforma_v3.md",
     "history/legacy/Tools_Archive/IPUB_Refatoracao_v2.md",

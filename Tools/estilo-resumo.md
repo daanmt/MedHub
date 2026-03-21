@@ -26,8 +26,7 @@
 - Separadores `---` entre seções principais
 
 ### NUNCA usar
-- Tabelas longas (> 5 linhas) — converter para bullets ou com células densas (parágrafos dentro de células)
-- Tabelas mesmo que pequenas ou médias — converter para bullets hierárquicos
+- **Tabelas** — em qualquer tamanho ou formato. Sempre converter para bullets hierárquicos. Sem exceções.
 - Fluxogramas ou algoritmos em ASCII (blocos ` ``` `) — converter para bullets hierárquicos com condicionais em texto (`→ se X:`, `→ se não:`)
 - Headers de metadata no topo (fonte, autor, ano, versão)
 - Linguagem motivacional ou didática ("Vamos lá!", "Caro aluno")

@@ -39,8 +39,11 @@ Ler `Tools/estilo-resumo.md` — OBRIGATÓRIO. Regras críticas:
 ### 5. Redigir o resumo
 - Fonte primária: apenas os PDFs extraídos
 - Seguir `Tools/estilo-resumo.md` (bullets, ⭐, ⚠️, 🔴)
+- Princípios de assertividade — dois focos simultâneos:
+  1. **Pontos-chave da matéria** — ampliam compreensão e raciocínio clínico
+  2. **Pontos-chave de prova** — aspectos prevalentes em questões de residência
+- **Meta de tamanho:** manter o resumo até ~300 linhas. Ser cirúrgico — cada linha deve ganhar seu lugar. Flexibilidade permitida, mas justificada.
 - Incluir seção final "Armadilhas de Prova"
-- Deixar espaço ao final: `*📝 Espaço reservado para inclusão de questões erradas*`
 
 ### 6. Salvar
 Salvar em `Temas/{Área}/{Subespecialidade}/{Nome do Tema}.md`

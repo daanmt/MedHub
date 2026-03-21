@@ -28,23 +28,33 @@
 
 ---
 
-## 🔬 Fase 3: Motor de Retenção FSRS v4 Real (Status: Próximo Passo)
+## 🔬 Fase 3: Motor de Retenção FSRS v4 Real (Status: Concluído)
 *Implementar a matemática de agendamento (Stability/Difficulty) baseada em logs reais.*
 
-**Objetivos:**
-- [ ] **Flashcards Bridge (ETL Autônomo):** Modificar `insert_questao.py` para gerar drafts de revisão automaticamente na tabela de Flashcards a partir dos erros, reduzindo a fricção de criação em 50%.
-- [ ] **FSRS Real Integration:** Substituir o sistema de navegação simples por agendamento real via pesos de memória.
-- [ ] **Review Log (history/):** Persistir a performance de cada card no histórico para calibragem futura.
-- [ ] **Busca Semântica no App:** Implementar busca por palavras-chave em todos os resumos da pasta `Temas/`.
+**Entregas Concluídas:**
+- [x] O Player FSRS agora roda nativo no SQLite, manipulando os states FSRS (Again/Hard/Good/Easy) sob demanda.
+- [x] A Curva de Esquecimento Crítico (Dashboard) respeita o período de carência da memória de curto prazo (3 dias).
+- [x] Unificação Minimalista em 3-Hubs na UI do Streamlit.
 
 ---
 
-## 🧠 Fase 4: O Workflow Fechado — Simulados e Analytics (Visão de Futuro)
+## 🧠 Fase 4: O Workflow Fechado — Simulados e Analytics (Status: Próximo Passo)
 *O sistema coordena ativamente as revisões do aluno.*
 
 **Objetivos:**
 - [ ] **Gerador de Simulados Personalizados:** Questões focadas nas fraquezas (Weakness-based testing).
 - [ ] **Relatórios de Desempenho Metacognitivo:** Insights automáticos sobre padrões de erro (ex: desatenção a números).
+
+---
+
+## 🗃️ Fase 5: Motor Lexical e Taxonomia Robusta (Visão de Futuro)
+*Erradicar duplicatas de input e consolidar a governança dos dados num modelo SSOT Relacional.*
+
+**A Fraqueza Atual:** A taxonomia do banco (`taxonomia_cronograma`) depende de correspondência exata de strings (ex: *Sífilis Congênita* vs *Sifilis Congenita*), causando fragmentação de performance quando o Excel ou o usuário divergem na grafia.
+**Plano de Resolução Definitiva:**
+1. **Dicionário Dimensional (dim_taxonomia):** Criar uma tabela estática e intocável de domínios, mapeando as 5 grandes áreas (Ped, Cir, GO, CM, Prev) para temas rígidos extraídos diretamente dos nomes dos arquivos Markdown em `Temas/`.
+2. **Motor de Fuzzy Matching (NLP):** Integrar um algoritmo de similaridade de strings (ex: `thefuzz` / Levenshtein) nos scripts de ingestão (`insert_questao.py` e futuros inputs manuais). Se o usuário digitar "sifilis gestacao", o motor corrige >85% e trava no ID mestre de "Sífilis na Gestação e Congênita".
+3. **Fim do Legado Excel (Autonomia):** Desenvolver um Widget super-rápido no Dashboard ("Logging Diário") onde o usuário informa o `Acerto/Erro` de uma sessão de estudos. O dropdown consumirá exclusivamente a `dim_taxonomia`, impedindo a criação de temas fantasmas.
 
 ---
 

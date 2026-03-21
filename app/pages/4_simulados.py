@@ -95,10 +95,10 @@ if st.session_state.simulado_q and "erro" not in st.session_state.simulado_q:
     st.markdown(f'<div style="background:#11161D; border:1px solid #202A36; padding:20px; border-radius:12px; font-size:1.1rem; border-left: 4px solid #2F6BFF;">{q.get("enunciado", "")}</div>', unsafe_allow_html=True)
     st.markdown("<br>", unsafe_allow_html=True)
     
-    op_a = st.button(f"A) {q.get('A', '')}", use_container_width=True)
-    op_b = st.button(f"B) {q.get('B', '')}", use_container_width=True)
-    op_c = st.button(f"C) {q.get('C', '')}", use_container_width=True)
-    op_d = st.button(f"D) {q.get('D', '')}", use_container_width=True)
+    op_a = st.button(f"A) {q.get('A', '')}", width='stretch')
+    op_b = st.button(f"B) {q.get('B', '')}", width='stretch')
+    op_c = st.button(f"C) {q.get('C', '')}", width='stretch')
+    op_d = st.button(f"D) {q.get('D', '')}", width='stretch')
     
     ans = None
     if op_a: ans = "A"

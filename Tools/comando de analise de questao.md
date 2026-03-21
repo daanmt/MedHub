@@ -161,132 +161,20 @@ Nunca exija formato específico.
 
 ### ETAPA 6 — Diagnóstico do Erro do Usuário
 
-**6.1 — Compare a resposta do usuário com o gabarito**
+**6.1 — Identifique o Elo Quebrado**
+Identifique em qual habilidade sequencial o usuário desviou do raciocínio e classifique o erro (ex: `Lacuna de conhecimento`, `Erro de aplicação`, `Armadilha do examinador`, `Erro de leitura`).
 
-Identifique:
-- Qual alternativa o usuário escolheu
-- Qual é a alternativa correta
-- Em qual habilidade sequencial (da cadeia mapeada na Etapa 2) o raciocínio do
-  usuário divergiu do correto
-
-**6.2 — Classifique o tipo de erro**
-
-Use exatamente uma das categorias abaixo:
-
-| Categoria | Definição |
-|---|---|
-| `Lacuna de conhecimento` | O usuário não sabia o conteúdo necessário para aquela habilidade |
-| `Conhecimento parcial` | O usuário sabia parte do conteúdo mas não o suficiente para resolver aquela habilidade |
-| `Erro de aplicação` | O usuário sabia o conteúdo mas não o aplicou corretamente no contexto da questão |
-| `Erro de leitura` | O usuário leu errado um dado do enunciado (confundiu sexo, idade, dado laboratorial, etc.) |
-| `Armadilha do examinador` | O usuário foi deliberadamente direcionado para uma alternativa incorreta por uma pista enganosa |
-| `Incerteza sem erro de base` | O usuário acertou mas não tinha certeza — risco de erro em formulação diferente |
-
-**6.3 — Localize o elo quebrado**
-
-Identifique qual habilidade sequencial específica falhou. Formato obrigatório:
-
-```
-Elo quebrado: Habilidade N — [descrição da habilidade]
-Tipo de erro: [categoria da tabela acima]
-O que faltou: [o conteúdo ou raciocínio específico que estava ausente ou errado]
-```
-
-**6.4 — Extraia a explicação correta sucinta**
-
-Escreva em 2-4 frases a explicação correta do ponto que falhou.
-Não resuma o gabarito inteiro — foque APENAS no elo que quebrou.
-Esta é a "explicação correta sucinta" que irá para o caderno.
+**6.2 — Extraia a Regra Mestre**
+Escreva em 2-3 frases a regra clínica de ouro que o usuário violou. Não resuma o gabarito; foque exatamente no elo quebrado.
 
 ---
 
-### ETAPA 7 — Extração para o caderno_erros.md
+### ETAPA 7 — O Output Final (Flashcard Bridge e Resumos)
 
-Monte a entrada completa usando o template da Seção 9 abaixo.
-Depois insira no `caderno_erros.md` sob a Área e Tema corretos.
+A IA deve responder com apenas **TRÊS** entregas curtas e táticas:
 
----
+1. **O Diagnóstico:** Qual elo quebrou e o motivo sucinto.
+2. **A "Regra Mestre" (Flashcard Logic):** Uma frase/conceito condensado que deve ir para a tabela `Flashcards` do SQLite.
+3. **Draft de Cópia pro Resumo:** O texto final (⚠️ Padrão de Prova ou 🔴 Armadilha) exato que a IA quer colocar no arquivo `.md` da pasta `Temas/`, seguindo a regra de hipercondensação (sem tabelas ASCII, usando bullets).
 
-## 9. Template de Saída para o caderno_erros.md
-
-> Use este template ao inserir entradas no caderno.
-> Foco: conteúdo médico para revisão. Sem metadata desnecessária.
-
-### Template de Entrada
-
-```
-#### [título curto descrevendo o ponto central da questão]
-
-**Complexidade:** [Baixa | Média | Alta]
-**Elo quebrado:** Habilidade N — [descrição]
-**Tipo de erro:** [categoria]
-
-**Caso:** [2-3 frases resumindo o caso clínico e o que a questão pede]
-
-**Habilidades sequenciais:**
-1. [Habilidade 1]
-2. [Habilidade 2]
-3. [Habilidade N]
-
-**O que faltou:**
-[O conteúdo ou raciocínio específico ausente/errado — 1-3 frases]
-
-**Explicação correta:**
-[A informação correta do elo quebrado — 2-4 frases]
-
-**Armadilha / nuance:**
-[O que o examinador usou para desviar o raciocínio. "N/A" se não aplicável]
-
-**Informações-chave para revisão:**
-- [Ponto 1]
-- [Ponto 2]
-- [Ponto N]
-
----
-```
-
-### Exemplo de Entrada Preenchida
-
-```
-#### Tosse seca por IECA em paciente com IC compensada — trocar por BRA
-
-**Complexidade:** Média
-**Elo quebrado:** Habilidade 3 — Reconhecer tosse seca como efeito adverso do IECA
-**Tipo de erro:** Erro de aplicação
-
-**Caso:** Mulher de 35 anos com ICFER (FEVE 40%), compensada (perfil A), em uso de
-enalapril + carvedilol + espironolactona + furosemida, apresenta tosse seca há 3 meses.
-Sem sinais de congestão. A questão pede a conduta inicial.
-
-**Habilidades sequenciais:**
-1. Reconhecer ICFER com terapia otimizada (IECA + BB + antagonista da aldosterona)
-2. Classificar perfil hemodinâmico como quente e seco (perfil A) — IC compensada
-3. Identificar tosse seca como efeito adverso clássico do IECA (enalapril)
-4. Saber que a conduta é trocar IECA por BRA (losartana), não investigar causa pulmonar
-
-**O que faltou:**
-Não associou a tosse seca ao enalapril apesar da paciente estar compensada e sem
-sinais de congestão pulmonar. Pensou em investigação diagnóstica (BNP) antes de
-considerar efeito adverso medicamentoso.
-
-**Explicação correta:**
-Tosse seca é o principal efeito colateral dos IECA (5-20% dos pacientes), mediada
-pelo acúmulo de bradicinina. Em paciente compensada sem congestão, a tosse não é
-cardíaca. A conduta é substituir o IECA por um BRA (ex: losartana), que não
-acumula bradicinina e tem benefício semelhante na ICFER.
-
-**Armadilha / nuance:**
-O examinador coloca uma paciente com IC para induzir o candidato a pensar em
-descompensação como causa da tosse. Os dados de exame físico normal, RX normal e
-perfil A servem exatamente para afastar essa hipótese e direcionar para efeito adverso.
-
-**Informações-chave para revisão:**
-- Tosse seca por IECA: 5-20% dos pacientes, mecanismo = acúmulo de bradicinina
-- Bradicinina: vasodilatadora e anti-remodelamento, mas causa tosse e angioedema
-- Conduta na tosse refratária por IECA: trocar por BRA (losartana, valsartana)
-- BRA: sem acúmulo de bradicinina → sem tosse e sem angioedema
-- Perfil hemodinâmico A (quente e seco) = IC compensada = tosse NÃO é congestão
-- BB na IC: carvedilol, metoprolol, bisoprolol, nebivolol — nenhum causa tosse
-
----
-```
+*(A IA não deve gerar templates longos textuais para os cadernos de erros antigos, visto que a infraestrutura foca inteiramente no `ipub.db` e no `insert_questao.py`).*

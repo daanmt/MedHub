@@ -12,11 +12,11 @@ Ambiente de estudo para residência médica. Processa questões de prova, regist
 **Leia `AGENTE.md` antes de qualquer ação.** Este arquivo contém o protocolo de boot e a ordem de leitura para garantir a continuidade do projeto.
 
 > [!IMPORTANT]
-> **SINGLE SOURCE OF TRUTH (SSOT):** O Markdown (`caderno_erros.md`) é a base absoluta. O App Streamlit (`01_dashboard.py`) reflete os dados via parser stateful. Ignorar o SQLite para leitura de UI; ele serve apenas para processamento futuro de ML.
+> **SINGLE SOURCE OF TRUTH (SSOT):** O Banco de Dados SQLite (`ipub.db`) é a única fonte da verdade para as métricas, tracking de flashcards e progresso. O velho `caderno_erros.md` de texto foi arquivado. O conteúdo clínico lapidado mora puramente na subpasta `Temas/`. A regra "Siamese Twins" evoluiu: **O Erro vai pro DB, a Lição vai pro Resumo (Temas)**.
 
-- **100 erros diagnosticados** no caderno (`caderno_erros.md`)
-- **34 resumos clínicos** consolidados em `Temas/`
-- **34 sessões** de estudo catalogadas em `history/`
+- **100+ erros estruturados** no SQLite (`ipub.db`).
+- **34 resumos clínicos** consolidados em `Temas/`.
+- **35 sessões** de estudo catalogadas em `history/`.
 
 ---
 
@@ -35,9 +35,7 @@ Ambiente de estudo para residência médica. Processa questões de prova, regist
 | Artefato | Arquivo |
 |---|---|
 | Resumos clínicos | `Temas/{Área}/{Subespecialidade}/{Tema}.md` |
-| Banco Principal (DB) | `ipub.db` (Erros + Cronograma) |
-| [Legado] Caderno | `caderno_erros.md` (Apenas leitura) |
-| [Legado] Progresso | `progresso.md` (Deprecado) |
+| Banco Principal (DB) | `ipub.db` (Erros, Flashcards, Cronograma) |
 
 ### Material de referência (PDFs — não editáveis)
 | Artefato | Pasta |
@@ -125,13 +123,10 @@ Ambiente de estudo para residência médica. Processa questões de prova, regist
 ## Decisões críticas (não reverter)
 
 - **Governança via AGENTE.md**: O boot e o fechamento seguem estritamente o `AGENTE.md`.
-- **Regra "Siamese Twins" (Híbrido Fase 2)**: DB (`ipub.db`) e Markdown devem ser atualizados em sincronia exata. Analisou uma questão? Ela deve figurar nos 2 lugares. **Script oficial:** `python Tools/insert_questao.py`.
-- `caderno_erros.md` atualizado a CADA questão — nunca em batch.
-- `progresso.md` derivado do caderno — atualizar junto.
-- Protocolo de análise (`Tools/comando de analise de questao.md`) carregado ANTES de analisar qualquer questão.
+- **Regra "Siamese Twins V2.0"**: O diagnóstico do erro deve ser gravado diretamente via CLI (`Tools/insert_questao.py`) no banco `ipub.db`. O raciocínio e ⚠️ Armadilhas da lição vão para o resumo em `.md`. Não usamos `caderno_erros.md` textual.
 - Resumos seguem spec em `Tools/estilo-resumo.md` — bullets hierárquicos, ⭐/⚠️/🔴; **sem tabelas, sem fluxogramas ASCII**.
-- Sessions numeradas globalmente em `history/` — qualquer agente registra.
-- `extract_pdfs.py` é CLI genérica para extração para `%TEMP%`.
+- Sessions numeradas globalmente em `history/` — qualquer agente registra. O fechamento da sessão invoca o **RAG Autopilot**.
+- `extract_pdfs.py` é CLI genérica para extração focada em "Zero PDF".
 
 ---
 

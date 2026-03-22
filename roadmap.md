@@ -50,11 +50,13 @@
 ## 🗃️ Fase 5: Motor Lexical e Taxonomia Robusta (Visão de Futuro)
 *Erradicar duplicatas de input e consolidar a governança dos dados num modelo SSOT Relacional.*
 
-**A Fraqueza Atual:** A taxonomia do banco (`taxonomia_cronograma`) depende de correspondência exata de strings (ex: *Sífilis Congênita* vs *Sifilis Congenita*), causando fragmentação de performance quando o Excel ou o usuário divergem na grafia.
+**A Fraqueza Atual:** A taxonomia do banco (`taxonomia_cronograma`) depende de correspondência exata de strings (ex: *Sífilis Congênita* vs *Sifilis Congenita*), e o pipeline de Flashcards sofre de "Atrofia Semântica" (gerando placeholders como "Este cenário costuma cair") porque o campo Base/Caso Clínico é frequentemente ignorado no input, deixando a LLM sem contexto para fabricar a Armadilha.
+
 **Plano de Resolução Definitiva:**
 1. **Dicionário Dimensional (dim_taxonomia):** Criar uma tabela estática e intocável de domínios, mapeando as 5 grandes áreas (Ped, Cir, GO, CM, Prev) para temas rígidos extraídos diretamente dos nomes dos arquivos Markdown em `Temas/`.
-2. **Motor de Fuzzy Matching (NLP):** Integrar um algoritmo de similaridade de strings (ex: `thefuzz` / Levenshtein) nos scripts de ingestão (`insert_questao.py` e futuros inputs manuais). Se o usuário digitar "sifilis gestacao", o motor corrige >85% e trava no ID mestre de "Sífilis na Gestação e Congênita".
-3. **Fim do Legado Excel (Autonomia):** Desenvolver um Widget super-rápido no Dashboard ("Logging Diário") onde o usuário informa o `Acerto/Erro` de uma sessão de estudos. O dropdown consumirá exclusivamente a `dim_taxonomia`, impedindo a criação de temas fantasmas.
+2. **Motor Lexical Fuzzy (NLP):** Integrar um algoritmo de similaridade de strings (ex: `thefuzz` / Levenshtein) nos scripts de ingestão (`insert_questao.py` e futuros inputs manuais) para travar 100% no ID Mestre.
+3. **Pipeline RAG Inverso (Flashcard Contexto-Ciente):** Acoplar a injeção do Resumo original (o conteúdo de `Temas/`) diretamente no prompt do `flashcard_builder`. A IA não dependerá apenas da frase curta do Caderno; ela usará o próprio parágrafo do Resumo Oficial para popular a "armadilha" e o "cenário" com lastro literário real e zero abstração.
+4. **Fim do Legado Excel (Autonomia):** Desenvolver o Widget super-rápido no Dashboard ("Logging Diário") com input obrigatório de caso base.
 
 ---
 

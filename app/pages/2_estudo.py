@@ -22,14 +22,19 @@ with tab1:
                 JOIN taxonomia_cronograma t ON q.tema_id = t.id
                 ORDER BY q.id DESC
             """, conn)
-        except Exception:
-            # Fallback seguro para esquemas cacheados (sem a coluna armadilha_prova)
-            df_erros = pd.read_sql_query("""
-                SELECT q.id, t.area, t.tema, q.titulo, q.elo_quebrado, q.caso, q.explicacao_correta, 'N/A' as armadilha_prova
-                FROM questoes_erros q
-                JOIN taxonomia_cronograma t ON q.tema_id = t.id
-                ORDER BY q.id DESC
-            """, conn)
+        except Exception as e1:
+            try:
+                # Fallback seguro para esquemas cacheados (sem a coluna armadilha_prova)
+                df_erros = pd.read_sql_query("""
+                    SELECT q.id, t.area, t.tema, q.titulo, q.elo_quebrado, q.caso, q.explicacao_correta, 'N/A' as armadilha_prova
+                    FROM questoes_erros q
+                    JOIN taxonomia_cronograma t ON q.tema_id = t.id
+                    ORDER BY q.id DESC
+                """, conn)
+            except Exception as e2:
+                st.error(f"⚠️ Erro Fatal no Banco de Dados da Nuvem.")
+                st.code(f"Erro original: {e1}\nFallback também falhou: {e2}")
+                df_erros = pd.DataFrame()
         conn.close()
         
         if not df_erros.empty:

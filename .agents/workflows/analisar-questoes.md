@@ -39,12 +39,12 @@ Seguir integralmente o protocolo de `Tools/comando de analise de questao.md` (Et
 ### 4. Atualizar o Resumo Clínico de Área (Temas/)
 - Localizar o arquivo `.md` do Tema em `Temas/{Área}/{Subespecialidade}/`.
 - Incorporar tanto os insights do estudo ativo quanto as armadilhas identificadas nas questões, no **local temático estrutural correto** — nunca solto no final.
-- **Integração pela Regra do Escudo (Benchmark MedHub):**
-  - As questões revelam lacunas clínicas. Sua inserção no resumo deve respeitar o estilo *Insuficiência Cardíaca* (direto/assertivo), ancorando-se na didática breve estilo *Sífilis*.
-  - A modificação ou ampliação para integrar o erro **nunca** pode apagar classificações base do resumo original (como escores AAST e tabelas fisiológicas).
-  - Destaque o erro estrutural com `🔴` e a taxa de cobrança com `⚠️`.
-  - **Linguagem:** 100% impessoal, acadêmica e diretiva. Exclua qualquer uso de ironia, metáforas, coloquialismos ou dramaticidade.
-- **Meta de tamanho e conservação:** Mantenha o formato refinado variando entre **200 e 250 linhas**, garantindo que toda linha justifique sua existência, mas que a teoria cirúrgica essencial seja preservada.
+- **Integração pela Regra do Escudo (Padrão-Ouro MedHub):**
+  - Use o resumo de `Trauma.md` como benchmark absoluto de estrutura e tom.
+  - As questões revelam lacunas clínicas. Sua inserção no resumo deve ser **específica e quantitativa**. Use scores (ex: AAST, ASA) e critérios oficiais.
+  - **Linguagem:** 100% impessoal, acadêmica e diretiva. Exclua qualquer uso de ironia, metáforas, coloquialismos ou dramaticidade (ex: "matar", "morrer", "encher balde").
+  - Mantenha a densidade: prefira explicar o mecanismo clínico em vez de apenas listar o fato ("fisiopatologia densa").
+  - **Conservação:** Mantenha o arquivo em torno de **200-300 linhas**, garantindo que toda linha justifique sua existência pela densidade técnica.
 - Não duplicar informação já presente no resumo. Refinar, não inflar. Mantenha os bullets curtos. Ser cirúrgico e tático. Tapar buracos mentais.
 
 ### 5. Responder ao usuário

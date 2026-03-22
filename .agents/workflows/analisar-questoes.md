@@ -39,12 +39,13 @@ Seguir integralmente o protocolo de `Tools/comando de analise de questao.md` (Et
 ### 4. Atualizar o Resumo Clínico de Área (Temas/)
 - Localizar o arquivo `.md` do Tema em `Temas/{Área}/{Subespecialidade}/`.
 - Incorporar tanto os insights do estudo ativo quanto as armadilhas identificadas nas questões, no **local temático estrutural correto** — nunca solto no final.
-- Princípio de **Abstração do Substrato (Benchmark 80/20)**:
-  - As questões erradas são o coração do sistema, pois elas revelam os **gaps (elos quebrados)** que baixarão a meta de 95% do usuário no IPUB. Essa inserção no resumo deve capturar ESSE SUBSTRATO para que o simulador/FSRS seja engatilhado no futuro.
-  - **80% Didática:** Ao incorporar a correção, preencha o buraco. Não jogue o gabarito seco. Crie uma linha ou sub-bullet explicando a lógica, ancorando o conhecimento solto ao tema-mãe.
-  - **20% Assertividade:** Ao expor a falha/gap, marque o alerta com `🔴` e a prevalência de cobrança com `⚠️`, fundindo esse insight ao texto como se ele sempre estivesse lá (evite "Na questão que errei hoje...", use apenas teoria bruta contextualizada).
-- Não duplicar informação já presente no resumo. Refinar, não inflar. Mantenha osBullets curtos para evitar paredes de texto.
-- Ser cirúrgico e tático. Tapar buracos mentais.
+- **Integração pela Regra do Escudo (Benchmark MedHub):**
+  - As questões revelam lacunas clínicas. Sua inserção no resumo deve respeitar o estilo *Insuficiência Cardíaca* (direto/assertivo), ancorando-se na didática breve estilo *Sífilis*.
+  - A modificação ou ampliação para integrar o erro **nunca** pode apagar classificações base do resumo original (como escores AAST e tabelas fisiológicas).
+  - Destaque o erro estrutural com `🔴` e a taxa de cobrança com `⚠️`.
+  - **Linguagem:** 100% impessoal, acadêmica e diretiva. Exclua qualquer uso de ironia, metáforas, coloquialismos ou dramaticidade.
+- **Meta de tamanho e conservação:** Mantenha o formato refinado variando entre **200 e 250 linhas**, garantindo que toda linha justifique sua existência, mas que a teoria cirúrgica essencial seja preservada.
+- Não duplicar informação já presente no resumo. Refinar, não inflar. Mantenha os bullets curtos. Ser cirúrgico e tático. Tapar buracos mentais.
 
 ### 5. Responder ao usuário
 Apresentar:

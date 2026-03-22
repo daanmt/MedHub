@@ -62,6 +62,8 @@ Ambiente de estudo para residência médica. Processa questões de prova, regist
 
 ## Últimas sessões
 
+**2026-03-22 | Antigravity (sessão 036):** **Consolidação de Arboviroses**. Criação de `Arboviroses.md` (Dengue, Chikungunya, Zika) focando no diagnóstico diferencial e armadilhas clássicas. Remoção automatizada dos PDFs-base (Zero PDF).
+**2026-03-21 | Antigravity (sessão 035):** **Reestruturação de Sífilis na Gestação**. Adição de seção de LCR, diagnóstico diferencial STORCH e ajustes em fluxogramas no resumo `[OBS] Sífilis na Gestação e Congênita.md`.
 **2026-03-20 | Antigravity (sessão 034):** **Refinamento de DM e Auditoria**. Análise de 2 questões de Diabetes (CAD e Manejo). Audit completo do resumo `Diabetes Mellitus - Complicações Agudas.md` com 6 correções técnicas (Na corrigido, insulina < 200, hipoglicemia noturna). Marca histórica de **100 erros** atingida no caderno e sincronizada no SQLite.
 **2026-03-20 | Antigravity (sessão 033):** **Consolidação de Diabetes Agudo**. Criação do resumo clínico `Diabetes Mellitus - Complicações Agudas.md` a partir de material do Estratégia MED. Cobertura completa de CAD (adulto/pediatria), EHH e Hipoglicemia. Seguida a política de "Zero PDF" com limpeza automática de arquivos temporários e deleção da apostila original.
 **2026-03-18 | Antigravity (sessão 032):** **Refinamento Avançado de Colo e Governança**. Revisão profunda do resumo `[GIN] Rastreamento Colo.md` com diretrizes 2025 e análise de 9 erros. Incluídos detalhes de coleta na gestação e seguimento pós-exérese por margens. Refatoração completa de tabelas para bullet points e proibição de referências explicitas a questões em resumos.

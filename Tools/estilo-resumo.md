@@ -29,18 +29,19 @@
 - **Tabelas** — em qualquer tamanho ou formato. Sempre converter para bullets hierárquicos. Sem exceções.
 - Fluxogramas ou algoritmos em ASCII (blocos ` ``` `) — converter para bullets hierárquicos com condicionais em texto (`→ se X:`, `→ se não:`)
 - Headers de metadata no topo (fonte, autor, ano, versão)
-- Linguagem motivacional ou didática ("Vamos lá!", "Caro aluno")
-- Emojis decorativos (apenas ⭐, ⚠️, 🔴 com função semântica)
-- **Referências a questões de prova dentro do texto** — nunca escrever "Foco do erro na Q1", "Q2 na prova", "Questão 3 abordou...", etc. O conteúdo aprendido com questões deve ser incorporado de forma natural ao tema, como se sempre tivesse feito parte do resumo. O resumo é um documento técnico de referência, não um caderno de erros.
+- **Linguagem Informal ou Coloquial** — PROIBIDO o uso de termos como " Vamos lá", "Dica de plantão", "Pulo do gato", "Se matar", "Vai morrer", "Encher balde furado", etc.
+- **Termos Não-Clínicos** — Evitar metáforas dramáticas ou gírias (ex: "letal", "bizarra", "engarrafa"). Use terminologia acadêmica (ex: "potencialmente fatal", "atípica", "congestão retrógrada").
+- **Referências a questões de prova dentro do texto** — nunca escrever "Foco do erro na Q1", "Q2 na prova", "Questão 3 abordou...", etc. O conteúdo aprendido com questões deve ser incorporado de forma natural ao tema, como se sempre tivesse feito parte do resumo.
 
 ---
 
-## Tom
+## Tom e Benchmark MedHub 80/20
 
-- Direto e técnico. O leitor é médico.
-- Frases curtas. Informação densa.
-- Priorizar o raciocínio clínico sobre a memorização pura.
-- Toda informação deve servir para resolver questões de prova.
+- **80% Assertividade:** Destacar definições, critérios (ATLS, GINA, GOLD), classificações e condutas imediatas com objetividade absoluta.
+- **20% Didática Clínica:** O resumo deve explicar o *porquê* clínico/fisiopatológico de forma densa. Não é apenas "fazer X", é "fazer X porque a fisiopatologia Y gera o fenômeno Z".
+- **Linguagem:** 100% profissional, objetiva e acadêmica. O leitor é um médico ou estudante em nível avançado.
+- Frases curtas e informação densa.
+- Toda informação deve servir para resolver questões, mas através da compreensão, não apenas memorização.
 
 ---
 

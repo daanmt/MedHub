@@ -1,27 +1,19 @@
-# MedHub Handoff — Session 035
+# MedHub Handoff — Session 036
 
-**Data**: 2026-03-21
+**Data**: 2026-03-22
 **Agente**: Antigravity
 
 ## Status Atual
-- **Conteúdo**: Resumo `[OBS] Sífilis na Gestação e Congênita.md` (GO) reestruturado e expandido com:
-    - Bloco sobre interpretação do **LCR/líquor** (critérios de neurossífilis, parâmetros, por que glicose não conta).
-    - Tabela de diagnóstico diferencial **STORCH** (sinais-chave por agente).
-    - Fluxograma de conduta (NTT) reescrito com lógica mais clara.
-    - Critério "adequadamente tratada" corrigido: **INÍCIO** ≥ 30 dias, não término.
-    - Nova armadilha sobre os 30 dias (a mais clássica da sífilis congênita).
-- **Banco de Dados**: 1 nova questão inserida no SQLite via `insert_questao.py` (ID: 189) — GO, Sífilis Congênita.
-- **Workflows**: `analisar-questoes.md` e `criar-resumo.md` refinados para suportar abordagem ativa de estudo (insights durante o estudo + meta de ~300 linhas).
+- **Conteúdo**: Resumo clínico de `Arboviroses.md` (Dengue, Chikungunya, Zika) criado e enriquecido na pasta de Infectologia. Trazendo diagnóstico etiológico, classificação de risco da OMS, diferenças terapêuticas e fisiológicas e principais armadilhas de prova (como tempo de PCR na urina para Zika).
+- **Workflows**: Seguido workflow "criar-resumo", que limpou os PDFs base e os temporários através do script python.
 
 ## Últimas Ações
-- Input do usuário: anotações de estudo ativo + 1 questão errada (mãe "inadequadamente tratada" por <30 dias).
-- Reescrita completa do resumo de Sífilis integrando todos os insights.
-- Refinamento dos dois workflows principais para refletir os novos princípios metodológicos.
+- Input do usuário indicou o material de Arboviroses e os arquivos de escopo.
+- Extração limpa, criação de resumo clínico e finalização de sessão (Zero PDF aplicado). 
 
 ## Próximos Passos
-1. Estudar as **STORCH** em detalhe e expandir individualmente (usuário sinalizou intenção).
-2. Continuar a cadeia de GO: próximos temas do pré-natal.
-3. Fase 2 do Roadmap: conversão de entradas do caderno em flashcards FSRS.
+1. Continuar a cadeia de Clínica Médica / Infectologia caso surjam mais apostilas.
+2. Explorar os temas de GO (STORCH) sinalizados na Sessão 035 ou avançar na Fase 2 do Roadmap (conversão em flashcards FSRS).
 
 ---
 *Assinado: Antigravity*

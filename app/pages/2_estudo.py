@@ -24,13 +24,17 @@ with tab1:
             """, conn)
         except Exception as e1:
             try:
-                # Fallback seguro para esquemas cacheados (sem a coluna armadilha_prova)
+                # Fallback ultra-seguro para esquemas estruturais desconhecidos do Cloud
                 df_erros = pd.read_sql_query("""
-                    SELECT q.id, t.area, t.tema, q.titulo, q.elo_quebrado, q.caso, q.explicacao_correta, 'N/A' as armadilha_prova
+                    SELECT q.*, t.area, t.tema 
                     FROM questoes_erros q
                     JOIN taxonomia_cronograma t ON q.tema_id = t.id
                     ORDER BY q.id DESC
                 """, conn)
+                # Garante que a UI não quebre se colunas antigas faltarem
+                for col in ['titulo', 'elo_quebrado', 'caso', 'explicacao_correta', 'armadilha_prova']:
+                    if col not in df_erros.columns:
+                        df_erros[col] = 'N/A'
             except Exception as e2:
                 st.error(f"⚠️ Erro Fatal no Banco de Dados da Nuvem.")
                 st.code(f"Erro original: {e1}\nFallback também falhou: {e2}")

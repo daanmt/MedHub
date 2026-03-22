@@ -38,12 +38,16 @@ Ler `Tools/estilo-resumo.md` — OBRIGATÓRIO. Regras críticas:
 
 ### 5. Redigir o resumo
 - Fonte primária: apenas os PDFs extraídos
-- Seguir `Tools/estilo-resumo.md` (bullets, ⭐, ⚠️, 🔴)
-- Princípios de assertividade — dois focos simultâneos:
-  1. **Pontos-chave da matéria** — ampliam compreensão e raciocínio clínico
-  2. **Pontos-chave de prova** — aspectos prevalentes em questões de residência
-- **Meta de tamanho:** manter o resumo até ~300 linhas. Ser cirúrgico — cada linha deve ganhar seu lugar. Flexibilidade permitida, mas justificada.
-- Incluir seção final "Armadilhas de Prova"
+- Seguir `Tools/estilo-resumo.md` e o novo **Benchmark MedHub 80/20**.
+- Princípio do **Benchmark MedHub (80% Didática / 20% Assertividade)**:
+  - Todo o texto deve focar em gerar **Substrato Cognitivo** (matéria-prima de alta voltagem para os flashcards e RAG).
+  - **80% Paciência Didática:** "Pegue o leitor pela mão". Explique o encadeamento e o *porquê* fisiopato/clínico (Ex: "A IC Direita não crepita o pulmão porque o sangue engarrafa antes de chegar lá").
+  - **20% Assertividade Direta:** Destacar letalmente os gaps/cascas de banana que o aluno tropeça.
+- **Formatação de Ouro:**
+  - NUNCA crie parágrafos gigantes ("paredes de texto"). Textos longos devem ser fatiados em **bullets curtos e lógicos** e encadeados.
+  - Emojis de âncora visual: ⭐ (Conceito Fundador) | ⚠️ (Padrão Repetitivo de Prova / Atenção) | 🔴 (Armadilha Letal / Exceção bizarra).
+  - A Seção "Armadilhas de Prova" no final de todo arquivo é sagrada e deve compilar os maiores `🔴` do tema.
+- **Meta de tamanho:** flexibilidade, mas com densidade extrema. Cada palavra deve tapar um buraco intelectual.
 
 ### 6. Salvar
 Salvar em `Temas/{Área}/{Subespecialidade}/{Nome do Tema}.md`

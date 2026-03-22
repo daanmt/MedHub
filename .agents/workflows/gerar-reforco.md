@@ -14,6 +14,7 @@ Use a tool interna do MCP do Obsidian (ou leia diretamente os arquivos na pasta 
 ### 3. Síntese do Tutor
 Analise o resumo clínico lido. Crie de 1 a 3 Flashcards super-diretos e focados na fraqueza. O flashcard deve focar apenas no que faz o candidato errar.
 - **Formato:** Elo quebrado (Pergunta) + Raciocínio Mestre (Resposta).
+- **Tom:** A resposta do flashcard deve utilizar a terminologia formal do Padrão-Ouro (sem gírias de plantão).
 
 ### 4. Materializar no Motor FSRS
 Use a interface de linha de comando para persistir seus novos flashcards dentro do banco de dados oficial FSRS (`ipub.db`). Para cada card, rode:

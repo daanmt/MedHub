@@ -37,11 +37,11 @@
 
 ## Tom e Benchmark MedHub 80/20
 
-- **80% Assertividade:** Destacar definições, critérios (ATLS, GINA, GOLD), classificações e condutas imediatas com objetividade absoluta.
-- **20% Didática Clínica:** O resumo deve explicar o *porquê* clínico/fisiopatológico de forma densa. Não é apenas "fazer X", é "fazer X porque a fisiopatologia Y gera o fenômeno Z".
-- **Linguagem:** 100% profissional, objetiva e acadêmica. O leitor é um médico ou estudante em nível avançado.
-- Frases curtas e informação densa.
-- Toda informação deve servir para resolver questões, mas através da compreensão, não apenas memorização.
+- **80% Assertividade:** Foco cirúrgico no que é cobrado em prova: condutas do ATLS 10, scores AAST, critérios diagnósticos, tabelas de choque e diretrizes oficiais.
+- **20% Didática Clínica (O Padrão-Ouro):** O resumo deve explicar o *porquê* clínico de forma densa. Não é apenas "fazer X", é "fazer X porque o mecanismo Y impede Z". Use terminologia técnica acadêmica em vez de simplificações exageradas.
+- **Regra da Especificidade Técnica:** Nunca use descrições genéricas se houver uma classificação oficial ou critério quantitativo disponível (ex: use AAST Grau IV, não apenas "lesão renal grave").
+- **Linguagem:** 100% profissional e acadêmica. Proibição absoluta de gírias de plantão (ex: "encher balde", "vai morrer", "nuance de prova"). O leitor é um colega médico buscando excelência técnica.
+- **Frases:** Curtas, densas e afirmativas.
 
 ---
 

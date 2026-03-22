@@ -19,5 +19,12 @@ Para garantir que a próxima sessão comece sem perda de informação:
 3.  **Registrar Sessão**: Criar novo arquivo em `history/session_NNN.md` seguindo o template.
 4.  **Git (se disponível)**: `git add .` (Garantindo que `ipub.db` embarque), `git commit -m "sessao NNN: [resumo]"`, `git push`.
 
+## 4. MENTALIDADE GOLD STANDARD (Qualidade MedHub)
+Toda interação deve refletir o nível de excelência dos resumos padrão-ouro (`Trauma.md`, `Insuficiência Cardíaca.md`):
+
+1.  **Benchmark 80/20:** 80% de assertividade objetiva (condutas, scores) + 20% de didática clínica formal (fisiopatologia densa).
+2.  **Linguagem Acadêmica:** Proibição absoluta de coloquialismos, jargões de "sobrevivência de plantão" ou termos dramáticos (ex: "vai morrer", "encher balde").
+3.  **Alta Especificidade:** Priorize critérios objetivos, quantitativos, definições; em vez de descrições genéricas.
+
 ---
 *Assinado: Antigravity*

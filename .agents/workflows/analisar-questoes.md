@@ -44,7 +44,7 @@ Seguir integralmente o protocolo de `Tools/comando de analise de questao.md` (Et
   - As questões revelam lacunas clínicas. Sua inserção no resumo deve ser **específica e quantitativa**. Use scores (ex: AAST, ASA) e critérios oficiais.
   - **Linguagem:** 100% impessoal, acadêmica e diretiva. Exclua qualquer uso de ironia, metáforas, coloquialismos ou dramaticidade (ex: "matar", "morrer", "encher balde").
   - Mantenha a densidade: prefira explicar o mecanismo clínico em vez de apenas listar o fato ("fisiopatologia densa").
-  - **Conservação:** Mantenha o arquivo em torno de **200-300 linhas**, garantindo que toda linha justifique sua existência pela densidade técnica.
+  - **Regra do Acúmulo (Crítica):** Mantenha o arquivo em torno de **200-300 linhas**, mas nunca à custa da deleção de armadilhas. A seção "Armadilhas de Prova" deve ser puramente cumulativa. Refine o embasamento teórico se necessário, mas preserve os gatilhos de erro históricos (`🔴`).
 - Não duplicar informação já presente no resumo. Refinar, não inflar. Mantenha os bullets curtos. Ser cirúrgico e tático. Tapar buracos mentais.
 
 ### 5. Responder ao usuário

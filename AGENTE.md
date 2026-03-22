@@ -25,6 +25,7 @@ Toda interação deve refletir o nível de excelência dos resumos padrão-ouro 
 1.  **Benchmark 80/20:** 80% de assertividade objetiva (condutas, scores) + 20% de didática clínica formal (fisiopatologia densa).
 2.  **Linguagem Acadêmica:** Proibição absoluta de coloquialismos, jargões de "sobrevivência de plantão" ou termos dramáticos (ex: "vai morrer", "encher balde").
 3.  **Alta Especificidade:** Priorize critérios objetivos, quantitativos, definições; em vez de descrições genéricas.
+4.  **Acúmulo de Conhecimento:** Jamais substitua ou remova insights prévios, especialmente na seção "Armadilhas de Prova". Novos dados devem ser **acumulados** aos existentes para evitar regressão de conhecimento.
 
 ---
 *Assinado: Antigravity*

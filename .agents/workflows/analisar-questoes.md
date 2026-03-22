@@ -39,12 +39,12 @@ Seguir integralmente o protocolo de `Tools/comando de analise de questao.md` (Et
 ### 4. Atualizar o Resumo Clínico de Área (Temas/)
 - Localizar o arquivo `.md` do Tema em `Temas/{Área}/{Subespecialidade}/`.
 - Incorporar tanto os insights do estudo ativo quanto as armadilhas identificadas nas questões, no **local temático estrutural correto** — nunca solto no final.
-- Princípio de assertividade: dois focos simultâneos:
-  1. **Pontos-chave da matéria** — ampliam compreensão e raciocínio clínico.
-  2. **Pontos-chave de prova** — aspectos mais prevalentes em questões.
-- Usar marcadores `⚠️ Padrão de prova:` e `🔴` nas anotações cruciais.
-- Não duplicar informação já presente no resumo. Refinar, não inflar.
-- **Meta de tamanho:** manter o resumo até ~300 linhas. Ser cirúrgico — cada linha deve ganhar seu lugar.
+- Princípio de **Abstração do Substrato (Benchmark 80/20)**:
+  - As questões erradas são o coração do sistema, pois elas revelam os **gaps (elos quebrados)** que baixarão a meta de 95% do usuário no IPUB. Essa inserção no resumo deve capturar ESSE SUBSTRATO para que o simulador/FSRS seja engatilhado no futuro.
+  - **80% Didática:** Ao incorporar a correção, preencha o buraco. Não jogue o gabarito seco. Crie uma linha ou sub-bullet explicando a lógica, ancorando o conhecimento solto ao tema-mãe.
+  - **20% Assertividade:** Ao expor a falha/gap, marque o alerta com `🔴` e a prevalência de cobrança com `⚠️`, fundindo esse insight ao texto como se ele sempre estivesse lá (evite "Na questão que errei hoje...", use apenas teoria bruta contextualizada).
+- Não duplicar informação já presente no resumo. Refinar, não inflar. Mantenha osBullets curtos para evitar paredes de texto.
+- Ser cirúrgico e tático. Tapar buracos mentais.
 
 ### 5. Responder ao usuário
 Apresentar:

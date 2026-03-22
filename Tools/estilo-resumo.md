@@ -47,7 +47,7 @@
 
 ## Seção Final Obrigatória
 
-Todo resumo DEVE terminar com:
+Todo resumo DEVE terminar com a seção abaixo. **IMPORTANTE:** Esta seção é **CUMULATIVA**. Jamais remova armadilhas antigas para dar lugar a novas; novos insights devem ser anexados aos existentes para garantir que o resumo evolua sem perder histórico.
 
 ```
 ## N. Armadilhas de Prova

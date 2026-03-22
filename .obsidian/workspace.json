@@ -185,6 +185,7 @@
   },
   "active": "ec5741a543f1deb9",
   "lastOpenFiles": [
+    "Tools/adjust_15.py",
     "app/pages/4_simulados.py",
     "Tools/check_schema.py",
     "Tools/fix_db_duplicates.py",
@@ -195,7 +196,6 @@
     "Tools/db_doctor.py",
     "Cronograma de Reta Final.xlsx - Plan1 (1).csv",
     "Dashboard EMED 2026 - Quadro Geral.csv",
-    "Tools/absorver_sheets_v2.py",
     "Anatomia do MedHub (Infraestrutura).md",
     "history/legacy/Tools_Archive/IPUB_Streamlit_Plano.md",
     "history/legacy/Tools_Archive/IPUB_Reforma_v3.md",

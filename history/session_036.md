@@ -1,4 +1,4 @@
-# Session 036 — Criação do Resumo Clínico de Arboviroses
+# Session 036 — Arboviroses e Blindagem Gold Standard
 **Data:** 2026-03-22
 **Ferramenta:** Antigravity
 **Continuidade:** Sessão 035
@@ -6,20 +6,25 @@
 ---
 
 ## O que foi feito
-- Extração de texto do PDF sobre Arboviroses (Dengue, Chikungunya e Zika).
-- Criação e formatação do resumo clínico de Arboviroses.
-- Refatoração profunda do resumo de **Trauma.md** para eliminar coloquialismos e atingir o Benchmark 80/20.
-- Atualização de `Tools/estilo-resumo.md` e `.agents/workflows/criar-resumo.md` com proibições estritas de tom informal.
-- Limpeza dos arquivos temporários e do PDF de origem.
+- Extração de texto e criação do resumo de **Arboviroses.md**.
+- Refinamento profundo de **Trauma.md** (Padrão-Ouro): atingida a alta especificidade clínica (AAST, DC, Nuances) com tom acadêmico formal (Benchmark 80/20).
+- **Blindagem do Ambiente:** Atualização de `AGENTE.md`, `Tools/estilo-resumo.md` e workflows (`analisar-questoes`, `criar-resumo`, `gerar-reforco`) para impor o nível de qualidade MedHub Gold Standard.
+- **Análise de Questões:** Integração de 19 questões de Arboviroses (89% acerto) no banco de dados e no resumo clínico (reestadiamento, reações cruzadas, Febre Amarela).
+- Sincronização final do RAG e Git.
 
 ## Artefatos criados/modificados
 - `Temas/Clínica Médica/Infectologia/Arboviroses.md`
-- `HANDOFF.md`
-- `ESTADO.md`
+- `Temas/Cirurgia/Trauma.md`
+- `AGENTE.md`, `Tools/estilo-resumo.md`
+- `.agents/workflows/` (Todos os arquivos)
+- `HANDOFF.md`, `task.md`
 
 ## Decisões tomadas
-- Formatação seguiu restritamente as regras de bullet points e marcadores visuais do `estilo-resumo.md`.
-- Abordagem direcionada em consolidar as diferenças-chaves para provas (ex.: janela de PCR zika em urina estendida até 15 dias, tratamento específico em fases).
+- Estabelecido que **Especificidade Técnica > Concisão** quando houver critérios oficiais (AAST, Critérios de LPD, etc).
+- Proibição absoluta de jargões de "sobrevivência de plantão" para manter autoridade técnica do material.
 
-## Próximos passos (se houver)
-- Continuar a cadeia de Clínica Médica / Infectologia ou avançar para a consolidação de flashcards FSRS (Fase 2 do Roadmap).
+## Próximos passos
+- Utilizar a nova estrutura blindada para os próximos temas de Infectologia ou Cirurgia.
+
+---
+*Assinado: Antigravity*

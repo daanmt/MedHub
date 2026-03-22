@@ -56,8 +56,12 @@ Sinais precoces precursores da disfunção sistêmica vascular.
 **Gestão de Hidratação por Grupos Clínicos:**
 - **Grupo A (Azul):** Baixo risco. Ambulatório. Hidratação via oral estipulada em **60 mL/kg/dia** (sendo 1/3 salina artificial e 2/3 líquidos gerais).
 - **Grupo B (Verde):** Sangramento de pele (petéquias ou prova do laço teste-positivo), pacientes com <2 anos ou >65 anos, gestantes, portadores de DPOC, DM, HAS, ou hepatopatia. Ambulatório com **hemograma obrigatório**. Avaliação dependente do erltrograma para alta vs. reposicionamento.
-- **Grupo C (Amarelo):** Sinais de Alarme vigentes. Internação fixa de enfermaria. Início com **10 mL/kg** administrados intravenosamente por período de **1 hora**.
-- **Grupo D (Vermelho):** Ocorrência de choque. Internamento UTI. Ataque agressivo com ringer ou SF a **20 mL/kg** infundidos em apenas **20 minutos**.
+- **Grupo C (Amarelo):** Presença de Sinais de Alarme. Exige internação em leito de enfermaria.
+  - **Manejo:** Reposição volêmica intravenosa com **10 mL/kg na primeira hora**.
+  - **Monitoramento:** Reavaliação clínica horária e laboratorial (hematócrito) após a reposição.
+- **Grupo D (Vermelho):** Presença de Choque, hemorragia grave ou disfunção orgânica. Exige internamento em UTI.
+  - **Manejo:** Expansão rápida com cristaloides (SF 0,9% ou RL) a **20 mL/kg em até 20 minutos**. Pode ser repetido até 3 vezes se persistência do choque.
+  - **⚠️ Reestadiamento Dinâmico:** Se um paciente em observação (Grupo A, B ou C) apresentar **piora súbita da dor abdominal, vômitos persistentes ou agitação psicomotora**, deve ser imediatamente reestagiado para **Grupo D** e submetido à expansão rápida.
 
 ⚠️ **Fármacos contraindicados em qualquer categoria de Dengue:**
 - Anti-inflamatórios Não Esteroidais (AINEs), Ácido Acetilsalicílico (AAS), e Corticosteroides.
@@ -98,8 +102,8 @@ Sinais precoces precursores da disfunção sistêmica vascular.
 - Sintomas oculomucosos associados com o estabelecimento de **conjuntivite não purulenta** em forte constância.
 
 ### 3.2 Diagnóstico Adjuvante e Sequelas Notáveis
-- **Intervalo Diagnóstico Físico (Zika PCR):** Além do soro sanguíneo, o traçado genético patogênico em teste urinário amplia imensuravelmente o potencial captador estendendo seu encontro laboratorial na **urina até 15º dia de detecção**.
-- Condição de reatividade cruzada fortíssima no exame sorológico após dias de cura pela similaridade molecular intra-família viral.
+- **Intervalo Diagnóstico (Zika PCR):** Detecção viável no soro sanguíneo (até 5º dia) e, de forma prolongada, na **urina (até o 15º dia)**.
+- **⚠️ Reação Cruzada:** Existe uma forte reatividade cruzada sorológica (IgM/IgG) entre os vírus **Dengue e Zika** devido à similaridade molecular (Flavivírus). O vírus Chikungunya (Alphavírus) geralmente não apresenta essa interferência.
 
 **Trato de Complicações Graves:**
 - Pediátrico / Fetal: Comprometimento de fechamento neurológico culminando em microcefalia permanente.
@@ -107,10 +111,26 @@ Sinais precoces precursores da disfunção sistêmica vascular.
 
 ---
 
-## 4. Armadilhas de Prova
+## 4. Febre Amarela
 
-- 🔴 O choque ocasionado pela via patogênica da Dengue decorre inteiramente da perfusão endotelial disfuncional com instabilidade hidrolítica (choque hipovolêmico por extravasamento), sendo um equívoco conceitual primário apontar a diástase sanguínea / hemorragia aparente manifesta das gengivas como a etiologia etiopatogênica do volume estático de pré-choque.
-- 🔴 O diagnóstico diferencial perante quadro clínico clássico estabelece que poliartralgias incapacitantes referenciam clinicamente o vírus Chikungunya; exantema de altíssimo fluxo pruriginoso reativo, hiperemia da conjuntiva com normotermia aponta patognomonicamente ao Zika; prostração sistêmica hemoconcentrada dita o rigor de evolução orgânica severa da Dengue.
-- 🔴 A aplicabilidade clínica precoce prescrita de anti-inflamatórios (AINEs) restringe-se integralmente na Dengue e na Fase Aguda primária da Chikungunya, contudo os AINEs são a terapêutica basilar padrão de eleição mandatória da Fase Subcrônica/Subaguda persistente do paciente de Chikungunya pós o 14º dia infeccioso evolutivo febril inativo.
-- 🔴 A durabilidade imunoreativa da biometria via RT-PCR frente pesquisa laboratorial da infecção por Zika apresenta uma viabilidade singular em vias do trato urinário alcançando amplos quinze limiares dias (15 dias).
-- 🔴 Uma verificação isolada com desfecho positivo para Prova de Rumpel-Leede (Prova do Laço) retém automaticamente a dispensação primária imediata e isola obrigatoriamente um posicionamento estrito ao Grupo Clínico B de risco hemorrágico de leito, constando do dever imediato imperativo da colheita do parâmetro fisiológico reticulocitário hemograma sem dispensa alta.
+### 4.1 Epidemiologia e Fatores de Risco
+- **Fatores de Gravidade:** Extremos de idade (< 2 anos e > 65 anos), gestantes e **Povos Originários (etnia)** são considerados grupos de maior vulnerabilidade.
+- **Transmissão:** Ciclo silvestre (vetores *Haemagogus* e *Sabethes*) e ciclo urbano (*Aedes aegypti* - sem registros no Brasil desde 1942).
+
+### 4.2 Imunização (Vacina 17DD)
+- **Tipo:** Vírus vivo atenuado.
+- **Contraindicações:** Imunossuprimidos graves e gestantes (de regra). 
+  - **Nuance:** Em situações de surto com alto risco de exposição, a vacinação de gestantes é permitida.
+  - **Doença Renal Crônica:** A DRC isolada, sem imunossupressão associada, **não** é contraindicação para a vacina.
+- **Larvicidas:** O uso de larvicidas (ex: piriproxifem) em reservatórios de água **não** possui relação causal comprovada com teratogenicidade ou microcefalia.
+
+---
+
+## 5. Armadilhas de Prova
+
+- 🔴 **Choque na Dengue:** A etiologia é o extravasamento plasmático por disfunção endotelial (choque hipovolêmico distributivo), e não a perda sanguínea por hemorragias de mucosas.
+- 🔴 **Diagnóstico Diferencial:** Poliartralgia incapacitante/edema → **Chikungunya**. Exantema intensamente pruriginoso + Conjuntivite não purulenta + Normotermia → **Zika**. Prostração + Hemoconcentração + Sinais de Alarme → **Dengue**.
+- 🔴 **Manejo C vs D:** Paciente que apresenta dor abdominal e agitação sob hidratação deve ser manejado como **Grupo D** (expansão 20ml/kg em 20 min), independentemente da classificação inicial.
+- 🔴 **Reação Cruzada:** Ocorre predominantemente entre Dengue e Zika (ambos Flavivírus).
+- 🔴 **Vacina Febre Amarela:** Não é contraindicada em pacientes com Doença Renal Crônica estável. Gestantes podem ser vacinadas em cenários de alto risco epidemiológico.
+- 🔴 **Monitoramento Grupo B:** Exige obrigatoriamente a realização de hemograma para avaliação do hematócrito antes da decisão de alta ou internação.

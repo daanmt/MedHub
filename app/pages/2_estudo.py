@@ -15,12 +15,21 @@ with tab1:
     
     if os.path.exists(DB_PATH):
         conn = sqlite3.connect(DB_PATH)
-        df_erros = pd.read_sql_query("""
-            SELECT q.id, t.area, t.tema, q.titulo, q.elo_quebrado, q.caso, q.explicacao_correta, q.armadilha_prova
-            FROM questoes_erros q
-            JOIN taxonomia_cronograma t ON q.tema_id = t.id
-            ORDER BY q.id DESC
-        """, conn)
+        try:
+            df_erros = pd.read_sql_query("""
+                SELECT q.id, t.area, t.tema, q.titulo, q.elo_quebrado, q.caso, q.explicacao_correta, q.armadilha_prova
+                FROM questoes_erros q
+                JOIN taxonomia_cronograma t ON q.tema_id = t.id
+                ORDER BY q.id DESC
+            """, conn)
+        except Exception:
+            # Fallback seguro para esquemas cacheados (sem a coluna armadilha_prova)
+            df_erros = pd.read_sql_query("""
+                SELECT q.id, t.area, t.tema, q.titulo, q.elo_quebrado, q.caso, q.explicacao_correta, 'N/A' as armadilha_prova
+                FROM questoes_erros q
+                JOIN taxonomia_cronograma t ON q.tema_id = t.id
+                ORDER BY q.id DESC
+            """, conn)
         conn.close()
         
         if not df_erros.empty:

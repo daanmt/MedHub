@@ -1,16 +1,14 @@
 # HANDOFF - MedHub
 
 ## Ponto de Parada
-- **Sessão 039 Concluída:** Refinamento de Otorrinolaringologia finalizado após análise de 19 questões (13/19).
-- **Resumos Atualizados:**
-    - `[ORL] Neoplasias, Congênitas e Traqueostomia.md`: Refinado com insights de traqueostomia e cistos.
-    - `Hanseníase e Síndromes Verrucosas.md`: Expandido anteriormente (Sessão 038).
+- **Sessão 040 Concluída:** Análise de 24 questões de Dermatologia finalizada. 8 erros registrados e resumo refinado.
+- **Governança:** Regra do Acúmulo de Armadilhas aplicada aos resumos de Otorrino e Dermatologia.
 
 ## Próximos Passos
-1. **Dermatologia:** Analisar possíveis erros/questões sobre Hanseníase e PLECT (tema recém-criado).
-2. **Pediatria/Ginecologia:** Retomar cronograma de áreas com menor cobertura (ver Dashboard no Streamlit).
-3. **FSRS:** Sincronizar os novos erros da Sessão 039 com os flashcards do DB.
+1. **Pediatria:** O usuário está com o arquivo `Emergências Pediátricas.md` aberto. Sugerir revisão de questões deste tema ou avançar no cronograma.
+2. **Dashboard:** Verificar se o volume de erros (ID > 200 agora) gerou novos padrões de revisão no FSRS.
+3. **RAG:** Manter a indexação `obsidian-notes-rag` ativa para buscas transversais nos novos resumos.
 
-## Notas de Governança
-- Política "Zero PDF" mantida rigorosamente.
-- Renomeação de arquivos para padrão `[ÁREA] Tema.md` em progresso pelo usuário.
+## Notas Técnicas
+- **Zero PDF:** Todos os materiais de dermato já foram consolidados.
+- **SQLite:** Banco de dados `ipub.db` atualizado com 164 entradas de erros.

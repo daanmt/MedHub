@@ -1,3 +1,11 @@
+---
+type: knowledge
+area: Clínica Médica
+especialidade: Infectologia
+status: active
+aliases: [Dengue, Zika, Chikungunya]
+---
+
 # Arboviroses
 
 ## 1. Dengue

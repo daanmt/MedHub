@@ -1,4 +1,7 @@
 ---
+type: workflow
+layer: agents
+status: canonical
 description: Registrar sessão no history ao final do trabalho
 ---
 

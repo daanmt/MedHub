@@ -1,3 +1,9 @@
+---
+type: knowledge
+area: Preventiva
+status: active
+---
+
 # Medidas de Saúde Coletiva
 
 > Prevalência em prova: Indicadores de morbidade (~50%) · Mortalidade (~33%) · Demográficos (~7%)

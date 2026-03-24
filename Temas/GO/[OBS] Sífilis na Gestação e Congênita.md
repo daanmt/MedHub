@@ -1,3 +1,11 @@
+---
+type: knowledge
+area: GO
+especialidade: Obstetrícia
+status: active
+aliases: [Sífilis Gestacional]
+---
+
 # Sífilis na Gestação e Congênita
 
 ## 1. Sífilis na Gestação: Conceitos e Diagnóstico

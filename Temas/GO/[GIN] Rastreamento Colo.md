@@ -1,3 +1,11 @@
+---
+type: knowledge
+area: GO
+especialidade: Ginecologia
+status: active
+aliases: [CA Colo, Papanicolau]
+---
+
 # Rastreamento do Câncer de Colo do Útero (2016 + 2025)
 
 ## 1. Bases e Prevenção Primária

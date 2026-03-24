@@ -1,3 +1,10 @@
+---
+type: knowledge
+area: GO
+especialidade: Obstetrícia
+status: active
+---
+
 # Sangramento da Primeira Metade da Gestação
 
 ⭐ **Três grandes causas:** Abortamento | Gestação Ectópica | Doença Trofoblástica Gestacional

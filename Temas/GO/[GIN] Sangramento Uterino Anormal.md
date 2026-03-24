@@ -1,3 +1,11 @@
+---
+type: knowledge
+area: GO
+especialidade: Ginecologia
+status: active
+aliases: [SUA]
+---
+
 # Sangramento Uterino Anormal (SUA)
 
 > Fonte: Apostila Estratégia MED — Prof. Alexandre Melitto (2024)

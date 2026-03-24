@@ -1,3 +1,10 @@
+---
+type: knowledge
+area: GO
+especialidade: Ginecologia
+status: active
+---
+
 # Doenças Benignas da Mama
 
 ## 1. Anatomia e Propedêutica

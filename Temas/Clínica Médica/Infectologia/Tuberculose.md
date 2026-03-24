@@ -1,3 +1,11 @@
+---
+type: knowledge
+area: Clínica Médica
+especialidade: Infectologia
+status: active
+aliases: [TB]
+---
+
 # Tuberculose
 
 ## 1. Aspectos Gerais e Transmissão

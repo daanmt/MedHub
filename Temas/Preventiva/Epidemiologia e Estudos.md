@@ -1,3 +1,9 @@
+---
+type: knowledge
+area: Preventiva
+status: active
+---
+
 # Epidemiologia e Estudos
 
 ---

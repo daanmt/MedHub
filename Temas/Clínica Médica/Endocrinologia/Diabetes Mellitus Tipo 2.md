@@ -1,3 +1,11 @@
+---
+type: knowledge
+area: Clínica Médica
+especialidade: Endocrinologia
+status: active
+aliases: [DM2, DM]
+---
+
 # Diabetes Mellitus Tipo 2 (DM2)
 
 ⭐ DM2 = **~90%** de todos os casos de DM | **Principal causa de morte**: doenças cardiovasculares

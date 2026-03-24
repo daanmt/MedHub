@@ -1,4 +1,7 @@
 ---
+type: workflow
+layer: agents
+status: canonical
 description: Analisar questões de prova erradas e atualizar caderno e resumos
 ---
 

@@ -1,3 +1,11 @@
+---
+type: knowledge
+area: GO
+especialidade: Ginecologia
+status: active
+aliases: [Climatério, TH]
+---
+
 # Climatério e Terapia Hormonal
 
 > Fonte: Apostila Estratégia MED — Prof. Carlos Eduardo Martins (2024)

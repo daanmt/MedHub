@@ -1,4 +1,7 @@
 ---
+type: workflow
+layer: agents
+status: canonical
 description: Criar resumo clínico a partir de PDF de apostila
 ---
 

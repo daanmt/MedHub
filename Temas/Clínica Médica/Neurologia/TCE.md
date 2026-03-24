@@ -1,3 +1,11 @@
+---
+type: knowledge
+area: Clínica Médica
+especialidade: Neurologia
+status: active
+aliases: [TCE]
+---
+
 # Traumatismo Cranioencefálico (TCE)
 
 ## 1. O Conceito Base: Primária vs Secundária

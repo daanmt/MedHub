@@ -1,3 +1,11 @@
+---
+type: knowledge
+area: Clínica Médica
+especialidade: Infectologia
+status: active
+aliases: [HIV, AIDS]
+---
+
 # HIV / AIDS
 
 ## 1. Aspectos Gerais

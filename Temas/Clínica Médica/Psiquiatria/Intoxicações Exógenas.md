@@ -1,3 +1,10 @@
+---
+type: knowledge
+area: Clínica Médica
+especialidade: Psiquiatria
+status: active
+---
+
 # Intoxicações Exógenas
 
 ## 0. Fundamentos do Sistema Colinérgico ⭐

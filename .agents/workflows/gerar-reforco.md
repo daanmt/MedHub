@@ -1,4 +1,7 @@
 ---
+type: workflow
+layer: agents
+status: canonical
 description: Gerar flashcards dinâmicos via MCP baseados nos piores tópicos do Cronograma
 ---
 

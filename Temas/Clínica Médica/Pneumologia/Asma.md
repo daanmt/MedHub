@@ -1,3 +1,11 @@
+---
+type: knowledge
+area: Clínica Médica
+especialidade: Pneumologia
+status: active
+aliases: [Asma]
+---
+
 # Asma Brônquica
 
 ---

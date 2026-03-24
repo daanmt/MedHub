@@ -1,3 +1,10 @@
+---
+type: onboarding
+layer: root
+status: canonical
+relates_to: [AGENTE, ESTADO, KNOWLEDGE_ARCHITECTURE]
+---
+
 # CLAUDE.md — Agente de Estudo para Residência Médica
 
 ## INICIO OBRIGATÓRIO DE SESSÃO
@@ -11,6 +18,7 @@
 | Criar resumo de tema | `.agents/workflows/criar-resumo.md` |
 | Analisar questões erradas | `.agents/workflows/analisar-questoes.md` |
 | Registrar sessão no history | `.agents/workflows/registrar-sessao.md` |
+| Gerar flashcards de reforço | `.agents/workflows/gerar-reforco.md` |
 
 ## Arquivos críticos em Tools/
 
@@ -19,4 +27,4 @@
 | `Tools/estilo-resumo.md` | Padrão de formatação **obrigatório** para resumos |
 | `Tools/comando de analise de questao.md` | Protocolo de análise de questão (9 etapas) |
 | `Tools/extract_pdfs.py` | Script de extração de PDFs (CLI genérica) |
-| `caderno_erros.md` | Banco de erros acumulado |
+| `Tools/insert_questao.py` | CLI: insere erro no `ipub.db` (SSOT de erros) |

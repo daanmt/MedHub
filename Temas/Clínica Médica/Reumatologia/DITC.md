@@ -1,3 +1,11 @@
+---
+type: knowledge
+area: Clínica Médica
+especialidade: Reumatologia
+status: active
+aliases: [DITC]
+---
+
 # Doenças Inflamatórias do Tecido Conjuntivo (DITC) - Parte I
 
 ## 1. Esclerose Sistêmica (ES) ⭐⭐⭐

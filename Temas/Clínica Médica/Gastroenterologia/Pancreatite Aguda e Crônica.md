@@ -1,3 +1,10 @@
+---
+type: knowledge
+area: Clínica Médica
+especialidade: Gastroenterologia
+status: active
+---
+
 # Pancreatite Aguda e Crônica
 
 A pancreatite é uma das condições mais prevalentes na gastroenterologia, sendo cobrada tanto em Clínica Médica quanto em Cirurgia.

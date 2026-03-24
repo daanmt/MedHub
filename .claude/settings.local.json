@@ -6,7 +6,17 @@
       "Bash(find C:UsersdaanmMedHub -name 04_resumos.py -o -name *resumos*)",
       "Bash(find C:UsersdaanmMedHubapppages -type f -name *.py)",
       "Bash(python -c \"import sys; [print\\(l.encode\\(''''ascii'''',''''replace''''\\).decode\\(\\)\\) for l in sys.stdin]\")",
-      "Bash(python:*)"
+      "Bash(python:*)",
+      "Bash(ls -lh C:/Users/daanm/MedHub/history/*.md)",
+      "Bash(find /c/Users/daanm/MedHub -name *flashcard* -o -name *MOC* -o -name *index* -o -name *hub*)",
+      "Bash(wc -l /c/Users/daanm/MedHub/Temas/*/*.md /c/Users/daanm/MedHub/Temas/*/*/*.md)",
+      "Bash(xargs ls:*)",
+      "Bash(find C:/Users/daanm/MedHub/app -type f -name *.py)",
+      "Bash(find C:Usersdaanm.claude -iname *rag* -o -iname *embed* -o -iname *index*)",
+      "Bash(find C:Usersdaanm.claude -type f -name *.json)",
+      "Bash(find C:UsersdaanmMedHub -maxdepth 2 -type f -name *.json)",
+      "Bash(find C:Usersdaanm.claude -type f -name *.json -o -name *.toml -o -name *.yaml -o -name *.yml)",
+      "Bash(find C:Usersdaanm.claudeprofiles -name settings.json -o -name *.toml)"
     ]
   }
 }

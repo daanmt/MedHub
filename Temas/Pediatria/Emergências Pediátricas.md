@@ -1,3 +1,10 @@
+---
+type: knowledge
+area: Pediatria
+status: active
+aliases: [PCR Pediátrico, IOT Pediátrica]
+---
+
 # Emergências Pediátricas — Resumo Consolidado
 
 ## 1. Arritmias Pediátricas

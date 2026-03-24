@@ -1,3 +1,11 @@
+---
+type: knowledge
+area: Clínica Médica
+especialidade: Cardiologia
+status: active
+aliases: [IC]
+---
+
 # Insuficiência Cardíaca (IC)
 
 ## 1. Definição e Epidemiologia

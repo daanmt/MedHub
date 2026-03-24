@@ -1,3 +1,11 @@
+---
+type: knowledge
+area: GO
+especialidade: Ginecologia
+status: active
+aliases: [CA Mama]
+---
+
 # Câncer de Mama
 
 > Fonte: Apostila Estratégia MED — Prof. Alexandre Melitto (2024)

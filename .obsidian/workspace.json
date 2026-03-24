@@ -180,6 +180,12 @@
   },
   "active": "1d493aa2754f27c2",
   "lastOpenFiles": [
+    "AGENTE.md",
+    "history/session_044.md",
+    "Temas/GO/Úlceras Genitais.md",
+    "Temas/GO/Úlcera.pdf",
+    "Temas/GO/[GIN] Ulceras Genitais.md",
+    "KNOWLEDGE_ARCHITECTURE.md",
     "history/session_043.md",
     "Sem título.base",
     "Tools/check_flashcards.py",
@@ -190,7 +196,6 @@
     "Tools/fix_areas.py",
     "app/pages/3_biblioteca.py",
     "app/pages/2_estudo.py",
-    "app/pages/1_dashboard.py",
     "Anatomia do MedHub (Infraestrutura).md",
     "history/legacy/Tools_Archive/IPUB_Streamlit_Plano.md",
     "history/legacy/Tools_Archive/IPUB_Reforma_v3.md",
@@ -198,7 +203,6 @@
     "history/legacy/progresso.md",
     "history/legacy/caderno_erros.md",
     "progresso.md",
-    "Mapeamento de Skills e Workflows.md",
-    "AGENTE.md"
+    "Mapeamento de Skills e Workflows.md"
   ]
 }

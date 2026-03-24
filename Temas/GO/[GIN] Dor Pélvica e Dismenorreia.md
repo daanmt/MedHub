@@ -1,3 +1,10 @@
+---
+type: knowledge
+area: GO
+especialidade: Ginecologia
+status: active
+---
+
 # Dor Pélvica Crônica e Dismenorreia
 
 > Fonte: Apostila Estratégia MED — Prof. Alexandre Melitto (2024)

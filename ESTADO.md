@@ -6,7 +6,7 @@ relates_to: AGENTE, HANDOFF, roadmap
 ---
 
 # ESTADO — MedHub (Preparação para Residência Médica)
-*Atualizado: 2026-03-23 (sessão 043) | Ferramenta: Antigravity*
+*Atualizado: 2026-03-24 (sessão 044) | Ferramenta: Antigravity*
 
 ---
 
@@ -22,8 +22,8 @@ Workspace state-driven de estudos médicos. Processa questões de prova, registr
 > **SINGLE SOURCE OF TRUTH (SSOT):** O banco SQLite (`ipub.db`) é a fonte de verdade para erros, métricas e estado FSRS. O `caderno_erros.md` textual foi arquivado em `history/legacy/`. O conteúdo clínico lapidado mora exclusivamente em `Temas/`. Regra "Siamese Twins": **o erro vai pro DB, a lição vai pro resumo (Temas/)**.
 
 - **200+ erros estruturados** no SQLite (`ipub.db`) — consulte o Dashboard para número exato.
-- **35+ resumos clínicos** consolidados em `Temas/`.
-- **42 sessões** de estudo catalogadas em `history/`.
+- **36+ resumos clínicos** consolidados em `Temas/`.
+- **44 sessões** de estudo catalogadas em `history/`.
 
 ---
 
@@ -65,6 +65,7 @@ Workspace state-driven de estudos médicos. Processa questões de prova, registr
 
 ## Últimas sessões
 
+**2026-03-24 | Antigravity (sessão 044):** **Ginecologia (Úlceras Genitais)**. Criação do resumo clínico `Úlceras Genitais.md` e análise de 3 questões críticas (Herpes gestacional, Fluxograma > 4 sem). 3 erros registrados no SQLite. Limpeza "Zero PDF" executada.
 **2026-03-23 | Antigravity (sessão 043):** **Auditoria arquitetural completa (inside job)**. Diagnóstico e correção de todos os documentos centrais. Alinhamento de ESTADO.md, README.md, HANDOFF.md, roadmap.md, workflows. Adição de wikilinks e frontmatter para Obsidian. Limpeza de referências obsoletas.
 **2026-03-23 | Antigravity (sessão 042):** **Vigilância em Saúde**. Criação do resumo clínico `Vigilância em Saúde.md` a partir de PDFs originais. Foco em PNVS 2018, Saúde Única e competências ANVISA. Limpeza "Zero PDF" executada.
 **2026-03-23 | Antigravity (sessão 041):** **Análise de Erros (Pediatria)**. Análise de 46 questões (42/46). Refinamento do resumo de Emergências Pediátricas (IOT, Pneumotórax, Adrenalina precoce). 4 erros registrados no SQLite (IDs 211-217).

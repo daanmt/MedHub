@@ -1,3 +1,9 @@
+---
+type: knowledge
+area: Preventiva
+status: active
+---
+
 # Vigilância em Saúde
 
 ## 1. Definição e Política Nacional (PNVS)

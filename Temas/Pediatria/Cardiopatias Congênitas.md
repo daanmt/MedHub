@@ -1,3 +1,9 @@
+---
+type: knowledge
+area: Pediatria
+status: active
+---
+
 # Cardiopatias Congênitas — Resumo Consolidado
 
 ## 1. Circulação Fetal → Transição Neonatal

@@ -1,3 +1,9 @@
+---
+type: spec
+layer: tools
+status: canonical
+---
+
 # Estilo MedHub — Spec de Formatação para Resumos
 
 > Este documento define o padrão de formatação para todos os resumos em `Temas/`.

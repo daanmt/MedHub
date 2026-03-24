@@ -1,3 +1,11 @@
+---
+type: knowledge
+area: Cirurgia
+especialidade: ORL
+status: active
+aliases: [ORL]
+---
+
 # Neoplasias, Congênitas e Traqueostomia
 
 ## 1. Doenças Congênitas Cervicofaciais

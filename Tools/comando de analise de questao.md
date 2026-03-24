@@ -1,3 +1,9 @@
+---
+type: spec
+layer: tools
+status: canonical
+---
+
 # Comando de Analise de Questao
 
 > **INSTRUCAO**: Consulte este arquivo SEMPRE antes de analisar qualquer questao de prova.

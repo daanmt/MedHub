@@ -1,3 +1,11 @@
+---
+type: knowledge
+area: Clínica Médica
+especialidade: Gastroenterologia
+status: active
+aliases: [DUP]
+---
+
 # Doença Ulcerosa Péptica (DUP)
 
 A DUP é uma lesão que ultrapassa a muscular da mucosa, decorrente do desequilíbrio entre fatores agressivos e protetores da mucosa gástrica ou duodenal.

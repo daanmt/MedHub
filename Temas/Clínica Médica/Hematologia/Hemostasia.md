@@ -1,3 +1,10 @@
+---
+type: knowledge
+area: Clínica Médica
+especialidade: Hematologia
+status: active
+---
+
 # Hemostasia
 
 ## 1. Hemostasia — Visão Geral

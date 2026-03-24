@@ -1,3 +1,11 @@
+---
+type: knowledge
+area: Clínica Médica
+especialidade: Nefrologia
+status: active
+aliases: [LRA]
+---
+
 # Lesão Renal Aguda
 
 ## 1. Definição e Classificação (KDIGO 2012) ⭐

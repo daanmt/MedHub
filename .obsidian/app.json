@@ -1,1 +1,12 @@
-{}
+{
+  "userIgnoreFilters": [
+    "medhub-ui-refresh-main",
+    "history/legacy",
+    "Fichas",
+    "Memorex",
+    "data",
+    "app",
+    ".venv",
+    ".claude"
+  ]
+}

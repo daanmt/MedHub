@@ -1,3 +1,11 @@
+---
+type: knowledge
+area: Clínica Médica
+especialidade: Dermatologia
+status: active
+aliases: [Hanseníase, PLECT]
+---
+
 # Hanseníase e Síndromes Verrucosas
 
 ## 1. Hanseníase 🦠

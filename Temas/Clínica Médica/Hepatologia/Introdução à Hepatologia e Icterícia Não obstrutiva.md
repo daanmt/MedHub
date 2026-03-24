@@ -1,3 +1,11 @@
+---
+type: knowledge
+area: Clínica Médica
+especialidade: Hepatologia
+status: active
+aliases: [Hepatologia, Icterícia]
+---
+
 # Introdução à Hepatologia e Icterícia Não Obstrutiva
 
 ---

@@ -1,3 +1,10 @@
+---
+type: knowledge
+area: Clínica Médica
+especialidade: Psiquiatria
+status: active
+---
+
 # Dependência Química
 
 ## 1. Conceitos Fundamentais

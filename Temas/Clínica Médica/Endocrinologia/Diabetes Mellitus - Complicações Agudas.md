@@ -1,3 +1,11 @@
+---
+type: knowledge
+area: Clínica Médica
+especialidade: Endocrinologia
+status: active
+aliases: [DM Agudo, CAD, HHS]
+---
+
 # Diabetes Mellitus — Complicações Agudas
 
 ---

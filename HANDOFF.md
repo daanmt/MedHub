@@ -9,23 +9,19 @@ relates_to: ESTADO, AGENTE
 
 ## Ponto de Parada
 
-- **Sessão 043 Concluída:** Auditoria arquitetural completa (inside job).
+- **Sessão 044 Concluída:** Criação do resumo de Úlceras Genitais e alinhamento com a nova arquitetura de conhecimento.
 - **O que foi feito:**
-  - `README.md` reescrito: estrutura reflete o repositório real, camadas nomeadas, arquivos legados removidos da estrutura.
-  - `ESTADO.md` atualizado: header corrigido (sessão 034→043), intro consistente com SSOT=ipub.db, stats atualizadas, próximos passos alinhados com Fase 4 do roadmap.
-  - `HANDOFF.md` corrigido: duplicata textual removida.
-  - `roadmap.md` corrigido: "Próximos Passos Imediatos" atualizado (meta 100 erros já atingida, FSRS implementado).
-  - `.agents/workflows/criar-resumo.md` corrigido: caminho hardcoded `c:\Users\daanm\IPUB\` substituído por referência relativa `Tools/`.
-  - `Tools/estilo-resumo.md` corrigido: referência obsoleta ao `caderno_erros.md` atualizada.
-  - Frontmatter Obsidian adicionado em todos os docs centrais.
-  - Wikilinks deliberados adicionados nos docs centrais.
-  - `history/session_043.md` criado com registro desta sessão.
+  - `Úlceras Genitais.md` criado do zero a partir de PDF da apostila.
+  - Arquitetura de conhecimento aplicada: remoção do prefixo `[GIN]`, inclusão de frontmatter canônico.
+  - "Zero PDF" executado (deletado PDF original e temporários).
+  - Padrão 80/20 e Spec de Estilo MedHub rigorosamente seguidos.
+  - Seção "Armadilhas de Prova" consolidada.
 
 ## Próximos Passos
 
-1. **Preventiva:** Usuário irá assistir à aula e trazer questões erradas para análise e acréscimo de "Armadilhas de Prova" no resumo `Vigilância em Saúde.md`.
-2. **Pediatria:** Avançar para "Cuidados Neonatais" ou "Cardiopatias Congênitas".
-3. **Fase 4 do Roadmap:** Iniciar planejamento do Gerador de Simulados Personalizados.
+1. **Ginecologia:** Avançar para "DIP e Cervicites" ou revisar questões de "Úlceras Genitais" para alimentar as armadilhas.
+2. **Preventiva:** Retomar o workflow de análise de questões em `Vigilância em Saúde.md`.
+3. **Fase 4 do Roadmap:** Gerador de Simulados Personalizados.
 
 ## Notas Técnicas
 

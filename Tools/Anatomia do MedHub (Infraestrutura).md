@@ -1,3 +1,10 @@
+---
+type: architecture-reference
+layer: tools
+status: canonical
+relates_to: ESTADO, AGENTE, roadmap
+---
+
 # Anatomia do MedHub (Infraestrutura Oficial)
 
 *Gerado pós-auditoria em 21/03/2026.*

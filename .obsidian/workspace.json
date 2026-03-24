@@ -11,10 +11,10 @@
             "id": "1d493aa2754f27c2",
             "type": "leaf",
             "state": {
-              "type": "empty",
+              "type": "graph",
               "state": {},
-              "icon": "lucide-file",
-              "title": "Nova aba"
+              "icon": "lucide-git-fork",
+              "title": "Visualização em gráfico"
             }
           }
         ]
@@ -178,8 +178,9 @@
       "bases:Criar nova base": false
     }
   },
-  "active": "fd343507086354c8",
+  "active": "1d493aa2754f27c2",
   "lastOpenFiles": [
+    "history/session_043.md",
     "Sem título.base",
     "Tools/check_flashcards.py",
     "Tools/adjust_15.py",
@@ -190,7 +191,6 @@
     "app/pages/3_biblioteca.py",
     "app/pages/2_estudo.py",
     "app/pages/1_dashboard.py",
-    "Tools/db_doctor.py",
     "Anatomia do MedHub (Infraestrutura).md",
     "history/legacy/Tools_Archive/IPUB_Streamlit_Plano.md",
     "history/legacy/Tools_Archive/IPUB_Reforma_v3.md",

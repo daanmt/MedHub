@@ -17,7 +17,7 @@ Seguir o **Boot Sequence** definido em `AGENTE.md`.
 
 ### 1. Extrair texto do(s) PDF(s)
 ```
-python c:\Users\daanm\IPUB\Tools\extract_pdfs.py "caminho\completo\Tema.pdf" "caminho\completo\Tema2.pdf"
+python Tools/extract_pdfs.py "caminho/completo/Tema.pdf" "caminho/completo/Tema2.pdf"
 ```
 - Saída: arquivos `.txt` temporários na pasta temp do sistema (`%TEMP%`)
 - O script imprime no stdout o path de cada arquivo gerado — usar esses paths no passo 2
@@ -52,7 +52,7 @@ Salvar em `Temas/{Área}/{Subespecialidade}/{Nome do Tema}.md`
 ### 7. Limpeza automática (pós-resumo)
 ```
 # Deletar PDFs da pasta do tema e os arquivos temporários:
-python c:\Users\daanm\IPUB\Tools\extract_pdfs.py --delete-pdfs "pasta\do\tema\" --delete-temps "path\tmp1.txt" "path\tmp2.txt"
+python Tools/extract_pdfs.py --delete-pdfs "pasta/do/tema/" --delete-temps "path/tmp1.txt" "path/tmp2.txt"
 ```
 - `--delete-pdfs <pasta>`: remove todos os `.pdf`/`.PDF` da pasta indicada
 - `--delete-temps <paths...>`: remove os arquivos `.txt` temporários gerados no passo 1

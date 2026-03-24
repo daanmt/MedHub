@@ -57,7 +57,7 @@ Todo resumo DEVE terminar com a seção abaixo. **IMPORTANTE:** Esta seção é 
 ...
 ```
 
-Esta seção consolida todos os `⚠️ Padrão de prova` espalhados pelo resumo + armadilhas adicionais do `caderno_erros.md`.
+Esta seção consolida todos os `⚠️ Padrão de prova` espalhados pelo resumo + armadilhas identificadas na análise de questões (registradas via `Tools/insert_questao.py` no `ipub.db`).
 
 ---
 

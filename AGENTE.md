@@ -1,3 +1,10 @@
+---
+type: bootstrap-protocol
+layer: root
+status: canonical
+relates_to: ESTADO, HANDOFF, roadmap
+---
+
 # AGENTE.md — Protocolo de Continuidade MedHub
 
 ## 1. PRINCÍPIO CENTRAL
@@ -6,8 +13,8 @@
 ## 2. BOOT SEQUENCE (Obrigatório ao iniciar)
 Toda nova sessão DEVE seguir esta ordem de leitura para bootstrap de contexto:
 
-1.  **ESTADO.md**: Visão canônica do projeto (o que é, mapa de arquivos, marcos).
-2.  **HANDOFF.md**: Onde paramos? (tarefa atual, obstáculos, próximo passo imediato).
+1.  **[[ESTADO]]**: Visão canônica do projeto (o que é, mapa de arquivos, marcos).
+2.  **[[HANDOFF]]**: Onde paramos? (tarefa atual, obstáculos, próximo passo imediato).
 3.  **Workflows relevantes**: Se for analisar questões, leia `.agents/workflows/analisar-questoes.md`. Se for criar resumo, leia `.agents/workflows/criar-resumo.md`.
 4.  **Último log**: `history/session_NNN.md` mais recente.
 

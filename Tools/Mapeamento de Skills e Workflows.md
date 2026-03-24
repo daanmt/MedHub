@@ -1,3 +1,10 @@
+---
+type: skills-reference
+layer: tools
+status: canonical
+relates_to: AGENTE, ESTADO
+---
+
 # Mapeamento de Skills e Workflows do MedHub
 
 *Data da auditoria: 2026-03-21 | Gerado por: Antigravity via RAG/MCP*

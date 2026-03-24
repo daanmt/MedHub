@@ -1,14 +1,34 @@
-# HANDOFF - MedHub
+---
+type: handoff
+layer: root
+status: operational
+relates_to: ESTADO, AGENTE
+---
+
+# HANDOFF — MedHub
 
 ## Ponto de Parada
-- **Sessão 041 Concluída:** Análise de 4 erros críticos de Emergências Pediátricas. Resumo refinado com foco em IOT, Pneumotórax e ritmos de parada.
-- **Governança:** Regra do Acúmulo de Armadilhas aplicada com sucesso.
-- **SQLite:** Banco de dados `ipub.db` atualizado com 4 novas entradas (IDs 211-217). Total estimado: 168 erros.
+
+- **Sessão 043 Concluída:** Auditoria arquitetural completa (inside job).
+- **O que foi feito:**
+  - `README.md` reescrito: estrutura reflete o repositório real, camadas nomeadas, arquivos legados removidos da estrutura.
+  - `ESTADO.md` atualizado: header corrigido (sessão 034→043), intro consistente com SSOT=ipub.db, stats atualizadas, próximos passos alinhados com Fase 4 do roadmap.
+  - `HANDOFF.md` corrigido: duplicata textual removida.
+  - `roadmap.md` corrigido: "Próximos Passos Imediatos" atualizado (meta 100 erros já atingida, FSRS implementado).
+  - `.agents/workflows/criar-resumo.md` corrigido: caminho hardcoded `c:\Users\daanm\IPUB\` substituído por referência relativa `Tools/`.
+  - `Tools/estilo-resumo.md` corrigido: referência obsoleta ao `caderno_erros.md` atualizada.
+  - Frontmatter Obsidian adicionado em todos os docs centrais.
+  - Wikilinks deliberados adicionados nos docs centrais.
+  - `history/session_043.md` criado com registro desta sessão.
 
 ## Próximos Passos
-1. **Pediatria:** Avançar para "Cuidados Neonatais" ou "Cardiopatias Congênitas".
-2. **Dashboard:** Verificar as métricas de acerto em Pediatria após esta sessão (42/46 = 91%).
+
+1. **Preventiva:** Usuário irá assistir à aula e trazer questões erradas para análise e acréscimo de "Armadilhas de Prova" no resumo `Vigilância em Saúde.md`.
+2. **Pediatria:** Avançar para "Cuidados Neonatais" ou "Cardiopatias Congênitas".
+3. **Fase 4 do Roadmap:** Iniciar planejamento do Gerador de Simulados Personalizados.
 
 ## Notas Técnicas
-- **Zero PDF:** Consolidação concluída sem arquivos temporários.
-- **RAG:** Indexação `obsidian-notes-rag index` disparada.
+
+- **Zero PDF:** PDFs deletados da pasta `Temas/Preventiva/` na sessão anterior.
+- **RAG:** Indexação recomendada após o commit desta sessão.
+- **ipub.db:** 200+ erros no banco (número exato via Dashboard).

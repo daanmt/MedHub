@@ -1,3 +1,10 @@
+---
+type: roadmap
+layer: root
+status: canonical
+relates_to: ESTADO, HANDOFF
+---
+
 # Product Roadmap: Sistema de Estudos MedHub
 
 > **Visão de Produto:** Um ecossistema de aprendizado ativo para residência médica que transforma passividade (ler) em hiper-retenção (testes, espaçamento e análise metacognitiva de erros). 
@@ -62,5 +69,8 @@
 
 ## 📝 Próximos Passos Imediatos (Diretrizes de Execução)
 
-1. **Escalabilidade:** Expandir a base de erros para romper o marco de 100 entradas reais no caderno.
-2. **Setup do FSRS Core:** Importar lógica de pesos matemáticos para o backend para agendar os flashcards de forma real.
+*Marco de 100 erros atingido na sessão 034. FSRS implementado na sessão 026 (Fase 3 concluída).*
+
+1. **Gerador de Simulados:** Implementar gerador de simulados personalizados baseado nas fraquezas do cronograma (Fase 4).
+2. **Relatório Metacognitivo:** Insights automáticos sobre padrões de erro recorrentes.
+3. **Continuar expandindo Temas/**: Áreas com menor cobertura de questões são prioritárias.

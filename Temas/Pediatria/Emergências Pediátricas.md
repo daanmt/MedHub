@@ -51,20 +51,22 @@ Diferente do adulto, a PCR pediátrica é geralmente secundária à **hipóxia p
 - **B - Ventilações:** 1 ventilação a cada 2-3 segundos (20-30/min) se houver apenas parada respiratória com pulso.
 
 ### 2.2 Ritmos de Parada e Desfibrilação ⭐
-- **Chocáveis (FV e TVSP):**
-  - **Conduta:** Desfibrilação imediata (Não sincronizada).
+- **Ritmos Chocáveis (FV e TVSP):**
+  - **Conduta:** Desfibrilação imediata (Não sincronizada). 
+  - 🔴 **Diferencial:** Cardioversão é para arritmias COM pulso (sincronizada). PCR = Desfibrilar.
   - **Carga:** 2 J/kg (1º choque) → 4 J/kg (2º choque) → Máx 10 J/kg.
   - **Drogas:** Adrenalina (a cada 3-5min) e Amiodarona (se refratário após 3º choque).
-- **Não Chocáveis (Assistolia e AESP):**
-  - Ritmos mais comuns na pediatria. **Epinefrina imediata.**
+- **Ritmos Não Chocáveis (Assistolia e AESP):**
+  - Ritmos mais comuns na pediatria. **Epinefrina imediata (1º ciclo).**
   - **Protocolo Linha Reta (CaGaDe):** **C**abos, **G**anho e **D**erivações para confirmar assistolia.
 
 ### 2.3 PALS
-- **IOT:** Após intubação, as compressões são **contínuas** (100-120/min) e ventilação é **assíncrona** (1 vent a cada 2-3s).
+- **IOT:** Principal benefício hemodinâmico na PCR é permitir compressões **contínuas** (sem pausar 15:2), mantendo a pressão de perfusão coronariana.
+- **Protocolo V.A. Avançada:** Após intubação, as compressões são **contínuas** (100-120/min) e ventilação é **assíncrona** (1 vent a cada 2-3s ou 20-30/min).
 - **DOPE (Deterioração súbita pós-IOT):**
   - **D**eslocamento do tubo.
   - **O**bstrução (secreção/sangue).
-  - **P**neumotórax (ausculta assimétrica).
+  - **P**neumotórax (ausculta assimétrica súbita + dessaturação). ⚠️ **Asmático Grave:** Padrão de prova para pneumotórax hipertensivo pós-IOT/Ventilação.
   - **E**quipamento (falha de O2/ventilador).
 - **IO:** Preferido se falha em 90s/3 tentativas de acesso venoso em emergência.
   - **Locais:** Tíbia proximal (mais comum), tíbia distal, fêmur distal ou esterno.
@@ -124,10 +126,16 @@ Mecanismo de trauma grave: Queda > 1m (< 2 anos) ou > 1,5m (> 2 anos); ejetado; 
 - **Caso 2 (TSVP Adulto):** Estável, FC 180. **Erro:** Adenosina direto. **Correto:** Manobra vagal primeiro por ser não invasiva.
 - **Caso 3 (Bradicardia Grave):** Lactente, FC < 60 mesmo após O2 e Ventilação. **Erro:** Atropina. **Correto:** Epinefrina (Adrenalina) 1:10.000. Atropina é para BAV ou tônus vagal.
 - **Caso 4 (Taquicardia Sinusal):** Febre, FC 200, **ONDA P VISÍVEL**. **Erro:** Manobra vagal. **Correto:** Antitérmico (tratar a causa).
+- **Caso 5 (PCR TVSP):** Criança 5 anos, 20kg. **Erro:** Marcar cardioversão. **Correto:** Desfibrilação com 40J (2 J/kg).
+- **Caso 6 (AESP na Asma):** PCR após IOT em asmático. **Erro:** Ajustar ventilação. **Correto:** Punção de alívio por provável Pneumotórax.
+- **Caso 7 (IOT na PCR):** Benefício da IOT na PCR. **Erro:** Melhorar oxigenação. **Correto:** Permitir compressões contínuas sem interrupções.
 
 ## 7. Armadilhas de Prova ⭐
 
 - 🔴 **TSV vs Taquicardia Sinusal:** Se houver onda P visível e FC variável com a febre/choro, o diagnóstico é **Sinusal**. Não fazer adenosina nem manobras vagais. Tratar a febre (**Antitérmico**).
+- 🔴 **Cardioversão vs Desfibrilação:** Se o ritmo é de **PCR**, a descarga é NÃO sincronizada (Desfibrilação). Cardioversão é exclusiva para taquiarritmias com pulso e instabilidade hemodinâmica.
+- 🔴 **Assistolia na VM:** Paciente já intubado não segue a relação 15:2. A RCP é contínua e a ventilação é assíncrona. A adrenalina é SEMPRE precoce (Ciclo 1) em ritmos não chocáveis.
+- 🔴 **Ausculta assimétrica pós-IOT:** Se for logo após a intubação em paciente eletivo, pensar em **IOT Seletiva**. Se for em paciente instável/asmático grave sob pressão positiva, pensar em **Pneumotórax Hipertensivo** e tratar imediatamente.
 - 🔴 **TSV Estável:** A sequência é sempre **Não Invasiva (Vagal) → Farmacológica (Adenosina)**. Deixar Cardioversão Sincronizada para casos de **Instabilidade** (Choque, má perfusão).
 - 🔴 **Bradicardia Grave (< 60 bpm):** Se persistir mesmo após via aérea e oxigênio adequados, a droga de escolha é a **Adrenalina**. Manter compressões se má perfusão persistir. Atropina NÃO é a primeira escolha na PCR/Bradicardia hipóxica pediátrica.
 - 🔴 **Dose da Adrenalina IV/IO:** Use a solução **1:10.000** (diluída). A solução 1:1.000 é reservada para via traqueal.

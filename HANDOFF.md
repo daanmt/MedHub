@@ -1,14 +1,14 @@
 # HANDOFF - MedHub
 
 ## Ponto de Parada
-- **Sessão 040 Concluída:** Análise de 24 questões de Dermatologia finalizada. 8 erros registrados e resumo refinado.
-- **Governança:** Regra do Acúmulo de Armadilhas aplicada aos resumos de Otorrino e Dermatologia.
+- **Sessão 041 Concluída:** Análise de 4 erros críticos de Emergências Pediátricas. Resumo refinado com foco em IOT, Pneumotórax e ritmos de parada.
+- **Governança:** Regra do Acúmulo de Armadilhas aplicada com sucesso.
+- **SQLite:** Banco de dados `ipub.db` atualizado com 4 novas entradas (IDs 211-217). Total estimado: 168 erros.
 
 ## Próximos Passos
-1. **Pediatria:** O usuário está com o arquivo `Emergências Pediátricas.md` aberto. Sugerir revisão de questões deste tema ou avançar no cronograma.
-2. **Dashboard:** Verificar se o volume de erros (ID > 200 agora) gerou novos padrões de revisão no FSRS.
-3. **RAG:** Manter a indexação `obsidian-notes-rag` ativa para buscas transversais nos novos resumos.
+1. **Pediatria:** Avançar para "Cuidados Neonatais" ou "Cardiopatias Congênitas".
+2. **Dashboard:** Verificar as métricas de acerto em Pediatria após esta sessão (42/46 = 91%).
 
 ## Notas Técnicas
-- **Zero PDF:** Todos os materiais de dermato já foram consolidados.
-- **SQLite:** Banco de dados `ipub.db` atualizado com 164 entradas de erros.
+- **Zero PDF:** Consolidação concluída sem arquivos temporários.
+- **RAG:** Indexação `obsidian-notes-rag index` disparada.

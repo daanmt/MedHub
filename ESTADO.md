@@ -6,7 +6,7 @@ relates_to: AGENTE, HANDOFF, roadmap
 ---
 
 # ESTADO — MedHub (Preparação para Residência Médica)
-*Atualizado: 2026-03-25 (sessão 046) | Ferramenta: Claude Code*
+*Atualizado: 2026-03-25 (sessão 047) | Ferramenta: Antigravity*
 
 ---
 
@@ -66,6 +66,7 @@ Workspace state-driven de estudos médicos. Processa questões de prova, registr
 
 ## Últimas sessões
 
+**2026-03-25 | Antigravity (sessão 047):** **Leitura de produto completa.** Diagnóstico, visão de produto e roadmap evolutivo (7 linhas) elaborados a partir do estado real do repositório. Aplicação documental: `roadmap.md` reescrito (de backlog para direção de produto), `README.md` com parágrafo de visão, `ESTADO.md` alinhado ao novo roadmap.
 **2026-03-25 | Claude Code (sessão 046):** **Memory v1 (LangGraph + LangMem + SQLiteMemoryStore)**. Implementação completa da camada de memória cross-session: `app/memory/` (store, checkpointer, schemas, tools, manager, inspect), `Tools/test_memory.py` (4/4 smoke tests), `MEMORY_ARCHITECTURE.md`. Atualização de AGENTE.md (boot step 5), `registrar-sessao.md` (passo 5 consolidação), `KNOWLEDGE_ARCHITECTURE.md` (seção 9), `requirements.txt`.
 **2026-03-24 | Antigravity (sessão 045):** **Sífilis na Gestação e Congênita**. Análise de questão sobre RN de mãe mal tratada com VDRL reagente. Refinamento de fluxograma NTT e inclusão de armadilhas de reinfecção/parceiro. Registro no SQLite (ipub.db).
 **2026-03-24 | Antigravity (sessão 044):** **Ginecologia (Úlceras Genitais)**. Criação do resumo clínico `Úlceras Genitais.md` e análise de 3 questões críticas (Herpes gestacional, Fluxograma > 4 sem). 3 erros registrados no SQLite. Limpeza "Zero PDF" executada.
@@ -90,11 +91,13 @@ Workspace state-driven de estudos médicos. Processa questões de prova, registr
 
 ## Próximos passos
 
-Alinhado com [[roadmap]] Fase 4:
+Ver [[roadmap]] — Linhas Evolutivas.
 
-1. **Gerador de Simulados Personalizados:** Questões focadas nas fraquezas (Weakness-based testing).
-2. **Relatórios de Desempenho Metacognitivo:** Insights automáticos sobre padrões de erro.
-3. Continuar alimentando `Temas/` nas áreas com menor cobertura de questões.
+Prioridade imediata (Linha 3 → Linha 4):
+1. **Pipeline RAG inverso:** Injetar conteúdo de `Temas/` no prompt de geração de flashcard (eliminar atrofia semântica).
+2. **Gerador de Simulados:** Selecionar questões por área/tema com menor taxa de acerto no banco.
+3. **Memory v1 em produção:** Rodar `consolidate_session()` ao fechar próxima sessão clínica real.
+4. Continuar expandindo `Temas/` nas áreas com menor cobertura de questões.
 
 ---
 

@@ -16,7 +16,25 @@
       "Bash(find C:Usersdaanm.claude -type f -name *.json)",
       "Bash(find C:UsersdaanmMedHub -maxdepth 2 -type f -name *.json)",
       "Bash(find C:Usersdaanm.claude -type f -name *.json -o -name *.toml -o -name *.yaml -o -name *.yml)",
-      "Bash(find C:Usersdaanm.claudeprofiles -name settings.json -o -name *.toml)"
+      "Bash(find C:Usersdaanm.claudeprofiles -name settings.json -o -name *.toml)",
+      "WebFetch(domain:langchain-ai.github.io)",
+      "Bash(pip list:*)",
+      "WebFetch(domain:docs.langchain.com)",
+      "Bash(sqlite3:*)",
+      "WebSearch",
+      "WebFetch(domain:reference.langchain.com)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:pypi.org)",
+      "WebFetch(domain:blog.langchain.com)",
+      "WebFetch(domain:python.langchain.com)",
+      "Bash(pip install:*)",
+      "Bash(PYTHONIOENCODING=utf-8 python Tools/test_memory.py 2>&1)",
+      "Bash(PYTHONIOENCODING=utf-8 python app/memory/inspect.py --context 2>&1)",
+      "Bash(PYTHONIOENCODING=utf-8 python -m app.memory.inspect --context 2>&1)",
+      "Bash(PYTHONIOENCODING=utf-8 python -m app.memory.inspect --stats 2>&1)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)"
     ]
   }
 }

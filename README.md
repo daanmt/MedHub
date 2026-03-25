@@ -6,7 +6,18 @@ status: canonical
 
 # MedHub — Ambiente de Estudo para Residência Médica
 
-Workspace state-driven de estudos médicos. Processa questões de prova, registra padrões de erro no banco SQLite (`ipub.db`) e mantém resumos clínicos estruturados em `Temas/`. Portável para qualquer LLM via workflows em `.agents/`.
+## O que é
+
+O MedHub é um ambiente de estudo adaptativo state-driven para residência médica. 
+
+Cada erro de questão desencadeia três eventos simultâneos: 
+- um registro estruturado com metadados diagnósticos no banco (`ipub.db`), 
+- um refinamento do resumo clínico correspondente em `Temas/`, e 
+- uma entrada no motor de retenção FSRS. 
+
+O resultado é um loop fechado entre falha, diagnóstico, conhecimento e retenção — que opera de forma contínua e cumulativa entre sessões. Trata-se de um sistema que aprende com o estudante enquanto o estudante aprende.
+
+Portável para qualquer LLM via `AGENTE.md` + workflows em `.agents/`.
 
 ## Para começar
 

@@ -4,17 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "f7e2d8a9e9e21ea3",
+        "id": "c8aee63416e59cf2",
         "type": "tabs",
         "children": [
           {
-            "id": "1d493aa2754f27c2",
+            "id": "688248a1cad7a83e",
             "type": "leaf",
             "state": {
-              "type": "graph",
+              "type": "empty",
               "state": {},
-              "icon": "lucide-git-fork",
-              "title": "Visualização em gráfico"
+              "icon": "lucide-file",
+              "title": "Nova aba"
             }
           }
         ]
@@ -178,8 +178,9 @@
       "bases:Criar nova base": false
     }
   },
-  "active": "1d493aa2754f27c2",
+  "active": "688248a1cad7a83e",
   "lastOpenFiles": [
+    "Temas/INDEX.md",
     "AGENTE.md",
     "history/session_044.md",
     "Temas/GO/Úlceras Genitais.md",

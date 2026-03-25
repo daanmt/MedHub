@@ -1,3 +1,10 @@
+---
+type: knowledge
+area: GO
+especialidade: Ginecologia
+status: active
+---
+
 # Amenorreia
 
 > Fonte: Apostila Estratégia MED — Profa. Monalisa Carvalho e Prof. Carlos Eduardo Martins (2024)

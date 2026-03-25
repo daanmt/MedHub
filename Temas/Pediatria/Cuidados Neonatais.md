@@ -1,3 +1,11 @@
+---
+type: knowledge
+area: Pediatria
+status: active
+---
+
+# Cuidados Neonatais
+
 ### Três perguntas fundamentais
 - RN ≥ 34 semanas?
 - RN respira ou chora?

@@ -36,6 +36,7 @@ MedHub/
 │   └── gerar-reforco.md
 │
 ├── Temas/                 ← base de conhecimento clínica (resumos por área)
+│   ├── INDEX.md           ← hub de navegação (todos os temas com wikilinks)
 │   ├── Cirurgia/
 │   ├── Clínica Médica/
 │   ├── GO/
@@ -63,7 +64,7 @@ MedHub/
 | Bootstrap / protocolo | `AGENTE.md`, `CLAUDE.md` |
 | Estado e snapshot | `ESTADO.md`, `HANDOFF.md` |
 | Dados operacionais | `ipub.db`, `flashcards_cache.json` |
-| Base de conhecimento | `Temas/**` |
+| Base de conhecimento | `Temas/**` · hub: `Temas/INDEX.md` |
 | Workflows portáveis | `.agents/workflows/**` |
 | Specs de qualidade | `Tools/estilo-resumo.md`, `Tools/comando de analise de questao.md` |
 | Interface | `streamlit_app.py`, `app/**` |

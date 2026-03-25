@@ -9,22 +9,19 @@ relates_to: ESTADO, AGENTE
 
 ## Ponto de Parada
 
-- **Sessão 044 Concluída:** Criação do resumo de Úlceras Genitais e alinhamento com a nova arquitetura de conhecimento.
+- **Sessão 045 Concluída:** Análise de Sífilis Congênita e Reinfecção Materna.
 - **O que foi feito:**
-  - `Úlceras Genitais.md` criado do zero a partir de PDF da apostila.
-  - Arquitetura de conhecimento aplicada: remoção do prefixo `[GIN]`, inclusão de frontmatter canônico.
-  - "Zero PDF" executado (deletado PDF original e temporários).
-  - Padrão 80/20 e Spec de Estilo MedHub rigorosamente seguidos.
-  - Seção "Armadilhas de Prova" consolidada.
+  - Análise técnica da questão de conduta neonatal em mãe mal tratada.
+  - Atualização do resumo `[OBS] Sífilis na Gestação e Congênita.md` com foco no NTT (Notificar, Triar, Tratar).
+  - Registro do erro no `ipub.db` e geração de flashcards.
+  - Indexação RAG executada via MCP.
 
 ## Próximos Passos
 
-1. **Ginecologia:** Avançar para "DIP e Cervicites" ou revisar questões de "Úlceras Genitais" para alimentar as armadilhas.
-2. **Preventiva:** Retomar o workflow de análise de questões em `Vigilância em Saúde.md`.
-3. **Fase 4 do Roadmap:** Gerador de Simulados Personalizados.
+1. **Ginecologia/Obstetrícia:** Iniciar novos temas como "DIP e Cervicites" ou revisar "Sangramentos da Primeira Metade".
+2. **Pediatria:** Avançar para "Cuidados Neonatais" onde o conhecimento de sífilis congênita se sobrepõe.
 
 ## Notas Técnicas
 
-- **Zero PDF:** PDFs deletados da pasta `Temas/Preventiva/` na sessão anterior.
-- **RAG:** Indexação recomendada após o commit desta sessão.
-- **ipub.db:** 200+ erros no banco (número exato via Dashboard).
+- **ipub.db:** Sincronizado com novo erro.
+- **RAG:** Reindexado após atualizações.

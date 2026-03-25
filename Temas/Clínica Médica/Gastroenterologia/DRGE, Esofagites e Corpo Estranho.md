@@ -1,3 +1,13 @@
+---
+type: knowledge
+area: Clínica Médica
+especialidade: Gastroenterologia
+status: active
+aliases: [DRGE]
+---
+
+# DRGE, Esofagites e Corpo Estranho
+
 ### DRGE
 - Fluxo retrógrado gastrointestinal para o esôfago, por incompetência do EEI
 - Sintomas frequentes, toda semana, por mais de 4 semanas; ou lesão na mucosa do esôfago

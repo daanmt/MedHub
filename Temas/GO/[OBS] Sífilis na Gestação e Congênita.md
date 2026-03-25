@@ -126,7 +126,7 @@ O LCR é coletado em **todos** os RNs com suspeita de sífilis congênita (mãe 
 **PASSO 1 — MÃE INADEQUADAMENTE TRATADA (ou não tratada):**
 → RN = Sífilis Congênita. Notificar compulsoriamente. Triar e tratar sempre.
 - Se **todos** os exames normais (hemograma, RX, LCR) **+ VDRL não reagente** → Penicilina G Benzatina 50.000 UI/kg IM, dose única.
-- Se **VDRL reagente** ou **qualquer exame alterado** (sem neurossífilis) → Penicilina Cristalina EV 50.000 UI/kg (12/12h por 7 dias, depois 8/8h até completar 10 dias) ou Procaína IM 50.000 UI/kg diária por 10 dias.
+- Se **VDRL reagente** (em qualquer titulação) ou **qualquer exame alterado** (mesmo assintomático) → Investigação completa é obrigatória. Tratar com Penicilina Cristalina EV 50.000 UI/kg (12/12h por 7 dias, depois 8/8h até completar 10 dias) ou Procaína IM 50.000 UI/kg diária por 10 dias.
 - Se **LCR alterado** ou **LCR impossível de coletar** → Penicilina Cristalina EV exclusiva, 10 dias. Se interrupção > 24h: reiniciar do zero.
 
 **PASSO 2 — MÃE ADEQUADAMENTE TRATADA:**
@@ -162,4 +162,6 @@ O LCR é coletado em **todos** os RNs com suspeita de sífilis congênita (mãe 
 - 🔴 **LCR impossível de coletar = inferir neurossífilis.** Tratar com Cristalina 10 dias. Se interrupção > 24h, reiniciar do zero.
 - 🔴 **Pseudoparalisia de Parrot:** RN "imóvel" e com dor ao toque/movimento. Não é dano neurológico — é osteocondrite sifilítica. Clássico da apresentação precoce.
 - 🔴 **Sangue do RN = veia periférica, nunca cordão.** Sangue de cordão contamina com anticorpos maternos e falseia resultados.
+- 🔴 **VDRL Reagente no RN de mãe mal tratada = Investigação Completa + Cristalina/Procaína.** Se o RN tem VDRL reagente (mesmo 1:1) e a mãe foi inadequadamente tratada, NÃO se faz apenas Benzatina. A Benzatina só é opção se o VDRL do RN for **não reagente** e todos os outros exames forem normais.
+- 🔴 **Tratamento do Parceiro na "Vida Real" vs "Critério de Notificação":** O MS retirou o tratamento do parceiro como critério para *notificar* sífilis congênita, mas um parceiro mal tratado indica alto risco de **reinfecção** materna (ascensão de títulos), o que torna a mãe "inadequadamente tratada".
 - 🔴 **Transmissão vs. Gravidade (inversamente proporcionais):** A sífilis recente transmite mais (até 100%), mas a gravidade fetal é maior se a infecção materna ocorreu no início da gestação.

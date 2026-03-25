@@ -48,3 +48,12 @@ Rodar o comando de indexação local do Obsidian para garantir que a IA tenha ac
 obsidian-notes-rag index
 ```
 - *Nota: Este passo garante a "amnésia zero" para o banco vetorial do projeto e mantém a funcionalidade MCP global sempre atualizada.*
+
+### 5. Consolidação de Memória Longa (Obrigatório — Memory v1)
+Consolidar padrões e insights da sessão na memória cross-session:
+```bash
+python -m app.memory.manager <NNN>
+```
+Onde `<NNN>` é o número da sessão recém-registrada (e.g., `046`).
+- *Requer `ANTHROPIC_API_KEY` para extração LLM. Sem key, usa fallback heurístico (lista áreas).*
+- *Outputs: entradas em `("medhub","session_insights")` e atualização de `("medhub","weak_areas")` no `medhub_memory.db`.*

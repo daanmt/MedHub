@@ -17,6 +17,8 @@ Toda nova sessão DEVE seguir esta ordem de leitura para bootstrap de contexto:
 2.  **[[HANDOFF]]**: Onde paramos? (tarefa atual, obstáculos, próximo passo imediato).
 3.  **Workflows relevantes**: Se for analisar questões, leia `.agents/workflows/analisar-questoes.md`. Se for criar resumo, leia `.agents/workflows/criar-resumo.md`.
 4.  **Último log**: `history/session_NNN.md` mais recente.
+5.  **[Memory v1] Carregar contexto de memória longa**: `python -m app.memory.inspect --context`
+    *(Mostra perfil do usuário, preferências, fraquezas persistentes e regras de workflow. Pular se medhub_memory.db não existir ainda.)*
 
 ## 3. PROTOCOLO DE FECHAMENTO (Antes de terminar)
 Para garantir que a próxima sessão comece sem perda de informação:

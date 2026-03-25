@@ -6,7 +6,7 @@ relates_to: AGENTE, HANDOFF, roadmap
 ---
 
 # ESTADO — MedHub (Preparação para Residência Médica)
-*Atualizado: 2026-03-24 (sessão 044) | Ferramenta: Antigravity*
+*Atualizado: 2026-03-25 (sessão 046) | Ferramenta: Claude Code*
 
 ---
 
@@ -23,7 +23,8 @@ Workspace state-driven de estudos médicos. Processa questões de prova, registr
 
 - **200+ erros estruturados** no SQLite (`ipub.db`) — consulte o Dashboard para número exato.
 - **36+ resumos clínicos** consolidados em `Temas/`.
-- **44 sessões** de estudo catalogadas em `history/`.
+- **46 sessões** de estudo catalogadas em `history/`.
+- **Memory v1 ativo**: `app/memory/` + `medhub_memory.db` (LangGraph + LangMem + SQLiteStore).
 
 ---
 
@@ -65,6 +66,7 @@ Workspace state-driven de estudos médicos. Processa questões de prova, registr
 
 ## Últimas sessões
 
+**2026-03-25 | Claude Code (sessão 046):** **Memory v1 (LangGraph + LangMem + SQLiteMemoryStore)**. Implementação completa da camada de memória cross-session: `app/memory/` (store, checkpointer, schemas, tools, manager, inspect), `Tools/test_memory.py` (4/4 smoke tests), `MEMORY_ARCHITECTURE.md`. Atualização de AGENTE.md (boot step 5), `registrar-sessao.md` (passo 5 consolidação), `KNOWLEDGE_ARCHITECTURE.md` (seção 9), `requirements.txt`.
 **2026-03-24 | Antigravity (sessão 045):** **Sífilis na Gestação e Congênita**. Análise de questão sobre RN de mãe mal tratada com VDRL reagente. Refinamento de fluxograma NTT e inclusão de armadilhas de reinfecção/parceiro. Registro no SQLite (ipub.db).
 **2026-03-24 | Antigravity (sessão 044):** **Ginecologia (Úlceras Genitais)**. Criação do resumo clínico `Úlceras Genitais.md` e análise de 3 questões críticas (Herpes gestacional, Fluxograma > 4 sem). 3 erros registrados no SQLite. Limpeza "Zero PDF" executada.
 **2026-03-23 | Antigravity (sessão 043):** **Auditoria arquitetural completa (inside job)**. Diagnóstico e correção de todos os documentos centrais. Alinhamento de ESTADO.md, README.md, HANDOFF.md, roadmap.md, workflows. Adição de wikilinks e frontmatter para Obsidian. Limpeza de referências obsoletas.
@@ -98,6 +100,7 @@ Alinhado com [[roadmap]] Fase 4:
 
 ## Decisões críticas (não reverter)
 
+- **Memory v1**: `app/memory/` (LangGraph + LangMem + SQLiteMemoryStore). Backend: `medhub_memory.db`. Não acoplado ao `ipub.db`. Smoke tests em `Tools/test_memory.py`.
 - **Governança via AGENTE.md**: O boot e o fechamento seguem estritamente o `AGENTE.md`.
 - **SSOT = ipub.db**: O diagnóstico do erro é gravado via CLI (`Tools/insert_questao.py`) no banco. O `caderno_erros.md` está arquivado em `history/legacy/`.
 - **Siamese Twins V2.0**: Erro → DB. Lição/Armadilha → Resumo em `Temas/`.

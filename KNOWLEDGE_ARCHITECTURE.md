@@ -192,3 +192,17 @@ O que ignorar                    → medhub-ui-refresh-main/, history/legacy/, F
 - **SSOT de workflows:** `.agents/workflows/`
 - O Obsidian é **interface de navegação**, não segunda fonte de verdade
 - Notas do Obsidian não substituem `ESTADO.md`
+
+---
+
+## 9. Memória de Agentes (Camadas 2 e 3)
+
+MedHub opera com três camadas de memória complementares. Detalhes em `MEMORY_ARCHITECTURE.md`.
+
+| Camada | Backend | Escopo | Responsável |
+|---|---|---|---|
+| Camada 1 | Repositório git (Temas/, ipub.db, history/) | Cross-session, canônico | Agente + dev |
+| Camada 2 | `medhub_memory.db::checkpoints` (SqliteSaver) | Within-thread, restaurável | LangGraph |
+| Camada 3 | `medhub_memory.db::memory_store` (SQLiteMemoryStore) | Cross-thread, longa duração | LangMem |
+
+**Regra:** conteúdo da Camada 1 **nunca** entra nas Camadas 2/3. Memória longa = preferências, padrões de fraqueza, regras procedurais e insights episódicos.

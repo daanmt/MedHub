@@ -5,6 +5,8 @@
 # Banco de Dados (local only)
 ipub.db
 ipub.db-journal
+medhub_memory.db
+medhub_memory.db-journal
 
 # Python
 __pycache__/

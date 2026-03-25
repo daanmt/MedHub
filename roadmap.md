@@ -5,72 +5,124 @@ status: canonical
 relates_to: ESTADO, HANDOFF
 ---
 
-# Product Roadmap: Sistema de Estudos MedHub
+# Roadmap de Produto — MedHub
 
-> **Visão de Produto:** Um ecossistema de aprendizado ativo para residência médica que transforma passividade (ler) em hiper-retenção (testes, espaçamento e análise metacognitiva de erros). 
-> **Foco Core:** Automação do trabalho braçal de criar materiais, permitindo ao usuário focar exclusivamento no estudo e na resolução clínica.
-
----
-
-## 📍 Fase 1: MVP - Fundação de Conhecimento (Status: Concluído / Em uso)
-*A infraestrutura básica para curadoria de conhecimento médico e diagnóstico de erros de prova.*
-
-**Entregas Atuais:**
-- [x] **Agente LLM Integrado (Antigravity):** Atua como co-piloto na IDE para processamento rápido baseando-se em `AGENTE.md` e `ESTADO.md`.
-- [x] **Caderno de Erros Centralizado (`caderno_erros.md`):** Taxonomia robusta baseada em Habilidades Sequenciais e Metacognição (Diagnóstico do tipo de erro).
-- [x] **Base de Conhecimento (`Temas/`):** Geração e formatação padronizada de resumos clínicos otimizados, alimentados diretamente pelos erros das questões.
-- [x] **Motor de Extração de Texto:** Script local (`extract_pdfs.py`) para consumir grandes volumes de PDFs e apostilas sem poluir o repositório.
-- [x] **Workflows Standard Operating Procedures (SOPs):** `.agents/workflows/` (Ex: Analisar questões médicas complexas garantindo o mesmo output sempre).
+> Direção evolutiva, não plano de sprint.
+> Sem datas. Sem status de tarefa. Sem checklists de MVP.
 
 ---
 
-## 🚀 Fase 2: Reforma v3.0 - Estabilização e Zero-DB (Status: Concluído)
-*Consolidar a arquitetura baseada em Markdown, eliminar over-engineering e estabilizar o player.*
+## Fundação (concluído)
 
-**Entregas Concluídas:**
-- [x] **Arquitetura Zero-DB (SSOT):** O Markdown (`caderno_erros.md`) é a única fonte de verdade para leitura na UI.
-- [x] **Parser Stateful:** Herança robusta de Área/Tema via cabeçalhos MD.
-- [x] **Dashboard Honesto:** Métricas 100% fiéis ao caderno, sem resíduos de FSRS fake.
-- [x] **O Grande Expurgo (Audit 2026):** Remoção/arquivamento do caderno histórico (`caderno_erros.md`) e da sujeira da pasta Tools (`*.xlsx`, `etl_*.py`), transferindo o protagonismo 100% para o `ipub.db` + UI.
+O MedHub foi construído em três camadas fundacionais, todas operacionais:
 
----
-
-## 🔬 Fase 3: Motor de Retenção FSRS v4 Real (Status: Concluído)
-*Implementar a matemática de agendamento (Stability/Difficulty) baseada em logs reais.*
-
-**Entregas Concluídas:**
-- [x] O Player FSRS agora roda nativo no SQLite, manipulando os states FSRS (Again/Hard/Good/Easy) sob demanda.
-- [x] A Curva de Esquecimento Crítico (Dashboard) respeita o período de carência da memória de curto prazo (3 dias).
-- [x] Unificação Minimalista em 3-Hubs na UI do Streamlit.
+- **Fundação (Fase 1):** Agente LLM integrado via `AGENTE.md`, base de conhecimento em `Temas/`, workflows portáveis em `.agents/`, extração de PDFs via `extract_pdfs.py`.
+- **Estabilização (Fase 2):** Arquitetura Zero-DB resolvida (SSOT = `ipub.db`), parser stateful, dashboard honesto, expurgo de arquivos legados.
+- **Motor de Retenção (Fase 3):** FSRS v4 nativo no SQLite, player de flashcards, curva de esquecimento com período de carência.
 
 ---
 
-## 🧠 Fase 4: O Workflow Fechado — Simulados e Analytics (Status: Próximo Passo)
-*O sistema coordena ativamente as revisões do aluno.*
+## Linhas Evolutivas
 
-**Objetivos:**
-- [ ] **Gerador de Simulados Personalizados:** Questões focadas nas fraquezas (Weakness-based testing).
-- [ ] **Relatórios de Desempenho Metacognitivo:** Insights automáticos sobre padrões de erro (ex: desatenção a números).
+### 1. MedHub como Sistema de Registro
 
----
+**Por que existe:** Todo o resto depende desta camada. Se o erro não for registrado com qualidade — tipo, tema, elo quebrado, armadilha — as camadas superiores não têm substrato. O registro é o acelerador de todas as outras linhas.
 
-## 🗃️ Fase 5: Motor Lexical e Taxonomia Robusta (Visão de Futuro)
-*Erradicar duplicatas de input e consolidar a governança dos dados num modelo SSOT Relacional.*
+**O que habilita:** O banco `ipub.db` como SSOT operacional cria a matéria-prima para análise, retenção e adaptação. Sem registro estruturado, há apenas acúmulo de notas.
 
-**A Fraqueza Atual:** A taxonomia do banco (`taxonomia_cronograma`) depende de correspondência exata de strings (ex: *Sífilis Congênita* vs *Sifilis Congenita*), e o pipeline de Flashcards sofre de "Atrofia Semântica" (gerando placeholders como "Este cenário costuma cair") porque o campo Base/Caso Clínico é frequentemente ignorado no input, deixando a LLM sem contexto para fabricar a Armadilha.
-
-**Plano de Resolução Definitiva:**
-1. **Dicionário Dimensional (dim_taxonomia):** Criar uma tabela estática e intocável de domínios, mapeando as 5 grandes áreas (Ped, Cir, GO, CM, Prev) para temas rígidos extraídos diretamente dos nomes dos arquivos Markdown em `Temas/`.
-2. **Motor Lexical Fuzzy (NLP):** Integrar um algoritmo de similaridade de strings (ex: `thefuzz` / Levenshtein) nos scripts de ingestão (`insert_questao.py` e futuros inputs manuais) para travar 100% no ID Mestre.
-3. **Pipeline RAG Inverso (Flashcard Contexto-Ciente):** Acoplar a injeção do Resumo original (o conteúdo de `Temas/`) diretamente no prompt do `flashcard_builder`. A IA não dependerá apenas da frase curta do Caderno; ela usará o próprio parágrafo do Resumo Oficial para popular a "armadilha" e o "cenário" com lastro literário real e zero abstração.
-4. **Fim do Legado Excel (Autonomia):** Desenvolver o Widget super-rápido no Dashboard ("Logging Diário") com input obrigatório de caso base.
+**O que consolida:**
+- Motor lexical fuzzy para normalização de taxonomia (eliminar variações de grafia como "Sífilis Congênita" vs. "Sifilis Congenita")
+- Logging rápido integrado na UI (reduzir fricção do `insert_questao.py` manual)
 
 ---
 
-## 📝 Próximos Passos Imediatos (Diretrizes de Execução)
+### 2. MedHub como Workspace Semântico
 
-*Marco de 100 erros atingido na sessão 034. FSRS implementado na sessão 026 (Fase 3 concluída).*
+**Por que existe:** O registro de erros sem base de conhecimento de qualidade é apenas um log. A base `Temas/` transforma o registro em compreensão. A lição identificada na questão precisa encontrar o lugar exato no resumo — não o fim do arquivo, mas o ponto temático correto.
 
-1. **Gerador de Simulados:** Implementar gerador de simulados personalizados baseado nas fraquezas do cronograma (Fase 4).
-2. **Relatório Metacognitivo:** Insights automáticos sobre padrões de erro recorrentes.
-3. **Continuar expandindo Temas/**: Áreas com menor cobertura de questões são prioritárias.
+**O que habilita:** A base semântica é o que permite flashcards contextualizados, simulados orientados por fraqueza e busca por embeddings. Sem `Temas/` de qualidade, o sistema gera ruído, não insight.
+
+**O que consolida:**
+- Migração completa da nomenclatura (remover prefixos legados `[GIN]`, `[OBS]`, `[CIR]`, `[ORL]`)
+- Eliminação de stubs (`TCE.md` precisa de conteúdo ou ser removido)
+- Busca semântica via `sqlite-vec` (já instalado) como alternativa à busca literal
+- Cobertura crescente: áreas com mais erros no banco merecem mais resumos
+
+---
+
+### 3. MedHub como Motor de Revisão
+
+**Por que existe:** Conhecimento sem revisão espaçada decai. A matemática do FSRS existe para combater a curva de esquecimento. Esta linha garante que o estudante revisite o que precisa, quando precisa — não o que é conveniente ou recente.
+
+**O que habilita:** O player FSRS fecha o loop entre erro → registro → retenção. Flashcards contextualizados com o conteúdo dos resumos (pipeline RAG inverso) elevam a qualidade da revisão de "lembrar a resposta" para "compreender o raciocínio".
+
+**O que consolida:**
+- Pipeline RAG inverso: injetar conteúdo do `Temas/` no prompt de geração de flashcard (eliminar "atrofia semântica")
+- Input obrigatório de contexto clínico ao registrar erro
+- Dashboard de revisão com curva de esquecimento por área
+
+---
+
+### 4. MedHub como Sistema de Recuperação Orientada por Tarefa
+
+**Por que existe:** O estudante não sabe sempre o que estudar primeiro. O sistema sabe — ele tem os dados. Esta linha transforma o banco de erros e o cronograma em recomendação ativa de estudo, não em relatório passivo.
+
+**O que habilita:** Simulados personalizados baseados em fraqueza real (Weakness-based testing). O sistema seleciona questões ou flashcards não de forma aleatória, mas orientada pelo gap identificado no `ipub.db` e pela curva de esquecimento do FSRS.
+
+**O que consolida:**
+- Gerador de simulados: seleciona por área/tema com menor taxa de acerto no banco
+- Relatório de desempenho metacognitivo: padrões de erro por tipo (desatenção, confusão de critério, erro de cálculo) — não apenas por tema
+- Integração cronograma ↔ FSRS: prioridade de revisão ponderada por data da prova
+
+---
+
+### 5. MedHub como Agente de Execução do Estudo
+
+**Por que existe:** As linhas anteriores dependem do estudante iniciar cada ciclo manualmente. Esta linha inverte: o sistema propõe, executa e confirma. O agente planeja a sessão, seleciona os materiais e registra os resultados — com mínima fricção para o usuário.
+
+**O que habilita:** Uma sessão guiada por agente: "hoje você tem 45 minutos — o sistema identificou que Sífilis Congênita e Emergências Pediátricas têm maior gap. Vamos revisar." O agente executa o workflow completo sem que o usuário precise orquestrar manualmente.
+
+**O que consolida:**
+- Session planner: agente lê o banco, identifica gaps e propõe plano de sessão
+- Execução autônoma do loop: análise → registro → atualização de resumo sem etapas manuais
+- Memória longa ativa: usar `weak_areas` e `session_insights` do LangMem para personalizar a seleção
+
+---
+
+### 6. MedHub como Agente Metacognitivo
+
+**Por que existe:** Saber *o que* errar e *o que* estudar é diferente de saber *por que* o padrão de erro persiste. A metacognição transforma dados de performance em consciência sobre o próprio processo de aprendizagem.
+
+**O que habilita:** Relatórios que vão além de "você errou Sífilis 3 vezes" — e chegam em "você sistematicamente seleciona o diagnóstico mais comum em vez de aplicar o critério do fluxograma". Isso é informação acionável para mudar o comportamento de estudo.
+
+**O que consolida:**
+- Ativar `consolidate_session()` em sessões clínicas reais (Memory v1 ir para produção)
+- Dashboard metacognitivo: top tipos de erro por área, padrões de elo quebrado, evolução temporal
+- Relatórios periódicos gerados pelo agente ao fechar ciclos de estudo
+
+---
+
+### 7. MedHub como Sistema Adaptativo
+
+**Por que existe:** Um sistema que aprende com o estudante precisa se recalibrar com o tempo. Temas dominados saem do radar ativo. Novas fraquezas emergem. O ritmo de estudo muda. O sistema acompanha essa evolução sem exigir reconfiguração manual.
+
+**O que habilita:** Um ambiente que se torna mais inteligente a cada sessão — ajustando prioridades, reformulando flashcards conforme o conhecimento consolida, identificando quando um tema está sendo hiper-revisado sem necessidade ou quando uma área está sendo negligenciada.
+
+**O que consolida:**
+- TTL/max_entries por namespace (evitar que `weak_areas` acumule áreas já dominadas)
+- Deduplicação LLM de `weak_areas` via `create_memory_store_manager`
+- Recalibração de cronograma baseada em curva real de acertos por área
+- Modelo de "gradiente de atenção": áreas com alta taxa de acerto recebem menos slot de sessão
+
+---
+
+## Anti-goals
+
+O MedHub não deve virar:
+
+1. **Dumping ground de Markdown.** Cada nota em `Temas/` existe porque um erro de questão ou uma apostila a justificou. Não criar resumos por completismo de área.
+2. **Chatbot genérico.** O agente tem identidade, protocolo e contexto específicos. Não generalizar para outros domínios.
+3. **App desconectado da base de conhecimento.** O Streamlit deve consumir o que está no banco e nos resumos — não criar uma camada de dados paralela.
+4. **Memória competindo com a fonte canônica.** O `medhub_memory.db` captura preferências e padrões de fraqueza, não replica o conteúdo de `Temas/` ou `ESTADO.md`.
+5. **Stack sofisticada sem clareza pedagógica.** Toda peça precisa ter uso real, não especulativo. A régua: se não foi usado em sessões reais, simplificar ou remover.
+6. **Arquitetura inflada sem uso real.** O risco de um projeto solo de engenharia é acumular camadas que parecem necessárias mas não são exercidas.

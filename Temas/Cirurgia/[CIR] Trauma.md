@@ -1,3 +1,13 @@
+---
+type: knowledge
+area: Cirurgia
+especialidade: Trauma
+status: active
+aliases: [Trauma Cirúrgico, ATLS]
+---
+
+# Trauma
+
 ### 1. Avaliação Inicial e Princípios Biomecânicos
 
 **Protocolo ABCDE (ATLS 10ª Edição)**

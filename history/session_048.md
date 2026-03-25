@@ -1,39 +1,26 @@
-# Session 048 — Trauma Abdominal e Pélvico (44 questões)
+# Sessão 048 — Consolidação de Memória e Taxonomia (2026-03-25)
 
-**Data:** 2026-03-25
-**Ferramenta:** Antigravity
-**Continuidade:** Sessão 047 (Leitura de produto)
+## 🎯 Objetivos da Sessão
+1.  Analisar 44 questões de Trauma Abdominal (Cirurgia).
+2.  Ativar e configurar a **Camada 3 de Memória (Long-term)** com LangMem.
+3.  Migrar a taxonomia do `ipub.db` para 20 disciplinas granulares (2.631 questões).
+4.  Inserir indicadores estratégicos (**Custo por Questão**) e metas Rumo aos 23k.
+
+## 📈 Performance Clínica (Trauma)
+- **Questões Analisadas:** 44
+- **Acertos:** 33 / Erros: 11 (75%)
+- **Status:** 12 erros inseridos no `ipub.db`.
+- **Destaque:** `[CIR] Trauma.md` atualizado com 6 blocos técnicos e 9 novas armadilhas.
+
+## 🧠 Evolução do Workspace
+- **Memory Batch:** 45 sessões históricas consolidadas no `medhub_memory.db`.
+- **Taxonomia:** Merged "Clinica Medica" -> "Clínica Médica", Split "GO" -> "Ginecologia" e "Obstetrícia".
+- **Volume:** Sincronizado com planilha externa de 2.631 questões.
+- **Tools:** `migrate_taxonomy.py` e `batch_consolidate.py` implementados.
+
+## 💡 Principais Insights (Camada 3)
+- **Trauma:** Confusão TC vs VLP na transição toracoabdominal; Gatilho de Damage Control vs Reparo Simples.
+- **Estratégia:** Necessidade de manter ~62 q/dia para bater meta de R$ 0,88 C/Q em Março (3.000 questões).
 
 ---
-
-## O que foi feito
-
-- Revisão de Trauma Abdominal e Pélvico com bateria de 44 questões.
-- Resultado: 33 acertos / 11 erros (75%).
-- 12 erros e dúvidas registrados no `ipub.db` (Cirurgia/Trauma).
-- `Temas/Cirurgia/[CIR] Trauma.md` atualizado com 6 blocos e +9 armadilhas cumulativas.
-
-## Padrões de erro identificados
-
-- **Transição Toracoabdominal (Q5, Q6, Q8):** 3 questões erradas com o mesmo elo — escolheu TC ou exploração digital quando a resposta era VLP. Fraqueza consolidada.
-- **Lesão Vesical intra vs extraperitoneal (Q1, Q3):** Dificuldade anatômica em localizar o extravasamento de contraste na TC (goteira parieto-cólica vs espaço de Retzius).
-- **Damage Control com coagulopatia (Q2, Q9):** Confusão entre quando tentar reparar lesão vs quando empacotar e ir para UTI.
-- **Hérnia diafragmática traumática (Q4):** Escolheu toracotomia; conduta correta é laparotomia/VLP (via abdominal).
-- **AAST Renal Grau IV (Q7):** Desconhecia que lesão vascular segmentar com hematoma contido já é grau IV.
-- **TNO Hepático (Q13):** Quis intervir com laparoscopia; blush arterial é o decisor — sem blush = TNO mesmo com líquido livre.
-
-## Artefatos criados/modificados
-
-- `Temas/Cirurgia/[CIR] Trauma.md` — atualizado (6 blocos + 9 armadilhas)
-- `HANDOFF.md` — atualizado para sessão 048
-- `ipub.db` — 12 novos registros (Cirurgia/Trauma)
-
-## Decisões tomadas
-
-- API key Anthropic configurada como variável de ambiente permanente (User level).
-- Camada 3 (LangMem) iniciada com primeira consolidação real desta sessão.
-
-## Próximos passos
-
-- Continuar com GO: DIP e Cervicites ou Sangramentos da Segunda Metade.
-- Em próxima bateria de Trauma: monitorar taxa de acerto em Transição Toracoabdominal.
+*Próxima Sessão sugerida: Avançar em GO (DIP) ou Pediatria para fechar o mês no alvo de 3.000 questões.*

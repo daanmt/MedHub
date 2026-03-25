@@ -6,7 +6,7 @@ relates_to: AGENTE, HANDOFF, roadmap
 ---
 
 # ESTADO — MedHub (Preparação para Residência Médica)
-*Atualizado: 2026-03-25 (sessão 047) | Ferramenta: Antigravity*
+*Atualizado: 2026-03-25 (sessão 048) | Ferramenta: Antigravity*
 
 ---
 
@@ -23,8 +23,8 @@ Workspace state-driven de estudos médicos. Processa questões de prova, registr
 
 - **200+ erros estruturados** no SQLite (`ipub.db`) — consulte o Dashboard para número exato.
 - **36+ resumos clínicos** consolidados em `Temas/`.
-- **46 sessões** de estudo catalogadas em `history/`.
-- **Memory v1 ativo**: `app/memory/` + `medhub_memory.db` (LangGraph + LangMem + SQLiteStore).
+- **48 sessões** de estudo catalogadas em `history/`.
+- **Memory v1 & v3 ativos**: `app/memory/` configurado com `ANTHROPIC_API_KEY` permanente e consolidação LLM funcional.
 
 ---
 
@@ -66,6 +66,7 @@ Workspace state-driven de estudos médicos. Processa questões de prova, registr
 
 ## Últimas sessões
 
+**2026-03-25 | Antigravity (sessão 048):** **Trauma Abdominal e Pélvico (Cirurgia)**. Análise de 44 questões (33/44 - 75%). 11 erros registrados no `ipub.db`. `Trauma.md` atualizado com 6 blocos de conteúdo e 9 armadilhas. **Camada 3 de Memória (Long-term)** operacional: `ANTHROPIC_API_KEY` configurada no Windows (User level), `manager.py` corrigido para compatibilidade com LangMem (positional args + Pydantic schemas) e primeira consolidação real executada.
 **2026-03-25 | Antigravity (sessão 047):** **Leitura de produto completa.** Diagnóstico, visão de produto e roadmap evolutivo (7 linhas) elaborados a partir do estado real do repositório. Aplicação documental: `roadmap.md` reescrito (de backlog para direção de produto), `README.md` com parágrafo de visão, `ESTADO.md` alinhado ao novo roadmap.
 **2026-03-25 | Claude Code (sessão 046):** **Memory v1 (LangGraph + LangMem + SQLiteMemoryStore)**. Implementação completa da camada de memória cross-session: `app/memory/` (store, checkpointer, schemas, tools, manager, inspect), `Tools/test_memory.py` (4/4 smoke tests), `MEMORY_ARCHITECTURE.md`. Atualização de AGENTE.md (boot step 5), `registrar-sessao.md` (passo 5 consolidação), `KNOWLEDGE_ARCHITECTURE.md` (seção 9), `requirements.txt`.
 **2026-03-24 | Antigravity (sessão 045):** **Sífilis na Gestação e Congênita**. Análise de questão sobre RN de mãe mal tratada com VDRL reagente. Refinamento de fluxograma NTT e inclusão de armadilhas de reinfecção/parceiro. Registro no SQLite (ipub.db).
@@ -96,8 +97,8 @@ Ver [[roadmap]] — Linhas Evolutivas.
 Prioridade imediata (Linha 3 → Linha 4):
 1. **Pipeline RAG inverso:** Injetar conteúdo de `Temas/` no prompt de geração de flashcard (eliminar atrofia semântica).
 2. **Gerador de Simulados:** Selecionar questões por área/tema com menor taxa de acerto no banco.
-3. **Memory v1 em produção:** Rodar `consolidate_session()` ao fechar próxima sessão clínica real.
-4. Continuar expandindo `Temas/` nas áreas com menor cobertura de questões.
+3. **Consolidação de Memória:** Executar `python -m app.memory.manager NNN` religiosamente ao final de cada sessão.
+4. Continuar expandindo `Temas/` nas áreas com menor cobertura de questões (GO: DIP e Sangramentos).
 
 ---
 

@@ -61,37 +61,14 @@ def _llm_consolidate(
     """Use LangMem's memory store manager to extract + persist insights."""
     try:
         from langmem import create_memory_store_manager
-        import anthropic
+        from langchain_anthropic import ChatAnthropic
+        from app.memory.schemas import SessionInsight, WeakArea
+
+        llm = ChatAnthropic(model=_HAIKU_MODEL, api_key=os.environ["ANTHROPIC_API_KEY"])
 
         manager = create_memory_store_manager(
-            model=_HAIKU_MODEL,
-            schemas=[
-                {
-                    "name": "session_insight",
-                    "description": "A memorable clinical or workflow insight from this session",
-                    "parameters": {
-                        "type": "object",
-                        "properties": {
-                            "insight": {"type": "string"},
-                            "area": {"type": "string"},
-                        },
-                        "required": ["insight", "area"],
-                    },
-                },
-                {
-                    "name": "weak_area",
-                    "description": "A recurring weakness pattern identified in a medical area",
-                    "parameters": {
-                        "type": "object",
-                        "properties": {
-                            "area": {"type": "string"},
-                            "especialidade": {"type": "string"},
-                            "pattern": {"type": "string"},
-                        },
-                        "required": ["area", "especialidade", "pattern"],
-                    },
-                },
-            ],
+            llm,  # positional-only nesta versão do LangMem
+            schemas=[SessionInsight, WeakArea],
             store=store,
             namespace=("medhub", "session_insights"),
             instructions=(
@@ -109,6 +86,8 @@ def _llm_consolidate(
 
     except Exception as e:
         print(f"[memory/manager] LLM consolidation skipped: {e}")
+
+
 
 
 def _fallback_consolidate(

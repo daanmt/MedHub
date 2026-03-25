@@ -10,7 +10,13 @@ relates_to: AGENTE, HANDOFF, roadmap
 
 ---
 
-Workspace state-driven de estudos médicos. Processa questões de prova, registra padrões de erro no banco SQLite (`ipub.db`) e mantém resumos clínicos estruturados em `Temas/`. Portável para qualquer LLM via [[AGENTE]] + workflows em `.agents/`.
+Workspace state-driven de estudos médicos. Processa questões de prova, registra padrões de erro no banco SQLite (`ipub.db`) e mantém resumos clínicos estruturados em `Temas/`.
+
+### 🚩 Metas Estratégicas (Roadmap 2026)
+- **Meta Final:** 23.000 questões até 12/2026 (Custo/Q: R$ 0,20).
+- **Marco ENARE:** 17.000 questões até 10/2026 (Custo/Q: R$ 0,24).
+- **Indicador Atual (Março):** 2.631 / 3.000 (Faltam 369 | ~62 q/dia).
+- **Performance:** 79,74% (Média Geral).
 
 ---
 
@@ -95,10 +101,10 @@ Workspace state-driven de estudos médicos. Processa questões de prova, registr
 Ver [[roadmap]] — Linhas Evolutivas.
 
 Prioridade imediata (Linha 3 → Linha 4):
-1. **Pipeline RAG inverso:** Injetar conteúdo de `Temas/` no prompt de geração de flashcard (eliminar atrofia semântica).
-2. **Gerador de Simulados:** Selecionar questões por área/tema com menor taxa de acerto no banco.
-3. **Consolidação de Memória:** Executar `python -m app.memory.manager NNN` religiosamente ao final de cada sessão.
-4. Continuar expandindo `Temas/` nas áreas com menor cobertura de questões (GO: DIP e Sangramentos).
+1. **Pipeline RAG inverso:** Injetar conteúdo de `Temas/` no prompt de geração de flashcard.
+2. **Meta Volumétrica (60 q/dia):** Manter o ritmo para fechar Março com 3.000 questões.
+3. **Consolidação de Memória:** Executar `python -m app.memory.manager NNN` após cada sessão.
+4. Continuar expandindo `Temas/` (GO: DIP e Sangramentos).
 
 ---
 

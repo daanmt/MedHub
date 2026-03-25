@@ -29,6 +29,9 @@ Criar `history/session_NNN.md` com o seguinte formato:
 ## O que foi feito
 - [Lista de ações realizadas]
 
+## Padrões de erro identificados (se sessão de questões)
+- [Áreas com erros recorrentes e elo quebrado]
+
 ## Artefatos criados/modificados
 - [Lista de arquivos com paths relativos]
 
@@ -51,9 +54,10 @@ obsidian-notes-rag index
 
 ### 5. Consolidação de Memória Longa (Obrigatório — Memory v1)
 Consolidar padrões e insights da sessão na memória cross-session:
-```bash
+```powershell
 python -m app.memory.manager <NNN>
 ```
-Onde `<NNN>` é o número da sessão recém-registrada (e.g., `046`).
-- *Requer `ANTHROPIC_API_KEY` para extração LLM. Sem key, usa fallback heurístico (lista áreas).*
-- *Outputs: entradas em `("medhub","session_insights")` e atualização de `("medhub","weak_areas")` no `medhub_memory.db`.*
+Onde `<NNN>` é o número da sessão recém-registrada (e.g., `048`).
+- *`ANTHROPIC_API_KEY` já está configurada como variável de ambiente permanente (User level). Não requer configuração manual.*
+- *Outputs: entradas em `("medhub","session_insights")` e `("medhub","weak_areas")` no `medhub_memory.db`.*
+- *Em sessões de questões: os padrões de erro identificados alimentam o `weak_areas` e ficam disponíveis na próxima sessão via `--context`.*

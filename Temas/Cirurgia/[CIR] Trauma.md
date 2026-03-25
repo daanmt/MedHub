@@ -127,9 +127,13 @@ aliases: [Trauma Cirúrgico, ATLS]
 - **Tratamento:** Controle farmacológico da FC e PA (Beta-bloqueadores) e tratamento endovascular/cirúrgico.
 
 **Lesões de Diafragma e Esôfago**
-- **Lesão Diafragmática:** Mais comum em ferimentos penetrantes na transição toracoabdominal (abaixo do mamilo).
-  - **Diagnóstico:** Videolaparoscopia (se estável) ou Laparotomia (instável).
-  - **Sinal Clínico:** Herniação de vísceras abdominais para o tórax em fases tardias.
+- **Lesão Diafragmática:** Mais comum em ferimentos penetrantes na transição toracoabdominal.
+  - **Limites da Transição Toracoabdominal:** Anterior T4 (mamilo) → T12; Lateral T6 → T12; Dorsal T8 (borda inferior da escápula) → T12.
+  - ⭐ **Diagnóstico — VLP é o padrão ouro:** Videolaparoscopia (se estável) — diagnostica diafragma **e** vísceras ocas. Indicada **independente de FAST ou TC negativos** (ambos têm baixa sensibilidade para lesão diafragmática pequena).
+  - **Exploração digital:** Aplicável apenas a FAB de **parede abdominal anterior**. **Não** se aplica à transição toracoabdominal (baixa acurácia).
+  - **Instável:** Laparotomia imediata.
+  - **Hérnia Diafragmática Traumática confirmada (TC):** Acesso **abdominal** (laparotomia/VLP) — permite diagnóstico de lesões associadas + redução + reparo. Toracotomia somente em hérnia crônica com aderências.
+  - **Sinal Clínico tardio:** Herniação de vísceras abdominais para o tórax.
 - **Lesão Esofágica:** Suspeitar em traumas transfixantes de mediastino com pneumomediastino ou derrame pleural.
   - **Diagnóstico:** EDA ou esofagograma.
   - **Tratamento:** Sutura primária precoce + drenagem pleural bilateral e de mediastino.
@@ -146,11 +150,13 @@ aliases: [Trauma Cirúrgico, ATLS]
 - **Trauma Penetrante:**
   - **Arma de Fogo (FAF):** Transperitoneal indica Laparotomia (Delgado > Cólon > Fígado).
   - **Arma Branca (FAB):**
-    - Parede Anterior: **Exploração digital**. Se violar a fáscia posterior/peritônio → Observação (EF seriado 24h + Lab) ou Laparotomia se instabilidade/peritonite.
-    - Flanco/Dorso: Tomografia com triplo contraste (oral, venoso, retal).
+    - Parede Anterior: **Exploração digital** sob anestesia local. Se violar a fáscia posterior → EF seriado 24h ou Laparotomia se instabilidade/peritonite. ⚠️ Em **obeso** (exame inconcluso): substituir por **VLP diagnóstica**.
+    - Flanco/Dorso: TC com triplo contraste (oral, venoso, retal).
+    - Transição Toracoabdominal: **VLP** (padrão ouro — independe de FAST/TC). Ver seção Lesão Diafragmática.
 
 **Cirurgia de Controle de Danos (Damage Control)**
 - **Objetivo:** Interrupção precoce da hemorragia e contaminação em pacientes limitados fisiologicamente, prevenindo a **Tríade Letal** (Acidose, Hipotermia e Coagulopatia).
+- 🔴 **Sinal de Coagulopatia Estabelecida:** Sangramento difuso sem formação de coágulos → **não tentar reparar lesões vasculares**. Conduta: empacotar compressas + peritoneostomia + UTI. Reabordagem cirúrgica em 48-72h.
 - **Nuances de Ressecção:**
   - Presença de múltiplas lesões próximas no delgado: Realizar **uma única enterectomia** englobando os segmentos (evitar múltiplas suturas).
   - Lesão de cólon transverso > 75% da circunferência: Colectomia segmentar do transverso.
@@ -158,7 +164,9 @@ aliases: [Trauma Cirúrgico, ATLS]
 
 **Trauma de Órgãos Sólidos e Ocos**
 - **Fígado:** Se o sangramento persistir após **Manobra de Pringle**, a etiologia provável são as veias supra-hepáticas ou cava retro-hepática.
-  - **Hemobilia:** Complicação tardia caracterizada pela **Tríade de Sandbloom** (Dor em hipocôndrio direito, Hemorragia Digestiva Alta e Icterícia). Conduta: Angioembolização.
+  - ⭐ **TNO (Tratamento Não Operatório):** Indicado em qualquer grau de lesão hepática com **estabilidade hemodinâmica e sem blush arterial** na TC. Líquido livre peritoneal isolado não contraindica o TNO. Conduta: UTI, monitorização, Hb/Ht seriados.
+  - **Blush arterial na TC (fase arterial):** Extravasamento ativo de contraste → **Embolização** (se estável). Instabilidade hemodinâmica → Laparotomia.
+  - **Hemobilia:** Complicação tardia — **Tríade de Sandbloom** (Dor em HD, HDA, Icterícia). Conduta: Angioembolização.
 - **Intestino Delgado:** Associado ao **Sinal do Cinto de Segurança**. Suspeitar de lesão de mesentério e Fratura de Chance (coluna lombar).
 
 **Trauma de Órgãos Específicos**
@@ -193,9 +201,12 @@ aliases: [Trauma Cirúrgico, ATLS]
     - **Grau V:** Avulsão do pedículo renal ou fragmentação completa do órgão.
   - **Manejo:** A maioria dos traumas Grau I-III é de conduta conservadora. Lesões Grau IV com extravasamento urinário persistente ou instabilidade requerem intervenção (urológica ou cirúrgica).
 - **Trauma Vesical:**
-  - **Extraperitoneal:** Caracterizado pelo **Sinal do Molar** na cistografia (contraste contido no espaço de Retzius). Tratamento conservador com SVD por 14-21 dias.
-    - **Indicações Cirúrgicas:** Lesão do trígono vesical, presença de fragmento ósseo na parede ou laparotomia por outra indicação.
-  - **Intraperitoneal (Cúpula):** Ruptura por trauma com bexiga cheia. Conduta: Rafia cirúrgica urgente com **fio absorvível** (ex: Vicryl) + SVD por 10-14 dias.
+  - ⭐ **Chave diagnóstica — TC:** Localização do extravasamento de contraste diferencia as lesões:
+    - Contraste para **cavidade abdominal** (goteira parieto-cólica, alças intestinais) = **Intraperitoneal** → cirurgia.
+    - Contraste restrito ao **espaço de Retzius** / paravesical = **Extraperitoneal** → **Sinal do Molar** → SVD.
+  - **Extraperitoneal:** Tratamento conservador com SVD por 14-21 dias.
+    - **Indicações Cirúrgicas:** Lesão do trígono vesical, fragmento ósseo na parede ou laparotomia por outra indicação.
+  - **Intraperitoneal (Cúpula):** Ruptura com bexiga cheia. Conduta: Rafia cirúrgica (laparotomia ou VLP se estável sem outras indicações) com **fio absorvível** (ex: Vicryl) + SVD por 10-14 dias.
 - **Trauma Uretral:** Tríade: Uretrorragia, retenção e próstata flutuante ao toque retal. Pode haver hematoma perineal em "asa de borboleta".
   - **Anterior (Uretra Bulbar):** Mecanismo de queda "a cavaleiro".
   - **Posterior (Membranosa/Prostática):** Associada a fraturas de pelve.
@@ -215,3 +226,12 @@ aliases: [Trauma Cirúrgico, ATLS]
 - 🔴 **Fios na Sutura Vesical:** Utilizar apenas fios **absorvíveis**. Fios inabsorvíveis (Nylon/Seda) atuam como nido para formação de cálculos.
 - 🔴 **Hematúria:** A ausência ou grau de hematúria não exclui lesão renal grave (avulsão de pedículo).
 - 🔴 **Estabilidade vs Instabilidade:** Nunca encaminhar pacientes instáveis para a sala de Tomografia. Exames à beira do leito (FAST/LPD) são os decisores.
+- 🔴 **Transição Toracoabdominal — VLP obrigatória:** TC e FAST negativos **não** excluem lesão de diafragma nem de víscera oca. VLP é o único método capaz de excluir ambas. TC negativa não muda a conduta.
+- 🔴 **Exploração digital ≠ Transição Toracoabdominal:** Exploração digital é conduta para FAB em **parede anterior**. Na transição, exploração digital tem baixa acurácia; VLP é o método correto.
+- 🔴 **Hérnia Diafragmática Traumática:** Acesso sempre **abdominal** (laparotomia/VLP). Toracotomia reservada para hérnias crônicas com aderências.
+- 🔴 **Lesão Vesical — TC:** Contraste para cavidade abdominal (goteira, alças) = intraperitoneal → cirurgia. Contraste restrito ao espaço de Retzius (Sinal do Molar) = extraperitoneal → SVD.
+- 🔴 **Damage Control com Coagulopatia:** Sangramento difuso sem coágulo = coagulopatia estabelecida → empacotar + UTI. Proibido tentativa de reparo vascular ou anastomose primária.
+- 🔴 **Hematúria Microscópica sem Choque — Adulto:** Não exige TC obrigatória. Indicar TC se: mecanismo de desaceleração, exame físico sugestivo ou hematúria macroscópica. **Criança: qualquer hematúria → TC obrigatória.**
+- 🔴 **TNO Hepático — Blush como decisor:** Estável + lesão hepática sem blush arterial = TNO, mesmo com líquido livre peritoneal. Blush = embolização (se estável). Instabilidade = laparotomia.
+- 🔴 **Taquicardia em Trauma Penetrante:** Nunca atribuir à dor. FAF ou FAB com taquicardia = hemorragia até prova em contrário. Associado a instabilidade → laparotomia imediata.
+- 🔴 **AAST Renal Grau IV — Lesão Vascular:** Laceração com lesão de **vasos segmentares** = Grau IV, mesmo com hematoma retroperitoneal contido. Grau III = laceração > 1 cm **sem** atingir sistema coletor nem vasos.

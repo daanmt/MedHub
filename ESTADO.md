@@ -58,8 +58,8 @@ Workspace state-driven de estudos médicos. Processa questões de prova, registr
 | Artefato | Arquivo |
 |---|---|
 | Resumos clínicos | `Temas/{Área}/{Subespecialidade}/{Tema}.md` |
-| Spec de formatação | `Tools/estilo-resumo.md` |
-| Protocolo de análise | `Tools/comando de analise de questao.md` |
+| Spec de formatação | `.claude/commands/estilo-resumo.md` |
+| Protocolo de análise | `.claude/commands/analisar-questao.md` |
 
 ### Material de referência (PDFs — não editáveis)
 | Artefato | Pasta |
@@ -117,7 +117,7 @@ Prioridade imediata (Linha 3 → Linha 4):
 - **Governança via AGENTE.md**: O boot e o fechamento seguem estritamente o `AGENTE.md`.
 - **SSOT = ipub.db**: O diagnóstico do erro é gravado via CLI (`Tools/insert_questao.py`) no banco. O `caderno_erros.md` está arquivado em `history/legacy/`.
 - **Siamese Twins V2.0**: Erro → DB. Lição/Armadilha → Resumo em `Temas/`.
-- **Resumos seguem** `Tools/estilo-resumo.md` — bullets hierárquicos, ⭐/⚠️/🔴; sem tabelas, sem fluxogramas ASCII.
+- **Resumos seguem** `.claude/commands/estilo-resumo.md` — bullets hierárquicos, ⭐/⚠️/🔴; sem tabelas, sem fluxogramas ASCII.
 - **Sessions numeradas globalmente** em `history/` — qualquer agente registra.
 - **Zero PDF**: `extract_pdfs.py` extrai para `%TEMP%` e apaga o PDF original após consolidação.
 - **Regra de Acúmulo**: Seção "Armadilhas de Prova" é cumulativa — nunca remover armadilhas antigas.

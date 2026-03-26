@@ -57,9 +57,13 @@ MedHub/
 ├── history/               ← logs de sessão (session_NNN.md)
 │   └── legacy/            ← arquivos arquivados (caderno_erros, progresso, planos antigos)
 │
-├── Tools/                 ← scripts utilitários e specs de qualidade
+├── .claude/commands/      ← skills atômicas (spec + invocação)
 │   ├── estilo-resumo.md   ← spec de formatação obrigatória
-│   ├── comando de analise de questao.md  ← protocolo de análise (9 etapas)
+│   ├── analisar-questao.md← protocolo de análise + insert_questao.py
+│   ├── extrair-pdf.md     ← wrapper para extract_pdfs.py (Zero PDF)
+│   └── auditar-resumos.md ← linter de qualidade para Temas/
+│
+├── Tools/                 ← scripts Python (CLIs)
 │   ├── insert_questao.py  ← CLI: insere erro no ipub.db
 │   └── extract_pdfs.py    ← CLI: extrai PDF para %TEMP%, política Zero PDF
 │
@@ -77,6 +81,6 @@ MedHub/
 | Dados operacionais | `ipub.db`, `flashcards_cache.json` |
 | Base de conhecimento | `Temas/**` · hub: `Temas/INDEX.md` |
 | Workflows portáveis | `.agents/workflows/**` |
-| Specs de qualidade | `Tools/estilo-resumo.md`, `Tools/comando de analise de questao.md` |
+| Skills (spec + invocação) | `.claude/commands/*.md` |
 | Interface | `streamlit_app.py`, `app/**` |
 | Histórico | `history/session_NNN.md` |

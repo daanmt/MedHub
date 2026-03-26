@@ -11,7 +11,7 @@ description: Analisar questões de prova erradas e atualizar caderno e resumos
 O usuário envia questões erradas **e/ou anotações feitas enquanto estuda** (abordagem ativa). O agente integra ambos: analisa erros de questão, diagnostica lacunas e incorpora os insights no resumo correspondente de forma natural e assertiva.
 
 ## Pré-requisitos
-Ler `Tools/comando de analise de questao.md` — contém o protocolo detalhado de análise por habilidades sequenciais.
+Ler `.claude/commands/analisar-questao.md` — contém o protocolo detalhado de análise por habilidades sequenciais e o padrão de invocação do `insert_questao.py`.
 
 ## Passos
 
@@ -30,7 +30,7 @@ Seguir o **Boot Sequence** definido em `AGENTE.md`.
 **B. Insights de estudo (anotações ativas):** O usuário pode enviar anotações livres que fez durante o estudo — insights, conexões, dúvidas, consolidações. Tratar essas anotações como matéria-prima valiosa a ser incorporada no resumo. Não exigir formato específico.
 
 ### 2. Aplicar protocolo de análise (para questões erradas)
-Seguir integralmente o protocolo de `Tools/comando de analise de questao.md` (Etapas 1-7).
+Seguir integralmente o protocolo de `.claude/commands/analisar-questao.md` (Etapas 1-8).
 
 ### 3. Popular Banco de Dados (Caderno de Erros DB)
 - **NÃO ADICIONE MÉTRICAS TEXTUAIS!** O `caderno_erros.md` baseado em texto está depreciado. O Streamlit Dashboard é a única Fonte Real da métrica.

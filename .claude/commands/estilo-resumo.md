@@ -1,6 +1,7 @@
 ---
-type: spec
-layer: tools
+description: "Spec de formatação obrigatória para resumos em Temas/. Consultar antes de criar ou editar qualquer resumo clínico."
+type: skill
+layer: commands
 status: canonical
 ---
 
@@ -35,7 +36,7 @@ status: canonical
 - **Tabelas** — em qualquer tamanho ou formato. Sempre converter para bullets hierárquicos. Sem exceções.
 - Fluxogramas ou algoritmos em ASCII (blocos ` ``` `) — converter para bullets hierárquicos com condicionais em texto (`→ se X:`, `→ se não:`)
 - Headers de metadata no topo (fonte, autor, ano, versão)
-- **Linguagem Informal ou Coloquial** — PROIBIDO o uso de termos como " Vamos lá", "Dica de plantão", "Pulo do gato", "Se matar", "Vai morrer", "Encher balde furado", etc.
+- **Linguagem Informal ou Coloquial** — PROIBIDO o uso de termos como "Vamos lá", "Dica de plantão", "Pulo do gato", "Se matar", "Vai morrer", "Encher balde furado", etc.
 - **Termos Não-Clínicos** — Evitar metáforas dramáticas ou gírias (ex: "letal", "bizarra", "engarrafa"). Use terminologia acadêmica (ex: "potencialmente fatal", "atípica", "congestão retrógrada").
 - **Referências a questões de prova dentro do texto** — nunca escrever "Foco do erro na Q1", "Q2 na prova", "Questão 3 abordou...", etc. O conteúdo aprendido com questões deve ser incorporado de forma natural ao tema, como se sempre tivesse feito parte do resumo.
 
@@ -71,4 +72,3 @@ Esta seção consolida todos os `⚠️ Padrão de prova` espalhados pelo resumo
 
 - `Temas/Cirurgia/Trauma.md` — formatação de referência para trauma
 - `Temas/Clínica Médica/Cardiologia/Insuficiência Cardíaca.md` — formatação de referência para clínica
-- `Temas/GO/[OBS] Sangramentos da Primeira Metade.md` — formatação de referência para GO

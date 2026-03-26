@@ -34,7 +34,9 @@
       "Bash(PYTHONIOENCODING=utf-8 python -m app.memory.inspect --stats 2>&1)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(du -sh C:/Users/daanm/MedHub/*)",
+      "Bash(git:*)"
     ]
   }
 }

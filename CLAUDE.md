@@ -20,11 +20,18 @@ relates_to: [AGENTE, ESTADO, KNOWLEDGE_ARCHITECTURE]
 | Registrar sessão no history | `.agents/workflows/registrar-sessao.md` |
 | Gerar flashcards de reforço | `.agents/workflows/gerar-reforco.md` |
 
-## Arquivos críticos em Tools/
+## Skills disponíveis (`.claude/commands/`)
 
-| Arquivo | Função |
+| Skill | Função |
 |---|---|
-| `Tools/estilo-resumo.md` | Padrão de formatação **obrigatório** para resumos |
-| `Tools/comando de analise de questao.md` | Protocolo de análise de questão (9 etapas) |
-| `Tools/extract_pdfs.py` | Script de extração de PDFs (CLI genérica) |
-| `Tools/insert_questao.py` | CLI: insere erro no `ipub.db` (SSOT de erros) |
+| `.claude/commands/estilo-resumo.md` | Padrão de formatação **obrigatório** para resumos |
+| `.claude/commands/analisar-questao.md` | Protocolo de análise de questão + invocação do `insert_questao.py` |
+| `.claude/commands/extrair-pdf.md` | Wrapper para `extract_pdfs.py` (política Zero PDF) |
+| `.claude/commands/auditar-resumos.md` | Linter de qualidade para `Temas/` |
+
+## Scripts em Tools/
+
+| Script | Função |
+|---|---|
+| `Tools/extract_pdfs.py` | CLI: extração de PDFs (ver skill `/extrair-pdf`) |
+| `Tools/insert_questao.py` | CLI: insere erro no `ipub.db` (ver skill `/analisar-questao`) |

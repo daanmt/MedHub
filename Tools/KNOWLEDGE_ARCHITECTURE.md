@@ -22,10 +22,9 @@ Regras duras do workspace. Toda nota nova e todo agente devem obedecer este docu
 | `roadmap` | raiz | `roadmap.md` |
 | `onboarding` | raiz | `README.md`, `CLAUDE.md` |
 | `rules` | raiz | `KNOWLEDGE_ARCHITECTURE.md` |
-| `spec` | `Tools/` | `estilo-resumo.md` |
+| `skill` | `.claude/commands/` | `estilo-resumo.md`, `analisar-questao.md` |
 | `workflow` | `.agents/workflows/` | `analisar-questoes.md` |
 | `hub` | qualquer nível | `Temas/INDEX.md` |
-| `reference` | `Tools/` | `Anatomia do MedHub.md` |
 | `session` | `history/` | `session_043.md` |
 
 ---
@@ -53,11 +52,12 @@ relates_to: [ESTADO, AGENTE]      # máximo 3 referências
 ---
 ```
 
-### Specs e referências (`Tools/`)
+### Skills (`.claude/commands/`)
 ```yaml
 ---
-type: [spec | reference]
-layer: tools
+description: "Uma linha — usada para descoberta e invocação"
+type: skill
+layer: commands
 status: canonical
 ---
 ```
@@ -140,16 +140,13 @@ Conteúdo semântico canônico. Porta de entrada para agentes.
 | `Temas/**/*.md` | Base de conhecimento clínico (núcleo do projeto) |
 | `Temas/INDEX.md` | Hub de navegação para todos os temas |
 | `.agents/workflows/*.md` | SOPs portáveis |
-| `Tools/estilo-resumo.md` | Spec de formatação obrigatória |
-| `Tools/comando de analise de questao.md` | Protocolo de análise |
+| `.claude/commands/*.md` | Skills atômicas (spec + invocação) |
 
 ### Tier 2 — Indexar com menor prioridade
 Contexto auxiliar. Útil mas não prioritário.
 
 | Arquivo | Por quê |
 |---|---|
-| `Tools/Anatomia do MedHub (Infraestrutura).md` | Referência de arquitetura |
-| `Tools/Mapeamento de Skills e Workflows.md` | Referência de skills |
 | `history/session_*.md` (últimas 10) | Histórico recente |
 
 ### Tier 3 — Não indexar / excluir
@@ -177,7 +174,7 @@ Entender o estado atual          → ESTADO.md
 Encontrar workflows              → .agents/workflows/
 Encontrar temas clínicos         → Temas/INDEX.md → Temas/{Área}/{Tema}.md
 Analisar questão errada          → .agents/workflows/analisar-questoes.md
-Criar novo resumo                → .agents/workflows/criar-resumo.md + Tools/estilo-resumo.md
+Criar novo resumo                → .agents/workflows/criar-resumo.md + .claude/commands/estilo-resumo.md
 Ver regras do ambiente           → KNOWLEDGE_ARCHITECTURE.md (este arquivo)
 O que ignorar                    → medhub-ui-refresh-main/, history/legacy/, Fichas/, Memorex/
 ```

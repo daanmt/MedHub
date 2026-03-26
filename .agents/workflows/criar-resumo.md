@@ -30,7 +30,7 @@ python Tools/extract_pdfs.py "caminho/completo/Tema.pdf" "caminho/completo/Tema2
 Abrir cada arquivo `.txt` gerado (usando os paths do passo 1) e ler o conteúdo completo.
 
 ### 3. Consultar o estilo de formatação
-Ler `Tools/estilo-resumo.md` — OBRIGATÓRIO. Regras críticas:
+Ler `.claude/commands/estilo-resumo.md` — OBRIGATÓRIO. Regras críticas:
 - Bullets hierárquicos; sem tabelas; sem fluxogramas ASCII
 - Emojis apenas: ⭐ (fundamental) | ⚠️ (padrão de prova) | 🔴 (armadilha final)
 - Seção final obrigatória: "Armadilhas de Prova"

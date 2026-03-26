@@ -36,7 +36,8 @@
       "Bash(git commit:*)",
       "Bash(git push:*)",
       "Bash(du -sh C:/Users/daanm/MedHub/*)",
-      "Bash(git:*)"
+      "Bash(git:*)",
+      "Bash(find /c/Users/daanm/MedHub/.claude -type f -name *.json -o -name *.md)"
     ]
   }
 }

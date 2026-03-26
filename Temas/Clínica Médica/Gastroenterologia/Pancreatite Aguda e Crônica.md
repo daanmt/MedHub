@@ -1,8 +1,9 @@
 ---
-type: knowledge
 area: Clínica Médica
+tema: Pancreatite Aguda e Crônica
+type: resumo
 especialidade: Gastroenterologia
-status: active
+status: ativo
 ---
 
 # Pancreatite Aguda e Crônica
@@ -35,23 +36,44 @@ Requer **2 de 3** critérios:
 3. **Imagem:** Achados característicos na TC de abdome ou RM.
 
 ### 1.4 Avaliação de Gravidade (Atlanta 2012)
-- **Leve:** Sem falência orgânica e sem complicações locais/sistêmicas.
-- **Moderadamente Grave:** Falência orgânica transitória (**reverte em < 48h**) ou complicações locais.
-- **Gave:** Falência orgânica persistente (**> 48h**).
+
+- **Leve:** sem falência orgânica e sem complicações locais/sistêmicas.
+- **Moderadamente Grave:** falência orgânica **transitória** (reverte em < 48h) **ou** complicações locais.
+- **Grave:** falência orgânica **persistente** (> 48h) — mortalidade ~17%.
 
 **Preditores de Gravidade Independentes:**
-- PCR ≥ 150 mg/dL (no 3º dia).
+- PCR ≥ 150 mg/dL (3º dia — o mais usado na prática).
 - Hematócrito > 44% (hemoconcentração por perda para o 3º espaço).
 - Ureia > 20 mg/dL (preditor de mortalidade).
 - Obesidade (IMC > 30).
 
-### 1.5 Exame Físico e Sinais de Hemorragia Retroperitoneal
+### 1.5 Scores de Gravidade
+
+- ⭐ **Critérios de Ranson** (score híbrido — colher na admissão e reavaliar em 48h):
+    - **Na admissão:** idade > 55 anos; leucócitos > 16.000/mm³; glicose > 200 mg/dL; LDH > 350 UI/L; AST > 250 UI/L.
+    - **Em 48h:** queda do hematócrito > 10%; ↑ ureia > 5 mg/dL; cálcio < 8 mg/dL; PaO₂ < 60 mmHg; déficit de base > 4 mEq/L; sequestro de líquidos > 6 L.
+    - **Interpretação:** 0–2 = leve (< 1% mortalidade); 3–4 = moderado (15%); 5–6 = grave (40%); ≥ 7 = muito grave (> 99%).
+    - ⚠️ **Padrão de prova:** critérios de admissão e de 48h são DIFERENTES — não misturar. LDH e AST estão APENAS na admissão.
+- **BISAP** (Bedside Index of Severity in Acute Pancreatitis — um ponto por critério):
+    - **B**UN > 25 mg/dL; **I**mpaired mental status; **S**IRS (≥ 2 critérios); **A**ge > 60; **P**leural effusion.
+    - Score ≥ 3 = grave (mortalidade > 5%).
+
+### 1.6 Classificação das Coleções (Atlanta 2012 Revisada)
+
+- ⭐ **Pancreatite edematosa intersticial:**
+    - **CFPA** (Coleção Fluida Peripancreática Aguda) → < 4 semanas, **sem parede**, sem necrose sólida. Regride espontaneamente na maioria.
+    - **Pseudocisto Pancreático** → > 4 semanas, **parede fibrótica bem definida**, conteúdo predominantemente líquido. Tratar se sintomático (drenagem endoscópica guiada por ecoendoscopia).
+- **Pancreatite necrosante:**
+    - **CNA** (Coleção Necrótica Aguda) → < 4 semanas, **sem parede**, conteúdo líquido + necrose sólida.
+    - **WON** (Walled-Off Necrosis / Necrose Murada) → > 4 semanas, **parede bem definida**, conteúdo líquido + necrose sólida. Tratar se infectada (step-up approach).
+
+### 1.7 Exame Físico e Sinais de Hemorragia Retroperitoneal
 - **Sinal de Cullen:** Equimose periumbilical.
 - **Sinal de Grey-Turner:** Equimose em flancos.
 - **Sinal de Fox:** Equimose na base do pênis.
 > ⚠️ **Atenção:** Estes sinais indicam mau prognóstico e sugerem pancreatite necro-hemorrágica.
 
-### 1.6 Tratamento
+### 1.8 Tratamento
 1. **Hidratação:** Ressuscitação volêmica agressiva precoce (preferencialmente **Ringer Lactato**).
 2. **Analgesia:** Opioides (Fentanil). Tradicionalmente evitava-se Morfina pelo "espasmo do esfíncter de Oddi", mas clinicamente é aceitável.
 3. **Dieta:** 
@@ -59,7 +81,7 @@ Requer **2 de 3** critérios:
    - Na PA Grave: Nutrição **Enteral** preferencial (mantém barreira intestinal e reduz translocação bacteriana).
 4. **Antibióticos:** **NÃO** fazer profilaxia. Indicado apenas se necrose infectada (febre e piora clínica após 7-10 dias de evolução).
 
-### 1.7 Necrose Pancreática
+### 1.9 Necrose Pancreática
 - **Necrose Estéril:** Conduta conservadora (Suporte + Nutrição Enteral). ⭐
 - **Necrose Infectada:** Suspeitar se piora clínica ou febre após 7-10 dias.
   - Sinais na TC: Presença de gás (bolhas).
@@ -109,17 +131,16 @@ A tríade aparece em estágios avançados:
 
 ---
 
-## 3. Armadilhas de Prova ⭐
+## 3. Armadilhas de Prova
 
 - 🔴 **TC de Abdome na Emergência:** Quase nunca indicada nas primeiras 48-72h, exceto se dúvida diagnóstica. Antes disso, pode subestimar a necrose.
 - 🔴 **Amilase normal:** Pode ocorrer na pancreatite por hipertrigliceridemia (interferência laboratorial) ou em etilistas crônicos (pâncreas "queimado").
 - 🔴 **Antibiótico Profilático:** NUNCA marcar essa opção. Só se usa se houver evidência de infecção (gás na TC ou punção positiva).
 - 🔴 **Posição Maometana:** O alívio da dor nesta posição é muito característico da pancreatite, ajudando a diferenciar de outras causas de abdome agudo.
-- 🔴 **Triatlon de Ranson:** Lembrar que existem critérios de **admissão** e critérios de **48 horas**. Se a questão der dados da admissão e perguntar a gravidade IMEDIATA, use apenas os de admissão.
+- 🔴 **Critérios de Ranson:** Lembrar que existem critérios de **admissão** e critérios de **48 horas**. Se a questão der dados da admissão e perguntar a gravidade IMEDIATA, use apenas os de admissão.
 - 🔴 **Enzimas na PC:** A reposição enzimática serve para tratar a esteatorreia MAIS a dor (por feedback negativo reduzindo a secreção pancreática).
 - 🔴 **Predição de Gravidade:** Nível de amilase não serve. Usar **PCR** (> 150), **Hematócrito** (> 44%) e **Ureia** (> 20).
 - 🔴 **CPRE:** Reservada para colangite associada ou obstrução biliar persistente. Icterícia isolada fugaz não é indicação obrigatória de urgência.
 - 🔴 **Cirurgia na Necrose:** Sempre "Step-up approach" (Drenagem → Debridamento minimamente invasivo) e o mais tardio possível (> 4 semanas).
 
 ---
-*Atualizado conforme guidelines 2024 e questões de residência.*

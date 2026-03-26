@@ -1,8 +1,9 @@
 ---
-type: knowledge
 area: Clínica Médica
+tema: Asma Brônquica
+type: resumo
 especialidade: Pneumologia
-status: active
+status: ativo
 aliases: [Asma]
 ---
 
@@ -422,7 +423,34 @@ Fluticasona furoato (GINA 2025): 100 mcg = baixa-média; 200 mcg = média-alta *
 
 ---
 
-## 10. Armadilhas de Prova
+## 10. Asma na Criança Menor de 6 Anos
+
+### 10.1 Bebê Chiador — Fenótipos de Sibilância
+- **Sibilância transitória precoce (mais comum):** inicia < 3 anos, cessa antes dos 6 anos; sem atopia; fator principal = exposição ao tabagismo materno + prematuridade; VEF1 basal reduzido.
+- **Sibilância persistente não atópica:** início < 3 anos, persiste além dos 6 anos; desencadeada por vírus (VRS); sem sensibilização alérgica; melhora na adolescência.
+- **Sibilância tardio-atópica (asma atópica clássica):** início após 3 anos; atopia, eczema, rinite; FeNO ↑; maior risco de asma persistente na vida adulta.
+
+### 10.2 Índice Preditivo de Asma (IPA)
+Aplicável a lactentes/pré-escolares com ≥ 3 episódios de sibilância/ano.
+
+**Critérios maiores (1 ponto cada):**
+- Diagnóstico médico de eczema atópico
+- Asma em familiar de 1º grau (pai ou mãe)
+
+**Critérios menores (1 ponto cada):**
+- Rinite alérgica diagnosticada por médico
+- Sibilância não associada a resfriado
+- Eosinofilia no hemograma > 4%
+
+**Interpretação:**
+- IPA **positivo** (≥ 1 critério maior **ou** ≥ 2 critérios menores): risco ~77% de asma aos 6 anos → iniciar CI de manutenção.
+- IPA **negativo**: probabilidade < 5% de asma persistente → tratar episódios isolados, não iniciar manutenção.
+
+> ⚠️ **Padrão de prova:** a espirometria não é executável de forma confiável < 6 anos. Diagnóstico é clínico + resposta terapêutica. IPA substitui a espirometria como critério de decisão nessa faixa etária.
+
+---
+
+## 11. Armadilhas de Prova
 
 - 🔴 **SABA em monoterapia** está proibido desde GINA 2019 — todo asmático recebe CI
 - 🔴 **VEF1 não faz parte** dos critérios de controle GINA — questões antigas cobram isso como correto

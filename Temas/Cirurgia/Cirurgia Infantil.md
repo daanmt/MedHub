@@ -1,164 +1,185 @@
+---
+area: Cirurgia
+tema: Cirurgia Infantil
+type: resumo
+especialidade: Cirurgia Pediátrica
+status: ativo
+---
+
 # Cirurgia Infantil
+
+---
 
 ## 1. Hérnia Diafragmática Congênita (HDC)
 
-- ⭐ **Definição:** Falha no desenvolvimento do diafragma intrauterino, permitindo a migração de vísceras abdominais para a cavidade torácica.
-- **Hérnia de Bochdalek (90%):** Defeito posterolateral, mais comum à esquerda (90%). Típica manifestação neonatal precoce.
-- **Hérnia de Morgagni:** Defeito antero-medial (parasternal), menos comum. Frequentemente assintomática no RN, diagnosticada tardiamente.
-- **Fisiopatologia (Ciclo Vicioso da Hipertensão Pulmonar):**
-    - Hipoplasia pulmonar ipsilateral e contralateral (vias aéreas e alvéolos reduzidos) + espessamento da musculatura arteriolar.
-    - Compressão visceral → Hipertensão Pulmonar (HP) → Shunt direita-esquerda persistente (canal arterial/forame oval).
-    - HP → Hipóxia, Acidose e Hipercapnia → Vasoconstrição pulmonar reflexa → Agravamento da HP.
+- ⭐ **Definição:** Falha no desenvolvimento do diafragma intrauterino, permitindo migração de vísceras abdominais para a cavidade torácica.
+- **Hérnia de Bochdalek (90%):** Defeito posterolateral, lado esquerdo (90%). Manifestação neonatal precoce. Sem saco herniário na maioria (saco presente em ~15%).
+- **Hérnia de Morgagni:** Defeito anteromedial (parasternal). Frequentemente assintomática no RN; diagnóstico tardio.
+- **Fisiopatologia — Ciclo Vicioso da HP:**
+    - Hipoplasia pulmonar ipsilateral e contralateral → hipertensão pulmonar (HP) → shunt D→E pelo canal arterial e forame oval.
+    - HP → hipóxia + acidose + hipercapnia → vasoconstrição pulmonar reflexa → agravamento da HP.
 - **Apresentação Clínica:**
-    - Desconforto respiratório grave logo após o nascimento (90% nas primeiras 24h).
-    - ⭐ **Abdome escafóide (escavado):** Sinal cardinal devido à ausência de vísceras na cavidade abdominal.
-    - Tórax com aumento do diâmetro anteroposterior + Murmúrio vesicular abolido + Ruídos Hidroaéreos (RHA) intratorácicos.
-    - Desvio do ictus cordis e das bulhas cardíacas para o lado contralateral.
+    - Desconforto respiratório grave logo ao nascer (90% nas primeiras 24h).
+    - ⭐ **Abdome escafóide (escavado):** sinal cardinal pela ausência das vísceras na cavidade abdominal.
+    - Tórax com aumento do diâmetro anteroposterior + murmúrio abolido + ruídos hidroaéreos intratorácicos.
+    - Desvio do ictus cordis e bulhas para o lado contralateral.
+    - Diferença de oximetria pré-ductal vs pós-ductal (consequência do shunt D→E).
 - **Diagnóstico:**
-    - **Pré-natal:** USG evidenciando polidrâmnio e alças intestinais no tórax.
-    - **Pós-natal:** Radiografia de tórax (múltiplas imagens bolhosas no hemitórax + desvio de mediastino).
-    - ⚠️ **Sonda Orogástrica:** O cateter aparece enovelado no tórax se o estômago estiver herniado (padrão de prova).
+    - **Pré-natal:** USG com polidrâmnio e alças intestinais intratorácicas.
+    - **Pós-natal:** RX de tórax (imagens bolhosas no hemitórax + desvio de mediastino).
+    - ⚠️ **Padrão de prova:** sonda orogástrica enovelada no tórax = estômago herniado. **Bolha gástrica tópica** aponta para MAC e EXCLUI HDC.
 - **Conduta:**
-    - **ESTABILIZAÇÃO CLÍNICA É PRIORIDADE:** A HDC é uma emergência clínica, não cirúrgica imediata.
-    - Intubação orotraqueal imediata (VETO à ventilação por máscara/ambu para evitar distensão gasosa das alças intratorácicas).
-    - Sonda orogástrica calibrosa em sucção contínua para descompressão.
-    - Manutenção de estabilidade cardiorrespiratória por 24-48h antes da correção cirúrgica.
+    - ⭐ **HDC é emergência CLÍNICA, não cirúrgica imediata.**
+    - IOT imediata — PROIBIDA ventilação com máscara/ambu (distende alças intratorácicas).
+    - Sonda orogástrica em sucção contínua.
+    - Estabilização cardiorrespiratória **2–4 dias** antes do reparo cirúrgico.
+    - Cirurgia: redução das vísceras via incisão subcostal + fechamento do defeito (tela de PTFE se grande).
 
 ---
 
 ## 2. Malformações Broncopulmonares
 
 - **Malformação Adenomatoide Cística (MAC):**
-    - Substituição do parênquima pulmonar por massa multicística de origem bronquiolar.
-    - **Clínica:** Desconforto respiratório neonatal ou infecções de repetição na infância.
-    - ⚠️ **Diferencial com HDC:** Na MAC, a bolha gástrica é tópica (abdominal) e o abdome não é escafóide. Cúpula diafragmática visível no RX.
-    - **Conduta:** Lobectomia (devido ao risco de infecção e potencial transformação maligna - rabdomiossarcoma).
+    - Substituição do parênquima por massa multicística de origem bronquiolar.
+    - Clínica: desconforto respiratório neonatal grave (lesões volumosas) ou infecções pulmonares de repetição na infância (lesões menores).
+    - RX: cistos radiolucentes ovalares, geralmente unilaterais e unilobares.
+    - ⚠️ **Padrão de prova:** diferencial com HDC — na MAC a bolha gástrica é tópica e a cúpula diafragmática ipsilateral é visível.
+    - Conduta: lobectomia (risco de infecção e transformação maligna — rabdomiossarcoma).
 - **Enfisema Lobar Congênito (ELC):**
-    - Hiperinsuflação de um lobo (comumente superior esquerdo ou médio direito) por efeito valva (obstrução brônquica parcial).
-    - **RX:** Hipertransparência localizada com compressão do parênquima adjacente e desvio de mediastino.
-    - **Conduta:** Lobectomia se sintomático; observação se assintomático (pode regredir).
+    - Hiperinsuflação de um lobo (preferencialmente lobo superior esquerdo ou médio direito) por efeito valva.
+    - RX: hipertransparência lobar localizada com compressão do parênquima adjacente e eventual desvio mediastinal.
+    - Diagnóstico: RX de tórax (padrão-ouro clínico).
+    - Conduta: observação se assintomático (tendência à regressão espontânea); lobectomia se sintomático.
 
 ---
 
 ## 3. Atresia de Esôfago (AE) e Fístula Traqueoesofágica (FTE)
 
-- ⭐ **Classificação mais comum (Tipo III):** Bolsa cega esofágica proximal + Fístula traqueoesofágica distal (85% dos casos).
-- **Associações:** 60% apresentam outras malformações.
-    - **VACTERL:** Vertebral, Anorretal, Cardíaca (mais comum), Traqueal, Esofágica, Renal e Limb (membros).
+- ⭐ **Tipo III (mais comum — 85%):** bolsa cega esofágica proximal + fístula traqueoesofágica distal.
+- **Tipo I:** AE isolada sem fístula — sem gás no abdome + polidrâmnio mais intenso (80% dos casos).
+- **Tipo V:** fístula em H sem atresia — sem polidrâmnio, bolha gástrica presente.
+- **Associações:** 60% com outras malformações.
+    - **VACTERL:** Vertebral, **A**norretal, **C**ardíaca (mais comum — causa de mortalidade), **T**raqueal, **E**sofágica, **R**enal, **L**imb.
 - **Apresentação Clínica:**
-    - Sialorreia excessiva ("bebê muito babão").
-    - Engasgos, tosse e cianose na primeira tentativa de alimentação.
-    - Distensão gástrica súbita (ar entrando pela fístula distal no choro).
+    - Sialorreia excessiva + engasgos + cianose na primeira alimentação.
+    - Distensão gástrica ao choro (ar pela fístula distal no Tipo III).
 - **Diagnóstico:**
-    - ⚠️ **Teste de Sonda:** Impossibilidade de progressão da sonda nasogástrica (fica presa a 8-12 cm da narina).
-    - **RX:** Sonda enovelada no coto proximal. Presença de gás no abdome confirma fístula distal (Tipo III). Ausência de gás abdominal indica atresia isolada (Tipo I).
+    - ⭐ **Teste de Sonda:** impossibilidade de progredir SNG — para a 8–12 cm da narina.
+    - RX: sonda enovelada no coto proximal. Gás no abdome = fístula distal (Tipo III). Ausência de gás = Tipo I.
+    - ⚠️ **Padrão de prova:** contraste oral é CONTRAINDICADO (risco de broncoaspiração).
 - **Conduta:**
-    - Posição com tronco elevado (minimizar refluxo gástrico para via aérea via fístula).
-    - Aspiração contínua do coto esofágico proximal ("sonda de Replogle").
-    - Cirurgia: Ligadura da fístula e anastomose primária término-terminal.
-- **Complicações Pós-Op:** Estenose da anastomose (mais comum tardia), Deiscência (precoce/grave), RGE e Traqueomalácea.
+    - Posição semisentada (minimizar RGE pela fístula).
+    - Aspiração contínua do coto proximal (sonda de Replogle).
+    - Cirurgia: ligadura da fístula + anastomose término-terminal primária.
+    - Se cotos muito distantes: esofagostomia + gastrostomia + reconstrução tardia (~1 ano).
+- **Complicações pós-op (ordem de frequência):** estenose da anastomose (mais comum tardia) > RGE > deiscência (precoce/grave) > traqueomalácea.
 
 ---
 
 ## 4. Obstruções Duodenais
 
-- **Etiologia:** 
-    - **Intrínseca (mais comum):** Atresia duodenal (falha de recanalização na 5ª-6ª semana) ou membranas.
-    - **Extrínseca:** Pâncreas anular ou Bridas de Ladd (malrotação).
-- **Associação:** ⭐ **Síndrome de Down (Trissomia 21)** está presente em 30% dos casos.
-- **Apresentação Clínica:** Vômitos biliosos precoces (maioria pós-ampular) + Ausência de distensão abdominal distal (apenas epigástrica).
-- **Diagnóstico:** ⭐ **Sinal da Dupla Bolha** no RX (estômago e primeira porção do duodeno dilatados).
-    - Se houver gás distal associado → Obstrução incompleta (Estenose, Pâncreas Anular ou Bridas de Ladd).
-- **Conduta:** Duodeno-duodenostomia (técnica de "Diamond-shaped" ou em diamante).
+- **Etiologia:**
+    - **Intrínseca (mais comum):** atresia duodenal (falha de recanalização, 5ª–6ª semana) ou membranas.
+    - **Extrínseca:** pâncreas anular ou bridas de Ladd (malrotação).
+- ⭐ **Associação com Síndrome de Down (Trissomia 21):** presente em 30% dos casos.
+- **Clínica:** vômitos biliosos precoces (maioria pós-ampular) + ausência de distensão abdominal distal.
+- **Diagnóstico:** ⭐ **Sinal da Dupla Bolha** no RX (estômago + 1ª porção do duodeno dilatados).
+    - Gás distal presente → obstrução incompleta (estenose, pâncreas anular ou bridas de Ladd).
+    - Ausência de gás distal → atresia completa.
+- **Conduta:** duodeno-duodenostomia (técnica em diamante — diamond-shaped).
 
 ---
 
 ## 5. Atresias Jejunoileais
 
-- **Patogênese:** Resultam de **acidentes vasculares isquêmicos intrauterinos** tardios (vólvulo, invaginação ou hérnia interna), gerando necrose e reabsorção de segmentos.
+- **Patogênese:** acidentes vasculares isquêmicos intrauterinos tardios (vólvulo, invaginação ou hérnia interna) → necrose e reabsorção de segmentos.
 - **Classificação:**
-    - **Tipo I:** Membrana mucosa.
-    - **Tipo II:** Cordão fibroso unindo os cotos.
-    - **Tipo IIIa:** Separação completa com defeito mesentérico em "V".
-    - **Tipo IIIb:** ⭐ **Apple-peel (Casca de Maçã):** Isquemia da AMS distal; intestino enrolado em torno de um vaso.
-    - **Tipo IV:** Múltiplas atresias ("Cordão de salsichas").
-- **Clínica:** Vômitos biliosos + Distensão abdominal generalizada + Falha na eliminação de mecônio.
+    - Tipo I: membrana mucosa.
+    - Tipo II: cordão fibroso unindo os cotos.
+    - Tipo IIIa: separação completa com defeito mesentérico em "V".
+    - ⭐ Tipo IIIb: **Apple-peel (Casca de Maçã)** — isquemia da AMS distal; intestino enrolado em torno de um vaso.
+    - Tipo IV: múltiplas atresias ("cordão de salsichas").
+- **Clínica:** vômitos biliosos + distensão abdominal generalizada + falha na eliminação de mecônio.
 
 ---
 
 ## 6. Má Rotação Intestinal e Vólvulo
 
-- **Fisiopatologia:** Falha na rotação de 270° anti-horária do intestino médio ao redor da Artéria Mesentérica Superior (AMS).
-- **Bandas de Ladd:** Aderências que cruzam o duodeno tentando fixar o ceco (que está no HCD), causando obstrução extrínseca.
-- ⭐ **Vólvulo de Intestino Médio (Emergência Cirúrgica):** Torção do mesentério de base estreita sobre a AMS.
-    - **Tríade Clínica:** Vômitos biliosos súbitos + Eliminação de sangue pelo ânus (estase venosa) + Massa abdominal palpável (alças edemaciadas).
-- **Diagnóstico:** Estudo contrastado (padrão-ouro) mostrando duodeno em "saca-rolhas" ou "bico de pássaro".
-- **Conduta:** **Procedimento de Ladd** (Distorção anti-horária + Secção de bridas + Alinhamento: delgado à direita e cólon à esquerda + Apendicectomia tática).
+- **Fisiopatologia:** falha na rotação de 270° anti-horária do intestino médio ao redor da AMS.
+- **Bridas de Ladd:** aderências que cruzam o duodeno tentando fixar o ceco (que está no HCD) → obstrução extrínseca.
+- ⭐ **Vólvulo de Intestino Médio (Emergência Cirúrgica):** torção do mesentério de base estreita sobre a AMS.
+    - **Tríade:** vômitos biliosos súbitos + eliminação de sangue pelo ânus + massa abdominal palpável.
+- **Diagnóstico:** estudo contrastado (padrão-ouro) — duodeno em "saca-rolhas" ou "bico de pássaro".
+- **Conduta:** **Procedimento de Ladd** — destorção anti-horária + secção de bridas + alinhamento (delgado à direita, cólon à esquerda) + apendicectomia tática.
 
 ---
 
 ## 7. Íleo Meconial
 
-- ⭐ **Associação:** 90% dos casos estão associados à **Fibrose Cística**. É a manifestação clínica mais precoce da doença.
-- **Fisiopatologia:** Mecônio espesso e viscoso ("massa de vidraceiro") impactado no íleo terminal.
-- **Apresentação Clínica:** Obstrução intestinal baixa (distensão + vômitos biliosos) + Massa pastosa palpável em FID.
-- **Diagnóstico:** RX com alças dilatadas SEM níveis hidroaéreos + **Sinal em "Bolha de Sabão"** ou "Vidro moído" em FID (Sinal de Neuhauser).
-- **Conduta:** 
-    - **Não complicado:** Enema com substância hipertônica (Gastrografina) para hidratar e eliminar o mecônio.
-    - **Complicado (Perfuração/Vólvulo):** Cirurgia com ressecção e enterostomia.
+- ⭐ **Associação:** 90% dos casos associados à **Fibrose Cística** — manifestação clínica mais precoce da doença.
+- **Fisiopatologia:** mecônio espesso e viscoso impactado no íleo terminal.
+- **Clínica:** obstrução intestinal baixa + massa pastosa palpável em FID.
+- **Diagnóstico:** RX com alças dilatadas SEM níveis hidroaéreos + **Sinal de Neuhauser** ("bolhas de sabão" ou "vidro moído" em FID).
+- **Conduta:**
+    - **Não complicado:** enema com substância hiperosmolar (Gastrografina) — hidrata e elimina o mecônio.
+    - **Complicado (perfuração/vólvulo):** cirurgia + ressecção + enterostomia.
 
 ---
 
 ## 8. Doença de Hirschsprung (Megacólon Aganglionar)
 
-- **Patogênese:** Falha na migração cefalocaudal das células da crista neural; ausência de plexos de Meissner e Auerbach no segmento distal.
-- **Segmento Doente:** É o segmento DISTAL espástico (estreito), enquanto o proximal saudável dilata-se (megacólon).
+- **Patogênese:** falha na migração cefalocaudal das células da crista neural → ausência de plexos de Meissner e Auerbach no segmento distal.
+- ⭐ **Paradoxo:** o segmento doente é o DISTAL (estreito/espástico); o proximal saudável dilata-se (megacólon).
 - **Apresentação Clínica:**
-    - Atraso na eliminação de mecônio (> 48h).
-    - Constipação crônica progressiva + Distensão abdominal importante.
-    - ⚠️ **Sinal do Toque Retal:** Ampola retal vazia + **Eliminação explosiva** de fezes e gases na retirada do dedo.
-- **Complicação Temível:** Enterocolite de Hirschsprung (principal causa de óbito; sepse e diarreia pútrida).
+    - Atraso na eliminação de mecônio (> 48h de vida).
+    - Constipação crônica progressiva + distensão abdominal.
+    - ⚠️ **Sinal do Toque Retal:** ampola retal vazia + eliminação explosiva de fezes e gases ao retirar o dedo.
+- **Complicação Temível:** enterocolite de Hirschsprung (principal causa de óbito — sepse + diarreia pútrida).
 - **Diagnóstico:**
-    - **Enema Opaco:** Demonstra o cone de transição.
-    - **Manometria Anorretal:** Ausência do reflexo inibitório anorretal (não relaxa com a distensão).
-    - ⭐ **Biópsia Retal (Padrão-Ouro):** Ausência de células ganglionares + Troncos nervosos hipertrofiados (positividade para Acetilcolinesterase - AChE).
-- **Conduta:** Cirurgia de abaixamento de cólon (Técnicas de Duhamel, Soave ou Swenson).
+    - **Enema opaco:** cone de transição entre segmento estreito e dilatado.
+    - **Manometria anorretal:** ausência do reflexo inibitório anorretal.
+    - ⭐ **Biópsia retal (padrão-ouro):** ausência de células ganglionares + troncos nervosos hipertrofiados (positividade para AChE).
+- **Conduta:** cirurgia de abaixamento (técnicas de Duhamel, Soave ou Swenson).
 
 ---
 
 ## 9. Malformações Anorretais
 
-- **Classificação Cirúrgica:**
-    - **Lesões Baixas (< 1cm da pele):** Coto retal próximo ao períneo; fístula perineal cutânea. Tratamento: Anorretoplastia em tempo único (Anoplastia).
-    - **Lesões Altas (> 1cm da pele):** Fístulas para via urinária (uretra/bexiga em meninos) ou vestíbulo/vagina (meninas). Tratamento: Colostomia inicial (3 tempos).
-- **Avaliação (Regra das 24 horas):** 
-    - Deve-se aguardar 24h para observar a saída de mecônio por fístulas (perineal ou urinária).
-    - **Invertogram (Incidência de Wangesteen-Rice):** Indicado após 24h na ausência de fístula visível para determinar a distância entre o ar no reto e a pele anal.
-- **Conduta HIGH:** Colostomia em alça (sigmóide) → Anorretoplastia Sagital Posterior (**Cirurgia de Peña**) aos 2-4 meses → Fechamento da colostomia.
+- **Classificação cirúrgica:**
+    - **Lesões Baixas (< 1 cm da pele):** coto retal próximo ao períneo; fístula perineal cutânea. Tratamento: anorretoplastia em tempo único (anoplastia).
+    - **Lesões Altas (> 1 cm da pele):** fístulas para via urinária (uretra/bexiga em meninos) ou vaginal (meninas). Tratamento: colostomia inicial + Cirurgia de Peña + fechamento da colostomia (3 tempos).
+- **Regra das 24 horas:** aguardar 24h para observar saída de mecônio por fístulas.
+    - Sem fístula visível após 24h → **Invertograma (Wangensteen-Rice):** incidência invertida para medir distância ar retal–pele anal.
+- **Conduta ALTA:** colostomia em alça (sigmóide) → **Cirurgia de Peña** (ASARP) aos 2–4 meses → fechamento da colostomia.
 
 ---
 
 ## 10. Malformações da Parede Abdominal
 
-| Característica | **Onfalocele** | **Gastrosquise** |
-| :--- | :--- | :--- |
-| **Localização** | Central (Cicatriz Umbilical) | Paramediana (Geralmente à Direita) |
-| **Saco Herniário** | **Sim** (Âmnio e Peritônio) | **Não** (Vísceras Expostas) |
-| **Cordão Umbilical**| Inserido no ápice do saco | Inserido na parede abdominal |
-| **Aspecto das Alças**| Normal | Espessada e Edematosa (Serosite) |
-| **Conteúdo** | Fígado frequente (30%) | Raramente Fígado |
-| **Associações** | frequente (Cardíacas, Down) | Raro (Atresia Intestinal) |
-| **Snd Associadas** | Beckwith-Wiedemann / Cantrell | Nenhuma específica |
-
-- **Conduta:** Proteção das alças, hidratação vigorosa (perdas maiores na gastrosquise) e reposição gástrica. Redução progressiva com Silo se houver desproporção víscero-abdominal relevante.
+- **Onfalocele:**
+    - Localização central (defeito na cicatriz umbilical).
+    - Cordão umbilical inserido no ápice do saco herniário.
+    - **Saco herniário presente** (âmnio + peritônio).
+    - Alças com aspecto normal; fígado frequentemente no saco (~30%).
+    - Associações sistêmicas frequentes: cardiopatias, Síndrome de Down, Síndrome de Beckwith-Wiedemann, Síndrome de Cantrell.
+- **Gastrosquise:**
+    - Localização paramediana (quase sempre à direita do cordão).
+    - Cordão umbilical inserido normalmente na parede abdominal.
+    - **Sem saco herniário** — vísceras diretamente expostas ao líquido amniótico.
+    - Alças espessadas, edematosas e friáveis (serosite química).
+    - Fígado raramente herniado.
+    - Associação: atresia intestinal (~10%) — única malformação associada relevante.
+- ⚠️ **Padrão de prova:** na gastrosquise as perdas insensíveis são maiores → hidratação EV mais vigorosa. O Silo é utilizado para redução gradual quando há desproporção víscero-abdominal que impediria o fechamento primário sem síndrome compartimental.
 
 ---
 
 ## 11. Armadilhas de Prova
 
-- 🔴 **HDC:** O reparo cirúrgico NUNCA é imediato; a estabilização respiratória e hemodinâmica (IOT + Sonda) deve ocorrer primeiro.
-- 🔴 **Vômitos Biliosos no RN:** São OBSTRUTIVOS até prova em contrário (Atresia Duodenal, Jejunal ou Vólvulo).
-- 🔴 **AE com Gás no Abdome:** Significa que há uma fístula traqueoesofágica distal (Tipo III).
-- 🔴 **Down e Atresia Duodenal:** Associação clássica. Lembrar do sinal da "Dupla Bolha".
-- 🔴 **Hirschsprung:** O segmento doente é o que parece "fino" (espástico) no enema, não o dilatado.
-- 🔴 **Silo:** É utilizado para redução gradual quando a pressão intra-abdominal impediria o fechamento primário sem risco de síndrome compartimental.
+- 🔴 **HDC:** reparo cirúrgico NUNCA é imediato — estabilização clínica (IOT + sonda + otimização hemodinâmica) tem prioridade. IOT é obrigatória; VETO à ventilação com máscara.
+- 🔴 **Bolha gástrica tópica no RN com desconforto respiratório:** afasta HDC → favorece MAC.
+- 🔴 **Vômitos biliosos no RN:** obstrução intestinal cirúrgica até prova em contrário — não atribuir ao RGE.
+- 🔴 **AE com gás no abdome:** fístula traqueoesofágica distal presente (Tipo III). Ausência de gás = atresia isolada (Tipo I).
+- 🔴 **Down e Atresia Duodenal:** associação clássica. Sinal da dupla bolha + ausência de gás distal = atresia completa.
+- 🔴 **Hirschsprung:** segmento doente = estreito e espástico (proximal aparentemente "normal" dilata por excesso). Toque retal com saída explosiva de fezes = sinal cardinal.
+- 🔴 **Onfalocele vs Gastrosquise:** onfalocele tem saco + inserção umbilical no ápice + múltiplas malformações. Gastrosquise: sem saco + cordão em posição normal + alças espessadas.
+- 🔴 **Silo:** redução gradual da gastrosquise para evitar síndrome compartimental abdominal — não é exclusivo da onfalocele.

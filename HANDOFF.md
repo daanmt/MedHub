@@ -1,20 +1,18 @@
-# HANDOFF — MedHub (Sessão 051 → 052)
+# HANDOFF — MedHub (Sessão 052 → 053)
 
-## 🏁 Onde paramos
-Finalizada a **Sessão 051** focada em **Cirurgia Infantil**.
+## Onde paramos
+Finalizada a **Sessão 052** focada em **Assistência ao Parto (GO)**.
 
-## 🛠️ Estado Técnico
-- **Conteúdo:** Criado resumo clínico `Cirurgia Infantil.md` abrangendo HDC, Atresia de Esôfago, Obstruções GI e Defeitos de Parede.
-- **Workflow:** Executado "Zero PDF" (limpeza total de PDFs fontes e arquivos temporários).
-- **Banco de Dados:** Nenhuma questão nova inserida; foco em síntese teórica.
+## Estado Técnico
+- **Resumo:** `Temas/GO/Assistência ao Parto.md` reescrito — mecanismo de parto, taquissistolia, parto taquitócico, indicações de cesárea, VCE detalhada, HPP preventivo, epidemiologia OMS, 22 armadilhas de prova.
+- **Skills:** `estilo-resumo.md`, `auditar-resumos.md`, `criar-resumo.md` atualizados com novos checks e checklist de auto-auditoria.
+- **Questões:** 34 resolvidas (22 acertos, 64.7%). Análise conversacional — nenhuma entrada no `ipub.db`.
+- **PDFs:** Limpos (política Zero PDF aplicada).
 
-## 🎯 Próximos Passos (Sessão 052)
-1.  **Ritmo:** Faltam **369 questões** para bater a meta de Março (3.000 q).
-2.  **Meta Diária:** Manter **~62 questões/dia**.
-3.  **Sugestão de Temas:**
-    - Ginecologia (DIP / Cervicites) - para expandir cobertura em GO.
-    - Clínica Médica (Cardio ou Neuro).
-    - Iniciar resolução de questões de Cirurgia Infantil para validar o resumo.
+## Próximos Passos (Sessão 053)
+1. Resolver questões de **Assistência ao Puerpério** (tema adjacente, alta incidência).
+2. Rodar `/auditar-resumos` nos demais resumos de GO para verificar conformidade com novo padrão.
+3. Meta de questões: ~2.665 acumuladas; faltam ~335 para meta de Março (3.000 q).
 
 ---
-*Assinado: Antigravity (2026-03-25)*
+*Assinado: Antigravity (2026-03-26)*

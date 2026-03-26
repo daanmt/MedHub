@@ -44,15 +44,33 @@ Ler `.claude/commands/estilo-resumo.md` — OBRIGATÓRIO. Regras críticas:
 - **HARD REQUIREMENT: Benchmark MedHub 80/20 (20% Didática Clínica / 80% Assertividade)**:
   - **20% Didática Clínica:** O resumo DEVE incluir o raciocínio fisiopatológico e clínico com precisão acadêmica (ex: "A insuficiência de VD não apresenta crepitações pulmonares devido à deficiência de bomba prévia ao leito capilar pulmonar").
   - **80% Assertividade:** Foco absoluto em critérios diagnósticos (scores), algoritmos de conduta e definições do ATLS/Diretrizes.
+- **Cobertura de Conteúdo (checklist pré-finalização):**
+  Antes de salvar, percorrer mentalmente o sumário/índice do PDF e confirmar que cada tópico cobrado foi incluído. Lacunas de conteúdo são tão graves quanto violações de formatação. Itens frequentemente omitidos:
+  - Classificações e critérios quantitativos (scores, graus, tempos-limite)
+  - Condutas proscritas e suas justificativas fisiopatológicas
+  - Complicações e manobras de emergência
+  - Seções de contexto clínico (ex: puerpério, pós-operatório, seguimento)
+  - Nuances de prova (critérios abandonados, armadilhas de enunciado)
 - **Formatação de Ouro:**
   - NUNCA crie parágrafos lineares extensos. Use **bullets técnicos, curtos e lógicos** de forma encadeada.
   - **VETO AO COLOQUIALISMO:** É proibido o uso de jargões, metáforas informais ("encher balde") ou tom motivacional. O tom deve ser estritamente formal e cirúrgico.
   - Emojis apenas: ⭐ (Fundamental) | ⚠️ (Padrão de Prova) | 🔴 (Armadilha de Prova).
+  - **PROIBIDO:** emojis em headers (🧭🕒🚨 etc.), bullets `✅`/`❌`, campo `estilo:` no frontmatter, rodapé editorial em itálico.
 
-### 6. Salvar
+### 6. Auto-auditoria (obrigatório antes de salvar)
+Percorrer o rascunho e verificar ausência de cada um dos seguintes:
+- [ ] Emojis em headers H1/H2/H3
+- [ ] Bullets com `✅` ou `❌`
+- [ ] Campo `estilo:` no frontmatter
+- [ ] Tabelas `|---|---|`
+- [ ] Rodapé editorial em itálico (`*Este resumo...`)
+- [ ] Seção "Armadilhas de Prova" ausente ou sem `🔴`
+- [ ] Tópico relevante do sumário do PDF não coberto
+
+### 7. Salvar
 Salvar em `Temas/{Área}/{Subespecialidade}/{Nome do Tema}.md`
 
-### 7. Limpeza automática (pós-resumo)
+### 8. Limpeza automática (pós-resumo)
 ```
 # Deletar PDFs da pasta do tema e os arquivos temporários:
 python Tools/extract_pdfs.py --delete-pdfs "pasta/do/tema/" --delete-temps "path/tmp1.txt" "path/tmp2.txt"
@@ -60,5 +78,5 @@ python Tools/extract_pdfs.py --delete-pdfs "pasta/do/tema/" --delete-temps "path
 - `--delete-pdfs <pasta>`: remove todos os `.pdf`/`.PDF` da pasta indicada
 - `--delete-temps <paths...>`: remove os arquivos `.txt` temporários gerados no passo 1
 
-### 8. Fechamento (Obrigatório)
+### 9. Fechamento (Obrigatório)
 Seguir o **Protocolo de Fechamento** em `AGENTE.md` e executar o workflow `registrar-sessao.md`.

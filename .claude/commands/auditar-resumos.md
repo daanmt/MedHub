@@ -27,6 +27,10 @@ Não requer argumentos. Varre `Temas/**/*.md` recursivamente.
 |---|---|---|
 | Seção "Armadilhas de Prova" | **Crítico** | Deve existir um heading `## N. Armadilhas de Prova` |
 | Tabelas ASCII | **Crítico** | Linhas com padrão `\|.*\|.*\|` são proibidas |
+| Emojis em headers | **Crítico** | Headings H1/H2/H3 não podem iniciar com emoji (🧭🕒🚨🟢🟡🔵 etc.) |
+| Bullets `✅`/`❌` | **Crítico** | Marcadores de bullet não podem ser `✅` ou `❌` — usar `-` com negrito |
+| Campo `estilo:` no frontmatter | **Crítico** | Frontmatter não deve conter campo `estilo:` |
+| Rodapé editorial | **Crítico** | Arquivo não deve terminar com linhas em itálico de origem/autoria (`*Este resumo...`) |
 | Marcadores visuais | Aviso | Pelo menos um de: `⚠️`, `🔴`, `⭐` |
 
 ---
@@ -60,4 +64,8 @@ Não requer argumentos. Varre `Temas/**/*.md` recursivamente.
 
 - **Sem "Armadilhas de Prova":** adicionar seção ao final do arquivo com pelo menos um `🔴`
 - **Tabela ASCII:** converter para bullets hierárquicos (ver `/estilo-resumo` para o padrão)
+- **Emojis em headers:** remover o emoji do título, mantê-lo apenas no corpo do texto se necessário
+- **Bullets `✅`/`❌`:** substituir por `- **Recomendado:**` / `- **Proscrito:**` ou equivalente com negrito
+- **Campo `estilo:` no frontmatter:** remover a linha `estilo: ...`
+- **Rodapé editorial:** remover última(s) linha(s) em itálico de origem/autoria
 - **Sem marcadores:** revisar se o resumo tem highlights com `⭐`, `⚠️` ou `🔴`

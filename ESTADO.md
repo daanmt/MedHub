@@ -6,7 +6,7 @@ relates_to: AGENTE, HANDOFF, roadmap
 ---
 
 # ESTADO — MedHub (Preparação para Residência Médica)
-*Atualizado: 2026-03-26 (sessão 054) | Ferramenta: Claude Code*
+*Atualizado: 2026-03-27 (sessão 055) | Ferramenta: Claude Code*
 
 ---
 
@@ -72,6 +72,7 @@ Workspace state-driven de estudos médicos. Processa questões de prova, registr
 
 ## Últimas sessões
 
+**2026-03-27 | Claude Code (sessão 055):** **Automação do sistema de memória via hooks**. Auditoria completa das 4 camadas de memória. Correção do `manager.py` (2 managers separados, pt-BR, session_id injetado, `_sync_error_counts`). Migração de 37 WeakAreas para namespace correto. Fix do MCP obsidian-notes-rag em agente-daktus-content (env vars). Hooks automáticos: `memory_boot.py` (SessionStart) + `memory_session_log.py` (PostToolUse Write). AGENTE.md e registrar-sessao.md atualizados.
 **2026-03-25 | Antigravity (sessão 051):** **Cirurgia Infantil**. Conclusão do resumo clínico, abrangendo de HDC a defeitos de parede abdominal. 80/20 benchmark e Zero PDF integral.
 **2026-03-25 | Antigravity (sessão 050):** **Início de Cirurgia Infantil**. Extração de PDFs e mapeamento clínico.
 **2026-03-25 | Antigravity (sessão 049):** **Icterícia e Sepse Neonatal (Pediatria)**. Criação do resumo clínico a partir de PDFs originais. Aplicação integral do Gold Standard 80/20 e workflow Zero PDF.
@@ -106,7 +107,7 @@ Ver [[roadmap]] — Linhas Evolutivas.
 Prioridade imediata (Linha 3 → Linha 4):
 1. **Pipeline RAG inverso:** Injetar conteúdo de `Temas/` no prompt de geração de flashcard.
 2. **Meta Volumétrica (60 q/dia):** Manter o ritmo para fechar Março com 3.000 questões.
-3. **Consolidação de Memória:** Executar `python -m app.memory.manager NNN` após cada sessão.
+3. **Consolidação de Memória:** Automática via hook PostToolUse(Write) ao criar `history/session_NNN.md`.
 4. Continuar expandindo `Temas/` (GO: DIP e Sangramentos).
 
 ---

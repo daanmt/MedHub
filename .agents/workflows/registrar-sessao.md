@@ -45,19 +45,14 @@ Criar `history/session_NNN.md` com o seguinte formato:
 ### 3. Atualizar ESTADO.md
 Adicionar entrada na seção "Últimas sessões" do `ESTADO.md` com resumo de uma linha.
 
-### 4. Sincronização Autônoma do RAG (Obrigatório)
-Rodar o comando de indexação local do Obsidian para garantir que a IA tenha acesso imediato a todas as atualizações na próxima sessão:
-```powershell
-obsidian-notes-rag index
-```
-- *Nota: Este passo garante a "amnésia zero" para o banco vetorial do projeto e mantém a funcionalidade MCP global sempre atualizada.*
+### 4. Sincronização Autônoma do RAG (Automático)
+Disparado automaticamente pelo hook `PostToolUse(Write)` quando `history/session_NNN.md` é criado.
+Fallback manual (se o hook falhar): `mcp__obsidian-notes-rag__reindex(clear=False)`
 
-### 5. Consolidação de Memória Longa (Obrigatório — Memory v1)
-Consolidar padrões e insights da sessão na memória cross-session:
+### 5. Consolidação de Memória Longa (Automático — Memory v1)
+Disparado automaticamente em background pelo hook `PostToolUse(Write)` quando `history/session_NNN.md` é criado.
+Fallback manual (se o hook falhar):
 ```powershell
 python -m app.memory.manager <NNN>
 ```
 Onde `<NNN>` é o número da sessão recém-registrada (e.g., `048`).
-- *`ANTHROPIC_API_KEY` já está configurada como variável de ambiente permanente (User level). Não requer configuração manual.*
-- *Outputs: entradas em `("medhub","session_insights")` e `("medhub","weak_areas")` no `medhub_memory.db`.*
-- *Em sessões de questões: os padrões de erro identificados alimentam o `weak_areas` e ficam disponíveis na próxima sessão via `--context`.*

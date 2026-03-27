@@ -54,6 +54,8 @@ A progressão cefalocaudal da icterícia permite estimar a Bilirrubina Total (BT
     - Pode ocorrer na **primeira gestação**: anticorpos anti-A e anti-B naturais são IgG e atravessam a placenta.
     - Quadro geralmente mais leve que na incompatibilidade Rh.
     - Coombs Direto (RN): negativo ou fracamente positivo em **60–70% dos casos** — o diagnóstico é clínico e pela tipagem sanguínea.
+    - **Eluato:** quando o Coombs Direto é positivo, o eluato identifica o anticorpo específico aderido às hemácias do RN (ex.: anti-B). Confirma a etiologia imune e o anticorpo responsável pela hemólise.
+    - ⭐ **Discriminador ABO × Rh:** mãe **Rh positivo** impossibilita isoimunização Rh — o dado da tipagem materna é o primeiro elo a processar antes de qualquer outro raciocínio.
 - ⭐ **Incompatibilidade Rh:**
     - Configuração: **mãe Rh−** (sensibilizada) e **RN Rh+**.
     - Geralmente **não ocorre na primeira gestação** (requer sensibilização prévia por gestação ou transfusão anterior).
@@ -63,8 +65,10 @@ A progressão cefalocaudal da icterícia permite estimar a Bilirrubina Total (BT
 
 ### 2.2 Icterícia pelo Aleitamento Materno
 
-- **Icterícia do Aleitamento (Precoce):** Por **falta** de leite nos primeiros dias → baixa ingesta calórica → aumento da circulação êntero-hepática. Conduta: aumentar frequência das mamadas.
-- **Icterícia do Leite Materno (Tardia):** Por **presença** de substâncias inibidoras no leite (ácidos graxos livres, pregnanodiol) que interferem na conjugação hepática. Ocorre após a 1ª semana; o RN está em bom estado geral e com ganho de peso adequado. Pode persistir até 3 meses. Diagnóstico de exclusão.
+- **Icterícia do Aleitamento (Precoce — primeiros dias):** Por **falta** de leite nos primeiros dias → baixa ingesta calórica → trânsito intestinal lento → ↑ circulação êntero-hepática. Conduta: corrigir técnica de amamentação e aumentar frequência das mamadas.
+- **Icterícia do Leite Materno (Tardia — após a 1ª semana):** Por **presença** de substâncias inibidoras no leite maduro (ácidos graxos livres, pregnanodiol, beta-glucuronidase) que interferem na conjugação hepática. Ocorre após o 7º dia; o RN está em bom estado geral e com ganho de peso adequado. Pode persistir até 3 meses. Diagnóstico de exclusão.
+- ⭐ **Critério temporal discriminador:** com 5 dias de vida o mecanismo do leite materno ainda não está ativo — hiperbilirrubinemia nessa janela é aleitamento (baixa ingesta) até prova em contrário.
+- ⚠️ **Atualização SBP:** não há indicação de suspender o aleitamento materno mesmo na icterícia do leite materno confirmada — os riscos de desmame superam o benefício sobre a bilirrubina.
 
 ### 2.3 Outras Causas Importantes
 
@@ -98,7 +102,7 @@ A progressão cefalocaudal da icterícia permite estimar a Bilirrubina Total (BT
 
 ### 3.2 Diagnóstico Diferencial da Colestase Neonatal
 
-- **Hepatite Neonatal Idiopática:** causa mais comum de colestase intra-hepática; exclusão de causas infecciosas (CMV, toxoplasmose, herpes, sífilis congênita) e metabólicas.
+- **Hepatite Neonatal Infecciosa/Idiopática:** principal grupo de colestase intra-hepática; causas infecciosas (CMV, toxoplasmose, herpes, sífilis congênita, parvovírus, ITU por E. coli) e idiopáticas. ⚠️ **Controvérsia de referência:** SBP aponta AVB como causa mais comum de colestase neonatal; fontes internacionais e dados de países em desenvolvimento apontam hepatite infecciosa — colestase intra-hepática (~70%) supera a extra-hepática (~30%) em volume absoluto.
 - **Deficiência de Alfa-1-Antitripsina (genótipo PiZZ):** colestase neonatal transitória; enfisema pulmonar de início precoce na vida adulta. Diagnóstico: dosagem sérica + fenotipagem.
 - **Síndrome de Alagille:** escassez de ductos biliares intra-hepáticos; facies triangular típica + cardiopatia (estenose pulmonar periférica) + vértebras em "borboleta" + embriotoxon posterior.
 - **Cisto de Colédoco:** dilatação cística da via biliar extra-hepática; massa palpável em hipocôndrio direito + colestase. USG é diagnóstico. Tratamento cirúrgico.
@@ -114,7 +118,10 @@ A progressão cefalocaudal da icterícia permite estimar a Bilirrubina Total (BT
 - **Indicação:** baseada no **nomograma de Bhutani** (AAP), conforme horas de vida, IG e presença de fatores de risco.
 - **Fatores de alto risco** (rebaixam o limiar de intervenção):
     - Hemólise isoimune, deficiência de G6PD, asfixia, letargia, instabilidade térmica.
-    - Albumina sérica < 3,0 g/dL; prematuridade (< 38 semanas).
+    - Albumina sérica < 3,0 g/dL; prematuridade (< 38 semanas); etnia asiática (variantes da UGT1A1 reduzem conjugação).
+- ⭐ **Irradiância:** fototerapia padrão = 8–10 µW/cm²/nm; fototerapia intensiva ≥ 30 µW/cm²/nm indicada quando BT > 17 mg/dL ou próxima ao nível de exsanguinotransfusão.
+- ⭐ **IGIV (Imunoglobulina EV):** indicada **exclusivamente** em hemólise isoimune grave documentada (ABO ou Rh com Coombs + e hemólise ativa persistente) quando BT não cede à fototerapia. **Não tem indicação em icterícia sem hemólise imune confirmada.**
+- ⚠️ **Padrão de prova — icterícia tardia:** qualquer icterícia após os **14–15 dias** de vida exige **dosagem de BT + frações** como primeiro passo antes de qualquer conduta. Se BD elevada → investigar AVB (USG, biópsia). Se BI elevada → considerar leite materno. Não suspender amamentação antes dessa classificação.
 
 ### 4.2 Exsanguíneo-Transfusão (EXT)
 
@@ -187,3 +194,7 @@ A progressão cefalocaudal da icterícia permite estimar a Bilirrubina Total (BT
 - 🔴 **G6PD e Coombs negativo:** hemólise grave com Coombs negativo em RN do sexo masculino deve sugerir deficiência de G6PD; dosar a enzima após resolução do episódio (falso-negativo durante a crise).
 - 🔴 **Sepse tardia nosocomial:** o regime empírico inclui **Vancomicina** (não Oxacilina) por conta do perfil de resistência do *Staph* coagulase-negativo em UTI neonatal.
 - 🔴 **Profilaxia Rh:** a imunoglobulina anti-D deve ser administrada à mãe Rh− em até **72h pós-parto**; também indicada após abortamento, amniocentese e outras situações de contato feto-materno.
+- 🔴 **IGIV em icterícia neonatal:** não é adjuvante à fototerapia de rotina — sua indicação é restrita a hemólise isoimune grave com BT ascendente apesar de fototerapia. Adicioná-la sem hemólise imune documentada é erro de indicação.
+- 🔴 **Icterícia tardia e leite materno:** icterícia em RN com > 14–15 dias e clínica de leite materno (AME, bom ganho de peso) NÃO permite suspender o leite sem primeiro dosar bilirrubinas. BD elevada muda completamente o fluxo para investigação de AVB.
+- 🔴 **Mãe Rh positivo:** impossibilita isoimunização Rh. O primeiro dado a processar em qualquer icterícia hemolítica imune é a tipagem materna — se Rh+, a incompatibilidade é necessariamente ABO (ou outro anticorpo irregular).
+- 🔴 **Causa de colestase neonatal (banca-dependente):** SBP = AVB mais comum; literatura internacional = infecciosa mais comum. Atentar para a referência da banca.

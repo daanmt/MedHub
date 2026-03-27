@@ -17,8 +17,9 @@ Toda nova sessão DEVE seguir esta ordem de leitura para bootstrap de contexto:
 2.  **[[HANDOFF]]**: Onde paramos? (tarefa atual, obstáculos, próximo passo imediato).
 3.  **Workflows relevantes**: Se for analisar questões, leia `.agents/workflows/analisar-questoes.md`. Se for criar resumo, leia `.agents/workflows/criar-resumo.md`.
 4.  **Último log**: `history/session_NNN.md` mais recente.
-5.  **[Memory v1] Carregar contexto de memória longa**: `python -m app.memory.inspect --context`
-    *(Mostra perfil do usuário, preferências, fraquezas persistentes e regras de workflow. Pular se medhub_memory.db não existir ainda.)*
+5.  **[Memory v1] Contexto de memória longa**: carregado automaticamente via hook SessionStart ao início da sessão.
+    Se não aparecer no contexto inicial, executar manualmente: `python -m app.memory.inspect --context`
+6.  **[RAG] Busca semântica durante a sessão**: usar `mcp__obsidian-notes-rag__search_notes` para localizar conteúdo clínico específico em `Temas/` sem ler arquivos inteiros. Útil para verificar condutas, cruzar temas e recuperar critérios de resumos existentes.
 
 ## 3. PROTOCOLO DE FECHAMENTO (Antes de terminar)
 Para garantir que a próxima sessão comece sem perda de informação:

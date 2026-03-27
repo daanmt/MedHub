@@ -6,7 +6,7 @@ relates_to: AGENTE, HANDOFF, roadmap
 ---
 
 # ESTADO — MedHub (Preparação para Residência Médica)
-*Atualizado: 2026-03-25 (sessão 051) | Ferramenta: Antigravity*
+*Atualizado: 2026-03-26 (sessão 054) | Ferramenta: Claude Code*
 
 ---
 
@@ -29,7 +29,7 @@ Workspace state-driven de estudos médicos. Processa questões de prova, registr
 
 - **200+ erros estruturados** no SQLite (`ipub.db`) — consulte o Dashboard para número exato.
 - **37+ resumos clínicos** consolidados em `Temas/`.
-- **51 sessões** de estudo catalogadas em `history/`.
+- **54 sessões** de estudo catalogadas em `history/`.
 - **Memory v1 & v3 ativos**: `app/memory/` configurado com `ANTHROPIC_API_KEY` permanente e consolidação LLM funcional.
 
 ---

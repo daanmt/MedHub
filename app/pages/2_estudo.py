@@ -3,6 +3,9 @@ import sqlite3
 import pandas as pd
 import random
 import os
+import sys
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+from app.utils.db import record_review
 
 st.set_page_config(page_title="Central de Erros", page_icon="📓", layout="wide")
 import os as _os
@@ -130,18 +133,17 @@ with tab2:
             
             def _avancar(rating):
                 if rating > 0:
-                    try:
-                        con = sqlite3.connect(DB_PATH)
-                        dias = {1:0, 2:1, 3:3, 4:7}[rating]
-                        con.execute(f"UPDATE fsrs_cards SET state=2, due=datetime('now', '+{dias} days') WHERE card_id=?", (card['id'],))
-                        con.commit()
-                        con.close()
-                    except: pass
+                    if 'reviewed_ids' not in st.session_state:
+                        st.session_state.reviewed_ids = set()
+                    if card['id'] not in st.session_state.reviewed_ids:
+                        record_review(card['id'], rating)
+                        st.session_state.reviewed_ids.add(card['id'])
                 st.session_state.fc_idx += 1
                 st.session_state.fc_verso = False
                 if st.session_state.fc_idx >= total:
                     st.cache_data.clear()
                     st.session_state.pop('fc_order', None)
+                    st.session_state.pop('reviewed_ids', None)
                 st.rerun()
 
             st.markdown(f"**📚 {card['area']} › {card['tema']}**")

@@ -1,21 +1,35 @@
-# HANDOFF — MedHub (Sessão 055 → 056)
+# HANDOFF — MedHub (Sessão 056 → 057)
 
 ## Onde paramos
-Finalizada a **Sessão 055** focada em **automação do sistema de memória via hooks**.
+Finalizada a **Sessão 056** focada em **infraestrutura do pipeline de flashcards (v5)**.
 
-## Estado Técnico
-- **Hooks ativos**: `Tools/hooks/memory_boot.py` (SessionStart) e `Tools/hooks/memory_session_log.py` (PostToolUse Write) registrados em `.claude/settings.local.json`.
-- **Boot automático**: ao iniciar Claude Code no MedHub, o contexto de memória (`=== MedHub Memory Context ===`) é injetado automaticamente.
-- **Fechamento automático**: ao criar qualquer `history/session_NNN.md`, o hook dispara `manager.py` em background + RAG reindex inline. Nenhuma ação manual necessária.
-- **manager.py corrigido**: 2 managers LangMem separados por schema (SessionInsight → `medhub/session_insights`, WeakArea → `medhub/weak_areas`), session_id injetado via prefixo `[SESSÃO: session_NNN]`, instruções em pt-BR, `_sync_error_counts()` a partir de `taxonomia_cronograma`.
-- **37 WeakAreas migradas**: de `medhub/session_insights` para `medhub/weak_areas` (DB: 64 SI + 37 WA).
-- **MCP agente-daktus-content corrigido**: `env` vars adicionadas ao `.mcp.json` do projeto Daktus.
-- **AGENTE.md e registrar-sessao.md**: atualizados com referência à automação.
+## Estado Técnico — Pipeline Flashcards v5
 
-## Próximos Passos (Sessão 056)
-1. Verificar se o hook SessionStart injeta o contexto corretamente ao reiniciar Claude Code.
-2. Continuar meta volumétrica: ~2.631 questões acumuladas, faltam ~369 para meta de Março (3.000 q).
-3. Próximo tema sugerido: **Assistência ao Puerpério** ou **DIP / Sangramentos na Gestação** (GO).
+### Schema atualizado (`flashcards`)
+- 8 novas colunas: `frente_contexto`, `frente_pergunta`, `verso_resposta`, `verso_regra_mestre`, `verso_armadilha`, `quality_source`, `card_version`, `needs_qualitative`
+- Rollback disponível via `ipub_backup_20260327_215403.db`
+
+### Auditoria final
+- **Total:** 277 cards
+- **Heuristic OK:** 219 | **Heuristic flagged:** 38 | **Qualitative:** 20 | **UI fallback:** 29
+- **Legacy:** 0 (todos regenerados)
+- **Needs qualitative:** 169 (armadilhas + cards com pergunta fraca)
+
+### Arquivos novos
+- `Tools/backup_db.py` — backup com integrity_check antes de migrações
+- `Tools/migrate_flashcards.py` — ALTER TABLE idempotente
+- `Tools/regenerate_cards.py` — regeneração heurística + aplicação de piloto qualitativo
+- `Tools/audit_cards.py` — relatório de qualidade
+
+### Arquivos atualizados
+- `Tools/insert_questao.py` — 5 novos args estruturados (`--frente_pergunta`, etc.), sem emojis, INSERT atualizado
+- `app/pages/2_estudo.py` — DB_PATH absoluto, Tab1 query corrigida, Tab2 render semântico com 3 blocos
+- `.claude/commands/analisar-questao.md` — Section 8 com 4 entregas obrigatórias (inclui 5 campos estruturados)
+
+## Próximos Passos (Sessão 057)
+1. Continuar meta volumétrica (~369 questões para meta de Março de 3.000 q)
+2. Próximo tema sugerido: **Assistência ao Puerpério** ou **DIP / Sangramentos na Gestação** (GO)
+3. Fase qualitativa futura: processar os 169 cards `needs_qualitative=1` em lotes via `--export`/`--apply`
 
 ---
 *Assinado: Claude Code (2026-03-27)*

@@ -9,11 +9,11 @@
 - Criação e aprovação do Plano de Implementação da Fase 2 (Integração DB/Markdown).
 - Estabelecida a Regra de Negócio de "Siamese Twins": O banco SQLite e o Caderno de Erros Markdown devem ser obrigatoriamente populados em sincronia a cada nova questão analisada.
 - Adicionado o **Passo 6** oficial ao workflow base `analisar-questoes.md`, determinando o input obrigatório via shell script.
-- Escrito e validado o CLI Helper `Tools/insert_questao.py`, permitindo a injeção cega e segura dos outputs do LLM (questão, alternativa, armadilha, elo) direto nas 4 tabelas fundamentais (incluindo o gerador automático do Card FSRS).
+- Escrito e validado o CLI Helper `tools/insert_questao.py`, permitindo a injeção cega e segura dos outputs do LLM (questão, alternativa, armadilha, elo) direto nas 4 tabelas fundamentais (incluindo o gerador automático do Card FSRS).
 
 ## Artefatos criados/modificados
 - `implementation_plan.md`
-- `Tools/insert_questao.py` (Criado)
+- `tools/insert_questao.py` (Criado)
 - `.agents/workflows/analisar-questoes.md`
 - `AGENTE.md`
 - `ESTADO.md`

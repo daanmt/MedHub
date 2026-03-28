@@ -15,8 +15,8 @@
 - **Refatoração de Estilo**: Conversão de 8 tabelas para listas de bullet points hierárquicos em `[GIN] Rastreamento Colo.md`.
 - **Governança de Conteúdo**: Remoção de menções diretas a "Foco do erro na QX" para manter o tom técnico e profissional do resumo.
 - **Atualização de Core Tools**:
-    - `Tools/estilo-resumo.md`: Adicionada proibição de referências a questões no texto.
-    - `Tools/comando de analise de questao.md`: Adicionada seção "⚠️ REGRA CRÍTICA" sobre como inserir insights no resumo sem citar a fonte do erro.
+    - `tools/estilo-resumo.md`: Adicionada proibição de referências a questões no texto.
+    - `tools/comando de analise de questao.md`: Adicionada seção "⚠️ REGRA CRÍTICA" sobre como inserir insights no resumo sem citar a fonte do erro.
 
 ## Resultados
 - Resumo de Rastreamento de Colo do Útero 100% atualizado, formatado e "limpo", agora com cobertura avançada de situações especiais.

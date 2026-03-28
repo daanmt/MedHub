@@ -13,7 +13,7 @@
 
 ## Artefatos modificados
 - `caderno_erros.md` — 4 novas entradas
-- `Temas/Clínica Médica/Endocrinologia/Diabetes Melitus Tipo 2.md` — atualizado
+- `resumos/Clínica Médica/Endocrinologia/Diabetes Melitus Tipo 2.md` — atualizado
 
 ## Padrões de erro desta sessão
 

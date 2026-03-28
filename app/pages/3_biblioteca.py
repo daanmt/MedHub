@@ -4,26 +4,28 @@ import os
 st.set_page_config(page_title="Biblioteca & Tutor", page_icon="📚", layout="wide")
 
 st.title("📚 Biblioteca")
-st.markdown('<p style="color: #A8B3C2; margin-top: -15px;">Acesso ultrarrápido aos resumos (.md) e Fichas/Apostilas (.pdf).</p>', unsafe_allow_html=True)
+st.markdown('<p style="color: #A8B3C2; margin-top: -15px;">Acesso ultrarrápido aos resumos (.md).</p>', unsafe_allow_html=True)
 
 tab1, tab2 = st.tabs(["📝 Resumos RAG (.md)", "🗂️ Fichas & Apostilas (.pdf)"])
 
 @st.cache_data(ttl=300)
 def carregar_resumos():
     lista = []
-    if os.path.exists("Temas"):
-        for root, dirs, files in os.walk("Temas"):
+    if os.path.exists("resumos"):
+        for root, dirs, files in os.walk("resumos"):
             for f in files:
                 if f.endswith(".md"):
                     area = os.path.basename(root)
-                    if area == "Temas" or area == "": area = "Geral"
+                    if area == "resumos" or area == "": area = "Geral"
                     lista.append({"area": area, "tema": f.replace(".md", ""), "path": os.path.join(root, f)})
     return sorted(lista, key=lambda x: (x['area'], x['tema']))
 
 @st.cache_data(ttl=300)
 def carregar_pdfs():
+    # As pastas Fichas/ e Memorex/ foram removidas pelo usuário por não serem utilizadas.
+    # Mantemos a função por compatibilidade caso novas pastas de PDF sejam adicionadas.
     lista = []
-    dirs_to_search = ["Fichas", "Memorex"]
+    dirs_to_search = ["pdf", "apostilas"] # Novos padrões lowercase
     for d in dirs_to_search:
         if os.path.exists(d):
             for root, dirs, files in os.walk(d):
@@ -54,7 +56,7 @@ with tab1:
             st.error(f"Erro ao ler arquivo: {e}")
     else:
         if not resumos:
-            st.info("Nenhum arquivo .md encontrado na pasta Temas/")
+            st.info("Nenhum arquivo .md encontrado na pasta resumos/")
         else:
             filt = st.text_input("Buscar Resumo", placeholder="Ex: Pneumonia...")
             filtered = [r for r in resumos if filt.lower() in r['tema'].lower()] if filt else resumos
@@ -71,7 +73,7 @@ with tab1:
 with tab2:
     pdfs = carregar_pdfs()
     if not pdfs:
-        st.info("Nenhum arquivo PDF encontrado nas pastas Fichas/ ou Memorex/")
+        st.info("Nenhum arquivo PDF encontrado (as pastas legadas Fichas/ e Memorex/ foram removidas).")
     else:
         for p in pdfs:
             st.markdown(f"📄 **{p['nome']}**")

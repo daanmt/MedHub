@@ -7,8 +7,8 @@ Criar resumo clínico de alto rendimento para Pancreatite Aguda e Crônica a par
 ## Ações Realizadas
 1. **Extração**: Texto extraído de `Pancre.pdf` via `extract_pdfs.py`.
 2. **Resumo Clínico (Consolidação)**: 
-    - Implementado `Temas/Clínica Médica/Gastroenterologia/Pancreatite Aguda e Crônica.md` (Critérios Atlanta, Grey-Turner, Step-up approach).
-    - Criado `Temas/Clínica Médica/Gastroenterologia/Doença Ulcerosa Péptica.md` a partir do diferencial de dor epigástrica crônica.
+    - Implementado `resumos/Clínica Médica/Gastroenterologia/Pancreatite Aguda e Crônica.md` (Critérios Atlanta, Grey-Turner, Step-up approach).
+    - Criado `resumos/Clínica Médica/Gastroenterologia/Doença Ulcerosa Péptica.md` a partir do diferencial de dor epigástrica crônica.
 3. **Análise de Questões**: 
     - Processamento de 7 erros teóricos sobre gravidade de PA, necrose e complicações de PC.
     - Diagnóstico de "broken skills" e inclusão no `caderno_erros.md`.

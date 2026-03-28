@@ -38,16 +38,16 @@
 - Frontmatter Obsidian adicionado.
 
 **.agents/workflows/criar-resumo.md** — Correção de caminho:
-- `c:\Users\daanm\IPUB\Tools\extract_pdfs.py` → `Tools/extract_pdfs.py` (projeto renomeado; caminho relativo portável).
+- `c:\Users\daanm\IPUB\Tools\extract_pdfs.py` → `tools/extract_pdfs.py` (projeto renomeado; caminho relativo portável).
 
-**Tools/estilo-resumo.md** — Correção de referência:
-- `caderno_erros.md` → `Tools/insert_questao.py` + `ipub.db` (arquivo arquivado).
+**tools/estilo-resumo.md** — Correção de referência:
+- `caderno_erros.md` → `tools/insert_questao.py` + `ipub.db` (arquivo arquivado).
 
 **AGENTE.md** — Adição de frontmatter + wikilinks para ESTADO e HANDOFF.
 
-**Tools/Anatomia do MedHub.md** — Frontmatter adicionado.
+**tools/Anatomia do MedHub.md** — Frontmatter adicionado.
 
-**Tools/Mapeamento de Skills e Workflows.md** — Frontmatter adicionado.
+**tools/Mapeamento de Skills e Workflows.md** — Frontmatter adicionado.
 
 ---
 
@@ -59,16 +59,16 @@
 - `roadmap.md` — corrigido
 - `AGENTE.md` — frontmatter + wikilinks
 - `.agents/workflows/criar-resumo.md` — caminho corrigido
-- `Tools/estilo-resumo.md` — referência atualizada
-- `Tools/Anatomia do MedHub (Infraestrutura).md` — frontmatter
-- `Tools/Mapeamento de Skills e Workflows.md` — frontmatter
+- `tools/estilo-resumo.md` — referência atualizada
+- `tools/Anatomia do MedHub (Infraestrutura).md` — frontmatter
+- `tools/Mapeamento de Skills e Workflows.md` — frontmatter
 - `history/session_043.md` — criado (este arquivo)
 
 ---
 
 ## Decisões tomadas
 
-- **Não criar novos documentos-hub**: `Tools/Anatomia do MedHub.md` e `Tools/Mapeamento de Skills e Workflows.md` já cumprem esse papel no vault Obsidian. Criar um terceiro hub seria inflação.
+- **Não criar novos documentos-hub**: `tools/Anatomia do MedHub.md` e `tools/Mapeamento de Skills e Workflows.md` já cumprem esse papel no vault Obsidian. Criar um terceiro hub seria inflação.
 - **Não mover `caderno_erros.md`**: já está em `history/legacy/` onde pertence. README foi corrigido para não mais mostrá-lo na raiz.
 - **Não tocar `medhub-ui-refresh-main/`**: fork React/Lovable explicitamente ignorado por decisão do usuário.
 - **Wikilinks sem extensão .md**: padrão Obsidian (`[[ESTADO]]` não `[[ESTADO.md]]`).

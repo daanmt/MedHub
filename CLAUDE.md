@@ -27,11 +27,11 @@ relates_to: [AGENTE, ESTADO, KNOWLEDGE_ARCHITECTURE]
 | `.claude/commands/estilo-resumo.md` | Padrão de formatação **obrigatório** para resumos |
 | `.claude/commands/analisar-questao.md` | Protocolo de análise de questão + invocação do `insert_questao.py` |
 | `.claude/commands/extrair-pdf.md` | Wrapper para `extract_pdfs.py` (política Zero PDF) |
-| `.claude/commands/auditar-resumos.md` | Linter de qualidade para `Temas/` |
+| `.claude/commands/auditar-resumos.md` | Linter de qualidade para `resumos/` |
 
-## Scripts em Tools/
+## Scripts em tools/
 
 | Script | Função |
 |---|---|
-| `Tools/extract_pdfs.py` | CLI: extração de PDFs (ver skill `/extrair-pdf`) |
-| `Tools/insert_questao.py` | CLI: insere erro no `ipub.db` (ver skill `/analisar-questao`) |
+| `tools/extract_pdfs.py` | CLI: extração de PDFs (ver skill `/extrair-pdf`) |
+| `tools/insert_questao.py` | CLI: insere erro no `ipub.db` (ver skill `/analisar-questao`) |

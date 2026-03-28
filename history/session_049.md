@@ -7,7 +7,7 @@
 
 ## O que foi feito
 - Extração de conteúdo técnico de alto rendimento a partir de PDFs (`Icterí.pdf` e `Flashc.pdf`).
-- Criação do resumo clínico consolidado `Icterícia e Sepse Neonatal.md` em `Temas/Pediatria/`.
+- Criação do resumo clínico consolidado `Icterícia e Sepse Neonatal.md` em `resumos/Pediatria/`.
 - Aplicação do MedHub Gold Standard 80/20 (80% assertividade / 20% didática clínica).
 - Execução do workflow "Zero PDF" com eliminação total de arquivos temporários e fontes após processamento.
 
@@ -15,7 +15,7 @@
 - N/A (Sessão focada em síntese de conteúdo).
 
 ## Artefatos criados/modificados
-- `Temas/Pediatria/Icterícia e Sepse Neonatal.md` (Criado)
+- `resumos/Pediatria/Icterícia e Sepse Neonatal.md` (Criado)
 - `ESTADO.md` (Atualizado)
 - `HANDOFF.md` (Atualizado)
 

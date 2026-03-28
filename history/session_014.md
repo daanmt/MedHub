@@ -14,7 +14,7 @@
 ## Artefatos criados/modificados
 - `caderno_erros.md` (+11 inserts na área Cirurgia)
 - `progresso.md` (+11 count e mapeamento de padronagens TAF/ATLS)
-- `Temas/Cirurgia/Trauma.md` (Acréscimos textuais explicativos em alertas)
+- `resumos/Cirurgia/Trauma.md` (Acréscimos textuais explicativos em alertas)
 - `history/session_014.md` (Este documento)
 
 ## Decisões tomadas

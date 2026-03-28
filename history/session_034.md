@@ -19,7 +19,7 @@
     - Adição de notas sobre hipoglicemia noturna por sulfonilureias e Efeito do Avental Branco.
 - **Sincronização de Dados**:
     - **Caderno**: Adicionadas 2 novas entradas estruturadas (IDs 099 e 100).
-    - **SQLite**: Executado `Tools/insert_questao.py` para as 2 questões (IDs gerados 183 e 185 no log do sistema).
+    - **SQLite**: Executado `tools/insert_questao.py` para as 2 questões (IDs gerados 183 e 185 no log do sistema).
 - **Métrica**: Atingida a marca simbólica de **100 erros** registrados.
 
 ## Resultados

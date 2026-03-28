@@ -57,7 +57,7 @@ def get_tema_id(cursor, area_hint, tema_name):
 
 def sync_from_summaries(cursor):
     print("Gerando flashcards de REVISÃO (High-Level) a partir dos Resumos Clínicos...")
-    temas_dir = 'Temas'
+    temas_dir = 'resumos'
     count = 0
     
     for root, dirs, files in os.walk(temas_dir):

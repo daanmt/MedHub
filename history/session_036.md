@@ -8,14 +8,14 @@
 ## O que foi feito
 - Extração de texto e criação do resumo de **Arboviroses.md**.
 - Refinamento profundo de **Trauma.md** (Padrão-Ouro): atingida a alta especificidade clínica (AAST, DC, Nuances) com tom acadêmico formal (Benchmark 80/20).
-- **Blindagem do Ambiente:** Atualização de `AGENTE.md`, `Tools/estilo-resumo.md` e workflows (`analisar-questoes`, `criar-resumo`, `gerar-reforco`) para impor o nível de qualidade MedHub Gold Standard.
+- **Blindagem do Ambiente:** Atualização de `AGENTE.md`, `tools/estilo-resumo.md` e workflows (`analisar-questoes`, `criar-resumo`, `gerar-reforco`) para impor o nível de qualidade MedHub Gold Standard.
 - **Análise de Questões:** Integração de 19 questões de Arboviroses (89% acerto) no banco de dados e no resumo clínico (reestadiamento, reações cruzadas, Febre Amarela).
 - Sincronização final do RAG e Git.
 
 ## Artefatos criados/modificados
-- `Temas/Clínica Médica/Infectologia/Arboviroses.md`
-- `Temas/Cirurgia/Trauma.md`
-- `AGENTE.md`, `Tools/estilo-resumo.md`
+- `resumos/Clínica Médica/Infectologia/Arboviroses.md`
+- `resumos/Cirurgia/Trauma.md`
+- `AGENTE.md`, `tools/estilo-resumo.md`
 - `.agents/workflows/` (Todos os arquivos)
 - `HANDOFF.md`, `task.md`
 

@@ -15,7 +15,7 @@ Regras duras do workspace. Toda nota nova e todo agente devem obedecer este docu
 
 | type | Onde fica | Exemplo |
 |---|---|---|
-| `knowledge` | `Temas/` | `Insuficiência Cardíaca.md` |
+| `knowledge` | `resumos/` | `Insuficiência Cardíaca.md` |
 | `bootstrap-protocol` | raiz | `AGENTE.md` |
 | `snapshot` | raiz | `ESTADO.md` |
 | `handoff` | raiz | aposentado — estado em `ESTADO.md` |
@@ -24,14 +24,14 @@ Regras duras do workspace. Toda nota nova e todo agente devem obedecer este docu
 | `rules` | raiz | `KNOWLEDGE_ARCHITECTURE.md` |
 | `skill` | `.claude/commands/` | `estilo-resumo.md`, `analisar-questao.md` |
 | `workflow` | `.agents/workflows/` | `analisar-questoes.md` |
-| `hub` | qualquer nível | `Temas/INDEX.md` |
+| `hub` | qualquer nível | `resumos/INDEX.md` |
 | `session` | `history/` | `session_043.md` |
 
 ---
 
 ## 2. Frontmatter Mínimo por Tipo
 
-### Notas de conhecimento clínico (`Temas/`)
+### Notas de conhecimento clínico (`resumos/`)
 ```yaml
 ---
 type: knowledge
@@ -87,8 +87,8 @@ status: active
 
 ## 3. Naming Conventions
 
-### `Temas/`
-- Hierarquia: `Temas/{Área}/{Especialidade}/{Tema}.md`
+### `resumos/`
+- Hierarquia: `resumos/{Área}/{Especialidade}/{Tema}.md`
 - Prefixos opcionais (`[GIN]`, `[OBS]`, `[CIR]`, `[ORL]`) são legados — não propagar
 - Nomenclatura nova: nome descritivo direto, sentence case, sem prefixo
 - Exemplos corretos: `Insuficiência Cardíaca.md`, `Tuberculose.md`, `Amenorreia.md`
@@ -107,7 +107,7 @@ status: active
 
 - Wikilinks são **intencionais**, não automáticos
 - Usar quando o link cria significado navegacional real
-- Hubs apontam para notas (`Temas/INDEX.md` → todos os temas)
+- Hubs apontam para notas (`resumos/INDEX.md` → todos os temas)
 - Notas de conhecimento **não linkam de volta** para docs raiz (evita ruído no grafo)
 - Docs raiz linkam para workflows e hubs relevantes
 - Aliases permitem wikilinks curtos: `[[IC]]` resolve para `Insuficiência Cardíaca.md`
@@ -137,8 +137,8 @@ Conteúdo semântico canônico. Porta de entrada para agentes.
 | `README.md` | Onboarding e arquitetura |
 | `roadmap.md` | Visão evolutiva |
 | `KNOWLEDGE_ARCHITECTURE.md` | Este documento — regras do ambiente |
-| `Temas/**/*.md` | Base de conhecimento clínico (núcleo do projeto) |
-| `Temas/INDEX.md` | Hub de navegação para todos os temas |
+| `resumos/**/*.md` | Base de conhecimento clínico (núcleo do projeto) |
+| `resumos/INDEX.md` | Hub de navegação para todos os temas |
 | `.agents/workflows/*.md` | SOPs portáveis |
 | `.claude/commands/*.md` | Skills atômicas (spec + invocação) |
 
@@ -156,8 +156,6 @@ Material que polui retrieval e grafo.
 |---|---|
 | `medhub-ui-refresh-main/` | Projeto React legado, sem relação com conteúdo clínico |
 | `history/legacy/` | Arquivos deprecados (caderno_erros.md, progresso.md) |
-| `Fichas/` | PDFs de fichas (sem .md) |
-| `Memorex/` | PDFs de memorex (sem .md) |
 | `data/` | CSVs operacionais |
 | `app/` | Código Python da UI |
 | `.venv/`, `.claude/` | Artefatos de ambiente |
@@ -172,11 +170,11 @@ TAREFA                              LEIA PRIMEIRO
 Retomar o projeto                → AGENTE.md → ESTADO.md (seção "Últimas sessões")
 Entender o estado atual          → ESTADO.md
 Encontrar workflows              → .agents/workflows/
-Encontrar temas clínicos         → Temas/INDEX.md → Temas/{Área}/{Tema}.md
+Encontrar temas clínicos         → resumos/INDEX.md → resumos/{Área}/{Tema}.md
 Analisar questão errada          → .agents/workflows/analisar-questoes.md
 Criar novo resumo                → .agents/workflows/criar-resumo.md + .claude/commands/estilo-resumo.md
 Ver regras do ambiente           → KNOWLEDGE_ARCHITECTURE.md (este arquivo)
-O que ignorar                    → medhub-ui-refresh-main/, history/legacy/, Fichas/, Memorex/
+O que ignorar                    → medhub-ui-refresh-main/, history/legacy/
 ```
 
 ---
@@ -185,7 +183,7 @@ O que ignorar                    → medhub-ui-refresh-main/, history/legacy/, F
 
 - **SSOT de dados:** `ipub.db` (erros, FSRS, cronograma) — não commitar
 - **SSOT documental:** `ESTADO.md`
-- **SSOT de conhecimento clínico:** `Temas/`
+- **SSOT de conhecimento clínico:** `resumos/`
 - **SSOT de workflows:** `.agents/workflows/`
 - O Obsidian é **interface de navegação**, não segunda fonte de verdade
 - Notas do Obsidian não substituem `ESTADO.md`
@@ -198,7 +196,7 @@ MedHub opera com três camadas de memória complementares. Detalhes em `MEMORY_A
 
 | Camada | Backend | Escopo | Responsável |
 |---|---|---|---|
-| Camada 1 | Repositório git (Temas/, ipub.db, history/) | Cross-session, canônico | Agente + dev |
+| Camada 1 | Repositório git (resumos/, ipub.db, history/) | Cross-session, canônico | Agente + dev |
 | Camada 2 | `medhub_memory.db::checkpoints` (SqliteSaver) | Within-thread, restaurável | LangGraph |
 | Camada 3 | `medhub_memory.db::memory_store` (SQLiteMemoryStore) | Cross-thread, longa duração | LangMem |
 

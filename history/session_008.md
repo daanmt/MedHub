@@ -18,7 +18,7 @@
 - Atualização do `ESTADO.md` e contagem de resumos (Total: 22).
 
 ## Resultados
-- Novo resumo `Temas/Clínica Médica/Hematologia/Hemostasia.md` disponível para estudo.
+- Novo resumo `resumos/Clínica Médica/Hematologia/Hemostasia.md` disponível para estudo.
 - Repositório local limpo e sincronizado.
 
 ---

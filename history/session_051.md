@@ -4,7 +4,7 @@ Nesta sessão, concluímos a criação do resumo clínico de **Cirurgia Infantil
 
 #### 1. Atividades Realizadas
 - **Boot Sequence**: Retomada do plano aprovado na Sessão 050.
-- **Redação do Resumo**: Criado o arquivo `Temas/Cirurgia/Cirurgia Infantil.md` seguindo o MedHub Gold Standard (80/20 benchmark).
+- **Redação do Resumo**: Criado o arquivo `resumos/Cirurgia/Cirurgia Infantil.md` seguindo o MedHub Gold Standard (80/20 benchmark).
   - Cobertura completa: HDC, Malformações Broncopulmonares, Atresia de Esôfago, Obstruções Duodenais e Jejunoileais, Má Rotação/Vólvulo, Íleo Meconial, Hirschsprung, Malformações Anorretais e Defeitos de Parede Abdominal.
   - Seção "Armadilhas de Prova" consolidada com 6 pontos críticos.
 - **Políticas de Governança**:

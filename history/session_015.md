@@ -6,13 +6,13 @@
 ---
 
 ## O que foi feito
-- Extração de texto via `extract_pdfs.py` do documento `Temas/GO/Sífili.pdf`.
+- Extração de texto via `extract_pdfs.py` do documento `resumos/GO/Sífili.pdf`.
 - Elaboração do **Resumo Clínico** completo englobando diagnóstico, estadiamento e protocolos de sífilis materno-fetal.
 - Compilação dos alertas de prova mencionados pelo professor do curso no PDF, principalmente voltados a pegadinhas sobre testes confirmatórios na gestante, "falha de tratamento" atrelada ao parceiro (que foi derrubada pelo ministério recentemente) e exames da criança recém-nascida.
 - Limpeza dos arquivos RAWs criados e do PDF original.
 
 ## Artefatos criados/modificados
-- `Temas/GO/[OBS] Sífilis na Gestação e Congênita.md` (Novo material)
+- `resumos/GO/[OBS] Sífilis na Gestação e Congênita.md` (Novo material)
 - `ESTADO.md` (Atualização de histórico e contagem de resumos p/ 24)
 - `HANDOFF.md` (Atualização de histórico de repasse)
 - `history/session_015.md` (Este documento)

@@ -12,15 +12,15 @@ Uso:
     python extract_pdfs.py --cleanup "caminho/para/arquivo.pdf"
 
 Fluxo completo esperado (executado pelo agente):
-    1. Extrair:   python extract_pdfs.py "Tema/Asma.pdf" "Tema/Asma a.pdf"
+    1. Extrair:   python extract_pdfs.py "resumos/Asma.pdf" "resumos/Asma a.pdf"
     2. Ler:       o agente lê os paths impressos no stdout
     3. Redigir:   agente escreve o resumo .md
-    4. Limpar:    python extract_pdfs.py --delete-pdfs "Tema/" --delete-temps caminho1.txt caminho2.txt
+    4. Limpar:    python extract_pdfs.py --delete-pdfs "resumos/" --delete-temps caminho1.txt caminho2.txt
 
 Import direto:
-    from Tools.extract_pdfs import extract_pdf, delete_pdfs_in_folder
+    from tools.extract_pdfs import extract_pdf, delete_pdfs_in_folder
     tmp_path = extract_pdf("arq.pdf")   # retorna path do arquivo temp
-    delete_pdfs_in_folder("Tema/Pneumologia/")
+    delete_pdfs_in_folder("resumos/Pneumologia/")
 """
 
 import pdfplumber

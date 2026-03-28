@@ -13,7 +13,7 @@
 
 ## Artefatos criados/modificados
 - `Temas\GO\[OBS] Sífilis na Gestação e Congênita.md` (Modificado)
-- `ipub.db` (Modificado via `Tools/insert_questao.py`)
+- `ipub.db` (Modificado via `tools/insert_questao.py`)
 
 ## Decisões tomadas
 - **Critério de Inadequação:** Reforçado que parceiro mal tratado ou ascensão de títulos maternos = reinfecção = tratamento inadequado, mesmo com doses prévias.

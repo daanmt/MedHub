@@ -12,7 +12,7 @@ taxa: 64.7%
 
 ## O que foi feito
 
-### 1. Revisão completa de `Temas/GO/Assistência ao Parto.md`
+### 1. Revisão completa de `resumos/GO/Assistência ao Parto.md`
 Resumo recriado do zero a partir de três PDFs (apostila Estratégia MED + mapa mental + flashcards).
 
 **Conteúdo adicionado vs. versão anterior:**

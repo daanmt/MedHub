@@ -13,7 +13,7 @@ topic: Ginecologia - Úlceras Genitais
 2. **Arquitetura:** Alinhamento imediato com as novas diretrizes de `KNOWLEDGE_ARCHITECTURE.md`:
    - Nome do arquivo: `Úlceras Genitais.md` (Remoção do prefixo legado `[GIN]`).
    - Adição de frontmatter canônico.
-3. **Extração:** Uso do `Tools/extract_pdfs.py` para processar `Úlcera.pdf`.
+3. **Extração:** Uso do `tools/extract_pdfs.py` para processar `Úlcera.pdf`.
 4. **Redação:** Implementação do padrão MedHub Gold Standard (80/20):
    - 80% Assertividade: Condutas CDC/MS, esquemas de Penicilina, Azitromicina, Doxiciclina, Cesariana no Herpes.
    - 20% Didática: Fisiologia herpética (latência ganglionar), corpúsculos de Donovan, bico de regador (LGV).

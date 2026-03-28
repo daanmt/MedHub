@@ -22,7 +22,7 @@ ferramenta: Claude Code
 - Análise de 5 questões erradas do tema Icterícia e Sepse Neonatal (Pediatria)
 - 5 erros inseridos no `ipub.db` (IDs 243–251)
 - 5 flashcards FSRS gerados automaticamente
-- Resumo `Temas/Pediatria/Icterícia e Sepse Neonatal.md` atualizado com 15 linhas novas
+- Resumo `resumos/Pediatria/Icterícia e Sepse Neonatal.md` atualizado com 15 linhas novas
 - Reindexação do Obsidian RAG (2935 → 3026 chunks)
 
 ---
@@ -47,7 +47,7 @@ ferramenta: Claude Code
 
 ## Artefatos criados/modificados
 
-- `Temas/Pediatria/Icterícia e Sepse Neonatal.md` — atualizado (eluato ABO, critério temporal leite materno, IGIV, irradiância fototerapia, fluxo icterícia tardia, controvérsia colestase)
+- `resumos/Pediatria/Icterícia e Sepse Neonatal.md` — atualizado (eluato ABO, critério temporal leite materno, IGIV, irradiância fototerapia, fluxo icterícia tardia, controvérsia colestase)
 - `ipub.db` — 5 novos erros + 5 flashcards
 - `history/session_054.md` — este arquivo
 

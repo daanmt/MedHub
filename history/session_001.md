@@ -7,7 +7,7 @@
 
 ## O que foi feito (sessões anteriores consolidadas)
 
-### Resumos criados (Temas/)
+### Resumos criados (resumos/)
 - Cirurgia: Trauma.md, TCE.md
 - Clínica Médica: Insuficiência Cardíaca (Cardio), DRC (Nefro), Asma (Pneumo), HIV e Tuberculose (Infecto), DRGE (Gastro), TCE (Neuro)
 - GO: Climatério e TH, CA de Mama, Doenças Benignas da Mama, Dor Pélvica, SUA, Amenorreia (GIN) | Sangramentos 1ª Metade (OBS)
@@ -22,8 +22,8 @@
 - INSTRUCOES_AGENTE.md criado (system prompt portável)
 - CLAUDE.md criado (pointer para Claude Code)
 - ESTADO.md criado (estado do projeto)
-- Tools/extract_pdfs.py criado (extração de PDFs)
-- Tools/comando de análise de questão.md criado (protocolo 9 etapas)
+- tools/extract_pdfs.py criado (extração de PDFs)
+- tools/comando de análise de questão.md criado (protocolo 9 etapas)
 
 ---
 

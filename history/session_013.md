@@ -8,7 +8,7 @@
 
 ## Ações Realizadas
 1. Extração do conteúdo de `Trauma_abdominal.pdf` (58 páginas).
-2. Planejamento do resumo para `Temas/Cirurgia/Trauma.md`.
+2. Planejamento do resumo para `resumos/Cirurgia/Trauma.md`.
 3. Adição da seção "Trauma Abdominal e Pélvico" aos tópicos de Trauma, seguindo o `estilo-resumo.md`.
 4. Enfoque em armadilhas de prova, incluindo a manobra de Pringle, conduta na hematúria, e as contraindicações de SVD no trauma uretral.
 5. Limpeza de artefatos temporários e atualização da documentação core (`ESTADO.md` e `HANDOFF.md`).

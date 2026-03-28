@@ -14,7 +14,7 @@
 
 ## Artefatos criados/modificados
 - `caderno_erros.md`
-- `Temas/GO/[OBS] Sífilis na Gestação e Congênita.md`
+- `resumos/GO/[OBS] Sífilis na Gestação e Congênita.md`
 - `progresso.md`
 - `ESTADO.md`
 - `HANDOFF.md`

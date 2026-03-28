@@ -9,6 +9,7 @@ BAD_PATTERNS = [
     r'^em \w+: qual a sequencia',
     r'^sobre \w+:',
     r'^qual a conduta correta em:',
+    r'^qual a abordagem correta em:',  # fallback genérico demais
     r'n/a',
 ]
 
@@ -19,6 +20,19 @@ def clean(s):
     if not s: return ''
     s = s.strip()
     return '' if s.lower() in NA_VALUES else s
+
+
+def strip_letter_ref(text: str) -> str:
+    """Remove referência de gabarito tipo '(B)', '(C)' do final do texto.
+
+    Ex: 'Adenosina (B)' -> 'Adenosina'
+        'Manobra Vagal (C).' -> 'Manobra Vagal'
+        'conduta expectante (A)' -> 'conduta expectante'
+    """
+    if not text:
+        return text
+    cleaned = re.sub(r'\s*\([A-Ea-e]\)\s*\.?\s*$', '', text.strip())
+    return cleaned.strip()
 
 def is_low_quality(pergunta: str) -> bool:
     p = pergunta.lower().strip()
@@ -47,13 +61,13 @@ def heuristic_fields(q):
     perg   = last_h or faltou or f"Qual a conduta correta em: {q['titulo']}?"
     if not perg.endswith('?'): perg += '?'
 
-    # Resposta: preferir alternativa_correta se substancial, senao fallback para explicacao
-    resp_raw = first_n(q['alternativa_correta'], 200)
+    # Resposta: preferir alternativa_correta stripada de letra de gabarito
+    resp_raw = strip_letter_ref(first_n(q['alternativa_correta'], 200))
     if len(resp_raw) < 8:
-        # Texto muito curto (ex: so a letra 'D') — usar explicacao como resposta
+        # Texto muito curto (ex: só a letra 'D') — usar explicacao como resposta
         resp_raw = first_n(q['explicacao_correta'], 200)
         if len(resp_raw) < 8:
-            resp_raw = ''  # Sem dados suficientes — UI usara fallback legado
+            resp_raw = ''  # Sem dados suficientes — UI usará fallback legado
 
     flagged = is_low_quality(perg) or len(resp_raw) == 0
     return {
@@ -160,12 +174,12 @@ def main():
             if c['tipo'] == 'armadilha':
                 new_fields = {
                     'frente_contexto':    first_n(c['enunciado'], 100),
-                    'frente_pergunta':    f"Qual o distrator tipico do examinador em: {c['titulo']}?",
+                    'frente_pergunta':    f"Qual o distrator do examinador em '{c['titulo']}'?",
                     'verso_resposta':     first_n(c['armadilha_prova'], 200),
                     'verso_regra_mestre': first_n(c['explicacao_correta'], 200),
-                    'verso_armadilha':    first_n(c['armadilha_prova'], 200),
+                    'verso_armadilha':    '',  # não redundante: regra mestre já cobre
                     'quality_source':     'heuristic',
-                    'needs_qualitative':  1,
+                    'needs_qualitative':  1,  # armadilha sempre flags para LLM
                 }
             else:
                 new_fields = heuristic_fields(c)

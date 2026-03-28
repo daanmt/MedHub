@@ -35,8 +35,11 @@ def _invert_elo_to_question(elo: str, tema: str) -> str:
     if any(x in elo_lower for x in ['indicação', 'contraindicação', 'quando', 'em quais']):
         return f"Quais as indicações/contraindicações de {_extract_key_term(elo)} em {tema}?"
     
-    # Fallback genérico mas cirúrgico
-    return f"Sobre {tema}: {elo.rstrip('.')}?"
+    # Fallback: usar o elo diretamente como pergunta clínica
+    elo_clean = elo.rstrip('.').strip()
+    if len(elo_clean) > 20:
+        return f"{elo_clean}?" if not elo_clean.endswith('?') else elo_clean
+    return f"Qual a abordagem diagnóstica/terapêutica em {tema}?"
 
 def insert_questao(area, tema, enunciado, correta, chamada, erro, elo, armadilha,
                    complexidade="Media", habilidades="N/A", faltou="N/A", explicacao="N/A", titulo="Erro sem titulo",

@@ -15,7 +15,7 @@ Cada camada tem responsabilidade exclusiva — **não duplicar informação entr
 ```
 ┌────────────────────────────────────────────────────────────┐
 │ CAMADA 1 — Canônica (repositório git)                      │
-│  AGENTE.md · ESTADO.md · HANDOFF.md · Temas/ · ipub.db    │
+│  AGENTE.md · ESTADO.md · Temas/ · ipub.db    │
 │  Fonte de verdade para conteúdo clínico e estado do projeto│
 └────────────────────────────────────────────────────────────┘
         ↑ lida no boot, atualizada ao fechar sessão
@@ -85,7 +85,7 @@ Dois bancos SQLite distintos — **zero acoplamento**:
 - Conteúdo de `Temas/*.md` (já no repo)
 - Dados brutos de `ipub.db` (já estruturados lá)
 - Logs completos de sessão (já em `history/`)
-- Estado de `ESTADO.md` ou `HANDOFF.md`
+- Estado de `ESTADO.md` (documento único de estado/handoff)
 
 ### Anti-drift
 
@@ -160,7 +160,7 @@ python Tools/test_memory.py
 ```
 1. AGENTE.md          (boot protocol)
 2. ESTADO.md          (snapshot canônico)
-3. HANDOFF.md         (próximo passo)
+3. ESTADO.md seção "Últimas sessões" (próximo passo)
 4. app/memory context (python app/memory/inspect.py --context)
 5. Workflow da tarefa (.agents/workflows/)
 6. Temas relevantes   (via Temas/INDEX.md)

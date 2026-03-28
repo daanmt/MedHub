@@ -2,7 +2,7 @@
 type: bootstrap-protocol
 layer: root
 status: canonical
-relates_to: ESTADO, HANDOFF, roadmap
+relates_to: ESTADO, roadmap
 ---
 
 # AGENTE.md — Protocolo de Continuidade MedHub
@@ -13,21 +13,21 @@ relates_to: ESTADO, HANDOFF, roadmap
 ## 2. BOOT SEQUENCE (Obrigatório ao iniciar)
 Toda nova sessão DEVE seguir esta ordem de leitura para bootstrap de contexto:
 
-1.  **[[ESTADO]]**: Visão canônica do projeto (o que é, mapa de arquivos, marcos).
-2.  **[[HANDOFF]]**: Onde paramos? (tarefa atual, obstáculos, próximo passo imediato).
-3.  **Workflows relevantes**: Se for analisar questões, leia `.agents/workflows/analisar-questoes.md`. Se for criar resumo, leia `.agents/workflows/criar-resumo.md`.
-4.  **Último log**: `history/session_NNN.md` mais recente.
-5.  **[Memory v1] Contexto de memória longa**: carregado automaticamente via hook SessionStart ao início da sessão.
+1.  **[[ESTADO]]**: Documento único de estado — visão canônica do projeto, mapa de arquivos, marcos e seção "Últimas sessões" (onde paramos).
+2.  **Workflows relevantes**: Se for analisar questões, leia `.agents/workflows/analisar-questoes.md`. Se for criar resumo, leia `.agents/workflows/criar-resumo.md`.
+3.  **Último log**: `history/session_NNN.md` mais recente.
+4.  **[Memory v1] Contexto de memória longa**: carregado automaticamente via hook SessionStart ao início da sessão.
     Se não aparecer no contexto inicial, executar manualmente: `python -m app.memory.inspect --context`
-6.  **[RAG] Busca semântica durante a sessão**: usar `mcp__obsidian-notes-rag__search_notes` para localizar conteúdo clínico específico em `Temas/` sem ler arquivos inteiros. Útil para verificar condutas, cruzar temas e recuperar critérios de resumos existentes.
+5.  **[RAG] Busca semântica durante a sessão**: usar `mcp__obsidian-notes-rag__search_notes` para localizar conteúdo clínico específico em `Temas/` sem ler arquivos inteiros. Útil para verificar condutas, cruzar temas e recuperar critérios de resumos existentes.
+
+> **Nota:** `HANDOFF.md` foi aposentado na sessão 058. `ESTADO.md` é o único documento de estado/handoff do projeto.
 
 ## 3. PROTOCOLO DE FECHAMENTO (Antes de terminar)
 Para garantir que a próxima sessão comece sem perda de informação:
 
-1.  **Atualizar HANDOFF.md**: Registre o que foi feito e o que falta.
-2.  **Atualizar ESTADO.md**: Se houve nova área/tema ou decisão estrutural.
-3.  **Registrar Sessão**: Criar novo arquivo em `history/session_NNN.md` seguindo o template.
-4.  **Git (se disponível)**: `git add .` (Garantindo que `ipub.db` embarque), `git commit -m "sessao NNN: [resumo]"`, `git push`.
+1.  **Atualizar ESTADO.md**: Adicionar entrada em "Últimas sessões" com o que foi feito e o que falta.
+2.  **Registrar Sessão**: Criar novo arquivo em `history/session_NNN.md` seguindo o template.
+3.  **Git (se disponível)**: Fazer `git add` nos arquivos modificados (nunca `git add .` — `ipub.db` não deve ser commitado), `git commit -m "sessao NNN: [resumo]"`, `git push`.
 
 ## 4. MENTALIDADE GOLD STANDARD (Qualidade MedHub)
 Toda interação deve refletir o nível de excelência dos resumos padrão-ouro (`Trauma.md`, `Insuficiência Cardíaca.md`):

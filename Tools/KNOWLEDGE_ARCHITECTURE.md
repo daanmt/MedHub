@@ -18,7 +18,7 @@ Regras duras do workspace. Toda nota nova e todo agente devem obedecer este docu
 | `knowledge` | `Temas/` | `Insuficiência Cardíaca.md` |
 | `bootstrap-protocol` | raiz | `AGENTE.md` |
 | `snapshot` | raiz | `ESTADO.md` |
-| `handoff` | raiz | `HANDOFF.md` |
+| `handoff` | raiz | aposentado — estado em `ESTADO.md` |
 | `roadmap` | raiz | `roadmap.md` |
 | `onboarding` | raiz | `README.md`, `CLAUDE.md` |
 | `rules` | raiz | `KNOWLEDGE_ARCHITECTURE.md` |
@@ -98,7 +98,7 @@ status: active
 - Não criar sessões retroativas
 
 ### Raiz
-- Maiúsculas para docs canônicos: `AGENTE.md`, `ESTADO.md`, `HANDOFF.md`, `CLAUDE.md`
+- Maiúsculas para docs canônicos: `AGENTE.md`, `ESTADO.md`, `CLAUDE.md`
 - Minúsculas para docs estruturais: `roadmap.md`
 
 ---
@@ -133,7 +133,7 @@ Conteúdo semântico canônico. Porta de entrada para agentes.
 |---|---|
 | `AGENTE.md` | Boot protocol — obrigatório em toda sessão |
 | `ESTADO.md` | Snapshot do projeto — estado atual |
-| `HANDOFF.md` | Próximo passo imediato |
+| ~~`HANDOFF.md`~~ | aposentado (sessão 058) — ver `ESTADO.md` |
 | `README.md` | Onboarding e arquitetura |
 | `roadmap.md` | Visão evolutiva |
 | `KNOWLEDGE_ARCHITECTURE.md` | Este documento — regras do ambiente |
@@ -169,7 +169,7 @@ Material que polui retrieval e grafo.
 ```
 TAREFA                              LEIA PRIMEIRO
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Retomar o projeto                → AGENTE.md → ESTADO.md → HANDOFF.md
+Retomar o projeto                → AGENTE.md → ESTADO.md (seção "Últimas sessões")
 Entender o estado atual          → ESTADO.md
 Encontrar workflows              → .agents/workflows/
 Encontrar temas clínicos         → Temas/INDEX.md → Temas/{Área}/{Tema}.md

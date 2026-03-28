@@ -26,8 +26,10 @@ status: ativo
     - Diferença de oximetria pré-ductal vs pós-ductal (consequência do shunt D→E).
 - **Diagnóstico:**
     - **Pré-natal:** USG com polidrâmnio e alças intestinais intratorácicas.
+        - **Índice prognóstico pré-natal:** ⭐ **LHR (lung-to-head ratio)** = tamanho do pulmão / circunferência da cabeça ao USG. LHR < 25% = mau prognóstico + indicação de FETO (oclusão traqueal fetal endoscópica). Não confundir com "razão pulmão/abdômen" — esse índice não existe.
     - **Pós-natal:** RX de tórax (imagens bolhosas no hemitórax + desvio de mediastino).
     - ⚠️ **Padrão de prova:** sonda orogástrica enovelada no tórax = estômago herniado. **Bolha gástrica tópica** aponta para MAC e EXCLUI HDC.
+    - ⚠️ **iNO na HDC:** reduz hipertensão pulmonar e sobrecarga do VD, mas ensaios clínicos **não demonstraram redução consistente de ECMO** em HDC — diferente de outras formas de hipertensão pulmonar persistente do RN (HPPN).
 - **Conduta:**
     - ⭐ **HDC é emergência CLÍNICA, não cirúrgica imediata.**
     - IOT imediata — PROIBIDA ventilação com máscara/ambu (distende alças intratorácicas).
@@ -67,6 +69,7 @@ status: ativo
     - ⭐ **Teste de Sonda:** impossibilidade de progredir SNG — para a 8–12 cm da narina.
     - RX: sonda enovelada no coto proximal. Gás no abdome = fístula distal (Tipo III). Ausência de gás = Tipo I.
     - ⚠️ **Padrão de prova:** contraste oral é CONTRAINDICADO (risco de broncoaspiração).
+    - ⚠️ **Padrão de prova (pré-natal):** polidrâmnio + **ausência de bolha gástrica** ao USG = AE **sem fístula** (Tipo I). Na AE Tipo III (fístula distal, 85%), o ar passa da traqueia pela fístula ao estômago → bolha gástrica **presente** ao USG. A ausência de bolha gástrica exclui qualquer tipo com fístula distal.
 - **Conduta:**
     - Posição semisentada (minimizar RGE pela fístula).
     - Aspiração contínua do coto proximal (sonda de Replogle).
@@ -83,9 +86,14 @@ status: ativo
     - **Extrínseca:** pâncreas anular ou bridas de Ladd (malrotação).
 - ⭐ **Associação com Síndrome de Down (Trissomia 21):** presente em 30% dos casos.
 - **Clínica:** vômitos biliosos precoces (maioria pós-ampular) + ausência de distensão abdominal distal.
+    - Vômitos **não biliosos** se obstrução pré-ampular (proximal à ampola de Vater).
+    - Estenoses parciais (membranas fenestradas): apresentação tardia (meses) simulando refluxo; piora com introdução de alimentos sólidos.
 - **Diagnóstico:** ⭐ **Sinal da Dupla Bolha** no RX (estômago + 1ª porção do duodeno dilatados).
     - Gás distal presente → obstrução incompleta (estenose, pâncreas anular ou bridas de Ladd).
     - Ausência de gás distal → atresia completa.
+    - ⚠️ **Padrão de prova:** dupla bolha = obstrução **duodenal exclusivamente**. Atresia jejunoileal produz múltiplos níveis hidroaéreos em alças distais — nunca dupla bolha isolada.
+    - ⚠️ **Padrão de prova:** quando a questão pede "hipótese mais provável" diante de dupla bolha, a epidemiologia desempata — **atresia duodenal >> pâncreas anular** (este é raro). Pâncreas anular só supera quando é a única causa de obstrução duodenal listada.
+    - ⚠️ **Padrão de prova:** paciente com Down encaminhado por "refluxo" com exame contrastado mostrando dupla bolha = obstrução duodenal. A imagem manda sobre o diagnóstico de encaminhamento.
 - **Conduta:** duodeno-duodenostomia (técnica em diamante — diamond-shaped).
 
 ---
@@ -151,6 +159,11 @@ status: ativo
 - **Regra das 24 horas:** aguardar 24h para observar saída de mecônio por fístulas.
     - Sem fístula visível após 24h → **Invertograma (Wangensteen-Rice):** incidência invertida para medir distância ar retal–pele anal.
 - **Conduta ALTA:** colostomia em alça (sigmóide) → **Cirurgia de Peña** (ASARP) aos 2–4 meses → fechamento da colostomia.
+- **Cloaca — Cascata Fisiopatológica:**
+    - Canal comum de junção do reto, vagina e uretra → orifício perineal único anterior (próximo ao clitóris) com saída de urina.
+    - Acúmulo de secreções vaginais → **hidrocolpos** (massa em hipogástrio).
+    - Hidrocolpos comprime extrinsecamente o trígono vesical ou ureter ipsilateral → megaureter → **hidronefrose unilateral** (massa em flanco).
+    - ⚠️ **Padrão de prova:** massa palpável em hipogástrio + flanco = hidrocolpos + hidronefrose. Fecaloma é impossível em RN pois requer fezes formadas.
 
 ---
 
@@ -179,7 +192,10 @@ status: ativo
 - 🔴 **Bolha gástrica tópica no RN com desconforto respiratório:** afasta HDC → favorece MAC.
 - 🔴 **Vômitos biliosos no RN:** obstrução intestinal cirúrgica até prova em contrário — não atribuir ao RGE.
 - 🔴 **AE com gás no abdome:** fístula traqueoesofágica distal presente (Tipo III). Ausência de gás = atresia isolada (Tipo I).
-- 🔴 **Down e Atresia Duodenal:** associação clássica. Sinal da dupla bolha + ausência de gás distal = atresia completa.
+- 🔴 **Down e Atresia Duodenal:** associação clássica. Sinal da dupla bolha + ausência de gás distal = atresia completa. Dupla bolha + Down + encaminhamento por "refluxo" = a imagem manda — conduta é duodeno-duodenostomia, não fundoplicatura.
+- 🔴 **Dupla bolha ≠ atresia ileal:** dupla bolha é exclusivo de obstrução duodenal. Atresia ileal → múltiplos níveis hidroaéreos. Pâncreas anular e atresia duodenal causam o mesmo sinal; quando a questão pede "mais provável", atresia duodenal supera pâncreas anular (este é raro).
+- 🔴 **LHR ≠ razão pulmão/abdômen:** o índice prognóstico pré-natal da HDC é lung-to-HEAD ratio (pulmão/cabeça). iNO melhora HP e VD, mas não reduz ECMO em HDC.
+- 🔴 **Cloaca → hidrocolpos → hidronefrose:** massa em hipogástrio + flanco = hidrocolpos + hidronefrose unilateral. Fecaloma é impossível em RN de 2 dias.
 - 🔴 **Hirschsprung:** segmento doente = estreito e espástico (proximal aparentemente "normal" dilata por excesso). Toque retal com saída explosiva de fezes = sinal cardinal.
 - 🔴 **Onfalocele vs Gastrosquise:** onfalocele tem saco + inserção umbilical no ápice + múltiplas malformações. Gastrosquise: sem saco + cordão em posição normal + alças espessadas.
 - 🔴 **Silo:** redução gradual da gastrosquise para evitar síndrome compartimental abdominal — não é exclusivo da onfalocele.

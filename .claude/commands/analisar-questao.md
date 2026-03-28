@@ -128,13 +128,23 @@ Ao analisar: **"Qual desafio o examinador quis criar aqui?"**
 
 ---
 
-## 8. Output Final (3 entregas obrigatórias)
+## 8. Output Final (4 entregas obrigatórias)
 
-Após análise, entregar **apenas** estas três coisas:
+Após análise, entregar **exatamente** estas quatro coisas:
 
 1. **O Diagnóstico:** Qual elo quebrou e o motivo sucinto.
-2. **A Regra Mestre (Flashcard Logic):** Uma frase condensada para a tabela `Flashcards` do SQLite.
-3. **Draft para o Resumo:** O texto final (⚠️ Padrão de Prova ou 🔴 Armadilha) exato para inserir em `Temas/`, seguindo bullets, sem tabelas ASCII.
+2. **Draft para o Resumo:** O texto final (⚠️ Padrão de Prova ou 🔴 Armadilha) exato para inserir em `Temas/`, seguindo bullets, sem tabelas ASCII.
+3. **Campos estruturados do Flashcard (5 campos):**
+
+```
+frente_contexto: [1-2 frases do cenário clínico — sem alternativas, sem gabarito]
+frente_pergunta: [a pergunta clínica direta, terminando em "?"]
+verso_resposta:  [resposta direta e completa — nunca uma letra isolada]
+verso_regra_mestre: [regra/princípio que resolve o caso — 2-3 frases densas]
+verso_armadilha: [o distrator do examinador — 1-2 frases]
+```
+
+4. **Comando insert_questao.py** com todos os campos, incluindo os 5 estruturados.
 
 ---
 
@@ -144,25 +154,32 @@ Após análise, registrar o erro no `ipub.db`:
 
 ```bash
 python Tools/insert_questao.py \
-  --area "[Cirurgia|Clínica Médica|Pediatria|GO|Preventiva]" \
+  --area "[Cirurgia|Clinica Medica|Pediatria|GO|Preventiva]" \
   --tema "[ex: Trauma Abdominal]" \
-  --titulo "[título curto do erro]" \
+  --titulo "[titulo curto do erro]" \
   --enunciado "[enunciado limpo, sem alternativas]" \
-  --correta "[letra + texto da alternativa correta]" \
-  --marcada "[letra + texto do que foi marcado]" \
-  --erro "[tipo: Lacuna de conhecimento | Erro de aplicação | Armadilha | Desatenção]" \
-  --elo "[habilidade que faltou — ex: não reconheceu critério de SIADH]" \
+  --correta "[texto completo da alternativa correta — nunca so a letra]" \
+  --marcada "[texto do que foi marcado]" \
+  --erro "[tipo: Lacuna de conhecimento | Erro de aplicacao | Armadilha | Desatencao]" \
+  --elo "[habilidade que faltou]" \
   --armadilha "[o que o examinador usou para induzir ao erro]" \
-  --complexidade "[Baixa|Média|Alta]" \
-  --habilidades "[Hab 1 → Hab 2 → Hab 3]" \
-  --faltou "[conceito específico que estava faltando]" \
-  --explicacao "[regra mestre em 2-3 frases]"
+  --complexidade "[Baixa|Media|Alta]" \
+  --habilidades "[Hab 1 -> Hab 2 -> Hab 3]" \
+  --faltou "[conceito especifico que estava faltando]" \
+  --explicacao "[regra mestre em 2-3 frases]" \
+  --frente_contexto "[1-2 frases do cenario clinico]" \
+  --frente_pergunta "[pergunta clinica direta, terminando em ?]" \
+  --verso_resposta "[resposta direta e completa]" \
+  --verso_regra_mestre "[principio que resolve o caso]" \
+  --verso_armadilha "[distrator do examinador]"
 ```
 
 **Parâmetros obrigatórios:** `--area`, `--tema`, `--enunciado`, `--correta`, `--marcada`, `--erro`, `--elo`, `--armadilha`
 
-**Parâmetros opcionais:** `--complexidade` (default: Média), `--habilidades`, `--faltou`, `--explicacao`, `--titulo`
+**Parâmetros opcionais:** `--complexidade` (default: Media), `--habilidades`, `--faltou`, `--explicacao`, `--titulo`
 
-**Resultado:** Insere em `questoes_erros` + gera automaticamente 1-2 flashcards IPUB v4.0 em `flashcards` + inicializa estado FSRS em `fsrs_cards`.
+**Parâmetros de qualidade (sempre fornecer):** `--frente_contexto`, `--frente_pergunta`, `--verso_resposta`, `--verso_regra_mestre`, `--verso_armadilha`
 
-> **Dica PowerShell:** Evitar aspas internas dentro de strings com `--arg "valor"`. Se o valor contiver aspas, usar apóstrofos internos ou escapar com `\"`.
+**Resultado:** Insere em `questoes_erros` + gera 1-2 flashcards IPUB v5.0 com campos estruturados em `flashcards` + inicializa estado FSRS em `fsrs_cards`.
+
+> **Dica PowerShell:** Evitar caracteres especiais (emojis, unicode) nos argumentos CLI — usar apenas ASCII simples. Se o valor contiver aspas, usar apostrofos internos ou escapar com `\"`.

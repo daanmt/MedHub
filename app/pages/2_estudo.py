@@ -5,7 +5,8 @@ import random
 import os
 
 st.set_page_config(page_title="Central de Erros", page_icon="📓", layout="wide")
-DB_PATH = 'ipub.db'
+import os as _os
+DB_PATH = _os.path.join(_os.path.dirname(_os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))), 'ipub.db')
 
 tab1, tab2 = st.tabs(["📖 Caderno de Erros (Consulta)", "🧠 FSRS Player (Reter)"])
 
@@ -17,7 +18,10 @@ with tab1:
         conn = sqlite3.connect(DB_PATH)
         try:
             df_erros = pd.read_sql_query("""
-                SELECT q.id, t.area, t.tema, q.titulo, q.elo_quebrado, q.caso, q.explicacao_correta, q.armadilha_prova
+                SELECT q.id, t.area, t.tema, q.titulo,
+                       q.habilidades_sequenciais AS elo_quebrado,
+                       q.o_que_faltou AS caso,
+                       q.explicacao_correta, q.armadilha_prova
                 FROM questoes_erros q
                 JOIN taxonomia_cronograma t ON q.tema_id = t.id
                 ORDER BY q.id DESC
@@ -72,14 +76,21 @@ with tab2:
         if not os.path.exists(DB_PATH): return []
         c = sqlite3.connect(DB_PATH).cursor()
         c.execute('''
-        SELECT f.id, f.frente, f.verso, t.area, t.tema, c.state
+        SELECT f.id, f.frente, f.verso, t.area, t.tema, c.state,
+               f.frente_contexto, f.frente_pergunta, f.verso_resposta,
+               f.verso_regra_mestre, f.verso_armadilha
         FROM flashcards f
-        JOIN taxonomia_cronograma t ON f.tema_id = t.id
+        LEFT JOIN taxonomia_cronograma t ON f.tema_id = t.id
         JOIN fsrs_cards c ON f.id = c.card_id
         WHERE c.due <= datetime('now') OR c.state = 0
         ''')
         rows = c.fetchall()
-        return [{"id": r[0], "frente": r[1], "verso": r[2], "area": r[3], "tema": r[4], "state": r[5]} for r in rows]
+        return [{"id": r[0], "frente": r[1], "verso": r[2],
+                 "area": r[3] or "Geral", "tema": r[4] or "",
+                 "state": r[5],
+                 "frente_contexto": r[6], "frente_pergunta": r[7],
+                 "verso_resposta": r[8], "verso_regra_mestre": r[9],
+                 "verso_armadilha": r[10]} for r in rows]
 
     cards = load_flashcards()
     
@@ -134,16 +145,34 @@ with tab2:
                 st.rerun()
 
             st.markdown(f"**📚 {card['area']} › {card['tema']}**")
-            
+
+            # Decide renderização: estruturada (novos campos) ou legada (frente/verso)
+            use_structured = bool(
+                card.get('frente_pergunta') and card['frente_pergunta'].strip() and
+                card.get('verso_resposta') and card['verso_resposta'].strip()
+            )
+
             if not st.session_state.fc_verso:
-                st.markdown(f'<div style="background:#11161D; border:1px solid #202A36; padding:20px; border-radius:12px; font-size:1.1rem;">{card["frente"]}</div>', unsafe_allow_html=True)
+                if use_structured:
+                    if card.get('frente_contexto') and card['frente_contexto'].strip():
+                        st.caption(card['frente_contexto'])
+                    st.markdown(f'<div style="background:#11161D; border:1px solid #202A36; padding:20px; border-radius:12px; font-size:1.1rem;">{card["frente_pergunta"]}</div>', unsafe_allow_html=True)
+                else:
+                    st.markdown(f'<div style="background:#11161D; border:1px solid #202A36; padding:20px; border-radius:12px; font-size:1.1rem;">{card["frente"]}</div>', unsafe_allow_html=True)
                 st.markdown("<br>", unsafe_allow_html=True)
                 if st.button("Revelar", type='primary', width='stretch'):
                     st.session_state.fc_verso = True
                     st.rerun()
                 if st.button("⏭️ Pular"): _avancar(0)
             else:
-                st.markdown(f'<div style="background:#1A1F26; border:1px solid #2F6BFF; border-left:4px solid #2F6BFF; padding:20px; border-radius:12px; font-size:1.1rem;">{card["verso"]}</div>', unsafe_allow_html=True)
+                if use_structured:
+                    st.success(card['verso_resposta'])
+                    if card.get('verso_regra_mestre') and card['verso_regra_mestre'].strip():
+                        st.info(f"**Regra mestre:** {card['verso_regra_mestre']}")
+                    if card.get('verso_armadilha') and card['verso_armadilha'].strip():
+                        st.warning(f"**Armadilha:** {card['verso_armadilha']}")
+                else:
+                    st.markdown(f'<div style="background:#1A1F26; border:1px solid #2F6BFF; border-left:4px solid #2F6BFF; padding:20px; border-radius:12px; font-size:1.1rem;">{card["verso"]}</div>', unsafe_allow_html=True)
                 st.markdown("<br>", unsafe_allow_html=True)
                 b1, b2, b3, b4 = st.columns(4)
                 if b1.button("Novamente", width='stretch'): _avancar(1)

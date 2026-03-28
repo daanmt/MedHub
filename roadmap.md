@@ -14,11 +14,46 @@ relates_to: ESTADO, HANDOFF
 
 ## Fundação (concluído)
 
-O MedHub foi construído em três camadas fundacionais, todas operacionais:
+O MedHub foi construído em três camadas fundacionais:
 
 - **Fundação (Fase 1):** Agente LLM integrado via `AGENTE.md`, base de conhecimento em `Temas/`, workflows portáveis em `.agents/`, extração de PDFs via `extract_pdfs.py`.
 - **Estabilização (Fase 2):** Arquitetura Zero-DB resolvida (SSOT = `ipub.db`), parser stateful, dashboard honesto, expurgo de arquivos legados.
-- **Motor de Retenção (Fase 3):** FSRS v4 nativo no SQLite, player de flashcards, curva de esquecimento com período de carência.
+- **Schema FSRS (Fase 3):** Tabelas `flashcards`, `fsrs_cards`, `fsrs_revlog` migradas. 277 cards gerados heuristicamente. CLI de revisão e motor FSRS operacional via `Tools/review_cli.py`.
+
+---
+
+## Trilhos de Desenvolvimento
+
+Quatro trilhos em paralelo — cada um tem foco e cadência próprios.
+
+### Trilho A — Core de Revisão
+Objetivo: FSRS funcionando de ponta a ponta (registro → algoritmo → próxima due).
+
+- `Tools/review_cli.py`: CLI MVP com política de 3 buckets (atrasados → hoje → novos) ✓
+- `Tools/audit_fsrs.py`: auditoria operacional do estado FSRS ✓
+- `app/pages/2_estudo.py`: player Streamlit integrado ao `record_review()` ✓
+- Session log no CLI (N revisados, distribuição 1-4, próximas dues) ✓
+
+### Trilho B — Interfaces
+Objetivo: Streamlit como dashboard e consulta; CLI como interface primária de revisão.
+
+- Dashboard FSRS: curva de retenção por área, distribuição de states
+- Métricas de streak e consistência de revisão
+- Interface de revisão qualitativa para cards `needs_qualitative`
+
+### Trilho C — Fontes de Cards
+Objetivo: alimentar o banco com cards de alta qualidade de múltiplas fontes.
+
+- `questoes_erros` → flashcards: pipeline operacional (sessão 056)
+- 169 cards `needs_qualitative`: geração em lotes via API Claude
+- PDFs Estratégia: pipeline de extração → geração de cards por apostila
+
+### Trilho D — Analytics
+Objetivo: fechar o loop entre performance e estudo.
+
+- Métricas FSRS no dashboard: curva de esquecimento, retention rate
+- Simulados orientados por fraqueza (menor acerto no banco)
+- Relatório metacognitivo: padrões de erro por tipo e área
 
 ---
 

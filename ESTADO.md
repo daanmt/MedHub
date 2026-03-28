@@ -6,7 +6,7 @@ relates_to: AGENTE, HANDOFF, roadmap
 ---
 
 # ESTADO — MedHub (Preparação para Residência Médica)
-*Atualizado: 2026-03-27 (sessão 055) | Ferramenta: Claude Code*
+*Atualizado: 2026-03-27 (sessão 057) | Ferramenta: Claude Code*
 
 ---
 
@@ -29,7 +29,7 @@ Workspace state-driven de estudos médicos. Processa questões de prova, registr
 
 - **200+ erros estruturados** no SQLite (`ipub.db`) — consulte o Dashboard para número exato.
 - **37+ resumos clínicos** consolidados em `Temas/`.
-- **54 sessões** de estudo catalogadas em `history/`.
+- **57 sessões** de estudo catalogadas em `history/`.
 - **Memory v1 & v3 ativos**: `app/memory/` configurado com `ANTHROPIC_API_KEY` permanente e consolidação LLM funcional.
 
 ---
@@ -45,7 +45,9 @@ Workspace state-driven de estudos médicos. Processa questões de prova, registr
 | Direção do produto | `roadmap.md` |
 | Dashboard Streamlit | `streamlit_app.py` |
 | Parser Stateful | `app/utils/parser.py` |
-| Player Flashcards | `app/pages/02_flashcards.py` |
+| Player Flashcards | `app/pages/2_estudo.py` |
+| CLI de Revisão FSRS | `Tools/review_cli.py` |
+| Auditoria FSRS | `Tools/audit_fsrs.py` |
 | Session logs | `history/session_NNN.md` |
 
 ### Dados
@@ -72,6 +74,8 @@ Workspace state-driven de estudos médicos. Processa questões de prova, registr
 
 ## Últimas sessões
 
+**2026-03-27 | Claude Code (sessão 057):** **FSRS operacional — CLI de revisão + fix Streamlit**. Substituição do `_avancar()` hardcoded em `2_estudo.py` por `record_review()` real. Criação de `Tools/review_cli.py` (3 buckets: atrasados/hoje/novos, args --limit/--new-limit/--area/--tema). Criação de `Tools/audit_fsrs.py` (auditoria operacional). ROADMAP.md reescrito com 4 trilhos (A Core Revisão, B Interfaces, C Fontes Cards, D Analytics).
+**2026-03-27 | Claude Code (sessão 056):** **Pipeline flashcards v5 — migração + regeneração heurística**. Schema `flashcards` migrado com 8 novos campos. 277 cards regenerados (219 heuristic OK, 20 qualitative, 38 flagged). Ferramentas: `Tools/backup_db.py`, `Tools/migrate_flashcards.py`, `Tools/regenerate_cards.py`, `Tools/audit_cards.py`. `insert_questao.py` atualizado com 5 args estruturados.
 **2026-03-27 | Claude Code (sessão 055):** **Automação do sistema de memória via hooks**. Auditoria completa das 4 camadas de memória. Correção do `manager.py` (2 managers separados, pt-BR, session_id injetado, `_sync_error_counts`). Migração de 37 WeakAreas para namespace correto. Fix do MCP obsidian-notes-rag em agente-daktus-content (env vars). Hooks automáticos: `memory_boot.py` (SessionStart) + `memory_session_log.py` (PostToolUse Write). AGENTE.md e registrar-sessao.md atualizados.
 **2026-03-25 | Antigravity (sessão 051):** **Cirurgia Infantil**. Conclusão do resumo clínico, abrangendo de HDC a defeitos de parede abdominal. 80/20 benchmark e Zero PDF integral.
 **2026-03-25 | Antigravity (sessão 050):** **Início de Cirurgia Infantil**. Extração de PDFs e mapeamento clínico.

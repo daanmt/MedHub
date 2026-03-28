@@ -10,7 +10,7 @@ relates_to: AGENTE, roadmap
 
 ---
 
-Workspace state-driven de estudos médicos. Processa questões de prova, registra padrões de erro no banco SQLite (`ipub.db`) e mantém resumos clínicos estruturados em `Temas/`.
+Workspace state-driven de estudos médicos. Processa questões de prova, registra padrões de erro no banco SQLite (`ipub.db`) e mantém resumos clínicos estruturados em `resumos/`.
 
 ### 🚩 Metas Estratégicas (Roadmap 2026)
 - **Meta Final:** 23.000 questões até 12/2026 (Custo/Q: R$ 0,20).
@@ -25,10 +25,10 @@ Workspace state-driven de estudos médicos. Processa questões de prova, registr
 **Leia `AGENTE.md` antes de qualquer ação.** Este arquivo contém o protocolo de boot e a ordem de leitura para garantir a continuidade do projeto.
 
 > [!IMPORTANT]
-> **SINGLE SOURCE OF TRUTH (SSOT):** O banco SQLite (`ipub.db`) é a fonte de verdade para erros, métricas e estado FSRS. O `caderno_erros.md` textual foi arquivado em `history/legacy/`. O conteúdo clínico lapidado mora exclusivamente em `Temas/`. Regra "Siamese Twins": **o erro vai pro DB, a lição vai pro resumo (Temas/)**.
+> **SINGLE SOURCE OF TRUTH (SSOT):** O banco SQLite (`ipub.db`) é a fonte de verdade para erros, métricas e estado FSRS. O `caderno_erros.md` textual foi arquivado em `history/legacy/`. O conteúdo clínico lapidado mora exclusivamente em `resumos/`. Regra "Siamese Twins": **o erro vai pro DB, a lição vai pro resumo (resumos/)**.
 
 - **200+ erros estruturados** no SQLite (`ipub.db`) — consulte o Dashboard para número exato.
-- **37+ resumos clínicos** consolidados em `Temas/`.
+- **37+ resumos clínicos** consolidados em `resumos/`.
 - **57 sessões** de estudo catalogadas em `history/`.
 - **Memory v1 & v3 ativos**: `app/memory/` configurado com `ANTHROPIC_API_KEY` permanente e consolidação LLM funcional.
 
@@ -46,11 +46,11 @@ Workspace state-driven de estudos médicos. Processa questões de prova, registr
 | Dashboard Streamlit | `streamlit_app.py` |
 | Parser Stateful | `app/utils/parser.py` |
 | Player Flashcards | `app/pages/2_estudo.py` |
-| CLI de Revisão FSRS | `Tools/review_cli.py` |
-| Auditoria FSRS | `Tools/audit_fsrs.py` |
-| Auditoria Qualidade Cards | `Tools/audit_flashcard_quality.py` |
-| Auditoria Integridade DB | `Tools/audit_integrity.py` |
-| Pipeline LLM Qualitativo | `Tools/regenerate_cards_llm.py` |
+| CLI de Revisão FSRS | `tools/review_cli.py` |
+| Auditoria FSRS | `tools/audit_fsrs.py` |
+| Auditoria Qualidade Cards | `tools/audit_flashcard_quality.py` |
+| Auditoria Integridade DB | `tools/audit_integrity.py` |
+| Pipeline LLM Qualitativo | `tools/regenerate_cards_llm.py` |
 | Session logs | `history/session_NNN.md` |
 
 ### Dados
@@ -75,15 +75,13 @@ Workspace state-driven de estudos médicos. Processa questões de prova, registr
 ### Conteúdo
 | Artefato | Arquivo |
 |---|---|
-| Resumos clínicos | `Temas/{Área}/{Subespecialidade}/{Tema}.md` |
+| Resumos clínicos | `resumos/{Área}/{Subespecialidade}/{Tema}.md` |
 | Spec de formatação | `.claude/commands/estilo-resumo.md` |
 | Protocolo de análise | `.claude/commands/analisar-questao.md` |
 
 ### Material de referência (PDFs — não editáveis)
 | Artefato | Pasta |
 |---|---|
-| Fichas de prova | `Fichas/` (5 PDFs por área) |
-| Memorex por área | `Memorex/` (6 subpastas) |
 | Textos extraídos | `%TEMP%` — deletados ao final de cada sessão (Zero PDF) |
 
 ---
@@ -151,19 +149,19 @@ Workspace state-driven de estudos médicos. Processa questões de prova, registr
 Ver [[roadmap]] — Linhas Evolutivas.
 
 Prioridade imediata (Linha 3 → Linha 4):
-1. **Pipeline RAG inverso:** Injetar conteúdo de `Temas/` no prompt de geração de flashcard.
+1. **Pipeline RAG inverso:** Injetar conteúdo de `resumos/` no prompt de geração de flashcard.
 2. **Meta Volumétrica (60 q/dia):** Manter o ritmo para fechar Março com 3.000 questões.
 3. **Consolidação de Memória:** Automática via hook PostToolUse(Write) ao criar `history/session_NNN.md`.
-4. Continuar expandindo `Temas/` (GO: DIP e Sangramentos).
+4. Continuar expandindo `resumos/` (GO: DIP e Sangramentos).
 
 ---
 
 ## Decisões críticas (não reverter)
 
-- **Memory v1**: `app/memory/` (LangGraph + LangMem + SQLiteMemoryStore). Backend: `medhub_memory.db`. Não acoplado ao `ipub.db`. Smoke tests em `Tools/test_memory.py`.
+- **Memory v1**: `app/memory/` (LangGraph + LangMem + SQLiteMemoryStore). Backend: `medhub_memory.db`. Não acoplado ao `ipub.db`. Smoke tests em `tools/test_memory.py`.
 - **Governança via AGENTE.md**: O boot e o fechamento seguem estritamente o `AGENTE.md`.
-- **SSOT = ipub.db**: O diagnóstico do erro é gravado via CLI (`Tools/insert_questao.py`) no banco. O `caderno_erros.md` está arquivado em `history/legacy/`.
-- **Siamese Twins V2.0**: Erro → DB. Lição/Armadilha → Resumo em `Temas/`.
+- **SSOT = ipub.db**: O diagnóstico do erro é gravado via CLI (`tools/insert_questao.py`) no banco. O `caderno_erros.md` está arquivado em `history/legacy/`.
+- **Siamese Twins V2.0**: Erro → DB. Lição/Armadilha → Resumo em `resumos/`.
 - **Resumos seguem** `.claude/commands/estilo-resumo.md` — bullets hierárquicos, ⭐/⚠️/🔴; sem tabelas, sem fluxogramas ASCII.
 - **Sessions numeradas globalmente** em `history/` — qualquer agente registra.
 - **Zero PDF**: `extract_pdfs.py` extrai para `%TEMP%` e apaga o PDF original após consolidação.

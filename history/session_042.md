@@ -11,7 +11,7 @@
 ## 2. Trabalho Realizado
 - **Extração:** Extraído texto dos PDFs originais usando `extract_pdfs.py`.
 - **Análise de Questões:** Analisadas 27 questões de Vigilância em Saúde (**Score: 21/27 - 78%**).
-- **Expansão do Resumo:** `Temas/Preventiva/Vigilância em Saúde.md` expandido com:
+- **Expansão do Resumo:** `resumos/Preventiva/Vigilância em Saúde.md` expandido com:
     - **Princípio da Precaução:** Gestão de incerteza em desastres ambientais.
     - **Vigilância Ativa vs Passiva:** Diferenciação técnica de busca intencional vs notificação rotineira.
     - **Regra de Notificação na Suspeita:** Fundamental em doenças como Sarampo.

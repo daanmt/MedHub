@@ -7,26 +7,26 @@
 
 ## O que foi feito
 
-- Movido `referencia/estilo-resumo.md` → `Tools/estilo-resumo.md` (consolidação em Tools/)
+- Movido `referencia/estilo-resumo.md` → `tools/estilo-resumo.md` (consolidação em tools/)
 - Removida pasta `referencia/` (agora vazia)
-- Deletado `Tools/extract_asma.py` (script temporário e obsoleto)
+- Deletado `tools/extract_asma.py` (script temporário e obsoleto)
 - Atualizado `CLAUDE.md` com nova localização dos arquivos críticos e tabela expandida
-- Atualizado `.agents/workflows/criar-resumo.md` com referência correta a `Tools/estilo-resumo.md`
-- Adicionado ao `Tools/estilo-resumo.md`: proibição explícita de fluxogramas/algoritmos em ASCII (blocos ` ``` `); tabelas passaram para seção NUNCA usar (usuário atualizou regra para banir todas as tabelas)
+- Atualizado `.agents/workflows/criar-resumo.md` com referência correta a `tools/estilo-resumo.md`
+- Adicionado ao `tools/estilo-resumo.md`: proibição explícita de fluxogramas/algoritmos em ASCII (blocos ` ``` `); tabelas passaram para seção NUNCA usar (usuário atualizou regra para banir todas as tabelas)
 - Refatorada seção 8.7 de `Asma.md`: fluxograma ASCII → bullets hierárquicos com condicionais em texto
 
 ## Artefatos criados/modificados
 
-- `Tools/estilo-resumo.md` (movido + regras atualizadas)
-- `Tools/extract_pdfs.py` (reescrito com CLI genérica na sessão 004 — sem alterações nesta sessão)
+- `tools/estilo-resumo.md` (movido + regras atualizadas)
+- `tools/extract_pdfs.py` (reescrito com CLI genérica na sessão 004 — sem alterações nesta sessão)
 - `CLAUDE.md` (atualizado)
 - `.agents/workflows/criar-resumo.md` (atualizado)
 - `ESTADO.md` (atualizado)
-- `Temas/Clínica Médica/Pneumologia/Asma.md` (seção 8.7 refatorada)
+- `resumos/Clínica Médica/Pneumologia/Asma.md` (seção 8.7 refatorada)
 
 ## Decisões tomadas
 
-- Toda documentação instrutiva do agente concentrada em `Tools/`
+- Toda documentação instrutiva do agente concentrada em `tools/`
 - Workflows em `.agents/workflows/` se mantêm (requisito do sistema de slash commands)
 - Scripts temporários de extração não devem ser criados — usar `extract_pdfs.py` com CLI genérica
 - Tabelas banidas completamente dos resumos (nem curtas); fluxogramas ASCII também banidos

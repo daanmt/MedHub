@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""MedHub — Auditoria de Integridade do Banco. Uso: python Tools/audit_integrity.py"""
+"""MedHub — Auditoria de Integridade do Banco. Uso: python tools/audit_integrity.py"""
 import sys, os
 if sys.platform == 'win32':
     sys.stdout.reconfigure(encoding='utf-8', errors='replace')
@@ -64,7 +64,7 @@ def main():
     total_temas = conn.execute("SELECT COUNT(DISTINCT tema_id) FROM flashcards").fetchone()[0]
     if orphan_temas:
         print(f"[WARN] tema_ids sem match em taxonomia_cronograma: {orphan_temas}/{total_temas}")
-        print("       -> Ver Tools/fix_taxonomy_bridge.py para corrigir")
+        print("       -> Ver tools/fix_taxonomy_bridge.py para corrigir")
     else:
         print("[OK]   taxonomia: todos os tema_ids mapeados")
 
@@ -80,14 +80,15 @@ def main():
 
     # 7. Backup policy check
     import glob
-    backups = sorted(glob.glob(os.path.join(os.path.dirname(os.path.dirname(
-        os.path.abspath(__file__))), 'ipub_backup_*.db')))
+    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    backup_pattern = os.path.join(project_root, 'artifacts', 'backups', 'ipub_backup_*.db')
+    backups = sorted(glob.glob(backup_pattern))
     if backups:
-        print(f"[INFO] Backups disponíveis: {len(backups)}")
+        print(f"[INFO] Backups disponíveis: {len(backups)} em artifacts/backups/")
         print(f"       Mais recente: {os.path.basename(backups[-1])}")
         print("       NOTA: Restaurar backup requer re-rodar migrate_flashcards.py + regenerate_cards.py")
     else:
-        print("[WARN] Nenhum backup encontrado — rode Tools/backup_db.py")
+        print("[WARN] Nenhum backup encontrado — rode tools/backup_db.py")
 
     print()
     print("[SUMÁRIO]", "OK — sem problemas críticos" if ok else "ATENÇÃO — verificar items [FAIL]")

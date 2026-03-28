@@ -11,9 +11,9 @@ Criação de resumos clínicos de alto rendimento para três temas fundamentais:
 - [x] Atualização da governança do projeto (`ESTADO.md` e `HANDOFF.md`).
 
 ## Entregáveis
-1.  [Dependência Química.md](file:///c:/Users/daanm/MedHub/Temas/Clínica%20Médica/Psiquiatria/Dependência%20Química.md)
-2.  [Intoxicações Exógenas.md](file:///c:/Users/daanm/MedHub/Temas/Clínica%20Médica/Psiquiatria/Intoxicações%20Exógenas.md)
-3.  [Lesão Renal Aguda.md](file:///c:/Users/daanm/MedHub/Temas/Clínica%20Médica/Nefrologia/Lesão%20Renal%20Aguda.md)
+1.  [Dependência Química.md](file:///c:/Users/daanm/MedHub/resumos/Clínica%20Médica/Psiquiatria/Dependência%20Química.md)
+2.  [Intoxicações Exógenas.md](file:///c:/Users/daanm/MedHub/resumos/Clínica%20Médica/Psiquiatria/Intoxicações%20Exógenas.md)
+3.  [Lesão Renal Aguda.md](file:///c:/Users/daanm/MedHub/resumos/Clínica%20Médica/Nefrologia/Lesão%20Renal%20Aguda.md)
 
 ## Decisões & Notas
 - **Foco em Prova:** Priorizados critérios KDIGO (LRA), Toxidromes (Intoxicações) e Estágios Motivacionais/Abstinência (Dependência).

@@ -10,7 +10,7 @@
 
 ## Ações Executadas
 - **Extração de Conteúdo**: Processamento do PDF `Diabet.pdf` usando `extract_pdfs.py`. Extração realizada para `%TEMP%` conforme nova governança.
-- **Redação Técnica**: Criação do resumo em `Temas/Clínica Médica/Endocrinologia/Diabetes Mellitus - Complicações Agudas.md`.
+- **Redação Técnica**: Criação do resumo em `resumos/Clínica Médica/Endocrinologia/Diabetes Mellitus - Complicações Agudas.md`.
     - Cobertura de **Cetoacidose Diabética (CAD)**: Fisiopatogenia, diagnóstico (ADA/ISPAD), tratamento (KIKI e 5 pilares), complicações (Edema Cerebral, Mucormicose).
     - Cobertura de **Estado Hiperglicêmico Hiperosmolar (EHH)**: Diferenças para CAD, critérios e tratamento.
     - Cobertura de **Hipoglicemia**: Fisiopatogenia, Tríade de Whipple e manejo de emergência.

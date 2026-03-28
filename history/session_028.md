@@ -8,7 +8,7 @@ Finalizar rebranding para MedHub no README e revisar alterações do usuário em
 ## Ações Realizadas
 1. **Bootstrap**: Executado protocolo de continuidade completo (`AGENTE.md`).
 2. **Rebranding**: Atualizado `README.md` alterando a estrutura de diretórios para `MedHub/`.
-3. **Revisão**: Sincronizadas edições do usuário em `Temas/Pediatria/Emergências Pediátricas.md` (siglas e correção no protocolo CaGaDe).
+3. **Revisão**: Sincronizadas edições do usuário em `resumos/Pediatria/Emergências Pediátricas.md` (siglas e correção no protocolo CaGaDe).
 4. **Streamlit**: Corrigido erro de "Page not found" removendo referência ao `05_progresso.py` (integrado ao Dashboard).
 5. **Governança**: Atualizados `HANDOFF.md` e `ESTADO.md`.
 6. **Git**: Sincronização via `add`, `commit` e `push`.

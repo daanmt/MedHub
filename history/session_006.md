@@ -8,7 +8,7 @@
 ## O que foi feito
 
 - Deletada pasta `Extracted/` e seus 9 arquivos (entulho de extrações anteriores)
-- Reescrito `Tools/extract_pdfs.py`: extração agora vai para pasta temp do sistema (`%TEMP%`), não para `Extracted/`
+- Reescrito `tools/extract_pdfs.py`: extração agora vai para pasta temp do sistema (`%TEMP%`), não para `Extracted/`
 - Adicionado `--delete-pdfs <pasta>`: deleta todos os PDFs da pasta indicada
 - Adicionado `--delete-temps <paths...>`: deleta arquivos `.txt` temporários de extração
 - Atualizado `.agents/workflows/criar-resumo.md` com passo 7 de limpeza automática
@@ -17,7 +17,7 @@
 
 ## Artefatos criados/modificados
 
-- `Tools/extract_pdfs.py` (reescrito)
+- `tools/extract_pdfs.py` (reescrito)
 - `.agents/workflows/criar-resumo.md` (atualizado)
 - `.gitignore` (entrada Extracted/ removida)
 - `ESTADO.md` (atualizado)

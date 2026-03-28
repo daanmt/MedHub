@@ -8,7 +8,7 @@
     - Apostila Estratégia MED 2024 (25.9 MB).
     - Portaria Conjunta SAES/SECTICS MS 2025 (Diretriz DNA-HPV).
 2. **Criação do Resumo**:
-    - [[GIN] Rastreamento Colo.md](file:///c:/Users/daanm/IPUB/Temas/GO/%5BGIN%5D%20Rastreamento%20Colo.md).
+    - [[GIN] Rastreamento Colo.md](file:///c:/Users/daanm/IPUB/resumos/GO/%5BGIN%5D%20Rastreamento%20Colo.md).
 3. **Mapeamento de Questões**:
     - Incorporação de nuances de 34 + 5 novas questões de prova.
     - Refinamento: Conduta em HIV+ com qualquer alteração (Colpo direta), tratamento de condiloma na gestante (TCA apenas), e critérios para dispensa de rastreio em histerectomizadas.

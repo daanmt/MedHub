@@ -15,7 +15,7 @@
     - Acúmulo de 3 novas Armadilhas de Prova e 3 novos Casos Clínicos.
 
 ## Artefatos criados/modificados
-- `Temas/Pediatria/Emergências Pediátricas.md` (Modificado)
+- `resumos/Pediatria/Emergências Pediátricas.md` (Modificado)
 - `ipub.db` (Modificado via `insert_questao.py`)
 - `ESTADO.md` e `HANDOFF.md` (Atualizados)
 

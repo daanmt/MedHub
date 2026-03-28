@@ -16,7 +16,7 @@
 ## Artefatos criados/modificados
 - `caderno_erros.md`
 - `progresso.md`
-- `Temas/Clínica Médica/Hematologia/Hemostasia.md`
+- `resumos/Clínica Médica/Hematologia/Hemostasia.md`
 - `AGENTE.md` (NOVO)
 - `HANDOFF.md` (NOVO)
 - `CLAUDE.md`

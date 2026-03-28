@@ -12,7 +12,7 @@ O MedHub é um ambiente de estudo adaptativo state-driven para residência médi
 
 Cada erro de questão desencadeia três eventos simultâneos:
 - um registro estruturado com metadados diagnósticos no banco (`ipub.db`),
-- um refinamento do resumo clínico correspondente em `Temas/`, e
+- um refinamento do resumo clínico correspondente em `resumos/`, e
 - uma entrada no motor de retenção FSRS.
 
 O resultado é um loop fechado entre falha, diagnóstico, conhecimento e retenção — que opera de forma contínua e cumulativa entre sessões.
@@ -45,7 +45,7 @@ MedHub/
 │   ├── registrar-sessao.md
 │   └── gerar-reforco.md
 │
-├── Temas/                 ← base de conhecimento clínica (resumos por área)
+├── resumos/                ← base de conhecimento clínica (resumos por área)
 │   ├── INDEX.md           ← hub de navegação (todos os temas com wikilinks)
 │   ├── Cirurgia/
 │   ├── Clínica Médica/
@@ -68,9 +68,9 @@ MedHub/
 │   ├── estilo-resumo.md   ← spec de formatação obrigatória
 │   ├── analisar-questao.md← protocolo de análise + insert_questao.py
 │   ├── extrair-pdf.md     ← wrapper para extract_pdfs.py (Zero PDF)
-│   └── auditar-resumos.md ← linter de qualidade para Temas/
+│   └── auditar-resumos.md ← linter de qualidade para resumos/
 │
-├── Tools/                 ← scripts Python (CLIs)
+├── tools/                 ← scripts Python (CLIs)
 │   ├── insert_questao.py         ← CLI: insere erro no ipub.db
 │   ├── extract_pdfs.py           ← CLI: extrai PDF para %TEMP%, política Zero PDF
 │   ├── backup_db.py              ← cria backup datado em artifacts/backups/
@@ -82,9 +82,7 @@ MedHub/
 │   ├── regenerate_cards_llm.py   ← passe qualitativo via API Claude
 │   └── fix_taxonomy_bridge.py    ← corrige tema_ids órfãos em taxonomia_cronograma
 │
-├── app/                   ← Streamlit multipage app
-├── Fichas/                ← PDFs de fichas (leitura apenas)
-└── Memorex/               ← PDFs Memorex por área (leitura apenas)
+└── app/                   ← Streamlit multipage app
 ```
 
 ## Fontes de verdade
@@ -95,7 +93,7 @@ MedHub/
 | Flashcards + FSRS | `ipub.db` → tabelas `flashcards`, `fsrs_cards`, `fsrs_revlog` |
 | Cronograma EMED | `ipub.db` → tabela `taxonomia_cronograma` |
 | Memória cross-session | `medhub_memory.db` (LangMem) |
-| Resumos clínicos | `Temas/**/*.md` |
+| Resumos clínicos | `resumos/**/*.md` |
 | Estado do projeto | `ESTADO.md` |
 
 ## Dois eixos de qualidade de flashcards
@@ -112,7 +110,7 @@ Um card pode ter `needs_qualitative=0` (não precisa de LLM) e ainda ter sinais 
 ## Política de artefatos e backups
 
 ### Backups
-- Criados por `Tools/backup_db.py` com integridade verificada
+- Criados por `tools/backup_db.py` com integridade verificada
 - Destino: `artifacts/backups/ipub_backup_YYYYMMDD_HHMMSS.db`
 - Não commitados (`.gitignore`)
 - Backup mais recente: `artifacts/backups/ipub_backup_20260328_003332.db`
@@ -135,7 +133,7 @@ Um card pode ter `needs_qualitative=0` (não precisa de LLM) e ainda ter sinais 
 | Bootstrap / protocolo | `AGENTE.md`, `CLAUDE.md` |
 | Estado e snapshot | `ESTADO.md` |
 | Dados operacionais | `ipub.db`, `medhub_memory.db` |
-| Base de conhecimento | `Temas/**` · hub: `Temas/INDEX.md` |
+| Base de conhecimento | `resumos/**` · hub: `resumos/INDEX.md` |
 | Workflows portáveis | `.agents/workflows/**` |
 | Skills (spec + invocação) | `.claude/commands/*.md` |
 | Interface | `streamlit_app.py`, `app/**` |

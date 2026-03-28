@@ -15,7 +15,7 @@
 ## Artefatos criados/modificados
 - `caderno_erros.md`
 - `progresso.md`
-- `Temas/Preventiva/Medidas de Saúde Coletiva.md`
+- `resumos/Preventiva/Medidas de Saúde Coletiva.md`
 - `HANDOFF.md`
 - `ESTADO.md`
 - `history/session_010.md` (NOVO)

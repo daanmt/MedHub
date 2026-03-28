@@ -17,9 +17,9 @@
 - **Sync Global:** Sincronização final da base de dados e código com o repositório GitHub.
 
 ## Artefatos criados/modificados
-- `Tools/insert_questao.py`: Motor de geração v3.8 Expert com lógica anti-spoiler.
-- `Tools/sync_flashcards.py`: Atualizado para padrão de imersão clínica.
-- `Tools/etl_markdown_to_sqlite.py`: Extração aprimorada de informações-chave.
+- `tools/insert_questao.py`: Motor de geração v3.8 Expert com lógica anti-spoiler.
+- `tools/sync_flashcards.py`: Atualizado para padrão de imersão clínica.
+- `tools/etl_markdown_to_sqlite.py`: Extração aprimorada de informações-chave.
 - `app/utils/db.py`: Sincronização de queries SQL com schema v3.8.
 - `ipub.db`: Base de dados regenerada com 125+ flashcards de elite.
 

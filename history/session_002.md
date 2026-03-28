@@ -24,7 +24,7 @@
 - `Cronograma/` — PDF desnecessário (existe no PC)
 
 ### Conteúdo
-- `Temas/Clínica Médica/Endocrinologia/Diabetes Melitus Tipo 2.md` — criado a partir da apostila Estratégia MED (Diabet.pdf) e reformatado para padrão IPUB (sem tabelas, com bullets + ⭐/⚠️/🔴)
+- `resumos/Clínica Médica/Endocrinologia/Diabetes Melitus Tipo 2.md` — criado a partir da apostila Estratégia MED (Diabet.pdf) e reformatado para padrão IPUB (sem tabelas, com bullets + ⭐/⚠️/🔴)
 
 ---
 
@@ -45,8 +45,8 @@ IPUB/
 ├── .agents/workflows/ (3 workflows)
 ├── referencia/ (estilo-resumo.md)
 ├── history/ (session_001, session_002)
-├── Temas/ (21 resumos em 5 áreas)
-├── Tools/ (extract_pdfs.py, comando de análise)
+├── resumos/ (21 resumos em 5 áreas)
+├── tools/ (extract_pdfs.py, comando de análise)
 ├── Extracted/ (textos regeneráveis, .gitignore)
 ├── Fichas/ (5 PDFs por área)
 └── Memorex/ (6 subpastas com PDFs)

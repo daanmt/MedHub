@@ -18,7 +18,7 @@ Toda nova sessão DEVE seguir esta ordem de leitura para bootstrap de contexto:
 3.  **Último log**: `history/session_NNN.md` mais recente.
 4.  **[Memory v1] Contexto de memória longa**: carregado automaticamente via hook SessionStart ao início da sessão.
     Se não aparecer no contexto inicial, executar manualmente: `python -m app.memory.inspect --context`
-5.  **[RAG] Busca semântica durante a sessão**: usar `mcp__obsidian-notes-rag__search_notes` para localizar conteúdo clínico específico em `Temas/` sem ler arquivos inteiros. Útil para verificar condutas, cruzar temas e recuperar critérios de resumos existentes.
+5.  **[RAG] Busca semântica durante a sessão**: usar `mcp__obsidian-notes-rag__search_notes` para localizar conteúdo clínico específico em `resumos/` sem ler arquivos inteiros. Útil para verificar condutas, cruzar temas e recuperar critérios de resumos existentes.
 
 > **Nota:** `HANDOFF.md` foi aposentado na sessão 058. `ESTADO.md` é o único documento de estado/handoff do projeto.
 

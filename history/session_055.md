@@ -11,10 +11,10 @@
 - **Auditoria completa das 4 camadas de memória MedHub**: (1) canônica/git, (2) RAG/semântica (obsidian-notes-rag + Ollama), (3) LangMem estruturada (medhub_memory.db), (4) operacional (ipub.db).
 - **Root cause do MCP obsidian-notes-rag**: subcomando `serve` ignora CLI args — apenas env vars chegam ao servidor. Corrigido adicionando seção `env` ao `.mcp.json` do agente-daktus-content.
 - **Correção de `app/memory/manager.py`**: split em 2 instâncias `create_memory_store_manager` (uma por schema/namespace), session_id injetado como prefixo `[SESSÃO: session_NNN]` para evitar alucinação de UUID, instruções em pt-BR explícito, adição de `_sync_error_counts()` que lê `taxonomia_cronograma` do `ipub.db` e popula `WeakArea.error_count`.
-- **Criação de `Tools/migrate_memory.py`**: migração one-time de 37 WeakAreas do namespace errado (`medhub/session_insights`) para o correto (`medhub/weak_areas`). Migração executada com sucesso (DB: 64 SessionInsights + 37 WeakAreas).
+- **Criação de `tools/migrate_memory.py`**: migração one-time de 37 WeakAreas do namespace errado (`medhub/session_insights`) para o correto (`medhub/weak_areas`). Migração executada com sucesso (DB: 64 SessionInsights + 37 WeakAreas).
 - **Hooks de automação implementados**:
-  - `Tools/hooks/memory_boot.py` — SessionStart hook: captura output de `load_context()` e injeta como `additionalContext` no boot da sessão.
-  - `Tools/hooks/memory_session_log.py` — PostToolUse(Write) hook: detecta criação de `history/session_NNN.md`, dispara `manager.py NNN` em background (DETACHED_PROCESS no Windows) e executa RAG reindex inline (timeout 60s).
+  - `tools/hooks/memory_boot.py` — SessionStart hook: captura output de `load_context()` e injeta como `additionalContext` no boot da sessão.
+  - `tools/hooks/memory_session_log.py` — PostToolUse(Write) hook: detecta criação de `history/session_NNN.md`, dispara `manager.py NNN` em background (DETACHED_PROCESS no Windows) e executa RAG reindex inline (timeout 60s).
   - `.claude/settings.local.json`: seção `hooks` adicionada com SessionStart (sem timeout) e PostToolUse/Write (timeout 90s).
 - **Documentação atualizada**: `AGENTE.md` Passo 5 e `registrar-sessao.md` Passos 4–5 marcados como automáticos com fallback manual.
 
@@ -24,10 +24,10 @@ Nenhuma questão analisada nesta sessão.
 
 ## Artefatos criados/modificados
 
-- `Tools/hooks/memory_boot.py` — criado
-- `Tools/hooks/memory_session_log.py` — criado
+- `tools/hooks/memory_boot.py` — criado
+- `tools/hooks/memory_session_log.py` — criado
 - `app/memory/manager.py` — refatorado (2 managers, pt-BR, session_id, _sync_error_counts)
-- `Tools/migrate_memory.py` — criado e executado
+- `tools/migrate_memory.py` — criado e executado
 - `.claude/settings.local.json` — adicionado seção `hooks`
 - `Daktus/agente-daktus-content/.mcp.json` — adicionado seção `env`
 - `AGENTE.md` — Passo 5 atualizado

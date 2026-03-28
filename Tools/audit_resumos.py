@@ -4,7 +4,7 @@ import re
 from pathlib import Path
 
 # Configurações do Linter
-TEMAS_DIR = Path(__file__).parent.parent / "Temas"
+TEMAS_DIR = Path(__file__).parent.parent / "resumos"
 REQUIRED_SECTIONS = [r"(#+)\s*(\d+\.\s*)?Armadilhas de Prova"]
 ANTI_PATTERNS = [
     (r"\|.*\|.*\|", "Tabela ASCII detectada (Proibido pelo estilo-resumo.md)")

@@ -11,7 +11,7 @@ Implementação completa do plano aprovado na sessão anterior para corrigir o p
 
 ## O que foi feito
 
-### Novos scripts em Tools/
+### Novos scripts em tools/
 - **`backup_db.py`**: backup com `PRAGMA integrity_check` antes de qualquer migração
 - **`migrate_flashcards.py`**: adiciona 8 colunas à tabela `flashcards` (idempotente)
 - **`regenerate_cards.py`**: regeneração heurística de todos os cards com questao_id; suporta `--export`/`--apply` para loop qualitativo; LEFT JOIN para orphaned tema_id; clean() para tratar N/A; fallback de resposta quando alternativa_correta < 8 chars

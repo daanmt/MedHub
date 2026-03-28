@@ -22,7 +22,7 @@
 - `app/memory/tools.py` — get_memory_tools() com 6 ferramentas LangMem (5 manage + 1 search)
 - `app/memory/manager.py` — consolidate_session() com LLM + fallback heurístico
 - `app/memory/inspect.py` — CLI observabilidade (--namespace, --threads, --dump, --stats, --context)
-- `Tools/test_memory.py` — 4 smoke tests (persistência, cross-thread, search, consolidação)
+- `tools/test_memory.py` — 4 smoke tests (persistência, cross-thread, search, consolidação)
 - `MEMORY_ARCHITECTURE.md` — documentação das 3 camadas, thread model, namespaces, governance
 
 **Modificados:**

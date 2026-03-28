@@ -5,7 +5,7 @@
 
 ## Atividades Realizadas
 1.  **Análise de Fonte:** Processamento da apostila de Emergências Pediátricas (103 páginas).
-2.  **Criação de Resumo:** Implementação de `Temas/Pediatria/Emergências Pediátricas.md` seguindo o padrão IPUB.
+2.  **Criação de Resumo:** Implementação de `resumos/Pediatria/Emergências Pediátricas.md` seguindo o padrão IPUB.
     -   Consolidação de Arritmias (TSV, BAV Congênito).
     -   Protocolos de RCP (BLS e PALS 2020-2024).
     -   Traumatismo Cranioencefálico (Critérios PECARN).

@@ -16,9 +16,9 @@ relates_to: ESTADO
 
 O MedHub foi construído em três camadas fundacionais:
 
-- **Fundação (Fase 1):** Agente LLM integrado via `AGENTE.md`, base de conhecimento em `Temas/`, workflows portáveis em `.agents/`, extração de PDFs via `extract_pdfs.py`.
+- **Fundação (Fase 1):** Agente LLM integrado via `AGENTE.md`, base de conhecimento em `resumos/`, workflows portáveis em `.agents/`, extração de PDFs via `extract_pdfs.py`.
 - **Estabilização (Fase 2):** Arquitetura Zero-DB resolvida (SSOT = `ipub.db`), parser stateful, dashboard honesto, expurgo de arquivos legados.
-- **Schema FSRS (Fase 3):** Tabelas `flashcards`, `fsrs_cards`, `fsrs_revlog` migradas. 277 cards gerados heuristicamente. CLI de revisão e motor FSRS operacional via `Tools/review_cli.py`.
+- **Schema FSRS (Fase 3):** Tabelas `flashcards`, `fsrs_cards`, `fsrs_revlog` migradas. 277 cards gerados heuristicamente. CLI de revisão e motor FSRS operacional via `tools/review_cli.py`.
 
 ---
 
@@ -29,8 +29,8 @@ Quatro trilhos em paralelo — cada um tem foco e cadência próprios.
 ### Trilho A — Core de Revisão
 Objetivo: FSRS funcionando de ponta a ponta (registro → algoritmo → próxima due).
 
-- `Tools/review_cli.py`: CLI MVP com política de 3 buckets (atrasados → hoje → novos) ✓
-- `Tools/audit_fsrs.py`: auditoria operacional do estado FSRS ✓
+- `tools/review_cli.py`: CLI MVP com política de 3 buckets (atrasados → hoje → novos) ✓
+- `tools/audit_fsrs.py`: auditoria operacional do estado FSRS ✓
 - `app/pages/2_estudo.py`: player Streamlit integrado ao `record_review()` ✓
 - Session log no CLI (N revisados, distribuição 1-4, próximas dues) ✓
 
@@ -46,10 +46,10 @@ Objetivo: alimentar o banco com cards de alta qualidade de múltiplas fontes.
 
 - `questoes_erros` → flashcards: pipeline heurístico corrigido (strip_letter_ref, sem "Sobre X:") ✓
 - Qualidade atual: **277/277 OK (100%)**, 0/277 com sinais críticos ✓ (sessão 058)
-- `Tools/audit_flashcard_quality.py`: auditoria permanente de qualidade ✓
+- `tools/audit_flashcard_quality.py`: auditoria permanente de qualidade ✓
 - Passe LLM completo: 189 cards reescritos, 0 needs_qualitative=1 pendentes ✓ (sessão 058)
-- Taxonomia bridge: 21 tema_ids órfãos corrigidos via `Tools/fix_taxonomy_bridge.py` ✓ (sessão 058)
-- PDFs Estratégia → flashcards: `Tools/import_pdf_cards.py` (a implementar)
+- Taxonomia bridge: 21 tema_ids órfãos corrigidos via `tools/fix_taxonomy_bridge.py` ✓ (sessão 058)
+- PDFs Estratégia → flashcards: `tools/import_pdf_cards.py` (a implementar)
 
 ### Trilho D — Analytics
 Objetivo: fechar o loop entre performance e estudo.
@@ -76,9 +76,9 @@ Objetivo: fechar o loop entre performance e estudo.
 
 ### 2. MedHub como Workspace Semântico
 
-**Por que existe:** O registro de erros sem base de conhecimento de qualidade é apenas um log. A base `Temas/` transforma o registro em compreensão. A lição identificada na questão precisa encontrar o lugar exato no resumo — não o fim do arquivo, mas o ponto temático correto.
+**Por que existe:** O registro de erros sem base de conhecimento de qualidade é apenas um log. A base `resumos/` transforma o registro em compreensão. A lição identificada na questão precisa encontrar o lugar exato no resumo — não o fim do arquivo, mas o ponto temático correto.
 
-**O que habilita:** A base semântica é o que permite flashcards contextualizados, simulados orientados por fraqueza e busca por embeddings. Sem `Temas/` de qualidade, o sistema gera ruído, não insight.
+**O que habilita:** A base semântica é o que permite flashcards contextualizados, simulados orientados por fraqueza e busca por embeddings. Sem `resumos/` de qualidade, o sistema gera ruído, não insight.
 
 **O que consolida:**
 - Migração completa da nomenclatura (remover prefixos legados `[GIN]`, `[OBS]`, `[CIR]`, `[ORL]`)
@@ -95,7 +95,7 @@ Objetivo: fechar o loop entre performance e estudo.
 **O que habilita:** O player FSRS fecha o loop entre erro → registro → retenção. Flashcards contextualizados com o conteúdo dos resumos (pipeline RAG inverso) elevam a qualidade da revisão de "lembrar a resposta" para "compreender o raciocínio".
 
 **O que consolida:**
-- Pipeline RAG inverso: injetar conteúdo do `Temas/` no prompt de geração de flashcard (eliminar "atrofia semântica")
+- Pipeline RAG inverso: injetar conteúdo do `resumos/` no prompt de geração de flashcard (eliminar "atrofia semântica")
 - Input obrigatório de contexto clínico ao registrar erro
 - Dashboard de revisão com curva de esquecimento por área
 
@@ -158,9 +158,9 @@ Objetivo: fechar o loop entre performance e estudo.
 
 O MedHub não deve virar:
 
-1. **Dumping ground de Markdown.** Cada nota em `Temas/` existe porque um erro de questão ou uma apostila a justificou. Não criar resumos por completismo de área.
+1. **Dumping ground de Markdown.** Cada nota em `resumos/` existe porque um erro de questão ou uma apostila a justificou. Não criar resumos por completismo de área.
 2. **Chatbot genérico.** O agente tem identidade, protocolo e contexto específicos. Não generalizar para outros domínios.
 3. **App desconectado da base de conhecimento.** O Streamlit deve consumir o que está no banco e nos resumos — não criar uma camada de dados paralela.
-4. **Memória competindo com a fonte canônica.** O `medhub_memory.db` captura preferências e padrões de fraqueza, não replica o conteúdo de `Temas/` ou `ESTADO.md`.
+4. **Memória competindo com a fonte canônica.** O `medhub_memory.db` captura preferências e padrões de fraqueza, não replica o conteúdo de `resumos/` ou `ESTADO.md`.
 5. **Stack sofisticada sem clareza pedagógica.** Toda peça precisa ter uso real, não especulativo. A régua: se não foi usado em sessões reais, simplificar ou remover.
 6. **Arquitetura inflada sem uso real.** O risco de um projeto solo de engenharia é acumular camadas que parecem necessárias mas não são exercidas.

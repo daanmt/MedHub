@@ -51,7 +51,7 @@ def get_queue(limit, new_limit, area, tema):
         return ("WHERE " + " AND ".join(all_clauses)) if all_clauses else ""
 
     # Bucket 1: atrasados (state > 0, due antes de hoje)
-    w1 = make_where(["fc.state > 0", "fc.due < datetime('now','start of day')"])
+    w1 = make_where(["fc.state > 0", "fc.due < datetime('now','start of day')", "f.needs_qualitative < 2"])
     b1 = conn.execute(
         f"{SELECT_FIELDS} {w1} ORDER BY fc.due ASC LIMIT ?",
         filter_params + [limit]
@@ -64,7 +64,8 @@ def get_queue(limit, new_limit, area, tema):
         w2 = make_where([
             "fc.state > 0",
             "fc.due >= datetime('now','start of day')",
-            "fc.due < datetime('now','start of day','+1 day')"
+            "fc.due < datetime('now','start of day','+1 day')",
+            "f.needs_qualitative < 2",
         ])
         b2 = conn.execute(
             f"{SELECT_FIELDS} {w2} ORDER BY fc.due ASC LIMIT ?",
@@ -76,7 +77,7 @@ def get_queue(limit, new_limit, area, tema):
     if remaining > 0:
         new_cap = min(remaining, new_limit)
         # Bucket 3: novos (state = 0)
-        w3 = make_where(["fc.state = 0"])
+        w3 = make_where(["fc.state = 0", "f.needs_qualitative < 2"])
         b3 = conn.execute(
             f"{SELECT_FIELDS} {w3} ORDER BY f.id ASC LIMIT ?",
             filter_params + [new_cap]

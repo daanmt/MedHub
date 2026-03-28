@@ -181,16 +181,25 @@ def run(args):
             print(f"\nNenhum card com sinal '{signal_key}'.")
 
     if args.export:
+        # --only-needs-qual: exportar todos os needs_qualitative=1 (não só os objetivamente ruins)
+        if hasattr(args, 'only_needs_qual') and args.only_needs_qual:
+            export_ids = [r[0] for r in conn.execute(
+                "SELECT id FROM flashcards WHERE needs_qualitative = 1 ORDER BY id"
+            ).fetchall()]
+            print(f"Modo --only-needs-qual: {len(export_ids)} cards com needs_qualitative=1")
+        else:
+            export_ids = bad_ids
+
         export_data = {
             'generated_at': datetime.now().isoformat(),
             'total_cards': total,
-            'problematic_count': len(bad_ids),
-            'problematic_ids': bad_ids,
+            'problematic_count': len(export_ids),
+            'problematic_ids': export_ids,
             'signal_counts': counts,
             'cards': [],
         }
-        # Exportar dados completos dos cards problemáticos para passe LLM
-        for card_id in bad_ids:
+        # Exportar dados completos dos cards para passe LLM
+        for card_id in export_ids:
             row = conn.execute("""
                 SELECT f.id, f.tipo, f.quality_source, f.needs_qualitative,
                        f.frente, f.verso, f.frente_contexto, f.frente_pergunta,
@@ -215,7 +224,7 @@ def run(args):
 
         with open(args.export, 'w', encoding='utf-8') as f:
             json.dump(export_data, f, ensure_ascii=False, indent=2)
-        print(f"\nExportado: {len(bad_ids)} cards -> {args.export}")
+        print(f"\nExportado: {len(export_ids)} cards -> {args.export}")
 
     print()
     conn.close()
@@ -232,6 +241,8 @@ def main():
                    help='Exportar cards problemáticos para JSON (input para LLM)')
     p.add_argument('--tipo', default='all', choices=['all', 'elo_quebrado', 'armadilha'],
                    help='Filtrar por tipo de card')
+    p.add_argument('--only-needs-qual', action='store_true', dest='only_needs_qual',
+                   help='Exportar apenas cards com needs_qualitative=1 (ignorar filtro de sinais)')
     args = p.parse_args()
     run(args)
 

@@ -11,10 +11,10 @@
             "id": "688248a1cad7a83e",
             "type": "leaf",
             "state": {
-              "type": "empty",
+              "type": "graph",
               "state": {},
-              "icon": "lucide-file",
-              "title": "Nova aba"
+              "icon": "lucide-git-fork",
+              "title": "Visualização em gráfico"
             }
           }
         ]
@@ -180,6 +180,15 @@
   },
   "active": "688248a1cad7a83e",
   "lastOpenFiles": [
+    "medhub_memory.db-journal",
+    "history/session_055.md",
+    "Tools/hooks/memory_session_log.py",
+    "Tools/hooks/memory_boot.py",
+    "Tools/hooks",
+    "Tools/migrate_memory.py",
+    "HANDOFF_MCP.md.tmp.22484.1774578363576",
+    "HANDOFF_MCP.md",
+    "HANDOFF_MCP.md.tmp.22396.1774577291648",
     "Temas/INDEX.md",
     "AGENTE.md",
     "history/session_044.md",
@@ -191,12 +200,6 @@
     "Sem título.base",
     "Tools/check_flashcards.py",
     "Tools/adjust_15.py",
-    "app/pages/4_simulados.py",
-    "Tools/check_schema.py",
-    "Tools/fix_db_duplicates.py",
-    "Tools/fix_areas.py",
-    "app/pages/3_biblioteca.py",
-    "app/pages/2_estudo.py",
     "Anatomia do MedHub (Infraestrutura).md",
     "history/legacy/Tools_Archive/IPUB_Streamlit_Plano.md",
     "history/legacy/Tools_Archive/IPUB_Reforma_v3.md",

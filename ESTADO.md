@@ -48,6 +48,9 @@ Workspace state-driven de estudos médicos. Processa questões de prova, registr
 | Player Flashcards | `app/pages/2_estudo.py` |
 | CLI de Revisão FSRS | `Tools/review_cli.py` |
 | Auditoria FSRS | `Tools/audit_fsrs.py` |
+| Auditoria Qualidade Cards | `Tools/audit_flashcard_quality.py` |
+| Auditoria Integridade DB | `Tools/audit_integrity.py` |
+| Pipeline LLM Qualitativo | `Tools/regenerate_cards_llm.py` |
 | Session logs | `history/session_NNN.md` |
 
 ### Dados
@@ -74,6 +77,7 @@ Workspace state-driven de estudos médicos. Processa questões de prova, registr
 
 ## Últimas sessões
 
+**2026-03-27 | Claude Code (sessão 057b):** **Refatoração de qualidade de flashcards (Fases 1-4)**. Auditoria permanente (`audit_flashcard_quality.py`): baseline era 277/277 ruins (100%). Fix no pipeline heurístico (`strip_letter_ref`, template armadilha). Regeneração completa de 277 cards: 239 heuristic OK + 38 heuristic_flagged. Resultado: 31/277 problemáticos (11.2%), 0 campos estruturados NULL. 169 cards marcados `needs_qualitative=1` para passe LLM. FSRS preservado (5 reviews, 5 stability>0). Pipeline LLM (`regenerate_cards_llm.py`) criado. Integridade auditada (`audit_integrity.py`). fix em `insert_questao.py` (fallback "Sobre X:" eliminado).
 **2026-03-27 | Claude Code (sessão 057):** **FSRS operacional — CLI de revisão + fix Streamlit**. Substituição do `_avancar()` hardcoded em `2_estudo.py` por `record_review()` real. Criação de `Tools/review_cli.py` (3 buckets: atrasados/hoje/novos, args --limit/--new-limit/--area/--tema). Criação de `Tools/audit_fsrs.py` (auditoria operacional). ROADMAP.md reescrito com 4 trilhos (A Core Revisão, B Interfaces, C Fontes Cards, D Analytics).
 **2026-03-27 | Claude Code (sessão 056):** **Pipeline flashcards v5 — migração + regeneração heurística**. Schema `flashcards` migrado com 8 novos campos. 277 cards regenerados (219 heuristic OK, 20 qualitative, 38 flagged). Ferramentas: `Tools/backup_db.py`, `Tools/migrate_flashcards.py`, `Tools/regenerate_cards.py`, `Tools/audit_cards.py`. `insert_questao.py` atualizado com 5 args estruturados.
 **2026-03-27 | Claude Code (sessão 055):** **Automação do sistema de memória via hooks**. Auditoria completa das 4 camadas de memória. Correção do `manager.py` (2 managers separados, pt-BR, session_id injetado, `_sync_error_counts`). Migração de 37 WeakAreas para namespace correto. Fix do MCP obsidian-notes-rag em agente-daktus-content (env vars). Hooks automáticos: `memory_boot.py` (SessionStart) + `memory_session_log.py` (PostToolUse Write). AGENTE.md e registrar-sessao.md atualizados.

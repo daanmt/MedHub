@@ -2,11 +2,11 @@
 type: snapshot
 layer: root
 status: canonical
-relates_to: AGENTE, HANDOFF, roadmap
+relates_to: AGENTE, roadmap
 ---
 
 # ESTADO — MedHub (Preparação para Residência Médica)
-*Atualizado: 2026-03-27 (sessão 057) | Ferramenta: Claude Code*
+*Atualizado: 2026-03-28 (sessão 058) | Ferramenta: Claude Code*
 
 ---
 
@@ -41,7 +41,7 @@ Workspace state-driven de estudos médicos. Processa questões de prova, registr
 |---|---|
 | Bootstrap protocol | `AGENTE.md` |
 | Estado do projeto | `ESTADO.md` (este arquivo) |
-| Estado operacional curto | `HANDOFF.md` |
+| Estado operacional curto | `ESTADO.md` (seção "Últimas sessões") |
 | Direção do produto | `roadmap.md` |
 | Dashboard Streamlit | `streamlit_app.py` |
 | Parser Stateful | `app/utils/parser.py` |
@@ -57,7 +57,20 @@ Workspace state-driven de estudos médicos. Processa questões de prova, registr
 | Artefato | Arquivo |
 |---|---|
 | Banco principal (erros, FSRS, cronograma) | `ipub.db` (local only — não commitar) |
-| Cache de flashcards LLM | `flashcards_cache.json` (commitado) |
+| Memória cross-session | `medhub_memory.db` (local only — não commitar) |
+| Backups datados | `artifacts/backups/ipub_backup_*.db` (local only) |
+
+### Artefatos de passe LLM (auditoria)
+| Sessão | Input | Output | Escopo |
+|---|---|---|---|
+| 058 | `artifacts/llm_runs/058/all_needs_qual.json` | `artifacts/llm_runs/058/all_improved.json` | 169 cards nq=1 |
+| 057b/058 | `artifacts/llm_runs/058/pilot_cards.json` | `artifacts/llm_runs/058/pilot_output.json` | 20 cards piloto nq=0 |
+
+### Arquivos aposentados
+| Artefato | Localização | Motivo |
+|---|---|---|
+| `flashcards_cache.json` | `artifacts/legacy/` | Pipeline v1 de flashcards pré-ipub.db; `fsrs_cache_cards`=0 rows; nenhuma página ativa usa `flashcard_builder.py` |
+| `HANDOFF_056.md` | `artifacts/legacy/` | Handoff de sessão 056; absorvido por ESTADO.md |
 
 ### Conteúdo
 | Artefato | Arquivo |
@@ -75,8 +88,32 @@ Workspace state-driven de estudos médicos. Processa questões de prova, registr
 
 ---
 
+## Dois eixos de qualidade de flashcards
+
+> **Atenção:** esses dois eixos são ortogonais — não confundir. Um card pode falhar em um eixo sem falhar no outro.
+
+| Eixo | Campo / Ferramenta | Valores | Significado |
+|---|---|---|---|
+| **Sinais objetivos** | `audit_flashcard_quality.py` | CRÍTICO / ALTO / ARQT. | Detecta artefatos no conteúdo renderizado: letra de gabarito `(A)`, prefixo `"Sobre X:"`, badge `RESPOSTA DIRETA`, regra mestre vazia |
+| **Fila qualitativa** | `needs_qualitative` | 0 = aprovado | Heurística OK ou passe LLM aplicado |
+| | | 1 = pendente LLM | Marcado para reescrita qualitativa |
+| | | 2 = aposentado | Excluído da fila FSRS (`WHERE needs_qualitative < 2`) |
+
+**Estado atual (pós-sessão 058):**
+- Sinais objetivos: **0/277** cards com sinal crítico/alto
+- needs_qualitative=1: **0** cards pendentes
+- Distribuição: `heuristic/nq=0`=87, `qualitative/nq=0`=190 (total=277)
+
+**Trilha de auditoria do passe qualitativo:**
+- Artefatos em `artifacts/llm_runs/058/` (não commitados — deriváveis do ipub.db)
+- Os 20 cards do piloto (057b) eram do grupo nq=0 (sinais objetivos), não do grupo nq=1
+- Os 169 do rollout (058) eram nq=1; grupos sem sobreposição (overlap=0)
+
+---
+
 ## Últimas sessões
 
+**2026-03-28 | Claude Code (sessão 058 — faxina):** **Faxina controlada de artefatos + documentação**. Criada estrutura `artifacts/` (llm_runs/058/, backups/, legacy/). Movidos: 4 JSONs de passe LLM para llm_runs/058/ (auditoria), 3 backups para artifacts/backups/, flashcards_cache.json + HANDOFF_056.md para artifacts/legacy/. `.gitignore` atualizado (artifacts/backups/, artifacts/llm_runs/, .mcp.json). README.md reescrito (estrutura, dois eixos, política de artefatos). ESTADO.md: seção "Dois eixos de qualidade" adicionada, tabela de dados atualizada, relacionamento com HANDOFF.md removido.
 **2026-03-28 | Claude Code (sessão 058):** **Passe qualitativo LLM + correção de taxonomia (Blocos 1-3)**. Rollout LLM completo em 189 cards (piloto 20 + rollout 169): qualidade 0/277 sinais críticos/altos (antes: 31/277), needs_qualitative=1→0. `Tools/fix_taxonomy_bridge.py` criado e executado: 21 tema_ids órfãos mapeados (INSERT OR IGNORE com IDs explícitos) — `audit_integrity` agora [OK] taxonomia. Filtro `needs_qualitative < 2` adicionado em `review_cli.py` e `2_estudo.py`. Suporte a aposentadoria (nq=2) em `regenerate_cards.py --apply`. Flag `--only-needs-qual` em `audit_flashcard_quality.py`. FSRS preservado (5 reviews, 5 stability>0). Distribuição final: 190 qualitative + 87 heuristic. **Auditoria de consistência numérica (pós-sessão):** os 20 do piloto eram todos `nq=0` (heuristic) no backup pré-aplicação — grupos piloto e rollout sem sobreposição (overlap=0). 20 piloto + 169 rollout + 1 correção manual = 190 qualitativos. 87 heurísticos são os que já passavam na heurística sem necessidade de LLM. Total: 277/277 contabilizados (`SELECT quality_source, needs_qualitative, COUNT(*) FROM flashcards GROUP BY 1,2` → heuristic/0=87, qualitative/0=190).
 **2026-03-27 | Claude Code (sessão 057b):** **Refatoração de qualidade de flashcards (Fases 1-4)**. Auditoria permanente (`audit_flashcard_quality.py`): baseline era 277/277 ruins (100%). Fix no pipeline heurístico (`strip_letter_ref`, template armadilha). Regeneração completa de 277 cards: 239 heuristic OK + 38 heuristic_flagged. Resultado: 31/277 problemáticos (11.2%), 0 campos estruturados NULL. 169 cards marcados `needs_qualitative=1` para passe LLM. FSRS preservado (5 reviews, 5 stability>0). Pipeline LLM (`regenerate_cards_llm.py`) criado. Integridade auditada (`audit_integrity.py`). fix em `insert_questao.py` (fallback "Sobre X:" eliminado).
 **2026-03-27 | Claude Code (sessão 057):** **FSRS operacional — CLI de revisão + fix Streamlit**. Substituição do `_avancar()` hardcoded em `2_estudo.py` por `record_review()` real. Criação de `Tools/review_cli.py` (3 buckets: atrasados/hoje/novos, args --limit/--new-limit/--area/--tema). Criação de `Tools/audit_fsrs.py` (auditoria operacional). ROADMAP.md reescrito com 4 trilhos (A Core Revisão, B Interfaces, C Fontes Cards, D Analytics).

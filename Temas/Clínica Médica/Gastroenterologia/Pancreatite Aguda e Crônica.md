@@ -58,36 +58,81 @@ Requer **2 de 3** critérios:
     - **B**UN > 25 mg/dL; **I**mpaired mental status; **S**IRS (≥ 2 critérios); **A**ge > 60; **P**leural effusion.
     - Score ≥ 3 = grave (mortalidade > 5%).
 
-### 1.6 Classificação das Coleções (Atlanta 2012 Revisada)
+### 1.6 Classificação Tomográfica de Balthazar
+
+Avalia a gravidade pela TC com contraste intravenoso. Combina dois componentes:
+
+- **Grau Balthazar (morfologia pancreática e peripancreática):**
+  - Grau A: pâncreas normal — 0 pontos
+  - Grau B: aumento focal ou difuso do pâncreas — 1 ponto
+  - Grau C: anormalidades intrínsecas + inflamação peripancreática — 2 pontos
+  - Grau D: uma coleção peripancreática — 3 pontos
+  - Grau E: duas ou mais coleções e/ou gás intrapancreático — 4 pontos
+
+- **Grau de Necrose (ausência de realce após contraste):**
+  - Sem necrose: 0 pontos
+  - < 33% do pâncreas: 2 pontos
+  - 33–50%: 4 pontos
+  - > 50%: 6 pontos
+
+- ⭐ **Índice de Gravidade Tomográfico (IGT) = Balthazar + Necrose (máximo 10 pontos):**
+  - IGT 0–3: morbidade ~8%, mortalidade ~3%
+  - IGT 4–6: morbidade ~35%, mortalidade ~6%
+  - IGT 7–10: morbidade ~92%, mortalidade ~17%
+  - ⚠️ **Padrão de prova:** O IGT é calculado com DOIS componentes somados; errar ao usar só o grau morfológico (Balthazar isolado) é uma armadilha frequente.
+
+### 1.8 Classificação das Coleções (Atlanta 2012 Revisada)
 
 - ⭐ **Pancreatite edematosa intersticial:**
-    - **CFPA** (Coleção Fluida Peripancreática Aguda) → < 4 semanas, **sem parede**, sem necrose sólida. Regride espontaneamente na maioria.
-    - **Pseudocisto Pancreático** → > 4 semanas, **parede fibrótica bem definida**, conteúdo predominantemente líquido. Tratar se sintomático (drenagem endoscópica guiada por ecoendoscopia).
+  - **CFPA** (Coleção Fluida Peripancreática Aguda) → < 4 semanas, **sem parede**, sem necrose sólida. Regride espontaneamente na maioria.
+  - **Pseudocisto Pancreático** → > 4 semanas, **parede fibrótica bem definida**, conteúdo predominantemente líquido. Tratar se sintomático (drenagem endoscópica guiada por ecoendoscopia).
 - **Pancreatite necrosante:**
-    - **CNA** (Coleção Necrótica Aguda) → < 4 semanas, **sem parede**, conteúdo líquido + necrose sólida.
-    - **WON** (Walled-Off Necrosis / Necrose Murada) → > 4 semanas, **parede bem definida**, conteúdo líquido + necrose sólida. Tratar se infectada (step-up approach).
+  - **CNA** (Coleção Necrótica Aguda) → < 4 semanas, **sem parede**, conteúdo líquido + necrose sólida.
+  - **WON** (Walled-Off Necrosis / Necrose Murada) → > 4 semanas, **parede bem definida**, conteúdo líquido + necrose sólida. Tratar se infectada (step-up approach).
 
-### 1.7 Exame Físico e Sinais de Hemorragia Retroperitoneal
+- ⚠️ **Padrão de prova:** O tempo de 4 semanas define a transição CFPA → Pseudocisto e CNA → WON. A parede bem definida (cápsula fibrosa) é o marcador morfológico da maturação, não o conteúdo.
+
+### 1.9 Exame Físico e Sinais de Hemorragia Retroperitoneal
 - **Sinal de Cullen:** Equimose periumbilical.
 - **Sinal de Grey-Turner:** Equimose em flancos.
 - **Sinal de Fox:** Equimose na base do pênis.
 > ⚠️ **Atenção:** Estes sinais indicam mau prognóstico e sugerem pancreatite necro-hemorrágica.
 
-### 1.8 Tratamento
-1. **Hidratação:** Ressuscitação volêmica agressiva precoce (preferencialmente **Ringer Lactato**).
-2. **Analgesia:** Opioides (Fentanil). Tradicionalmente evitava-se Morfina pelo "espasmo do esfíncter de Oddi", mas clinicamente é aceitável.
-3. **Dieta:** 
-   - Na PA Leve: Dieta oral zero até melhora da dor, seguida de dieta hipolipídica precoce.
-   - Na PA Grave: Nutrição **Enteral** preferencial (mantém barreira intestinal e reduz translocação bacteriana).
-4. **Antibióticos:** **NÃO** fazer profilaxia. Indicado apenas se necrose infectada (febre e piora clínica após 7-10 dias de evolução).
+### 1.10 Tratamento de Suporte
 
-### 1.9 Necrose Pancreática
-- **Necrose Estéril:** Conduta conservadora (Suporte + Nutrição Enteral). ⭐
-- **Necrose Infectada:** Suspeitar se piora clínica ou febre após 7-10 dias.
-  - Sinais na TC: Presença de gás (bolhas).
-  - Conduta: Punção ou ATB (Imipenem) + Drenagem Minimamente Invasiva (Step-up approach). Cirurgia (Necrosectomia) deve ser evitada nas primeiras 4 semanas.
+1. **Hidratação:** Ressuscitação volêmica agressiva precoce (preferencialmente **Ringer Lactato**). Meta: débito urinário 0,5 mL/kg/h.
+2. **Analgesia:** Opioides (Fentanil). Morfina é clinicamente aceitável apesar do histórico de espasmo do esfíncter de Oddi.
+3. **Nutrição:**
+   - PA Leve: Dieta oral hipolipídica assim que a dor tolerar. Não aguardar normalização das enzimas.
+   - PA Grave: ⭐ **Nutrição Enteral precoce obrigatória** (iniciar em 24–48h) via sonda nasoenteral (pré ou pós-pilórica). Mecanismo: mantém a integridade da mucosa intestinal e previne a translocação bacteriana — principal mecanismo de infecção da necrose.
+   - ⚠️ **Padrão de prova:** A nutrição enteral está **contraindicada** em instabilidade hemodinâmica grave (risco de isquemia intestinal) e íleo paralítico. Nessas situações, manter aporte glicêmico venoso e reintroduzir a enteral após estabilização.
+   - Nutrição parenteral total (NPT): causa atrofia da mucosa, maior risco de infecção e complicações metabólicas. Usar apenas como última opção quando enteral for impossível.
+4. **Antibióticos:** **Profilaxia é proibida.** Indicado apenas na suspeita de necrose infectada (piora clínica ou gás na TC após 7–10 dias).
 
-### 1.8 Investigação de Microlitíase
+### 1.11 Necrose Pancreática — Conduta
+
+- **Necrose Estéril:**
+  - Conduta: conservadora (suporte + nutrição enteral). ⭐
+  - **Não drena rotineiramente.** Exceções para intervenção em necrose estéril:
+    - Obstrução gástrica, intestinal ou biliar por efeito de massa — após 4 semanas.
+    - Sintomas persistentes incapacitantes (dor, anorexia) — após 8 semanas.
+    - Síndrome do ducto desconectado com coleções sintomáticas — após 4 semanas.
+
+- **Necrose Infectada:**
+  - Suspeitar: piora clínica (febre, leucocitose, instabilidade) após 7–10 dias sem melhora.
+  - Confirmar: **gás na TC** (patognomônico) ou punção com cultura positiva.
+  - Conduta: **Step-up approach** (escalonamento do menos para o mais invasivo):
+    - Passo 1 → **Antibioticoterapia** (Imipenem, ou quinolona/cefepima + metronidazol). Minoria melhora só com ATB.
+    - Passo 2 → **Drenagem minimamente invasiva** (se não houver melhora com ATB):
+      - **Drenagem percutânea guiada por TC:** preferência quando há janela anatômica segura (coleção com acesso sem estruturas nobres interposta, geralmente flanco esquerdo ou região com coleção próxima à parede abdominal). Resolve 20–60% dos casos de necrose infectada.
+      - **Drenagem endoscópica transgástrica (EUS):** indicada quando há contato íntimo da coleção com o estômago (< 1 cm), sem janela segura para percutânea.
+      - ⭐ **Critério de escolha:** Preferir percutânea quando houver janela segura. Recorrer à endoscópica quando a anatomia impede a via percutânea.
+    - Passo 3 → **Necrosectomia minimamente invasiva** (videolaparoscópica ou retroperitoneal): se não houver melhora com drenagem.
+    - Passo 4 → **Necrosectomia cirúrgica aberta:** última opção. Associada a alta morbimortalidade quando realizada precocemente.
+  - ⭐ **Timing cirúrgico:** Adiar ao máximo. Idealmente após **4–6 semanas** do início da pancreatite, quando a necrose se organiza e delimita — reduz ressecção de tecido viável e morbimortalidade.
+  - ⚠️ **Padrão de prova:** A presença de gás na TC em paciente com piora clínica que não respondeu a ATB indica drenagem percutânea — não necrosectomia direta.
+
+### 1.12 Investigação de Microlitíase
 - Se USG de abdome for normal e a clínica for sugestiva (ausência de álcool, obesidade/perda ponderal aguda), o próximo passo é realizar **Ecoendoscopia (USG Endoscópico)** para pesquisa de microcálculos ou lama biliar. ⭐
 
 ---
@@ -140,7 +185,11 @@ A tríade aparece em estágios avançados:
 - 🔴 **Critérios de Ranson:** Lembrar que existem critérios de **admissão** e critérios de **48 horas**. Se a questão der dados da admissão e perguntar a gravidade IMEDIATA, use apenas os de admissão.
 - 🔴 **Enzimas na PC:** A reposição enzimática serve para tratar a esteatorreia MAIS a dor (por feedback negativo reduzindo a secreção pancreática).
 - 🔴 **Predição de Gravidade:** Nível de amilase não serve. Usar **PCR** (> 150), **Hematócrito** (> 44%) e **Ureia** (> 20).
-- 🔴 **CPRE:** Reservada para colangite associada ou obstrução biliar persistente. Icterícia isolada fugaz não é indicação obrigatória de urgência.
-- 🔴 **Cirurgia na Necrose:** Sempre "Step-up approach" (Drenagem → Debridamento minimamente invasivo) e o mais tardio possível (> 4 semanas).
+- 🔴 **CPRE:** Reservada para colangite associada OU obstrução biliar persistente documentada por imagem. **Icterícia isolada na pancreatite biliar não é indicação** — a icterícia pode refletir edema local transitório ou hepatite inflamatória, e não necessariamente litíase obstrutiva.
+- 🔴 **Cirurgia na Necrose:** Sempre step-up approach. A necrosectomia aberta, quando indicada, deve ser realizada o mais tardiamente possível — idealmente após 4–6 semanas.
+- 🔴 **Drenagem percutânea vs. endoscópica:** A escolha da via depende da anatomia, não do diagnóstico. Percutânea é preferida quando há janela segura (trajeto sem estruturas nobres). Endoscópica transgástrica é reservada para coleções sem janela percutânea mas com contato íntimo com o estômago (< 1 cm).
+- 🔴 **Necrose estéril não se drena por rotina:** A ausência de gás na TC e ausência de piora clínica em necrose pancreática indica conduta conservadora. A drenagem rotineira de necrose estéril não é recomendada — drena-se apenas quando infectada ou quando causa obstrução/sintomas persistentes após as 4–8 semanas definidas.
+- 🔴 **Nutrição enteral na PA grave é prioritária:** Em questões que apresentam PA grave com múltiplos tratamentos para escolher, a nutrição enteral precoce via sonda deve ser sempre selecionada se ainda não foi instituída. Só está contraindicada em instabilidade hemodinâmica grave ou íleo paralítico.
+- 🔴 **IGT de Balthazar = grau morfológico + grau de necrose:** O índice de gravidade tomográfico é composto (máximo 10). Usar apenas o grau morfológico (A–E) sem somar o componente de necrose é erro frequente.
 
 ---

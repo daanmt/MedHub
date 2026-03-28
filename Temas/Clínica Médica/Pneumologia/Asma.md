@@ -137,6 +137,13 @@ aliases: [Asma]
 
 > ⚠️ **Padrão de prova:** VEF1 **não faz mais parte** dos critérios de controle GINA — questões de 2021 ou mais antigas cobram isso desatualizado.
 
+> ⚠️ **Padrão de prova:** o threshold é **≤ 2×/semana** (2 ou menos), não "menos de 1 vez". Alternativas que citam "< 1×/semana" para sintomas ou resgate estão erradas.
+
+**Critérios de controle em crianças < 6 anos (mais rigorosos):**
+- Sintomas diurnos: ≤ 1×/semana = controlada (versus ≤ 2 no adulto/maior)
+- Uso de resgate: ≤ 1×/semana = controlada
+- ⭐ Questões pediátricas exigem atenção a esse limiar — 1 dia de sintoma ou 1 uso de resgate na semana já indica alteração do controle.
+
 ### 5.2 Gravidade (avaliação retrospectiva — após ≥ 12 meses de tratamento)
 
 - **Leve:** controlada com steps 1–2
@@ -340,6 +347,8 @@ Fluticasona furoato (GINA 2025): 100 mcg = baixa-média; 200 mcg = média-alta *
 **Corticoide sistêmico:**
 - Prednisolona 1 mg/kg/dia (ou 50 mg/dia equivalente) por **5–7 dias**
 - Iniciar precocemente se piora ou falência ao SABA; VO = EV em eficácia
+- ⭐ **Via oral é preferida** — mesma eficácia que EV, mais rápida de administrar, menor custo, sem punção venosa
+- Corticoide IM: inferior ao VO; não usar na crise aguda de asma
 
 **CI em dose alta:**
 - Na 1ª hora na UE (sem corticoide oral) → ↓ risco de internação — evidência A
@@ -368,6 +377,8 @@ Fluticasona furoato (GINA 2025): 100 mcg = baixa-média; 200 mcg = média-alta *
 
 **1º passo — triagem de gravidade máxima:**
 - → Sonolento, confuso ou tórax silente? → **Quase-fatal:** SABA + SAMA + O₂ → IOT (quetamina + propofol) → UTI
+- ⭐ **Sedação na IOT do asmático: quetamina** — efeito broncodilatador (estimula catecolaminas). Evitar etomidato (sem broncodilatação).
+- ⚠️ IOT restrita à: coma, PCR, apneia, respiração agônica, alteração grave do nível de consciência. **Não indicar só por PaCO₂ elevado ou SpO₂ ruim** — hipercapnia isolada não é critério.
 - → Não: estratificar entre leve-moderada e grave
 
 **→ Leve-Moderada:**
@@ -403,16 +414,29 @@ Fluticasona furoato (GINA 2025): 100 mcg = baixa-média; 200 mcg = média-alta *
 
 ## 9. Situações Especiais
 
-**Asma relacionada ao trabalho (ART):**
-- Requer notificação via CAT (comunicação de acidente de trabalho)
-- Diagnóstico: hiper-responsividade brônquica + nexo causal ocupacional
-- Conduta diagnóstica: medida seriada de PFE no trabalho vs. fora do trabalho
+**Asma relacionada ao trabalho (ART) — diferenciação crítica:**
+- ⭐ **Asma ocupacional (desencadeada pelo trabalho):** paciente **sem asma prévia** → desenvolve asma após exposição laboral a agentes sensibilizantes (poeira de madeira, isocianatos, látex, farinhas). A doença entra em remissão ao afastar do ambiente.
+- ⭐ **Asma agravada pelo trabalho:** paciente **com asma prévia** (mesmo que controlada ou assintomática) → piora documentada pela exposição ocupacional.
+- **Diferença-chave para prova:** o elemento discriminador é a existência ou não de histórico de asma **antes** do início da exposição laboral.
+- Ambas = Schilling Grupo III (trabalho sobre predisposição latente ou doença prévia).
+- Diagnóstico: hiper-responsividade brônquica + nexo causal → medida seriada de PFE no trabalho vs. fora.
+- Requer notificação via CAT.
 
-**Asma ocupacional:** hígido → desenvolve asma após exposição laboral
-**Asma agravada pelo trabalho:** asmático prévio com piora ocupacional
+**Avaliação pré-operatória do asmático:**
+- Asma **bem controlada:** avaliação clínica suficiente — sem indicação de exames adicionais além da rotina da faixa etária.
+- Asma como **doença pulmonar crônica conhecida** + cirurgia de alto risco pulmonar: indicar espirometria com prova broncodilatadora.
+- Critérios de alto risco pulmonar perioperatório: cirurgia > 3h; IOT; procedimento de cabeça/pescoço, tórax ou abdome superior; VEF1 < 1 L; tabagismo; sonda nasogástrica no perioperatório.
+- ⚠️ A espirometria **não supera** a avaliação clínica como preditor de complicações — sua função é documentar a função basal e identificar obstrução grave (VEF1 < 1 L) antes do procedimento.
 
 **Asma induzida pelo exercício (AIE):**
 - GINA 2025 adicionou: ICS-formoterol conforme necessário **e antes do exercício** como opção
+
+**Asma induzida pelo exercício (AIE):**
+- GINA 2025 adicionou: ICS-formoterol conforme necessário **e antes do exercício** como opção
+
+**Salbutamol em altas doses — segurança:**
+- ⭐ Salbutamol inalatório é agonista **seletivo β2** — mínima afinidade pelos receptores β1 miocárdicos mesmo em doses repetidas. Não está contraindicado em cardiopatas. Efeitos adversos (tremor, taquicardia, hipocalemia) são dose-dependentes mas não impedem seu uso em crises.
+- Beta-2 agonistas **EV** (sistêmicos): mais efeitos CV — reservar para crises muito graves sem resposta à via inalatória.
 
 **Asma e COVID-19:**
 - Asmáticos não têm maior risco de infecção por SARS-CoV-2
@@ -448,6 +472,19 @@ Aplicável a lactentes/pré-escolares com ≥ 3 episódios de sibilância/ano.
 
 > ⚠️ **Padrão de prova:** a espirometria não é executável de forma confiável < 6 anos. Diagnóstico é clínico + resposta terapêutica. IPA substitui a espirometria como critério de decisão nessa faixa etária.
 
+### 10.3 Steps de Tratamento — Criança < 6 anos
+
+⭐ **Track 1 (ICS-formoterol) SOMENTE a partir de 6 anos** — formoterol não está aprovado como broncodilatador de resgate nessa faixa por ausência de estudos de segurança pediátrica.
+
+- Step 1: SABA por demanda (salbutamol)
+- Step 2: CI dose baixa diária + SABA por demanda. Alternativa: antileucotrieno oral diário.
+- Step 3: CI dose dobrada + SABA por demanda. Alternativa: CI dose baixa + LTRA.
+- Step 4: CI dose dobrada + encaminhamento ao especialista; LTRA como opção adicional. Alternativas: aumentar frequência do CI ou adicionar CI intermitente de alta dose.
+
+⭐ **LABA não recomendado < 6 anos** — nunca combinar CI + LABA antes dos 6 anos. Em questões pediátricas: riscar automaticamente alternativas que propõem LABA para crianças < 6 anos.
+
+**Sulfato de magnésio em < 6 anos:** evidências limitadas — GINA considera possível; recomendado de forma mais segura apenas ≥ 6 anos em crises graves.
+
 ---
 
 ## 11. Armadilhas de Prova
@@ -469,5 +506,12 @@ Aplicável a lactentes/pré-escolares com ≥ 3 episódios de sibilância/ano.
 - 🔴 **PaCO₂ normal/elevado** na crise = sinal de fadiga — iminência de parada respiratória
 - 🔴 **Asma grave** = diagnóstico **retrospectivo** (≥ 12 meses de seguimento com boa adesão)
 - 🔴 **Broncoprovocação positivo** = confirma HRVR, não especificamente asma — negativo em sintomático **exclui** asma
-
-*📝 Espaço reservado para inclusão de questões erradas*
+- 🔴 **Critério de controle — threshold exato:** sintomas diurnos e uso de resgate ≤ **2×/semana**. "Menos de 1 vez" não é o limiar correto para adultos. Em < 6 anos: ≤ 1×/semana (mais rigoroso — 1 dia de sintoma já indica perda de controle).
+- 🔴 **LABA < 6 anos:** nunca indicado em crianças menores de 6 anos — Track 1 (ICS-formoterol) só a partir dos 6 anos. Eliminar alternativas com LABA em questões pediátricas < 6 anos.
+- 🔴 **Corticoide na crise: VO = EV em eficácia.** Via oral é preferida — mais rápida, mais barata, sem complicações do acesso venoso. Corticoide IM não é recomendado na crise.
+- 🔴 **Tratamento INICIAL da crise leve-moderada = SABA isolado.** O corticoide sistêmico é adicionado se houver falha ao SABA ou crise moderada-grave — não é a primeira medida nos casos leves sem hipoxemia.
+- 🔴 **Salbutamol inalatório não é contraindicado em cardiopatas.** É seletivo β2 com mínimo efeito β1 miocárdico — usar sem restrição nas crises. Apenas beta-2 EV/sistêmico tem mais efeitos CV.
+- 🔴 **Quetamina > etomidato na IOT do asmático** — quetamina tem efeito broncodilatador (estimula catecolaminas endógenas). Etomidato não tem esse efeito e não é a droga de escolha.
+- 🔴 **IOT na asma = indicação clínica, não gasométrica.** Critérios: coma, PCR, apneia, respiração agônica, alteração grave do estado mental. PaCO₂ elevado isolado não indica IOT imediata.
+- 🔴 **Asma ocupacional ≠ asma agravada pelo trabalho.** Ocupacional = sem histórico de asma antes da exposição laboral. Agravada = já era asmático e piora com o trabalho. O elemento discriminador é a presença ou ausência de asma prévia.
+- 🔴 **Espirometria pré-op:** indicada em asmático com doença crônica conhecida antes de cirurgia de alto risco (> 3h, IOT, tórax/abdome superior). Asma bem controlada sem risco adicional: avaliação clínica suficiente. Broncoprovocação e ergoespirometria NÃO têm papel no pré-op de asmáticos.

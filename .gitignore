@@ -22,3 +22,10 @@ __pycache__/
 .DS_Store
 desktop.ini
 Thumbs.db
+
+# MCP — config local com paths de máquina
+.mcp.json
+
+# Artefatos — backups e runs LLM (binários e JSONs grandes)
+artifacts/backups/
+artifacts/llm_runs/

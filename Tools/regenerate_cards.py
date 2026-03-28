@@ -144,15 +144,27 @@ def main():
 
         if args.apply:
             data = json.loads(Path(args.apply).read_text(encoding='utf-8'))
+            retired = applied = 0
             for item in data:
                 cid = item.pop('id')
+                # needs_qualitative=2 no JSON: aposentar card (excluir da fila FSRS)
+                if item.get('needs_qualitative') == 2:
+                    if not args.dry_run:
+                        conn.execute(
+                            "UPDATE flashcards SET needs_qualitative=2 WHERE id=?", (cid,)
+                        )
+                        retired += 1
+                    else:
+                        print(f"[DRY] card {cid}: APOSENTADO (needs_qualitative=2)")
+                    continue
                 row = conn.execute("SELECT * FROM flashcards WHERE id=?", (cid,)).fetchone()
                 old = dict(row) if row else {}
                 item['quality_source'] = 'qualitative'
                 item['needs_qualitative'] = 0
                 apply_update(conn, cid, old, item, args.dry_run)
+                applied += 1
             if not args.dry_run: conn.commit()
-            print(f"Aplicados: {len(data)} cards.")
+            print(f"Aplicados: {applied} cards  |  Aposentados: {retired}")
             return
 
         tipo_filter = None if args.tipo == 'all' else args.tipo

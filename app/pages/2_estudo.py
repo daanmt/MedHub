@@ -85,7 +85,8 @@ with tab2:
         FROM flashcards f
         LEFT JOIN taxonomia_cronograma t ON f.tema_id = t.id
         JOIN fsrs_cards c ON f.id = c.card_id
-        WHERE c.due <= datetime('now') OR c.state = 0
+        WHERE (c.due <= datetime('now') OR c.state = 0)
+          AND f.needs_qualitative < 2
         ''')
         rows = c.fetchall()
         return [{"id": r[0], "frente": r[1], "verso": r[2],

@@ -173,9 +173,10 @@ Prioridade imediata (Linha 3 → Linha 4):
 
 ## Para retomar: leia nesta ordem
 
-1. **`ESTADO.md`** (este arquivo) — visão geral do projeto.
-2. **`HANDOFF.md`** — onde o último agente parou.
-3. **`AGENTE.md`** — protocolo de boot e fechamento (regras que governam a sessão).
+1. **`ESTADO.md`** (este arquivo) — visão geral do projeto + onde a última sessão parou (seção "Últimas sessões").
+2. **`AGENTE.md`** — protocolo de boot e fechamento (regras que governam a sessão).
+
+> `HANDOFF.md` foi aposentado na sessão 058 — `ESTADO.md` é o documento único de estado/handoff.
 
 ---
 

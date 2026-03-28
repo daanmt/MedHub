@@ -2,7 +2,7 @@
 type: roadmap
 layer: root
 status: canonical
-relates_to: ESTADO, HANDOFF
+relates_to: ESTADO
 ---
 
 # Roadmap de Produto — MedHub
@@ -44,9 +44,12 @@ Objetivo: Streamlit como dashboard e consulta; CLI como interface primária de r
 ### Trilho C — Fontes de Cards
 Objetivo: alimentar o banco com cards de alta qualidade de múltiplas fontes.
 
-- `questoes_erros` → flashcards: pipeline operacional (sessão 056)
-- 169 cards `needs_qualitative`: geração em lotes via API Claude
-- PDFs Estratégia: pipeline de extração → geração de cards por apostila
+- `questoes_erros` → flashcards: pipeline heurístico corrigido (strip_letter_ref, sem "Sobre X:") ✓
+- Qualidade atual: **277/277 OK (100%)**, 0/277 com sinais críticos ✓ (sessão 058)
+- `Tools/audit_flashcard_quality.py`: auditoria permanente de qualidade ✓
+- Passe LLM completo: 189 cards reescritos, 0 needs_qualitative=1 pendentes ✓ (sessão 058)
+- Taxonomia bridge: 21 tema_ids órfãos corrigidos via `Tools/fix_taxonomy_bridge.py` ✓ (sessão 058)
+- PDFs Estratégia → flashcards: `Tools/import_pdf_cards.py` (a implementar)
 
 ### Trilho D — Analytics
 Objetivo: fechar o loop entre performance e estudo.

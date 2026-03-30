@@ -139,6 +139,8 @@ aliases: [Demencia, Alzheimer, HPN, DFT, DCL]
 - Progressão característica em **"degraus"** (piora súbita → estabilidade → nova piora)
 - **Domínios preferencialmente comprometidos:** atenção e funções **executivas** (padrão subcortical)
 - Manifestações neurológicas focais precoces: hemiparesia, disartria, disfagia, marcha parkinsoniana, incontinência urinária precoce
+- **Doença de pequenos vasos (Doença de Binswanger):** forma demencial embasada em ateroesclerose de pequenos vasos perfurantes causadoras da típica leucoaraiose, sendo uma das etiologias mais comuns.
+- **CADASIL:** síndrome cerebral autossômica dominante caracterizada por demência com claro acometimento **executivo**, disfunção precoce de **marcha**, **déficits focais** e imagem por neuro-ressonância de lesões temporais/subcorticias acompanhada de fortíssima **história familiar de AVC**.
 
 **Escore de Hachinski:**
 - 0–4: sugestivo de Alzheimer
@@ -285,5 +287,8 @@ aliases: [Demencia, Alzheimer, HPN, DFT, DCL]
 - 🔴 **Demência vascular: progressão em degraus** — não confundir com Alzheimer (progressão linear). Domínios iniciais: executivo + atenção (subcortical).
 - 🔴 **HPN: tap test confirma candidato cirúrgico** — melhora após retirada de LCR prediz resposta à DVP. Melhores resultados com cirurgia precoce (< 1–2 anos de sintomas).
 - 🔴 **CJD: proteína 14-3-3 + EEG periódico + hipersinal cortical/núcleos da base** — tríade diagnóstica da demência rapidamente progressiva priônica.
-- 🔴 **MEEM não diagnostica demência** — é teste de rastreio e acompanhamento. Pode ser normal em profissional de alta escolaridade com demência leve.
+- 🔴 **Doença Priônica vs Vascular:** Fique muito alerta aos enunciados epidemiológicos. De base, a Doença de pequenos vasos (Binswanger) é causa MUITO COMUM de quadro de via secundária. Em absoluto oposto, doênça priônica é EXTREMAMENTE RARA e nunca será resposta como causa prevalente associada em idosos.
+- 🔴 **Demência precoce com focais e queixas familiares:** Acometimento executivo associado à sintomas motores neurológicos evidentes precocemente, com atoleiros de histórico na família (AVC de repetição / precoce) é a porta central de suspeição de CADASIL, demência de fundo vascular subcortical. A diferenciação com DCL é clara pois Lewy impõe parkinsonismo e alucinações visuais (não déficits de área puramente vascular).
+- 🔴 **MEEM não afasta demência (Alta escolaridade):** Este é um clássico de prova. Pacientes submetidos a altíssimos níveis de instrução (ex: professor universitário) muitas vezes pontuam muito alto (29/30) no exame de MEEM devido a adaptação do exame e de seu intelecto, camuflando a doença. O grande divisor de águas é o prejuízo das AVDs (se perder, deixar pendências de cartão). Se a FUNCIONALIDADE foi rompida = Demência em percurso.
 - 🔴 **Demências reversíveis = 5–10% dos casos** — mnemônico MINHA-TDB; sempre rastrear antes de fechar diagnóstico de Alzheimer.
+- 🔴 **Reabilitação Cognitiva e Esclerose Múltipla:** Excluindo diagnósticos ativos de depressão (ex: com escore em testes de PHQ-9 abaixo do marco <5 ou GDS normal), a alteração do nível cognitivo no paciente com diagnóstico base de foco neurológico inflamatório, como a ES, deve ser tratado em via de prioridade com o engajamento do mesmo na terapêutica de REABILIATAÇÃO COGNITIVA, não devendo pular ou estagnar em fármacos psíquicos que já se baseiam ineficazes e incorretos pro cenário de causa mortis neurológica primária.

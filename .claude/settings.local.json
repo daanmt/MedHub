@@ -96,7 +96,8 @@
       "Bash(sed -i 's/Retomar o projeto                → AGENTE.md → ESTADO.md → HANDOFF.md/Retomar o projeto                → AGENTE.md → ESTADO.md \\(seção \"\"\"\"Últimas sessões\"\"\"\"\\)/' Tools/KNOWLEDGE_ARCHITECTURE.md)",
       "Bash(sed -i 's/AGENTE.md · ESTADO.md · HANDOFF.md · Temas\\\\/ · ipub.db/AGENTE.md · ESTADO.md · Temas\\\\/ · ipub.db/' Tools/MEMORY_ARCHITECTURE.md)",
       "Bash(sed -i 's/- Estado de `ESTADO.md` ou `HANDOFF.md`/- Estado de `ESTADO.md` \\(documento único de estado\\\\/handoff\\)/' Tools/MEMORY_ARCHITECTURE.md)",
-      "Bash(sed -i 's/3. HANDOFF.md         \\(próximo passo\\)/3. ESTADO.md seção \"\"\"\"Últimas sessões\"\"\"\" \\(próximo passo\\)/' Tools/MEMORY_ARCHITECTURE.md)"
+      "Bash(sed -i 's/3. HANDOFF.md         \\(próximo passo\\)/3. ESTADO.md seção \"\"\"\"Últimas sessões\"\"\"\" \\(próximo passo\\)/' Tools/MEMORY_ARCHITECTURE.md)",
+      "Bash(find /c/Users/daanm/MedHub/Temas -type f -name *.md)"
     ]
   },
   "enableAllProjectMcpServers": true,

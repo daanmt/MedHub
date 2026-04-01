@@ -59,6 +59,7 @@ aliases: [Trauma Cirúrgico, ATLS]
 - **Classe II (15-30%):** 750-1.500 mL. Taquicardia e estreitamento da pressão de pulso. Conduta: **Cristaloide**.
 - **Classe III (31-40%):** 1.500-2.000 mL. Hipotensão e confusão mental. Conduta: **Cristaloide + Hemoderivados**.
 - **Classe IV (> 40%):** > 2.000 mL. Choque profundo, letargia. Conduta: **Protocolo de Transfusão Maciça (MTP)**.
+- **ABC Score (Transfusão Maciça):** 4 critérios clínicos (Trauma penetrante, PAS ≤ 90 mmHg, FC ≥ 120 bpm e FAST Positivo). Score ≥ 2 alerta MTP na sala de trauma.
 
 > ⚠️ **Padrão de prova — Reanimação Classe III/IV:** No choque Grau III ou IV, a reanimação inicial deve integrar **Hemoderivados** precocemente. No paciente pediátrico instável (Grau III), a transfusão de hemácias é prioritária.
 
@@ -85,7 +86,7 @@ aliases: [Trauma Cirúrgico, ATLS]
 - **Clínica:** Instabilidade hemodinâmica (choque obstrutivo), turgência jugular, desvio de traqueia e ausência de MV.
 - **Diagnóstico:** **EXCLUSIVAMENTE CLÍNICO**. É proibido aguardar exames radiológicos.
 - **Tratamento Secuencial:** 
-    1. Descompressão imediata (Digital ou Toracocentese por agulha no 5º EIC).
+    1. Descompressão imediata (Digital ou Toracocentese por agulha calibrosa no 5º EIC). 🔴 **Armadilha:** A primeira ação é OBVIAMENTE a punção, nunca aguarde esterilizar drenos e tubos em selo d'água perante PCR eminente!
     2. Drenagem de tórax definitiva (5º EIC, linha axilar média).
 
 **Pneumotórax Aberto**
@@ -125,6 +126,7 @@ aliases: [Trauma Cirúrgico, ATLS]
 - Decorrente de desaceleração abrupta em traumas de alta energia (geralmente na altura do ligamento arterioso).
 - **Sinais Radiológicos:** Alargamento de mediastino (> 8 cm), desvio de traqueia para a direita e depressão do brônquio fonte esquerdo.
 - **Tratamento:** Controle farmacológico da FC e PA (Beta-bloqueadores) e tratamento endovascular/cirúrgico.
+- 🔴 **Armadilha:** Alargamento >8cm e velamento radiopaco do pulmão esquerdo é diagnostico gritante de Ruptura Aórtica/Hemotórax. A hemodinâmica não precisa estar instável — o paciente pode chegar normotenso (PAS 130) pelo tamponamento temporário dos cotos!
 
 **Lesões de Diafragma e Esôfago**
 - **Lesão Diafragmática:** Mais comum em ferimentos penetrantes na transição toracoabdominal.
@@ -136,7 +138,8 @@ aliases: [Trauma Cirúrgico, ATLS]
   - **Sinal Clínico tardio:** Herniação de vísceras abdominais para o tórax.
 - **Lesão Esofágica:** Suspeitar em traumas transfixantes de mediastino com pneumomediastino ou derrame pleural.
   - **Diagnóstico:** EDA ou esofagograma.
-  - **Tratamento:** Sutura primária precoce + drenagem pleural bilateral e de mediastino.
+  - **Tratamento precoce (< 24h):** Sutura primária + drenagem ("Golden Period").
+  - 🔴 **Tratamento tardio (> 24h) com sepse:** Os tecidos ficam esfacelados formando mediastinite purulenta severa. Drenos percutâneos guiados cegos ignoram os debridamentos necróticos necessários. A conduta vital será **Toracotomia + ampla limpeza mediastinal e exclusão**, sem fechamento primário por insucesso frente a friabilidade.
 
 ---
 
@@ -184,14 +187,14 @@ aliases: [Trauma Cirúrgico, ATLS]
   - **Classificação AAST:**
     - **Grau I:** Contusão hematoma menor ou laceração superficial sem lesão ductal.
     - **Grau II:** Laceração parenquimatosa maior **sem lesão ductal**.
-    - **Grau III:** Secção parenquimatosa com **lesão ductal distal** (à esquerda da veia mesentérica superior).
+    - **Grau III:** Secção parenquimatosa com **lesão ductal distal** (à esquerda da veia mesentérica superior). 🔴 **Armadilha:** A banca pode forçar um manejo minimamente invasivo (CPRE com stent), mas a regra soberana para Grau III é **Pancreatectomia distal (corpocaudal)**.
     - **Grau IV:** Lesão ductal proximal (à direita da VMS) ou envolvendo a ampola de Vater.
     - **Grau V:** Ruptura maciça da cabeça do pâncreas.
   - **Manejo:** 
     - Graus I e II: Tratamento conservador com drenagem externa de sucção fechada.
     - Grau III: Pancreatectomia distal (corpocaudal) com ou sem esplenectomia.
   - **Pseudocisto Pancreático:** Complicação tardia (> 4 semanas). 
-    - Conduta: Drenagem se sintomático ou infectado. Opção preferencial: **Drenagem endoscópica transmural** (cistogastrostomia) se houver "janela" adequada e parede amadurecida.
+    - Conduta: Drenagem se sintomático ou infectado. Opção preferencial: **Drenagem endoscópica transmural com Pig Tail** (cistogastrostomia) se houver "janela" adequada e parede amadurecida. 🔴 **Armadilha:** Em face de coleção não-infectada e com janela adequada, a drenagem endoscópica é a preferida pois oferece tratamento **definitivo** frente a punção percutânea radiológica que mantém fístula externa e é subótima nestas condições.
 - **Trauma Renal:** TC contrastada é o padrão-ouro para estadiamento.
   - **Classificação AAST:**
     - **Grau I:** Contusão ou hematoma subcapsular não expansivo; sem laceração parenquimatosa.
@@ -235,3 +238,9 @@ aliases: [Trauma Cirúrgico, ATLS]
 - 🔴 **TNO Hepático — Blush como decisor:** Estável + lesão hepática sem blush arterial = TNO, mesmo com líquido livre peritoneal. Blush = embolização (se estável). Instabilidade = laparotomia.
 - 🔴 **Taquicardia em Trauma Penetrante:** Nunca atribuir à dor. FAF ou FAB com taquicardia = hemorragia até prova em contrário. Associado a instabilidade → laparotomia imediata.
 - 🔴 **AAST Renal Grau IV — Lesão Vascular:** Laceração com lesão de **vasos segmentares** = Grau IV, mesmo com hematoma retroperitoneal contido. Grau III = laceração > 1 cm **sem** atingir sistema coletor nem vasos.
+- 🔴 **Assédios Diagnósticos X Peritonite Franca**: A PA sustentada (ex: 102x70) ou coma vígil simulado pelo hálito etílico não reduzem a obrigatoriedade da peritonite ao exame físico obvio (após trauma contuso): descompressão difusamente dolorosa encaminha imperativamente a **Laparotomia**, e jamais a Tomografia.
+- 🔴 **Acesso Cirúrgico Maxilofacial em Esgotamento ("Crico"):** IOT na vítima desfigurada e com sangramento em face impõe um contra-senso por impossibilidade de visualização das pregas glóticas. Em grave queda saturacional a providência imediata é a **Cricotireoidostomia cirúrgica** de urgência (A traqueostomia sobrou restrita apenas às ocorrências na pediatria < 12 anos ou fraturas diretas da laringe).
+- 🔴 **Triagem Inicial diante Eviscerados Brutais**: A evisceração de alças induz uma corrida intempestiva para laparotomia esquecendo a linha vital das vias A-B-C. Se a pessoa eviscerada explica seu histórico ao corpo médico (A+B patentes), o segmento prioritário a executar obrigatóriamente se estanca no **acesso venoso calibroso ("C")** ANTES de tentar cobrir as vísceras sob gazes umidificadas ("E").
+- 🔴 **Hiperamilasemia sem Origem aparente**: Elevada em cenário secundario contuso de desaceleração indica oculta surpresa diagnóstica para Lesão de Pâncreas/Duodeno enevoada no estadiamento prévio transacional. (Alerta em provas: Ferimentos de perfuração balísticas de Armas de Fogo FAF esburacam primeiramente Intestino Delgado [50%] seguido do Cólon [40%]; Lâminas avulsas F.A. Brancas sangram primeiramente Fígado [40%] seguido do Delgado [30%]).
+- 🔴 **Mito da Hemostasia Coagulante de Frio (A Tríade):** A Tríade letal não forma tromboses sistêmicas por instinto de sobrevivência (estado trombogênico primário). Ela cessa quimicamente toda catálise enzimática proteica, impondo o temível colapso da **incoagulabilidade** pura durante hemorragia volumosa na Hipotermia (<35°C).
+- 🔴 **Ponto Cego das Avaliações Torpodas Lombares (O TC Dorsal):** Lâminas e projéteis invadindo o Dorso (abaixo de T8/apófise costal e flancos oblíquos) sabotam o raciocínio natural da visualização videoscópica (VLP) ou dos toques por dedo, pois são blindados de acesso peritoneal contíguo. O mandamento soberano para Pt. Estável no Flanco/Dorso sem peritonite aparente é a imposição imediata do rádio exame da **TC de Abdome c/ Triplo Contraste**. (Se achado "retropneumoperitônio bolhoso" revelado, Laparotomia imediata é exigida!).

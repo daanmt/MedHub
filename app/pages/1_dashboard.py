@@ -5,7 +5,11 @@ import plotly.express as px
 from datetime import datetime
 import os
 
+from app.utils.styles import inject_styles, content_card, COLORS
+from app.engine import summarize_performance
+
 st.set_page_config(page_title="MedHub Dashboard", page_icon="📊", layout="wide")
+inject_styles()
 DB_PATH = 'ipub.db'
 
 def get_dashboard_data():
@@ -78,3 +82,14 @@ if df is not None and not df.empty:
 
 else:
     st.info("Banco de dados vazio ou inicializando.")
+
+# Padrões de Fraqueza — exibido somente quando há dados em medhub_memory.db
+perf = summarize_performance()
+if perf["padroes"]:
+    st.markdown("### Padrões de Fraqueza")
+    for p in perf["padroes"]:
+        content_card(
+            title=p["area"],
+            content=f"{p['pattern']} — {p['error_count']} erros",
+            subtitle=p.get("especialidade") or None,
+        )

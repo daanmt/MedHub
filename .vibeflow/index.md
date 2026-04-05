@@ -1,5 +1,5 @@
 # Project: MedHub
-> Analyzed: 2026-03-29
+> Analyzed: 2026-04-05
 > Stack: Python 3, Streamlit (multipage), SQLite (ipub.db), LangGraph/LangMem, Anthropic Claude API, Ollama, pdfplumber, obsidian-notes-rag MCP
 > Type: Medical study platform — CLI tools + Streamlit UI + AI agent workflows
 > Suggested budget: ≤ 6 files per task
@@ -25,7 +25,7 @@ All persistent data lives in `ipub.db` (SQLite, local only). Clinical knowledge 
 | Tools/CLI | `tools/` | insert_questao, extract_pdfs, review_cli, audit scripts |
 | Workflows | `.agents/workflows/` | Portable agent protocols (analisar, criar, gerar, registrar) |
 | Skills | `.claude/commands/` | Claude-specific specs (estilo-resumo, analisar-questao, etc.) |
-| Knowledge Base | `resumos/` | 37+ clinical summaries organized by specialty |
+| Knowledge Base | `resumos/` | 44 clinical summaries organized by specialty |
 
 ## Pattern Registry
 
@@ -102,3 +102,4 @@ patterns:
 - `medhub-ui-refresh-main/` — React/Lovable prototype, abandoned; ignored in .obsidian graph
 - FSRS state does NOT persist on Streamlit Cloud (ephemeral filesystem)
 - `4_simulados.py` logs weakness silently to DB; actual logging implementation needs verification
+- `resumos/Clínica Médica/Neurologia/Demências.md` uses legacy frontmatter (`type: resumo`, `status: ativo`) — correct on next edit

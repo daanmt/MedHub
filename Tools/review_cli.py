@@ -18,7 +18,7 @@ from app.utils.db import record_review, get_connection
 
 SELECT_FIELDS = """
     SELECT f.id, f.frente_pergunta, f.verso_resposta, f.frente_contexto,
-           f.verso_regra_mestre, f.verso_armadilha, f.frente, f.verso,
+           f.verso_regra_mestre, f.verso_armadilha,
            fc.state, fc.due, COALESCE(t.area,''), COALESCE(t.tema,'')
     FROM flashcards f
     JOIN fsrs_cards fc ON f.id = fc.card_id
@@ -27,8 +27,8 @@ SELECT_FIELDS = """
 
 # Índices das colunas no resultado
 COL_ID, COL_FRENTE_PERGUNTA, COL_VERSO_RESPOSTA, COL_FRENTE_CONTEXTO = 0, 1, 2, 3
-COL_VERSO_REGRA, COL_VERSO_ARMADILHA, COL_FRENTE, COL_VERSO = 4, 5, 6, 7
-COL_STATE, COL_DUE, COL_AREA, COL_TEMA = 8, 9, 10, 11
+COL_VERSO_REGRA, COL_VERSO_ARMADILHA = 4, 5
+COL_STATE, COL_DUE, COL_AREA, COL_TEMA = 6, 7, 8, 9
 
 
 def build_filters(area, tema):
@@ -92,44 +92,29 @@ def display_front(card, label):
     tema = card[COL_TEMA]
     frente_pergunta = card[COL_FRENTE_PERGUNTA]
     frente_contexto = card[COL_FRENTE_CONTEXTO]
-    frente = card[COL_FRENTE]
 
     print()
     print("=" * 64)
     print(f"  {label}  |  {area} › {tema}")
     print("=" * 64)
 
-    use_structured = bool(frente_pergunta and frente_pergunta.strip())
-    if use_structured:
-        if frente_contexto and frente_contexto.strip():
-            print(f"\n  Contexto: {frente_contexto}")
-        print(f"\n  {frente_pergunta}")
-    else:
-        print(f"\n  {frente or '(sem frente)'}")
+    if frente_contexto and frente_contexto.strip():
+        print(f"\n  Contexto: {frente_contexto}")
+    print(f"\n  {frente_pergunta or '(sem frente)'}")
     print()
 
 
 def display_back(card):
-    frente_pergunta = card[COL_FRENTE_PERGUNTA]
     verso_resposta = card[COL_VERSO_RESPOSTA]
     verso_regra = card[COL_VERSO_REGRA]
     verso_armadilha = card[COL_VERSO_ARMADILHA]
-    verso = card[COL_VERSO]
-
-    use_structured = bool(
-        frente_pergunta and frente_pergunta.strip() and
-        verso_resposta and verso_resposta.strip()
-    )
 
     print("-" * 64)
-    if use_structured:
-        print(f"\n  RESPOSTA:\n  {verso_resposta}")
-        if verso_regra and verso_regra.strip():
-            print(f"\n  REGRA MESTRE:\n  {verso_regra}")
-        if verso_armadilha and verso_armadilha.strip():
-            print(f"\n  ARMADILHA:\n  {verso_armadilha}")
-    else:
-        print(f"\n  {verso or '(sem verso)'}")
+    print(f"\n  RESPOSTA:\n  {verso_resposta or '(sem verso)'}")
+    if verso_regra and verso_regra.strip():
+        print(f"\n  REGRA MESTRE:\n  {verso_regra}")
+    if verso_armadilha and verso_armadilha.strip():
+        print(f"\n  ARMADILHA:\n  {verso_armadilha}")
     print()
 
 

@@ -148,7 +148,12 @@ A progressão cefalocaudal da icterícia permite estimar a Bilirrubina Total (BT
 
 - ⭐ **Sepse Precoce (< 72h de vida):** transmissão vertical (ascendente ou intraparto).
     - **Agentes:** *Streptococcus agalactiae* (GBS, Streptococcus do Grupo B) e *Escherichia coli*.
-    - **Fatores de risco:** ruptura prolongada de membranas (PROM > 18h), corioamnionite, febre materna intraparto (> 38°C), prematuridade, colonização materna por GBS sem profilaxia adequada.
+    - **Fatores de risco:** ruptura prolongada de membranas (PROM > 18h), corioamnionite, febre materna intraparto (> 38°C), prematuridade, colonização materna por GBS sem profilaxia adequada, **infecção urinária materna (ITU)**.
+    - ⭐ **Listeria monocytogenes — perfil discriminador:**
+        - Transmissão transplacentária após intoxicação alimentar materna; mãe habitualmente assintomática.
+        - Tríade ao nascimento: **líquido amniótico marrom-acastanhado** (corioamnionite grave) + **exantema pústulo-eritematoso difuso** (lesões presentes ao nascimento, antes de qualquer exposição nosocomial) + **monocitose acentuada** no hemograma (o próprio nome do agente é o mnemônico).
+        - Evolução frequentemente fulminante; mortalidade neonatal 10–50%.
+        - Discriminador vs. GBS: GBS não causa LA marrom, não gera exantema cutâneo ao nascimento e não produz monocitose.
 - **Sepse Tardia (≥ 72h de vida):** transmissão horizontal (nosocomial ou comunitária).
     - **Agentes nosocomiais:** *Staphylococcus* coagulase-negativo (1º lugar em UTI neonatal), *S. aureus*, bacilos Gram-negativos hospitalares (*Klebsiella*, *Pseudomonas*), *Candida spp.*
     - **Fatores de risco:** prematuridade extrema, cateter venoso central, ventilação mecânica, cirurgia.
@@ -158,6 +163,7 @@ A progressão cefalocaudal da icterícia permite estimar a Bilirrubina Total (BT
 - **Hemocultura:** padrão-ouro — colher idealmente 2 amostras antes de iniciar antibiótico.
 - **Hemograma:** relação I/T (neutrófilos imaturos / neutrófilos totais) ≥ **0,2** sugere infecção; leucopenia (< 5.000/mm³) tem maior valor preditivo que leucocitose.
 - **PCR:** elevação após 12–24h — marcador de evolução mais que de diagnóstico inicial.
+- ⭐ **Exceção SBP — taquipneia isolada < 6h:** RN com taquipneia como único sinal clínico nas primeiras 6h de vida, sem deterioração sistêmica, pode ser manejado com **observação clínica + aguardar hemocultura**, sem antibiótico imediato. PCR coletada antes de 12–24h tem valor preditivo limitado (ainda não atingiu o pico inflamatório). ATB empírico iniciado apenas se evolução desfavorável ou hemocultura positiva.
 - **Líquor:** obrigatório se suspeita de meningite ou bacteriemia documentada.
     - Valores de referência no RN a termo: proteína até **100 mg/dL**, glicose > 50% glicemia sérica, < 20–30 células/mm³.
     - Meningite: pleiocitose com predomínio de PMN, proteína elevada, glicorraquia < 40% glicemia.
@@ -198,3 +204,5 @@ A progressão cefalocaudal da icterícia permite estimar a Bilirrubina Total (BT
 - 🔴 **Icterícia tardia e leite materno:** icterícia em RN com > 14–15 dias e clínica de leite materno (AME, bom ganho de peso) NÃO permite suspender o leite sem primeiro dosar bilirrubinas. BD elevada muda completamente o fluxo para investigação de AVB.
 - 🔴 **Mãe Rh positivo:** impossibilita isoimunização Rh. O primeiro dado a processar em qualquer icterícia hemolítica imune é a tipagem materna — se Rh+, a incompatibilidade é necessariamente ABO (ou outro anticorpo irregular).
 - 🔴 **Causa de colestase neonatal (banca-dependente):** SBP = AVB mais comum; literatura internacional = infecciosa mais comum. Atentar para a referência da banca.
+- 🔴 **Listeria vs. GBS — discriminadores clínicos:** GBS é o agente mais comum da sepse precoce, mas não causa LA marrom, não gera exantema pústulo-eritematoso ao nascimento e não produz monocitose. A tríade LA acastanhado + exantema neonatal precoce + monocitose é perfil exclusivo de *Listeria monocytogenes*.
+- 🔴 **Exceção SBP "taquipneia isolada":** a regra geral de iniciar ATB empírico na simples suspeita tem exceção — taquipneia isolada nas primeiras 6h de vida, sem outros sinais sistêmicos, é manejada com observação clínica e hemocultura pendente. PCR às 6h é marcador inativo (eleva-se após 12–24h) e não deve antecipar a antibioticoterapia neste cenário específico.

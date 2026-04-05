@@ -23,10 +23,10 @@ All `.md` files under `resumos/` — organized by specialty:
 **Frontmatter (required on every file):**
 ```yaml
 ---
-type: resumo
+type: knowledge
 area: Clínica Médica
 especialidade: Cardiologia
-status: completo
+status: active
 aliases: [IC, insuficiência cardíaca]
 ---
 ```
@@ -78,10 +78,10 @@ aliases: [IC, insuficiência cardíaca]
 File: `resumos/Clínica Médica/Cardiologia/Insuficiência Cardíaca.md`
 ```markdown
 ---
-type: resumo
+type: knowledge
 area: Clínica Médica
 especialidade: Cardiologia
-status: completo
+status: active
 aliases: [IC, insuficiência cardíaca, heart failure]
 ---
 
@@ -125,3 +125,6 @@ File: `resumos/GO/Assistência ao Parto.md` (reference for GO and procedure-heav
 - Headers with emojis (e.g. `## 🫀 Coração`) exist in a few legacy files — migrate on edit
 - Some files lack frontmatter — add when touching the file
 - Informal closings like "Resumo atualizado na sessão 052" — remove on sight
+- **`type: resumo`** — older/legacy frontmatter value; correct is `type: knowledge` (confirmed in gold-standard IC.md and all newer files)
+- **`status: completo` or `status: ativo`** — legacy values; correct is `status: active` (English, active state)
+- `Demências.md` uses both deviations (`type: resumo`, `status: ativo`) — update on next edit

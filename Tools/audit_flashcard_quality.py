@@ -73,9 +73,9 @@ SIGNALS = {
     },
 }
 
-# "effective" front/back: usa structured se populado, senão legacy
-EFF_FRONT = "CASE WHEN frente_pergunta IS NOT NULL AND TRIM(frente_pergunta) != '' THEN frente_pergunta ELSE frente END"
-EFF_BACK  = "CASE WHEN verso_resposta  IS NOT NULL AND TRIM(verso_resposta)  != '' THEN verso_resposta  ELSE verso  END"
+# "effective" front/back: schema v5 (frente/verso removidos em medhub-cleanup)
+EFF_FRONT = "COALESCE(NULLIF(TRIM(frente_pergunta), ''), '[sem pergunta]')"
+EFF_BACK  = "COALESCE(NULLIF(TRIM(verso_resposta),  ''), '[sem resposta]')"
 
 
 def build_sql(signal_key, tipo_filter=None):
@@ -202,7 +202,7 @@ def run(args):
         for card_id in export_ids:
             row = conn.execute("""
                 SELECT f.id, f.tipo, f.quality_source, f.needs_qualitative,
-                       f.frente, f.verso, f.frente_contexto, f.frente_pergunta,
+                       f.frente_contexto, f.frente_pergunta,
                        f.verso_resposta, f.verso_regra_mestre, f.verso_armadilha,
                        q.titulo, q.enunciado, q.alternativa_correta,
                        q.habilidades_sequenciais, q.o_que_faltou,
@@ -215,7 +215,7 @@ def run(args):
             """, (card_id,)).fetchone()
             if row:
                 cols = ['id','tipo','quality_source','needs_qualitative',
-                        'frente','verso','frente_contexto','frente_pergunta',
+                        'frente_contexto','frente_pergunta',
                         'verso_resposta','verso_regra_mestre','verso_armadilha',
                         'titulo','enunciado','alternativa_correta',
                         'habilidades_sequenciais','o_que_faltou',

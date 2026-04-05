@@ -79,7 +79,7 @@ with tab2:
         if not os.path.exists(DB_PATH): return []
         c = sqlite3.connect(DB_PATH).cursor()
         c.execute('''
-        SELECT f.id, f.frente, f.verso, t.area, t.tema, c.state,
+        SELECT f.id, t.area, t.tema, c.state,
                f.frente_contexto, f.frente_pergunta, f.verso_resposta,
                f.verso_regra_mestre, f.verso_armadilha
         FROM flashcards f
@@ -89,12 +89,12 @@ with tab2:
           AND f.needs_qualitative < 2
         ''')
         rows = c.fetchall()
-        return [{"id": r[0], "frente": r[1], "verso": r[2],
-                 "area": r[3] or "Geral", "tema": r[4] or "",
-                 "state": r[5],
-                 "frente_contexto": r[6], "frente_pergunta": r[7],
-                 "verso_resposta": r[8], "verso_regra_mestre": r[9],
-                 "verso_armadilha": r[10]} for r in rows]
+        return [{"id": r[0],
+                 "area": r[1] or "Geral", "tema": r[2] or "",
+                 "state": r[3],
+                 "frente_contexto": r[4], "frente_pergunta": r[5],
+                 "verso_resposta": r[6], "verso_regra_mestre": r[7],
+                 "verso_armadilha": r[8]} for r in rows]
 
     cards = load_flashcards()
     
@@ -149,33 +149,21 @@ with tab2:
 
             st.markdown(f"**📚 {card['area']} › {card['tema']}**")
 
-            # Decide renderização: estruturada (novos campos) ou legada (frente/verso)
-            use_structured = bool(
-                card.get('frente_pergunta') and card['frente_pergunta'].strip() and
-                card.get('verso_resposta') and card['verso_resposta'].strip()
-            )
-
             if not st.session_state.fc_verso:
-                if use_structured:
-                    if card.get('frente_contexto') and card['frente_contexto'].strip():
-                        st.caption(card['frente_contexto'])
-                    st.markdown(f'<div style="background:#11161D; border:1px solid #202A36; padding:20px; border-radius:12px; font-size:1.1rem;">{card["frente_pergunta"]}</div>', unsafe_allow_html=True)
-                else:
-                    st.markdown(f'<div style="background:#11161D; border:1px solid #202A36; padding:20px; border-radius:12px; font-size:1.1rem;">{card["frente"]}</div>', unsafe_allow_html=True)
+                if card.get('frente_contexto') and card['frente_contexto'].strip():
+                    st.caption(card['frente_contexto'])
+                st.markdown(f'<div style="background:#11161D; border:1px solid #202A36; padding:20px; border-radius:12px; font-size:1.1rem;">{card["frente_pergunta"]}</div>', unsafe_allow_html=True)
                 st.markdown("<br>", unsafe_allow_html=True)
                 if st.button("Revelar", type='primary', width='stretch'):
                     st.session_state.fc_verso = True
                     st.rerun()
                 if st.button("⏭️ Pular"): _avancar(0)
             else:
-                if use_structured:
-                    st.success(card['verso_resposta'])
-                    if card.get('verso_regra_mestre') and card['verso_regra_mestre'].strip():
-                        st.info(f"**Regra mestre:** {card['verso_regra_mestre']}")
-                    if card.get('verso_armadilha') and card['verso_armadilha'].strip():
-                        st.warning(f"**Armadilha:** {card['verso_armadilha']}")
-                else:
-                    st.markdown(f'<div style="background:#1A1F26; border:1px solid #2F6BFF; border-left:4px solid #2F6BFF; padding:20px; border-radius:12px; font-size:1.1rem;">{card["verso"]}</div>', unsafe_allow_html=True)
+                st.success(card['verso_resposta'])
+                if card.get('verso_regra_mestre') and card['verso_regra_mestre'].strip():
+                    st.info(f"**Regra mestre:** {card['verso_regra_mestre']}")
+                if card.get('verso_armadilha') and card['verso_armadilha'].strip():
+                    st.warning(f"**Armadilha:** {card['verso_armadilha']}")
                 st.markdown("<br>", unsafe_allow_html=True)
                 b1, b2, b3, b4 = st.columns(4)
                 if b1.button("Novamente", width='stretch'): _avancar(1)

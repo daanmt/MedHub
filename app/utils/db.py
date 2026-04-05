@@ -150,7 +150,7 @@ def get_erros_resumidos():
     """Traz erros agrupados por tema para o Bloco 3"""
     conn = get_connection()
     df = pd.read_sql('''
-        SELECT 
+        SELECT
             t.area || ' - ' || t.tema as TemaFull,
             q.tipo_erro,
             q.habilidades_sequenciais as elo_quebrado,
@@ -163,133 +163,83 @@ def get_erros_resumidos():
     conn.close()
     return df
 
-def init_fsrs_cache_tables():
-    """Cria tabelas FSRS para os cards do flashcards_cache.json (se não existirem)."""
+
+def get_erros_por_tema(tema: str) -> list:
+    """Retorna erros recentes filtrados por tema ou área (busca substring, case-insensitive).
+
+    Args:
+        tema: Termo de busca (ex: "Cardiologia", "IC", "Insuficiência Cardíaca").
+
+    Returns:
+        list[dict]: Lista de erros com chaves id, titulo, tipo_erro,
+                    habilidades_sequenciais, armadilha_prova, explicacao_correta,
+                    area, tema. Retorna [] se nenhum resultado.
+    """
     conn = get_connection()
-    cursor = conn.cursor()
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS fsrs_cache_cards (
-            erro_origem INTEGER PRIMARY KEY,
-            state INTEGER DEFAULT 0,
-            stability REAL DEFAULT 0.0,
-            difficulty REAL DEFAULT 0.0,
-            scheduled_days INTEGER DEFAULT 0,
-            reps INTEGER DEFAULT 0,
-            lapses INTEGER DEFAULT 0,
-            last_review DATETIME,
-            due DATETIME
-        )
-    ''')
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS fsrs_cache_revlog (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            erro_origem INTEGER,
-            rating INTEGER,
-            state INTEGER,
-            stability REAL,
-            difficulty REAL,
-            scheduled_days INTEGER,
-            review_time DATETIME DEFAULT CURRENT_TIMESTAMP
-        )
-    ''')
-    conn.commit()
+    df = pd.read_sql('''
+        SELECT q.id, q.titulo, q.tipo_erro,
+               q.habilidades_sequenciais, q.armadilha_prova, q.explicacao_correta,
+               t.area, t.tema
+        FROM questoes_erros q
+        JOIN taxonomia_cronograma t ON q.tema_id = t.id
+        WHERE LOWER(t.tema) LIKE LOWER(?) OR LOWER(t.area) LIKE LOWER(?)
+        ORDER BY q.id DESC
+        LIMIT 20
+    ''', conn, params=(f'%{tema}%', f'%{tema}%'))
     conn.close()
+    return df.to_dict('records')
 
 
-def get_cache_fsrs_state(erro_origem: int) -> dict:
-    """Retorna o estado FSRS de um card do cache. Inicializa se não existir."""
-    init_fsrs_cache_tables()
+def get_cards_by_bucket() -> dict:
+    """Retorna flashcards FSRS divididos em três buckets temporais.
+
+    Returns:
+        dict com chaves:
+            atrasados (list[dict]): cards vencidos antes de hoje (state > 0)
+            hoje (list[dict]): cards que vencem hoje (state > 0)
+            novos (list[dict]): cards nunca revisados (state == 0), max 10
+        Cada dict contém: card_id, frente_pergunta, verso_resposta, due, area, tema.
+    """
     conn = get_connection()
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM fsrs_cache_cards WHERE erro_origem = ?", (erro_origem,))
-    row = cursor.fetchone()
+    now = datetime.now()
+    today_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
+    today_end = now.replace(hour=23, minute=59, second=59, microsecond=999999)
+
+    df_atrasados = pd.read_sql('''
+        SELECT f.id AS card_id, f.frente_pergunta, f.verso_resposta,
+               fc.due, t.area, t.tema
+        FROM flashcards f
+        JOIN fsrs_cards fc ON f.id = fc.card_id
+        LEFT JOIN taxonomia_cronograma t ON f.tema_id = t.id
+        WHERE fc.due < ? AND fc.state > 0
+        ORDER BY fc.due ASC
+    ''', conn, params=(today_start,))
+
+    df_hoje = pd.read_sql('''
+        SELECT f.id AS card_id, f.frente_pergunta, f.verso_resposta,
+               fc.due, t.area, t.tema
+        FROM flashcards f
+        JOIN fsrs_cards fc ON f.id = fc.card_id
+        LEFT JOIN taxonomia_cronograma t ON f.tema_id = t.id
+        WHERE fc.due >= ? AND fc.due <= ? AND fc.state > 0
+        ORDER BY fc.due ASC
+    ''', conn, params=(today_start, today_end))
+
+    df_novos = pd.read_sql('''
+        SELECT f.id AS card_id, f.frente_pergunta, f.verso_resposta,
+               fc.due, t.area, t.tema
+        FROM flashcards f
+        JOIN fsrs_cards fc ON f.id = fc.card_id
+        LEFT JOIN taxonomia_cronograma t ON f.tema_id = t.id
+        WHERE fc.state = 0
+        ORDER BY f.id ASC
+        LIMIT 10
+    ''', conn)
+
     conn.close()
+    return {
+        "atrasados": df_atrasados.to_dict('records'),
+        "hoje": df_hoje.to_dict('records'),
+        "novos": df_novos.to_dict('records'),
+    }
 
-    if row is None:
-        fsrs = FSRS()
-        return {**fsrs.init_card(), 'erro_origem': erro_origem}
-
-    cols = ['erro_origem', 'state', 'stability', 'difficulty', 'scheduled_days',
-            'reps', 'lapses', 'last_review', 'due']
-    return dict(zip(cols, row))
-
-
-def record_cache_review(erro_origem: int, rating: int) -> dict:
-    """Aplica FSRS e persiste o estado atualizado para um card do cache."""
-    init_fsrs_cache_tables()
-    conn = get_connection()
-    cursor = conn.cursor()
-
-    cursor.execute("SELECT * FROM fsrs_cache_cards WHERE erro_origem = ?", (erro_origem,))
-    row = cursor.fetchone()
-
-    fsrs = FSRS()
-    if row is None:
-        card_data = fsrs.init_card()
-    else:
-        cols = ['erro_origem', 'state', 'stability', 'difficulty', 'scheduled_days',
-                'reps', 'lapses', 'last_review', 'due']
-        card_data = dict(zip(cols, row))
-
-    new_state = fsrs.evaluate(card_data, rating)
-
-    cursor.execute('''
-        INSERT INTO fsrs_cache_cards
-            (erro_origem, state, stability, difficulty, scheduled_days, reps, lapses, last_review, due)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-        ON CONFLICT(erro_origem) DO UPDATE SET
-            state=excluded.state, stability=excluded.stability, difficulty=excluded.difficulty,
-            scheduled_days=excluded.scheduled_days, reps=excluded.reps, lapses=excluded.lapses,
-            last_review=excluded.last_review, due=excluded.due
-    ''', (
-        erro_origem, new_state['state'], new_state['stability'], new_state['difficulty'],
-        new_state['scheduled_days'], new_state['reps'], new_state['lapses'],
-        new_state['last_review'], new_state['due']
-    ))
-
-    cursor.execute('''
-        INSERT INTO fsrs_cache_revlog (erro_origem, rating, state, stability, difficulty, scheduled_days)
-        VALUES (?, ?, ?, ?, ?, ?)
-    ''', (
-        erro_origem, rating, new_state['state'], new_state['stability'],
-        new_state['difficulty'], new_state['scheduled_days']
-    ))
-
-    conn.commit()
-    conn.close()
-    return new_state
-
-
-def get_cache_due_count() -> int:
-    """Quantos cards do cache estão vencidos para revisão hoje."""
-    try:
-        init_fsrs_cache_tables()
-        conn = get_connection()
-        cursor = conn.cursor()
-        cursor.execute(
-            "SELECT COUNT(*) FROM fsrs_cache_cards WHERE due <= ? AND state > 0",
-            (datetime.now(),)
-        )
-        count = cursor.fetchone()[0]
-        conn.close()
-        return count
-    except Exception:
-        return 0
-
-
-def sync_git():
-    """Executa o commit e push do banco de dados para o GitHub"""
-    import subprocess
-    try:
-        # 1. Add
-        subprocess.run(["git", "add", "ipub.db"], check=True)
-        # 2. Commit
-        msg = f"update: progress sync {datetime.now().strftime('%Y-%m-%d %H:%M')}"
-        subprocess.run(["git", "commit", "-m", msg], check=True)
-        # 3. Push
-        subprocess.run(["git", "push"], check=True)
-        return True, "Sincronização concluída com sucesso!"
-    except subprocess.CalledProcessError as e:
-        return False, f"Erro no processo Git: {e}"
-    except Exception as e:
-        return False, f"Erro inesperado: {e}"

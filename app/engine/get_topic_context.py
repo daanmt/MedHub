@@ -107,6 +107,7 @@ def get_topic_context(tema: str, area: Optional[str] = None) -> dict:
         "erros_recentes": [],
         "cards_ativos": 0,
         "weak_areas": [],
+        "relevant_chunks": [],
     }
 
     # 1. Resumo
@@ -155,6 +156,13 @@ def get_topic_context(tema: str, area: Optional[str] = None) -> dict:
                     "pattern": content.get("pattern", ""),
                     "error_count": content.get("error_count", 0),
                 })
+    except Exception:
+        pass
+
+    # 5. RAG chunks — busca semântica sobre resumos indexados
+    try:
+        from app.engine.rag import search as rag_search
+        result["relevant_chunks"] = rag_search(tema, n_results=3)
     except Exception:
         pass
 

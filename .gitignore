@@ -4,6 +4,7 @@
 
 # Banco de Dados (local only)
 ipub.db
+data/chroma/
 ipub.db-journal
 medhub_memory.db
 medhub_memory.db-journal

@@ -1,3 +1,11 @@
+---
+type: resumo
+area: GO
+especialidade: Ginecologia
+status: ativo
+aliases: [Úlceras Vulvares, IST Ulcerativas, Cancro Mole, Herpes Genital, LGV, Donovanose]
+---
+
 # Úlceras Genitais
 
 ---

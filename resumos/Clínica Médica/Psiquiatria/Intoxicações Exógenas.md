@@ -3,6 +3,7 @@ type: knowledge
 area: Clínica Médica
 especialidade: Psiquiatria
 status: active
+aliases: [Intoxicações Exógenas, Intoxicação Exógena, Antídotos, Paracetamol, Organofosforado, Salicilato]
 ---
 
 # Intoxicações Exógenas

@@ -3,6 +3,7 @@ type: knowledge
 area: GO
 especialidade: Ginecologia
 status: active
+aliases: [Amenorreia, Amenorreia Primária, Amenorreia Secundária, Síndrome de Asherman]
 ---
 
 # Amenorreia

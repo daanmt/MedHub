@@ -1,7 +1,9 @@
 ---
 type: knowledge
 area: Pediatria
+especialidade: Pediatria
 status: active
+aliases: [Cardiopatias Congênitas, CIA, CIV, PCA, Tetralogia de Fallot, TGA, Coarctação]
 ---
 
 # Cardiopatias Congênitas — Resumo Consolidado

@@ -3,6 +3,7 @@ type: knowledge
 area: GO
 especialidade: Ginecologia
 status: active
+aliases: [Doenças Benignas da Mama, Mastalgia, Fibroadenoma, Papiloma Intraductal, Descarga Papilar, Ectasia Ductal]
 ---
 
 # Doenças Benignas da Mama

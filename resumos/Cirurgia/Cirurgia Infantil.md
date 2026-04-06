@@ -4,6 +4,7 @@ tema: Cirurgia Infantil
 type: resumo
 especialidade: Cirurgia Pediátrica
 status: ativo
+aliases: [Cirurgia Infantil, Cirurgia Pediátrica, HDC, Onfalocele, Gastrosquise, Estenose Pilórica, Invaginação Intestinal]
 ---
 
 # Cirurgia Infantil

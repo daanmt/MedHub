@@ -1,8 +1,9 @@
 ---
 type: knowledge
 area: Pediatria
+especialidade: Pediatria
 status: active
-aliases: [PCR Pediátrico, IOT Pediátrica]
+aliases: [PCR Pediátrico, IOT Pediátrica, TSV Pediátrica, Emergências Pediátricas, Bradicardia Pediátrica, Reanimação Pediátrica]
 ---
 
 # Emergências Pediátricas — Resumo Consolidado

@@ -111,6 +111,7 @@ Workspace state-driven de estudos médicos. Processa questões de prova, registr
 
 ## Últimas sessões
 
+**2026-04-05 | Antigravity (sessão 063):** **Diagnóstico e documentação da arquitetura RAG**. Identificação e auditoria dos dois sistemas ChromaDB coexistentes: `app/engine/rag.py` (RAG canônico, `data/chroma/`, 688 chunks, `resumos/` clínicos) e `obsidian-notes-rag` MCP (auxiliar, vault completo, 862 chunks). Confirmação que não há conflito — paths físicos distintos, clients independentes. Bug documentado: servidor MCP sobe sem `--provider ollama` em sessões Antigravity. Sessão de revisão FSRS executada (5 atrasados Pediatria/TSV + 10 novos). Decisão arquitetural registrada em `.vibeflow/decisions.md`.
 **2026-04-05 | Antigravity (sessão 062):** **Análise de Sepse Neonatal**. Processamento de 3 questões erradas sobre Iceícia e Sepse Neonatal. Lacunas identificadas: (1) perfil discriminador da *Listeria monocytogenes* (tríade LA marrom + exantema neonatal + monocitose); (2) exceção SBP para taquipneia isolada nas primeiras 6h (watchful waiting); (3) desatenção na classificação da ampicilina como penicilina. 3 insercões no SQLite (IDs 345–347) e resumo `Iceícia e Sepse Neonatal.md` atualizado com 2 novos blocos clínicos e 2 armadilhas cumulativas.
 **2026-04-01 | Antigravity (sessão 061):** **Análise Massiva de Trauma e ATLS**. Processamento de 14 questões objetivas/discursivas erradas, rastreando vulnerabilidades nas escolhas minimamente invasivas ilusórias VS obviedades clínicas de peritonites e eviscerações desfiguradas. Foram performadas 14 injeções bem-sucedidas no SQLite `ipub.db` e aplicadas 14 modificações cumulativas via Regra do Escudo na documentação referencial `resumos/Cirurgia/[CIR] Trauma.md`, fortalecendo significativamente suas "Armadilhas de Prova".
 **2026-03-29 | Antigravity (sessão 060):** **Análise de Gastroenterologia: DRGE e Pancreatite**. Cruzamento transversal de 8 erros práticos vindos de bloco de 44q. Foram documentados massivamente no `ipub.db` falhas ligadas a "Ansiedade de Intervenção": Indicação ansiosa de cirurgia precoce em necrose pancreática estéril crônica, CPRE desnecessária para icterícia transiente, superestimar o poder oncológico da Fundoplicatura no Barrett, e dieta pós-op de Nissen e Toupet. Enriquecimento duplo da seção "Armadilhas de Prova" dos respectivos resumos de DRGE e Pancreatite.
@@ -152,19 +153,22 @@ Workspace state-driven de estudos médicos. Processa questões de prova, registr
 
 Ver [[roadmap]] — Linhas Evolutivas.
 
-Prioridade imediata (Linha 3 → Linha 4):
-1. **Pipeline RAG inverso:** Injetar conteúdo de `resumos/` no prompt de geração de flashcard.
-2. **Meta Volumétrica (60 q/dia):** Manter o ritmo para fechar Março com 3.000 questões.
-3. **Consolidação de Memória:** Automática via hook PostToolUse(Write) ao criar `history/session_NNN.md`.
-4. Continuar expandindo `resumos/` (GO: DIP e Sangramentos).
+Prioridade imediata:
+1. **Pipeline RAG inverso:** `app/engine/rag.py` já tem 688 chunks indexados. Integrar `get_topic_context()` para retornar `relevant_chunks` e usar em `generate_contextual_cards()` — conforme spec `medhub-rag-layer.md`.
+2. **Busca semântica na Biblioteca:** Adicionar `st.text_input` em `3_biblioteca.py` tab1 chamando `rag.search()` — já especificado no PRD.
+3. **Meta Volumétrica:** Processar questões erradas continuamente (meta ENARE 17k até out/2026).
+4. **Expansão de Conteúdo:** Avançar em `resumos/` (GO: DIP e Sangramentos).
 
 ---
 
 ## Decisões críticas (não reverter)
 
+- **RAG canônico = `app/engine/rag.py`**: ChromaDB local em `data/chroma/` (688 chunks), corpus = `resumos/**/*.md`, embedding via Ollama `nomic-embed-text`. É a interface fundação para o engine. Fallback silencioso se ChromaDB/Ollama offline. Detalhes em `.vibeflow/decisions.md` (2026-04-05).
+- **MCP `obsidian-notes-rag` = auxiliar opcional**: Vault completo (147 arquivos), usado por agentes externos via MCP. Bug conhecido: sobe sem `--provider ollama` em sessões Antigravity — precisa restart. Não substitui nem interfere com o RAG interno.
+- **Study Engine = `app/engine/`**: Interface estável para agentes externos. Funções: `get_review_queue()`, `get_topic_context()`, `summarize_performance()`, `analyze_error()`, `generate_contextual_cards()`. Agentes NÃO fazem queries SQL diretas — usam o engine.
 - **Memory v1**: `app/memory/` (LangGraph + LangMem + SQLiteMemoryStore). Backend: `medhub_memory.db`. Não acoplado ao `ipub.db`. Smoke tests em `tools/test_memory.py`.
 - **Governança via AGENTE.md**: O boot e o fechamento seguem estritamente o `AGENTE.md`.
-- **SSOT = ipub.db**: O diagnóstico do erro é gravado via CLI (`tools/insert_questao.py`) no banco. O `caderno_erros.md` está arquivado em `history/legacy/`.
+- **SSOT = ipub.db**: O diagnóstico do erro é gravado via CLI (`tools/insert_questao.py`) no banco. O `caderno_erros.md` textual foi arquivado em `history/legacy/`.
 - **Siamese Twins V2.0**: Erro → DB. Lição/Armadilha → Resumo em `resumos/`.
 - **Resumos seguem** `.claude/commands/estilo-resumo.md` — bullets hierárquicos, ⭐/⚠️/🔴; sem tabelas, sem fluxogramas ASCII.
 - **Sessions numeradas globalmente** em `history/` — qualquer agente registra.

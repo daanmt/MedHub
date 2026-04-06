@@ -1,7 +1,9 @@
 ---
 type: knowledge
 area: Preventiva
+especialidade: Epidemiologia
 status: active
+aliases: [Epidemiologia, Estudos Epidemiológicos, Bioestatística, Validade, Sensibilidade, Especificidade, VPP, VPN]
 ---
 
 # Epidemiologia e Estudos

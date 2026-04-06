@@ -83,6 +83,7 @@ Objetivo: fechar o loop entre performance e estudo.
 **O que consolida:**
 - Migração completa da nomenclatura (remover prefixos legados `[GIN]`, `[OBS]`, `[CIR]`, `[ORL]`)
 - Eliminação de stubs (`TCE.md` precisa de conteúdo ou ser removido)
+- Auditoria de precisão do RAG: refinar chunking (garantir overlap e captura stricta de headers) e testar recall semântico para melhorar a pontaria de buscas clínicas.
 - Busca semântica via `sqlite-vec` (já instalado) como alternativa à busca literal
 - Cobertura crescente: áreas com mais erros no banco merecem mais resumos
 

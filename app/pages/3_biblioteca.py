@@ -1,7 +1,11 @@
 import streamlit as st
 import os
+from pathlib import Path
+
+from app.utils.styles import inject_styles
 
 st.set_page_config(page_title="Biblioteca & Tutor", page_icon="📚", layout="wide")
+inject_styles()
 
 st.title("📚 Biblioteca")
 st.markdown('<p style="color: #A8B3C2; margin-top: -15px;">Acesso ultrarrápido aos resumos (.md).</p>', unsafe_allow_html=True)
@@ -55,6 +59,32 @@ with tab1:
         except Exception as e:
             st.error(f"Erro ao ler arquivo: {e}")
     else:
+        # ── BUSCA SEMÂNTICA ───────────────────────────────────────────────────
+        query = st.text_input("Busca semântica", placeholder="Ex: critérios SIRS neonato, manejo sepse choque...")
+
+        if query.strip():
+            try:
+                from app.engine.rag import search as rag_search, _CHROMA_AVAILABLE
+                if not _CHROMA_AVAILABLE:
+                    st.info("Índice semântico não disponível. Execute: python tools/index_resumos.py")
+                else:
+                    resultados = rag_search(query.strip(), n_results=5)
+                    if not resultados:
+                        st.caption("Nenhum resultado. O índice pode estar vazio — execute tools/index_resumos.py")
+                    else:
+                        for r in resultados:
+                            section = r["metadata"].get("section", "—")
+                            source = r["metadata"].get("source", "")
+                            with st.expander(f"{section}  ·  {Path(source).stem if source else ''}"):
+                                st.markdown(r["text"])
+                                if source:
+                                    st.caption(f"Fonte: `{source}`")
+            except Exception as e:
+                st.warning(f"Busca semântica indisponível: {e}")
+
+        st.divider()
+
+        # ── GALERIA DE RESUMOS ────────────────────────────────────────────────
         if not resumos:
             st.info("Nenhum arquivo .md encontrado na pasta resumos/")
         else:

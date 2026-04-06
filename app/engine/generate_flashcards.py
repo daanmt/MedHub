@@ -176,35 +176,41 @@ def generate_contextual_cards(
     elo_quebrado: str,
     armadilha: Optional[str] = None,
     resumo_content: Optional[str] = None,
+    relevant_chunks: Optional[list[dict]] = None,
 ) -> list[dict]:
     """Retorna até 2 flashcards v5 para o erro analisado.
 
-    quality_source='contextual' se resumo_content presente e chamada LLM OK.
+    quality_source='contextual' se trecho disponível (via relevant_chunks ou resumo_content) e LLM OK.
     quality_source='heuristic' como fallback em qualquer outro caso.
 
     Args:
         tema: Nome do tema clínico (usado apenas para contexto heurístico).
         elo_quebrado: Conceito/raciocínio que falhou — âncora do card.
         armadilha: Texto da armadilha de prova (opcional).
-        resumo_content: Conteúdo do resumo .md injetado pelo chamador
-            (tipicamente via get_topic_context()["resumo_content"]).
+        resumo_content: Conteúdo do resumo .md (fallback se relevant_chunks ausente).
+        relevant_chunks: Chunks RAG de get_topic_context()["relevant_chunks"].
+            Quando presente, usa relevant_chunks[0]["text"] como trecho — mais
+            preciso que keyword match de _extract_relevant_section().
 
     Returns:
         list[dict] com campos v5 completos:
             tipo, frente_contexto, frente_pergunta, verso_resposta,
             verso_regra_mestre, verso_armadilha, quality_source, needs_qualitative.
     """
-    if resumo_content:
-        try:
-            if not os.environ.get("ANTHROPIC_API_KEY"):
-                raise ValueError("ANTHROPIC_API_KEY não definida")
-            trecho = _extract_relevant_section(resumo_content, elo_quebrado)
-            cards = _llm_generate(elo_quebrado, armadilha, trecho)
-            for c in cards:
-                c["quality_source"] = "contextual"
-                c["needs_qualitative"] = 0
-            return cards
-        except Exception:
-            return _heuristic_generate(elo_quebrado, armadilha)
+    if relevant_chunks:
+        trecho = relevant_chunks[0]["text"]
+    elif resumo_content:
+        trecho = _extract_relevant_section(resumo_content, elo_quebrado)
     else:
+        return _heuristic_generate(elo_quebrado, armadilha)
+
+    try:
+        if not os.environ.get("ANTHROPIC_API_KEY"):
+            raise ValueError("ANTHROPIC_API_KEY não definida")
+        cards = _llm_generate(elo_quebrado, armadilha, trecho)
+        for c in cards:
+            c["quality_source"] = "contextual"
+            c["needs_qualitative"] = 0
+        return cards
+    except Exception:
         return _heuristic_generate(elo_quebrado, armadilha)

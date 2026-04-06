@@ -1,7 +1,9 @@
 ---
 type: knowledge
 area: Pediatria
+especialidade: Neonatologia
 status: active
+aliases: [Cuidados Neonatais, Reanimação Neonatal, Neonato, RN, Prematuridade, Apgar]
 ---
 
 # Cuidados Neonatais

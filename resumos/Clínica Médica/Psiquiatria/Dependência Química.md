@@ -3,6 +3,7 @@ type: knowledge
 area: Clínica Médica
 especialidade: Psiquiatria
 status: active
+aliases: [Dependência Química, Alcoolismo, Síndrome de Abstinência, Cannabis, Crack, Substâncias Psicoativas]
 ---
 
 # Dependência Química

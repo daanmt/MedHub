@@ -78,6 +78,25 @@
 - `medhub_memory.db`: NOT committed
 - `flashcards_cache.json`: committed (archived to artifacts/legacy/, no longer active)
 
+## RAG (busca semântica sobre resumos)
+
+- **Sistema canônico:** `app/engine/rag.py` + ChromaDB em `data/chroma/`
+  - Corpus: `resumos/**/*.md` (44 resumos clínicos, chunking por H2/H3)
+  - Embedding: `nomic-embed-text` via Ollama local (`http://localhost:11434`)
+  - Interface: `from app.engine.rag import search, index_all, _CHROMA_AVAILABLE`
+  - Fallback seguro: se ChromaDB ou Ollama offline, `search()` retorna `[]` silenciosamente
+  - Reindexar após adicionar/renomear resumo: `python tools/index_resumos.py`
+
+- **Sistema auxiliar (MCP):** `obsidian-notes-rag` — corpus = vault completo (147 arquivos)
+  - Usado apenas por agentes externos que precisam buscar qualquer nota do vault
+  - **Bug conhecido:** sobe sem `--provider ollama` em sessões Antigravity → falha com `OPENAI_API_KEY not set`
+  - O `.mcp.json` do repositório está correto; precisa restart do servidor MCP para herdar a configuração
+
+- **Os dois sistemas não se interferem** — paths físicos distintos, clients ChromaDB independentes
+- **Para código do engine/páginas:** sempre usar `app/engine/rag.py` (import direto, sem MCP)
+- **Para reindexação:** `python tools/index_resumos.py` (CLI com argparse)
+- **`data/chroma/` está no `.gitignore`** — local only, não commitar
+
 ## Don'ts
 - Do NOT use `import sqlite3` in Streamlit pages or any file outside `app/utils/db.py` (only exception: `tools/insert_questao.py` as standalone CLI)
 - Do NOT use treemaps or session history charts in the dashboard (via MEMORY.md)

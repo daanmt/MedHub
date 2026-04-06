@@ -3,6 +3,7 @@ type: knowledge
 area: Clínica Médica
 especialidade: Hematologia
 status: active
+aliases: [Hemostasia, Coagulação, Plaquetas, TP, TTPa, Anticoagulação, Trombose]
 ---
 
 # Hemostasia

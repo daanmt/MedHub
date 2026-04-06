@@ -4,6 +4,7 @@ tema: Icterícia e Sepse Neonatal
 type: resumo
 especialidade: Pediatria
 status: ativo
+aliases: [Icterícia Neonatal, Sepse Neonatal, Kernicterus, Listeria, Foterapia, Hiperbilirrubinemia]
 ---
 
 # Icterícia e Sepse Neonatal

@@ -3,6 +3,7 @@ type: knowledge
 area: GO
 especialidade: Ginecologia
 status: active
+aliases: [Dor Pélvica, Dismenorreia, Endometriose, DPC, Síndrome Pré-menstrual]
 ---
 
 # Dor Pélvica Crônica e Dismenorreia

@@ -4,6 +4,7 @@ tema: Pancreatite Aguda e Crônica
 type: resumo
 especialidade: Gastroenterologia
 status: ativo
+aliases: [Pancreatite, Pancreatite Aguda, Pancreatite Crônica, Critérios de Atlanta, TIGAR-O]
 ---
 
 # Pancreatite Aguda e Crônica

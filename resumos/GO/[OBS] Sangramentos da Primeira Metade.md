@@ -3,6 +3,7 @@ type: knowledge
 area: GO
 especialidade: Obstetrícia
 status: active
+aliases: [Sangramentos Primeira Metade, Abortamento, Gravidez Ectópica, Mola Hidatiforme, DTG]
 ---
 
 # Sangramento da Primeira Metade da Gestação

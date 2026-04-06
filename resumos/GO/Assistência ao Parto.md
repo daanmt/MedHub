@@ -1,9 +1,10 @@
 ---
-area: Obstetrícia
+area: GO
 tema: Assistência ao Parto
 type: resumo
-especialidade: GO
+especialidade: Obstetrícia
 status: ativo
+aliases: [Parto Normal, Assistência ao Parto, Mecanismo do Parto, Parto Vaginal]
 ---
 
 # Assistência ao Parto

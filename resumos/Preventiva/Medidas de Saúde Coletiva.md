@@ -1,7 +1,9 @@
 ---
 type: knowledge
 area: Preventiva
+especialidade: Saúde Coletiva
 status: active
+aliases: [Saúde Coletiva, Indicadores de Saúde, Mortalidade Infantil, Cobertura Vacinal, Taxa de Mortalidade]
 ---
 
 # Medidas de Saúde Coletiva

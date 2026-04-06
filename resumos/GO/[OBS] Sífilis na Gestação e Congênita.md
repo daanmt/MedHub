@@ -3,7 +3,7 @@ type: knowledge
 area: GO
 especialidade: Obstetrícia
 status: active
-aliases: [Sífilis Gestacional]
+aliases: [Sífilis Gestacional, Sífilis Congênita, VDRL, Treponema, Sífilis na Gestação, Penicilina Benzatina, NTT, Neurossífilis Congênita]
 ---
 
 # Sífilis na Gestação e Congênita

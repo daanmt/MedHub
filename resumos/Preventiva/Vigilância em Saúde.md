@@ -1,7 +1,9 @@
 ---
 type: knowledge
 area: Preventiva
+especialidade: Vigilância em Saúde
 status: active
+aliases: [Vigilância em Saúde, PNVS, Vigilância Epidemiológica, ANVISA, Saúde Única, Zoonoses]
 ---
 
 # Vigilância em Saúde

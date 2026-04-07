@@ -205,6 +205,8 @@ def generate_contextual_cards(
         return _heuristic_generate(elo_quebrado, armadilha)
 
     try:
+        from dotenv import load_dotenv
+        load_dotenv()
         if not os.environ.get("ANTHROPIC_API_KEY"):
             raise ValueError("ANTHROPIC_API_KEY não definida")
         cards = _llm_generate(elo_quebrado, armadilha, trecho)

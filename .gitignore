@@ -10,6 +10,7 @@ medhub_memory.db
 medhub_memory.db-journal
 
 # Python
+.env
 __pycache__/
 *.pyc
 *.pyo

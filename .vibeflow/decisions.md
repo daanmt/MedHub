@@ -1,6 +1,22 @@
 # Decision Log
 > Newest first. Updated automatically by the architect agent.
 
+## 2026-04-07 — BM25 como re-ranker pós-Chroma: alpha=0.8, Threshold Fixo, Desabilitado por Regressão
+
+**Contexto:** O BM25 foi implementado para resolver colisões léxicas (Placenta vs DPP), mas degradou o Recall global (90% → 73%) ao elevar termos genéricos ("tratar", "diagnóstico") de outras especialidades.
+
+**Decisão:**
+- **Alpha=0.8:** Redução drástica da influência léxica para evitar falsos positivos em corpus médico denso.
+- **Threshold Fixo (0.35):** Normalização do score coseno ancorada no limite de corte do RAG, não no máximo relativo do lote recuperado. Isso garante estabilidade de score independente da qualidade do vizinho.
+- **Desabilitado em Produção:** O reranker BM25 permanece no código (`_bm25_rerank`), mas a chamada em `search()` foi comentada/removida. **Tech Debt para /discover**: O sistema performa melhor com Coseno Puro + HyDE + Context Propagation no momento.
+
+**HyDE cache & Parallellism:** 
+- `_HYDE_CACHE` module-level p/ evitar re-chamadas de API na mesma sessão.
+- `ThreadPoolExecutor` no `search()` dispara HyDE e `get_collection()` em paralelo: latência final = `max(LLM, DB)`, não a soma. Redução média de ~1s no TTFT.
+
+
+---
+
 ## 2026-04-05 — Arquitetura RAG: dois índices, papéis distintos, sem conflito
 
 **Contexto:** O projeto tinha `obsidian-notes-rag` MCP instalado sem clareza sobre seu papel. Após diagnóstico (sessão 063), ficou claro que coexistem dois sistemas ChromaDB com propósitos distintos.

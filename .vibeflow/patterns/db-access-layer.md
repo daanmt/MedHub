@@ -8,12 +8,13 @@ confidence: inferred
 
 <!-- vibeflow:auto:start -->
 ## What
-All SQLite access is funneled through `app/utils/db.py`. Pages and components never import `sqlite3` directly — they call typed functions that return DataFrames or dicts. The only exception is `tools/insert_questao.py`, which is a standalone CLI.
+All SQLite access is funneled through `app/utils/db.py`. Pages and components never import `sqlite3` directly — they call typed functions that return DataFrames or dicts. Standalone CLI tools (`tools/`) have their own connections as authorized exceptions. `app/engine/` wraps `db.py` for agent consumers, adding RAG and graceful error handling.
 
 ## Where
 - `app/utils/db.py` — the sole authorized DB module in the app layer
+- `app/engine/` — domain API layer that wraps db.py calls for external agents; agents import `app.engine`, not `app.utils.db` directly
 - `tools/insert_questao.py` — standalone CLI with its own connection (authorized exception)
-- `tools/review_cli.py`, `tools/audit_*.py` — standalone CLIs (authorized exception)
+- `tools/review_cli.py`, `tools/audit_*.py`, `tools/cleanup_db.py` — standalone CLIs (authorized exception)
 
 ## The Pattern
 

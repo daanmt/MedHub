@@ -27,6 +27,11 @@ def main():
         default="resumos",
         help="Diretório raiz dos resumos (default: resumos)",
     )
+    parser.add_argument(
+        "--clear",
+        action="store_true",
+        help="Deleta a indexação antiga e recria do zero",
+    )
     args = parser.parse_args()
 
     try:
@@ -51,7 +56,7 @@ def main():
     print("  Se necessário: ollama pull nomic-embed-text\n")
 
     try:
-        results = index_all(resumos_dir=args.dir)
+        results = index_all(resumos_dir=args.dir, clear=args.clear)
     except Exception as e:
         err = str(e).lower()
         if any(k in err for k in ("connection", "ollama", "nomic", "refused")):

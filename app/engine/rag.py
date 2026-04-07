@@ -18,6 +18,7 @@ Limitações documentadas:
 from __future__ import annotations
 
 import re
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Optional
 
@@ -38,6 +39,8 @@ COLLECTION_NAME = "resumos"
 
 _MIN_CHUNK_CHARS = 100
 _MAX_CHUNK_CHARS = 1500
+
+_HYDE_CACHE: dict[str, str] = {}  # cache de sessão: query → hypothetical_doc; TTL = processo
 
 
 def get_collection():
@@ -140,15 +143,22 @@ def _chunk_by_headers(content: str) -> list[dict]:
 
 
 def _generate_hypothetical_document(query: str) -> str:
-    """Usa Anthropic (Haiku 4.5) ou Ollama para gerar uma resposta hipotética à query (HyDE)."""
+    """Usa Anthropic (Haiku 4.5) ou Ollama para gerar uma resposta hipotética à query (HyDE).
+
+    Resultado é cacheado em _HYDE_CACHE por TTL de sessão — queries repetidas não
+    re-chamam a API.
+    """
+    if query in _HYDE_CACHE:
+        return _HYDE_CACHE[query]
+
     import os
     import json
     import urllib.request
     from dotenv import load_dotenv
     load_dotenv()
-    
+
     prompt = f"Escreva um fato clínico objetivo (máximo 3 linhas) abordando o seguinte tema/assunto: {query}"
-    
+
     # Tentativa 1: Anthropic
     if os.environ.get("ANTHROPIC_API_KEY"):
         try:
@@ -160,7 +170,9 @@ def _generate_hypothetical_document(query: str) -> str:
                 system="Você é um assistente médico. Responda com um fato clínico objetivo que seria encontrado em um livro-texto, sem saudações.",
                 messages=[{"role": "user", "content": prompt}]
             )
-            return response.content[0].text.strip()
+            doc = response.content[0].text.strip()
+            _HYDE_CACHE[query] = doc
+            return doc
         except Exception:
             pass
 
@@ -168,7 +180,7 @@ def _generate_hypothetical_document(query: str) -> str:
     try:
         url = "http://localhost:11434/api/generate"
         data = {
-            "model": "llama3", 
+            "model": "llama3",
             "prompt": prompt,
             "stream": False,
             "system": "Você é um assistente médico. Responda com um fato clínico objetivo que seria encontrado em um livro-texto, sem saudações."
@@ -176,12 +188,50 @@ def _generate_hypothetical_document(query: str) -> str:
         req = urllib.request.Request(url, data=json.dumps(data).encode("utf-8"), headers={"Content-Type": "application/json"})
         with urllib.request.urlopen(req, timeout=5) as response:
             res = json.loads(response.read().decode())
-            return res.get("response", query).strip()
+            doc = res.get("response", query).strip()
+            _HYDE_CACHE[query] = doc
+            return doc
     except Exception:
         pass
-    
-    # Fallback final
+
+    # Fallback final: cacheamos a própria query para evitar re-tentativas em sessão
+    _HYDE_CACHE[query] = query
     return query
+
+
+def _bm25_rerank(chunks: list[dict], query: str, alpha: float = 0.8) -> list[dict]:
+    """Re-ordena chunks usando score híbrido coseno+BM25.
+
+    Combina distância coseno normalizada (peso alpha) com score BM25 normalizado
+    (peso 1-alpha). Alpha=0.8 mantém semântica como árbitro principal — BM25 entra
+    como desempate léxico para pares com vocabulário clínico sobreposto.
+
+    A query BM25 usa o último item de 'query' se ela contiver '\n---\n' como separador
+    (convenção interna: 'raw_query\n---\nhyde_doc'). Isso garante que o léxico expandido
+    do documento hipotético guie o BM25, não apenas tokens curtos da query original.
+
+    Retorna chunks com campo '_hybrid_score' adicionado, ordenados do maior para o menor.
+    Se rank_bm25 não estiver instalado ou ocorrer qualquer erro, retorna chunks
+    na ordem coseno original (fallback silencioso).
+    """
+    try:
+        from rank_bm25 import BM25Okapi
+        if not chunks:
+            return chunks
+        # Usa o documento HyDE expandido para léxico se disponível
+        bm25_query = query.split("\n---\n")[-1] if "\n---\n" in query else query
+        corpus = [c["text"].lower().split() for c in chunks]
+        bm25 = BM25Okapi(corpus)
+        scores = bm25.get_scores(bm25_query.lower().split())
+        max_score = max(scores) if max(scores) > 0 else 1.0
+        for i, chunk in enumerate(chunks):
+            norm_bm25 = scores[i] / max_score
+            # Ancoramos a distância ao threshold duro do RAG em vez do relativo do batch
+            norm_cosine = 1.0 - (chunk["distance"] / 0.35)
+            chunk["_hybrid_score"] = alpha * norm_cosine + (1 - alpha) * norm_bm25
+        return sorted(chunks, key=lambda x: x["_hybrid_score"], reverse=True)
+    except Exception:
+        return chunks  # fallback: ordem coseno original, sem raise
 
 
 def index_resumo(path: Path, collection=None) -> int:
@@ -283,9 +333,14 @@ def search(query: str, n_results: int = 5, area: Optional[str] = None, use_hyde:
     try:
         query_texts = [query]
         if use_hyde:
-            query_texts.append(_generate_hypothetical_document(query))
-
-        collection = get_collection()
+            # HyDE e get_collection() rodam em paralelo: latência = max(ambos), não soma
+            with ThreadPoolExecutor(max_workers=2) as ex:
+                f_hyde = ex.submit(_generate_hypothetical_document, query)
+                f_coll = ex.submit(get_collection)
+                collection = f_coll.result()
+                query_texts.append(f_hyde.result())
+        else:
+            collection = get_collection()
         where = {"area": area} if area else None
         
         # Puxa margem extra para ter folga contra deduplicados ou hits ruins
@@ -312,6 +367,8 @@ def search(query: str, n_results: int = 5, area: Optional[str] = None, use_hyde:
                     })
 
         combined.sort(key=lambda x: x["distance"])
+        # BM25 rerank desabilitado: regressivo no corpus médico atual (90%→73%).
+        # Tech debt documentado para /discover (RRF + Cross-Encoder). Ver rag_benchmark_report_v2.md.
         return combined[:n_results]
     except Exception:
         return []

@@ -57,6 +57,7 @@ Workspace state-driven de estudos médicos. Processa questões de prova, registr
 | Artefato | Arquivo |
 |---|---|
 | Banco principal (erros, FSRS, cronograma) | `ipub.db` (local only — não commitar) |
+| Chaves de API e Segredos | `.env` (local only — ignorado no git) |
 | Memória cross-session | `medhub_memory.db` (local only — não commitar) |
 | Backups datados | `artifacts/backups/ipub_backup_*.db` (local only) |
 
@@ -111,6 +112,7 @@ Workspace state-driven de estudos médicos. Processa questões de prova, registr
 
 ## Últimas sessões
 
+**2026-04-07 | Antigravity (sessão 064):** **Otimização Avançada do RAG e Benchmarking**. Implementação de arquitetura multi-query (Híbrida: Raw + HyDE), propagação de contexto global (injeção de título em chunks), paralelismo de busca (ThreadPoolExecutor) e inclusão estrutural do reranker BM25 (atualmente desabilitado por regressão, tech debt para /discover). Auditoria de métricas: **Recall@5 atingiu 90%** (baseline corrigido p/ corpus real) e latência média estabilizada em ~5.2s. Implementação do carregamento seguro de API via `.env`/`python-dotenv`.
 **2026-04-05 | Antigravity (sessão 063):** **Diagnóstico e documentação da arquitetura RAG**. Identificação e auditoria dos dois sistemas ChromaDB coexistentes: `app/engine/rag.py` (RAG canônico, `data/chroma/`, 688 chunks, `resumos/` clínicos) e `obsidian-notes-rag` MCP (auxiliar, vault completo, 862 chunks). Confirmação que não há conflito — paths físicos distintos, clients independentes. Bug documentado: servidor MCP sobe sem `--provider ollama` em sessões Antigravity. Sessão de revisão FSRS executada (5 atrasados Pediatria/TSV + 10 novos). Decisão arquitetural registrada em `.vibeflow/decisions.md`.
 **2026-04-05 | Antigravity (sessão 062):** **Análise de Sepse Neonatal**. Processamento de 3 questões erradas sobre Iceícia e Sepse Neonatal. Lacunas identificadas: (1) perfil discriminador da *Listeria monocytogenes* (tríade LA marrom + exantema neonatal + monocitose); (2) exceção SBP para taquipneia isolada nas primeiras 6h (watchful waiting); (3) desatenção na classificação da ampicilina como penicilina. 3 insercões no SQLite (IDs 345–347) e resumo `Iceícia e Sepse Neonatal.md` atualizado com 2 novos blocos clínicos e 2 armadilhas cumulativas.
 **2026-04-01 | Antigravity (sessão 061):** **Análise Massiva de Trauma e ATLS**. Processamento de 14 questões objetivas/discursivas erradas, rastreando vulnerabilidades nas escolhas minimamente invasivas ilusórias VS obviedades clínicas de peritonites e eviscerações desfiguradas. Foram performadas 14 injeções bem-sucedidas no SQLite `ipub.db` e aplicadas 14 modificações cumulativas via Regra do Escudo na documentação referencial `resumos/Cirurgia/[CIR] Trauma.md`, fortalecendo significativamente suas "Armadilhas de Prova".
@@ -163,8 +165,8 @@ Prioridade imediata:
 
 ## Decisões críticas (não reverter)
 
-- **RAG canônico = `app/engine/rag.py`**: ChromaDB local em `data/chroma/` (688 chunks), corpus = `resumos/**/*.md`, embedding via Ollama `nomic-embed-text`. É a interface fundação para o engine. Fallback silencioso se ChromaDB/Ollama offline. Detalhes em `.vibeflow/decisions.md` (2026-04-05).
-- **MCP `obsidian-notes-rag` = auxiliar opcional**: Vault completo (147 arquivos), usado por agentes externos via MCP. Bug conhecido: sobe sem `--provider ollama` em sessões Antigravity — precisa restart. Não substitui nem interfere com o RAG interno.
+- **RAG canônico = `app/engine/rag.py`**: ChromaDB local em `data/chroma/` (688 chunks), corpus = `resumos/**/*.md`, embedding via Ollama `nomic-embed-text`. **Arquitetura V2 (Sessão 064):** Multi-query (Raw + HyDE), ThreadPoolExecutor p/ paralelismo de busca, Context Propagation (título injetado no chunk), BM25 desabilitado no sort final por regressão (tech debt p/ /discover).
+- **RAG Latência Target: ~5s**: Paralelismo de busca obrigatório para não somar tempos de rede LLM e rede local.
 - **Study Engine = `app/engine/`**: Interface estável para agentes externos. Funções: `get_review_queue()`, `get_topic_context()`, `summarize_performance()`, `analyze_error()`, `generate_contextual_cards()`. Agentes NÃO fazem queries SQL diretas — usam o engine.
 - **Memory v1**: `app/memory/` (LangGraph + LangMem + SQLiteMemoryStore). Backend: `medhub_memory.db`. Não acoplado ao `ipub.db`. Smoke tests em `tools/test_memory.py`.
 - **Governança via AGENTE.md**: O boot e o fechamento seguem estritamente o `AGENTE.md`.

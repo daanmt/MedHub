@@ -139,6 +139,51 @@ def _chunk_by_headers(content: str) -> list[dict]:
     return [c for c in final if len(c["text"]) >= 50]
 
 
+def _generate_hypothetical_document(query: str) -> str:
+    """Usa Anthropic (Haiku 4.5) ou Ollama para gerar uma resposta hipotética à query (HyDE)."""
+    import os
+    import json
+    import urllib.request
+    from dotenv import load_dotenv
+    load_dotenv()
+    
+    prompt = f"Escreva um fato clínico objetivo (máximo 3 linhas) abordando o seguinte tema/assunto: {query}"
+    
+    # Tentativa 1: Anthropic
+    if os.environ.get("ANTHROPIC_API_KEY"):
+        try:
+            import anthropic
+            client = anthropic.Anthropic()
+            response = client.messages.create(
+                model="claude-haiku-4-5-20251001",
+                max_tokens=256,
+                system="Você é um assistente médico. Responda com um fato clínico objetivo que seria encontrado em um livro-texto, sem saudações.",
+                messages=[{"role": "user", "content": prompt}]
+            )
+            return response.content[0].text.strip()
+        except Exception:
+            pass
+
+    # Tentativa 2: Ollama (Fallback)
+    try:
+        url = "http://localhost:11434/api/generate"
+        data = {
+            "model": "llama3", 
+            "prompt": prompt,
+            "stream": False,
+            "system": "Você é um assistente médico. Responda com um fato clínico objetivo que seria encontrado em um livro-texto, sem saudações."
+        }
+        req = urllib.request.Request(url, data=json.dumps(data).encode("utf-8"), headers={"Content-Type": "application/json"})
+        with urllib.request.urlopen(req, timeout=5) as response:
+            res = json.loads(response.read().decode())
+            return res.get("response", query).strip()
+    except Exception:
+        pass
+    
+    # Fallback final
+    return query
+
+
 def index_resumo(path: Path, collection=None) -> int:
     """Chunka e indexa um resumo no ChromaDB via upsert.
 
@@ -156,28 +201,58 @@ def index_resumo(path: Path, collection=None) -> int:
     fm = _parse_frontmatter(path)
     chunks = _chunk_by_headers(content)
 
+    ids = []
+    docs = []
+    metas = []
+    
+    # Extrair título e alias para contexto semântico global
+    tema = path.stem
+    aliases = fm.get("aliases", [])
+    alias_str = f" ({', '.join(aliases)})" if aliases else ""
+    contexto_global = f"[{tema}{alias_str} > "
+    
     for i, chunk in enumerate(chunks):
-        doc_id = f"{path.stem}::{i}"
+        ids.append(f"{path.stem}::{i}")
+        
+        # Propagação massiva de contexto: Injeta o título do documento no topo do texto
+        # para que o modelo nomic capture a essência semântica mesmo em parágrafos isolados.
+        texto_enriquecido = f"{contexto_global}{chunk['header']}]\n{chunk['text']}"
+        docs.append(texto_enriquecido)
+        
+        metas.append({
+            "source": str(path),
+            "section": chunk["header"],
+            "area": fm.get("area", ""),
+            "especialidade": fm.get("especialidade", ""),
+        })
+
+    if docs:
         collection.upsert(
-            ids=[doc_id],
-            documents=[chunk["text"]],
-            metadatas=[{
-                "source": str(path),
-                "section": chunk["header"],
-                "area": fm.get("area", ""),
-                "especialidade": fm.get("especialidade", ""),
-            }],
+            ids=ids,
+            documents=docs,
+            metadatas=metas,
         )
 
     return len(chunks)
 
 
-def index_all(resumos_dir: str = "resumos") -> dict[str, int]:
+def index_all(resumos_dir: str = "resumos", clear: bool = False) -> dict[str, int]:
     """Indexa todos os resumos em resumos/**/*.md.
+
+    Args:
+        resumos_dir: Diretório com arquivos .md
+        clear: Se True, exclui toda a collection antes de indexar
 
     Returns:
         dict {filename: chunk_count}
     """
+    if clear:
+        client = chromadb.PersistentClient(path=CHROMA_PATH)
+        try:
+            client.delete_collection(name=COLLECTION_NAME)
+        except Exception:
+            pass
+            
     collection = get_collection()
     results: dict[str, int] = {}
     for path in sorted(Path(resumos_dir).rglob("*.md")):
@@ -188,15 +263,17 @@ def index_all(resumos_dir: str = "resumos") -> dict[str, int]:
     return results
 
 
-def search(query: str, n_results: int = 3, area: Optional[str] = None) -> list[dict]:
-    """Busca semântica sobre os resumos indexados.
+def search(query: str, n_results: int = 5, area: Optional[str] = None, use_hyde: bool = True, max_distance: float = 0.35) -> list[dict]:
+    """Busca semântica sobre os resumos indexados usando Multi-Query (HyDE + Raw).
 
     Retorna [] quando ChromaDB indisponível ou Ollama offline.
 
     Args:
         query: Texto da consulta (ex: elo_quebrado, pergunta clínica).
-        n_results: Número máximo de chunks a retornar.
+        n_results: Número máximo de chunks a retornar (default: 5).
         area: Filtro opcional por área (ex: "Clínica Médica").
+        use_hyde: Se True, gera documento hipotético e usa busca combinada.
+        max_distance: Cossenóide máximo admissível. Distâncias maiores são expurgadas (default: 0.35).
 
     Returns:
         list[dict] com chaves: text, metadata (source, section, area, especialidade), distance.
@@ -204,24 +281,37 @@ def search(query: str, n_results: int = 3, area: Optional[str] = None) -> list[d
     if not _CHROMA_AVAILABLE:
         return []
     try:
+        query_texts = [query]
+        if use_hyde:
+            query_texts.append(_generate_hypothetical_document(query))
+
         collection = get_collection()
         where = {"area": area} if area else None
+        
+        # Puxa margem extra para ter folga contra deduplicados ou hits ruins
+        fetch_k = max(n_results * 2, 5)
         results = collection.query(
-            query_texts=[query],
-            n_results=n_results,
+            query_texts=query_texts,
+            n_results=fetch_k,
             where=where,
         )
-        return [
-            {
-                "text": doc,
-                "metadata": meta,
-                "distance": dist,
-            }
-            for doc, meta, dist in zip(
-                results["documents"][0],
-                results["metadatas"][0],
-                results["distances"][0],
-            )
-        ]
+
+        combined = []
+        seen_texts = set()
+
+        for docs_series, metas_series, dists_series in zip(results["documents"], results["metadatas"], results["distances"]):
+            for doc, meta, dist in zip(docs_series, metas_series, dists_series):
+                if dist > max_distance:
+                    continue
+                if doc not in seen_texts:
+                    seen_texts.add(doc)
+                    combined.append({
+                        "text": doc,
+                        "metadata": meta,
+                        "distance": dist,
+                    })
+
+        combined.sort(key=lambda x: x["distance"])
+        return combined[:n_results]
     except Exception:
         return []

@@ -83,7 +83,9 @@ Objetivo: fechar o loop entre performance e estudo.
 **O que consolida:**
 - Migração completa da nomenclatura (remover prefixos legados `[GIN]`, `[OBS]`, `[CIR]`, `[ORL]`)
 - Eliminação de stubs (`TCE.md` precisa de conteúdo ou ser removido)
-- Auditoria de precisão do RAG: refinar chunking (garantir overlap e captura stricta de headers) e testar recall semântico para melhorar a pontaria de buscas clínicas.
+- Auditoria de precisão do RAG: refinar chunking e testar recall semântico ✓ (Sessão 064: Recall@5 90% atingido com HyDE + Multi-query)
+- Motor RAG Híbrido V1: Implementado HyDE (hypothetical document embeddings) com fallback Anthropic/Ollama, paralelismo de busca (ThreadPoolExecutor), propagação de contexto global nos chunks e rerank BM25 (alpha=0.8) ✓
+- `/discover` (Próximos Passos): Implementar Cross-Encoders dedicados, Reciprocal Rank Fusion (RRF) e fix de normalização de score para atingir 99%+ de Recall.
 - Busca semântica via `sqlite-vec` (já instalado) como alternativa à busca literal
 - Cobertura crescente: áreas com mais erros no banco merecem mais resumos
 

@@ -17,6 +17,8 @@ Cada erro de questão desencadeia três eventos simultâneos:
 
 O resultado é um loop fechado entre falha, diagnóstico, conhecimento e retenção — que opera de forma contínua e cumulativa entre sessões.
 
+O sistema também expõe busca semântica sobre a base de conhecimento via **RAG V2** (`app/engine/rag.py`): Multi-query (Raw + HyDE), paralelismo de busca (ThreadPoolExecutor), propagação de contexto nos chunks. Recall@5 = 90% (ChromaDB + nomic-embed-text, 688 chunks, corpus `resumos/`).
+
 Portável para qualquer LLM via `AGENTE.md` + workflows em `.agents/`.
 
 ## Para começar
@@ -73,16 +75,47 @@ MedHub/
 ├── tools/                 ← scripts Python (CLIs)
 │   ├── insert_questao.py         ← CLI: insere erro no ipub.db
 │   ├── extract_pdfs.py           ← CLI: extrai PDF para %TEMP%, política Zero PDF
+│   ├── index_resumos.py          ← (re)indexa resumos/ no ChromaDB (RAG)
 │   ├── backup_db.py              ← cria backup datado em artifacts/backups/
+│   ├── init_db.py                ← inicializa schema do ipub.db
+│   ├── cleanup_db.py             ← limpeza de registros obsoletos no banco
 │   ├── audit_flashcard_quality.py← auditoria permanente de qualidade de cards
 │   ├── audit_integrity.py        ← auditoria de integridade do banco
 │   ├── audit_fsrs.py             ← auditoria operacional FSRS
+│   ├── audit_resumos.py          ← linter de qualidade para resumos/
 │   ├── review_cli.py             ← CLI de revisão FSRS (3 buckets)
 │   ├── regenerate_cards.py       ← regeneração heurística + apply de passe LLM
 │   ├── regenerate_cards_llm.py   ← passe qualitativo via API Claude
+│   ├── sync_flashcards.py        ← sincronização de flashcards entre fontes
+│   ├── migrate_flashcards.py     ← migração de schema de flashcards
+│   ├── migrate_memory.py         ← migração de dados de memória
 │   └── fix_taxonomy_bridge.py    ← corrige tema_ids órfãos em taxonomia_cronograma
 │
+├── data/
+│   └── chroma/            ← índice ChromaDB (RAG V2 — não commitar)
+│
 └── app/                   ← Streamlit multipage app
+    ├── streamlit_app.py   ← entry point
+    ├── pages/
+    │   ├── 1_dashboard.py ← painel de performance
+    │   ├── 2_estudo.py    ← player FSRS
+    │   └── 3_biblioteca.py← navegação de resumos
+    ├── engine/            ← API de domínio (agentes usam isto, não queries diretas)
+    │   ├── rag.py         ← busca semântica RAG V2 (HyDE + Multi-query)
+    │   ├── analyze_error.py
+    │   ├── generate_flashcards.py
+    │   ├── get_review_queue.py
+    │   ├── get_topic_context.py
+    │   └── summarize_performance.py
+    ├── memory/            ← memória cross-session (LangGraph + LangMem)
+    │   ├── manager.py     ← consolidação LLM de sessões
+    │   ├── store.py       ← SQLiteMemoryStore → medhub_memory.db
+    │   └── inspect.py     ← CLI de inspeção
+    └── utils/
+        ├── db.py          ← ÚNICO ponto de import sqlite3 na camada app
+        ├── fsrs.py        ← algoritmo FSRS v4
+        ├── styles.py      ← design system (COLORS, inject_styles)
+        └── parser.py      ← parser stateful de questões
 ```
 
 ## Fontes de verdade
@@ -92,8 +125,9 @@ MedHub/
 | Erros de questão | `ipub.db` → tabela `questoes_erros` |
 | Flashcards + FSRS | `ipub.db` → tabelas `flashcards`, `fsrs_cards`, `fsrs_revlog` |
 | Cronograma EMED | `ipub.db` → tabela `taxonomia_cronograma` |
-| Memória cross-session | `medhub_memory.db` (LangMem) |
-| Resumos clínicos | `resumos/**/*.md` |
+| Memória cross-session | `medhub_memory.db` (LangMem) — não commitar |
+| Resumos clínicos | `resumos/**/*.md` (44+ arquivos) |
+| Índice semântico (RAG) | `data/chroma/` (688 chunks, nomic-embed-text) — não commitar |
 | Estado do projeto | `ESTADO.md` |
 
 ## Dois eixos de qualidade de flashcards
@@ -113,7 +147,7 @@ Um card pode ter `needs_qualitative=0` (não precisa de LLM) e ainda ter sinais 
 - Criados por `tools/backup_db.py` com integridade verificada
 - Destino: `artifacts/backups/ipub_backup_YYYYMMDD_HHMMSS.db`
 - Não commitados (`.gitignore`)
-- Backup mais recente: `artifacts/backups/ipub_backup_20260328_003332.db`
+- Backup mais recente: `artifacts/backups/ipub_backup_20260405_191106.db`
 - Manter ao menos os 2 mais recentes; remover os antigos manualmente
 
 ### Artefatos LLM

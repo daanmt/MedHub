@@ -110,12 +110,12 @@ def insert_questao(area, tema, enunciado, correta, chamada, erro, elo, armadilha
         for tipo_card, frente, verso, fc_, fp_, vr_, vrm_, va_, qs_ in cards_to_insert:
             needs_q = 0 if qs_ == 'qualitative' else 1
             cursor.execute('''
-                INSERT INTO flashcards (questao_id, tema_id, tipo, frente, verso,
+                INSERT INTO flashcards (questao_id, tema_id, tipo,
                                         frente_contexto, frente_pergunta, verso_resposta,
                                         verso_regra_mestre, verso_armadilha,
                                         quality_source, needs_qualitative)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            ''', (questao_id, tema_id, tipo_card, frente, verso,
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ''', (questao_id, tema_id, tipo_card,
                   fc_, fp_, vr_, vrm_, va_, qs_, needs_q))
             card_id = cursor.lastrowid
 
@@ -132,11 +132,14 @@ def insert_questao(area, tema, enunciado, correta, chamada, erro, elo, armadilha
             WHERE id = ?
         ''', (datetime.now().strftime('%Y-%m-%d'), tema_id))
         
-        cursor.execute('''
-            UPDATE cronograma_progresso 
-            SET status = 'Concluído', updated_at = CURRENT_TIMESTAMP
-            WHERE tema LIKE ?
-        ''', (f"%{tema}%",))
+        try:
+            cursor.execute('''
+                UPDATE cronograma_progresso
+                SET status = 'Concluído', updated_at = CURRENT_TIMESTAMP
+                WHERE tema LIKE ?
+            ''', (f"%{tema}%",))
+        except Exception:
+            pass  # tabela opcional — ignorar se não existir
 
         cursor.execute('''
             UPDATE taxonomia_cronograma

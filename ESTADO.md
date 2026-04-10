@@ -6,7 +6,7 @@ relates_to: AGENTE, roadmap
 ---
 
 # ESTADO — MedHub (Preparação para Residência Médica)
-*Atualizado: 2026-03-29 (sessão 060) | Ferramenta: Antigravity*
+*Atualizado: 2026-04-09 (sessão 065) | Ferramenta: Antigravity*
 
 ---
 
@@ -112,6 +112,8 @@ Workspace state-driven de estudos médicos. Processa questões de prova, registr
 
 ## Últimas sessões
 
+**2026-04-10 | Antigravity (sessão 066):** **Análise de Questões — Síndromes Hipertensivas na Gestação**. Processamento de 6 questões erradas. Lacunas identificadas: (1) sequência de conduta na eclâmpsia ativa (via aérea antes do MgSO4 — convulsão autolimitada); (2) proteinúria como critério diagnóstico, não de gravidade (ACOG 2013+); (3) anatomia da 2ª onda trofoblástica (zona de junção miometrial); (4) DTG como causa de PE apenas antes de 20 semanas; (5) lógica OR nos critérios de gravidade (PA 140/90 + critérios órgão-alvo = grave); (6) conduta ambulatorial — sem restrição de sal, anti-hipertensivo só se PA ≥ 140/90. 6 inserções no SQLite (IDs 349–359) e resumo `Síndromes Hipertensivas na Gestação.md` completamente reescrito ao Gold Standard (sessão 065 havia gerado texto ilegível). Correção de 2 bugs no `tools/insert_questao.py` (colunas `frente`/`verso` removidas do INSERT; tabela `cronograma_progresso` ausente tratada com try/except).
+**2026-04-09 | Antigravity (sessão 065):** **Síndromes Hipertensivas na Gestação**. Criação do resumo clínico referencial integrando os PDFs base (Medcel/Estratégia) e extração focada de Flashcards via extrator py. Cumprimento do Gold Standard 80/20, englobando manejo agudo ZUSPAN/PRITCHARD e limiares exatos de interrupção cronológica da gravidez. Implementação da "Armadilha de prova" retroativa baseada nos flashcards de alta prioridade. Limpeza completa dos artefatos originais e arquivos temporários de conversão.
 **2026-04-07 | Antigravity (sessão 064):** **Otimização Avançada do RAG e Benchmarking**. Implementação de arquitetura multi-query (Híbrida: Raw + HyDE), propagação de contexto global (injeção de título em chunks), paralelismo de busca (ThreadPoolExecutor) e inclusão estrutural do reranker BM25 (atualmente desabilitado por regressão, tech debt para /discover). Auditoria de métricas: **Recall@5 atingiu 90%** (baseline corrigido p/ corpus real) e latência média estabilizada em ~5.2s. Implementação do carregamento seguro de API via `.env`/`python-dotenv`.
 **2026-04-05 | Antigravity (sessão 063):** **Diagnóstico e documentação da arquitetura RAG**. Identificação e auditoria dos dois sistemas ChromaDB coexistentes: `app/engine/rag.py` (RAG canônico, `data/chroma/`, 688 chunks, `resumos/` clínicos) e `obsidian-notes-rag` MCP (auxiliar, vault completo, 862 chunks). Confirmação que não há conflito — paths físicos distintos, clients independentes. Bug documentado: servidor MCP sobe sem `--provider ollama` em sessões Antigravity. Sessão de revisão FSRS executada (5 atrasados Pediatria/TSV + 10 novos). Decisão arquitetural registrada em `.vibeflow/decisions.md`.
 **2026-04-05 | Antigravity (sessão 062):** **Análise de Sepse Neonatal**. Processamento de 3 questões erradas sobre Iceícia e Sepse Neonatal. Lacunas identificadas: (1) perfil discriminador da *Listeria monocytogenes* (tríade LA marrom + exantema neonatal + monocitose); (2) exceção SBP para taquipneia isolada nas primeiras 6h (watchful waiting); (3) desatenção na classificação da ampicilina como penicilina. 3 insercões no SQLite (IDs 345–347) e resumo `Iceícia e Sepse Neonatal.md` atualizado com 2 novos blocos clínicos e 2 armadilhas cumulativas.

@@ -14,11 +14,12 @@ relates_to: ESTADO
 
 ## Fundação (concluído)
 
-O MedHub foi construído em três camadas fundacionais:
+O MedHub foi construído em quatro camadas fundacionais:
 
 - **Fundação (Fase 1):** Agente LLM integrado via `AGENTE.md`, base de conhecimento em `resumos/`, workflows portáveis em `.agents/`, extração de PDFs via `extract_pdfs.py`.
 - **Estabilização (Fase 2):** Arquitetura Zero-DB resolvida (SSOT = `ipub.db`), parser stateful, dashboard honesto, expurgo de arquivos legados.
-- **Schema FSRS (Fase 3):** Tabelas `flashcards`, `fsrs_cards`, `fsrs_revlog` migradas. 277 cards gerados heuristicamente. CLI de revisão e motor FSRS operacional via `tools/review_cli.py`.
+- **Schema FSRS (Fase 3):** Tabelas `flashcards`, `fsrs_cards`, `fsrs_revlog` migradas. 277 cards gerados. Passe qualitativo LLM completo (0 pendentes). CLI de revisão e motor FSRS operacional via `tools/review_cli.py`.
+- **RAG V2 + Memória (Fase 4):** `app/engine/rag.py` com Multi-query (Raw + HyDE), ThreadPoolExecutor, Context Propagation. Recall@5 = 90%. `app/memory/` com LangGraph + LangMem + SQLiteMemoryStore operacional (`medhub_memory.db`).
 
 ---
 
@@ -33,6 +34,7 @@ Objetivo: FSRS funcionando de ponta a ponta (registro → algoritmo → próxima
 - `tools/audit_fsrs.py`: auditoria operacional do estado FSRS ✓
 - `app/pages/2_estudo.py`: player Streamlit integrado ao `record_review()` ✓
 - Session log no CLI (N revisados, distribuição 1-4, próximas dues) ✓
+- `insert_questao.py` estável (bugfix sessão 066: remoção de colunas obsoletas, tratamento de `cronograma_progresso`) ✓
 
 ### Trilho B — Interfaces
 Objetivo: Streamlit como dashboard e consulta; CLI como interface primária de revisão.
@@ -84,9 +86,10 @@ Objetivo: fechar o loop entre performance e estudo.
 - Migração completa da nomenclatura (remover prefixos legados `[GIN]`, `[OBS]`, `[CIR]`, `[ORL]`)
 - Eliminação de stubs (`TCE.md` precisa de conteúdo ou ser removido)
 - Auditoria de precisão do RAG: refinar chunking e testar recall semântico ✓ (Sessão 064: Recall@5 90% atingido com HyDE + Multi-query)
-- Motor RAG Híbrido V1: Implementado HyDE (hypothetical document embeddings) com fallback Anthropic/Ollama, paralelismo de busca (ThreadPoolExecutor), propagação de contexto global nos chunks e rerank BM25 (alpha=0.8) ✓
-- `/discover` (Próximos Passos): Implementar Cross-Encoders dedicados, Reciprocal Rank Fusion (RRF) e fix de normalização de score para atingir 99%+ de Recall.
-- Busca semântica via `sqlite-vec` (já instalado) como alternativa à busca literal
+- Motor RAG V2: HyDE + Raw query, ThreadPoolExecutor, Context Propagation nos chunks ✓ — BM25 desabilitado (regressão, tech debt)
+- Cobertura semântica: 44+ resumos indexados (688 chunks) em `data/chroma/` ✓
+- `/discover` (Tech Debt): Cross-Encoders dedicados, Reciprocal Rank Fusion (RRF), normalização de score → meta Recall@5 99%+
+- Busca semântica via `sqlite-vec` como alternativa à busca literal (a implementar)
 - Cobertura crescente: áreas com mais erros no banco merecem mais resumos
 
 ---
@@ -126,7 +129,7 @@ Objetivo: fechar o loop entre performance e estudo.
 **O que consolida:**
 - Session planner: agente lê o banco, identifica gaps e propõe plano de sessão
 - Execução autônoma do loop: análise → registro → atualização de resumo sem etapas manuais
-- Memória longa ativa: usar `weak_areas` e `session_insights` do LangMem para personalizar a seleção
+- Memória longa ativa: `weak_areas` e `session_insights` no LangMem operacionais ✓ — integração com session planner pendente
 
 ---
 
@@ -137,7 +140,7 @@ Objetivo: fechar o loop entre performance e estudo.
 **O que habilita:** Relatórios que vão além de "você errou Sífilis 3 vezes" — e chegam em "você sistematicamente seleciona o diagnóstico mais comum em vez de aplicar o critério do fluxograma". Isso é informação acionável para mudar o comportamento de estudo.
 
 **O que consolida:**
-- Ativar `consolidate_session()` em sessões clínicas reais (Memory v1 ir para produção)
+- `consolidate_session()` ativo: Memory v1 em produção (`app/memory/`, `medhub_memory.db`) ✓ (sessão 055)
 - Dashboard metacognitivo: top tipos de erro por área, padrões de elo quebrado, evolução temporal
 - Relatórios periódicos gerados pelo agente ao fechar ciclos de estudo
 

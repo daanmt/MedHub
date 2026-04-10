@@ -6,7 +6,7 @@ relates_to: AGENTE, roadmap
 ---
 
 # ESTADO — MedHub (Preparação para Residência Médica)
-*Atualizado: 2026-04-09 (sessão 065) | Ferramenta: Antigravity*
+*Atualizado: 2026-04-10 (sessão 066) | Ferramenta: Claude Code*
 
 ---
 
@@ -28,8 +28,8 @@ Workspace state-driven de estudos médicos. Processa questões de prova, registr
 > **SINGLE SOURCE OF TRUTH (SSOT):** O banco SQLite (`ipub.db`) é a fonte de verdade para erros, métricas e estado FSRS. O `caderno_erros.md` textual foi arquivado em `history/legacy/`. O conteúdo clínico lapidado mora exclusivamente em `resumos/`. Regra "Siamese Twins": **o erro vai pro DB, a lição vai pro resumo (resumos/)**.
 
 - **200+ erros estruturados** no SQLite (`ipub.db`) — consulte o Dashboard para número exato.
-- **37+ resumos clínicos** consolidados em `resumos/`.
-- **57 sessões** de estudo catalogadas em `history/`.
+- **44+ resumos clínicos** consolidados em `resumos/`.
+- **59 sessões** de estudo catalogadas em `history/`.
 - **Memory v1 & v3 ativos**: `app/memory/` configurado com `ANTHROPIC_API_KEY` permanente e consolidação LLM funcional.
 
 ---
@@ -50,7 +50,14 @@ Workspace state-driven de estudos médicos. Processa questões de prova, registr
 | Auditoria FSRS | `tools/audit_fsrs.py` |
 | Auditoria Qualidade Cards | `tools/audit_flashcard_quality.py` |
 | Auditoria Integridade DB | `tools/audit_integrity.py` |
+| Auditoria Resumos | `tools/audit_resumos.py` |
 | Pipeline LLM Qualitativo | `tools/regenerate_cards_llm.py` |
+| Indexador RAG (ChromaDB) | `tools/index_resumos.py` |
+| Init schema DB | `tools/init_db.py` |
+| Limpeza DB | `tools/cleanup_db.py` |
+| Sync flashcards | `tools/sync_flashcards.py` |
+| Migração schema flashcards | `tools/migrate_flashcards.py` |
+| Migração memória | `tools/migrate_memory.py` |
 | Session logs | `history/session_NNN.md` |
 
 ### Dados

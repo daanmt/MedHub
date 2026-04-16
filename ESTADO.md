@@ -6,7 +6,7 @@ relates_to: AGENTE, roadmap
 ---
 
 # ESTADO — MedHub (Preparação para Residência Médica)
-*Atualizado: 2026-04-10 (sessão 066) | Ferramenta: Claude Code*
+*Atualizado: 2026-04-16 (sessão 067) | Ferramenta: Antigravity*
 
 ---
 
@@ -15,8 +15,8 @@ Workspace state-driven de estudos médicos. Processa questões de prova, registr
 ### 🚩 Metas Estratégicas (Roadmap 2026)
 - **Meta Final:** 23.000 questões até 12/2026 (Custo/Q: R$ 0,20).
 - **Marco ENARE:** 17.000 questões até 10/2026 (Custo/Q: R$ 0,24).
-- **Indicador Atual (Março):** 2.631 / 3.000 (Faltam 369 | ~62 q/dia).
-- **Performance:** 79,74% (Média Geral).
+- **Indicador Atual (Abril):** 3.020 / 17.000 (Meta ENARE) — Faltam ~14.300 q.
+- **Performance Geral:** 79,9% (2.413 acertos / 3.020 questões — fonte: sessoes_bulk).
 
 ---
 
@@ -29,8 +29,9 @@ Workspace state-driven de estudos médicos. Processa questões de prova, registr
 
 - **200+ erros estruturados** no SQLite (`ipub.db`) — consulte o Dashboard para número exato.
 - **44+ resumos clínicos** consolidados em `resumos/`.
-- **59 sessões** de estudo catalogadas em `history/`.
+- **67 sessões** de estudo catalogadas em `history/`.
 - **Memory v1 & v3 ativos**: `app/memory/` configurado com `ANTHROPIC_API_KEY` permanente e consolidação LLM funcional.
+- **`sessoes_bulk`** — nova tabela (sessão 067): fonte de verdade para totais de questões/acertos por área. Populada com dados reais de 3.020 questões (sessões 001–066).
 
 ---
 
@@ -56,6 +57,8 @@ Workspace state-driven de estudos médicos. Processa questões de prova, registr
 | Init schema DB | `tools/init_db.py` |
 | Limpeza DB | `tools/cleanup_db.py` |
 | Sync flashcards | `tools/sync_flashcards.py` |
+| **Registro bulk de sessão** | **`tools/registrar_sessao_bulk.py`** |
+| Migração histórica bulk | `tools/migrar_sessoes_bulk.py` |
 | Migração schema flashcards | `tools/migrate_flashcards.py` |
 | Migração memória | `tools/migrate_memory.py` |
 | Session logs | `history/session_NNN.md` |
@@ -119,6 +122,7 @@ Workspace state-driven de estudos médicos. Processa questões de prova, registr
 
 ## Últimas sessões
 
+**2026-04-16 | Antigravity (sessão 067):** **Correção de dados e arquitetura de rastreamento**. Diagnóstico do gap estrutural: `insert_questao.py` incrementava `questoes_realizadas` apenas por erros (não por acertos). Criada tabela `sessoes_bulk` como fonte de verdade para totais por área. Migração histórica de 3.020 questões (18 áreas) e 2.413 acertos (79,9%) via `migrar_sessoes_bulk.py`. Criação de `registrar_sessao_bulk.py` para uso em toda sessão futura. Dashboard reescrito para ler de `sessoes_bulk` com gráfico colorido por threshold, tabela por especialidade, badges de tendência e gráfico temporal. `insert_questao.py` corrigido (não mais incrementa `questoes_realizadas`). `taxonomia_cronograma` deduplicada (14 linhas orphan removidas).
 **2026-04-10 | Antigravity (sessão 066):** **Análise de Questões — Síndromes Hipertensivas na Gestação**. Processamento de 6 questões erradas. Lacunas identificadas: (1) sequência de conduta na eclâmpsia ativa (via aérea antes do MgSO4 — convulsão autolimitada); (2) proteinúria como critério diagnóstico, não de gravidade (ACOG 2013+); (3) anatomia da 2ª onda trofoblástica (zona de junção miometrial); (4) DTG como causa de PE apenas antes de 20 semanas; (5) lógica OR nos critérios de gravidade (PA 140/90 + critérios órgão-alvo = grave); (6) conduta ambulatorial — sem restrição de sal, anti-hipertensivo só se PA ≥ 140/90. 6 inserções no SQLite (IDs 349–359) e resumo `Síndromes Hipertensivas na Gestação.md` completamente reescrito ao Gold Standard (sessão 065 havia gerado texto ilegível). Correção de 2 bugs no `tools/insert_questao.py` (colunas `frente`/`verso` removidas do INSERT; tabela `cronograma_progresso` ausente tratada com try/except).
 **2026-04-09 | Antigravity (sessão 065):** **Síndromes Hipertensivas na Gestação**. Criação do resumo clínico referencial integrando os PDFs base (Medcel/Estratégia) e extração focada de Flashcards via extrator py. Cumprimento do Gold Standard 80/20, englobando manejo agudo ZUSPAN/PRITCHARD e limiares exatos de interrupção cronológica da gravidez. Implementação da "Armadilha de prova" retroativa baseada nos flashcards de alta prioridade. Limpeza completa dos artefatos originais e arquivos temporários de conversão.
 **2026-04-07 | Antigravity (sessão 064):** **Otimização Avançada do RAG e Benchmarking**. Implementação de arquitetura multi-query (Híbrida: Raw + HyDE), propagação de contexto global (injeção de título em chunks), paralelismo de busca (ThreadPoolExecutor) e inclusão estrutural do reranker BM25 (atualmente desabilitado por regressão, tech debt para /discover). Auditoria de métricas: **Recall@5 atingiu 90%** (baseline corrigido p/ corpus real) e latência média estabilizada em ~5.2s. Implementação do carregamento seguro de API via `.env`/`python-dotenv`.
@@ -179,7 +183,8 @@ Prioridade imediata:
 - **Study Engine = `app/engine/`**: Interface estável para agentes externos. Funções: `get_review_queue()`, `get_topic_context()`, `summarize_performance()`, `analyze_error()`, `generate_contextual_cards()`. Agentes NÃO fazem queries SQL diretas — usam o engine.
 - **Memory v1**: `app/memory/` (LangGraph + LangMem + SQLiteMemoryStore). Backend: `medhub_memory.db`. Não acoplado ao `ipub.db`. Smoke tests em `tools/test_memory.py`.
 - **Governança via AGENTE.md**: O boot e o fechamento seguem estritamente o `AGENTE.md`.
-- **SSOT = ipub.db**: O diagnóstico do erro é gravado via CLI (`tools/insert_questao.py`) no banco. O `caderno_erros.md` textual foi arquivado em `history/legacy/`.
+- **SSOT = ipub.db / sessoes_bulk**: O total de questões/ acertos por área é authoritative em `sessoes_bulk`. O diagnóstico do erro é gravado via CLI (`tools/insert_questao.py`) no banco. O `caderno_erros.md` textual foi arquivado em `history/legacy/`.
+- **Protocolo de Registro de Sessão**: Ao informar "fiz X questões, acertei Y", o agente DEVE chamar `tools/registrar_sessao_bulk.py --sessao NNN --area AREA --feitas X --acertos Y` ANTES de processar os erros. Essa é a única forma de manter os contadores de performance precisos.
 - **Siamese Twins V2.0**: Erro → DB. Lição/Armadilha → Resumo em `resumos/`.
 - **Resumos seguem** `.claude/commands/estilo-resumo.md` — bullets hierárquicos, ⭐/⚠️/🔴; sem tabelas, sem fluxogramas ASCII.
 - **Sessions numeradas globalmente** em `history/` — qualquer agente registra.

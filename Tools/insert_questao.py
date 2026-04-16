@@ -124,14 +124,16 @@ def insert_questao(area, tema, enunciado, correta, chamada, erro, elo, armadilha
                 VALUES (?, 0, ?)
             ''', (card_id, datetime.now()))
 
-        # 4. Atualizar métricas do cronograma
+        # 4. Atualizar ultima_revisao do tema (usado pelo widget Foco Crítico).
+        #    NOTA ARQUITETURAL: questoes_realizadas e questoes_acertadas NÃO são
+        #    incrementados aqui. O volume de questões é registrado via
+        #    tools/registrar_sessao_bulk.py (separação de responsabilidades).
         cursor.execute('''
             UPDATE taxonomia_cronograma
-            SET questoes_realizadas = questoes_realizadas + 1,
-                ultima_revisao = ?
+            SET ultima_revisao = ?
             WHERE id = ?
         ''', (datetime.now().strftime('%Y-%m-%d'), tema_id))
-        
+
         try:
             cursor.execute('''
                 UPDATE cronograma_progresso
@@ -140,15 +142,6 @@ def insert_questao(area, tema, enunciado, correta, chamada, erro, elo, armadilha
             ''', (f"%{tema}%",))
         except Exception:
             pass  # tabela opcional — ignorar se não existir
-
-        cursor.execute('''
-            UPDATE taxonomia_cronograma
-            SET percentual_acertos = CASE 
-                WHEN questoes_realizadas > 0 THEN (CAST(questoes_acertadas AS REAL) / questoes_realizadas) * 100
-                ELSE 0 
-            END
-            WHERE id = ?
-        ''', (tema_id,))
 
         conn.commit()
         print(f"Sucesso! Questão '{titulo}' inserida. Flashcard IPUB High-Level [ID: {card_id}] gerado.")

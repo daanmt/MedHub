@@ -51,7 +51,18 @@ def registrar(sessao_num: int, area: str, feitas: int, acertos: int,
             )
         """)
 
-        # 2. Insere o registro da sessão
+        # 2. Guarda contra insercao dupla (idempotencia)
+        existing = conn.execute(
+            "SELECT id, questoes_feitas FROM sessoes_bulk WHERE sessao_num=? AND area=?",
+            (sessao_num, area)
+        ).fetchone()
+        if existing:
+            print("[AVISO] Sessao %03d/%s ja existe (id=%d, feitas=%d). Nada alterado." % (
+                sessao_num, area, existing[0], existing[1]))
+            conn.close()
+            return False
+
+        # 3. Insere o registro da sessao
         conn.execute("""
             INSERT INTO sessoes_bulk
                 (sessao_num, area, questoes_feitas, questoes_acertadas, data_sessao, observacoes)
@@ -95,12 +106,12 @@ def registrar(sessao_num: int, area: str, feitas: int, acertos: int,
 
         erros = feitas - acertos
         pct   = acertos / feitas * 100 if feitas else 0
-        print(f"✅  Sessão {sessao_num:03d} | {area}")
-        print(f"   Questões: {feitas} | Acertos: {acertos} | Erros: {erros} | {pct:.1f}%")
+        print("[OK] Sessao %03d | %s" % (sessao_num, area))
+        print("     Questoes: %d | Acertos: %d | Erros: %d | %.1f%%" % (feitas, acertos, erros, pct))
         return True
 
     except Exception as e:
-        print(f"❌  Erro: {e}")
+        print("[ERRO] %s" % str(e))
         conn.rollback()
         return False
     finally:

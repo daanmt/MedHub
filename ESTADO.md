@@ -6,7 +6,7 @@ relates_to: AGENTE, roadmap
 ---
 
 # ESTADO — MedHub (Preparação para Residência Médica)
-*Atualizado: 2026-04-16 (sessão 067) | Ferramenta: Antigravity*
+*Atualizado: 2026-04-16 (sessão 068) | Ferramenta: Antigravity*
 
 ---
 
@@ -15,8 +15,8 @@ Workspace state-driven de estudos médicos. Processa questões de prova, registr
 ### 🚩 Metas Estratégicas (Roadmap 2026)
 - **Meta Final:** 23.000 questões até 12/2026 (Custo/Q: R$ 0,20).
 - **Marco ENARE:** 17.000 questões até 10/2026 (Custo/Q: R$ 0,24).
-- **Indicador Atual (Abril):** 3.020 / 17.000 (Meta ENARE) — Faltam ~14.300 q.
-- **Performance Geral:** 79,9% (2.413 acertos / 3.020 questões — fonte: sessoes_bulk).
+- **Indicador Atual (Abril):** 3.064 / 17.000 (Meta ENARE) — Faltam ~13.936 q.
+- **Performance Geral:** 80,0% (2.453 acertos / 3.064 questões — fonte: sessoes_bulk).
 
 ---
 
@@ -122,6 +122,7 @@ Workspace state-driven de estudos médicos. Processa questões de prova, registr
 
 ## Últimas sessões
 
+**2026-04-16 | Gemini 3.1 Pro (sessão 068):** **Cirurgia Infantil e Refinamento de Dados**. Correção profunda visual (injetando `styles.py` globalmente na interface). Correção de 197 chaves (FKs) órfãs que causavam inexpressão dos flashcards antigamente criados em decorrência da deleção estrutural de taxonomia antiga. Inclusão da data de sessão local `data_sessao` provando consistência ao Foco Crítico. Aplicação da resolução da Cirurgia Infantil (44q registradas, com 1 deleção duplicada), obtendo 90% acerto e catalogando 4 itens. Reforço da idempontência do pipeline bulk.
 **2026-04-16 | Antigravity (sessão 067):** **Correção de dados e arquitetura de rastreamento**. Diagnóstico do gap estrutural: `insert_questao.py` incrementava `questoes_realizadas` apenas por erros (não por acertos). Criada tabela `sessoes_bulk` como fonte de verdade para totais por área. Migração histórica de 3.020 questões (18 áreas) e 2.413 acertos (79,9%) via `migrar_sessoes_bulk.py` — fonte: `dashboard-emed.xlsx`. `taxonomia_cronograma` populada com 85 subtemas reais do Excel via `popular_subtemas.py` (ex: Neurologia > Demências q=156/a=137; Epilepsias q=148/a=115; AVC q=100/a=75). Discrepância de +40q entre Quadro Geral (2.980) e soma de subtemas (3.020) explicada: o QG exclui tarefas de "Revisão por Questões" cross-tema (Obstetrícia: QG=213 vs subtemas=253 — 40q de Ass. Parto não computadas no QG). Número real operacional: **3.020 questões**. Criação de `registrar_sessao_bulk.py` para uso em toda sessão futura. Dashboard reescrito: gráfico colorido por threshold, tabela por especialidade com erros, badges de tendência, gráfico temporal. `insert_questao.py` corrigido (separação volume/erros). `taxonomia_cronograma` deduplicada (14 linhas órfãs removidas).
 **2026-04-10 | Antigravity (sessão 066):** **Análise de Questões — Síndromes Hipertensivas na Gestação**. Processamento de 6 questões erradas. Lacunas identificadas: (1) sequência de conduta na eclâmpsia ativa (via aérea antes do MgSO4 — convulsão autolimitada); (2) proteinúria como critério diagnóstico, não de gravidade (ACOG 2013+); (3) anatomia da 2ª onda trofoblástica (zona de junção miometrial); (4) DTG como causa de PE apenas antes de 20 semanas; (5) lógica OR nos critérios de gravidade (PA 140/90 + critérios órgão-alvo = grave); (6) conduta ambulatorial — sem restrição de sal, anti-hipertensivo só se PA ≥ 140/90. 6 inserções no SQLite (IDs 349–359) e resumo `Síndromes Hipertensivas na Gestação.md` completamente reescrito ao Gold Standard (sessão 065 havia gerado texto ilegível). Correção de 2 bugs no `tools/insert_questao.py` (colunas `frente`/`verso` removidas do INSERT; tabela `cronograma_progresso` ausente tratada com try/except).
 **2026-04-09 | Antigravity (sessão 065):** **Síndromes Hipertensivas na Gestação**. Criação do resumo clínico referencial integrando os PDFs base (Medcel/Estratégia) e extração focada de Flashcards via extrator py. Cumprimento do Gold Standard 80/20, englobando manejo agudo ZUSPAN/PRITCHARD e limiares exatos de interrupção cronológica da gravidez. Implementação da "Armadilha de prova" retroativa baseada nos flashcards de alta prioridade. Limpeza completa dos artefatos originais e arquivos temporários de conversão.

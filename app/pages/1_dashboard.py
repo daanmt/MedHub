@@ -3,7 +3,7 @@ import sqlite3
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
-from datetime import datetime
+from datetime import datetime, date, timedelta
 import os
 
 from app.utils.styles import inject_styles, content_card, COLORS
@@ -12,13 +12,14 @@ from app.engine import summarize_performance
 st.set_page_config(page_title="MedHub Dashboard", page_icon="📊", layout="wide")
 inject_styles()
 DB_PATH = 'ipub.db'
+META_PCT = 85  # ← meta de aproveitamento
 
 # ──────────────────────────────────────────────────────────
 # DATA LAYER
 # ──────────────────────────────────────────────────────────
 
 def get_bulk_totals():
-    """Agrega questoes_feitas / questoes_acertadas por área, da sessoes_bulk."""
+    """Agrega questoes_feitas / acertadas por área, da sessoes_bulk."""
     if not os.path.exists(DB_PATH):
         return pd.DataFrame()
     conn = sqlite3.connect(DB_PATH)
@@ -42,7 +43,6 @@ def get_bulk_totals():
     return df
 
 def get_trend_data():
-    """Devolve série temporal por área para cálculo de tendência."""
     if not os.path.exists(DB_PATH):
         return pd.DataFrame()
     conn = sqlite3.connect(DB_PATH)
@@ -54,7 +54,7 @@ def get_trend_data():
                         THEN CAST(questoes_acertadas AS REAL) / questoes_feitas * 100
                         ELSE 0 END AS pct
             FROM sessoes_bulk
-            WHERE sessao_num > 0          -- exclui migração histórica
+            WHERE sessao_num > 0
               AND questoes_feitas > 0
             ORDER BY area, sessao_num
         """, conn)
@@ -64,7 +64,6 @@ def get_trend_data():
     return df
 
 def get_erros_por_area():
-    """Conta erros registrados no banco por área."""
     if not os.path.exists(DB_PATH):
         return pd.DataFrame()
     conn = sqlite3.connect(DB_PATH)
@@ -80,35 +79,53 @@ def get_erros_por_area():
     conn.close()
     return df
 
-def get_foco_critico():
-    """Temas com baixo desempenho ou não revistos há muito tempo."""
-    if not os.path.exists(DB_PATH):
+def get_foco_critico(df_bulk: pd.DataFrame):
+    """
+    Calcula Foco Crítico a partir de sessoes_bulk (timestamps reais).
+    Critérios:
+      - Não vista há > 7 dias: urgente
+      - % acerto < meta: precisa reforço  
+      - Fator de risco = dias_sem_ver * (1 + penalidade_pct)
+    """
+    if df_bulk.empty:
         return pd.DataFrame()
-    conn = sqlite3.connect(DB_PATH)
-    try:
-        df = pd.read_sql_query("SELECT * FROM taxonomia_cronograma", conn)
-        df['dias_sem_ver'] = (
-            datetime.now() - pd.to_datetime(df['ultima_revisao'])
-        ).dt.days.fillna(999)
-        df = df[(df['questoes_realizadas'] > 0) & (df['dias_sem_ver'] > 3)].copy()
-        if not df.empty:
-            df['fator_risco'] = df['dias_sem_ver'] + ((100 - df['percentual_acertos']) * 0.5)
-            df = df.sort_values('fator_risco', ascending=False)
-    except Exception:
-        df = pd.DataFrame()
-    conn.close()
-    return df
+    today = date.today()
+    rows = []
+    for _, r in df_bulk.iterrows():
+        ultima = r.get('ultima_sessao')
+        if ultima:
+            try:
+                dt = datetime.strptime(str(ultima)[:10], '%Y-%m-%d').date()
+                dias = (today - dt).days
+            except Exception:
+                dias = 999
+        else:
+            dias = 999
+
+        pct = r['pct']
+        penalidade = max(0, META_PCT - pct) / 10  # cada 1% abaixo da meta = 0.1 ponto
+        fator = dias * (1 + penalidade)
+
+        rows.append({
+            'area':       r['area'],
+            'feitas':     int(r['feitas']),
+            'acertos':    int(r['acertos']),
+            'pct':        pct,
+            'ultima_sessao': ultima or '—',
+            'dias_sem_ver':  dias,
+            'fator_risco':   fator,
+        })
+    df = pd.DataFrame(rows)
+    return df.sort_values('fator_risco', ascending=False)
 
 # ──────────────────────────────────────────────────────────
 # HELPERS
 # ──────────────────────────────────────────────────────────
 
 def trend_badge(area, trend_df):
-    """Retorna (emoji, cor, label) de tendência para uma área."""
     sub = trend_df[trend_df['area'] == area].sort_values('sessao_num')
     if len(sub) < 2:
-        return "—", COLORS['muted_fg'], "Dados insuficientes"
-    # Regressão simples: compara última vs média anterior
+        return "—", COLORS['muted_fg'], "Aguardando 2ª sessão"
     last   = sub['pct'].iloc[-1]
     before = sub['pct'].iloc[:-1].mean()
     delta  = last - before
@@ -120,11 +137,22 @@ def trend_badge(area, trend_df):
         return "→", COLORS['warning'], f"{delta:+.1f}% — estável"
 
 def color_for_pct(pct):
-    if pct >= 75:
+    if pct >= META_PCT:
         return COLORS['success']
     elif pct >= 60:
         return COLORS['warning']
     return COLORS['danger']
+
+def urgency_color(dias):
+    if dias > 30:  return COLORS['danger']
+    if dias > 14:  return COLORS['warning']
+    return COLORS['secondary_fg']
+
+def dias_label(dias):
+    if dias == 999:  return "nunca registrada"
+    if dias == 0:    return "hoje"
+    if dias == 1:    return "há 1 dia"
+    return f"há {dias} dias"
 
 # ──────────────────────────────────────────────────────────
 # LAYOUT
@@ -147,17 +175,21 @@ if has_data:
     total_a   = int(df_bulk['acertos'].sum())
     total_err = int(df_erros['erros'].sum()) if not df_erros.empty else 0
     perf_geral = (total_a / total_q * 100) if total_q else 0
+    acima_meta = int((df_bulk['pct'] >= META_PCT).sum())
 
     # ── Métricas topo ──
-    m1, m2, m3, m4 = st.columns(4)
+    m1, m2, m3, m4, m5 = st.columns(5)
     m1.metric("Questões (EMED)", f"{total_q:,}".replace(",", "."))
     m2.metric("Acertos",         f"{total_a:,}".replace(",", "."))
-    m3.metric("Desempenho Geral", f"{perf_geral:.1f}%")
+    m3.metric("Desempenho Geral", f"{perf_geral:.1f}%",
+              delta=f"{perf_geral - META_PCT:.1f}% vs meta {META_PCT}%",
+              delta_color="normal")
     m4.metric("Erros estruturados", total_err)
+    m5.metric(f"Acima da meta {META_PCT}%", f"{acima_meta}/{len(df_bulk)} áreas")
 
     st.divider()
 
-    # ── Linha 1: Gráfico + Foco Crítico ──
+    # ── Linha 1: Gráfico bar + Foco Crítico ──
     c1, c2 = st.columns([1.6, 1])
 
     with c1:
@@ -177,9 +209,14 @@ if has_data:
                           '%{customdata[0]} / %{customdata[1]} questões<extra></extra>',
             customdata=df_chart[['acertos', 'feitas']].values,
         ))
-        fig.add_vline(x=70, line_dash="dot", line_color=COLORS['warning'],
-                      annotation_text="Meta 70%", annotation_position="top right",
-                      annotation_font_color=COLORS['warning'])
+        fig.add_vline(
+            x=META_PCT,
+            line_dash="dot",
+            line_color=COLORS['warning'],
+            annotation_text=f"Meta {META_PCT}%",
+            annotation_position="top right",
+            annotation_font_color=COLORS['warning'],
+        )
         fig.update_layout(
             xaxis_range=[0, 100],
             xaxis_title="Aproveitamento (%)",
@@ -194,24 +231,40 @@ if has_data:
 
     with c2:
         st.subheader("🚨 Foco Crítico")
-        st.caption("Temas com baixa performance ou não vistos há muito tempo.")
-        df_fc = get_foco_critico()
+        st.caption(f"Ordenado por: tempo sem ver + distância da meta {META_PCT}%.")
+
+        df_fc = get_foco_critico(df_bulk)
         if not df_fc.empty:
+            # Exibe top 8
             for _, r in df_fc.head(8).iterrows():
-                pct_color = color_for_pct(r['percentual_acertos'])
+                pct_color = color_for_pct(r['pct'])
+                dias_c    = urgency_color(r['dias_sem_ver'])
+                abaixo    = r['pct'] < META_PCT
+                border    = COLORS['danger'] if abaixo else COLORS['border']
+
+                # Badge de ação recomendada
+                if r['dias_sem_ver'] > 14:
+                    acao = "⏰ Rever"
+                elif abaixo:
+                    acao = "📖 Reforço"
+                else:
+                    acao = "✅ OK"
+
                 st.markdown(f"""
-                <div style="background:#11161D;border-left:3px solid {COLORS['danger']};
+                <div style="background:#11161D;border-left:3px solid {border};
                             border-radius:6px;padding:10px;margin-bottom:8px;">
+                  <div style="display:flex;justify-content:space-between;align-items:center;">
                     <div style="font-size:0.8rem;color:{COLORS['secondary_fg']};">{r['area']}</div>
-                    <div style="font-weight:600;color:{COLORS['foreground']};">{r['tema']}</div>
-                    <div style="font-size:0.8rem;color:{pct_color};">
-                        {r['percentual_acertos']:.1f}% acertos
-                        &nbsp;·&nbsp; há {int(r['dias_sem_ver'])} dias
-                    </div>
+                    <div style="font-size:0.75rem;color:{dias_c};">{dias_label(r['dias_sem_ver'])}</div>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px;">
+                    <div style="font-size:0.8rem;color:{pct_color};font-weight:600;">{r['pct']:.1f}% acerto</div>
+                    <div style="font-size:0.72rem;color:{COLORS['muted_fg']};">{acao}</div>
+                  </div>
                 </div>
                 """, unsafe_allow_html=True)
         else:
-            st.success("🎉 Nenhum tema crítico para revisão urgente hoje.")
+            st.info("Sem dados de sessão para calcular foco crítico.")
 
     st.divider()
 
@@ -221,10 +274,12 @@ if has_data:
     with col_t:
         st.subheader("📋 Resumo por Especialidade")
         df_display = df_bulk.copy()
-        df_display['Erros reg.'] = df_display['area'].map(
-            df_erros.set_index('area')['erros'] if not df_erros.empty else {}
-        ).fillna(0).astype(int)
+        erros_map = df_erros.set_index('area')['erros'] if not df_erros.empty else {}
+        df_display['Erros reg.'] = df_display['area'].map(erros_map).fillna(0).astype(int)
         df_display['% Acerto'] = df_display['pct'].apply(lambda x: f"{x:.1f}%")
+        df_display['Última sessão'] = df_display['ultima_sessao'].apply(
+            lambda x: str(x)[:10] if x else '—'
+        )
         df_display.rename(columns={
             'area': 'Especialidade',
             'feitas': 'Feitas',
@@ -232,7 +287,7 @@ if has_data:
             'sessoes': 'Sessões',
         }, inplace=True)
         st.dataframe(
-            df_display[['Especialidade','Feitas','Acertos','% Acerto','Erros reg.','Sessões']],
+            df_display[['Especialidade','Feitas','Acertos','% Acerto','Erros reg.','Última sessão','Sessões']],
             use_container_width=True,
             hide_index=True,
         )
@@ -241,8 +296,7 @@ if has_data:
         st.subheader("📉 Tendência por Área")
         has_trend = not df_trend.empty
         if has_trend:
-            areas_com_trend = df_trend['area'].unique()
-            for area in areas_com_trend:
+            for area in df_trend['area'].unique():
                 arrow, color, label = trend_badge(area, df_trend)
                 st.markdown(f"""
                 <div style="display:flex;align-items:center;gap:8px;
@@ -256,10 +310,12 @@ if has_data:
                 </div>
                 """, unsafe_allow_html=True)
         else:
-            st.info("Tendência disponível a partir da 2ª sessão por área.\n\n"
-                    "Use `registrar_sessao_bulk.py` após cada sessão para ativar.")
+            st.info(
+                "📈 Tendência ativa após 2ª sessão por área.\n\n"
+                "Use `tools/registrar_sessao_bulk.py` ao final de cada sessão."
+            )
 
-    # ── Linha 3: Gráfico de evolução temporal (se houver ≥2 sessões) ──
+    # ── Linha 3: Evolução temporal ──
     if has_trend and len(df_trend['sessao_num'].unique()) >= 2:
         st.divider()
         st.subheader("📅 Evolução Temporal da Performance")
@@ -269,7 +325,8 @@ if has_data:
             labels={'sessao_num': 'Sessão', 'pct': 'Aproveitamento (%)', 'area': 'Área'},
             template='plotly_dark',
         )
-        fig2.add_hline(y=70, line_dash="dot", line_color=COLORS['warning'])
+        fig2.add_hline(y=META_PCT, line_dash="dot", line_color=COLORS['warning'],
+                       annotation_text=f"Meta {META_PCT}%", annotation_font_color=COLORS['warning'])
         fig2.update_layout(
             plot_bgcolor='rgba(0,0,0,0)',
             paper_bgcolor='rgba(0,0,0,0)',
@@ -281,10 +338,9 @@ if has_data:
         st.plotly_chart(fig2, use_container_width=True)
 
 else:
-    st.info("Banco de dados vazio ou sem dados de sessão. "
-            "Execute `tools/migrar_sessoes_bulk.py` para inicializar.")
+    st.info("Banco de dados vazio. Execute `tools/migrar_sessoes_bulk.py` para inicializar.")
 
-# ── Padrões de Fraqueza (memória cross-session) ──
+# ── Padrões de Fraqueza ──
 perf = summarize_performance()
 if perf["padroes"]:
     st.divider()

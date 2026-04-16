@@ -6,8 +6,10 @@ import os
 import sys
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 from app.utils.db import record_review
+from app.utils.styles import inject_styles
 
 st.set_page_config(page_title="Central de Erros", page_icon="📓", layout="wide")
+inject_styles()
 import os as _os
 DB_PATH = _os.path.join(_os.path.dirname(_os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))), 'ipub.db')
 

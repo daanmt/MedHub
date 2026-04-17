@@ -6,7 +6,7 @@ relates_to: AGENTE, roadmap
 ---
 
 # ESTADO — MedHub (Preparação para Residência Médica)
-*Atualizado: 2026-04-16 (sessão 069) | Ferramenta: Antigravity*
+*Atualizado: 2026-04-16 (sessão 070) | Ferramenta: Antigravity*
 
 ---
 
@@ -122,6 +122,7 @@ Workspace state-driven de estudos médicos. Processa questões de prova, registr
 
 ## Últimas sessões
 
+**2026-04-16 | Antigravity (sessão 070):** **Análise de Questões e Performance (Preventiva)**. Submissão volumétrica no banco (`registrar_sessao_bulk.py`) validando 23 questões realizadas e assegurando a cota de 18 acertos (78.3%). Mapeamento de 5 falhas cognitivas pontuais versando sobre armadilhas da emissão judiciária compulsória do _Perito Ad Hoc_ isolado e falsas afecções nas diretrizes de Notificações Nacionais vs surtos de Mão-Pé-e-Boca infantis despadronizadas. Injeção direta no SQLite (via sub-script pass-through para prevenção de bad-strings em Poweshell) e consolidação simultânea das 5 armadilhas via Escudo protetivo no respectivo resumo nativo.
 **2026-04-16 | Gemini 3.1 Pro (sessão 069):** **Sistemas de Informação em Saúde (Preventiva)**. Criação completa do resumo clínico correspondente mediante leitura e extração do arquivo de base (Zero PDF). Aplicação cirúrgica dos benchmarks do MedHub (80/20) relatando integralmente dados sobre sistemas: SIM, SINAN, SINASC, SISAB e correlatos adjacentes. Foram documentadas armadilhas cumulativas vitais.
 **2026-04-16 | Gemini 3.1 Pro (sessão 068):** **Cirurgia Infantil e Refinamento de Dados**. Correção profunda visual (injetando `styles.py` globalmente na interface). Correção de 197 chaves (FKs) órfãs que causavam inexpressão dos flashcards antigamente criados em decorrência da deleção estrutural de taxonomia antiga. Inclusão da data de sessão local `data_sessao` provando consistência ao Foco Crítico. Aplicação da resolução da Cirurgia Infantil (44q registradas, com 1 deleção duplicada), obtendo 90% acerto e catalogando 4 itens. Reforço da idempontência do pipeline bulk.
 **2026-04-16 | Antigravity (sessão 067):** **Correção de dados e arquitetura de rastreamento**. Diagnóstico do gap estrutural: `insert_questao.py` incrementava `questoes_realizadas` apenas por erros (não por acertos). Criada tabela `sessoes_bulk` como fonte de verdade para totais por área. Migração histórica de 3.020 questões (18 áreas) e 2.413 acertos (79,9%) via `migrar_sessoes_bulk.py` — fonte: `dashboard-emed.xlsx`. `taxonomia_cronograma` populada com 85 subtemas reais do Excel via `popular_subtemas.py` (ex: Neurologia > Demências q=156/a=137; Epilepsias q=148/a=115; AVC q=100/a=75). Discrepância de +40q entre Quadro Geral (2.980) e soma de subtemas (3.020) explicada: o QG exclui tarefas de "Revisão por Questões" cross-tema (Obstetrícia: QG=213 vs subtemas=253 — 40q de Ass. Parto não computadas no QG). Número real operacional: **3.020 questões**. Criação de `registrar_sessao_bulk.py` para uso em toda sessão futura. Dashboard reescrito: gráfico colorido por threshold, tabela por especialidade com erros, badges de tendência, gráfico temporal. `insert_questao.py` corrigido (separação volume/erros). `taxonomia_cronograma` deduplicada (14 linhas órfãs removidas).

@@ -6,7 +6,7 @@ relates_to: AGENTE, roadmap
 ---
 
 # ESTADO — MedHub (Preparação para Residência Médica)
-*Atualizado: 2026-04-16 (sessão 070) | Ferramenta: Antigravity*
+*Atualizado: 2026-04-23 (sessão 071) | Ferramenta: Claude Code*
 
 ---
 
@@ -122,6 +122,7 @@ Workspace state-driven de estudos médicos. Processa questões de prova, registr
 
 ## Últimas sessões
 
+**2026-04-23 | Claude Code (sessão 071):** **Análise de Úlceras Genitais (GO — revisão).** Bloco de 43 questões com 38 acertos (88,4%) registrado via `registrar_sessao_bulk.py`. Análise cirúrgica dos 5 erros (IDs DB 375, 377, 379, 381, 383) — todos em `Úlceras Genitais.md`. Três eixos de falha metacognitiva identificados: (a) ancoragem em sinal isolado (Q1 — "adenopatia fistulizada → LGV" sem checar orifício único nem coexistência com úlcera dolorosa); (b) leitura superficial de alternativa / filtro eliminatório (Q2 — "mesmo com lesões herpéticas" deveria ter caído instantaneamente; Q5 — Trichomonas como intruso em lista de úlcera); (c) contaminação cruzada de cortes temporais e checklists incompletos (Q3 — omitiu doxiciclina em lesão >4 semanas; Q4 — misturou 28s/via parto com 36s/início supressão). Resumo `resumos/GO/Úlceras Genitais.md` enriquecido com 10 novas armadilhas cumulativas (Regra do Escudo respeitada). Padrões 6-8 acrescentados em `feedback_analise_questoes.md` — agora 8 padrões (5 clínicos + 3 de raciocínio/leitura).
 **2026-04-16 | Antigravity (sessão 070):** **Análise de Questões e Performance (Preventiva)**. Submissão volumétrica no banco (`registrar_sessao_bulk.py`) validando 23 questões realizadas e assegurando a cota de 18 acertos (78.3%). Mapeamento de 5 falhas cognitivas pontuais versando sobre armadilhas da emissão judiciária compulsória do _Perito Ad Hoc_ isolado e falsas afecções nas diretrizes de Notificações Nacionais vs surtos de Mão-Pé-e-Boca infantis despadronizadas. Injeção direta no SQLite (via sub-script pass-through para prevenção de bad-strings em Poweshell) e consolidação simultânea das 5 armadilhas via Escudo protetivo no respectivo resumo nativo.
 **2026-04-16 | Gemini 3.1 Pro (sessão 069):** **Sistemas de Informação em Saúde (Preventiva)**. Criação completa do resumo clínico correspondente mediante leitura e extração do arquivo de base (Zero PDF). Aplicação cirúrgica dos benchmarks do MedHub (80/20) relatando integralmente dados sobre sistemas: SIM, SINAN, SINASC, SISAB e correlatos adjacentes. Foram documentadas armadilhas cumulativas vitais.
 **2026-04-16 | Gemini 3.1 Pro (sessão 068):** **Cirurgia Infantil e Refinamento de Dados**. Correção profunda visual (injetando `styles.py` globalmente na interface). Correção de 197 chaves (FKs) órfãs que causavam inexpressão dos flashcards antigamente criados em decorrência da deleção estrutural de taxonomia antiga. Inclusão da data de sessão local `data_sessao` provando consistência ao Foco Crítico. Aplicação da resolução da Cirurgia Infantil (44q registradas, com 1 deleção duplicada), obtendo 90% acerto e catalogando 4 itens. Reforço da idempontência do pipeline bulk.

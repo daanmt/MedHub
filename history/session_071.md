@@ -1,4 +1,4 @@
-# Session 071 — Análise de Úlceras Genitais (GO — revisão)
+# Session 071 — Análise de Úlceras Genitais + skill /performance
 **Data:** 2026-04-23
 **Ferramenta:** Claude Code
 **Continuidade:** Sessão 070
@@ -49,3 +49,54 @@ Três eixos metacognitivos recorrentes — o usuário sabia o conteúdo clínico
 
 - Próxima análise de questão: aplicar coaching pelos padrões nomeados (6-8) antes de explicar o conteúdo.
 - Continuar revisão das lacunas de GO — DIP e Sangramentos são temas priorizados no roadmap.
+
+---
+
+## Parte 2 — Skill `/performance` (ciclo vibeflow completo)
+
+Após pedido do usuário por uma skill reutilizável para checagem rápida de performance (gatilho: a query ad-hoc de performance executada manualmente na Parte 1 falhou por uso de coluna errada — `acertos` em vez de `questoes_acertadas`), executei o ciclo vibeflow completo: `/discover` → `/gen-spec` → `/implement` → `/audit`.
+
+### Fluxo executado
+
+1. **`/vibeflow:discover`** → PRD em `.vibeflow/prds/performance.md`. Fast-track (3/3 critérios de clareza).
+2. **`/vibeflow:gen-spec`** → Spec em `.vibeflow/specs/performance.md` com 7 DoD checks, budget 4/6, sem split.
+3. **`/vibeflow:implement`** → 4 arquivos criados/modificados. Smoke test falhou com `UnicodeEncodeError` (cp1252 × emoji no Windows), corrigido com `sys.stdout.reconfigure(encoding='utf-8')` em 1 tentativa.
+4. **`/vibeflow:audit`** → Verdict **PASS**. 7/7 DoD checks verificados com evidência de arquivo:linha.
+
+### Artefatos criados (v0 da skill /performance)
+
+| Arquivo | Propósito |
+|---|---|
+| `tools/performance.py` | CLI read-only, stdlib-only, ~300 linhas. Queries `sessoes_bulk`, cruza com `METAS_MENSAIS` hardcoded, emite markdown com 5 blocos. |
+| `.claude/commands/performance.md` | Skill: invoca o script + instrui Claude a complementar com 2–4 linhas de análise estratégica. |
+| `.vibeflow/prds/performance.md` | PRD gerado pelo /discover. |
+| `.vibeflow/specs/performance.md` | Spec gerado pelo /gen-spec. |
+| `.vibeflow/audits/performance-audit.md` | Audit gerado pelo /audit (verdict PASS). |
+| `.vibeflow/decisions.md` | 2 decisões registradas (UTF-8 stdout pattern + drift de taxonomia como diagnóstico visível). |
+| `ESTADO.md` | Linha adicionada em "Infraestrutura" apontando para `tools/performance.py`. |
+| `CLAUDE.md` | 2 linhas (skill + script) apontando para `/performance`. |
+
+### O que o relatório `/performance` mostra (5 blocos)
+
+1. **Total acumulado** de questões, acertos e performance geral.
+2. **Meta do mês** corrente (de `METAS_MENSAIS`), déficit, ritmo diário necessário.
+3. **Custo/Q** em duas dimensões (acumulado + mês corrente), classificado em faixa visual (🟢🟡🟠🔴🟣) com distância da meta final (R$ 0,10/q em dez/2026).
+4. **Marcos adiante:** distância até ENARE (17.000) e Final (23.000).
+5. **Áreas fracas** (< 75%, ordenadas) + **gaps absolutos** (áreas com 0q).
+
+### Findings de dados expostos pelo relatório (não bloquearam PASS)
+
+Dois problemas de dados históricos que o script revelou fielmente:
+
+1. **Drift de taxonomia:** `"Obstetricia"` (sem acento) no DB vs `"Obstetrícia"` em `AREAS_VALIDAS` → falsamente listada como gap. `"GO"` foi criado como área paralela na Parte 1 desta sessão.
+2. **`data_sessao` de migração histórica (sessão 067) setado para 2026-04-16**, fazendo com que o custo/Q do mês corrente pareça artificialmente baixo (🟢 Meta) por usar 3.130q como denominador de abril.
+
+Ambos registrados em `.vibeflow/decisions.md` como diagnóstico visível a ser limpo em sessão futura, não tocados neste v0.
+
+### Decisões arquiteturais da Parte 2
+
+- **`METAS_MENSAIS` hardcoded no topo do script** (não em JSON externo nem em nova tabela no DB) — simplicidade > flexibilidade para v0.
+- **Stdlib apenas** (sqlite3 + datetime + calendar) — sem pandas. Startup < 100ms.
+- **`AREAS_VALIDAS` replicado** em vez de importado de `registrar_sessao_bulk.py` — mantém scripts standalone independentes (padrão `db-access-layer.md`).
+- **Script é a fonte de lógica; skill é apenas wrapper instrutor** — evolução independente.
+- **UTF-8 stdout mandatório para CLIs com emoji** — estabelecido como convenção arquitetural (ver `.vibeflow/decisions.md`).

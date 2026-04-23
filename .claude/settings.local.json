@@ -100,7 +100,8 @@
       "Bash(find /c/Users/daanm/MedHub/Temas -type f -name *.md)",
       "Skill(vibeflow:audit)",
       "Bash(pip show:*)",
-      "Bash(ollama list:*)"
+      "Bash(ollama list:*)",
+      "Skill(vibeflow:discover)"
     ]
   },
   "enableAllProjectMcpServers": true,

@@ -28,6 +28,7 @@ relates_to: [AGENTE, ESTADO, KNOWLEDGE_ARCHITECTURE]
 | `.claude/commands/analisar-questao.md` | Protocolo de análise de questão + invocação do `insert_questao.py` |
 | `.claude/commands/extrair-pdf.md` | Wrapper para `extract_pdfs.py` (política Zero PDF) |
 | `.claude/commands/auditar-resumos.md` | Linter de qualidade para `resumos/` |
+| `.claude/commands/performance.md` | Checagem rápida de performance (questões, metas, custo/Q, áreas fracas) — read-only |
 
 ## Scripts em tools/
 
@@ -35,3 +36,4 @@ relates_to: [AGENTE, ESTADO, KNOWLEDGE_ARCHITECTURE]
 |---|---|
 | `tools/extract_pdfs.py` | CLI: extração de PDFs (ver skill `/extrair-pdf`) |
 | `tools/insert_questao.py` | CLI: insere erro no `ipub.db` (ver skill `/analisar-questao`) |
+| `tools/performance.py` | CLI: relatório de performance em markdown (ver skill `/performance`) |

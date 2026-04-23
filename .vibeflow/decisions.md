@@ -1,6 +1,34 @@
 # Decision Log
 > Newest first. Updated automatically by the architect agent.
 
+## 2026-04-23 — CLIs Python com emoji: forçar UTF-8 no stdout (Windows cp1252)
+
+**Contexto:** Implementação de `tools/performance.py` (skill `/performance`) usa emojis de faixa (🟢🟡🟠🔴🟣) para classificação visual de custo/questão. Primeira execução em Windows crashou com `UnicodeEncodeError: 'charmap' codec can't encode '\U0001f7e3'` — o cp1252 default do Windows não cobre planos astrais Unicode, e ao rodar via subprocess (como Claude Code faz via Bash) o stdout é cp1252, não UTF-8.
+
+**Decisão:** CLIs em `tools/` que imprimem emoji DEVEM incluir no topo de `main()`:
+```python
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+except AttributeError:
+    pass  # Python < 3.7
+```
+
+**Pitfall para futuros scripts:** `insert_questao.py` e `registrar_sessao_bulk.py` também sofrem disso (imprimem `quest�o` em vez de `questão`), mas com caracteres pt-BR o cp1252 degrada sem crashar. Com emojis do plano astral (U+1F7E0+), crasha. Para qualquer novo CLI com emoji, aplicar a reconfiguração.
+
+---
+
+## 2026-04-23 — Drift de taxonomia em `sessoes_bulk`: aceitar como diagnóstico visível
+
+**Contexto:** Auditoria de `performance.py` expôs duas inconsistências de dados:
+1. `"Obstetricia"` (sem acento) no DB vs `"Obstetrícia"` em `AREAS_VALIDAS` — falsamente listada como gap.
+2. `"GO"` criado como área paralela a Ginecologia/Obstetricia na sessão 071.
+
+**Decisão:** Não normalizar em `performance.py`. O script deve revelar fielmente o drift. Futuras consolidações de dados em SQL migration script separado (fora do escopo do v0). Correção cirúrgica:
+- Sessões futuras: usar exatamente os nomes de `AREAS_VALIDAS` de `registrar_sessao_bulk.py` ao chamar `--area`.
+- Para dados históricos: criar `tools/normalizar_areas.py` quando prioridade justificar (tech debt).
+
+---
+
 ## 2026-04-07 — BM25 como re-ranker pós-Chroma: alpha=0.8, Threshold Fixo, Desabilitado por Regressão
 
 **Contexto:** O BM25 foi implementado para resolver colisões léxicas (Placenta vs DPP), mas degradou o Recall global (90% → 73%) ao elevar termos genéricos ("tratar", "diagnóstico") de outras especialidades.

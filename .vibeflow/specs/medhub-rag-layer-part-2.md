@@ -1,3 +1,5 @@
+> **Status:** archived — phase complete. Frozen reference; not part of the active vibeflow surface.
+
 # Spec: MedHub RAG Layer — Part 2: Integration & UI
 
 > Generated via /vibeflow:gen-spec on 2026-04-05

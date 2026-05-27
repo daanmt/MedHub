@@ -1,3 +1,5 @@
+> **Status:** archived — phase complete. Frozen reference; not part of the active vibeflow surface.
+
 # Audit Report: RAG Hybrid Re-ranking + HyDE Latency Optimization
 
 > Auditado em: 2026-04-07

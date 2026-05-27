@@ -1,3 +1,5 @@
+> **Status:** archived — phase complete. Frozen reference; not part of the active vibeflow surface.
+
 # Audit Report: performance
 
 > Generated via /vibeflow:audit on 2026-04-23

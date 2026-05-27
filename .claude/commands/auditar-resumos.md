@@ -7,14 +7,14 @@ status: canonical
 
 # Skill: Auditar Resumos
 
-Executa o linter `Tools/audit_resumos.py` sobre todos os arquivos `.md` em `Temas/`.
+Executa o linter `tools/audit_resumos.py` sobre todos os arquivos `.md` em `Temas/`.
 
 ---
 
 ## Invocação
 
 ```bash
-python Tools/audit_resumos.py
+python tools/audit_resumos.py
 ```
 
 Não requer argumentos. Varre `Temas/**/*.md` recursivamente.

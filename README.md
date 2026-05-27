@@ -20,7 +20,7 @@ The knowledge base is local by default — embeddings are computed by Ollama aga
 Wrong answer on a practice question
         │
         ▼
-Tools/insert_questao.py (CLI)
+tools/insert_questao.py (CLI)
         │
         ├─► questoes_erros          (structured error + metadata)
         ├─► flashcards              (heuristic card from elo_quebrado)
@@ -39,7 +39,7 @@ Tools/insert_questao.py (CLI)
 
 Retrieval is multi-query: the raw query and (when enabled) a HyDE-generated hypothetical answer are queried in parallel against a ChromaDB collection of H2/H3-chunked summaries. Results are deduplicated and filtered by a hard cosine-distance threshold (`0.35`). A BM25 hybrid rerank is implemented (`_bm25_rerank` in `app/engine/rag.py`) but disabled in code: re-enabling it regressed retrieval on this corpus.
 
-**Retrieval is measured by a reproducible eval** at `Tools/eval/` — 18 (query, expected_resumo) pairs mined from session logs, runnable as `python Tools/eval/run_eval.py --both` (requires Ollama + ChromaDB). Current baseline (file-level): Recall@5 = 0.778 / MRR@10 = 0.657 with HyDE on; 0.500 / 0.425 without. See `Tools/eval/REPORT.md` for per-query detail and `Tools/eval/README.md` for honest caveats (n=18 → ~22pp CI; file-level not section-level; not an end-to-end retrieval→generation eval).
+**Retrieval is measured by a reproducible eval** at `tools/eval/` — 18 (query, expected_resumo) pairs mined from session logs, runnable as `python tools/eval/run_eval.py --both` (requires Ollama + ChromaDB). Current baseline (file-level): Recall@5 = 0.778 / MRR@10 = 0.657 with HyDE on; 0.500 / 0.425 without. See `tools/eval/REPORT.md` for per-query detail and `tools/eval/README.md` for honest caveats (n=18 → ~22pp CI; file-level not section-level; not an end-to-end retrieval→generation eval).
 
 ---
 
@@ -52,7 +52,7 @@ Retrieval is multi-query: the raw query and (when enabled) a HyDE-generated hypo
 - **Reranking:** `rank-bm25` (implemented, disabled — see `rag.py`).
 - **Spaced repetition:** FSRS-inspired simplified scheduler (`app/utils/fsrs.py`, ~75 LOC). The 17-weight default vector is the canonical FSRS v4 `DEFAULT_W`, but `evaluate()` applies a single linear difficulty update and one stability formula — not faithful FSRS v4.
 - **Agent-memory scaffolding:** LangGraph `SqliteSaver` checkpointer + LangMem-backed store on a separate `medhub_memory.db`. Only `consolidate_session` (triggered by a PostToolUse hook) and two read paths (`weak_areas` in `get_topic_context` and `summarize_performance`) are exercised; the checkpointer and `tools.py` exports are scaffold for an agent that does not live in this repo.
-- **PDF extraction:** pdfplumber, PyPDF2 (delete-after-extract policy — `Tools/extract_pdfs.py`).
+- **PDF extraction:** pdfplumber, PyPDF2 (delete-after-extract policy — `tools/extract_pdfs.py`).
 - **Dashboards:** Plotly, pandas.
 
 ---
@@ -78,10 +78,10 @@ MedHub/
 │       ├── db.py                # primary sqlite3 access layer
 │       ├── fsrs.py              # FSRS-inspired simplified scheduler
 │       └── styles.py            # design tokens
-├── Tools/                       # ~18 active CLIs: insert_questao, index_resumos,
+├── tools/                       # ~18 active CLIs: insert_questao, index_resumos,
 │                                # init_db, audits, performance, regenerate_cards, ...
-│                                # plus Tools/_archive/migrations/ (6 one-shots, kept for history)
-│                                # plus Tools/eval/ (retrieval eval — queries.json + run_eval.py)
+│                                # plus tools/_archive/migrations/ (6 one-shots, kept for history)
+│                                # plus tools/eval/ (retrieval eval — queries.json + run_eval.py)
 ├── resumos/                     # clinical-knowledge markdown, 5 areas
 ├── .agents/workflows/           # markdown task protocols
 ├── .claude/commands/            # slash-command specs
@@ -93,7 +93,7 @@ MedHub/
 
 `app/engine/` exports two functions: `summarize_performance` (consumed by the dashboard) and `get_topic_context` (which internally calls `rag.search`, consumed by the library page). Both are read-only and side-effect-free.
 
-The `import sqlite3` convention is "primary access via `app/utils/db.py`". It is currently also imported by `app/memory/{manager,store,inspect}.py` (separate `medhub_memory.db`) and by `app/pages/{1_dashboard,2_estudo}.py` (known tech debt). CLIs under `Tools/` use `sqlite3` directly by design.
+The `import sqlite3` convention is "primary access via `app/utils/db.py`". It is currently also imported by `app/memory/{manager,store,inspect}.py` (separate `medhub_memory.db`) and by `app/pages/{1_dashboard,2_estudo}.py` (known tech debt). CLIs under `tools/` use `sqlite3` directly by design.
 
 ---
 
@@ -115,11 +115,11 @@ pip install -r requirements.txt
 #    Absence triggers Ollama llama3 / heuristic fallback paths.
 
 # 4. Initialise the SQLite store (must be run from repo root)
-python Tools/init_db.py
+python tools/init_db.py
 
 # 5. (Optional) Pull the embedding model and index resumos for RAG
 ollama pull nomic-embed-text
-python Tools/index_resumos.py
+python tools/index_resumos.py
 
 # 6. Launch the app
 streamlit run streamlit_app.py
@@ -142,11 +142,11 @@ The dashboard boots cleanly on a fresh, empty database created by `init_db.py`; 
 
 **What is partial or known-fragile**
 - BM25 hybrid rerank is implemented and dormant; re-enabling regressed retrieval on this corpus (see comment in `app/engine/rag.py`).
-- The eval at `Tools/eval/` measures file-level retrieval on 18 queries (n=18 → ~22pp 95% CI). It does not measure section-level retrieval, retrieval→generation end-to-end, or latency/cost. Older internal docs cite Recall@5 ≈ 0.90 / MRR ≈ 0.708 from an unrecoverable procedure — the committed baseline (0.778 / 0.657) supersedes them.
+- The eval at `tools/eval/` measures file-level retrieval on 18 queries (n=18 → ~22pp 95% CI). It does not measure section-level retrieval, retrieval→generation end-to-end, or latency/cost. Older internal docs cite Recall@5 ≈ 0.90 / MRR ≈ 0.708 from an unrecoverable procedure — the committed baseline (0.778 / 0.657) supersedes them.
 - The FSRS scheduler is a simplified single-formula implementation, not a faithful FSRS v4.
 - `ipub.db` was tracked early on and removed via `git rm --cached`; the blob remains in git history. It is gitignored going forward.
 - Historical commits also contain a transcribed UMED study schedule (`data/cronograma_umed.csv`) and the author's own EMED performance log (`Dashboard EMED 2026.xlsx`); both have been removed from the current tree.
-- Test coverage is effectively zero (`Tools/test_memory.py` only); no `pytest.ini`, no CI.
+- Test coverage is effectively zero (`tools/test_memory.py` only); no `pytest.ini`, no CI.
 
 **Out of scope**
 - No multi-user, no auth, no deployment. Single-machine study environment.

@@ -3,11 +3,11 @@
 MedHub — Auditoria Permanente de Qualidade de Flashcards
 
 Uso:
-    python Tools/audit_flashcard_quality.py               # resumo de métricas
-    python Tools/audit_flashcard_quality.py --examples 5  # exemplos dos piores cards
-    python Tools/audit_flashcard_quality.py --export FILE # exporta IDs p/ passe LLM
-    python Tools/audit_flashcard_quality.py --tipo armadilha
-    python Tools/audit_flashcard_quality.py --signal alt_letter  # detalha 1 sinal
+    python tools/audit_flashcard_quality.py               # resumo de métricas
+    python tools/audit_flashcard_quality.py --examples 5  # exemplos dos piores cards
+    python tools/audit_flashcard_quality.py --export FILE # exporta IDs p/ passe LLM
+    python tools/audit_flashcard_quality.py --tipo armadilha
+    python tools/audit_flashcard_quality.py --signal alt_letter  # detalha 1 sinal
 
 Critérios objetivos de baixa qualidade:
   CRÍTICO  alt_letter     — verso contém "(A)", "(B)" etc. (referência de gabarito)

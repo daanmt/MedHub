@@ -4,8 +4,8 @@ Migração one-time: move WeakAreas do namespace errado para o correto.
 medhub/session_insights (errado) → medhub/weak_areas (correto)
 
 Uso:
-    python Tools/migrate_memory.py --dry-run   # preview
-    python Tools/migrate_memory.py             # executa
+    python tools/migrate_memory.py --dry-run   # preview
+    python tools/migrate_memory.py             # executa
 """
 
 import argparse

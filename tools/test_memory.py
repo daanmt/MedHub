@@ -2,7 +2,7 @@
 Smoke tests for MedHub Memory v1.
 
 Run from repo root:
-    python Tools/test_memory.py
+    python tools/test_memory.py
 
 Tests:
   1. Persistence  — put → reinitialize store → get (must recover)

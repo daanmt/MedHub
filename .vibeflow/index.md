@@ -25,7 +25,7 @@ All persistent data lives in `ipub.db` (SQLite, local only). Clinical knowledge 
 | Core Utils | `app/utils/` | styles, parser, db, fsrs, flashcard_builder, file_io |
 | Engine API | `app/engine/` | Domain API layer: get_topic_context, analyze_error, generate_contextual_cards, RAG search |
 | Memory | `app/memory/` | LangGraph + LangMem cross-session memory (SQLiteMemoryStore) |
-| Tools/CLI | `tools/` | insert_questao, extract_pdfs, review_cli, index_resumos, audit/cleanup scripts |
+| tools/CLI | `tools/` | insert_questao, extract_pdfs, review_cli, index_resumos, audit/cleanup scripts |
 | Workflows | `.agents/workflows/` | Portable agent protocols (analisar, criar, gerar, registrar) |
 | Skills | `.claude/commands/` | Claude-specific specs (estilo-resumo, analisar-questao, etc.) |
 | Knowledge Base | `resumos/` | 44 clinical summaries organized by specialty |

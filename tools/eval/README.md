@@ -6,8 +6,8 @@ Minimal reproducible eval for `app.engine.rag.search`. Replaces the folklore num
 
 ```bash
 ollama pull nomic-embed-text      # one-time
-python Tools/index_resumos.py     # one-time (or after editing resumos/)
-python Tools/eval/run_eval.py     # writes Tools/eval/REPORT.md
+python tools/index_resumos.py     # one-time (or after editing resumos/)
+python tools/eval/run_eval.py     # writes tools/eval/REPORT.md
 ```
 
 Options:
@@ -53,4 +53,4 @@ Options:
 
 The cited Recall@5 ≈ 0.90 / MRR ≈ 0.708 came from `.vibeflow/prds/rag-hybrid-rerank-hyde-cache.md` and `ROADMAP.md` (attributed to "Sessão 064"). They were measured against an unknown fixture by a manual procedure and reference a `rag_benchmark_report_v2.md` that does not exist anywhere in the repo. The single concrete query in those PRDs (`"Diferença clínica de placenta prévia de DPP"`) points to an expected gold file (`[OBS] Sangramentos da Segunda Metade.md`) that was never created — only `Primeira Metade.md` exists.
 
-This eval supersedes those numbers. Any future Recall@5 / MRR claim about MedHub's RAG layer should reference `Tools/eval/REPORT.md` (with its fixture sha256 and the git sha of `app/engine/rag.py`), not the old folklore.
+This eval supersedes those numbers. Any future Recall@5 / MRR claim about MedHub's RAG layer should reference `tools/eval/REPORT.md` (with its fixture sha256 and the git sha of `app/engine/rag.py`), not the old folklore.

@@ -153,7 +153,7 @@ verso_armadilha: [o distrator do examinador — 1-2 frases]
 Após análise, registrar o erro no `ipub.db`:
 
 ```bash
-python Tools/insert_questao.py \
+python tools/insert_questao.py \
   --area "[Cirurgia|Clinica Medica|Pediatria|GO|Preventiva]" \
   --tema "[ex: Trauma Abdominal]" \
   --titulo "[titulo curto do erro]" \

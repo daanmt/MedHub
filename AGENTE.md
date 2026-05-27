@@ -116,14 +116,14 @@ relates_to: [ESTADO, AGENTE]      # máximo 3 referências
 
 ## 6. Decisões críticas (não reverter)
 
-- **RAG canônico** = `app/engine/rag.py` (ChromaDB em `data/chroma/`, embeddings via Ollama `nomic-embed-text`, multi-query Raw + HyDE, ThreadPoolExecutor, context propagation no chunk, BM25 desabilitado por regressão). Baseline reproducible em `Tools/eval/REPORT.md`.
-- **Engine API** = `app/engine/` expõe 2 funções estáveis para Streamlit (e agentes externos): `get_topic_context()` e `summarize_performance()`. Agentes **não** fazem queries SQL diretas — vão pelo engine ou pelos CLIs em `Tools/`.
-- **Memory v1** = `app/memory/` (LangGraph SqliteSaver + LangMem). Backend `medhub_memory.db`, isolado do `ipub.db`. Smoke tests em `Tools/test_memory.py`.
-- **Siamese Twins** — Erro → DB (via `Tools/insert_questao.py`). Lição/Armadilha → resumo correspondente em `resumos/`.
-- **SSOT volumétrica** = `sessoes_bulk` no `ipub.db`. Ao informar "fiz X questões, acertei Y", o agente DEVE chamar `python Tools/registrar_sessao_bulk.py --sessao NNN --area AREA --feitas X --acertos Y` ANTES de processar erros individuais.
+- **RAG canônico** = `app/engine/rag.py` (ChromaDB em `data/chroma/`, embeddings via Ollama `nomic-embed-text`, multi-query Raw + HyDE, ThreadPoolExecutor, context propagation no chunk, BM25 desabilitado por regressão). Baseline reproducible em `tools/eval/REPORT.md`.
+- **Engine API** = `app/engine/` expõe 2 funções estáveis para Streamlit (e agentes externos): `get_topic_context()` e `summarize_performance()`. Agentes **não** fazem queries SQL diretas — vão pelo engine ou pelos CLIs em `tools/`.
+- **Memory v1** = `app/memory/` (LangGraph SqliteSaver + LangMem). Backend `medhub_memory.db`, isolado do `ipub.db`. Smoke tests em `tools/test_memory.py`.
+- **Siamese Twins** — Erro → DB (via `tools/insert_questao.py`). Lição/Armadilha → resumo correspondente em `resumos/`.
+- **SSOT volumétrica** = `sessoes_bulk` no `ipub.db`. Ao informar "fiz X questões, acertei Y", o agente DEVE chamar `python tools/registrar_sessao_bulk.py --sessao NNN --area AREA --feitas X --acertos Y` ANTES de processar erros individuais.
 - **Resumos seguem** `.claude/commands/estilo-resumo.md`. Bullets hierárquicos, marcadores ⭐/⚠️/🔴. Sem tabelas, sem fluxogramas ASCII.
 - **Sessions numeradas globalmente** em `history/` — qualquer agente registra (sem fork por ferramenta).
-- **Zero PDF** — `Tools/extract_pdfs.py` extrai para `%TEMP%` e apaga o PDF original após consolidação no resumo.
+- **Zero PDF** — `tools/extract_pdfs.py` extrai para `%TEMP%` e apaga o PDF original após consolidação no resumo.
 - **Regra de Acúmulo** — armadilhas de prova são cumulativas; jamais sobrescrever, apenas somar.
 
 ---
@@ -149,26 +149,26 @@ relates_to: [ESTADO, AGENTE]      # máximo 3 referências
 | `/auditar-resumos` | Linter de qualidade para `resumos/` |
 | `/performance` | Checagem rápida (questões, metas, custo/Q, áreas fracas) — read-only |
 
-### 7.3 CLIs ativos (`Tools/`)
+### 7.3 CLIs ativos (`tools/`)
 
 | Script | Função |
 |---|---|
-| `Tools/insert_questao.py` | Insere erro estruturado no `ipub.db` (questoes_erros + flashcards + fsrs_cards + taxonomia) |
-| `Tools/registrar_sessao_bulk.py` | Registra totais por área em `sessoes_bulk` |
-| `Tools/extract_pdfs.py` | PDF → .txt (com delete-after-extract) |
-| `Tools/init_db.py` | Cria schema canônico (idempotente) |
-| `Tools/index_resumos.py` | Indexa `resumos/**/*.md` no ChromaDB |
-| `Tools/performance.py` | Relatório de performance em markdown |
-| `Tools/audit_resumos.py` | Linter de qualidade de resumos |
-| `Tools/audit_flashcard_quality.py` | Auditoria de qualidade de cards |
-| `Tools/audit_integrity.py` | Auditoria de integridade do DB |
-| `Tools/audit_fsrs.py` | Estado do FSRS |
-| `Tools/regenerate_cards.py` / `regenerate_cards_llm.py` | Regeneração de cards (heurística + LLM) |
-| `Tools/review_cli.py` | Player FSRS em CLI |
-| `Tools/backup_db.py` | Backup datado do `ipub.db` para `artifacts/backups/` |
-| `Tools/eval/run_eval.py` | Eval de retrieval (Recall@k + MRR@10) |
+| `tools/insert_questao.py` | Insere erro estruturado no `ipub.db` (questoes_erros + flashcards + fsrs_cards + taxonomia) |
+| `tools/registrar_sessao_bulk.py` | Registra totais por área em `sessoes_bulk` |
+| `tools/extract_pdfs.py` | PDF → .txt (com delete-after-extract) |
+| `tools/init_db.py` | Cria schema canônico (idempotente) |
+| `tools/index_resumos.py` | Indexa `resumos/**/*.md` no ChromaDB |
+| `tools/performance.py` | Relatório de performance em markdown |
+| `tools/audit_resumos.py` | Linter de qualidade de resumos |
+| `tools/audit_flashcard_quality.py` | Auditoria de qualidade de cards |
+| `tools/audit_integrity.py` | Auditoria de integridade do DB |
+| `tools/audit_fsrs.py` | Estado do FSRS |
+| `tools/regenerate_cards.py` / `regenerate_cards_llm.py` | Regeneração de cards (heurística + LLM) |
+| `tools/review_cli.py` | Player FSRS em CLI |
+| `tools/backup_db.py` | Backup datado do `ipub.db` para `artifacts/backups/` |
+| `tools/eval/run_eval.py` | Eval de retrieval (Recall@k + MRR@10) |
 
-Migrações one-shot já aplicadas vivem em `Tools/_archive/migrations/` — não re-rodar.
+Migrações one-shot já aplicadas vivem em `tools/_archive/migrations/` — não re-rodar.
 
 ---
 

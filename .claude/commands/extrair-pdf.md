@@ -7,7 +7,7 @@ status: canonical
 
 # Skill: Extrair PDF
 
-Wrapper para `Tools/extract_pdfs.py`. Implementa a **política Zero PDF** do MedHub: PDFs são temporários, o conhecimento permanece em Markdown.
+Wrapper para `tools/extract_pdfs.py`. Implementa a **política Zero PDF** do MedHub: PDFs são temporários, o conhecimento permanece em Markdown.
 
 ---
 
@@ -15,7 +15,7 @@ Wrapper para `Tools/extract_pdfs.py`. Implementa a **política Zero PDF** do Med
 
 ```bash
 # 1. Extrair — paths dos .txt são impressos no stdout
-python Tools/extract_pdfs.py "Tema/Asma.pdf" "Tema/Asma_Complementar.pdf"
+python tools/extract_pdfs.py "Tema/Asma.pdf" "Tema/Asma_Complementar.pdf"
 
 # 2. Ler — abrir cada arquivo .txt cujo path foi impresso
 #    (os paths ficam em %TEMP% por padrão)
@@ -23,7 +23,7 @@ python Tools/extract_pdfs.py "Tema/Asma.pdf" "Tema/Asma_Complementar.pdf"
 # 3. Redigir — escrever o resumo .md baseado no conteúdo extraído
 
 # 4. Limpar — apagar PDFs originais e arquivos temporários
-python Tools/extract_pdfs.py --delete-pdfs "Tema/Pneumologia/" --delete-temps "C:/Temp/ipub_Asma_abc.txt" "C:/Temp/ipub_Asma_Complementar_xyz.txt"
+python tools/extract_pdfs.py --delete-pdfs "Tema/Pneumologia/" --delete-temps "C:/Temp/ipub_Asma_abc.txt" "C:/Temp/ipub_Asma_Complementar_xyz.txt"
 ```
 
 ---
@@ -55,21 +55,21 @@ python Tools/extract_pdfs.py --delete-pdfs "Tema/Pneumologia/" --delete-temps "C
 ### Criar resumo de um tema novo
 ```bash
 # Passo 1: extrair
-python Tools/extract_pdfs.py "Memorex/Memorex_Cirurgia/Trauma.pdf"
+python tools/extract_pdfs.py "Memorex/Memorex_Cirurgia/Trauma.pdf"
 # → imprime: C:/Users/.../AppData/Local/Temp/ipub_Trauma_a1b2c3.txt
 
 # Passo 4: após escrever o resumo, limpar
-python Tools/extract_pdfs.py --delete-pdfs "Memorex/Memorex_Cirurgia/" --delete-temps "C:/Users/.../ipub_Trauma_a1b2c3.txt"
+python tools/extract_pdfs.py --delete-pdfs "Memorex/Memorex_Cirurgia/" --delete-temps "C:/Users/.../ipub_Trauma_a1b2c3.txt"
 ```
 
 ### Verificar antes de deletar
 ```bash
-python Tools/extract_pdfs.py --dry-run --delete-pdfs "Temas/Pediatria/"
+python tools/extract_pdfs.py --dry-run --delete-pdfs "Temas/Pediatria/"
 ```
 
 ### Múltiplos PDFs de uma vez
 ```bash
-python Tools/extract_pdfs.py "arq1.pdf" "arq2.pdf" "arq3.pdf"
+python tools/extract_pdfs.py "arq1.pdf" "arq2.pdf" "arq3.pdf"
 # → imprime 3 paths, um por linha
 ```
 

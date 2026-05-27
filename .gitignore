@@ -25,6 +25,10 @@ __pycache__/
 desktop.ini
 Thumbs.db
 
+# Obsidian — workspace state é local (lastOpenFiles, layout, etc.)
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+
 # MCP — config local com paths de máquina
 .mcp.json
 

@@ -1,7 +1,21 @@
-import streamlit as st
+"""
+MedHub Design System — Flat & Clinical Aesthetic.
 
-# MedHub Design System - Flat & Clinical Aesthetic
-# Based on medhub-ui-refresh-main tokens with strictly FLAT implementation
+Single source of truth para tokens visuais e componentes reutilizáveis em
+todas as páginas Streamlit. Importa via `from app.utils.styles import ...`
+e injeta CSS global via `inject_styles()`.
+
+Tokens: `COLORS` (paleta canônica) e `GLOBAL_STYLES` (CSS injetado).
+Componentes: `metric_card`, `content_card`, `flashcard_front`,
+`flashcard_back` — retornam HTML para `st.markdown(unsafe_allow_html=True)`.
+
+Regras invioláveis (Padrão Flat & Clinical):
+- Prefixo CSS `medhub-*` em todas as classes customizadas (evita colisão).
+- ZERO gradients, backdrop-filter, box-shadow ou animações decorativas.
+- Cores apenas do dict `COLORS`; nunca hard-code hex em outros arquivos.
+"""
+
+import streamlit as st
 
 COLORS = {
     "background": "#05070A",

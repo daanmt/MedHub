@@ -1,3 +1,16 @@
+"""
+CLI canônica para registrar um erro de questão no `ipub.db` atomicamente.
+
+Transação de 4 passos em commit único:
+1. Insert/update em `taxonomia_cronograma` (cria área+tema se não existir).
+2. Insert em `questoes_erros` com metadados do erro.
+3. Insert de 1-2 cards em `flashcards` (heurístico ou contextual via LLM).
+4. Init de estado FSRS em `fsrs_cards` para cada card.
+
+Assinatura canônica (17 args: 8 obrigatórios + 9 opcionais/qualidade) em
+`.claude/commands/analisar-questao.md §9`. Exit 0 em sucesso, 1 em falha.
+"""
+
 import sqlite3
 import argparse
 import sys

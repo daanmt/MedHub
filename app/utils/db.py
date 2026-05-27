@@ -1,3 +1,15 @@
+"""
+MedHub DB access layer — única fonte de `import sqlite3` na camada `app/`.
+
+Convenções: reads retornam `pandas.DataFrame`; writes usam cursor+commit
+explícitos; sempre fechar via `conn.close()`; queries parametrizadas
+(`params=(...)`) para evitar SQL injection. `DB_PATH` é resolvido relativo
+à raiz do repo.
+
+Callers acima: `app/pages/*.py`, `app/engine/*.py`. CLIs em `tools/` usam
+`sqlite3` diretamente por design (scripts standalone).
+"""
+
 import sqlite3
 import pandas as pd
 import os

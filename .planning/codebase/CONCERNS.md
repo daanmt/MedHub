@@ -1,3 +1,5 @@
+> **Snapshot — codebase has drifted significantly since this was generated. Several listed concerns have been remediated. See [`NOTICE.md`](NOTICE.md) for the divergence list.**
+
 # Technical Concerns
 
 **Analysis Date:** 2026-03-28

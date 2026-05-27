@@ -1,3 +1,5 @@
+> **Snapshot — codebase has drifted significantly since this was generated. See [`../.planning/codebase/NOTICE.md`](../.planning/codebase/NOTICE.md) for the known-divergence list before relying on any specific claim here.**
+
 # Project: MedHub
 > Analyzed: 2026-04-07
 > Stack: Python 3, Streamlit (multipage), SQLite (ipub.db), LangGraph/LangMem, Anthropic Claude API, Ollama, pdfplumber, obsidian-notes-rag MCP

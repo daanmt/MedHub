@@ -6,14 +6,14 @@ Pipeline: export → rewrite (LLM) → apply
 
 Uso:
     # 1. Exportar cards que precisam de revisão
-    python Tools/audit_flashcard_quality.py --export problematic.json
+    python tools/audit_flashcard_quality.py --export problematic.json
 
     # 2. Reescrever com LLM (requer ANTHROPIC_API_KEY)
-    python Tools/regenerate_cards_llm.py --input problematic.json --output improved.json
-    python Tools/regenerate_cards_llm.py --input problematic.json --output improved.json --pilot 20
+    python tools/regenerate_cards_llm.py --input problematic.json --output improved.json
+    python tools/regenerate_cards_llm.py --input problematic.json --output improved.json --pilot 20
 
     # 3. Aplicar ao banco
-    python Tools/regenerate_cards.py --apply improved.json
+    python tools/regenerate_cards.py --apply improved.json
 
 Regras obrigatórias do prompt de reescrita:
     - Proibido qualquer referência "(A)", "(B)", "alternativa C", "gabarito"
@@ -229,7 +229,7 @@ def main():
         print("Cards com violações incluídos no output com campo '_violations' — revisar manualmente.")
     print()
     print("Próximo passo:")
-    print(f"  python Tools/regenerate_cards.py --apply {args.output}")
+    print(f"  python tools/regenerate_cards.py --apply {args.output}")
 
 
 if __name__ == '__main__':

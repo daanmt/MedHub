@@ -8,7 +8,7 @@ import os
 import sys
 from pathlib import Path
 
-# Navega para project root: Tools/hooks/memory_boot.py → Tools/hooks → Tools → MedHub/
+# Navega para project root: tools/hooks/memory_boot.py → tools/hooks → Tools → MedHub/
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 os.chdir(PROJECT_ROOT)
 sys.path.insert(0, str(PROJECT_ROOT))

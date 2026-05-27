@@ -35,7 +35,7 @@ Seguir integralmente o protocolo de `.claude/commands/analisar-questao.md` (Etap
 ### 3. Popular Banco de Dados (Caderno de Erros DB)
 - **NÃO ADICIONE MÉTRICAS TEXTUAIS!** O `caderno_erros.md` baseado em texto está depreciado. O Streamlit Dashboard é a única Fonte Real da métrica.
 - Para questões erradas, popular os metadados no SQLite via CLI:
-  - Execute: `python Tools/insert_questao.py --area "[Cirurgia|Pediatria|GO|...]" --tema "[ex: Trauma]" --enunciado "[enunciado limpo]" --correta "[letra]" --marcada "[letra]" --erro "[tipo de erro]" --elo "[habilidade que faltou]" --armadilha "[explicação e resumo]"`
+  - Execute: `python tools/insert_questao.py --area "[Cirurgia|Pediatria|GO|...]" --tema "[ex: Trauma]" --enunciado "[enunciado limpo]" --correta "[letra]" --marcada "[letra]" --erro "[tipo de erro]" --elo "[habilidade que faltou]" --armadilha "[explicação e resumo]"`
   - *Dica*: Evite aspas internas no PowerShell — usar nomes sem especiais entre aspas duplas.
 - Para insights de estudo sem questão associada: não registrar no SQLite (não há erro mensurável).
 

@@ -1,7 +1,7 @@
 """
 MedHub FSRS Audit — Auditoria Operacional
 Verifica o estado real do motor FSRS no ipub.db.
-Uso: python Tools/audit_fsrs.py
+Uso: python tools/audit_fsrs.py
 """
 
 import sys

@@ -34,7 +34,7 @@ Gaps in the sequence (026, 047, 050, 053, 057, 058, 064) are sessions that happe
 | 051 | 2026-03-25 | Antigravity | Resumo Cirurgia Infantil (HDC → defeitos de parede); 80/20 + Zero PDF |
 | 049 | 2026-03-25 | Antigravity | Resumo Icterícia e Sepse Neonatal (Pediatria); Gold Standard 80/20 |
 | 048 | 2026-03-25 | Antigravity | Resumo Trauma Abdominal e Pélvico (Cirurgia) |
-| 046 | 2026-03-25 | Claude Code | Memory v1: LangGraph + LangMem + `SQLiteMemoryStore`; `app/memory/` + `Tools/test_memory.py` (4/4 smokes) |
+| 046 | 2026-03-25 | Claude Code | Memory v1: LangGraph + LangMem + `SQLiteMemoryStore`; `app/memory/` + `tools/test_memory.py` (4/4 smokes) |
 | 045 | 2026-03-24 | Antigravity | Sífilis Congênita e reinfecção materna (análise + refinamento NTT) |
 | 044 | 2026-03-24 | Antigravity | Resumo Úlceras Genitais (GO) + 3 erros (Herpes gestacional, fluxograma > 4 sem) |
 | 043 | 2026-03-23 | Antigravity | Auditoria arquitetural completa: alinhamento de ESTADO/README/HANDOFF/roadmap + wikilinks Obsidian |

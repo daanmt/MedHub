@@ -7,16 +7,16 @@ em sessões anteriores ao ETL do Excel (que iniciou IDs em 22). Esses IDs
 ficaram órfãos porque o ETL não herdou os registros antigos.
 
 Modos:
-    python Tools/fix_taxonomy_bridge.py --diagnose
+    python tools/fix_taxonomy_bridge.py --diagnose
         → Mostra os orphans com proposta de mapeamento e amostra de títulos
 
-    python Tools/fix_taxonomy_bridge.py --apply --dry-run
+    python tools/fix_taxonomy_bridge.py --apply --dry-run
         → Simula INSERT sem alterar o banco
 
-    python Tools/fix_taxonomy_bridge.py --apply
+    python tools/fix_taxonomy_bridge.py --apply
         → Executa INSERT OR IGNORE para cada orphan mapeável
 
-    python Tools/fix_taxonomy_bridge.py --export-manual bridge_manual.csv
+    python tools/fix_taxonomy_bridge.py --export-manual bridge_manual.csv
         → Exporta CSV dos ambíguos para revisão manual
 """
 

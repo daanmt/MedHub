@@ -1,7 +1,7 @@
 """
 MedHub FSRS Review CLI
 Sessão de revisão espaçada com política de 3 buckets (atrasados → hoje → novos).
-Uso: python Tools/review_cli.py [--limit N] [--new-limit N] [--area STR] [--tema STR]
+Uso: python tools/review_cli.py [--limit N] [--new-limit N] [--area STR] [--tema STR]
 """
 
 import sys

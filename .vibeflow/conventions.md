@@ -9,7 +9,7 @@
 
 ## File naming
 - Pages: `N_nome_da_pagina.py` (number prefix, snake_case) — e.g. `1_dashboard.py`, `2_estudo.py`
-- Tools/scripts: `snake_case.py` — e.g. `insert_questao.py`, `extract_pdfs.py`
+- tools/scripts: `snake_case.py` — e.g. `insert_questao.py`, `extract_pdfs.py`
 - Resumos (clinical summaries): `Título em Sentence Case.md` under `resumos/<Especialidade>/[Subarea/]`
 - Session logs: `history/session_NNN.md` (zero-padded 3-digit number)
 - Frontmatter field `type`, `area`, `especialidade`, `status`, `aliases` on all resumo files (see AGENTE.md §5.2)

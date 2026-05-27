@@ -3,21 +3,21 @@ run_eval.py — minimal retrieval eval for app.engine.rag.search.
 
 Loads a fixture of (query, expected_resumo_path) pairs and reports
 Recall@k and MRR@10 against the live ChromaDB index. Writes a markdown
-report to Tools/eval/REPORT.md and prints a summary to stdout.
+report to tools/eval/REPORT.md and prints a summary to stdout.
 
 Requirements at runtime:
   - Ollama running locally with nomic-embed-text pulled
-  - ChromaDB persistent index at data/chroma/ (run Tools/index_resumos.py first)
+  - ChromaDB persistent index at data/chroma/ (run tools/index_resumos.py first)
   - Optional: ANTHROPIC_API_KEY in .env for HyDE (otherwise falls back to
     Ollama llama3, then to identity)
 
 Usage:
-  python Tools/eval/run_eval.py                    # default: HyDE on
-  python Tools/eval/run_eval.py --no-hyde          # compare without HyDE
-  python Tools/eval/run_eval.py --both             # run both configs
-  python Tools/eval/run_eval.py --output PATH      # custom report path
+  python tools/eval/run_eval.py                    # default: HyDE on
+  python tools/eval/run_eval.py --no-hyde          # compare without HyDE
+  python tools/eval/run_eval.py --both             # run both configs
+  python tools/eval/run_eval.py --output PATH      # custom report path
 
-Honest scope (see Tools/eval/README.md):
+Honest scope (see tools/eval/README.md):
   - 18 queries → ~22pp 95% binomial CI at this n; subtle ranking
     changes are inside the noise band.
   - Author-defined gold set, not blind. Mitigation: include misses on
@@ -44,8 +44,8 @@ sys.path.insert(0, str(REPO_ROOT))
 
 from app.engine.rag import search, _CHROMA_AVAILABLE  # noqa: E402
 
-FIXTURE_PATH = REPO_ROOT / "Tools" / "eval" / "queries.json"
-DEFAULT_REPORT_PATH = REPO_ROOT / "Tools" / "eval" / "REPORT.md"
+FIXTURE_PATH = REPO_ROOT / "tools" / "eval" / "queries.json"
+DEFAULT_REPORT_PATH = REPO_ROOT / "tools" / "eval" / "REPORT.md"
 
 
 def normalize_source(s: str) -> str:

@@ -338,7 +338,7 @@ if has_data:
         st.plotly_chart(fig2, use_container_width=True)
 
 else:
-    st.info("Banco de dados vazio. Registre uma sessão com `python Tools/registrar_sessao_bulk.py --area <area> --feitas <n> --acertos <n>`.")
+    st.info("Banco de dados vazio. Registre uma sessão com `python tools/registrar_sessao_bulk.py --area <area> --feitas <n> --acertos <n>`.")
 
 # ── Padrões de Fraqueza ──
 perf = summarize_performance()

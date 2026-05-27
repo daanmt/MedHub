@@ -1,21 +1,28 @@
 import sqlite3
 import os
 
-DB_PATH = 'ipub.db'
+DB_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'ipub.db')
 
 def init_db():
-    print("Iniciando a criação do banco de dados IPUB... (Fase 2/3 Roadmap)")
-    
-    # Se já existir, podemos optar por backup (neste script iniciaremos zerado caso delete-se)
+    """Cria o schema canônico do ipub.db (idempotente via CREATE TABLE IF NOT EXISTS).
+
+    Schema alinhado com o estado vivo do app (sessão 071+):
+      - flashcards: v5 (frente_contexto / frente_pergunta / verso_resposta /
+        verso_regra_mestre / verso_armadilha + quality_source / card_version /
+        needs_qualitative). Sem colunas legadas frente/verso.
+      - sessoes_bulk: agregados por sessão (escrito por registrar_sessao_bulk.py,
+        lido pelo dashboard e por performance.py).
+    """
+    print(f"Inicializando schema do ipub.db em: {DB_PATH}")
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
-    # Tabela 1: Taxonomia do Estratégia Med & Dash de Progresso
+    # Tabela 1: Taxonomia (mapa área → tema com agregados)
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS taxonomia_cronograma (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        area TEXT NOT NULL,           -- Ex: Cirurgia, Pediatria, G.O
-        tema TEXT NOT NULL,           -- Ex: ATLS, Imunizações, Sífilis na Gestação
+        area TEXT NOT NULL,
+        tema TEXT NOT NULL,
         questoes_realizadas INTEGER DEFAULT 0,
         questoes_acertadas INTEGER DEFAULT 0,
         percentual_acertos REAL DEFAULT 0.0,
@@ -23,7 +30,7 @@ def init_db():
     )
     ''')
 
-    # Tabela 2: Caderno de Erros Estruturado
+    # Tabela 2: Caderno de erros estruturado
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS questoes_erros (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -43,29 +50,34 @@ def init_db():
     )
     ''')
 
-    # Tabela 3: Flashcards Front/Back ou Cloze
+    # Tabela 3: Flashcards v5 (schema atual; sem colunas legadas frente/verso)
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS flashcards (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        questao_id INTEGER,          -- Link com a origem do erro
-        tema_id INTEGER,             -- Link com a taxonomia
-        tipo TEXT,                   -- 'FrontBack' ou 'Cloze'
-        frente TEXT NOT NULL,
-        verso TEXT NOT NULL,
+        questao_id INTEGER,
+        tema_id INTEGER,
+        tipo TEXT,
+        frente_contexto TEXT,
+        frente_pergunta TEXT,
+        verso_resposta TEXT,
+        verso_regra_mestre TEXT,
+        verso_armadilha TEXT,
+        quality_source TEXT DEFAULT 'legacy',
+        card_version INTEGER DEFAULT 1,
+        needs_qualitative INTEGER DEFAULT 0,
         FOREIGN KEY (questao_id) REFERENCES questoes_erros(id),
         FOREIGN KEY (tema_id) REFERENCES taxonomia_cronograma(id)
     )
     ''')
 
-    # Tabela 4: FSRS (Memory State) - O cérebro do espaçamento
-    # state: 0=New, 1=Learning, 2=Review, 3=Relearning
+    # Tabela 4: FSRS state (1:1 com flashcards)
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS fsrs_cards (
-        card_id INTEGER PRIMARY KEY, -- 1:1 com flashcards(id)
+        card_id INTEGER PRIMARY KEY,
         state INTEGER DEFAULT 0,
-        due DATETIME,                -- Próxima revisão agendada
-        stability REAL DEFAULT 0.0,  -- (S) Em dias pra cair a 90%
-        difficulty REAL DEFAULT 0.0, -- (D) Otimizado via heurística retroativa
+        due DATETIME,
+        stability REAL DEFAULT 0.0,
+        difficulty REAL DEFAULT 0.0,
         elapsed_days INTEGER DEFAULT 0,
         scheduled_days INTEGER DEFAULT 0,
         reps INTEGER DEFAULT 0,
@@ -75,12 +87,12 @@ def init_db():
     )
     ''')
 
-    # Tabela 5: FSRS Log de Revisão (Fundamental para otimização futura)
+    # Tabela 5: FSRS log de revisão
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS fsrs_revlog (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         card_id INTEGER,
-        rating INTEGER,               -- 1=Again, 2=Hard, 3=Good, 4=Easy
+        rating INTEGER,
         state INTEGER,
         due DATETIME,
         stability REAL,
@@ -93,9 +105,23 @@ def init_db():
     )
     ''')
 
+    # Tabela 6: Sessoes bulk (agregados por sessão; SSOT de totais no dashboard)
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS sessoes_bulk (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        sessao_num INTEGER,
+        area TEXT NOT NULL,
+        questoes_feitas INTEGER DEFAULT 0,
+        questoes_acertadas INTEGER DEFAULT 0,
+        data_sessao DATE DEFAULT CURRENT_DATE,
+        observacoes TEXT
+    )
+    ''')
+
     conn.commit()
     conn.close()
-    print("Sucesso! Modelo DSR + Excel EMED instanciados no SQLite virtual (ipub.db).")
+    print("Schema criado/atualizado. Tabelas: taxonomia_cronograma, questoes_erros, "
+          "flashcards (v5), fsrs_cards, fsrs_revlog, sessoes_bulk.")
 
 if __name__ == "__main__":
     init_db()

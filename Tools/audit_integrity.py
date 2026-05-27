@@ -64,7 +64,7 @@ def main():
     total_temas = conn.execute("SELECT COUNT(DISTINCT tema_id) FROM flashcards").fetchone()[0]
     if orphan_temas:
         print(f"[WARN] tema_ids sem match em taxonomia_cronograma: {orphan_temas}/{total_temas}")
-        print("       -> Ver tools/fix_taxonomy_bridge.py para corrigir")
+        print("       -> Ver Tools/_archive/migrations/fix_taxonomy_bridge.py (script arquivado) para padrão de correção")
     else:
         print("[OK]   taxonomia: todos os tema_ids mapeados")
 
@@ -86,7 +86,7 @@ def main():
     if backups:
         print(f"[INFO] Backups disponíveis: {len(backups)} em artifacts/backups/")
         print(f"       Mais recente: {os.path.basename(backups[-1])}")
-        print("       NOTA: Restaurar backup requer re-rodar migrate_flashcards.py + regenerate_cards.py")
+        print("       NOTA: Restaurar backup requer re-rodar Tools/_archive/migrations/migrate_flashcards.py + Tools/regenerate_cards.py")
     else:
         print("[WARN] Nenhum backup encontrado — rode tools/backup_db.py")
 

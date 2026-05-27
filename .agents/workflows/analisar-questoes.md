@@ -33,10 +33,7 @@ Seguir o **Boot Sequence** definido em `AGENTE.md`.
 Seguir integralmente o protocolo de `.claude/commands/analisar-questao.md` (Etapas 1-8).
 
 ### 3. Popular Banco de Dados (Caderno de Erros DB)
-- **NÃO ADICIONE MÉTRICAS TEXTUAIS!** O `caderno_erros.md` baseado em texto está depreciado. O Streamlit Dashboard é a única Fonte Real da métrica.
-- Para questões erradas, popular os metadados no SQLite via CLI:
-  - Execute: `python tools/insert_questao.py --area "[Cirurgia|Pediatria|GO|...]" --tema "[ex: Trauma]" --enunciado "[enunciado limpo]" --correta "[letra]" --marcada "[letra]" --erro "[tipo de erro]" --elo "[habilidade que faltou]" --armadilha "[explicação e resumo]"`
-  - *Dica*: Evite aspas internas no PowerShell — usar nomes sem especiais entre aspas duplas.
+- Para questões erradas, popular os metadados no SQLite via CLI: execute `insert_questao.py` conforme a invocação canônica de 17 argumentos em `.claude/commands/analisar-questao.md §9`.
 - Para insights de estudo sem questão associada: não registrar no SQLite (não há erro mensurável).
 
 ### 4. Atualizar o Resumo Clínico de Área (Temas/)

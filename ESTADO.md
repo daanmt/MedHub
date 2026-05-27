@@ -43,7 +43,7 @@ relates_to: [AGENTE, roadmap]
 
 ## Próximos passos
 
-Ver [`roadmap.md`](roadmap.md) — Linhas Evolutivas.
+Ver [`ROADMAP.md`](ROADMAP.md) — Linhas Evolutivas.
 
 **Prioridades imediatas:**
 

@@ -55,7 +55,7 @@ Toda interação reflete o nível de excelência dos resumos padrão-ouro (`Trau
 | `knowledge` | `resumos/` | `Insuficiência Cardíaca.md` |
 | `bootstrap-protocol` | raiz | `AGENTE.md` |
 | `snapshot` | raiz | `ESTADO.md` |
-| `roadmap` | raiz | `roadmap.md` |
+| `roadmap` | raiz | `ROADMAP.md` |
 | `onboarding` | raiz | `README.md`, `CLAUDE.md` (stub) |
 | `skill` | `.claude/commands/` | `estilo-resumo.md`, `analisar-questao.md` |
 | `workflow` | `.agents/workflows/` | `analisar-questoes.md` |
@@ -93,7 +93,7 @@ relates_to: [ESTADO, AGENTE]      # máximo 3 referências
 
 - `resumos/{Área}/{Especialidade}/{Tema}.md`. Sentence case. Prefixos legados (`[GIN]`, `[OBS]`, `[CIR]`, `[ORL]`) não são propagados.
 - `history/session_NNN.md` (três dígitos, zero-padded, numeração global sequencial). Não criar sessões retroativas.
-- Raiz: docs canônicos maiúsculos (`AGENTE.md`, `ESTADO.md`); estruturais minúsculos (`roadmap.md`).
+- Raiz: docs canônicos em maiúsculas (`AGENTE.md`, `CLAUDE.md`, `ESTADO.md`, `README.md`, `ROADMAP.md`, `LICENSE`).
 
 ### 5.4 Wikilinks e aliases
 

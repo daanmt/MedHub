@@ -2,40 +2,211 @@
 type: bootstrap-protocol
 layer: root
 status: canonical
-relates_to: ESTADO, roadmap
+relates_to: [ESTADO, roadmap]
 ---
 
-# AGENTE.md — Protocolo de Continuidade MedHub
+# AGENTE.md — Protocolo, Convenções e Arquitetura
 
-## 1. PRINCÍPIO CENTRAL
+Documento único de governança do MedHub. Toda sessão começa aqui.
+
+---
+
+## 1. Princípio Central
+
 **Este projeto é uma jornada contínua.** Nunca comece do zero. Sua missão é herdar o estado da sessão anterior, executar a tarefa atual e preparar o terreno para a próxima.
 
-## 2. BOOT SEQUENCE (Obrigatório ao iniciar)
-Toda nova sessão DEVE seguir esta ordem de leitura para bootstrap de contexto:
+---
 
-1.  **[[ESTADO]]**: Documento único de estado — visão canônica do projeto, mapa de arquivos, marcos e seção "Últimas sessões" (onde paramos).
-2.  **Workflows relevantes**: Se for analisar questões, leia `.agents/workflows/analisar-questoes.md`. Se for criar resumo, leia `.agents/workflows/criar-resumo.md`.
-3.  **Último log**: `history/session_NNN.md` mais recente.
-4.  **[Memory v1] Contexto de memória longa**: carregado automaticamente via hook SessionStart ao início da sessão.
-    Se não aparecer no contexto inicial, executar manualmente: `python -m app.memory.inspect --context`
-5.  **[RAG] Busca semântica durante a sessão**: usar `mcp__obsidian-notes-rag__search_notes` para localizar conteúdo clínico específico em `resumos/` sem ler arquivos inteiros. Útil para verificar condutas, cruzar temas e recuperar critérios de resumos existentes.
+## 2. Boot Sequence (obrigatório ao iniciar)
 
-> **Nota:** `HANDOFF.md` foi aposentado na sessão 058. `ESTADO.md` é o único documento de estado/handoff do projeto.
-
-## 3. PROTOCOLO DE FECHAMENTO (Antes de terminar)
-Para garantir que a próxima sessão comece sem perda de informação:
-
-1.  **Atualizar ESTADO.md**: Adicionar entrada em "Últimas sessões" com o que foi feito e o que falta.
-2.  **Registrar Sessão**: Criar novo arquivo em `history/session_NNN.md` seguindo o template.
-3.  **Git (se disponível)**: Fazer `git add` nos arquivos modificados (nunca `git add .` — `ipub.db` não deve ser commitado), `git commit -m "sessao NNN: [resumo]"`, `git push`.
-
-## 4. MENTALIDADE GOLD STANDARD (Qualidade MedHub)
-Toda interação deve refletir o nível de excelência dos resumos padrão-ouro (`Trauma.md`, `Insuficiência Cardíaca.md`):
-
-1.  **Benchmark 80/20:** 80% de assertividade objetiva (condutas, scores) + 20% de didática clínica formal (fisiopatologia densa).
-2.  **Linguagem Acadêmica:** Proibição absoluta de coloquialismos, jargões de "sobrevivência de plantão" ou termos dramáticos (ex: "vai morrer", "encher balde").
-3.  **Alta Especificidade:** Priorize critérios objetivos, quantitativos, definições; em vez de descrições genéricas.
-4.  **Acúmulo de Conhecimento:** Jamais substitua ou remova insights prévios, especialmente na seção "Armadilhas de Prova". Novos dados devem ser **acumulados** aos existentes para evitar regressão de conhecimento.
+1. **`ESTADO.md`** — snapshot canônico: metas, indicador atual, últimas sessões.
+2. **Workflow da tarefa** — `.agents/workflows/{analisar-questoes,criar-resumo,registrar-sessao,gerar-reforco}.md`.
+3. **Último log** — `history/session_NNN.md` mais recente (índice em `history/INDEX.md`).
+4. **Memória longa** — carregada via hook `SessionStart`. Se não aparecer: `python -m app.memory.inspect --context`.
+5. **RAG semântico durante a sessão** — `mcp__obsidian-notes-rag__search_notes` para localizar conteúdo em `resumos/` sem ler arquivos inteiros.
 
 ---
-*Assinado: Antigravity*
+
+## 3. Protocolo de Fechamento
+
+1. **Atualizar `ESTADO.md`** — adicionar entrada em "Últimas sessões".
+2. **Registrar sessão** — novo `history/session_NNN.md` seguindo `.agents/workflows/registrar-sessao.md`.
+3. **Git** — `git add` arquivos modificados (nunca `git add .`), commit semântico, push. `ipub.db` e `medhub_memory.db` não vão pro git.
+
+---
+
+## 4. Mentalidade Gold Standard
+
+Toda interação reflete o nível de excelência dos resumos padrão-ouro (`Trauma.md`, `Insuficiência Cardíaca.md`):
+
+1. **Benchmark 80/20** — 80% assertividade objetiva (condutas, scores) + 20% didática clínica densa.
+2. **Linguagem acadêmica** — sem coloquialismos, jargões de plantão ou termos dramáticos.
+3. **Alta especificidade** — critérios objetivos, quantitativos, definições; nada genérico.
+4. **Acúmulo de conhecimento** — armadilhas são **cumulativas**; novos insights se somam aos antigos, nunca substituem.
+
+---
+
+## 5. Convenções
+
+### 5.1 Tipos de nota
+
+| `type` | Onde fica | Exemplo |
+|---|---|---|
+| `knowledge` | `resumos/` | `Insuficiência Cardíaca.md` |
+| `bootstrap-protocol` | raiz | `AGENTE.md` |
+| `snapshot` | raiz | `ESTADO.md` |
+| `roadmap` | raiz | `roadmap.md` |
+| `onboarding` | raiz | `README.md`, `CLAUDE.md` (stub) |
+| `skill` | `.claude/commands/` | `estilo-resumo.md`, `analisar-questao.md` |
+| `workflow` | `.agents/workflows/` | `analisar-questoes.md` |
+| `hub` | qualquer nível | `resumos/INDEX.md` |
+| `session` | `history/` | `session_071.md` |
+
+### 5.2 Frontmatter mínimo
+
+Notas de conhecimento clínico (`resumos/`):
+
+```yaml
+---
+type: knowledge
+area: [Clínica Médica | GO | Cirurgia | Pediatria | Preventiva]
+especialidade: Cardiologia        # omitir se área == especialidade
+status: [active | stub]
+aliases: [IC]                     # apenas siglas consolidadas; omitir se não existir
+---
+```
+
+Documentos raiz canônicos:
+
+```yaml
+---
+type: [bootstrap-protocol | snapshot | roadmap | onboarding]
+layer: root
+status: canonical
+relates_to: [ESTADO, AGENTE]      # máximo 3 referências
+---
+```
+
+**Regra:** não adicionar campos decorativos. Se o campo não orienta busca ou filtragem, não existe.
+
+### 5.3 Naming
+
+- `resumos/{Área}/{Especialidade}/{Tema}.md`. Sentence case. Prefixos legados (`[GIN]`, `[OBS]`, `[CIR]`, `[ORL]`) não são propagados.
+- `history/session_NNN.md` (três dígitos, zero-padded, numeração global sequencial). Não criar sessões retroativas.
+- Raiz: docs canônicos maiúsculos (`AGENTE.md`, `ESTADO.md`); estruturais minúsculos (`roadmap.md`).
+
+### 5.4 Wikilinks e aliases
+
+- Wikilinks são intencionais. Use quando criam navegação real, não decoração.
+- Aliases apenas para siglas clínicas consolidadas (≤3 por nota): `IC`, `DRC`, `LRA`, `TB`, `DM2`, `TCE`, `DUP`, `DITC`, `SUA`, `PLECT`.
+- Notas de conhecimento não linkam de volta para docs raiz (evita ruído no grafo).
+
+### 5.5 SSOTs (Single Sources of Truth)
+
+| Domínio | SSOT | Commitar? |
+|---|---|---|
+| Erros, FSRS, cronograma | `ipub.db` | Não (local-only) |
+| Conhecimento clínico | `resumos/**/*.md` | Sim |
+| Estado do projeto | `ESTADO.md` | Sim |
+| Workflows | `.agents/workflows/` | Sim |
+| Memória longa do agente | `medhub_memory.db` | Não (local-only) |
+| Chaves de API | `.env` | Não (gitignored) |
+
+---
+
+## 6. Decisões críticas (não reverter)
+
+- **RAG canônico** = `app/engine/rag.py` (ChromaDB em `data/chroma/`, embeddings via Ollama `nomic-embed-text`, multi-query Raw + HyDE, ThreadPoolExecutor, context propagation no chunk, BM25 desabilitado por regressão). Baseline reproducible em `Tools/eval/REPORT.md`.
+- **Engine API** = `app/engine/` expõe 2 funções estáveis para Streamlit (e agentes externos): `get_topic_context()` e `summarize_performance()`. Agentes **não** fazem queries SQL diretas — vão pelo engine ou pelos CLIs em `Tools/`.
+- **Memory v1** = `app/memory/` (LangGraph SqliteSaver + LangMem). Backend `medhub_memory.db`, isolado do `ipub.db`. Smoke tests em `Tools/test_memory.py`.
+- **Siamese Twins** — Erro → DB (via `Tools/insert_questao.py`). Lição/Armadilha → resumo correspondente em `resumos/`.
+- **SSOT volumétrica** = `sessoes_bulk` no `ipub.db`. Ao informar "fiz X questões, acertei Y", o agente DEVE chamar `python Tools/registrar_sessao_bulk.py --sessao NNN --area AREA --feitas X --acertos Y` ANTES de processar erros individuais.
+- **Resumos seguem** `.claude/commands/estilo-resumo.md`. Bullets hierárquicos, marcadores ⭐/⚠️/🔴. Sem tabelas, sem fluxogramas ASCII.
+- **Sessions numeradas globalmente** em `history/` — qualquer agente registra (sem fork por ferramenta).
+- **Zero PDF** — `Tools/extract_pdfs.py` extrai para `%TEMP%` e apaga o PDF original após consolidação no resumo.
+- **Regra de Acúmulo** — armadilhas de prova são cumulativas; jamais sobrescrever, apenas somar.
+
+---
+
+## 7. Workflows & Skills
+
+### 7.1 Workflows (`.agents/workflows/`)
+
+| Tarefa | Workflow |
+|---|---|
+| Criar resumo de tema | `.agents/workflows/criar-resumo.md` |
+| Analisar questões erradas | `.agents/workflows/analisar-questoes.md` |
+| Registrar sessão no history | `.agents/workflows/registrar-sessao.md` |
+| Gerar flashcards de reforço | `.agents/workflows/gerar-reforco.md` |
+
+### 7.2 Skills / Slash commands (`.claude/commands/`)
+
+| Skill | Função |
+|---|---|
+| `/estilo-resumo` | Padrão de formatação **obrigatório** para resumos |
+| `/analisar-questao` | Protocolo de análise + invocação do `insert_questao.py` |
+| `/extrair-pdf` | Wrapper para `extract_pdfs.py` (política Zero PDF) |
+| `/auditar-resumos` | Linter de qualidade para `resumos/` |
+| `/performance` | Checagem rápida (questões, metas, custo/Q, áreas fracas) — read-only |
+
+### 7.3 CLIs ativos (`Tools/`)
+
+| Script | Função |
+|---|---|
+| `Tools/insert_questao.py` | Insere erro estruturado no `ipub.db` (questoes_erros + flashcards + fsrs_cards + taxonomia) |
+| `Tools/registrar_sessao_bulk.py` | Registra totais por área em `sessoes_bulk` |
+| `Tools/extract_pdfs.py` | PDF → .txt (com delete-after-extract) |
+| `Tools/init_db.py` | Cria schema canônico (idempotente) |
+| `Tools/index_resumos.py` | Indexa `resumos/**/*.md` no ChromaDB |
+| `Tools/performance.py` | Relatório de performance em markdown |
+| `Tools/audit_resumos.py` | Linter de qualidade de resumos |
+| `Tools/audit_flashcard_quality.py` | Auditoria de qualidade de cards |
+| `Tools/audit_integrity.py` | Auditoria de integridade do DB |
+| `Tools/audit_fsrs.py` | Estado do FSRS |
+| `Tools/regenerate_cards.py` / `regenerate_cards_llm.py` | Regeneração de cards (heurística + LLM) |
+| `Tools/review_cli.py` | Player FSRS em CLI |
+| `Tools/backup_db.py` | Backup datado do `ipub.db` para `artifacts/backups/` |
+| `Tools/eval/run_eval.py` | Eval de retrieval (Recall@k + MRR@10) |
+
+Migrações one-shot já aplicadas vivem em `Tools/_archive/migrations/` — não re-rodar.
+
+---
+
+## 8. Modelo de Memória (3 camadas)
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│ CAMADA 1 — Canônica (repositório git)                        │
+│  AGENTE.md · ESTADO.md · resumos/ · ipub.db                  │
+│  Conteúdo clínico e estado do projeto. Fonte de verdade.     │
+└──────────────────────────────────────────────────────────────┘
+        ↑ lida no boot · atualizada ao fechar sessão
+┌──────────────────────────────────────────────────────────────┐
+│ CAMADA 2 — Short-term (LangGraph checkpointer)               │
+│  SqliteSaver → medhub_memory.db::checkpoints                 │
+│  thread_id = "session_{NNN:03d}"  ·  within-session state    │
+└──────────────────────────────────────────────────────────────┘
+        ↑ restaurada automaticamente por thread_id
+┌──────────────────────────────────────────────────────────────┐
+│ CAMADA 3 — Long-term (LangMem + SQLiteMemoryStore)           │
+│  SQLiteMemoryStore → medhub_memory.db::memory_store          │
+│  Namespaces: profile · weak_areas · workflow_rules ·         │
+│              session_insights · study_preferences            │
+└──────────────────────────────────────────────────────────────┘
+```
+
+**Governança:**
+- Camada 3 captura preferências, padrões de fraqueza e insights — **não** replica `resumos/`, `ipub.db` ou `ESTADO.md`.
+- `consolidate_session(NNN)` é chamada pelo hook `PostToolUse(Write)` quando um novo `history/session_NNN.md` é escrito. Usa `claude-haiku-4-5` se `ANTHROPIC_API_KEY` estiver presente; senão, fallback heurístico (lista áreas trabalhadas).
+- `workflow_rules` é comparada com este `AGENTE.md` antes de persistir — não duplicar o que já está canonicamente documentado.
+
+**Inspeção:** `python -m app.memory.inspect --{context,namespace medhub/weak_areas,threads,dump,stats}`.
+**Detalhes técnicos:** docstring de `app/memory/__init__.py` + `app/memory/schemas.py`.
+
+---
+
+## 9. O que ignorar
+
+- `medhub-ui-refresh-main/` — projeto React legado (já fora do tree atual; resíduo só em git history).
+- `history/legacy/` — sessões 001-028 referenciam artefatos retirados (`HANDOFF.md`, `caderno_erros.md`, `progresso.md`).
+- `.venv/`, `__pycache__/`, `data/chroma/`, `artifacts/backups/`, `artifacts/llm_runs/` — artefatos locais ou gitignored.

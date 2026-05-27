@@ -2,7 +2,7 @@
 type: roadmap
 layer: root
 status: canonical
-relates_to: ESTADO
+relates_to: [ESTADO]
 ---
 
 # Roadmap de Produto — MedHub
@@ -10,55 +10,7 @@ relates_to: ESTADO
 > Direção evolutiva, não plano de sprint.
 > Sem datas. Sem status de tarefa. Sem checklists de MVP.
 
----
-
-## Fundação (concluído)
-
-O MedHub foi construído em quatro camadas fundacionais:
-
-- **Fundação (Fase 1):** Agente LLM integrado via `AGENTE.md`, base de conhecimento em `resumos/`, workflows portáveis em `.agents/`, extração de PDFs via `extract_pdfs.py`.
-- **Estabilização (Fase 2):** Arquitetura Zero-DB resolvida (SSOT = `ipub.db`), parser stateful, dashboard honesto, expurgo de arquivos legados.
-- **Schema FSRS (Fase 3):** Tabelas `flashcards`, `fsrs_cards`, `fsrs_revlog` migradas. 277 cards gerados. Passe qualitativo LLM completo (0 pendentes). CLI de revisão e motor FSRS operacional via `tools/review_cli.py`.
-- **RAG V2 + Memória (Fase 4):** `app/engine/rag.py` com Multi-query (Raw + HyDE), ThreadPoolExecutor, Context Propagation. Recall@5 = 90%. `app/memory/` com LangGraph + LangMem + SQLiteMemoryStore operacional (`medhub_memory.db`).
-
----
-
-## Trilhos de Desenvolvimento
-
-Quatro trilhos em paralelo — cada um tem foco e cadência próprios.
-
-### Trilho A — Core de Revisão
-Objetivo: FSRS funcionando de ponta a ponta (registro → algoritmo → próxima due).
-
-- `tools/review_cli.py`: CLI MVP com política de 3 buckets (atrasados → hoje → novos) ✓
-- `tools/audit_fsrs.py`: auditoria operacional do estado FSRS ✓
-- `app/pages/2_estudo.py`: player Streamlit integrado ao `record_review()` ✓
-- Session log no CLI (N revisados, distribuição 1-4, próximas dues) ✓
-- `insert_questao.py` estável (bugfix sessão 066: remoção de colunas obsoletas, tratamento de `cronograma_progresso`) ✓
-
-### Trilho B — Interfaces
-Objetivo: Streamlit como dashboard e consulta; CLI como interface primária de revisão.
-
-- Dashboard FSRS: curva de retenção por área, distribuição de states
-- Métricas de streak e consistência de revisão
-- Interface de revisão qualitativa para cards `needs_qualitative`
-
-### Trilho C — Fontes de Cards
-Objetivo: alimentar o banco com cards de alta qualidade de múltiplas fontes.
-
-- `questoes_erros` → flashcards: pipeline heurístico corrigido (strip_letter_ref, sem "Sobre X:") ✓
-- Qualidade atual: **277/277 OK (100%)**, 0/277 com sinais críticos ✓ (sessão 058)
-- `tools/audit_flashcard_quality.py`: auditoria permanente de qualidade ✓
-- Passe LLM completo: 189 cards reescritos, 0 needs_qualitative=1 pendentes ✓ (sessão 058)
-- Taxonomia bridge: 21 tema_ids órfãos corrigidos via `tools/fix_taxonomy_bridge.py` ✓ (sessão 058)
-- PDFs Estratégia → flashcards: `tools/import_pdf_cards.py` (a implementar)
-
-### Trilho D — Analytics
-Objetivo: fechar o loop entre performance e estudo.
-
-- Métricas FSRS no dashboard: curva de esquecimento, retention rate
-- Simulados orientados por fraqueza (menor acerto no banco)
-- Relatório metacognitivo: padrões de erro por tipo e área
+A fundação está pronta (agente LLM + workflows portáveis + `ipub.db` como SSOT + FSRS operacional + RAG local + memória cross-session). Este documento descreve para onde o sistema pode evoluir — não o que já foi feito. Para o histórico de implementação, ver [`history/INDEX.md`](history/INDEX.md); para o estado atual, ver [`ESTADO.md`](ESTADO.md).
 
 ---
 
@@ -85,12 +37,10 @@ Objetivo: fechar o loop entre performance e estudo.
 **O que consolida:**
 - Migração completa da nomenclatura (remover prefixos legados `[GIN]`, `[OBS]`, `[CIR]`, `[ORL]`)
 - Eliminação de stubs (`TCE.md` precisa de conteúdo ou ser removido)
-- Auditoria de precisão do RAG: refinar chunking e testar recall semântico ✓ (Sessão 064: Recall@5 90% atingido com HyDE + Multi-query)
-- Motor RAG V2: HyDE + Raw query, ThreadPoolExecutor, Context Propagation nos chunks ✓ — BM25 desabilitado (regressão, tech debt)
-- Cobertura semântica: 44+ resumos indexados (688 chunks) em `data/chroma/` ✓
-- `/discover` (Tech Debt): Cross-Encoders dedicados, Reciprocal Rank Fusion (RRF), normalização de score → meta Recall@5 99%+
-- Busca semântica via `sqlite-vec` como alternativa à busca literal (a implementar)
 - Cobertura crescente: áreas com mais erros no banco merecem mais resumos
+- **Retrieval baseline reproducible:** `Tools/eval/REPORT.md` (R@5=0.778 / MRR@10=0.657 com HyDE; 18 queries; rodar via `python Tools/eval/run_eval.py`)
+- `/discover` (tech debt): Cross-Encoders dedicados, Reciprocal Rank Fusion (RRF), normalização de score → meta R@5 ≥ 0.95
+- Busca semântica via `sqlite-vec` como alternativa à busca literal (a implementar)
 
 ---
 
@@ -104,6 +54,7 @@ Objetivo: fechar o loop entre performance e estudo.
 - Pipeline RAG inverso: injetar conteúdo do `resumos/` no prompt de geração de flashcard (eliminar "atrofia semântica")
 - Input obrigatório de contexto clínico ao registrar erro
 - Dashboard de revisão com curva de esquecimento por área
+- Implementação FSRS v4 fiel (hoje `app/utils/fsrs.py` é simplificação — 1 fórmula linear de dificuldade + 1 de estabilidade)
 
 ---
 
@@ -129,7 +80,7 @@ Objetivo: fechar o loop entre performance e estudo.
 **O que consolida:**
 - Session planner: agente lê o banco, identifica gaps e propõe plano de sessão
 - Execução autônoma do loop: análise → registro → atualização de resumo sem etapas manuais
-- Memória longa ativa: `weak_areas` e `session_insights` no LangMem operacionais ✓ — integração com session planner pendente
+- Memória longa ativa: `weak_areas` e `session_insights` no LangMem operacionais; integração com session planner pendente
 
 ---
 
@@ -140,9 +91,9 @@ Objetivo: fechar o loop entre performance e estudo.
 **O que habilita:** Relatórios que vão além de "você errou Sífilis 3 vezes" — e chegam em "você sistematicamente seleciona o diagnóstico mais comum em vez de aplicar o critério do fluxograma". Isso é informação acionável para mudar o comportamento de estudo.
 
 **O que consolida:**
-- `consolidate_session()` ativo: Memory v1 em produção (`app/memory/`, `medhub_memory.db`) ✓ (sessão 055)
 - Dashboard metacognitivo: top tipos de erro por área, padrões de elo quebrado, evolução temporal
 - Relatórios periódicos gerados pelo agente ao fechar ciclos de estudo
+- Reaproveitar `weak_areas` da Camada 3 como input do relatório
 
 ---
 
@@ -169,4 +120,4 @@ O MedHub não deve virar:
 3. **App desconectado da base de conhecimento.** O Streamlit deve consumir o que está no banco e nos resumos — não criar uma camada de dados paralela.
 4. **Memória competindo com a fonte canônica.** O `medhub_memory.db` captura preferências e padrões de fraqueza, não replica o conteúdo de `resumos/` ou `ESTADO.md`.
 5. **Stack sofisticada sem clareza pedagógica.** Toda peça precisa ter uso real, não especulativo. A régua: se não foi usado em sessões reais, simplificar ou remover.
-6. **Arquitetura inflada sem uso real.** O risco de um projeto solo de engenharia é acumular camadas que parecem necessárias mas não são exercidas.
+6. **Arquitetura inflada sem uso real.** O risco de um projeto solo de engenharia é acumular camadas que parecem necessárias mas não são exercidas. (Lição da sessão 072: 4 funções da "engine API" e `app/memory/tools.py` foram deletadas após auditoria revelar zero callers.)

@@ -146,7 +146,6 @@ The dashboard boots cleanly on a fresh, empty database created by `init_db.py`; 
 - BM25 hybrid rerank is implemented and dormant; re-enabling regressed retrieval on this corpus (see comment in `app/engine/rag.py`).
 - No automated retrieval benchmark is committed. Numbers cited in internal docs are from informal manual evaluations and are not reproducible from this repo.
 - The FSRS scheduler is a simplified single-formula implementation, not a faithful FSRS v4.
-- `app/components/sidebar.py` and `app/utils/parser.py` are tracked orphans (no callers, reference archived inputs); slated for deletion.
 - Three of the five `app/engine/` exports (`analyze_error`, `get_review_queue`, `generate_contextual_cards`) have no in-repo callers and no tests; treat them as API surface, not tested integrations.
 - `ipub.db` was tracked early on and removed via `git rm --cached`; the blob remains in git history. It is gitignored going forward.
 - Historical commits also contain a transcribed UMED study schedule (`data/cronograma_umed.csv`) and the author's own EMED performance log (`Dashboard EMED 2026.xlsx`); both have been removed from the current tree.

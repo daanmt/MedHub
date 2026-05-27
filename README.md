@@ -39,7 +39,7 @@ Tools/insert_questao.py (CLI)
 
 Retrieval is multi-query: the raw query and (when enabled) a HyDE-generated hypothetical answer are queried in parallel against a ChromaDB collection of H2/H3-chunked summaries. Results are deduplicated and filtered by a hard cosine-distance threshold (`0.35`). A BM25 hybrid rerank is implemented (`_bm25_rerank` in `app/engine/rag.py`) but disabled in code: re-enabling it regressed retrieval on this corpus.
 
-**No automated retrieval benchmark is committed to this repo.** Internal documents quote informal manual-evaluation numbers; the runner and the fixture queries are not in the repo, so those numbers are not reproducible from this codebase. The RAG layer is described qualitatively here for that reason.
+**Retrieval is measured by a reproducible eval** at `Tools/eval/` — 18 (query, expected_resumo) pairs mined from session logs, runnable as `python Tools/eval/run_eval.py --both` (requires Ollama + ChromaDB). Current baseline (file-level): Recall@5 = 0.778 / MRR@10 = 0.657 with HyDE on; 0.500 / 0.425 without. See `Tools/eval/REPORT.md` for per-query detail and `Tools/eval/README.md` for honest caveats (n=18 → ~22pp CI; file-level not section-level; not an end-to-end retrieval→generation eval).
 
 ---
 
@@ -81,6 +81,7 @@ MedHub/
 ├── Tools/                       # ~18 active CLIs: insert_questao, index_resumos,
 │                                # init_db, audits, performance, regenerate_cards, ...
 │                                # plus Tools/_archive/migrations/ (6 one-shots, kept for history)
+│                                # plus Tools/eval/ (retrieval eval — queries.json + run_eval.py)
 ├── resumos/                     # clinical-knowledge markdown, 5 areas
 ├── .agents/workflows/           # markdown task protocols
 ├── .claude/commands/            # slash-command specs
@@ -141,7 +142,7 @@ The dashboard boots cleanly on a fresh, empty database created by `init_db.py`; 
 
 **What is partial or known-fragile**
 - BM25 hybrid rerank is implemented and dormant; re-enabling regressed retrieval on this corpus (see comment in `app/engine/rag.py`).
-- No automated retrieval benchmark is committed. Numbers cited in internal docs are from informal manual evaluations and are not reproducible from this repo.
+- The eval at `Tools/eval/` measures file-level retrieval on 18 queries (n=18 → ~22pp 95% CI). It does not measure section-level retrieval, retrieval→generation end-to-end, or latency/cost. Older internal docs cite Recall@5 ≈ 0.90 / MRR ≈ 0.708 from an unrecoverable procedure — the committed baseline (0.778 / 0.657) supersedes them.
 - The FSRS scheduler is a simplified single-formula implementation, not a faithful FSRS v4.
 - `ipub.db` was tracked early on and removed via `git rm --cached`; the blob remains in git history. It is gitignored going forward.
 - Historical commits also contain a transcribed UMED study schedule (`data/cronograma_umed.csv`) and the author's own EMED performance log (`Dashboard EMED 2026.xlsx`); both have been removed from the current tree.

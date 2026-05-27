@@ -1,3 +1,5 @@
+> **Snapshot — codebase has drifted significantly since this was generated. See [`NOTICE.md`](NOTICE.md) for the divergence list.**
+
 # Codebase Structure
 
 **Analysis Date:** 2026-03-28

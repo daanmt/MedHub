@@ -1,3 +1,19 @@
+"""
+FSRS v4 simplificado — scheduler de repetição espaçada do MedHub.
+
+Implementação minimalista (~75 LOC) inspirada em FSRS v4; não é fiel ao
+algoritmo oficial. `evaluate()` aplica uma fórmula linear de dificuldade
++ uma de estabilidade. Suficiente para uso pessoal com retenção-alvo ~90%.
+
+API (classe FSRS):
+- `init_card()` → dict de estado inicial (state=0/New).
+- `evaluate(card, rating)` → próximo estado (state ∈ {0,1,2}: New/Learning/Review).
+- Rating: 1=Again, 2=Hard, 3=Good, 4=Easy (escala FSRS padrão).
+
+`DEFAULT_W` é o vetor canônico de 17 pesos FSRS v4 (referência; só um
+subconjunto é usado pela implementação simplificada).
+"""
+
 import math
 from datetime import datetime, timedelta
 

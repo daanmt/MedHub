@@ -139,7 +139,17 @@ relates_to: [ESTADO, AGENTE]      # máximo 3 referências
 | Registrar sessão no history | `.agents/workflows/registrar-sessao.md` |
 | Gerar flashcards de reforço | `.agents/workflows/gerar-reforco.md` |
 
-### 7.2 Skills / Slash commands (`.claude/commands/`)
+### 7.2 Contrato — Skills × Workflows × CLIs
+
+As duas superfícies coexistem sob três regras invioláveis:
+
+- **Skills (`.claude/commands/*.md`) são referência atômica.** Especificam protocolo, assinatura de CLI, padrão de estilo, template de resposta. Não contêm sequência de passos numerados nem orquestração.
+- **Workflows (`.agents/workflows/*.md`) são orquestração imperativa.** Numeram passos, invocam skills por nome/path (`.claude/commands/<skill>.md`), mas nunca reespecificam o conteúdo das skills. Quando um workflow precisa de detalhe de CLI, regra de estilo ou protocolo de análise, ele referencia a skill e termina ali.
+- **Cada CLI em `tools/` tem assinatura canônica em UMA skill.** A assinatura completa (todos os flags, semântica de cada argumento) vive em exatamente um `.claude/commands/*.md`. Workflows referenciam por nome de skill + seção; jamais copiam a invocação.
+
+Qualquer duplicação semântica entre workflow e skill é defeito por contrato. Edições futuras a uma skill não exigem edição-espelho em workflows porque workflows não carregam o conteúdo da skill.
+
+### 7.3 Skills / Slash commands (`.claude/commands/`)
 
 | Skill | Função |
 |---|---|
@@ -149,7 +159,7 @@ relates_to: [ESTADO, AGENTE]      # máximo 3 referências
 | `/auditar-resumos` | Linter de qualidade para `resumos/` |
 | `/performance` | Checagem rápida (questões, metas, custo/Q, áreas fracas) — read-only |
 
-### 7.3 CLIs ativos (`tools/`)
+### 7.4 CLIs ativos (`tools/`)
 
 | Script | Função |
 |---|---|

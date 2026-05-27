@@ -20,10 +20,7 @@ Analise o resumo clínico lido. Crie de 1 a 3 Flashcards super-diretos e focados
 - **Tom:** A resposta do flashcard deve utilizar a terminologia formal do Padrão-Ouro (sem gírias de plantão).
 
 ### 4. Materializar no Motor FSRS
-Use a interface de linha de comando para persistir seus novos flashcards dentro do banco de dados oficial FSRS (`ipub.db`). Para cada card, rode:
-```powershell
-python Tools\insert_questao.py --area "Reforço RAG" --tema "TEMA_AQUI" --enunciado "Tutor Inteligente: Card gerado automaticamente para reforçar a curva de esquecimento de um tema crítico." --correta "RESPOSTA MESTRA DO CARD" --marcada "N/A" --erro "Lacuna de conhecimento" --elo "PERGUNTA DO CARD" --armadilha "N/A"
-```
+Persistir cada card via `insert_questao.py` conforme a invocação canônica de 17 argumentos em `.claude/commands/analisar-questao.md §9`. Para reforço sintético: `--area "Reforço RAG"`, `--erro "Lacuna de conhecimento"`, `--marcada "N/A"`, `--armadilha "N/A"`; demais campos (incluindo os 5 estruturados de flashcard) vêm da síntese do tutor.
 
 ### 5. Update
 Avise o usuário que os cards foram injetados e estão disponíveis para repetição espaçada na aba "Player FSRS" do Streamlit.

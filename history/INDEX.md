@@ -4,7 +4,7 @@ Chronological index of every work session on this project. The session log files
 
 **Reading order:** newest-first below. Active sessions live in `history/`; pre-modernization sessions (≤028, when the project still relied on `caderno_erros.md`, `HANDOFF.md`, and `progresso.md`) have been archived to [`legacy/`](legacy/) — see [`legacy/README.md`](legacy/README.md) for the deprecation context.
 
-Gaps in the sequence (026, 047, 050, 053, 057, 058, 064) are sessions that happened but whose dedicated log file was absorbed into adjacent ones or never written separately.
+Gaps in the sequence (026, 047, 050, 053, 057, 058, 064, 072) are sessions that happened but whose dedicated log file was absorbed into adjacent ones or never written separately.
 
 ---
 
@@ -12,6 +12,7 @@ Gaps in the sequence (026, 047, 050, 053, 057, 058, 064) are sessions that happe
 
 | # | Date | Tool | Topic |
 |---:|---|---|---|
+| 073 | 2026-05-27 | Claude Code | Consolidação do harness em fluxo único — contrato §7.2 em AGENTE + 7 commits (workflows delegam CLI canônica em vez de copiar, vibeflow `domain-engine-api` staleness fix 5→2 exports, 4 module docstrings, `Temas/`→`resumos/` em 7 arquivos) |
 | 071 | 2026-04-23 | Claude Code | Análise de Úlceras Genitais (43q / 38a, 5 erros, 3 eixos metacognitivos) + criação da skill `/performance` via ciclo vibeflow completo (discover→spec→implement→audit) |
 | 070 | 2026-04-16 | Antigravity | Análise de Preventiva (23q / 18a, 5 erros, armadilhas DO e notificações compulsórias) + bulk register |
 | 069 | 2026-04-16 | Gemini 3.1 Pro | Resumo `Sistemas de Informação em Saúde` (Preventiva): SIM, SINAN, SINASC, SISAB |

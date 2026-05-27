@@ -1,0 +1,128 @@
+[
+  {
+    "id": "go-001",
+    "query": "Cancro mole vs LGV diagnóstico diferencial orifício único bico de regador",
+    "area": "GO",
+    "expected_resumo_path": "resumos/GO/Úlceras Genitais.md",
+    "notes": "Sessão 071 Q1"
+  },
+  {
+    "id": "go-002",
+    "query": "Quando iniciar supressão de herpes na gestação 36 semanas",
+    "area": "GO",
+    "expected_resumo_path": "resumos/GO/Úlceras Genitais.md",
+    "notes": "Sessão 071 Q4"
+  },
+  {
+    "id": "pre-001",
+    "query": "Preenchimento da DO causas de morte Parte I e Parte II",
+    "area": "Preventiva",
+    "expected_resumo_path": "resumos/Preventiva/Sistemas de Informação em Saúde.md",
+    "notes": "Sessão 070"
+  },
+  {
+    "id": "go-003",
+    "query": "Eclâmpsia com convulsão ativa primeira conduta via aérea ou MgSO4",
+    "area": "GO",
+    "expected_resumo_path": "resumos/GO/Síndromes Hipertensivas na Gestação.md",
+    "notes": "Sessão 066 ID 349"
+  },
+  {
+    "id": "go-004",
+    "query": "Segunda onda trofoblástica destino anatômico zona de junção miometrial",
+    "area": "GO",
+    "expected_resumo_path": "resumos/GO/Síndromes Hipertensivas na Gestação.md",
+    "notes": "Sessão 066 ID 353"
+  },
+  {
+    "id": "ped-001",
+    "query": "Listeria monocytogenes sepse neonatal LA marrom exantema monocitose",
+    "area": "Pediatria",
+    "expected_resumo_path": "resumos/Pediatria/Icterícia e Sepse Neonatal.md",
+    "notes": "Sessão 062"
+  },
+  {
+    "id": "ped-002",
+    "query": "RN taquipneia isolada primeiras 6 horas conduta watchful waiting",
+    "area": "Pediatria",
+    "expected_resumo_path": "resumos/Pediatria/Icterícia e Sepse Neonatal.md",
+    "notes": "Sessão 062"
+  },
+  {
+    "id": "cir-001",
+    "query": "Pneumotórax hipertensivo punção agulhada vs dreno pleural localização 5º EIC",
+    "area": "Cirurgia",
+    "expected_resumo_path": "resumos/Cirurgia/[CIR] Trauma.md",
+    "notes": "Sessão 061. Atualização ATLS."
+  },
+  {
+    "id": "cir-002",
+    "query": "Trauma pancreático AAST III conduta cirúrgica vs CPRE",
+    "area": "Cirurgia",
+    "expected_resumo_path": "resumos/Cirurgia/[CIR] Trauma.md",
+    "notes": "Sessão 061"
+  },
+  {
+    "id": "cm-001",
+    "query": "Necrosectomia pancreática timing walled-off 4-6 semanas",
+    "area": "Clínica Médica",
+    "expected_resumo_path": "resumos/Clínica Médica/Gastroenterologia/Pancreatite Aguda e Crônica.md",
+    "notes": "Sessão 060"
+  },
+  {
+    "id": "cm-002",
+    "query": "Fundoplicatura Nissen vs Toupet em Barrett papel oncológico",
+    "area": "Clínica Médica",
+    "expected_resumo_path": "resumos/Clínica Médica/Gastroenterologia/DRGE, Esofagites e Corpo Estranho.md",
+    "notes": "Sessão 060"
+  },
+  {
+    "id": "cm-003",
+    "query": "MEEM normal 29/30 paciente alta escolaridade diagnóstico demência AVDs",
+    "area": "Clínica Médica",
+    "expected_resumo_path": "resumos/Clínica Médica/Neurologia/Demências.md",
+    "notes": "Sessão 059"
+  },
+  {
+    "id": "cm-004",
+    "query": "CADASIL demência hereditária vascular AVC familiar tríade",
+    "area": "Clínica Médica",
+    "expected_resumo_path": "resumos/Clínica Médica/Neurologia/Demências.md",
+    "notes": "Sessão 059"
+  },
+  {
+    "id": "ped-003",
+    "query": "IOT em PCR pediátrica permite RCP contínua",
+    "area": "Pediatria",
+    "expected_resumo_path": "resumos/Pediatria/Emergências Pediátricas.md",
+    "notes": "Sessão 041 IDs 211, 213"
+  },
+  {
+    "id": "cm-005",
+    "query": "Hanseníase diagnóstico inicial estesiometria Semmes-Weinstein vs biópsia",
+    "area": "Clínica Médica",
+    "expected_resumo_path": "resumos/Clínica Médica/Dermatologia/Hanseníase e Síndromes Verrucosas.md",
+    "notes": "Sessão 040"
+  },
+  {
+    "id": "cm-006",
+    "query": "CAD transição insulina dose plena para reduzida 0.02-0.05 UI/kg/h adição SG",
+    "area": "Clínica Médica",
+    "expected_resumo_path": "resumos/Clínica Médica/Endocrinologia/Diabetes Mellitus - Complicações Agudas.md",
+    "notes": "Sessão 034"
+  },
+  {
+    "id": "go-005",
+    "query": "Lesão genital maior que 4 semanas cobertura sindrômica 4 agentes",
+    "area": "GO",
+    "expected_resumo_path": "resumos/GO/Úlceras Genitais.md",
+    "notes": "Sessão 044"
+  },
+  {
+    "id": "go-006",
+    "query": "Coleta endocervical em gestante rastreamento colo do útero",
+    "area": "GO",
+    "expected_resumo_path": "resumos/GO/[GIN] Rastreamento Colo.md",
+    "notes": "Sessão 032"
+  }
+]

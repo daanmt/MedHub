@@ -64,18 +64,14 @@ MedHub/
 ├── streamlit_app.py             # entry point (page registry only)
 ├── app/
 │   ├── pages/                   # 3 Streamlit pages: dashboard, study, library
-│   ├── engine/                  # 5-function domain API
+│   ├── engine/                  # 2-function read-only domain API
 │   │   ├── rag.py               # ChromaDB + Ollama + HyDE + dormant BM25
-│   │   ├── analyze_error.py     # context bundle after an error is logged
-│   │   ├── generate_flashcards.py
-│   │   ├── get_topic_context.py
-│   │   ├── get_review_queue.py
+│   │   ├── get_topic_context.py # bundles resumo + recent errors + weak_areas
 │   │   └── summarize_performance.py
 │   ├── memory/                  # LangGraph SqliteSaver + LangMem store
 │   │   ├── checkpointer.py
 │   │   ├── store.py             # SQLiteMemoryStore(BaseStore)
 │   │   ├── manager.py           # consolidate_session (ChatAnthropic)
-│   │   ├── tools.py             # langmem manage/search memory tools
 │   │   ├── schemas.py           # pydantic models
 │   │   └── inspect.py           # introspection CLI
 │   └── utils/
@@ -94,7 +90,7 @@ MedHub/
 └── .gitignore                   # ipub.db, .env, data/chroma/ are local-only
 ```
 
-Of the 5 exports in `app/engine/__init__.py`, only `summarize_performance` (dashboard) and `get_topic_context.search` (library) have in-repo callers. The other three (`analyze_error`, `get_review_queue`, `generate_contextual_cards`) are an API surface intended for external agents (Claude Code, Cursor, Antigravity) — they have no callers in this codebase and no automated tests proving they are exercised.
+`app/engine/` exports two functions: `summarize_performance` (consumed by the dashboard) and `get_topic_context` (which internally calls `rag.search`, consumed by the library page). Both are read-only and side-effect-free.
 
 The `import sqlite3` convention is "primary access via `app/utils/db.py`". It is currently also imported by `app/memory/{manager,store,inspect}.py` (separate `medhub_memory.db`) and by `app/pages/{1_dashboard,2_estudo}.py` (known tech debt). CLIs under `Tools/` use `sqlite3` directly by design.
 
@@ -147,7 +143,6 @@ The dashboard boots cleanly on a fresh, empty database created by `init_db.py`; 
 - BM25 hybrid rerank is implemented and dormant; re-enabling regressed retrieval on this corpus (see comment in `app/engine/rag.py`).
 - No automated retrieval benchmark is committed. Numbers cited in internal docs are from informal manual evaluations and are not reproducible from this repo.
 - The FSRS scheduler is a simplified single-formula implementation, not a faithful FSRS v4.
-- Three of the five `app/engine/` exports (`analyze_error`, `get_review_queue`, `generate_contextual_cards`) have no in-repo callers and no tests; treat them as API surface, not tested integrations.
 - `ipub.db` was tracked early on and removed via `git rm --cached`; the blob remains in git history. It is gitignored going forward.
 - Historical commits also contain a transcribed UMED study schedule (`data/cronograma_umed.csv`) and the author's own EMED performance log (`Dashboard EMED 2026.xlsx`); both have been removed from the current tree.
 - Test coverage is effectively zero (`Tools/test_memory.py` only); no `pytest.ini`, no CI.

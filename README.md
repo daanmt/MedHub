@@ -55,8 +55,6 @@ Retrieval is multi-query: the raw query and (when enabled) a HyDE-generated hypo
 - **PDF extraction:** pdfplumber, PyPDF2 (delete-after-extract policy — `Tools/extract_pdfs.py`).
 - **Dashboards:** Plotly, pandas.
 
-**Dependency gap:** `anthropic`, `chromadb`, `langchain-anthropic`, and `pydantic` are imported but not pinned in `requirements.txt`. They must be installed manually (see "How to run"). All four are import-guarded or env-gated, so the app boots without them.
-
 ---
 
 ## Repository structure
@@ -111,24 +109,21 @@ python -m venv .venv
 .\.venv\Scripts\Activate.ps1                 # Windows PowerShell
 # source .venv/bin/activate                  # macOS / Linux
 
-# 2. Install pinned deps
+# 2. Install dependencies
 pip install -r requirements.txt
 
-# 3. Install the four imports missing from requirements.txt
-pip install anthropic chromadb langchain-anthropic pydantic
-
-# 4. (Optional) Configure environment
+# 3. (Optional) Configure environment
 #    .env (gitignored) may set ANTHROPIC_API_KEY for HyDE / LLM cards.
 #    Absence triggers Ollama llama3 / heuristic fallback paths.
 
-# 5. Initialise the SQLite store (must be run from repo root)
+# 4. Initialise the SQLite store (must be run from repo root)
 python Tools/init_db.py
 
-# 6. (Optional) Pull the embedding model and index resumos for RAG
+# 5. (Optional) Pull the embedding model and index resumos for RAG
 ollama pull nomic-embed-text
 python Tools/index_resumos.py
 
-# 7. Launch the app
+# 6. Launch the app
 streamlit run streamlit_app.py
 ```
 
@@ -149,7 +144,6 @@ The dashboard boots cleanly on a fresh, empty database created by `init_db.py`; 
 
 **What is partial or known-fragile**
 - BM25 hybrid rerank is implemented and dormant; re-enabling regressed retrieval on this corpus (see comment in `app/engine/rag.py`).
-- `anthropic`, `chromadb`, `langchain-anthropic`, and `pydantic` are imported but not pinned in `requirements.txt`.
 - No automated retrieval benchmark is committed. Numbers cited in internal docs are from informal manual evaluations and are not reproducible from this repo.
 - The FSRS scheduler is a simplified single-formula implementation, not a faithful FSRS v4.
 - `app/components/sidebar.py` and `app/utils/parser.py` are tracked orphans (no callers, reference archived inputs); slated for deletion.

@@ -1,5 +1,5 @@
 ---
-description: "Spec de formatação obrigatória para resumos em Temas/. Consultar antes de criar ou editar qualquer resumo clínico."
+description: "Spec de formatação obrigatória para resumos em resumos/. Consultar antes de criar ou editar qualquer resumo clínico."
 type: skill
 layer: commands
 status: canonical
@@ -7,7 +7,7 @@ status: canonical
 
 # Estilo MedHub — Spec de Formatação para Resumos
 
-> Este documento define o padrão de formatação para todos os resumos em `Temas/`.
+> Este documento define o padrão de formatação para todos os resumos em `resumos/`.
 > Qualquer agente que criar ou editar resumos DEVE seguir estas regras.
 
 ---
@@ -98,6 +98,6 @@ Além das regras de formato, o resumo deve cobrir todos os tópicos clinicamente
 
 ## Referências de Estilo (exemplos reais)
 
-- `Temas/Cirurgia/Trauma.md` — formatação de referência para trauma
-- `Temas/Clínica Médica/Cardiologia/Insuficiência Cardíaca.md` — formatação de referência para clínica
-- `Temas/GO/Assistência ao Parto.md` — referência para obstetrícia: cobertura de mecanismo de parto, taquissistolia, VCE com detalhes, indicações de cesárea, HPP preventivo e armadilhas densas
+- `resumos/Cirurgia/Trauma.md` — formatação de referência para trauma
+- `resumos/Clínica Médica/Cardiologia/Insuficiência Cardíaca.md` — formatação de referência para clínica
+- `resumos/GO/Assistência ao Parto.md` — referência para obstetrícia: cobertura de mecanismo de parto, taquissistolia, VCE com detalhes, indicações de cesárea, HPP preventivo e armadilhas densas

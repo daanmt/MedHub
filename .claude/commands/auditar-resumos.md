@@ -1,5 +1,5 @@
 ---
-description: "Linter de qualidade para resumos em Temas/. Verifica conformidade com o padrão MedHub: seção Armadilhas de Prova, ausência de tabelas, presença de marcadores visuais."
+description: "Linter de qualidade para resumos em resumos/. Verifica conformidade com o padrão MedHub: seção Armadilhas de Prova, ausência de tabelas, presença de marcadores visuais."
 type: skill
 layer: commands
 status: canonical
@@ -7,7 +7,7 @@ status: canonical
 
 # Skill: Auditar Resumos
 
-Executa o linter `tools/audit_resumos.py` sobre todos os arquivos `.md` em `Temas/`.
+Executa o linter `tools/audit_resumos.py` sobre todos os arquivos `.md` em `resumos/`.
 
 ---
 
@@ -17,7 +17,7 @@ Executa o linter `tools/audit_resumos.py` sobre todos os arquivos `.md` em `Tema
 python tools/audit_resumos.py
 ```
 
-Não requer argumentos. Varre `Temas/**/*.md` recursivamente.
+Não requer argumentos. Varre `resumos/**/*.md` recursivamente.
 
 ---
 

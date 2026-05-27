@@ -133,7 +133,7 @@ Ao analisar: **"Qual desafio o examinador quis criar aqui?"**
 Após análise, entregar **exatamente** estas quatro coisas:
 
 1. **O Diagnóstico:** Qual elo quebrou e o motivo sucinto.
-2. **Draft para o Resumo:** O texto final (⚠️ Padrão de Prova ou 🔴 Armadilha) exato para inserir em `Temas/`, seguindo bullets, sem tabelas ASCII.
+2. **Draft para o Resumo:** O texto final (⚠️ Padrão de Prova ou 🔴 Armadilha) exato para inserir em `resumos/`, seguindo bullets, sem tabelas ASCII.
 3. **Campos estruturados do Flashcard (5 campos):**
 
 ```

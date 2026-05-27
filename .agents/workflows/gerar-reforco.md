@@ -12,7 +12,7 @@ python -c "import sqlite3; c=sqlite3.connect('ipub.db').cursor(); c.execute('SEL
 ```
 
 ### 2. Recuperar a Matéria no Cérebro (RAG/MCP)
-Use a tool interna do MCP do Obsidian (ou leia diretamente os arquivos na pasta `Temas/`) buscando pelo nome do tema crítico retornado no passo 1. O objetivo é absorver o conhecimento nativo do usuário, especialmente a seção de **Armadilhas de Prova**.
+Use a tool interna do MCP do Obsidian (ou leia diretamente os arquivos na pasta `resumos/`) buscando pelo nome do tema crítico retornado no passo 1. O objetivo é absorver o conhecimento nativo do usuário, especialmente a seção de **Armadilhas de Prova**.
 
 ### 3. Síntese do Tutor
 Analise o resumo clínico lido. Crie de 1 a 3 Flashcards super-diretos e focados na fraqueza. O flashcard deve focar apenas no que faz o candidato errar.

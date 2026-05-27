@@ -8,7 +8,7 @@ description: Criar resumo clínico a partir de PDF de apostila
 # Workflow: Criar Resumo de Tema
 
 ## Pré-requisitos
-- PDF(s) da apostila na pasta do tema (ex: `Temas/Clínica Médica/Pneumologia/`)
+- PDF(s) da apostila na pasta do tema (ex: `resumos/Clínica Médica/Pneumologia/`)
 - Saber a Área e o Tema (ex: Clínica Médica > Pneumologia > Asma)
 
 ## Passos
@@ -36,8 +36,8 @@ Ler `.claude/commands/estilo-resumo.md` — OBRIGATÓRIO. Regras críticas:
 - Seção final obrigatória: "Armadilhas de Prova"
 
 ### 4. (Opcional) Consultar resumos existentes como referência
-- `Temas/Clínica Médica/Cardiologia/Insuficiência Cardíaca.md`
-- `Temas/Clínica Médica/Neurologia/TCE.md`
+- `resumos/Clínica Médica/Cardiologia/Insuficiência Cardíaca.md`
+- `resumos/Clínica Médica/Neurologia/TCE.md`
 
 ### 5. Redigir o resumo
 - Fonte primária: apenas os PDFs extraídos.
@@ -68,7 +68,7 @@ Percorrer o rascunho e verificar ausência de cada um dos seguintes:
 - [ ] Tópico relevante do sumário do PDF não coberto
 
 ### 7. Salvar
-Salvar em `Temas/{Área}/{Subespecialidade}/{Nome do Tema}.md`
+Salvar em `resumos/{Área}/{Subespecialidade}/{Nome do Tema}.md`
 
 ### 8. Limpeza automática (pós-resumo)
 ```

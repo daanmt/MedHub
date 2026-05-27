@@ -33,7 +33,7 @@ python tools/extract_pdfs.py --delete-pdfs "Tema/Pneumologia/" --delete-temps "C
 | Argumento | Uso | Exemplo |
 |---|---|---|
 | `"arquivo.pdf"` | Extrair um ou mais PDFs | `"Fichas/Cirurgia.pdf"` |
-| `--delete-pdfs <pasta>` | Apagar todos os .pdf/.PDF de uma pasta | `--delete-pdfs "Temas/GO/"` |
+| `--delete-pdfs <pasta>` | Apagar todos os .pdf/.PDF de uma pasta | `--delete-pdfs "resumos/GO/"` |
 | `--delete-temps <paths...>` | Apagar arquivos .txt temporários específicos | `--delete-temps "C:/Temp/ipub_x.txt"` |
 | `--dry-run` | Simular deleções sem executar | Para verificar antes de deletar |
 | `--out <path>` | Salvar extração em path específico (apenas 1 PDF) | `--out "saida.txt"` |
@@ -64,7 +64,7 @@ python tools/extract_pdfs.py --delete-pdfs "Memorex/Memorex_Cirurgia/" --delete-
 
 ### Verificar antes de deletar
 ```bash
-python tools/extract_pdfs.py --dry-run --delete-pdfs "Temas/Pediatria/"
+python tools/extract_pdfs.py --dry-run --delete-pdfs "resumos/Pediatria/"
 ```
 
 ### Múltiplos PDFs de uma vez

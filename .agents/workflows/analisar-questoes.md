@@ -36,8 +36,8 @@ Seguir integralmente o protocolo de `.claude/commands/analisar-questao.md` (Etap
 - Para questões erradas, popular os metadados no SQLite via CLI: execute `insert_questao.py` conforme a invocação canônica de 17 argumentos em `.claude/commands/analisar-questao.md §9`.
 - Para insights de estudo sem questão associada: não registrar no SQLite (não há erro mensurável).
 
-### 4. Atualizar o Resumo Clínico de Área (Temas/)
-- Localizar o arquivo `.md` do Tema em `Temas/{Área}/{Subespecialidade}/`.
+### 4. Atualizar o Resumo Clínico de Área (resumos/)
+- Localizar o arquivo `.md` do Tema em `resumos/{Área}/{Subespecialidade}/`.
 - Incorporar tanto os insights do estudo ativo quanto as armadilhas identificadas nas questões, no **local temático estrutural correto** — nunca solto no final.
 - **Integração pela Regra do Escudo (Padrão-Ouro MedHub):**
   - Use o resumo de `Trauma.md` como benchmark absoluto de estrutura e tom.

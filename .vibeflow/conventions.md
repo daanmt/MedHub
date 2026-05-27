@@ -12,7 +12,7 @@
 - Tools/scripts: `snake_case.py` — e.g. `insert_questao.py`, `extract_pdfs.py`
 - Resumos (clinical summaries): `Título em Sentence Case.md` under `resumos/<Especialidade>/[Subarea/]`
 - Session logs: `history/session_NNN.md` (zero-padded 3-digit number)
-- Frontmatter field `type`, `area`, `especialidade`, `status`, `aliases` on all resumo files (via KNOWLEDGE_ARCHITECTURE.md)
+- Frontmatter field `type`, `area`, `especialidade`, `status`, `aliases` on all resumo files (see AGENTE.md §5.2)
 
 ## Database access
 - **Only `app/utils/db.py` may use `import sqlite3`** — no pages, no other utilities
@@ -30,7 +30,7 @@
 - Session state keys: short, descriptive, snake_case — e.g. `fc_idx`, `fc_verso`, `fc_order`
 - `@st.cache_data(ttl=60)` for DB load functions inside pages
 - Cache clear on user action: `st.cache_data.clear()` + `st.rerun()`
-- Pages connect to DB directly via `sqlite3.connect(DB_PATH)` only as last resort (legacy tab1 in 2_estudo.py); prefer db.py functions (via KNOWLEDGE_ARCHITECTURE.md)
+- Pages connect to DB directly via `sqlite3.connect(DB_PATH)` only as last resort (legacy tab1 in 2_estudo.py); prefer db.py functions (see AGENTE.md §5.5)
 
 ## Design system
 - Import: `from app.utils.styles import inject_styles, COLORS, metric_card, content_card, flashcard_front, flashcard_back`

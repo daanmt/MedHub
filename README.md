@@ -82,8 +82,9 @@ MedHub/
 │       ├── db.py                # primary sqlite3 access layer
 │       ├── fsrs.py              # FSRS-inspired simplified scheduler
 │       └── styles.py            # design tokens
-├── Tools/                       # ~25 CLIs: insert_questao, index_resumos,
-│                                # init_db, audits, migrations, performance, ...
+├── Tools/                       # ~18 active CLIs: insert_questao, index_resumos,
+│                                # init_db, audits, performance, regenerate_cards, ...
+│                                # plus Tools/_archive/migrations/ (6 one-shots, kept for history)
 ├── resumos/                     # clinical-knowledge markdown, 5 areas
 ├── .agents/workflows/           # markdown task protocols
 ├── .claude/commands/            # slash-command specs

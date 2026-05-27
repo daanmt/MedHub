@@ -11,46 +11,42 @@ confidence: inferred
 `app/engine/` is a typed, side-effect-free domain library exposing the system's state to external agents (Claude Code, Cursor, external scripts). It sits above `app/utils/db.py` and wraps DB queries + RAG search into stable, well-documented function signatures. Pages and agents call `app.engine` — never `app.utils.db` directly from agent code.
 
 ## Where
-- `app/engine/__init__.py` — public API surface (5 exports)
+- `app/engine/__init__.py` — public API surface (2 re-exports estáveis)
 - `app/engine/get_topic_context.py` — combined DB + RAG context lookup
-- `app/engine/get_review_queue.py` — FSRS bucket query
+- `app/engine/get_review_queue.py` — FSRS bucket query (módulo interno, não re-exportado)
 - `app/engine/summarize_performance.py` — metrics + weakness patterns
-- `app/engine/analyze_error.py` — post-insertion context synthesis
-- `app/engine/generate_flashcards.py` — contextual LLM card generation (Claude Haiku)
-- `app/engine/rag.py` — semantic search over resumos/ via ChromaDB + Ollama (Multi-Query + HyDE)
+- `app/engine/analyze_error.py` — post-insertion context synthesis (módulo interno, não re-exportado)
+- `app/engine/generate_flashcards.py` — contextual LLM card generation (Claude Haiku — módulo interno, não re-exportado)
+- `app/engine/rag.py` — semantic search over resumos/ via ChromaDB + Ollama (Multi-Query + HyDE — módulo interno, importar como `from app.engine.rag import search`)
 
 ## The Pattern
 
-**Public API (5 stable exports from `app.engine`):**
+**Public API (2 stable re-exports from `app.engine`):**
 ```python
 from app.engine import (
     get_topic_context,       # dict with resumo + erros + cards + weak_areas + rag chunks
-    get_review_queue,        # FSRS buckets: atrasados / hoje / novos
     summarize_performance,   # total_erros + taxa_acerto + padroes (weakness)
-    generate_contextual_cards,  # list[dict] flashcards v5 (contextual or heuristic)
-    analyze_error,           # post-insertion context + can_generate_cards flag
 )
 ```
 
-**Typical agent workflow (after `insert_questao.py` call):**
-```python
-from app.engine import analyze_error, generate_contextual_cards
+Outros módulos do `app/engine/` (`rag`, `analyze_error`, `generate_flashcards`, `get_review_queue`) existem mas NÃO são re-exportados no `__init__.py` por decisão deliberada — agentes externos consomem apenas os 2 exports estáveis acima. As funções internas servem para composição entre módulos do próprio `app/engine/`.
 
-resultado = analyze_error("Sepse Neonatal", area="Pediatria")
-# resultado = {
-#   "context": {resumo_path, resumo_content, erros_recentes, cards_ativos, weak_areas, relevant_chunks},
-#   "resumo_available": True,
-#   "can_generate_cards": True,
+**Typical agent workflow:**
+```python
+from app.engine import get_topic_context, summarize_performance
+
+ctx = get_topic_context("Sepse Neonatal", area="Pediatria")
+# ctx = {
+#   "resumo_path": "resumos/Pediatria/Sepse Neonatal.md",
+#   "resumo_content": "---\n...",
+#   "erros_recentes": [...],
+#   "cards_ativos": 3,
+#   "weak_areas": [{"area": "Pediatria", "pattern": "...", "error_count": 4}],
+#   "relevant_chunks": [{"text": "...", "metadata": {...}, "distance": 0.12}],
 # }
 
-if resultado["can_generate_cards"]:
-    cards = generate_contextual_cards(
-        tema="Sepse Neonatal",
-        elo_quebrado="critério de SIRS em neonatos",
-        armadilha="SIRS não se aplica igual a adultos",
-        resumo_content=resultado["context"]["resumo_content"],
-        relevant_chunks=resultado["context"]["relevant_chunks"],  # RAG-prioritized
-    )
+perf = summarize_performance(area="Pediatria")
+# perf = {"total_erros": 12, "taxa_acerto": 0.78, "padroes": [...]}
 ```
 
 **get_topic_context — rich context object:**

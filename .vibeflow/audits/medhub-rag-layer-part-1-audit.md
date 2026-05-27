@@ -1,3 +1,5 @@
+> **Status:** archived — phase complete. Frozen reference; not part of the active vibeflow surface.
+
 # Audit Report: medhub-rag-layer-part-1
 
 > Auditado em: 2026-04-05

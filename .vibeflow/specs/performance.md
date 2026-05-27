@@ -1,3 +1,5 @@
+> **Status:** archived — phase complete. Frozen reference; not part of the active vibeflow surface.
+
 # Spec: /performance — Checagem rápida de performance MedHub
 
 > Generated via /vibeflow:gen-spec on 2026-04-23

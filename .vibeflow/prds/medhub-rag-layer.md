@@ -1,3 +1,5 @@
+> **Status:** archived — phase complete. Frozen reference; not part of the active vibeflow surface.
+
 # PRD: MedHub RAG Layer
 
 > Generated via /vibeflow:discover on 2026-04-05

@@ -1,3 +1,5 @@
+> **Status:** archived — phase complete. Frozen reference; not part of the active vibeflow surface.
+
 # Spec: MedHub — Study Engine Core (Operações de Consulta)
 
 > Gerado via /vibeflow:gen-spec em 2026-04-05

@@ -1,3 +1,5 @@
+> **Status:** archived — phase complete. Frozen reference; not part of the active vibeflow surface.
+
 # Spec: RAG Hybrid Re-ranking + HyDE Latency Optimization
 
 > Generated via /vibeflow:gen-spec on 2026-04-07

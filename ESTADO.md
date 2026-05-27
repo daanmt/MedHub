@@ -165,7 +165,7 @@ Workspace state-driven de estudos médicos. Processa questões de prova, registr
 **2026-03-16 | Antigravity (sessão 031):** **Expansão em Psiquiatria e Nefrologia**. Criação dos resumos de `Dependência Química.md`, `Intoxicações Exógenas.md` e `Lesão Renal Aguda.md`.
 **2026-03-15 | Antigravity (sessão 030):** **Consolidação de Pancreatites**. Criação do resumo de `Pancreatite Aguda e Crônica.md`. Foco em critérios de Atlanta 2012.
 **2026-03-15 | Antigravity (sessão 029):** **UI Refresh**. Implementado sistema de design Flat com `app/utils/styles.py`. Arquitetura híbrida de botões FSRS implementada.
-**2026-03-14 | Antigravity (sessões 018–028):** Ver `history/session_NNN.md` para detalhes individuais.
+**2026-03-14 | Antigravity (sessões 018–028):** Ver [`history/INDEX.md`](history/INDEX.md) (estão arquivadas em `history/legacy/`).
 
 ---
 

@@ -1,0 +1,88 @@
+# MedHub — Session Chronicle
+
+Chronological index of every work session on this project. The session log files themselves carry the detail (what was analyzed, what changed, what was decided); this index is the table of contents.
+
+**Reading order:** newest-first below. Active sessions live in `history/`; pre-modernization sessions (≤028, when the project still relied on `caderno_erros.md`, `HANDOFF.md`, and `progresso.md`) have been archived to [`legacy/`](legacy/) — see [`legacy/README.md`](legacy/README.md) for the deprecation context.
+
+Gaps in the sequence (026, 047, 050, 053, 057, 058, 064) are sessions that happened but whose dedicated log file was absorbed into adjacent ones or never written separately.
+
+---
+
+## Active sessions (029 onward)
+
+| # | Date | Tool | Topic |
+|---:|---|---|---|
+| 071 | 2026-04-23 | Claude Code | Análise de Úlceras Genitais (43q / 38a, 5 erros, 3 eixos metacognitivos) + criação da skill `/performance` via ciclo vibeflow completo (discover→spec→implement→audit) |
+| 070 | 2026-04-16 | Antigravity | Análise de Preventiva (23q / 18a, 5 erros, armadilhas DO e notificações compulsórias) + bulk register |
+| 069 | 2026-04-16 | Gemini 3.1 Pro | Resumo `Sistemas de Informação em Saúde` (Preventiva): SIM, SINAN, SINASC, SISAB |
+| 068 | 2026-04-16 | Gemini 3.1 Pro | Cirurgia Infantil (44q / 40a, 4 erros) + fix de 197 FKs órfãs + `data_sessao` + idempotência bulk |
+| 067 | 2026-04-16 | Antigravity | Arquitetura `sessoes_bulk` + migração histórica (3.020q, 2.413a, 79,9%) + dashboard reescrito |
+| 066 | 2026-04-10 | Antigravity | Análise Síndromes Hipertensivas na Gestação (6 erros, IDs 349-359) + correção de bugs em insert_questao.py |
+| 065 | 2026-04-09 | Antigravity | Resumo `Síndromes Hipertensivas na Gestação` (Gold Standard 80/20, ZUSPAN/PRITCHARD) |
+| 064 | 2026-04-07 | Antigravity | RAG v2: multi-query (Raw + HyDE), ThreadPoolExecutor, BM25 estrutural (depois desabilitado), `.env` via python-dotenv |
+| 063 | 2026-04-05 | Antigravity | Auditoria dos 2 ChromaDB coexistentes (canônico em `data/chroma/` + MCP obsidian-notes-rag); decisão arquitetural |
+| 062 | 2026-04-05 | Antigravity | Análise Sepse Neonatal (3 erros: Listeria, exceção SBP, ampicilina) |
+| 061 | 2026-04-01 | Antigravity | Análise massiva Trauma/ATLS (14 erros) — peritonites, eviscerações, choque |
+| 060 | 2026-03-29 | Antigravity | Gastroenterologia: DRGE + Pancreatite (8 erros) — padrão "Ansiedade de Intervenção" nomeado |
+| 059 | 2026-03-29 | Antigravity | Demências e EM (4 erros): CADASIL, Binswanger, MEEM falso-negativo em alta escolaridade |
+| 058b| 2026-03-28 | Claude Code | Faxina de artefatos: `artifacts/{llm_runs/058,backups,legacy}/` + .gitignore + README rewrite + HANDOFF.md aposentado |
+| 058 | 2026-03-28 | Claude Code | Passe qualitativo LLM em 189 cards + `fix_taxonomy_bridge.py` (21 órfãos) + filtro `needs_qualitative<2` |
+| 057b| 2026-03-27 | Claude Code | Refatoração qualidade flashcards (Fases 1-4): baseline 277/277 ruins → 31/277 |
+| 057 | 2026-03-27 | Claude Code | FSRS operacional: `record_review()` real + `review_cli.py` + `audit_fsrs.py`; ROADMAP reescrito (4 trilhos) |
+| 056 | 2026-03-27 | Claude Code | Pipeline flashcards v5: schema migrado (8 novos campos) + 277 cards regenerados (heuristic) |
+| 055 | 2026-03-25 | Claude Code | Automação de memória via hooks (SessionStart + PostToolUse Write) + correção do manager.py |
+| 051 | 2026-03-25 | Antigravity | Resumo Cirurgia Infantil (HDC → defeitos de parede); 80/20 + Zero PDF |
+| 049 | 2026-03-25 | Antigravity | Resumo Icterícia e Sepse Neonatal (Pediatria); Gold Standard 80/20 |
+| 048 | 2026-03-25 | Antigravity | Resumo Trauma Abdominal e Pélvico (Cirurgia) |
+| 046 | 2026-03-25 | Claude Code | Memory v1: LangGraph + LangMem + `SQLiteMemoryStore`; `app/memory/` + `Tools/test_memory.py` (4/4 smokes) |
+| 045 | 2026-03-24 | Antigravity | Sífilis Congênita e reinfecção materna (análise + refinamento NTT) |
+| 044 | 2026-03-24 | Antigravity | Resumo Úlceras Genitais (GO) + 3 erros (Herpes gestacional, fluxograma > 4 sem) |
+| 043 | 2026-03-23 | Antigravity | Auditoria arquitetural completa: alinhamento de ESTADO/README/HANDOFF/roadmap + wikilinks Obsidian |
+| 042 | 2026-03-23 | Antigravity | Resumo Vigilância em Saúde (PNVS 2018, Saúde Única, ANVISA) |
+| 041 | 2026-03-23 | Antigravity | Análise Pediatria (46q / 42a) — IOT em PCR, pneumotórax, adrenalina precoce |
+| 040 | 2026-03-23 | Antigravity | Análise Dermatologia (24q / 16a) — Hanseníase + PLECT, estesiometria, Sabouraud |
+| 039 | 2026-03-22 | Antigravity | Refinamento Otorrino (19q / 13a) — cisto dermoide, hemangioma subglótico, HPV orofaringe |
+| 038 | 2026-03-22 | Antigravity | Resumo Hanseníase e Síndromes Verrucosas (PLECT, 80/20, Zero PDF) |
+| 037 | 2026-03-22 | Antigravity | Resumo Otorrino Cirúrgica (cisto tireoglosso → esvaziamento cervical) |
+| 036 | 2026-03-22 | Antigravity | Resumo Arboviroses (Dengue/Chikungunya/Zika) + Zero PDF |
+| 035 | 2026-03-21 | Antigravity | Reestruturação Sífilis na Gestação: LCR + STORCH + fluxogramas |
+| 034 | 2026-03-20 | Antigravity | Análise DM (CAD, manejo) + audit do resumo + marca histórica de 100 erros |
+| 033 | 2026-03-20 | Antigravity | Resumo Diabetes Mellitus — Complicações Agudas (CAD adulto/ped, EHH, hipoglicemia) |
+| 032 | 2026-03-18 | Antigravity | Refinamento Rastreamento Colo (diretrizes 2025) + análise de 9 erros |
+| 031 | 2026-03-16 | Antigravity | Resumos Psiquiatria (Dependência Química, Intoxicações Exógenas) + Nefrologia (LRA) |
+| 030 | 2026-03-15 | Antigravity | Resumo Pancreatite Aguda e Crônica (Atlanta 2012) |
+| 029 | 2026-03-15 | Antigravity | UI Refresh: design Flat com `app/utils/styles.py` + arquitetura híbrida de botões FSRS |
+
+## Legacy sessions (001–028, archived)
+
+Pre-modernization era. Workflows referenced `caderno_erros.md`, `HANDOFF.md`, `progresso.md` — all retired during sessão 058. Files moved to [`legacy/`](legacy/). See [`legacy/README.md`](legacy/README.md) for deprecation context.
+
+| # | Date | Tool | Topic |
+|---:|---|---|---|
+| 028 | 2026-03-14 | Antigravity | Rebranding IPUB → MedHub; revisão Pediatria/Emergências |
+| 027 | 2026-03-14 | Antigravity | Expansão Saúde Coletiva III |
+| 025 | 2026-03-14 | Antigravity | Reforma IPUB v3.0 — estabilização final |
+| 024 | 2026-03-14 | Antigravity | Upgrade pedagógico Flashcards v3.8 Expert |
+| 023 | 2026-03-14 | Antigravity | Streamlit Web App + pivô arquitetural (Zero DB) |
+| 022 | 2026-03-14 | Antigravity | ETL + migração massiva de dados históricos |
+| 021 | 2026-03-14 | Antigravity | FSRS Optimizer e algoritmos de ML |
+| 020 | 2026-03-14 | Antigravity | Workflows híbridos + regra Siamese Twins |
+| 019 | 2026-03-14 | Antigravity | Arquitetura de banco FSRS + planilha Estratégia Med |
+| 018 | 2026-03-14 | Antigravity | Ajuste de produto (FSRS + arquitetura UI/DB) |
+| 017 | 2026-03-14 | Antigravity | Elaboração do roadmap do sistema IPUB |
+| 016 | 2026-03-14 | Antigravity | Análise Sífilis na Gestação |
+| 015 | 2026-03-13 | Antigravity | Resumo Sífilis na Gestação e Congênita |
+| 014 | 2026-03-12 | Antigravity | Análise Trauma Abdominal / ATLS |
+| 013 | 2026-03-11 | Antigravity | Resumo Trauma Abdominal e Pélvico |
+| 012 | 2026-03-10 | Antigravity | Resumo Emergências Pediátricas |
+| 011 | 2026-03-09 | Antigravity | Resumo Rastreamento CCU (diretrizes 2016 + 2025 DNA-HPV) |
+| 010 | 2026-03-09 | Antigravity | Análise Public Health Measures (Saúde Coletiva) |
+| 009 | 2026-03-08 | Antigravity | Análise PTI + refatoração de governança |
+| 008 | 2026-03-06 | Antigravity | Resumo Hemostasia |
+| 007 | 2026-03-06 | Antigravity | Expansão Infectologia (TB + HIV) |
+| 006 | 2026-03-05 | Antigravity | Eliminação do `Extracted/` + limpeza automática pós-resumo (Zero PDF) |
+| 005 | 2026-03-05 | Antigravity | Consolidação de Tools + refatoração Asma.md |
+| 004 | 2026-03-04 | Antigravity (Gemini 2.5 Pro) | Análise DM2 (continuação — 4 questões) |
+| 003 | 2026-03-04 | Antigravity (Gemini 2.5 Pro) | Análise DM2 (9 questões) |
+| 002 | 2026-03-04 | Antigravity (Opus) | Reestruturação lean do IPUB |
+| 001 | 2025-02 → 2026-03-03 | Mixed (retroativo) | Histórico pré-reestruturação consolidado |

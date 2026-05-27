@@ -35,3 +35,4 @@ Thumbs.db
 # Artefatos — backups e runs LLM (binários e JSONs grandes)
 artifacts/backups/
 artifacts/llm_runs/
+artifacts/audits/

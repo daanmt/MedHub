@@ -27,8 +27,13 @@
 - **Remover o FSRS Player, não consertá-lo** — a revisão conversacional (`/revisar`) o superou; Streamlit fica só com Dashboard + Caderno + Biblioteca (conforme spec da Onda D).
 - `.claude/settings.local.json` permanece fora dos commits (decisão da sessão 073: PR separado).
 
+## Extensão pós-encerramento (mesma data)
+
+- **Google Drive MCP oficial vinculado (OAuth ok, restart pendente).** Não existe MCP oficial específico para Sheets; o acesso a planilhas é via o connector claude.ai Google Drive. Skill `/importar-planilha` adaptada: pré-requisito atualizado + seção "Planilhas canônicas" (registro de nome/ID a preencher na primeira sessão com acesso). As planilhas são a fonte primária de performance/desempenho e uma delas é o **cronograma** (conciliação com `taxonomia_cronograma`; CLI de persistência a definir na primeira importação real).
+
 ## Próximos passos
 
+- **Após restart:** registrar nome/ID das planilhas canônicas em `/importar-planilha` e fazer a primeira leitura via Drive MCP (volume/desempenho + cronograma).
 - Regenerar pattern docs stale via `/vibeflow:analyze` (`design-system-usage`, `streamlit-page-structure`, `db-access-layer` ainda referenciam o player e `flashcard_front/back`).
 - Onda E (se planejada) ou prioridades do ESTADO: pipeline RAG inverso, busca semântica na Biblioteca.
 - `1_dashboard.py` ainda usa `sqlite3` cru — anti-scope da Onda D, candidato a onda futura.

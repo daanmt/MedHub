@@ -9,17 +9,32 @@ status: canonical
 
 Ingere o volume de questões a partir de uma planilha do Google (Sheets/xlsx no Drive) para a tabela `sessoes_bulk` do `ipub.db`. Coerente com a tese agent-first: **o agente lê e interpreta a planilha via MCP; o código (`tools/importar_sessoes.py` → `registrar_sessao_bulk.registrar`) persiste**.
 
-Use quando o usuário pedir: "importa minha planilha", "puxa as questões do Drive", "atualiza o volume a partir da planilha do EMED".
+Use quando o usuário pedir: "importa minha planilha", "puxa as questões do Drive", "atualiza o volume a partir da planilha do EMED", "verifica minhas planilhas".
 
 ---
 
-## Pré-requisito: autenticar o Google Drive MCP
+## Pré-requisito: Google Drive MCP
 
-O connector `claude.ai Google Drive` exige OAuth interativo. Se ainda não autenticado, instruir o usuário:
+Não existe MCP oficial do Google específico para Sheets — o acesso é via o connector oficial **claude.ai Google Drive** (tools `mcp__claude_ai_Google_Drive__*`), que lê Google Sheets como arquivos do Drive (export CSV/tabela). **OAuth já vinculado em 2026-06-03**; as tools aparecem após restart do Claude Code. Se algum dia desautenticar:
 
-> Rode `/mcp` e selecione **"claude.ai Google Drive"** para autenticar.
+> Rode `/mcp` e selecione **"claude.ai Google Drive"** para reautenticar.
 
-Sem isso, as tools de leitura do Drive não ficam disponíveis. (O caminho de persistência local funciona independentemente.)
+(O caminho de persistência local funciona independentemente do MCP.)
+
+---
+
+## Planilhas canônicas (registro)
+
+As planilhas do Drive são a **fonte primária dos dados de performance e desempenho**, e uma delas é o **cronograma**. Registro a preencher na primeira sessão com acesso (nome exato + ID do Drive):
+
+| Papel | Nome no Drive | ID | Destino no `ipub.db` |
+|---|---|---|---|
+| Volume/desempenho (questões por sessão) | _preencher_ | _preencher_ | `sessoes_bulk` (via `importar_sessoes.py`) |
+| Cronograma de estudos | _preencher_ | _preencher_ | conciliação com `taxonomia_cronograma` (leitura; persistência a definir) |
+
+Regras:
+- **Verificação:** quando o usuário pedir para "verificar as planilhas", ler via MCP e conciliar com o estado do `ipub.db` (`sessoes_bulk` via `/performance`, cronograma via `taxonomia_cronograma`), reportando divergências — sem gravar nada sem confirmação.
+- **Cronograma:** ainda não há CLI de persistência para o cronograma. Na primeira importação real, mapear a estrutura da planilha e definir o caminho de escrita (novo CLI em `tools/`, nunca SQL direto pelo agente).
 
 ---
 

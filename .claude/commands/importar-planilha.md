@@ -45,7 +45,17 @@ Normalização de rótulos planilha → `AREAS_VALIDAS`: `Neuro`→`Neurologia`;
 
 Regras:
 - **Verificação:** quando o usuário pedir para "verificar as planilhas", ler via MCP e conciliar com o estado do `ipub.db` (`sessoes_bulk` via `/performance`, cronograma via `taxonomia_cronograma`), reportando divergências — sem gravar nada sem confirmação.
-- **Cronograma:** ainda não há CLI de persistência para o cronograma. Na primeira importação real, mapear a estrutura da planilha e definir o caminho de escrita (novo CLI em `tools/`, nunca SQL direto pelo agente).
+- **Cronograma (decisão sessão 075): NÃO persistir no `ipub.db`.** A planilha é o SSOT do cronograma e o usuário a edita manualmente — uma cópia local ficaria stale. O agente lê sob demanda via MCP e usa para planejar a sessão (próximos temas, resumos a criar, blocos de questões). `taxonomia_cronograma` segue alimentada apenas pelo pipeline de erros (`insert_questao.py`), sem relação de escrita com a planilha.
+
+### Estrutura mapeada — Cronograma de Reta Final.xlsx
+
+`read_file_content` embola a grade — para parsing confiável, usar `download_file_content` (base64 → xlsx) + `openpyxl`. Aba única `Plan1`:
+
+- **Linha 2** — 28 semanas, colunas 1–28: `"30/03 a 03/04/26"` … `"05/10 a 09/10/26"` (⚠️ typo na semana 11: `"08/06 a 12/06/25"`, ano errado).
+- **Linha 3** — trilha da semana: `GO` ×2 → `U/E` ×6 → `CIRURGIA` ×7 → `OPCIONAL` ×7 → `CLÍNICA 2` ×6.
+- **Linhas 4–16** — slots de tarefas da semana, formato `"Tema (Tipo)"` com quebras de linha internas (normalizar whitespace). Tipos: `Teoria [I-IV]`, `Revisão [I-II]`, `Revisão por Questões` (blocos multi-tema separados por `;`). Linhas 4–8 tendem a seguir trilhas fixas (Preventiva, Pediatria, Cirurgia, GIN, OBS); 9–16 são mistas/esparsas.
+
+Para localizar a semana corrente: comparar a data de hoje com os ranges da linha 2. Os temas do cronograma casam com os `Assunto` das abas do Dashboard — a conciliação tarefa-a-tarefa entre as duas planilhas é possível por (tema, tipo).
 
 ---
 

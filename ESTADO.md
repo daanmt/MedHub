@@ -15,10 +15,11 @@ relates_to: [AGENTE, roadmap]
 
 ## Metas
 
-- **Meta Final:** 23.000 questões até 12/2026 (Custo/Q: R$ 0,20)
+- **Marco ENAMED (prioridade):** 12.000 questões até 13/09/2026 — ritmo alvo ~86q/dia (projeções no `/performance`)
 - **Marco ENARE:** 17.000 questões até 10/2026 (Custo/Q: R$ 0,24)
-- **Indicador Atual (Abril/2026):** 3.064 / 17.000 — faltam ~13.936 q
-- **Performance Geral:** 80,0% (2.453 acertos / 3.064 questões — fonte: `sessoes_bulk`)
+- **Meta Final:** 23.000 questões até 12/2026 (Custo/Q: R$ 0,20)
+- **Indicador Atual (Maio/2026):** 3.170 / 12.000 ENAMED — faltam ~8.830 q
+- **Performance Geral:** 80,4% (2.549 acertos / 3.170 questões — fonte: `sessoes_bulk`, 100% conciliada com planilha Drive em 03/06)
 - **Resumos consolidados:** 44+ em `resumos/`
 - **Erros estruturados no `ipub.db`:** 200+ (número exato no Dashboard)
 
@@ -46,12 +47,13 @@ relates_to: [AGENTE, roadmap]
 
 Ver [`ROADMAP.md`](ROADMAP.md) — Linhas Evolutivas.
 
-**Prioridades imediatas:**
+**Prioridades imediatas (guiadas pelo cronograma — SSOT: `Cronograma de Reta Final.xlsx` no Drive, ver `/importar-planilha`):**
 
-1. **Pipeline RAG inverso:** integrar `get_topic_context()` com `app/engine/rag.py` (688 chunks já indexados) e usar em geração de cards quando reativada.
-2. **Busca semântica na Biblioteca:** `st.text_input` em `app/pages/3_biblioteca.py` chamando `rag.search()`.
-3. **Meta volumétrica:** processar questões erradas continuamente (meta ENARE 17k até out/2026).
-4. **Expansão de conteúdo:** avançar em `resumos/` (GO: DIP e Sangramentos).
+1. **Arboviroses:** fechar Revisão + bloco de questões (Revisão por Questões com Meningites e Sepse na semana 22–26/06). Resumo já existe (`resumos/Clínica Médica/Infectologia/Arboviroses.md`) — acumular armadilhas conforme erros.
+2. **Diabetes (bloco em curso):** criar resumo `Diabetes Mellitus - Complicações Crônicas` (gap — DM2 e Compl. Agudas já existem); Teoria é da semana 01–05/06 e a Revisão por Questões do bloco DM completo fecha em 15–19/06.
+3. **Meta volumétrica:** ENAMED 12k até 13/09 exige ~86q/dia — priorizar blocos de Revisão por Questões.
+4. **Pipeline RAG inverso:** integrar `get_topic_context()` com `app/engine/rag.py` (688 chunks já indexados).
+5. **Busca semântica na Biblioteca:** `st.text_input` em `app/pages/3_biblioteca.py` chamando `rag.search()`.
 
 ---
 

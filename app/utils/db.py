@@ -88,31 +88,31 @@ def get_due_cards_count():
     conn.close()
     return count
 
-def get_next_due_card():
-    """Busca o próximo card a ser revisado (Frente, Verso, CardID)"""
+def get_caderno_detalhado(area=None):
+    """Caderno de erros detalhado para a página de consulta (read-only).
+
+    Retorna colunas: id, area, tema, titulo, elo, caso, explicacao, armadilha.
+    Filtro opcional por área (match exato). Diferente de `get_caderno_erros()`
+    (que serve outra visão); ambos coexistem.
+    """
     conn = get_connection()
-    # Pela lógica FSRS, buscamos o que venceu há mais tempo
-    df = pd.read_sql('''
-        SELECT 
-            f.id as flashcard_id,
-            f.frente,
-            f.verso,
-            fc.state,
-            fc.stability,
-            fc.difficulty,
-            fc.reps,
-            fc.lapses,
-            t.area,
-            t.tema
-        FROM fsrs_cards fc
-        JOIN flashcards f ON f.id = fc.card_id
-        JOIN taxonomia_cronograma t ON t.id = f.tema_id
-        WHERE fc.due <= ?
-        ORDER BY fc.due ASC
-        LIMIT 1
-    ''', conn, params=(datetime.now(),))
+    sql = '''
+        SELECT q.id, t.area, t.tema, q.titulo,
+               q.habilidades_sequenciais AS elo,
+               q.o_que_faltou AS caso,
+               q.explicacao_correta AS explicacao,
+               q.armadilha_prova AS armadilha
+        FROM questoes_erros q
+        JOIN taxonomia_cronograma t ON q.tema_id = t.id
+    '''
+    params = ()
+    if area:
+        sql += ' WHERE t.area = ?'
+        params = (area,)
+    sql += ' ORDER BY q.id DESC'
+    df = pd.read_sql(sql, conn, params=params)
     conn.close()
-    return df.iloc[0].to_dict() if not df.empty else None
+    return df
 
 def record_review(flashcard_id, rating):
     """Aplica o algoritmo FSRS e atualiza o banco de dados"""

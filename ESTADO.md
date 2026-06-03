@@ -7,7 +7,7 @@ relates_to: [AGENTE, roadmap]
 
 # ESTADO — MedHub
 
-*Atualizado: 2026-05-27 (sessão 073) | Ferramenta: Claude Code (Opus 4.7)*
+*Atualizado: 2026-06-03 (sessão 074) | Ferramenta: Claude Code (Opus 4.8)*
 
 > **Boot:** ler [`AGENTE.md`](AGENTE.md) primeiro — protocolo, convenções, decisões críticas e arquitetura de memória vivem lá. Este arquivo só responde *onde estamos hoje*.
 
@@ -26,6 +26,7 @@ relates_to: [AGENTE, roadmap]
 
 ## Últimas 10 sessões
 
+**2026-06-03 | Claude Code (sessão 074):** **Pivot Agent-First fechado (Ondas A-D commitadas).** Retomada da sessão interrompida: Onda D (Streamlit Encolhe) completada — `2_estudo.py` vira Caderno de Erros read-only (FSRS Player removido em favor de `/revisar`), `flashcard_front/back` e `get_next_due_card` removidos, `get_caderno_detalhado` em `db.py`. Audit **PASS** (6/6 DoD, pytest 4/4 + test_fsrs 14/14). Trabalho acumulado das Ondas A-C herdado e commitado atomicamente por onda (staging por hunk em `db.py`): adapter py-fsrs + `/revisar` + `fsrs_queue.py` (A), cards metacognitivos + aposentadoria de `regenerate_cards{,_llm}.py` (B), `/importar-planilha` + `importar_sessoes.py` (C). Streamlit agora = Dashboard + Caderno + Biblioteca.
 **2026-05-27 | Claude Code (sessão 073):** **Consolidação do harness em fluxo único.** Audit em paralelo (3 agentes A/B/C → ~666 linhas em `artifacts/audits/harness/`, gitignored) identificou duplicação skills×workflows e staleness em `.vibeflow/patterns/`. 7 commits atômicos: contrato §7.2 em AGENTE (skills = referência, workflows = orquestração que invoca skills sem copiar), fix de 3 bugs em workflows (8-arg CLI stale, `Tools\` casing, backslash path), correção da staleness em `domain-engine-api.md` (5→2 exports), 4 module docstrings canônicos (`db.py`, `styles.py`, `fsrs.py`, `insert_questao.py`), replace-all `Temas/` → `resumos/` em 7 arquivos. Zero behavioral change. `.claude/settings.local.json` continua em separate PR.
 **2026-05-27 | Claude Code (sessão 072):** **Housekeeping + auditoria técnica do repo.** Sweep de código (10 commits: branch hygiene, MIT LICENSE, `init_db.py` schema fix, README rewrite, untrack `.obsidian/workspace.json`, requirements.txt pinned, delete 5 orphan modules, archive 6 one-shot migrations, delete 4 engine/memory API orphans, build `tools/eval/` retrieval eval com baseline `R@5=0.778 / MRR@10=0.657` substituindo folklore não-reproduzível). Meta-layer cleanup (4 commits: prune 10 stale docs incl. `.planning/codebase/*` + `OVERVIEW.md`; mark `.vibeflow/specs+prds+audits` archived; `history/INDEX.md` + move sessions 001-028 para `legacy/`; consolidação dos 6 docs raiz em 4 — `AGENTE.md` expandido, `CLAUDE.md` stub, `ESTADO.md` slim, `roadmap.md` trim). Push para origin; About+topics curados no GitHub.
 **2026-04-23 | Claude Code (sessão 071):** **Análise de Úlceras Genitais (43q/38a, 5 erros, 3 eixos metacognitivos) + criação da skill `/performance` via ciclo vibeflow completo (discover→spec→implement→audit).**

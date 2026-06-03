@@ -202,51 +202,58 @@ def get_erros_por_tema(tema: str) -> list:
     return df.to_dict('records')
 
 
-def get_cards_by_bucket() -> dict:
+def get_cards_by_bucket(area=None, tema=None, new_limit=10) -> dict:
     """Retorna flashcards FSRS divididos em três buckets temporais.
+
+    Args:
+        area: filtro opcional de área (match exato em taxonomia_cronograma.area)
+        tema: filtro opcional de tema (LIKE em taxonomia_cronograma.tema)
+        new_limit: máximo de cards novos (state == 0) retornados
 
     Returns:
         dict com chaves:
             atrasados (list[dict]): cards vencidos antes de hoje (state > 0)
             hoje (list[dict]): cards que vencem hoje (state > 0)
-            novos (list[dict]): cards nunca revisados (state == 0), max 10
-        Cada dict contém: card_id, frente_pergunta, verso_resposta, due, area, tema.
+            novos (list[dict]): cards nunca revisados (state == 0), max new_limit
+        Cada dict contém: card_id, frente_contexto, frente_pergunta,
+        verso_resposta, verso_regra_mestre, verso_armadilha, needs_qualitative,
+        due, area, tema. Cards aposentados (needs_qualitative >= 2) são excluídos.
     """
     conn = get_connection()
     now = datetime.now()
     today_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
     today_end = now.replace(hour=23, minute=59, second=59, microsecond=999999)
 
-    df_atrasados = pd.read_sql('''
-        SELECT f.id AS card_id, f.frente_pergunta, f.verso_resposta,
-               fc.due, t.area, t.tema
+    cols = '''f.id AS card_id, f.frente_contexto, f.frente_pergunta,
+              f.verso_resposta, f.verso_regra_mestre, f.verso_armadilha,
+              f.needs_qualitative, fc.due, t.area, t.tema'''
+    base = f'''
+        SELECT {cols}
         FROM flashcards f
         JOIN fsrs_cards fc ON f.id = fc.card_id
         LEFT JOIN taxonomia_cronograma t ON f.tema_id = t.id
-        WHERE fc.due < ? AND fc.state > 0
-        ORDER BY fc.due ASC
-    ''', conn, params=(today_start,))
+        WHERE f.needs_qualitative < 2
+    '''
+    extra = ''
+    extra_params = []
+    if area:
+        extra += ' AND t.area = ?'
+        extra_params.append(area)
+    if tema:
+        extra += ' AND t.tema LIKE ?'
+        extra_params.append(f'%{tema}%')
 
-    df_hoje = pd.read_sql('''
-        SELECT f.id AS card_id, f.frente_pergunta, f.verso_resposta,
-               fc.due, t.area, t.tema
-        FROM flashcards f
-        JOIN fsrs_cards fc ON f.id = fc.card_id
-        LEFT JOIN taxonomia_cronograma t ON f.tema_id = t.id
-        WHERE fc.due >= ? AND fc.due <= ? AND fc.state > 0
-        ORDER BY fc.due ASC
-    ''', conn, params=(today_start, today_end))
+    df_atrasados = pd.read_sql(
+        base + extra + ' AND fc.due < ? AND fc.state > 0 ORDER BY fc.due ASC',
+        conn, params=(*extra_params, today_start))
 
-    df_novos = pd.read_sql('''
-        SELECT f.id AS card_id, f.frente_pergunta, f.verso_resposta,
-               fc.due, t.area, t.tema
-        FROM flashcards f
-        JOIN fsrs_cards fc ON f.id = fc.card_id
-        LEFT JOIN taxonomia_cronograma t ON f.tema_id = t.id
-        WHERE fc.state = 0
-        ORDER BY f.id ASC
-        LIMIT 10
-    ''', conn)
+    df_hoje = pd.read_sql(
+        base + extra + ' AND fc.due >= ? AND fc.due <= ? AND fc.state > 0 ORDER BY fc.due ASC',
+        conn, params=(*extra_params, today_start, today_end))
+
+    df_novos = pd.read_sql(
+        base + extra + ' AND fc.state = 0 ORDER BY f.id ASC LIMIT ?',
+        conn, params=(*extra_params, new_limit))
 
     conn.close()
     return {

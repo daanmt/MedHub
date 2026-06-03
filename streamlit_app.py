@@ -10,7 +10,7 @@ st.set_page_config(
 pages = {
     "Hub Principal": [
         st.Page("app/pages/1_dashboard.py",    title="Dashboard & Métricas", icon="📊"),
-        st.Page("app/pages/2_estudo.py",       title="Caderno & Retenção FSRS", icon="🧠"),
+        st.Page("app/pages/2_estudo.py",       title="Caderno de Erros", icon="📓"),
         st.Page("app/pages/3_biblioteca.py",   title="Biblioteca & PDFs", icon="📚"),
     ],
 }

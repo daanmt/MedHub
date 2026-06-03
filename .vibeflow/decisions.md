@@ -1,6 +1,16 @@
 # Decision Log
 > Newest first. Updated automatically by the architect agent.
 
+## 2026-06-03 — FSRS Player do Streamlit removido: revisão é conversacional (`/revisar`)
+
+**Contexto:** Onda D (audit PASS em `.vibeflow/audits/onda-d-streamlit-encolhe-audit.md`). Com a Onda A, a revisão espaçada migrou para `/revisar` + `tools/fsrs_queue.py` (funciona via celular). O player do `2_estudo.py` tab2 ficou redundante e carregava bugs conhecidos (closure capturando card errado, `fc_idx % total` mascarando overflow, `sqlite3` cru em página).
+
+**Decisão:** Remover o player em vez de consertá-lo. `2_estudo.py` vira **Caderno de Erros read-only** via `db.py::get_caderno_detalhado(area=None)`. Símbolos mortos removidos junto: `db.py::get_next_due_card()` (bug latente — colunas `frente`/`verso` inexistentes) e `styles.py::flashcard_front/back` (0 callers). Streamlit agora é só Dashboard + Caderno + Biblioteca.
+
+**Pitfall:** Pattern docs em `.vibeflow/patterns/` ficaram stale (referenciam player/tabs/`flashcard_front`) — regenerar via `/vibeflow:analyze`, não editar dentro dos marcadores auto.
+
+---
+
 ## 2026-04-23 — CLIs Python com emoji: forçar UTF-8 no stdout (Windows cp1252)
 
 **Contexto:** Implementação de `tools/performance.py` (skill `/performance`) usa emojis de faixa (🟢🟡🟠🔴🟣) para classificação visual de custo/questão. Primeira execução em Windows crashou com `UnicodeEncodeError: 'charmap' codec can't encode '\U0001f7e3'` — o cp1252 default do Windows não cobre planos astrais Unicode, e ao rodar via subprocess (como Claude Code faz via Bash) o stdout é cp1252, não UTF-8.

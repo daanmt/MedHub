@@ -6,8 +6,8 @@ todas as páginas Streamlit. Importa via `from app.utils.styles import ...`
 e injeta CSS global via `inject_styles()`.
 
 Tokens: `COLORS` (paleta canônica) e `GLOBAL_STYLES` (CSS injetado).
-Componentes: `metric_card`, `content_card`, `flashcard_front`,
-`flashcard_back` — retornam HTML para `st.markdown(unsafe_allow_html=True)`.
+Componentes: `metric_card`, `content_card` — renderizam HTML via
+`st.markdown(unsafe_allow_html=True)`.
 
 Regras invioláveis (Padrão Flat & Clinical):
 - Prefixo CSS `medhub-*` em todas as classes customizadas (evita colisão).
@@ -174,38 +174,3 @@ def content_card(title, content, subtitle=None):
     """
     st.markdown(html, unsafe_allow_html=True)
 
-def flashcard_front(category, question, context=""):
-    """Render a premium flashcard front."""
-    header = f'<div style="font-style: italic; color: {COLORS["muted_fg"]}; font-size: 0.75rem; margin-bottom: 12px;">{category}</div>'
-    context_html = f'<div style="color: {COLORS["secondary_fg"]}; font-size: 0.85rem; margin-bottom: 10px;">{context}</div>' if context else ""
-    st.markdown(f"""
-    <div class="medhub-card" style="border-color: {COLORS['border_soft']}">
-        {header}
-        {context_html}
-        <div style="font-size: 1.15rem; font-weight: 500; line-height: 1.5;">{question}</div>
-    </div>
-    """, unsafe_allow_html=True)
-
-def flashcard_back(answer, master_rule=None, trap=None):
-    """Render a premium flashcard back."""
-    master_html = f"""
-    <div class="medhub-box box-master">
-        <div class="medhub-box-title" style="color: {COLORS['accent_hint']};">Regra Mestre</div>
-        <div style="font-size: 0.85rem;">{master_rule}</div>
-    </div>
-    """ if master_rule else ""
-    
-    trap_html = f"""
-    <div class="medhub-box box-trap">
-        <div class="medhub-box-title" style="color: {COLORS['warning']};">Armadilha</div>
-        <div style="font-size: 0.85rem;">{trap}</div>
-    </div>
-    """ if trap else ""
-
-    st.markdown(f"""
-    <div class="medhub-card" style="border-color: {COLORS['primary']}44">
-        <div style="font-size: 1rem; line-height: 1.6; margin-bottom: 12px;">{answer}</div>
-        {master_html}
-        {trap_html}
-    </div>
-    """, unsafe_allow_html=True)

@@ -33,7 +33,7 @@ O script imprime 5 blocos em markdown, nesta ordem:
 4. **Custo por questão** — em duas dimensões:
    - *Acumulado*: investimento total ÷ todas as questões.
    - *Mês corrente*: parcela do mês ÷ questões feitas no mês.
-   Cada um classificado em faixa visual (🟢 Meta / 🟡 Ótimo / 🟠 Bom / 🔴 Alto / 🟣 Crítico) com distância da meta final (R$ 0,10/q em dez/2026).
+   Cada um classificado em faixa visual (🟢 Meta / 🟡 Ótimo / 🟠 Bom / 🔴 Alto / 🟣 Crítico) com distância da meta final (R$ 0,20/q em dez/2026 — coerente com ESTADO.md: R$ 4.410 / 23.000q).
 5. **Áreas fracas e gaps** — áreas com performance < 75% ordenadas por pior, e áreas de `AREAS_VALIDAS` com 0 questões.
 
 ---
@@ -60,7 +60,7 @@ Quando as metas mensais ou faixas de custo mudarem, editar **apenas** no topo de
 - `MARCOS` — lista de tuplas `(nome, alvo_acumulado, data_da_prova | None)`. Marcos com data ganham projeções de ritmo.
 - `RITMOS_PROJECAO` — tupla de ritmos diários (q/dia) projetados para marcos datados.
 - `FAIXAS_CUSTO` — lista ordenada de tuplas `(limite_superior, emoji, rotulo)`.
-- `META_CUSTO_Q` — alvo final (default `0.10`).
+- `META_CUSTO_Q` — alvo final (default `0.20`).
 
 Nenhuma outra mudança é necessária.
 

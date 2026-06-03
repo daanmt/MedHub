@@ -1,32 +1,82 @@
+"""FSRS fiel — scheduler de repetição espaçada do MedHub (adapter sobre py-fsrs).
+
+Esta classe é um **adapter** fino sobre `py-fsrs` (open-spaced-repetition),
+a implementação de referência do algoritmo FSRS (mesma org do `fsrs4anki`).
+Substitui a fórmula caseira anterior, preservando a interface
+`init_card()` / `evaluate(card, rating)` consumida por `app.utils.db.record_review`
+e o schema `fsrs_cards`/`fsrs_revlog` (nenhuma coluna nova).
+
+Mapeamento de estado: MedHub usa `state` 0=New, 1=Learning, 2=Review,
+3=Relearning. py-fsrs usa 1=Learning, 2=Review, 3=Relearning (sem "New").
+Um card MedHub com `state==0` ou `stability` ausente é tratado como card
+novo (nunca revisado) do py-fsrs. O `step` (fase de learning) do py-fsrs
+não é persistido no schema atual — é reconstruído como 0; isso é fiel no
+estado Review (que ignora `step`) e apenas reinicia os passos curtos de
+learning, sem impacto no agendamento de longo prazo.
+
+Datas: py-fsrs opera em UTC tz-aware; o MedHub armazena datetimes naive
+locais (compatível com os dados existentes). O adapter converte nas bordas.
+
+Retenção-alvo: `REQUEST_RETENTION = 0.9`.
 """
-FSRS v4 simplificado — scheduler de repetição espaçada do MedHub.
 
-Implementação minimalista (~75 LOC) inspirada em FSRS v4; não é fiel ao
-algoritmo oficial. `evaluate()` aplica uma fórmula linear de dificuldade
-+ uma de estabilidade. Suficiente para uso pessoal com retenção-alvo ~90%.
+from datetime import datetime, timezone
 
-API (classe FSRS):
-- `init_card()` → dict de estado inicial (state=0/New).
-- `evaluate(card, rating)` → próximo estado (state ∈ {0,1,2}: New/Learning/Review).
-- Rating: 1=Again, 2=Hard, 3=Good, 4=Easy (escala FSRS padrão).
+from fsrs import Scheduler, Card, Rating
 
-`DEFAULT_W` é o vetor canônico de 17 pesos FSRS v4 (referência; só um
-subconjunto é usado pela implementação simplificada).
-"""
+REQUEST_RETENTION = 0.9
 
-import math
-from datetime import datetime, timedelta
+# Scheduler único reutilizado (parâmetros default de referência do py-fsrs).
+# - learning_steps=(): sem fase de "passos curtos" (minutos) — cada review opera
+#   direto no modelo DSR, com intervalos em dias desde a 1ª revisão. Isso é fiel
+#   ao FSRS (modelo de memória) e evita depender do `step` (que o schema não
+#   persiste); cards graduam para Review imediatamente.
+# - relearning_steps default (1 passo): preserva o estado Relearning (3) quando
+#   um card de Review recebe Again; o reset de step é inócuo (passo único gradua
+#   de volta a Review num Good).
+# - enable_fuzzing=False: intervalos determinísticos/reproduzíveis.
+_SCHEDULER = Scheduler(desired_retention=REQUEST_RETENTION,
+                       learning_steps=(), enable_fuzzing=False)
 
-# Parâmetros FSRS v4 (Simplificado para o IPUB)
-# Pesos padrão para o algoritmo FSRS
-DEFAULT_W = [0.4, 0.6, 2.4, 5.8, 4.93, 0.94, 0.86, 0.01, 1.49, 0.14, 0.94, 2.18, 0.05, 0.34, 1.26, 0.26, 2.05]
+
+def _parse_dt(value):
+    """Converte valor armazenado (str/datetime/None/NaN) em datetime tz-aware.
+
+    datetimes naive são interpretados como horário local. Retorna None se o
+    valor for ausente/inválido.
+    """
+    if value is None:
+        return None
+    if isinstance(value, float):  # pandas NaN/NaT
+        return None
+    if isinstance(value, str):
+        s = value.strip()
+        if not s or s.lower() in ("none", "nat", "nan"):
+            return None
+        s = s.replace("T", " ")
+        parsed = None
+        for fmt in ("%Y-%m-%d %H:%M:%S.%f", "%Y-%m-%d %H:%M:%S", "%Y-%m-%d"):
+            try:
+                parsed = datetime.strptime(s, fmt)
+                break
+            except ValueError:
+                continue
+        value = parsed
+    if isinstance(value, datetime):
+        return value.astimezone() if value.tzinfo is None else value
+    return None
+
 
 class FSRS:
-    def __init__(self, w=DEFAULT_W):
-        self.w = w
+    """Adapter de interface estável sobre o Scheduler do py-fsrs."""
+
+    def __init__(self, w=None):
+        # `w` mantido por compatibilidade de assinatura; ignorado (py-fsrs usa
+        # seus próprios parâmetros de referência).
+        self.scheduler = _SCHEDULER
 
     def init_card(self):
-        """Inicializa um card novo (State 0)"""
+        """Estado inicial de um card novo (state=0=New), no shape do schema."""
         return {
             "state": 0,
             "stability": 0.0,
@@ -36,56 +86,54 @@ class FSRS:
             "reps": 0,
             "lapses": 0,
             "last_review": None,
-            "due": datetime.now()
+            "due": datetime.now(),
         }
 
-    def next_interval(self, stability):
-        new_interval = stability * 9 / 10 # Retenção de 90%
-        return max(1, round(new_interval))
-
     def evaluate(self, card, rating):
-        """
-        Calcula o próximo estado do card com base na avaliação (1-4)
-        Rating: 1=Again, 2=Hard, 3=Good, 4=Easy
-        """
-        # Simplificação do algoritmo FSRS para o IPUB
-        # Em uma implementação real, usaríamos as fórmulas de estabilidade e dificuldade
-        
-        state = card['state']
-        stability = card['stability']
-        difficulty = card['difficulty']
-        reps = card['reps']
-        lapses = card['lapses']
-        
-        if state == 0: # New Card
-            # Valores iniciais baseados no rating
-            stability = self.w[rating - 1]
-            difficulty = self.w[4] - (rating - 3) * self.w[5]
-            state = 1 # Learning
+        """Aplica a avaliação (1=Again, 2=Hard, 3=Good, 4=Easy) e retorna o
+        próximo estado no shape consumido por `record_review` (9 chaves)."""
+        rating = int(rating)
+        now_utc = datetime.now(timezone.utc)
+        reps = int(card.get("reps") or 0)
+        lapses = int(card.get("lapses") or 0)
+        state = card.get("state")
+        stability = card.get("stability")
+        last_review = _parse_dt(card.get("last_review"))
+
+        is_new = (not state) or int(state) == 0 or not stability
+
+        if is_new:
+            fcard = Card()  # card fresco do py-fsrs (nunca revisado)
         else:
-            if rating == 1: # Again
-                lapses += 1
-                stability = self.w[4] / 2 # Reduz estabilidade significativamente
-                state = 1 # Volta para aprendizado
-            else:
-                # Atualização de estabilidade e dificuldade (versão linear simplificada)
-                difficulty = max(1, min(10, difficulty - (rating - 3) * 0.5))
-                stability = stability * (1 + math.exp(self.w[6]) * (11 - difficulty) * math.pow(stability, -0.1))
-                state = 2 # Review
-                
+            due_aware = _parse_dt(card.get("due")) or now_utc
+            fcard = Card.from_dict({
+                "card_id": int(card.get("card_id") or 1),
+                "state": int(state),
+                "step": 0,
+                "stability": float(stability),
+                "difficulty": float(card.get("difficulty") or 5.0),
+                "due": due_aware.isoformat(),
+                "last_review": last_review.isoformat() if last_review else None,
+            })
+
+        new_card, _log = self.scheduler.review_card(fcard, Rating(rating), now_utc)
+
+        due_local = new_card.due.astimezone().replace(tzinfo=None)
+        last_review_local = now_utc.astimezone().replace(tzinfo=None)
+        elapsed_days = (now_utc - last_review).days if last_review else 0
+        scheduled_days = max(0, (new_card.due - now_utc).days)
         reps += 1
-        scheduled_days = self.next_interval(stability)
-        last_review = datetime.now()
-        due = last_review + timedelta(days=scheduled_days)
-        
+        if rating == 1 and not is_new:
+            lapses += 1
+
         return {
-            "state": state,
-            "stability": stability,
-            "difficulty": difficulty,
-            "elapsed_days": scheduled_days,
-            "scheduled_days": scheduled_days,
+            "state": int(new_card.state),
+            "stability": float(new_card.stability),
+            "difficulty": float(new_card.difficulty),
+            "elapsed_days": int(elapsed_days),
+            "scheduled_days": int(scheduled_days),
             "reps": reps,
             "lapses": lapses,
-            "last_review": last_review,
-            "due": due
+            "last_review": last_review_local,
+            "due": due_local,
         }

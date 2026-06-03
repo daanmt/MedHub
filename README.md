@@ -79,7 +79,7 @@ MedHub/
 │       ├── fsrs.py              # FSRS-inspired simplified scheduler
 │       └── styles.py            # design tokens
 ├── tools/                       # ~18 active CLIs: insert_questao, index_resumos,
-│                                # init_db, audits, performance, regenerate_cards, ...
+│                                # init_db, audits, performance, fsrs_queue, cards_regen_queue, ...
 │                                # plus tools/_archive/migrations/ (6 one-shots, kept for history)
 │                                # plus tools/eval/ (retrieval eval — queries.json + run_eval.py)
 ├── resumos/                     # clinical-knowledge markdown, 5 areas

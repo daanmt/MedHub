@@ -4,7 +4,9 @@ CLI canônica para registrar um erro de questão no `ipub.db` atomicamente.
 Transação de 4 passos em commit único:
 1. Insert/update em `taxonomia_cronograma` (cria área+tema se não existir).
 2. Insert em `questoes_erros` com metadados do erro.
-3. Insert de 1-2 cards em `flashcards` (heurístico ou contextual via LLM).
+3. Insert de cards em `flashcards`: N cards atômicos via `--cards-file`
+   (cunhados pelo agente, ver `.claude/commands/estilo-flashcard.md`), ou
+   caminho legado 1-2 cards a partir dos campos estruturados.
 4. Init de estado FSRS em `fsrs_cards` para cada card.
 
 Assinatura canônica (17 args: 8 obrigatórios + 9 opcionais/qualidade) em
@@ -13,51 +15,18 @@ Assinatura canônica (17 args: 8 obrigatórios + 9 opcionais/qualidade) em
 
 import sqlite3
 import argparse
+import json
 import sys
 from datetime import datetime
 import os
 import re
 DB_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'ipub.db')
 
-def _extract_key_term(elo: str) -> str:
-    """Extrai o termo médico principal do elo para usar na pergunta."""
-    stopwords = ['habilidade', 'confundiu', 'esqueceu', 'não lembrou', 
-                 'erro ao', 'falhou em', 'priorizar', 'identificar', 'prioritário']
-    result = elo
-    for sw in stopwords:
-        result = result.lower().replace(sw, '').strip()
-    return result[:80]
-
-def _invert_elo_to_question(elo: str, tema: str) -> str:
-    """Transforma texto do elo quebrado em pergunta cirúrgica."""
-    elo_lower = elo.lower()
-    
-    # Padrões de limiar numérico
-    if any(x in elo_lower for x in ['limiar', 'ponto de corte', '< ', '> ', 'mg/dl', 'mg/kg', 'bpm']):
-        return f"Em {tema}: qual o valor limiar/dose correto para {_extract_key_term(elo)}?"
-    
-    # Padrões de sequência/prioridade
-    if any(x in elo_lower for x in ['antes', 'primeiro', 'prioritário', 'sequência', 'ordem']):
-        return f"Em {tema}: qual a sequência correta de conduta? (Dica: a ordem importa)"
-    
-    # Padrões de critério diagnóstico
-    if any(x in elo_lower for x in ['critério', 'diagnóstico', 'definição', 'classificação']):
-        return f"Quais os critérios diagnósticos / definição de {_extract_key_term(elo)}?"
-    
-    # Padrões de indicação/contraindicação
-    if any(x in elo_lower for x in ['indicação', 'contraindicação', 'quando', 'em quais']):
-        return f"Quais as indicações/contraindicações de {_extract_key_term(elo)} em {tema}?"
-    
-    # Fallback: usar o elo diretamente como pergunta clínica
-    elo_clean = elo.rstrip('.').strip()
-    if len(elo_clean) > 20:
-        return f"{elo_clean}?" if not elo_clean.endswith('?') else elo_clean
-    return f"Qual a abordagem diagnóstica/terapêutica em {tema}?"
-
 def insert_questao(area, tema, enunciado, correta, chamada, erro, elo, armadilha,
                    complexidade="Media", habilidades="N/A", faltou="N/A", explicacao="N/A", titulo="Erro sem titulo",
                    frente_contexto=None, frente_pergunta=None,
-                   verso_resposta=None, verso_regra_mestre=None, verso_armadilha=None):
+                   verso_resposta=None, verso_regra_mestre=None, verso_armadilha=None,
+                   cards=None):
     # print(f"DEBUG: Tentando inserir no banco: {os.path.abspath(DB_PATH)}")
     conn = None
     try:
@@ -88,36 +57,56 @@ def insert_questao(area, tema, enunciado, correta, chamada, erro, elo, armadilha
         questao_id = cursor.lastrowid
 
         # 2. Gerar Flashcards IPUB v5.0
-        enunciado_limpo = re.sub(r'(?i)(?:Marcou|Gabarito|Resposta|O gabarito foi).*', '', enunciado).strip()
-        caso_resumo = (enunciado_limpo.split('.')[0] if '.' in enunciado_limpo else enunciado_limpo)[:120]
+        if cards is not None:
+            # Caminho agent-first: N cards atômicos já cunhados pela régua
+            # (.claude/commands/estilo-flashcard.md). Substitui a geração fixa
+            # elo+armadilha; todos os cards são qualitativos.
+            cards_to_insert = []
+            for i, c in enumerate(cards):
+                fp_card = (c.get('frente_pergunta') or '').strip()
+                vr_card = (c.get('verso_resposta') or '').strip()
+                if not fp_card or not vr_card:
+                    raise ValueError(f"Card {i}: 'frente_pergunta' e 'verso_resposta' sao obrigatorios")
+                cards_to_insert.append((
+                    c.get('tipo') or 'conteudo',
+                    '', '',  # frente/verso legados — nao usados no INSERT v5
+                    c.get('frente_contexto') or '',
+                    fp_card, vr_card,
+                    c.get('verso_regra_mestre') or '',
+                    c.get('verso_armadilha') or '',
+                    'qualitative',
+                ))
+        else:
+            enunciado_limpo = re.sub(r'(?i)(?:Marcou|Gabarito|Resposta|O gabarito foi).*', '', enunciado).strip()
+            caso_resumo = (enunciado_limpo.split('.')[0] if '.' in enunciado_limpo else enunciado_limpo)[:120]
 
-        # Determinar qualidade e fonte dos campos estruturados
-        use_qualitative = all([frente_pergunta, verso_resposta])
-        qual_source_elo = 'qualitative' if use_qualitative else 'heuristic'
+            # Determinar qualidade e fonte dos campos estruturados
+            use_qualitative = all([frente_pergunta, verso_resposta])
+            qual_source_elo = 'qualitative' if use_qualitative else 'heuristic'
 
-        # Campos estruturados: usar args explícitos ou gerar heurística
-        fc = frente_contexto or caso_resumo
-        fp = frente_pergunta or _invert_elo_to_question(habilidades if habilidades != "N/A" else elo, tema)
-        vr = verso_resposta or (correta if len(correta) >= 8 else explicacao[:200] if explicacao != "N/A" else "")
-        vrm = verso_regra_mestre or (explicacao[:300] if explicacao != "N/A" else "")
-        va_elo = verso_armadilha or (armadilha[:200] if armadilha != "N/A" else "")
+            # Campos estruturados: usar args explícitos ou gerar heurística
+            fc = frente_contexto or caso_resumo
+            fp = frente_pergunta or f"{tema}: qual a conduta/criterio correto?"
+            vr = verso_resposta or (correta if len(correta) >= 8 else explicacao[:200] if explicacao != "N/A" else "")
+            vrm = verso_regra_mestre or (explicacao[:300] if explicacao != "N/A" else "")
+            va_elo = verso_armadilha or (armadilha[:200] if armadilha != "N/A" else "")
 
-        # Frente/verso legados (mantidos para fallback da UI)
-        frente_elo = f"**Contexto:** {caso_resumo}\n\n**Pergunta:** {fp}"
-        verso_elo = f"**RESPOSTA DIRETA:** {correta}\n\n**REGRA MESTRE:**\n{explicacao[:300] if explicacao != 'N/A' else 'Verificar caderno.'}"
+            # Frente/verso legados (mantidos para fallback da UI)
+            frente_elo = f"**Contexto:** {caso_resumo}\n\n**Pergunta:** {fp}"
+            verso_elo = f"**RESPOSTA DIRETA:** {correta}\n\n**REGRA MESTRE:**\n{explicacao[:300] if explicacao != 'N/A' else 'Verificar caderno.'}"
 
-        cards_to_insert = [('elo_quebrado', frente_elo, verso_elo, fc, fp, vr, vrm, va_elo, qual_source_elo)]
+            cards_to_insert = [('elo_quebrado', frente_elo, verso_elo, fc, fp, vr, vrm, va_elo, qual_source_elo)]
 
-        # --- Card 2: A Armadilha (se relevante) ---
-        if armadilha and len(armadilha) > 20 and armadilha != "N/A":
-            trigger_match = re.search(r'(?i)(?:descreve|apresenta|usa|coloca)\s+(.*?)(?=\s+para|\.|\Z)', armadilha)
-            trigger = trigger_match.group(1) if trigger_match else "este cenario"
-            frente_arm = f"**ARMADILHA:** O examinador costuma usar {trigger} para induzir ao erro em {tema}."
-            verso_arm = f"**Gatilho:** {armadilha}\n\n**Como evitar:** Reler a regra mestre sobre este distrator."
-            va_arm = armadilha[:200] if armadilha != "N/A" else ""
-            cards_to_insert.append(('armadilha', frente_arm, verso_arm, caso_resumo[:100],
-                                    f"Qual o distrator tipico do examinador em: {titulo}?",
-                                    armadilha[:200], explicacao[:200] if explicacao != "N/A" else "", va_arm, 'heuristic'))
+            # --- Card 2: A Armadilha (se relevante) ---
+            if armadilha and len(armadilha) > 20 and armadilha != "N/A":
+                trigger_match = re.search(r'(?i)(?:descreve|apresenta|usa|coloca)\s+(.*?)(?=\s+para|\.|\Z)', armadilha)
+                trigger = trigger_match.group(1) if trigger_match else "este cenario"
+                frente_arm = f"**ARMADILHA:** O examinador costuma usar {trigger} para induzir ao erro em {tema}."
+                verso_arm = f"**Gatilho:** {armadilha}\n\n**Como evitar:** Reler a regra mestre sobre este distrator."
+                va_arm = armadilha[:200] if armadilha != "N/A" else ""
+                cards_to_insert.append(('armadilha', frente_arm, verso_arm, caso_resumo[:100],
+                                        f"Qual o distrator tipico do examinador em: {titulo}?",
+                                        armadilha[:200], explicacao[:200] if explicacao != "N/A" else "", va_arm, 'heuristic'))
 
         # Inserção dos cards
         for tipo_card, frente, verso, fc_, fp_, vr_, vrm_, va_, qs_ in cards_to_insert:
@@ -188,8 +177,18 @@ if __name__ == "__main__":
     parser.add_argument("--verso_resposta", default=None)
     parser.add_argument("--verso_regra_mestre", default=None)
     parser.add_argument("--verso_armadilha", default=None)
+    # Caminho agent-first: lista de N cards atômicos em JSON (UTF-8).
+    # Cada item: {tipo?, frente_contexto?, frente_pergunta, verso_resposta, verso_regra_mestre?, verso_armadilha?}.
+    # Quando fornecido, substitui a geração fixa elo+armadilha.
+    parser.add_argument("--cards-file", dest="cards_file", default=None,
+                        help="Path para JSON com lista de cards atômicos (ver estilo-flashcard.md)")
 
     args = parser.parse_args()
+
+    cards = None
+    if args.cards_file:
+        with open(args.cards_file, encoding="utf-8") as fh:
+            cards = json.load(fh)
 
     insert_questao(
         area=args.area,
@@ -210,4 +209,5 @@ if __name__ == "__main__":
         verso_resposta=args.verso_resposta,
         verso_regra_mestre=args.verso_regra_mestre,
         verso_armadilha=args.verso_armadilha,
+        cards=cards,
     )

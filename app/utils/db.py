@@ -262,3 +262,46 @@ def get_cards_by_bucket(area=None, tema=None, new_limit=10) -> dict:
         "novos": df_novos.to_dict('records'),
     }
 
+
+def update_flashcard_fields(card_id, fields) -> bool:
+    """Atualiza os campos v5 de um flashcard existente, preservando o estado FSRS.
+
+    Usado na regeneração de cards (Onda B): reescreve o conteúdo mantendo o
+    `card_id` — logo `fsrs_cards`/`fsrs_revlog` permanecem intactos. Marca o
+    card como qualitativo e incrementa `card_version`.
+
+    Args:
+        card_id: id do flashcard a atualizar.
+        fields: dict com qualquer subconjunto de {frente_contexto,
+            frente_pergunta, verso_resposta, verso_regra_mestre,
+            verso_armadilha, tipo}.
+
+    Returns:
+        True se um card foi atualizado; False se `card_id` não existe ou
+        nenhum campo válido foi fornecido.
+    """
+    permitidos = {'frente_contexto', 'frente_pergunta', 'verso_resposta',
+                  'verso_regra_mestre', 'verso_armadilha', 'tipo'}
+    sets = {k: v for k, v in fields.items() if k in permitidos}
+    if not sets:
+        return False
+
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT 1 FROM flashcards WHERE id = ?", (card_id,))
+    if cursor.fetchone() is None:
+        conn.close()
+        return False
+
+    # Nomes de coluna vêm de um allowlist fixo (não de input) — sem injeção.
+    assignments = ", ".join(f"{col} = ?" for col in sets)
+    cursor.execute(
+        f"UPDATE flashcards SET {assignments}, "
+        "quality_source = 'qualitative', needs_qualitative = 0, "
+        "card_version = COALESCE(card_version, 1) + 1 WHERE id = ?",
+        (*sets.values(), card_id),
+    )
+    conn.commit()
+    conn.close()
+    return True
+

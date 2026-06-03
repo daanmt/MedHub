@@ -86,7 +86,7 @@ def main():
     if backups:
         print(f"[INFO] Backups disponíveis: {len(backups)} em artifacts/backups/")
         print(f"       Mais recente: {os.path.basename(backups[-1])}")
-        print("       NOTA: Restaurar backup requer re-rodar tools/_archive/migrations/migrate_flashcards.py + tools/regenerate_cards.py")
+        print("       NOTA: cards de baixa qualidade sao regenerados pelo agente via tools/cards_regen_queue.py (ver estilo-flashcard.md)")
     else:
         print("[WARN] Nenhum backup encontrado — rode tools/backup_db.py")
 

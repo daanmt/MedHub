@@ -56,10 +56,16 @@ AREAS_VALIDAS = [
     "Reumato", "Hepato", "Otorrino", "Ortopedia", "Oftalmo",
 ]
 
+# (nome, alvo_acumulado, data_da_prova | None)
+# Marcos com data ganham projeções de ritmo (RITMOS_PROJECAO) no bloco 2.
 MARCOS = [
-    ("ENARE (out/2026)", 17000),
-    ("Final (dez/2026)", 23000),
+    ("ENAMED", 12000, date(2026, 9, 13)),
+    ("ENARE (out/2026)", 17000, None),
+    ("Final (dez/2026)", 23000, None),
 ]
+
+# Ritmos diários usados nas projeções dos marcos datados (q/dia).
+RITMOS_PROJECAO = (80, 90, 100)
 
 
 def get_totais(conn):
@@ -141,7 +147,7 @@ def bloco_total(total_q, total_a):
 def bloco_meta_mes(mes_atual, total_q, hoje):
     if mes_atual not in METAS_MENSAIS:
         return [
-            "## 2. Meta do mês",
+            "## 3. Meta do mês",
             "",
             f"⚠️ Mês corrente ({mes_atual}) fora da série `METAS_MENSAIS`.",
             "Atualize o dicionário no topo de `tools/performance.py` para voltar a operar.",
@@ -149,7 +155,7 @@ def bloco_meta_mes(mes_atual, total_q, hoje):
     meta = METAS_MENSAIS[mes_atual]["meta_acumulada"]
     deficit = meta - total_q
     linhas = [
-        "## 2. Meta do mês",
+        "## 3. Meta do mês",
         "",
         f"- **Mês corrente:** {mes_atual}",
         f"- **Meta acumulada:** {meta}",
@@ -169,7 +175,7 @@ def bloco_meta_mes(mes_atual, total_q, hoje):
 
 
 def bloco_custo(mes_atual, total_q, questoes_mes):
-    linhas = ["## 3. Custo por questão", ""]
+    linhas = ["## 4. Custo por questão", ""]
     if mes_atual not in METAS_MENSAIS:
         linhas.append(f"⚠️ Mês corrente ({mes_atual}) fora da série — sem dados de investimento.")
         return linhas
@@ -211,14 +217,38 @@ def bloco_custo(mes_atual, total_q, questoes_mes):
     return linhas
 
 
-def bloco_marcos(total_q):
-    linhas = ["## 4. Marcos adiante", ""]
-    for nome, alvo in MARCOS:
+def bloco_marcos(total_q, hoje):
+    linhas = ["## 2. Marcos adiante", ""]
+    for nome, alvo, data_marco in MARCOS:
         faltam = alvo - total_q
         if faltam <= 0:
             linhas.append(f"- ✅ **{nome}** ({alvo}) — meta já atingida (excedente {abs(faltam)}q).")
-        else:
-            linhas.append(f"- **{nome}** ({alvo}) — faltam **{faltam}q**.")
+            continue
+        linhas.append(f"- **{nome}** ({alvo}) — faltam **{faltam}q**.")
+        if data_marco is None:
+            continue
+        dias = (data_marco - hoje).days + 1  # inclui hoje
+        if dias <= 0:
+            linhas.append(f"  - ⚠️ Data do marco ({data_marco.isoformat()}) já passou — atualizar `MARCOS`.")
+            continue
+        ritmo_alvo = faltam / dias
+        linhas.append(
+            f"  - **{dias} dias** até {data_marco.strftime('%d/%m/%Y')}"
+            f" — ritmo para o alvo: ~{ritmo_alvo:.0f}q/dia."
+        )
+        # Custo/q projetado usa o investimento acumulado do mês do marco.
+        invest_marco = METAS_MENSAIS.get(data_marco.strftime("%Y-%m"), {}).get("investimento")
+        for ritmo in RITMOS_PROJECAO:
+            proj = total_q + ritmo * dias
+            pct = 100.0 * proj / alvo
+            extra = ""
+            if invest_marco:
+                custo_proj = invest_marco / proj
+                emoji, _rotulo = classificar_custo(custo_proj)
+                extra = f" · custo/q proj.: {fmt_moeda(custo_proj)} {emoji}"
+            linhas.append(
+                f"  - Projeção **{ritmo}q/dia** → {proj} acumuladas ({pct:.0f}% do alvo){extra}"
+            )
     return linhas
 
 
@@ -255,11 +285,11 @@ def formatar_relatorio(total_q, total_a, por_area, mes_atual, questoes_mes, hoje
     partes.append("")
     partes.extend(bloco_total(total_q, total_a))
     partes.append("")
+    partes.extend(bloco_marcos(total_q, hoje))
+    partes.append("")
     partes.extend(bloco_meta_mes(mes_atual, total_q, hoje))
     partes.append("")
     partes.extend(bloco_custo(mes_atual, total_q, questoes_mes))
-    partes.append("")
-    partes.extend(bloco_marcos(total_q))
     partes.append("")
     partes.extend(bloco_areas(por_area))
     return "\n".join(partes)

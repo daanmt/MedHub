@@ -24,7 +24,9 @@ from datetime import date, datetime
 
 DB_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'ipub.db')
 
-META_CUSTO_Q = 0.10
+# Meta final coerente com ESTADO.md: R$ 4.410 / 23.000q = R$ 0,19/q em dez/2026.
+# (O antigo 0.10 era matematicamente inatingível mesmo batendo 100% da meta.)
+META_CUSTO_Q = 0.20
 
 METAS_MENSAIS = {
     "2026-03": {"meta_acumulada": 3000,  "investimento": 2310.00},
@@ -42,10 +44,10 @@ METAS_MENSAIS = {
 # Faixas: (limite_superior_exclusivo, emoji, rotulo)
 # A última faixa usa float('inf') como teto.
 FAIXAS_CUSTO = [
-    (0.10,         "🟢", "Meta (dez/2026)"),
-    (0.20,         "🟡", "Ótimo"),
-    (0.30,         "🟠", "Bom"),
-    (0.50,         "🔴", "Alto"),
+    (0.20,         "🟢", "Meta (dez/2026)"),
+    (0.30,         "🟡", "Ótimo"),
+    (0.50,         "🟠", "Bom"),
+    (1.00,         "🔴", "Alto"),
     (float('inf'), "🟣", "Crítico"),
 ]
 
@@ -196,7 +198,7 @@ def bloco_custo(mes_atual, total_q, questoes_mes):
         distancia_a = custo_acum - META_CUSTO_Q
         linhas.append(
             f"- **Acumulado:** {fmt_moeda(custo_acum)}/q {emoji_a} {rotulo_a}"
-            f" — distância da meta (R$ 0,10): {fmt_moeda(distancia_a)}"
+            f" — distância da meta ({fmt_moeda(META_CUSTO_Q)}): {fmt_moeda(distancia_a)}"
         )
     else:
         linhas.append("- **Acumulado:** N/A (0 questões)")

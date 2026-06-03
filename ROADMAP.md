@@ -54,7 +54,7 @@ A fundação está pronta (agente LLM + workflows portáveis + `ipub.db` como SS
 - Pipeline RAG inverso: injetar conteúdo do `resumos/` no prompt de geração de flashcard (eliminar "atrofia semântica")
 - Input obrigatório de contexto clínico ao registrar erro
 - Dashboard de revisão com curva de esquecimento por área
-- Implementação FSRS v4 fiel (hoje `app/utils/fsrs.py` é simplificação — 1 fórmula linear de dificuldade + 1 de estabilidade)
+- Implementação FSRS v4 fiel (hoje `app/utils/fsrs.py` é simplificação — 1 fórmula linear de dificuldade + 1 de estabilidade). Referência canônica do algoritmo: [`fsrs4anki`](https://github.com/open-spaced-repetition/fsrs4anki); port Python da mesma org: `py-fsrs`
 
 ---
 
@@ -108,6 +108,23 @@ A fundação está pronta (agente LLM + workflows portáveis + `ipub.db` como SS
 - Deduplicação LLM de `weak_areas` via `create_memory_store_manager`
 - Recalibração de cronograma baseada em curva real de acertos por área
 - Modelo de "gradiente de atenção": áreas com alta taxa de acerto recebem menos slot de sessão
+
+---
+
+### 8. MedHub Agent-First (Consolidação no Claude Code)
+
+**Por que existe:** As linhas 1-7 assumiam o estudante orquestrando múltiplas plataformas (Antigravity, Gemini, Claude Code) e o Streamlit como rosto principal. Esta linha inverte a postura: **uma interface (Claude Code), o agente como cérebro, o código como esqueleto determinístico mínimo.** O que historicamente virou "cérebro em código" — geração heurística de cards, pipeline de RAG, interpretação de performance — pertence ao agente. O que é determinístico e precisa estar correto — o algoritmo FSRS e a persistência — pertence ao código. Tudo o mais (UI, ingestão) encolhe ou sai para MCP.
+
+**O que habilita:** Uso remoto real (remote-control pelo celular) sem hospedar app nem migrar o SQLite para a nuvem — a revisão acontece na conversa. Menos superfície frágil (Ollama/ChromaDB deixam de ser caminho crítico; heurística de cards desaparece). Um único fluxo de dados: erro/planilha → agente → CLI de persistência → `ipub.db`.
+
+**O que consolida:**
+- **Revisão conversacional de flashcards:** o agente puxa a fila vencida (buckets atrasado/hoje/novo), apresenta card a card no chat e grava o rating via `record_review()`. O player Streamlit (`app/pages/2_estudo.py`) vira opcional/desktop — corrigir os bugs de closure/`session_state` ou descontinuar.
+- **Geração de cards pelo agente:** aposentar `tools/regenerate_cards.py` + `regenerate_cards_llm.py` (421 linhas de heurística regex + batch LLM). Ao analisar um erro, o agente escreve o card de qualidade e passa pronto para `insert_questao.py` (que já aceita `--frente_*`/`--verso_*`).
+- **FSRS fiel** (cruza com Linha 3): substituir `app/utils/fsrs.py` caseiro pela lógica de referência (`fsrs4anki`/`py-fsrs`). É o único pedaço que *deve* ser código correto e determinístico.
+- **RAG local mantido, obsidian MCP descontinuado para busca:** decisão empírica — em teste comparativo o `rag.py` local acertou resumo + seção (dist 0.148, metadata de área/especialidade) enquanto o MCP `obsidian-notes-rag` retornou tópico errado, indexando um snapshot stale com `Temas/` + `resumos/` duplicados + ruído de projeto.
+- **Ingestão via Google Workspace MCP:** planilhas na conta Google entram via MCP (Drive/Sheets) → `registrar_sessao_bulk.py`, substituindo a extração manual de `.xlsx`.
+- **Streamlit encolhe ao que exige UI real:** dashboard cede espaço para a skill `/performance`; o app deixa de hospedar "inteligência".
+- **Higiene latente:** corrigir `app/utils/db.py:98-99` (`get_next_due_card()` referencia colunas `frente`/`verso` já removidas) e adicionar `UNIQUE(area, tema)` em `taxonomia_cronograma`.
 
 ---
 

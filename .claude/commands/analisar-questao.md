@@ -134,15 +134,17 @@ Após análise, entregar **exatamente** estas quatro coisas:
 
 1. **O Diagnóstico:** Qual elo quebrou e o motivo sucinto.
 2. **Draft para o Resumo:** O texto final (⚠️ Padrão de Prova ou 🔴 Armadilha) exato para inserir em `resumos/`, seguindo bullets, sem tabelas ASCII.
-3. **Campos estruturados do Flashcard (5 campos):**
+3. **Cards estruturados:** cunhar **1 a 3 cards atômicos** seguindo a régua canônica em [`estilo-flashcard.md`](estilo-flashcard.md) (5 princípios: conteúdo atômico, ancorado no erro, sem vazar resposta, regra-mestre = distinção, armadilha = distrator específico). Cada card tem os 5 campos:
 
 ```
-frente_contexto: [1-2 frases do cenário clínico — sem alternativas, sem gabarito]
+frente_contexto: [1-2 frases do cenário clínico — sem alternativas, sem gabarito; pode ser vazio]
 frente_pergunta: [a pergunta clínica direta, terminando em "?"]
 verso_resposta:  [resposta direta e completa — nunca uma letra isolada]
-verso_regra_mestre: [regra/princípio que resolve o caso — 2-3 frases densas]
-verso_armadilha: [o distrator do examinador — 1-2 frases]
+verso_regra_mestre: [a distinção/sobreposição que previne a confusão]
+verso_armadilha: [o distrator específico que pegou o aluno]
 ```
+
+> A semântica de **como** escrever cada campo (atômico, sem vazamento, ancorado no resumo) é definida em `estilo-flashcard.md` — não reespecificar aqui.
 
 4. **Comando insert_questao.py** com todos os campos, incluindo os 5 estruturados.
 

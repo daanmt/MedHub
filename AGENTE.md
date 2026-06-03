@@ -173,7 +173,7 @@ Qualquer duplicação semântica entre workflow e skill é defeito por contrato.
 | `tools/audit_flashcard_quality.py` | Auditoria de qualidade de cards |
 | `tools/audit_integrity.py` | Auditoria de integridade do DB |
 | `tools/audit_fsrs.py` | Estado do FSRS |
-| `tools/regenerate_cards.py` / `regenerate_cards_llm.py` | Regeneração de cards (heurística + LLM) |
+| `tools/cards_regen_queue.py` | Fila (read-only) de cards a regenerar pelo agente — substitui a geração heurística aposentada |
 | `tools/review_cli.py` | Player FSRS em CLI |
 | `tools/backup_db.py` | Backup datado do `ipub.db` para `artifacts/backups/` |
 | `tools/eval/run_eval.py` | Eval de retrieval (Recall@k + MRR@10) |

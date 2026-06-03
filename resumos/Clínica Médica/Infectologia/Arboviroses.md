@@ -49,6 +49,8 @@ Sinais precoces precursores da disfunção sistêmica vascular.
 - **H**epatomegalia
 - **H**ematócrito francamente ascendente (hemoconcentração instalada)
 
+⭐ **Apresentação atípica em < 2 anos:** nessa faixa, o quadro grave pode ser a **primeira manifestação clínica perceptível** — o início febril passa despercebido e a criança pode chegar já na fase crítica/choque. Exige limiar de suspeição mais baixo.
+
 **Dengue Grave:**
 - Choque consolidado (taquicardia, descompensação com pulso filiforme, PA convergente < 20 mmHg, extremidades frias, oligúria).
 - Desconforto respiratório (reflexo reacional ao derramamento pericavitário ou pleural).
@@ -60,6 +62,7 @@ Sinais precoces precursores da disfunção sistêmica vascular.
 - Indicado em todo quadro suspeito sem sangramentos espontâneos.
 - Média da aferição [PAS+PAD]/2 mantida pelo esfigmomanômetro durante 5 min (adultos).
 - Positiva: surgimento ≥ 20 petéquias em quadrado de área (2,5 x 2,5 cm). Confirmação sumária de classificação laboratorial base (Grupo B).
+- ⚠️ **Limiar pediátrico distinto:** na criança o manguito permanece insuflado por **3 minutos** e a prova é positiva com **≥ 10 petéquias** no quadrado de 2,5 cm (adulto = 5 min e ≥ 20 petéquias).
 
 **Gestão de Hidratação por Grupos Clínicos:**
 - **Grupo A (Azul):** Baixo risco. Ambulatório. Hidratação via oral estipulada em **60 mL/kg/dia** (sendo 1/3 salina artificial e 2/3 líquidos gerais).
@@ -108,6 +111,9 @@ Sinais precoces precursores da disfunção sistêmica vascular.
 - Em detrimento febril das outras desordens, frequentemente reporta-se como condição de estado **afebril ou de febre baixa atenuada**.
 - Elemento de crivo diagnóstico central incide sobre a erupção do imenso **exantema maculopapular intensamente pruriginoso**.
 - Sintomas oculomucosos associados com o estabelecimento de **conjuntivite não purulenta** em forte constância.
+- **Edema periarticular / de extremidades** é manifestação frequente e integra a definição de caso.
+
+**Definição de caso suspeito (MS):** exantema maculopapular pruriginoso **+ ao menos um** de: febre, conjuntivite não purulenta, artralgia/poliartralgia ou **edema periarticular**. Fenômenos hemorrágicos **não** caracterizam Zika (são da dengue); leucopenia é achado inespecífico.
 
 ### 3.2 Diagnóstico Adjuvante e Sequelas Notáveis
 - **Intervalo Diagnóstico (Zika PCR):** Detecção viável no soro sanguíneo (até 5º dia) e, de forma prolongada, na **urina (até o 15º dia)**.
@@ -122,11 +128,14 @@ Sinais precoces precursores da disfunção sistêmica vascular.
 ## 4. Febre Amarela
 
 ### 4.1 Epidemiologia e Fatores de Risco
+- **Período de incubação:** **3 a 6 dias** (podendo, raramente, estender-se até ~15 dias).
 - **Fatores de Gravidade:** Extremos de idade (< 2 anos e > 65 anos), gestantes e **Povos Originários (etnia)** são considerados grupos de maior vulnerabilidade.
 - **Transmissão:** Ciclo silvestre (vetores *Haemagogus* e *Sabethes*) e ciclo urbano (*Aedes aegypti* - sem registros no Brasil desde 1942).
+- ⭐ **Principal medida de controle = imunização** (não o controle vetorial, que é central na dengue/chikungunya/Zika).
 
 ### 4.2 Imunização (Vacina 17DD)
 - **Tipo:** Vírus vivo atenuado.
+- ⚠️ **Eventos adversos graves:** **Doença Viscerotrópica Aguda (DVA-VFA)** — quadro multissistêmico que mimetiza a febre amarela selvagem — e **Doença Neurotrópica Aguda**. São os eventos graves clássicos cobrados em prova.
 - **Contraindicações:** Imunossuprimidos graves e gestantes (de regra). 
   - **Nuance:** Em situações de surto com alto risco de exposição, a vacinação de gestantes é permitida.
   - **Doença Renal Crônica:** A DRC isolada, sem imunossupressão associada, **não** é contraindicação para a vacina.
@@ -142,3 +151,9 @@ Sinais precoces precursores da disfunção sistêmica vascular.
 - 🔴 **Reação Cruzada:** Ocorre predominantemente entre Dengue e Zika (ambos Flavivírus).
 - 🔴 **Vacina Febre Amarela:** Não é contraindicada em pacientes com Doença Renal Crônica estável. Gestantes podem ser vacinadas em cenários de alto risco epidemiológico.
 - 🔴 **Monitoramento Grupo B:** Exige obrigatoriamente a realização de hemograma para avaliação do hematócrito antes da decisão de alta ou internação.
+- 🔴 **Dose C vs D (a banca troca os números):** Grupo C (sinal de alarme) = **10 mL/kg na primeira hora**. Grupo D (choque) = **20 mL/kg em até 20 min**. Atribuir a dose/tempo do D ao C é o erro clássico.
+- 🔴 **Sobreposição Chikungunya × Zika:** quando o caso mistura prurido e conjuntivite (Zika) com artralgia intensa e **febre alta**, o que decide é a **artralgia exuberante + febre alta → Chikungunya**. Na Zika a artralgia é leve e a febre baixa/ausente.
+- 🔴 **Achado que sugere Zika:** **edema periarticular/de extremidades** (critério de definição de caso). Fenômeno hemorrágico é da dengue; leucopenia é inespecífica — ambos são distratores em questão de Zika.
+- 🔴 **Incubação da Febre Amarela = 3 a 6 dias** (janelas de 10-14 ou 14-21 dias são distratores).
+- 🔴 **Vacina FA (eventos adversos):** Doença Viscerotrópica Aguda (DVA-VFA) e Doença Neurotrópica Aguda são os eventos graves. A **imunização** é a principal medida de controle da FA (não o controle vetorial).
+- 🔴 **Prova do laço pediátrica:** criança = 3 min de insuflação e **≥ 10 petéquias**; adulto = 5 min e ≥ 20 petéquias.

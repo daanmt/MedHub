@@ -25,12 +25,23 @@ Não existe MCP oficial do Google específico para Sheets — o acesso é via o 
 
 ## Planilhas canônicas (registro)
 
-As planilhas do Drive são a **fonte primária dos dados de performance e desempenho**, e uma delas é o **cronograma**. Registro a preencher na primeira sessão com acesso (nome exato + ID do Drive):
+As planilhas do Drive são a **fonte primária dos dados de performance e desempenho**, e uma delas é o **cronograma**. Registrado na primeira sessão com acesso (2026-06-03, sessão 075):
 
 | Papel | Nome no Drive | ID | Destino no `ipub.db` |
 |---|---|---|---|
-| Volume/desempenho (questões por sessão) | _preencher_ | _preencher_ | `sessoes_bulk` (via `importar_sessoes.py`) |
-| Cronograma de estudos | _preencher_ | _preencher_ | conciliação com `taxonomia_cronograma` (leitura; persistência a definir) |
+| Volume/desempenho (questões por sessão) | `Dashboard EMED 2026` (Google Sheets nativo) | `1SCgQMK31WkaRzhjrCXTM04Zc2FuSG9IrTCCQwAoAxaA` | `sessoes_bulk` (via `importar_sessoes.py`) |
+| Cronograma de estudos | `Cronograma de Reta Final.xlsx` (xlsx no Drive) | `157JEKQA9O49JxQHApOutKrVn7jW8JdIY` | conciliação com `taxonomia_cronograma` (leitura; persistência a definir) |
+
+### Estrutura mapeada — Dashboard EMED 2026
+
+`read_file_content` retorna o spreadsheet inteiro como tabelas markdown concatenadas, **sem os nomes das abas**. Ordem observada:
+
+1. Tabela mensal: `Mês | Investimento | Questões | Meta | Custo/Q` (questões = acumulado no fim do mês).
+2. Quadro Geral: `Disciplina | Tarefas Feitas | % Tarefas Feitas | Questões Feitas | % Acertos` (20 disciplinas). ⚠️ Pode divergir das abas por bug de fórmula (visto em Obstetrícia); **as abas por disciplina são a fonte autoritativa**.
+3. 20 tabelas de tarefas (`Tarefa | Assunto | Tipo de Tarefa | Realizada? | Questões Feitas | Acertos | % Acertos`), uma por disciplina, nesta ordem: Pediatria, Preventiva, Cirurgia, Infecto, Obstetrícia, Ginecologia, Gastro, Endocrino, Cardiologia, Psiquiatria, Neuro, Nefrologia, Hemato, Pneumo, Dermato, Reumato, Hepato, Otorrino, Ortopedia, Oftalmo. ⚠️ A ordem **não** segue o Quadro Geral — confirmar cada tabela pelo conteúdo (assuntos) e validar a soma contra o Quadro Geral.
+4. Tabelas `Disciplina | Questões Feitas | Acertos | % Acertos` adicionais (seções de acompanhamento, zeradas em 2026-06-03 — ignorar até ganharem dados).
+
+Normalização de rótulos planilha → `AREAS_VALIDAS`: `Neuro`→`Neurologia`; demais coincidem. A planilha guarda **acumulados por tarefa**, não sessões — o delta a importar é `(total na aba) − (total em sessoes_bulk)` por área.
 
 Regras:
 - **Verificação:** quando o usuário pedir para "verificar as planilhas", ler via MCP e conciliar com o estado do `ipub.db` (`sessoes_bulk` via `/performance`, cronograma via `taxonomia_cronograma`), reportando divergências — sem gravar nada sem confirmação.

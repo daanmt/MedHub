@@ -10,5 +10,6 @@ One-shot scripts whose target migration has been applied. Kept for historical tr
 | `popular_subtemas.py` | Reconstructed `taxonomia_cronograma` from `dashboard-emed.xlsx` (no longer tracked). One-shot taxonomy seed. | Sessão 067 |
 | `fix_taxonomy_bridge.py` | Bridged orphan `tema_ids` (1–21, 27, 37–41) created by `insert_questao.py` before the Excel ETL started IDs at 22. One-shot data healing. | Pre-sessão 067 |
 | `cleanup_db.py` | Dropped legacy `frente` / `verso` columns from `flashcards` and three legacy tables (`fsrs_cache_cards`, `fsrs_cache_revlog`, `cronograma_progresso`) after the v5 migration completed. Backup-first; idempotent on already-clean DBs. | Post-sessão 057b |
+| `normalize_areas_bulk.py` | Normalized two area labels in `sessoes_bulk` found during the first reconciliation against the Drive spreadsheet (`/importar-planilha`): `GO` → `Ginecologia` (sessão 071) and `Obstetricia` → `Obstetrícia` (historical migration row). Backup-first, dry-run flag, clash check on `(sessao_num, area)`. | Sessão 075 |
 
 If a similar migration is needed again, write a new dated script in `tools/` — do not copy from here. The patterns are useful (backup-first, dry-run flag, schema validation) but the targets and assumptions are stale.

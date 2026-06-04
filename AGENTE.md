@@ -19,19 +19,22 @@ Documento único de governança do MedHub. Toda sessão começa aqui.
 
 ## 2. Boot Sequence (obrigatório ao iniciar)
 
-1. **`ESTADO.md`** — snapshot canônico: metas, indicador atual, últimas sessões.
-2. **Workflow da tarefa** — `.agents/workflows/{analisar-questoes,criar-resumo,registrar-sessao,gerar-reforco}.md`.
-3. **Último log** — `history/session_NNN.md` mais recente (índice em `history/INDEX.md`).
-4. **Memória longa** — carregada via hook `SessionStart`. Se não aparecer: `python -m app.memory.inspect --context`.
-5. **RAG semântico durante a sessão** — `mcp__obsidian-notes-rag__search_notes` para localizar conteúdo em `resumos/` sem ler arquivos inteiros.
+1. **`HANDOFF.md`** — camada operacional curta: próximo passo imediato + estado por frente. **Ler PRIMEIRO** (estrutura em `core/contracts/handoff-contract.md`).
+2. **`ESTADO.md`** — snapshot macro: metas, indicador, marcos (`core/contracts/estado-contract.md`).
+3. **Check de reconcile** — rodar o protocolo de `core/contracts/reconcile-contract.md` (planilha↔db↔ESTADO↔FSRS). BLOCKING → resolver antes de trabalho novo.
+4. **Workflow da tarefa** — `.agents/workflows/{analisar-questoes,criar-resumo,registrar-sessao,gerar-reforco}.md`.
+5. **Último log** — `history/session_NNN.md` mais recente (índice em `history/INDEX.md`).
+6. **Memória longa** — carregada via hook `SessionStart`. Se não aparecer: `python -m app.memory.inspect --context`.
+7. **RAG semântico durante a sessão** — `mcp__obsidian-notes-rag__search_notes` para localizar conteúdo em `resumos/` sem ler arquivos inteiros.
 
 ---
 
 ## 3. Protocolo de Fechamento
 
-1. **Atualizar `ESTADO.md`** — adicionar entrada em "Últimas sessões".
-2. **Registrar sessão** — novo `history/session_NNN.md` seguindo `.agents/workflows/registrar-sessao.md`.
-3. **Git** — `git add` arquivos modificados (nunca `git add .`), commit semântico, push. `ipub.db` e `medhub_memory.db` não vão pro git.
+1. **Atualizar `HANDOFF.md`** — **sempre** (toda sessão significativa). Rotacionar "Última sessão" (substituir, não acumular) + atualizar "Estado por frente" + "Próximo passo imediato". Regras em `core/contracts/handoff-contract.md`.
+2. **Atualizar `ESTADO.md`** — **só se o macro mudou** (indicador cruzou marco, nova frente, skill/contrato versionado). Não é diário de sessões. Regras em `core/contracts/estado-contract.md`.
+3. **Registrar sessão** — novo `history/session_NNN.md` seguindo `.agents/workflows/registrar-sessao.md` + entry em `history/INDEX.md`.
+4. **Git** — `git add` arquivos modificados (nunca `git add .`), commit semântico, push. `ipub.db` e `medhub_memory.db` não vão pro git.
 
 ---
 
@@ -125,6 +128,8 @@ relates_to: [ESTADO, AGENTE]      # máximo 3 referências
 - **Sessions numeradas globalmente** em `history/` — qualquer agente registra (sem fork por ferramenta).
 - **Zero PDF** — `tools/extract_pdfs.py` extrai para `%TEMP%` e apaga o PDF original após consolidação no resumo.
 - **Regra de Acúmulo** — armadilhas de prova são cumulativas; jamais sobrescrever, apenas somar.
+- **Camada de estado contract-driven (sessão 075)** — estado vive em duas camadas: `HANDOFF.md` (operacional curto, ≤60 linhas, lido primeiro) + `ESTADO.md` (macro). Normatizado por `core/contracts/{handoff,estado,reconcile,fsrs-management}-contract.md`. Padrão adaptado do agente irmão `agente-daktus-content`. Boot roda check de reconcile; fechamento atualiza HANDOFF sempre.
+- **FSRS bankruptcy (sessão 075)** — os 70 cards heurísticos legados foram aposentados (`needs_qualitative=2`), não regenerados. Go-forward: cards nascem qualitativos via `insert_questao.py`. Política em `core/contracts/fsrs-management-contract.md`.
 
 ---
 

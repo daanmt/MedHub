@@ -77,6 +77,7 @@ aliases: [DM Agudo, CAD, HHS]
 - ⭐ **Acidose metabólica:** pH arterial ≤ 7,3 **e/ou** HCO₃ sérico ≤ 18 mEq/L
 - ⭐ **Cetonemia** (β-hidroxibutirato ≥ 3 mmol/L) **ou** cetonúria (fita reagente positiva)
 - ⚠️ Padrão de prova: ânion gap aumentado **não é critério diagnóstico** formal, mas é característica da CAD
+- ⚠️ Padrão de prova: quando o enunciado já fornece glicemia elevada **e** acidose metabólica, o exame que **confirma** a CAD é a documentação da **cetose** (cetonúria na fita ou β-HB sérico) — a 3ª perna da tríade que ainda falta. Lactato sérico investiga o diagnóstico diferencial da acidose, **não** confirma CAD
 
 **Gravidade:**
 
@@ -384,6 +385,8 @@ aliases: [DM Agudo, CAD, HHS]
 - ⚠️ Padrão de prova: idosos e diabéticos de longa data → predominam sintomas **neuroglicopênicos** (neuropatia autonômica reduz sintomas adrenérgicos)
 - ⚠️ Padrão de prova: taquicardia e sudorese **noturnas** em diabético em uso de sulfonilureia = hipoglicemia noturna até prova em contrário → confirmar com aferição de glicemia capilar durante o episódio (Tríade de Whipple)
 - ⚠️ **Efeito do Avental Branco** em diabético com HAS: PA elevada no consultório com PA domiciliar em meta → NÃO adicionar anti-hipertensivos sem confirmar PA fora do contexto clínico (MRPA ou medida em casa por familiar confiável)
+- ⚠️ Padrão de prova: criança/adolescente com DM1 em **doença intercorrente** (febre, infecção) que **reduz a ingesta alimentar** com a dose de insulina **mantida** → hipoglicemia. O cluster adrenérgico (palidez, taquicardia, sudorese profusa, tremor, irritabilidade) é a pista; a ausência de poliúria/vômitos/Kussmaul/dor abdominal afasta CAD (que exigiria déficit de insulina, não excesso relativo)
+- ⚠️ Padrão de prova: **crise convulsiva ou rebaixamento de consciência em DM1 = hipoglicemia até prova em contrário** → glicemia capilar imediata + reposição de glicose (glucagon SC/IM/nasal se sem acesso venoso). Insulina é o distrator que mata (automatismo "diabetes → insulina")
 
 **Tríade de Whipple:**
 1. Sintomas compatíveis com hipoglicemia
@@ -434,5 +437,9 @@ aliases: [DM Agudo, CAD, HHS]
 - 🔴 Sulfonilureia + taquicardia/sudorese **noturna** = hipoglicemia noturna; confirmar com glicemia capilar (Tríade de Whipple) antes de modificar anti-hipertensivos
 - 🔴 PA elevada no consultório com PA domiciliar em meta em diabético = **Efeito do Avental Branco** → não adicionar anti-hipertensivo; conduta é confirmar PA por MRPA
 - 🔴 Na CAD, ao atingir glicemia < 200 mg/dL com acidose ainda não resolvida: acrescentar SG **e** reduzir insulina para **0,02–0,05 UI/kg/h** — não suspender; não manter dose plena
+- 🔴 Criança DM1 com doença febril + recusa alimentar e insulina mantida = **hipoglicemia** (cluster adrenérgico), não CAD — CAD exige déficit de insulina e sinais de hiperglicemia (poliúria, vômitos, Kussmaul, dor abdominal)
+- 🔴 Convulsão/rebaixamento em DM1 = **hipoglicemia** até prova em contrário → repor glicose; sem acesso venoso, **glucagon**. **Insulina é o distrator fatal** — "glicemia capilar" pode estar certa em mais de uma alternativa; o que decide é glucagon, não insulina
+- 🔴 Para **confirmar** CAD com glicemia e acidose já documentadas, o exame que falta é a **cetose** (cetonúria/β-HB), 3ª perna da tríade — lactato **não** confirma CAD
+- 🔴 Em questão de "característica **MENOS comum** no EHH", a resposta é **dor abdominal** (proporcional à acidemia, ausente no EHH); os **sintomas neurológicos são MAIS comuns** no EHH (hiperosmolaridade) — não inverter a relação
 
 ---

@@ -7,7 +7,7 @@ relates_to: [AGENTE, handoff-contract, estado-contract]
 
 # ESTADO — MedHub
 
-*Atualizado: 2026-06-03 (sessão 075) | Ferramenta: Claude Code (Opus 4.8)*
+*Atualizado: 2026-06-04 (sessão 076) | Ferramenta: Claude Code (Opus 4.8)*
 
 > **Boot:** ler [`AGENTE.md`](AGENTE.md) → [`HANDOFF.md`](HANDOFF.md) (operacional curto) primeiro. Este arquivo é o snapshot **macro** (metas, indicador, marcos). Estrutura normatizada por [`core/contracts/estado-contract.md`](core/contracts/estado-contract.md).
 
@@ -18,9 +18,9 @@ relates_to: [AGENTE, handoff-contract, estado-contract]
 - **Marco ENAMED (prioridade):** 12.000 questões até 13/09/2026 — ritmo alvo ~86q/dia (projeções no `/performance`)
 - **Marco ENARE:** 17.000 questões até 10/2026 (Custo/Q: R$ 0,24)
 - **Meta Final:** 23.000 questões até 12/2026 (Custo/Q: R$ 0,20)
-- **Indicador Atual:** 3.210 / 12.000 ENAMED — faltam ~8.790 q
-- **Performance Geral:** 80,2% (2.574 acertos / 3.210 questões — `sessoes_bulk`, conciliada com planilha Drive em 03/06: aba Infecto 217 = db, QG total 3.210)
-- **Contadores:** 45 resumos em `resumos/` · 226 erros em `ipub.db` · 332 cards qualitativos ativos (70 legados aposentados)
+- **Indicador Atual:** 3.244 / 12.000 ENAMED — faltam ~8.756 q
+- **Performance Geral:** 80,2% (2.601 acertos / 3.244 questões — `sessoes_bulk`; +34q/27a de CAD/EHH na s076)
+- **Contadores:** 45 resumos em `resumos/` · 233 erros em `ipub.db` · 338 cards qualitativos ativos (71 aposentados) · **0 heurísticos ativos**
 
 ---
 
@@ -28,9 +28,10 @@ relates_to: [AGENTE, handoff-contract, estado-contract]
 
 - **Volume & Metas:** 3.210 acumuladas (80,2%). Planilha Drive conciliada (delta +40q Cirurgia + 40q Infecto/Arboviroses; áreas normalizadas). Cluster fraco confirmado: Cardiologia, Hepato, Dermato, FA.
 - **Conteúdo:** 45 resumos. Arboviroses turbinado (17 armadilhas). **Gap ativo do cronograma:** `Diabetes Mellitus - Complicações Crônicas`.
-- **Erros & Cards:** 226 erros estruturados. Pipeline `/analisar-questao` → `insert_questao.py` operante.
-- **FSRS:** 332 cards qualitativos; backlog 307 nunca revisados (drenar por área fraca — ver `fsrs-management-contract.md`). 70 heurísticos aposentados (bankruptcy s075).
-- **Infraestrutura:** camada de contratos `core/contracts/` (estado, handoff, reconcile, fsrs). Google Drive MCP vinculado (IDs canônicos em `/importar-planilha`).
+- **Erros & Cards:** 233 erros estruturados (+7 CAD/EHH). Pipeline `/analisar-questao` → `insert_questao.py` operante.
+- **FSRS:** 338 cards qualitativos; **fila 100% qualitativa — 0 heurísticos** (os 87 órfãos da bankruptcy s075 foram regenerados em 4 ondas na s076). Backlog state=0 segue a drenar por área fraca. 71 aposentados (70 bankruptcy + 1 duplicata).
+- **Infraestrutura:** camada de contratos `core/contracts/`. `cards_regen_queue.py` critério corrigido (`nq=1` órfão → `quality_source='heuristic' AND nq!=2`). Google Drive MCP vinculado.
+- **Dívida de dados (nova):** temas `[bulk] *` são lata de lixo de rotulagem — ~80 cards mal-filiados (cardiopatias/iSGLT-2/HbA1c/epidemiologia/GO sob "[bulk] Cirurgia"); inflam o "Cirurgia due" e distorcem o filtro por área. Re-fil pendente.
 
 ---
 

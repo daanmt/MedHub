@@ -86,11 +86,11 @@ Persistir via `insert_questao.py` (go-forward) ou via o caminho de UPDATE/`--car
 
 ## Backfill — regenerar cards legados
 
-> **Superado na sessão 075 (bankruptcy):** os 70 cards heurísticos legados (`needs_qualitative = 1`) foram **aposentados** (`needs_qualitative = 2`, fora da fila), não regenerados — decisão registrada em `core/contracts/fsrs-management-contract.md`. Esta seção fica **dormente**: só se aplica se cards heurísticos reaparecerem (não deveriam — a geração heurística está aposentada e cards novos nascem qualitativos). Mantida como referência do protocolo.
+> **Histórico:** sessão 075 aposentou (`needs_qualitative = 2`) os 70 cards heurísticos flagueados (`needs_qualitative = 1`). A sessão 076 descobriu **87 heurísticos remanescentes** (`quality_source = 'heuristic'`, `nq = 0`) que escaparam do filtro da bankruptcy e os **regenerou** por este protocolo (decisão do usuário: regenerar, não aposentar). O critério da fila foi corrigido de `nq = 1` para `quality_source = 'heuristic' AND nq != 2`. Após s076 **não há heurísticos ativos** — esta seção volta a ficar dormente; só reaparece se a geração heurística for reintroduzida (não deve).
 
-Os cards cunhados pela heurística antiga (`needs_qualitative = 1`) devem ser refeitos pelo agente, um erro por vez:
+Os cards cunhados pela heurística antiga devem ser refeitos pelo agente, um erro por vez:
 
-1. **Puxar a fila:** `python tools/cards_regen_queue.py [--area X] [--limit N] [--questao-id ID]` — emite, em JSON, cada erro com seu substrato metacognitivo (`tipo_erro`, `habilidades_sequenciais`, `o_que_faltou`, `alternativa_correta`/`marcada`, `armadilha_prova`) + os `cards_atuais` (com `card_id`).
+1. **Puxar a fila:** `python tools/cards_regen_queue.py [--area X] [--limit N] [--questao-id ID]` — emite, em JSON, cada erro com seu substrato metacognitivo (`tipo_erro`, `habilidades_sequenciais`, `o_que_faltou`, `alternativa_correta`/`marcada`, `armadilha_prova`) + os `cards_atuais` (com `card_id`). Critério atual: `quality_source = 'heuristic'` e `needs_qualitative != 2`.
 2. **Ancorar no resumo:** buscar o resumo correspondente via RAG local (`app.engine.rag.search`) para os critérios/alertas de incidência.
 3. **Cunhar** 1-3 cards atômicos pelos 5 princípios acima.
 4. **Persistir, preservando o FSRS:**

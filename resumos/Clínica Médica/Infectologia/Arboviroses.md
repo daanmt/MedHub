@@ -133,14 +133,21 @@ Sinais precoces precursores da disfunção sistêmica vascular.
 ## 4. Febre Amarela
 
 ### 4.1 Epidemiologia e Fatores de Risco
+- **Agente:** *Flavivirus* (família *Flaviviridae*) — **vírus de RNA** fita simples, envelopado, replicação citoplasmática (mesmo gênero de dengue e Zika).
 - **Período de incubação:** **3 a 6 dias** (podendo, raramente, estender-se até ~15 dias).
+- **Período de viremia:** inicia **24–48h antes** dos sintomas e perdura até o **4º–5º dia** (não ultrapassa ~7 dias) → isolamento prolongado de 14 dias é desnecessário.
 - **Fatores de Gravidade:** Extremos de idade (< 2 anos e > 65 anos), gestantes e **Povos Originários (etnia)** são considerados grupos de maior vulnerabilidade.
-- **Transmissão:** Ciclo silvestre (vetores *Haemagogus* e *Sabethes*) e ciclo urbano (*Aedes aegypti* - sem registros no Brasil desde 1942).
+- **Transmissão (vetores por ciclo):** ciclo **silvestre** = *Haemagogus* e *Sabethes* (responsável pelos casos atuais no Brasil); ciclo **urbano** = *Aedes aegypti* (sem registros urbanos no Brasil desde 1942). *Phlebotomus* é vetor da leishmaniose (distrator).
 - ⭐ **Principal medida de controle = imunização** (não o controle vetorial, que é central na dengue/chikungunya/Zika).
 
+**Formas clínicas:**
+- **Leve/moderada:** febre, cefaleia, mialgia, náuseas, vômitos; icterícia ausente ou leve. **Sinal de Faget** (bradicardia relativa em vigência de febre alta) pode estar presente.
+- **Maligna:** após um período de **remissão de 6–48h** (entre o 3º e o 5º dia), há agravamento com **icterícia, insuficiência renal e fenômenos hemorrágicos** (não trombóticos). Letalidade alta, sobretudo nos que necessitam de terapia renal substitutiva.
+
 ### 4.2 Imunização (Vacina 17DD)
-- **Tipo:** Vírus vivo atenuado.
-- **Esquema por idade:** 1ª dose aos **9 meses**, reforço aos **4 anos**. Quem inicia (primovacina) **após os 4 anos** recebe **dose única** para a vida toda.
+- **Tipo:** Vírus vivo atenuado, **cultivado em ovo de galinha**; via **subcutânea**; proteção a partir de **10 dias**.
+- **Esquema por idade:** 1ª dose aos **9 meses**, reforço aos **4 anos** (para quem se vacinou antes dos 5 anos). Depois, **dose única vitalícia** — esquema adotado no Brasil desde **abril/2017** (não há reforços periódicos, ex.: aos 12 anos).
+- **Faixa de indicação:** **9 meses a 59 anos**. Maiores de **60 anos** apenas se residirem/viajarem para área de risco. Todo o território nacional é área de recomendação desde **2018**.
 - **Viajante para área de risco:** vacinar com antecedência **mínima de 10 dias** (anticorpos protetores surgem entre o 7º e o 10º dia); imunogenicidade de 90–98%.
 - ⚠️ **Eventos adversos graves:** **Doença Viscerotrópica Aguda (DVA-VFA)** — quadro multissistêmico que mimetiza a febre amarela selvagem — e **Doença Neurotrópica Aguda** (meningoencefalite 7–21 dias pós-vacina). São os eventos graves clássicos cobrados em prova.
 - **Contraindicações:** Imunossuprimidos graves (de **qualquer natureza**, primária ou secundária) e gestantes (de regra). Lactantes: contraindicada até o bebê completar **6 meses** (se indispensável, suspender o aleitamento por 10–14 dias).
@@ -169,3 +176,8 @@ Sinais precoces precursores da disfunção sistêmica vascular.
 - 🔴 **Infecção secundária (ADE):** 2ª infecção por **sorotipo diferente** eleva o risco de dengue grave. Não confundir com infecção bacteriana sobreposta.
 - 🔴 **Vacina FA — esquema:** 9 meses + reforço aos 4 anos; dose única se primovacina > 4 anos. Viajante: **≥ 10 dias** antes da viagem.
 - 🔴 **Vacina FA — contraindicação vs DRC:** imunossuprimidos (qualquer natureza) e gestantes (de regra) são contraindicados; **DRC estável isolada NÃO é contraindicação**. Distrator recorrente.
+- 🔴 **Vetores da FA por ciclo:** *Aedes aegypti* é vetor **urbano** (nunca silvestre); silvestre = *Haemagogus* e *Sabethes*. *Phlebotomus* é da leishmaniose.
+- 🔴 **Vírus da FA = RNA** (*Flavivirus*), nunca DNA.
+- 🔴 **Viremia da FA < 7 dias** (24–48h antes dos sintomas até o 4º–5º dia) → isolar caso por 14 dias é desnecessário.
+- 🔴 **Sinal de Faget:** bradicardia relativa apesar de febre alta — clássico (não exclusivo) da FA.
+- 🔴 **Esquema vacinal FA:** dose única vitalícia desde 2017; único reforço é aos 4 anos. Não há reforço aos 12 anos nem doses periódicas. Diagnóstico da dengue: NS1/PCR até o 5º dia, IgM a partir do 6º.

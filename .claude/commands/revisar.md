@@ -60,6 +60,7 @@ Comportamentos default desta skill, ajustáveis pelo usuário a qualquer momento
 - **Renderização em lote.** Apresentar **N frentes de uma vez** (default ajustável durante a sessão — o usuário pediu 3, depois 5). O usuário responde todas; o agente revela + avalia + grava o lote inteiro de uma vez. Sem lote explícito, usar 1 por vez.
 - **Avaliação automática pelo agente** (passo 4 acima): o agente dá a nota, não o usuário.
 - **Papel de scrum master ativo:** ao detectar **erro repetido** (mesmo conceito errado em cards diferentes), parar e sinalizar explicitamente — não deixar passar (regra "não errar duas vezes pelo mesmo motivo"). Conectar o card ao erro de origem em `questoes_erros` quando útil.
+- **Micro-resumo ao errar (revisão *just-in-time* — feedback do usuário, sessão 076).** Quando a nota for **1 ou 2**, logo após revelar o verso apresentar um **resumo curto (~2-4 linhas) do bloco/conceito errado** — não só o gabarito do card, mas o contexto que o cerca (a regra-mestre + por que o distrator engana + a fronteira com conceitos vizinhos). Ancorar no resumo de origem em `resumos/` (via RAG `mcp__obsidian-notes-rag__search_notes` quando útil). Objetivo: fechar a lacuna **enquanto está quente**, revisando "em tempo". Para acerto (3-4), não interromper o fluxo com resumo.
 - **Honestidade sobre generosidade:** preferir a nota que reflete o recall real, mesmo que baixa.
 
 ---

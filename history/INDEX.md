@@ -12,6 +12,7 @@ Gaps in the sequence (026, 047, 050, 053, 057, 058, 064, 072) are sessions that 
 
 | # | Date | Tool | Topic |
 |---:|---|---|---|
+| 076 | 2026-06-04 | Claude Code | CAD/EHH (34q, 7 erros → 7 cards + resumo turbinado) + **regeneração completa dos 87 cards heurísticos órfãos** da bankruptcy s075 (4 ondas, FSRS preservado → 0 heurísticos) + fix do critério órfão da `cards_regen_queue.py` + `/revisar` 15 cards (fantasma Dengue C/D resolvido); achado: temas `[bulk]` mal-rotulados |
 | 075 | 2026-06-03 | Claude Code | Conexão Google Drive (planilhas conciliadas) + marco ENAMED no `/performance` + ciclo completo Arboviroses (15 erros → 19 cards → resumo) + **camada de estado contract-driven** (4 contratos `core/`, HANDOFF+ESTADO, bankruptcy FSRS) espelhada do `agente-daktus-content` |
 | 074 | 2026-06-03 | Claude Code | Pivot Agent-First fechado — Onda D completada (Streamlit Encolhe: FSRS Player removido, Caderno read-only via `get_caderno_detalhado`; audit PASS) + commits atômicos das Ondas A-D herdadas da sessão interrompida |
 | 073 | 2026-05-27 | Claude Code | Consolidação do harness em fluxo único — contrato §7.2 em AGENTE + 7 commits (workflows delegam CLI canônica em vez de copiar, vibeflow `domain-engine-api` staleness fix 5→2 exports, 4 module docstrings, `Temas/`→`resumos/` em 7 arquivos) |

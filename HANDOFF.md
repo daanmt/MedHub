@@ -1,28 +1,27 @@
 # HANDOFF.md — ESTADO OPERACIONAL CURTO
-*Atualizado: 2026-06-03 — conexão Drive + ENAMED + 15 erros Arboviroses + camada de contratos (sessão 075)*
+*Atualizado: 2026-06-04 — CAD/EHH + regeneração dos 87 cards órfãos + /revisar (sessão 076)*
 
 ## ▶ Próximo passo imediato (ao retomar)
-1. **Criar resumo `Diabetes Mellitus - Complicações Crônicas`** (gap do cronograma; DM2 e Compl. Agudas já existem). Revisão por Questões do bloco DM fecha 15–19/06.
-2. **Revisão FSRS diária** via `/revisar` — 14 cards de Arboviroses voltam em 04/06 (sobretudo Febre Amarela básica) + drenar backlog por área fraca.
-3. **Boot:** rodar o check de reconcile (`core/contracts/reconcile-contract.md`) — conferir planilha↔db↔ESTADO↔FSRS antes de trabalho novo.
+1. **Re-fil dos temas `[bulk]`** (nova demanda da s076): ~80 cards mal-rotulados sob "[bulk] Cirurgia" (cardiopatias, iSGLT-2, HbA1c, epidemiologia, GO). Migração one-shot, backup-first → corrige o "Cirurgia due" inflado e o filtro por área do `/revisar`.
+2. **Drenar fila FSRS:** 15 cards restantes da fila de 04/06 + 4 que voltam hoje (rating 1: bradicardia/adrenalina, taqui sinusal, incubação FA, extravasamento dengue) + novos por área fraca.
+3. **Boot:** rodar o check de reconcile (`core/contracts/reconcile-contract.md`).
 
 ## Estado por frente
-- **Volume & Metas:** 3.210/12.000 ENAMED (80,2%); ~86q/dia para o alvo. Planilha conciliada 100% em 03/06 (Infecto 217 = db).
-- **Conteúdo:** Arboviroses turbinado (17 armadilhas, seção vacina FA blindada). Próximo = Diabetes Compl. Crônicas.
-- **Erros & Cards:** 226 erros; 15 novos de Arboviroses (s075) + 19 cards qualitativos.
-- **FSRS:** fila ativa 332 qualitativos; backlog 307 nunca revisados; 70 heurísticos aposentados (bankruptcy).
-- **Infraestrutura:** `core/contracts/` criada (4 contratos); `/revisar` ganhou modo conversacional (auto-rating + lote); HANDOFF+ESTADO split.
+- **Volume & Metas:** 3.244/12.000 ENAMED (80,2%); ~86q/dia para o alvo (13-09). Planilha não reconciliada nesta sessão (sem novo lançamento no Drive).
+- **Conteúdo:** 45 resumos. `Compl. Agudas` turbinado (+4 armadilhas CAD/EHH). **Gap ativo:** `Diabetes - Complicações Crônicas`.
+- **Erros & Cards:** 233 erros (+7 CAD/EHH); 338 cards qualitativos.
+- **FSRS:** **fila 100% qualitativa — 0 heurísticos** (87 órfãos regenerados em 4 ondas). Backlog state=0 segue a drenar. Watched Dengue C/D **resolvido**.
+- **Infraestrutura:** `cards_regen_queue.py` critério corrigido (`nq=1` órfão → `quality_source='heuristic' AND nq!=2`); `estilo-flashcard.md §Backfill` reativada.
 
-## Última sessão — sessão 075
-- Google Drive MCP conectado: IDs canônicos registrados (`/importar-planilha`); planilha↔db conciliada (delta +40q Cirurgia; `GO`→Ginecologia, `Obstetricia`→Obstetrícia).
-- `/performance`: marco **ENAMED** (12k/13-09) com projeções de ritmo; `META_CUSTO_Q` 0,10→0,20.
-- Cronograma do Drive vira guia de prioridades (não persiste no db).
-- 15 erros de Arboviroses analisados (3 blocos) → 19 flashcards + resumo turbinado; `/revisar` dos 19 (8×1, 6×2, 2×3, 3×4); cluster fraco = Febre Amarela.
-- Camada de estado contract-driven (espelho do `agente-daktus-content`): 4 contratos + HANDOFF + bankruptcy dos 70 cards legados.
+## Última sessão — sessão 076
+- CAD/EHH: 34q/27a registradas (3.244); 7 erros → 7 cards qualitativos (406-412) + resumo turbinado; 4/7 erros foram sobre armadilhas já documentadas (gargalo = aplicação/leitura, não conhecimento).
+- **87 cards heurísticos órfãos regenerados qualitativamente** (4 ondas, `update_flashcard_fields`, FSRS preservado) + 1 duplicata (#276) aposentada → 0 heurísticos ativos.
+- Causa-raiz do slip-through achada e corrigida (filtro órfão da bankruptcy s075).
+- `/revisar` 15 cards (7×4, 3×2, 5×1): **fantasma Dengue C/D caiu** ✅; novo ponto fraco = arritmias pediátricas (PALS).
 
 ## Pendências/observações ativas
-- **Push pendente:** muitos commits locais da s075; `main` sem upstream tracking configurado — resolver no go.
-- **Erro repetido vigiado:** dose Dengue C (10/1h) vs D (20/20min) — falhou 2-3× em casos embrulhados; card volta amanhã.
+- **Push pendente:** commits locais s075 + s076; `main` sem upstream tracking — resolver no go.
+- **Erro repetido vigiado (novo):** dengue — eixo de gravidade é **extravasamento plasmático**, não sangramento (#396 falhou); arritmias pediátricas (sinus vs TSV vs bradicardia).
 
 ---
 *Histórico: history/INDEX.md · Snapshot macro: ESTADO.md*

@@ -1,7 +1,8 @@
 """cards_regen_queue.py — fila de regeneração de flashcards em JSON.
 
 CLI **read-only** que emite, em JSON, os erros cujos cards precisam ser
-regenerados (default: `needs_qualitative = 1`), junto com:
+regenerados (critério: `quality_source = 'heuristic'` e ainda não aposentado,
+`needs_qualitative != 2`), junto com:
   - o substrato metacognitivo de `questoes_erros` (tipo_erro, habilidades_sequenciais,
     o_que_faltou, alternativa_correta/marcada, armadilha_prova, enunciado);
   - os cards atuais (card_id + campos v5) para o agente reescrever.
@@ -34,13 +35,16 @@ from app.utils import db  # noqa: E402
 def fetch_regen_queue(area=None, limit=None, questao_id=None):
     """Retorna lista de erros (+ cards atuais) a regenerar.
 
-    Critério default: erros com ao menos um card `needs_qualitative = 1`.
-    Filtros opcionais: area (exato), questao_id (um erro específico), limit.
+    Critério: erros com ao menos um card heurístico ainda ativo
+    (`quality_source = 'heuristic'` e `needs_qualitative != 2`). Pós-bankruptcy
+    da sessão 075, o antigo sinal `needs_qualitative = 1` ficou órfão (os 70
+    cards flagueados viraram `= 2`), deixando 87 heurísticos `nq = 0` invisíveis;
+    este critério os recupera. Filtros opcionais: area, questao_id, limit.
     """
     conn = db.get_connection()
     cursor = conn.cursor()
 
-    where = ["f.needs_qualitative = 1"]
+    where = ["f.quality_source = 'heuristic'", "f.needs_qualitative != 2"]
     params = []
     if questao_id is not None:
         where.append("q.id = ?")

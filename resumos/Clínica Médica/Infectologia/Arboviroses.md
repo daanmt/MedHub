@@ -57,6 +57,10 @@ Sinais precoces precursores da disfunção sistêmica vascular.
 - Sangramento grave manifesto (SNC, hemorragia digestiva, metrorragia volumosa).
 - Disfunção orgânica de sistema primário: miocardite, encefalite ou hepatite severa (transaminases > 1000).
 
+⭐ **Eixo de gravidade = extravasamento plasmático, não sangramento.** Na classificação antiga, **dengue hemorrágica** exigia febre + trombocitopenia (≤ 100.000) + tendência hemorrágica **+ evidência de extravasamento de plasma** (hemoconcentração ≥ 20%, queda do Ht pós-hidratação, derrame/ascite/hipoproteinemia). Petéquias, epistaxe e prova do laço positiva com plaquetopenia, **sem** extravasamento, configuram **dengue clássica** — não hemorrágica.
+
+⭐ **Infecção secundária (ADE):** uma segunda infecção por **sorotipo diferente** é o principal fator de risco imunológico para dengue grave (facilitação dependente de anticorpos). "Infecção secundária" ≠ infecção bacteriana sobreposta. Outros fatores de gravidade: extremos de idade e etnia.
+
 ### 1.4 Manejo Terapêutico
 **Teste de Fragilidade (Prova do Laço):**
 - Indicado em todo quadro suspeito sem sangramentos espontâneos.
@@ -73,6 +77,7 @@ Sinais precoces precursores da disfunção sistêmica vascular.
 - **Grupo D (Vermelho):** Presença de Choque, hemorragia grave ou disfunção orgânica. Exige internamento em UTI.
   - **Manejo:** Expansão rápida com cristaloides (SF 0,9% ou RL) a **20 mL/kg em até 20 minutos**. Pode ser repetido até 3 vezes se persistência do choque.
   - **⚠️ Reestadiamento Dinâmico:** Se um paciente em observação (Grupo A, B ou C) apresentar **piora súbita da dor abdominal, vômitos persistentes ou agitação psicomotora**, deve ser imediatamente reestagiado para **Grupo D** e submetido à expansão rápida.
+  - ⭐ **Precisão C vs D:** o surgimento de **sinais de alarme isolados** (dor abdominal, vômitos persistentes) reclassifica para **Grupo C → 10 mL/kg na 1ª hora** (não conduta empírica de "aumentar hidratação + antiemético"). A passagem para **Grupo D** (20 mL/kg em 20 min) exige **choque, hemorragia grave ou disfunção orgânica** — a agitação só conta como gatilho de D quando traduz hipoperfusão/choque.
 
 ⚠️ **Fármacos contraindicados em qualquer categoria de Dengue:**
 - Anti-inflamatórios Não Esteroidais (AINEs), Ácido Acetilsalicílico (AAS), e Corticosteroides.
@@ -135,8 +140,10 @@ Sinais precoces precursores da disfunção sistêmica vascular.
 
 ### 4.2 Imunização (Vacina 17DD)
 - **Tipo:** Vírus vivo atenuado.
-- ⚠️ **Eventos adversos graves:** **Doença Viscerotrópica Aguda (DVA-VFA)** — quadro multissistêmico que mimetiza a febre amarela selvagem — e **Doença Neurotrópica Aguda**. São os eventos graves clássicos cobrados em prova.
-- **Contraindicações:** Imunossuprimidos graves e gestantes (de regra). 
+- **Esquema por idade:** 1ª dose aos **9 meses**, reforço aos **4 anos**. Quem inicia (primovacina) **após os 4 anos** recebe **dose única** para a vida toda.
+- **Viajante para área de risco:** vacinar com antecedência **mínima de 10 dias** (anticorpos protetores surgem entre o 7º e o 10º dia); imunogenicidade de 90–98%.
+- ⚠️ **Eventos adversos graves:** **Doença Viscerotrópica Aguda (DVA-VFA)** — quadro multissistêmico que mimetiza a febre amarela selvagem — e **Doença Neurotrópica Aguda** (meningoencefalite 7–21 dias pós-vacina). São os eventos graves clássicos cobrados em prova.
+- **Contraindicações:** Imunossuprimidos graves (de **qualquer natureza**, primária ou secundária) e gestantes (de regra). Lactantes: contraindicada até o bebê completar **6 meses** (se indispensável, suspender o aleitamento por 10–14 dias).
   - **Nuance:** Em situações de surto com alto risco de exposição, a vacinação de gestantes é permitida.
   - **Doença Renal Crônica:** A DRC isolada, sem imunossupressão associada, **não** é contraindicação para a vacina.
 - **Larvicidas:** O uso de larvicidas (ex: piriproxifem) em reservatórios de água **não** possui relação causal comprovada com teratogenicidade ou microcefalia.
@@ -157,3 +164,8 @@ Sinais precoces precursores da disfunção sistêmica vascular.
 - 🔴 **Incubação da Febre Amarela = 3 a 6 dias** (janelas de 10-14 ou 14-21 dias são distratores).
 - 🔴 **Vacina FA (eventos adversos):** Doença Viscerotrópica Aguda (DVA-VFA) e Doença Neurotrópica Aguda são os eventos graves. A **imunização** é a principal medida de controle da FA (não o controle vetorial).
 - 🔴 **Prova do laço pediátrica:** criança = 3 min de insuflação e **≥ 10 petéquias**; adulto = 5 min e ≥ 20 petéquias.
+- 🔴 **Sinais de alarme = conduta protocolizada, não empírica:** ao surgirem sob observação, reclassificar para Grupo C e dar **10 mL/kg na 1ª hora** — não "aumentar hidratação + antiemético e reavaliar".
+- 🔴 **Dengue hemorrágica ≠ só sangramento:** exige **extravasamento plasmático** (hemoconcentração ≥ 20%, derrame, hipoproteinemia). Sangramento + plaquetopenia sem extravasamento = dengue clássica.
+- 🔴 **Infecção secundária (ADE):** 2ª infecção por **sorotipo diferente** eleva o risco de dengue grave. Não confundir com infecção bacteriana sobreposta.
+- 🔴 **Vacina FA — esquema:** 9 meses + reforço aos 4 anos; dose única se primovacina > 4 anos. Viajante: **≥ 10 dias** antes da viagem.
+- 🔴 **Vacina FA — contraindicação vs DRC:** imunossuprimidos (qualquer natureza) e gestantes (de regra) são contraindicados; **DRC estável isolada NÃO é contraindicação**. Distrator recorrente.

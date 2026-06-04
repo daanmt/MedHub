@@ -48,10 +48,19 @@ python tools/fsrs_queue.py --record <card_id> --rating <1-4>
 1. **Abrir a sessão.** Rodar `--list` (com os filtros que o usuário pediu, se houver) para saber quantos cards há e anunciar o tamanho da sessão ("você tem 12 cards: 8 atrasados, 2 de hoje, 2 novos").
 2. **Apresentar a FRENTE.** Para o card atual, mostrar `frente_contexto` (se houver) como contexto e `frente_pergunta` como a pergunta. **Não revelar o verso ainda.** Convidar o usuário a tentar responder.
 3. **Revelar o VERSO sob pedido.** Quando o usuário responder ou pedir ("mostra", "não sei", "revela"), mostrar `verso_resposta`, depois `verso_regra_mestre` (a regra de ouro) e, se preenchida, `verso_armadilha` (o distrator/pegadinha).
-4. **Coletar a avaliação.** Pedir 1-4 (1=Novamente, 2=Difícil, 3=Bom, 4=Fácil). Aceitar linguagem natural ("acertei fácil" → 4, "errei" → 1).
+4. **Avaliar automaticamente (contrato).** O agente **atribui a nota 1-4 com base na resposta do usuário** (não pede o número). Critério: cravou conceito + regra-mestre → 4; acertou o núcleo, faltou detalhe → 3; recall parcial/na zona mas sem o alvo → 2; errou ou "não sei" → 1. **Informar a nota atribuída** ("→ 3") e a justificativa em 1 linha; o usuário pode sobrepor ("não, foi 2"). Ratings honestos > generosos — a precisão do FSRS depende disso.
 5. **Gravar.** Rodar `--record <card_id> --rating <n>`. Confirmar com o próximo `due` retornado ("próxima revisão em N dias").
 6. **Avançar.** Buscar o próximo card (novo `--next`, ou o próximo item do lote já obtido no passo 1). Repetir 2-5.
 7. **Fechar.** Quando a fila esvaziar (`{"empty": true}`) ou o usuário parar, resumir: quantos cards revisados e a distribuição de ratings.
+
+### Modo conversacional padrão (contrato core — sessão 075)
+
+Comportamentos default desta skill, ajustáveis pelo usuário a qualquer momento:
+
+- **Renderização em lote.** Apresentar **N frentes de uma vez** (default ajustável durante a sessão — o usuário pediu 3, depois 5). O usuário responde todas; o agente revela + avalia + grava o lote inteiro de uma vez. Sem lote explícito, usar 1 por vez.
+- **Avaliação automática pelo agente** (passo 4 acima): o agente dá a nota, não o usuário.
+- **Papel de scrum master ativo:** ao detectar **erro repetido** (mesmo conceito errado em cards diferentes), parar e sinalizar explicitamente — não deixar passar (regra "não errar duas vezes pelo mesmo motivo"). Conectar o card ao erro de origem em `questoes_erros` quando útil.
+- **Honestidade sobre generosidade:** preferir a nota que reflete o recall real, mesmo que baixa.
 
 ---
 

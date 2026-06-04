@@ -161,7 +161,7 @@ Sinais precoces precursores da disfunção sistêmica vascular.
 
 - 🔴 **Choque na Dengue:** A etiologia é o extravasamento plasmático por disfunção endotelial (choque hipovolêmico distributivo), e não a perda sanguínea por hemorragias de mucosas.
 - 🔴 **Diagnóstico Diferencial:** Poliartralgia incapacitante/edema → **Chikungunya**. Exantema intensamente pruriginoso + Conjuntivite não purulenta + Normotermia → **Zika**. Prostração + Hemoconcentração + Sinais de Alarme → **Dengue**.
-- 🔴 **Manejo C vs D:** Paciente que apresenta dor abdominal e agitação sob hidratação deve ser manejado como **Grupo D** (expansão 20ml/kg em 20 min), independentemente da classificação inicial.
+- 🔴 **Manejo C vs D (precisão):** O surgimento de **sinais de alarme isolados** (dor abdominal, vômitos persistentes) reclassifica para **Grupo C → 10 mL/kg na 1ª hora**. A expansão rápida do **Grupo D** (20 mL/kg em 20 min) exige **choque, hemorragia grave ou disfunção orgânica** — a agitação só puxa para D quando traduz hipoperfusão/choque. *(Refina a redação anterior, que tratava dor abdominal + agitação genericamente como D.)*
 - 🔴 **Reação Cruzada:** Ocorre predominantemente entre Dengue e Zika (ambos Flavivírus).
 - 🔴 **Vacina Febre Amarela:** Não é contraindicada em pacientes com Doença Renal Crônica estável. Gestantes podem ser vacinadas em cenários de alto risco epidemiológico.
 - 🔴 **Monitoramento Grupo B:** Exige obrigatoriamente a realização de hemograma para avaliação do hematócrito antes da decisão de alta ou internação.

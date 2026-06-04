@@ -12,6 +12,7 @@ Gaps in the sequence (026, 047, 050, 053, 057, 058, 064, 072) are sessions that 
 
 | # | Date | Tool | Topic |
 |---:|---|---|---|
+| 075 | 2026-06-03 | Claude Code | Conexão Google Drive (planilhas conciliadas) + marco ENAMED no `/performance` + ciclo completo Arboviroses (15 erros → 19 cards → resumo) + **camada de estado contract-driven** (4 contratos `core/`, HANDOFF+ESTADO, bankruptcy FSRS) espelhada do `agente-daktus-content` |
 | 074 | 2026-06-03 | Claude Code | Pivot Agent-First fechado — Onda D completada (Streamlit Encolhe: FSRS Player removido, Caderno read-only via `get_caderno_detalhado`; audit PASS) + commits atômicos das Ondas A-D herdadas da sessão interrompida |
 | 073 | 2026-05-27 | Claude Code | Consolidação do harness em fluxo único — contrato §7.2 em AGENTE + 7 commits (workflows delegam CLI canônica em vez de copiar, vibeflow `domain-engine-api` staleness fix 5→2 exports, 4 module docstrings, `Temas/`→`resumos/` em 7 arquivos) |
 | 071 | 2026-04-23 | Claude Code | Análise de Úlceras Genitais (43q / 38a, 5 erros, 3 eixos metacognitivos) + criação da skill `/performance` via ciclo vibeflow completo (discover→spec→implement→audit) |

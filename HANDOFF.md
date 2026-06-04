@@ -7,7 +7,7 @@
 3. **Boot:** rodar o check de reconcile (`core/contracts/reconcile-contract.md`) — conferir planilha↔db↔ESTADO↔FSRS antes de trabalho novo.
 
 ## Estado por frente
-- **Volume & Metas:** 3.170/12.000 ENAMED (80,4%); ~86q/dia para o alvo. Planilha conciliada 100% em 03/06.
+- **Volume & Metas:** 3.210/12.000 ENAMED (80,2%); ~86q/dia para o alvo. Planilha conciliada 100% em 03/06 (Infecto 217 = db).
 - **Conteúdo:** Arboviroses turbinado (17 armadilhas, seção vacina FA blindada). Próximo = Diabetes Compl. Crônicas.
 - **Erros & Cards:** 226 erros; 15 novos de Arboviroses (s075) + 19 cards qualitativos.
 - **FSRS:** fila ativa 332 qualitativos; backlog 307 nunca revisados; 70 heurísticos aposentados (bankruptcy).

@@ -57,6 +57,8 @@ Regras:
 
 Para localizar a semana corrente: comparar a data de hoje com os ranges da linha 2. Os temas do cronograma casam com os `Assunto` das abas do Dashboard — a conciliação tarefa-a-tarefa entre as duas planilhas é possível por (tema, tipo).
 
+**Marcador de conclusão (workflow do usuário):** o usuário **risca / muda a cor** do tema no cronograma ao concluí-lo (lê + faz exercícios, lança no dashboard). Esse marcador é o sinal de "tema concluído" que alimenta a priorização do próximo tema. Ler a formatação via `openpyxl`: `cell.fill.fgColor.rgb` (cor de fundo) e `cell.font.strike` (tachado). Célula sem preenchimento/sem strike = pendente. Ver `core/contracts/reconcile-contract.md §Absorção de dados de performance`.
+
 ---
 
 ## Fluxo

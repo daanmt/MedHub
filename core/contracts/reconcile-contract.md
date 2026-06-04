@@ -30,7 +30,7 @@ Leitura rápida, read-only. Reporta divergências; não grava sem confirmação.
 | **B2** | Header do HANDOFF aponta `sessão NNN` mas `history/session_NNN.md` não existe | BLOCKING | existência do arquivo |
 | **B3** | "Estado por frente" do HANDOFF contradiz o `ESTADO.md` | BLOCKING | cross-check macro |
 | **B4** | Indicador do `ESTADO.md` diverge do total de `sessoes_bulk` | BLOCKING | `/performance` vs ESTADO |
-| **W1** | Planilha Dashboard (Drive) diverge de `sessoes_bulk` | WARNING | `/importar-planilha` (verificar) |
+| **W1** | Planilha Dashboard (somas das **abas por disciplina**) diverge de `sessoes_bulk` | WARNING | `/importar-planilha` (verificar) — comparar contra as abas, **nunca** o Quadro Geral |
 | **W2** | `history/session_NNN.md` existe mas não está no `history/INDEX.md` | WARNING | INDEX desatualizado |
 | **W3** | Backlog FSRS (`state=0`) cresceu sem drenagem há N sessões | WARNING | `fsrs-management-contract.md` |
 | **W4** | Áreas em `sessoes_bulk` fora de `AREAS_VALIDAS` | WARNING | vocabulário (ver sessão 075: `GO`, `Obstetricia`) |
@@ -67,9 +67,11 @@ PASSO 4 — Saída
 
 ## Absorção de dados de performance (planilha → db)
 
-A planilha do Drive (`Dashboard EMED 2026`) é o **SSOT de volume**; o usuário a edita manualmente. Regras de absorção:
+A planilha do Drive (`Dashboard EMED 2026`) é o **SSOT de volume** e a fonte **mais fresca**: o usuário a preenche **logo após cada estudo** (lê o tema + faz exercícios), registrando as questões/performance nas linhas de tarefa do dashboard e **riscando / mudando a cor do tema no cronograma** ao concluí-lo. Consequências para o reconcile:
 
-- **No boot:** W1 detecta drift planilha↔`sessoes_bulk`. Se houver, oferecer conciliação (não importar silenciosamente).
-- **Delta, não total:** a planilha guarda acumulados por tarefa; importar só `(total na aba) − (total no db)` por área — via `/importar-planilha` → `tools/importar_sessoes.py`. Ver `.claude/commands/importar-planilha.md`.
-- **Usuário relata "fiz X, acertei Y":** `tools/registrar_sessao_bulk.py` ANTES de processar erros (decisão "SSOT volumétrica" em `AGENTE.md §6`).
-- **Cronograma:** a planilha `Cronograma de Reta Final.xlsx` NÃO persiste no db — leitura sob demanda para guiar prioridades (decisão sessão 075).
+- **A planilha geralmente já reflete o trabalho.** Quando o usuário diz "registrei / concluí X", o esperado é **delta = 0** vs o db se já tiver sido importado nesta sessão — confirmar, não duplicar. Se o db ainda não tem, importar o delta.
+- **Abas por disciplina são autoritativas; o Quadro Geral NÃO.** O Quadro Geral tem bugs de fórmula recorrentes na coluna *Questões Feitas* (observado empiricamente: Obstetrícia somava acertos s075; Infecto não somou a linha nova de Arboviroses s075). **W1 reconcilia contra a soma das abas por disciplina**, nunca contra o Quadro Geral. Ao detectar divergência QG↔aba, reportar como provável bug de fórmula da planilha (sugerir correção ao usuário; o MCP é read-only).
+- **Sinal de conclusão de tema:** tema **riscado / recolorido** no cronograma = concluído. É o gatilho que alimenta a priorização do *próximo tema* (a fila de `ESTADO.md §Próximos passos` segue o cronograma). Ler os marcadores via `download_file_content` + openpyxl (ver `.claude/commands/importar-planilha.md`).
+- **Delta, não total:** a planilha guarda acumulados por tarefa; importar só `(soma da aba) − (total no db)` por área — via `/importar-planilha` → `tools/importar_sessoes.py`.
+- **Usuário relata "fiz X, acertei Y" (sem ter lançado na planilha ainda):** `tools/registrar_sessao_bulk.py` ANTES de processar erros (decisão "SSOT volumétrica" em `AGENTE.md §6`). O usuário tipicamente lança na planilha em paralelo — conciliar, não somar em dobro.
+- **Cronograma:** a planilha `Cronograma de Reta Final.xlsx` NÃO persiste no db — leitura sob demanda para guiar prioridades e ler os marcadores de conclusão (decisão sessão 075).

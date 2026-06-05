@@ -98,7 +98,11 @@ def insert_questao(area, tema, enunciado, correta, chamada, erro, elo, armadilha
             cards_to_insert = [('elo_quebrado', frente_elo, verso_elo, fc, fp, vr, vrm, va_elo, qual_source_elo)]
 
             # --- Card 2: A Armadilha (se relevante) ---
-            if armadilha and len(armadilha) > 20 and armadilha != "N/A":
+            # Só no caminho PURAMENTE legado: quando o agente passou campos
+            # qualitativos (frente_pergunta + verso_resposta), a armadilha já
+            # está em verso_armadilha do card 1 — gerar o card heurístico aqui
+            # duplicaria o conteúdo (bug s077: #413 qualitativo + #414 heurístico).
+            if not use_qualitative and armadilha and len(armadilha) > 20 and armadilha != "N/A":
                 trigger_match = re.search(r'(?i)(?:descreve|apresenta|usa|coloca)\s+(.*?)(?=\s+para|\.|\Z)', armadilha)
                 trigger = trigger_match.group(1) if trigger_match else "este cenario"
                 frente_arm = f"**ARMADILHA:** O examinador costuma usar {trigger} para induzir ao erro em {tema}."

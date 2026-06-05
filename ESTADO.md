@@ -7,7 +7,7 @@ relates_to: [AGENTE, handoff-contract, estado-contract]
 
 # ESTADO — MedHub
 
-*Atualizado: 2026-06-04 (sessão 076) | Ferramenta: Claude Code (Opus 4.8)*
+*Atualizado: 2026-06-05 (sessão 077) | Ferramenta: Claude Code (Opus 4.8)*
 
 > **Boot:** ler [`AGENTE.md`](AGENTE.md) → [`HANDOFF.md`](HANDOFF.md) (operacional curto) primeiro. Este arquivo é o snapshot **macro** (metas, indicador, marcos). Estrutura normatizada por [`core/contracts/estado-contract.md`](core/contracts/estado-contract.md).
 
@@ -20,7 +20,7 @@ relates_to: [AGENTE, handoff-contract, estado-contract]
 - **Meta Final:** 23.000 questões até 12/2026 (Custo/Q: R$ 0,20)
 - **Indicador Atual:** 3.244 / 12.000 ENAMED — faltam ~8.756 q
 - **Performance Geral:** 80,2% (2.601 acertos / 3.244 questões — `sessoes_bulk`; +34q/27a de CAD/EHH na s076)
-- **Contadores:** 45 resumos em `resumos/` · 233 erros em `ipub.db` · 338 cards qualitativos ativos (71 aposentados) · **0 heurísticos ativos**
+- **Contadores:** 45 resumos em `resumos/` · 234 erros em `ipub.db` · 325 cards qualitativos ativos (86 aposentados) · **0 heurísticos ativos** · **0 cards `[bulk]` mal-rotulados**
 
 ---
 
@@ -29,9 +29,9 @@ relates_to: [AGENTE, handoff-contract, estado-contract]
 - **Volume & Metas:** 3.210 acumuladas (80,2%). Planilha Drive conciliada (delta +40q Cirurgia + 40q Infecto/Arboviroses; áreas normalizadas). Cluster fraco confirmado: Cardiologia, Hepato, Dermato, FA.
 - **Conteúdo:** 45 resumos. Arboviroses turbinado (17 armadilhas). **Gap ativo do cronograma:** `Diabetes Mellitus - Complicações Crônicas`.
 - **Erros & Cards:** 233 erros estruturados (+7 CAD/EHH). Pipeline `/analisar-questao` → `insert_questao.py` operante.
-- **FSRS:** 338 cards qualitativos; **fila 100% qualitativa — 0 heurísticos** (os 87 órfãos da bankruptcy s075 foram regenerados em 4 ondas na s076). Backlog state=0 segue a drenar por área fraca. 71 aposentados (70 bankruptcy + 1 duplicata).
-- **Infraestrutura:** camada de contratos `core/contracts/`. `cards_regen_queue.py` critério corrigido. **Governança de evidência (s076):** `evidence-governance.md` + `/pesquisar-evidencia` + subagente `evidence-researcher` + `pubmedmcp` — auditoria de afirmação clínica (BR>INT>consenso + lente da banca), adaptada do irmão. Google Drive MCP vinculado.
-- **Dívida de dados (nova):** temas `[bulk] *` são lata de lixo de rotulagem — ~80 cards mal-filiados (cardiopatias/iSGLT-2/HbA1c/epidemiologia/GO sob "[bulk] Cirurgia"); inflam o "Cirurgia due" e distorcem o filtro por área. Re-fil pendente.
+- **FSRS:** 325 cards qualitativos; **fila 100% qualitativa — 0 heurísticos**. Backlog state=0 segue a drenar por área fraca. 86 aposentados (70 bankruptcy + 1 duplicata + 15 dedup s077). **Deck limpo (s077): 0 duplicatas, 0 option-dependent, 0 mal-rotulados.** Contrato `/revisar` evoluído (flip obrigatório + relearning intra-sessão).
+- **Infraestrutura:** camada de contratos `core/contracts/`. **Governança de evidência (s076):** `evidence-governance.md` + `/pesquisar-evidencia` + subagente `evidence-researcher` + `pubmedmcp` — auditoria de afirmação clínica (BR>INT>consenso + lente da banca). Google Drive MCP vinculado. **`insert_questao.py` corrigido (s077):** não gera mais card heurístico extra no caminho qualitativo.
+- **Dívida de dados (RESOLVIDA s077):** os ~291 cards `[bulk]` foram re-categorizados para área/tema corretos ("[bulk] Cirurgia" 216→0; Cirurgia real 57, Pediatria 65, Endocrino 35). O filtro por área e o "due por área" voltam a ser confiáveis.
 
 ---
 

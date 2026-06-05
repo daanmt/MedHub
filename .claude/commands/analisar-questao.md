@@ -91,6 +91,10 @@ O conteúdo extraído deve ser incorporado **de forma natural e técnica** ao bl
 
 O resumo é um **documento técnico de referência**, não um caderno de erros.
 
+### ⚠️ Afirmação decisória controversa → auditar a evidência
+
+Quando a `explicacao_correta`/`verso_regra_mestre` fizer uma afirmação **decisória** (conduta de 1ª linha, dose, cutoff, score, critério, contraindicação) **e** houver controvérsia, banca-dependência ou confiança < alta, auditar pela hierarquia de `core/contracts/evidence-governance.md` (sociedades BR + MS > RCT/INT > consenso) via `/pesquisar-evidencia` ou o subagente `evidence-researcher`. Se o gabarito da banca divergir da diretriz vigente: **ensinar a resposta da banca + registrar 🔴 armadilha "banca-dependente"** (contrato §6). Citar a fonte (sociedade/ano ou PMID). Nunca fabricar fonte (honest-negative).
+
 ---
 
 ## 5. Perspectiva do Examinador

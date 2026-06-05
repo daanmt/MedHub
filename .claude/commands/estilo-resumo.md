@@ -9,6 +9,7 @@ status: canonical
 
 > Este documento define o padrão de formatação para todos os resumos em `resumos/`.
 > Qualquer agente que criar ou editar resumos DEVE seguir estas regras.
+> **Conteúdo decisório** (conduta/dose/cutoff/critério controverso) segue, além da forma, a **governança de evidência** de `core/contracts/evidence-governance.md`: auditar contra a melhor fonte (sociedades BR > RCT/INT > consenso), citar fonte/ano, e registrar conflito banca × evidência como 🔴 armadilha banca-dependente.
 
 ---
 

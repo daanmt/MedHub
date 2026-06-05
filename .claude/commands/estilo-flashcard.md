@@ -114,3 +114,7 @@ Os cards cunhados pela heurística antiga devem ser refeitos pelo agente, um err
 - **Flashcard** = recall atômico de um ponto de ruptura específico, ancorado no resumo.
 
 O card consome o resumo; não o substitui nem o duplica.
+
+## Evidência: o card herda a auditoria da origem
+
+O card **não é auditado isoladamente** — ele herda o veredito de evidência da questão/resumo de origem (`core/contracts/evidence-governance.md` §1). Quando a `verso_regra_mestre` afirma uma conduta/dose/cutoff decisória já auditada, **carregar a citação** (sociedade/ano ou PMID) e, se for conflito banca × evidência, refletir o 🔴 alerta banca-dependente na `verso_armadilha`.

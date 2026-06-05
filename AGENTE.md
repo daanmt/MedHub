@@ -130,6 +130,7 @@ relates_to: [ESTADO, AGENTE]      # máximo 3 referências
 - **Regra de Acúmulo** — armadilhas de prova são cumulativas; jamais sobrescrever, apenas somar.
 - **Camada de estado contract-driven (sessão 075)** — estado vive em duas camadas: `HANDOFF.md` (operacional curto, ≤60 linhas, lido primeiro) + `ESTADO.md` (macro). Normatizado por `core/contracts/{handoff,estado,reconcile,fsrs-management}-contract.md`. Padrão adaptado do agente irmão `agente-daktus-content`. Boot roda check de reconcile; fechamento atualiza HANDOFF sempre.
 - **FSRS bankruptcy (sessão 075)** — os 70 cards heurísticos legados foram aposentados (`needs_qualitative=2`), não regenerados. Go-forward: cards nascem qualitativos via `insert_questao.py`. Política em `core/contracts/fsrs-management-contract.md`.
+- **Governança de evidência (sessão 076)** — afirmação clínica decisória (conduta/dose/cutoff/critério) é auditada contra a melhor evidência: hierarquia **sociedades BR + MS > RCT/meta + guidelines INT > consenso**, com **lente da banca** (o que ENAMED/ENARE espera). Conflito banca × evidência atual → ensina a resposta da banca **e** registra 🔴 armadilha "banca-dependente" (nunca silenciar). Substrato: `pubmedmcp` (verbatim por PMID/DOI) + WebSearch (sociedades BR em PDF) + obsidian-rag (local). Normatizado por `core/contracts/evidence-governance.md`; operado por `/pesquisar-evidencia` + subagente `evidence-researcher`. Adaptado do mecanismo de auditoria do `agente-daktus-content`. Escopo v1.0: go-forward + sob demanda (sem varredura retroativa).
 
 ---
 
@@ -163,6 +164,7 @@ Qualquer duplicação semântica entre workflow e skill é defeito por contrato.
 | `/extrair-pdf` | Wrapper para `extract_pdfs.py` (política Zero PDF) |
 | `/auditar-resumos` | Linter de qualidade para `resumos/` |
 | `/performance` | Checagem rápida (questões, metas, custo/Q, áreas fracas) — read-only |
+| `/pesquisar-evidencia` | Busca + auditoria de evidência de afirmação clínica decisória (hierarquia BR>INT>consenso + lente da banca); veredito + fonte. Governado por `core/contracts/evidence-governance.md` |
 
 ### 7.4 CLIs ativos (`tools/`)
 

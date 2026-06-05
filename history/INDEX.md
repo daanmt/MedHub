@@ -12,6 +12,7 @@ Gaps in the sequence (026, 047, 050, 053, 057, 058, 064, 072) are sessions that 
 
 | # | Date | Tool | Topic |
 |---:|---|---|---|
+| 077 | 2026-06-05 | Claude Code | `/revisar` ~34 cards + re-drills + **dissecação metacognitiva** (bug nº 1: ancoragem no número, transferível PTI/asma/trauma) + evolução do contrato `/revisar` (flip obrigatório + relearning intra-sessão) + **limpeza estrutural do deck**: 15 pares dedup, 5 option-dependent reescritos, **re-fil de 291 cards `[bulk]`** (Cirurgia 216→57, Pediatria 4→65) + fix `insert_questao.py` (card heurístico fantasma) |
 | 076 | 2026-06-04 | Claude Code | CAD/EHH (34q, 7 erros → 7 cards + resumo turbinado) + **regeneração completa dos 87 cards heurísticos órfãos** da bankruptcy s075 (4 ondas, FSRS preservado → 0 heurísticos) + fix do critério órfão da `cards_regen_queue.py` + `/revisar` 15 cards (fantasma Dengue C/D resolvido); achado: temas `[bulk]` mal-rotulados |
 | 075 | 2026-06-03 | Claude Code | Conexão Google Drive (planilhas conciliadas) + marco ENAMED no `/performance` + ciclo completo Arboviroses (15 erros → 19 cards → resumo) + **camada de estado contract-driven** (4 contratos `core/`, HANDOFF+ESTADO, bankruptcy FSRS) espelhada do `agente-daktus-content` |
 | 074 | 2026-06-03 | Claude Code | Pivot Agent-First fechado — Onda D completada (Streamlit Encolhe: FSRS Player removido, Caderno read-only via `get_caderno_detalhado`; audit PASS) + commits atômicos das Ondas A-D herdadas da sessão interrompida |

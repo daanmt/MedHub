@@ -30,7 +30,7 @@ relates_to: [AGENTE, handoff-contract, estado-contract]
 - **Conteúdo:** 45 resumos. Arboviroses turbinado (17 armadilhas). **Gap ativo do cronograma:** `Diabetes Mellitus - Complicações Crônicas`.
 - **Erros & Cards:** 233 erros estruturados (+7 CAD/EHH). Pipeline `/analisar-questao` → `insert_questao.py` operante.
 - **FSRS:** 338 cards qualitativos; **fila 100% qualitativa — 0 heurísticos** (os 87 órfãos da bankruptcy s075 foram regenerados em 4 ondas na s076). Backlog state=0 segue a drenar por área fraca. 71 aposentados (70 bankruptcy + 1 duplicata).
-- **Infraestrutura:** camada de contratos `core/contracts/`. `cards_regen_queue.py` critério corrigido (`nq=1` órfão → `quality_source='heuristic' AND nq!=2`). Google Drive MCP vinculado.
+- **Infraestrutura:** camada de contratos `core/contracts/`. `cards_regen_queue.py` critério corrigido. **Governança de evidência (s076):** `evidence-governance.md` + `/pesquisar-evidencia` + subagente `evidence-researcher` + `pubmedmcp` — auditoria de afirmação clínica (BR>INT>consenso + lente da banca), adaptada do irmão. Google Drive MCP vinculado.
 - **Dívida de dados (nova):** temas `[bulk] *` são lata de lixo de rotulagem — ~80 cards mal-filiados (cardiopatias/iSGLT-2/HbA1c/epidemiologia/GO sob "[bulk] Cirurgia"); inflam o "Cirurgia due" e distorcem o filtro por área. Re-fil pendente.
 
 ---

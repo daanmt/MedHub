@@ -1,10 +1,11 @@
 # HANDOFF.md — ESTADO OPERACIONAL CURTO
-*Atualizado: 2026-06-04 — CAD/EHH + regeneração dos 87 cards órfãos + /revisar (sessão 076)*
+*Atualizado: 2026-06-04 — s076: CAD/EHH + 87 cards regenerados + camada de evidência. **Próximo: retomar `/revisar` (parados em 20/30).***
 
-## ▶ Próximo passo imediato (ao retomar)
-1. **Re-fil dos temas `[bulk]`** (nova demanda da s076): ~80 cards mal-rotulados sob "[bulk] Cirurgia" (cardiopatias, iSGLT-2, HbA1c, epidemiologia, GO). Migração one-shot, backup-first → corrige o "Cirurgia due" inflado e o filtro por área do `/revisar`.
-2. **Drenar fila FSRS:** 15 cards restantes da fila de 04/06 + 4 que voltam hoje (rating 1: bradicardia/adrenalina, taqui sinusal, incubação FA, extravasamento dengue) + novos por área fraca.
-3. **Boot:** rodar o check de reconcile (`core/contracts/reconcile-contract.md`).
+## ▶ Próximo passo imediato (ao retomar) — RETOMAR `/revisar`
+1. **Continuar a revisão de onde paramos (estávamos em 20/30).** Fila ≈ **17 cards**: 7 que caíram hoje (re-fixar) + 10 novos de outras áreas (Cirurgia 6, Infecto 2, Obstetrícia 1, Pneumo 1). Modo: lotes de 5, auto-rating, **micro-resumo ao errar** (feedback s076 — ativo).
+2. **Focar os clusters fracos de 04/06:** ⚠️ **PALS/arritmias pediátricas** (taqui sinusal × TSV × bradicardia→adrenalina), ⚠️ **Febre Amarela** (4/5 caíram: vetores, vírus, Faget, viremia), ⚠️ **dengue = extravasamento** (não sangramento). Cards que voltaram p/ hoje: #1, #5, #389, #396, #401, #403, #404.
+3. **Evidência agora LIVE:** `pubmedmcp` conecta neste boot → usar `/pesquisar-evidencia` se um card for banca-dependente/contestável (ex.: colestase SBP×INT, metas SBD×ADA).
+4. **Antes:** check de reconcile rápido (`core/contracts/reconcile-contract.md`).
 
 ## Estado por frente
 - **Volume & Metas:** 3.244/12.000 ENAMED (80,2%); ~86q/dia para o alvo (13-09). Planilha não reconciliada nesta sessão (sem novo lançamento no Drive).
@@ -21,8 +22,8 @@
 - **Camada de governança de evidência** portada/adaptada do irmão (contrato + skill `/pesquisar-evidencia` + subagente + `pubmedmcp`): hierarquia BR>INT>consenso + lente da banca + veredito `DESATUALIZADO` (banca×evidência → 🔴 banca-dependente).
 
 ## Pendências/observações ativas
-- **Push pendente:** commits locais s075 + s076; `main` sem upstream tracking — resolver no go.
-- **Erro repetido vigiado (novo):** dengue — eixo de gravidade é **extravasamento plasmático**, não sangramento (#396 falhou); arritmias pediátricas (sinus vs TSV vs bradicardia).
+- **Demanda em espera (despriorizada p/ a revisão):** re-fil dos temas `[bulk]` — ~80 cards mal-rotulados sob "[bulk] Cirurgia" (cardiopatias/iSGLT-2/HbA1c/epidemiologia/GO); migração one-shot backup-first → corrige o "Cirurgia due" inflado.
+- **Erro repetido vigiado:** dengue = **extravasamento plasmático**, não sangramento (#396); arritmias pediátricas (sinusal × TSV × bradicardia). Git: tudo pushed até `d3706cb`.
 
 ---
 *Histórico: history/INDEX.md · Snapshot macro: ESTADO.md*

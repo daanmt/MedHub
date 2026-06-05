@@ -11,13 +11,14 @@
 - **Conteúdo:** 45 resumos. `Compl. Agudas` turbinado (+4 armadilhas CAD/EHH). **Gap ativo:** `Diabetes - Complicações Crônicas`.
 - **Erros & Cards:** 233 erros (+7 CAD/EHH); 338 cards qualitativos.
 - **FSRS:** **fila 100% qualitativa — 0 heurísticos** (87 órfãos regenerados em 4 ondas). Backlog state=0 segue a drenar. Watched Dengue C/D **resolvido**.
-- **Infraestrutura:** `cards_regen_queue.py` critério corrigido (`nq=1` órfão → `quality_source='heuristic' AND nq!=2`); `estilo-flashcard.md §Backfill` reativada.
+- **Infraestrutura:** `cards_regen_queue.py` critério corrigido; `estilo-flashcard.md §Backfill` reativada. **Nova camada: governança de evidência** (`core/contracts/evidence-governance.md` + `/pesquisar-evidencia` + subagente `evidence-researcher` + `pubmedmcp`). `pubmedmcp` conecta no **próximo boot** (restart do Claude Code).
 
 ## Última sessão — sessão 076
 - CAD/EHH: 34q/27a registradas (3.244); 7 erros → 7 cards qualitativos (406-412) + resumo turbinado; 4/7 erros foram sobre armadilhas já documentadas (gargalo = aplicação/leitura, não conhecimento).
 - **87 cards heurísticos órfãos regenerados qualitativamente** (4 ondas, `update_flashcard_fields`, FSRS preservado) + 1 duplicata (#276) aposentada → 0 heurísticos ativos.
 - Causa-raiz do slip-through achada e corrigida (filtro órfão da bankruptcy s075).
-- `/revisar` 15 cards (7×4, 3×2, 5×1): **fantasma Dengue C/D caiu** ✅; novo ponto fraco = arritmias pediátricas (PALS).
+- `/revisar` 20 cards: **fantasma Dengue C/D caiu** ✅; pontos fracos novos = arritmias pediátricas (PALS) + Febre Amarela (4/5 caíram).
+- **Camada de governança de evidência** portada/adaptada do irmão (contrato + skill `/pesquisar-evidencia` + subagente + `pubmedmcp`): hierarquia BR>INT>consenso + lente da banca + veredito `DESATUALIZADO` (banca×evidência → 🔴 banca-dependente).
 
 ## Pendências/observações ativas
 - **Push pendente:** commits locais s075 + s076; `main` sem upstream tracking — resolver no go.

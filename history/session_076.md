@@ -39,7 +39,22 @@
 - Regenerar os 87 heurísticos órfãos (decisão do usuário) em vez de aposentá-los — o caminho §Backfill da `estilo-flashcard.md` foi reativado para esta finalidade.
 - Aposentar a duplicata #276 (idêntica a #274) em vez de manter dois cards FSRS iguais.
 
+## Continuação (pós-fechamento inicial)
+
+### /revisar — +5 cards (Febre Amarela) → 20 no total
+- Bloco FA: 4/5 caíram (vetores, vírus, sinal de Faget, viremia/isolamento) — **Febre Amarela é o calcanhar confirmado**. Esquema vacinal (9m+4a) acertado.
+- **Feedback do usuário (encodado):** ao errar um card (nota 1-2), apresentar **micro-resumo do bloco** (revisão *just-in-time*). Gravado em `.claude/commands/revisar.md §Modo conversacional` + memória `feedback-revisar-conversational-mode`.
+
+### Adendo — Camada de governança de evidência (port adaptado do irmão)
+Por diretriz do usuário, portado o mecanismo de busca/auditoria de evidência científica do `agente-daktus-content`, adaptado ao MedHub:
+- `core/contracts/evidence-governance.md` (contrato): hierarquia **sociedades BR + MS > RCT/meta + guidelines INT > consenso** + **lente da banca**; taxonomia de 6 vereditos com **`DESATUALIZADO`** (banca × evidência atual) como assinatura MedHub; conflito banca×evidência → ensina a banca + 🔴 armadilha banca-dependente (drift não silenciado); honest-negative; boundary abstract-only; audit-before-advance.
+- `.claude/commands/pesquisar-evidencia.md` (skill operacional) + `.claude/agents/evidence-researcher.md` (subagente fan-out, read-only).
+- `pubmedmcp` adicionado ao `.mcp.json` (local/gitignored; conecta no próximo boot).
+- Integração: AGENTE.md §6/§7.3, analisar-questao, estilo-resumo, estilo-flashcard.
+- Escopo v1.0: **go-forward + skill sob demanda** (sem varredura retroativa). Fonte: `pubmed-audit-layer.md` + `evidence-bank-governance.md` + `daktus-evidence` do irmão.
+
 ## Próximos passos
+- **Reiniciar o Claude Code** para o `pubmedmcp` conectar (a auditoria por PMID/DOI só funciona após o restart; antes disso degrada para WebSearch).
 - **NOVA DEMANDA — re-fil dos temas `[bulk]`:** dezenas de cards estão mal-rotulados (cardiopatias congênitas, iSGLT-2, metas HbA1c, epidemiologia, GO — todos sob "[bulk] Cirurgia"); infla o "Cirurgia due" e distorce o filtro por área do `/revisar`. Migração one-shot, backup-first.
 - **Drenar backlog FSRS** (15 cards restantes da fila de hoje + 4 que voltam hoje por rating 1 + novos) por área fraca.
 - **Bloco PALS** (arritmias pediátricas) como revisão dirigida.

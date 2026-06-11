@@ -37,6 +37,8 @@ relates_to: [AGENTE, handoff-contract, estado-contract]
 
 ## Próximos passos
 
+> **🏃 MODO SPRINT QUESTION-FIRST (s078 → ~13/07/2026):** atrasado no cronograma → estudo só por **questões + flashcards, SEM leitura de apostila**. Meta **≥100 questões/dia + ≥20 flashcards/dia** (100/dia > ritmo-alvo ENAMED de ~92/dia → recupera o gap). Cobertura de tópico novo é question-first; **não criar resumo completo por tópico** neste período. Detalhe: [[project-sprint-questoes-focado]] na memória.
+
 Ver [`ROADMAP.md`](ROADMAP.md). Prioridades guiadas pelo cronograma (SSOT: `Cronograma de Reta Final.xlsx` no Drive):
 
 1. **Diabetes - Complicações Crônicas:** criar o resumo (gap; DM2 e Compl. Agudas já existem). Revisão por Questões do bloco DM fecha 15–19/06.

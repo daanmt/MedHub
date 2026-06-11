@@ -18,9 +18,15 @@
 - **Bug nº 3 — decoreba Febre Amarela:** vetores (disse "Haemophilus" por Haemagogus), Faget (errou), incubação/viremia (colapsou ambos em "6-10 dias"), família do vírus, esquema vacinal. Lacuna factual pura — resumo é gold, falta repetição.
 - **Vitória de mecanismo (Camada 1 funcionou):** reposição na dengue — errou card 17 ("20 mL/kg" no Grupo C) → após micro-resumo, **cravou card 32** ("Grupo C, 10 mL/kg/1ª hora"). Consertou na mesma sessão.
 
-## Achados de qualidade do deck
+## Dedup estrutural do deck (s078)
 
-- **4 pares duplicados entre os cards novos:** ids **39/40** (FAST+ estável → TC), **41/42** (uretra anterior / queda a cavaleiro), **43/44** (damage control), **45/46** (concordância DM2 em gêmeos MZ). Mesma pergunta, versos quase idênticos. Dedup pendente — o dedup da s077 não os cobriu (eram `state=0` novos).
+- **Causa-raiz encontrada:** o deck tinha **duplicação sistemática v1/v2** — um bug de pipeline criava **2 cards por questão de origem**. Chave determinística = `questao_id` (cada par compartilha o mesmo `questao_id`; ex.: q25→#39/#40). Muito mais confiável que similaridade textual (rewrites com sinônimos — "FAF"≈"arma de fogo" — derrotam SequenceMatcher e até token-Jaccard).
+- **Adjudicação:** dos **121** `questao_id` com 2 cards ativos, **109 são duplicatas reais** (mesma conduta, reformulada) → aposentadas via `needs_qualitative=2` (reversível; backup `ipub_backup_20260611_114134.db`). Mantido o card mais completo de cada par (score: tem armadilha + regra + comprimento).
+- **Deck: 325 → 216 cards ativos** (195 aposentados: 70 bankruptcy + 16 s077 + 109 s078). **0 duplicatas restantes.**
+- **12 pares EXCLUÍDOS do dedup:**
+  - **5 arbovirose (q211-226):** multi-card LEGÍTIMO da s075 (facetas distintas do mesmo erro — ex.: q214 = reposição + dengue<2a). Mantidos.
+  - **7 divergentes (cards conflitam — NÃO duplicatas, flag p/ revisão):** q40 (#69/#70), **q53 (#95 HCE × #96 T4F)**, **q54 (#97 T4F × #98 atresia pulmonar)**, **q99 (#182 ↓insulina × #183 manter — contraditório)**, **q100 (#184 intensificar × #185 avental branco — contraditório)**, q133 (#230/#231), q154 (#272 MgSO4 × #273 salbutamol). Alguns têm um card clinicamente errado (distrator armazenado como card real) — decidir corrigir ou aposentar.
+- Método foi script ad-hoc (varredura por similaridade → descoberta da chave `questao_id` → dedup determinístico), removido após uso (Zero-temp). `insert_questao.py` já corrigido na s077 (não recria o padrão go-forward).
 
 ## Artefatos criados/modificados
 
@@ -28,7 +34,7 @@
 - Memória longa: `feedback_revisar_conversational_mode.md` (Camada 2 + Why/How) + `MEMORY.md` (ponteiro).
 - `HANDOFF.md` — rotacionado para s078. `ESTADO.md` — contrato Camada 2 + data/ferramenta.
 - `history/session_078.md` + `history/INDEX.md`.
-- `ipub.db` (local-only): 44 revlogs (1 por card; sem regravação dos re-surfaced 1-2).
+- `ipub.db` (local-only): 44 revlogs (1 por card; sem regravação dos re-surfaced 1-2) + **109 cards aposentados** no dedup (`needs_qualitative=2`). Backup pré-dedup: `ipub_backup_20260611_114134.db`.
 
 ## Decisões tomadas
 
@@ -38,6 +44,6 @@
 ## Próximos passos
 
 - **Drillar FA bruto** (Anki): vetores, Faget, incubação 3-6, viremia <7, vírus RNA/Flaviviridae, vacina 9m+4a→dose única, DVA. Resumo `Arboviroses.md §4` é o material.
-- **Dedup dos 4 pares novos** (ids 39/40, 41/42, 43/44, 45/46) — pendente.
+- **Revisar os 7 pares divergentes** flagados no dedup (corrigir card errado ou aposentar) — destaque: q53/q54 (diagnósticos trocados), q99/q100 (condutas contraditórias).
 - Gap de conteúdo ativo: `Diabetes - Complicações Crônicas`.
 - Volume: ENAMED 3.244/12.000 (~92q/dia para 13/09).

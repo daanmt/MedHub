@@ -1,29 +1,35 @@
 # HANDOFF.md — ESTADO OPERACIONAL CURTO
-*Atualizado: 2026-06-11 — s078: `/revisar` **backlog drenado (44 cards)** + contrato `/revisar` → **Camada 2 (Revisão Direcionada de fechamento)** (o card é a sonda, o resumo é a fonte; verdict: **0 deficiência de material**) + **dedup estrutural: 109 pares v1/v2 aposentados** (deck 325→216; chave `questao_id`). **Próximo: MODO SPRINT questão-first — ≥100q + ≥20 cards/dia, sem apostila (até ~13/07).***
+*Atualizado: 2026-06-12 — s079 (LRA) + s080 (Hemostasia) fechadas; 22 erros → 23 cards (415-437); 3 padrões metacognitivos nomeados. **Próximo: bloco de 8 temas do cronograma — revisão direcionada do resumo ANTES das questões.***
 
-## ▶ Próximo passo imediato — MODO SPRINT QUESTÃO-FIRST (s079+)
-1. **Frente = questão pura.** Meta **≥100q/dia + ≥20 flashcards/dia** até ~13/07/2026 (final desta semana + 4 semanas). **SEM apostila** — tópico novo coberto por questões + cards. Por sessão: `registrar_sessao_bulk` ANTES → analisar erros → cards via `insert_questao`. **Não criar resumo completo por tópico novo.** Detalhe: memória `project-sprint-questoes-focado`. Scrum master cobra a cadência (100/dia > alvo ENAMED de ~92/dia).
-2. **`/revisar` (contrato s078):** Camada 1 (micro-resumo na virada) + **Camada 2 (Revisão Direcionada ao fechar)** + flip + relearning. **Nota sprint:** tópico question-first pode não ter resumo de origem → a Camada 2 vira **micro-nota** focada do erro. **Re-verificar FA** (cards 401/403/389/402/405) — drillada s078, deve subir pra nota 4.
-3. **Vigiar bug nº 1 (ancoragem no achado):** líquido livre / plaqueta / PaCO2 lidos contra a tabela, não o contexto. Heurística: *"o que esse achado DEVERIA significar nesse cenário?"*.
-4. **7 pares divergentes** flagados no dedup (corrigir/aposentar quando der): q53 (#95/#96 HCE×T4F), q54 (#97/#98 T4F×atresia), q99 (#182/#183 insulina), q100 (#184/#185 avental branco), q40, q133, q154.
+## ▶ Próximo passo imediato — bloco de temas de amanhã
+1. **Workflow do dia:** revisão direcionada do resumo ANTES de cada bloco de questões (a apostila é a "última chance" antes de avançar; usuário pediu reonboarding profundo, sem comprimir). Todos os 8 temas JÁ têm resumo:
+   - DITC (Teoria II) → `resumos/Clínica Médica/Reumatologia/DITC.md`
+   - Trauma → `resumos/Cirurgia/[CIR] Trauma.md` (gold, auditado s078; ver hipotermia/tríade letal)
+   - Doenças Benignas da Mama → `resumos/GO/[GIN] Doenças Benignas da Mama.md`
+   - Climatério e TH → `resumos/GO/[GIN] Climatério e TH.md`
+   - Rastreamento do Colo → `resumos/GO/[GIN] Rastreamento Colo.md`
+   - Úlceras Genitais (rev. questões) → `resumos/GO/Úlceras Genitais.md` (armadilha Trichomonas, s071)
+   - DRC Pts 1-2 → `resumos/Clínica Médica/Nefrologia/Doença Renal Crônica.md` (par com LRA)
+   - LRA (rev. questões) → `resumos/Clínica Médica/Nefrologia/Lesão Renal Aguda.md` (gold; vigiar bug 1b)
+2. **Re-verificar os 3 pontos cegos** quando os cards surgirem no `/revisar`: vWD × FVIII (434/435), enunciado negativo (rotular V/F e marcar a F), PTI tratar × observar (430, reincidência).
+3. **Cadência:** longe de 100q/dia (s080 = 37q). Scrum master cobra o piso.
 
 ## Estado por frente
-- **Volume & Metas:** 3.244/12.000 ENAMED (80,2%); ~92q/dia para o alvo (13-09). Planilha não reconciliada nesta sessão.
-- **Conteúdo:** 45 resumos. **Gap ativo:** `Diabetes - Complicações Crônicas`. Resumos dos temas revisados (Arbovirose/Trauma/Asma/DM2) auditados na s078 = **padrão-ouro, sem edição**.
-- **Erros & Cards:** 234 erros; **216 cards qualitativos ativos** (195 aposentados). **Dedup estrutural s078:** 109 pares v1/v2 (chave `questao_id`) aposentados via `needs_qualitative=2` (reversível; backup `ipub_backup_20260611_114134.db`).
-- **FSRS:** backlog de 44 cards drenado (24×4, 5×3, 7×2, 8×1). Falhas: FA (decoreba) + trauma órgão sólido (bug nº 1). Vitória: dengue C/D consertado na sessão (Camada 1).
-- **Infraestrutura:** contrato `/revisar` com **Camada 2** ativo; governança de evidência + `pubmedmcp` ativos.
+- **Volume & Metas:** 3.316/12.000 ENAMED (79,9%); ritmo-alvo ~93q/dia p/ 13-09. +72q nas s079-080 (LRA 77%, Hemo 62%). Planilha não reconciliada.
+- **Conteúdo:** 45 resumos; os 8 temas de amanhã cobertos. Hipotermia/tríade letal (Q2 Hemo) cabe melhor em `Trauma.md` — backfill opcional.
+- **Erros & Cards:** 255 erros; **239 cards qualitativos ativos** (195 aposentados, 0 heurísticos). +23 hoje (415-437).
+- **FSRS:** 23 cards novos vencem já → caem no próximo `/revisar`. Vigiar: vWD/FVIII, PTI, enunciado negativo.
+- **Infraestrutura:** 3 memórias novas/atualizadas (bug 1b ancoragem-fármaco; enunciado-negativo; bug 1 PTI-recorrência).
 
-## Última sessão — sessão 078
-- **`/revisar` 44 cards** (backlog drenado em 8 lotes de 5). Condutas de CM/Cirurgia/Cardio sólidas; falhas concentradas em **FA (decoreba)** e **trauma de órgão sólido (bug nº 1)**.
-- **Contrato `/revisar` → Camada 2 (Revisão Direcionada de fechamento):** o card é a sonda, o resumo é a fonte; reforçar matéria não-consolidada via card é infrutífero → reabordar o resumo do tema ao fechar. Encodado em `revisar.md` + memória.
-- **Verdict de Camada 2 (s078): 0 deficiência de material** — FA, Trauma, Asma e DM2 têm resumo gold cobrindo o ponto errado com armadilha. Prescrição = drillar, não editar.
-- **Pares contraditórios espelhados (bug nº 1):** PTI 9×10 (PFC × observação) e baço×fígado 25×26 (observação × laparoscopia).
+## Última sessão — sessão 080 (Hemostasia)
+- 37q/23a (62%, área fraca confirmada). 14 erros (2 blocos) → 13 cards (425-437); Q7 = erro de banca (gabarito oficial B medicamente errado), não cardado.
+- vWD confundida com FVIII/hemofilia 2× (Q11/Q12); grid TP/TTPa frágil (Q10); plasmaférese errada nos 2 sentidos (Q9 demais, Q14 de menos).
+- Enunciado negativo errado de novo (Q14) → 3ª vez na semana → memória `feedback_enunciado_negativo`.
+- Pontes da revisão direcionada (uremia→DDAVP, grid TP/TTPa) caíram mesmo avisadas → recall ativo só com card.
 
 ## Pendências/observações ativas
-- **Erros repetidos vigiados:** bug nº 1 — ancoragem no achado (líquido livre/plaqueta/PaCO2); FA decoreba; ATLS XABC.
-- **7 pares divergentes** flagados no dedup (ver Próximo passo §3) — revisar/corrigir/aposentar.
-- **Git:** commit/push da s078 nesta sessão (contrato + docs; `ipub.db` é local-only).
+- **3 padrões metacognitivos vivos:** ancoragem no número (PTI reincidiu), ancoragem no fármaco (s079), enunciado negativo (s080). Todos = "parar antes de completar a verificação".
+- **Backfill opcional:** hipotermia/tríade letal → `Trauma.md`; def. vit. K por má-absorção e fibrinólise→tranexâmico → `Hemostasia I` (cards cobrem; resumo fino).
 
 ---
 *Histórico: history/INDEX.md · Snapshot macro: ESTADO.md*

@@ -7,7 +7,7 @@ relates_to: [AGENTE, handoff-contract, estado-contract]
 
 # ESTADO — MedHub
 
-*Atualizado: 2026-06-12 (sessão 080) | Ferramenta: Claude Code (Fable 5)*
+*Atualizado: 2026-06-13 (sessão 081) | Ferramenta: Claude Code (Fable 5)*
 
 > **Boot:** ler [`AGENTE.md`](AGENTE.md) → [`HANDOFF.md`](HANDOFF.md) (operacional curto) primeiro. Este arquivo é o snapshot **macro** (metas, indicador, marcos). Estrutura normatizada por [`core/contracts/estado-contract.md`](core/contracts/estado-contract.md).
 
@@ -20,17 +20,17 @@ relates_to: [AGENTE, handoff-contract, estado-contract]
 - **Meta Final:** 23.000 questões até 12/2026 (Custo/Q: R$ 0,20)
 - **Indicador Atual:** 3.316 / 12.000 ENAMED — faltam ~8.684 q
 - **Performance Geral:** 79,9% (2.651 acertos / 3.316 questões — `sessoes_bulk`; +72q nas s079-080: LRA 77%, Hemostasia 62%)
-- **Contadores:** 45 resumos em `resumos/` · 255 erros em `ipub.db` · **239 cards qualitativos ativos (195 aposentados)** · **0 heurísticos ativos** · **0 duplicatas**
+- **Contadores:** 45 resumos em `resumos/` · 255 erros em `ipub.db` · **238 cards qualitativos ativos (196 aposentados)** · **0 heurísticos ativos** · **0 duplicatas**
 
 ---
 
 ## Estado por frente (macro)
 
 - **Volume & Metas:** 3.316 acumuladas (79,9%); ritmo-alvo ~93q/dia p/ 12k em 13-09. Planilha não reconciliada nas s079-080. Cluster fraco: Cardiologia, Hepato, Dermato, FA, **Hemostasia (62%)**.
-- **Conteúdo:** 45 resumos. **Gap ativo do cronograma:** `Diabetes Mellitus - Complicações Crônicas`. Os 8 temas do bloco de amanhã têm resumo.
-- **Erros & Cards:** 255 erros estruturados (+21 nas s079-080). Pipeline `/analisar-questao` → `insert_questao.py` operante; geração 100% qualitativa.
-- **FSRS:** **239 cards qualitativos ativos**; fila 100% qualitativa (+23 nas s079-080, ids 415-437, vencem já). Pontos fracos a vigiar no `/revisar`: vWD/FVIII, PTI tratar×observar, enunciado negativo.
-- **Infraestrutura:** camada de contratos `core/contracts/`. **Governança de evidência (s076):** `evidence-governance.md` + `/pesquisar-evidencia` + subagente `evidence-researcher` + `pubmedmcp`. **Contrato `/revisar` Camada 2 (s078):** ao fechar sessão, revisão direcionada de volta ao resumo do tema com gap. **3 padrões metacognitivos nomeados (s079-080):** ancoragem no número (PTI reincidiu), ancoragem no fármaco, enunciado negativo.
+- **Conteúdo:** 45 resumos; **`Hemostasia.md` expandido (s081)** — coagulopatias adquiridas (hipotermia/tríade letal, vit. K, PTT/SHU), HNF (IIa+Xa), PTI criança×adulto, +7 armadilhas. **Gaps ativos:** resumo de **Cardiopatia Congênita** (tema dos cards travados) e `Diabetes - Complicações Crônicas`.
+- **Erros & Cards:** 255 erros; **238 cards qualitativos ativos** (c92 aposentado na curadoria s081). Pipeline `insert_questao.py` operante; **nova rotina de curadoria `recurate_cards.py`** (refaz cards in-place por id, preserva FSRS).
+- **FSRS:** 238 ativos; **49 reviews na s081** (pós-pausa de ~2-3 meses). Cardiopatia congênita segurada até ter resumo de base. Pontos fracos: Hemato (vWD/FVIII, PTI, coagulopatias adquiridas), cardiopatia congênita (tema zero).
+- **Infraestrutura:** camada de contratos `core/contracts/`. **Governança de evidência (s076):** `evidence-governance.md` + `/pesquisar-evidencia` + subagente `evidence-researcher` + `pubmedmcp`. **Contrato `/revisar` Camada 2 (s078):** ao fechar sessão, revisão direcionada de volta ao resumo do tema com gap. **3 padrões metacognitivos nomeados (s079-080):** ancoragem no número (PTI reincidiu), ancoragem no fármaco, enunciado negativo. **Curadoria de cards (s081):** `tools/recurate_cards.py` (refaz in-place). **4º padrão metacognitivo:** "fato verdadeiro no contexto errado" (Pringle/beta2/GLP-1).
 
 ---
 
@@ -40,7 +40,7 @@ relates_to: [AGENTE, handoff-contract, estado-contract]
 
 Ver [`ROADMAP.md`](ROADMAP.md). Prioridades guiadas pelo cronograma (SSOT: `Cronograma de Reta Final.xlsx` no Drive):
 
-1. **Bloco de amanhã (8 temas):** DITC, Trauma, Doenças Benignas da Mama, Climatério e TH, Rastreamento do Colo, Úlceras Genitais (rev. questões), DRC Pts 1-2, LRA (rev. questões). Revisão direcionada → questões → erros → cards. Detalhe operacional no `HANDOFF.md`.
+1. **Cardiopatia Congênita:** criar o resumo de base (tema não-dominado) + drillar os 12 cards travados. Depois, **cards + questões (ambos)**. Detalhe operacional no `HANDOFF.md`.
 2. **Diabetes - Complicações Crônicas:** criar o resumo (gap; DM2 e Compl. Agudas já existem).
 3. **Drenar backlog FSRS** por área fraca + revisão diária via `/revisar`.
 4. **Meta volumétrica:** ENAMED 12k até 13/09 (~93q/dia) — priorizar Revisão por Questões.

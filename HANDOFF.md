@@ -1,35 +1,29 @@
 # HANDOFF.md — ESTADO OPERACIONAL CURTO
-*Atualizado: 2026-06-12 — s079 (LRA) + s080 (Hemostasia) fechadas; 22 erros → 23 cards (415-437); 3 padrões metacognitivos nomeados. **Próximo: bloco de 8 temas do cronograma — revisão direcionada do resumo ANTES das questões.***
+*Atualizado: 2026-06-13 — s081 (revisão pós-pausa + auditoria + curadoria). 49 cards revisados; `Hemostasia.md` expandido; criada rotina `recurate_cards.py` (4 cards refeitos, 1 aposentado). **Próximo: ABRIR entregando o resumo de Cardiopatia Congênita, depois cards travados + questões.***
 
-## ▶ Próximo passo imediato — bloco de temas de amanhã
-1. **Workflow do dia:** revisão direcionada do resumo ANTES de cada bloco de questões (a apostila é a "última chance" antes de avançar; usuário pediu reonboarding profundo, sem comprimir). Todos os 8 temas JÁ têm resumo:
-   - DITC (Teoria II) → `resumos/Clínica Médica/Reumatologia/DITC.md`
-   - Trauma → `resumos/Cirurgia/[CIR] Trauma.md` (gold, auditado s078; ver hipotermia/tríade letal)
-   - Doenças Benignas da Mama → `resumos/GO/[GIN] Doenças Benignas da Mama.md`
-   - Climatério e TH → `resumos/GO/[GIN] Climatério e TH.md`
-   - Rastreamento do Colo → `resumos/GO/[GIN] Rastreamento Colo.md`
-   - Úlceras Genitais (rev. questões) → `resumos/GO/Úlceras Genitais.md` (armadilha Trichomonas, s071)
-   - DRC Pts 1-2 → `resumos/Clínica Médica/Nefrologia/Doença Renal Crônica.md` (par com LRA)
-   - LRA (rev. questões) → `resumos/Clínica Médica/Nefrologia/Lesão Renal Aguda.md` (gold; vigiar bug 1b)
-2. **Re-verificar os 3 pontos cegos** quando os cards surgirem no `/revisar`: vWD × FVIII (434/435), enunciado negativo (rotular V/F e marcar a F), PTI tratar × observar (430, reincidência).
-3. **Cadência:** longe de 100q/dia (s080 = 37q). Scrum master cobra o piso.
+## ▶ Próximo passo imediato — abertura de amanhã
+1. **Entregar o RESUMO de Cardiopatia Congênita** (mini-review de base, no modelo do que foi feito p/ Hemato) — tema **não-dominado**; 12 cards travados (c90,94,95,96,97,98,100,102,104,106,108,110) aguardam essa base. NÃO drillar antes do resumo.
+2. **Complementar a base** dos demais temas travados conforme os cards voltarem: TCE pediátrico (PECARN, tríade de Cushing), Trauma-choque (graus I-IV, TXA/CRASH-2), Gravidez ectópica (limiar β-hCG, dor pós-MTX).
+3. **Cards + questões (ambos).** Volume de questões é o gargalo — **0 questões hoje** (dia de re-grounding). Scrum master cobra o piso amanhã.
+4. **Re-testar os 4 cards refeitos** na versão nova: 428 (HIT), 68 (iSGLT-2/CAD euglicêmica), 82 (TXA), 74 (Cushing).
 
 ## Estado por frente
-- **Volume & Metas:** 3.316/12.000 ENAMED (79,9%); ritmo-alvo ~93q/dia p/ 13-09. +72q nas s079-080 (LRA 77%, Hemo 62%). Planilha não reconciliada.
-- **Conteúdo:** 45 resumos; os 8 temas de amanhã cobertos. Hipotermia/tríade letal (Q2 Hemo) cabe melhor em `Trauma.md` — backfill opcional.
-- **Erros & Cards:** 255 erros; **239 cards qualitativos ativos** (195 aposentados, 0 heurísticos). +23 hoje (415-437).
-- **FSRS:** 23 cards novos vencem já → caem no próximo `/revisar`. Vigiar: vWD/FVIII, PTI, enunciado negativo.
-- **Infraestrutura:** 3 memórias novas/atualizadas (bug 1b ancoragem-fármaco; enunciado-negativo; bug 1 PTI-recorrência).
+- **Volume & Metas:** 3.316/12.000 ENAMED (79,9%) — **inalterado** (revisão, 0 questões). Ritmo-alvo ~93q/dia. Usuário **retomando após ~2-3 meses parado** → revisão/grounding é fundamental agora.
+- **Conteúdo:** 45 resumos; **`Hemostasia.md` expandido** (seção 8 nova: hipotermia/tríade letal, def. vit. K, PTT/SHU, HNF, PTI criança×adulto, 7 armadilhas). **Gap ativo: resumo de Cardiopatia Congênita** (a criar).
+- **Erros & Cards:** 255 erros; **238 cards ativos** (c92 aposentado hoje) / 196 aposentados. ~150 ativos ainda não-vistos.
+- **FSRS:** 49 reviews hoje. Muitos cards de baixa stability vencem amanhã (FA, Hemato, misto travados). Cardiopatia: segurada até ter resumo.
+- **Infraestrutura:** `tools/recurate_cards.py` (NOVA — curadoria de cards in-place via JSON, preserva FSRS).
 
-## Última sessão — sessão 080 (Hemostasia)
-- 37q/23a (62%, área fraca confirmada). 14 erros (2 blocos) → 13 cards (425-437); Q7 = erro de banca (gabarito oficial B medicamente errado), não cardado.
-- vWD confundida com FVIII/hemofilia 2× (Q11/Q12); grid TP/TTPa frágil (Q10); plasmaférese errada nos 2 sentidos (Q9 demais, Q14 de menos).
-- Enunciado negativo errado de novo (Q14) → 3ª vez na semana → memória `feedback_enunciado_negativo`.
-- Pontes da revisão direcionada (uremia→DDAVP, grid TP/TTPa) caíram mesmo avisadas → recall ativo só com card.
+## Última sessão — sessão 081 (revisão + curadoria)
+- Maratona `/revisar` pós-pausa: **49 cards** (28 fila + 13 Hemato + 8 misto). Hemato confirmada fraca (6/13 zeros) → review dedicado + resumo expandido.
+- Auditoria: deck ativo **limpo** (0 heurísticos ativos, fila regen vazia); 181 não-vistos mapeados.
+- Curadoria: 428/68/82/74 refeitos, 92 aposentado. Achado: **safra de mar/2026 tem formulação fraca** (varredura pendente).
 
 ## Pendências/observações ativas
-- **3 padrões metacognitivos vivos:** ancoragem no número (PTI reincidiu), ancoragem no fármaco (s079), enunciado negativo (s080). Todos = "parar antes de completar a verificação".
-- **Backfill opcional:** hipotermia/tríade letal → `Trauma.md`; def. vit. K por má-absorção e fibrinólise→tranexâmico → `Hemostasia I` (cards cobrem; resumo fino).
+- **Cardiopatia congênita = tema ZERO:** resumo de base + drillar os 12 travados (próxima sessão, passo 1).
+- **Cards segurados (não-vistos do misto):** DM2 c69/70, TCE c76/78/80, choque c84/86/88, ectópica c114/116/118/120.
+- **Curadoria contínua:** safra mar/2026 (c~48-120) precisa varredura de qualidade via `recurate_cards.py`.
+- **4 padrões metacognitivos vivos:** ancoragem no nº, ancoragem no fármaco, enunciado negativo, e o novo **"fato verdadeiro no contexto errado"** (Pringle/beta2/GLP-1) — todos = "parar antes de completar a verificação".
 
 ---
 *Histórico: history/INDEX.md · Snapshot macro: ESTADO.md*

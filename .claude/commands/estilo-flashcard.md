@@ -37,6 +37,31 @@ O flashcard do MedHub não enuncia um fato genérico sobre um tema — ele **ref
 
 ---
 
+## Altura graduada e cards de andaime (sessão 082)
+
+O card ancorado no erro (acima) é o **topo** de uma cadeia — o elo metacognitivo fino da questão. Para temas em que o estudante está **frio**, o topo é inacessível: faltam os elos a montante. A altura de um card é, portanto, um **gradiente**, não um par base/topo:
+
+- **`base`** — conceito primitivo do tema (ex.: "cianose = shunt D→E"). Não nasce de um erro; nasce de uma **lacuna de fundação detectada num cluster** e é ancorado no resumo.
+- **`mecanismo`** — o porquê causal **encadeado** que liga a base ao topo (ex.: "por que a T4F cursa com hipofluxo"). É o degrau onde o raciocínio mecanístico se firma — o de **maior rendimento**, porque o gap diagnosticado costuma ser causalidade, não fato.
+- **`nuance`/`detalhe`** — discriminações finas intermediárias, quando preciso.
+- **topo** (`conteudo`/`elo_quebrado`) — o card de erro clássico.
+
+O campo `tipo` carrega a altura. Quantos degraus existem é **inferido da iteração**: onde um elo trava (cluster de cards-alvo caindo no mesmo eixo), costura-se o degrau **imediatamente adjacente** (propagação local) — não se repete o topo nem se reconstrói tudo. Cards de andaime são baratos e cirúrgicos; acumulá-los é o **mapa fino das lacunas**, não ruído.
+
+**Gatilho:** card isolado caindo = recall (re-drill). **Cluster** caindo no mesmo conceito = fundação ausente → gerar andaime.
+
+### CLI — `tools/insert_card_base.py`
+
+Persiste cards de andaime (qualquer altura via `tipo`) **sem erro de origem** (`questao_id=NULL`), criando `flashcards` + `fsrs_cards` (state 0). Idempotente por (tema, pergunta, tipo). Assinatura canônica:
+
+```bash
+python tools/insert_card_base.py --area AREA --tema "TEMA" --from cards.json [--dry-run]
+```
+
+JSON: lista de `{tipo?, frente_contexto?, frente_pergunta, verso_resposta, verso_regra_mestre?, verso_armadilha?}` (`tipo` default `'base'`). Cada card de andaime segue os 5 princípios acima + a regra de grounding: razão de existir explicável em 1 linha, ancorada no resumo + no cluster que o motivou (`ai-eng`: "especificidade sem contexto é criptografia").
+
+---
+
 ## Exemplo-âncora: erro #211 (Úlceras Genitais)
 
 **Erro real:** validou a alternativa por reconhecer 3 de 4 agentes corretos numa questão de lista, sem conferir o 4º (*Trichomonas* — corrimento, não úlcera).

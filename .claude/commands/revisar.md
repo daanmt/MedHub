@@ -53,6 +53,14 @@ python tools/fsrs_queue.py --record <card_id> --rating <1-4>
 6. **Avançar.** Buscar o próximo card (novo `--next`, ou o próximo item do lote já obtido no passo 1). Repetir 2-5.
 7. **Fechar com Revisão Direcionada.** Quando a fila esvaziar (`{"empty": true}`) ou o usuário parar: (a) resumo de sessão — cards revisados + distribuição de ratings; (b) rodar a **Revisão Direcionada de fechamento** (ver seção abaixo) — voltar aos resumos dos temas onde houve gap e **reabordar a matéria**, não só re-drillar o card.
 
+### Camada 0 — Refresh pré-bloco e compressão calibrada (sessão 082)
+
+> **Princípio: esquentar antes de sondar.** Medir recall a frio num tema gelado (pós-pausa, ou cards de estreia) só produz notas 1 e nenhuma reativação. Antes de drillar um bloco de tema frio, **refrescar a fundação** — uma leitura curta e dirigida pelos conceitos que os cards vão sondar, ancorada no resumo. Casa leitura + cards (e/ou questões); não a sonda crua primeiro. Feedback do usuário (s082): *"refrescar a memória com um resuminho gravitando em torno da sessão, antes de realizar os cards"*.
+
+1. **Calibrar a compressão ao estado do tema.** A dose do refresh escala com o quão frio está o tema — sinal objetivo: **stability média + taxa de acerto do cluster**. Tema frio → **descomprimir** (conceitos primitivos, do chão). Tema consolidado → **comprimir** (só a discriminação fina). Não entregar fundação a quem já domina (vira ruído); não drillar o topo de quem não tem chão (o card vira leech).
+2. **A nota pós-refresh mede "pegou no aquecimento", não recall a frio.** Sinalizar isso ao usuário; para estreia/tema frio é o correto — o FSRS calibra o recall real conforme os cards reaparecem nos dias seguintes.
+3. **Gatilho de andaime.** Se o bloco expõe um **cluster** caindo no mesmo eixo (não um card isolado), a fundação está ausente → cunhar **cards de andaime** (`base`/`mecanismo`/…) via `tools/insert_card_base.py`, costurando o degrau imediatamente adjacente ao buraco (**propagação local**). O degrau `mecanismo` (porquê causal encadeado) rende mais — o gap costuma ser causalidade, não fato. Régua: [`estilo-flashcard.md`](estilo-flashcard.md) §Altura graduada.
+
 ### Modo conversacional padrão (contrato core — sessão 075)
 
 Comportamentos default desta skill, ajustáveis pelo usuário a qualquer momento:

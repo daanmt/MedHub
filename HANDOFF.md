@@ -1,29 +1,30 @@
 # HANDOFF.md — ESTADO OPERACIONAL CURTO
-*Atualizado: 2026-06-13 — s081 (revisão pós-pausa + auditoria + curadoria). 49 cards revisados; `Hemostasia.md` expandido; criada rotina `recurate_cards.py` (4 cards refeitos, 1 aposentado). **Próximo: ABRIR entregando o resumo de Cardiopatia Congênita, depois cards travados + questões.***
+*Atualizado: 2026-06-14 — s082 (revisão de Cardiopatias Congênitas + evolução "cards de altura graduada"). Diagnóstico: o tema NÃO era "zero" — o resumo existe e é gold; o gap era **grounding do estudante**. Construída a infra de andaime de pré-requisito. **Próximo: VOLUME (questões — gargalo real, 2 dias a 0) + drillar a escada de cardiopatia conforme o FSRS trouxer.***
 
 ## ▶ Próximo passo imediato — abertura de amanhã
-1. **Entregar o RESUMO de Cardiopatia Congênita** (mini-review de base, no modelo do que foi feito p/ Hemato) — tema **não-dominado**; 12 cards travados (c90,94,95,96,97,98,100,102,104,106,108,110) aguardam essa base. NÃO drillar antes do resumo.
-2. **Complementar a base** dos demais temas travados conforme os cards voltarem: TCE pediátrico (PECARN, tríade de Cushing), Trauma-choque (graus I-IV, TXA/CRASH-2), Gravidez ectópica (limiar β-hCG, dor pós-MTX).
-3. **Cards + questões (ambos).** Volume de questões é o gargalo — **0 questões hoje** (dia de re-grounding). Scrum master cobra o piso amanhã.
-4. **Re-testar os 4 cards refeitos** na versão nova: 428 (HIT), 68 (iSGLT-2/CAD euglicêmica), 82 (TXA), 74 (Cushing).
+1. **Questões — o gargalo de verdade.** Duas sessões seguidas a 0 (s081 grounding, s082 construção). Scrum master cobra o piso (≥100/dia; ritmo-alvo ENAMED ~94/dia). **Refresh pré-bloco** (`/revisar` Camada 0) antes do bloco da área escolhida.
+2. **Drillar a escada de Cardiopatias Congênitas** conforme o FSRS vence: HCE (base c441 + alvos c94/c95/c96) volta **amanhã**; mecanismos (c443-445) e os base 439/440/442 em ~2 dias. Escada base→mecanismo→topo já no banco (tema 121).
+3. **Re-testar os 4 refeitos da s081** (ainda não revisados): 428 (HIT), 68 (iSGLT-2), 74 (Cushing), 82 (TXA).
+4. **Decisão Tier-3 pendente:** formalizar altura no schema (ordinal + `prereq_de` + fila auto-ordenada base→topo). Hoje a altura vive no campo `tipo` (sem schema change).
 
 ## Estado por frente
-- **Volume & Metas:** 3.316/12.000 ENAMED (79,9%) — **inalterado** (revisão, 0 questões). Ritmo-alvo ~93q/dia. Usuário **retomando após ~2-3 meses parado** → revisão/grounding é fundamental agora.
-- **Conteúdo:** 45 resumos; **`Hemostasia.md` expandido** (seção 8 nova: hipotermia/tríade letal, def. vit. K, PTT/SHU, HNF, PTI criança×adulto, 7 armadilhas). **Gap ativo: resumo de Cardiopatia Congênita** (a criar).
-- **Erros & Cards:** 255 erros; **238 cards ativos** (c92 aposentado hoje) / 196 aposentados. ~150 ativos ainda não-vistos.
-- **FSRS:** 49 reviews hoje. Muitos cards de baixa stability vencem amanhã (FA, Hemato, misto travados). Cardiopatia: segurada até ter resumo.
-- **Infraestrutura:** `tools/recurate_cards.py` (NOVA — curadoria de cards in-place via JSON, preserva FSRS).
+- **Volume & Metas:** 3.316/12.000 ENAMED (79,9%) — **inalterado** (0 questões). Junho (meta 8.000) já não fecha; foco = ~94q/dia p/ não perder 13/09. Custo/q alto (R$ 0,95) — diluir com volume.
+- **Conteúdo:** 45 resumos. **`Cardiopatias Congênitas.md` é gold e completo** — a s081 errou ao chamá-lo de "tema zero a criar". Sem gap de material aqui. Gap real: `Diabetes - Complicações Crônicas`.
+- **Erros & Cards:** 255 erros; **+8 cards de andaime** no tema 121 (5 `base` ids 438-442; 3 `mecanismo` ids 443-445). ~246 cards ativos.
+- **FSRS:** s082 drillou os **12 cards-alvo** de cardiopatia (2 vistos + 10 estreias) + os 8 de andaime. Distribuição honesta; **HCE foi o buraco** (re-ensinado, volta amanhã).
+- **Infraestrutura:** NOVA capacidade **cards de altura graduada** — `tools/insert_card_base.py` + `/revisar` Camada 0 (refresh + compressão calibrada) + decisão AGENTE §6 + régua em `estilo-flashcard.md`. Ver [[cards-altura-graduada]] na memória.
 
-## Última sessão — sessão 081 (revisão + curadoria)
-- Maratona `/revisar` pós-pausa: **49 cards** (28 fila + 13 Hemato + 8 misto). Hemato confirmada fraca (6/13 zeros) → review dedicado + resumo expandido.
-- Auditoria: deck ativo **limpo** (0 heurísticos ativos, fila regen vazia); 181 não-vistos mapeados.
-- Curadoria: 428/68/82/74 refeitos, 92 aposentado. Achado: **safra de mar/2026 tem formulação fraca** (varredura pendente).
+## Última sessão — sessão 082 (revisão + evolução de método)
+- Drill de Cardiopatias Congênitas (12 cards-alvo). Achado: tema não-dominado por **falta de grounding**, não de material (resumo gold já existia; HANDOFF da s081 estava factualmente errado).
+- Co-desenho com o usuário da evolução **"altura graduada"**: cards `base → mecanismo → nuance → topo`; andaime gerado quando um **cluster** cai; propagação local; compressão calibrada ao nível do estudante. Princípios de `ai-eng`.
+- Construído: CLI `insert_card_base.py` (Tier-1, sem schema change) + 8 cards de andaime + docs (estilo-flashcard, revisar Camada 0, AGENTE §6/§7.4) + memória.
+- Gap fino do estudante nomeado: **causalidade/mecanismo, não fato** — o degrau `mecanismo` é o de maior rendimento.
 
 ## Pendências/observações ativas
-- **Cardiopatia congênita = tema ZERO:** resumo de base + drillar os 12 travados (próxima sessão, passo 1).
-- **Cards segurados (não-vistos do misto):** DM2 c69/70, TCE c76/78/80, choque c84/86/88, ectópica c114/116/118/120.
-- **Curadoria contínua:** safra mar/2026 (c~48-120) precisa varredura de qualidade via `recurate_cards.py`.
-- **4 padrões metacognitivos vivos:** ancoragem no nº, ancoragem no fármaco, enunciado negativo, e o novo **"fato verdadeiro no contexto errado"** (Pringle/beta2/GLP-1) — todos = "parar antes de completar a verificação".
+- **VOLUME é o gargalo.** Duas sessões a 0 questões — priorizar amanhã.
+- **Tier-3:** schema formal de altura (ordinal + `prereq_de` + fila auto-ordenada base→topo). Espera OK do usuário.
+- **Aplicar altura graduada a outros temas frios** (Hemato, LRA) conforme clusters caírem na revisão.
+- **4 padrões metacognitivos vivos:** ancoragem nº/fármaco, enunciado negativo, fato-no-contexto-errado — todos = "parar antes de completar a verificação".
 
 ---
 *Histórico: history/INDEX.md · Snapshot macro: ESTADO.md*

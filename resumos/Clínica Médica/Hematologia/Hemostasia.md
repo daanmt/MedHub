@@ -63,9 +63,10 @@ aliases: [Hemostasia, Coagulação, Plaquetas, TP, TTPa, Anticoagulação, Tromb
     - ⚠️ Teratogênica — substituir por HBPM na gestação.
 
 - **Heparinas:**
-    - **HNF:** Liga-se à Antitrombina III. Meia-vida curta. Monitorar com **TTPA**. Antídoto: **Protamina**.
-    - **HBPM (Enoxaparina):** Inibe preferencialmente Fator Xa. Sem monitoria habitual (obesos/renais crônicos: anti-Xa).
-    - **HIT (Trombocitopenia Induzida por Heparina):** Queda > 50% das plaquetas após 5–10 dias. É **pró-trombótica** (não hemorrágica!). Conduta: suspender heparina + iniciar anticoagulante alternativo (ex: Fondaparinux/argatrobana).
+    - **HNF:** potencializa a **Antitrombina III** e inibe **trombina (IIa) e Fator Xa em proporção ~1:1**. Ligação inespecífica a proteínas plasmáticas → **biodisponibilidade baixa/variável** e **meia-vida curta** → exige **TTPA** e infusão contínua/múltiplas doses. Antídoto: **Protamina**.
+    - **HBPM (Enoxaparina):** inibe **preferencialmente o Fator Xa** (cadeia curta não alcança a trombina) → resposta **previsível**, **maior biodisponibilidade e meia-vida** que a HNF, sem monitoria habitual (obesos/renais crônicos: anti-Xa).
+    - ⚠️ Padrão de prova: "HNF inibe IIa **e** Xa" é **verdadeiro**; a pegadinha em questão V/F é atribuir à HNF "maior biodisponibilidade/meia-vida" — isso é da **HBPM**.
+    - **HIT (Trombocitopenia Induzida por Heparina):** Queda > 50% das plaquetas após 5–10 dias. É **pró-trombótica** (não hemorrágica!). Conduta: suspender **toda** heparina (HNF e HBPM são a mesma classe) + anticoagulante não-heparínico (**Fondaparinux/argatrobana**). Varfarina isolada na fase aguda é contraindicada (queda da proteína C).
 
 - **DOACs (Anticoagulantes Orais Diretos):**
     - Inibidores do Xa: **Rivaroxabana**, **Apixabana**, , **Fondaparinux**, Edoxabana.
@@ -116,7 +117,8 @@ aliases: [Hemostasia, Coagulação, Plaquetas, TP, TTPa, Anticoagulação, Tromb
     - ⚠️ Mielograma **NÃO é indicado** na investigação inicial. Reservar se houver anemia, leucopenia, esplenomegalia, linfadenomegalias ou suspeita de outra doença hematológica.
 
 - **Tratamento:**
-    - **Indicação:** Plaquetas < 30.000 ou sangramento significativo.
+    - **Indicação (adulto):** Plaquetas < 30.000 ou sangramento significativo.
+    - ⭐ **Indicação (criança):** decide o **padrão de sangramento**, não o número isolado — **púrpura seca** (só pele) com plaquetas acima do limiar → **observar** (90% remitem espontaneamente); **púrpura úmida** (sangramento mucoso) **OU plaquetas < 10.000** → **tratar**, mesmo sem sangramento.
     - **Primeira Linha:** Glucocorticoides (Prednisona) ou Imunoglobulina Humana. (IVIG para resposta rápida).
     - **Segunda Linha:** Esplenectomia, Rituximabe, Agonistas de TPO.
     - **Imunoglobulina IV humana:** mesma eficácia; mais cara e EV; ação mais rápida → preferida no sangramento ativo (associada ao corticoide).
@@ -224,12 +226,41 @@ aliases: [Hemostasia, Coagulação, Plaquetas, TP, TTPa, Anticoagulação, Tromb
 
 ---
 
-## 8. Trombofilias
+## 8. Coagulopatias Adquiridas Agudas e Microangiopatias Trombóticas
+
+### 8.1 Coagulopatia do Trauma e Tríade Letal
+
+- **Tríade letal:** **hipotermia + acidose + hipocalcemia** — perpetua o sangramento no politraumatizado/politransfundido (citrato das bolsas quela o cálcio).
+- ⭐ **Coagulopatia da hipotermia:** as enzimas da cascata são **termodependentes**, mas o coagulograma é processado a **37 °C** no laboratório → **subestima** a disfunção do frio. Resultado típico: **sangramento difuso clínico com TP/TTPa quase normais**.
+    - ⚠️ **Fibrinogênio normal** afasta coagulopatia **dilucional** e **CIVD** (ambas o consomem) → aponta o defeito **funcional** da hipotermia.
+    - Conduta: **reaquecer** + corrigir **cálcio** e acidose. Hemocomponentes não corrigem enquanto o paciente está frio.
+- **Hiperfibrinólise do trauma:** coágulo se forma e **se dissolve** (lise precoce). Conduta: **ácido tranexâmico precoce** (< 3 h). Crioprecipitado/PFC repõem fibrinogênio/fatores, mas **não freiam a fibrinólise**.
+
+### 8.2 Deficiência de Vitamina K
+
+- A vitamina K é **lipossolúvel** e cofator dos fatores **II, VII, IX, X** (+ proteínas C e S).
+- Causas: **má-absorção de gorduras** (colestase, doença celíaca, esteatorreia), antibioticoterapia, recém-nascido (doença hemorrágica do RN), varfarina.
+- Lab: **TP/INR alarga primeiro** (FVII tem meia-vida mais curta) → depois **TP e TTPa alargados**, com plaquetas e fibrinogênio normais.
+- Conduta: **repor vitamina K** (serve de teste terapêutico); sangramento grave → complexo protrombínico/PFC.
+
+### 8.3 Microangiopatias Trombóticas (PTT / SHU)
+
+- **Marca comum:** anemia hemolítica **microangiopática mecânica** (**esquizócitos**) + plaquetopenia de consumo, **Coombs direto NEGATIVO** + **reticulocitose**.
+- **PTT (Púrpura Trombocitopênica Trombótica):** deficiência/inibição da **ADAMTS13** → multímeros gigantes de FvW → trombos plaquetários.
+    - Pêntade (raramente completa): plaquetopenia + anemia hemolítica + febre + alteração **neurológica** + lesão **renal**.
+    - ⭐ Tratamento: **PLASMAFÉRESE** urgente (+ corticoide ± rituximabe). **Heparina e transfusão de plaquetas NÃO** tratam (plaqueta pode agravar a trombose).
+- **SHU (Síndrome Hemolítico-Urêmica):** criança, pós-diarreia por *E. coli* O157:H7 (toxina Shiga); predomina a **lesão renal**. Suporte; plasmaférese se atípica.
+
+> ⚠️ Padrão de prova: a coagulopatia com **TP/TTPa quase normais** no politransfundido é **hipotermia** (dilucional baixaria o fibrinogênio). E **plasmaférese** é conduta de **PTT/MAT** — exige **hemólise microangiopática com esquizócitos**; sem isso (def. de vit. K, def. de fator), plasmaférese é distrator.
+
+---
+
+## 9. Trombofilias
 
 - Estados de hipercoagulabilidade → tendência à trombose (venosa e/ou arterial).
 - Tríade de Virchow: **estase vascular** + **lesão endotelial** + **hipercoagulabilidade**.
 
-### 8.1 Síndrome Antifosfolípide (SAF) — Trombofilia Adquirida
+### 9.1 Síndrome Antifosfolípide (SAF) — Trombofilia Adquirida
 
 > ⭐ Trombofilia adquirida mais cobrada. Causa autoimune sistêmica.
 
@@ -266,7 +297,7 @@ aliases: [Hemostasia, Coagulação, Plaquetas, TP, TTPa, Anticoagulação, Tromb
     - Tromboses arteriais: associar antiplaquetários (AAS, clopidogrel).
     - ⚠️ Varfarina é teratogênica → substituir por **HBPM** durante gestação.
 
-### 8.2 Trombofilias Hereditárias
+### 9.2 Trombofilias Hereditárias
 
 - **Fator V de Leiden:**
     - ⭐ Trombofilia hereditária mais **comum** (~5% da população).
@@ -294,7 +325,7 @@ aliases: [Hemostasia, Coagulação, Plaquetas, TP, TTPa, Anticoagulação, Tromb
 
 ---
 
-## 9. Armadilhas de Prova
+## 10. Armadilhas de Prova
 
 - 🔴 **PTI x Henoch-Schönlein:** na PTI há plaquetopenia + sangramento difuso. Na PHS, plaquetas são normais e a púrpura é gravitacional (glúteos/MMII) + dor abdominal + hematúria.
 - 🔴 **PTI: mielograma NÃO é indicado** na avaliação inicial. Só fazer se suspeita de outra doença hematológica (anemia, leucopenia, esplenomegalia, linfadenomegalias).
@@ -313,3 +344,10 @@ aliases: [Hemostasia, Coagulação, Plaquetas, TP, TTPa, Anticoagulação, Tromb
 - 🔴 **HIT:** heparina causa queda de plaquetas, mas o quadro é de TROMBOSE (não sangramento). Suspender heparina + trocar por Fondaparinux.
 - 🔴 **Monitorização:** HNF = TTPA; Varfarina = TAP/RNI; HBPM = Anti-Xa (em selecionados).
 - 🔴 **Varfarina:** nunca iniciar isolada em trombose aguda — risco de efeito pró-trombótico inicial (queda da Proteína C). Sempre ponte com heparina.
+- 🔴 **Coagulopatia da hipotermia:** sangramento difuso com **TP/TTPa quase normais** e **fibrinogênio normal** no politransfundido = hipotermia (labs a 37 °C enganam) → **reaquecer** + corrigir Ca/acidose. Dilucional/CIVD baixariam o fibrinogênio.
+- 🔴 **Deficiência de vitamina K:** má-absorção de lipossolúveis → ↓ II, VII, IX, X → TP (e depois TTPa) alargados → **repor vitamina K**; não é plasmaférese.
+- 🔴 **Hiperfibrinólise (trauma):** coágulo forma e dissolve → **ácido tranexâmico** precoce; crioprecipitado repõe fibrinogênio mas não freia a lise.
+- 🔴 **PTT:** tratar com **plasmaférese** (não heparina/transfusão de plaqueta); hemólise **Coombs-negativa** com esquizócitos + reticulocitose. Em "EXCETO", a falsa costuma ser "tratamento com heparina/corticoide isolado".
+- 🔴 **Hemofilia adquirida:** TTPA alargado que **NÃO corrige no teste da mistura** = inibidor (autoanticorpo anti-FVIII), não deficiência → **FVIIa recombinante** (bypass) + imunossupressão.
+- 🔴 **PTI na criança:** decide o **padrão de sangramento** (seca × úmida) + limiar **< 10.000**, não o número isolado; 90% remitem → observar a púrpura seca.
+- 🔴 **Bicitopenia no idoso** (plaquetopenia + anemia macrocítica): NÃO é PTI (que é isolada) → investigar **medula óssea** (SMD/leucemia).

@@ -1,30 +1,29 @@
 # HANDOFF.md — ESTADO OPERACIONAL CURTO
-*Atualizado: 2026-06-14 — s082 (revisão de Cardiopatias Congênitas + evolução "cards de altura graduada"). Diagnóstico: o tema NÃO era "zero" — o resumo existe e é gold; o gap era **grounding do estudante**. Construída a infra de andaime de pré-requisito. **Próximo: VOLUME (questões — gargalo real, 2 dias a 0) + drillar a escada de cardiopatia conforme o FSRS trouxer.***
+*Atualizado: 2026-06-15 — s083. **Zero de questões quebrado (75q)** + construída ponta-a-ponta a **capacidade de gestão da curva de esquecimento (F1-F6)**: radar de dormência, `/refrescar`, boot proativo, dedup da taxonomia, contrato. **Próximo: estrear o boot proativo + fechar o bloco 3 (Nefro, 40q pendente).***
 
 ## ▶ Próximo passo imediato — abertura de amanhã
-1. **Questões — o gargalo de verdade.** Duas sessões seguidas a 0 (s081 grounding, s082 construção). Scrum master cobra o piso (≥100/dia; ritmo-alvo ENAMED ~94/dia). **Refresh pré-bloco** (`/revisar` Camada 0) antes do bloco da área escolhida.
-2. **Drillar a escada de Cardiopatias Congênitas** conforme o FSRS vence: HCE (base c441 + alvos c94/c95/c96) volta **amanhã**; mecanismos (c443-445) e os base 439/440/442 em ~2 dias. Escada base→mecanismo→topo já no banco (tema 121).
-3. **Re-testar os 4 refeitos da s081** (ainda não revisados): 428 (HIT), 68 (iSGLT-2), 74 (Cushing), 82 (TXA).
-4. **Decisão Tier-3 pendente:** formalizar altura no schema (ordinal + `prereq_de` + fila auto-ordenada base→topo). Hoje a altura vive no campo `tipo` (sem schema change).
+1. **Estrear o boot proativo (§2 passo 4):** rodar `python tools/day_plan.py` e **liderar com o plano decidido** (não menu). Hoje aponta: refrescar Icterícia e Sepse Neonatal (60d), volume 3391 (faltam ~94q/dia), FSRS 27+14+167.
+2. **1º `/refrescar` real** — `dormant_refresh.py --pick` → narrar inline → `--stamp`. Não toca o FSRS.
+3. **Fechar o Bloco 3 — Nefro (DRC + LRA, 40q)** que ficou pendente (micro-refresh de DRC já entregue na s083). VOLUME segue o gargalo (~94q/dia p/ 13/09).
+4. Re-testar os 4 refeitos da s081 (428/68/74/82) + escada de Cardiopatias via FSRS.
 
 ## Estado por frente
-- **Volume & Metas:** 3.316/12.000 ENAMED (79,9%) — **inalterado** (0 questões). Junho (meta 8.000) já não fecha; foco = ~94q/dia p/ não perder 13/09. Custo/q alto (R$ 0,95) — diluir com volume.
-- **Conteúdo:** 45 resumos. **`Cardiopatias Congênitas.md` é gold e completo** — a s081 errou ao chamá-lo de "tema zero a criar". Sem gap de material aqui. Gap real: `Diabetes - Complicações Crônicas`.
-- **Erros & Cards:** 255 erros; **+8 cards de andaime** no tema 121 (5 `base` ids 438-442; 3 `mecanismo` ids 443-445). ~246 cards ativos.
-- **FSRS:** s082 drillou os **12 cards-alvo** de cardiopatia (2 vistos + 10 estreias) + os 8 de andaime. Distribuição honesta; **HCE foi o buraco** (re-ensinado, volta amanhã).
-- **Infraestrutura:** NOVA capacidade **cards de altura graduada** — `tools/insert_card_base.py` + `/revisar` Camada 0 (refresh + compressão calibrada) + decisão AGENTE §6 + régua em `estilo-flashcard.md`. Ver [[cards-altura-graduada]] na memória.
+- **Volume & Metas:** 3.391/12.000 ENAMED (28,3%) — **+75 hoje** (zero quebrado após 3 sessões). Junho (8.000) não fecha; foco = ~94q/dia p/ 13/09. Bloco 3 (Nefro 40q) pendente.
+- **Conteúdo:** 45 resumos. **`DITC.md` +§4 DMTC** (anti-U1-RNP, hierarquia de frequência) + 2 armadilhas. Gap real ativo: `Diabetes - Complicações Crônicas` e `Doença Renal Crônica` (stub).
+- **Erros & Cards:** **+14 cards** na s083 (13 GO ids 446-458 + 1 DITC 459); ~260 ativos. 6 padrões metacognitivos em GO (gestante perdida 2×, ancoragem, regra-idade, ATA, palpite-abandonado, 2016×2025 banca-dependente).
+- **FSRS:** backlog grande (167 novos + 41 vencidos) — quase nada revisado (curva não alimentada). `/revisar` cumpre o piso de cards/dia.
+- **Infraestrutura — NOVA capacidade (F1-F6):** curva de esquecimento — `review_log` (SSOT tempo-revisão) + `/refrescar`/`dormant_refresh.py` + `review_radar.py` + boot proativo `day_plan.py` + **taxonomia deduplicada (126→86, `UNIQUE(area,tema)`)** + backfill (47 temas) + `core/contracts/forgetting-curve-contract.md` + **autonomia AGENTE §1.1**. Ver [[project_curva_esquecimento]].
 
-## Última sessão — sessão 082 (revisão + evolução de método)
-- Drill de Cardiopatias Congênitas (12 cards-alvo). Achado: tema não-dominado por **falta de grounding**, não de material (resumo gold já existia; HANDOFF da s081 estava factualmente errado).
-- Co-desenho com o usuário da evolução **"altura graduada"**: cards `base → mecanismo → nuance → topo`; andaime gerado quando um **cluster** cai; propagação local; compressão calibrada ao nível do estudante. Princípios de `ai-eng`.
-- Construído: CLI `insert_card_base.py` (Tier-1, sem schema change) + 8 cards de andaime + docs (estilo-flashcard, revisar Camada 0, AGENTE §6/§7.4) + memória.
-- Gap fino do estudante nomeado: **causalidade/mecanismo, não fato** — o degrau `mecanismo` é o de maior rendimento.
+## Última sessão — sessão 083
+- Estudo: GO 54/41 (76%) + DITC 21/20 (95%) = 75/61 (81%); 14 cards; `DITC.md` ganhou DMTC. Bloco 3 Nefro não rodado.
+- Feature F1-F6 planejada (3 Explore + 1 Plan agent, verificada contra o db) e executada+verificada: F4 destrutivo com backup-first/dry-run; 0 órfãos, filhos preservados, integrity ok.
+- Drive "Extensivo EMED": acesso por ID ok, mas **enumeração por parentId falha** (não é só propagação) — investigar share. Apostilas = fonte; sugestões de flashcard ≠ cards automáticos.
 
 ## Pendências/observações ativas
-- **VOLUME é o gargalo.** Duas sessões a 0 questões — priorizar amanhã.
-- **Tier-3:** schema formal de altura (ordinal + `prereq_de` + fila auto-ordenada base→topo). Espera OK do usuário.
-- **Aplicar altura graduada a outros temas frios** (Hemato, LRA) conforme clusters caírem na revisão.
-- **4 padrões metacognitivos vivos:** ancoragem nº/fármaco, enunciado negativo, fato-no-contexto-errado — todos = "parar antes de completar a verificação".
+- **Bloco 3 (Nefro, 40q)** pendente — fechar primeiro.
+- **Tier-3** (schema formal de altura de card) e **limpeza `[bulk]`/`Geral`** da taxonomia seguem pendentes (fora de escopo do forgetting-curve v1).
+- Drive: descobrir por que a árvore não enumera (tipo de compartilhamento).
+- 4 padrões metacognitivos vivos + o 5º (palpite-abandonado-por-palavra) observado na s083.
 
 ---
-*Histórico: history/INDEX.md · Snapshot macro: ESTADO.md*
+*Histórico: history/INDEX.md · Snapshot macro: ESTADO.md · Curva: core/contracts/forgetting-curve-contract.md*

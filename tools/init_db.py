@@ -30,6 +30,13 @@ def init_db():
     )
     ''')
 
+    # Identidade do tema = (area, tema). UNIQUE evita re-poluição por re-import
+    # (a dedup de s083 colapsou 22 grupos duplicados; ver dedup_taxonomia.py).
+    cursor.execute('''
+    CREATE UNIQUE INDEX IF NOT EXISTS ux_taxonomia_area_tema
+        ON taxonomia_cronograma(area, tema)
+    ''')
+
     # Tabela 2: Caderno de erros estruturado
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS questoes_erros (
@@ -118,10 +125,29 @@ def init_db():
     )
     ''')
 
+    # Tabela 7: Log de revisão TEMÁTICA (SSOT do tempo-desde-última-revisão por tema).
+    #           Complementa fsrs_cards.last_review (nível card); NÃO faz parte do FSRS.
+    #           Ver core/contracts/forgetting-curve-contract.md.
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS review_log (
+        id           INTEGER PRIMARY KEY AUTOINCREMENT,
+        tema_id      INTEGER,
+        resumo_path  TEXT,
+        kind         TEXT NOT NULL,
+        source       TEXT,
+        note         TEXT,
+        reviewed_at  DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (tema_id) REFERENCES taxonomia_cronograma(id)
+    )
+    ''')
+    cursor.execute('''
+    CREATE INDEX IF NOT EXISTS idx_review_log_tema ON review_log(tema_id, reviewed_at)
+    ''')
+
     conn.commit()
     conn.close()
     print("Schema criado/atualizado. Tabelas: taxonomia_cronograma, questoes_erros, "
-          "flashcards (v5), fsrs_cards, fsrs_revlog, sessoes_bulk.")
+          "flashcards (v5), fsrs_cards, fsrs_revlog, sessoes_bulk, review_log.")
 
 if __name__ == "__main__":
     init_db()

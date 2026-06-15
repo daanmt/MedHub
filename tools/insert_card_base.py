@@ -54,7 +54,7 @@ DB_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'ipub.db')
 
 
 def get_or_create_tema(cursor, area, tema):
-    cursor.execute("SELECT id FROM taxonomia_cronograma WHERE tema = ?", (tema,))
+    cursor.execute("SELECT id FROM taxonomia_cronograma WHERE area = ? AND tema = ?", (area, tema))
     row = cursor.fetchone()
     if row:
         return row[0]

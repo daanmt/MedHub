@@ -33,8 +33,8 @@ def insert_questao(area, tema, enunciado, correta, chamada, erro, elo, armadilha
         conn = sqlite3.connect(DB_PATH)
         cursor = conn.cursor()
 
-        # Verifica se o Tema já existe. Se não existir, cria.
-        cursor.execute("SELECT id FROM taxonomia_cronograma WHERE tema = ?", (tema,))
+        # Verifica se o Tema já existe (por (area, tema) — evita re-poluir; UNIQUE no schema). Se não existir, cria.
+        cursor.execute("SELECT id FROM taxonomia_cronograma WHERE area = ? AND tema = ?", (area, tema))
         row = cursor.fetchone()
         
         if row:

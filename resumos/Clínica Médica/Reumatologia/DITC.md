@@ -62,12 +62,28 @@ Doença infiltrativa linfocitária de glândulas exócrinas (Sicca).
 
 ---
 
-## 4. Armadilhas de Prova
+## 4. Doença Mista do Tecido Conjuntivo (DMTC) ⭐⭐
+---
+Síndrome de **sobreposição**: reúne traços de **LES + ES + miopatia inflamatória**, definida por um marcador obrigatório.
+
+- **Marcador:** **anti-U1-RNP (anti-RNP) em altos títulos — presente em ~100%**. ⭐ Sua ausência praticamente afasta o diagnóstico.
+- **Epidemiologia:** mulheres (9:1), início na 2ª–3ª década. Casos pediátricos são raros (mesmo quadro clínico do adulto).
+- **Manifestações mais frequentes (hierarquia que cai em prova):** ⭐⭐
+    - **Fenômeno de Raynaud** (> 90%) — frequentemente a manifestação inicial; sua ausência levanta dúvida diagnóstica.
+    - **Poliartrite/sinovite** (~95%) — simétrica de mãos/punhos (padrão LES-like), porém **mais frequente e mais grave** que no LES isolado.
+    - Edema de mãos/dedos ("puffy hands", > 70%); miosite (> 50%); dismotilidade esofágica (70–80%).
+- **Pele:** predominam os achados **ES-like** (Raynaud, esclerodactilia). Rash malar/fotossensibilidade (LES-like) e sinal de Gottron podem ocorrer, porém **menos frequentes**.
+
+---
+
+## 5. Armadilhas de Prova
 ---
 - 🔴 Suspender IECA na Crise Renal Esclerodérmica por medo de piorar a LRA — **ERRO FATAL**. Na ES, o IECA é a droga de escolha e deve ser mantido.
 - 🔴 Confundir Raynaud primário (jovem, sem úlceras, CPU normal) com secundário (ES, úlceras de polpa, megacapilares na CPU).
 - 🔴 Esquecer que a Dermatomiosite pode ser o primeiro sinal de uma neoplasia oculta no idoso.
 - 🔴 Marcar Anti-Ro e Anti-La como específicos de Lúpus — eles ocorrem no LES, mas são a marca da Síndrome de Sjögren.
 - 🔴 Atribuir "Mãos de Mecânico" à sujeira ou trabalho — é sinal patognomônico de Síndrome Antissintetase.
+- 🔴 **DMTC:** as manifestações dominantes são **Raynaud + poliartrite** (ambos > 90%), não as lúpicas. **Rash malar** seduz por ser a cara do LES, mas na DMTC é **infrequente** — parear Raynaud com rash malar é a pegadinha (a resposta é **Raynaud + poliartrite**). Marcador: anti-U1-RNP em ~100%.
+- 🔴 **Sinal de Gottron** (rash eritematoso sobre dorso de dedos/cotovelos/joelhos — pode ocorrer na DMTC) ≠ **pápulas de Gottron** (patognomônicas da dermatomiosite, sobre as articulações MCF/IF).
 
 *📝 Espaço reservado para inclusão de questões erradas*

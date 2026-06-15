@@ -305,3 +305,87 @@ def update_flashcard_fields(card_id, fields) -> bool:
     conn.close()
     return True
 
+
+# ---------------------------------------------------------------------------
+# Curva de esquecimento — revisão TEMÁTICA (review_log)
+# SSOT do "tempo desde a última revisão" por tema. Complementa o FSRS (nível
+# card); o refresh dormente NUNCA toca fsrs_cards/fsrs_revlog. Ver
+# core/contracts/forgetting-curve-contract.md.
+# ---------------------------------------------------------------------------
+
+def resolve_tema_id(area, tema):
+    """Resolve (area, tema) -> id em taxonomia_cronograma por match EXATO.
+
+    Centraliza a regra de identidade do tema por (area, tema). Não cria linha.
+    Se houver duplicatas (taxonomia poluída pré-dedup), retorna o menor id
+    (determinístico). Returns int ou None.
+    """
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute(
+        "SELECT id FROM taxonomia_cronograma WHERE area = ? AND tema = ? ORDER BY id ASC LIMIT 1",
+        (area, tema))
+    row = cursor.fetchone()
+    conn.close()
+    return row[0] if row else None
+
+
+def log_review(tema_id=None, resumo_path=None, kind='dormant_refresh',
+               source='agent', note=None) -> int:
+    """Registra uma revisão TEMÁTICA em review_log e retorna o id da linha.
+
+    NÃO toca o FSRS (fsrs_cards/fsrs_revlog) — é o registro de re-ensino
+    narrativo do tema, complementar à revisão de cards. `kind` ∈
+    {dormant_refresh, directed_review, resumo_read, backfill}.
+    """
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute('''
+        INSERT INTO review_log (tema_id, resumo_path, kind, source, note)
+        VALUES (?, ?, ?, ?, ?)
+    ''', (tema_id, resumo_path, kind, source, note))
+    conn.commit()
+    rid = cursor.lastrowid
+    conn.close()
+    return rid
+
+
+def get_theme_last_review(tema_id=None, area=None, tema=None):
+    """Última revisão de um tema, unindo as 3 fontes de tempo (read-only).
+
+    Fontes: review_log.reviewed_at, fsrs_cards.last_review (via
+    flashcards.tema_id) e taxonomia_cronograma.ultima_revisao. Aceita `tema_id`
+    direto OU (area, tema). Datas ISO comparam lexicograficamente, então
+    `max()` por string dá a mais recente.
+
+    Returns dict {tema_id, last_review (str|None), source (str|None)} ou None
+    se o tema não existe.
+    """
+    if tema_id is None:
+        if area is not None and tema is not None:
+            tema_id = resolve_tema_id(area, tema)
+        if tema_id is None:
+            return None
+    conn = get_connection()
+    cursor = conn.cursor()
+    candidates = []  # (timestamp_str, source)
+    r = cursor.execute(
+        "SELECT MAX(reviewed_at) FROM review_log WHERE tema_id = ?", (tema_id,)).fetchone()
+    if r and r[0]:
+        candidates.append((r[0], 'review_log'))
+    r = cursor.execute('''
+        SELECT MAX(fc.last_review) FROM fsrs_cards fc
+        JOIN flashcards f ON f.id = fc.card_id
+        WHERE f.tema_id = ?''', (tema_id,)).fetchone()
+    if r and r[0]:
+        candidates.append((r[0], 'fsrs'))
+    r = cursor.execute(
+        "SELECT ultima_revisao FROM taxonomia_cronograma WHERE id = ?", (tema_id,)).fetchone()
+    if r and r[0]:
+        candidates.append((r[0], 'taxonomia'))
+    conn.close()
+    if not candidates:
+        return {"tema_id": tema_id, "last_review": None, "source": None}
+    best = max(candidates, key=lambda x: x[0])
+    return {"tema_id": tema_id, "last_review": best[0], "source": best[1]}
+

@@ -15,6 +15,10 @@ Documento único de governança do MedHub. Toda sessão começa aqui.
 
 **Este projeto é uma jornada contínua.** Nunca comece do zero. Sua missão é herdar o estado da sessão anterior, executar a tarefa atual e preparar o terreno para a próxima.
 
+### 1.1 Postura de autonomia (sessão 083)
+
+O agente **decide o próximo passo imediato e executa** — terceiriza a gestão do estudo. Lidera com um **plano decidido** (§2 passo 4 "Plano do Dia"), não com um menu de "o que você quer fazer?". **Pausa só em:** (a) fork real (trade-off que muda o resultado), (b) **operação destrutiva sobre SSOT** (`ipub.db`, `resumos/`), (c) fronteira de PR/commit, (d) condição BLOCKING do reconcile. Recomendar decisivamente; "corrija-me se errei" > "o que você prefere?". Normatizado em `core/contracts/forgetting-curve-contract.md §Autonomia`.
+
 ---
 
 ## 2. Boot Sequence (obrigatório ao iniciar)
@@ -22,10 +26,11 @@ Documento único de governança do MedHub. Toda sessão começa aqui.
 1. **`HANDOFF.md`** — camada operacional curta: próximo passo imediato + estado por frente. **Ler PRIMEIRO** (estrutura em `core/contracts/handoff-contract.md`).
 2. **`ESTADO.md`** — snapshot macro: metas, indicador, marcos (`core/contracts/estado-contract.md`).
 3. **Check de reconcile** — rodar o protocolo de `core/contracts/reconcile-contract.md` (planilha↔db↔ESTADO↔FSRS). BLOCKING → resolver antes de trabalho novo.
-4. **Workflow da tarefa** — `.agents/workflows/{analisar-questoes,criar-resumo,registrar-sessao,gerar-reforco}.md`.
-5. **Último log** — `history/session_NNN.md` mais recente (índice em `history/INDEX.md`).
-6. **Memória longa** — carregada via hook `SessionStart`. Se não aparecer: `python -m app.memory.inspect --context`.
-7. **RAG semântico durante a sessão** — `mcp__obsidian-notes-rag__search_notes` para localizar conteúdo em `resumos/` sem ler arquivos inteiros.
+4. **Plano do Dia (proativo)** — após o reconcile passar, **liderar com um plano decidido** (não um menu): rodar `python tools/day_plan.py` e apresentar (≤8 linhas) — tema dormente do dia (`/refrescar`), volume vs ritmo-alvo (~94q/dia p/ ENAMED), fila FSRS (vencidos + backlog) e próximo tema do cronograma — e **propor o passo imediato**. Pausar só em fork real / operação destrutiva sobre SSOT / fronteira de PR (ver §1.1). Governado por `core/contracts/forgetting-curve-contract.md`.
+5. **Workflow da tarefa** — `.agents/workflows/{analisar-questoes,criar-resumo,registrar-sessao,gerar-reforco}.md`.
+6. **Último log** — `history/session_NNN.md` mais recente (índice em `history/INDEX.md`).
+7. **Memória longa** — carregada via hook `SessionStart`. Se não aparecer: `python -m app.memory.inspect --context`.
+8. **RAG semântico durante a sessão** — `mcp__obsidian-notes-rag__search_notes` para localizar conteúdo em `resumos/` sem ler arquivos inteiros.
 
 ---
 
@@ -108,7 +113,7 @@ relates_to: [ESTADO, AGENTE]      # máximo 3 referências
 
 | Domínio | SSOT | Commitar? |
 |---|---|---|
-| Erros, FSRS, cronograma | `ipub.db` | Não (local-only) |
+| Erros, FSRS, cronograma, revisão temática (`review_log`) | `ipub.db` | Não (local-only) |
 | Conhecimento clínico | `resumos/**/*.md` | Sim |
 | Estado do projeto | `ESTADO.md` | Sim |
 | Workflows | `.agents/workflows/` | Sim |
@@ -132,6 +137,7 @@ relates_to: [ESTADO, AGENTE]      # máximo 3 referências
 - **FSRS bankruptcy (sessão 075)** — os 70 cards heurísticos legados foram aposentados (`needs_qualitative=2`), não regenerados. Go-forward: cards nascem qualitativos via `insert_questao.py`. Política em `core/contracts/fsrs-management-contract.md`.
 - **Governança de evidência (sessão 076)** — afirmação clínica decisória (conduta/dose/cutoff/critério) é auditada contra a melhor evidência: hierarquia **sociedades BR + MS > RCT/meta + guidelines INT > consenso**, com **lente da banca** (o que ENAMED/ENARE espera). Conflito banca × evidência atual → ensina a resposta da banca **e** registra 🔴 armadilha "banca-dependente" (nunca silenciar). Substrato: `pubmedmcp` (verbatim por PMID/DOI) + WebSearch (sociedades BR em PDF) + obsidian-rag (local). Normatizado por `core/contracts/evidence-governance.md`; operado por `/pesquisar-evidencia` + subagente `evidence-researcher`. Adaptado do mecanismo de auditoria do `agente-daktus-content`. Escopo v1.0: go-forward + sob demanda (sem varredura retroativa).
 - **Cards de altura graduada / andaime de pré-requisito (sessão 082)** — a altura de um flashcard é um **gradiente** (`base → mecanismo → nuance → topo`), carregado no campo `tipo`. Cards de andaime (altura < topo) reconstroem os elos **a montante** quando um **CLUSTER** de cards-alvo trava por falta de grounding (card isolado caindo = recall, não falta de base). Nascem **sem erro de origem** (`questao_id=NULL`), ancorados no resumo, via `tools/insert_card_base.py`. **Propagação local:** tapar o buraco costurando o degrau imediatamente adjacente; o nº de degraus é inferido da iteração com o estudante. O degrau `mecanismo` (porquê causal encadeado) é o de maior rendimento — o gap costuma ser **causalidade, não fato**. Calibração de compressão na revisão: a dose de fundação entregue **antes** do bloco escala com o quão frio está o tema (stability + acerto do cluster) — ver `/revisar` Camada 0. Régua de autoria em `.claude/commands/estilo-flashcard.md`. **Schema formal pendente (Tier 3):** altura ordinal + grafo `prereq_de` + ordenação automática da fila base→topo. Adaptado dos princípios de `ai-eng` (grounding, subcategory targeting, velocidade > perfeição).
+- **Gestão da curva de esquecimento (sessão 083)** — o MedHub gere a curva **no nível do TEMA** (o FSRS gere no card). Ritual diário `/refrescar` (`tools/dormant_refresh.py`): seleciona o tema mais dormente (`tools/review_radar.py`), re-ensina em prosa narrativa **menos comprimida** (substrato via `app.engine.get_topic_context`) e carimba em **`review_log`** — o **SSOT do tempo-de-revisão temática**. 🔴 **Fronteira dura:** o refresh **NÃO toca o FSRS** (não chama `record_review`, não cunha card). Boot **proativo** (§2 passo 4, `tools/day_plan.py`) cruza dormência × volume × FSRS × cronograma e lidera com plano decidido. **Invariante anti-poluição:** identidade do tema = `(area, tema)` com `UNIQUE` em `taxonomia_cronograma` (a dedup de s083 colapsou 22 grupos via `tools/dedup_taxonomia.py`, merge MAX; `insert_questao`/`insert_card_base` resolvem por `(area,tema)`). Normatizado por `core/contracts/forgetting-curve-contract.md`.
 
 ---
 
@@ -166,6 +172,7 @@ Qualquer duplicação semântica entre workflow e skill é defeito por contrato.
 | `/auditar-resumos` | Linter de qualidade para `resumos/` |
 | `/performance` | Checagem rápida (questões, metas, custo/Q, áreas fracas) — read-only |
 | `/pesquisar-evidencia` | Busca + auditoria de evidência de afirmação clínica decisória (hierarquia BR>INT>consenso + lente da banca); veredito + fonte. Governado por `core/contracts/evidence-governance.md` |
+| `/refrescar` | Refresh narrativo diário de um tema **dormente** (curva de esquecimento) — re-hidrata memória de temas frios; não toca o FSRS. Distinto do `/revisar`. CLI: `dormant_refresh.py` |
 
 ### 7.4 CLIs ativos (`tools/`)
 
@@ -184,6 +191,8 @@ Qualquer duplicação semântica entre workflow e skill é defeito por contrato.
 | `tools/audit_fsrs.py` | Estado do FSRS |
 | `tools/cards_regen_queue.py` | Fila (read-only) de cards a regenerar pelo agente — substitui a geração heurística aposentada |
 | `tools/review_cli.py` | Player FSRS em CLI |
+| `tools/review_radar.py` | Radar de dormência por tema (curva de esquecimento) — ranqueia por tempo-sem-revisar + decaimento FSRS. Read-only |
+| `tools/dormant_refresh.py` | Ritual de refresh de tema dormente (`--pick`/`--context`/`--stamp`) — seleciona, monta substrato (engine) e carimba em `review_log`. Não toca o FSRS |
 | `tools/backup_db.py` | Backup datado do `ipub.db` para `artifacts/backups/` |
 | `tools/eval/run_eval.py` | Eval de retrieval (Recall@k + MRR@10) |
 

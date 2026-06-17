@@ -44,7 +44,7 @@ aliases: [Hemostasia, Coagulação, Plaquetas, TP, TTPa, Anticoagulação, Tromb
 
 - **D-dímero:** Produto de degradação de fibrina estabilizada. Elevado em CIVD, TEV, cirrose.
 
-- **Padrões laboratoriais por doença:**
+- **Padrões laboratoriais por doença:** ⭐ o grid **TP × TTPa** é a chave-mestra da hemostasia secundária — o padrão de **qual teste alarga localiza o defeito** antes de recorrer à lista de fatores (TP isolado = extrínseca/FVII; TTPa isolado = intrínseca; ambos = via comum).
     - TAP e TTPA normais → DvW leve, deficiência de FXIII, plaquetopenia (PTI).
     - TAP prolongado, TTPA normal → Deficiência de FVII; varfarina, doença hepática, CIVD precoce.
     - TAP normal, TTPA prolongado → Hemofilia A/B, DvW; anticoagulante lúpico, heparina, inibidores de FVIII.

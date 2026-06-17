@@ -75,6 +75,8 @@ aliases: [LRA]
 - **FENa** = (Na urina × Cr plasma) / (Na plasma × Cr urina) × 100: pré-renal **< 1%** | NTA **> 1%**.
 - **FEUreia** (em uso de diuréticos): pré-renal **< 35%** | NTA **> 35%**.
 - **Osmolaridade urinária:** pré-renal > 500 mOsm/L | NTA < 350 mOsm/L.
+- **Densidade urinária:** pré-renal **> 1.020** (urina concentrada) | NTA **< 1.020** (urina diluída — túbulo lesado não concentra).
+- **Relação creatinina urinária/plasmática:** pré-renal > 40 | NTA < 20.
 - **Sedimento:** pré-renal → cilindros hialinos | NTA → cilindros granulosos + células epiteliais descamadas.
 - **Relação Ureia/Cr plasmáticas > 40:** pré-renal (ureia é reabsorvida junto com sódio e água no TCP → acumula no plasma desproporcionalmente à Cr).
 
@@ -109,11 +111,16 @@ aliases: [LRA]
 - ⚠️ **Padrão de prova:** SHR **não melhora com expansão volêmica** — chave para diferenciá-lo da pré-renal.
 
 ### 4.2 Síndrome Cardiorrenal (SCR)
-- **SCR Tipo 1 (agudo → agudo):** IC aguda descompensada → LRA.
-    - Mecanismo duplo: ↓ débito cardíaco E congestão venosa renal (↑ pressão intratubular → ↓ TFG).
+- Disfunção aguda ou crônica de um órgão (coração ou rim) provocando disfunção do outro. **Cinco tipos**, definidos pelo órgão inicial e pela cronologia:
+    - **Tipo 1 (cardiorrenal aguda):** IC aguda → LRA.
+    - **Tipo 2 (cardiorrenal crônica):** IC crônica → DRC.
+    - **Tipo 3 (renocardíaca aguda):** LRA → lesão cardíaca aguda (arritmias por hipercalemia, pericardite urêmica).
+    - **Tipo 4 (renocardíaca crônica):** DRC → IC crônica.
+    - **Tipo 5 (secundária):** doença sistêmica (ex.: sepse) → IC aguda E LRA simultâneas.
+- **SCR Tipo 1 — mecanismo duplo:** ↓ débito cardíaco E congestão venosa renal (↑ pressão intratubular → ↓ TFG).
     - ⭐ A congestão venosa é tão importante quanto o baixo débito.
     - Conduta: diureticoterapia guiada por pressão venosa; inotrópicos se baixo débito.
-- **SCR Tipo 3 (agudo → agudo reverso):** LRA → lesão cardíaca (arritmias por hipercalemia, pericardite urêmica).
+- ⭐ **Tratamento de todos os 5 tipos:** tratar a causa de base da descompensação inicial.
 - ⚠️ **Padrão de prova:** Piora de Cr com diurético em IC pode ser aceitável se houver descongestão clínica.
 
 ### 4.3 Rabdomiólise ⭐⭐
@@ -158,6 +165,9 @@ aliases: [LRA]
 ### 4.7 Síndrome de Lise Tumoral (SLT)
 - Após quimioterapia de alta carga (Burkitt, LLA, LLC em crise blástica) ou espontânea.
 - **Distúrbios:** ↑ K, ↑ P, ↑ ácido úrico, ↓ Ca ("CA CAI").
+- **Critérios de Cairo-Bishop:**
+    - **SLT laboratorial:** ≥ 2 critérios — fósforo ≥ 4,5 mg/dL, potássio ≥ 6 mEq/L, ácido úrico ≥ 8 mg/dL, cálcio total < 7 mg/dL.
+    - **SLT clínica:** SLT laboratorial + ≥ 1 de — **LRA**, **crise convulsiva**, **arritmia cardíaca ou morte súbita**.
 - **LRA por:** nefropatia úrica (obstrução tubular) + precipitação de fosfato de cálcio.
 - **Prevenção:** hidratação + **alopurinol** (bloqueia xantina oxidase) ou **rasburicase** (converte ácido úrico → alantoína; **contraindicada em G6PD**).
 
@@ -258,6 +268,20 @@ aliases: [LRA]
 - ⭐ Sequência mnemônica: **T → P → QRS → FV** (Tenda → P some → QRS alarga → Fibrilação).
 - **Gluconato de cálcio** (estabilizador de membrana) indicado quando há **alteração no ECG** — não abaixa o K, protege o coração.
 
+### Manejo da Hipercalemia — 3 Frentes ⭐⭐
+> Limiar: K⁺ > 5,5 mEq/L. As três frentes são complementares e simultâneas, não sequenciais.
+
+- **1. Estabilizar a membrana** (se alteração no ECG): **gluconato de cálcio 10% 10 mL EV** em 2–3 min; repetir a cada 5 min até corrigir a alteração. Início em 5–10 min. Não reduz o K — protege o miocárdio.
+- **2. Shift (deslocar K⁺ para o intracelular)** — efeito transitório, há rebote:
+    - **Insulina regular 10 UI + glicose 50% 100 mL** EV (solução polarizante) — início ~20 min. Medida de shift **mais eficaz**.
+    - **Beta-2 agonista inalatório** (fenoterol/salbutamol) — início 30–60 min.
+    - **Bicarbonato de sódio 8,4% 1 mEq/kg** — **apenas se houver acidose** associada.
+- **3. Eliminar K⁺ do organismo** (a única que reduz o estoque corporal):
+    - **Furosemida 1 mg/kg** (se houver diurese preservada).
+    - **Resina de troca** (poliestirenossulfonato de cálcio, Sorcal 30 g) — terapia de exceção.
+    - **Hemodiálise** — se hipercalemia refratária às medidas clínicas.
+- ⚠️ **Padrão de prova:** insulina+glicose e beta-2 apenas **redistribuem** o potássio (efeito temporário); só furosemida, resina e diálise efetivamente o **removem**.
+
 ---
 
 ## 9. Armadilhas de Prova
@@ -280,5 +304,12 @@ aliases: [LRA]
 - 🔴 Piora de Cr durante diureticoterapia em IC pode ser aceitável se houver descongestão — não suspender automaticamente.
 - 🔴 FENa e FEUreia perdem validade em DRC preexistente — o rim crônico não conserva sódio adequadamente.
 - 🔴 GNDA pós-estreptocócica: ↓ C3 (complemento) + hematúria dismórfica. Plaquetas normais (diferencia de SHU/PTT).
+- 🔴 Densidade urinária diferencia topografia: **> 1.020 = pré-renal** (urina concentrada) | **< 1.020 = NTA** (urina diluída).
+- 🔴 Hipercalemia: insulina+glicose e beta-2 apenas **deslocam** o K⁺ (efeito transitório, com rebote) — só **furosemida, resina de troca e diálise removem** o potássio do corpo. Gluconato de cálcio protege o coração, mas **não abaixa o K**.
+- 🔴 Fluido de escolha na LRA (e nas lises celulares) = **cristaloide** (SF 0,9% ou Ringer Lactato); coloides não (coagulopatia, anafilaxia). Evitar Ringer Lactato se hipercalemia/hipercalcemia; evitar SF 0,9% se acidose hiperclorêmica.
+- 🔴 Medidas **SEM eficácia** na LRA (pegadinha do "não fazer"): dopamina "em dose renal", fenoldopam, peptídeo natriurético atrial, IGF-1, eritropoetina, N-acetilcisteína. Diurético trata hipervolemia, mas **não previne nem reverte** a LRA.
+- 🔴 Síndrome de lise tumoral — critérios de **Cairo-Bishop**: laboratorial = ≥ 2 de (P ≥ 4,5; K ≥ 6; ácido úrico ≥ 8; Ca < 7); clínica = LRA, convulsão ou arritmia/morte súbita.
+- 🔴 Síndrome cardiorrenal tem **5 tipos** (1: IC aguda→LRA; 2: IC crônica→DRC; 3: LRA→IC aguda; 4: DRC→IC crônica; 5: doença sistêmica→IC+LRA). Tratamento = causa de base.
+- 🔴 LRA e DRC se retroalimentam: **LRA é fator de risco para DRC** futura; **DRC prévia é o principal fator de risco para LRA** que necessita de diálise.
 
 *📝 Espaço reservado para inclusão de questões erradas*

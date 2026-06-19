@@ -1,30 +1,25 @@
 # HANDOFF.md — ESTADO OPERACIONAL CURTO
-*Atualizado: 2026-06-17 — s084. **Construído `Doença Renal Crônica.md` (stub→padrão-ouro)** + auditado `LRA.md` + bloco Nefro (40q) e SOAP (26q) = **+66q**, **11 erros→cards** + **8 andaimes** (DMO, Hemostasia, Cardiopatias). `/revisar`: 35/50 da fila revisados — **a curva finalmente comeu**. **Próximo: o boot começa pela revisão temática + re-drill + os 15 restantes.***
+*Atualizado: 2026-06-19 — **s085 (sessão GIGANTE)**. **Pediatria 38/23 registrado** (icterícia/sepse neonatal, 60,5%; radar cravou o tema 63d frio). `/revisar`: **fila vencida ZERADA — 52 cards**. **Deck:** 435 recurado + **15 andaimes** (Hemostasia 3, Trauma 2, Ectópica 2, **Icterícia 8**). **Neonatologia:** 15 erros → **algoritmo das 3 comportas** (tempo / direta-colestase / regras ABO-Rh) + sepse precoce×tardia + GBS + Kramer; tema refrescado (review_log #50). **Achado central: bug nº 1c em 6 temas** (tem o fato, pula a verificação). **Próximo: re-drill dos 1 → cirurgia infantil II.***
 
-## ▶ Próximo passo imediato — abertura da próxima sessão
-1. **Revisão rápida dos temas (Camada 2)** dos gaps de hoje, na ordem dos clusters frios:
-   - **Hemostasia** — grid TP/TTPa (já com 3 andaimes); re-drill 426, 429, 431, 432, 433, 435.
-   - **Cardiopatias** — cianose=shunt D→E / anatomia T4F / ducto-dependente (já com 3 andaimes); re-drill 97, 104, 108, 110.
-   - **Pontuais:** DM2 (cetoacidose euglicêmica do iSGLT2; rastreamento ADA ≥35), TCE-ped (TC obrigatória na fratura; IOT+anti-PIC antes da TC), TXA (janela **3h**, 1g+1g/8h), TB ativa×ILTB, FA incubação **3-6d**.
-2. **Re-drill dos cards <4** desta sessão (18): 13, 44, 56, 68, 72, 74, 82, 97, 104, 108, 110, 389, 426, 429, 431, 432, 433, 435 — relearning mnemônico, **não grava FSRS**.
-3. **Terminar a fila:** ~**15 cards restantes** dos 50 puxados (Cardiopatias + Hemato remanescentes).
-4. Seguir o gargalo: **VOLUME ≥94q/dia** p/ ENAMED (13/09). Bloco 3 (Nefro) **fechado** ✅.
+## ▶ Próximo passo imediato — s085 cont. ou s086
+1. **Re-drill dos 1 de hoje** (relearning, NÃO grava FSRS): 426, 435, 84, 78, 70, 104 + neonatologia (deixar os 8 andaimes da icterícia maturarem 1-2 dias antes).
+2. **Cirurgia infantil II** (usuário traz questões) — depois **planejamento familiar**. Refresh dirigido (Camada 0) antes de cada bloco.
+3. **Backlog de NOVOS (~195 c/ andaimes)** — atacar aos poucos via `/revisar` (separado da fila vencida, zerada).
+4. Gargalo: **VOLUME ≥97q/dia** p/ ENAMED (13/09). Hoje: +38 (revisão não conta como questões).
 
 ## Estado por frente
-- **Volume & Metas:** **3.457/12.000 ENAMED (28,8%) — +66 hoje** (Nefro 40/31 + SOAP 26/24). 80,0% geral. Ritmo-alvo ~94q/dia.
-- **Conteúdo:** **46 resumos** — **`Doença Renal Crônica.md` construído** (10 seções, KDIGO→TRS→DRC×LRA, 30 armadilhas) + **`LRA.md` auditado** (Cairo-Bishop, cardiorrenal 5 tipos, escada da hipercalemia, densidade urinária) + linha-âncora do grid no `Hemostasia.md`. Gap restante: `Diabetes - Complicações Crônicas`.
-- **Erros & Cards:** 278 erros. **+20 cards hoje** (9 Nefro 460-468 + 3 SOAP 477-479 + 8 andaimes: 2 DMO, 3 Hemostasia, 3 Cardio). Card 56 reescrito (vazava MCQ); card 17 corrigido.
-- **FSRS:** **35/50 revisados na s084** (1ª alimentação real da curva). Distribuição honesta: muitos 4 em Arbovirose/DM2/Trauma; **2 clusters frios → andaime**: Hemostasia (fatores) e Cardiopatias (T4F/shunt). Backlog segue grande.
+- **Volume & Metas:** **3.495/12.000 ENAMED (29,1%) — +38 na s085** (Pediatria 38/23). 79,8% geral. Ritmo-alvo ~97q/dia. Cluster fraco confirmado pelo usuário: **hemato/hepato/imuno** (densos em comporta — não aptidão, é framework+bug).
+- **Conteúdo:** **46 resumos.** Verdito s085: `0 deficiência de material` em Hemostasia/Cardiopatias (resumos gold). **Gaps de resumo:** `Diabetes - Complicações Crônicas`; **algoritmo de ectópica** e **icterícia neonatal** hoje só em andaime/micro-nota (sprint) — candidatos a resumo futuro.
+- **Erros & Cards:** 278 erros (neonatologia foi clusterizada, não 15 inserts individuais). **~304 cards ativos** (+24 andaimes na s085+s084; 435 recurado v2). Pipeline andaime validado em **5 temas**.
+- **FSRS:** **fila vencida ZERADA na s085 (52 cards).** Distribuição 25×4/12×3/8×2/7×1. Backlog de NOVOS (~195, inclui 15 andaimes recém-criados) é a próxima fronteira.
 
-## Última sessão — sessão 084
-- DRC.md construído da apostila (Estratégia, Zero PDF cumprido) + LRA.md auditado. Bloco Nefro 40/31 (77,5%): 9 erros, padrão dominante **bug nº 1c (fato/contexto)** reincidente (furosemida em DRC avançada; restrição proteica fora de TFG<30). Cluster fraco: **DMO-DRC (3/9)**.
-- SOAP/RCOP 26/24 (92,3%): P=Plano (não Propedêutica); A = avaliação ancorada nos dados; longitudinalidade.
-- `/revisar` 35/50: andaime destravou Hemostasia em tempo real (lote 4 afundou → lote 5 recuperou). Cardiopatias = 2º cluster frio, andaimado.
+## Última sessão completa — sessão 084
+- DRC.md construído + LRA.md auditado. Nefro 40/31, SOAP 26/24 = +66q. Padrão **bug nº 1c** — agora confirmado como **eixo metacognitivo central** (s085: 6 temas).
 
 ## Pendências/observações ativas
-- **Re-drill + 15 restantes + revisão temática** → abertura da próxima (acima).
-- **bug nº 1c (fato/contexto)** é o alvo nº 1 do próximo bloco — reincidiu limpo 2× ([[feedback_bug_fato_contexto_errado]]).
-- Tier-3 (schema de altura), limpeza `[bulk]`/`Geral`, enumeração do Drive — seguem pendentes.
+- **bug nº 1c / "para antes do porquê"** = alvo nº 1, **6 temas na s085** (cardio, trauma, hemo, DM2, ectópica, icterícia). Frente: **decompose → playbook de execução de prova** ([[project_decompose_bug_execucao_prova]]). É a prioridade estratégica.
+- **Re-drill dos 1** (426, 435, 84, 78, 70, 104) pendente. Andaimes de icterícia maturando (não drillar 1-2 dias).
+- **Possíveis resumos novos:** ectópica, icterícia neonatal (hoje só andaime). Tier-3 (schema de altura), limpeza `[bulk]`/`Geral`, enumeração do Drive — seguem.
 
 ---
 *Histórico: history/INDEX.md · Snapshot macro: ESTADO.md · Curva: core/contracts/forgetting-curve-contract.md*

@@ -7,7 +7,7 @@ relates_to: [AGENTE, handoff-contract, estado-contract]
 
 # ESTADO — MedHub
 
-*Atualizado: 2026-06-17 (sessão 084) | Ferramenta: Claude Code (Opus 4.8)*
+*Atualizado: 2026-06-19 (sessão 085) | Ferramenta: Claude Code (Opus 4.8)*
 
 > **Boot:** ler [`AGENTE.md`](AGENTE.md) → [`HANDOFF.md`](HANDOFF.md) (operacional curto) primeiro. Este arquivo é o snapshot **macro** (metas, indicador, marcos). Estrutura normatizada por [`core/contracts/estado-contract.md`](core/contracts/estado-contract.md).
 
@@ -20,9 +20,9 @@ relates_to: [AGENTE, handoff-contract, estado-contract]
 - **Marco ENAMED (prioridade):** 12.000 questões até **13/09/2026** — ritmo-alvo **~96q/dia** (faltam 8.543). ⚠️ Meta de junho (4.500) não fecha: atrás 1.043.
 - **Plano de fim de ano:** 17.000 questões até 12/2026 (dashboard).
 - **Custo/Q atual:** **R$ 0,91** (jun/2026, acumulado = investimento ÷ questões), em queda; alvo no fim do plano ≈ R$ 0,26.
-- **Indicador Atual:** 3.457 / 12.000 ENAMED (28,8%).
-- **Performance Geral:** 80,0% (2.767 acertos / 3.457 questões — `sessoes_bulk`). Fracos no dashboard: **Hepato 57% · Dermato 67% · Cardiologia/Otorrino 68% · Hemato 74% · Pneumo/Nefro/Endocrino/Infecto ~76%**.
-- **Contadores:** **46 resumos** em `resumos/` · **278 erros** em `ipub.db` · **~280 cards ativos** (+20 na s084; 196 aposentados) · **0 heurísticos ativos** · **taxonomia `UNIQUE(area,tema)`**
+- **Indicador Atual:** 3.495 / 12.000 ENAMED (29,1%).
+- **Performance Geral:** 79,8% (2.790 acertos / 3.495 questões — `sessoes_bulk`). Fracos no dashboard: **Hepato 57% · Dermato 67% · Cardiologia/Otorrino 68% · Hemato 74% · Pneumo/Nefro/Endocrino/Infecto ~76%**. Usuário confirma cluster fraco subjetivo: **hemato/hepato/imuno** (temas densos em comporta — ver playbook).
+- **Contadores:** **46 resumos** em `resumos/` · **278 erros** em `ipub.db` · **~295 cards ativos** (+15 andaimes na s085; 196 aposentados) · **0 heurísticos ativos** · **taxonomia `UNIQUE(area,tema)`**
 
 ---
 
@@ -42,10 +42,11 @@ relates_to: [AGENTE, handoff-contract, estado-contract]
 
 Ver [`ROADMAP.md`](ROADMAP.md). Prioridades guiadas pelo cronograma (SSOT: `Cronograma de Reta Final.xlsx` no Drive):
 
-1. **Abertura da próxima (s085):** revisão temática dos gaps da s084 → re-drill dos 18 cards <4 → 15 restantes da fila FSRS (ver `HANDOFF.md`).
-2. **VOLUME (questões):** o gargalo. Bloco 3 (Nefro) **fechado** ✅. Seguir ≥96q/dia com refresh pré-bloco; **alvo nº 1 metacognitivo: bug nº 1c (fato/contexto)**, reincidente na s084.
-3. **Gap de resumo restante:** `Diabetes - Complicações Crônicas`.
-4. **Pendentes:** Tier-3 (schema de altura), limpeza `[bulk]`/`Geral` da taxonomia, investigar a enumeração do Drive.
+1. **Abertura da próxima:** re-drill dos 1 da s085 (426, 435, 84, 78, 70, 104) → **Cirurgia Infantil II** (questões) → planejamento familiar. Refresh Camada 0 antes de cada bloco.
+2. **PRIORIDADE ESTRATÉGICA — bug nº 1c:** confirmado como **eixo metacognitivo central** (s085: disparou em **6 temas**). Operacionalizar o [`PLAYBOOK_EXECUCAO_PROVA.md`](PLAYBOOK_EXECUCAO_PROVA.md) — treinar o reflexo de "checar a comporta antes de aplicar". Maior alavanca da preparação (rende mais que estudar mais um tema).
+3. **VOLUME (questões):** o gargalo. Seguir ≥97q/dia com refresh pré-bloco.
+4. **Gaps de resumo:** `Diabetes - Complicações Crônicas`; candidatos novos: ectópica, icterícia neonatal (hoje só andaime/micro-nota). **Zero PDF pendente:** 4 órfãos antigos (LRA, Introd, DITC, Sistemas de Informação).
+5. **Pendentes:** Tier-3 (schema de altura), limpeza `[bulk]`/`Geral` da taxonomia, enumeração do Drive.
 
 > Detalhe operacional e próximo passo imediato: [`HANDOFF.md`](HANDOFF.md). Histórico completo: [`history/INDEX.md`](history/INDEX.md).
 

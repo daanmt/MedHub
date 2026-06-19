@@ -4,7 +4,7 @@ tema: Cirurgia Infantil
 type: resumo
 especialidade: Cirurgia Pediátrica
 status: ativo
-aliases: [Cirurgia Infantil, Cirurgia Pediátrica, HDC, Onfalocele, Gastrosquise, Estenose Pilórica, Invaginação Intestinal]
+aliases: [Cirurgia Infantil, Cirurgia Pediátrica, HDC, Estenose Pilórica, Invaginação Intestinal, Meckel, ECN, Criptorquidia, VUP, RVU, Wilms, Neuroblastoma, Torção testicular]
 ---
 
 # Cirurgia Infantil
@@ -187,7 +187,148 @@ aliases: [Cirurgia Infantil, Cirurgia Pediátrica, HDC, Onfalocele, Gastrosquise
 
 ---
 
-## 11. Armadilhas de Prova
+## 11. Enterocolite Necrosante (ECN)
+
+- ⭐ **Emergência gastrointestinal adquirida mais comum do período neonatal.** Acomete preferencialmente **prematuros de muito baixo peso (< 1.500 g)** na 1ª–2ª semana de vida. É a causa mais comum de **síndrome do intestino curto** na criança.
+- **Patogênese:** imaturidade intestinal + colonização bacteriana anômala + **alimentação enteral** (90–95% receberam dieta antes do quadro) → lesão isquêmico-inflamatória da mucosa.
+- **Apresentação clínica:** distensão abdominal, intolerância alimentar (resíduo gástrico), **sangue nas fezes** (macro ou oculto), letargia, instabilidade térmica, apneia/bradicardia. Progressão → sepse sistêmica + coagulopatia + deterioração hemodinâmica. Eritema/edema de parede abdominal e massa palpável indicam necrose/peritonite (sinais de gravidade).
+- **Diagnóstico:** ⭐ **Pneumatose intestinal ao RX = achado patognomônico** (gás intramural). Outros: pneumoporta (gás venoso portal), alça intestinal fixa, ascite, **pneumoperitônio** (perfuração).
+- **Tratamento:**
+    - **Clínico (sucesso em até 50%):** suspender dieta enteral, **descompressão gástrica (sonda orogástrica)**, ressuscitação hidroeletrolítica, antibioticoterapia de amplo espectro por 7–10 dias, nutrição parenteral, acompanhamento radiográfico seriado.
+    - ⭐ **Indicação cirúrgica ABSOLUTA: pneumoperitônio (perfuração).** Outras indicações: deterioração clínica, celulite de parede, piora da acidose, queda de leucócitos/plaquetas, massa palpável com alça fixa. Princípio cirúrgico: ressecção dos segmentos inviáveis.
+
+---
+
+## 12. Estenose Hipertrófica do Piloro (EHP)
+
+- **Definição:** hipertrofia da musculatura pilórica → obstáculo ao esvaziamento gástrico. Etiologia multifatorial.
+- **Epidemiologia:** ⭐ predomínio **masculino (4:1)**, **primogênito**; forte influência hereditária.
+- **Apresentação clínica:** ⭐ **vômitos em jato, SEM bile, progressivos**, com início entre **2–8 semanas de vida**; **apetite preservado** (fome logo após vomitar).
+    - **Distúrbio metabólico clássico:** ⭐ **alcalose metabólica hipoclorêmica e hipocalêmica** (perda de HCl gástrico; hipocalemia por perda renal de potássio).
+    - Exame físico: ⭐ **oliva pilórica palpável** (epigástrio/QSD) = **patognomônica** — dispensa exame complementar; ondas de Kussmaul (peristalse gástrica visível).
+- **Diagnóstico (se oliva não palpável):** ⭐ **ultrassonografia** — espessura muscular pilórica **> 3–4 mm** e comprimento **> 15–18 mm**.
+- **Tratamento:**
+    - ⭐ **NÃO é urgência cirúrgica — a verdadeira urgência é corrigir o distúrbio metabólico.** Reidratar e **corrigir a alcalose e a hipocalemia ANTES da cirurgia** (risco anestésico/apneia se operado alcalótico).
+    - Cirurgia curativa: **piloromiotomia de Fredet-Ramstedt** (incisão longitudinal da musculatura, preservando a mucosa).
+
+---
+
+## 13. Intussuscepção (Invaginação Intestinal)
+
+- **Definição:** penetração de um segmento proximal de alça no segmento distal; localização **ileocólica em 80%** dos casos.
+- **Epidemiologia:** ⭐ **lactente de 4–12 meses (pico entre o 5º e o 9º mês)**, previamente hígido. Na criança, **~90% é idiopática**, sem ponto de condução anatômico (hiperplasia linfoide pós-viral). Em **maiores de 2 anos**, suspeitar de causa secundária com ponto de condução: ⭐ o **divertículo de Meckel** é o mais comum.
+- **Apresentação clínica:** ⭐ **tríade clássica** — dor abdominal em cólica, intensa e intermitente (a criança flete os membros, com palidez e sudorese) + **massa tubuliforme palpável (QSD)** + **eliminação anal de muco com sangue ("geleia de morango")**. Sinal de Dance (fossa ilíaca direita vazia/escafóide). Entre as crises, a criança permanece relativamente bem.
+- **Diagnóstico:** ⭐ **ultrassonografia abdominal** (exame inicial) — **sinal do alvo** (corte transversal) ou **pseudo-rim** (corte longitudinal).
+- **Tratamento:**
+    - ⭐ **Redução hidrostática ou pneumática por enema (contraste ou ar) = procedimento de eleição** (sucesso > 80%). Confirmação do sucesso: refluxo de ar/contraste no íleo terminal + resolução da massa.
+    - ⚠️ **Padrão de prova:** contraindicações ao enema → **peritonite ou instabilidade hemodinâmica**, que indicam **laparotomia**.
+
+---
+
+## 14. Divertículo de Meckel
+
+- ⭐ **Anomalia congênita mais comum do trato gastrointestinal.** Remanescente do **conduto onfalomesentérico (ducto vitelino)**.
+- **Regra dos 2 (mnemônica):** ~2% da população; ~2 pés (≈60 cm) proximal à válvula ileocecal; ~2 polegadas de comprimento; 2 tipos de mucosa ectópica (gástrica e pancreática); sintomático geralmente antes dos 2 anos.
+- **Complicações (a clínica decorre delas):**
+    - ⭐ **Hemorragia digestiva baixa indolor e maciça (enterorragia)** — causa mais frequente de HDB em **menores de 5 anos** (mucosa gástrica ectópica → úlcera péptica ileal).
+    - **Obstrução** (complicação mais comum no conjunto — por invaginação ou volvo), diverticulite (simula apendicite), perfuração.
+- **Diagnóstico:** ⭐ **cintilografia com ⁹⁹ᵐTc-pertecnetato** ("cintilografia de Meckel") — detecta a **mucosa gástrica ectópica** nos casos de sangramento.
+- **Tratamento:** ressecção cirúrgica — diverticulectomia em "V" com fechamento transversal; ressecção segmentar do íleo + anastomose primária se houver inflamação/ulceração da base.
+
+---
+
+## 15. Apendicite Aguda na Infância
+
+- ⭐ **Causa mais frequente de abdome agudo cirúrgico na infância.** Mais comum entre **4 e 15 anos**; apresentação mais atípica e maior taxa de perfuração em **menores de 5 anos**.
+- **Etiopatogênese:** obstrução da luz apendicular → na criança, mais frequentemente por **hiperplasia linfoide (pós-viral)** que por fecálito; também parasitoses (oxiuríase, tricocefalíase).
+- **Apresentação clínica:** dor inicialmente periumbilical/difusa que **migra para a fossa ilíaca direita** (ponto de McBurney) + descompressão brusca dolorosa. **Diarreia e vômitos** mais frequentes nos menores de 5 anos (confundem com gastroenterite).
+- **Diagnóstico:** ⭐ **essencialmente clínico** (anamnese + exame físico evolutivo). Imagem de escolha = **ultrassonografia** (apêndice ≥ 7 mm, não compressível, "aspecto em alvo", "anel de fogo" ao Doppler, líquido/abscesso periapendicular). ⚠️ O principal mimetizador é a **adenite mesentérica**.
+- **Tratamento:** **apendicectomia** (convencional ou laparoscópica) + antibioticoterapia para aeróbios e anaeróbios (iniciada no pré-operatório). Apendicite gangrenosa/perfurada → manter antibiótico intravenoso no pós-operatório até afebril.
+
+---
+
+## 16. Persistência do Conduto Peritônio-Vaginal
+
+- **Base embriológica:** o **conduto peritônio-vaginal** acompanha a descida testicular e normalmente se oblitera (9º mês de gestação ou logo após o nascimento). A **falha de obliteração** origina um espectro de apresentações.
+- **Hérnia inguinal indireta:**
+    - ⭐ **Mais comum à direita (60%)** — atribuída à descida mais tardia do testículo direito; predomínio **masculino (6:1)**; maior incidência em **prematuros**. Nas meninas, o ligamento redondo origina hérnias indiretas e os **cistos de Nuck** (análogos ao cisto de cordão).
+    - Clínica: abaulamento inguinal/escrotal intermitente ao aumento da pressão intra-abdominal (choro, esforço, ortostase); **sinal do fio / da luva de seda**. Indolor, exceto nas complicações.
+    - ⭐ **Tratamento: SEMPRE cirúrgico (herniorrafia), assim que as condições clínicas permitirem, INDEPENDENTEMENTE do peso** — pelo risco de encarceramento (maior em prematuros e no 1º ano). Não há conduta expectante (contraste com a hérnia umbilical).
+    - **Hérnia inguinal encarcerada:** irritabilidade, vômitos, distensão e parada de eliminação (obstrução intestinal — causa frequente no lactente). Sem peritonite → **redução manual (sucesso ~70%)** + herniorrafia em **24–48 h** (após resolução do edema). **Irredutível ou com peritonite → exploração cirúrgica imediata.**
+- **Hidrocele comunicante e cisto de cordão:**
+    - Persistência do conduto de **pequeno calibre** (passa apenas líquido). Hidrocele comunicante: aumento do volume escrotal ao longo do dia. Cisto de cordão (hidrocele de cordão): obliteração parcial do conduto.
+    - ⭐ **Transiluminação POSITIVA** (conteúdo líquido) — distingue de hérnia inguinoescrotal, tumor testicular e hematocele (sólidos, transiluminação negativa).
+    - ⭐ **Tratamento: conduta expectante até ~10 meses–1 ano** (resolução espontânea frequente); hidrocelectomia eletiva (inguinotomia) se persistir. Cisto de cordão → exploração cirúrgica em qualquer idade. **A aspiração NÃO é recomendada.**
+
+---
+
+## 17. Hérnia Umbilical
+
+- Congênita e muito comum; decorre do fechamento incompleto da aponeurose dos retos abdominais na cicatriz umbilical.
+- ⭐ **Fecha espontaneamente em ~80% dos casos → conduta expectante; reparo eletivo adiável até cerca dos 5 anos.** O encarceramento é **raro** (contraste com a hérnia inguinal).
+- **Reparo cirúrgico mais precoce se:** episódio de encarceramento (raro, mas reparo imediato); defeito fascial **> 2 cm** ou excesso de pele **> 3 cm** (baixa probabilidade de fechamento espontâneo).
+
+---
+
+## 18. Obstrução Urinária Congênita e Refluxo Vesicoureteral
+
+### 18.1 Válvula de Uretra Posterior (VUP)
+- ⭐ **Anomalia obstrutiva congênita do trato urinário mais comum em meninos.** Membrana obstrutiva na uretra posterior.
+- **Repercussões:** dilatação da uretra prostática, hipertrofia do detrusor e do colo vesical, divertículos vesicais, refluxo vesicoureteral, **hidronefrose bilateral** e, nos casos graves, displasia renal. Intraútero: oligodramnia → **hipoplasia pulmonar** (insuficiência respiratória grave ao nascer).
+- **Diagnóstico:** ultrassonografia pré-natal; no pós-natal, suspeitar por **globo vesical palpável + jato urinário fraco** em RN masculino ou ITU de repetição no 1º ano. ⭐ **Confirmação: uretrocistografia miccional** (ou uretroscopia).
+- **Tratamento:** **eletrofulguração transuretral** da válvula, já no primeiro mês de vida.
+
+### 18.2 Refluxo Vesicoureteral (RVU)
+- Fluxo retrógrado de urina da bexiga para o trato urinário superior. ⭐ **Importância: pielonefrites de repetição → cicatrizes renais (nefropatia de refluxo) → principal fator etiológico de HAS na infância** e de insuficiência renal terminal.
+- **Diagnóstico:** ⭐ **uretrocistografia miccional** confirma e gradua (I–V); **cintilografia com DMSA** avalia função relativa e detecta cicatrizes. A ultrassonografia não firma o diagnóstico.
+- **Tratamento:**
+    - **Graus I–III (baixo grau):** clínico — ⭐ **quimioprofilaxia antibiótica** mantida enquanto persistir o refluxo (tendência à resolução espontânea com o crescimento).
+    - **Graus IV–V (alto grau):** cirúrgico (reimplante ureteral com alongamento do túnel submucoso) — cura espontânea infrequente. Também cirurgia no baixo grau sem melhora após 2–3 anos de profilaxia.
+
+---
+
+## 19. Criptorquidia
+
+- **Ausência de um ou ambos os testículos no escroto** por falha da migração normal. Ocorre em **~3% dos termos e ~30% dos prematuros**.
+- **Classificação:** **palpáveis (80–90%)** — testículo **retrátil** (desce ao escroto durante o exame por hiper-reflexia cremastérica; é **variante normal**), intracanalicular, extracanalicular, ectópico. **Não palpáveis (10–20%)** — intra-abdominal, atrófico, evanescente (vasos espermáticos em fundo cego = torção intraútero) ou agenesia.
+- **Conduta:** ⭐ **descida espontânea pode ocorrer até ~3–6 meses (rara após 1 ano) → conduta expectante até 6–12 meses.** Persistindo: **orquidopexia** — palpável: aberta; não palpável: **laparoscopia** diagnóstico-terapêutica (técnica de Fowler-Stephens em 2 tempos se a > 2 cm do anel inguinal interno).
+- ⭐ **Complicações:** maior risco de **malignidade testicular (tumor de células germinativas)**, infertilidade, hérnia inguinal e torção. A orquidopexia facilita o rastreio, mas não anula o risco oncológico.
+
+---
+
+## 20. Escroto Agudo
+
+- Síndrome de dor escrotal súbita + aumento do volume da bolsa. Principais causas: torção testicular e orquiepididimite.
+- **Torção testicular:**
+    - ⭐ **Emergência cirúrgica geniturinária mais comum da infância.** **Extravaginal (~10%):** neonatal/intraútero. **Intravaginal:** mais frequente, associada à deformidade **"em badalo de sino"**, pico de incidência aos **14 anos**.
+    - Clínica: dor testicular súbita e unilateral (frequentemente durante o sono); ⭐ **reflexo cremastérico diminuído/abolido**, testículo em **posição alta** (sinal de Brunzel) e **horizontalizado** (sinal de Angell), ⭐ **sinal de Prehn NEGATIVO** (dor não alivia à elevação).
+    - Diagnóstico: clínico; em caso de dúvida, **USG com Doppler** (gônada avascular). ⭐ **Janela de viabilidade de ~6 horas.**
+    - Tratamento: **exploração cirúrgica** — distorção + **orquidopexia** se viável (orquiectomia se inviável); ⭐ **orquidopexia CONTRALATERAL no mesmo ato** (o defeito anatômico costuma ser bilateral).
+- **Orquiepididimite:** condição inflamatória/infecciosa; em crianças, predominam **Gram-negativos entéricos**. Dor insidiosa, disúria, urgência, febre; ⭐ **sinal de Prehn POSITIVO** (alívio à elevação). Tratamento clínico (antibiótico, suspensório escrotal, anti-inflamatório).
+
+---
+
+## 21. Neuroblastoma
+
+- ⭐ **Tumor sólido extracraniano mais comum da infância.** Tumor maligno do **sistema nervoso simpático** (células da crista neural); ~90% diagnosticados antes dos 5 anos (idade média 22 meses).
+- **Apresentação clínica:** ⭐ **massa abdominal endurecida, irregular, que CRUZA a linha média** (65% no abdome, frequentemente na **medula adrenal**). Sintomas constitucionais; secreção de **catecolaminas** (HAS precoce, taquicardia, rubor, sudorese). Disseminação medular/óssea → ⭐ **"sinal do guaxinim"** (equimose periorbitária bilateral + proptose) e nódulos subcutâneos azulados ("blueberry muffin").
+- **Diagnóstico:** **catecolaminas urinárias** (ácido vanilmandélico e homovanílico); ⭐ **TC = padrão-ouro** (massa sólida finamente calcificada que **desloca o rim inferolateralmente sem destruir o sistema pielocalicial**); cintilografia com **MIBG**; histologia (pequenas células azuis redondas).
+- **Tratamento:** cirurgia na doença localizada; nos estádios avançados, biópsia + quimioterapia ± radioterapia.
+
+---
+
+## 22. Tumor de Wilms (Nefroblastoma)
+
+- **Neoplasia renal embrionária**; ⭐ **75% diagnosticados antes dos 5 anos** (idade média ~5 anos, criança **mais velha** que a do neuroblastoma). Síndromes predisponentes: **WAGR** (Wilms, Aniridia, malformação Geniturinária, Retardo mental), Beckwith-Wiedemann, Denys-Drash, Li-Fraumeni.
+- **Apresentação clínica:** ⭐ **massa abdominal lisa e regular que ocupa a loja renal e NÃO ultrapassa a linha média**; criança em **bom estado geral**. Hematúria e HAS (25%, sistema renina-angiotensina). Metástases mais frequentes: pulmão e fígado.
+- **Diagnóstico:** ⭐ **ultrassonografia inicial** (confirma origem renal; pesquisa trombo em veia renal/cava, que pode atingir o átrio direito); **TC abdominopélvica** estadia e diferencia do neuroblastoma; bilateral em ~10%.
+- **Tratamento:** ⭐ **nefrectomia radical + quimioterapia** (± radioterapia conforme estádio e histologia). A exploração cirúrgica é necessária para o estadiamento.
+
+> ⭐ **Neuroblastoma × Tumor de Wilms (discriminação clássica):** ambos cursam com massa abdominal na infância. **Neuroblastoma** — criança mais nova (frequentemente < 2 anos), massa que **CRUZA a linha média**, calcificada, catecolaminas elevadas, estado geral comprometido, desloca o rim sem destruí-lo. **Wilms** — criança mais velha (~5 anos), massa **restrita à loja renal (não cruza a linha média)**, origem renal, bom estado geral, com trombo em veia renal/cava.
+
+---
+
+## 23. Armadilhas de Prova
 
 - 🔴 **HDC:** reparo cirúrgico NUNCA é imediato — estabilização clínica (IOT + sonda + otimização hemodinâmica) tem prioridade. IOT é obrigatória; VETO à ventilação com máscara.
 - 🔴 **Bolha gástrica tópica no RN com desconforto respiratório:** afasta HDC → favorece MAC.
@@ -203,3 +344,16 @@ aliases: [Cirurgia Infantil, Cirurgia Pediátrica, HDC, Onfalocele, Gastrosquise
 - 🔴 **[Sessão 068] Estenose duodenal parcial de apresentação tardia:** membranas fenestradas permitem passagem parcial de alimento → lactente pode ter "refluxo" por meses, com piora ao introduzir pastosos. A imagem (dupla bolha) desvela o diagnóstico real — nunca tratar com fundoplicatura sem excluir obstrução.
 - 🔴 **[Sessão 068] AE: broncoscopia ≠ diagnóstico:** broncoscopia apenas visualiza o orifício da fístula (se presente) — NÃO faz o diagnóstico da atresia. O diagnóstico é: sonda para a 8–12 cm + RX tórax/abdome (sonda enovelada). Contraste oral = PROIBIDO. TC/contraste = desnecessários como exame inicial.
 - 🔴 **[Sessão 068] AE: gás no abdome = tipo III vs ausência de gás = tipo I:** a radiografia simples já determina se há fístula. Gas abaixo do diafragma = fístula traqueoesofágica distal (tipo III, 85% dos casos). Ausência de gás = atresia isolada (tipo I) → polidrâmnio mais intenso.
+- 🔴 **ECN:** pneumatose intestinal = achado patognomônico; **pneumoperitônio = indicação cirúrgica absoluta**. Prematuro de muito baixo peso + dieta enteral + distensão + sangue nas fezes.
+- 🔴 **EHP: a urgência é METABÓLICA, não cirúrgica.** Corrigir a alcalose hipoclorêmica/hipocalêmica antes de operar (Fredet-Ramstedt). Vômito em jato sem bile, 2–8 semanas, oliva palpável = patognomônica (dispensa USG).
+- 🔴 **EHP × obstrução duodenal — a bile localiza a obstrução:** EHP = vômito SEM bile (obstrução pilórica, pré-ampular). Obstrução duodenal (pós-ampular, 85%) = vômito BILIOSO.
+- 🔴 **Intussuscepção: o enema (hidrostático/pneumático) é diagnóstico E terapêutico.** Contraindicado apenas em peritonite/instabilidade (→ laparotomia). Lactente 4–12 meses, "geleia de morango", massa em QSD.
+- 🔴 **Intussuscepção em maiores de 2 anos:** procurar ponto de condução — o divertículo de Meckel é o mais comum.
+- 🔴 **Divertículo de Meckel: HDB indolor e maciça em menores de 5 anos** → cintilografia com ⁹⁹ᵐTc-pertecnetato (mucosa gástrica ectópica). Anomalia congênita mais comum do TGI.
+- 🔴 **Hérnia inguinal na criança = SEMPRE cirúrgica, sem espera, independe do peso** (risco de encarceramento). Difere da hérnia UMBILICAL (expectante até ~5 anos; fecha sozinha em 80%).
+- 🔴 **Transiluminação POSITIVA = conteúdo líquido (hidrocele/cisto de cordão) → expectante até ~1 ano.** Negativa = conteúdo sólido (hérnia, tumor, hematocele).
+- 🔴 **VUP: anomalia obstrutiva urinária congênita mais comum em meninos** — globo vesical + jato fraco; confirmar com uretrocistografia miccional; oligodramnia intraútero → hipoplasia pulmonar.
+- 🔴 **RVU: uretrocistografia miccional confirma e gradua; DMSA mostra cicatriz.** Graus I–III = quimioprofilaxia; IV–V = cirurgia. Principal fator de HAS na infância (nefropatia de refluxo).
+- 🔴 **Criptorquidia: expectante até 6–12 meses; depois orquidopexia.** O testículo RETRÁTIL (desce ao exame, cremastérico) é variante NORMAL e não opera. O risco oncológico persiste após a cirurgia.
+- 🔴 **Torção testicular: janela de ~6 h, Prehn NEGATIVO, cremastérico abolido → exploração imediata + orquidopexia BILATERAL.** Orquiepididimite: Prehn POSITIVO, disúria/febre, tratamento clínico.
+- 🔴 **Massa abdominal que CRUZA a linha média na criança = neuroblastoma** (catecolaminas↑, mais novo, mau estado geral, desloca o rim sem destruí-lo). **Wilms NÃO cruza** (restrito à loja renal, bom estado geral, mais velho ~5 anos, trombo em veia renal/cava).

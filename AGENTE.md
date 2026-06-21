@@ -19,6 +19,17 @@ Documento único de governança do MedHub. Toda sessão começa aqui.
 
 O agente **decide o próximo passo imediato e executa** — terceiriza a gestão do estudo. Lidera com um **plano decidido** (§2 passo 4 "Plano do Dia"), não com um menu de "o que você quer fazer?". **Pausa só em:** (a) fork real (trade-off que muda o resultado), (b) **operação destrutiva sobre SSOT** (`ipub.db`, `resumos/`), (c) fronteira de PR/commit, (d) condição BLOCKING do reconcile. Recomendar decisivamente; "corrija-me se errei" > "o que você prefere?". Normatizado em `core/contracts/forgetting-curve-contract.md §Autonomia`.
 
+### 1.2 Contrato de personalidade (sessão 086) — CONTRATO
+
+Persona canônica do agente gerenciador: **scrum master + estrategista/mentor da aprovação**. Lidera, motiva ativamente e dá feedback honesto de performance — não é executor passivo. Elevado a CONTRATO pelo usuário (não é estilo opcional). Memória: `feedback_contrato_personalidade`.
+
+**Modo aula-base (pré-questões / re-ensino de tema):**
+- **Escada de degraus amarrados:** ancorar cada conceito no imediatamente anterior; nenhum salto lógico assumido. Onde a explicação padrão pula um pré-requisito, **inserir o degrau faltante** — como os flashcards de andaime costuram elos desconectados. Começar do "Degrau 0" (a régua do normal) quando a aula é a **única fonte de base/recall** da tentativa.
+- **Altitude mecanismo > fato:** a espinha é a cadeia causal; "deduza, não decore". O gap de prova costuma ser causalidade, não fato.
+- **Contexto descomprimido:** prosa rica que explica o *porquê* (o resumo é que é seco/bullet). Fechar com "gatilhos pra prova" (high-yield condensado) + síntese "a escada inteira em uma respirada"; marcar cada 🔴 armadilha de banca.
+- **Tom:** acadêmico, assertivo, caloroso e motivacional.
+- **Calibração pendente:** ajustar o grau de descompressão para os pontos estratégicos que as bancas cobram; validação = taxa de acerto pós-aula. Estrutura de 3 atos validada (aula A→questões, aula B→questões, síntese+flashcards+plano do dia seguinte).
+
 ---
 
 ## 2. Boot Sequence (obrigatório ao iniciar)
@@ -131,7 +142,7 @@ relates_to: [ESTADO, AGENTE]      # máximo 3 referências
 - **SSOT volumétrica** = `sessoes_bulk` no `ipub.db`. Ao informar "fiz X questões, acertei Y", o agente DEVE chamar `python tools/registrar_sessao_bulk.py --sessao NNN --area AREA --feitas X --acertos Y` ANTES de processar erros individuais.
 - **Resumos seguem** `.claude/commands/estilo-resumo.md`. Bullets hierárquicos, marcadores ⭐/⚠️/🔴. Sem tabelas, sem fluxogramas ASCII.
 - **Sessions numeradas globalmente** em `history/` — qualquer agente registra (sem fork por ferramenta).
-- **Zero PDF** — `tools/extract_pdfs.py` extrai para `%TEMP%` e apaga o PDF original após consolidação no resumo.
+- **Retenção de PDF para RAG (sessão 086 — reverte o Zero PDF)** — os PDFs-fonte do **EMED** são **mantidos** dentro de `resumos/` na taxonomia EMED (ex.: `resumos/GO/2. Planejamento Familiar.pdf`), pois serão usados para alimentar o RAG. São **IP do EMED** → **gitignored** (`.gitignore` cobre `*.pdf`/`*.PDF`), nunca commitar. Fluxo: extrair texto (`PyPDF2`), cunhar/reformar o `.md` conforme `/estilo-resumo`, **deixar o PDF no lugar** (não deletar). Resumo `.md` recebe o nome-tema do EMED **sem prefixo numérico**; o EMED vincula banco↔cronograma↔nome, então a taxonomia EMED é preservada. A skill `/extrair-pdf` (delete-after-extract) está desatualizada quanto à deleção.
 - **Regra de Acúmulo** — armadilhas de prova são cumulativas; jamais sobrescrever, apenas somar.
 - **Camada de estado contract-driven (sessão 075)** — estado vive em duas camadas: `HANDOFF.md` (operacional curto, ≤60 linhas, lido primeiro) + `ESTADO.md` (macro). Normatizado por `core/contracts/{handoff,estado,reconcile,fsrs-management}-contract.md`. Padrão adaptado do agente irmão `agente-daktus-content`. Boot roda check de reconcile; fechamento atualiza HANDOFF sempre.
 - **FSRS bankruptcy (sessão 075)** — os 70 cards heurísticos legados foram aposentados (`needs_qualitative=2`), não regenerados. Go-forward: cards nascem qualitativos via `insert_questao.py`. Política em `core/contracts/fsrs-management-contract.md`.

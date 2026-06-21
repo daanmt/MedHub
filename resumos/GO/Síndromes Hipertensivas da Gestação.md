@@ -2,12 +2,12 @@
 type: resumo
 area: GO
 especialidade: Obstetrícia
-tema: Síndromes Hipertensivas na Gestação
+tema: Síndromes Hipertensivas da Gestação
 status: revisado
 aliases: [DHEG, Pré-eclâmpsia, Eclâmpsia, Síndrome HELLP]
 ---
 
-# Síndromes Hipertensivas na Gestação
+# Síndromes Hipertensivas da Gestação
 
 ## 1. Epidemiologia e Fisiopatologia
 - **Impacto:** Primeira causa de morte materna no Brasil; segunda no mundo.
@@ -35,14 +35,12 @@ aliases: [DHEG, Pré-eclâmpsia, Eclâmpsia, Síndrome HELLP]
 
 ## 3. Classificação
 
-| Síndrome | Definição |
-|---|---|
-| **Hipertensão gestacional** | PA ≥ 140/90 após 20 semanas, sem proteinúria ou critérios de gravidade; resolve até 12 semanas pós-parto |
-| **Pré-eclâmpsia (PE)** | PA ≥ 140/90 após 20 semanas + proteinúria ≥ 300mg/24h (ou IPC ≥ 0,3) **ou** critério de disfunção de órgão-alvo |
-| **Eclâmpsia** | Convulsões tônico-clônicas generalizadas em contexto de PE, sem outra causa neurológica |
-| **Síndrome HELLP** | Variante grave: hemólise microangiopática + elevação de transaminases + plaquetopenia |
-| **HAC** | Hipertensão documentada antes de 20 semanas |
-| **PE sobreposta** | Nova proteinúria ou piora súbita + sinais de gravidade em paciente com HAC, após 20 semanas |
+- **Hipertensão gestacional:** PA ≥ 140/90 após 20 semanas, **sem** proteinúria nem critérios de gravidade; resolve até 12 semanas pós-parto.
+- **Pré-eclâmpsia (PE):** PA ≥ 140/90 após 20 semanas + proteinúria ≥ 300 mg/24h (ou IPC ≥ 0,3) **ou** critério de disfunção de órgão-alvo.
+- **Eclâmpsia:** convulsões tônico-clônicas generalizadas em contexto de PE, sem outra causa neurológica.
+- **Síndrome HELLP:** variante grave — hemólise microangiopática + elevação de transaminases + plaquetopenia.
+- **Hipertensão arterial crônica (HAC):** hipertensão documentada **antes** de 20 semanas.
+- **PE sobreposta:** nova proteinúria ou piora súbita + sinais de gravidade em paciente com HAC, após 20 semanas.
 
 - ⚠️ Edema de face e membros inferiores **não** é critério diagnóstico de PE — não pontua para o diagnóstico.
 
@@ -122,7 +120,7 @@ Ocorre com ou sem pico convulsivo adjunto. Pode se instalar sem hipertensão ou 
 
 ---
 
-## 8. Sulfato de Magnésio (MgSO4)
+## 9. Sulfato de Magnésio (MgSO4)
 
 **Indicações:** PE com sinais de gravidade, iminência de eclâmpsia, eclâmpsia.
 
@@ -143,7 +141,7 @@ Ocorre com ou sem pico convulsivo adjunto. Pode se instalar sem hipertensão ou 
 
 ---
 
-## 9. Controle da Crise Hipertensiva
+## 10. Controle da Crise Hipertensiva
 
 - **Alvo pressórico:** PA 140–150/90–100 mmHg (evitar hipotensão — risco isquêmico fetal).
 - **1ª linha:** Hidralazina 5 mg IV a cada 20 min (máx. 20 mg) **ou** Nifedipina 10 mg VO a cada 20–30 min.
@@ -151,22 +149,21 @@ Ocorre com ou sem pico convulsivo adjunto. Pode se instalar sem hipertensão ou 
 
 ---
 
-## 10. Resolução da Gestação
+## 11. Resolução da Gestação
 
-| Condição | IG mínima para resolução |
-|---|---|
-| HIG / PE sem gravidade | ≥ 37 semanas |
-| PE com sinais de gravidade | ≥ 34 semanas |
-| HAC sem gravidade | ≥ 37 semanas |
-| PE sobreposta sem gravidade | ≥ 37 semanas |
-| PE sobreposta com gravidade | ≥ 34 semanas |
-| Eclâmpsia / HELLP | Independente da IG (após estabilização com MgSO4 e anti-hipertensivo) |
+⭐ **Idade gestacional mínima para resolução, por condição:**
+- **HIG / PE sem gravidade:** ≥ 37 semanas.
+- **HAC sem gravidade:** ≥ 37 semanas.
+- **PE sobreposta sem gravidade:** ≥ 37 semanas.
+- **PE com sinais de gravidade:** ≥ 34 semanas.
+- **PE sobreposta com gravidade:** ≥ 34 semanas.
+- **Eclâmpsia / HELLP:** independente da IG (após estabilização com MgSO4 e anti-hipertensivo).
 
 - Corticoterapia abaixo de 34 semanas pode ser administrada, mas **não deve atrasar a resolução** nos casos graves.
 
 ---
 
-## 11. Armadilhas de Prova
+## 12. Armadilhas de Prova
 
 - 🔴 **Diagnóstico diferencial temporal:** PE e HIG só ocorrem **após 20 semanas**. Hipertensão antes de 20 semanas = HAC. Exceção: doença trofoblástica gestacional (DTG/mola) pode causar PE antes de 20 semanas. No 3º trimestre, DTG é impossível — a causa é invariavelmente isquemia placentária por falha da 2ª onda trofoblástica.
 - 🔴 **Proteinúria é critério diagnóstico, não de gravidade:** Guidelines atuais (ACOG 2013+) removeram a proteinúria (inclusive maciça > 5g) dos critérios de gravidade. Candidatos com repertório antigo erram por incluí-la como sinal grave.
@@ -179,3 +176,10 @@ Ocorre com ou sem pico convulsivo adjunto. Pode se instalar sem hipertensão ou 
 - 🔴 **Restrição de sal na PE:** sem benefício comprovado — não consta nas diretrizes. O instinto de prescrever dieta hipossódica para hipertensão não se aplica à PE.
 - 🔴 **Limiar do anti-hipertensivo:** PA ≥ 140/90 mmHg. Com PA 130/90 (PAS abaixo de 140), não há indicação de farmacoterapia. Alvo quando iniciado: PAD = 85 mmHg.
 - 🔴 **Segunda onda trofoblástica:** destino anatômico exato = zona de junção miometrial (camada muscular média das artérias espiraladas). Distratores: endotélio da artéria uterina, decídua capsular.
+- 🔴 **Iminência de eclâmpsia = PE grave por si só:** cefaleia/turvação/escotomas/epigastralgia/hiperreflexia já classificam como grave, mesmo com PA 140/90. Conduta = estabilizar + MgSO4 + **resolução** (não apenas induzir nem observar). Marcar "PE leve" porque a PA não bateu 160/110 é a armadilha.
+- 🔴 **Crise hipertensiva em TRANSFERÊNCIA → nifedipina VO:** hidralazina e nifedipina são ambas 1ª linha, mas a **hidralazina é endovenosa** — no transporte (sem acesso/bomba), a **nifedipina oral** é a escolha segura. O contexto flipa a escolha. (Labetalol: indisponível no Brasil.)
+- 🔴 **Gluconato de cálcio só na DEPRESSÃO RESPIRATÓRIA:** qualquer sinal de toxicidade (reflexo patelar abolido — 1º sinal —, FR < 16, diurese < 25) manda **suspender o Mg**; o **antídoto** (gluconato de cálcio 1 g IV) é reservado à **depressão respiratória**. Reflexo abolido isolado → suspende, não antidota.
+- 🔴 **MgSO4 NÃO trata a hipertensão:** é anticonvulsivante (PE grave, iminência, eclâmpsia, HELLP) e neuroprotetor fetal (< 32 sem). O pico hipertensivo é tratado por hidralazina/nifedipina. Em enunciado EXCETO, esta é a falsa a isolar.
+- 🔴 **PE grave ≠ interrupção imediata:** a 1ª medida é estabilizar (anti-HAS de ação rápida se PA ≥ 160/110 + MgSO4). A resolução depende da IG (≥ 34 sem) e de complicações; via vaginal preferencial. "Tirar o bebê já / cesárea de urgência" é o reflexo de over-tratamento.
+- 🔴 **Reflexo de over-tratamento abaixo de 160/110:** PA 150/100 **não** é crise — não usa hidralazina EV nem cesárea. PE sobreposta sem gravidade → manter anti-HAS oral (metildopa) e resolver com **37 semanas**.
+- 🔴 **Duração do MgSO4 é fixa = 24h** após o parto (ou após a última convulsão na eclâmpsia). Não se guia por normalização laboratorial nem por tempo menor (6/12h). O puerpério imediato é o período de maior risco.

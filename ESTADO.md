@@ -7,7 +7,7 @@ relates_to: [AGENTE, handoff-contract, estado-contract]
 
 # ESTADO — MedHub
 
-*Atualizado: 2026-06-19 (sessão 085) | Ferramenta: Claude Code (Opus 4.8)*
+*Atualizado: 2026-06-20 (sessão 086) | Ferramenta: Claude Code (Opus 4.8)*
 
 > **Boot:** ler [`AGENTE.md`](AGENTE.md) → [`HANDOFF.md`](HANDOFF.md) (operacional curto) primeiro. Este arquivo é o snapshot **macro** (metas, indicador, marcos). Estrutura normatizada por [`core/contracts/estado-contract.md`](core/contracts/estado-contract.md).
 
@@ -20,9 +20,9 @@ relates_to: [AGENTE, handoff-contract, estado-contract]
 - **Marco ENAMED (prioridade):** 12.000 questões até **13/09/2026** — ritmo-alvo **~96q/dia** (faltam 8.543). ⚠️ Meta de junho (4.500) não fecha: atrás 1.043.
 - **Plano de fim de ano:** 17.000 questões até 12/2026 (dashboard).
 - **Custo/Q atual:** **R$ 0,91** (jun/2026, acumulado = investimento ÷ questões), em queda; alvo no fim do plano ≈ R$ 0,26.
-- **Indicador Atual:** 3.495 / 12.000 ENAMED (29,1%).
-- **Performance Geral:** 79,8% (2.790 acertos / 3.495 questões — `sessoes_bulk`). Fracos no dashboard: **Hepato 57% · Dermato 67% · Cardiologia/Otorrino 68% · Hemato 74% · Pneumo/Nefro/Endocrino/Infecto ~76%**. Usuário confirma cluster fraco subjetivo: **hemato/hepato/imuno** (temas densos em comporta — ver playbook).
-- **Contadores:** **46 resumos** em `resumos/` · **278 erros** em `ipub.db` · **~295 cards ativos** (+15 andaimes na s085; 196 aposentados) · **0 heurísticos ativos** · **taxonomia `UNIQUE(area,tema)`**
+- **Indicador Atual:** **3.596 / 12.000 ENAMED (30,0%)** — cruzou o marco; **+101 na s086** (meta ≥97q/dia BATIDA pela 1ª vez).
+- **Performance Geral:** ~79,6% (`sessoes_bulk`). Fracos no dashboard: **Hepato 57% · Dermato 67% · Cardiologia/Otorrino 68% · Hemato 74% · Pneumo/Nefro/Endocrino/Infecto ~76%**. Cluster fraco subjetivo: **hemato/hepato/imuno**. **Achado s086: o gargalo principal agora é EXECUÇÃO DE PROVA, não conteúdo** — viés de posição (default-to-C) + fechamento precoce (ver playbook).
+- **Contadores:** **48 resumos** em `resumos/` (+Planej. Familiar, +Exantemáticas) · **299 erros** em `ipub.db` · **~325 cards ativos** (+17 erro +4 andaimes na s086) · **0 heurísticos ativos** · **taxonomia `UNIQUE(area,tema)`**
 
 ---
 
@@ -42,11 +42,11 @@ relates_to: [AGENTE, handoff-contract, estado-contract]
 
 Ver [`ROADMAP.md`](ROADMAP.md). Prioridades guiadas pelo cronograma (SSOT: `Cronograma de Reta Final.xlsx` no Drive):
 
-1. **Abertura da próxima:** re-drill dos 1 da s085 (426, 435, 84, 78, 70, 104) → **Cirurgia Infantil II** (questões) → planejamento familiar. Refresh Camada 0 antes de cada bloco.
-2. **PRIORIDADE ESTRATÉGICA — bug nº 1c:** confirmado como **eixo metacognitivo central** (s085: disparou em **6 temas**). Operacionalizar o [`PLAYBOOK_EXECUCAO_PROVA.md`](PLAYBOOK_EXECUCAO_PROVA.md) — treinar o reflexo de "checar a comporta antes de aplicar". Maior alavanca da preparação (rende mais que estudar mais um tema).
-3. **VOLUME (questões):** o gargalo. Seguir ≥97q/dia com refresh pré-bloco.
-4. **Gaps de resumo:** `Diabetes - Complicações Crônicas`; candidatos novos: ectópica, icterícia neonatal (hoje só andaime/micro-nota). **Zero PDF pendente:** 4 órfãos antigos (LRA, Introd, DITC, Sistemas de Informação).
-5. **Pendentes:** Tier-3 (schema de altura), limpeza `[bulk]`/`Geral` da taxonomia, enumeração do Drive.
+1. **Abertura da próxima:** começa com **flashcards** (17 cards operacionais da s086 vencem cedo no FSRS) → **≥100 questões**. Aula-base + refresh Camada 0 antes de cada bloco.
+2. **PRIORIDADE ESTRATÉGICA — execução de prova:** o gargalo migrou de conteúdo para processo de resolução. Treinar o **ritual anti-vazamento** (default-to-C + fechamento precoce) via [`PLAYBOOK_EXECUCAO_PROVA.md`](PLAYBOOK_EXECUCAO_PROVA.md). Maior alavanca da preparação. (bug nº 1c segue ativo; default-to-C é o novo sub-padrão dominante.)
+3. **Aulas-base = CONTRATO** (AGENTE §1.2): cunhar aula "escada de degraus" antes de cada bloco novo; calibrar descompressão para pontos operacionais que a banca cobra.
+4. **Gaps de resumo:** `Diabetes - Complicações Crônicas`; candidatos: ectópica, icterícia neonatal (só andaime). PDFs do EMED agora MANTIDOS (gitignored) p/ RAG — GO/Gastro/Dermato/Pediatria despejados.
+5. **Pendentes:** Tier-3 (schema de altura), limpeza `[bulk]`/`Geral` da taxonomia, enumeração do Drive, re-drill dos 1 (426, 435, 84, 78, 70, 104).
 
 > Detalhe operacional e próximo passo imediato: [`HANDOFF.md`](HANDOFF.md). Histórico completo: [`history/INDEX.md`](history/INDEX.md).
 

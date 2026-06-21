@@ -28,7 +28,11 @@ Um **gatilho saliente** no enunciado (um número fora da faixa, um fármaco, uma
 | **"Para antes do porquê"** | Sabe o **diagnóstico** (o fato), não o **elo causal** que o defende / exclui o vizinho | s085 (HCE canal-dependência; resistência decide o shunt; idade exclui atresia pulmonar) |
 | **Ancoragem na linha de dados** | Vê "mãe O, bebê A" e dispara "incompatibilidade" sem checar as regras | s085 icterícia (Q1, Q2, Q4, Q8, Q10, Q15) |
 | **Super-aplicação (não-checar-a-comporta)** | Transfere uma conduta correta para um caso onde a **comporta mudou** | s085 trauma (TTA→laparoscopia no instável; estável→TC com TC já feita) |
-| **Enunciado negativo (EXCETO/ERRADA)** | Marca a afirmação **verdadeira** em vez de isolar a falsa (primo de *leitura*, não de verificação) | s079-080 (3×) |
+| **Enunciado negativo (EXCETO/ERRADA)** | Marca a afirmação **verdadeira** em vez de isolar a falsa (primo de *leitura*, não de verificação) | s079-080 (3×), s086 (Q4 hipertensivas) |
+| **Viés de posição (default-to-C)** | Sob incerteza, a mão gravita para a **opção do meio (C)** em vez de forçar a verificação até o fim | **s086 hipertensivas: 6 de 7 erradas = letra C** (gabaritos espalhados D,B,D,A,B,A) |
+| **Reflexo de over-tratamento** | Ao ler "grave"/dado assustador, dispara a conduta mais agressiva (interromper já / hidralazina / cesárea) sem checar o **limiar** (PA ≥160/110?) ou a **IG** | s086 hipertensivas (Q5 PA 150x100→hidralazina; Q6 grave→interromper já) |
+| **Fechamento precoce em discriminador parcial** | Um achado parcial (tosse/coriza) dispara o diagnóstico vizinho **antes** de ler a marca patognomônica; **pior sob pressão de tempo** (marca sem terminar de ler) | s086 exantemáticas (Q3/Q4/Q7: tosse+coriza→sarampo, ignorou face esbofeteada/rendilhado = parvovírus). **Autorrelatado pelo estudante.** |
+| **Paciente especial → resposta exótica** | A palavra "imunossuprimido/neoplasia/gestante" puxa para a complicação rara/grave em vez da **mais comum** | s086 exantemáticas (Q2: imunossuprimido→marcou PEES; a mais comum é pneumonia) |
 
 ---
 
@@ -77,5 +81,6 @@ Não é coincidência nem azar de tema. É **um** gargalo, transversal. Por isso
 | **Cardiopatias congênitas** | **Cianose = shunt D→E?** → a **idade**? → **canal-dependente**? |
 | **Mecanismo de fármaco** | A **seta** está na direção certa? (não inverter causa/efeito) |
 | **Sepse neonatal** | **Tempo** (precoce<72h vs tardia) define agente e antibiótico |
+| **Doenças exantemáticas** | **(1) Febre↔exantema** (roséola: febre some ANTES) → **(2) a MARCA** (Koplik=sarampo / face esbofeteada=parvovírus / polimórfico=varicela / língua framboesa+lixa=escarlatina) → **(3) viral×bacteriana** (só escarlatina = ATB). Ler até o fim: coriza/tosse NÃO fecham sarampo |
 
 > Atualizar esta tabela conforme novos temas forem dissecados em revisão/análise de questões. A comporta de cada tema é o que o `/revisar` e a análise de erro devem extrair e nomear em tempo real.

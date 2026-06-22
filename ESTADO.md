@@ -7,7 +7,7 @@ relates_to: [AGENTE, handoff-contract, estado-contract]
 
 # ESTADO — MedHub
 
-*Atualizado: 2026-06-20 (sessão 086) | Ferramenta: Claude Code (Opus 4.8)*
+*Atualizado: 2026-06-22 (sessão 087) | Ferramenta: Claude Code (Opus 4.8)*
 
 > **Boot:** ler [`AGENTE.md`](AGENTE.md) → [`HANDOFF.md`](HANDOFF.md) (operacional curto) primeiro. Este arquivo é o snapshot **macro** (metas, indicador, marcos). Estrutura normatizada por [`core/contracts/estado-contract.md`](core/contracts/estado-contract.md).
 
@@ -22,15 +22,15 @@ relates_to: [AGENTE, handoff-contract, estado-contract]
 - **Custo/Q atual:** **R$ 0,91** (jun/2026, acumulado = investimento ÷ questões), em queda; alvo no fim do plano ≈ R$ 0,26.
 - **Indicador Atual:** **3.596 / 12.000 ENAMED (30,0%)** — cruzou o marco; **+101 na s086** (meta ≥97q/dia BATIDA pela 1ª vez).
 - **Performance Geral:** ~79,6% (`sessoes_bulk`). Fracos no dashboard: **Hepato 57% · Dermato 67% · Cardiologia/Otorrino 68% · Hemato 74% · Pneumo/Nefro/Endocrino/Infecto ~76%**. Cluster fraco subjetivo: **hemato/hepato/imuno**. **Achado s086: o gargalo principal agora é EXECUÇÃO DE PROVA, não conteúdo** — viés de posição (default-to-C) + fechamento precoce (ver playbook).
-- **Contadores:** **48 resumos** em `resumos/` (+Planej. Familiar, +Exantemáticas) · **299 erros** em `ipub.db` · **~325 cards ativos** (+17 erro +4 andaimes na s086) · **0 heurísticos ativos** · **taxonomia `UNIQUE(area,tema)`**
+- **Contadores:** **48 resumos** em `resumos/` · **297 erros** em `ipub.db` · **318 cards ativos** (35 andaimes) · **0 heurísticos ativos** · **taxonomia `UNIQUE(area,tema)`**
 
 ---
 
 ## Estado por frente (macro)
 
-- **Volume & Metas:** **3.457 acumuladas (80,0%); +66 na s084** (Nefro 40/31 + SOAP 26/24); ritmo-alvo ~96q/dia p/ 12k em 13-09. Junho (4.500) não fecha (atrás 1.043); foco em não perder setembro. Cluster fraco: Hepato, Dermato, Cardiologia, Otorrino, Hemato.
-- **Conteúdo:** **46 resumos.** `Doença Renal Crônica.md` **construído na s084** (stub→padrão-ouro: KDIGO→TRS→DRC×LRA, 30 armadilhas) + `LRA.md` auditado. **Gap real restante:** `Diabetes - Complicações Crônicas`.
-- **Erros & Cards:** 278 erros; **~280 cards ativos** (+20 na s084: 9 Nefro + 3 SOAP + 8 andaimes DMO/Hemostasia/Cardio). Pipeline `insert_questao.py` (+ `insert_card_base.py` andaime); taxonomia `UNIQUE(area,tema)`.
+- **Volume & Metas:** **3.596 / 12.000 ENAMED (30,0%); +101 na s086** (0 na s087, revisão); ritmo-alvo **~100q/dia** p/ 12k em 13-09 (faltam 8.404 em 84d). Foco em não perder setembro. Cluster fraco: Hepato 57%, Dermato 67%, Cardiologia/Otorrino 68%, Hemato 72%. **Gargalo nº1 = execução de prova.**
+- **Conteúdo:** **48 resumos** (+Planej. Familiar, +Exantemáticas na s086). **Gaps:** `Diabetes - Complicações Crônicas`; ectópica/icterícia neonatal (só andaime). PDFs EMED p/ aula-base: GO restante, Gastro, Dermato, Pediatria.
+- **Erros & Cards:** **297 erros; 318 cards ativos (35 andaimes).** Pipeline `insert_questao.py` (+ `insert_card_base.py` andaime); taxonomia `UNIQUE(area,tema)`. Fila FSRS vencida zerada na s087 (46 cards).
 - **FSRS:** backlog grande — mas a **curva finalmente comeu na s084 (35/50 revisados)**. `/refrescar` (dormente) + `/revisar` atacam o backlog. **Andaime validado em tempo real:** Hemostasia destravou após 3 cards-base. Clusters frios andaimados: Hemostasia (fatores), Cardiopatias (T4F/shunt).
 - **Infraestrutura — NOVA capacidade (s083): gestão da curva de esquecimento** — `review_log` (SSOT do tempo-de-revisão) + radar de dormência (`review_radar.py`) + `/refrescar` (`dormant_refresh.py`, **não toca o FSRS**) + **boot proativo** "Plano do Dia" (`day_plan.py`, AGENTE §2 passo 4) + **autonomia codificada** (AGENTE §1.1) + contrato `core/contracts/forgetting-curve-contract.md`. Mantém: cards de altura graduada (s082), governança de evidência (s076), Camada 2 do `/revisar` (s078). **5 padrões metacognitivos vivos** (+ palpite-abandonado-por-palavra). **Tier-3 (schema de altura) pendente.**
 

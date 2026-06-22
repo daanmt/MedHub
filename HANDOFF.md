@@ -1,27 +1,26 @@
 # HANDOFF.md — ESTADO OPERACIONAL CURTO
-*Atualizado: 2026-06-19 — **s085 (sessão GIGANTE)**. **Pediatria 38/23 registrado** (icterícia/sepse neonatal, 60,5%; radar cravou o tema 63d frio). `/revisar`: **fila vencida ZERADA — 52 cards**. **Deck:** 435 recurado + **15 andaimes** (Hemostasia 3, Trauma 2, Ectópica 2, **Icterícia 8**). **Neonatologia:** 15 erros → **algoritmo das 3 comportas** (tempo / direta-colestase / regras ABO-Rh) + sepse precoce×tardia + GBS + Kramer; tema refrescado (review_log #50). **Achado central: bug nº 1c em 6 temas** (tem o fato, pula a verificação). **Próximo: re-drill dos 1 → cirurgia infantil II.***
+*Atualizado: 2026-06-22 — **s087: sessão 100% de revisão FSRS** (46 cards). **Fila vencida drenada 30/30** + 10 novos + 6 andaimes do shunt. **Cluster Cardiopatias/shunt FECHADO ao vivo** (nó = colar "hipoplasia de VE" na T4F; fronteira T4F×HCE travada). **Cluster Ectópica mapeado** (algoritmo certeza→conduta — vira aula-base). **Achado de gestão: andaimes de mecanismo do shunt estavam presos atrás do new-limit e nunca tinham sido revisados** (state=0). Eixo de processo segue protagonista: discriminante escondido (#140), titulação invertida (#128), interferência (#88).*
 
-*Atualizado: 2026-06-20 — **s086 dia GIGANTE: 101 questões** (meta ≥97/dia BATIDA pela 1ª vez). 4 blocos: Cir. infantil II 18/22, Planej. familiar 27/30, Sd. hipertensivas 17/24, Exantemáticas 18/25. **Aulas-base (Atos 1+2) = CONTRATO DE PERSONALIDADE** (AGENTE.md §1.2): 0 erro de fisiopatologia; erros foram operacionais/comportamentais. **Achado central: viés de posição (default-to-C)** + fechamento precoce em discriminador parcial. 2 resumos novos (Planej. Familiar, Exantemáticas) + 1 reformado (Hipertensivas).*
-
-## ▶ Próximo passo imediato — s087 (abertura definida pelo usuário)
-1. **COMEÇAR COM FLASHCARDS** (`/revisar`): os 17 cards operacionais da s086 (505-517) vencem cedo no FSRS — drenar a fila antes do 1º bloco.
-2. **DEPOIS: ≥100 questões** (at least). Aula-base "escada de degraus" + refresh Camada 0 antes de cada bloco novo. PDFs EMED disponíveis: GO restante, Gastro, Dermato.
-3. **Ritual anti-vazamento** (treinar em TODA questão): (a) terminei de ler o enunciado? (b) qual a comporta/marca? (c) se vou marcar C "porque parece razoável" — por que não A/D? Default-to-C = vazamento nº 1 da s086.
-4. **Re-drill dos 1 pendentes** (relearning, NÃO grava FSRS): 426, 435, 84, 78, 70, 104.
+## ▶ Próximo passo imediato — s088 + SEMANA 22-28/06
+**Foco triplo da semana: VOLUME ~100q/dia + EXECUÇÃO DE PROVA + atacar os FRACOS com aula-base.**
+1. **Seg 22 — Cardiologia/IC** (IC Pt.1 54% + 67d dormente = fraco E frio): aula-base IC "escada" + refresh + **bloco ≥100q**.
+2. **Ter 23 — Hepato** (57%, pior área) · **Qua 24 — Dermato** (67%, Hanseníase dormente) · **Qui 25 — Hemato** (72%) · **Sex 26 — GO/ectópica** (fechar o algoritmo de hoje) · **Sáb 27 — Pediatria/shunt + Neuro dormente** · **Dom 28 — simulado misto cronometrado + balanço.**
+3. **Ritual anti-vazamento em CADA questão:** (a) li o enunciado inteiro? (b) qual o discriminador — tem dado escondido (tipo "já cessou")? (c) marco por eliminação ou atração? *(anti default-to-C)* (d) confirmei ou trato suspeita?
+4. Rituais diários: `/revisar` (manter fila baixa) + `/refrescar` (dormente) + erros→cards.
 
 ## Estado por frente
-- **Volume & Metas:** **3.596/12.000 ENAMED (30,0%) — +101 na s086** (Cir. infantil II 18/22 + Planej. familiar 27/30 + Sd. hipertensivas 17/24 + Exantemáticas 18/25). **Meta ≥97q/dia BATIDA pela 1ª vez.** **ACHADO s086: viés de posição (default-to-C)** — 6/7 nas hipertensivas + 4/7 nas exantemáticas foram letra C. Sub-padrões novos no playbook: over-tratamento, fechamento precoce em discriminador parcial, "paciente especial→resposta exótica". Aulas-base **validadas: 0 erro de fisiopatologia** nos 2 blocos pós-aula. 79,8% geral. Ritmo-alvo ~97q/dia. Cluster fraco confirmado pelo usuário: **hemato/hepato/imuno** (densos em comporta — não aptidão, é framework+bug).
-- **Conteúdo:** **48 resumos.** s086: **Planejamento Familiar** + **Doenças Exantemáticas** criados (gold) + **Síndromes Hipertensivas da Gestação** reformado (mata tabelas, alinha nome EMED) + armadilhas operacionais somadas a partir das questões. **Política de PDFs REVERTIDA** — manter PDFs do EMED gitignored em resumos/ p/ futuro RAG (AGENTE.md §6). PDFs despejados: GO (completo), Gastro, Dermato, **Pediatria (completo)**. **Gaps:** `Diabetes - Complicações Crônicas`; ectópica e icterícia neonatal (só andaime).
-- **Erros & Cards:** 278 erros (neonatologia foi clusterizada, não 15 inserts individuais). **~304 cards ativos** (+24 andaimes na s085+s084; 435 recurado v2). Pipeline andaime validado em **5 temas**.
-- **FSRS:** **fila vencida ZERADA na s085 (52 cards).** Distribuição 25×4/12×3/8×2/7×1. Backlog de NOVOS (~195, inclui 15 andaimes recém-criados) é a próxima fronteira.
+- **Volume & Metas:** **3.596/12.000 ENAMED (30,0%)** · 0 na s087 (sessão de revisão) · faltam 8.404 em 84d → **~100q/dia**. Fracos: Hepato 57% · Dermato 67% · Cardio/Otorrino 68% · Hemato 72%. Gargalo nº1 = **execução de prova** (default-to-C, fechamento precoce, discriminante escondido).
+- **Conteúdo:** **48 resumos.** Gaps: `Diabetes - Complicações Crônicas`; ectópica/icterícia neonatal (só andaime). PDFs EMED p/ aula-base: GO restante, Gastro, Dermato, Pediatria.
+- **Erros & Cards:** **297 erros · 318 cards ativos (35 andaimes).** Fila FSRS vencida ZERADA na s087. #426 corrigido (tríade letal).
+- **FSRS:** vencida zerada (46 drenados). Backlog de novos ~200. **Andaimes de mecanismo presos atrás do new-limit** — precisam furar a fila (pendência Tier-3).
 
-## Última sessão completa — sessão 084
-- DRC.md construído + LRA.md auditado. Nefro 40/31, SOAP 26/24 = +66q. Padrão **bug nº 1c** — agora confirmado como **eixo metacognitivo central** (s085: 6 temas).
+## Última sessão de questões — sessão 086
+- Dia gigante 101q (meta batida, 30% ENAMED). Aulas-base → CONTRATO. Achado: execução de prova virou o gargalo (default-to-C).
 
 ## Pendências/observações ativas
-- **bug nº 1c / "para antes do porquê"** = alvo nº 1, **6 temas na s085** (cardio, trauma, hemo, DM2, ectópica, icterícia). Frente: **decompose → playbook de execução de prova** ([[project_decompose_bug_execucao_prova]]). É a prioridade estratégica.
-- **Re-drill dos 1** (426, 435, 84, 78, 70, 104) pendente. Andaimes de icterícia maturando (não drillar 1-2 dias).
-- **Possíveis resumos novos:** ectópica, icterícia neonatal (hoje só andaime). Tier-3 (schema de altura), limpeza `[bulk]`/`Geral`, enumeração do Drive — seguem.
+- **Curadoria de cards:** reestruturar **#104** (CIA — pedido do usuário), avaliar **#70** (sulfonilureia 1ª ger) e **#428** (HIT) — apontados como mal-formulados.
+- **bug nº 1c / execução de prova** = alvo nº 1 ([`PLAYBOOK_EXECUCAO_PROVA.md`](PLAYBOOK_EXECUCAO_PROVA.md)). Default-to-C + fechamento precoce + discriminante escondido + titulação invertida.
+- **Sistema:** andaime vencido deve furar new-limit; Tier-3 (schema de altura); limpeza `[bulk]`/`Geral`; enumeração do Drive; cruzar plano da semana com `Cronograma de Reta Final.xlsx` (Drive).
 
 ---
 *Histórico: history/INDEX.md · Snapshot macro: ESTADO.md · Curva: core/contracts/forgetting-curve-contract.md*

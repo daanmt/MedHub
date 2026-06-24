@@ -1,8 +1,8 @@
 # HANDOFF.md — ESTADO OPERACIONAL CURTO
 *Atualizado: 2026-06-24 — **s090: dia tríplice da Semana 09 — 76q/72%** (T9 Pólipos 23/18 · T10 TCE+Demências 40/29 · T11 HAS 13/8) + **20 flashcards FSRS** drenados (curva 2,0→3,6). **20 cards novos** (16 erro #534–552 + 4 andaimes: AAA #539, Glasgow base+mecanismo #546–547, grade HAS #553). **Eixo do dia = bug nº1** (ancoragem/dado parcial): pólipos PSO×colono 2× · HAS hipocalemia ignorada + cutoff MAPA + consultório×MAPA. Reincidente: **hiperventilação no TCE**. Glasgow cluster fraco → 2 andaimes. Acumulado **3.739 (31,2% ENAMED)**. **T1–T11 ✓**; faltam **T12–T13** p/ fechar a Semana 09.*
 
-## ▶ Próximo passo imediato — s091: fechar a Semana 09 (T12 → T13)
-**Abrir com FSRS (16 atrasados + cards/andaimes de hoje que vencem cedo: Glasgow, grade HAS, #534–553) → T12 → T13.**
+## ▶ Próximo passo imediato — s091: fechar a Semana 09 (T12 + T13, ~100q somados)
+**🎯 Meta declarada pelo usuário (fim da s090): adiantar o MÁXIMO das ~100 questões de T12+T13 somados.** Abrir com FSRS (16 atrasados + cards/andaimes de hoje que vencem cedo: Glasgow, grade HAS, #534–553) → T12 → T13. Aula-base escada COMPLETA e **descomprimida** antes de cada bloco ([[feedback_aula_descomprimida_preferencia]]).
 1. **T12 — Dependência Química + Intoxicações (Rev).** Conferir PDF/resumo no `Cronograma.pdf`.
 2. **T13 — cluster Pediatria (Rev).** Fecha a Semana 09.
 3. **Ritual anti-vazamento por questão:** **ler o exame/caso pelo CONJUNTO, não pelo dado parcial** (bug nº1 — reincidiu hoje em pólipos e HAS) · **fechar a conduta** · **hiperventilação = resgate, não rotina** (reincidente).

@@ -7,7 +7,7 @@ relates_to: [AGENTE, handoff-contract, estado-contract]
 
 # ESTADO — MedHub
 
-*Atualizado: 2026-06-22 (sessão 087) | Ferramenta: Claude Code (Opus 4.8)*
+*Atualizado: 2026-06-23 (sessão 089) | Ferramenta: Claude Code (Opus 4.8)*
 
 > **Boot:** ler [`AGENTE.md`](AGENTE.md) → [`HANDOFF.md`](HANDOFF.md) (operacional curto) primeiro. Este arquivo é o snapshot **macro** (metas, indicador, marcos). Estrutura normatizada por [`core/contracts/estado-contract.md`](core/contracts/estado-contract.md).
 
@@ -17,20 +17,21 @@ relates_to: [AGENTE, handoff-contract, estado-contract]
 
 > **Plano atualizado no `Dashboard EMED 2026` (reconcile s084):** ramp mensal de questões 3.000 (mai) → **17.000 (dez/2026)** [3000·4500·6250·8000·10000·12500·15000·17000]; investimento R$ 2.940 → R$ 4.410 (R$ 210/mês). **Reconcile db↔dashboard: batem por área e no total (3.457 = 3.457, 0 divergência).** *(Supersede a antiga "Meta Final 23.000" — confirmar com o usuário se o stretch de 23k permanece.)*
 
-- **Marco ENAMED (prioridade):** 12.000 questões até **13/09/2026** — ritmo-alvo **~96q/dia** (faltam 8.543). ⚠️ Meta de junho (4.500) não fecha: atrás 1.043.
+- **Marco ENAMED (prioridade):** 12.000 questões até **13/09/2026** — ritmo-alvo **~102q/dia** (faltam 8.337). ⚠️ **Meta de junho = 4.500 (acumulado): faltam 837 em 7 dias (24–30/06) → ~120q/dia.** 🐛 `performance.py` usa o ramp antigo (reporta junho 8.000 / final 23.000) — corrigir p/ 4.500 / 17.000 (pós-reconcile s084).
 - **Plano de fim de ano:** 17.000 questões até 12/2026 (dashboard).
 - **Custo/Q atual:** **R$ 0,91** (jun/2026, acumulado = investimento ÷ questões), em queda; alvo no fim do plano ≈ R$ 0,26.
-- **Indicador Atual:** **3.596 / 12.000 ENAMED (30,0%)** — cruzou o marco; **+101 na s086** (meta ≥97q/dia BATIDA pela 1ª vez).
-- **Performance Geral:** ~79,6% (`sessoes_bulk`). Fracos no dashboard: **Hepato 57% · Dermato 67% · Cardiologia/Otorrino 68% · Hemato 74% · Pneumo/Nefro/Endocrino/Infecto ~76%**. Cluster fraco subjetivo: **hemato/hepato/imuno**. **Achado s086: o gargalo principal agora é EXECUÇÃO DE PROVA, não conteúdo** — viés de posição (default-to-C) + fechamento precoce (ver playbook).
-- **Contadores:** **48 resumos** em `resumos/` · **297 erros** em `ipub.db` · **318 cards ativos** (35 andaimes) · **0 heurísticos ativos** · **taxonomia `UNIQUE(area,tema)`**
+- **Indicador Atual:** **3.663 / 12.000 ENAMED (30,5%)** — **+24 na s089** (Meningites, 75%) · +67 no dia 23/06. Marco dos 30% cruzado na s086.
+- **Performance Geral:** ~79% (`sessoes_bulk`). Fracos no dashboard: **Hepato 57% · Dermato 67% · Cardiologia/Otorrino 68% · Hemato 74%**. **Gargalo principal = EXECUÇÃO DE PROVA, não conteúdo** — default-to-C, fechamento precoce, **não fechar a conduta** (reconfirmado na s088: acertou o dx, errou a conduta em intussuscepção/ECN/apendicite).
+- **Contadores:** **48 resumos** em `resumos/` · **311 erros** em `ipub.db` · **334 cards ativos** (37 andaimes) · **taxonomia `UNIQUE(area,tema)`**
+- **Cronograma (SSOT identificado na s088):** `Cronograma.pdf` na raiz (Estratégia MED — Reta Final 30 semanas). Estudo na **Semana 09** (T1–T8 ✓); fila T9→T13 (~150q). Supersede o plano inferido anterior ("Cardio/IC").
 
 ---
 
 ## Estado por frente (macro)
 
-- **Volume & Metas:** **3.596 / 12.000 ENAMED (30,0%); +101 na s086** (0 na s087, revisão); ritmo-alvo **~100q/dia** p/ 12k em 13-09 (faltam 8.404 em 84d). Foco em não perder setembro. Cluster fraco: Hepato 57%, Dermato 67%, Cardiologia/Otorrino 68%, Hemato 72%. **Gargalo nº1 = execução de prova.**
+- **Volume & Metas:** **3.663 / 12.000 ENAMED (30,5%); +24 na s089** (Meningites 75%; +67 no dia 23/06); ritmo-alvo **~102q/dia** p/ 12k em 13-09 (faltam 8.337 em 82d). **Meta junho 4.500: faltam 837 em 7d → ~120q/dia.** Cluster fraco: Hepato 57%, Dermato 67%, Cardiologia/Otorrino 68%, Hemato 72%. **Gargalo nº1 = execução de prova.**
 - **Conteúdo:** **48 resumos** (+Planej. Familiar, +Exantemáticas na s086). **Gaps:** `Diabetes - Complicações Crônicas`; ectópica/icterícia neonatal (só andaime). PDFs EMED p/ aula-base: GO restante, Gastro, Dermato, Pediatria.
-- **Erros & Cards:** **297 erros; 318 cards ativos (35 andaimes).** Pipeline `insert_questao.py` (+ `insert_card_base.py` andaime); taxonomia `UNIQUE(area,tema)`. Fila FSRS vencida zerada na s087 (46 cards).
+- **Erros & Cards:** **311 erros; 334 cards ativos (37 andaimes).** Pipeline `insert_questao.py` (+ `insert_card_base.py` andaime); taxonomia `UNIQUE(area,tema)`. Fila FSRS: vencidos + 6 novos de Meningites + backlog ~209.
 - **FSRS:** backlog grande — mas a **curva finalmente comeu na s084 (35/50 revisados)**. `/refrescar` (dormente) + `/revisar` atacam o backlog. **Andaime validado em tempo real:** Hemostasia destravou após 3 cards-base. Clusters frios andaimados: Hemostasia (fatores), Cardiopatias (T4F/shunt).
 - **Infraestrutura — NOVA capacidade (s083): gestão da curva de esquecimento** — `review_log` (SSOT do tempo-de-revisão) + radar de dormência (`review_radar.py`) + `/refrescar` (`dormant_refresh.py`, **não toca o FSRS**) + **boot proativo** "Plano do Dia" (`day_plan.py`, AGENTE §2 passo 4) + **autonomia codificada** (AGENTE §1.1) + contrato `core/contracts/forgetting-curve-contract.md`. Mantém: cards de altura graduada (s082), governança de evidência (s076), Camada 2 do `/revisar` (s078). **5 padrões metacognitivos vivos** (+ palpite-abandonado-por-palavra). **Tier-3 (schema de altura) pendente.**
 
@@ -46,7 +47,7 @@ Ver [`ROADMAP.md`](ROADMAP.md). Prioridades guiadas pelo cronograma (SSOT: `Cron
 2. **PRIORIDADE ESTRATÉGICA — execução de prova:** o gargalo migrou de conteúdo para processo de resolução. Treinar o **ritual anti-vazamento** (default-to-C + fechamento precoce) via [`PLAYBOOK_EXECUCAO_PROVA.md`](PLAYBOOK_EXECUCAO_PROVA.md). Maior alavanca da preparação. (bug nº 1c segue ativo; default-to-C é o novo sub-padrão dominante.)
 3. **Aulas-base = CONTRATO** (AGENTE §1.2): cunhar aula "escada de degraus" antes de cada bloco novo; calibrar descompressão para pontos operacionais que a banca cobra.
 4. **Gaps de resumo:** `Diabetes - Complicações Crônicas`; candidatos: ectópica, icterícia neonatal (só andaime). PDFs do EMED agora MANTIDOS (gitignored) p/ RAG — GO/Gastro/Dermato/Pediatria despejados.
-5. **Pendentes:** Tier-3 (schema de altura), limpeza `[bulk]`/`Geral` da taxonomia, enumeração do Drive, re-drill dos 1 (426, 435, 84, 78, 70, 104).
+5. **Pendentes:** 🐛 corrigir o ramp de metas do `performance.py` (junho 4.500 / dez 17.000, pós-s084); Tier-3 (schema de altura), limpeza `[bulk]`/`Geral` da taxonomia, enumeração do Drive, re-drill dos 1 (426, 435, 84, 78, 70, 104).
 
 > Detalhe operacional e próximo passo imediato: [`HANDOFF.md`](HANDOFF.md). Histórico completo: [`history/INDEX.md`](history/INDEX.md).
 

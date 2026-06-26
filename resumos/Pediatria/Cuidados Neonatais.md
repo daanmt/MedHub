@@ -93,8 +93,11 @@ aliases: [Cuidados Neonatais, Reanimação Neonatal, Neonato, RN, Prematuridade,
 	- Melanose pustulosa neonatal: neném nasce com
 	- Miliária: neném carioca, enrolado na coberta
 	- Manchas mongólicas: bundinha azulada
-	- Crânio: bossa serossanguínea, céfalo-hematoma e hemorragias subgaleais | partos difíceis
-	- Hemorragias aumentam o risco de icterícia neonatal
+	- Crânio (coleções pós-parto difícil) — discriminar pela relação com as **suturas**:
+		- **Bossa serossanguínea:** edema do subcutâneo, **CRUZA as suturas**, presente **ao nascer**, resolve em dias. Conduta expectante.
+		- **Cefalohematoma:** hemorragia subperióstea, **NÃO ultrapassa as suturas**, surge **após o nascimento** e reabsorve por calcificação em semanas. ⭐ Conduta **expectante + monitorar icterícia** (a reabsorção eleva a bilirrubina indireta). 🔴 Não puncionar/drenar, não RM, não 2ª dose de vitamina K.
+		- **Hemorragia subgaleal:** sangramento no espaço subgaleal, **cruza suturas e progride**, pode causar **choque hipovolêmico** — a única grave, exige vigilância hemodinâmica.
+	- Hemorragias aumentam o risco de icterícia neonatal (degradação da hemoglobina extravasada → ↑ bilirrubina indireta)
 
 
 ### Alojamento conjunto

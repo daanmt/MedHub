@@ -62,7 +62,7 @@ Ao contrário do sistema adrenérgico (Luta ou Fuga), o sistema colinérgico é 
 ---
 - **Benzodiazepínicos:** Flumazenil.
 - **Opioides:** Naloxona.
-- **Paracetamol:** N-acetilcisteína (Fluimucil).
+- **Paracetamol:** N-acetilcisteína (antídoto — repõe glutationa; **guiada pela dose/nível sérico** no nomograma de Rumack-Matthew). ⚠️ **Medida INICIAL de descontaminação (ingestão recente, < 1-2h) = Carvão ativado** — carvão e NAC não se excluem: o carvão é o primeiro gesto, a NAC entra conforme a dose. 🔴 **Banca-dependente:** comando pedindo "medida inicial / em tempo hábil" → carvão; comando pedindo o que muda mortalidade → NAC.
 - **Organofosforados:** Atropina / Pralidoxima.
 - **Betabloqueadores:** Glucagon.
 - **Bloqueadores de Canais de Cálcio (BCC):** Gluconato de Cálcio. ⭐
@@ -81,5 +81,6 @@ Ao contrário do sistema adrenérgico (Luta ou Fuga), o sistema colinérgico é 
 - 🔴 Ignorar que **Salicilatos (AAS)** cursam com Alcalose Respiratória precoce + Acidose Metabólica (Misto). ⭐
 - 🔴 Esquecer que **Nafazolina** em crianças é a causa clássica de toxíndrome simpatomimética após "gotas nasais".
 - 🔴 Tratar intoxicação por Anlodipino com Glucagon (o correto para BCC é Cálcio).
+- 🔴 Pular direto para a N-acetilcisteína quando a questão pede a "medida inicial em tempo hábil" da intoxicação aguda recente por paracetamol — a descontaminação inicial é o **Carvão ativado** (janela 1-2h).
 
 *📝 Espaço reservado para inclusão de questões erradas*

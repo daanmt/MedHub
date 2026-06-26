@@ -7,7 +7,7 @@ relates_to: [AGENTE, handoff-contract, estado-contract]
 
 # ESTADO — MedHub
 
-*Atualizado: 2026-06-24 (sessão 090) | Ferramenta: Claude Code (Opus 4.8)*
+*Atualizado: 2026-06-26 (sessão 091) | Ferramenta: Claude Code (Opus 4.8)*
 
 > **Boot:** ler [`AGENTE.md`](AGENTE.md) → [`HANDOFF.md`](HANDOFF.md) (operacional curto) primeiro. Este arquivo é o snapshot **macro** (metas, indicador, marcos). Estrutura normatizada por [`core/contracts/estado-contract.md`](core/contracts/estado-contract.md).
 
@@ -20,18 +20,18 @@ relates_to: [AGENTE, handoff-contract, estado-contract]
 - **Marco ENAMED (prioridade):** 12.000 questões até **13/09/2026** — ritmo-alvo **~102q/dia** (faltam 8.261). ⚠️ **Meta de junho = 4.500 (acumulado): faltam 761 em 6 dias (25–30/06) → ~127q/dia.** 🐛 `performance.py` usa o ramp antigo (reporta junho 8.000 / final 23.000) — corrigir p/ 4.500 / 17.000 (pós-reconcile s084).
 - **Plano de fim de ano:** 17.000 questões até 12/2026 (dashboard).
 - **Custo/Q atual:** **R$ 0,91** (jun/2026, acumulado = investimento ÷ questões), em queda; alvo no fim do plano ≈ R$ 0,26.
-- **Indicador Atual:** **3.739 / 12.000 ENAMED (31,2%)** — **+76 na s090** (dia tríplice: Pólipos 78% · TCE+Demências 72,5% · HAS 61,5%). Marco dos 31% cruzado na s090.
+- **Indicador Atual:** **3.839 / 12.000 ENAMED (32,0%)** — **+100 na s091** (Semana 09 fechada: T12 Dep.Química/Intox 86% · T13 Pediatria-revisão 88%). Marco dos 32% cruzado na s091.
 - **Performance Geral:** ~79% (`sessoes_bulk`). Fracos no dashboard: **Hepato 57% · Dermato 67% · Cardiologia/Otorrino 68% · Hemato 74%**. **Gargalo principal = EXECUÇÃO DE PROVA, não conteúdo** — default-to-C, fechamento precoce, **não fechar a conduta** (reconfirmado na s088: acertou o dx, errou a conduta em intussuscepção/ECN/apendicite).
-- **Contadores:** **48 resumos** em `resumos/` · **327 erros** em `ipub.db` · **354 cards ativos** (41 andaimes) · **taxonomia `UNIQUE(area,tema)`**
-- **Cronograma (SSOT identificado na s088):** `Cronograma.pdf` na raiz (Estratégia MED — Reta Final 30 semanas). Estudo na **Semana 09** (T1–T11 ✓); fila T12–T13. Supersede o plano inferido anterior ("Cardio/IC").
+- **Contadores:** **48 resumos** em `resumos/` · **340 erros** em `ipub.db` · **~370 cards ativos** (41 andaimes) · **taxonomia `UNIQUE(area,tema)`**
+- **Cronograma (SSOT identificado na s088):** `Cronograma.pdf` na raiz (Estratégia MED — Reta Final 30 semanas). **Semana 09 ✓ FECHADA (T1–T13)**; próxima: **Semana 10** (T1 Preventiva). Supersede o plano inferido anterior ("Cardio/IC").
 
 ---
 
 ## Estado por frente (macro)
 
-- **Volume & Metas:** **3.739 / 12.000 ENAMED (31,2%); +76 na s090** (dia tríplice T9/T10/T11); ritmo-alvo **~102q/dia** p/ 12k em 13-09 (faltam 8.261 em 81d). **Meta junho 4.500: faltam 761 em 6d → ~127q/dia.** Cluster fraco: Hepato 57%, Dermato 67%, Cardiologia/Otorrino 68%, Hemato 72%. **Gargalo nº1 = execução de prova.**
+- **Volume & Metas:** **3.839 / 12.000 ENAMED (32,0%); +100 na s091** (Semana 09 fechada, T12+T13); ritmo-alvo **~102q/dia** p/ 12k em 13-09. **Meta junho 4.500: faltam 661 em 5d (26–30/06) → ~132q/dia.** Cluster fraco: Hepato 57%, Dermato 67%, Cardiologia/Otorrino 68%, Hemato 72%. **Gargalo nº1 = execução de prova** (reconfirmado s091: bug nº1/ancoragem + não-transferência card→caso + inversão de marcador).
 - **Conteúdo:** **48 resumos** (+Planej. Familiar, +Exantemáticas na s086). **Gaps:** `Diabetes - Complicações Crônicas`; ectópica/icterícia neonatal (só andaime). PDFs EMED p/ aula-base: GO restante, Gastro, Dermato, Pediatria.
-- **Erros & Cards:** **327 erros; 354 cards ativos (41 andaimes).** Pipeline `insert_questao.py` (+ `insert_card_base.py` andaime); taxonomia `UNIQUE(area,tema)`. Fila FSRS: vencidos + 6 novos de Meningites + backlog ~209.
+- **Erros & Cards:** **340 erros; ~370 cards ativos (41 andaimes).** Pipeline `insert_questao.py` (+ `insert_card_base.py` andaime); taxonomia `UNIQUE(area,tema)`. Fila FSRS: vencida **zerada na s091** (29 drenados); backlog de novos ~415 + 16 do dia.
 - **FSRS:** backlog grande — mas a **curva finalmente comeu na s084 (35/50 revisados)**. `/refrescar` (dormente) + `/revisar` atacam o backlog. **Andaime validado em tempo real:** Hemostasia destravou após 3 cards-base. Clusters frios andaimados: Hemostasia (fatores), Cardiopatias (T4F/shunt).
 - **Infraestrutura — NOVA capacidade (s083): gestão da curva de esquecimento** — `review_log` (SSOT do tempo-de-revisão) + radar de dormência (`review_radar.py`) + `/refrescar` (`dormant_refresh.py`, **não toca o FSRS**) + **boot proativo** "Plano do Dia" (`day_plan.py`, AGENTE §2 passo 4) + **autonomia codificada** (AGENTE §1.1) + contrato `core/contracts/forgetting-curve-contract.md`. Mantém: cards de altura graduada (s082), governança de evidência (s076), Camada 2 do `/revisar` (s078). **5 padrões metacognitivos vivos** (+ palpite-abandonado-por-palavra). **Tier-3 (schema de altura) pendente.**
 

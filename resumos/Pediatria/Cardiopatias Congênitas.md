@@ -292,6 +292,7 @@ Tratamento:
 - ECG: sobrecarga de VD
 - **ACIANOGÊNICA** — não tem CIV, portanto sem shunt D→E
 - ⚠️ **Padrão de prova:** sopro em foco pulmonar + cianose = T4F, NÃO EP valvar. EP valvar isolada NÃO causa cianose. A CIV da T4F é o que permite o shunt D→E → cianose
+- 🔴 **Banca-dependente (cianose AOS ESFORÇOS):** quando a questão descreve **cianose ao choro/mamadas** ("crise de hipóxia") com teste de hiperóxia < 100 e oferece os componentes isolados, a resposta é **estenose pulmonar** — é a obstrução dinâmica do infundíbulo que **gera** a crise. Não marcar CIV (a CIV é só o shunt, não o gerador da cianose dinâmica). Reconcilia com a regra acima: EP valvar isolada não dá cianose **de repouso**, mas é o motor da cianose **dinâmica** na fisiologia tipo Fallot.
 
 ---
 

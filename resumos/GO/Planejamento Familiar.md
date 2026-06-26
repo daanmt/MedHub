@@ -187,3 +187,6 @@ aliases: [Contracepção, Anticoncepção, LARC]
 - 🔴 **Enxaqueca COM aura = contraindicação absoluta (cat. 4) aos combinados** em qualquer idade; sem aura é cat. 3 apenas se > 35 anos.
 - 🔴 **Única contraindicação absoluta aos métodos com progesterona isolada = câncer de mama atual.** Por isso são a saída quando há contraindicação aos combinados.
 - 🔴 **Amenorreia lactacional só vale com os três critérios simultâneos:** ≤ 6 meses pós-parto + amamentação exclusiva + amenorreia. Falha de um deles anula o método.
+- 🔴 **DIU no puerpério tem janela:** **< 48h** pode (pós-parto imediato) · **48h a 4 semanas = categoria 3** (risco de expulsão) · **> 4 semanas** pode. Na janela intermediária (ex.: 1 semana de pós-parto), prefira o **implante** de progestágeno. Não generalizar "LARC sempre liberado no puerpério".
+- 🔴 **Pós-bariátrica DISABSORTIVA → evitar hormonal ORAL** (a disabsorção reduz a eficácia): usar via não-oral (injetável, adesivo, anel, DIU, implante). Para regularizar ciclo anovulatório, **combinado cíclico** (ex.: injetável combinado).
+- 🔴 **Exclusão de gravidez = DUM, não teste:** para iniciar qualquer método, a gravidez é descartada pela **data da última menstruação** (anamnese) — não se exige teste urinário/βhCG de rotina. E o único exame essencial antes de um **combinado** é **aferir a PA** (o progestágeno isolado não exige exame).

@@ -1,29 +1,31 @@
 # HANDOFF.md — ESTADO OPERACIONAL CURTO
-*Atualizado: 2026-06-26 — **s091: dia épico, Semana 09 FECHADA (T1–T13 ✓)**. **T12** Dep. Química + Intoxicações 51/44 (86%) + **T13** Pediatria-revisão 49/43 (88%) = **100q/dia, 87%**. **16 cards novos** (#554–569) + **3 curados** (#104/#116/#118). **29 cards FSRS drenados** (fila vencida ZERADA) + **2 refreshes** (Hanseníase, DHEG). **Eixo do dia = bug nº1/execução de prova**: ancoragem (CIA sopro×B2-fixo, hepatite×hipofosfatemia), **não-transferência card→caso** (estenose pulmonar: cravou o card, errou a questão) e **3 inversões de marcador** (TSH/VDRL/FSH → nova memória). Acumulado **3.839 (32,0% ENAMED)**.*
+*Atualizado: 2026-06-26 — **s092: modo VOLUME (recuperação de cronograma), Semana 10 iniciada**. Mapeadas as 6 tasks da S10 (147q). Feitas: **T1+T6 Sistemas de Informação 65/60 (92%)** + **T4 Planejamento Familiar 42/32 (76%)** = **107q/86%**. **14 cards novos** (#570–583). **Eixo:** T1/T6 = cluster **Declaração de Óbito** (3 erros: causa externa É emitida pelo IML, IML≠SVO, causa básica=inicia a cadeia) + SISVAN errado **2×**; T4 = lacunas finas (**sub-cluster DIU**: cobre eficaz imediato, gravidez+DIU retira se fio visível, pré-DIU=exame pélvico). Acumulado **3.946 (32,9% ENAMED)**.*
 
-## ▶ Próximo passo imediato — s092: abrir Semana 10 + resumo de ectópica
-1. **FSRS:** drenar a fila do dia (16 novos #554–569 + relearning dos nota-baixa de hoje) via `/revisar`.
-2. **Resumo de ectópica** (gap recorrente, PRIORIDADE): extrair do **PDF `Sangramentos da Primeira Metade`** (em `resumos/GO/`, confirmado pelo usuário) → redigir conforme `/estilo-resumo`.
-3. **Semana 10 — Tarefa 1 (Preventiva, Teoria+Exercícios).** Aula-base escada **descomprimida** antes do bloco.
-- **Ritual anti-vazamento:** ler o **CONJUNTO** (não o dado parcial) · **completar a verificação** · **transferir o fato do card para o caso** · cuidado com a **direção do marcador** ([[feedback_inversao_direcao_marcador]]).
+## ▶ Próximo passo imediato — s093: matar T2 + T3 (aula DESCOMPRIMIDA)
+**🎯 Pedido do usuário:** T2+T3 são **blocos NOVOS de teoria** → **aula-base escada DESCOMPRIMIDA** (não o refresh comprimido do modo-volume). **Conferir `Cronograma.pdf` ANTES** (sub-temas já extraídos abaixo). Calibração e fluxo em [[project_contrato_execucao_cronograma]] + [[feedback_aula_descomprimida_preferencia]].
+1. **T2 — Doenças Exantemáticas (Teoria, 18q):** sub-temas **4.0 Rubéola · 5.0 Varicela · 6.0 Doença Mão-Pé-Boca · 7.0 Escarlatina** (NÃO sarampo/exantema súbito/eritema infeccioso — são 1.0-3.0, outra task). Resumo: `resumos/Pediatria/Doenças Exantemáticas.md`.
+2. **T3 — Cirurgia Infantil Pt 3 (Teoria, 22q):** sub-temas **Hidronefrose fetal/neonatal (VUP, RVU) · Criptorquidia · Escroto Agudo · Neuroblastoma · Tumor de Wilms**. Resumo: `resumos/Cirurgia/Cirurgia Infantil.md` (seções 18-22).
+3. **FRENTE NOVA — formalizar o contrato de execução** cronograma↔resumos↔aulas-base: esboçar `core/contracts/execucao-cronograma-contract.md` + referenciar no `AGENTE.md`. Spec em [[project_contrato_execucao_cronograma]].
+4. **FSRS:** drenar a fila (vencidos + 30 novos das s091/s092: #554-583). Via `/revisar`.
+- *(T5 Síndromes Hipertensivas = só leitura, 0 questões. Restam só T2+T3 p/ fechar as 6 tasks.)*
 
 ## Estado por frente
-- **Volume & Metas:** **3.839/12.000 ENAMED (32,0%)** · +100 no dia (Psiq 51/44, Pediatria 49/43). **Meta junho 4.500: faltam 661 em 5 dias (26–30/06) → ~132q/dia.** Ritmo ENAMED ~102q/dia. Fracos: Hepato · Dermato · Cardio/Otorrino.
-- **Cronograma (SSOT = `Cronograma.pdf`):** **Semana 09 ✓ (T1–T13).** Próxima: **Semana 10** (T1 Preventiva Teoria+Exerc…).
-- **Conteúdo:** 48 resumos (4 turbinados na s091: Dep. Química, Intoxicações, Cardiopatias Congênitas, Cuidados Neonatais). **Gaps:** ectópica (PDF mapeado), `TCE.md` reescrita.
-- **Erros & Cards:** **340 erros · ~370 cards ativos** (16 novos #554–569 + 3 curados).
-- **FSRS:** fila vencida **ZERADA** hoje; backlog de novos (~415) + 16 do dia. Drenar via `/revisar`.
+- **Volume & Metas:** **3.946/12.000 ENAMED (32,9%)** · **+107 na s092** (Preventiva 65/60, Ginecologia 42/32). **Meta junho 4.500: faltam 554.** Ritmo ENAMED ~102q/dia. Fracos: Hepato · Dermato · Cardio/Otorrino.
+- **Cronograma (SSOT = `Cronograma.pdf`):** Semana 09 ✓. **Semana 10 em curso** (T1,T4,T6 ✓; faltam T2,T3 das 6 iniciais; T5 = só teoria).
+- **Conteúdo:** 48 resumos (s092 turbinou Sistemas de Informação + Planejamento Familiar). 🐛 **`Sistemas de Informação em Saúde.md` tem redação ruim → candidato a REESCRITA.** Gaps: ectópica (PDF Sangramentos 1ª Metade), `TCE.md`.
+- **Erros & Cards:** **354 erros · ~384 cards ativos** (14 novos s092 + 3 curados s091).
+- **FSRS:** fila vencida zerada na s091; backlog de novos + 30 novos das s091/s092.
 
-## Última sessão de questões — sessão 091 (dia 24–26/06)
-- T12 (Psiq) 51/44 + T13 (Pediatria) 49/43 = **100q/87%**. 13 erros → 16 cards + 2 resumos por bloco. Bug nº1/execução foi o eixo (ancoragem + não-transferência card→caso + inversão de marcador).
+## Última sessão de questões — sessão 092 (26/06, modo volume)
+- T1+T6 Sistemas de Informação 65/60 + T4 Planejamento Familiar 42/32 = **107q/86%**. 14 erros → 14 cards. Cluster DO (T6) + sub-cluster DIU (T4).
 
 ## Pendências/observações ativas
-- **Resumo de ectópica** — extrair do PDF `Sangramentos da Primeira Metade` (abertura s092).
-- 🐛 **`performance.py` metas desatualizadas** (reporta junho 8.000/final 23.000; corretos = 4.500/17.000 pós-s084).
-- **Reescrever `TCE.md`** (gold standard — escopo grande, confirmar com usuário).
-- **Curadoria:** #104/#116/#118 ✓ (s091); #70 cravou na revisão. Resta varrer safra mar/2026.
-- **Sistema:** andaime vencido deve furar new-limit (Tier-3); limpeza [bulk]/Geral; enumerar Cronograma.pdf (semanas 10+).
+- **Contrato de execução** cronograma↔resumos↔aulas (criar em `core/contracts/`) — frente s093.
+- **Reescrever `Sistemas de Informação em Saúde.md`** (redação ruim/imprecisa) + **`TCE.md`** (gold standard).
+- **Resumo de ectópica** — extrair do PDF `Sangramentos da Primeira Metade` (`resumos/GO/`).
+- 🐛 `performance.py` metas desatualizadas (junho 4.500 / dez 17.000).
+- Curadoria #104/#116/#118 ✓ (s091). Resta varrer safra mar/2026.
 - **tmp/scratchpad:** scripts descartáveis (não commitar).
 
 ---
-*Histórico: history/INDEX.md · Snapshot macro: ESTADO.md · Curva: core/contracts/forgetting-curve-contract.md*
+*Histórico: history/INDEX.md · Snapshot macro: ESTADO.md · Frente de sincronia: [[project_contrato_execucao_cronograma]]*

@@ -257,6 +257,8 @@ Forks resolvidos pelo usuário — fecham as DECISÕES PENDENTES da §f:
 7. **Rótulos sujos (`GO`/`Obstetrícia` mojibake):** **normalizar só na leitura** no v1.0; migração destrutiva = fork futuro.
 8. **Fonte:** **PDF v1.0** (offline, determinístico); xlsx do Drive fora de escopo.
 
-**Frente nova derivada:** **Sessão dedicada de Cirurgia** — varrer todo o eixo cirúrgico (resumos + PDFs de Ortop/Otorrino/outros já na pasta) e avaliar ajustes no cronograma dentro da margem/metas.
+**Frente nova derivada 1:** **Sessão dedicada de Cirurgia** — varrer todo o eixo cirúrgico (resumos + PDFs de Ortop/Otorrino/outros já na pasta) e avaliar ajustes no cronograma dentro da margem/metas.
+
+**Frente nova derivada 2 (s093):** integrar **`/schedule` (routines)** ao sistema de sync — gestão **proativa** do calendário: lembretes de metas diárias/semanais/mensais, tema do dia e os **gatilhos** (ex.: reavaliação da meta em S13). Routine inicial criada para o gatilho S13 (12/07). Caveat de arquitetura: o agente cloud do `/schedule` não tem o `ipub.db` local (Zero-DB no Cloud) → as routines servem como **trigger/lembrete** que abre a reavaliação localmente, não como executor com acesso ao estado.
 
 **Status:** plano APROVADO → implementar a Fase 1 (`tools/cronograma.py` + `core/cronograma/grade.json`).

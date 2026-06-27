@@ -1,14 +1,14 @@
 ---
 type: session
 sessao: 093
-data: 2026-06-27
-area_foco: Fecha Semana 10 (T2 Exantemáticas + T3 Cir. Infantil III) + reconcile de drift + ULTRAPLAN s094 (cronograma comprimido + sistema de sync)
+data: 2026-06-27 01:09 (sessão de estudo: 2026-06-26)
+area_foco: Avança Semana 10 (T2 Exantemáticas + T3 Cir. Infantil III; 6/11 tasks) + reconcile de drift + ULTRAPLAN s094
 ---
 
-# Sessão 093 — Fecha a Semana 10 + Ultraplan do cronograma (s094)
+# Sessão 093 — Avança a Semana 10 + Ultraplan do cronograma (s094)
 
 ## Contexto
-Sessão longa e de virada estratégica. Abriu com **reconcile de drift** (db 3.946 vs Dashboard 3.940) pedido pelo usuário, fechou as 2 tasks restantes da Semana 10 com aula-base DESCOMPRIMIDA, e culminou num **ultraplan multi-agente (workflow)** para comprimir o cronograma restante e desenhar o sistema de sync cronograma↔performance↔FSRS. Norte estratégico declarado: **Psiquiatria UFRJ/IPUB**; sprint total ENAMED; também UERJ (MFC) e USP; estuda até dez.
+Sessão longa e de virada estratégica. Abriu com **reconcile de drift** (db 3.946 vs Dashboard 3.940) pedido pelo usuário, **avançou a Semana 10 com T2+T3** em aula-base DESCOMPRIMIDA, e culminou num **ultraplan multi-agente (workflow)** para comprimir o cronograma restante e desenhar o sistema de sync cronograma↔performance↔FSRS. **O dia de estudo 26/06 fechou 147q nas 6 primeiras tasks da S10 (s092 107 + s093 40); a S10 tem 11 tasks — faltam 5 (~126q): Meningites Rev, Diabetes Comp. Crônicas, Distúrbios Ácido-Base, Pneumo Intensiva I, Hepatites Virais.** Norte estratégico declarado: **Psiquiatria UFRJ/IPUB**; sprint total ENAMED; também UERJ (MFC) e USP; estuda até dez.
 
 ## O que foi feito
 - **Reconcile de drift (6q):** rastreado 100% à Pediatria — T13 "Revisão por Questões" (s091) lançada na planilha em **campo emprestado e subnotificada** (43/36 vs db 49/43). **db é a fonte fiel** (confirmado pelo usuário, que corrigiu a planilha). Gin/GO (−30/+30) = rotulagem que se cancela (W4). Memória nova: `project_drift_revisao_por_questoes`.
@@ -47,4 +47,4 @@ Sessão longa e de virada estratégica. Abriu com **reconcile de drift** (db 3.9
 3. Reescrever `Sistemas de Informação em Saúde.md` + `TCE.md`; resumo de ectópica.
 
 ## Próximo (s094)
-Começar a **Fase 1 do ultraplan** (`tools/cronograma.py` + `grade.json`) — não depende dos forks (já decididos). Em paralelo, **S11 começa 29/06** (Medicina de Família e Comunidade Teoria I + 12 tasks, 412q). Drenar FSRS (#554-588 + vencidos).
+**A) Matar o resto da S10** (5 tasks, ~126q): Meningites (Revisão) → Diabetes Comp. Crônicas (Teoria; criar resumo) → Distúrbios Ácido-Base (Teoria) → Pneumo Intensiva I (Teoria) → Hepatites Virais (Teoria; ataca Hepato). **B)** Fase 1 do sync (`tools/cronograma.py` + `grade.json`). **C)** Sessão dedicada de Cirurgia. **D)** FSRS (#554-588 + vencidos). **S11 (29/06) só após fechar a S10.** Convenção nova: registros com **data + hora**.

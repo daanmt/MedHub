@@ -7,7 +7,7 @@ relates_to: [AGENTE, handoff-contract, estado-contract]
 
 # ESTADO — MedHub
 
-*Atualizado: 2026-06-26 (sessão 092) | Ferramenta: Claude Code (Opus 4.8)*
+*Atualizado: 2026-06-27 01:09 (sessão 093) | Ferramenta: Claude Code (Opus 4.8)*
 
 > **Boot:** ler [`AGENTE.md`](AGENTE.md) → [`HANDOFF.md`](HANDOFF.md) (operacional curto) primeiro. Este arquivo é o snapshot **macro** (metas, indicador, marcos). Estrutura normatizada por [`core/contracts/estado-contract.md`](core/contracts/estado-contract.md).
 
@@ -23,7 +23,7 @@ relates_to: [AGENTE, handoff-contract, estado-contract]
 - **Indicador Atual:** **3.986** — **40% da meta-prova (10.000)** · 33% do teto (12.000) — **+40 na s093** (T2 Exantemáticas 89% · T3 Cir. Infantil III 86%). Perf. geral 79,8%.
 - **Performance Geral:** ~79% (`sessoes_bulk`). Fracos no dashboard: **Hepato 57% · Dermato 67% · Cardiologia/Otorrino 68% · Hemato 74%**. **Gargalo principal = EXECUÇÃO DE PROVA, não conteúdo** — default-to-C, fechamento precoce, **não fechar a conduta** (reconfirmado na s088: acertou o dx, errou a conduta em intussuscepção/ECN/apendicite).
 - **Contadores:** **48 resumos** em `resumos/` · **354 erros** em `ipub.db` · **~384 cards ativos** (41 andaimes) · **taxonomia `UNIQUE(area,tema)`**
-- **Cronograma (SSOT identificado na s088):** `Cronograma.pdf` na raiz (Estratégia MED — Reta Final 30 semanas). Semana 09 ✓. **Semana 10 EM CURSO** (T1/T4/T6 ✓; faltam T2 Exantemáticas + T3 Cir. Infantil Pt3; T5 = só teoria). **Nova frente: contrato de execução cronograma↔resumos↔aulas.**
+- **Cronograma (SSOT `Cronograma.pdf`, 28 semanas — 2 de revisão removidas):** Semana 09 ✓. **Semana 10 EM CURSO — 6/11 tasks (147q); faltam 5 (~126q):** Meningites Rev · Diabetes Comp. Crônicas · Distúrbios Ácido-Base · Pneumo Intensiva I · Hepatites Virais. Calendário na S13 (~3 sem atrás). **Frente s094: ultraplan do cronograma comprimido + sistema de sync** (`docs/plans/s094-ultraplan.md`).
 
 ---
 

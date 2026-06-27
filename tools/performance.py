@@ -7,7 +7,7 @@ Imprime em stdout um relatório markdown com 5 blocos:
 1. Total acumulado de questões, acertos e performance geral.
 2. Meta do mês corrente + ritmo diário necessário.
 3. Custo/questão (acumulado + mês corrente) classificado em faixas.
-4. Marcos adiante: ENARE (17.000) e Final (23.000).
+4. Marcos adiante: ENAMED (12.000, 13/09) e plano dez/2026 (17.000).
 5. Áreas fracas (< 75%) e gaps absolutos (0 questões).
 
 Uso:
@@ -24,29 +24,28 @@ from datetime import date, datetime
 
 DB_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'ipub.db')
 
-# Meta final coerente com ESTADO.md: R$ 4.410 / 23.000q = R$ 0,19/q em dez/2026.
-# (O antigo 0.10 era matematicamente inatingível mesmo batendo 100% da meta.)
-META_CUSTO_Q = 0.20
+# Meta final coerente com ESTADO.md (reconcile s084): R$ 4.410 / 17.000q = R$ 0,26/q em dez/2026.
+META_CUSTO_Q = 0.26
 
+# Ramp oficial pos-reconcile s084 (= Dashboard EMED 2026): mai 3.000 -> dez 17.000.
+# investimento e ACUMULADO (+R$ 210/mes). Confirmado contra a aba mensal da planilha.
 METAS_MENSAIS = {
-    "2026-03": {"meta_acumulada": 3000,  "investimento": 2310.00},
-    "2026-04": {"meta_acumulada": 4500,  "investimento": 2520.00},
-    "2026-05": {"meta_acumulada": 6250,  "investimento": 2940.00},
-    "2026-06": {"meta_acumulada": 8000,  "investimento": 3150.00},
-    "2026-07": {"meta_acumulada": 10000, "investimento": 3360.00},
-    "2026-08": {"meta_acumulada": 12500, "investimento": 3570.00},
-    "2026-09": {"meta_acumulada": 15000, "investimento": 3780.00},
-    "2026-10": {"meta_acumulada": 17000, "investimento": 3990.00},
-    "2026-11": {"meta_acumulada": 20000, "investimento": 4200.00},
-    "2026-12": {"meta_acumulada": 23000, "investimento": 4410.00},
+    "2026-05": {"meta_acumulada": 3000,  "investimento": 2940.00},
+    "2026-06": {"meta_acumulada": 4500,  "investimento": 3150.00},
+    "2026-07": {"meta_acumulada": 6250,  "investimento": 3360.00},
+    "2026-08": {"meta_acumulada": 8000,  "investimento": 3570.00},
+    "2026-09": {"meta_acumulada": 10000, "investimento": 3780.00},
+    "2026-10": {"meta_acumulada": 12500, "investimento": 3990.00},
+    "2026-11": {"meta_acumulada": 15000, "investimento": 4200.00},
+    "2026-12": {"meta_acumulada": 17000, "investimento": 4410.00},
 }
 
 # Faixas: (limite_superior_exclusivo, emoji, rotulo)
 # A última faixa usa float('inf') como teto.
 FAIXAS_CUSTO = [
-    (0.20,         "🟢", "Meta (dez/2026)"),
-    (0.30,         "🟡", "Ótimo"),
-    (0.50,         "🟠", "Bom"),
+    (0.26,         "🟢", "Meta (dez/2026)"),
+    (0.40,         "🟡", "Ótimo"),
+    (0.60,         "🟠", "Bom"),
     (1.00,         "🔴", "Alto"),
     (float('inf'), "🟣", "Crítico"),
 ]
@@ -62,8 +61,7 @@ AREAS_VALIDAS = [
 # Marcos com data ganham projeções de ritmo (RITMOS_PROJECAO) no bloco 2.
 MARCOS = [
     ("ENAMED", 12000, date(2026, 9, 13)),
-    ("ENARE (out/2026)", 17000, None),
-    ("Final (dez/2026)", 23000, None),
+    ("Plano dez/2026 (2o ciclo: UERJ/USP)", 17000, None),
 ]
 
 # Ritmos diários usados nas projeções dos marcos datados (q/dia).

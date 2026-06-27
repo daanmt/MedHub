@@ -1,31 +1,32 @@
 # HANDOFF.md — ESTADO OPERACIONAL CURTO
-*Atualizado: 2026-06-26 — **s092: modo VOLUME (recuperação de cronograma), Semana 10 iniciada**. Mapeadas as 6 tasks da S10 (147q). Feitas: **T1+T6 Sistemas de Informação 65/60 (92%)** + **T4 Planejamento Familiar 42/32 (76%)** = **107q/86%**. **14 cards novos** (#570–583). **Eixo:** T1/T6 = cluster **Declaração de Óbito** (3 erros: causa externa É emitida pelo IML, IML≠SVO, causa básica=inicia a cadeia) + SISVAN errado **2×**; T4 = lacunas finas (**sub-cluster DIU**: cobre eficaz imediato, gravidez+DIU retira se fio visível, pré-DIU=exame pélvico). Acumulado **3.946 (32,9% ENAMED)**.*
+*Atualizado: 2026-06-27 — **s093: fecha a Semana 10 (T2+T3) + ULTRAPLAN s094 do cronograma**. T2 Exantemáticas 18/16 + T3 Cir. Infantil III 22/19 = **40q/87,5%**. 5 cards (#584-588) + 2 resumos turbinados. Reconcile de drift fechado (6q na Pediatria T13; db = fonte fiel). `performance.py` corrigido. **Meta recalibrada: 10.000 + gatilho S13.** Acumulado **3.986 (40% da meta-prova).***
 
-## ▶ Próximo passo imediato — s093: matar T2 + T3 (aula DESCOMPRIMIDA)
-**🎯 Pedido do usuário:** T2+T3 são **blocos NOVOS de teoria** → **aula-base escada DESCOMPRIMIDA** (não o refresh comprimido do modo-volume). **Conferir `Cronograma.pdf` ANTES** (sub-temas já extraídos abaixo). Calibração e fluxo em [[project_contrato_execucao_cronograma]] + [[feedback_aula_descomprimida_preferencia]].
-1. **T2 — Doenças Exantemáticas (Teoria, 18q):** sub-temas **4.0 Rubéola · 5.0 Varicela · 6.0 Doença Mão-Pé-Boca · 7.0 Escarlatina** (NÃO sarampo/exantema súbito/eritema infeccioso — são 1.0-3.0, outra task). Resumo: `resumos/Pediatria/Doenças Exantemáticas.md`.
-2. **T3 — Cirurgia Infantil Pt 3 (Teoria, 22q):** sub-temas **Hidronefrose fetal/neonatal (VUP, RVU) · Criptorquidia · Escroto Agudo · Neuroblastoma · Tumor de Wilms**. Resumo: `resumos/Cirurgia/Cirurgia Infantil.md` (seções 18-22).
-3. **FRENTE NOVA — formalizar o contrato de execução** cronograma↔resumos↔aulas-base: esboçar `core/contracts/execucao-cronograma-contract.md` + referenciar no `AGENTE.md`. Spec em [[project_contrato_execucao_cronograma]].
-4. **FSRS:** drenar a fila (vencidos + 30 novos das s091/s092: #554-583). Via `/revisar`.
-- *(T5 Síndromes Hipertensivas = só leitura, 0 questões. Restam só T2+T3 p/ fechar as 6 tasks.)*
+## ▶ Próximo passo imediato — s094
+**Frente principal: implementar a Fase 1 do ultraplan** (`docs/plans/s094-ultraplan.md`; forks já decididos):
+1. **F1 — `tools/cronograma.py` + `core/cronograma/grade.json`** (versionado): fundir os scripts do scratch (`crono_extract.py`+`cronograma_grade.py`); `AREA_PDF_TO_CANON`; subcomandos `--rebuild/--check/--json/--gap/--radar`. Validar S10=273q. → **F2 radar** → **F3 day_plan** (boot puxa semana+ritmos) → **F4 contrato** `cronograma-contract.md`.
+2. **🆕 Sessão dedicada de Cirurgia:** varrer o eixo cirúrgico (resumos + PDFs Ortop/Otorrino/outros na pasta) → avaliar ajustes no cronograma.
+3. **Conteúdo S11 (começa 29/06):** Med. de Família e Comunidade (Teoria I) + 12 tasks (412q). Calibrar aula por tipo.
+4. **FSRS:** drenar #554-588 + vencidos (`/revisar`).
+
+## Plano da sprint (decidido s093)
+- **Meta-prova 10.000 + gatilho S13 (~12/07):** acúmulo ≥5.600 → 12k; <5.200 → confirma 10k. 12k = teto.
+- **Ritmo: 3 dias sprint + 1 folga + simulado dominical** (~90-100q nos dias ON → ~10k no ENAMED).
+- **14 simulados × 100q** (1/domingo; 11 pré-ENAMED = 1.100q) — volume extra + hábito + cobre órfãs no mix.
+- **Arritmia (FA/Flutter/PCR) antecipada → ~S18-S21.** Órfãs (Oftalmo/Otorrino/Dermato/Ortop): via simulados, sem bloco dedicado. Fonte cronograma = PDF v1.0.
 
 ## Estado por frente
-- **Volume & Metas:** **3.946/12.000 ENAMED (32,9%)** · **+107 na s092** (Preventiva 65/60, Ginecologia 42/32). **Meta junho 4.500: faltam 554.** Ritmo ENAMED ~102q/dia. Fracos: Hepato · Dermato · Cardio/Otorrino.
-- **Cronograma (SSOT = `Cronograma.pdf`):** Semana 09 ✓. **Semana 10 em curso** (T1,T4,T6 ✓; faltam T2,T3 das 6 iniciais; T5 = só teoria).
-- **Conteúdo:** 48 resumos (s092 turbinou Sistemas de Informação + Planejamento Familiar). 🐛 **`Sistemas de Informação em Saúde.md` tem redação ruim → candidato a REESCRITA.** Gaps: ectópica (PDF Sangramentos 1ª Metade), `TCE.md`.
-- **Erros & Cards:** **354 erros · ~384 cards ativos** (14 novos s092 + 3 curados s091).
-- **FSRS:** fila vencida zerada na s091; backlog de novos + 30 novos das s091/s092.
+- **Volume & Metas:** **3.986 / 10.000 meta-prova (40%)** [teto 12k]. Cronograma S11-S28 = **6.689q/222 tasks** (1,62× compressão até ENAMED 13/09). Ritmo real junho ~31/dia → alvo ~90-100/dia nos dias ON. Fracos = gaps de **volume** (Hepato 14q · Otorrino 19q · Dermato 24q; 0q: Ortopedia, Oftalmo).
+- **Cronograma (SSOT `Cronograma.pdf`, 28 sem):** S10 ✓. **S11 começa 29/06.** Calendário na S13; conteúdo na S10 (~3 sem atrás). Grade em `scratchpad/crono_dados.json`.
+- **Conteúdo:** 48 resumos. Gaps: ectópica; reescrever `TCE.md` e `Sistemas de Informação em Saúde.md`.
+- **Erros & Cards:** **359 erros · ~389 cards** (5 novos s093). FSRS: backlog #554-588 + vencidos.
 
-## Última sessão de questões — sessão 092 (26/06, modo volume)
-- T1+T6 Sistemas de Informação 65/60 + T4 Planejamento Familiar 42/32 = **107q/86%**. 14 erros → 14 cards. Cluster DO (T6) + sub-cluster DIU (T4).
+## Última sessão de questões — s093 (27/06)
+- T2 Exantemáticas + T3 Cir. Infantil III = **40q/87,5%**. Eixo = **bug nº1** (veneno na cauda Q1/Q5 + ancoragem em achado isolado Q3/Q4 + enunciado negativo Q2 = 4ª reincidência). Conteúdo intacto; gargalo é leitura/execução.
 
-## Pendências/observações ativas
-- **Contrato de execução** cronograma↔resumos↔aulas (criar em `core/contracts/`) — frente s093.
-- **Reescrever `Sistemas de Informação em Saúde.md`** (redação ruim/imprecisa) + **`TCE.md`** (gold standard).
-- **Resumo de ectópica** — extrair do PDF `Sangramentos da Primeira Metade` (`resumos/GO/`).
-- 🐛 `performance.py` metas desatualizadas (junho 4.500 / dez 17.000).
-- Curadoria #104/#116/#118 ✓ (s091). Resta varrer safra mar/2026.
-- **tmp/scratchpad:** scripts descartáveis (não commitar).
+## Pendências ativas
+- Ultraplan s094 (`docs/plans/s094-ultraplan.md`) → implementar F1-F4 + sessão de Cirurgia.
+- Limpeza de rótulos sujos `sessoes_bulk` (`GO`/`Obstetrícia` mojibake) = fork destrutivo (normalizar só na leitura por ora — W4).
+- Reescrever `Sistemas de Informação em Saúde.md` + `TCE.md`; resumo de ectópica.
 
 ---
-*Histórico: history/INDEX.md · Snapshot macro: ESTADO.md · Frente de sincronia: [[project_contrato_execucao_cronograma]]*
+*Histórico: history/INDEX.md · Macro: ESTADO.md · Plano da frente: docs/plans/s094-ultraplan.md*

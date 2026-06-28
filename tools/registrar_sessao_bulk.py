@@ -27,6 +27,8 @@ AREAS_VALIDAS = [
     "Ginecologia", "Gastro", "Endocrino", "Cardiologia", "Psiquiatria",
     "Neurologia", "Nefrologia", "Hemato", "Pneumo", "Dermato",
     "Reumato", "Hepato", "Otorrino", "Ortopedia", "Oftalmo",
+    "Simulado",  # slot dedicado a simulados: volume/desempenho AGREGADO (tendencia/predicao ENAMED);
+                 # os erros individuais continuam vinculados aos temas clinicos reais (resumos/flashcards)
 ]
 
 def registrar(sessao_num: int, area: str, feitas: int, acertos: int,

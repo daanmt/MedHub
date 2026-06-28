@@ -47,11 +47,17 @@ def _parse_frontmatter(path: Path) -> dict:
 
 
 def _build_index() -> dict[str, str]:
-    """Constrói índice {termo_lower → path} a partir do frontmatter de resumos/."""
+    """Constrói índice {termo_lower → path} a partir de resumos/.
+
+    O nome do arquivo (`path.stem`) é o identificador mais forte do tema — é o
+    que `taxonomia_cronograma.tema` usa — então é indexado SEMPRE (mesmo sem
+    frontmatter) e tem **precedência** sobre o frontmatter em caso de colisão.
+    `especialidade`/`area`/`aliases` entram como apontadores adicionais (fracos).
+    """
+    paths = [p for p in Path("resumos").rglob("*.md") if p.name != "INDEX.md"]
     index: dict[str, str] = {}
-    for path in Path("resumos").rglob("*.md"):
-        if path.name == "INDEX.md":
-            continue
+    # passo 1 — frontmatter (apontadores fracos)
+    for path in paths:
         fm = _parse_frontmatter(path)
         if not fm:
             continue
@@ -62,6 +68,9 @@ def _build_index() -> dict[str, str]:
         for alias in fm.get("aliases", []):
             if alias:
                 index[alias.lower()] = str(path)
+    # passo 2 — nome do arquivo (identificador forte): vence qualquer frontmatter
+    for path in paths:
+        index[path.stem.lower()] = str(path)
     return index
 
 

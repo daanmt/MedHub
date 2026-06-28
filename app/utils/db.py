@@ -389,3 +389,97 @@ def get_theme_last_review(tema_id=None, area=None, tema=None):
     best = max(candidates, key=lambda x: x[0])
     return {"tema_id": tema_id, "last_review": best[0], "source": best[1]}
 
+
+# ---------------------------------------------------------------------------
+# Revisão Calibrada — nota de dificuldade-para-o-usuário por TEMA (1-10)
+# Estado-de-tema em taxonomia_cronograma. 🔴 Única exceção autorizada à regra
+# "só insert_questao.py escreve taxonomia": set_dificuldade toca APENAS as 3
+# colunas dificuldade/dificuldade_fonte/dificuldade_at — nunca volume, acertos,
+# perf% ou ultima_revisao. Ver core/contracts/revisao-calibrada-contract.md.
+# ---------------------------------------------------------------------------
+
+def set_dificuldade(area, tema, nota, fonte) -> bool:
+    """Grava a nota de dificuldade (1-10) de um tema. Returns True/False.
+
+    `fonte` ∈ {'usuario', 'agente_inferida'}. `nota` é clampada em [1,10]
+    (ou None para limpar). False se o tema (area, tema) não existe na taxonomia
+    (não cria linha — isso é papel do insert_questao).
+    """
+    tema_id = resolve_tema_id(area, tema)
+    if tema_id is None:
+        return False
+    if nota is not None:
+        nota = max(1, min(10, int(nota)))
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute(
+        "UPDATE taxonomia_cronograma "
+        "SET dificuldade = ?, dificuldade_fonte = ?, dificuldade_at = ? "
+        "WHERE id = ?",
+        (nota, fonte, datetime.now().isoformat(" "), tema_id))
+    conn.commit()
+    conn.close()
+    return True
+
+
+def get_dificuldade(area, tema):
+    """Lê a nota de dificuldade de um tema.
+
+    Returns dict {'nota', 'fonte', 'at'} ou None se o tema não existe.
+    Tema existente mas sem calibração → {'nota': None, 'fonte': None, 'at': None}
+    (distingue "não calibrado" de "tema ausente").
+    """
+    tema_id = resolve_tema_id(area, tema)
+    if tema_id is None:
+        return None
+    conn = get_connection()
+    cursor = conn.cursor()
+    row = cursor.execute(
+        "SELECT dificuldade, dificuldade_fonte, dificuldade_at "
+        "FROM taxonomia_cronograma WHERE id = ?", (tema_id,)).fetchone()
+    conn.close()
+    if row is None:
+        return None
+    return {"nota": row[0], "fonte": row[1], "at": row[2]}
+
+
+def get_tema_stats(area, tema):
+    """Volume/performance de um tema (read-only). None se o tema não existe.
+
+    Sinal FRIO para infer_nota (eixo 1). Returns
+    {'questoes', 'acertos', 'percentual', 'ultima_revisao'}.
+    """
+    tema_id = resolve_tema_id(area, tema)
+    if tema_id is None:
+        return None
+    conn = get_connection()
+    cursor = conn.cursor()
+    row = cursor.execute(
+        "SELECT questoes_realizadas, questoes_acertadas, percentual_acertos, ultima_revisao "
+        "FROM taxonomia_cronograma WHERE id = ?", (tema_id,)).fetchone()
+    conn.close()
+    if row is None:
+        return None
+    return {"questoes": row[0], "acertos": row[1],
+            "percentual": row[2], "ultima_revisao": row[3]}
+
+
+def get_ultimo_bloco_tema(area, tema):
+    """% de acerto do bloco MAIS RECENTE de (area, tema) em sessoes_bulk (read-only).
+
+    sessoes_bulk não tem coluna `tema` — o tema vive em `observacoes`; casa por
+    LIKE. Sinal FRIO para infer_nota (eixo 3). None se não houver bloco do tema
+    (eixo não atua — degradação graciosa).
+    """
+    conn = get_connection()
+    cursor = conn.cursor()
+    row = cursor.execute(
+        "SELECT questoes_feitas, questoes_acertadas FROM sessoes_bulk "
+        "WHERE area = ? AND observacoes LIKE ? AND questoes_feitas > 0 "
+        "ORDER BY data_sessao DESC, id DESC LIMIT 1",
+        (area, f"%{tema}%")).fetchone()
+    conn.close()
+    if not row or not row[0]:
+        return None
+    return round(row[1] / row[0] * 100, 1)
+

@@ -1,31 +1,33 @@
 # HANDOFF.md — ESTADO OPERACIONAL CURTO
-*Atualizado: 2026-06-27 22:17 — **s094: fecha a Semana 10 (5 tasks restantes; 11/11) + 4 resumos + frente Revisão Calibrada (PRD)**. Dia 27/06 = **126q/87 (69%)**: Meningites Rev 50/35 · Ácido-Base 19/5 · Pneumo Int. 15/12 · Diabetes Comp.Crônicas 17/13 · Hepatites 25/22. **S10 FECHADA (273q).** 4 resumos novos (2 no registro "onboarding fundacional"). Acumulado **4.112 (41% da meta-prova 10k).***
+*Atualizado: 2026-06-27 ~23:55 — **s095: sessão de engenharia + cards**. Forjou os **21 flashcards do dia** (#589-609, 5 temas da s094) + construiu o **sistema de sync do cronograma F1-F4** (derivador + grade.json + radar + day_plan + contrato) + fechamento formal. **Sem questões novas** (dia de build). Acumulado **4.112 (41% da meta-prova 10k)**.*
 
-## ▶ Próximo passo imediato — s095
-**A) Cunhar os flashcards do dia** (Meningites + Ácido-Base + Pneumo + Diabetes + Hepatites — combinado p/ s095; ainda não cunhados).
-**B) Semana 11** do cronograma (S10 fechada → avança).
-**C) Engenharia — F1 do sync** (`tools/cronograma.py` + `core/cronograma/grade.json`, ainda inexistentes): agora também **desbloqueia o PRD de Revisão Calibrada** → F2 radar → F3 day_plan → F4 contrato. Integrar `/schedule` no calendário (pedido s093).
-**D) FSRS:** drenar #554-588 + vencidos (`/revisar`).
+## ▶ Próximo passo imediato — s096
+**A) Implementar o PRD de Revisão Calibrada** (agora **DESBLOQUEADO** — F1 sync pronto): schema `dificuldade` em `taxonomia_cronograma` + `infer_nota()` + fundir `/revisar`+`/refrescar`. **Pré-req:** fix `_find_resumo` (indexar `path.stem.lower()` em `get_topic_context._build_index`) — hoje a resolução tema→resumo é fuzzy frágil e o `infer_nota` depende dela.
+**B) Semana 11** (estudo): começa com FSRS vencidos + ≥100q. Próximos temas (da grade): Medicina de Família, Doenças Exantemáticas (Rev), Cirurgia Infantil Pt 3 (Rev), Vulvovaginites, Síndromes Hipertensivas, Imunizações, Sepse.
+**C) FSRS:** drenar #554-609 + vencidos (`/revisar`); backlog = 14 atrasados + 12 hoje + 291 novos.
+**D) Carry-over:** sessão dedicada de Cirurgia; integrar `/schedule` no calendário.
 
-## Frentes novas (s094 — aprovadas, a implementar)
-- **Revisão Calibrada** (`docs/plans/s094-revisao-calibrada-PRD.md`): escala de dificuldade do tema **1-10** calibra a descompressão (10=onboarding, ref. resumo DM; comprime se fácil/quente/baixa-prevalência); **aglutina `/revisar` + `/refrescar`** numa competência única (exercícios=ampla / flashcards=direcionada; refresh não toca FSRS); integra cronograma + `/performance` (área fraca → nota maior → mais descomprimido). 6 questões abertas APROVADAS. Memória `project_revisao_calibrada`.
-- **Registro onboarding fundacional**: temas onde o usuário é iniciante — sigla na 1ª aparição, cada nuance/parâmetro explicado, foco vida médica (aplicado a Ácido-Base + Pneumo). Memória `feedback_registro_onboarding_iniciante`.
+## Sistema de sync do cronograma (s095 — NOVO, F1-F4 completo)
+- **`tools/cronograma.py`** (derivador único, read-only) + **`core/cronograma/grade.json`** (30 sem · 352 tasks · 10218q; commitado). Subcomandos `--rebuild`/`--check`/`--json`/`--gap`/`--radar`/`--validate`. Validado: S10=273, S11-28=6689/222.
+- **`day_plan.py`** agora lê a grade: conteúdo **S11** vs calendário **S13** (~2 sem atrás), temas + dois ritmos (grade ~85/dia · meta 10k ~75/dia).
+- **Contrato** `core/contracts/cronograma-contract.md` + skill `/cronograma` + reconcile **W5-W7**. 🔴 read-only no db; único write = ponteiro `Próxima = SNN`.
+- **Achado p/ a frente do PRD:** `_find_resumo` indexa só frontmatter (não nome de arquivo) → resolução frágil; fix aditivo pendente.
+
+## Frentes vivas
+- **PRD Revisão Calibrada** (`docs/plans/s094-revisao-calibrada-PRD.md`): aprovado, **DESBLOQUEADO**. Implementar (frente A).
+- **Registro onboarding fundacional**: aplicado (Ácido-Base, Pneumo).
 
 ## Plano da sprint (s093)
-**Meta-prova 10.000 + gatilho S13 (~12/07):** ≥5.600 → 12k; <5.200 → 10k. **Ritmo 3+1 + simulado dominical** (~90-100q/dia ON); **14 simulados × 100q** (11 pré-ENAMED).
+**Meta-prova 10.000 + gatilho S13 (~12/07):** ≥5.600 → 12k; <5.200 → 10k. **Ritmo 3+1 + simulado dominical** (~90-100q/dia ON); 14 simulados × 100q (11 pré-ENAMED).
 
 ## Estado por frente
-- **Volume & Metas:** **4.112 / 10.000 meta-prova (41%)** [teto 12k]. Perf. geral **79,4%**. Fracos = gaps de volume (Hepato · Otorrino · Dermato; 0q: Ortopedia, Oftalmo). Dia puxado p/ baixo por Ácido-Base 26% (tema NOVO de iniciante, destravado via aula).
-- **Cronograma (SSOT `Cronograma.pdf`, 28 sem):** **S10 FECHADA — 11/11 tasks (273q).** Próxima = **S11**. Calendário na S13; conteúdo na S10 (~3 sem atrás). Grade: `scratchpad/crono_dados.json`.
-- **Conteúdo:** **51 resumos** (+4 na s094: Diabetes Comp.Crônicas, Ácido-Base, Pneumo Int., Hepatites; 2 em registro onboarding). Gaps: reescrever `TCE.md` + `Sistemas de Informação em Saúde.md`; ectópica.
-- **Erros & Cards:** 359 erros · ~389 cards (#588 último). **Flashcards do dia PENDENTES (s095).** FSRS: backlog #554-588 + vencidos.
-
-## Última sessão de questões — s094 (estudo+registro 27/06)
-- 5 blocos / **126q/87 (69%)**. **Eixo = bug nº1 / "não fechar a verificação/conduta"**: LCR por dado parcial (glicorraquia relativa) migrou p/ a PaCO₂ (Ácido-Base); pé diabético = **4/4 erros** no eixo cirúrgico-vascular (foco infeccioso>exame; revascularizar antes de amputar); HBV ocupacional/pós-exposição. 2 não-erros em Meningites (gabaritos ruins).
+- **Volume & Metas:** **4.112 / 10.000 (41%)** [teto 12k]. Perf. geral 79,5%. Sem questões na s095 (engenharia). `--gap` (de S11): cronograma cobre os 10k a **88% de execução**; 12k exige banco extra (+1199).
+- **Cronograma (SSOT `Cronograma.pdf`):** **sync F1-F4 LIVE**. **Próxima = S11** (conteúdo); calendário nominal S13. `grade.json` versionado.
+- **Conteúdo:** **51 resumos**. Gaps: reescrever `TCE.md` + `Sistemas de Informação em Saúde.md`; ectópica.
+- **Erros & Cards:** **364 erros · ~410 cards** (#609 último; +21 na s095). FSRS backlog: #554-609 + vencidos.
 
 ## Pendências ativas
-- Gaps de cobertura de aula (candidatos a card/andaime): **pé diabético cirúrgico-vascular**; **HBV ocupacional/pós-exposição**.
-- Carry-over s093: sessão dedicada de Cirurgia; integrar `/schedule` na gestão de calendário.
+- Fix `_find_resumo` (pré-req do PRD). Limpeza `[bulk]`/`Geral` da taxonomia. Re-drill dos bugs nº1 (426/435/84/78/70/104). Sessão Cirurgia + `/schedule`.
 
 ---
-*Histórico: history/INDEX.md · Macro: ESTADO.md · Planos: docs/plans/s094-revisao-calibrada-PRD.md · s094-ultraplan.md*
+*Histórico: history/INDEX.md · Macro: ESTADO.md · Planos: docs/plans/s094-revisao-calibrada-PRD.md · s094-ultraplan.md · Contrato: core/contracts/cronograma-contract.md*

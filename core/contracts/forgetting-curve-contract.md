@@ -59,7 +59,9 @@ A janela anti-repetição (`dormant_refresh.REPETITION_WINDOW_DAYS`, default 7 d
 
 ## Boot proativo — Plano do Dia
 
-`AGENTE.md §2 passo 4`: após o reconcile, `tools/day_plan.py` compõe (read-only) dormência × volume (vs ~94q/dia ENAMED) × fila FSRS × próximo tema do cronograma; o agente **lidera com um plano decidido** + propõe o passo. Consome (não duplica) o report FSRS que `reconcile`/`fsrs-management` já exigem no boot.
+`AGENTE.md §2 passo 4`: após o reconcile, `tools/day_plan.py` compõe (read-only) dormência × volume (vs ~94q/dia ENAMED) × fila FSRS × **cronograma**; o agente **lidera com um plano decidido** + propõe o passo. Consome (não duplica) o report FSRS que `reconcile`/`fsrs-management` já exigem no boot.
+
+A **4ª fonte (cronograma, s095)** entra via `import cronograma` (não reparseia o PDF): `day_plan` mostra semana de **conteúdo** (ponteiro `Próxima = SNN`) vs nominal por data, temas previstos e **dois ritmos-alvo** (terminar a grade vs meta-prova). Governado por `cronograma-contract.md`; read-only, zero write no db.
 
 ---
 

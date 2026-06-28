@@ -46,7 +46,11 @@ def _fsrs_counts(con):
     }
 
 
+META_PROVA = 10000   # meta-prova ENAMED (decisão s093/ESTADO); 12k = teto/stretch
+
+
 def _cronograma_hint():
+    """Fallback legado: 1ª linha numerada de '## Próximos passos' do ESTADO (frágil)."""
     try:
         with open(os.path.join(ROOT, "ESTADO.md"), encoding="utf-8") as fh:
             txt = fh.read()
@@ -57,6 +61,50 @@ def _cronograma_hint():
         return None
     lm = re.search(r'^\s*\d+\.\s*(.+)$', m.group(1), re.M)
     return lm.group(1).strip() if lm else None
+
+
+def _semana_conteudo():
+    """Ponteiro de semana de CONTEÚDO (HANDOFF > ESTADO). Marca canônica: 'Próxima = SNN'.
+    O usuário segue por conteúdo, atrás do calendário nominal — este é o ponteiro textual
+    permitido pelo contrato (ultraplan §d.2). None se ausente."""
+    for fn in ("HANDOFF.md", "ESTADO.md"):
+        try:
+            txt = open(os.path.join(ROOT, fn), encoding="utf-8").read()
+        except Exception:
+            continue
+        m = re.search(r"Pr[óo]xima\s*=\s*(?:Semana\s*)?S?\s*(\d+)", txt)
+        if m:
+            return int(m.group(1))
+    return None
+
+
+def _cronograma_hoje(total_q, hoje):
+    """Substitui _cronograma_hint: lê a grade (cronograma.py) e cruza com a posição real.
+    Read-only. Retorna None se a grade não existir (degradação graciosa → fallback hint)."""
+    try:
+        import cronograma as cr
+        grade = cr.load_grade()
+    except Exception:
+        return None
+    nominal = cr.semana_corrente(grade, hoje)
+    conteudo = _semana_conteudo() or nominal
+    wk = cr.get_semana(grade, conteudo)
+    if not wk:
+        return None
+    enamed = datetime.strptime(cr.ENAMED, "%Y-%m-%d").date()
+    dias = (enamed - hoje).days + 1
+    restante = sum(s["total_questoes"] for s in grade["semanas"] if s["semana"] >= conteudo)
+    return {
+        "conteudo": conteudo,
+        "nominal": nominal,
+        "lag": (nominal - conteudo) if (nominal and conteudo and nominal > conteudo) else None,
+        "previstas": wk["total_questoes"],
+        "n_tasks": wk["n_tasks"],
+        "temas": [t["tema"] for t in wk["tasks"] if t.get("tema")][:3],
+        "dias_enamed": dias,
+        "ritmo_cronograma": round(restante / dias, 1) if dias > 0 else None,
+        "ritmo_meta": round(max(0, META_PROVA - total_q) / dias, 1) if dias > 0 else None,
+    }
 
 
 def build():
@@ -93,7 +141,8 @@ def build():
             "dias_ate_marco": dias, "ritmo_alvo": ritmo_alvo,
         },
         "fsrs": fsrs,
-        "cronograma_hint": _cronograma_hint(),
+        "cronograma": _cronograma_hoje(total_q or 0, hoje),
+        "cronograma_hint": _cronograma_hint(),   # fallback se a grade não existir
         "sugestao_passo": passo,
     }
 
@@ -110,7 +159,16 @@ def render(p):
                f"p/ ENAMED em {v['dias_ate_marco']}d → ritmo-alvo ~{v['ritmo_alvo']}q/dia")
     out.append(f"- 🔁 **FSRS:** {f['atrasados']} atrasados + {f['hoje']} hoje + "
                f"{f['backlog_novos']} novos (backlog)")
-    if p["cronograma_hint"]:
+    c = p.get("cronograma")
+    if c:
+        lag = f" · calendário em S{c['nominal']} (~{c['lag']} sem atrás)" if c.get("lag") else ""
+        out.append(f"- 🧭 **Cronograma:** conteúdo **S{c['conteudo']}** · {c['previstas']}q previstas "
+                   f"· {c['n_tasks']} tasks{lag}")
+        if c["temas"]:
+            out.append(f"    • próximos temas: {', '.join(c['temas'])}")
+        out.append(f"    • ritmos-alvo: terminar a grade ~{c['ritmo_cronograma']}/dia · "
+                   f"meta-prova {META_PROVA // 1000}k ~{c['ritmo_meta']}/dia ({c['dias_enamed']}d p/ ENAMED)")
+    elif p.get("cronograma_hint"):
         out.append(f"- 🧭 **Cronograma:** {p['cronograma_hint'][:120]}")
     out.append(f"- ▶️ **Passo sugerido:** {p['sugestao_passo']}")
     return "\n".join(out)

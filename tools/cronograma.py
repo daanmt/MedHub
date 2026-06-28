@@ -286,6 +286,92 @@ def gap_volume(grade, total_acum, meta=10000, desde_semana=None):
     }
 
 
+# ───────────────────────── Fase 2 — Radar cobertura × performance ─────────────────────────
+ENAMED = "2026-09-13"   # fronteira pré/pós para o radar de cobertura
+
+
+def _norm_perf_area(area):
+    """Rótulo de sessoes_bulk → área canônica (ou None p/ pular). Trata os sujos do W4."""
+    canon = set(AREA_PDF_TO_CANON.values())
+    if area in canon:
+        return area, None
+    a = (area or "").strip()
+    if a.startswith("Obstetr"):                      # mojibake "Obstetr�cia"
+        return "Obstetrícia", f"rótulo sujo {a!r} normalizado → Obstetrícia"
+    if a == "GO":
+        return None, "rótulo 'GO' ambíguo Gineco/Obstetrícia — não atribuído (split não-trivial)"
+    return None, f"rótulo desconhecido {a!r} fora de AREAS_VALIDAS — ignorado"
+
+
+def radar(grade, por_area, desde_semana=None, enamed=ENAMED):
+    """Cruza performance (sessoes_bulk) × cobertura futura do cronograma (rateio igual),
+    com fronteira pré/pós-ENAMED. Read-only. Não escreve nada."""
+    if desde_semana is None:
+        desde_semana = semana_corrente(grade) or 1
+
+    perf, warnings = {}, []
+    for area, q, a, _pct in por_area:
+        canon, w = _norm_perf_area(area)
+        if w:
+            warnings.append(w)
+        if canon:
+            pq, pa = perf.get(canon, (0, 0))
+            perf[canon] = (pq + q, pa + a)
+    perf = {k: (q, (100.0 * a / q if q else 0.0)) for k, (q, a) in perf.items()}
+
+    cov_pre, cov_post, weeks_by_area = {}, {}, {}
+    for s in grade["semanas"]:
+        if s["semana"] < desde_semana or s["n_tasks"] == 0:
+            continue
+        rate = s["total_questoes"] / s["n_tasks"]          # rateio igual (ultraplan §c.5)
+        bucket = cov_pre if s["inicio"] <= enamed else cov_post
+        for t in s["tasks"]:
+            if t["multi_area"]:
+                continue
+            A = t["area_norm"]
+            bucket[A] = bucket.get(A, 0.0) + rate
+            weeks_by_area.setdefault(A, set()).add(s["semana"])
+
+    rows = []
+    for A in sorted(set(AREA_PDF_TO_CANON.values())):
+        q, pct = perf.get(A, (0, 0.0))
+        pre, post = round(cov_pre.get(A, 0.0)), round(cov_post.get(A, 0.0))
+        weak = (q < 50) or (pct < 70.0)
+        if pre > 0:
+            flag, tag = "🟢", "coberta pré-ENAMED"
+        elif post > 0:
+            flag, tag = "🟡", "só pós-ENAMED (tarde)"
+        elif q == 0:
+            flag, tag = "⚪", "gap total (0q feito · 0 no cronograma restante)"
+        elif weak:
+            flag, tag = "🔴", "fraca SEM cobertura restante"
+        else:
+            flag, tag = "🟢", "dominada (sem mais no cronograma)"
+        rows.append({
+            "area": A, "feito_q": q, "pct": round(pct, 1),
+            "cobertura_pre": pre, "cobertura_pos": post,
+            "flag": flag, "tag": tag,
+            "semanas": sorted(weeks_by_area.get(A, set())),
+        })
+    return {"desde_semana": desde_semana, "enamed": enamed, "rows": rows, "warnings": warnings}
+
+
+def render_radar(r):
+    ordem = {"🔴": 0, "⚪": 1, "🟡": 2, "🟢": 3}
+    out = [f"# 🧭 Radar cronograma × performance (desde S{r['desde_semana']} · ENAMED {r['enamed']})", ""]
+    for w in r["warnings"]:
+        out.append(f"- ⚠️ {w}")
+    if r["warnings"]:
+        out.append("")
+    for row in sorted(r["rows"], key=lambda x: (ordem[x["flag"]], x["area"])):
+        sem = f" · S{row['semanas']}" if row["semanas"] else ""
+        out.append(
+            f"- {row['flag']} **{row['area']}** — {row['feito_q']}q feito ({row['pct']}%) · "
+            f"cobertura restante pré {row['cobertura_pre']}q / pós {row['cobertura_pos']}q · {row['tag']}{sem}"
+        )
+    return "\n".join(out)
+
+
 def validate(grade):
     """Asserções da Fase 1 (ultraplan §e). Retorna (ok, linhas)."""
     out, ok = [], True
@@ -319,8 +405,10 @@ def main():
     ap.add_argument("--check", action="store_true", help="grade.json em dia vs PDF?")
     ap.add_argument("--json", action="store_true", help="imprime a grade")
     ap.add_argument("--gap", action="store_true", help="gap de volume vs meta")
+    ap.add_argument("--radar", action="store_true", help="cobertura futura × performance (Fase 2)")
     ap.add_argument("--validate", action="store_true", help="asserções da Fase 1")
     ap.add_argument("--semana", type=int, help="filtra --json para a semana N")
+    ap.add_argument("--desde", type=int, help="semana inicial p/ --gap/--radar (default: nominal por data)")
     ap.add_argument("--meta", type=int, default=10000, help="meta de volume p/ --gap")
     args = ap.parse_args()
 
@@ -345,7 +433,16 @@ def main():
         con = db.get_connection()
         tot, _ = get_totais(con)
         con.close()
-        print(json.dumps(gap_volume(load_grade(), tot or 0, args.meta), ensure_ascii=False, indent=2))
+        print(json.dumps(gap_volume(load_grade(), tot or 0, args.meta, args.desde),
+                         ensure_ascii=False, indent=2))
+        return
+    if args.radar:
+        import app.utils.db as db
+        from performance import get_por_area
+        con = db.get_connection()
+        pa = get_por_area(con)
+        con.close()
+        print(render_radar(radar(load_grade(), pa, desde_semana=args.desde)))
         return
     if args.json:
         g = load_grade()

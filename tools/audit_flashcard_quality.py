@@ -71,6 +71,11 @@ SIGNALS = {
         'severity': 'INFO',
         'sql_raw':  "needs_qualitative = 1",
     },
+    'orfao_sem_andaime': {
+        'label':    'Órfão sem âncora (questao_id NULL e não-andaime)',
+        'severity': 'ALTO',
+        'sql_raw':  "questao_id IS NULL AND tipo NOT IN ('base','mecanismo','nuance','andaime')",
+    },
 }
 
 # "effective" front/back: schema v5 (frente/verso removidos em medhub-cleanup)

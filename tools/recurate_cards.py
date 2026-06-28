@@ -20,6 +20,12 @@ import sqlite3
 import os
 import json
 import argparse
+import sys
+
+try:
+    sys.stdout.reconfigure(encoding="utf-8")
+except Exception:
+    pass
 
 DB_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'ipub.db')
 
@@ -29,6 +35,7 @@ FIELD_MAP = {
     'resposta': 'verso_resposta',
     'regra': 'verso_regra_mestre',
     'armadilha': 'verso_armadilha',
+    'tipo': 'tipo',
 }
 
 

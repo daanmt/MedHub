@@ -1,0 +1,3474 @@
+{
+  "_meta": {
+    "fonte": "Cronograma.pdf",
+    "fonte_sha256": "7cd56385092d8acf0f38ec5c16e82bdcdbb7ae06339a2ba6e3a995cef050b762",
+    "fonte_mtime": "2026-03-24T09:49:02",
+    "extraido_em": "2026-06-27T23:23:06",
+    "semana_1_inicio": "2026-03-30",
+    "n_semanas": 30,
+    "n_tasks": 352,
+    "total_questoes": 10218,
+    "areas_canon": [
+      "Cardiologia",
+      "Cirurgia",
+      "Dermato",
+      "Endocrino",
+      "Gastro",
+      "Ginecologia",
+      "Hemato",
+      "Hepato",
+      "Infecto",
+      "Nefrologia",
+      "Neurologia",
+      "Obstetrícia",
+      "Oftalmo",
+      "Ortopedia",
+      "Otorrino",
+      "Pediatria",
+      "Pneumo",
+      "Preventiva",
+      "Psiquiatria",
+      "Reumato"
+    ]
+  },
+  "semanas": [
+    {
+      "semana": 1,
+      "inicio": "2026-03-30",
+      "fim": "2026-04-05",
+      "total_questoes": 225,
+      "n_tasks": 10,
+      "tasks": [
+        {
+          "tarefa": 1,
+          "area_pdf": "Preventiva",
+          "area_norm": "Preventiva",
+          "multi_area": false,
+          "tema": "",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 2,
+          "area_pdf": "Pediatria",
+          "area_norm": "Pediatria",
+          "multi_area": false,
+          "tema": "Cuidados Neonatais",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 3,
+          "area_pdf": "Cirurgia",
+          "area_norm": "Cirurgia",
+          "multi_area": false,
+          "tema": "Trauma - Avaliação Inicial, Vias Aéreas e Trauma Torácico",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 4,
+          "area_pdf": "Ginecologia",
+          "area_norm": "Ginecologia",
+          "multi_area": false,
+          "tema": "",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 5,
+          "area_pdf": "Obstetrícia",
+          "area_norm": "Obstetrícia",
+          "multi_area": false,
+          "tema": "Sangramento da Primeira Metade",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 6,
+          "area_pdf": "Preventiva",
+          "area_norm": "Preventiva",
+          "multi_area": false,
+          "tema": "Processo Saúde- Doença",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 7,
+          "area_pdf": "Pediatria",
+          "area_norm": "Pediatria",
+          "multi_area": false,
+          "tema": "Cuidados Neonatais",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 8,
+          "area_pdf": "Infectologia",
+          "area_norm": "Infecto",
+          "multi_area": false,
+          "tema": "Tuberculose",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 9,
+          "area_pdf": "Gastroenterologia",
+          "area_norm": "Gastro",
+          "multi_area": false,
+          "tema": "Doença do Refluxo Gastroesofágico, Esofagites e Corpo Estranho",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 10,
+          "area_pdf": "Nefrologia",
+          "area_norm": "Nefrologia",
+          "multi_area": false,
+          "tema": "Teoria + Exercícios CARDIOLOGIA #A3296F CIRURGIA #4287CC DERMATOLOGIA #CEC67A ENDOCRINOLOGIA #7AC8FC GASTROENTEROLOGIA #89EDEA GINECOLOGIA #8A90FF HEMATOLOGIA #754A6B HEPATOLOGIA #1C4B8E INFECTOLOGIA #23B8C1 MEDICINA PREVENTIVA #885796 NEFROLOGIA #DDEB9B NEUROLOGIA #673ECE OBSTETRÍCIA #5C6EF2 ORTOPEDIA #0BA4AE OFTALMOLOGIA #058C95 OTORRINOLARINGOLOGIA #5644D8 PEDIATRIA #BBC7F9 PNEUMOLOGIA #2988AD PSIQUIATRIA #E0AB5F REUMATOLOGIA #62A780",
+          "tipo": "",
+          "tipo_norm": "outro"
+        }
+      ]
+    },
+    {
+      "semana": 2,
+      "inicio": "2026-04-06",
+      "fim": "2026-04-12",
+      "total_questoes": 323,
+      "n_tasks": 10,
+      "tasks": [
+        {
+          "tarefa": 1,
+          "area_pdf": "Preventiva",
+          "area_norm": "Preventiva",
+          "multi_area": false,
+          "tema": "Processo Saúde- Doença",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 2,
+          "area_pdf": "Pediatria",
+          "area_norm": "Pediatria",
+          "multi_area": false,
+          "tema": "Cuidados Neonatais",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 3,
+          "area_pdf": "Cirurgia",
+          "area_norm": "Cirurgia",
+          "multi_area": false,
+          "tema": "Trauma - Avaliação Inicial, Vias Aéreas e Trauma Torácico",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 4,
+          "area_pdf": "Ginecologia",
+          "area_norm": "Ginecologia",
+          "multi_area": false,
+          "tema": "Doenças Benignas da Mama",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 5,
+          "area_pdf": "Obstetrícia",
+          "area_norm": "Obstetrícia",
+          "multi_area": false,
+          "tema": "Sangramento da Primeira Metade",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 6,
+          "area_pdf": "Infectologia",
+          "area_norm": "Infecto",
+          "multi_area": false,
+          "tema": "Tuberculose",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 7,
+          "area_pdf": "Cirurgia",
+          "area_norm": "Cirurgia",
+          "multi_area": false,
+          "tema": "Trauma - Avaliação Inicial, Vias Aéreas e Trauma Torácico",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 8,
+          "area_pdf": "Endocrinologia",
+          "area_norm": "Endocrino",
+          "multi_area": false,
+          "tema": "Diabetes Mellitus Tipo 2",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 9,
+          "area_pdf": "Neurologia",
+          "area_norm": "Neurologia",
+          "multi_area": false,
+          "tema": "Traumatismo Cranioencefálico",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 10,
+          "area_pdf": "Pneumologia",
+          "area_norm": "Pneumo",
+          "multi_area": false,
+          "tema": "Asma",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        }
+      ]
+    },
+    {
+      "semana": 3,
+      "inicio": "2026-04-13",
+      "fim": "2026-04-19",
+      "total_questoes": 334,
+      "n_tasks": 11,
+      "tasks": [
+        {
+          "tarefa": 1,
+          "area_pdf": "Preventiva",
+          "area_norm": "Preventiva",
+          "multi_area": false,
+          "tema": "Medidas de Saúde Coletiva Pt 1",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 2,
+          "area_pdf": "Pediatria",
+          "area_norm": "Pediatria",
+          "multi_area": false,
+          "tema": "Cardiopatias Congênitas",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 3,
+          "area_pdf": "Cirurgia",
+          "area_norm": "Cirurgia",
+          "multi_area": false,
+          "tema": "Trauma - Choque",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 4,
+          "area_pdf": "Ginecologia",
+          "area_norm": "Ginecologia",
+          "multi_area": false,
+          "tema": "Climatério e Terapia Hormonal",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 5,
+          "area_pdf": "Obstetrícia",
+          "area_norm": "Obstetrícia",
+          "multi_area": false,
+          "tema": "Sangramento da Primeira Metade",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 6,
+          "area_pdf": "Preventiva",
+          "area_norm": "Preventiva",
+          "multi_area": false,
+          "tema": "Medidas de Saúde Coletiva Pt. 1",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 7,
+          "area_pdf": "Pediatria",
+          "area_norm": "Pediatria",
+          "multi_area": false,
+          "tema": "Cardiopatias Congênitas",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 8,
+          "area_pdf": "Infectologia",
+          "area_norm": "Infecto",
+          "multi_area": false,
+          "tema": "HIV",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 9,
+          "area_pdf": "Gastroenterologia",
+          "area_norm": "Gastro",
+          "multi_area": false,
+          "tema": "Doença do Refluxo Gastroesofágico, Esofagites e Corpo Estranho",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 10,
+          "area_pdf": "Nefrologia",
+          "area_norm": "Nefrologia",
+          "multi_area": false,
+          "tema": "Doença Renal Crônica - Pt. 1 e 2",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 11,
+          "area_pdf": "Cardiologia",
+          "area_norm": "Cardiologia",
+          "multi_area": false,
+          "tema": "Insuficiência Cardíaca Pt. 1 e 2",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        }
+      ]
+    },
+    {
+      "semana": 4,
+      "inicio": "2026-04-20",
+      "fim": "2026-04-26",
+      "total_questoes": 399,
+      "n_tasks": 12,
+      "tasks": [
+        {
+          "tarefa": 1,
+          "area_pdf": "Preventiva",
+          "area_norm": "Preventiva",
+          "multi_area": false,
+          "tema": "Medidas de Saúde Coletiva Pt 2",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 2,
+          "area_pdf": "Pediatria",
+          "area_norm": "Pediatria",
+          "multi_area": false,
+          "tema": "",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 3,
+          "area_pdf": "Cirurgia",
+          "area_norm": "Cirurgia",
+          "multi_area": false,
+          "tema": "Trauma - Choque",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 4,
+          "area_pdf": "Ginecologia",
+          "area_norm": "Ginecologia",
+          "multi_area": false,
+          "tema": "Climatério e Terapia Hormonal",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 5,
+          "area_pdf": "Obstetrícia",
+          "area_norm": "Obstetrícia",
+          "multi_area": false,
+          "tema": "Sangramento da Primeira Metade",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 6,
+          "area_pdf": "Infectologia",
+          "area_norm": "Infecto",
+          "multi_area": false,
+          "tema": "HIV",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 7,
+          "area_pdf": "Cirurgia",
+          "area_norm": "Cirurgia",
+          "multi_area": false,
+          "tema": "Trauma - Choque",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 8,
+          "area_pdf": "Endocrinologia",
+          "area_norm": "Endocrino",
+          "multi_area": false,
+          "tema": "Diabetes Mellitus Tipo 2",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 9,
+          "area_pdf": "Neurologia",
+          "area_norm": "Neurologia",
+          "multi_area": false,
+          "tema": "Traumatismo Cranioencefálico",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 10,
+          "area_pdf": "Pneumologia",
+          "area_norm": "Pneumo",
+          "multi_area": false,
+          "tema": "Asma",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 11,
+          "area_pdf": "Hematologia",
+          "area_norm": "Hemato",
+          "multi_area": false,
+          "tema": "Hemostasia Pt. I e II",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 12,
+          "area_pdf": "Infectologia",
+          "area_norm": "Infecto",
+          "multi_area": false,
+          "tema": "Tuberculose e HIV",
+          "tipo": "Revisão por Questões",
+          "tipo_norm": "revisao_questoes"
+        }
+      ]
+    },
+    {
+      "semana": 5,
+      "inicio": "2026-04-27",
+      "fim": "2026-05-03",
+      "total_questoes": 314,
+      "n_tasks": 11,
+      "tasks": [
+        {
+          "tarefa": 1,
+          "area_pdf": "Preventiva",
+          "area_norm": "Preventiva",
+          "multi_area": false,
+          "tema": "Medidas de Saúde Coletiva Pt. 2",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 2,
+          "area_pdf": "Pediatria",
+          "area_norm": "Pediatria",
+          "multi_area": false,
+          "tema": "Emergências Pediátricas",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 3,
+          "area_pdf": "Cirurgia",
+          "area_norm": "Cirurgia",
+          "multi_area": false,
+          "tema": "Trauma Abdominal e Pélvico",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 4,
+          "area_pdf": "Ginecologia",
+          "area_norm": "Ginecologia",
+          "multi_area": false,
+          "tema": "Rastreamento do Câncer de Colo Uterino",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 5,
+          "area_pdf": "Obstetrícia",
+          "area_norm": "Obstetrícia",
+          "multi_area": false,
+          "tema": "Sífilis na Gestação e Sífilis Congênita",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 6,
+          "area_pdf": "Preventiva",
+          "area_norm": "Preventiva",
+          "multi_area": false,
+          "tema": "Medidas de Saúde Coletiva Pt 3",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 7,
+          "area_pdf": "Pediatria",
+          "area_norm": "Pediatria",
+          "multi_area": false,
+          "tema": "Emergências Pediátricas",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 8,
+          "area_pdf": "Gastroenterologia",
+          "area_norm": "Gastro",
+          "multi_area": false,
+          "tema": "Pancreatite Aguda e Crônica",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 9,
+          "area_pdf": "Nefrologia",
+          "area_norm": "Nefrologia",
+          "multi_area": false,
+          "tema": "Lesão Renal Aguda",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 10,
+          "area_pdf": "Psiquiatria",
+          "area_norm": "Psiquiatria",
+          "multi_area": false,
+          "tema": "Dependência Química e Intoxicações Exógenas",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 11,
+          "area_pdf": "Reumatologia",
+          "area_norm": "Reumato",
+          "multi_area": false,
+          "tema": "Doenças Inflamatória do Tecido Conjuntivo I",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        }
+      ]
+    },
+    {
+      "semana": 6,
+      "inicio": "2026-05-04",
+      "fim": "2026-05-10",
+      "total_questoes": 335,
+      "n_tasks": 12,
+      "tasks": [
+        {
+          "tarefa": 1,
+          "area_pdf": "Preventiva",
+          "area_norm": "Preventiva",
+          "multi_area": false,
+          "tema": "Medidas de Saúde Coletiva Pt. 3",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 2,
+          "area_pdf": "Pediatria",
+          "area_norm": "Pediatria",
+          "multi_area": false,
+          "tema": "Emergências Pediátricas",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 3,
+          "area_pdf": "Cirurgia",
+          "area_norm": "Cirurgia",
+          "multi_area": false,
+          "tema": "Trauma Abdominal e Pélvico",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 4,
+          "area_pdf": "Ginecologia",
+          "area_norm": "Ginecologia",
+          "multi_area": false,
+          "tema": "Rastreamento do Câncer de Colo Uterino",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 5,
+          "area_pdf": "Obstetrícia",
+          "area_norm": "Obstetrícia",
+          "multi_area": false,
+          "tema": "Sífilis na Gestação e Sífilis Congênita",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 6,
+          "area_pdf": "Infectologia",
+          "area_norm": "Infecto",
+          "multi_area": false,
+          "tema": "Arboviroses",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 7,
+          "area_pdf": "Endocrinologia",
+          "area_norm": "Endocrino",
+          "multi_area": false,
+          "tema": "Diabetes Mellitus - Complicações Agudas",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 8,
+          "area_pdf": "Cardiologia",
+          "area_norm": "Cardiologia",
+          "multi_area": false,
+          "tema": "Insuficiência Cardíaca Pt. 1 e 2",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 9,
+          "area_pdf": "Hepatologia",
+          "area_norm": "Hepato",
+          "multi_area": false,
+          "tema": "Introdução à Hepatologia e Icterícia Não obstrutiva",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 10,
+          "area_pdf": "Dermatologia",
+          "area_norm": "Dermato",
+          "multi_area": false,
+          "tema": "Hanseníase e Síndromes Verrucosas",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 11,
+          "area_pdf": "Otorrinolaringologia",
+          "area_norm": "Otorrino",
+          "multi_area": false,
+          "tema": "Neoplasias benignas e malignas de cabeça e pescoço, doenças congênitas cervicofaciais e traqueostomia",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 12,
+          "area_pdf": "Preventiva",
+          "area_norm": "Preventiva",
+          "multi_area": false,
+          "tema": "",
+          "tipo": "Revisão por Questões",
+          "tipo_norm": "revisao_questoes"
+        }
+      ]
+    },
+    {
+      "semana": 7,
+      "inicio": "2026-05-11",
+      "fim": "2026-05-17",
+      "total_questoes": 460,
+      "n_tasks": 13,
+      "tasks": [
+        {
+          "tarefa": 1,
+          "area_pdf": "Preventiva",
+          "area_norm": "Preventiva",
+          "multi_area": false,
+          "tema": "Vigilância em Saúde",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 2,
+          "area_pdf": "Pediatria",
+          "area_norm": "Pediatria",
+          "multi_area": false,
+          "tema": "Emergências Pediátricas",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 3,
+          "area_pdf": "Cirurgia",
+          "area_norm": "Cirurgia",
+          "multi_area": false,
+          "tema": "Trauma Abdominal e Pélvico",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 4,
+          "area_pdf": "Ginecologia",
+          "area_norm": "Ginecologia",
+          "multi_area": false,
+          "tema": "Úlceras Genitais",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 5,
+          "area_pdf": "Obstetrícia",
+          "area_norm": "Obstetrícia",
+          "multi_area": false,
+          "tema": "Sífilis na Gestação e Sífilis Congênita",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 6,
+          "area_pdf": "Pediatria",
+          "area_norm": "Pediatria",
+          "multi_area": false,
+          "tema": "Icterícia e Sepse Neonatal",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 7,
+          "area_pdf": "Cirurgia",
+          "area_norm": "Cirurgia",
+          "multi_area": false,
+          "tema": "Cirurgia Infantil Pt 1",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 8,
+          "area_pdf": "Gastroenterologia",
+          "area_norm": "Gastro",
+          "multi_area": false,
+          "tema": "Pancreatite Aguda e Crônica",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 9,
+          "area_pdf": "Neurologia",
+          "area_norm": "Neurologia",
+          "multi_area": false,
+          "tema": "Demências",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 10,
+          "area_pdf": "Pneumologia",
+          "area_norm": "Pneumo",
+          "multi_area": false,
+          "tema": "Asma",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 11,
+          "area_pdf": "Ortopedia",
+          "area_norm": "Ortopedia",
+          "multi_area": false,
+          "tema": "Quadril Pediátrico; Politrauma Ortopédico",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 12,
+          "area_pdf": "Cirurgia",
+          "area_norm": "Cirurgia",
+          "multi_area": false,
+          "tema": "",
+          "tipo": "Revisão por Questões",
+          "tipo_norm": "revisao_questoes"
+        },
+        {
+          "tarefa": 13,
+          "area_pdf": "Gastroenterologia",
+          "area_norm": "Gastro",
+          "multi_area": false,
+          "tema": "",
+          "tipo": "Revisão por Questões",
+          "tipo_norm": "revisao_questoes"
+        }
+      ]
+    },
+    {
+      "semana": 8,
+      "inicio": "2026-05-18",
+      "fim": "2026-05-24",
+      "total_questoes": 458,
+      "n_tasks": 13,
+      "tasks": [
+        {
+          "tarefa": 1,
+          "area_pdf": "Preventiva",
+          "area_norm": "Preventiva",
+          "multi_area": false,
+          "tema": "Vigilância em Saúde",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 2,
+          "area_pdf": "Pediatria",
+          "area_norm": "Pediatria",
+          "multi_area": false,
+          "tema": "Icterícia e Sepse Neonatal",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 3,
+          "area_pdf": "Cirurgia",
+          "area_norm": "Cirurgia",
+          "multi_area": false,
+          "tema": "Cirurgia Infantil Pt 1",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 4,
+          "area_pdf": "Ginecologia",
+          "area_norm": "Ginecologia",
+          "multi_area": false,
+          "tema": "Úlceras Genitais",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 5,
+          "area_pdf": "Obstetrícia",
+          "area_norm": "Obstetrícia",
+          "multi_area": false,
+          "tema": "Síndromes Hipertensivas da Gestação",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 6,
+          "area_pdf": "Preventiva",
+          "area_norm": "Preventiva",
+          "multi_area": false,
+          "tema": "Sistemas de Informação em Saúde",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 7,
+          "area_pdf": "Infectologia",
+          "area_norm": "Infecto",
+          "multi_area": false,
+          "tema": "Arboviroses",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 8,
+          "area_pdf": "Endocrinologia",
+          "area_norm": "Endocrino",
+          "multi_area": false,
+          "tema": "Diabetes Mellitus - Complicações Agudas",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 9,
+          "area_pdf": "Nefrologia",
+          "area_norm": "Nefrologia",
+          "multi_area": false,
+          "tema": "Lesão Renal Aguda",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 10,
+          "area_pdf": "Hematologia",
+          "area_norm": "Hemato",
+          "multi_area": false,
+          "tema": "Hemostasia I e II",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 11,
+          "area_pdf": "Reumatologia",
+          "area_norm": "Reumato",
+          "multi_area": false,
+          "tema": "Doenças Inflamatória do Tecido Conjuntivo I",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 12,
+          "area_pdf": "Ginecologia",
+          "area_norm": "Ginecologia",
+          "multi_area": false,
+          "tema": "",
+          "tipo": "Revisão por Questões",
+          "tipo_norm": "revisao_questoes"
+        },
+        {
+          "tarefa": 13,
+          "area_pdf": "Nefrologia",
+          "area_norm": "Nefrologia",
+          "multi_area": false,
+          "tema": "",
+          "tipo": "Revisão por Questões",
+          "tipo_norm": "revisao_questoes"
+        }
+      ]
+    },
+    {
+      "semana": 9,
+      "inicio": "2026-05-25",
+      "fim": "2026-05-31",
+      "total_questoes": 408,
+      "n_tasks": 13,
+      "tasks": [
+        {
+          "tarefa": 1,
+          "area_pdf": "Preventiva",
+          "area_norm": "Preventiva",
+          "multi_area": false,
+          "tema": "Sistemas de Informação em Saúde",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 2,
+          "area_pdf": "Pediatria",
+          "area_norm": "Pediatria",
+          "multi_area": false,
+          "tema": "Icterícia e Sepse Neonatal",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 3,
+          "area_pdf": "Cirurgia",
+          "area_norm": "Cirurgia",
+          "multi_area": false,
+          "tema": "Cirurgia Infantil Pt 2",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 4,
+          "area_pdf": "Ginecologia",
+          "area_norm": "Ginecologia",
+          "multi_area": false,
+          "tema": "Planejamento Familiar",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 5,
+          "area_pdf": "Obstetrícia",
+          "area_norm": "Obstetrícia",
+          "multi_area": false,
+          "tema": "Síndromes Hipertensivas da Gestação",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 6,
+          "area_pdf": "Pediatria",
+          "area_norm": "Pediatria",
+          "multi_area": false,
+          "tema": "Doenças Exantemáticas",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 7,
+          "area_pdf": "Cirurgia",
+          "area_norm": "Cirurgia",
+          "multi_area": false,
+          "tema": "Cirurgia Infantil Pt 2",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 8,
+          "area_pdf": "Infectologia",
+          "area_norm": "Infecto",
+          "multi_area": false,
+          "tema": "Meningites",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 9,
+          "area_pdf": "Gastroenterologia",
+          "area_norm": "Gastro",
+          "multi_area": false,
+          "tema": "Polipose Intestinal e Câncer Colorretal",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 10,
+          "area_pdf": "Neurologia",
+          "area_norm": "Neurologia",
+          "multi_area": false,
+          "tema": "Traumatismo Cranioencefálico e Demências",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 11,
+          "area_pdf": "Cardiologia",
+          "area_norm": "Cardiologia",
+          "multi_area": false,
+          "tema": "Hipertensão Arterial Sistêmica Pt. 1",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 12,
+          "area_pdf": "Psiquiatria",
+          "area_norm": "Psiquiatria",
+          "multi_area": false,
+          "tema": "Dependência Química e Intoxicações Exógenas",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 13,
+          "area_pdf": "Pediatria",
+          "area_norm": "Pediatria",
+          "multi_area": false,
+          "tema": "",
+          "tipo": "Revisão por Questões",
+          "tipo_norm": "revisao_questoes"
+        }
+      ]
+    },
+    {
+      "semana": 10,
+      "inicio": "2026-06-01",
+      "fim": "2026-06-07",
+      "total_questoes": 273,
+      "n_tasks": 11,
+      "tasks": [
+        {
+          "tarefa": 1,
+          "area_pdf": "Preventiva",
+          "area_norm": "Preventiva",
+          "multi_area": false,
+          "tema": "Sistemas de Informação em Saúde",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 2,
+          "area_pdf": "Pediatria",
+          "area_norm": "Pediatria",
+          "multi_area": false,
+          "tema": "Doenças Exantemáticas",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 3,
+          "area_pdf": "Cirurgia",
+          "area_norm": "Cirurgia",
+          "multi_area": false,
+          "tema": "Cirurgia Infantil Pt 3",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 4,
+          "area_pdf": "Ginecologia",
+          "area_norm": "Ginecologia",
+          "multi_area": false,
+          "tema": "Planejamento Familiar",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 5,
+          "area_pdf": "Obstetrícia",
+          "area_norm": "Obstetrícia",
+          "multi_area": false,
+          "tema": "Síndromes Hipertensivas da Gestação",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 6,
+          "area_pdf": "Preventiva",
+          "area_norm": "Preventiva",
+          "multi_area": false,
+          "tema": "Sistemas de Informação em Saúde",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 7,
+          "area_pdf": "Infectologia",
+          "area_norm": "Infecto",
+          "multi_area": false,
+          "tema": "Meningites",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 8,
+          "area_pdf": "Endocrinologia",
+          "area_norm": "Endocrino",
+          "multi_area": false,
+          "tema": "Diabetes Mellitus - Complicações Crônicas",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 9,
+          "area_pdf": "Nefrologia",
+          "area_norm": "Nefrologia",
+          "multi_area": false,
+          "tema": "Distúrbios Ácido-Base",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 10,
+          "area_pdf": "Pneumologia",
+          "area_norm": "Pneumo",
+          "multi_area": false,
+          "tema": "Pneumologia Intensiva",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 11,
+          "area_pdf": "Hepatologia",
+          "area_norm": "Hepato",
+          "multi_area": false,
+          "tema": "Hepatites Virais",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        }
+      ]
+    },
+    {
+      "semana": 11,
+      "inicio": "2026-06-08",
+      "fim": "2026-06-14",
+      "total_questoes": 412,
+      "n_tasks": 13,
+      "tasks": [
+        {
+          "tarefa": 1,
+          "area_pdf": "Preventiva",
+          "area_norm": "Preventiva",
+          "multi_area": false,
+          "tema": "Medicina de Família e Comunidade",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 2,
+          "area_pdf": "Pediatria",
+          "area_norm": "Pediatria",
+          "multi_area": false,
+          "tema": "Doenças Exantemáticas",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 3,
+          "area_pdf": "Cirurgia",
+          "area_norm": "Cirurgia",
+          "multi_area": false,
+          "tema": "Cirurgia Infantil Pt 3",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 4,
+          "area_pdf": "Ginecologia",
+          "area_norm": "Ginecologia",
+          "multi_area": false,
+          "tema": "Vulvovaginites",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 5,
+          "area_pdf": "Obstetrícia",
+          "area_norm": "Obstetrícia",
+          "multi_area": false,
+          "tema": "Síndromes Hipertensivas da Gestação",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 6,
+          "area_pdf": "Pediatria",
+          "area_norm": "Pediatria",
+          "multi_area": false,
+          "tema": "Imunizações",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 7,
+          "area_pdf": "Infectologia",
+          "area_norm": "Infecto",
+          "multi_area": false,
+          "tema": "Sepse",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 8,
+          "area_pdf": "Gastroenterologia",
+          "area_norm": "Gastro",
+          "multi_area": false,
+          "tema": "Pólipos e Neoplasias Intestinais",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 9,
+          "area_pdf": "Hematologia",
+          "area_norm": "Hemato",
+          "multi_area": false,
+          "tema": "Anemias Hemolíticas",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 10,
+          "area_pdf": "Reumatologia",
+          "area_norm": "Reumato",
+          "multi_area": false,
+          "tema": "Doenças Inflamatória do Tecido Conjuntivo II",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 11,
+          "area_pdf": "Oftalmologia",
+          "area_norm": "Oftalmo",
+          "multi_area": false,
+          "tema": "Síndrome do Olho Vermelho",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 12,
+          "area_pdf": "Cirurgia",
+          "area_norm": "Cirurgia",
+          "multi_area": false,
+          "tema": "",
+          "tipo": "Revisão por Questões",
+          "tipo_norm": "revisao_questoes"
+        },
+        {
+          "tarefa": 13,
+          "area_pdf": "Obstetrícia",
+          "area_norm": "Obstetrícia",
+          "multi_area": false,
+          "tema": "",
+          "tipo": "Revisão por Questões",
+          "tipo_norm": "revisao_questoes"
+        }
+      ]
+    },
+    {
+      "semana": 12,
+      "inicio": "2026-06-15",
+      "fim": "2026-06-21",
+      "total_questoes": 451,
+      "n_tasks": 13,
+      "tasks": [
+        {
+          "tarefa": 1,
+          "area_pdf": "Preventiva",
+          "area_norm": "Preventiva",
+          "multi_area": false,
+          "tema": "Medicina de Família e Comunidade",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 2,
+          "area_pdf": "Pediatria",
+          "area_norm": "Pediatria",
+          "multi_area": false,
+          "tema": "Imunizações",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 3,
+          "area_pdf": "Cirurgia",
+          "area_norm": "Cirurgia",
+          "multi_area": false,
+          "tema": "Apendicite Aguda",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 4,
+          "area_pdf": "Ginecologia",
+          "area_norm": "Ginecologia",
+          "multi_area": false,
+          "tema": "Vulvovaginites",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 5,
+          "area_pdf": "Obstetrícia",
+          "area_norm": "Obstetrícia",
+          "multi_area": false,
+          "tema": "Pré-Natal",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 6,
+          "area_pdf": "Preventiva",
+          "area_norm": "Preventiva",
+          "multi_area": false,
+          "tema": "Medicina de Família e Comunidade",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 7,
+          "area_pdf": "Cirurgia",
+          "area_norm": "Cirurgia",
+          "multi_area": false,
+          "tema": "Apendicite Aguda",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 8,
+          "area_pdf": "Endocrinologia",
+          "area_norm": "Endocrino",
+          "multi_area": false,
+          "tema": "Diabetes Mellitus - Complicações Crônicas",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 9,
+          "area_pdf": "Nefrologia",
+          "area_norm": "Nefrologia",
+          "multi_area": false,
+          "tema": "Distúrbios do Potássio",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 10,
+          "area_pdf": "Neurologia",
+          "area_norm": "Neurologia",
+          "multi_area": false,
+          "tema": "Cefaleias; Epilepsias",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 11,
+          "area_pdf": "Cardiologia",
+          "area_norm": "Cardiologia",
+          "multi_area": false,
+          "tema": "Hipertensão Arterial Sistêmica Pt. 2",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 12,
+          "area_pdf": "Preventiva",
+          "area_norm": "Preventiva",
+          "multi_area": false,
+          "tema": "",
+          "tipo": "Revisão por Questões",
+          "tipo_norm": "revisao_questoes"
+        },
+        {
+          "tarefa": 13,
+          "area_pdf": "Endocrinologia",
+          "area_norm": "Endocrino",
+          "multi_area": false,
+          "tema": "",
+          "tipo": "Revisão por Questões",
+          "tipo_norm": "revisao_questoes"
+        }
+      ]
+    },
+    {
+      "semana": 13,
+      "inicio": "2026-06-22",
+      "fim": "2026-06-28",
+      "total_questoes": 387,
+      "n_tasks": 12,
+      "tasks": [
+        {
+          "tarefa": 1,
+          "area_pdf": "Preventiva",
+          "area_norm": "Preventiva",
+          "multi_area": false,
+          "tema": "Princípios e Diretrizes do SUS",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 2,
+          "area_pdf": "Pediatria",
+          "area_norm": "Pediatria",
+          "multi_area": false,
+          "tema": "Imunizações",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 3,
+          "area_pdf": "Cirurgia",
+          "area_norm": "Cirurgia",
+          "multi_area": false,
+          "tema": "Abdome Agudo Inflamatório - Colecistite e Colangite Aguda",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 4,
+          "area_pdf": "Ginecologia",
+          "area_norm": "Ginecologia",
+          "multi_area": false,
+          "tema": "Endometriose",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 5,
+          "area_pdf": "Obstetrícia",
+          "area_norm": "Obstetrícia",
+          "multi_area": false,
+          "tema": "Pré-Natal",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 6,
+          "area_pdf": "Pediatria",
+          "area_norm": "Pediatria",
+          "multi_area": false,
+          "tema": "Imunizações",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 7,
+          "area_pdf": "Infectologia",
+          "area_norm": "Infecto",
+          "multi_area": false,
+          "tema": "Sepse",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 8,
+          "area_pdf": "Gastroenterologia",
+          "area_norm": "Gastro",
+          "multi_area": false,
+          "tema": "Doença Inflamatória Intestinal",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 9,
+          "area_pdf": "Pneumologia",
+          "area_norm": "Pneumo",
+          "multi_area": false,
+          "tema": "Pneumologia Intensiva",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 10,
+          "area_pdf": "Psiquiatria",
+          "area_norm": "Psiquiatria",
+          "multi_area": false,
+          "tema": "Transtornos de Humor; Psiquiatria Social e Reforma Psiquiátrica",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 11,
+          "area_pdf": "Hepatologia",
+          "area_norm": "Hepato",
+          "multi_area": false,
+          "tema": "Introdução à Hepatologia e Icterícia Não obstrutiva; Hepatites Virais",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 12,
+          "area_pdf": "Infectologia",
+          "area_norm": "Infecto",
+          "multi_area": false,
+          "tema": "",
+          "tipo": "Revisão por Questões",
+          "tipo_norm": "revisao_questoes"
+        }
+      ]
+    },
+    {
+      "semana": 14,
+      "inicio": "2026-06-29",
+      "fim": "2026-07-05",
+      "total_questoes": 358,
+      "n_tasks": 11,
+      "tasks": [
+        {
+          "tarefa": 1,
+          "area_pdf": "Medicina Preventiva",
+          "area_norm": "Preventiva",
+          "multi_area": false,
+          "tema": "Princípios e Diretrizes do SUS",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 2,
+          "area_pdf": "Pediatria",
+          "area_norm": "Pediatria",
+          "multi_area": false,
+          "tema": "Asma",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 3,
+          "area_pdf": "Cirurgia",
+          "area_norm": "Cirurgia",
+          "multi_area": false,
+          "tema": "Colecistite e Colangite Aguda",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 4,
+          "area_pdf": "Ginecologia",
+          "area_norm": "Ginecologia",
+          "multi_area": false,
+          "tema": "Endometriose",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 5,
+          "area_pdf": "Obstetrícia",
+          "area_norm": "Obstetrícia",
+          "multi_area": false,
+          "tema": "Pré-Natal",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 6,
+          "area_pdf": "Endocrinologia",
+          "area_norm": "Endocrino",
+          "multi_area": false,
+          "tema": "Tireotoxicose",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 7,
+          "area_pdf": "Cirurgia",
+          "area_norm": "Cirurgia",
+          "multi_area": false,
+          "tema": "Diverticulite Aguda",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 8,
+          "area_pdf": "Neurologia",
+          "area_norm": "Neurologia",
+          "multi_area": false,
+          "tema": "Cefaleias; Epilepsias",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 9,
+          "area_pdf": "Dermatologia",
+          "area_norm": "Dermato",
+          "multi_area": false,
+          "tema": "Hanseníase; Síndromes Verrucosas",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 10,
+          "area_pdf": "Ortopedia",
+          "area_norm": "Ortopedia",
+          "multi_area": false,
+          "tema": "Doenças da Coluna Vertebral; Maus Tratos",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 11,
+          "area_pdf": "Otorrinolaringologia",
+          "area_norm": "Otorrino",
+          "multi_area": false,
+          "tema": "Infecções das Vias Aéreas Superiores Pt. 1",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        }
+      ]
+    },
+    {
+      "semana": 15,
+      "inicio": "2026-07-06",
+      "fim": "2026-07-12",
+      "total_questoes": 384,
+      "n_tasks": 12,
+      "tasks": [
+        {
+          "tarefa": 1,
+          "area_pdf": "Preventiva",
+          "area_norm": "Preventiva",
+          "multi_area": false,
+          "tema": "Princípios e Diretrizes do SUS",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 2,
+          "area_pdf": "Pediatria",
+          "area_norm": "Pediatria",
+          "multi_area": false,
+          "tema": "Asma",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 3,
+          "area_pdf": "Cirurgia",
+          "area_norm": "Cirurgia",
+          "multi_area": false,
+          "tema": "Diverticulite Aguda",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 4,
+          "area_pdf": "Ginecologia",
+          "area_norm": "Ginecologia",
+          "multi_area": false,
+          "tema": "Câncer de Mama",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 5,
+          "area_pdf": "Obstetrícia",
+          "area_norm": "Obstetrícia",
+          "multi_area": false,
+          "tema": "Assistência ao Parto",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 6,
+          "area_pdf": "Preventiva",
+          "area_norm": "Preventiva",
+          "multi_area": false,
+          "tema": "Atenção Primária à Saúde no Brasil",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 7,
+          "area_pdf": "Pediatria",
+          "area_norm": "Pediatria",
+          "multi_area": false,
+          "tema": "Aleitamento Materno",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 8,
+          "area_pdf": "Infectologia",
+          "area_norm": "Infecto",
+          "multi_area": false,
+          "tema": "Parasitoses; Infecções Relacionadas à Assistência em Saúde",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 9,
+          "area_pdf": "Gastroenterologia",
+          "area_norm": "Gastro",
+          "multi_area": false,
+          "tema": "Doença Inflamatória Intestinal",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 10,
+          "area_pdf": "Nefrologia",
+          "area_norm": "Nefrologia",
+          "multi_area": false,
+          "tema": "Distúrbios Ácido-Base; Distúrbios do Potássio",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 11,
+          "area_pdf": "Cardiologia",
+          "area_norm": "Cardiologia",
+          "multi_area": false,
+          "tema": "Hipertensão Arterial Sistêmica Pt. 3",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 12,
+          "area_pdf": "Cirurgia",
+          "area_norm": "Cirurgia",
+          "multi_area": false,
+          "tema": "",
+          "tipo": "Revisão por Questões",
+          "tipo_norm": "revisao_questoes"
+        }
+      ]
+    },
+    {
+      "semana": 16,
+      "inicio": "2026-07-13",
+      "fim": "2026-07-19",
+      "total_questoes": 434,
+      "n_tasks": 12,
+      "tasks": [
+        {
+          "tarefa": 1,
+          "area_pdf": "Medicina Preventiva",
+          "area_norm": "Preventiva",
+          "multi_area": false,
+          "tema": "Atenção Primária à Saúde no Brasil",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 2,
+          "area_pdf": "Pediatria",
+          "area_norm": "Pediatria",
+          "multi_area": false,
+          "tema": "Aleitamento Materno",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 3,
+          "area_pdf": "Cirurgia",
+          "area_norm": "Cirurgia",
+          "multi_area": false,
+          "tema": "Cirurgia Vascular",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 4,
+          "area_pdf": "Ginecologia",
+          "area_norm": "Ginecologia",
+          "multi_area": false,
+          "tema": "Câncer de Mama",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 5,
+          "area_pdf": "Obstetrícia",
+          "area_norm": "Obstetrícia",
+          "multi_area": false,
+          "tema": "Assistência ao Parto",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 6,
+          "area_pdf": "Infectologia",
+          "area_norm": "Infecto",
+          "multi_area": false,
+          "tema": "Parasitoses; Infecção Hospitalar",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 7,
+          "area_pdf": "Endocrinologia",
+          "area_norm": "Endocrino",
+          "multi_area": false,
+          "tema": "Tireotoxicose",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 8,
+          "area_pdf": "Neurologia",
+          "area_norm": "Neurologia",
+          "multi_area": false,
+          "tema": "Distúrbios do Movimento",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 9,
+          "area_pdf": "Pneumologia",
+          "area_norm": "Pneumo",
+          "multi_area": false,
+          "tema": "Pneumologia Intensiva",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 10,
+          "area_pdf": "Hematologia",
+          "area_norm": "Hemato",
+          "multi_area": false,
+          "tema": "Anemias Hemolíticas",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 11,
+          "area_pdf": "Pediatria",
+          "area_norm": "Pediatria",
+          "multi_area": false,
+          "tema": "",
+          "tipo": "Revisão por Questões",
+          "tipo_norm": "revisao_questoes"
+        },
+        {
+          "tarefa": 12,
+          "area_pdf": "Ginecologia",
+          "area_norm": "Ginecologia",
+          "multi_area": false,
+          "tema": "",
+          "tipo": "Revisão por Questões",
+          "tipo_norm": "revisao_questoes"
+        }
+      ]
+    },
+    {
+      "semana": 17,
+      "inicio": "2026-07-20",
+      "fim": "2026-07-26",
+      "total_questoes": 293,
+      "n_tasks": 11,
+      "tasks": [
+        {
+          "tarefa": 1,
+          "area_pdf": "Preventiva",
+          "area_norm": "Preventiva",
+          "multi_area": false,
+          "tema": "Atenção Primária à Saúde no Brasil",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 2,
+          "area_pdf": "Pediatria",
+          "area_norm": "Pediatria",
+          "multi_area": false,
+          "tema": "Diarreia",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 3,
+          "area_pdf": "Cirurgia",
+          "area_norm": "Cirurgia",
+          "multi_area": false,
+          "tema": "Cirurgia Vascular",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 4,
+          "area_pdf": "Ginecologia",
+          "area_norm": "Ginecologia",
+          "multi_area": false,
+          "tema": "Sangramento Uterino Anormal",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 5,
+          "area_pdf": "Obstetrícia",
+          "area_norm": "Obstetrícia",
+          "multi_area": false,
+          "tema": "Vitalidade Fetal",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 6,
+          "area_pdf": "Preventiva",
+          "area_norm": "Preventiva",
+          "multi_area": false,
+          "tema": "Atenção Primária à Saúde no Brasil",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 7,
+          "area_pdf": "Pediatria",
+          "area_norm": "Pediatria",
+          "multi_area": false,
+          "tema": "Diarreia",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 8,
+          "area_pdf": "Cirurgia",
+          "area_norm": "Cirurgia",
+          "multi_area": false,
+          "tema": "Urologia",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 9,
+          "area_pdf": "Infectologia",
+          "area_norm": "Infecto",
+          "multi_area": false,
+          "tema": "Pneumonias Bacterianas",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 10,
+          "area_pdf": "Gastroenterologia",
+          "area_norm": "Gastro",
+          "multi_area": false,
+          "tema": "Neoplasias de Estômago e Esôfago",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 11,
+          "area_pdf": "Nefrologia",
+          "area_norm": "Nefrologia",
+          "multi_area": false,
+          "tema": "Nefrolitíase",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        }
+      ]
+    },
+    {
+      "semana": 18,
+      "inicio": "2026-07-27",
+      "fim": "2026-08-02",
+      "total_questoes": 380,
+      "n_tasks": 13,
+      "tasks": [
+        {
+          "tarefa": 1,
+          "area_pdf": "Preventiva",
+          "area_norm": "Preventiva",
+          "multi_area": false,
+          "tema": "Ética Médica",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 2,
+          "area_pdf": "Pediatria",
+          "area_norm": "Pediatria",
+          "multi_area": false,
+          "tema": "Pneumonias na Infância",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 3,
+          "area_pdf": "Cirurgia",
+          "area_norm": "Cirurgia",
+          "multi_area": false,
+          "tema": "Urologia",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 4,
+          "area_pdf": "Ginecologia",
+          "area_norm": "Ginecologia",
+          "multi_area": false,
+          "tema": "Sangramento Uterino Anormal",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 5,
+          "area_pdf": "Obstetrícia",
+          "area_norm": "Obstetrícia",
+          "multi_area": false,
+          "tema": "Vitalidade Fetal",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 6,
+          "area_pdf": "Infectologia",
+          "area_norm": "Infecto",
+          "multi_area": false,
+          "tema": "Pneumonias Bacterianas",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 7,
+          "area_pdf": "Endocrinologia",
+          "area_norm": "Endocrino",
+          "multi_area": false,
+          "tema": "Hipotireoidismo",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 8,
+          "area_pdf": "Neurologia",
+          "area_norm": "Neurologia",
+          "multi_area": false,
+          "tema": "Distúrbios do Movimento",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 9,
+          "area_pdf": "Cardiologia",
+          "area_norm": "Cardiologia",
+          "multi_area": false,
+          "tema": "Hipertensão Arterial Sistêmica",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 10,
+          "area_pdf": "Psiquiatria",
+          "area_norm": "Psiquiatria",
+          "multi_area": false,
+          "tema": "Transtornos de Humor; Psiquiatria Social e Reforma Psiquiátrica",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 11,
+          "area_pdf": "Reumatologia",
+          "area_norm": "Reumato",
+          "multi_area": false,
+          "tema": "Doenças Inflamatórias do Tecido Conjuntivo",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 12,
+          "area_pdf": "Obstetrícia",
+          "area_norm": "Obstetrícia",
+          "multi_area": false,
+          "tema": "",
+          "tipo": "Revisão por Questões",
+          "tipo_norm": "revisao_questoes"
+        },
+        {
+          "tarefa": 13,
+          "area_pdf": "Cardiologia",
+          "area_norm": "Cardiologia",
+          "multi_area": false,
+          "tema": "",
+          "tipo": "Revisão por Questões",
+          "tipo_norm": "revisao_questoes"
+        }
+      ]
+    },
+    {
+      "semana": 19,
+      "inicio": "2026-08-03",
+      "fim": "2026-08-09",
+      "total_questoes": 449,
+      "n_tasks": 13,
+      "tasks": [
+        {
+          "tarefa": 1,
+          "area_pdf": "Pediatria",
+          "area_norm": "Pediatria",
+          "multi_area": false,
+          "tema": "Pneumonias na Infância",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 2,
+          "area_pdf": "Cirurgia",
+          "area_norm": "Cirurgia",
+          "multi_area": false,
+          "tema": "Urologia",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 3,
+          "area_pdf": "Ginecologia",
+          "area_norm": "Ginecologia",
+          "multi_area": false,
+          "tema": "Tumores Anexiais e Câncer de Ovário",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 4,
+          "area_pdf": "Obstetrícia",
+          "area_norm": "Obstetrícia",
+          "multi_area": false,
+          "tema": "Diabetes na Gestação",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 5,
+          "area_pdf": "Preventiva",
+          "area_norm": "Preventiva",
+          "multi_area": false,
+          "tema": "Ética Médica",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 6,
+          "area_pdf": "Pediatria",
+          "area_norm": "Pediatria",
+          "multi_area": false,
+          "tema": "Choque em Pediatria",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 7,
+          "area_pdf": "Cirurgia",
+          "area_norm": "Cirurgia",
+          "multi_area": false,
+          "tema": "Urologia",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 8,
+          "area_pdf": "Gastroenterologia",
+          "area_norm": "Gastro",
+          "multi_area": false,
+          "tema": "Neoplasias de Estômago e Esôfago",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 9,
+          "area_pdf": "Nefrologia",
+          "area_norm": "Nefrologia",
+          "multi_area": false,
+          "tema": "Nefrolitíase",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 10,
+          "area_pdf": "Hepatologia",
+          "area_norm": "Hepato",
+          "multi_area": false,
+          "tema": "Complicações da Cirrose Hepática",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 11,
+          "area_pdf": "Preventiva",
+          "area_norm": "Preventiva",
+          "multi_area": false,
+          "tema": "",
+          "tipo": "Revisão por Questões",
+          "tipo_norm": "revisao_questoes"
+        },
+        {
+          "tarefa": 12,
+          "area_pdf": "Gastroenterologia",
+          "area_norm": "Gastro",
+          "multi_area": false,
+          "tema": "",
+          "tipo": "Revisão por Questões",
+          "tipo_norm": "revisao_questoes"
+        },
+        {
+          "tarefa": 13,
+          "area_pdf": "Nefrologia",
+          "area_norm": "Nefrologia",
+          "multi_area": false,
+          "tema": "",
+          "tipo": "Revisão por Questões",
+          "tipo_norm": "revisao_questoes"
+        }
+      ]
+    },
+    {
+      "semana": 20,
+      "inicio": "2026-08-10",
+      "fim": "2026-08-16",
+      "total_questoes": 301,
+      "n_tasks": 11,
+      "tasks": [
+        {
+          "tarefa": 1,
+          "area_pdf": "Preventiva",
+          "area_norm": "Preventiva",
+          "multi_area": false,
+          "tema": "Financiamento em Saúde",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 2,
+          "area_pdf": "Pediatria",
+          "area_norm": "Pediatria",
+          "multi_area": false,
+          "tema": "Choque em Pediatria",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 3,
+          "area_pdf": "Cirurgia",
+          "area_norm": "Cirurgia",
+          "multi_area": false,
+          "tema": "Hérnias da Parede Abdominal",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 4,
+          "area_pdf": "Ginecologia",
+          "area_norm": "Ginecologia",
+          "multi_area": false,
+          "tema": "Tumores Anexiais e Câncer de Ovário",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 5,
+          "area_pdf": "Obstetrícia",
+          "area_norm": "Obstetrícia",
+          "multi_area": false,
+          "tema": "Diabetes na Gestação",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 6,
+          "area_pdf": "Infectologia",
+          "area_norm": "Infecto",
+          "multi_area": false,
+          "tema": "Pneumonias Bacterianas",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 7,
+          "area_pdf": "Endocrinologia",
+          "area_norm": "Endocrino",
+          "multi_area": false,
+          "tema": "Hipotireoidismo",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 8,
+          "area_pdf": "Pneumologia",
+          "area_norm": "Pneumo",
+          "multi_area": false,
+          "tema": "Pneumologia Intensiva",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 9,
+          "area_pdf": "Hematologia",
+          "area_norm": "Hemato",
+          "multi_area": false,
+          "tema": "Anemias Microcíticas e Leucemias Agudas",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 10,
+          "area_pdf": "Otorrinolaringologia",
+          "area_norm": "Otorrino",
+          "multi_area": false,
+          "tema": "Infecções das Vias Aéreas Superiores Pt. 2",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 11,
+          "area_pdf": "Oftalmologia",
+          "area_norm": "Oftalmo",
+          "multi_area": false,
+          "tema": "Doenças do Polo Posterior",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        }
+      ]
+    },
+    {
+      "semana": 21,
+      "inicio": "2026-08-17",
+      "fim": "2026-08-23",
+      "total_questoes": 312,
+      "n_tasks": 12,
+      "tasks": [
+        {
+          "tarefa": 1,
+          "area_pdf": "Preventiva",
+          "area_norm": "Preventiva",
+          "multi_area": false,
+          "tema": "Financiamento em Saúde",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 2,
+          "area_pdf": "Pediatria",
+          "area_norm": "Pediatria",
+          "multi_area": false,
+          "tema": "Alergia Alimentar",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 3,
+          "area_pdf": "Cirurgia",
+          "area_norm": "Cirurgia",
+          "multi_area": false,
+          "tema": "Hérnias da Parede Abdominal",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 4,
+          "area_pdf": "Ginecologia",
+          "area_norm": "Ginecologia",
+          "multi_area": false,
+          "tema": "Prolapsos de Órgãos Pélvicos",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 5,
+          "area_pdf": "Obstetrícia",
+          "area_norm": "Obstetrícia",
+          "multi_area": false,
+          "tema": "Diabetes na Gestação",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 6,
+          "area_pdf": "Pediatria",
+          "area_norm": "Pediatria",
+          "multi_area": false,
+          "tema": "Alergia Alimentar",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 7,
+          "area_pdf": "Gastroenterologia",
+          "area_norm": "Gastro",
+          "multi_area": false,
+          "tema": "Anatomia do Intestino e Síndrome do Intestino Irritável",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 8,
+          "area_pdf": "Neurologia",
+          "area_norm": "Neurologia",
+          "multi_area": false,
+          "tema": "Distúrbios do Movimento",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 9,
+          "area_pdf": "Cardiologia",
+          "area_norm": "Cardiologia",
+          "multi_area": false,
+          "tema": "Valvopatias",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 10,
+          "area_pdf": "Reumatologia",
+          "area_norm": "Reumato",
+          "multi_area": false,
+          "tema": "Vasculites",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 11,
+          "area_pdf": "Ortopedia",
+          "area_norm": "Ortopedia",
+          "multi_area": false,
+          "tema": "Fraturas e Luxações; Complicações do Trauma Ortopédico",
+          "tipo": "Teoria + Exercícios",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 12,
+          "area_pdf": "Pediatria",
+          "area_norm": "Pediatria",
+          "multi_area": false,
+          "tema": "",
+          "tipo": "Revisão por Questões",
+          "tipo_norm": "revisao_questoes"
+        }
+      ]
+    },
+    {
+      "semana": 22,
+      "inicio": "2026-08-24",
+      "fim": "2026-08-30",
+      "total_questoes": 342,
+      "n_tasks": 12,
+      "tasks": [
+        {
+          "tarefa": 1,
+          "area_pdf": "Preventiva",
+          "area_norm": "Preventiva",
+          "multi_area": false,
+          "tema": "Financiamento em saúde",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 2,
+          "area_pdf": "Pediatria",
+          "area_norm": "Pediatria",
+          "multi_area": false,
+          "tema": "Reanimação Neonatal",
+          "tipo": "Teoria",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 3,
+          "area_pdf": "Cirurgia",
+          "area_norm": "Cirurgia",
+          "multi_area": false,
+          "tema": "Hérnias da Parede Abdominal",
+          "tipo": "Teoria III",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 4,
+          "area_pdf": "Ginecologia",
+          "area_norm": "Ginecologia",
+          "multi_area": false,
+          "tema": "Prolapsos de Órgãos Pélvicos",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 5,
+          "area_pdf": "Obstetrícia",
+          "area_norm": "Obstetrícia",
+          "multi_area": false,
+          "tema": "Sangramento da Segunda Metade",
+          "tipo": "Teoria",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 6,
+          "area_pdf": "Preventiva",
+          "area_norm": "Preventiva",
+          "multi_area": false,
+          "tema": "Estatística Médica",
+          "tipo": "Teoria I",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 7,
+          "area_pdf": "Cirurgia",
+          "area_norm": "Cirurgia",
+          "multi_area": false,
+          "tema": "Hérnias da Parede Abdominal",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 8,
+          "area_pdf": "Infectologia",
+          "area_norm": "Infecto",
+          "multi_area": false,
+          "tema": "Pneumonias Bacterianas",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 9,
+          "area_pdf": "Endocrinologia",
+          "area_norm": "Endocrino",
+          "multi_area": false,
+          "tema": "Obesidade e Síndrome Metabólica (Teoria) Cirurgia Bariátrica e Metabólica",
+          "tipo": "Teoria",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 10,
+          "area_pdf": "Nefrologia",
+          "area_norm": "Nefrologia",
+          "multi_area": false,
+          "tema": "Doenças Glomerulares",
+          "tipo": "Teoria",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 11,
+          "area_pdf": "Psiquiatria",
+          "area_norm": "Psiquiatria",
+          "multi_area": false,
+          "tema": "Psicofarmacologia (Teoria) Psiquiatria Infantil",
+          "tipo": "Teoria",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 12,
+          "area_pdf": "Infectologia",
+          "area_norm": "Infecto",
+          "multi_area": false,
+          "tema": "Revisão por Questões : Parasitoses Infecção Hospitalar Pneumonias Bacterianas",
+          "tipo": "",
+          "tipo_norm": "outro"
+        }
+      ]
+    },
+    {
+      "semana": 23,
+      "inicio": "2026-08-31",
+      "fim": "2026-09-06",
+      "total_questoes": 259,
+      "n_tasks": 11,
+      "tasks": [
+        {
+          "tarefa": 1,
+          "area_pdf": "Preventiva",
+          "area_norm": "Preventiva",
+          "multi_area": false,
+          "tema": "Estatística Médica",
+          "tipo": "Teoria II",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 2,
+          "area_pdf": "Pediatria",
+          "area_norm": "Pediatria",
+          "multi_area": false,
+          "tema": "Reanimação Neonatal",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 3,
+          "area_pdf": "Cirurgia",
+          "area_norm": "Cirurgia",
+          "multi_area": false,
+          "tema": "Princípios da Anestesiologia",
+          "tipo": "Teoria I",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 4,
+          "area_pdf": "Ginecologia",
+          "area_norm": "Ginecologia",
+          "multi_area": false,
+          "tema": "Câncer de Colo Uterino",
+          "tipo": "Teoria",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 5,
+          "area_pdf": "Obstetrícia",
+          "area_norm": "Obstetrícia",
+          "multi_area": false,
+          "tema": "Sangramento da Segunda Metade",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 6,
+          "area_pdf": "Pediatria",
+          "area_norm": "Pediatria",
+          "multi_area": false,
+          "tema": "Crescimento",
+          "tipo": "Teoria",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 7,
+          "area_pdf": "Infectologia",
+          "area_norm": "Infecto",
+          "multi_area": false,
+          "tema": "Animais Peçonhentos",
+          "tipo": "Teoria",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 8,
+          "area_pdf": "Gastroenterologia",
+          "area_norm": "Gastro",
+          "multi_area": false,
+          "tema": "Anatomia do Intestino e Síndrome do Intestino Irritável",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 9,
+          "area_pdf": "Neurologia",
+          "area_norm": "Neurologia",
+          "multi_area": false,
+          "tema": "Acidentes Vasculares Cerebrais",
+          "tipo": "Teoria",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 10,
+          "area_pdf": "Pneumologia",
+          "area_norm": "Pneumo",
+          "multi_area": false,
+          "tema": "Doença Pulmonar Obstrutiva Crônica",
+          "tipo": "Teoria",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 11,
+          "area_pdf": "Hepatologia",
+          "area_norm": "Hepato",
+          "multi_area": false,
+          "tema": "Complicações da Cirrose Hepática",
+          "tipo": "Teoria II",
+          "tipo_norm": "teoria"
+        }
+      ]
+    },
+    {
+      "semana": 24,
+      "inicio": "2026-09-07",
+      "fim": "2026-09-13",
+      "total_questoes": 420,
+      "n_tasks": 14,
+      "tasks": [
+        {
+          "tarefa": 1,
+          "area_pdf": "Preventiva",
+          "area_norm": "Preventiva",
+          "multi_area": false,
+          "tema": "Estatística Médica",
+          "tipo": "Revisão I",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 2,
+          "area_pdf": "Pediatria",
+          "area_norm": "Pediatria",
+          "multi_area": false,
+          "tema": "Crescimento",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 3,
+          "area_pdf": "Cirurgia",
+          "area_norm": "Cirurgia",
+          "multi_area": false,
+          "tema": "Princípios da Anestesiologia",
+          "tipo": "Teoria II",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 4,
+          "area_pdf": "Ginecologia",
+          "area_norm": "Ginecologia",
+          "multi_area": false,
+          "tema": "Câncer de Colo Uterino",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 5,
+          "area_pdf": "Obstetrícia",
+          "area_norm": "Obstetrícia",
+          "multi_area": false,
+          "tema": "Partograma e Distocia",
+          "tipo": "Teoria",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 6,
+          "area_pdf": "Preventiva",
+          "area_norm": "Preventiva",
+          "multi_area": false,
+          "tema": "Estatística Médica",
+          "tipo": "Teoria III",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 7,
+          "area_pdf": "Cirurgia",
+          "area_norm": "Cirurgia",
+          "multi_area": false,
+          "tema": "Princípios da Anestesiologia",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 8,
+          "area_pdf": "Infectologia",
+          "area_norm": "Infecto",
+          "multi_area": false,
+          "tema": "Animais Peçonhentos",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 9,
+          "area_pdf": "Endocrinologia",
+          "area_norm": "Endocrino",
+          "multi_area": false,
+          "tema": "Obesidade e Síndrome Metabólica Cirurgia Bariátrica e Metabólica",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 10,
+          "area_pdf": "Nefrologia",
+          "area_norm": "Nefrologia",
+          "multi_area": false,
+          "tema": "Infecção do Trato Urinário",
+          "tipo": "Teoria",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 11,
+          "area_pdf": "Cardiologia",
+          "area_norm": "Cardiologia",
+          "multi_area": false,
+          "tema": "Valvopatias",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 12,
+          "area_pdf": "Cirurgia",
+          "area_norm": "Cirurgia",
+          "multi_area": false,
+          "tema": "Cirurgia Vascular Urologia Hérnias da Parede Abdominal Princípios da Anestesiologia",
+          "tipo": "Revisão por Questões",
+          "tipo_norm": "revisao_questoes"
+        },
+        {
+          "tarefa": 13,
+          "area_pdf": "Ginecologia",
+          "area_norm": "Ginecologia",
+          "multi_area": false,
+          "tema": "Sangramento Uterino Anormal Tumores Anexiais e Câncer de Ovário Prolapsos de Órgãos Pélvicos Câncer de Colo Uterino",
+          "tipo": "Revisão por Questões",
+          "tipo_norm": "revisao_questoes"
+        },
+        {
+          "tarefa": 14,
+          "area_pdf": "Endocrinologia",
+          "area_norm": "Endocrino",
+          "multi_area": false,
+          "tema": "Tireotoxicose Hipotireoidismo Obesidade e Síndrome Metabólica Cirurgia Bariátrica e Metabólica",
+          "tipo": "Revisão por Questões",
+          "tipo_norm": "revisao_questoes"
+        }
+      ]
+    },
+    {
+      "semana": 25,
+      "inicio": "2026-09-14",
+      "fim": "2026-09-20",
+      "total_questoes": 325,
+      "n_tasks": 13,
+      "tasks": [
+        {
+          "tarefa": 1,
+          "area_pdf": "Preventiva",
+          "area_norm": "Preventiva",
+          "multi_area": false,
+          "tema": "Estatística Médica",
+          "tipo": "Teoria IV",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 2,
+          "area_pdf": "Pediatria",
+          "area_norm": "Pediatria",
+          "multi_area": false,
+          "tema": "Tópicos em Pediatria",
+          "tipo": "Teoria",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 3,
+          "area_pdf": "Cirurgia",
+          "area_norm": "Cirurgia",
+          "multi_area": false,
+          "tema": "Abdome Agudo Obstrutivo",
+          "tipo": "Teoria",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 4,
+          "area_pdf": "Ginecologia",
+          "area_norm": "Ginecologia",
+          "multi_area": false,
+          "tema": "Incontinência Urinária",
+          "tipo": "Teoria",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 5,
+          "area_pdf": "Obstetrícia",
+          "area_norm": "Obstetrícia",
+          "multi_area": false,
+          "tema": "Partograma e Distocia",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 6,
+          "area_pdf": "Pediatria",
+          "area_norm": "Pediatria",
+          "multi_area": false,
+          "tema": "Tópicos em Pediatria",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 7,
+          "area_pdf": "Infectologia",
+          "area_norm": "Infecto",
+          "multi_area": false,
+          "tema": "Endocardites",
+          "tipo": "Teoria",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 8,
+          "area_pdf": "Gastroenterologia",
+          "area_norm": "Gastro",
+          "multi_area": false,
+          "tema": "Disfagia, Alterações Estruturais e Dist. Mort.",
+          "tipo": "Teoria",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 9,
+          "area_pdf": "Pneumologia",
+          "area_norm": "Pneumo",
+          "multi_area": false,
+          "tema": "Derrame Pleural",
+          "tipo": "Teoria",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 10,
+          "area_pdf": "Hematologia",
+          "area_norm": "Hemato",
+          "multi_area": false,
+          "tema": "Anemias Microcíticas Leucemias Agudas",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 11,
+          "area_pdf": "Reumatologia",
+          "area_norm": "Reumato",
+          "multi_area": false,
+          "tema": "Artrite Reumatóide",
+          "tipo": "Teoria",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 12,
+          "area_pdf": "Obstetrícia",
+          "area_norm": "Obstetrícia",
+          "multi_area": false,
+          "tema": "Diabetes na Gestação Sangramento da Segunda Metade Partograma e Distocia",
+          "tipo": "Revisão por Questões",
+          "tipo_norm": "revisao_questoes"
+        },
+        {
+          "tarefa": 13,
+          "area_pdf": "Pneumologia",
+          "area_norm": "Pneumo",
+          "multi_area": false,
+          "tema": "Neoplasias Pulmonares",
+          "tipo": "Teoria",
+          "tipo_norm": "teoria"
+        }
+      ]
+    },
+    {
+      "semana": 26,
+      "inicio": "2026-09-21",
+      "fim": "2026-09-27",
+      "total_questoes": 361,
+      "n_tasks": 12,
+      "tasks": [
+        {
+          "tarefa": 1,
+          "area_pdf": "Preventiva",
+          "area_norm": "Preventiva",
+          "multi_area": false,
+          "tema": "Estatística Médica",
+          "tipo": "Revisão II",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 2,
+          "area_pdf": "Pediatria",
+          "area_norm": "Pediatria",
+          "multi_area": false,
+          "tema": "Desnutrição na Infância",
+          "tipo": "Teoria",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 3,
+          "area_pdf": "Cirurgia",
+          "area_norm": "Cirurgia",
+          "multi_area": false,
+          "tema": "Abdome Agudo Obstrutivo",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 4,
+          "area_pdf": "Ginecologia",
+          "area_norm": "Ginecologia",
+          "multi_area": false,
+          "tema": "Incontinência Urinária",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 5,
+          "area_pdf": "Obstetrícia",
+          "area_norm": "Obstetrícia",
+          "multi_area": false,
+          "tema": "Gestação Múltipla",
+          "tipo": "Teoria",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 6,
+          "area_pdf": "Preventiva",
+          "area_norm": "Preventiva",
+          "multi_area": false,
+          "tema": "Normas Regulamentadoras",
+          "tipo": "Teoria I",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 7,
+          "area_pdf": "Endocrinologia",
+          "area_norm": "Endocrino",
+          "multi_area": false,
+          "tema": "Osteoporose e Doença óssea de Paget",
+          "tipo": "Teoria",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 8,
+          "area_pdf": "Nefrologia",
+          "area_norm": "Nefrologia",
+          "multi_area": false,
+          "tema": "Doenças Glomerulares Infecção do Trato Urinário",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 9,
+          "area_pdf": "Neurologia",
+          "area_norm": "Neurologia",
+          "multi_area": false,
+          "tema": "Coma e alterações da consciência",
+          "tipo": "Teoria",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 10,
+          "area_pdf": "Psiquiatria",
+          "area_norm": "Psiquiatria",
+          "multi_area": false,
+          "tema": "Psicofarmacologia Psiquiatria Infantil",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 11,
+          "area_pdf": "Hepatologia",
+          "area_norm": "Hepato",
+          "multi_area": false,
+          "tema": "Complicações da Cirrose Hepática",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 12,
+          "area_pdf": "Pediatria",
+          "area_norm": "Pediatria",
+          "multi_area": false,
+          "tema": "Reanimação neonatal Crescimento Tópicos em Pediatria Desnutrição na Infância",
+          "tipo": "Revisão por Questões",
+          "tipo_norm": "revisao_questoes"
+        }
+      ]
+    },
+    {
+      "semana": 27,
+      "inicio": "2026-09-28",
+      "fim": "2026-10-04",
+      "total_questoes": 466,
+      "n_tasks": 15,
+      "tasks": [
+        {
+          "tarefa": 1,
+          "area_pdf": "Preventiva",
+          "area_norm": "Preventiva",
+          "multi_area": false,
+          "tema": "Normas Regulamentadoras",
+          "tipo": "Teoria II",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 2,
+          "area_pdf": "Pediatria",
+          "area_norm": "Pediatria",
+          "multi_area": false,
+          "tema": "Desnutrição na Infância",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 3,
+          "area_pdf": "Cirurgia",
+          "area_norm": "Cirurgia",
+          "multi_area": false,
+          "tema": "Complicações Pós-Operatórias",
+          "tipo": "Teoria I",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 4,
+          "area_pdf": "Ginecologia",
+          "area_norm": "Ginecologia",
+          "multi_area": false,
+          "tema": "Assistência à Vítima de Violência Sexual",
+          "tipo": "Teoria",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 5,
+          "area_pdf": "Obstetrícia",
+          "area_norm": "Obstetrícia",
+          "multi_area": false,
+          "tema": "Gestação Múltipla",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 6,
+          "area_pdf": "Pediatria",
+          "area_norm": "Pediatria",
+          "multi_area": false,
+          "tema": "Obesidade Infantil e na Adolescência",
+          "tipo": "Teoria",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 7,
+          "area_pdf": "Cirurgia",
+          "area_norm": "Cirurgia",
+          "multi_area": false,
+          "tema": "Complicações Pós-Operatórias",
+          "tipo": "Teoria II",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 8,
+          "area_pdf": "Infectologia",
+          "area_norm": "Infecto",
+          "multi_area": false,
+          "tema": "Endocardite Bacteriana - Endocardite Infecciosa",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 9,
+          "area_pdf": "Gastroenterologia",
+          "area_norm": "Gastro",
+          "multi_area": false,
+          "tema": "Disfagia, Alterações Estruturais e Dist. Mot.",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 10,
+          "area_pdf": "Cardiologia",
+          "area_norm": "Cardiologia",
+          "multi_area": false,
+          "tema": "Fibrilação e Flutter Atrial Parada Cardiorrespiratória",
+          "tipo": "Teoria",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 11,
+          "area_pdf": "Dermatologia",
+          "area_norm": "Dermato",
+          "multi_area": false,
+          "tema": "Oncologia Cutânea",
+          "tipo": "Teoria",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 12,
+          "area_pdf": "Neurologia",
+          "area_norm": "Neurologia",
+          "multi_area": false,
+          "tema": "AVC Coma e alterações da consciência",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 13,
+          "area_pdf": "Reumatologia",
+          "area_norm": "Reumato",
+          "multi_area": false,
+          "tema": "Artrite Reumatoide",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 14,
+          "area_pdf": "Cardiologia",
+          "area_norm": "Cardiologia",
+          "multi_area": false,
+          "tema": "Fibrilação e Flutter Atrial Parada Cardiorrespiratória",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 15,
+          "area_pdf": "Dermatologia",
+          "area_norm": "Dermato",
+          "multi_area": false,
+          "tema": "Oncologia Cutânea",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        }
+      ]
+    },
+    {
+      "semana": 28,
+      "inicio": "2026-10-05",
+      "fim": "2026-10-11",
+      "total_questoes": 355,
+      "n_tasks": 12,
+      "tasks": [
+        {
+          "tarefa": 1,
+          "area_pdf": "Preventiva",
+          "area_norm": "Preventiva",
+          "multi_area": false,
+          "tema": "Normas Regulamentadoras",
+          "tipo": "Teoria III",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 2,
+          "area_pdf": "Pediatria",
+          "area_norm": "Pediatria",
+          "multi_area": false,
+          "tema": "Obesidade Infantil e na Adolescência",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 3,
+          "area_pdf": "Cirurgia",
+          "area_norm": "Cirurgia",
+          "multi_area": false,
+          "tema": "Complicações Pós-Operatórias",
+          "tipo": "Teoria III",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 4,
+          "area_pdf": "Ginecologia",
+          "area_norm": "Ginecologia",
+          "multi_area": false,
+          "tema": "Assistência à Vítima de Violência Sexual",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 5,
+          "area_pdf": "Obstetrícia",
+          "area_norm": "Obstetrícia",
+          "multi_area": false,
+          "tema": "Hemorragia Pós-Parto",
+          "tipo": "Teoria",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 6,
+          "area_pdf": "Endocrinologia",
+          "area_norm": "Endocrino",
+          "multi_area": false,
+          "tema": "Osteoporose e Doença óssea de Paget",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 7,
+          "area_pdf": "Neurologia",
+          "area_norm": "Neurologia",
+          "multi_area": false,
+          "tema": "Doenças Neuromusculares",
+          "tipo": "Teoria",
+          "tipo_norm": "teoria"
+        },
+        {
+          "tarefa": 8,
+          "area_pdf": "Ortopedia",
+          "area_norm": "Ortopedia",
+          "multi_area": false,
+          "tema": "Quadril Pediátrico Politrauma Ortopédico Doenças da coluna vertebral Maus Tratos Fraturas e Luxações Complicações do trauma ortopédico",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 9,
+          "area_pdf": "Preventiva",
+          "area_norm": "Preventiva",
+          "multi_area": false,
+          "tema": "Normas Regulamentadoras",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 10,
+          "area_pdf": "Cirurgia",
+          "area_norm": "Cirurgia",
+          "multi_area": false,
+          "tema": "Complicações Pós-Operatórias",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 11,
+          "area_pdf": "Obstetrícia",
+          "area_norm": "Obstetrícia",
+          "multi_area": false,
+          "tema": "Hemorragia Pós-Parto",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        },
+        {
+          "tarefa": 12,
+          "area_pdf": "Neurologia",
+          "area_norm": "Neurologia",
+          "multi_area": false,
+          "tema": "Doenças Neuromusculares",
+          "tipo": "Revisão",
+          "tipo_norm": "revisao"
+        }
+      ]
+    },
+    {
+      "semana": 29,
+      "inicio": "2026-10-12",
+      "fim": "2026-10-18",
+      "total_questoes": 0,
+      "n_tasks": 7,
+      "tasks": [
+        {
+          "tarefa": 1,
+          "area_pdf": "Todas as Disciplinas",
+          "area_norm": "Multi",
+          "multi_area": true,
+          "tema": "",
+          "tipo": "Diversos Assuntos",
+          "tipo_norm": "revisao_questoes"
+        },
+        {
+          "tarefa": 2,
+          "area_pdf": "Todas as Disciplinas",
+          "area_norm": "Multi",
+          "multi_area": true,
+          "tema": "",
+          "tipo": "Diversos Assuntos",
+          "tipo_norm": "revisao_questoes"
+        },
+        {
+          "tarefa": 3,
+          "area_pdf": "Todas as Disciplinas",
+          "area_norm": "Multi",
+          "multi_area": true,
+          "tema": "",
+          "tipo": "Diversos Assuntos",
+          "tipo_norm": "revisao_questoes"
+        },
+        {
+          "tarefa": 4,
+          "area_pdf": "Todas as Disciplinas",
+          "area_norm": "Multi",
+          "multi_area": true,
+          "tema": "",
+          "tipo": "Diversos Assuntos",
+          "tipo_norm": "revisao_questoes"
+        },
+        {
+          "tarefa": 5,
+          "area_pdf": "Todas as Disciplinas",
+          "area_norm": "Multi",
+          "multi_area": true,
+          "tema": "",
+          "tipo": "Diversos Assuntos",
+          "tipo_norm": "revisao_questoes"
+        },
+        {
+          "tarefa": 6,
+          "area_pdf": "Todas as Disciplinas",
+          "area_norm": "Multi",
+          "multi_area": true,
+          "tema": "",
+          "tipo": "Diversos Assuntos",
+          "tipo_norm": "revisao_questoes"
+        },
+        {
+          "tarefa": 7,
+          "area_pdf": "Todas as Disciplinas",
+          "area_norm": "Multi",
+          "multi_area": true,
+          "tema": "",
+          "tipo": "Diversos Assuntos",
+          "tipo_norm": "revisao_questoes"
+        }
+      ]
+    },
+    {
+      "semana": 30,
+      "inicio": "2026-10-19",
+      "fim": "2026-10-25",
+      "total_questoes": 0,
+      "n_tasks": 7,
+      "tasks": [
+        {
+          "tarefa": 1,
+          "area_pdf": "Pediatria e Cirurgia",
+          "area_norm": "Multi",
+          "multi_area": true,
+          "tema": "",
+          "tipo": "Questões Erradas",
+          "tipo_norm": "revisao_questoes"
+        },
+        {
+          "tarefa": 2,
+          "area_pdf": "Preventiva e Infecto",
+          "area_norm": "Multi",
+          "multi_area": true,
+          "tema": "",
+          "tipo": "Questões Erradas",
+          "tipo_norm": "revisao_questoes"
+        },
+        {
+          "tarefa": 3,
+          "area_pdf": "Ginecologia e Obstetrícia",
+          "area_norm": "Multi",
+          "multi_area": true,
+          "tema": "",
+          "tipo": "Questões Erradas",
+          "tipo_norm": "revisao_questoes"
+        },
+        {
+          "tarefa": 4,
+          "area_pdf": "Endocrino e Gastro",
+          "area_norm": "Multi",
+          "multi_area": true,
+          "tema": "",
+          "tipo": "Questões Erradas",
+          "tipo_norm": "revisao_questoes"
+        },
+        {
+          "tarefa": 5,
+          "area_pdf": "Cardio, Psiquiatria e Nefro",
+          "area_norm": "Multi",
+          "multi_area": true,
+          "tema": "",
+          "tipo": "Questões Erradas",
+          "tipo_norm": "revisao_questoes"
+        },
+        {
+          "tarefa": 6,
+          "area_pdf": "Neuro, Hemato, Pneumo e",
+          "area_norm": "Multi",
+          "multi_area": true,
+          "tema": "Hepato Questões Erradas",
+          "tipo": "",
+          "tipo_norm": "outro"
+        },
+        {
+          "tarefa": 7,
+          "area_pdf": "Reumato, Ortopedia, Otorrino,",
+          "area_norm": "Multi",
+          "multi_area": true,
+          "tema": "Dermato e Oftalmo Questões Erradas",
+          "tipo": "",
+          "tipo_norm": "outro"
+        }
+      ]
+    }
+  ]
+}

@@ -34,8 +34,12 @@ Leitura rápida, read-only. Reporta divergências; não grava sem confirmação.
 | **W2** | `history/session_NNN.md` existe mas não está no `history/INDEX.md` | WARNING | INDEX desatualizado |
 | **W3** | Backlog FSRS (`state=0`) cresceu sem drenagem há N sessões | WARNING | `fsrs-management-contract.md` |
 | **W4** | Áreas em `sessoes_bulk` fora de `AREAS_VALIDAS` | WARNING | vocabulário (ver sessão 075: `GO`, `Obstetricia`) |
+| **W5** | `grade.json` defasado vs `Cronograma.pdf` (sha256 difere) | WARNING | `python tools/cronograma.py --check` |
+| **W6** | "Próxima = SNN" (semana de conteúdo) no HANDOFF/ESTADO desatualizada vs o trabalho real | WARNING | ponteiro textual vs últimas sessões |
+| **W7** | Gap de meta materializado (`acum + cronograma restante < meta`) — **fork estratégico, reporta UMA vez** | WARNING | `python tools/cronograma.py --gap` |
 
 **BLOCKING** → resolver antes de iniciar trabalho novo. **WARNING** → reportar; trabalho pode seguir.
+> **Cronograma (W5-W7) nunca é BLOCKING:** plano não é verdade-de-estado; estar atrasado é *informação de gestão*, não corrupção (`cronograma-contract.md`).
 
 ---
 
@@ -55,13 +59,17 @@ PASSO 3 — Resolver WARNING (se houver)
   → W2: adicionar entry no history/INDEX.md.
   → W3: agendar onda de drenagem (ver fsrs-management-contract.md).
   → W4: normalizar rótulos (migração one-shot em tools/, nunca SQL direto inline).
+  → W5: python tools/cronograma.py --rebuild (regenera o cache; grade.json é derivado do PDF).
+  → W6: atualizar o ponteiro textual "Próxima = SNN" no HANDOFF/ESTADO (único write da feature de cronograma).
+  → W7: reportar UMA vez; registrar a decisão do usuário em ESTADO §Metas; silenciar até a premissa mudar.
+       🔴 Resolução de W5-W7 NÃO grava no db (cronograma-contract.md, Cláusula 5).
 
 PASSO 4 — Saída
   → Condição: HANDOFF ≤ 60 linhas + header com session em history/ + HANDOFF ⟷ ESTADO ⟷ db consistentes.
   → Commitar a reconciliação como commit separado, antes do trabalho da sessão.
 ```
 
-**Arquivos alteráveis no Reconcile:** `HANDOFF.md`, `ESTADO.md`, `history/`, `history/INDEX.md`, `ipub.db` (via CLIs/migração). **Não alterar** em reconcile: `resumos/`, `skills/`, `.claude/commands/`.
+**Arquivos alteráveis no Reconcile:** `HANDOFF.md`, `ESTADO.md`, `history/`, `history/INDEX.md`, `ipub.db` (via CLIs/migração), `core/cronograma/grade.json` (cache regenerável via `--rebuild`). **Não alterar** em reconcile: `resumos/`, `skills/`, `.claude/commands/`, `Cronograma.pdf` (SSOT).
 
 ---
 

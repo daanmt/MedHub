@@ -13,6 +13,23 @@ Use quando o usuário pedir qualquer variação de: "revisar", "vamos revisar fl
 
 ---
 
+## Revisão Calibrada — sub-modos PREPARAR / DRENAR (s096)
+
+> `/revisar` é a **competência única** de revisão — absorveu `/refrescar`. Norma: [`core/contracts/revisao-calibrada-contract.md`](../../core/contracts/revisao-calibrada-contract.md). Dois sub-modos com permissões **disjuntas**:
+
+- **PREPARAR** (narrativo; **FSRS read-only**) — re-ensino calibrado do tema **antes** de drillar. Absorve o antigo `/refrescar` e a Camada 0. Profundidade calibrada pela **nota de dificuldade 1-10** (degrau D10/D8/D5/D2, Cláusula 3 do contrato); largura pelo **propósito** (amplo → exercícios / direcionado → flashcards). Largura e profundidade são ortogonais.
+  - 🔴 **Invariante A:** PREPARAR **NUNCA** emite `record_review` nem `UPDATE` em `fsrs_cards`/`fsrs_revlog` — nenhum write de FSRS.
+  - 🔴 **Invariante B:** PREPARAR **SEMPRE** carimba `review_log` ao concluir — `python tools/dormant_refresh.py --stamp --tema-id <id> --kind <dormant_refresh|directed_review>` (dormência → `dormant_refresh`; cronograma/fila/pedido → `directed_review`). A curva nunca cega.
+- **DRENAR** (card-a-card; **ESCREVE FSRS**) — o player FSRS descrito abaixo. Única superfície que move o FSRS. A transição **PREPARAR → DRENAR** é o único ponto em que o FSRS passa a ser escrito.
+
+### Resolver a nota na abertura de task
+
+`python tools/day_plan.py --difficulty "<area>" "<tema>"` → JSON com `nota_usuario`, `nota_inferida`, `nota_efetiva`, `degrau`, `paragrafos`, `divergencia`, `proposito`. Precedência **dura**: input do usuário > pergunta > inferência (`infer_nota`). Se `divergencia` ≠ null (|Δ| ≥ 3), **sinalizar sem sobrescrever** ("marcou 3, mas histórico 48%/26d — confirma o 3 ou subo pra 6?"). Persistir a nota usada via `db.set_dificuldade` (`fonte='usuario'` é soberana). 🔴 **A nota calibra SÓ a profundidade da PREPARAÇÃO — nunca o agendamento FSRS** (regido por recall real em DRENAR).
+
+> As **Camadas 0/1/2** abaixo permanecem válidas, reenquadradas: **Camada 0** = PREPARAR (agora graduada por nota, não fixa em "sempre descomprime"); **Camadas 1/2** = dentro de DRENAR (micro-resumo na virada + Revisão Direcionada de fechamento).
+
+---
+
 ## Invocação do CLI
 
 ```bash

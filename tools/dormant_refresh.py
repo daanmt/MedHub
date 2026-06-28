@@ -129,11 +129,22 @@ def context(tema, area=None):
     }
 
 
-def stamp(tema_id, resumo=None, note=None):
-    """Carimba o refresh em review_log (kind=dormant_refresh). NÃO toca o FSRS."""
+VALID_KINDS = ("dormant_refresh", "directed_review")
+
+
+def stamp(tema_id, resumo=None, note=None, kind="dormant_refresh"):
+    """Carimba o refresh/PREPARAR em review_log. NÃO toca o FSRS (Invariante A).
+
+    kind ∈ {dormant_refresh, directed_review}: discrimina o gatilho do PREPARAR
+    (radar de dormência vs cronograma/fila FSRS/pedido direto). Invariante B da
+    Revisão Calibrada — TODO PREPARAR carimba review_log para a curva nunca cegar.
+    Ver core/contracts/revisao-calibrada-contract.md.
+    """
+    if kind not in VALID_KINDS:
+        raise ValueError(f"kind inválido: {kind!r} (use {VALID_KINDS})")
     rid = db.log_review(tema_id=tema_id, resumo_path=resumo,
-                        kind="dormant_refresh", source="agent", note=note)
-    return {"logged": True, "review_log_id": rid, "tema_id": tema_id}
+                        kind=kind, source="agent", note=note)
+    return {"logged": True, "review_log_id": rid, "tema_id": tema_id, "kind": kind}
 
 
 def main():
@@ -147,6 +158,8 @@ def main():
     ap.add_argument("--tema-id", type=int, dest="tema_id", help="id do tema (com --stamp)")
     ap.add_argument("--resumo", help="Caminho do resumo refrescado (com --stamp)")
     ap.add_argument("--note", help="Nota curta do que foi refrescado (com --stamp)")
+    ap.add_argument("--kind", choices=VALID_KINDS, default="dormant_refresh",
+                    help="Gatilho do PREPARAR (com --stamp): dormant_refresh|directed_review")
     ap.add_argument("--window-days", type=int, default=REPETITION_WINDOW_DAYS, dest="window_days",
                     help=f"Janela anti-repetição em dias (default {REPETITION_WINDOW_DAYS})")
     args = ap.parse_args()
@@ -160,7 +173,7 @@ def main():
     else:  # --stamp
         if args.tema_id is None:
             ap.error("--stamp exige --tema-id")
-        _emit(stamp(args.tema_id, resumo=args.resumo, note=args.note))
+        _emit(stamp(args.tema_id, resumo=args.resumo, note=args.note, kind=args.kind))
 
 
 if __name__ == "__main__":

@@ -10,6 +10,7 @@ Reusa: dormant_refresh.pick (dormência), performance.get_totais/_questoes_do_me
 Uso: python tools/day_plan.py [--json]
 """
 import argparse
+import importlib
 import json
 import os
 import re
@@ -107,6 +108,162 @@ def _cronograma_hoje(total_q, hoje):
     }
 
 
+# ---------------------------------------------------------------------------
+# Revisão Calibrada — inferência da nota de dificuldade (read-only).
+# infer_nota() é determinística e só lê sinais FRIOS independentes da própria
+# saída (anti-circularidade, PRD §7.6). day_plan NÃO escreve estado: a
+# persistência da nota é feita na abertura de task (skill /revisar), não aqui.
+# Norma: core/contracts/revisao-calibrada-contract.md.
+# ---------------------------------------------------------------------------
+
+DEGRAU_PARAGRAFOS = {"D10": (7, 9), "D8": (5, 6), "D5": (3, 4), "D2": (1, 2)}
+
+
+def _clamp(v, lo, hi):
+    return max(lo, min(hi, v))
+
+
+def _degrau_de(nota):
+    """Mapa nota→degrau de registro (PRD §4.6)."""
+    if nota >= 9:
+        return "D10"
+    if nota >= 7:
+        return "D8"
+    if nota >= 4:
+        return "D5"
+    return "D2"
+
+
+def _divergencia(nota_usuario, nota_inferida):
+    """Divergência auto-nota × inferência (PRD §4.4). None se |Δ|<3 ou sem nota do usuário."""
+    if nota_usuario is None or abs(nota_usuario - nota_inferida) < 3:
+        return None
+    return {"usuario": nota_usuario, "inferida": nota_inferida,
+            "delta": nota_usuario - nota_inferida}
+
+
+def infer_nota(sinais):
+    """Nota de dificuldade inferida (1-10). Determinística — PRD §7.3.
+
+    `sinais`: dict com acerto_hist (None se 0q), acerto_bloco (None se inexistente),
+    score_dorm (float), leu_tema (bool), prevalencia ('alta'|'media'|'baixa').
+    Só sinais FRIOS independentes da saída (§7.6): nunca a profundidade da
+    preparação nem o acerto "morno" pós-PREPARAR.
+    """
+    acerto_hist = sinais.get("acerto_hist")
+    acerto_bloco = sinais.get("acerto_bloco")
+    score_dorm = sinais.get("score_dorm")
+    leu_tema = bool(sinais.get("leu_tema"))
+    prevalencia = sinais.get("prevalencia") or "media"
+
+    # eixo 1 — performance histórica define a BASE
+    if acerto_hist is None and not leu_tema:
+        base = 9                      # estreia pura → onboarding
+    elif acerto_hist is None:
+        base = 6                      # leu, sem volume registrado
+    elif acerto_hist < 50:
+        base = 8
+    elif acerto_hist < 65:
+        base = 7
+    elif acerto_hist < 80:
+        base = 5
+    else:
+        base = 3                      # >= 80%
+
+    # eixo 2 — frieza (dormência) empurra p/ cima; quente puxa p/ baixo.
+    # score_dorm None = sinal AUSENTE (≠ quente) → eixo neutro.
+    if score_dorm is not None:
+        if score_dorm >= 40:
+            base += 2
+        elif score_dorm >= 25:
+            base += 1
+        elif score_dorm < 7:
+            base -= 1
+
+    # eixo 3 — último bloco fraco confirma dificuldade VIVA
+    if acerto_bloco is not None and acerto_bloco < 60:
+        base += 1
+
+    # eixo 4 — prevalência ENAMED = piso de banca, não teto (neutro hoje §7.7)
+    if prevalencia == "baixa":
+        base -= 1
+    nota = _clamp(base, 1, 10)
+    if prevalencia == "alta":
+        nota = max(nota, 4)
+    return nota
+
+
+def montar_sinais(area, tema):
+    """Coleta os sinais frios de um tema do db/radar (read-only). PRD §7.3/§7.6."""
+    stats = db.get_tema_stats(area, tema)
+    acerto_hist = stats["percentual"] if (stats and stats.get("questoes")) else None
+    acerto_bloco = db.get_ultimo_bloco_tema(area, tema)
+
+    score_dorm = None       # None = sem sinal de dormência (≠ quente)
+    try:
+        import review_radar
+        for r in review_radar.coletar(area=area):
+            if r.get("tema") == tema:
+                score_dorm = r.get("score")
+                break
+    except Exception:
+        pass
+
+    last = db.get_theme_last_review(area=area, tema=tema)
+    leu = bool(last and last.get("last_review"))
+    if not leu:
+        try:
+            gtc = importlib.import_module("app.engine.get_topic_context")
+            leu = gtc._find_resumo(tema) is not None
+        except Exception:
+            pass
+
+    return {
+        "acerto_hist": acerto_hist,
+        "acerto_bloco": acerto_bloco,
+        "score_dorm": score_dorm,
+        "leu_tema": leu,
+        "prevalencia": "media",       # §7.7: grade.json ainda não tem prevalencia_enamed
+    }
+
+
+def _proposito(area, tema):
+    """exercicios (amplo) vs flashcards (direcionado). Cluster vencido → flashcards. PRD §5.2/§7.4."""
+    try:
+        q = db.get_cards_by_bucket(area=area, tema=tema)
+        vencidos = len(q.get("atrasados", [])) + len(q.get("hoje", []))
+    except Exception:
+        vencidos = 0
+    return ("flashcards" if vencidos >= 3 else "exercicios"), vencidos
+
+
+def difficulty_report(area, tema):
+    """Proposta read-only de nota/degrau/proposito p/ a abertura de task (PRD R3/R4)."""
+    sinais = montar_sinais(area, tema)
+    nota_inferida = infer_nota(sinais)
+    d = db.get_dificuldade(area, tema)
+    nota_usuario = d["nota"] if (d and d.get("nota") is not None) else None
+    fonte = d["fonte"] if d else None
+    nota_efetiva = nota_usuario if nota_usuario is not None else nota_inferida
+    degrau = _degrau_de(nota_efetiva)
+    proposito, vencidos = _proposito(area, tema)
+    largura = ("amplo (escopo do cronograma)" if proposito == "exercicios"
+               else "direcionado (cluster vencido)")
+    passo = (f"Revisar {tema} como dif-{nota_efetiva} ({degrau}), PREPARAR "
+             f"{'descomprimido' if nota_efetiva >= 7 else 'comprimido'}+mecanismo, "
+             f"{largura}; depois DRENAR.")
+    return {
+        "area": area, "tema": tema,
+        "nota_usuario": nota_usuario, "nota_fonte": fonte,
+        "nota_inferida": nota_inferida, "nota_efetiva": nota_efetiva,
+        "degrau": degrau, "paragrafos": list(DEGRAU_PARAGRAFOS[degrau]),
+        "divergencia": _divergencia(nota_usuario, nota_inferida),
+        "proposito": proposito, "cards_vencidos": vencidos,
+        "sinais": sinais,
+        "sugestao_passo": passo,
+    }
+
+
 def build():
     con = db.get_connection()
     total_q, total_a = get_totais(con)
@@ -177,7 +334,14 @@ def render(p):
 def main():
     ap = argparse.ArgumentParser(description="Plano do Dia (read-only).")
     ap.add_argument("--json", action="store_true", help="Saída JSON crua")
+    ap.add_argument("--difficulty", nargs=2, metavar=("AREA", "TEMA"),
+                    help="Reporta nota inferida + degrau + proposito de um tema (read-only)")
     args = ap.parse_args()
+    if args.difficulty:
+        area, tema = args.difficulty
+        print(json.dumps(difficulty_report(area, tema), ensure_ascii=False,
+                         default=str, indent=2))
+        return
     p = build()
     print(json.dumps(p, ensure_ascii=False, default=str, indent=2) if args.json else render(p))
 

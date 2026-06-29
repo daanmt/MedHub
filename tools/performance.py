@@ -24,6 +24,13 @@ from datetime import date, datetime
 
 DB_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'ipub.db')
 
+# Slot agregado de simulado (s098): sinal da predição ENAMED, NÃO volume.
+# Decisão s099: simulado não conta como questão "feita" (não polui cronograma/meta).
+# Os erros do simulado viram flashcards nos temas reais; a linha fica em sessoes_bulk
+# apenas como ponto da série de predição. Toda agregação de volume exclui esta área.
+AREA_SIMULADO = "Simulado"
+_EXCLUI_SIMULADO = f"area <> '{AREA_SIMULADO}'"
+
 # Meta final coerente com ESTADO.md (reconcile s084): R$ 4.410 / 17.000q = R$ 0,26/q em dez/2026.
 META_CUSTO_Q = 0.26
 
@@ -70,7 +77,7 @@ RITMOS_PROJECAO = (80, 90, 100)
 
 def get_totais(conn):
     cur = conn.cursor()
-    cur.execute("SELECT SUM(questoes_feitas), SUM(questoes_acertadas) FROM sessoes_bulk")
+    cur.execute(f"SELECT SUM(questoes_feitas), SUM(questoes_acertadas) FROM sessoes_bulk WHERE {_EXCLUI_SIMULADO}")
     row = cur.fetchone()
     total_q = row[0] or 0
     total_a = row[1] or 0
@@ -82,6 +89,7 @@ def get_por_area(conn):
     cur.execute("""
         SELECT area, SUM(questoes_feitas), SUM(questoes_acertadas)
           FROM sessoes_bulk
+         WHERE """ + _EXCLUI_SIMULADO + """
          GROUP BY area
     """)
     resultado = []
@@ -96,7 +104,7 @@ def get_por_area(conn):
 def get_questoes_do_mes(conn, mes_yyyy_mm):
     cur = conn.cursor()
     cur.execute(
-        "SELECT SUM(questoes_feitas) FROM sessoes_bulk WHERE strftime('%Y-%m', data_sessao) = ?",
+        f"SELECT SUM(questoes_feitas) FROM sessoes_bulk WHERE {_EXCLUI_SIMULADO} AND strftime('%Y-%m', data_sessao) = ?",
         (mes_yyyy_mm,),
     )
     row = cur.fetchone()
@@ -227,7 +235,7 @@ def bloco_marcos(total_q, hoje):
         linhas.append(f"- **{nome}** ({alvo}) — faltam **{faltam}q**.")
         if data_marco is None:
             continue
-        dias = (data_marco - hoje).days + 1  # inclui hoje
+        dias = (data_marco - hoje).days  # hoje inclusive, dia da prova exclusivo
         if dias <= 0:
             linhas.append(f"  - ⚠️ Data do marco ({data_marco.isoformat()}) já passou — atualizar `MARCOS`.")
             continue

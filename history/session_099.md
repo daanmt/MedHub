@@ -54,5 +54,5 @@ Sessão híbrida (engenharia de estado + estudo por questões). Duas frentes de 
 - **Seguir a S11** (faltam 10 das 13 tarefas): Vulvovaginites, Imunizações, Sepse, Síndromes Hipertensivas, etc. Ritmo-alvo ~88q/dia p/ fechar a grade.
 - **FSRS:** 12 cards vencem hoje (os de 28/06 maturando) + backlog — drenar no `/revisar`.
 - **Drill de execução:** ritual V/F no enunciado negativo; re-drill Wilms×neuro e criptorquidia.
-- **Pendências de fundo:** 16 cards do simulado (s098); resumo de Cirurgia Infantil (gap — armadilhas só nos cards); implementar predição ENAMED.
-- Acumulado: **4.217** (clínico; simulado 41 fora do volume).
+- **Pendências de fundo (zeradas no fim da s099):** ✅ 16 cards do simulado s098 cunhados nos temas reais (IDs 636-651); ✅ resumo de Cirurgia Infantil **já existia** (gold) e foi **ampliado** (torção de apêndice, hidronefrose antenatal/neonatal §18.3, parafimose, hipospádia, hepatobiliar); 🗄️ **predição ENAMED ARQUIVADA** por decisão do usuário (simulado permanece só como registro fora do volume + erros→cards).
+- Acumulado: **4.217** (clínico; simulado 41 fora do volume). Contadores finais: **400 erros · 422 cards ativos · 53 resumos**.

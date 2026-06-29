@@ -93,7 +93,7 @@ def _cronograma_hoje(total_q, hoje):
     if not wk:
         return None
     enamed = datetime.strptime(cr.ENAMED, "%Y-%m-%d").date()
-    dias = (enamed - hoje).days + 1
+    dias = (enamed - hoje).days  # dias de estudo: hoje inclusive, dia da prova exclusivo
     restante = sum(s["total_questoes"] for s in grade["semanas"] if s["semana"] >= conteudo)
     return {
         "conteudo": conteudo,
@@ -270,11 +270,12 @@ def build():
     hoje = date.today()
     q_mes = get_questoes_do_mes(con, hoje.strftime("%Y-%m"))
     q_hoje = con.cursor().execute(
-        "SELECT COALESCE(SUM(questoes_feitas),0) FROM sessoes_bulk WHERE data_sessao = ?",
+        "SELECT COALESCE(SUM(questoes_feitas),0) FROM sessoes_bulk "
+        "WHERE area <> 'Simulado' AND data_sessao = ?",  # s099: simulado não conta como feita
         (hoje.isoformat(),)).fetchone()[0]
     _nome, alvo, data_marco = MARCOS[0]            # ENAMED 12000 @ 13/09/2026
     faltam = max(0, alvo - (total_q or 0))
-    dias = (data_marco - hoje).days + 1
+    dias = (data_marco - hoje).days  # hoje inclusive, dia da prova exclusivo
     ritmo_alvo = round(faltam / dias, 1) if dias > 0 else None
     fsrs = _fsrs_counts(con)
     con.close()

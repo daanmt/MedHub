@@ -1,23 +1,33 @@
 # HANDOFF.md — ESTADO OPERACIONAL CURTO
-*Atualizado: 2026-06-28 ~16:30 — **s098: simulado dominical (41q, navegador interrompeu) + diagnóstico dos 16 erros + frente de predição ENAMED**. 25/41 = 61%; **10/16 erros foram EXECUÇÃO** (bug nº1 ×6 + conduta ×3 + leitura ×1), só 6 de conteúdo. Volume no slot dedicado `Simulado`. 16 erros persistidos em `tmp/simulado_s098_erros.md` p/ cunhagem. (s097 = curadoria do backlog: 115→98 temas, 409→386 cards.)*
+*Atualizado: 2026-06-29 — **s099: recalibração da reta (11 sem) + política do simulado fora do volume + 105q da S11 (20 cards) + resumo gold de MFC**. 77 dias/11,0 sem até 13/09 (=S24-calendário); decisão: fechar a grade S11→S28 (6.689q) até o ENAMED ≈ 87q/dia. Estudo 28/06: MFC 31/27, Exantemáticas 41/35, Cir. Infantil Pt3 33/22 → 20 erros = 20 cards (616-635). 🔴 enunciado negativo reincidiu 3×; Wilms×neuro + criptorquidia (direção) + escroto agudo. (s098 = simulado 41q/61%, 16 erros pendentes.)*
 
-## ▶ Próximo passo imediato — s099 (HOJE)
-**A) Adiantar o cronograma (~60-80 questões):** Semana 11 (Med. de Família, Exantemáticas Rev, Cir. Infantil Pt3 Rev, Vulvovaginites, Imunizações, Sepse, Síndromes Hipertensivas). Foco: **ritual anti-vazamento** — integrar o conjunto (o bug nº1 derrubou 6 do simulado).
-**B) Cunhar os 16 cards do simulado** — substrato em `tmp/simulado_s098_erros.md` (pipeline limpo, ancorados no elo); priorizar os 6 do bug nº1 + refresh de asma/GINA (2 erros).
-**C) Implementar a predição ENAMED** (frente `project_predicao_enamed`): série temporal de % → projeção + IC.
+## ▶ Próximo passo imediato — s100 (29/06)
+**A) Seguir a S11** (faltam 10 das 13 tarefas: Vulvovaginites, Imunizações, Sepse, Síndromes Hipertensivas, etc.). Ritmo-alvo **~88q/dia** p/ fechar a grade. Refresh pré-bloco antes de cada tema.
+**B) Drenar o FSRS** — 12 cards vencem hoje (os de 28/06) + backlog; `/revisar`. Re-drill dirigido: **enunciado negativo** (ritual V/F), **Wilms×neuro**, **criptorquidia (direção)**.
+**C) Pendências de fundo:** 16 cards do simulado (`tmp/simulado_s098_erros.md`); resumo de Cirurgia Infantil (gap); implementar predição ENAMED.
 
 ## Simulado / Predição ENAMED (s098 — frente nova)
 - Slot `Simulado` em `AREAS_VALIDAS` = volume/desempenho AGREGADO (sinal de condição-de-prova, o mais próximo do ENAMED); erros vinculam aos temas reais (sem dupla contagem). Usuário espelha 1 linha no Quadro Geral do dashboard.
 - 1º ponto da série: 41q/61%. A frente projetará a nota ENAMED com IC a partir da evolução.
+- **Simulados restantes: 10** (1/domingo, 05/07→06/09; o 1º de hoje já é o ponto inicial da série). Supersede o "11 pré-ENAMED" antigo do ESTADO.
+- 🔧 **Política s099 — simulado fora do volume:** as questões de simulado **não contam como "feitas"** (não poluem a contagem do cronograma/meta). A linha `Simulado` em `sessoes_bulk` persiste só como sinal da predição. Mecanismo: `performance.py::AREA_SIMULADO` + filtro `area<>'Simulado'` em `get_totais`/`get_por_area`/`get_questoes_do_mes` (herdado por `day_plan` e `cronograma`) + `day_plan.q_hoje`. Os **erros** seguem aproveitados → `insert_questao.py` (que NÃO mexe em `questoes_realizadas`) nos temas reais → flashcards.
+
+## 🎯 Decisão estratégica de cronograma (s099) — fechar a grade INTEIRA até o ENAMED
+- 13/09 cai na **semana-calendário 24** da grade (30 sem; S1 = 30/03). Conteúdo está em **S11**. **Decisão do usuário:** comprimir TODO o conteúdo restante (S11→S28, S29/S30 = revisão 0q) **dentro dos 77 dias** até a prova; acelerar questões se preciso.
+- **Falta de conteúdo: 6.689q (S11→S28)** → ritmo p/ fechar a grade ≈ **87q/dia corridos** (`day_plan`: "terminar a grade ~86.9/dia"). Acima do ritmo da meta-prova 10k (~76/dia), abaixo do teto 12k (~102/dia).
+- **Vão ENAMED→UERJ/USP** será tocado por OUTRO cronograma / talvez só simulados. Prioridade absoluta = grade até 13/09.
 
 ## Curadoria de cards (s097 — capacidade nova)
 - Workflow `.agents/workflows/curar-cards.md` (5 fases). Ferramentas: `normalize_taxonomia.py`, `insert_card_extra.py`, `detect_clones.py`, `recurate` (+`tipo`/+UTF-8), linter (+`orfao_sem_andaime`). Achado: defeito de card é de **autoria** → reforjar ancorado no erro > aposentar.
 
 ## Estado por frente
-- **Volume & Metas:** **4.153** (4.112 clínico + 41 simulado) / 10.000 (41%). Perf. ~79%. Custo/q acum. R$0,77.
-- **Cronograma (SSOT `Cronograma.pdf`):** **Próxima = S11**; calendário nominal S13.
-- **Conteúdo:** **52 resumos**. Gaps: `TCE.md`, `Sistemas de Informação em Saúde.md`.
-- **Erros & Cards:** **364 erros · 386 cards ativos** (taxonomia 98 temas, áreas canônicas) + **16 erros do simulado pendentes de cunhagem**.
+- **Volume & Metas:** **4.217** / 10.000 (42%) [+105 s099: 31 MFC + 41 Exantemáticas + 33 Cir. Infantil Pt3]. Perf. ~79%. Custo/q acum. R$0,77. **Simulado NÃO entra no volume (decisão s099)** — os 41q viram só ponto da série de predição; agregações de `performance.py`/`day_plan`/`cronograma` excluem `area='Simulado'`.
+- **Cronograma (SSOT `Cronograma.pdf`):** **Próxima = S11**; calendário nominal S13 (13/09 = S24-calendário). **Alvo s099: fechar S11→S28 (6.689q) até 13/09 ≈ 87q/dia corridos.**
+- **Conteúdo:** **53 resumos** (+1 s099: `Medicina de Família e Comunidade.md`, gold, indexado no RAG). Gaps: `TCE.md`, `Sistemas de Informação em Saúde.md`.
+- **Erros & Cards:** **384 erros · 406 cards ativos** (taxonomia 98 temas, áreas canônicas) + **16 erros do simulado pendentes de cunhagem**.
+- **MFC (s099):** 31q/27a (87%); 3 erros cunhados (IDs 616-618). Cluster = lacuna em MCCP (ordem + nº de componentes). Q2 = estruturas familiares (banca-dependente).
+- **Exantemáticas Rev. (s099):** 41q/35a (85%); 6 erros cunhados (IDs 619-624), **TODOS sarampo** = lacuna de conteúdo focal em **bloqueio vacinal/PPE** (dose zero, vacina×IG por idade/imunidade, bloqueio na suspeita, recrudescência 2018, PEES tardia). Armadilhas somadas ao resumo. 🔴 **Enunciado negativo reincidiu 2× (Q1/Q3)** — execução, não só conteúdo.
+- **Cir. Infantil Pt3 Rev. (s099):** 33q/22a (67%); 11 erros cunhados (IDs 625-635, tema "Cirurgia Infantil"). Clusters: **criptorquidia** (palpável→orquidopexia / não palpável→laparoscopia), **escroto agudo** (torção testicular×apêndice×epididimite), **Wilms×neuroblastoma** (origem+metástase / idade), **hidronefrose fetal-neonatal** (unilateral→aguardar / grau3-4→renograma diurético), parafimose. 🔴 enunciado negativo reincidiu (Q3). **Gap: não há resumo de Cirurgia Infantil** — armadilhas só nos cards.
 
 ## Pendências ativas
 Cunhar 16 cards do simulado. Implementar predição ENAMED. Ratificar contrato Revisão Calibrada. Limpeza pós-curadoria (29 regra-vazia · Cirurgia Infantil). Reescrever `TCE.md`. Áreas fracas: Hepato 57% · Dermato 67% · Cardio 67% · Otorrino 68% · Nefro 70% · Hemato 72%.

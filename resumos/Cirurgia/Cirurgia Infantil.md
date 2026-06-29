@@ -286,6 +286,12 @@ aliases: [Cirurgia Infantil, Cirurgia Pediátrica, HDC, Estenose Pilórica, Inva
     - **Graus I–III (baixo grau):** clínico — ⭐ **quimioprofilaxia antibiótica** mantida enquanto persistir o refluxo (tendência à resolução espontânea com o crescimento).
     - **Graus IV–V (alto grau):** cirúrgico (reimplante ureteral com alongamento do túnel submucoso) — cura espontânea infrequente. Também cirurgia no baixo grau sem melhora após 2–3 anos de profilaxia.
 
+### 18.3 Hidronefrose Antenatal e Neonatal
+- **Classificação da Sociedade Fetal de Urologia (SFU), grau 0–4:** 0 = sem HN; 1 = leve separação do complexo ecogênico central; 2 = cálices visíveis; 3 = pelve dilatada com quase todos os cálices; ⭐ **4 = grau 3 + afilamento do parênquima**. A probabilidade de anomalia significativa é proporcional à gravidade.
+- ⭐ **Conduta ANTENATAL — hidronefrose UNILATERAL com rim contralateral normal: NÃO intervir in utero;** investigar após o nascimento. Antecipar o parto não traz benefício.
+- ⭐ **Exceção que exige atenção pré-natal:** uretero-hidronefrose **BILATERAL com bexiga espessada** (sugere obstrução infravesical / **VUP** em feto masculino) **e** com sinais de deterioração (oligo/anidrâmnio → risco de hipoplasia pulmonar) → pode indicar **derivação vésico-amniótica**.
+- **Investigação PÓS-NATAL:** 1º exame = **USG** (sem radiação). ⭐ **Renograma com diurético** é o exame de escolha para definir **obstrução funcional** (ex.: estenose de junção ureteropiélica) e a função renal diferencial nas HN persistentes **grau 3–4**, após excluir VUP. **Uretrocistografia miccional** se houver dilatação ureteral/suspeita de VUP ou RVU; a **urografia excretora** só precede o renograma se houver dilatação ureteral bilateral.
+
 ---
 
 ## 19. Criptorquidia
@@ -306,6 +312,7 @@ aliases: [Cirurgia Infantil, Cirurgia Pediátrica, HDC, Estenose Pilórica, Inva
     - Diagnóstico: clínico; em caso de dúvida, **USG com Doppler** (gônada avascular). ⭐ **Janela de viabilidade de ~6 horas.**
     - Tratamento: **exploração cirúrgica** — distorção + **orquidopexia** se viável (orquiectomia se inviável); ⭐ **orquidopexia CONTRALATERAL no mesmo ato** (o defeito anatômico costuma ser bilateral).
 - **Orquiepididimite:** condição inflamatória/infecciosa; em crianças, predominam **Gram-negativos entéricos**. Dor insidiosa, disúria, urgência, febre; ⭐ **sinal de Prehn POSITIVO** (alívio à elevação). Tratamento clínico (antibiótico, suspensório escrotal, anti-inflamatório).
+- **Torção do apêndice testicular (hidátide de Morgagni):** ⭐ causa frequente de escroto agudo entre **6 e 12 anos**. Dor de **instalação insidiosa/progressiva** (oposto da torção testicular súbita), focal no polo superior; ⭐ **"blue dot sign"** (ponto azulado de ~1 cm no polo superior, em ~20%); **reflexo cremastérico PRESERVADO**; SEM sintomas urinários. USG com Doppler diferencia da torção testicular (fluxo testicular preservado). ⭐ **Tratamento CONSERVADOR:** repouso + anti-inflamatório (não cirúrgico).
 
 ---
 
@@ -360,3 +367,9 @@ aliases: [Cirurgia Infantil, Cirurgia Pediátrica, HDC, Estenose Pilórica, Inva
 - 🔴 **Torção testicular: janela de ~6 h, Prehn NEGATIVO, cremastérico abolido → exploração imediata + orquidopexia BILATERAL.** Orquiepididimite: Prehn POSITIVO, disúria/febre, tratamento clínico.
 - 🔴 **Massa abdominal que CRUZA a linha média na criança = neuroblastoma** (catecolaminas↑, mais novo, mau estado geral, desloca o rim sem destruí-lo). **Wilms tipicamente NÃO cruza** (restrito à loja renal, bom estado geral, mais velho ~5 anos, trombo em veia renal/cava) — **mas um Wilms volumoso PODE cruzar**: quando cruza, o conjunto decide (**hematúria + bom estado geral + ~4-5 anos = Wilms**); a ultrapassagem não afasta o diagnóstico. **Nenhum sinal isolado fecha** — pesar o conjunto, não um discriminador.
 - 🔴 **Prune-Belly × VUP:** megabexiga + uretero-hidronefrose bilateral **não é exclusivo da VUP**. A **tríade** (parede abdominal deficiente + criptorquidia bilateral + malformação urinária) + **uretra de calibre normal na UCM** define **Prune-Belly** e exclui VUP. Série de sinais → pense **SÍNDROME**.
+- 🔴 **Escroto agudo — três assinaturas:** torção testicular (SÚBITO, afebril, cremastérico abolido, Prehn negativo → cirurgia imediata) × **torção de apêndice testicular** (INSIDIOSO, 6-12 anos, "blue dot", cremastérico preservado → conservador) × orquiepididimite (febre/disúria, Prehn positivo → clínico). O "blue dot" + curso insidioso SEM sintoma urinário é apêndice — não tratar como epididimite.
+- 🔴 **Hidronefrose fetal UNILATERAL (rim contralateral normal) = aguardar o nascimento** — sem tratamento intrauterino nem antecipação de parto. Intervenção in utero só na uretero-hidronefrose BILATERAL com bexiga espessada (VUP) e deterioração (oligo/anidrâmnio).
+- 🔴 **Hidronefrose neonatal persistente grau 3-4 (sem dilatação ureteral, VUP excluída) → renograma com diurético** (avalia obstrução funcional/EJUP e função diferencial). Doppler (sem suspeita vascular) e TC (não avalia função) não respondem à pergunta.
+- 🔴 **Parafimose:** 1ª medida = **redução digital**; se falhar, incisão dorsal do anel. **Postectomia é ELETIVA** (episódios repetidos/trauma prepucial), nunca cirurgia de urgência de rotina. Não tratada → necrose.
+- 🔴 **Timing cirúrgico diferido:** **hidrocele comunicante** = expectante até ~10-12 meses; **hipospádia** = cirurgia no 2º semestre (não ao diagnóstico). Já a **hérnia inguinal** e o **testículo ectópico** se operam precocemente/ao diagnóstico.
+- 🔴 **Massa abdominal + acolia (fezes esbranquiçadas) na criança = obstrução biliar por massa** (cisto de colédoco — tríade icterícia+dor+massa, <10 anos; ou hepatoblastoma comprimindo vias biliares, <5 anos, AFP elevada), **não colangite** (que exige a tríade de Charcot: febre + icterícia + dor).

@@ -1,7 +1,7 @@
 ---
 type: contract
 layer: core
-status: pending-ratification
+status: canonical
 version: 1.0
 relates_to: [forgetting-curve-contract, fsrs-management-contract, cronograma-contract, AGENTE]
 ---

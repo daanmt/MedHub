@@ -1,4 +1,4 @@
-# Session 014 — Análise de Questões de Trauma Abdominal/ATLS
+# Session 014 -- Análise de Questões de Trauma Abdominal/ATLS
 **Data:** 2026-03-12
 **Ferramenta:** Antigravity 
 **Continuidade:** Revezamento posterior ao sumário de Trauma.

@@ -1,4 +1,4 @@
-# Session 069 — Resumo: Sistemas de Informação em Saúde
+# Session 069 -- Resumo: Sistemas de Informação em Saúde
 **Data:** 2026-04-16
 **Ferramenta:** Gemini 3.1 Pro (High)
 **Continuidade:** Sessão 068

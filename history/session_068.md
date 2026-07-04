@@ -1,4 +1,4 @@
-# Session 068 — Cirurgia Infantil e Refinamentos de Integração
+# Session 068 -- Cirurgia Infantil e Refinamentos de Integração
 **Data:** 2026-04-16
 **Ferramenta:** Antigravity / Gemini 3.1 Pro
 **Continuidade:** Sessão 067

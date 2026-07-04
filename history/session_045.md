@@ -1,4 +1,4 @@
-# Session 045 — Análise de Sífilis Congênita e Reinfecção Materna
+# Session 045 -- Análise de Sífilis Congênita e Reinfecção Materna
 **Data:** 2026-03-24
 **Ferramenta:** Antigravity
 **Continuidade:** Sessão 044

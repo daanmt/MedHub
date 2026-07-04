@@ -18,7 +18,7 @@
 
 ## Destaques do Resumo
 - **2016**: Rastreio trienal; início aos 25 anos; encerramento aos 64 anos.
-- **2025**: Teste DNA-HPV a cada 5 anos; gestão por genotipagem (16/18+ → Colposcopia; outros+ → Citologia reflexa).
+- **2025**: Teste DNA-HPV a cada 5 anos; gestão por genotipagem (16/18+ -> Colposcopia; outros+ -> Citologia reflexa).
 - **Armadilhas**: NIC 1 (Histologia) é conduta expectante; Cauterização de ectopia é proibida se assintomática; Vacinação HPV agora em dose única para imunocompetentes.
 
 ## Próximos Passos

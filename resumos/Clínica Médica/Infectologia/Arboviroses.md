@@ -49,7 +49,7 @@ Sinais precoces precursores da disfunção sistêmica vascular.
 - **H**epatomegalia
 - **H**ematócrito francamente ascendente (hemoconcentração instalada)
 
-⭐ **Apresentação atípica em < 2 anos:** nessa faixa, o quadro grave pode ser a **primeira manifestação clínica perceptível** — o início febril passa despercebido e a criança pode chegar já na fase crítica/choque. Exige limiar de suspeição mais baixo.
+⭐ **Apresentação atípica em < 2 anos:** nessa faixa, o quadro grave pode ser a **primeira manifestação clínica perceptível** -- o início febril passa despercebido e a criança pode chegar já na fase crítica/choque. Exige limiar de suspeição mais baixo.
 
 **Dengue Grave:**
 - Choque consolidado (taquicardia, descompensação com pulso filiforme, PA convergente < 20 mmHg, extremidades frias, oligúria).
@@ -57,7 +57,7 @@ Sinais precoces precursores da disfunção sistêmica vascular.
 - Sangramento grave manifesto (SNC, hemorragia digestiva, metrorragia volumosa).
 - Disfunção orgânica de sistema primário: miocardite, encefalite ou hepatite severa (transaminases > 1000).
 
-⭐ **Eixo de gravidade = extravasamento plasmático, não sangramento.** Na classificação antiga, **dengue hemorrágica** exigia febre + trombocitopenia (≤ 100.000) + tendência hemorrágica **+ evidência de extravasamento de plasma** (hemoconcentração ≥ 20%, queda do Ht pós-hidratação, derrame/ascite/hipoproteinemia). Petéquias, epistaxe e prova do laço positiva com plaquetopenia, **sem** extravasamento, configuram **dengue clássica** — não hemorrágica.
+⭐ **Eixo de gravidade = extravasamento plasmático, não sangramento.** Na classificação antiga, **dengue hemorrágica** exigia febre + trombocitopenia (≤ 100.000) + tendência hemorrágica **+ evidência de extravasamento de plasma** (hemoconcentração ≥ 20%, queda do Ht pós-hidratação, derrame/ascite/hipoproteinemia). Petéquias, epistaxe e prova do laço positiva com plaquetopenia, **sem** extravasamento, configuram **dengue clássica** -- não hemorrágica.
 
 ⭐ **Infecção secundária (ADE):** uma segunda infecção por **sorotipo diferente** é o principal fator de risco imunológico para dengue grave (facilitação dependente de anticorpos). "Infecção secundária" ≠ infecção bacteriana sobreposta. Outros fatores de gravidade: extremos de idade e etnia.
 
@@ -77,7 +77,7 @@ Sinais precoces precursores da disfunção sistêmica vascular.
 - **Grupo D (Vermelho):** Presença de Choque, hemorragia grave ou disfunção orgânica. Exige internamento em UTI.
   - **Manejo:** Expansão rápida com cristaloides (SF 0,9% ou RL) a **20 mL/kg em até 20 minutos**. Pode ser repetido até 3 vezes se persistência do choque.
   - **⚠️ Reestadiamento Dinâmico:** Se um paciente em observação (Grupo A, B ou C) apresentar **piora súbita da dor abdominal, vômitos persistentes ou agitação psicomotora**, deve ser imediatamente reestagiado para **Grupo D** e submetido à expansão rápida.
-  - ⭐ **Precisão C vs D:** o surgimento de **sinais de alarme isolados** (dor abdominal, vômitos persistentes) reclassifica para **Grupo C → 10 mL/kg na 1ª hora** (não conduta empírica de "aumentar hidratação + antiemético"). A passagem para **Grupo D** (20 mL/kg em 20 min) exige **choque, hemorragia grave ou disfunção orgânica** — a agitação só conta como gatilho de D quando traduz hipoperfusão/choque.
+  - ⭐ **Precisão C vs D:** o surgimento de **sinais de alarme isolados** (dor abdominal, vômitos persistentes) reclassifica para **Grupo C -> 10 mL/kg na 1ª hora** (não conduta empírica de "aumentar hidratação + antiemético"). A passagem para **Grupo D** (20 mL/kg em 20 min) exige **choque, hemorragia grave ou disfunção orgânica** -- a agitação só conta como gatilho de D quando traduz hipoperfusão/choque.
 
 ⚠️ **Fármacos contraindicados em qualquer categoria de Dengue:**
 - Anti-inflamatórios Não Esteroidais (AINEs), Ácido Acetilsalicílico (AAS), e Corticosteroides.
@@ -133,24 +133,24 @@ Sinais precoces precursores da disfunção sistêmica vascular.
 ## 4. Febre Amarela
 
 ### 4.1 Epidemiologia e Fatores de Risco
-- **Agente:** *Flavivirus* (família *Flaviviridae*) — **vírus de RNA** fita simples, envelopado, replicação citoplasmática (mesmo gênero de dengue e Zika).
+- **Agente:** *Flavivirus* (família *Flaviviridae*) -- **vírus de RNA** fita simples, envelopado, replicação citoplasmática (mesmo gênero de dengue e Zika).
 - **Período de incubação:** **3 a 6 dias** (podendo, raramente, estender-se até ~15 dias).
-- **Período de viremia:** inicia **24–48h antes** dos sintomas e perdura até o **4º–5º dia** (não ultrapassa ~7 dias) → isolamento prolongado de 14 dias é desnecessário.
+- **Período de viremia:** inicia **24-48h antes** dos sintomas e perdura até o **4º-5º dia** (não ultrapassa ~7 dias) -> isolamento prolongado de 14 dias é desnecessário.
 - **Fatores de Gravidade:** Extremos de idade (< 2 anos e > 65 anos), gestantes e **Povos Originários (etnia)** são considerados grupos de maior vulnerabilidade.
 - **Transmissão (vetores por ciclo):** ciclo **silvestre** = *Haemagogus* e *Sabethes* (responsável pelos casos atuais no Brasil); ciclo **urbano** = *Aedes aegypti* (sem registros urbanos no Brasil desde 1942). *Phlebotomus* é vetor da leishmaniose (distrator).
 - ⭐ **Principal medida de controle = imunização** (não o controle vetorial, que é central na dengue/chikungunya/Zika).
 
 **Formas clínicas:**
 - **Leve/moderada:** febre, cefaleia, mialgia, náuseas, vômitos; icterícia ausente ou leve. **Sinal de Faget** (bradicardia relativa em vigência de febre alta) pode estar presente.
-- **Maligna:** após um período de **remissão de 6–48h** (entre o 3º e o 5º dia), há agravamento com **icterícia, insuficiência renal e fenômenos hemorrágicos** (não trombóticos). Letalidade alta, sobretudo nos que necessitam de terapia renal substitutiva.
+- **Maligna:** após um período de **remissão de 6-48h** (entre o 3º e o 5º dia), há agravamento com **icterícia, insuficiência renal e fenômenos hemorrágicos** (não trombóticos). Letalidade alta, sobretudo nos que necessitam de terapia renal substitutiva.
 
 ### 4.2 Imunização (Vacina 17DD)
 - **Tipo:** Vírus vivo atenuado, **cultivado em ovo de galinha**; via **subcutânea**; proteção a partir de **10 dias**.
-- **Esquema por idade:** 1ª dose aos **9 meses**, reforço aos **4 anos** (para quem se vacinou antes dos 5 anos). Depois, **dose única vitalícia** — esquema adotado no Brasil desde **abril/2017** (não há reforços periódicos, ex.: aos 12 anos).
+- **Esquema por idade:** 1ª dose aos **9 meses**, reforço aos **4 anos** (para quem se vacinou antes dos 5 anos). Depois, **dose única vitalícia** -- esquema adotado no Brasil desde **abril/2017** (não há reforços periódicos, ex.: aos 12 anos).
 - **Faixa de indicação:** **9 meses a 59 anos**. Maiores de **60 anos** apenas se residirem/viajarem para área de risco. Todo o território nacional é área de recomendação desde **2018**.
-- **Viajante para área de risco:** vacinar com antecedência **mínima de 10 dias** (anticorpos protetores surgem entre o 7º e o 10º dia); imunogenicidade de 90–98%.
-- ⚠️ **Eventos adversos graves:** **Doença Viscerotrópica Aguda (DVA-VFA)** — quadro multissistêmico que mimetiza a febre amarela selvagem — e **Doença Neurotrópica Aguda** (meningoencefalite 7–21 dias pós-vacina). São os eventos graves clássicos cobrados em prova.
-- **Contraindicações:** Imunossuprimidos graves (de **qualquer natureza**, primária ou secundária) e gestantes (de regra). Lactantes: contraindicada até o bebê completar **6 meses** (se indispensável, suspender o aleitamento por 10–14 dias).
+- **Viajante para área de risco:** vacinar com antecedência **mínima de 10 dias** (anticorpos protetores surgem entre o 7º e o 10º dia); imunogenicidade de 90-98%.
+- ⚠️ **Eventos adversos graves:** **Doença Viscerotrópica Aguda (DVA-VFA)** -- quadro multissistêmico que mimetiza a febre amarela selvagem -- e **Doença Neurotrópica Aguda** (meningoencefalite 7-21 dias pós-vacina). São os eventos graves clássicos cobrados em prova.
+- **Contraindicações:** Imunossuprimidos graves (de **qualquer natureza**, primária ou secundária) e gestantes (de regra). Lactantes: contraindicada até o bebê completar **6 meses** (se indispensável, suspender o aleitamento por 10-14 dias).
   - **Nuance:** Em situações de surto com alto risco de exposição, a vacinação de gestantes é permitida.
   - **Doença Renal Crônica:** A DRC isolada, sem imunossupressão associada, **não** é contraindicação para a vacina.
 - **Larvicidas:** O uso de larvicidas (ex: piriproxifem) em reservatórios de água **não** possui relação causal comprovada com teratogenicidade ou microcefalia.
@@ -160,24 +160,24 @@ Sinais precoces precursores da disfunção sistêmica vascular.
 ## 5. Armadilhas de Prova
 
 - 🔴 **Choque na Dengue:** A etiologia é o extravasamento plasmático por disfunção endotelial (choque hipovolêmico distributivo), e não a perda sanguínea por hemorragias de mucosas.
-- 🔴 **Diagnóstico Diferencial:** Poliartralgia incapacitante/edema → **Chikungunya**. Exantema intensamente pruriginoso + Conjuntivite não purulenta + Normotermia → **Zika**. Prostração + Hemoconcentração + Sinais de Alarme → **Dengue**.
-- 🔴 **Manejo C vs D (precisão):** O surgimento de **sinais de alarme isolados** (dor abdominal, vômitos persistentes) reclassifica para **Grupo C → 10 mL/kg na 1ª hora**. A expansão rápida do **Grupo D** (20 mL/kg em 20 min) exige **choque, hemorragia grave ou disfunção orgânica** — a agitação só puxa para D quando traduz hipoperfusão/choque. *(Refina a redação anterior, que tratava dor abdominal + agitação genericamente como D.)*
+- 🔴 **Diagnóstico Diferencial:** Poliartralgia incapacitante/edema -> **Chikungunya**. Exantema intensamente pruriginoso + Conjuntivite não purulenta + Normotermia -> **Zika**. Prostração + Hemoconcentração + Sinais de Alarme -> **Dengue**.
+- 🔴 **Manejo C vs D (precisão):** O surgimento de **sinais de alarme isolados** (dor abdominal, vômitos persistentes) reclassifica para **Grupo C -> 10 mL/kg na 1ª hora**. A expansão rápida do **Grupo D** (20 mL/kg em 20 min) exige **choque, hemorragia grave ou disfunção orgânica** -- a agitação só puxa para D quando traduz hipoperfusão/choque. *(Refina a redação anterior, que tratava dor abdominal + agitação genericamente como D.)*
 - 🔴 **Reação Cruzada:** Ocorre predominantemente entre Dengue e Zika (ambos Flavivírus).
 - 🔴 **Vacina Febre Amarela:** Não é contraindicada em pacientes com Doença Renal Crônica estável. Gestantes podem ser vacinadas em cenários de alto risco epidemiológico.
 - 🔴 **Monitoramento Grupo B:** Exige obrigatoriamente a realização de hemograma para avaliação do hematócrito antes da decisão de alta ou internação.
 - 🔴 **Dose C vs D (a banca troca os números):** Grupo C (sinal de alarme) = **10 mL/kg na primeira hora**. Grupo D (choque) = **20 mL/kg em até 20 min**. Atribuir a dose/tempo do D ao C é o erro clássico.
-- 🔴 **Sobreposição Chikungunya × Zika:** quando o caso mistura prurido e conjuntivite (Zika) com artralgia intensa e **febre alta**, o que decide é a **artralgia exuberante + febre alta → Chikungunya**. Na Zika a artralgia é leve e a febre baixa/ausente.
-- 🔴 **Achado que sugere Zika:** **edema periarticular/de extremidades** (critério de definição de caso). Fenômeno hemorrágico é da dengue; leucopenia é inespecífica — ambos são distratores em questão de Zika.
+- 🔴 **Sobreposição Chikungunya × Zika:** quando o caso mistura prurido e conjuntivite (Zika) com artralgia intensa e **febre alta**, o que decide é a **artralgia exuberante + febre alta -> Chikungunya**. Na Zika a artralgia é leve e a febre baixa/ausente.
+- 🔴 **Achado que sugere Zika:** **edema periarticular/de extremidades** (critério de definição de caso). Fenômeno hemorrágico é da dengue; leucopenia é inespecífica -- ambos são distratores em questão de Zika.
 - 🔴 **Incubação da Febre Amarela = 3 a 6 dias** (janelas de 10-14 ou 14-21 dias são distratores).
 - 🔴 **Vacina FA (eventos adversos):** Doença Viscerotrópica Aguda (DVA-VFA) e Doença Neurotrópica Aguda são os eventos graves. A **imunização** é a principal medida de controle da FA (não o controle vetorial).
 - 🔴 **Prova do laço pediátrica:** criança = 3 min de insuflação e **≥ 10 petéquias**; adulto = 5 min e ≥ 20 petéquias.
-- 🔴 **Sinais de alarme = conduta protocolizada, não empírica:** ao surgirem sob observação, reclassificar para Grupo C e dar **10 mL/kg na 1ª hora** — não "aumentar hidratação + antiemético e reavaliar".
+- 🔴 **Sinais de alarme = conduta protocolizada, não empírica:** ao surgirem sob observação, reclassificar para Grupo C e dar **10 mL/kg na 1ª hora** -- não "aumentar hidratação + antiemético e reavaliar".
 - 🔴 **Dengue hemorrágica ≠ só sangramento:** exige **extravasamento plasmático** (hemoconcentração ≥ 20%, derrame, hipoproteinemia). Sangramento + plaquetopenia sem extravasamento = dengue clássica.
 - 🔴 **Infecção secundária (ADE):** 2ª infecção por **sorotipo diferente** eleva o risco de dengue grave. Não confundir com infecção bacteriana sobreposta.
-- 🔴 **Vacina FA — esquema:** 9 meses + reforço aos 4 anos; dose única se primovacina > 4 anos. Viajante: **≥ 10 dias** antes da viagem.
-- 🔴 **Vacina FA — contraindicação vs DRC:** imunossuprimidos (qualquer natureza) e gestantes (de regra) são contraindicados; **DRC estável isolada NÃO é contraindicação**. Distrator recorrente.
+- 🔴 **Vacina FA -- esquema:** 9 meses + reforço aos 4 anos; dose única se primovacina > 4 anos. Viajante: **≥ 10 dias** antes da viagem.
+- 🔴 **Vacina FA -- contraindicação vs DRC:** imunossuprimidos (qualquer natureza) e gestantes (de regra) são contraindicados; **DRC estável isolada NÃO é contraindicação**. Distrator recorrente.
 - 🔴 **Vetores da FA por ciclo:** *Aedes aegypti* é vetor **urbano** (nunca silvestre); silvestre = *Haemagogus* e *Sabethes*. *Phlebotomus* é da leishmaniose.
 - 🔴 **Vírus da FA = RNA** (*Flavivirus*), nunca DNA.
-- 🔴 **Viremia da FA < 7 dias** (24–48h antes dos sintomas até o 4º–5º dia) → isolar caso por 14 dias é desnecessário.
-- 🔴 **Sinal de Faget:** bradicardia relativa apesar de febre alta — clássico (não exclusivo) da FA.
+- 🔴 **Viremia da FA < 7 dias** (24-48h antes dos sintomas até o 4º-5º dia) -> isolar caso por 14 dias é desnecessário.
+- 🔴 **Sinal de Faget:** bradicardia relativa apesar de febre alta -- clássico (não exclusivo) da FA.
 - 🔴 **Esquema vacinal FA:** dose única vitalícia desde 2017; único reforço é aos 4 anos. Não há reforço aos 12 anos nem doses periódicas. Diagnóstico da dengue: NS1/PCR até o 5º dia, IgM a partir do 6º.

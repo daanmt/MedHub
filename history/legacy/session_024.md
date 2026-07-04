@@ -1,4 +1,4 @@
-# Session 024 — Upgrade Pedagógico Flashcards v3.8 Expert
+# Session 024 -- Upgrade Pedagógico Flashcards v3.8 Expert
 **Data:** 2026-03-14
 **Ferramenta:** Antigravity (Advanced Agentic Coding)
 **Continuidade:** Sessão 023

@@ -1,7 +1,7 @@
-# Session 001 — Retroativo: Histórico pré-reestruturação
+# Session 001 -- Retroativo: Histórico pré-reestruturação
 **Data:** 2025-02 a 2026-03-03
 **Ferramenta:** Claude Code (Sonnet), Antigravity (vários modelos)
-**Continuidade:** N/A — primeira entrada
+**Continuidade:** N/A -- primeira entrada
 
 ---
 

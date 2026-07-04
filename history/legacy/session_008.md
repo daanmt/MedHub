@@ -1,4 +1,4 @@
-# Sessão 008 — Resumo de Hemostasia
+# Sessão 008 -- Resumo de Hemostasia
 *Data: 2026-03-06 | Ferramenta: Antigravity*
 
 ## Objetivos

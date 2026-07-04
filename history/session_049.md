@@ -1,4 +1,4 @@
-# Session 049 — Pediatria (Icterícia e Sepse Neonatal)
+# Session 049 -- Pediatria (Icterícia e Sepse Neonatal)
 **Data:** 2026-03-25
 **Ferramenta:** Antigravity
 **Continuidade:** Sessão 048

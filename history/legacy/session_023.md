@@ -1,4 +1,4 @@
-# Session 023 — Streamlit Web App e Pivô Arquitetural (Zero DB)
+# Session 023 -- Streamlit Web App e Pivô Arquitetural (Zero DB)
 **Data:** 2026-03-14
 **Ferramenta:** Antigravity
 **Continuidade:** Sessão 022

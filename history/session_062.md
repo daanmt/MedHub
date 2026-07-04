@@ -6,10 +6,10 @@ area: Pediatria
 tema: Icterícia e Sepse Neonatal
 questoes_analisadas: 3
 erros_inseridos: 3
-ids_sqlite: 345–347
+ids_sqlite: 345-347
 ---
 
-# Sessão 062 — Análise de Sepse Neonatal (Pediatria)
+# Sessão 062 -- Análise de Sepse Neonatal (Pediatria)
 
 ## Resumo executivo
 
@@ -25,9 +25,9 @@ Sessão de análise de erros com foco em **Icterícia e Sepse Neonatal** (Pediat
 - GBS: agente mais comum, mas jamais causa LA marrom, exantema cutâneo ao nascimento nem monocitose.
 - Transmissão: transplacentária após intoxicação alimentar materna (mãe habitualmente assintomática).
 
-### 2. Exceção SBP — taquipneia isolada nas primeiras 6h
+### 2. Exceção SBP -- taquipneia isolada nas primeiras 6h
 - **Lacuna:** aplicação da regra geral "ATB empírico em qualquer suspeita" sem reconhecer a exceção de taquipneia isolada.
-- **Lição:** RN com taquipneia como único sinal clínico < 6h de vida, sem deterioração sistêmica → **observação clínica + aguardar hemocultura**. PCR coletada às 6h tem valor preditivo limitado (eleva-se após 12–24h). ATB empírico apenas se evolução desfavorável ou hemocultura positiva.
+- **Lição:** RN com taquipneia como único sinal clínico < 6h de vida, sem deterioração sistêmica -> **observação clínica + aguardar hemocultura**. PCR coletada às 6h tem valor preditivo limitado (eleva-se após 12-24h). ATB empírico apenas se evolução desfavorável ou hemocultura positiva.
 
 ### 3. Classificação da ampicilina
 - **Lacuna:** não reconhecer a ampicilina como pertencente ao grupo das penicilinas (aminopenicilina).
@@ -39,7 +39,7 @@ Sessão de análise de erros com foco em **Icterícia e Sepse Neonatal** (Pediat
 
 | Artefato | Modificação |
 |---|---|
-| `ipub.db` | 3 erros inseridos (IDs 345–347) via `tools/insert_questao.py` |
+| `ipub.db` | 3 erros inseridos (IDs 345-347) via `tools/insert_questao.py` |
 | `resumos/Pediatria/Icterícia e Sepse Neonatal.md` | +2 blocos clínicos (*Listeria* discriminador + exceção SBP) + 2 armadilhas cumulativas na seção "Armadilhas de Prova" |
 | `ESTADO.md` | Entrada da sessão 062 adicionada em "Últimas sessões" |
 

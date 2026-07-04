@@ -1,4 +1,4 @@
-# Session 101 — Criação de Resumos Padrão-Ouro e Finalização da Fila FSRS
+# Session 101 -- Criação de Resumos Padrão-Ouro e Finalização da Fila FSRS
 **Data:** 2026-06-30
 **Ferramenta:** Antigravity IDE
 **Continuidade:** Sessão 100
@@ -21,7 +21,7 @@
 - **Arboviroses (Dengue Grave):** Extremos de idade (< 2 anos e > 65 anos), gestantes e povos originários (indígenas) são fatores de risco demográficos isolados.
 - **Esporotricose:** O padrão-ouro de confirmação diagnóstica é a cultura em meio Sabouraud, não a biópsia ou o exame direto por KOH (baixa sensibilidade).
 - **Hanseníase (Reações):** A neurite aguda associada a piora de lesões antigas em tratamento é a Reação Tipo 1 (Reação Reversa). Trata-se com Prednisona 1 mg/kg/dia e **mantém-se a PQT** inalterada.
-- **Cetoacidose Diabética (Insulina regular):** Ao cruzar a glicemia abaixo de 200–250 mg/dL com acidose ainda ativa (cetoácidos na circulação), reduz-se a infusão contínua de insulina regular pela metade (0,02 a 0,05 UI/kg/h) e associa-se **Soro Glicosado** para evitar hipoglicemia. Não se deve dar NPH ou suspender a BIC.
+- **Cetoacidose Diabética (Insulina regular):** Ao cruzar a glicemia abaixo de 200-250 mg/dL com acidose ainda ativa (cetoácidos na circulação), reduz-se a infusão contínua de insulina regular pela metade (0,02 a 0,05 UI/kg/h) e associa-se **Soro Glicosado** para evitar hipoglicemia. Não se deve dar NPH ou suspender a BIC.
 
 ## Artefatos criados/modificados
 - [Imunizações.md](file:///c:/Users/daanm/MedHub/resumos/Pediatria/Imunizações.md) (Criado)

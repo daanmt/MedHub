@@ -1,4 +1,4 @@
-# Sessão 048 — Consolidação de Memória e Taxonomia (2026-03-25)
+# Sessão 048 -- Consolidação de Memória e Taxonomia (2026-03-25)
 
 ## 🎯 Objetivos da Sessão
 1.  Analisar 44 questões de Trauma Abdominal (Cirurgia).

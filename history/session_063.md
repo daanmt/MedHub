@@ -1,4 +1,4 @@
-# Session 063 — Diagnóstico, Auditoria de Frontmatter e Reindexação RAG
+# Session 063 -- Diagnóstico, Auditoria de Frontmatter e Reindexação RAG
 **Data:** 2026-04-05
 **Ferramenta:** Antigravity / Gemini 3.1 Pro (High)
 **Continuidade:** Sessão 062

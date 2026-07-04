@@ -1,4 +1,4 @@
-# Session 018 — Ajuste de Produto (FSRS e Arquitetura UI/DB)
+# Session 018 -- Ajuste de Produto (FSRS e Arquitetura UI/DB)
 **Data:** 2026-03-14
 **Ferramenta:** Antigravity
 **Continuidade:** Sessão 017

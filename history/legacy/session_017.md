@@ -1,4 +1,4 @@
-# Session 017 — Elaboração de Roadmap do Sistema IPUB
+# Session 017 -- Elaboração de Roadmap do Sistema IPUB
 **Data:** 2026-03-14
 **Ferramenta:** Antigravity
 **Continuidade:** Sessão 016

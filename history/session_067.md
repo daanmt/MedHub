@@ -1,4 +1,4 @@
-# Session 067 — Correção de Dados e Arquitetura de Rastreamento (Bulk)
+# Session 067 -- Correção de Dados e Arquitetura de Rastreamento (Bulk)
 **Data:** 2026-04-16
 **Ferramenta:** Antigravity
 **Continuidade:** Sessão 066

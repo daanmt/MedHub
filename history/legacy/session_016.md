@@ -1,4 +1,4 @@
-# Session 016 — Análise de Questões de Sífilis na Gestação
+# Session 016 -- Análise de Questões de Sífilis na Gestação
 **Data:** 2026-03-14
 **Ferramenta:** Antigravity
 **Continuidade:** Sessão 015

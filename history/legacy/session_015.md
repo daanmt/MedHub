@@ -1,4 +1,4 @@
-# Session 015 — Sífilis na Gestação e Congênita
+# Session 015 -- Sífilis na Gestação e Congênita
 **Data:** 2026-03-13
 **Ferramenta:** Antigravity 
 **Continuidade:** Revezamento posterior as questões de Trauma Abdominal.

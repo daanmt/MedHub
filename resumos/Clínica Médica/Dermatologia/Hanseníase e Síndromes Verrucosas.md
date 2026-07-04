@@ -44,7 +44,7 @@ A hanseníase ataca os nervos periféricos, levando a deformidades característi
     - **Grau II:** Deformidades visíveis (garras, úlceras, reabsorções ósseas, lagoftalmo).
 
 ### Diagnóstico e Laboratório
-- **Estesiometria (Monofilamentos de Semmes-Weinstein):** ⭐ **Conduta Inicial.** Fundamental para quantificar a perda sensitiva e confirmar o diagnóstico de forma não invasiva. A perda segue a ordem: Térmica → Dolorosa → Tátil.
+- **Estesiometria (Monofilamentos de Semmes-Weinstein):** ⭐ **Conduta Inicial.** Fundamental para quantificar a perda sensitiva e confirmar o diagnóstico de forma não invasiva. A perda segue a ordem: Térmica -> Dolorosa -> Tátil.
 - **Baciloscopia (IB):** Raspado dérmico de lóbulo auricular, cotovelo e lesão. **IB > 0 define paciente Multibacilar (MB)**.
 - **Biopsia:** Útil para classificação (dimorfas) ou exclusão de diagnósticos diferenciais (ex: Tinha do corpo). **NÃO é obrigatória** para o início do tratamento se houver clínica + alteração de sensibilidade.
 - **Tríplice Reação de Lewis Incompleta:** Na biópsia/teste, a ausência de eritema reflexo secundário indica denervação axonal simpática.

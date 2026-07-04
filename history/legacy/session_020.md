@@ -1,4 +1,4 @@
-# Session 020 — Workflows Híbridos e Regra Siamese Twins
+# Session 020 -- Workflows Híbridos e Regra Siamese Twins
 **Data:** 2026-03-14
 **Ferramenta:** Antigravity
 **Continuidade:** Sessão 019
@@ -22,7 +22,7 @@
 
 ## Decisões tomadas
 - O fechamento global (`AGENTE.md`) agora inclui obrigatoriedade no comando git para commitar também as atualizações binárias do `.db`.
-- Para proteger o banco, LLMs não rodarão queries cruas de INSERT nos loops normais — usarão estritamente o wrapper Python.
+- Para proteger o banco, LLMs não rodarão queries cruas de INSERT nos loops normais -- usarão estritamente o wrapper Python.
 
 ## Próximos passos (se houver)
 - Realizar a massiva extração ETL (Extract, Transform, Load) das ~67 questões do arquivo de Markdown legado `caderno_erros.md` para o `ipub.db`.

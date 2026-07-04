@@ -1,4 +1,4 @@
-# MedHub History — Session 033
+# MedHub History -- Session 033
 
 **Data**: 2026-03-20
 **Agente**: Antigravity

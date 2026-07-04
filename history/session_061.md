@@ -1,4 +1,4 @@
-# Session 061 — Análise Massiva de Traumas e Omissões de Protocolo
+# Session 061 -- Análise Massiva de Traumas e Omissões de Protocolo
 **Data:** 2026-04-01
 **Ferramenta:** Antigravity
 **Continuidade:** Sessão 060

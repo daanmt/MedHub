@@ -1,4 +1,4 @@
-# Session 009 — PTI Analysis and Governance Refactoring
+# Session 009 -- PTI Analysis and Governance Refactoring
 **Data:** 2026-03-08
 **Ferramenta:** Antigravity
 **Continuidade:** Sessão 008

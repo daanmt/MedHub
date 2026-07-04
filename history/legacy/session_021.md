@@ -1,4 +1,4 @@
-# Session 021 — FSRS Optimizer e Algoritmos de Machine Learning
+# Session 021 -- FSRS Optimizer e Algoritmos de Machine Learning
 **Data:** 2026-03-14
 **Ferramenta:** Antigravity
 **Continuidade:** Sessão 020

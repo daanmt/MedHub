@@ -1,4 +1,4 @@
-# MedHub Session Log — Session 031
+# MedHub Session Log -- Session 031
 
 ## Resumo da Sessão
 Criação de resumos clínicos de alto rendimento para três temas fundamentais: Dependência Química, Intoxicações Exógenas e Lesão Renal Aguda. O trabalho seguiu o protocolo de extração de PDFs, síntese focada em prova e limpeza de ambiente.

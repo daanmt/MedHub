@@ -1,4 +1,4 @@
-# Sessão 007 — Expansão de Infectologia (TB e HIV)
+# Sessão 007 -- Expansão de Infectologia (TB e HIV)
 *Data: 2026-03-06 | Ferramenta: Antigravity*
 
 ## Objetivos

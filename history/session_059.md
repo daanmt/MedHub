@@ -1,4 +1,4 @@
-# Session 059 — Análise de Questões: Demências e EM
+# Session 059 -- Análise de Questões: Demências e EM
 **Data:** 2026-03-29
 **Ferramenta:** Antigravity
 **Continuidade:** Sessão 058

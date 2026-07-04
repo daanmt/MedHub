@@ -32,13 +32,13 @@ aliases: [Dependência Química, Alcoolismo, Síndrome de Abstinência, Cannabis
 
 ## 3. Álcool (Etanol)
 ---
-- **Metabolismo:** Etanol → (*Álcool desidrogenase*) → Acetaldeído → (*Aldeído desidrogenase*) → Ácido Acético.
+- **Metabolismo:** Etanol -> (*Álcool desidrogenase*) -> Acetaldeído -> (*Aldeído desidrogenase*) -> Ácido Acético.
 - **Questionário CAGE:** Rastreio rápido (≥ 2 respostas sim = positivo). ⭐
     - **C**ut down (Já pensou em diminuir?)
     - **A**nnoyed (Pessoas se irritam com seu uso?)
     - **G**uilty (Sente culpa por beber?)
     - **E**ye-opener (Bebe pela manhã para acalmar os nervos?)
-- **AUDIT:** Rastreio mais detalhado (10 perguntas, escore 0-40). ⚠️ **Padrão de prova: a conduta escala com a faixa** — localizar o escore antes de escolher a intervenção.
+- **AUDIT:** Rastreio mais detalhado (10 perguntas, escore 0-40). ⚠️ **Padrão de prova: a conduta escala com a faixa** -- localizar o escore antes de escolher a intervenção.
     - **0-7 (baixo risco):** educação/orientação sobre o álcool.
     - **8-15 (uso de risco):** **aconselhamento simples / intervenção breve** apontando os riscos.
     - **16-19 (uso nocivo):** aconselhamento + **monitoramento** contínuo.
@@ -49,13 +49,13 @@ aliases: [Dependência Química, Alcoolismo, Síndrome de Abstinência, Cannabis
 - **Síndrome de Abstinência Alcoólica (SAA):**
     - Início: 6-48h após última dose.
     - Sintomas: Tremores (primeiro sinal), sudorese, taquicardia, ansiedade, convulsões (tônico-clônicas).
-    - **Convulsão na abstinência:** ⚠️ não atribuir a crise *exclusivamente* à abstinência — **investigar sempre outra etiologia** (TCE, AVC, neuroinfecção, distúrbio metabólico) no alcoolista. A profilaxia da convulsão é o **efeito gabaérgico/anticonvulsivante do BZD** (não "melhorar o sono" com hipnóticos).
-    - **Delirium Tremens (DT):** 24-72h após abstinência. Alteração de consciência, alucinações (zoopsias - bichos na pele), desorientação, instabilidade autonômica. 🔴 **Emergência médica → internação hospitalar** (CAPS-AD só após a estabilização, para o manejo da dependência fora da crise).
+    - **Convulsão na abstinência:** ⚠️ não atribuir a crise *exclusivamente* à abstinência -- **investigar sempre outra etiologia** (TCE, AVC, neuroinfecção, distúrbio metabólico) no alcoolista. A profilaxia da convulsão é o **efeito gabaérgico/anticonvulsivante do BZD** (não "melhorar o sono" com hipnóticos).
+    - **Delirium Tremens (DT):** 24-72h após abstinência. Alteração de consciência, alucinações (zoopsias - bichos na pele), desorientação, instabilidade autonômica. 🔴 **Emergência médica -> internação hospitalar** (CAPS-AD só após a estabilização, para o manejo da dependência fora da crise).
     - **Hipofosfatemia:** ⭐ o etilista internado tem reserva de fosfato baixa; a hidratação/realimentação desloca fósforo para a célula (**síndrome de realimentação**), precipitando **rabdomiólise (CK elevada), disfunção miocárdica, parestesias e convulsão**. Diferencia-se da hipocalcemia (tetania/Chvostek/Trousseau) pela CK alta.
     - **Tratamento:**
         - **1ª linha:** Benzodiazepínicos (Diazepam; **Lorazepam em hepatopatas**) + **Tiamina em todos** (previne Wernicke).
         - **2ª linha:** Carbamazepina e Fenobarbital (podem substituir o BZD).
-        - **Antipsicótico de resgate** (psicose/agitação refratária ao BZD): **Haloperidol** (alta potência, IM). 🔴 **Clozapina é contraindicada** — antipsicótico atípico que **reduz o limiar convulsivo** e pode precipitar crises no paciente em abstinência.
+        - **Antipsicótico de resgate** (psicose/agitação refratária ao BZD): **Haloperidol** (alta potência, IM). 🔴 **Clozapina é contraindicada** -- antipsicótico atípico que **reduz o limiar convulsivo** e pode precipitar crises no paciente em abstinência.
 - **Wernicke-Korsakoff:**
     - **Encefalopatia de Wernicke (Aguda):** Ataxia + Oftalmoparesia/Nistagmo + Confusão mental (Tríade clássica).
     - **Psicose de Korsakoff (Crônica):** Amnésia anterógrada + Confabulações.
@@ -80,10 +80,10 @@ aliases: [Dependência Química, Alcoolismo, Síndrome de Abstinência, Cannabis
 - 🔴 Usar Fenitoína para tratar convulsão por abstinência (é ineficaz; usar Benzodiazepínicos).
 - 🔴 Prescrever Bupropiona para paciente com histórico de Bulimia ou Anorexia (risco de convulsão).
 - 🔴 Esquecer que em hepatopatas o Benzodiazepínico de escolha é o Lorazepam (metabolismo extra-hepático).
-- 🔴 Ancorar em "etilista + TGO elevada" e fechar em hepatite alcoólica — TGO levemente alta (200-300) com TGP baixa, sem icterícia, num paciente que parou de beber, é abstinência + hipofosfatemia (CK alta), não hepatite/encefalopatia hepática.
-- 🔴 Liberar para o CAPS-AD um paciente em Delirium Tremens — DT exige internação hospitalar; CAPS-AD é pós-estabilização.
-- 🔴 Marcar Carbamazepina como a droga "proibida" na SAA — ela é 2ª linha aceita; a contraindicada é a **Clozapina** (reduz o limiar convulsivo).
-- 🔴 Superdimensionar a intervenção pelo AUDIT — escore 8-15 pede aconselhamento simples; monitoramento só ≥16, encaminhamento só ≥20.
+- 🔴 Ancorar em "etilista + TGO elevada" e fechar em hepatite alcoólica -- TGO levemente alta (200-300) com TGP baixa, sem icterícia, num paciente que parou de beber, é abstinência + hipofosfatemia (CK alta), não hepatite/encefalopatia hepática.
+- 🔴 Liberar para o CAPS-AD um paciente em Delirium Tremens -- DT exige internação hospitalar; CAPS-AD é pós-estabilização.
+- 🔴 Marcar Carbamazepina como a droga "proibida" na SAA -- ela é 2ª linha aceita; a contraindicada é a **Clozapina** (reduz o limiar convulsivo).
+- 🔴 Superdimensionar a intervenção pelo AUDIT -- escore 8-15 pede aconselhamento simples; monitoramento só ≥16, encaminhamento só ≥20.
 - 🔴 Atribuir a convulsão do alcoolista exclusivamente à abstinência sem investigar causa orgânica (TCE, AVC, neuroinfecção, metabólico).
 
 *📝 Espaço reservado para inclusão de questões erradas*

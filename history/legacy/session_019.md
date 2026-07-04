@@ -1,4 +1,4 @@
-# Session 019 — Arquitetura de Banco FSRS e Planilha Estratégia Med
+# Session 019 -- Arquitetura de Banco FSRS e Planilha Estratégia Med
 **Data:** 2026-03-14
 **Ferramenta:** Antigravity
 **Continuidade:** Sessão 018

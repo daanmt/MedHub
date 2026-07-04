@@ -1,4 +1,4 @@
-# Session 025 — Reforma IPUB v3.0 (Estabilização Final)
+# Session 025 -- Reforma IPUB v3.0 (Estabilização Final)
 **Data:** 2026-03-14
 **Ferramenta:** Antigravity (Advanced Agentic Coding)
 **Continuidade:** Sessão 024

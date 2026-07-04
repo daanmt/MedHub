@@ -1,4 +1,4 @@
-# Session 041 — Emergências Pediátricas (Ritmos e IOT)
+# Session 041 -- Emergências Pediátricas (Ritmos e IOT)
 **Data:** 2026-03-23
 **Ferramenta:** Antigravity
 **Continuidade:** Sessão 040

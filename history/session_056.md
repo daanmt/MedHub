@@ -1,7 +1,7 @@
-# Sessão 056 — Pipeline Flashcards v5
+# Sessão 056 -- Pipeline Flashcards v5
 
 **Data:** 2026-03-27
-**Foco:** Infraestrutura — migração e regeneração do pipeline de flashcards
+**Foco:** Infraestrutura -- migração e regeneração do pipeline de flashcards
 
 ---
 
@@ -40,11 +40,11 @@ UI fallback:     29
 
 ## Bugs corrigidos
 1. **`N/A?` como pergunta**: heurística não tratava 'N/A' como valor vazio
-2. **`resp: D` single-letter**: alternativa_correta apenas com letra → fallback para explicacao
+2. **`resp: D` single-letter**: alternativa_correta apenas com letra -> fallback para explicacao
 3. **LEFT JOIN taxonomia**: 205 cards com tema_id orphaned eram silenciosamente descartados
 4. **UnicodeEncodeError no dry-run**: print usava `encode('ascii', 'replace')` para saída segura no Windows
 5. **DB_PATH relativo em 2_estudo.py**: quebrava quando cwd ≠ raiz do projeto
 6. **Tab1 query com colunas inexistentes**: sempre caía no fallback N/A
 
 ## Commits
-- `20c70d0` — sessao 056: pipeline flashcards v5
+- `20c70d0` -- sessao 056: pipeline flashcards v5

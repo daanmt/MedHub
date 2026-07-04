@@ -1,4 +1,4 @@
-# Session 022 — Construção do ETL (Extract, Transform, Load) e Migração Massiva
+# Session 022 -- Construção do ETL (Extract, Transform, Load) e Migração Massiva
 **Data:** 2026-03-14
 **Ferramenta:** Antigravity
 **Continuidade:** Sessão 021

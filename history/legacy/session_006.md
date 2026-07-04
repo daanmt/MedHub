@@ -1,4 +1,4 @@
-# Session 006 — Eliminação de Extracted/ e Limpeza Automática Pós-Resumo
+# Session 006 -- Eliminação de Extracted/ e Limpeza Automática Pós-Resumo
 **Data:** 2026-03-05
 **Ferramenta:** Antigravity
 **Continuidade:** Sessão 005
@@ -27,7 +27,7 @@
 
 - Extrações são efêmeras: vão para `%TEMP%` e devem ser deletadas ao final do workflow
 - PDFs da pasta do tema também são deletados automaticamente pelo script após o resumo ser consolidado
-- O agente nunca deve criar scripts ad hoc de extração — usar `extract_pdfs.py` diretamente
+- O agente nunca deve criar scripts ad hoc de extração -- usar `extract_pdfs.py` diretamente
 
 ## Próximos passos
 

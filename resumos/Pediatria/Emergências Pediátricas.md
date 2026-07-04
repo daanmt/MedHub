@@ -6,7 +6,7 @@ status: active
 aliases: [PCR Pediátrico, IOT Pediátrica, TSV Pediátrica, Emergências Pediátricas, Bradicardia Pediátrica, Reanimação Pediátrica]
 ---
 
-# Emergências Pediátricas — Resumo Consolidado
+# Emergências Pediátricas -- Resumo Consolidado
 
 ## 1. Arritmias Pediátricas
 
@@ -26,19 +26,19 @@ Mecanismo mais comum é a reentrada nodal.
   - **FC:** ≥ 220 bpm (bebês) ou ≥ 180 bpm (crianças).
   - **Ritmo:** Regular, QRS estreito (≤ 0,09s).
   - **Onda P:** Ausente ou anormal (retrógrada).
-- **Tratamento — TSV Estável:**
+- **Tratamento -- TSV Estável:**
   1. **Manobras Vagais:**
      - Lactentes: Bolsa de gelo em face (15-20s, sem obstruir nariz/boca).
      - Maiores: Valsalva (soprar canudo fechado) ou massagem do seio carotídeo.
   2. **Adenosina:** Droga de 1ª escolha se manobras falharem. **Flush rápido** (1mg/ml) seguido de SF.
-     - Dose: 0,1 mg/kg (máx 6mg) → se não responder → 0,2 mg/kg (máx 12mg).
-- **Tratamento — TSV Instável (Choque/Hipotensão):**
-  - **Cardioversão Sincronizada:** 0,5 a 1 J/kg → se necessário → 2 J/kg.
+     - Dose: 0,1 mg/kg (máx 6mg) -> se não responder -> 0,2 mg/kg (máx 12mg).
+- **Tratamento -- TSV Instável (Choque/Hipotensão):**
+  - **Cardioversão Sincronizada:** 0,5 a 1 J/kg -> se necessário -> 2 J/kg.
 
 ### 1.3 BAV Congênito
 - **Etiologia:** 60-90% associados a doenças autoimunes maternas (**Lúpus ou Sjögren**).
 - **Marcador:** Passagem transplacentária de anticorpos **Anti-Ro/SSA e Anti-La/SSB**.
-- ⚠️ **Padrão de prova:** Gestante com lúpus ou bradicardia fetal persistente → investigar BAV no RN. Tratamento: Marcapasso se FC < 55 bpm ou sintomático.
+- ⚠️ **Padrão de prova:** Gestante com lúpus ou bradicardia fetal persistente -> investigar BAV no RN. Tratamento: Marcapasso se FC < 55 bpm ou sintomático.
 
 ---
 
@@ -62,7 +62,7 @@ Diferente do adulto, a PCR pediátrica é geralmente secundária à **hipóxia p
 - **Ritmos Chocáveis (FV e TVSP):**
   - **Conduta:** Desfibrilação imediata (Não sincronizada). 
   - 🔴 **Diferencial:** Cardioversão é para arritmias COM pulso (sincronizada). PCR = Desfibrilar.
-  - **Carga:** 2 J/kg (1º choque) → 4 J/kg (2º choque) → Máx 10 J/kg.
+  - **Carga:** 2 J/kg (1º choque) -> 4 J/kg (2º choque) -> Máx 10 J/kg.
   - **Drogas:** Adrenalina (a cada 3-5min) e Amiodarona (se refratário após 3º choque).
 - **Ritmos Não Chocáveis (Assistolia e AESP):**
   - Ritmos mais comuns na pediatria. **Epinefrina imediata (1º ciclo).**
@@ -116,15 +116,15 @@ Mecanismo de trauma grave: Queda > 1m (< 2 anos) ou > 1,5m (> 2 anos); ejetado; 
 
 ## 5. Afogamento
 
-- **Fisiopatologia:** Hipóxia e isquemia cerebral são os danos principais. Aspiração de líquido → inativação do surfactante → Edema pulmonar (SDRA).
+- **Fisiopatologia:** Hipóxia e isquemia cerebral são os danos principais. Aspiração de líquido -> inativação do surfactante -> Edema pulmonar (SDRA).
 
 ### 5.1 Classificação de Szpilman e Conduta
-- **Grau 1:** Ausculta normal + Toce → Alta.
-- **Grau 2:** Estertores esparsos → O2 + Observação 6-24h.
-- **Grau 3:** Edema agudo (espuma) sem choque → UTI + O2/CPAP.
-- **Grau 4:** Edema agudo com choque → UTI + IOT.
-- **Grau 5:** Parada Respiratória (apneia com pulso) → **5 ventilações de resgate** → manter ventilação.
-- **Grau 6:** PCR (apneia sem pulso) → Iniciar RCP (A-B-C no afogamento, ventilação primeiro).
+- **Grau 1:** Ausculta normal + Toce -> Alta.
+- **Grau 2:** Estertores esparsos -> O2 + Observação 6-24h.
+- **Grau 3:** Edema agudo (espuma) sem choque -> UTI + O2/CPAP.
+- **Grau 4:** Edema agudo com choque -> UTI + IOT.
+- **Grau 5:** Parada Respiratória (apneia com pulso) -> **5 ventilações de resgate** -> manter ventilação.
+- **Grau 6:** PCR (apneia sem pulso) -> Iniciar RCP (A-B-C no afogamento, ventilação primeiro).
 
 ---
 
@@ -144,7 +144,7 @@ Mecanismo de trauma grave: Queda > 1m (< 2 anos) ou > 1,5m (> 2 anos); ejetado; 
 - 🔴 **Cardioversão vs Desfibrilação:** Se o ritmo é de **PCR**, a descarga é NÃO sincronizada (Desfibrilação). Cardioversão é exclusiva para taquiarritmias com pulso e instabilidade hemodinâmica.
 - 🔴 **Assistolia na VM:** Paciente já intubado não segue a relação 15:2. A RCP é contínua e a ventilação é assíncrona. A adrenalina é SEMPRE precoce (Ciclo 1) em ritmos não chocáveis.
 - 🔴 **Ausculta assimétrica pós-IOT:** Se for logo após a intubação em paciente eletivo, pensar em **IOT Seletiva**. Se for em paciente instável/asmático grave sob pressão positiva, pensar em **Pneumotórax Hipertensivo** e tratar imediatamente.
-- 🔴 **TSV Estável:** A sequência é sempre **Não Invasiva (Vagal) → Farmacológica (Adenosina)**. Deixar Cardioversão Sincronizada para casos de **Instabilidade** (Choque, má perfusão).
+- 🔴 **TSV Estável:** A sequência é sempre **Não Invasiva (Vagal) -> Farmacológica (Adenosina)**. Deixar Cardioversão Sincronizada para casos de **Instabilidade** (Choque, má perfusão).
 - 🔴 **Bradicardia Grave (< 60 bpm):** Se persistir mesmo após via aérea e oxigênio adequados, a droga de escolha é a **Adrenalina**. Manter compressões se má perfusão persistir. Atropina NÃO é a primeira escolha na PCR/Bradicardia hipóxica pediátrica.
 - 🔴 **Dose da Adrenalina IV/IO:** Use a solução **1:10.000** (diluída). A solução 1:1.000 é reservada para via traqueal.
 - 🔴 **Varredura digital:** Proibido no engasgo se o objeto não estiver visível.

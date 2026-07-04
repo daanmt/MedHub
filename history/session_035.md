@@ -1,16 +1,16 @@
-# MedHub History — Session 035
+# MedHub History -- Session 035
 
 **Data**: 2026-03-21
 **Agente**: Antigravity
 
 ## Objetivos da Sessão
 1. Integrar anotações de estudo ativo do usuário sobre Sífilis na Gestação e Congênita.
-2. Analisar 1 questão errada (critério de gestante adequadamente tratada — regra dos 30 dias).
+2. Analisar 1 questão errada (critério de gestante adequadamente tratada -- regra dos 30 dias).
 3. Refinar os workflows para suportar a abordagem ativa de estudo.
 
 ## Ações Executadas
 - **Análise Clínica:**
-    - Questão: MAE tratada com 3 doses (27/11–11/12), parto 16/12 = apenas 19 dias do início. Inadequadamente tratada. RN com VDRL reagente mas LCR normal → Cristalina ou Procaína 10 dias (D correta). Erro do usuário: não identificou que o critério de 30 dias conta do INÍCIO do tratamento.
+    - Questão: MAE tratada com 3 doses (27/11-11/12), parto 16/12 = apenas 19 dias do início. Inadequadamente tratada. RN com VDRL reagente mas LCR normal -> Cristalina ou Procaína 10 dias (D correta). Erro do usuário: não identificou que o critério de 30 dias conta do INÍCIO do tratamento.
     - Erro classificado como: falha no critério de adequação materna.
 - **Resumo Clínico:** Reescrita completa de `[OBS] Sífilis na Gestação e Congênita.md`:
     - Nova seção: Interpretação do LCR (critérios de neurossífilis, parâmetros e justificativas fisiológicas).

@@ -1,4 +1,4 @@
-# Session 065 — Criação do Resumo de Síndromes Hipertensivas
+# Session 065 -- Criação do Resumo de Síndromes Hipertensivas
 **Data:** 2026-04-09
 **Ferramenta:** Antigravity
 **Continuidade:** N/A

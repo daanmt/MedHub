@@ -1,4 +1,4 @@
-# Session 060 — Análise de Questões: DRGE, Esofagites e Pancreatite
+# Session 060 -- Análise de Questões: DRGE, Esofagites e Pancreatite
 **Data:** 2026-03-29
 **Ferramenta:** Antigravity
 **Continuidade:** Sessão 059

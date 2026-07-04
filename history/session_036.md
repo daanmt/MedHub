@@ -1,4 +1,4 @@
-# Session 036 — Arboviroses e Blindagem Gold Standard
+# Session 036 -- Arboviroses e Blindagem Gold Standard
 **Data:** 2026-03-22
 **Ferramenta:** Antigravity
 **Continuidade:** Sessão 035

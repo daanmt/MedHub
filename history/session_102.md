@@ -1,4 +1,4 @@
-# Session 102 — Drenagem FSRS (24 cards) + Fechamento Conversacional
+# Session 102 -- Drenagem FSRS (24 cards) + Fechamento Conversacional
 **Data:** 2026-07-01
 **Ferramenta:** Antigravity IDE (Gemini 3.5 Flash)
 **Continuidade:** Sessão 101
@@ -13,8 +13,8 @@
 ## Padrões de erro identificados (na sessão FSRS)
 - **Pancreatite:** 
   - Ecoendoscopia (EUS) é o exame padrão-ouro para buscar microlitíase oculta na pancreatite idiopática.
-  - Insuficiência pancreática exócrina causa deficiência de B12 (falta de protease impede descolamento da proteína R) e de vitamina D (falta de lipase impede absorção de lipossolúveis $\rightarrow$ osteoporose).
-  - Necrose infectada segue *step-up* (ATB $\rightarrow$ Drenagem $\rightarrow$ Cirurgia) e exige adiar intervenções invasivas (> 4-6 semanas) até demarcação da necrose.
+  - Insuficiência pancreática exócrina causa deficiência de B12 (falta de protease impede descolamento da proteína R) e de vitamina D (falta de lipase impede absorção de lipossolúveis -> osteoporose).
+  - Necrose infectada segue *step-up* (ATB -> Drenagem -> Cirurgia) e exige adiar intervenções invasivas (> 4-6 semanas) até demarcação da necrose.
 - **Sífilis:**
   - O tratamento materno é inadequado se iniciado a menos de 30 dias do parto, obrigando investigação e tratamento de 10 dias do recém-nascido.
   - A sífilis terciária possui baixa transmissão vertical (10-30%) devido à baixa carga circulante de espiroquetas.

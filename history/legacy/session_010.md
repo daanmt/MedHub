@@ -1,4 +1,4 @@
-# Session 010 — Public Health Measures (Collective Health)
+# Session 010 -- Public Health Measures (Collective Health)
 **Data:** 2026-03-09
 **Ferramenta:** Antigravity
 **Continuidade:** Sessão 009

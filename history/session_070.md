@@ -1,4 +1,4 @@
-# Session 070 — Análise de Desempenho e Erros (Preventiva)
+# Session 070 -- Análise de Desempenho e Erros (Preventiva)
 **Data:** 2026-04-16
 **Ferramenta:** Antigravity
 **Continuidade:** Sessão 069

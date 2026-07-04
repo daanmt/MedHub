@@ -133,13 +133,50 @@ def cmd_stats(db_path: str) -> None:
     print()
 
 
+def _unwrap(value: dict) -> dict:
+    """Desembrulha o envelope LangMem {"kind": ..., "content": {...}}.
+
+    Defensivo: cai para o dict plano se não houver envelope (registros
+    legados ou evolução do schema do LangMem).
+    """
+    content = value.get("content", value)
+    return content if isinstance(content, dict) else value
+
+
+def _rank_weak_areas(items: list, top_n: int = 8) -> list[dict]:
+    """Dedup por (area, especialidade) + ranking determinístico, read-side.
+
+    Mantém 1 linha por par, ordenada por error_count desc, depois
+    last_updated desc, depois (area, especialidade) asc (desempate estável).
+
+    TODO(R1b): error_count hoje é agregado global uniforme (241 em todos) —
+    a correção por área é write-side e fica fora desta parte; enquanto isso
+    o desempate por last_updated carrega o ranking.
+    """
+    best: dict[tuple, dict] = {}
+    for item in items:
+        v = _unwrap(item.value)
+        pair = (v.get("area", "?"), v.get("especialidade", "?"))
+        count = v.get("error_count") or 0
+        updated = str(v.get("last_updated") or "")
+        cur = best.get(pair)
+        if cur is None or (count, updated) > (cur["_count"], cur["_updated"]):
+            best[pair] = {**v, "_count": count, "_updated": updated}
+
+    # sort estável em 3 passos: par asc → last_updated desc → error_count desc
+    ranked = sorted(best.items(), key=lambda kv: kv[0])
+    ranked = sorted(ranked, key=lambda kv: kv[1]["_updated"], reverse=True)
+    ranked = sorted(ranked, key=lambda kv: kv[1]["_count"], reverse=True)
+    return [v for _, v in ranked[:top_n]]
+
+
 def load_context(db_path: str = _DEFAULT_DB) -> None:
     """Print a concise memory context suitable for agent boot."""
     store = SQLiteMemoryStore(db_path)
 
     profile_items = store.search(("medhub", "profile"), limit=10)
     prefs_items = store.search(("medhub", "study_preferences"), limit=10)
-    weak_items = store.search(("medhub", "weak_areas"), limit=20)
+    weak_items = store.search(("medhub", "weak_areas"), limit=500)
     rules_items = store.search(("medhub", "workflow_rules"), limit=10)
 
     print("\n=== MedHub Memory Context ===\n")
@@ -155,15 +192,16 @@ def load_context(db_path: str = _DEFAULT_DB) -> None:
             print(f"  {json.dumps(item.value, ensure_ascii=False)}")
 
     if weak_items:
-        print("\n## Áreas de fraqueza persistentes")
-        for item in weak_items:
-            v = item.value
-            print(f"  [{v.get('area','?')} / {v.get('especialidade','?')}] {v.get('pattern','')}")
+        print("\n## Áreas de fraqueza persistentes (top 8)")
+        for v in _rank_weak_areas(weak_items, top_n=8):
+            count = v["_count"]
+            suffix = f" ({count} erros)" if count else ""
+            print(f"  [{v.get('area','?')} / {v.get('especialidade','?')}] {v.get('pattern','')}{suffix}")
 
     if rules_items:
         print("\n## Regras de workflow aprendidas")
         for item in rules_items:
-            v = item.value
+            v = _unwrap(item.value)
             print(f"  [{v.get('learned_in','?')}] {v.get('rule','')} — {v.get('context','')}")
 
     if not any([profile_items, prefs_items, weak_items, rules_items]):

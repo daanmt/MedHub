@@ -3,7 +3,7 @@
     "fonte": "Cronograma.pdf",
     "fonte_sha256": "7cd56385092d8acf0f38ec5c16e82bdcdbb7ae06339a2ba6e3a995cef050b762",
     "fonte_mtime": "2026-03-24T09:49:02",
-    "extraido_em": "2026-07-02T22:06:46",
+    "extraido_em": "2026-07-04T13:24:03",
     "semana_1_inicio": "2026-03-30",
     "n_semanas": 30,
     "n_tasks": 352,
@@ -77,7 +77,7 @@
           "tema": "",
           "tipo": "Teoria + Exercícios",
           "tipo_norm": "teoria",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 5,
@@ -117,7 +117,7 @@
           "tema": "Tuberculose",
           "tipo": "Teoria + Exercícios",
           "tipo_norm": "teoria",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 9,
@@ -156,7 +156,7 @@
           "tema": "Processo Saúde- Doença",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 2,
@@ -226,7 +226,7 @@
           "tema": "Diabetes Mellitus Tipo 2",
           "tipo": "Teoria + Exercícios",
           "tipo_norm": "teoria",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 9,
@@ -236,7 +236,7 @@
           "tema": "Traumatismo Cranioencefálico",
           "tipo": "Teoria + Exercícios",
           "tipo_norm": "teoria",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 10,
@@ -246,7 +246,7 @@
           "tema": "Asma",
           "tipo": "Teoria + Exercícios",
           "tipo_norm": "teoria",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         }
       ]
     },
@@ -265,7 +265,7 @@
           "tema": "Medidas de Saúde Coletiva Pt 1",
           "tipo": "Teoria + Exercícios",
           "tipo_norm": "teoria",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 2,
@@ -315,7 +315,7 @@
           "tema": "Medidas de Saúde Coletiva Pt. 1",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 7,
@@ -335,7 +335,7 @@
           "tema": "HIV",
           "tipo": "Teoria + Exercícios",
           "tipo_norm": "teoria",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 9,
@@ -345,7 +345,7 @@
           "tema": "Doença do Refluxo Gastroesofágico, Esofagites e Corpo Estranho",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 10,
@@ -365,7 +365,7 @@
           "tema": "Insuficiência Cardíaca Pt. 1 e 2",
           "tipo": "Teoria + Exercícios",
           "tipo_norm": "teoria",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         }
       ]
     },
@@ -384,7 +384,7 @@
           "tema": "Medidas de Saúde Coletiva Pt 2",
           "tipo": "Teoria + Exercícios",
           "tipo_norm": "teoria",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 2,
@@ -454,7 +454,7 @@
           "tema": "Diabetes Mellitus Tipo 2",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 9,
@@ -464,7 +464,7 @@
           "tema": "Traumatismo Cranioencefálico",
           "tipo": "Teoria + Exercícios",
           "tipo_norm": "teoria",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 10,
@@ -474,7 +474,7 @@
           "tema": "Asma",
           "tipo": "Teoria + Exercícios",
           "tipo_norm": "teoria",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 11,
@@ -484,7 +484,7 @@
           "tema": "Hemostasia Pt. I e II",
           "tipo": "Teoria + Exercícios",
           "tipo_norm": "teoria",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 12,
@@ -513,7 +513,7 @@
           "tema": "Medidas de Saúde Coletiva Pt. 2",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 2,
@@ -523,7 +523,7 @@
           "tema": "Emergências Pediátricas",
           "tipo": "Teoria + Exercícios",
           "tipo_norm": "teoria",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 3,
@@ -573,7 +573,7 @@
           "tema": "Emergências Pediátricas",
           "tipo": "Teoria + Exercícios",
           "tipo_norm": "teoria",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 8,
@@ -613,7 +613,7 @@
           "tema": "Doenças Inflamatória do Tecido Conjuntivo I",
           "tipo": "Teoria + Exercícios",
           "tipo_norm": "teoria",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         }
       ]
     },
@@ -632,7 +632,7 @@
           "tema": "Medidas de Saúde Coletiva Pt. 3",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 2,
@@ -642,7 +642,7 @@
           "tema": "Emergências Pediátricas",
           "tipo": "Teoria + Exercícios",
           "tipo_norm": "teoria",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 3,
@@ -662,7 +662,7 @@
           "tema": "Rastreamento do Câncer de Colo Uterino",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 5,
@@ -692,7 +692,7 @@
           "tema": "Diabetes Mellitus - Complicações Agudas",
           "tipo": "Teoria + Exercícios",
           "tipo_norm": "teoria",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 8,
@@ -801,7 +801,7 @@
           "tema": "Sífilis na Gestação e Sífilis Congênita",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 6,
@@ -821,7 +821,7 @@
           "tema": "Cirurgia Infantil Pt 1",
           "tipo": "Teoria + Exercícios",
           "tipo_norm": "teoria",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 8,
@@ -831,7 +831,7 @@
           "tema": "Pancreatite Aguda e Crônica",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 9,
@@ -851,7 +851,7 @@
           "tema": "Asma",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 11,
@@ -900,7 +900,7 @@
           "tema": "Vigilância em Saúde",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 2,
@@ -930,7 +930,7 @@
           "tema": "Úlceras Genitais",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 5,
@@ -970,7 +970,7 @@
           "tema": "Diabetes Mellitus - Complicações Agudas",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 9,
@@ -1000,7 +1000,7 @@
           "tema": "Doenças Inflamatória do Tecido Conjuntivo I",
           "tipo": "Teoria + Exercícios",
           "tipo_norm": "teoria",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 12,
@@ -1139,7 +1139,7 @@
           "tema": "Hipertensão Arterial Sistêmica Pt. 1",
           "tipo": "Teoria + Exercícios",
           "tipo_norm": "teoria",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 12,
@@ -1149,7 +1149,7 @@
           "tema": "Dependência Química e Intoxicações Exógenas",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 13,
@@ -1228,7 +1228,7 @@
           "tema": "Sistemas de Informação em Saúde",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 7,
@@ -1278,7 +1278,7 @@
           "tema": "Hepatites Virais",
           "tipo": "Teoria + Exercícios",
           "tipo_norm": "teoria",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         }
       ]
     },
@@ -1367,7 +1367,7 @@
           "tema": "Pólipos e Neoplasias Intestinais",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 9,
@@ -1397,7 +1397,7 @@
           "tema": "Síndrome do Olho Vermelho",
           "tipo": "Teoria + Exercícios",
           "tipo_norm": "teoria",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 12,
@@ -1476,7 +1476,7 @@
           "tema": "Pré-Natal",
           "tipo": "Teoria + Exercícios",
           "tipo_norm": "teoria",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 6,
@@ -1486,7 +1486,7 @@
           "tema": "Medicina de Família e Comunidade",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 7,
@@ -1506,7 +1506,7 @@
           "tema": "Diabetes Mellitus - Complicações Crônicas",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 9,
@@ -1536,7 +1536,7 @@
           "tema": "Hipertensão Arterial Sistêmica Pt. 2",
           "tipo": "Teoria + Exercícios",
           "tipo_norm": "teoria",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 12,
@@ -1625,7 +1625,7 @@
           "tema": "Imunizações",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 7,
@@ -1635,7 +1635,7 @@
           "tema": "Sepse",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 8,
@@ -1675,7 +1675,7 @@
           "tema": "Introdução à Hepatologia e Icterícia Não obstrutiva; Hepatites Virais",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 12,
@@ -1724,7 +1724,7 @@
           "tema": "Colecistite e Colangite Aguda",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 4,
@@ -1734,7 +1734,7 @@
           "tema": "Endometriose",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 5,
@@ -1744,7 +1744,7 @@
           "tema": "Pré-Natal",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 6,
@@ -1774,7 +1774,7 @@
           "tema": "Cefaleias; Epilepsias",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 9,
@@ -1784,7 +1784,7 @@
           "tema": "Hanseníase; Síndromes Verrucosas",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 10,
@@ -1823,7 +1823,7 @@
           "tema": "Princípios e Diretrizes do SUS",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 2,
@@ -1833,7 +1833,7 @@
           "tema": "Asma",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 3,
@@ -1843,7 +1843,7 @@
           "tema": "Diverticulite Aguda",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 4,
@@ -1903,7 +1903,7 @@
           "tema": "Doença Inflamatória Intestinal",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 10,
@@ -1913,7 +1913,7 @@
           "tema": "Distúrbios Ácido-Base; Distúrbios do Potássio",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 11,
@@ -1952,7 +1952,7 @@
           "tema": "Atenção Primária à Saúde no Brasil",
           "tipo": "Teoria + Exercícios",
           "tipo_norm": "teoria",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 2,
@@ -1962,7 +1962,7 @@
           "tema": "Aleitamento Materno",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 3,
@@ -1982,7 +1982,7 @@
           "tema": "Câncer de Mama",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 5,
@@ -1992,7 +1992,7 @@
           "tema": "Assistência ao Parto",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 6,
@@ -2002,7 +2002,7 @@
           "tema": "Parasitoses; Infecção Hospitalar",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 7,
@@ -2012,7 +2012,7 @@
           "tema": "Tireotoxicose",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 8,
@@ -2042,7 +2042,7 @@
           "tema": "Anemias Hemolíticas",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 11,
@@ -2101,7 +2101,7 @@
           "tema": "Cirurgia Vascular",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 4,
@@ -2131,7 +2131,7 @@
           "tema": "Atenção Primária à Saúde no Brasil",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 7,
@@ -2141,7 +2141,7 @@
           "tema": "Diarreia",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 8,
@@ -2230,7 +2230,7 @@
           "tema": "Sangramento Uterino Anormal",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 5,
@@ -2240,7 +2240,7 @@
           "tema": "Vitalidade Fetal",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 6,
@@ -2280,7 +2280,7 @@
           "tema": "Hipertensão Arterial Sistêmica",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 10,
@@ -2290,7 +2290,7 @@
           "tema": "Transtornos de Humor; Psiquiatria Social e Reforma Psiquiátrica",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 11,
@@ -2300,7 +2300,7 @@
           "tema": "Doenças Inflamatórias do Tecido Conjuntivo",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 12,
@@ -2339,7 +2339,7 @@
           "tema": "Pneumonias na Infância",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 2,
@@ -2379,7 +2379,7 @@
           "tema": "Ética Médica",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 6,
@@ -2399,7 +2399,7 @@
           "tema": "Urologia",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 8,
@@ -2409,7 +2409,7 @@
           "tema": "Neoplasias de Estômago e Esôfago",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 9,
@@ -2419,7 +2419,7 @@
           "tema": "Nefrolitíase",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 10,
@@ -2488,7 +2488,7 @@
           "tema": "Choque em Pediatria",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 3,
@@ -2508,7 +2508,7 @@
           "tema": "Tumores Anexiais e Câncer de Ovário",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 5,
@@ -2538,7 +2538,7 @@
           "tema": "Hipotireoidismo",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 8,
@@ -2548,7 +2548,7 @@
           "tema": "Pneumologia Intensiva",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 9,
@@ -2637,7 +2637,7 @@
           "tema": "Diabetes na Gestação",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 6,
@@ -2647,7 +2647,7 @@
           "tema": "Alergia Alimentar",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 7,
@@ -2667,7 +2667,7 @@
           "tema": "Distúrbios do Movimento",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 9,
@@ -2726,7 +2726,7 @@
           "tema": "Financiamento em saúde",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 2,
@@ -2756,7 +2756,7 @@
           "tema": "Prolapsos de Órgãos Pélvicos",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 5,
@@ -2786,7 +2786,7 @@
           "tema": "Hérnias da Parede Abdominal",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 8,
@@ -2796,7 +2796,7 @@
           "tema": "Pneumonias Bacterianas",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 9,
@@ -2865,7 +2865,7 @@
           "tema": "Reanimação Neonatal",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 3,
@@ -2895,7 +2895,7 @@
           "tema": "Sangramento da Segunda Metade",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 6,
@@ -2925,7 +2925,7 @@
           "tema": "Anatomia do Intestino e Síndrome do Intestino Irritável",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 9,
@@ -2974,7 +2974,7 @@
           "tema": "Estatística Médica",
           "tipo": "Revisão I",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 2,
@@ -2984,7 +2984,7 @@
           "tema": "Crescimento",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 3,
@@ -3004,7 +3004,7 @@
           "tema": "Câncer de Colo Uterino",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 5,
@@ -3034,7 +3034,7 @@
           "tema": "Princípios da Anestesiologia",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 8,
@@ -3044,7 +3044,7 @@
           "tema": "Animais Peçonhentos",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 9,
@@ -3054,7 +3054,7 @@
           "tema": "Obesidade e Síndrome Metabólica Cirurgia Bariátrica e Metabólica",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 10,
@@ -3074,7 +3074,7 @@
           "tema": "Valvopatias",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 12,
@@ -3163,7 +3163,7 @@
           "tema": "Partograma e Distocia",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 6,
@@ -3173,7 +3173,7 @@
           "tema": "Tópicos em Pediatria",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 7,
@@ -3213,7 +3213,7 @@
           "tema": "Anemias Microcíticas Leucemias Agudas",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 11,
@@ -3262,7 +3262,7 @@
           "tema": "Estatística Médica",
           "tipo": "Revisão II",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 2,
@@ -3282,7 +3282,7 @@
           "tema": "Abdome Agudo Obstrutivo",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 4,
@@ -3292,7 +3292,7 @@
           "tema": "Incontinência Urinária",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 5,
@@ -3332,7 +3332,7 @@
           "tema": "Doenças Glomerulares Infecção do Trato Urinário",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 9,
@@ -3352,7 +3352,7 @@
           "tema": "Psicofarmacologia Psiquiatria Infantil",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 11,
@@ -3362,7 +3362,7 @@
           "tema": "Complicações da Cirrose Hepática",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 12,
@@ -3391,7 +3391,7 @@
           "tema": "Normas Regulamentadoras",
           "tipo": "Teoria II",
           "tipo_norm": "teoria",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 2,
@@ -3411,7 +3411,7 @@
           "tema": "Complicações Pós-Operatórias",
           "tipo": "Teoria I",
           "tipo_norm": "teoria",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 4,
@@ -3421,7 +3421,7 @@
           "tema": "Assistência à Vítima de Violência Sexual",
           "tipo": "Teoria",
           "tipo_norm": "teoria",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 5,
@@ -3441,7 +3441,7 @@
           "tema": "Obesidade Infantil e na Adolescência",
           "tipo": "Teoria",
           "tipo_norm": "teoria",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 7,
@@ -3451,7 +3451,7 @@
           "tema": "Complicações Pós-Operatórias",
           "tipo": "Teoria II",
           "tipo_norm": "teoria",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 8,
@@ -3481,7 +3481,7 @@
           "tema": "Fibrilação e Flutter Atrial Parada Cardiorrespiratória",
           "tipo": "Teoria",
           "tipo_norm": "teoria",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 11,
@@ -3491,7 +3491,7 @@
           "tema": "Oncologia Cutânea",
           "tipo": "Teoria",
           "tipo_norm": "teoria",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 12,
@@ -3501,7 +3501,7 @@
           "tema": "AVC Coma e alterações da consciência",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 13,
@@ -3511,7 +3511,7 @@
           "tema": "Artrite Reumatoide",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 14,
@@ -3521,7 +3521,7 @@
           "tema": "Fibrilação e Flutter Atrial Parada Cardiorrespiratória",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 15,
@@ -3531,7 +3531,7 @@
           "tema": "Oncologia Cutânea",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         }
       ]
     },
@@ -3560,7 +3560,7 @@
           "tema": "Obesidade Infantil e na Adolescência",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 3,
@@ -3580,7 +3580,7 @@
           "tema": "Assistência à Vítima de Violência Sexual",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 5,
@@ -3600,7 +3600,7 @@
           "tema": "Osteoporose e Doença óssea de Paget",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 7,
@@ -3620,7 +3620,7 @@
           "tema": "Quadril Pediátrico Politrauma Ortopédico Doenças da coluna vertebral Maus Tratos Fraturas e Luxações Complicações do trauma ortopédico",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 9,
@@ -3630,7 +3630,7 @@
           "tema": "Normas Regulamentadoras",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 10,
@@ -3640,7 +3640,7 @@
           "tema": "Complicações Pós-Operatórias",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 11,
@@ -3650,7 +3650,7 @@
           "tema": "Hemorragia Pós-Parto",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         },
         {
           "tarefa": 12,
@@ -3660,7 +3660,7 @@
           "tema": "Doenças Neuromusculares",
           "tipo": "Revisão",
           "tipo_norm": "revisao",
-          "material_indicado": "extensivo"
+          "material_indicado": "resumo"
         }
       ]
     },

@@ -1,6 +1,30 @@
 # Decision Log
 > Newest first. Updated automatically by the architect agent.
 
+## 2026-07-04 — Heurística `material_indicado` (extensivo vs resumo): menção textual, não `tipo==teoria`
+
+**Contexto:** Parte 4 do PRD de Autogovernança (`.vibeflow/audits/autogovernanca-proativa-part-4-audit.md`, PASS). O gatilho antigo em `tools/cronograma.py` (`tipo_norm=='teoria' OR /extensivo/`) marcava 279/352 tasks (79%) como extensivo — esvaziava a calibração (quase tudo virava D10). Novo critério (`cronograma.py:179`): `material_indicado='extensivo'` só quando o `raw` do PDF menciona "Extensivo"/"Livro Digital Completo" **E** a task **não** é de revisão (`revis[ãa]o`). Resultado pós-`--rebuild`: 155 extensivo / 197 resumo = 44% (n_tasks=352, total=10218 preservados).
+
+**Decisão:** A Technical Decision da spec dizia "menção a Extensivo E ausência de 'Resumo'", mas "Resumo" ocorre 694× no PDF (estrutural, não discriminante) — usá-lo como exclusão zeraria a marcação. Substituído pela **contraparte semântica real**: exclusão por **revisão** (revisar o LDI já estudado ≠ leitura extensiva fresca). Ancorado no DoD mensurável (< 60%).
+
+**Precedência D10 (G5):** material extensivo **nunca** sobrescreve nota explícita do usuário (`fonte='usuario'`). Só a inferência sem nota recebe floor 9 (degrau D10) + sinal `deep_research: true`. A regra é **única e verbatim** em `tools/day_plan.py`, `core/contracts/revisao-calibrada-contract.md` e `AGENTE.md §1.2`.
+
+**Pitfall:** Ao editar `AGENTE.md`/contrato, preservar as strings-âncora que `tools/test_revisao_calibrada.py` faz grep (`test_contrato`/`test_agente`/`test_degrau_mecanico`) — rodar a suíte após cada edição documental.
+
+---
+
+## 2026-07-04 — Linter de resumos em 2 severidades (BLOCK/WARN); regras novas nascem WARN
+
+**Contexto:** Parte 2 do PRD de Autogovernança (`.vibeflow/audits/autogovernanca-proativa-part-2-audit.md`, PASS). `tools/audit_resumos.py` ganhou modelo de duas severidades: BLOCK (exit 1, bloqueia commit) para as regras vigentes (Armadilhas ausente, tabela ASCII, `UnicodeDecodeError`) e WARN (exit 0, só adverte, agregado por tipo) para regras novas (frontmatter §5.2, encoding não-ASCII proibido `→ — – $\rightarrow$`). `errors='ignore'` removido da leitura. `test_roundtrip` isolado em cópia temp do `ipub.db`. Guard de `fsrs` na suíte com mensagem clara.
+
+**Decisão:** Warning-first — regra nova **nasce WARN** e só vira BLOCK "quando a base zerar" (decisão do usuário). O exit code vem de `block_total`; `auto_check` distingue WARN de BLOCK no relatório via linha machine-readable `[AUTO-CHECK-META] BLOCK_TOTAL=x WARN_TOTAL=y` (não reimplementa a regra).
+
+**Pitfall (contradição de spec):** A DoD 1 listou "emoji em header" como regra BLOCK "vigente", mas ela **nunca** foi enforçada e a base tem 28+ headers com `⭐`/`⚠️`/`🔴` legítimos — promovê-la a BLOCK quebraria a DoD 3 (`auto_check --all` exit 0). Resolução: **não introduzida**. Se for lintar emoji-em-header no futuro, nasce WARN e exige antes uma decisão sobre os marcadores que a base usa de propósito. Regra geral: ao adicionar regra de linter, cruzar contra a base real (`auto_check --all`) ANTES de escolher a severidade.
+
+**Encoding:** `←`/`…` são legítimos e preservados — a lista de proibidos é fechada (`→ — – $\rightarrow$`), não "todo não-ASCII".
+
+---
+
 ## 2026-06-03 — FSRS Player do Streamlit removido: revisão é conversacional (`/revisar`)
 
 **Contexto:** Onda D (audit PASS em `.vibeflow/audits/onda-d-streamlit-encolhe-audit.md`). Com a Onda A, a revisão espaçada migrou para `/revisar` + `tools/fsrs_queue.py` (funciona via celular). O player do `2_estudo.py` tab2 ficou redundante e carregava bugs conhecidos (closure capturando card errado, `fc_idx % total` mascarando overflow, `sqlite3` cru em página).

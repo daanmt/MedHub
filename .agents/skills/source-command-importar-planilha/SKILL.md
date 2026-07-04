@@ -19,9 +19,9 @@ Use quando o usuário pedir: "importa minha planilha", "puxa as questões do Dri
 
 ## Pré-requisito: Google Drive MCP
 
-Não existe MCP oficial do Google específico para Sheets — o acesso é via o connector oficial **Codex.ai Google Drive** (tools `mcp__claude_ai_Google_Drive__*`), que lê Google Sheets como arquivos do Drive (export CSV/tabela). **OAuth já vinculado em 2026-06-03**; as tools aparecem após restart do Codex. Se algum dia desautenticar:
+Não existe MCP oficial do Google específico para Sheets — o acesso é via o connector oficial **claude.ai Google Drive** (tools `mcp__claude_ai_Google_Drive__*`), que lê Google Sheets como arquivos do Drive (export CSV/tabela). **OAuth já vinculado em 2026-06-03**; as tools aparecem após restart do Claude Code. Se algum dia desautenticar:
 
-> Rode `/mcp` e selecione **"Codex.ai Google Drive"** para reautenticar.
+> Rode `/mcp` e selecione **"claude.ai Google Drive"** para reautenticar.
 
 (O caminho de persistência local funciona independentemente do MCP.)
 

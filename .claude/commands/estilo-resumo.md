@@ -51,6 +51,7 @@ status: canonical
 
 - **80% Assertividade:** Foco cirúrgico no que é cobrado em prova: condutas do ATLS 10, scores AAST, critérios diagnósticos, tabelas de choque e diretrizes oficiais.
 - **20% Didática Clínica (O Padrão-Ouro):** O resumo deve explicar o *porquê* clínico de forma densa. Não é apenas "fazer X", é "fazer X porque o mecanismo Y impede Z". Use terminologia técnica acadêmica em vez de simplificações exageradas.
+- **Deep-Researchness em Resumos D10 / Extensivo:** Quando um resumo for gerado ou auditado sob calibração máxima (D10) ou pautado na apostila do extensivo, é obrigatório esquadrinhar a literatura de base para revelar nuances ocultas, exceções de edital e interconexões entre especialidades, não se limitando a sínteses superficiais.
 - **Regra da Especificidade Técnica:** Nunca use descrições genéricas se houver uma classificação oficial ou critério quantitativo disponível (ex: use AAST Grau IV, não apenas "lesão renal grave").
 - **Linguagem:** 100% profissional e acadêmica. Proibição absoluta de gírias de plantão (ex: "encher balde", "vai morrer", "nuance de prova"). O leitor é um colega médico buscando excelência técnica.
 - **Frases:** Curtas, densas e afirmativas.
@@ -102,3 +103,13 @@ Além das regras de formato, o resumo deve cobrir todos os tópicos clinicamente
 - `resumos/Cirurgia/Trauma.md` — formatação de referência para trauma
 - `resumos/Clínica Médica/Cardiologia/Insuficiência Cardíaca.md` — formatação de referência para clínica
 - `resumos/GO/Assistência ao Parto.md` — referência para obstetrícia: cobertura de mecanismo de parto, taquissistolia, VCE com detalhes, indicações de cesárea, HPP preventivo e armadilhas densas
+
+---
+
+## Autoverificação Obrigatória (Reflexo Autônomo)
+
+Antes de concluir a redação ou edição de qualquer resumo clínico em `resumos/`, o agente DEVE executar o comando de auto-auditoria:
+```bash
+python -X utf8 tools/auto_check.py --changed
+```
+É estritamente proibido encerrar a tarefa de resumo sem comprovar no terminal que o linter retornou status `✅ PASSED` com exit code `0`.

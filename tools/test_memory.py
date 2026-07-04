@@ -176,6 +176,53 @@ def test_consolidation() -> bool:
 
 
 # ---------------------------------------------------------------------------
+# Test 5 — Context unwrap (envelope LangMem)
+# ---------------------------------------------------------------------------
+def test_context_unwrap() -> bool:
+    print("\n[5] Unwrap: registro-envelope → load_context renderiza valores reais")
+    import io
+    import contextlib
+    from app.memory.inspect import load_context
+
+    with tempfile.NamedTemporaryFile(suffix=".db", delete=False) as f:
+        db = f.name
+
+    try:
+        store = _make_store(db)
+        # Formato canônico do LangMem: envelope {"kind", "content"}
+        store.put(
+            ("medhub", "weak_areas"),
+            "uuid-envelope-1",
+            {
+                "kind": "WeakArea",
+                "content": {
+                    "area": "GO",
+                    "especialidade": "Obstetrícia",
+                    "pattern": "Confunde conduta em DPP vs placenta prévia",
+                    "error_count": 3,
+                    "last_updated": "2026-07-01",
+                },
+            },
+        )
+
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            load_context(db)
+        out = buf.getvalue()
+
+        if "[? / ?]" in out:
+            print(f"  {_FAIL} — placeholder [? / ?] ainda presente no contexto")
+            return False
+        if "[GO / Obstetrícia]" not in out:
+            print(f"  {_FAIL} — fraqueza não renderizada com valores reais:\n{out}")
+            return False
+        print(f"  {_PASS} — envelope desembrulhado: [GO / Obstetrícia] renderizado, zero [? / ?]")
+        return True
+    finally:
+        os.unlink(db)
+
+
+# ---------------------------------------------------------------------------
 # Runner
 # ---------------------------------------------------------------------------
 def main() -> None:
@@ -188,6 +235,7 @@ def main() -> None:
         test_cross_thread(),
         test_search(),
         test_consolidation(),
+        test_context_unwrap(),
     ]
 
     passed = sum(results)

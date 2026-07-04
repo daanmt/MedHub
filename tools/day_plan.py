@@ -238,29 +238,54 @@ def _proposito(area, tema):
     return ("flashcards" if vencidos >= 3 else "exercicios"), vencidos
 
 
+def _norm_tema(s):
+    """Normaliza um tema p/ igualdade: casefold + trim + colapso de espaços."""
+    return " ".join((s or "").casefold().split())
+
+
+def _material_do_tema(tema):
+    """material_indicado da grade por igualdade normalizada (C1). 'resumo' se ausente.
+
+    Igualdade normalizada (não substring): substring com string vazia era a raiz do C1
+    (tema vazio casava qualquer tema; o `break` interno deixava semanas seguintes
+    sobrescreverem). Ignora temas vazios e faz early-return no 1º match — determinístico.
+    """
+    try:
+        import cronograma as cr
+        grade = cr.load_grade()
+    except Exception:
+        return "resumo"
+    alvo = _norm_tema(tema)
+    if not alvo:
+        return "resumo"
+    for s in grade["semanas"]:
+        for t in s["tasks"]:
+            tt = t.get("tema", "")
+            if tt and _norm_tema(tt) == alvo:
+                return t.get("material_indicado", "resumo")
+    return "resumo"
+
+
 def difficulty_report(area, tema):
-    """Proposta read-only de nota/degrau/proposito p/ a abertura de task (PRD R3/R4)."""
+    """Proposta read-only de nota/degrau/proposito p/ a abertura de task (PRD R3/R4).
+
+    Regra D10 (extensivo): material extensivo ou inferência sem nota explícita → degrau D10 + dever de Deep-Researchness; a nota explícita do usuário (fonte=usuario) sempre vence (precedência input > pergunta > inferência).
+    """
     sinais = montar_sinais(area, tema)
     nota_inferida = infer_nota(sinais)
     d = db.get_dificuldade(area, tema)
     nota_usuario = d["nota"] if (d and d.get("nota") is not None) else None
     fonte = d["fonte"] if d else None
     nota_efetiva = nota_usuario if nota_usuario is not None else nota_inferida
-    
-    mat = "resumo"
-    try:
-        import cronograma as cr
-        grade = cr.load_grade()
-        for s in grade["semanas"]:
-            for t in s["tasks"]:
-                if t.get("tema") == tema or t.get("tema", "").lower() in tema.lower():
-                    mat = t.get("material_indicado", "resumo")
-                    break
-    except Exception:
-        pass
-        
-    if mat == "extensivo" and (nota_efetiva is None or nota_efetiva < 7):
-        nota_efetiva = 7
+
+    mat = _material_do_tema(tema)
+
+    # G5: nota explícita do usuário NUNCA é sobrescrita. Só quando NÃO há nota explícita
+    # o extensivo aplica floor 9 (degrau D10, não D8) + dispara o dever de Deep-Researchness.
+    deep_research = False
+    if mat == "extensivo" and nota_usuario is None:
+        nota_efetiva = max(nota_inferida, 9)
+        deep_research = True
 
     degrau = _degrau_de(nota_efetiva)
     proposito, vencidos = _proposito(area, tema)
@@ -277,6 +302,7 @@ def difficulty_report(area, tema):
         "divergencia": _divergencia(nota_usuario, nota_inferida),
         "proposito": proposito, "cards_vencidos": vencidos,
         "material_indicado": mat,
+        "deep_research": deep_research,
         "sinais": sinais,
         "sugestao_passo": passo,
     }

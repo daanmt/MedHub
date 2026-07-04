@@ -19,7 +19,16 @@ except Exception:
 
 import importlib  # noqa: E402
 
-import app.utils.db as db  # noqa: E402
+try:
+    import app.utils.db as db  # noqa: E402
+except ModuleNotFoundError as e:
+    # O ponto de falha é app.utils.db -> py-fsrs, instalado só no python global
+    # (não no .venv). Mensagem clara em vez de ImportError cru; re-levanta o resto.
+    if e.name == "fsrs":
+        print("ERRO: py-fsrs ausente. Rode com o python global que tem py-fsrs; "
+              "o .venv não tem. (ex.: `python tools/test_revisao_calibrada.py`)")
+        sys.exit(2)
+    raise
 # app.engine.__init__ re-exporta a função get_topic_context, sombreando o
 # submódulo homônimo no namespace do pacote — pegar o módulo real via importlib.
 gtc = importlib.import_module("app.engine.get_topic_context")  # noqa: E402
@@ -70,18 +79,34 @@ def test_seed():
 
 def test_roundtrip():
     print("[DoD-1b] helpers roundtrip")
-    check(db.set_dificuldade("XAREA", "XTEMA inexistente", 5, "usuario") is False,
-          "set tema inexistente -> False")
-    check(db.get_dificuldade("XAREA", "XTEMA inexistente") is None,
-          "get tema inexistente -> None")
-    # clamp + restauração (não corrompe: restaura o valor do seed)
-    orig = db.get_dificuldade("Hepato", "Hepatites Virais")["nota"]
-    db.set_dificuldade("Hepato", "Hepatites Virais", 99, "usuario")
-    got = db.get_dificuldade("Hepato", "Hepatites Virais")["nota"]
-    check(got == 10, f"clamp 99 -> 10 (got {got})")
-    db.set_dificuldade("Hepato", "Hepatites Virais", orig, "usuario")
-    check(db.get_dificuldade("Hepato", "Hepatites Virais")["nota"] == orig,
-          "restaurou valor original")
+    # Isolado numa cópia temp do ipub.db (padrão de test_barreiras_preparar):
+    # os writes de teste NUNCA tocam o db real, mesmo se um crash cair no meio.
+    import shutil
+    import tempfile
+
+    tmp = os.path.join(tempfile.gettempdir(), "ipub_test_roundtrip.db")
+    shutil.copy(DB_PATH, tmp)
+    orig_path = db.DB_PATH
+    db.DB_PATH = tmp
+    try:
+        check(db.set_dificuldade("XAREA", "XTEMA inexistente", 5, "usuario") is False,
+              "set tema inexistente -> False")
+        check(db.get_dificuldade("XAREA", "XTEMA inexistente") is None,
+              "get tema inexistente -> None")
+        # clamp + restauração (na cópia temp; o db real permanece byte-idêntico)
+        orig = db.get_dificuldade("Hepato", "Hepatites Virais")["nota"]
+        db.set_dificuldade("Hepato", "Hepatites Virais", 99, "usuario")
+        got = db.get_dificuldade("Hepato", "Hepatites Virais")["nota"]
+        check(got == 10, f"clamp 99 -> 10 (got {got})")
+        db.set_dificuldade("Hepato", "Hepatites Virais", orig, "usuario")
+        check(db.get_dificuldade("Hepato", "Hepatites Virais")["nota"] == orig,
+              "restaurou valor original")
+    finally:
+        db.DB_PATH = orig_path
+        try:
+            os.remove(tmp)
+        except OSError:
+            pass
 
 
 def test_find_resumo():

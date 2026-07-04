@@ -1,4 +1,5 @@
 import os
+import re
 import sys
 import subprocess
 from pathlib import Path
@@ -56,11 +57,27 @@ def get_staged_files():
         return None
     return sorted(set(staged))
 
-def run_command(cmd_list, desc):
+def run_command(cmd_list, desc, capture=False):
     print(f"\n[AUTO-CHECK] Executando: {desc}")
     print(f"            $ {' '.join(cmd_list)}")
+    if capture:
+        # Captura + eco: preserva a saída na tela E devolve o texto para que o
+        # relatório final possa distinguir WARN de BLOCK (sem reimplementar a regra).
+        res = subprocess.run(cmd_list, cwd=ROOT_DIR, capture_output=True,
+                             text=True, encoding="utf-8", errors="replace")
+        if res.stdout:
+            print(res.stdout, end="" if res.stdout.endswith("\n") else "\n")
+        if res.stderr:
+            print(res.stderr, end="" if res.stderr.endswith("\n") else "\n")
+        return res.returncode == 0, res.stdout or ""
     res = subprocess.run(cmd_list, cwd=ROOT_DIR)
-    return res.returncode == 0
+    return res.returncode == 0, ""
+
+
+def _warn_total(output):
+    """Extrai WARN_TOTAL da linha machine-readable do audit_resumos. 0 se ausente."""
+    m = re.search(r"WARN_TOTAL=(\d+)", output)
+    return int(m.group(1)) if m else 0
 
 def main():
     mode = "--changed"
@@ -81,30 +98,37 @@ def main():
 
     resumos_to_check = []
     tools_to_check = []
+    changed_files = None
+    parity_relevant = (mode == "--all")
 
     if mode in ("--changed", "--staged"):
         changed_files = get_staged_files() if mode == "--staged" else get_changed_files()
         if changed_files is None:
             mode = "--all"
+            parity_relevant = True
         else:
             origem = "staged para commit" if mode == "--staged" else "modificado(s)/untracked na sessão"
             print(f"🔍 Detectados {len(changed_files)} arquivo(s) {origem}.")
             for f in changed_files:
+                fp = f.replace("\\", "/")
+                # Paridade command<->skill: relevante se o canônico OU o espelho mudou.
+                if fp.startswith(".claude/commands/") or fp.startswith(".agents/skills/"):
+                    parity_relevant = True
                 path_obj = ROOT_DIR / f
                 if not path_obj.exists():
                     continue
                 # Classificar
-                if f.replace("\\", "/").startswith("resumos/") and f.endswith(".md"):
+                if fp.startswith("resumos/") and f.endswith(".md"):
                     resumos_to_check.append(f)
-                elif (f.replace("\\", "/").startswith("tools/") or f.replace("\\", "/").startswith("core/")) and f.endswith(".py"):
+                elif (fp.startswith("tools/") or fp.startswith("core/")) and f.endswith(".py"):
                     tools_to_check.append(f)
 
-            if not resumos_to_check and not tools_to_check:
+            if not resumos_to_check and not tools_to_check and not parity_relevant:
                 print("\n✅ Nenhum arquivo crítico (resumos/*.md ou scripts python estruturais) foi alterado.")
                 print("   O harness não exige execução de suítes de teste para esta mudança. Aprovado!")
                 print("=" * 60)
                 return 0
-            
+
             print(f"   ↳ Resumos para auditar: {len(resumos_to_check)}")
             print(f"   ↳ Scripts estruturais para testar: {len(tools_to_check)}")
 
@@ -118,34 +142,49 @@ def main():
             cmd.extend(resumos_to_check)
         
         desc = "Linter de Qualidade de Resumos" + (" (Global)" if mode == "--all" else f" ({len(resumos_to_check)} arquivos)")
-        success = run_command(cmd, desc)
+        success, out = run_command(cmd, desc, capture=True)
         all_passed = all_passed and success
-        results_summary.append((desc, success))
+        results_summary.append((desc, success, _warn_total(out)))
 
     # 2. Auditar Motor Python / Testes de Calibração
     if mode == "--all" or tools_to_check:
         cmd_test = [sys.executable, "tools/test_revisao_calibrada.py"]
         desc = "Suíte Central de Testes (Revisão Calibrada e D10)"
-        success = run_command(cmd_test, desc)
+        success, _ = run_command(cmd_test, desc)
         all_passed = all_passed and success
-        results_summary.append((desc, success))
+        results_summary.append((desc, success, 0))
 
         # Se houver teste específico de autonomia
         test_autonomia_path = ROOT_DIR / "tools" / "test_autonomia_hooks.py"
         if test_autonomia_path.exists() and (mode == "--all" or any("autonomia" in f or "hooks" in f for f in tools_to_check)):
             cmd_auto = [sys.executable, "tools/test_autonomia_hooks.py"]
             desc_auto = "Suíte de Testes do Harness de Autonomia e Hooks"
-            success_auto = run_command(cmd_auto, desc_auto)
+            success_auto, _ = run_command(cmd_auto, desc_auto)
             all_passed = all_passed and success_auto
-            results_summary.append((desc_auto, success_auto))
+            results_summary.append((desc_auto, success_auto, 0))
+
+    # 3. Paridade command<->skill (Parte 3). WARN, não bloqueia (warning-first):
+    #    a regra de "em sync" mora no gerador; o auto_check só orquestra o --check.
+    if parity_relevant:
+        ok_parity, out_parity = run_command(
+            [sys.executable, "tools/sync_skills.py", "--check"],
+            "Paridade command<->skill (sync_skills --check)", capture=True)
+        desc_parity = "Paridade command<->skill"
+        if ok_parity:
+            results_summary.append((desc_parity, True, 0))
+        else:
+            n_drift = out_parity.count("PARITY_DRIFT")
+            # success=True: WARN não rebaixa o veredito (não altera all_passed).
+            results_summary.append((desc_parity, True, n_drift))
 
     # Resumo Final
     print("\n" + "=" * 60)
     print("📊 RELATÓRIO FINAL DO HARNESS AUTÔNOMO")
     print("=" * 60)
-    for desc, success in results_summary:
+    for desc, success, warns in results_summary:
         icon = "✅ PASSED" if success else "❌ FAILED"
-        print(f"  {icon} - {desc}")
+        badge = f"  ⚠️ {warns} WARN (não bloqueia)" if warns else ""
+        print(f"  {icon} - {desc}{badge}")
     print("=" * 60)
 
     if all_passed:

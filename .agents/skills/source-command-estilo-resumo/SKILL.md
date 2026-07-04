@@ -117,4 +117,3 @@ Antes de concluir a redação ou edição de qualquer resumo clínico em `resumo
 python -X utf8 tools/auto_check.py --changed
 ```
 É estritamente proibido encerrar a tarefa de resumo sem comprovar no terminal que o linter retornou status `✅ PASSED` com exit code `0`.
-

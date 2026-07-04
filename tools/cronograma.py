@@ -176,7 +176,15 @@ def parse_grade(paginas, semana_1_inicio=SEMANA_1_INICIO):
             d = dtasks.get(tn, {})
             area_norm, multi = normaliza_area(area_pdf)
             tipo_norm = normaliza_tipo(tipo_v)
-            mat = "extensivo" if (tipo_norm == "teoria" or re.search(r"extensivo", d.get("raw", ""), re.I)) else "resumo"
+            # material_indicado (C4 recalibrado, s107): 'extensivo' SÓ quando o texto do PDF
+            # menciona explicitamente 'Extensivo'/'Livro Digital Completo' E a task NÃO é de
+            # revisão (revisar o LDI já estudado ≠ leitura extensiva fresca). O gatilho antigo
+            # `tipo_norm=='teoria'` era largo demais — marcava 279/352 (79%) como extensivo,
+            # esvaziando a calibração. Novo critério ancora na menção textual: ~44% das tasks.
+            raw = d.get("raw", "")
+            menciona_ext = re.search(r"extensivo|livro digital completo", raw, re.I)
+            eh_revisao = re.search(r"revis[ãa]o", raw, re.I)
+            mat = "extensivo" if (menciona_ext and not eh_revisao) else "resumo"
             tasks.append({
                 "tarefa": tn,
                 "area_pdf": area_pdf,

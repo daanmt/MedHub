@@ -140,13 +140,13 @@ def _parse_payload(payload_lines):
 
 
 def _parse_detail(detail_lines):
-    """{N: {tema_detail, questoes}} — tema via 'Livro Digital: tema (Tipo)' + contagem de Links."""
+    """{N: {tema_detail, questoes, raw}} — tema via 'Livro Digital: tema (Tipo)' + contagem de Links."""
     out = {}
     for n, lines in _split_tarefas(detail_lines).items():
         s = _dewrap(" ".join(lines))
         m = re.search(r"Livro Digital:\s*(.+?)\s*\((?:Teoria|Revis[ãa]o)[^)]*\)", s)
         counts = [int(c) for c in re.findall(r"Link\s*-\s*(\d+)\s*quest", s)]
-        out[n] = {"tema_detail": m.group(1).strip() if m else "", "questoes": sum(counts)}
+        out[n] = {"tema_detail": m.group(1).strip() if m else "", "questoes": sum(counts), "raw": s}
     return out
 
 
@@ -175,6 +175,8 @@ def parse_grade(paginas, semana_1_inicio=SEMANA_1_INICIO):
             tema_r, tipo_v = _parse_payload(clean[1:])
             d = dtasks.get(tn, {})
             area_norm, multi = normaliza_area(area_pdf)
+            tipo_norm = normaliza_tipo(tipo_v)
+            mat = "extensivo" if (tipo_norm == "teoria" or re.search(r"extensivo", d.get("raw", ""), re.I)) else "resumo"
             tasks.append({
                 "tarefa": tn,
                 "area_pdf": area_pdf,
@@ -182,7 +184,8 @@ def parse_grade(paginas, semana_1_inicio=SEMANA_1_INICIO):
                 "multi_area": multi,
                 "tema": tema_r or d.get("tema_detail", "") or "",
                 "tipo": tipo_v,
-                "tipo_norm": normaliza_tipo(tipo_v),
+                "tipo_norm": tipo_norm,
+                "material_indicado": mat,
             })
 
         # total da SEMANA = soma de TODOS os "Link - NN questões" da semana (validado: S10=273,

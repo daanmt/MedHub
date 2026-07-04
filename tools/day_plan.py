@@ -102,6 +102,7 @@ def _cronograma_hoje(total_q, hoje):
         "previstas": wk["total_questoes"],
         "n_tasks": wk["n_tasks"],
         "temas": [t["tema"] for t in wk["tasks"] if t.get("tema")][:3],
+        "temas_material": [f"{t['tema']} ({t.get('material_indicado', 'resumo')})" for t in wk["tasks"] if t.get("tema")][:3],
         "dias_enamed": dias,
         "ritmo_cronograma": round(restante / dias, 1) if dias > 0 else None,
         "ritmo_meta": round(max(0, META_PROVA - total_q) / dias, 1) if dias > 0 else None,
@@ -245,11 +246,27 @@ def difficulty_report(area, tema):
     nota_usuario = d["nota"] if (d and d.get("nota") is not None) else None
     fonte = d["fonte"] if d else None
     nota_efetiva = nota_usuario if nota_usuario is not None else nota_inferida
+    
+    mat = "resumo"
+    try:
+        import cronograma as cr
+        grade = cr.load_grade()
+        for s in grade["semanas"]:
+            for t in s["tasks"]:
+                if t.get("tema") == tema or t.get("tema", "").lower() in tema.lower():
+                    mat = t.get("material_indicado", "resumo")
+                    break
+    except Exception:
+        pass
+        
+    if mat == "extensivo" and (nota_efetiva is None or nota_efetiva < 7):
+        nota_efetiva = 7
+
     degrau = _degrau_de(nota_efetiva)
     proposito, vencidos = _proposito(area, tema)
     largura = ("amplo (escopo do cronograma)" if proposito == "exercicios"
                else "direcionado (cluster vencido)")
-    passo = (f"Revisar {tema} como dif-{nota_efetiva} ({degrau}), PREPARAR "
+    passo = (f"Revisar {tema} como dif-{nota_efetiva} ({degrau}) [Material: {mat}], PREPARAR "
              f"{'descomprimido' if nota_efetiva >= 7 else 'comprimido'}+mecanismo, "
              f"{largura}; depois DRENAR.")
     return {
@@ -259,6 +276,7 @@ def difficulty_report(area, tema):
         "degrau": degrau, "paragrafos": list(DEGRAU_PARAGRAFOS[degrau]),
         "divergencia": _divergencia(nota_usuario, nota_inferida),
         "proposito": proposito, "cards_vencidos": vencidos,
+        "material_indicado": mat,
         "sinais": sinais,
         "sugestao_passo": passo,
     }
@@ -323,7 +341,7 @@ def render(p):
         out.append(f"- 🧭 **Cronograma:** conteúdo **S{c['conteudo']}** · {c['previstas']}q previstas "
                    f"· {c['n_tasks']} tasks{lag}")
         if c["temas"]:
-            out.append(f"    • próximos temas: {', '.join(c['temas'])}")
+            out.append(f"    • próximos temas: {', '.join(c.get('temas_material', c['temas']))}")
         out.append(f"    • ritmos-alvo: terminar a grade ~{c['ritmo_cronograma']}/dia · "
                    f"meta-prova {META_PROVA // 1000}k ~{c['ritmo_meta']}/dia ({c['dias_enamed']}d p/ ENAMED)")
     elif p.get("cronograma_hint"):

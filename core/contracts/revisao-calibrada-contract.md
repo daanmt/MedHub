@@ -42,7 +42,7 @@ Precedência **dura**: **input explícito do usuário > pergunta respondida > in
 
 Quatro degraus de formato, com switches **auditáveis por contagem/regex** (não adjetivos):
 
-- **Degrau D10 (notas 9-10) — Onboarding do zero.** Parágrafos: **7-9.** **Degrau 0 explícito** (a régua do "normal" antes da nuance). **Toda sigla definida por extenso na 1ª ocorrência.** Espinha: *mecanismo → por que existe → valores → ajustes → o que acontece se errar → contexto de uso*. Nenhum salto: cada seção referencia a anterior.
+- **Degrau D10 (notas 9-10) — Onboarding do zero / Deep-Researchness.** Parágrafos: **7-9.** **Degrau 0 explícito** (a régua do "normal" antes da nuance). **Toda sigla definida por extenso na 1ª ocorrência.** Espinha: *mecanismo → por que existe → valores → ajustes → o que acontece se errar → contexto de uso*. Nenhum salto: cada seção referencia a anterior. **Obrigação de Deep-Researchness:** quando acionado por cronograma de extensivo ou nota 9-10, o agente tem o dever proativo de varrer a literatura de base em profundidade, antecipando conexões entre especialidades, controvérsias de bancas e exceções clínicas antes de o usuário realizar questões ou auditar resumos.
 - **Degrau D8 (notas 7-8) — Descomprimido com mecanismo.** Parágrafos: **5-6.** Degrau 0 explícito; siglas-chave expandidas. Fundação + cadeia causal + nuance.
 - **Degrau D5 (notas 4-6) — Gatilhos + armadilhas.** Parágrafos: **3-4.** Degrau 0 assumido conhecido. Mecanismo curto + conduta; fecha com gatilhos-de-prova + 🔴 armadilhas.
 - **Degrau D2 (notas 1-3) — Só armadilhas / flash.** Parágrafos: **1-2** ou bullets. Sem reconstruir fundação. 🔴 armadilha + diferencial "X vs Y".
@@ -53,7 +53,7 @@ A nota explícita do usuário **escolhe o degrau diretamente**; sem nota, a faix
 
 `/refrescar` deixa de ser skill autônoma e vira o **sub-modo PREPARAR** dentro de `/revisar`. Uma porta só; a fronteira vira **interna** (dois sub-modos com permissões disjuntas).
 
-- **PREPARAR** (narrativo; FSRS read-only) — releitura calibrada ao degrau (Cláusula 3) e ao **propósito**: **amplo** rumo a EXERCÍCIOS (cobre o escopo do cronograma) ou **direcionado** rumo a FLASHCARDS (foca o cluster vencido). Largura (propósito) e profundidade (nota) são **ortogonais**.
+- **PREPARAR** (narrativo; FSRS read-only) — releitura calibrada ao degrau (Cláusula 3) e ao **propósito**: **amplo** rumo a EXERCÍCIOS (cobre o escopo do cronograma com postura proativa de revelar nuances e interconexões sob D10) ou **direcionado** rumo a FLASHCARDS (foca o cluster vencido). Largura (propósito) e profundidade (nota) são **ortogonais**.
 - **DRENAR** (card-a-card; ESCREVE FSRS) — o player FSRS atual (Camadas 1/2 do `/revisar`). Única superfície que move o FSRS.
 - A transição **PREPARAR → DRENAR** é o único ponto em que o FSRS passa a ser escrito.
 

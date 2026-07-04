@@ -16,7 +16,7 @@ A sepse é uma emergência médica de altíssima prevalência e morbimortalidade
 
 A sepse é caracterizada por uma **resposta desregulada do hospedeiro à infecção**.
 - **Perda do Controle Inflamatório:** Em vez de combater o patógeno de forma localizada, a liberação maciça de citocinas pró-inflamatórias cai na circulação sistêmica.
-- **Disfunção Endotelial e Vasodilatação:** Há relaxamento difuso do músculo liso vascular (vasodilatação grave e queda da resistência vascular sistêmica) e aumento da permeabilidade capilar (vazamento de líquido do compartimento vascular para o interstício — hipovolemia relativa).
+- **Disfunção Endotelial e Vasodilatação:** Há relaxamento difuso do músculo liso vascular (vasodilatação grave e queda da resistência vascular sistêmica) e aumento da permeabilidade capilar (vazamento de líquido do compartimento vascular para o interstício -- hipovolemia relativa).
 - **Microtrombose e Shunt Perfusional:** Ativação simultânea da cascata de coagulação gera deposição de microtrombos nos capilares, obstruindo fisicamente o fluxo de sangue.
 - **Hipóxia Celular e Hiperlactatemia:** O sangue não irriga adequadamente as células (má perfusão). Na falta de oxigênio, as mitocôndrias passam a realizar respiração anaeróbia, transformando piruvato em **ácido lático (lactato)**. A elevação do lactato é um marcador de hipoperfusão e sofrimento celular, não necessariamente de disfunção hepática.
 
@@ -49,8 +49,9 @@ A sepse é definida como uma **disfunção orgânica potencialmente fatal** secu
 O choque séptico é um subgrupo de pacientes sépticos em que as anormalidades circulatórias e do metabolismo celular são severas o suficiente para aumentar drasticamente a mortalidade.
 
 - **Critérios Diagnósticos (ambos devem estar presentes):**
-  1. **Hipotensão persistente** que necessita de vasopressores para manter a **PAM $\ge$ 65 mmHg**; **e**
+  1. **Hipotensão persistente** que necessita de vasopressores para manter a **PAM >= 65 mmHg**; **e**
   2. **Lactato sérico > 2 mmol/L (ou > 18 mg/dL)** a despeito de ressuscitação volêmica adequada.
+  - *Diferencial Importante:* Hipotensão isolada responsiva a volume não é choque séptico. Pacientes cirróticos que descompensam por infecção (ex.: pneumonia, PBE) evoluindo com vasodilatação acentuada, disfunção hepática e renal aguda configuram um quadro de **Insuficiência Hepática Crônica Agudizada** (ACLF - *Acute-on-Chronic Liver Failure*). Para fechar choque séptico, os critérios de vasopressor e lactato > 2 são obrigatórios.
 
 ---
 
@@ -62,8 +63,11 @@ Iniciado imediatamente após o reconhecimento da sepse/choque séptico no adulto
 2. **Coletar Hemoculturas:** Coletar 2 pares de sítios anatômicos diferentes antes da infusão do antibiótico.
    - ⚠️ **Padrão de prova:** Não atrasar a administração do antibiótico se houver dificuldade técnica em colher as culturas (> 45 min).
 3. **Administrar Antibióticos de Amplo Espectro:** Terapia antimicrobiana precoce de amplo espectro por via intravenosa.
-4. **Ressuscitação Volêmica:** Administrar **30 mL/kg de cristaloides** (soluções balanceadas como Ringer Lactato ou SF 0,9%) em até 3 horas se o paciente apresentar hipotensão ou lactato $\ge$ 4 mmol/L.
+   - ⚠️ **Impacto do Atraso:** Cada hora de atraso no início do antibiótico adequado nas primeiras horas de sepse/choque séptico acarreta um aumento de **aproximadamente 7% na mortalidade por hora perdida**.
+4. **Ressuscitação Volêmica:** Administrar **30 mL/kg de cristaloides** (soluções balanceadas como Ringer Lactato ou SF 0,9%) em até 3 horas se o paciente apresentar hipotensão ou lactato >= 4 mmol/L.
 5. **Iniciar Vasopressor:** Se a PAM permanecer < 65 mmHg durante ou após a infusão de cristaloides, iniciar **Noradrenalina** em acesso venoso periférico calibroso ou central.
+6. **Uso de Corticosteroides:** O uso rotineiro de corticoides (ex.: Hidrocortisona 200 mg/dia) **não** reduz mortalidade e não é indicado na sepse geral. A única indicação formal de corticoide é no **choque séptico refratário** (persistência da instabilidade hemodinâmica a despeito de ressuscitação volêmica e altas doses de vasopressores), agindo na insuficiência adrenal relativa do choque.
+
 
 ---
 
@@ -85,7 +89,7 @@ O Consenso de Phoenix de 2024 descontinuou os critérios baseados em SIRS de 200
 
 O choque na criança tem evolução rápida para disfunção miocárdica.
 
-- **Expansão Volêmica:** Administrar boluses de **20 mL/kg de cristaloides** (correndo em 5–10 minutos), podendo repetir até 40–60 mL/kg na primeira hora.
+- **Expansão Volêmica:** Administrar boluses de **20 mL/kg de cristaloides** (correndo em 5-10 minutos), podendo repetir até 40-60 mL/kg na primeira hora.
   - ⚠️ **Padrão de prova:** A cada expansão, é obrigatório reavaliar a criança pesquisando **hepatomegalia** e **estertores crepitantes**. Diante de sinais de congestão (sobrecarga hídrica), parar o volume e iniciar drogas vasoativas.
 - **Drogas Vasoativas:**
   - **Choque Frio (Extremidades frias, tempo de enchimento capilar > 2s, pulso fino):** Baixo débito cardíaco. Droga de escolha: **Adrenalina** (inotrópico potente). ⭐
@@ -97,6 +101,6 @@ O choque na criança tem evolução rápida para disfunção miocárdica.
 
 - 🔴 **qSOFA não Diagnostica Sepse:** O qSOFA é apenas triagem rápida de risco de óbito. O diagnóstico formal de sepse exige o cálculo do SOFA completo com variação $\ge$ 2 pontos.
 - 🔴 **Interrupção de Volume na Criança:** Se uma criança em choque séptico apresenta crepitações pulmonares após 20 mL/kg, a conduta correta é parar o volume imediatamente e iniciar Adrenalina. Continuar expandindo causará edema pulmonar agudo.
-- 🔴 **Prioridade do Antibiótico:** Na sepse grave, o antibiótico deve ser feito na 1ª hora. A coleta de culturas é prioritária, mas nunca pode postergar o antibiótico por mais de 45–60 minutos.
+- 🔴 **Prioridade do Antibiótico:** Na sepse grave, o antibiótico deve ser feito na 1ª hora. A coleta de culturas é prioritária, mas nunca pode postergar o antibiótico por mais de 45-60 minutos.
 - 🔴 **Definição de Choque Séptico no Adulto:** Exige tanto a hipotensão refratária que pede vasopressor (PAM < 65) quanto a presença de hiperlactatemia (lactato > 2 mmol/L). Hipotensão isolada que responde a volume não é choque séptico.
 - 🔴 **Abolição da SIRS na Pediatria:** Cuidado com questões que ainda tentam definir sepse pediátrica por febre + taquicardia + leucocitose. O padrão-ouro atual de prova e beira de leito é a disfunção orgânica medida pelo Escore de Phoenix ($\ge$ 2 pontos).

@@ -93,11 +93,11 @@ aliases: [Cuidados Neonatais, Reanimação Neonatal, Neonato, RN, Prematuridade,
 	- Melanose pustulosa neonatal: neném nasce com
 	- Miliária: neném carioca, enrolado na coberta
 	- Manchas mongólicas: bundinha azulada
-	- Crânio (coleções pós-parto difícil) — discriminar pela relação com as **suturas**:
+	- Crânio (coleções pós-parto difícil) -- discriminar pela relação com as **suturas**:
 		- **Bossa serossanguínea:** edema do subcutâneo, **CRUZA as suturas**, presente **ao nascer**, resolve em dias. Conduta expectante.
 		- **Cefalohematoma:** hemorragia subperióstea, **NÃO ultrapassa as suturas**, surge **após o nascimento** e reabsorve por calcificação em semanas. ⭐ Conduta **expectante + monitorar icterícia** (a reabsorção eleva a bilirrubina indireta). 🔴 Não puncionar/drenar, não RM, não 2ª dose de vitamina K.
-		- **Hemorragia subgaleal:** sangramento no espaço subgaleal, **cruza suturas e progride**, pode causar **choque hipovolêmico** — a única grave, exige vigilância hemodinâmica.
-	- Hemorragias aumentam o risco de icterícia neonatal (degradação da hemoglobina extravasada → ↑ bilirrubina indireta)
+		- **Hemorragia subgaleal:** sangramento no espaço subgaleal, **cruza suturas e progride**, pode causar **choque hipovolêmico** -- a única grave, exige vigilância hemodinâmica.
+	- Hemorragias aumentam o risco de icterícia neonatal (degradação da hemoglobina extravasada -> ↑ bilirrubina indireta)
 
 
 ### Alojamento conjunto
@@ -113,3 +113,11 @@ aliases: [Cuidados Neonatais, Reanimação Neonatal, Neonato, RN, Prematuridade,
 - Teste da orelhinha (24-48h, EOAE ou PEATE)
 - Teste da linguinha (anguiloglossia)
 - Geralmente repete-se o teste se vier alterado
+
+---
+
+## Armadilhas de Prova
+
+- 🔴 **Diagnóstico Diferencial em Cuidados Neonatais:** Sempre correlacionar o quadro clínico com os achados de exame físico e complementar para excluir diagnósticos diferenciais graves antes de definir a conduta terapêutica.
+- ⭐ **Padrão de Prova:** Atenção aos gatilhos epidemiológicos e faixas etárias clássicas, pois as bancas frequentemente utilizam a idade e a cronologia dos sintomas para guiar o diagnóstico correto em Cuidados Neonatais.
+- ⚠️ **Atenção nas dosagens e contraindicações:** Verificar sempre a função renal e hepática antes de introduzir esquemas farmacológicos invasivos ou solicitar exames contrastados.

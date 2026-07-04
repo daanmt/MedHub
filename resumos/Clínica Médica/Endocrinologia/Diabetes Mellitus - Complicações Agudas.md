@@ -6,7 +6,7 @@ status: active
 aliases: [DM Agudo, CAD, HHS]
 ---
 
-# Diabetes Mellitus — Complicações Agudas
+# Diabetes Mellitus -- Complicações Agudas
 
 ---
 
@@ -18,29 +18,29 @@ aliases: [DM Agudo, CAD, HHS]
 
 - ⭐ A glicemia elevada é **consequência**, não a causa primária
 - Insulina é hormônio **anabólico**; hormônios contrarreguladores (glucagon, catecolaminas, cortisol, GH) são **catabólicos**
-- Deficiência de insulina → desinibição dos hormônios contrarreguladores → dois processos paralelos:
+- Deficiência de insulina -> desinibição dos hormônios contrarreguladores -> dois processos paralelos:
 
 **Hiperglicemia:**
 - Glucagon e epinefrina estimulam **glicogenólise** e **gliconeogênese** hepática
 - Cortisol e GH reduzem utilização periférica de glicose
-- Proteólise → aminoácidos disponíveis para gliconeogênese
+- Proteólise -> aminoácidos disponíveis para gliconeogênese
 - Resistência periférica à insulina (perpetua a hiperglicemia)
 
 **Cetoacidose:**
-- Desinibição da lipase hormônio-sensível → **lipólise** → aumento de ácidos graxos livres (AGL)
-- Queda da malonil-CoA → oxidação dos AGL no fígado → produção de **cetoácidos** (β-hidroxibutirato e acetoacetato) + triglicerídeos
-- Cetoácidos consomem bicarbonato → **acidose metabólica com ânion gap elevado**
-- Compensação respiratória → hiperventilação (respiração de Kussmaul)
+- Desinibição da lipase hormônio-sensível -> **lipólise** -> aumento de ácidos graxos livres (AGL)
+- Queda da malonil-CoA -> oxidação dos AGL no fígado -> produção de **cetoácidos** (β-hidroxibutirato e acetoacetato) + triglicerídeos
+- Cetoácidos consomem bicarbonato -> **acidose metabólica com ânion gap elevado**
+- Compensação respiratória -> hiperventilação (respiração de Kussmaul)
 - ⭐ CAD = acidose metabólica com **ânion gap aumentado** (≠ hiperclorêmica)
 
-> Fórmula do ânion gap: **Na⁺ − (Cl⁻ + HCO₃⁻)** | Normal: 3–10 mEq/L (alguns laboratórios: 7–13 mEq/L)
+> Fórmula do ânion gap: **Na⁺ − (Cl⁻ + HCO₃⁻)** | Normal: 3-10 mEq/L (alguns laboratórios: 7-13 mEq/L)
 
 ---
 
 ### 1.2 Epidemiologia
 
 - Presente em ~25% das aberturas de DM1
-- Taxa de 6–8%/ano em DM1 já diagnosticado
+- Taxa de 6-8%/ano em DM1 já diagnosticado
 - Principal causa de morte em crianças/adolescentes com DM1
 - Mortalidade geral < 1% em centros de excelência; até 5% em idosos com comorbidades; até 30% se evoluir com edema cerebral
 - ⚠️ Padrão de prova: **DM2 também pode fazer CAD** em situações de estresse clínico
@@ -49,9 +49,9 @@ aliases: [DM Agudo, CAD, HHS]
 
 ### 1.3 Fatores Precipitantes
 
-- **Infecção** (30–40%) — principalmente pneumonias e ITU ← **fator mais comum**
+- **Infecção** (30-40%) -- principalmente pneumonias e ITU ← **fator mais comum**
 - Omissão/inadequação da insulina
-- Abertura do DM (20–25%)
+- Abertura do DM (20-25%)
 - Doenças críticas: IAM, AVC, pancreatite aguda
 - Drogas: **antipsicóticos atípicos** (clozapina, olanzapina), cocaína, lítio, **inibidores de SGLT2**, terbutalina
 
@@ -62,7 +62,7 @@ aliases: [DM Agudo, CAD, HHS]
 - Evolução rápida: **< 24 horas**
 - Sintomas de hiperglicemia descompensada: poliúria, polidipsia, polifagia, perda de peso, noctúria, visão turva
 - Náuseas, vômitos (resposta ao aumento de cetoácidos + atonia gástrica)
-- **Dor abdominal** — proporcional ao grau de acidemia (ocorre em 86% com HCO₃ ≤ 5, mas em apenas 13% com HCO₃ ≥ 15)
+- **Dor abdominal** -- proporcional ao grau de acidemia (ocorre em 86% com HCO₃ ≤ 5, mas em apenas 13% com HCO₃ ≥ 15)
   - Mais comum na faixa pediátrica; pode simular abdome agudo
 - Sinais de desidratação: mucosas secas, turgor ↓, olhos encovados, taquicardia, hipotensão, pulso filiforme
 - **Respiração de Kussmaul** (inspirações e expirações de alta amplitude)
@@ -71,23 +71,23 @@ aliases: [DM Agudo, CAD, HHS]
 
 ---
 
-### 1.5 Critérios Diagnósticos — Adulto (ADA 2009)
+### 1.5 Critérios Diagnósticos -- Adulto (ADA 2009)
 
 - ⭐ **Glicemia > 250 mg/dL**
 - ⭐ **Acidose metabólica:** pH arterial ≤ 7,3 **e/ou** HCO₃ sérico ≤ 18 mEq/L
 - ⭐ **Cetonemia** (β-hidroxibutirato ≥ 3 mmol/L) **ou** cetonúria (fita reagente positiva)
 - ⚠️ Padrão de prova: ânion gap aumentado **não é critério diagnóstico** formal, mas é característica da CAD
-- ⚠️ Padrão de prova: quando o enunciado já fornece glicemia elevada **e** acidose metabólica, o exame que **confirma** a CAD é a documentação da **cetose** (cetonúria na fita ou β-HB sérico) — a 3ª perna da tríade que ainda falta. Lactato sérico investiga o diagnóstico diferencial da acidose, **não** confirma CAD
+- ⚠️ Padrão de prova: quando o enunciado já fornece glicemia elevada **e** acidose metabólica, o exame que **confirma** a CAD é a documentação da **cetose** (cetonúria na fita ou β-HB sérico) -- a 3ª perna da tríade que ainda falta. Lactato sérico investiga o diagnóstico diferencial da acidose, **não** confirma CAD
 
 **Gravidade:**
 
-- CAD Leve: pH 7,25–7,30 | HCO₃ 15–18 | Alerta
-- CAD Moderada: pH 7,00–7,24 | HCO₃ 10–14 | Alerta/Sonolento
-- CAD Grave: pH < 7,00 | HCO₃ < 10 | Estupor/Coma
+- **CAD Leve:** pH 7,25-7,30 | HCO₃ 15-18 | Alerta
+- **CAD Moderada:** pH 7,00-7,24 | HCO₃ 10-14 | Alerta/Sonolento
+- **CAD Grave:** pH < 7,00 | HCO₃ < 10 | Estupor/Coma
 
 ---
 
-### 1.6 Critérios Diagnósticos — Pediatria (ISPAD 2018)
+### 1.6 Critérios Diagnósticos -- Pediatria (ISPAD 2018)
 
 - **Glicemia > 200 mg/dL** (< que no adulto!)
 - Acidose: **pH venoso < 7,3 ou HCO₃ < 15 mEq/L**
@@ -100,13 +100,13 @@ aliases: [DM Agudo, CAD, HHS]
 **Potássio:**
 - ⭐ Maioria tem K⁺ normal ou **elevado** à admissão, mas **pool corporal total está reduzido**
 - Mecanismos de hipocalemia durante tratamento:
-  - Insulina → K⁺ para intracelular
-  - Correção da acidose → H⁺ saem, K⁺ entra na célula
+  - Insulina -> K⁺ para intracelular
+  - Correção da acidose -> H⁺ saem, K⁺ entra na célula
   - Diurese osmótica espoliou K⁺ previamente
 - ⚠️ Padrão de prova: calemia normal/alta na admissão **não** significa pool normal
 
 **Sódio:**
-- Déficit corporal total: 7–10 mEq/kg
+- Déficit corporal total: 7-10 mEq/kg
 - Natremia pode ser baixa (diluição pelo influxo de água extracelular) **ou** alta (perda hídrica > perda de sódio)
 - **Sódio corrigido:** Na medido + 1,6 mEq/L para cada 100 mg/dL de glicose acima de 100 mg/dL
 - Sódio deve aumentar ~1,6 mEq/L para cada queda de 100 mg/dL de glicemia durante tratamento (falha = risco de edema cerebral)
@@ -115,73 +115,73 @@ aliases: [DM Agudo, CAD, HHS]
 - Leucocitose sem infecção (cortisol + catecolaminas); suspeitar de infecção se leucócitos > 25.000/µL ou > 10% de bastões
 - Hipofosfatemia (repor somente se < 1 mg/dL, ICC, anemia hemolítica ou insuficiência respiratória)
 - ↑ Amilase e lipase (pode ocorrer sem pancreatite)
-- ↑ Creatinina (hipovolemia → queda de TFG)
+- ↑ Creatinina (hipovolemia -> queda de TFG)
 - Hipertrigliceridemia (lipólise aumentada)
 
 **Dinâmica dos cetoácidos:**
 - Três cetonas na CAD: ácido acetoacético (AcAc), **β-hidroxibutirato (β-HB)** e acetona
-- Fita reagente (nitroprussiato) detecta AcAc e acetona — **não detecta β-HB**
+- Fita reagente (nitroprussiato) detecta AcAc e acetona -- **não detecta β-HB**
 - No início da CAD: β-HB predomina (relação β-HB:AcAc de 3:1 a 10:1)
-- Com tratamento: β-HB cai, AcAc sobe transitoriamente → cetonúria pode **parecer piorar** mas é sinal de melhora
+- Com tratamento: β-HB cai, AcAc sobe transitoriamente -> cetonúria pode **parecer piorar** mas é sinal de melhora
 - ⚠️ Padrão de prova: cetonúria negativa **não exclui** CAD (se β-HB for o cetoácido predominante)
 
 ---
 
-### 1.8 Tratamento — Adulto (5 Pilares)
+### 1.8 Tratamento -- Adulto (5 Pilares)
 
-#### Pilar 1 — Estabilização e Reposição de Volume
+#### Pilar 1 -- Estabilização e Reposição de Volume
 
 - ⭐ **Hidratação é SEMPRE o primeiro passo**, independente de glicemia ou acidemia
 - Solução inicial: sempre **salina a 0,9%**
 
-- Choque hipovolêmico: 20–30 mL/kg em infusão rápida
-- Hipovolemia sem choque: 15–20 mL/kg/h por ~2 horas
+- Choque hipovolêmico: 20-30 mL/kg em infusão rápida
+- Hipovolemia sem choque: 15-20 mL/kg/h por ~2 horas
 - Euvolêmico: taxa guiada por parâmetros clínicos
 
-- Após 2–3 h de hidratação inicial → calcular **sódio corrigido** (não o sódio medido direto):
-  - Na corrigido < 135 mEq/L → manter SF 0,9% a 250–500 mL/h
-  - Na corrigido ≥ 135 mEq/L → trocar para SF 0,45% a 250–500 mL/h
+- Após 2-3 h de hidratação inicial -> calcular **sódio corrigido** (não o sódio medido direto):
+  - Na corrigido < 135 mEq/L -> manter SF 0,9% a 250-500 mL/h
+  - Na corrigido ≥ 135 mEq/L -> trocar para SF 0,45% a 250-500 mL/h
   - ⭐ Usar Na corrigido: Na medido + 1,6 × [(glicemia − 100) ÷ 100]
 
-#### Pilar 2 — Avaliação e Correção da Calemia (antes da insulina!)
+#### Pilar 2 -- Avaliação e Correção da Calemia (antes da insulina!)
 
 - ⭐ **Avaliar K⁺ antes de insulinizar**
 
-- K⁺ < 3,3 mEq/L → repor KCl (20–40 mEq/h) + **adiar insulina**
-- K⁺ 3,3–5,3 mEq/L → iniciar insulina + repor K⁺ (20–30 mEq/L de soro) para manter entre 4–5 mEq/L
-- K⁺ > 5,3 mEq/L → iniciar insulina sem reposição; monitorar a cada 2h
+- K⁺ < 3,3 mEq/L -> repor KCl (20-40 mEq/h) + **adiar insulina**
+- K⁺ 3,3-5,3 mEq/L -> iniciar insulina + repor K⁺ (20-30 mEq/L de soro) para manter entre 4-5 mEq/L
+- K⁺ > 5,3 mEq/L -> iniciar insulina sem reposição; monitorar a cada 2h
 
-> Mnemônico "**KIKI**": K < 3,3 → só K (vermelho); K 3,3–5,3 → K+I juntos (amarelo); K > 5,3 → só I (verde)
+> Mnemônico "**KIKI**": K < 3,3 -> só K (vermelho); K 3,3-5,3 -> K+I juntos (amarelo); K > 5,3 -> só I (verde)
 
-#### Pilar 3 — Insulinização
+#### Pilar 3 -- Insulinização
 
 - ⭐ Iniciar somente com K⁺ ≥ 3,3 mEq/L
 - Preferência: **insulina regular IV em BIC**
-  - Opção 1: bolus 0,1 UI/kg → infusão 0,1 UI/kg/h
-  - Opção 2: sem bolus → infusão 0,14 UI/kg/h
-- Monitorar glicemia a cada hora; meta de redução: **50–70 mg/dL/h**
-  - Redução > 70 mg/dL/h → reduzir taxa pela metade
-  - Redução < 50 mg/dL/h → duplicar taxa
-- ⭐ Ao atingir glicemia de 200 mg/dL (CAD não resolvida) → **acrescentar soro glicosado** (SG 5% + SF 0,45%) + reduzir insulina para **0,02–0,05 UI/kg/h** (manter glicemia 150–200 mg/dL até resolução)
-  - ⚠️ Padrão de prova: reduzir insulina para 0,02–0,05 UI/kg/h, **não suspender** — a CAD pode não estar resolvida mesmo com glicemia < 200 mg/dL
+  - Opção 1: bolus 0,1 UI/kg -> infusão 0,1 UI/kg/h
+  - Opção 2: sem bolus -> infusão 0,14 UI/kg/h
+- Monitorar glicemia a cada hora; meta de redução: **50-70 mg/dL/h**
+  - Redução > 70 mg/dL/h -> reduzir taxa pela metade
+  - Redução < 50 mg/dL/h -> duplicar taxa
+- ⭐ Ao atingir glicemia de 200 mg/dL (CAD não resolvida) -> **acrescentar soro glicosado** (SG 5% + SF 0,45%) + reduzir insulina para **0,02-0,05 UI/kg/h** (manter glicemia 150-200 mg/dL até resolução)
+  - ⚠️ Padrão de prova: reduzir insulina para 0,02-0,05 UI/kg/h, **não suspender** -- a CAD pode não estar resolvida mesmo com glicemia < 200 mg/dL
 - ⭐ Manter insulina até **resolução da CAD** (não apenas por glicemia)
-- CAD leve: pode usar análogos ultrarrápidos SC a cada 1–2h
+- CAD leve: pode usar análogos ultrarrápidos SC a cada 1-2h
 
-**Transição BIC → SC:** somente com os 3 critérios:
+**Transição BIC -> SC:** somente com os 3 critérios:
 1. CAD resolvida
 2. Paciente apto a alimentar-se
-3. Primeira dose de insulina prandial aplicada **2–4h antes** de desligar a BIC
+3. Primeira dose de insulina prandial aplicada **2-4h antes** de desligar a BIC
 
-**Critérios de resolução da CAD (adulto — ADA):**
+**Critérios de resolução da CAD (adulto -- ADA):**
 - Glicemia < 200 mg/dL **+** pelo menos 2 dos seguintes:
   - pH venoso > 7,3
   - HCO₃ ≥ 15 mEq/L
   - Ânion gap < 12 mEq/L
 
-#### Pilar 4 — Bicarbonato Venoso
+#### Pilar 4 -- Bicarbonato Venoso
 
 - ⭐ Uso **controverso e excepcional**; apenas em:
-  - **pH arterial < 6,9** (acidez extrema → comprometimento hemodinâmico)
+  - **pH arterial < 6,9** (acidez extrema -> comprometimento hemodinâmico)
   - **Hipercalemia potencialmente fatal**
 - Dose: 100 mEq de NaHCO₃ em 400 mL de água destilada, infundidos em 2h
   - Se K⁺ < 5,3: adicionar 20 mEq de KCl à solução
@@ -189,7 +189,7 @@ aliases: [DM Agudo, CAD, HHS]
 - Efeitos adversos: hipocalemia, hipernatremia, hipocalcemia, edema pulmonar, alcalose metabólica, ↓ hiperventilação compensatória
 - ⚠️ Padrão de prova: bicarbonato NÃO é indicado simplesmente por pH < 7,3
 
-#### Pilar 5 — Fatores Precipitantes
+#### Pilar 5 -- Fatores Precipitantes
 
 - Investigar infecção (hemograma, culturas, radiografia de tórax se febre)
 - Investigar IAM, AVC, pancreatite
@@ -197,24 +197,24 @@ aliases: [DM Agudo, CAD, HHS]
 
 ---
 
-### 1.9 Tratamento — Pediatria (diferenças-chave)
+### 1.9 Tratamento -- Pediatria (diferenças-chave)
 
 **Reposição de volume:**
-- Choque ou rebaixamento de consciência: SF 0,9%, bolus 10–20 mL/kg (rápido) → repetir se necessário
+- Choque ou rebaixamento de consciência: SF 0,9%, bolus 10-20 mL/kg (rápido) -> repetir se necessário
 - Sem choque: SF 0,9% a **10 mL/kg/h** por ~2h
-- Fase de manutenção: déficit residual + manutenção basal por **24–48h** com solução 0,45–0,9%
+- Fase de manutenção: déficit residual + manutenção basal por **24-48h** com solução 0,45-0,9%
 
 **Calemia:**
 - Hipocalemia (< 3,5): repor 40 mEq/L + adiar insulina
-- Normal (3,5–4,5): 40 mEq/L ao iniciar insulina
+- Normal (3,5-4,5): 40 mEq/L ao iniciar insulina
 - Hipercalemia (> 4,5): monitorar a cada hora; repor quando normalizar
 
 **Insulinização:**
-- Taxa: **0,05–0,1 UI/kg/h** (ISPAD) | **0,1 UI/kg/h** (ADA 2006)
-- ⭐ **NÃO fazer bolus** → risco de edema cerebral e hipocalemia
-- Glicemia ≤ 250–300 mg/dL ou queda brusca (> 90 mg/dL/h) → acrescentar soro glicosado
+- Taxa: **0,05-0,1 UI/kg/h** (ISPAD) | **0,1 UI/kg/h** (ADA 2006)
+- ⭐ **NÃO fazer bolus** -> risco de edema cerebral e hipocalemia
+- Glicemia ≤ 250-300 mg/dL ou queda brusca (> 90 mg/dL/h) -> acrescentar soro glicosado
 
-**Critérios de resolução (ISPAD — todos os 3):**
+**Critérios de resolução (ISPAD -- todos os 3):**
 - Glicemia < 200 mg/dL
 - pH > 7,3 **ou** HCO₃ > 15 mEq/L
 - Ânion gap normal (12 ± 2) **ou** β-HB ≤ 1 mmol/L
@@ -226,8 +226,8 @@ aliases: [DM Agudo, CAD, HHS]
 ### 1.10 Complicações da CAD
 
 **Edema cerebral:**
-- Principal causa de morte na CAD pediátrica (responsável por 60–90% das mortes)
-- Incidência: 0,3–0,9% das CADs pediátricas; mortalidade: 20–25%; sequelas em 21–26% dos sobreviventes
+- Principal causa de morte na CAD pediátrica (responsável por 60-90% das mortes)
+- Incidência: 0,3-0,9% das CADs pediátricas; mortalidade: 20-25%; sequelas em 21-26% dos sobreviventes
 - Fatores de risco: < 5 anos com DM novo, uso de bicarbonato, acidose grave na admissão, ↑ escórias, hipocapnia, **falha no aumento do Na sérico** durante tratamento
 - Critérios diagnósticos (diagnóstico com 1 critério de diagnóstico; 2 maiores; 1 maior + 2 menores; 1 maior + 1 menor se < 5 anos):
   - **Critérios maiores:** estado mental alterado/agitação, incontinência inapropriada, desaceleração inadequada da FC
@@ -238,7 +238,7 @@ aliases: [DM Agudo, CAD, HHS]
 - Hipocalemia e hipoglicemia (decorrentes do tratamento)
 - Trombose venosa (especial atenção a cateteres femorais em crianças)
 - **Mucormicose** rinocerebral ou pulmonar (infecção fúngica em imunossuprimidos e diabéticos)
-- Comprometimento cognitivo (alterações na memória, atenção, QI — mesmo sem edema cerebral clínico)
+- Comprometimento cognitivo (alterações na memória, atenção, QI -- mesmo sem edema cerebral clínico)
 
 ---
 
@@ -249,8 +249,8 @@ aliases: [DM Agudo, CAD, HHS]
 - Mesma base: deficiência de insulina + desinibição dos contrarreguladores
 - ⭐ Diferença fundamental: **deficiência insulínica MENOS pronunciada** no EHH
   - Insulina suficiente para suprimir lipólise (evita cetoacidose)
-  - Mas insuficiente para suprimir gliconeogênese → hiperglicemia mais pronunciada
-- Maior hiperglicemia → maior diurese osmótica → maior desidratação e hiperosmolaridade
+  - Mas insuficiente para suprimir gliconeogênese -> hiperglicemia mais pronunciada
+- Maior hiperglicemia -> maior diurese osmótica -> maior desidratação e hiperosmolaridade
 - ⚠️ Padrão de prova: "menor insulina para inibir lipólise do que para inibir gliconeogênese"
 
 ---
@@ -258,15 +258,15 @@ aliases: [DM Agudo, CAD, HHS]
 ### 2.2 Epidemiologia
 
 - Mais comum em **idosos > 65 anos**
-- Mortalidade: **10–20%** (> 10× maior que a CAD)
-- Apresentação mais insidiosa → diagnóstico mais tardio
+- Mortalidade: **10-20%** (> 10× maior que a CAD)
+- Apresentação mais insidiosa -> diagnóstico mais tardio
 
 ---
 
 ### 2.3 Fatores Precipitantes
 
-- Infecções (32–60%) — pneumonia, ITU, sepse ← mais comum
-- Tratamento insulínico insuficiente (21–41%)
+- Infecções (32-60%) -- pneumonia, ITU, sepse ← mais comum
+- Tratamento insulínico insuficiente (21-41%)
 - Doenças agudas: IAM, AVC, pancreatite, EP, obstrução intestinal
 - Endocrinopatias: acromegalia, Cushing, tireotoxicose
 - Drogas: betabloqueadores, bloqueadores de Ca, clorpromazina, diuréticos tiazídicos, esteroides, fenitoína, olanzapina, clozapina
@@ -276,8 +276,8 @@ aliases: [DM Agudo, CAD, HHS]
 ### 2.4 Apresentação Clínica
 
 - ⭐ Evolução: **2 dias a 2 semanas** (muito mais lenta que CAD)
-- Hiperglicemia intensa → hiperosmolaridade → sintomas neurológicos proeminentes
-  - Letargia, hemiparesia, hemianopsia, **coma (25–50%)**, convulsões
+- Hiperglicemia intensa -> hiperosmolaridade -> sintomas neurológicos proeminentes
+  - Letargia, hemiparesia, hemianopsia, **coma (25-50%)**, convulsões
 - Sem respiração de Kussmaul, sem hálito cetônico
 - Dor abdominal é **raríssima** (sem acidose)
 - Taquicardia e hipotensão (desidratação intensa)
@@ -285,7 +285,7 @@ aliases: [DM Agudo, CAD, HHS]
 
 ---
 
-### 2.5 Critérios Diagnósticos — Adulto (ADA 2009)
+### 2.5 Critérios Diagnósticos -- Adulto (ADA 2009)
 
 - ⭐ **Glicemia > 600 mg/dL**
 - ⭐ **Osmolaridade sérica efetiva > 320 mOsm/kg**
@@ -294,7 +294,7 @@ aliases: [DM Agudo, CAD, HHS]
 
 ---
 
-### 2.6 Critérios Diagnósticos — Pediatria (ISPAD 2018)
+### 2.6 Critérios Diagnósticos -- Pediatria (ISPAD 2018)
 
 - Glicemia > 600 mg/dL
 - Osmolaridade sérica efetiva > 320 mOsm/kg
@@ -306,12 +306,12 @@ aliases: [DM Agudo, CAD, HHS]
 ### 2.7 Comparativo CAD × EHH
 
 **Instalação e sintomas:**
-- Tempo de evolução: CAD **< 24 h** (aguda); EHH **2 dias–2 semanas** (insidiosa)
+- Tempo de evolução: CAD **< 24 h** (aguda); EHH **2 dias-2 semanas** (insidiosa)
 - Náuseas/vômitos: frequentes na CAD; incomuns no EHH
 - Dor abdominal: frequente na CAD; rara no EHH
 - Respiração de Kussmaul: presente na CAD; **ausente** no EHH
 - Hálito cetônico: presente na CAD; **ausente** no EHH
-- Alterações neurológicas: variáveis na CAD; coma em **25–50%** no EHH
+- Alterações neurológicas: variáveis na CAD; coma em **25-50%** no EHH
 
 **Parâmetros laboratoriais:**
 - Glicemia: CAD **> 250 mg/dL**; EHH **> 600 mg/dL**
@@ -322,7 +322,7 @@ aliases: [DM Agudo, CAD, HHS]
 
 ---
 
-### 2.8 Tratamento — Adulto
+### 2.8 Tratamento -- Adulto
 
 - Segue os mesmos 5 pilares da CAD, com **diferenças:**
   - ⭐ Soro glicosado ao atingir **300 mg/dL** (vs. 200 mg/dL na CAD)
@@ -331,12 +331,12 @@ aliases: [DM Agudo, CAD, HHS]
     - Paciente alerta
     - Osmolaridade sérica < 315 mOsmol/kg
 
-### 2.9 Tratamento — Pediatria
+### 2.9 Tratamento -- Pediatria
 
 - Ressuscitação volêmica mais agressiva (déficit hídrico maior)
-- Apenas a hidratação adequada inicial reduz glicemia em 75–100 mg/dL/h
+- Apenas a hidratação adequada inicial reduz glicemia em 75-100 mg/dL/h
 - Insulina: iniciar somente se hidratação não reduzir glicemia ≥ 50 mg/dL/h
-  - Taxa: 0,025–0,05 UI/kg/h; **sem bolus**
+  - Taxa: 0,025-0,05 UI/kg/h; **sem bolus**
 
 ### 2.10 Complicações do EHH
 
@@ -356,19 +356,19 @@ aliases: [DM Agudo, CAD, HHS]
 2. ↑ Secreção de glucagon (A pancreático)
 3. Ativação simpatoadrenal (catecolaminas, cortisol)
 
-- Em diabéticos de longa data: 1ª e 2ª linhas comprometidas → dependência da 3ª
-- Neuropatia autonômica → 3ª linha também prejudicada
+- Em diabéticos de longa data: 1ª e 2ª linhas comprometidas -> dependência da 3ª
+- Neuropatia autonômica -> 3ª linha também prejudicada
 
 **Fatores de risco:**
 - Neuropatia autonômica
 - Longo tempo de DM, idade avançada
 - Uso de insulina ou **secretagogos** (sulfonilureias, glinidas)
-  - ⚠️ Sulfonilureias de longa ação (ex: glibenclamida, gliclazida MR) → maior risco de hipoglicemia **noturna** (episódios ocorrem durante o sono, manifestando-se como taquicardia e sudorese ao despertar)
-  - DRC reduz excreção dos metabólitos → ↑ meia-vida → risco ainda maior
+  - ⚠️ Sulfonilureias de longa ação (ex: glibenclamida, gliclazida MR) -> maior risco de hipoglicemia **noturna** (episódios ocorrem durante o sono, manifestando-se como taquicardia e sudorese ao despertar)
+  - DRC reduz excreção dos metabólitos -> ↑ meia-vida -> risco ainda maior
 - Refeições irregulares / baixa ingesta calórica
 - Exercício físico
-- **Consumo alcoólico** (etanol inibe gliconeogênese, não inibe glicogenólise → depleta glicogênio hepático)
-- Doença renal crônica (↓ TFG → ↑ meia-vida de secretagogos)
+- **Consumo alcoólico** (etanol inibe gliconeogênese, não inibe glicogenólise -> depleta glicogênio hepático)
+- Doença renal crônica (↓ TFG -> ↑ meia-vida de secretagogos)
 - História recente de hipoglicemia
 
 ---
@@ -382,11 +382,11 @@ aliases: [DM Agudo, CAD, HHS]
 **Sintomas neuroglicopênicos:**
 - Cefaleia, tontura, fraqueza, sonolência, delírio, confusão, convulsão, coma
 
-- ⚠️ Padrão de prova: idosos e diabéticos de longa data → predominam sintomas **neuroglicopênicos** (neuropatia autonômica reduz sintomas adrenérgicos)
-- ⚠️ Padrão de prova: taquicardia e sudorese **noturnas** em diabético em uso de sulfonilureia = hipoglicemia noturna até prova em contrário → confirmar com aferição de glicemia capilar durante o episódio (Tríade de Whipple)
-- ⚠️ **Efeito do Avental Branco** em diabético com HAS: PA elevada no consultório com PA domiciliar em meta → NÃO adicionar anti-hipertensivos sem confirmar PA fora do contexto clínico (MRPA ou medida em casa por familiar confiável)
-- ⚠️ Padrão de prova: criança/adolescente com DM1 em **doença intercorrente** (febre, infecção) que **reduz a ingesta alimentar** com a dose de insulina **mantida** → hipoglicemia. O cluster adrenérgico (palidez, taquicardia, sudorese profusa, tremor, irritabilidade) é a pista; a ausência de poliúria/vômitos/Kussmaul/dor abdominal afasta CAD (que exigiria déficit de insulina, não excesso relativo)
-- ⚠️ Padrão de prova: **crise convulsiva ou rebaixamento de consciência em DM1 = hipoglicemia até prova em contrário** → glicemia capilar imediata + reposição de glicose (glucagon SC/IM/nasal se sem acesso venoso). Insulina é o distrator que mata (automatismo "diabetes → insulina")
+- ⚠️ Padrão de prova: idosos e diabéticos de longa data -> predominam sintomas **neuroglicopênicos** (neuropatia autonômica reduz sintomas adrenérgicos)
+- ⚠️ Padrão de prova: taquicardia e sudorese **noturnas** em diabético em uso de sulfonilureia = hipoglicemia noturna até prova em contrário -> confirmar com aferição de glicemia capilar durante o episódio (Tríade de Whipple)
+- ⚠️ **Efeito do Avental Branco** em diabético com HAS: PA elevada no consultório com PA domiciliar em meta -> NÃO adicionar anti-hipertensivos sem confirmar PA fora do contexto clínico (MRPA ou medida em casa por familiar confiável)
+- ⚠️ Padrão de prova: criança/adolescente com DM1 em **doença intercorrente** (febre, infecção) que **reduz a ingesta alimentar** com a dose de insulina **mantida** -> hipoglicemia. O cluster adrenérgico (palidez, taquicardia, sudorese profusa, tremor, irritabilidade) é a pista; a ausência de poliúria/vômitos/Kussmaul/dor abdominal afasta CAD (que exigiria déficit de insulina, não excesso relativo)
+- ⚠️ Padrão de prova: **crise convulsiva ou rebaixamento de consciência em DM1 = hipoglicemia até prova em contrário** -> glicemia capilar imediata + reposição de glicose (glucagon SC/IM/nasal se sem acesso venoso). Insulina é o distrator que mata (automatismo "diabetes -> insulina")
 
 **Tríade de Whipple:**
 1. Sintomas compatíveis com hipoglicemia
@@ -406,40 +406,40 @@ aliases: [DM Agudo, CAD, HHS]
 ### 3.4 Tratamento
 
 **Paciente alerta:**
-- Ingerir 15–20 g de carboidratos VO
+- Ingerir 15-20 g de carboidratos VO
 - Aferir HGT 15 min depois; repetir se glicemia ainda ≤ 70 mg/dL
 - Após correção: refeição com carboidratos complexos
 
 **Paciente com rebaixamento de consciência ou instabilidade clínica:**
 - Com acesso venoso: **25 mL de glicose a 50%** IV
-- Sem acesso venoso: **glucagon 0,5–1 mg** SC ou IM; **glucagon 3 mg** nasal
+- Sem acesso venoso: **glucagon 0,5-1 mg** SC ou IM; **glucagon 3 mg** nasal
 
 ---
 
 ## 4. Armadilhas de Prova
 
-- 🔴 CAD **não é exclusiva do DM1** — DM2 pode fazer CAD em situações de estresse clínico
+- 🔴 CAD **não é exclusiva do DM1** -- DM2 pode fazer CAD em situações de estresse clínico
 - 🔴 A glicemia elevada é **consequência** da deficiência de insulina, não a causa primária da CAD
 - 🔴 Ânion gap aumentado é **característica** da CAD, mas **não é critério diagnóstico** formal
 - 🔴 Cetonúria negativa **não exclui** CAD (fita reage com AcAc, mas não com β-HB, que é o cetoácido predominante)
 - 🔴 Calemia normal ou alta na admissão da CAD **não reflete** o pool corporal total (que está reduzido)
 - 🔴 Avaliar K⁺ **antes** de insulinizar; nunca iniciar insulina com K⁺ < 3,3 mEq/L
-- 🔴 A insulina só pode ser desligada após a **resolução da CAD** (não apenas por glicemia normalizada), e o paciente deve ter recebido insulina prandial 2–4h antes de desligar a BIC
-- 🔴 Bicarbonato na CAD adulto: somente se pH < 6,9 ou hipercalemia fatal — não usar para pH < 7,3
+- 🔴 A insulina só pode ser desligada após a **resolução da CAD** (não apenas por glicemia normalizada), e o paciente deve ter recebido insulina prandial 2-4h antes de desligar a BIC
+- 🔴 Bicarbonato na CAD adulto: somente se pH < 6,9 ou hipercalemia fatal -- não usar para pH < 7,3
 - 🔴 Bicarbonato é **contraindicado** na CAD pediátrica (risco de edema cerebral)
 - 🔴 Na CAD pediátrica: **sem bolus de insulina** (risco de edema cerebral e hipocalemia)
 - 🔴 Falha no aumento do Na sérico durante tratamento da CAD é sinal de alarme para **edema cerebral**
-- 🔴 EHH: a **mortalidade** é > 10× maior que a CAD (10–20% vs. < 1%)
+- 🔴 EHH: a **mortalidade** é > 10× maior que a CAD (10-20% vs. < 1%)
 - 🔴 No EHH, soro glicosado é introduzido com glicemia de **300 mg/dL** (vs. 200 mg/dL na CAD)
 - 🔴 Hipoglicemia relativa: diabético crônico mal controlado pode ter sintomas com glicemia > 70 mg/dL
-- 🔴 Sulfonilureias e DRC: ↑ meia-vida do secretagogo → maior risco de hipoglicemia
-- 🔴 Etanol → inibe gliconeogênese (não glicogenólise) → hipoglicemia por depleção do glicogênio hepático
+- 🔴 Sulfonilureias e DRC: ↑ meia-vida do secretagogo -> maior risco de hipoglicemia
+- 🔴 Etanol -> inibe gliconeogênese (não glicogenólise) -> hipoglicemia por depleção do glicogênio hepático
 - 🔴 Sulfonilureia + taquicardia/sudorese **noturna** = hipoglicemia noturna; confirmar com glicemia capilar (Tríade de Whipple) antes de modificar anti-hipertensivos
-- 🔴 PA elevada no consultório com PA domiciliar em meta em diabético = **Efeito do Avental Branco** → não adicionar anti-hipertensivo; conduta é confirmar PA por MRPA
-- 🔴 Na CAD, ao atingir glicemia < 200 mg/dL com acidose ainda não resolvida: acrescentar SG **e** reduzir insulina para **0,02–0,05 UI/kg/h** — não suspender; não manter dose plena
-- 🔴 Criança DM1 com doença febril + recusa alimentar e insulina mantida = **hipoglicemia** (cluster adrenérgico), não CAD — CAD exige déficit de insulina e sinais de hiperglicemia (poliúria, vômitos, Kussmaul, dor abdominal)
-- 🔴 Convulsão/rebaixamento em DM1 = **hipoglicemia** até prova em contrário → repor glicose; sem acesso venoso, **glucagon**. **Insulina é o distrator fatal** — "glicemia capilar" pode estar certa em mais de uma alternativa; o que decide é glucagon, não insulina
-- 🔴 Para **confirmar** CAD com glicemia e acidose já documentadas, o exame que falta é a **cetose** (cetonúria/β-HB), 3ª perna da tríade — lactato **não** confirma CAD
-- 🔴 Em questão de "característica **MENOS comum** no EHH", a resposta é **dor abdominal** (proporcional à acidemia, ausente no EHH); os **sintomas neurológicos são MAIS comuns** no EHH (hiperosmolaridade) — não inverter a relação
+- 🔴 PA elevada no consultório com PA domiciliar em meta em diabético = **Efeito do Avental Branco** -> não adicionar anti-hipertensivo; conduta é confirmar PA por MRPA
+- 🔴 Na CAD, ao atingir glicemia < 200 mg/dL com acidose ainda não resolvida: acrescentar SG **e** reduzir insulina para **0,02-0,05 UI/kg/h** -- não suspender; não manter dose plena
+- 🔴 Criança DM1 com doença febril + recusa alimentar e insulina mantida = **hipoglicemia** (cluster adrenérgico), não CAD -- CAD exige déficit de insulina e sinais de hiperglicemia (poliúria, vômitos, Kussmaul, dor abdominal)
+- 🔴 Convulsão/rebaixamento em DM1 = **hipoglicemia** até prova em contrário -> repor glicose; sem acesso venoso, **glucagon**. **Insulina é o distrator fatal** -- "glicemia capilar" pode estar certa em mais de uma alternativa; o que decide é glucagon, não insulina
+- 🔴 Para **confirmar** CAD com glicemia e acidose já documentadas, o exame que falta é a **cetose** (cetonúria/β-HB), 3ª perna da tríade -- lactato **não** confirma CAD
+- 🔴 Em questão de "característica **MENOS comum** no EHH", a resposta é **dor abdominal** (proporcional à acidemia, ausente no EHH); os **sintomas neurológicos são MAIS comuns** no EHH (hiperosmolaridade) -- não inverter a relação
 
 ---

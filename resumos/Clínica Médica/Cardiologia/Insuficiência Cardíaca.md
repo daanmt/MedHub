@@ -15,14 +15,14 @@ aliases: [IC]
 
 ## 2. A Bússola: Classificação por Fração de Ejeção (FEVE)
 O Ecocardiograma (método de Simpson) divide a IC em três caminhos de tratamento absolutos.
-- **ICFEr (Reduzida) — FEVE < 40%:**
+- **ICFEr (Reduzida) -- FEVE < 40%:**
   - O defeito é na **contratilidade** (sístole). O músculo estirou.
-  - **Física:** Remodelamento Excêntrico. Coração **dilata** → Ictus desviado, Cardiomegalia no RX.
-- **ICFEi / ICFELR (Intermediária / Levemente Reduzida) — FEVE 40–49%:**
+  - **Física:** Remodelamento Excêntrico. Coração **dilata** -> Ictus desviado, Cardiomegalia no RX.
+- **ICFEi / ICFELR (Intermediária / Levemente Reduzida) -- FEVE 40-49%:**
   - O "limbo". Assuma a maioria das condutas da ICFEr para evitar progressão.
-- **ICFEp (Preservada) — FEVE ≥ 50%:**
+- **ICFEp (Preservada) -- FEVE ≥ 50%:**
   - O defeito é no **relaxamento** (diástole). O ventrículo é duro/espesso.
-  - **Física:** Remodelamento Concêntrico. O VE não cresce para fora → **Coração de tamanho normal no RX**.
+  - **Física:** Remodelamento Concêntrico. O VE não cresce para fora -> **Coração de tamanho normal no RX**.
 
 ## 3. Pistas Clínicas Clássicas
 - **Miocardite:** Jovem + quadro gripal há 1-2 semanas + IC aguda nova.
@@ -108,3 +108,11 @@ O paciente com IC chega encharcado e recebe Furosemida 8/8h. Em 5 dias, o edema 
 - **O Surto:** O homem relata tonturas severas ao ficar de pé e sua pressão despenca. A Creatinina salta e a Ureia pula para >200 (relação Ur/Cr absurda).
 - **O Diagnóstico:** Iatrogenia. O diurético forçado reduziu o edema intersticial, mas SECAR O SANGUE dentro dos vasos (intravascular) antes. Foi gerada Hipovolemia e Lesão Pré-Renal.
 - 🔴 *A Conduta Correta:* O paciente não tá mais hipervolêmico, ele secou! **Suspenda diurético e HIDRATE** as veias do paciente.
+
+---
+
+## Armadilhas de Prova
+
+- 🔴 **Diagnóstico Diferencial em Insuficiência Cardíaca:** Sempre correlacionar o quadro clínico com os achados de exame físico e complementar para excluir diagnósticos diferenciais graves antes de definir a conduta terapêutica.
+- ⭐ **Padrão de Prova:** Atenção aos gatilhos epidemiológicos e faixas etárias clássicas, pois as bancas frequentemente utilizam a idade e a cronologia dos sintomas para guiar o diagnóstico correto em Insuficiência Cardíaca.
+- ⚠️ **Atenção nas dosagens e contraindicações:** Verificar sempre a função renal e hepática antes de introduzir esquemas farmacológicos invasivos ou solicitar exames contrastados.

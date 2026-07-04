@@ -14,13 +14,24 @@ O Programa Nacional de Imunizações (PNI) do Brasil é um dos mais robustos do 
 
 ## 1. Princípios Gerais e Classificação das Vacinas
 
-A imunização divide-se em ativa (quando o corpo produz a própria resposta imune através de antígenos) e passiva (administração direta de anticorpos, como soros e imunoglobulinas). As vacinas são imunizações ativas e dividem-se em:
+A imunização é a aquisição de proteção contra patógenos e divide-se em:
 
-- **Atenuadas (Vírus ou Bactéria Vivos):** Contêm o patógeno vivo, mas enfraquecido em laboratório. Induzem resposta imunológica robusta e duradoura com poucas doses.
-  - Exemplos: BCG, Rotavírus (VORH), Febre Amarela, Tríplice Viral (SRC), Tetra Viral e Varicela.
-  - Contraindicações gerais: Imunodeprimidos, gestantes e lactentes de mães com imunodeficiências graves.
-- **Inativadas (Agentes Mortos ou Fragmentos):** Contêm o agente morto, subunidades, toxoides ou proteínas recombinantes. São extremamente seguras, mas exigem múltiplas doses e reforços com adjuvantes para manter a memória.
-  - Exemplos: Hepatite B, Pentavalente, VIP, Pneumocócica, Meningocócica, Influenza e HPV.
+- **Imunização Passiva:** Administração direta de anticorpos prontos. A proteção após a aplicação é **imediata** e independente da resposta imune ativa do hospedeiro, mas é **transitória** (não gera memória imunológica).
+  - **Imunoglobulina Homóloga:** Obtida a partir de plasma ou soro de **um ou mais doadores humanos da comunidade** (humano -> humano). Pode ser standard (pool populacional geral) ou específica/hiperimune (doadores selecionados com altos títulos de anticorpos, ex.: antitetânica, antirrábica, anti-hepatite B).
+  - **Imunoglobulina Heteróloga:** Produzida a partir do soro de animais imunizados, frequentemente equinos (animal -> humano), muito utilizada para soros antiofídicos, antitetânico animal, antidiftérico. Apresenta maior risco de reações de hipersensibilidade (doença do soro).
+  - **Anticorpo Monoclonal:** Produzido em laboratório contra um único epítopo antigênico específico (ex.: Palivizumabe para prevenção de VSR).
+- **Imunização Ativa:** Estímulo do próprio organismo para produzir antígenos e gerar memória imunológica. Pode ser natural (infecção selvagem) ou artificial (vacinas). As vacinas dividem-se em:
+  - **Atenuadas (Vírus ou Bactéria Vivos):** Contêm o patógeno vivo, mas enfraquecido. Simulam a infecção intracelular natural, ativando tanto a imunidade humoral quanto a celular de forma duradoura.
+    - Exemplos: BCG, Rotavírus (VORH), Febre Amarela, Tríplice Viral (SRC), Tetra Viral e Varicela.
+    - Contraindicações gerais: Imunodeprimidos, gestantes e lactentes de mães sob imunossupressão severa.
+  - **Inativadas (Agentes Mortos ou Fragmentos):** Contêm o patógeno morto ou suas frações (proteínas, toxoides). Não têm capacidade de replicação, sendo extremamente seguras, mas exigem múltiplas doses e adjuvantes.
+    - Exemplos: Hepatite B, Pentavalente, VIP, Pneumocócica, Meningocócica, Influenza e HPV.
+    - **Mecanismo das Vacinas Conjugadas:** Bactérias encapsuladas possuem antígenos polissacarídeos puros que induzem apenas resposta T-independente (células B puras), a qual é pouco imunogênica e ineficaz em menores de 2 anos. Para contornar isso, os polissacarídeos são **conjugados a uma proteína carreadora** (tétano ou difteria). A proteína recruta os linfócitos T CD4+ auxiliares (resposta T-dependente), promovendo cooperação B-T, maturação de afinidade e **geração de memória imunológica robusta em lactentes menores de 2 anos**.
+
+### 1.1 Regras de Interferência e Coadministração
+- **Hemoderivados/Imunoglobulinas vs. Vacinas Atenuadas:** Anticorpos exógenos presentes em transfusões de sangue (concentrado de hemácias, plasma) ou imunoglobulinas policlonais podem neutralizar temporariamente o vírus da vacina atenuada antes que ele se replique e induza imunidade.
+  - *Intervalo necessário:* Deve-se respeitar um intervalo mínimo de **3 a 11 meses** (sendo exatamente **5 meses** para concentrado de hemácias e imunoglobulina anti-varicela-zóster) entre a transfusão/imunoglobulina e a aplicação de vacinas vivas atenuadas sistêmicas (Tríplice Viral e Varicela).
+  - *Exceção dos Monoclonais:* O **Palivizumabe** (monoclonal anti-VSR) é altamente específico e não possui reatividade com outros patógenos vacinais. **Não há interferência** com nenhuma vacina do calendário nacional, devendo o lactente receber suas vacinas (incluindo as de vírus vivos) **imediatamente e sem atrasos**.
 
 ---
 
@@ -28,7 +39,7 @@ A imunização divide-se em ativa (quando o corpo produz a própria resposta imu
 
 - **Ao Nascer:**
   - **BCG:** Dose única. Protege contra formas graves de tuberculose (miliar e meníngea).
-  - **Hepatite B:** Dose de nascimento (aplicar nas primeiras 12–24h para prevenir transmissão vertical).
+  - **Hepatite B:** Dose de nascimento (aplicar nas primeiras 12-24h para prevenir transmissão vertical).
 - **2 Meses:**
   - **Pentavalente (1ª dose):** Difteria, Tétano, Coqueluche, Hepatite B e *Haemophilus influenzae* tipo b (Hib).
   - **VIP (1ª dose):** Vacina Inativada Poliomielite (injetável).

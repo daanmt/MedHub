@@ -73,3 +73,11 @@ Se as luzes piscam e acusam HIC letal para herniações cerebelares o foco muda 
 ## 7. O PECARN Pediátrico: Cancele os Raios-X
 Trauma na testa do neném e mãinha doida. Não se prescreve raio-x pra trinca ou mapeamentos em criança com trauma sem gravidade, em virtude das deficiencias magnas do chumbo no deselvolvimento precoce dos tubos. Usa-se a Tomo mas filtrada com rédea forte caso precise ou simplesmente mande em obvervaçao doméstica dependendo dos fluxogarmas.
 - 🔴 **A Grande Exceção da Fratura Tátil:** Se colocar as pontas dos dedos na cabeça do bebe lactente e sentir afundamento das calotas como amassador mole da abóbada (fraturas de massa de toque) ou do osso de base. Encaminhe diretamente pra Tomografia independente do grau da letargia farta do guri, já se infere risco anatômico perigoso gravérrimo e hemorragias intra axiais eminentes.
+
+---
+
+## Armadilhas de Prova
+
+- 🔴 **Diagnóstico Diferencial em TCE:** Sempre correlacionar o quadro clínico com os achados de exame físico e complementar para excluir diagnósticos diferenciais graves antes de definir a conduta terapêutica.
+- ⭐ **Padrão de Prova:** Atenção aos gatilhos epidemiológicos e faixas etárias clássicas, pois as bancas frequentemente utilizam a idade e a cronologia dos sintomas para guiar o diagnóstico correto em TCE.
+- ⚠️ **Atenção nas dosagens e contraindicações:** Verificar sempre a função renal e hepática antes de introduzir esquemas farmacológicos invasivos ou solicitar exames contrastados.

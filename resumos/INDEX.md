@@ -7,7 +7,7 @@ relates_to: [README, ESTADO, KNOWLEDGE_ARCHITECTURE]
 
 # Índice de Temas
 
-Hub de navegação para os resumos clínicos. Não duplica conteúdo — apenas aponta.
+Hub de navegação para os resumos clínicos. Não duplica conteúdo -- apenas aponta.
 
 > **38 temas** distribuídos em 5 áreas. Novos temas devem ser registrados aqui.
 
@@ -15,79 +15,91 @@ Hub de navegação para os resumos clínicos. Não duplica conteúdo — apenas 
 
 ## Cirurgia
 
-- [[Neoplasias, Congênitas e Traqueostomia]] — ORL
-- [[Trauma]] — Trauma cirúrgico (ATLS)
-- [[TCE — Neurocirurgia]] — stub
+- [[Neoplasias, Congênitas e Traqueostomia]] -- ORL
+- [[Trauma]] -- Trauma cirúrgico (ATLS)
+- [[TCE -- Neurocirurgia]] -- stub
+- [[Quadril Pediátrico]] -- alias: DDQ, Perthes, SCFE (Ortopedia Pediátrica)
 
 ## Clínica Médica
 
 ### Cardiologia
-- [[Insuficiência Cardíaca (IC)|Insuficiência Cardíaca]] — alias: IC
+- [[Insuficiência Cardíaca (IC)|Insuficiência Cardíaca]] -- alias: IC
 
 ### Dermatologia
-- [[Hanseníase e Síndromes Verrucosas]] — alias: PLECT
+- [[Hanseníase e Síndromes Verrucosas]] -- alias: PLECT
 
 ### Endocrinologia
-- [[Diabetes Mellitus Tipo 2 (DM2)|Diabetes Mellitus Tipo 2]] — alias: DM2
-- [[Diabetes Mellitus — Complicações Agudas]] — alias: CAD, HHS
+- [[Diabetes Mellitus Tipo 2 (DM2)|Diabetes Mellitus Tipo 2]] -- alias: DM2
+- [[Diabetes Mellitus -- Complicações Agudas]] -- alias: CAD, HHS
 
 ### Gastroenterologia
-- [[DRGE, Esofagites e Corpo Estranho]] — alias: DRGE
-- [[Doença Ulcerosa Péptica (DUP)|Doença Ulcerosa Péptica]] — alias: DUP
+- [[DRGE, Esofagites e Corpo Estranho]] -- alias: DRGE
+- [[Doença Ulcerosa Péptica (DUP)|Doença Ulcerosa Péptica]] -- alias: DUP
 - [[Pancreatite Aguda e Crônica]]
+- [[Polipose Intestinal e Câncer Colorretal]] -- alias: CCR, Lynch, PAF
 
 ### Hematologia
 - [[Hemostasia]]
 
 ### Hepatologia
-- [[Introdução à Hepatologia e Icterícia Não Obstrutiva]] — alias: Icterícia
+- [[Introdução à Hepatologia e Icterícia Não Obstrutiva]] -- alias: Icterícia
 
 ### Infectologia
-- [[Arboviroses]] — alias: Dengue, Zika, Chikungunya
-- [[HIV / AIDS|HIV]] — alias: HIV, AIDS
-- [[Tuberculose]] — alias: TB
+- [[Arboviroses]] -- alias: Dengue, Zika, Chikungunya
+- [[HIV / AIDS|HIV]] -- alias: HIV, AIDS
+- [[Tuberculose]] -- alias: TB
 
 ### Nefrologia
-- [[Lesão Renal Aguda]] — alias: LRA
-- [[Doença Renal Crônica]] — alias: DRC (stub)
+- [[Lesão Renal Aguda]] -- alias: LRA
+- [[Doença Renal Crônica]] -- alias: DRC (stub)
 
 ### Neurologia
-- [[Traumatismo Cranioencefálico (TCE)|TCE]] — alias: TCE
+- [[Traumatismo Cranioencefálico (TCE)|TCE]] -- alias: TCE
+
+### Oftalmologia
+- [[Síndrome do Olho Vermelho]]
 
 ### Pneumologia
-- [[Asma Brônquica|Asma]] — alias: Asma
+- [[Asma Brônquica|Asma]] -- alias: Asma
 
 ### Psiquiatria
 - [[Dependência Química]]
 - [[Intoxicações Exógenas]]
 
 ### Reumatologia
-- [[Doenças Inflamatórias do Tecido Conjuntivo (DITC) - Parte I|DITC]] — alias: DITC
+- [[Doenças Inflamatórias do Tecido Conjuntivo (DITC) - Parte I|DITC]] -- alias: DITC
 
 ## GO
 
 ### Ginecologia
 - [[Amenorreia]]
-- [[Câncer de Mama]] — alias: CA Mama
-- [[Climatério e Terapia Hormonal]] — alias: TH
+- [[Câncer de Mama]] -- alias: CA Mama
+- [[Climatério e Terapia Hormonal]] -- alias: TH
 - [[Doenças Benignas da Mama]]
 - [[Dor Pélvica Crônica e Dismenorreia]]
-- [[Rastreamento do Câncer de Colo do Útero (2016 + 2025)|Rastreamento Colo]] — alias: CA Colo, Papanicolau
-- [[Sangramento Uterino Anormal (SUA)|SUA]] — alias: SUA
+- [[Rastreamento do Câncer de Colo do Útero (2016 + 2025)|Rastreamento Colo]] -- alias: CA Colo, Papanicolau
+- [[Sangramento Uterino Anormal (SUA)|SUA]] -- alias: SUA
 
 ### Obstetrícia
 - [[Sangramento da Primeira Metade da Gestação]]
-- [[Sífilis na Gestação e Congênita]] — alias: Sífilis Gestacional
+- [[Sífilis na Gestação e Congênita]] -- alias: Sífilis Gestacional
 
 ## Pediatria
 
-- [[Cardiopatias Congênitas — Resumo Consolidado|Cardiopatias Congênitas]]
+- [[Cardiopatias Congênitas -- Resumo Consolidado|Cardiopatias Congênitas]]
 - [[Cuidados Neonatais]]
-- [[Emergências Pediátricas — Resumo Consolidado|Emergências Pediátricas]] — alias: PCR Pediátrico, IOT
+- [[Emergências Pediátricas -- Resumo Consolidado|Emergências Pediátricas]] -- alias: PCR Pediátrico, IOT
 
 ## Preventiva
 
 - [[Epidemiologia e Estudos]]
 - [[Medidas de Saúde Coletiva]]
-- [[Processo Saúde-Doença]] — stub
+- [[Processo Saúde-Doença]] -- stub
 - [[Vigilância em Saúde]]
+
+---
+
+## Armadilhas de Prova
+
+- 🔴 **Controle Metacognitivo:** Não negligencie a revisão diária dos resumos dormentes catalogados neste índice. O esquecimento ocorre de forma exponencial sem o reforço ativo do FSRS.
+- ⭐ **Regra de Ouro da Navegação:** Sempre acesse os resumos por especialidade e verifique as armadilhas canônicas antes de resolver baterias de questões no MedHub.

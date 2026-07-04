@@ -1,7 +1,15 @@
 import os
+import sys
 import glob
 import re
 from pathlib import Path
+
+# Garante compatibilidade nativa de encoding em terminais Windows sem quebrar icones
+if hasattr(sys.stdout, 'reconfigure'):
+    try:
+        sys.stdout.reconfigure(encoding='utf-8')
+    except Exception:
+        pass
 
 # Configurações do Linter
 TEMAS_DIR = Path(__file__).parent.parent / "resumos"
@@ -11,13 +19,24 @@ ANTI_PATTERNS = [
 ]
 REQUIRED_MARKERS = ["⚠️", "🔴", "⭐"] # Recomenda-se ter pelo menos um
 
-def audit_summaries():
-    print(f"Iniciando auditoria em: {TEMAS_DIR}")
-    md_files = glob.glob(str(TEMAS_DIR / "**" / "*.md"), recursive=True)
+def audit_summaries(file_list=None):
+    if file_list is None and len(sys.argv) > 1:
+        # Se passados pela CLI
+        file_list = [f for f in sys.argv[1:] if f.endswith('.md') and os.path.exists(f)]
+        if not file_list and len(sys.argv) > 1:
+            print("Nenhum arquivo .md válido foi encontrado nos argumentos.")
+            return 0
+
+    if file_list:
+        md_files = file_list
+        print(f"Iniciando auditoria pontual em {len(md_files)} arquivo(s) .md...")
+    else:
+        print(f"Iniciando auditoria global em: {TEMAS_DIR}")
+        md_files = glob.glob(str(TEMAS_DIR / "**" / "*.md"), recursive=True)
     
     if not md_files:
-        print("Nenhum arquivo .md encontrado.")
-        return
+        print("Nenhum arquivo .md encontrado para auditoria.")
+        return 0
 
     erros_encontrados = 0
     arquivos_com_erro = 0
@@ -25,10 +44,14 @@ def audit_summaries():
     print(f"\nAuditando {len(md_files)} resumos clínicos...\n")
 
     for file_path in md_files:
-        with open(file_path, 'r', encoding='utf-8') as f:
+        with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
             content = f.read()
             
-        file_name = Path(file_path).relative_to(TEMAS_DIR)
+        try:
+            file_name = Path(file_path).resolve().relative_to(TEMAS_DIR.resolve())
+        except ValueError:
+            file_name = Path(file_path)
+            
         issues = []
 
         # 1. Checar se tem Armadilhas de Prova
@@ -66,6 +89,9 @@ def audit_summaries():
     else:
         print(f"⚠️  RESULTADO: {erros_encontrados} erro(s) crítico(s) em {arquivos_com_erro} arquivo(s).")
     print("="*40)
+    
+    return 1 if erros_encontrados > 0 else 0
 
 if __name__ == "__main__":
-    audit_summaries()
+    exit_code = audit_summaries()
+    sys.exit(exit_code)

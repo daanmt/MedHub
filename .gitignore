@@ -8,6 +8,7 @@ data/chroma/
 ipub.db-journal
 medhub_memory.db
 medhub_memory.db-journal
+ipub_backup_*.db
 
 # Python
 .env
@@ -28,9 +29,16 @@ Thumbs.db
 # Obsidian — workspace state é local (lastOpenFiles, layout, etc.)
 .obsidian/workspace.json
 .obsidian/workspace-mobile.json
+.obsidian/appearance.json
 
 # MCP — config local com paths de máquina
 .mcp.json
+
+# Codex CLI — config local com paths de máquina (paridade com .claude/, não versionar)
+.codex/
+
+# Scratch — scripts one-shot e temporários de sessão
+tmp/
 
 # Artefatos — backups e runs LLM (binários e JSONs grandes)
 artifacts/backups/

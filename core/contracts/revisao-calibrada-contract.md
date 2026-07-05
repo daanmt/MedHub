@@ -7,7 +7,7 @@ relates_to: [forgetting-curve-contract, fsrs-management-contract, cronograma-con
 ---
 
 # Contrato de Execução de Revisão Calibrada
-**Versão 1.0 | 2026-06-28 (sessão 096) — primeira instância. Materializa o PRD `docs/plans/s094-revisao-calibrada-PRD.md` (revisão adversarial).**
+**Versão 1.1 | 2026-07-05 (s108+, F8/F9 do ledger AUDITORIA_MEDHUB: Invariantes C e D) — anterior: 1.0, 2026-06-28 (sessão 096). Materializa o PRD `docs/plans/s094-revisao-calibrada-PRD.md` (revisão adversarial).**
 
 > Documento normativo. Governa a **competência única `/revisar`** cuja descompressão é calibrada por uma **nota de dificuldade-para-o-usuário (1-10) por tema**, sem cegar a curva de esquecimento. Consome o score de dormência e a retrievability de `forgetting-curve-contract.md` (não os redefine) e o `(tema, tipo)` de `cronograma-contract.md`. Referenciado por: `AGENTE.md` (§1.2, §6, §7.3), `.claude/commands/revisar.md`.
 
@@ -67,6 +67,10 @@ A nota explícita do usuário **escolhe o degrau diretamente**; sem nota, a faix
 - tema do **radar de dormência** → `kind='dormant_refresh'`;
 - tema do **cronograma / fila FSRS / pedido direto** → `kind='directed_review'`.
 
+**Invariante C — Janela de override ANTES do record (F9, v1.1).** No DRENAR, o rating só é gravado **depois** da janela de override: o agente **propõe** a nota (com justificativa de 1 linha), aguarda a resposta do usuário (confirmação, correção ou avanço), e **só então** chama `record_review` — **uma vez por card por sessão, sempre**. Não existe amend pós-record: `record_review` é append-only por design (INSERT em `fsrs_revlog` + UPDATE em `fsrs_cards`); re-gravar recalcula o FSRS sobre estado já mutado e corrompe o agendamento (caso real: card 403, s108 — nota 2 corrigida p/ 4 após o record moveu o due indevidamente e deixou 2 linhas de revlog). Se um erro de gravação real acontecer, registra-se o ocorrido em `history/session_NNN.md` como achado — **nunca** re-record. Esta invariante RESOLVE a contradição da v1.0 entre "o usuário pode sobrepor a nota" e a regra anti-duplo-registro: o override intencional acontece **dentro da janela**, antes da gravação. No modo lote, a janela é **única por lote** (notas propostas do lote inteiro → confirmação/correção → gravação do lote).
+
+**Invariante D — Isolamento de conteúdo do PREPARAR (F8, v1.1).** O PREPARAR aquece **conceitos e mecanismos**, **nunca** o par pergunta-resposta específico dos cards do bloco que vem a seguir. Regras operacionais: (a) o refresh é montado a partir do resumo/substrato do tema **sem abrir os versos** dos cards do bloco; (b) formulações sempre como **tendência** ("geralmente X; considerar Y se Z"), nunca como absoluto — uma imprecisão no aquecimento vira erro induzido no card seguinte (erro de ensino amplificado, 3º canal de viés observado na s108); (c) **distinção de classe de card**: em cards de **raciocínio/conduta**, aquecer o framework é legítimo — mas a nota pós-refresh mede "pegou o framework", não recall a frio, e isso é sinalizado; em cards de **fato puro** (definição/eponímia/dado seco), o refresh é **contraindicado** — aquecê-los É entregar a resposta; o refresh limita-se à orientação de entorno e o fato cobrado é retido para o recall.
+
 ## Cláusula 6 — Inferência determinística (`infer_nota`)
 
 `infer_nota(sinais)` (em `tools/day_plan.py`) é a SSOT da nota inferida — função de pontos clampada em 1-10. Pseudocódigo normativo:
@@ -125,6 +129,8 @@ Estado **de tema** em `taxonomia_cronograma` (local-only): `dificuldade INTEGER`
 
 - PREPARAR **nunca** escreve FSRS (Invariante A). DRENAR é a única superfície que move o FSRS.
 - TODO PREPARAR carimba `review_log` (Invariante B) — a curva nunca cega.
+- Rating só grava **após a janela de override**, uma vez por card (Invariante C) — não existe amend pós-record.
+- PREPARAR isolado das respostas do bloco; fato puro não se aquece (Invariante D) — a validade do trial de recall é sagrada.
 - A nota **nunca** governa o agendamento FSRS — só a profundidade da preparação.
 - `set_dificuldade` toca só as 3 colunas de dificuldade. `infer_nota` é read-only e só lê sinais frios.
 

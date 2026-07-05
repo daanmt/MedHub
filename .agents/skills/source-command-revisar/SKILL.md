@@ -24,7 +24,9 @@ Use quando o usuário pedir qualquer variação de: "revisar", "vamos revisar fl
 - **PREPARAR** (narrativo; **FSRS read-only**) — re-ensino calibrado do tema **antes** de drillar. Absorve o antigo `/refrescar` e a Camada 0. Profundidade calibrada pela **nota de dificuldade 1-10** (degrau D10/D8/D5/D2, Cláusula 3 do contrato); largura pelo **propósito** (amplo → exercícios / direcionado → flashcards). Largura e profundidade são ortogonais.
   - 🔴 **Invariante A:** PREPARAR **NUNCA** emite `record_review` nem `UPDATE` em `fsrs_cards`/`fsrs_revlog` — nenhum write de FSRS.
   - 🔴 **Invariante B:** PREPARAR **SEMPRE** carimba `review_log` ao concluir — `python tools/dormant_refresh.py --stamp --tema-id <id> --kind <dormant_refresh|directed_review>` (dormência → `dormant_refresh`; cronograma/fila/pedido → `directed_review`). A curva nunca cega.
+  - 🔴 **Invariante D (isolamento, F8):** o refresh aquece **conceitos e mecanismos**, nunca o par pergunta-resposta dos cards do bloco — montado a partir do resumo **sem abrir os versos**; regras como **tendência** ("geralmente X; considerar Y se Z"), nunca absoluto. **Classe de card:** raciocínio/conduta → aquecer o framework é legítimo (a nota pós-refresh mede "pegou o framework" — sinalizar); **fato puro** (definição/eponímia/dado seco) → refresh **contraindicado**: só orientação de entorno, o fato cobrado é retido para o recall.
 - **DRENAR** (card-a-card; **ESCREVE FSRS**) — o player FSRS descrito abaixo. Única superfície que move o FSRS. A transição **PREPARAR → DRENAR** é o único ponto em que o FSRS passa a ser escrito.
+  - 🔴 **Invariante C (override-antes-do-record, F9):** o rating só é gravado **após a janela de override** (nota proposta → confirmação/correção do usuário → gravação única). Nunca `--record` antes da janela; nunca re-record depois dela.
 
 ### Resolver a nota na abertura de task
 
@@ -69,8 +71,8 @@ python tools/fsrs_queue.py --record <card_id> --rating <1-4>
 1. **Abrir a sessão.** Rodar `--list` (com os filtros que o usuário pediu, se houver) para saber quantos cards há e anunciar o tamanho da sessão ("você tem 12 cards: 8 atrasados, 2 de hoje, 2 novos").
 2. **Apresentar a FRENTE.** Para o card atual, mostrar `frente_contexto` (se houver) como contexto e `frente_pergunta` como a pergunta. **Não revelar o verso ainda.** Convidar o usuário a tentar responder.
 3. **Revelar o VERSO sob pedido.** Quando o usuário responder ou pedir ("mostra", "não sei", "revela"), mostrar `verso_resposta`, depois `verso_regra_mestre` (a regra de ouro) e, se preenchida, `verso_armadilha` (o distrator/pegadinha).
-4. **Avaliar automaticamente (contrato).** O agente **atribui a nota 1-4 com base na resposta do usuário** (não pede o número). Critério: cravou conceito + regra-mestre → 4; acertou o núcleo, faltou detalhe → 3; recall parcial/na zona mas sem o alvo → 2; errou ou "não sei" → 1. **Informar a nota atribuída** ("→ 3") e a justificativa em 1 linha; o usuário pode sobrepor ("não, foi 2"). Ratings honestos > generosos — a precisão do FSRS depende disso.
-5. **Gravar.** Rodar `--record <card_id> --rating <n>`. Confirmar com o próximo `due` retornado ("próxima revisão em N dias").
+4. **Propor a nota e abrir a janela de override (contrato, Invariante C).** O agente **propõe a nota 1-4 com base na resposta do usuário** (não pede o número). Critério: cravou conceito + regra-mestre → 4; acertou o núcleo, faltou detalhe → 3; recall parcial/na zona mas sem o alvo → 2; errou ou "não sei" → 1. **Informar a nota proposta** ("→ 3") e a justificativa em 1 linha, e **aguardar a resposta do usuário**: confirmação, correção ("não, foi 2") ou simples avanço valem como fechamento da janela. **Nada é gravado neste passo.** Ratings honestos > generosos — a precisão do FSRS depende disso.
+5. **Gravar — só após a janela.** Fechada a janela do passo 4, rodar `--record <card_id> --rating <n>` com a nota final — **uma única vez por card**. Confirmar com o próximo `due` retornado ("próxima revisão em N dias"). Correção que chegar **depois** do record não gera re-record (Invariante C): registrar o ocorrido no fechamento (`history/session_NNN.md`) e seguir.
 6. **Avançar.** Buscar o próximo card (novo `--next`, ou o próximo item do lote já obtido no passo 1). Repetir 2-5.
 7. **Fechar com Revisão Direcionada.** Quando a fila esvaziar (`{"empty": true}`) ou o usuário parar: (a) resumo de sessão — cards revisados + distribuição de ratings; (b) rodar a **Revisão Direcionada de fechamento** (ver seção abaixo) — voltar aos resumos dos temas onde houve gap e **reabordar a matéria**, não só re-drillar o card.
 
@@ -86,8 +88,8 @@ python tools/fsrs_queue.py --record <card_id> --rating <1-4>
 
 Comportamentos default desta skill, ajustáveis pelo usuário a qualquer momento:
 
-- **Renderização em lote.** Apresentar **N frentes de uma vez** (default ajustável durante a sessão — o usuário pediu 3, depois 5). O usuário responde todas; o agente revela + avalia + grava o lote inteiro de uma vez. Sem lote explícito, usar 1 por vez.
-- **Avaliação automática pelo agente** (passo 4 acima): o agente dá a nota, não o usuário.
+- **Renderização em lote.** Apresentar **N frentes de uma vez** (default ajustável durante a sessão — o usuário pediu 3, depois 5). O usuário responde todas; o agente revela + **propõe as notas do lote inteiro** e abre **uma janela de override única do lote** (Invariante C); confirmadas/corrigidas, grava o lote de uma vez. Sem lote explícito, usar 1 por vez.
+- **Avaliação automática pelo agente** (passo 4 acima): o agente propõe a nota, não o usuário — e grava só após a janela.
 - **Papel de scrum master ativo:** ao detectar **erro repetido** (mesmo conceito errado em cards diferentes), parar e sinalizar explicitamente — não deixar passar (regra "não errar duas vezes pelo mesmo motivo"). Conectar o card ao erro de origem em `questoes_erros` quando útil.
 - **Camada 1 — Expansão de contexto na virada (micro-resumo *just-in-time*; feedback s076).** Quando a nota for **1 ou 2**, logo após virar o card apresentar uma **expansão curta (~2-4 linhas) do conceito errado** — não só o gabarito, mas o contexto que o cerca (a regra-mestre + por que o distrator engana + a fronteira com conceitos vizinhos), ancorada no resumo de origem em `resumos/` (via RAG `mcp__obsidian-notes-rag__search_notes` quando útil). Objetivo: fechar a lacuna **enquanto está quente**. Em acerto sólido (4) não interromper; num 3 frágil, uma linha de fronteira basta. Esta é a versão **por-card**; a consolidação **por-tema** vem na Camada 2 (Revisão Direcionada de fechamento).
 - **Flip obrigatório do card (feedback do usuário, sessão 077).** Após a tentativa, **sempre virar o card** — revelar `verso_resposta` + `verso_regra_mestre` (+ `verso_armadilha`) de **todo** card, mesmo nos acertos (3-4). Ver a formulação exata da resposta consolida a memória; nunca pular o verso "porque acertou".
@@ -110,9 +112,11 @@ Ao fechar a sessão, **antes** de encerrar, rodar a Revisão Direcionada sobre o
 
 ---
 
-## Regra anti-duplo-registro
+## Regra anti-duplo-registro (reconciliada com o override — F9)
 
 O CLI é **stateless** — cada `--record` grava uma linha em `fsrs_revlog`. A deduplicação é responsabilidade do agente: **mantenha o conjunto de `card_id` já avaliados nesta conversa** e nunca chame `--record` duas vezes para o mesmo card na mesma sessão. (Espelha a regra `reviewed_ids` do player Streamlit, mas no nível do agente.)
+
+**Sem contradição com o "usuário pode sobrepor":** o override intencional acontece **dentro da janela do passo 4, ANTES do record** (Invariante C do contrato). Depois do record não há amend — re-gravar recalcula o FSRS sobre estado já mutado e deixa 2 linhas de revlog (caso card 403, s108). Correção tardia vira nota de fechamento em `history/`, nunca segundo `--record`.
 
 ---
 

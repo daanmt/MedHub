@@ -96,7 +96,7 @@ A progressão cefalocaudal da icterícia permite estimar a Bilirrubina Total (BT
 - **Quadro Clínico:** Icterícia persistente após 14 dias, **acolia fecal** (fezes acinzentadas), **colúria** e hepatomegalia. RN geralmente com bom estado geral no início.
 - **Diagnóstico:**
     - USG abdominal: sinal do **"triângulo fibroso"** na bifurcação portal; vesícula ausente ou rudimentar.
-    - Padrão-ouro: **biópsia hepática** -- proliferação de ductos biliares, plugues biliares e fibrose periportal.
+    - Padrão-ouro: **biópsia hepática percutânea** -- proliferação de ductos biliares, plugues biliares e fibrose periportal. É o exame mais acurado para diferenciação definitiva entre colestase intra e extra-hepática (como AVB) antes da cirurgia, superando a colangiorressonância magnética (que possui baixa acurácia em recém-nascidos devido ao pequeno calibre das vias biliares).
 - **Tratamento:**
     - **Cirurgia de Kasai** (portoenterostomia hepatojejunal) -- idealmente **antes dos 60 dias** de vida; sucesso cai para < 30% após esse prazo.
     - Falha do Kasai ou diagnóstico tardio -> **transplante hepático**.
@@ -207,3 +207,4 @@ A progressão cefalocaudal da icterícia permite estimar a Bilirrubina Total (BT
 - 🔴 **Causa de colestase neonatal (banca-dependente):** SBP = AVB mais comum; literatura internacional = infecciosa mais comum. Atentar para a referência da banca.
 - 🔴 **Listeria vs. GBS -- discriminadores clínicos:** GBS é o agente mais comum da sepse precoce, mas não causa LA marrom, não gera exantema pústulo-eritematoso ao nascimento e não produz monocitose. A tríade LA acastanhado + exantema neonatal precoce + monocitose é perfil exclusivo de *Listeria monocytogenes*.
 - 🔴 **Exceção SBP "taquipneia isolada":** a regra geral de iniciar ATB empírico na simples suspeita tem exceção -- taquipneia isolada nas primeiras 6h de vida, sem outros sinais sistêmicos, é manejada com observação clínica e hemocultura pendente. PCR às 6h é marcador inativo (eleva-se após 12-24h) e não deve antecipar a antibioticoterapia neste cenário específico.
+- 🔴 **AVB: biópsia hepática vs colangiorressonância:** na investigação da colestase neonatal persistente com USG inconclusiva, o exame de escolha para definir a etiologia antes da exploração cirúrgica é a **biópsia hepática percutânea**. Nunca marcar colangiorressonância magnética, que tem baixa precisão técnica no recém-nascido e não diferencia adequadamente causas intra e extra-hepáticas. Além disso, a AVB é causa de colestase **extra-hepática** (e cirúrgica), jamais intra-hepática.

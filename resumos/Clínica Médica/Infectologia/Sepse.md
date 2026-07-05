@@ -27,9 +27,9 @@ A sepse é caracterizada por uma **resposta desregulada do hospedeiro à infecç
 A sepse é definida como uma **disfunção orgânica potencialmente fatal** secundária a uma infecção suspeita ou confirmada, operacionalizada pela elevação do escore SOFA.
 
 - **Escore SOFA (*Sequential Organ Failure Assessment*):**
-  - O diagnóstico de sepse requer um **aumento de $\ge$ 2 pontos** no SOFA em relação ao basal.
+  - O diagnóstico de sepse requer um **aumento de >= 2 pontos** no SOFA em relação ao basal.
   - Avalia 6 sistemas (1 a 4 pontos por sistema):
-    1. **Respiratório:** Relação $PaO_2/FiO_2$.
+    1. **Respiratório:** Relação PaO_2/FiO_2.
     2. **Coagulação:** Contagem de plaquetas.
     3. **Hepático:** Bilirrubina total.
     4. **Cardiovascular:** Pressão arterial média (PAM) ou dose de vasopressores.
@@ -37,9 +37,9 @@ A sepse é definida como uma **disfunção orgânica potencialmente fatal** secu
     6. **Renal:** Creatinina sérica e débito urinário.
 - **Escore qSOFA (*quick* SOFA):**
   - **Não define sepse.** É apenas uma ferramenta de triagem rápida para identificar pacientes infectados com alto risco de óbito fora da UTI.
-  - É considerado positivo se preencher **$\ge$ 2 de 3 critérios**:
-    - **Frequência Respiratória $\ge$ 22/min.**
-    - **Pressão Arterial Sistólica $\le$ 100 mmHg.**
+  - É considerado positivo se preencher **>= 2 de 3 critérios**:
+    - **Frequência Respiratória >= 22/min.**
+    - **Pressão Arterial Sistólica <= 100 mmHg.**
     - **Alteração do estado mental (Glasgow < 15).**
 
 ---
@@ -75,11 +75,11 @@ Iniciado imediatamente após o reconhecimento da sepse/choque séptico no adulto
 
 O Consenso de Phoenix de 2024 descontinuou os critérios baseados em SIRS de 2005 para a população de 1 mês a < 18 anos.
 
-- **Sepse Pediátrica:** Disfunção orgânica potencialmente fatal em crianças com suspeita ou confirmação de infecção, definida por um **Escore de Sepse de Phoenix $\ge$ 2 pontos**.
+- **Sepse Pediátrica:** Disfunção orgânica potencialmente fatal em crianças com suspeita ou confirmação de infecção, definida por um **Escore de Sepse de Phoenix >= 2 pontos**.
   - O Escore de Phoenix pontua disfunções em 4 sistemas orgânicos principais:
-    - **Cardiovascular:** Pressão arterial sistólica baixa para a idade, necessidade de vasopressores ou lactato sérico $\ge$ 2 mmol/L.
-    - **Respiratório:** Relação $PaO_2/FiO_2$ ou $SpO_2/FiO_2$ alterada, ou necessidade de suporte ventilatório.
-    - **Coagulação:** Plaquetopenia (< 100.000/$\mu$L), D-Dímero elevado ou Fibrinogênio baixo.
+    - **Cardiovascular:** Pressão arterial sistólica baixa para a idade, necessidade de vasopressores ou lactato sérico >= 2 mmol/L.
+    - **Respiratório:** Relação PaO_2/FiO_2 ou SpO_2/FiO_2 alterada, ou necessidade de suporte ventilatório.
+    - **Coagulação:** Plaquetopenia (< 100.000/uL), D-Dímero elevado ou Fibrinogênio baixo.
     - **Neurológico:** Glasgow < 15 ou pupilas não reativas bilaterais.
 - **Choque Séptico Pediátrico:** Definido como sepse associada a **pelo menos 1 ponto no escore cardiovascular** de Phoenix.
 
@@ -99,8 +99,8 @@ O choque na criança tem evolução rápida para disfunção miocárdica.
 
 ## 7. Armadilhas de Prova
 
-- 🔴 **qSOFA não Diagnostica Sepse:** O qSOFA é apenas triagem rápida de risco de óbito. O diagnóstico formal de sepse exige o cálculo do SOFA completo com variação $\ge$ 2 pontos.
+- 🔴 **qSOFA não Diagnostica Sepse:** O qSOFA é apenas triagem rápida de risco de óbito. O diagnóstico formal de sepse exige o cálculo do SOFA completo com variação >= 2 pontos.
 - 🔴 **Interrupção de Volume na Criança:** Se uma criança em choque séptico apresenta crepitações pulmonares após 20 mL/kg, a conduta correta é parar o volume imediatamente e iniciar Adrenalina. Continuar expandindo causará edema pulmonar agudo.
 - 🔴 **Prioridade do Antibiótico:** Na sepse grave, o antibiótico deve ser feito na 1ª hora. A coleta de culturas é prioritária, mas nunca pode postergar o antibiótico por mais de 45-60 minutos.
 - 🔴 **Definição de Choque Séptico no Adulto:** Exige tanto a hipotensão refratária que pede vasopressor (PAM < 65) quanto a presença de hiperlactatemia (lactato > 2 mmol/L). Hipotensão isolada que responde a volume não é choque séptico.
-- 🔴 **Abolição da SIRS na Pediatria:** Cuidado com questões que ainda tentam definir sepse pediátrica por febre + taquicardia + leucocitose. O padrão-ouro atual de prova e beira de leito é a disfunção orgânica medida pelo Escore de Phoenix ($\ge$ 2 pontos).
+- 🔴 **Abolição da SIRS na Pediatria:** Cuidado com questões que ainda tentam definir sepse pediátrica por febre + taquicardia + leucocitose. O padrão-ouro atual de prova e beira de leito é a disfunção orgânica medida pelo Escore de Phoenix (>= 2 pontos).

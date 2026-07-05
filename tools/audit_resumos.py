@@ -32,6 +32,7 @@ ENCODING_PROIBIDO = {
     "—": "travessão em-dash (use '--')",
     "–": "en-dash (use '-')",
     r"$\rightarrow$": "LaTeX \\rightarrow (use '->')",
+    "\\rightarrow": "comando LaTeX \\rightarrow (use '->')",
 }
 
 
@@ -46,7 +47,10 @@ def _frontmatter_faltando(content):
 
 def _encoding_proibido(content):
     """Caracteres de encoding não-ASCII proibidos presentes. WARN. [] = ok."""
-    return [ch for ch in ENCODING_PROIBIDO if ch in content]
+    issues = [ch for ch in ENCODING_PROIBIDO if ch in content]
+    if re.search(r"\$[<>\d\\=].*?\$", content):
+        issues.append("sintaxe LaTeX inline ($...$)")
+    return issues
 
 
 def audit_summaries(file_list=None):

@@ -71,7 +71,7 @@ Toda interação reflete o nível de excelência dos resumos padrão-ouro (`Trau
 2. **Linguagem acadêmica** — sem coloquialismos, jargões de plantão ou termos dramáticos.
 3. **Alta especificidade** — critérios objetivos, quantitativos, definições; nada genérico.
 4. **Acúmulo de conhecimento** — armadilhas são **cumulativas**; novos insights se somam aos antigos, nunca substituem.
-5. **Convenção de Encoding (sessão 103):** Jamais usar setas Unicode (→) ou LaTeX ($\rightarrow$, \rightarrow) nem aspas ou travessões inteligentes em resumos, flashcards, logs ou chats. Usar exclusivamente a seta ASCII (->), aspas retas normais (' ou ") e hifens simples/duplos (- ou --) para garantir compatibilidade e legibilidade total em qualquer terminal Windows.
+5. **Convenção de Encoding e Zero LaTeX (sessão 103/108):** Jamais utilizar sintaxe de LaTeX inline (`$ ... $` ou `$$ ... $$`), comandos matemáticos (`\rightarrow`, `\le`, `\ge`, `\mu`), ou cifrões encapsulando números e desigualdades (`$< 60$`, `$> 1000$`, `$\rightarrow$`) em resumos, flashcards, logs ou respostas no chat. É terminantemente proibido o uso de setas Unicode (→), aspas ou travessões inteligentes (–, —). Usar exclusivamente Markdown e ASCII limpo: seta simples (`->`), sinais de menor/maior diretos (`< 60`, `> 1000`, `<=`, `>=`), aspas retas normais (' ou ") e hifens simples/duplos (- ou --), garantindo legibilidade perfeita e zero quebra visual em qualquer terminal ou app externo.
 
 ---
 

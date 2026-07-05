@@ -1,10 +1,10 @@
 # HANDOFF.md -- ESTADO OPERACIONAL CURTO
-*Atualizado: 2026-07-04 -- **s107: PRD de Autogovernanca Proativa IMPLEMENTADO (Partes 1-4, R1-R6), 4 auditorias PASS, commitado (e13ee0b)**. Acumulado 4.418. Proximo passo: voltar ao ritmo de questoes da S11 (~107q/dia p/ o alvo ENAMED).*
+*Atualizado: 2026-07-05 -- **s108: Semana 11 FINALIZADA. Iniciando Sprint de Compressao (S12 + S13 em 6 dias, ~140q/dia) com folga no domingo.***
 
-## > Proximo passo imediato -- s108
-**A) Voltar ao ritmo de questoes da S11:** Imunizacoes, Sepse e Anemias Hemoliticas (resumos prontos) -- ~107q/dia para o alvo ENAMED. O boot agora abre com as fraquezas reais + plano do dia (Parte 1 entregue); seguir o "Proximo ato" oferecido.
-**B) Ratificar em uso real:** o novo `day_plan --difficulty` (precedencia G5 corrigida: nota explicita vence; extensivo sem nota -> D10 + deep_research) e a heuristica extensivo recalibrada (44%, era 79%) na 1a abertura de task.
-**C) Pendencias de fundo:** reescrever `TCE.md` + `Sistemas de Informacao em Saude.md`; gaps ectopica/ictericia neonatal (so andaime).
+## > Proximo passo imediato -- s109
+**A) Executar Bloco de Segunda-Feira (S12T1-T4):** MFC (Teoria), Imunizacoes (Teoria), Apendicite Aguda (Teoria) e Vulvovaginites (Revisao). ~130-150 questoes totais.
+**B) Criar/Reforcar bases:** preparacao para criacao de `resumos/Cirurgia/Apendicite Aguda.md` e revisao de FSRS (drenar 57 vencidos).
+**C) Pendencias de fundo:** reescrever `TCE.md` + `Sistemas de Informacao em Saude.md` nas folgas/brechas.
 
 ## Padroes de erro vivos (herdados s102) -- atencao do scrum master
 - RED **Reacao Reversa (Tipo 1):** neurite aguda = Prednisona 1 mg/kg/dia imediato e **manter** a PQT.

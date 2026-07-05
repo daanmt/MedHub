@@ -117,7 +117,7 @@ aliases: [Cirurgia Infantil, Cirurgia Pediátrica, HDC, Estenose Pilórica, Inva
 - **Fisiopatologia:** falha na rotação de 270° anti-horária do intestino médio ao redor da AMS.
 - **Bridas de Ladd:** aderências que cruzam o duodeno tentando fixar o ceco (que está no HCD) -> obstrução extrínseca.
 - ⭐ **Vólvulo de Intestino Médio (Emergência Cirúrgica):** torção do mesentério de base estreita sobre a AMS.
-    - **Tríade:** vômitos biliosos súbitos + eliminação de sangue pelo ânus + massa abdominal palpável.
+    - **Tríade:** vômitos biliosos súbitos + eliminação de sangue pelo ânus + massa abdominal palpável. No lactente com ~1 mês de vida (ex.: 25 dias) previamente bem que inicia de forma aguda com letargia, vômitos biliosos e "pobreza de gás" no RX de abdome (indicando obstrução alta duodenal), o diagnóstico é Vólvulo até prova em contrário -- não confundir com atresia jejunoileal (que se manifesta nas primeiras 24-48h de vida com múltiplas alças distendidas e níveis hidroaéreos).
 - **Diagnóstico:** estudo contrastado (padrão-ouro) -- duodeno em "saca-rolhas" ou "bico de pássaro".
 - **Conduta:** **Procedimento de Ladd** -- destorção anti-horária + secção de bridas + alinhamento (delgado à direita, cólon à esquerda) + apendicectomia tática.
 
@@ -143,12 +143,12 @@ aliases: [Cirurgia Infantil, Cirurgia Pediátrica, HDC, Estenose Pilórica, Inva
     - Atraso na eliminação de mecônio (> 48h de vida).
     - Constipação crônica progressiva + distensão abdominal.
     - ⚠️ **Sinal do Toque Retal:** ampola retal vazia + eliminação explosiva de fezes e gases ao retirar o dedo.
-- **Complicação Temível:** enterocolite de Hirschsprung (principal causa de óbito -- sepse + diarreia pútrida).
+- **Complicação Temível:** enterocolite associada a Hirschsprung (HAEC -- principal causa de óbito e de internações recorrentes na criança constipada, com diarreia explosiva fétida, distensão e febre; não confundir com reação mecânica benigna a lavagens ou gastroenterite viral).
 - **Diagnóstico:**
     - **Enema opaco:** cone de transição entre segmento estreito e dilatado.
     - **Manometria anorretal:** ausência do reflexo inibitório anorretal.
     - ⭐ **Biópsia retal (padrão-ouro):** ausência de células ganglionares + troncos nervosos hipertrofiados (positividade para AChE).
-- **Conduta:** cirurgia de abaixamento (técnicas de Duhamel, Soave ou Swenson).
+- **Conduta:** na obstrução aguda por fecaloma ou crise de enterocolite, a 1ª medida é a **descompressão por lavagens intestinais seriadas** com soro fisiológico morno (nunca indicar laparotomia ou colostomia imediata em cólon destendido e não preparado). Após compensação e confirmação por biópsia, cirurgia de abaixamento definitiva (técnicas de Duhamel, Soave ou Swenson).
 
 ---
 
@@ -230,7 +230,7 @@ aliases: [Cirurgia Infantil, Cirurgia Pediátrica, HDC, Estenose Pilórica, Inva
 - ⭐ **Anomalia congênita mais comum do trato gastrointestinal.** Remanescente do **conduto onfalomesentérico (ducto vitelino)**.
 - **Regra dos 2 (mnemônica):** ~2% da população; ~2 pés (≈60 cm) proximal à válvula ileocecal; ~2 polegadas de comprimento; 2 tipos de mucosa ectópica (gástrica e pancreática); sintomático geralmente antes dos 2 anos.
 - **Complicações (a clínica decorre delas):**
-    - ⭐ **Hemorragia digestiva baixa indolor e maciça (enterorragia)** -- causa mais frequente de HDB em **menores de 5 anos** (mucosa gástrica ectópica -> úlcera péptica ileal).
+    - ⭐ **Hemorragia digestiva baixa indolor e maciça (enterorragia)** -- causa mais frequente de HDB em **menores de 5 anos**. O sangramento decorre da **ulceração péptica da mucosa ileal normal adjacente**, provocada pela secreção ácida de mucosa gástrica ectópica presente no divertículo (e não por invaginação intestinal ou diverticulite).
     - **Obstrução** (complicação mais comum no conjunto -- por invaginação ou volvo), diverticulite (simula apendicite), perfuração.
 - **Diagnóstico:** ⭐ **cintilografia com ⁹⁹ᵐTc-pertecnetato** ("cintilografia de Meckel") -- detecta a **mucosa gástrica ectópica** nos casos de sangramento.
 - **Tratamento:** ressecção cirúrgica -- diverticulectomia em "V" com fechamento transversal; ressecção segmentar do íleo + anastomose primária se houver inflamação/ulceração da base.
@@ -241,8 +241,8 @@ aliases: [Cirurgia Infantil, Cirurgia Pediátrica, HDC, Estenose Pilórica, Inva
 
 - ⭐ **Causa mais frequente de abdome agudo cirúrgico na infância.** Mais comum entre **4 e 15 anos**; apresentação mais atípica e maior taxa de perfuração em **menores de 5 anos**.
 - **Etiopatogênese:** obstrução da luz apendicular -> na criança, mais frequentemente por **hiperplasia linfoide (pós-viral)** que por fecálito; também parasitoses (oxiuríase, tricocefalíase).
-- **Apresentação clínica:** dor inicialmente periumbilical/difusa que **migra para a fossa ilíaca direita** (ponto de McBurney) + descompressão brusca dolorosa. **Diarreia e vômitos** mais frequentes nos menores de 5 anos (confundem com gastroenterite).
-- **Diagnóstico:** ⭐ **essencialmente clínico** (anamnese + exame físico evolutivo). Imagem de escolha = **ultrassonografia** (apêndice ≥ 7 mm, não compressível, "aspecto em alvo", "anel de fogo" ao Doppler, líquido/abscesso periapendicular). ⚠️ O principal mimetizador é a **adenite mesentérica**.
+- **Apresentação clínica:** dor inicialmente periumbilical/difusa que **migra para a fossa ilíaca direita** (ponto de McBurney) + descompressão brusca dolorosa. **Diarreia reativa e vômitos** por irritação pélvica/mesentérica são frequentes nos menores de 5 anos, fazendo com que a apendicite seja confundida ou diagnosticada erroneamente como gastroenterocolite em até 40% dos casos.
+- **Diagnóstico:** ⭐ **essencialmente clínico** (anamnese + exame físico evolutivo). Imagem de escolha = **ultrassonografia** (diâmetro anteroposterior > 6 mm, não compressível, "aspecto em alvo", "anel de fogo" ao Doppler, líquido/abscesso periapendicular). Diâmetro de 5 mm é considerado normal ou limítrofe. ⚠️ O principal mimetizador é a **adenite mesentérica**.
 - **Tratamento:** **apendicectomia** (convencional ou laparoscópica) + antibioticoterapia para aeróbios e anaeróbios (iniciada no pré-operatório). Apendicite gangrenosa/perfurada -> manter antibiótico intravenoso no pós-operatório até afebril.
 
 ---
@@ -373,3 +373,8 @@ aliases: [Cirurgia Infantil, Cirurgia Pediátrica, HDC, Estenose Pilórica, Inva
 - 🔴 **Parafimose:** 1ª medida = **redução digital**; se falhar, incisão dorsal do anel. **Postectomia é ELETIVA** (episódios repetidos/trauma prepucial), nunca cirurgia de urgência de rotina. Não tratada -> necrose.
 - 🔴 **Timing cirúrgico diferido:** **hidrocele comunicante** = expectante até ~10-12 meses; **hipospádia** = cirurgia no 2º semestre (não ao diagnóstico). Já a **hérnia inguinal** e o **testículo ectópico** se operam precocemente/ao diagnóstico.
 - 🔴 **Massa abdominal + acolia (fezes esbranquiçadas) na criança = obstrução biliar por massa** (cisto de colédoco -- tríade icterícia+dor+massa, <10 anos; ou hepatoblastoma comprimindo vias biliares, <5 anos, AFP elevada), **não colangite** (que exige a tríade de Charcot: febre + icterícia + dor).
+- 🔴 **Colestase neonatal cirúrgica (AVB): biópsia vs colangiorressonância:** com acolia fecal persistente e USG inconclusiva, o exame padrão-ouro para definir a etiologia antes do Kasai é a **biópsia hepática percutânea**. ColangioRM possui baixa precisão técnica em neonatos e não diferencia adequadamente causas intra e extra-hepáticas. A AVB é causa **extra-hepática** (jamais intra-hepática).
+- 🔴 **Apendicite na infância: diâmetro > 6 mm no USG:** 5,0 mm não confirma apendicite (limiar é > 6,0 mm). Em < 5 anos, a irritação mesentérica provoca diarreia reativa e vômitos, sobrepondo-se à gastroenterocolite em 40% dos casos; diarreia não afasta apendicite.
+- 🔴 **Hirschsprung: enterocolite (HAEC) ≠ "reação a lavagens":** episódios graves de diarreia explosiva com febre em paciente com Hirschsprung representam HAEC (condição potencialmente letal por translocação e sepse), nunca irritação mecânica benigna. Na obstrução por fecaloma, a conduta imediata é **descompressão por lavagens intestinais**, jamais cirurgia/colostomia de urgência.
+- 🔴 **Divertículo de Meckel: sangramento indolor por ulceração péptica:** o sangramento em < 5 anos ocorre por ulceração da mucosa ileal adjacente pelo ácido da mucosa gástrica ectópica, e não por invaginação intestinal (que causa obstrução e dor em cólica).
+- 🔴 **Vólvulo de Intestino Médio vs Atresia Jejunoileal:** vômitos biliosos agudos com letargia e "pobreza de gás" no RX em lactente com ~1 mês (ex.: 25 dias) = Vólvulo de Intestino Médio (obstrução alta duodenal agudizada). Atresia jejunoileal se manifesta nas primeiras 24-48h de vida com distensão de múltiplas alças e níveis hidroaéreos no RX.

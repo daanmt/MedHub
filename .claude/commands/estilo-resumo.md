@@ -34,16 +34,17 @@ status: canonical
 - Separadores `---` entre seções principais
 
 ### NUNCA usar
-- **Tabelas** — em qualquer tamanho ou formato. Sempre converter para bullets hierárquicos. Sem exceções.
-- Fluxogramas ou algoritmos em ASCII (blocos ` ``` `) — converter para bullets hierárquicos com condicionais em texto (`→ se X:`, `→ se não:`)
-- **Emojis em headers (H1/H2/H3)** — proibido usar 🧭, 🕒, 🚨, 🟢, 🟡, 🔴, 🔵 ou qualquer emoji como prefixo de título de seção. Emojis são permitidos apenas inline no corpo do texto como marcadores (`⭐`, `⚠️`, `🔴`).
-- **`✅` e `❌` como marcadores de bullet** — substituir por bullets `-` normais com negrito para destacar status (ex: `- **Conduta recomendada:**` / `- **Proscrito:**`).
-- **Campo `estilo:` no frontmatter** — o frontmatter aceita apenas `area`, `tema`, `type`, `especialidade`, `status`, `aliases`. Campos como `estilo: Gold Standard` são não-padrão e devem ser removidos.
-- **Rodapés editoriais** — proibido encerrar o arquivo com frases como `*Este resumo foi cristalizado a partir de...*` ou qualquer nota de origem/autoria. O arquivo termina na última armadilha de prova.
+- **Tabelas** -- em qualquer tamanho ou formato. Sempre converter para bullets hierárquicos. Sem exceções.
+- Fluxogramas ou algoritmos em ASCII (blocos ` ``` `) -- converter para bullets hierárquicos com condicionais em texto (`-> se X:`, `-> se não:`)
+- **Sintaxe LaTeX Inline e Símbolos Unicode (`$ ... $`, `\rightarrow`, `→`, `—`, `–`)** -- PROIBIDO encapsular números, setas ou desigualdades entre cifrões (ex: `$< 60$`, `$> 1000$`, `$\rightarrow$`, `$\le$`). Use sempre ASCII/Markdown limpo e direto (`->`, `< 60`, `> 1000`, `<=`, `--`, `-`), garantindo zero bug visual e compatibilidade de encoding.
+- **Emojis em headers (H1/H2/H3)** -- proibido usar 🧭, 🕒, 🚨, 🟢, 🟡, 🔴, 🔵 ou qualquer emoji como prefixo de título de seção. Emojis são permitidos apenas inline no corpo do texto como marcadores (`⭐`, `⚠️`, `🔴`).
+- **`✅` e `❌` como marcadores de bullet** -- substituir por bullets `-` normais com negrito para destacar status (ex: `- **Conduta recomendada:**` / `- **Proscrito:**`).
+- **Campo `estilo:` no frontmatter** -- o frontmatter aceita apenas `area`, `tema`, `type`, `especialidade`, `status`, `aliases`. Campos como `estilo: Gold Standard` são não-padrão e devem ser removidos.
+- **Rodapés editoriais** -- proibido encerrar o arquivo com frases como `*Este resumo foi cristalizado a partir de...*` ou qualquer nota de origem/autoria. O arquivo termina na última armadilha de prova.
 - Headers de metadata no topo (fonte, autor, ano, versão)
-- **Linguagem Informal ou Coloquial** — PROIBIDO o uso de termos como "Vamos lá", "Dica de plantão", "Pulo do gato", "Se matar", "Vai morrer", "Encher balde furado", etc.
-- **Termos Não-Clínicos** — Evitar metáforas dramáticas ou gírias (ex: "letal", "bizarra", "engarrafa"). Use terminologia acadêmica (ex: "potencialmente fatal", "atípica", "congestão retrógrada").
-- **Referências a questões de prova dentro do texto** — nunca escrever "Foco do erro na Q1", "Q2 na prova", "Questão 3 abordou...", etc. O conteúdo aprendido com questões deve ser incorporado de forma natural ao tema, como se sempre tivesse feito parte do resumo.
+- **Linguagem Informal ou Coloquial** -- PROIBIDO o uso de termos como "Vamos lá", "Dica de plantão", "Pulo do gato", "Se matar", "Vai morrer", "Encher balde furado", etc.
+- **Termos Não-Clínicos** -- Evitar metáforas dramáticas ou gírias (ex: "letal", "bizarra", "engarrafa"). Use terminologia acadêmica (ex: "potencialmente fatal", "atípica", "congestão retrógrada").
+- **Referências a questões de prova dentro do texto** -- nunca escrever "Foco do erro na Q1", "Q2 na prova", "Questão 3 abordou...", etc. O conteúdo aprendido com questões deve ser incorporado de forma natural ao tema, como se sempre tivesse feito parte do resumo.
 
 ---
 

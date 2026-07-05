@@ -29,6 +29,15 @@ O flashcard do MedHub não enuncia um fato genérico sobre um tema — ele **ref
 
 ---
 
+## Convenção de Encoding e Zero LaTeX (sessão 103/108)
+
+É rigorosamente **proibido** utilizar sintaxe de LaTeX inline (`$ ... $` ou `$$ ... $$`), comandos matemáticos (`\rightarrow`, `\le`, `\ge`, `\mu`), ou cifrões encapsulando números e desigualdades (`$< 60$`, `$> 1000$`, `$\rightarrow$`) na redação dos campos `frente_pergunta`, `frente_contexto`, `verso_resposta`, `verso_regra_mestre` e `verso_armadilha`.
+- Também é proibido o uso de setas Unicode (→) e aspas ou travessões inteligentes (–, —).
+- **Usar exclusivamente ASCII/Markdown limpo:** seta simples (`->`), sinais diretos (`< 60`, `> 1000`, `<=`, `>=`), aspas retas (' ou ") e hifens simples/duplos (- ou --).
+- Essa regra garante legibilidade limpa, evita quebras de encoding na exportação para Anki/FSRS e previne ruídos de leitura no terminal Windows.
+
+---
+
 ## Granularidade
 
 - **1 a 3 cards por erro.** A maioria dos erros rende 1-2. Acima de 3, o erro provavelmente mistura conceitos — reanalisar.

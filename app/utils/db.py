@@ -202,6 +202,76 @@ def get_erros_por_tema(tema: str) -> list:
     return df.to_dict('records')
 
 
+def get_bulk_totals_por_area():
+    """Totais de sessoes_bulk por área para o dashboard (read-only, F10).
+
+    Colunas: area, feitas, acertos, sessoes, ultima_sessao, pct.
+    DataFrame vazio se o banco/tabela não existir — a página degrada graciosamente.
+    """
+    if not os.path.exists(DB_PATH):
+        return pd.DataFrame()
+    conn = get_connection()
+    try:
+        df = pd.read_sql('''
+            SELECT
+                area,
+                SUM(questoes_feitas)     AS feitas,
+                SUM(questoes_acertadas)  AS acertos,
+                COUNT(DISTINCT sessao_num) AS sessoes,
+                MAX(data_sessao)           AS ultima_sessao
+            FROM sessoes_bulk
+            WHERE questoes_feitas > 0
+            GROUP BY area
+            ORDER BY feitas DESC
+        ''', conn)
+        df['pct'] = (df['acertos'] / df['feitas'] * 100).round(1)
+    except Exception:
+        df = pd.DataFrame()
+    conn.close()
+    return df
+
+
+def get_trend_sessoes():
+    """Série (area, sessao_num, pct) de sessoes_bulk para tendência do dashboard (read-only, F10)."""
+    if not os.path.exists(DB_PATH):
+        return pd.DataFrame()
+    conn = get_connection()
+    try:
+        df = pd.read_sql('''
+            SELECT sessao_num, area, questoes_feitas, questoes_acertadas,
+                   data_sessao,
+                   CASE WHEN questoes_feitas > 0
+                        THEN CAST(questoes_acertadas AS REAL) / questoes_feitas * 100
+                        ELSE 0 END AS pct
+            FROM sessoes_bulk
+            WHERE sessao_num > 0
+              AND questoes_feitas > 0
+            ORDER BY area, sessao_num
+        ''', conn)
+    except Exception:
+        df = pd.DataFrame()
+    conn.close()
+    return df
+
+
+def get_erros_por_area():
+    """Contagem de questoes_erros por área para o dashboard (read-only, F10)."""
+    if not os.path.exists(DB_PATH):
+        return pd.DataFrame()
+    conn = get_connection()
+    try:
+        df = pd.read_sql('''
+            SELECT t.area, COUNT(q.id) AS erros
+            FROM questoes_erros q
+            JOIN taxonomia_cronograma t ON t.id = q.tema_id
+            GROUP BY t.area
+        ''', conn)
+    except Exception:
+        df = pd.DataFrame()
+    conn.close()
+    return df
+
+
 def get_cards_by_bucket(area=None, tema=None, new_limit=10) -> dict:
     """Retorna flashcards FSRS divididos em três buckets temporais.
 

@@ -1,83 +1,20 @@
 import streamlit as st
-import sqlite3
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from datetime import datetime, date, timedelta
-import os
 
 from app.utils.styles import inject_styles, content_card, COLORS
+from app.utils.db import get_bulk_totals_por_area, get_trend_sessoes, get_erros_por_area
 from app.engine import summarize_performance
 
 st.set_page_config(page_title="MedHub Dashboard", page_icon="📊", layout="wide")
 inject_styles()
-DB_PATH = 'ipub.db'
 META_PCT = 85  # ← meta de aproveitamento
 
 # ──────────────────────────────────────────────────────────
-# DATA LAYER
+# DATA LAYER — via app/utils/db.py (F10: página não fala SQL)
 # ──────────────────────────────────────────────────────────
-
-def get_bulk_totals():
-    """Agrega questoes_feitas / acertadas por área, da sessoes_bulk."""
-    if not os.path.exists(DB_PATH):
-        return pd.DataFrame()
-    conn = sqlite3.connect(DB_PATH)
-    try:
-        df = pd.read_sql_query("""
-            SELECT
-                area,
-                SUM(questoes_feitas)     AS feitas,
-                SUM(questoes_acertadas)  AS acertos,
-                COUNT(DISTINCT sessao_num) AS sessoes,
-                MAX(data_sessao)           AS ultima_sessao
-            FROM sessoes_bulk
-            WHERE questoes_feitas > 0
-            GROUP BY area
-            ORDER BY feitas DESC
-        """, conn)
-        df['pct'] = (df['acertos'] / df['feitas'] * 100).round(1)
-    except Exception:
-        df = pd.DataFrame()
-    conn.close()
-    return df
-
-def get_trend_data():
-    if not os.path.exists(DB_PATH):
-        return pd.DataFrame()
-    conn = sqlite3.connect(DB_PATH)
-    try:
-        df = pd.read_sql_query("""
-            SELECT sessao_num, area, questoes_feitas, questoes_acertadas,
-                   data_sessao,
-                   CASE WHEN questoes_feitas > 0
-                        THEN CAST(questoes_acertadas AS REAL) / questoes_feitas * 100
-                        ELSE 0 END AS pct
-            FROM sessoes_bulk
-            WHERE sessao_num > 0
-              AND questoes_feitas > 0
-            ORDER BY area, sessao_num
-        """, conn)
-    except Exception:
-        df = pd.DataFrame()
-    conn.close()
-    return df
-
-def get_erros_por_area():
-    if not os.path.exists(DB_PATH):
-        return pd.DataFrame()
-    conn = sqlite3.connect(DB_PATH)
-    try:
-        df = pd.read_sql_query("""
-            SELECT t.area, COUNT(q.id) AS erros
-            FROM questoes_erros q
-            JOIN taxonomia_cronograma t ON t.id = q.tema_id
-            GROUP BY t.area
-        """, conn)
-    except Exception:
-        df = pd.DataFrame()
-    conn.close()
-    return df
 
 def get_foco_critico(df_bulk: pd.DataFrame):
     """
@@ -164,8 +101,8 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-df_bulk  = get_bulk_totals()
-df_trend = get_trend_data()
+df_bulk  = get_bulk_totals_por_area()
+df_trend = get_trend_sessoes()
 df_erros = get_erros_por_area()
 
 has_data = df_bulk is not None and not df_bulk.empty

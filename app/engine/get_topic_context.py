@@ -15,6 +15,9 @@ from typing import Optional
 
 import app.utils.db as db
 
+# Raiz do repo resolvida por __file__ (F14): o índice de resumos não pode
+# depender do cwd — streamlit/CLIs rodam da raiz e mascaravam o defeito.
+_ROOT = Path(__file__).resolve().parents[2]
 
 # Índice lazy-loaded: {termo_lower → path_str}
 _resumo_index: dict[str, str] | None = None
@@ -54,7 +57,7 @@ def _build_index() -> dict[str, str]:
     frontmatter) e tem **precedência** sobre o frontmatter em caso de colisão.
     `especialidade`/`area`/`aliases` entram como apontadores adicionais (fracos).
     """
-    paths = [p for p in Path("resumos").rglob("*.md") if p.name != "INDEX.md"]
+    paths = [p for p in (_ROOT / "resumos").rglob("*.md") if p.name != "INDEX.md"]
     index: dict[str, str] = {}
     # passo 1 — frontmatter (apontadores fracos)
     for path in paths:
@@ -123,7 +126,8 @@ def get_topic_context(tema: str, area: Optional[str] = None) -> dict:
     try:
         resumo_path = _find_resumo(tema)
         if resumo_path and resumo_path.exists():
-            result["resumo_path"] = str(resumo_path)
+            # contrato do retorno: caminho relativo à raiz (índice interno é absoluto)
+            result["resumo_path"] = str(resumo_path.relative_to(_ROOT))
             result["resumo_content"] = resumo_path.read_text(encoding='utf-8')
     except Exception:
         pass

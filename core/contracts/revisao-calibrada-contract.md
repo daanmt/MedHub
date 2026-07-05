@@ -121,6 +121,7 @@ Estado **de tema** em `taxonomia_cronograma` (local-only): `dificuldade INTEGER`
 3. **Histerese:** baixar a nota exige 2 sinais frios consistentes (blocos ≥ 80% + stability↑).
 4. **Prevalência:** peso neutro até a grade carregar o campo (Cláusula 8).
 5. **PREPARAR oferece DRENAR** em seguida (competência única); pode encerrar como pura preparação se o usuário parar.
+5b. **DRENAR oferece PREPARAR quando o cluster está frio (F5, v1.1):** o gatilho do aquecimento deixa de morar só no pedido do usuário — ao abrir um cluster no DRENAR com sinal frio (score de dormência `>= 25` via `day_plan --review-plan`/`review_radar`), o agente **oferece** o PREPARAR proativamente. Oferta, nunca execução automática; recusa do usuário vale para a sessão. O limiar vive AQUI (contrato), não no CLI — o CLI só expõe o score cru.
 6. **Soberania do usuário prevalece** mesmo com dormência alta — o agente sinaliza a divergência, não sobrescreve.
 
 ---

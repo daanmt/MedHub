@@ -385,6 +385,20 @@ def review_plan(new_limit=10):
                                             "total": 0})
             c[nome] += 1
             c["total"] += 1
+
+    # Sinal de frieza por cluster (F5) -- score de dormência do review_radar.
+    # Fallback silencioso: radar indisponível -> frieza=None (day_plan segue
+    # read-only e resiliente; o julgamento frio/quente é do contrato, não daqui).
+    frieza = {}
+    try:
+        import review_radar
+        for r in review_radar.coletar():
+            frieza[(r.get("area"), r.get("tema"))] = r.get("score")
+    except Exception:
+        pass
+    for c in clusters.values():
+        c["frieza"] = frieza.get((c["area"], c["tema"]))
+
     return sorted(clusters.values(),
                   key=lambda c: (-(c["atrasados"] + c["hoje"]), -c["total"],
                                  c["area"], c["tema"]))
@@ -397,7 +411,11 @@ def render_review_plan(clusters):
     out = [f"# 📋 Plano de Revisão — {total} cards em {len(clusters)} cluster(s)", ""]
     for c in clusters:
         partes = [f"{c[b]} {b}" for b in ("atrasados", "hoje", "novos") if c[b]]
-        out.append(f"- **{c['area']} · {c['tema']}** — {c['total']} card(s): {', '.join(partes)}")
+        frio = ""
+        if c.get("frieza") is not None:
+            frio = f" · frieza {c['frieza']}" + (" ❄️" if c["frieza"] >= 25 else "")
+        out.append(f"- **{c['area']} · {c['tema']}** — {c['total']} card(s): "
+                   f"{', '.join(partes)}{frio}")
     return "\n".join(out)
 
 

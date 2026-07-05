@@ -1,0 +1,25 @@
+{
+  "_doc": "Lexico da heuristica F7 (audit_flashcard_quality.py): pares de categorias clinicas OPOSTAS + termos que as identificam. Curadoria continua e do agente-player (conteudo, nao engenharia). Matching: casefold + sem acentos, substring. Semente de calibracao: caso card 95 (HCE hiperfluxo x armadilha que so cita Fallot hipofluxo).",
+  "categorias": {
+    "cianotica-hiperfluxo": [
+      "hipoplasia do ventriculo esquerdo",
+      "hipoplasia do coracao esquerdo",
+      "hipoplasia de ve",
+      "hipoplasia do ve",
+      "coracao esquerdo hipoplasico",
+      "hce",
+      "transposicao das grandes arterias",
+      "transposicao de grandes arterias",
+      "tga"
+    ],
+    "cianotica-hipofluxo": [
+      "tetralogia de fallot",
+      "fallot",
+      "atresia tricuspide",
+      "atresia pulmonar"
+    ]
+  },
+  "opostos": [
+    ["cianotica-hiperfluxo", "cianotica-hipofluxo"]
+  ]
+}

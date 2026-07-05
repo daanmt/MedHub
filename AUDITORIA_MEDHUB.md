@@ -105,6 +105,45 @@ relates_to: [AGENTE, ESTADO, HANDOFF]
 
 ---
 
+## 3b. Sessao de engenharia (Fable, 2026-07-05) -- verificacao F1-F9, achados F10-F15, entrega das 5 ondas
+
+> Pickup da secao 8 executado: ledger -> PRD (`.vibeflow/prds/engenharia-ledger-f1-f13.md`) -> 5 specs -> implement -> audit (fluxo vibeflow completo). Cada achado foi VERIFICADO contra o codigo antes de virar spec (secao 0.4). Commits: d7ad6ea (PRD+specs), d488cfe (p1), 5e19dab (p2), a669a6f (p3), a47967d (p4), p5 no commit desta edicao. Audits PASS em `.vibeflow/audits/engenharia-ledger-part-*.md`.
+
+**Status F1-F9:**
+- F1 -> **ENTREGUE (p1)**: invariante executavel `check_session_pointer` no auto_check (WARN `SESSION_POINTER_DRIFT`; ponteiro <= max(session)+1); roda em --all e quando HANDOFF/history no diff.
+- F2 -> **NAO REPRODUZIDO (medido, p5)**: mediana de 3 runs via PowerShell, cwd=repo, 2026-07-05 -- `auto_check --staged` 0.15s; `day_plan` 0.89s; `git status` 0.07s. O timeout de 120s da s108 era do ambiente Bash daquela sessao (profile/globbing do harness), nao do tooling do repo. Achado fica ABERTO-DORMENTE: se reproduzir em sessao de uso, medir com este mesmo metodo antes de consertar.
+- F3 -> **ENTREGUE (p2)**: `fsrs_queue --cluster` (opt-in, buckets preservados, temas contiguos; sem a flag = byte-identico) + `day_plan --review-plan` (clusters derivados da fila real).
+- F4 -> **ENTREGUE (p2)**: teto dinamico (decisao do operador 2026-07-05): TETO_BASE=30; atrasados>30 -> teto dobra (cap 60) ate drenar. Norma no fsrs-management-contract v1.1; campo `divida` no day_plan.
+- F5 -> **ENTREGUE (p5)**: sinal de frieza por cluster no `--review-plan` (via review_radar, fallback silencioso) + clausula de oferta proativa do PREPARAR (limiar >=25 no contrato, nao no CLI).
+- F6 -> **ENTREGUE (p1)**: `day_plan --handoff-block` (bloco numerico derivado; AGENTE §3 passo 1 atualizado). Bonus: expos inconsistencia do manual antigo (/10.000 convivendo com ritmo de 12k).
+- F7 -> **PARCIAL (p5 + curadoria pendente)**: heuristica com lexico opcional (`tools/data/competidores_categorias.json`) no audit_flashcard_quality -- WARN experimental, gate anti-decorativo (3 execucoes sem sinal acionavel -> remover). Calibrada: dispara no card 95. Reforge dos cards 95/120 segue com o agente-player (/curar-cards; id=120 via gate de evidencia).
+- F8 -> **ENTREGUE (p3)**: Invariante D no contrato v1.1 (PREPARAR isolado: sem abrir versos; tendencia nunca absoluto; fato puro nao se aquece).
+- F9 -> **ENTREGUE (p3)**: Invariante C (janela de override ANTES do record; 1 record por card; sem amend pos-record). Contradicao v1.0 eliminada.
+
+**Achados novos (scan estatico + friccao de implementacao):**
+
+### F10 -- Dashboard bypassava a camada db -- **MEDIA** -- **RESOLVIDO (p4)**
+- Evidencia: `app/pages/1_dashboard.py` fazia `import sqlite3` + `DB_PATH='ipub.db'` relativo (quebra se cwd != raiz; violava db-access-layer.md). Fix: 3 funcoes novas em db.py (SQL identico, DataFrames validados .equals=True); app/pages/ agora 100% sem sqlite3.
+
+### F11 -- Blob ipub.db no historico git -- **BAIXA** -- **RUNBOOK GATED (p4)**
+- Evidencia: blob versionado ate s058 (`d99ff02`); ~1.6MB de dado local-only em todo clone. Runbook executavel em `docs/runbook-expurgo-ipub-git.md` -- NAO executado (reescreve historico; Tier 3, aval do operador na janela).
+
+### F12 -- Testes sem harness formal -- **MEDIA** -- **RESOLVIDO (p4)**
+- Evidencia: 4 test_*.py scripts avulsos. Fix: pytest.ini + conftest.py + bridge subprocess (exit code assertado; coleta crua daria verde decorativo -- funcoes de check sem assert). `pytest` na raiz: 7 passed. Standalone preservado.
+
+### F13 -- Hooks de boot nao versionados -- **MEDIA** -- **RESOLVIDO (p1)**
+- Evidencia: SessionStart/PostToolUse so em settings.local.json com paths absolutos da maquina -- boot deterministico nao sobrevivia a clone. Fix: `.claude/settings.json` versionado com $CLAUDE_PROJECT_DIR.
+
+### F14 -- test_revisao_calibrada e cwd-sensivel -- **BAIXA**
+- Evidencia: rodado fora da raiz do repo, falha 4 checks; com cwd=raiz, passa. O auto_check sempre o invoca com cwd correto (mascarava). Mitigado no pytest via bridge (cwd=raiz); o script standalone segue exigindo cwd na raiz.
+- Hipotese de melhoria: resolver paths por `__file__` nos 4 checks afetados (baixo custo, sessao futura).
+
+### F15 -- test_memory quebra em pipe cp1252 -- **BAIXA**
+- Evidencia: imprime U+2192 (seta unicode) sem reconfigure de stdout -> UnicodeEncodeError sob pipe; viola o decision de 2026-04-23 (CLIs com nao-ASCII devem reconfigurar) e a convencao de encoding (AGENTE §4.5). Mitigado no bridge via PYTHONIOENCODING=utf-8.
+- Hipotese de melhoria: aplicar o snippet canonico de reconfigure + trocar as setas por `->` (4 linhas).
+
+---
+
 ## 4. O que esta solido (nao mexer sem motivo)
 
 Registrado para o PRD nao "consertar" o que funciona:
@@ -185,4 +224,4 @@ O objetivo da sessao nao era so drenar cards: era **usar o MedHub para descobrir
 
 ---
 
-*Este doc e o ledger vivo de engenharia. Nao "fecha" -- acumula achados (F10, F11, ...) a cada sessao de uso, ate o Fable derivar o PRD. Ultima atualizacao: s108 (2026-07-05).*
+*Este doc e o ledger vivo de engenharia. Nao "fecha" -- acumula achados a cada sessao de uso. O 1o ciclo Fable (PRD -> 5 ondas) foi ENTREGUE em 2026-07-05 (secao 3b); **proximos achados comecam em F16** (F10-F15 ja usados pela sessao de engenharia). Ultima atualizacao: sessao de engenharia Fable (2026-07-05).*

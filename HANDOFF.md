@@ -3,7 +3,7 @@
 
 ## > Proximo passo imediato -- s109 (NOVA SESSAO, contexto limpo)
 **A) VOLUME -- Questoes da Semana 12 (~120q).** Trilha principal do dia: executar ~120 questoes da S12. Refresh calibrado por tema antes de cada bloco; cada erro vira card ancorado no elo metacognitivo.
-**B) ENGENHARIA -- Alimentar o ledger para o Fable.** O proximo coordenador segue documentando melhorias em `AUDITORIA_MEDHUB.md` (ledger vivo; proximos achados F10+). Quando o operador pedir, o **Fable** deriva o PRD via `/vibeflow:discover` -> `/gen-spec` (briefing pronto na secao 8 do ledger, registro anti-atrito). Toda friccao de uso e um achado candidato -- registrar.
+**B) ENGENHARIA -- 1o ciclo Fable ENTREGUE (2026-07-05).** PRD + 5 specs + implement + audit (fluxo vibeflow completo): F1/F3/F4/F5/F6/F8/F9/F10/F12/F13 entregues; F2 medido (nao reproduz); F7 heuristica calibrada (reforge 95/120 segue com o coordenador via /curar-cards); F11 = runbook GATED (`docs/runbook-expurgo-ipub-git.md`, aval do operador). Detalhe: ledger secao 3b + `.vibeflow/audits/engenharia-ledger-part-*`. NOVO NO FLUXO: fechamento usa `day_plan --handoff-block` (numeros derivados) + fila com `--cluster` + `--review-plan` + janela de override ANTES do `--record` (Invariante C). O ledger segue vivo: **proximos achados comecam em F16**.
 
 ## Padroes de erro vivos -- atencao do scrum master
 - RED **Pneumotorax hipertensivo (asma AESP pos-IOT):** assimetria de murmurio + dessaturacao subita = puncao de alivio ANTES de mexer no ventilador. **REINCIDIU na s108** (card 213, nota 1) -- leak persistente, prioridade.

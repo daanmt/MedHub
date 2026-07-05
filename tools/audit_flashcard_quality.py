@@ -21,6 +21,7 @@ Critérios objetivos de baixa qualidade:
 """
 
 import sys, os, json, argparse, re
+import unicodedata
 from datetime import datetime
 
 if sys.platform == 'win32':
@@ -81,6 +82,59 @@ SIGNALS = {
 # "effective" front/back: schema v5 (frente/verso removidos em medhub-cleanup)
 EFF_FRONT = "COALESCE(NULLIF(TRIM(frente_pergunta), ''), '[sem pergunta]')"
 EFF_BACK  = "COALESCE(NULLIF(TRIM(verso_resposta),  ''), '[sem resposta]')"
+
+# Heurística F7 (AUDITORIA_MEDHUB) — léxico opcional de categorias opostas.
+LEXICON_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                            'data', 'competidores_categorias.json')
+
+
+def _norm_txt(s):
+    """casefold + remoção de acentos, para matching robusto do léxico."""
+    s = unicodedata.normalize('NFD', (s or '').casefold())
+    return ''.join(ch for ch in s if not unicodedata.combining(ch))
+
+
+def check_discriminacao_lexicon(conn):
+    """Heurística F7 (experimental; WARN, nunca afeta exit code).
+
+    Sinaliza cards cuja verso_armadilha nomeia competidor de categoria OPOSTA
+    à da resposta sem nomear nenhum da MESMA categoria — o padrão dos cards
+    95/120 (armadilha defende-se do competidor errado). Sem léxico em
+    tools/data/competidores_categorias.json -> None (seção nem aparece).
+    Gate anti-decorativo: se em 3 execuções reais não sinalizar nada
+    acionável, remover (ledger F7).
+    """
+    try:
+        with open(LEXICON_PATH, encoding='utf-8') as fh:
+            lex = json.load(fh)
+    except (OSError, json.JSONDecodeError):
+        return None
+    categorias = {cat: [_norm_txt(t) for t in termos]
+                  for cat, termos in lex.get('categorias', {}).items()}
+    opostos = [set(par) for par in lex.get('opostos', [])]
+    if not categorias or not opostos:
+        return None
+
+    def cats_de(texto):
+        t = _norm_txt(texto)
+        return {cat for cat, termos in categorias.items()
+                if any(termo in t for termo in termos)}
+
+    flags = []
+    rows = conn.execute("""
+        SELECT id, verso_resposta, verso_armadilha FROM flashcards
+        WHERE verso_armadilha IS NOT NULL AND TRIM(verso_armadilha) <> ''
+    """).fetchall()
+    for card_id, resposta, armadilha in rows:
+        cats_resp = cats_de(resposta)
+        cats_arm = cats_de(armadilha)
+        if not cats_resp or not cats_arm:
+            continue
+        if cats_resp & cats_arm:
+            continue  # armadilha nomeia ao menos 1 competidor da mesma categoria
+        if any({cr, ca} in opostos for cr in cats_resp for ca in cats_arm):
+            flags.append((card_id, sorted(cats_resp), sorted(cats_arm)))
+    return flags
 
 
 def build_sql(signal_key, tipo_filter=None):
@@ -175,6 +229,19 @@ def run(args):
     print()
     print(f"TOTAL COM ≥1 SINAL CRÍTICO/ALTO:  {len(bad_ids)} / {total}  ({pct_bad:.1f}%)")
     print(f"Cards OK (sem sinais críticos):    {total - len(bad_ids)} / {total}")
+
+    # Heurística F7 — WARN experimental via léxico (não altera exit code)
+    f7 = check_discriminacao_lexicon(conn)
+    if f7 is not None:
+        print()
+        print("HEURÍSTICA F7 — discriminação incompleta (léxico; WARN, não bloqueia):")
+        if f7:
+            for card_id, cats_resp, cats_arm in f7:
+                print(f"  [WARN] id={card_id}: armadilha só nomeia categoria oposta "
+                      f"({', '.join(cats_arm)}) — resposta é ({', '.join(cats_resp)}); "
+                      f"candidato a /curar-cards")
+        else:
+            print("  nenhum card sinalizado com o léxico atual")
 
     if args.examples > 0:
         signal_key = args.signal if hasattr(args, 'signal') and args.signal else 'alt_letter'

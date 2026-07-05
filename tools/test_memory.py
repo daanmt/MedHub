@@ -20,6 +20,11 @@ from pathlib import Path
 
 # Allow running from repo root
 sys.path.insert(0, str(Path(__file__).parent.parent))
+# F15: saída segura sob pipe cp1252 (decisão 2026-04-23 — CLIs com não-ASCII reconfiguram)
+try:
+    sys.stdout.reconfigure(encoding="utf-8")
+except Exception:
+    pass
 
 from app.memory.store import SQLiteMemoryStore
 
@@ -35,7 +40,7 @@ def _make_store(db_path: str) -> SQLiteMemoryStore:
 # Test 1 — Persistence
 # ---------------------------------------------------------------------------
 def test_persistence() -> bool:
-    print("\n[1] Persistência: put → reinicializar → get")
+    print("\n[1] Persistência: put -> reinicializar -> get")
     with tempfile.NamedTemporaryFile(suffix=".db", delete=False) as f:
         db = f.name
 
@@ -99,7 +104,7 @@ def test_cross_thread() -> bool:
 # Test 3 — Search
 # ---------------------------------------------------------------------------
 def test_search() -> bool:
-    print("\n[3] Search: 3 entradas → busca por query → retorna relevante")
+    print("\n[3] Search: 3 entradas -> busca por query -> retorna relevante")
     with tempfile.NamedTemporaryFile(suffix=".db", delete=False) as f:
         db = f.name
 
@@ -133,7 +138,7 @@ def test_search() -> bool:
 # Test 4 — Consolidation
 # ---------------------------------------------------------------------------
 def test_consolidation() -> bool:
-    print("\n[4] Consolidação: mock session log → consolidate_session → session_insights atualizado")
+    print("\n[4] Consolidação: mock session log -> consolidate_session -> session_insights atualizado")
     with tempfile.NamedTemporaryFile(suffix=".db", delete=False) as f:
         db = f.name
 
@@ -179,7 +184,7 @@ def test_consolidation() -> bool:
 # Test 5 — Context unwrap (envelope LangMem)
 # ---------------------------------------------------------------------------
 def test_context_unwrap() -> bool:
-    print("\n[5] Unwrap: registro-envelope → load_context renderiza valores reais")
+    print("\n[5] Unwrap: registro-envelope -> load_context renderiza valores reais")
     import io
     import contextlib
     from app.memory.inspect import load_context

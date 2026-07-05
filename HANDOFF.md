@@ -1,8 +1,8 @@
 # HANDOFF.md -- ESTADO OPERACIONAL CURTO
-*Atualizado: 2026-07-05 -- **s108: Semana 11 FINALIZADA. Iniciando Sprint de Compressao (S12 + S13 em 6 dias, ~140q/dia) com folga no domingo.***
+*Atualizado: 2026-07-05 -- **s108: Semana 11 FINALIZADA. Iniciando Sprint de Compressao Equilibrada (S12 + S13 de Domingo a Domingo, max 120q/dia) com folga na Quinta.***
 
 ## > Proximo passo imediato -- s109
-**A) Executar Bloco de Segunda-Feira (S12T1-T4):** MFC (Teoria), Imunizacoes (Teoria), Apendicite Aguda (Teoria) e Vulvovaginites (Revisao). ~130-150 questoes totais.
+**A) Executar Bloco de Domingo (05/07) — S12T1-T4:** MFC (Teoria), Imunizacoes (Teoria), Apendicite Aguda (Teoria) e Vulvovaginites (Revisao). Total de 118 questoes.
 **B) Criar/Reforcar bases:** preparacao para criacao de `resumos/Cirurgia/Apendicite Aguda.md` e revisao de FSRS (drenar 57 vencidos).
 **C) Pendencias de fundo:** reescrever `TCE.md` + `Sistemas de Informacao em Saude.md` nas folgas/brechas.
 

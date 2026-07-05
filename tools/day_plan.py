@@ -49,6 +49,19 @@ def _fsrs_counts(con):
 
 META_PROVA = 10000   # meta-prova ENAMED (decisão s093/ESTADO); 12k = teto/stretch
 
+# Política de teto dinâmico (F4 -- decisão do operador 2026-07-05).
+# Norma: core/contracts/fsrs-management-contract.md §Teto dinâmico.
+TETO_BASE = 30            # cards/dia fora do regime de dívida
+CAP_MULTIPLICADOR = 2     # teto_efetivo nunca excede CAP_MULTIPLICADOR * TETO_BASE
+
+
+def _teto_efetivo(atrasados):
+    """Teto do dia: regime de dívida quando atrasados > TETO_BASE; o teto sobe
+    até o cap para drenar (na prática, dobra até a dívida zerar)."""
+    if atrasados > TETO_BASE:
+        return min(TETO_BASE + atrasados, CAP_MULTIPLICADOR * TETO_BASE)
+    return TETO_BASE
+
 
 def _cronograma_hint():
     """Fallback legado: 1ª linha numerada de '## Próximos passos' do ESTADO (frágil)."""
@@ -343,10 +356,49 @@ def build():
             "dias_ate_marco": dias, "ritmo_alvo": ritmo_alvo,
         },
         "fsrs": fsrs,
+        "divida": {
+            "atrasados": fsrs["atrasados"],
+            "regime_divida": fsrs["atrasados"] > TETO_BASE,
+            "teto_base": TETO_BASE,
+            "teto_efetivo": _teto_efetivo(fsrs["atrasados"]),
+        },
         "cronograma": _cronograma_hoje(total_q or 0, hoje),
         "cronograma_hint": _cronograma_hint(),   # fallback se a grade não existir
         "sugestao_passo": passo,
     }
+
+
+def review_plan(new_limit=10):
+    """Clusters do dia derivados da fila real (F3) -- read-only.
+
+    Mesma fonte da fila (get_cards_by_bucket, mesmo new_limit default do
+    fsrs_queue): a contagem não pode divergir do que --list entrega. Mata a
+    classe de erro de contagem manual observada na s108 (3x).
+    """
+    buckets = db.get_cards_by_bucket(new_limit=new_limit)
+    clusters = {}
+    for nome in ("atrasados", "hoje", "novos"):
+        for card in buckets.get(nome, []):
+            chave = (card.get("area") or "(sem area)", card.get("tema") or "(sem tema)")
+            c = clusters.setdefault(chave, {"area": chave[0], "tema": chave[1],
+                                            "atrasados": 0, "hoje": 0, "novos": 0,
+                                            "total": 0})
+            c[nome] += 1
+            c["total"] += 1
+    return sorted(clusters.values(),
+                  key=lambda c: (-(c["atrasados"] + c["hoje"]), -c["total"],
+                                 c["area"], c["tema"]))
+
+
+def render_review_plan(clusters):
+    if not clusters:
+        return "# 📋 Plano de Revisão — fila vazia"
+    total = sum(c["total"] for c in clusters)
+    out = [f"# 📋 Plano de Revisão — {total} cards em {len(clusters)} cluster(s)", ""]
+    for c in clusters:
+        partes = [f"{c[b]} {b}" for b in ("atrasados", "hoje", "novos") if c[b]]
+        out.append(f"- **{c['area']} · {c['tema']}** — {c['total']} card(s): {', '.join(partes)}")
+    return "\n".join(out)
 
 
 def render_handoff_block(p):
@@ -378,6 +430,9 @@ def render(p):
                f"p/ ENAMED em {v['dias_ate_marco']}d → ritmo-alvo ~{v['ritmo_alvo']}q/dia")
     out.append(f"- 🔁 **FSRS:** {f['atrasados']} atrasados + {f['hoje']} hoje + "
                f"{f['backlog_novos']} novos (backlog)")
+    dv = p["divida"]
+    regime = " · **REGIME DE DÍVIDA** (teto sobe até drenar)" if dv["regime_divida"] else ""
+    out.append(f"- 🎯 **Teto do dia:** {dv['teto_efetivo']} cards (base {dv['teto_base']}{regime})")
     c = p.get("cronograma")
     if c:
         lag = f" · calendário em S{c['nominal']} (~{c['lag']} sem atrás)" if c.get("lag") else ""
@@ -399,11 +454,19 @@ def main():
     ap.add_argument("--handoff-block", action="store_true", dest="handoff_block",
                     help="Emite o bloco numérico 'Estado por frente' derivado do db, "
                          "pronto para colar no HANDOFF.md (F6: número digitado vira derivado)")
+    ap.add_argument("--review-plan", action="store_true", dest="review_plan",
+                    help="Emite os clusters do dia (area/tema + contagem por bucket) "
+                         "derivados da fila real (F3); com --json, sai o agregado cru")
     ap.add_argument("--difficulty", nargs=2, metavar=("AREA", "TEMA"),
                     help="Reporta nota inferida + degrau + proposito de um tema (read-only)")
     args = ap.parse_args()
     if args.handoff_block:
         print(render_handoff_block(build()))
+        return
+    if args.review_plan:
+        clusters = review_plan()
+        print(json.dumps(clusters, ensure_ascii=False, indent=2) if args.json
+              else render_review_plan(clusters))
         return
     if args.difficulty:
         area, tema = args.difficulty

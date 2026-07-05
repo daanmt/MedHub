@@ -7,7 +7,7 @@ relates_to: [reconcile-contract, estado-contract, AGENTE]
 ---
 
 # Contrato de Gerenciamento do FSRS
-**Versão 1.0 | 2026-06-03 (sessão 075) — primeira instância**
+**Versão 1.1 | 2026-07-05 (s108+, F3/F4 do ledger AUDITORIA_MEDHUB) — anterior: 1.0, 2026-06-03 (sessão 075)**
 
 > Documento normativo. Define como a fila de repetição espaçada é gerenciada, drenada e mantida.
 > Referenciado por: `AGENTE.md`, `reconcile-contract.md` (W3), `.claude/commands/revisar.md`, `.claude/commands/estilo-flashcard.md`.
@@ -34,9 +34,20 @@ O FSRS é o motor de retenção do MedHub. Este contrato evita os dois modos de 
 - **Cap de novos por sessão:** default `--new-limit 10`. Não despejar o backlog inteiro — drenar em ondas.
 - **Priorização por área fraca:** ao drenar, filtrar por `--area`/`--tema` das áreas com pior performance (cruzar com `/performance`). Cards de Cardiologia/Hepato/Dermato/FA antes de áreas fortes.
 - **Ordem natural da fila:** atrasados → hoje → novos (definida no `fsrs_queue`).
+- **Revisão em cluster (F3, v1.1):** `fsrs_queue.py --cluster` preserva a prioridade de bucket e agrupa por (area, tema) dentro de cada bucket -- um PREPARAR aquece o tema e drena o cluster inteiro. `day_plan.py --review-plan` emite os clusters do dia com contagem derivada da fila real (contagem manual foi fonte de erro 3x na s108). A flag é opt-in: sem ela, a ordem é a natural.
 - **Ratings honestos:** o agente avalia 1-4 pela resposta do usuário (contrato em `revisar.md` §Modo conversacional); honestidade > generosidade — a precisão do FSRS depende disso.
 
 ---
+
+## Teto dinâmico (F4, v1.1 -- decisão do operador 2026-07-05)
+
+A tensão estrutural observada na s108 (44 agendados > teto de 30 antes de qualquer card novo) é resolvida por **teto dinâmico**, não por teto fixo + mutirão:
+
+- `TETO_BASE = 30` cards/dia (agendados + novos), vigente fora do regime de dívida.
+- **Regime de dívida:** `atrasados > TETO_BASE`. Nele, `teto_efetivo = min(TETO_BASE + atrasados, 2 * TETO_BASE)` -- na prática o teto **dobra (60) até a dívida drenar**, e volta a 30 quando `atrasados <= 30`.
+- A fonte dos números é `day_plan.py` (campo `divida` no `--json`; linha "Teto do dia" no render). Constantes nomeadas em `tools/day_plan.py` (`TETO_BASE`, `CAP_MULTIPLICADOR`) -- ajuste é edição de 1 linha + este contrato.
+- O teto **informa** a sessão de revisão; quem drena é o `/revisar`. Nenhuma drenagem automática.
+- Alternativa descartada: "modo mutirão" (teto fixo + sessão dedicada quando estourar) -- decisão registrada no PRD engenharia-ledger-f1-f13.
 
 ## Drenagem do backlog (ondas)
 

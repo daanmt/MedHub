@@ -11,10 +11,12 @@ Existe para que o agente (Claude Code) conduza a revisão dentro da conversa
 
 Uso:
     python tools/fsrs_queue.py --next [--area X] [--tema Y]
-    python tools/fsrs_queue.py --list [--area X] [--tema Y] [--limit N] [--new-limit M]
+    python tools/fsrs_queue.py --list [--area X] [--tema Y] [--limit N] [--new-limit M] [--cluster]
     python tools/fsrs_queue.py --record <card_id> --rating <1-4>
 
-Ordem da fila: atrasados -> hoje -> novos. Cards aposentados
+Ordem da fila: atrasados -> hoje -> novos. Com --cluster (F3), a prioridade de
+bucket é preservada e, dentro de cada bucket, os cards são agrupados por
+(area, tema) — revisão em cluster sem re-agrupamento manual. Cards aposentados
 (needs_qualitative >= 2) são excluídos pela própria query do db.
 
 Assinatura canônica documentada em .claude/commands/revisar.md (contrato §7.2).
@@ -35,12 +37,25 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from app.utils import db  # noqa: E402
 
 
-def _ordered_queue(area=None, tema=None, limit=None, new_limit=10):
-    """Achata os três buckets na ordem de prioridade, anotando o bucket de origem."""
+def _cluster_key(card):
+    """Chave de agrupamento (area, tema); cards sem taxonomia vão ao fim do bucket."""
+    return (card.get("area") is None, card.get("area") or "",
+            card.get("tema") is None, card.get("tema") or "")
+
+
+def _ordered_queue(area=None, tema=None, limit=None, new_limit=10, cluster=False):
+    """Achata os três buckets na ordem de prioridade, anotando o bucket de origem.
+
+    Com cluster=True (F3), ordena secundariamente por (area, tema) DENTRO de
+    cada bucket — sort estável preserva a sub-ordem por due no mesmo tema.
+    """
     buckets = db.get_cards_by_bucket(area=area, tema=tema, new_limit=new_limit)
     ordered = []
     for nome in ("atrasados", "hoje", "novos"):
-        for card in buckets.get(nome, []):
+        cards = buckets.get(nome, [])
+        if cluster:
+            cards = sorted(cards, key=_cluster_key)
+        for card in cards:
             card = dict(card)
             card["bucket"] = nome
             ordered.append(card)
@@ -71,6 +86,10 @@ def main():
     parser.add_argument("--limit", type=int, help="Máximo de cards na fila (--list)")
     parser.add_argument("--new-limit", type=int, default=10, dest="new_limit",
                         help="Máximo de cards novos (state 0). Default: 10")
+    parser.add_argument("--cluster", action="store_true",
+                        help="Agrupa por (area, tema) dentro de cada bucket, preservando "
+                             "a prioridade atrasados -> hoje -> novos (F3). Opt-in: sem a "
+                             "flag, a ordem é a atual")
     args = parser.parse_args()
 
     if args.record is not None:
@@ -87,7 +106,8 @@ def main():
         return
 
     ordered = _ordered_queue(area=args.area, tema=args.tema,
-                             limit=args.limit, new_limit=args.new_limit)
+                             limit=args.limit, new_limit=args.new_limit,
+                             cluster=args.cluster)
 
     if args.next:
         _emit(ordered[0] if ordered else {"empty": True})

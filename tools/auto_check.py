@@ -79,6 +79,47 @@ def _warn_total(output):
     m = re.search(r"WARN_TOTAL=(\d+)", output)
     return int(m.group(1)) if m else 0
 
+
+def check_session_pointer(handoff_path=None, history_dir=None):
+    """Invariante F1 (AUDITORIA_MEDHUB): o ponteiro de sessao do HANDOFF nunca
+    excede max(history/session_NNN) + 1. Renumeracao antecipada (+1) e legitima;
+    acima disso ha sessao anunciada sem log selado.
+
+    O ponteiro e o maior sNN citado nas linhas-ancora do HANDOFF (header
+    "*Atualizado:" e heading "Proximo passo") -- nao no arquivo inteiro, para
+    nao capturar mencoes historicas em prosa. Parse defensivo: sem match ou
+    sem dados -> None (check silencioso, nunca falso-positivo barulhento).
+
+    Retorna (pointer, max_sess) em drift; None quando coerente ou sem dados.
+    """
+    handoff = Path(handoff_path) if handoff_path else ROOT_DIR / "HANDOFF.md"
+    history = Path(history_dir) if history_dir else ROOT_DIR / "history"
+    if not handoff.exists() or not history.is_dir():
+        return None
+    try:
+        text = handoff.read_text(encoding="utf-8")
+    except Exception:
+        return None
+    nums = []
+    for line in text.splitlines():
+        s = line.strip()
+        if s.startswith("*Atualizado") or (
+                s.startswith("#") and re.search(r"pr[oó]ximo passo", s, re.IGNORECASE)):
+            nums += [int(n) for n in re.findall(r"\bs(\d{2,3})\b", s)]
+    if not nums:
+        return None
+    sessions = []
+    for p in history.rglob("session_*.md"):
+        m = re.fullmatch(r"session_(\d+)", p.stem)
+        if m:
+            sessions.append(int(m.group(1)))
+    if not sessions:
+        return None
+    pointer, max_sess = max(nums), max(sessions)
+    if pointer > max_sess + 1:
+        return (pointer, max_sess)
+    return None
+
 def main():
     mode = "--changed"
     if len(sys.argv) > 1 and sys.argv[1] in ("--all", "-a"):
@@ -100,12 +141,14 @@ def main():
     tools_to_check = []
     changed_files = None
     parity_relevant = (mode == "--all")
+    pointer_relevant = (mode == "--all")
 
     if mode in ("--changed", "--staged"):
         changed_files = get_staged_files() if mode == "--staged" else get_changed_files()
         if changed_files is None:
             mode = "--all"
             parity_relevant = True
+            pointer_relevant = True
         else:
             origem = "staged para commit" if mode == "--staged" else "modificado(s)/untracked na sessão"
             print(f"🔍 Detectados {len(changed_files)} arquivo(s) {origem}.")
@@ -114,6 +157,10 @@ def main():
                 # Paridade command<->skill: relevante se o canônico OU o espelho mudou.
                 if fp.startswith(".claude/commands/") or fp.startswith(".agents/skills/"):
                     parity_relevant = True
+                # Invariante de ponteiro (F1): relevante se HANDOFF ou history/ mudou
+                # (checado antes do exists() para pegar também deleções de logs).
+                if fp == "HANDOFF.md" or fp.startswith("history/"):
+                    pointer_relevant = True
                 path_obj = ROOT_DIR / f
                 if not path_obj.exists():
                     continue
@@ -123,7 +170,7 @@ def main():
                 elif (fp.startswith("tools/") or fp.startswith("core/")) and f.endswith(".py"):
                     tools_to_check.append(f)
 
-            if not resumos_to_check and not tools_to_check and not parity_relevant:
+            if not resumos_to_check and not tools_to_check and not parity_relevant and not pointer_relevant:
                 print("\n✅ Nenhum arquivo crítico (resumos/*.md ou scripts python estruturais) foi alterado.")
                 print("   O harness não exige execução de suítes de teste para esta mudança. Aprovado!")
                 print("=" * 60)
@@ -176,6 +223,18 @@ def main():
             n_drift = out_parity.count("PARITY_DRIFT")
             # success=True: WARN não rebaixa o veredito (não altera all_passed).
             results_summary.append((desc_parity, True, n_drift))
+
+    # 4. Invariante de ponteiro de sessao (F1 -- AUDITORIA_MEDHUB). WARN, não bloqueia:
+    #    nasce advertindo (política s106/107) e só endurece quando a base zerar.
+    if pointer_relevant:
+        drift = check_session_pointer()
+        desc_pointer = "Invariante de ponteiro de sessão (F1)"
+        if drift:
+            print(f"\n[WARN] SESSION_POINTER_DRIFT: HANDOFF aponta s{drift[0]}, mas o log "
+                  f"mais recente é history/session_{drift[1]:03d}.md (limite = max + 1). "
+                  f"Selar a sessão pendente antes de avançar o ponteiro.")
+        # success=True: WARN não rebaixa o veredito (não altera all_passed).
+        results_summary.append((desc_pointer, True, 1 if drift else 0))
 
     # Resumo Final
     print("\n" + "=" * 60)

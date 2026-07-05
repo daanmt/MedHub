@@ -349,6 +349,23 @@ def build():
     }
 
 
+def render_handoff_block(p):
+    """Bloco numerico 'Estado por frente' derivado do db (F6 -- AUDITORIA_MEDHUB).
+
+    ASCII puro, pronto para colar no HANDOFF.md. So numeros derivados: o texto
+    qualitativo (proximo tema, gaps, pendencias) continua manual no fechamento.
+    """
+    v, f = p["volume"], p["fsrs"]
+    perf = round(v["acertos"] / v["total"] * 100, 1) if v["total"] else 0.0
+    return "\n".join([
+        f"- **Volume & Metas:** {v['total']} / {v['alvo_enamed']} (perf. ~{perf}%). "
+        f"Hoje: {v['hoje']}. Ritmo-alvo ~{v['ritmo_alvo']}q/dia "
+        f"({v['dias_ate_marco']}d p/ ENAMED).",
+        f"- **FSRS:** {f['atrasados']} atrasados + {f['hoje']} hoje. "
+        f"Backlog: {f['backlog_novos']} novos.",
+    ])
+
+
 def render(p):
     d, v, f = p["dormant"], p["volume"], p["fsrs"]
     out = [f"# 🗓️ Plano do Dia — {p['data']}", ""]
@@ -379,9 +396,15 @@ def render(p):
 def main():
     ap = argparse.ArgumentParser(description="Plano do Dia (read-only).")
     ap.add_argument("--json", action="store_true", help="Saída JSON crua")
+    ap.add_argument("--handoff-block", action="store_true", dest="handoff_block",
+                    help="Emite o bloco numérico 'Estado por frente' derivado do db, "
+                         "pronto para colar no HANDOFF.md (F6: número digitado vira derivado)")
     ap.add_argument("--difficulty", nargs=2, metavar=("AREA", "TEMA"),
                     help="Reporta nota inferida + degrau + proposito de um tema (read-only)")
     args = ap.parse_args()
+    if args.handoff_block:
+        print(render_handoff_block(build()))
+        return
     if args.difficulty:
         area, tema = args.difficulty
         print(json.dumps(difficulty_report(area, tema), ensure_ascii=False,

@@ -183,30 +183,6 @@
   "enabledMcpjsonServers": [
     "obsidian-notes-rag"
   ],
-  "hooks": {
-    "SessionStart": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python \"C:/Users/daanm/MedHub/Tools/hooks/memory_boot.py\""
-          }
-        ]
-      }
-    ],
-    "PostToolUse": [
-      {
-        "matcher": "Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python \"C:/Users/daanm/MedHub/Tools/hooks/memory_session_log.py\"",
-            "timeout": 90
-          }
-        ]
-      }
-    ]
-  },
   "remote": {
     "defaultEnvironmentId": "env_01J7wZiFNkTcrVGcdUbv4Dj8"
   }

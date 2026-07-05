@@ -12,10 +12,10 @@
 - RED **PTT:** hemolise mecanica (Coombs negativo, esquizocitos) -> plasmaferese de urgencia (heparina contraindicada).
 
 ## Estado por frente
-- **Volume & Metas:** ~**4.454** / 10.000 (regenerar via day_plan -- ver F6). Perf. ~79%. ENAMED 13/09: ~70 dias, ~107q/dia p/ o alvo. | Proximo: S12 (~120q).
+- **Volume & Metas:** 4454 / 12000 (perf. ~79.0%). Hoje: 0. Ritmo-alvo ~107.8q/dia (70d p/ ENAMED). [derivado: day_plan --handoff-block] | Proximo: S12 (~120q).
 - **Conteudo:** 61 resumos. Gaps: TCE.md, Sistemas de Informacao em Saude.md.
 - **Erros & Cards:** sem cards novos na s108 (revisao + engenharia). 2 cards mal-calibrados p/ reforge: **95** (HCE x TGA) e **120** (heterotopica x corpo luteo; via gate de evidencia).
-- **FSRS:** **atrasados/hoje ZERADOS** (43 drenados nesta sessao). Backlog ~350 novos (regenerar via day_plan). Re-drill assentado: 213, 205.
+- **FSRS:** 1 atrasados + 2 hoje. Backlog: 351 novos. [derivado: day_plan --handoff-block] (43 drenados na s108; re-drill assentado: 213, 205.)
 - **Infraestrutura:** NOVO ledger de engenharia `AUDITORIA_MEDHUB.md` (F1-F9; F1 resolvido). F3/F7/F8/F9 nasceram do uso vivo. Ledger e vivo -- acumula ate o Fable derivar o PRD.
 
 ## Pendencias ativas

@@ -1,25 +1,25 @@
 # HANDOFF.md -- ESTADO OPERACIONAL CURTO
-*Atualizado: 2026-07-05 -- **s108: Semana 11 FINALIZADA. Iniciando Sprint de Compressao Equilibrada (S12 + S13 de Domingo a Domingo, max 120q/dia) com folga na Quinta.***
+*Atualizado: 2026-07-05 -- **s108: fila FSRS de atrasados ZERADA (43 cards) + auditoria de engenharia iniciada (ledger vivo AUDITORIA_MEDHUB.md, F1-F9). Drift F1 do ponteiro de sessao RESOLVIDO.***
 
-## > Proximo passo imediato -- s109
-**A) Executar Bloco de Domingo (05/07) — S12T1-T4:** MFC (Teoria), Imunizacoes (Teoria), Apendicite Aguda (Teoria) e Vulvovaginites (Revisao). Total de 118 questoes.
-**B) Criar/Reforcar bases:** preparacao para criacao de `resumos/Cirurgia/Apendicite Aguda.md` e revisao de FSRS (drenar 57 vencidos).
-**C) Pendencias de fundo:** reescrever `TCE.md` + `Sistemas de Informacao em Saude.md` nas folgas/brechas.
+## > Proximo passo imediato -- s109 (NOVA SESSAO, contexto limpo)
+**A) VOLUME -- Questoes da Semana 12 (~120q).** Trilha principal do dia: executar ~120 questoes da S12. Refresh calibrado por tema antes de cada bloco; cada erro vira card ancorado no elo metacognitivo.
+**B) ENGENHARIA -- Alimentar o ledger para o Fable.** O proximo coordenador segue documentando melhorias em `AUDITORIA_MEDHUB.md` (ledger vivo; proximos achados F10+). Quando o operador pedir, o **Fable** deriva o PRD via `/vibeflow:discover` -> `/gen-spec` (briefing pronto na secao 8 do ledger, registro anti-atrito). Toda friccao de uso e um achado candidato -- registrar.
 
-## Padroes de erro vivos (herdados s102) -- atencao do scrum master
-- RED **Reacao Reversa (Tipo 1):** neurite aguda = Prednisona 1 mg/kg/dia imediato e **manter** a PQT.
-- RED **PTT:** hemolise mecanica (Coombs negativo, esquizocitos) -> **plasmaferese** de urgencia (heparina contraindicada).
-- RED **Asma (AESP pos-IOT):** assimetria de murmurio + dessaturacao subita = pneumotorax hipertensivo -> puncao de alivio.
+## Padroes de erro vivos -- atencao do scrum master
+- RED **Pneumotorax hipertensivo (asma AESP pos-IOT):** assimetria de murmurio + dessaturacao subita = puncao de alivio ANTES de mexer no ventilador. **REINCIDIU na s108** (card 213, nota 1) -- leak persistente, prioridade.
+- RED **Bug nº1 / parar antes de completar a verificacao:** sifilis congenita (card 189) -- incerteza sobre adequacao materna = TRATAR o RN, nunca observar. Regra do operador: falta de info materna = inadequada = tratar RN (50k UI/kg/dose, 10d).
+- RED **Reacao Reversa (Tipo 1):** neurite aguda = Prednisona 1 mg/kg/dia e MANTER a PQT.
+- RED **PTT:** hemolise mecanica (Coombs negativo, esquizocitos) -> plasmaferese de urgencia (heparina contraindicada).
 
 ## Estado por frente
-- **Volume & Metas:** **4.418** / 10.000 (44%). Perf. ~79.2%. ENAMED 13/09: 71 dias, ~107q/dia p/ o alvo.
-- **Conteudo:** **61 resumos**. Gaps: TCE.md, Sistemas de Informacao em Saude.md.
-- **Erros & Cards:** sem novos na s107 (sessao de engenharia). Base ~419 erros / 441 cards.
-- **FSRS:** 27 atrasados + 13 hoje + 322 backlog de novos.
-- **Infraestrutura:** **PRD de Autogovernanca 100% entregue (s107).** Boot injeta fraquezas reais + plano do dia + proximo ato (Parte 1). Linter em 2 severidades BLOCK/WARN (Parte 2). Fonte canonica de skills = `.claude/commands` + espelhos gerados por `tools/sync_skills.py`; `auto_check` acusa drift de paridade (Parte 3). Precedencia D10/extensivo corrigida + governanca no AGENTE.md secoes 1.3/6/7.4 (Parte 4).
+- **Volume & Metas:** ~**4.454** / 10.000 (regenerar via day_plan -- ver F6). Perf. ~79%. ENAMED 13/09: ~70 dias, ~107q/dia p/ o alvo. | Proximo: S12 (~120q).
+- **Conteudo:** 61 resumos. Gaps: TCE.md, Sistemas de Informacao em Saude.md.
+- **Erros & Cards:** sem cards novos na s108 (revisao + engenharia). 2 cards mal-calibrados p/ reforge: **95** (HCE x TGA) e **120** (heterotopica x corpo luteo; via gate de evidencia).
+- **FSRS:** **atrasados/hoje ZERADOS** (43 drenados nesta sessao). Backlog ~350 novos (regenerar via day_plan). Re-drill assentado: 213, 205.
+- **Infraestrutura:** NOVO ledger de engenharia `AUDITORIA_MEDHUB.md` (F1-F9; F1 resolvido). F3/F7/F8/F9 nasceram do uso vivo. Ledger e vivo -- acumula ate o Fable derivar o PRD.
 
 ## Pendencias ativas
-Reescrever `TCE.md` + `Sistemas de Informacao em Saude.md`. Ratificar em uso o day_plan --difficulty recalibrado. Retomar o volume de questoes da S11.
+Reescrever TCE.md + Sistemas de Informacao em Saude.md. Reforjar cards 95/120. Fable: derivar PRD do ledger (ordem sugerida F1+F6 -> F3 -> F9 -> F8 -> F7 -> F4 -> F2 -> F5).
 
 ---
-*Historico: history/INDEX.md * Macro: ESTADO.md * Sessao: history/session_107.md * PRD: .vibeflow/prds/autogovernanca-proativa.md*
+*Historico: history/INDEX.md * Macro: ESTADO.md * Sessao: history/session_108.md * Ledger de engenharia: AUDITORIA_MEDHUB.md*

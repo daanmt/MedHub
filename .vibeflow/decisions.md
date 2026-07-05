@@ -1,6 +1,16 @@
 # Decision Log
 > Newest first. Updated automatically by the architect agent.
 
+## 2026-07-05 — Invariantes de estado executáveis (F1/F6) + runtime canônico é o Python do sistema
+
+**Contexto:** Part 1 do PRD engenharia-ledger (`.vibeflow/audits/engenharia-ledger-part-1-audit.md`, PASS). Transplante do padrão Executable-State-Reconcile: `auto_check.py::check_session_pointer()` (ponteiro do HANDOFF <= max(history/session_NNN)+1; WARN `SESSION_POINTER_DRIFT`, warning-first) e `day_plan.py --handoff-block` (bloco numérico do HANDOFF vira derivado do db — números digitados à mão foram a raiz do F6).
+
+**Decisão:** invariante de governança novo entra como check do `auto_check` (nunca disciplina textual solta); número de estado em doc de governança é derivado por CLI, nunca digitado. Hooks de sessão agora versionados em `.claude/settings.json` com `$CLAUDE_PROJECT_DIR` (F13) — `settings.local.json` guarda só o específico da máquina.
+
+**Pitfall (runtime):** o runtime canônico dos CLIs é o **Python do sistema** (Python312) — a `.venv/` está stale e NÃO tem o pacote `fsrs` (o `app/utils/fsrs.py` importa `from fsrs import Scheduler, Card, Rating`, py-fsrs de referência); rodar tools pela `.venv` quebra. Confirma também que `fsrs-review-flow.md` (pattern doc) está desatualizado (mostra FSRS custom) — regenerar via /vibeflow:analyze, não editar à mão.
+
+---
+
 ## 2026-07-04 — Heurística `material_indicado` (extensivo vs resumo): menção textual, não `tipo==teoria`
 
 **Contexto:** Parte 4 do PRD de Autogovernança (`.vibeflow/audits/autogovernanca-proativa-part-4-audit.md`, PASS). O gatilho antigo em `tools/cronograma.py` (`tipo_norm=='teoria' OR /extensivo/`) marcava 279/352 tasks (79%) como extensivo — esvaziava a calibração (quase tudo virava D10). Novo critério (`cronograma.py:179`): `material_indicado='extensivo'` só quando o `raw` do PDF menciona "Extensivo"/"Livro Digital Completo" **E** a task **não** é de revisão (`revis[ãa]o`). Resultado pós-`--rebuild`: 155 extensivo / 197 resumo = 44% (n_tasks=352, total=10218 preservados).

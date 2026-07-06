@@ -134,13 +134,118 @@ relates_to: [AGENTE, ESTADO, HANDOFF]
 ### F13 -- Hooks de boot nao versionados -- **MEDIA** -- **RESOLVIDO (p1)**
 - Evidencia: SessionStart/PostToolUse so em settings.local.json com paths absolutos da maquina -- boot deterministico nao sobrevivia a clone. Fix: `.claude/settings.json` versionado com $CLAUDE_PROJECT_DIR.
 
-### F14 -- test_revisao_calibrada e cwd-sensivel -- **BAIXA**
+### F14 -- test_revisao_calibrada e cwd-sensivel -- **BAIXA** -- **RESOLVIDO (3d)**
 - Evidencia: rodado fora da raiz do repo, falha 4 checks; com cwd=raiz, passa. O auto_check sempre o invoca com cwd correto (mascarava). Mitigado no pytest via bridge (cwd=raiz); o script standalone segue exigindo cwd na raiz.
-- Hipotese de melhoria: resolver paths por `__file__` nos 4 checks afetados (baixo custo, sessao futura).
+- Hipotese de melhoria: resolver paths por `__file__` nos 4 checks afetados (baixo custo, sessao futura). *(Resolucao real: causa era no engine, nao no teste -- ver 3d.)*
 
-### F15 -- test_memory quebra em pipe cp1252 -- **BAIXA**
+### F15 -- test_memory quebra em pipe cp1252 -- **BAIXA** -- **RESOLVIDO (3d)**
 - Evidencia: imprime U+2192 (seta unicode) sem reconfigure de stdout -> UnicodeEncodeError sob pipe; viola o decision de 2026-04-23 (CLIs com nao-ASCII devem reconfigurar) e a convencao de encoding (AGENTE §4.5). Mitigado no bridge via PYTHONIOENCODING=utf-8.
 - Hipotese de melhoria: aplicar o snippet canonico de reconfigure + trocar as setas por `->` (4 linhas).
+
+---
+
+## 3c. Sessao de uso s109 (coordenador-observador) -- achados F16-F19
+
+> **Origem:** uso vivo da s109 -- forja da aula-base de apendicite (prova de R+ em gastroenterologia). O papel de coordenador-observador (contrato do operador, 2026-07-05) alimenta o ledger **F16+** enquanto conduz o estudo. Trilha de ENGENHARIA: o conteudo clinico (apendicite, questoes, erros) vai para `history/` + HANDOFF, nao aqui (secao 7.6). Achados de primeira passada -- **verificar** antes de virar spec do ciclo 2.
+
+### F16 -- Tema cirurgico de alto rendimento sem SSOT clinico (.md); so o PDF-fonte existe -- **MEDIA**
+- **Evidencia:** apendicite ("um dos temas mais cobrados na prova de Cirurgia Geral", segundo a propria fonte EMED) tem em `resumos/Cirurgia/` apenas o PDF-fonte gitignored (`8. Abdome Agudo Inflamatorio - Apendicite Aguda.pdf`) e **nenhum `.md`**. Glob por `*Apendic*` retorna so o PDF; grep de termos (Alvarado/apendice/carcinoide) nos `.md` acha so mencoes tangenciais (Cirurgia Infantil, Polipose/CCR), nao resumo dedicado. Para cunhar a aula foi preciso extrair o PDF a mao na sessao.
+- **Leitura de sistema:** `resumos/**/*.md` e o SSOT de conhecimento clinico E o unico corpus que o RAG indexa (`index_resumos.py`; AGENTE secao 6). Tema sem `.md` fica (a) invisivel ao RAG semantico (`obsidian-notes-rag search_notes` volta vazio p/ apendicite), (b) sem fonte consultavel nem armadilhas cumulativas, (c) re-extraido a mao a cada aula. O HANDOFF lista gaps pontuais (TCE.md, Sistemas de Informacao) mas nao ha check sistematico de cobertura.
+- **Verificacao sugerida:** cruzar `resumos/**/*.pdf` (fontes EMED presentes) contra `resumos/**/*.md` (SSOTs existentes); listar temas com PDF sem `.md` par e quantos sao de alto rendimento.
+- **Hipotese de melhoria:** (a) relatorio de cobertura `pdf-sem-md` (CLI ou check WARN no `auto_check`) que torna o gap visivel e priorizavel; (b) rodar o workflow `criar-resumo` p/ apendicite -- fecha o gap de conteudo E realimenta o RAG. A aula-base desta sessao ja e insumo pronto p/ o `.md`.
+
+### F17 -- PDFs-fonte retidos "para o RAG" nao sao indexados; o proposito da decisao s086 esta desconectado do wiring -- **MEDIA**
+- **Evidencia:** a decisao s086 (AGENTE secao 6) reteve os PDFs do EMED dentro de `resumos/` "pois serao usados para alimentar o RAG". Mas `index_resumos.py` indexa `resumos/**/*.md` -- o PDF fica no lugar, **un-indexado**. O texto do PDF so entra no RAG se/quando transcrito a mao para `.md`.
+- **Leitura de sistema:** gap entre a intencao declarada (PDF alimenta o RAG) e o wiring (RAG so le `.md`). O caminho real e implicito: PDF -> extracao manual -> `.md` -> index. Enquanto o `.md` nao e cunhado, o PDF e IP retido sem retorno de busca. F17 e a causa-sistemica de F16 existir silenciosamente.
+- **Verificacao sugerida:** confirmar que `index_resumos.py` nao ingere PDF (aparentemente so glob de `*.md`); contar PDFs em `resumos/**` sem `.md` par.
+- **Hipotese de melhoria (escolha de arquitetura p/ ai-eng):** ou (a) canonizar PDF->md como o unico caminho (entao F16 e "so" execucao de conteudo + o relatorio de cobertura basta), ou (b) `index_resumos` passa a ingerir texto extraido de PDF como fonte secundaria do RAG (com metadado de origem) -- amplia cobertura sem trabalho de autoria, mas indexa material bruto fora do `/estilo-resumo`.
+
+### F18 -- Aula-base e efemera (chat-only); sem artefato de persistencia/reuso nem registro de calibracao -- **BAIXA/MEDIA**
+- **Evidencia:** a aula-base de apendicite foi construida e entregue so no chat. Nao ha `aulas/` nem campo que vincule aula a tema; a proxima vez o artefato e re-forjado do zero. A nota de dificuldade 1-10 que calibrou a descompressao (D10 pela regra do extensivo) tambem nao foi registrada (`taxonomia_cronograma.dificuldade` intocada nesta sessao).
+- **Leitura de sistema:** a aula-base e artefato pedagogico validado (memoria: "leitura mais prazerosa"; efeito de cobertura 53%->75%) e caro de produzir (extracao + escada). Efemeridade = re-trabalho, zero acumulo, sem reuso cross-sessao -- tensao com o objetivo "melhor app de estudos". Pode ser efemera-por-design SE o `.md` (F16) for a forma duravel e a aula for so a sua renderizacao descomprimida.
+- **Verificacao sugerida:** decidir se a forma duravel do ensino e o `.md` gold (aula = derivada efemera) ou se a aula merece artefato proprio; conferir se `db.set_dificuldade` pode registrar a calibracao mesmo em prova fora do cronograma.
+- **Hipotese de melhoria (p/ ai-eng decidir):** (a) `.md` como forma duravel + aula como render efemero (fecha via F16, custo zero de infra); ou (b) persistir a aula (`{Tema}.aula.md` ou secao); e, minimamente, (c) registrar a nota de dificuldade do tema no ato da aula, alimentando a Revisao Calibrada.
+
+### F19 -- Ambiente e ENAMED/cronograma-centrico; prova paralela (R+ gastro) sem suporte de primeira classe -- **BAIXA**
+- **Evidencia:** a sessao atual e p/ uma "prova de R+ em gastroenterologia", fora do `Cronograma.pdf`/grade ENAMED. Todo o boot (day_plan: volume-vs-meta, ritmo-alvo ~107.8q/dia, "faltam p/ ENAMED em 70d", proximos temas do cronograma) assume o alvo ENAMED. A maquinaria por tema (fraquezas, FSRS, cards, RAG) e agnostica de prova e serve; mas nao ha como escopar/trackear um alvo paralelo.
+- **Leitura de sistema:** o modelo de "para que estou estudando" e single-target (ENAMED). Provas paralelas (R+, especificas de residencia -- UERJ/USP/IPUB ja estao na direcao estrategica) sao atendidas ad-hoc pelo eixo tema, sem metrica/escopo proprio. Nao e defeito -- e limite de modelo de dominio, relevante ao objetivo de produto.
+- **Verificacao sugerida:** mapear superficies ENAMED-hardcoded (day_plan metas/ritmo, cronograma) vs. agnosticas (insert_questao, fsrs, rag); avaliar recorrencia de provas paralelas.
+- **Hipotese de melhoria (p/ ai-eng/produto):** conceito leve de "prova-alvo" (tag/escopo) que reusa o eixo tema e permite um sub-plano; ou decisao explicita de manter single-target e tratar paralelas so pelo eixo tema. Baixa urgencia; registrar p/ nao perder o sinal.
+
+---
+
+## 3d. Sessao de engenharia -- ciclo 2, rodada 1 (Fable/ai-eng, 2026-07-05, paralela a s109)
+
+> Rodada de suporte iniciada ANTES da s109 abrir (e concluida em paralelo a ela). Do escopo autorizado do ciclo 2: entregue (a)-parcial e (b), mais F14/F15 (pendencias BAIXA do ciclo 1). (c) reforge + triagem de F16-F19 correm com a leva do operador. Corrida de escrita neste ledger detectada e respeitada: a s109 tomou a secao 3c e F16-F19; esta rodada usa 3d e F20.
+
+**F11 (expurgo ipub.db) -- JANELA PREPARADA, EXECUCAO AGUARDA GO NOMINAL:**
+- Pre-condicoes conferidas na janela (2026-07-05, pre-s109): tree limpo, main == origin/main (b9bca29), sem lock; blob confirmado no historico (10+ commits ate d99ff02).
+- Backup mirror CRIADO: `C:/Users/daanm/medhub-backup-pre-expurgo.git` (18M). `git-filter-repo` INSTALADO (pip --user; ferramenta de operador, fora do requirements.txt).
+- O rewrite foi BLOQUEADO pelo gate de permissao do harness da sessao de engenharia (history-rewrite sem pedido nominal na conversa). Decisao: nao contornar -- gate humano no momento da execucao e o espirito do runbook ("aval NESTA janela"). Historico INTACTO. Com a s109 aberta, a janela FECHOU de qualquer forma (sem rewrite com sessao ativa).
+- Proxima janela: pos-s109, tree limpo de novo -> operador da o go nominal na conversa do Fable (rota preferida: runbook completo + validacao em clone fresco) OU roda os passos 2-5 do runbook direto no terminal.
+
+**F4/(b) -- teto dinamico VALIDADO com dados reais:**
+- Vivo (hoje, pre-s109): 1 atrasado -> regime normal, teto 30. Render do day_plan confere ("Teto do dia: 30 cards (base 30)").
+- Retrospectivo (s108 = maior divida real observada): 40 atrasados -> teto = min(30+40, 60) = 60; drenagem real da s108 foi 43+4 = 47 <= 60. O parametro teria coberto o pior caso real.
+- Observacao de design: a formula satura no cap ja na primeira entrada do regime (31 atrasados -> min(61, 60) = 60) -- na pratica e um degrau binario 30/60, nao rampa. Funciona na escala real; NAO mexer salvo divida real >60 aparecer (gate anti-decorativo).
+
+**F14 -> RESOLVIDO:** a verificacao achou a causa no ENGINE, nao no teste -- `app/engine/get_topic_context.py::_build_index` usava `Path("resumos")` relativo ao cwd (streamlit/CLIs rodando da raiz mascaravam). Fix: `_ROOT` resolvido por `__file__`; indice interno absoluto; `resumo_path` do retorno relativizado (contrato documentado preservado). Repro antes (fora da raiz): 4 checks XX; depois: TODOS PASSARAM. pytest 7 passed.
+
+**F15 -> RESOLVIDO:** snippet canonico de reconfigure (precedente: test_revisao_calibrada.py:15-18) + 4 prints com seta U+2192 trocados por `->`. Repro antes (sob pipe): UnicodeEncodeError; depois: 5/5 sob pipe.
+
+### F20 -- .venv dessincronizado do requirements.txt (fsrs ausente) -- **BAIXA**
+- **Evidencia:** `./.venv/Scripts/python tools/day_plan.py` -> `ModuleNotFoundError: No module named 'fsrs'` (traceback cru); `requirements.txt` declara `fsrs>=6.3.1`; o python global roda tudo. `test_revisao_calibrada.py:25-30` ja conhece e trata (mensagem clara + exit 2) -- mas so ali.
+- **Leitura de sistema:** o venv existe e engana -- agente/dev que o ative nao roda day_plan nem db.py. O runtime canonico de fato e o python global, mas isso so esta documentado dentro de um teste.
+- **Verificacao sugerida:** conferir quem depende do venv (streamlit? hooks?) antes de escolher a hipotese.
+- **Hipotese de melhoria:** (i) sincronizar o venv (`pip install -r requirements.txt`) e mante-lo canonico, OU (ii) aposentar o venv e documentar o python global como runtime no AGENTE/README, OU (iii) guard com mensagem clara (padrao do test_revisao_calibrada) nos CLIs de `tools/`. Decisao do operador.
+
+---
+
+## 3e. Sessao de uso s109 (coordenador-observador) -- analise do 1o lote de questoes -- achado F21
+
+> Corrida de escrita respeitada (convencao da secao 3d): a rodada 1 do ciclo 2 tomou 3d e F20; esta continuacao da s109 usa 3e e F21. Origem: analise do 1o lote de apendicite (18 questoes, 5 erros) -- trilha de ENGENHARIA. O conteudo clinico (os 5 cards ancorados nos erros) foi para o `ipub.db` via `insert_questao.py` (flashcards 727-731), nao aqui (secao 7.6).
+
+### F21 -- Compressao por dificuldade (Revisao Calibrada) eliminou um ponto de decisao de alto rendimento, nao so encurtou profundidade -- **MEDIA**
+- **Evidencia:** a aula-base de apendicite foi re-renderizada em D7 (pedido do operador, baixando do D10). A compressao D10 -> D7 removeu o galho "isquemia de base apendicular junto ao ceco -> ileotiflectomia/ileocolectomia" (presente no D10; cortado no D7 como "detalhe cirurgico de baixo rendimento"). A Q2 do lote (42% de acerto) caiu exatamente nesse galho -- o operador marcou Ochsner (invaginacao), gabarito ileotiflectomia. Erro em parte atribuivel ao corte da aula.
+- **Leitura de sistema:** a Revisao Calibrada mapeia a nota 1-10 a degraus de descompressao (D10/D8/D5/D2). Mas a regra de cobertura (`feedback_aula_base_cobertura_escopo`, normada em AGENTE secao 1.2) diz que a profundidade calibra, a **cobertura nao** -- nunca cortar tema/ponto de pega de banca. O D7 violou isso: comprimiu ELIMINANDO um ponto de decisao testavel em vez de encurta-lo. O knob de dificuldade nao tem um "piso de cobertura" operacional no ato de render a aula.
+- **Verificacao sugerida:** revisar `core/contracts/revisao-calibrada-contract.md` -- ha clausula que separe "profundidade/descompressao" (calibravel pela nota) de "cobertura de pontos de decisao de alto rendimento" (piso fixo por tema)? A regra existe em memoria/AGENTE mas nao esta operacionalizada por nota.
+- **Hipotese de melhoria:** a nota calibra descompressao/prosa, nunca a lista de pontos de decisao de alto rendimento -- que e um checklist de cobertura fixo por tema, derivado do sumario da fonte (EMED). Operacionalmente, mesmo em D2/D5/D7 o render passa por esse checklist antes de fechar. Conecta com F18 (persistir aula + calibracao) e com o padrao ja validado (s089: extrair o sumario do PDF como checklist de cobertura antes de redigir).
+
+---
+
+## 3f. Sessao de uso s109 (coordenador-observador) -- 2o lote de questoes -- achados F22-F26
+
+> Corrida de escrita respeitada (convencao 3d): 3c=F16-F19, 3d=F20, 3e=F21, esta secao=3f/F22-F26. Origem: 2o lote de apendicite (42 questoes, 11 erros) -- trilha de ENGENHARIA (os 5 cards de conteudo foram para `ipub.db`, flashcards 732-736). O operador pediu explicitamente (2026-07-05) alimentar o ledger com erros de processo, tentativas insatisfeitas, bugs, capacidades inexploradas e inconsistencias -- esta safra responde a isso.
+
+### F22 -- `registrar_sessao_bulk` idempotente por (sessao_num, area) impede 2o bloco da mesma area na mesma sessao -- **MEDIA**
+- **Evidencia:** o 1o bloco de apendicite foi gravado como s109/Cirurgia (18q). Ao registrar o 2o bloco (42q) na mesma sessao/area, a guarda de idempotencia (`registrar_sessao_bulk.py:56-65`, "SELECT ... WHERE sessao_num=? AND area=?") retornaria "[AVISO] ... Nada alterado" -- nem soma nem atualiza. Contornei com `--sessao 110` (+ `--obs` "s109 bloco 2"); senao o volume das 42q seria perdido.
+- **Leitura de sistema:** a guarda protege contra duplo-registro acidental, mas trata "mesma sessao + mesma area" como duplicata sempre. Um dia com 2+ blocos da mesma area (comum: manha e tarde de Cirurgia) nao tem como ser gravado sem falsear o `sessao_num` -- que passa a acumular um valor (110) sem `history/session_110` correspondente. Inconsistencia entre rotulo de volume e ponteiro de sessao.
+- **Verificacao sugerida:** confirmar se `day_plan`/dashboard somam volume por SUM de linhas (110 nao quebraria o total, so o rotulo) ou assumem 1 linha por sessao.
+- **Hipotese de melhoria:** (a) UPSERT acumulativo (mesma sessao+area soma feitas/acertos), OU (b) `--bloco N` como parte da chave, OU (c) desacoplar `sessao_num` do volume (chave por `data`+area+bloco). A idempotencia anti-duplo deveria olhar um hash do lote, nao (sessao, area).
+
+### F23 -- Cards de erro recem-cunhados (state 0) nao sao surfaced antes do proximo bloco do mesmo tema -> reincidencia -- **MEDIA**
+- **Evidencia:** o link "quadro classico jovem <48h = operar, nao pedir imagem" foi cunhado no bloco 1 desta MESMA sessao (card 730, horas antes). No 2o lote (mesmo dia, mesmo tema) o operador reincidiu no MESMO link **3x** (Q4 pediu US, Q8 pediu TC, Q11 pediu US). O card 730 e state 0 (novo), sem `due` proximo -> nao foi drilado no intervalo entre os blocos. Reincidencia em HORAS, nao dias -- torna o achado mais forte.
+- **Leitura de sistema:** para um tema ATIVO (blocos consecutivos), o FSRS puro (agenda por curva) nao serve o card fresco a tempo -- ele so entra pela fila de novos. Falta um gatilho "voce tem cards de erro frescos do tema X que vai treinar agora -> mini-drill antes do bloco" (PREPARAR DIRECIONADO por tema-alvo). A regra do `analisar-questao` ("nao tolere errar 2x pelo mesmo motivo") existe no papel, mas nada a opera.
+- **Verificacao sugerida:** confirmar que cards state 0 nao entram na fila de vencidos same-day; medir quantos dos 11 erros batem em links ja carded no 1o lote (>= 3: Q4/Q8/Q11 -> 730; Q8 tambem toca 729).
+- **Hipotese de melhoria:** um "pre-bloco por tema-alvo" -- antes de um bloco anunciado de tema X, oferecer drill dos cards de erro frescos (state 0) de X. Estende o PREPARAR (F5) do dormente para o tema-quente-recem-errado. Fecha o buraco entre cunhar o card e ele virar util.
+
+### F24 -- `insert_questao.py` sem modo batch; N erros = N chamadas longas -> exige driver ad-hoc -- **BAIXA/MEDIA**
+- **Evidencia:** um lote de 11 erros nao tem caminho de insercao em lote. Cada erro e uma chamada com ~17 args longos; encadear via shell quebrou por quoting (`bash -c`, aspas desbalanceadas, exit 2, ZERO inseridos). A solucao foi um driver Python (`run_inserts.py`, depois `run_inserts2.py`) passando args por LISTA (sem shell). `--cards-file` existe, mas so adiciona cards a um erro ja criado -- nao cria N pares questao+card novos.
+- **Leitura de sistema:** o pipeline e otimo para 1 erro por vez, mas lotes de prova (10-40q) sao o caso real. A ausencia de batch empurra o agente para scripts ad-hoc a cada sessao -- custo e superficie de erro recorrentes (a falha de quoting inutilizou a 1a tentativa).
+- **Verificacao sugerida:** confirmar que `--cards-file` nao cria a linha em `questoes_erros` (so cards); medir o atrito de 5-11 inserts sequenciais.
+- **Hipotese de melhoria:** `insert_questao.py --errors-file errors.json` aceitando uma LISTA de erros completos (metadados + 5 campos de card cada), inseridos numa transacao. O agente escreve 1 JSON (sem quoting de shell) e chama 1x. Elimina a classe inteira de driver ad-hoc + falha de quoting.
+
+### F25 -- Sem detector de reincidencia: "errar 2x pelo mesmo motivo" nao e sinalizado automaticamente -- **MEDIA**
+- **Evidencia:** para descobrir que Q4/Q8/Q11 do 2o lote batiam no card 730 (do 1o lote), o agente cruzou manualmente os erros novos contra os cards existentes. Nada no `insert_questao`/db avisa "este erro reincide sobre um elo ja carded". O `analisar-questao.md` eleva isso a "alerta critico", mas o sinal depende 100% da memoria do agente na sessao.
+- **Leitura de sistema:** o dado existe (`questoes_erros` tem `elo`/`tipo_erro`/`o_que_faltou`; cards tem tema+links). Um matcher (tema + similaridade do `elo`/`o_que_faltou`) marcaria reincidencia no ato do insert -> promoveria o erro a "padrao vivo" no HANDOFF e ao envelope de fraquezas (LangMem, R1 da Autogovernanca). Capacidade inexplorada.
+- **Verificacao sugerida:** avaliar se um match por (tema + tipo_erro + overlap de tokens do elo) tem precisao suficiente; comecar como WARN (politica s106/107).
+- **Hipotese de melhoria:** no `insert_questao`, apos inserir, checar "ha erro/card anterior no mesmo tema com elo semelhante?" e, se sim, emitir flag de REINCIDENCIA (contagem + link). Alimenta a trilha de conteudo (HANDOFF padroes vivos) e a de fraquezas. Conecta com F23 (surfacing) e R1.
+
+### F26 -- Questoes anuladas/banca-dependentes contam como erro "limpo"; sem tag -- **BAIXA/MEDIA**
+- **Evidencia:** no 2o lote, Q10 tinha "GABARITO OFICIAL: A" x "GABARITO EMED: C" -- o operador marcou C (alinhado ao EMED: "nao existe sinal de McBurney, e PONTO"), "errou" so pelo gabarito oficial. Q5 trazia "nenhuma alternativa esta correta" (banca manteve D com duracao tecnicamente errada). Ambas entram no bruto de 11 erros como se fossem erro limpo de conteudo.
+- **Leitura de sistema:** o volume/erro nao distingue "erro real de conteudo" de "questao anulada/controversa onde o operador acertou com razao" -- mesma familia do F7 (1o ciclo). Sem tag, a taxa de erro e o pipeline de cards ficam poluidos por questoes que nao medem lacuna real. Inconsistencia de sinal.
+- **Verificacao sugerida:** estimar a frequencia de anuladas/divergentes nos lotes reais; decidir se merece um campo.
+- **Hipotese de melhoria:** flag opcional no registro do erro (`--status anulada|banca-divergente`) que (a) nao gera card de "erro" (ou gera card de conteudo neutro), (b) nao conta contra a taxa de acerto real, (c) aciona o gate de evidencia (`/pesquisar-evidencia`) quando banca x diretriz divergem. Estende o mecanismo do F7 do card para a propria questao.
 
 ---
 
@@ -224,4 +329,4 @@ O objetivo da sessao nao era so drenar cards: era **usar o MedHub para descobrir
 
 ---
 
-*Este doc e o ledger vivo de engenharia. Nao "fecha" -- acumula achados a cada sessao de uso. O 1o ciclo Fable (PRD -> 5 ondas) foi ENTREGUE em 2026-07-05 (secao 3b); **proximos achados comecam em F16** (F10-F15 ja usados pela sessao de engenharia). Ultima atualizacao: sessao de engenharia Fable (2026-07-05).*
+*Este doc e o ledger vivo de engenharia. Nao "fecha" -- acumula achados a cada sessao de uso. O 1o ciclo Fable (PRD -> 5 ondas) foi ENTREGUE em 2026-07-05 (secao 3b). A s109 (coordenador-observador) adicionou **F16-F19** do uso vivo (forja da aula-base de apendicite; secao 3c) -- insumo do ciclo 2. A rodada 1 do ciclo 2 (Fable/ai-eng, paralela a s109; secao 3d) entregou F14/F15, validou o teto (F4/b), preparou a janela do expurgo (F11) e registrou F20. A s109 (1o lote de questoes; secao 3e) adicionou F21, e (2o lote; secao 3f) **F22-F26** (bulk idempotente, reincidencia sem surfacing, insert sem batch, sem detector de reincidencia, anuladas sem tag); **proximos achados comecam em F27**. Ultima atualizacao: sessao de uso s109 (2026-07-05).*

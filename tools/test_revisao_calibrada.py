@@ -298,6 +298,44 @@ def test_agente():
     check("revisao-calibrada-contract.md" in src, "AGENTE aponta o contrato")
 
 
+# ----- part-3: sinal da aula (F18c + F21) ---------------------------------
+
+def test_f21_f18c_contrato():
+    print("[part-3] F21/F18c: Cláusula 10 + Invariante E no contrato + revisar")
+    src = _read("core/contracts/revisao-calibrada-contract.md")
+    check("Cláusula 10" in src, "Cláusula 10 presente")
+    check("Invariante E" in src, "Invariante E nomeada")
+    check("piso fixo" in src.lower(), "cobertura = piso fixo (F21)")
+    check("sumário da fonte" in src, "piso derivado do sumário da fonte")
+    check("fonte='aula'" in src, "registro fonte='aula' (F18c) no contrato")
+    check("'usuario'|'agente_inferida'|'aula'" in src, "enum dificuldade_fonte admite 'aula'")
+    rev = _read(".claude/commands/revisar.md")
+    check("fonte='aula'" in rev, "revisar.md tem o passo de registro fonte='aula'")
+    check("piso fixo" in rev.lower(), "revisar.md tem a regra cobertura-piso")
+
+
+def test_f18c_registro_aula():
+    print("[part-3] F18c: set_dificuldade fonte='aula' roundtrip (db temp)")
+    import shutil
+    import tempfile
+    tmp = os.path.join(tempfile.gettempdir(), "ipub_test_aula.db")
+    shutil.copy(DB_PATH, tmp)
+    orig_path = db.DB_PATH
+    db.DB_PATH = tmp
+    try:
+        ok = db.set_dificuldade("Hepato", "Hepatites Virais", 7, "aula")
+        check(ok is True, "set_dificuldade fonte='aula' -> True")
+        d = db.get_dificuldade("Hepato", "Hepatites Virais")
+        check(d is not None and d["nota"] == 7 and d["fonte"] == "aula",
+              f"roundtrip fonte='aula' (got {d})")
+    finally:
+        db.DB_PATH = orig_path
+        try:
+            os.remove(tmp)
+        except OSError:
+            pass
+
+
 if __name__ == "__main__":
     # Parte 1
     test_schema()
@@ -318,6 +356,9 @@ if __name__ == "__main__":
     test_skill_revisar()
     test_degrau_mecanico()
     test_agente()
+    # Parte 3 (sinal da aula: F18c + F21)
+    test_f21_f18c_contrato()
+    test_f18c_registro_aula()
     print()
     if falhas:
         print(f"FALHOU: {len(falhas)} check(s)")

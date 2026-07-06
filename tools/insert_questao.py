@@ -382,7 +382,9 @@ if __name__ == "__main__":
         with open(args.cards_file, encoding="utf-8") as fh:
             cards = json.load(fh)
 
-    insert_questao(
+    # F27: o exit code reflete o resultado (simetrico ao modo --errors-file acima).
+    # insert_questao retorna False em falha (own_conn) -> exit 1; sucesso -> exit 0.
+    ok = insert_questao(
         area=args.area,
         tema=args.tema,
         enunciado=args.enunciado,
@@ -404,3 +406,4 @@ if __name__ == "__main__":
         cards=cards,
         status=args.status,
     )
+    sys.exit(0 if ok else 1)

@@ -151,6 +151,23 @@ def get_db_metrics():
     return {'total_questoes': total_questoes, 'total_acertos': total_acertos,
             'media_desempenho': round(media, 1), 'df_areas': df}
 
+def get_taxonomia_rendimento():
+    """Lista (area, tema, volume, erros) por tema da taxonomia — read-only.
+
+    Sinal de rendimento para priorização de cobertura de SSOT (F16a): `volume` =
+    `questoes_realizadas`; `erros` = `questoes_realizadas - questoes_acertadas`.
+    Temas sem questões entram com volume/erros 0. Retorna list[dict].
+    """
+    conn = get_connection()
+    df = pd.read_sql(
+        'SELECT area, tema, '
+        'questoes_realizadas AS volume, '
+        '(questoes_realizadas - questoes_acertadas) AS erros '
+        'FROM taxonomia_cronograma',
+        conn)
+    conn.close()
+    return df.to_dict('records')
+
 def get_caderno_erros():
     """Traz todos os flashcards do caderno unindo relacionalmente com a taxonomia"""
     conn = get_connection()
@@ -578,9 +595,13 @@ def get_theme_last_review(tema_id=None, area=None, tema=None):
 def set_dificuldade(area, tema, nota, fonte) -> bool:
     """Grava a nota de dificuldade (1-10) de um tema. Returns True/False.
 
-    `fonte` ∈ {'usuario', 'agente_inferida'}. `nota` é clampada em [1,10]
-    (ou None para limpar). False se o tema (area, tema) não existe na taxonomia
-    (não cria linha — isso é papel do insert_questao).
+    `fonte` ∈ {'usuario', 'agente_inferida', 'aula'} — 'aula' e a nota que
+    calibrou a forja de uma aula/PREPARAR, registrada no ato (F18c, Clausula 10
+    do revisao-calibrada-contract); nao dispara reinferencia automatica e nao
+    deve sobrescrever uma nota soberana 'usuario' (precedencia e responsabilidade
+    do chamador). `nota` e clampada em [1,10] (ou None para limpar). False se o
+    tema (area, tema) nao existe na taxonomia (nao cria linha — isso e papel do
+    insert_questao).
     """
     tema_id = resolve_tema_id(area, tema)
     if tema_id is None:

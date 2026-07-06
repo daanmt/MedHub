@@ -7,7 +7,9 @@ import contextlib
 import io
 import json
 import os
+import shutil
 import sqlite3
+import subprocess
 import sys
 import tempfile
 
@@ -199,10 +201,66 @@ def test_single_com_status_anulada():
         os.remove(tmp)
 
 
+# ----- F27: exit code do modo single (subprocess em sandbox hermetico) --------
+
+_REAL_SCRIPT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "insert_questao.py")
+
+
+def _sandbox_cli():
+    """Sandbox: copia do script standalone + ipub.db temp com schema.
+
+    insert_questao.py resolve DB_PATH = dirname(dirname(__file__))/ipub.db, entao a
+    copia em <d>/tools/insert_questao.py aponta para <d>/ipub.db -- writes ficam no
+    sandbox, o db real NUNCA e tocado.
+    """
+    d = tempfile.mkdtemp()
+    tdir = os.path.join(d, "tools")
+    os.makedirs(tdir)
+    shutil.copy(_REAL_SCRIPT, os.path.join(tdir, "insert_questao.py"))
+    shutil.move(_db_temp(), os.path.join(d, "ipub.db"))  # reusa o schema de _db_temp
+    return d, os.path.join(tdir, "insert_questao.py")
+
+
+def test_single_exit_ok():
+    # F27: modo single com entrada valida -> exit 0
+    d, script = _sandbox_cli()
+    try:
+        r = subprocess.run(
+            [sys.executable, script,
+             "--area", "Cirurgia", "--tema", "Apendicite Aguda",
+             "--enunciado", "Caso valido com detalhes suficientes.",
+             "--correta", "A", "--marcada", "B", "--erro", "Conceitual",
+             "--elo", "elo sobre conduta cirurgica", "--armadilha", "distrator X"],
+            capture_output=True, text=True)
+        assert r.returncode == 0, f"sucesso deveria sair 0 (got {r.returncode}: {r.stdout}{r.stderr})"
+    finally:
+        shutil.rmtree(d, ignore_errors=True)
+
+
+def test_single_exit_fail():
+    # F27: modo single que faz insert_questao retornar False -> exit 1
+    d, script = _sandbox_cli()
+    cf = os.path.join(d, "cards.json")
+    with open(cf, "w", encoding="utf-8") as fh:
+        json.dump([{"tipo": "conteudo"}], fh)  # sem frente_pergunta/verso_resposta -> ValueError -> False
+    try:
+        r = subprocess.run(
+            [sys.executable, script,
+             "--area", "Cirurgia", "--tema", "Apendicite Aguda",
+             "--enunciado", "Caso.", "--correta", "A", "--marcada", "B",
+             "--erro", "Conceitual", "--elo", "elo", "--armadilha", "X",
+             "--cards-file", cf],
+            capture_output=True, text=True)
+        assert r.returncode == 1, f"falha deveria sair 1 (got {r.returncode}: {r.stdout}{r.stderr})"
+    finally:
+        shutil.rmtree(d, ignore_errors=True)
+
+
 if __name__ == "__main__":
     fns = [test_lote_valido_transacao_unica, test_item_invalido_nada_inserido,
            test_excecao_no_meio_rollback_total, test_dedupe_reexecucao_nao_duplica,
-           test_status_anulada_sem_card_com_gate, test_single_com_status_anulada]
+           test_status_anulada_sem_card_com_gate, test_single_com_status_anulada,
+           test_single_exit_ok, test_single_exit_fail]
     falhas = 0
     for fn in fns:
         try:

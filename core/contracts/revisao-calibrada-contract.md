@@ -7,7 +7,7 @@ relates_to: [forgetting-curve-contract, fsrs-management-contract, cronograma-con
 ---
 
 # Contrato de Execução de Revisão Calibrada
-**Versão 1.1 | 2026-07-05 (s108+, F8/F9 do ledger AUDITORIA_MEDHUB: Invariantes C e D) — anterior: 1.0, 2026-06-28 (sessão 096). Materializa o PRD `docs/plans/s094-revisao-calibrada-PRD.md` (revisão adversarial).**
+**Versão 1.2 | 2026-07-06 (s109+, F18c/F21 do pipeline de conhecimento: Invariante E + Cláusula 10) — anterior: 1.1, 2026-07-05 (s108+, F8/F9: Invariantes C e D); 1.0, 2026-06-28 (sessão 096). Materializa o PRD `docs/plans/s094-revisao-calibrada-PRD.md` (revisão adversarial) + PRD `pipeline-conhecimento` (Onda 3).**
 
 > Documento normativo. Governa a **competência única `/revisar`** cuja descompressão é calibrada por uma **nota de dificuldade-para-o-usuário (1-10) por tema**, sem cegar a curva de esquecimento. Consome o score de dormência e a retrievability de `forgetting-curve-contract.md` (não os redefine) e o `(tema, tipo)` de `cronograma-contract.md`. Referenciado por: `AGENTE.md` (§1.2, §6, §7.3), `.claude/commands/revisar.md`.
 
@@ -71,6 +71,8 @@ A nota explícita do usuário **escolhe o degrau diretamente**; sem nota, a faix
 
 **Invariante D — Isolamento de conteúdo do PREPARAR (F8, v1.1).** O PREPARAR aquece **conceitos e mecanismos**, **nunca** o par pergunta-resposta específico dos cards do bloco que vem a seguir. Regras operacionais: (a) o refresh é montado a partir do resumo/substrato do tema **sem abrir os versos** dos cards do bloco; (b) formulações sempre como **tendência** ("geralmente X; considerar Y se Z"), nunca como absoluto — uma imprecisão no aquecimento vira erro induzido no card seguinte (erro de ensino amplificado, 3º canal de viés observado na s108); (c) **distinção de classe de card**: em cards de **raciocínio/conduta**, aquecer o framework é legítimo — mas a nota pós-refresh mede "pegou o framework", não recall a frio, e isso é sinalizado; em cards de **fato puro** (definição/eponímia/dado seco), o refresh é **contraindicado** — aquecê-los É entregar a resposta; o refresh limita-se à orientação de entorno e o fato cobrado é retido para o recall.
 
+**Invariante E — Cobertura de ponto de prova é piso fixo (F21, v1.2).** A descompressão (nota 1-10) calibra **profundidade/prosa**; a **cobertura do conjunto de pontos de decisão de alto rendimento** do tema é **inviolável**. Nenhum degrau — nem o D2 (flash) — autoriza **ELIMINAR** um ponto de prova testável: comprimir **encurta** um ponto, **nunca o corta** (detalhamento na Cláusula 10). Raiz: a Q2 da s109 caiu num ponto de decisão (ileotiflectomia) que a descompressão D10→D7 eliminou em vez de encurtar. Auditada pela presença da Cláusula 10 + do checklist de cobertura no render.
+
 ## Cláusula 6 — Inferência determinística (`infer_nota`)
 
 `infer_nota(sinais)` (em `tools/day_plan.py`) é a SSOT da nota inferida — função de pontos clampada em 1-10. Pseudocódigo normativo:
@@ -108,7 +110,7 @@ def infer_nota(sinais):
 
 ## Cláusula 7 — Persistência da nota
 
-Estado **de tema** em `taxonomia_cronograma` (local-only): `dificuldade INTEGER` (1-10, NULL = não calibrado), `dificuldade_fonte TEXT` (`'usuario'|'agente_inferida'`), `dificuldade_at TIMESTAMP`. Escrita **exclusivamente** via `db.set_dificuldade(area, tema, nota, fonte)` — 🔴 única exceção autorizada à regra "só `insert_questao` escreve `taxonomia_cronograma`": toca **apenas** as 3 colunas novas. **Frescor:** `NULL` ou (`agente_inferida` **e** `dificuldade_at` > 7 dias) → reinferir antes de abrir. Nota `fonte='usuario'` é soberana (não recalcula a aplicada, mas computa a inferida p/ checar divergência).
+Estado **de tema** em `taxonomia_cronograma` (local-only): `dificuldade INTEGER` (1-10, NULL = não calibrado), `dificuldade_fonte TEXT` (`'usuario'|'agente_inferida'|'aula'`), `dificuldade_at TIMESTAMP`. Escrita **exclusivamente** via `db.set_dificuldade(area, tema, nota, fonte)` — 🔴 única exceção autorizada à regra "só `insert_questao` escreve `taxonomia_cronograma`": toca **apenas** as 3 colunas novas. **Frescor:** `NULL` ou (`agente_inferida` **e** `dificuldade_at` > 7 dias) → reinferir antes de abrir; `'aula'` é nota registrada (fato da forja, Cláusula 10) — **não** dispara reinferência automática. Nota `fonte='usuario'` é soberana (não recalcula a aplicada, mas computa a inferida p/ checar divergência).
 
 ## Cláusula 8 — Degradação graciosa (prevalência ENAMED)
 
@@ -124,6 +126,17 @@ Estado **de tema** em `taxonomia_cronograma` (local-only): `dificuldade INTEGER`
 5b. **DRENAR oferece PREPARAR quando o cluster está frio (F5, v1.1):** o gatilho do aquecimento deixa de morar só no pedido do usuário — ao abrir um cluster no DRENAR com sinal frio (score de dormência `>= 25` via `day_plan --review-plan`/`review_radar`), o agente **oferece** o PREPARAR proativamente. Oferta, nunca execução automática; recusa do usuário vale para a sessão. O limiar vive AQUI (contrato), não no CLI — o CLI só expõe o score cru.
 6. **Soberania do usuário prevalece** mesmo com dormência alta — o agente sinaliza a divergência, não sobrescreve.
 
+## Cláusula 10 — Descompressão (calibrável) × Cobertura (piso fixo) + registro no ato (F18c/F21, v1.2)
+
+Duas dimensões **ortogonais** no render de qualquer aula/PREPARAR calibrado, que **não se confundem**:
+
+- **Descompressão = elástico (calibrável).** A nota 1-10 governa a **profundidade** narrativa, o nº de parágrafos e a prosa (Cláusula 3). Tema fácil/quente comprime; difícil/frio descomprime.
+- **Cobertura de pontos de decisão de alto rendimento = PISO FIXO (não calibrável).** O **conjunto** de pontos de prova testáveis do tema é um piso por tema, derivado do **sumário da fonte** (índice do resumo / aula-base; precedente s089 — o LCR lido por dado parcial, não pelo conjunto). Mesmo em **D2** (nota 1-3, flash) o render passa pelo **checklist de cobertura** antes de fechar: comprimir a **prosa** de um ponto é legítimo; **eliminar** o ponto não é. **Compressão encurta um ponto de decisão; nunca o exclui** (Invariante E). Raiz do F21: a Q2 da s109 caiu exatamente num ponto (ileotiflectomia) que a descompressão D10→D7 **eliminou** em vez de encurtar.
+
+**Dependência de operacionalização (não bloqueia a cláusula).** O checklist **mecânico** de cobertura deriva o piso do sumário da fonte — que depende da cobertura de `.md`/sumário (Partes 1-2 do pipeline de conhecimento: relatório de cobertura + RAG two-tier). Enquanto a cobertura mecânica não amadurece, o piso deriva **do que houver** (índice do resumo presente ou o escopo exato do cronograma). A cláusula é a **barreira de conduta agora**; o motor mecânico vem com a cobertura.
+
+**Registro no ato (F18c).** A nota 1-10 que **calibrou** a descompressão é **registrada no fechamento** da aula/PREPARAR via `db.set_dificuldade(area, tema, nota, fonte='aula')` — o sinal caro da forja da aula deixa de ser efêmero e passa a alimentar a Revisão Calibrada. **Respeita a precedência da Cláusula 2:** `fonte='aula'` **não sobrescreve** uma nota soberana `fonte='usuario'` (registra apenas quando a nota da aula não colide com input explícito do usuário). **Zero schema novo** — reusa as 3 colunas de dificuldade e o `set_dificuldade` existente.
+
 ---
 
 ## Fronteiras duras (resumo)
@@ -133,6 +146,8 @@ Estado **de tema** em `taxonomia_cronograma` (local-only): `dificuldade INTEGER`
 - Rating só grava **após a janela de override**, uma vez por card (Invariante C) — não existe amend pós-record.
 - PREPARAR isolado das respostas do bloco; fato puro não se aquece (Invariante D) — a validade do trial de recall é sagrada.
 - A nota **nunca** governa o agendamento FSRS — só a profundidade da preparação.
+- Descompressão é calibrável; **cobertura de ponto de prova é piso fixo** (Invariante E / Cláusula 10) — compressão encurta, nunca corta.
+- A nota que calibrou a aula é **registrada no fechamento** (`fonte='aula'`, Cláusula 10), sem sobrescrever `fonte='usuario'`.
 - `set_dificuldade` toca só as 3 colunas de dificuldade. `infer_nota` é read-only e só lê sinais frios.
 
 *Ratificação:* este contrato nasce `pending-ratification`; vira `canonical` após validação em uso (1ª abertura de task calibrada de ponta a ponta).

@@ -372,3 +372,237 @@ def search(query: str, n_results: int = 5, area: Optional[str] = None, use_hyde:
         return combined[:n_results]
     except Exception:
         return []
+
+
+# ---------------------------------------------------------------------------
+# Tier bruto (pdf_raw) -- F17. ADITIVO: o gold (collection `resumos`, search,
+# index_all, get_collection) NAO muda. Epistemologia two-tier do ai-eng
+# (ADR-002): o PDF nunca vira canon por existir; o `.md` cunhado sombrea o PDF
+# do mesmo tema. `data/chroma/` continua local-only; nenhum PDF e deletado.
+# ---------------------------------------------------------------------------
+
+PDF_COLLECTION_NAME = "pdf_raw"
+
+
+def get_pdf_collection():
+    """Collection do tier bruto (`pdf_raw`), isolada do gold (`resumos`).
+
+    Isolamento fisico: `--clear` do bruto nao arrisca o gold, e o gold-primeiro
+    e uma consulta ordenada de duas collections, nao um filtro dentro de uma.
+    """
+    ef = OllamaEmbeddingFunction(url=OLLAMA_URL, model_name=EMBED_MODEL)
+    client = chromadb.PersistentClient(path=CHROMA_PATH)
+    return client.get_or_create_collection(
+        name=PDF_COLLECTION_NAME,
+        embedding_function=ef,
+        metadata={"hnsw:space": "cosine"},
+    )
+
+
+def _norm_tema(nome: str) -> str:
+    """Normaliza um stem/tema para a chave de sombreamento (local ao modulo).
+
+    Remove prefixo numerico EMED, acentos, case e pontuacao. Espelha a
+    normalizacao da Parte 1 mas mantida local para a Parte 2 nao depender dela.
+    """
+    import unicodedata
+    s = re.sub(r"^\s*\d+\s*[-.)_]*\s*", "", nome or "")
+    s = unicodedata.normalize("NFKD", s)
+    s = "".join(c for c in s if not unicodedata.combining(c))
+    return re.sub(r"[^a-z0-9]+", " ", s.lower()).strip()
+
+
+def _chunk_plain(text: str, max_chars: int = _MAX_CHUNK_CHARS) -> list[str]:
+    """Chunk de texto plano (PDF extraido) por acumulo de paragrafos.
+
+    O texto de PDF nao tem estrutura de header confiavel (o gold usa H2/H3),
+    entao agrupamos paragrafos (separados por linha em branco) em janelas
+    <= max_chars; paragrafos gigantes sao fatiados no limite. Chunks < 50 chars
+    sao descartados.
+    """
+    brutos = re.split(r"\n\s*\n", text or "")
+    paras: list[str] = []
+    for p in brutos:
+        p = p.strip()
+        while len(p) > max_chars:
+            paras.append(p[:max_chars])
+            p = p[max_chars:]
+        if p:
+            paras.append(p)
+
+    chunks: list[str] = []
+    buf = ""
+    for p in paras:
+        if buf and len(buf) + len(p) + 2 > max_chars:
+            chunks.append(buf)
+            buf = p
+        else:
+            buf = (buf + "\n\n" + p) if buf else p
+    if buf:
+        chunks.append(buf)
+    return [c for c in chunks if len(c) >= 50]
+
+
+def _extract_via_temp(pdf_path: str) -> Optional[str]:
+    """Extrai texto de um PDF reusando tools/extract_pdfs.extract_pdf.
+
+    Cria arquivo temp, le o conteudo e remove o temp (NAO o PDF). Retorna None
+    em qualquer falha (PDF sem texto extraivel e pulado, nao quebra a indexacao).
+    """
+    import os
+    import sys as _sys
+    try:
+        root = str(Path(__file__).resolve().parent.parent.parent)
+        if root not in _sys.path:
+            _sys.path.insert(0, root)
+        from tools.extract_pdfs import extract_pdf
+    except Exception:
+        return None
+    tmp = None
+    try:
+        tmp = extract_pdf(pdf_path)
+        if not tmp:
+            return None
+        with open(tmp, encoding="utf-8") as fh:
+            return fh.read()
+    except Exception:
+        return None
+    finally:
+        if tmp:
+            try:
+                os.remove(tmp)
+            except Exception:
+                pass
+
+
+def index_pdf(path: Path, collection=None, extractor=None) -> int:
+    """Extrai, chunka e indexa UM PDF no tier bruto. Incremental por mtime.
+
+    Args:
+        path: caminho do .pdf.
+        collection: collection pdf_raw (reutilizar se ja instanciada).
+        extractor: callable(str)->str|None (injetavel em teste). Default:
+            extracao real via arquivo temp.
+
+    Returns:
+        Numero de chunks indexados. 0 se pulado (mtime inalterado) ou sem texto.
+    """
+    if collection is None:
+        collection = get_pdf_collection()
+
+    mtime = str(int(path.stat().st_mtime))
+    origem = str(path)
+
+    # Incremental: ja indexado com o mesmo mtime -> pula (custo zero).
+    try:
+        existing = collection.get(where={"origem": origem}, limit=1, include=["metadatas"])
+        metas_ex = existing.get("metadatas") or []
+        if metas_ex and metas_ex[0].get("mtime") == mtime:
+            return 0
+    except Exception:
+        pass
+
+    texto = extractor(origem) if extractor else _extract_via_temp(origem)
+    if not texto or not texto.strip():
+        return 0
+    chunks = _chunk_plain(texto)
+    if not chunks:
+        return 0
+
+    # mtime mudou -> limpa chunks antigos deste PDF antes de reinserir.
+    try:
+        collection.delete(where={"origem": origem})
+    except Exception:
+        pass
+
+    import hashlib
+    h = hashlib.md5(origem.encode("utf-8")).hexdigest()[:8]
+    tema = path.stem
+    ids = [f"{h}::{i}" for i in range(len(chunks))]
+    metas = [{"source": "pdf_raw", "origem": origem, "tema": tema, "mtime": mtime}
+             for _ in chunks]
+    collection.upsert(ids=ids, documents=chunks, metadatas=metas)
+    return len(chunks)
+
+
+def index_pdfs_raw(resumos_dir: str = "resumos", clear: bool = False) -> dict[str, int]:
+    """Indexa o tier bruto de todos os PDFs em resumos_dir (incremental).
+
+    Args:
+        resumos_dir: raiz dos PDFs-fonte.
+        clear: se True, deleta SOMENTE a collection pdf_raw antes (gold intocado).
+
+    Returns:
+        dict {pdf_path: chunk_count}.
+    """
+    if clear:
+        client = chromadb.PersistentClient(path=CHROMA_PATH)
+        try:
+            client.delete_collection(name=PDF_COLLECTION_NAME)
+        except Exception:
+            pass
+
+    collection = get_pdf_collection()
+    results: dict[str, int] = {}
+    for path in sorted(p for p in Path(resumos_dir).rglob("*") if p.suffix.lower() == ".pdf"):
+        results[str(path)] = index_pdf(path, collection)
+    return results
+
+
+def _tema_norm_de_hit(hit: dict) -> str:
+    """Chave de tema normalizada de um hit (gold ou pdf_raw), para sombreamento."""
+    meta = hit.get("metadata", {}) or {}
+    if meta.get("source") == "pdf_raw":
+        return _norm_tema(meta.get("tema", ""))
+    return _norm_tema(Path(meta.get("source", "")).stem)
+
+
+def _aplica_sombreamento(raw_hits, temas_gold, max_distance, faltam):
+    """Filtra hits do tier bruto: descarta > max_distance, temas ja no gold e
+    duplicatas de texto. Retorna ate `faltam` hits ordenados por distancia.
+
+    Funcao pura (sem Chroma/Ollama) -- alvo direto do teste de sombreamento.
+    """
+    out = []
+    seen = set()
+    for hit in raw_hits:
+        if hit["distance"] > max_distance:
+            continue
+        if _tema_norm_de_hit(hit) in temas_gold:
+            continue
+        if hit["text"] in seen:
+            continue
+        seen.add(hit["text"])
+        out.append(hit)
+    out.sort(key=lambda x: x["distance"])
+    return out[:faltam]
+
+
+def search_two_tier(query: str, n_results: int = 5, area: Optional[str] = None,
+                    use_hyde: bool = True, max_distance: float = 0.35) -> list[dict]:
+    """Busca gold-primeiro com fallback MARCADO no tier bruto (pdf_raw).
+
+    O gold (`search`) responde primeiro; o tier bruto so complementa ate
+    n_results quando o gold nao preenche. Hits do bruto trazem
+    `metadata['source'] == 'pdf_raw'` (o agente os trata como nao-curados).
+    Sombreamento: temas ja cobertos pelo gold NAO trazem pdf_raw do mesmo tema.
+    Retorna [] (via gold) se ChromaDB/Ollama offline.
+    """
+    gold = search(query, n_results=n_results, area=area, use_hyde=use_hyde,
+                  max_distance=max_distance)
+    if len(gold) >= n_results or not _CHROMA_AVAILABLE:
+        return gold
+
+    temas_gold = {_tema_norm_de_hit(h) for h in gold}
+    faltam = n_results - len(gold)
+    try:
+        coll = get_pdf_collection()
+        res = coll.query(query_texts=[query], n_results=max(faltam * 3, 5))
+        raw_hits = []
+        for docs, metas, dists in zip(res["documents"], res["metadatas"], res["distances"]):
+            for doc, meta, dist in zip(docs, metas, dists):
+                raw_hits.append({"text": doc, "metadata": meta, "distance": dist})
+        bruto = _aplica_sombreamento(raw_hits, temas_gold, max_distance, faltam)
+        return gold + bruto
+    except Exception:
+        return gold

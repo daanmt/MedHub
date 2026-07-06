@@ -186,6 +186,19 @@ python tools/insert_questao.py \
 
 **Parâmetros de qualidade (sempre fornecer):** `--frente_contexto`, `--frente_pergunta`, `--verso_resposta`, `--verso_regra_mestre`, `--verso_armadilha`
 
+**Mapeamento arg → coluna em `questoes_erros` (F28 — evita criar coluna redundante):**
+
+| Argumento | Coluna persistida |
+|---|---|
+| `--faltou` | **`o_que_faltou`** — coluna canônica do "elo/o que faltou" |
+| `--habilidades` | `habilidades_sequenciais` |
+| `--erro` | `tipo_erro` |
+| `--elo` | **nenhuma coluna própria** |
+
+🔴 **`--elo` NÃO tem coluna própria.** Apesar de obrigatório, seu texto **não é persistido** como campo — ele alimenta **apenas** o matcher de reincidência **F25** (`checar_reincidencia`, junto de `--faltou`/`--habilidades`) para sinalizar erro similar já registrado no tema. O campo canônico do elo/lacuna é **`o_que_faltou`** (via `--faltou`). Uma sessão futura **não deve** criar uma coluna `elo` — o mapeamento acima é o contrato.
+
+**Exit code (F27):** modo single retorna `0` em sucesso e `1` em falha (simétrico ao `--errors-file`) — um wrapper/hook pode confiar no código de saída.
+
 **Resultado:** Insere em `questoes_erros` + gera 1-2 flashcards IPUB v5.0 com campos estruturados em `flashcards` + inicializa estado FSRS em `fsrs_cards`.
 
 > **Dica PowerShell:** Evitar caracteres especiais (emojis, unicode) nos argumentos CLI — usar apenas ASCII simples. Se o valor contiver aspas, usar apostrofos internos ou escapar com `\"`.

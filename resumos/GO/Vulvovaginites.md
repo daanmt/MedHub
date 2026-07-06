@@ -4,7 +4,7 @@ area: GO
 especialidade: Ginecologia
 tema: Vulvovaginites
 status: revisado
-aliases: [VB, Candidíase, Tricomoníase, Vaginose Bacteriana]
+aliases: [VB, Candidíase, Tricomoníase, Vaginose Bacteriana, Vaginite Atrófica, Vaginose Citolítica, Vaginite Aeróbia, Cervicite, SGM]
 ---
 
 # Vulvovaginites
@@ -60,7 +60,29 @@ aliases: [VB, Candidíase, Tricomoníase, Vaginose Bacteriana]
 
 ---
 
-## 6. Quadro discriminatório (gatilhos de prova)
+## 6. Outras vulvovaginites (as que a banca cobra além do trio)
+
+O trio Candida/VB/Trico não fecha o escopo. Três entidades caem e confundem porque **imitam** o trio, mas têm eixo diferente -- e o pH + a presença de lactobacilos + o teste das aminas as separam.
+
+- ⭐ **Vaginite atrófica (Síndrome Geniturinária da Menopausa -- SGM).** Eixo: **hipoestrogenismo** (menopausa, pós-parto/lactação, contraceptivo só-progestágeno, antiestrogênios). Sem estrogênio -> cai o glicogênio -> caem os lactobacilos -> **pH > 4,5**. Quadro: ressecamento, dispareunia, corrimento inespecífico amarelado, prurido eventual; microscopia com **células parabasais/intermediárias, ausência de lactobacilos, leucócitos**. ⭐ pH alto + ausência de lactobacilos numa mulher **hipoestrogênica** = **atrofia, não infecção**. Tratamento: **estrogênio tópico** (+ hidratantes/lubrificantes). Metronidazol aqui trataria doença que não existe.
+- ⭐ **Vaginose citolítica.** Eixo oposto ao da atrofia: **excesso** de lactobacilos de Döderlein -> pH **muito baixo (≤ 4,0-4,5)** -> **citólise**. Imita candidíase (corrimento esbranquiçado, prurido/ardor **cíclicos, piora pré-menstrual**), mas: **sem hifas**, **teste das aminas negativo**, bacterioscopia com **lactobacilos abundantes + núcleos desnudos/restos celulares + leucócitos escassos**; cultura para fungo **negativa** fecha o diagnóstico. Tratamento: **alcalinizar** -- ducha/banho de assento com **bicarbonato de sódio** (sobretudo pré-menstrual). ⭐ A direção do tratamento é contraintuitiva: o problema é acidez demais -> **não** usar antifúngico nem acidificar (ácido ascórbico/bórico pioram).
+- ⭐ **Vaginite aeróbia.** Disbiose com queda de lactobacilos + **aeróbios entéricos** e **inflamação**. Agentes: **E. coli, Staphylococcus aureus, Streptococcus agalactiae, Enterococcus faecalis**. Quadro: corrimento **amarelo purulento**, mau odor, com **sinais inflamatórios** (ao contrário da VB, que não inflama); **pH alto**, **teste das aminas NEGATIVO** (é o que a separa da VB, cujo whiff é +), microscopia com muitos **polimorfonucleares + células parabasais** e maturação epitelial deficiente. Tratamento: **clindamicina** (tópica) ou conforme o agente; a forma grave é a **vaginite inflamatória descamativa**.
+
+---
+
+## 7. Vaginite × Cervicite -- o diferencial que decide o antibiótico
+
+Metade dos erros de conduta nasce aqui: tratar como vaginite o que é **cervicite**, ou empilhar antibiótico de cervicite numa vaginite pura.
+
+- ⭐ **Primeiro decida o LOCUS.** Vaginite = vagina/vulva. Cervicite = **colo** (muco cervical purulento, colo friável/hiperemiado/edemaciado, sinusorragia, dispareunia). **Exame vaginal NORMAL** (lactobacilos presentes, pH normal, sem clue cells/hifas/flagelados) **+ achado inflamatório no colo** = **cervicite**, não vulvovaginite.
+- **Agentes da cervicite:** **gonococo + Chlamydia** (comum coinfecção). Diagnóstico: **cultura em Thayer-Martin** (gono) ou **PCR** endocervical (gono + clamídia). Pista do parceiro: uretrite **hialina/discreta** = não-gonocócica (**Chlamydia**); **purulenta** = gonocócica.
+- ⭐ **Tratamento da cervicite:** **ceftriaxone 500 mg IM** (gono) **+ azitromicina 1 g VO** (Chlamydia), doses únicas. Doxiciclina 100 mg 12/12h é alternativa para clamídia (**14 dias na DIP**).
+- ⭐ **Quando o ceftriaxone SAI:** quando a cultura/PCR **afasta o gono** (ex.: Thayer-Martin negativo) -> cobre só a Chlamydia (azitromicina). **Quando entra a DIP:** **dor à mobilização do colo/anexos**, febre, dor pélvica -> esquema amplo (**ceftriaxone + doxiciclina + metronidazol**).
+- 🔴 A cilada dos dois lados: **empilhar** ceftriaxone numa VB pura (colo normal) **e** **esquecer** o ceftriaxone/azitromicina numa cervicite verdadeira. O locus decide.
+
+---
+
+## 8. Quadro discriminatório (gatilhos de prova)
 - **pH é o divisor:** Candidíase = **normal (< 4,5)** · VB e Trico = **alto (> 4,5)**.
 - **Quem é IST:** **só a Tricomoníase** -> única que trata parceiro + rastreia IST.
 - **Quem inflama (prurido/hiperemia):** Candidíase e Trico **sim** · VB **não** (só corrimento + odor).
@@ -71,7 +93,7 @@ aliases: [VB, Candidíase, Tricomoníase, Vaginose Bacteriana]
 
 ---
 
-## 7. Armadilhas de Prova
+## 9. Armadilhas de Prova
 - 🔴 **O reflexo do antifúngico:** não prescrever fluconazol/miconazol para qualquer corrimento. **VB e Trico = metronidazol; Candida = azólico.** Corrimento acinzentado com clue cells/whiff é VB -> metronidazol, **nunca** antifúngico.
 - 🔴 **Prurido ≠ Candida automaticamente:** a Tricomoníase também é inflamatória e cursa com prurido. **Bolhosa + odor fétido + pH alto = Trico**, mesmo com prurido. Ler o **conjunto** do corrimento, não um sintoma isolado.
 - 🔴 **Clue cells têm ALTA predição** para VB (critério de Amsel) -- não baixa.
@@ -79,3 +101,9 @@ aliases: [VB, Candidíase, Tricomoníase, Vaginose Bacteriana]
 - 🔴 **Tricomoníase é tratada por VIA ORAL** -- tópico não atinge uretra/Bartholin (reservatórios -> recorrência).
 - 🔴 **pH normal (< 4,5) aponta Candida**; pH > 4,5 afasta candidíase e direciona a VB/Trico.
 - 🔴 **"Obstrução tubária" é complicação de DIP/cervicite, não de vulvovaginite** -- vulvovaginite não dá dor à mobilização anexial.
+- 🔴 **Vaginite atrófica:** pH alto + ausência de lactobacilos numa mulher **hipoestrogênica** (menopausa, pós-parto, contraceptivo só-progestágeno) = **atrofia -> estrogênio tópico**, não metronidazol. Ler o contexto (idade/menopausa), não só o pH (bug nº1).
+- 🔴 **Vaginose citolítica:** pH **baixo** + aminas **negativo** + lactobacilos **abundantes** + citólise, com clínica tipo candidíase mas **sem hifas** = citolítica -> tratar **alcalinizando (bicarbonato)**. Ácido (ascórbico/bórico) e antifúngico pioram ou não resolvem.
+- 🔴 **Vaginite aeróbia:** corrimento amarelo purulento + **inflamação** + pH alto + **aminas NEGATIVO** (é o que a separa da VB, cujo whiff é +); agentes aeróbios entéricos (E. coli, S. aureus, S. agalactiae, Enterococcus) -> clindamicina.
+- 🔴 **Vaginite × cervicite (o antibiótico depende do locus):** exame vaginal **normal** + muco/colo inflamado = **cervicite** -> **ceftriaxone + azitromicina**. VB pura (colo sem alterações) = **só metronidazol**, não empilhar ATB. O ceftriaxone **sai** se a cultura/PCR afasta o gono; **DIP** (dor à mobilização) = esquema amplo (ceftriaxone + doxiciclina + metronidazol).
+- 🔴 **Agente da VB é anaeróbio polimicrobiano** (Gardnerella, Mobiluncus, Bacteroides, **Clostridium**...); **Trichomonas NÃO é agente de VB** (é protozoário de outra doença) -- se o enunciado já deu o diagnóstico de VB, responder sobre o agente DELA.
+- 🔴 **VB + alergia a metronidazol = clindamicina** (não antifúngico). **Candidíase na gestante = azólico TÓPICO** (fluconazol/itraconazol VO **contraindicados** na gravidez).

@@ -1,12 +1,16 @@
 ---
 type: runbook
 layer: docs
-status: GATED
+status: EXECUTADO (2026-07-06)
 relates_to: [AUDITORIA_MEDHUB]
 ---
 
 # RUNBOOK -- Expurgo do blob ipub.db do historico git (F11)
 
+> **EXECUTADO em 2026-07-06** (go nominal do operador; validado em clone fresco:
+> 0 commits tocando ipub.db, size-pack ~18M -> 2.91 MiB). Mantido como referencia
+> de procedimento. Registro: AUDITORIA_MEDHUB.md secao 3b/F11.
+>
 > **GATED -- NAO EXECUTAR SEM AVAL EXPLICITO DO OPERADOR.**
 > Reescreve o historico do repositorio: todo clone existente diverge e precisa
 > ser re-clonado. Operacao Tier 3. Este runbook transforma a decisao futura em

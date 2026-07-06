@@ -125,8 +125,9 @@ relates_to: [AGENTE, ESTADO, HANDOFF]
 ### F10 -- Dashboard bypassava a camada db -- **MEDIA** -- **RESOLVIDO (p4)**
 - Evidencia: `app/pages/1_dashboard.py` fazia `import sqlite3` + `DB_PATH='ipub.db'` relativo (quebra se cwd != raiz; violava db-access-layer.md). Fix: 3 funcoes novas em db.py (SQL identico, DataFrames validados .equals=True); app/pages/ agora 100% sem sqlite3.
 
-### F11 -- Blob ipub.db no historico git -- **BAIXA** -- **RUNBOOK GATED (p4)**
-- Evidencia: blob versionado ate s058 (`d99ff02`); ~1.6MB de dado local-only em todo clone. Runbook executavel em `docs/runbook-expurgo-ipub-git.md` -- NAO executado (reescreve historico; Tier 3, aval do operador na janela).
+### F11 -- Blob ipub.db no historico git -- **BAIXA** -- **RESOLVIDO (2026-07-06, expurgo executado)**
+- Evidencia: blob versionado ate s058 (`d99ff02`); ~1.6MB de dado local-only em todo clone. Runbook em `docs/runbook-expurgo-ipub-git.md`.
+- **EXECUTADO 2026-07-06 (go nominal do operador):** push previo -> mirror de backup atualizado -> `git filter-repo --invert-paths --path ipub.db --force` -> force push. Validado em clone fresco do GitHub: 0 commits tocando ipub.db; size-pack ~18M -> 2.91 MiB; ipub.db local intacto (untracked). Backups: `C:/Users/daanm/medhub-backup-pre-expurgo.git` (mirror pre-expurgo completo). NB: TODOS os SHAs mudaram na reescrita -- SHAs pre-expurgo citados neste ledger/audits/HANDOFF sao referencias do historico antigo (narrativa preservada; ponteiros obsoletos por design).
 
 ### F12 -- Testes sem harness formal -- **MEDIA** -- **RESOLVIDO (p4)**
 - Evidencia: 4 test_*.py scripts avulsos. Fix: pytest.ini + conftest.py + bridge subprocess (exit code assertado; coleta crua daria verde decorativo -- funcoes de check sem assert). `pytest` na raiz: 7 passed. Standalone preservado.
@@ -178,7 +179,7 @@ relates_to: [AGENTE, ESTADO, HANDOFF]
 
 > Rodada de suporte iniciada ANTES da s109 abrir (e concluida em paralelo a ela). Do escopo autorizado do ciclo 2: entregue (a)-parcial e (b), mais F14/F15 (pendencias BAIXA do ciclo 1). (c) reforge + triagem de F16-F19 correm com a leva do operador. Corrida de escrita neste ledger detectada e respeitada: a s109 tomou a secao 3c e F16-F19; esta rodada usa 3d e F20.
 
-**F11 (expurgo ipub.db) -- JANELA PREPARADA, EXECUCAO AGUARDA GO NOMINAL:**
+**F11 (expurgo ipub.db) -- JANELA PREPARADA na rodada 1; EXECUTADO 2026-07-06 (ver secao 3b/F11):**
 - Pre-condicoes conferidas na janela (2026-07-05, pre-s109): tree limpo, main == origin/main (b9bca29), sem lock; blob confirmado no historico (10+ commits ate d99ff02).
 - Backup mirror CRIADO: `C:/Users/daanm/medhub-backup-pre-expurgo.git` (18M). `git-filter-repo` INSTALADO (pip --user; ferramenta de operador, fora do requirements.txt).
 - O rewrite foi BLOQUEADO pelo gate de permissao do harness da sessao de engenharia (history-rewrite sem pedido nominal na conversa). Decisao: nao contornar -- gate humano no momento da execucao e o espirito do runbook ("aval NESTA janela"). Historico INTACTO. Com a s109 aberta, a janela FECHOU de qualquer forma (sem rewrite com sessao ativa).

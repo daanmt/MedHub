@@ -23,7 +23,7 @@
 - **Infraestrutura:** ledger de engenharia cresceu **F16-F26** (papel coordenador-observador, contrato s109; memoria `project_papel_auditor_ledger`). Trilha dupla respeitada (conteudo -> aqui/log; engenharia -> ledger). Rodada de engenharia paralela (Fable/ai-eng) tocou 3d/F20 (venv) + preparou a janela do expurgo (F11, GATED).
 
 ## Pendencias ativas
-Consolidar `resumos/Cirurgia/Apendicite Aguda.md` (F16, ciclo 3). Mini-drill anti-reincidencia (`--pre-bloco "Apendicite"`) antes do proximo bloco. Reescrever TCE.md + Sistemas de Informacao em Saude.md. Reforjar cards 95/120 (/curar-cards; 120 via gate de evidencia -- pode usar `--status banca-divergente` no re-registro). **Fable ciclo 2 FEITO** (s109 commitada + PRD/specs/4 parts/audits; 12 commits locais). **PENDENTE DO OPERADOR: (a) push p/ origin (gate do harness pede go nominal ao Fable ou `git push` manual); (b) expurgo F11 (mirror+ferramenta prontos, go nominal na janela limpa).**
+Consolidar `resumos/Cirurgia/Apendicite Aguda.md` (F16, ciclo 3). Mini-drill anti-reincidencia (`--pre-bloco "Apendicite"`) antes do proximo bloco. Reescrever TCE.md + Sistemas de Informacao em Saude.md. Reforjar cards 95/120 (/curar-cards; 120 via gate de evidencia -- pode usar `--status banca-divergente` no re-registro). **Fable ciclo 2 FEITO + PUSHADO + EXPURGO F11 EXECUTADO (2026-07-06, go nominal).** Historico git REESCRITO (blob ipub.db expurgado; repo ~2.9MB; validado em clone fresco). **ATENCAO: clones/copias antigas do repo em qualquer outra maquina devem ser descartados e re-clonados** (SHAs mudaram). Backup pre-expurgo: `C:/Users/daanm/medhub-backup-pre-expurgo.git`.
 
 ---
 *Historico: history/INDEX.md * Macro: ESTADO.md * Sessao: history/session_109.md * Ledger de engenharia: AUDITORIA_MEDHUB.md*

@@ -12,6 +12,7 @@ Uso: python tools/day_plan.py [--json]
 import argparse
 import importlib
 import json
+import math
 import os
 import re
 import sys
@@ -53,6 +54,19 @@ META_PROVA = 10000   # meta-prova ENAMED (decisão s093/ESTADO); 12k = teto/stre
 # Norma: core/contracts/fsrs-management-contract.md §Teto dinâmico.
 TETO_BASE = 30            # cards/dia fora do regime de dívida
 CAP_MULTIPLICADOR = 2     # teto_efetivo nunca excede CAP_MULTIPLICADOR * TETO_BASE
+
+# Recomendador do dia (PRD orquestracao part-2).
+# Norma e significado de cada parâmetro: core/contracts/orquestracao-contract.md
+# (a tabela de parâmetros do contrato espelha ESTES nomes/valores — paridade testada).
+JANELA_RITMO_DIAS = 14            # janela móvel do ritmo real (q/dia)
+TEMPO_DEFAULT_H = 4.0             # horas assumidas sem --tempo
+ENERGIA_DEFAULT = "media"         # energia assumida sem --energia
+QUESTOES_POR_HORA = 15            # conversão tempo -> capacidade de questões
+LIMIAR_FOLGA_DESCANSO_DIAS = 3    # folga projetada mínima p/ descanso com energia baixa
+PERIODO_SIMULADO_SEMANAS = 4      # slot de simulado a cada N semanas de conteúdo
+FRESCOS_JANELA_HORAS = 48         # janela do mini-drill anti-reincidência
+FSRS_LEVE_CAP = 15                # cap de cards no dia leve/descanso
+FATOR_ENERGIA = {"alta": 1.0, "media": 0.85, "baixa": 0.6}  # modula a capacidade
 
 
 def _teto_efetivo(atrasados):
@@ -139,6 +153,7 @@ def _cronograma_hoje(total_q, hoje):
         "temas": [t["tema"] for t in wk["tasks"] if t.get("tema")][:3],
         "temas_material": [f"{t['tema']} ({t.get('material_indicado', 'resumo')})" for t in wk["tasks"] if t.get("tema")][:3],
         "dias_enamed": dias,
+        "restante_q": restante,
         "ritmo_cronograma": round(restante / dias, 1) if dias > 0 else None,
         "ritmo_meta": round(max(0, META_PROVA - total_q) / dias, 1) if dias > 0 else None,
     }
@@ -343,7 +358,103 @@ def difficulty_report(area, tema):
     }
 
 
-def build():
+def recomendar_dia(sinais, tempo_h=None, energia=None):
+    """Recomendador do dia (PRD orquestracao part-2) — função de decisão
+    DETERMINÍSTICA e PURA: dict de sinais derivados -> estrutura de blocos.
+    Nenhum acesso a db/arquivo aqui (testável por fixtures). Regras R1-R5 e
+    parâmetros nomeados: core/contracts/orquestracao-contract.md.
+    """
+    defaults_assumidos = tempo_h is None and energia is None
+    tempo_h = TEMPO_DEFAULT_H if tempo_h is None else float(tempo_h)
+    energia = (energia or ENERGIA_DEFAULT).lower()
+    fator = FATOR_ENERGIA.get(energia, FATOR_ENERGIA[ENERGIA_DEFAULT])
+    capacidade_q = int(tempo_h * QUESTOES_POR_HORA * fator)
+
+    dias = sinais.get("dias_enamed") or 0
+    restante = sinais.get("restante_grade_q") or 0
+    ritmo_real = sinais.get("ritmo_real") or 0.0
+    ritmo_nec = round(restante / dias, 1) if dias > 0 else None
+    if restante <= 0:
+        dias_p_fechar, folga_dias = 0, dias
+    elif ritmo_real > 0:
+        dias_p_fechar = math.ceil(restante / ritmo_real)
+        folga_dias = dias - dias_p_fechar
+    else:
+        dias_p_fechar, folga_dias = None, None  # sem ritmo medido na janela
+    projecao = {"ritmo_real": ritmo_real, "ritmo_necessario": ritmo_nec,
+                "dias_para_fechar": dias_p_fechar, "folga_dias": folga_dias,
+                "janela_dias": JANELA_RITMO_DIAS}
+
+    blocos, just = [], []
+    contexto = {"tempo_h": tempo_h, "energia": energia, "capacidade_q": capacidade_q}
+    frescos = sinais.get("frescos_tema_alvo") or []
+    tema_alvo = sinais.get("tema_alvo")
+    vencidos = sinais.get("vencidos") or 0
+    teto = sinais.get("teto_efetivo") or TETO_BASE
+
+    # R1 — anti-reincidência primeiro: cards de erro frescos do tema-alvo
+    if frescos:
+        blocos.append({"tipo": "mini-drill", "qtd": len(frescos), "alvo": tema_alvo,
+                       "motivo": "card(s) de erro frescos (<%dh) no tema-alvo"
+                                 % FRESCOS_JANELA_HORAS})
+        just.append("reincidência: %d card(s) frescos de %s" % (len(frescos), tema_alvo))
+
+    # R2 — descanso: energia baixa + folga projetada acima do limiar
+    if energia == "baixa" and folga_dias is not None and folga_dias >= LIMIAR_FOLGA_DESCANSO_DIAS:
+        blocos.append({"tipo": "descanso", "qtd": 0, "alvo": None,
+                       "motivo": "energia baixa + folga projetada de %dd (limiar %dd)"
+                                 % (folga_dias, LIMIAR_FOLGA_DESCANSO_DIAS)})
+        if vencidos > 0:
+            blocos.append({"tipo": "fsrs", "qtd": min(teto, FSRS_LEVE_CAP, vencidos),
+                           "alvo": "vencidos", "motivo": "revisão leve (dia de descanso)"})
+        just.append("descanso permitido: folga %dd >= %dd e energia baixa — sem tema novo hoje"
+                    % (folga_dias, LIMIAR_FOLGA_DESCANSO_DIAS))
+        just.append("ritmo real %.1fq/dia vs necessário %sq/dia (janela %dd)"
+                    % (ritmo_real, ritmo_nec, JANELA_RITMO_DIAS))
+        return {"blocos": blocos, "justificativa": just, "projecao": projecao,
+                "defaults_assumidos": defaults_assumidos, "contexto": contexto}
+
+    # R3 — simulado periódico (usa a área 'Simulado' já existente no registro)
+    semana = sinais.get("semana_conteudo")
+    if semana and semana % PERIODO_SIMULADO_SEMANAS == 0:
+        blocos.append({"tipo": "simulado", "qtd": 1, "alvo": "Simulado",
+                       "motivo": "slot periódico (semana S%d, a cada %d semanas)"
+                                 % (semana, PERIODO_SIMULADO_SEMANAS)})
+        just.append("semana S%d é múltipla de %d: slot de simulado"
+                    % (semana, PERIODO_SIMULADO_SEMANAS))
+
+    # R4 — questões da grade: alvo = min(capacidade do dia, ritmo necessário);
+    # atrasado (folga negativa) => capacidade máxima do dia
+    alvo_q = capacidade_q if ritmo_nec is None else min(capacidade_q,
+                                                        max(int(math.ceil(ritmo_nec)), 1))
+    if folga_dias is not None and folga_dias < 0:
+        alvo_q = capacidade_q
+        just.append("grade atrasada (%dd de déficit projetado): capacidade máxima em questões"
+                    % -folga_dias)
+    if alvo_q > 0 and restante > 0:
+        blocos.append({"tipo": "questoes", "qtd": alvo_q,
+                       "alvo": tema_alvo or "próximo tema da semana",
+                       "motivo": "necessário %sq/dia; capacidade ~%dq (%.1fh x %d q/h x %.2f)"
+                                 % (ritmo_nec, capacidade_q, tempo_h, QUESTOES_POR_HORA, fator)})
+    just.append("ritmo real %.1fq/dia vs necessário %sq/dia (janela %dd)"
+                % (ritmo_real, ritmo_nec, JANELA_RITMO_DIAS))
+
+    # R5 — FSRS até o teto efetivo (F4 governa a dívida)
+    fsrs_qtd = min(teto, vencidos + 15)
+    if fsrs_qtd > 0:
+        blocos.append({"tipo": "fsrs", "qtd": fsrs_qtd, "alvo": "fila do dia",
+                       "motivo": "teto efetivo %d (dívida: %d vencidos)" % (teto, vencidos)})
+    just.append("dívida FSRS: %d vencidos; teto %d; backlog %d novos"
+                % (vencidos, teto, sinais.get("backlog_novos") or 0))
+    if sinais.get("lag"):
+        just.append("posição: conteúdo S%s (%s sem atrás do calendário)"
+                    % (semana, sinais["lag"]))
+
+    return {"blocos": blocos, "justificativa": just, "projecao": projecao,
+            "defaults_assumidos": defaults_assumidos, "contexto": contexto}
+
+
+def build(tempo_h=None, energia=None):
     con = db.get_connection()
     total_q, total_a = get_totais(con)
     hoje = date.today()
@@ -368,6 +479,34 @@ def build():
     else:
         passo = "Seguir o cronograma: próximo tema previsto + questões."
 
+    cron = _cronograma_hoje(total_q or 0, hoje)
+
+    # Sinais do recomendador (part-2) — todos derivados; falha de um sinal não
+    # derruba o plano (degradação graciosa, mesmo espírito do cronograma).
+    temas_semana = (cron or {}).get("temas") or []
+    tema_alvo = temas_semana[0] if temas_semana else None
+    try:
+        ritmo_real = db.get_ritmo_real(JANELA_RITMO_DIAS)
+    except Exception:
+        ritmo_real = 0.0
+    try:
+        frescos = (db.get_fresh_error_cards(tema=tema_alvo, janela_horas=FRESCOS_JANELA_HORAS)
+                   if tema_alvo else [])
+    except Exception:
+        frescos = []
+    sinais = {
+        "dias_enamed": (cron or {}).get("dias_enamed") or dias,
+        "restante_grade_q": (cron or {}).get("restante_q") or 0,
+        "ritmo_real": ritmo_real,
+        "vencidos": vencidos,
+        "teto_efetivo": _teto_efetivo(fsrs["atrasados"]),
+        "backlog_novos": fsrs["backlog_novos"],
+        "semana_conteudo": (cron or {}).get("conteudo"),
+        "lag": (cron or {}).get("lag"),
+        "tema_alvo": tema_alvo,
+        "frescos_tema_alvo": frescos,
+    }
+
     return {
         "data": hoje.isoformat(),
         "dormant": dormant,
@@ -384,9 +523,10 @@ def build():
             "teto_base": TETO_BASE,
             "teto_efetivo": _teto_efetivo(fsrs["atrasados"]),
         },
-        "cronograma": _cronograma_hoje(total_q or 0, hoje),
+        "cronograma": cron,
         "cronograma_hint": _cronograma_hint(),   # fallback se a grade não existir
         "sugestao_passo": passo,
+        "recomendacao": recomendar_dia(sinais, tempo_h=tempo_h, energia=energia),
     }
 
 
@@ -501,6 +641,24 @@ def render(p):
                    f"meta-prova {META_PROVA // 1000}k ~{c['ritmo_meta']}/dia ({c['dias_enamed']}d p/ ENAMED)")
     elif p.get("cronograma_hint"):
         out.append(f"- 🧭 **Cronograma:** {p['cronograma_hint'][:120]}")
+    r = p.get("recomendacao")
+    if r:
+        ctx = r["contexto"]
+        rotulo = "defaults" if r["defaults_assumidos"] else "dia"
+        out.append(f"- 🧠 **Recomendação do dia** [{rotulo}: {ctx['tempo_h']:g}h/{ctx['energia']}]:")
+        for i, b in enumerate(r["blocos"], 1):
+            alvo = f" — {b['alvo']}" if b.get("alvo") else ""
+            qtd = f" {b['qtd']}" if b.get("qtd") else ""
+            out.append(f"    {i}. {b['tipo']}{qtd}{alvo} · {b['motivo']}")
+        pj = r["projecao"]
+        if pj["dias_para_fechar"] is not None:
+            out.append(f"    • projeção: ritmo real {pj['ritmo_real']}q/dia → grade fecha em "
+                       f"~{pj['dias_para_fechar']}d (folga {pj['folga_dias']}d) · "
+                       f"necessário {pj['ritmo_necessario']}q/dia (janela {pj['janela_dias']}d)")
+        else:
+            out.append(f"    • projeção: sem ritmo medido na janela de {pj['janela_dias']}d — "
+                       f"necessário {pj['ritmo_necessario']}q/dia")
+        out.append(f"    • sinais: {'; '.join(r['justificativa'][:3])}")
     out.append(f"- ▶️ **Passo sugerido:** {p['sugestao_passo']}")
     return "\n".join(out)
 
@@ -516,6 +674,10 @@ def main():
                          "derivados da fila real (F3); com --json, sai o agregado cru")
     ap.add_argument("--difficulty", nargs=2, metavar=("AREA", "TEMA"),
                     help="Reporta nota inferida + degrau + proposito de um tema (read-only)")
+    ap.add_argument("--tempo", type=float, default=None, metavar="H",
+                    help="Horas disponíveis hoje (recomendador; default declarado no output)")
+    ap.add_argument("--energia", choices=["alta", "media", "baixa"], default=None,
+                    help="Energia do dia (recomendador; modula a capacidade)")
     args = ap.parse_args()
     if args.handoff_block:
         print(render_handoff_block(build()))
@@ -530,7 +692,12 @@ def main():
         print(json.dumps(difficulty_report(area, tema), ensure_ascii=False,
                          default=str, indent=2))
         return
-    p = build()
+    if args.tempo is not None or args.energia is not None:
+        try:   # condição declarada do dia vira série (pergunta em aberto 2 do PRD)
+            db.registrar_condicao_dia(args.tempo, args.energia)
+        except Exception:
+            pass
+    p = build(tempo_h=args.tempo, energia=args.energia)
     print(json.dumps(p, ensure_ascii=False, default=str, indent=2) if args.json else render(p))
 
 

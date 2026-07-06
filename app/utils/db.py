@@ -78,6 +78,56 @@ def get_semana_conteudo():
     except (TypeError, ValueError):
         return None
 
+
+def get_ritmo_real(janela_dias=14):
+    """Ritmo real de questões (q/dia) na janela móvel, de sessoes_bulk.
+    Simulado não conta como questão feita (decisão s099)."""
+    conn = get_connection()
+    try:
+        row = conn.execute(
+            "SELECT COALESCE(SUM(questoes_feitas), 0) FROM sessoes_bulk "
+            "WHERE area <> 'Simulado' AND data_sessao >= date('now', ?)",
+            ("-%d day" % int(janela_dias),)).fetchone()
+    finally:
+        conn.close()
+    total = row[0] if row else 0
+    return round(total / janela_dias, 1) if janela_dias > 0 else 0.0
+
+
+def get_fresh_error_cards(tema=None, janela_horas=48):
+    """Cards de erro FRESCOS: state=0 criados na janela (o INSERT de fsrs_cards
+    grava due=now na criação — para state 0, due == momento de criação; contrato
+    fixado por teste). Filtro opcional por tema/area (LIKE). Lista de dicts."""
+    conn = get_connection()
+    try:
+        extra = ""
+        params = ["-%d hours" % int(janela_horas)]
+        if tema:
+            extra = " AND (t.tema LIKE ? OR t.area LIKE ?)"
+            params += ["%" + tema + "%", "%" + tema + "%"]
+        df = pd.read_sql('''
+            SELECT f.id, f.frente_pergunta, t.area, t.tema, fc.due
+            FROM flashcards f
+            JOIN fsrs_cards fc ON fc.card_id = f.id
+            JOIN taxonomia_cronograma t ON t.id = f.tema_id
+            WHERE fc.state = 0 AND fc.due >= datetime('now', ?)''' + extra + '''
+            ORDER BY f.id DESC
+        ''', conn, params=params)
+    finally:
+        conn.close()
+    return df.to_dict('records')
+
+
+def registrar_condicao_dia(tempo_h, energia):
+    """Registra as condições declaradas do dia (tempo/energia) em preparacao_estado
+    — série bruta para o preditivo futuro (PRD orquestracao, pergunta em aberto 2)."""
+    import json as _json
+    set_preparacao(
+        "condicao_dia",
+        _json.dumps({"data": datetime.now().date().isoformat(),
+                     "tempo_h": tempo_h, "energia": energia}, ensure_ascii=False),
+        fonte="day_plan")
+
 def get_db_metrics():
     """Consulta métricas de desempenho por área (1 linha por área após import fixado)."""
     conn = get_connection()

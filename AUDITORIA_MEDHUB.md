@@ -217,35 +217,96 @@ relates_to: [AGENTE, ESTADO, HANDOFF]
 
 > Corrida de escrita respeitada (convencao 3d): 3c=F16-F19, 3d=F20, 3e=F21, esta secao=3f/F22-F26. Origem: 2o lote de apendicite (42 questoes, 11 erros) -- trilha de ENGENHARIA (os 5 cards de conteudo foram para `ipub.db`, flashcards 732-736). O operador pediu explicitamente (2026-07-05) alimentar o ledger com erros de processo, tentativas insatisfeitas, bugs, capacidades inexploradas e inconsistencias -- esta safra responde a isso.
 
-### F22 -- `registrar_sessao_bulk` idempotente por (sessao_num, area) impede 2o bloco da mesma area na mesma sessao -- **MEDIA**
+### F22 -- `registrar_sessao_bulk` idempotente por (sessao_num, area) impede 2o bloco da mesma area na mesma sessao -- **MEDIA** -- **RESOLVIDO (3g)**
 - **Evidencia:** o 1o bloco de apendicite foi gravado como s109/Cirurgia (18q). Ao registrar o 2o bloco (42q) na mesma sessao/area, a guarda de idempotencia (`registrar_sessao_bulk.py:56-65`, "SELECT ... WHERE sessao_num=? AND area=?") retornaria "[AVISO] ... Nada alterado" -- nem soma nem atualiza. Contornei com `--sessao 110` (+ `--obs` "s109 bloco 2"); senao o volume das 42q seria perdido.
 - **Leitura de sistema:** a guarda protege contra duplo-registro acidental, mas trata "mesma sessao + mesma area" como duplicata sempre. Um dia com 2+ blocos da mesma area (comum: manha e tarde de Cirurgia) nao tem como ser gravado sem falsear o `sessao_num` -- que passa a acumular um valor (110) sem `history/session_110` correspondente. Inconsistencia entre rotulo de volume e ponteiro de sessao.
 - **Verificacao sugerida:** confirmar se `day_plan`/dashboard somam volume por SUM de linhas (110 nao quebraria o total, so o rotulo) ou assumem 1 linha por sessao.
 - **Hipotese de melhoria:** (a) UPSERT acumulativo (mesma sessao+area soma feitas/acertos), OU (b) `--bloco N` como parte da chave, OU (c) desacoplar `sessao_num` do volume (chave por `data`+area+bloco). A idempotencia anti-duplo deveria olhar um hash do lote, nao (sessao, area).
 
-### F23 -- Cards de erro recem-cunhados (state 0) nao sao surfaced antes do proximo bloco do mesmo tema -> reincidencia -- **MEDIA**
+### F23 -- Cards de erro recem-cunhados (state 0) nao sao surfaced antes do proximo bloco do mesmo tema -> reincidencia -- **MEDIA** -- **RESOLVIDO (3g)**
 - **Evidencia:** o link "quadro classico jovem <48h = operar, nao pedir imagem" foi cunhado no bloco 1 desta MESMA sessao (card 730, horas antes). No 2o lote (mesmo dia, mesmo tema) o operador reincidiu no MESMO link **3x** (Q4 pediu US, Q8 pediu TC, Q11 pediu US). O card 730 e state 0 (novo), sem `due` proximo -> nao foi drilado no intervalo entre os blocos. Reincidencia em HORAS, nao dias -- torna o achado mais forte.
 - **Leitura de sistema:** para um tema ATIVO (blocos consecutivos), o FSRS puro (agenda por curva) nao serve o card fresco a tempo -- ele so entra pela fila de novos. Falta um gatilho "voce tem cards de erro frescos do tema X que vai treinar agora -> mini-drill antes do bloco" (PREPARAR DIRECIONADO por tema-alvo). A regra do `analisar-questao` ("nao tolere errar 2x pelo mesmo motivo") existe no papel, mas nada a opera.
 - **Verificacao sugerida:** confirmar que cards state 0 nao entram na fila de vencidos same-day; medir quantos dos 11 erros batem em links ja carded no 1o lote (>= 3: Q4/Q8/Q11 -> 730; Q8 tambem toca 729).
 - **Hipotese de melhoria:** um "pre-bloco por tema-alvo" -- antes de um bloco anunciado de tema X, oferecer drill dos cards de erro frescos (state 0) de X. Estende o PREPARAR (F5) do dormente para o tema-quente-recem-errado. Fecha o buraco entre cunhar o card e ele virar util.
 
-### F24 -- `insert_questao.py` sem modo batch; N erros = N chamadas longas -> exige driver ad-hoc -- **BAIXA/MEDIA**
+### F24 -- `insert_questao.py` sem modo batch; N erros = N chamadas longas -> exige driver ad-hoc -- **BAIXA/MEDIA** -- **RESOLVIDO (3g)**
 - **Evidencia:** um lote de 11 erros nao tem caminho de insercao em lote. Cada erro e uma chamada com ~17 args longos; encadear via shell quebrou por quoting (`bash -c`, aspas desbalanceadas, exit 2, ZERO inseridos). A solucao foi um driver Python (`run_inserts.py`, depois `run_inserts2.py`) passando args por LISTA (sem shell). `--cards-file` existe, mas so adiciona cards a um erro ja criado -- nao cria N pares questao+card novos.
 - **Leitura de sistema:** o pipeline e otimo para 1 erro por vez, mas lotes de prova (10-40q) sao o caso real. A ausencia de batch empurra o agente para scripts ad-hoc a cada sessao -- custo e superficie de erro recorrentes (a falha de quoting inutilizou a 1a tentativa).
 - **Verificacao sugerida:** confirmar que `--cards-file` nao cria a linha em `questoes_erros` (so cards); medir o atrito de 5-11 inserts sequenciais.
 - **Hipotese de melhoria:** `insert_questao.py --errors-file errors.json` aceitando uma LISTA de erros completos (metadados + 5 campos de card cada), inseridos numa transacao. O agente escreve 1 JSON (sem quoting de shell) e chama 1x. Elimina a classe inteira de driver ad-hoc + falha de quoting.
 
-### F25 -- Sem detector de reincidencia: "errar 2x pelo mesmo motivo" nao e sinalizado automaticamente -- **MEDIA**
+### F25 -- Sem detector de reincidencia: "errar 2x pelo mesmo motivo" nao e sinalizado automaticamente -- **MEDIA** -- **RESOLVIDO (3g)**
 - **Evidencia:** para descobrir que Q4/Q8/Q11 do 2o lote batiam no card 730 (do 1o lote), o agente cruzou manualmente os erros novos contra os cards existentes. Nada no `insert_questao`/db avisa "este erro reincide sobre um elo ja carded". O `analisar-questao.md` eleva isso a "alerta critico", mas o sinal depende 100% da memoria do agente na sessao.
 - **Leitura de sistema:** o dado existe (`questoes_erros` tem `elo`/`tipo_erro`/`o_que_faltou`; cards tem tema+links). Um matcher (tema + similaridade do `elo`/`o_que_faltou`) marcaria reincidencia no ato do insert -> promoveria o erro a "padrao vivo" no HANDOFF e ao envelope de fraquezas (LangMem, R1 da Autogovernanca). Capacidade inexplorada.
 - **Verificacao sugerida:** avaliar se um match por (tema + tipo_erro + overlap de tokens do elo) tem precisao suficiente; comecar como WARN (politica s106/107).
 - **Hipotese de melhoria:** no `insert_questao`, apos inserir, checar "ha erro/card anterior no mesmo tema com elo semelhante?" e, se sim, emitir flag de REINCIDENCIA (contagem + link). Alimenta a trilha de conteudo (HANDOFF padroes vivos) e a de fraquezas. Conecta com F23 (surfacing) e R1.
 
-### F26 -- Questoes anuladas/banca-dependentes contam como erro "limpo"; sem tag -- **BAIXA/MEDIA**
+### F26 -- Questoes anuladas/banca-dependentes contam como erro "limpo"; sem tag -- **BAIXA/MEDIA** -- **RESOLVIDO (3g)**
 - **Evidencia:** no 2o lote, Q10 tinha "GABARITO OFICIAL: A" x "GABARITO EMED: C" -- o operador marcou C (alinhado ao EMED: "nao existe sinal de McBurney, e PONTO"), "errou" so pelo gabarito oficial. Q5 trazia "nenhuma alternativa esta correta" (banca manteve D com duracao tecnicamente errada). Ambas entram no bruto de 11 erros como se fossem erro limpo de conteudo.
 - **Leitura de sistema:** o volume/erro nao distingue "erro real de conteudo" de "questao anulada/controversa onde o operador acertou com razao" -- mesma familia do F7 (1o ciclo). Sem tag, a taxa de erro e o pipeline de cards ficam poluidos por questoes que nao medem lacuna real. Inconsistencia de sinal.
 - **Verificacao sugerida:** estimar a frequencia de anuladas/divergentes nos lotes reais; decidir se merece um campo.
 - **Hipotese de melhoria:** flag opcional no registro do erro (`--status anulada|banca-divergente`) que (a) nao gera card de "erro" (ou gera card de conteudo neutro), (b) nao conta contra a taxa de acerto real, (c) aciona o gate de evidencia (`/pesquisar-evidencia`) quando banca x diretriz divergem. Estende o mecanismo do F7 do card para a propria questao.
+
+---
+
+## 3g. Sessao de engenharia -- ciclo 2, rodada 2 (Fable/ai-eng, 2026-07-06) -- ORQUESTRACAO ENTREGUE
+
+> Fluxo vibeflow completo delegado pelo operador (2026-07-05, pos-s109): discover -> PRD
+> (`.vibeflow/prds/orquestracao-preparacao.md`) -> 4 specs -> implement -> audit **PASS 4/4**
+> (`.vibeflow/audits/orquestracao-preparacao-part-*-audit.md`). Tema do PRD veio da decisao
+> de produto do operador: ORQUESTRACAO DA PREPARACAO (posicao nunca errada; distribuir carga
+> cognitiva pelo follow-up real; descanso/simulado como saidas legitimas). pytest: 13 -> 36 passed.
+
+**Entregas (verificadas contra o codigo antes de spec; regra 0.4):**
+- **op-3 (posicao) -> SISTEMA NOVO (part-1):** semana de conteudo = estado de primeira classe
+  no db (`preparacao_estado`); CLI `tools/preparacao.py` (--set-semana/--show); day_plan
+  db-first (regex `Proxima = SNN` rebaixada a fallback com WARN; nominal virou comparativo);
+  `--handoff-block` EMITE a posicao; invariante `POSICAO_DRIFT` no auto_check (WARN).
+  O smoke expos na hora: conteudo S12 vs nominal S15 -- 3 semanas de atraso que o fallback
+  nominal mascarava.
+- **F22 -> RESOLVIDO (part-1):** `--acumular` soma o 2o bloco na mesma (sessao, area) com
+  delta-only na taxonomia (sem dupla contagem); guarda anti-duplo preservada por default;
+  `--semana N` atualiza a posicao no ato do registro.
+- **Recomendador do dia -> ENTREGUE (part-2):** `recomendar_dia()` pura e deterministica
+  (R1 mini-drill, R2 descanso, R3 simulado, R4 questoes, R5 fsrs) + projecao (ritmo real
+  14d vs necessario, folga em dias) + `--tempo H`/`--energia alta|media|baixa` com defaults
+  declarados e registro da condicao. Norma com parametros nomeados:
+  `core/contracts/orquestracao-contract.md` (paridade contrato<->CLI TESTADA); AGENTE 2
+  passo 4 aponta. Gate anti-decorativo declarado (3 sessoes sem alterar decisao -> revisar).
+  Smoke real: "ritmo real 65.6q/dia -> grade fecha em ~96d (folga -27d); necessario 91q/dia".
+- **F23 -> RESOLVIDO (part-3):** `fsrs_queue --pre-bloco TEMA [--janela-horas]` lista so os
+  cards de erro frescos (state 0) do tema-alvo; rating segue o caminho unico. Smoke real:
+  10 cards frescos de Apendicite (727-736) servidos.
+- **F25 -> RESOLVIDO (part-3):** matcher lexical pos-insert (tokens normalizados,
+  LIMIAR_OVERLAP=0.5) emite `[REINCIDENCIA]` apontando card/erro existente -- WARN
+  informativo, nunca bloqueia. Fixture positiva = caso real s109 (Q4 vs card 730).
+- **F24 -> RESOLVIDO (part-4):** `insert_questao --errors-file lote.json` -- N erros numa
+  transacao unica; validacao pre-transacao aponta item/campo; rollback TOTAL em excecao;
+  dedupe por conteudo em re-execucao. Elimina a classe driver-ad-hoc/quoting.
+- **F26 -> RESOLVIDO (part-4):** `--status anulada|banca-divergente` (coluna nova
+  `questoes_erros.status`, ALTER idempotente): registra o erro SEM cunhar card +
+  `[GATE-EVIDENCIA]`; taxa real limpa por construcao.
+
+**Fora do ciclo (registro honesto):**
+- **F21 segue ABERTO** -- e clausula de contrato do fluxo de aula (piso de cobertura por
+  tema vs descompressao por nota), nao CLI; ficou fora do PRD por lapso de triagem da
+  rodada. Candidato: edicao do `revisao-calibrada-contract` pelo coordenador ou rodada 3.
+- **F16-F19 (pipeline de conhecimento)** -- anti-escopo declarado do PRD; ciclo 3
+  (decisao de arquitetura ja registrada: two-tier, .md canon + collection pdf_raw).
+
+### F27 -- Modo single do insert_questao sai com exit 0 mesmo em falha -- **BAIXA**
+- **Evidencia:** a docstring promete "Exit 0 em sucesso, 1 em falha", mas o main nao
+  captura o retorno de `insert_questao()` -- falha imprime erro e sai 0. Pre-existente;
+  descoberto na verificacao da part-4 (que implementou exit 1 no caminho --errors-file).
+- **Hipotese de melhoria:** `sys.exit(0 if ok else 1)` no modo single (1 linha; conferir
+  se algum chamador depende do exit 0 atual antes).
+
+### F28 -- Arg `--elo` (required) nao e persistido em coluna propria -- **BAIXA**
+- **Evidencia:** o INSERT de `questoes_erros` grava habilidades/faltou/armadilha; o `elo`
+  era recebido e IGNORADO ate a part-3 (o matcher F25 virou seu 1o consumidor real).
+  O "elo" semantico vive espalhado em `o_que_faltou`/cards.
+- **Hipotese de melhoria:** ou persistir (coluna `elo`), ou documentar no workflow que o
+  campo canonico e `o_que_faltou` e deprecar o arg. Decisao de schema -- operador.
 
 ---
 
@@ -329,4 +390,4 @@ O objetivo da sessao nao era so drenar cards: era **usar o MedHub para descobrir
 
 ---
 
-*Este doc e o ledger vivo de engenharia. Nao "fecha" -- acumula achados a cada sessao de uso. O 1o ciclo Fable (PRD -> 5 ondas) foi ENTREGUE em 2026-07-05 (secao 3b). A s109 (coordenador-observador) adicionou **F16-F19** do uso vivo (forja da aula-base de apendicite; secao 3c) -- insumo do ciclo 2. A rodada 1 do ciclo 2 (Fable/ai-eng, paralela a s109; secao 3d) entregou F14/F15, validou o teto (F4/b), preparou a janela do expurgo (F11) e registrou F20. A s109 (1o lote de questoes; secao 3e) adicionou F21, e (2o lote; secao 3f) **F22-F26** (bulk idempotente, reincidencia sem surfacing, insert sem batch, sem detector de reincidencia, anuladas sem tag); **proximos achados comecam em F27**. Ultima atualizacao: sessao de uso s109 (2026-07-05).*
+*Este doc e o ledger vivo de engenharia. Nao "fecha" -- acumula achados a cada sessao de uso. O 1o ciclo Fable (PRD -> 5 ondas) foi ENTREGUE em 2026-07-05 (secao 3b). A s109 (coordenador-observador) adicionou **F16-F19** do uso vivo (forja da aula-base de apendicite; secao 3c) -- insumo do ciclo 2. A rodada 1 do ciclo 2 (Fable/ai-eng, paralela a s109; secao 3d) entregou F14/F15, validou o teto (F4/b), preparou a janela do expurgo (F11) e registrou F20. A s109 (1o lote de questoes; secao 3e) adicionou F21, e (2o lote; secao 3f) **F22-F26**. O **ciclo 2 rodada 2** (Fable/ai-eng, 2026-07-06; secao 3g) entregou o PRD ORQUESTRACAO completo (vibeflow 4/4 PASS): posicao SSOT (op-3), recomendador do dia, F22-F26 RESOLVIDOS; F21 segue aberto (contrato de aula); F27/F28 registrados pelos audits. **Proximos achados comecam em F29**. Ultima atualizacao: ciclo 2 rodada 2 (2026-07-06).*

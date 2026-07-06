@@ -79,6 +79,10 @@ def main():
                       help="Imprime o lote da fila (array JSON)")
     acao.add_argument("--record", type=int, metavar="CARD_ID",
                       help="Grava a avaliação de um card (exige --rating)")
+    acao.add_argument("--pre-bloco", dest="pre_bloco", metavar="TEMA",
+                      help="Mini-drill anti-reincidência (F23): lista SÓ os cards de erro "
+                           "FRESCOS (state 0, janela --janela-horas) do tema-alvo, antes de "
+                           "um bloco de questões. Rating segue o --record normal")
     parser.add_argument("--rating", type=int, choices=[1, 2, 3, 4],
                         help="Avaliação 1=Novamente 2=Difícil 3=Bom 4=Fácil (com --record)")
     parser.add_argument("--area", help="Filtro de área (match exato)")
@@ -90,7 +94,26 @@ def main():
                         help="Agrupa por (area, tema) dentro de cada bucket, preservando "
                              "a prioridade atrasados -> hoje -> novos (F3). Opt-in: sem a "
                              "flag, a ordem é a atual")
+    parser.add_argument("--janela-horas", type=int, default=48, dest="janela_horas",
+                        help="Janela de frescor do --pre-bloco em horas (default 48; "
+                             "norma: core/contracts/orquestracao-contract.md)")
     args = parser.parse_args()
+
+    if args.pre_bloco:
+        frescos = db.get_fresh_error_cards(tema=args.pre_bloco,
+                                           janela_horas=args.janela_horas)
+        if not frescos:
+            _emit({"empty": True, "pre_bloco": args.pre_bloco,
+                   "msg": "0 cards frescos p/ '%s' na janela de %dh"
+                          % (args.pre_bloco, args.janela_horas)})
+            return
+        out = []
+        for card in frescos:
+            card = dict(card)
+            card["bucket"] = "pre-bloco"
+            out.append(card)
+        _emit(out)
+        return
 
     if args.record is not None:
         if args.rating is None:

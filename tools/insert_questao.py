@@ -22,6 +22,51 @@ import os
 import re
 DB_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'ipub.db')
 
+# --- Reincidencia (F25, PRD orquestracao part-3) ----------------------------
+# Matcher lexical simples: normaliza, remove stopwords minimas, mede overlap de
+# tokens. WARN informativo (politica s106/107) -- NUNCA bloqueia o insert.
+LIMIAR_OVERLAP = 0.5   # fracao de tokens compartilhados sobre o MENOR conjunto
+STOPWORDS = {"de", "da", "do", "das", "dos", "em", "no", "na", "nos", "nas",
+             "um", "uma", "para", "por", "com", "sem", "que", "nao", "não",
+             "mais", "menos", "antes", "apos", "após", "entre", "sobre",
+             "qual", "quando", "como", "deve", "pode", "caso", "paciente"}
+
+
+def _tokens(texto):
+    """Tokens normalizados (>= 4 chars, sem stopwords) p/ o match lexical."""
+    palavras = re.findall(r"[a-zA-ZÀ-ÿ0-9<>=]{4,}", (texto or "").lower())
+    return {p for p in palavras if p not in STOPWORDS}
+
+
+def checar_reincidencia(conn, tema_id, questao_id_novo, texto_novo):
+    """F25: cruza o erro novo contra erros/cards EXISTENTES do mesmo tema.
+    Retorna lista de hits [(tipo, id, overlap)]; vazia quando nada casa."""
+    novos = _tokens(texto_novo)
+    if not novos:
+        return []
+    hits = []
+    cur = conn.cursor()
+    cur.execute("SELECT id, habilidades_sequenciais, o_que_faltou FROM questoes_erros "
+                "WHERE tema_id = ? AND id <> ?", (tema_id, questao_id_novo))
+    for qid, hab, faltou in cur.fetchall():
+        antigos = _tokens((hab or "") + " " + (faltou or ""))
+        if antigos:
+            overlap = len(novos & antigos) / min(len(novos), len(antigos))
+            if overlap >= LIMIAR_OVERLAP:
+                hits.append(("erro", qid, round(overlap, 2)))
+    cur.execute("SELECT id, frente_pergunta, verso_resposta, verso_regra_mestre, "
+                "verso_armadilha FROM flashcards "
+                "WHERE tema_id = ? AND (questao_id IS NULL OR questao_id <> ?)",
+                (tema_id, questao_id_novo))
+    for cid, fp, vr, vrm, va in cur.fetchall():
+        antigos = _tokens(" ".join(filter(None, (fp, vr, vrm, va))))
+        if antigos:
+            overlap = len(novos & antigos) / min(len(novos), len(antigos))
+            if overlap >= LIMIAR_OVERLAP:
+                hits.append(("card", cid, round(overlap, 2)))
+    return hits
+
+
 def insert_questao(area, tema, enunciado, correta, chamada, erro, elo, armadilha,
                    complexidade="Media", habilidades="N/A", faltou="N/A", explicacao="N/A", titulo="Erro sem titulo",
                    frente_contexto=None, frente_pergunta=None,
@@ -151,6 +196,22 @@ def insert_questao(area, tema, enunciado, correta, chamada, erro, elo, armadilha
 
         conn.commit()
         print(f"Sucesso! Questão '{titulo}' inserida. Flashcard IPUB High-Level [ID: {card_id}] gerado.")
+
+        # F25 (pos-commit, read-only): sinaliza reincidencia sobre elo ja registrado.
+        # O matcher NUNCA altera o resultado do insert (WARN informativo).
+        try:
+            texto_novo = " ".join(t for t in (
+                elo, faltou if faltou != "N/A" else "", habilidades if habilidades != "N/A" else ""
+            ) if t)
+            hits = checar_reincidencia(conn, tema_id, questao_id, texto_novo)
+            if hits:
+                alvos = ", ".join("%s %d (overlap %.2f)" % h for h in hits[:5])
+                print("[REINCIDENCIA] elo similar a: %s -- %dx no tema. "
+                      "Candidato a padrao vivo (HANDOFF) e mini-drill "
+                      "(fsrs_queue --pre-bloco)." % (alvos, len(hits)))
+        except Exception:
+            pass
+
         return True
 
     except Exception as e:

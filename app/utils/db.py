@@ -21,6 +21,63 @@ DB_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__)
 def get_connection():
     return sqlite3.connect(DB_PATH)
 
+
+# --- Preparação (posição SSOT + estado de orquestração; PRD orquestracao-preparacao part-1) ---
+
+def _ensure_preparacao_table(conn):
+    conn.execute('''
+        CREATE TABLE IF NOT EXISTS preparacao_estado (
+            chave         TEXT PRIMARY KEY,
+            valor         TEXT NOT NULL,
+            atualizado_em TEXT NOT NULL,
+            fonte         TEXT
+        )
+    ''')
+
+
+def set_preparacao(chave, valor, fonte=None):
+    """Grava estado de preparação (key-value). Upsert idempotente."""
+    conn = get_connection()
+    try:
+        _ensure_preparacao_table(conn)
+        conn.execute('''
+            INSERT INTO preparacao_estado (chave, valor, atualizado_em, fonte)
+            VALUES (?, ?, ?, ?)
+            ON CONFLICT(chave) DO UPDATE SET
+                valor = excluded.valor,
+                atualizado_em = excluded.atualizado_em,
+                fonte = excluded.fonte
+        ''', (chave, str(valor), datetime.now().isoformat(timespec="seconds"), fonte))
+        conn.commit()
+    finally:
+        conn.close()
+
+
+def get_preparacao(chave):
+    """Lê estado de preparação. Retorna {valor, atualizado_em, fonte} ou None."""
+    conn = get_connection()
+    try:
+        _ensure_preparacao_table(conn)
+        row = conn.execute(
+            "SELECT valor, atualizado_em, fonte FROM preparacao_estado WHERE chave = ?",
+            (chave,)).fetchone()
+    finally:
+        conn.close()
+    if not row:
+        return None
+    return {"valor": row[0], "atualizado_em": row[1], "fonte": row[2]}
+
+
+def get_semana_conteudo():
+    """Semana de conteúdo do cronograma (posição SSOT). int ou None."""
+    item = get_preparacao("semana_conteudo")
+    if not item:
+        return None
+    try:
+        return int(item["valor"])
+    except (TypeError, ValueError):
+        return None
+
 def get_db_metrics():
     """Consulta métricas de desempenho por área (1 linha por área após import fixado)."""
     conn = get_connection()

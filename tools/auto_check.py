@@ -120,6 +120,60 @@ def check_session_pointer(handoff_path=None, history_dir=None):
         return (pointer, max_sess)
     return None
 
+
+def check_posicao_drift(handoff_path=None, db_path=None):
+    """Invariante POSICAO_DRIFT (op-3 / PRD orquestracao part-1): a semana de
+    conteudo citada nas linhas-ancora do HANDOFF nao pode divergir da posicao
+    SSOT do db (preparacao_estado). Ancoras: header "*Atualizado", heading
+    "Proximo passo" e a linha derivada "- **Posicao:**". Semana = S maiusculo
+    + 1-2 digitos (sessoes usam s minusculo + 3 digitos; nao colidem).
+
+    Parse defensivo: sem posicao no db, sem HANDOFF ou sem mencao de semana
+    nas ancoras -> None (silencio, nunca falso-positivo barulhento).
+    Retorna (semana_handoff, semana_db) em drift; None quando coerente.
+    """
+    handoff = Path(handoff_path) if handoff_path else ROOT_DIR / "HANDOFF.md"
+    dbp = Path(db_path) if db_path else ROOT_DIR / "ipub.db"
+    if not handoff.exists() or not dbp.exists():
+        return None
+    con = None
+    try:
+        import sqlite3
+        con = sqlite3.connect(str(dbp))
+        row = con.execute(
+            "SELECT valor FROM preparacao_estado WHERE chave='semana_conteudo'"
+        ).fetchone()
+    except Exception:
+        return None
+    finally:
+        if con is not None:
+            con.close()
+    if not row:
+        return None
+    try:
+        semana_db = int(row[0])
+    except (TypeError, ValueError):
+        return None
+    try:
+        text = handoff.read_text(encoding="utf-8")
+    except Exception:
+        return None
+    mencoes = []
+    for line in text.splitlines():
+        s = line.strip()
+        if s.startswith("- **Posicao:**"):
+            # linha derivada cita conteudo E nominal -- so a semana de conteudo conta
+            mencoes += [int(n) for n in re.findall(r"conteudo\s+S(\d{1,2})\b", s)]
+        elif s.startswith("*Atualizado") or (
+                s.startswith("#") and re.search(r"pr[oó]ximo passo", s, re.IGNORECASE)):
+            mencoes += [int(n) for n in re.findall(r"\bS(\d{1,2})\b", s)]
+    if not mencoes:
+        return None
+    divergentes = [m for m in mencoes if m != semana_db]
+    if divergentes:
+        return (divergentes[0], semana_db)
+    return None
+
 def main():
     mode = "--changed"
     if len(sys.argv) > 1 and sys.argv[1] in ("--all", "-a"):
@@ -235,6 +289,18 @@ def main():
                   f"Selar a sessão pendente antes de avançar o ponteiro.")
         # success=True: WARN não rebaixa o veredito (não altera all_passed).
         results_summary.append((desc_pointer, True, 1 if drift else 0))
+
+    # 5. Invariante de posicao SSOT (op-3 -- PRD orquestracao part-1). WARN, não bloqueia:
+    #    mesma janela de relevância do ponteiro (HANDOFF no diff ou --all).
+    if pointer_relevant:
+        pdrift = check_posicao_drift()
+        desc_posicao = "Invariante de posição SSOT (POSICAO_DRIFT)"
+        if pdrift:
+            print(f"\n[WARN] POSICAO_DRIFT: HANDOFF cita S{pdrift[0]}, mas a posição SSOT "
+                  f"(preparacao_estado) é S{pdrift[1]}. Corrigir o texto ou atualizar via "
+                  f"tools/preparacao.py --set-semana.")
+        # success=True: WARN não rebaixa o veredito (não altera all_passed).
+        results_summary.append((desc_posicao, True, 1 if pdrift else 0))
 
     # Resumo Final
     print("\n" + "=" * 60)

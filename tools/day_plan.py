@@ -92,6 +92,25 @@ def _semana_conteudo():
     return None
 
 
+def _resolver_semana_conteudo():
+    """Posição SSOT db-first (PRD orquestracao part-1): preparacao_estado > texto
+    (deprecado, WARN em stderr) > None. Retorna (semana|None, fonte) com fonte em
+    {'db', 'texto', None}. O WARN vai a stderr para não poluir stdout/--json."""
+    try:
+        s = db.get_semana_conteudo()
+    except Exception:
+        s = None
+    if s is not None:
+        return s, "db"
+    s = _semana_conteudo()
+    if s is not None:
+        print("[WARN] POSICAO_VIA_TEXTO (deprecado): semana de conteudo lida por regex "
+              "de HANDOFF/ESTADO. Registre a posicao SSOT com: "
+              "python tools/preparacao.py --set-semana %d" % s, file=sys.stderr)
+        return s, "texto"
+    return None, None
+
+
 def _cronograma_hoje(total_q, hoje):
     """Substitui _cronograma_hint: lê a grade (cronograma.py) e cruza com a posição real.
     Read-only. Retorna None se a grade não existir (degradação graciosa → fallback hint)."""
@@ -101,7 +120,9 @@ def _cronograma_hoje(total_q, hoje):
     except Exception:
         return None
     nominal = cr.semana_corrente(grade, hoje)
-    conteudo = _semana_conteudo() or nominal
+    conteudo, fonte_pos = _resolver_semana_conteudo()
+    if conteudo is None:
+        conteudo, fonte_pos = nominal, "nominal"
     wk = cr.get_semana(grade, conteudo)
     if not wk:
         return None
@@ -111,6 +132,7 @@ def _cronograma_hoje(total_q, hoje):
     return {
         "conteudo": conteudo,
         "nominal": nominal,
+        "posicao_fonte": fonte_pos,
         "lag": (nominal - conteudo) if (nominal and conteudo and nominal > conteudo) else None,
         "previstas": wk["total_questoes"],
         "n_tasks": wk["n_tasks"],
@@ -427,13 +449,22 @@ def render_handoff_block(p):
     """
     v, f = p["volume"], p["fsrs"]
     perf = round(v["acertos"] / v["total"] * 100, 1) if v["total"] else 0.0
-    return "\n".join([
+    linhas = [
         f"- **Volume & Metas:** {v['total']} / {v['alvo_enamed']} (perf. ~{perf}%). "
         f"Hoje: {v['hoje']}. Ritmo-alvo ~{v['ritmo_alvo']}q/dia "
         f"({v['dias_ate_marco']}d p/ ENAMED).",
         f"- **FSRS:** {f['atrasados']} atrasados + {f['hoje']} hoje. "
         f"Backlog: {f['backlog_novos']} novos.",
-    ])
+    ]
+    c = p.get("cronograma")
+    if c:
+        lag_txt = f", atraso {c['lag']} sem" if c.get("lag") else ""
+        fonte = c.get("posicao_fonte")
+        origem = "preparacao_estado" if fonte == "db" else (fonte or "?")
+        linhas.append(
+            f"- **Posicao:** conteudo S{c['conteudo']} (nominal S{c['nominal']}{lag_txt}) "
+            f"[derivado: {origem}]")
+    return "\n".join(linhas)
 
 
 def render(p):
@@ -454,8 +485,16 @@ def render(p):
     c = p.get("cronograma")
     if c:
         lag = f" · calendário em S{c['nominal']} (~{c['lag']} sem atrás)" if c.get("lag") else ""
+        fonte_pos = c.get("posicao_fonte")
+        if fonte_pos == "nominal":
+            aviso_pos = (" · ⚠️ posição ASSUMIDA pelo calendário — registre: "
+                         "preparacao.py --set-semana N")
+        elif fonte_pos == "texto":
+            aviso_pos = " · ⚠️ posição via texto (deprecado)"
+        else:
+            aviso_pos = ""
         out.append(f"- 🧭 **Cronograma:** conteúdo **S{c['conteudo']}** · {c['previstas']}q previstas "
-                   f"· {c['n_tasks']} tasks{lag}")
+                   f"· {c['n_tasks']} tasks{lag}{aviso_pos}")
         if c["temas"]:
             out.append(f"    • próximos temas: {', '.join(c.get('temas_material', c['temas']))}")
         out.append(f"    • ritmos-alvo: terminar a grade ~{c['ritmo_cronograma']}/dia · "

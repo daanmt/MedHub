@@ -67,16 +67,28 @@ def checar_reincidencia(conn, tema_id, questao_id_novo, texto_novo):
     return hits
 
 
+def _ensure_status_column(cursor):
+    """F26: coluna `status` em questoes_erros (anulada | banca-divergente | NULL=valida).
+    ALTER idempotente (aditivo, DEFAULT NULL) -- mesmo padrao CREATE-IF-NOT-EXISTS do repo."""
+    cols = {r[1] for r in cursor.execute("PRAGMA table_info(questoes_erros)")}
+    if "status" not in cols:
+        cursor.execute("ALTER TABLE questoes_erros ADD COLUMN status TEXT DEFAULT NULL")
+
+
 def insert_questao(area, tema, enunciado, correta, chamada, erro, elo, armadilha,
                    complexidade="Media", habilidades="N/A", faltou="N/A", explicacao="N/A", titulo="Erro sem titulo",
                    frente_contexto=None, frente_pergunta=None,
                    verso_resposta=None, verso_regra_mestre=None, verso_armadilha=None,
-                   cards=None):
+                   cards=None, status=None, conn=None):
     # print(f"DEBUG: Tentando inserir no banco: {os.path.abspath(DB_PATH)}")
-    conn = None
+    # conn externa (part-4): participa de transacao maior (lote) -- nao abre,
+    # nao commita, nao fecha; excecao PROPAGA para o rollback total do lote.
+    own_conn = conn is None
     try:
-        conn = sqlite3.connect(DB_PATH)
+        if own_conn:
+            conn = sqlite3.connect(DB_PATH)
         cursor = conn.cursor()
+        _ensure_status_column(cursor)
 
         # Verifica se o Tema já existe (por (area, tema) — evita re-poluir; UNIQUE no schema). Se não existir, cria.
         cursor.execute("SELECT id FROM taxonomia_cronograma WHERE area = ? AND tema = ?", (area, tema))
@@ -91,18 +103,22 @@ def insert_questao(area, tema, enunciado, correta, chamada, erro, elo, armadilha
             ''', (area, tema, datetime.now().strftime('%Y-%m-%d')))
             tema_id = cursor.lastrowid
 
-        # 1. Inserir a Questão Erro com Schema Expandido
+        # 1. Inserir a Questão Erro com Schema Expandido (+status F26)
         cursor.execute('''
-            INSERT INTO questoes_erros 
-            (tema_id, titulo, complexidade, enunciado, alternativa_correta, alternativa_marcada, 
-             tipo_erro, habilidades_sequenciais, o_que_faltou, explicacao_correta, armadilha_prova)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        ''', (tema_id, titulo, complexidade, enunciado, correta, chamada, 
-              erro, habilidades, faltou, explicacao, armadilha))
+            INSERT INTO questoes_erros
+            (tema_id, titulo, complexidade, enunciado, alternativa_correta, alternativa_marcada,
+             tipo_erro, habilidades_sequenciais, o_que_faltou, explicacao_correta, armadilha_prova, status)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ''', (tema_id, titulo, complexidade, enunciado, correta, chamada,
+              erro, habilidades, faltou, explicacao, armadilha, status))
         questao_id = cursor.lastrowid
 
         # 2. Gerar Flashcards IPUB v5.0
-        if cards is not None:
+        # F26: anulada/banca-divergente registra o ERRO (memoria do caso) mas NAO
+        # cunha card (nao e lacuna real) e fica marcada p/ gate de evidencia.
+        if status in ("anulada", "banca-divergente"):
+            cards_to_insert = []
+        elif cards is not None:
             # Caminho agent-first: N cards atômicos já cunhados pela régua
             # (.claude/commands/estilo-flashcard.md). Substitui a geração fixa
             # elo+armadilha; todos os cards são qualitativos.
@@ -194,43 +210,138 @@ def insert_questao(area, tema, enunciado, correta, chamada, erro, elo, armadilha
         except Exception:
             pass  # tabela opcional — ignorar se não existir
 
-        conn.commit()
-        print(f"Sucesso! Questão '{titulo}' inserida. Flashcard IPUB High-Level [ID: {card_id}] gerado.")
+        if own_conn:
+            conn.commit()
+        if cards_to_insert:
+            print(f"Sucesso! Questão '{titulo}' inserida. Flashcard IPUB High-Level [ID: {card_id}] gerado.")
+        else:
+            print(f"Sucesso! Questão '{titulo}' registrada SEM card (status: {status}).")
+            print(f"[GATE-EVIDENCIA] Q {status} registrada p/ /pesquisar-evidencia; "
+                  f"não conta como lacuna real nem entra na fila.")
 
-        # F25 (pos-commit, read-only): sinaliza reincidencia sobre elo ja registrado.
+        # F25 (pos-insert, read-only): sinaliza reincidencia sobre elo ja registrado.
         # O matcher NUNCA altera o resultado do insert (WARN informativo).
-        try:
-            texto_novo = " ".join(t for t in (
-                elo, faltou if faltou != "N/A" else "", habilidades if habilidades != "N/A" else ""
-            ) if t)
-            hits = checar_reincidencia(conn, tema_id, questao_id, texto_novo)
-            if hits:
-                alvos = ", ".join("%s %d (overlap %.2f)" % h for h in hits[:5])
-                print("[REINCIDENCIA] elo similar a: %s -- %dx no tema. "
-                      "Candidato a padrao vivo (HANDOFF) e mini-drill "
-                      "(fsrs_queue --pre-bloco)." % (alvos, len(hits)))
-        except Exception:
-            pass
+        if status not in ("anulada", "banca-divergente"):
+            try:
+                texto_novo = " ".join(t for t in (
+                    elo, faltou if faltou != "N/A" else "", habilidades if habilidades != "N/A" else ""
+                ) if t)
+                hits = checar_reincidencia(conn, tema_id, questao_id, texto_novo)
+                if hits:
+                    alvos = ", ".join("%s %d (overlap %.2f)" % h for h in hits[:5])
+                    print("[REINCIDENCIA] elo similar a: %s -- %dx no tema. "
+                          "Candidato a padrao vivo (HANDOFF) e mini-drill "
+                          "(fsrs_queue --pre-bloco)." % (alvos, len(hits)))
+            except Exception:
+                pass
 
         return True
 
     except Exception as e:
+        if not own_conn:
+            raise  # transacao do lote: o chamador faz o rollback TOTAL
         print(f"Erro ao inserir no banco: {e}")
         return False
     finally:
-        if conn:
+        if own_conn and conn:
             conn.close()
+
+CAMPOS_OBRIGATORIOS = ("area", "tema", "enunciado", "correta", "marcada",
+                       "erro", "elo", "armadilha")
+
+
+def insert_batch(errors_file):
+    """F24: insere um LOTE de erros (JSON array) numa transacao UNICA.
+
+    - Validacao PRE-transacao: campos obrigatorios por item -> erro aponta item/campo,
+      NADA inserido.
+    - Dedupe por conteudo: (area, tema, enunciado) ja registrado -> item PULADO com
+      aviso (re-execucao do mesmo lote nao duplica).
+    - Qualquer excecao no meio -> ROLLBACK TOTAL (zero parcial).
+    Cada item aceita os campos do modo single + opcionais `cards` (lista) e
+    `status` (anulada | banca-divergente). Retorna True/False.
+    """
+    try:
+        with open(errors_file, encoding="utf-8") as fh:
+            itens = json.load(fh)
+    except Exception as e:
+        print(f"[ERRO] errors-file ilegivel/JSON invalido: {e}. NADA inserido.")
+        return False
+    if not isinstance(itens, list) or not itens:
+        print("[ERRO] errors-file deve ser um array JSON nao-vazio. NADA inserido.")
+        return False
+    for i, item in enumerate(itens):
+        if not isinstance(item, dict):
+            print(f"[ERRO] item {i}: deve ser objeto JSON. NADA inserido.")
+            return False
+        faltando = [c for c in CAMPOS_OBRIGATORIOS if not str(item.get(c) or "").strip()]
+        if faltando:
+            print(f"[ERRO] item {i} ('{item.get('titulo', '?')}'): campos obrigatorios "
+                  f"ausentes: {', '.join(faltando)}. NADA inserido.")
+            return False
+        st = item.get("status")
+        if st and st not in ("anulada", "banca-divergente"):
+            print(f"[ERRO] item {i}: status invalido '{st}'. NADA inserido.")
+            return False
+
+    conn = sqlite3.connect(DB_PATH)
+    inseridos, pulados = [], []
+    try:
+        cursor = conn.cursor()
+        _ensure_status_column(cursor)
+        for i, item in enumerate(itens):
+            cursor.execute("""
+                SELECT q.id FROM questoes_erros q
+                JOIN taxonomia_cronograma t ON t.id = q.tema_id
+                WHERE t.area = ? AND t.tema = ? AND TRIM(q.enunciado) = TRIM(?)
+            """, (item["area"], item["tema"], item["enunciado"]))
+            dup = cursor.fetchone()
+            if dup:
+                pulados.append((i, dup[0]))
+                print(f"[SKIP] item {i}: erro ja registrado (questao id={dup[0]}) -- dedupe por conteudo.")
+                continue
+            insert_questao(
+                area=item["area"], tema=item["tema"], enunciado=item["enunciado"],
+                correta=item["correta"], chamada=item["marcada"], erro=item["erro"],
+                elo=item["elo"], armadilha=item["armadilha"],
+                complexidade=item.get("complexidade", "Média"),
+                habilidades=item.get("habilidades", "N/A"),
+                faltou=item.get("faltou", "N/A"),
+                explicacao=item.get("explicacao", "N/A"),
+                titulo=item.get("titulo", "Erro sem titulo"),
+                frente_contexto=item.get("frente_contexto"),
+                frente_pergunta=item.get("frente_pergunta"),
+                verso_resposta=item.get("verso_resposta"),
+                verso_regra_mestre=item.get("verso_regra_mestre"),
+                verso_armadilha=item.get("verso_armadilha"),
+                cards=item.get("cards"), status=item.get("status"),
+                conn=conn,   # transacao do lote: excecao propaga p/ rollback total
+            )
+            inseridos.append(i)
+        conn.commit()
+    except Exception as e:
+        conn.rollback()
+        print(f"[ERRO] lote abortado: {e}. ROLLBACK TOTAL -- zero inserido nesta execucao.")
+        return False
+    finally:
+        conn.close()
+    print(f"[OK] Lote: {len(inseridos)} erro(s) inserido(s), {len(pulados)} pulado(s) "
+          f"por dedupe. Itens inseridos: {inseridos or '-'}")
+    return True
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="ETL Script para pipeline Agente -> SQLite")
-    parser.add_argument("--area", required=True)
-    parser.add_argument("--tema", required=True)
-    parser.add_argument("--enunciado", required=True)
-    parser.add_argument("--correta", required=True)
-    parser.add_argument("--marcada", required=True)
-    parser.add_argument("--erro", required=True)
-    parser.add_argument("--elo", required=True)
-    parser.add_argument("--armadilha", required=True)
+    # Obrigatorios NO MODO SINGLE (validados manualmente: com --errors-file eles
+    # vem do JSON; a mensagem/exit 2 do parser.error preserva o contrato atual).
+    parser.add_argument("--area")
+    parser.add_argument("--tema")
+    parser.add_argument("--enunciado")
+    parser.add_argument("--correta")
+    parser.add_argument("--marcada")
+    parser.add_argument("--erro")
+    parser.add_argument("--elo")
+    parser.add_argument("--armadilha")
     parser.add_argument("--complexidade", default="Média")
     parser.add_argument("--habilidades", default="N/A")
     parser.add_argument("--faltou", default="N/A")
@@ -247,8 +358,24 @@ if __name__ == "__main__":
     # Quando fornecido, substitui a geração fixa elo+armadilha.
     parser.add_argument("--cards-file", dest="cards_file", default=None,
                         help="Path para JSON com lista de cards atômicos (ver estilo-flashcard.md)")
+    # Part-4 (F24/F26):
+    parser.add_argument("--errors-file", dest="errors_file", default=None,
+                        help="LOTE: JSON array de erros completos (campos do modo single "
+                             "+ opcionais cards/status por item) inseridos numa transacao "
+                             "unica; item invalido = rollback total; dedupe por conteudo")
+    parser.add_argument("--status", choices=["anulada", "banca-divergente"], default=None,
+                        help="F26: registra o erro SEM cunhar card e marcado p/ gate de "
+                             "evidencia (nao conta como lacuna real)")
 
     args = parser.parse_args()
+
+    if args.errors_file:
+        ok = insert_batch(args.errors_file)
+        sys.exit(0 if ok else 1)
+
+    faltando = ["--" + c for c in CAMPOS_OBRIGATORIOS if not getattr(args, c)]
+    if faltando:
+        parser.error(f"the following arguments are required: {', '.join(faltando)}")
 
     cards = None
     if args.cards_file:
@@ -275,4 +402,5 @@ if __name__ == "__main__":
         verso_regra_mestre=args.verso_regra_mestre,
         verso_armadilha=args.verso_armadilha,
         cards=cards,
+        status=args.status,
     )

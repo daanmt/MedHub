@@ -309,6 +309,45 @@ relates_to: [AGENTE, ESTADO, HANDOFF]
 - **Hipotese de melhoria:** ou persistir (coluna `elo`), ou documentar no workflow que o
   campo canonico e `o_que_faltou` e deprecar o arg. Decisao de schema -- operador.
 
+### F29 -- Drift planilha-db nao pego pelo boot (reconcile B4/W1 pulado) -- **ALTA** -- **RESOLVIDO (s110p2, 2026-07-06)**
+- **Evidencia:** a sessao abriu com `/performance` + `/cronograma` direto do cache do hook
+  (`day_plan`), sem rodar o check de reconcile (AGENTE.md secao 2 passo 3 / reconcile-contract
+  B4/W1) contra a planilha `Dashboard EMED 2026`. Relatei 4584q ao operador; ele corrigiu para
+  4660 (76q de delta) -- residuo ja existente ANTES desta sessao comecar, nao gerado por ela.
+- **Causa raiz (dupla, achada via `download_file_content`+openpyxl nas 20 abas por disciplina
+  da planilha):** (1) **mislabel** -- `'GO'` (id 38) e 3x `'Clinica Medica'` (ids 64/65/66,
+  sessoes 103-105, gap Antigravity sem fechamento) eram rotulos invalidos escondendo
+  Ginecologia/Infecto/Hemato/Oftalmo reais (casamento exato feitas+acertos digito a digito,
+  zero ambiguidade); (2) **volume nunca registrado** -- Ortopedia (29q/24a, Quadril Pediatrico)
+  e um residual de Cirurgia (47q/40a, tarefa especifica nao identificavel) existiam na
+  planilha sob nenhum rotulo no db.
+- **EXECUTADO:** `tools/fix_data_delta_110.py` (relabel dos 4 ids; arquivado em
+  `tools/_archive/migrations/`) + `registrar_sessao_bulk.py --acumular` (Ortopedia/Cirurgia).
+  Backup previo (`ipub_backup_20260706_201837.db`). Validado: `performance.py` bate
+  4660q/3684a/79.1% identico a planilha; as 20 areas conferem 1:1 contra as abas por disciplina.
+- **Hipotese de melhoria (o que falta para nao reincidir):** o boot hoje SO reconcilia se o
+  agente decidir rodar manualmente -- nao ha barreira mecanica. Promover B4/W1 a um passo
+  automatico do `day_plan.py`/hook (mesmo que so um WARN comparando total local vs total via
+  MCP), em vez de depender do agente lembrar de rodar `/importar-planilha` toda sessao.
+
+### F30 -- `material_indicado` do cronograma nao verifica se o resumo realmente existe -- **MEDIA**
+- **Evidencia:** a task de Pre-Natal em S12 vem marcada `material_indicado: resumo` (implica
+  "so ler o resumo existente"), mas `resumos/GO/Pré-Natal.md` NUNCA existiu -- so o PDF-fonte
+  (`25. Pré-Natal.pdf`, 90 paginas). Descoberto ao vivo: operador fez cold recall de 18q (sem
+  aula previa) e so na analise pos-questoes percebi que era tema-zero, tendo que construir o
+  resumo do zero a partir do PDF (mesmo padrao do F16 -- Apendicite).
+- **Leitura de sistema:** a heuristica `material_indicado` (mencionada em `AGENTE.md` secao 1.2,
+  refinada 79%->44% na s107) provavelmente infere o rotulo do TIPO de tarefa do PDF do cronograma
+  (`Teoria` vs `Revisão`), nao de uma checagem real contra `resumos/**/*.md`. Isso pode levar a
+  aula/estudo com expectativa de material leve quando na verdade e tema-zero.
+- **Verificacao sugerida:** conferir quantas outras tasks com `material_indicado: resumo` tambem
+  carecem de `.md` correspondente (cruzar `core/cronograma/grade.json` x `resumos/**/*.md` por
+  `_find_resumo`).
+- **Hipotese de melhoria:** `cronograma.py` (ou `day_plan.py --difficulty`) checar em tempo real
+  se o resumo existe via `_find_resumo` e rebaixar `material_indicado` para `extensivo`
+  automaticamente quando nao existir -- fecha o mesmo buraco do F16 de forma preventiva, para
+  qualquer tema futuro, nao so Apendicite.
+
 ---
 
 ## 4. O que esta solido (nao mexer sem motivo)
@@ -391,4 +430,4 @@ O objetivo da sessao nao era so drenar cards: era **usar o MedHub para descobrir
 
 ---
 
-*Este doc e o ledger vivo de engenharia. Nao "fecha" -- acumula achados a cada sessao de uso. O 1o ciclo Fable (PRD -> 5 ondas) foi ENTREGUE em 2026-07-05 (secao 3b). A s109 (coordenador-observador) adicionou **F16-F19** do uso vivo (forja da aula-base de apendicite; secao 3c) -- insumo do ciclo 2. A rodada 1 do ciclo 2 (Fable/ai-eng, paralela a s109; secao 3d) entregou F14/F15, validou o teto (F4/b), preparou a janela do expurgo (F11) e registrou F20. A s109 (1o lote de questoes; secao 3e) adicionou F21, e (2o lote; secao 3f) **F22-F26**. O **ciclo 2 rodada 2** (Fable/ai-eng, 2026-07-06; secao 3g) entregou o PRD ORQUESTRACAO completo (vibeflow 4/4 PASS): posicao SSOT (op-3), recomendador do dia, F22-F26 RESOLVIDOS; F21 segue aberto (contrato de aula); F27/F28 registrados pelos audits. **Proximos achados comecam em F29**. Ultima atualizacao: ciclo 2 rodada 2 (2026-07-06).*
+*Este doc e o ledger vivo de engenharia. Nao "fecha" -- acumula achados a cada sessao de uso. O 1o ciclo Fable (PRD -> 5 ondas) foi ENTREGUE em 2026-07-05 (secao 3b). A s109 (coordenador-observador) adicionou **F16-F19** do uso vivo (forja da aula-base de apendicite; secao 3c) -- insumo do ciclo 2. A rodada 1 do ciclo 2 (Fable/ai-eng, paralela a s109; secao 3d) entregou F14/F15, validou o teto (F4/b), preparou a janela do expurgo (F11) e registrou F20. A s109 (1o lote de questoes; secao 3e) adicionou F21, e (2o lote; secao 3f) **F22-F26**. O **ciclo 2 rodada 2** (Fable/ai-eng, 2026-07-06; secao 3g) entregou o PRD ORQUESTRACAO completo (vibeflow 4/4 PASS): posicao SSOT (op-3), recomendador do dia, F22-F26 RESOLVIDOS; F21 segue aberto (contrato de aula); F27/F28 registrados pelos audits. A **s110 parte 2** (2026-07-06) verificou performance+cronograma a pedido do operador, achou e RESOLVEU **F29** (drift planilha-db de 76q, ao vivo, mesma sessao); no ciclo de Pre-Natal I (cold recall, tema-zero) registrou **F30** (material_indicado nao verifica existencia real do resumo), aberto. **Proximos achados comecam em F31**. Ultima atualizacao: s110 parte 2 (2026-07-06).*

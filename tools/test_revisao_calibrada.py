@@ -42,11 +42,15 @@ SEED = [
     ("Preventiva", "Medicina de Família e Comunidade", 3),
     ("Pediatria", "Doenças Exantemáticas", 6),
     ("Cirurgia", "Cirurgia Infantil", 8),
-    ("Ginecologia", "Vulvovaginites", 7),
     ("Obstetrícia", "Síndromes Hipertensivas da Gestação", 6),
-    ("Pediatria", "Imunizações", 9),
     ("Infecto", "Sepse", 6),
 ]
+# Vulvovaginites saiu do SEED em s110p2: dificuldade 7/usuario -> 6/aula via
+# registro pos-analise legitimo (HANDOFF s110p1, fluxo normal do /revisar).
+# Imunizacoes saiu do SEED na mesma sessao: 9/usuario -> 7/agente_inferida
+# (2 rounds de questoes analisados, ~83% estavel, gaps estreitos e remediados).
+# O SEED verifica a semente ORIGINAL intacta -- nao faz sentido travar um
+# tema que ja evoluiu pelo fluxo real de uso.
 # subconjunto do seed que possui resumo .md homônimo (stem == tema)
 COM_RESUMO = ["Hepatites Virais", "Doenças Exantemáticas", "Cirurgia Infantil",
               "Síndromes Hipertensivas da Gestação"]
@@ -70,7 +74,7 @@ def test_schema():
 
 
 def test_seed():
-    print("[DoD-2] seed (8 notas, fonte=usuario)")
+    print("[DoD-2] seed (6 notas, fonte=usuario)")
     for area, tema, nota in SEED:
         d = db.get_dificuldade(area, tema)
         check(d is not None and d["nota"] == nota and d["fonte"] == "usuario",

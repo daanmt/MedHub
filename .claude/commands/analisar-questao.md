@@ -71,6 +71,12 @@ Informação-chave 2: [conceito que resolve a Habilidade 2]
 - **Não tolere errar duas vezes pelo mesmo motivo**: alerta crítico.
 - **Diferencie "não sabia" de "sabia mas não aplicou"**: tratamentos diferentes.
 
+### 3.1 Calibração hard-skill x soft-skill (peso da análise)
+
+Padrões de execução de prova já catalogados (bug nº1, enunciado negativo, ancoragem no número, etc. -- ver memória `feedback_analise_questoes`) são reais e valiosos, mas **não são o ponto de partida da análise**. Usá-los como reflexo automático encurta a investigação e limita o diagnóstico -- o erro vira "ah, é o bug nº1 de novo" antes de esgotar o que especificamente da disciplina não foi dominado.
+
+**Regra de peso:** ~80% da análise vai para o diagnóstico técnico/clínico específico (qual mecanismo, critério, conduta ou discriminador da matéria não foi dominado -- Etapas 1-4 acima, aplicadas a fundo). Os ~20% restantes cobrem a camada de execução de prova (se um padrão já catalogado também se aplica). Diagnosticar o elo tecnicamente **primeiro**; só depois, e de forma breve, verificar se o padrão de execução se encaixa -- nunca o contrário.
+
 ---
 
 ## 4. O que Extrair para o Resumo

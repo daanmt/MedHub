@@ -125,6 +125,27 @@ def _resolver_semana_conteudo():
     return None, None
 
 
+def _conclusao_drive():
+    """Snapshot de conclusão real do xlsx do Drive (preparacao_estado.cronograma_conclusao_drive,
+    gravado por `python tools/cronograma.py --sync-drive`). Read-only, sem MCP aqui — day_plan
+    só consome o que o agente já sincronizou no boot. Retorna (by_task, fresco):
+    by_task = {(semana, tarefa): concluido} ou None se ausente/corrompido;
+    fresco = True só se atualizado_em é do dia-calendário corrente (W8/reconcile-contract)."""
+    try:
+        item = db.get_preparacao("cronograma_conclusao_drive")
+    except Exception:
+        return None, False
+    if not item:
+        return None, False
+    try:
+        snap = json.loads(item["valor"])
+        by_task = {(t["semana"], t["tarefa"]): t["concluido"] for t in snap.get("tasks", [])}
+    except Exception:
+        return None, False
+    fresco = (item.get("atualizado_em") or "")[:10] == date.today().isoformat()
+    return by_task, fresco
+
+
 def _cronograma_hoje(total_q, hoje):
     """Substitui _cronograma_hint: lê a grade (cronograma.py) e cruza com a posição real.
     Read-only. Retorna None se a grade não existir (degradação graciosa → fallback hint)."""
@@ -143,6 +164,18 @@ def _cronograma_hoje(total_q, hoje):
     enamed = datetime.strptime(cr.ENAMED, "%Y-%m-%d").date()
     dias = (enamed - hoje).days  # dias de estudo: hoje inclusive, dia da prova exclusivo
     restante = sum(s["total_questoes"] for s in grade["semanas"] if s["semana"] >= conteudo)
+
+    # W8: fronteira REAL de conclusão (xlsx riscado) em vez de só posição calendário.
+    # Sem snapshot fresco -> degradação graciosa pro comportamento antigo (lista a semana
+    # inteira) + sinaliza conclusao_desatualizada pro render() avisar (nunca falha silente).
+    conclusao_by_task, conclusao_fresca = _conclusao_drive()
+    tasks_semana = wk["tasks"]
+    conclusao_desatualizada = True
+    if conclusao_by_task is not None and conclusao_fresca:
+        conclusao_desatualizada = False
+        tasks_semana = [t for t in wk["tasks"]
+                        if not conclusao_by_task.get((wk["semana"], t["tarefa"]), False)]
+
     return {
         "conteudo": conteudo,
         "nominal": nominal,
@@ -150,8 +183,9 @@ def _cronograma_hoje(total_q, hoje):
         "lag": (nominal - conteudo) if (nominal and conteudo and nominal > conteudo) else None,
         "previstas": wk["total_questoes"],
         "n_tasks": wk["n_tasks"],
-        "temas": [t["tema"] for t in wk["tasks"] if t.get("tema")][:3],
-        "temas_material": [f"{t['tema']} ({t.get('material_indicado', 'resumo')})" for t in wk["tasks"] if t.get("tema")][:3],
+        "temas": [t["tema"] for t in tasks_semana if t.get("tema")][:3],
+        "temas_material": [f"{t['tema']} ({t.get('material_indicado', 'resumo')})" for t in tasks_semana if t.get("tema")][:3],
+        "conclusao_desatualizada": conclusao_desatualizada,
         "dias_enamed": dias,
         "restante_q": restante,
         "ritmo_cronograma": round(restante / dias, 1) if dias > 0 else None,
@@ -633,8 +667,10 @@ def render(p):
             aviso_pos = " · ⚠️ posição via texto (deprecado)"
         else:
             aviso_pos = ""
+        aviso_concl = (" · ⚠️ conclusão real desatualizada (sync: python tools/cronograma.py "
+                       "--sync-drive <xlsx>)") if c.get("conclusao_desatualizada") else ""
         out.append(f"- 🧭 **Cronograma:** conteúdo **S{c['conteudo']}** · {c['previstas']}q previstas "
-                   f"· {c['n_tasks']} tasks{lag}{aviso_pos}")
+                   f"· {c['n_tasks']} tasks{lag}{aviso_pos}{aviso_concl}")
         if c["temas"]:
             out.append(f"    • próximos temas: {', '.join(c.get('temas_material', c['temas']))}")
         out.append(f"    • ritmos-alvo: terminar a grade ~{c['ritmo_cronograma']}/dia · "

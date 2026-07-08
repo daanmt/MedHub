@@ -4,11 +4,13 @@ Fixtures DETERMINISTICAS sobre a funcao pura recomendar_dia() + queries novas de
 db (db temp) + paridade contrato<->CLI. Pytest-nativo (coleta direta); standalone:
 python tools/test_orquestrador.py. Nada aqui toca o ipub.db real.
 """
+import json
 import os
 import re
 import sqlite3
 import sys
 import tempfile
+from datetime import date, timedelta
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -18,6 +20,7 @@ except Exception:
     pass
 
 import app.utils.db as db  # noqa: E402
+import cronograma as cr    # noqa: E402
 import day_plan as dp      # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -196,13 +199,211 @@ def test_get_fresh_error_cards():
         os.remove(tmp)
 
 
+# ───────────── Sync Drive / W8 (spec cronograma-sync-conclusao-drive) ─────────────
+
+def _xlsx_temp(cells):
+    """xlsx minimo em disco p/ teste: linha 2 com >=10 semanas 'DD/MM a DD/MM'
+    (exigido por _parse_conclusao_xlsx), celulas conforme `cells` =
+    [(semana, row, texto, strike), ...]."""
+    import openpyxl
+    from openpyxl.styles import Font
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = "Plan1"
+    n_semanas = max(10, max((c[0] for c in cells), default=1))
+    for col in range(1, n_semanas + 1):
+        ws.cell(row=2, column=col, value=f"{col:02d}/01 a {(col + 6):02d}/01")
+    for semana, row, texto, strike in cells:
+        c = ws.cell(row=row, column=semana, value=texto)
+        if strike:
+            c.font = Font(strike=True)
+    fd, path = tempfile.mkstemp(suffix=".xlsx")
+    os.close(fd)
+    wb.save(path)
+    return path
+
+
+def test_norm_tema_xlsx_ignora_acentos_e_quebras():
+    a = cr._norm_tema_xlsx("Doenças\nInflamatória do Tecido\nConjuntivo II (Teoria)")
+    b = cr._norm_tema_xlsx("doencas inflamatoria do tecido   conjuntivo ii (teoria)")
+    assert a == b, f"normalizacao deve casar acentos/quebras/espacos (got {a!r} vs {b!r})"
+
+
+def test_diff_drive_matching_por_semana_tema_tipo():
+    xlsx = _xlsx_temp([
+        (1, 4, "Apendicite Aguda (Teoria)", True),
+        (1, 5, "Apendicite Aguda (Revisão)", False),
+    ])
+    try:
+        grade = {"semanas": [{"semana": 1, "tasks": [
+            {"tarefa": 1, "area_norm": "Cirurgia", "tema": "Apendicite Aguda", "tipo_norm": "teoria"},
+            {"tarefa": 2, "area_norm": "Cirurgia", "tema": "Apendicite Aguda", "tipo_norm": "revisao"},
+        ]}]}
+        r = cr.diff_drive(xlsx, grade=grade)
+        by_tarefa = {t["tarefa"]: t["concluido"] for t in r["tasks"]}
+        assert by_tarefa[1] is True, "teoria riscada -> concluido"
+        assert by_tarefa[2] is False, "revisao nao riscada -> pendente"
+        assert not r["sem_match"], f"ambas tasks deveriam casar por (semana,tema,tipo) (got {r['sem_match']})"
+    finally:
+        os.remove(xlsx)
+
+
+def test_diff_drive_sem_match_fica_pendente():
+    xlsx = _xlsx_temp([(1, 4, "Outro Tema Qualquer (Teoria)", True)])
+    try:
+        grade = {"semanas": [{"semana": 1, "tasks": [
+            {"tarefa": 1, "area_norm": "Cirurgia", "tema": "Apendicite Aguda", "tipo_norm": "teoria"},
+        ]}]}
+        r = cr.diff_drive(xlsx, grade=grade)
+        assert r["tasks"][0]["concluido"] is False, "sem match no xlsx -> conservador (pendente)"
+        assert len(r["sem_match"]) == 1, "tema sem match deve ser reportado (nao falha silente)"
+    finally:
+        os.remove(xlsx)
+
+
+def test_parse_conclusao_xlsx_rejeita_estrutura_invalida():
+    import openpyxl
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = "Plan1"
+    ws.cell(row=2, column=1, value="lixo nao-data")
+    fd, path = tempfile.mkstemp(suffix=".xlsx")
+    os.close(fd)
+    wb.save(path)
+    try:
+        try:
+            cr._parse_conclusao_xlsx(path)
+            assert False, "estrutura invalida deveria levantar ValueError"
+        except ValueError:
+            pass
+    finally:
+        os.remove(path)
+
+
+def test_conclusao_drive_ausente():
+    tmp = _db_temp_minimo()
+    orig = db.DB_PATH
+    db.DB_PATH = tmp
+    try:
+        by_task, fresco = dp._conclusao_drive()
+        assert by_task is None and fresco is False, "sem snapshot gravado -> ausente"
+    finally:
+        db.DB_PATH = orig
+        os.remove(tmp)
+
+
+def test_conclusao_drive_desatualizada_cai_no_fallback():
+    tmp = _db_temp_minimo()
+    orig = db.DB_PATH
+    db.DB_PATH = tmp
+    try:
+        snap = {"gerado_em": "2026-07-07T10:00:00",
+                "tasks": [{"semana": 12, "tarefa": 1, "concluido": True}]}
+        db.set_preparacao("cronograma_conclusao_drive", json.dumps(snap), fonte="drive_sync")
+        ontem = (date.today() - timedelta(days=1)).isoformat() + "T10:00:00"
+        con = sqlite3.connect(tmp)
+        con.execute("UPDATE preparacao_estado SET atualizado_em = ? WHERE chave = ?",
+                    (ontem, "cronograma_conclusao_drive"))
+        con.commit()
+        con.close()
+        by_task, fresco = dp._conclusao_drive()
+        assert fresco is False, "snapshot de ontem -> nao fresco (fallback pro calendario)"
+        assert by_task == {(12, 1): True}, "mapa ainda retorna (so a flag de frescor muda)"
+    finally:
+        db.DB_PATH = orig
+        os.remove(tmp)
+
+
+def test_conclusao_drive_fresca():
+    tmp = _db_temp_minimo()
+    orig = db.DB_PATH
+    db.DB_PATH = tmp
+    try:
+        snap = {"gerado_em": "now", "tasks": [
+            {"semana": 12, "tarefa": 1, "concluido": True},
+            {"semana": 12, "tarefa": 2, "concluido": False}]}
+        db.set_preparacao("cronograma_conclusao_drive", json.dumps(snap), fonte="drive_sync")
+        by_task, fresco = dp._conclusao_drive()
+        assert fresco is True, "snapshot de hoje -> fresco"
+        assert by_task == {(12, 1): True, (12, 2): False}
+    finally:
+        db.DB_PATH = orig
+        os.remove(tmp)
+
+
+def test_cronograma_hoje_filtra_por_conclusao_fresca():
+    """DoD 2/3: com snapshot fresco, task concluida some de 'temas'; snapshot velho
+    cai no comportamento antigo (semana inteira) + sinaliza conclusao_desatualizada."""
+    tmp = _db_temp_minimo()
+    orig = db.DB_PATH
+    db.DB_PATH = tmp
+    grade = {"_meta": {}, "semanas": [{
+        "semana": 12, "inicio": "2026-06-15", "fim": "2026-06-21",
+        "total_questoes": 100, "n_tasks": 2,
+        "tasks": [
+            {"tarefa": 1, "area_norm": "Preventiva", "tema": "Tema Feito",
+             "tipo_norm": "teoria", "material_indicado": "resumo"},
+            {"tarefa": 2, "area_norm": "Preventiva", "tema": "Tema Pendente",
+             "tipo_norm": "teoria", "material_indicado": "resumo"},
+        ],
+    }]}
+
+    class _FakeCr:
+        ENAMED = cr.ENAMED
+
+        @staticmethod
+        def load_grade():
+            return grade
+
+        @staticmethod
+        def semana_corrente(g, hoje):
+            return 12
+
+        @staticmethod
+        def get_semana(g, n):
+            return g["semanas"][0] if n == 12 else None
+
+    orig_mod = sys.modules.get("cronograma")
+    sys.modules["cronograma"] = _FakeCr
+    try:
+        db.set_preparacao("semana_conteudo", 12, fonte="operador")
+        snap = {"gerado_em": "now", "tasks": [{"semana": 12, "tarefa": 1, "concluido": True}]}
+        db.set_preparacao("cronograma_conclusao_drive", json.dumps(snap), fonte="drive_sync")
+        hoje = date.today()
+        c = dp._cronograma_hoje(0, hoje)
+        assert c["conclusao_desatualizada"] is False, "snapshot de hoje -> nao desatualizado"
+        assert c["temas"] == ["Tema Pendente"], f"tema feito deve sumir (got {c['temas']})"
+
+        ontem = (hoje - timedelta(days=1)).isoformat() + "T10:00:00"
+        con = sqlite3.connect(tmp)
+        con.execute("UPDATE preparacao_estado SET atualizado_em = ? WHERE chave = ?",
+                    (ontem, "cronograma_conclusao_drive"))
+        con.commit()
+        con.close()
+        c2 = dp._cronograma_hoje(0, hoje)
+        assert c2["conclusao_desatualizada"] is True, "snapshot velho -> sinaliza desatualizado"
+        assert set(c2["temas"]) == {"Tema Feito", "Tema Pendente"}, \
+            f"fallback lista a semana inteira sem filtro (got {c2['temas']})"
+    finally:
+        if orig_mod is not None:
+            sys.modules["cronograma"] = orig_mod
+        else:
+            sys.modules.pop("cronograma", None)
+        db.DB_PATH = orig
+        os.remove(tmp)
+
+
 if __name__ == "__main__":
     fns = [test_mix_normal, test_descanso_energia_baixa_com_folga,
            test_energia_baixa_sem_folga_nao_descansa, test_simulado_semana_multipla,
            test_tempo_curto_reduz_capacidade, test_frescos_viram_primeiro_bloco,
            test_folga_positiva_limita_pelo_necessario, test_paridade_contrato_cli,
            test_render_inclui_recomendacao, test_get_ritmo_real_janela,
-           test_get_fresh_error_cards]
+           test_get_fresh_error_cards,
+           test_norm_tema_xlsx_ignora_acentos_e_quebras, test_diff_drive_matching_por_semana_tema_tipo,
+           test_diff_drive_sem_match_fica_pendente, test_parse_conclusao_xlsx_rejeita_estrutura_invalida,
+           test_conclusao_drive_ausente, test_conclusao_drive_desatualizada_cai_no_fallback,
+           test_conclusao_drive_fresca, test_cronograma_hoje_filtra_por_conclusao_fresca]
     falhas = 0
     for fn in fns:
         try:

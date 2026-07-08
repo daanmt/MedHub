@@ -17,6 +17,9 @@ Subcomandos:
   --json [--semana N]   imprime a grade inteira (ou só a semana N)
   --gap [--meta M]  gap honesto de volume: acum(ipub) + cronograma restante vs meta
   --validate        roda asserções de validação (S10=273, S11-28=6689/222, áreas)
+  --sync-drive X    lê o xlsx do Drive (já baixado, ver importar-planilha.md) e grava
+                    o snapshot de conclusão real (tema riscado) em preparacao_estado
+                    (W8/reconcile — spec cronograma-sync-conclusao-drive)
 
 Uso: python tools/cronograma.py --rebuild
 """
@@ -26,6 +29,7 @@ import json
 import os
 import re
 import sys
+import unicodedata
 from datetime import date, datetime, timedelta
 
 try:                                   # UTF-8 no console cp1252 do Windows
@@ -410,6 +414,114 @@ def validate(grade):
     return ok, out
 
 
+# ───────────────────── Sync Drive — conclusão real (xlsx) ─────────────────────
+# W8/reconcile-contract.md — spec cronograma-sync-conclusao-drive.md. grade.json
+# marca posição por CALENDÁRIO (PDF estático); este bloco lê o xlsx do Drive (o
+# usuário risca o tema ao concluir — ver .claude/commands/importar-planilha.md)
+# e cruza por (semana, tema, tipo_norm) para saber o que está REALMENTE feito.
+# Read-only sobre o xlsx; o único write é o snapshot em preparacao_estado
+# (nunca em taxonomia_cronograma/sessoes_bulk/FSRS — Cláusula 5).
+
+DRIVE_SHEET_NAME = "Plan1"
+DRIVE_DATA_ROW = 2          # linha das datas "DD/MM a DD/MM" — 1 coluna = 1 semana
+DRIVE_TASK_ROWS = range(4, 17)  # slots de task (linhas 4-16)
+
+
+def _norm_tema_xlsx(s):
+    """Normaliza texto p/ casar grade.json (PDF) x xlsx (Drive): casefold + strip
+    de acentos (unicodedata) + colapso de espaços/quebras de linha internas da célula."""
+    s = unicodedata.normalize("NFKD", s or "")
+    s = "".join(c for c in s if not unicodedata.combining(c))
+    return " ".join(s.casefold().split())
+
+
+def _parse_conclusao_xlsx(xlsx_path):
+    """Lê o xlsx do Drive e extrai, por (semana=nº da coluna, texto bruto da
+    célula), o status riscado (concluído). Valida a linha 2 (datas) antes de
+    prosseguir — aborta com erro claro se o formato não bater (Risco: estrutura
+    do xlsx muda)."""
+    import openpyxl
+    wb = openpyxl.load_workbook(xlsx_path, data_only=True)
+    ws = wb[DRIVE_SHEET_NAME] if DRIVE_SHEET_NAME in wb.sheetnames else wb.active
+
+    semanas_validas = 0
+    for col in range(1, ws.max_column + 1):
+        v = ws.cell(row=DRIVE_DATA_ROW, column=col).value
+        if v and re.match(r"^\d{2}/\d{2} a \d{2}/\d{2}", str(v).strip()):
+            semanas_validas += 1
+    if semanas_validas < 10:
+        raise ValueError(
+            f"xlsx não reconhecido: só {semanas_validas} semana(s) com data válida na "
+            f"linha {DRIVE_DATA_ROW} (esperado 'DD/MM a DD/MM'); estrutura pode ter mudado")
+
+    celulas = []
+    for col in range(1, ws.max_column + 1):
+        if not ws.cell(row=DRIVE_DATA_ROW, column=col).value:
+            continue
+        for row in DRIVE_TASK_ROWS:
+            cell = ws.cell(row=row, column=col)
+            texto = cell.value
+            if not texto:
+                continue
+            bruto = _dewrap(str(texto))
+            celulas.append({
+                "semana": col,
+                "texto_bruto": bruto,
+                "texto_norm": _norm_tema_xlsx(bruto),
+                "tipo_norm": normaliza_tipo(bruto),
+                "concluido": bool(cell.font.strike),
+            })
+    return celulas
+
+
+def diff_drive(xlsx_path, grade=None):
+    """Cruza as células do xlsx (conclusão real) com as tasks de grade.json por
+    (semana, tema normalizado, tipo_norm) — o índice de task não bate 1:1 entre
+    as duas fontes (o xlsx bundla vários temas por célula em Revisão por
+    Questões). Sem match = concluído:False (conservador — nunca assume feito
+    sem confirmação positiva do tachado)."""
+    grade = grade or load_grade()
+    celulas = _parse_conclusao_xlsx(xlsx_path)
+    por_semana = {}
+    for c in celulas:
+        por_semana.setdefault(c["semana"], []).append(c)
+
+    tasks_out, sem_match = [], []
+    for s in grade["semanas"]:
+        cels = por_semana.get(s["semana"], [])
+        for t in s["tasks"]:
+            tema_norm = _norm_tema_xlsx(t.get("tema", ""))
+            concluido = False
+            match = None
+            if tema_norm:
+                match = next((c for c in cels if c["tipo_norm"] == t["tipo_norm"]
+                              and tema_norm in c["texto_norm"]), None)
+                if match:
+                    concluido = match["concluido"]
+                else:
+                    sem_match.append({"semana": s["semana"], "tema": t["tema"],
+                                       "tipo_norm": t["tipo_norm"]})
+            tasks_out.append({
+                "semana": s["semana"], "tarefa": t["tarefa"], "area_norm": t["area_norm"],
+                "tema": t.get("tema", ""), "tipo_norm": t["tipo_norm"], "concluido": concluido,
+            })
+    return {"tasks": tasks_out, "sem_match": sem_match}
+
+
+def sync_drive(xlsx_path):
+    """Parseia o xlsx + grava o snapshot em preparacao_estado (chave
+    'cronograma_conclusao_drive'). Único write desta feature (Cláusula 5)."""
+    import app.utils.db as db
+    result = diff_drive(xlsx_path)
+    snapshot = {
+        "gerado_em": datetime.now().isoformat(timespec="seconds"),
+        "tasks": result["tasks"],
+    }
+    db.set_preparacao("cronograma_conclusao_drive", json.dumps(snapshot, ensure_ascii=False),
+                       fonte="drive_sync")
+    return snapshot, result["sem_match"]
+
+
 def main():
     ap = argparse.ArgumentParser(description="Derivador do cronograma (read-only).")
     ap.add_argument("--rebuild", action="store_true", help="(re)gera grade.json do PDF")
@@ -421,6 +533,9 @@ def main():
     ap.add_argument("--semana", type=int, help="filtra --json para a semana N")
     ap.add_argument("--desde", type=int, help="semana inicial p/ --gap/--radar (default: nominal por data)")
     ap.add_argument("--meta", type=int, default=10000, help="meta de volume p/ --gap")
+    ap.add_argument("--sync-drive", metavar="XLSX_PATH", dest="sync_drive",
+                    help="parseia o xlsx do Drive (já baixado via MCP) e grava o snapshot "
+                         "de conclusão real em preparacao_estado")
     args = ap.parse_args()
 
     if args.rebuild:
@@ -459,6 +574,20 @@ def main():
         g = load_grade()
         out = get_semana(g, args.semana) if args.semana else g
         print(json.dumps(out, ensure_ascii=False, indent=2))
+        return
+    if args.sync_drive:
+        try:
+            snap, sem_match = sync_drive(args.sync_drive)
+        except ValueError as e:
+            print(f"[ERRO] {e}")
+            sys.exit(1)
+        n_ok = sum(1 for t in snap["tasks"] if t["concluido"])
+        print(f"[OK] snapshot gravado em preparacao_estado: {len(snap['tasks'])} tasks · "
+              f"{n_ok} concluídas · {len(sem_match)} sem match")
+        if sem_match:
+            print("  sem match (tema não encontrado no xlsx da semana — ficou pendente):")
+            for m in sem_match[:20]:
+                print(f"    S{m['semana']} · {m['tema']} ({m['tipo_norm']})")
         return
     ap.print_help()
 

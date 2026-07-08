@@ -37,6 +37,7 @@ Leitura rápida, read-only. Reporta divergências; não grava sem confirmação.
 | **W5** | `grade.json` defasado vs `Cronograma.pdf` (sha256 difere) | WARNING | `python tools/cronograma.py --check` |
 | **W6** | "Próxima = SNN" (semana de conteúdo) no HANDOFF/ESTADO desatualizada vs o trabalho real | WARNING | ponteiro textual vs últimas sessões |
 | **W7** | Gap de meta materializado (`acum + cronograma restante < meta`) — **fork estratégico, reporta UMA vez** | WARNING | `python tools/cronograma.py --gap` |
+| **W8** | Posição calendário de `grade.json` diverge da fronteira real de conclusão marcada no xlsx do Drive (tema riscado) | WARNING | `day_plan.py`/`cron.conclusao_desatualizada` — snapshot `preparacao_estado.cronograma_conclusao_drive` ausente ou de dia-calendário anterior |
 
 **BLOCKING** → resolver antes de iniciar trabalho novo. **WARNING** → reportar; trabalho pode seguir.
 > **Cronograma (W5-W7) nunca é BLOCKING:** plano não é verdade-de-estado; estar atrasado é *informação de gestão*, não corrupção (`cronograma-contract.md`).
@@ -63,6 +64,10 @@ PASSO 3 — Resolver WARNING (se houver)
   → W6: atualizar o ponteiro textual "Próxima = SNN" no HANDOFF/ESTADO (único write da feature de cronograma).
   → W7: reportar UMA vez; registrar a decisão do usuário em ESTADO §Metas; silenciar até a premissa mudar.
        🔴 Resolução de W5-W7 NÃO grava no db (cronograma-contract.md, Cláusula 5).
+  → W8: buscar o xlsx via MCP Drive (fileId em `importar-planilha.md`) e rodar
+       `python tools/cronograma.py --sync-drive <path-baixado>` — grava o snapshot em
+       `preparacao_estado.cronograma_conclusao_drive` (write permitido, Cláusula 5).
+       1× por dia-calendário basta (o snapshot já reusa nos boots seguintes do mesmo dia).
 
 PASSO 4 — Saída
   → Condição: HANDOFF ≤ 60 linhas + header com session em history/ + HANDOFF ⟷ ESTADO ⟷ db consistentes.

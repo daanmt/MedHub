@@ -1,6 +1,18 @@
 # Decision Log
 > Newest first. Updated automatically by the architect agent.
 
+## 2026-07-08 — Sync de conclusão real do cronograma (xlsx Drive): reusar `preparacao_estado`, não arquivo novo
+
+**Contexto:** Achado F33 (`AUDITORIA_MEDHUB.md`) — o boot recomendava temas já concluídos porque `day_plan.py`/`grade.json` são calendário-driven e nunca liam o marcador de conclusão real (tema riscado) do xlsx `Cronograma de Reta Final.xlsx` do Drive. PRD/spec/implement/audit completo (`.vibeflow/{prds,specs,audits}/cronograma-sync-conclusao-drive.md`), verdict **PASS**.
+
+**Decisão:** o PRD original propunha um arquivo novo `core/cronograma/conclusao_drive.json` (gitignored). O gen-spec descobriu que já existe exatamente o mecanismo necessário — `preparacao_estado` (tabela chave/valor/`atualizado_em`/`fonte` em `ipub.db`, criada pelo PRD `orquestracao-preparacao` part-1, 2026-07-06) — e o reusou (nova chave `cronograma_conclusao_drive`) em vez de duplicar lógica de cache/staleness. Matching entre `grade.json` (PDF, 1 task = 1 tema) e o xlsx (bundla vários temas por célula) é por `(semana, tema normalizado, tipo_norm)`, nunca por índice de task; sem match = `concluido:false` (conservador — nunca assume feito sem confirmação positiva do tachado).
+
+**Pitfall (doc↔código drift, mesma classe do F33):** `core/contracts/cronograma-contract.md` v1.0 (Cláusula 5) ainda descrevia "o único write permitido é o ponteiro de texto `Próxima = SNN` em HANDOFF/ESTADO" — mas esse caminho já estava **deprecado** desde 2026-07-06 (`day_plan.py::_resolver_semana_conteudo()` emite `[WARN] POSICAO_VIA_TEXTO`). O contrato nunca foi atualizado quando o SSOT migrou pro db. Corrigido nesta feature (Cláusula 5 v1.1). **Regra geral: quando um PRD/spec migra o mecanismo de persistência de um sistema já normatizado por contrato, atualizar o contrato NO MESMO spec — não depois.**
+
+**Pitfall (falso positivo de encoding):** a leitura do xlsx via MCP + prints em scripts ad-hoc no console do Windows (cp1252) mostrava acentuação corrompida (`"Doen�as"`), levando a crer que os dados vinham corrompidos do Drive. Não vinham — era só o console sem `sys.stdout.reconfigure(encoding="utf-8")` (mesmo pitfall de 2026-04-23 abaixo, mas na leitura via MCP em vez de emoji). O matching funciona corretamente com os dados reais (UTF-8 íntegro em memória); a normalização por `unicodedata` (strip de acentos) foi implementada mesmo assim como rede de segurança — inofensiva mesmo sem corrupção real.
+
+---
+
 ## 2026-07-05 — Invariantes de estado executáveis (F1/F6) + runtime canônico é o Python do sistema
 
 **Contexto:** Part 1 do PRD engenharia-ledger (`.vibeflow/audits/engenharia-ledger-part-1-audit.md`, PASS). Transplante do padrão Executable-State-Reconcile: `auto_check.py::check_session_pointer()` (ponteiro do HANDOFF <= max(history/session_NNN)+1; WARN `SESSION_POINTER_DRIFT`, warning-first) e `day_plan.py --handoff-block` (bloco numérico do HANDOFF vira derivado do db — números digitados à mão foram a raiz do F6).

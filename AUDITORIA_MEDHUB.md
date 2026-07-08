@@ -348,6 +348,84 @@ relates_to: [AGENTE, ESTADO, HANDOFF]
   automaticamente quando nao existir -- fecha o mesmo buraco do F16 de forma preventiva, para
   qualquer tema futuro, nao so Apendicite.
 
+### F31 -- Cards FSRS podem existir sem NENHUM lastro clinico (nem .md nem PDF-fonte) -- **MEDIA**
+- **Evidencia:** card_id 205 (Leishmaniose, area Infecto) foi drenado na s112 e o usuario relatou
+  "muita dificuldade" pedindo refresh amplo -- `find resumos -iname "*leishmaniose*"` retornou
+  vazio E nao ha PDF-fonte tampouco (diferente do F16/F30, onde ao menos o PDF EMED existia). O
+  card nasceu de um erro real via `insert_questao.py` (Siamese Twins: erro->db, licao->resumo),
+  mas o lado "licao->resumo" nunca foi executado -- e nao ha checagem no momento da insercao que
+  force ou ao menos sinalize a ausencia.
+- **Leitura de sistema:** o par Siamese Twins (`AGENTE.md` secao 6) e uma convencao, nao um
+  invariante mecanico -- `insert_questao.py` grava o erro/card mesmo se o resumo do tema
+  (area,tema) nao existir em `resumos/**/*.md` nem como PDF-fonte. Generaliza F16/F30 (tema COM
+  pdf sem .md) para o caso mais severo: tema sem nenhum lastro escrito.
+- **Verificacao sugerida:** cruzar `taxonomia_cronograma` (todas as `(area,tema)` com card ativo)
+  x `resumos/**/*.md` x `resumos/**/*.pdf`; listar temas com card ativo e ZERO lastro escrito.
+- **Hipotese de melhoria:** `insert_questao.py` fazer um check read-only (WARN nao bloqueante)
+  quando `_find_resumo(area,tema)` retorna None -- sinaliza no ato da insercao, nao meses depois
+  num refresh de FSRS.
+
+### F32 -- Re-drill intra-sessao do `/revisar` colide com o relearning nativo do FSRS (state=3) -- **BAIXA**
+- **Evidencia:** s112 (drenagem de 28 cards + re-drill de 13). Apos ratings 1 em 3 cards (205,
+  201, 165), o agente fez o re-drill manual (conversacional, sem `--record`) conforme o contrato
+  -- mas o proprio `record_review()` ja tinha agendado esses 3 cards para reaparecer NO MESMO DIA
+  (`state=3`, relearning nativo da lib FSRS). Resultado: ao rodar `--list` no fechamento da sessao
+  pra conferir fila vazia, os 3 reapareceram como "hoje", mesmo ja reforcados com sucesso no
+  re-drill manual minutos antes -- pareceu fila nao-vazia quando na pratica estava.
+- **Leitura de sistema:** duas camadas tentando resolver o mesmo problema (recall fragil precisa
+  de reforco proximo) por vias diferentes -- o contrato da skill (`revisar.md`, "Relearning
+  intra-sessao") reimplementa em prosa algo que a lib FSRS (`app/utils/fsrs.py`) ja faz nativamente
+  via `state=3`. Nao ha bug de dado (nenhum record duplicado), so ambiguidade de leitura.
+- **Verificacao sugerida:** checar se `--list`/`--next` deveriam marcar cards `state=3` com `due`
+  no mesmo dia da sessao atual como distintos de "aguardando 1a resposta".
+- **Hipotese de melhoria:** nenhuma acao imediata necessaria (nao e bug funcional) -- documentar em
+  `revisar.md` que o relearning nativo (state=3, mesmo dia) e ESPERADO apos rating 1/2 e que o
+  re-drill conversacional e complementar, nao substituto.
+
+### F33 -- Boot recomenda temas ja FEITOS porque `day_plan`/`grade.json` sao calendario-driven, nao leem conclusao real da planilha -- **MEDIA** -- **RESOLVIDO (08/07, mesma sessao)**
+- **Evidencia (08/07):** o boot do dia recomendou "proximos temas: MFC (extensivo), Imunizacoes
+  (extensivo), Apendicite Aguda (extensivo)" como S12. O operador contestou -- essas 3 tarefas ja
+  tinham sido feitas. Verificacao ao vivo via `download_file_content`+`openpyxl` na planilha
+  `Cronograma de Reta Final.xlsx` (marcador de conclusao = `cell.font.strike`, conforme
+  `importar-planilha.md`) confirmou: MFC Teoria I/II, Imunizacoes Teoria I/II e Apendicite
+  Teoria+Revisao estao riscados (FEITOS, semanas 11-12). O que de fato falta em S12 (sem strike):
+  DITC II (Teoria), Disturbios do Potassio (Teoria), Cefaleias+Epilepsias (Teoria), HAS Pt.2
+  (Teoria) + 2 blocos de Revisao por Questoes (MFC+Vigilancia+SIS; DM Tipo2 completo).
+- **Causa raiz:** `cronograma-contract.md` ja documentava isso como fora de escopo v1.0 (Clausula
+  1 + secao "Fora de escopo", item R8: "Reconciliar PDF x xlsx do Drive"). `grade.json` deriva
+  do `Cronograma.pdf` estatico (SSOT estrutural) e o `day_plan.py` posiciona "proximos temas" por
+  **posicao sequencial na grade vs data calendario**, nunca lendo o marcador de tachado/cor que o
+  operador usa na planilha do Drive para sinalizar conclusao real. O ponteiro textual
+  `Proxima = Semana N` em `ESTADO.md`/`HANDOFF.md` (unico write permitido pela Clausula 5) tambem
+  estava desatualizado (`Semana 11`, de sessoes anteriores) e nao e atualizado automaticamente --
+  so por edicao manual quando alguem nota o drift.
+- **Verificacao sugerida:** cruzar `grade.json` completo (352 tasks) x planilha inteira (nao so a
+  janela S11-S16 checada nesta sessao) para medir o tamanho real do drift calendario x execucao.
+- **Hipotese de melhoria:** implementar R8 de fato -- `cronograma.py --check-drive` (ou similar)
+  le `cell.font.strike` por task via MCP sob demanda no boot (nao cron, coerente com Clausula 3) e
+  cruza com `area_norm`/`tema` de `grade.json` para computar "proximos temas" pela FRONTEIRA REAL
+  de conclusao, nao pela posicao calendario. Ate isso existir, o ponteiro `Proxima = SNN` deve ser
+  tratado como aproximacao e reconciliado manualmente quando o operador contestar o boot (como
+  aqui). Correcao ao vivo desta sessao: `HANDOFF.md`/`ESTADO.md` atualizados (Semana 11 fechada,
+  Semana 12 parcial, lista real de pendentes).
+- **EXECUTADO:** ciclo completo `/discover` -> `/gen-spec` -> `/implement` -> `/audit` (verdict
+  **PASS**; `.vibeflow/{prds,specs,audits}/cronograma-sync-conclusao-drive.md`). Implementa R8 de
+  fato: `tools/cronograma.py --sync-drive <xlsx>` parseia `cell.font.strike` por task e casa contra
+  `grade.json` por `(semana, tema normalizado via unicodedata, tipo_norm)` -- indice de task nao
+  bate 1:1 entre PDF e xlsx, entao o match e semantico, nao posicional. Grava snapshot em
+  `preparacao_estado.cronograma_conclusao_drive` (reusa o SSOT do PRD orquestracao-preparacao em
+  vez de criar arquivo novo -- achado durante o gen-spec: a `cronograma-contract.md` Clausula 5
+  estava desatualizada, ainda descrevia o ponteiro de texto `Proxima = SNN` como "unico write
+  permitido" quando esse caminho ja estava DEPRECADO desde 2026-07-06). `day_plan.py` agora filtra
+  "proximos temas" pela fronteira real quando o snapshot e do dia-calendario corrente; sem
+  snapshot fresco, degrada pro comportamento calendario antigo + avisa `conclusao_desatualizada`
+  (nunca falha silenciosa). Nova condicao **W8** em `reconcile-contract.md`. Validado contra o
+  xlsx real desta sessao: 352 tasks, 119 concluidas, resultado bate 1:1 com a apuracao manual que
+  originou este achado. 19/19 testes novos+existentes PASS + `auto_check.py --changed` PASSED.
+- **Nao resolvido por este ciclo (fora de escopo, documentado na spec):** alinhamento fino
+  `questoes_por_lista[i] <-> tasks[i]` (permanece rateio igual); reimportacao de volume a partir
+  do xlsx (fluxo separado, W1/F29).
+
 ---
 
 ## 4. O que esta solido (nao mexer sem motivo)
@@ -430,4 +508,4 @@ O objetivo da sessao nao era so drenar cards: era **usar o MedHub para descobrir
 
 ---
 
-*Este doc e o ledger vivo de engenharia. Nao "fecha" -- acumula achados a cada sessao de uso. O 1o ciclo Fable (PRD -> 5 ondas) foi ENTREGUE em 2026-07-05 (secao 3b). A s109 (coordenador-observador) adicionou **F16-F19** do uso vivo (forja da aula-base de apendicite; secao 3c) -- insumo do ciclo 2. A rodada 1 do ciclo 2 (Fable/ai-eng, paralela a s109; secao 3d) entregou F14/F15, validou o teto (F4/b), preparou a janela do expurgo (F11) e registrou F20. A s109 (1o lote de questoes; secao 3e) adicionou F21, e (2o lote; secao 3f) **F22-F26**. O **ciclo 2 rodada 2** (Fable/ai-eng, 2026-07-06; secao 3g) entregou o PRD ORQUESTRACAO completo (vibeflow 4/4 PASS): posicao SSOT (op-3), recomendador do dia, F22-F26 RESOLVIDOS; F21 segue aberto (contrato de aula); F27/F28 registrados pelos audits. A **s110 parte 2** (2026-07-06) verificou performance+cronograma a pedido do operador, achou e RESOLVEU **F29** (drift planilha-db de 76q, ao vivo, mesma sessao); no ciclo de Pre-Natal I (cold recall, tema-zero) registrou **F30** (material_indicado nao verifica existencia real do resumo), aberto. **Proximos achados comecam em F31**. Ultima atualizacao: s110 parte 2 (2026-07-06).*
+*Este doc e o ledger vivo de engenharia. Nao "fecha" -- acumula achados a cada sessao de uso. O 1o ciclo Fable (PRD -> 5 ondas) foi ENTREGUE em 2026-07-05 (secao 3b). A s109 (coordenador-observador) adicionou **F16-F19** do uso vivo (forja da aula-base de apendicite; secao 3c) -- insumo do ciclo 2. A rodada 1 do ciclo 2 (Fable/ai-eng, paralela a s109; secao 3d) entregou F14/F15, validou o teto (F4/b), preparou a janela do expurgo (F11) e registrou F20. A s109 (1o lote de questoes; secao 3e) adicionou F21, e (2o lote; secao 3f) **F22-F26**. O **ciclo 2 rodada 2** (Fable/ai-eng, 2026-07-06; secao 3g) entregou o PRD ORQUESTRACAO completo (vibeflow 4/4 PASS): posicao SSOT (op-3), recomendador do dia, F22-F26 RESOLVIDOS; F21 segue aberto (contrato de aula); F27/F28 registrados pelos audits. A **s110 parte 2** (2026-07-06) verificou performance+cronograma a pedido do operador, achou e RESOLVEU **F29** (drift planilha-db de 76q, ao vivo, mesma sessao); no ciclo de Pre-Natal I (cold recall, tema-zero) registrou **F30** (material_indicado nao verifica existencia real do resumo), aberto. A **s113** (08/07, verificacao de cronograma a pedido do operador) achou e RESOLVEU **F33** (boot recomendava temas ja feitos, calendario-driven sem ler conclusao real da planilha) na mesma sessao via ciclo completo `/discover`->`/gen-spec`->`/implement`->`/audit` (PASS); F31/F32 registrados por uso vivo (s112). **Proximos achados comecam em F34**. Ultima atualizacao: s113 (2026-07-08).*

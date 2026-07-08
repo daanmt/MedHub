@@ -1,10 +1,10 @@
 # HANDOFF.md -- ESTADO OPERACIONAL CURTO
-*Atualizado: 2026-07-07 -- **s112: DM Complicacoes Cronicas 58q/51a (87,9%, melhor % recente) + 7 erros -> 7 cards (762-768). Achados de conteudo novo no resumo: pe de Charcot (mecanismo vasodilatador) e diretriz SBC/SBHCI 2017 (DM pos-ICP).***
+*Atualizado: 2026-07-08 -- **s113: F33 RESOLVIDO -- sync mecanico de conclusao real do cronograma (xlsx Drive) via ciclo /discover->/gen-spec->/implement->/audit (PASS). cronograma-contract v1.1 + W8 novo.***
 
 ## > Proximo passo imediato
 1. **FSRS:** 3 atrasados + 6 hoje (backlog 393 novos) -- `/revisar` ou `fsrs_queue.py`.
 2. **Debito aberto (arrastado):** aula-base de Pre-Natal I NUNCA foi feita (operador adiantou pra cold recall) -- resumo pronto, so falta a "escada de degraus" antes de fechar o tema de verdade.
-3. **Proximo bloco de conteudo (S12, recomendado pelo day_plan):** Medicina de Familia e Comunidade (extensivo) -- cards de erro frescos (<48h) puxando reincidencia. Fila seguinte: Apendicite Aguda (F16, alta alavanca), Hipertensao Arterial Sistemica Pt.2/Cardiologia, Disturbios do Potassio, Cefaleias+Epilepsias.
+3. **Proximo bloco de conteudo real (S12, agora via sync automatico -- nao mais manual):** DITC II (Teoria) -- proxima acao pedida pelo operador (revisao Parte I + expansao Parte II) -- + Disturbios do Potassio, Cefaleias+Epilepsias, HAS Pt.2 (Teoria) + 2 blocos de Revisao por Questoes (MFC+Vigilancia+SIS; DM Tipo2 completo). Fonte: `preparacao_estado.cronograma_conclusao_drive` (boot sincroniza 1x/dia-calendario via MCP Drive quando `day_plan` sinalizar `conclusao_desatualizada` -- ver AGENTE.md §2 passo 4).
 4. Slot de simulado previsto ainda nesta semana (S12, ciclo de 4 semanas).
 
 ## Padroes de erro vivos -- atencao do scrum master
@@ -16,13 +16,13 @@
 
 ## Estado por frente
 - **Volume & Metas:** 4765 / 12000 (perf. ~79.2%). Hoje: 0. Ritmo-alvo ~108.0q/dia (67d p/ ENAMED). [derivado: day_plan --handoff-block]
-- **Conteudo:** 63 resumos. DM Complicacoes Cronicas ganhou secao nova (5.5 Neuroartropatia de Charcot) + fato de diretriz SBC/SBHCI em Doenca Macrovascular + ressalva de triciclicos em Neuropatia Autonomica + 6 novas armadilhas. Gap de alta alavanca seguinte: Apendicite Aguda (F16).
-- **Erros & Cards:** +7 cards de erro hoje (762-768: DM Complicacoes Cronicas), todos ancorados no elo.
+- **Conteudo:** 63 resumos, sem mudanca nesta sessao (engenharia pura). Gap de alta alavanca seguinte: Apendicite Aguda (F16, resumo ainda pendente).
+- **Erros & Cards:** sem novos cards nesta sessao.
 - **FSRS:** 3 atrasados + 6 hoje. Backlog: 393 novos. [derivado: day_plan --handoff-block]
-- **Infraestrutura:** sem mudancas de engenharia nesta sessao (bloco de conteudo puro). Virada de papel 2 (s111) segue valendo: Opus resolve achados do ledger, agente anota.
+- **Infraestrutura:** F33 resolvido -- `tools/cronograma.py --sync-drive` (parse xlsx + matching semana/tema/tipo + snapshot em `preparacao_estado`), `day_plan.py` filtra por conclusao real, W8 novo (`reconcile-contract.md`), `cronograma-contract.md` v1.1 (Clausula 5 corrigida -- ponteiro de texto estava deprecado desde 06/07 sem o contrato refletir). 8 testes novos (19/19 PASS) + `auto_check.py --changed` PASSED.
 
 ## Pendencias ativas
-Aula-base de Pre-Natal I (debito, ver acima). Apendicite Aguda ainda sem resumo (F16, cobertura ja prioriza). Reescrever TCE.md + Sistemas de Informacao em Saude.md. Reforjar cards 95/120 (120 via gate de evidencia). Ledger `AUDITORIA_MEDHUB.md`: F21 aberto (contrato de aula), F30 aberto (cronograma x resumo real) -- ambos candidatos a Opus.
+Aula-base de Pre-Natal I (debito, ver acima). Apendicite Aguda ainda sem resumo (F16, cobertura ja prioriza). Reescrever TCE.md + Sistemas de Informacao em Saude.md. Reforjar cards 95/120 (120 via gate de evidencia). Ledger `AUDITORIA_MEDHUB.md`: F21 aberto (contrato de aula), F30 aberto (material_indicado x resumo real) -- candidatos a Opus. Proximos achados comecam em F34.
 
 ---
-*Historico: history/INDEX.md * Macro: ESTADO.md * Sessao: history/session_112.md * Ledger de engenharia: AUDITORIA_MEDHUB.md*
+*Historico: history/INDEX.md * Macro: ESTADO.md * Sessao: history/session_113.md * Ledger de engenharia: AUDITORIA_MEDHUB.md*

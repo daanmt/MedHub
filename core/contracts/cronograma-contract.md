@@ -47,7 +47,9 @@ O estudante segue um cronograma de 30 semanas (EMED), mas **por conteúdo**, atr
 - **Zero write em `taxonomia_cronograma`** (tabela de desempenho-por-tema, `UNIQUE(area,tema)`, alimentada SÓ por `insert_questao.py`). Tasks repetem o mesmo tema em várias semanas com `tipo` diferente → escrevê-las quebraria o UNIQUE/a dedup s083 e furaria o resolver `(area,tema)`. O elo cronograma↔desempenho é **em memória** (join por nome normalizado), nunca por escrita.
 - **Zero write em `sessoes_bulk`, FSRS (`fsrs_cards`/`fsrs_revlog`) e `review_log`.** O derivador é read-only.
 - **Rótulos sujos (W4: `GO`, mojibake `Obstetrícia`) são normalizados NA LEITURA, com WARNING** — o db **não** é tocado. A migração destrutiva que limpa o db de fato é fork à parte.
-- **Único write permitido pela feature de cronograma:** espelhar **1 ponteiro de texto** — `Próxima = SNN` (semana de conteúdo) em `HANDOFF.md`/`ESTADO.md`, atualizado quando a semana de conteúdo vira. `day_plan.py` lê esse ponteiro (fallback: semana nominal por data).
+- **Writes permitidos pela feature de cronograma (v1.1, corrigido): a tabela `preparacao_estado`** (`ipub.db`, chave/valor/`atualizado_em`/`fonte` — PRD `orquestracao-preparacao` part-1, 2026-07-06), NUNCA `taxonomia_cronograma`/`sessoes_bulk`/FSRS. Duas chaves hoje:
+  - `semana_conteudo` — posição SSOT (semana de conteúdo), gravada por `python tools/preparacao.py --set-semana N`. **Substitui** o antigo "ponteiro de texto `Próxima = SNN` em `HANDOFF.md`/`ESTADO.md`" (v1.0 desta cláusula) — esse caminho está **deprecado**: `day_plan.py::_resolver_semana_conteudo()` só cai nele quando `preparacao_estado` está vazio, e emite `[WARN] POSICAO_VIA_TEXTO (deprecado)` em stderr quando isso acontece. Não editar mais o texto do HANDOFF/ESTADO como fonte — é saída derivada, não input.
+  - `cronograma_conclusao_drive` — snapshot da fronteira real de conclusão (tema riscado no xlsx do Drive), gravado por `python tools/cronograma.py --sync-drive <xlsx>` (spec `cronograma-sync-conclusao-drive`, W8/`reconcile-contract.md`). Frescor = dia-calendário de `atualizado_em`; `day_plan.py` ignora o snapshot (degrada pro comportamento calendário puro) quando ausente ou de dia anterior.
 
 ## Cláusula 6 — Lente estratégica (dono do gap = fork)
 
@@ -70,7 +72,7 @@ O estudante segue um cronograma de 30 semanas (EMED), mas **por conteúdo**, atr
 
 ## Fora de escopo (v1.0)
 
-- Reconciliar PDF × xlsx do Drive (R8).
+- ~~Reconciliar PDF × xlsx do Drive (R8)~~ — **implementado v1.1** (marcador de conclusão/tema riscado, `--sync-drive`). Segue fora de escopo: alinhamento fino `questoes_por_lista[i] ↔ tasks[i]` (linha abaixo) — R8 cobriu só o booleano concluído/pendente por tema, não contagem por task.
 - Migração destrutiva de rótulos sujos no `sessoes_bulk` (fork à parte — só normalização na leitura).
 - Alinhamento exato `questoes_por_lista[i] ↔ tasks[i]` (v1.1; hoje rateio igual).
 - Resolução robusta tema→resumo por nome de arquivo em `get_topic_context._find_resumo` (hoje indexa só `especialidade`/`area`/`aliases` → fuzzy frágil). **Pré-requisito do `infer_nota` do PRD de Revisão Calibrada** — fix aditivo = indexar `path.stem.lower()`.
@@ -79,4 +81,5 @@ O estudante segue um cronograma de 30 semanas (EMED), mas **por conteúdo**, atr
 
 ## Changelog
 
+- **v1.1 (2026-07-08):** implementa R8 (marcador de conclusão real do xlsx do Drive) — `tools/cronograma.py --sync-drive` (parse `cell.font.strike` + matching `(semana,tema,tipo_norm)` contra `grade.json`) grava snapshot em `preparacao_estado.cronograma_conclusao_drive`; `day_plan.py` filtra "próximos temas" pela fronteira real quando o snapshot é do dia-calendário corrente (W8, `reconcile-contract.md`). Corrige a Cláusula 5, que estava desatualizada desde a migração do ponteiro de posição para `preparacao_estado` (PRD `orquestracao-preparacao`, 2026-07-06) — achado **F33** (`AUDITORIA_MEDHUB.md`), spec `.vibeflow/specs/cronograma-sync-conclusao-drive.md`.
 - **v1.0 (2026-06-27, s095):** primeira instância. F1 `tools/cronograma.py` (derivador + `AREA_PDF_TO_CANON`) + `core/cronograma/grade.json` (30 sem · 352 tasks · 10218q; validado S10=273, S11-28=6689/222); F2 `--radar` (cobertura × performance, fronteira pré/pós-ENAMED); F3 integração no `day_plan.py` (conteúdo×calendário, ponteiro `Próxima=SNN`); F4 este contrato + patches reconcile/AGENTE/forgetting-curve + skill. Adaptado da arquitetura contract-driven do irmão `agente-daktus-content`.

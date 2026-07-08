@@ -1,27 +1,28 @@
 # HANDOFF.md -- ESTADO OPERACIONAL CURTO
-*Atualizado: 2026-07-06 -- **s111 (fecha s110 parte 2): F29 RESOLVIDO (drift planilha-db de 76q, achado e corrigido ao vivo) + Imunizacoes II (29q/24a, dificuldade 9->7) + Pre-Natal I tema-zero (18q/13a cold recall, resumo criado do zero de 90 paginas, dificuldade 9) + F30 registrado. Dia: 117q/93a (79,5%).***
+*Atualizado: 2026-07-07 -- **s112: DM Complicacoes Cronicas 58q/51a (87,9%, melhor % recente) + 7 erros -> 7 cards (762-768). Achados de conteudo novo no resumo: pe de Charcot (mecanismo vasodilatador) e diretriz SBC/SBHCI 2017 (DM pos-ICP).***
 
 ## > Proximo passo imediato
-1. **FSRS:** 3 atrasados + 9 hoje (backlog 386 novos) -- `/revisar` ou `fsrs_queue.py`.
-2. **Debito aberto:** aula-base de Pre-Natal I NUNCA foi feita (operador adiantou pra cold recall) -- resumo pronto, so falta a "escada de degraus" antes de fechar o tema de verdade.
-3. **Proximo bloco de conteudo (S12, candidatos):** Apendicite Aguda (F16, alta alavanca -- fecha gap de RAG antigo), Hipertensao Arterial Sistemica Pt.2/Cardiologia (confirmado nesta semana, area fraca 67%), Disturbios do Potassio, Cefaleias+Epilepsias (ambos extensivo, ainda intocados).
+1. **FSRS:** 3 atrasados + 6 hoje (backlog 393 novos) -- `/revisar` ou `fsrs_queue.py`.
+2. **Debito aberto (arrastado):** aula-base de Pre-Natal I NUNCA foi feita (operador adiantou pra cold recall) -- resumo pronto, so falta a "escada de degraus" antes de fechar o tema de verdade.
+3. **Proximo bloco de conteudo (S12, recomendado pelo day_plan):** Medicina de Familia e Comunidade (extensivo) -- cards de erro frescos (<48h) puxando reincidencia. Fila seguinte: Apendicite Aguda (F16, alta alavanca), Hipertensao Arterial Sistemica Pt.2/Cardiologia, Disturbios do Potassio, Cefaleias+Epilepsias.
+4. Slot de simulado previsto ainda nesta semana (S12, ciclo de 4 semanas).
 
 ## Padroes de erro vivos -- atencao do scrum master
-- RED **Mapa de reforco instavel (Imunizacoes):** inventa reforco onde nao existe (Hepatite B completa nao reforca, confundido com logica de dT) E perde reforco onde passou a existir (Febre Amarela ganhou reforco aos 4 anos em 2020 -- errou 2x no mesmo bloco, Q4+Q5).
-- RED **Enunciado negativo reincidiu 2x no MESMO bloco (Pre-Natal Q1+Q3)** -- padrao cronico ja mapeado (`feedback_enunciado_negativo`); sob fadiga de leitura marca alternativa VERDADEIRA como se fosse a falsa. Ritual: rotular V/F cada alternativa antes de decidir, sempre que ver "assinale a incorreta"/EXCETO.
-- RED **Ferro x folato, direcoes opostas no 1o trimestre confundidas:** ferro deve ser LIMITADO (estresse oxidativo trofoblastico); folato deve ser INICIADO cedo (reduz DTN). Mesma janela, sentidos opostos.
-- RED **Bug no1 (emese x hiperemese):** achado negativo explicito no enunciado ("sem perda de peso") foi ignorado, escalou pra internacao sem criterio objetivo de hiperemese.
-- RED **Imunoglobulina antitetanica nao e automatica no ferimento de alto risco** -- exige checklist proprio (esquema desconhecido/incompleto OU populacao especial OU >10a mal cuidado), nao reflexo "ferimento feio = vacina+soro".
+- RED **Enunciado negativo reincidiu 2x no MESMO bloco de novo (DM Q1+Q4)** -- 3a sessao seguida com esse padrao (s110 Pre-Natal Q1+Q3, agora DM). Padrao cronico ja mapeado (`feedback_enunciado_negativo`); sob fadiga de leitura marca alternativa VERDADEIRA como se fosse a falsa. Ritual: rotular V/F cada alternativa antes de decidir, sempre que ver "mostra-se inadequado"/"conceito inadequado"/EXCETO.
+- RED **Inversao intuitiva do mecanismo (pe de Charcot):** denervacao autonomica "deveria" sugerir isquemia/vasoconstricao, mas causa VASODILATACAO em microvasos (perda do tonus simpatico) -- 57% da turma errou na mesma direcao, sinal de armadilha sistemica, nao so individual.
+- RED **Vies otimista em fato de diretriz (DM pos-ICP):** assumiu que "tratar bem os fatores de risco" reduz obito/eventos no diabetico revascularizado; a diretriz SBC/SBHCI 2017 diz o oposto (nao ha reducao efetiva demonstrada) -- 72% da turma errou pro lado otimista.
+- RED **Mapa de reforco instavel (Imunizacoes, arrastado):** inventa reforco onde nao existe (Hepatite B) E perde reforco onde passou a existir (Febre Amarela aos 4 anos, 2020).
+- RED **Ferro x folato, direcoes opostas no 1o trimestre confundidas (arrastado):** ferro deve ser LIMITADO; folato deve ser INICIADO cedo. Mesma janela, sentidos opostos.
 
 ## Estado por frente
-- **Volume & Metas:** 4707 / 12000 (perf. ~79.1%). Hoje: 117. Ritmo-alvo ~105.7q/dia (69d p/ ENAMED). [derivado: day_plan --handoff-block]
-- **Conteudo:** 63 resumos (**+2 hoje:** Imunizacoes MUITO expandido -- composicao de vacinas/coadministracao/calendarios adulto-idoso-gestante-prematuro-CRIE/BCG+HepB+DTP+Hib+Polio aprofundados; Pre-Natal CRIADO DO ZERO, tema-zero, 90 paginas do LDI condensadas). Gap de alta alavanca seguinte: Apendicite Aguda (F16).
-- **Erros & Cards:** +10 cards de erro hoje (751-761: 6 Imunizacoes, 5 Pre-Natal), todos ancorados no elo.
-- **FSRS:** 3 atrasados + 9 hoje. Backlog: 386 novos. [derivado: day_plan --handoff-block]
-- **Infraestrutura:** **F29 RESOLVIDO** (drift planilha-db de 76q -- 4 relabels + 2 registros de volume faltante, tudo com backup e validacao 1:1 contra a planilha) + **F30 registrado** (`material_indicado` do cronograma nao verifica se o resumo existe de verdade -- mesmo buraco do F16). **Virada de papel (definida pelo operador nesta sessao):** eu sigo anotando/registrando achados no ledger; **Opus** assume o papel de reconciliar/resolver os proximos achados de engenharia -- eu nao implemento mais sozinho esse tipo de item.
+- **Volume & Metas:** 4765 / 12000 (perf. ~79.2%). Hoje: 0. Ritmo-alvo ~108.0q/dia (67d p/ ENAMED). [derivado: day_plan --handoff-block]
+- **Conteudo:** 63 resumos. DM Complicacoes Cronicas ganhou secao nova (5.5 Neuroartropatia de Charcot) + fato de diretriz SBC/SBHCI em Doenca Macrovascular + ressalva de triciclicos em Neuropatia Autonomica + 6 novas armadilhas. Gap de alta alavanca seguinte: Apendicite Aguda (F16).
+- **Erros & Cards:** +7 cards de erro hoje (762-768: DM Complicacoes Cronicas), todos ancorados no elo.
+- **FSRS:** 3 atrasados + 6 hoje. Backlog: 393 novos. [derivado: day_plan --handoff-block]
+- **Infraestrutura:** sem mudancas de engenharia nesta sessao (bloco de conteudo puro). Virada de papel 2 (s111) segue valendo: Opus resolve achados do ledger, agente anota.
 
 ## Pendencias ativas
 Aula-base de Pre-Natal I (debito, ver acima). Apendicite Aguda ainda sem resumo (F16, cobertura ja prioriza). Reescrever TCE.md + Sistemas de Informacao em Saude.md. Reforjar cards 95/120 (120 via gate de evidencia). Ledger `AUDITORIA_MEDHUB.md`: F21 aberto (contrato de aula), F30 aberto (cronograma x resumo real) -- ambos candidatos a Opus.
 
 ---
-*Historico: history/INDEX.md * Macro: ESTADO.md * Sessao: history/session_111.md * Ledger de engenharia: AUDITORIA_MEDHUB.md*
+*Historico: history/INDEX.md * Macro: ESTADO.md * Sessao: history/session_112.md * Ledger de engenharia: AUDITORIA_MEDHUB.md*

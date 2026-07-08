@@ -21,7 +21,8 @@ aliases: [DRD, PND]
 - Mecanismo final comum (hipótese de Brownlee): **superprodução de superóxido mitocondrial**, que ativa em paralelo quatro vias de lesão.
 
 **As quatro vias clássicas:**
-- **Via dos polióis:** excesso de glicose é reduzido a **sorbitol** pela aldose redutase, consumindo NADPH -> queda da glutationa -> estresse oxidativo; o acúmulo intracelular de sorbitol gera estresse osmótico (relevante em cristalino e nervo).
+- **Via dos polióis:** excesso de glicose é reduzido a **sorbitol** pela aldose redutase, consumindo NADPH -> queda da glutationa -> estresse oxidativo; o acúmulo **intracelular** de sorbitol gera estresse osmótico (relevante em cristalino e nervo).
+- ⚠️ Padrão de prova: bancas trocam "dentro" por "fora" da célula em alternativas quase idênticas sobre o acúmulo de sorbitol (é sempre **intracelular**) -- e **glicação de proteínas** (AGEs) é mecanismo **real**, não distrator, ao lado dos demais.
 - **Produtos finais de glicação avançada (AGEs):** glicação não enzimática de proteínas e lipídios -> ligam o receptor **RAGE** -> inflamação, disfunção endotelial e espessamento da membrana basal.
 - **Via da proteína quinase C (PKC):** hiperglicemia -> diacilglicerol -> ativa PKC -> alterações de fluxo, permeabilidade vascular, **angiogênese (VEGF)** e estado pró-coagulante.
 - **Via das hexosaminas:** desvia frutose-6-fosfato e modifica fatores de transcrição, alterando expressão gênica.
@@ -199,6 +200,7 @@ aliases: [DRD, PND]
 **Correlação clínica:**
 - Dano às **fibras grossas** -> prejudica vibração, propriocepção e reflexos -> **dormência, formigamento, instabilidade e perda da sensibilidade protetora** (queixas "negativas").
 - Dano às **fibras finas** -> prejudica nocicepção e discriminação térmica -> **dor em queimação, choques elétricos, dor lancinante e em pontada** (queixas "positivas").
+- ⚠️ Padrão de prova: alternativas que descrevem o acometimento somático como **"apenas" sensitivo** (dormência, queimação, formigamento, perda de sensibilidade) estão **incompletas/falsas** -- a PND é **sensitivo-motora**; o envolvimento motor é tardio, mas faz parte do quadro.
 
 **Padrão de distribuição:**
 - ⭐ Dor mais pronunciada **à noite**, inicia-se nas **regiões plantares** com progressão proximal -- distribuição **em bota**; ao atingir a região mediana da perna, acometem-se as mãos -> distribuição **em bota e luva**.
@@ -238,6 +240,7 @@ aliases: [DRD, PND]
 - **IRSN:** duloxetina ou venlafaxina.
 - **Tricíclicos:** amitriptilina ou nortriptilina.
 - **Gabapentinoides:** pregabalina ou gabapentina.
+- ⚠️ Padrão de prova: tricíclicos são contraindicados especificamente na neuropatia autonômica **CARDIOVASCULAR** (risco de arritmia, prolongamento de QT, agravamento de hipotensão ortostática) -- **não** na neuropatia autonômica em geral (gastrointestinal, urogenital, sudomotora seguem sem essa contraindicação).
 
 **Opções subsequentes:**
 - Capsaicina, lidocaína em patch, ácido alfa-lipóico (tióctico), TENS.
@@ -331,7 +334,20 @@ aliases: [DRD, PND]
 
 **Classificação IWGDF/PEDIS** (avaliação da úlcera/infecção): **P**erfusão, **E**xtensão, profundidade (**D**epth), **I**nfecção e **S**ensibilidade.
 
-### 5.5 Prevenção e Conduta por Risco
+**Gravidade da infecção e via de tratamento:**
+- **Infecção leve** (limitada à pele, sem sinais sistêmicos): ajustar o controle glicêmico + curativo tópico (soro fisiológico e antibiótico tópico, ex. sulfadiazina de prata) com **reavaliação programada** em curto prazo, escalando para antibiótico sistêmico se não houver melhora.
+- ⚠️ Padrão de prova: exsudato purulento e odor fétido "parecem graves" e tentam empurrar para antibioticoterapia sistêmica de largada -- a classificação formal da gravidade (leve/moderada/grave), não a aparência isolada da secreção, é quem define a via. 🔴 Banca-dependente: o IDSA classicamente já indica antibiótico oral mesmo em infecção leve (ex. cefalosporina de 1ª geração); nesta banca, o tópico + reavaliação é o 1º passo cobrado.
+- Sempre ajustar a glicemia em paralelo -- hiperglicemia piora a cicatrização e o controle infeccioso, independentemente da via antibiótica escolhida.
+
+### 5.5 Neuroartropatia de Charcot
+
+- Complicação da PND autonômica: **denervação simpática** retira o tônus vasoconstritor dos **microvasos**, liberando neuropeptídios **vasodilatadores** (substância P, CGRP, TNF-alfa) -> hiperfluxo capilar, aumento de filtração de fluidos e resposta inflamatória.
+- Esse hiperfluxo (e não isquemia) contribui para a reabsorção óssea e fragmentação/esclerose que caracterizam o pé de Charcot.
+- Perda axonal motora -> desequilíbrio flexor-extensor -> **colapso do arco do médiopé**, subluxação/luxação e fraturas por estresse.
+- Clínica: pé com **rubor, calor e edema generalizado**, mas dor/desconforto **modesto** (mascarado pela neuropatia subjacente) -- "pé chato com sinais flogísticos".
+- ⚠️ Padrão de prova: a denervação "deveria" sugerir isquemia/vasoconstrição, mas o mecanismo é o **oposto** -- perda do tônus simpático vasoconstritor gera **vasodilatação** em **microvasos** (não macrovasos). É a inversão mais escolhida pela turma em questões sobre esse mecanismo.
+
+### 5.6 Prevenção e Conduta por Risco
 
 - **Grau muito baixo:** medidas educativas -- inspeção diária dos pés, não fumar, não andar descalço, verificar a temperatura da água, cortar unhas em linha reta, calçados adequados, meias de algodão e hidratação após higiene.
 - **Grau baixo:** educação + **calçados adaptados**; se insuficiente para corrigir a distribuição de carga, avaliar **cirurgia corretiva profilática**.
@@ -347,6 +363,7 @@ aliases: [DRD, PND]
 - Inclui **doença arterial coronariana (DAC)**, **AVC** e **doença arterial periférica (DAP)**.
 - ⭐ A doença cardiovascular aterosclerótica é a **principal causa de morte** no diabético; o DM é considerado condição de **alto a muito alto risco cardiovascular**.
 - A isquemia pode ser **silenciosa** (neuropatia autonômica) -- infarto sem dor.
+- 🔴 Diretriz SBC/SBHCI (2017, intervenção coronária): o DM acelera o processo aterosclerótico/aterotrombótico e eleva em **2-4x** o risco cardiovascular; **as terapêuticas de controle da doença e dos fatores de risco NÃO parecem reduzir efetivamente** o risco de óbito/eventos adversos, **independentemente da via de revascularização** (cirurgia vs. ICP). Fato contraintuitivo e citado literalmente -- não presumir que "tratar bem os fatores de risco" neutraliza o pior prognóstico do diabético.
 
 ### 6.2 Controle Lipídico
 
@@ -412,3 +429,10 @@ aliases: [DRD, PND]
 - 🔴 Estratificação IWGDF define a **periodicidade do seguimento** do pé (anual no grau 0 até 1-3 meses no grau 3); deformidade e história de úlcera/amputação elevam o risco.
 - 🔴 Metas de **LDL e HbA1c são individualizadas**; alvo de LDL < 50 mg/dL no diabético com doença cardiovascular estabelecida e HbA1c mais flexível (< 8%) no idoso frágil são condutas-padrão -- bancas que cobram alvo único genérico são **banca-dependentes**.
 - 🔴 Em DM2 com doença cardiovascular/renal, **iSGLT2 e GLP-1 RA** são escolhidos pelo **benefício de órgão**, independentemente da HbA1c -- não tratar apenas a glicemia.
+- 🔴 Alternativas que descrevem a PND somática como "**apenas**" sensitiva estão incompletas/falsas -- a PND é **sensitivo-motora** (envolvimento motor é tardio, mas real).
+- 🔴 Acúmulo de sorbitol na via dos poliois é sempre **intracelular** (não extracelular) -- bancas trocam "dentro"/"fora" da célula; **glicação de proteínas (AGEs)** é mecanismo real, não distrator.
+- 🔴 Infecção **leve** do pé diabético (limitada à pele, sem sinais sistêmicos): curativo tópico + reavaliação programada é a via cobrada nesta banca antes de escalar para ATB sistêmico -- exsudato purulento/odor fétido não define gravidade sozinho (**banca-dependente**: IDSA classicamente já indica ATB oral mesmo em infecção leve).
+- 🔴 **Pé de Charcot:** denervação autonômica gera **vasodilatação** (não vasoconstrição) em **microvasos** por perda do tônus simpático -- neuropeptídios liberados (substância P, CGRP, TNF-alfa) são **vasodilatadores**; o hiperfluxo, não a isquemia, contribui para a reabsorção óssea.
+- 🔴 Tricíclicos são contraindicados especificamente na neuropatia autonômica **cardiovascular** (arritmia/QT/hipotensão ortostática) -- não na neuropatia autonômica diabética como categoria geral.
+- 🔴 Diretriz SBC/SBHCI (2017): no diabético revascularizado (ICP ou cirurgia), as terapêuticas de controle de DM/fatores de risco **não reduzem efetivamente** óbito/eventos adversos -- fato contraintuitivo citado literalmente em prova.
+- 🔴 Diabético mal controlado tem **glicose salivar e do fluido gengival aumentadas** (não inalteradas) -- pode alterar a microbiota do biofilme dental e favorecer candidíase oral/doença periodontal; não confundir com a controvérsia sobre incidência de cárie.

@@ -1,28 +1,28 @@
 # HANDOFF.md -- ESTADO OPERACIONAL CURTO
-*Atualizado: 2026-07-08 -- **s113: F33 RESOLVIDO -- sync mecanico de conclusao real do cronograma (xlsx Drive) via ciclo /discover->/gen-spec->/implement->/audit (PASS). cronograma-contract v1.1 + W8 novo.***
+*Atualizado: 2026-07-09 -- **s114: S12 avanca 2/6 (Vigilancia+SI+MFC 96,2% + DM Tipo2+Agudas+Cronicas completo 87,2%, 100q/dia) + achado de dois SSOTs no cronograma (ordem=xlsx Drive editado a mao / detalhamento=Cronograma.pdf) + correcao do marco ENAMED (10k meta-prova, 12k era o valor exposto por engano) + usuario delegou autoridade permanente pra recalibrar dificuldade divergente.***
 
 ## > Proximo passo imediato
-1. **FSRS:** 3 atrasados + 6 hoje (backlog 393 novos) -- `/revisar` ou `fsrs_queue.py`.
-2. **Debito aberto (arrastado):** aula-base de Pre-Natal I NUNCA foi feita (operador adiantou pra cold recall) -- resumo pronto, so falta a "escada de degraus" antes de fechar o tema de verdade.
-3. **Proximo bloco de conteudo real (S12, agora via sync automatico -- nao mais manual):** DITC II (Teoria) -- proxima acao pedida pelo operador (revisao Parte I + expansao Parte II) -- + Disturbios do Potassio, Cefaleias+Epilepsias, HAS Pt.2 (Teoria) + 2 blocos de Revisao por Questoes (MFC+Vigilancia+SIS; DM Tipo2 completo). Fonte: `preparacao_estado.cronograma_conclusao_drive` (boot sincroniza 1x/dia-calendario via MCP Drive quando `day_plan` sinalizar `conclusao_desatualizada` -- ver AGENTE.md §2 passo 4).
-4. Slot de simulado previsto ainda nesta semana (S12, ciclo de 4 semanas).
+1. **Mesmo dia (09/07), sessao seguinte (pedido explicito do operador):** HAS Pt. 2 (Teoria, resumo -- so PDF cru em `resumos/Clínica Médica/Cardiologia/`, extrair+autorar antes do bloco de questoes).
+2. Depois: DITC II (Teoria, extensivo -- estende `DITC.md` existente, nao e tema-zero).
+3. Restam da S12 depois disso: Disturbios do Potassio (tema-zero, so PDF cru), Cefaleias+Epilepsias (tema-zero, nem PDF-fonte localizado ainda -- maior risco da semana).
+4. FSRS: 9 atrasados + 5 hoje (backlog 400 novos) -- `/revisar` ou `fsrs_queue.py`.
 
 ## Padroes de erro vivos -- atencao do scrum master
-- RED **Enunciado negativo reincidiu 2x no MESMO bloco de novo (DM Q1+Q4)** -- 3a sessao seguida com esse padrao (s110 Pre-Natal Q1+Q3, agora DM). Padrao cronico ja mapeado (`feedback_enunciado_negativo`); sob fadiga de leitura marca alternativa VERDADEIRA como se fosse a falsa. Ritual: rotular V/F cada alternativa antes de decidir, sempre que ver "mostra-se inadequado"/"conceito inadequado"/EXCETO.
-- RED **Inversao intuitiva do mecanismo (pe de Charcot):** denervacao autonomica "deveria" sugerir isquemia/vasoconstricao, mas causa VASODILATACAO em microvasos (perda do tonus simpatico) -- 57% da turma errou na mesma direcao, sinal de armadilha sistemica, nao so individual.
-- RED **Vies otimista em fato de diretriz (DM pos-ICP):** assumiu que "tratar bem os fatores de risco" reduz obito/eventos no diabetico revascularizado; a diretriz SBC/SBHCI 2017 diz o oposto (nao ha reducao efetiva demonstrada) -- 72% da turma errou pro lado otimista.
-- RED **Mapa de reforco instavel (Imunizacoes, arrastado):** inventa reforco onde nao existe (Hepatite B) E perde reforco onde passou a existir (Febre Amarela aos 4 anos, 2020).
-- RED **Ferro x folato, direcoes opostas no 1o trimestre confundidas (arrastado):** ferro deve ser LIMITADO; folato deve ser INICIADO cedo. Mesma janela, sentidos opostos.
+- RED **REINCIDENCIA CONFIRMADA (2x): crianca DM1 doente = hipoglicemia, nao CAD** -- cruzou automatico com o erro #229 (overlap 0,63) MESMO apos a aula-base da propria sessao (s114) ter citado o cenario quase literalmente horas antes. Ensinar nao bastou -- candidato a mini-drill dedicado do card 775 (fsrs_queue --pre-bloco), nao so mais uma entrada na fila normal.
+- RED **Ancoragem no farmaco (familia bug no1b) reapareceu:** glibenclamida marcada por reflexo "remedio de diabetes conhecido" num quadro de acidose latica por METFORMINA -- nao checou se o mecanismo do farmaco batia com o quadro clinico (AG aumentado, sem cetose).
+- RED **Fato certo, pergunta errada (familia bug no1c):** "albuminuria e mais precoce que creatinina" (verdadeiro, serve pra ESTADIAR nefropatia) aplicado numa pergunta de CLEARANCE (por que esta paciente hipoglicemiou -- creatinina/TFGe e quem responde).
+- RED **Enunciado longo com ruido decisivo escondido:** questao de DM2 grave (55a, obesa) tinha os 2 numeros que decidiam (GJ 323, HbA1c 10,7%) afogados num painel laboratorial de 15+ itens com varios red herrings (ferritina, transaminases, TSH normais) -- extrair o que decide antes de resolver.
+- Padroes antigos (enunciado negativo, pe de Charcot, mapa de reforco instavel, ferro x folato) seguem arquivados, sem novo evento nesta sessao.
 
 ## Estado por frente
-- **Volume & Metas:** 4765 / 12000 (perf. ~79.2%). Hoje: 0. Ritmo-alvo ~108.0q/dia (67d p/ ENAMED). [derivado: day_plan --handoff-block]
-- **Conteudo:** 63 resumos, sem mudanca nesta sessao (engenharia pura). Gap de alta alavanca seguinte: Apendicite Aguda (F16, resumo ainda pendente).
-- **Erros & Cards:** sem novos cards nesta sessao.
-- **FSRS:** 3 atrasados + 6 hoje. Backlog: 393 novos. [derivado: day_plan --handoff-block]
-- **Infraestrutura:** F33 resolvido -- `tools/cronograma.py --sync-drive` (parse xlsx + matching semana/tema/tipo + snapshot em `preparacao_estado`), `day_plan.py` filtra por conclusao real, W8 novo (`reconcile-contract.md`), `cronograma-contract.md` v1.1 (Clausula 5 corrigida -- ponteiro de texto estava deprecado desde 06/07 sem o contrato refletir). 8 testes novos (19/19 PASS) + `auto_check.py --changed` PASSED.
+- **Volume & Metas:** 4865 / 10000 (perf. ~79.4%). Hoje: 100. Ritmo-alvo ~77.8q/dia (66d p/ ENAMED). [derivado: day_plan --handoff-block]
+- **Conteudo:** 63 resumos, 4 enriquecidos nesta sessao (Vigilancia em Saude; DM Complicacoes Cronicas x2; DM Tipo 2; DM Complicacoes Agudas x2). Gap novo sinalizado: `Sistemas de Informacao em Saude.md` com prosa fora do padrao-ouro (autoria original s069, nao e dano do episodio Antigravity) -- candidato a reforja, nao feito ainda.
+- **Erros & Cards:** +8 erros analisados nesta sessao, 7 cards novos (769-771, 773-775) + 1 banca-divergente sem card (772, gate F26 -- banca admitiu ambiguidade no proprio gabarito).
+- **FSRS:** 9 atrasados + 5 hoje. Backlog: 400 novos. [derivado: day_plan --handoff-block]
+- **Infraestrutura:** corrigido o marco ENAMED em `performance.py`/`day_plan.py` (ainda referenciavam 12k pos-recalibracao s093/099, que fixou 10k como meta-prova; 12k virou teto/stretch exposto a parte) -- inflava o "faltam" em ~2.000q. Fixture `SEED` do harness ajustado (MFC saiu, mesmo padrao ja usado pra Vulvovaginites em s110p2). Achado novo de arquitetura: cronograma tem DOIS SSOTs -- ordem/semana das tarefas vem do xlsx do Drive (editado a mao pelo usuario), detalhamento vem do `Cronograma.pdf` intocado; `grade.json` so deriva do PDF e nao captura a reordenacao manual (`project_cronograma_dual_ssot`). Usuario delegou autoridade permanente pra sobrescrever nota de dificuldade divergente sem pausar (`feedback_autoridade_recalibragem_dificuldade`).
 
 ## Pendencias ativas
-Aula-base de Pre-Natal I (debito, ver acima). Apendicite Aguda ainda sem resumo (F16, cobertura ja prioriza). Reescrever TCE.md + Sistemas de Informacao em Saude.md. Reforjar cards 95/120 (120 via gate de evidencia). Ledger `AUDITORIA_MEDHUB.md`: F21 aberto (contrato de aula), F30 aberto (material_indicado x resumo real) -- candidatos a Opus. Proximos achados comecam em F34.
+Aula-base de Pre-Natal I (debito antigo, arrastado -- resumo pronto, falta so a escada de degraus). Apendicite Aguda -- verificar status do resumo (F16, nao tocado nesta sessao). Reescrever TCE.md + **Sistemas de Informacao em Saude.md (achado novo desta sessao)**. Reforjar cards 95/120 (120 via gate de evidencia). Corrigir rotulo `sessao_num=115->114` do bloco Endocrino de hoje (erro meu, tratei 2 blocos do mesmo dia como sessoes separadas) -- bloqueado pelo classificador de auto mode, nao insisti; nao afeta volume/performance (agregam por area+data), so a rastreabilidade sessao-a-sessao. Ledger `AUDITORIA_MEDHUB.md`: F21/F30 seguem abertos. Proximos achados comecam em F34.
 
 ---
-*Historico: history/INDEX.md * Macro: ESTADO.md * Sessao: history/session_113.md * Ledger de engenharia: AUDITORIA_MEDHUB.md*
+*Historico: history/INDEX.md * Macro: ESTADO.md * Sessao: history/session_114.md * Ledger de engenharia: AUDITORIA_MEDHUB.md*

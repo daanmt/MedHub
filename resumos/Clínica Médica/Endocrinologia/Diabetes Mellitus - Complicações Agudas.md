@@ -124,6 +124,7 @@ aliases: [DM Agudo, CAD, HHS]
 - No início da CAD: β-HB predomina (relação β-HB:AcAc de 3:1 a 10:1)
 - Com tratamento: β-HB cai, AcAc sobe transitoriamente -> cetonúria pode **parecer piorar** mas é sinal de melhora
 - ⚠️ Padrão de prova: cetonúria negativa **não exclui** CAD (se β-HB for o cetoácido predominante)
+- ⭐⭐ **Cetonúria NÃO guia o desmame/continuidade da insulina durante o tratamento** -- é mau marcador de evolução (lag de conversão β-HB -> AcAc, pode permanecer positiva ou até "piorar" por > 24h mesmo com a CAD já resolvendo). O critério de manter/reduzir insulina é sempre a **resolução da acidose** (glicemia < 200 + pH/HCO3/AG normalizando), nunca a cetonúria negativar.
 
 ---
 
@@ -439,6 +440,7 @@ aliases: [DM Agudo, CAD, HHS]
 - 🔴 Na CAD, ao atingir glicemia < 200 mg/dL com acidose ainda não resolvida: acrescentar SG **e** reduzir insulina para **0,02-0,05 UI/kg/h** -- não suspender; não manter dose plena
 - 🔴 Criança DM1 com doença febril + recusa alimentar e insulina mantida = **hipoglicemia** (cluster adrenérgico), não CAD -- CAD exige déficit de insulina e sinais de hiperglicemia (poliúria, vômitos, Kussmaul, dor abdominal)
 - 🔴 Convulsão/rebaixamento em DM1 = **hipoglicemia** até prova em contrário -> repor glicose; sem acesso venoso, **glucagon**. **Insulina é o distrator fatal** -- "glicemia capilar" pode estar certa em mais de uma alternativa; o que decide é glucagon, não insulina
+- 🔴🔴 **REINCIDENTE (2x):** DM1 + criança doente (febre/infecção) + recusa alimentar + insulina mantida evoca CAD por reflexo (é o diagnóstico mais temido), mas o cluster **adrenérgico puro** (palidez, taquicardia, sudorese profusa, tremor, irritabilidade) **sem** poliúria/vômitos/dor abdominal/Kussmaul é **hipoglicemia** (excesso relativo de insulina), o espectro glicêmico oposto da CAD. Checar SEMPRE a ausência dos sinais hiperglicêmicos antes de fechar em CAD nesse cenário.
 - 🔴 Para **confirmar** CAD com glicemia e acidose já documentadas, o exame que falta é a **cetose** (cetonúria/β-HB), 3ª perna da tríade -- lactato **não** confirma CAD
 - 🔴 Em questão de "característica **MENOS comum** no EHH", a resposta é **dor abdominal** (proporcional à acidemia, ausente no EHH); os **sintomas neurológicos são MAIS comuns** no EHH (hiperosmolaridade) -- não inverter a relação
 

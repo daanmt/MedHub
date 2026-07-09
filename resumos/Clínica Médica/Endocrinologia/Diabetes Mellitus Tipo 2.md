@@ -254,6 +254,7 @@ aliases: [DM2, DM]
 - ⚠️ **Cetoacidose euglicêmica** (glicemia < 250): dor abdominal + náuseas com glicemia "normal" -> suspeitar! **iSGLT-2 AUMENTA** risco de cetoacidose (não reduz)
 - **Contraindicações**: DM1, TFG < 30, cetoacidose prévia, pé em risco / **amputação prévia** (canagliflozina), ITU de repetição
 - Indicação renal: TFG > 30 + albumin. > **300 mg/g** (microalbuminúria leve de 20-25 mg/g não basta)
+- ⭐ **Os 2 perfis de maior benefício, em questão de múltipla escolha:** alto risco CV (IAM/AVC prévio, angina instável, DAC, DAP -- EMPA-REG) OU nefropata com **macroalbuminúria > 300 mg/g explicitamente informada** (CREDENCE). Uma alternativa que descreve "nefropatia diabética + TFG X" **sem** informar o grau de albuminúria fica incompleta/ambígua -- prefira a alternativa que bate sem ambiguidade num dos 2 perfis.
 
 > ⚠️ **Padrão de prova:** SGLT-2 fica no **túbulo proximal** (não glomérulo). O efeito renal é **reduzir** a hiperfiltração (não aumentar). Candidíase vaginal recorrente -> pensar em iSGLT-2 ou DM descompensado.
 

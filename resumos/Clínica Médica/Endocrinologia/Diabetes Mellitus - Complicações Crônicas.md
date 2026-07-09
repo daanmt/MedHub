@@ -55,6 +55,7 @@ aliases: [DRD, PND]
 - ⭐ Para **confirmar** DRD pelo critério de albuminúria: **2 de 3 coletas alteradas** num período de 3 a 6 meses (afasta elevação transitória).
 - ⭐ A **albuminúria altera-se mais precocemente que a creatinina** -- é o marcador mais sensível de lesão inicial.
 - A TFGe deve ser calculada idealmente pela equação **CKD-EPI** (idade, sexo, creatinina).
+- ⭐⭐ **Duas perguntas renais diferentes, dois exames diferentes:** "há **lesão glomerular**?" (estadiamento de nefropatia) -> **albuminúria/proteinúria** (mais precoce, ver acima). "Qual a **capacidade de filtração/clearance**?" (explica acúmulo de fármaco de excreção renal) -> **creatinina/TFGe**. Diabético de longa data com hipoglicemias NOVAS sem outra mudança, em uso de secretagogo (sulfonilureia/glinida), sugere queda de clearance -> acúmulo do fármaco -> pedir **creatinina sérica**, não proteinúria (que não mede capacidade de filtração).
 
 **Valores de normalidade da albuminúria:**
 - Albumina em amostra isolada: < 14 mg/L.
@@ -398,6 +399,7 @@ aliases: [DRD, PND]
   - **iSGLT2:** nefroproteção, redução de hospitalização por IC e desfechos cardiovasculares.
   - **GLP-1 RA:** redução de desfechos cardiovasculares ateroscleróticos e renais; perda ponderal.
 - A **metformina** permanece o agente inicial habitual, com os ajustes por TFG descritos na seção 2.
+- ⭐⭐ **Regra de atribuição micro x macrovascular:** controle glicêmico por **qualquer via** (incluindo insulina isolada) reduz complicações **microvasculares** -- é o nível de HbA1c que importa, não a droga. Benefício **macrovascular** comprovado é restrito a classes específicas: **GLP-1 RA (liraglutida)**, **iSGLT2 (empagliflozina)** e **metformina** (em menor escala). Insulina, sulfonilureias e demais classes **não** têm essa evidência -- indicar insulina num paciente grave (HbA1c >= 10%/glicemia >= 300 + sintomas) reduz o risco microvascular, mas o enunciado que pede também o efeito macrovascular exige reconhecer essa ausência de benefício.
 
 ---
 

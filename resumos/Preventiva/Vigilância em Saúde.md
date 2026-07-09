@@ -39,8 +39,13 @@ aliases: [Vigilância em Saúde, PNVS, Vigilância Epidemiológica, ANVISA, Saú
 ## 3. Vigilância Sanitária
 
 - **Definição:** Conjunto de ações capaz de eliminar, diminuir ou prevenir riscos à saúde e de intervir nos problemas sanitários decorrentes do meio ambiente, da produção e circulação de bens e da prestação de serviços de interesse da saúde.
+- **Objeto do licenciamento:** abrange bens de consumo cotidiano com risco sanitário -- medicamentos, alimentos, cosméticos, saneantes domissanitários (ex.: repelente de mosquito) -- não apenas insumos hospitalares/farmacêuticos. Licenciar/autorizar o uso de um produto de consumo é ação típica da Sanitária, mesmo em contexto de epidemia por vetor (ex.: repelente na epidemia de Zika/microcefalia).
 - **Intersecção com a Epidemiológica:**
     - **Farmacovigilância / Farmacoepidemiologia:** Estudo e monitoramento de **efeitos adversos de fármacos** (VigiMed da ANVISA). Embora o insumo seja da sanitária, o agravo à saúde é da esfera epidemiológica.
+- **Acesso a medicamento não registrado (RDC 38/2013 ANVISA, alterada pela RDC 311/2019):**
+    - ⭐ **Uso compassivo:** disponibilização de medicamento novo/promissor, ainda **sem registro na ANVISA**, para uso **individual** de paciente com doença grave ou que ameace a vida, sem alternativa terapêutica satisfatória, em **qualquer fase** do desenvolvimento clínico.
+    - **Acesso expandido:** mesma lógica, mas para um **grupo** de pacientes, exigindo estudo de **fase III** em andamento ou concluído.
+    - **Fornecimento pós-estudo:** disponibilização gratuita do medicamento aos sujeitos de pesquisa após o encerramento do estudo ou da participação do sujeito.
 - **Competências de Gestão:**
     - **Municípios:** Execução das ações de fiscalização e controle local.
     - **União (Federal):** Vigilância em **portos, aeroportos e fronteiras** (atribuição exclusiva da ANVISA).
@@ -87,3 +92,5 @@ aliases: [Vigilância em Saúde, PNVS, Vigilância Epidemiológica, ANVISA, Saú
 - 🔴 **Fontes de Dados:** O **SIM (Declaração de Óbito)** pode ser fonte primária de dados epidemiológicos se houver falha na notificação prévia (SINAN).
 - 🔴 **Vigilância Passiva:** É a estratégia mais comum; ocorre quando o serviço de saúde notifica o agravo a partir do atendimento espontâneo do paciente. A busca ativa (ex: sintomáticos de TB) é o oposto.
 - 🔴 **Governança do SNVE:** A regulamentação e coordenação NACIONAL do sistema de vigilância epidemiológica são competências diretas do **Ministério da Saúde**.
+- 🔴 **Vigilância Sanitária x Epidemiológica -- o objeto decide, não a palavra "vigilância":** licenciar/autorizar um **produto** (medicamento, repelente, cosmético) é Sanitária; receber notificação/investigar caso ou surto é Epidemiológica. "Receber notificação" é a ação mais prototípica de "vigilância" para um médico -- por isso é o distrator mais forte quando a questão pede um subtipo específico diferente (ex.: epidemia de Zika pedindo ação da Sanitária, não da Epidemiológica).
+- 🔴 **Uso compassivo x acesso expandido:** o eixo da definição é a **ausência de registro comercial** do fármaco no Brasil -- não é sobre reaproveitar (uso off-label) um medicamento já registrado para outra doença. Compassivo = individual, qualquer fase; expandido = grupo, a partir da fase III.

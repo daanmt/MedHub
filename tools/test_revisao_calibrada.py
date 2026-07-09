@@ -39,7 +39,6 @@ DB_PATH = os.path.join(ROOT, "ipub.db")
 
 SEED = [
     ("Hepato", "Hepatites Virais", 8),
-    ("Preventiva", "Medicina de Família e Comunidade", 3),
     ("Pediatria", "Doenças Exantemáticas", 6),
     ("Cirurgia", "Cirurgia Infantil", 8),
     ("Obstetrícia", "Síndromes Hipertensivas da Gestação", 6),
@@ -47,6 +46,9 @@ SEED = [
 ]
 # Vulvovaginites saiu do SEED em s110p2: dificuldade 7/usuario -> 6/aula via
 # registro pos-analise legitimo (HANDOFF s110p1, fluxo normal do /revisar).
+# Medicina de Familia e Comunidade saiu do SEED em s114: dificuldade 3/usuario ->
+# 5/usuario via input explicito do usuario ("D5") na aula-base Vigilancia+SI+MFC
+# (Clausula 2 do contrato -- input explicito e soberano e pode recalibrar a qualquer momento).
 # Imunizacoes saiu do SEED na mesma sessao: 9/usuario -> 7/agente_inferida
 # (2 rounds de questoes analisados, ~83% estavel, gaps estreitos e remediados).
 # O SEED verifica a semente ORIGINAL intacta -- nao faz sentido travar um

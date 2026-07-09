@@ -7,7 +7,7 @@ Imprime em stdout um relatório markdown com 5 blocos:
 1. Total acumulado de questões, acertos e performance geral.
 2. Meta do mês corrente + ritmo diário necessário.
 3. Custo/questão (acumulado + mês corrente) classificado em faixas.
-4. Marcos adiante: ENAMED (12.000, 13/09) e plano dez/2026 (17.000).
+4. Marcos adiante: ENAMED meta-prova (10.000, 13/09), teto/stretch (12.000) e plano dez/2026 (17.000).
 5. Áreas fracas (< 75%) e gaps absolutos (0 questões).
 
 Uso:
@@ -66,8 +66,12 @@ AREAS_VALIDAS = [
 
 # (nome, alvo_acumulado, data_da_prova | None)
 # Marcos com data ganham projeções de ritmo (RITMOS_PROJECAO) no bloco 2.
+# Recalibração s093/099 (docs/plans/s094-ultraplan.md + ESTADO.md): meta-prova = 10.000,
+# 12.000 vira teto/stretch. Gatilho de reavaliação em S13 (~12/07): acumulo >=5.600 -> volta
+# a 12.000 como meta; <5.200 -> confirma 10.000. Ambos os marcos seguem expostos até lá.
 MARCOS = [
-    ("ENAMED", 12000, date(2026, 9, 13)),
+    ("ENAMED (meta-prova)", 10000, date(2026, 9, 13)),
+    ("ENAMED (teto/stretch)", 12000, date(2026, 9, 13)),
     ("Plano dez/2026 (2o ciclo: UERJ/USP)", 17000, None),
 ]
 

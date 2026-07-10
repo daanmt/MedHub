@@ -10,6 +10,7 @@ Reusa: dormant_refresh.pick (dormência), performance.get_totais/_questoes_do_me
 Uso: python tools/day_plan.py [--json]
 """
 import argparse
+import glob
 import importlib
 import json
 import math
@@ -126,24 +127,41 @@ def _resolver_semana_conteudo():
 
 
 def _conclusao_drive():
-    """Snapshot de conclusão real do xlsx do Drive (preparacao_estado.cronograma_conclusao_drive,
+    """Snapshot de conclusão real + ordem do xlsx do Drive (preparacao_estado.cronograma_conclusao_drive,
     gravado por `python tools/cronograma.py --sync-drive`). Read-only, sem MCP aqui — day_plan
-    só consome o que o agente já sincronizou no boot. Retorna (by_task, fresco):
+    só consome o que o agente já sincronizou no boot. Retorna dict:
     by_task = {(semana, tarefa): concluido} ou None se ausente/corrompido;
-    fresco = True só se atualizado_em é do dia-calendário corrente (W8/reconcile-contract)."""
+    ordem_by_task = {(semana, tarefa): ordem_xlsx} (vazio se snapshot antigo sem 'ordem' -> fallback PDF);
+    fresco = True só se atualizado_em é do dia-calendário corrente (W8/reconcile-contract);
+    atualizado_em = 'YYYY-MM-DD' da última sync ou None."""
+    vazio = {"by_task": None, "ordem_by_task": {}, "fresco": False, "atualizado_em": None}
     try:
         item = db.get_preparacao("cronograma_conclusao_drive")
     except Exception:
-        return None, False
+        return vazio
     if not item:
-        return None, False
+        return vazio
     try:
         snap = json.loads(item["valor"])
-        by_task = {(t["semana"], t["tarefa"]): t["concluido"] for t in snap.get("tasks", [])}
+        tasks = snap.get("tasks", [])
+        by_task = {(t["semana"], t["tarefa"]): t["concluido"] for t in tasks}
+        ordem_by_task = {(t["semana"], t["tarefa"]): t["ordem"] for t in tasks
+                         if t.get("ordem") is not None}
     except Exception:
-        return None, False
-    fresco = (item.get("atualizado_em") or "")[:10] == date.today().isoformat()
-    return by_task, fresco
+        return vazio
+    data_sync = (item.get("atualizado_em") or "")[:10] or None
+    fresco = data_sync == date.today().isoformat()
+    return {"by_task": by_task, "ordem_by_task": ordem_by_task,
+            "fresco": fresco, "atualizado_em": data_sync}
+
+
+def _ordenar_por_drive(tasks, ordem_by_task, semana):
+    """Ordena as tasks da semana pela ordem real do xlsx do Drive (ordem_by_task).
+    Estável: tasks sem ordem conhecida vão para o fim, preservando a ordem do
+    grade.json (PDF). Sem ordem_by_task -> identidade (fallback PDF puro, DoD 3)."""
+    if not ordem_by_task:
+        return tasks
+    return sorted(tasks, key=lambda t: ordem_by_task.get((semana, t["tarefa"]), 10 ** 6))
 
 
 def _cronograma_hoje(total_q, hoje):
@@ -168,13 +186,18 @@ def _cronograma_hoje(total_q, hoje):
     # W8: fronteira REAL de conclusão (xlsx riscado) em vez de só posição calendário.
     # Sem snapshot fresco -> degradação graciosa pro comportamento antigo (lista a semana
     # inteira) + sinaliza conclusao_desatualizada pro render() avisar (nunca falha silente).
-    conclusao_by_task, conclusao_fresca = _conclusao_drive()
+    drive = _conclusao_drive()
+    conclusao_by_task = drive["by_task"]
     tasks_semana = wk["tasks"]
     conclusao_desatualizada = True
-    if conclusao_by_task is not None and conclusao_fresca:
+    if conclusao_by_task is not None and drive["fresco"]:
         conclusao_desatualizada = False
         tasks_semana = [t for t in wk["tasks"]
                         if not conclusao_by_task.get((wk["semana"], t["tarefa"]), False)]
+        # ordena pela ordem real do xlsx (o usuário reordena à mão); fallback = ordem do PDF
+        tasks_semana = _ordenar_por_drive(tasks_semana, drive["ordem_by_task"], wk["semana"])
+    drive_data = drive["atualizado_em"]
+    drive_dias = (hoje - date.fromisoformat(drive_data)).days if drive_data else None
 
     return {
         "conteudo": conteudo,
@@ -184,8 +207,10 @@ def _cronograma_hoje(total_q, hoje):
         "previstas": wk["total_questoes"],
         "n_tasks": wk["n_tasks"],
         "temas": [t["tema"] for t in tasks_semana if t.get("tema")][:3],
-        "temas_material": [f"{t['tema']} ({t.get('material_indicado', 'resumo')})" for t in tasks_semana if t.get("tema")][:3],
+        "temas_material": [f"{t['tema']} ({_material_efetivo(t['tema'], t.get('material_indicado', 'resumo'))})" for t in tasks_semana if t.get("tema")][:3],
         "conclusao_desatualizada": conclusao_desatualizada,
+        "drive_sync_data": drive_data,
+        "drive_sync_dias": drive_dias,
         "dias_enamed": dias,
         "restante_q": restante,
         "ritmo_cronograma": round(restante / dias, 1) if dias > 0 else None,
@@ -350,6 +375,22 @@ def _material_do_tema(tema):
     return "resumo"
 
 
+def _material_efetivo(tema, material):
+    """F30: se o cronograma diz 'resumo' mas o .md nao existe, rebaixa para
+    'extensivo' -- nao prometer "so ler o resumo" quando ele nao existe (tema-zero
+    mascarado). Read-only; reusa o resolver `_find_resumo` (indexa stem desde s096).
+    Qualquer falha na resolucao -> mantem o rotulo original (nunca quebra o boot)."""
+    if material != "resumo":
+        return material
+    try:
+        gtc = importlib.import_module("app.engine.get_topic_context")
+        if gtc._find_resumo(tema) is None:
+            return "extensivo"
+    except Exception:
+        pass
+    return material
+
+
 def difficulty_report(area, tema):
     """Proposta read-only de nota/degrau/proposito p/ a abertura de task (PRD R3/R4).
 
@@ -362,7 +403,7 @@ def difficulty_report(area, tema):
     fonte = d["fonte"] if d else None
     nota_efetiva = nota_usuario if nota_usuario is not None else nota_inferida
 
-    mat = _material_do_tema(tema)
+    mat = _material_efetivo(tema, _material_do_tema(tema))   # F30: rebaixa se o .md nao existe
 
     # G5: nota explícita do usuário NUNCA é sobrescrita. Só quando NÃO há nota explícita
     # o extensivo aplica floor 9 (degrau D10, não D8) + dispara o dever de Deep-Researchness.
@@ -615,6 +656,16 @@ def render_review_plan(clusters):
     return "\n".join(out)
 
 
+def _contar_resumos():
+    """Higiene (F6): contagem derivada de resumos/**/*.md -- MESMO glob do
+    audit_resumos (o numero bate com o linter). Digitar o contador a mao foi a
+    raiz do drift 63x61 no ESTADO. None em falha (nunca quebra o bloco)."""
+    try:
+        return len(glob.glob(os.path.join(ROOT, "resumos", "**", "*.md"), recursive=True))
+    except Exception:
+        return None
+
+
 def render_handoff_block(p):
     """Bloco numerico 'Estado por frente' derivado do db (F6 -- AUDITORIA_MEDHUB).
 
@@ -630,6 +681,9 @@ def render_handoff_block(p):
         f"- **FSRS:** {f['atrasados']} atrasados + {f['hoje']} hoje. "
         f"Backlog: {f['backlog_novos']} novos.",
     ]
+    n_resumos = _contar_resumos()
+    if n_resumos is not None:
+        linhas.append(f"- **Conteudo:** {n_resumos} resumos em resumos/. [derivado: glob]")
     c = p.get("cronograma")
     if c:
         lag_txt = f", atraso {c['lag']} sem" if c.get("lag") else ""
@@ -667,10 +721,19 @@ def render(p):
             aviso_pos = " · ⚠️ posição via texto (deprecado)"
         else:
             aviso_pos = ""
-        aviso_concl = (" · ⚠️ conclusão real desatualizada (sync: python tools/cronograma.py "
-                       "--sync-drive <xlsx>)") if c.get("conclusao_desatualizada") else ""
         out.append(f"- 🧭 **Cronograma:** conteúdo **S{c['conteudo']}** · {c['previstas']}q previstas "
-                   f"· {c['n_tasks']} tasks{lag}{aviso_pos}{aviso_concl}")
+                   f"· {c['n_tasks']} tasks{lag}{aviso_pos}")
+        # Banner de frescor do Drive (Part 1 -- disparo forçado): o snapshot carrega conclusão
+        # real E ordem das tarefas; velho => os "próximos temas" podem vir fora de ordem ou já
+        # feitos. Nunca silencioso -- o sync vira ação obrigatória do boot (AGENTE §2 passo 4).
+        if c.get("conclusao_desatualizada"):
+            nd = c.get("drive_sync_dias")
+            quando = f"{nd}d atrás" if nd is not None else "nunca sincronizado"
+            out.append(f"    • ⚠️ **Drive desatualizado ({quando})** -- rodar `python tools/"
+                       f"cronograma.py --sync-drive <xlsx>` antes de confiar na lista abaixo "
+                       f"(pode conter temas já feitos ou fora da ordem real)")
+        else:
+            out.append(f"    • Drive sincronizado: {c.get('drive_sync_data') or '—'}")
         if c["temas"]:
             out.append(f"    • próximos temas: {', '.join(c.get('temas_material', c['temas']))}")
         out.append(f"    • ritmos-alvo: terminar a grade ~{c['ritmo_cronograma']}/dia · "

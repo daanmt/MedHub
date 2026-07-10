@@ -330,7 +330,7 @@ relates_to: [AGENTE, ESTADO, HANDOFF]
   automatico do `day_plan.py`/hook (mesmo que so um WARN comparando total local vs total via
   MCP), em vez de depender do agente lembrar de rodar `/importar-planilha` toda sessao.
 
-### F30 -- `material_indicado` do cronograma nao verifica se o resumo realmente existe -- **MEDIA**
+### F30 -- `material_indicado` do cronograma nao verifica se o resumo realmente existe -- **MEDIA** -- **RESOLVIDO (s115, boot-cronograma-drive-confiavel part-2)**
 - **Evidencia:** a task de Pre-Natal em S12 vem marcada `material_indicado: resumo` (implica
   "so ler o resumo existente"), mas `resumos/GO/Pré-Natal.md` NUNCA existiu -- so o PDF-fonte
   (`25. Pré-Natal.pdf`, 90 paginas). Descoberto ao vivo: operador fez cold recall de 18q (sem
@@ -348,7 +348,7 @@ relates_to: [AGENTE, ESTADO, HANDOFF]
   automaticamente quando nao existir -- fecha o mesmo buraco do F16 de forma preventiva, para
   qualquer tema futuro, nao so Apendicite.
 
-### F31 -- Cards FSRS podem existir sem NENHUM lastro clinico (nem .md nem PDF-fonte) -- **MEDIA**
+### F31 -- Cards FSRS podem existir sem NENHUM lastro clinico (nem .md nem PDF-fonte) -- **MEDIA** -- **RESOLVIDO (s115, boot-cronograma-drive-confiavel part-2)**
 - **Evidencia:** card_id 205 (Leishmaniose, area Infecto) foi drenado na s112 e o usuario relatou
   "muita dificuldade" pedindo refresh amplo -- `find resumos -iname "*leishmaniose*"` retornou
   vazio E nao ha PDF-fonte tampouco (diferente do F16/F30, onde ao menos o PDF EMED existia). O
@@ -425,6 +425,43 @@ relates_to: [AGENTE, ESTADO, HANDOFF]
 - **Nao resolvido por este ciclo (fora de escopo, documentado na spec):** alinhamento fino
   `questoes_por_lista[i] <-> tasks[i]` (permanece rateio igual); reimportacao de volume a partir
   do xlsx (fluxo separado, W1/F29).
+
+---
+
+## 3h. Sessao de engenharia -- s115 (2026-07-09): auditoria do boot -> PRD boot-cronograma-drive-confiavel (3 partes, audits PASS)
+
+> Origem: o operador pediu auditoria do boot + dos PRDs recentes, com o norte "mais autonomo,
+> gerir o cronograma com maxima eficiencia". Fluxo vibeflow completo conduzido por MIM:
+> `/discover` -> `/gen-spec` (3 specs) -> `/implement`+`/audit` x3 (todos PASS). Entrega F34 e
+> resolve F30/F31. Achados/decisoes de processo em `.vibeflow/decisions.md`.
+
+### F34 -- Boot regride em silencio quando o snapshot do Drive nao e sincronizado; ordem manual do xlsx nao e capturada -- **MEDIA** -- **RESOLVIDO (s115)**
+- **Evidencia (viva no boot de 09/07):** (1) `proximos temas: MFC, Imunizacoes, Apendicite` -- todos
+  ja feitos -- porque nenhum snapshot fresco existia no boot headless e o `day_plan` caiu pra
+  ordem-do-PDF, com `conclusao_desatualizada` sinalizado fraco demais (hint no fim da linha). (2)
+  `Refrescar: Leishmaniose` (tema sem lastro, F31). Alem disso, o usuario reordena tarefas a mao no
+  xlsx (ordem/semana) e o `--sync-drive` descartava essa ordem (so lia o tachado) -- `project_cronograma_dual_ssot`.
+- **Leitura de sistema:** costura headless/interativo -- o hook `SessionStart` roda sem MCP e so ve o
+  db local; tudo que depende do Drive (conclusao W8, ordem, reconcile de volume W1) fica refem da
+  disciplina do agente rodar `--sync-drive` e regride em silencio quando ele nao roda. O trabalho
+  anterior (W8/F33) mecanizou o PROCESSAMENTO do sync, nao o DISPARO nem a captura de ordem.
+- **EXECUTADO (3 partes, audits PASS em `.vibeflow/audits/boot-cronograma-drive-confiavel-part-{1,2,3}-audit.md`):**
+  - **part-1 (disparo+ordem):** `--sync-drive` captura `ordem` (linha do xlsx) no snapshot
+    `preparacao_estado`; `day_plan` ordena "proximos temas" pela ordem real quando fresco (fallback
+    PDF); banner `Drive desatualizado (Nd)` no topo; `AGENTE §2.4` + `reconcile W8` tornam o sync
+    ACAO OBRIGATORIA quando STALE, com degradacao graciosa (MCP fora -> calendario-only COM caveat,
+    nunca silencioso, nunca BLOCK -- Clausula 6). Regressao propria detectada e corrigida no loop
+    (contrato de `_conclusao_drive` tupla->dict quebrou 3 testes de `test_orquestrador.py` que o
+    `auto_check --changed` nao roda -- pego pelo `pytest` completo do audit; pitfall registrado).
+  - **part-2 (integridade, F30+F31):** `_material_efetivo` rebaixa `resumo -> extensivo` quando o
+    `.md` nao existe (render + `--difficulty`; compoe com G5 -- nota do usuario ainda vence); WARN
+    `[SEM-LASTRO]` read-only no `insert_questao` (nunca bloqueia).
+  - **part-3 (higiene):** contador de resumos DERIVADO (`--handoff-block`, mesmo glob do linter ->
+    fim do drift `63x61`); linha "Indicador Atual" do ESTADO enxugada (deixou de ser diario);
+    `estado-contract` reforca a regra; este ponteiro de abertos corrigido.
+- **Nao resolvido (fora de escopo, documentado nas specs):** automacao real do fetch do Drive (viola
+  Clausula 1/3 -- fica agent-triggered, so o disparo virou obrigatorio-de-tentativa); mecanizacao
+  completa do reconcile de volume W1/F29; alinhamento fino `questoes_por_lista[i] <-> tasks[i]`.
 
 ---
 
@@ -508,4 +545,4 @@ O objetivo da sessao nao era so drenar cards: era **usar o MedHub para descobrir
 
 ---
 
-*Este doc e o ledger vivo de engenharia. Nao "fecha" -- acumula achados a cada sessao de uso. O 1o ciclo Fable (PRD -> 5 ondas) foi ENTREGUE em 2026-07-05 (secao 3b). A s109 (coordenador-observador) adicionou **F16-F19** do uso vivo (forja da aula-base de apendicite; secao 3c) -- insumo do ciclo 2. A rodada 1 do ciclo 2 (Fable/ai-eng, paralela a s109; secao 3d) entregou F14/F15, validou o teto (F4/b), preparou a janela do expurgo (F11) e registrou F20. A s109 (1o lote de questoes; secao 3e) adicionou F21, e (2o lote; secao 3f) **F22-F26**. O **ciclo 2 rodada 2** (Fable/ai-eng, 2026-07-06; secao 3g) entregou o PRD ORQUESTRACAO completo (vibeflow 4/4 PASS): posicao SSOT (op-3), recomendador do dia, F22-F26 RESOLVIDOS; F21 segue aberto (contrato de aula); F27/F28 registrados pelos audits. A **s110 parte 2** (2026-07-06) verificou performance+cronograma a pedido do operador, achou e RESOLVEU **F29** (drift planilha-db de 76q, ao vivo, mesma sessao); no ciclo de Pre-Natal I (cold recall, tema-zero) registrou **F30** (material_indicado nao verifica existencia real do resumo), aberto. A **s113** (08/07, verificacao de cronograma a pedido do operador) achou e RESOLVEU **F33** (boot recomendava temas ja feitos, calendario-driven sem ler conclusao real da planilha) na mesma sessao via ciclo completo `/discover`->`/gen-spec`->`/implement`->`/audit` (PASS); F31/F32 registrados por uso vivo (s112). **Proximos achados comecam em F34**. Ultima atualizacao: s113 (2026-07-08).*
+*Este doc e o ledger vivo de engenharia. Nao "fecha" -- acumula achados a cada sessao de uso. O 1o ciclo Fable (PRD -> 5 ondas) foi ENTREGUE em 2026-07-05 (secao 3b). A s109 (coordenador-observador) adicionou **F16-F19** do uso vivo (forja da aula-base de apendicite; secao 3c) -- insumo do ciclo 2. A rodada 1 do ciclo 2 (Fable/ai-eng, paralela a s109; secao 3d) entregou F14/F15, validou o teto (F4/b), preparou a janela do expurgo (F11) e registrou F20. A s109 (1o lote de questoes; secao 3e) adicionou F21, e (2o lote; secao 3f) **F22-F26**. O **ciclo 2 rodada 2** (Fable/ai-eng, 2026-07-06; secao 3g) entregou o PRD ORQUESTRACAO completo (vibeflow 4/4 PASS): posicao SSOT (op-3), recomendador do dia, F22-F26 RESOLVIDOS; F21 segue aberto (contrato de aula); F27/F28 registrados pelos audits. A **s110 parte 2** (2026-07-06) verificou performance+cronograma a pedido do operador, achou e RESOLVEU **F29** (drift planilha-db de 76q, ao vivo, mesma sessao); no ciclo de Pre-Natal I (cold recall, tema-zero) registrou **F30** (material_indicado nao verifica existencia real do resumo), aberto. A **s113** (08/07, verificacao de cronograma a pedido do operador) achou e RESOLVEU **F33** (boot recomendava temas ja feitos, calendario-driven sem ler conclusao real da planilha) na mesma sessao via ciclo completo `/discover`->`/gen-spec`->`/implement`->`/audit` (PASS); F31/F32 registrados por uso vivo (s112). A **s115** (2026-07-09) auditou o boot e entregou o PRD **boot-cronograma-drive-confiavel** em 3 partes (vibeflow discover->gen-spec->implement->audit, audits PASS): achado novo **F34** (disparo+ordem do Drive) + **F30/F31 RESOLVIDOS**; **F21 segue aberto**. **Proximos achados comecam em F35**. Ultima atualizacao: s115 (2026-07-09).*

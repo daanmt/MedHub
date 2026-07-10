@@ -69,6 +69,7 @@ O MedHub tem 4 frentes + infraestrutura. Toda seção "por frente" (aqui e no HA
 - Narrativa de sessão ("o que foi feito na sessão 074…") → vai em `history/`.
 - Pendências operacionais imediatas → vão no `HANDOFF.md`.
 - Lista session-by-session acumulada (o ESTADO antigo tinha "Últimas 10 sessões" — isso é pointer para `history/INDEX.md`, não conteúdo).
+- **Narrativa acumulada na linha "Indicador Atual"** (blow-by-blow `sNN..sNN` no mesmo parágrafo) → o indicador é o **valor macro corrente** (questões/alvo, %) + pointer para `history/`; o histórico session-by-session vive em `history/INDEX.md`, nunca inchando a linha do indicador. Contadores (resumos/erros/cards) são **derivados** (`day_plan.py --handoff-block`), não digitados — evita o drift `63×61`.
 
 ---
 

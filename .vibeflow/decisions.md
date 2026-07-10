@@ -1,6 +1,36 @@
 # Decision Log
 > Newest first. Updated automatically by the architect agent.
 
+## 2026-07-09 — Boot confiável (Part 3): contador derivado + spec multi-parte implementa a INTENÇÃO, não o literal stale
+
+**Contexto:** Risco 5 da auditoria de boot — `ESTADO.md` virou diário de sessões (linha "Indicador Atual" com ~4.000 chars s114..s096), contador de resumos `63×61` divergente, HANDOFF omitia F31 dos abertos. Spec part-3 (Onda D). Audit **PASS**.
+
+**Decisão:** o contador de resumos vira DERIVADO em `day_plan.py --handoff-block` (`_contar_resumos()` usa o **mesmo glob** do `audit_resumos` → número bate com o linter, teste vincula os dois). Estende o padrão F6 (número de estado é derivado, não digitado) ao contador de conteúdo. A linha "Indicador Atual" do ESTADO é enxugada para valor-macro + pointer a `history/`; `estado-contract.md` ganha regra explícita proibindo blow-by-blow na linha do indicador.
+
+**Pitfall (spec multi-parte × realidade):** o DoD 3 da part-3 foi escrito ("incluir F31 nos abertos") ANTES de as parts 1+2 rodarem — mas elas **resolvem** F30/F31 na mesma leva. Implementar o literal ("F31 aberto") teria produzido um HANDOFF factualmente errado. **Regra: numa spec multi-parte, a parte tardia implementa a INTENÇÃO do DoD contra a realidade corrente (F30/F31/F34 entregues), não o literal congelado no momento da escrita.** O ledger `AUDITORIA_MEDHUB.md` (marcar F30/F31 RESOLVIDO + abrir F34) é selado no fechamento da sessão, fora do escopo das 3 specs — o HANDOFF aponta a pendência.
+
+---
+
+## 2026-07-09 — Boot confiável (Part 2): rebaixamento de `material_indicado` no call-site, não na fonte
+
+**Contexto:** F30 (`AUDITORIA_MEDHUB.md`) — o cronograma marca `material_indicado: resumo` sem verificar se o `.md` existe (Pré-Natal/Leishmaniose eram tema-zero mascarados). Spec part-2 (Onda B). Audit **PASS**.
+
+**Decisão:** o rebaixamento `resumo -> extensivo` (quando `_find_resumo(tema)` é None) vive num helper `_material_efetivo(tema, material)` aplicado nos **dois call-sites** — `_cronograma_hoje` (render) e `difficulty_report` (calibração) — e **não** dentro de `_material_do_tema`, que continua retornando o rótulo cru da grade (preserva o determinismo/early-return que fechou o C1). Reusa o resolver `_find_resumo` (indexa stem desde s096), read-only; falha de import -> mantém o rótulo (nunca quebra o boot). Compõe corretamente com a precedência G5: a nota explícita do usuário ainda vence o floor D10 do extensivo (Leishmaniose ao vivo = dif-8/D8 com Material: extensivo — o rótulo reflete a realidade, a nota respeita o input). F31 (lastro no insert) segue o mesmo padrão read-only do F25 (WARN pós-insert, nunca bloqueia).
+
+**Pitfall confirmado (repetido da Part 1):** rodar `pytest` completo — não `auto_check --changed` — antes de declarar verde. Desta vez sem regressão; o hábito pegou o risco antes de virar FAIL de audit.
+
+---
+
+## 2026-07-09 — Boot confiável (Part 1): ordem real do xlsx no snapshot + disparo obrigatório; `_conclusao_drive` vira dict
+
+**Contexto:** Achado F34 (`AUDITORIA_MEDHUB.md`) / PRD `boot-cronograma-drive-confiavel`. O boot regredia silenciosamente quando o snapshot do Drive não era sincronizado (temas já feitos + fora da ordem manual do usuário reaparecendo como "próximos temas"). Spec part-1 (C+A): estende o `--sync-drive` para capturar `ordem` (linha do xlsx) além do tachado; `day_plan` ordena "próximos temas" pela ordem real quando o snapshot é fresco, cai pro PDF quando velho; banner de frescor no render + AGENTE §2.4 torna o sync ação obrigatória. Audit **PASS**.
+
+**Decisão:** a ordem real vive no snapshot `preparacao_estado.cronograma_conclusao_drive` (campo `ordem` por task), **nunca** no `grade.json` (que é cache regenerável do PDF — Cláusula 1/3). Reforça o padrão de 2026-07-08: o xlsx do Drive é sobreposto em memória, o PDF permanece o SSOT estrutural. `_conclusao_drive` passou de tupla `(by_task, fresco)` para dict `{by_task, ordem_by_task, fresco, atualizado_em}` — função privada, contrato pode evoluir, mas os testes que a exercitam têm de acompanhar no mesmo spec.
+
+**Pitfall (blind spot do harness):** `auto_check --changed` deu falso-verde na fase de implement — sua heurística de "scripts estruturais para os arquivos mudados" rodou `test_revisao_calibrada` + `test_autonomia_hooks`, mas **não** `test_orquestrador.py`, que também exercita `_conclusao_drive`. A regressão (3 testes quebrados pela mudança tupla->dict) só apareceu no `pytest` completo do audit. **Regra: ao mudar o contrato de uma função, rodar `pytest` completo (não só `auto_check --changed`) antes de declarar verde — o seletor de suíte por arquivo-mudado não mapeia todos os consumidores de um símbolo.** Candidato a achado de engenharia do ledger (o mapeamento arquivo->suíte do `auto_check` é incompleto).
+
+---
+
 ## 2026-07-08 — Sync de conclusão real do cronograma (xlsx Drive): reusar `preparacao_estado`, não arquivo novo
 
 **Contexto:** Achado F33 (`AUDITORIA_MEDHUB.md`) — o boot recomendava temas já concluídos porque `day_plan.py`/`grade.json` são calendário-driven e nunca liam o marcador de conclusão real (tema riscado) do xlsx `Cronograma de Reta Final.xlsx` do Drive. PRD/spec/implement/audit completo (`.vibeflow/{prds,specs,audits}/cronograma-sync-conclusao-drive.md`), verdict **PASS**.

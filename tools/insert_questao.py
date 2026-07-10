@@ -75,6 +75,38 @@ def _ensure_status_column(cursor):
         cursor.execute("ALTER TABLE questoes_erros ADD COLUMN status TEXT DEFAULT NULL")
 
 
+def _tem_lastro(tema):
+    """F31: o tema tem lastro escrito? True se resolve a um .md (engine `_find_resumo`,
+    indexa stem desde s096) OU existe um PDF-fonte par em resumos/** (taxonomia EMED).
+    Read-only. Conservador: se nao consegue nem checar o .md, assume True (nao acusa
+    ausencia por falha de import) -- o par Siamese Twins so e sinalizado quando a
+    ausencia e POSITIVAMENTE confirmada."""
+    try:
+        import importlib
+        gtc = importlib.import_module("app.engine.get_topic_context")
+        if gtc._find_resumo(tema) is not None:
+            return True
+    except Exception:
+        return True
+    try:
+        import glob
+        import unicodedata
+
+        def _n(s):
+            s = unicodedata.normalize("NFKD", s or "")
+            return "".join(c for c in s if not unicodedata.combining(c)).casefold().strip()
+
+        alvo = _n(tema)
+        raiz = os.path.join(os.path.dirname(os.path.dirname(__file__)), "resumos")
+        if alvo:
+            for p in glob.glob(os.path.join(raiz, "**", "*.pdf"), recursive=True):
+                if alvo in _n(os.path.splitext(os.path.basename(p))[0]):
+                    return True
+    except Exception:
+        pass
+    return False
+
+
 def insert_questao(area, tema, enunciado, correta, chamada, erro, elo, armadilha,
                    complexidade="Media", habilidades="N/A", faltou="N/A", explicacao="N/A", titulo="Erro sem titulo",
                    frente_contexto=None, frente_pergunta=None,
@@ -234,6 +266,17 @@ def insert_questao(area, tema, enunciado, correta, chamada, erro, elo, armadilha
                           "(fsrs_queue --pre-bloco)." % (alvos, len(hits)))
             except Exception:
                 pass
+
+        # F31 (pos-insert, read-only): tema sem lastro escrito (.md nem PDF-fonte).
+        # WARN informativo -- NUNCA bloqueia; o par Siamese Twins (erro->db,
+        # licao->resumo) ficou incompleto e vira candidato a criar/estender o resumo.
+        try:
+            if not _tem_lastro(tema):
+                print("[SEM-LASTRO] '%s / %s' nao tem resumo (.md) nem PDF-fonte par -- "
+                      "par Siamese Twins incompleto; candidato a criar/estender o resumo."
+                      % (area, tema))
+        except Exception:
+            pass
 
         return True
 

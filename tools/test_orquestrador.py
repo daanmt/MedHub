@@ -285,8 +285,9 @@ def test_conclusao_drive_ausente():
     orig = db.DB_PATH
     db.DB_PATH = tmp
     try:
-        by_task, fresco = dp._conclusao_drive()
-        assert by_task is None and fresco is False, "sem snapshot gravado -> ausente"
+        drive = dp._conclusao_drive()
+        assert drive["by_task"] is None and drive["fresco"] is False, "sem snapshot gravado -> ausente"
+        assert drive["ordem_by_task"] == {} and drive["atualizado_em"] is None
     finally:
         db.DB_PATH = orig
         os.remove(tmp)
@@ -306,9 +307,9 @@ def test_conclusao_drive_desatualizada_cai_no_fallback():
                     (ontem, "cronograma_conclusao_drive"))
         con.commit()
         con.close()
-        by_task, fresco = dp._conclusao_drive()
-        assert fresco is False, "snapshot de ontem -> nao fresco (fallback pro calendario)"
-        assert by_task == {(12, 1): True}, "mapa ainda retorna (so a flag de frescor muda)"
+        drive = dp._conclusao_drive()
+        assert drive["fresco"] is False, "snapshot de ontem -> nao fresco (fallback pro calendario)"
+        assert drive["by_task"] == {(12, 1): True}, "mapa ainda retorna (so a flag de frescor muda)"
     finally:
         db.DB_PATH = orig
         os.remove(tmp)
@@ -323,9 +324,10 @@ def test_conclusao_drive_fresca():
             {"semana": 12, "tarefa": 1, "concluido": True},
             {"semana": 12, "tarefa": 2, "concluido": False}]}
         db.set_preparacao("cronograma_conclusao_drive", json.dumps(snap), fonte="drive_sync")
-        by_task, fresco = dp._conclusao_drive()
-        assert fresco is True, "snapshot de hoje -> fresco"
-        assert by_task == {(12, 1): True, (12, 2): False}
+        drive = dp._conclusao_drive()
+        assert drive["fresco"] is True, "snapshot de hoje -> fresco"
+        assert drive["by_task"] == {(12, 1): True, (12, 2): False}
+        assert drive["ordem_by_task"] == {}, "snapshot antigo sem 'ordem' -> mapa vazio (fallback PDF)"
     finally:
         db.DB_PATH = orig
         os.remove(tmp)

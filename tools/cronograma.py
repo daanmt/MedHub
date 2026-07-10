@@ -466,6 +466,7 @@ def _parse_conclusao_xlsx(xlsx_path):
             bruto = _dewrap(str(texto))
             celulas.append({
                 "semana": col,
+                "row": row,            # ordem real: linha do xlsx = onde o usuário reordena à mão
                 "texto_bruto": bruto,
                 "texto_norm": _norm_tema_xlsx(bruto),
                 "tipo_norm": normaliza_tipo(bruto),
@@ -504,6 +505,8 @@ def diff_drive(xlsx_path, grade=None):
             tasks_out.append({
                 "semana": s["semana"], "tarefa": t["tarefa"], "area_norm": t["area_norm"],
                 "tema": t.get("tema", ""), "tipo_norm": t["tipo_norm"], "concluido": concluido,
+                # ordem real do xlsx (linha da célula casada); None sem match -> fallback PDF
+                "ordem": (match["row"] if match else None),
             })
     return {"tasks": tasks_out, "sem_match": sem_match}
 

@@ -60,6 +60,7 @@ A obtenção de aprovação integral (status `✅ PASSED` com exit code `0`) é 
 2. **Atualizar `ESTADO.md`** -- **só se o macro mudou** (indicador cruzou marco, nova frente, skill/contrato versionado). Não é diário de sessões. Regras em `core/contracts/estado-contract.md`.
 3. **Registrar sessão** -- novo `history/session_NNN.md` seguindo `.agents/workflows/registrar-sessao.md` + entry em `history/INDEX.md`. **Invariante de ponteiro (F1):** o `auto_check` verifica que o ponteiro do HANDOFF não excede `max(history/session_NNN) + 1` (WARN `SESSION_POINTER_DRIFT`) -- selar a sessão aqui é o que mantém o passo 1 legítimo.
 4. **Git** -- `git add` arquivos modificados (nunca `git add .`), commit semântico, push. `ipub.db` e `medhub_memory.db` não vão pro git.
+5. **REFLECTION de engenharia (só em sessão de ENGENHARIA)** -- `python tools/reflect.py`: 1 datum honesto sobre a execução das rotinas (ledger-of-self) + proposta de próximo ciclo GATED (propõe, nunca executa; go é humano). Sem sinal novo = "(sem sinal novo)" e para. Não rodar em sessão de estudo. Gate anti-decorativo: 3 execuções reais sem mudar decisão -> remover a tool.
 
 ---
 

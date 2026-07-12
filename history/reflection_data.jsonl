@@ -1,0 +1,2 @@
+{"ts": "2026-07-12T18:59:45+00:00", "janela_desde": null, "sinal": true, "snapshot": {}, "proposta": null, "achados": [], "eventos_na_janela": {"opened": 1, "resolved": 1}, "resumo": "2 evento(s) na janela; sem candidato com evidencia integra -- nenhuma proposta (anti-fabricacao)", "contexto_aderencia": {"dias_com_plano": 0, "blocos_pulados": 0}}
+{"ts": "2026-07-12T18:59:46+00:00", "janela_desde": "2026-07-12T18:59:45+00:00", "sinal": false, "snapshot": {}, "proposta": null, "resumo": "(sem sinal novo)"}

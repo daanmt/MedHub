@@ -23,6 +23,9 @@
 - **Posicao cronograma:** conteúdo S12 (nominal S15, atraso ~3 sem). [derivado: preparacao_estado] Drive stale.
 - **Infraestrutura:** nenhuma mudança de contrato/script. Pipeline "usuário larga PDF Estratégia -> subagente redige -> eu audito" segue validado.
 
+## Handoff de engenharia recebido (ai-eng, 2026-07-12)
+🔧 **`.vibeflow/prds/HANDOFF-integridade-harness-taxonomia.md`** — handoff do arquiteto para o agente INTERNO tocar (gen-spec→implement→audit próprios): (1) `auto_check --all` roda só 2 de N suítes (`test_fsrs` etc. sem gate — F35 parcial); (2) `taxonomia_cronograma` sem `UNIQUE(area,tema)`. FSRS fiel confirmado JÁ FEITO (commit `46df800`) — não refazer.
+
 ## Pendencias ativas
 🔴 Hanseníase Revisão Direcionada (cluster frio). Reforjar `TCE.md` + `Sistemas de Informação em Saúde.md`. Aula-base de Pré-Natal I. Reforjar cards 95/120 (120 via gate de evidência). Rótulo `sessao_num=115` pendente. Ledger `AUDITORIA_MEDHUB.md`: **F21 reconciliado 2026-07-12** (conduta resolvida no contrato v1.2; enforcement mecanico na spec `mecanismo-conhecimento-consolidacao-part-3`); F35 (reconcile de volume W1/F29 + seletor de suite do auto_check). Ano da diretriz de HAS (2020 x SBC 2025). Banca-dependente no DITC II (belimumabe/nefrite, SAF 2023) -- auditar via `/pesquisar-evidencia` se quiser.
 

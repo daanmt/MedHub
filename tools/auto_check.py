@@ -13,6 +13,16 @@ if hasattr(sys.stdout, 'reconfigure'):
 
 ROOT_DIR = Path(__file__).parent.parent.resolve()
 
+# Ledger-of-self (degrau 2 -- spec ledger-auto-instrumentacao): os WARNs dos
+# checks viram memoria estruturada. Import resiliente: sem o modulo, a
+# deteccao segue intacta (so a memoria se perde).
+try:
+    from ledger_self import record as _ledger_record
+except Exception:
+    def _ledger_record(check, findings, root=None):
+        pass
+
+
 def _git_files(args):
     """Roda `git -c core.quotepath=false <args>` (com -z) e devolve lista de paths.
 
@@ -279,10 +289,13 @@ def main():
         desc_parity = "Paridade command<->skill"
         if ok_parity:
             results_summary.append((desc_parity, True, 0))
+            _ledger_record("parity", [])
         else:
             n_drift = out_parity.count("PARITY_DRIFT")
             # success=True: WARN não rebaixa o veredito (não altera all_passed).
             results_summary.append((desc_parity, True, n_drift))
+            _ledger_record("parity", [{"alvo": "command<->skill",
+                                       "payload": {"n_drift": n_drift}}])
 
     # 4. Invariante de ponteiro de sessao (F1 -- AUDITORIA_MEDHUB). WARN, não bloqueia:
     #    nasce advertindo (política s106/107) e só endurece quando a base zerar.
@@ -295,6 +308,9 @@ def main():
                   f"Selar a sessão pendente antes de avançar o ponteiro.")
         # success=True: WARN não rebaixa o veredito (não altera all_passed).
         results_summary.append((desc_pointer, True, 1 if drift else 0))
+        _ledger_record("session_pointer",
+                       [{"alvo": "HANDOFF.md", "payload":
+                         {"pointer": drift[0], "max_sess": drift[1]}}] if drift else [])
 
     # 5. Invariante de posicao SSOT (op-3 -- PRD orquestracao part-1). WARN, não bloqueia:
     #    mesma janela de relevância do ponteiro (HANDOFF no diff ou --all).
@@ -307,6 +323,10 @@ def main():
                   f"tools/preparacao.py --set-semana.")
         # success=True: WARN não rebaixa o veredito (não altera all_passed).
         results_summary.append((desc_posicao, True, 1 if pdrift else 0))
+        _ledger_record("posicao_ssot",
+                       [{"alvo": "HANDOFF.md", "payload":
+                         {"semana_handoff": pdrift[0], "semana_db": pdrift[1]}}]
+                       if pdrift else [])
 
     # 6. Cobertura de conhecimento -- tema da semana corrente (spec mecanismo-conhecimento
     #    part-3). WARN, não bloqueia: torna visível o tema da semana sem .md canônico.
@@ -325,6 +345,9 @@ def main():
                   f"tools/cobertura_conhecimento.py.")
         # success=True: WARN não rebaixa o veredito (não altera all_passed).
         results_summary.append((desc_cob, True, len(orfaos_sem)))
+        _ledger_record("cobertura_semana",
+                       [{"alvo": x["stem"], "payload": {"semana": semana_n}}
+                        for x in orfaos_sem])
 
     # 7. Sensor de drift doc-vs-codigo (degrau 1 -- spec sensor-drift-doc-codigo).
     #    WARN, não bloqueia: compara anotacoes drift-check dos docs de estado com
@@ -347,6 +370,10 @@ def main():
                   f"(regra: {a['regra']}). Reconciliar o doc ou corrigir a anotação.")
         # success=True: WARN não rebaixa o veredito (não altera all_passed).
         results_summary.append((desc_drift, True, len(achados_drift)))
+        _ledger_record("doc_drift",
+                       [{"alvo": f"{a['doc']}:{a['regra']}",
+                         "payload": {"tipo": a["tipo"], "msg": a["msg"]}}
+                        for a in achados_drift if a["tipo"] != "sensor"])
 
     # Resumo Final
     print("\n" + "=" * 60)

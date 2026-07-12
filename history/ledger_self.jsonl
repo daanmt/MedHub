@@ -1,0 +1,2 @@
+{"ts": "2026-07-12T18:40:16+00:00", "event": "opened", "check": "doc_drift", "fingerprint": "b771089376a3", "alvo": "HANDOFF.md:sqlite \"SELECT COUNT(*) FROM flashcards WHERE id BETWEEN 797 AND 809\" == 99", "payload": {"tipo": "drift", "msg": "doc afirma 99, db responde 13"}}
+{"ts": "2026-07-12T18:40:54+00:00", "event": "resolved", "check": "doc_drift", "fingerprint": "b771089376a3", "alvo": "HANDOFF.md:sqlite \"SELECT COUNT(*) FROM flashcards WHERE id BETWEEN 797 AND 809\" == 99"}

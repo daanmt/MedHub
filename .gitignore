@@ -44,3 +44,6 @@ tmp/
 artifacts/backups/
 artifacts/llm_runs/
 artifacts/audits/
+
+# ledger-of-self: estado DERIVADO (reconstruivel); o .jsonl de eventos e versionado
+history/ledger_self_state.json

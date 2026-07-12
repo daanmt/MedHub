@@ -313,7 +313,33 @@ Tríade: **trombose + morbidade obstétrica + anticorpos antifosfolípides (AAF)
 
 ---
 
-## 11. Armadilhas de Prova
+## 11. Diagnósticos Diferenciais do LES e das DITC
+
+O LES é a "grande simuladora"; a prova cobra separá-lo dos mimetizadores. Os discriminadores de maior rendimento:
+
+### 11.1 LES x Esclerose Sistêmica
+- **Esclerose sistêmica:** Raynaud de longa data + **úlceras/pitting digitais** + espessamento cutâneo + **doença pulmonar intersticial** (estertor em velcro, DLCO baixo, padrão restritivo) + esofagopatia; FAN+ (anticentrômero na limitada; Scl-70/RNA-pol III na difusa).
+- ⭐ A **úlcera digital** e o **Raynaud prolongado** praticamente NÃO ocorrem no LES -- é o desempate contra o lúpus.
+
+### 11.2 Síndrome pulmão-rim (o padrão da imunofluorescência decide)
+- **GRANULAR** (imunocomplexos) = **LES** -> dosar complemento (consumido).
+- **LINEAR** (anti-membrana basal) = **Goodpasture**.
+- **PAUCI-IMUNE** (sem depósito) = **vasculites ANCA** (granulomatose com poliangiite, Churg-Strauss) -> dosar ANCA.
+- No Brasil, lembrar também da **leptospirose** como causa de síndrome pulmão-rim.
+
+### 11.3 Vasculite por IgA (púrpura de Henoch-Schönlein)
+- Tétrade: **púrpura palpável** (MMII/nádegas) + **artrite/artralgia** + **dor abdominal** + **acometimento renal** (hematúria), com **complemento NORMAL** e laboratório em geral normal. Diferente de Goodpasture (pulmão-rim, sem púrpura/abdome).
+
+### 11.4 LES x Fibromialgia
+- **Fibromialgia** = dor difusa **não inflamatória e não autoimune**: sem sinovite objetiva, **sem febre**, sem consumo de complemento. Tender points podem coexistir com o LES, mas **não explicam poliartrite nem febre** -- diante de sinovite + febre, pensar em doença inflamatória (LES/AR).
+
+### 11.5 Hemólise: autoimune (AHAI) x microangiopática
+- **AHAI** (do LES): **Coombs/TAD POSITIVO** -> corticoide + transfusão em alíquotas.
+- **Microangiopática** (PTT/SHU): **Coombs NEGATIVO** + **esquizócitos** -> ADAMTS13, plasmaférese. Acertar o diagnóstico de AHAI mas pedir ADAMTS13/plasmaférese é o erro clássico.
+
+---
+
+## 12. Armadilhas de Prova
 
 - 🔴 **Epidemiologia invertida:** o LES é mais incidente e mais **grave em negros/hispânicos**, não em brancos; e a nefrite lúpica é mais grave nesses grupos.
 - 🔴 **Hormônios:** **estrogênio favorece** o LES e **testosterona/androgênio protege** -- a banca troca os papéis.
@@ -352,3 +378,8 @@ Tríade: **trombose + morbidade obstétrica + anticorpos antifosfolípides (AAF)
 - 🔴 **Gestante com SAF NÃO usa varfarina** (teratogênica) -> **heparina (HBPM) + AAS**. **DOACs não devem ser usados** em SAF de alto risco/triplo-positivo.
 - 🔴 **Nefropatia da SAF** (microangiopatia trombótica) é diferencial da nefrite lúpica, e a **biópsia renal não é proscrita** em anticoagulado (pode-se fazer ponte com heparina).
 - 🔴 **Síndrome de Sneddon** = AVC + livedo reticular + hipertensão de difícil controle + AAF.
+- 🔴 **Síndrome de Evans** = anemia hemolítica autoimune (Coombs+) + plaquetopenia imune (+/- neutropenia); o LES é a principal causa. Não é hepatoesplenomegalia/linfopenia/febre.
+- 🔴 **Fatores de pior prognóstico no LES:** raça negra, baixo nível socioeconômico, sexo masculino, nefrite, acometimento de SNC. O acometimento **articular NÃO** piora prognóstico; o **ANA** é universal (não estratifica).
+- 🔴 **Retirada abrupta de corticoide crônico -> insuficiência adrenal secundária** (hipotensão); o desmame é sempre progressivo. No lúpico polimedicado com hipotensão após parar uma droga, a resposta é a **prednisona** (parar anti-hipertensivo elevaria a PA).
+- 🔴 **Filtro do complemento:** na atividade renal do LES o complemento é sempre **CONSUMIDO** (C3/C4 baixos); qualquer alternativa com **"aumento de C3"** na atividade lúpica é falsa.
+- 🔴 **Retinopatia por antimalárico = suspensão DEFINITIVA** (não "suspender 90 dias e reintroduzir em dose menor") -- pegadinha de enunciado negativo.

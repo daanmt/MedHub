@@ -1,30 +1,30 @@
 # HANDOFF.md -- ESTADO OPERACIONAL CURTO
-*Atualizado: 2026-07-10 -- **s117: Cefaleias;Epilepsias + DITC II = 3 resumos gold do zero (Estratégia MED, subagentes + auto_check PASS). Bloco Neuro 30q/20a (66,7%); 9 erros -> 9 cards (788-796). Bloqueio da s116 (PDF de Cefaleias adulto) resolvido pelo usuário. Corrigi erro factual da fonte (TVC seio cavernoso -> sagital superior) no SSOT + banca-dependente. Aulas D7->D5 (Neuro) + D9 (DITC II). Q1 banca-divergente sem card.***
+*Atualizado: 2026-07-11 -- **s118: DITC II (LES+SAF) 24q/11a (46%); 13 erros -> 13 cards (797-809). Feedback: aula D9 saiu enxuta-incompleta (sem DDx) -> memória atualizada + §11 Diagnósticos Diferenciais costurada no DITC II.md (auto_check PASS). FSRS drain lote 1 (5 cards). s117 selada (commit 655b2fc). Modo recuperação (cansaço); rush volta 13/07.***
 
 ## > Proximo passo imediato
-1. **MODO RECUPERAÇÃO 11-12/07** (usuário cansado): sanar pendências + **drenar flashcards**; rush do cronograma volta **segunda 13/07**.
-2. **Hoje (s118, em curso):** questões de **DITC II** -> analisar -> cards (área `Reumato`, tema DITC II/LES). Drenar **FSRS: 26 vencidos + backlog até o teto de 30**. Refresh **Leishmaniose** (dormente).
-3. **Segunda 13/07:** `python tools/cronograma.py --sync-drive <xlsx>` OBRIGATÓRIO antes do rush (Drive 2d desatualizado).
-4. **Batch pendente (plano s116):** faltam **Imunizações III (29q)** + **Colecistite e Colangite (18q)** -- só Cefaleias;Epilepsias saiu das 101q planejadas.
-5. **Mini-drill de enunciado negativo** -- reincidente 3ª sessão seguida.
+1. **PRÓXIMA SESSÃO (plano do usuário):** (a) **revisão/PREPARAR de CADA tema** dos próximos ~50 cards da fila FSRS; (b) depois **drenar 50 cards** (atrasados + hoje + backlog). Boot: puxar a fila viva `python tools/fsrs_queue.py --list --limit 50 --cluster` e oferecer o PREPARAR por tema. Snapshot 11/07 (Trauma-pesado): Trauma Abdominal (10), Cir. Infantil I (6), Trauma Aval. Inicial (5), Pancreatite (4), Hemostasia/Arboviroses (3), Ectópica/Emerg.Ped/Hanseníase/TCE ped/Choque (2), + ~10 temas com 1.
+2. **Hanseníase -- Revisão Direcionada pendente** (veio fria no drain: dx inicial/estesiometria + vigilância de contato 5 anos).
+3. **Segunda 13/07:** rush do cronograma volta -> `python tools/cronograma.py --sync-drive <xlsx>` OBRIGATÓRIO antes (Drive stale).
+4. **Batch pendente (plano s116):** faltam **Imunizações III (29q)** + **Colecistite e Colangite (18q)**.
+5. **Mini-drill de enunciado negativo** -- reincidente 3ª+ sessão seguida (prioridade).
 
 ## Padroes de erro vivos -- atencao do scrum master
-- 🔴 **Casar conduta x acuidade/contexto (família bug nº1 + ATLS, 3x na s117):** Q2 (pulou a ventilação pós-benzo, foi em manitol), Q3 (açúcar VO no inconsciente), Q9 (fenitoína IV em crise única). Aplica a conduta certa no momento errado -- "parar antes de completar a verificação".
-- 🔴 **Enunciado negativo -- REINCIDENTE (Q5/Q6; 3ª sessão seguida):** rotular cada opção V/F antes de marcar. Hora do mini-drill dedicado.
-- 🔴 **Sintomático x profilático (Q10):** di-hidroergotamina (abortiva) numa pergunta de profilaxia, mesmo após a aula do dia.
-- Lacunas pontuais s117: B6 x B12 (status refratário), recorrência de crise febril (pico BAIXO, contraintuitivo), duração > 24h não é red flag.
-- Carregado: enunciado negativo (s116 2x, s112, s100...), IECA-first-no-diabético, criança DM1 doente = hipoglicemia não CAD.
+- 🔴 **bug nº1 / leitura parcial (eixo nº1, 3x na s118):** tinha o discriminador (granular=LES, complemento baixo=atividade, classe IV x V) mas ancorou num achado só (proteinúria, hemoptise). Mesmo padrão da s117 (acuidade/contexto) e do simulado. **É o eixo que mais sangra ponto.**
+- 🔴 **enunciado negativo -- REINCIDENTE (Q4; 3ª+ sessão seguida):** rotular cada opção V/F antes de marcar. Mini-drill = prioridade.
+- 🔴 **DDx breadth -- falha de AULA (do agente):** aula D9 sem diferenciais; corrigido no resumo + memória `feedback_aula_base_cobertura_escopo`. Ao dar aula de tema integrador (LES, pulmão-rim, poliartrite), listar os DDx no checklist de cobertura.
+- Lacunas s118: Evans (AHAI+plaquetopenia), prognóstico do LES (negro/NSE, não articular/ANA), retirada de corticoide -> insuf. adrenal, gravidez lúpica (mantém HCQ+prednisona).
+- Carregado: acuidade/contexto (s117), IECA-first-no-diabético, criança DM1 = hipoglicemia.
 
 ## Estado por frente
-- **Volume & Metas:** 4937 / 10000 (perf. ~79.3%). Hoje: 0. Ritmo-alvo ~79.1q/dia (64d p/ ENAMED). [derivado: day_plan --handoff-block]
-- **FSRS:** 18 atrasados + 8 hoje. Backlog: 421 novos. [derivado: day_plan --handoff-block]
-- **Conteudo:** 69 resumos em resumos/ (+3 na s117: Cefaleias, Epilepsias, DITC II). [derivado: glob] DITC II = sibling do `DITC.md` (não extensão).
-- **Erros & Cards:** +9 na s117 (cards 788-796). Q1 banca-divergente sem card.
-- **Posicao cronograma:** conteúdo S12 (nominal S15, atraso ~3 sem). [derivado: preparacao_estado] Drive 2d stale.
-- **Infraestrutura:** nenhuma mudança de contrato/script (só conteúdo + operação normal). Pipeline "usuário larga PDF Estratégia -> subagente redige -> eu audito" validado 3x nesta sessão.
+- **Volume & Metas:** 4961 / 10000 (perf. ~79.1%). Hoje: 24. Ritmo-alvo ~78.7q/dia (64d p/ ENAMED). [derivado: day_plan --handoff-block]
+- **FSRS:** 13 atrasados + 10 hoje. Backlog: 434 novos. [derivado: day_plan --handoff-block] Drain s118: 5 cards (3x nota 4, 2x nota 1).
+- **Conteudo:** 69 resumos em resumos/ (DITC II estendido com §11 DDx). [derivado: glob]
+- **Erros & Cards:** +13 na s118 (cards 797-809). Temas por doença (LES/Esclerose Sistêmica/SAF/Vasculites).
+- **Posicao cronograma:** conteúdo S12 (nominal S15, atraso ~3 sem). [derivado: preparacao_estado] Drive stale.
+- **Infraestrutura:** nenhuma mudança de contrato/script. Pipeline "usuário larga PDF Estratégia -> subagente redige -> eu audito" segue validado.
 
 ## Pendencias ativas
-🔴 Reforjar `TCE.md` + `Sistemas de Informação em Saúde.md`. Aula-base de Pré-Natal I (débito antigo). Reforjar cards 95/120 (120 via gate de evidência). Rótulo `sessao_num=115` (bloco Endocrino da s114) segue pendente -- reconciliar quando conveniente. Ledger `AUDITORIA_MEDHUB.md`: **F21 aberto**; próximos achados em F35 (mecanizar reconcile de volume W1/F29 + fechar blind spot do seletor de suite do auto_check). Ano da diretriz de HAS (2020 x SBC 2025). **Banca-dependente flagados no DITC II** (belimumabe/nefrite, SAF 2023) -- auditar via `/pesquisar-evidencia` se quiser.
+🔴 Hanseníase Revisão Direcionada (cluster frio). Reforjar `TCE.md` + `Sistemas de Informação em Saúde.md`. Aula-base de Pré-Natal I. Reforjar cards 95/120 (120 via gate de evidência). Rótulo `sessao_num=115` pendente. Ledger `AUDITORIA_MEDHUB.md`: **F21 aberto**; F35 (reconcile de volume W1/F29 + seletor de suite do auto_check). Ano da diretriz de HAS (2020 x SBC 2025). Banca-dependente no DITC II (belimumabe/nefrite, SAF 2023) -- auditar via `/pesquisar-evidencia` se quiser.
 
 ---
-*Historico: history/INDEX.md * Macro: ESTADO.md * Sessao: history/session_117.md * Ledger de engenharia: AUDITORIA_MEDHUB.md*
+*Historico: history/INDEX.md * Macro: ESTADO.md * Sessao: history/session_118.md * Ledger de engenharia: AUDITORIA_MEDHUB.md*

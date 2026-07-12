@@ -1,6 +1,19 @@
 # Decision Log
 > Newest first. Updated automatically by the architect agent.
 
+## 2026-07-12 — Consolidação do mecanismo de conhecimento: 3 partes, PASS/PASS/PASS
+
+**Contexto:** auditoria M-OBS do arquiteto (ai-eng) sobre a "bagunça" de RAG/conhecimento — 4 camadas sobrepostas (rag.py vivo · MCP obsidian redundante · scaffold LangGraph/BM25 morto · pubmedmcp). Achado-mestre: **3 das 4 dores eram DRIFT doc-vs-código, não falta de mecanismo.** Corpus gold medido = 238k tokens (acima do limiar de 200k que justifica RAG, por margem estreita) → alavanca é curadoria (data-centric), não infra. PRD `mecanismo-conhecimento-consolidacao` → 3 specs → implement+audit PASS 3/3. Auditoria completa em `docs/AUDITORIA-MECANISMO-CONHECIMENTO-2026-07-12.md`.
+
+**Decisões:**
+1. **Motor de busca único = `app/engine/rag.py`.** MCP `obsidian-notes-rag` aposentado (2º índice vetorial do mesmo vault, mesmo modelo, store paralelo, zero consumidores Python) — removido de `.mcp.json` + hook. Scaffold LangGraph checkpointer e BM25 (`rank-bm25`) removidos (mortos/regressivos).
+2. **Budget de spec é do arquiteto:** part-1 subiu de ≤6 para ≤8 quando a deleção de `checkpointer.py` revelou 2 importadores vivos (`__init__.py`, `inspect.py`) — escopo certo, contagem corrigida; documentado no spec. Não parei para "perguntar" quando o operador já delegou o pipeline.
+3. **F21 reconciliado em DOIS planos, não "RESOLVIDO" seco:** conduta resolvida no contrato `revisao-calibrada-contract.md` v1.2; enforcement mecânico (WARN de cobertura) na part-3. Marcar "RESOLVIDO" chapado seria um novo drift — o próprio contrato (L138) diz que o motor mecânico vem com a cobertura.
+4. **Fallback textual marca proveniência** (`metadata['source']='fallback_textual'`, `distance=None`, `resumo_path` preservado) — análogo ao `pdf_raw` do two-tier; o agente distingue degradado de curado. Só ativa em falha de infra (não em resultado vazio legítimo).
+5. **Contador de resumos = deriver único** `tools/cobertura_conhecimento.py` (".md cunhados" exclui INDEX.md → 68). Achado que valida: glob manual dava 69 (contava INDEX.md); só o deriver é confiável.
+
+**Pitfall:** o glob ingênuo (`find -name '*.md'`) e o deriver canônico divergiam por 1 (INDEX.md) — reforça F6 (número de estado é derivado, nunca digitado) e o alarga ao contador de conteúdo.
+
 ## 2026-07-09 — Boot confiável (Part 3): contador derivado + spec multi-parte implementa a INTENÇÃO, não o literal stale
 
 **Contexto:** Risco 5 da auditoria de boot — `ESTADO.md` virou diário de sessões (linha "Indicador Atual" com ~4.000 chars s114..s096), contador de resumos `63×61` divergente, HANDOFF omitia F31 dos abertos. Spec part-3 (Onda D). Audit **PASS**.

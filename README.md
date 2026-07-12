@@ -49,9 +49,8 @@ Retrieval is multi-query: the raw query and (when enabled) a HyDE-generated hypo
 - **Storage:** SQLite — `ipub.db` for study state, `medhub_memory.db` for agent memory.
 - **Retrieval:** ChromaDB persistent client + `nomic-embed-text` via Ollama at `http://localhost:11434`. Chroma collection persisted at `data/chroma/`.
 - **LLM (optional):** Anthropic SDK (`claude-haiku-4-5-20251001`), used in three places: HyDE query expansion (`app/engine/rag.py`), LLM-quality flashcard generation (`app/engine/generate_flashcards.py`), and agent-memory session consolidation (`app/memory/manager.py`, via `langchain-anthropic`). Each call site falls back when `ANTHROPIC_API_KEY` is unset.
-- **Reranking:** `rank-bm25` (implemented, disabled — see `rag.py`).
 - **Spaced repetition:** FSRS-inspired simplified scheduler (`app/utils/fsrs.py`, ~75 LOC). The 17-weight default vector is the canonical FSRS v4 `DEFAULT_W`, but `evaluate()` applies a single linear difficulty update and one stability formula — not faithful FSRS v4.
-- **Agent-memory scaffolding:** LangGraph `SqliteSaver` checkpointer + LangMem-backed store on a separate `medhub_memory.db`. Only `consolidate_session` (triggered by a PostToolUse hook) and two read paths (`weak_areas` in `get_topic_context` and `summarize_performance`) are exercised; the checkpointer and `tools.py` exports are scaffold for an agent that does not live in this repo.
+- **Agent-memory:** LangMem-backed store on a separate `medhub_memory.db`. `consolidate_session` (triggered by a PostToolUse hook) writes; two read paths (`weak_areas` in `get_topic_context` and `summarize_performance`) consume it.
 - **PDF extraction:** pdfplumber, PyPDF2 (delete-after-extract policy — `tools/extract_pdfs.py`).
 - **Dashboards:** Plotly, pandas.
 
@@ -65,11 +64,10 @@ MedHub/
 ├── app/
 │   ├── pages/                   # 3 Streamlit pages: dashboard, study, library
 │   ├── engine/                  # 2-function read-only domain API
-│   │   ├── rag.py               # ChromaDB + Ollama + HyDE + dormant BM25
+│   │   ├── rag.py               # ChromaDB + Ollama + HyDE (two-tier gold/pdf_raw)
 │   │   ├── get_topic_context.py # bundles resumo + recent errors + weak_areas
 │   │   └── summarize_performance.py
-│   ├── memory/                  # LangGraph SqliteSaver + LangMem store
-│   │   ├── checkpointer.py
+│   ├── memory/                  # LangMem long-term store
 │   │   ├── store.py             # SQLiteMemoryStore(BaseStore)
 │   │   ├── manager.py           # consolidate_session (ChatAnthropic)
 │   │   ├── schemas.py           # pydantic models

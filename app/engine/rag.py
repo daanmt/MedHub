@@ -199,41 +199,6 @@ def _generate_hypothetical_document(query: str) -> str:
     return query
 
 
-def _bm25_rerank(chunks: list[dict], query: str, alpha: float = 0.8) -> list[dict]:
-    """Re-ordena chunks usando score híbrido coseno+BM25.
-
-    Combina distância coseno normalizada (peso alpha) com score BM25 normalizado
-    (peso 1-alpha). Alpha=0.8 mantém semântica como árbitro principal — BM25 entra
-    como desempate léxico para pares com vocabulário clínico sobreposto.
-
-    A query BM25 usa o último item de 'query' se ela contiver '\n---\n' como separador
-    (convenção interna: 'raw_query\n---\nhyde_doc'). Isso garante que o léxico expandido
-    do documento hipotético guie o BM25, não apenas tokens curtos da query original.
-
-    Retorna chunks com campo '_hybrid_score' adicionado, ordenados do maior para o menor.
-    Se rank_bm25 não estiver instalado ou ocorrer qualquer erro, retorna chunks
-    na ordem coseno original (fallback silencioso).
-    """
-    try:
-        from rank_bm25 import BM25Okapi
-        if not chunks:
-            return chunks
-        # Usa o documento HyDE expandido para léxico se disponível
-        bm25_query = query.split("\n---\n")[-1] if "\n---\n" in query else query
-        corpus = [c["text"].lower().split() for c in chunks]
-        bm25 = BM25Okapi(corpus)
-        scores = bm25.get_scores(bm25_query.lower().split())
-        max_score = max(scores) if max(scores) > 0 else 1.0
-        for i, chunk in enumerate(chunks):
-            norm_bm25 = scores[i] / max_score
-            # Ancoramos a distância ao threshold duro do RAG em vez do relativo do batch
-            norm_cosine = 1.0 - (chunk["distance"] / 0.35)
-            chunk["_hybrid_score"] = alpha * norm_cosine + (1 - alpha) * norm_bm25
-        return sorted(chunks, key=lambda x: x["_hybrid_score"], reverse=True)
-    except Exception:
-        return chunks  # fallback: ordem coseno original, sem raise
-
-
 def index_resumo(path: Path, collection=None) -> int:
     """Chunka e indexa um resumo no ChromaDB via upsert.
 
@@ -313,10 +278,50 @@ def index_all(resumos_dir: str = "resumos", clear: bool = False) -> dict[str, in
     return results
 
 
+def _textual_fallback(query: str, n_results: int = 5, area: Optional[str] = None) -> list[dict]:
+    """Fallback léxico quando o RAG semântico está indisponível (Chroma/Ollama offline).
+
+    Reusa o índice de `get_topic_context` (`_find_resumo`) para localizar o resumo mais
+    próximo do query e o chunker canônico `_chunk_by_headers` para fatiá-lo em seções
+    H2/H3. Retorna no mesmo shape de search(), com `metadata['source'] == 'fallback_textual'`
+    (marca de proveniência análoga ao `pdf_raw` do two-tier) e `distance = None` — o
+    consumidor distingue o resultado degradado do semântico curado. `[]` se nada casar.
+
+    O import de get_topic_context é lazy: evita ciclo de import (get_topic_context importa rag).
+    """
+    try:
+        from app.engine.get_topic_context import _find_resumo, _parse_frontmatter
+        path = _find_resumo(query)
+        if not path or not path.exists():
+            return []
+        fm = _parse_frontmatter(path)
+        if area and fm.get("area") and fm["area"].lower() != area.lower():
+            return []
+        chunks = _chunk_by_headers(path.read_text(encoding="utf-8"))
+        out = []
+        for c in chunks[:n_results]:
+            out.append({
+                "text": c["text"],
+                "metadata": {
+                    "source": "fallback_textual",
+                    "resumo_path": str(path),
+                    "section": c["header"],
+                    "area": fm.get("area", ""),
+                    "especialidade": fm.get("especialidade", ""),
+                },
+                "distance": None,
+            })
+        return out
+    except Exception:
+        return []
+
+
 def search(query: str, n_results: int = 5, area: Optional[str] = None, use_hyde: bool = True, max_distance: float = 0.35) -> list[dict]:
     """Busca semântica sobre os resumos indexados usando Multi-Query (HyDE + Raw).
 
-    Retorna [] quando ChromaDB indisponível ou Ollama offline.
+    Quando ChromaDB/Ollama estão indisponíveis, degrada para `_textual_fallback`
+    (busca léxica marcada `source=fallback_textual`) em vez de retornar []. O caminho
+    semântico (infra viva) é inalterado — o fallback só ativa em falha de infra.
 
     Args:
         query: Texto da consulta (ex: elo_quebrado, pergunta clínica).
@@ -329,7 +334,7 @@ def search(query: str, n_results: int = 5, area: Optional[str] = None, use_hyde:
         list[dict] com chaves: text, metadata (source, section, area, especialidade), distance.
     """
     if not _CHROMA_AVAILABLE:
-        return []
+        return _textual_fallback(query, n_results, area)
     try:
         query_texts = [query]
         if use_hyde:
@@ -367,11 +372,9 @@ def search(query: str, n_results: int = 5, area: Optional[str] = None, use_hyde:
                     })
 
         combined.sort(key=lambda x: x["distance"])
-        # BM25 rerank desabilitado: regressivo no corpus médico atual (90%→73%).
-        # Tech debt documentado para /discover (RRF + Cross-Encoder). Ver rag_benchmark_report_v2.md.
         return combined[:n_results]
     except Exception:
-        return []
+        return _textual_fallback(query, n_results, area)
 
 
 # ---------------------------------------------------------------------------
@@ -586,7 +589,8 @@ def search_two_tier(query: str, n_results: int = 5, area: Optional[str] = None,
     n_results quando o gold nao preenche. Hits do bruto trazem
     `metadata['source'] == 'pdf_raw'` (o agente os trata como nao-curados).
     Sombreamento: temas ja cobertos pelo gold NAO trazem pdf_raw do mesmo tema.
-    Retorna [] (via gold) se ChromaDB/Ollama offline.
+    Se ChromaDB/Ollama offline, retorna o fallback lexico do gold
+    (`search` -> `_textual_fallback`, marcado `source=fallback_textual`).
     """
     gold = search(query, n_results=n_results, area=area, use_hyde=use_hyde,
                   max_distance=max_distance)

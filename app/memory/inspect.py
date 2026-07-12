@@ -3,7 +3,6 @@ CLI de observabilidade para MedHub Memory v1.
 
 Uso:
     python app/memory/inspect.py --namespace medhub/weak_areas
-    python app/memory/inspect.py --threads
     python app/memory/inspect.py --dump
     python app/memory/inspect.py --stats
 """
@@ -14,7 +13,6 @@ import argparse
 import json
 
 from app.memory.store import SQLiteMemoryStore
-from app.memory.checkpointer import get_checkpointer, get_session_history
 
 
 _DEFAULT_DB = "medhub_memory.db"
@@ -60,35 +58,6 @@ def cmd_namespace(ns_arg: str, db_path: str) -> None:
             }
         )
     _print_table(rows)
-    print()
-
-
-def cmd_threads(db_path: str) -> None:
-    """List all session threads in the checkpointer."""
-    print("\n[threads — SqliteSaver]\n")
-    try:
-        with get_checkpointer(db_path) as cp:
-            # SqliteSaver doesn't expose a direct list-all-threads API;
-            # query the underlying SQLite directly as a fallback.
-            import sqlite3
-            conn = sqlite3.connect(db_path)
-            try:
-                rows = conn.execute(
-                    "SELECT DISTINCT thread_id FROM checkpoints ORDER BY thread_id"
-                ).fetchall()
-                if not rows:
-                    print("  (nenhuma thread registrada)")
-                else:
-                    for row in rows:
-                        history = get_session_history(cp, row[0])
-                        steps = len(history)
-                        print(f"  {row[0]}  ({steps} checkpoints)")
-            except Exception as e:
-                print(f"  Erro ao listar threads: {e}")
-            finally:
-                conn.close()
-    except Exception as e:
-        print(f"  Checkpointer indisponível: {e}")
     print()
 
 
@@ -213,7 +182,6 @@ def load_context(db_path: str = _DEFAULT_DB) -> None:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="MedHub Memory Inspector")
     parser.add_argument("--namespace", "-n", metavar="NS", help="Show entries for namespace (e.g. medhub/profile)")
-    parser.add_argument("--threads", "-t", action="store_true", help="List all session threads")
     parser.add_argument("--dump", "-d", action="store_true", help="Dump all long-term memory")
     parser.add_argument("--stats", "-s", action="store_true", help="Summary statistics")
     parser.add_argument("--context", "-c", action="store_true", help="Print agent boot context")
@@ -222,8 +190,6 @@ if __name__ == "__main__":
 
     if args.namespace:
         cmd_namespace(args.namespace, args.db)
-    elif args.threads:
-        cmd_threads(args.db)
     elif args.dump:
         cmd_dump(args.db)
     elif args.stats:

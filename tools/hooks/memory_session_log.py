@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 """
 PostToolUse(Write) hook: detecta criação de session log e automatiza fechamento.
-Consolida memória longa via manager.py (background) + reindexia RAG (inline).
+Consolida memória longa via manager.py (background).
 """
 import json
-import os
 import re
 import subprocess
 import sys
@@ -38,29 +37,6 @@ try:
     messages.append(f"[Memory v1] Consolidacao da sessao {session_num:03d} iniciada em background.")
 except Exception as e:
     messages.append(f"[Memory v1] Erro ao iniciar consolidacao: {e}")
-
-# RAG reindex inline (Ollama local: ~10–15s, aceitável no hook)
-env = {
-    **os.environ,
-    "OBSIDIAN_RAG_PROVIDER": "ollama",
-    "OBSIDIAN_RAG_MODEL": "nomic-embed-text:latest",
-    "OBSIDIAN_RAG_VAULT": str(PROJECT_ROOT),
-    "OBSIDIAN_RAG_DATA": str(Path.home() / "AppData/Local/obsidian-notes-rag/medhub"),
-}
-try:
-    result = subprocess.run(
-        ["uvx", "obsidian-notes-rag", "index"],
-        cwd=str(PROJECT_ROOT), env=env,
-        capture_output=True, text=True, timeout=60,
-    )
-    if result.returncode == 0:
-        messages.append("[Memory v2] RAG reindexado.")
-    else:
-        messages.append(f"[Memory v2] Reindex falhou: {result.stderr[:80]}")
-except subprocess.TimeoutExpired:
-    messages.append("[Memory v2] Reindex timeout — sera feito na proxima sessao.")
-except Exception as e:
-    messages.append(f"[Memory v2] Reindex erro: {e}")
 
 print(json.dumps({
     "hookSpecificOutput": {

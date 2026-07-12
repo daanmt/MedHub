@@ -1,24 +1,20 @@
 """
-MedHub Memory — LangGraph + LangMem persistence layer.
+MedHub Memory — LangMem persistence layer.
 
-Three-layer model:
+Two-layer model:
   Camada 1: Canonical repo (AGENTE.md, ESTADO.md, ipub.db, resumos/)
-  Camada 2: Short-term / thread-scoped (SqliteSaver → medhub_memory.db::checkpoints)
   Camada 3: Long-term / cross-thread (LangMem + SQLiteMemoryStore → medhub_memory.db::memory_store)
 
 Quick start:
-    from app.memory import get_store, get_checkpointer
+    from app.memory import get_store
 
     store = get_store()
-    with get_checkpointer() as cp:
-        config = get_thread_config(46)
-        # pass cp and config to your LangGraph graph
+    items = store.search(("medhub", "weak_areas"))
 """
 
 from __future__ import annotations
 
 from app.memory.store import SQLiteMemoryStore
-from app.memory.checkpointer import get_checkpointer, get_thread_config, get_session_history
 
 
 _DEFAULT_DB = "medhub_memory.db"
@@ -35,8 +31,5 @@ def get_store(db_path: str = _DEFAULT_DB) -> SQLiteMemoryStore:
 
 __all__ = [
     "get_store",
-    "get_checkpointer",
-    "get_thread_config",
-    "get_session_history",
     "SQLiteMemoryStore",
 ]

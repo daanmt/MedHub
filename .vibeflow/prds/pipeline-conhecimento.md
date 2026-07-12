@@ -5,7 +5,7 @@
 > + parecer arquitetural batido com o operador no chat (2026-07-05/06). O operador leu o parecer
 > e mandou gerar o PRD -- as decisoes recomendadas entram como base; redirecionamento e possivel
 > ate o gen-spec. Encoding ASCII limpo (AGENTE.md secao 4.5).
-> **STATUS: PRD pronto; gen-spec -> implement -> audit AGUARDAM go do operador.**
+> **STATUS: IMPLEMENTADO 2026-07-06 (4 ondas; audits `pipeline-conhecimento-part-{1,2,3,4}-audit.md` PASS). RAG two-tier vivo: gold + collection `pdf_raw` em `data/chroma/`. F21 = cláusula de conduta no contrato `revisao-calibrada-contract.md` v1.2; enforcement mecânico (WARN de cobertura) na spec `mecanismo-conhecimento-consolidacao-part-3`.**
 
 ## Problema
 

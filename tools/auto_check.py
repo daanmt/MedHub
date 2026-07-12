@@ -302,6 +302,24 @@ def main():
         # success=True: WARN não rebaixa o veredito (não altera all_passed).
         results_summary.append((desc_posicao, True, 1 if pdrift else 0))
 
+    # 6. Cobertura de conhecimento -- tema da semana corrente (spec mecanismo-conhecimento
+    #    part-3). WARN, não bloqueia: torna visível o tema da semana sem .md canônico.
+    #    Silencioso quando coberto ou grade indisponível (degrada, nunca falso-positivo).
+    if mode == "--all":
+        desc_cob = "Cobertura de conhecimento (tema da semana)"
+        try:
+            from cobertura_conhecimento import semana_orfaos_correntes
+            orfaos_sem, semana_n = semana_orfaos_correntes(str(ROOT_DIR / "resumos"))
+        except Exception:
+            orfaos_sem, semana_n = [], 0
+        if orfaos_sem:
+            nomes = ", ".join(x["stem"] for x in orfaos_sem[:5])
+            print(f"\n[WARN] COBERTURA_SEMANA: {len(orfaos_sem)} tema(s) da semana S{semana_n} "
+                  f"sem .md canônico ({nomes}). Priorizar autoria — fila em "
+                  f"tools/cobertura_conhecimento.py.")
+        # success=True: WARN não rebaixa o veredito (não altera all_passed).
+        results_summary.append((desc_cob, True, len(orfaos_sem)))
+
     # Resumo Final
     print("\n" + "=" * 60)
     print("📊 RELATÓRIO FINAL DO HARNESS AUTÔNOMO")

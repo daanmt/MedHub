@@ -239,6 +239,35 @@ def render(pareado, semana_orfaos, restantes, n_pdfs, n_mds, semana_n):
     return "\n".join(linhas)
 
 
+def semana_orfaos_correntes(dir_resumos: str = "resumos"):
+    """Temas da semana corrente do cronograma SEM .md canonico, + numero da semana.
+
+    Reusa o pipeline de cobertura (coletar -> parear -> grade -> priorizar) sem
+    imprimir -- consumido pelo WARN de tools/auto_check.py (spec mecanismo-conhecimento
+    part-3). Retorna (list[dict] orfaos_da_semana, int semana_n).
+
+    Degrada para ([], 0) quando a grade esta indisponivel ou qualquer etapa falha:
+    silencio, nunca falso-positivo (mesma disciplina do relatorio).
+    """
+    try:
+        pdfs, mds = coletar(dir_resumos)
+        pareado = parear(pdfs, mds)
+        grade, semana_n = carregar_grade()
+        if not semana_n:
+            return [], 0
+        semana_norms = temas_norm_semana(grade, semana_n)
+        grade_norms = temas_norm_grade(grade)
+        taxonomia = taxonomia_por_norm()
+        orfaos = [{"stem": p["stem"], "norm": p["norm"],
+                   "area": _area_do_path(p["path"], dir_resumos),
+                   "candidato": p["candidato"], "score": p["score"]}
+                  for p in pareado if not p["coberto"]]
+        semana_orfaos, _ = priorizar(orfaos, semana_norms, grade_norms, taxonomia)
+        return semana_orfaos, semana_n
+    except Exception:
+        return [], 0
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Relatorio read-only de cobertura de SSOT clinico (PDFs vs .md)."

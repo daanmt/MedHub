@@ -18,13 +18,13 @@
 ## Estado por frente
 - **Volume & Metas:** 4961 / 10000 (perf. ~79.1%). Hoje: 24. Ritmo-alvo ~78.7q/dia (64d p/ ENAMED). [derivado: day_plan --handoff-block]
 - **FSRS:** 13 atrasados + 10 hoje. Backlog: 434 novos. [derivado: day_plan --handoff-block] Drain s118: 5 cards (3x nota 4, 2x nota 1).
-- **Conteudo:** 69 resumos em resumos/ (DITC II estendido com §11 DDx). [derivado: glob]
+- **Conteudo:** resumos em resumos/ (DITC II estendido com §11 DDx). [contador canonico: `python tools/cobertura_conhecimento.py` -> ".md cunhados", exclui INDEX.md -- nao hardcodar]
 - **Erros & Cards:** +13 na s118 (cards 797-809). Temas por doença (LES/Esclerose Sistêmica/SAF/Vasculites).
 - **Posicao cronograma:** conteúdo S12 (nominal S15, atraso ~3 sem). [derivado: preparacao_estado] Drive stale.
 - **Infraestrutura:** nenhuma mudança de contrato/script. Pipeline "usuário larga PDF Estratégia -> subagente redige -> eu audito" segue validado.
 
 ## Pendencias ativas
-🔴 Hanseníase Revisão Direcionada (cluster frio). Reforjar `TCE.md` + `Sistemas de Informação em Saúde.md`. Aula-base de Pré-Natal I. Reforjar cards 95/120 (120 via gate de evidência). Rótulo `sessao_num=115` pendente. Ledger `AUDITORIA_MEDHUB.md`: **F21 aberto**; F35 (reconcile de volume W1/F29 + seletor de suite do auto_check). Ano da diretriz de HAS (2020 x SBC 2025). Banca-dependente no DITC II (belimumabe/nefrite, SAF 2023) -- auditar via `/pesquisar-evidencia` se quiser.
+🔴 Hanseníase Revisão Direcionada (cluster frio). Reforjar `TCE.md` + `Sistemas de Informação em Saúde.md`. Aula-base de Pré-Natal I. Reforjar cards 95/120 (120 via gate de evidência). Rótulo `sessao_num=115` pendente. Ledger `AUDITORIA_MEDHUB.md`: **F21 reconciliado 2026-07-12** (conduta resolvida no contrato v1.2; enforcement mecanico na spec `mecanismo-conhecimento-consolidacao-part-3`); F35 (reconcile de volume W1/F29 + seletor de suite do auto_check). Ano da diretriz de HAS (2020 x SBC 2025). Banca-dependente no DITC II (belimumabe/nefrite, SAF 2023) -- auditar via `/pesquisar-evidencia` se quiser.
 
 ---
 *Historico: history/INDEX.md * Macro: ESTADO.md * Sessao: history/session_118.md * Ledger de engenharia: AUDITORIA_MEDHUB.md*

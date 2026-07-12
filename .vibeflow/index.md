@@ -28,7 +28,7 @@ All persistent data lives in `ipub.db` (SQLite, local only). Clinical knowledge 
 | tools/CLI | `tools/` | insert_questao, extract_pdfs, review_cli, index_resumos, audit/cleanup scripts |
 | Workflows | `.agents/workflows/` | Portable agent protocols (analisar, criar, gerar, registrar) |
 | Skills | `.claude/commands/` | Claude-specific specs (estilo-resumo, analisar-questao, etc.) |
-| Knowledge Base | `resumos/` | 44 clinical summaries organized by specialty |
+| Knowledge Base | `resumos/` | Clinical summaries by specialty — contador canônico: `python tools/cobertura_conhecimento.py` (".md cunhados", exclui INDEX.md); não hardcodar |
 
 ## Pattern Registry
 

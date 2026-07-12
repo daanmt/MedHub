@@ -120,11 +120,14 @@ A fundação está pronta (agente LLM + workflows portáveis + `ipub.db` como SS
 **O que consolida:**
 - **Revisão conversacional de flashcards:** o agente puxa a fila vencida (buckets atrasado/hoje/novo), apresenta card a card no chat e grava o rating via `record_review()`. O player Streamlit (`app/pages/2_estudo.py`) vira opcional/desktop — corrigir os bugs de closure/`session_state` ou descontinuar.
 - **Geração de cards pelo agente:** aposentar `tools/regenerate_cards.py` + `regenerate_cards_llm.py` (421 linhas de heurística regex + batch LLM). Ao analisar um erro, o agente escreve o card de qualidade e passa pronto para `insert_questao.py` (que já aceita `--frente_*`/`--verso_*`).
+<!-- drift-check: path tools/test_fsrs.py exists -->
 - **FSRS fiel** (cruza com Linha 3): ~~substituir `app/utils/fsrs.py` caseiro pela lógica de referência (`fsrs4anki`/`py-fsrs`)~~. **✅ FEITO** (commit `46df800` "feat(fsrs): onda A — FSRS fiel (py-fsrs)"): `fsrs.py` é adapter fino sobre `py-fsrs`; `tools/test_fsrs.py` valida fidelidade à referência (incl. "stability bate com py-fsrs"). Reconciliado 2026-07-12.
 - **RAG local mantido, obsidian MCP descontinuado para busca:** decisão empírica — em teste comparativo o `rag.py` local acertou resumo + seção (dist 0.148, metadata de área/especialidade) enquanto o MCP `obsidian-notes-rag` retornou tópico errado, indexando um snapshot stale com `Temas/` + `resumos/` duplicados + ruído de projeto.
 - **Ingestão via Google Workspace MCP:** planilhas na conta Google entram via MCP (Drive/Sheets) → `registrar_sessao_bulk.py`, substituindo a extração manual de `.xlsx`.
 - **Streamlit encolhe ao que exige UI real:** dashboard cede espaço para a skill `/performance`; o app deixa de hospedar "inteligência".
-- **Higiene latente:** ~~corrigir `app/utils/db.py:98-99` (`get_next_due_card()` referencia colunas `frente`/`verso` já removidas)~~ **✅ FEITO** (`get_next_due_card`/`frente`/`verso` não existem mais em `db.py`; reconciliado 2026-07-12) · **ABERTO:** adicionar `UNIQUE(area, tema)` em `taxonomia_cronograma` (schema confirmado sem a constraint em 2026-07-12).
+<!-- drift-check: symbol app/utils/db.py::get_next_due_card absent -->
+<!-- drift-check: unique taxonomia_cronograma (area, tema) exists -->
+- **Higiene latente:** ~~corrigir `app/utils/db.py:98-99` (`get_next_due_card()` referencia colunas `frente`/`verso` já removidas)~~ **✅ FEITO** (`get_next_due_card`/`frente`/`verso` não existem mais em `db.py`; reconciliado 2026-07-12) · ~~**ABERTO:** adicionar `UNIQUE(area, tema)` em `taxonomia_cronograma`~~ **✅ JÁ EXISTIA** (índice `ux_taxonomia_area_tema` criado na s083 por `tools/dedup_taxonomia.py`; presente em `init_db.py` e documentado em `core/contracts/forgetting-curve-contract.md`. A "confirmação sem a constraint" de 2026-07-12 foi **erro de verificação da auditoria externa** — reconciliado 2026-07-12 na implantação do sensor de drift).
 
 ---
 

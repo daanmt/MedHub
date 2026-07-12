@@ -196,6 +196,7 @@ def main():
     changed_files = None
     parity_relevant = (mode == "--all")
     pointer_relevant = (mode == "--all")
+    doc_drift_relevant = (mode == "--all")
 
     if mode in ("--changed", "--staged"):
         changed_files = get_staged_files() if mode == "--staged" else get_changed_files()
@@ -203,6 +204,7 @@ def main():
             mode = "--all"
             parity_relevant = True
             pointer_relevant = True
+            doc_drift_relevant = True
         else:
             origem = "staged para commit" if mode == "--staged" else "modificado(s)/untracked na sessão"
             print(f"🔍 Detectados {len(changed_files)} arquivo(s) {origem}.")
@@ -215,6 +217,9 @@ def main():
                 # (checado antes do exists() para pegar também deleções de logs).
                 if fp == "HANDOFF.md" or fp.startswith("history/"):
                     pointer_relevant = True
+                # Sensor doc-vs-codigo (check 7): relevante se um doc-alvo mudou.
+                if fp in ("ROADMAP.md", "HANDOFF.md", "ESTADO.md", "AUDITORIA_MEDHUB.md"):
+                    doc_drift_relevant = True
                 path_obj = ROOT_DIR / f
                 if not path_obj.exists():
                     continue
@@ -224,7 +229,8 @@ def main():
                 elif (fp.startswith("tools/") or fp.startswith("core/")) and f.endswith(".py"):
                     tools_to_check.append(f)
 
-            if not resumos_to_check and not tools_to_check and not parity_relevant and not pointer_relevant:
+            if (not resumos_to_check and not tools_to_check and not parity_relevant
+                    and not pointer_relevant and not doc_drift_relevant):
                 print("\n✅ Nenhum arquivo crítico (resumos/*.md ou scripts python estruturais) foi alterado.")
                 print("   O harness não exige execução de suítes de teste para esta mudança. Aprovado!")
                 print("=" * 60)
@@ -319,6 +325,28 @@ def main():
                   f"tools/cobertura_conhecimento.py.")
         # success=True: WARN não rebaixa o veredito (não altera all_passed).
         results_summary.append((desc_cob, True, len(orfaos_sem)))
+
+    # 7. Sensor de drift doc-vs-codigo (degrau 1 -- spec sensor-drift-doc-codigo).
+    #    WARN, não bloqueia: compara anotacoes drift-check dos docs de estado com
+    #    a realidade (codigo/schema/paths). A regra mora em tools/doc_drift.py;
+    #    o auto_check só orquestra. Sensor indisponível = WARN visível (nunca
+    #    silêncio que mascare sensor quebrado).
+    if doc_drift_relevant:
+        desc_drift = "Sensor de drift doc-vs-código (DOC_DRIFT)"
+        try:
+            from doc_drift import run_checks as doc_drift_run
+            achados_drift = doc_drift_run(str(ROOT_DIR))
+        except Exception as e:
+            print(f"\n[WARN] DOC_DRIFT_SENSOR: sensor indisponível ({e}).")
+            achados_drift = [{"tipo": "sensor"}]
+        for a in achados_drift:
+            if a["tipo"] == "sensor":
+                continue
+            tag = "DOC_DRIFT" if a["tipo"] == "drift" else "DOC_DRIFT_SYNTAX"
+            print(f"\n[WARN] {tag}: {a['doc']}:{a['linha']} -- {a['msg']} "
+                  f"(regra: {a['regra']}). Reconciliar o doc ou corrigir a anotação.")
+        # success=True: WARN não rebaixa o veredito (não altera all_passed).
+        results_summary.append((desc_drift, True, len(achados_drift)))
 
     # Resumo Final
     print("\n" + "=" * 60)

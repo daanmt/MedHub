@@ -844,6 +844,118 @@ def ler_plano(data_iso):
     return [dict(zip(cols, r)) for r in rows]
 
 
+# --- Aderência planejado × real (spec telemetria-estudo-part-2) ---------------
+# Família de medição por tipo de bloco: qual fonte MEDIDA responde pelo tipo.
+# Trava anti-sycophancy: a classificação deriva SÓ de fsrs_revlog/sessoes_bulk
+# (realizado medido); tempo_h/energia são dimensão do plano, nunca evidência.
+FAMILIA_MEDICAO = {"mini-drill": "cards", "fsrs": "cards",
+                   "questoes": "questoes", "simulado": "simulado",
+                   "descanso": None}
+
+
+def realizado_do_dia(con, data_iso):
+    """Realizado MEDIDO do dia, direto das fontes SSOT (read-only)."""
+    q = con.execute(
+        "SELECT COALESCE(SUM(questoes_feitas),0) FROM sessoes_bulk "
+        "WHERE area <> 'Simulado' AND data_sessao = ?", (data_iso,)).fetchone()[0]
+    sim = con.execute(
+        "SELECT COUNT(*) FROM sessoes_bulk "
+        "WHERE area = 'Simulado' AND data_sessao = ?", (data_iso,)).fetchone()[0]
+    cards = con.execute(
+        "SELECT COUNT(*) FROM fsrs_revlog WHERE date(review_time) = ?",
+        (data_iso,)).fetchone()[0]
+    return {"questoes": q or 0, "simulado": sim or 0, "cards": cards or 0}
+
+
+def classificar_dia(plano_rows, realizado):
+    """Classificação PURA planejado×real de um dia (testável por fixtures).
+
+    Regras determinísticas: cumprido (real >= planejado), parcial (0 < real <
+    planejado), pulado (real == 0 e planejado > 0); volume 0 (ex.: descanso) =
+    cumprido trivial. Famílias que dividem a mesma medida (mini-drill e fsrs
+    dividem 'cards') alocam o realizado NA ORDEM do plano — mini-drill primeiro
+    por construção (R1 vem antes). Realizado sem bloco correspondente (ou acima
+    do planejado da família) vira 'extra' — estudo não planejado é sinal de 1ª
+    classe, nunca descartado.
+    """
+    saldo = dict(realizado)
+    consumo_planejado = {}
+    blocos = []
+    for b in sorted(plano_rows, key=lambda r: r.get("ordem", 0)):
+        medida = FAMILIA_MEDICAO.get(b.get("task_tipo"))
+        planejado = int(b.get("volume_planejado") or 0)
+        if medida is None:
+            blocos.append(dict(b, realizado=None,
+                               status="cumprido" if planejado == 0 else "pulado"))
+            continue
+        consumo_planejado[medida] = consumo_planejado.get(medida, 0) + planejado
+        real = min(saldo.get(medida, 0), planejado)
+        saldo[medida] = saldo.get(medida, 0) - real
+        if planejado == 0 or real >= planejado:
+            status = "cumprido"
+        elif real > 0:
+            status = "parcial"
+        else:
+            status = "pulado"
+        blocos.append(dict(b, realizado=real, status=status))
+    extra = [{"tipo": medida, "qtd": resto}
+             for medida, resto in sorted(saldo.items()) if resto > 0]
+    return {"blocos": blocos, "extra": extra}
+
+
+def aderencia(fim=None, semanas=1):
+    """Série de aderência por dia na janela (deriva TUDO do db; zero input manual)."""
+    fim = fim or date.today()
+    dias = []
+    con = None
+    try:
+        con = db.get_connection()
+        for delta in range(semanas * 7 - 1, -1, -1):
+            d = fim.fromordinal(fim.toordinal() - delta)
+            data_iso = d.isoformat()
+            plano = ler_plano(data_iso)
+            try:
+                real = realizado_do_dia(con, data_iso)
+            except Exception:
+                real = {"questoes": 0, "simulado": 0, "cards": 0}
+            if plano:
+                dia = classificar_dia(plano, real)
+                dia["sem_plano"] = False
+            else:
+                # honestidade > completude: sem plano gravado, nada é "pulado";
+                # o realizado aparece inteiro como extra (sinal, não erro).
+                dia = {"blocos": [],
+                       "extra": [{"tipo": k, "qtd": v}
+                                 for k, v in sorted(real.items()) if v > 0],
+                       "sem_plano": True}
+            dia["data"] = data_iso
+            dias.append(dia)
+    finally:
+        if con is not None:
+            con.close()
+    return dias
+
+
+def render_aderencia(dias):
+    out = ["# 📈 Aderência planejado × real", ""]
+    for dia in dias:
+        if dia["sem_plano"]:
+            extras = ", ".join(f"{e['qtd']} {e['tipo']}" for e in dia["extra"])
+            out.append(f"- **{dia['data']}** — sem plano gravado"
+                       + (f" · extra: {extras}" if extras else ""))
+            continue
+        marcas = {"cumprido": "OK", "parcial": "parcial", "pulado": "PULADO"}
+        partes = []
+        for b in dia["blocos"]:
+            real_txt = "-" if b["realizado"] is None else b["realizado"]
+            partes.append(f"{b['task_tipo']} {real_txt}/{b['volume_planejado']} "
+                          f"[{marcas[b['status']]}]")
+        extras = ", ".join(f"{e['qtd']} {e['tipo']}" for e in dia["extra"])
+        out.append(f"- **{dia['data']}** — " + " · ".join(partes)
+                   + (f" · extra: {extras}" if extras else ""))
+    return "\n".join(out)
+
+
 def main():
     ap = argparse.ArgumentParser(description="Plano do Dia (read-only).")
     ap.add_argument("--json", action="store_true", help="Saída JSON crua")
@@ -863,9 +975,18 @@ def main():
                     help="Simulação: monta o plano sem gravar em plano_dia")
     ap.add_argument("--plano-de", metavar="YYYY-MM-DD", dest="plano_de",
                     help="Imprime o plano PERSISTIDO de uma data (JSON)")
+    ap.add_argument("--aderencia", action="store_true",
+                    help="Relatório aderência planejado×real por dia (derivado do db)")
+    ap.add_argument("--semanas", type=int, default=1, metavar="N",
+                    help="Janela do --aderencia em semanas (default 1)")
     args = ap.parse_args()
     if args.plano_de:
         print(json.dumps(ler_plano(args.plano_de), ensure_ascii=False, indent=2))
+        return
+    if args.aderencia:
+        dias = aderencia(semanas=max(1, args.semanas))
+        print(json.dumps(dias, ensure_ascii=False, indent=2) if args.json
+              else render_aderencia(dias))
         return
     if args.handoff_block:
         print(render_handoff_block(build()))

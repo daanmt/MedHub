@@ -30,9 +30,12 @@ Dois furos de integridade, ambos pequenos e delegáveis:
    perigoso — o gate que protege todo o trabalho futuro tem cobertura parcial. (Parte do F35
    do ledger: "seletor de suíte do auto_check".)
 
-2. **`taxonomia_cronograma` não tem `UNIQUE(area, tema)`.** Schema confirmado em 2026-07-12 sem
-   a constraint. Nada impede duas linhas `(area, tema)` idênticas — que corromperiam contadores
-   e o pareamento de cobertura. (Higiene latente do ROADMAP, ainda aberta.)
+2. ~~**`taxonomia_cronograma` não tem `UNIQUE(area, tema)`.**~~ **ITEM CAI (corrigido
+   2026-07-12, implantação do sensor de drift):** o índice `ux_taxonomia_area_tema` existe
+   **desde a s083** (`tools/dedup_taxonomia.py`; também em `init_db.py` e documentado em
+   `core/contracts/forgetting-curve-contract.md`). A "confirmação sem a constraint" acima
+   foi erro de verificação da auditoria externa. Deste PRD resta APENAS o item 1
+   (cobertura de suíte) — os critérios de sucesso 2 e a parte de migração não se aplicam.
 
 ## Público-alvo
 

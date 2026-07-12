@@ -1,6 +1,19 @@
 # Decision Log
 > Newest first. Updated automatically by the architect agent.
 
+## 2026-07-12 — Sensor de drift doc-vs-código (check 7): anotações verificáveis, não NLP; drift real pego na implantação
+
+**Contexto:** degrau 1 da série auto-evolução (spec `sensor-drift-doc-codigo`, audit **PASS**, commit `fa7cc2c`). `tools/doc_drift.py` + check 7 WARN-first no `auto_check`.
+
+**Decisões:**
+1. **Claim verificável = anotação explícita** (`<!-- drift-check: sqlite|symbol|path|unique ... -->`), nunca parsing de prosa — anti-fabricação; a anotação codifica o que o DOC afirma e WARN = realidade ≠ doc.
+2. **Sensor read-only por construção** (`mode=ro` URI + recusa de não-SELECT) e allowlist fixa de 4 docs — fronteira clínica garantida por design, com teste.
+3. **A implantação pagou o sensor**: o claim "ABERTO: UNIQUE(area,tema)" do ROADMAP estava stale — `ux_taxonomia_area_tema` existe **desde a s083** (`dedup_taxonomia.py`, `init_db.py`). A "confirmação sem a constraint" da auditoria externa de 2026-07-12 foi **erro de verificação** (provável: procurou constraint no DDL da tabela em vez de `PRAGMA index_list`). Item 2 do handoff de integridade CAI.
+
+**Pitfall (mesma classe do F35):** `pytest.ini` tem whitelist fixa em `python_files` — suíte nova com asserts nativos NÃO é coletada até ser adicionada à lista. O "pytest verde" pós-implement dava 63 (baseline) e parecia completo. Regra: ao criar `tools/test_*.py`, conferir a contagem coletada ANTES e DEPOIS; se igual, a suíte não entrou.
+
+---
+
 ## 2026-07-12 — Consolidação do mecanismo de conhecimento: 3 partes, PASS/PASS/PASS
 
 **Contexto:** auditoria M-OBS do arquiteto (ai-eng) sobre a "bagunça" de RAG/conhecimento — 4 camadas sobrepostas (rag.py vivo · MCP obsidian redundante · scaffold LangGraph/BM25 morto · pubmedmcp). Achado-mestre: **3 das 4 dores eram DRIFT doc-vs-código, não falta de mecanismo.** Corpus gold medido = 238k tokens (acima do limiar de 200k que justifica RAG, por margem estreita) → alavanca é curadoria (data-centric), não infra. PRD `mecanismo-conhecimento-consolidacao` → 3 specs → implement+audit PASS 3/3. Auditoria completa em `docs/AUDITORIA-MECANISMO-CONHECIMENTO-2026-07-12.md`.

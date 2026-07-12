@@ -1,6 +1,20 @@
 # Decision Log
 > Newest first. Updated automatically by the architect agent.
 
+## 2026-07-12 — Série auto-evolução COMPLETA (5 specs, 5 PASS): o MedHub agora se lê, se lembra, se mede e se julga sob portão
+
+**Contexto:** 4 handoff PRDs do arquiteto (ai-eng) → 5 specs → implement+audit **PASS 5/5**, executados pelo próprio arquiteto (delegação do operador). pytest 63→115. Degraus: sensor doc-drift (check 7) · ledger-of-self · plano persistido · aderência planejado×real · reflect gated.
+
+**Decisões estruturais:**
+1. **Pattern `warn-first-check` promovido** a `.vibeflow/patterns/` (3º uso): invariante de governança novo = check WARN-first do auto_check + regra em módulo próprio + instrumentação no ledger-of-self.
+2. **Persistência do plano só no caminho que renderiza o plano** — `--handoff-block` (fechamento, defaults) NÃO regrava a intenção declarada de manhã; protege a série de aderência.
+3. **Sinal do reflect = eventos novos OU occurrences≠snapshot do último datum** — recorrência silenciosa (dedup) vira sinal sem quebrar a idempotência de leitura.
+4. **Autonomia calibrada em toda a série**: detecção/registro autônomos; proposta gated; nenhum WARN bloqueia; nenhum conteúdo clínico tocado (fronteira testada por construção — allowlists + schemas fechados).
+
+**Pitfalls da série:** `pytest.ini` whitelist fixa (suíte nova invisível até entrar na lista — conferir contagem coletada antes/depois); referências stale em PRD/spec a `cleanup_db.py` (não existe) e ao claim UNIQUE (índice existia desde s083) — **duas instâncias de `Drift-as-Primary-Debt` dentro dos próprios artefatos de quem o combate**; a resolução foi sempre "implementar a INTENÇÃO contra a realidade corrente".
+
+---
+
 ## 2026-07-12 — Sensor de drift doc-vs-código (check 7): anotações verificáveis, não NLP; drift real pego na implantação
 
 **Contexto:** degrau 1 da série auto-evolução (spec `sensor-drift-doc-codigo`, audit **PASS**, commit `fa7cc2c`). `tools/doc_drift.py` + check 7 WARN-first no `auto_check`.

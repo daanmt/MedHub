@@ -58,6 +58,9 @@ patterns:
   - file: patterns/domain-engine-api.md
     tags: [engine, domain-api, agent-interface, rag, flashcards, typed-api, hyde, multi-query]
     modules: [app/engine/, tools/]
+  - file: patterns/warn-first-check.md
+    tags: [harness, auto-check, warn, governance, invariants, drift]
+    modules: [tools/auto_check.py, tools/doc_drift.py, tools/ledger_self.py]
 <!-- vibeflow:patterns:end -->
 
 ## Pattern Docs Available

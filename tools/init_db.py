@@ -144,10 +144,32 @@ def init_db():
     CREATE INDEX IF NOT EXISTS idx_review_log_tema ON review_log(tema_id, reviewed_at)
     ''')
 
+    # Tabela 8: Plano do dia PERSISTIDO (spec telemetria-estudo-part-1).
+    #           O que o day_plan recomendou, com flags de contexto do run — o
+    #           PLANEJADO para a aderência planejado×real (part-2). Só metadado
+    #           de processo: tipos/contadores/labels; NENHUM conteúdo clínico.
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS plano_dia (
+        id                 INTEGER PRIMARY KEY AUTOINCREMENT,
+        data               TEXT NOT NULL,
+        ordem              INTEGER NOT NULL,
+        task_tipo          TEXT NOT NULL,
+        alvo_tema          TEXT,
+        volume_planejado   INTEGER NOT NULL DEFAULT 0,
+        tempo_h            REAL,
+        energia            TEXT,
+        defaults_assumidos INTEGER NOT NULL DEFAULT 0,
+        criado_em          TEXT NOT NULL
+    )
+    ''')
+    cursor.execute('''
+    CREATE INDEX IF NOT EXISTS idx_plano_dia_data ON plano_dia(data)
+    ''')
+
     conn.commit()
     conn.close()
     print("Schema criado/atualizado. Tabelas: taxonomia_cronograma, questoes_erros, "
-          "flashcards (v5), fsrs_cards, fsrs_revlog, sessoes_bulk, review_log.")
+          "flashcards (v5), fsrs_cards, fsrs_revlog, sessoes_bulk, review_log, plano_dia.")
 
 if __name__ == "__main__":
     init_db()

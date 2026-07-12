@@ -1,8 +1,14 @@
-"""day_plan.py — Plano do Dia (read-only) para o boot proativo.
+"""day_plan.py — Plano do Dia para o boot proativo.
 
-Compõe, SEM escrever nada: tema dormente do dia, volume vs ritmo-alvo (ENAMED),
-fila FSRS (vencidos + backlog), dica do cronograma e uma sugestão de passo
-imediato. O boot (AGENTE §2 passo 4) roda isto e lidera com o plano.
+Compõe: tema dormente do dia, volume vs ritmo-alvo (ENAMED), fila FSRS
+(vencidos + backlog), dica do cronograma e uma sugestão de passo imediato.
+O boot (AGENTE §2 passo 4) roda isto e lidera com o plano.
+
+Escritas (únicas, ambas de metadado de processo): a condição declarada do dia
+(condicao_dia via db.registrar_condicao_dia) e o PLANO recomendado do dia
+(plano_dia via persistir_plano — spec telemetria-estudo-part-1; o realizado já
+vive em fsrs_revlog/review_log/sessoes_bulk, o planejado agora sobrevive para a
+aderência planejado×real). Todo o resto permanece read-only; --no-persist simula.
 
 Reusa: dormant_refresh.pick (dormência), performance.get_totais/_questoes_do_mes/MARCOS
 (volume/ritmo), app.utils.db (fila FSRS). Não duplica constantes de meta.
@@ -762,6 +768,82 @@ def render(p):
     return "\n".join(out)
 
 
+PLANO_DIA_DDL = '''
+CREATE TABLE IF NOT EXISTS plano_dia (
+    id                 INTEGER PRIMARY KEY AUTOINCREMENT,
+    data               TEXT NOT NULL,
+    ordem              INTEGER NOT NULL,
+    task_tipo          TEXT NOT NULL,
+    alvo_tema          TEXT,
+    volume_planejado   INTEGER NOT NULL DEFAULT 0,
+    tempo_h            REAL,
+    energia            TEXT,
+    defaults_assumidos INTEGER NOT NULL DEFAULT 0,
+    criado_em          TEXT NOT NULL
+)
+'''
+
+
+def persistir_plano(p):
+    """Persiste os blocos recomendados do dia (spec telemetria-estudo-part-1).
+
+    delete+insert TRANSACIONAL por data: o plano é atômico por dia — re-rodar
+    substitui (precedente F22: nunca acumula); UPSERT por (data, ordem) deixaria
+    blocos órfãos quando o re-run recomenda menos blocos. Lazy DDL no padrão
+    preparacao_estado (registrar_sessao_bulk). Só metadado de processo:
+    tipo/qtd/label/flags — nenhum conteúdo clínico. Falha vira WARN; o plano
+    do stdout nunca se perde por causa da persistência.
+    """
+    r = p.get("recomendacao") or {}
+    blocos = r.get("blocos") or []
+    ctx = r.get("contexto") or {}
+    con = None
+    try:
+        con = db.get_connection()
+        con.execute(PLANO_DIA_DDL)
+        con.execute("CREATE INDEX IF NOT EXISTS idx_plano_dia_data ON plano_dia(data)")
+        con.execute("DELETE FROM plano_dia WHERE data = ?", (p["data"],))
+        agora = datetime.now().isoformat(timespec="seconds")
+        for i, b in enumerate(blocos, 1):
+            con.execute(
+                "INSERT INTO plano_dia (data, ordem, task_tipo, alvo_tema, "
+                "volume_planejado, tempo_h, energia, defaults_assumidos, criado_em) "
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                (p["data"], i, b.get("tipo") or "?", b.get("alvo"),
+                 int(b.get("qtd") or 0), ctx.get("tempo_h"), ctx.get("energia"),
+                 1 if r.get("defaults_assumidos") else 0, agora))
+        con.commit()
+    except Exception as e:
+        if con is not None:
+            try:
+                con.rollback()
+            except Exception:
+                pass
+        print(f"[WARN] PLANO_DIA: persistência falhou ({e}) — o plano segue no stdout.")
+    finally:
+        if con is not None:
+            con.close()
+
+
+def ler_plano(data_iso):
+    """Blocos planejados de uma data (consumo da part-2 e do --plano-de)."""
+    con = None
+    try:
+        con = db.get_connection()
+        rows = con.execute(
+            "SELECT ordem, task_tipo, alvo_tema, volume_planejado, tempo_h, "
+            "energia, defaults_assumidos, criado_em FROM plano_dia "
+            "WHERE data = ? ORDER BY ordem", (data_iso,)).fetchall()
+    except Exception:
+        rows = []
+    finally:
+        if con is not None:
+            con.close()
+    cols = ("ordem", "task_tipo", "alvo_tema", "volume_planejado", "tempo_h",
+            "energia", "defaults_assumidos", "criado_em")
+    return [dict(zip(cols, r)) for r in rows]
+
+
 def main():
     ap = argparse.ArgumentParser(description="Plano do Dia (read-only).")
     ap.add_argument("--json", action="store_true", help="Saída JSON crua")
@@ -777,7 +859,14 @@ def main():
                     help="Horas disponíveis hoje (recomendador; default declarado no output)")
     ap.add_argument("--energia", choices=["alta", "media", "baixa"], default=None,
                     help="Energia do dia (recomendador; modula a capacidade)")
+    ap.add_argument("--no-persist", action="store_true", dest="no_persist",
+                    help="Simulação: monta o plano sem gravar em plano_dia")
+    ap.add_argument("--plano-de", metavar="YYYY-MM-DD", dest="plano_de",
+                    help="Imprime o plano PERSISTIDO de uma data (JSON)")
     args = ap.parse_args()
+    if args.plano_de:
+        print(json.dumps(ler_plano(args.plano_de), ensure_ascii=False, indent=2))
+        return
     if args.handoff_block:
         print(render_handoff_block(build()))
         return
@@ -797,6 +886,13 @@ def main():
         except Exception:
             pass
     p = build(tempo_h=args.tempo, energia=args.energia)
+    # Persistência SÓ no caminho que renderiza o plano do dia (default/--json):
+    # os modos de relatório (--handoff-block/--review-plan/--difficulty) retornam
+    # antes e NÃO regravam — o handoff-block no fechamento rodaria com defaults e
+    # sobrescreveria a intenção declarada de manhã (--tempo/--energia), corrompendo
+    # a série de aderência da part-2.
+    if not args.no_persist:
+        persistir_plano(p)
     print(json.dumps(p, ensure_ascii=False, default=str, indent=2) if args.json else render(p))
 
 

@@ -28,7 +28,7 @@ Um **gatilho saliente** no enunciado (um número fora da faixa, um fármaco, uma
 | **"Para antes do porquê"** | Sabe o **diagnóstico** (o fato), não o **elo causal** que o defende / exclui o vizinho | s085 (HCE canal-dependência; resistência decide o shunt; idade exclui atresia pulmonar) |
 | **Ancoragem na linha de dados** | Vê "mãe O, bebê A" e dispara "incompatibilidade" sem checar as regras | s085 icterícia (Q1, Q2, Q4, Q8, Q10, Q15) |
 | **Super-aplicação (não-checar-a-comporta)** | Transfere uma conduta correta para um caso onde a **comporta mudou** | s085 trauma (TTA→laparoscopia no instável; estável→TC com TC já feita) |
-| **Enunciado negativo (EXCETO/ERRADA)** | Marca a afirmação **verdadeira** em vez de isolar a falsa (primo de *leitura*, não de verificação) | s079-080 (3×), s086 (Q4 hipertensivas) |
+| **Enunciado negativo (EXCETO/ERRADA)** | Marca a afirmação **verdadeira** em vez de isolar a falsa (primo de *leitura*, não de verificação); não usa o **nº de F como checksum** (deve ser 1) | s079-080 (3×), s086 (Q4 hipertensivas), s112-118, **s120 (mini-drill: checksum nº de F=1; REINCIDIU em prova real no dia seguinte -- Q2 SUS "NÃO traduz descentralização", marcou ação verdadeira)** |
 | **Viés de posição (default-to-C)** | Sob incerteza, a mão gravita para a **opção do meio (C)** em vez de forçar a verificação até o fim | **s086 hipertensivas: 6 de 7 erradas = letra C** (gabaritos espalhados D,B,D,A,B,A) |
 | **Reflexo de over-tratamento** | Ao ler "grave"/dado assustador, dispara a conduta mais agressiva (interromper já / hidralazina / cesárea) sem checar o **limiar** (PA ≥160/110?) ou a **IG** | s086 hipertensivas (Q5 PA 150x100→hidralazina; Q6 grave→interromper já) |
 | **Fechamento precoce em discriminador parcial** | Um achado parcial (tosse/coriza) dispara o diagnóstico vizinho **antes** de ler a marca patognomônica; **pior sob pressão de tempo** (marca sem terminar de ler) | s086 exantemáticas (Q3/Q4/Q7: tosse+coriza→sarampo, ignorou face esbofeteada/rendilhado = parvovírus). **Autorrelatado pelo estudante.** |
@@ -66,7 +66,7 @@ Não é coincidência nem azar de tema. É **um** gargalo, transversal. Por isso
 2. **"Passei por ela, ou pulei pro dado saliente?"**
 3. Se a pergunta é **"por quê" / "o que exclui"** → dê **MAIS UM passo** depois do fato. *("É T4F" → "e por que não atresia? — a idade.")*
 4. Antes de aplicar uma **conduta conhecida** → *"a comporta deste caso é a mesma do caso onde aprendi essa conduta?"*
-5. **Enunciado negativo (EXCETO/ERRADA)** → rotule cada alternativa **V/F** e marque a **F** (processo separado, deliberado).
+5. **Enunciado negativo (EXCETO/ERRADA)** -> rotule cada alternativa **V/F** e **conte os F: deve dar exatamente 1**. Deu **0** (não achei a falsa) ou **2** (rotulei alguma errado)? Você **NÃO terminou** -- volte nas duvidosas, não chute. O nº de F é o *checksum* da questão. (s120: Q1 terminou com 2 F -> chutou e errou; Q3 terminou com 0 F -> não achou a falsa e perdeu.)
 
 ---
 

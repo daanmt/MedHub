@@ -2,11 +2,21 @@
 *Atualizado: 2026-07-15 -- **s120: S13 conversacional (SUS/Imunizações/Colecistite) + pendências quentes -- 4 dias, 65q, 15 cards (811-825), 1 resumo gold novo (SUS). Padrão de ouro do dia: aula ancorada no PDF do EMED (a de SUS de memória cortou os Atributos da APS -- usuário pegou). Imunizações recalibrado D10 (dificuldade absoluta). Enunciado negativo SUSPENSO como foco (erros eram de conteúdo). Acumulado 5.026.***
 
 ## > Proximo passo imediato
-1. **Continuar a S13** (o db diz S12, mas a posição REAL é S13 -- usuário fechou S12; Drive não sincronizado). Blocos restantes: Endometriose, Pré-Natal II, DII, Pneumo Intensiva II, Transtornos de Humor, Hepatologia/Icterícia (revisão), Arboviroses/Meningites/Sepse (rev. por questões).
-2. 🔴 **Imunizações - Revisão (S13) = onboarding D10 COMPLETO**, extremamente didático -- foco no "fora da normalidade": eventos adversos, timing de reforços, quando aplicar/não imunoglobulina, intervalos, contraindicações. Diretriz do usuário ([[feedback_imunizacoes_d10_onboarding]], tema_id 265).
-3. **Drenar FSRS:** 22 atrasados + 4 hoje + 425 backlog. Dormente do dia: Dependência Química (20d, 8 cards).
-4. **Backfill do resumo de Imunizações:** gaps de Teoria III (Raiva pós-exposição, COVID, Dengue, Herpes-Zóster sem seção própria).
-5. **Antes de CADA aula-base:** buscar o PDF-fonte do EMED em `resumos/` (INCLUINDO `.pdf`) e ancorar -- nunca só da memória ([[feedback_aula_base_ancorar_pdf_emed]]).
+
+**PLANO 15.07 (energia ALTA, ~6h -- capacidade ~90q + 30 FSRS):**
+
+**A. Flashcards (FSRS) -- PRIORIZAÇÃO (`/revisar` DRENAR):**
+1. **22 atrasados PRIMEIRO** (dívida vencida) -- limpar antes que o backlog cresça.
+2. **Cards frescos de hoje (811-825)** via `--new-limit` -- consolidam A FRIO o que foi errado na s120 (SUS/Imuniza/Colecistite); reforço no mesmo dia.
+3. Resto do backlog (425 novos) até o teto de **30/dia**.
+
+**B. Questões -- PRIORIZAÇÃO (~90q, aula-base ancorada no PDF -> questões -> análise):**
+1. 🔴 **Imunizações - Revisão (D10 onboarding COMPLETO)** -- maior alavanca da área mais fraca, e a Teoria III está fresca. Foco no "fora da normalidade": eventos adversos, timing de reforços, quando aplicar/não imunoglobulina, intervalos, contraindicações ([[feedback_imunizacoes_d10_onboarding]], tema_id 265).
+2. **Tema NOVO da S13** para volume: Endometriose, DII, Pré-Natal II, Pneumo Intensiva II, Transtornos de Humor (os "próximos temas" do day_plan ainda listam SUS/Imuniza/Colecistite -- JÁ FEITOS; ignorar, é o Drive stale).
+3. Blocos de revisão da S13: Hepatologia/Icterícia; Arboviroses/Meningites/Sepse (rev. por questões).
+
+**Regra permanente:** antes de CADA aula-base, buscar o PDF-fonte do EMED em `resumos/` (INCLUINDO `.pdf`) e ancorar -- nunca só da memória ([[feedback_aula_base_ancorar_pdf_emed]]).
+**Pendência de conteúdo:** backfill do resumo de Imunizações (Raiva pós-exposição, COVID, Dengue, Herpes-Zóster sem seção própria).
 
 ## Padroes de erro vivos -- atencao do scrum master
 - 🟢 **Enunciado negativo SUSPENSO como foco (s120):** o usuário mostrou que os erros recentes eram de CONTEÚDO, não da estrutura da pergunta. O agente estava deixando o padrão virar reflexo e blindar o mergulho clínico -- reforça [[feedback_analise_hard_soft_skill]] (80% técnico / 20% padrão). Não reintroduzir sem sinal real.

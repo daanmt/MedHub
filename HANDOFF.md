@@ -1,39 +1,31 @@
 # HANDOFF.md -- ESTADO OPERACIONAL CURTO
-*Atualizado: 2026-07-15 -- **s120: S13 conversacional (SUS/Imunizações/Colecistite) + pendências quentes -- 4 dias, 65q, 15 cards (811-825), 1 resumo gold novo (SUS). Padrão de ouro do dia: aula ancorada no PDF do EMED (a de SUS de memória cortou os Atributos da APS -- usuário pegou). Imunizações recalibrado D10 (dificuldade absoluta). Enunciado negativo SUSPENSO como foco (erros eram de conteúdo). Acumulado 5.026.***
+*Atualizado: 2026-07-15 -- **s121: dia de FSRS + engenharia + curadoria (0 questão nova). Drenei 26 vencidos (dívida→0). Auditei o baralho e tracei a estratégia M1-M4 de "matar os cards". Entreguei 2 features vibeflow (linter de auto-suficiência + telemetria pool×dívida, audit PASS ×2). M1 feito: 27 cards reforjados, worklist do linter 24→0.***
 
 ## > Proximo passo imediato
 
-**PLANO 15.07 (energia ALTA, ~6h -- capacidade ~90q + 30 FSRS):**
+**M2 -- Intake priorizado, fraco-primeiro (o baralho está limpo, agora se ENCHE por prioridade):**
+1. 🔴 **Imunizações 18 cards no pool** -- casar com a task **Imunizações-Revisão D10 da S13**: aula-base D10 (ancorada no PDF EMED) -> questões -> **drenar as 18 no mesmo dia** (loop fechado, `/revisar DRENAR --area Pediatria --tema Imuniza --new-limit 18`).
+2. Depois: clusters de **Cirurgia** (Infantil 32, Apendicite, Trauma) e **GO** (Hipertensivas 23, Vulvovaginites) -- ~20 novos/dia.
+3. **Volume:** dia de estudo real -> retomar questões (ritmo-alvo ~83q/dia; s121 não teve questão nova).
 
-**A. Flashcards (FSRS) -- PRIORIZAÇÃO (`/revisar` DRENAR):**
-1. **22 atrasados PRIMEIRO** (dívida vencida) -- limpar antes que o backlog cresça.
-2. **Cards frescos de hoje (811-825)** via `--new-limit` -- consolidam A FRIO o que foi errado na s120 (SUS/Imuniza/Colecistite); reforço no mesmo dia.
-3. Resto do backlog (425 novos) até o teto de **30/dia**.
-
-**B. Questões -- PRIORIZAÇÃO (~90q, aula-base ancorada no PDF -> questões -> análise):**
-1. 🔴 **Imunizações - Revisão (D10 onboarding COMPLETO)** -- maior alavanca da área mais fraca, e a Teoria III está fresca. Foco no "fora da normalidade": eventos adversos, timing de reforços, quando aplicar/não imunoglobulina, intervalos, contraindicações ([[feedback_imunizacoes_d10_onboarding]], tema_id 265).
-2. **Tema NOVO da S13** para volume: Endometriose, DII, Pré-Natal II, Pneumo Intensiva II, Transtornos de Humor (os "próximos temas" do day_plan ainda listam SUS/Imuniza/Colecistite -- JÁ FEITOS; ignorar, é o Drive stale).
-3. Blocos de revisão da S13: Hepatologia/Icterícia; Arboviroses/Meningites/Sepse (rev. por questões).
-
-**Regra permanente:** antes de CADA aula-base, buscar o PDF-fonte do EMED em `resumos/` (INCLUINDO `.pdf`) e ancorar -- nunca só da memória ([[feedback_aula_base_ancorar_pdf_emed]]).
-**Pendência de conteúdo:** backfill do resumo de Imunizações (Raiva pós-exposição, COVID, Dengue, Herpes-Zóster sem seção própria).
+**Princípio (M4):** card fresco entra em ≤2 dias -- não recriar o pool de junho. **Card entra colado no tema sendo estudado** (validado pelo usuário).
+**Worklist de reforja futura:** `python tools/card_self_sufficiency.py --json` (hoje: 0).
 
 ## Padroes de erro vivos -- atencao do scrum master
-- 🟢 **Enunciado negativo SUSPENSO como foco (s120):** o usuário mostrou que os erros recentes eram de CONTEÚDO, não da estrutura da pergunta. O agente estava deixando o padrão virar reflexo e blindar o mergulho clínico -- reforça [[feedback_analise_hard_soft_skill]] (80% técnico / 20% padrão). Não reintroduzir sem sinal real.
-- 🔴 **Imunizações = dificuldade ABSOLUTA (D10):** 7/25 erros; 3 foram recall fresco do que foi ensinado 2h antes (palivizumabe não interfere, antitérmico só MenB, influenza >= 6m). O tema não consolida num passe -- exige onboarding.
-- 🔴 **Colecistite × Colangite -- eixo da drenagem:** Q1 drenou a estrutura errada (CPRE numa colecistite). Regra: cístico/vesícula -> colecistostomia; colédoco/via biliar -> CPRE. Card 823.
-- Carregado: discriminações de princípio SUS (igualdade×universalidade, integralidade×equidade); atributos da APS (essenCIAL + derivados).
+- 🔴 **Imunizações = dificuldade ABSOLUTA (D10):** área mais fraca, 18 cards ainda no pool. A revisão S13 é a maior alavanca.
+- 🟠 **Bug nº1 (execução):** #19 asma na drenagem -- ancorar num parâmetro isolado em vez do conjunto ("pior parâmetro manda"). Faceta viva.
+- 🟢 **Enunciado negativo SUSPENSO como foco (s120):** erros eram de conteúdo. Não reintroduzir sem sinal real ([[feedback_analise_hard_soft_skill]]).
 
 ## Estado por frente
 - **Volume & Metas:** 5026 / 10000 (perf. ~79.1%). Hoje: 18. Ritmo-alvo ~82.9q/dia (60d p/ ENAMED). [derivado: day_plan --handoff-block]
-- **FSRS:** 22 atrasados + 4 hoje + 425 novos (backlog). Cards s120: 811-825 (15 de erro) + urocultura + reforge 209.
-- **Conteudo:** 70 resumos em resumos/ (+SUS `Princípios e Diretrizes do SUS.md`, gold, auto_check PASS). [derivado: glob]
-- **Erros & Cards:** +15 erros s120 (SUS 811-815, Imuniza 816-822, Colecistite 823-825). `review_log` 87-91 (Icterícia, Intoxicações, + PREPARAR de SUS/Imuniza/Colecistite). Dificuldades: SUS=5, Imunizações=10, Colecistite=10 (usuario); Icterícia/Sepse Neonatal=8 (aula).
-- **Posicao cronograma:** db=S12 (nominal S16, atraso 4 sem); **REAL=S13** (usuário fechou S12). Drive stale (6d) -- `--sync-drive` quando houver xlsx local.
-- **Infraestrutura:** ai-eng -- `day_plan --aderencia` ESTREADO no boot (telemetria planejado×real). `reflect.py` = só sessão de engenharia (esta foi de estudo). RAG reformado disponível.
+- **FSRS:** divida 0 atrasados + 2 p/ hoje -- pool 425 nunca introduzidos (entram <=30/dia). [derivado] Baralho auditado: 596 ativos, 66/105 temas nunca drilados.
+- **Conteudo:** 70 resumos em resumos/. [derivado: glob]
+- **Erros & Cards:** 27 cards reforjados s121 (`card_version`++, FSRS preservado); worklist auto-suficiência = 0. Nenhum erro/card novo (dia sem questão).
+- **Posicao cronograma:** db=S13 (nominal S16, atraso 3 sem). Drive stale -- `--sync-drive` quando houver xlsx local.
+- **Infraestrutura:** 🆕 `card_self_sufficiency.py` (check WARN no auto_check) + `day_plan.telemetria_fila` (pool×dívida). PRD+2 specs+2 audits em `.vibeflow/`. `reflect.py` = rodar (sessão teve engenharia).
 
 ## Pendencias ativas
-🔴 Imunizações - Revisão D10 (diretriz). Backfill resumo Imunizações (Raiva/COVID/Dengue/Zóster). Colecistite: tema nasceu (298, D10). Reforjar `TCE.md` + `Sistemas de Informação em Saúde.md`. Aula-base de Pré-Natal I/II. Reforjar cards 95/120 (120 via gate de evidência). Ledger `AUDITORIA_MEDHUB.md`: F35 (reconcile volume + seletor de suite auto_check); F8 (isolamento PREPARAR D8+). Ano da diretriz de HAS (2020 x SBC 2025). Banca-dependente no DITC II (belimumabe/nefrite, SAF 2023).
+🔴 M2 Imunizações-Revisão D10 (aula PDF EMED -> questões -> drenar 18 cards). Backfill resumo Imunizações (Raiva/COVID/Dengue/Zóster). Reforjar `TCE.md` + `Sistemas de Informação em Saúde.md`. Aula-base de Pré-Natal I/II. Reforjar cards 95/120 (120 via gate de evidência -- já reforjado s121 na auto-suficiência, checar conteúdo). Ledger `AUDITORIA_MEDHUB.md`: F35 (reconcile volume + seletor de suite auto_check); F8 (isolamento PREPARAR D8+). Ano da diretriz de HAS (2020 x SBC 2025). Banca-dependente no DITC II (belimumabe/nefrite, SAF 2023). Opcional: F próprio p/ re-arquitetar `due=now()` (só telemetria foi feita).
 
 ---
-*Historico: history/INDEX.md * Macro: ESTADO.md * Sessao: history/session_120.md * Ledger de engenharia: AUDITORIA_MEDHUB.md*
+*Historico: history/INDEX.md * Macro: ESTADO.md * Sessao: history/session_121.md * Ledger de engenharia: AUDITORIA_MEDHUB.md*

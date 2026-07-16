@@ -525,7 +525,7 @@ def recomendar_dia(sinais, tempo_h=None, energia=None):
     if fsrs_qtd > 0:
         blocos.append({"tipo": "fsrs", "qtd": fsrs_qtd, "alvo": "fila do dia",
                        "motivo": "teto efetivo %d (dívida: %d vencidos)" % (teto, vencidos)})
-    just.append("dívida FSRS: %d vencidos; teto %d; backlog %d novos"
+    just.append("dívida FSRS: %d vencidos; teto %d; pool %d nunca introduzidos"
                 % (vencidos, teto, sinais.get("backlog_novos") or 0))
     if sinais.get("lag"):
         just.append("posição: conteúdo S%s (%s sem atrás do calendário)"
@@ -672,6 +672,27 @@ def _contar_resumos():
         return None
 
 
+def telemetria_fila(fsrs, divida):
+    """Rotulacao canonica da fila FSRS: separa DIVIDA (revisao ja vencida) de
+    POOL (cards nunca introduzidos). Ambos aparecem com due no passado no db
+    (card novo nasce com due=now -- insert_questao.py), mas so a divida e atraso
+    real; o pool e metrado pelo teto de introducao/dia. NAO altera nenhuma
+    contagem -- so reusa os buckets de _fsrs_counts/_teto_efetivo sob nomes que
+    nao mentem (encerra a leitura de 'backlog: N novos' como se fosse divida).
+
+    divida (atrasada) = state>0 AND due<hoje   (fsrs['atrasados'])
+    hoje              = state>0 AND due=hoje    (fsrs['hoje'])
+    pool              = state=0                 (fsrs['backlog_novos'])
+    """
+    return {
+        "divida": fsrs["atrasados"],
+        "hoje": fsrs["hoje"],
+        "pool": fsrs["backlog_novos"],
+        "teto": divida["teto_efetivo"],
+        "regime_divida": divida["regime_divida"],
+    }
+
+
 def render_handoff_block(p):
     """Bloco numerico 'Estado por frente' derivado do db (F6 -- AUDITORIA_MEDHUB).
 
@@ -679,13 +700,14 @@ def render_handoff_block(p):
     qualitativo (proximo tema, gaps, pendencias) continua manual no fechamento.
     """
     v, f = p["volume"], p["fsrs"]
+    t = telemetria_fila(f, p["divida"])
     perf = round(v["acertos"] / v["total"] * 100, 1) if v["total"] else 0.0
     linhas = [
         f"- **Volume & Metas:** {v['total']} / {v['alvo_enamed']} (perf. ~{perf}%). "
         f"Hoje: {v['hoje']}. Ritmo-alvo ~{v['ritmo_alvo']}q/dia "
         f"({v['dias_ate_marco']}d p/ ENAMED).",
-        f"- **FSRS:** {f['atrasados']} atrasados + {f['hoje']} hoje. "
-        f"Backlog: {f['backlog_novos']} novos.",
+        f"- **FSRS:** divida {t['divida']} atrasados + {t['hoje']} p/ hoje "
+        f"-- pool {t['pool']} nunca introduzidos (entram <={t['teto']}/dia).",
     ]
     n_resumos = _contar_resumos()
     if n_resumos is not None:
@@ -711,8 +733,9 @@ def render(p):
                    f"{d['dias_sem_revisar']}d sem rever · {d['n_cards']} cards · {d.get('perf') or '—'}%)")
     out.append(f"- 📊 **Volume:** {v['total']} acum. · hoje {v['hoje']} · faltam {v['faltam']} "
                f"p/ ENAMED em {v['dias_ate_marco']}d → ritmo-alvo ~{v['ritmo_alvo']}q/dia")
-    out.append(f"- 🔁 **FSRS:** {f['atrasados']} atrasados + {f['hoje']} hoje + "
-               f"{f['backlog_novos']} novos (backlog)")
+    t = telemetria_fila(f, p["divida"])
+    out.append(f"- 🔁 **FSRS:** dívida {t['divida']} atrasados + {t['hoje']} p/ hoje "
+               f"· pool {t['pool']} nunca introduzidos (entram <={t['teto']}/dia)")
     dv = p["divida"]
     regime = " · **REGIME DE DÍVIDA** (teto sobe até drenar)" if dv["regime_divida"] else ""
     out.append(f"- 🎯 **Teto do dia:** {dv['teto_efetivo']} cards (base {dv['teto_base']}{regime})")

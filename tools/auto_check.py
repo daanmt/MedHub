@@ -207,6 +207,7 @@ def main():
     parity_relevant = (mode == "--all")
     pointer_relevant = (mode == "--all")
     doc_drift_relevant = (mode == "--all")
+    card_relevant = (mode == "--all")
 
     if mode in ("--changed", "--staged"):
         changed_files = get_staged_files() if mode == "--staged" else get_changed_files()
@@ -215,6 +216,7 @@ def main():
             parity_relevant = True
             pointer_relevant = True
             doc_drift_relevant = True
+            card_relevant = True
         else:
             origem = "staged para commit" if mode == "--staged" else "modificado(s)/untracked na sessão"
             print(f"🔍 Detectados {len(changed_files)} arquivo(s) {origem}.")
@@ -230,6 +232,13 @@ def main():
                 # Sensor doc-vs-codigo (check 7): relevante se um doc-alvo mudou.
                 if fp in ("ROADMAP.md", "HANDOFF.md", "ESTADO.md", "AUDITORIA_MEDHUB.md"):
                     doc_drift_relevant = True
+                # Auto-suficiencia de card (check 8): cards vivem no ipub.db (fora
+                # do git), entao o gatilho e a maquinaria de autoria/deteccao mudar.
+                if fp in ("tools/insert_questao.py", "tools/insert_card_base.py",
+                          "tools/card_self_sufficiency.py", "tools/test_card_self_sufficiency.py",
+                          "tools/audit_flashcard_quality.py",
+                          ".claude/commands/estilo-flashcard.md"):
+                    card_relevant = True
                 path_obj = ROOT_DIR / f
                 if not path_obj.exists():
                     continue
@@ -240,7 +249,8 @@ def main():
                     tools_to_check.append(f)
 
             if (not resumos_to_check and not tools_to_check and not parity_relevant
-                    and not pointer_relevant and not doc_drift_relevant):
+                    and not pointer_relevant and not doc_drift_relevant
+                    and not card_relevant):
                 print("\n✅ Nenhum arquivo crítico (resumos/*.md ou scripts python estruturais) foi alterado.")
                 print("   O harness não exige execução de suítes de teste para esta mudança. Aprovado!")
                 print("=" * 60)
@@ -279,6 +289,25 @@ def main():
             success_auto, _ = run_command(cmd_auto, desc_auto)
             all_passed = all_passed and success_auto
             results_summary.append((desc_auto, success_auto, 0))
+
+        # Suíte de telemetria de fila (Part 2): roda quando day_plan mudou (ou --all).
+        test_telemetria_path = ROOT_DIR / "tools" / "test_day_plan_telemetria.py"
+        if test_telemetria_path.exists() and (mode == "--all" or any("day_plan" in f for f in tools_to_check)):
+            cmd_tel = [sys.executable, "tools/test_day_plan_telemetria.py"]
+            desc_tel = "Suíte de telemetria de fila (pool x dívida)"
+            success_tel, _ = run_command(cmd_tel, desc_tel)
+            all_passed = all_passed and success_tel
+            results_summary.append((desc_tel, success_tel, 0))
+
+    # 2b. Suíte do check de auto-suficiência de card (Part 1). BLOCKING como
+    #     todo teste de código: valida os detectores por fixtures (não depende
+    #     do db vivo). Gate = maquinaria de card mudou (ou --all).
+    if card_relevant:
+        cmd_css_test = [sys.executable, "tools/test_card_self_sufficiency.py"]
+        desc_css_test = "Suíte do check de auto-suficiência de card"
+        success_css_test, _ = run_command(cmd_css_test, desc_css_test)
+        all_passed = all_passed and success_css_test
+        results_summary.append((desc_css_test, success_css_test, 0))
 
     # 3. Paridade command<->skill (Parte 3). WARN, não bloqueia (warning-first):
     #    a regra de "em sync" mora no gerador; o auto_check só orquestra o --check.
@@ -374,6 +403,35 @@ def main():
                        [{"alvo": f"{a['doc']}:{a['regra']}",
                          "payload": {"tipo": a["tipo"], "msg": a["msg"]}}
                         for a in achados_drift if a["tipo"] != "sensor"])
+
+    # 8. Auto-suficiencia de card (spec auto-suficiencia-card-e-telemetria-fila
+    #    Part 1). WARN, não bloqueia: detecta cards não-respondíveis-a-frio
+    #    (opcao-anaforico/deitico/pct-fake). A regra mora em card_self_sufficiency.py;
+    #    o auto_check só orquestra. Sensor indisponível = WARN visível (nunca
+    #    silêncio que mascare sensor quebrado).
+    if card_relevant:
+        desc_css = "Auto-suficiência de card (CARD_AUTOSUFICIENCIA)"
+        try:
+            from card_self_sufficiency import run_checks as css_run
+            achados_css = css_run()
+            sensor_ok = True
+        except Exception as e:
+            print(f"\n[WARN] CARD_AUTOSUFICIENCIA_SENSOR: sensor indisponível ({e}).")
+            achados_css, sensor_ok = [], False
+        if achados_css:
+            from collections import Counter
+            por_padrao = Counter(a["padrao"] for a in achados_css)
+            resumo = ", ".join(f"{p}: {n}" for p, n in por_padrao.most_common())
+            print(f"\n[WARN] CARD_AUTOSUFICIENCIA: {len(achados_css)} card(s) não "
+                  f"auto-suficiente(s) [{resumo}]. Worklist de reforja: "
+                  f"python tools/card_self_sufficiency.py --json.")
+        # success=True: WARN não rebaixa o veredito (não altera all_passed).
+        results_summary.append((desc_css, True, len(achados_css) if sensor_ok else 1))
+        _ledger_record("card_autosuficiencia",
+                       [{"alvo": f"card#{a['id']}", "payload":
+                         {"padrao": a["padrao"], "tema": a["tema"]}}
+                        for a in achados_css] if sensor_ok
+                       else [{"alvo": "sensor", "payload": {}}])
 
     # Resumo Final
     print("\n" + "=" * 60)

@@ -203,3 +203,15 @@ except AttributeError:
 **Fix:** Simplificar `EFF_FRONT`/`EFF_BACK` para `COALESCE(NULLIF(TRIM(campo_v5), ''), '[placeholder]')` — sem ELSE fallback para colunas legacy.
 
 **Grep de segurança pré-DROP:** `grep -rn "frente\|verso" tools/ --include="*.py"` antes de executar qualquer DROP COLUMN de colunas com nomes comuns.
+
+---
+
+## 2026-07-15 — Regex de linter semantico over-matcheia prosa clinica (guarda de contexto anaforico)
+
+**Contexto:** Part 1 do spec `auto-suficiencia-card-e-telemetria-fila` cunhou um check de auto-suficiencia de flashcard a partir dos regex de um audit exploratorio (sessao 121). Rodados contra o db vivo, ~30% dos matches eram falso-positivo.
+
+**Pitfall:** A prosa clinica reusa os mesmos termos do gatilho em sentido nao-alvo: "alternativa/opcao" = escolha *terapeutica* (nao MCQ); "acima" = comparador de *valor* (PA acima de 160, idade acima de 45, nivel acima de T6); stems sem `\b` casam substring ("ressuscitada" -> "citad"). Regex de varredura exploratoria NAO servem direto como check permanente -- a precisao que basta pra *achar* um padrao numa auditoria pontual queima a confianca num WARN recorrente.
+
+**Fix (aprovado pelo usuario):** apertar com guarda de contexto anaforico -- "opcao/alternativa" so em moldura de prova (`assinale`, `(correta|incorreta|errada|falsa)`, entre aspas, "por que X esta errada"); "acima" so deitico ("quadro/caso/paciente acima", "acima descrito/citado"); `\b` em `citad`/`mencionad`. Resultado: 36 achados (ruidosos) -> 24 reais, 0 dos 11 ex-FPs disparam. Cada aperto ancorado num teste negativo.
+
+**Regra go-forward:** todo detector regex novo -> rodar contra o corpus real ANTES de fechar a severidade; inspecionar os matches (nao so contar); ancorar cada falso-positivo removido num teste negativo. Espelha a decisao 2026-07-04 do harness (regra de linter cruza contra `--all` antes de escolher severidade).

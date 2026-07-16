@@ -1,2 +1,52 @@
 {"ts": "2026-07-12T18:40:16+00:00", "event": "opened", "check": "doc_drift", "fingerprint": "b771089376a3", "alvo": "HANDOFF.md:sqlite \"SELECT COUNT(*) FROM flashcards WHERE id BETWEEN 797 AND 809\" == 99", "payload": {"tipo": "drift", "msg": "doc afirma 99, db responde 13"}}
 {"ts": "2026-07-12T18:40:54+00:00", "event": "resolved", "check": "doc_drift", "fingerprint": "b771089376a3", "alvo": "HANDOFF.md:sqlite \"SELECT COUNT(*) FROM flashcards WHERE id BETWEEN 797 AND 809\" == 99"}
+{"ts": "2026-07-15T13:38:07+00:00", "event": "opened", "check": "posicao_ssot", "fingerprint": "01755b5ba8cb", "alvo": "HANDOFF.md", "payload": {"semana_handoff": 13, "semana_db": 12}}
+{"ts": "2026-07-15T13:51:14+00:00", "event": "resolved", "check": "posicao_ssot", "fingerprint": "01755b5ba8cb", "alvo": "HANDOFF.md"}
+{"ts": "2026-07-15T22:31:09+00:00", "event": "opened", "check": "card_autosuficiencia", "fingerprint": "2a37583dc2ff", "alvo": "card#5", "payload": {"padrao": "deitico", "tema": "Emergências Pediátricas"}}
+{"ts": "2026-07-15T22:31:09+00:00", "event": "opened", "check": "card_autosuficiencia", "fingerprint": "1041fb94248c", "alvo": "card#42", "payload": {"padrao": "deitico", "tema": "Trauma Abdominal e Pélvico"}}
+{"ts": "2026-07-15T22:31:09+00:00", "event": "opened", "check": "card_autosuficiencia", "fingerprint": "0c3ce6a9c780", "alvo": "card#52", "payload": {"padrao": "deitico", "tema": "Diabetes Mellitus Tipo 2"}}
+{"ts": "2026-07-15T22:31:09+00:00", "event": "opened", "check": "card_autosuficiencia", "fingerprint": "25f642ba61cd", "alvo": "card#120", "payload": {"padrao": "deitico", "tema": "Gravidez ectópica"}}
+{"ts": "2026-07-15T22:31:09+00:00", "event": "opened", "check": "card_autosuficiencia", "fingerprint": "ce4f4845420f", "alvo": "card#155", "payload": {"padrao": "opcao-anaforico", "tema": "Atenção Primária à Saúde"}}
+{"ts": "2026-07-15T22:31:09+00:00", "event": "opened", "check": "card_autosuficiencia", "fingerprint": "a2835a80e6cc", "alvo": "card#159", "payload": {"padrao": "deitico", "tema": "Sistemas de Informação em Saúde"}}
+{"ts": "2026-07-15T22:31:09+00:00", "event": "opened", "check": "card_autosuficiencia", "fingerprint": "19b1b51a537b", "alvo": "card#175", "payload": {"padrao": "deitico", "tema": "Pancreatite Aguda e Crônica"}}
+{"ts": "2026-07-15T22:31:09+00:00", "event": "opened", "check": "card_autosuficiencia", "fingerprint": "1372099afc90", "alvo": "card#185", "payload": {"padrao": "deitico", "tema": "Diabetes Mellitus Tipo 2"}}
+{"ts": "2026-07-15T22:31:09+00:00", "event": "opened", "check": "card_autosuficiencia", "fingerprint": "0fd3b8e1b3e4", "alvo": "card#229", "payload": {"padrao": "deitico", "tema": "Trauma Abdominal e Pélvico"}}
+{"ts": "2026-07-15T22:31:09+00:00", "event": "opened", "check": "card_autosuficiencia", "fingerprint": "d96ac2f6bc73", "alvo": "card#243", "payload": {"padrao": "deitico", "tema": "Icterícia e Sepse Neonatal"}}
+{"ts": "2026-07-15T22:31:09+00:00", "event": "opened", "check": "card_autosuficiencia", "fingerprint": "0bf1972695ae", "alvo": "card#253", "payload": {"padrao": "deitico", "tema": "Pancreatite Aguda e Crônica"}}
+{"ts": "2026-07-15T22:31:09+00:00", "event": "opened", "check": "card_autosuficiencia", "fingerprint": "7ebc1948b5fd", "alvo": "card#413", "payload": {"padrao": "opcao-anaforico", "tema": "PTI"}}
+{"ts": "2026-07-15T22:31:09+00:00", "event": "opened", "check": "card_autosuficiencia", "fingerprint": "1aaa3d1a312f", "alvo": "card#682", "payload": {"padrao": "opcao-anaforico", "tema": "Anemias Hemolíticas"}}
+{"ts": "2026-07-15T22:31:09+00:00", "event": "opened", "check": "card_autosuficiencia", "fingerprint": "35514b6c5696", "alvo": "card#694", "payload": {"padrao": "deitico", "tema": "Síndrome do Olho Vermelho"}}
+{"ts": "2026-07-15T22:31:09+00:00", "event": "opened", "check": "card_autosuficiencia", "fingerprint": "ce008bafcb0f", "alvo": "card#743", "payload": {"padrao": "opcao-anaforico", "tema": "Vulvovaginites"}}
+{"ts": "2026-07-15T22:31:09+00:00", "event": "opened", "check": "card_autosuficiencia", "fingerprint": "9c271f678ec0", "alvo": "card#746", "payload": {"padrao": "opcao-anaforico", "tema": "Vulvovaginites"}}
+{"ts": "2026-07-15T22:31:09+00:00", "event": "opened", "check": "card_autosuficiencia", "fingerprint": "7f1bbaf47871", "alvo": "card#750", "payload": {"padrao": "opcao-anaforico", "tema": "Vulvovaginites"}}
+{"ts": "2026-07-15T22:31:09+00:00", "event": "opened", "check": "card_autosuficiencia", "fingerprint": "e53dcf2b94b7", "alvo": "card#791", "payload": {"padrao": "opcao-anaforico", "tema": "Epilepsias"}}
+{"ts": "2026-07-15T22:31:09+00:00", "event": "opened", "check": "card_autosuficiencia", "fingerprint": "9b06f0aad176", "alvo": "card#800", "payload": {"padrao": "opcao-anaforico", "tema": "Lúpus Eritematoso Sistêmico"}}
+{"ts": "2026-07-15T22:31:09+00:00", "event": "opened", "check": "card_autosuficiencia", "fingerprint": "6ed49b5ea405", "alvo": "card#809", "payload": {"padrao": "opcao-anaforico", "tema": "Lúpus Eritematoso Sistêmico"}}
+{"ts": "2026-07-15T22:31:09+00:00", "event": "opened", "check": "card_autosuficiencia", "fingerprint": "a232a057110d", "alvo": "card#813", "payload": {"padrao": "pct-fake", "tema": "Princípios e Diretrizes do SUS"}}
+{"ts": "2026-07-15T22:31:09+00:00", "event": "opened", "check": "card_autosuficiencia", "fingerprint": "aa3c7a6813cb", "alvo": "card#815", "payload": {"padrao": "pct-fake", "tema": "Princípios e Diretrizes do SUS"}}
+{"ts": "2026-07-15T22:31:09+00:00", "event": "opened", "check": "card_autosuficiencia", "fingerprint": "7c0db41e4d80", "alvo": "card#824", "payload": {"padrao": "opcao-anaforico", "tema": "Abdome Agudo Inflamatório - Colecistite e Colangite Aguda"}}
+{"ts": "2026-07-15T22:31:09+00:00", "event": "opened", "check": "card_autosuficiencia", "fingerprint": "6a127eef855c", "alvo": "card#825", "payload": {"padrao": "opcao-anaforico", "tema": "Abdome Agudo Inflamatório - Colecistite e Colangite Aguda"}}
+{"ts": "2026-07-16T00:37:17+00:00", "event": "resolved", "check": "card_autosuficiencia", "fingerprint": "2a37583dc2ff", "alvo": "card#5"}
+{"ts": "2026-07-16T00:37:17+00:00", "event": "resolved", "check": "card_autosuficiencia", "fingerprint": "1041fb94248c", "alvo": "card#42"}
+{"ts": "2026-07-16T00:37:17+00:00", "event": "resolved", "check": "card_autosuficiencia", "fingerprint": "0c3ce6a9c780", "alvo": "card#52"}
+{"ts": "2026-07-16T00:37:17+00:00", "event": "resolved", "check": "card_autosuficiencia", "fingerprint": "25f642ba61cd", "alvo": "card#120"}
+{"ts": "2026-07-16T00:37:17+00:00", "event": "resolved", "check": "card_autosuficiencia", "fingerprint": "ce4f4845420f", "alvo": "card#155"}
+{"ts": "2026-07-16T00:37:17+00:00", "event": "resolved", "check": "card_autosuficiencia", "fingerprint": "a2835a80e6cc", "alvo": "card#159"}
+{"ts": "2026-07-16T00:37:17+00:00", "event": "resolved", "check": "card_autosuficiencia", "fingerprint": "19b1b51a537b", "alvo": "card#175"}
+{"ts": "2026-07-16T00:37:17+00:00", "event": "resolved", "check": "card_autosuficiencia", "fingerprint": "1372099afc90", "alvo": "card#185"}
+{"ts": "2026-07-16T00:37:17+00:00", "event": "resolved", "check": "card_autosuficiencia", "fingerprint": "0fd3b8e1b3e4", "alvo": "card#229"}
+{"ts": "2026-07-16T00:37:17+00:00", "event": "resolved", "check": "card_autosuficiencia", "fingerprint": "d96ac2f6bc73", "alvo": "card#243"}
+{"ts": "2026-07-16T00:37:17+00:00", "event": "resolved", "check": "card_autosuficiencia", "fingerprint": "0bf1972695ae", "alvo": "card#253"}
+{"ts": "2026-07-16T00:37:17+00:00", "event": "resolved", "check": "card_autosuficiencia", "fingerprint": "7ebc1948b5fd", "alvo": "card#413"}
+{"ts": "2026-07-16T00:37:17+00:00", "event": "resolved", "check": "card_autosuficiencia", "fingerprint": "1aaa3d1a312f", "alvo": "card#682"}
+{"ts": "2026-07-16T00:37:17+00:00", "event": "resolved", "check": "card_autosuficiencia", "fingerprint": "35514b6c5696", "alvo": "card#694"}
+{"ts": "2026-07-16T00:37:17+00:00", "event": "resolved", "check": "card_autosuficiencia", "fingerprint": "ce008bafcb0f", "alvo": "card#743"}
+{"ts": "2026-07-16T00:37:17+00:00", "event": "resolved", "check": "card_autosuficiencia", "fingerprint": "9c271f678ec0", "alvo": "card#746"}
+{"ts": "2026-07-16T00:37:17+00:00", "event": "resolved", "check": "card_autosuficiencia", "fingerprint": "7f1bbaf47871", "alvo": "card#750"}
+{"ts": "2026-07-16T00:37:17+00:00", "event": "resolved", "check": "card_autosuficiencia", "fingerprint": "e53dcf2b94b7", "alvo": "card#791"}
+{"ts": "2026-07-16T00:37:17+00:00", "event": "resolved", "check": "card_autosuficiencia", "fingerprint": "9b06f0aad176", "alvo": "card#800"}
+{"ts": "2026-07-16T00:37:17+00:00", "event": "resolved", "check": "card_autosuficiencia", "fingerprint": "6ed49b5ea405", "alvo": "card#809"}
+{"ts": "2026-07-16T00:37:17+00:00", "event": "resolved", "check": "card_autosuficiencia", "fingerprint": "a232a057110d", "alvo": "card#813"}
+{"ts": "2026-07-16T00:37:17+00:00", "event": "resolved", "check": "card_autosuficiencia", "fingerprint": "aa3c7a6813cb", "alvo": "card#815"}
+{"ts": "2026-07-16T00:37:17+00:00", "event": "resolved", "check": "card_autosuficiencia", "fingerprint": "7c0db41e4d80", "alvo": "card#824"}
+{"ts": "2026-07-16T00:37:17+00:00", "event": "resolved", "check": "card_autosuficiencia", "fingerprint": "6a127eef855c", "alvo": "card#825"}

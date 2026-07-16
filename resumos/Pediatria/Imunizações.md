@@ -167,7 +167,7 @@ Anticorpos exógenos presentes em transfusões de sangue ou imunoglobulinas poli
 - **Hepatite B:** obrigatoriamente **4 doses** se peso <= 2.000g e/ou < 33 semanas (ao nascer, 2, 4 e 6 meses).
 - **DTP:** preferir a acelular (DTPa), principalmente em internados de UTI neonatal.
 - **Rotavírus e Pólio Oral:** **não usar em ambiente hospitalar** (excreção fecal do vírus vacinal, risco de disseminação nosocomial).
-- **Palivizumabe:** para selecionados -- < 32 semanas de idade gestacional, cardiopatas com repercussão hemodinâmica, ou pneumopatia crônica da prematuridade -- nos meses de maior circulação do VSR.
+- **Palivizumabe (substituído pelo Nirsevimabe em fev/2026, dose única -- ver seção 11):** para selecionados -- < 32 semanas de idade gestacional, cardiopatas com repercussão hemodinâmica, ou pneumopatia crônica da prematuridade -- nos meses de maior circulação do VSR.
 - O prematuro tem resposta imune mais imatura em geral (não é só sobre timing de doses).
 
 ### 4.6 CRIEs (Centros de Referência de Imunobiológicos Especiais)
@@ -207,7 +207,7 @@ Disponibilizam vacinas/imunoglobulinas gratuitas para populações especiais: im
   - Ampliação da idade-limite do HPV para 9-45 anos em homens/mulheres com HIV, transplantados ou oncológicos em imunossupressão.
   - Ampliação do MenACWY para adolescentes de 13-14 anos (além dos 11-12).
   - Lançamento da Shingrix (herpes-zóster inativada) ao lado da Zostavax (viva).
-  - Vacina Qdenga (dengue) no mercado privado, aplicável independente do status sorológico prévio.
+  - Vacina Qdenga (dengue) **incorporada ao PNI/SUS** (viva atenuada, 4-59 anos, 2 doses com 3 meses de intervalo), aplicável independente do status sorológico prévio -- ver seção 13.2.
   - Protocolo pós-exposição de varicela: imunoglobulina agora para **< 9 meses** (era < 12 meses); acima disso, vacina.
   - Dose extra de Hib para quem usou DTPa (em vez de DTPw) no primeiro ano de vida.
 
@@ -353,7 +353,49 @@ O *Clostridium tetani* é **anaeróbico** -- toda a lógica do cuidado local gir
 
 ---
 
-## 11. Armadilhas de Prova
+## 11. Prevenção do Vírus Sincicial Respiratório (VSR) e vacina da gestante
+
+O VSR é a principal causa de bronquiolite e pneumonia no lactente. A prevenção combina **anticorpo monoclonal** (imunização passiva) no bebê e **vacina** na gestante (proteção transplacentária).
+
+- **Palivizumabe:** anticorpo monoclonal anti-VSR (imunização passiva), aplicado **mensalmente** nos meses de maior circulação do VSR. 🔴 **Substituído pelo Nirsevimabe a partir de fevereiro de 2026.**
+- **Nirsevimabe:** anticorpo monoclonal de meia-vida longa -- vantagem sobre o palivizumabe = **dose única** por temporada (não mensal).
+  - **CRIEs:** todos os **< 37 semanas** no 1º ano de vida; portadores de comorbidades nos 2 primeiros anos (cardiopatia congênita, displasia broncopulmonar da prematuridade, imunocomprometidos, síndrome de Down, fibrose cística, doença neuromuscular, anomalias congênitas de via aérea).
+  - **Sociedades (SBP/SBIM):** todas as crianças no 1º ano de vida.
+  - ⭐ Monoclonal específico -- **não interfere** com nenhuma vacina (ver 1.4); o lactente segue o calendário sem atraso.
+- **Abrysvo (vacina anti-VSR da gestante):** inativada, bivalente, recombinante, intramuscular, **incorporada ao PNI**. Dose única na gestante entre **32 e 36 semanas** (bula: 24-36 semanas). Objetivo = passagem transplacentária de anticorpos que protegem o RN até os 6 meses -- mesma lógica da dTpa.
+
+---
+
+## 12. Raiva (vacina e soro)
+
+Vacina **inativada** antirrábica + soro antirrábico (SAR) ou imunoglobulina humana antirrábica (IGHAR, imunização passiva). A profilaxia pós-exposição cruza o **tipo de exposição** com o **animal envolvido**.
+
+- **Pré-exposição** (profissionais de risco -- veterinários, biólogos): **2 doses**, nos dias 0 e 7.
+- **Pós-exposição -- 2 passos antes da conduta:**
+  1. **Tipo de acidente:** *contato indireto* (lambedura de pele íntegra, manuseio de utensílios) · *acidente leve* (ferimento superficial, único, em tronco/membros) · *acidente grave* (cabeça, face, pescoço, mãos, polpas digitais, planta do pé; ferimento profundo/múltiplo/extenso; lambedura de mucosa).
+  2. **Animal:** doméstico (cão/gato) · de produção (bovino, equino, suíno) · silvestre ou **morcego**.
+- **Conduta:**
+  - 🔴 **Morcego = SEMPRE grave**, qualquer contato (mesmo indireto) -> **4 doses de vacina + soro/imunoglobulina**.
+  - **Cão/gato sadio e passível de observação:** **observar por 10 dias**. Permaneceu sadio -> encerra o caso. Adoeceu/sumiu/morreu -> iniciar a profilaxia pós-exposição.
+  - **Cão/gato suspeito, raivoso ou não observável; animais de produção; silvestres:** acidente **leve** -> 4 doses de vacina; acidente **grave** -> 4 doses de vacina **+ soro/imunoglobulina**.
+  - **Contato indireto:** não realizar profilaxia.
+
+---
+
+## 13. COVID-19 e Dengue
+
+### 13.1 COVID-19
+- Imunizantes de RNA/proteína (Spikevax, Comirnaty, Zalika), no calendário a partir dos 6 meses. Não contêm vírus vivo -- não causam a doença.
+- **Gestante e idoso:** reforço a cada **6 meses**. Demais grupos prioritários: dose anual. Esquema primário ampliado (2-3 doses) em nunca vacinados < 5 anos, conforme imunossupressão.
+
+### 13.2 Dengue
+- 🔴 **Qdenga (PNI/SUS):** vacina **viva atenuada**, quadrivalente, dos **4 aos 59 anos**, **2 doses com intervalo de 3 meses (90 dias)**, e **independe da sorologia prévia** para dengue.
+- **Dengvaxia (sistema privado):** viva atenuada, 6 aos 45 anos, **3 doses**, e **só pode ser aplicada em soropositivos** (quem já teve dengue comprovada).
+- ⭐ **O discriminador de prova é a sorologia prévia:** Qdenga dispensa, Dengvaxia exige. Aplicar Dengvaxia em soronegativo aumenta o risco de dengue grave numa infecção futura.
+
+---
+
+## 14. Armadilhas de Prova
 
 - 🔴 **Fim da Gotinha:** Questões que apresentarem esquemas vacinais infantis desatualizados cobrando a VOP ("gotinha") aos 15 meses ou 4 anos devem ser marcadas como incorretas. O esquema atualizado é 100% VIP (injetável), com doses aos 2, 4, 6 e 15 meses.
 - 🔴 **Dose do HPV (banca-dependente):** apostilas/questões mais antigas (ex.: LDI Extensivo 2024) ainda trazem **duas doses** para 9-14 anos; a atualização mais recente do PNI simplificou para **dose única** para aumentar a cobertura. Confirmar qual versão o enunciado assume -- não fixar um número só.
@@ -365,3 +407,5 @@ O *Clostridium tetani* é **anaeróbico** -- toda a lógica do cuidado local gir
 - 🔴 **Coadministração sarampo + febre amarela em < 2 anos:** única exceção real à regra "viva x viva pode no mesmo dia" -- precisa de 15-30 dias de intervalo.
 - 🔴 **Hepatite B não tem reforço periódico.** Uma vez completo o esquema primário (3 doses fora da infância, 4 na infância), está definitivamente protegido -- não confundir com a lógica de dT/dTpa, que reforçam a cada 10 anos para sempre. Contexto de "atualização de carteira do adolescente/viajante" induz a achar que toda vacina ali precisa de reforço; Hepatite B é a exceção que já completou.
 - 🔴 **Febre Amarela não é mais dose única sem reforço (reincidência confirmada 2x no mesmo bloco de estudo).** Desde 2020, quem toma a 1ª dose entre 9 meses e < 5 anos recebe reforço aos 4 anos. A vacina que continua sendo genuinamente "dose única, sem reforço" no calendário infantil é a Hepatite A (15 meses).
+- 🔴 **Sarampo pós-exposição -- vacina de bloqueio só a partir de 6 meses.** Contactante suscetível **imunocompetente >= 6 meses** -> **vacina de bloqueio** (até 72h). Contactante que **não pode receber vacina viva** -- **< 6 meses**, imunodeprimidos, gestantes -> **imunoglobulina** (até 6 dias). O lactente de 4-5 meses parece "imunocompetente, dá vacina", mas está **abaixo do piso etário** da vacina viva de sarampo -> recebe imunoglobulina, igual ao imunodeprimido. (O intervalo de bloqueio pós-contato é o mesmo racional da varicela: >= 9 meses imunocompetente -> vacina; grupos especiais -> imunoglobulina.)
+- 🔴 **BCG -- contraindicação ABSOLUTA x PONTUAL.** A absoluta (nunca aplica) é a **imunodeficiência crônica: HIV+ adulto (mesmo assintomático) e criança HIV sintomática** -- vacina viva vetada permanentemente. O **peso < 2.000g é contraindicação PONTUAL** (adia até atingir o peso, depois vacina), assim como dermatose no sítio e imunossupressão transitória. Quando o enunciado pede a "absoluta", o `< 2.000g` é o distrator mais decorado -- filtrar sempre pelo qualificador permanente x adiável.

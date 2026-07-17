@@ -50,3 +50,6 @@
 {"ts": "2026-07-16T00:37:17+00:00", "event": "resolved", "check": "card_autosuficiencia", "fingerprint": "aa3c7a6813cb", "alvo": "card#815"}
 {"ts": "2026-07-16T00:37:17+00:00", "event": "resolved", "check": "card_autosuficiencia", "fingerprint": "7c0db41e4d80", "alvo": "card#824"}
 {"ts": "2026-07-16T00:37:17+00:00", "event": "resolved", "check": "card_autosuficiencia", "fingerprint": "6a127eef855c", "alvo": "card#825"}
+{"ts": "2026-07-17T17:11:27+00:00", "event": "opened", "check": "parity", "fingerprint": "ddf439b44739", "alvo": "command<->skill", "payload": {"n_drift": 1}}
+{"ts": "2026-07-17T17:42:06+00:00", "event": "resolved", "check": "parity", "fingerprint": "ddf439b44739", "alvo": "command<->skill"}
+{"ts": "2026-07-17T17:42:06+00:00", "event": "opened", "check": "card_autosuficiencia", "fingerprint": "6a4de021901a", "alvo": "card#828", "payload": {"padrao": "opcao-anaforico", "tema": "Pré-Natal"}}

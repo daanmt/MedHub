@@ -144,7 +144,19 @@ Após análise, entregar **exatamente** estas quatro coisas:
 
 1. **O Diagnóstico:** Qual elo quebrou e o motivo sucinto.
 2. **Draft para o Resumo:** O texto final (⚠️ Padrão de Prova ou 🔴 Armadilha) exato para inserir em `resumos/`, seguindo bullets, sem tabelas ASCII.
-3. **Cards estruturados:** cunhar **1 a 3 cards atômicos** seguindo a régua canônica em [`estilo-flashcard.md`](estilo-flashcard.md) (5 princípios: conteúdo atômico, ancorado no erro, sem vazar resposta, regra-mestre = distinção, armadilha = distrator específico). Cada card tem os 5 campos:
+3. **Cards estruturados -- consultando o deck EMED (seleção por contexto, s124):**
+
+   Antes de cunhar, **consultar o deck de referência do EMED** do tema (275 decks atômicos colhidos em `resumos/**/Flashcards - <Tema>.pdf`):
+
+   ```bash
+   python tools/emed_flashcards.py --query --tema "<tema>" [--area <area>]
+   ```
+
+   Retorna os pares frente/verso atômicos do EMED (`match: exact|fuzzy` -> `cards`), ou `match: none` com `candidates`.
+
+   - 🔴 **Seleção por contexto -- NUNCA o deck inteiro.** Dos pares retornados, puxar **apenas os que tocam o elo quebrado / a lacuna** do erro (o critério de match é o elo do aluno x o conteúdo do par EMED). Adaptar ao **padrão atômico** (`estilo-flashcard.md §Formato atômico`), ancorando no erro específico. O deck EMED é **molde de formulação + fonte de cobertura**, não um despejo no FSRS (a estratégia "matar os cards" e o teto de 30/dia proíbem import em massa).
+   - **Fallback gracioso:** se `match: none` (tema sem deck) ou nenhum par casa o elo, cunhar do zero pelo **mesmo padrão atômico** -- sem travar.
+   - Cunhar **1 a 3 cards atômicos** (frente gerativa curta, resposta de uma frase, o "porquê" fora do recall). Se o deck EMED diverge do resumo/gabarito auditado, **não copiar cego** -- herda a auditoria de evidência (`estilo-flashcard.md §Evidência`). Cada card tem os 5 campos:
 
 ```
 frente_contexto: [1-2 frases do cenário clínico — sem alternativas, sem gabarito; pode ser vazio]

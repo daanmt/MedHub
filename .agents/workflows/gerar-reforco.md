@@ -14,10 +14,10 @@ python -c "import sqlite3; c=sqlite3.connect('ipub.db').cursor(); c.execute('SEL
 ### 2. Recuperar a Matéria no Cérebro (RAG/MCP)
 Use a tool interna do MCP do Obsidian (ou leia diretamente os arquivos na pasta `resumos/`) buscando pelo nome do tema crítico retornado no passo 1. O objetivo é absorver o conhecimento nativo do usuário, especialmente a seção de **Armadilhas de Prova**.
 
-### 3. Síntese do Tutor
-Analise o resumo clínico lido. Crie de 1 a 3 Flashcards super-diretos e focados na fraqueza. O flashcard deve focar apenas no que faz o candidato errar.
-- **Formato:** Elo quebrado (Pergunta) + Raciocínio Mestre (Resposta).
-- **Tom:** A resposta do flashcard deve utilizar a terminologia formal do Padrão-Ouro (sem gírias de plantão).
+### 3. Síntese do Tutor (consultando o deck EMED)
+Antes de cunhar, **consultar o deck EMED do tema crítico:** `python tools/emed_flashcards.py --query --tema "<tema>"`. Dos pares atômicos retornados, puxar **por contexto** apenas os que atacam a fraqueza (nunca o deck inteiro). Adaptar ao **padrão atômico** de `.claude/commands/estilo-flashcard.md §Formato atômico`. Sem deck (`match: none`) -> cunhar do zero pelo mesmo padrão.
+- Crie de 1 a 3 Flashcards atômicos focados no que faz o candidato errar (frente gerativa curta, resposta de uma frase, "porquê" fora do recall).
+- **Tom:** terminologia formal do Padrão-Ouro (sem gírias de plantão).
 
 ### 4. Materializar no Motor FSRS
 Persistir cada card via `insert_questao.py` conforme a invocação canônica de 17 argumentos em `.claude/commands/analisar-questao.md §9`. Para reforço sintético: `--area "Reforço RAG"`, `--erro "Lacuna de conhecimento"`, `--marcada "N/A"`, `--armadilha "N/A"`; demais campos (incluindo os 5 estruturados de flashcard) vêm da síntese do tutor.

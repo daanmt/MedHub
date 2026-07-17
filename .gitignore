@@ -2,6 +2,10 @@
 *.pdf
 *.PDF
 
+# Corpus de flashcards EMED (IP do EMED, derivado dos PDFs — local only, RAG/cunhagem)
+*.cards.json
+artifacts/emed_harvest_report.json
+
 # Banco de Dados (local only)
 ipub.db
 data/chroma/

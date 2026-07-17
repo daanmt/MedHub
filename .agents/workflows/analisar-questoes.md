@@ -30,7 +30,7 @@ Seguir o **Boot Sequence** definido em `AGENTE.md`.
 **B. Insights de estudo (anotações ativas):** O usuário pode enviar anotações livres que fez durante o estudo — insights, conexões, dúvidas, consolidações. Tratar essas anotações como matéria-prima valiosa a ser incorporada no resumo. Não exigir formato específico.
 
 ### 2. Aplicar protocolo de análise (para questões erradas)
-Seguir integralmente o protocolo de `.claude/commands/analisar-questao.md` (Etapas 1-8).
+Seguir integralmente o protocolo de `.claude/commands/analisar-questao.md` (Etapas 1-8). **A cunhagem de cards (Etapa 8.3) consulta o deck EMED do tema (`python tools/emed_flashcards.py --query --tema "<tema>"`) e seleciona por contexto** -- só os pares que casam o elo quebrado, adaptados ao padrão atômico; fallback à autoria do zero se não houver deck. O protocolo vive na skill; não reespecificar aqui.
 
 ### 3. Popular Banco de Dados (Caderno de Erros DB)
 - Para questões erradas, popular os metadados no SQLite via CLI: execute `insert_questao.py` conforme a invocação canônica de 17 argumentos em `.claude/commands/analisar-questao.md §9`.

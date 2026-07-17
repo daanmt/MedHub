@@ -33,6 +33,38 @@ O flashcard do MedHub não enuncia um fato genérico sobre um tema — ele **ref
 
 ---
 
+## Formato atômico (referência EMED — sessão 124)
+
+> **A régua de formulação foi calibrada.** Os 5 princípios acima definem *o que* testar (o elo quebrado); esta seção define *como escrever* — no **minimum information principle** (Wozniak), aferido contra os decks oficiais do EMED (275 decks colhidos em `resumos/**/Flashcards - <Tema>.pdf`, consultáveis por `python tools/emed_flashcards.py --query --tema "<tema>"`).
+
+**O modo de falha que isto corrige — o "paragraph card":** empacotar `frente_contexto` + `frente_pergunta` + `verso_resposta` + `verso_regra_mestre` + `verso_armadilha` num item só. O aluno acerta 3 de 5 pedaços, marca "Bom", e os 2 esquecidos somem (illusion of competence). A auditoria da s124 reprovou a safra por isto (833 double-barreled; 350/398 sim/não com muro no verso; 835 set).
+
+**As 7 regras (das 20 de Wozniak + os decks EMED):**
+
+1. **Atômico -- 1 fato por card.** Se a resposta tem um "e" (progesterona *e* aromatase), são **dois cards**. O EMED nunca junta.
+2. **Frente gerativa, nunca sim/não com o payload no verso.** A frente força *produzir* o discriminador, não julgar uma afirmação. ("Proteinúria: critério diagnóstico ou de gravidade?" > "proteinúria é gravidade? s/n".)
+3. **Resposta = uma frase.** O EMED responde "Ovários." / "Estrogênio." / "Videolaparoscopia com biópsia." Curto e específico -- densidade clínica sim, parágrafo não.
+4. **O "porquê" sai do recall.** Mecanismo/regra vai entre parênteses (lido *depois*, para consolidar) OU vira um **card discriminador próprio** -- não entra na carga de recuperação.
+5. **Interferência -> card discriminador.** Quando duas coisas confundem (aromatase altaxbaixa, ureteralxvesical), um card que **contrasta as duas diretamente** (estilo EMED, cards adjacentes 23x24). A armadilha vira esse card, não um parágrafo colado.
+6. **Evitar sets/enumerações.** Ranking de sítios, listas longas -> cloze ou cards ordenados, ou cortar a cauda de baixo rendimento. (O EMED testa "sítio mais frequente? -> Ovários", não o ranking inteiro.)
+7. **Fonte + data em fato banca-dependente.** ACOG 2013, SBC 2025, MS -> selo de fonte/ano no card (herda a auditoria de evidência, ver §Evidência).
+
+### Reconciliação com o targeting metacognitivo
+
+Isto **não** repudia o card ancorado no erro -- **refina**. O diagnóstico metacognitivo (os 5 princípios) continua escolhendo **QUAL fato atômico** testar (o elo que quebrou -- personalização que o EMED não tem). Muda a **formulação**: um elo quebrado -> **N cards atômicos** no formato EMED, um deles podendo ser o discriminador. Certo no *o quê*; corrigido no *empacotamento*.
+
+### Antes/depois
+
+**833 (double-barreled) ->** 2 atômicos + 1 discriminador:
+> ❌ "Quanto à progesterona e à aromatase, o que caracteriza o endométrio na endometriose?" -> verso com 2 fatos + regra + armadilha.
+> ✅ **A:** "Na endometriose, a aromatase nos implantes está aumentada ou reduzida?" -> "Aumentada (super-expressa)." *(gera estrogênio local -> por isso inibidor de aromatase funciona)*
+> ✅ **B:** "Na endometriose, o endométrio ectópico responde à progesterona?" -> "Não -- é resistente." *(perde o freio antiestrogênico -> proliferação)*
+
+**350 (sim/não com muro) ->** gerativo + datado:
+> ✅ "Proteinúria é critério diagnóstico ou de gravidade da pré-eclâmpsia?" -> "Diagnóstico." *(gravidade > 5g/24h removida pela ACOG 2013)*
+
+---
+
 ## Convenção de Encoding e Zero LaTeX (sessão 103/108)
 
 É rigorosamente **proibido** utilizar sintaxe de LaTeX inline (`$ ... $` ou `$$ ... $$`), comandos matemáticos (`\rightarrow`, `\le`, `\ge`, `\mu`), ou cifrões encapsulando números e desigualdades (`$< 60$`, `$> 1000$`, `$\rightarrow$`) na redação dos campos `frente_pergunta`, `frente_contexto`, `verso_resposta`, `verso_regra_mestre` e `verso_armadilha`.
@@ -118,6 +150,8 @@ verso_regra_mestre: [a distinção/sobreposição que previne a confusão]
 verso_armadilha:    [o distrator específico que pegou o usuário, ancorado no resumo]
 ```
 
+🔴 **Reenquadramento (s124 -- ver §Formato atômico):** `verso_regra_mestre` e `verso_armadilha` **deixam de ser carga de recall obrigatória em todo card**. O recall é sempre **1 fato** (`verso_resposta` = uma frase, não um parágrafo). Default: a **regra** entra como parêntese lido-depois OU vira **card discriminador próprio**; a **armadilha** idem (card discriminador, não parágrafo colado). Encher os 5 campos como um mini-resumo é o "paragraph card" (defeito). Os campos permanecem no schema (compat), mas o contrato desaconselha usá-los como carga de recuperação.
+
 Persistir via `insert_questao.py` (go-forward) ou via o caminho de UPDATE/`--cards-file` (regeneração) — ver `analisar-questao.md` §9 e a spec da Onda B.
 
 ---
@@ -155,4 +189,4 @@ O card consome o resumo; não o substitui nem o duplica.
 
 ## Evidência: o card herda a auditoria da origem
 
-O card **não é auditado isoladamente** — ele herda o veredito de evidência da questão/resumo de origem (`core/contracts/evidence-governance.md` §1). Quando a `verso_regra_mestre` afirma uma conduta/dose/cutoff decisória já auditada, **carregar a citação** (sociedade/ano ou PMID) e, se for conflito banca × evidência, refletir o 🔴 alerta banca-dependente na `verso_armadilha`.
+O card **não é auditado isoladamente** — ele herda o veredito de evidência da questão/resumo de origem (`core/contracts/evidence-governance.md` §1). Quando a `verso_regra_mestre` afirma uma conduta/dose/cutoff decisória já auditada, **carregar a citação** (sociedade/ano ou PMID) e, se for conflito banca x evidência, refletir o 🔴 alerta banca-dependente na `verso_armadilha`.

@@ -468,6 +468,40 @@ relates_to: [AGENTE, ESTADO, HANDOFF]
 
 ---
 
+## 3i. Sessoes de uso s124-s125 -- achados F35-F36 (registro retroativo)
+
+> Origem: dois achados vinham sendo carregados como ponteiro no `HANDOFF.md` sem entrada propria no
+> ledger (F35 desde a s124, F36 novo na s125). Registrados aqui na reconciliacao de fechamento da
+> s125 para que o ponteiro tenha lastro.
+
+### F35 -- Reconcile de volume (W1) segue manual e o `auto_check --changed` nao cobre a suite impactada -- **MEDIA** -- **ABERTO**
+- **Origem:** herdado como "nao resolvido" do escopo do F34/s115 (secao 3h) e carregado no HANDOFF
+  desde a s124 sem entrada propria.
+- **Duas faces:**
+  - **Reconcile de volume (W1/F29):** a conferencia planilha-db continua dependendo de o agente
+    lembrar de rodar; o drift de 76q pego ao vivo na s110 foi corrigido a mao, nao mecanizado.
+    Agravado pelo drift recorrente das linhas de "Revisao por Questoes" (`project_drift_revisao_por_questoes`).
+  - **Seletor de suite do `auto_check`:** `auto_check --changed` seleciona a suite pelo arquivo
+    tocado e por isso NAO rodou os 3 testes de `test_orquestrador.py` quebrados na part-1 da s115 --
+    so o `pytest` completo do audit pegou. O seletor da falso verde quando a mudanca e de contrato
+    (tupla->dict) e o consumidor vive noutro arquivo.
+- **Impacto:** falso verde no gate barato; drift de volume so aparece quando alguem olha.
+
+### F36 -- Agente nao materializa binario grande baixado via MCP -> `--sync-drive` pulado 2 sessoes seguidas -- **MEDIA** -- **ABERTO**
+- **Evidencia (s124 e s125, duas sessoes consecutivas):** o boot sinalizou `Drive desatualizado`
+  (10 dias no boot de 19/07) e o `--sync-drive` **nao rodou** nas duas: o `.xlsx` do Drive volta do
+  MCP como base64 grande e o agente nao tem caminho pratico para materializa-lo em disco "a mao"
+  para passar ao CLI. Consequencia direta na s125: o boot ofereceu Colecistite/Imunizacoes (ordem
+  do PDF) e **o usuario teve que ditar a ordem real da S13**.
+- **Leitura de sistema:** o F34 tornou o disparo do sync OBRIGATORIO-DE-TENTATIVA, mas a tentativa
+  falha num degrau que nenhuma clausula previa -- **transporte**, nao disciplina. Enquanto o
+  download nao vira arquivo, "obrigatorio" vira ritual vazio e o dual-SSOT do cronograma
+  (`project_cronograma_dual_ssot`) regride em silencio para o lado do PDF.
+- **Direcao (nao implementada):** dar ao sync um caminho de materializacao proprio (o CLI baixa/
+  recebe o blob e escreve o arquivo) em vez de exigir que o agente faca a ponte base64->disco.
+
+---
+
 ## 4. O que esta solido (nao mexer sem motivo)
 
 Registrado para o PRD nao "consertar" o que funciona:
@@ -548,4 +582,7 @@ O objetivo da sessao nao era so drenar cards: era **usar o MedHub para descobrir
 
 ---
 
-*Este doc e o ledger vivo de engenharia. Nao "fecha" -- acumula achados a cada sessao de uso. O 1o ciclo Fable (PRD -> 5 ondas) foi ENTREGUE em 2026-07-05 (secao 3b). A s109 (coordenador-observador) adicionou **F16-F19** do uso vivo (forja da aula-base de apendicite; secao 3c) -- insumo do ciclo 2. A rodada 1 do ciclo 2 (Fable/ai-eng, paralela a s109; secao 3d) entregou F14/F15, validou o teto (F4/b), preparou a janela do expurgo (F11) e registrou F20. A s109 (1o lote de questoes; secao 3e) adicionou F21, e (2o lote; secao 3f) **F22-F26**. O **ciclo 2 rodada 2** (Fable/ai-eng, 2026-07-06; secao 3g) entregou o PRD ORQUESTRACAO completo (vibeflow 4/4 PASS): posicao SSOT (op-3), recomendador do dia, F22-F26 RESOLVIDOS; F21 segue aberto (contrato de aula); F27/F28 registrados pelos audits. A **s110 parte 2** (2026-07-06) verificou performance+cronograma a pedido do operador, achou e RESOLVEU **F29** (drift planilha-db de 76q, ao vivo, mesma sessao); no ciclo de Pre-Natal I (cold recall, tema-zero) registrou **F30** (material_indicado nao verifica existencia real do resumo), aberto. A **s113** (08/07, verificacao de cronograma a pedido do operador) achou e RESOLVEU **F33** (boot recomendava temas ja feitos, calendario-driven sem ler conclusao real da planilha) na mesma sessao via ciclo completo `/discover`->`/gen-spec`->`/implement`->`/audit` (PASS); F31/F32 registrados por uso vivo (s112). A **s115** (2026-07-09) auditou o boot e entregou o PRD **boot-cronograma-drive-confiavel** em 3 partes (vibeflow discover->gen-spec->implement->audit, audits PASS): achado novo **F34** (disparo+ordem do Drive) + **F30/F31 RESOLVIDOS**; **F21 segue aberto**. **Proximos achados comecam em F35**. Ultima atualizacao: s115 (2026-07-09). **Adendo 2026-07-12 (Fable/ai-eng, ciclo mecanismo-de-conhecimento):** F21 RECONCILIADO em dois planos (conduta RESOLVIDA no contrato v1.2; enforcement mecanico na spec `mecanismo-conhecimento-consolidacao-part-3`) -- ver secao 3e. Ciclo de consolidacao do mecanismo de RAG/conhecimento em andamento (part-1 audit PASS: MCP obsidian aposentado, scaffold LangGraph/BM25 removido; part-2: reconciliacao de drift documental).*
+*Este doc e o ledger vivo de engenharia. Nao "fecha" -- acumula achados a cada sessao de uso. O 1o ciclo Fable (PRD -> 5 ondas) foi ENTREGUE em 2026-07-05 (secao 3b). A s109 (coordenador-observador) adicionou **F16-F19** do uso vivo (forja da aula-base de apendicite; secao 3c) -- insumo do ciclo 2. A rodada 1 do ciclo 2 (Fable/ai-eng, paralela a s109; secao 3d) entregou F14/F15, validou o teto (F4/b), preparou a janela do expurgo (F11) e registrou F20. A s109 (1o lote de questoes; secao 3e) adicionou F21, e (2o lote; secao 3f) **F22-F26**. O **ciclo 2 rodada 2** (Fable/ai-eng, 2026-07-06; secao 3g) entregou o PRD ORQUESTRACAO completo (vibeflow 4/4 PASS): posicao SSOT (op-3), recomendador do dia, F22-F26 RESOLVIDOS; F21 segue aberto (contrato de aula); F27/F28 registrados pelos audits. A **s110 parte 2** (2026-07-06) verificou performance+cronograma a pedido do operador, achou e RESOLVEU **F29** (drift planilha-db de 76q, ao vivo, mesma sessao); no ciclo de Pre-Natal I (cold recall, tema-zero) registrou **F30** (material_indicado nao verifica existencia real do resumo), aberto. A **s113** (08/07, verificacao de cronograma a pedido do operador) achou e RESOLVEU **F33** (boot recomendava temas ja feitos, calendario-driven sem ler conclusao real da planilha) na mesma sessao via ciclo completo `/discover`->`/gen-spec`->`/implement`->`/audit` (PASS); F31/F32 registrados por uso vivo (s112). A **s115** (2026-07-09) auditou o boot e entregou o PRD **boot-cronograma-drive-confiavel** em 3 partes (vibeflow discover->gen-spec->implement->audit, audits PASS): achado novo **F34** (disparo+ordem do Drive) + **F30/F31 RESOLVIDOS**; **F21 segue aberto**. A reconciliacao de fechamento da **s125** (2026-07-19; secao 3i) registrou
+retroativamente **F35** (reconcile de volume manual + seletor de suite do `auto_check` dando falso
+verde) e **F36** (binario grande do Drive via MCP nao materializa em disco -> `--sync-drive` pulado
+na s124 e na s125), ambos ABERTOS. **Proximos achados comecam em F37**. Ultima atualizacao: s125 (2026-07-19). **Adendo 2026-07-12 (Fable/ai-eng, ciclo mecanismo-de-conhecimento):** F21 RECONCILIADO em dois planos (conduta RESOLVIDA no contrato v1.2; enforcement mecanico na spec `mecanismo-conhecimento-consolidacao-part-3`) -- ver secao 3e. Ciclo de consolidacao do mecanismo de RAG/conhecimento em andamento (part-1 audit PASS: MCP obsidian aposentado, scaffold LangGraph/BM25 removido; part-2: reconciliacao de drift documental).*

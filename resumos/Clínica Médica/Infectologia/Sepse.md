@@ -19,6 +19,7 @@ A sepse é caracterizada por uma **resposta desregulada do hospedeiro à infecç
 - **Disfunção Endotelial e Vasodilatação:** Há relaxamento difuso do músculo liso vascular (vasodilatação grave e queda da resistência vascular sistêmica) e aumento da permeabilidade capilar (vazamento de líquido do compartimento vascular para o interstício -- hipovolemia relativa).
 - **Microtrombose e Shunt Perfusional:** Ativação simultânea da cascata de coagulação gera deposição de microtrombos nos capilares, obstruindo fisicamente o fluxo de sangue.
 - **Hipóxia Celular e Hiperlactatemia:** O sangue não irriga adequadamente as células (má perfusão). Na falta de oxigênio, as mitocôndrias passam a realizar respiração anaeróbia, transformando piruvato em **ácido lático (lactato)**. A elevação do lactato é um marcador de hipoperfusão e sofrimento celular, não necessariamente de disfunção hepática.
+- **Mediadores -- o eixo pró vs anti-inflamatório:** a cascata é disparada por citocinas **pró-inflamatórias** (IL-1, IL-6, TNF-alfa), que estimulam o endotélio a liberar **óxido nítrico (NO)** -- o principal vasodilatador, responsável pela queda da resistência vascular sistêmica e pela progressão ao choque. Contrarregulando, a **IL-10** é a citocina **anti-inflamatória protetora** (alça de feedback negativo do TNF-alfa): seu aumento associa-se a **menor** progressão ao choque. Dois marcadores que "invertem" na doença avançada -- a **proteína C reativa (PCR)**, que cai na disfunção hepática aguda, e o **cortisol**, que cai na insuficiência adrenal relativa -- sinalizam **pior** prognóstico, não melhor.
 
 ---
 
@@ -42,6 +43,10 @@ A sepse é definida como uma **disfunção orgânica potencialmente fatal** secu
     - **Pressão Arterial Sistólica <= 100 mmHg.**
     - **Alteração do estado mental (Glasgow < 15).**
 
+- **SIRS (definição legada, ainda cobrada):** a Síndrome de Resposta Inflamatória Sistêmica **não define mais sepse** (superada pelo Sepsis-3), mas a banca ainda testa seus critérios. São **4 parâmetros** (>= 2 positivos): **temperatura** (> 38 ou < 36 ºC), **FC** > 90 bpm, **FR** > 20 irpm (ou PaCO2 < 32 mmHg) e **leucograma** (> 12.000, < 4.000 ou > 10% de bastões). 🔴 **Plaquetas não entram na SIRS** -- trombocitopenia é do SOFA.
+- **Termo "sepse grave" foi ABOLIDO:** no consenso antigo, "sepse grave" = sepse + disfunção orgânica; o Sepsis-3 o descontinuou, pois **toda sepse já implica disfunção orgânica** (logo, toda sepse é "grave"). Alternativa que usa "sepse grave" carrega um termo morto.
+- **Ancoragem no protocolo citado:** o **qSOFA** nasceu com o **Sepsis-3 (2016)**. Uma questão que ancora num protocolo **anterior** (ex.: Surviving Sepsis Campaign 2016, pré-Sepsis-3) recomenda rastreamento **sem especificar a ferramenta** -- responder pela régua **daquele** protocolo, não pelo conhecimento geral atual.
+
 ---
 
 ## 3. Choque Séptico no Adulto
@@ -64,9 +69,12 @@ Iniciado imediatamente após o reconhecimento da sepse/choque séptico no adulto
    - ⚠️ **Padrão de prova:** Não atrasar a administração do antibiótico se houver dificuldade técnica em colher as culturas (> 45 min).
 3. **Administrar Antibióticos de Amplo Espectro:** Terapia antimicrobiana precoce de amplo espectro por via intravenosa.
    - ⚠️ **Impacto do Atraso:** Cada hora de atraso no início do antibiótico adequado nas primeiras horas de sepse/choque séptico acarreta um aumento de **aproximadamente 7% na mortalidade por hora perdida**.
+   - ⚠️ **Falha terapêutica = escalonar o espectro:** se o paciente **piora sob o antibiótico atual**, a troca deve **ampliar a classe/espectro**, não lateralizar para cobertura equivalente. Ex.: quem falha a **ciprofloxacino** (amplo gram-negativo) não melhora com **ceftriaxona** (espectro semelhante) -- escalona-se para **carbapenêmico** (+/- **vancomicina** se suspeita de Gram-positivo resistente).
 4. **Ressuscitação Volêmica:** Administrar **30 mL/kg de cristaloides** (soluções balanceadas como Ringer Lactato ou SF 0,9%) em até 3 horas se o paciente apresentar hipotensão ou lactato >= 4 mmol/L.
 5. **Iniciar Vasopressor:** Se a PAM permanecer < 65 mmHg durante ou após a infusão de cristaloides, iniciar **Noradrenalina** em acesso venoso periférico calibroso ou central.
-6. **Uso de Corticosteroides:** O uso rotineiro de corticoides (ex.: Hidrocortisona 200 mg/dia) **não** reduz mortalidade e não é indicado na sepse geral. A única indicação formal de corticoide é no **choque séptico refratário** (persistência da instabilidade hemodinâmica a despeito de ressuscitação volêmica e altas doses de vasopressores), agindo na insuficiência adrenal relativa do choque.
+6. **Uso de Corticosteroides:** O uso rotineiro de corticoides (ex.: Hidrocortisona 200 mg/dia) **não** reduz mortalidade e não é indicado na sepse geral. A única indicação formal de corticoide é no **choque séptico refratário** (persistência da instabilidade hemodinâmica a despeito de ressuscitação volêmica e altas doses de vasopressores), agindo na insuficiência adrenal relativa do choque. *(Nuance banca-dependente: a SSC 2021 sugere hidrocortisona já no choque em **vasopressor contínuo**, mais amplo que "refratário" -- mas o rótulo de prova consagrado segue "refratário".)*
+
+> **Metas hemodinâmicas legadas (EGDT / Rivers 2001, SSC 2008 -- ainda cobradas):** o protocolo antigo de terapia precoce guiada por metas nas primeiras 6h perseguia: **PVC 8-12 mmHg** (volume), **PAM >= 65**, **débito urinário >= 0,5 mL/kg/h** e **saturação venosa central (SvcO2) >= 70%**. 🔴 **Raciocínio de prova:** com PAM e volume já na meta, uma **SvcO2 < 70%** aponta transporte de O2 insuficiente por **duas** causas -- **anemia** ou **baixo débito cardíaco**. Se o **hematócrito < 30%** -> **transfundir**; se o **hematócrito >= 30%** (anemia já corrigida) -> **inotrópico (dobutamina)**. Embora a SSC atual não persiga mais a SvcO2 de rotina, a banca cobra essa árvore de decisão.
 
 
 ---
@@ -104,3 +112,8 @@ O choque na criança tem evolução rápida para disfunção miocárdica.
 - 🔴 **Prioridade do Antibiótico:** Na sepse grave, o antibiótico deve ser feito na 1ª hora. A coleta de culturas é prioritária, mas nunca pode postergar o antibiótico por mais de 45-60 minutos.
 - 🔴 **Definição de Choque Séptico no Adulto:** Exige tanto a hipotensão refratária que pede vasopressor (PAM < 65) quanto a presença de hiperlactatemia (lactato > 2 mmol/L). Hipotensão isolada que responde a volume não é choque séptico.
 - 🔴 **Abolição da SIRS na Pediatria:** Cuidado com questões que ainda tentam definir sepse pediátrica por febre + taquicardia + leucocitose. O padrão-ouro atual de prova e beira de leito é a disfunção orgânica medida pelo Escore de Phoenix (>= 2 pontos).
+- 🔴 **Mediadores -- direção do efeito:** IL-10 é **anti-inflamatória/protetora** (menor progressão ao choque); **óxido nítrico**, TNF, IL-1 e IL-6 são **vasodilatadores/pró-inflamatórios** e **pioram** o choque. PCR baixa e cortisol baixo indicam **pior** prognóstico. Marcar aumento de NO como "protetor" inverte o papel.
+- 🔴 **Corticoide não reduz mortalidade:** só entra no **choque refratário** -- incluí-lo entre as medidas que "reduzem mortalidade" (ao lado de ATB precoce e vasopressor) é erro clássico.
+- 🔴 **SvcO2 baixa com hematócrito na meta -> dobutamina:** não desviar para o controle glicêmico (distrator) antes de corrigir a falha hemodinâmica.
+- 🔴 **Falha de antibiótico -> escalonar, não lateralizar:** trocar ciprofloxacino por ceftriaxona (espectro gram-negativo semelhante) não é escalonamento -- amplia-se a classe (carbapenêmico +/- vancomicina).
+- 🔴 **"Sepse grave" e SIRS são framework antigo:** "sepse grave" foi abolido (toda sepse é grave); a SIRS não define mais sepse -- mas seus 4 critérios ainda caem, e **trombocitopenia não é um deles**.

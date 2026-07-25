@@ -72,3 +72,31 @@ Nenhuma outra mudança é necessária.
 - Depende apenas da tabela `sessoes_bulk` — fonte de verdade para volume por área (populada via `tools/registrar_sessao_bulk.py`).
 - Se o mês corrente sair da série `METAS_MENSAIS` (ex.: rodar em jan/2027 sem atualizar), o script degrada graciosamente: blocos 3 e 4 trazem aviso, blocos 1/2/5 seguem funcionais (marcos datados perdem só o custo/q projetado).
 - Se a data de um marco já passou, o bloco 2 avisa para atualizar `MARCOS` em vez de projetar ritmo negativo.
+
+---
+
+## Diagnóstico de Variância e Zona (`tools/variancia.py`)
+
+> **Assinatura canônica deste CLI** (AGENTE.md §7.2). Spec: `.vibeflow/specs/variancia-e-zona.md`. Read-only.
+
+**Por que existe:** no platô dos 75-80% a **média não é o sinal — a variância é**. Nota alta numa prova e baixa em outra indica desempenho dependente do *perfil da prova*, não do conhecimento. Medido em 25/07: média 77,6% (boa) e **desvio de 12,0 pp** (alto).
+
+| Comando | Função |
+|---|---|
+| `--metricas [--ultimos N] [--piso Q]` | n, média, desvio-padrão populacional, amplitude, coef. de variação |
+| `--zona` | classificação de 2 eixos + prescrição + débito de simulado (render legível) |
+| `--simulado-check` | há simulado na janela de 7d? (política: 1/semana) |
+| `--json` | diagnóstico completo em JSON |
+
+**As 4 zonas** (desempenho × cobertura da grade, cortes em 70%/70%):
+
+| | Cobertura baixa | Cobertura alta |
+|---|---|---|
+| **Desempenho baixo** | `CONTEUDO` — falta base | `RETENCAO` — viu e não reteve; FSRS |
+| **Desempenho alto** | `COBERTURA` — acerta o que estudou, falta terreno | `DIRECIONAMENTO` — gargalo é execução |
+
+🔴 **A zona de 1 eixo do vídeo (60-65% = conteúdo, 70-80% = direcionamento) misclassifica quem tem nota de platô SEM ter fechado a grade.** O segundo eixo separa "não sei" de "ainda não vi". Em 25/07 o usuário está em **COBERTURA** (77,6% de acerto, 43% da grade percorrida) — prescrição é **avançar a grade**, não refinar.
+
+🔴 **Variância corre POR FORA da zona.** Desvio >= 10 pp prescreve **simulado** em qualquer quadrante: sensibilidade a perfil de prova não se corrige com mais bloco temático, só com prova inteira e diversa.
+
+🔴 **Cobertura NÃO vem de `taxonomia_cronograma.questoes_realizadas`** — esse campo está inflado (~19.6k contra 5.2k reais em `sessoes_bulk`). Vem da grade versionada + semana de conteúdo. Se um dia a cobertura parecer alta demais, é esse o defeito a suspeitar primeiro.

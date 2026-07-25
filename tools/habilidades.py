@@ -33,7 +33,7 @@ from datetime import datetime
 DB_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'ipub.db')
 
 # Enum fechado. Ordem = severidade crescente para efeito de relatorio.
-VEREDITOS = ('acertou', 'incerteza', 'errou', 'indefinido')
+VEREDITOS = ('acertou', 'incerteza', 'desatencao', 'errou', 'indefinido')
 
 # Separador canonico da cadeia. Garantido pela convencao ASCII do AGENTE.md
 # secao 4.5 (Zero LaTeX / zero setas Unicode) -- a prosa legada usa " -> ".
@@ -251,6 +251,7 @@ def reincidentes(limit=10, min_temas=1, db_path=None):
         '       COUNT(DISTINCT qh.tema_id)  AS temas_distintos, '
         "       SUM(CASE WHEN qh.veredito = 'errou'     THEN 1 ELSE 0 END) AS n_errou, "
         "       SUM(CASE WHEN qh.veredito = 'incerteza' THEN 1 ELSE 0 END) AS n_incerteza, "
+        "       SUM(CASE WHEN qh.veredito = 'desatencao' THEN 1 ELSE 0 END) AS n_desatencao, "
         '       MAX(qh.criado_em)           AS ultima '
         '  FROM habilidades h '
         '  JOIN questao_habilidades qh ON qh.habilidade_id = h.id '
@@ -260,11 +261,11 @@ def reincidentes(limit=10, min_temas=1, db_path=None):
         ' LIMIT ?', (min_temas, limit)).fetchall()
     conn.close()
     out = []
-    for hid, texto, ocor, temas, n_err, n_inc, ultima in rows:
+    for hid, texto, ocor, temas, n_err, n_inc, n_des, ultima in rows:
         out.append({
             'habilidade_id': hid, 'texto': texto, 'ocorrencias': ocor,
             'temas_distintos': temas, 'n_errou': n_err or 0,
-            'n_incerteza': n_inc or 0, 'ultima': ultima,
+            'n_incerteza': n_inc or 0, 'n_desatencao': n_des or 0, 'ultima': ultima,
             # o sinal que o video 1 chama de "sensibilidade a linhas de
             # raciocinio especificas", em oposicao a falta de conteudo
             'padrao_de_raciocinio': temas >= 3,

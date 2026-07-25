@@ -691,7 +691,7 @@ def get_ultimo_bloco_tema(area, tema):
 # curadoria vivem no CLI standalone `tools/habilidades.py`; aqui expomos o que
 # o dashboard e o agente precisam consultar durante a sessão.
 
-VEREDITOS_HABILIDADE = ('acertou', 'incerteza', 'errou', 'indefinido')
+VEREDITOS_HABILIDADE = ('acertou', 'incerteza', 'desatencao', 'errou', 'indefinido')
 
 
 def get_habilidades_reincidentes(limit=10, min_temas=1):
@@ -762,3 +762,31 @@ def registrar_habilidade(texto, tema_id=None, veredito='errou', questao_id=None,
         return hid
     finally:
         conn.close()
+
+
+# --- Série de blocos para diagnóstico de variância (spec variancia-e-zona) ---
+
+def get_serie_blocos(piso_questoes=15, ultimos=None, incluir_simulado=False):
+    """Série de % de acerto por bloco (DataFrame, read-only).
+
+    Substrato do diagnóstico de variância: no platô dos 75-80%, a **variância**
+    entre blocos diz mais que a média — nota alta numa prova e baixa em outra
+    indica desempenho dependente do perfil da prova, não do conhecimento.
+    Blocos abaixo do piso são excluídos: 5 questões geram % com granularidade
+    de 20 pp e poluem a métrica com ruído amostral.
+    """
+    filtro = "" if incluir_simulado else "area <> 'Simulado' AND "
+    conn = get_connection()
+    try:
+        df = pd.read_sql_query(
+            "SELECT data_sessao, area, questoes_feitas, questoes_acertadas "
+            "FROM sessoes_bulk WHERE " + filtro + "questoes_feitas >= ? "
+            "ORDER BY data_sessao, id", conn, params=(int(piso_questoes),))
+    finally:
+        conn.close()
+    if df.empty:
+        return df
+    df['pct'] = (df['questoes_acertadas'] / df['questoes_feitas'] * 100).round(1)
+    if ultimos:
+        df = df.tail(int(ultimos))
+    return df

@@ -251,3 +251,30 @@ python tools/insert_questao.py \
 🔴 **`temas_distintos >= 3` separa padrão de raciocínio de lacuna de conteúdo.** A mesma habilidade falhando em 3 temas diferentes não é desconhecer os temas — é desconhecer a habilidade. Esses casos são candidatos diretos à família do bug nº 1 e devem ser tratados como tal (playbook de execução de prova), não com mais leitura do tema.
 
 **Fronteira dura:** este CLI escreve **apenas** em `habilidades` e `questao_habilidades`. Nunca toca FSRS, `flashcards`, `questoes_erros` ou `sessoes_bulk`.
+
+---
+
+## 11. Taxonomia da questão e ORÇAMENTO de correção
+
+> Origem: Pedro Martins, "o método mais rápido para corrigir questões". O tempo de correção é recurso finito — gastar 20 min numa questão direta rouba o tempo de outra que renderia mais, e derruba o volume.
+
+🔴 **Antes de analisar, classifique o TIPO. O tipo define quanto esforço a questão merece.**
+
+| Tipo | Assinatura | Orçamento de correção |
+|---|---|---|
+| **Direta** (decoreba) | "ou você sabe ou não sabe"; sem etapa intermediária | **1 aprendizado, 2-4 linhas.** NÃO reler a resolução inteira, NÃO revisar o tema. Extrair o fato, cunhar 1 card, seguir. |
+| **Fluxograma** | decisão estruturada por nós (sífilis congênita, reanimação neonatal, ACLS, cálculo renal) | **Identificar em QUAL NÓ errou.** O aprendizado é o nó, não o fluxograma inteiro. Reapresentar o fluxograma fechado + marcar o nó. |
+| **Raciocínio** | 3+ etapas encadeadas; enunciado omite o diagnóstico de propósito | **Análise completa** (Etapas 1-5 + metacognição). É aqui que o orçamento longo se paga. |
+
+**Exemplos de calibração:**
+- "Qual o tempo máximo de armazenamento do leite materno ordenhado?" -> **Direta**. Errou = não sabia 12h/15 dias. Um card. Fim. Não reler aleitamento.
+- "Cálculo de 2 cm em polo inferior, qual conduta?" -> **Fluxograma**. Errou = ou não sabia que tamanho e local são os nós decisores, ou errou o valor de corte. O card é o nó específico.
+- "Lúpus + cefaleia súbita + anticardiolipina, qual conduta?" -> **Raciocínio**. Duas etapas (identificar trombose venosa cerebral -> indicar anticoagulação). Vale a análise cheia.
+
+🔴 **A crítica que sustenta a regra:** errar uma questão de nefrolitíase **não** significa "estudar nefrolitíase". Significa que faltou **uma regra específica**. Mandar mais questões do tema é matar formiga com bazuca — é justamente o que o [[ledger de habilidades]] (§10) existe para evitar. O reforço deve mirar a **habilidade**, não o tema.
+
+### Verificar habilidades mesmo quando ACERTOU
+
+Acerto não encerra a análise. Pergunte: *executei todas as etapas, ou acertei por intuição/eliminação?* Habilidade resolvida "na sorte" registra-se com **`--veredito incerteza`** (§10) — e uma questão acertada pode expor 2-3 lacunas colaterais que valem `--add`. É o sinal que o pipeline de erro descartaria inteiro.
+
+**Os 4 estados por habilidade** (não 2): `acertou` · `incerteza` (sabia mais ou menos, hesitou) · `desatencao` (sabia e escorregou na leitura/marcação) · `errou` (não sabia). Separar `desatencao` de `errou` importa porque o tratamento é oposto: desatenção pede ritual de execução (rotular V/F, reler o comando), erro pede conteúdo.

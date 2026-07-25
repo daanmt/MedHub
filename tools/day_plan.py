@@ -93,6 +93,37 @@ def _teto_efetivo(atrasados):
     return TETO_BASE
 
 
+def _diagnostico():
+    """Variância/zona + habilidades reincidentes + débito de simulado.
+
+    s126: a média já está boa (77,6%) e não diz o que fazer; a **variância**
+    entre blocos é o sinal que prescreve. Degradação graciosa em bloco: sinal
+    ausente nunca derruba o plano do dia (mesmo contrato de `_cronograma_hoje`).
+    """
+    out = {}
+    try:
+        import variancia as V
+        z = V.zona()
+        if z.get('zona'):
+            out['zona'] = z['zona']
+            out['prescricao'] = z['prescricao']
+            out['desvio'] = z['metricas']['desvio']
+            out['media_blocos'] = z['metricas']['media']
+            out['cobertura_pct'] = z['cobertura']['pct']
+            out['acao_variancia'] = z.get('acao_variancia')
+        out['simulado'] = V.simulado_check()
+    except Exception:
+        pass
+    try:
+        import app.utils.db as _db
+        df = _db.get_habilidades_reincidentes(limit=3, min_temas=2)
+        if df is not None and not df.empty:
+            out['habilidades'] = df.to_dict('records')
+    except Exception:
+        pass
+    return out or None
+
+
 def _cronograma_hint():
     """Fallback legado: 1ª linha numerada de '## Próximos passos' do ESTADO (frágil)."""
     try:
@@ -634,6 +665,7 @@ def build(tempo_h=None, energia=None):
         },
         "cronograma": cron,
         "cronograma_hint": _cronograma_hint(),   # fallback se a grade não existir
+        "diagnostico": _diagnostico(),           # variância/zona + habilidades (s126)
         "sugestao_passo": passo,
         "recomendacao": recomendar_dia(sinais, tempo_h=tempo_h, energia=energia),
     }
@@ -799,6 +831,23 @@ def render(p):
                    f"~{c['ritmo_meta']}/dia · ENAMED em {c['dias_enamed']}d (sem alvo de volume)")
     elif p.get("cronograma_hint"):
         out.append(f"- 🧭 **Cronograma:** {p['cronograma_hint'][:120]}")
+    d = p.get("diagnostico")
+    if d:
+        if d.get("zona"):
+            out.append(f"- 🔬 **Diagnóstico:** zona **{d['zona']}** · média dos blocos "
+                       f"{d['media_blocos']}% · **desvio {d['desvio']} pp** · "
+                       f"grade {d['cobertura_pct']}% percorrida")
+            out.append(f"    • {d['prescricao']}")
+            if d.get("acao_variancia"):
+                out.append(f"    • 🔴 {d['acao_variancia']}")
+        sim = d.get("simulado") or {}
+        if sim.get("em_debito"):
+            out.append(f"    • ⚠️ **Simulado em débito** (nenhum em {sim['janela_dias']}d · "
+                       f"último {sim.get('ultimo') or 'nunca'}) — política: 1/semana")
+        for h in (d.get("habilidades") or [])[:3]:
+            flag = " 🔴" if h.get("padrao_de_raciocinio") else ""
+            out.append(f"    • habilidade reincidente{flag}: {h['texto']} "
+                       f"({h['ocorrencias']}x em {h['temas_distintos']} temas)")
     r = p.get("recomendacao")
     if r:
         ctx = r["contexto"]

@@ -215,3 +215,15 @@ except AttributeError:
 **Fix (aprovado pelo usuario):** apertar com guarda de contexto anaforico -- "opcao/alternativa" so em moldura de prova (`assinale`, `(correta|incorreta|errada|falsa)`, entre aspas, "por que X esta errada"); "acima" so deitico ("quadro/caso/paciente acima", "acima descrito/citado"); `\b` em `citad`/`mencionad`. Resultado: 36 achados (ruidosos) -> 24 reais, 0 dos 11 ex-FPs disparam. Cada aperto ancorado num teste negativo.
 
 **Regra go-forward:** todo detector regex novo -> rodar contra o corpus real ANTES de fechar a severidade; inspecionar os matches (nao so contar); ancorar cada falso-positivo removido num teste negativo. Espelha a decisao 2026-07-04 do harness (regra de linter cruza contra `--all` antes de escolher severidade).
+
+## Ledger de Habilidades (2026-07-25)
+
+**Decisão:** habilidade vira entidade de primeira classe (`habilidades` + `questao_habilidades`), extraída de `questoes_erros.habilidades_sequenciais` **sem migrar destrutivamente** o campo de prosa. Padrão novo: *ledger normalizado sobre campo de prosa legado*.
+
+**Por quê:** na faixa dos 75-80% o gargalo deixa de ser conteúdo e vira direcionamento. "Área fraca = tema" é a granularidade dos 60%; a pergunta útil passa a ser *qual habilidade eu falho através de temas diferentes*. `temas_distintos >= 3` é o discriminador entre **padrão de raciocínio** e **lacuna de conteúdo**.
+
+**Armadilhas descobertas (registrar para não repetir):**
+- Campo de prosa legado tinha **dois** formatos, não um: setas `A -> B` e lista numerada `1. ... 2. ...`. Assumir um só jogaria 22% dos dados na fila de curadoria.
+- **Sentinelas envenenam métrica de agregação.** `N/A` ocupava 125 registros em 31 temas e emergiu como a "habilidade mais reincidente". Todo backfill que agrega por texto precisa de lista de sentinelas + rótulos genéricos.
+- **Backfill não deve inventar veredito.** Marcar a cadeia inteira de uma questão errada como `errou` seria falso (tipicamente só 1 elo quebra) e destruiria justamente a métrica que a feature existe para produzir. `indefinido` + curadoria incremental é o caminho honesto.
+- **Dedup por texto exato só funciona se a AUTORIA cooperar.** 1.324 habilidades para 1.336 ocorrências no histórico: prosa sob medida por questão nunca reincide. A regra de autoria (habilidade reutilizável) foi para `/analisar-questao` ETAPA 2 — sem ela a tabela existe e não diz nada.

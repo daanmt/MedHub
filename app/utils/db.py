@@ -684,3 +684,81 @@ def get_ultimo_bloco_tema(area, tema):
         return None
     return round(row[1] / row[0] * 100, 1)
 
+
+
+# --- Ledger de Habilidades (spec ledger-de-habilidades) ---
+# Camada de LEITURA para app/ e agentes. A escrita em massa (backfill) e a
+# curadoria vivem no CLI standalone `tools/habilidades.py`; aqui expomos o que
+# o dashboard e o agente precisam consultar durante a sessão.
+
+VEREDITOS_HABILIDADE = ('acertou', 'incerteza', 'errou', 'indefinido')
+
+
+def get_habilidades_reincidentes(limit=10, min_temas=1):
+    """Habilidades ordenadas por reincidência (DataFrame, read-only).
+
+    `temas_distintos >= 3` separa **padrão de raciocínio** de **lacuna de
+    conteúdo**: a mesma habilidade falhando em temas diferentes não é
+    desconhecer o tema, é desconhecer a habilidade. É a granularidade que a
+    faixa dos 75-80% exige — `weak_areas` continua sendo por tema, esta camada
+    é por habilidade. Devolve DataFrame vazio se o ledger ainda não existir.
+    """
+    conn = get_connection()
+    try:
+        df = pd.read_sql_query(
+            "SELECT h.id AS habilidade_id, h.texto, "
+            "       COUNT(qh.id)               AS ocorrencias, "
+            "       COUNT(DISTINCT qh.tema_id) AS temas_distintos, "
+            "       SUM(CASE WHEN qh.veredito = 'errou'     THEN 1 ELSE 0 END) AS n_errou, "
+            "       SUM(CASE WHEN qh.veredito = 'incerteza' THEN 1 ELSE 0 END) AS n_incerteza "
+            "  FROM habilidades h "
+            "  JOIN questao_habilidades qh ON qh.habilidade_id = h.id "
+            " GROUP BY h.id, h.texto "
+            "HAVING temas_distintos >= ? "
+            " ORDER BY ocorrencias DESC, temas_distintos DESC "
+            " LIMIT ?", conn, params=(int(min_temas), int(limit)))
+    except Exception:
+        return pd.DataFrame(columns=['habilidade_id', 'texto', 'ocorrencias',
+                                     'temas_distintos', 'n_errou', 'n_incerteza'])
+    finally:
+        conn.close()
+    if not df.empty:
+        df['padrao_de_raciocinio'] = df['temas_distintos'] >= 3
+    return df
+
+
+def registrar_habilidade(texto, tema_id=None, veredito='errou', questao_id=None,
+                         origem='agente'):
+    """Registra uma ocorrência de habilidade. NÃO toca `questoes_erros`.
+
+    Existe para o caso que o pipeline de erro não cobre: aprendizado colhido de
+    questão **acertada** (ou acertada com dúvida). Por isso `questao_id` é
+    opcional e nada aqui incrementa erro nem volume.
+    """
+    if veredito not in VEREDITOS_HABILIDADE:
+        raise ValueError("veredito inválido: %r -- válidos: %s"
+                         % (veredito, ', '.join(VEREDITOS_HABILIDADE)))
+    if not texto or not str(texto).strip():
+        raise ValueError("texto da habilidade vazio")
+    import unicodedata
+    _s = unicodedata.normalize('NFKD', str(texto))
+    norm = ' '.join(''.join(c for c in _s if not unicodedata.combining(c)).lower().split())
+    agora = datetime.now().isoformat(timespec='seconds')
+    conn = get_connection()
+    try:
+        cur = conn.cursor()
+        row = cur.execute('SELECT id FROM habilidades WHERE texto_norm = ?',
+                          (norm,)).fetchone()
+        if row:
+            hid = row[0]
+        else:
+            cur.execute('INSERT INTO habilidades (texto, texto_norm, precisa_curadoria, '
+                        'criado_em) VALUES (?, ?, 0, ?)', (str(texto).strip(), norm, agora))
+            hid = cur.lastrowid
+        cur.execute('INSERT INTO questao_habilidades (habilidade_id, questao_id, tema_id, '
+                    'ordem, veredito, origem, criado_em) VALUES (?, ?, ?, 0, ?, ?, ?)',
+                    (hid, questao_id, tema_id, veredito, origem, agora))
+        conn.commit()
+        return hid
+    finally:
+        conn.close()

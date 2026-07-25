@@ -166,10 +166,55 @@ def init_db():
     CREATE INDEX IF NOT EXISTS idx_plano_dia_data ON plano_dia(data)
     ''')
 
+    # --- Ledger de Habilidades (spec ledger-de-habilidades) ---
+    # Promove `questoes_erros.habilidades_sequenciais` (prosa "A -> B -> C") a
+    # entidade consultavel, SEM migrar destrutivamente o campo de origem.
+    # Catalogo normalizado: dedup por texto_norm (lower/strip/sem acento).
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS habilidades (
+        id                INTEGER PRIMARY KEY AUTOINCREMENT,
+        texto             TEXT NOT NULL,
+        texto_norm        TEXT NOT NULL UNIQUE,
+        precisa_curadoria INTEGER NOT NULL DEFAULT 0,
+        criado_em         TEXT NOT NULL
+    )
+    ''')
+    # Ocorrencia da habilidade. questao_id NULLABLE de proposito: habilidade
+    # colhida de questao ACERTADA nao tem erro de origem (mesmo padrao dos
+    # cards de andaime em insert_card_base.py, que nascem com questao_id=NULL).
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS questao_habilidades (
+        id            INTEGER PRIMARY KEY AUTOINCREMENT,
+        habilidade_id INTEGER NOT NULL,
+        questao_id    INTEGER,
+        tema_id       INTEGER,
+        ordem         INTEGER NOT NULL DEFAULT 0,
+        veredito      TEXT NOT NULL DEFAULT 'indefinido',
+        origem        TEXT NOT NULL DEFAULT 'backfill',
+        criado_em     TEXT NOT NULL,
+        FOREIGN KEY (habilidade_id) REFERENCES habilidades(id),
+        FOREIGN KEY (questao_id)    REFERENCES questoes_erros(id),
+        FOREIGN KEY (tema_id)       REFERENCES taxonomia_cronograma(id)
+    )
+    ''')
+    cursor.execute('''
+    CREATE INDEX IF NOT EXISTS idx_qhab_habilidade ON questao_habilidades(habilidade_id)
+    ''')
+    cursor.execute('''
+    CREATE INDEX IF NOT EXISTS idx_qhab_questao ON questao_habilidades(questao_id)
+    ''')
+    # Guarda de idempotencia do backfill: uma habilidade nao se repete na mesma
+    # questao na mesma posicao. Permite reexecutar --backfill sem duplicar.
+    cursor.execute('''
+    CREATE UNIQUE INDEX IF NOT EXISTS idx_qhab_dedup
+        ON questao_habilidades(habilidade_id, questao_id, ordem)
+    ''')
+
     conn.commit()
     conn.close()
     print("Schema criado/atualizado. Tabelas: taxonomia_cronograma, questoes_erros, "
-          "flashcards (v5), fsrs_cards, fsrs_revlog, sessoes_bulk, review_log, plano_dia.")
+          "flashcards (v5), fsrs_cards, fsrs_revlog, sessoes_bulk, review_log, plano_dia, "
+          "habilidades, questao_habilidades.")
 
 if __name__ == "__main__":
     init_db()

@@ -44,6 +44,12 @@ Exemplos de habilidades:
 - Associar duas condições a uma única etiologia
 - Indicar a conduta correta para a condição identificada
 
+🔴 **Escreva a habilidade para ser REUTILIZÁVEL entre questões.** Ela alimenta o **Ledger de Habilidades** (§10), cujo produto é responder *"qual habilidade eu falho em temas diferentes"*. Uma habilidade redigida como frase única daquela questão nunca reincide e não gera sinal.
+- ✅ `Reconhecer enunciado negativo e rotular cada alternativa V/F`
+- ❌ `Reconhecer que nesta questão de 2019 sobre PTI o enunciado pedia a EXCETO`
+- Nunca usar `N/A`, `Diagnóstico`, `Terapêutica`, `Conduta` isolados — são rótulos de categoria, não elos de raciocínio, e o ledger os descarta.
+- **Marque qual habilidade QUEBROU.** Numa cadeia de 4, tipicamente só 1 falhou; as outras 3 o usuário executou bem. Registrar a cadeia toda como erro envenena a métrica.
+
 ### ETAPA 3 — Informações-Chave
 Para cada habilidade, extraia o **conceito central** que a resolve:
 
@@ -224,3 +230,28 @@ python tools/insert_questao.py \
 **Resultado:** Insere em `questoes_erros` + gera 1-2 flashcards IPUB v5.0 com campos estruturados em `flashcards` + inicializa estado FSRS em `fsrs_cards`.
 
 > **Dica PowerShell:** Evitar caracteres especiais (emojis, unicode) nos argumentos CLI — usar apenas ASCII simples. Se o valor contiver aspas, usar apostrofos internos ou escapar com `\"`.
+
+---
+
+## 10. Ledger de Habilidades (`tools/habilidades.py`)
+
+> **Assinatura canônica deste CLI** (AGENTE.md §7.2: a assinatura completa vive em UMA skill). Spec: `.vibeflow/specs/ledger-de-habilidades.md`.
+
+**Por que existe:** na faixa dos 75-80% o gargalo deixa de ser conteúdo e passa a ser **direcionamento**. "Área fraca = Colecistite" é a granularidade dos 60%; nesta faixa a pergunta útil é *qual habilidade eu falho, através de temas diferentes*. O ledger promove `habilidades_sequenciais` (prosa) a entidade consultável, sem migrar o campo de origem.
+
+| Comando | Função |
+|---|---|
+| `--backfill [--dry-run]` | Popula o ledger a partir de `questoes_erros`. **Read-only na origem**, idempotente. |
+| `--report` | Panorama: catálogo, ocorrências, distribuição de vereditos, fila de curadoria. |
+| `--reincidentes [--limit N] [--min-temas N]` | Habilidades por reincidência + nº de temas distintos. |
+| `--add "texto" --area A --tema T [--veredito V] [--questao-id N]` | Registra habilidade avulsa. |
+
+**Vereditos (enum fechado):** `acertou` · `incerteza` · `errou` · `indefinido`. Valor fora do conjunto levanta `ValueError`.
+
+🔴 **`incerteza` é estado de primeira classe.** "Acertei na dúvida" não é acerto — é uma bomba-relógio que a prova detona. Quando o usuário sinalizar hesitação numa questão que acertou, registrar `--veredito incerteza`, não deixar passar como acerto.
+
+🔴 **Questão ACERTADA também rende registro.** Uma questão pode ter a habilidade-alvo correta e ainda expor 2-3 lacunas colaterais que o usuário não percebeu. Hoje esse sinal morreria: `insert_questao.py` só é chamado para questão errada. Use `--add` — ele **não** escreve em `questoes_erros` nem em `sessoes_bulk` (não vira erro nem volume).
+
+🔴 **`temas_distintos >= 3` separa padrão de raciocínio de lacuna de conteúdo.** A mesma habilidade falhando em 3 temas diferentes não é desconhecer os temas — é desconhecer a habilidade. Esses casos são candidatos diretos à família do bug nº 1 e devem ser tratados como tal (playbook de execução de prova), não com mais leitura do tema.
+
+**Fronteira dura:** este CLI escreve **apenas** em `habilidades` e `questao_habilidades`. Nunca toca FSRS, `flashcards`, `questoes_erros` ou `sessoes_bulk`.

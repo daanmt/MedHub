@@ -723,3 +723,24 @@ Uma "receita" para achar a causa da dispneia aguda em **< 3 min**, examinando **
 - 🔴 **Tuberculose é a principal causa de hemoptise em países em desenvolvimento** (no Brasil, suspeitar sempre).
 - 🔴 **POCUS no TEP: parênquima normal (perfil A com deslizamento preservado)** -- o diagnóstico vem indireto (VCI dilatada, sobrecarga de VD, TVP), não de alteração pulmonar direta.
 - 🔴 **Linhas B = padrão intersticial (edema/SDRA)**; **ausência de deslizamento pleural + código de barras + lung point = pneumotórax**.
+
+### Leitura das curvas do ventilador -- o sistema de identificação ⭐⭐
+
+Antes de interpretar qualquer gráfico, identifique **qual curva é qual** pela relação com a linha de base. É mecânico e resolve metade das questões de tela de ventilador:
+
+- **NÃO toca a linha de base -> curva de PRESSÃO.** Ela nunca zera porque existe PEEP.
+- **CRUZA a linha de base -> curva de FLUXO.** É a única com componente positivo (inspiratório) e negativo (expiratório).
+- **TOCA a linha de base -> curva de VOLUME.** Sobe na inspiração, volta a zero na expiração.
+
+- 🔴 **Assistido x controlado -- a regra é numérica, não gráfica:** se a **frequência respiratória AFERIDA pelo ventilador for maior que a PROGRAMADA**, o paciente está disparando ciclos, logo a ventilação é **assistida**. Programada 25 e aferida 30 = assistida, não controlada. Não tente adivinhar isso pela curva de pressão.
+- 🔴 **VCV x PCV -- pelo formato do FLUXO:** fluxo em **onda quadrada** = limitado a **VOLUME** (fluxo fixo imposto). Fluxo **livre/desacelerado** = limitado a **PRESSÃO** (o ventilador entrega o que for preciso para atingir a pressão alvo e mantém). PSV apareceria rotulado "PSV" no monitor e teria ciclos espontâneos ciclados a fluxo.
+- 🔴 **Aprisionamento aéreo x duplo disparo (confundíveis na tela):** no **aprisionamento**, o fluxo expiratório não zera antes do novo ciclo E a PEEP medida em pausa expiratória excede a programada. No **duplo disparo**, há **dois ciclos consecutivos SEM intervalo entre eles**, disparados pelo mesmo esforço -- o tempo inspiratório mecânico é menor que o tempo inspiratório neural do paciente.
+- **Vazamento de circuito:** a curva de **volume não retorna à linha de base** (volume expirado menor que o inspirado), podendo gerar autodisparo. **Líquido no circuito:** trepidação de baixa amplitude na curva de pressão.
+
+### Ventilação do paciente OBSTRUTIVO (asma/DPOC) -- hipoventilação controlada ⭐⭐
+
+- 🔴 **Começa-se com frequência respiratória BAIXA e volume corrente BAIXO -- não é correção, é ajuste inicial.** Parece contraintuitivo num paciente que está retendo CO2, e é exatamente por isso que cai em prova: a resistência alta exige **tempo expiratório longo**, e ventilar mais rápido ou com volume maior só aumenta o aprisionamento, gerando auto-PEEP, assincronia e piora da retenção. Conforme o broncoespasmo cede, sobe-se o volume-minuto.
+- 🔴 **Fluxo inspiratório BAIXO no obstrutivo.** Fluxo alto empurra ar numa via aérea estreitada e dispara a pressão de pico, sem tempo de acomodação. A intuição de "fluxo alto para reduzir pico" está invertida.
+- 🔴 **PEEP alta é para recrutar alvéolo colapsado (SDRA, congestão), NUNCA para aprisionamento aéreo.** No obstrutivo, PEEP excessiva agrava assincronia e retenção de CO2. Confundir as duas indicações é o erro clássico: contra auto-PEEP a ordem é reduzir FR/VC, depois reduzir tempo inspiratório.
+- 🔴 **FiO2 alvo abaixo de 0,6 como parâmetro sustentado.** Os 100% do pós-IOT imediato são ponte de segundos; manter 90-100% causa toxicidade por espécies reativas e **atelectasia de absorção** (denitrogenização alveolar).
+- **Rebaixamento de consciência no asmático grave = carbonarcose** (retenção aguda de CO2), indicação de via aérea definitiva.

@@ -160,11 +160,16 @@ def test_get_ritmo_real_janela():
                     "questoes_acertadas, data_sessao) VALUES "
                     "(1, 'Cirurgia', 60, 44, date('now', '-1 day')),"
                     "(2, 'Pediatria', 40, 30, date('now', '-5 day')),"
-                    "(3, 'Simulado', 90, 60, date('now', '-2 day')),"     # Simulado nao conta
+                    "(3, 'Simulado', 90, 60, date('now', '-2 day')),"     # s126: Simulado CONTA
                     "(4, 'Cirurgia', 100, 70, date('now', '-30 day'))")   # fora da janela
         con.commit()
         con.close()
-        assert db.get_ritmo_real(14) == round(100 / 14, 1), "soma so a janela, sem Simulado"
+        # s126 (reverte s099): simulado e volume real -- do 2o ciclo em diante a preparacao
+        # UERJ/USP e feita de prova antiga/simulado, e exclui-lo zeraria o ritmo medido.
+        assert db.get_ritmo_real(14) == round(190 / 14, 1), "soma a janela, COM Simulado"
+        # o escopo grade-only continua disponivel para medir o avanco do cronograma
+        assert db.get_ritmo_real(14, incluir_simulado=False) == round(100 / 14, 1), \
+            "incluir_simulado=False volta ao comportamento grade-only"
     finally:
         db.DB_PATH = orig
         os.remove(tmp)

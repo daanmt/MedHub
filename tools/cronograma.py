@@ -560,7 +560,9 @@ def main():
         import app.utils.db as db
         from performance import get_totais
         con = db.get_connection()
-        tot, _ = get_totais(con)
+        # escopo 'cronograma': o gap mede o avanço da GRADE, então exclui o bloco de simulado
+        # (que desde a s126 conta no volume total, mas não empurra o cronograma).
+        tot, _ = get_totais(con, escopo="cronograma")
         con.close()
         print(json.dumps(gap_volume(load_grade(), tot or 0, args.meta, args.desde),
                          ensure_ascii=False, indent=2))

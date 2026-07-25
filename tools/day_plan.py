@@ -55,11 +55,20 @@ def _fsrs_counts(con):
     }
 
 
-META_PROVA = 10000   # meta-prova ENAMED (decisão s093/ESTADO); 12k = teto/stretch
+# s126 -- virada multi-banca: a meta de volume deixa de ser "10k até o ENAMED" e passa a ser
+# o 2o ciclo (UERJ/USP). Nomes e números vêm de performance.MARCOS, fonte única.
+META_CICLO, DATA_CICLO = MARCOS[1][1], MARCOS[1][2]   # 12.500 @ 31/12/2026
+
+
+def DIAS_ATE_CICLO(hoje):
+    return (DATA_CICLO - hoje).days
+
 
 # Política de teto dinâmico (F4 -- decisão do operador 2026-07-05).
 # Norma: core/contracts/fsrs-management-contract.md §Teto dinâmico.
-TETO_BASE = 30            # cards/dia fora do regime de dívida
+# s126: teto sobe 30 -> 40 (usuário pediu "flashcards mais frequentes" ao trocar o regime de
+# sprint pelo de constância; as questões caem de ~96 para ~55/dia e a folga vai pros cards).
+TETO_BASE = 40            # cards/dia fora do regime de dívida
 CAP_MULTIPLICADOR = 2     # teto_efetivo nunca excede CAP_MULTIPLICADOR * TETO_BASE
 
 # Recomendador do dia (PRD orquestracao part-2).
@@ -189,6 +198,17 @@ def _cronograma_hoje(total_q, hoje):
     dias = (enamed - hoje).days  # dias de estudo: hoje inclusive, dia da prova exclusivo
     restante = sum(s["total_questoes"] for s in grade["semanas"] if s["semana"] >= conteudo)
 
+    # s126 -- BUG corrigido: ritmo_cronograma dividia a grade INTEIRA pelos dias até o ENAMED,
+    # misturando duas escalas de tempo. A grade tem calendário próprio e fecha ~6 semanas DEPOIS
+    # da prova (S30 termina 25/10), então o divisor certo é o fim da grade, não a data do ENAMED.
+    # Era isso que produzia o ritmo-alvo fictício de ~116q/dia.
+    fim_grade = max((s.get("fim") or "") for s in grade["semanas"])
+    try:
+        dias_grade = (date.fromisoformat(fim_grade) - hoje).days
+    except (ValueError, TypeError):
+        dias_grade = dias
+    dias_grade = max(dias_grade, 1)
+
     # W8: fronteira REAL de conclusão (xlsx riscado) em vez de só posição calendário.
     # Sem snapshot fresco -> degradação graciosa pro comportamento antigo (lista a semana
     # inteira) + sinaliza conclusao_desatualizada pro render() avisar (nunca falha silente).
@@ -218,9 +238,12 @@ def _cronograma_hoje(total_q, hoje):
         "drive_sync_data": drive_data,
         "drive_sync_dias": drive_dias,
         "dias_enamed": dias,
+        "dias_grade": dias_grade,
+        "fim_grade": fim_grade or None,
         "restante_q": restante,
-        "ritmo_cronograma": round(restante / dias, 1) if dias > 0 else None,
-        "ritmo_meta": round(max(0, META_PROVA - total_q) / dias, 1) if dias > 0 else None,
+        "ritmo_cronograma": round(restante / dias_grade, 1),
+        "ritmo_meta": round(max(0, META_CICLO - total_q) / DIAS_ATE_CICLO(hoje), 1)
+                      if DIAS_ATE_CICLO(hoje) > 0 else None,
     }
 
 
@@ -451,7 +474,10 @@ def recomendar_dia(sinais, tempo_h=None, energia=None):
     fator = FATOR_ENERGIA.get(energia, FATOR_ENERGIA[ENERGIA_DEFAULT])
     capacidade_q = int(tempo_h * QUESTOES_POR_HORA * fator)
 
-    dias = sinais.get("dias_enamed") or 0
+    # s126: o ritmo necessário da GRADE mede-se contra o fim da grade (~25/10), não contra a
+    # data do ENAMED -- a grade fecha ~6 semanas depois da prova. Usar dias_enamed aqui era o
+    # que inflava o "necessário" para ~116q/dia. Fallback p/ dias_enamed se o sinal faltar.
+    dias = sinais.get("dias_grade") or sinais.get("dias_enamed") or 0
     restante = sinais.get("restante_grade_q") or 0
     ritmo_real = sinais.get("ritmo_real") or 0.0
     ritmo_nec = round(restante / dias, 1) if dias > 0 else None
@@ -542,9 +568,9 @@ def build(tempo_h=None, energia=None):
     q_mes = get_questoes_do_mes(con, hoje.strftime("%Y-%m"))
     q_hoje = con.cursor().execute(
         "SELECT COALESCE(SUM(questoes_feitas),0) FROM sessoes_bulk "
-        "WHERE area <> 'Simulado' AND data_sessao = ?",  # s099: simulado não conta como feita
+        "WHERE data_sessao = ?",  # s126: simulado CONTA no volume (reverte s099)
         (hoje.isoformat(),)).fetchone()[0]
-    _nome, alvo, data_marco = MARCOS[0]            # ENAMED meta-prova 10000 @ 13/09/2026
+    nome_marco, alvo, data_marco = MARCOS[0]       # s126: grade EMED completa @ 25/10/2026
     faltam = max(0, alvo - (total_q or 0))
     dias = (data_marco - hoje).days  # hoje inclusive, dia da prova exclusivo
     ritmo_alvo = round(faltam / dias, 1) if dias > 0 else None
@@ -577,6 +603,7 @@ def build(tempo_h=None, energia=None):
         frescos = []
     sinais = {
         "dias_enamed": (cron or {}).get("dias_enamed") or dias,
+        "dias_grade": (cron or {}).get("dias_grade") or dias,
         "restante_grade_q": (cron or {}).get("restante_q") or 0,
         "ritmo_real": ritmo_real,
         "vencidos": vencidos,
@@ -596,6 +623,7 @@ def build(tempo_h=None, energia=None):
             "hoje": q_hoje or 0, "mes": q_mes or 0,
             "alvo_enamed": alvo, "faltam": faltam,
             "dias_ate_marco": dias, "ritmo_alvo": ritmo_alvo,
+            "marco": nome_marco,   # s126: rótulo vem do MARCOS[0], não mais "ENAMED" fixo
         },
         "fsrs": fsrs,
         "divida": {
@@ -705,7 +733,7 @@ def render_handoff_block(p):
     linhas = [
         f"- **Volume & Metas:** {v['total']} / {v['alvo_enamed']} (perf. ~{perf}%). "
         f"Hoje: {v['hoje']}. Ritmo-alvo ~{v['ritmo_alvo']}q/dia "
-        f"({v['dias_ate_marco']}d p/ ENAMED).",
+        f"({v['dias_ate_marco']}d p/ {v.get('marco', 'marco')}).",
         f"- **FSRS:** divida {t['divida']} atrasados + {t['hoje']} p/ hoje "
         f"-- pool {t['pool']} nunca introduzidos (entram <={t['teto']}/dia).",
     ]
@@ -732,7 +760,8 @@ def render(p):
         out.append(f"- 🌡️ **Refrescar (dormente):** {d['tema']} ({d['area']} · "
                    f"{d['dias_sem_revisar']}d sem rever · {d['n_cards']} cards · {d.get('perf') or '—'}%)")
     out.append(f"- 📊 **Volume:** {v['total']} acum. · hoje {v['hoje']} · faltam {v['faltam']} "
-               f"p/ ENAMED em {v['dias_ate_marco']}d → ritmo-alvo ~{v['ritmo_alvo']}q/dia")
+               f"p/ {v.get('marco', 'marco')} em {v['dias_ate_marco']}d "
+               f"→ ritmo-alvo ~{v['ritmo_alvo']}q/dia (~{round(v['ritmo_alvo'] * 7 / 6)}q em 6 dias/sem)")
     t = telemetria_fila(f, p["divida"])
     out.append(f"- 🔁 **FSRS:** dívida {t['divida']} atrasados + {t['hoje']} p/ hoje "
                f"· pool {t['pool']} nunca introduzidos (entram <={t['teto']}/dia)")
@@ -765,8 +794,9 @@ def render(p):
             out.append(f"    • Drive sincronizado: {c.get('drive_sync_data') or '—'}")
         if c["temas"]:
             out.append(f"    • próximos temas: {', '.join(c.get('temas_material', c['temas']))}")
-        out.append(f"    • ritmos-alvo: terminar a grade ~{c['ritmo_cronograma']}/dia · "
-                   f"meta-prova {META_PROVA // 1000}k ~{c['ritmo_meta']}/dia ({c['dias_enamed']}d p/ ENAMED)")
+        out.append(f"    • ritmos-alvo: fechar a grade ~{c['ritmo_cronograma']}/dia "
+                   f"(até {c.get('fim_grade') or '?'}) · 2o ciclo {META_CICLO // 1000}k "
+                   f"~{c['ritmo_meta']}/dia · ENAMED em {c['dias_enamed']}d (sem alvo de volume)")
     elif p.get("cronograma_hint"):
         out.append(f"- 🧭 **Cronograma:** {p['cronograma_hint'][:120]}")
     r = p.get("recomendacao")

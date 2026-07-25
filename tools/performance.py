@@ -24,27 +24,40 @@ from datetime import date, datetime
 
 DB_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'ipub.db')
 
-# Slot agregado de simulado (s098): sinal da predição ENAMED, NÃO volume.
-# Decisão s099: simulado não conta como questão "feita" (não polui cronograma/meta).
-# Os erros do simulado viram flashcards nos temas reais; a linha fica em sessoes_bulk
-# apenas como ponto da série de predição. Toda agregação de volume exclui esta área.
+# Slot agregado de simulado (s098). Historico: a s099 decidiu que simulado NAO era volume.
+# 🔄 REVERTIDO na s126 -- a partir do 2o ciclo (UERJ/USP) a preparacao e feita majoritariamente
+# de provas antigas e simulados; exclui-los zeraria a contabilidade da Fase 2. Agora simulado
+# CONTA no volume total e a separacao pedida pelo usuario e de APRESENTACAO (bloco dedicado),
+# nao de contagem. O escopo 'cronograma' segue excluindo, para nao poluir o avanco da grade.
+# Os erros do simulado continuam virando flashcards nos temas clinicos reais (sem dupla contagem).
 AREA_SIMULADO = "Simulado"
 _EXCLUI_SIMULADO = f"area <> '{AREA_SIMULADO}'"
+_SO_SIMULADO = f"area = '{AREA_SIMULADO}'"
 
-# Meta final coerente com ESTADO.md (reconcile s084): R$ 4.410 / 17.000q = R$ 0,26/q em dez/2026.
-META_CUSTO_Q = 0.26
 
-# Ramp oficial pos-reconcile s084 (= Dashboard EMED 2026): mai 3.000 -> dez 17.000.
-# investimento e ACUMULADO (+R$ 210/mes). Confirmado contra a aba mensal da planilha.
+def _filtro_escopo(escopo):
+    """'total' = tudo (volume oficial) | 'cronograma' = so a grade | 'simulado' = so o bloco."""
+    return {"total": "1=1", "cronograma": _EXCLUI_SIMULADO, "simulado": _SO_SIMULADO}[escopo]
+
+
+# Custo-alvo recalibrado na s126: R$ 4.410 / 12.500q = R$ 0,35/q em dez/2026.
+# (era 0,26 sobre o ramp de 17.000, aposentado junto com o regime de sprint.)
+META_CUSTO_Q = 0.35
+
+# Ramp s126 -- regime de CONSTANCIA (multi-banca ENAMED + UERJ/USP), substitui o ramp de sprint
+# que ia a 17.000 em dez. Base: ~55q/dia em 6 dias/semana (~330/semana). mai/jun sao historicos.
+# O 12.500 nao e arbitrario: e a soma do proprio plano (5.191 em 25/07 + 4.263 de cronograma
+# + ~300 de simulados ENAMED + ~2.700 de banca UERJ/USP). 15.000 fica como stretch, nao como meta.
+# investimento e ACUMULADO (+R$ 210/mes) -- inalterado, e gasto real, nao alvo.
 METAS_MENSAIS = {
     "2026-05": {"meta_acumulada": 3000,  "investimento": 2940.00},
     "2026-06": {"meta_acumulada": 4500,  "investimento": 3150.00},
-    "2026-07": {"meta_acumulada": 6250,  "investimento": 3360.00},
-    "2026-08": {"meta_acumulada": 8000,  "investimento": 3570.00},
-    "2026-09": {"meta_acumulada": 10000, "investimento": 3780.00},
-    "2026-10": {"meta_acumulada": 12500, "investimento": 3990.00},
-    "2026-11": {"meta_acumulada": 15000, "investimento": 4200.00},
-    "2026-12": {"meta_acumulada": 17000, "investimento": 4410.00},
+    "2026-07": {"meta_acumulada": 5500,  "investimento": 3360.00},
+    "2026-08": {"meta_acumulada": 7000,  "investimento": 3570.00},
+    "2026-09": {"meta_acumulada": 8300,  "investimento": 3780.00},
+    "2026-10": {"meta_acumulada": 9600,  "investimento": 3990.00},
+    "2026-11": {"meta_acumulada": 11000, "investimento": 4200.00},
+    "2026-12": {"meta_acumulada": 12500, "investimento": 4410.00},
 }
 
 # Faixas: (limite_superior_exclusivo, emoji, rotulo)
@@ -69,19 +82,29 @@ AREAS_VALIDAS = [
 # Recalibração s093/099 (docs/plans/s094-ultraplan.md + ESTADO.md): meta-prova = 10.000,
 # 12.000 vira teto/stretch. Gatilho de reavaliação em S13 (~12/07): acumulo >=5.600 -> volta
 # a 12.000 como meta; <5.200 -> confirma 10.000. Ambos os marcos seguem expostos até lá.
+# 🔄 Recalibracao s126 (virada multi-banca). Os marcos de ENAMED por VOLUME foram removidos:
+# a grade do EMED tem 30 semanas e fecha ~25/10, ~6 semanas DEPOIS da prova de 13/09 -- perseguir
+# 10.000 ate 13/09 comprimia 13 semanas de grade em 50 dias e produzia o ritmo-alvo ficticio de
+# ~96q/dia. O ENAMED continua sendo prestado; so nao e mais uma corrida de volume.
+# MARCOS[0] dirige o ritmo-alvo do day_plan -- troca-lo muda a pressao diaria reportada.
+ENAMED_DATA = date(2026, 9, 13)      # prova (referencia de calendario, nao alvo de volume)
 MARCOS = [
-    ("ENAMED (meta-prova)", 10000, date(2026, 9, 13)),
-    ("ENAMED (teto/stretch)", 12000, date(2026, 9, 13)),
-    ("Plano dez/2026 (2o ciclo: UERJ/USP)", 17000, None),
+    ("Cronograma EMED (grade completa)", 9454, date(2026, 10, 25)),
+    ("2o ciclo UERJ/USP", 12500, date(2026, 12, 31)),
+    ("Stretch dez/2026", 15000, None),
 ]
 
 # Ritmos diários usados nas projeções dos marcos datados (q/dia).
-RITMOS_PROJECAO = (80, 90, 100)
+# s126: rebaixados de (80,90,100) -- o regime de constância opera em 40-70, não em 80-100.
+RITMOS_PROJECAO = (40, 55, 70)
 
 
-def get_totais(conn):
+def get_totais(conn, escopo="total"):
+    """(questoes_feitas, acertadas). escopo: 'total' (volume oficial, INCLUI simulado -- s126)
+    | 'cronograma' (só a grade EMED) | 'simulado' (só o bloco dedicado)."""
     cur = conn.cursor()
-    cur.execute(f"SELECT SUM(questoes_feitas), SUM(questoes_acertadas) FROM sessoes_bulk WHERE {_EXCLUI_SIMULADO}")
+    cur.execute("SELECT SUM(questoes_feitas), SUM(questoes_acertadas) FROM sessoes_bulk "
+                "WHERE " + _filtro_escopo(escopo))
     row = cur.fetchone()
     total_q = row[0] or 0
     total_a = row[1] or 0
@@ -105,10 +128,13 @@ def get_por_area(conn):
     return resultado
 
 
-def get_questoes_do_mes(conn, mes_yyyy_mm):
+def get_questoes_do_mes(conn, mes_yyyy_mm, escopo="total"):
+    """Volume do mês. Default 'total' -- a meta mensal (METAS_MENSAIS) é de volume oficial,
+    e desde a s126 simulado conta nele."""
     cur = conn.cursor()
     cur.execute(
-        f"SELECT SUM(questoes_feitas) FROM sessoes_bulk WHERE {_EXCLUI_SIMULADO} AND strftime('%Y-%m', data_sessao) = ?",
+        "SELECT SUM(questoes_feitas) FROM sessoes_bulk WHERE " + _filtro_escopo(escopo)
+        + " AND strftime('%Y-%m', data_sessao) = ?",
         (mes_yyyy_mm,),
     )
     row = cur.fetchone()

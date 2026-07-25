@@ -79,14 +79,17 @@ def get_semana_conteudo():
         return None
 
 
-def get_ritmo_real(janela_dias=14):
+def get_ritmo_real(janela_dias=14, incluir_simulado=True):
     """Ritmo real de questões (q/dia) na janela móvel, de sessoes_bulk.
-    Simulado não conta como questão feita (decisão s099)."""
+    s126: simulado passa a CONTAR (reverte s099) -- é volume real e, do 2o ciclo em diante,
+    a maior parte do estudo é prova antiga/simulado. Passe incluir_simulado=False para medir
+    só o avanço da grade EMED."""
+    filtro = "" if incluir_simulado else "area <> 'Simulado' AND "
     conn = get_connection()
     try:
         row = conn.execute(
             "SELECT COALESCE(SUM(questoes_feitas), 0) FROM sessoes_bulk "
-            "WHERE area <> 'Simulado' AND data_sessao >= date('now', ?)",
+            "WHERE " + filtro + "data_sessao >= date('now', ?)",
             ("-%d day" % int(janela_dias),)).fetchone()
     finally:
         conn.close()

@@ -422,3 +422,18 @@ Tratamento:
 - 🔴 **Diagnóstico Diferencial em Cardiopatias Congênitas:** Sempre correlacionar o quadro clínico com os achados de exame físico e complementar para excluir diagnósticos diferenciais graves antes de definir a conduta terapêutica.
 - ⭐ **Padrão de Prova:** Atenção aos gatilhos epidemiológicos e faixas etárias clássicas, pois as bancas frequentemente utilizam a idade e a cronologia dos sintomas para guiar o diagnóstico correto em Cardiopatias Congênitas.
 - ⚠️ **Atenção nas dosagens e contraindicações:** Verificar sempre a função renal e hepática antes de introduzir esquemas farmacológicos invasivos ou solicitar exames contrastados.
+
+### A matriz de dois eixos: fluxo no RX x idade da descompensação ⭐⭐
+
+A cianótica não se resolve decorando cardiopatia por cardiopatia. Cruzam-se **dois eixos** e cada casa fica com poucos candidatos:
+
+- **Hipofluxo + horas a dias de vida** (canal fechando) -> **atresia pulmonar**, **atresia tricúspide**.
+- **Hipofluxo + 2 a 6 meses** (obstrução progressiva) -> **Tetralogia de Fallot**.
+- **Hiperfluxo + horas a dias de vida** -> **hipoplasia do coração esquerdo (HCE)**, **TGA**, **drenagem anômala total de veias pulmonares**.
+- **Hiperfluxo + meses, sem cianose** (shunt E->D) -> CIV grande, PCA, DSAV: dão **ICC**, não cianose.
+
+- 🔴 **HCE x T4F -- o RX é o discriminador, não o ECG.** As duas dão HVD, sobrecarga de AD e desvio do eixo à direita no ECG. O que separa: a **HCE dá HIPERfluxo e descompensa no 2º-3º dia** (quando o canal fecha, e todo o débito sistêmico dependia dele); a **T4F dá HIPOfluxo e se manifesta aos 2-6 meses**. Ler o ECG e pular o RX leva direto ao erro.
+- 🔴 **A HVD tem DUAS origens distintas -- não confundir os mecanismos:** na **T4F** é sobrecarga de **pressão** contra a estenose pulmonar infundibular, e o **VE é NORMAL**; na **HCE** o VD é o ventrículo **sistêmico** (faz o trabalho dos dois), e é o **VE** que não se desenvolveu. Atribuir a HVD da Tetralogia a um "VE hipoplásico" mistura as duas doenças.
+- 🔴 **Cianose exige shunt D->E, não basta obstrução.** É por isso que a **estenose pulmonar valvar isolada NÃO cianosa** (sem CIV, o sangue represa no VD mas não alcança a aorta) enquanto a **T4F cianosa** com sopro pulmonar parecido. A **CIV é o componente essencial** da cianose -- o sopro é igual nas duas, ele não discrimina nada.
+- 🔴 **Os 4 componentes da T4F:** CIV + estenose/obstrução infundibular da via de saída do VD + aorta cavalgando a CIV + **hipertrofia do VD**. O quarto item é hipertrofia, nunca hipoplasia.
+- ⭐ **A idade é o discriminador mais barato da prova.** Cianótica de hipofluxo que abre nos primeiros dias é canal-dependente (AP/AT); a que abre em meses, com crises ao choro, é T4F. Antes de comparar sopros, pergunte a idade.

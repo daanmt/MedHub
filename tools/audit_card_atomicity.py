@@ -32,6 +32,19 @@ qual doi E qual tem adenite?" = 2 criterios -> defeito real. "Cancro mole x
 donovanose: qual das duas doi e cursa com adenite?" = 1 criterio (a resposta e
 uma so) -> legitimo, ainda que o regex acuse.
 
+Classes de falso-positivo ja mapeadas (todas com o mesmo desempate acima):
+  1. card discriminador   -- "A x B: qual das duas ...?"
+  2. copula sem acento    -- "Qual e a unica vacina ...?"  [guarda automatica]
+  3. par 'entre X e Y'    -- "intervalo entre a transfusao e a vacina"  [guarda automatica]
+  4. objetos da MESMA resposta -- "Qual exame define o diagnostico e o prognostico?"
+     (a resposta e um exame so). SEM guarda automatica: a assinatura sintatica e
+     identica a de uma segunda demanda real, entao exige olho humano. Libere item
+     a item via `--permitir-atomicidade` do apply_reforja.py.
+
+As guardas 2 e 3 nasceram de auditar a propria worklist (s128) -- o corpus grava
+sem acento por convencao, o que colapsa a copula "e" e a conjuncao "e" na mesma
+letra. Sem elas o detector superestimava em ~8% (220 -> 203 cards de duplo-ask).
+
 Uso standalone: python tools/audit_card_atomicity.py [--json] [--limit N]
 Uso pelo harness: from audit_card_atomicity import run_checks
 """
@@ -75,6 +88,18 @@ RE_INTERROGATIVO = re.compile(
 RE_E_ARTIGO_NUCLEO = re.compile(
     r"\be\s+(a|o|as|os)\s+[a-zà-ÿ]{4,}", re.IGNORECASE)
 
+# 🔴 DOIS GUARDAS DE PRECISAO (s128, achados ao auditar a propria worklist).
+# O corpus grava sem acento (convencao da secao 4.5), o que colapsa dois 'e'
+# distintos numa mesma letra -- sem estes guardas o detector superestima:
+#   (a) COPULA: "Qual e a unica vacina ...?" e "qual E a", nao "qual E(conj) a".
+#       Assinatura: interrogativo IMEDIATAMENTE antes do 'e'.
+#   (b) CONSTRUCAO 'ENTRE X E Y': "intervalo entre a transfusao e a vacina",
+#       "entre RN e adulto" -- o 'e' fecha um par, nao abre uma 2a demanda.
+RE_COPULA = re.compile(
+    r"\b(qual|quais|quando|onde|como|quanto[as]?|quem|que)\s+e\s+(a|o|as|os)\b",
+    re.IGNORECASE)
+RE_ENTRE = re.compile(r"\bentre\b", re.IGNORECASE)
+
 # --- resposta-multifato ----------------------------------------------------
 LIMITE_CHARS = 220          # acima disso ja nao e "uma frase"
 LIMITE_FRASES = 3           # 3+ terminadores = paragrafo
@@ -98,8 +123,16 @@ def checar_front(txt):
         return "duplo-ask/duas-interrogacoes"
     if RE_DUPLO_ASK.search(txt):
         return "duplo-ask/conectivo"
-    if RE_INTERROGATIVO.search(txt) and RE_E_ARTIGO_NUCLEO.search(txt):
-        return "duplo-ask/segundo-nucleo"
+    if RE_INTERROGATIVO.search(txt):
+        for m in RE_E_ARTIGO_NUCLEO.finditer(txt):
+            trecho_antes = txt[:m.start()]
+            # guarda (a): o 'e' e copula ("qual e a ...") -> nao e 2a demanda.
+            if RE_COPULA.search(txt[max(0, m.start() - 24):m.end()]):
+                continue
+            # guarda (b): 'entre X e Y' fecha um par -> nao e 2a demanda.
+            if RE_ENTRE.search(trecho_antes):
+                continue
+            return "duplo-ask/segundo-nucleo"
     return None
 
 

@@ -561,10 +561,19 @@ relates_to: [AGENTE, ESTADO, HANDOFF]
   requisitos de acerto, e focassem no nucleo epistemologico do erro"*. Ele percebeu ao vivo que a
   frente que ele via era comprimida enquanto o verso (que so o agente lia) trazia exigencias extras,
   pelas quais estava sendo descontado.
-- **Evidencia (medida, nao estimada):** `tools/audit_card_atomicity.py` (criado nesta sessao) acusa
-  **358 de ~900 cards ativos (~40%)**: 227 com **duplo-ask** (a frente cobra duas respostas) e 259
-  com **resposta-multifato** (verso em paragrafo, viola a regra 3 do formato atomico); 122 com ambos.
+- **Evidencia (medida, nao estimada):** `tools/audit_card_atomicity.py` (criado nesta sessao) acusou
+  **364 cards**: 220 com **duplo-ask** (a frente cobra duas respostas) e 259 com
+  **resposta-multifato** (verso em paragrafo, viola a regra 3 do formato atomico); 122 com ambos.
   Temas mais afetados: Cirurgia Infantil (40), Hemostasia I (29), Cardiopatias Congenitas (21).
+- 🔴 **DUAS CORRECOES DE MEDIDA feitas na propria sessao (registrar, para nao repetir):**
+  1. **Denominador errado no 1o relato.** Reportei "~40% de ~900 cards ativos". Os ~900 eram o TOTAL
+     da tabela; **230 cards estao aposentados** (`needs_qualitative >= 2`) e o detector nunca os le.
+     A base ativa era ~678 -> a taxa real era **~54%**, nao 40%. O problema era pior do que o relato.
+  2. **Dois bugs de precisao no proprio detector.** O corpus grava sem acento (secao 4.5), o que
+     colapsa a copula "e" e a conjuncao "e" na mesma letra: `"Qual e a unica vacina ...?"` casava
+     como duplo-ask. Idem a construcao `"entre X e Y"`. Dois guardas + teste de regressao derrubaram
+     **220 -> 203** cards de duplo-ask (~8% era falso-positivo). Ambos os bugs so apareceram ao
+     **auditar a propria worklist item a item** -- nao ao escrever o detector.
 - **Leitura de sistema -- por que e ALTA e nao cosmetica:** um card com 2 criterios de acerto admite
   "acertei metade", e **a nota FSRS deixa de significar alguma coisa**. Nota 2 num card duplo nao
   distingue "sabe metade" de "nao sabe nada", e o agendamento passa a mentir sobre a curva. O defeito
@@ -578,10 +587,28 @@ relates_to: [AGENTE, ESTADO, HANDOFF]
   "UM CRITERIO DE ACERTO por card" em `estilo-flashcard.md` + espelho sincronizado; **8 cards
   atomizados** (370, 372, 406, 407, 408, 447, 456, 457 reescritos in-place com FSRS preservado +
   12 desmembramentos via `insert_card_extra`).
-- **Aberto:** **~350 cards** na worklist. Ordem de ataque proposta: (1) os 227 de duplo-ask primeiro
-  -- sao os que corrompem a nota; (2) os 137 que so tem resposta-multifato depois -- degradam
-  retencao, nao a medida. Nao fazer big-bang: lotes por tema, priorizando os temas que aparecem na
-  fila FSRS dos proximos dias.
+- **Onda 2 (mesma sessao, 4 subagentes em paralelo -- pedido do usuario):** 91 cards dos temas mais
+  contaminados (Hemostasia I, Cardiopatias, Cirurgia Infantil, Quadril Pediatrico, Polipos,
+  Vulvovaginites, Arboviroses, Meningites, Imunizacoes) reescritos in-place + **109 splits**.
+  **Arquitetura que tornou isso seguro: os agentes AUTORAM (db em `mode=ro`), o orquestrador
+  PERSISTE.** Uma unica mao escrevendo -> zero contencao de lock no SQLite e um so ponto de gate.
+  - Gate de aplicacao novo: `tools/apply_reforja.py` -- valida schema + encoding + **atomicidade do
+    conteudo PROPOSTO** (o remedio auditado pelo criterio que diagnosticou a doenca), all-or-nothing,
+    dry-run por default. Pegou 1 card que os agentes deixaram passar ("Coombs positivo ou negativo
+    **e por que**") e 4 falso-positivos que exigiram olho humano.
+  - Os agentes fizeram **triagem honesta**: o grupo B classificou 8 dos seus 23 como falso-positivo
+    e os manteve quase intactos, em vez de inventar defeito para cumprir tarefa.
+- **Estado:** de **364 -> 264 cards afetados**; duplo-ask **220 -> 125**. Base ativa 787 (34%).
+  A queda tem tres componentes distintos, nao confundir: **91 consertos reais**, **~17 falso-positivos
+  eliminados** pelos guardas do detector, e **diluicao** (109 cards novos, atomicos por construcao,
+  engordam o denominador).
+- **Aberto:** **264 cards**. Ordem: (1) os **125 de duplo-ask** -- sao os que corrompem a nota;
+  (2) os ~139 so-multifato depois -- degradam retencao, nao a medida. Lotes por tema, priorizando
+  os que caem na fila FSRS dos proximos dias. Nunca big-bang.
+- 🔴 **Custo colateral a monitorar:** a onda cunhou 109 cards novos, todos entrando no pool
+  (`state=0`), que foi de 383 para ~684. Com teto de 40/dia isso e divida de consolidacao, nao
+  ativo -- **escalonar o intake priorizando os temas fracos**, sob pena de trocar um problema de
+  qualidade por um de volume.
 
 ---
 

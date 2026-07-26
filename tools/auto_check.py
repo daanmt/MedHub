@@ -237,7 +237,7 @@ def main():
                 if fp in ("tools/insert_questao.py", "tools/insert_card_base.py",
                           "tools/card_self_sufficiency.py", "tools/test_card_self_sufficiency.py",
                           "tools/audit_flashcard_quality.py", "tools/audit_card_atomicity.py",
-                          "tools/insert_card_extra.py",
+                          "tools/insert_card_extra.py", "tools/apply_reforja.py",
                           ".claude/commands/estilo-flashcard.md"):
                     card_relevant = True
                 path_obj = ROOT_DIR / f

@@ -5,7 +5,13 @@
 
 1. 🎯 **SIMULADO ENAMED de 100 questoes -- HOJE (26/07).** Fecha o debito aberto desde 28/06 e e a **primeira medicao de variancia em condicao de prova** (desvio 11,9 pp = gargalo isolado nº1). Registrar com `--area Simulado`.
 2. **3 rituais para levar:** *o que EXCLUI o que eu ia marcar* · *o que esta NORMAL, e o que esse normal proibe* · *quantas perguntas o enunciado embutiu*.
-3. Depois: as 2 tasks restantes da S13 -- **Transtornos de Humor + Psiq Social** (D10/extensivo -> aula-base completa antes) e **Arboviroses + Meningites + Sepse** (revisao -> direto a questao).
+3. Depois: 🔴 **o proximo tema real da S13 e Transtornos de Humor + Psiquiatria Social/Reforma** (t10, linha 13 do xlsx) -- **unico pendente dos 12**, e da especialidade-alvo. D10/extensivo -> aula-base completa antes. A t12 (Infecto, Revisao por Questoes) esta ambigua: sem `tema` na grade e o bloco de Infecto de 19/07 pode te-la coberto -- **confirmar com o usuario**.
+
+## 🧭 Posicao real da S13 -- CORRIGIDA (s128), nao confiar no `day_plan`
+
+**10 de 12 tasks da S13 ja concluidas.** O `day_plan` oferece "Principios do SUS, Imunizacoes, Colecistite" como proximos temas -- os tres foram feitos em **13, 14 e 15/07**. O boot esta mandando refazer o topo da semana. Causa: o snapshot do Drive congelou em 09/07 (F36).
+**Duas fontes independentes convergem:** (a) o mapa de tachado derivado do xlsx; (b) **`sessoes_bulk`**, que registra volume para os 10 temas entre 13 e 25/07 e **zero para Psiquiatria**. Enquanto o F36 nao fechar, `sessoes_bulk` e a fonte confiavel de conclusao -- nao a lista derivada do PDF.
+✅ **Nao ha drift de ORDEM:** a ordem das linhas do xlsx bate 1:1 com o `grade.json` na S13. O usuario nao reordenou.
 
 ## 🔬 Diagnostico vigente (`python tools/variancia.py --zona`)
 

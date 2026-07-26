@@ -509,6 +509,30 @@ relates_to: [AGENTE, ESTADO, HANDOFF]
 - **Direcao refinada:** `tools/cronograma.py --sync-drive` aceitar `--from-base64 <path>` **ou**,
   melhor, um `--fetch-drive <fileId>` que use credencial local (service account / OAuth em `.env`)
   e escreva o `.xlsx` sozinho. O agente passa a **disparar** o sync, nunca a **transportar** o byte.
+- **Adendo 2 (s128) -- o protocolo de chunks FALHOU, e o modo de falha ficou quantificado.**
+  Tentativa dedicada (subagente, ~3M tokens de orcamento) parou em **5.519 de 30.756 chars (18%)**.
+  Achados que valem mais que a tentativa:
+  1. **A fidelidade degrada por COMPRIMENTO DE EMISSAO, nao por posicao.** Ate ~3.000-3.400 chars por
+     chamada a copia e byte-perfect; acima disso desincroniza **em silencio** -- o base64 continua
+     sintaticamente valido e quem quebra e o deflate. Nao ha erro visivel no momento da escrita.
+     ⚠️ Ressalva de honestidade: o pedaco que corrompeu tinha **5.078 chars**, acima do limite de
+     3.000 que a instrucao mandava. O protocolo foi **violado**, nao estritamente falsificado --
+     mas o custo de descobrir isso ja mostra que o caminho e economicamente inviavel.
+  2. **O tamanho-alvo e verificavel a priori:** o EOCD do zip da 12 membros e diretorio central de
+     786 B em offset 22.258 -> arquivo de 23.066 B -> **exatamente 30.756 chars de base64**. Serve
+     de checksum barato em qualquer tentativa futura, antes de decodificar.
+  3. 🔴 **CAPACIDADE NAO REGISTRADA -- `mcp__claude_ai_Google_Drive__read_file_content`** no mesmo
+     `fileId` devolve a planilha **inteira como texto** (28 semanas x 13 linhas de tarefa, verbatim),
+     **sem transcricao nenhuma**. So nao carrega o **tachado** (que e formatacao, nao conteudo).
+     Isso abre um **modo degradado viavel**: ordem e temas vem de graca; so a conclusao depende do
+     xlsx binario. O ledger nao conhecia essa tool.
+  4. **O subagente se recusou a gravar um snapshot sintetico** (reconstruir um .xlsx via openpyxl a
+     partir do texto + tachado derivado) com o argumento correto: um snapshot **fresco porem
+     sintetico e pior que um velho**, porque o velho ao menos grita `Drive desatualizado`. Julgamento
+     certo -- registrar como precedente.
+- **Veredito:** F36 **nao se resolve por protocolo**. So codigo resolve. Enquanto `--fetch-drive` nao
+  existe, o modo degradado (2) + (3) e o melhor disponivel: `read_file_content` da ordem e temas;
+  a conclusao se cruza com `sessoes_bulk`, que e SSOT e independente do Drive.
 
 ### F37 -- `taxonomia_cronograma.questoes_realizadas` inflado ~3,7x -- **MEDIA** -- **ABERTO**
 - **Evidencia (s127):** o campo acusa **19.597** questoes contra **5.232** reais em `sessoes_bulk`.

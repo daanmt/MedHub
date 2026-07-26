@@ -241,6 +241,64 @@ def get_caderno_detalhado(area=None):
     conn.close()
     return df
 
+def carga_agendada(cursor, inicio, fim):
+    """{date: n_cards} de cards de revisão já agendados na faixa. Read-only.
+
+    Ignora cards aposentados (`needs_qualitative >= 2`): eles nunca entram na
+    fila, então não são carga real e não devem influenciar o balanceamento.
+    """
+    from datetime import date as _date
+    linhas = cursor.execute(
+        "SELECT date(f.due) AS d, COUNT(1) FROM fsrs_cards f "
+        "JOIN flashcards l ON l.id = f.card_id "
+        "WHERE f.state > 0 AND COALESCE(l.needs_qualitative, 0) < 2 "
+        "  AND date(f.due) BETWEEN ? AND ? GROUP BY d",
+        (inicio.isoformat(), fim.isoformat())).fetchall()
+    out = {}
+    for d, n in linhas:
+        try:
+            out[_date.fromisoformat(d)] = n
+        except (TypeError, ValueError):
+            continue
+    return out
+
+
+def _balancear_due(cursor, metrics):
+    """Aplica o load balancer ao `due` calculado pelo FSRS. Devolve metrics.
+
+    Mantém `stability`/`difficulty` intocados; ajusta `due` e, por honestidade
+    do revlog, `scheduled_days` para o intervalo efetivamente agendado.
+    """
+    from datetime import date as _date, datetime as _dt, timedelta as _td
+    from app.utils.fsrs_balance import escolher_dia, folga_de
+
+    due = metrics.get("due")
+    if isinstance(due, str):
+        due = _dt.fromisoformat(due)
+    if not isinstance(due, _dt):
+        return metrics
+
+    intervalo = int(metrics.get("scheduled_days") or 0)
+    if int(metrics.get("state") or 0) != 2 or not folga_de(intervalo):
+        return metrics
+
+    hoje = _date.today()
+    alvo = due.date()
+    f = folga_de(intervalo)
+    carga = carga_agendada(cursor, alvo - _td(days=f), alvo + _td(days=f))
+    novo_dia, desloc = escolher_dia(alvo, intervalo, carga, hoje,
+                                    state=int(metrics.get("state") or 0))
+    if not desloc:
+        return metrics
+
+    metrics = dict(metrics)
+    metrics["due"] = _dt.combine(novo_dia, due.time())
+    metrics["scheduled_days"] = max(0, intervalo + desloc)
+    print(f"[FSRS_BALANCE] due {alvo} -> {novo_dia} ({desloc:+d}d; "
+          f"carga {carga.get(alvo, 0)} -> {carga.get(novo_dia, 0)})")
+    return metrics
+
+
 def record_review(flashcard_id, rating):
     """Aplica o algoritmo FSRS e atualiza o banco de dados"""
     conn = get_connection()
@@ -258,7 +316,17 @@ def record_review(flashcard_id, rating):
     # 2. Calcula próximo estado via FSRS
     fsrs = FSRS()
     new_metrics = fsrs.evaluate(card_data, rating)
-    
+
+    # 2b. Load balancing do calendário (s128). Dentro da janela de folga do
+    #     intervalo (+-5%), escolhe o dia de MENOR carga já agendada -- achata
+    #     o pico sem tocar em stability/difficulty. Só card de revisão com
+    #     intervalo >= 4d é elegível; a regra vive em fsrs_balance (puro).
+    #     Falha aqui nunca derruba a gravação da revisão.
+    try:
+        new_metrics = _balancear_due(cursor, new_metrics)
+    except Exception as e:                                    # pragma: no cover
+        print(f"[WARN] FSRS_BALANCE: balanceamento pulado ({e}); due original mantido.")
+
     # 3. Atualiza banco
     cursor.execute('''
         UPDATE fsrs_cards 

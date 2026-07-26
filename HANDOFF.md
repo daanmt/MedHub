@@ -19,6 +19,14 @@
 - **`estilo-flashcard.md` §UM CRITERIO DE ACERTO (s128)** -- regua nova, formulada pelo usuario. Card que admite "acertei metade" torna a nota FSRS ininterpretavel. Demanda composta se treina em QUESTAO, nunca em card.
 - **`insert_questao.py --errors-file`** -- lote transacional de erros (usado p/ os 13 de Hepato). 🔴 **`--habilidades` alimenta o ledger; `--elo` NAO** (errei isso e tive de reparar).
 
+## 🔄 Politica de cards MUDOU (s128) -- de teto para PISO
+
+**>= 30 cards/dia**, definido pelo usuario. Deixou de ser limite de protecao e virou **compromisso de vazao**. Razao dele, e ela corrige um erro meu: a atomizacao **baixa a carga cognitiva por card**, entao o custo de uma sessao e **tempo, nao contagem** -- eu havia alarmado sobre o pool subir de 383 p/ ~500 medindo em unidades. 🔴 **Nao tratar crescimento de pool como custo automatico**: perguntar o tempo real por card antes de alarmar. Estado: base ativa 787 = 283 introduzidos + **504 no pool**. A 30 novos/dia o pool zera em ~17 dias (11/08).
+
+## ⚖️ Load balancing do FSRS (s128) -- NOVO, pedido do usuario
+
+O agendamento agora **olha o calendario**. Dentro da folga do intervalo (+-5%, piso 1d / teto 10d), escolhe o dia de MENOR carga -- achata o pico sem tocar em `stability`/`difficulty`. So card de revisao com intervalo >= 4d; nunca no passado; empate fica no dia do FSRS. Norma em `AGENTE.md §6`; regra pura em `app/utils/fsrs_balance.py`; aplicado em `db.record_review`. **Ver o efeito: `python tools/fsrs_load.py`** (mostra a distribuicao + o **CV**, que e a metrica a derrubar). Estado inicial medido: **pico 48 no dia 27/07 contra media 9,2 -- CV 1,13**. O balanceamento so age em revisoes FUTURAS: o grumo ja agendado nao se desfaz sozinho.
+
 ## Padroes de erro vivos -- atencao do scrum master
 
 - 🔴 **Padrao-mestre, FACETA NOVA: o discriminador e um exame NORMAL.** 3 instancias limpas na s128 (transaminase normal excluia hepatite; DHL/hemograma normais excluiam hemolise; transaminase normal excluia indicacao de tratar). Ele le "normal" como ausencia de informacao.

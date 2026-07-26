@@ -208,6 +208,7 @@ def main():
     pointer_relevant = (mode == "--all")
     doc_drift_relevant = (mode == "--all")
     card_relevant = (mode == "--all")
+    fsrs_relevant = (mode == "--all")
 
     if mode in ("--changed", "--staged"):
         changed_files = get_staged_files() if mode == "--staged" else get_changed_files()
@@ -217,6 +218,7 @@ def main():
             pointer_relevant = True
             doc_drift_relevant = True
             card_relevant = True
+            fsrs_relevant = True
         else:
             origem = "staged para commit" if mode == "--staged" else "modificado(s)/untracked na sessão"
             print(f"🔍 Detectados {len(changed_files)} arquivo(s) {origem}.")
@@ -240,6 +242,12 @@ def main():
                           "tools/insert_card_extra.py", "tools/apply_reforja.py",
                           ".claude/commands/estilo-flashcard.md"):
                     card_relevant = True
+                # Load balancer FSRS (check 2c): o caminho de escrita vive em
+                # app/, que a classificação abaixo não varre -- daí a flag.
+                if fp in ("app/utils/fsrs_balance.py", "app/utils/fsrs.py",
+                          "app/utils/db.py", "tools/test_fsrs_balance.py",
+                          "tools/fsrs_load.py", "tools/fsrs_queue.py"):
+                    fsrs_relevant = True
                 path_obj = ROOT_DIR / f
                 if not path_obj.exists():
                     continue
@@ -251,7 +259,7 @@ def main():
 
             if (not resumos_to_check and not tools_to_check and not parity_relevant
                     and not pointer_relevant and not doc_drift_relevant
-                    and not card_relevant):
+                    and not card_relevant and not fsrs_relevant):
                 print("\n✅ Nenhum arquivo crítico (resumos/*.md ou scripts python estruturais) foi alterado.")
                 print("   O harness não exige execução de suítes de teste para esta mudança. Aprovado!")
                 print("=" * 60)
@@ -275,12 +283,22 @@ def main():
         results_summary.append((desc, success, _warn_total(out)))
 
     # 2. Auditar Motor Python / Testes de Calibração
-    if mode == "--all" or tools_to_check:
+    if mode == "--all" or tools_to_check or fsrs_relevant:
         cmd_test = [sys.executable, "tools/test_revisao_calibrada.py"]
         desc = "Suíte Central de Testes (Revisão Calibrada e D10)"
         success, _ = run_command(cmd_test, desc)
         all_passed = all_passed and success
         results_summary.append((desc, success, 0))
+
+        # 2c. Load balancer do agendamento FSRS (s128). BLOCKING: mexe no
+        #     caminho único de escrita do FSRS, então regressão aqui corrompe
+        #     a curva. Suíte pura (não depende do db vivo).
+        test_bal = ROOT_DIR / "tools" / "test_fsrs_balance.py"
+        if test_bal.exists() and (mode == "--all" or fsrs_relevant):
+            desc_bal = "Suíte do load balancer FSRS"
+            success_bal, _ = run_command([sys.executable, "tools/test_fsrs_balance.py"], desc_bal)
+            all_passed = all_passed and success_bal
+            results_summary.append((desc_bal, success_bal, 0))
 
         # Se houver teste específico de autonomia
         test_autonomia_path = ROOT_DIR / "tools" / "test_autonomia_hooks.py"

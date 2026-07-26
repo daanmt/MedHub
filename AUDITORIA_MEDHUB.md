@@ -487,8 +487,8 @@ relates_to: [AGENTE, ESTADO, HANDOFF]
     (tupla->dict) e o consumidor vive noutro arquivo.
 - **Impacto:** falso verde no gate barato; drift de volume so aparece quando alguem olha.
 
-### F36 -- Agente nao materializa binario grande baixado via MCP -> `--sync-drive` pulado 2 sessoes seguidas -- **MEDIA** -- **ABERTO**
-- **Evidencia (s124 e s125, duas sessoes consecutivas):** o boot sinalizou `Drive desatualizado`
+### F36 -- Agente nao materializa binario grande baixado via MCP -> `--sync-drive` pulado 5 sessoes seguidas -- **ALTA** (era MEDIA) -- **ABERTO**
+- **Evidencia (s124, s125, s126, s127 e s128):** o boot sinalizou `Drive desatualizado`
   (10 dias no boot de 19/07) e o `--sync-drive` **nao rodou** nas duas: o `.xlsx` do Drive volta do
   MCP como base64 grande e o agente nao tem caminho pratico para materializa-lo em disco "a mao"
   para passar ao CLI. Consequencia direta na s125: o boot ofereceu Colecistite/Imunizacoes (ordem
@@ -499,6 +499,89 @@ relates_to: [AGENTE, ESTADO, HANDOFF]
   (`project_cronograma_dual_ssot`) regride em silencio para o lado do PDF.
 - **Direcao (nao implementada):** dar ao sync um caminho de materializacao proprio (o CLI baixa/
   recebe o blob e escreve o arquivo) em vez de exigir que o agente faca a ponte base64->disco.
+- **Adendo s128 (2026-07-25) -- o modo de falha ficou preciso.** O MCP **funcionou**: o
+  `download_file_content` devolveu o `.xlsx` inteiro em base64 (~30 KB). O degrau que quebra e a
+  **transcricao**: para gravar o blob o agente precisa reemiti-lo verbatim por uma tool de escrita,
+  e a ~30 KB ele trunca/elide de forma sistematica (2 tentativas, 2 arquivos corrompidos, ambos
+  descartados). Nao e falta de acesso nem de disciplina -- e um limite de fidelidade de copia longa.
+  Corolario: **nenhuma clausula de processo conserta F36**; so codigo conserta. A elevacao para ALTA
+  reflete que o boot ja regride ha 5 sessoes e que o usuario vem suprindo a lacuna a mao.
+- **Direcao refinada:** `tools/cronograma.py --sync-drive` aceitar `--from-base64 <path>` **ou**,
+  melhor, um `--fetch-drive <fileId>` que use credencial local (service account / OAuth em `.env`)
+  e escreva o `.xlsx` sozinho. O agente passa a **disparar** o sync, nunca a **transportar** o byte.
+
+### F37 -- `taxonomia_cronograma.questoes_realizadas` inflado ~3,7x -- **MEDIA** -- **ABERTO**
+- **Evidencia (s127):** o campo acusa **19.597** questoes contra **5.232** reais em `sessoes_bulk`.
+  Descoberto ao construir o eixo de cobertura de `tools/variancia.py`: a 1a versao lia esse campo e
+  produzia "89,5% da grade coberta / zona DIRECIONAMENTO" -- diagnostico **invertido** em relacao ao
+  real (43,0% / zona COBERTURA). A fonte foi trocada para a grade versionada e um teste estrutural
+  impede a regressao, **mas o campo segue inflado no db**.
+- **Leitura de sistema:** metas e performance leem `sessoes_bulk` e por isso nao foram afetadas -- o
+  campo e uma **superficie de estado orfa**, que ninguem reconcilia e qualquer feature nova pode
+  consumir de boa-fe. Foi exatamente o que aconteceu. O risco nao e o numero errado: e ele estar
+  disponivel e parecer autoritativo.
+- **Verificacao sugerida:** rastrear quem escreve o campo (`insert_questao.py`? migracao legada?) e
+  decidir entre (a) reconciliar contra `sessoes_bulk`, (b) derivar on-the-fly, ou (c) **remover a
+  coluna** -- preferivel, se ninguem legitimo a le. Enquanto existir, adicionar check no reconcile.
+
+### F38 -- Erros analisados na conversa nao chegam a `questoes_erros`; a analise evapora -- **ALTA** -- **ABERTO**
+- **Evidencia (s127 -> descoberto na s128, 2026-07-25):** o bloco de Pneumologia Intensiva II teve
+  **6 erros analisados em profundidade** (elo quebrado, armadilha, conteudo faltante -- registrados
+  em prosa no `history/session_127.md`). No `ipub.db`: `sessoes_bulk` recebeu o volume (22/16) e o
+  ledger de habilidades recebeu **7 habilidades** (`origem='bloco-s127'`, `veredito='errou'`), mas
+  `questoes_erros` **nao recebeu uma linha sequer** -- zero registros com `data_registro` de 25/07.
+  Consequencia: os cards nasceram sem erro de origem (`insert_card_base`, `questao_id=NULL`), e o
+  substrato canonico (`tipo_erro`, `alternativa_marcada`, `explicacao_correta`) so existe em prosa.
+- **Leitura de sistema:** o pipeline de analise tem **dois finais** -- `insert_questao.py` (erro
+  completo + cards) e `habilidades.py --add` (so a habilidade). A s127 introduziu o segundo e o
+  agente **substituiu** um pelo outro em vez de encadear. Nenhum invariante notou: `auto_check` audita
+  arquivos, nao a coerencia "bloco com N erros narrados -> N linhas em `questoes_erros`". O sinal mais
+  rico do sistema (o erro estruturado, que alimenta cards, areas fracas e armadilhas dos resumos) e
+  o unico sem gate de persistencia.
+- **Agravante:** o defeito e **silencioso e retroativo**. So apareceu porque a sessao seguinte foi
+  cunhar os cards e nao achou a ancora. Blocos anteriores podem ter o mesmo buraco.
+- **Dimensionamento retroativo (rodado na s128, 2026-05-01 a 2026-07-25):** erros esperados
+  (`feitas - acertadas`) = **466**; linhas em `questoes_erros` no mesmo periodo = **335**;
+  **delta = 131 (~28%)**. 17 dias-bloco com gap positivo. Dias com delta negativo (ex.: 29/06,
+  -22) sao **registro tardio** -- o erro entra no dia seguinte ao estudo --, por isso o gap por
+  linha e ruidoso e so o total tem leitura.
+  ⚠️ **O 131 e teto, nao piso de analises perdidas.** Parte vem de volume importado da planilha via
+  `/importar-planilha`, que traz feitas/acertos **sem** os erros terem sido itemizados -- ausencia
+  esperada, nao defeito. O que o F38 nomeia e o subconjunto em que a analise **comprovadamente
+  aconteceu** e nao persistiu; a s127 e a instancia confirmada (6 erros narrados no log, 0 no db).
+  Separar os dois exige cruzar com o log de cada sessao -- trabalho de curadoria, nao de query.
+- **Direcao (nao implementada):** (1) WARN no reconcile de boot -- "bloco de DD/MM registrou N erros
+  em `sessoes_bulk` e 0 em `questoes_erros`"; (2) tornar explicito em `/analisar-questao` que
+  `--add` **complementa** e nunca substitui `insert_questao.py`; (3) avaliar se `habilidades.py --add`
+  com `veredito='errou'` e `questao_id=NULL` deveria simplesmente avisar na saida.
+
+### F39 -- 40% do baralho viola o principio atomico; a nota FSRS vira ininterpretavel -- **ALTA** -- **PARCIAL (detector entregue, reforja em 8/358)**
+- **Origem:** achado do USUARIO durante o dreno da s128, formulado melhor do que o contrato tinha:
+  *"e importante que a informacao solicitada no card seja clara, que os cards nao tenham diversos
+  requisitos de acerto, e focassem no nucleo epistemologico do erro"*. Ele percebeu ao vivo que a
+  frente que ele via era comprimida enquanto o verso (que so o agente lia) trazia exigencias extras,
+  pelas quais estava sendo descontado.
+- **Evidencia (medida, nao estimada):** `tools/audit_card_atomicity.py` (criado nesta sessao) acusa
+  **358 de ~900 cards ativos (~40%)**: 227 com **duplo-ask** (a frente cobra duas respostas) e 259
+  com **resposta-multifato** (verso em paragrafo, viola a regra 3 do formato atomico); 122 com ambos.
+  Temas mais afetados: Cirurgia Infantil (40), Hemostasia I (29), Cardiopatias Congenitas (21).
+- **Leitura de sistema -- por que e ALTA e nao cosmetica:** um card com 2 criterios de acerto admite
+  "acertei metade", e **a nota FSRS deixa de significar alguma coisa**. Nota 2 num card duplo nao
+  distingue "sabe metade" de "nao sabe nada", e o agendamento passa a mentir sobre a curva. O defeito
+  nao degrada so a experiencia -- **corrompe a medida** que governa toda a repeticao espacada.
+- **Dano colateral confirmado:** o agente contabilizou 6 ocorrencias de um padrao de erro do usuario
+  (*"para na primeira metade da pergunta"*) usando cards duplos como evidencia. **5 das 6 eram
+  defeito do card.** O ruido do baralho estava sendo importado para o prontuario cognitivo do aluno --
+  a pior consequencia possivel, porque muda o que ele treina.
+- **Entregue nesta sessao:** detector `tools/audit_card_atomicity.py` (read-only, WARN-first, com a
+  classe de falso-positivo do **card discriminador** documentada); check 9 do `auto_check`; clausula
+  "UM CRITERIO DE ACERTO por card" em `estilo-flashcard.md` + espelho sincronizado; **8 cards
+  atomizados** (370, 372, 406, 407, 408, 447, 456, 457 reescritos in-place com FSRS preservado +
+  12 desmembramentos via `insert_card_extra`).
+- **Aberto:** **~350 cards** na worklist. Ordem de ataque proposta: (1) os 227 de duplo-ask primeiro
+  -- sao os que corrompem a nota; (2) os 137 que so tem resposta-multifato depois -- degradam
+  retencao, nao a medida. Nao fazer big-bang: lotes por tema, priorizando os temas que aparecem na
+  fila FSRS dos proximos dias.
 
 ---
 
@@ -585,4 +668,9 @@ O objetivo da sessao nao era so drenar cards: era **usar o MedHub para descobrir
 *Este doc e o ledger vivo de engenharia. Nao "fecha" -- acumula achados a cada sessao de uso. O 1o ciclo Fable (PRD -> 5 ondas) foi ENTREGUE em 2026-07-05 (secao 3b). A s109 (coordenador-observador) adicionou **F16-F19** do uso vivo (forja da aula-base de apendicite; secao 3c) -- insumo do ciclo 2. A rodada 1 do ciclo 2 (Fable/ai-eng, paralela a s109; secao 3d) entregou F14/F15, validou o teto (F4/b), preparou a janela do expurgo (F11) e registrou F20. A s109 (1o lote de questoes; secao 3e) adicionou F21, e (2o lote; secao 3f) **F22-F26**. O **ciclo 2 rodada 2** (Fable/ai-eng, 2026-07-06; secao 3g) entregou o PRD ORQUESTRACAO completo (vibeflow 4/4 PASS): posicao SSOT (op-3), recomendador do dia, F22-F26 RESOLVIDOS; F21 segue aberto (contrato de aula); F27/F28 registrados pelos audits. A **s110 parte 2** (2026-07-06) verificou performance+cronograma a pedido do operador, achou e RESOLVEU **F29** (drift planilha-db de 76q, ao vivo, mesma sessao); no ciclo de Pre-Natal I (cold recall, tema-zero) registrou **F30** (material_indicado nao verifica existencia real do resumo), aberto. A **s113** (08/07, verificacao de cronograma a pedido do operador) achou e RESOLVEU **F33** (boot recomendava temas ja feitos, calendario-driven sem ler conclusao real da planilha) na mesma sessao via ciclo completo `/discover`->`/gen-spec`->`/implement`->`/audit` (PASS); F31/F32 registrados por uso vivo (s112). A **s115** (2026-07-09) auditou o boot e entregou o PRD **boot-cronograma-drive-confiavel** em 3 partes (vibeflow discover->gen-spec->implement->audit, audits PASS): achado novo **F34** (disparo+ordem do Drive) + **F30/F31 RESOLVIDOS**; **F21 segue aberto**. A reconciliacao de fechamento da **s125** (2026-07-19; secao 3i) registrou
 retroativamente **F35** (reconcile de volume manual + seletor de suite do `auto_check` dando falso
 verde) e **F36** (binario grande do Drive via MCP nao materializa em disco -> `--sync-drive` pulado
-na s124 e na s125), ambos ABERTOS. **Proximos achados comecam em F37**. Ultima atualizacao: s125 (2026-07-19). **Adendo 2026-07-12 (Fable/ai-eng, ciclo mecanismo-de-conhecimento):** F21 RECONCILIADO em dois planos (conduta RESOLVIDA no contrato v1.2; enforcement mecanico na spec `mecanismo-conhecimento-consolidacao-part-3`) -- ver secao 3e. Ciclo de consolidacao do mecanismo de RAG/conhecimento em andamento (part-1 audit PASS: MCP obsidian aposentado, scaffold LangGraph/BM25 removido; part-2: reconciliacao de drift documental).*
+na s124 e na s125), ambos ABERTOS. A **s128** (2026-07-25) registrou **F37** (campo `questoes_realizadas` inflado, achado
+na s127) e **F38** (erros analisados nao chegam a `questoes_erros` -- pipeline com dois finais), e
+elevou **F36 para ALTA** com o modo de falha precisado (limite de transcricao, nao de acesso).
+Ainda na **s128**, o dreno de 40 cards produziu **F39** (40% do baralho viola o principio atomico --
+detector entregue, 8 cards atomizados, ~350 na worklist), achado **do usuario**, nao do agente.
+**Proximos achados comecam em F40**. Ultima atualizacao: s128 (2026-07-26). **Adendo 2026-07-12 (Fable/ai-eng, ciclo mecanismo-de-conhecimento):** F21 RECONCILIADO em dois planos (conduta RESOLVIDA no contrato v1.2; enforcement mecanico na spec `mecanismo-conhecimento-consolidacao-part-3`) -- ver secao 3e. Ciclo de consolidacao do mecanismo de RAG/conhecimento em andamento (part-1 audit PASS: MCP obsidian aposentado, scaffold LangGraph/BM25 removido; part-2: reconciliacao de drift documental).*

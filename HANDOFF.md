@@ -1,40 +1,40 @@
 # HANDOFF.md -- ESTADO OPERACIONAL CURTO
-*Atualizado: 2026-07-25 -- **s127: Pneumo Intensiva II (VM, 72,7%) + 2 loops vibeflow (Ledger de Habilidades · Variancia e Zona, 2 audits PASS) + aula-base vira HIBRIDA por dificuldade. ESTADO.md sincronizado com a virada da s126.***
+*Atualizado: 2026-07-26 -- **s128: Hepatologia S13 (41q, 68,3%) + 13 erros persistidos + dreno de 40 cards + F39 (40% do baralho nao-atomico -- detector entregue).***
 
 ## > Proximo passo imediato
 
-1. 🎯 **SIMULADO ENAMED de 100 questoes -- 26/07** (decidido pelo usuario). Fecha o debito de simulado (aberto desde 28/06) e e a **primeira medicao de variancia em condicao de prova**. Registrar com `--area Simulado` (conta no volume, bloco dedicado).
-2. **Ainda em 25/07:** o usuario volta para mais questoes + **~30 flashcards** (drenar o pool de 372).
-3. Depois, as 3 tasks restantes da S13: **Transtornos de Humor + Psiq Social/Reforma** (Teoria -- pela regra nova, provavelmente tema-zero, leva aula-base completa) · **Hepatologia + Ictericia nao-obstrutiva + Hepatites Virais** (Revisao -- vai direto a questao) · **Arboviroses + Meningites + Sepse** (Revisao por Questoes).
+1. 🎯 **SIMULADO ENAMED de 100 questoes -- HOJE (26/07).** Fecha o debito aberto desde 28/06 e e a **primeira medicao de variancia em condicao de prova** (desvio 11,9 pp = gargalo isolado nº1). Registrar com `--area Simulado`.
+2. **3 rituais para levar:** *o que EXCLUI o que eu ia marcar* · *o que esta NORMAL, e o que esse normal proibe* · *quantas perguntas o enunciado embutiu*.
+3. Depois: as 2 tasks restantes da S13 -- **Transtornos de Humor + Psiq Social** (D10/extensivo -> aula-base completa antes) e **Arboviroses + Meningites + Sepse** (revisao -> direto a questao).
 
-## 🔬 Diagnostico vigente (rodar `python tools/variancia.py --zona`)
+## 🔬 Diagnostico vigente (`python tools/variancia.py --zona`)
 
-**Zona COBERTURA** -- desempenho alto (media de blocos 77,6%) sobre **43,0% da grade percorrida**. Prescricao: **AVANCAR a grade**, nao trocar cobertura por refinamento.
-🔴 **Variancia entre blocos = 11,9 pp (alta).** Corre POR FORA da zona: prescreve **simulado** em qualquer quadrante -- bloco tematico nao corrige sensibilidade a perfil de prova. **E o gargalo isolado nº1 hoje, acima da media.**
+**Zona COBERTURA** -- desempenho alto sobre 43,0% da grade. Prescricao: **AVANCAR a grade**.
+🔴 **Variancia 11,9 pp (alta)** -- corre POR FORA da zona, prescreve **simulado** em qualquer quadrante.
+📈 **Conta refeita (s128):** o "20,9 q/dia real" mistura dias vazios. Por **dia trabalhado** julho deu **56,9 q/dia** -- ja acima dos ~53/dia da meta a 6 dias/semana. **O gargalo e FREQUENCIA (15 de 26 dias = 58%), nao capacidade.** A 6 dias/sem o marco de 9.454 cai (~9.745). Nao fecha: grade EMED inteira exigiria ~75 q/dia trabalhado -> ~76% de cobertura ate 25/10. **Fork registrado, nao decidido.**
 
-## Capacidades novas (s127) -- usar
+## Capacidades novas (s128) -- usar
 
-- **`tools/habilidades.py`** -- ledger de habilidades. `--reincidentes` responde "qual habilidade eu falho em temas DIFERENTES"; `>= 3 temas` = padrao de raciocinio, nao lacuna de conteudo. **`--add` registra aprendizado de questao ACERTADA** (nao vira erro nem volume) e o estado **`incerteza`** ("acertei na duvida"). Assinatura em `/analisar-questao §10`.
-- **`tools/variancia.py`** -- variancia + zona de 2 eixos + debito de simulado. Assinatura em `/performance`.
-- **`/analisar-questao §11` -- ORCAMENTO de correcao por tipo:** direta = 1 aprendizado, **nao reler a resolucao**; fluxograma = achar o NO que quebrou; raciocinio = analise cheia. Tempo de correcao e finito.
-- 🔴 **`AGENTE.md §1.2` -- aula-base agora e HIBRIDA POR DIFICULDADE.** Tema-zero ou D8+ -> aula completa ANTES. D5 ou menor -> **questoes primeiro**, aula depois mirando o buraco. Muda o gatilho, nao a profundidade (Clausula 10 intacta).
+- **`tools/audit_card_atomicity.py`** -- detector de card nao-atomico (`duplo-ask` + `resposta-multifato`), read-only, **check 9 do `auto_check`** (WARN). Triar a worklist por **CRITERIOS DE ACERTO**, nao por regex: card discriminador e falso-positivo conhecido e esta documentado no modulo.
+- **`estilo-flashcard.md` §UM CRITERIO DE ACERTO (s128)** -- regua nova, formulada pelo usuario. Card que admite "acertei metade" torna a nota FSRS ininterpretavel. Demanda composta se treina em QUESTAO, nunca em card.
+- **`insert_questao.py --errors-file`** -- lote transacional de erros (usado p/ os 13 de Hepato). 🔴 **`--habilidades` alimenta o ledger; `--elo` NAO** (errei isso e tive de reparar).
 
 ## Padroes de erro vivos -- atencao do scrum master
 
-- 🔴 **Padrao-mestre (discriminador ignorado)** -- caso limpo na s127 (Q6): item dizia "TEP **no 1o pos-operatorio de artroplastia**"; leu "TEP", concluiu certo que TEP nao e indicacao de VNI, e **parou antes da segunda metade da frase**. Ritual: ler o item ATE O FIM antes de julgar.
-- 🔴 **Bug nº1 (numero contra a regua)** -- Q3: tinha PaO2 e FiO2 e nao fez 60/0,4 = 150 nem situou em Berlim (moderada, nao grave).
-- 🟡 **SINAL NOVO -- retencao de conteudo fresco sob prova:** 2 dos 6 erros foram material ensinado **2h antes** (correcao de autoPEEP; VNI no pos-op). Nao e lacuna de conteudo. **Observar se repete** nos proximos blocos pos-aula.
-- 🔴 **Familia bug nº1c (fato no contexto errado)** -- 2 eventos com IECA na s126 (trocar por BRA; IECA em gestante).
+- 🔴 **Padrao-mestre, FACETA NOVA: o discriminador e um exame NORMAL.** 3 instancias limpas na s128 (transaminase normal excluia hepatite; DHL/hemograma normais excluiam hemolise; transaminase normal excluia indicacao de tratar). Ele le "normal" como ausencia de informacao.
+- 🔴 **Bug nº1 (numero contra a regua)** -- card 421: "dialise depende do valor?" -> depende de **AEIOU**, nao de numero.
+- 🟡 **Pergunta composta -- NAO INFLAR.** Contei 6 ocorrencias na s128; **5 eram defeito de card duplo**, 1 real. O padrao existe, mas so se mede em **questao de prova**.
+- 🟢 **Sensor em desenvolvimento:** no card 462 ele verbalizou o discriminador ("essa funcao minima ai e foda") e ainda assim errou. Detecta, mas nao converte em mudanca de resposta -- alvo do proximo ciclo.
 
 ## Estado por frente
-- **Volume & Metas:** 5254 / 9454 (perf. ~79.1%). Hoje: 22. Ritmo-alvo ~45.7q/dia (92d p/ Cronograma EMED (grade completa)). [derivado: day_plan --handoff-block]
-- **FSRS:** divida 0 atrasados + 4 p/ hoje -- pool 372 nunca introduzidos (entram <=40/dia). [derivado]
-- **Conteudo:** 71 resumos. `Pneumologia Intensiva.md` expandido na s127 (leitura de curvas + ventilacao do obstrutivo) -- as duas secoes **faltavam na aula-base do agente**, nao no aluno.
-- **Erros & Cards:** 6 erros de VM analisados; **7 habilidades registradas no ledger** (veredito=errou). Nenhum card novo cunhado ainda -- **pendente**.
-- **Posicao cronograma:** db=S13 (nominal S17, atraso 4 sem). Drive stale (F36 aberto).
+- **Volume & Metas:** 5295 / 9454 (perf. ~79.0%). Hoje: 0. Ritmo-alvo ~45.7q/dia (91d p/ Cronograma EMED (grade completa)). [derivado: day_plan --handoff-block]
+- **FSRS:** divida 0 atrasados + 9 p/ hoje -- pool 395 nunca introduzidos (entram <=40/dia). [derivado]
+- **Conteudo:** 71 resumos. `Pneumologia Intensiva.md` **ja tinha** a secao 7 de VMNI completa -- a lacuna da s127 era da AULA, nao do resumo.
+- **Erros & Cards:** 606 erros (+13) · 908 cards (+47 cunhados, +12 desmembrados, 9 reescritos in-place com FSRS preservado).
+- **Posicao cronograma:** conteudo S13 (nominal S17, atraso 4 sem). Drive stale 17d (F36).
 
 ## Pendencias ativas
-Cunhar os cards dos 6 erros de VM. Reforja de `TCE.md` + `Sistemas de Informacao em Saude.md`. Ledger: vereditos majoritariamente `indefinido` ate a curadoria avancar. Ledger `AUDITORIA_MEDHUB.md`: **F37 novo** (`taxonomia_cronograma.questoes_realizadas` inflado ~3,7x -- 19.597 contra 5.232 reais; nao afeta metas, que leem `sessoes_bulk`, mas contamina qualquer feature que confie nele), **F36** (Drive `--sync-drive` pulado 3 sessoes), **F35** (seletor de suite do auto_check), F8. Regra 90-50 / ponderacao por incidencia (video 3): proxy existe (repeticao de tema na grade), spec nao escrito.
+**Worklist de atomicidade: ~350 cards** (227 duplo-ask primeiro -- corrompem a nota; depois os 137 so-paragrafo). Lotes por tema, priorizando quem cai na fila FSRS dos proximos dias; nunca big-bang. Reforja de `TCE.md` + `Sistemas de Informacao em Saude.md`. Ledger `AUDITORIA_MEDHUB.md`: **F39 novo** (atomicidade, PARCIAL), **F38** (erros analisados nao chegam a `questoes_erros` -- delta retroativo de ate 131), **F36 elevado a ALTA** (o MCP entrega o xlsx; o que quebra e a transcricao de 30 KB -- so codigo conserta, `--fetch-drive`), F37, F35, F8.
 
 ---
-*Historico: history/INDEX.md * Macro: ESTADO.md * Sessao: history/session_127.md * Ledger de engenharia: AUDITORIA_MEDHUB.md*
+*Historico: history/INDEX.md * Macro: ESTADO.md * Sessao: history/session_128.md * Ledger de engenharia: AUDITORIA_MEDHUB.md*

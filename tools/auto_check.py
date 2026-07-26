@@ -236,7 +236,8 @@ def main():
                 # do git), entao o gatilho e a maquinaria de autoria/deteccao mudar.
                 if fp in ("tools/insert_questao.py", "tools/insert_card_base.py",
                           "tools/card_self_sufficiency.py", "tools/test_card_self_sufficiency.py",
-                          "tools/audit_flashcard_quality.py",
+                          "tools/audit_flashcard_quality.py", "tools/audit_card_atomicity.py",
+                          "tools/insert_card_extra.py",
                           ".claude/commands/estilo-flashcard.md"):
                     card_relevant = True
                 path_obj = ROOT_DIR / f
@@ -431,6 +432,37 @@ def main():
                        [{"alvo": f"card#{a['id']}", "payload":
                          {"padrao": a["padrao"], "tema": a["tema"]}}
                         for a in achados_css] if sensor_ok
+                       else [{"alvo": "sensor", "payload": {}}])
+
+    # 9. Atomicidade de card (s128). WARN, não bloqueia: detecta violação do
+    #    minimum information principle -- duplo-ask (a frente cobra duas
+    #    respostas, o que torna a nota FSRS ininterpretável) e resposta-multifato
+    #    (o verso responde em parágrafo). Mesmo gate do check 8: a maquinaria de
+    #    autoria de card mudou. Regra nova nasce WARN (política s106/107).
+    if card_relevant:
+        desc_atom = "Atomicidade de card (CARD_ATOMICIDADE)"
+        try:
+            from audit_card_atomicity import run_checks as atom_run
+            achados_atom = atom_run()
+            sensor_atom_ok = True
+        except Exception as e:
+            print(f"\n[WARN] CARD_ATOMICIDADE_SENSOR: sensor indisponível ({e}).")
+            achados_atom, sensor_atom_ok = [], False
+        if achados_atom:
+            from collections import Counter
+            por_padrao_atom = Counter(a["padrao"] for a in achados_atom)
+            resumo_atom = ", ".join(f"{p}: {n}" for p, n in por_padrao_atom.most_common())
+            n_cards_atom = len({a["id"] for a in achados_atom})
+            print(f"\n[WARN] CARD_ATOMICIDADE: {n_cards_atom} card(s) não atômico(s) "
+                  f"[{resumo_atom}]. Worklist: python tools/audit_card_atomicity.py --json. "
+                  f"Triar por CRITÉRIOS DE ACERTO (card discriminador é falso-positivo conhecido).")
+        # success=True: WARN não rebaixa o veredito (não altera all_passed).
+        results_summary.append((desc_atom, True,
+                                len(achados_atom) if sensor_atom_ok else 1))
+        _ledger_record("card_atomicidade",
+                       [{"alvo": f"card#{a['id']}", "payload":
+                         {"padrao": a["padrao"], "tema": a["tema"]}}
+                        for a in achados_atom] if sensor_atom_ok
                        else [{"alvo": "sensor", "payload": {}}])
 
     # Resumo Final

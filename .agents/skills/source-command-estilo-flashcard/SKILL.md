@@ -49,6 +49,14 @@ O flashcard do MedHub não enuncia um fato genérico sobre um tema — ele **ref
 6. **Evitar sets/enumerações.** Ranking de sítios, listas longas -> cloze ou cards ordenados, ou cortar a cauda de baixo rendimento. (O EMED testa "sítio mais frequente? -> Ovários", não o ranking inteiro.)
 7. **Fonte + data em fato banca-dependente.** ACOG 2013, SBC 2025, MS -> selo de fonte/ano no card (herda a auditoria de evidência, ver §Evidência).
 
+🔴 **Régua operacional (s128) -- UM CRITÉRIO DE ACERTO por card.** O teste decisivo não é contar entidades citadas, é contar **em quantas coisas independentes o aluno pode errar**. Se um card admite "acertei metade", ele está quebrado: a nota FSRS vira ininterpretável (acertar 1 de 2 não é "meio card", e o agendamento passa a mentir). Formulação do usuário: *"que a informação solicitada no card seja clara, que os cards não tenham diversos requisitos de acerto, e focassem no núcleo epistemológico do erro, na concatenação lógica dos conhecimentos necessários"*.
+
+- ❌ "Qual a via **e** a composição da TH?" -> 2 critérios -> **dois cards**.
+- ❌ "Qual o exame **e** a medicação?" -> 2 critérios (e aqui o exame nem discrimina) -> **um card, o da medicação**.
+- ✅ "Cancro mole x donovanose: qual das duas dói e cursa com adenite?" -> 2 entidades, **1 critério** (a resposta é uma só) -> card discriminador legítimo (regra 5).
+
+**Fronteira com a execução de prova:** questão de prova *legitimamente* cobra duas metades ao mesmo tempo. Isso se treina **resolvendo questões**, não no flashcard -- espelhar a demanda composta no card contamina a medida de recall. Detector: `python tools/audit_card_atomicity.py` (WARN no `auto_check`); triar a worklist pelo critério acima, não pelo regex.
+
 ### Reconciliação com o targeting metacognitivo
 
 Isto **não** repudia o card ancorado no erro -- **refina**. O diagnóstico metacognitivo (os 5 princípios) continua escolhendo **QUAL fato atômico** testar (o elo que quebrou -- personalização que o EMED não tem). Muda a **formulação**: um elo quebrado -> **N cards atômicos** no formato EMED, um deles podendo ser o discriminador. Certo no *o quê*; corrigido no *empacotamento*.

@@ -1,54 +1,42 @@
 # HANDOFF.md -- ESTADO OPERACIONAL CURTO
-*Atualizado: 2026-07-26 -- **s128: Hepatologia S13 (41q, 68,3%) + 13 erros persistidos + dreno de 40 cards + F39 (40% do baralho nao-atomico -- detector entregue).***
+*Atualizado: 2026-08-01 -- **s130: Meningites (resumo novo) + Reforma Psiquiatrica completa + Arboviroses/Meningites/Sepse (57q, 91,2%) + dreno de 50 cards + S13 COMPLETA (12/12).***
 
 ## > Proximo passo imediato
 
-1. 🎯 **SIMULADO ENAMED de 100 questoes -- HOJE (26/07).** Fecha o debito aberto desde 28/06 e e a **primeira medicao de variancia em condicao de prova** (desvio 11,9 pp = gargalo isolado nº1). Registrar com `--area Simulado`.
-2. **3 rituais para levar:** *o que EXCLUI o que eu ia marcar* · *o que esta NORMAL, e o que esse normal proibe* · *quantas perguntas o enunciado embutiu*.
-3. Depois: 🔴 **o proximo tema real da S13 e Transtornos de Humor + Psiquiatria Social/Reforma** (t10, linha 13 do xlsx) -- **unico pendente dos 12**, e da especialidade-alvo. D10/extensivo -> aula-base completa antes. A t12 (Infecto, Revisao por Questoes) esta ambigua: sem `tema` na grade e o bloco de Infecto de 19/07 pode te-la coberto -- **confirmar com o usuario**.
+1. 🎯 **SIMULADO ENARE/ENAMED de 100 questoes -- amanha (2026-08-02), trazido pelo usuario.** Fecha o debito de simulado (politica 1/semana, ultimo em 28/06 -- 5 semanas de atraso) e ataca direto a **variancia alta entre blocos (10,4 pp)**, que o diagnostico (`variancia.py --zona`) prescreve resolver com simulado, nao com mais bloco por tema. Registrar com `--area Simulado`.
+2. Depois do simulado: **seguir drenando a fila FSRS** (~50 cards restantes: 41 atrasados + 9 hoje) e **avancar o cronograma pra S14** -- a S13 fechou nesta sessao (12/12 tasks; as 2 ultimas eram Psiquiatria e a Revisao por Questoes de Infecto, ambas concluidas s129/s130).
 
-## 🧭 Posicao real da S13 -- CORRIGIDA (s128), nao confiar no `day_plan`
+## 🎯 S13 COMPLETA (s130) -- nao confiar mais no aviso antigo do day_plan
 
-**10 de 12 tasks da S13 ja concluidas.** O `day_plan` oferece "Principios do SUS, Imunizacoes, Colecistite" como proximos temas -- os tres foram feitos em **13, 14 e 15/07**. O boot esta mandando refazer o topo da semana. Causa: o snapshot do Drive congelou em 09/07 (F36).
-**Duas fontes independentes convergem:** (a) o mapa de tachado derivado do xlsx; (b) **`sessoes_bulk`**, que registra volume para os 10 temas entre 13 e 25/07 e **zero para Psiquiatria**. Enquanto o F36 nao fechar, `sessoes_bulk` e a fonte confiavel de conclusao -- nao a lista derivada do PDF.
-✅ **Nao ha drift de ORDEM:** a ordem das linhas do xlsx bate 1:1 com o `grade.json` na S13. O usuario nao reordenou.
+As 2 tasks que a s128 tinha isolado como pendentes (10: Transtornos de Humor+Reforma Psiquiatrica; 12: Arboviroses+Meningites+Sepse, Revisao por Questoes) foram concluidas nas sessoes 129 e 130. **S13 = 12/12.** O `day_plan` ainda pode sugerir temas antigos da S13 (SUS/Imunizacoes/Colecistite) por causa do Drive stale (F36) -- ignorar, ja foram feitos em 13-15/07 (ver s128).
 
 ## 🔬 Diagnostico vigente (`python tools/variancia.py --zona`)
 
 **Zona COBERTURA** -- desempenho alto sobre 43,0% da grade. Prescricao: **AVANCAR a grade**.
-🔴 **Variancia 11,9 pp (alta)** -- corre POR FORA da zona, prescreve **simulado** em qualquer quadrante.
-📈 **Conta refeita (s128):** o "20,9 q/dia real" mistura dias vazios. Por **dia trabalhado** julho deu **56,9 q/dia** -- ja acima dos ~53/dia da meta a 6 dias/semana. **O gargalo e FREQUENCIA (15 de 26 dias = 58%), nao capacidade.** A 6 dias/sem o marco de 9.454 cai (~9.745). Nao fecha: grade EMED inteira exigiria ~75 q/dia trabalhado -> ~76% de cobertura ate 25/10. **Fork registrado, nao decidido.**
-
-## Capacidades novas (s128) -- usar
-
-- **`tools/audit_card_atomicity.py`** -- detector de card nao-atomico (`duplo-ask` + `resposta-multifato`), read-only, **check 9 do `auto_check`** (WARN). Triar a worklist por **CRITERIOS DE ACERTO**, nao por regex: card discriminador e falso-positivo conhecido e esta documentado no modulo.
-- **`estilo-flashcard.md` §UM CRITERIO DE ACERTO (s128)** -- regua nova, formulada pelo usuario. Card que admite "acertei metade" torna a nota FSRS ininterpretavel. Demanda composta se treina em QUESTAO, nunca em card.
-- **`insert_questao.py --errors-file`** -- lote transacional de erros (usado p/ os 13 de Hepato). 🔴 **`--habilidades` alimenta o ledger; `--elo` NAO** (errei isso e tive de reparar).
-
-## 🔄 Politica de cards MUDOU (s128) -- de teto para PISO
-
-**>= 30 cards/dia**, definido pelo usuario. Deixou de ser limite de protecao e virou **compromisso de vazao**. Razao dele, e ela corrige um erro meu: a atomizacao **baixa a carga cognitiva por card**, entao o custo de uma sessao e **tempo, nao contagem** -- eu havia alarmado sobre o pool subir de 383 p/ ~500 medindo em unidades. 🔴 **Nao tratar crescimento de pool como custo automatico**: perguntar o tempo real por card antes de alarmar. Estado: base ativa 787 = 283 introduzidos + **504 no pool**. A 30 novos/dia o pool zera em ~17 dias (11/08).
-
-## ⚖️ Load balancing do FSRS (s128) -- NOVO, pedido do usuario
-
-O agendamento agora **olha o calendario**. Dentro da folga do intervalo (+-5%, piso 1d / teto 10d), escolhe o dia de MENOR carga -- achata o pico sem tocar em `stability`/`difficulty`. So card de revisao com intervalo >= 4d; nunca no passado; empate fica no dia do FSRS. Norma em `AGENTE.md §6`; regra pura em `app/utils/fsrs_balance.py`; aplicado em `db.record_review`. **Ver o efeito: `python tools/fsrs_load.py`** (mostra a distribuicao + o **CV**, que e a metrica a derrubar). Estado inicial medido: **pico 48 no dia 27/07 contra media 9,2 -- CV 1,13**. O balanceamento so age em revisoes FUTURAS: o grumo ja agendado nao se desfaz sozinho.
+🔴 **Variancia 10,4 pp (alta)** -- corre POR FORA da zona, prescreve **simulado** em qualquer quadrante. Em debito ha 5 semanas -- o usuario ja programou o simulado de amanha para isso.
 
 ## Padroes de erro vivos -- atencao do scrum master
 
-- 🔴 **Padrao-mestre, FACETA NOVA: o discriminador e um exame NORMAL.** 3 instancias limpas na s128 (transaminase normal excluia hepatite; DHL/hemograma normais excluiam hemolise; transaminase normal excluia indicacao de tratar). Ele le "normal" como ausencia de informacao.
-- 🔴 **Bug nº1 (numero contra a regua)** -- card 421: "dialise depende do valor?" -> depende de **AEIOU**, nao de numero.
-- 🟡 **Pergunta composta -- NAO INFLAR.** Contei 6 ocorrencias na s128; **5 eram defeito de card duplo**, 1 real. O padrao existe, mas so se mede em **questao de prova**.
-- 🟢 **Sensor em desenvolvimento:** no card 462 ele verbalizou o discriminador ("essa funcao minima ai e foda") e ainda assim errou. Detecta, mas nao converte em mudanca de resposta -- alvo do proximo ciclo.
+- 🔴 **Dengue Grupo C x D -- 3ª reincidencia (s130).** Mesmo discriminador (sinal de alarme isolado reclassifica pra C, nao pula pra D) errado 3x: 2 em junho, 1 em s130. O resumo (`Arboviroses.md`) ja tem a regra certa desde a 2ª ocorrencia -- **isso nao e lacuna de conteudo, e recall que nao resiste a pressao de prova.** Merece ficar no radar ate parar de reincidir.
+- 🟡 **"Direcao certa, parou antes do detalhe" (s130).** Padrao notado no dreno de cards: varias respostas acertaram o principio geral mas nao o numero/regime especifico que fecha a questao (criterios ADA, regime basal+bolus, local de puncao do pneumotorax pos-ATLS 10/11). Nao e falta de conhecimento, e parar cedo demais na resposta.
+- 🟡 **Cair na armadilha que o proprio card ja avisava (s130).** 4 casos no dreno (LSIL 20a, DMO-DRC/calcio-vs-dieta, TTA penetrante/TC-vs-laparoscopia, cardiopatia cianotica/CIA-vs-TGA) -- ver o verso uma vez nao bastou pra internalizar nesses pontos.
+- 🔴 **Padrao-mestre (discriminador que EXCLUI), faceta "exame NORMAL"** -- vivo desde s128, sem nova instancia limpa em s129/s130.
+
+## Capacidades novas (s129/s130) -- usar
+
+- **Recuperar aula-base de transcript anterior em vez de regenerar** -- quando o usuario ja recebeu uma aula-base na mesma sessao/dia mas nao fez as questoes ainda, ler o `.jsonl` da sessao anterior em `C:\Users\daanm\.claude\projects\C--Users-daanm-medhub\` e extrair o texto ja pronto, poupando tokens. Usado com sucesso em s129.
+- **F39 continua:** mais 2 cards reforjados por atomicidade (138, 487) -- reescrita in-place com `update_flashcard_fields` + `insert_card_base.py` para os companheiros. Worklist de atomicidade segue (~350 cards, ver Pendencias).
 
 ## Estado por frente
-- **Volume & Metas:** 5295 / 9454 (perf. ~79.0%). Hoje: 0. Ritmo-alvo ~45.7q/dia (91d p/ Cronograma EMED (grade completa)). [derivado: day_plan --handoff-block]
-- **FSRS:** divida 0 atrasados + 9 p/ hoje -- pool 395 nunca introduzidos (entram <=40/dia). [derivado]
-- **Conteudo:** 71 resumos. `Pneumologia Intensiva.md` **ja tinha** a secao 7 de VMNI completa -- a lacuna da s127 era da AULA, nao do resumo.
-- **Erros & Cards:** 606 erros (+13) · 908 cards (+47 cunhados, +12 desmembrados, 9 reescritos in-place com FSRS preservado).
-- **Posicao cronograma:** conteudo S13 (nominal S17, atraso 4 sem). Drive stale 17d (F36).
+- **Volume & Metas:** 5385 / 9454 (perf. ~79.3%). Hoje: 57. Ritmo-alvo ~47.9q/dia (85d p/ Cronograma EMED (grade completa)). [derivado: day_plan --handoff-block]
+- **FSRS:** divida 41 atrasados + 9 p/ hoje -- pool 520 nunca introduzidos (entram <=80/dia). [derivado]
+- **Conteudo:** 75 resumos. 2 novos completos esta sessao (`Meningites.md`, `Psiquiatria Social e Reforma Psiquiatrica.md`) + 1 da sessao anterior (`Transtornos do Humor.md`).
+- **Erros & Cards:** 619 erros (+8 s129, +5 s130, incluindo 2 banca-divergentes) · 1033 cards (+13 nesta sessao entre erros e reforja).
+- **Meta do mes (agosto):** 7000 acumulado ate 31/08 -- deficit 1615q, ritmo necessario ~52q/dia.
+- **Posicao cronograma:** S13 **completa** (12/12). Proximo: S14.
 
 ## Pendencias ativas
-**Worklist de atomicidade: ~350 cards** (227 duplo-ask primeiro -- corrompem a nota; depois os 137 so-paragrafo). Lotes por tema, priorizando quem cai na fila FSRS dos proximos dias; nunca big-bang. Reforja de `TCE.md` + `Sistemas de Informacao em Saude.md`. Ledger `AUDITORIA_MEDHUB.md`: **F39 novo** (atomicidade, PARCIAL), **F38** (erros analisados nao chegam a `questoes_erros` -- delta retroativo de ate 131), **F36 elevado a ALTA** (o MCP entrega o xlsx; o que quebra e a transcricao de 30 KB -- so codigo conserta, `--fetch-drive`), F37, F35, F8.
+**Worklist de atomicidade: ~348 cards** (227 duplo-ask primeiro -- corrompem a nota; depois os 137 so-paragrafo; -2 esta sessao). Lotes por tema, priorizando quem cai na fila FSRS dos proximos dias; nunca big-bang. Ledger `AUDITORIA_MEDHUB.md`: **F39** (atomicidade, PARCIAL, avancando), **F38** (erros analisados nao chegam a `questoes_erros` -- delta retroativo de ate 131), **F36 ALTA** (Drive stale, MCP entrega o xlsx mas a transcricao de 30 KB quebra -- so codigo conserta, `--fetch-drive`), F37, F35, F8.
 
 ---
-*Historico: history/INDEX.md * Macro: ESTADO.md * Sessao: history/session_128.md * Ledger de engenharia: AUDITORIA_MEDHUB.md*
+*Historico: history/INDEX.md * Macro: ESTADO.md * Sessao: history/session_130.md * Ledger de engenharia: AUDITORIA_MEDHUB.md*

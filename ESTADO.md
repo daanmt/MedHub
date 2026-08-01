@@ -7,7 +7,7 @@ relates_to: [AGENTE, handoff-contract, estado-contract]
 
 # ESTADO -- MedHub
 
-*Atualizado: 2026-07-26 (sessão 128 -- Hepatologia S13 (68,3%) + 13 erros persistidos + dreno FSRS de 40 cards + **F39: 40% do baralho viola o princípio atômico** (detector entregue); acumulado 5.295) | Ferramenta: Claude Code (Opus 5 [1M])*
+*Atualizado: 2026-08-01 (sessão 130 -- Meningites + Reforma Psiquiátrica (resumos completos) + Arboviroses/Meningites/Sepse (91,2%) + dreno FSRS de 50 cards + **S13 COMPLETA (12/12 tasks)**; acumulado 5.385) | Ferramenta: Claude Code (Sonnet 5)*
 
 > **Boot:** ler [`AGENTE.md`](AGENTE.md) -> [`HANDOFF.md`](HANDOFF.md) (operacional curto) primeiro. Este arquivo é o snapshot **macro** (metas, indicador, marcos). Estrutura normatizada por [`core/contracts/estado-contract.md`](core/contracts/estado-contract.md).
 

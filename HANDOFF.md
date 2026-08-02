@@ -1,11 +1,16 @@
 # HANDOFF.md -- ESTADO OPERACIONAL CURTO
-*Atualizado: 2026-08-02 -- **s131: Simulado ENARE/ENAMED (100q, 54%) processado por completo (46/46 erros analisados e persistidos) + 2 padroes de raciocinio novos cruzaram o limiar no ledger de habilidades + PLAYBOOK_EXECUCAO_PROVA.md atualizado (tripe) + estrategia multi-banca (ENAMED/UERJ/USP) refinada com o usuario.***
+*Atualizado: 2026-08-02 -- **s131+s132: Simulado ENARE/ENAMED (100q, 54%) processado por completo (46/46 erros) + 2 padroes novos no ledger + PLAYBOOK_EXECUCAO_PROVA.md atualizado (tripe) + estrategia multi-banca refinada + dreno FSRS 30/100 cards + Revisao Direcionada de fechamento.***
 
 ## > Proximo passo imediato
 
-1. **Escrever as armadilhas nos `resumos/*.md` correspondentes aos 46 erros -- pendencia aberta, nao fechada nesta sessao.** ~35 temas SEM resumo ainda (novos, criados so na `taxonomia_cronograma` pelo insert do erro) -- ver lista completa em "Pendencias ativas". Frente propria, tratar em lote por especialidade, nao big-bang.
-2. **Retomar o ritmo normal:** FSRS (50 atrasados + 12 hoje = 62) via `/revisar`, depois questoes do cronograma **S14** (ignorar sugestao de S13 do `day_plan` -- Drive segue stale, ver aviso abaixo). Sem sprint: ritmo ~47-55q/dia em 6 dias/semana, decisao s126 reafirmada nesta sessao.
-3. **Simulado semanal virou compromisso, nao aspiracao.** Proximo em ate 7 dias. Restam ~5-6 simulados ate o ENAMED (13/09, 42d restantes nesta data) -- o ultimo cai dentro do Interludio ja planejado (07-13/09).
+1. **Continuar o dreno FSRS: restam 70 cards** (32 atrasados/hoje + 38 novos do pool) do lote de 100 que o usuario pediu -- ver `tools/fsrs_queue.py --list --limit 70 --new-limit 38`.
+2. **Escrever as armadilhas nos `resumos/*.md` correspondentes aos 46 erros do simulado -- pendencia aberta.** ~34 temas SEM resumo ainda (1 de 35 ja resolvido: Doencas Benignas da Mama, s132). Ver lista completa em "Pendencias ativas". Frente propria, lote por especialidade.
+3. **Retomar cronograma S14** (ignorar sugestao de S13 do `day_plan` -- Drive stale, ver aviso abaixo). Sem sprint: ritmo ~47-55q/dia em 6 dias/semana, decisao s126 reafirmada.
+4. **Simulado semanal virou compromisso.** Proximo em ate 7 dias. Restam ~5-6 ate o ENAMED (13/09) -- ultimo cai no Interludio ja planejado (07-13/09).
+
+## 🔁 Dreno FSRS s132 -- 30/100 cards, padrao "direcao certa sem o detalhe" reincidiu 4x
+
+Notas: ~19x4, 8x2, 2x3, 1x1. Revisao Direcionada de fechamento (descomprimida, a pedido do usuario) conferiu os 8 resumos de origem dos 11 cards <4: **10 ja bem cobertos** (recall gap, nao lacuna -- trauma/Pringle/amilase, ulceras genitais, hanseniase, iSGLT-2, endometriose, rastreamento colo, LRA). **1 expandido:** Doencas Benignas da Mama (fibroadenoma complexo x cisto complexo -- usuario respondeu "mastectomia" pra lesao benigna).
 
 ## 🎯 Simulado ENARE/ENAMED processado (s131) -- achado mais denso da preparacao ate aqui
 
@@ -34,8 +39,8 @@ Ambos os novos + o reforco do padrao-mestre estao documentados em `PLAYBOOK_EXEC
 
 ## Estado por frente
 - **Volume & Metas:** 5485 / 9454 (perf. ~78.8%). Hoje: 100. Ritmo-alvo ~47.2q/dia (84d p/ Cronograma EMED (grade completa)). [derivado: day_plan --handoff-block]
-- **FSRS:** divida 50 atrasados + 12 p/ hoje -- pool 566 nunca introduzidos (entram <=80/dia). [derivado]
-- **Conteudo:** 75 resumos em resumos/. [derivado: glob]
+- **FSRS:** divida 26 atrasados + 15 p/ hoje (drenada de 62 nesta sessao) -- pool 566 nunca introduzidos (entram <=40/dia). [derivado]
+- **Conteudo:** 75 resumos em resumos/ (1 expandido nesta sessao: Doencas Benignas da Mama). [derivado: glob]
 - **Posicao:** conteudo S13 (nominal S18, atraso 5 sem) [derivado: preparacao_estado] -- ⚠️ **S13 ja fechou 12/12 na s130** (SUS/Imunizacoes/Colecistite feitos em 13-15/07); o derivado so nao reflete isso por causa do Drive stale (F36). Proximo tema real: **S14**.
 - **Erros & Cards:** 667 erros acumulados (+46 nesta sessao) · cards + FSRS inicializados para todos os 46.
 - **Diagnostico (`variancia.py --zona`):** zona COBERTURA (media blocos 78,2%, desvio 10,4pp alto, 43% da grade percorrida). Simulado em dia (registrado hoje).

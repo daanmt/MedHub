@@ -1,16 +1,20 @@
 # HANDOFF.md -- ESTADO OPERACIONAL CURTO
-*Atualizado: 2026-08-02 -- **s131+s132: Simulado ENARE/ENAMED (100q, 54%) processado por completo (46/46 erros) + 2 padroes novos no ledger + PLAYBOOK_EXECUCAO_PROVA.md atualizado (tripe) + estrategia multi-banca refinada + dreno FSRS 30/100 cards + Revisao Direcionada de fechamento.***
+*Atualizado: 2026-08-03 -- **s133: dreno FSRS fecha 80/100 do lote (50 cards, 5 blocos de 10) + Revisao Direcionada de fechamento -- zona fraca nova identificada em Nefrologia (DRC/DMO + eixo agudo x cronico), 100% recall gap confirmado contra o resumo.***
 
 ## > Proximo passo imediato
 
-1. **Continuar o dreno FSRS: restam 70 cards** (32 atrasados/hoje + 38 novos do pool) do lote de 100 que o usuario pediu -- ver `tools/fsrs_queue.py --list --limit 70 --new-limit 38`.
+1. **Retomar o dreno FSRS:** lote de 100 fechou em 80 (30 s132 + 50 s133). Restam **20 cards, todos do pool novos** (`476,477,478,479,480,481,483,484,485,486,491,492,493,495,499,501,502,503,504,505`) + o que vencer organicamente (relearning dos 13 notas-1 de hoje volta em ciclo curto) -- ver `tools/fsrs_queue.py --list`. Considerar abrir com PREPARAR rapido em Nefrologia (DRC/DMO + pre-renal x NTA x nefroesclerose) antes de drillar -- 7/10 do ultimo bloco caiu nesse eixo.
 2. **Escrever as armadilhas nos `resumos/*.md` correspondentes aos 46 erros do simulado -- pendencia aberta.** ~34 temas SEM resumo ainda (1 de 35 ja resolvido: Doencas Benignas da Mama, s132). Ver lista completa em "Pendencias ativas". Frente propria, lote por especialidade.
 3. **Retomar cronograma S14** (ignorar sugestao de S13 do `day_plan` -- Drive stale, ver aviso abaixo). Sem sprint: ritmo ~47-55q/dia em 6 dias/semana, decisao s126 reafirmada.
 4. **Simulado semanal virou compromisso.** Proximo em ate 7 dias. Restam ~5-6 ate o ENAMED (13/09) -- ultimo cai no Interludio ja planejado (07-13/09).
 
-## 🔁 Dreno FSRS s132 -- 30/100 cards, padrao "direcao certa sem o detalhe" reincidiu 4x
+## 🔁 Dreno FSRS s133 -- 50 cards (fecha 80/100 do lote), zona fraca nova em Nefrologia
 
-Notas: ~19x4, 8x2, 2x3, 1x1. Revisao Direcionada de fechamento (descomprimida, a pedido do usuario) conferiu os 8 resumos de origem dos 11 cards <4: **10 ja bem cobertos** (recall gap, nao lacuna -- trauma/Pringle/amilase, ulceras genitais, hanseniase, iSGLT-2, endometriose, rastreamento colo, LRA). **1 expandido:** Doencas Benignas da Mama (fibroadenoma complexo x cisto complexo -- usuario respondeu "mastectomia" pra lesao benigna).
+Notas: 24x4, 8x3, 5x2, 13x1 -- media puxada pra baixo pelo bloco 5 (7/10 <4, todo do pool novos, concentrado em Nefrologia). **Padrao-mestre [[feedback_bug_discriminador_exclui]] reincidiu 3x no bloco 3** (mortalidade geral ignorando "estruturas etarias distintas"; CIV ignorando "cianotica"; penicilina IM ignorando "profilaxia adequada") -- sinalizado ao usuario em tempo real.
+
+**Achado novo:** eixo agudo x cronico embaralhado 3x (pre-renal com raciocinio de DRC; nefroesclerose hipertensiva chamada "NTA cronificada"; SHU confundido com NIA) + cadeia da DMO-DRC nao consolidada (hiperPTH secundario, os 2 extremos de turnover, termo diagnostico -- 3 "nao lembro" seguidos). Revisao Direcionada conferiu `Doenca Renal Cronica.md` + `Lesao Renal Aguda.md` contra os 7 gaps: **ambos excepcionais**, ja tem ate tabela diferencial NIA x SHU x GNDA x PTT pronta (LRA.md §4.9) -- **100% recall gap, zero edicao de resumo.** E zona fraca de pratica, nao de material -- watchlist para a proxima entrada em Nefro.
+
+Usuario perguntou diretamente se os cards estavam repetindo -- confirmado: Imunizacoes (7), Ictericia/Sepse Neonatal (6) e Sindromes Hipertensivas (6) concentraram quase metade dos primeiros 40 cards. E artefato de cunhagem em lote na mesma sessao de origem (due dates proximas), nao redundancia de autoria.
 
 ## 🎯 Simulado ENARE/ENAMED processado (s131) -- achado mais denso da preparacao ate aqui
 
@@ -34,13 +38,14 @@ Ambos os novos + o reforco do padrao-mestre estao documentados em `PLAYBOOK_EXEC
 ## Padroes de erro vivos -- atencao do scrum master
 
 - 🔴 **Dengue Grupo C x D -- 3a reincidencia (s130).** Mesmo discriminador (sinal de alarme isolado reclassifica pra C, nao pula pra D) errado 3x. O resumo ja tem a regra certa -- e recall que nao resiste a pressao de prova, nao lacuna de conteudo. Sem instancia nova no simulado s131 (tema nao caiu nesta prova).
-- 🟡 **"Direcao certa, parou antes do detalhe" (s130).** Acertar o principio geral mas nao o numero/regime especifico que fecha a questao. Ainda vivo -- proxima ocorrencia limpa marca para o playbook.
+- 🟡 **"Direcao certa, parou antes do detalhe" (s130).** Acertar o principio geral mas nao o numero/regime especifico que fecha a questao. **Reincidiu no dreno s133** (icterícia<24h, Declaracao de Obito, IGIV, sifilis terciaria, diagnostico+conduta composta) -- padrao consistente atraves de sessoes, considerar promover a 🔴.
 - 🟡 **Cair na armadilha que o proprio card ja avisava (s130).** Ver o verso uma vez nao bastou pra internalizar em 4 casos.
+- 🟡 **Nefrologia -- eixo agudo x cronico embaralhado + cadeia DMO-DRC nao consolidada (s133, novo).** 3 trocas agudo/cronico no mesmo bloco (pre-renal, nefroesclerose, SHU x NIA) + 3 "nao lembro" seguidos na cadeia do hiperPTH secundario. Resumos conferidos e excelentes -- e pratica, nao material. Watchlist para a proxima entrada em Nefro.
 
 ## Estado por frente
 - **Volume & Metas:** 5485 / 9454 (perf. ~78.8%). Hoje: 100. Ritmo-alvo ~47.2q/dia (84d p/ Cronograma EMED (grade completa)). [derivado: day_plan --handoff-block]
-- **FSRS:** divida 26 atrasados + 15 p/ hoje (drenada de 62 nesta sessao) -- pool 566 nunca introduzidos (entram <=40/dia). [derivado]
-- **Conteudo:** 75 resumos em resumos/ (1 expandido nesta sessao: Doencas Benignas da Mama). [derivado: glob]
+- **FSRS:** divida original de atrasados/hoje (41 cards) **zerada** nesta sessao; fila viva agora mostra 6 atrasados + 13 hoje (bounce-back de relearning dos 13 notas-1 de hoje) -- pool ~557 nunca introduzidos, 9 introduzidos nesta sessao (entram <=40/dia). [derivado]
+- **Conteudo:** 75 resumos em resumos/ -- nenhum editado nesta sessao (DRC.md e LRA.md conferidos contra os gaps de Nefro e ja excelentes). [derivado: glob]
 - **Posicao:** conteudo S13 (nominal S18, atraso 5 sem) [derivado: preparacao_estado] -- ⚠️ **S13 ja fechou 12/12 na s130** (SUS/Imunizacoes/Colecistite feitos em 13-15/07); o derivado so nao reflete isso por causa do Drive stale (F36). Proximo tema real: **S14**.
 - **Erros & Cards:** 667 erros acumulados (+46 nesta sessao) · cards + FSRS inicializados para todos os 46.
 - **Diagnostico (`variancia.py --zona`):** zona COBERTURA (media blocos 78,2%, desvio 10,4pp alto, 43% da grade percorrida). Simulado em dia (registrado hoje).
@@ -52,4 +57,4 @@ Ambos os novos + o reforco do padrao-mestre estao documentados em `PLAYBOOK_EXEC
 **Worklist de atomicidade: ~348 cards** (herdada, sem mudanca nesta sessao). Ledger `AUDITORIA_MEDHUB.md`: F39 (atomicidade, PARCIAL), F38, F36 ALTA (Drive stale), F37, F35, F8.
 
 ---
-*Historico: history/INDEX.md * Macro: ESTADO.md * Sessao: history/session_131.md * Ledger de engenharia: AUDITORIA_MEDHUB.md*
+*Historico: history/INDEX.md * Macro: ESTADO.md * Sessao: history/session_133.md * Ledger de engenharia: AUDITORIA_MEDHUB.md*

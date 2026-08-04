@@ -152,6 +152,14 @@ aliases: [SUS]
 - Acesso de primeiro contato = atencao no primeiro contato.
 - Orientacao comunitaria = abordagem/foco na comunidade; Orientacao familiar = centralidade/foco na familia.
 
+### 5.4 Discriminacao por Vinheta
+
+> A banca raramente pergunta a definicao isolada -- ela descreve a CENA e pede pra identificar o atributo. Os pares abaixo sao os que mais confundem.
+
+- **"ACS insuficiente / populacao sem cobertura, sem conseguir chegar ao servico"** -> **Acesso de primeiro contato**, nao Coordenacao. Acesso e sobre CHEGAR ao servico (porta de entrada); Coordenacao e sobre articular o fluxo ENTRE pontos da rede depois que a pessoa ja esta DENTRO do sistema (referencia/contrarreferencia). O ACS e a ponte de entrada, nao o articulador de fluxo interno.
+- **"Profissional caminha o territorio, levanta dados epidemiologicos/sociodemograficos, participa do conselho local, e PROPOE planejamento das acoes conforme as necessidades"** -> **Orientacao comunitaria**. O INSUMO (dados + contato direto com a comunidade/territorio) e o atributo; o planejamento resultante e consequencia, nao o atributo em si. ⚠️ "Planejamento estrategico" nao existe na lista de atributos de Starfield -- e isca lexical pelo eco da palavra "planejamento" no enunciado.
+- **"Entender e valorizar a cultura, habitos, crencas de um grupo pra facilitar a relacao"** -> **Competencia cultural**, nao Orientacao comunitaria. Os dois sao derivados e ambos remetem a "conhecer o contexto social", mas Orientacao comunitaria e DADO agregado da comunidade como um todo (epidemiologia/sociodemografia); Competencia cultural e RESPEITO relacional a cultura/crencas/idioma de um grupo especifico.
+
 ---
 
 ## 6. Armadilhas de Prova
@@ -166,3 +174,6 @@ aliases: [SUS]
 - 🔴 Classificacao dos atributos da APS: Coordenacao, Integralidade, Acesso de primeiro contato e Longitudinalidade sao ESSENCIAIS (essenCIAL); Orientacao familiar, Orientacao comunitaria e Competencia cultural sao DERIVADOS. Trocar essencial por derivado e o erro mais cobrado.
 - 🔴 A APS e a porta de entrada PREFERENCIAL (nao a unica) -- urgencia/emergencia, atencao psicossocial e servicos de acesso aberto tambem sao portas de entrada da rede.
 - 🔴 Competencia cultural nao se resume a compreender a linguagem local: envolve respeitar crencas e rituais do grupo e, ao final, materializa a equidade.
+- 🔴 ACS insuficiente/populacao sem cobertura prejudica o **Acesso de primeiro contato** (chegar ao servico), nao a Coordenacao (fluxo entre pontos ja dentro do sistema).
+- 🔴 Vinheta de profissional que caminha o territorio + levanta dados epidemiologicos/sociodemograficos + participa do conselho local = **Orientacao comunitaria**, mesmo que a ultima frase mencione "planejamento" -- "planejamento estrategico" nao e atributo de Starfield.
+- 🔴 Orientacao comunitaria (dado agregado da comunidade) x Competencia cultural (respeito relacional a cultura/crencas/idioma de um grupo) -- ambos derivados, ambos remetem a "contexto social", mas nao sao intercambiaveis.

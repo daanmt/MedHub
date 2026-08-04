@@ -533,6 +533,12 @@ relates_to: [AGENTE, ESTADO, HANDOFF]
 - **Veredito:** F36 **nao se resolve por protocolo**. So codigo resolve. Enquanto `--fetch-drive` nao
   existe, o modo degradado (2) + (3) e o melhor disponivel: `read_file_content` da ordem e temas;
   a conclusao se cruza com `sessoes_bulk`, que e SSOT e independente do Drive.
+- **Adendo 3 (s134, 2026-08-03) -- reincidencia confirma o diagnostico da s128, sem achado tecnico novo.**
+  `download_file_content` + reescrita manual travou 2x no mesmo padrao de truncamento sistematico
+  (nao progrediu alem do que o adendo 2 ja quantificou). `read_file_content` funcionou de primeira,
+  devolvendo a planilha inteira como texto (28 colunas de semana, tarefas por linha), confirmando que
+  o modo degradado (2)+(3) e **reproduzivel**, nao um acerto isolado da s128. `--fetch-drive` segue
+  nao implementado -- 6a sessao seguida com a mesma lacuna de transporte.
 
 ### F37 -- `taxonomia_cronograma.questoes_realizadas` inflado ~3,7x -- **MEDIA** -- **ABERTO**
 - **Evidencia (s127):** o campo acusa **19.597** questoes contra **5.232** reais em `sessoes_bulk`.

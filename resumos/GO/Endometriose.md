@@ -44,7 +44,7 @@ Presença de tecido endometrial (glândulas e estroma) fora da cavidade uterina.
   - **Estádio II -- leve:** implantes superficiais < 5 cm no peritônio e ovários, sem aderências significativas.
   - **Estádio III -- moderada:** múltiplos implantes, aderências tubárias e ovarianas.
   - **Estádio IV -- grave:** múltiplos implantes superficiais e profundos, endometriomas e aderências densas.
-- **Classificação de ACOSTA (1973):** leve, moderada ou grave (menos utilizada; a leve corresponde a implantes superficiais recentes, sem endometrioma nem aderências).
+- **Classificação de ACOSTA (1973):** leve, moderada ou grave (menos utilizada; a leve corresponde a implantes superficiais recentes, sem endometrioma nem aderências; observar que ACOSTA não possui o grau "mínima", exclusivo da ASRM).
 - ⚠️ Padrão de prova: **não há correlação entre o estádio e os sintomas ou a intensidade da dor.** A dor depende da **profundidade** do implante e de estar em **área inervada**, não do estádio. Da mesma forma, a infertilidade ocorre mesmo em estádios iniciais (pela alteração inflamatória do líquido peritoneal).
 
 ---
@@ -176,3 +176,4 @@ O racional do tratamento clínico é bloquear/reduzir a menstruação e o estím
 - 🔴 **O endométrio na endometriose super-expressa aromatase** (produz estrogênio local -- não há "falta" de aromatase) e apresenta **resistência à progesterona**; fixar a direção dessas alterações.
 - 🔴 **Locais mais frequentes: ovários > fundo de saco > ligamentos uterossacros.** As tubas uterinas não estão entre os sítios mais frequentes, apesar de a menstruação retrógrada passar por elas.
 - 🔴 **Malignização é rara (1-2,5%)** -- carcinoma endometrióide e de células claras -- e **não justifica rastreamento** de câncer de ovário.
+- 🔴 **Recorrência é independente do tratamento:** por ser doença crônica estrogênio-dependente, a endometriose pode apresentar recidiva independente de o tratamento ter sido clínico (ACO/progestágeno/análogos) ou cirúrgico conservador.

@@ -176,7 +176,8 @@
       "Bash(echo \"=== CARD 4 \\(Q3 - conteudo na menina\\) ===\")",
       "Bash(echo \"=== DONE ===\")",
       "Bash(echo \"=== ARQUIVOS GERADOS ===\")",
-      "Bash(wc -l C:/Users/daanm/AppData/Local/Temp/claude/C--Users-daanm-medhub/024dc8d5-1dda-4289-91f9-248ee5ce40d4/scratchpad/dm_cronicas.txt C:/Users/daanm/AppData/Local/Temp/claude/C--Users-daanm-medhub/024dc8d5-1dda-4289-91f9-248ee5ce40d4/scratchpad/acido_base.txt C:/Users/daanm/AppData/Local/Temp/claude/C--Users-daanm-medhub/024dc8d5-1dda-4289-91f9-248ee5ce40d4/scratchpad/gasometria.txt C:/Users/daanm/AppData/Local/Temp/claude/C--Users-daanm-medhub/024dc8d5-1dda-4289-91f9-248ee5ce40d4/scratchpad/pneumo_intensiva.txt C:/Users/daanm/AppData/Local/Temp/claude/C--Users-daanm-medhub/024dc8d5-1dda-4289-91f9-248ee5ce40d4/scratchpad/hepatites_virais.txt)"
+      "Bash(wc -l C:/Users/daanm/AppData/Local/Temp/claude/C--Users-daanm-medhub/024dc8d5-1dda-4289-91f9-248ee5ce40d4/scratchpad/dm_cronicas.txt C:/Users/daanm/AppData/Local/Temp/claude/C--Users-daanm-medhub/024dc8d5-1dda-4289-91f9-248ee5ce40d4/scratchpad/acido_base.txt C:/Users/daanm/AppData/Local/Temp/claude/C--Users-daanm-medhub/024dc8d5-1dda-4289-91f9-248ee5ce40d4/scratchpad/gasometria.txt C:/Users/daanm/AppData/Local/Temp/claude/C--Users-daanm-medhub/024dc8d5-1dda-4289-91f9-248ee5ce40d4/scratchpad/pneumo_intensiva.txt C:/Users/daanm/AppData/Local/Temp/claude/C--Users-daanm-medhub/024dc8d5-1dda-4289-91f9-248ee5ce40d4/scratchpad/hepatites_virais.txt)",
+      "Bash(python *)"
     ]
   },
   "enableAllProjectMcpServers": true,

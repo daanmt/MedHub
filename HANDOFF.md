@@ -1,24 +1,25 @@
 # HANDOFF.md -- ESTADO OPERACIONAL CURTO
-*Atualizado: 2026-08-07 -- Reconciliação s138 (Claude Code) sobre s136-137 (Antigravity, sem fechamento) -- detalhe em `history/INDEX.md` (gap-note)*
+*Atualizado: 2026-08-07 -- Sessão 138 -- 86 erros (Simulado 2+3) analisados/cadastrados + raio-x consolidado vs cronograma*
 
 ## > Próximo passo imediato
 
-1. **Análise de Erros do Simulado 2 & Simulado 3:**
-   - **Simulado 2 (Sessão 131 / 46 erros):** já 100% em `questoes_erros`+`flashcards`+FSRS (Siamese Twins automático) e com 3 padrões no ledger de habilidades. **Pendente real (adiado desde s131):** integrar as 🔴 armadilhas nos ~35 resumos correspondentes -- ainda não escrito em nenhum `resumos/*.md`.
-   - **Simulado 3 (Sessão 137 / 40 erros):** ainda **0 registrados**. Fonte (PDFs/print das questões) não está no repo -- Simulado 2 usou 5 PDFs na raiz (`Simulado 2 - pt*.pdf`); não há equivalente `Simulado 3 - *` localmente. Precisa do usuário.
-2. **Conclusão da Semana 14:**
-   - Tasks restantes: *Cefaleias & Epilepsias (Revisão 48q)*, *Hanseníase & Síndromes Verrucosas (Revisão 41q)*, *IVAS Pt. 1 (Teoria 19q)*.
+1. **Aulas-base enxutas por bloco dos erros do relatório** (decisão do usuário ao fechar a s138): agrupar os 86 erros do raio-x (artifact publicado na sessão) por bloco temático/área, dar uma aula-base **enxuta** (não a escada completa D10 -- o objetivo é tapar o buraco específico que o erro expôs, não recobrir o tema inteiro) para cada bloco. Isso **absorve** a pendência antiga "integrar armadilhas do Simulado 2 nos resumos" (adiada desde s131) -- a aula-base é o veículo que escreve a armadilha no resumo, não uma tarefa separada.
+2. **Ao final: drenar os cards FSRS** -- fila atual 27 atrasados + 25 do dia (52 prontos) + pool 617 nunca introduzidos (inclui os 40 novos do Simulado 3, ainda state=0).
+3. Priorização sugerida pelo raio-x: comece pelos **17 erros "retenção confirmada"** (já estudados antes, erro reincide) e pelos **3 blind spots estruturais** (SCA/dislipidemia, Psoríase, Transtornos Alimentares -- não têm resumo/tarefa nenhuma no grade) -- maior densidade de sinal por aula.
+4. Pendente à parte: *Cefaleias & Epilepsias (Revisão 48q)*, *Hanseníase & Síndromes Verrucosas (Revisão 41q)*, *IVAS Pt. 1 (Teoria 19q)* -- tasks restantes da Semana 14.
 
 ## Estado por frente
-- **Volume & Metas:** 5.811 / 9.454 (perf. ~78,6%). Ritmo-alvo ~46,1q/dia (79d p/ Cronograma EMED). Hoje (07/08): 0 -- sessão em andamento.
-- **Conteúdo:** 79 resumos -- `Tireotoxicose.md`, `Diverticulite Aguda.md`, `Doenças da Coluna Vertebral e Maus-Tratos.md` (novos, 05/08) + `Pré-Natal.md` (atualizado, 05/08); commitados em 06/08 junto do Simulado 3.
-- **Erros & Cards:** 718 erros totais em `questoes_erros` (+24 em 05-06/08: tireotoxicose 685-694, Pré-Natal/Aborto-Legal 695-708, Diverticulite/Coluna 709-718) -- todos com card atômico pareado (`flashcards`/`fsrs_cards` 1112-1135).
-- **FSRS:** dreno real de 96 cards em **05/08** (não "50 hoje" como o HANDOFF anterior registrou -- 0 reviews em 06/08, corrigido na reconciliação). Fila **agora (07/08): 27 atrasados + 25 do dia -- pool 577 nunca introduzidos** (`day_plan.py --handoff-block`).
+- **Volume & Metas:** 5.811 / 9.454 (perf. ~78,6%). Ritmo-alvo ~46,1q/dia (79d p/ Cronograma EMED). Hoje (07/08): 0q de conteúdo novo -- sessão foi 100% análise/reconciliação.
+- **Erros & Cards:** **756 erros** em `questoes_erros` (+40 hoje: Simulado 3 completo, ids 719-758). **86/86 erros dos 2 simulados com card atômico pareado** (Simulado 2: 46/46 já existia desde s131; Simulado 3: 40/40 cunhado hoje). 2 bugs de acento próprios corrigidos em tempo real (taxonomia duplicada, mesclada de volta).
+- **FSRS:** fila **27 atrasados + 25 do dia** -- pool **617 nunca introduzidos** (+40 de hoje, ainda intocados). Nenhum dreno rodou nesta sessão (foi 100% análise).
+- **Ledger de habilidades:** "diretriz desatualizada" virou o padrão nº1 do ledger inteiro (7 especialidades). 2 padrões novos cruzaram o limiar de 3+ temas: "aborda pela especialidade, ignora instabilidade geral" e reforço do "enunciado negativo". Reincidência direta nomeada: toxoplasmose IgM+/IgG- (erro 729 = mesmo elo do erro 626, s131). Detalhe em `PLAYBOOK_EXECUCAO_PROVA.md` (seção "Evidência da s138").
+- **Artifact:** raio-x consolidado dos 86 erros × `grade.json` publicado (dashboard + cards de revisão rápida) -- 44/86 (51%) já deveriam estar cobertos pelo cronograma (17 retenção confirmada), 42/86 futuro/fora do nomeado (13 genuinamente fora de qualquer tarefa nomeada, 3 blind spots estruturais do grade).
 
-## Última sessão -- s136+s137 (Antigravity, reconciliadas na s138 -- ver gap-note no INDEX)
-- **s136 (05/08):** Tireotoxicose (10 erros, resumo novo) + Pré-Natal GO Aula D5 (38q/24 = 63,2%, 14 erros) + Diverticulite Aguda + Coluna Vertebral/Maus-Tratos Aula D10 (53q/43 = 81,1% combinado, 10 erros, 2 resumos novos) + dreno FSRS de 96 cards + 24 cards atômicos cunhados. 🔴 Volume de Tireotoxicose não entrou em `sessoes_bulk` (gap SSOT, total tentado não recuperável).
-- **s137 (06/08):** Simulado 3 (ENARE/ENAMED) -- 100q, 60 acertos (**60,0%** -- +6,0pp sobre os 54,0% do Simulado 2). Registrado em `sessoes_bulk` (`sessao_num` 137). Os 40 erros da prova **não foram cadastrados** -- é o item 1 do próximo passo.
-- Nenhuma das duas fechou o protocolo (sem `history/session_NNN.md`, sem entry no INDEX até esta reconciliação).
+## Última sessão -- s138
+- **Reconciliação:** selado o gap de fechamento das s136-137 (Antigravity) -- gap-note em `history/INDEX.md`, HANDOFF corrigido, commit separado (`4a84219`).
+- **Simulado 3 (40 erros):** usuário colou as 100 questões + gabarito oficial em lotes; identificação de erradas auditada contra o gabarito do usuário (bateu 40/40 exato); todas analisadas via protocolo `/analisar-questao` e cadastradas (`719-758`). Commit `d9671c0`.
+- **Raio-x consolidado:** os 86 erros (Simulado 2+3) cruzados contra `grade.json` + histórico do banco -- classificação em 7 status de cobertura, 3 blind spots estruturais do grade nomeados, artifact HTML publicado com dashboard e superfície de revisão card-a-card.
+- **Sem dreno FSRS e sem trabalho nos resumos ainda** -- fica para a próxima sessão (ver Próximo passo imediato).
 
 ---
-*Histórico: history/INDEX.md (gap-note s136-137) * Macro: ESTADO.md * Sessão: s138 em andamento (Claude Code)*
+*Histórico: history/INDEX.md * Macro: ESTADO.md * Sessão: history/session_138.md*

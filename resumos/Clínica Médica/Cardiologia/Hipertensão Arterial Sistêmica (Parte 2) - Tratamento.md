@@ -22,6 +22,7 @@ O tema mais cobrado em prova nao e a farmacologia isolada, e sim identificar QUE
 
 ### 1.2 Limiares para Iniciar Tratamento
 
+- ⭐ Nomenclatura de classificacao (SBC 2025): normotensao = PA < 120/80 mmHg; pre-hipertensao = PA 120-139 e/ou 80-89 mmHg (MEV, sem farmaco no diagnostico, com acompanhamento e estratificacao de risco cardiovascular); HAS estagio 1 = PA >= 140/90 mmHg (farmaco associado a MEV). A faixa 120-139/80-89 parece "normal" pelos criterios classicos mais antigos, mas a SBC 2025 passou a rotula-la PRE-hipertensao -- o diagnostico ja implica MEV e acompanhamento, independente da estratificacao de risco mais fina detalhada a seguir.
 - PA >= 120/80 mmHg sem criterio de HAS estabelecida e sem alto risco: apenas MEV, com alvo de manter PA < 130/80 mmHg e reduzir risco global.
 - PA 130-139 e/ou 80-89 mmHg (limitrofe) com risco cardiovascular alto ou muito alto: MEV por 3 meses.
   - -> se, apos 3 meses, PA persiste >= 130/80 mmHg: associar tratamento medicamentoso a MEV.
@@ -281,3 +282,4 @@ Investigar quatro pontos:
 - 🔴 Esquecer que a quarta droga da HAS resistente e a espironolactona (fundamentada no componente hipervolemico/hiperaldosteronismo), e que a MAPA e mandatoria para confirmar HAR verdadeira (excluir jaleco branco) antes de escalonar.
 - 🔴 Prescrever betabloqueador ao idoso em uso de inibidor da acetilcolinesterase (demencia) -- risco de bradiarritmia grave. No idoso, os anti-hipertensivos de primeira linha sao preferiveis, e na HSI a dupla e BCC + tiazidico.
 - 🔴 Suspender clonidina abruptamente: causa crise adrenergica de rebote (pior com betabloqueador concomitante). A retirada deve ser gradual, em 2-4 semanas.
+- 🔴 SBC 2025 nomeia a faixa PA 120-139 e/ou 80-89 mmHg como PRE-hipertensao (nao mais "normotensao" simples). Diante de PA media 128/84 mmHg (tecnica adequada, 2 consultas) em paciente assintomatico, a conduta NAO e "normotenso, retorno anual": e pre-hipertenso -- MEV ja no diagnostico, com acompanhamento e estratificacao de risco cardiovascular, sem farmaco. O farmaco so entra em HAS estagio 1 (PA >= 140/90 mmHg), associado a MEV. Confundir essa faixa com normotensao pelos criterios classicos antigos e o erro tipico de quem nao acompanhou a atualizacao da nomenclatura.

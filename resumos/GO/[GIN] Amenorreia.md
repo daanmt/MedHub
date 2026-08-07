@@ -433,6 +433,4 @@ Tratamento: **remover fator desencadeante**
 
 ## Armadilhas de Prova
 
-- 🔴 **Diagnóstico Diferencial em [GIN] Amenorreia:** Sempre correlacionar o quadro clínico com os achados de exame físico e complementar para excluir diagnósticos diferenciais graves antes de definir a conduta terapêutica.
-- ⭐ **Padrão de Prova:** Atenção aos gatilhos epidemiológicos e faixas etárias clássicas, pois as bancas frequentemente utilizam a idade e a cronologia dos sintomas para guiar o diagnóstico correto em [GIN] Amenorreia.
-- ⚠️ **Atenção nas dosagens e contraindicações:** Verificar sempre a função renal e hepática antes de introduzir esquemas farmacológicos invasivos ou solicitar exames contrastados.
+- 🔴 **Amenorreia primária SEM útero não é sinônimo de Turner:** diante de "sem útero", o reflexo de puxar uma causa genética "clássica" como a Síndrome de Turner é a armadilha. Turner (cariótipo 45X0) é disgenesia gonadal -- afeta só o compartimento II (ovário) -- e cursa com AUSÊNCIA de caracteres sexuais secundários (sem eixo hormonal funcionante) e com o útero PRESERVADO (compartimento I intacto). Um quadro com 46XX + mamas já desenvolvidas (eixo hormonal íntegro) + útero ausente fecha com Síndrome de Rokitansky (agenesia mülleriana isolada), nunca com Turner -- a ausência de caracteres sexuais secundários é o dado que exclui Turner do diagnóstico.

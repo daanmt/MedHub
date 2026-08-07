@@ -61,6 +61,13 @@ aliases: [DM2, DM]
 
 > ⚠️ **Padrão de prova:** Tireoidopatia **NÃO é rastreada** em adultos saudáveis assintomáticos -- nenhuma guideline recomenda (USPSTF, SBE, ATA). Frequência na prática clínica ≠ evidência.
 
+**Rastreio negativo + alta carga de risco (SBD 2024) -- TTGO-1h:**
+- HbA1c e glicemia de jejum isoladas têm sensibilidade limitada: um paciente pode ter DM ou pré-DM já instalados e ainda "passar" nos 2 testes normalmente
+- Se o rastreio inicial vier normal (HbA1c e glicemia de jejum) MAS o paciente acumula **≥ 3 fatores de risco** (ou escore **FINDRISC alto/muito alto**), a SBD 2024 não libera para reavaliação de rotina -- orienta aprofundar com **TTGO-1h** (glicemia 1h pós-sobrecarga de 75g), exame mais acurado para identificar diabetes/pré-diabetes não detectados pelos testes tradicionais nesse cenário
+- Reavaliação simples (repetir o rastreio em 1 ano, ou em 3 anos se baixo risco) fica reservada a quem tem baixa carga de fatores de risco
+
+> ⚠️ **Padrão de prova:** Rastreio "normal" (HbA1c + glicemia de jejum) em paciente com ≥ 3 fatores de risco NÃO fecha o caso com reforço de MEV/reavaliação em 1-3 anos -- a diretriz mais recente (SBD 2024) reconhece a baixa sensibilidade desses 2 exames isolados e manda aprofundar com TTGO-1h antes de liberar o paciente para reavaliação de rotina.
+
 ---
 
 ## 4. Critérios Diagnósticos
@@ -366,3 +373,4 @@ ETAPA 4: Insulinização plena (basal + prandial)
 - 🔴 **Sulfonilureias + warfarina/salicilatos**: ↑ hipoglicemia por deslocamento proteico (SUF 1ª geração)
 - 🔴 **Metformina + sulfonilureia**: NÃO aumenta hipoglicemia
 - 🔴 **ICFEi**: FE 40-49% (não confundir com ICFEr < 40% nem ICFEp ≥ 50%)
+- 🔴 **Rastreio negativo (HbA1c/glicemia de jejum normais) + ≥ 3 fatores de risco (ou FINDRISC alto/muito alto)**: SBD 2024 manda **TTGO-1h**, não apenas reavaliar em 1-3 anos -- HbA1c e glicemia de jejum isoladas têm sensibilidade limitada e podem ser falso-negativas nesse cenário de alto risco

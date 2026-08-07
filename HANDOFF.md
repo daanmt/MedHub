@@ -1,25 +1,26 @@
 # HANDOFF.md -- ESTADO OPERACIONAL CURTO
-*Atualizado: 2026-08-07 -- Sessão 138 -- 86 erros (Simulado 2+3) analisados/cadastrados + raio-x consolidado vs cronograma*
+*Atualizado: 2026-08-07 -- Sessão 139 -- workflow de curadoria dos 66 erros restantes do raio-x, encerrada em progresso (budget 90%)*
 
 ## > Próximo passo imediato
 
-1. **Aulas-base enxutas por bloco dos erros do relatório** (decisão do usuário ao fechar a s138): agrupar os 86 erros do raio-x (artifact publicado na sessão) por bloco temático/área, dar uma aula-base **enxuta** (não a escada completa D10 -- o objetivo é tapar o buraco específico que o erro expôs, não recobrir o tema inteiro) para cada bloco. Isso **absorve** a pendência antiga "integrar armadilhas do Simulado 2 nos resumos" (adiada desde s131) -- a aula-base é o veículo que escreve a armadilha no resumo, não uma tarefa separada.
-2. **Ao final: drenar os cards FSRS** -- fila atual 27 atrasados + 25 do dia (52 prontos) + pool 617 nunca introduzidos (inclui os 40 novos do Simulado 3, ainda state=0).
-3. Priorização sugerida pelo raio-x: comece pelos **17 erros "retenção confirmada"** (já estudados antes, erro reincide) e pelos **3 blind spots estruturais** (SCA/dislipidemia, Psoríase, Transtornos Alimentares -- não têm resumo/tarefa nenhuma no grade) -- maior densidade de sinal por aula.
-4. Pendente à parte: *Cefaleias & Epilepsias (Revisão 48q)*, *Hanseníase & Síndromes Verrucosas (Revisão 41q)*, *IVAS Pt. 1 (Teoria 19q)* -- tasks restantes da Semana 14.
+1. **Retomar o workflow de curadoria** ANTES de qualquer coisa nova:
+   `Workflow({scriptPath: "C:\Users\daanm\.claude\projects\C--Users-daanm-medhub\d09f727a-3eba-420b-ba22-4cc31bc61ec5\workflows\scripts\aula-base-raiox-restante-wf_7ececd35-b24.js", resumeFromRunId: "wf_7ececd35-b24"})` -- agentes já completos voltam do cache; só os pendentes rodam de novo. Conferir o `results` estruturado final (cada item já vem com `question_recap` + `mechanism_explanation` prontos).
+2. **Apresentar o ensino ao usuário em blocos pausados por área** (não uma parede de texto só) -- mesmo padrão dos blocos manuais da s139 (Cirurgia, Obstetrícia, Ginecologia, blind spots). Ao terminar cada bloco, seguir sem perguntar "posso continuar?" (autonomia), mas sem empilhar múltiplas áreas densas na mesma mensagem.
+3. **Rodar `auto_check --changed`** de novo após o resume (o da s139 fechou 0 blocks/8 warns nos 62 arquivos já tocados -- conferir que o restante do workflow também passa).
+4. **Dreno FSRS** (fila 62 cards: 27 atrasados + 25 do dia + 10 novos) -- 5 cards já apresentados na s139 e **não avaliados**: paracoco #209, Addison #463, DRC hipertensiva #465, SHU #467, DMO-DRC #469. Reapresentar ou retomar direto -- pula pro próximo se o usuário já não lembra do contexto.
+5. Pendência à parte (não é sessão de estudo): 12 resumos ainda com o defeito de "armadilhas boilerplate" fora dos 2 já corrigidos hoje -- `grep -rl "Sempre correlacionar o quadro clínico com os achados de exame físico" resumos/`.
 
 ## Estado por frente
-- **Volume & Metas:** 5.811 / 9.454 (perf. ~78,6%). Ritmo-alvo ~46,1q/dia (79d p/ Cronograma EMED). Hoje (07/08): 0q de conteúdo novo -- sessão foi 100% análise/reconciliação.
-- **Erros & Cards:** **756 erros** em `questoes_erros` (+40 hoje: Simulado 3 completo, ids 719-758). **86/86 erros dos 2 simulados com card atômico pareado** (Simulado 2: 46/46 já existia desde s131; Simulado 3: 40/40 cunhado hoje). 2 bugs de acento próprios corrigidos em tempo real (taxonomia duplicada, mesclada de volta).
-- **FSRS:** fila **27 atrasados + 25 do dia** -- pool **617 nunca introduzidos** (+40 de hoje, ainda intocados). Nenhum dreno rodou nesta sessão (foi 100% análise).
-- **Ledger de habilidades:** "diretriz desatualizada" virou o padrão nº1 do ledger inteiro (7 especialidades). 2 padrões novos cruzaram o limiar de 3+ temas: "aborda pela especialidade, ignora instabilidade geral" e reforço do "enunciado negativo". Reincidência direta nomeada: toxoplasmose IgM+/IgG- (erro 729 = mesmo elo do erro 626, s131). Detalhe em `PLAYBOOK_EXECUCAO_PROVA.md` (seção "Evidência da s138").
-- **Artifact:** raio-x consolidado dos 86 erros × `grade.json` publicado (dashboard + cards de revisão rápida) -- 44/86 (51%) já deveriam estar cobertos pelo cronograma (17 retenção confirmada), 42/86 futuro/fora do nomeado (13 genuinamente fora de qualquer tarefa nomeada, 3 blind spots estruturais do grade).
+- **Volume & Metas:** 5.811 / 9.454 (inalterado -- s139 foi 100% curadoria de resumo, 0q de conteúdo novo, igual à s138).
+- **Raio-x (86 erros, s138):** 20 cobertos manualmente e a fundo (17 retenção confirmada + 3 blind spots). Os outros 66 foram para o workflow `wf_7ececd35-b24` -- progresso real mas não confirmado como 100%: `git status` no fechamento mostrava a maioria dos ~70 temas planejados já tocados (62 resumos no total da sessão: 23 editados + 39 novos), mas alguns ainda não confirmados até o corte -- Trauma Penetrante Tóraco-Abdominal, Câncer de Endométrio, Úlceras Genitais, Contracepção, Assistência ao Parto, Triagem Neonatal, Febre Reumática, Síndromes Pleuropulmonares, Declaração de Óbito, Indicadores Epidemiológicos, Controle Social no SUS, Tuberculose, Escoliose, Lombalgia, Colangite Biliar Primária. **Conferir contra o `results` do resume antes de assumir que algum desses ficou de fora.**
+- **FSRS:** fila 62 (27 atrasados + 25 do dia + 10 novos puxados) -- dreno não rodou (só apresentação, sem avaliação).
+- **Achados de padrão (s139):** Colecistite/Colangite reincidiu 3x (1 pós aula-base da s135) -- confirma o nº1 do ledger com evidência concreta. SCA/Dislipidemia (risco extremo/LDL<40, Diretriz 2025) é a 3ª instância nomeada hoje de "diretriz desatualizada". Toxoplasmose #729 é reincidência direta confirmada do erro #626 (s131). Achado de curadoria repetido: fato certo já escrito no resumo, nunca promovido a armadilha explícita (Y de Roux, Toxoplasmose, mamografia-gestação) -- padrão a vigiar nos resultados do workflow também.
+- **Achado sistêmico novo:** defeito "armadilhas boilerplate" (bullets genéricos sem informação real, às vezes com header duplicado por bug de emoji-no-header quebrando o linter) em 14 resumos do repo -- corrigido em 2 (CA de Mama, Rastreamento Colo), 12 pendentes (item 5 acima).
 
-## Última sessão -- s138
-- **Reconciliação:** selado o gap de fechamento das s136-137 (Antigravity) -- gap-note em `history/INDEX.md`, HANDOFF corrigido, commit separado (`4a84219`).
-- **Simulado 3 (40 erros):** usuário colou as 100 questões + gabarito oficial em lotes; identificação de erradas auditada contra o gabarito do usuário (bateu 40/40 exato); todas analisadas via protocolo `/analisar-questao` e cadastradas (`719-758`). Commit `d9671c0`.
-- **Raio-x consolidado:** os 86 erros (Simulado 2+3) cruzados contra `grade.json` + histórico do banco -- classificação em 7 status de cobertura, 3 blind spots estruturais do grade nomeados, artifact HTML publicado com dashboard e superfície de revisão card-a-card.
-- **Sem dreno FSRS e sem trabalho nos resumos ainda** -- fica para a próxima sessão (ver Próximo passo imediato).
+## Última sessão -- s139
+- 20 erros do raio-x cobertos a fundo manualmente (aula + recap + resumo + auto_check por bloco); usuário apontou que isso era só 20 dos 86 -- decisão de cobrir o resto hoje via workflow multi-agente, subagentes travados em Sonnet (pedido explícito do usuário, aplicado com `model: 'sonnet'`).
+- Workflow lançado, parado uma vez pra adicionar o `model: 'sonnet'` explícito, relançado com resume (cache preservado). Sessão encerrada com ele ainda rodando -- usuário pediu consolidar e continuar na próxima (budget da sessão em 90%).
+- Sem dreno FSRS. Sem reflexão de engenharia (sessão de estudo).
 
 ---
-*Histórico: history/INDEX.md * Macro: ESTADO.md * Sessão: history/session_138.md*
+*Histórico: history/INDEX.md * Macro: ESTADO.md * Sessão: history/session_139.md*

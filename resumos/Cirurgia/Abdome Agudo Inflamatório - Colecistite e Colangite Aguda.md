@@ -211,7 +211,7 @@ aliases: [Colecistite Aguda, Colangite Aguda, Colangite Ascendente, Colecistite 
 
 ### 11.2 Imagem
 - ⭐ O diagnóstico definitivo **exige imagem** demonstrando dilatação da via biliar ou o fator obstrutivo.
-- **USG:** dilatação biliar e cálculos; o colédoco é considerado dilatado a partir de ~6 mm.
+- **USG:** dilatação biliar e cálculos; o colédoco é considerado dilatado a partir de ~6 mm. ⭐ Baixa sensibilidade mas **alta especificidade** para coledocolitíase -- cálculo já visualizado no USG dispensa colangioRM confirmatória e autoriza ir direto para CPRE, inclusive quando o quadro ainda não fecha os critérios inflamatórios completos da colangite (afebril, sem leucocitose).
 - **TC:** alta sensibilidade para dilatação e estenose; baixa para cálculos; útil para complicações (abscesso hepático, trombose de veia porta, aerobilia).
 - **Colangio-RM (CRNM):** maior precisão para identificar a **causa da obstrução** (sensibilidade ~87%, especificidade ~92%); não permite tratamento.
 - **Ecoendoscopia:** excelente acurácia para coledocolitíase (sensibilidade ~97%, especificidade ~90%); superior para cálculos pequenos (< 6 mm).
@@ -239,7 +239,7 @@ aliases: [Colecistite Aguda, Colangite Aguda, Colangite Ascendente, Colecistite 
 
 ### 12.2 Drenagem da Via Biliar
 - ⭐ **CPRE com drenagem transpapilar (papilotomia) é a 1a escolha / padrão-ouro.**
-- **Drenagem trans-hepática percutânea (DTPH):** quando a CPRE é indisponível, malsucedida ou inacessível (anatomia alterada -- Y de Roux, cirurgia de Whipple, estenose duodenal). Requer dilatação da via biliar intra-hepática; é mais invasiva; contraindicada em coagulopatia.
+- **Drenagem trans-hepática percutânea (DTPH):** quando a CPRE é indisponível, malsucedida ou inacessível por anatomia alterada. ⭐ No **bypass gástrico em Y de Roux**, a reconstrução exclui o duodeno do trajeto alimentar e inviabiliza o acesso peroral convencional do duodenoscópio até a papila -- mesma lógica na cirurgia de Whipple e na estenose duodenal. Requer dilatação da via biliar intra-hepática; é mais invasiva; contraindicada em coagulopatia.
 - **Drenagem por ecoendoscopia:** alternativa em alto risco de complicação ou falha da CPRE/DTPH e em anatomia cirúrgica alterada.
 - **Drenagem cirúrgica:** reservada à falha dos métodos anteriores -- coledocotomia com colocação de dreno de Kehr (tubo T); no paciente estável, colecistectomia e retirada do cálculo no mesmo tempo.
 - **Derivação biliodigestiva** (paciente estável, via dilatada > 2 cm e/ou múltiplos cálculos): hepaticojejunostomia em Y de Roux (menor refluxo e colangite, porém inacessível à endoscopia) x hepaticoduodenostomia (mantém acesso endoscópico, mas com maior risco de colangite recorrente -- síndrome do Sump).
@@ -278,3 +278,6 @@ aliases: [Colecistite Aguda, Colangite Aguda, Colangite Ascendente, Colecistite 
 - 🔴 Na gestante de baixo risco, negar a cirurgia: a **laparoscopia é preferida em qualquer trimestre**; apenas no 3o trimestre se posterga (antibiótico) para o pós-parto pelo risco de parto prematuro.
 - 🔴 Confundir os limites do **trígono de Calot** ou dispensar a Visão Crítica da Segurança: a identificação do ducto cístico e da artéria cística antes da secção previne a lesão iatrogênica da via biliar.
 - 🔴 Após colecistostomia na colecistite **alitiásica**, indicar colecistectomia de intervalo desnecessária: a recorrência é baixa e, em geral, não se opera depois (diferente da forma litiásica).
+- 🔴 Deixar a **etiologia da obstrução** (cálculo, estenose, neoplasia) mudar a urgência da drenagem: colangite aguda com tríade de Charcot presente é emergência **independente da causa de base**. Diante de obstrução neoplásica (ex.: tumor de cabeça de pâncreas comprimindo o colédoco), a drenagem biliar (CPRE, com prótese se compressão extrínseca) precede qualquer estadiamento oncológico -- este vem depois da estabilização.
+- 🔴 Exigir colangioRM confirmatória diante de cálculo **já visualizado** no USG (alta especificidade): coledocolitíase sintomática com obstrução confirmada vai direto para CPRE, mesmo sem a síndrome inflamatória completa da colangite (afebril, sem leucocitose) -- a colecistectomia segue sendo conduta posterior, após desobstruída a via.
+- 🔴 Aplicar o reflexo "colangite = CPRE" sem checar a **anatomia cirúrgica prévia**: bypass gástrico em Y de Roux (ou Whipple, estenose duodenal) exclui o acesso peroral à papila. A alternativa é a drenagem trans-hepática percutânea -- não a insistência na CPRE convencional, nem a cirurgia aberta de imediato.

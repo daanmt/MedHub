@@ -101,12 +101,12 @@ Anticorpos exógenos presentes em transfusões de sangue ou imunoglobulinas poli
 - **2 Meses:**
   - **Pentavalente (1ª dose):** Difteria, Tétano, Coqueluche, Hepatite B e *Haemophilus influenzae* tipo b (Hib).
   - **VIP (1ª dose):** Vacina Inativada Poliomielite (injetável).
-  - **Pneumocócica 10-Valente (1ª dose).**
+  - **Pneumocócica 20-Valente (1ª dose):** substituiu a 10-valente no esquema básico (ver seção 5).
   - **VORH (1ª dose):** Vacina Oral de Rotavírus Humano.
 - **3 Meses:**
   - **Meningocócica C Conjugada (1ª dose).**
 - **4 Meses:**
-  - Repetição do esquema de 2 meses: Pentavalente (2ª dose) + VIP (2ª dose) + Pneumocócica 10 (2ª dose) + VORH (2ª dose).
+  - Repetição do esquema de 2 meses: Pentavalente (2ª dose) + VIP (2ª dose) + Pneumocócica 10-valente (2ª dose, única dose do esquema básico ainda não migrada para a 20-valente -- ver seção 5) + VORH (2ª dose).
 - **5 Meses:**
   - **Meningocócica C Conjugada (2ª dose).**
 - **6 Meses:**
@@ -121,7 +121,7 @@ Anticorpos exógenos presentes em transfusões de sangue ou imunoglobulinas poli
 
 - **12 Meses:**
   - **Tríplice Viral (1ª dose):** Sarampo, Caxumba e Rubéola.
-  - **Pneumocócica 10-Valente:** Dose de reforço.
+  - **Pneumocócica 20-Valente:** Dose de reforço (substituiu a 10-valente; ver seção 5).
   - **Meningocócica ACWY:** Dose de reforço (substituindo a antiga dose de Meningo C). ⭐
 - **15 Meses:**
   - **Tetra Viral (ou Tríplice + Varicela):** Sarampo, Caxumba, Rubéola e Varicela.
@@ -203,6 +203,10 @@ Disponibilizam vacinas/imunoglobulinas gratuitas para populações especiais: im
     - **2ª dose (D2):** Pode ser administrada até **23 meses e 29 dias** (1 ano, 11 meses e 29 dias) de vida.
     - Intervalo mínimo entre as doses: 30 dias.
   - 🔴 **Bancas desatualizadas ainda cobram a janela antiga** (D1 até 3m15d, D2 até 7m29d) -- confirmar qual versão o enunciado assume antes de responder.
+- **Troca da Pneumocócica 10-valente pela 20-valente no esquema básico:**
+  - O PNI substituiu a pneumocócica 10-valente pela **20-valente** na maioria das doses do esquema infantil: aos **2 meses** e no reforço dos **12 meses**, a vacina indicada já é a 20-valente.
+  - A dose dos **4 meses é a única que permanece com a 10-valente**, mantida até o esgotamento do estoque de transição -- convivência temporária das duas apresentações no mesmo esquema, não erro de digitação.
+  - ⚠️ Quem decorou o esquema clássico (10-valente em 2, 4 e 12 meses) responde pelo conhecimento desatualizado -- confirmar a versão vigente do calendário no enunciado antes de marcar.
 - **Outras mudanças recentes (podem aparecer como conhecimento datado em apostilas de 2023-2024 -- checar sempre a versão vigente no enunciado):**
   - Ampliação da idade-limite do HPV para 9-45 anos em homens/mulheres com HIV, transplantados ou oncológicos em imunossupressão.
   - Ampliação do MenACWY para adolescentes de 13-14 anos (além dos 11-12).
@@ -409,3 +413,4 @@ Vacina **inativada** antirrábica + soro antirrábico (SAR) ou imunoglobulina hu
 - 🔴 **Febre Amarela não é mais dose única sem reforço (reincidência confirmada 2x no mesmo bloco de estudo).** Desde 2020, quem toma a 1ª dose entre 9 meses e < 5 anos recebe reforço aos 4 anos. A vacina que continua sendo genuinamente "dose única, sem reforço" no calendário infantil é a Hepatite A (15 meses).
 - 🔴 **Sarampo pós-exposição -- vacina de bloqueio só a partir de 6 meses.** Contactante suscetível **imunocompetente >= 6 meses** -> **vacina de bloqueio** (até 72h). Contactante que **não pode receber vacina viva** -- **< 6 meses**, imunodeprimidos, gestantes -> **imunoglobulina** (até 6 dias). O lactente de 4-5 meses parece "imunocompetente, dá vacina", mas está **abaixo do piso etário** da vacina viva de sarampo -> recebe imunoglobulina, igual ao imunodeprimido. (O intervalo de bloqueio pós-contato é o mesmo racional da varicela: >= 9 meses imunocompetente -> vacina; grupos especiais -> imunoglobulina.)
 - 🔴 **BCG -- contraindicação ABSOLUTA x PONTUAL.** A absoluta (nunca aplica) é a **imunodeficiência crônica: HIV+ adulto (mesmo assintomático) e criança HIV sintomática** -- vacina viva vetada permanentemente. O **peso < 2.000g é contraindicação PONTUAL** (adia até atingir o peso, depois vacina), assim como dermatose no sítio e imunossupressão transitória. Quando o enunciado pede a "absoluta", o `< 2.000g` é o distrator mais decorado -- filtrar sempre pelo qualificador permanente x adiável.
+- 🔴 **Pneumocócica 10-valente x 20-valente (calendário desatualizado):** O esquema básico infantil trocou a pneumocócica 10-valente pela **20-valente** aos **2 e 12 meses** -- só a dose dos **4 meses** ainda é 10-valente, mantida até esgotar o estoque de transição. Lactente de 2 meses hígido em vacinação de rotina recebe pentavalente + VIP + **pneumocócica 20-valente** + rotavírus; marcar "10-valente" nessa idade é erro de conhecimento desatualizado -- o esquema antigo foi o padrão ensinado por anos, mas quem não atualizou o calendário mais recente do PNI erra por desatualização, não por raciocínio clínico.

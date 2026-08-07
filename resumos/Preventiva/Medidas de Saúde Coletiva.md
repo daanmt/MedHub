@@ -197,3 +197,4 @@ Substituição de DIP por DCNT e Causas Externas.
 - 🔴 **5-9 anos:** Externas > Neoplasias > Nervoso (não doenças respiratórias/infecciosas)
 - 🔴 **Prevalência de doença crônica:** tratamento que prolonga vida sem curar **aumenta** prevalência; incidência permanece igual
 - 🔴 **Comparação inter-regional:** sempre taxa padronizada por idade -- CGM bruto é confundido pela estrutura etária
+- 🔴 **Mortalidade específica vs Letalidade -- denominador trocado:** "óbitos / casos admitidos (ou confirmados)" é fórmula real e válida, mas é a de LETALIDADE (risco de morte entre os doentes), não de mortalidade específica. Mortalidade específica exige denominador população EXPOSTA/em risco (óbitos / população em risco x 100.000, risco de morte entre os sadios) -- sem esse dado populacional, o coeficiente não pode ser calculado, mesmo que a questão forneça óbitos e casos admitidos. Identidade útil: Mortalidade específica = Incidência x Letalidade

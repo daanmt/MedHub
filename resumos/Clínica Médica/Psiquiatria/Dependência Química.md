@@ -85,5 +85,4 @@ aliases: [Dependência Química, Alcoolismo, Síndrome de Abstinência, Cannabis
 - 🔴 Marcar Carbamazepina como a droga "proibida" na SAA -- ela é 2ª linha aceita; a contraindicada é a **Clozapina** (reduz o limiar convulsivo).
 - 🔴 Superdimensionar a intervenção pelo AUDIT -- escore 8-15 pede aconselhamento simples; monitoramento só ≥16, encaminhamento só ≥20.
 - 🔴 Atribuir a convulsão do alcoolista exclusivamente à abstinência sem investigar causa orgânica (TCE, AVC, neuroinfecção, metabólico).
-
-*📝 Espaço reservado para inclusão de questões erradas*
+- 🔴 Mecanismo por trás da troca em hepatopatia (Child-Pugh B/C): o Diazepam depende de oxidação hepática (CYP450), gerando metabólitos ativos de meia-vida longa que se acumulam quando essa via está prejudicada (sedação excessiva). O Lorazepam sofre glicuronidação direta (fase II), rota preservada mesmo em cirrose avançada, sem metabólitos ativos relevantes -- por isso é o BZD preferencial nesse cenário, não o Diazepam-padrão que a maioria lembra primeiro para SAA.

@@ -278,7 +278,7 @@ LIE-BG (Pap)
 
 ---
 
-## 🔴 Armadilhas de Prova
+## Armadilhas de Prova
 
 - **ASC-H ≠ ASC-US**: ASC-H sempre vai pra colposcopia. Jamais repetir citologia em ASC-H.
 - **ASCUS 25-29 anos ≠ LIE-BG 25-29 anos**: ASCUS = 12 meses; LIE-BG = **6 meses**. Trocar é a armadilha clássica.
@@ -296,11 +296,4 @@ LIE-BG (Pap)
 - **Encerramento do rastreio (2025)**: negativo aos 60 anos -> liberada (próximo seria após os 64). Jamais liberada se teve LIE-AG ou adenocarcinoma in situ tratados (rastrear por 25 anos).
 - **Imunossuprimida (2025)**: qualquer HPV oncogênico -> colposcopia direta (não diferencia tipo). Rastreamento **indefinido**.
 - **Cervicite folicular = Chlamydia até prova em contrário** -> tratar empiricamente.
-
----
-
-## Armadilhas de Prova
-
-- 🔴 **Diagnóstico Diferencial em [GIN] Rastreamento Colo:** Sempre correlacionar o quadro clínico com os achados de exame físico e complementar para excluir diagnósticos diferenciais graves antes de definir a conduta terapêutica.
-- ⭐ **Padrão de Prova:** Atenção aos gatilhos epidemiológicos e faixas etárias clássicas, pois as bancas frequentemente utilizam a idade e a cronologia dos sintomas para guiar o diagnóstico correto em [GIN] Rastreamento Colo.
-- ⚠️ **Atenção nas dosagens e contraindicações:** Verificar sempre a função renal e hepática antes de introduzir esquemas farmacológicos invasivos ou solicitar exames contrastados.
+- **NIC2/3 (biópsia dirigida) + paciente pede histerectomia direto:** trocar a via cirúrgica (vaginal por ser "menos invasiva") não resolve o problema real -- o erro não está na via, está em pular a etapa excisional. Biópsia é amostra, não a lesão inteira; pode haver microinvasão oculta. Conduta: exérese da zona de transformação/conização primeiro, para afastar microinvasão e analisar margens, **antes** de qualquer histerectomia -- mesmo diante do pedido da paciente.

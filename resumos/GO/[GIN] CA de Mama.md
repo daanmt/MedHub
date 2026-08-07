@@ -222,6 +222,10 @@ aliases: [CA Mama]
 
 ## Armadilhas de Prova
 
-- 🔴 **Diagnóstico Diferencial em [GIN] CA de Mama:** Sempre correlacionar o quadro clínico com os achados de exame físico e complementar para excluir diagnósticos diferenciais graves antes de definir a conduta terapêutica.
-- ⭐ **Padrão de Prova:** Atenção aos gatilhos epidemiológicos e faixas etárias clássicas, pois as bancas frequentemente utilizam a idade e a cronologia dos sintomas para guiar o diagnóstico correto em [GIN] CA de Mama.
-- ⚠️ **Atenção nas dosagens e contraindicações:** Verificar sempre a função renal e hepática antes de introduzir esquemas farmacológicos invasivos ou solicitar exames contrastados.
+- 🔴 **Mamografia NÃO é contraindicada na gestação.** É evitada como rastreio de rotina, mas a mamografia **diagnóstica** (nódulo palpável suspeito) é permitida em qualquer trimestre, com **proteção abdominal** -- a dose de radiação envolvida é mínima. Diante de nódulo suspeito em gestante, a USG é sempre o 1o exame, mas não substitui a mamografia quando há indicação diagnóstica. Não confundir com a radioterapia (essa sim proibida em toda a gestação).
+- 🔴 **BI-RADS 5 = biópsia**, mesmo sem outros achados -- probabilidade de malignidade > 95%.
+- 🔴 **Biópsia excisional é CONTRAINDICADA como método diagnóstico** (impede margens livres na cirurgia definitiva) -- a BAG (core biopsy) é a 1a escolha para nódulo suspeito sólido.
+- 🔴 **Carcinoma inflamatório não tem nódulo palpável** -- edema + eritema + peau d'orange em rápida evolução confundem com mastite; mastectomia é obrigatória mesmo com resposta completa à quimioterapia.
+- 🔴 **cN3 (linfonodo supraclavicular ipsilateral) já é estádio IV** -- metástase, não doença locorregional.
+- 🔴 **Trastuzumabe nunca é associado a antracíclico** (cardiotoxicidade somada) -- combina-se com taxano.
+- 🔴 **Fator de risco geral não é sinônimo de critério de ALTO RISCO.** Menarca precoce, menopausa tardia e nuliparidade são fatores de risco reais e conhecidos, mas isoladamente NÃO classificam a paciente na categoria de alto risco (que muda o seguimento e pode indicar quimioprofilaxia). Os critérios que de fato definem essa categoria são mais restritos: biópsia prévia com atipia (HDA/HLA), mutação BRCA1/2, história familiar de 1º grau com CA de mama antes da menopausa, ou risco calculado >20% pelo modelo de Tyrer-Cuzick. Em questão que pede o critério de alto risco, menarca precoce e nuliparidade são distratores clássicos -- a resposta correta é o item da lista restrita (ex.: biópsia prévia com atipia).

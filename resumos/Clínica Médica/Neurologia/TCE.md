@@ -78,6 +78,4 @@ Trauma na testa do neném e mãinha doida. Não se prescreve raio-x pra trinca o
 
 ## Armadilhas de Prova
 
-- 🔴 **Diagnóstico Diferencial em TCE:** Sempre correlacionar o quadro clínico com os achados de exame físico e complementar para excluir diagnósticos diferenciais graves antes de definir a conduta terapêutica.
-- ⭐ **Padrão de Prova:** Atenção aos gatilhos epidemiológicos e faixas etárias clássicas, pois as bancas frequentemente utilizam a idade e a cronologia dos sintomas para guiar o diagnóstico correto em TCE.
-- ⚠️ **Atenção nas dosagens e contraindicações:** Verificar sempre a função renal e hepática antes de introduzir esquemas farmacológicos invasivos ou solicitar exames contrastados.
+- 🔴 **TC antes de neurocirurgia no TCE leve com sinal de alarme:** TCE leve (Glasgow 15-13) com qualquer sinal de alarme -- inclusive intoxicação alcoólica ou por outras drogas, além dos já citados (vômito, idade > 65, perda de consciência/amnésia prolongada, uso de anticoagulante, sinais de fratura de base de crânio) -- indica TC de crânio, não o acionamento direto da neurocirurgia. A avaliação neurocirúrgica imediata fica reservada ao TCE moderado/grave (Glasgow <= 12) ou à TC já alterada: é o exame de imagem que define se existe lesão que justifique o especialista, e não o inverso. Pegadinha clássica de prova: o paciente agitado e embriagado parece "caso para acionar a neurocirurgia na hora", mas a intoxicação é ela própria um sinal de alarme que INDICA a TC -- o exame vem antes do encaminhamento, nunca depois dele.

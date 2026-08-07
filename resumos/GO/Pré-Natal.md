@@ -176,8 +176,9 @@ Sem indicação obrigatória de rotina no Brasil (MS) para risco habitual, mas r
 - **Morfológico 1º trimestre** (11-13 sem6d): rastreio de cromossomopatias + morfologia fetal.
 - **Morfológico 2º trimestre** (18-24 sem): morfologia fetal + rastreio de prematuridade (medida do colo).
 - **Dopplervelocimetria** (a partir do 2º tri): vitalidade fetal, anemia fetal, rastreio de pré-eclâmpsia.
-- **Ecocardiograma fetal** (a partir de 14 sem, ideal 24-28 sem): morfologia cardíaca.
+- **Ecocardiograma fetal** (a partir de 14 sem, ideal 24-28 sem): morfologia cardíaca. Indicação relativa: idade materna avançada (>= 35/40 anos) e gestação por fertilização in vitro (FIV).
 - **USG tridimensional** (a partir do 2º tri): auxilia identificação de anomalias.
+- 🔴 **USG tardio e biometria seriada:** USG de 2º/3º trimestre (>= 22 sem) apresenta erro biométrico elevado (14-21 dias). Em paciente sem DUM confiável, um único USG tardio não estabelece datação definitiva; indica-se avaliação biométrica seriada (repetir USG em 14 a 21 dias) para avaliar a curva de crescimento e afastar restrição de crescimento fetal (RCF).
 
 ---
 
@@ -248,3 +249,12 @@ Sem indicação obrigatória de rotina no Brasil (MS) para risco habitual, mas r
 - 🔴 **Hiperêmese gravídica** exige critério objetivo (perda > 5% peso, OU desidratação, OU PUQE > 7) -- náusea/vômito leve sem esses critérios é conduzido ambulatorialmente (dieta fracionada +/- antiemético oral), não indica internação nem bateria laboratorial completa.
 - 🔴 **Hipertermia:** banho de imersão quente associa-se tanto a DTN quanto a abortamento (2 associações diferentes, ambas verdadeiras) -- não negar uma achando que é distrator da outra. Sauna isolada não tem associação estatística confirmada; exposição solar moderada (<= 20 min) é segura.
 - 🔴 **Rastreamento quádruplo (2º tri) não invalida o de 1º trimestre** -- quem fez o de 1º tri pode e deve complementar com o do 2º para ampliar a detecção; a maioria dos DTN é caso NOVO/esporádico, não familiar.
+- 🔴 **Swab de EGB:** restrito ao termo (35-37 semanas); não antecipar para a consulta de 28 semanas.
+- 🔴 **Ecocardiograma fetal:** idade materna avançada (>= 35/40a) e FIV são indicações relativas de ecocardiograma fetal (ideal 28 semanas).
+- 🔴 **USG de 2º/3º tri sem DUM confiável:** não aceitar como datação absoluta em exame único isolado (erro de 14-21 dias) -- exige biometria seriada (repetir USG em 14 a 21 dias) para confirmar a evolução.
+- 🔴 **Zona discriminatória do beta-hCG (< 1.500-2.000 mUI/mL):** ausência de saco gestacional intrauterino na USTV com beta-hCG baixo é esperada e normal; a conduta é curva de 48h, nunca laparotomia/cirurgia de urgência ou assumir ectópica.
+- 🔴 **Febre Amarela no puerpério / lactação:** contraindicada em lactantes com bebês < 6 meses pelo risco de encefalite vacinal no lactente pelo vírus vivo eliminado no leite (se aplicada em surto, suspender o aleitamento por 10 dias).
+- 🔴 **EGB com bolsa rota < 18h no termo:** em gestante a termo com cultura desconhecida sem febre, a profilaxia só é iniciada se/quando a bolsa rota completar 18 horas (com 12h de bolsa rota, aguardam-se 6h).
+- 🔴 **Aborto legal por estupro:** dispensa autorização judicial, boletim de ocorrência (BO) e condenação do agressor — o consentimento assinado da gestante (ou responsável) é a única exigência legal.
+- 🔴 **Contracepção pós-vacina de vírus vivo:** mulheres em idade fértil que recebem vacina de vírus vivo atenuado (tríplice viral, varicela, febre amarela) devem evitar a gravidez por pelo menos 1 mês (30 dias).
+- 🔴 **Ganho de peso no sobrepeso (IMC 25,0-29,9):** meta total de 7 a 11,5 kg (mínimo de 7,0 kg, equivalente a ~230 g/semana nas 30 semanas finais). Na Naegele, atentar para meses com 31 dias (32 de Agosto = 1º de Setembro).

@@ -1,30 +1,26 @@
 # HANDOFF.md -- ESTADO OPERACIONAL CURTO
-*Atualizado: 2026-08-04 -- S14 tarefa 3 Colecistite/Colangite 44q (88,6%) + 2x reincidencia discriminador-exclui (sessão 135)*
+*Atualizado: 2026-08-06 -- Sessão 137/138 -- 91q de conteúdo S14 + Simulado 3 (100q / 60,0%) + 50 Flashcards FSRS*
 
-## > Proximo passo imediato
+## > Próximo passo imediato
 
-1. **S14 tarefa 4: Endometriose (Ginecologia, revisão).** Checar nota de dificuldade (`day_plan.py --difficulty`) antes de decidir profundidade da aula-base.
-2. **S14 tarefa 6: Tireotoxicose (Endocrino, teoria/extensivo)** -- usuário pula a tarefa 5 (Pré-Natal) por ora, ordem por escolha própria.
-3. Flashcards (dreno FSRS) ainda hoje -- dívida 5 atrasados + 31 hoje, teto 40/dia.
+1. **Análise de Erros do Simulado 2 & Simulado 3:**
+   - **Simulado 2 (Sessão 131 / 46 erros):** Analisar o substrato de erros, cunhar os flashcards atômicos com 1 único critério e integrar as 🔴 armadilhas nos resumos.
+   - **Simulado 3 (Sessão 137 / 40 erros):** Cadastrar as 40 questões erradas em `questoes_erros` / `ipub.db` e extrair o raio-x por área.
+2. **Conclusão da Semana 14:**
+   - Tasks restantes: *Cefaleias & Epilepsias (Revisão 48q)*, *Hanseníase & Síndromes Verrucosas (Revisão 41q)*, *IVAS Pt. 1 (Teoria 19q)*.
 
 ## Estado por frente
-- **Volume & Metas:** 5.579 / 9.454 (perf. ~79,0%). Hoje: 44q (Cirurgia, 88,6%). Ritmo-alvo ~47,3q/dia (82d p/ Cronograma EMED completo). [derivado: day_plan --handoff-block]
-- **Conteúdo:** 76 resumos -- 1 editado hoje (Colecistite/Colangite: §5.3 instabilidade x comorbidade + 2 armadilhas novas/estendidas, incl. sobreposição com pancreatite biliar). [derivado: glob]
-- **Erros & Cards:** 677 erros acumulados (5 hoje), cards 1088-1094 (7 novos, atômicos). 2/5 erros de hoje = padrão-mestre discriminador-exclui; ledger confirma 5 ocorrências/5 temas distintos -- já é bug de raciocínio transversal.
-- **FSRS:** dívida 5 atrasados + 31 p/ hoje -- pool 548 nunca introduzidos (entram <=40/dia).
-- **Posição:** conteúdo real S14, tarefa 3/11 feita hoje (Colecistite 88,6%); tarefas 1-2 já feitas (SUS, Asma); 4-11 restantes. day_plan ainda mostra S13/temas já concluídos -- Drive não ressincronizado (F36), ignorar a lista bruta.
+- **Volume & Metas:** 5.811 / 9.454 (perf. ~78,9%). Hoje: 91q de conteúdo + 100q no Simulado 3 (60,0% de aproveitamento - evolução sobre o Simulado 2).
+- **Conteúdo:** 79 resumos -- 2 novos criados hoje ([Diverticulite Aguda.md](file:///c:/Users/daanm/MedHub/resumos/Cirurgia/Diverticulite%20Aguda.md) e [Doenças da Coluna Vertebral e Maus-Tratos.md](file:///c:/Users/daanm/MedHub/resumos/Cirurgia/Doen%C3%A7as%20da%20Coluna%20Vertebral%20e%20Maus-Tratos.md)), 1 atualizado (Pré-Natal.md).
+- **Erros & Cards:** 24 erros analisados e cadastrados hoje (IDs 1112-1135), 50 cards FSRS revisados e gravados com 100% de aproveitamento.
+- **FSRS & Reforja:** 16 cards recentes (IDs 71, 113, 1112-1125) e 8 cards da sessão (IDs 1126-1133) varridos e 100% reforjados no formato atômico de 1 único critério. Fila FSRS com 0 atrasados.
 
-## Última sessão -- sessão 135
-- Aula-base D8 de Colecistite/Colangite repetida integralmente a pedido do usuário; tarefa 3 de S14 executada: 44q, 39 acertos (88,6%).
-- 5 erros analisados e persistidos (7 cards atômicos): Q1 e Q3 = padrão-mestre discriminador-exclui (Q3 é reincidência **direta** do erro #572, TG18 exige critério de imagem); Q2 = hierarquia de prioridade colecistite/colangite-suspeita x pancreatite biliar; Q4 = fato-no-contexto-errado (mecanismo colecistite x colangite); Q5 = decoreba invertida (alitiásica).
-- Ledger de habilidades resincronizado -- discriminador-exclui confirmado em 5 ocorrências/5 temas distintos (cruza o limiar de bug de raciocínio).
-- Resumo de Colecistite/Colangite ganhou 3 gaps reais (instabilidade x comorbidade, colestase-sem-imagem estendida, sobreposição com pancreatite biliar). `auto_check --changed` PASS.
-- Gap conceitual de APACHE II esclarecido à parte (score geral de UTI, não biliar-específico) -- não correspondia a nenhum dos 5 erros colados.
-
-## Pendências/observações ativas
-- Próxima vez que Colecistite/Colangite aparecer: rodar `fsrs_queue.py --pre-bloco` no tema (mini-drill anti-reincidência, erro #572 já reincidiu 1x).
-- Reforja: 9 cards com defeito de autoria seguem pendentes (477,478,483,484,485,486,505,513,521), carregado da s134.
-- Backlog antigo: 34 temas do simulado s131 ainda sem resumo/armadilha escrita.
+## Última sessão -- sessão 137/138
+- **Pré-Natal (GO):** Aula-Base D5 + 38q (14 erros persistidos + resumo atualizado).
+- **Diverticulite Aguda (Cirurgia):** Aula-Base D10 + 26q (84,6% acertos + 4 erros persistidos + resumo novo).
+- **Coluna Vertebral & Maus-Tratos (Ortopedia/Pediatria):** Resumo novo + Aula-Base D10 + 27q (77,8% acertos + 6 erros persistidos).
+- **Simulado 3 (ENARE/ENAMED):** 100q realizadas, 60 acertos (**60,0%** — evolução de +6.0 pp sobre os 54,0% do Simulado 2). Registrado em `sessoes_bulk` (Sessão 137).
+- **FSRS:** Rodada de 50 flashcards executada e gravada no banco.
 
 ---
-*Historico: history/INDEX.md * Macro: ESTADO.md * Sessao: history/session_135.md * Ledger de engenharia: AUDITORIA_MEDHUB.md*
+*Histórico: history/INDEX.md * Macro: ESTADO.md * Sessão: history/session_137.md*

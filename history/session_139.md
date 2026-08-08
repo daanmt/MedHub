@@ -47,8 +47,15 @@ Fila carregada (62 cards: 27 atrasados + 25 do dia + 10 novos), 5 cards do prime
 - Workflow multi-agente para a parte mecânica de curadoria de resumo, subagentes fixados em Sonnet -- decisão explícita do usuário.
 - Sessão encerrada com o workflow em andamento (não interrompido) -- consolidar na próxima sessão via resume, não reiniciar do zero.
 
+## Fechamento (retomado após reset de limite, mesma sessão, 2026-08-08)
+
+- **Workflow concluído: 70/70 itens, 0 erros, 0 vazios.** ~11min, 71 subagentes Sonnet, 1.42M tokens de subagente, 292 tool uses. Breakdown: 35 resumos novos (stub) + 30 editados + **5 recall puro** (ITU pediátrica #720, Suplementação de Ferro #657, Endometriose #666, DNPM #645, Pancreatite #743 -- já bem cobertos, confirma que o erro foi memória, não lacuna). 35/70 tiveram PDF-fonte do EMED pra ancorar; os outros 35 vieram de conhecimento clínico estabelecido, sinalizado caso a caso. 66/70 itens conectados a um padrão transversal do ledger.
+- **Artifact de consolidação publicado** (via subagent dedicado, general-purpose): https://claude.ai/code/artifact/215f337d-f336-433f-8a9d-0ae988ae2fe4 -- cobre os 70 temas/erros do workflow no mesmo padrão visual do raio-x original da s138 (dashboard + área + padrões transversais + cards expansíveis). Validação de integridade 70/70, 0 HTML quebrado, 1 bug de contraste dark-mode corrigido antes de publicar.
+- **PRD gerado via /vibeflow:discover:** `.vibeflow/prds/rotina-pos-simulado-raio-x.md` -- formaliza a rotina de raio-x+cards+performance pós-simulado como candidata a skill nova. Decisões do usuário: (1) skill, não CLI fechado -- o *como* do cruzamento estrutural fica em aberto pro gen-spec; (2) artifact com **design fixo** (não redesenhado a cada vez), pensando na futura integração como dashboard Streamlit -- explicitamente **fora de escopo agora** ("por hora não vamos nos aprofundar").
+- **Cobertura de resumos:** 70 -> **122 .md cunhados** (contador canônico `tools/cobertura_conhecimento.py`).
+
 ## Próximos passos
-1. **Retomar o workflow** (`Workflow({scriptPath: ".../aula-base-raiox-restante-wf_7ececd35-b24.js", resumeFromRunId: "wf_7ececd35-b24"})`) -- agentes já completos voltam do cache, só os pendentes rodam de novo. Conferir o `results` final retornado.
-2. **Apresentar o ensino ao usuário em blocos pausados** (não uma parede de texto só) -- cada resultado do workflow já vem com `question_recap` + `mechanism_explanation` prontos, é questão de entregar no ritmo certo.
-3. **Dreno FSRS** -- fila com 62 cards, 5 já apresentados sem avaliação (paracoco #209, Addison #463, DRC hipertensiva #465, SHU #467, DMO-DRC #469) -- reapresentar ou continuar de onde parou.
-4. **Faxina separada (não é sessão de estudo):** 12 resumos ainda com o defeito de "armadilhas boilerplate" fora dos 2 já corrigidos hoje (ver lista via `grep -rl "Sempre correlacionar o quadro clínico com os achados de exame físico" resumos/`).
+1. **Dreno FSRS** (sessão nova, por pedido do usuário) -- fila com ~62+ cards, 5 já apresentados sem avaliação (paracoco #209, Addison #463, DRC hipertensiva #465, SHU #467, DMO-DRC #469) -- reapresentar ou continuar de onde parou.
+2. **`/vibeflow:gen-spec .vibeflow/prds/rotina-pos-simulado-raio-x.md`** quando o usuário quiser transformar o PRD em spec técnica -- não é urgente, é infraestrutura pra quando o próximo simulado acontecer.
+3. **Faxina separada (não é sessão de estudo):** 12 resumos ainda com o defeito de "armadilhas boilerplate" fora dos 2 já corrigidos na s139 (ver lista via `grep -rl "Sempre correlacionar o quadro clínico com os achados de exame físico" resumos/`).
+4. Raio-x original da s138 (86 erros) está **100% coberto** agora entre s139 manual (20) + workflow (70, dos quais 1 tema -- Reanimação Neonatal -- fundiu 2 ids). Nenhuma pendência de conteúdo aberta dessa frente.

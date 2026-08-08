@@ -294,3 +294,4 @@ Viável se: feto < 3.500 g, pelve adequada, cabeça fletida, obstetra experiente
 - 🔴 **Circular de cordão ≠ prolapso de cordão:** circular não contraindica parto vaginal.
 - 🔴 **Puxos dirigidos:** proscritos. Puxos espontâneos são a conduta recomendada.
 - 🔴 **Epidemiologia OMS:** adolescência = 10-19 anos; baixo peso = < 2.500 g; taxa ideal cesárea = 10-15%.
+- 🔴 **Ausculta fetal x toque vaginal -- não trocar as frequências:** ausculta fetal intermitente a cada **15-30 minutos** (durante a contração e no minuto seguinte); toque vaginal a cada **2-4 horas** (nunca de hora em hora). São os dois procedimentos periódicos de vigilância do primeiro período e a prova explora a inversão dos intervalos entre eles.

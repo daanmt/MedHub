@@ -261,3 +261,4 @@ Por ordem de preferência:
 - ⚠️ Transaminases ≥ 3× VN **com sintomas** = suspender RIPE; ≥ 5× VN **sem sintomas** = suspender RIPE
 - 🔴 Neurite óptica = etambutol (suspender); neuropatia periférica = isoniazida (tratar com piridoxina sem suspender)
 - 🔴 CD4 < 50 em HIV+: iniciar TARV em 2 semanas do RIPE (não esperar a manutenção)
+- 🔴 PVHIV contactante de caso bacilífero tem indicação de tratar ILTB independentemente do resultado do PPD -- a imunossupressão pode gerar PPD falso-negativo, então a regra de "repetir PPD em 8 semanas se < 5mm" (válida para contactante sem HIV) não se aplica aqui; esquema preferencial é isoniazida isolada por 9 meses, evitando a rifapentina do 3HP pelo risco de interação com antirretrovirais

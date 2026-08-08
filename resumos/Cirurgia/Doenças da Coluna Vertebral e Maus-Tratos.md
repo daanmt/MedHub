@@ -28,14 +28,17 @@ Tema duplo de alto impacto em Ortopedia Adulto e Pediátrica/Medicina Legal. A l
 ## 2. Lombalgia & Sinais de Alarme (*Red Flags*)
 
 - **Lombalgia Mecânica Comum (> 90% dos casos):** autolimitada (melhora em 4 a 6 semanas). Tratamento inicial: analgesia, anti-inflamatórios (AINEs), calor local, manutenção de atividades diárias leves (🔴 **evitar repouso prolongado no leito**).
+- ⭐ **Diagnóstico eminentemente clínico:** cerca de 90% do diagnóstico da lombalgia vem da anamnese (10% do exame físico). Exame de imagem não serve para confirmar a lombalgia mecânica -- entra em cena apenas a partir de um sinal de alarme, com o objetivo de EXCLUIR causa secundária (na lombalgia mecânica simples, a radiografia é normal).
 - **Sem indicação de Imagem Inicial na Lombalgia Aguda Comum:** raio-X ou TC/RM NÃO devem ser solicitados nas primeiras 4 a 6 semanas sem sinais de alarme.
-- 🔴 **Sinais de Alarme (*Red Flags*) — Indicam Exame de Imagem (RM) Imediato:**
+- 🔴 **Sinais de Alarme (*Red Flags*) -- Indicam Necessidade de Exame de Imagem:**
   - Idade extrema (< 18 anos ou > 50 anos com início recente).
   - História de neoplasia / câncer prévio (suspeita de metástase óssea).
   - Febre, calafrios, uso de drogas EV, imunossupressão (suspeita de espondilodiscite/abscesso epidural).
   - Perda ponderal inexplicada.
   - Trauma recente ou Osteoporose prévia.
-  - **Déficit motor progressivo / Síndrome da Cauda Equina.**
+  - **Déficit motor progressivo / Síndrome da Cauda Equina** (única exceção à conduta abaixo -- ver 3.1).
+- 🔴 **O exame INICIAL diante de sinal de alarme é sempre a Radiografia Simples, nunca a RM direto:** mesmo diante de suspeita de tumor/neoplasia, a radiografia -- barata e de ampla disponibilidade -- é o primeiro exame solicitado; ela não diagnostica a lombalgia mecânica, mas rastreia/exclui causa secundária óssea (ex.: apagamento do pedículo/processo espinhoso -- "sinal da coruja caolha" -- sugere lesão tumoral). TC (melhor exame para osso) e RM (melhor exame para partes moles -- disco e medula) ficam reservadas para quando a suspeita de etiologia secundária persiste após a radiografia.
+  - *Exceção:* **Síndrome da Cauda Equina** -- por ser emergência neurocirúrgica, pula-se direto para RM de urgência (ver Seção 3.1).
 
 ---
 
@@ -121,3 +124,7 @@ Tema duplo de alto impacto em Ortopedia Adulto e Pediátrica/Medicina Legal. A l
 - 🔴 **Teste de Lasègue Cruzado:** elevar a perna saudável reproduz dor na afetada -- altamente específico para hérnia de disco extrusa.
 - 🔴 **Escoliose Idiopática:** Ângulo de Cobb < 20° (observar); 20°-40° em imaturo (colete ortópico); > 40°-50° (cirurgia).
 - 🔴 **Suspeita de Maus-Tratos:** Notificação **COMPULSÓRIA imediata ao Conselho Tutelar**. Não precisa de BO nem de prova judicial.
+- 🔴 **Colete Ortopédico (Milwaukee/TLSO) na Escoliose -- finalidade é CONTER, não regredir:** o colete indicado nas curvas de 20-40° em paciente esqueleticamente imaturo (Risser 0-2) tem o objetivo EXCLUSIVO de conter/frear a progressão até a maturidade esquelética -- ele NÃO reduz nem regride o grau de escoliose já estabelecido. Uso deve ser de no mínimo 18h/dia (ideal 18-23h); uso parcial/inconsistente não impede a progressão da curva.
+- 🔴 **Escoliose Infantil (congênita) x Juvenil/Adolescente (idiopática) -- bancas trocam sexo e lado entre os subtipos:** a forma infantil (diagnosticada até os 3 anos, de origem congênita) é mais comum em MENINOS e a curva predomina do lado ESQUERDO; a forma juvenil/adolescente (idiopática, a mais prevalente) é mais comum em MENINAS e a curva predomina do lado DIREITO, com progressão mais acelerada durante o estirão de crescimento puberal.
+- 🔴 **Dor lombar em criança/adolescente com escoliose:** raramente é causada pela própria curva escoliótica -- só em curvas > 70°. A causa mais comum de dor nas costas nessa faixa etária é a ergonomia inadequada de mobiliário escolar/mochila. Dor significativa atribuída à escoliose idiopática exige investigação de causa secundária (tumor medular, infecção, hérnia discal), pois a escoliose idiopática típica costuma ser indolor.
+- 🔴 **Exame Inicial na Lombalgia com Sinal de Alarme:** é SEMPRE a radiografia simples, mesmo diante de suspeita de tumor/neoplasia -- barata, disponível e suficiente para rastrear/excluir causa secundária óssea (ex.: sinal da "coruja caolha" no tumor vertebral). A banca induz o candidato a pular direto para o exame "mais completo" (RM), mas a RM só é o exame inicial na exceção da Síndrome da Cauda Equina (RM de urgência + encaminhamento cirúrgico imediato).

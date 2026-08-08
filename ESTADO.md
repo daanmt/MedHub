@@ -7,7 +7,8 @@ relates_to: [AGENTE, handoff-contract, estado-contract]
 
 # ESTADO -- MedHub
 
-*Atualizado: 2026-08-03 (sessão 134 -- virada CRM/piso ENAMED (~60%) + cadência da semana fechada (2 simulados/sem + 30-50 cards/dia) + dreno FSRS 50 cards + S14 SUS/Asma 94q (90%/90%); acumulado 5.535) | Ferramenta: Claude Code (Sonnet 5)*
+*Atualizado: 2026-08-07/08 (sessão 139 -- raio-x dos 86 erros da s138 fechado 100%: 20 manual + 70 via workflow multi-agente; cobertura de resumos salta de 70 -> 122 .md cunhados (`tools/cobertura_conhecimento.py`); PRD `rotina-pos-simulado-raio-x` gerado via /discover, candidato a skill futura; detalhe operacional completo em HANDOFF.md) | Ferramenta: Claude Code (Sonnet 5)*
+*Anterior: 2026-08-03 (sessão 134 -- virada CRM/piso ENAMED (~60%) + cadência da semana fechada (2 simulados/sem + 30-50 cards/dia) + dreno FSRS 50 cards + S14 SUS/Asma 94q (90%/90%); acumulado 5.535)*
 
 > **Boot:** ler [`AGENTE.md`](AGENTE.md) -> [`HANDOFF.md`](HANDOFF.md) (operacional curto) primeiro. Este arquivo é o snapshot **macro** (metas, indicador, marcos). Estrutura normatizada por [`core/contracts/estado-contract.md`](core/contracts/estado-contract.md).
 

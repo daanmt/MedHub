@@ -119,3 +119,4 @@ Variante da infecção pelo *M. tuberculosis*.
 - 🔴 **Paraco e RX de Tórax:** Mesmo em lesões exclusivamente orais/cutâneas da forma crônica, o RX de tórax é imperativo para avaliar o pulmão (asa de borboleta).
 - 🔴 **Gemulação do Paraco:** Múltipla (roda de leme). Gemulação simples é pegadinha de examinador.
 - 🔴 **Neurite e PQT:** Nunca suspender o tratamento fixo de PQT-U por conta de episódios reacionais ou neurite.
+- 🔴 **Lesão hipocrômica única sem espessamento neural = Indeterminada, não Virchowiana:** O conjunto lesão única (ou poucas), alteração sensitiva discreta e AUSÊNCIA de espessamento neural define a forma Indeterminada -- estágio inicial, anterior à definição polar. Virchowiana é a forma mais grave e mais lembrada pela banca, mas exige MÚLTIPLAS lesões difusas, infiltração cutânea extensa e comprometimento sistêmico; lesão solitária, mesmo bem delimitada, não preenche isoladamente esses critérios.

@@ -4,6 +4,8 @@ Chronological index of every work session on this project. The session log files
 
 **Reading order:** newest-first below. Active sessions live in `history/`; pre-modernization sessions (≤028, when the project still relied on `caderno_erros.md`, `HANDOFF.md`, and `progresso.md`) have been archived to [`legacy/`](legacy/) -- see [`legacy/README.md`](legacy/README.md) for the deprecation context.
 
+**session_140.md (2026-08-08/11):** dreno FSRS completo (78 cards) + curadoria de cards em escala (15 reforjados via `recurate_cards.py`, 2 desmembrados, 1 aposentado) + re-drill de consolidação (40 -> 15 -> 14 resolvidos) + bloco IVAS (19q/15 acertos, 4 erros, 5 cards, 2 resumos novos) + reconcile corrigiu drift de `ESTADO.md` parado desde a s125. Sessão cruzou um gap de 3 dias sem estudo (08/08 -> 08/11) antes do fechamento.
+
 Gaps in the sequence (026, 047, 050, 053, 057, 058, 064, 072) are sessions that happened but whose dedicated log file was absorbed into adjacent ones or never written separately.
 
 **Gap 103-105 (Antigravity, ~2026-07-01 a 07-02):** três sessões do agente Antigravity que produziram trabalho substancial mas **não seguiram o protocolo de fechamento** (nenhum commit, nenhum session log, HANDOFF não rotacionado). O trabalho -- convenção de encoding ASCII em massa (s103), harness de autonomia `auto_check.py`/`setup_hooks.py` (s104), e a frente extensivo `material_indicado` + Deep-Researchness D10 (s105) -- foi **revisado, corrigido e selado retroativamente na s106**, sem fabricar logs retroativos (proibido por convenção). A evidência das intenções vive nos PRD/spec de `.vibeflow/{prds,specs}/{autonomia-harness-hooks,extensivo-cronograma-deep-research}`. Ver `session_106.md`.

@@ -4,6 +4,8 @@ Chronological index of every work session on this project. The session log files
 
 **Reading order:** newest-first below. Active sessions live in `history/`; pre-modernization sessions (≤028, when the project still relied on `caderno_erros.md`, `HANDOFF.md`, and `progresso.md`) have been archived to [`legacy/`](legacy/) -- see [`legacy/README.md`](legacy/README.md) for the deprecation context.
 
+**session_142.md (2026-08-12):** bloco Hanseníase+PLECT (41q/33 acertos, fecho S14) + DRENAR de 69 cards + redrill de 24. Usuário pegou aula-base sequencial falhando em cluster de dx diferencial (pediu tabela) e cards double-barreled (inclusive uma reforja minha) -- nasceu o teste "eixo x pacote" em `estilo-flashcard.md`. Achado em escala: 280 cards não-atômicos no baralho (`audit_card_atomicity.py`). 2 padrões reincidentes confirmados no ledger (discriminação por epidemiologia solta; escalonar intervenção além do protocolo, 4 temas cada). Simulado 4 amanhã de manhã.
+
 **session_141.md (2026-08-11):** bloco Cefaleias+Epilepsias (48q/38 acertos), 10 erros + 10 cards. Fechada por limite de contexto -- Hanseníase/Verrucosas + FSRS 50+ ficam pra próxima; Simulado 4 planejado pra manhã seguinte.
 
 **session_140.md (2026-08-08/11):** dreno FSRS completo (78 cards) + curadoria de cards em escala (15 reforjados via `recurate_cards.py`, 2 desmembrados, 1 aposentado) + re-drill de consolidação (40 -> 15 -> 14 resolvidos) + bloco IVAS (19q/15 acertos, 4 erros, 5 cards, 2 resumos novos) + reconcile corrigiu drift de `ESTADO.md` parado desde a s125. Sessão cruzou um gap de 3 dias sem estudo (08/08 -> 08/11) antes do fechamento.

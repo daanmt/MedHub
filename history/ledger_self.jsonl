@@ -510,3 +510,39 @@
 {"ts": "2026-08-04T00:46:25+00:00", "event": "resolved", "check": "posicao_ssot", "fingerprint": "01755b5ba8cb", "alvo": "HANDOFF.md"}
 {"ts": "2026-08-07T18:00:04+00:00", "event": "opened", "check": "session_pointer", "fingerprint": "a3d15712ce11", "alvo": "HANDOFF.md", "payload": {"pointer": 138, "max_sess": 135}}
 {"ts": "2026-08-07T19:48:21+00:00", "event": "resolved", "check": "session_pointer", "fingerprint": "a3d15712ce11", "alvo": "HANDOFF.md"}
+{"ts": "2026-08-12T19:53:31+00:00", "event": "opened", "check": "card_autosuficiencia", "fingerprint": "37da80ea930d", "alvo": "card#1048", "payload": {"padrao": "opcao-anaforico", "tema": "Síndrome de Down"}}
+{"ts": "2026-08-12T19:53:31+00:00", "event": "opened", "check": "card_autosuficiencia", "fingerprint": "bfe76fcde299", "alvo": "card#1191", "payload": {"padrao": "opcao-anaforico", "tema": "Epilepsias"}}
+{"ts": "2026-08-12T19:53:31+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "4eb4d2020d4e", "alvo": "card#1025", "payload": {"padrao": "duplo-ask/conectivo", "tema": "Transtornos do Humor"}}
+{"ts": "2026-08-12T19:53:31+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "23db9c21ef0f", "alvo": "card#1026", "payload": {"padrao": "duplo-ask/conectivo", "tema": "Psiquiatria Social e Reforma Psiquiátrica"}}
+{"ts": "2026-08-12T19:53:31+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "63fbc497b5cf", "alvo": "card#1033", "payload": {"padrao": "duplo-ask/conectivo", "tema": "Meningites"}}
+{"ts": "2026-08-12T19:53:31+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "26774531bd25", "alvo": "card#1035", "payload": {"padrao": "resposta-multifato/paragrafo", "tema": "Icterícia e Sepse Neonatal"}}
+{"ts": "2026-08-12T19:53:31+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "b905f2cbd431", "alvo": "card#1036", "payload": {"padrao": "resposta-multifato/paragrafo", "tema": "Icterícia e Sepse Neonatal"}}
+{"ts": "2026-08-12T19:53:31+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "f89de720e530", "alvo": "card#1039", "payload": {"padrao": "duplo-ask/conectivo", "tema": "Síndromes Demenciais"}}
+{"ts": "2026-08-12T19:53:31+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "e0a32600a313", "alvo": "card#1041", "payload": {"padrao": "duplo-ask/conectivo", "tema": "Toxoplasmose na Gestação"}}
+{"ts": "2026-08-12T19:53:31+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "7bda9c05fb48", "alvo": "card#1048", "payload": {"padrao": "duplo-ask/conectivo", "tema": "Síndrome de Down"}}
+{"ts": "2026-08-12T19:53:31+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "2e4f086b6d70", "alvo": "card#1051", "payload": {"padrao": "duplo-ask/duas-interrogacoes", "tema": "Síndromes Hipertensivas da Gestação"}}
+{"ts": "2026-08-12T19:53:31+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "3b66ed99ab02", "alvo": "card#1053", "payload": {"padrao": "duplo-ask/conectivo", "tema": "Vulvovaginites"}}
+{"ts": "2026-08-12T19:53:31+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "728a9c9061dc", "alvo": "card#1054", "payload": {"padrao": "duplo-ask/conectivo", "tema": "Hérnia Femoral Encarcerada"}}
+{"ts": "2026-08-12T19:53:31+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "05f96200dfb7", "alvo": "card#1060", "payload": {"padrao": "duplo-ask/segundo-nucleo", "tema": "Desenvolvimento Neuropsicomotor (DNPM)"}}
+{"ts": "2026-08-12T19:53:31+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "e1c318ef6fdc", "alvo": "card#1064", "payload": {"padrao": "duplo-ask/conectivo", "tema": "Hanseníase"}}
+{"ts": "2026-08-12T19:53:31+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "d8a2d04d109a", "alvo": "card#1068", "payload": {"padrao": "duplo-ask/duas-interrogacoes", "tema": "Descolamento Prematuro de Placenta"}}
+{"ts": "2026-08-12T19:53:31+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "6fab43902506", "alvo": "card#1082", "payload": {"padrao": "resposta-multifato/multi-frase", "tema": "Abdome Agudo Inflamatório - Colecistite e Colangite Aguda"}}
+{"ts": "2026-08-12T19:53:31+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "568ad2ed6a91", "alvo": "card#1085", "payload": {"padrao": "duplo-ask/conectivo", "tema": "Princípios e Diretrizes do SUS"}}
+{"ts": "2026-08-12T19:53:31+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "ff9edbf81386", "alvo": "card#1087", "payload": {"padrao": "duplo-ask/conectivo", "tema": "Asma"}}
+{"ts": "2026-08-12T19:53:31+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "fca1d69fb8b1", "alvo": "card#1094", "payload": {"padrao": "duplo-ask/conectivo", "tema": "Abdome Agudo Inflamatório - Colecistite e Colangite Aguda"}}
+{"ts": "2026-08-12T19:53:31+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "1cf9430be6df", "alvo": "card#1098", "payload": {"padrao": "duplo-ask/conectivo", "tema": "Endometriose"}}
+{"ts": "2026-08-12T19:53:31+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "df76f7593362", "alvo": "card#1135", "payload": {"padrao": "duplo-ask/conectivo", "tema": "Doenças da Coluna Vertebral e Maus-Tratos"}}
+{"ts": "2026-08-12T19:53:31+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "4a5090967789", "alvo": "card#1138", "payload": {"padrao": "duplo-ask/conectivo", "tema": "Síndrome de Abstinência Alcoólica"}}
+{"ts": "2026-08-12T19:53:31+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "8587fed6238c", "alvo": "card#1162", "payload": {"padrao": "duplo-ask/segundo-nucleo", "tema": "Otite Média"}}
+{"ts": "2026-08-12T19:53:31+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "ce185d4d87ac", "alvo": "card#1182", "payload": {"padrao": "duplo-ask/conectivo", "tema": "Faringites e Infeccoes Virais das Vias Aereas Superiores"}}
+{"ts": "2026-08-12T19:53:31+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "655a5f8bf97e", "alvo": "card#206"}
+{"ts": "2026-08-12T19:53:31+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "9909af67b47a", "alvo": "card#469"}
+{"ts": "2026-08-12T19:53:31+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "05833f8559d4", "alvo": "card#470"}
+{"ts": "2026-08-12T19:53:31+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "90e5780d217c", "alvo": "card#477"}
+{"ts": "2026-08-12T19:53:31+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "43dd6b3158c5", "alvo": "card#483"}
+{"ts": "2026-08-12T19:53:31+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "13b72af57987", "alvo": "card#485"}
+{"ts": "2026-08-12T19:53:31+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "4f388c3e5c70", "alvo": "card#486"}
+{"ts": "2026-08-13T00:39:11+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "f66e993efd2c", "alvo": "card#1209", "payload": {"padrao": "resposta-multifato/paragrafo", "tema": "Gravidez ectópica"}}
+{"ts": "2026-08-13T00:39:11+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "839e29d03652", "alvo": "card#493"}
+{"ts": "2026-08-13T00:39:11+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "5b1efb48f481", "alvo": "card#523"}
+{"ts": "2026-08-13T00:39:11+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "adf079d6538f", "alvo": "card#524"}

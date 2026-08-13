@@ -1,21 +1,24 @@
 # HANDOFF.md -- ESTADO OPERACIONAL CURTO
-*Atualizado: 2026-08-11 -- Sessão 141 -- aula-base Cefaleias+Epilepsias, 48q/38 acertos, 10 erros + 10 cards. Fechado por tamanho de contexto, não por fim de trabalho.*
+*Atualizado: 2026-08-12 -- Sessão 142 -- Hanseníase+PLECT (fecho S14), 41q/33 acertos, 8 erros/9 cards + DRENAR de 69 cards + redrill de 24 + teste "eixo x pacote" novo em estilo-flashcard.md.*
 
 ## > Próximo passo imediato
 
-1. **Hanseníase; Síndromes Verrucosas (D5/D5, revisão)** -- 2ª das 2 tarefas do dia, ainda não iniciada. Resumo já existe (`resumos/Clínica Médica/Dermatologia/Hanseníase e Síndromes Verrucosas.md`).
-2. **FSRS: puxar 50+ cards** -- pedido explícito do usuário, ainda não feito. Fila deve estar maior que os 36+10 do fechamento da s140 (mais 3 dias sem drenar).
-3. **Simulado 4** -- planejado para amanhã de manhã, decisão do próprio usuário (mente descansada > forçar hoje). Não cobrar antes disso.
-4. Retomar direto -- esta conversa fechou por limite de contexto, o fio não foi perdido (ver `history/session_141.md`).
+1. **Simulado 4** -- amanhã de manhã (2026-08-13), decisão do usuário (mente descansada). Registrar via `registrar_sessao_bulk.py --area Simulado` + raio-x dos erros de praxe.
+2. **Fila de reforja em massa (280 cards não-atômicos)** -- `python tools/audit_card_atomicity.py --json`. Achado em escala nesta sessão, não é urgente; sessão dedicada futura, triar por "eixo x pacote" (ver `estilo-flashcard.md`), esperar ~30% falso-positivo.
+3. **Cronograma S14 fechado** -- Hanseníase+PLECT era a última tarefa Dermato pendente. Próximo tema conforme `tools/cronograma.py` (Drive desatualizado há mais de 2 semanas -- rodar `--sync-drive` antes de confiar na ordem).
+4. Retomar direto -- nada pendente de contexto perdido.
 
 ## Estado por frente
-- **Volume:** +48 questões (Neurologia, 38 acertos) desde o fechamento da s140. Cronograma S14: só falta o bloco Dermato pra fechar a semana.
-- **Cards:** +10 novos (1183-1192) do bloco Neuro. Erros pontuais e diversos (sem padrão novo de peso) -- ver `session_141.md`.
+- **Volume & Metas:** 5919 / 9454 (perf. ~78.6%). Hoje: 41. Ritmo-alvo ~47.8q/dia (74d p/ Cronograma EMED (grade completa)).
+- **FSRS:** dívida 2 atrasados + 5 p/ hoje -- pool 625 nunca introduzidos (entram <=40/dia). Fila do dia zerada (69 drenados + 24 consolidados em redrill).
+- **Conteúdo:** 125 resumos em resumos/. [derivado: glob]
+- **Posição:** conteúdo S14 (nominal S20, atraso 6 sem) [derivado: preparacao_estado]
 
-## Última sessão -- s141
-- Aula-base Neurologia (Cefaleias D8, Epilepsias D5) entregue conforme calibração.
-- 48q/38 acertos trazidos pelo usuário, 10 erros analisados e inseridos em lote único.
-- Sessão encerrada proativamente por tamanho de contexto -- Dermato e FSRS ficam para a próxima conversa, sem perda de estado (tudo commitado).
+## Última sessão -- s142
+- Aula-base Hanseníase+Síndromes Verrucosas entregue ancorada no PDF-fonte (não só no resumo); 5 correções/adições no resumo (Mitsuda, classificação PB/MB, vigilância de contatos corrigida, esporotricose forma fixa, poupança térmica).
+- 41q/33 acertos (80,5%), 8 erros analisados, 9 cards novos. Usuário pediu tabela comparativa (aula sequencial não bastou pra cluster PLECT) -- entregue, e virou memória (`feedback_aula_cluster_diferencial_tabela`).
+- DRENAR de 69 cards + redrill de 24 até nota 4. Usuário identificou cards double-barreled em escala (inclusive uma reforja minha) -> nasceu o teste "eixo x pacote" (`estilo-flashcard.md`, refina a régua da s128). 280 cards não-atômicos no baralho todo (achado, não resolvido).
+- 2 padrões de erro confirmados no ledger de habilidades: discriminação por epidemiologia solta (4 temas) e escalonar intervenção além do protocolo (4 temas, cruza família bug nº1).
 
 ---
-*Histórico: history/INDEX.md * Macro: ESTADO.md * Sessão: history/session_141.md*
+*Histórico: history/INDEX.md * Macro: ESTADO.md * Sessão: history/session_142.md*

@@ -236,3 +236,12 @@ except AttributeError:
 - **O dado tem gate, não só o código**: (a) write-gate `card_checks.validar_card` nos 5 writers (erros = template/embutida/encoding/campos; resto warn-first); (b) `auto_check` dispara checks de card por watermark de dado `(MAX(id), COUNT(*), MAX(card_version))` em `history/card_watermark.json` — arquivo staged não detecta INSERT/reforja no banco.
 - **Calibração é pré-requisito de endurecimento**: limiar de detector relacional só muda com `calibrate_card_checks.py` re-rodado contra o incidente real (recall atual: 68/68; FP aparente: 14/978). Persistido no ledger (`calibracao_card_checks`).
 - **Pendência que bloqueia CHECK de schema**: semântica de `needs_qualitative=1` (contrato pós-bankruptcy proíbe; banco tem 11 como "sinalizado"; fluxo usa). Decidir e emendar contrato ANTES de qualquer constraint.
+
+## 2026-08-14 — Ciclo P3 (fila priorizada + proveniência, ai-eng)
+
+- **Proveniência antes da curadoria**: `card_version`/`selection_reason` no revlog entram ANTES da onda de reforja — reforja sem essas colunas é imensurável para sempre (ordem de medição > ordem de conveniência).
+- **Banda prioritária = bucket explícito**, não reordenação do FIFO: `atrasados → erros_frescos (48h/cap 8, só questao_id NOT NULL) → hoje → novos`; card-base não fura a fila. Paridade F3 com day_plan preservada.
+- **Evento ≠ achado**: eventos imutáveis (generation/reincidencia) vão em JSONL append-only próprio, NUNCA no ledger_self (opened/resolved auto-resolveria o passado). Flush pós-commit: rollback = zero eventos falsos.
+- **Preview com paridade testada**: `preview_ratings` quebra JUNTO com o scheduler se ele mudar — o preview nunca mente; intervalo é pré-balanceador com flag explícita.
+- **Contrato de apresentação codificado** em `revisar.md` (anti-vazamento de tema, preview, motivo, --reason) — correção que era tribal virou norma verificável.
+- **`update_flashcard_fields` gateado**: o último caminho de escrita documentado sem validação fechou; degradação anunciada quando `tools/` ausente.

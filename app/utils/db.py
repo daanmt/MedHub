@@ -729,6 +729,38 @@ def update_flashcard_fields(card_id, fields) -> bool:
     if not sets:
         return False
 
+    # P3 part-4: gate de qualidade TAMBÉM aqui — este é o caminho de escrita
+    # documentado fora dos CLIs (a regen queue instrui o agente a chamar
+    # direto). Mesmos predicados parciais do recurate (campos presentes).
+    # card_checks vive em tools/ (import lazy por __file__, imune a
+    # monkeypatch de DB_PATH); indisponível → WARN e segue (a camada CLI já
+    # valida; o app não pode quebrar sem tools/ — degradação anunciada).
+    try:
+        _tools = os.path.join(os.path.dirname(os.path.dirname(
+            os.path.dirname(os.path.abspath(__file__)))), 'tools')
+        import sys as _sys
+        if _tools not in _sys.path:
+            _sys.path.insert(0, _tools)
+        import card_checks as _cc
+    except Exception as e:  # pragma: no cover
+        print(f"[WARN] CARD_GATE: card_checks indisponivel ({e}) — reescrita sem gate.")
+        _cc = None
+    if _cc is not None:
+        erros = list(_cc.checar_encoding(sets))
+        for k in ('frente_pergunta', 'verso_resposta'):
+            if k in sets and not str(sets[k]).strip():
+                erros.append(f"{k} vazia")
+        if sets.get('frente_pergunta'):
+            t = _cc.checar_pergunta_template(sets)
+            if t:
+                erros.append(t)
+            emb = _cc.checar_resposta_embutida(sets)
+            if emb:
+                erros.append(emb)
+        if erros:
+            raise ValueError("gate de qualidade reprovou a reescrita (regua "
+                             ".claude/commands/estilo-flashcard.md): " + " | ".join(erros))
+
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute("SELECT 1 FROM flashcards WHERE id = ?", (card_id,))

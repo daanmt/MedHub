@@ -28,6 +28,21 @@ import card_checks  # gate de qualidade (part-3) — biblioteca pura, fonte unic
 
 DB_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'ipub.db')
 
+# P3 part-4: eventos aguardando COMMIT — evento de transacao que faz rollback
+# seria fato falso no log; o flush so acontece pos-commit (own_conn ou lote).
+_EVENTOS_PENDENTES = []
+
+
+def _flush_eventos():
+    """Persiste os eventos pendentes (pos-commit). Nunca derruba o insert."""
+    try:
+        import event_log
+        for tipo, dados in _EVENTOS_PENDENTES:
+            event_log.registrar(tipo, dados)
+    except Exception as e:
+        print(f"[WARN] EVENT_LOG: flush falhou ({e}); eventos so no stdout.")
+    _EVENTOS_PENDENTES.clear()
+
 # --- Reincidencia (F25, PRD orquestracao part-3) ----------------------------
 # Matcher lexical simples: normaliza, remove stopwords minimas, mede overlap de
 # tokens. WARN informativo (politica s106/107) -- NUNCA bloqueia o insert.
@@ -244,8 +259,16 @@ def insert_questao(area, tema, enunciado, correta, chamada, erro, elo, armadilha
         except Exception:
             pass  # tabela opcional — ignorar se não existir
 
+        # P3 part-4: evento de geracao (ids/contagens — nunca texto clinico);
+        # fica pendente ate o commit (lote comita em insert_batch).
+        if cards_to_insert:
+            _EVENTOS_PENDENTES.append(("generation", {
+                "questao_id": questao_id, "n_cards": len(cards_to_insert),
+                "avisos": len(gate_avisos)}))
+
         if own_conn:
             conn.commit()
+            _flush_eventos()
         if cards_to_insert:
             print(f"Sucesso! Questão '{titulo}' inserida. Flashcard IPUB High-Level [ID: {card_id}] gerado.")
         else:
@@ -266,6 +289,18 @@ def insert_questao(area, tema, enunciado, correta, chamada, erro, elo, armadilha
                     print("[REINCIDENCIA] elo similar a: %s -- %dx no tema. "
                           "Candidato a padrao vivo (HANDOFF) e mini-drill "
                           "(fsrs_queue --pre-bloco)." % (alvos, len(hits)))
+                    # P3 part-4: reincidencia vira evento persistido (metrica
+                    # de 1a classe de um sistema error-driven). Ja pos-commit
+                    # no modo single; no lote, flusha com o commit do lote.
+                    ev = ("reincidencia", {"questao_id": questao_id, "hits": len(hits)})
+                    if own_conn:
+                        try:
+                            import event_log
+                            event_log.registrar(*ev)
+                        except Exception:
+                            pass
+                    else:
+                        _EVENTOS_PENDENTES.append(ev)
             except Exception:
                 pass
 
@@ -285,6 +320,7 @@ def insert_questao(area, tema, enunciado, correta, chamada, erro, elo, armadilha
     except Exception as e:
         if not own_conn:
             raise  # transacao do lote: o chamador faz o rollback TOTAL
+        _EVENTOS_PENDENTES.clear()  # P3: rollback implicito -> evento seria fato falso
         print(f"Erro ao inserir no banco: {e}")
         return False
     finally:
@@ -381,8 +417,10 @@ def insert_batch(errors_file):
             )
             inseridos.append(i)
         conn.commit()
+        _flush_eventos()  # P3: eventos do lote so existem apos o commit real
     except Exception as e:
         conn.rollback()
+        _EVENTOS_PENDENTES.clear()  # P3: rollback total -> nenhum evento
         print(f"[ERRO] lote abortado: {e}. ROLLBACK TOTAL -- zero inserido nesta execucao.")
         return False
     finally:

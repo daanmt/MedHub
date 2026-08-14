@@ -345,11 +345,25 @@ class ConcurrentReviewError(Exception):
     antes era garantia só de protocolo (incidente card 403, s108)."""
 
 
-def record_review(flashcard_id, rating):
+def _ensure_revlog_columns(conn):
+    """P3 part-1: colunas de proveniência no revlog — `card_version` (a versão
+    que o usuário VIU) e `selection_reason` (por que o card foi servido).
+    ALTER idempotente (padrão `_ensure_status_column` do repo). Histórico
+    antigo fica NULL — proveniência começa agora, sem backfill."""
+    cols = {r[1] for r in conn.execute("PRAGMA table_info(fsrs_revlog)")}
+    if "card_version" not in cols:
+        conn.execute("ALTER TABLE fsrs_revlog ADD COLUMN card_version INTEGER")
+    if "selection_reason" not in cols:
+        conn.execute("ALTER TABLE fsrs_revlog ADD COLUMN selection_reason TEXT")
+
+
+def record_review(flashcard_id, rating, selection_reason=None):
     """Aplica o algoritmo FSRS e atualiza o banco de dados.
 
     part-2 (flashcards-integridade): lê o estado e delega a `_aplicar_review`
-    (lock otimista). Corrida → `ConcurrentReviewError`, nada gravado."""
+    (lock otimista). Corrida → `ConcurrentReviewError`, nada gravado.
+    P3 part-1: `selection_reason` opcional (vencido|fresh_error|agendado|novo|
+    pre_bloco) persiste no revlog; assinatura retro-compatível."""
     conn = get_connection()
     try:
         df = pd.read_sql("SELECT * FROM fsrs_cards WHERE card_id = ?", conn, params=(flashcard_id,))
@@ -363,12 +377,13 @@ def record_review(flashcard_id, rating):
         else:
             card_data = df.iloc[0].to_dict()
             card_novo = False
-        return _aplicar_review(conn, card_data, rating, card_novo=card_novo)
+        return _aplicar_review(conn, card_data, rating, card_novo=card_novo,
+                               selection_reason=selection_reason)
     finally:
         conn.close()
 
 
-def _aplicar_review(conn, card_data, rating, card_novo=False):
+def _aplicar_review(conn, card_data, rating, card_novo=False, selection_reason=None):
     """Núcleo da gravação sobre um estado LIDO (testável em separado).
 
     Lock otimista: o UPDATE é condicionado ao `last_review` lido — duas
@@ -433,14 +448,22 @@ def _aplicar_review(conn, card_data, rating, card_novo=False):
 
     # Log da revisão — só grava quando o estado gravou (mesma transação).
     # `last_elapsed_days` = elapsed do estado ANTERIOR (era sempre-NULL antes).
+    # P3 part-1: proveniência — versão VISTA capturada do banco no ato (fonte =
+    # banco, não chamador; single-user, versão corrente == versão vista).
+    _ensure_revlog_columns(conn)
+    row_v = cursor.execute("SELECT card_version FROM flashcards WHERE id = ?",
+                           (flashcard_id,)).fetchone()
+    versao_vista = row_v[0] if row_v and row_v[0] is not None else None
     cursor.execute('''
         INSERT INTO fsrs_revlog (card_id, rating, state, due, stability, difficulty,
-                                 elapsed_days, last_elapsed_days, scheduled_days)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                                 elapsed_days, last_elapsed_days, scheduled_days,
+                                 card_version, selection_reason)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ''', (
         flashcard_id, rating, new_metrics['state'], new_metrics['due'],
         new_metrics['stability'], new_metrics['difficulty'],
-        new_metrics['elapsed_days'], elapsed_anterior, new_metrics['scheduled_days']
+        new_metrics['elapsed_days'], elapsed_anterior, new_metrics['scheduled_days'],
+        versao_vista, selection_reason
     ))
 
     conn.commit()

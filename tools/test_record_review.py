@@ -150,9 +150,34 @@ def test_last_elapsed_days_populado():
     _com_db(corpo)
 
 
+def test_proveniencia_card_version_e_reason():
+    """P3 part-1: revlog registra a versao VISTA e o motivo de servico; pos-
+    reforja (card_version 1->2), a nova revisao registra 2 — 'v2 > v1?' vira
+    pergunta respondivel."""
+    def corpo(tmp):
+        with contextlib.redirect_stdout(io.StringIO()):
+            db.record_review(1, 3, selection_reason="vencido")
+        con = sqlite3.connect(tmp)
+        v1 = con.execute("SELECT card_version, selection_reason FROM fsrs_revlog "
+                         "ORDER BY id DESC LIMIT 1").fetchone()
+        con.execute("UPDATE flashcards SET card_version = 2 WHERE id = 1")
+        con.commit()
+        con.close()
+        with contextlib.redirect_stdout(io.StringIO()):
+            db.record_review(1, 3)  # sem reason: NULL (retro-compativel)
+        con = sqlite3.connect(tmp)
+        v2 = con.execute("SELECT card_version, selection_reason FROM fsrs_revlog "
+                         "ORDER BY id DESC LIMIT 1").fetchone()
+        con.close()
+        assert v1 == (1, "vencido"), f"1a revisao: versao vista=1 + reason (got {v1})"
+        assert v2 == (2, None), f"pos-reforja: versao vista=2, reason NULL (got {v2})"
+    _com_db(corpo)
+
+
 if __name__ == "__main__":
     fns = [test_fluxo_normal_intacto, test_corrida_segunda_aplicacao_falha_sem_log,
-           test_card_sem_linha_fsrs_ganha_insert, test_last_elapsed_days_populado]
+           test_card_sem_linha_fsrs_ganha_insert, test_last_elapsed_days_populado,
+           test_proveniencia_card_version_e_reason]
     falhas = 0
     for fn in fns:
         try:

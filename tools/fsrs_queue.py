@@ -85,6 +85,10 @@ def main():
                            "um bloco de questões. Rating segue o --record normal")
     parser.add_argument("--rating", type=int, choices=[1, 2, 3, 4],
                         help="Avaliação 1=Novamente 2=Difícil 3=Bom 4=Fácil (com --record)")
+    parser.add_argument("--reason", default=None,
+                        choices=["vencido", "fresh_error", "agendado", "novo", "pre_bloco"],
+                        help="P3: por que o card foi servido — propague o selection_reason "
+                             "que veio no --next/--list; persiste no revlog")
     parser.add_argument("--area", help="Filtro de área (match exato)")
     parser.add_argument("--tema", help="Filtro de tema (LIKE)")
     parser.add_argument("--limit", type=int, help="Máximo de cards na fila (--list)")
@@ -119,7 +123,8 @@ def main():
         if args.rating is None:
             parser.error("--record exige --rating <1-4>")
         try:
-            metrics = db.record_review(args.record, args.rating)
+            metrics = db.record_review(args.record, args.rating,
+                                       selection_reason=args.reason)
         except db.ConcurrentReviewError as e:
             # part-2: fail-safe — reporta e NAO regrava (Invariante C).
             _emit({"recorded": False, "card_id": args.record,

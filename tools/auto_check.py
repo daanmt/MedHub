@@ -67,6 +67,70 @@ def get_staged_files():
         return None
     return sorted(set(staged))
 
+
+# --- Watermark de dado dos cards (part-6, flashcards-integridade) -----------
+# Cards vivem no ipub.db, FORA do git — gatilho por arquivo staged nao detecta
+# INSERT/reforja/delete no banco (3a causa do incidente dos 68, §6.5.2). A
+# tripla (MAX(id), COUNT(*), MAX(card_version)) cobre insert, delete e reforja
+# in-place; timestamp foi rejeitado (nao pega UPDATE nem delete — mesma licao
+# do watermark set-diff recomendado ao daktus-hub).
+
+WATERMARK_PATH = ROOT_DIR / "history" / "card_watermark.json"
+
+
+def card_watermark_atual(db_path=None):
+    """Tripla do estado atual do dado, ou None se o banco esta inacessivel
+    (sensor quebrado = WARN visivel; quem chama trata None como 'mudou')."""
+    import sqlite3
+    dbp = Path(db_path) if db_path else ROOT_DIR / "ipub.db"
+    try:
+        con = sqlite3.connect(f"file:{dbp.as_posix()}?mode=ro", uri=True)
+        try:
+            row = con.execute(
+                "SELECT COALESCE(MAX(id), 0), COUNT(*), COALESCE(MAX(card_version), 0) "
+                "FROM flashcards").fetchone()
+        finally:
+            con.close()
+        return {"max_id": row[0], "count": row[1], "max_version": row[2]}
+    except Exception as e:
+        print(f"[WARN] CARD_WATERMARK: banco inacessivel ({e}) — "
+              f"checks de card rodam por precaucao (fail-open).")
+        return None
+
+
+def card_watermark_mudou(db_path=None, marco_path=None):
+    """(mudou: bool, atual) — True quando o dado avancou desde o ultimo marco,
+    quando nao ha marco, ou quando nao da para saber (fail-open p/ deteccao)."""
+    import json
+    atual = card_watermark_atual(db_path)
+    if atual is None:
+        return True, atual
+    mp = Path(marco_path) if marco_path else WATERMARK_PATH
+    if not mp.exists():
+        return True, atual
+    try:
+        antigo = json.loads(mp.read_text(encoding="utf-8"))
+    except Exception:
+        print("[WARN] CARD_WATERMARK: marco ilegivel — tratado como 'mudou'.")
+        return True, atual
+    return antigo != atual, atual
+
+
+def card_watermark_selar(atual, marco_path=None):
+    """Persiste o marco — chamar SO depois que os checks de card rodaram
+    (corrida interrompida nao avanca o watermark)."""
+    import json
+    if atual is None:
+        return
+    mp = Path(marco_path) if marco_path else WATERMARK_PATH
+    try:
+        mp.parent.mkdir(parents=True, exist_ok=True)
+        mp.write_text(json.dumps(atual), encoding="utf-8")
+    except Exception as e:
+        print(f"[WARN] CARD_WATERMARK: falha ao selar o marco ({e}).")
+
+
+
 def run_command(cmd_list, desc, capture=False):
     print(f"\n[AUTO-CHECK] Executando: {desc}")
     print(f"            $ {' '.join(cmd_list)}")
@@ -256,6 +320,15 @@ def main():
                     resumos_to_check.append(f)
                 elif (fp.startswith("tools/") or fp.startswith("core/")) and f.endswith(".py"):
                     tools_to_check.append(f)
+
+            # part-6: gatilho por WATERMARK DE DADO — mesmo com zero arquivos
+            # staged relevantes, se o ipub.db avancou desde o ultimo check de
+            # card, os checks 8/9 ligam. O dado passa a ter gate, nao so o codigo.
+            if not card_relevant:
+                wm_mudou, _ = card_watermark_mudou()
+                if wm_mudou:
+                    card_relevant = True
+                    print("   ↳ Watermark de dado: ipub.db mudou desde o último check de card — checks de card ligados.")
 
             if (not resumos_to_check and not tools_to_check and not parity_relevant
                     and not pointer_relevant and not doc_drift_relevant
@@ -482,6 +555,11 @@ def main():
                          {"padrao": a["padrao"], "tema": a["tema"]}}
                         for a in achados_atom] if sensor_atom_ok
                        else [{"alvo": "sensor", "payload": {}}])
+
+    # part-6: sela o marco SO depois que os checks de card rodaram — uma
+    # corrida interrompida antes daqui nao avanca o watermark.
+    if card_relevant:
+        card_watermark_selar(card_watermark_atual())
 
     # Resumo Final
     print("\n" + "=" * 60)

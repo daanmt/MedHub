@@ -48,14 +48,10 @@ DB_PATH = ROOT_DIR / 'ipub.db'
 CAMPOS_OK = {'frente_contexto', 'frente_pergunta', 'verso_resposta',
              'verso_regra_mestre', 'verso_armadilha', 'tipo'}
 
-# AGENTE.md secao 4.5 -- encoding limpo, zero LaTeX.
-RE_PROIBIDO = [
-    (re.compile(r"\$[^$]*\$"), "LaTeX inline ($...$)"),
-    (re.compile(r"\\(rightarrow|leftarrow|le\b|ge\b|mu\b|times\b|approx)"), "comando LaTeX"),
-    (re.compile(r"[\u2192\u2190\u2194\u21d2]"), "seta Unicode"),
-    (re.compile(r"[\u2018\u2019\u201c\u201d]"), "aspa inteligente"),
-    (re.compile(r"[\u2013\u2014]"), "travessao inteligente"),
-]
+# AGENTE.md secao 4.5 -- encoding limpo, zero LaTeX. Fonte unica movida para a
+# biblioteca de predicados (part-3): o gate 2 daqui e o write-gate dos writers
+# usam a MESMA lista — sem duplicacao de regex.
+from card_checks import RE_PROIBIDO  # noqa: E402
 
 
 def _validar(itens):

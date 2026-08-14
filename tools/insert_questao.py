@@ -22,6 +22,10 @@ import sys
 from datetime import datetime
 import os
 import re
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import card_checks  # gate de qualidade (part-3) — biblioteca pura, fonte unica
+
 DB_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'ipub.db')
 
 # --- Reincidencia (F25, PRD orquestracao part-3) ----------------------------
@@ -145,19 +149,34 @@ def insert_questao(area, tema, enunciado, correta, chamada, erro, elo, armadilha
                     "pela regua (.claude/commands/estilo-flashcard.md) ou o par "
                     "frente_pergunta+verso_resposta; erro SEM card so com "
                     "status anulada/banca-divergente")
+            # Gate de qualidade (part-3): os MESMOS predicados da auditoria,
+            # na escrita. Erros bloqueiam (todos relatados de uma vez); avisos
+            # sao warn-first (nao bloqueiam, viram [AVISO-CARD] no stdout).
+            ctx = {"titulo": titulo, "tema": tema, "area": area}
+            gate_erros, gate_avisos = [], []
             cards_to_insert = []
             for i, c in enumerate(cards):
-                fp_card = (c.get('frente_pergunta') or '').strip()
-                vr_card = (c.get('verso_resposta') or '').strip()
-                if not fp_card or not vr_card:
-                    raise ValueError(f"Card {i}: 'frente_pergunta' e 'verso_resposta' sao obrigatorios")
+                res = card_checks.validar_card(c, contexto=ctx)
+                gate_erros += [f"card {i}: {e_}" for e_ in res["erros"]]
+                gate_avisos += [f"card {i}: {a_}" for a_ in res["avisos"]]
                 cards_to_insert.append((
                     c.get('tipo') or 'conteudo',
                     c.get('frente_contexto') or '',
-                    fp_card, vr_card,
+                    (c.get('frente_pergunta') or '').strip(),
+                    (c.get('verso_resposta') or '').strip(),
                     c.get('verso_regra_mestre') or '',
                     c.get('verso_armadilha') or '',
                 ))
+            if gate_erros:
+                raise ValueError(
+                    "gate de qualidade reprovou a cunhagem (regua "
+                    ".claude/commands/estilo-flashcard.md): " + " | ".join(gate_erros))
+            av_distrator = card_checks.checar_distrator(
+                {"alternativa_marcada": chamada}, cards)
+            if av_distrator:
+                gate_avisos.append(av_distrator)
+            for a_ in gate_avisos:
+                print(f"[AVISO-CARD] {a_}")
 
         if own_conn:
             conn = sqlite3.connect(DB_PATH)

@@ -222,6 +222,9 @@ def _sandbox_cli():
     tdir = os.path.join(d, "tools")
     os.makedirs(tdir)
     shutil.copy(_REAL_SCRIPT, os.path.join(tdir, "insert_questao.py"))
+    # part-3: o CLI importa a biblioteca de gate — vai junto pro sandbox.
+    shutil.copy(os.path.join(os.path.dirname(_REAL_SCRIPT), "card_checks.py"),
+                os.path.join(tdir, "card_checks.py"))
     shutil.move(_db_temp(), os.path.join(d, "ipub.db"))  # reusa o schema de _db_temp
     return d, os.path.join(tdir, "insert_questao.py")
 

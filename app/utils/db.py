@@ -345,6 +345,40 @@ class ConcurrentReviewError(Exception):
     antes era garantia só de protocolo (incidente card 403, s108)."""
 
 
+ROTULOS_RATING = {1: "again", 2: "hard", 3: "good", 4: "easy"}
+
+
+def preview_ratings(flashcard_id):
+    """P3 part-3: a consequência dos 4 ratings ANTES da escolha — rating é
+    input do modelo, não intervalo fixo. Read-only: roda o scheduler sobre
+    CÓPIAS do estado lido; zero escrita. O intervalo é PRÉ-balanceador — o
+    record pode deslocar o due em ±5% quando o intervalo é >= 4d (flag
+    `balanceado_apos_record` avisa)."""
+    conn = get_connection()
+    try:
+        df = pd.read_sql("SELECT * FROM fsrs_cards WHERE card_id = ?", conn,
+                         params=(flashcard_id,))
+    finally:
+        conn.close()
+    if df.empty:
+        card_data = FSRS().init_card()
+        card_data['card_id'] = flashcard_id
+    else:
+        card_data = df.iloc[0].to_dict()
+    fsrs = FSRS()
+    out = {}
+    for rating in (1, 2, 3, 4):
+        m = fsrs.evaluate(dict(card_data), rating)
+        dias = int(m["scheduled_days"])
+        out[ROTULOS_RATING[rating]] = {
+            "scheduled_days": dias,
+            "due": str(m["due"]),
+            "rotulo": "hoje" if dias < 1 else f"{dias}d",
+            "balanceado_apos_record": dias >= 4,
+        }
+    return out
+
+
 def _ensure_revlog_columns(conn):
     """P3 part-1: colunas de proveniência no revlog — `card_version` (a versão
     que o usuário VIU) e `selection_reason` (por que o card foi servido).

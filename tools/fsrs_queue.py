@@ -82,6 +82,8 @@ def main():
                       help="Imprime o lote da fila (array JSON)")
     acao.add_argument("--record", type=int, metavar="CARD_ID",
                       help="Grava a avaliação de um card (exige --rating)")
+    acao.add_argument("--preview", type=int, metavar="CARD_ID",
+                      help="P3: consequencia dos 4 ratings p/ um card (JSON), sem gravar nada")
     acao.add_argument("--pre-bloco", dest="pre_bloco", metavar="TEMA",
                       help="Mini-drill anti-reincidência (F23): lista SÓ os cards de erro "
                            "FRESCOS (state 0, janela --janela-horas) do tema-alvo, antes de "
@@ -142,12 +144,27 @@ def main():
         })
         return
 
+    if args.preview is not None:
+        _emit({"card_id": args.preview, "preview": db.preview_ratings(args.preview)})
+        return
+
     ordered = _ordered_queue(area=args.area, tema=args.tema,
                              limit=args.limit, new_limit=args.new_limit,
                              cluster=args.cluster)
 
     if args.next:
-        _emit(ordered[0] if ordered else {"empty": True})
+        if not ordered:
+            _emit({"empty": True})
+            return
+        card = ordered[0]
+        # P3 part-3: preview embutido no momento do rating (so no --next; no
+        # --list seria 4xN evaluates sem uso). Falha de preview nunca derruba
+        # a fila — o card sai sem o campo, com o erro anotado.
+        try:
+            card["preview"] = db.preview_ratings(card["card_id"])
+        except Exception as e:
+            card["preview_error"] = str(e)
+        _emit(card)
     else:  # --list
         _emit(ordered)
 

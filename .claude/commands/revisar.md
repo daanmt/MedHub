@@ -45,8 +45,33 @@ python tools/fsrs_queue.py --next [--area "Cardiologia"] [--tema "Insufic"]
 python tools/fsrs_queue.py --list [--area X] [--tema Y] [--limit N] [--new-limit M]
 
 # Gravar a avaliação de um card (1=Novamente 2=Difícil 3=Bom 4=Fácil)
-python tools/fsrs_queue.py --record <card_id> --rating <1-4>
+# P3: propagar o selection_reason que veio no card servido (--next/--list)
+python tools/fsrs_queue.py --record <card_id> --rating <1-4> --reason <vencido|fresh_error|agendado|novo|pre_bloco>
+
+# P3: consequência dos 4 ratings para um card (sem gravar nada)
+python tools/fsrs_queue.py --preview <card_id>
 ```
+
+---
+
+## Contrato de apresentação (P3 part-3)
+
+Regras de EXIBIÇÃO do card na conversa — codificadas aqui porque a correção do
+vazamento de rótulo (modo de falha #8 do handoff de flashcards) era tribal:
+
+1. **Não vazar a categoria antes da revelação**: NUNCA exibir `tema`/`area`
+   acima da pergunta enquanto o verso está fechado (entrega a categoria da
+   resposta). Tema/área só aparecem APÓS a revelação, junto do verso.
+2. **Preview antes do rating**: o `--next` já traz `preview` — mostrar a
+   consequência das 4 escolhas junto das opções (ex.: `1 Novamente → hoje ·
+   2 Difícil → 2d · 3 Bom → 6d · 4 Fácil → 14d`). O rating é input do modelo,
+   não um intervalo fixo; `balanceado_apos_record: true` = o dia final pode
+   deslocar ±5% (balanceador de carga).
+3. **Dizer por que o card veio**: o card servido carrega `selection_reason` —
+   exibir de forma curta (`fresh_error` → "⚠ erro recente"; `vencido` →
+   "↻ revisão vencida"; `agendado` → "agendado p/ hoje"; `novo` → "✦ novo").
+4. **Propagar a proveniência no record**: gravar SEMPRE com `--reason` igual ao
+   `selection_reason` servido — é o que torna a fila auditável no revlog.
 
 **Flags:**
 

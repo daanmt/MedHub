@@ -142,7 +142,8 @@ def _db_temp_minimo():
         CREATE TABLE taxonomia_cronograma (id INTEGER PRIMARY KEY AUTOINCREMENT,
             area TEXT, tema TEXT);
         CREATE TABLE flashcards (id INTEGER PRIMARY KEY AUTOINCREMENT, questao_id INTEGER,
-            tema_id INTEGER, tipo TEXT, frente_pergunta TEXT);
+            tema_id INTEGER, tipo TEXT, frente_pergunta TEXT,
+            needs_qualitative INTEGER DEFAULT 0);
         CREATE TABLE fsrs_cards (card_id INTEGER PRIMARY KEY, state INTEGER, due TIMESTAMP);
     """)
     con.commit()

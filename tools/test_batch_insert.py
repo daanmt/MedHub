@@ -55,6 +55,11 @@ def _item(n, **overrides):
         correta=f"Conduta correta {n}", marcada=f"Conduta errada {n}",
         erro="Conceitual", elo=f"elo do caso {n} sobre conduta cirurgica",
         armadilha=f"armadilha {n}", titulo=f"Caso {n}",
+        # part-1: fallback heuristico removido — todo item valido carrega cards
+        # cunhados (regua estilo-flashcard.md); sem cards = recusado pre-transacao.
+        cards=[{"tipo": "conteudo",
+                "frente_pergunta": f"Qual a conduta correta no caso {n}?",
+                "verso_resposta": f"Conduta correta {n} detalhada."}],
     )
     base.update(overrides)
     return base
@@ -222,7 +227,29 @@ def _sandbox_cli():
 
 
 def test_single_exit_ok():
-    # F27: modo single com entrada valida -> exit 0
+    # F27: modo single com entrada valida (cards cunhados, part-1) -> exit 0
+    d, script = _sandbox_cli()
+    cf = os.path.join(d, "cards_ok.json")
+    with open(cf, "w", encoding="utf-8") as fh:
+        json.dump([{"tipo": "conteudo",
+                    "frente_pergunta": "Qual a conduta na apendicite nao complicada?",
+                    "verso_resposta": "Apendicectomia."}], fh)
+    try:
+        r = subprocess.run(
+            [sys.executable, script,
+             "--area", "Cirurgia", "--tema", "Apendicite Aguda",
+             "--enunciado", "Caso valido com detalhes suficientes.",
+             "--correta", "A", "--marcada", "B", "--erro", "Conceitual",
+             "--elo", "elo sobre conduta cirurgica", "--armadilha", "distrator X",
+             "--cards-file", cf],
+            capture_output=True, text=True)
+        assert r.returncode == 0, f"sucesso deveria sair 0 (got {r.returncode}: {r.stdout}{r.stderr})"
+    finally:
+        shutil.rmtree(d, ignore_errors=True)
+
+
+def test_single_sem_cards_exit_fail():
+    # part-1: modo single SEM cards e sem par de flags -> exit 1 (fallback removido)
     d, script = _sandbox_cli()
     try:
         r = subprocess.run(
@@ -232,7 +259,8 @@ def test_single_exit_ok():
              "--correta", "A", "--marcada", "B", "--erro", "Conceitual",
              "--elo", "elo sobre conduta cirurgica", "--armadilha", "distrator X"],
             capture_output=True, text=True)
-        assert r.returncode == 0, f"sucesso deveria sair 0 (got {r.returncode}: {r.stdout}{r.stderr})"
+        assert r.returncode == 1, f"sem cards deveria sair 1 (got {r.returncode}: {r.stdout}{r.stderr})"
+        assert "estilo-flashcard" in r.stdout, "mensagem cita a regua"
     finally:
         shutil.rmtree(d, ignore_errors=True)
 
@@ -260,7 +288,7 @@ if __name__ == "__main__":
     fns = [test_lote_valido_transacao_unica, test_item_invalido_nada_inserido,
            test_excecao_no_meio_rollback_total, test_dedupe_reexecucao_nao_duplica,
            test_status_anulada_sem_card_com_gate, test_single_com_status_anulada,
-           test_single_exit_ok, test_single_exit_fail]
+           test_single_exit_ok, test_single_sem_cards_exit_fail, test_single_exit_fail]
     falhas = 0
     for fn in fns:
         try:

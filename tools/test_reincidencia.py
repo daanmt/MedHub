@@ -68,6 +68,12 @@ def _insert_q4(**overrides):
         elo="no quadro classico jovem com menos de 48h pediu US imagem em vez de operar direto",
         armadilha="Ruido urinario induz a pedir exame",
         faltou="operar sem imagem no quadro classico",
+        # part-1: fallback heuristico removido — o insert exige cards cunhados.
+        # O matcher F25 exclui os cards da PROPRIA questao (questao_id <>), entao
+        # estes nao interferem nos hits contra o fixture pre-existente (card 730).
+        cards=[{"tipo": "conteudo",
+                "frente_pergunta": "Jovem com quadro classico ha menos de 48h: qual a conduta?",
+                "verso_resposta": "Apendicectomia direta, sem exame de imagem."}],
     )
     kwargs.update(overrides)
     return iq.insert_questao(**kwargs)

@@ -19,7 +19,11 @@ from app.utils.fsrs import FSRS
 DB_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'ipub.db')
 
 def get_connection():
-    return sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(DB_PATH)
+    # part-1 (flashcards-integridade): as FKs sempre existiram no schema, mas o
+    # SQLite so as impoe com o PRAGMA ligado — e ele e por-conexao.
+    conn.execute("PRAGMA foreign_keys = ON")
+    return conn
 
 
 # --- Preparação (posição SSOT + estado de orquestração; PRD orquestracao-preparacao part-1) ---
@@ -100,7 +104,8 @@ def get_ritmo_real(janela_dias=14, incluir_simulado=True):
 def get_fresh_error_cards(tema=None, janela_horas=48):
     """Cards de erro FRESCOS: state=0 criados na janela (o INSERT de fsrs_cards
     grava due=now na criação — para state 0, due == momento de criação; contrato
-    fixado por teste). Filtro opcional por tema/area (LIKE). Lista de dicts."""
+    fixado por teste). Exclui aposentados/quarentena (needs_qualitative >= 2 —
+    vazamento fechado na part-1). Filtro opcional por tema/area (LIKE)."""
     conn = get_connection()
     try:
         extra = ""
@@ -113,7 +118,8 @@ def get_fresh_error_cards(tema=None, janela_horas=48):
             FROM flashcards f
             JOIN fsrs_cards fc ON fc.card_id = f.id
             JOIN taxonomia_cronograma t ON t.id = f.tema_id
-            WHERE fc.state = 0 AND fc.due >= datetime('now', ?)''' + extra + '''
+            WHERE fc.state = 0 AND fc.due >= datetime('now', ?)
+              AND COALESCE(f.needs_qualitative, 0) < 2''' + extra + '''
             ORDER BY f.id DESC
         ''', conn, params=params)
     finally:

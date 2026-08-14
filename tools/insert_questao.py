@@ -5,8 +5,10 @@ Transação de 4 passos em commit único:
 1. Insert/update em `taxonomia_cronograma` (cria área+tema se não existir).
 2. Insert em `questoes_erros` com metadados do erro.
 3. Insert de cards em `flashcards`: N cards atômicos via `--cards-file`
-   (cunhados pelo agente, ver `.claude/commands/estilo-flashcard.md`), ou
-   caminho legado 1-2 cards a partir dos campos estruturados.
+   (cunhados pelo agente, ver `.claude/commands/estilo-flashcard.md`) OU o par
+   `--frente_pergunta`+`--verso_resposta` (card qualitativo único). Erro sem
+   card só com `--status` anulada/banca-divergente — o fallback heurístico foi
+   REMOVIDO (part-1, incidente dos 68 em 2026-08-13): sem cards = falha alta.
 4. Init de estado FSRS em `fsrs_cards` para cada card.
 
 Assinatura canônica (17 args: 8 obrigatórios + 9 opcionais/qualidade) em
@@ -117,8 +119,49 @@ def insert_questao(area, tema, enunciado, correta, chamada, erro, elo, armadilha
     # nao commita, nao fecha; excecao PROPAGA para o rollback total do lote.
     own_conn = conn is None
     try:
+        # Contrato de cunhagem (part-1): construir a lista de cards ANTES de
+        # qualquer INSERT — contrato invalido nao grava nada. O fallback
+        # heuristico foi REMOVIDO (o contrato s076 ja o havia aposentado e ele
+        # reapareceu no incidente dos 68, 2026-08-13; so remocao de codigo segura).
+        # F26: anulada/banca-divergente registra o ERRO (memoria do caso) mas NAO
+        # cunha card (nao e lacuna real) e fica marcada p/ gate de evidencia.
+        if status in ("anulada", "banca-divergente"):
+            cards_to_insert = []
+        else:
+            if cards is None and frente_pergunta and verso_resposta:
+                # Modo flags individuais (CLI single): autoria qualitativa
+                # legitima — converge para o caminho unico como card atomico.
+                cards = [{
+                    "tipo": "elo_quebrado",
+                    "frente_contexto": frente_contexto,
+                    "frente_pergunta": frente_pergunta,
+                    "verso_resposta": verso_resposta,
+                    "verso_regra_mestre": verso_regra_mestre,
+                    "verso_armadilha": verso_armadilha,
+                }]
+            if not cards:
+                raise ValueError(
+                    "cards ausente/vazio: todo erro valido exige cards cunhados "
+                    "pela regua (.claude/commands/estilo-flashcard.md) ou o par "
+                    "frente_pergunta+verso_resposta; erro SEM card so com "
+                    "status anulada/banca-divergente")
+            cards_to_insert = []
+            for i, c in enumerate(cards):
+                fp_card = (c.get('frente_pergunta') or '').strip()
+                vr_card = (c.get('verso_resposta') or '').strip()
+                if not fp_card or not vr_card:
+                    raise ValueError(f"Card {i}: 'frente_pergunta' e 'verso_resposta' sao obrigatorios")
+                cards_to_insert.append((
+                    c.get('tipo') or 'conteudo',
+                    c.get('frente_contexto') or '',
+                    fp_card, vr_card,
+                    c.get('verso_regra_mestre') or '',
+                    c.get('verso_armadilha') or '',
+                ))
+
         if own_conn:
             conn = sqlite3.connect(DB_PATH)
+            conn.execute("PRAGMA foreign_keys = ON")  # part-1: FKs do schema impostas
         cursor = conn.cursor()
         _ensure_status_column(cursor)
 
@@ -145,77 +188,17 @@ def insert_questao(area, tema, enunciado, correta, chamada, erro, elo, armadilha
               erro, habilidades, faltou, explicacao, armadilha, status))
         questao_id = cursor.lastrowid
 
-        # 2. Gerar Flashcards IPUB v5.0
-        # F26: anulada/banca-divergente registra o ERRO (memoria do caso) mas NAO
-        # cunha card (nao e lacuna real) e fica marcada p/ gate de evidencia.
-        if status in ("anulada", "banca-divergente"):
-            cards_to_insert = []
-        elif cards is not None:
-            # Caminho agent-first: N cards atômicos já cunhados pela régua
-            # (.claude/commands/estilo-flashcard.md). Substitui a geração fixa
-            # elo+armadilha; todos os cards são qualitativos.
-            cards_to_insert = []
-            for i, c in enumerate(cards):
-                fp_card = (c.get('frente_pergunta') or '').strip()
-                vr_card = (c.get('verso_resposta') or '').strip()
-                if not fp_card or not vr_card:
-                    raise ValueError(f"Card {i}: 'frente_pergunta' e 'verso_resposta' sao obrigatorios")
-                cards_to_insert.append((
-                    c.get('tipo') or 'conteudo',
-                    '', '',  # frente/verso legados — nao usados no INSERT v5
-                    c.get('frente_contexto') or '',
-                    fp_card, vr_card,
-                    c.get('verso_regra_mestre') or '',
-                    c.get('verso_armadilha') or '',
-                    'qualitative',
-                ))
-        else:
-            enunciado_limpo = re.sub(r'(?i)(?:Marcou|Gabarito|Resposta|O gabarito foi).*', '', enunciado).strip()
-            caso_resumo = (enunciado_limpo.split('.')[0] if '.' in enunciado_limpo else enunciado_limpo)[:120]
-
-            # Determinar qualidade e fonte dos campos estruturados
-            use_qualitative = all([frente_pergunta, verso_resposta])
-            qual_source_elo = 'qualitative' if use_qualitative else 'heuristic'
-
-            # Campos estruturados: usar args explícitos ou gerar heurística
-            fc = frente_contexto or caso_resumo
-            fp = frente_pergunta or f"{tema}: qual a conduta/criterio correto?"
-            vr = verso_resposta or (correta if len(correta) >= 8 else explicacao[:200] if explicacao != "N/A" else "")
-            vrm = verso_regra_mestre or (explicacao[:300] if explicacao != "N/A" else "")
-            va_elo = verso_armadilha or (armadilha[:200] if armadilha != "N/A" else "")
-
-            # Frente/verso legados (mantidos para fallback da UI)
-            frente_elo = f"**Contexto:** {caso_resumo}\n\n**Pergunta:** {fp}"
-            verso_elo = f"**RESPOSTA DIRETA:** {correta}\n\n**REGRA MESTRE:**\n{explicacao[:300] if explicacao != 'N/A' else 'Verificar caderno.'}"
-
-            cards_to_insert = [('elo_quebrado', frente_elo, verso_elo, fc, fp, vr, vrm, va_elo, qual_source_elo)]
-
-            # --- Card 2: A Armadilha (se relevante) ---
-            # Só no caminho PURAMENTE legado: quando o agente passou campos
-            # qualitativos (frente_pergunta + verso_resposta), a armadilha já
-            # está em verso_armadilha do card 1 — gerar o card heurístico aqui
-            # duplicaria o conteúdo (bug s077: #413 qualitativo + #414 heurístico).
-            if not use_qualitative and armadilha and len(armadilha) > 20 and armadilha != "N/A":
-                trigger_match = re.search(r'(?i)(?:descreve|apresenta|usa|coloca)\s+(.*?)(?=\s+para|\.|\Z)', armadilha)
-                trigger = trigger_match.group(1) if trigger_match else "este cenario"
-                frente_arm = f"**ARMADILHA:** O examinador costuma usar {trigger} para induzir ao erro em {tema}."
-                verso_arm = f"**Gatilho:** {armadilha}\n\n**Como evitar:** Reler a regra mestre sobre este distrator."
-                va_arm = armadilha[:200] if armadilha != "N/A" else ""
-                cards_to_insert.append(('armadilha', frente_arm, verso_arm, caso_resumo[:100],
-                                        f"Qual o distrator tipico do examinador em: {titulo}?",
-                                        armadilha[:200], explicacao[:200] if explicacao != "N/A" else "", va_arm, 'heuristic'))
-
-        # Inserção dos cards
-        for tipo_card, frente, verso, fc_, fp_, vr_, vrm_, va_, qs_ in cards_to_insert:
-            needs_q = 0 if qs_ == 'qualitative' else 1
+        # 2. Inserção dos cards (lista construída no topo — caminho qualitativo
+        # único; sempre quality_source='qualitative' e needs_qualitative=0).
+        for tipo_card, fc_, fp_, vr_, vrm_, va_ in cards_to_insert:
             cursor.execute('''
                 INSERT INTO flashcards (questao_id, tema_id, tipo,
                                         frente_contexto, frente_pergunta, verso_resposta,
                                         verso_regra_mestre, verso_armadilha,
                                         quality_source, needs_qualitative)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'qualitative', 0)
             ''', (questao_id, tema_id, tipo_card,
-                  fc_, fp_, vr_, vrm_, va_, qs_, needs_q))
+                  fc_, fp_, vr_, vrm_, va_))
             card_id = cursor.lastrowid
 
             cursor.execute('''
@@ -326,8 +309,25 @@ def insert_batch(errors_file):
         if st and st not in ("anulada", "banca-divergente"):
             print(f"[ERRO] item {i}: status invalido '{st}'. NADA inserido.")
             return False
+        # Contrato de cunhagem (part-1): sem status de excecao, o item precisa de
+        # cards OU do par frente_pergunta+verso_resposta — pego AQUI, pre-transacao.
+        if not st:
+            crds = item.get("cards")
+            if crds is not None and (not isinstance(crds, list) or not crds):
+                print(f"[ERRO] item {i} ('{item.get('titulo', '?')}'): 'cards' deve ser "
+                      f"lista nao-vazia (o fallback heuristico foi removido). NADA inserido.")
+                return False
+            tem_par = (str(item.get("frente_pergunta") or "").strip()
+                       and str(item.get("verso_resposta") or "").strip())
+            if crds is None and not tem_par:
+                print(f"[ERRO] item {i} ('{item.get('titulo', '?')}'): sem 'cards' e sem par "
+                      f"frente_pergunta+verso_resposta. Cunhe pela regua "
+                      f"(.claude/commands/estilo-flashcard.md) ou use status "
+                      f"anulada/banca-divergente. NADA inserido.")
+                return False
 
     conn = sqlite3.connect(DB_PATH)
+    conn.execute("PRAGMA foreign_keys = ON")  # part-1: FKs do schema impostas
     inseridos, pulados = [], []
     try:
         cursor = conn.cursor()

@@ -1,8 +1,8 @@
 """cards_regen_queue.py — fila de regeneração de flashcards em JSON.
 
 CLI **read-only** que emite, em JSON, os erros cujos cards precisam ser
-regenerados (critério: `quality_source = 'heuristic'` e ainda não aposentado,
-`needs_qualitative != 2`), junto com:
+regenerados (critério: `quality_source = 'heuristic'` e ainda ativo,
+`COALESCE(needs_qualitative,0) < 2` — definição canônica, part-1), junto com:
   - o substrato metacognitivo de `questoes_erros` (tipo_erro, habilidades_sequenciais,
     o_que_faltou, alternativa_correta/marcada, armadilha_prova, enunciado);
   - os cards atuais (card_id + campos v5) para o agente reescrever.
@@ -36,7 +36,7 @@ def fetch_regen_queue(area=None, limit=None, questao_id=None):
     """Retorna lista de erros (+ cards atuais) a regenerar.
 
     Critério: erros com ao menos um card heurístico ainda ativo
-    (`quality_source = 'heuristic'` e `needs_qualitative != 2`). Pós-bankruptcy
+    (`quality_source = 'heuristic'` e `COALESCE(needs_qualitative,0) < 2`). Pós-bankruptcy
     da sessão 075, o antigo sinal `needs_qualitative = 1` ficou órfão (os 70
     cards flagueados viraram `= 2`), deixando 87 heurísticos `nq = 0` invisíveis;
     este critério os recupera. Filtros opcionais: area, questao_id, limit.
@@ -44,7 +44,9 @@ def fetch_regen_queue(area=None, limit=None, questao_id=None):
     conn = db.get_connection()
     cursor = conn.cursor()
 
-    where = ["f.quality_source = 'heuristic'", "f.needs_qualitative != 2"]
+    # Definição canônica de ativo (part-1): < 2 com COALESCE — `!= 2` reincluiria
+    # um hipotético nq=3 (aposentado por outra via) como ativo.
+    where = ["f.quality_source = 'heuristic'", "COALESCE(f.needs_qualitative, 0) < 2"]
     params = []
     if questao_id is not None:
         where.append("q.id = ?")

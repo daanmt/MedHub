@@ -680,13 +680,16 @@ def review_plan(new_limit=10):
     """
     buckets = db.get_cards_by_bucket(new_limit=new_limit)
     clusters = {}
-    for nome in ("atrasados", "hoje", "novos"):
+    # P3 part-2: bucket `erros_frescos` entra na contagem (paridade F3 com o
+    # --list); para o cluster ele conta como "novos" (é card novo — só é
+    # servido antes), sem criar chave nova de display.
+    for nome in ("atrasados", "erros_frescos", "hoje", "novos"):
         for card in buckets.get(nome, []):
             chave = (card.get("area") or "(sem area)", card.get("tema") or "(sem tema)")
             c = clusters.setdefault(chave, {"area": chave[0], "tema": chave[1],
                                             "atrasados": 0, "hoje": 0, "novos": 0,
                                             "total": 0})
-            c[nome] += 1
+            c["novos" if nome == "erros_frescos" else nome] += 1
             c["total"] += 1
 
     # Sinal de frieza por cluster (F5) -- score de dormência do review_radar.

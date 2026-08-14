@@ -583,8 +583,20 @@ def get_erros_por_area():
     return df
 
 
+# P3 part-2: banda prioritária de erros frescos no dreno padrão. Constantes
+# simples — tabela de política só se a política começar a variar de verdade.
+JANELA_FRESH_H = 48   # janela de frescor (h) — mesma norma do --pre-bloco
+CAP_FRESH = 8         # máx. de cards de erro fresco furando a fila por corrida
+
+
 def get_cards_by_bucket(area=None, tema=None, new_limit=10) -> dict:
-    """Retorna flashcards FSRS divididos em três buckets temporais.
+    """Retorna flashcards FSRS divididos em QUATRO buckets de prioridade.
+
+    Ordem de serviço (fsrs_queue): atrasados → erros_frescos → hoje → novos.
+    P3 part-2: `erros_frescos` = state=0 nascidos de ERRO (questao_id NOT NULL)
+    criados na janela JANELA_FRESH_H, cap CAP_FRESH, mais fresco primeiro —
+    ataca a reincidência na fila padrão (antes só no --pre-bloco opt-in).
+    Sem duplicata: esses ids são excluídos de `novos`.
 
     Args:
         area: filtro opcional de área (match exato em taxonomia_cronograma.area)
@@ -592,13 +604,10 @@ def get_cards_by_bucket(area=None, tema=None, new_limit=10) -> dict:
         new_limit: máximo de cards novos (state == 0) retornados
 
     Returns:
-        dict com chaves:
-            atrasados (list[dict]): cards vencidos antes de hoje (state > 0)
-            hoje (list[dict]): cards que vencem hoje (state > 0)
-            novos (list[dict]): cards nunca revisados (state == 0), max new_limit
-        Cada dict contém: card_id, frente_contexto, frente_pergunta,
-        verso_resposta, verso_regra_mestre, verso_armadilha, needs_qualitative,
-        due, area, tema. Cards aposentados (needs_qualitative >= 2) são excluídos.
+        dict {atrasados, erros_frescos, hoje, novos}; cada card carrega
+        `selection_reason` ∈ {vencido, fresh_error, agendado, novo} além de
+        card_id, campos v5, needs_qualitative, due, area, tema. Aposentados
+        excluídos pela definição canônica (ativo_where).
     """
     conn = get_connection()
     now = datetime.now()
@@ -613,7 +622,7 @@ def get_cards_by_bucket(area=None, tema=None, new_limit=10) -> dict:
         FROM flashcards f
         JOIN fsrs_cards fc ON f.id = fc.card_id
         LEFT JOIN taxonomia_cronograma t ON f.tema_id = t.id
-        WHERE f.needs_qualitative < 2
+        WHERE {ativo_where('f.')}
     '''
     extra = ''
     extra_params = []
@@ -632,15 +641,34 @@ def get_cards_by_bucket(area=None, tema=None, new_limit=10) -> dict:
         base + extra + ' AND fc.due >= ? AND fc.due <= ? AND fc.state > 0 ORDER BY fc.due ASC',
         conn, params=(*extra_params, today_start, today_end))
 
+    # Banda prioritária: erro fresco (due == criação p/ state=0 — contrato
+    # fixado por teste em get_fresh_error_cards). Card-base/andaime (sem
+    # questao_id) NÃO fura a fila — não é anti-reincidência.
+    df_frescos = pd.read_sql(
+        base + extra + ''' AND fc.state = 0 AND f.questao_id IS NOT NULL
+            AND fc.due >= datetime('now', ?) ORDER BY fc.due DESC LIMIT ?''',
+        conn, params=(*extra_params, "-%d hours" % JANELA_FRESH_H, CAP_FRESH))
+    ids_frescos = [int(x) for x in df_frescos["card_id"].tolist()]
+
+    not_in = ""
+    params_novos = list(extra_params)
+    if ids_frescos:
+        not_in = " AND f.id NOT IN (%s)" % ",".join("?" * len(ids_frescos))
+        params_novos += ids_frescos
     df_novos = pd.read_sql(
-        base + extra + ' AND fc.state = 0 ORDER BY f.id ASC LIMIT ?',
-        conn, params=(*extra_params, new_limit))
+        base + extra + ' AND fc.state = 0' + not_in + ' ORDER BY f.id ASC LIMIT ?',
+        conn, params=(*params_novos, new_limit))
 
     conn.close()
+
+    def _tag(registros, reason):
+        return [dict(r, selection_reason=reason) for r in registros]
+
     return {
-        "atrasados": df_atrasados.to_dict('records'),
-        "hoje": df_hoje.to_dict('records'),
-        "novos": df_novos.to_dict('records'),
+        "atrasados": _tag(df_atrasados.to_dict('records'), "vencido"),
+        "erros_frescos": _tag(df_frescos.to_dict('records'), "fresh_error"),
+        "hoje": _tag(df_hoje.to_dict('records'), "agendado"),
+        "novos": _tag(df_novos.to_dict('records'), "novo"),
     }
 
 

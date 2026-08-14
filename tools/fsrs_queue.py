@@ -44,14 +44,17 @@ def _cluster_key(card):
 
 
 def _ordered_queue(area=None, tema=None, limit=None, new_limit=10, cluster=False):
-    """Achata os três buckets na ordem de prioridade, anotando o bucket de origem.
+    """Achata os buckets na ordem de prioridade, anotando o bucket de origem.
 
-    Com cluster=True (F3), ordena secundariamente por (area, tema) DENTRO de
-    cada bucket — sort estável preserva a sub-ordem por due no mesmo tema.
+    P3 part-2: ordem `atrasados → erros_frescos → hoje → novos` — card de erro
+    recente fura a fila ANTES de novos FIFO (banda prioritária explícita); cada
+    card já vem com `selection_reason` do db. Com cluster=True (F3), ordena
+    secundariamente por (area, tema) DENTRO de cada bucket — sort estável
+    preserva a sub-ordem por due no mesmo tema.
     """
     buckets = db.get_cards_by_bucket(area=area, tema=tema, new_limit=new_limit)
     ordered = []
-    for nome in ("atrasados", "hoje", "novos"):
+    for nome in ("atrasados", "erros_frescos", "hoje", "novos"):
         cards = buckets.get(nome, [])
         if cluster:
             cards = sorted(cards, key=_cluster_key)

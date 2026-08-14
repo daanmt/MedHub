@@ -14,7 +14,7 @@ if sys.platform == 'win32':
     sys.stdin.reconfigure(encoding='utf-8', errors='replace')
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from app.utils.db import record_review, get_connection
+from app.utils.db import record_review, get_connection, ConcurrentReviewError
 
 SELECT_FIELDS = """
     SELECT f.id, f.frente_pergunta, f.verso_resposta, f.frente_contexto,
@@ -208,7 +208,12 @@ def main():
         if rating is None:
             break
         if rating > 0:
-            record_review(card[COL_ID], rating)
+            try:
+                record_review(card[COL_ID], rating)
+            except ConcurrentReviewError as e:
+                # part-2 (Invariante C): corrida detectada — reporta e NAO regrava.
+                print(f"  [ERRO] rating nao gravado (estado mudou desde a leitura): {e}")
+                continue
             reviewed += 1
             ratings.append(rating)
         else:

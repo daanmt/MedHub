@@ -305,58 +305,112 @@ def _balancear_due(cursor, metrics):
     return metrics
 
 
-def record_review(flashcard_id, rating):
-    """Aplica o algoritmo FSRS e atualiza o banco de dados"""
-    conn = get_connection()
-    cursor = conn.cursor()
-    
-    # 1. Busca estado atual do card
-    df = pd.read_sql("SELECT * FROM fsrs_cards WHERE card_id = ?", conn, params=(flashcard_id,))
-    if df.empty:
-        fsrs = FSRS()
-        card_data = fsrs.init_card()
-        card_data['card_id'] = flashcard_id
-    else:
-        card_data = df.iloc[0].to_dict()
+class ConcurrentReviewError(Exception):
+    """Re-record bloqueado: o estado FSRS mudou entre a leitura e a gravação.
 
-    # 2. Calcula próximo estado via FSRS
+    Trava técnica da Invariante C do contrato revisao-calibrada (part-2) —
+    antes era garantia só de protocolo (incidente card 403, s108)."""
+
+
+def record_review(flashcard_id, rating):
+    """Aplica o algoritmo FSRS e atualiza o banco de dados.
+
+    part-2 (flashcards-integridade): lê o estado e delega a `_aplicar_review`
+    (lock otimista). Corrida → `ConcurrentReviewError`, nada gravado."""
+    conn = get_connection()
+    try:
+        df = pd.read_sql("SELECT * FROM fsrs_cards WHERE card_id = ?", conn, params=(flashcard_id,))
+        if df.empty:
+            # Card sem linha FSRS: antes o UPDATE atingia 0 linhas e a revisão se
+            # perdia do estado (só o revlog registrava). Agora vira INSERT.
+            fsrs = FSRS()
+            card_data = fsrs.init_card()
+            card_data['card_id'] = flashcard_id
+            card_novo = True
+        else:
+            card_data = df.iloc[0].to_dict()
+            card_novo = False
+        return _aplicar_review(conn, card_data, rating, card_novo=card_novo)
+    finally:
+        conn.close()
+
+
+def _aplicar_review(conn, card_data, rating, card_novo=False):
+    """Núcleo da gravação sobre um estado LIDO (testável em separado).
+
+    Lock otimista: o UPDATE é condicionado ao `last_review` lido — duas
+    aplicações do MESMO estado → a segunda dá rowcount 0 → rollback +
+    `ConcurrentReviewError`, e o revlog NÃO ganha linha. Para card novo o
+    INSERT usa a PK como trava (corrida falha alto com IntegrityError)."""
+    cursor = conn.cursor()
+    flashcard_id = card_data['card_id']
+
+    # `last_review`/`elapsed_days` do estado lido — normalizados p/ o WHERE
+    # (pandas devolve None/NaN para NULL; o banco guarda TEXT).
+    lr_lido = card_data.get('last_review')
+    if lr_lido is None or isinstance(lr_lido, float):
+        lr_lido = ''
+    else:
+        lr_lido = str(lr_lido)
+    elapsed_anterior = None if card_novo else card_data.get('elapsed_days')
+    if isinstance(elapsed_anterior, float):
+        elapsed_anterior = None
+
+    # Calcula próximo estado via FSRS
     fsrs = FSRS()
     new_metrics = fsrs.evaluate(card_data, rating)
 
-    # 2b. Load balancing do calendário (s128). Dentro da janela de folga do
-    #     intervalo (+-5%), escolhe o dia de MENOR carga já agendada -- achata
-    #     o pico sem tocar em stability/difficulty. Só card de revisão com
-    #     intervalo >= 4d é elegível; a regra vive em fsrs_balance (puro).
-    #     Falha aqui nunca derruba a gravação da revisão.
+    # Load balancing do calendário (s128). Dentro da janela de folga do
+    # intervalo (+-5%), escolhe o dia de MENOR carga já agendada -- achata
+    # o pico sem tocar em stability/difficulty. Só card de revisão com
+    # intervalo >= 4d é elegível; a regra vive em fsrs_balance (puro).
+    # Falha aqui nunca derruba a gravação da revisão.
     try:
         new_metrics = _balancear_due(cursor, new_metrics)
     except Exception as e:                                    # pragma: no cover
         print(f"[WARN] FSRS_BALANCE: balanceamento pulado ({e}); due original mantido.")
 
-    # 3. Atualiza banco
+    if card_novo:
+        cursor.execute('''
+            INSERT INTO fsrs_cards (card_id, state, due, stability, difficulty,
+                                    elapsed_days, scheduled_days, reps, lapses, last_review)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ''', (
+            flashcard_id, new_metrics['state'], new_metrics['due'], new_metrics['stability'],
+            new_metrics['difficulty'], new_metrics['elapsed_days'], new_metrics['scheduled_days'],
+            new_metrics['reps'], new_metrics['lapses'], new_metrics['last_review']
+        ))
+    else:
+        cursor.execute('''
+            UPDATE fsrs_cards
+            SET state = ?, due = ?, stability = ?, difficulty = ?,
+                elapsed_days = ?, scheduled_days = ?, reps = ?, lapses = ?, last_review = ?
+            WHERE card_id = ?
+              AND COALESCE(CAST(last_review AS TEXT), '') = ?
+        ''', (
+            new_metrics['state'], new_metrics['due'], new_metrics['stability'], new_metrics['difficulty'],
+            new_metrics['elapsed_days'], new_metrics['scheduled_days'], new_metrics['reps'],
+            new_metrics['lapses'], new_metrics['last_review'], flashcard_id, lr_lido
+        ))
+        if cursor.rowcount == 0:
+            conn.rollback()
+            raise ConcurrentReviewError(
+                f"card {flashcard_id}: estado FSRS mudou desde a leitura -- "
+                f"re-record bloqueado (Invariante C, revisao-calibrada)")
+
+    # Log da revisão — só grava quando o estado gravou (mesma transação).
+    # `last_elapsed_days` = elapsed do estado ANTERIOR (era sempre-NULL antes).
     cursor.execute('''
-        UPDATE fsrs_cards 
-        SET state = ?, due = ?, stability = ?, difficulty = ?, 
-            elapsed_days = ?, scheduled_days = ?, reps = ?, lapses = ?, last_review = ?
-        WHERE card_id = ?
+        INSERT INTO fsrs_revlog (card_id, rating, state, due, stability, difficulty,
+                                 elapsed_days, last_elapsed_days, scheduled_days)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     ''', (
-        new_metrics['state'], new_metrics['due'], new_metrics['stability'], new_metrics['difficulty'],
-        new_metrics['elapsed_days'], new_metrics['scheduled_days'], new_metrics['reps'], 
-        new_metrics['lapses'], new_metrics['last_review'], flashcard_id
+        flashcard_id, rating, new_metrics['state'], new_metrics['due'],
+        new_metrics['stability'], new_metrics['difficulty'],
+        new_metrics['elapsed_days'], elapsed_anterior, new_metrics['scheduled_days']
     ))
-    
-    # 4. Log da revisão (Tabela nova no schema v3.6)
-    cursor.execute('''
-        INSERT INTO fsrs_revlog (card_id, rating, state, due, stability, difficulty, elapsed_days, scheduled_days)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    ''', (
-        flashcard_id, rating, new_metrics['state'], new_metrics['due'], 
-        new_metrics['stability'], new_metrics['difficulty'], 
-        new_metrics['elapsed_days'], new_metrics['scheduled_days']
-    ))
-    
+
     conn.commit()
-    conn.close()
     return new_metrics
 
 def get_erros_resumidos():

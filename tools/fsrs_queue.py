@@ -118,7 +118,13 @@ def main():
     if args.record is not None:
         if args.rating is None:
             parser.error("--record exige --rating <1-4>")
-        metrics = db.record_review(args.record, args.rating)
+        try:
+            metrics = db.record_review(args.record, args.rating)
+        except db.ConcurrentReviewError as e:
+            # part-2: fail-safe — reporta e NAO regrava (Invariante C).
+            _emit({"recorded": False, "card_id": args.record,
+                   "error": f"rating nao gravado (estado mudou desde a leitura): {e}"})
+            sys.exit(1)
         _emit({
             "recorded": True,
             "card_id": args.record,

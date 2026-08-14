@@ -227,3 +227,12 @@ except AttributeError:
 - **Sentinelas envenenam métrica de agregação.** `N/A` ocupava 125 registros em 31 temas e emergiu como a "habilidade mais reincidente". Todo backfill que agrega por texto precisa de lista de sentinelas + rótulos genéricos.
 - **Backfill não deve inventar veredito.** Marcar a cadeia inteira de uma questão errada como `errou` seria falso (tipicamente só 1 elo quebra) e destruiria justamente a métrica que a feature existe para produzir. `indefinido` + curadoria incremental é o caminho honesto.
 - **Dedup por texto exato só funciona se a AUTORIA cooperar.** 1.324 habilidades para 1.336 ocorrências no histórico: prosa sob medida por questão nunca reincide. A regra de autoria (habilidade reutilizável) foi para `/analisar-questao` ETAPA 2 — sem ela a tabela existe e não diz nada.
+
+## 2026-08-14 — Ciclo flashcards-integridade (parts 1-6, ai-eng)
+
+- **Geração de card é agent-first ONLY**: o fallback heurístico foi removido (não aposentado — removido). `cards` ausente/vazio = erro alto citando a régua. Precedente: "aposentado por convenção" reapareceu (s076 → incidente dos 68, 2026-08-13); só remoção de código segura.
+- **Definição canônica de "card ativo"**: `COALESCE(needs_qualitative, 0) < 2` — fonte única em `db.ATIVO_WHERE` + VIEW `flashcards_ativos` + helper `db.ativos()`. CLIs read-only replicam a expressão literalmente com comentário apontando para db.py (harness leve > import de pandas).
+- **Invariante C tem trava técnica**: `record_review` usa lock otimista (WHERE sobre `last_review` lido + rowcount); corrida → `ConcurrentReviewError`, revlog intacto. Limite documentado: single-user; revisitar se surgir concorrência real multi-processo.
+- **O dado tem gate, não só o código**: (a) write-gate `card_checks.validar_card` nos 5 writers (erros = template/embutida/encoding/campos; resto warn-first); (b) `auto_check` dispara checks de card por watermark de dado `(MAX(id), COUNT(*), MAX(card_version))` em `history/card_watermark.json` — arquivo staged não detecta INSERT/reforja no banco.
+- **Calibração é pré-requisito de endurecimento**: limiar de detector relacional só muda com `calibrate_card_checks.py` re-rodado contra o incidente real (recall atual: 68/68; FP aparente: 14/978). Persistido no ledger (`calibracao_card_checks`).
+- **Pendência que bloqueia CHECK de schema**: semântica de `needs_qualitative=1` (contrato pós-bankruptcy proíbe; banco tem 11 como "sinalizado"; fluxo usa). Decidir e emendar contrato ANTES de qualquer constraint.

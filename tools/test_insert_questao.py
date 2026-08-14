@@ -234,6 +234,30 @@ def test_regen_queue_definicao_canonica_de_ativo():
     _com_db_temp(corpo)
 
 
+def test_view_ativos_equivale_expressao_canonica():
+    """part-5: VIEW flashcards_ativos == expressao inline canonica, incl. nq
+    NULL/0/1/2/3 — e a view existe em qualquer conexao da fabrica."""
+    def corpo(tmp):
+        con = sqlite3.connect(tmp)
+        con.execute("INSERT INTO taxonomia_cronograma (area, tema) VALUES ('A', 'T')")
+        for nq in (None, 0, 1, 2, 3):
+            con.execute("INSERT INTO flashcards (tema_id, tipo, frente_pergunta, "
+                        "verso_resposta, needs_qualitative) VALUES (1, 'conteudo', 'P?', 'R.', ?)",
+                        (nq,))
+        con.commit()
+        con.close()
+        conn = db.get_connection()  # fabrica cria a view
+        try:
+            n_view = conn.execute("SELECT COUNT(*) FROM flashcards_ativos").fetchone()[0]
+            n_inline = conn.execute("SELECT COUNT(*) FROM flashcards "
+                                    f"WHERE {db.ATIVO_WHERE}").fetchone()[0]
+        finally:
+            conn.close()
+        assert n_view == n_inline == 3, f"NULL/0/1 ativos; 2/3 fora (got view={n_view}, inline={n_inline})"
+        assert len(db.ativos()) == 3, "helper ativos() usa a mesma definicao"
+    _com_db_temp(corpo)
+
+
 def test_batch_sem_cards_nada_inserido():
     def corpo(tmp):
         import json
@@ -258,6 +282,7 @@ if __name__ == "__main__":
            test_caminho_qualitativo_integro, test_flags_individuais_convergem,
            test_pragma_fk_ligado_na_fabrica, test_fk_imposta_em_insert_orfao,
            test_fresh_error_cards_filtra_aposentado,
+           test_view_ativos_equivale_expressao_canonica,
            test_regen_queue_definicao_canonica_de_ativo,
            test_batch_sem_cards_nada_inserido]
     falhas = 0

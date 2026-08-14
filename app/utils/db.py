@@ -18,12 +18,45 @@ from app.utils.fsrs import FSRS
 
 DB_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'ipub.db')
 
+# Definição canônica de "card ativo" (part-5, flashcards-integridade) — FONTE
+# ÚNICA. Antes havia 3 definições divergentes em 5 arquivos (`!= 2`, `< 2` sem
+# COALESCE, sem filtro). CLIs read-only que não importam este módulo replicam a
+# expressão LITERALMENTE, com comentário apontando para cá.
+ATIVO_WHERE = "COALESCE(needs_qualitative, 0) < 2"
+
+
+def ativo_where(alias=""):
+    """Expressão canônica de ativo, com alias opcional (ex.: ativo_where('f.'))."""
+    return f"COALESCE({alias}needs_qualitative, 0) < 2"
+
+
+def _ensure_views(conn):
+    """VIEW canônica dos ativos. Idempotente; em fixture sem a tabela, a view
+    fica pendente sem quebrar a conexão (SQLite só resolve nomes no SELECT)."""
+    try:
+        conn.execute("CREATE VIEW IF NOT EXISTS flashcards_ativos AS "
+                     f"SELECT * FROM flashcards WHERE {ATIVO_WHERE}")
+    except sqlite3.OperationalError:
+        pass  # db mínimo de teste sem flashcards — view é opcional aí
+
+
 def get_connection():
     conn = sqlite3.connect(DB_PATH)
     # part-1 (flashcards-integridade): as FKs sempre existiram no schema, mas o
     # SQLite so as impoe com o PRAGMA ligado — e ele e por-conexao.
     conn.execute("PRAGMA foreign_keys = ON")
+    _ensure_views(conn)
     return conn
+
+
+def ativos():
+    """Cards ativos (definição canônica) como DataFrame — helper único p/ os
+    consumidores que hoje reimplementam o filtro."""
+    conn = get_connection()
+    try:
+        return pd.read_sql("SELECT * FROM flashcards_ativos", conn)
+    finally:
+        conn.close()
 
 
 # --- Preparação (posição SSOT + estado de orquestração; PRD orquestracao-preparacao part-1) ---

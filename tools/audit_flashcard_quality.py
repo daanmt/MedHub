@@ -28,7 +28,9 @@ if sys.platform == 'win32':
     sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from app.utils.db import get_connection
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from app.utils.db import get_connection, ativo_where
+import card_checks  # detectores cross-field (part-5) — mesma biblioteca do write-gate
 
 SIGNALS = {
     'alt_letter': {
@@ -144,7 +146,9 @@ def build_sql(signal_key, tipo_filter=None):
     else:
         condition = sig['sql_raw'].format(front=EFF_FRONT, back=EFF_BACK)
 
-    where_parts = [condition]
+    # part-5: os sinais auditam os ATIVOS (definição canônica db.ATIVO_WHERE) —
+    # antes este auditor era o único sem filtro (3ª definição divergente).
+    where_parts = [condition, ativo_where()]
     if tipo_filter:
         where_parts.append(f"tipo = '{tipo_filter}'")
     return "SELECT id FROM flashcards WHERE " + " AND ".join(f"({p})" for p in where_parts)
@@ -160,12 +164,13 @@ def ids_signal(conn, signal_key, tipo_filter=None):
 
 
 def all_problematic_ids(conn, tipo_filter=None):
-    """IDs com ao menos 1 sinal crítico ou alto (exclui INFO)."""
-    exclude = {'needs_qual', 'regra_vazia', 'structured_null'}  # tracked separately
+    """IDs de cards ATIVOS com ao menos 1 sinal — TODOS os sinais contam.
+
+    part-5: o exclude-set {needs_qual, regra_vazia, structured_null} foi
+    REMOVIDO — a exclusão escondia do agregado exatamente os sinais que teriam
+    pego o incidente dos 68 (§6.5.2 da pré-auditoria)."""
     parts = []
     for key, sig in SIGNALS.items():
-        if key in exclude:
-            continue
         if 'sql_eff' in sig:
             c = sig['sql_eff'].format(front=EFF_FRONT, back=EFF_BACK)
         else:
@@ -174,8 +179,49 @@ def all_problematic_ids(conn, tipo_filter=None):
 
     where = " OR ".join(parts)
     tipo_clause = f" AND tipo = '{tipo_filter}'" if tipo_filter else ""
-    rows = conn.execute(f"SELECT DISTINCT id FROM flashcards WHERE ({where}){tipo_clause}").fetchall()
+    rows = conn.execute(f"SELECT DISTINCT id FROM flashcards WHERE ({where}) "
+                        f"AND ({ativo_where()}){tipo_clause}").fetchall()
     return [r[0] for r in rows]
+
+
+def check_cross_field(conn):
+    """part-5: predicados RELACIONAIS da biblioteca card_checks sobre os ativos.
+
+    Retorna (por_tag, distrator): por_tag = {tag: [card_ids]}; distrator =
+    [questao_ids] com alternativa_marcada perdida nos cards derivados.
+    WARN, nunca afeta exit code (warn-first)."""
+    rows = conn.execute(f"""
+        SELECT f.id, f.questao_id, f.frente_contexto, f.frente_pergunta,
+               f.verso_resposta, f.verso_regra_mestre, f.verso_armadilha,
+               q.titulo, q.alternativa_marcada, t.tema
+        FROM flashcards f
+        LEFT JOIN questoes_erros q ON q.id = f.questao_id
+        LEFT JOIN taxonomia_cronograma t ON t.id = f.tema_id
+        WHERE {ativo_where('f.')}
+    """).fetchall()
+    por_tag = {}
+    por_questao = {}
+    for (cid, qid, fc, fp, vr, vrm, va, titulo, marcada, tema) in rows:
+        card = {"frente_contexto": fc, "frente_pergunta": fp, "verso_resposta": vr,
+                "verso_regra_mestre": vrm, "verso_armadilha": va}
+        ctx = {"titulo": titulo, "tema": tema}
+        for achado in (card_checks.checar_pergunta_template(card, ctx),
+                       card_checks.checar_resposta_embutida(card, ctx),
+                       card_checks.checar_multi_parte(card),
+                       card_checks.checar_negativo_orfao(card),
+                       card_checks.checar_contexto_artefato(card)):
+            if achado:
+                tag = achado.split(" ")[0].rstrip(",")
+                por_tag.setdefault(tag, []).append(cid)
+        if qid is not None:
+            por_questao.setdefault(qid, {"marcada": marcada, "cards": []})
+            por_questao[qid]["cards"].append(card)
+    distrator = []
+    for qid, dados in por_questao.items():
+        if card_checks.checar_distrator({"alternativa_marcada": dados["marcada"]},
+                                        dados["cards"]):
+            distrator.append(qid)
+    return por_tag, sorted(distrator)
 
 
 def print_examples(conn, signal_key, n, tipo_filter=None):
@@ -203,7 +249,10 @@ def run(args):
     print("  MedHub — Auditoria de Qualidade de Flashcards")
     print(f"  Data: {datetime.now().strftime('%Y-%m-%d %H:%M')}")
     print("=" * 60)
-    print(f"\nTotal de cards: {total}")
+    ativos_n = conn.execute(
+        f"SELECT COUNT(*) FROM flashcards WHERE {ativo_where()}").fetchone()[0]
+    print(f"\nTotal de cards: {total}  (ativos: {ativos_n} — definição canônica; "
+          f"os sinais auditam os ativos)")
     if tipo_filter:
         filtered = conn.execute(f"SELECT COUNT(*) FROM flashcards WHERE tipo='{tipo_filter}'").fetchone()[0]
         print(f"Filtro tipo={tipo_filter}: {filtered} cards")
@@ -220,15 +269,28 @@ def run(args):
     for key, sig in SIGNALS.items():
         n = count_signal(conn, key, tipo_filter)
         counts[key] = n
-        pct = f"{n/total*100:.1f}%" if total > 0 else "0%"
+        pct = f"{n/ativos_n*100:.1f}%" if ativos_n > 0 else "0%"
         print(f"  [{sig['severity']:<6}] {sig['label']:<52}: {n:>4}  ({pct})")
 
-    # Total problemáticos (union)
+    # Total problemáticos (union) — part-5: TODOS os sinais contam no agregado
     bad_ids = all_problematic_ids(conn, tipo_filter)
-    pct_bad = len(bad_ids) / total * 100 if total > 0 else 0
+    pct_bad = len(bad_ids) / ativos_n * 100 if ativos_n > 0 else 0
     print()
-    print(f"TOTAL COM ≥1 SINAL CRÍTICO/ALTO:  {len(bad_ids)} / {total}  ({pct_bad:.1f}%)")
-    print(f"Cards OK (sem sinais críticos):    {total - len(bad_ids)} / {total}")
+    print(f"TOTAL COM ≥1 SINAL (todos os sinais; ativos):  {len(bad_ids)} / {ativos_n}  ({pct_bad:.1f}%)")
+    print(f"Cards ativos OK (sem nenhum sinal):            {ativos_n - len(bad_ids)} / {ativos_n}")
+
+    # part-5: detectores cross-field (relacionais) — WARN, não bloqueia
+    cross_tags, cross_distrator = check_cross_field(conn)
+    print()
+    print("DETECTORES CROSS-FIELD (card_checks — mesmos predicados do write-gate; WARN):")
+    if not cross_tags and not cross_distrator:
+        print("  nenhum card ativo sinalizado")
+    for tag in sorted(cross_tags):
+        ids = cross_tags[tag]
+        print(f"  [WARN] {tag:<22}: {len(ids):>4} card(s)  (ex.: {ids[:8]})")
+    if cross_distrator:
+        print(f"  [WARN] distrator-perdido      : {len(cross_distrator):>4} questão(ões) — "
+              f"alternativa_marcada não aparece nos cards derivados (ex.: {cross_distrator[:8]})")
 
     # Heurística F7 — WARN experimental via léxico (não altera exit code)
     f7 = check_discriminacao_lexicon(conn)
@@ -268,6 +330,9 @@ def run(args):
             'problematic_count': len(export_ids),
             'problematic_ids': export_ids,
             'signal_counts': counts,
+            # part-5: sinais relacionais no export, com tag própria
+            'cross_field': {tag: ids for tag, ids in cross_tags.items()},
+            'cross_field_distrator_questoes': cross_distrator,
             'cards': [],
         }
         # Exportar dados completos dos cards para passe LLM

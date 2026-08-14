@@ -108,7 +108,9 @@ def _cards_ativos(db_path):
             "fl.verso_armadilha AS verso_armadilha, "
             "t.tema AS tema, t.area AS area "
             "FROM flashcards fl LEFT JOIN taxonomia_cronograma t ON t.id = fl.tema_id "
-            "WHERE fl.needs_qualitative < 2").fetchall()
+            # definição canônica de ativo (db.ATIVO_WHERE; part-5) — inline aqui
+            # porque este CLI ro não importa app.utils.db (harness leve).
+            "WHERE COALESCE(fl.needs_qualitative, 0) < 2").fetchall()
         return [dict(r) for r in rows]
     except Exception:
         return []

@@ -27,6 +27,9 @@ try:
 except Exception:
     pass
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import card_checks  # gate de qualidade (part-4) — mesma biblioteca dos demais writers
+
 DB_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'ipub.db')
 
 FIELD_MAP = {
@@ -49,8 +52,9 @@ def main():
         edits = json.load(f)
 
     conn = sqlite3.connect(DB_PATH)
+    conn.execute("PRAGMA foreign_keys = ON")  # part-4: FKs impostas
     c = conn.cursor()
-    n_refeitos = n_aposentados = 0
+    n_refeitos = n_aposentados = n_rejeitados = 0
 
     for e in edits:
         cid = e['card_id']
@@ -70,11 +74,40 @@ def main():
             continue
 
         sets, vals, campos = [], [], []
+        card_eq = {}
         for k, col in FIELD_MAP.items():
             if e.get(k) is not None:
                 sets.append(f"{col}=?")
                 vals.append(e[k])
                 campos.append(k)
+                card_eq[col] = e[k]
+
+        # part-4: fim do no-op disfarcado — item sem campo valido NAO executa
+        # UPDATE, NAO incrementa card_version, NAO flipa quality_source.
+        if not campos:
+            print(f"  [ERRO] card {cid}: nenhum campo valido "
+                  f"({', '.join(sorted(FIELD_MAP))}) — item rejeitado, nada aplicado.")
+            n_rejeitados += 1
+            continue
+
+        # Gate de qualidade (part-4) sobre os campos PRESENTES (edicao parcial
+        # e legitima — nao exigir campos que o item nao esta alterando).
+        erros_item = card_checks.checar_encoding(card_eq)
+        for k, col in (("pergunta", "frente_pergunta"), ("resposta", "verso_resposta")):
+            if e.get(k) is not None and not str(e[k]).strip():
+                erros_item.append(f"{col} vazia")
+        if card_eq.get("frente_pergunta"):
+            t = card_checks.checar_pergunta_template(card_eq)
+            if t:
+                erros_item.append(t)
+            emb = card_checks.checar_resposta_embutida(card_eq)
+            if emb:
+                erros_item.append(emb)
+        if erros_item:
+            print(f"  [ERRO] card {cid}: {' | '.join(erros_item)} — item rejeitado, nada aplicado.")
+            n_rejeitados += 1
+            continue
+
         sets += ["card_version=?", "quality_source=?", "needs_qualitative=?"]
         vals += [ver + 1, 'qualitative', 0]
         vals.append(cid)
@@ -85,10 +118,14 @@ def main():
 
     if not args.dry_run:
         conn.commit()
-        print(f"\nCommitado: {n_refeitos} refeitos, {n_aposentados} aposentados.")
+        print(f"\nCommitado: {n_refeitos} refeitos, {n_aposentados} aposentados, "
+              f"{n_rejeitados} rejeitado(s) pelo gate.")
     else:
-        print(f"\n(dry-run) {n_refeitos} seriam refeitos, {n_aposentados} aposentados. Nada gravado.")
+        print(f"\n(dry-run) {n_refeitos} seriam refeitos, {n_aposentados} aposentados, "
+              f"{n_rejeitados} rejeitado(s). Nada gravado.")
     conn.close()
+    if n_rejeitados:
+        sys.exit(1)  # part-4: rejeicao e visivel no exit code (fail-loud)
 
 
 if __name__ == '__main__':

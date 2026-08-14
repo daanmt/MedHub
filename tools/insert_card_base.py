@@ -50,6 +50,9 @@ from datetime import datetime
 # Saída em UTF-8 — evita UnicodeEncodeError no console cp1252 do Windows.
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import card_checks  # gate de qualidade (part-4) — mesma biblioteca dos demais writers
+
 DB_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'ipub.db')
 
 
@@ -77,7 +80,25 @@ def main():
     with open(args.src, encoding='utf-8') as f:
         cards = json.load(f)
 
+    # Gate de qualidade (part-4): mesmos predicados da auditoria, ANTES de
+    # qualquer escrita — lote com erro nao grava nada (all-or-nothing).
+    ctx = {"tema": args.tema, "area": args.area}
+    erros_gate, avisos_gate = [], []
+    for i, card in enumerate(cards):
+        res = card_checks.validar_card(card, contexto=ctx)
+        erros_gate += [f"card {i}: {e}" for e in res["erros"]]
+        avisos_gate += [f"card {i}: {a}" for a in res["avisos"]]
+    for a in avisos_gate:
+        print(f"  [AVISO-CARD] {a}")
+    if erros_gate:
+        for e in erros_gate:
+            print(f"  [ERRO] {e}")
+        print("\n[ERRO] gate de qualidade reprovou o lote (regua "
+              ".claude/commands/estilo-flashcard.md). NADA gravado.")
+        sys.exit(1)
+
     conn = sqlite3.connect(DB_PATH)
+    conn.execute("PRAGMA foreign_keys = ON")  # part-4: FKs impostas
     c = conn.cursor()
     tema_id = get_or_create_tema(c, args.area, args.tema)
 
@@ -85,8 +106,6 @@ def main():
     for i, card in enumerate(cards):
         fp = (card.get('frente_pergunta') or '').strip()
         vr = (card.get('verso_resposta') or '').strip()
-        if not fp or not vr:
-            raise ValueError(f"Card {i}: 'frente_pergunta' e 'verso_resposta' são obrigatórios")
         tipo = card.get('tipo') or 'base'
 
         # Idempotência: pula se já existe card de mesma altura (tipo) com a mesma pergunta no tema.

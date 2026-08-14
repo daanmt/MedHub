@@ -21,6 +21,9 @@ try:
 except Exception:
     pass
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import card_checks  # gate de qualidade (part-4) — mesma biblioteca dos demais writers
+
 DB_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'ipub.db')
 
 
@@ -32,7 +35,24 @@ def main():
     dry = not args.apply
 
     cards = json.load(open(args.src, encoding='utf-8'))
+
+    # Gate de qualidade (part-4): valida o lote ANTES de qualquer escrita.
+    erros_gate, avisos_gate = [], []
+    for i, card in enumerate(cards):
+        res = card_checks.validar_card(card)
+        erros_gate += [f"card {i}: {e}" for e in res["erros"]]
+        avisos_gate += [f"card {i}: {a}" for a in res["avisos"]]
+    for a in avisos_gate:
+        print(f"  [AVISO-CARD] {a}")
+    if erros_gate:
+        for e in erros_gate:
+            print(f"  [ERRO] {e}")
+        print("\n[ERRO] gate de qualidade reprovou o lote (regua "
+              ".claude/commands/estilo-flashcard.md). NADA gravado.")
+        sys.exit(1)
+
     conn = sqlite3.connect(DB_PATH)
+    conn.execute("PRAGMA foreign_keys = ON")  # part-4: FKs impostas
     cur = conn.cursor()
     ins = skip = 0
 

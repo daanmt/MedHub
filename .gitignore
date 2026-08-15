@@ -17,6 +17,7 @@ ipub_backup_*.db
 # Python
 .env
 __pycache__/
+.pytest_cache/
 *.pyc
 *.pyo
 *.pyd

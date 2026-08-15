@@ -245,3 +245,12 @@ except AttributeError:
 - **Preview com paridade testada**: `preview_ratings` quebra JUNTO com o scheduler se ele mudar — o preview nunca mente; intervalo é pré-balanceador com flag explícita.
 - **Contrato de apresentação codificado** em `revisar.md` (anti-vazamento de tema, preview, motivo, --reason) — correção que era tribal virou norma verificável.
 - **`update_flashcard_fields` gateado**: o último caminho de escrita documentado sem validação fechou; degradação anunciada quando `tools/` ausente.
+
+## 2026-08-14/15 — Ciclo consolidacao-alcancabilidade (parts 1-7, ai-eng)
+
+- **Obsoleto SAI; arquivar não é resposta** (política do operador): morte = git rm com 0 refs provadas. Mortos: Streamlit completo, reflect.py, apply_reforja (fundido), audit_integrity (fundido), migrate_dificuldade (fundido), review_cli (superado pelo /revisar), pdf_raw/two-tier (eval decidiu), session_insights (write-only), audit_cards, docs absorvidos.
+- **Alcançabilidade é gate**: `tools/reachability_check.py` (check 12) pergunta "alguém chega aqui?"; ISENTOS só com razão declarada. 1ª corrida pagou-se (4 órfãos reais).
+- **Auto-higiene é passo do rito de fechamento** (AGENTE §3 + handoff-contract cláusula 4): absorvido/incorporado sai no mesmo commit do selo.
+- **Operação destrutiva em massa exige COUNT-ASSERT + dry-run auditável** (lição do incidente part-7: regex pegou coluna errada da tabela → 408≠228 teria abortado; 180 PDFs-fonte restaurados 180/180 de G:/D: com verificação byte a byte).
+- **Boot barato**: hook injeta o plano; protocolo não duplica harness; "se a leitura precisa de bytes, não é do agente" (2 sinais: conclusão=Sheets texto, ordem=xlsx ritual do usuário); B1 BLOCKING de fato.
+- **Eval com fixture quebrada = harness silenciosamente-quebrado**: regenerar REPORT com data+HEAD; variância do HyDE (sem temperature=0) documentada — candidato a fix.

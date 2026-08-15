@@ -60,7 +60,10 @@ A obtenção de aprovação integral (status `✅ PASSED` com exit code `0`) é 
 1. **Atualizar `HANDOFF.md`** -- **sempre** (toda sessão significativa). Rotacionar "Última sessão" (substituir, não acumular) + atualizar "Estado por frente" + "Próximo passo imediato". Regras em `core/contracts/handoff-contract.md`. **Números derivados (F6):** o bloco numérico do "Estado por frente" (volume, perf, FSRS, backlog) é gerado por `python tools/day_plan.py --handoff-block` -- nunca digitado à mão; só o texto qualitativo é manual.
 2. **Atualizar `ESTADO.md`** -- **só se o macro mudou** (indicador cruzou marco, nova frente, skill/contrato versionado). Não é diário de sessões. Regras em `core/contracts/estado-contract.md`.
 3. **Registrar sessão** -- novo `history/session_NNN.md` seguindo `.agents/workflows/registrar-sessao.md` + entry em `history/INDEX.md`. **Invariante de ponteiro (F1):** o `auto_check` verifica que o ponteiro do HANDOFF não excede `max(history/session_NNN) + 1` (WARN `SESSION_POINTER_DRIFT`) -- selar a sessão aqui é o que mantém o passo 1 legítimo.
-4. **Git** -- `git add` arquivos modificados (nunca `git add .`), commit semântico, push. `ipub.db` e `medhub_memory.db` não vão pro git.
+4. **Auto-higiene** -- **arquivo absorvido/integrado em doc mais estável SAI no mesmo commit do selo**; relatório incorporado por outro mais fresco SAI. Veredito **binário** (fica ou é deletado) -- sem `archive/`, sem "deixa por enquanto": o conteúdo já vive no doc que o absorveu, e a cópia órfã só existe para envelhecer e mentir. Vale para relatórios de sessão, specs cumpridas, scratch de `tmp/` e backups fora da rotação. O que NÃO sai: SSOT (`resumos/`, `history/`, `core/`), dívida ativa declarada no HANDOFF e PDFs-fonte EMED.
+5. **Git** -- `git add` arquivos modificados (nunca `git add .`), commit semântico, push. `ipub.db` e `medhub_memory.db` não vão pro git.
+
+**Checklist do rito:** HANDOFF -> ESTADO (se o macro mudou) -> `session_NNN` + INDEX -> **auto-higiene (o que foi absorvido saiu?)** -> commit semântico.
 
 ---
 

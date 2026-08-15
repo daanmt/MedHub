@@ -77,6 +77,8 @@ Ao fechar uma sessão significativa:
 
 **Se você está adicionando ao HANDOFF sem remover algo equivalente, está acumulando em vez de rotacionar. Interromper.**
 
+4. **Auto-higiene (AGENTE §3.4).** A rotação não para no texto: o **arquivo** absorvido por um doc mais estável (relatório já incorporado, spec já cumprida, scratch já consolidado) **sai do repo no mesmo commit do selo**. Veredito binário -- sem `archive/`. Exceções: SSOT (`resumos/`, `history/`, `core/`), dívida ativa declarada no HANDOFF e PDFs-fonte EMED.
+
 ---
 
 ## Sessão significativa

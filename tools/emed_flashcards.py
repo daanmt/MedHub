@@ -246,6 +246,16 @@ def harvest(source: Path, force: bool = False):
         sidecar = dest_dir / f"Flashcards - {tema}.cards.json"
         expected.add(dest_pdf)
 
+        # Passo de copia (shutil.copy2 abaixo) avaliado em consolidacao-part-2
+        # (2026-08-14): NAO existe so para alimentar o tier morto de RAG sobre
+        # PDF (pdf_raw, removido). Auditoria constatou 47/275 decks colhidos
+        # sem .md nem PDF-fonte topico correspondente em resumos/** -- para
+        # esses, esta copia e a UNICA evidencia que tools/cobertura_conhecimento.py
+        # (F16a) e tools/insert_questao.py::_tem_lastro (F31, gate de insercao)
+        # enxergam. Cópias já redundantes (md/PDF-fonte ja cobrem o tema) estao
+        # listadas em .vibeflow/audits/pdf-copias-orfas-part2.md -- remocao
+        # fisica fica para a part-7, nao aqui. Passo FICA.
+
         # Idempotencia: deck ja copiado (mesmo tamanho) E ja extraido -> pula por completo
         # (evita reler o HD externo em re-runs).
         if (not force and dest_pdf.exists() and dest_pdf.stat().st_size == pdf.stat().st_size

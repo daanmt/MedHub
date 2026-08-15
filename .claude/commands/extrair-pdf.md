@@ -79,10 +79,16 @@ python tools/extract_pdfs.py "arq1.pdf" "arq2.pdf" "arq3.pdf"
 
 🔴 **NÃO deletar os PDFs do EMED.** A política "Zero PDF" foi **revertida na s086**:
 os PDFs-fonte são **retidos** (gitignored, fora do versionamento) porque alimentam
-a indexação RAG (`tools/index_pdf_raw.py`) e são IP-fonte **não-reconstruível**.
+`tools/cobertura_conhecimento.py` (F16a) e o gate de lastro de
+`tools/insert_questao.py::_tem_lastro` (F31) e são IP-fonte **não-reconstruível**.
 O vault opera em Markdown; os PDFs ficam como matéria-prima local.
 
 > Correção 2026-08-14 (auditoria de sistemas): esta seção instruía deletar os
 > PDFs — norma morta cujo cumprimento causava perda irreversível (`AGENTE.md §6`
 > já admitia o drift). Único caso: PDF temporário de terceiros sem valor de
 > fonte pode ser removido a critério do usuário, nunca por default do agente.
+>
+> Correção 2026-08-14 (consolidacao-part-2): o tier bruto de RAG sobre PDF
+> (`pdf_raw`, `tools/index_pdf_raw.py`) foi removido — o gold (`resumos/**/*.md`)
+> satura antes do tier PDF contribuir. A retenção dos PDFs acima não depende
+> mais de RAG.

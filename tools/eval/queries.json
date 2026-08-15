@@ -24,14 +24,14 @@
     "id": "go-003",
     "query": "Eclâmpsia com convulsão ativa primeira conduta via aérea ou MgSO4",
     "area": "GO",
-    "expected_resumo_path": "resumos/GO/Síndromes Hipertensivas na Gestação.md",
+    "expected_resumo_path": "resumos/GO/Síndromes Hipertensivas da Gestação.md",
     "notes": "Sessão 066 ID 349"
   },
   {
     "id": "go-004",
     "query": "Segunda onda trofoblástica destino anatômico zona de junção miometrial",
     "area": "GO",
-    "expected_resumo_path": "resumos/GO/Síndromes Hipertensivas na Gestação.md",
+    "expected_resumo_path": "resumos/GO/Síndromes Hipertensivas da Gestação.md",
     "notes": "Sessão 066 ID 353"
   },
   {

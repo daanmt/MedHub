@@ -8,7 +8,11 @@ Tests:
   1. Persistence  — put → reinitialize store → get (must recover)
   2. Cross-thread — store is global; write under session_001, read from session_002
   3. Search       — put 3 entries → search by query → must return relevant
-  4. Consolidation — write mock session log → run consolidate_session → verify session_insights updated
+  4. Consolidation — mock session log → consolidate_session → error_count sincronizado
+                     e nenhum namespace write-only criado (consolidacao-part-3)
+  5. Context unwrap — envelope LangMem renderizado por load_context
+
+Namespace único vivo: medhub/weak_areas. Textos abaixo são dummy.
 """
 
 from __future__ import annotations
@@ -46,16 +50,16 @@ def test_persistence() -> bool:
 
     try:
         store = _make_store(db)
-        store.put(("medhub", "profile"), "test_user", {"exam_target": "USP", "study_pace": "intensivo"})
+        store.put(("medhub", "weak_areas"), "test_persist", {"area": "AreaAlfa", "especialidade": "TemaUm"})
         del store  # destruir instância
 
         store2 = _make_store(db)  # nova instância, mesmo arquivo
-        item = store2.get(("medhub", "profile"), "test_user")
+        item = store2.get(("medhub", "weak_areas"), "test_persist")
 
         if item is None:
             print(f"  {_FAIL} — item não encontrado após reinicialização")
             return False
-        if item.value.get("exam_target") != "USP":
+        if item.value.get("area") != "AreaAlfa":
             print(f"  {_FAIL} — valor incorreto: {item.value}")
             return False
         print(f"  {_PASS} — recuperado: {item.value}")
@@ -110,25 +114,26 @@ def test_search() -> bool:
 
     try:
         store = _make_store(db)
-        store.put(("medhub", "session_insights"), "s001", {"session_id": "session_001", "insight": "Dengue grave: plaquetas < 20k + sangramento espontâneo", "area": "Infectologia"})
-        store.put(("medhub", "session_insights"), "s002", {"session_id": "session_002", "insight": "Sífilis congênita: qualquer RN de mãe com VDRL reagente sem tratamento adequado deve tratar", "area": "GO"})
-        store.put(("medhub", "session_insights"), "s003", {"session_id": "session_003", "insight": "IC com FEr: IECAs + betabloqueador + antagonistas aldosterona reduzem mortalidade", "area": "Cardiologia"})
+        ns = ("medhub", "weak_areas")
+        store.put(ns, "s001", {"area": "AreaAlfa", "especialidade": "TemaUm", "pattern": "padrao dummy alfa"})
+        store.put(ns, "s002", {"area": "AreaBeta", "especialidade": "TemaDois", "pattern": "padrao dummy beta"})
+        store.put(ns, "s003", {"area": "AreaGama", "especialidade": "TemaTres", "pattern": "padrao dummy gama"})
 
-        results = store.search(("medhub", "session_insights"), query="dengue", limit=10)
+        results = store.search(ns, query="AreaAlfa", limit=10)
         if not results:
-            print(f"  {_FAIL} — busca por 'dengue' não retornou nada")
+            print(f"  {_FAIL} — busca por 'AreaAlfa' não retornou nada")
             return False
         if results[0].key != "s001":
             print(f"  {_FAIL} — resultado inesperado: {results[0].key}")
             return False
 
         # Negative: busca por algo inexistente
-        empty = store.search(("medhub", "session_insights"), query="nefrologia_inexistente_xyz", limit=10)
+        empty = store.search(ns, query="area_inexistente_xyz", limit=10)
         if empty:
             print(f"  {_FAIL} — busca negativa retornou resultados: {[i.key for i in empty]}")
             return False
 
-        print(f"  {_PASS} — busca 'dengue' retornou '{results[0].value['area']}'; negativo correto")
+        print(f"  {_PASS} — busca 'AreaAlfa' retornou '{results[0].value['area']}'; negativo correto")
         return True
     finally:
         os.unlink(db)
@@ -138,45 +143,67 @@ def test_search() -> bool:
 # Test 4 — Consolidation
 # ---------------------------------------------------------------------------
 def test_consolidation() -> bool:
-    print("\n[4] Consolidação: mock session log -> consolidate_session -> session_insights atualizado")
+    print("\n[4] Consolidação: mock session log -> consolidate_session -> error_count sincronizado")
+    import sqlite3
+
     with tempfile.NamedTemporaryFile(suffix=".db", delete=False) as f:
         db = f.name
 
-    # Create a mock session log in a temp directory
+    # Create a mock session log + ipub sintético em diretório temporário
     with tempfile.TemporaryDirectory() as tmpdir:
         history_dir = Path(tmpdir) / "history"
         history_dir.mkdir()
         mock_log = history_dir / "session_999.md"
         mock_log.write_text(
-            "# Session 999 — Cardiologia\n\n"
-            "Analisamos questões de Insuficiência Cardíaca e Cardiologia.\n"
-            "Erro recorrente em IC com FEr (classificação NYHA).\n",
+            "# Session 999 — log dummy\n\nTexto dummy de sessão para o smoke.\n",
             encoding="utf-8",
         )
 
-        # Patch history dir for the test
+        fake_ipub = Path(tmpdir) / "ipub_fake.db"
+        conn = sqlite3.connect(fake_ipub)
+        conn.execute(
+            """CREATE TABLE taxonomia_cronograma (
+                   id INTEGER PRIMARY KEY AUTOINCREMENT, area TEXT NOT NULL, tema TEXT NOT NULL,
+                   questoes_realizadas INTEGER DEFAULT 0, questoes_acertadas INTEGER DEFAULT 0)"""
+        )
+        conn.execute(
+            "INSERT INTO taxonomia_cronograma (area, tema, questoes_realizadas, questoes_acertadas) VALUES ('AreaAlfa','TemaUm',100,40)"
+        )
+        conn.commit()
+        conn.close()
+
+        # Patch history dir + ipub path for the test
         import app.memory.manager as mgr_mod
-        original_dir = mgr_mod._HISTORY_DIR
-        mgr_mod._HISTORY_DIR = history_dir
+        original_dir, original_ipub = mgr_mod._HISTORY_DIR, mgr_mod._IPUB_PATH
+        mgr_mod._HISTORY_DIR, mgr_mod._IPUB_PATH = history_dir, fake_ipub
 
         try:
             store = _make_store(db)
-            # Run without API key → fallback path
+            store.put(
+                ("medhub", "weak_areas"),
+                "wa_dummy",
+                {"kind": "WeakArea", "content": {"area": "AreaAlfa", "especialidade": "TemaUm", "error_count": 0}},
+            )
+            # Sem API key → só o sync de contadores roda
             os.environ.pop("ANTHROPIC_API_KEY", None)
             from app.memory.manager import consolidate_session
             consolidate_session(999, store=store, db_path=db)
 
-            # Verify session_insights has an entry
-            items = store.search(("medhub", "session_insights"), limit=10)
-            if not items:
-                print(f"  {_FAIL} — nenhuma entrada criada em session_insights")
+            item = store.get(("medhub", "weak_areas"), "wa_dummy")
+            if item is None or item.value["content"]["error_count"] != 60:
+                print(f"  {_FAIL} — error_count não sincronizado: {item.value if item else None}")
                 return False
 
-            entry = items[0]
-            print(f"  {_PASS} — insight criado: '{entry.value.get('insight', '')[:60]}…'")
+            # Nenhuma memória write-only pode ter sido criada
+            namespaces = store.list_namespaces(prefix=("medhub",), limit=50)
+            if any("session_insights" in "/".join(ns) for ns in namespaces):
+                print(f"  {_FAIL} — namespace write-only recriado: {namespaces}")
+                return False
+
+            print(f"  {_PASS} — error_count=60 por match exato (area, tema); namespaces: {['/'.join(n) for n in namespaces]}")
             return True
         finally:
-            mgr_mod._HISTORY_DIR = original_dir
+            mgr_mod._HISTORY_DIR, mgr_mod._IPUB_PATH = original_dir, original_ipub
             os.unlink(db)
 
 

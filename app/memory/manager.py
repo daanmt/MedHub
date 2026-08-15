@@ -1,43 +1,34 @@
 """
 Background memory consolidation for MedHub.
 
-Called at session close (via registrar-sessao.md workflow) to:
+Called at session close (hook PostToolUse(Write) → spawn detached) to:
   1. Read history/session_NNN.md
-  2. Extract clinical insights → ("medhub", "session_insights")
-  3. Extract weakness patterns → ("medhub", "weak_areas")
-  4. Sync error_count in WeakAreas from ipub.db performance data
+  2. Extract weakness patterns → ("medhub", "weak_areas")
+  3. Sync error_count in WeakAreas from ipub.db performance data
 
-Uses two separate create_memory_store_manager instances (one per schema)
-so each schema lands in its own namespace.
+Namespace único: ("medhub", "weak_areas") — é o que o boot lê via
+`inspect.load_context()`. Memória write-only foi removida (consolidacao-part-3).
 
-Uses claude-haiku-4-5 (low cost). Graceful fallback if ANTHROPIC_API_KEY absent.
+Uses claude-haiku-4-5 (low cost). Sem ANTHROPIC_API_KEY só o sync de
+contadores roda. Falhas são registradas em history/memory_errors.log
+(o processo é spawnado detached, com stdout/stderr em DEVNULL).
 """
 
 from __future__ import annotations
 
 import os
 import sqlite3
+import unicodedata
+from datetime import datetime
 from pathlib import Path
 
 from app.memory.store import SQLiteMemoryStore
 
 
 _HISTORY_DIR = Path("history")
+_IPUB_PATH = Path("ipub.db")
+_ERROR_LOG = Path("history") / "memory_errors.log"
 _HAIKU_MODEL = "claude-haiku-4-5-20251001"
-
-_SI_INSTRUCTIONS = """
-Você é um analisador de logs de sessão de estudo médico para residência médica.
-Extraia insights clínicos memoráveis: distinções diagnósticas, armadilhas de prova,
-critérios objetivos e condutas específicas identificados nesta sessão.
-
-Regras obrigatórias:
-- Escreva SEMPRE em português brasileiro (pt-BR)
-- O campo session_id do SessionInsight DEVE ser exatamente o valor indicado na linha
-  [SESSÃO: session_NNN] no início do log (ex: "session_054") — nunca invente um UUID
-- Ignore detalhes de workflow/infraestrutura — foque exclusivamente no conteúdo médico-clínico
-- Prefira insights densos com valores específicos (doses, escores, critérios diagnósticos)
-- Cada insight deve ser autocontido e compreensível fora do contexto da sessão
-"""
 
 _WA_INSTRUCTIONS = """
 Você é um analisador de padrões de erro para estudo médico para residência médica.
@@ -53,6 +44,22 @@ Regras obrigatórias:
 """
 
 
+def log_error(context: str, exc: BaseException | str) -> None:
+    """Append 1 linha em history/memory_errors.log (ts + erro curto).
+
+    Sem retry, sem bloqueio: o spawn é fire-and-forget e stdout/stderr vão
+    para DEVNULL, então o arquivo é a única superfície de falha visível.
+    """
+    short = str(exc).replace("\n", " ")[:300]
+    line = f"{datetime.now().isoformat(timespec='seconds')}\t{context}\t{type(exc).__name__ if isinstance(exc, BaseException) else 'Error'}: {short}\n"
+    try:
+        _ERROR_LOG.parent.mkdir(parents=True, exist_ok=True)
+        with _ERROR_LOG.open("a", encoding="utf-8") as fh:
+            fh.write(line)
+    except Exception:
+        pass  # logging nunca derruba a consolidação
+
+
 def _read_session_log(session_num: int) -> str | None:
     path = _HISTORY_DIR / f"session_{session_num:03d}.md"
     if not path.exists():
@@ -60,84 +67,116 @@ def _read_session_log(session_num: int) -> str | None:
     return path.read_text(encoding="utf-8")
 
 
-def _extract_areas_from_log(log_text: str) -> list[str]:
-    """Heuristic area extraction used in fallback path."""
-    known_areas = [
-        "Clínica Médica", "Cardiologia", "Pneumologia", "Nefrologia",
-        "Gastroenterologia", "Endocrinologia", "Reumatologia", "Neurologia",
-        "Hematologia", "Infectologia",
-        "GO", "Ginecologia", "Obstetrícia",
-        "Pediatria", "Neonatologia",
-        "Cirurgia", "Ortopedia", "Neurocirurgia",
-        "Preventiva", "Saúde Pública", "Epidemiologia",
-        "Psiquiatria", "Dermatologia", "Oftalmologia", "Otorrinolaringologia",
-        "Urologia", "Oncologia",
-    ]
-    return [a for a in known_areas if a.lower() in log_text.lower()]
+# ---------------------------------------------------------------------------
+# Contador de erros — matching EXATO por (area, tema)
+# ---------------------------------------------------------------------------
 
+def _norm(value: object) -> str:
+    """Normaliza rótulo de taxonomia para comparação exata.
 
-def _sync_error_counts(store: SQLiteMemoryStore) -> None:
-    """Atualiza error_count nas WeakAreas com dados quantitativos de ipub.db.
-
-    Usa taxonomia_cronograma: SUM(questoes_realizadas - questoes_acertadas) por área.
-    Matching por substring (area name em ipub.db vs WeakArea.area).
+    Case-fold + remoção de acentos + colapso de espaços. NÃO faz substring:
+    dois rótulos só casam se forem o MESMO rótulo.
     """
-    ipub_path = Path("ipub.db")
-    if not ipub_path.exists():
-        return
+    if not value:
+        return ""
+    s = unicodedata.normalize("NFKD", str(value))
+    s = "".join(ch for ch in s if not unicodedata.combining(ch))
+    return " ".join(s.split()).casefold()
 
+
+def _load_ipub_error_counts(ipub_path: Path) -> dict[tuple[str, str], int]:
+    """Erros por (area, tema) — a granularidade que desambigua sub-temas.
+
+    GROUP BY area, tema (não só area): dois temas da mesma área produzem
+    linhas distintas. Linhas cujos rótulos normalizam para o mesmo par são
+    SOMADAS (múltiplos matches somam).
+    """
+    conn = sqlite3.connect(ipub_path)
     try:
-        conn = sqlite3.connect(ipub_path)
         rows = conn.execute(
             """SELECT area,
-                      SUM(questoes_realizadas - questoes_acertadas) as erros
+                      tema,
+                      SUM(questoes_realizadas - questoes_acertadas) AS erros
                FROM taxonomia_cronograma
                WHERE questoes_realizadas > 0
-               GROUP BY area"""
+               GROUP BY area, tema"""
         ).fetchall()
+    finally:
         conn.close()
+
+    counts: dict[tuple[str, str], int] = {}
+    for area, tema, erros in rows:
+        if not erros or int(erros) <= 0:
+            continue
+        key = (_norm(area), _norm(tema))
+        counts[key] = counts.get(key, 0) + int(erros)
+    return counts
+
+
+def _sync_error_counts(store: SQLiteMemoryStore, ipub_path: Path | str = _IPUB_PATH) -> int:
+    """Atualiza error_count nas WeakAreas com dados quantitativos de ipub.db.
+
+    Match EXATO do par (WeakArea.area, WeakArea.especialidade) contra o par
+    (taxonomia_cronograma.area, .tema). Sem substring, sem `break` no primeiro
+    hit: sub-temas distintos da mesma área recebem counts distintos, e
+    WeakArea sem par correspondente recebe 0 — nunca herda o total da área.
+
+    Retorna o número de WeakAreas atualizadas.
+    """
+    path = Path(ipub_path)
+    if not path.exists():
+        return 0
+
+    try:
+        counts = _load_ipub_error_counts(path)
     except Exception as e:
+        log_error("sync_error_counts/read_ipub", e)
         print(f"[memory/manager] Não foi possível ler ipub.db: {e}")
-        return
+        return 0
 
-    # Mapa de area_ipub → error_count
-    ipub_counts: dict[str, int] = {r[0].lower(): int(r[1]) for r in rows if r[1]}
+    if not counts:
+        return 0
 
-    if not ipub_counts:
-        return
-
-    existing = store.search(("medhub", "weak_areas"), limit=200)
+    existing = store.search(("medhub", "weak_areas"), limit=1000)
     updated = 0
     for item in existing:
         val = item.value
-        if val.get("kind") != "WeakArea":
+        if not isinstance(val, dict):
             continue
-        wa_area = val.get("content", {}).get("area", "").lower()
-        # Tenta match por substring em ambas as direções
-        matched_count = None
-        for ipub_area, count in ipub_counts.items():
-            if ipub_area in wa_area or wa_area in ipub_area:
-                matched_count = count
-                break
-        if matched_count is not None and val.get("content", {}).get("error_count", 0) != matched_count:
-            val["content"]["error_count"] = matched_count
+        if "kind" in val and val.get("kind") != "WeakArea":
+            continue
+        # Envelope LangMem {"kind", "content"} ou dict plano legado
+        content = val.get("content") if isinstance(val.get("content"), dict) else val
+        if not isinstance(content, dict):
+            continue
+
+        key = (_norm(content.get("area")), _norm(content.get("especialidade")))
+        matched = counts.get(key, 0)  # sem match = 0, NUNCA o total da área
+
+        if content.get("error_count", 0) != matched:
+            content["error_count"] = matched
             store.put(("medhub", "weak_areas"), item.key, val)
             updated += 1
 
     if updated:
         print(f"[memory/manager] error_count atualizado em {updated} WeakAreas via ipub.db")
+    return updated
 
+
+# ---------------------------------------------------------------------------
+# Consolidação
+# ---------------------------------------------------------------------------
 
 def _llm_consolidate(
     session_log: str,
     session_num: int,
     store: SQLiteMemoryStore,
 ) -> None:
-    """Dois managers LLM: SessionInsight e WeakArea em namespaces separados."""
+    """Extrai WeakAreas do log da sessão para o namespace medhub/weak_areas."""
     try:
         from langmem import create_memory_store_manager
         from langchain_anthropic import ChatAnthropic
-        from app.memory.schemas import SessionInsight, WeakArea
+        from app.memory.schemas import WeakArea
 
         llm = ChatAnthropic(model=_HAIKU_MODEL, api_key=os.environ["ANTHROPIC_API_KEY"])
         session_id = f"session_{session_num:03d}"
@@ -146,18 +185,6 @@ def _llm_consolidate(
         content = f"[SESSÃO: {session_id}]\n\n{session_log}"
         config = {"configurable": {"thread_id": session_id}}
 
-        # Manager A: SessionInsight → medhub/session_insights
-        si_manager = create_memory_store_manager(
-            llm,
-            schemas=[SessionInsight],
-            store=store,
-            namespace=("medhub", "session_insights"),
-            instructions=_SI_INSTRUCTIONS,
-        )
-        si_manager.invoke({"messages": [{"role": "user", "content": content}]}, config=config)
-        print(f"[memory/manager] SessionInsights consolidados para {session_id}")
-
-        # Manager B: WeakArea → medhub/weak_areas
         wa_manager = create_memory_store_manager(
             llm,
             schemas=[WeakArea],
@@ -169,33 +196,8 @@ def _llm_consolidate(
         print(f"[memory/manager] WeakAreas consolidadas para {session_id}")
 
     except Exception as e:
+        log_error(f"llm_consolidate/session_{session_num:03d}", e)
         print(f"[memory/manager] LLM consolidation skipped: {e}")
-
-
-def _fallback_consolidate(
-    session_log: str,
-    session_num: int,
-    store: SQLiteMemoryStore,
-) -> None:
-    """Consolidação heurística quando ANTHROPIC_API_KEY ausente."""
-    areas = _extract_areas_from_log(session_log)
-    if not areas:
-        return
-
-    session_id = f"session_{session_num:03d}"
-    store.put(
-        ("medhub", "session_insights"),
-        session_id,
-        {
-            "kind": "SessionInsight",
-            "content": {
-                "session_id": session_id,
-                "insight": f"Áreas trabalhadas: {', '.join(areas)}",
-                "area": areas[0],
-            },
-        },
-    )
-    print(f"[memory/manager] Fallback insight salvo para {session_id}: {areas}")
 
 
 def consolidate_session(
@@ -222,14 +224,14 @@ def consolidate_session(
 
     print(f"[memory/manager] Consolidando {session_id}...")
 
-    api_key = os.environ.get("ANTHROPIC_API_KEY")
-    if api_key:
+    if os.environ.get("ANTHROPIC_API_KEY"):
         _llm_consolidate(log_text, session_num, store)
     else:
-        _fallback_consolidate(log_text, session_num, store)
+        print("[memory/manager] ANTHROPIC_API_KEY ausente — extração de WeakArea pulada.")
 
-    # Sincronizar error_count de ipub.db (independente do path LLM/fallback)
-    _sync_error_counts(store)
+    # Sincronizar error_count de ipub.db (roda mesmo sem API key).
+    # _IPUB_PATH explícito: mantém o path patchável em teste.
+    _sync_error_counts(store, _IPUB_PATH)
 
     print(f"[memory/manager] {session_id} consolidado.")
 
@@ -241,4 +243,9 @@ if __name__ == "__main__":
         print("Uso: python -m app.memory.manager <session_num>")
         sys.exit(1)
 
-    consolidate_session(int(sys.argv[1]))
+    # Processo filho de um spawn detached: sem try/except global a falha é muda.
+    try:
+        consolidate_session(int(sys.argv[1]))
+    except BaseException as e:  # noqa: BLE001 — última linha de defesa do filho
+        log_error(f"consolidate_session/{sys.argv[1]}", e)
+        sys.exit(1)

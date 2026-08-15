@@ -148,7 +148,7 @@ relates_to: [ESTADO, AGENTE]      # máximo 3 referências
 
 - **RAG canônico** = `app/engine/rag.py` (ChromaDB em `data/chroma/`, embeddings via Ollama `nomic-embed-text`, multi-query Raw + HyDE, ThreadPoolExecutor, context propagation no chunk, two-tier gold/`pdf_raw`). Baseline reproducible em `tools/eval/REPORT.md`. (BM25 rerank removido em 2026-07-12 -- era regressivo no corpus médico; ver `.vibeflow/audits/mecanismo-conhecimento-consolidacao-part-1-audit.md`.)
 - **Engine API** = `app/engine/` expõe 2 funções estáveis para Streamlit (e agentes externos): `get_topic_context()` e `summarize_performance()`. Agentes **não** fazem queries SQL diretas -- vão pelo engine ou pelos CLIs em `tools/`.
-- **Memory v1** = `app/memory/` (LangGraph SqliteSaver + LangMem). Backend `medhub_memory.db`, isolado do `ipub.db`. Smoke tests em `tools/test_memory.py`.
+- **Memory v1** = `app/memory/` (LangMem + `SQLiteMemoryStore`). Backend `medhub_memory.db`, isolado do `ipub.db`. Smoke tests em `tools/test_memory.py`.
 - **Siamese Twins** -- Erro -> DB (via `tools/insert_questao.py`). Lição/Armadilha -> resumo correspondente em `resumos/`.
 - **SSOT volumétrica** = `sessoes_bulk` no `ipub.db`. Ao informar "fiz X questões, acertei Y", o agente DEVE chamar `python tools/registrar_sessao_bulk.py --sessao NNN --area AREA --feitas X --acertos Y` ANTES de processar erros individuais.
 - **Resumos seguem** `.claude/commands/estilo-resumo.md`. Bullets hierárquicos, marcadores ⭐/⚠️/🔴. Sem tabelas, sem fluxogramas ASCII.
@@ -233,7 +233,7 @@ Migrações one-shot já aplicadas vivem em `tools/_archive/migrations/` -- não
 
 ---
 
-## 8. Modelo de Memória (3 camadas)
+## 8. Modelo de Memória (2 camadas)
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
@@ -243,25 +243,19 @@ Migrações one-shot já aplicadas vivem em `tools/_archive/migrations/` -- não
 └──────────────────────────────────────────────────────────────┘
         ↑ lida no boot · atualizada ao fechar sessão
 ┌──────────────────────────────────────────────────────────────┐
-│ CAMADA 2 -- Short-term (LangGraph checkpointer)               │
-│  SqliteSaver -> medhub_memory.db::checkpoints                 │
-│  thread_id = "session_{NNN:03d}"  ·  within-session state    │
-└──────────────────────────────────────────────────────────────┘
-        ↑ restaurada automaticamente por thread_id
-┌──────────────────────────────────────────────────────────────┐
 │ CAMADA 3 -- Long-term (LangMem + SQLiteMemoryStore)           │
 │  SQLiteMemoryStore -> medhub_memory.db::memory_store          │
-│  Namespaces: profile · weak_areas · workflow_rules ·         │
-│              session_insights · study_preferences            │
+│  Namespace: weak_areas (único -- tem writer E leitor)        │
 └──────────────────────────────────────────────────────────────┘
 ```
 
 **Governança:**
-- Camada 3 captura preferências, padrões de fraqueza e insights -- **não** replica `resumos/`, `ipub.db` ou `ESTADO.md`.
-- `consolidate_session(NNN)` é chamada pelo hook `PostToolUse(Write)` quando um novo `history/session_NNN.md` é escrito. Usa `claude-haiku-4-5` se `ANTHROPIC_API_KEY` estiver presente; senão, fallback heurístico (lista áreas trabalhadas).
-- `workflow_rules` é comparada com este `AGENTE.md` antes de persistir -- não duplicar o que já está canonicamente documentado.
+- Camada 3 captura padrões de fraqueza -- **não** replica `resumos/`, `ipub.db` ou `ESTADO.md`.
+- `consolidate_session(NNN)` é chamada pelo hook `PostToolUse(Write)` quando um novo `history/session_NNN.md` é escrito. Usa `claude-haiku-4-5` se `ANTHROPIC_API_KEY` estiver presente; sem a chave, só o sync de `error_count` roda.
+- `error_count` vem de `ipub.db` por match **exato** do par (area, tema); par sem correspondência fica em 0 -- nunca herda o total da área.
+- Falha da consolidação (processo filho, detached) é registrada em `history/memory_errors.log`.
 
-**Inspeção:** `python -m app.memory.inspect --{context,namespace medhub/weak_areas,threads,dump,stats}`.
+**Inspeção:** `python -m app.memory.inspect --{context,namespace medhub/weak_areas,dump,stats}`.
 **Detalhes técnicos:** docstring de `app/memory/__init__.py` + `app/memory/schemas.py`.
 
 ---

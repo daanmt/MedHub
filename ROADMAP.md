@@ -80,7 +80,7 @@ A fundação está pronta (agente LLM + workflows portáveis + `ipub.db` como SS
 **O que consolida:**
 - Session planner: agente lê o banco, identifica gaps e propõe plano de sessão
 - Execução autônoma do loop: análise → registro → atualização de resumo sem etapas manuais
-- Memória longa ativa: `weak_areas` e `session_insights` no LangMem operacionais; integração com session planner pendente
+- Memória longa ativa: `weak_areas` no LangMem (contador exato por (area,tema) desde consolidacao-part-3; `session_insights` write-only foi removido); integração com session planner pendente
 
 ---
 

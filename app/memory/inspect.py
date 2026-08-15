@@ -118,9 +118,10 @@ def _rank_weak_areas(items: list, top_n: int = 8) -> list[dict]:
     Mantém 1 linha por par, ordenada por error_count desc, depois
     last_updated desc, depois (area, especialidade) asc (desempate estável).
 
-    TODO(R1b): error_count hoje é agregado global uniforme (241 em todos) —
-    a correção por área é write-side e fica fora desta parte; enquanto isso
-    o desempate por last_updated carrega o ranking.
+    error_count vem do match EXATO (area, tema) feito write-side em
+    `manager._sync_error_counts` (consolidacao-part-3): sub-temas distintos
+    da mesma área têm counts distintos, e par sem correspondência em
+    ipub.db fica em 0 (o desempate por last_updated carrega esses).
     """
     best: dict[tuple, dict] = {}
     for item in items:
@@ -140,40 +141,25 @@ def _rank_weak_areas(items: list, top_n: int = 8) -> list[dict]:
 
 
 def load_context(db_path: str = _DEFAULT_DB) -> None:
-    """Print a concise memory context suitable for agent boot."""
+    """Print a concise memory context suitable for agent boot.
+
+    Namespace único: medhub/weak_areas. Os namespaces fantasma
+    (profile · study_preferences · workflow_rules) foram removidos em
+    consolidacao-part-3 — nunca tiveram writer e estavam em 0 linhas.
+    """
     store = SQLiteMemoryStore(db_path)
 
-    profile_items = store.search(("medhub", "profile"), limit=10)
-    prefs_items = store.search(("medhub", "study_preferences"), limit=10)
     weak_items = store.search(("medhub", "weak_areas"), limit=500)
-    rules_items = store.search(("medhub", "workflow_rules"), limit=10)
 
     print("\n=== MedHub Memory Context ===\n")
 
-    if profile_items:
-        print("## Perfil do usuário")
-        for item in profile_items:
-            print(f"  {json.dumps(item.value, ensure_ascii=False)}")
-
-    if prefs_items:
-        print("\n## Preferências de estudo")
-        for item in prefs_items:
-            print(f"  {json.dumps(item.value, ensure_ascii=False)}")
-
     if weak_items:
-        print("\n## Áreas de fraqueza persistentes (top 8)")
+        print("## Áreas de fraqueza persistentes (top 8)")
         for v in _rank_weak_areas(weak_items, top_n=8):
             count = v["_count"]
             suffix = f" ({count} erros)" if count else ""
             print(f"  [{v.get('area','?')} / {v.get('especialidade','?')}] {v.get('pattern','')}{suffix}")
-
-    if rules_items:
-        print("\n## Regras de workflow aprendidas")
-        for item in rules_items:
-            v = _unwrap(item.value)
-            print(f"  [{v.get('learned_in','?')}] {v.get('rule','')} — {v.get('context','')}")
-
-    if not any([profile_items, prefs_items, weak_items, rules_items]):
+    else:
         print("  (memória vazia — primeira sessão)")
 
     print()
@@ -181,7 +167,7 @@ def load_context(db_path: str = _DEFAULT_DB) -> None:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="MedHub Memory Inspector")
-    parser.add_argument("--namespace", "-n", metavar="NS", help="Show entries for namespace (e.g. medhub/profile)")
+    parser.add_argument("--namespace", "-n", metavar="NS", help="Show entries for namespace (e.g. medhub/weak_areas)")
     parser.add_argument("--dump", "-d", action="store_true", help="Dump all long-term memory")
     parser.add_argument("--stats", "-s", action="store_true", help="Summary statistics")
     parser.add_argument("--context", "-c", action="store_true", help="Print agent boot context")

@@ -5,9 +5,16 @@
 
 1. **Amanhã (16/08): SIMULADO agendado** (cadência 2/semana) -- é o próximo ato, não a fila FSRS
    (dívida baixíssima) nem cronograma novo.
-2. **Confirmar S14 no Drive antes de assumir S15.** Dado desatualizado (20+ dias) -- pode listar
+2. **Ritmo decidido nesta sessão: 100q/dia, 5x/semana + 2 simulados/semana.** Projeção (ver
+   `session_145.md`): **8.819 acumulado até 13/09** (93% da grade, alcança S20) e **13.019 até
+   25/10** -- estoura o teto anual de 12.500 quase 2 meses cedo (cruza ~20/10). Vale revisitar a
+   meta de fim de ano (subir pro stretch 15k?) quando chegar perto disso.
+3. **Próxima sessão de flashcard: pool inteiro (529) vira prioridade**, não intake normal --
+   usuário quer servir de camada de QA ao vivo (reforja/exclusão/fork), igual ao ritmo de hoje.
+   Teto de cards fica em aberto até zerar o pool; revisitar depois.
+4. **Confirmar S14 no Drive antes de assumir S15.** Dado desatualizado (20+ dias) -- pode listar
    tarefa já feita ou fora de ordem real. Rodar `tools/cronograma.py --sync-drive <xlsx>` primeiro.
-3. **S15 (quando abrir):** 12 tasks / 384 questões. Destaque: **HAS Pt. 3** -- conecta direto com o
+5. **S15 (quando abrir):** 12 tasks / 384 questões. Destaque: **HAS Pt. 3** -- conecta direto com o
    bloco de fechamento de hoje. Também: Câncer de Mama, Assistência ao Parto, APS, Aleitamento
    Materno, Parasitoses (extensivo/teoria nova, sem revisão prévia).
 

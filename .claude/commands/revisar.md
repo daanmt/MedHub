@@ -147,7 +147,7 @@ O CLI é **stateless** — cada `--record` grava uma linha em `fsrs_revlog`. A d
 
 ## Notas
 
-- **Não há sessão Streamlit.** Esta skill é a interface primária de revisão na pivotagem agent-first (ROADMAP Linha 8). O player em `app/pages/2_estudo.py` permanece como opção desktop, intocado.
+- **Não há sessão Streamlit.** Esta skill é a interface primária (e única) de revisão na pivotagem agent-first (ROADMAP Linha 8). O player `app/pages/2_estudo.py` foi removido (código morto — consolidacao-part-1).
 - **`ipub.db` é local-only.** O CLI roda na máquina onde o banco vive; via remote-control, o comando é executado nessa máquina e o resultado volta para a conversa.
 - **Avaliação honesta.** Incentivar o usuário a tentar responder antes de revelar o verso — a precisão do FSRS depende de ratings honestos.
 - O FSRS subjacente é o de `app/utils/fsrs.py` (substituição pela referência é a part-2 da Onda A; esta skill não muda quando o FSRS for trocado, pois grava via `record_review()`).

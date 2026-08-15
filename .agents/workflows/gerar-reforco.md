@@ -23,4 +23,4 @@ Antes de cunhar, **consultar o deck EMED do tema crítico:** `python tools/emed_
 Persistir cada card via `insert_questao.py` conforme a invocação canônica de 17 argumentos em `.claude/commands/analisar-questao.md §9`. Para reforço sintético: `--area "Reforço RAG"`, `--erro "Lacuna de conhecimento"`, `--marcada "N/A"`, `--armadilha "N/A"`; demais campos (incluindo os 5 estruturados de flashcard) vêm da síntese do tutor.
 
 ### 5. Update
-Avise o usuário que os cards foram injetados e estão disponíveis para repetição espaçada na aba "Player FSRS" do Streamlit.
+Avise o usuário que os cards foram injetados e estão disponíveis para repetição espaçada via `/revisar`.

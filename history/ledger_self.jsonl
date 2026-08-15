@@ -562,3 +562,14 @@
 {"ts": "2026-08-15T02:49:39+00:00", "event": "resolved", "check": "reachability", "fingerprint": "194310f03669", "alvo": "tools/calibrate_card_checks.py"}
 {"ts": "2026-08-15T02:49:39+00:00", "event": "resolved", "check": "reachability", "fingerprint": "849e5ddc2043", "alvo": "tools/review_cli.py"}
 {"ts": "2026-08-15T02:49:39+00:00", "event": "resolved", "check": "reachability", "fingerprint": "41e5ea42c08d", "alvo": "tools/test_habilidades.py"}
+{"ts": "2026-08-15T20:59:28+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "f8559be20eca", "alvo": "card#505"}
+{"ts": "2026-08-15T20:59:28+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "1b237835b4e5", "alvo": "card#544"}
+{"ts": "2026-08-15T20:59:28+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "6c4e6373fe45", "alvo": "card#546"}
+{"ts": "2026-08-15T20:59:28+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "e38ad2de6954", "alvo": "card#547"}
+{"ts": "2026-08-15T20:59:28+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "16d542c38816", "alvo": "card#571"}
+{"ts": "2026-08-15T20:59:28+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "fe0b783b24d2", "alvo": "card#577"}
+{"ts": "2026-08-15T20:59:28+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "e87db570f251", "alvo": "card#579"}
+{"ts": "2026-08-15T21:51:33+00:00", "event": "resolved", "check": "card_autosuficiencia", "fingerprint": "6a4de021901a", "alvo": "card#828"}
+{"ts": "2026-08-15T21:51:33+00:00", "event": "resolved", "check": "card_autosuficiencia", "fingerprint": "bfe76fcde299", "alvo": "card#1191"}
+{"ts": "2026-08-15T21:51:33+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "652dd93305e8", "alvo": "card#553"}
+{"ts": "2026-08-15T21:51:33+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "969e615323bb", "alvo": "card#828"}

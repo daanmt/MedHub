@@ -7,8 +7,8 @@ relates_to: [AGENTE, handoff-contract, estado-contract]
 
 # ESTADO -- MedHub
 
-*Atualizado: 2026-08-14 (sessão 144 -- ENGENHARIA; frente nova e prioritária: **ALCANÇABILIDADE**) | Ferramenta: Claude Code (Opus 5, 1M)*
-*Anterior: 2026-08-12 (sessão 142). Narrativa por sessão: [`history/INDEX.md`](history/INDEX.md) -- o header aqui é 1 linha por contrato.*
+*Atualizado: 2026-08-15 (sessão 145 -- Boot v2 validado na prática + 100 cards drenados + 26 tasks de curadoria de flashcard) | Ferramenta: Claude Code (Sonnet 5)*
+*Anterior: 2026-08-14 (sessão 144). Narrativa por sessão: [`history/INDEX.md`](history/INDEX.md) -- o header aqui é 1 linha por contrato.*
 
 > **Boot:** ler [`AGENTE.md`](AGENTE.md) -> [`HANDOFF.md`](HANDOFF.md) (operacional curto) primeiro. Este arquivo é o snapshot **macro** (metas, indicador, marcos). Estrutura normatizada por [`core/contracts/estado-contract.md`](core/contracts/estado-contract.md).
 
@@ -28,7 +28,7 @@ relates_to: [AGENTE, handoff-contract, estado-contract]
 - **Custo/Q atual:** **R$ 0,91** (jun/2026, acumulado = investimento ÷ questões), em queda; alvo no fim do plano ≈ R$ 0,26.
 - **Indicador Atual:** **6.019 / 9.454** -- **63,7%** do marco da grade · 48,2% do 2º ciclo (12.500) · perf. **78,4%** · ritmo-alvo **~47,7q/dia** (72d p/ 25/10). *(derivado: `python tools/day_plan.py --handoff-block`; histórico do indicador em `history/INDEX.md`)*
 - **Performance Geral:** **78,4%** (`sessoes_bulk`). Fracos: Hepato 57% · Dermato 67% · Cardiologia/Otorrino 68% · Hemato 74%. **Gargalo nº1 = EXECUÇÃO DE PROVA, não conteúdo** (default-to-C, fechamento precoce, não fechar a conduta).
-- **Contadores (derivados):** **125 resumos** · **812 erros** · **978 cards ativos** (`needs_qualitative<2`; 1.277 c/ aposentados) · **pool FSRS 554** · **taxonomia 244 temas** · **RAG gold-only** (`pdf_raw` deletada na consolidação part-2, ~130MB liberados).
+- **Contadores (derivados):** **125 resumos** · **812 erros** · **~984 cards ativos** (`needs_qualitative<2`; sessão 145 corrigiu 12 defeitos reais de autoria -- reforges, forks, 7 duplicatas de import aposentadas) · **pool FSRS 529** · **taxonomia 244 temas** · **RAG gold-only** (`pdf_raw` deletada na consolidação part-2, ~130MB liberados).
 - **Cronograma -- DOIS SSOTs (achado s114, modelo revisto na s144):** detalhamento de cada tarefa = `Cronograma.pdf` (SSOT, derivado para `core/cronograma/grade.json`); **conclusão** = coluna `Realizada?` do `Dashboard EMED 2026` (Sheets nativo, texto puro, o agente lê); **ordem** = `Cronograma de Reta Final.xlsx` reordenado à mão (ritual do usuário, `--sync-drive` local). Norma: `cronograma-contract.md` Cláusula 5b. Datas em `core/provas.json` (ENAMED 13/09 = prova · fim-grade 25/10 = grade).
 
 ---

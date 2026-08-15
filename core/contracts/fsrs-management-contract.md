@@ -70,7 +70,7 @@ Backlog = cards `state = 0` (nunca revisados). Após a bankruptcy, ~307 cards qu
 
 ## Zero-DB no Cloud (invariante)
 
-`ipub.db` é **local-only**. O Streamlit Cloud tem filesystem efêmero — **não** persiste FSRS. O `/revisar` roda na máquina onde o banco vive (inclusive via remote-control/celular). Não há sincronização de FSRS para o Cloud; qualquer feature de revisão no Cloud seria stateless e está fora de escopo.
+`ipub.db` é **local-only**. O `/revisar` roda na máquina onde o banco vive (inclusive via remote-control/celular) — é a interface única de revisão desde a pivotagem agent-first. Não há réplica hospedada do FSRS nem sincronização remota: qualquer estado de revisão fora desta máquina está fora de escopo.
 
 ---
 

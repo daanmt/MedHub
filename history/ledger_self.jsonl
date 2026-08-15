@@ -550,3 +550,5 @@
 {"ts": "2026-08-14T21:08:28+00:00", "event": "opened", "check": "parity", "fingerprint": "ddf439b44739", "alvo": "command<->skill", "payload": {"n_drift": 1}}
 {"ts": "2026-08-15T02:09:20+00:00", "event": "opened", "check": "handoff_teto", "fingerprint": "abeed62c0ff8", "alvo": "HANDOFF.md", "payload": {"linhas": 68, "limite": 60}}
 {"ts": "2026-08-15T02:10:30+00:00", "event": "resolved", "check": "handoff_teto", "fingerprint": "abeed62c0ff8", "alvo": "HANDOFF.md"}
+{"ts": "2026-08-15T02:31:18+00:00", "event": "resolved", "check": "parity", "fingerprint": "ddf439b44739", "alvo": "command<->skill"}
+{"ts": "2026-08-15T02:31:48+00:00", "event": "opened", "check": "doc_drift", "fingerprint": "62e9808a549c", "alvo": ".claude/commands/estilo-resumo.md:resumos/Cirurgia/Trauma.md", "payload": {"tipo": "ref", "msg": "path citado nao existe no repo: resumos/Cirurgia/Trauma.md"}}

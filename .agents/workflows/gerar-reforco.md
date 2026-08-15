@@ -2,7 +2,7 @@
 type: workflow
 layer: agents
 status: canonical
-description: Gerar flashcards dinâmicos via MCP baseados nos piores tópicos do Cronograma
+description: Gerar flashcards dinâmicos via RAG local baseados nos piores tópicos do Cronograma
 ---
 
 ### 1. Identificar o Alvo (Tema mais Crítico)
@@ -11,8 +11,12 @@ Descubra qual é a fraqueza atual do usuário consultando a tabela do cronograma
 python -c "import sqlite3; c=sqlite3.connect('ipub.db').cursor(); c.execute('SELECT tema, percentual_acertos FROM taxonomia_cronograma WHERE questoes_realizadas > 0 ORDER BY percentual_acertos ASC LIMIT 1'); print(c.fetchone())"
 ```
 
-### 2. Recuperar a Matéria no Cérebro (RAG/MCP)
-Use a tool interna do MCP do Obsidian (ou leia diretamente os arquivos na pasta `resumos/`) buscando pelo nome do tema crítico retornado no passo 1. O objetivo é absorver o conhecimento nativo do usuário, especialmente a seção de **Armadilhas de Prova**.
+### 2. Recuperar a Matéria no Cérebro (RAG local)
+Buscar pelo tema crítico retornado no passo 1 no motor único `app/engine/rag.py`:
+```powershell
+python -c "from app.engine.rag import search; [print(r) for r in search('<tema>', n_results=5)]"
+```
+Fallback (RAG indisponível): ler diretamente o arquivo do tema em `resumos/`. O objetivo é absorver o conhecimento nativo do usuário, especialmente a seção de **Armadilhas de Prova**.
 
 ### 3. Síntese do Tutor (consultando o deck EMED)
 Antes de cunhar, **consultar o deck EMED do tema crítico:** `python tools/emed_flashcards.py --query --tema "<tema>"`. Dos pares atômicos retornados, puxar **por contexto** apenas os que atacam a fraqueza (nunca o deck inteiro). Adaptar ao **padrão atômico** de `.claude/commands/estilo-flashcard.md §Formato atômico`. Sem deck (`match: none`) -> cunhar do zero pelo mesmo padrão.

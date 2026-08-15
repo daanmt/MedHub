@@ -61,7 +61,7 @@ Toda afirmação auditada registra **qual substrato** a sustentou:
 
 - **`canonico`** — **PubMed MCP** (`pubmedmcp` · tool `search_abstracts`): verificação verbatim de cifra/desfecho de RCT/meta-análise por **PMID/DOI**. Força probatória plena. Config em `.mcp.json` (raiz).
 - **`fallback`** — **WebSearch / WebFetch**: diretrizes de sociedade BR e MS (vivem em PDF, **fora do PubMed**), guidelines INT não-indexadas, status de publicação, cifras de suplemento. Declarado **explicitamente**.
-- **`local`** — **obsidian-notes-rag** (`mcp__obsidian-notes-rag__search_notes`): recupera o que já existe nos `resumos/` (consistência interna; **não** é fonte de verdade externa).
+- **`local`** — **RAG local** (`app.engine.rag.search`, motor único; ChromaDB gold-only sobre `resumos/`): recupera o que já existe nos `resumos/` (consistência interna; **não** é fonte de verdade externa). O MCP `obsidian-notes-rag` que ocupava este papel foi descomissionado em 2026-07-12 e não está em `.mcp.json`.
 
 **Boundary abstract-only (herdado):** achar o PMID **≠** confirmar a cifra. Cifra fora do abstract (tabela/suplemento) → ancorar o PMID e marcar `NÃO-VERIFICÁVEL [suplemento]`. **Nunca inventar o número.**
 

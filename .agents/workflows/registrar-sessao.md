@@ -47,7 +47,7 @@ Adicionar entrada na seção "Últimas sessões" do `ESTADO.md` com resumo de um
 
 ### 4. Sincronização Autônoma do RAG (Automático)
 Disparado automaticamente pelo hook `PostToolUse(Write)` quando `history/session_NNN.md` é criado.
-Fallback manual (se o hook falhar): `mcp__obsidian-notes-rag__reindex(clear=False)`
+Fallback manual (se o hook falhar): `python tools/index_resumos.py` (motor único `app/engine/rag.py`; o índice cobre `resumos/`, gold-only).
 
 ### 5. Consolidação de Memória Longa (Automático — Memory v1)
 Disparado automaticamente em background pelo hook `PostToolUse(Write)` quando `history/session_NNN.md` é criado.

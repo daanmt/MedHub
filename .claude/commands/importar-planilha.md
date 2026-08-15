@@ -45,11 +45,12 @@ Normalização de rótulos planilha → `AREAS_VALIDAS`: `Neuro`→`Neurologia`;
 
 Regras:
 - **Verificação:** quando o usuário pedir para "verificar as planilhas", ler via MCP e conciliar com o estado do `ipub.db` (`sessoes_bulk` via `/performance`, cronograma via `taxonomia_cronograma`), reportando divergências — sem gravar nada sem confirmação.
-- **Cronograma (decisão sessão 075): NÃO persistir no `ipub.db`.** A planilha é o SSOT do cronograma e o usuário a edita manualmente — uma cópia local ficaria stale. O agente lê sob demanda via MCP e usa para planejar a sessão (próximos temas, resumos a criar, blocos de questões). `taxonomia_cronograma` segue alimentada apenas pelo pipeline de erros (`insert_questao.py`), sem relação de escrita com a planilha.
+- **Cronograma (decisão sessão 075): NÃO persistir no `ipub.db`.** A planilha é o SSOT do cronograma e o usuário a edita manualmente — uma cópia local ficaria stale. `taxonomia_cronograma` segue alimentada apenas pelo pipeline de erros (`insert_questao.py`), sem relação de escrita com a planilha.
+- 🔴 **Dois sinais, dois donos (`cronograma-contract.md` Cláusula 5b).** **Conclusão** ("esta tarefa saiu da fila?") vem da coluna **`Realizada?`** do **Dashboard EMED 2026** — Sheets **nativo**, lido em **texto puro** por `read_file_content`, executável **pelo agente** em runtime. **Ordem** (a sequência que o usuário reordenou) vive só no `Cronograma de Reta Final.xlsx` binário e é **ritual do usuário**: `python tools/cronograma.py --sync-drive <path-local>`, **sem MCP**. Regra dura: **se a leitura precisa de bytes, ela não é do agente** — nenhum passo pode exigir binário via MCP. Faltando qualquer um dos dois sinais, seguir com **caveat honesto**, nunca em silêncio e nunca bloqueando.
 
 ### Estrutura mapeada — Cronograma de Reta Final.xlsx
 
-`read_file_content` embola a grade — para parsing confiável, usar `download_file_content` (base64 → xlsx) + `openpyxl`. Aba única `Plan1`:
+> Esta seção descreve o arquivo que o **usuário** processa localmente no ritual `--sync-drive`. O agente **não** baixa este xlsx: `read_file_content` embola a grade e o caminho binário via MCP não fecha (defeito D5). Aba única `Plan1`:
 
 - **Linha 2** — 28 semanas, colunas 1–28: `"30/03 a 03/04/26"` … `"05/10 a 09/10/26"` (⚠️ typo na semana 11: `"08/06 a 12/06/25"`, ano errado).
 - **Linha 3** — trilha da semana: `GO` ×2 → `U/E` ×6 → `CIRURGIA` ×7 → `OPCIONAL` ×7 → `CLÍNICA 2` ×6.
@@ -57,7 +58,7 @@ Regras:
 
 Para localizar a semana corrente: comparar a data de hoje com os ranges da linha 2. Os temas do cronograma casam com os `Assunto` das abas do Dashboard — a conciliação tarefa-a-tarefa entre as duas planilhas é possível por (tema, tipo).
 
-**Marcador de conclusão (workflow do usuário):** o usuário **risca / muda a cor** do tema no cronograma ao concluí-lo (lê + faz exercícios, lança no dashboard). Esse marcador é o sinal de "tema concluído" que alimenta a priorização do próximo tema. Ler a formatação via `openpyxl`: `cell.fill.fgColor.rgb` (cor de fundo) e `cell.font.strike` (tachado). Célula sem preenchimento/sem strike = pendente. Ver `core/contracts/reconcile-contract.md §Absorção de dados de performance`.
+**Marcador de conclusão (workflow do usuário):** o usuário **risca / muda a cor** do tema no cronograma ao concluí-lo (lê + faz exercícios, lança no dashboard). A formatação só é legível pelo **binário local**, no ritual do usuário — `cronograma.py --sync-drive` lê `cell.fill.fgColor.rgb` (cor de fundo) e `cell.font.strike` (tachado) via `openpyxl`; célula sem preenchimento/sem strike = pendente. **O agente não tem esse caminho**: o sinal de conclusão que ele lê é a coluna `Realizada?` do Dashboard EMED (texto puro). Ver `core/contracts/reconcile-contract.md §Absorção de dados de performance` e `cronograma-contract.md` Cláusula 5b.
 
 ---
 

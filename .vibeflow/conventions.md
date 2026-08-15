@@ -1,60 +1,72 @@
 # Conventions: MedHub
 
+> Hand-reconciled: 2026-08-14 (consolidacao part-5). **Update by hand** — `analyze`
+> re-invents subsystems that were deleted. Mechanical guard: `python tools/doc_drift.py`.
+
 <!-- vibeflow:auto:start -->
 
 ## Language
 - All user-facing text, comments, variable names, and UI labels: **Portuguese (pt-BR)**
 - Code identifiers (function names, column names, class names): pt-BR or English, both acceptable
-- All agent workflow/skill files: pt-BR
+- All agent workflow/skill/contract files: pt-BR
 
 ## File naming
-- Pages: `N_nome_da_pagina.py` (number prefix, snake_case) — e.g. `1_dashboard.py`, `2_estudo.py`
-- tools/scripts: `snake_case.py` — e.g. `insert_questao.py`, `extract_pdfs.py`
+- tools/scripts: `snake_case.py` — e.g. `insert_questao.py`, `card_checks.py`
+- Tests: `tools/test_<alvo>.py`, and the filename must be added to `python_files` in `pytest.ini` to be collected
 - Resumos (clinical summaries): `Título em Sentence Case.md` under `resumos/<Especialidade>/[Subarea/]`
 - Session logs: `history/session_NNN.md` (zero-padded 3-digit number)
-- Frontmatter field `type`, `area`, `especialidade`, `status`, `aliases` on all resumo files (see AGENTE.md §5.2)
+- Agent skills: `.claude/commands/<slug>.md`; mirrors are `.agents/skills/source-command-<slug>/SKILL.md`
+- Frontmatter fields `type`, `area`, `especialidade`, `status`, `aliases` on all resumo files (see AGENTE.md §5.2)
 
 ## Database access
-- **Only `app/utils/db.py` may use `import sqlite3`** — no pages, no other utilities
+- **Only `app/utils/db.py` may use `import sqlite3`** — no other module in `app/`
 - All queries go through functions in `db.py` that return `pd.DataFrame` or plain dicts
 - DB path resolved relative to repo root: `os.path.join(os.path.dirname(...), 'ipub.db')`
 - Always close connections: explicit `conn.close()` after every `pd.read_sql` or cursor block
-- Pattern: `conn = get_connection()` → `pd.read_sql(...)` → `conn.close()`
 - Use `conn.commit()` before `conn.close()` on write operations
-- Exception: `tools/insert_questao.py` is a standalone CLI, so it opens its own connection directly
+- Exception: standalone CLIs in `tools/` open their own connection directly
 
-## Streamlit pages
-- Every page calls `inject_styles()` from `app.utils.styles` at the top (after `st.set_page_config`)
-- Use `st.tabs([...])` for major page sections — not nested st.expander at top level
-- Filters via `st.multiselect(..., placeholder="Todas")` — never radio buttons for specialty filters
-- Session state keys: short, descriptive, snake_case — e.g. `fc_idx`, `fc_verso`, `fc_order`
-- `@st.cache_data(ttl=60)` for DB load functions inside pages
-- Cache clear on user action: `st.cache_data.clear()` + `st.rerun()`
-- Pages connect to DB directly via `sqlite3.connect(DB_PATH)` only as last resort (legacy tab1 in 2_estudo.py); prefer db.py functions (see AGENTE.md §5.5)
+## Agent norms (the product surface)
+- `.claude/commands/<slug>.md` is the **single source of truth** for a skill. Never hand-edit
+  `.agents/skills/source-command-<slug>/SKILL.md` — it is a build artifact
+- After editing any command: `python tools/sync_skills.py`, then `--check` must exit 0
+- Each CLI has its canonical signature in exactly ONE skill; workflows reference it, never copy it (AGENTE.md §7.2)
+- A norm must describe the system that exists. If a subsystem dies, the clause that names it
+  either becomes accurate or is deleted — a stale clause burns tool calls and, at worst, destroys data
+- Never instruct a tool name (`mcp__<server>__<tool>`) whose server is absent from `.mcp.json`
+- Never require binary bytes over MCP in a boot step — if a read needs bytes, it belongs to the
+  user's local ritual, not the agent (`cronograma-contract.md` Cláusula 5b)
 
-## Design system
-- Import: `from app.utils.styles import inject_styles, COLORS, metric_card, content_card, flashcard_front, flashcard_back`
-- CSS class prefix: `medhub-*` (e.g. `medhub-card`, `medhub-metric-label`)
-- **No gradients, no backdrop-filter, no shadows** — flat design only
-- **Sentence case everywhere** — no ALL CAPS in labels, no text-transform: uppercase
-- Font: Inter (Google Fonts CDN import in GLOBAL_STYLES)
-- Colors from `COLORS` dict — never hardcode hex values in pages
-- FSRS rating buttons: 4 columns, nth-child CSS targeting (already in GLOBAL_STYLES)
+## Sensors (WARN-first)
+- Sensors DETECT and report; they never correct, never block, never write
+- `tools/doc_drift.py` runs two modes: `drift-check` annotations over the 4 state docs, and a
+  dead-reference scan over `.claude/commands/`, `.claude/agents/`, `.agents/workflows/`, `core/contracts/`
+- A sensor that cannot judge something stays silent about it (out-of-repo refs, globs, placeholders) —
+  honest silence beats fake coverage, and false positives are how a sensor gets ignored
+- A line that asserts an absence ("foi removido") is a tombstone, not a lie — the scan skips it
 
-## Flashcard schema (v5.0)
+## Flashcard schema
 - Structured fields: `frente_contexto`, `frente_pergunta`, `verso_resposta`, `verso_regra_mestre`, `verso_armadilha`
-- Legacy fields: `frente`, `verso` (kept for UI fallback only)
-- Quality tracking: `quality_source` ('heuristic' | 'qualitative'), `needs_qualitative` (0=approved, 1=pending, 2=retired)
-- Card types: `tipo` = 'elo_quebrado' | 'armadilha'
-- Render check in UI: `use_structured = bool(frente_pergunta.strip() and verso_resposta.strip())`
+- **The `frente`/`verso` fallback is gone** — there is no UI to fall back to; structured fields are mandatory
+- Provenance: `quality_source`, `card_version`, `needs_qualitative`, `questao_id` on `flashcards`;
+  `card_version` + `selection_reason` on `fsrs_revlog`
+- Card types: `tipo` = `elo_quebrado` | `armadilha` | scaffold degrees (`base`, `mecanismo`, …)
+- **Every write passes `tools/card_checks.py::validar_card()`** — `erros` block the write, `avisos` warn
+- `card_version` bumps only on a real field change; FSRS state is always preserved across recuration
+
+## FSRS
+- The scheduler is the reference library `py-fsrs` (`fsrs>=6.3.1`) — **not** a hand-rolled v4
+- `app/utils/fsrs.py` is a thin adapter (`Scheduler(desired_retention=0.9, learning_steps=(), enable_fuzzing=False)`)
+- Never write `fsrs_revlog` twice for the same card in one session (anti-duplo-registro; dedup lives in the agent)
+- Review queue order is fixed: `atrasados` → `erros_frescos` → `hoje` → `novos` (`get_cards_by_bucket`)
 
 ## CLI tools (tools/)
 - All scripts are invokable as `python tools/<script>.py --arg value`
 - Use `argparse` with explicit `required=True` for mandatory args
 - DB path: `os.path.join(os.path.dirname(os.path.dirname(__file__)), 'ipub.db')`
-- Print human-readable success/error to stdout
-- Return bool from main insert function (True/False)
+- Print human-readable success/error to stdout; return bool from the main insert function
 - `finally: if conn: conn.close()` — always close on exception
+- Destructive tools need a `--dry-run` and must be idempotent
 
 ## Clinical summaries (resumos/)
 - Mandatory spec: `.claude/commands/estilo-resumo.md`
@@ -63,53 +75,53 @@
 - **No `✅`/`❌` bullets** — use plain text or `⭐`
 - Armadilhas section is **cumulative** — never delete, only add/refine
 - Benchmark: 80% assertiveness (condutas, scores, criteria) / 20% clinical didactics
-- Frontmatter: `type`, `area`, `especialidade`, `status`, `aliases` fields required (via CLAUDE.md)
+- Frontmatter: `type`, `area`, `especialidade`, `status`, `aliases` fields required
+
+## PDF retention (s086 — replaces the old "Zero PDF")
+- 🔴 **Source PDFs from EMED are RETAINED** (gitignored). They feed
+  `tools/cobertura_conhecimento.py` and the ballast gate `insert_questao.py::_tem_lastro`,
+  and they are non-reconstructible source IP
+- Only the temporary `.txt` files from extraction are cleaned automatically
+- Deleting a PDF is an explicit user act, never an agent default
 
 ## Agent sessions
-- Boot: always read `AGENTE.md` first, then `ESTADO.md`
+- Boot: read `AGENTE.md` first, then `ESTADO.md`. The day-plan is injected by the `SessionStart`
+  hook — **do not re-run `tools/day_plan.py` by hand**
 - Closure: update `ESTADO.md` + create `history/session_NNN.md` + git commit
-- SSOT rule: error goes to `ipub.db` (via `insert_questao.py`), lesson goes to `resumos/`
-- Zero PDF policy: extract → summarize → delete PDF + temp files
+- SSOT rule: the error goes to `ipub.db` (via `insert_questao.py`), the lesson goes to `resumos/`
+- `ESTADO.md` narrative fields are **1 line** by contract — accumulated prose belongs in `history/`
 
 ## Git / commits
 - Session commits: `sessao NNN: <one-line description>`
 - Tool commits: `chore: <description>`
 - `ipub.db`: NOT committed (local only, in .gitignore)
 - `medhub_memory.db`: NOT committed
-- `flashcards_cache.json`: committed (archived to artifacts/legacy/, no longer active)
+- Source PDFs: NOT committed (gitignored, but retained on disk)
 
 ## RAG (busca semântica sobre resumos)
-
-- **Sistema canônico:** `app/engine/rag.py` + ChromaDB em `data/chroma/`
-  - Corpus: `resumos/**/*.md` (44 resumos clínicos, chunking por H2/H3)
-  - Embedding: `nomic-embed-text` via Ollama local (`http://localhost:11434`)
-  - Interface: `from app.engine.rag import search, index_all, _CHROMA_AVAILABLE`
-  - Fallback seguro: se ChromaDB ou Ollama offline, `search()` retorna `[]` silenciosamente
-  - Reindexar após adicionar/renomear resumo: `python tools/index_resumos.py`
-
-- **Sistema auxiliar (MCP):** `obsidian-notes-rag` — corpus = vault completo (147 arquivos)
-  - Usado apenas por agentes externos que precisam buscar qualquer nota do vault
-  - **Bug conhecido:** sobe sem `--provider ollama` em sessões Antigravity → falha com `OPENAI_API_KEY not set`
-  - O `.mcp.json` do repositório está correto; precisa restart do servidor MCP para herdar a configuração
-
-- **Os dois sistemas não se interferem** — paths físicos distintos, clients ChromaDB independentes
-- **Para código do engine/páginas:** sempre usar `app/engine/rag.py` (import direto, sem MCP)
-- **Para reindexação:** `python tools/index_resumos.py` (CLI com argparse)
-- **`data/chroma/` está no `.gitignore`** — local only, não commitar
+- **Single engine:** `app/engine/rag.py` + ChromaDB in `data/chroma/`
+  - Corpus: `resumos/**/*.md`, **gold-only**, single collection `resumos`, chunked by H2/H3
+  - Embedding: `nomic-embed-text` via local Ollama (`http://localhost:11434`)
+  - Interface: `from app.engine.rag import search, index_all`
+  - Safe fallback: if ChromaDB or Ollama is offline, `search()` degrades to a textual fallback
+  - Reindex after adding/renaming a resumo: `python tools/index_resumos.py` (`--clear` after renames)
+- **There is no second index.** The `obsidian-notes-rag` MCP was decommissioned 2026-07-12 and
+  removed from `.mcp.json`; `search_two_tier()`/`pdf_raw` were removed in consolidacao part-2
+- **`data/chroma/` is gitignored** — local only
 
 ## Don'ts
-- Do NOT use `import sqlite3` in Streamlit pages or any file outside `app/utils/db.py` (only exception: `tools/insert_questao.py` as standalone CLI)
-- Do NOT use treemaps or session history charts in the dashboard (via MEMORY.md)
-- Do NOT add gradients, `backdrop-filter`, or `box-shadow` to UI components — flat design only
+- Do NOT use `import sqlite3` outside `app/utils/db.py` (only exception: standalone CLIs in `tools/`)
+- Do NOT hand-edit anything under `.agents/skills/` — regenerate with `tools/sync_skills.py`
+- Do NOT reference an MCP server that is not in `.mcp.json` (today only `pubmedmcp`)
+- Do NOT delete source PDFs — the "Zero PDF" policy was reverted in s086
 - Do NOT add emojis to H1/H2/H3 headers in resumo files
 - Do NOT use `✅`/`❌` as bullet markers in resumos
 - Do NOT write `estilo:` field in resumo frontmatter
 - Do NOT add editorial footers to resumo files
 - Do NOT commit `ipub.db` or `medhub_memory.db`
-- Do NOT call `sync_git()` from `db.py` — it's broken on Streamlit Cloud, ignore it
 - Do NOT delete armadilhas from the cumulative section in resumos — only add/refine
 - Do NOT read from `caderno_erros.md` as SSOT — it's archived; SSOT is `ipub.db`
 - Do NOT use `flashcards_cache.json` for anything — it's archived to `artifacts/legacy/`
-- Do NOT modify `medhub-ui-refresh-main/` — abandoned React prototype
+- Do NOT re-run `tools/day_plan.py` at boot — the hook already did it
 
 <!-- vibeflow:auto:end -->

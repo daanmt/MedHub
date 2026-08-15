@@ -34,7 +34,7 @@ O estudante segue um cronograma de 30 semanas (EMED), mas **por conteúdo**, atr
 
 ## Cláusula 3 — Sync read-on-demand
 
-- Leitura **sob demanda** no boot/CLI; **sem cron**, sem daemon. Coerente com **Zero-DB no Cloud** (Streamlit não persiste; a grade é local + git).
+- Leitura **sob demanda** no boot/CLI; **sem cron**, sem daemon. A grade é **local + git** — não há serviço hospedado guardando estado dela.
 - `--check` compara `sha256(PDF)` vs `grade._meta.fonte_sha256`; defasagem → `--rebuild`. A grade é **cache regenerável** do PDF: editá-la à mão é defeito (regenerar, não corrigir).
 
 ## Cláusula 4 — Derivador único

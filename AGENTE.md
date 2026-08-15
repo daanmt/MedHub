@@ -146,8 +146,8 @@ relates_to: [ESTADO, AGENTE]      # máximo 3 referências
 
 ## 6. Decisões críticas (não reverter)
 
-- **RAG canônico** = `app/engine/rag.py` (ChromaDB em `data/chroma/`, embeddings via Ollama `nomic-embed-text`, multi-query Raw + HyDE, ThreadPoolExecutor, context propagation no chunk, two-tier gold/`pdf_raw`). Baseline reproducible em `tools/eval/REPORT.md`. (BM25 rerank removido em 2026-07-12 -- era regressivo no corpus médico; ver `.vibeflow/audits/mecanismo-conhecimento-consolidacao-part-1-audit.md`.)
-- **Engine API** = `app/engine/` expõe 2 funções estáveis para Streamlit (e agentes externos): `get_topic_context()` e `summarize_performance()`. Agentes **não** fazem queries SQL diretas -- vão pelo engine ou pelos CLIs em `tools/`.
+- **RAG canônico** = `app/engine/rag.py` (ChromaDB em `data/chroma/`, embeddings via Ollama `nomic-embed-text`, multi-query Raw + HyDE, ThreadPoolExecutor, context propagation no chunk, **gold-only**: a collection `pdf_raw` e o `search_two_tier()` foram removidos na consolidacao part-2). Baseline reproducible em `tools/eval/REPORT.md`. (BM25 rerank removido em 2026-07-12 -- era regressivo no corpus médico; ver `.vibeflow/audits/mecanismo-conhecimento-consolidacao-part-1-audit.md`.)
+- **Engine API** = `app/engine/` expõe **1 superficie estavel** para agentes: `get_topic_context()` (sobre `rag.py`). `summarize_performance()` foi removido junto com a UI Streamlit -- performance sai pela skill `/performance` + CLIs. Agentes **não** fazem queries SQL diretas -- vão pelo engine ou pelos CLIs em `tools/`.
 - **Memory v1** = `app/memory/` (LangMem + `SQLiteMemoryStore`). Backend `medhub_memory.db`, isolado do `ipub.db`. Smoke tests em `tools/test_memory.py`.
 - **Siamese Twins** -- Erro -> DB (via `tools/insert_questao.py`). Lição/Armadilha -> resumo correspondente em `resumos/`.
 - **SSOT volumétrica** = `sessoes_bulk` no `ipub.db`. Ao informar "fiz X questões, acertei Y", o agente DEVE chamar `python tools/registrar_sessao_bulk.py --sessao NNN --area AREA --feitas X --acertos Y` ANTES de processar erros individuais.

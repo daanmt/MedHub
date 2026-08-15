@@ -522,9 +522,15 @@ def main():
         for a in achados_drift:
             if a["tipo"] == "sensor":
                 continue
-            tag = "DOC_DRIFT" if a["tipo"] == "drift" else "DOC_DRIFT_SYNTAX"
+            # 'ref' = referência morta em norma viva (modo refs, part-5): o
+            # conserto é a norma, não a anotação -- por isso a ação difere.
+            tag = {"drift": "DOC_DRIFT", "ref": "DOC_REF"}.get(
+                a["tipo"], "DOC_DRIFT_SYNTAX")
+            acao = ("Corrigir a norma (ou remover a seção morta)."
+                    if a["tipo"] == "ref"
+                    else "Reconciliar o doc ou corrigir a anotação.")
             print(f"\n[WARN] {tag}: {a['doc']}:{a['linha']} -- {a['msg']} "
-                  f"(regra: {a['regra']}). Reconciliar o doc ou corrigir a anotação.")
+                  f"(regra: {a['regra']}). {acao}")
         # success=True: WARN não rebaixa o veredito (não altera all_passed).
         results_summary.append((desc_drift, True, len(achados_drift)))
         _ledger_record("doc_drift",

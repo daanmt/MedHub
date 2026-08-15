@@ -43,7 +43,7 @@ Exportar o substrato e fanout por tema:
 
 ### 4. Executar a curadoria (backup + dry-run sempre)
 - **Aposentar/fundir:** `recurate_cards.py --from <json>` com `{card_id, aposentar:true}` para os perdedores (o sobrevivente absorve).
-- **Reforjar:** **workflow de cunhagem** (1 agente/lote) re-cunha cada card ancorado no ângulo + `erro_origem` + RAG do resumo (`mcp__obsidian-notes-rag__search_notes`), seguindo os 5 princípios. Aplicar via `recurate_cards.py` (`{card_id, contexto, pergunta, resposta, regra, armadilha, tipo}`) — preserva `card_id` e estado FSRS, incrementa `card_version`.
+- **Reforjar:** **workflow de cunhagem** (1 agente/lote) re-cunha cada card ancorado no ângulo + `erro_origem` + RAG do resumo (`app.engine.rag.search`), seguindo os 5 princípios. Aplicar via `recurate_cards.py` (`{card_id, contexto, pergunta, resposta, regra, armadilha, tipo}`) — preserva `card_id` e estado FSRS, incrementa `card_version`.
 - **Atomização:** quando um reforjar gera um 2º conceito do mesmo erro, `insert_card_extra.py --from <json> --apply` cria o card herdando o `questao_id`/`tema_id` de origem.
 
 ### 5. Validar e fechar

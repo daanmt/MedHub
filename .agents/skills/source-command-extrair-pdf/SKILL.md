@@ -1,6 +1,6 @@
 ---
 name: "source-command-extrair-pdf"
-description: "Extrai texto de PDFs para arquivos .txt temporários. Usar no início do workflow criar-resumo. Também faz limpeza de PDFs e temps após uso (política Zero PDF)."
+description: "Extrai texto de PDFs para arquivos .txt temporários. Usar no início do workflow criar-resumo. Limpa apenas os .txt temporários — os PDFs-fonte do EMED são RETIDOS (política de retenção, s086)."
 ---
 
 # source-command-extrair-pdf
@@ -11,7 +11,7 @@ Use this skill when the user asks to run the migrated source command `extrair-pd
 
 # Skill: Extrair PDF
 
-Wrapper para `tools/extract_pdfs.py`. Implementa a **política Zero PDF** do MedHub: PDFs são temporários, o conhecimento permanece em Markdown.
+Wrapper para `tools/extract_pdfs.py`. O conhecimento permanece em Markdown, mas os **PDFs-fonte do EMED são retidos** (gitignored) — ver §Política de retenção abaixo. A limpeza automática cobre só os `.txt` temporários; deleção de PDF é ato explícito do usuário, nunca default do agente.
 
 ---
 
@@ -79,6 +79,20 @@ python tools/extract_pdfs.py "arq1.pdf" "arq2.pdf" "arq3.pdf"
 
 ---
 
-## Política Zero PDF
+## Política de retenção de PDFs (s086 — substitui a antiga "Zero PDF")
 
-Após consolidar o resumo .md, os PDFs **devem ser deletados**. O MedHub opera exclusivamente em Markdown. PDFs são fontes temporárias de extração, não documentos permanentes do vault.
+🔴 **NÃO deletar os PDFs do EMED.** A política "Zero PDF" foi **revertida na s086**:
+os PDFs-fonte são **retidos** (gitignored, fora do versionamento) porque alimentam
+`tools/cobertura_conhecimento.py` (F16a) e o gate de lastro de
+`tools/insert_questao.py::_tem_lastro` (F31) e são IP-fonte **não-reconstruível**.
+O vault opera em Markdown; os PDFs ficam como matéria-prima local.
+
+> Correção 2026-08-14 (auditoria de sistemas): esta seção instruía deletar os
+> PDFs — norma morta cujo cumprimento causava perda irreversível (`AGENTE.md §6`
+> já admitia o drift). Único caso: PDF temporário de terceiros sem valor de
+> fonte pode ser removido a critério do usuário, nunca por default do agente.
+>
+> Correção 2026-08-14 (consolidacao-part-2): o tier bruto de RAG sobre PDF
+> (`pdf_raw`, `tools/index_pdf_raw.py`) foi removido — o gold (`resumos/**/*.md`)
+> satura antes do tier PDF contribuir. A retenção dos PDFs acima não depende
+> mais de RAG.

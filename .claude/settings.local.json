@@ -50,26 +50,13 @@
       "Bash(PYTHONIOENCODING=utf-8 python Tools/extract_pdfs.py \"Temas/Clínica Médica/Neurologia/Demênc.pdf\" \"Temas/Clínica Médica/Neurologia/Flashc.pdf\" 2>/dev/null)",
       "Bash(PYTHONIOENCODING=utf-8 python Tools/extract_pdfs.py \"Temas/Clínica Médica/Pneumologia/Asma a.pdf\" \"Temas/Clínica Médica/Pneumologia/Flashc.pdf\" 2>/dev/null)",
       "Bash(PYTHONIOENCODING=utf-8 python Tools/audit_resumos.py)",
-      "mcp__obsidian-notes-rag__get_stats",
-      "mcp__obsidian-notes-rag__search_notes",
-      "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\); mcp=d.get\\(''''mcpServers'''',{}\\); [print\\(k,''''->'''',json.dumps\\(v,indent=2\\)\\) for k,v in mcp.items\\(\\) if ''''obsidian'''' in k.lower\\(\\)]\")",
-      "Bash(find C:/Users/daanm/ -name *.json -path *obsidian*)",
       "Bash(head -10 find C:/Users/daanm/ -name *.json -path *rag*)",
       "Bash(find C:/Users/daanm/ -name mcp*.json)",
-      "mcp__obsidian-notes-rag__reindex",
-      "Bash(uvx obsidian-notes-rag:*)",
       "Bash(find C:Usersdaanm -name *antigravity* -o -name .antigravity*)",
       "Bash(find C:/Users/daanm/.claude -name *.json -type f)",
       "Bash(ls:*)",
-      "Bash(find C:/Users/daanm/AppData -name mcp.json -o -name *obsidian-notes-rag*)",
-      "Bash(find C:/Users/daanm/AppData/Local/uv/cache/wheels-v6/pypi/obsidian-notes-rag -type f -name *.py -o -name *.md -o -name *.json -o -name *.toml -o -name *.txt)",
       "Bash(find C:/Users/daanm/.gemini -type f -name *.json)",
       "Bash(claude mcp:*)",
-      "Bash(rm \"/c/Users/daanm/AppData/Local/obsidian-notes-rag/daktus/obsidian_notes.db\")",
-      "Bash(mv \"/c/Users/daanm/AppData/Local/obsidian-notes-rag/obsidian-notes-rag/obsidian_notes.db\" \"/c/Users/daanm/AppData/Local/obsidian-notes-rag/daktus/obsidian_notes.db\")",
-      "Read(//c/Users/daanm/AppData/Local/obsidian-notes-rag/obsidian-notes-rag//**)",
-      "Read(//c/Users/daanm/AppData/Local/obsidian-notes-rag/daktus//**)",
-      "Read(//c/Users/daanm/AppData/Local/obsidian-notes-rag/**)",
       "Read(//c/Users/daanm/AppData/Roaming/**)",
       "Bash(curl -s http://localhost:11434/api/tags)",
       "Bash(grep -r \"ANTHROPIC\\\\|claude\\\\|haiku\\\\|api_key\\\\|API_KEY\" C:/Users/daanm/MedHub/ --include=*.py --include=*.toml --include=*.json -l)",
@@ -181,9 +168,7 @@
     ]
   },
   "enableAllProjectMcpServers": true,
-  "enabledMcpjsonServers": [
-    "obsidian-notes-rag"
-  ],
+  "enabledMcpjsonServers": [],
   "remote": {
     "defaultEnvironmentId": "env_01J7wZiFNkTcrVGcdUbv4Dj8"
   }

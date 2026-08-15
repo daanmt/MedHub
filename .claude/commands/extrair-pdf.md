@@ -1,5 +1,5 @@
 ---
-description: "Extrai texto de PDFs para arquivos .txt temporários. Usar no início do workflow criar-resumo. Também faz limpeza de PDFs e temps após uso (política Zero PDF)."
+description: "Extrai texto de PDFs para arquivos .txt temporários. Usar no início do workflow criar-resumo. Limpa apenas os .txt temporários — os PDFs-fonte do EMED são RETIDOS (política de retenção, s086)."
 type: skill
 layer: commands
 status: canonical
@@ -7,7 +7,7 @@ status: canonical
 
 # Skill: Extrair PDF
 
-Wrapper para `tools/extract_pdfs.py`. Implementa a **política Zero PDF** do MedHub: PDFs são temporários, o conhecimento permanece em Markdown.
+Wrapper para `tools/extract_pdfs.py`. O conhecimento permanece em Markdown, mas os **PDFs-fonte do EMED são retidos** (gitignored) — ver §Política de retenção abaixo. A limpeza automática cobre só os `.txt` temporários; deleção de PDF é ato explícito do usuário, nunca default do agente.
 
 ---
 

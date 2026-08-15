@@ -64,6 +64,93 @@ def DIAS_ATE_CICLO(hoje):
     return (DATA_CICLO - hoje).days
 
 
+# ---------------------------------------------------------------------------
+# Entidade multi-prova (spec consolidacao-part-4). O calendário do estudante tem
+# mais de uma data e elas NAO sao a mesma coisa: ENAMED (13/09) e PROVA; o fim da
+# grade EMED (25/10) e fecho de CRONOGRAMA, ~6 semanas DEPOIS da prova. Confundir
+# as duas foi o que produziu o ritmo-alvo ficticio corrigido na s126.
+# 🔴 Fronteira dura: este bloco e DISPLAY (countdown no cabecalho do plano). O
+# RITMO continua calculado contra a GRADE em _cronograma_hoje (correcao deliberada
+# da s126) -- nada daqui alimenta formula de ritmo.
+# UERJ/USP entram em core/provas.json quando houver edital -- sem codigo novo.
+# ---------------------------------------------------------------------------
+PROVAS_PATH = os.path.join(ROOT, "core", "provas.json")
+
+
+def carregar_provas(path=None):
+    """Le core/provas.json -> [{nome, data(date), tipo}] ordenado por data.
+
+    Parser TOLERANTE por contrato: arquivo ausente, ilegivel, JSON invalido ou
+    entrada malformada emitem WARN em stderr e sao ignorados -- o plano do dia
+    nunca quebra por causa do countdown (mesmo espirito da degradacao graciosa
+    do cronograma). Pior caso = lista vazia.
+    """
+    alvo = path or PROVAS_PATH
+    try:
+        with open(alvo, encoding="utf-8") as fh:
+            dados = json.load(fh)
+    except FileNotFoundError:
+        print(f"[WARN] PROVAS_AUSENTE: {alvo} nao encontrado -- plano segue sem countdown.",
+              file=sys.stderr)
+        return []
+    except (json.JSONDecodeError, OSError, UnicodeDecodeError, ValueError) as e:
+        print(f"[WARN] PROVAS_ILEGIVEL: {alvo} ({e}) -- plano segue sem countdown.",
+              file=sys.stderr)
+        return []
+    if not isinstance(dados, list):
+        print(f"[WARN] PROVAS_FORMATO: {alvo} nao contem uma lista -- plano segue sem countdown.",
+              file=sys.stderr)
+        return []
+    provas = []
+    for i, item in enumerate(dados):
+        if not isinstance(item, dict):
+            print(f"[WARN] PROVAS_ENTRADA: item {i} nao e objeto -- ignorado.", file=sys.stderr)
+            continue
+        nome, bruto = item.get("nome"), item.get("data")
+        tipo = item.get("tipo") or "prova"
+        try:
+            quando = date.fromisoformat(str(bruto))
+        except (ValueError, TypeError):
+            print(f"[WARN] PROVAS_DATA: '{nome or i}' com data invalida ({bruto!r}) -- ignorado.",
+                  file=sys.stderr)
+            continue
+        if not nome:
+            print(f"[WARN] PROVAS_NOME: item {i} sem nome -- ignorado.", file=sys.stderr)
+            continue
+        provas.append({"nome": str(nome), "data": quando, "tipo": str(tipo)})
+    return sorted(provas, key=lambda p: p["data"])
+
+
+def _texto_countdown(nome, tipo, dias):
+    """Rotulo por TIPO: prova conta para a data; grade conta para o fecho."""
+    if tipo == "grade":
+        if dias > 0:
+            return f"grade fecha em {dias}d"
+        return "grade fecha hoje" if dias == 0 else f"grade fechou ha {-dias}d"
+    if dias > 0:
+        return f"{nome} em {dias}d"
+    return f"{nome} e hoje" if dias == 0 else f"{nome} foi ha {-dias}d"
+
+
+def countdown_provas(hoje, provas=None, path=None):
+    """[{nome, tipo, data, dias, texto}] -- dias = data - hoje (hoje inclusive,
+    dia do evento exclusivo; mesma convencao de _cronograma_hoje)."""
+    itens = provas if provas is not None else carregar_provas(path)
+    saida = []
+    for p in itens:
+        dias = (p["data"] - hoje).days
+        saida.append({"nome": p["nome"], "tipo": p["tipo"],
+                      "data": p["data"].isoformat(), "dias": dias,
+                      "texto": _texto_countdown(p["nome"], p["tipo"], dias)})
+    return saida
+
+
+def render_countdown(provas):
+    """Linha unica do cabecalho: 'ENAMED em 30d · grade fecha em 72d'.
+    Sem provas legiveis -> string vazia (o cabecalho simplesmente nao ganha a linha)."""
+    return " · ".join(p["texto"] for p in provas) if provas else ""
+
+
 # Política de teto dinâmico (F4 -- decisão do operador 2026-07-05).
 # Norma: core/contracts/fsrs-management-contract.md §Teto dinâmico.
 # s126: teto sobe 30 -> 40 (usuário pediu "flashcards mais frequentes" ao trocar o regime de
@@ -648,6 +735,7 @@ def build(tempo_h=None, energia=None):
 
     return {
         "data": hoje.isoformat(),
+        "provas": countdown_provas(hoje),   # multi-prova: display, nao alimenta ritmo
         "dormant": dormant,
         "volume": {
             "total": total_q or 0, "acertos": total_a or 0,
@@ -789,6 +877,10 @@ def render_handoff_block(p):
 def render(p):
     d, v, f = p["dormant"], p["volume"], p["fsrs"]
     out = [f"# 🗓️ Plano do Dia — {p['data']}", ""]
+    # Countdown multi-prova: cada data com o proprio rotulo (prova x fecho de grade).
+    linha_provas = render_countdown(p.get("provas") or [])
+    if linha_provas:
+        out += [f"- ⏳ **Datas:** {linha_provas}"]
     if d.get("empty"):
         out.append("- 🌡️ **Refrescar (dormente):** nenhum tema elegível.")
     else:

@@ -248,6 +248,37 @@ def check_posicao_drift(handoff_path=None, db_path=None):
         return (divergentes[0], semana_db)
     return None
 
+LIMITE_HANDOFF = 60
+
+
+def check_handoff_len(handoff_path=None, limite=LIMITE_HANDOFF):
+    """Condicao B1 (reconcile-contract.md) -- BLOCKING de fato.
+
+    O contrato declara B1 (`HANDOFF.md > 60 linhas`) como BLOCKING desde a s075,
+    mas o check nunca existiu em codigo: era prosa, e o HANDOFF passou de 60 sem
+    nada bloquear (achado D3 da s144 -- "warning-first virou warning-only").
+    Aqui ele vira trava tecnica, com os checks-irmaos (F1 ponteiro, POSICAO_DRIFT).
+
+    Por que BLOCKING e nao WARN: o HANDOFF e lido no boot de TODA sessao; passar
+    do teto e o mecanismo pelo qual a narrativa se acumula na camada mais cara do
+    sistema. O conserto e barato e conhecido -- migrar o excedente para
+    history/session_NNN.md (nada se perde, muda de endereco).
+
+    Conta linhas fisicas (a mesma regra do contrato: "contagem de linhas").
+    Parse defensivo: sem arquivo -> None (silencio, nunca falso-positivo).
+    Retorna (n_linhas, limite) quando estoura; None quando dentro do teto.
+    """
+    handoff = Path(handoff_path) if handoff_path else ROOT_DIR / "HANDOFF.md"
+    if not handoff.exists():
+        return None
+    try:
+        texto = handoff.read_text(encoding="utf-8")
+    except Exception:
+        return None
+    n = len(texto.splitlines())
+    return (n, limite) if n > limite else None
+
+
 def main():
     mode = "--changed"
     if len(sys.argv) > 1 and sys.argv[1] in ("--all", "-a"):
@@ -270,6 +301,7 @@ def main():
     changed_files = None
     parity_relevant = (mode == "--all")
     pointer_relevant = (mode == "--all")
+    handoff_relevant = (mode == "--all")
     doc_drift_relevant = (mode == "--all")
     card_relevant = (mode == "--all")
     fsrs_relevant = (mode == "--all")
@@ -280,6 +312,7 @@ def main():
             mode = "--all"
             parity_relevant = True
             pointer_relevant = True
+            handoff_relevant = True
             doc_drift_relevant = True
             card_relevant = True
             fsrs_relevant = True
@@ -295,6 +328,9 @@ def main():
                 # (checado antes do exists() para pegar também deleções de logs).
                 if fp == "HANDOFF.md" or fp.startswith("history/"):
                     pointer_relevant = True
+                # Condicao B1 (BLOCKING): so o proprio HANDOFF muda o tamanho dele.
+                if fp == "HANDOFF.md":
+                    handoff_relevant = True
                 # Sensor doc-vs-codigo (check 7): relevante se um doc-alvo mudou.
                 if fp in ("ROADMAP.md", "HANDOFF.md", "ESTADO.md", "AUDITORIA_MEDHUB.md"):
                     doc_drift_relevant = True
@@ -560,6 +596,25 @@ def main():
     # corrida interrompida antes daqui nao avanca o watermark.
     if card_relevant:
         card_watermark_selar(card_watermark_atual())
+
+    # 10. Condicao B1 do reconcile (HANDOFF > 60 linhas). 🔴 BLOCKING de fato
+    #     (spec consolidacao-part-4): o contrato ja declarava BLOCKING desde a
+    #     s075, mas nao havia check -- excecao deliberada a politica "regra nova
+    #     nasce WARN", porque esta regra nao e nova, e a implementacao tardia de
+    #     uma regra existente que estava sendo violada sem consequencia (D3/s144).
+    if handoff_relevant:
+        desc_b1 = "Teto do HANDOFF (B1 do reconcile)"
+        estouro = check_handoff_len()
+        if estouro:
+            print(f"\n[BLOCK] HANDOFF_LONGO (B1): HANDOFF.md tem {estouro[0]} linhas "
+                  f"(teto {estouro[1]}). Migrar o excedente narrativo para "
+                  f"history/session_NNN.md -- nada se perde, muda de endereco. "
+                  f"Norma: core/contracts/reconcile-contract.md B1.")
+            all_passed = False
+        results_summary.append((desc_b1, not estouro, 0))
+        _ledger_record("handoff_teto",
+                       [{"alvo": "HANDOFF.md", "payload":
+                         {"linhas": estouro[0], "limite": estouro[1]}}] if estouro else [])
 
     # Resumo Final
     print("\n" + "=" * 60)

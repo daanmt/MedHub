@@ -58,6 +58,17 @@ Ao vivo, durante a drenagem, o usuário identificou (e eu confirmei com o teste 
 - Card defeituoso nunca grava nota no FSRS -- sai da fila, vira task de reforja.
 - Cluster de cards quase-duplicados: sempre preservar o card com mais `fsrs_revlog` ao fundir.
 
+## Addendum -- calibração de largura na Revisão Direcionada (pós-selo)
+
+Usuário deu feedback depois do fechamento inicial: os blocos de TCE e etilismo ficaram mais estreitos
+do que deveriam -- síndromes vizinhas (hemorragia subdural, lesão axonal difusa, fratura de base de
+crânio, reflexo de Cushing, convulsão precoce x tardia; encefalopatia de Wernicke aguda, cetoacidose
+alcoólica, o mecanismo GABA/NMDA único que amarra convulsão e delirium tremens) foram citadas de
+passagem em vez de abertas com a mesma densidade do tema principal. Corrigido na hora -- os dois
+blocos ganharam a expansão completa no chat. Memória nova: `feedback_revisao_direcionada_blast_radius`
+-- doravante, todo bloco de fechamento abre 1-2 vizinhos do mesmo jeito por padrão (largura), distinto
+da calibração de profundidade que já existia (`feedback_aula_descomprimida_preferencia`).
+
 ## Próximos passos
 
 Ver `HANDOFF.md` -- em resumo: amanhã (16/08) é dia de simulado; fila FSRS está com dívida baixíssima (não é prioridade abrir); S15 começa quando o S14 fechar no Drive (dado desatualizado, precisa sync antes de confiar na lista); S15 traz "HAS Pt. 3" -- conecta direto com o bloco de hoje.

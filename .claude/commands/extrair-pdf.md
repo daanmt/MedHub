@@ -75,6 +75,14 @@ python tools/extract_pdfs.py "arq1.pdf" "arq2.pdf" "arq3.pdf"
 
 ---
 
-## Política Zero PDF
+## Política de retenção de PDFs (s086 — substitui a antiga "Zero PDF")
 
-Após consolidar o resumo .md, os PDFs **devem ser deletados**. O MedHub opera exclusivamente em Markdown. PDFs são fontes temporárias de extração, não documentos permanentes do vault.
+🔴 **NÃO deletar os PDFs do EMED.** A política "Zero PDF" foi **revertida na s086**:
+os PDFs-fonte são **retidos** (gitignored, fora do versionamento) porque alimentam
+a indexação RAG (`tools/index_pdf_raw.py`) e são IP-fonte **não-reconstruível**.
+O vault opera em Markdown; os PDFs ficam como matéria-prima local.
+
+> Correção 2026-08-14 (auditoria de sistemas): esta seção instruía deletar os
+> PDFs — norma morta cujo cumprimento causava perda irreversível (`AGENTE.md §6`
+> já admitia o drift). Único caso: PDF temporário de terceiros sem valor de
+> fonte pode ser removido a critério do usuário, nunca por default do agente.

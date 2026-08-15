@@ -26,7 +26,18 @@ def init_db():
         questoes_realizadas INTEGER DEFAULT 0,
         questoes_acertadas INTEGER DEFAULT 0,
         percentual_acertos REAL DEFAULT 0.0,
-        ultima_revisao DATE
+        ultima_revisao DATE,
+        -- Dificuldade-do-tema (PRD s094 §4.5, Revisao Calibrada parte 1).
+        -- Absorvido de tools/migrate_dificuldade.py na consolidacao part-6
+        -- (fusao c): a migracao one-shot ja rodou no ipub.db vivo, mas o
+        -- CREATE TABLE nao tinha as colunas -- um banco recriado do zero
+        -- nascia QUEBRADO para revisao_calibrada. Agora nasce integro.
+        --   dificuldade       1-10, NULL = ainda nao calibrado
+        --   dificuldade_fonte 'usuario' | 'agente_inferida'
+        --   dificuldade_at    recencia, para reinferir nota envelhecida
+        dificuldade INTEGER,
+        dificuldade_fonte TEXT,
+        dificuldade_at TIMESTAMP
     )
     ''')
 

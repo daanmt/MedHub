@@ -13,13 +13,14 @@ padrões com incidente real + proibição verbatim na spec estilo-flashcard.md).
 AVISO = multi_parte, negativo_orfao, contexto_artefato, distrator_perdido.
 
 Atomicidade NÃO mora aqui — segue em `audit_card_atomicity.checar_front/verso`
-(fonte única pré-existente); `apply_reforja` a consome como gate 3.
+(fonte única pré-existente); `recurate_cards` a consome como gate 2.
 """
 import re
 import unicodedata
 
 # AGENTE.md secao 4.5 — encoding limpo, zero LaTeX. FONTE ÚNICA (movido de
-# apply_reforja na part-3; o CLI importa daqui).
+# apply_reforja na part-3; o reescritor canonico recurate_cards importa daqui
+# desde a consolidacao part-6, que absorveu o apply_reforja).
 RE_PROIBIDO = [
     (re.compile(r"\$[^$]*\$"), "LaTeX inline ($...$)"),
     (re.compile(r"\\(rightarrow|leftarrow|le\b|ge\b|mu\b|times\b|approx)"), "comando LaTeX"),

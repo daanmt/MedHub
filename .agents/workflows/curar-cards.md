@@ -42,8 +42,13 @@ Exportar o substrato e fanout por tema:
 3. **Resolver o plano:** tratar **auto-referência** de fusão (`fundir_em == self` = sobrevivente) e **cadeias**; validar cobertura 100% e ausência de sobrevivente-que-some.
 
 ### 4. Executar a curadoria (backup + dry-run sempre)
-- **Aposentar/fundir:** `recurate_cards.py --from <json>` com `{card_id, aposentar:true}` para os perdedores (o sobrevivente absorve).
-- **Reforjar:** **workflow de cunhagem** (1 agente/lote) re-cunha cada card ancorado no ângulo + `erro_origem` + RAG do resumo (`app.engine.rag.search`), seguindo os 5 princípios. Aplicar via `recurate_cards.py` (`{card_id, contexto, pergunta, resposta, regra, armadilha, tipo}`) — preserva `card_id` e estado FSRS, incrementa `card_version`.
+`tools/recurate_cards.py` é o **reescritor in-place canônico** — desde a consolidação part-6 ele absorveu o falecido `apply_reforja.py` (havia dois reescritores com rigores diferentes; o lote passava pelo mais frouxo). O que mudou na interface:
+- **`--dry-run` é o DEFAULT.** Sem `--apply`, nada é gravado. `--dry-run` explícito segue aceito.
+- **All-or-nothing.** Um item reprovado reprova o LOTE INTEIRO, em transação única — não existe mais lote parcialmente aplicado.
+- **4 gates** sobre o conteúdo proposto: schema · encoding (§4.5) · formulação (template/resposta-embutida) · **atomicidade** (o mesmo detector que diagnosticou o defeito audita o remédio). Card discriminador legítimo (1 critério de acerto) passa com `--permitir-atomicidade`, conferido a olho.
+
+- **Aposentar/fundir:** `recurate_cards.py --from <json> --apply` com `{card_id, aposentar:true}` para os perdedores (o sobrevivente absorve).
+- **Reforjar:** **workflow de cunhagem** (1 agente/lote) re-cunha cada card ancorado no ângulo + `erro_origem` + RAG do resumo (`app.engine.rag.search`), seguindo os 5 princípios. Aplicar via `recurate_cards.py --apply` (`{card_id, contexto, pergunta, resposta, regra, armadilha, tipo}` — os nomes de coluna v5 também são aceitos) — preserva `card_id` e estado FSRS, incrementa `card_version`.
 - **Atomização:** quando um reforjar gera um 2º conceito do mesmo erro, `insert_card_extra.py --from <json> --apply` cria o card herdando o `questao_id`/`tema_id` de origem.
 
 ### 5. Validar e fechar

@@ -552,3 +552,13 @@
 {"ts": "2026-08-15T02:10:30+00:00", "event": "resolved", "check": "handoff_teto", "fingerprint": "abeed62c0ff8", "alvo": "HANDOFF.md"}
 {"ts": "2026-08-15T02:31:18+00:00", "event": "resolved", "check": "parity", "fingerprint": "ddf439b44739", "alvo": "command<->skill"}
 {"ts": "2026-08-15T02:31:48+00:00", "event": "opened", "check": "doc_drift", "fingerprint": "62e9808a549c", "alvo": ".claude/commands/estilo-resumo.md:resumos/Cirurgia/Trauma.md", "payload": {"tipo": "ref", "msg": "path citado nao existe no repo: resumos/Cirurgia/Trauma.md"}}
+{"ts": "2026-08-15T02:43:08+00:00", "event": "opened", "check": "reachability", "fingerprint": "b56bf3c681da", "alvo": "tools/audit_fsrs.py", "payload": {"referenciadores": 0}}
+{"ts": "2026-08-15T02:43:08+00:00", "event": "opened", "check": "reachability", "fingerprint": "194310f03669", "alvo": "tools/calibrate_card_checks.py", "payload": {"referenciadores": 0}}
+{"ts": "2026-08-15T02:43:08+00:00", "event": "opened", "check": "reachability", "fingerprint": "70ff3f6afa38", "alvo": "tools/reachability_check.py", "payload": {"referenciadores": 0}}
+{"ts": "2026-08-15T02:43:08+00:00", "event": "opened", "check": "reachability", "fingerprint": "849e5ddc2043", "alvo": "tools/review_cli.py", "payload": {"referenciadores": 0}}
+{"ts": "2026-08-15T02:43:08+00:00", "event": "opened", "check": "reachability", "fingerprint": "41e5ea42c08d", "alvo": "tools/test_habilidades.py", "payload": {"referenciadores": 0}}
+{"ts": "2026-08-15T02:46:38+00:00", "event": "resolved", "check": "reachability", "fingerprint": "70ff3f6afa38", "alvo": "tools/reachability_check.py"}
+{"ts": "2026-08-15T02:49:39+00:00", "event": "resolved", "check": "reachability", "fingerprint": "b56bf3c681da", "alvo": "tools/audit_fsrs.py"}
+{"ts": "2026-08-15T02:49:39+00:00", "event": "resolved", "check": "reachability", "fingerprint": "194310f03669", "alvo": "tools/calibrate_card_checks.py"}
+{"ts": "2026-08-15T02:49:39+00:00", "event": "resolved", "check": "reachability", "fingerprint": "849e5ddc2043", "alvo": "tools/review_cli.py"}
+{"ts": "2026-08-15T02:49:39+00:00", "event": "resolved", "check": "reachability", "fingerprint": "41e5ea42c08d", "alvo": "tools/test_habilidades.py"}

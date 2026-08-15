@@ -339,7 +339,8 @@ def main():
                 if fp in ("tools/insert_questao.py", "tools/insert_card_base.py",
                           "tools/card_self_sufficiency.py", "tools/test_card_self_sufficiency.py",
                           "tools/audit_flashcard_quality.py", "tools/audit_card_atomicity.py",
-                          "tools/insert_card_extra.py", "tools/apply_reforja.py",
+                          "tools/insert_card_extra.py", "tools/recurate_cards.py",
+                          "tools/check_fk_orphans.py",
                           ".claude/commands/estilo-flashcard.md"):
                     card_relevant = True
                 # Load balancer FSRS (check 2c): o caminho de escrita vive em
@@ -598,12 +599,39 @@ def main():
                         for a in achados_atom] if sensor_atom_ok
                        else [{"alvo": "sensor", "payload": {}}])
 
+    # 10. Integridade referencial + schema do ipub.db (consolidacao part-6).
+    #     WARN, não bloqueia: o script existia desde a part-1 mas nunca foi
+    #     conectado a harness nenhum (achado D4, "construído-e-nunca-conectado").
+    #     Mesmo gate dos checks 8/9 (maquinaria de card mudou OU watermark de
+    #     dado avancou): órfão de FK e coluna faltando são defeitos de DADO, e
+    #     dado muda fora do git. A regra mora em check_fk_orphans.py (que desde
+    #     a part-6 absorveu o schema-check do falecido audit_integrity.py);
+    #     o auto_check só orquestra. Sensor indisponível = WARN visível.
+    if card_relevant:
+        desc_fk = "Integridade referencial + schema (FK_ORPHANS)"
+        try:
+            from check_fk_orphans import run_checks as fk_run, _detalhe as fk_detalhe
+            achados_fk = fk_run()
+            sensor_fk_ok = True
+        except Exception as e:
+            print(f"\n[WARN] FK_ORPHANS_SENSOR: sensor indisponível ({e}).")
+            achados_fk, sensor_fk_ok = [], False
+        for a in achados_fk:
+            print(f"\n[WARN] FK_ORPHANS: {a['alvo']} -- {fk_detalhe(a['payload'])}. "
+                  f"Conserto e decisao do operador; o check nao escreve.")
+        # success=True: WARN não rebaixa o veredito (não altera all_passed).
+        results_summary.append((desc_fk, True,
+                                len(achados_fk) if sensor_fk_ok else 1))
+        _ledger_record("fk_orphans",
+                       achados_fk if sensor_fk_ok
+                       else [{"alvo": "sensor", "payload": {}}])
+
     # part-6: sela o marco SO depois que os checks de card rodaram — uma
     # corrida interrompida antes daqui nao avanca o watermark.
     if card_relevant:
         card_watermark_selar(card_watermark_atual())
 
-    # 10. Condicao B1 do reconcile (HANDOFF > 60 linhas). 🔴 BLOCKING de fato
+    # 11. Condicao B1 do reconcile (HANDOFF > 60 linhas). 🔴 BLOCKING de fato
     #     (spec consolidacao-part-4): o contrato ja declarava BLOCKING desde a
     #     s075, mas nao havia check -- excecao deliberada a politica "regra nova
     #     nasce WARN", porque esta regra nao e nova, e a implementacao tardia de
@@ -621,6 +649,34 @@ def main():
         _ledger_record("handoff_teto",
                        [{"alvo": "HANDOFF.md", "payload":
                          {"linhas": estouro[0], "limite": estouro[1]}}] if estouro else [])
+
+    # 12. Alcancabilidade (consolidacao part-6). WARN, não bloqueia. SÓ no --all:
+    #     varre o repo inteiro (~90 alvos x ~200 referenciadores) e a pergunta
+    #     que ele faz -- "alguem chega aqui?" -- é sobre a ESTRUTURA do repo, que
+    #     não muda a cada arquivo tocado. Rodar no --changed seria custo por
+    #     ruído. Órfão = construído-e-nunca-conectado (achado D4): código que não
+    #     dá erro, só não acontece. Regra em tools/reachability_check.py.
+    if mode == "--all":
+        desc_reach = "Alcançabilidade de código (REACHABILITY)"
+        try:
+            from reachability_check import run_checks as reach_run
+            achados_reach = reach_run()
+            sensor_reach_ok = True
+        except Exception as e:
+            print(f"\n[WARN] REACHABILITY_SENSOR: sensor indisponível ({e}).")
+            achados_reach, sensor_reach_ok = [], False
+        if achados_reach:
+            nomes = ", ".join(a["alvo"] for a in achados_reach[:5])
+            print(f"\n[WARN] REACHABILITY: {len(achados_reach)} arquivo(s) sem "
+                  f"referenciador vivo ({nomes}"
+                  f"{', ...' if len(achados_reach) > 5 else ''}). "
+                  f"Conectar ou aposentar: python tools/reachability_check.py.")
+        # success=True: WARN não rebaixa o veredito (não altera all_passed).
+        results_summary.append((desc_reach, True,
+                                len(achados_reach) if sensor_reach_ok else 1))
+        _ledger_record("reachability",
+                       achados_reach if sensor_reach_ok
+                       else [{"alvo": "sensor", "payload": {}}])
 
     # Resumo Final
     print("\n" + "=" * 60)

@@ -154,7 +154,7 @@
       "Bash(xargs -I{} echo \"falhas nos nossos 2 arquivos: {}\")",
       "PowerShell(python tools/day_plan.py)",
       "PowerShell(python tools/performance.py)",
-      "PowerShell(python tools/audit_integrity.py)",
+      "PowerShell(python tools/check_fk_orphans.py)",
       "PowerShell(python tools/fsrs_queue.py --list)",
       "PowerShell(python tools/review_radar.py)",
       "Bash(export PYTHONUTF8=1)",

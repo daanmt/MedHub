@@ -39,7 +39,8 @@ Classes de falso-positivo ja mapeadas (todas com o mesmo desempate acima):
   4. objetos da MESMA resposta -- "Qual exame define o diagnostico e o prognostico?"
      (a resposta e um exame so). SEM guarda automatica: a assinatura sintatica e
      identica a de uma segunda demanda real, entao exige olho humano. Libere item
-     a item via `--permitir-atomicidade` do apply_reforja.py.
+     a item via `--permitir-atomicidade` do recurate_cards.py (que absorveu
+     o apply_reforja na consolidacao part-6).
 
 As guardas 2 e 3 nasceram de auditar a propria worklist (s128) -- o corpus grava
 sem acento por convencao, o que colapsa a copula "e" e a conjuncao "e" na mesma

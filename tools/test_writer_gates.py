@@ -66,7 +66,13 @@ def _json_temp(payload):
 
 
 def _rodar(mod, argv, db_path):
-    """Roda mod.main() com argv/db patchados. Retorna (exit_code, stdout)."""
+    """Roda mod.main() com argv/db patchados. Retorna (exit_code, stdout).
+
+    Aceita os DOIS estilos de saida: `sys.exit(n)` de dentro do main (writers
+    antigos) e `return n` com o `sys.exit(main())` no __main__ (estilo que o
+    recurate_cards herdou do apply_reforja na fusao da part-6). Sem isso, um
+    main() que RETORNA 1 seria lido como sucesso -- teste verde decorativo.
+    """
     orig_argv, orig_db = sys.argv, mod.DB_PATH
     sys.argv, mod.DB_PATH = argv, db_path
     out = io.StringIO()
@@ -74,7 +80,9 @@ def _rodar(mod, argv, db_path):
     try:
         with contextlib.redirect_stdout(out):
             try:
-                mod.main()
+                ret = mod.main()
+                if isinstance(ret, int):
+                    code = ret
             except SystemExit as e:
                 code = int(e.code or 0)
     finally:
@@ -200,13 +208,106 @@ def test_recurate_gate_rejeita_template():
 
 
 def test_recurate_valido_aplica():
+    """part-6 (fusao a): --apply passou a ser OBRIGATORIO para gravar.
+
+    Antes o default do recurate_cards era GRAVAR (--dry-run era opt-in); o
+    apply_reforja, que este CLI absorveu, tinha o default inverso (dry-run,
+    --apply para gravar). Fundir mantendo o default mais frouxo rebaixaria o
+    rigor -- justamente o que a fusao existe para impedir. Por isso o teste
+    mudou: a invocacao sem --apply agora e o caso `test_recurate_dry_run_default`.
+    """
     rc = _import_writer("recurate_cards")
     db = _db_com_card()
     lote = _json_temp([{"card_id": 1, "pergunta": "Qual o criterio da sindrome ficticia?"}])
     try:
-        code, _ = _rodar(rc, ["recurate_cards.py", "--from", lote], db)
+        code, _ = _rodar(rc, ["recurate_cards.py", "--from", lote, "--apply"], db)
         ver, qs, fp = _card1(db)
         assert code == 0 and ver == 2 and qs == "qualitative"
+        assert fp == "Qual o criterio da sindrome ficticia?"
+    finally:
+        os.remove(db)
+        os.remove(lote)
+
+
+def test_recurate_dry_run_default():
+    """Sem --apply: gate aprova, exit 0, e NADA e gravado (dry-run default)."""
+    rc = _import_writer("recurate_cards")
+    db = _db_com_card()
+    lote = _json_temp([{"card_id": 1, "pergunta": "Qual o criterio da sindrome ficticia?"}])
+    try:
+        code, out = _rodar(rc, ["recurate_cards.py", "--from", lote], db)
+        assert code == 0, "lote valido em dry-run sai 0"
+        assert _card1(db) == (1, "heuristic", "P?"), "dry-run NAO grava"
+        assert "dry-run" in out
+    finally:
+        os.remove(db)
+        os.remove(lote)
+
+
+def test_recurate_absorve_gate_atomicidade():
+    """Absorcao do gate 3 do apply_reforja: reforja que continua duplo-ask
+    NAO entra -- e o rebaixamento --permitir-atomicidade a deixa passar."""
+    rc = _import_writer("recurate_cards")
+    db = _db_com_card()
+    duplo = "Qual o criterio da sindrome ficticia e qual a dose inicial?"
+    lote = _json_temp([{"card_id": 1, "pergunta": duplo}])
+    try:
+        code, out = _rodar(rc, ["recurate_cards.py", "--from", lote, "--apply"], db)
+        assert code == 1, "duplo-ask bloqueia"
+        assert _card1(db)[0] == 1, "nada aplicado"
+        assert "AVISO-ATOMICIDADE" in out and "duplo-ask" in out
+        code2, _ = _rodar(rc, ["recurate_cards.py", "--from", lote, "--apply",
+                               "--permitir-atomicidade"], db)
+        assert code2 == 0 and _card1(db)[0] == 2, "rebaixamento explicito aplica"
+    finally:
+        os.remove(db)
+        os.remove(lote)
+
+
+def test_recurate_all_or_nothing():
+    """Absorcao do all-or-nothing: um item ruim no lote impede TODO o lote.
+
+    Antes da part-6 o recurate aplicava item a item e commitava os bons --
+    lote parcialmente aplicado, o estado que ninguem sabe descrever.
+    """
+    rc = _import_writer("recurate_cards")
+    db = _db_com_card()
+    con = sqlite3.connect(db)
+    con.execute("INSERT INTO flashcards (id, tipo, frente_pergunta, verso_resposta, "
+                "quality_source, card_version) VALUES (2, 'conteudo', 'Q?', 'R.', "
+                "'heuristic', 1)")
+    con.commit()
+    con.close()
+    lote = _json_temp([
+        {"card_id": 1, "pergunta": "Qual o criterio da sindrome ficticia?"},   # bom
+        {"card_id": 2, "pergunta": "X: qual a conduta/criterio correto?"},     # ruim
+    ])
+    try:
+        code, out = _rodar(rc, ["recurate_cards.py", "--from", lote, "--apply"], db)
+        assert code == 1
+        assert "all-or-nothing" in out
+        con = sqlite3.connect(db)
+        vers = [r[0] for r in con.execute("SELECT card_version FROM flashcards ORDER BY id")]
+        con.close()
+        assert vers == [1, 1], f"o item BOM tambem nao pode ter sido aplicado (got {vers})"
+    finally:
+        os.remove(db)
+        os.remove(lote)
+
+
+def test_recurate_aceita_nomes_v5_do_apply_reforja():
+    """Lotes no formato do falecido apply_reforja (nomes de coluna v5) seguem
+    valendo -- a fusao nao invalida JSON ja gerado."""
+    rc = _import_writer("recurate_cards")
+    db = _db_com_card()
+    lote = _json_temp([{"card_id": 1,
+                        "frente_pergunta": "Qual o criterio da sindrome ficticia?",
+                        "verso_resposta": "Criterio Y acima do limiar Z."}])
+    try:
+        code, _ = _rodar(rc, ["recurate_cards.py", "--from", lote, "--apply"], db)
+        assert code == 0
+        ver, qs, fp = _card1(db)
+        assert ver == 2 and qs == "qualitative"
         assert fp == "Qual o criterio da sindrome ficticia?"
     finally:
         os.remove(db)

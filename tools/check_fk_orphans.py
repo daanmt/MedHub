@@ -1,15 +1,22 @@
-"""check_fk_orphans.py — varredura read-only de órfãos referenciais no ipub.db.
+"""check_fk_orphans.py — varredura read-only de integridade do ipub.db.
 
-As FKs do schema sempre existiram, mas só passaram a ser impostas na part-1
-(PRAGMA foreign_keys por conexão). Linhas órfãs PRÉ-existentes não são pegas
-pelo PRAGMA (ele só valida escritas novas) — este script as detecta.
+Duas camadas, ambas read-only:
+
+  A. SCHEMA (absorvido de tools/audit_integrity.py na consolidacao part-6,
+     fusao b) — PRAGMA table_info x colunas obrigatorias. Pega a classe de
+     defeito que nenhuma query de dado pega: a COLUNA que nao existe. Foi o
+     unico check nao-redundante do audit_integrity (as varreduras 2-5 dele
+     eram as mesmas SQL daqui); o resto morreu com ele.
+  B. ORFAOS referenciais — as FKs do schema sempre existiram, mas so passaram
+     a ser impostas na part-1 (PRAGMA foreign_keys por conexao). Linhas orfas
+     PRE-existentes nao sao pegas pelo PRAGMA (ele so valida escritas novas).
 
 Padrão warn-first: reporta [WARN] e sai exit 0 SEMPRE — limpeza de dado é
 decisão do operador/agente MedHub, nunca deste script (que não escreve nada).
 Achados registrados no ledger-of-self (tag `fk_orphans`) quando disponível.
 
 Uso: python tools/check_fk_orphans.py
-Baseline 2026-08-14: 0 órfãos nas 5 varreduras.
+Baseline 2026-08-14: 0 órfãos nas 5 varreduras, schema completo.
 """
 import os
 import sqlite3
@@ -39,10 +46,46 @@ VARREDURAS = [
 ]
 
 
+# Camada A — schema (absorvido do audit_integrity.py, fusao b da part-6).
+# (tabela, colunas obrigatorias). taxonomia_cronograma entra aqui porque a
+# part-6 moveu as 3 colunas `dificuldade*` do migrate_dificuldade.py (one-shot,
+# morto) para a CREATE TABLE do init_db.py: este check e a rede que pega um db
+# criado antes da mudanca e nunca migrado.
+SCHEMA_OBRIGATORIO = [
+    ("flashcards", {"frente_pergunta", "verso_resposta", "verso_regra_mestre",
+                    "verso_armadilha", "frente_contexto", "quality_source",
+                    "card_version", "needs_qualitative"}),
+    ("taxonomia_cronograma", {"area", "tema", "dificuldade", "dificuldade_fonte",
+                              "dificuldade_at"}),
+]
+
+
+def checar_schema(conn):
+    """Colunas obrigatorias x PRAGMA table_info. Retorna lista de achados."""
+    achados = []
+    for tabela, obrig in SCHEMA_OBRIGATORIO:
+        try:
+            cols = {r[1] for r in conn.execute(f"PRAGMA table_info({tabela})")}
+        except Exception as e:
+            achados.append({"alvo": f"schema:{tabela}",
+                            "payload": {"erro": f"PRAGMA falhou: {e}"}})
+            continue
+        if not cols:
+            achados.append({"alvo": f"schema:{tabela}",
+                            "payload": {"erro": "tabela inexistente"}})
+            continue
+        faltando = obrig - cols
+        if faltando:
+            achados.append({"alvo": f"schema:{tabela}",
+                            "payload": {"colunas_faltando": sorted(faltando)}})
+    return achados
+
+
 def run_checks(db_path=None):
-    """Roda as 5 varreduras. Retorna lista de achados [{'alvo', 'payload'}] —
-    vazia = base limpa. Sensor defensivo: banco inacessível vira achado próprio
-    (nunca silêncio que mascare sensor quebrado)."""
+    """Roda o check de schema + as 5 varreduras de orfaos. Retorna lista de
+    achados [{'alvo', 'payload'}] — vazia = base limpa. Sensor defensivo:
+    banco inacessível vira achado próprio (nunca silêncio que mascare sensor
+    quebrado)."""
     path = db_path or DB_PATH
     achados = []
     try:
@@ -50,6 +93,7 @@ def run_checks(db_path=None):
     except Exception as e:
         return [{"alvo": "sensor", "payload": {"erro": f"banco inacessivel: {e}"}}]
     try:
+        achados.extend(checar_schema(conn))
         for nome, sql in VARREDURAS:
             try:
                 n = conn.execute(sql).fetchone()[0]
@@ -63,14 +107,23 @@ def run_checks(db_path=None):
     return achados
 
 
+def _detalhe(payload):
+    """Uma linha legivel por tipo de achado (schema, orfaos, sensor)."""
+    if payload.get("erro"):
+        return payload["erro"]
+    if payload.get("colunas_faltando"):
+        return f"colunas faltando: {', '.join(payload['colunas_faltando'])} " \
+               f"(rode tools/init_db.py ou confira a CREATE TABLE)"
+    return f"{payload.get('orfaos')} linha(s) orfa(s)"
+
+
 def main():
     achados = run_checks()
     if not achados:
-        print("[OK] FK_ORPHANS: 0 orfaos nas 5 varreduras.")
+        print("[OK] FK_ORPHANS: schema completo + 0 orfaos nas 5 varreduras.")
     for a in achados:
-        det = a["payload"].get("erro") or f"{a['payload'].get('orfaos')} linha(s) orfa(s)"
-        print(f"[WARN] FK_ORPHANS: {a['alvo']} -- {det}. "
-              f"Limpeza e decisao do operador; este script nao escreve.")
+        print(f"[WARN] FK_ORPHANS: {a['alvo']} -- {_detalhe(a['payload'])}. "
+              f"Conserto e decisao do operador; este script nao escreve.")
     try:
         import ledger_self
         ledger_self.record("fk_orphans", achados)

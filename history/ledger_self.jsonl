@@ -546,3 +546,5 @@
 {"ts": "2026-08-13T00:39:11+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "839e29d03652", "alvo": "card#493"}
 {"ts": "2026-08-13T00:39:11+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "5b1efb48f481", "alvo": "card#523"}
 {"ts": "2026-08-13T00:39:11+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "adf079d6538f", "alvo": "card#524"}
+{"ts": "2026-08-14T20:11:53+00:00", "event": "opened", "check": "calibracao_card_checks", "fingerprint": "e0092133a77a", "alvo": "incidente-781-814", "payload": {"recall": "68/68", "meta": ">=66", "por_tag": {"template-conduta-criterio": 34, "template-distrator-tipico": 34, "resposta-embutida": 34}, "nao_detectados": [], "falso_pos_aparente": 14, "veredito": "PASS"}}
+{"ts": "2026-08-14T21:08:28+00:00", "event": "opened", "check": "parity", "fingerprint": "ddf439b44739", "alvo": "command<->skill", "payload": {"n_drift": 1}}

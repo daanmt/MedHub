@@ -125,6 +125,19 @@ def reacc(txt):
 
 AREA_FIX = {"Obstetricia": "Obstetrícia", "Endocrino": "Endócrino"}
 
+# Os 5 grandes blocos da prova. Especialidades cirurgicas (ortopedia, otorrino,
+# oftalmo, urologia) entram em Cirurgia; todas as subespecialidades clinicas
+# entram em Clinica Medica.
+MACRO = {
+    "Cirurgia": "Cirurgia", "Ortopedia": "Cirurgia", "Otorrino": "Cirurgia", "Oftalmo": "Cirurgia",
+    "Pediatria": "Pediatria",
+    "Preventiva": "Preventiva",
+    "Ginecologia": "GO", "Obstetrícia": "GO",
+}
+MACRO_ORDEM = ["Clínica Médica", "Cirurgia", "GO", "Pediatria", "Preventiva"]
+MACRO_NOME = {"Clínica Médica": "Clínica Médica", "Cirurgia": "Cirurgia",
+              "GO": "G.O.", "Pediatria": "Pediatria", "Preventiva": "Preventiva"}
+
 
 # --------------------------------------------------------------------------
 # 2. Cadeia de habilidades: etapa cognitiva + elo quebrado
@@ -535,9 +548,22 @@ def build(hoje=None):
                 "stab": round(c["stability"] or 0, 1),
             })
 
+        if not alts:                       # S3/S4: so o par conhecido, mesmo desenho
+            alts = [{"letra": "", "pct": None, "role": "bad",
+                     "txt": reacc(r["alternativa_marcada"] or "")},
+                    {"letra": "", "pct": None, "role": "ok",
+                     "txt": reacc(r["alternativa_correta"] or "")}]
+            alts_parciais = True
+        else:
+            alts_parciais = False
+
+        gap = cadeia[quebrado]["txt"] if cadeia else ""
+
         recs.append({
             "id": eid, "sim": sim, "qnum": qnum, "mec": mec, "conf": confs.get(str(eid), "auto"),
-            "area": area, "tema": tema, "titulo": reacc(r["titulo"] or ""),
+            "area": area, "macro": MACRO.get(area, "Clínica Médica"),
+            "gap": gap, "altp": alts_parciais,
+            "tema": tema, "titulo": reacc(r["titulo"] or ""),
             "cx": r["complexidade"] or "Media", "fonte": fonte,
             "enun": enun, "cmd": comando, "cmdsrc": cmd_src,
             "ok": reacc(r["alternativa_correta"] or ""), "bad": reacc(r["alternativa_marcada"] or ""),
@@ -550,6 +576,7 @@ def build(hoje=None):
 
     etapas = [{"k": k, "n": n, "d": d} for k, n, d in ETAPAS]
     return {"erros": recs, "mec": cur["mecanismos_prosa"], "ordem": cur["ordem_mecanismos"],
+            "macro_ordem": MACRO_ORDEM, "macro_nome": MACRO_NOME,
             "sims": {k: {kk: vv for kk, vv in v.items() if kk != "ids"} for k, v in SIMS.items()},
             "etapas": etapas, "hoje": hoje.isoformat()}
 

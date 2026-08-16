@@ -129,19 +129,26 @@ button{font-family:inherit;cursor:pointer}
 @media(max-width:640px){.mbody{padding-left:15px}.mhead{grid-template-columns:22px 1fr;gap:10px}.spark{grid-column:2;margin-top:6px}}
 
 /* filtros */
-.filters{position:sticky;top:0;z-index:30;background:var(--paper);padding:13px 0 11px;border-bottom:1px solid var(--line2);
-  display:flex;flex-direction:column;gap:9px}
+.filters{position:sticky;top:0;z-index:30;background:var(--paper);padding:11px 0 9px;
+  border-bottom:1px solid var(--line2);display:flex;flex-direction:column;gap:8px}
 .filters::before{content:"";position:absolute;inset:0 -20px auto -20px;background:var(--paper);z-index:-1;border-bottom:1px solid var(--line2)}
-.frow{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
-.fgl{font-size:10.5px;font-weight:750;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-right:2px}
-.chip{font-size:12.5px;padding:5px 11px;border:1px solid var(--line2);background:var(--card);color:var(--ink2)}
-.chip:hover{border-color:var(--teal)}
-.chip.on{background:var(--teal);border-color:var(--teal);color:var(--on);font-weight:600}
-.chip .n{opacity:.65;margin-left:4px;font-variant-numeric:tabular-nums}
-input[type=search]{flex:1;min-width:180px;padding:8px 11px;border:1px solid var(--line2);background:var(--card);
-  color:var(--ink);font:inherit;font-size:13.5px}
-input[type=search]::placeholder{color:var(--ink3)}
-.count{font-size:12px;color:var(--ink3);font-variant-numeric:tabular-nums}
+.frow{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.chip{font-size:12.5px;padding:4px 10px;border:1px solid transparent;background:none;color:var(--ink3);
+  border-radius:2px;line-height:1.5}
+.chip:hover{color:var(--ink);background:var(--sunk)}
+.chip.on{background:var(--ink);color:var(--paper);font-weight:600}
+.chip .n{opacity:.55;margin-left:5px;font-variant-numeric:tabular-nums;font-size:11px}
+.chip.sub{font-size:12px;padding:3px 9px;color:var(--ink3)}
+.chip.sub.on{background:var(--teal);color:var(--on)}
+.sep{width:1px;align-self:stretch;background:var(--line2);margin:2px 5px}
+.search{margin-left:auto;display:flex;align-items:center;gap:6px;border:1px solid var(--line2);
+  background:var(--card);padding:0 9px;height:28px;max-width:210px;flex:0 1 210px}
+.search svg{width:13px;height:13px;flex-shrink:0;stroke:var(--ink3);fill:none;stroke-width:2}
+.search input{border:0;background:none;color:var(--ink);font:inherit;font-size:12.5px;width:100%;padding:0;outline:none}
+.search input::placeholder{color:var(--ink3)}
+.search:focus-within{border-color:var(--teal)}
+.count{font-size:11.5px;color:var(--ink3);font-variant-numeric:tabular-nums;white-space:nowrap}
+@media(max-width:640px){.search{margin-left:0;flex:1 1 100%;max-width:none}}
 
 /* lista de erros */
 .list{display:flex;flex-direction:column;gap:9px;padding-top:18px}
@@ -164,13 +171,33 @@ input[type=search]::placeholder{color:var(--ink3)}
 .err.open .ebody{display:block}
 .eblock{padding:0 15px 15px}
 .elab{font-size:10.5px;font-weight:750;letter-spacing:.11em;text-transform:uppercase;color:var(--ink3);margin-bottom:5px}
-.etext{font-size:15.2px;line-height:1.62;color:var(--ink2);max-width:76ch}
+.etext{font-size:15.2px;line-height:1.62;color:var(--ink2);text-align:justify;
+  text-justify:inter-word;hyphens:auto;-webkit-hyphens:auto}
 .etext.serif{font-family:Georgia,"Iowan Old Style",serif;font-size:16px;color:var(--ink)}
+/* colapso de bloco longo */
+.clipw{position:relative}
+.clipw.off .etext{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.clipw.off::after{content:"";position:absolute;left:0;right:0;bottom:0;height:26px;pointer-events:none;
+  background:linear-gradient(to bottom,transparent,var(--card))}
+.eblock.arm .clipw.off::after{background:linear-gradient(to bottom,transparent,var(--rose-wash))}
+.elabrow{display:flex;align-items:center;gap:9px;margin-bottom:5px}
+.elabrow .elab{margin:0}
+.tgl{margin-left:auto;font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--ink3);background:none;border:0;padding:2px 4px;flex-shrink:0}
+.tgl:hover{color:var(--teal-ink)}
 .eblock.arm{background:var(--rose-wash);margin:0 15px 15px;padding:12px 15px;border-left:3px solid var(--rose)}
 .eblock.arm .elab{color:var(--rose-ink)}
 .eblock.arm .etext{color:var(--ink)}
 .eblock.exp{border-left:3px solid var(--teal);margin:0 15px 15px;padding:2px 0 2px 14px}
 .empty{padding:56px 20px;text-align:center;color:var(--ink3);font-size:14.5px}
+
+/* o discriminador que faltou */
+.gap{margin:0 15px 15px;background:var(--rose-wash);border-left:3px solid var(--rose);padding:11px 14px}
+.gap .elab{color:var(--rose-ink);margin-bottom:4px}
+.gap .g{font-size:15px;line-height:1.5;color:var(--ink);font-weight:560}
+.gap .mecl{font-size:11.5px;color:var(--rose-ink);margin-top:6px;opacity:.85}
+.lnk{background:none;border:0;padding:0;font:inherit;color:inherit;text-decoration:underline;
+  text-underline-offset:2px;font-weight:640}
 
 /* comando da questao */
 .cmd{margin:0 15px 15px;background:var(--sunk);border-left:3px solid var(--ink3);padding:11px 14px}
@@ -181,6 +208,7 @@ input[type=search]::placeholder{color:var(--ink3)}
 /* alternativas com % da turma */
 .alts{margin:0 15px 15px;border:1px solid var(--line2)}
 .alt{display:grid;grid-template-columns:26px 1fr 92px;gap:10px;align-items:center;padding:9px 12px;font-size:14px}
+.alts.parcial .alt{grid-template-columns:26px 1fr}
 .alt+.alt{border-top:1px solid var(--line)}
 .alt .lt{font-weight:700;color:var(--ink3);font-variant-numeric:tabular-nums}
 .alt .tx{color:var(--ink2);line-height:1.4}
@@ -284,14 +312,16 @@ code{font-family:ui-monospace,Consolas,monospace;font-size:11.8px;background:var
   <p class="note">Clique num caso para abrir a vinheta, a escada de habilidades, o bug sistêmico e os cards forjados.</p>
 </div>
 <div class="filters">
-  <div class="frow"><span class="fgl">Prova</span><span id="fsim"></span></div>
-  <div class="frow"><span class="fgl">Área</span><span id="farea"></span></div>
-  <div class="frow" id="pillrow" style="display:none"><span class="fgl">Recorte</span><span id="pills"></span></div>
   <div class="frow">
-    <input type="search" id="q" placeholder="Buscar por tema, achado, conduta, fármaco…" aria-label="Buscar nos erros">
-    <button class="chip" id="clr">Limpar filtros</button>
-    <span class="count" id="cnt"></span>
+    <span id="fsim"></span><span class="sep"></span><span id="fmacro"></span>
+    <label class="search">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4.2-4.2"/></svg>
+      <input type="search" id="q" placeholder="Buscar" aria-label="Buscar nos erros">
+    </label>
   </div>
+  <div class="frow" id="subrow" style="display:none"><span id="fsub"></span></div>
+  <div class="frow" id="pillrow" style="display:none"><span id="pills"></span><span class="count" id="cnt"></span></div>
+  <div class="frow" id="cntrow"><span class="count" id="cnt2"></span></div>
 </div>
 <div class="list" id="list"></div>
 <div class="empty" id="empty" style="display:none">Nenhum erro corresponde a esses filtros.</div>
@@ -309,7 +339,7 @@ const $ = s => document.querySelector(s);
 const esc = s => (s||"").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const SIMK = ["S2","S3","S4"];
 const ETAPA = {}; D.etapas.forEach(e => ETAPA[e.k] = e);
-let fSim = null, fArea = null, fMec = null, fEtapa = null, fQ = "";
+let fSim = null, fMacro = null, fArea = null, fMec = null, fEtapa = null, fQ = "";
 
 /* ── trilha ── */
 $("#track").innerHTML = SIMK.map((k,i) => {
@@ -366,13 +396,19 @@ $("#mecs").innerHTML = D.ordem.map(m => {
 }).join("");
 
 /* ── filtros ── */
-const areas = [...new Set(D.erros.map(e => e.area))].sort((a,b) =>
-  D.erros.filter(e=>e.area===b).length - D.erros.filter(e=>e.area===a).length);
-const chip = (g,v,lab,n) => `<button class="chip" data-f="${g}" data-v="${v==null?"":esc(v)}">${esc(lab)}<span class="n">${n}</span></button>`;
-$("#fsim").innerHTML = chip("sim",null,"Todas",D.erros.length) +
-  SIMK.map(k => chip("sim",k,D.sims[k].nome,D.sims[k].erros)).join("");
-$("#farea").innerHTML = chip("area",null,"Todas",D.erros.length) +
-  areas.map(a => chip("area",a,a,D.erros.filter(e=>e.area===a).length)).join("");
+const nMacro = m => D.erros.filter(e => e.macro === m).length;
+const chip = (g,v,lab,n,cls) => `<button class="chip${cls?" "+cls:""}" data-f="${g}" data-v="${v==null?"":esc(v)}">${esc(lab)}<span class="n">${n}</span></button>`;
+$("#fsim").innerHTML = chip("sim",null,"Tudo",D.erros.length) +
+  SIMK.map(k => chip("sim",k,k,D.sims[k].erros)).join("");
+$("#fmacro").innerHTML = D.macro_ordem.filter(nMacro).map(m => chip("macro",m,D.macro_nome[m],nMacro(m))).join("");
+
+function subchips(){
+  if (!fMacro) return "";
+  const subs = [...new Set(D.erros.filter(e=>e.macro===fMacro).map(e=>e.area))]
+    .sort((a,b)=>D.erros.filter(e=>e.area===b).length-D.erros.filter(e=>e.area===a).length);
+  if (subs.length < 2) return "";
+  return subs.map(a => chip("area",a,a,D.erros.filter(e=>e.area===a).length,"sub")).join("");
+}
 
 /* ── peças do card ── */
 function ladder(e){
@@ -423,27 +459,39 @@ function cardsBlock(e){
     <div class="cards">${items}</div><p class="cardstat">${nota}</p>`;
 }
 
-function bugBlock(e){
-  const m = D.mec[e.mec];
-  return `<div class="eblock"><div class="elab">O bug sistêmico aqui — ${esc(m.nome)}</div>
-    <div class="etext">${m.mec}</div></div>
-    <div class="eblock" style="padding-top:0"><div class="ritual"><div class="mlab">O ritual que desarma</div>
-      <div class="mtext">${m.ritual}</div></div></div>`;
+function gapBlock(e){
+  if (!e.gap) return "";
+  return `<div class="gap"><div class="elab">O discriminador que faltou</div>
+    <div class="g">${esc(e.gap)}</div>
+    <div class="mecl">Instância de <button class="lnk" data-filter-mec="${e.mec}">${esc(D.mec[e.mec].nome)}</button> — o mecanismo inteiro está na seção acima.</div></div>`;
 }
 
 function respostas(e){
-  if (e.alts && e.alts.length){
-    const mx = Math.max(...e.alts.map(a => a.pct), 1);
-    return `<div class="alts">${e.alts.map(a => `<div class="alt ${a.role}">
-      <span class="lt">${a.role==="ok"?'<span class="mk">✓</span>':(a.role==="bad"?'<span class="mk">✗</span>':"")}${a.letra}</span>
-      <span class="tx">${esc(a.txt)}</span>
-      <span class="pc"><i style="width:${a.pct/mx*100}%"></i><s>${a.pct}%</s></span></div>`).join("")}</div>
-      <p class="cardstat">Percentual = fatia da turma que marcou cada alternativa.</p>`;
-  }
-  return `<div class="split">
-    <div class="lane bad"><span class="lb"><span class="mark">✗</span>Você marcou</span><span class="lt">${esc(e.bad)}</span></div>
-    <div class="lane ok"><span class="lb"><span class="mark">✓</span>Gabarito</span><span class="lt">${esc(e.ok)}</span></div>
-  </div>`;
+  const mx = Math.max(...e.alts.map(a => a.pct || 0), 1);
+  const linhas = e.alts.map(a => {
+    const mk = a.role === "ok" ? '<span class="mk">✓</span>'
+             : (a.role === "bad" ? '<span class="mk">✗</span>' : "");
+    const pc = e.altp ? ""
+      : `<span class="pc"><i style="width:${(a.pct||0)/mx*100}%"></i><s>${a.pct}%</s></span>`;
+    return `<div class="alt ${a.role}"><span class="lt">${mk}${a.letra}</span>
+      <span class="tx">${esc(a.txt)}</span>${pc}</div>`;
+  }).join("");
+  const nota = e.altp
+    ? "Só o gabarito e a alternativa marcada foram registrados nesta prova — os outros distratores não constam."
+    : "Percentual = fatia da turma que marcou cada alternativa.";
+  return `<div class="alts${e.altp ? " parcial" : ""}">${linhas}</div><p class="cardstat">${nota}</p>`;
+}
+
+/* bloco de texto com botao de compactar */
+let _bid = 0;
+function bloco(lab, txt, cls, serif){
+  if (!txt) return "";
+  const id = "b" + (++_bid);
+  const longo = txt.length > 260;
+  return `<div class="eblock ${cls||""}">
+    <div class="elabrow"><div class="elab">${esc(lab)}</div>
+      ${longo?`<button class="tgl" data-clip="${id}" aria-expanded="true">compactar</button>`:""}</div>
+    <div class="clipw" id="${id}"><div class="etext${serif?" serif":""}">${esc(txt)}</div></div></div>`;
 }
 
 function card(e){
@@ -462,14 +510,14 @@ function card(e){
       <span class="eid mn">#${e.id}</span>
     </button>
     <div class="ebody">
-      ${e.enun?`<div class="eblock"><div class="elab">A vinheta</div><div class="etext serif">${esc(e.enun)}</div></div>`:""}
+      ${bloco("A vinheta", e.enun, "", true)}
       ${cmd}
       ${respostas(e)}
+      ${gapBlock(e)}
       ${ladder(e)}
-      ${e.arm?`<div class="eblock arm"><div class="elab">Por que é armadilha</div><div class="etext">${esc(e.arm)}</div></div>`:""}
-      ${e.falt?`<div class="eblock"><div class="elab">O que faltou</div><div class="etext">${esc(e.falt)}</div></div>`:""}
-      ${e.expl?`<div class="eblock exp"><div class="elab">Racional correto</div><div class="etext serif">${esc(e.expl)}</div></div>`:""}
-      ${bugBlock(e)}
+      ${bloco("Por que é armadilha", e.arm, "arm")}
+      ${bloco("O que faltou", e.falt)}
+      ${bloco("Racional correto", e.expl, "exp", true)}
       ${cardsBlock(e)}
     </div></article>`;
 }
@@ -478,7 +526,8 @@ function card(e){
 function render(){
   const q = fQ.trim().toLowerCase();
   const vis = D.erros.filter(e =>
-    (!fSim || e.sim === fSim) && (!fArea || e.area === fArea) && (!fMec || e.mec === fMec) &&
+    (!fSim || e.sim === fSim) && (!fMacro || e.macro === fMacro) &&
+    (!fArea || e.area === fArea) && (!fMec || e.mec === fMec) &&
     (!fEtapa || (e.cad[e.quebrado] && e.cad[e.quebrado].tipo === fEtapa)) &&
     (!q || [e.titulo,e.tema,e.area,e.enun,e.cmd,e.ok,e.bad,e.arm,e.falt,e.expl,e.tipo,
             e.cad.map(b=>b.txt).join(" "), e.cards.map(c=>c.p+" "+c.r).join(" ")]
@@ -490,10 +539,15 @@ function render(){
   if (fEtapa) pills.push(`<span class="pill">quebrou em: ${esc(ETAPA[fEtapa].n)}<button data-clr="etapa" aria-label="Remover filtro de etapa">×</button></span>`);
   $("#pillrow").style.display = pills.length ? "flex" : "none";
   $("#pills").innerHTML = pills.join("");
-  $("#cnt").textContent = `${vis.length} de ${D.erros.length} erros`;
+  const sc = subchips();
+  $("#subrow").style.display = sc ? "flex" : "none";
+  $("#fsub").innerHTML = sc;
+  const txt = `${vis.length} de ${D.erros.length} erros`;
+  $("#cnt").textContent = txt; $("#cnt2").textContent = txt;
+  $("#cntrow").style.display = pills.length ? "none" : "flex";
   document.querySelectorAll("[data-f]").forEach(b => {
     const g = b.dataset.f, v = b.dataset.v || null;
-    b.classList.toggle("on", (g === "sim" ? fSim : fArea) === v);
+    b.classList.toggle("on", (g === "sim" ? fSim : g === "macro" ? fMacro : fArea) === v);
   });
   document.querySelectorAll("[data-etapa]").forEach(b => {
     const on = b.dataset.etapa === fEtapa;
@@ -504,7 +558,7 @@ function render(){
 function toFilters(){ document.querySelector(".filters").scrollIntoView({behavior:"smooth", block:"start"}); }
 
 document.addEventListener("click", ev => {
-  const t = ev.target.closest("[data-filter-mec],[data-filter-etapa],[data-etapa],[data-toggle],[data-e],[data-f],[data-goto],[data-clr],#clr");
+  const t = ev.target.closest("[data-filter-mec],[data-filter-etapa],[data-etapa],[data-toggle],[data-e],[data-f],[data-goto],[data-clr],[data-clip],#clr");
   if (!t) return;
   if (t.hasAttribute("data-clr")) {
     if (t.dataset.clr === "mec") fMec = null; else fEtapa = null;
@@ -526,21 +580,29 @@ document.addEventListener("click", ev => {
     const a = t.closest(".err"); t.setAttribute("aria-expanded", a.classList.toggle("open"));
     a.classList.remove("hit"); return;
   }
+  if (t.hasAttribute("data-clip")) {
+    const w = document.getElementById(t.dataset.clip);
+    const off = w.classList.toggle("off");
+    t.textContent = off ? "expandir" : "compactar";
+    t.setAttribute("aria-expanded", !off); return;
+  }
   if (t.hasAttribute("data-f")) {
-    const v = t.dataset.v || null;
-    if (t.dataset.f === "sim") fSim = (fSim === v ? null : v); else fArea = (fArea === v ? null : v);
+    const v = t.dataset.v || null, g = t.dataset.f;
+    if (g === "sim") fSim = (fSim === v ? null : v);
+    else if (g === "macro") { fMacro = (fMacro === v ? null : v); fArea = null; }
+    else fArea = (fArea === v ? null : v);
     render(); return;
   }
   if (t.hasAttribute("data-goto")) {
     const id = t.dataset.goto;
-    fSim = fArea = fMec = fEtapa = null; $("#q").value = ""; fQ = "";
+    fSim = fMacro = fArea = fMec = fEtapa = null; $("#q").value = ""; fQ = "";
     render();
     const el = document.getElementById("e" + id);
     if (el) { el.classList.add("open","hit"); el.querySelector(".ehead").setAttribute("aria-expanded","true");
       el.scrollIntoView({behavior:"smooth", block:"center"}); }
     return;
   }
-  if (t.id === "clr") { fSim = fArea = fMec = fEtapa = null; $("#q").value = ""; fQ = ""; render(); }
+  if (t.id === "clr") { fSim = fMacro = fArea = fMec = fEtapa = null; $("#q").value = ""; fQ = ""; render(); }
 });
 $("#q").addEventListener("input", e => { fQ = e.target.value; render(); });
 render();

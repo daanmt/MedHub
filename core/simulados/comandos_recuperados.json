@@ -1,0 +1,310 @@
+{
+ "_doc": "Comando (a pergunta) de cada questao cujo registro original guardou so o contexto do caso. origem=pdf_verbatim -> texto literal do PDF da prova. origem=inferido_das_alternativas -> reconstruido pela forma gramatical das alternativas (diagnostico / conduta / sequencia / julgamento), NAO e o texto original da banca.",
+ "gerado_em": "2026-08-16",
+ "comandos": {
+  "622": {
+   "comando": "Diante do quadro clínico, qual é o manejo mais apropriado?",
+   "origem": "pdf_verbatim",
+   "prova": "S2",
+   "questao": 1
+  },
+  "623": {
+   "comando": "Com base na literatura atual, qual é o diagnóstico mais adequado para Carlos Eduardo neste momento?",
+   "origem": "pdf_verbatim",
+   "prova": "S2",
+   "questao": 2
+  },
+  "624": {
+   "comando": "Considerando-se esse caso, assinale o diagnóstico mais provável.",
+   "origem": "pdf_verbatim",
+   "prova": "S2",
+   "questao": 3
+  },
+  "625": {
+   "comando": "Baseado no quadro clínico apresentado, assinale a alternativa correta.",
+   "origem": "pdf_verbatim",
+   "prova": "S2",
+   "questao": 8
+  },
+  "626": {
+   "comando": "Que orientação deve ser dada à paciente nesse momento?",
+   "origem": "pdf_verbatim",
+   "prova": "S2",
+   "questao": 10
+  },
+  "627": {
+   "comando": "Sobre esse caso, é correto afirmar que:",
+   "origem": "pdf_verbatim",
+   "prova": "S2",
+   "questao": 11
+  },
+  "628": {
+   "comando": "Nessa situação, a conduta correta na atenção primária é:",
+   "origem": "pdf_verbatim",
+   "prova": "S2",
+   "questao": 16
+  },
+  "629": {
+   "comando": "Qual é o exame inicial mais adequado para esse paciente?",
+   "origem": "pdf_verbatim",
+   "prova": "S2",
+   "questao": 17
+  },
+  "630": {
+   "comando": "Com base no quadro clínico apresentado, assinale a alternativa que corresponde ao diagnóstico mais provável.",
+   "origem": "pdf_verbatim",
+   "prova": "S2",
+   "questao": 18
+  },
+  "631": {
+   "comando": "Com base exclusivamente nos achados do exame físico, qual é a síndrome pleuropulmonar mais provável?",
+   "origem": "pdf_verbatim",
+   "prova": "S2",
+   "questao": 22
+  },
+  "633": {
+   "comando": "Qual é a conduta mais adequada para Thiago nesta consulta?",
+   "origem": "pdf_verbatim",
+   "prova": "S2",
+   "questao": 25
+  },
+  "634": {
+   "comando": "De acordo com a Diretriz Brasileira de Hipertensão Arterial – SBC 2025, qual é a classificação da pressão arterial desse paciente e a conduta inicial mais apropriada?",
+   "origem": "pdf_verbatim",
+   "prova": "S2",
+   "questao": 29
+  },
+  "635": {
+   "comando": "O diagnóstico mais provável e o tratamento imediato mais adequado, são, respectivamente:",
+   "origem": "pdf_verbatim",
+   "prova": "S2",
+   "questao": 31
+  },
+  "636": {
+   "comando": "Diante do caso, quais são o diagnóstico e a conduta mais adequada?",
+   "origem": "pdf_verbatim",
+   "prova": "S2",
+   "questao": 33
+  },
+  "637": {
+   "comando": "Como se classifica a morte da paciente, de acordo com a vigilância do óbito materno?",
+   "origem": "pdf_verbatim",
+   "prova": "S2",
+   "questao": 35
+  },
+  "638": {
+   "comando": "Considerando a principal hipótese diagnóstica, assinale a alternativa que descreve o tratamento indicado.",
+   "origem": "pdf_verbatim",
+   "prova": "S2",
+   "questao": 37
+  },
+  "639": {
+   "comando": "A conduta mais apropriada é:",
+   "origem": "pdf_verbatim",
+   "prova": "S2",
+   "questao": 38
+  },
+  "640": {
+   "comando": "Considerando o quadro clínico, qual é a principal hipótese diagnóstica?",
+   "origem": "pdf_verbatim",
+   "prova": "S2",
+   "questao": 46
+  },
+  "641": {
+   "comando": "Considerando a hipótese de apneia obstrutiva do sono, que escala a seguir é útil na avaliação desse diagnóstico?",
+   "origem": "pdf_verbatim",
+   "prova": "S2",
+   "questao": 48
+  },
+  "642": {
+   "comando": "Considerando as recomendações atuais de reanimação neonatal, assinale a alternativa que descreve corretamente a conduta inicial mais adequada nesse cenário.",
+   "origem": "pdf_verbatim",
+   "prova": "S2",
+   "questao": null
+  },
+  "643": {
+   "comando": "Acerca da assistência ao trabalho de parto, assinale a alternativa correta.",
+   "origem": "pdf_verbatim",
+   "prova": "S2",
+   "questao": 52
+  },
+  "644": {
+   "comando": "Baseado no caso, o exame mais indicado para investigação etiológica inicial é:",
+   "origem": "pdf_verbatim",
+   "prova": "S2",
+   "questao": 54
+  },
+  "645": {
+   "comando": "Que achado justifica um encaminhamento imediato para avaliação especializada?",
+   "origem": "pdf_verbatim",
+   "prova": "S2",
+   "questao": 56
+  },
+  "647": {
+   "comando": "Qual é a conduta adequada nesse momento?",
+   "origem": "pdf_verbatim",
+   "prova": "S2",
+   "questao": 62
+  },
+  "649": {
+   "comando": "Com base no quadro clínico, assinale a alternativa que indica o tipo mais provável de hanseníase.",
+   "origem": "pdf_verbatim",
+   "prova": "S2",
+   "questao": 67
+  },
+  "650": {
+   "comando": "Considerando o caso apresentado, qual é a conduta correta?",
+   "origem": "pdf_verbatim",
+   "prova": "S2",
+   "questao": 68
+  },
+  "651": {
+   "comando": "Assinale a alternativa que descreve o método anticoncepcional melhor indicado para essa paciente.",
+   "origem": "pdf_verbatim",
+   "prova": "S2",
+   "questao": 69
+  },
+  "652": {
+   "comando": "A enfermeira está:",
+   "origem": "pdf_verbatim",
+   "prova": "S2",
+   "questao": 70
+  },
+  "653": {
+   "comando": "Considerando a principal hipótese diagnóstica, qual é a conduta a ser realizada imediatamente?",
+   "origem": "pdf_verbatim",
+   "prova": "S2",
+   "questao": 72
+  },
+  "654": {
+   "comando": "Baseado no quadro clínico, quais são a classificação do trauma e a conduta?",
+   "origem": "pdf_verbatim",
+   "prova": "S2",
+   "questao": 74
+  },
+  "655": {
+   "comando": "Qual é a conduta mais adequada nesse momento?",
+   "origem": "pdf_verbatim",
+   "prova": "S2",
+   "questao": 75
+  },
+  "658": {
+   "comando": "Baseado no caso, assinale a alternativa correta.",
+   "origem": "pdf_verbatim",
+   "prova": "S2",
+   "questao": 78
+  },
+  "660": {
+   "comando": "Considerando que o número de óbitos registrados foi igual a 50, a mortalidade específica ocasionada pela poluição:",
+   "origem": "pdf_verbatim",
+   "prova": "S2",
+   "questao": 82
+  },
+  "661": {
+   "comando": "Qual é a conduta prioritária no atendimento intra- hospitalar deste paciente?",
+   "origem": "pdf_verbatim",
+   "prova": "S2",
+   "questao": 83
+  },
+  "663": {
+   "comando": "Baseando-se nesse quadro, qual é a medida prioritária no atendimento inicial?",
+   "origem": "pdf_verbatim",
+   "prova": "S2",
+   "questao": 86
+  },
+  "664": {
+   "comando": "Com base no quadro descrito, assinale a alternativa que descreve a hipótese diagnóstica mais provável:",
+   "origem": "pdf_verbatim",
+   "prova": "S2",
+   "questao": 88
+  },
+  "665": {
+   "comando": "Qual é a conduta mais adequada para Melissa?",
+   "origem": "pdf_verbatim",
+   "prova": "S2",
+   "questao": 96
+  },
+  "666": {
+   "comando": "Considerando o caso descrito, assinale a alternativa que descreve a hipótese diagnóstica mais provável:",
+   "origem": "pdf_verbatim",
+   "prova": "S2",
+   "questao": 97
+  },
+  "667": {
+   "comando": "Qual é a próxima conduta indicada para o caso?",
+   "origem": "pdf_verbatim",
+   "prova": "S2",
+   "questao": 98
+  },
+  "784": {
+   "comando": "Qual o diagnóstico mais provável e a conduta inicial mais adequada?",
+   "origem": "inferido_das_alternativas",
+   "prova": "S4"
+  },
+  "785": {
+   "comando": "Assinale a sequência correta de marcadores tumorais para as neoplasias listadas.",
+   "origem": "inferido_das_alternativas",
+   "prova": "S4"
+  },
+  "789": {
+   "comando": "Qual a conduta terapêutica mais adequada neste momento?",
+   "origem": "inferido_das_alternativas",
+   "prova": "S4"
+  },
+  "794": {
+   "comando": "Qual a principal hipótese diagnóstica e o exame que a confirma?",
+   "origem": "inferido_das_alternativas",
+   "prova": "S4"
+  },
+  "795": {
+   "comando": "Qual a conduta mais adequada neste momento?",
+   "origem": "inferido_das_alternativas",
+   "prova": "S4"
+  },
+  "796": {
+   "comando": "Qual a principal hipótese diagnóstica?",
+   "origem": "inferido_das_alternativas",
+   "prova": "S4"
+  },
+  "797": {
+   "comando": "Qual a principal hipótese diagnóstica?",
+   "origem": "inferido_das_alternativas",
+   "prova": "S4"
+  },
+  "798": {
+   "comando": "Sobre o indeferimento do acompanhante pela secretaria, assinale a alternativa correta.",
+   "origem": "inferido_das_alternativas",
+   "prova": "S4"
+  },
+  "799": {
+   "comando": "Qual o delineamento de estudo mais adequado para essa investigação?",
+   "origem": "inferido_das_alternativas",
+   "prova": "S4"
+  },
+  "800": {
+   "comando": "Qual a conduta mais adequada?",
+   "origem": "inferido_das_alternativas",
+   "prova": "S4"
+  },
+  "803": {
+   "comando": "Qual a conduta terapêutica mais adequada?",
+   "origem": "inferido_das_alternativas",
+   "prova": "S4"
+  },
+  "805": {
+   "comando": "Qual o diagnóstico mais provável e a conduta inicial mais adequada?",
+   "origem": "inferido_das_alternativas",
+   "prova": "S4"
+  },
+  "811": {
+   "comando": "Qual a conduta cirúrgica mais adequada neste momento?",
+   "origem": "inferido_das_alternativas",
+   "prova": "S4"
+  },
+  "814": {
+   "comando": "Qual a conduta mais adequada neste momento?",
+   "origem": "inferido_das_alternativas",
+   "prova": "S4"
+  }
+ }
+}

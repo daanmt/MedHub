@@ -18,8 +18,8 @@ prova. A fila foi refeita só com o guia.
 
 ## O que JÁ FOI FEITO e está aplicado
 
-- **Acentuação do `ipub.db`**: 79 dos 120 registros de erro dos simulados tiveram acentos
-  restaurados (636 campos). Método: dicionário de 2.035 palavras colhido dos próprios
+- **Acentuação do `ipub.db`**: 119 dos 120 registros de erro dos simulados tiveram acentos
+  restaurados. Método: dicionário de 2.035 palavras colhido dos próprios
   `resumos/**/*.md` (`core/simulados/acentos_pt_br.json`) + passe de sonnets sob invariante dura
   `sem_diacriticos(novo) == sem_diacriticos(antigo)`, verificada por `tools/aplica_acentos.py`.
   1 registro (#808) foi REJEITADO pela invariante — o agente mudou além do acento.
@@ -72,20 +72,15 @@ de acerto), mas **vieram sem acentuação** — por isso o passe de `prep_reforj
 ROI por slot com o guia como verdade, não descalibragem de blueprint. Depois republicar em
 https://claude.ai/code/artifact/8a3fcf35-a82c-471f-a2d4-9bc89a5c28e8
 
-### 3. Acentos dos registros restantes
+### 3. Acentos -- CONCLUIDO (119/120)
 
-Estado real ao fim da sessão: **82 dos 120** registros acentuados e aplicados. Os 6 lotes
-voltaram, mas **os lotes 2, 3 e parte do 6 foram rejeitados em massa pela invariante** — esses
-agentes não se limitaram a acentuar: reescreveram e expandiram `explicacao_correta`,
-`o_que_faltou` e `armadilha_prova`. O gate funcionou (nada de conteúdo reescrito entrou no
-banco), mas o trabalho deles é inaproveitável como está.
+Todos os 6 lotes entraram. Restou **apenas o #808**, rejeitado pela invariante -- reprocessar a
+mao. Diagnostico intermediario que eu registrei aqui ("os agentes reescreveram conteudo") estava
+ERRADO: a causa real era o primeiro arquivo do lote 2 vir com escape de HTML; o agente regravou e
+passou limpo. Nenhum conteudo reescrito entrou no banco em momento algum.
 
-Ao relançar, endurecer o prompt: proibir explicitamente ampliar/reescrever qualquer campo, e
-pedir para devolver o texto **idêntico** quando não houver acento a acrescentar. Rodar depois
-`python tools/aplica_acentos.py` (dry-run) e só então `--apply`.
-
-`tools/aplica_acentos.py` já tolera o sufixo do comando anexado ao `enunciado` (o comando foi
-gravado DEPOIS que os agentes leram o texto). Reprocessar #808 à mão.
+`tools/aplica_acentos.py` tolera o sufixo do comando anexado ao `enunciado` (o comando foi gravado
+DEPOIS que os agentes leram o texto).
 
 ### 4. Cards que o artefato mostra
 

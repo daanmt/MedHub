@@ -1,0 +1,466 @@
+{
+ "_doc": "Curadoria autoral da Autopsia dos Simulados. mecanismo = taxonomia de bug sistemico (s143). elo_quebrado = indice 0-based do bloco da cadeia onde o raciocinio quebrou (sobrescreve a heuristica). tipo_bloco = etapa cognitiva por bloco (sobrescreve a heuristica). Revisado a mao caso a caso na s146.",
+ "mecanismo": {
+  "622": "exclui",
+  "623": "desatualizada",
+  "624": "exclui",
+  "625": "lacuna",
+  "626": "comporta",
+  "627": "exclui",
+  "628": "exclui",
+  "629": "negativo",
+  "630": "exclui",
+  "631": "inversao",
+  "632": "comporta",
+  "633": "comporta",
+  "634": "lacuna",
+  "635": "comporta",
+  "636": "exclui",
+  "637": "exclui",
+  "638": "lacuna",
+  "639": "comporta",
+  "640": "exclui",
+  "641": "comporta",
+  "642": "desatualizada",
+  "643": "inversao",
+  "644": "comporta",
+  "645": "exclui",
+  "646": "lacuna",
+  "647": "lacuna",
+  "648": "escore",
+  "649": "exclui",
+  "650": "comporta",
+  "651": "comporta",
+  "652": "lacuna",
+  "653": "comporta",
+  "654": "escore",
+  "655": "contexto",
+  "656": "exclui",
+  "657": "lacuna",
+  "658": "contexto",
+  "659": "lacuna",
+  "660": "categoria",
+  "661": "lacuna",
+  "662": "negativo",
+  "663": "comporta",
+  "664": "exclui",
+  "665": "desatualizada",
+  "666": "lacuna",
+  "667": "comporta",
+  "719": "categoria",
+  "720": "exclui",
+  "721": "contexto",
+  "722": "comporta",
+  "723": "lacuna",
+  "724": "escore",
+  "725": "lacuna",
+  "726": "degrau-anterior",
+  "727": "exclui",
+  "728": "categoria",
+  "729": "comporta",
+  "730": "lacuna",
+  "731": "lacuna",
+  "732": "comporta",
+  "733": "exclui",
+  "734": "negativo",
+  "735": "exclui",
+  "736": "desatualizada",
+  "737": "exclui",
+  "738": "lacuna",
+  "739": "lacuna",
+  "740": "comporta",
+  "741": "comporta",
+  "742": "escore",
+  "743": "negativo",
+  "744": "lacuna",
+  "745": "exclui",
+  "746": "inversao",
+  "747": "exclui",
+  "748": "lacuna",
+  "749": "exclui",
+  "750": "desatualizada",
+  "751": "exclui",
+  "752": "lacuna",
+  "753": "lacuna",
+  "754": "lacuna",
+  "755": "desatualizada",
+  "756": "contexto",
+  "757": "comporta",
+  "758": "lacuna",
+  "781": "comporta",
+  "782": "exclui",
+  "783": "exclui",
+  "784": "exclui",
+  "785": "par",
+  "786": "comporta",
+  "787": "desatualizada",
+  "788": "degrau-anterior",
+  "789": "comporta",
+  "790": "comporta",
+  "791": "contexto",
+  "792": "negativo",
+  "793": "contexto",
+  "794": "exclui",
+  "795": "desatualizada",
+  "796": "exclui",
+  "797": "exclui",
+  "798": "lacuna",
+  "799": "contexto",
+  "800": "comporta",
+  "801": "desatualizada",
+  "802": "exclui",
+  "803": "comporta",
+  "804": "desatualizada",
+  "805": "exclui",
+  "806": "escore",
+  "807": "escore",
+  "808": "comporta",
+  "809": "comporta",
+  "810": "inversao",
+  "811": "exclui",
+  "812": "categoria",
+  "813": "contexto",
+  "814": "contexto"
+ },
+ "conf_mecanismo": {
+  "622": "auto",
+  "623": "auto",
+  "624": "auto",
+  "625": "auto",
+  "626": "auto",
+  "627": "auto",
+  "628": "auto",
+  "629": "auto",
+  "630": "auto",
+  "631": "auto",
+  "632": "auto",
+  "633": "auto",
+  "634": "auto",
+  "635": "auto",
+  "636": "auto",
+  "637": "auto",
+  "638": "auto",
+  "639": "auto",
+  "640": "auto",
+  "641": "auto",
+  "642": "auto",
+  "643": "auto",
+  "644": "auto",
+  "645": "auto",
+  "646": "auto",
+  "647": "auto",
+  "648": "auto",
+  "649": "auto",
+  "650": "auto",
+  "651": "auto",
+  "652": "auto",
+  "653": "auto",
+  "654": "auto",
+  "655": "auto",
+  "656": "auto",
+  "657": "auto",
+  "658": "auto",
+  "659": "auto",
+  "660": "auto",
+  "661": "auto",
+  "662": "auto",
+  "663": "auto",
+  "664": "auto",
+  "665": "auto",
+  "666": "auto",
+  "667": "auto",
+  "719": "auto",
+  "720": "auto",
+  "721": "auto",
+  "722": "auto",
+  "723": "auto",
+  "724": "auto",
+  "725": "auto",
+  "726": "manual",
+  "727": "auto",
+  "728": "auto",
+  "729": "auto",
+  "730": "auto",
+  "731": "auto",
+  "732": "auto",
+  "733": "auto",
+  "734": "auto",
+  "735": "auto",
+  "736": "auto",
+  "737": "auto",
+  "738": "auto",
+  "739": "auto",
+  "740": "auto",
+  "741": "auto",
+  "742": "auto",
+  "743": "auto",
+  "744": "auto",
+  "745": "auto",
+  "746": "auto",
+  "747": "auto",
+  "748": "auto",
+  "749": "auto",
+  "750": "auto",
+  "751": "auto",
+  "752": "auto",
+  "753": "auto",
+  "754": "auto",
+  "755": "auto",
+  "756": "auto",
+  "757": "auto",
+  "758": "auto",
+  "781": "manual",
+  "782": "manual",
+  "783": "manual",
+  "784": "manual",
+  "785": "manual",
+  "786": "manual",
+  "787": "manual",
+  "788": "manual",
+  "789": "manual",
+  "790": "manual",
+  "791": "manual",
+  "792": "manual",
+  "793": "manual",
+  "794": "manual",
+  "795": "manual",
+  "796": "manual",
+  "797": "manual",
+  "798": "manual",
+  "799": "manual",
+  "800": "manual",
+  "801": "manual",
+  "802": "manual",
+  "803": "manual",
+  "804": "manual",
+  "805": "manual",
+  "806": "manual",
+  "807": "manual",
+  "808": "manual",
+  "809": "manual",
+  "810": "manual",
+  "811": "manual",
+  "812": "manual",
+  "813": "manual",
+  "814": "manual"
+ },
+ "elo_quebrado": {
+  "622": 1,
+  "624": 1,
+  "636": 1,
+  "638": 1,
+  "650": 1,
+  "657": 1,
+  "659": 1,
+  "664": 1,
+  "732": 3,
+  "735": 1,
+  "740": 2,
+  "744": 2,
+  "747": 2,
+  "753": 2,
+  "757": 2,
+  "789": 4,
+  "792": 1,
+  "795": 2,
+  "803": 2,
+  "808": 1
+ },
+ "tipo_bloco": {
+  "625": {
+   "2": "conduta"
+  },
+  "631": {
+   "1": "discriminar"
+  },
+  "632": {
+   "2": "conduta"
+  },
+  "634": {
+   "1": "fato"
+  },
+  "641": {
+   "1": "fato"
+  },
+  "645": {
+   "2": "regua"
+  },
+  "646": {
+   "1": "regua"
+  },
+  "647": {
+   "1": "regua"
+  },
+  "648": {
+   "1": "fato"
+  },
+  "655": {
+   "2": "conduta"
+  },
+  "657": {
+   "1": "fato"
+  },
+  "721": {
+   "2": "conduta"
+  },
+  "724": {
+   "1": "regua"
+  },
+  "728": {
+   "3": "discriminar"
+  },
+  "729": {
+   "2": "conduta"
+  },
+  "740": {
+   "2": "conduta"
+  },
+  "741": {
+   "2": "conduta"
+  },
+  "742": {
+   "2": "conduta"
+  },
+  "744": {
+   "2": "conduta"
+  },
+  "747": {
+   "2": "conduta"
+  },
+  "749": {
+   "1": "discriminar"
+  },
+  "753": {
+   "2": "regua"
+  },
+  "754": {
+   "2": "conduta"
+  },
+  "781": {
+   "3": "ordem"
+  },
+  "785": {
+   "0": "ordem"
+  },
+  "786": {
+   "1": "regua"
+  },
+  "789": {
+   "4": "conduta"
+  },
+  "790": {
+   "2": "conduta"
+  },
+  "791": {
+   "2": "conduta"
+  },
+  "793": {
+   "2": "regua"
+  },
+  "794": {
+   "2": "dado"
+  },
+  "795": {
+   "2": "conduta"
+  },
+  "797": {
+   "0": "discriminar"
+  },
+  "798": {
+   "2": "regua"
+  },
+  "799": {
+   "0": "regua"
+  },
+  "805": {
+   "3": "dado"
+  },
+  "808": {
+   "1": "ordem"
+  },
+  "814": {
+   "2": "ordem"
+  }
+ },
+ "mecanismos_prosa": {
+  "exclui": {
+   "nome": "O discriminador que EXCLUI",
+   "resumo": "O enunciado traz um dado que <em>elimina ativamente</em> a alternativa mais saliente — e ele é lido como silêncio, não como informação.",
+   "mec": "A âncora é o achado mais chamativo da vinheta. Você constrói a hipótese em cima dele e para. Enquanto isso, um segundo dado — quase sempre um achado <strong>normal, ausente ou negativo</strong> — está dizendo que aquela hipótese não pode ser a certa. Achado normal não é lacuna de dado: é exclusão. Uma eletroforese normal <em>afasta</em> beta-talassemia. Um FAST negativo <em>diz onde o sangue não está</em>. Uma paciente irritada <em>não é</em> uma paciente letárgica.",
+   "ritual": "Antes de marcar: <strong>&ldquo;qual dado deste enunciado EXCLUI a alternativa que eu ia escolher?&rdquo;</strong> Se você não encontra nenhum, releia os achados normais e as negativas — é ali que ele está escondido."
+  },
+  "comporta": {
+   "nome": "Comporta de conduta não checada",
+   "resumo": "A conduta é escolhida pela aparência de gravidade do quadro, sem consultar o critério objetivo que a libera ou a barra.",
+   "mec": "Não é viés de sobretratamento. A comporta simplesmente fica fora do caminho, nas duas direções: quando o quadro <em>parece</em> grave você escala além do protocolo; quando <em>parece</em> brando você deixa de fazer o que estava indicado. Nos dois casos o critério estava escrito no enunciado. Cada tema tem sua comporta — estabilidade hemodinâmica no trauma, critérios de internação na DIP, estigmas de Fukuoka no IPMN, gatilhos do plano C na desidratação.",
+   "ritual": "Duas perguntas, nunca uma só: <strong>&ldquo;o critério objetivo deste tema autoriza a conduta que vou marcar?&rdquo;</strong> e <strong>&ldquo;ele obriga alguma conduta que eu estou deixando de fazer?&rdquo;</strong>"
+  },
+  "contexto": {
+   "nome": "Fato no contexto errado",
+   "resumo": "Um fato verdadeiro é aplicado fora da condição em que ele vale — faixa etária vizinha, doença vizinha, consequência vizinha.",
+   "mec": "O conhecimento está correto; o endereço é que está errado. Lichtenstein é técnica real, mas para hérnia inguinal, não femoral. &ldquo;Apenas PPD&rdquo; é conduta correta, mas para maiores de 10 anos. Tumor &gt;3 cm é dado relevante, mas indica estadiamento invasivo, não neoadjuvância. A banca constrói o distrator com um fato que você reconhece e sabe estar certo — em outro lugar.",
+   "ritual": "<strong>&ldquo;A condição deste caso é a mesma do caso onde eu aprendi esse fato?&rdquo;</strong> Cheque idade, gravidade, órgão e momento antes de transferir a conduta."
+  },
+  "desatualizada": {
+   "nome": "Diretriz desatualizada",
+   "resumo": "A verificação foi concluída — mas contra uma versão antiga do protocolo. Não é processo, é régua velha.",
+   "mec": "Mecanismo distinto de todos os outros desta lista: aqui você não parou cedo nem pulou etapa. Você aplicou corretamente uma regra que mudou. Já atingiu SBC, PNI, ATLS, SBD, dislipidemia, reanimação neonatal, CFM, PCDT da hepatite C e ASGE. É o padrão nº 1 do ledger e o único que raciocínio nenhum corrige — só varredura periódica das fontes.",
+   "ritual": "Quando o enunciado <strong>nomeia a fonte e o ano</strong> (&ldquo;segundo a SBC 2025&rdquo;, &ldquo;PNI vigente em 2026&rdquo;, &ldquo;protocolo vigente no Brasil&rdquo;), ele está avisando que cobra a versão nova. Pergunte: <strong>&ldquo;essa regra teve atualização que eu não incorporei?&rdquo;</strong>"
+  },
+  "escore": {
+   "nome": "Classifica por impressão, não pela régua",
+   "resumo": "Existe um escore nomeado com parâmetros dados no enunciado — e a categoria é estimada pela sensação de gravidade em vez de somada.",
+   "mec": "Quando a questão cita PRAM, Caprini, Fukuoka, BISAP ou um grau de lesão, ela está entregando os itens para você contar. Estimar produz erros que a soma nunca produziria: no Caprini a estimativa chegou a uma categoria que <em>não existe</em> na escala. Se o escore fosse consultado, isso seria impossível.",
+   "ritual": "Escore nomeado no enunciado = escore para <strong>calcular</strong>. Liste os itens, atribua os pontos, some, leia a faixa. Nunca vá direto da impressão para a categoria."
+  },
+  "negativo": {
+   "nome": "Enunciado negativo",
+   "resumo": "A questão pede a alternativa FALSA e você marca uma verdadeira — em geral um termo familiar de outra categoria.",
+   "mec": "O padrão mais teimoso do histórico: reincidiu em s079-080, s120 (com mini-drill feito e recaída no dia seguinte), s138 e de novo agora. A assinatura é sempre a mesma: sob pressão de tempo, um termo reconhecível de uma lista <em>vizinha</em> é processado como pertencente à lista da pergunta. Leucocitúria soa a ITU e é marcada como &ldquo;contra Kawasaki&rdquo; — quando é piúria estéril, critério a favor.",
+   "ritual": "Rotule cada alternativa <strong>V ou F</strong> e conte os F: <strong>deve dar exatamente 1</strong>. Deu 0 (não achou a falsa) ou 2 (rotulou alguma errado)? Você não terminou — volte, não chute. O número de F é o checksum da questão."
+  },
+  "inversao": {
+   "nome": "Inversão de direção",
+   "resumo": "O par está certo, os polos estão trocados: alto por baixo, positivo por negativo, antes por depois.",
+   "mec": "Você lembra que duas coisas se relacionam, mas grava a relação sem a seta. Coleta precoce do pezinho compromete fenilcetonúria e hipotireoidismo — mas dá falso-<em>negativo</em> numa e falso-<em>positivo</em> na outra. A direção sai do mecanismo: acúmulo que ainda não ocorreu falseia para baixo; pico fisiológico que ainda não cedeu falseia para cima.",
+   "ritual": "Nunca guarde a associação sozinha. <strong>Guarde o mecanismo que impõe a direção</strong> — se você consegue reconstruir o porquê, a seta nunca inverte."
+  },
+  "categoria": {
+   "nome": "Termo de categoria adjacente",
+   "resumo": "Um termo real e familiar, pertencente a uma lista vizinha, é aceito como se fosse da lista da pergunta.",
+   "mec": "Primo do enunciado negativo, mas independente dele. CMV é testado em contexto transfusional — para receptores de risco, não em toda bolsa. &ldquo;Esclerodermiforme&rdquo; é subtipo real — do carcinoma basocelular, não do melanoma. &ldquo;Óbitos/casos admitidos&rdquo; é fórmula válida — da letalidade, não da mortalidade específica. A familiaridade do termo é exatamente o que faz a armadilha funcionar.",
+   "ritual": "Quando o termo soar conhecido, pergunte <strong>&ldquo;conhecido de onde?&rdquo;</strong> — e confira se a lista de onde ele vem é a lista que a pergunta pede."
+  },
+  "degrau-anterior": {
+   "nome": "Responde a pergunta anterior",
+   "resumo": "Você pede o exame que responde uma pergunta que o caso já respondeu, em vez do que responde a pergunta viva.",
+   "mec": "Espelho do &ldquo;pula a hierarquia&rdquo;: aqui você fica um degrau <em>atrás</em>. A idade óssea separa variante benigna de puberdade precoce patológica — mas o caso já entregou velocidade de crescimento de 7 cm/ano e progressão de Tanner em 4 meses, que fecham &ldquo;patológica&rdquo;. A pergunta viva passou a ser central ou periférica, e só o LH basal responde.",
+   "ritual": "Antes de escolher o exame: <strong>&ldquo;o que este caso já provou, e o que ainda está em aberto?&rdquo;</strong> Peça o exame da pergunta aberta."
+  },
+  "par": {
+   "nome": "Par ou sequência incompleta",
+   "resumo": "A resposta exige duas partes ou quatro correspondências, e você valida as primeiras e para.",
+   "mec": "Numa questão de correspondência, <em>todas</em> as alternativas plausíveis começam certo — é o início correto que serve de isca. A banca escreveu isso literalmente: &ldquo;embora o Ca 72-4 e o PSA estejam corretos nas duas primeiras posições, o erro prévio anula a opção&rdquo;.",
+   "ritual": "Valide <strong>cada</strong> posição de forma independente antes de marcar. Acerto parcial no início não é evidência sobre o resto."
+  },
+  "lacuna": {
+   "nome": "Lacuna de conteúdo pura",
+   "resumo": "Sem padrão de raciocínio identificável: o fato não estava disponível. Corrige-se estudando, não mudando o processo.",
+   "mec": "Esta é a categoria honesta do mapa — nem todo erro é bug de execução. Aqui o conteúdo simplesmente não estava na memória, e nenhum ritual de prova recuperaria. São os erros que justificam aula-base e card de cristalização, não treino de leitura de enunciado.",
+   "ritual": "Nada a treinar na hora da prova. <strong>Vira card de fato direto</strong> e entra na repetição espaçada."
+  }
+ },
+ "ordem_mecanismos": [
+  "exclui",
+  "comporta",
+  "lacuna",
+  "desatualizada",
+  "contexto",
+  "escore",
+  "negativo",
+  "inversao",
+  "categoria",
+  "degrau-anterior",
+  "par"
+ ]
+}

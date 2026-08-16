@@ -1,0 +1,434 @@
+<title>A Fila Errada</title>
+<style>
+:root{
+  --paper:#ECEFE9; --card:#FAFBF8; --sunk:#E2E6DE;
+  --ink:#161A17; --ink2:#4A544C; --ink3:#7B857D;
+  --line:rgba(22,26,23,.13); --line2:rgba(22,26,23,.28);
+  --teal:#1A5654; --teal-ink:#123E3C; --teal-wash:#DCE9E6;
+  --rose:#A03A5D; --rose-ink:#7C2946; --rose-wash:#F4E1E7;
+  --ochre:#8A6A12; --ochre-ink:#68500C; --ochre-wash:#F2E9CE;
+  --on:#FFFFFF;
+  --s1:#008C84; --s2:#A07A0C;            /* series validadas p/ os graficos */
+  --grid:rgba(22,26,23,.10);
+  --sh:0 1px 2px rgba(22,26,23,.05),0 10px 26px -16px rgba(22,26,23,.3);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#101413; --card:#181D1B; --sunk:#212825;
+  --ink:#E7EDE8; --ink2:#AEBAB1; --ink3:#7D8A80;
+  --line:rgba(231,237,232,.14); --line2:rgba(231,237,232,.3);
+  --teal:#57ADA8; --teal-ink:#7FC9C4; --teal-wash:#14312F;
+  --rose:#D98BA4; --rose-ink:#EBA9BE; --rose-wash:#361A24;
+  --ochre:#C9A54A; --ochre-ink:#DEBF74; --ochre-wash:#332A10;
+  --on:#101413;
+  --s1:#12A99C; --s2:#A38228;
+  --grid:rgba(231,237,232,.12);
+  --sh:0 1px 2px rgba(0,0,0,.45),0 12px 30px -16px rgba(0,0,0,.75);
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#101413; --card:#181D1B; --sunk:#212825;
+  --ink:#E7EDE8; --ink2:#AEBAB1; --ink3:#7D8A80;
+  --line:rgba(231,237,232,.14); --line2:rgba(231,237,232,.3);
+  --teal:#57ADA8; --teal-ink:#7FC9C4; --teal-wash:#14312F;
+  --rose:#D98BA4; --rose-ink:#EBA9BE; --rose-wash:#361A24;
+  --ochre:#C9A54A; --ochre-ink:#DEBF74; --ochre-wash:#332A10;
+  --on:#101413;
+  --s1:#12A99C; --s2:#A38228;
+  --grid:rgba(231,237,232,.12);
+  --sh:0 1px 2px rgba(0,0,0,.45),0 12px 30px -16px rgba(0,0,0,.75);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);
+  font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.mn{font-family:ui-monospace,"SF Mono",SFMono-Regular,Consolas,monospace;font-variant-numeric:tabular-nums}
+h1,h2{margin:0;font-weight:670;letter-spacing:-.025em;text-wrap:balance;line-height:1.14}
+h1{font-size:clamp(27px,4.4vw,42px)}
+h2{font-size:clamp(18px,2.3vw,23px)}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px 90px}
+:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+button{font-family:inherit;cursor:pointer}
+p{margin:0 0 13px}
+
+.top{padding:46px 0 8px}
+.eye{font-size:11px;font-weight:750;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);margin:0 0 13px}
+.top h1{margin-bottom:15px;max-width:17ch}
+.lede{font-size:17.5px;line-height:1.56;color:var(--ink2);max-width:64ch}
+.lede strong{color:var(--ink);font-weight:620}
+
+.bar{display:flex;align-items:baseline;gap:12px;border-bottom:2px solid var(--ink);padding-bottom:7px;margin:48px 0 18px;flex-wrap:wrap}
+.bar h2{flex:1;min-width:220px}
+.bar .note{font-size:12px;color:var(--ink3);max-width:44ch}
+
+/* cartoes de numero */
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:22px 0 4px}
+.tile{background:var(--card);border:1px solid var(--line2);padding:14px 15px}
+.tile .k{font-size:10.5px;font-weight:750;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3)}
+.tile .v{font-size:31px;font-weight:680;letter-spacing:-.035em;line-height:1.05;margin-top:6px;font-variant-numeric:tabular-nums}
+.tile .d{font-size:12.5px;color:var(--ink3);margin-top:4px;line-height:1.35}
+.tile.alert{border-color:var(--rose)}
+.tile.alert .v{color:var(--rose-ink)}
+
+/* prosa */
+.prose{max-width:68ch;font-size:15.6px;line-height:1.62;color:var(--ink2)}
+.prose strong{color:var(--ink);font-weight:600}
+.prose em{font-style:italic}
+
+/* figuras */
+figure{margin:22px 0 8px;background:var(--card);border:1px solid var(--line2);padding:17px 18px 14px}
+figcaption{font-size:12.3px;color:var(--ink3);line-height:1.45;margin-top:11px;max-width:78ch}
+.legend{display:flex;gap:15px;flex-wrap:wrap;font-size:12px;color:var(--ink2);margin-bottom:13px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.sw{width:11px;height:11px;border-radius:50%;display:inline-block}
+.sw.hollow{border-radius:0;width:2px;height:13px;background:var(--ink3)}
+.chart{width:100%;overflow-x:auto}
+svg{display:block;max-width:100%;height:auto}
+.axl{font-size:11.5px;fill:var(--ink3)}
+.lbl{font-size:12.5px;fill:var(--ink);font-weight:560}
+.val{font-size:11.5px;fill:var(--ink2);font-variant-numeric:tabular-nums}
+.gridline{stroke:var(--grid);stroke-width:1}
+
+/* tabelas de troca */
+.swap{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:20px}
+@media(max-width:840px){.swap{grid-template-columns:1fr}}
+.col{background:var(--card);border:1px solid var(--line2)}
+.colh{padding:12px 14px;border-bottom:1px solid var(--line2);display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
+.colh .t{font-size:14.5px;font-weight:680;letter-spacing:-.01em}
+.colh .n{font-size:11.5px;color:var(--ink3);margin-left:auto;font-variant-numeric:tabular-nums}
+.col.up .colh{background:var(--teal-wash)}
+.col.up .colh .t{color:var(--teal-ink)}
+.col.down .colh{background:var(--rose-wash)}
+.col.down .colh .t{color:var(--rose-ink)}
+.row{padding:10px 14px;border-top:1px solid var(--line);display:grid;grid-template-columns:52px 1fr;gap:11px;align-items:start}
+.row:first-of-type{border-top:0}
+.rate{font-size:14px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-.02em;padding-top:1px}
+.col.up .rate{color:var(--teal-ink)}
+.col.down .rate{color:var(--rose-ink)}
+.rt{font-size:14.3px;line-height:1.35;color:var(--ink);font-weight:560}
+.meta{font-size:11.5px;color:var(--ink3);margin-top:3px;line-height:1.4}
+.mk{display:inline-block;font-size:10px;font-weight:750;letter-spacing:.05em;text-transform:uppercase;
+  padding:1.5px 5px;background:var(--sunk);color:var(--ink2);margin-right:5px}
+.mk.w{background:var(--ochre-wash);color:var(--ochre-ink)}
+
+/* fila completa */
+table{width:100%;border-collapse:collapse;font-size:13.6px}
+th{text-align:left;font-size:10.5px;font-weight:750;letter-spacing:.09em;text-transform:uppercase;color:var(--ink3);
+  padding:8px 9px;border-bottom:1px solid var(--line2);position:sticky;top:0;background:var(--paper)}
+th.r,td.r{text-align:right;font-variant-numeric:tabular-nums}
+td{padding:7px 9px;border-bottom:1px solid var(--line);color:var(--ink2);vertical-align:top}
+tr:hover td{background:var(--sunk)}
+td.tema{color:var(--ink)}
+.pos{color:var(--ink3);font-variant-numeric:tabular-nums}
+.tw{max-height:0;overflow:hidden}
+details>summary{cursor:pointer;font-size:13.5px;color:var(--teal-ink);padding:9px 0;font-weight:600;list-style:none}
+details>summary::-webkit-details-marker{display:none}
+details>summary::before{content:"+ ";font-weight:800}
+details[open]>summary::before{content:"– "}
+.scroll{overflow-x:auto;border:1px solid var(--line2);background:var(--card)}
+
+.warn{background:var(--ochre-wash);border-left:3px solid var(--ochre);padding:13px 16px;margin:20px 0;max-width:74ch}
+.warn .k{font-size:10.5px;font-weight:750;letter-spacing:.1em;text-transform:uppercase;color:var(--ochre-ink);margin-bottom:5px}
+.warn p{font-size:14.4px;line-height:1.55;color:var(--ink);margin:0 0 8px}
+.warn p:last-child{margin:0}
+
+footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--line2)}
+footer p{font-size:12.3px;color:var(--ink3);max-width:82ch;margin:0 0 8px}
+code{font-family:ui-monospace,Consolas,monospace;font-size:11.8px;background:var(--sunk);padding:1px 5px}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <p class="eye">MedHub · Cronograma EMED × ENAMED · semanas 15–30</p>
+  <h1>A fila está certa. A prova é que é outra.</h1>
+  <p class="lede">O cronograma não está gastando tempo com tema que cai pouco — a alocação por área bate quase perfeitamente com o guia estatístico. <strong>O problema é qual guia.</strong> As 16 semanas restantes foram desenhadas com o formato do ENARE, e a prova de 13/09 tem outro formato. Isso deixa <strong>12 slots a mais em Clínica Médica</strong> e <strong>14 a menos em Cirurgia e Pediatria</strong> exatamente na janela que antecede o ENAMED.</p>
+</header>
+
+<div class="tiles">
+  <div class="tile"><div class="k">Janela até o ENAMED</div><div class="v">28<span style="font-size:17px;font-weight:600"> dias</span></div><div class="d">a 100q/dia × 5d/sem = ~2.000 questões</div></div>
+  <div class="tile"><div class="k">Onde isso te deixa</div><div class="v">S19</div><div class="d">o ENAMED cai no meio da semana 19 do cronograma</div></div>
+  <div class="tile"><div class="k">Blocos pendentes</div><div class="v">82</div><div class="d">158 task-slots em S15–S30</div></div>
+  <div class="tile alert"><div class="k">Cabem antes da prova</div><div class="v">75</div><div class="d">task-slots — 47% do que resta</div></div>
+</div>
+
+<div class="bar">
+  <h2>O cronograma está calibrado para outra prova</h2>
+  <p class="note">Composição por grande área: o que o EMED reservou em S15–S30 contra o que o ENAMED cobra.</p>
+</div>
+
+<figure>
+  <div class="legend">
+    <span><i class="sw" style="background:var(--s2)"></i>EMED S15–S30 (slots)</span>
+    <span><i class="sw" style="background:var(--s1)"></i>ENAMED medido</span>
+    <span><i class="sw hollow"></i>guia ENARE</span>
+  </div>
+  <div class="chart"><svg viewBox="0 0 760 278" role="img" aria-label="Composição por grande área: EMED contra ENAMED">
+<line class="gridline" x1="178.0" y1="16" x2="178.0" y2="252"/>
+<text class="axl" x="178.0" y="270" text-anchor="middle">0%</text>
+<line class="gridline" x1="294.4" y1="16" x2="294.4" y2="252"/>
+<text class="axl" x="294.4" y="270" text-anchor="middle">10%</text>
+<line class="gridline" x1="410.9" y1="16" x2="410.9" y2="252"/>
+<text class="axl" x="410.9" y="270" text-anchor="middle">20%</text>
+<line class="gridline" x1="527.3" y1="16" x2="527.3" y2="252"/>
+<text class="axl" x="527.3" y="270" text-anchor="middle">30%</text>
+<line class="gridline" x1="643.8" y1="16" x2="643.8" y2="252"/>
+<text class="axl" x="643.8" y="270" text-anchor="middle">40%</text>
+<text class="lbl" x="165" y="43.0" text-anchor="end">Clínica Médica</text>
+<line x1="493.6" y1="39.0" x2="664.7" y2="39.0" stroke="var(--line2)" stroke-width="2"/>
+<line x1="640.9" y1="32.0" x2="640.9" y2="46.0" stroke="var(--ink3)" stroke-width="2"><title>guia ENARE: 39.75%</title></line>
+<circle cx="493.6" cy="39.0" r="6" fill="var(--s1)" stroke="var(--card)" stroke-width="2"><title>ENAMED medido: 27.1% (simulado 24.2% · erros 30.0%)</title></circle>
+<circle cx="664.7" cy="39.0" r="6" fill="var(--s2)" stroke="var(--card)" stroke-width="2"><title>EMED S15-S30: 41.8% dos slots</title></circle>
+<text class="val" x="674.7" y="43.0" text-anchor="start">41.8%</text>
+<text class="val" x="483.6" y="43.0" text-anchor="end">27.1%</text>
+<text class="lbl" x="165" y="89.0" text-anchor="end">Cirurgia</text>
+<line x1="339.9" y1="85.0" x2="428.4" y2="85.0" stroke="var(--line2)" stroke-width="2"/>
+<line x1="324.5" y1="78.0" x2="324.5" y2="92.0" stroke="var(--ink3)" stroke-width="2"><title>guia ENARE: 12.58%</title></line>
+<circle cx="428.4" cy="85.0" r="6" fill="var(--s1)" stroke="var(--card)" stroke-width="2"><title>ENAMED medido: 21.5% (simulado 22.1% · erros 20.8%)</title></circle>
+<circle cx="339.9" cy="85.0" r="6" fill="var(--s2)" stroke="var(--card)" stroke-width="2"><title>EMED S15-S30: 13.9% dos slots</title></circle>
+<text class="val" x="329.9" y="89.0" text-anchor="end">13.9%</text>
+<text class="val" x="438.4" y="89.0" text-anchor="start">21.5%</text>
+<text class="lbl" x="165" y="135.0" text-anchor="end">Ginecologia e Obstetrícia</text>
+<line x1="392.3" y1="131.0" x2="427.2" y2="131.0" stroke="var(--line2)" stroke-width="2"/>
+<line x1="404.1" y1="124.0" x2="404.1" y2="138.0" stroke="var(--ink3)" stroke-width="2"><title>guia ENARE: 19.42%</title></line>
+<circle cx="427.2" cy="131.0" r="6" fill="var(--s1)" stroke="var(--card)" stroke-width="2"><title>ENAMED medido: 21.4% (simulado 21.1% · erros 21.7%)</title></circle>
+<circle cx="392.3" cy="131.0" r="6" fill="var(--s2)" stroke="var(--card)" stroke-width="2"><title>EMED S15-S30: 18.4% dos slots</title></circle>
+<text class="val" x="382.3" y="135.0" text-anchor="end">18.4%</text>
+<text class="val" x="437.2" y="135.0" text-anchor="start">21.4%</text>
+<text class="lbl" x="165" y="181.0" text-anchor="end">Pediatria</text>
+<line x1="332.9" y1="177.0" x2="406.2" y2="177.0" stroke="var(--line2)" stroke-width="2"/>
+<line x1="321.9" y1="170.0" x2="321.9" y2="184.0" stroke="var(--ink3)" stroke-width="2"><title>guia ENARE: 12.36%</title></line>
+<circle cx="406.2" cy="177.0" r="6" fill="var(--s1)" stroke="var(--card)" stroke-width="2"><title>ENAMED medido: 19.6% (simulado 20.0% · erros 19.2%)</title></circle>
+<circle cx="332.9" cy="177.0" r="6" fill="var(--s2)" stroke="var(--card)" stroke-width="2"><title>EMED S15-S30: 13.3% dos slots</title></circle>
+<text class="val" x="322.9" y="181.0" text-anchor="end">13.3%</text>
+<text class="val" x="416.2" y="181.0" text-anchor="start">19.6%</text>
+<text class="lbl" x="165" y="227.0" text-anchor="end">Medicina Preventiva</text>
+<line x1="299.1" y1="223.0" x2="325.9" y2="223.0" stroke="var(--line2)" stroke-width="2"/>
+<line x1="363.0" y1="216.0" x2="363.0" y2="230.0" stroke="var(--ink3)" stroke-width="2"><title>guia ENARE: 15.89%</title></line>
+<circle cx="299.1" cy="223.0" r="6" fill="var(--s1)" stroke="var(--card)" stroke-width="2"><title>ENAMED medido: 10.4% (simulado 12.6% · erros 8.3%)</title></circle>
+<circle cx="325.9" cy="223.0" r="6" fill="var(--s2)" stroke="var(--card)" stroke-width="2"><title>EMED S15-S30: 12.7% dos slots</title></circle>
+<text class="val" x="335.9" y="227.0" text-anchor="start">12.7%</text>
+<text class="val" x="289.1" y="227.0" text-anchor="end">10.4%</text>
+</svg></div>
+  <figcaption>O EMED acompanha o ENARE quase linha a linha (Clínica Médica 41,8% × 39,75%; Cirurgia 13,9% × 12,58%; Pediatria 13,3% × 12,36%). O ENAMED é uma prova achatada — cinco áreas entre 10% e 27%. <strong>A distância entre o ponto ocre e o ponto verde é o erro de calibragem.</strong> ENAMED medido = média de duas amostras independentes: as 95 questões do Simulado 2 classificadas uma a uma e os 120 erros dos Simulados 2–4.</figcaption>
+</figure>
+
+<div class="prose">
+  <p>Vale insistir no que <em>não</em> foi encontrado: a hipótese de que o cronograma reserva as semanas iniciais a temas de baixa incidência <strong>não se sustenta</strong>. Medida contra o guia ENARE, a alocação por área do EMED tem razão entre 0,8 e 1,6 em 18 das 20 especialidades — é um cronograma bem construído. Ele só foi construído para o exame errado no que diz respeito a 13 de setembro.</p>
+  <p>A consequência é aritmética. A 100 questões por dia, cinco dias por semana, sobram cerca de 2.000 questões até a prova — o suficiente para atravessar S14 e parar dentro da S19. Tudo que estiver agendado de S20 em diante <strong>não existe para o ENAMED</strong>. A fila não é uma preferência: é uma seleção de 75 slots entre 158.</p>
+</div>
+
+<div class="bar">
+  <h2>O desequilíbrio da janela</h2>
+  <p class="note">Slots reservados hoje em S15–S20 menos os slots que o blueprint do ENAMED justifica.</p>
+</div>
+
+<figure>
+  <div class="legend">
+    <span><i class="sw" style="background:var(--rose);border-radius:2px"></i>slots a mais do que a prova cobra</span>
+    <span><i class="sw" style="background:var(--s1);border-radius:2px"></i>slots a menos do que a prova cobra</span>
+  </div>
+  <div class="chart"><svg viewBox="0 0 760 252" role="img" aria-label="Excesso e déficit de slots na janela pré-ENAMED">
+<line class="gridline" x1="239.4" y1="10" x2="239.4" y2="226"/>
+<text class="axl" x="239.4" y="244" text-anchor="middle">10</text>
+<line class="gridline" x1="341.7" y1="10" x2="341.7" y2="226"/>
+<text class="axl" x="341.7" y="244" text-anchor="middle">5</text>
+<line class="gridline" x1="546.3" y1="10" x2="546.3" y2="226"/>
+<text class="axl" x="546.3" y="244" text-anchor="middle">5</text>
+<line class="gridline" x1="648.6" y1="10" x2="648.6" y2="226"/>
+<text class="axl" x="648.6" y="244" text-anchor="middle">10</text>
+<text class="lbl" x="165" y="39.0" text-anchor="end">Clínica Médica</text>
+<rect x="444.0" y="24.0" width="239.4" height="20" rx="3" fill="var(--rose)"><title>Clínica Médica: 32 slots hoje, 20.3 justificados pelo ENAMED</title></rect>
+<text class="val" x="691.4" y="38.0" text-anchor="start">+12 slots</text>
+<text class="lbl" x="165" y="81.0" text-anchor="end">Cirurgia</text>
+<rect x="339.6" y="66.0" width="104.4" height="20" rx="3" fill="var(--s1)"><title>Cirurgia: 11 slots hoje, 16.1 justificados pelo ENAMED</title></rect>
+<text class="val" x="331.6" y="80.0" text-anchor="end">-5 slots</text>
+<text class="lbl" x="165" y="123.0" text-anchor="end">Ginecologia e Obstetrícia</text>
+<rect x="380.6" y="108.0" width="63.4" height="20" rx="3" fill="var(--s1)"><title>Ginecologia e Obstetrícia: 13 slots hoje, 16.1 justificados pelo ENAMED</title></rect>
+<text class="val" x="372.6" y="122.0" text-anchor="end">-3 slots</text>
+<text class="lbl" x="165" y="165.0" text-anchor="end">Pediatria</text>
+<rect x="327.4" y="150.0" width="116.6" height="20" rx="3" fill="var(--s1)"><title>Pediatria: 9 slots hoje, 14.7 justificados pelo ENAMED</title></rect>
+<text class="val" x="319.4" y="164.0" text-anchor="end">-6 slots</text>
+<text class="lbl" x="165" y="207.0" text-anchor="end">Medicina Preventiva</text>
+<rect x="444.0" y="192.0" width="45.0" height="20" rx="3" fill="var(--rose)"><title>Medicina Preventiva: 10 slots hoje, 7.8 justificados pelo ENAMED</title></rect>
+<text class="val" x="497.0" y="206.0" text-anchor="start">+2 slots</text>
+<line x1="444.0" y1="10" x2="444.0" y2="226" stroke="var(--ink2)" stroke-width="1.5"/>
+<text class="axl" x="444.0" y="244" text-anchor="middle">0</text>
+</svg></div>
+  <figcaption>Clínica Médica ocupa 32 dos 75 slots da janela quando o ENAMED justificaria 20. Pediatria e Cirurgia, juntas, aparecem com 11 slots a menos do que deveriam. Preventiva e GO estão praticamente no ponto.</figcaption>
+</figure>
+
+<div class="bar">
+  <h2>A troca</h2>
+  <p class="note">17 blocos entram, 15 saem. Saldo de 32 contra 33 slots — a janela não cresce.</p>
+</div>
+
+<div class="swap">
+  <div class="col up">
+    <div class="colh"><span class="t">Puxar para antes do ENAMED</span><span class="n">17 blocos · 32 slots</span></div>
+    <div class="row"><span class="rate">26.9</span><span><span class="rt">Crescimento</span><span class="meta"><span class="mk">Pediatria</span><span class="mk">S23 · 2 slots</span><span class="mk w">1 erro nos simulados</span><br>TOP-10 #6; puericultura 27,59%</span></span></div>
+<div class="row"><span class="rate">22.1</span><span><span class="rt">Reanimação Neonatal</span><span class="meta"><span class="mk">Pediatria</span><span class="mk">S22 · 2 slots</span><span class="mk w">2 erro nos simulados</span><br>neonatologia 12,07% (2a maior subárea); fora do TOP-10</span></span></div>
+<div class="row"><span class="rate">20.0</span><span><span class="rt">Princípios da Anestesiologia</span><span class="meta"><span class="mk">Cirurgia</span><span class="mk">S23 · 3 slots</span><br>TOP-10 #1; subárea própria 6%</span></span></div>
+<div class="row"><span class="rate">20.0</span><span><span class="rt">Abdome Agudo Obstrutivo</span><span class="meta"><span class="mk">Cirurgia</span><span class="mk">S25 · 2 slots</span><br>TOP-10 #9; urgências abdominais 10%</span></span></div>
+<div class="row"><span class="rate">18.2</span><span><span class="rt">Câncer de Colo Uterino</span><span class="meta"><span class="mk">Ginecologia</span><span class="mk">S23 · 2 slots</span><span class="mk w">2 erro nos simulados</span><br>TOP-10 #2; oncologia ginecológica 22,45%</span></span></div>
+<div class="row"><span class="rate">16.6</span><span><span class="rt">Hemorragia Pós-Parto</span><span class="meta"><span class="mk">Obstetrícia</span><span class="mk">S28 · 2 slots</span><span class="mk w">1 erro nos simulados</span><br>TOP-10 #6; intercorrências obstétricas 27,91% (maior subárea)</span></span></div>
+<div class="row"><span class="rate">14.7</span><span><span class="rt">Tópicos em Pediatria</span><span class="meta"><span class="mk">Pediatria</span><span class="mk">S25 · 2 slots</span><br>TOP-10 #10 (última posição)</span></span></div>
+<div class="row"><span class="rate">12.8</span><span><span class="rt">Sangramento da Segunda Metade</span><span class="meta"><span class="mk">Obstetrícia</span><span class="mk">S22 · 2 slots</span><br>TOP-10 #7; intercorrências obstétricas 27,91%</span></span></div>
+<div class="row"><span class="rate">10.2</span><span><span class="rt">Partograma e Distocia</span><span class="meta"><span class="mk">Obstetrícia</span><span class="mk">S24 · 2 slots</span><br>parto 13,95%; vizinho do #4 (indução/distocia)</span></span></div>
+<div class="row"><span class="rate">7.5</span><span><span class="rt">Complicações Pós-Operatórias</span><span class="meta"><span class="mk">Cirurgia</span><span class="mk">S27 · 4 slots</span><br>encosta em 'temas gerais' (#5); sem subárea própria</span></span></div>
+<div class="row"><span class="rate">7.2</span><span><span class="rt">Acidentes Vasculares Cerebrais</span><span class="meta"><span class="mk">Neurologia</span><span class="mk">S23 · 1 slot</span><br>TOP-10 #1; AVC 18,75% (maior subárea, empatada com TCE)</span></span></div>
+<div class="row"><span class="rate">6.3</span><span><span class="rt">Fibrilação e Flutter Atrial Parada Cardiorrespiratória</span><span class="meta"><span class="mk">Cardiologia</span><span class="mk">S27 · 2 slots</span><br>TOP-10 #2 e #6; arritmias 32,14% (maior subárea)</span></span></div>
+<div class="row"><span class="rate">6.0</span><span><span class="rt">AVC Coma e alterações da consciência</span><span class="meta"><span class="mk">Neurologia</span><span class="mk">S27 · 1 slot</span><br>revisão que cobre o TOP-10 #1</span></span></div>
+<div class="row"><span class="rate">5.0</span><span><span class="rt">Infecção do Trato Urinário</span><span class="meta"><span class="mk">Nefrologia</span><span class="mk">S24 · 1 slot</span><br>TOP #2; ITU 21,43% (maior subárea)</span></span></div>
+<div class="row"><span class="rate">4.5</span><span><span class="rt">Obesidade e Síndrome Metabólica (Teoria) Cirurgia Bariátrica e Metabólica</span><span class="meta"><span class="mk">Endocrino</span><span class="mk">S22 · 2 slots</span><br>TOP-9 #5 e #6; obesidade/SM 28,57% (2a maior subárea)</span></span></div>
+<div class="row"><span class="rate">4.3</span><span><span class="rt">Endocardites</span><span class="meta"><span class="mk">Infecto</span><span class="mk">S25 · 1 slot</span><br>TOP-10 #9; sem subárea própria</span></span></div>
+<div class="row"><span class="rate">4.3</span><span><span class="rt">Endocardite Bacteriana - Endocardite Infecciosa</span><span class="meta"><span class="mk">Infecto</span><span class="mk">S27 · 1 slot</span><br>TOP-10 #9; sem subárea própria</span></span></div>
+  </div>
+  <div class="col down">
+    <div class="colh"><span class="t">Empurrar para depois</span><span class="n">15 blocos · 33 slots</span></div>
+    <div class="row"><span class="rate">0.1</span><span><span class="rt">Doenças do Polo Posterior</span><span class="meta"><span class="mk">Oftalmo</span><span class="mk">S20 · 1 slot</span><br>ausente: o guia só lista tumores oculares e córnea/cristalino</span></span></div>
+<div class="row"><span class="rate">0.3</span><span><span class="rt">Pneumologia Intensiva</span><span class="meta"><span class="mk">Pneumo</span><span class="mk">S16 · 2 slots</span><br>ausente do guia</span></span></div>
+<div class="row"><span class="rate">0.8</span><span><span class="rt">Transtornos de Humor; Psiquiatria Social e Reforma Psiquiátrica</span><span class="meta"><span class="mk">Psiquiatria</span><span class="mk">S18 · 1 slot</span><br>ausente do guia</span></span></div>
+<div class="row"><span class="rate">0.8</span><span><span class="rt">Nefrolitíase</span><span class="meta"><span class="mk">Nefrologia</span><span class="mk">S17 · 2 slots</span><br>TOP #7; não figura entre as subáreas</span></span></div>
+<div class="row"><span class="rate">1.0</span><span><span class="rt">Complicações da Cirrose Hepática</span><span class="meta"><span class="mk">Hepato</span><span class="mk">S19 · 3 slots</span><br>TOP #4; complicações da insuf. hepática 22,22%</span></span></div>
+<div class="row"><span class="rate">1.2</span><span><span class="rt">Distúrbios do Movimento</span><span class="meta"><span class="mk">Neurologia</span><span class="mk">S16 · 3 slots</span><br>TOP-10 #5; não figura entre as subáreas</span></span></div>
+<div class="row"><span class="rate">1.8</span><span><span class="rt">Pneumonias Bacterianas</span><span class="meta"><span class="mk">Infecto</span><span class="mk">S17 · 4 slots</span><br>TOP-10 #4; pneumonia 10,00%</span></span></div>
+<div class="row"><span class="rate">2.5</span><span><span class="rt">Anemias Microcíticas e Leucemias Agudas</span><span class="meta"><span class="mk">Hemato</span><span class="mk">S20 · 2 slots</span><br>TOP #3 e #7 num bloco só</span></span></div>
+<div class="row"><span class="rate">2.5</span><span><span class="rt">Urologia</span><span class="meta"><span class="mk">Cirurgia</span><span class="mk">S17 · 4 slots</span><br>ausente do guia: nem subárea nem TOP-10</span></span></div>
+<div class="row"><span class="rate">2.7</span><span><span class="rt">Infecções das Vias Aéreas Superiores Pt. 2</span><span class="meta"><span class="mk">Otorrino</span><span class="mk">S20 · 1 slot</span><br>TOP #2; IVAS 66,67% da especialidade</span></span></div>
+<div class="row"><span class="rate">3.4</span><span><span class="rt">Doenças Inflamatórias do Tecido Conjuntivo</span><span class="meta"><span class="mk">Reumato</span><span class="mk">S18 · 1 slot</span><span class="mk w">acerto histórico 46%</span><br>TOP #4; tec. conjuntivo 22,22%</span></span></div>
+<div class="row"><span class="rate">3.9</span><span><span class="rt">Anemias Hemolíticas</span><span class="meta"><span class="mk">Hemato</span><span class="mk">S16 · 1 slot</span><br>TOP #6; hemoglobinopatias 26,67% (maior subárea)</span></span></div>
+<div class="row"><span class="rate">5.2</span><span><span class="rt">Financiamento em Saúde</span><span class="meta"><span class="mk">Preventiva</span><span class="mk">S20 · 3 slots</span><br>SUS 19,44%; fora do TOP-10</span></span></div>
+<div class="row"><span class="rate">7.7</span><span><span class="rt">Vitalidade Fetal</span><span class="meta"><span class="mk">Obstetrícia</span><span class="mk">S17 · 2 slots</span><br>medicina fetal 18,60%; fora do TOP-10</span></span></div>
+<div class="row"><span class="rate">7.7</span><span><span class="rt">Diabetes na Gestação</span><span class="meta"><span class="mk">Obstetrícia</span><span class="mk">S19 · 3 slots</span><span class="mk w">2 erro nos simulados</span><br>TOP-10 #9; doenças associadas à gestação 16,28%</span></span></div>
+  </div>
+</div>
+
+<div class="warn">
+  <div class="k">Três blocos saem contra o meu conselho</div>
+  <p><strong>Diabetes na Gestação</strong> (7,67/slot, 2 erros nos simulados) e <strong>Vitalidade Fetal</strong> (7,67/slot) são bons temas — saem só porque GO já está com a cota cheia de blocos ainda melhores. Se sobrar folga na janela, são os dois primeiros a voltar.</p>
+  <p><strong>Doenças Inflamatórias do Tecido Conjuntivo</strong> sai com 46% de acerto histórico em 24 questões — é o seu pior número entre todos os blocos pendentes. Vale 1 slot: mantenha se puder.</p>
+</div>
+
+<div class="bar">
+  <h2>A fila inteira</h2>
+  <p class="note">Os 82 blocos por rendimento esperado por slot. Ordem sugerida de execução, de cima para baixo.</p>
+</div>
+
+<details>
+  <summary>Abrir os 82 blocos ranqueados</summary>
+  <div class="scroll">
+  <table>
+    <thead><tr><th class="r">#</th><th class="r">rend/slot</th><th class="r">slots</th><th>S atual</th><th>Área</th><th>Tema</th><th>Por quê</th></tr></thead>
+    <tbody><tr><td class="r pos">1</td><td class="r">40.0</td><td class="r">1</td><td class="pos">S15</td><td>Cirurgia</td><td class="tema">Diverticulite Aguda</td><td>TOP-10 #7; urgências abdominais 10%</td></tr>
+<tr><td class="r pos">2</td><td class="r">34.3</td><td class="r">1</td><td class="pos">S15</td><td>Pediatria</td><td class="tema">Asma</td><td>pneumologia pediátrica 10,34%; fora do TOP-10 (bronquiolite é #8) · 2 erro nos simulados</td></tr>
+<tr><td class="r pos">3</td><td class="r">31.9</td><td class="r">2</td><td class="pos">S15</td><td>Pediatria</td><td class="tema">Aleitamento Materno</td><td>TOP-10 #4; puericultura 27,59% (maior subárea) · 1 erro nos simulados</td></tr>
+<tr><td class="r pos">4</td><td class="r">29.4</td><td class="r">2</td><td class="pos">S18</td><td>Pediatria</td><td class="tema">Pneumonias na Infância</td><td>TOP-10 #3; pneumologia pediátrica 10,34%</td></tr>
+<tr><td class="r pos">5</td><td class="r">26.9</td><td class="r">2</td><td class="pos">S23</td><td>Pediatria</td><td class="tema">Crescimento</td><td>TOP-10 #6; puericultura 27,59% · 1 erro nos simulados</td></tr>
+<tr><td class="r pos">6</td><td class="r">24.5</td><td class="r">2</td><td class="pos">S17</td><td>Pediatria</td><td class="tema">Diarreia</td><td>TOP-10 #5; gastrologia pediátrica 8,62%</td></tr>
+<tr><td class="r pos">7</td><td class="r">22.1</td><td class="r">2</td><td class="pos">S22</td><td>Pediatria</td><td class="tema">Reanimação Neonatal</td><td>neonatologia 12,07% (2a maior subárea); fora do TOP-10 · 2 erro nos simulados</td></tr>
+<tr><td class="r pos">8</td><td class="r">20.8</td><td class="r">1</td><td class="pos">S15</td><td>Preventiva</td><td class="tema">Princípios e Diretrizes do SUS</td><td>SUS 19,44%; fora do TOP-10</td></tr>
+<tr><td class="r pos">9</td><td class="r">20.0</td><td class="r">3</td><td class="pos">S23</td><td>Cirurgia</td><td class="tema">Princípios da Anestesiologia</td><td>TOP-10 #1; subárea própria 6%</td></tr>
+<tr><td class="r pos">10</td><td class="r">20.0</td><td class="r">2</td><td class="pos">S25</td><td>Cirurgia</td><td class="tema">Abdome Agudo Obstrutivo</td><td>TOP-10 #9; urgências abdominais 10%</td></tr>
+<tr><td class="r pos">11</td><td class="r">19.6</td><td class="r">2</td><td class="pos">S19</td><td>Pediatria</td><td class="tema">Choque em Pediatria</td><td>TOP-10 #9 (emergências pediátricas)</td></tr>
+<tr><td class="r pos">12</td><td class="r">18.2</td><td class="r">2</td><td class="pos">S15</td><td>Ginecologia</td><td class="tema">Câncer de Mama</td><td>TOP-10 #4; mastologia 20,41% · 2 erro nos simulados</td></tr>
+<tr><td class="r pos">13</td><td class="r">18.2</td><td class="r">2</td><td class="pos">S23</td><td>Ginecologia</td><td class="tema">Câncer de Colo Uterino</td><td>TOP-10 #2; oncologia ginecológica 22,45% · 2 erro nos simulados</td></tr>
+<tr><td class="r pos">14</td><td class="r">16.9</td><td class="r">2</td><td class="pos">S18</td><td>Preventiva</td><td class="tema">Ética Médica</td><td>TOP-10 #1; subárea própria 11,11% · 2 erro nos simulados</td></tr>
+<tr><td class="r pos">15</td><td class="r">16.6</td><td class="r">2</td><td class="pos">S15</td><td>Obstetrícia</td><td class="tema">Assistência ao Parto</td><td>TOP-10 #5; parto 13,95% · 1 erro nos simulados · acerto histórico 67%</td></tr>
+<tr><td class="r pos">16</td><td class="r">16.6</td><td class="r">2</td><td class="pos">S28</td><td>Obstetrícia</td><td class="tema">Hemorragia Pós-Parto</td><td>TOP-10 #6; intercorrências obstétricas 27,91% (maior subárea) · 1 erro nos simulados</td></tr>
+<tr><td class="r pos">17</td><td class="r">14.7</td><td class="r">2</td><td class="pos">S25</td><td>Pediatria</td><td class="tema">Tópicos em Pediatria</td><td>TOP-10 #10 (última posição)</td></tr>
+<tr><td class="r pos">18</td><td class="r">14.7</td><td class="r">2</td><td class="pos">S26</td><td>Pediatria</td><td class="tema">Desnutrição na Infância</td><td>puericultura 27,59%; fora do TOP-10</td></tr>
+<tr><td class="r pos">19</td><td class="r">14.0</td><td class="r">2</td><td class="pos">S17</td><td>Ginecologia</td><td class="tema">Sangramento Uterino Anormal</td><td>ginecologia endócrina 26,53% (maior subárea); vizinho do #8</td></tr>
+<tr><td class="r pos">20</td><td class="r">14.0</td><td class="r">2</td><td class="pos">S19</td><td>Ginecologia</td><td class="tema">Tumores Anexiais e Câncer de Ovário</td><td>TOP-10 #7; oncologia ginecológica 22,45%</td></tr>
+<tr><td class="r pos">21</td><td class="r">12.8</td><td class="r">2</td><td class="pos">S22</td><td>Obstetrícia</td><td class="tema">Sangramento da Segunda Metade</td><td>TOP-10 #7; intercorrências obstétricas 27,91%</td></tr>
+<tr><td class="r pos">22</td><td class="r">10.2</td><td class="r">2</td><td class="pos">S24</td><td>Obstetrícia</td><td class="tema">Partograma e Distocia</td><td>parto 13,95%; vizinho do #4 (indução/distocia)</td></tr>
+<tr><td class="r pos">23</td><td class="r">7.8</td><td class="r">4</td><td class="pos">S15</td><td>Preventiva</td><td class="tema">Atenção Primária à Saúde no Brasil</td><td>TOP-10 #5; MFC 22,22%</td></tr>
+<tr><td class="r pos">24</td><td class="r">7.7</td><td class="r">2</td><td class="pos">S17</td><td>Obstetrícia</td><td class="tema">Vitalidade Fetal</td><td>medicina fetal 18,60%; fora do TOP-10</td></tr>
+<tr><td class="r pos">25</td><td class="r">7.7</td><td class="r">3</td><td class="pos">S19</td><td>Obstetrícia</td><td class="tema">Diabetes na Gestação</td><td>TOP-10 #9; doenças associadas à gestação 16,28% · 2 erro nos simulados</td></tr>
+<tr><td class="r pos">26</td><td class="r">7.7</td><td class="r">2</td><td class="pos">S26</td><td>Obstetrícia</td><td class="tema">Gestação Múltipla</td><td>intercorrências 27,91%; fora do TOP-10</td></tr>
+<tr><td class="r pos">27</td><td class="r">7.5</td><td class="r">1</td><td class="pos">S16</td><td>Endocrino</td><td class="tema">Tireotoxicose</td><td>TOP-9 #7; tireoide 33,33%</td></tr>
+<tr><td class="r pos">28</td><td class="r">7.5</td><td class="r">4</td><td class="pos">S20</td><td>Cirurgia</td><td class="tema">Hérnias da Parede Abdominal</td><td>TOP-10 #10 (última posição)</td></tr>
+<tr><td class="r pos">29</td><td class="r">7.5</td><td class="r">4</td><td class="pos">S27</td><td>Cirurgia</td><td class="tema">Complicações Pós-Operatórias</td><td>encosta em 'temas gerais' (#5); sem subárea própria</td></tr>
+<tr><td class="r pos">30</td><td class="r">7.2</td><td class="r">1</td><td class="pos">S23</td><td>Neurologia</td><td class="tema">Acidentes Vasculares Cerebrais</td><td>TOP-10 #1; AVC 18,75% (maior subárea, empatada com TCE)</td></tr>
+<tr><td class="r pos">31</td><td class="r">7.2</td><td class="r">1</td><td class="pos">S15</td><td>Infecto</td><td class="tema">Parasitoses; Infecções Relacionadas à Assistência em Saúde</td><td>TOP-10 #1 e #6 num bloco só</td></tr>
+<tr><td class="r pos">32</td><td class="r">7.2</td><td class="r">1</td><td class="pos">S16</td><td>Infecto</td><td class="tema">Parasitoses; Infecção Hospitalar</td><td>TOP-10 #1 e #6 num bloco só</td></tr>
+<tr><td class="r pos">33</td><td class="r">6.8</td><td class="r">2</td><td class="pos">S15</td><td>Cardiologia</td><td class="tema">Hipertensão Arterial Sistêmica Pt. 3</td><td>TOP-10 #4 (e #1 é HAS Pt.2); HAS 25,00% · 1 erro nos simulados</td></tr>
+<tr><td class="r pos">34</td><td class="r">6.6</td><td class="r">1</td><td class="pos">S15</td><td>Gastro</td><td class="tema">Doença Inflamatória Intestinal</td><td>no TOP-10; intestinos 13,04%</td></tr>
+<tr><td class="r pos">35</td><td class="r">6.3</td><td class="r">2</td><td class="pos">S27</td><td>Cardiologia</td><td class="tema">Fibrilação e Flutter Atrial Parada Cardiorrespiratória</td><td>TOP-10 #2 e #6; arritmias 32,14% (maior subárea)</td></tr>
+<tr><td class="r pos">36</td><td class="r">6.0</td><td class="r">1</td><td class="pos">S27</td><td>Neurologia</td><td class="tema">AVC Coma e alterações da consciência</td><td>revisão que cobre o TOP-10 #1</td></tr>
+<tr><td class="r pos">37</td><td class="r">5.8</td><td class="r">1</td><td class="pos">S15</td><td>Nefrologia</td><td class="tema">Distúrbios Ácido-Base; Distúrbios do Potássio</td><td>TOP #1; DHE 14,29% · acerto histórico 68%</td></tr>
+<tr><td class="r pos">38</td><td class="r">5.6</td><td class="r">2</td><td class="pos">S21</td><td>Ginecologia</td><td class="tema">Prolapsos de Órgãos Pélvicos</td><td>ginecologia geral 6,12%; fora do TOP-10</td></tr>
+<tr><td class="r pos">39</td><td class="r">5.6</td><td class="r">2</td><td class="pos">S25</td><td>Ginecologia</td><td class="tema">Incontinência Urinária</td><td>ginecologia geral 6,12%; fora do TOP-10</td></tr>
+<tr><td class="r pos">40</td><td class="r">5.2</td><td class="r">3</td><td class="pos">S20</td><td>Preventiva</td><td class="tema">Financiamento em Saúde</td><td>SUS 19,44%; fora do TOP-10</td></tr>
+<tr><td class="r pos">41</td><td class="r">5.2</td><td class="r">6</td><td class="pos">S22</td><td>Preventiva</td><td class="tema">Estatística Médica</td><td>epidemiologia 41,67% (maior subárea do guia inteiro); TOP-10 #4 e #8</td></tr>
+<tr><td class="r pos">42</td><td class="r">5.0</td><td class="r">2</td><td class="pos">S16</td><td>Cirurgia</td><td class="tema">Cirurgia Vascular</td><td>ausente do guia: nem subárea nem TOP-10</td></tr>
+<tr><td class="r pos">43</td><td class="r">5.0</td><td class="r">1</td><td class="pos">S24</td><td>Nefrologia</td><td class="tema">Infecção do Trato Urinário</td><td>TOP #2; ITU 21,43% (maior subárea)</td></tr>
+<tr><td class="r pos">44</td><td class="r">5.0</td><td class="r">2</td><td class="pos">S17</td><td>Gastro</td><td class="tema">Neoplasias de Estômago e Esôfago</td><td>TOP-10 #2; neoplasias do sist. digestivo 39,13% (maior subárea)</td></tr>
+<tr><td class="r pos">45</td><td class="r">4.9</td><td class="r">2</td><td class="pos">S21</td><td>Pediatria</td><td class="tema">Alergia Alimentar</td><td>ausente do guia</td></tr>
+<tr><td class="r pos">46</td><td class="r">4.9</td><td class="r">2</td><td class="pos">S27</td><td>Pediatria</td><td class="tema">Obesidade Infantil e na Adolescência</td><td>ausente do guia</td></tr>
+<tr><td class="r pos">47</td><td class="r">4.9</td><td class="r">2</td><td class="pos">S18</td><td>Endocrino</td><td class="tema">Hipotireoidismo</td><td>TOP-9 #4; tireoide 33,33% (maior subárea) · 1 erro nos simulados</td></tr>
+<tr><td class="r pos">48</td><td class="r">4.5</td><td class="r">2</td><td class="pos">S22</td><td>Endocrino</td><td class="tema">Obesidade e Síndrome Metabólica (Teoria) Cirurgia Bariátrica e Metabólica</td><td>TOP-9 #5 e #6; obesidade/SM 28,57% (2a maior subárea)</td></tr>
+<tr><td class="r pos">49</td><td class="r">4.5</td><td class="r">1</td><td class="pos">S28</td><td>Ortopedia</td><td class="tema">Quadril Pediátrico Politrauma Ortopédico Doenças da coluna vertebral Maus Tratos Fraturas e Luxações Complicações do trauma ortopédico</td><td>cobre TOP #1, #2 e #4 num bloco só</td></tr>
+<tr><td class="r pos">50</td><td class="r">4.3</td><td class="r">1</td><td class="pos">S25</td><td>Infecto</td><td class="tema">Endocardites</td><td>TOP-10 #9; sem subárea própria</td></tr>
+<tr><td class="r pos">51</td><td class="r">4.3</td><td class="r">1</td><td class="pos">S27</td><td>Infecto</td><td class="tema">Endocardite Bacteriana - Endocardite Infecciosa</td><td>TOP-10 #9; sem subárea própria</td></tr>
+<tr><td class="r pos">52</td><td class="r">4.2</td><td class="r">1</td><td class="pos">S22</td><td>Nefrologia</td><td class="tema">Doenças Glomerulares</td><td>TOP #3; glomerulopatias 14,29%</td></tr>
+<tr><td class="r pos">53</td><td class="r">4.2</td><td class="r">1</td><td class="pos">S26</td><td>Nefrologia</td><td class="tema">Doenças Glomerulares Infecção do Trato Urinário</td><td>revisão que cobre TOP #2 e #3</td></tr>
+<tr><td class="r pos">54</td><td class="r">4.1</td><td class="r">1</td><td class="pos">S25</td><td>Pneumo</td><td class="tema">Neoplasias Pulmonares</td><td>TOP #2; câncer de pulmão 33,33% (maior subárea)</td></tr>
+<tr><td class="r pos">55</td><td class="r">3.9</td><td class="r">1</td><td class="pos">S16</td><td>Hemato</td><td class="tema">Anemias Hemolíticas</td><td>TOP #6; hemoglobinopatias 26,67% (maior subárea)</td></tr>
+<tr><td class="r pos">56</td><td class="r">3.8</td><td class="r">1</td><td class="pos">S21</td><td>Ortopedia</td><td class="tema">Fraturas e Luxações; Complicações do Trauma Ortopédico</td><td>TOP #4/#5; trauma ortopédico 25%</td></tr>
+<tr><td class="r pos">57</td><td class="r">3.6</td><td class="r">1</td><td class="pos">S26</td><td>Neurologia</td><td class="tema">Coma e alterações da consciência</td><td>fora do TOP-10; encosta em anatomia/semiologia (#6)</td></tr>
+<tr><td class="r pos">58</td><td class="r">3.4</td><td class="r">1</td><td class="pos">S18</td><td>Reumato</td><td class="tema">Doenças Inflamatórias do Tecido Conjuntivo</td><td>TOP #4; tec. conjuntivo 22,22% · acerto histórico 46%</td></tr>
+<tr><td class="r pos">59</td><td class="r">3.4</td><td class="r">1</td><td class="pos">S21</td><td>Reumato</td><td class="tema">Vasculites</td><td>TOP #3; vasculites 22,22%</td></tr>
+<tr><td class="r pos">60</td><td class="r">3.2</td><td class="r">2</td><td class="pos">S21</td><td>Cardiologia</td><td class="tema">Valvopatias</td><td>TOP-10 #8; não figura entre as subáreas</td></tr>
+<tr><td class="r pos">61</td><td class="r">3.0</td><td class="r">2</td><td class="pos">S26</td><td>Endocrino</td><td class="tema">Osteoporose e Doença óssea de Paget</td><td>TOP-9 #8; metabolismo ósseo 9,52%</td></tr>
+<tr><td class="r pos">62</td><td class="r">2.9</td><td class="r">2</td><td class="pos">S23</td><td>Infecto</td><td class="tema">Animais Peçonhentos</td><td>TOP-10 #7</td></tr>
+<tr><td class="r pos">63</td><td class="r">2.8</td><td class="r">2</td><td class="pos">S27</td><td>Ginecologia</td><td class="tema">Assistência à Vítima de Violência Sexual</td><td>ausente do guia</td></tr>
+<tr><td class="r pos">64</td><td class="r">2.7</td><td class="r">1</td><td class="pos">S23</td><td>Pneumo</td><td class="tema">Doença Pulmonar Obstrutiva Crônica</td><td>TOP #3; DPOC 11,11%</td></tr>
+<tr><td class="r pos">65</td><td class="r">2.7</td><td class="r">1</td><td class="pos">S25</td><td>Pneumo</td><td class="tema">Derrame Pleural</td><td>TOP #4; derrame pleural 11,11%</td></tr>
+<tr><td class="r pos">66</td><td class="r">2.7</td><td class="r">1</td><td class="pos">S20</td><td>Otorrino</td><td class="tema">Infecções das Vias Aéreas Superiores Pt. 2</td><td>TOP #2; IVAS 66,67% da especialidade</td></tr>
+<tr><td class="r pos">67</td><td class="r">2.6</td><td class="r">4</td><td class="pos">S26</td><td>Preventiva</td><td class="tema">Normas Regulamentadoras</td><td>saúde do trabalhador 5,56%; TOP-10 #10</td></tr>
+<tr><td class="r pos">68</td><td class="r">2.5</td><td class="r">4</td><td class="pos">S17</td><td>Cirurgia</td><td class="tema">Urologia</td><td>ausente do guia: nem subárea nem TOP-10</td></tr>
+<tr><td class="r pos">69</td><td class="r">2.5</td><td class="r">2</td><td class="pos">S21</td><td>Gastro</td><td class="tema">Anatomia do Intestino e Síndrome do Intestino Irritável</td><td>no TOP-10 em posição baixa; intestinos 13,04%</td></tr>
+<tr><td class="r pos">70</td><td class="r">2.5</td><td class="r">2</td><td class="pos">S25</td><td>Gastro</td><td class="tema">Disfagia, Alterações Estruturais e Dist. Mort.</td><td>no TOP-10 em posição baixa; esôfago 17,39%</td></tr>
+<tr><td class="r pos">71</td><td class="r">2.5</td><td class="r">2</td><td class="pos">S20</td><td>Hemato</td><td class="tema">Anemias Microcíticas e Leucemias Agudas</td><td>TOP #3 e #7 num bloco só</td></tr>
+<tr><td class="r pos">72</td><td class="r">2.2</td><td class="r">2</td><td class="pos">S25</td><td>Reumato</td><td class="tema">Artrite Reumatóide</td><td>TOP #1; artropatias inflamatórias 55,56% · 1 erro nos simulados</td></tr>
+<tr><td class="r pos">73</td><td class="r">1.9</td><td class="r">2</td><td class="pos">S22</td><td>Psiquiatria</td><td class="tema">Psicofarmacologia (Teoria) Psiquiatria Infantil</td><td>TOP #3 e #5; psiq. infantil 30%</td></tr>
+<tr><td class="r pos">74</td><td class="r">1.8</td><td class="r">2</td><td class="pos">S28</td><td>Neurologia</td><td class="tema">Doenças Neuromusculares</td><td>TOP-10 #8; neuromusculares 6,25%</td></tr>
+<tr><td class="r pos">75</td><td class="r">1.8</td><td class="r">4</td><td class="pos">S17</td><td>Infecto</td><td class="tema">Pneumonias Bacterianas</td><td>TOP-10 #4; pneumonia 10,00%</td></tr>
+<tr><td class="r pos">76</td><td class="r">1.6</td><td class="r">2</td><td class="pos">S27</td><td>Dermato</td><td class="tema">Oncologia Cutânea</td><td>TOP #1; câncer de pele 14,29%</td></tr>
+<tr><td class="r pos">77</td><td class="r">1.2</td><td class="r">3</td><td class="pos">S16</td><td>Neurologia</td><td class="tema">Distúrbios do Movimento</td><td>TOP-10 #5; não figura entre as subáreas</td></tr>
+<tr><td class="r pos">78</td><td class="r">1.0</td><td class="r">3</td><td class="pos">S19</td><td>Hepato</td><td class="tema">Complicações da Cirrose Hepática</td><td>TOP #4; complicações da insuf. hepática 22,22%</td></tr>
+<tr><td class="r pos">79</td><td class="r">0.8</td><td class="r">2</td><td class="pos">S17</td><td>Nefrologia</td><td class="tema">Nefrolitíase</td><td>TOP #7; não figura entre as subáreas</td></tr>
+<tr><td class="r pos">80</td><td class="r">0.8</td><td class="r">1</td><td class="pos">S18</td><td>Psiquiatria</td><td class="tema">Transtornos de Humor; Psiquiatria Social e Reforma Psiquiátrica</td><td>ausente do guia</td></tr>
+<tr><td class="r pos">81</td><td class="r">0.3</td><td class="r">2</td><td class="pos">S16</td><td>Pneumo</td><td class="tema">Pneumologia Intensiva</td><td>ausente do guia</td></tr>
+<tr><td class="r pos">82</td><td class="r">0.1</td><td class="r">1</td><td class="pos">S20</td><td>Oftalmo</td><td class="tema">Doenças do Polo Posterior</td><td>ausente: o guia só lista tumores oculares e córnea/cristalino</td></tr></tbody>
+  </table>
+  </div>
+</details>
+
+<div class="bar">
+  <h2>Como o número foi feito</h2>
+  <p class="note">Duas camadas, cada uma da fonte que a sustenta.</p>
+</div>
+
+<div class="prose">
+  <p><strong>Camada macro — de onde vem o peso da grande área.</strong> Não do guia. O guia ENARE descreve o ENARE, e medimos que o ENAMED tem outro formato. O peso macro vem de duas amostras do próprio ENAMED: as 95 questões do Simulado 2, classificadas uma a uma por área, e a distribuição dos 120 erros dos Simulados 2, 3 e 4. As duas concordam dentro de 6 pontos em todas as áreas.</p>
+  <p><strong>Camada micro — de onde vem o peso do tema dentro da área.</strong> Do guia ENARE, que tem 453 questões de 2019 a 2024. Esta camada transfere entre bancas: quais temas de Ginecologia caem mais é uma propriedade da medicina e do edital, não do formato da prova. Cada bloco recebeu de 0,5 (ausente do guia) a 3,0 (topo do TOP-10 ou subárea dominante), com a justificativa registrada linha a linha na tabela acima.</p>
+  <p><strong>Camada de fraqueza.</strong> Bônus de até +1,0 para bloco que já custou erro nos três simulados ou que tem acerto histórico abaixo de 70% com pelo menos 20 questões. É o que promove <em>Reanimação Neonatal</em> e <em>Câncer de Colo</em> acima de pares de mesma prevalência.</p>
+  <p><strong>Custo.</strong> O rendimento é dividido pelo número de task-slots que o EMED reservou ao bloco — um tema que precisa de 4 passagens custa 4× mais do que um que precisa de 1. É isso que derruba <em>Urologia</em> (4 slots, ausente do guia) e <em>Pneumonias Bacterianas</em> (4 slots) na fila.</p>
+</div>
+
+<div class="warn">
+  <div class="k">O que não confiar</div>
+  <p><strong>O split fino dentro de Clínica Médica é a camada mais mole.</strong> Ele vem das proporções do ENARE renormalizadas — a única fonte com amostra suficiente para 14 especialidades. No Simulado 2, Infectologia teve 6,3% das questões contra os 2,9% que esse método atribui. Se você acha que Infecto e Pneumo caem mais do que a fila sugere, você provavelmente está certo, e <em>Pneumonias Bacterianas</em> merece revisão manual antes de descer.</p>
+  <p><strong>O baseline da ordem atual vem do <code>grade.json</code>, derivado do PDF.</strong> A planilha do Drive foi sincronizada pela última vez em 26/07 e você reordena o xlsx à mão. Se já mexeu em S15+ desde então, confira antes de aplicar.</p>
+  <p><strong>Reordenar tem custo.</strong> O EMED espaça teoria e revisão de propósito. A troca preserva o par (teoria e revisão viajam juntas), mas encurta alguns intervalos. Para tema que você já domina isso é barato; para tema frio, não.</p>
+</div>
+
+<footer>
+  <p><strong>Fontes:</strong> <code>core/cronograma/grade.json</code> (352 tasks, derivado de <code>Cronograma.pdf</code>) · <code>ipub.db</code> (<code>questoes_erros</code>, <code>taxonomia_cronograma</code>) · <code>Guia_Estatístico_-_ENARE.pdf</code>, páginas 8–28 · <code>Simulado 2 - pt1..5.pdf</code>, 95 questões classificadas.</p>
+  <p><strong>Datas:</strong> hoje 16/08/2026 · ENAMED 13/09/2026 (28 dias) · fim da grade EMED 25/10/2026 (70 dias). Ritmo assumido: 100 questões/dia, 5 dias por semana, conforme decidido na sessão 145.</p>
+  <p><strong>Não é o guia do ENAMED.</strong> Os três guias disponíveis são ENARE, UERJ e USP-SP; o Estratégia não publicou um guia estatístico do ENAMED. O ENARE é o mais próximo por ser exame nacional multi-institucional, e é usado aqui só na camada micro, justamente porque a camada macro não transfere.</p>
+</footer>
+</div>

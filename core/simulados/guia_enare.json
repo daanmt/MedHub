@@ -1,0 +1,911 @@
+{
+ "_doc": "Guia Estatistico ENARE (Estrategia MED), paginas 8-28. Extraido do PDF (IP, gitignored). n=453 questoes 2019-2024. 'especialidades' = incidencia por especialidade (pag 8). 'paginas' = subareas com % e TOP-N de assuntos por especialidade.",
+ "fonte": "Guia_Estatístico_-_ENARE.pdf",
+ "n_questoes": 453,
+ "especialidades": [
+  {
+   "especialidade": "PREVENTIVA",
+   "pct": 15.89,
+   "n": 72
+  },
+  {
+   "especialidade": "PEDIATRIA",
+   "pct": 12.36,
+   "n": 56
+  },
+  {
+   "especialidade": "CIRURGIA",
+   "pct": 11.7,
+   "n": 53
+  },
+  {
+   "especialidade": "GINECOLOGIA",
+   "pct": 10.15,
+   "n": 46
+  },
+  {
+   "especialidade": "OBSTETRÍCIA",
+   "pct": 9.27,
+   "n": 42
+  },
+  {
+   "especialidade": "CARDIOLOGIA",
+   "pct": 6.18,
+   "n": 28
+  },
+  {
+   "especialidade": "GASTROENTEROLOGIA",
+   "pct": 4.86,
+   "n": 22
+  },
+  {
+   "especialidade": "ENDOCRINOLOGIA",
+   "pct": 4.42,
+   "n": 20
+  },
+  {
+   "especialidade": "INFECTOLOGIA",
+   "pct": 4.19,
+   "n": 19
+  },
+  {
+   "especialidade": "NEUROLOGIA",
+   "pct": 3.53,
+   "n": 16
+  },
+  {
+   "especialidade": "HEMATOLOGIA",
+   "pct": 2.87,
+   "n": 13
+  },
+  {
+   "especialidade": "NEFROLOGIA",
+   "pct": 2.43,
+   "n": 11
+  },
+  {
+   "especialidade": "PSIQUIATRIA",
+   "pct": 2.21,
+   "n": 10
+  },
+  {
+   "especialidade": "REUMATOLOGIA",
+   "pct": 1.99,
+   "n": 9
+  },
+  {
+   "especialidade": "PNEUMOLOGIA",
+   "pct": 1.99,
+   "n": 9
+  },
+  {
+   "especialidade": "HEPATOLOGIA",
+   "pct": 1.77,
+   "n": 8
+  },
+  {
+   "especialidade": "DERMATOLOGIA",
+   "pct": 1.55,
+   "n": 7
+  },
+  {
+   "especialidade": "OTORRINOLARINGOLOGIA",
+   "pct": 1.32,
+   "n": 6
+  },
+  {
+   "especialidade": "ORTOPEDIA",
+   "pct": 0.88,
+   "n": 4
+  },
+  {
+   "especialidade": "OFTALMOLOGIA",
+   "pct": 0.44,
+   "n": 2
+  }
+ ],
+ "paginas": [
+  {
+   "pagina": 9,
+   "especialidade": "MEDICINA PREVENTIVA",
+   "periodo": "2017-2023",
+   "subareas": [
+    {
+     "nome": "EPIDEMIOLOGIA",
+     "pct": 41.67,
+     "n": 30
+    },
+    {
+     "nome": "MEDICINA DE FAMÍLIA E COM.",
+     "pct": 22.22,
+     "n": 16
+    },
+    {
+     "nome": "SISTEMA ÚNICO DE SAÚDE (SUS)",
+     "pct": 19.44,
+     "n": 14
+    },
+    {
+     "nome": "ÉTICA MÉDICA",
+     "pct": 11.11,
+     "n": 8
+    },
+    {
+     "nome": "SAÚDE DO TRABALHADOR",
+     "pct": 5.56,
+     "n": 4
+    }
+   ],
+   "soma_pct": 100.0,
+   "assuntos": [
+    "ÉTICA MÉDICA",
+    "MEDICINA DE FAMÍLIA E COMUNIDADE",
+    "PROCESSO SAÚDE-DOENÇA",
+    "TESTES DIAGNÓSTICOS",
+    "ATENÇÃO PRIMÁRIA À SAÚDE NO BRASIL",
+    "MEDIDAS DE SAÚDE COLETIVA PT. II",
+    "SISTEMAS DE INFORMAÇÃO EM SAÚDE",
+    "PESQUISA EPIDEMIOLÓGICA E MEDIDAS DE ASSOCIAÇÃO",
+    "SAÚDE DO IDOSO",
+    "BASES DE SAÚDE DO TRABALHADOR"
+   ]
+  },
+  {
+   "pagina": 10,
+   "especialidade": "PEDIATRIA",
+   "periodo": "2021-2023",
+   "subareas": [
+    {
+     "nome": "PUERICULTURA",
+     "pct": 27.59,
+     "n": 16
+    },
+    {
+     "nome": "NEONATOLOGIA",
+     "pct": 12.07,
+     "n": 7
+    },
+    {
+     "nome": "PNEUMOLOGIA PEDIÁTRICA",
+     "pct": 10.34,
+     "n": 6
+    },
+    {
+     "nome": "CARDIOLOGIA PEDIÁTRICA",
+     "pct": 8.62,
+     "n": 5
+    },
+    {
+     "nome": "GASTROLOGIA PEDIÁTRICA",
+     "pct": 8.62,
+     "n": 5
+    }
+   ],
+   "soma_pct": 67.24,
+   "assuntos": [
+    "IMUNIZAÇÕES",
+    "CARDIOPATIAS CONGÊNITAS",
+    "PNEUMONIAS NA INFÂNCIA",
+    "ALEITAMENTO MATERNO",
+    "DIARREIA",
+    "CRESCIMENTO",
+    "INFECÇÕES CONGÊNITAS",
+    "BRONQUIOLITE",
+    "EMERGÊNCIAS PEDIÁTRICAS",
+    "TÓPICOS EM PEDIATRIA"
+   ]
+  },
+  {
+   "pagina": 11,
+   "especialidade": "CIRURGIA",
+   "periodo": "2017-2023",
+   "subareas": [
+    {
+     "nome": "CIRURGIA INFANTIL",
+     "pct": 24.0,
+     "n": 12
+    },
+    {
+     "nome": "TRAUMA",
+     "pct": 10.0,
+     "n": 5
+    },
+    {
+     "nome": "URGÊNCIAS ABDOMINAIS",
+     "pct": 10.0,
+     "n": 5
+    },
+    {
+     "nome": "AVALIAÇÃO PRÉ-OPERATÓRIA",
+     "pct": 8.0,
+     "n": 4
+    },
+    {
+     "nome": "PRINCÍPIOS DA ANESTESIOLOGIA",
+     "pct": 6.0,
+     "n": 3
+    }
+   ],
+   "soma_pct": 58.0,
+   "assuntos": [
+    "PRINCÍPIOS DA ANESTESIOLOGIA",
+    "ABDOME AGUDO INFLAMATÓRIO - APENDICITE AGUDA",
+    "CIRURGIA INFANTIL PT. III",
+    "CICATRIZAÇÃO DE FERIDAS",
+    "TEMAS GERAIS EM CIRURGIA",
+    "VESÍCULA E VIAS BILIARES",
+    "ABDOME AGUDO INFLAMATÓRIO - DIVERTICULITE AGUDA",
+    "CIRURGIA BARIÁTRICA E METABÓLICA (TRATAMENTO CIR. DA OBESIDADE)",
+    "ABDOME AGUDO OBSTRUTIVO",
+    "HÉRNIAS DA PAREDE ABDOMINAL"
+   ]
+  },
+  {
+   "pagina": 12,
+   "especialidade": "GINECOLOGIA",
+   "periodo": "2021-2023",
+   "subareas": [
+    {
+     "nome": "GINECOLOGIA ENDÓCRINA",
+     "pct": 26.53,
+     "n": 13
+    },
+    {
+     "nome": "ONCOLOGIA GINECOLÓGICA",
+     "pct": 22.45,
+     "n": 11
+    },
+    {
+     "nome": "MASTOLOGIA",
+     "pct": 20.41,
+     "n": 10
+    },
+    {
+     "nome": "INFECÇÕES EM GINECOLOGIA",
+     "pct": 14.29,
+     "n": 7
+    },
+    {
+     "nome": "GINECOLOGIA GERAL",
+     "pct": 6.12,
+     "n": 3
+    }
+   ],
+   "soma_pct": 89.8,
+   "assuntos": [
+    "VULVOVAGINITES",
+    "RASTREAMENTO DO CÂNCER DE COLO UTERINO",
+    "PLANEJAMENTO FAMILIAR",
+    "RASTREAMENTO DO CÂNCER DE MAMA",
+    "ÚLCERAS GENITAIS",
+    "AMENORREIA",
+    "TUMORES ANEXIAIS E CÂNCER DE OVÁRIO",
+    "CÂNCER DO CORPO DO ÚTERO",
+    "CLIMATÉRIO E TERAPIA HORMONAL",
+    "DOENÇA INFLAMATÓRIA PÉLVICA (DIP)"
+   ]
+  },
+  {
+   "pagina": 13,
+   "especialidade": "OBSTETRÍCIA",
+   "periodo": "2017-2023",
+   "subareas": [
+    {
+     "nome": "INTERCORRÊNCIAS OBSTÉTRICAS",
+     "pct": 27.91,
+     "n": 12
+    },
+    {
+     "nome": "MEDICINA FETAL",
+     "pct": 18.6,
+     "n": 8
+    },
+    {
+     "nome": "DOENÇAS ASSOCIADAS À GESTAÇÃO",
+     "pct": 16.28,
+     "n": 7
+    },
+    {
+     "nome": "PARTO",
+     "pct": 13.95,
+     "n": 6
+    },
+    {
+     "nome": "PRÉ-NATAL",
+     "pct": 11.63,
+     "n": 5
+    }
+   ],
+   "soma_pct": 88.37,
+   "assuntos": [
+    "PRÉ-NATAL",
+    "DISTÚRBIOS HIPERTENSIVOS DA GESTAÇÃO",
+    "SANGRAMENTO DA PRIMEIRA METADE",
+    "INDUÇÃO DO PARTO E PÓS-DATISMO",
+    "ASSISTÊNCIA AO PARTO",
+    "HEMORRAGIA PÓS-PARTO (HPP)",
+    "SANGRAMENTO DA SEGUNDA METADE",
+    "SÍFILIS NA GESTAÇÃO E SÍFILIS CONGÊNITA",
+    "DIABETES NA GESTAÇÃO",
+    "INFECÇÕES CONGÊNITAS"
+   ]
+  },
+  {
+   "pagina": 14,
+   "especialidade": "CARDIOLOGIA",
+   "periodo": "2021-2023",
+   "subareas": [
+    {
+     "nome": "ARRITMIAS CARDÍACAS",
+     "pct": 32.14,
+     "n": 9
+    },
+    {
+     "nome": "HIPERTENSÃO ARTERIAL SISTÊMICA (HAS)",
+     "pct": 25.0,
+     "n": 7
+    },
+    {
+     "nome": "INSUFICIÊNCIA CARDÍACA",
+     "pct": 17.86,
+     "n": 5
+    },
+    {
+     "nome": "ATEROSCLEROSE E DOENÇA ARTERIAL CORONARIANA",
+     "pct": 10.71,
+     "n": 3
+    },
+    {
+     "nome": "SÍNDROMES AÓRTICAS AGUDAS",
+     "pct": 3.57,
+     "n": 1
+    }
+   ],
+   "soma_pct": 89.28,
+   "assuntos": [
+    "HIPERTENSÃO ARTERIAL SISTÊMICA PT. 2",
+    "FIBRILAÇÃO E FLUTTER ATRIAL",
+    "IAMCSSST (INFARTO AGUDO DO MIOCARDIO)",
+    "HIPERTENSÃO ARTERIAL SISTÊMICA PT. 3",
+    "TAQUIARRITMIAS",
+    "PARADA CARDIORRESPIRATÓRIA (PCR)",
+    "INSUFICIÊNCIA CARDÍACA PT.2",
+    "VALVOPATIAS",
+    "DISLIPIDEMIA E ESTRATIFICAÇÃO DE RISCO CARDIOVASCULAR",
+    "SCASSST - SÍNDROME CORONARIANA AGUDA S/ SUPRA DO SEG. ST"
+   ]
+  },
+  {
+   "pagina": 15,
+   "especialidade": "GASTROENTEROLOGIA",
+   "periodo": "2021-2023",
+   "subareas": [
+    {
+     "nome": "NEOPLASIAS DO SISTEMA DIGESTIVO",
+     "pct": 39.13,
+     "n": 9
+    },
+    {
+     "nome": "ESÔFAGO",
+     "pct": 17.39,
+     "n": 4
+    },
+    {
+     "nome": "HEMORRAGIA DIGESTIVA",
+     "pct": 13.04,
+     "n": 3
+    },
+    {
+     "nome": "INTESTINOS",
+     "pct": 13.04,
+     "n": 3
+    },
+    {
+     "nome": "PÂNCREAS",
+     "pct": 8.7,
+     "n": 2
+    }
+   ],
+   "soma_pct": 91.3,
+   "assuntos": [
+    "PÓLIPOS E NEOPLASIAS INTESTINAIS",
+    "NEOPLASIAS DE ESTÔMAGO E ESÔFAGO",
+    "DOENÇA ULCEROSA PÉPTICA, INIBIDORES DA BOMBA DE PRÓTONS E HELICOBACTER PYLORI",
+    "DOENÇA DO REFLUXO GASTROESOFÁGICO, ESOFAGITES E CORPO ESTRANHO",
+    "PANCREATITE AGUDA E CRÔNICA (PANCREATITES)",
+    "DOENÇA INFLAMATÓRIA INTESTINAL",
+    "ANATOMIA E FISIOLOGIA DO PÂNCREAS E NEOPLASIAS PANCREÁTICAS",
+    "ANATOMIA DO INTESTINO E SÍNDROME DO INTESTINO IRRITÁVEL",
+    "DISFAGIA, ALTERAÇÕES ESTRUTURAIS E DIST. MORT.",
+    "HEMORRAGIA DIGESTIVA ALTA VARICOSA"
+   ]
+  },
+  {
+   "pagina": 16,
+   "especialidade": "ENDOCRINOLOGIA",
+   "periodo": "2021-2023",
+   "subareas": [
+    {
+     "nome": "TIREOIDE",
+     "pct": 33.33,
+     "n": 7
+    },
+    {
+     "nome": "OBESIDADE E SÍNDROME METABÓLICA",
+     "pct": 28.57,
+     "n": 6
+    },
+    {
+     "nome": "DIABETES",
+     "pct": 19.05,
+     "n": 4
+    },
+    {
+     "nome": "METABOLISMO ÓSSEO E MINERAL",
+     "pct": 9.52,
+     "n": 2
+    },
+    {
+     "nome": "ADRENAL",
+     "pct": 4.76,
+     "n": 1
+    }
+   ],
+   "soma_pct": 95.23,
+   "assuntos": [
+    "DIABETES MELLITUS - COMPLICAÇÕES AGUDAS",
+    "DIABETES MELLITUS TIPO 2",
+    "INTRODUÇÃO AO DIABETES MELLITUS",
+    "HIPOTIREOIDISMO",
+    "CIRURGIA BARIÁTRICA E METABÓLICA (TRATAMENTO CIR. OBESIDADE)",
+    "OBESIDADE E SÍNDROME METABÓLICA",
+    "TIREOTOXICOSE",
+    "OSTEOPOROSE E DOENÇA ÓSSEA DE PAGET",
+    "HIPERPROLACTINEMIA"
+   ]
+  },
+  {
+   "pagina": 17,
+   "especialidade": "INFECTOLOGIA",
+   "periodo": "2021-2023",
+   "subareas": [
+    {
+     "nome": "MICROBIOLOGIA E ANTIMICROBIANOS",
+     "pct": 20.0,
+     "n": 4
+    },
+    {
+     "nome": "HIV/AIDS",
+     "pct": 15.0,
+     "n": 3
+    },
+    {
+     "nome": "PNEUMONIA",
+     "pct": 10.0,
+     "n": 2
+    },
+    {
+     "nome": "INFECÇÕES SEXUALMENTE TRANSMISSÍVEIS",
+     "pct": 10.0,
+     "n": 2
+    },
+    {
+     "nome": "ARBOVIROSES",
+     "pct": 10.0,
+     "n": 2
+    }
+   ],
+   "soma_pct": 65.0,
+   "assuntos": [
+    "INFECÇÃO HOSPITALAR",
+    "ANTIBIÓTICOS",
+    "ARBOVIROSES (DENGUE, CHIKUNGUNYA E ZIKA)",
+    "PNEUMONIAS BACTERIANAS",
+    "HIV",
+    "PARASITOSES",
+    "ANIMAIS PEÇONHENTOS",
+    "SEPSE",
+    "ENDOCARDITE BACTERIANA - ENDOCARDITE INFECCIOSA",
+    "COVID"
+   ]
+  },
+  {
+   "pagina": 18,
+   "especialidade": "NEUROLOGIA",
+   "periodo": "2021-2023",
+   "subareas": [
+    {
+     "nome": "ACIDENTES VASCULARES CEREBRAIS (AVC)",
+     "pct": 18.75,
+     "n": 3
+    },
+    {
+     "nome": "TRAUMATISMO CRANIENCEFÁLICO",
+     "pct": 18.75,
+     "n": 3
+    },
+    {
+     "nome": "CEFALEIAS",
+     "pct": 12.5,
+     "n": 2
+    },
+    {
+     "nome": "DOENÇAS NEUROMUSCULARES",
+     "pct": 6.25,
+     "n": 1
+    },
+    {
+     "nome": "EPILEPSIAS",
+     "pct": 6.25,
+     "n": 1
+    }
+   ],
+   "soma_pct": 62.5,
+   "assuntos": [
+    "ACIDENTES VASCULARES CEREBRAIS",
+    "TRAUMATISMO CRANIOENCEFÁLICO",
+    "EPILEPSIAS",
+    "CEFALEIAS",
+    "DISTÚRBIOS DO MOVIMENTO",
+    "ANATOMIA, FISIOLOGIA E SEMIOLOGIA NEUROLÓGICA",
+    "DEMÊNCIAS",
+    "DOENÇAS NEUROMUSCULARES",
+    "DISTÚRBIOS DO SONO",
+    "DOENÇAS DEMIELINIZANTES E ENCEFALITES AUTOIMUNES"
+   ]
+  },
+  {
+   "pagina": 19,
+   "especialidade": "HEMATOLOGIA",
+   "periodo": "2021-2023",
+   "subareas": [
+    {
+     "nome": "HEMOGLOBINOPATIAS",
+     "pct": 26.67,
+     "n": 3
+    },
+    {
+     "nome": "LEUCEMIAS",
+     "pct": 13.33,
+     "n": 2
+    },
+    {
+     "nome": "HEMOSTASIA",
+     "pct": 13.33,
+     "n": 2
+    },
+    {
+     "nome": "MEDICINA TRANSFUSIONAL",
+     "pct": 13.33,
+     "n": 2
+    },
+    {
+     "nome": "LINFOMAS",
+     "pct": 13.33,
+     "n": 2
+    }
+   ],
+   "soma_pct": 79.99,
+   "assuntos": [
+    "LEUCEMIAS CRÔNICAS, LINFOMAS, MIELODISPLASIAS E HEMOSTASIA II",
+    "MEDICINA TRANSFUSIONAL",
+    "ANEMIAS MICROCÍTICAS",
+    "ANEMIAS MACROCÍTICAS",
+    "MIELOPROLIFERAÇÕES",
+    "ANEMIAS HEMOLÍTICAS",
+    "LEUCEMIAS AGUDAS"
+   ]
+  },
+  {
+   "pagina": 20,
+   "especialidade": "NEFROLOGIA",
+   "periodo": "2021-2023",
+   "subareas": [
+    {
+     "nome": "INFECÇÃO DO TRATO URINÁRIO (ITU)",
+     "pct": 21.43,
+     "n": 2
+    },
+    {
+     "nome": "DISTÚRBIOS DO EQUILÍBRIO ACIDOBÁSICO (DHE)",
+     "pct": 14.29,
+     "n": 2
+    },
+    {
+     "nome": "GLOMERULOPATIAS",
+     "pct": 14.29,
+     "n": 2
+    },
+    {
+     "nome": "LESÃO RENAL AGUDA (LRA)",
+     "pct": 14.29,
+     "n": 2
+    },
+    {
+     "nome": "DOENÇA RENAL CRÔNICA",
+     "pct": 14.29,
+     "n": 2
+    }
+   ],
+   "soma_pct": 78.59,
+   "assuntos": [
+    "DISTÚRBIOS ÁCIDO-BASE / ANÁLISE DA GASOMETRIA ARTERIAL",
+    "INFECÇÃO DO TRATO URINÁRIO (ITU)",
+    "DOENÇAS GLOMERULARES",
+    "LESÃO RENAL AGUDA (LRA)",
+    "DOENÇA RENAL CRÔNICA - PT. 2",
+    "DOENÇA RENAL CRÔNICA - PT. 1",
+    "NEFROLITÍASE",
+    "DISNATREMIAS"
+   ]
+  },
+  {
+   "pagina": 21,
+   "especialidade": "PSIQUIATRIA",
+   "periodo": "2021-2023",
+   "subareas": [
+    {
+     "nome": "INTOXICAÇÕES EXÓGENAS",
+     "pct": 40.0,
+     "n": 4
+    },
+    {
+     "nome": "PSIQUIATRIA INFANTIL",
+     "pct": 30.0,
+     "n": 3
+    },
+    {
+     "nome": "TRANSTORNOS ALIMENTARES",
+     "pct": 10.0,
+     "n": 1
+    },
+    {
+     "nome": "PSICOFARMACOLOGIA",
+     "pct": 10.0,
+     "n": 1
+    },
+    {
+     "nome": "DEPENDÊNCIA QUÍMICA",
+     "pct": 10.0,
+     "n": 1
+    }
+   ],
+   "soma_pct": 100.0,
+   "assuntos": [
+    "DEPENDÊNCIA QUÍMICA",
+    "INTOXICAÇÕES EXÓGENAS",
+    "PSIQUIATRIA INFANTIL",
+    "TRANSTORNOS ALIMENTARES",
+    "PSICOFARMACOLOGIA"
+   ]
+  },
+  {
+   "pagina": 22,
+   "especialidade": "REUMATOLOGIA",
+   "periodo": "2021-2023",
+   "subareas": [
+    {
+     "nome": "ARTROPATIAS INFLAMATÓRIAS",
+     "pct": 55.56,
+     "n": 5
+    },
+    {
+     "nome": "VASCULITES",
+     "pct": 22.22,
+     "n": 2
+    },
+    {
+     "nome": "DOENÇAS AUTOIMUNES DO TECIDO CONJUNTIVO",
+     "pct": 22.22,
+     "n": 2
+    }
+   ],
+   "soma_pct": 100.0,
+   "assuntos": [
+    "ARTRITE REUMATÓIDE",
+    "ARTRITES MICROCRISTALINAS",
+    "VASCULITES",
+    "DOENÇAS INFLAMATÓRIAS DO TECIDO CONJUNTIVO II",
+    "ESPONDILOARTRITE",
+    "MIOPATIAS AUTOIMUNES SISTÊMICAS"
+   ]
+  },
+  {
+   "pagina": 23,
+   "especialidade": "PNEUMOLOGIA",
+   "periodo": "2021-2023",
+   "subareas": [
+    {
+     "nome": "CÂNCER DE PULMÃO",
+     "pct": 33.33,
+     "n": 3
+    },
+    {
+     "nome": "ASMA",
+     "pct": 33.33,
+     "n": 3
+    },
+    {
+     "nome": "DERRAME PLEURAL",
+     "pct": 11.11,
+     "n": 1
+    },
+    {
+     "nome": "DOENÇA PULMONAR OBSTRUTIVA CRÔNICA (DPOC)",
+     "pct": 11.11,
+     "n": 1
+    },
+    {
+     "nome": "PNEUMOPATIAS INTERSTICIAIS, HIPERTENSÃO PULMONAR, BRONQUIECTASIAS, P.E.",
+     "pct": 11.11,
+     "n": 1
+    }
+   ],
+   "soma_pct": 99.99,
+   "assuntos": [
+    "ASMA",
+    "NEOPLASIAS PULMONARES",
+    "DOENÇA PULMONAR OBSTRUTIVA CRÔNICA (DPOC)",
+    "DERRAME PLEURAL",
+    "PNEUMOPATIAS INTERSTICIAIS, HIPERTENSÃO PULMONAR, BRONQUIECTASIAS E PNEUMOTÓRAX ESPONTÂNEO"
+   ]
+  },
+  {
+   "pagina": 24,
+   "especialidade": "HEPATOLOGIA",
+   "periodo": "2021-2023",
+   "subareas": [
+    {
+     "nome": "COMPLICAÇÕES DA INSUFICIÊNCIA HEPÁTICA",
+     "pct": 22.22,
+     "n": 2
+    },
+    {
+     "nome": "INTRODUÇÃO À HEPATOLOGIA",
+     "pct": 22.22,
+     "n": 2
+    },
+    {
+     "nome": "OUTRAS HEPATOPATIAS",
+     "pct": 22.22,
+     "n": 2
+    },
+    {
+     "nome": "TUMORES HEPÁTICOS",
+     "pct": 11.11,
+     "n": 1
+    },
+    {
+     "nome": "CIRROSE",
+     "pct": 11.11,
+     "n": 1
+    }
+   ],
+   "soma_pct": 88.88,
+   "assuntos": [
+    "TUMORES HEPÁTICOS",
+    "CIRROSE HEPÁTICA",
+    "HEPATITES VIRAIS",
+    "COMPLICAÇÕES DA CIRROSE HEPÁTICA",
+    "INTRODUÇÃO À HEPATOLOGIA E ICTERÍCIA NÃO OBSTRUTIVA",
+    "HEPATOPATIAS AUTOIMUNES",
+    "SÍNDROME HEPATORRENAL E SÍNDROME HEPATOPULMONAR"
+   ]
+  },
+  {
+   "pagina": 25,
+   "especialidade": "DERMATOLOGIA",
+   "periodo": "2021-2023",
+   "subareas": [
+    {
+     "nome": "DERMATOSES INFECCIOSAS",
+     "pct": 57.14,
+     "n": 4
+    },
+    {
+     "nome": "HANSENÍASE",
+     "pct": 14.29,
+     "n": 1
+    },
+    {
+     "nome": "DERMATOSES ECZEMATOSAS",
+     "pct": 14.29,
+     "n": 1
+    },
+    {
+     "nome": "CÂNCER DE PELE",
+     "pct": 14.29,
+     "n": 1
+    }
+   ],
+   "soma_pct": 100.01,
+   "assuntos": [
+    "ONCOLOGIA CUTÂNEA (CÂNCER DE PELE)",
+    "HANSENÍASE",
+    "DERMATOSES INFECCIOSAS",
+    "DERMATOSES ECZEMATOSAS"
+   ]
+  },
+  {
+   "pagina": 26,
+   "especialidade": "OTORRINOLARINGOLOGIA",
+   "periodo": "2021-2023",
+   "subareas": [
+    {
+     "nome": "INFECÇÕES DAS VIAS AÉREAS SUPERIORES",
+     "pct": 66.67,
+     "n": 4
+    },
+    {
+     "nome": "LINFADENITES CERVICAIS",
+     "pct": 16.67,
+     "n": 1
+    },
+    {
+     "nome": "RINITE ALÉRGICA",
+     "pct": 16.67,
+     "n": 1
+    }
+   ],
+   "soma_pct": 100.01,
+   "assuntos": [
+    "MANEJO DOS NÓDULOS DE TIREOIDE, CÂNCER DE TIREOIDE E TIREOIDECTOMIA",
+    "INFECÇÕES DAS VIAS AÉREAS SUPERIORES PT. 2",
+    "INFECÇÕES DAS VIAS AÉREAS SUPERIORES PT. 1",
+    "NEOPLASIAS BENIGNAS E MALIGNAS DE CABEÇA E PESCOÇO, DOENÇAS CONGÊNITAS CERVICOFACIAIS E TRAQUEOSTOMIA"
+   ]
+  },
+  {
+   "pagina": 27,
+   "especialidade": "ORTOPEDIA",
+   "periodo": "2021-2023",
+   "subareas": [
+    {
+     "nome": "ORTOPEDIA GERAL",
+     "pct": 50.0,
+     "n": 2
+    },
+    {
+     "nome": "TRAUMA ORTOPÉDICO",
+     "pct": 25.0,
+     "n": 1
+    },
+    {
+     "nome": "ORTOPEDIA PEDIÁTRICA",
+     "pct": 25.0,
+     "n": 1
+    }
+   ],
+   "soma_pct": 100.0,
+   "assuntos": [
+    "MAUS TRATOS",
+    "QUADRIL PEDIÁTRICO",
+    "ONCOLOGIA ORTOPÉDICA E OSTEOMIELITE",
+    "CONCEITOS BÁSICOS DO TRAUMA ORTOPÉDICO",
+    "FRATURA EXPOSTA"
+   ]
+  },
+  {
+   "pagina": 28,
+   "especialidade": "OFTALMOLOGIA",
+   "periodo": "2021-2023",
+   "subareas": [
+    {
+     "nome": "TUMORES OCULARES MALIGNOS",
+     "pct": 50.0,
+     "n": 1
+    },
+    {
+     "nome": "CÓRNEA E CRISTALINO",
+     "pct": 50.0,
+     "n": 1
+    }
+   ],
+   "soma_pct": 100.0,
+   "assuntos": [
+    "TUMORES OCULARES MALIGNOS",
+    "CÓRNEA E CRISTALINO"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,1258 @@
+{
+ "_doc": "Plano de reordenacao S15-S30 pelo rendimento esperado no ENAMED (13/09/2026). Baseline = core/cronograma/grade.json (derivado do PDF). Conferir contra o Drive antes de aplicar.",
+ "gerado_para": "2026-08-16",
+ "capacidade_janela_slots": 75,
+ "cota_macro": {
+  "Clínica Médica": 20,
+  "Cirurgia": 16,
+  "Ginecologia e Obstetrícia": 16,
+  "Pediatria": 15,
+  "Medicina Preventiva": 8
+ },
+ "uso_macro": {
+  "Clínica Médica": 20,
+  "Cirurgia": 16,
+  "Ginecologia e Obstetrícia": 16,
+  "Pediatria": 15,
+  "Medicina Preventiva": 7
+ },
+ "puxar": [
+  {
+   "area": "Pediatria",
+   "rotulo": "Crescimento",
+   "n_tasks": 2,
+   "semana_min": 23,
+   "rend_task": 26.95,
+   "just": "TOP-10 #6; puericultura 27,59%",
+   "motivos": [
+    "1 erro nos simulados"
+   ]
+  },
+  {
+   "area": "Pediatria",
+   "rotulo": "Reanimação Neonatal",
+   "n_tasks": 2,
+   "semana_min": 22,
+   "rend_task": 22.05,
+   "just": "neonatologia 12,07% (2a maior subárea); fora do TOP-10",
+   "motivos": [
+    "2 erro nos simulados"
+   ]
+  },
+  {
+   "area": "Cirurgia",
+   "rotulo": "Princípios da Anestesiologia",
+   "n_tasks": 3,
+   "semana_min": 23,
+   "rend_task": 20.0,
+   "just": "TOP-10 #1; subárea própria 6%",
+   "motivos": []
+  },
+  {
+   "area": "Cirurgia",
+   "rotulo": "Abdome Agudo Obstrutivo",
+   "n_tasks": 2,
+   "semana_min": 25,
+   "rend_task": 20.0,
+   "just": "TOP-10 #9; urgências abdominais 10%",
+   "motivos": []
+  },
+  {
+   "area": "Ginecologia",
+   "rotulo": "Câncer de Colo Uterino",
+   "n_tasks": 2,
+   "semana_min": 23,
+   "rend_task": 18.168,
+   "just": "TOP-10 #2; oncologia ginecológica 22,45%",
+   "motivos": [
+    "2 erro nos simulados"
+   ]
+  },
+  {
+   "area": "Obstetrícia",
+   "rotulo": "Hemorragia Pós-Parto",
+   "n_tasks": 2,
+   "semana_min": 28,
+   "rend_task": 16.608,
+   "just": "TOP-10 #6; intercorrências obstétricas 27,91% (maior subárea)",
+   "motivos": [
+    "1 erro nos simulados"
+   ]
+  },
+  {
+   "area": "Pediatria",
+   "rotulo": "Tópicos em Pediatria",
+   "n_tasks": 2,
+   "semana_min": 25,
+   "rend_task": 14.7,
+   "just": "TOP-10 #10 (última posição)",
+   "motivos": []
+  },
+  {
+   "area": "Obstetrícia",
+   "rotulo": "Sangramento da Segunda Metade",
+   "n_tasks": 2,
+   "semana_min": 22,
+   "rend_task": 12.775,
+   "just": "TOP-10 #7; intercorrências obstétricas 27,91%",
+   "motivos": []
+  },
+  {
+   "area": "Obstetrícia",
+   "rotulo": "Partograma e Distocia",
+   "n_tasks": 2,
+   "semana_min": 24,
+   "rend_task": 10.22,
+   "just": "parto 13,95%; vizinho do #4 (indução/distocia)",
+   "motivos": []
+  },
+  {
+   "area": "Cirurgia",
+   "rotulo": "Complicações Pós-Operatórias",
+   "n_tasks": 4,
+   "semana_min": 27,
+   "rend_task": 7.5,
+   "just": "encosta em 'temas gerais' (#5); sem subárea própria",
+   "motivos": []
+  },
+  {
+   "area": "Neurologia",
+   "rotulo": "Acidentes Vasculares Cerebrais",
+   "n_tasks": 1,
+   "semana_min": 23,
+   "rend_task": 7.23,
+   "just": "TOP-10 #1; AVC 18,75% (maior subárea, empatada com TCE)",
+   "motivos": []
+  },
+  {
+   "area": "Cardiologia",
+   "rotulo": "Fibrilação e Flutter Atrial Parada Cardiorrespiratória",
+   "n_tasks": 2,
+   "semana_min": 27,
+   "rend_task": 6.315,
+   "just": "TOP-10 #2 e #6; arritmias 32,14% (maior subárea)",
+   "motivos": []
+  },
+  {
+   "area": "Neurologia",
+   "rotulo": "AVC Coma e alterações da consciência",
+   "n_tasks": 1,
+   "semana_min": 27,
+   "rend_task": 6.025,
+   "just": "revisão que cobre o TOP-10 #1",
+   "motivos": []
+  },
+  {
+   "area": "Nefrologia",
+   "rotulo": "Infecção do Trato Urinário",
+   "n_tasks": 1,
+   "semana_min": 24,
+   "rend_task": 4.98,
+   "just": "TOP #2; ITU 21,43% (maior subárea)",
+   "motivos": []
+  },
+  {
+   "area": "Endocrino",
+   "rotulo": "Obesidade e Síndrome Metabólica (Teoria) Cirurgia Bariátrica e Metabólica",
+   "n_tasks": 2,
+   "semana_min": 22,
+   "rend_task": 4.515,
+   "just": "TOP-9 #5 e #6; obesidade/SM 28,57% (2a maior subárea)",
+   "motivos": []
+  },
+  {
+   "area": "Infecto",
+   "rotulo": "Endocardites",
+   "n_tasks": 1,
+   "semana_min": 25,
+   "rend_task": 4.29,
+   "just": "TOP-10 #9; sem subárea própria",
+   "motivos": []
+  },
+  {
+   "area": "Infecto",
+   "rotulo": "Endocardite Bacteriana - Endocardite Infecciosa",
+   "n_tasks": 1,
+   "semana_min": 27,
+   "rend_task": 4.29,
+   "just": "TOP-10 #9; sem subárea própria",
+   "motivos": []
+  }
+ ],
+ "empurrar": [
+  {
+   "area": "Hemato",
+   "rotulo": "Anemias Hemolíticas",
+   "n_tasks": 1,
+   "semana_min": 16,
+   "rend_task": 3.92,
+   "just": "TOP #6; hemoglobinopatias 26,67% (maior subárea)",
+   "motivos": []
+  },
+  {
+   "area": "Neurologia",
+   "rotulo": "Distúrbios do Movimento",
+   "n_tasks": 3,
+   "semana_min": 16,
+   "rend_task": 1.205,
+   "just": "TOP-10 #5; não figura entre as subáreas",
+   "motivos": []
+  },
+  {
+   "area": "Pneumo",
+   "rotulo": "Pneumologia Intensiva",
+   "n_tasks": 2,
+   "semana_min": 16,
+   "rend_task": 0.34,
+   "just": "ausente do guia",
+   "motivos": []
+  },
+  {
+   "area": "Cirurgia",
+   "rotulo": "Urologia",
+   "n_tasks": 4,
+   "semana_min": 17,
+   "rend_task": 2.5,
+   "just": "ausente do guia: nem subárea nem TOP-10",
+   "motivos": []
+  },
+  {
+   "area": "Infecto",
+   "rotulo": "Pneumonias Bacterianas",
+   "n_tasks": 4,
+   "semana_min": 17,
+   "rend_task": 1.788,
+   "just": "TOP-10 #4; pneumonia 10,00%",
+   "motivos": []
+  },
+  {
+   "area": "Nefrologia",
+   "rotulo": "Nefrolitíase",
+   "n_tasks": 2,
+   "semana_min": 17,
+   "rend_task": 0.83,
+   "just": "TOP #7; não figura entre as subáreas",
+   "motivos": []
+  },
+  {
+   "area": "Obstetrícia",
+   "rotulo": "Vitalidade Fetal",
+   "n_tasks": 2,
+   "semana_min": 17,
+   "rend_task": 7.665,
+   "just": "medicina fetal 18,60%; fora do TOP-10",
+   "motivos": []
+  },
+  {
+   "area": "Psiquiatria",
+   "rotulo": "Transtornos de Humor; Psiquiatria Social e Reforma Psiquiátrica",
+   "n_tasks": 1,
+   "semana_min": 18,
+   "rend_task": 0.755,
+   "just": "ausente do guia",
+   "motivos": []
+  },
+  {
+   "area": "Reumato",
+   "rotulo": "Doenças Inflamatórias do Tecido Conjuntivo",
+   "n_tasks": 1,
+   "semana_min": 18,
+   "rend_task": 3.4,
+   "just": "TOP #4; tec. conjuntivo 22,22%",
+   "motivos": [
+    "acerto histórico 46%"
+   ]
+  },
+  {
+   "area": "Hepato",
+   "rotulo": "Complicações da Cirrose Hepática",
+   "n_tasks": 3,
+   "semana_min": 19,
+   "rend_task": 1.008,
+   "just": "TOP #4; complicações da insuf. hepática 22,22%",
+   "motivos": []
+  },
+  {
+   "area": "Obstetrícia",
+   "rotulo": "Diabetes na Gestação",
+   "n_tasks": 3,
+   "semana_min": 19,
+   "rend_task": 7.665,
+   "just": "TOP-10 #9; doenças associadas à gestação 16,28%",
+   "motivos": [
+    "2 erro nos simulados"
+   ]
+  },
+  {
+   "area": "Hemato",
+   "rotulo": "Anemias Microcíticas e Leucemias Agudas",
+   "n_tasks": 2,
+   "semana_min": 20,
+   "rend_task": 2.45,
+   "just": "TOP #3 e #7 num bloco só",
+   "motivos": []
+  },
+  {
+   "area": "Oftalmo",
+   "rotulo": "Doenças do Polo Posterior",
+   "n_tasks": 1,
+   "semana_min": 20,
+   "rend_task": 0.15,
+   "just": "ausente: o guia só lista tumores oculares e córnea/cristalino",
+   "motivos": []
+  },
+  {
+   "area": "Otorrino",
+   "rotulo": "Infecções das Vias Aéreas Superiores Pt. 2",
+   "n_tasks": 1,
+   "semana_min": 20,
+   "rend_task": 2.7,
+   "just": "TOP #2; IVAS 66,67% da especialidade",
+   "motivos": []
+  },
+  {
+   "area": "Preventiva",
+   "rotulo": "Financiamento em Saúde",
+   "n_tasks": 3,
+   "semana_min": 20,
+   "rend_task": 5.2,
+   "just": "SUS 19,44%; fora do TOP-10",
+   "motivos": []
+  }
+ ],
+ "fila": [
+  {
+   "area": "Cirurgia",
+   "rotulo": "Diverticulite Aguda",
+   "n_tasks": 1,
+   "semana_min": 15,
+   "rend_task": 40.0,
+   "micro": 2.0,
+   "peso_area": 20.0,
+   "just": "TOP-10 #7; urgências abdominais 10%",
+   "motivos": []
+  },
+  {
+   "area": "Pediatria",
+   "rotulo": "Asma",
+   "n_tasks": 1,
+   "semana_min": 15,
+   "rend_task": 34.3,
+   "micro": 1.5,
+   "peso_area": 19.6,
+   "just": "pneumologia pediátrica 10,34%; fora do TOP-10 (bronquiolite é #8)",
+   "motivos": [
+    "2 erro nos simulados"
+   ]
+  },
+  {
+   "area": "Pediatria",
+   "rotulo": "Aleitamento Materno",
+   "n_tasks": 2,
+   "semana_min": 15,
+   "rend_task": 31.85,
+   "micro": 3.0,
+   "peso_area": 19.6,
+   "just": "TOP-10 #4; puericultura 27,59% (maior subárea)",
+   "motivos": [
+    "1 erro nos simulados"
+   ]
+  },
+  {
+   "area": "Pediatria",
+   "rotulo": "Pneumonias na Infância",
+   "n_tasks": 2,
+   "semana_min": 18,
+   "rend_task": 29.4,
+   "micro": 3.0,
+   "peso_area": 19.6,
+   "just": "TOP-10 #3; pneumologia pediátrica 10,34%",
+   "motivos": []
+  },
+  {
+   "area": "Pediatria",
+   "rotulo": "Crescimento",
+   "n_tasks": 2,
+   "semana_min": 23,
+   "rend_task": 26.95,
+   "micro": 2.5,
+   "peso_area": 19.6,
+   "just": "TOP-10 #6; puericultura 27,59%",
+   "motivos": [
+    "1 erro nos simulados"
+   ]
+  },
+  {
+   "area": "Pediatria",
+   "rotulo": "Diarreia",
+   "n_tasks": 2,
+   "semana_min": 17,
+   "rend_task": 24.5,
+   "micro": 2.5,
+   "peso_area": 19.6,
+   "just": "TOP-10 #5; gastrologia pediátrica 8,62%",
+   "motivos": []
+  },
+  {
+   "area": "Pediatria",
+   "rotulo": "Reanimação Neonatal",
+   "n_tasks": 2,
+   "semana_min": 22,
+   "rend_task": 22.05,
+   "micro": 2.0,
+   "peso_area": 19.6,
+   "just": "neonatologia 12,07% (2a maior subárea); fora do TOP-10",
+   "motivos": [
+    "2 erro nos simulados"
+   ]
+  },
+  {
+   "area": "Preventiva",
+   "rotulo": "Princípios e Diretrizes do SUS",
+   "n_tasks": 1,
+   "semana_min": 15,
+   "rend_task": 20.8,
+   "micro": 2.0,
+   "peso_area": 10.4,
+   "just": "SUS 19,44%; fora do TOP-10",
+   "motivos": []
+  },
+  {
+   "area": "Cirurgia",
+   "rotulo": "Princípios da Anestesiologia",
+   "n_tasks": 3,
+   "semana_min": 23,
+   "rend_task": 20.0,
+   "micro": 3.0,
+   "peso_area": 20.0,
+   "just": "TOP-10 #1; subárea própria 6%",
+   "motivos": []
+  },
+  {
+   "area": "Cirurgia",
+   "rotulo": "Abdome Agudo Obstrutivo",
+   "n_tasks": 2,
+   "semana_min": 25,
+   "rend_task": 20.0,
+   "micro": 2.0,
+   "peso_area": 20.0,
+   "just": "TOP-10 #9; urgências abdominais 10%",
+   "motivos": []
+  },
+  {
+   "area": "Pediatria",
+   "rotulo": "Choque em Pediatria",
+   "n_tasks": 2,
+   "semana_min": 19,
+   "rend_task": 19.6,
+   "micro": 2.0,
+   "peso_area": 19.6,
+   "just": "TOP-10 #9 (emergências pediátricas)",
+   "motivos": []
+  },
+  {
+   "area": "Ginecologia",
+   "rotulo": "Câncer de Mama",
+   "n_tasks": 2,
+   "semana_min": 15,
+   "rend_task": 18.168,
+   "micro": 3.0,
+   "peso_area": 11.18,
+   "just": "TOP-10 #4; mastologia 20,41%",
+   "motivos": [
+    "2 erro nos simulados"
+   ]
+  },
+  {
+   "area": "Ginecologia",
+   "rotulo": "Câncer de Colo Uterino",
+   "n_tasks": 2,
+   "semana_min": 23,
+   "rend_task": 18.168,
+   "micro": 3.0,
+   "peso_area": 11.18,
+   "just": "TOP-10 #2; oncologia ginecológica 22,45%",
+   "motivos": [
+    "2 erro nos simulados"
+   ]
+  },
+  {
+   "area": "Preventiva",
+   "rotulo": "Ética Médica",
+   "n_tasks": 2,
+   "semana_min": 18,
+   "rend_task": 16.9,
+   "micro": 3.0,
+   "peso_area": 10.4,
+   "just": "TOP-10 #1; subárea própria 11,11%",
+   "motivos": [
+    "2 erro nos simulados"
+   ]
+  },
+  {
+   "area": "Obstetrícia",
+   "rotulo": "Assistência ao Parto",
+   "n_tasks": 2,
+   "semana_min": 15,
+   "rend_task": 16.608,
+   "micro": 2.5,
+   "peso_area": 10.22,
+   "just": "TOP-10 #5; parto 13,95%",
+   "motivos": [
+    "1 erro nos simulados",
+    "acerto histórico 67%"
+   ]
+  },
+  {
+   "area": "Obstetrícia",
+   "rotulo": "Hemorragia Pós-Parto",
+   "n_tasks": 2,
+   "semana_min": 28,
+   "rend_task": 16.608,
+   "micro": 3.0,
+   "peso_area": 10.22,
+   "just": "TOP-10 #6; intercorrências obstétricas 27,91% (maior subárea)",
+   "motivos": [
+    "1 erro nos simulados"
+   ]
+  },
+  {
+   "area": "Pediatria",
+   "rotulo": "Tópicos em Pediatria",
+   "n_tasks": 2,
+   "semana_min": 25,
+   "rend_task": 14.7,
+   "micro": 1.5,
+   "peso_area": 19.6,
+   "just": "TOP-10 #10 (última posição)",
+   "motivos": []
+  },
+  {
+   "area": "Pediatria",
+   "rotulo": "Desnutrição na Infância",
+   "n_tasks": 2,
+   "semana_min": 26,
+   "rend_task": 14.7,
+   "micro": 1.5,
+   "peso_area": 19.6,
+   "just": "puericultura 27,59%; fora do TOP-10",
+   "motivos": []
+  },
+  {
+   "area": "Ginecologia",
+   "rotulo": "Sangramento Uterino Anormal",
+   "n_tasks": 2,
+   "semana_min": 17,
+   "rend_task": 13.975,
+   "micro": 2.5,
+   "peso_area": 11.18,
+   "just": "ginecologia endócrina 26,53% (maior subárea); vizinho do #8",
+   "motivos": []
+  },
+  {
+   "area": "Ginecologia",
+   "rotulo": "Tumores Anexiais e Câncer de Ovário",
+   "n_tasks": 2,
+   "semana_min": 19,
+   "rend_task": 13.975,
+   "micro": 2.5,
+   "peso_area": 11.18,
+   "just": "TOP-10 #7; oncologia ginecológica 22,45%",
+   "motivos": []
+  },
+  {
+   "area": "Obstetrícia",
+   "rotulo": "Sangramento da Segunda Metade",
+   "n_tasks": 2,
+   "semana_min": 22,
+   "rend_task": 12.775,
+   "micro": 2.5,
+   "peso_area": 10.22,
+   "just": "TOP-10 #7; intercorrências obstétricas 27,91%",
+   "motivos": []
+  },
+  {
+   "area": "Obstetrícia",
+   "rotulo": "Partograma e Distocia",
+   "n_tasks": 2,
+   "semana_min": 24,
+   "rend_task": 10.22,
+   "micro": 2.0,
+   "peso_area": 10.22,
+   "just": "parto 13,95%; vizinho do #4 (indução/distocia)",
+   "motivos": []
+  },
+  {
+   "area": "Preventiva",
+   "rotulo": "Atenção Primária à Saúde no Brasil",
+   "n_tasks": 4,
+   "semana_min": 15,
+   "rend_task": 7.8,
+   "micro": 3.0,
+   "peso_area": 10.4,
+   "just": "TOP-10 #5; MFC 22,22%",
+   "motivos": []
+  },
+  {
+   "area": "Obstetrícia",
+   "rotulo": "Vitalidade Fetal",
+   "n_tasks": 2,
+   "semana_min": 17,
+   "rend_task": 7.665,
+   "micro": 1.5,
+   "peso_area": 10.22,
+   "just": "medicina fetal 18,60%; fora do TOP-10",
+   "motivos": []
+  },
+  {
+   "area": "Obstetrícia",
+   "rotulo": "Diabetes na Gestação",
+   "n_tasks": 3,
+   "semana_min": 19,
+   "rend_task": 7.665,
+   "micro": 2.0,
+   "peso_area": 10.22,
+   "just": "TOP-10 #9; doenças associadas à gestação 16,28%",
+   "motivos": [
+    "2 erro nos simulados"
+   ]
+  },
+  {
+   "area": "Obstetrícia",
+   "rotulo": "Gestação Múltipla",
+   "n_tasks": 2,
+   "semana_min": 26,
+   "rend_task": 7.665,
+   "micro": 1.5,
+   "peso_area": 10.22,
+   "just": "intercorrências 27,91%; fora do TOP-10",
+   "motivos": []
+  },
+  {
+   "area": "Endocrino",
+   "rotulo": "Tireotoxicose",
+   "n_tasks": 1,
+   "semana_min": 16,
+   "rend_task": 7.525,
+   "micro": 2.5,
+   "peso_area": 3.01,
+   "just": "TOP-9 #7; tireoide 33,33%",
+   "motivos": []
+  },
+  {
+   "area": "Cirurgia",
+   "rotulo": "Hérnias da Parede Abdominal",
+   "n_tasks": 4,
+   "semana_min": 20,
+   "rend_task": 7.5,
+   "micro": 1.5,
+   "peso_area": 20.0,
+   "just": "TOP-10 #10 (última posição)",
+   "motivos": []
+  },
+  {
+   "area": "Cirurgia",
+   "rotulo": "Complicações Pós-Operatórias",
+   "n_tasks": 4,
+   "semana_min": 27,
+   "rend_task": 7.5,
+   "micro": 1.5,
+   "peso_area": 20.0,
+   "just": "encosta em 'temas gerais' (#5); sem subárea própria",
+   "motivos": []
+  },
+  {
+   "area": "Neurologia",
+   "rotulo": "Acidentes Vasculares Cerebrais",
+   "n_tasks": 1,
+   "semana_min": 23,
+   "rend_task": 7.23,
+   "micro": 3.0,
+   "peso_area": 2.41,
+   "just": "TOP-10 #1; AVC 18,75% (maior subárea, empatada com TCE)",
+   "motivos": []
+  },
+  {
+   "area": "Infecto",
+   "rotulo": "Parasitoses; Infecções Relacionadas à Assistência em Saúde",
+   "n_tasks": 1,
+   "semana_min": 15,
+   "rend_task": 7.15,
+   "micro": 2.5,
+   "peso_area": 2.86,
+   "just": "TOP-10 #1 e #6 num bloco só",
+   "motivos": []
+  },
+  {
+   "area": "Infecto",
+   "rotulo": "Parasitoses; Infecção Hospitalar",
+   "n_tasks": 1,
+   "semana_min": 16,
+   "rend_task": 7.15,
+   "micro": 2.5,
+   "peso_area": 2.86,
+   "just": "TOP-10 #1 e #6 num bloco só",
+   "motivos": []
+  },
+  {
+   "area": "Cardiologia",
+   "rotulo": "Hipertensão Arterial Sistêmica Pt. 3",
+   "n_tasks": 2,
+   "semana_min": 15,
+   "rend_task": 6.841,
+   "micro": 3.0,
+   "peso_area": 4.21,
+   "just": "TOP-10 #4 (e #1 é HAS Pt.2); HAS 25,00%",
+   "motivos": [
+    "1 erro nos simulados"
+   ]
+  },
+  {
+   "area": "Gastro",
+   "rotulo": "Doença Inflamatória Intestinal",
+   "n_tasks": 1,
+   "semana_min": 15,
+   "rend_task": 6.62,
+   "micro": 2.0,
+   "peso_area": 3.31,
+   "just": "no TOP-10; intestinos 13,04%",
+   "motivos": []
+  },
+  {
+   "area": "Cardiologia",
+   "rotulo": "Fibrilação e Flutter Atrial Parada Cardiorrespiratória",
+   "n_tasks": 2,
+   "semana_min": 27,
+   "rend_task": 6.315,
+   "micro": 3.0,
+   "peso_area": 4.21,
+   "just": "TOP-10 #2 e #6; arritmias 32,14% (maior subárea)",
+   "motivos": []
+  },
+  {
+   "area": "Neurologia",
+   "rotulo": "AVC Coma e alterações da consciência",
+   "n_tasks": 1,
+   "semana_min": 27,
+   "rend_task": 6.025,
+   "micro": 2.5,
+   "peso_area": 2.41,
+   "just": "revisão que cobre o TOP-10 #1",
+   "motivos": []
+  },
+  {
+   "area": "Nefrologia",
+   "rotulo": "Distúrbios Ácido-Base; Distúrbios do Potássio",
+   "n_tasks": 1,
+   "semana_min": 15,
+   "rend_task": 5.81,
+   "micro": 3.0,
+   "peso_area": 1.66,
+   "just": "TOP #1; DHE 14,29%",
+   "motivos": [
+    "acerto histórico 68%"
+   ]
+  },
+  {
+   "area": "Ginecologia",
+   "rotulo": "Prolapsos de Órgãos Pélvicos",
+   "n_tasks": 2,
+   "semana_min": 21,
+   "rend_task": 5.59,
+   "micro": 1.0,
+   "peso_area": 11.18,
+   "just": "ginecologia geral 6,12%; fora do TOP-10",
+   "motivos": []
+  },
+  {
+   "area": "Ginecologia",
+   "rotulo": "Incontinência Urinária",
+   "n_tasks": 2,
+   "semana_min": 25,
+   "rend_task": 5.59,
+   "micro": 1.0,
+   "peso_area": 11.18,
+   "just": "ginecologia geral 6,12%; fora do TOP-10",
+   "motivos": []
+  },
+  {
+   "area": "Preventiva",
+   "rotulo": "Financiamento em Saúde",
+   "n_tasks": 3,
+   "semana_min": 20,
+   "rend_task": 5.2,
+   "micro": 1.5,
+   "peso_area": 10.4,
+   "just": "SUS 19,44%; fora do TOP-10",
+   "motivos": []
+  },
+  {
+   "area": "Preventiva",
+   "rotulo": "Estatística Médica",
+   "n_tasks": 6,
+   "semana_min": 22,
+   "rend_task": 5.2,
+   "micro": 3.0,
+   "peso_area": 10.4,
+   "just": "epidemiologia 41,67% (maior subárea do guia inteiro); TOP-10 #4 e #8",
+   "motivos": []
+  },
+  {
+   "area": "Cirurgia",
+   "rotulo": "Cirurgia Vascular",
+   "n_tasks": 2,
+   "semana_min": 16,
+   "rend_task": 5.0,
+   "micro": 0.5,
+   "peso_area": 20.0,
+   "just": "ausente do guia: nem subárea nem TOP-10",
+   "motivos": []
+  },
+  {
+   "area": "Nefrologia",
+   "rotulo": "Infecção do Trato Urinário",
+   "n_tasks": 1,
+   "semana_min": 24,
+   "rend_task": 4.98,
+   "micro": 3.0,
+   "peso_area": 1.66,
+   "just": "TOP #2; ITU 21,43% (maior subárea)",
+   "motivos": []
+  },
+  {
+   "area": "Gastro",
+   "rotulo": "Neoplasias de Estômago e Esôfago",
+   "n_tasks": 2,
+   "semana_min": 17,
+   "rend_task": 4.965,
+   "micro": 3.0,
+   "peso_area": 3.31,
+   "just": "TOP-10 #2; neoplasias do sist. digestivo 39,13% (maior subárea)",
+   "motivos": []
+  },
+  {
+   "area": "Pediatria",
+   "rotulo": "Alergia Alimentar",
+   "n_tasks": 2,
+   "semana_min": 21,
+   "rend_task": 4.9,
+   "micro": 0.5,
+   "peso_area": 19.6,
+   "just": "ausente do guia",
+   "motivos": []
+  },
+  {
+   "area": "Pediatria",
+   "rotulo": "Obesidade Infantil e na Adolescência",
+   "n_tasks": 2,
+   "semana_min": 27,
+   "rend_task": 4.9,
+   "micro": 0.5,
+   "peso_area": 19.6,
+   "just": "ausente do guia",
+   "motivos": []
+  },
+  {
+   "area": "Endocrino",
+   "rotulo": "Hipotireoidismo",
+   "n_tasks": 2,
+   "semana_min": 18,
+   "rend_task": 4.891,
+   "micro": 3.0,
+   "peso_area": 3.01,
+   "just": "TOP-9 #4; tireoide 33,33% (maior subárea)",
+   "motivos": [
+    "1 erro nos simulados"
+   ]
+  },
+  {
+   "area": "Endocrino",
+   "rotulo": "Obesidade e Síndrome Metabólica (Teoria) Cirurgia Bariátrica e Metabólica",
+   "n_tasks": 2,
+   "semana_min": 22,
+   "rend_task": 4.515,
+   "micro": 3.0,
+   "peso_area": 3.01,
+   "just": "TOP-9 #5 e #6; obesidade/SM 28,57% (2a maior subárea)",
+   "motivos": []
+  },
+  {
+   "area": "Ortopedia",
+   "rotulo": "Quadril Pediátrico Politrauma Ortopédico Doenças da coluna vertebral Maus Tratos Fraturas e Luxações Complicações do trauma ortopédico",
+   "n_tasks": 1,
+   "semana_min": 28,
+   "rend_task": 4.5,
+   "micro": 3.0,
+   "peso_area": 1.5,
+   "just": "cobre TOP #1, #2 e #4 num bloco só",
+   "motivos": []
+  },
+  {
+   "area": "Infecto",
+   "rotulo": "Endocardites",
+   "n_tasks": 1,
+   "semana_min": 25,
+   "rend_task": 4.29,
+   "micro": 1.5,
+   "peso_area": 2.86,
+   "just": "TOP-10 #9; sem subárea própria",
+   "motivos": []
+  },
+  {
+   "area": "Infecto",
+   "rotulo": "Endocardite Bacteriana - Endocardite Infecciosa",
+   "n_tasks": 1,
+   "semana_min": 27,
+   "rend_task": 4.29,
+   "micro": 1.5,
+   "peso_area": 2.86,
+   "just": "TOP-10 #9; sem subárea própria",
+   "motivos": []
+  },
+  {
+   "area": "Nefrologia",
+   "rotulo": "Doenças Glomerulares",
+   "n_tasks": 1,
+   "semana_min": 22,
+   "rend_task": 4.15,
+   "micro": 2.5,
+   "peso_area": 1.66,
+   "just": "TOP #3; glomerulopatias 14,29%",
+   "motivos": []
+  },
+  {
+   "area": "Nefrologia",
+   "rotulo": "Doenças Glomerulares Infecção do Trato Urinário",
+   "n_tasks": 1,
+   "semana_min": 26,
+   "rend_task": 4.15,
+   "micro": 2.5,
+   "peso_area": 1.66,
+   "just": "revisão que cobre TOP #2 e #3",
+   "motivos": []
+  },
+  {
+   "area": "Pneumo",
+   "rotulo": "Neoplasias Pulmonares",
+   "n_tasks": 1,
+   "semana_min": 25,
+   "rend_task": 4.08,
+   "micro": 3.0,
+   "peso_area": 1.36,
+   "just": "TOP #2; câncer de pulmão 33,33% (maior subárea)",
+   "motivos": []
+  },
+  {
+   "area": "Hemato",
+   "rotulo": "Anemias Hemolíticas",
+   "n_tasks": 1,
+   "semana_min": 16,
+   "rend_task": 3.92,
+   "micro": 2.0,
+   "peso_area": 1.96,
+   "just": "TOP #6; hemoglobinopatias 26,67% (maior subárea)",
+   "motivos": []
+  },
+  {
+   "area": "Ortopedia",
+   "rotulo": "Fraturas e Luxações; Complicações do Trauma Ortopédico",
+   "n_tasks": 1,
+   "semana_min": 21,
+   "rend_task": 3.75,
+   "micro": 2.5,
+   "peso_area": 1.5,
+   "just": "TOP #4/#5; trauma ortopédico 25%",
+   "motivos": []
+  },
+  {
+   "area": "Neurologia",
+   "rotulo": "Coma e alterações da consciência",
+   "n_tasks": 1,
+   "semana_min": 26,
+   "rend_task": 3.615,
+   "micro": 1.5,
+   "peso_area": 2.41,
+   "just": "fora do TOP-10; encosta em anatomia/semiologia (#6)",
+   "motivos": []
+  },
+  {
+   "area": "Reumato",
+   "rotulo": "Doenças Inflamatórias do Tecido Conjuntivo",
+   "n_tasks": 1,
+   "semana_min": 18,
+   "rend_task": 3.4,
+   "micro": 2.0,
+   "peso_area": 1.36,
+   "just": "TOP #4; tec. conjuntivo 22,22%",
+   "motivos": [
+    "acerto histórico 46%"
+   ]
+  },
+  {
+   "area": "Reumato",
+   "rotulo": "Vasculites",
+   "n_tasks": 1,
+   "semana_min": 21,
+   "rend_task": 3.4,
+   "micro": 2.5,
+   "peso_area": 1.36,
+   "just": "TOP #3; vasculites 22,22%",
+   "motivos": []
+  },
+  {
+   "area": "Cardiologia",
+   "rotulo": "Valvopatias",
+   "n_tasks": 2,
+   "semana_min": 21,
+   "rend_task": 3.158,
+   "micro": 1.5,
+   "peso_area": 4.21,
+   "just": "TOP-10 #8; não figura entre as subáreas",
+   "motivos": []
+  },
+  {
+   "area": "Endocrino",
+   "rotulo": "Osteoporose e Doença óssea de Paget",
+   "n_tasks": 2,
+   "semana_min": 26,
+   "rend_task": 3.01,
+   "micro": 2.0,
+   "peso_area": 3.01,
+   "just": "TOP-9 #8; metabolismo ósseo 9,52%",
+   "motivos": []
+  },
+  {
+   "area": "Infecto",
+   "rotulo": "Animais Peçonhentos",
+   "n_tasks": 2,
+   "semana_min": 23,
+   "rend_task": 2.86,
+   "micro": 2.0,
+   "peso_area": 2.86,
+   "just": "TOP-10 #7",
+   "motivos": []
+  },
+  {
+   "area": "Ginecologia",
+   "rotulo": "Assistência à Vítima de Violência Sexual",
+   "n_tasks": 2,
+   "semana_min": 27,
+   "rend_task": 2.795,
+   "micro": 0.5,
+   "peso_area": 11.18,
+   "just": "ausente do guia",
+   "motivos": []
+  },
+  {
+   "area": "Pneumo",
+   "rotulo": "Doença Pulmonar Obstrutiva Crônica",
+   "n_tasks": 1,
+   "semana_min": 23,
+   "rend_task": 2.72,
+   "micro": 2.0,
+   "peso_area": 1.36,
+   "just": "TOP #3; DPOC 11,11%",
+   "motivos": []
+  },
+  {
+   "area": "Pneumo",
+   "rotulo": "Derrame Pleural",
+   "n_tasks": 1,
+   "semana_min": 25,
+   "rend_task": 2.72,
+   "micro": 2.0,
+   "peso_area": 1.36,
+   "just": "TOP #4; derrame pleural 11,11%",
+   "motivos": []
+  },
+  {
+   "area": "Otorrino",
+   "rotulo": "Infecções das Vias Aéreas Superiores Pt. 2",
+   "n_tasks": 1,
+   "semana_min": 20,
+   "rend_task": 2.7,
+   "micro": 3.0,
+   "peso_area": 0.9,
+   "just": "TOP #2; IVAS 66,67% da especialidade",
+   "motivos": []
+  },
+  {
+   "area": "Preventiva",
+   "rotulo": "Normas Regulamentadoras",
+   "n_tasks": 4,
+   "semana_min": 26,
+   "rend_task": 2.6,
+   "micro": 1.0,
+   "peso_area": 10.4,
+   "just": "saúde do trabalhador 5,56%; TOP-10 #10",
+   "motivos": []
+  },
+  {
+   "area": "Cirurgia",
+   "rotulo": "Urologia",
+   "n_tasks": 4,
+   "semana_min": 17,
+   "rend_task": 2.5,
+   "micro": 0.5,
+   "peso_area": 20.0,
+   "just": "ausente do guia: nem subárea nem TOP-10",
+   "motivos": []
+  },
+  {
+   "area": "Gastro",
+   "rotulo": "Anatomia do Intestino e Síndrome do Intestino Irritável",
+   "n_tasks": 2,
+   "semana_min": 21,
+   "rend_task": 2.482,
+   "micro": 1.5,
+   "peso_area": 3.31,
+   "just": "no TOP-10 em posição baixa; intestinos 13,04%",
+   "motivos": []
+  },
+  {
+   "area": "Gastro",
+   "rotulo": "Disfagia, Alterações Estruturais e Dist. Mort.",
+   "n_tasks": 2,
+   "semana_min": 25,
+   "rend_task": 2.482,
+   "micro": 1.5,
+   "peso_area": 3.31,
+   "just": "no TOP-10 em posição baixa; esôfago 17,39%",
+   "motivos": []
+  },
+  {
+   "area": "Hemato",
+   "rotulo": "Anemias Microcíticas e Leucemias Agudas",
+   "n_tasks": 2,
+   "semana_min": 20,
+   "rend_task": 2.45,
+   "micro": 2.5,
+   "peso_area": 1.96,
+   "just": "TOP #3 e #7 num bloco só",
+   "motivos": []
+  },
+  {
+   "area": "Reumato",
+   "rotulo": "Artrite Reumatóide",
+   "n_tasks": 2,
+   "semana_min": 25,
+   "rend_task": 2.21,
+   "micro": 3.0,
+   "peso_area": 1.36,
+   "just": "TOP #1; artropatias inflamatórias 55,56%",
+   "motivos": [
+    "1 erro nos simulados"
+   ]
+  },
+  {
+   "area": "Psiquiatria",
+   "rotulo": "Psicofarmacologia (Teoria) Psiquiatria Infantil",
+   "n_tasks": 2,
+   "semana_min": 22,
+   "rend_task": 1.887,
+   "micro": 2.5,
+   "peso_area": 1.51,
+   "just": "TOP #3 e #5; psiq. infantil 30%",
+   "motivos": []
+  },
+  {
+   "area": "Neurologia",
+   "rotulo": "Doenças Neuromusculares",
+   "n_tasks": 2,
+   "semana_min": 28,
+   "rend_task": 1.808,
+   "micro": 1.5,
+   "peso_area": 2.41,
+   "just": "TOP-10 #8; neuromusculares 6,25%",
+   "motivos": []
+  },
+  {
+   "area": "Infecto",
+   "rotulo": "Pneumonias Bacterianas",
+   "n_tasks": 4,
+   "semana_min": 17,
+   "rend_task": 1.788,
+   "micro": 2.5,
+   "peso_area": 2.86,
+   "just": "TOP-10 #4; pneumonia 10,00%",
+   "motivos": []
+  },
+  {
+   "area": "Dermato",
+   "rotulo": "Oncologia Cutânea",
+   "n_tasks": 2,
+   "semana_min": 27,
+   "rend_task": 1.59,
+   "micro": 3.0,
+   "peso_area": 1.06,
+   "just": "TOP #1; câncer de pele 14,29%",
+   "motivos": []
+  },
+  {
+   "area": "Neurologia",
+   "rotulo": "Distúrbios do Movimento",
+   "n_tasks": 3,
+   "semana_min": 16,
+   "rend_task": 1.205,
+   "micro": 1.5,
+   "peso_area": 2.41,
+   "just": "TOP-10 #5; não figura entre as subáreas",
+   "motivos": []
+  },
+  {
+   "area": "Hepato",
+   "rotulo": "Complicações da Cirrose Hepática",
+   "n_tasks": 3,
+   "semana_min": 19,
+   "rend_task": 1.008,
+   "micro": 2.5,
+   "peso_area": 1.21,
+   "just": "TOP #4; complicações da insuf. hepática 22,22%",
+   "motivos": []
+  },
+  {
+   "area": "Nefrologia",
+   "rotulo": "Nefrolitíase",
+   "n_tasks": 2,
+   "semana_min": 17,
+   "rend_task": 0.83,
+   "micro": 1.0,
+   "peso_area": 1.66,
+   "just": "TOP #7; não figura entre as subáreas",
+   "motivos": []
+  },
+  {
+   "area": "Psiquiatria",
+   "rotulo": "Transtornos de Humor; Psiquiatria Social e Reforma Psiquiátrica",
+   "n_tasks": 1,
+   "semana_min": 18,
+   "rend_task": 0.755,
+   "micro": 0.5,
+   "peso_area": 1.51,
+   "just": "ausente do guia",
+   "motivos": []
+  },
+  {
+   "area": "Pneumo",
+   "rotulo": "Pneumologia Intensiva",
+   "n_tasks": 2,
+   "semana_min": 16,
+   "rend_task": 0.34,
+   "micro": 0.5,
+   "peso_area": 1.36,
+   "just": "ausente do guia",
+   "motivos": []
+  },
+  {
+   "area": "Oftalmo",
+   "rotulo": "Doenças do Polo Posterior",
+   "n_tasks": 1,
+   "semana_min": 20,
+   "rend_task": 0.15,
+   "micro": 0.5,
+   "peso_area": 0.3,
+   "just": "ausente: o guia só lista tumores oculares e córnea/cristalino",
+   "motivos": []
+  }
+ ]
+}

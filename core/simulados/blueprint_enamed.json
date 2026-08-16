@@ -1,0 +1,34 @@
+{
+ "_doc": "Blueprint do ENAMED medido em duas amostras independentes. NAO usar o macro do guia ENARE: ele descreve outra prova (Clinica Medica 39,75% la, ~27% aqui).",
+ "amostras": {
+  "simulado_2_classificado": {
+   "n": 95,
+   "fonte": "Simulado 2 - pt1..5.pdf, 95 questoes classificadas por area",
+   "contagem": {
+    "Clínica Médica": 23,
+    "Cirurgia": 21,
+    "Ginecologia e Obstetrícia": 20,
+    "Pediatria": 19,
+    "Medicina Preventiva": 12
+   }
+  },
+  "erros_simulados_2_3_4": {
+   "n": 120,
+   "fonte": "ipub.db questoes_erros ids 622-667, 719-758, 781-814",
+   "contagem": {
+    "Clínica Médica": 36,
+    "Ginecologia e Obstetrícia": 26,
+    "Cirurgia": 25,
+    "Pediatria": 23,
+    "Medicina Preventiva": 10
+   }
+  }
+ },
+ "pooled_pct": {
+  "Clínica Médica": 27.1,
+  "Cirurgia": 21.5,
+  "Ginecologia e Obstetrícia": 21.4,
+  "Pediatria": 19.6,
+  "Medicina Preventiva": 10.4
+ }
+}

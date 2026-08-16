@@ -38,31 +38,18 @@ prova. A fila foi refeita só com o guia.
 
 ## O que FALTA (retomar aqui)
 
-### 1. Reforja dos 138 cards defeituosos — PRINCIPAL
+### 1. Reforja dos 138 cards -- CONCLUIDA
 
-O linter canônico (`tools/card_checks.py`) acusa **138 cards** com defeito de formulação
-(`checar_pergunta_template` 118 + `checar_resposta_embutida` 81, união 138) e 68 com
-`contexto-artefato` ("S4 Q11 (85% acertaram)" como contexto). 70 estão dentro dos 120 erros dos
-simulados, 68 fora. Todos os 68 do lote S4 têm `quality_source='heuristic'` e vieram truncados
-em exatamente 200 caracteres — **passaram por um caminho que burlou o gate de qualidade**.
+131 cards reforjados in-place + 7 aposentados, via `tools/recurate_cards.py --apply`
+(card_id e estado FSRS preservados, card_version incrementado). Os 4 gates aprovaram os 138
+itens. Defeitos de formulacao no baralho inteiro: **138 -> 9**.
 
-Estado: 6 agentes sonnet reforjaram os lotes. **Só `reforja_out/lote_4.json` chegou ao disco**;
-os lotes 1, 2, 3 e 6 voltaram por notificação e receberam pedido de persistência (pode ter
-chegado tarde). O lote 5 não retornou.
+Os 14 que o gate barrou na primeira passada eram quase todos pergunta com dois nucleos
+("X **e** Y") -- reescritos a mao para um criterio de acerto cada. Licao para o proximo lote:
+por no prompt do agente que a pergunta nao pode ter conjuncao ligando dois pedidos.
 
-Retomar assim:
-1. Conferir `scratchpad/reforja_out/`. Para os lotes faltantes, **relançar o agente** com o
-   mesmo par de arquivos: contrato em `scratchpad/reforja_brief.md` + dados em
-   `scratchpad/reforja_in/lote_N.json` (todos ainda em disco).
-2. `python tools/prep_reforja.py` — consolida, aplica o dicionário de acentos e emite
-   `scratchpad/reforja_final.json` no formato do recurate.
-3. `python tools/recurate_cards.py --from scratchpad/reforja_final.json` (dry-run é o default).
-   O CLI é **all-or-nothing** e roda 4 gates (schema, encoding, formulação, atomicidade).
-   Se um item reprovar, o lote inteiro cai — corrigir o item e repetir.
-4. `--apply` só depois do dry-run limpo. O `card_id` e o estado FSRS são preservados.
-
-Nota de qualidade observada nos lotes que voltaram: bons (ancorados no discriminador, um critério
-de acerto), mas **vieram sem acentuação** — por isso o passe de `prep_reforja.py` é obrigatório.
+Sobraram **9 cards** com defeito, fora da worklist original -- varrer com `card_checks` numa
+proxima passada.
 
 ### 2. Artefato da fila com o modelo guia-only
 

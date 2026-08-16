@@ -46,10 +46,21 @@ def main():
                 new = limpa(rec.get(c))
                 if old is None and new is None:
                     continue
-                if desac(new or "") != desac(old or ""):
+                dn, do = desac(new or ""), desac(old or "")
+                if dn == do:
+                    if new != old:
+                        novo[c] = new
+                elif do.startswith(dn) and len(dn) > 40:
+                    # o comando da questao foi anexado ao enunciado DEPOIS que o
+                    # agente leu o texto: aceita o prefixo acentuado e preserva o resto
+                    cand = (new or "") + (old or "")[len(new or ""):]
+                    if desac(cand) == do:
+                        if cand != old:
+                            novo[c] = cand
+                    else:
+                        falhou = c; break
+                else:
                     falhou = c; break
-                if new != old:
-                    novo[c] = new
             if falhou:
                 rej.append((eid, f"invariante quebrada em '{falhou}'"))
             elif novo:

@@ -72,11 +72,20 @@ de acerto), mas **vieram sem acentuação** — por isso o passe de `prep_reforj
 ROI por slot com o guia como verdade, não descalibragem de blueprint. Depois republicar em
 https://claude.ai/code/artifact/8a3fcf35-a82c-471f-a2d4-9bc89a5c28e8
 
-### 3. Acentos dos 41 registros restantes
+### 3. Acentos dos registros restantes
 
-Os lotes 2 e 3 de `scratchpad/acentos_in/` não retornaram. Relançar igual ao que funcionou e
-rodar `python tools/aplica_acentos.py --apply`. Reprocessar #808 à mão (rejeitado pela
-invariante).
+Estado real ao fim da sessão: **82 dos 120** registros acentuados e aplicados. Os 6 lotes
+voltaram, mas **os lotes 2, 3 e parte do 6 foram rejeitados em massa pela invariante** — esses
+agentes não se limitaram a acentuar: reescreveram e expandiram `explicacao_correta`,
+`o_que_faltou` e `armadilha_prova`. O gate funcionou (nada de conteúdo reescrito entrou no
+banco), mas o trabalho deles é inaproveitável como está.
+
+Ao relançar, endurecer o prompt: proibir explicitamente ampliar/reescrever qualquer campo, e
+pedir para devolver o texto **idêntico** quando não houver acento a acrescentar. Rodar depois
+`python tools/aplica_acentos.py` (dry-run) e só então `--apply`.
+
+`tools/aplica_acentos.py` já tolera o sufixo do comando anexado ao `enunciado` (o comando foi
+gravado DEPOIS que os agentes leram o texto). Reprocessar #808 à mão.
 
 ### 4. Cards que o artefato mostra
 

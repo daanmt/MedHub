@@ -573,3 +573,18 @@
 {"ts": "2026-08-15T21:51:33+00:00", "event": "resolved", "check": "card_autosuficiencia", "fingerprint": "bfe76fcde299", "alvo": "card#1191"}
 {"ts": "2026-08-15T21:51:33+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "652dd93305e8", "alvo": "card#553"}
 {"ts": "2026-08-15T21:51:33+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "969e615323bb", "alvo": "card#828"}
+{"ts": "2026-08-17T20:50:12+00:00", "event": "opened", "check": "card_autosuficiencia", "fingerprint": "42278fc9da62", "alvo": "card#33", "payload": {"padrao": "deitico", "tema": "Trauma Abdominal e Pélvico"}}
+{"ts": "2026-08-17T20:50:12+00:00", "event": "opened", "check": "card_autosuficiencia", "fingerprint": "6a127eef855c", "alvo": "card#825", "payload": {"padrao": "opcao-anaforico", "tema": "Abdome Agudo Inflamatório - Colecistite e Colangite Aguda"}}
+{"ts": "2026-08-17T20:50:12+00:00", "event": "opened", "check": "card_autosuficiencia", "fingerprint": "366eb8c5c3a1", "alvo": "card#1268", "payload": {"padrao": "deitico", "tema": "Ulcera Peptica Perfurada"}}
+{"ts": "2026-08-17T20:50:12+00:00", "event": "opened", "check": "card_autosuficiencia", "fingerprint": "bc84f8ef5972", "alvo": "card#1278", "payload": {"padrao": "opcao-anaforico", "tema": "Infeccao Latente por Tuberculose"}}
+{"ts": "2026-08-17T20:50:12+00:00", "event": "opened", "check": "card_autosuficiencia", "fingerprint": "9c39dcbd3588", "alvo": "card#1298", "payload": {"padrao": "opcao-anaforico", "tema": "Dislipidemia e Estratificação de Risco Cardiovascular"}}
+{"ts": "2026-08-17T20:50:12+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "f9c8a81b8cd6", "alvo": "card#25"}
+{"ts": "2026-08-17T20:50:12+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "34f60fa6d9c7", "alvo": "card#33"}
+{"ts": "2026-08-17T20:50:12+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "7f075813f531", "alvo": "card#245"}
+{"ts": "2026-08-17T20:50:12+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "a1fe95d2cca9", "alvo": "card#504"}
+{"ts": "2026-08-17T20:50:12+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "b7d114762c3b", "alvo": "card#609"}
+{"ts": "2026-08-17T20:50:12+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "d2efd77b6570", "alvo": "card#773"}
+{"ts": "2026-08-17T20:50:12+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "ab110bcef85b", "alvo": "card#825"}
+{"ts": "2026-08-17T21:28:05+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "faf7af8e35a7", "alvo": "card#1303", "payload": {"padrao": "duplo-ask/conectivo", "tema": "Hérnias Inguinais"}}
+{"ts": "2026-08-17T21:28:05+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "813ea64a6d3a", "alvo": "card#1308", "payload": {"padrao": "resposta-multifato/multi-frase", "tema": "Melanoma"}}
+{"ts": "2026-08-17T21:38:45+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "cdee34c9e3be", "alvo": "card#1322", "payload": {"padrao": "resposta-multifato/multi-frase", "tema": "Retocolite Ulcerativa"}}

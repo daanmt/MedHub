@@ -54,7 +54,7 @@ button{font-family:inherit;cursor:pointer}
 .eye{font-size:11px;font-weight:750;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);margin:0 0 13px}
 .top h1{margin-bottom:14px;max-width:19ch}
 .sub{font-size:17px;line-height:1.55;color:var(--ink2);max-width:62ch;margin:0}
-.track{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:30px 0 8px}
+.track{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:30px 0 8px}
 .sim{background:var(--card);border:1px solid var(--line2);padding:15px 16px}
 .sim .sn{font-size:11px;font-weight:750;letter-spacing:.11em;text-transform:uppercase;color:var(--ink3)}
 .sim .sd{font-size:11.5px;color:var(--ink3);margin-top:1px}
@@ -66,7 +66,8 @@ button{font-family:inherit;cursor:pointer}
 .gauge i{position:absolute;left:0;top:0;height:100%;background:var(--teal);display:block}
 .gauge b{position:absolute;top:-3px;width:1px;height:11px;background:var(--ink3)}
 .simfoot{font-size:11.5px;color:var(--ink3);margin-top:9px;display:flex;justify-content:space-between;gap:8px}
-@media(max-width:700px){.track{grid-template-columns:1fr}}
+@media(max-width:980px){.track{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.track{grid-template-columns:1fr}}
 
 .bar{display:flex;align-items:baseline;gap:12px;border-bottom:2px solid var(--ink);padding-bottom:7px;margin:46px 0 18px;flex-wrap:wrap}
 .bar h2{flex:1;min-width:200px}
@@ -284,9 +285,9 @@ code{font-family:ui-monospace,Consolas,monospace;font-size:11.8px;background:var
 
 <div class="wrap">
 <header class="top">
-  <p class="eye">MedHub · Autópsia dos simulados · 120 erros mapeados</p>
-  <h1>Três provas, um punhado de bugs</h1>
-  <p class="sub">Os erros dos Simulados 2, 3 e 4 reunidos num lugar só — navegáveis pelo <strong>mecanismo que os produziu</strong> e pelo <strong>degrau da cadeia em que o raciocínio quebrou</strong>. Cada caso mostra a escada inteira: o que você executou, onde parou, e os flashcards que nasceram dali.</p>
+  <p class="eye">MedHub · Autópsia dos simulados · 157 erros mapeados</p>
+  <h1>Quatro provas, um punhado de bugs</h1>
+  <p class="sub">Os erros dos Simulados 2, 3, 4 e 5 reunidos num lugar só — navegáveis pelo <strong>mecanismo que os produziu</strong> e pelo <strong>degrau da cadeia em que o raciocínio quebrou</strong>. Cada caso mostra a escada inteira: o que você executou, onde parou, e os flashcards que nasceram dali.</p>
   <div class="track" id="track"></div>
 </header>
 
@@ -327,7 +328,7 @@ code{font-family:ui-monospace,Consolas,monospace;font-size:11.8px;background:var
 <div class="empty" id="empty" style="display:none">Nenhum erro corresponde a esses filtros.</div>
 
 <footer>
-  <p><strong>Fonte:</strong> <code>ipub.db</code> — tabelas <code>questoes_erros</code>, <code>flashcards</code> e <code>fsrs_cards</code>. Simulado 2 (ids 622–667), Simulado 3 (719–758), Simulado 4 (781–814). O texto das questões do <strong>Simulado 2 é verbatim do PDF da prova</strong>, com o percentual da turma em cada alternativa; Simulados 3 e 4 usam o registro condensado do banco, porque o PDF dessas provas não está no repositório.</p>
+  <p><strong>Fonte:</strong> <code>ipub.db</code> — tabelas <code>questoes_erros</code>, <code>flashcards</code> e <code>fsrs_cards</code>. Simulado 2 (ids 622–667), Simulado 3 (719–758), Simulado 4 (781–814), Simulado 5 (815–851). O texto das questões dos <strong>Simulados 2 e 5 é verbatim do PDF da prova</strong>, com o percentual da turma em cada alternativa; Simulados 3 e 4 usam o registro condensado do banco, porque o PDF dessas provas não está no repositório. No Simulado 5, duas questões (Q20 e Q100) vieram truncadas no export da plataforma — confirmadas CERTA pelo usuário, mas sem enunciado recuperável, por isso não aparecem como caso mapeado aqui.</p>
   <p><strong>Sobre a classificação:</strong> o <em>mecanismo</em> dos 34 erros do Simulado 4 foi classificado à mão a partir dos comentários da banca; os 86 dos Simulados 2 e 3, automaticamente a partir do texto de análise registrado — casos marcados <em>classif. auto</em> podem conter imprecisão. O <em>degrau em que a cadeia quebrou</em> e a <em>etapa cognitiva</em> de cada degrau saem de uma heurística revisada caso a caso à mão (20 elos e 38 etapas corrigidos manualmente); a curadoria vive em <code>core/simulados/curadoria.json</code>. O vínculo card ↔ degrau é inferido por sobreposição lexical e é o elo mais frágil da página.</p>
   <p><strong>Regenerar:</strong> <code>python -X utf8 tools/autopsia_simulados.py</code>.</p>
 </footer>
@@ -337,7 +338,7 @@ code{font-family:ui-monospace,Consolas,monospace;font-size:11.8px;background:var
 const D = __DATA__;
 const $ = s => document.querySelector(s);
 const esc = s => (s||"").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const SIMK = ["S2","S3","S4"];
+const SIMK = ["S2","S3","S4","S5"];
 const ETAPA = {}; D.etapas.forEach(e => ETAPA[e.k] = e);
 let fSim = null, fMacro = null, fArea = null, fMec = null, fEtapa = null, fQ = "";
 

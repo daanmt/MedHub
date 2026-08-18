@@ -52,4 +52,4 @@ artifacts/audits/
 
 # ledger-of-self: estado DERIVADO (reconstruivel); o .jsonl de eventos e versionado
 history/ledger_self_state.json
-core/simulados/_s2_questoes.json
+core/simulados/_s*_questoes.json

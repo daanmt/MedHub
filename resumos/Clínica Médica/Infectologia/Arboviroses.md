@@ -175,6 +175,7 @@ Sinais precoces precursores da disfunção sistêmica vascular.
 - 🔴 **Dengue hemorrágica ≠ só sangramento:** exige **extravasamento plasmático** (hemoconcentração ≥ 20%, derrame, hipoproteinemia). Sangramento + plaquetopenia sem extravasamento = dengue clássica.
 - 🔴 **Infecção secundária (ADE):** 2ª infecção por **sorotipo diferente** eleva o risco de dengue grave. Não confundir com infecção bacteriana sobreposta.
 - 🔴 **Vacina FA -- esquema:** 9 meses + reforço aos 4 anos; dose única se primovacina > 4 anos. Viajante: **≥ 10 dias** antes da viagem.
+- 🔴 **Não transferir a conduta volêmica da dengue para outra arbovirose.** "Surto de arbovirose no bairro" é gatilho genérico -- a expansão volêmica rápida (Grupo D) é conduta de DENGUE com sinal de alarme/extravasamento plasmático, não de chikungunya. Quadro com artralgia intensa bilateral/simétrica + postura antálgica encurvada + exantema + hiperemia conjuntival + plaquetas ainda normais-limítrofes, SEM sinais de extravasamento, é chikungunya na fase aguda -- tratamento sintomático (dipirona/paracetamol + repouso + hidratação oral), nunca expansão volêmica reservada à dengue grave.
 - 🔴 **Vacina FA -- contraindicação vs DRC:** imunossuprimidos (qualquer natureza) e gestantes (de regra) são contraindicados; **DRC estável isolada NÃO é contraindicação**. Distrator recorrente.
 - 🔴 **Vetores da FA por ciclo:** *Aedes aegypti* é vetor **urbano** (nunca silvestre); silvestre = *Haemagogus* e *Sabethes*. *Phlebotomus* é da leishmaniose.
 - 🔴 **Vírus da FA = RNA** (*Flavivirus*), nunca DNA.

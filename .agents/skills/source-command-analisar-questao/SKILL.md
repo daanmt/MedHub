@@ -188,7 +188,7 @@ Após análise, registrar o erro no `ipub.db`:
 
 ```bash
 python tools/insert_questao.py \
-  --area "[Cirurgia|Clinica Medica|Pediatria|GO|Preventiva]" \
+  --area "[subespecialidade real -- ver tabela abaixo]" \
   --tema "[ex: Trauma Abdominal]" \
   --titulo "[titulo curto do erro]" \
   --enunciado "[enunciado limpo, sem alternativas]" \
@@ -207,6 +207,8 @@ python tools/insert_questao.py \
   --verso_regra_mestre "[principio que resolve o caso]" \
   --verso_armadilha "[distrator do examinador]"
 ```
+
+🔴 **`--area` é a subespecialidade real, não uma macro-área (achado s146).** O banco inteiro (`taxonomia_cronograma`, todo o histórico de `questoes_erros`) já usa ~20 valores — `Cardiologia`, `Nefrologia`, `Neurologia`, `Endocrino`, `Gastro`, `Hepato`, `Hemato`, `Reumato`, `Pneumo`, `Dermato`, `Psiquiatria`, `Otorrino`, `Ortopedia`, além de `Cirurgia`/`Pediatria`/`Preventiva`/`Ginecologia`/`Obstetrícia` — não as 5 grandes áreas do exemplo antigo acima. **Antes de escolher, consulte `select distinct area from taxonomia_cronograma`** e reuse o valor exato já existente para o domínio; só crie um valor novo se genuinamente não houver nenhum próximo. `GO`/`Ginecologia`/`Obstetrícia` coexistem como 3 valores fragmentados do mesmo domínio amplo — preferir `Ginecologia` ou `Obstetrícia` (o específico) a `GO` daqui em diante, sem reclassificar retroativamente sem pedido explícito.
 
 **Parâmetros obrigatórios:** `--area`, `--tema`, `--enunciado`, `--correta`, `--marcada`, `--erro`, `--elo`, `--armadilha`
 

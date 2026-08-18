@@ -21,6 +21,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DB = os.path.join(ROOT, "ipub.db")
 CURADORIA = os.path.join(ROOT, "core", "simulados", "curadoria.json")
 CACHE_S2 = os.path.join(ROOT, "core", "simulados", "_s2_questoes.json")  # gitignored (IP)
+CACHE_S5 = os.path.join(ROOT, "core", "simulados", "_s5_questoes.json")  # gitignored (IP)
 
 SIMS = {
     "S2": {"nome": "Simulado 2", "data": "02/08/2026", "score": 54, "erros": 46,
@@ -29,8 +30,17 @@ SIMS = {
            "ids": range(719, 759), "fonte": "db"},
     "S4": {"nome": "Simulado 4", "data": "13/08/2026", "score": 66, "erros": 34,
            "ids": range(781, 815), "fonte": "db"},
+    "S5": {"nome": "Simulado 5", "data": "17/08/2026", "score": 63, "erros": 37,
+           "ids": range(815, 852), "fonte": "pdf"},
 }
-SIMK = ["S2", "S3", "S4"]
+SIMK = ["S2", "S3", "S4", "S5"]
+
+# Vinculo direto id-do-erro <-> numero-da-questao (1-100) no Simulado 5. Conhecido e
+# determinístico (ordem de insercao dos 4 blocos == ordem crescente de numero), ao
+# contrario do S2 que precisa de bijecao por similaridade lexical (casa_s2).
+S5_NUMS = [3, 5, 8, 11, 14, 17, 18, 22, 23, 24, 25, 27, 28, 33, 34, 43, 45, 46,
+           52, 54, 55, 56, 57, 58, 61, 65, 68, 69, 72, 73, 74, 77, 79, 87, 88, 98, 99]
+S5_ID_TO_NUM = dict(zip(range(815, 852), S5_NUMS))
 
 
 # --------------------------------------------------------------------------
@@ -132,7 +142,7 @@ MACRO = {
     "Cirurgia": "Cirurgia", "Ortopedia": "Cirurgia", "Otorrino": "Cirurgia", "Oftalmo": "Cirurgia",
     "Pediatria": "Pediatria",
     "Preventiva": "Preventiva",
-    "Ginecologia": "GO", "Obstetrícia": "GO",
+    "Ginecologia": "GO", "Obstetrícia": "GO", "GO": "GO",
 }
 MACRO_ORDEM = ["Clínica Médica", "Cirurgia", "GO", "Pediatria", "Preventiva"]
 MACRO_NOME = {"Clínica Médica": "Clínica Médica", "Cirurgia": "Cirurgia",
@@ -433,6 +443,26 @@ def _limpa(s):
     return (s[:m.start()] if m else s).strip()
 
 
+def parse_s5():
+    """Texto verbatim do Simulado 5, ja extraido e corrigido em tools/parse_simulado5_v2.py
+    (bug de ordem 'Questao N' antes do MARK corrigido; Q20/Q100 confirmadas CERTA pelo
+    usuario mas ausentes do PDF exportado -- nao entram aqui pois nao viram erro)."""
+    if os.path.exists(CACHE_S5):
+        return json.load(open(CACHE_S5, encoding="utf-8"))
+    return []
+
+
+def casa_s5(db_rows, qs):
+    """Vinculo direto erro-do-db <-> questao do PDF do S5, por S5_ID_TO_NUM (conhecido)."""
+    by_num = {q["num"]: q for q in qs}
+    out = {}
+    for r in db_rows:
+        num = S5_ID_TO_NUM.get(r["id"])
+        if num is not None and num in by_num:
+            out[r["id"]] = by_num[num]
+    return out
+
+
 def casa_s2(db_rows, qs):
     """Bijecao erro-do-db <-> questao ERRADA do PDF por sobreposicao de alternativas."""
     err = [q for q in qs if q["status"] == "ERRADA"]
@@ -505,6 +535,10 @@ def build(hoje=None):
     s2rows = [r for r in rows if r["id"] in SIMS["S2"]["ids"]]
     s2map = casa_s2(s2rows, s2) if s2 else {}
 
+    s5 = parse_s5()
+    s5rows = [r for r in rows if r["id"] in SIMS["S5"]["ids"]]
+    s5map = casa_s5(s5rows, s5) if s5 else {}
+
     recs = []
     for r in rows:
         eid = r["id"]
@@ -515,9 +549,16 @@ def build(hoje=None):
         area = AREA_FIX.get((tx["area"] if tx else ""), (tx["area"] if tx else "")) or "--"
         tema = reacc(tx["tema"] if tx else "")
 
-        pq = s2map.get(eid)
-        if pq:                                   # S2: texto verbatim do PDF, ja acentuado
-            ctx, cmd, achou = separa_comando(pq["enun"])
+        pq = s2map.get(eid) or s5map.get(eid)
+        if pq:                                   # S2/S5: texto verbatim do PDF, ja acentuado
+            enun_pdf = pq["enun"] or ""
+            if len(enun_pdf) < 150:
+                # "Texto de apoio" colapsado no export: a vinheta nao veio no PDF, mas
+                # o usuario a colou manualmente no chat e ela foi persistida no registro.
+                enun_db = reacc(re.sub(r"^S\d+ Q\d+ \(\d+% acertaram\)\.?\s*", "", r["enunciado"] or ""))
+                if len(enun_db) > len(enun_pdf):
+                    enun_pdf = enun_db
+            ctx, cmd, achou = separa_comando(enun_pdf)
             enun, comando, cmd_src = ctx, cmd, ("prova" if achou else "ausente")
             alts = marca_alternativas(pq, r["alternativa_correta"], r["alternativa_marcada"])
             pct_turma, qnum = pq["pct_turma"], pq["num"]

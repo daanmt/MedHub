@@ -58,7 +58,13 @@ aliases: [SUS]
     - X a XIII -- integracao saude/meio ambiente/saneamento; conjugacao de recursos das tres esferas; resolutividade em todos os niveis; evitar duplicidade de meios.
 - ⭐ **Atualizacao -- 16o principio: Atencao Humanizada** (Lei no 15.126/2025). Humanizar = colocar a pessoa no centro do cuidado e valorizar os **tres atores** da producao da saude: usuario, profissional e gestor. Antes era politica de governo; agora, como principio, e obrigatoria em todas as esferas independentemente do governo.
 
-### 2.3 Politica Nacional de Atencao Basica (PNAB)
+### 2.3 Participacao Complementar da Iniciativa Privada
+
+- ⭐ **Art. 199 da CF/88 + Art. 8 da Lei 8.080/1990:** a iniciativa privada pode participar do SUS em **carater complementar**, quando o setor publico e insuficiente para garantir a oferta de servicos assistenciais numa determinada regiao.
+- Essa participacao se da mediante **contrato de direito publico ou convenio**, tendo **preferencia as entidades filantropicas e sem fins lucrativos**. Na relacao especifica com o SUS, o prestador nao pode visar lucro.
+- ⚠️ **Padrao de prova:** a alternativa que descreve corretamente essa complementaridade costuma soar "boa demais para ser verdadeira" ao lado de outras 2 afirmativas tambem corretas -- nao descartar por desconfianca da combinacao "todas corretas".
+
+### 2.4 Politica Nacional de Atencao Basica (PNAB)
 
 - Instituida pela **Portaria MS/GM no 2.436/2017**; considera **Atencao Basica (AB)** e **Atencao Primaria a Saude (APS)** como termos **equivalentes**.
 - ⭐ **Principios da AB (identicos aos doutrinarios):** **Universalidade, Equidade, Integralidade**.
@@ -177,4 +183,5 @@ aliases: [SUS]
 - 🔴 ACS insuficiente/populacao sem cobertura prejudica o **Acesso de primeiro contato** (chegar ao servico), nao a Coordenacao (fluxo entre pontos ja dentro do sistema).
 - 🔴 Vinheta de profissional que caminha o territorio + levanta dados epidemiologicos/sociodemograficos + participa do conselho local = **Orientacao comunitaria**, mesmo que a ultima frase mencione "planejamento" -- "planejamento estrategico" nao e atributo de Starfield.
 - 🔴 Orientacao comunitaria (dado agregado da comunidade) x Competencia cultural (respeito relacional a cultura/crencas/idioma de um grupo) -- ambos derivados, ambos remetem a "contexto social", mas nao sao intercambiaveis.
+- 🔴 A participacao complementar da iniciativa privada no SUS (CF art. 199 + Lei 8.080/90 art. 8, via contrato/convenio, sem fins lucrativos nessa relacao) e afirmacao **correta** e recorrente -- nao descartar uma alternativa "todas as afirmativas corretas" so por desconfianca de a banca raramente entregar 3 afirmativas verdadeiras juntas.
 - 🔴 Lei no 8.142/1990 (art. 1o, par. 2o): as decisoes do Conselho de Saude sao homologadas pelo chefe do Poder Executivo de cada esfera de governo -- Prefeito no municipio, Governador no estado, Presidente da Republica na Uniao -- e NAO pelo Secretario de Saude (que costuma presidir o conselho na pratica, mas nao detem essa competencia legal) nem por orgaos estaduais/regionais. Conselhos de Saude sao instancias deliberativas e PERMANENTES, com composicao paritaria (50% usuarios, 25% trabalhadores de saude, 25% gestores/prestadores) -- diferentes das Conferencias de Saude, que sao consultivas e quadrienais.

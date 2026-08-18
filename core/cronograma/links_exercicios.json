@@ -1,0 +1,1721 @@
+{
+ "_doc": "Links dos cadernos de exercicios (questoes) por tarefa, S15-S30, extraidos de Cronograma.pdf via posicao (pdfplumber: texto 'Link - N questoes:' seguido da URL fragmentada na mesma coluna). Mapeamento tarefa<->link e por ORDEM DE APARICAO dentro da semana (nao por leitura do numero da tarefa, que vem rotacionado no PDF) -- validado por soma_links==total_esperado (ver relatorio de extracao). Quando 'AMBIGUO' no relatorio, revisar manualmente antes de confiar no mapeamento daquela semana.",
+ "extraido_em": "2026-08-18",
+ "semanas": {
+  "15": [
+   {
+    "tarefa": 1,
+    "area_pdf": "Preventiva",
+    "area_norm": "Preventiva",
+    "tema": "Princípios e Diretrizes do SUS",
+    "tipo": "Revisão",
+    "n_questoes_link": 43,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/0a9496dd-1c7a-4979-a7c5-75f1489b38e3/?per_page=20"
+   },
+   {
+    "tarefa": 2,
+    "area_pdf": "Pediatria",
+    "area_norm": "Pediatria",
+    "tema": "Asma",
+    "tipo": "Revisão",
+    "n_questoes_link": 36,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/bf3ea228-2aad-473e-badf-70704bb7468c/?per_page=20"
+   },
+   {
+    "tarefa": 3,
+    "area_pdf": "Cirurgia",
+    "area_norm": "Cirurgia",
+    "tema": "Diverticulite Aguda",
+    "tipo": "Revisão",
+    "n_questoes_link": 42,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/05e13a53-a662-44f7-ba55-438d7e90aaed/?per_page=20"
+   },
+   {
+    "tarefa": 4,
+    "area_pdf": "Ginecologia",
+    "area_norm": "Ginecologia",
+    "tema": "Câncer de Mama",
+    "tipo": "Teoria + Exercícios",
+    "n_questoes_link": 24,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/38c4e2e0-cb49-4715-884c-34d1660fb513/?per_page=20"
+   },
+   {
+    "tarefa": 5,
+    "area_pdf": "Obstetrícia",
+    "area_norm": "Obstetrícia",
+    "tema": "Assistência ao Parto",
+    "tipo": "Teoria + Exercícios",
+    "n_questoes_link": 34,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/26c7eefd-d7d3-4ebe-9787-c57a36aa6c1d/?per_page=20"
+   },
+   {
+    "tarefa": 6,
+    "area_pdf": "Preventiva",
+    "area_norm": "Preventiva",
+    "tema": "Atenção Primária à Saúde no Brasil",
+    "tipo": "Teoria + Exercícios",
+    "n_questoes_link": 23,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/a4a43e67-df28-4a4a-a8ec-23d8d83b703a/?per_page=20"
+   },
+   {
+    "tarefa": 7,
+    "area_pdf": "Pediatria",
+    "area_norm": "Pediatria",
+    "tema": "Aleitamento Materno",
+    "tipo": "Teoria + Exercícios",
+    "n_questoes_link": 27,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/a408b04b-5c42-4bd3-ac9e-7b5b71a422c6/?per_page=20"
+   },
+   {
+    "tarefa": 8,
+    "area_pdf": "Infectologia",
+    "area_norm": "Infecto",
+    "tema": "Parasitoses; Infecções Relacionadas à Assistência em Saúde",
+    "tipo": "Teoria + Exercícios",
+    "n_questoes_link": 33,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/5e6b8ac4-6e3c-479b-86dc-73ce2e71b324/?per_page=20"
+   },
+   {
+    "tarefa": 9,
+    "area_pdf": "Gastroenterologia",
+    "area_norm": "Gastro",
+    "tema": "Doença Inflamatória Intestinal",
+    "tipo": "Revisão",
+    "n_questoes_link": 47,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/c282df98-11c9-46f8-875a-dd62ec024d17/?per_page=20"
+   },
+   {
+    "tarefa": 10,
+    "area_pdf": "Nefrologia",
+    "area_norm": "Nefrologia",
+    "tema": "Distúrbios Ácido-Base; Distúrbios do Potássio",
+    "tipo": "Revisão",
+    "n_questoes_link": 19,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/46497d52-0826-4351-889d-8edb46331579/?per_page=20"
+   },
+   {
+    "tarefa": 11,
+    "area_pdf": "Cardiologia",
+    "area_norm": "Cardiologia",
+    "tema": "Hipertensão Arterial Sistêmica Pt. 3",
+    "tipo": "Teoria + Exercícios",
+    "n_questoes_link": 56,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/7cda8aa0-b2c3-41ef-b711-c3fafbbe47c4/?per_page=20"
+   },
+   {
+    "tarefa": 12,
+    "area_pdf": "Cirurgia",
+    "area_norm": "Cirurgia",
+    "tema": "",
+    "tipo": "Revisão por Questões",
+    "n_questoes_link": null,
+    "url": null
+   }
+  ],
+  "16": [
+   {
+    "tarefa": 1,
+    "area_pdf": "Medicina Preventiva",
+    "area_norm": "Preventiva",
+    "tema": "Atenção Primária à Saúde no Brasil",
+    "tipo": "Teoria + Exercícios",
+    "n_questoes_link": 23,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/f83443ab-4021-49e1-8e3d-033b72b6f227/?per_page=20"
+   },
+   {
+    "tarefa": 2,
+    "area_pdf": "Pediatria",
+    "area_norm": "Pediatria",
+    "tema": "Aleitamento Materno",
+    "tipo": "Revisão",
+    "n_questoes_link": 46,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/43ba1d48-bf0b-4e7b-b369-2e4210504fc7/?per_page=20"
+   },
+   {
+    "tarefa": 3,
+    "area_pdf": "Cirurgia",
+    "area_norm": "Cirurgia",
+    "tema": "Cirurgia Vascular",
+    "tipo": "Teoria + Exercícios",
+    "n_questoes_link": 19,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/bbfe7e33-5e07-41fb-b6cc-f813fee5cede/?per_page=20"
+   },
+   {
+    "tarefa": 4,
+    "area_pdf": "Ginecologia",
+    "area_norm": "Ginecologia",
+    "tema": "Câncer de Mama",
+    "tipo": "Revisão",
+    "n_questoes_link": 45,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/69ecc0a0-3f4d-4c26-bb35-4533522c0a52/?per_page=20"
+   },
+   {
+    "tarefa": 5,
+    "area_pdf": "Obstetrícia",
+    "area_norm": "Obstetrícia",
+    "tema": "Assistência ao Parto",
+    "tipo": "Revisão",
+    "n_questoes_link": 41,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/061eb5c4-a381-4282-976c-f04851b23dd7/?per_page=20"
+   },
+   {
+    "tarefa": 6,
+    "area_pdf": "Infectologia",
+    "area_norm": "Infecto",
+    "tema": "Parasitoses; Infecção Hospitalar",
+    "tipo": "Revisão",
+    "n_questoes_link": 40,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/adce974c-e453-4e96-a655-d99cee11516e/?per_page=20"
+   },
+   {
+    "tarefa": 7,
+    "area_pdf": "Endocrinologia",
+    "area_norm": "Endocrino",
+    "tema": "Tireotoxicose",
+    "tipo": "Revisão",
+    "n_questoes_link": 36,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/04f6bfe4-c622-4340-976e-91c1ddf5d288/?per_page=20"
+   },
+   {
+    "tarefa": 8,
+    "area_pdf": "Neurologia",
+    "area_norm": "Neurologia",
+    "tema": "Distúrbios do Movimento",
+    "tipo": "Teoria + Exercícios",
+    "n_questoes_link": 22,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/243d5981-e62f-4990-afc4-aade72683f82/?per_page=20"
+   },
+   {
+    "tarefa": 9,
+    "area_pdf": "Pneumologia",
+    "area_norm": "Pneumo",
+    "tema": "Pneumologia Intensiva",
+    "tipo": "Teoria + Exercícios",
+    "n_questoes_link": 15,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/e905ce9c-be16-4f0e-a73b-e8ee2a3352c7/?per_page=20"
+   },
+   {
+    "tarefa": 10,
+    "area_pdf": "Hematologia",
+    "area_norm": "Hemato",
+    "tema": "Anemias Hemolíticas",
+    "tipo": "Revisão",
+    "n_questoes_link": 39,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/355bda7e-80cb-42e1-a7c3-b12ae82d8db4/?per_page=20"
+   },
+   {
+    "tarefa": 11,
+    "area_pdf": "Pediatria",
+    "area_norm": "Pediatria",
+    "tema": "",
+    "tipo": "Revisão por Questões",
+    "n_questoes_link": 51,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/2af10f18-31a9-40fc-bd36-808fc24eb9d9/?per_page=20"
+   },
+   {
+    "tarefa": 12,
+    "area_pdf": "Ginecologia",
+    "area_norm": "Ginecologia",
+    "tema": "",
+    "tipo": "Revisão por Questões",
+    "n_questoes_link": 57,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/af9a9e78-38bb-4690-b7ef-e9250a664f6b/?per_page=20"
+   }
+  ],
+  "17": [
+   {
+    "tarefa": 1,
+    "area_pdf": "Preventiva",
+    "area_norm": "Preventiva",
+    "tema": "Atenção Primária à Saúde no Brasil",
+    "tipo": "Teoria + Exercícios",
+    "n_questoes_link": null,
+    "url": null
+   },
+   {
+    "tarefa": 2,
+    "area_pdf": "Pediatria",
+    "area_norm": "Pediatria",
+    "tema": "Diarreia",
+    "tipo": "Teoria + Exercícios",
+    "n_questoes_link": 22,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/0382f382-00f7-4a6a-9902-44eca6ad0f42/?per_page=20"
+   },
+   {
+    "tarefa": 3,
+    "area_pdf": "Cirurgia",
+    "area_norm": "Cirurgia",
+    "tema": "Cirurgia Vascular",
+    "tipo": "Revisão",
+    "n_questoes_link": 43,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/a67fae67-457b-4554-b9cb-9cefba080e3b/?per_page=20"
+   },
+   {
+    "tarefa": 4,
+    "area_pdf": "Ginecologia",
+    "area_norm": "Ginecologia",
+    "tema": "Sangramento Uterino Anormal",
+    "tipo": "Teoria + Exercícios",
+    "n_questoes_link": 23,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/a11c14d5-ca0c-4246-863f-f329518b45a0/?per_page=20"
+   },
+   {
+    "tarefa": 5,
+    "area_pdf": "Obstetrícia",
+    "area_norm": "Obstetrícia",
+    "tema": "Vitalidade Fetal",
+    "tipo": "Teoria + Exercícios",
+    "n_questoes_link": 25,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/3178cba8-2439-4a4e-af6e-0ceed3415043/?per_page=20"
+   },
+   {
+    "tarefa": 6,
+    "area_pdf": "Preventiva",
+    "area_norm": "Preventiva",
+    "tema": "Atenção Primária à Saúde no Brasil",
+    "tipo": "Revisão",
+    "n_questoes_link": 50,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/3adee5ee-b6df-4ede-8a84-e9e7a4c36b82/?per_page=20"
+   },
+   {
+    "tarefa": 7,
+    "area_pdf": "Pediatria",
+    "area_norm": "Pediatria",
+    "tema": "Diarreia",
+    "tipo": "Revisão",
+    "n_questoes_link": 41,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/57876df8-f4ae-4231-a6d4-d9e9857b1b3a/?per_page=20"
+   },
+   {
+    "tarefa": 8,
+    "area_pdf": "Cirurgia",
+    "area_norm": "Cirurgia",
+    "tema": "Urologia",
+    "tipo": "Teoria + Exercícios",
+    "n_questoes_link": 20,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/30f44def-4346-46a1-93f3-79b277406c2e/?per_page=20"
+   },
+   {
+    "tarefa": 9,
+    "area_pdf": "Infectologia",
+    "area_norm": "Infecto",
+    "tema": "Pneumonias Bacterianas",
+    "tipo": "Teoria + Exercícios",
+    "n_questoes_link": 16,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/0202307d-5d30-494b-aab3-9fc13bd303cd/?per_page=20"
+   },
+   {
+    "tarefa": 10,
+    "area_pdf": "Gastroenterologia",
+    "area_norm": "Gastro",
+    "tema": "Neoplasias de Estômago e Esôfago",
+    "tipo": "Teoria + Exercícios",
+    "n_questoes_link": 27,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/b4a33205-e2ac-410d-acf6-48e8fb94861d/?per_page=20"
+   },
+   {
+    "tarefa": 11,
+    "area_pdf": "Nefrologia",
+    "area_norm": "Nefrologia",
+    "tema": "Nefrolitíase",
+    "tipo": "Teoria + Exercícios",
+    "n_questoes_link": 26,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/b72e1c19-1ed0-44c4-b3b5-c5be0009a0b2/?per_page=20"
+   }
+  ],
+  "18": [
+   {
+    "tarefa": 1,
+    "area_pdf": "Preventiva",
+    "area_norm": "Preventiva",
+    "tema": "Ética Médica",
+    "tipo": "Teoria + Exercícios",
+    "n_questoes_link": 20,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/a57a9aaf-d06b-4155-89d2-c2e288168b1d/?per_page=20"
+   },
+   {
+    "tarefa": 2,
+    "area_pdf": "Pediatria",
+    "area_norm": "Pediatria",
+    "tema": "Pneumonias na Infância",
+    "tipo": "Teoria + Exercícios",
+    "n_questoes_link": 24,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/9535c433-bc7f-4fa9-98c3-d35f0100c496/?per_page=20"
+   },
+   {
+    "tarefa": 3,
+    "area_pdf": "Cirurgia",
+    "area_norm": "Cirurgia",
+    "tema": "Urologia",
+    "tipo": "Teoria + Exercícios",
+    "n_questoes_link": 13,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/23734322-5ada-4fbe-9d1e-8f9f2f6e9ccd/?per_page=20"
+   },
+   {
+    "tarefa": 4,
+    "area_pdf": "Ginecologia",
+    "area_norm": "Ginecologia",
+    "tema": "Sangramento Uterino Anormal",
+    "tipo": "Revisão",
+    "n_questoes_link": 42,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/21cbc0c1-4c2b-462a-b8ea-a54eb0500b61/?per_page=20"
+   },
+   {
+    "tarefa": 5,
+    "area_pdf": "Obstetrícia",
+    "area_norm": "Obstetrícia",
+    "tema": "Vitalidade Fetal",
+    "tipo": "Revisão",
+    "n_questoes_link": 36,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/79bcf75e-4e0d-42c6-973f-8c9d26fffab1/?per_page=20"
+   },
+   {
+    "tarefa": 6,
+    "area_pdf": "Infectologia",
+    "area_norm": "Infecto",
+    "tema": "Pneumonias Bacterianas",
+    "tipo": "Teoria + Exercícios",
+    "n_questoes_link": 17,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/52016cb5-a620-423f-8b33-5aef32e4ce5e/?per_page=20"
+   },
+   {
+    "tarefa": 7,
+    "area_pdf": "Endocrinologia",
+    "area_norm": "Endocrino",
+    "tema": "Hipotireoidismo",
+    "tipo": "Teoria + Exercícios",
+    "n_questoes_link": 21,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/b964fc37-c1da-4d47-83db-7625936435e2/?per_page=20"
+   },
+   {
+    "tarefa": 8,
+    "area_pdf": "Neurologia",
+    "area_norm": "Neurologia",
+    "tema": "Distúrbios do Movimento",
+    "tipo": "Teoria + Exercícios",
+    "n_questoes_link": 12,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/190aee72-d40c-48e9-ac93-bb8311db63c7/?per_page=20"
+   },
+   {
+    "tarefa": 9,
+    "area_pdf": "Cardiologia",
+    "area_norm": "Cardiologia",
+    "tema": "Hipertensão Arterial Sistêmica",
+    "tipo": "Revisão",
+    "n_questoes_link": 42,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/34e4ed4d-19ee-4e31-8bc6-52729bee36b6/?per_page=20"
+   },
+   {
+    "tarefa": 10,
+    "area_pdf": "Psiquiatria",
+    "area_norm": "Psiquiatria",
+    "tema": "Transtornos de Humor; Psiquiatria Social e Reforma Psiquiátrica",
+    "tipo": "Revisão",
+    "n_questoes_link": 40,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/95edbcca-aaa3-49cd-ba14-bf5eba7a8a08/?per_page=20"
+   },
+   {
+    "tarefa": 11,
+    "area_pdf": "Reumatologia",
+    "area_norm": "Reumato",
+    "tema": "Doenças Inflamatórias do Tecido Conjuntivo",
+    "tipo": "Revisão",
+    "n_questoes_link": 34,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/3ae22d62-3d65-4631-83f7-29b5c64147e1/?per_page=20"
+   },
+   {
+    "tarefa": 12,
+    "area_pdf": "Obstetrícia",
+    "area_norm": "Obstetrícia",
+    "tema": "",
+    "tipo": "Revisão por Questões",
+    "n_questoes_link": 36,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/6b7084b9-603a-4b2c-a4ef-d29ff0534333/?per_page=20"
+   },
+   {
+    "tarefa": 13,
+    "area_pdf": "Cardiologia",
+    "area_norm": "Cardiologia",
+    "tema": "",
+    "tipo": "Revisão por Questões",
+    "n_questoes_link": 43,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/c61863e9-3b78-4ceb-8165-4f25e6fcedec/?per_page=20"
+   }
+  ],
+  "19": [
+   {
+    "tarefa": 1,
+    "area_pdf": "Pediatria",
+    "area_norm": "Pediatria",
+    "tema": "Pneumonias na Infância",
+    "tipo": "Revisão",
+    "n_questoes_link": 47,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/0d4f8216-fa84-4fb8-8e6f-49de888c6b3c/?per_page=20"
+   },
+   {
+    "tarefa": 2,
+    "area_pdf": "Cirurgia",
+    "area_norm": "Cirurgia",
+    "tema": "Urologia",
+    "tipo": "Teoria + Exercícios",
+    "n_questoes_link": 21,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/cfe72ef4-3d55-419d-b5df-5f15f0f6fbe5/?per_page=20"
+   },
+   {
+    "tarefa": 3,
+    "area_pdf": "Ginecologia",
+    "area_norm": "Ginecologia",
+    "tema": "Tumores Anexiais e Câncer de Ovário",
+    "tipo": "Teoria + Exercícios",
+    "n_questoes_link": 21,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/aae324a1-9d5d-4cec-a22a-1c94e34b7346/?per_page=20"
+   },
+   {
+    "tarefa": 4,
+    "area_pdf": "Obstetrícia",
+    "area_norm": "Obstetrícia",
+    "tema": "Diabetes na Gestação",
+    "tipo": "Teoria + Exercícios",
+    "n_questoes_link": 19,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/43dfee73-2eff-45e8-8e39-5c1cd7c7738f/?per_page=20"
+   },
+   {
+    "tarefa": 5,
+    "area_pdf": "Preventiva",
+    "area_norm": "Preventiva",
+    "tema": "Ética Médica",
+    "tipo": "Revisão",
+    "n_questoes_link": 39,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/ba0d4b31-8515-4162-a154-44131b78d236/?per_page=20"
+   },
+   {
+    "tarefa": 6,
+    "area_pdf": "Pediatria",
+    "area_norm": "Pediatria",
+    "tema": "Choque em Pediatria",
+    "tipo": "Teoria + Exercícios",
+    "n_questoes_link": 24,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/2c9ecd04-7e11-4958-a36b-57590021a87d/?per_page=20"
+   },
+   {
+    "tarefa": 7,
+    "area_pdf": "Cirurgia",
+    "area_norm": "Cirurgia",
+    "tema": "Urologia",
+    "tipo": "Revisão",
+    "n_questoes_link": 38,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/bb464bf0-c3d8-411c-a545-984322a38f43/?per_page=20"
+   },
+   {
+    "tarefa": 8,
+    "area_pdf": "Gastroenterologia",
+    "area_norm": "Gastro",
+    "tema": "Neoplasias de Estômago e Esôfago",
+    "tipo": "Revisão",
+    "n_questoes_link": 40,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/f4b46598-2678-4b48-bcba-1c572c98e260/?per_page=20"
+   },
+   {
+    "tarefa": 9,
+    "area_pdf": "Nefrologia",
+    "area_norm": "Nefrologia",
+    "tema": "Nefrolitíase",
+    "tipo": "Revisão",
+    "n_questoes_link": 42,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/c5e68c43-3eb3-4604-9c85-64ec2d2bc0ae/?per_page=20"
+   },
+   {
+    "tarefa": 10,
+    "area_pdf": "Hepatologia",
+    "area_norm": "Hepato",
+    "tema": "Complicações da Cirrose Hepática",
+    "tipo": "Teoria + Exercícios",
+    "n_questoes_link": 15,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/e213f666-1c2c-4293-b82b-a1a3eb924a0b/?per_page=20"
+   },
+   {
+    "tarefa": 11,
+    "area_pdf": "Preventiva",
+    "area_norm": "Preventiva",
+    "tema": "",
+    "tipo": "Revisão por Questões",
+    "n_questoes_link": 59,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/6640c124-77ee-46fc-9648-5795e5c8a41d/?per_page=20"
+   },
+   {
+    "tarefa": 12,
+    "area_pdf": "Gastroenterologia",
+    "area_norm": "Gastro",
+    "tema": "",
+    "tipo": "Revisão por Questões",
+    "n_questoes_link": 41,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/42a01718-b387-4d1a-bad4-6b397decd8af/?per_page=20"
+   },
+   {
+    "tarefa": 13,
+    "area_pdf": "Nefrologia",
+    "area_norm": "Nefrologia",
+    "tema": "",
+    "tipo": "Revisão por Questões",
+    "n_questoes_link": 43,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/31ce883b-20e7-4fcd-bfcd-766d91ff0918/?per_page=20"
+   }
+  ],
+  "20": [
+   {
+    "tarefa": 1,
+    "area_pdf": "Preventiva",
+    "area_norm": "Preventiva",
+    "tema": "Financiamento em Saúde",
+    "tipo": "Teoria + Exercícios",
+    "n_questoes_link": 27,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/5949f381-eb2c-4a00-8e9b-6444b405bc4f/?per_page=20"
+   },
+   {
+    "tarefa": 2,
+    "area_pdf": "Pediatria",
+    "area_norm": "Pediatria",
+    "tema": "Choque em Pediatria",
+    "tipo": "Revisão",
+    "n_questoes_link": 36,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/238a0a58-f261-4fee-a259-c0f5d81b6b3c/?per_page=20"
+   },
+   {
+    "tarefa": 3,
+    "area_pdf": "Cirurgia",
+    "area_norm": "Cirurgia",
+    "tema": "Hérnias da Parede Abdominal",
+    "tipo": "Teoria + Exercícios",
+    "n_questoes_link": 25,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/04b9c19e-37f1-490d-88c7-cd2e7282e61f/?per_page=20"
+   },
+   {
+    "tarefa": 4,
+    "area_pdf": "Ginecologia",
+    "area_norm": "Ginecologia",
+    "tema": "Tumores Anexiais e Câncer de Ovário",
+    "tipo": "Revisão",
+    "n_questoes_link": 40,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/e6be5b67-b2b6-4798-8443-c0ed6a7256ec/?per_page=20"
+   },
+   {
+    "tarefa": 5,
+    "area_pdf": "Obstetrícia",
+    "area_norm": "Obstetrícia",
+    "tema": "Diabetes na Gestação",
+    "tipo": "Teoria + Exercícios",
+    "n_questoes_link": 33,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/3a478813-439f-4710-926f-41189ef12856/?per_page=20"
+   },
+   {
+    "tarefa": 6,
+    "area_pdf": "Infectologia",
+    "area_norm": "Infecto",
+    "tema": "Pneumonias Bacterianas",
+    "tipo": "Teoria + Exercícios",
+    "n_questoes_link": 14,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/a2aba305-0df6-4b23-8c13-b0f81608920a/?per_page=20"
+   },
+   {
+    "tarefa": 7,
+    "area_pdf": "Endocrinologia",
+    "area_norm": "Endocrino",
+    "tema": "Hipotireoidismo",
+    "tipo": "Revisão",
+    "n_questoes_link": 29,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/105a8e4f-1ef6-4125-8ef5-c922cabbf328/?per_page=20"
+   },
+   {
+    "tarefa": 8,
+    "area_pdf": "Pneumologia",
+    "area_norm": "Pneumo",
+    "tema": "Pneumologia Intensiva",
+    "tipo": "Revisão",
+    "n_questoes_link": 31,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/b75e5897-f650-4ee5-aab6-37df32bc3249/?per_page=20"
+   },
+   {
+    "tarefa": 9,
+    "area_pdf": "Hematologia",
+    "area_norm": "Hemato",
+    "tema": "Anemias Microcíticas e Leucemias Agudas",
+    "tipo": "Teoria + Exercícios",
+    "n_questoes_link": 27,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/cab17f2b-40cd-482f-8ee5-1215275a03e6/?per_page=20"
+   },
+   {
+    "tarefa": 10,
+    "area_pdf": "Otorrinolaringologia",
+    "area_norm": "Otorrino",
+    "tema": "Infecções das Vias Aéreas Superiores Pt. 2",
+    "tipo": "Teoria + Exercícios",
+    "n_questoes_link": 24,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/0a736311-a118-44ae-919e-6095908b004d/?per_page=20"
+   },
+   {
+    "tarefa": 11,
+    "area_pdf": "Oftalmologia",
+    "area_norm": "Oftalmo",
+    "tema": "Doenças do Polo Posterior",
+    "tipo": "Teoria + Exercícios",
+    "n_questoes_link": 15,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/2088a541-e6dd-433a-b019-c973b6240e90/?per_page=20"
+   }
+  ],
+  "21": [
+   {
+    "tarefa": 1,
+    "area_pdf": "Preventiva",
+    "area_norm": "Preventiva",
+    "tema": "Financiamento em Saúde",
+    "tipo": "Teoria + Exercícios",
+    "n_questoes_link": 15,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/b9bd5317-ac52-4f12-9f31-94053a34c6bc/?per_page=20"
+   },
+   {
+    "tarefa": 2,
+    "area_pdf": "Pediatria",
+    "area_norm": "Pediatria",
+    "tema": "Alergia Alimentar",
+    "tipo": "Teoria + Exercícios",
+    "n_questoes_link": 21,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/24105a4b-7367-49d0-acb9-49a603334474/?per_page=20"
+   },
+   {
+    "tarefa": 3,
+    "area_pdf": "Cirurgia",
+    "area_norm": "Cirurgia",
+    "tema": "Hérnias da Parede Abdominal",
+    "tipo": "Teoria + Exercícios",
+    "n_questoes_link": 21,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/34f8cbcc-0e8a-4aff-ab7f-1dca2c9b4a6c/?per_page=20"
+   },
+   {
+    "tarefa": 4,
+    "area_pdf": "Ginecologia",
+    "area_norm": "Ginecologia",
+    "tema": "Prolapsos de Órgãos Pélvicos",
+    "tipo": "Teoria + Exercícios",
+    "n_questoes_link": 25,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/cff0301b-c8f9-4184-ad91-4951570288c2/?per_page=20"
+   },
+   {
+    "tarefa": 5,
+    "area_pdf": "Obstetrícia",
+    "area_norm": "Obstetrícia",
+    "tema": "Diabetes na Gestação",
+    "tipo": "Revisão",
+    "n_questoes_link": 43,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/1093d168-744a-4ce4-90ab-bc856c649d12/?per_page=20"
+   },
+   {
+    "tarefa": 6,
+    "area_pdf": "Pediatria",
+    "area_norm": "Pediatria",
+    "tema": "Alergia Alimentar",
+    "tipo": "Revisão",
+    "n_questoes_link": 38,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/395f1a06-889a-439b-8fea-17e18dbd946e/?per_page=20"
+   },
+   {
+    "tarefa": 7,
+    "area_pdf": "Gastroenterologia",
+    "area_norm": "Gastro",
+    "tema": "Anatomia do Intestino e Síndrome do Intestino Irritável",
+    "tipo": "Teoria + Exercícios",
+    "n_questoes_link": 18,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/d83db7b3-b13c-4afb-a2a6-5b9bd719f378/?per_page=20"
+   },
+   {
+    "tarefa": 8,
+    "area_pdf": "Neurologia",
+    "area_norm": "Neurologia",
+    "tema": "Distúrbios do Movimento",
+    "tipo": "Revisão",
+    "n_questoes_link": 31,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/c5c51810-62d1-44e7-aab6-6e082ff5bfe2/?per_page=20"
+   },
+   {
+    "tarefa": 9,
+    "area_pdf": "Cardiologia",
+    "area_norm": "Cardiologia",
+    "tema": "Valvopatias",
+    "tipo": "Teoria + Exercícios",
+    "n_questoes_link": 21,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/de2cad4c-c6b5-420f-b31f-98938473cc75/?per_page=20"
+   },
+   {
+    "tarefa": 10,
+    "area_pdf": "Reumatologia",
+    "area_norm": "Reumato",
+    "tema": "Vasculites",
+    "tipo": "Teoria + Exercícios",
+    "n_questoes_link": 14,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/56fbc824-e3c0-4c4a-9a48-1b224df00c7d/?per_page=20"
+   },
+   {
+    "tarefa": 11,
+    "area_pdf": "Ortopedia",
+    "area_norm": "Ortopedia",
+    "tema": "Fraturas e Luxações; Complicações do Trauma Ortopédico",
+    "tipo": "Teoria + Exercícios",
+    "n_questoes_link": 22,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/6563e4c6-33b7-4f55-b40a-ed02f78bd9a8/?per_page=20"
+   },
+   {
+    "tarefa": 12,
+    "area_pdf": "Pediatria",
+    "area_norm": "Pediatria",
+    "tema": "",
+    "tipo": "Revisão por Questões",
+    "n_questoes_link": 43,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/05ae6461-05f0-482a-93fd-473ed25bf723/?per_page=20"
+   }
+  ],
+  "22": [
+   {
+    "tarefa": 1,
+    "area_pdf": "Preventiva",
+    "area_norm": "Preventiva",
+    "tema": "Financiamento em saúde",
+    "tipo": "Revisão",
+    "n_questoes_link": 39,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/affae8f9-4253-4d69-9a62-a78c1ac39d1a/?per_page=20"
+   },
+   {
+    "tarefa": 2,
+    "area_pdf": "Pediatria",
+    "area_norm": "Pediatria",
+    "tema": "Reanimação Neonatal",
+    "tipo": "Teoria",
+    "n_questoes_link": 27,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/8ae39ba4-f3af-4f4a-b104-f5e36cfe3f24/?per_page=20"
+   },
+   {
+    "tarefa": 3,
+    "area_pdf": "Cirurgia",
+    "area_norm": "Cirurgia",
+    "tema": "Hérnias da Parede Abdominal",
+    "tipo": "Teoria III",
+    "n_questoes_link": 15,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/a9db430a-a12f-4696-830c-36880d5fab09/?per_page=20"
+   },
+   {
+    "tarefa": 4,
+    "area_pdf": "Ginecologia",
+    "area_norm": "Ginecologia",
+    "tema": "Prolapsos de Órgãos Pélvicos",
+    "tipo": "Revisão",
+    "n_questoes_link": 41,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/2cb19e0e-8570-449e-b372-0b7e822fb28a/?per_page=20"
+   },
+   {
+    "tarefa": 5,
+    "area_pdf": "Obstetrícia",
+    "area_norm": "Obstetrícia",
+    "tema": "Sangramento da Segunda Metade",
+    "tipo": "Teoria",
+    "n_questoes_link": 24,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/e095bde4-9bb4-4343-9fec-0c8aaae11188/?per_page=20"
+   },
+   {
+    "tarefa": 6,
+    "area_pdf": "Preventiva",
+    "area_norm": "Preventiva",
+    "tema": "Estatística Médica",
+    "tipo": "Teoria I",
+    "n_questoes_link": 13,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/cc77db1b-d959-4146-a1ec-e349fd05b7a1/?per_page=20"
+   },
+   {
+    "tarefa": 7,
+    "area_pdf": "Cirurgia",
+    "area_norm": "Cirurgia",
+    "tema": "Hérnias da Parede Abdominal",
+    "tipo": "Revisão",
+    "n_questoes_link": 37,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/bfa9a64a-bbd0-49b3-9e66-b8784a807185/?per_page=20"
+   },
+   {
+    "tarefa": 8,
+    "area_pdf": "Infectologia",
+    "area_norm": "Infecto",
+    "tema": "Pneumonias Bacterianas",
+    "tipo": "Revisão",
+    "n_questoes_link": 32,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/d8387dc3-8d41-4490-95b6-13d07b0a013e/?per_page=20"
+   },
+   {
+    "tarefa": 9,
+    "area_pdf": "Endocrinologia",
+    "area_norm": "Endocrino",
+    "tema": "Obesidade e Síndrome Metabólica (Teoria) Cirurgia Bariátrica e Metabólica",
+    "tipo": "Teoria",
+    "n_questoes_link": 25,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/5a9ffec7-f186-4e0d-9f1b-745b731185e4/?per_page=20"
+   },
+   {
+    "tarefa": 10,
+    "area_pdf": "Nefrologia",
+    "area_norm": "Nefrologia",
+    "tema": "Doenças Glomerulares",
+    "tipo": "Teoria",
+    "n_questoes_link": 21,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/74c07227-b248-4aaf-98f6-980662d77bea/?per_page=20"
+   },
+   {
+    "tarefa": 11,
+    "area_pdf": "Psiquiatria",
+    "area_norm": "Psiquiatria",
+    "tema": "Psicofarmacologia (Teoria) Psiquiatria Infantil",
+    "tipo": "Teoria",
+    "n_questoes_link": 27,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/18659bea-db6e-4616-9a64-5d9b956b1f3f/?per_page=20"
+   },
+   {
+    "tarefa": 12,
+    "area_pdf": "Infectologia",
+    "area_norm": "Infecto",
+    "tema": "Revisão por Questões : Parasitoses Infecção Hospitalar Pneumonias Bacterianas",
+    "tipo": "",
+    "n_questoes_link": 41,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/e1acac69-553d-4fc5-b3ab-d9e375c1021c/?per_page=20"
+   }
+  ],
+  "23": [
+   {
+    "tarefa": 1,
+    "area_pdf": "Preventiva",
+    "area_norm": "Preventiva",
+    "tema": "Estatística Médica",
+    "tipo": "Teoria II",
+    "n_questoes_link": 13,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/e0c0e375-c4aa-44fb-97df-e939222c7fc1/?per_page=20"
+   },
+   {
+    "tarefa": 2,
+    "area_pdf": "Pediatria",
+    "area_norm": "Pediatria",
+    "tema": "Reanimação Neonatal",
+    "tipo": "Revisão",
+    "n_questoes_link": 43,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/73e3a18a-c6c8-441e-b817-6829130b97b2/?per_page=20"
+   },
+   {
+    "tarefa": 3,
+    "area_pdf": "Cirurgia",
+    "area_norm": "Cirurgia",
+    "tema": "Princípios da Anestesiologia",
+    "tipo": "Teoria I",
+    "n_questoes_link": 12,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/f082d47b-76fe-4772-ad3d-8b0645b076c1/?per_page=20"
+   },
+   {
+    "tarefa": 4,
+    "area_pdf": "Ginecologia",
+    "area_norm": "Ginecologia",
+    "tema": "Câncer de Colo Uterino",
+    "tipo": "Teoria",
+    "n_questoes_link": 25,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/cc28ea36-1bae-48dc-91ca-be6daf45c2ac/?per_page=20"
+   },
+   {
+    "tarefa": 5,
+    "area_pdf": "Obstetrícia",
+    "area_norm": "Obstetrícia",
+    "tema": "Sangramento da Segunda Metade",
+    "tipo": "Revisão",
+    "n_questoes_link": 38,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/a049f2a3-06c4-431d-858b-cf4f7b8de936/?per_page=20"
+   },
+   {
+    "tarefa": 6,
+    "area_pdf": "Pediatria",
+    "area_norm": "Pediatria",
+    "tema": "Crescimento",
+    "tipo": "Teoria",
+    "n_questoes_link": 18,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/fc08c886-6cf8-4567-8976-7570d7ba4288/?per_page=20"
+   },
+   {
+    "tarefa": 7,
+    "area_pdf": "Infectologia",
+    "area_norm": "Infecto",
+    "tema": "Animais Peçonhentos",
+    "tipo": "Teoria",
+    "n_questoes_link": 27,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/32890eb2-480d-43be-b06d-931639dad17c/?per_page=20"
+   },
+   {
+    "tarefa": 8,
+    "area_pdf": "Gastroenterologia",
+    "area_norm": "Gastro",
+    "tema": "Anatomia do Intestino e Síndrome do Intestino Irritável",
+    "tipo": "Revisão",
+    "n_questoes_link": 19,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/c2eac977-985b-4061-8835-0d607c100ed7/?per_page=20"
+   },
+   {
+    "tarefa": 9,
+    "area_pdf": "Neurologia",
+    "area_norm": "Neurologia",
+    "tema": "Acidentes Vasculares Cerebrais",
+    "tipo": "Teoria",
+    "n_questoes_link": 18,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/5619583c-362f-4582-8060-9b60bb90cc67/?per_page=20"
+   },
+   {
+    "tarefa": 10,
+    "area_pdf": "Pneumologia",
+    "area_norm": "Pneumo",
+    "tema": "Doença Pulmonar Obstrutiva Crônica",
+    "tipo": "Teoria",
+    "n_questoes_link": 26,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/ace282ea-eb35-413f-a3ac-108c33c9f5b2/?per_page=20"
+   },
+   {
+    "tarefa": 11,
+    "area_pdf": "Hepatologia",
+    "area_norm": "Hepato",
+    "tema": "Complicações da Cirrose Hepática",
+    "tipo": "Teoria II",
+    "n_questoes_link": 20,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/a1823ec2-cfec-4cd4-b591-717ce8d361c9/?per_page=20"
+   }
+  ],
+  "24": [
+   {
+    "tarefa": 1,
+    "area_pdf": "Preventiva",
+    "area_norm": "Preventiva",
+    "tema": "Estatística Médica",
+    "tipo": "Revisão I",
+    "n_questoes_link": 24,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/f08871a8-65d1-4635-a444-dfaab4b17eb9/?per_page=20"
+   },
+   {
+    "tarefa": 2,
+    "area_pdf": "Pediatria",
+    "area_norm": "Pediatria",
+    "tema": "Crescimento",
+    "tipo": "Revisão",
+    "n_questoes_link": 31,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/fafdde71-7a10-4ef8-8036-c28372255591/?per_page=20"
+   },
+   {
+    "tarefa": 3,
+    "area_pdf": "Cirurgia",
+    "area_norm": "Cirurgia",
+    "tema": "Princípios da Anestesiologia",
+    "tipo": "Teoria II",
+    "n_questoes_link": 24,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/3ef9a57d-f807-4e94-91a8-9224ee21497a/?per_page=20"
+   },
+   {
+    "tarefa": 4,
+    "area_pdf": "Ginecologia",
+    "area_norm": "Ginecologia",
+    "tema": "Câncer de Colo Uterino",
+    "tipo": "Revisão",
+    "n_questoes_link": 38,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/bad4caf5-9753-495a-a2e8-36d43678d16a/?per_page=20"
+   },
+   {
+    "tarefa": 5,
+    "area_pdf": "Obstetrícia",
+    "area_norm": "Obstetrícia",
+    "tema": "Partograma e Distocia",
+    "tipo": "Teoria",
+    "n_questoes_link": 17,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/dcb36bb6-829e-4d22-a1be-62a45286959f/?per_page=20"
+   },
+   {
+    "tarefa": 6,
+    "area_pdf": "Preventiva",
+    "area_norm": "Preventiva",
+    "tema": "Estatística Médica",
+    "tipo": "Teoria III",
+    "n_questoes_link": 10,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/1367be9a-98fc-4362-a2eb-ab55cd00d92b/?per_page=20"
+   },
+   {
+    "tarefa": 7,
+    "area_pdf": "Cirurgia",
+    "area_norm": "Cirurgia",
+    "tema": "Princípios da Anestesiologia",
+    "tipo": "Revisão",
+    "n_questoes_link": 40,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/9ac75240-a512-4168-963a-d74f21181999/?per_page=20"
+   },
+   {
+    "tarefa": 8,
+    "area_pdf": "Infectologia",
+    "area_norm": "Infecto",
+    "tema": "Animais Peçonhentos",
+    "tipo": "Revisão",
+    "n_questoes_link": 27,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/8134083b-b401-49ad-9a0c-24986cd1a4bd/?per_page=20"
+   },
+   {
+    "tarefa": 9,
+    "area_pdf": "Endocrinologia",
+    "area_norm": "Endocrino",
+    "tema": "Obesidade e Síndrome Metabólica Cirurgia Bariátrica e Metabólica",
+    "tipo": "Revisão",
+    "n_questoes_link": 34,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/460d4259-7986-4ba1-a725-5394e6ef8991/?per_page=20"
+   },
+   {
+    "tarefa": 10,
+    "area_pdf": "Nefrologia",
+    "area_norm": "Nefrologia",
+    "tema": "Infecção do Trato Urinário",
+    "tipo": "Teoria",
+    "n_questoes_link": 20,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/e23a42ca-ebde-40b3-9b38-bc88fc80959e/?per_page=20"
+   },
+   {
+    "tarefa": 11,
+    "area_pdf": "Cardiologia",
+    "area_norm": "Cardiologia",
+    "tema": "Valvopatias",
+    "tipo": "Revisão",
+    "n_questoes_link": 35,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/a261a066-c70c-41e2-b1d3-8bad7f08047b/?per_page=20"
+   },
+   {
+    "tarefa": 12,
+    "area_pdf": "Cirurgia",
+    "area_norm": "Cirurgia",
+    "tema": "Cirurgia Vascular Urologia Hérnias da Parede Abdominal Princípios da Anestesiologia",
+    "tipo": "Revisão por Questões",
+    "n_questoes_link": 41,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/ba1c1bb6-940e-4926-b159-ce5da06b0b1b/?per_page=20"
+   },
+   {
+    "tarefa": 13,
+    "area_pdf": "Ginecologia",
+    "area_norm": "Ginecologia",
+    "tema": "Sangramento Uterino Anormal Tumores Anexiais e Câncer de Ovário Prolapsos de Órgãos Pélvicos Câncer de Colo Uterino",
+    "tipo": "Revisão por Questões",
+    "n_questoes_link": 35,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/881f65bb-abde-4411-9e8e-f24637b00431/?per_page=20"
+   },
+   {
+    "tarefa": 14,
+    "area_pdf": "Endocrinologia",
+    "area_norm": "Endocrino",
+    "tema": "Tireotoxicose Hipotireoidismo Obesidade e Síndrome Metabólica Cirurgia Bariátrica e Metabólica",
+    "tipo": "Revisão por Questões",
+    "n_questoes_link": 44,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/732acc5e-a1f1-43c2-8128-e8d28a43d2e9/?per_page=20"
+   }
+  ],
+  "25": [
+   {
+    "tarefa": 1,
+    "area_pdf": "Preventiva",
+    "area_norm": "Preventiva",
+    "tema": "Estatística Médica",
+    "tipo": "Teoria IV",
+    "n_questoes_link": 22,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/ffb8dc21-e7d3-4aa4-aa94-12d6484a5bff/?per_page=20"
+   },
+   {
+    "tarefa": 2,
+    "area_pdf": "Pediatria",
+    "area_norm": "Pediatria",
+    "tema": "Tópicos em Pediatria",
+    "tipo": "Teoria",
+    "n_questoes_link": 18,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/8b3e96e1-7997-4da0-8059-e72fe75ac4f8/?per_page=20"
+   },
+   {
+    "tarefa": 3,
+    "area_pdf": "Cirurgia",
+    "area_norm": "Cirurgia",
+    "tema": "Abdome Agudo Obstrutivo",
+    "tipo": "Teoria",
+    "n_questoes_link": 20,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/83ebf1f0-07c9-4c18-8cd4-ccec122122fe/?per_page=20"
+   },
+   {
+    "tarefa": 4,
+    "area_pdf": "Ginecologia",
+    "area_norm": "Ginecologia",
+    "tema": "Incontinência Urinária",
+    "tipo": "Teoria",
+    "n_questoes_link": 21,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/1b4ae6d2-f7a1-4580-b5f5-3d8606a989ef/?per_page=20"
+   },
+   {
+    "tarefa": 5,
+    "area_pdf": "Obstetrícia",
+    "area_norm": "Obstetrícia",
+    "tema": "Partograma e Distocia",
+    "tipo": "Revisão",
+    "n_questoes_link": 39,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/c4df4466-9c1c-43d5-8124-c01c49a1c242/?per_page=20"
+   },
+   {
+    "tarefa": 6,
+    "area_pdf": "Pediatria",
+    "area_norm": "Pediatria",
+    "tema": "Tópicos em Pediatria",
+    "tipo": "Revisão",
+    "n_questoes_link": 36,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/50ac88dd-db3b-4707-814b-54fd7aa5f3ed/?per_page=20"
+   },
+   {
+    "tarefa": 7,
+    "area_pdf": "Infectologia",
+    "area_norm": "Infecto",
+    "tema": "Endocardites",
+    "tipo": "Teoria",
+    "n_questoes_link": 19,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/7eb1692a-67f7-488e-86ce-780b35480eee/?per_page=20"
+   },
+   {
+    "tarefa": 8,
+    "area_pdf": "Gastroenterologia",
+    "area_norm": "Gastro",
+    "tema": "Disfagia, Alterações Estruturais e Dist. Mort.",
+    "tipo": "Teoria",
+    "n_questoes_link": 23,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/6dd270aa-7906-4bb8-a5ca-e60fd7dd58e6/?per_page=20"
+   },
+   {
+    "tarefa": 9,
+    "area_pdf": "Pneumologia",
+    "area_norm": "Pneumo",
+    "tema": "Derrame Pleural",
+    "tipo": "Teoria",
+    "n_questoes_link": 17,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/b8b189eb-7e05-4d1c-8354-fd3ed8753de0/?per_page=20"
+   },
+   {
+    "tarefa": 10,
+    "area_pdf": "Hematologia",
+    "area_norm": "Hemato",
+    "tema": "Anemias Microcíticas Leucemias Agudas",
+    "tipo": "Revisão",
+    "n_questoes_link": 27,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/0f8f71b5-bed9-4842-ad8c-0339555cc6d5/?per_page=20"
+   },
+   {
+    "tarefa": 11,
+    "area_pdf": "Reumatologia",
+    "area_norm": "Reumato",
+    "tema": "Artrite Reumatóide",
+    "tipo": "Teoria",
+    "n_questoes_link": 15,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/705807ce-f619-4073-a8f4-a58a3e9bdf1b/?per_page=20"
+   },
+   {
+    "tarefa": 12,
+    "area_pdf": "Obstetrícia",
+    "area_norm": "Obstetrícia",
+    "tema": "Diabetes na Gestação Sangramento da Segunda Metade Partograma e Distocia",
+    "tipo": "Revisão por Questões",
+    "n_questoes_link": 49,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/bd59db44-7a5a-468b-ac4d-fe2c49d8499e/?per_page=20"
+   },
+   {
+    "tarefa": 13,
+    "area_pdf": "Pneumologia",
+    "area_norm": "Pneumo",
+    "tema": "Neoplasias Pulmonares",
+    "tipo": "Teoria",
+    "n_questoes_link": 19,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/d3364386-d293-4aaf-b538-357704eea4d5/?per_page=20"
+   }
+  ],
+  "26": [
+   {
+    "tarefa": 1,
+    "area_pdf": "Preventiva",
+    "area_norm": "Preventiva",
+    "tema": "Estatística Médica",
+    "tipo": "Revisão II",
+    "n_questoes_link": 44,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/c1f5461e-819a-4f74-9396-2f0962670e98/?per_page=20"
+   },
+   {
+    "tarefa": 2,
+    "area_pdf": "Pediatria",
+    "area_norm": "Pediatria",
+    "tema": "Desnutrição na Infância",
+    "tipo": "Teoria",
+    "n_questoes_link": 16,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/6226e8b2-153b-43fd-8425-dc6cc3f1ccdc/?per_page=20"
+   },
+   {
+    "tarefa": 3,
+    "area_pdf": "Cirurgia",
+    "area_norm": "Cirurgia",
+    "tema": "Abdome Agudo Obstrutivo",
+    "tipo": "Revisão",
+    "n_questoes_link": 37,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/fc48cfc6-9528-482f-a0a8-385997e4e7c9/?per_page=20"
+   },
+   {
+    "tarefa": 4,
+    "area_pdf": "Ginecologia",
+    "area_norm": "Ginecologia",
+    "tema": "Incontinência Urinária",
+    "tipo": "Revisão",
+    "n_questoes_link": 37,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/cfd8b7ed-0523-4521-b5a8-29e1f1c01d58/?per_page=20"
+   },
+   {
+    "tarefa": 5,
+    "area_pdf": "Obstetrícia",
+    "area_norm": "Obstetrícia",
+    "tema": "Gestação Múltipla",
+    "tipo": "Teoria",
+    "n_questoes_link": 24,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/645b48aa-cc0e-4d59-b318-1f7c477e10ba/?per_page=20"
+   },
+   {
+    "tarefa": 6,
+    "area_pdf": "Preventiva",
+    "area_norm": "Preventiva",
+    "tema": "Normas Regulamentadoras",
+    "tipo": "Teoria I",
+    "n_questoes_link": 12,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/eb029fc3-2f3d-43e2-9865-3be5d21272cf/?per_page=20"
+   },
+   {
+    "tarefa": 7,
+    "area_pdf": "Endocrinologia",
+    "area_norm": "Endocrino",
+    "tema": "Osteoporose e Doença óssea de Paget",
+    "tipo": "Teoria",
+    "n_questoes_link": 20,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/1f68e70a-68d6-440a-a9b5-9da774c42eab/?per_page=20"
+   },
+   {
+    "tarefa": 8,
+    "area_pdf": "Nefrologia",
+    "area_norm": "Nefrologia",
+    "tema": "Doenças Glomerulares Infecção do Trato Urinário",
+    "tipo": "Revisão",
+    "n_questoes_link": 33,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/a158376a-d708-4a0e-8465-3fe0d9229d07/?per_page=20"
+   },
+   {
+    "tarefa": 9,
+    "area_pdf": "Neurologia",
+    "area_norm": "Neurologia",
+    "tema": "Coma e alterações da consciência",
+    "tipo": "Teoria",
+    "n_questoes_link": 22,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/9f77c6e1-8658-4a55-b66d-dc292cbe2bf3/?per_page=20"
+   },
+   {
+    "tarefa": 10,
+    "area_pdf": "Psiquiatria",
+    "area_norm": "Psiquiatria",
+    "tema": "Psicofarmacologia Psiquiatria Infantil",
+    "tipo": "Revisão",
+    "n_questoes_link": 35,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/c7e38fa2-0875-498e-bb21-fd5a3776d12d/?per_page=20"
+   },
+   {
+    "tarefa": 11,
+    "area_pdf": "Hepatologia",
+    "area_norm": "Hepato",
+    "tema": "Complicações da Cirrose Hepática",
+    "tipo": "Revisão",
+    "n_questoes_link": 32,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/f91b3293-00a7-4f79-a94d-ad3fd055529d/?per_page=20"
+   },
+   {
+    "tarefa": 12,
+    "area_pdf": "Pediatria",
+    "area_norm": "Pediatria",
+    "tema": "Reanimação neonatal Crescimento Tópicos em Pediatria Desnutrição na Infância",
+    "tipo": "Revisão por Questões",
+    "n_questoes_link": 49,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/dddba9b5-6072-4539-8ba6-fca136ec8879/?per_page=20"
+   }
+  ],
+  "27": [
+   {
+    "tarefa": 1,
+    "area_pdf": "Preventiva",
+    "area_norm": "Preventiva",
+    "tema": "Normas Regulamentadoras",
+    "tipo": "Teoria II",
+    "n_questoes_link": 13,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/6b4654a0-8777-4abd-ae35-9823f1bfcb45/?per_page=20"
+   },
+   {
+    "tarefa": 2,
+    "area_pdf": "Pediatria",
+    "area_norm": "Pediatria",
+    "tema": "Desnutrição na Infância",
+    "tipo": "Revisão",
+    "n_questoes_link": 47,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/5b565a37-83f5-45e3-a1b0-48a3d278ada8/?per_page=20"
+   },
+   {
+    "tarefa": 3,
+    "area_pdf": "Cirurgia",
+    "area_norm": "Cirurgia",
+    "tema": "Complicações Pós-Operatórias",
+    "tipo": "Teoria I",
+    "n_questoes_link": 26,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/1053a9ad-d0a1-432c-9584-e4cdaa712208/?per_page=20"
+   },
+   {
+    "tarefa": 4,
+    "area_pdf": "Ginecologia",
+    "area_norm": "Ginecologia",
+    "tema": "Assistência à Vítima de Violência Sexual",
+    "tipo": "Teoria",
+    "n_questoes_link": 28,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/2c101542-29dd-47f4-895f-ff3a9813e1f6/?per_page=20"
+   },
+   {
+    "tarefa": 5,
+    "area_pdf": "Obstetrícia",
+    "area_norm": "Obstetrícia",
+    "tema": "Gestação Múltipla",
+    "tipo": "Revisão",
+    "n_questoes_link": 36,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/0a12cfb3-9a40-4f41-ac3c-09c02701e464/?per_page=20"
+   },
+   {
+    "tarefa": 6,
+    "area_pdf": "Pediatria",
+    "area_norm": "Pediatria",
+    "tema": "Obesidade Infantil e na Adolescência",
+    "tipo": "Teoria",
+    "n_questoes_link": 26,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/aa81ed9e-1522-42e9-bacf-43f346fd8c86/?per_page=20"
+   },
+   {
+    "tarefa": 7,
+    "area_pdf": "Cirurgia",
+    "area_norm": "Cirurgia",
+    "tema": "Complicações Pós-Operatórias",
+    "tipo": "Teoria II",
+    "n_questoes_link": 20,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/49fcd27f-e7d1-420d-ae04-b6018d827bbb/?per_page=20"
+   },
+   {
+    "tarefa": 8,
+    "area_pdf": "Infectologia",
+    "area_norm": "Infecto",
+    "tema": "Endocardite Bacteriana - Endocardite Infecciosa",
+    "tipo": "Revisão",
+    "n_questoes_link": 28,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/42eb70ec-9d74-4eae-9787-86db36bda8c5/?per_page=20"
+   },
+   {
+    "tarefa": 9,
+    "area_pdf": "Gastroenterologia",
+    "area_norm": "Gastro",
+    "tema": "Disfagia, Alterações Estruturais e Dist. Mot.",
+    "tipo": "Revisão",
+    "n_questoes_link": 36,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/6071510c-c449-49c0-8fa8-9c0b2f491843/?per_page=20"
+   },
+   {
+    "tarefa": 10,
+    "area_pdf": "Cardiologia",
+    "area_norm": "Cardiologia",
+    "tema": "Fibrilação e Flutter Atrial Parada Cardiorrespiratória",
+    "tipo": "Teoria",
+    "n_questoes_link": 26,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/cfcb1107-e9da-4975-8c9b-381749d24d0e/?per_page=20"
+   },
+   {
+    "tarefa": 11,
+    "area_pdf": "Dermatologia",
+    "area_norm": "Dermato",
+    "tema": "Oncologia Cutânea",
+    "tipo": "Teoria",
+    "n_questoes_link": 26,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/b202874b-7ae8-4d3a-8b54-2408f147d462/?per_page=20"
+   },
+   {
+    "tarefa": 12,
+    "area_pdf": "Neurologia",
+    "area_norm": "Neurologia",
+    "tema": "AVC Coma e alterações da consciência",
+    "tipo": "Revisão",
+    "n_questoes_link": 50,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/87b7977d-79ff-4c31-a46e-bc64f6dd10d5/?per_page=20"
+   },
+   {
+    "tarefa": 13,
+    "area_pdf": "Reumatologia",
+    "area_norm": "Reumato",
+    "tema": "Artrite Reumatoide",
+    "tipo": "Revisão",
+    "n_questoes_link": 24,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/b600d233-171d-455b-b8b7-7bfc363893b3/?per_page=20"
+   },
+   {
+    "tarefa": 14,
+    "area_pdf": "Cardiologia",
+    "area_norm": "Cardiologia",
+    "tema": "Fibrilação e Flutter Atrial Parada Cardiorrespiratória",
+    "tipo": "Revisão",
+    "n_questoes_link": 36,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/a96f810b-a20d-4b63-8470-6b04c63ccb21/?per_page=20"
+   },
+   {
+    "tarefa": 15,
+    "area_pdf": "Dermatologia",
+    "area_norm": "Dermato",
+    "tema": "Oncologia Cutânea",
+    "tipo": "Revisão",
+    "n_questoes_link": 44,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/2182e1d8-659c-4c40-90aa-6099fad02577/?per_page=20"
+   }
+  ],
+  "28": [
+   {
+    "tarefa": 1,
+    "area_pdf": "Preventiva",
+    "area_norm": "Preventiva",
+    "tema": "Normas Regulamentadoras",
+    "tipo": "Teoria III",
+    "n_questoes_link": null,
+    "url": null
+   },
+   {
+    "tarefa": 2,
+    "area_pdf": "Pediatria",
+    "area_norm": "Pediatria",
+    "tema": "Obesidade Infantil e na Adolescência",
+    "tipo": "Revisão",
+    "n_questoes_link": 31,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/670c75b6-370b-4245-8747-6e0100293400/?per_page=20"
+   },
+   {
+    "tarefa": 3,
+    "area_pdf": "Cirurgia",
+    "area_norm": "Cirurgia",
+    "tema": "Complicações Pós-Operatórias",
+    "tipo": "Teoria III",
+    "n_questoes_link": 16,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/00a51ab2-d883-4340-a947-a1e9fa2a0f90/?per_page=20"
+   },
+   {
+    "tarefa": 4,
+    "area_pdf": "Ginecologia",
+    "area_norm": "Ginecologia",
+    "tema": "Assistência à Vítima de Violência Sexual",
+    "tipo": "Revisão",
+    "n_questoes_link": 35,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/61b0497b-d1af-4b00-94aa-de8eba0a771e/?per_page=20"
+   },
+   {
+    "tarefa": 5,
+    "area_pdf": "Obstetrícia",
+    "area_norm": "Obstetrícia",
+    "tema": "Hemorragia Pós-Parto",
+    "tipo": "Teoria",
+    "n_questoes_link": 24,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/d26fcc67-724b-4a6e-9543-75af93c3ba5b/?per_page=20"
+   },
+   {
+    "tarefa": 6,
+    "area_pdf": "Endocrinologia",
+    "area_norm": "Endocrino",
+    "tema": "Osteoporose e Doença óssea de Paget",
+    "tipo": "Revisão",
+    "n_questoes_link": 33,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/140d6672-23c5-4c0d-ad3d-ba18908c4304/?per_page=20LivroNeuromusculares1."
+   },
+   {
+    "tarefa": 7,
+    "area_pdf": "Neurologia",
+    "area_norm": "Neurologia",
+    "tema": "Doenças Neuromusculares",
+    "tipo": "Teoria",
+    "n_questoes_link": 24,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/b0ac284d-d883-4f90-b811-545fbad82046/?per_page=20"
+   },
+   {
+    "tarefa": 8,
+    "area_pdf": "Ortopedia",
+    "area_norm": "Ortopedia",
+    "tema": "Quadril Pediátrico Politrauma Ortopédico Doenças da coluna vertebral Maus Tratos Fraturas e Luxações Complicações do trauma ortopédico",
+    "tipo": "Revisão",
+    "n_questoes_link": 58,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/526bc301-0ac3-4bed-aff7-8e4583b8ac8a/?per_page=20"
+   },
+   {
+    "tarefa": 9,
+    "area_pdf": "Preventiva",
+    "area_norm": "Preventiva",
+    "tema": "Normas Regulamentadoras",
+    "tipo": "Revisão",
+    "n_questoes_link": 20,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/57840f57-4502-468f-88b6-c649ff6f168c/?per_page=20"
+   },
+   {
+    "tarefa": 10,
+    "area_pdf": "Cirurgia",
+    "area_norm": "Cirurgia",
+    "tema": "Complicações Pós-Operatórias",
+    "tipo": "Revisão",
+    "n_questoes_link": 38,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/5f6dbf33-cece-459d-af7a-b33ee4070045/?per_page=20"
+   },
+   {
+    "tarefa": 11,
+    "area_pdf": "Obstetrícia",
+    "area_norm": "Obstetrícia",
+    "tema": "Hemorragia Pós-Parto",
+    "tipo": "Revisão",
+    "n_questoes_link": 41,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/e8f98a5a-6ff9-44e8-8caf-f14d7f364a92/?per_page=20"
+   },
+   {
+    "tarefa": 12,
+    "area_pdf": "Neurologia",
+    "area_norm": "Neurologia",
+    "tema": "Doenças Neuromusculares",
+    "tipo": "Revisão",
+    "n_questoes_link": 35,
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/282f1491-c38b-4f28-a07a-e41fb4c39def/?per_page=20"
+   }
+  ],
+  "29": [
+   {
+    "tarefa": 1,
+    "area_pdf": "Todas as Disciplinas",
+    "area_norm": "Multi",
+    "tema": "",
+    "tipo": "Diversos Assuntos",
+    "n_questoes_link": null,
+    "url": null
+   },
+   {
+    "tarefa": 2,
+    "area_pdf": "Todas as Disciplinas",
+    "area_norm": "Multi",
+    "tema": "",
+    "tipo": "Diversos Assuntos",
+    "n_questoes_link": null,
+    "url": null
+   },
+   {
+    "tarefa": 3,
+    "area_pdf": "Todas as Disciplinas",
+    "area_norm": "Multi",
+    "tema": "",
+    "tipo": "Diversos Assuntos",
+    "n_questoes_link": null,
+    "url": null
+   },
+   {
+    "tarefa": 4,
+    "area_pdf": "Todas as Disciplinas",
+    "area_norm": "Multi",
+    "tema": "",
+    "tipo": "Diversos Assuntos",
+    "n_questoes_link": null,
+    "url": null
+   },
+   {
+    "tarefa": 5,
+    "area_pdf": "Todas as Disciplinas",
+    "area_norm": "Multi",
+    "tema": "",
+    "tipo": "Diversos Assuntos",
+    "n_questoes_link": null,
+    "url": null
+   },
+   {
+    "tarefa": 6,
+    "area_pdf": "Todas as Disciplinas",
+    "area_norm": "Multi",
+    "tema": "",
+    "tipo": "Diversos Assuntos",
+    "n_questoes_link": null,
+    "url": null
+   },
+   {
+    "tarefa": 7,
+    "area_pdf": "Todas as Disciplinas",
+    "area_norm": "Multi",
+    "tema": "",
+    "tipo": "Diversos Assuntos",
+    "n_questoes_link": null,
+    "url": null
+   }
+  ],
+  "30": [
+   {
+    "tarefa": 1,
+    "area_pdf": "Pediatria e Cirurgia",
+    "area_norm": "Multi",
+    "tema": "",
+    "tipo": "Questões Erradas",
+    "n_questoes_link": null,
+    "url": null
+   },
+   {
+    "tarefa": 2,
+    "area_pdf": "Preventiva e Infecto",
+    "area_norm": "Multi",
+    "tema": "",
+    "tipo": "Questões Erradas",
+    "n_questoes_link": null,
+    "url": null
+   },
+   {
+    "tarefa": 3,
+    "area_pdf": "Ginecologia e Obstetrícia",
+    "area_norm": "Multi",
+    "tema": "",
+    "tipo": "Questões Erradas",
+    "n_questoes_link": null,
+    "url": null
+   },
+   {
+    "tarefa": 4,
+    "area_pdf": "Endocrino e Gastro",
+    "area_norm": "Multi",
+    "tema": "",
+    "tipo": "Questões Erradas",
+    "n_questoes_link": null,
+    "url": null
+   },
+   {
+    "tarefa": 5,
+    "area_pdf": "Cardio, Psiquiatria e Nefro",
+    "area_norm": "Multi",
+    "tema": "",
+    "tipo": "Questões Erradas",
+    "n_questoes_link": null,
+    "url": null
+   },
+   {
+    "tarefa": 6,
+    "area_pdf": "Neuro, Hemato, Pneumo e",
+    "area_norm": "Multi",
+    "tema": "Hepato Questões Erradas",
+    "tipo": "",
+    "n_questoes_link": null,
+    "url": null
+   },
+   {
+    "tarefa": 7,
+    "area_pdf": "Reumato, Ortopedia, Otorrino,",
+    "area_norm": "Multi",
+    "tema": "Dermato e Oftalmo Questões Erradas",
+    "tipo": "",
+    "n_questoes_link": null,
+    "url": null
+   }
+  ]
+ }
+}

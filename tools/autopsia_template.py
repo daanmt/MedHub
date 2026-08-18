@@ -175,6 +175,8 @@ button{font-family:inherit;cursor:pointer}
 .etext{font-size:15.2px;line-height:1.62;color:var(--ink2);text-align:justify;
   text-justify:inter-word;hyphens:auto;-webkit-hyphens:auto}
 .etext.serif{font-family:Georgia,"Iowan Old Style",serif;font-size:16px;color:var(--ink)}
+.etext mark.dk{background:var(--ochre-wash);color:var(--ochre-ink);text-decoration:underline;
+  text-decoration-color:var(--ochre);text-underline-offset:2.5px;padding:0 1px;font-weight:600}
 /* colapso de bloco longo */
 .clipw{position:relative}
 .clipw.off .etext{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
@@ -192,11 +194,17 @@ button{font-family:inherit;cursor:pointer}
 .eblock.exp{border-left:3px solid var(--teal);margin:0 15px 15px;padding:2px 0 2px 14px}
 .empty{padding:56px 20px;text-align:center;color:var(--ink3);font-size:14.5px}
 
-/* o discriminador que faltou */
-.gap{margin:0 15px 15px;background:var(--rose-wash);border-left:3px solid var(--rose);padding:11px 14px}
-.gap .elab{color:var(--rose-ink);margin-bottom:4px}
-.gap .g{font-size:15px;line-height:1.5;color:var(--ink);font-weight:560}
-.gap .mecl{font-size:11.5px;color:var(--rose-ink);margin-top:6px;opacity:.85}
+/* anatomia do erro -- discriminador + o que faltou + por que e armadilha, fundidos */
+.anatomy{margin:0 15px 15px;background:var(--rose-wash);border-left:3px solid var(--rose);padding:13px 14px}
+.anatomy>.elab{color:var(--rose-ink);margin-bottom:9px}
+.anrow{margin-bottom:11px}
+.anrow:last-child{margin-bottom:0}
+.antag{display:block;font-size:10px;font-weight:750;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--rose-ink);opacity:.8;margin-bottom:2px}
+.antxt{font-size:15px;line-height:1.52;color:var(--ink);font-weight:560}
+.anatomy .g{font-size:15.5px;font-weight:620}
+.anatomy .mecl{font-size:11.5px;color:var(--rose-ink);margin-top:10px;padding-top:9px;
+  border-top:1px solid rgba(160,58,93,.22);opacity:.9}
 .lnk{background:none;border:0;padding:0;font:inherit;color:inherit;text-decoration:underline;
   text-underline-offset:2px;font-weight:640}
 
@@ -422,8 +430,7 @@ function ladder(e){
       <span class="rst">${st}</span></li>`;
   }).join("");
   return `<div class="eblock" style="padding-bottom:9px"><div class="elab">Cadeia de habilidades</div></div>
-    <ol class="ladder">${rows}</ol>
-    <p class="ladkey">Verde = degrau que você executou · vermelho = onde a cadeia parou · cinza = degrau que a questão nunca chegou a testar.</p>`;
+    <ol class="ladder">${rows}</ol>`;
 }
 
 function fsrsChips(c){
@@ -445,11 +452,6 @@ function fsrsChips(c){
 
 function cardsBlock(e){
   if (!e.cards.length) return "";
-  const novos = e.cards.filter(c => c.st === "novo").length;
-  const nota = novos === e.cards.length
-    ? `${e.cards.length===1?"Este card ainda não foi introduzido":"Nenhum destes cards foi introduzido ainda"} — o erro segue sem nenhuma passagem de reforço.`
-    : (novos ? `${e.cards.length - novos} já em circulação, ${novos} ainda não introduzido${novos>1?"s":""}.`
-             : `Todos já em circulação no FSRS.`);
   const items = e.cards.map(c => `<div class="fc">
     <div class="fcmeta"><span class="fct ${c.tipo}">${esc(c.tipo.replace("_"," "))}</span>${fsrsChips(c)}
       <span class="fcd mn">#${c.id}</span></div>
@@ -457,13 +459,17 @@ function cardsBlock(e){
     <div class="fcq">${esc(c.p)}</div>
     ${c.r?`<div class="fca">${esc(c.r)}</div>`:""}</div>`).join("");
   return `<div class="eblock" style="padding-bottom:9px"><div class="elab">Cards forjados neste erro — ${e.cards.length}</div></div>
-    <div class="cards">${items}</div><p class="cardstat">${nota}</p>`;
+    <div class="cards">${items}</div>`;
 }
 
-function gapBlock(e){
-  if (!e.gap) return "";
-  return `<div class="gap"><div class="elab">O discriminador que faltou</div>
-    <div class="g">${esc(e.gap)}</div>
+function anatomiaErro(e){
+  if (!e.gap && !e.falt && !e.arm) return "";
+  const rows = [
+    e.gap  ? `<div class="anrow"><span class="antag">O discriminador</span><span class="antxt g">${esc(e.gap)}</span></div>` : "",
+    e.falt ? `<div class="anrow"><span class="antag">O que faltou</span><span class="antxt">${esc(e.falt)}</span></div>` : "",
+    e.arm  ? `<div class="anrow"><span class="antag">Por que é armadilha</span><span class="antxt">${esc(e.arm)}</span></div>` : "",
+  ].join("");
+  return `<div class="anatomy"><div class="elab">Anatomia do erro</div>${rows}
     <div class="mecl">Instância de <button class="lnk" data-filter-mec="${e.mec}">${esc(D.mec[e.mec].nome)}</button> — o mecanismo inteiro está na seção acima.</div></div>`;
 }
 
@@ -478,21 +484,28 @@ function respostas(e){
       <span class="tx">${esc(a.txt)}</span>${pc}</div>`;
   }).join("");
   const nota = e.altp
-    ? "Só o gabarito e a alternativa marcada foram registrados nesta prova — os outros distratores não constam."
-    : "Percentual = fatia da turma que marcou cada alternativa.";
-  return `<div class="alts${e.altp ? " parcial" : ""}">${linhas}</div><p class="cardstat">${nota}</p>`;
+    ? "<p class=\"cardstat\">Só o gabarito e a alternativa marcada foram registrados nesta prova — os outros distratores não constam.</p>"
+    : "";
+  return `<div class="alts${e.altp ? " parcial" : ""}">${linhas}</div>${nota}`;
+}
+
+/* destaque de dados-chave na vinheta: numero+unidade clinica, ou negacao/excecao que muda o sentido */
+const KEYRX = /(\d+(?:[.,]\d+)?\s?(?:mmHg|bpm|mg\/?k?g?|mcg|ng\/?m?[Ll]?|mEq\/?[Ll]?|m[Ll]|c[Mm]|mm|[Kk]g|semanas?|dias?|meses?|anos?|%|UI|g\/dL|°C))|(\bexceto\b|\bsem\b|\bnão\s+apresenta\w*\b|\bnão\s+há\b|\bausência\s+de\b|\bnega\b|\bapesar\s+de\b|\bexcluindo\b|\bnenhum\w*\b)/gi;
+function marcaChave(escTxt){
+  return escTxt.replace(KEYRX, m => `<mark class="dk">${m}</mark>`);
 }
 
 /* bloco de texto com botao de compactar */
 let _bid = 0;
-function bloco(lab, txt, cls, serif){
+function bloco(lab, txt, cls, serif, hl){
   if (!txt) return "";
   const id = "b" + (++_bid);
   const longo = txt.length > 260;
+  const body = hl ? marcaChave(esc(txt)) : esc(txt);
   return `<div class="eblock ${cls||""}">
     <div class="elabrow"><div class="elab">${esc(lab)}</div>
       ${longo?`<button class="tgl" data-clip="${id}" aria-expanded="true">compactar</button>`:""}</div>
-    <div class="clipw" id="${id}"><div class="etext${serif?" serif":""}">${esc(txt)}</div></div></div>`;
+    <div class="clipw" id="${id}"><div class="etext${serif?" serif":""}">${body}</div></div></div>`;
 }
 
 function card(e){
@@ -511,13 +524,11 @@ function card(e){
       <span class="eid mn">#${e.id}</span>
     </button>
     <div class="ebody">
-      ${bloco("A vinheta", e.enun, "", true)}
+      ${bloco("A vinheta", e.enun, "", true, true)}
       ${cmd}
       ${respostas(e)}
-      ${gapBlock(e)}
       ${ladder(e)}
-      ${bloco("Por que é armadilha", e.arm, "arm")}
-      ${bloco("O que faltou", e.falt)}
+      ${anatomiaErro(e)}
       ${bloco("Racional correto", e.expl, "exp", true)}
       ${cardsBlock(e)}
     </div></article>`;

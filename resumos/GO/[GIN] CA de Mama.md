@@ -27,7 +27,13 @@ aliases: [CA Mama]
 
 **Fatores protetores:** amamentação; atividade física; 1ª gestação <25 anos; menopausa cirúrgica precoce
 
-**Alto risco:** risco >20% (Tyrer-Cuzick); familiar 1º grau com CA mama antes da menopausa; biópsia com atipia; BRCA1/2
+**Alto risco (critérios fechados -- lista restrita, NÃO inclui os fatores de risco gerais acima):**
+- Risco >20% ao longo da vida (Tyrer-Cuzick) ou RR>1,67 (Gail)
+- Parente 1º grau com CA mama/ovário antes da menopausa (RR=3,5)
+- História familiar de CA de mama **em homem** (RR=3,0-5,0)
+- Biópsia prévia com atipia (HDA/HLA) ou CLIS (RR=3,5-4,0)
+- Radioterapia torácica <30 anos (RR=2,0-8,0)
+- Mutação genética confirmada: BRCA1/2, Li-Fraumeni (p53), Cowden (PTEN) (RR=4,0-8,0)
 
 **Prevenção em alto risco:**
 - **Quimioprevenção:** tamoxifeno (pré e pós-menopausa) OU inibidores da aromatase (só pós-menopausa)
@@ -39,8 +45,17 @@ aliases: [CA Mama]
 ## 2. Rastreamento e Diagnóstico
 
 **Rastreamento (MS):** mamografia, mulheres de **50-69 anos**, a cada **2 anos**
-**Sociedades médicas:** anual a partir dos **40 anos**
-**Alto risco (BRCA1/2):** mamografia + RM mamária anuais a partir dos 30 anos
+**Sociedades médicas (FEBRASGO/SBM/CBR):** anual a partir dos **40 anos** até os 74 (continua além se expectativa de vida > 7 anos)
+
+**Alto risco -- idade de início amarrada ao CRITÉRIO específico, nunca genérica:**
+- História familiar (parente 1º grau pré-menopausa, risco calculado >20%): mamografia anual iniciando **10 anos antes** do diagnóstico da parente mais jovem (nunca antes dos 30)
+- Mutação **BRCA1** (ou parente 1º grau com mutação): mamografia anual a partir do diagnóstico, **não antes dos 35**
+- Mutação **BRCA2**: mamografia anual a partir do diagnóstico, **não antes dos 30**
+- Radioterapia torácica prévia (<30 anos): mamografia anual **8 anos após** o tratamento, não antes dos 30
+- Li-Fraumeni, Cowden, ou lesão precursora (HDA/HLA/CLIS): mamografia anual a partir do diagnóstico, não antes dos 30
+- RM mamária soma-se (não substitui) em todos os casos acima, com pisos de idade próprios um pouco mais precoces (ex.: BRCA1 não antes de 25; BRCA2 e radioterapia não antes de 25-30)
+
+**Rastreamento em pessoas trans:** acompanha a exposição hormonal real da mama, não o sexo de nascimento -- homem trans sem mastectomia bilateral segue a régua de mulher cis; com mastectomia, não rastreia. Mulher trans só rastreia se em uso (ou já usou) hormonização feminizante, aí segue a régua de mulher cis a partir dos 40 (FEBRASGO) ou conforme tempo de terapia hormonal (MS: a partir de 20 anos de uso).
 
 **Métodos diagnósticos:**
 - **Mamografia:** rastreamento + nódulo palpável + planejamento cirúrgico (multicentricidade, extensão)
@@ -53,10 +68,20 @@ aliases: [CA Mama]
 **BI-RADS:**
 - 0: inconclusivo -> completar investigação
 - 1-2: 0% de risco -> rastreamento habitual
-- 3: <2% -> controle em 6 meses
-- 4: 2-95% -> biópsia
-- **5: >95% -> biópsia** ⭐
-- 6: maligno confirmado -> tratamento
+- 3: <=2% -> controle em 6 meses (fluxograma: 6m -> 12m -> 24m estável -> rebaixa p/ BI-RADS 2)
+- 4: 2-95% -> biópsia. Subcortes: **4A** (>2-10%), **4B** (>10-50%), **4C** (>50-<95%)
+- **5: >=95% -> biópsia** ⭐
+- 6: maligno confirmado -> acompanhamento de tratamento
+
+**Vocabulário de imagem (reconhecer o padrão, não decorar a tabela):**
+- Aponta BI-RADS 3 (tranquilo): circunscrito, regular, ovalado, hipoecogênico homogêneo, **paralelo à pele/horizontalizado** ("mais largo que alto"), microcalcificações **monomórficas**
+- Aponta BI-RADS 4/5 (suspeito): contornos irregulares/lobulados, heterogêneo, **verticalizado** ("mais alto que largo" -- invade em profundidade em vez de se achatar contra a pele), sombra acústica posterior, microcalcificações **pleomórficas** ou ramificadas em "letra chinesa", nódulo **espiculado** (imagem clássica de câncer)
+
+**Tipo de biópsia por lesão:**
+- **PAAF** (citológico): esvaziar cisto grande/doloroso/em crescimento; diferenciar cisto espesso de nódulo sólido
+- **Core biopsy/trocater** (histológico): **1ª escolha** p/ nódulo sólido suspeito BI-RADS 4/5 -- permite estudo imuno-histoquímico completo
+- **Mamotomia** (agulha grossa vácuo-assistida): indicação mais específica é microcalcificação suspeita visível só na mamografia (estereotaxia)
+- **Setorectomia** (cirúrgica): reserva quando os métodos percutâneos não estão disponíveis, ou exérese completa após biópsia prévia com atipia
 
 ---
 
@@ -67,8 +92,10 @@ aliases: [CA Mama]
 - **Outros:** retração do mamilo; descarga papilar sanguinolenta/em água de rocha (unilateral, uniductal); peau d'orange; eritema; abaulamento/retração da pele
 
 ### ⚠️ Carcinoma Inflamatório
-- Edema + eritema + peau d'orange em ≥1/3 da mama | rápido | **sem nódulo** (confunde com mastite)
-- **Mastectomia obrigatória** mesmo com resposta completa à quimioterapia
+- Edema + eritema + peau d'orange em ≥1/3 da mama | rápido (semanas a 6 meses) | **sem nódulo** (confunde com mastite)
+- **Discriminador prático com mastite: a DOR.** Mastite dói muito; carcinoma inflamatório geralmente **não** apresenta dor importante. Quadro "inflamatório" que não responde a antibiótico reforça a suspeita
+- Maioria já com linfonodo axilar comprometido ao diagnóstico; ~1/3 já com metástase à distância
+- **Mastectomia obrigatória** mesmo com resposta completa à quimioterapia neoadjuvante
 
 ### ⚠️ Doença de Paget
 - Ulceração do complexo areolopapilar -- **eczema do mamilo que não cura**
@@ -86,15 +113,21 @@ aliases: [CA Mama]
 - Tubular, mucinoso, medular: <5% | bom prognóstico relativo
 - Micropapilífero: <5% | alto potencial linfático | pior prognóstico
 - Metaplásico: raro | frequentemente triplo negativo | pior prognóstico
+- Adenoide cístico: raríssimo | igual ao das glândulas salivares | bom prognóstico
+- Secretório: raríssimo | "tumor pediátrico" | excelente prognóstico
 
 ---
 
 ## 5. Classificação Molecular
 
-- **Luminal A** (RE+ RP+ HER2− Ki-67 <14%) -> **Melhor prognóstico** -> Hormonioterapia
-- **Luminal B** (RE+ RP+ HER2± Ki-67 ≥14%) -> Intermediário -> Hormônio ± quimio
-- **HER2** (RE− HER2+++) -> Intermediário-ruim -> Quimio + trastuzumabe
-- **Triplo Negativo** (RE− RP− HER2−) -> **Pior prognóstico** -> Quimio ± pembrolizumabe
+> Corrigido contra o PDF-fonte (2026-08-18): o corte de Ki-67 para Luminal A é **20%**, não 14%.
+
+- **Luminal A** (RE+ RP+ HER2− escore 0/1+ Ki-67 <20%) -> **Melhor prognóstico** -> Hormonioterapia isolada geralmente basta
+- **Luminal B** (RE+ HER2± E [RP <20% e/ou Ki-67 >20%]) -> Intermediário -> Hormônio ± quimio. RP baixo sozinho já empurra p/ B mesmo com Ki-67 baixo
+- **HER2 puro** (RE− RP− HER2+++) -> Intermediário-ruim -> Quimio + trastuzumabe
+- **Triplo Negativo** (RE− RP− HER2−) -> **Pior prognóstico** -> Quimio ± pembrolizumabe (sem alvo hormonal nem HER2)
+
+**Oncotype DX:** teste genômico (21 genes) -> Recurrence Score 0-100 (baixo <18, intermediário 18-31, alto >=31). Decide se soma quimio à hormonioterapia em tumores RE+/HER2-/N0 (T1-T2, hoje também até IIA/T1N1). Tema frio, mas cai.
 
 ---
 
@@ -121,7 +154,7 @@ aliases: [CA Mama]
 - **Mastectomia à Madden (padrão):** mama + fáscia do peitoral maior | preserva músculos
 - **Mastectomia à Halsted:** radical | raramente indicada
 
-**Contraindicações à quadrantectomia:** tumor >1 quadrante; microcalcificações extensas; margens impossíveis; **radioterapia torácica prévia (absoluta)**; multicêntrico; doença vascular do colágeno ativa; carcinoma inflamatório; desejo da paciente
+**Contraindicações à quadrantectomia:** tumor >1 quadrante; microcalcificações extensas; margens impossíveis; **radioterapia torácica prévia (absoluta)**; multicêntrico; doença vascular do colágeno ativa (**exceto artrite reumatoide** -- não impede RT complementar); carcinoma inflamatório; desejo da paciente
 
 ### Linfonodo Sentinela
 - Localização: corante azul + radiofármaco (tecnécio) -> **dupla marcação**
@@ -129,9 +162,9 @@ aliases: [CA Mama]
 - **Esvaziamento INDICADO:** ≥3 linfonodos sentinela | axila comprometida clinicamente | contraindicação à radioterapia
 
 ### Radioterapia
-- **Sempre após quadrantectomia**
+- **Sempre após quadrantectomia** (exceção rara: estudo PRIME-2 -- pode-se considerar dispensar se >65 anos + tumor <3cm + linfonodo sentinela negativo + RH+ HER2-)
 - Após mastectomia com T3/T4 ou ≥4 linfonodos comprometidos
-- **PROIBIDA na gestação (qualquer trimestre)**
+- **PROIBIDA na gestação (qualquer trimestre)** -- terapêutica, dose alta, diferente da mamografia diagnóstica (ver Armadilhas)
 - Não fazer concomitante à quimioterapia
 
 ### Hormonioterapia (RE e/ou RP positivos)

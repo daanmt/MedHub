@@ -1,0 +1,1754 @@
+[
+ {
+  "pos": 1,
+  "area": "Pediatria",
+  "tema": "Aleitamento Materno",
+  "peso": 36.02,
+  "questoes": 68,
+  "semana_atual": "S15,S16",
+  "nova_semana": 15,
+  "acumulado": 68,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/a408b04b-5c42-4bd3-ac9e-7b5b71a422c6/?per_page=20",
+    "n_questoes": 27
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/43ba1d48-bf0b-4e7b-b369-2e4210504fc7/?per_page=20",
+    "n_questoes": 46
+   }
+  ]
+ },
+ {
+  "pos": 2,
+  "area": "Pediatria",
+  "tema": "Diarreia",
+  "peso": 36.02,
+  "questoes": 53,
+  "semana_atual": "S17",
+  "nova_semana": 15,
+  "acumulado": 121,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/0382f382-00f7-4a6a-9902-44eca6ad0f42/?per_page=20",
+    "n_questoes": 22
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/57876df8-f4ae-4231-a6d4-d9e9857b1b3a/?per_page=20",
+    "n_questoes": 41
+   }
+  ]
+ },
+ {
+  "pos": 3,
+  "area": "Preventiva",
+  "tema": "Atenção Primária à Saúde no Brasil",
+  "peso": 33.39,
+  "questoes": 121,
+  "semana_atual": "S15,S16,S17",
+  "nova_semana": 15,
+  "acumulado": 243,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/a4a43e67-df28-4a4a-a8ec-23d8d83b703a/?per_page=20",
+    "n_questoes": 23
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/f83443ab-4021-49e1-8e3d-033b72b6f227/?per_page=20",
+    "n_questoes": 23
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/3adee5ee-b6df-4ede-8a84-e9e7a4c36b82/?per_page=20",
+    "n_questoes": 50
+   }
+  ]
+ },
+ {
+  "pos": 4,
+  "area": "Preventiva",
+  "tema": "Ética Médica",
+  "peso": 33.39,
+  "questoes": 64,
+  "semana_atual": "S18,S19",
+  "nova_semana": 15,
+  "acumulado": 307,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/a57a9aaf-d06b-4155-89d2-c2e288168b1d/?per_page=20",
+    "n_questoes": 20
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/ba0d4b31-8515-4162-a154-44131b78d236/?per_page=20",
+    "n_questoes": 39
+   }
+  ]
+ },
+ {
+  "pos": 5,
+  "area": "Cirurgia",
+  "tema": "Urologia",
+  "peso": 32.75,
+  "questoes": 125,
+  "semana_atual": "S17,S18,S19",
+  "nova_semana": 15,
+  "acumulado": 432,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/30f44def-4346-46a1-93f3-79b277406c2e/?per_page=20",
+    "n_questoes": 20
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/23734322-5ada-4fbe-9d1e-8f9f2f6e9ccd/?per_page=20",
+    "n_questoes": 13
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/cfe72ef4-3d55-419d-b5df-5f15f0f6fbe5/?per_page=20",
+    "n_questoes": 21
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/bb464bf0-c3d8-411c-a545-984322a38f43/?per_page=20",
+    "n_questoes": 38
+   }
+  ]
+ },
+ {
+  "pos": 6,
+  "area": "Cirurgia",
+  "tema": "Abdome Agudo Obstrutivo",
+  "peso": 32.75,
+  "questoes": 55,
+  "semana_atual": "S25,S26",
+  "nova_semana": 15,
+  "acumulado": 487,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/83ebf1f0-07c9-4c18-8cd4-ccec122122fe/?per_page=20",
+    "n_questoes": 20
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/fc48cfc6-9528-482f-a0a8-385997e4e7c9/?per_page=20",
+    "n_questoes": 37
+   }
+  ]
+ },
+ {
+  "pos": 7,
+  "area": "Pediatria",
+  "tema": "Asma",
+  "peso": 28.82,
+  "questoes": 32,
+  "semana_atual": "S15",
+  "nova_semana": 15,
+  "acumulado": 519,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/bf3ea228-2aad-473e-badf-70704bb7468c/?per_page=20",
+    "n_questoes": 36
+   }
+  ]
+ },
+ {
+  "pos": 8,
+  "area": "Pediatria",
+  "tema": "Pneumonias na Infância",
+  "peso": 28.82,
+  "questoes": 64,
+  "semana_atual": "S18,S19",
+  "nova_semana": 16,
+  "acumulado": 582,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/9535c433-bc7f-4fa9-98c3-d35f0100c496/?per_page=20",
+    "n_questoes": 24
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/0d4f8216-fa84-4fb8-8e6f-49de888c6b3c/?per_page=20",
+    "n_questoes": 47
+   }
+  ]
+ },
+ {
+  "pos": 9,
+  "area": "Pediatria",
+  "tema": "Reanimação Neonatal",
+  "peso": 28.82,
+  "questoes": 52,
+  "semana_atual": "S22,S23",
+  "nova_semana": 16,
+  "acumulado": 634,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/8ae39ba4-f3af-4f4a-b104-f5e36cfe3f24/?per_page=20",
+    "n_questoes": 27
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/73e3a18a-c6c8-441e-b817-6829130b97b2/?per_page=20",
+    "n_questoes": 43
+   }
+  ]
+ },
+ {
+  "pos": 10,
+  "area": "Ginecologia",
+  "tema": "Sangramento Uterino Anormal",
+  "peso": 28.62,
+  "questoes": 56,
+  "semana_atual": "S17,S18",
+  "nova_semana": 16,
+  "acumulado": 690,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/a11c14d5-ca0c-4246-863f-f329518b45a0/?per_page=20",
+    "n_questoes": 23
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/21cbc0c1-4c2b-462a-b8ea-a54eb0500b61/?per_page=20",
+    "n_questoes": 42
+   }
+  ]
+ },
+ {
+  "pos": 11,
+  "area": "Ginecologia",
+  "tema": "Câncer de Colo Uterino",
+  "peso": 28.62,
+  "questoes": 54,
+  "semana_atual": "S23,S24",
+  "nova_semana": 16,
+  "acumulado": 744,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/cc28ea36-1bae-48dc-91ca-be6daf45c2ac/?per_page=20",
+    "n_questoes": 25
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/bad4caf5-9753-495a-a2e8-36d43678d16a/?per_page=20",
+    "n_questoes": 38
+   }
+  ]
+ },
+ {
+  "pos": 12,
+  "area": "Preventiva",
+  "tema": "Princípios e Diretrizes do SUS",
+  "peso": 27.83,
+  "questoes": 32,
+  "semana_atual": "S15",
+  "nova_semana": 16,
+  "acumulado": 776,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/0a9496dd-1c7a-4979-a7c5-75f1489b38e3/?per_page=20",
+    "n_questoes": 43
+   }
+  ]
+ },
+ {
+  "pos": 13,
+  "area": "Preventiva",
+  "tema": "Estatística Médica",
+  "peso": 27.83,
+  "questoes": 167,
+  "semana_atual": "S22,S23,S24,S25,S26",
+  "nova_semana": 16,
+  "acumulado": 943,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/cc77db1b-d959-4146-a1ec-e349fd05b7a1/?per_page=20",
+    "n_questoes": 13
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/e0c0e375-c4aa-44fb-97df-e939222c7fc1/?per_page=20",
+    "n_questoes": 13
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/f08871a8-65d1-4635-a444-dfaab4b17eb9/?per_page=20",
+    "n_questoes": 24
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/1367be9a-98fc-4362-a2eb-ab55cd00d92b/?per_page=20",
+    "n_questoes": 10
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/ffb8dc21-e7d3-4aa4-aa94-12d6484a5bff/?per_page=20",
+    "n_questoes": 22
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/c1f5461e-819a-4f74-9396-2f0962670e98/?per_page=20",
+    "n_questoes": 44
+   }
+  ]
+ },
+ {
+  "pos": 14,
+  "area": "Obstetrícia",
+  "tema": "Diabetes na Gestação",
+  "peso": 24.1,
+  "questoes": 88,
+  "semana_atual": "S19,S20,S21",
+  "nova_semana": 16,
+  "acumulado": 1031,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/43dfee73-2eff-45e8-8e39-5c1cd7c7738f/?per_page=20",
+    "n_questoes": 19
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/3a478813-439f-4710-926f-41189ef12856/?per_page=20",
+    "n_questoes": 33
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/1093d168-744a-4ce4-90ab-bc856c649d12/?per_page=20",
+    "n_questoes": 43
+   }
+  ]
+ },
+ {
+  "pos": 15,
+  "area": "Obstetrícia",
+  "tema": "Sangramento da Segunda Metade",
+  "peso": 24.1,
+  "questoes": 52,
+  "semana_atual": "S22,S23",
+  "nova_semana": 17,
+  "acumulado": 1083,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/e095bde4-9bb4-4343-9fec-0c8aaae11188/?per_page=20",
+    "n_questoes": 24
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/a049f2a3-06c4-431d-858b-cf4f7b8de936/?per_page=20",
+    "n_questoes": 38
+   }
+  ]
+ },
+ {
+  "pos": 16,
+  "area": "Obstetrícia",
+  "tema": "Hemorragia Pós-Parto",
+  "peso": 24.1,
+  "questoes": 59,
+  "semana_atual": "S28",
+  "nova_semana": 17,
+  "acumulado": 1142,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/d26fcc67-724b-4a6e-9543-75af93c3ba5b/?per_page=20",
+    "n_questoes": 24
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/e8f98a5a-6ff9-44e8-8caf-f14d7f364a92/?per_page=20",
+    "n_questoes": 41
+   }
+  ]
+ },
+ {
+  "pos": 17,
+  "area": "Ginecologia",
+  "tema": "Câncer de Mama",
+  "peso": 23.85,
+  "questoes": 68,
+  "semana_atual": "S15,S16",
+  "nova_semana": 17,
+  "acumulado": 1210,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/38c4e2e0-cb49-4715-884c-34d1660fb513/?per_page=20",
+    "n_questoes": 24
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/69ecc0a0-3f4d-4c26-bb35-4533522c0a52/?per_page=20",
+    "n_questoes": 45
+   }
+  ]
+ },
+ {
+  "pos": 18,
+  "area": "Infecto",
+  "tema": "Pneumonias Bacterianas",
+  "peso": 21.97,
+  "questoes": 112,
+  "semana_atual": "S17,S18,S20,S22",
+  "nova_semana": 17,
+  "acumulado": 1322,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/0202307d-5d30-494b-aab3-9fc13bd303cd/?per_page=20",
+    "n_questoes": 16
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/52016cb5-a620-423f-8b33-5aef32e4ce5e/?per_page=20",
+    "n_questoes": 17
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/a2aba305-0df6-4b23-8c13-b0f81608920a/?per_page=20",
+    "n_questoes": 14
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/d8387dc3-8d41-4490-95b6-13d07b0a013e/?per_page=20",
+    "n_questoes": 32
+   }
+  ]
+ },
+ {
+  "pos": 19,
+  "area": "Pediatria",
+  "tema": "Crescimento",
+  "peso": 21.62,
+  "questoes": 54,
+  "semana_atual": "S23,S24",
+  "nova_semana": 17,
+  "acumulado": 1376,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/fc08c886-6cf8-4567-8976-7570d7ba4288/?per_page=20",
+    "n_questoes": 18
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/fafdde71-7a10-4ef8-8036-c28372255591/?per_page=20",
+    "n_questoes": 31
+   }
+  ]
+ },
+ {
+  "pos": 20,
+  "area": "Ginecologia",
+  "tema": "Sangramento Uterino Anormal Tumores Anexiais e Câncer de Ovário Prolapsos de Órgãos Pélvicos Câncer de Colo Uterino",
+  "peso": 21.46,
+  "questoes": 30,
+  "semana_atual": "S24",
+  "nova_semana": 17,
+  "acumulado": 1406,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/881f65bb-abde-4411-9e8e-f24637b00431/?per_page=20",
+    "n_questoes": 35
+   }
+  ]
+ },
+ {
+  "pos": 21,
+  "area": "Obstetrícia",
+  "tema": "Diabetes na Gestação Sangramento da Segunda Metade Partograma e Distocia",
+  "peso": 20.89,
+  "questoes": 25,
+  "semana_atual": "S25",
+  "nova_semana": 17,
+  "acumulado": 1431,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/bd59db44-7a5a-468b-ac4d-fe2c49d8499e/?per_page=20",
+    "n_questoes": 49
+   }
+  ]
+ },
+ {
+  "pos": 22,
+  "area": "Cirurgia",
+  "tema": "Complicações Pós-Operatórias",
+  "peso": 19.65,
+  "questoes": 121,
+  "semana_atual": "S27,S28",
+  "nova_semana": 17,
+  "acumulado": 1552,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/1053a9ad-d0a1-432c-9584-e4cdaa712208/?per_page=20",
+    "n_questoes": 26
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/49fcd27f-e7d1-420d-ae04-b6018d827bbb/?per_page=20",
+    "n_questoes": 20
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/00a51ab2-d883-4340-a947-a1e9fa2a0f90/?per_page=20",
+    "n_questoes": 16
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/5f6dbf33-cece-459d-af7a-b33ee4070045/?per_page=20",
+    "n_questoes": 38
+   }
+  ]
+ },
+ {
+  "pos": 23,
+  "area": "Obstetrícia",
+  "tema": "Assistência ao Parto",
+  "peso": 19.28,
+  "questoes": 68,
+  "semana_atual": "S15,S16",
+  "nova_semana": 18,
+  "acumulado": 1620,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/26c7eefd-d7d3-4ebe-9787-c57a36aa6c1d/?per_page=20",
+    "n_questoes": 34
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/061eb5c4-a381-4282-976c-f04851b23dd7/?per_page=20",
+    "n_questoes": 41
+   }
+  ]
+ },
+ {
+  "pos": 24,
+  "area": "Ginecologia",
+  "tema": "Tumores Anexiais e Câncer de Ovário",
+  "peso": 19.08,
+  "questoes": 62,
+  "semana_atual": "S19,S20",
+  "nova_semana": 18,
+  "acumulado": 1682,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/aae324a1-9d5d-4cec-a22a-1c94e34b7346/?per_page=20",
+    "n_questoes": 21
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/e6be5b67-b2b6-4798-8443-c0ed6a7256ec/?per_page=20",
+    "n_questoes": 40
+   }
+  ]
+ },
+ {
+  "pos": 25,
+  "area": "Pediatria",
+  "tema": "Reanimação neonatal Crescimento Tópicos em Pediatria Desnutrição na Infância",
+  "peso": 18.01,
+  "questoes": 30,
+  "semana_atual": "S26",
+  "nova_semana": 18,
+  "acumulado": 1712,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/dddba9b5-6072-4539-8ba6-fca136ec8879/?per_page=20",
+    "n_questoes": 49
+   }
+  ]
+ },
+ {
+  "pos": 26,
+  "area": "Infecto",
+  "tema": "Revisão por Questões : Parasitoses Infecção Hospitalar Pneumonias Bacterianas",
+  "peso": 17.58,
+  "questoes": 28,
+  "semana_atual": "S22",
+  "nova_semana": 18,
+  "acumulado": 1741,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/e1acac69-553d-4fc5-b3ab-d9e375c1021c/?per_page=20",
+    "n_questoes": 41
+   }
+  ]
+ },
+ {
+  "pos": 27,
+  "area": "Preventiva",
+  "tema": "Financiamento em Saúde",
+  "peso": 16.7,
+  "questoes": 82,
+  "semana_atual": "S20,S21,S22",
+  "nova_semana": 18,
+  "acumulado": 1822,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/5949f381-eb2c-4a00-8e9b-6444b405bc4f/?per_page=20",
+    "n_questoes": 27
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/b9bd5317-ac52-4f12-9f31-94053a34c6bc/?per_page=20",
+    "n_questoes": 15
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/affae8f9-4253-4d69-9a62-a78c1ac39d1a/?per_page=20",
+    "n_questoes": 39
+   }
+  ]
+ },
+ {
+  "pos": 28,
+  "area": "Infecto",
+  "tema": "Parasitoses; Infecções Relacionadas à Assistência em Saúde",
+  "peso": 15.38,
+  "questoes": 32,
+  "semana_atual": "S15",
+  "nova_semana": 18,
+  "acumulado": 1854,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/5e6b8ac4-6e3c-479b-86dc-73ce2e71b324/?per_page=20",
+    "n_questoes": 33
+   }
+  ]
+ },
+ {
+  "pos": 29,
+  "area": "Infecto",
+  "tema": "Parasitoses; Infecção Hospitalar",
+  "peso": 15.38,
+  "questoes": 36,
+  "semana_atual": "S16",
+  "nova_semana": 18,
+  "acumulado": 1891,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/adce974c-e453-4e96-a655-d99cee11516e/?per_page=20",
+    "n_questoes": 40
+   }
+  ]
+ },
+ {
+  "pos": 30,
+  "area": "Obstetrícia",
+  "tema": "Vitalidade Fetal",
+  "peso": 14.46,
+  "questoes": 56,
+  "semana_atual": "S17,S18",
+  "nova_semana": 18,
+  "acumulado": 1946,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/3178cba8-2439-4a4e-af6e-0ceed3415043/?per_page=20",
+    "n_questoes": 25
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/79bcf75e-4e0d-42c6-973f-8c9d26fffab1/?per_page=20",
+    "n_questoes": 36
+   }
+  ]
+ },
+ {
+  "pos": 31,
+  "area": "Obstetrícia",
+  "tema": "Partograma e Distocia",
+  "peso": 14.46,
+  "questoes": 55,
+  "semana_atual": "S24,S25",
+  "nova_semana": 18,
+  "acumulado": 2001,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/dcb36bb6-829e-4d22-a1be-62a45286959f/?per_page=20",
+    "n_questoes": 17
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/c4df4466-9c1c-43d5-8124-c01c49a1c242/?per_page=20",
+    "n_questoes": 39
+   }
+  ]
+ },
+ {
+  "pos": 32,
+  "area": "Pediatria",
+  "tema": "Choque em Pediatria",
+  "peso": 14.41,
+  "questoes": 62,
+  "semana_atual": "S19,S20",
+  "nova_semana": 19,
+  "acumulado": 2063,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/2c9ecd04-7e11-4958-a36b-57590021a87d/?per_page=20",
+    "n_questoes": 24
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/238a0a58-f261-4fee-a259-c0f5d81b6b3c/?per_page=20",
+    "n_questoes": 36
+   }
+  ]
+ },
+ {
+  "pos": 33,
+  "area": "Pediatria",
+  "tema": "Desnutrição na Infância",
+  "peso": 14.41,
+  "questoes": 61,
+  "semana_atual": "S26,S27",
+  "nova_semana": 19,
+  "acumulado": 2124,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/6226e8b2-153b-43fd-8425-dc6cc3f1ccdc/?per_page=20",
+    "n_questoes": 16
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/5b565a37-83f5-45e3-a1b0-48a3d278ada8/?per_page=20",
+    "n_questoes": 47
+   }
+  ]
+ },
+ {
+  "pos": 34,
+  "area": "Ginecologia",
+  "tema": "Assistência à Vítima de Violência Sexual",
+  "peso": 14.31,
+  "questoes": 61,
+  "semana_atual": "S27,S28",
+  "nova_semana": 19,
+  "acumulado": 2185,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/2c101542-29dd-47f4-895f-ff3a9813e1f6/?per_page=20",
+    "n_questoes": 28
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/61b0497b-d1af-4b00-94aa-de8eba0a771e/?per_page=20",
+    "n_questoes": 35
+   }
+  ]
+ },
+ {
+  "pos": 35,
+  "area": "Cirurgia",
+  "tema": "Diverticulite Aguda",
+  "peso": 13.1,
+  "questoes": 32,
+  "semana_atual": "S15",
+  "nova_semana": 19,
+  "acumulado": 2217,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/05e13a53-a662-44f7-ba55-438d7e90aaed/?per_page=20",
+    "n_questoes": 42
+   }
+  ]
+ },
+ {
+  "pos": 36,
+  "area": "Cirurgia",
+  "tema": "Cirurgia Vascular Urologia Hérnias da Parede Abdominal Princípios da Anestesiologia",
+  "peso": 13.1,
+  "questoes": 30,
+  "semana_atual": "S24",
+  "nova_semana": 19,
+  "acumulado": 2247,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/ba1c1bb6-940e-4926-b159-ce5da06b0b1b/?per_page=20",
+    "n_questoes": 41
+   }
+  ]
+ },
+ {
+  "pos": 37,
+  "area": "Endocrino",
+  "tema": "Hipotireoidismo",
+  "peso": 11.79,
+  "questoes": 57,
+  "semana_atual": "S18,S20",
+  "nova_semana": 19,
+  "acumulado": 2304,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/b964fc37-c1da-4d47-83db-7625936435e2/?per_page=20",
+    "n_questoes": 21
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/105a8e4f-1ef6-4125-8ef5-c922cabbf328/?per_page=20",
+    "n_questoes": 29
+   }
+  ]
+ },
+ {
+  "pos": 38,
+  "area": "Preventiva",
+  "tema": "Normas Regulamentadoras",
+  "peso": 11.13,
+  "questoes": 120,
+  "semana_atual": "S26,S27,S28",
+  "nova_semana": 19,
+  "acumulado": 2424,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/eb029fc3-2f3d-43e2-9865-3be5d21272cf/?per_page=20",
+    "n_questoes": 12
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/6b4654a0-8777-4abd-ae35-9823f1bfcb45/?per_page=20",
+    "n_questoes": 13
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/57840f57-4502-468f-88b6-c649ff6f168c/?per_page=20",
+    "n_questoes": 20
+   }
+  ]
+ },
+ {
+  "pos": 39,
+  "area": "Gastro",
+  "tema": "Doença Inflamatória Intestinal",
+  "peso": 11.1,
+  "questoes": 32,
+  "semana_atual": "S15",
+  "nova_semana": 19,
+  "acumulado": 2456,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/c282df98-11c9-46f8-875a-dd62ec024d17/?per_page=20",
+    "n_questoes": 47
+   }
+  ]
+ },
+ {
+  "pos": 40,
+  "area": "Gastro",
+  "tema": "Neoplasias de Estômago e Esôfago",
+  "peso": 11.1,
+  "questoes": 61,
+  "semana_atual": "S17,S19",
+  "nova_semana": 19,
+  "acumulado": 2517,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/b4a33205-e2ac-410d-acf6-48e8fb94861d/?per_page=20",
+    "n_questoes": 27
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/f4b46598-2678-4b48-bcba-1c572c98e260/?per_page=20",
+    "n_questoes": 40
+   }
+  ]
+ },
+ {
+  "pos": 41,
+  "area": "Psiquiatria",
+  "tema": "Psicofarmacologia (Teoria) Psiquiatria Infantil",
+  "peso": 11.0,
+  "questoes": 28,
+  "semana_atual": "S22",
+  "nova_semana": 20,
+  "acumulado": 2546,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/18659bea-db6e-4616-9a64-5d9b956b1f3f/?per_page=20",
+    "n_questoes": 27
+   }
+  ]
+ },
+ {
+  "pos": 42,
+  "area": "Psiquiatria",
+  "tema": "Psicofarmacologia Psiquiatria Infantil",
+  "peso": 11.0,
+  "questoes": 30,
+  "semana_atual": "S26",
+  "nova_semana": 20,
+  "acumulado": 2576,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/c7e38fa2-0875-498e-bb21-fd5a3776d12d/?per_page=20",
+    "n_questoes": 35
+   }
+  ]
+ },
+ {
+  "pos": 43,
+  "area": "Cardiologia",
+  "tema": "Hipertensão Arterial Sistêmica Pt. 3",
+  "peso": 10.38,
+  "questoes": 32,
+  "semana_atual": "S15",
+  "nova_semana": 20,
+  "acumulado": 2608,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/7cda8aa0-b2c3-41ef-b711-c3fafbbe47c4/?per_page=20",
+    "n_questoes": 56
+   }
+  ]
+ },
+ {
+  "pos": 44,
+  "area": "Cardiologia",
+  "tema": "Hipertensão Arterial Sistêmica",
+  "peso": 10.38,
+  "questoes": 29,
+  "semana_atual": "S18",
+  "nova_semana": 20,
+  "acumulado": 2637,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/34e4ed4d-19ee-4e31-8bc6-52729bee36b6/?per_page=20",
+    "n_questoes": 42
+   }
+  ]
+ },
+ {
+  "pos": 45,
+  "area": "Obstetrícia",
+  "tema": "Gestação Múltipla",
+  "peso": 9.64,
+  "questoes": 61,
+  "semana_atual": "S26,S27",
+  "nova_semana": 20,
+  "acumulado": 2698,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/645b48aa-cc0e-4d59-b318-1f7c477e10ba/?per_page=20",
+    "n_questoes": 24
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/0a12cfb3-9a40-4f41-ac3c-09c02701e464/?per_page=20",
+    "n_questoes": 36
+   }
+  ]
+ },
+ {
+  "pos": 46,
+  "area": "Ginecologia",
+  "tema": "Prolapsos de Órgãos Pélvicos",
+  "peso": 9.54,
+  "questoes": 54,
+  "semana_atual": "S21,S22",
+  "nova_semana": 20,
+  "acumulado": 2753,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/cff0301b-c8f9-4184-ad91-4951570288c2/?per_page=20",
+    "n_questoes": 25
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/2cb19e0e-8570-449e-b372-0b7e822fb28a/?per_page=20",
+    "n_questoes": 41
+   }
+  ]
+ },
+ {
+  "pos": 47,
+  "area": "Ginecologia",
+  "tema": "Incontinência Urinária",
+  "peso": 9.54,
+  "questoes": 55,
+  "semana_atual": "S25,S26",
+  "nova_semana": 20,
+  "acumulado": 2808,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/1b4ae6d2-f7a1-4580-b5f5-3d8606a989ef/?per_page=20",
+    "n_questoes": 21
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/cfd8b7ed-0523-4521-b5a8-29e1f1c01d58/?per_page=20",
+    "n_questoes": 37
+   }
+  ]
+ },
+ {
+  "pos": 48,
+  "area": "Neurologia",
+  "tema": "Acidentes Vasculares Cerebrais",
+  "peso": 8.7,
+  "questoes": 24,
+  "semana_atual": "S23",
+  "nova_semana": 20,
+  "acumulado": 2831,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/5619583c-362f-4582-8060-9b60bb90cc67/?per_page=20",
+    "n_questoes": 18
+   }
+  ]
+ },
+ {
+  "pos": 49,
+  "area": "Endocrino",
+  "tema": "Tireotoxicose",
+  "peso": 7.86,
+  "questoes": 36,
+  "semana_atual": "S16",
+  "nova_semana": 20,
+  "acumulado": 2867,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/04f6bfe4-c622-4340-976e-91c1ddf5d288/?per_page=20",
+    "n_questoes": 36
+   }
+  ]
+ },
+ {
+  "pos": 50,
+  "area": "Cardiologia",
+  "tema": "Fibrilação e Flutter Atrial Parada Cardiorrespiratória",
+  "peso": 7.79,
+  "questoes": 62,
+  "semana_atual": "S27",
+  "nova_semana": 20,
+  "acumulado": 2930,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/cfcb1107-e9da-4975-8c9b-381749d24d0e/?per_page=20",
+    "n_questoes": 26
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/a96f810b-a20d-4b63-8470-6b04c63ccb21/?per_page=20",
+    "n_questoes": 36
+   }
+  ]
+ },
+ {
+  "pos": 51,
+  "area": "Psiquiatria",
+  "tema": "Transtornos de Humor; Psiquiatria Social e Reforma Psiquiátrica",
+  "peso": 7.7,
+  "questoes": 29,
+  "semana_atual": "S18",
+  "nova_semana": 20,
+  "acumulado": 2959,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/95edbcca-aaa3-49cd-ba14-bf5eba7a8a08/?per_page=20",
+    "n_questoes": 40
+   }
+  ]
+ },
+ {
+  "pos": 52,
+  "area": "Nefrologia",
+  "tema": "Doenças Glomerulares",
+  "peso": 7.44,
+  "questoes": 28,
+  "semana_atual": "S22",
+  "nova_semana": 20,
+  "acumulado": 2987,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/74c07227-b248-4aaf-98f6-980662d77bea/?per_page=20",
+    "n_questoes": 21
+   }
+  ]
+ },
+ {
+  "pos": 53,
+  "area": "Nefrologia",
+  "tema": "Infecção do Trato Urinário",
+  "peso": 7.44,
+  "questoes": 30,
+  "semana_atual": "S24",
+  "nova_semana": 20,
+  "acumulado": 3017,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/e23a42ca-ebde-40b3-9b38-bc88fc80959e/?per_page=20",
+    "n_questoes": 20
+   }
+  ]
+ },
+ {
+  "pos": 54,
+  "area": "Nefrologia",
+  "tema": "Doenças Glomerulares Infecção do Trato Urinário",
+  "peso": 7.44,
+  "questoes": 30,
+  "semana_atual": "S26",
+  "nova_semana": 21,
+  "acumulado": 3047,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/a158376a-d708-4a0e-8465-3fe0d9229d07/?per_page=20",
+    "n_questoes": 33
+   }
+  ]
+ },
+ {
+  "pos": 55,
+  "area": "Endocrino",
+  "tema": "Tireotoxicose Hipotireoidismo Obesidade e Síndrome Metabólica Cirurgia Bariátrica e Metabólica",
+  "peso": 7.37,
+  "questoes": 30,
+  "semana_atual": "S24",
+  "nova_semana": 21,
+  "acumulado": 3077,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/732acc5e-a1f1-43c2-8128-e8d28a43d2e9/?per_page=20",
+    "n_questoes": 44
+   }
+  ]
+ },
+ {
+  "pos": 56,
+  "area": "Neurologia",
+  "tema": "AVC Coma e alterações da consciência",
+  "peso": 7.25,
+  "questoes": 31,
+  "semana_atual": "S27",
+  "nova_semana": 21,
+  "acumulado": 3108,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/87b7977d-79ff-4c31-a46e-bc64f6dd10d5/?per_page=20",
+    "n_questoes": 50
+   }
+  ]
+ },
+ {
+  "pos": 57,
+  "area": "Pediatria",
+  "tema": "Alergia Alimentar",
+  "peso": 7.21,
+  "questoes": 52,
+  "semana_atual": "S21",
+  "nova_semana": 21,
+  "acumulado": 3160,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/24105a4b-7367-49d0-acb9-49a603334474/?per_page=20",
+    "n_questoes": 21
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/395f1a06-889a-439b-8fea-17e18dbd946e/?per_page=20",
+    "n_questoes": 38
+   }
+  ]
+ },
+ {
+  "pos": 58,
+  "area": "Pediatria",
+  "tema": "Tópicos em Pediatria",
+  "peso": 7.21,
+  "questoes": 50,
+  "semana_atual": "S25",
+  "nova_semana": 21,
+  "acumulado": 3210,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/8b3e96e1-7997-4da0-8059-e72fe75ac4f8/?per_page=20",
+    "n_questoes": 18
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/50ac88dd-db3b-4707-814b-54fd7aa5f3ed/?per_page=20",
+    "n_questoes": 36
+   }
+  ]
+ },
+ {
+  "pos": 59,
+  "area": "Pediatria",
+  "tema": "Obesidade Infantil e na Adolescência",
+  "peso": 7.21,
+  "questoes": 61,
+  "semana_atual": "S27,S28",
+  "nova_semana": 21,
+  "acumulado": 3271,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/aa81ed9e-1522-42e9-bacf-43f346fd8c86/?per_page=20",
+    "n_questoes": 26
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/670c75b6-370b-4245-8747-6e0100293400/?per_page=20",
+    "n_questoes": 31
+   }
+  ]
+ },
+ {
+  "pos": 60,
+  "area": "Cirurgia",
+  "tema": "Cirurgia Vascular",
+  "peso": 6.55,
+  "questoes": 63,
+  "semana_atual": "S16,S17",
+  "nova_semana": 21,
+  "acumulado": 3334,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/bbfe7e33-5e07-41fb-b6cc-f813fee5cede/?per_page=20",
+    "n_questoes": 19
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/a67fae67-457b-4554-b9cb-9cefba080e3b/?per_page=20",
+    "n_questoes": 43
+   }
+  ]
+ },
+ {
+  "pos": 61,
+  "area": "Cirurgia",
+  "tema": "Hérnias da Parede Abdominal",
+  "peso": 6.55,
+  "questoes": 110,
+  "semana_atual": "S20,S21,S22",
+  "nova_semana": 21,
+  "acumulado": 3444,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/04b9c19e-37f1-490d-88c7-cd2e7282e61f/?per_page=20",
+    "n_questoes": 25
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/34f8cbcc-0e8a-4aff-ab7f-1dca2c9b4a6c/?per_page=20",
+    "n_questoes": 21
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/a9db430a-a12f-4696-830c-36880d5fab09/?per_page=20",
+    "n_questoes": 15
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/bfa9a64a-bbd0-49b3-9e66-b8784a807185/?per_page=20",
+    "n_questoes": 37
+   }
+  ]
+ },
+ {
+  "pos": 62,
+  "area": "Cirurgia",
+  "tema": "Princípios da Anestesiologia",
+  "peso": 6.55,
+  "questoes": 84,
+  "semana_atual": "S23,S24",
+  "nova_semana": 21,
+  "acumulado": 3528,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/f082d47b-76fe-4772-ad3d-8b0645b076c1/?per_page=20",
+    "n_questoes": 12
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/3ef9a57d-f807-4e94-91a8-9224ee21497a/?per_page=20",
+    "n_questoes": 24
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/9ac75240-a512-4168-963a-d74f21181999/?per_page=20",
+    "n_questoes": 40
+   }
+  ]
+ },
+ {
+  "pos": 63,
+  "area": "Hemato",
+  "tema": "Anemias Hemolíticas",
+  "peso": 6.45,
+  "questoes": 36,
+  "semana_atual": "S16",
+  "nova_semana": 22,
+  "acumulado": 3564,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/355bda7e-80cb-42e1-a7c3-b12ae82d8db4/?per_page=20",
+    "n_questoes": 39
+   }
+  ]
+ },
+ {
+  "pos": 64,
+  "area": "Neurologia",
+  "tema": "Coma e alterações da consciência",
+  "peso": 5.8,
+  "questoes": 30,
+  "semana_atual": "S26",
+  "nova_semana": 22,
+  "acumulado": 3594,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/9f77c6e1-8658-4a55-b66d-dc292cbe2bf3/?per_page=20",
+    "n_questoes": 22
+   }
+  ]
+ },
+ {
+  "pos": 65,
+  "area": "Pneumo",
+  "tema": "Derrame Pleural",
+  "peso": 5.02,
+  "questoes": 25,
+  "semana_atual": "S25",
+  "nova_semana": 22,
+  "acumulado": 3619,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/b8b189eb-7e05-4d1c-8354-fd3ed8753de0/?per_page=20",
+    "n_questoes": 17
+   }
+  ]
+ },
+ {
+  "pos": 66,
+  "area": "Endocrino",
+  "tema": "Obesidade e Síndrome Metabólica (Teoria) Cirurgia Bariátrica e Metabólica",
+  "peso": 4.91,
+  "questoes": 28,
+  "semana_atual": "S22",
+  "nova_semana": 22,
+  "acumulado": 3648,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/5a9ffec7-f186-4e0d-9f1b-745b731185e4/?per_page=20",
+    "n_questoes": 25
+   }
+  ]
+ },
+ {
+  "pos": 67,
+  "area": "Endocrino",
+  "tema": "Obesidade e Síndrome Metabólica Cirurgia Bariátrica e Metabólica",
+  "peso": 4.91,
+  "questoes": 30,
+  "semana_atual": "S24",
+  "nova_semana": 22,
+  "acumulado": 3678,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/460d4259-7986-4ba1-a725-5394e6ef8991/?per_page=20",
+    "n_questoes": 34
+   }
+  ]
+ },
+ {
+  "pos": 68,
+  "area": "Reumato",
+  "tema": "Doenças Inflamatórias do Tecido Conjuntivo",
+  "peso": 4.62,
+  "questoes": 29,
+  "semana_atual": "S18",
+  "nova_semana": 22,
+  "acumulado": 3707,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/3ae22d62-3d65-4631-83f7-29b5c64147e1/?per_page=20",
+    "n_questoes": 34
+   }
+  ]
+ },
+ {
+  "pos": 69,
+  "area": "Reumato",
+  "tema": "Artrite Reumatóide",
+  "peso": 4.62,
+  "questoes": 56,
+  "semana_atual": "S25,S27",
+  "nova_semana": 22,
+  "acumulado": 3763,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/705807ce-f619-4073-a8f4-a58a3e9bdf1b/?per_page=20",
+    "n_questoes": 15
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/b600d233-171d-455b-b8b7-7bfc363893b3/?per_page=20",
+    "n_questoes": 24
+   }
+  ]
+ },
+ {
+  "pos": 70,
+  "area": "Gastro",
+  "tema": "Anatomia do Intestino e Síndrome do Intestino Irritável",
+  "peso": 4.44,
+  "questoes": 50,
+  "semana_atual": "S21,S23",
+  "nova_semana": 22,
+  "acumulado": 3812,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/d83db7b3-b13c-4afb-a2a6-5b9bd719f378/?per_page=20",
+    "n_questoes": 18
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/c2eac977-985b-4061-8835-0d607c100ed7/?per_page=20",
+    "n_questoes": 19
+   }
+  ]
+ },
+ {
+  "pos": 71,
+  "area": "Infecto",
+  "tema": "Animais Peçonhentos",
+  "peso": 4.39,
+  "questoes": 54,
+  "semana_atual": "S23,S24",
+  "nova_semana": 22,
+  "acumulado": 3866,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/32890eb2-480d-43be-b06d-931639dad17c/?per_page=20",
+    "n_questoes": 27
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/8134083b-b401-49ad-9a0c-24986cd1a4bd/?per_page=20",
+    "n_questoes": 27
+   }
+  ]
+ },
+ {
+  "pos": 72,
+  "area": "Infecto",
+  "tema": "Endocardites",
+  "peso": 4.39,
+  "questoes": 25,
+  "semana_atual": "S25",
+  "nova_semana": 22,
+  "acumulado": 3891,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/7eb1692a-67f7-488e-86ce-780b35480eee/?per_page=20",
+    "n_questoes": 19
+   }
+  ]
+ },
+ {
+  "pos": 73,
+  "area": "Infecto",
+  "tema": "Endocardite Bacteriana - Endocardite Infecciosa",
+  "peso": 4.39,
+  "questoes": 31,
+  "semana_atual": "S27",
+  "nova_semana": 22,
+  "acumulado": 3922,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/42eb70ec-9d74-4eae-9787-86db36bda8c5/?per_page=20",
+    "n_questoes": 28
+   }
+  ]
+ },
+ {
+  "pos": 74,
+  "area": "Neurologia",
+  "tema": "Distúrbios do Movimento",
+  "peso": 4.35,
+  "questoes": 91,
+  "semana_atual": "S16,S18,S21",
+  "nova_semana": 22,
+  "acumulado": 4013,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/243d5981-e62f-4990-afc4-aade72683f82/?per_page=20",
+    "n_questoes": 22
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/190aee72-d40c-48e9-ac93-bb8311db63c7/?per_page=20",
+    "n_questoes": 12
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/c5c51810-62d1-44e7-aab6-6e082ff5bfe2/?per_page=20",
+    "n_questoes": 31
+   }
+  ]
+ },
+ {
+  "pos": 75,
+  "area": "Hemato",
+  "tema": "Anemias Microcíticas e Leucemias Agudas",
+  "peso": 4.3,
+  "questoes": 27,
+  "semana_atual": "S20",
+  "nova_semana": 23,
+  "acumulado": 4041,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/cab17f2b-40cd-482f-8ee5-1215275a03e6/?per_page=20",
+    "n_questoes": 27
+   }
+  ]
+ },
+ {
+  "pos": 76,
+  "area": "Hemato",
+  "tema": "Anemias Microcíticas Leucemias Agudas",
+  "peso": 4.3,
+  "questoes": 25,
+  "semana_atual": "S25",
+  "nova_semana": 23,
+  "acumulado": 4066,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/0f8f71b5-bed9-4842-ad8c-0339555cc6d5/?per_page=20",
+    "n_questoes": 27
+   }
+  ]
+ },
+ {
+  "pos": 77,
+  "area": "Pneumo",
+  "tema": "Doença Pulmonar Obstrutiva Crônica",
+  "peso": 4.02,
+  "questoes": 24,
+  "semana_atual": "S23",
+  "nova_semana": 23,
+  "acumulado": 4089,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/ace282ea-eb35-413f-a3ac-108c33c9f5b2/?per_page=20",
+    "n_questoes": 26
+   }
+  ]
+ },
+ {
+  "pos": 78,
+  "area": "Pneumo",
+  "tema": "Neoplasias Pulmonares",
+  "peso": 4.02,
+  "questoes": 25,
+  "semana_atual": "S25",
+  "nova_semana": 23,
+  "acumulado": 4114,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/d3364386-d293-4aaf-b538-357704eea4d5/?per_page=20",
+    "n_questoes": 19
+   }
+  ]
+ },
+ {
+  "pos": 79,
+  "area": "Dermato",
+  "tema": "Oncologia Cutânea",
+  "peso": 3.98,
+  "questoes": 62,
+  "semana_atual": "S27",
+  "nova_semana": 23,
+  "acumulado": 4177,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/b202874b-7ae8-4d3a-8b54-2408f147d462/?per_page=20",
+    "n_questoes": 26
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/2182e1d8-659c-4c40-90aa-6099fad02577/?per_page=20",
+    "n_questoes": 44
+   }
+  ]
+ },
+ {
+  "pos": 80,
+  "area": "Endocrino",
+  "tema": "Osteoporose e Doença óssea de Paget",
+  "peso": 3.93,
+  "questoes": 60,
+  "semana_atual": "S26,S28",
+  "nova_semana": 23,
+  "acumulado": 4236,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/1f68e70a-68d6-440a-a9b5-9da774c42eab/?per_page=20",
+    "n_questoes": 20
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/140d6672-23c5-4c0d-ad3d-ba18908c4304/?per_page=20LivroNeuromusculares1.",
+    "n_questoes": 33
+   }
+  ]
+ },
+ {
+  "pos": 81,
+  "area": "Ortopedia",
+  "tema": "Quadril Pediátrico Politrauma Ortopédico Doenças da coluna vertebral Maus Tratos Fraturas e Luxações Complicações do trauma ortopédico",
+  "peso": 3.82,
+  "questoes": 30,
+  "semana_atual": "S28",
+  "nova_semana": 23,
+  "acumulado": 4266,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/526bc301-0ac3-4bed-aff7-8e4583b8ac8a/?per_page=20",
+    "n_questoes": 58
+   }
+  ]
+ },
+ {
+  "pos": 82,
+  "area": "Nefrologia",
+  "tema": "Distúrbios Ácido-Base; Distúrbios do Potássio",
+  "peso": 3.72,
+  "questoes": 32,
+  "semana_atual": "S15",
+  "nova_semana": 23,
+  "acumulado": 4298,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/46497d52-0826-4351-889d-8edb46331579/?per_page=20",
+    "n_questoes": 19
+   }
+  ]
+ },
+ {
+  "pos": 83,
+  "area": "Ortopedia",
+  "tema": "Fraturas e Luxações; Complicações do Trauma Ortopédico",
+  "peso": 3.58,
+  "questoes": 26,
+  "semana_atual": "S21",
+  "nova_semana": 23,
+  "acumulado": 4324,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/6563e4c6-33b7-4f55-b40a-ed02f78bd9a8/?per_page=20",
+    "n_questoes": 22
+   }
+  ]
+ },
+ {
+  "pos": 84,
+  "area": "Cardiologia",
+  "tema": "Valvopatias",
+  "peso": 3.46,
+  "questoes": 56,
+  "semana_atual": "S21,S24",
+  "nova_semana": 23,
+  "acumulado": 4380,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/de2cad4c-c6b5-420f-b31f-98938473cc75/?per_page=20",
+    "n_questoes": 21
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/a261a066-c70c-41e2-b1d3-8bad7f08047b/?per_page=20",
+    "n_questoes": 35
+   }
+  ]
+ },
+ {
+  "pos": 85,
+  "area": "Pneumo",
+  "tema": "Pneumologia Intensiva",
+  "peso": 3.01,
+  "questoes": 64,
+  "semana_atual": "S16,S20",
+  "nova_semana": 23,
+  "acumulado": 4443,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/e905ce9c-be16-4f0e-a73b-e8ee2a3352c7/?per_page=20",
+    "n_questoes": 15
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/b75e5897-f650-4ee5-aab6-37df32bc3249/?per_page=20",
+    "n_questoes": 31
+   }
+  ]
+ },
+ {
+  "pos": 86,
+  "area": "Otorrino",
+  "tema": "Infecções das Vias Aéreas Superiores Pt. 2",
+  "peso": 2.94,
+  "questoes": 27,
+  "semana_atual": "S20",
+  "nova_semana": 23,
+  "acumulado": 4471,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/0a736311-a118-44ae-919e-6095908b004d/?per_page=20",
+    "n_questoes": 24
+   }
+  ]
+ },
+ {
+  "pos": 87,
+  "area": "Neurologia",
+  "tema": "Doenças Neuromusculares",
+  "peso": 2.9,
+  "questoes": 59,
+  "semana_atual": "S28",
+  "nova_semana": 23,
+  "acumulado": 4530,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/b0ac284d-d883-4f90-b811-545fbad82046/?per_page=20",
+    "n_questoes": 24
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/282f1491-c38b-4f28-a07a-e41fb4c39def/?per_page=20",
+    "n_questoes": 35
+   }
+  ]
+ },
+ {
+  "pos": 88,
+  "area": "Hepato",
+  "tema": "Complicações da Cirrose Hepática",
+  "peso": 2.7,
+  "questoes": 88,
+  "semana_atual": "S19,S23,S26",
+  "nova_semana": 24,
+  "acumulado": 4618,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/e213f666-1c2c-4293-b82b-a1a3eb924a0b/?per_page=20",
+    "n_questoes": 15
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/a1823ec2-cfec-4cd4-b591-717ce8d361c9/?per_page=20",
+    "n_questoes": 20
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/f91b3293-00a7-4f79-a94d-ad3fd055529d/?per_page=20",
+    "n_questoes": 32
+   }
+  ]
+ },
+ {
+  "pos": 89,
+  "area": "Nefrologia",
+  "tema": "Nefrolitíase",
+  "peso": 2.48,
+  "questoes": 61,
+  "semana_atual": "S17,S19",
+  "nova_semana": 24,
+  "acumulado": 4679,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/b72e1c19-1ed0-44c4-b3b5-c5be0009a0b2/?per_page=20",
+    "n_questoes": 26
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/c5e68c43-3eb3-4604-9c85-64ec2d2bc0ae/?per_page=20",
+    "n_questoes": 42
+   }
+  ]
+ },
+ {
+  "pos": 90,
+  "area": "Gastro",
+  "tema": "Disfagia, Alterações Estruturais e Dist. Mort.",
+  "peso": 2.22,
+  "questoes": 56,
+  "semana_atual": "S25,S27",
+  "nova_semana": 24,
+  "acumulado": 4735,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/6dd270aa-7906-4bb8-a5ca-e60fd7dd58e6/?per_page=20",
+    "n_questoes": 23
+   },
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/6071510c-c449-49c0-8fa8-9c0b2f491843/?per_page=20",
+    "n_questoes": 36
+   }
+  ]
+ },
+ {
+  "pos": 91,
+  "area": "Reumato",
+  "tema": "Vasculites",
+  "peso": 1.54,
+  "questoes": 26,
+  "semana_atual": "S21",
+  "nova_semana": 24,
+  "acumulado": 4761,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/56fbc824-e3c0-4c4a-9a48-1b224df00c7d/?per_page=20",
+    "n_questoes": 14
+   }
+  ]
+ },
+ {
+  "pos": 92,
+  "area": "Oftalmo",
+  "tema": "Doenças do Polo Posterior",
+  "peso": 0.42,
+  "questoes": 27,
+  "semana_atual": "S20",
+  "nova_semana": 24,
+  "acumulado": 4789,
+  "links": [
+   {
+    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/2088a541-e6dd-433a-b019-c973b6240e90/?per_page=20",
+    "n_questoes": 15
+   }
+  ]
+ }
+]

@@ -7,8 +7,8 @@ relates_to: [AGENTE, handoff-contract, estado-contract]
 
 # ESTADO -- MedHub
 
-*Atualizado: 2026-08-17 (sessão 146 -- Simulado 5 (63%) analisado + Autópsia estendida a 4 provas + achados técnicos resolvidos) | Ferramenta: Claude Code (Sonnet 5)*
-*Anterior: 2026-08-15 (sessão 145). Narrativa por sessão: [`history/INDEX.md`](history/INDEX.md) -- o header aqui é 1 linha por contrato.*
+*Atualizado: 2026-08-19 (sessão 149 -- nova frente: contrato de design de artifact para aula-base, modelo = motor reusável da Autópsia) | Ferramenta: Claude Code (Sonnet 5)*
+*Anterior: 2026-08-17 (sessão 146). Narrativa por sessão: [`history/INDEX.md`](history/INDEX.md) -- o header aqui é 1 linha por contrato.*
 
 > **Boot:** ler [`AGENTE.md`](AGENTE.md) -> [`HANDOFF.md`](HANDOFF.md) (operacional curto) primeiro. Este arquivo é o snapshot **macro** (metas, indicador, marcos). Estrutura normatizada por [`core/contracts/estado-contract.md`](core/contracts/estado-contract.md).
 
@@ -54,7 +54,7 @@ Ver [`ROADMAP.md`](ROADMAP.md). Prioridades guiadas pelo cronograma (SSOT: `Cron
 
 1. **Abertura da próxima:** começa com **flashcards** (17 cards operacionais da s086 vencem cedo no FSRS) -> **≥100 questões**. Aula-base + refresh Camada 0 antes de cada bloco.
 2. **PRIORIDADE ESTRATÉGICA -- execução de prova:** o gargalo migrou de conteúdo para processo de resolução. Treinar o **ritual anti-vazamento** (default-to-C + fechamento precoce) via [`PLAYBOOK_EXECUCAO_PROVA.md`](docs/PLAYBOOK_EXECUCAO_PROVA.md). Maior alavanca da preparação. (bug nº 1c segue ativo; default-to-C é o novo sub-padrão dominante.)
-3. **Aulas-base = CONTRATO** (AGENTE §1.2): cunhar aula "escada de degraus" antes de cada bloco novo; calibrar descompressão para pontos operacionais que a banca cobra.
+3. **Aulas-base = CONTRATO** (AGENTE §1.2): cunhar aula "escada de degraus" antes de cada bloco novo; calibrar descompressão para pontos operacionais que a banca cobra. **🔄 s149:** entrega passa a ser via **Artifact HTML com design real** (skill `frontend-design`), modelo = motor reusável da Autópsia (`tools/autopsia_template.py`) -- `tools/aula_template.py` equivalente ainda não existe, frente aberta (`HANDOFF.md`). Bundles que compartilham mecanismo (ex.: abdome agudo cirúrgico) estruturam-se em árvore (tronco -> branches), não capítulos paralelos (`feedback_bundled_cronograma_task_content`).
 4. **Gaps de resumo:** `Diabetes - Complicações Crônicas`; candidatos: ectópica, icterícia neonatal (só andaime). PDFs do EMED agora MANTIDOS (gitignored) p/ RAG -- GO/Gastro/Dermato/Pediatria despejados.
 5. **Revisão Calibrada -- IMPLEMENTADA (s096):** schema + `infer_nota` + fusão `/revisar` + contrato + 63 testes. Resta **ratificar o contrato** após o 1º uso real e **integrar `day_plan --difficulty`** na abertura de task do boot. **Pendentes:** Tier-3 (schema de altura), limpeza `[bulk]`/`Geral` da taxonomia, re-drill dos bug-nº1 (#70 reincidiu na s096), sessão dedicada de Cirurgia, integrar `/schedule` no calendário.
 

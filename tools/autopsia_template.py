@@ -175,8 +175,8 @@ button{font-family:inherit;cursor:pointer}
 .etext{font-size:15.2px;line-height:1.62;color:var(--ink2);text-align:justify;
   text-justify:inter-word;hyphens:auto;-webkit-hyphens:auto}
 .etext.serif{font-family:Georgia,"Iowan Old Style",serif;font-size:16px;color:var(--ink)}
-.etext mark.dk{background:var(--ochre-wash);color:var(--ochre-ink);text-decoration:underline;
-  text-decoration-color:var(--ochre);text-underline-offset:2.5px;padding:0 1px;font-weight:600}
+.etext mark.dk{background:var(--ochre-wash)!important;color:var(--ochre-ink)!important;text-decoration:underline!important;
+  text-decoration-color:var(--ochre)!important;text-underline-offset:2.5px;padding:0 1px;font-weight:600;border-radius:2px}
 /* colapso de bloco longo */
 .clipw{position:relative}
 .clipw.off .etext{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
@@ -489,19 +489,48 @@ function respostas(e){
   return `<div class="alts${e.altp ? " parcial" : ""}">${linhas}</div>${nota}`;
 }
 
-/* destaque de dados-chave na vinheta: numero+unidade clinica, ou negacao/excecao que muda o sentido */
-const KEYRX = /(\d+(?:[.,]\d+)?\s?(?:mmHg|bpm|mg\/?k?g?|mcg|ng\/?m?[Ll]?|mEq\/?[Ll]?|m[Ll]|c[Mm]|mm|[Kk]g|semanas?|dias?|meses?|anos?|%|UI|g\/dL|°C))|(\bexceto\b|\bsem\b|\bnão\s+apresenta\w*\b|\bnão\s+há\b|\bausência\s+de\b|\bnega\b|\bapesar\s+de\b|\bexcluindo\b|\bnenhum\w*\b)/gi;
+/* destaque de dados-chave: numero+unidade clinica, ou negacao/excecao que muda o sentido.
+   So roda DENTRO das zonas que o Python ja localizou por sobreposicao lexical com o
+   discriminador real (gap+falt) -- nunca no texto inteiro. Regex cego em toda a vinheta
+   marcava idade/data-de-cirurgia-previa com o mesmo peso do dado que de fato decide a
+   questao, diluindo o sinal (framing errado, feedback do usuario s148). `termos` (palavras
+   de conteudo que batem com gap/falt, vindas do Python) cobre o discriminador quando ele
+   nao e numero nem gatilho de negacao -- ex.: "irritação peritoneal", "ventriculomegalia". */
+const KEYRX = /(\d+(?:[.,]\d+)?\s?(?:mmHg|mmol\/?[Ll]?|bpm|mg\/dL|mg\/?k?g?|mcg|ng\/?m?[Ll]?|mEq\/?[Ll]?|m[Ll]|c[Mm]|mm|[Kk]g|semanas?|dias?|meses?|anos?|%|UI|g\/dL|°C))|(\bexceto\b|\bsem\b|\bnão\s+apresenta\w*\b|\bnão\s+há\b|\bausência\s+de\b|\bnega\b|\bapesar\s+de\b|\bexcluindo\b|\bnenhum\w*\b)/gi;
 function marcaChave(escTxt){
   return escTxt.replace(KEYRX, m => `<mark class="dk">${m}</mark>`);
 }
+function marcaZona(escTxt, termos){
+  let rx = KEYRX;
+  if (termos && termos.length){
+    const alt = termos.map(t => esc(t).replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|");
+    rx = new RegExp(KEYRX.source + "|(" + alt + ")", "gi");
+  }
+  return escTxt.replace(rx, m => `<mark class="dk">${m}</mark>`);
+}
 
-/* bloco de texto com botao de compactar */
+/* bloco de texto com botao de compactar. hl (opcional) = [{z:[ini,fim], t:[termos]}, ...]
+   vindo do Python (zonas_destaque em tools/autopsia_simulados.py), em coordenadas de
+   caractere sobre `txt`; fora das zonas o texto so passa por esc(), sem marcacao. */
 let _bid = 0;
 function bloco(lab, txt, cls, serif, hl){
   if (!txt) return "";
   const id = "b" + (++_bid);
   const longo = txt.length > 260;
-  const body = hl ? marcaChave(esc(txt)) : esc(txt);
+  let body;
+  if (hl && hl.length){
+    let cursor = 0, partes = [];
+    for (const zona of hl){
+      const [ini, fim] = zona.z;
+      partes.push(esc(txt.slice(cursor, ini)));
+      partes.push(marcaZona(esc(txt.slice(ini, fim)), zona.t));
+      cursor = fim;
+    }
+    partes.push(esc(txt.slice(cursor)));
+    body = partes.join("");
+  } else {
+    body = esc(txt);
+  }
   return `<div class="eblock ${cls||""}">
     <div class="elabrow"><div class="elab">${esc(lab)}</div>
       ${longo?`<button class="tgl" data-clip="${id}" aria-expanded="true">compactar</button>`:""}</div>
@@ -524,7 +553,7 @@ function card(e){
       <span class="eid mn">#${e.id}</span>
     </button>
     <div class="ebody">
-      ${bloco("A vinheta", e.enun, "", true, true)}
+      ${bloco("A vinheta", e.enun, "", true, e.hl)}
       ${cmd}
       ${respostas(e)}
       ${ladder(e)}

@@ -588,3 +588,8 @@
 {"ts": "2026-08-17T21:28:05+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "faf7af8e35a7", "alvo": "card#1303", "payload": {"padrao": "duplo-ask/conectivo", "tema": "Hérnias Inguinais"}}
 {"ts": "2026-08-17T21:28:05+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "813ea64a6d3a", "alvo": "card#1308", "payload": {"padrao": "resposta-multifato/multi-frase", "tema": "Melanoma"}}
 {"ts": "2026-08-17T21:38:45+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "cdee34c9e3be", "alvo": "card#1322", "payload": {"padrao": "resposta-multifato/multi-frase", "tema": "Retocolite Ulcerativa"}}
+{"ts": "2026-08-19T16:35:50+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "a3258df00db3", "alvo": "card#1354", "payload": {"padrao": "resposta-multifato/multi-frase", "tema": "Princípios e Diretrizes do SUS"}}
+{"ts": "2026-08-19T16:35:50+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "37bb846439b8", "alvo": "card#1360", "payload": {"padrao": "resposta-multifato/paragrafo", "tema": "Princípios e Diretrizes do SUS"}}
+{"ts": "2026-08-19T16:35:50+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "7c5150fcd083", "alvo": "card#1361", "payload": {"padrao": "resposta-multifato/paragrafo", "tema": "Princípios e Diretrizes do SUS"}}
+{"ts": "2026-08-19T16:35:50+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "f3118e78bb63", "alvo": "card#1362", "payload": {"padrao": "duplo-ask/conectivo", "tema": "Princípios e Diretrizes do SUS"}}
+{"ts": "2026-08-19T17:45:44+00:00", "event": "opened", "check": "posicao_ssot", "fingerprint": "01755b5ba8cb", "alvo": "HANDOFF.md", "payload": {"semana_handoff": 15, "semana_db": 14}}

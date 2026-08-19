@@ -431,6 +431,51 @@ def analisa_cadeia(rec, mec, cur):
     return out, quebrado
 
 
+def termos_zona(frase, alvo):
+    """Palavras de conteudo da frase que tambem estao no vocabulario-alvo (gap+falt) --
+    cobre o discriminador quando ele nao e numero nem gatilho de negacao (o KEYRX do
+    cliente so pega esses dois; um achado nominal como 'ventriculomegalia' ou 'irritacao
+    peritoneal' passava batido)."""
+    return list(dict.fromkeys(w for w in re.findall(r"[A-Za-zÀ-ÿ]{4,}", frase) if _asc(w) in alvo))
+
+
+def zonas_destaque(enun, gap, falt):
+    """Restringe o destaque de dados-chave na vinheta a(s) frase(s) que de fato carregam
+    o discriminador -- em vez do KEYRX cego rodando no texto inteiro e marcando qualquer
+    numero/negacao, relevante ou nao para ESSA questao (framing errado -- feedback do
+    usuario s148: "faltam dados discriminantes... enquanto dados nao-relevantes estao
+    destacados"; o highlight servia pra achar numero, nao pra achar o que decide).
+
+    Reusa a mesma maquina de sobreposicao lexical (toks/_cob/_jac) que ja localiza o elo
+    quebrado em analisa_cadeia, agora contra o vocabulario de gap+falt (a descricao ja
+    curada do que decide a questao, escrita durante /analisar-questao). Devolve
+    [{"z":[ini,fim], "t":[termos]}, ...] em coordenadas de caractere sobre `enun`, em
+    ordem de aparicao no texto; sem zona = sem destaque (silencio > ruido, mesmo criterio
+    da CSS hardening anterior).
+    """
+    alvo = toks(gap) | toks(falt)
+    if not alvo or not enun:
+        return []
+    frases = [f for f in _FIM.split(enun) if f.strip()]
+    if not frases:
+        return []
+    scored = sorted(((_cob(alvo, toks(f)) * 2.0 + _jac(alvo, toks(f)), f) for f in frases),
+                     key=lambda x: -x[0])
+    if scored[0][0] <= 0:
+        return []
+    corte = scored[0][0] * 0.6
+    out = []
+    for s, f in scored:
+        if s < corte or len(out) >= 2:
+            break
+        i = enun.find(f)
+        if i == -1:
+            continue
+        out.append({"z": [i, i + len(f)], "t": termos_zona(f, alvo)})
+    out.sort(key=lambda z: z["z"][0])
+    return out
+
+
 # --------------------------------------------------------------------------
 # 3. Comando da questao
 # --------------------------------------------------------------------------
@@ -761,6 +806,7 @@ def build(hoje=None):
             alts_parciais = False
 
         gap = cadeia[quebrado]["txt"] if cadeia else ""
+        hl = zonas_destaque(enun, gap, r["o_que_faltou"] or "")
 
         recs.append({
             "id": eid, "sim": sim, "qnum": qnum, "mec": mec, "conf": confs.get(str(eid), "auto"),
@@ -768,7 +814,7 @@ def build(hoje=None):
             "gap": gap, "altp": alts_parciais,
             "tema": tema, "titulo": reacc(r["titulo"] or ""),
             "cx": r["complexidade"] or "Media", "fonte": fonte,
-            "enun": enun, "cmd": comando, "cmdsrc": cmd_src,
+            "enun": enun, "hl": hl, "cmd": comando, "cmdsrc": cmd_src,
             "ok": reacc(r["alternativa_correta"] or ""), "bad": reacc(r["alternativa_marcada"] or ""),
             "alts": alts, "pct": pct_turma,
             "tipo": reacc(r["tipo_erro"] or ""), "falt": reacc(r["o_que_faltou"] or ""),

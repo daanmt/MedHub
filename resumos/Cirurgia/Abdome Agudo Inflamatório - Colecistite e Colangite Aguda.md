@@ -115,8 +115,9 @@ aliases: [Colecistite Aguda, Colangite Aguda, Colangite Ascendente, Colecistite 
 - **Colecistostomia (drenagem percutânea da vesícula guiada por USG/TC)** é a opção no paciente **instável** ou de **altíssimo risco cirúrgico**, associada à antibioticoterapia. Se houver falha -> colecistectomia. Colecistectomia de intervalo (após 3-6 meses) quando as condições clínicas melhorarem; extração percutânea/litotripsia pela colecistostomia se o alto risco persistir.
 - ⭐ O critério é a **instabilidade clínica atual** (séptico, incapaz de tolerar anestesia/cirurgia agora) -- não a simples presença de uma comorbidade de base. Paciente com hepatopatia crônica, porém orientado, cooperativo e hemodinamicamente estável, segue o padrão-ouro (colecistectomia laparoscópica precoce); a cirrose é fator de risco relativo para conversão para via aberta, não indicação de drenagem percutânea.
 
-### 5.4 Conduta Segundo Tokyo e Risco Cirúrgico (ASA)
-- **Baixo risco (ASA <= 2):**
+### 5.4 Conduta Segundo Tokyo e Risco Cirúrgico (ASA + Charlson)
+- ⭐ As Diretrizes de Tokyo estimam o risco cirúrgico por **dois índices em conjunto**: a classificação **ASA** (estado físico) e o **Índice de Comorbidade de Charlson** (ICC, soma ponderada de comorbidades -- idade, DM, neoplasia, DPOC, IC, etc.). **Charlson <= 5 = baixo risco**; acima disso, o risco cirúrgico sobe. Uma questão pode citar "Tokyo II, Charlson 5" para justificar baixo risco e colecistectomia precoce sem citar o ASA explicitamente -- os dois índices são usados de forma intercambiável/conjunta na literatura de Tokyo, não é preciso ter ambos calculados para responder.
+- **Baixo risco (ASA <= 2 e/ou Charlson <= 5):**
   - Tokyo I e II -> colecistectomia laparoscópica precoce.
   - Tokyo III sem disfunção neurológica/respiratória e sem hiperbilirrubinemia (BT < 2 mg/dL) -> colecistectomia precoce após reanimação, em centro avançado.
 - **Alto risco (ASA >= 3):**

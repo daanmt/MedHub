@@ -1,7 +1,7 @@
 ---
 type: knowledge
 area: Pediatria
-status: stub
+status: active
 ---
 
 # Aleitamento Materno e Mastite Lactacional
@@ -44,8 +44,25 @@ status: stub
     - Quando indicada, a cobertura empírica é dirigida a *Staphylococcus aureus*, o agente mais comum nos casos de infecção estabelecida.
 - ⭐ **A mama afetada NÃO deve ser suspensa de rotina:** suspender a amamentação interrompe o esvaziamento, que é a própria causa-raiz do ingurgitamento/mastite -- a suspensão piora a estase láctea e alimenta o próprio ciclo, em vez de resolvê-lo. A amamentação (ou a ordenha, quando o bebê não consegue sugar a mama afetada) é mantida mesmo durante o tratamento.
 
-## 4. Armadilhas de Prova
+## 5. Contraindicações e Situações Especiais ao Aleitamento Materno
+
+- **Contraindicações absolutas e permanentes** (lista fechada, cobrança direta de prova): HIV materno; HTLV-1 e HTLV-2 maternos; galactosemia da criança; uso materno de medicamento/droga incompatível com a amamentação.
+- **Suspensão temporária, com ressalva específica** (não é contraindicação definitiva):
+    - Herpes ativo na mama: suspende só a mama com lesão vesicular ativa; a mama contralateral mantém a amamentação normalmente.
+    - Varicela materna com vesículas surgindo de 5 dias antes a 2 dias depois do parto: isola-se a mãe até as lesões virarem crosta, administra-se imunoglobulina no RN, e o leite ordenhado pode ser oferecido ao bebê.
+    - Doença de Chagas em fase aguda.
+    - Doença psiquiátrica materna sem acompanhamento adequado.
+    - Vacina de febre amarela em mãe de bebê com menos de 6 meses: suspende a amamentação por 10 dias após a aplicação.
+- 🔴 **Situações que NÃO contraindicam a amamentação, mas carregam um detalhe adicional cobrado à parte:**
+    - Síndrome gripal / suspeita ou confirmação de COVID-19 na mãe: a amamentação é mantida com máscara e higiene de mãos, independentemente do resultado dos exames -- mas a doação do leite excedente em Banco de Leite Humano (BLH) fica contraindicada enquanto durar o quadro suspeito/confirmado. São duas perguntas diferentes: amamentar o próprio filho (livre) x doar para o banco (vedado).
+    - Tuberculose pulmonar bacilífera: a amamentação é mantida, com a mãe usando máscara CIRÚRGICA (não N95) durante a mamada e em todo contato próximo com o RN, enquanto a baciloscopia do escarro permanecer positiva.
+- ⭐ **Parâmetro de suficiência da oferta láctea:** o ganho de peso satisfatório do bebê na curva de crescimento (não um exame de "quantidade de leite") já confirma que a produção está adequada. A dieta da lactante é sempre normocalórica e equilibrada -- mesmo que a mãe esteja acima do peso, dieta restritiva/hipocalórica não é indicada durante a amamentação, pois pode comprometer a produção de leite; a hidratação segue sob demanda de sede, sem necessidade de forçar volume.
+
+## 6. Armadilhas de Prova
 
 - 🔴 Área mamária eritematosa e dolorosa em lactante não fecha diagnóstico de infecção bacteriana por si só: mastite lactacional inicial/leve é, na maioria dos casos, um processo inflamatório por estase láctea (esvaziamento ineficaz por técnica inadequada), não uma infecção estabelecida. Na ausência de febre alta persistente, sinais de flutuação (abscesso) ou queda do estado geral materno, a conduta correta é conservadora -- correção da pega, manutenção/intensificação da amamentação e anti-inflamatório sistêmico -- SEM antibiótico. A prescrição reflexa de ATB diante de qualquer área mamária inflamada é a armadilha: antibiótico fica reservado para abscesso, refratariedade às medidas conservadoras, queda do estado geral materno ou fissura grave com infecção secundária.
 - 🔴 Suspender a amamentação da mama afetada "por precaução" diante de ingurgitamento ou mastite é conduta contraproducente, não apenas desnecessária: o esvaziamento incompleto é a causa-raiz do quadro, e a suspensão da mamada piora a estase láctea, alimentando o próprio ingurgitamento/mastite em vez de resolvê-lo. A conduta correta intensifica a frequência das mamadas (ou a ordenha, se o bebê não sugar) na mama afetada, nunca a interrompe de rotina.
-- 🔴 Reincidência (simulado ENAMED): mastite com febre (39 C) e hiperemia localizada, mas sem área de flutuação, levou a indicar suspensão da amamentação -- mesmo padrão descrito acima. A ausência de flutuação (sem abscesso) mantém a conduta com amamentação/esvaziamento mantidos associada a antibioticoterapia empírica, nunca a suspensão da mamada.
+- 🔴 Mastite com febre alta e hiperemia localizada, mas sem área de flutuação, não indica suspensão da amamentação -- mesmo padrão descrito acima. A ausência de flutuação (sem abscesso) mantém a conduta com amamentação/esvaziamento mantidos associada a antibioticoterapia empírica, nunca a suspensão da mamada.
+- 🔴 Diante de mãe com síndrome gripal/COVID-19 suspeita ou confirmada, a alternativa "gêmea" da correta costuma repetir a liberação da amamentação e só inverter a permissão de doação de leite em BLH -- ler a frase inteira até o fim é o que discrimina; memorizar só "COVID não contraindica amamentar" não basta.
+- 🔴 Diante de mãe bacilífera por tuberculose, o distrator típico troca a máscara cirúrgica pela N95 (mais restritiva, "soa" mais segura) -- a recomendação oficial do MS é a máscara cirúrgica simples.
+- 🔴 Puérpera acima do peso perguntando sobre a amamentação: a alternativa que soa como boa prática médica geral (dieta de emagrecimento + aumento de líquidos) é a errada -- na lactação a dieta é normocalórica, e o parâmetro que importa é o ganho de peso do bebê na curva, não o peso da mãe.

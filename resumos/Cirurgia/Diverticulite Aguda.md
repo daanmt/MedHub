@@ -39,8 +39,9 @@ Tema de altíssimo rendimento na Cirurgia Geral. A doença diverticular do cólo
 
 ---
 
-## 3. Classificação de Hinchey (Modificada por Wasvary)
+## 3. Classificação de Hinchey (Modificada por Kaiser)
 
+- **Hinchey 0:** Diverticulite leve, não complicada -- espessamento parietal e discreto borramento da gordura pericolônica, sem abscesso. Tratamento ambulatorial (suporte + antibiótico), sem necessidade de internação.
 - **Hinchey Ia:** Inflamação pericólica sem abscesso (fleimão).
 - **Hinchey Ib:** Abscesso pericólico ou mesentérico restrito.
 - **Hinchey II:** Abscesso pélvico, retroperitoneal ou à distância (bloqueado na pelve).
@@ -78,7 +79,15 @@ Tema de altíssimo rendimento na Cirurgia Geral. A doença diverticular do cólo
 
 ---
 
-## 6. Armadilhas de Prova
+## 6. Diagnósticos Diferenciais
+
+- **Câncer colorretal:** também espessa a parede intestinal na TC e pode mimetizar o quadro clínico. A favor de diverticulite: inflamação pericolônica/mesentérica associada, segmento inflamado com mais de 10 cm de extensão, ausência de linfonodos pericolônicos aumentados. A favor de CCR: emagrecimento, alteração do hábito intestinal, hematoquezia, astenia.
+- **Apendagite epiploica:** torção ou trombose venosa espontânea de um apêndice epiploico -- condição benigna e autolimitada. Dor abdominal aguda localizada, predominantemente em FIE (60-80% dos casos), **sem** febre e **sem** alteração laboratorial. TC mostra imagem ovalar com densidade de gordura e centro radioluscente. Tratamento conservador (analgésico/anti-inflamatório); melhora completa em 3-14 dias.
+- **Doença inflamatória intestinal (DII):** o sintoma predominante é a diarreia, não a dor, com sintomas arrastando por vários meses antes da apresentação. A TC pode mostrar espessamento parietal tanto na DII quanto na diverticulite; a presença de diverticulose com inflamação peridiverticular favorece diverticulite aguda.
+
+---
+
+## 7. Armadilhas de Prova
 
 - 🔴 **Divertículo do cólon é FALSO divertículo** (mucosa + submucosa pulsam pelos *vasa recta*). Sigmoide é o local mais comum.
 - 🔴 **Diverticulite NUNCA sangra maciçamente.** Sangramento diverticular é INDOLOR, maciço e mais comum no **cólon direito**.

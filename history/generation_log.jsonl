@@ -115,3 +115,20 @@
 {"ts": "2026-08-19T14:42:43", "tipo": "generation", "questao_id": 874, "n_cards": 1, "avisos": 0}
 {"ts": "2026-08-19T14:42:43", "tipo": "generation", "questao_id": 875, "n_cards": 1, "avisos": 1}
 {"ts": "2026-08-19T14:42:43", "tipo": "generation", "questao_id": 876, "n_cards": 1, "avisos": 0}
+{"ts": "2026-08-19T22:03:42", "tipo": "generation", "questao_id": 877, "n_cards": 1, "avisos": 0}
+{"ts": "2026-08-19T22:03:42", "tipo": "generation", "questao_id": 878, "n_cards": 1, "avisos": 0}
+{"ts": "2026-08-19T22:03:42", "tipo": "generation", "questao_id": 879, "n_cards": 1, "avisos": 0}
+{"ts": "2026-08-19T23:31:24", "tipo": "generation", "questao_id": 880, "n_cards": 1, "avisos": 3}
+{"ts": "2026-08-19T23:31:24", "tipo": "generation", "questao_id": 881, "n_cards": 1, "avisos": 0}
+{"ts": "2026-08-19T23:31:24", "tipo": "generation", "questao_id": 882, "n_cards": 1, "avisos": 1}
+{"ts": "2026-08-19T23:31:24", "tipo": "generation", "questao_id": 883, "n_cards": 1, "avisos": 1}
+{"ts": "2026-08-19T23:31:24", "tipo": "generation", "questao_id": 884, "n_cards": 1, "avisos": 1}
+{"ts": "2026-08-21T20:08:14", "tipo": "generation", "questao_id": 885, "n_cards": 1, "avisos": 1}
+{"ts": "2026-08-21T20:08:14", "tipo": "generation", "questao_id": 886, "n_cards": 1, "avisos": 0}
+{"ts": "2026-08-21T20:08:14", "tipo": "reincidencia", "questao_id": 886, "hits": 1}
+{"ts": "2026-08-21T20:08:15", "tipo": "generation", "questao_id": 887, "n_cards": 1, "avisos": 2}
+{"ts": "2026-08-21T20:08:15", "tipo": "generation", "questao_id": 888, "n_cards": 1, "avisos": 0}
+{"ts": "2026-08-21T20:08:15", "tipo": "reincidencia", "questao_id": 888, "hits": 1}
+{"ts": "2026-08-21T20:08:16", "tipo": "generation", "questao_id": 889, "n_cards": 1, "avisos": 1}
+{"ts": "2026-08-21T20:08:17", "tipo": "generation", "questao_id": 890, "n_cards": 1, "avisos": 2}
+{"ts": "2026-08-21T20:08:18", "tipo": "generation", "questao_id": 891, "n_cards": 1, "avisos": 1}

@@ -20,7 +20,7 @@ aliases: [Parto Normal, Assistência ao Parto, Mecanismo do Parto, Parto Vaginal
     - Conduta: não internar. Internação precoce aumenta significativamente o risco de cesárea desnecessária.
 - **Fase Ativa (critério de internação):**
     - Dinâmica: ≥ 3 contrações em 10 minutos.
-    - Dilatação: **≥ 5 cm** (padrão OMS/MS atualizado).
+    - Dilatação: **≥ 5 cm** (padrão OMS/MS atualizado); considera-se trabalho de parto estabelecido a partir de **4-6 cm** de dilatação cervical associada a dinâmica uterina regular -- o critério central é essa associação (dilatação progressiva + contrações regulares), não um valor isolado.
     - Duração variável: **~12h em primíparas**, **~10h em multíparas**.
     - ⚠️ Padrão de prova: o critério de **1 cm/hora** foi **abandonado** -- a evolução do parto eutócico é heterogênea e não deve ser mensurada por essa métrica.
     - Conduta: internar, dieta livre, acompanhante, partograma.
@@ -29,7 +29,7 @@ aliases: [Parto Normal, Assistência ao Parto, Mecanismo do Parto, Parto Vaginal
     - Amnioscopia (quando indicada): mecônio (coloração amarela/esverdeada) -> investigar sofrimento fetal. Complicações: sangramento do colo, rotura de membranas, trauma fetal. **Descolamento de placenta NÃO é complicação da amnioscopia.**
 - **Epidemiologia OMS (referências para prova):**
     - Adolescência: **10-19 anos**.
-    - Baixo peso ao nascer: **< 2.500 g** (muito baixo: < 1.500 g; extremo: < 1.000 g).
+    - Peso ao nascer: normal **2.500-3.500 g**; baixo peso **< 2.500 g** (muito baixo: < 1.500 g; extremo: < 1.000 g).
     - Taxa ideal de cesáreas: **10-15%** do total de partos.
 
 ---
@@ -126,7 +126,8 @@ Primeira hora após a dequitação. Período de maior risco de HPP.
 
 ⭐ Sequência obrigatória: **Insinuação -> Descida -> Rotação Interna -> Desprendimento Cefálico -> Rotação Externa -> Desprendimento de Espáduas**
 
-- **Insinuação:** passagem do maior diâmetro cefálico (suboccípito-bregmático, 9,5 cm) pelo estreito superior. Referência: ponto ósseo fetal no plano **0 de DeLee**.
+- **Insinuação:** passagem do maior diâmetro cefálico (suboccípito-bregmático, 9,5 cm) pelo estreito superior. Referência: ponto ósseo fetal no plano **0 de DeLee** -- ou seja, no nível das espinhas isquiáticas maternas.
+    - ⚠️ Padrão de prova: "fixo" não é sinônimo de "insinuado". Apresentação **fixa** significa apenas que o polo cefálico não é mais mobilizável ao toque (já ultrapassou o estreito superior), podendo estar em **qualquer plano negativo de DeLee** (ex.: -2). **Insinuada** é conceito mais específico -- exige estar exatamente no **plano 0**. Um polo fixo em -2 ainda não está insinuado; não inferir bom prognóstico de parto vaginal apenas pela apresentação estar fixa.
 - **Descida:** polo cefálico desce do estreito superior ao inferior.
 - **Rotação interna:** cabeça gira para que o occipício coincida com o diâmetro anteroposterior do estreito inferior (posição occípito-púbica = OP).
     - Posições **anteriores** (ODA, OEA): rotação de **45°**.
@@ -153,7 +154,8 @@ Primeira hora após a dequitação. Período de maior risco de HPP.
 - **Métodos não farmacológicos -- invasivos (podem ter efeitos colaterais):**
     - Acupuntura/acupressão, TENS (estimulação elétrica transcutânea), injeção intradérmica de água estéril.
 - **Métodos farmacológicos:**
-    - **Bloqueio regional (padrão-ouro):** peridural, raquianestesia ou duplo bloqueio. Produz analgesia sem interferir nas demais funções motoras. Pode prolongar o 2º período em até 1h. **Contraindicações:** hipotensão acentuada, hipovolemia, infecção no sítio de punção, coagulopatia, uso de anticoagulantes.
+    - **Bloqueio regional/espinhal (padrão-ouro e primeira escolha):** peridural, raquianestesia ou duplo bloqueio raqui-peridural. Produz analgesia sem interferir nas demais funções motoras. Pode prolongar o 2º período em até 1h. **Contraindicações:** hipotensão acentuada, hipovolemia, infecção no sítio de punção, coagulopatia, uso de anticoagulantes.
+    - ⚠️ Padrão de prova: opioides sistêmicos e a analgesia venosa controlada pela paciente (PCA) **não competem em primeira linha** com o bloqueio espinhal -- são reservados para quando este está contraindicado ou indisponível.
     - Opioides sistêmicos: meperidina, remifentanil, cetamina (segunda linha).
     - Bloqueio do nervo pudendo: anestesia local para o período expulsivo.
 
@@ -254,21 +256,55 @@ Viável se: feto < 3.500 g, pelve adequada, cabeça fletida, obstetra experiente
 - **Manobra de Mauriceau:** dedo médio e indicador na mandíbula -> fletir cabeça derradeira.
 - **Fórcipe de Piper:** cabeça derradeira após falha das manobras manuais.
 
+### 9.5 Paralisia Obstétrica (Lesão de Plexo Braquial)
+
+- **Definição:** lesão de tração do plexo braquial durante a distocia de ombro ou o desprendimento das espáduas -- principal complicação neurológica associada ao parto.
+- **Erb-Duchenne (C5-C6):** forma mais comum. Apresentação clássica em "gorjeta de garçom" -- braço aduzido, rodado medialmente, estendido no cotovelo e pronado no antebraço -- com reflexo de Moro **assimétrico** (ausente ou reduzido no lado acometido).
+- **Conduta:** fisioterapia motora **ativa** desde o diagnóstico, não apenas observação clínica expectante.
+    - Reavaliação estruturada aos **3 meses**: recuperação de força do bíceps é o marcador de **bom prognóstico**.
+    - Reavaliação aos **6 meses**: sem melhora do bíceps -> indica **exploração cirúrgica do plexo braquial e neurólise**.
+- ⚠️ Padrão de prova: **Síndrome de Horner** associada (enoftalmia, ptose, miose, anidrose) indica extensão da lesão até **T1/gânglio estrelado** (envolvimento das raízes baixas do plexo) e sinaliza **mau prognóstico**.
+
+### 9.6 Fórcipe de Rotação (Variedade Transversa)
+
+- **Indicação:** variedade de posição **occípito-transversa** (OET/ODT) com falha de rotação interna espontânea, exigindo fórcipe para promover a rotação até **occípito-púbica (OP)**, a variedade favorável ao desprendimento.
+    - De OET para OP: **90°** de rotação.
+- **Fórcipe de Kielland:** único que permite rotação ampla (**> 45°**). Colheres com curvatura pélvica pouco acentuada e articulação **não fixa** (deslizante), o que viabiliza o giro.
+- **Fórcipe de Simpson-Braun:** articulação **fixa** -- não serve para rotações amplas, apenas para variedades já próximas de OP.
+- ⚠️ Padrão de prova: poucos minutos (ex.: 15 min) em variedade transversa **não caracterizam**, por si só, distócia de rotação -- exige-se tempo maior de observação da falha da rotação interna antes de indicar fórcipe rotacional.
+
 ---
 
-## 10. Puerpério Fisiológico
+## 10. Trabalho de Parto Prematuro (TPP)
+
+- **Definição:** trabalho de parto que se instala antes do termo (< 37 semanas), com risco perinatal proporcional ao grau de prematuridade.
+- **Tocólise -- contraindicação absoluta:** doença materna descompensada (ex.: cardiopatia, pré-eclâmpsia grave, corioamnionite, hemorragia ativa). A decisão de tentar prolongar a gestação exige que o feto se beneficie do adiamento -- se a mãe está descompensando, o risco materno supera o benefício fetal.
+- **Classificação de Hobel (estadiamento do TPP):**
+    - **Estágio I:** fatores de risco para TPP presentes, sem sintomas.
+    - **Estágio II:** útero irritável -- contrações sem modificação cervical.
+    - **Estágio III:** TPP reversível -- contrações regulares com alteração cervical inicial.
+    - **Estágio IV:** TPP irreversível -- dilatação cervical **≥ 4 cm**.
+- **Indicação de tocólise:** restrita ao **estágio III**.
+    - ⚠️ Padrão de prova: no **estágio IV** (dilatação ≥ 4 cm), a tocólise **não é mais indicada** -- a conduta passa a ser assistir o parto com analgesia. O reflexo automático "TPP = tocólise + corticoide" ignora que contraindicação materna e/ou dilatação avançada excluem a tentativa de prolongar a gestação.
+
+---
+
+## 11. Puerpério Fisiológico
 
 - **Definição:** do nascimento à involução das alterações gestacionais (~6-8 semanas).
 - **Divisão:**
     - Imediato: nascimento até 2ª hora (inclui 3º e 4º períodos).
     - Mediato: 3ª hora ao 10º dia.
     - Tardio: 11º dia até 6-8 semanas.
-- **Involução uterina:** regride ~1 cm/dia; dimensões pré-gestacionais em ~4 semanas. After-pains fisiológicos, piores com amamentação (ocitocina endógena).
+- **Involução uterina:** regride **~1 cm/dia** (não 3 cm/dia); dimensões próximas às pré-gestacionais em ~4 semanas -- nunca retorna a um volume idêntico ao pré-gestacional, ficando discretamente maior a cada gestação subsequente. After-pains fisiológicos, piores com amamentação (ocitocina endógena).
+- **Retorno da ovulação:**
+    - Mulheres que **não amamentam** podem ter retorno precoce, a partir de **3-5 semanas pós-parto** (podendo ocorrer já aos 25 dias).
+    - Amamentação **exclusiva** atrasa esse retorno pelo efeito supressor da **prolactina** sobre o eixo hipotálamo-hipófise-ovário.
 - **Alojamento conjunto:** após Greenberg estável (1ª hora pós-dequitação).
 
 ---
 
-## 11. Armadilhas de Prova
+## 12. Armadilhas de Prova
 
 - 🔴 **Critério 1 cm/hora abandonado:** não indicar ocitocina nem cesárea apenas por não atingir 1 cm/h -- evolução do parto eutócico é heterogênea.
 - 🔴 **Toque vaginal:** intervalo correto é **2-4 horas**, não "a cada 4h" fixamente. Pode ser reduzido por mudança clínica ou desejo da paciente.
@@ -295,3 +331,11 @@ Viável se: feto < 3.500 g, pelve adequada, cabeça fletida, obstetra experiente
 - 🔴 **Puxos dirigidos:** proscritos. Puxos espontâneos são a conduta recomendada.
 - 🔴 **Epidemiologia OMS:** adolescência = 10-19 anos; baixo peso = < 2.500 g; taxa ideal cesárea = 10-15%.
 - 🔴 **Ausculta fetal x toque vaginal -- não trocar as frequências:** ausculta fetal intermitente a cada **15-30 minutos** (durante a contração e no minuto seguinte); toque vaginal a cada **2-4 horas** (nunca de hora em hora). São os dois procedimentos periódicos de vigilância do primeiro período e a prova explora a inversão dos intervalos entre eles.
+- 🔴 **Paralisia obstétrica (Erb-Duchenne):** conduta é fisioterapia motora ATIVA desde o diagnóstico, com reavaliação estruturada aos 3 meses (recuperação do bíceps = bom prognóstico) e aos 6 meses (sem melhora -> exploração cirúrgica do plexo braquial + neurólise). Síndrome de Horner associada = mau prognóstico (extensão da lesão a T1/gânglio estrelado).
+- 🔴 **TPP -- contraindicações à tocólise:** doença materna descompensada é contraindicação absoluta. Pela classificação de Hobel, a tocólise só é indicada no estágio III; no estágio IV (dilatação ≥ 4 cm) a conduta é assistir o parto com analgesia, não tocolisar.
+- 🔴 **Hierarquia de analgesia de parto:** bloqueio espinhal (peridural, raquianestesia ou duplo bloqueio) é padrão-ouro e primeira escolha. Opioides sistêmicos e analgesia venosa controlada pela paciente são reserva para contraindicação/indisponibilidade do bloqueio espinhal, não alternativas de primeira linha.
+- 🔴 **Peso normal ao nascer:** 2.500-3.500 g -- não confundir com o corte de baixo peso (< 2.500 g).
+- 🔴 **Fórcipe de rotação:** apenas o Kielland (articulação não fixa) permite rotação ampla (> 45°) -- variedade transversa (OET) até OP exige 90°. O Simpson-Braun tem articulação fixa e não serve para rotação ampla. Poucos minutos em variedade transversa não definem, por si só, distócia de rotação.
+- 🔴 **Fase ativa x 3º período -- não confundir:** fase ativa/trabalho de parto estabelecido é definida por dilatação cervical (4-6 cm) associada a dinâmica uterina regular. O 3º período é definido por eventos (da saída do feto à dequitação), não por um teto de tempo -- os 30-60 minutos citados são limiares de conduta, não a definição do período.
+- 🔴 **Puerpério -- involução e retorno da ovulação:** útero involui ~1 cm/dia (não 3 cm/dia). Mulheres que não amamentam podem ovular já a partir de 25 dias (3-5 semanas pós-parto); amamentação exclusiva atrasa o retorno via prolactina.
+- 🔴 **Fixo x insinuado:** apresentação fixa significa apenas que o polo cefálico não é mais mobilizável, podendo estar em qualquer plano NEGATIVO de DeLee. Insinuada é conceito mais específico -- exige estar exatamente no plano 0. Um polo em -2 é fixo, mas ainda não insinuado; não inferir bom prognóstico de parto vaginal apenas pela apresentação estar fixa.

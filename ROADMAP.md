@@ -131,6 +131,19 @@ A fundação está pronta (agente LLM + workflows portáveis + `ipub.db` como SS
 
 ---
 
+### 9. Pós-ENAMED: lições de engenharia (ai-eng lote/5, 2026-08-20)
+
+> Absorvido de handoff externo (`ai-eng`) recebido 2026-08-21, arquivo apagado por auto-higiene (s151). Fontes: `arxiv-clinical-reasoning-graphs`, `arxiv-fragility-self-improving-agents`, `arxiv-benchmarking-tool-calling-evals`, `arxiv-stagedworkspace`, `arxiv-ontological-trust-agents`, `arxiv-thinking-with-kgs` (`brain/lectures/` do ai-eng). Deliberadamente **não antes de 13/09** — mudaria o instrumento no meio da medição.
+
+**O que consolida:**
+- Taxonomia como triplas explícitas (`tema is_a área`, `alias_de`) para o gerador de cards, não lista plana — cruza com Linha 2.
+- `resumos/*.md` carregam `fonte_sha` do PDF/aula-base de origem; `doc_drift`/`reachability_check` acusam resumo cujo `fonte_sha` diverge do hash atual da fonte — cruza com Linha 2.
+- `feedback_*` de memória ganham `ancora` (sessão/commit que confirmou) + `status ∈ {hipótese, validado, revogado}`; shuffle-test periódico (re-derivar lições de N sessões em 2 ordens, contar as que só aparecem numa ordem) — cruza com Linha 5/6.
+- Template de delegação a subagente ganha 3 linhas fixas: D(x) = papel+objetivo+evidência-que-fecha; COUNT-ASSERT/`--dry-run` em toda operação mutadora; persistência incremental (grava a cada item, não só no fim).
+- Sessão que declara "feito" sem ato verificável (commit/teste/contagem re-executada) vira "não-demonstração" no rito de fechamento, não precedente.
+
+---
+
 ## Anti-goals
 
 O MedHub não deve virar:

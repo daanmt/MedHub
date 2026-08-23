@@ -601,3 +601,6 @@
 {"ts": "2026-08-21T23:10:41+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "ca6836442dd1", "alvo": "card#1378", "payload": {"padrao": "resposta-multifato/paragrafo", "tema": "Diverticulite Aguda"}}
 {"ts": "2026-08-21T23:10:41+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "7f287d6cbc3a", "alvo": "card#1381", "payload": {"padrao": "resposta-multifato/paragrafo", "tema": "Abdome Agudo Inflamatório - Colecistite e Colangite Aguda"}}
 {"ts": "2026-08-21T23:10:41+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "3b724124846d", "alvo": "card#1382", "payload": {"padrao": "duplo-ask/conectivo", "tema": "Abdome Agudo Inflamatório - Colecistite e Colangite Aguda"}}
+{"ts": "2026-08-22T22:27:04+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "d9b05184bb2b", "alvo": "card#1392", "payload": {"padrao": "duplo-ask/conectivo", "tema": "Assistência ao Parto"}}
+{"ts": "2026-08-22T22:27:04+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "05c76c41aaa0", "alvo": "card#1401", "payload": {"padrao": "duplo-ask/conectivo", "tema": "Parasitoses"}}
+{"ts": "2026-08-23T01:43:46+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "567d7f0d9195", "alvo": "card#1403", "payload": {"padrao": "duplo-ask/segundo-nucleo", "tema": "Dependência Química"}}

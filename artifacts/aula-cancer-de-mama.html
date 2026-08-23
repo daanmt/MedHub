@@ -1,0 +1,466 @@
+<title>A Escada do Câncer de Mama</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,380;9..144,480;9..144,600;9..144,680&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F2EFF3; --card:#FBFAFC; --sunk:#E7E1E9;
+  --ink:#1D1720; --ink2:#55495B; --ink3:#857892;
+  --line:rgba(29,23,32,.13); --line2:rgba(29,23,32,.26);
+  --plum:#5C3560; --plum-ink:#402445; --plum-wash:#ECE0EC;
+  --carmine:#8E2F41; --carmine-ink:#6B2231; --carmine-wash:#F5E2E6;
+  --amber:#8A5A17; --amber-ink:#6B4610; --amber-wash:#F3E6CC;
+  --on:#FFFFFF;
+  --sh:0 1px 2px rgba(29,23,32,.06),0 12px 30px -18px rgba(29,23,32,.35);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#17131A; --card:#201A24; --sunk:#2A222F;
+  --ink:#ECE7EF; --ink2:#B7ACBE; --ink3:#85798E;
+  --line:rgba(236,231,239,.14); --line2:rgba(236,231,239,.28);
+  --plum:#B98CBE; --plum-ink:#D6AFDA; --plum-wash:#3A2A3E;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  --on:#17131A;
+  --sh:0 1px 2px rgba(0,0,0,.5),0 14px 34px -18px rgba(0,0,0,.8);
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#17131A; --card:#201A24; --sunk:#2A222F;
+  --ink:#ECE7EF; --ink2:#B7ACBE; --ink3:#85798E;
+  --line:rgba(236,231,239,.14); --line2:rgba(236,231,239,.28);
+  --plum:#B98CBE; --plum-ink:#D6AFDA; --plum-wash:#3A2A3E;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  --on:#17131A;
+  --sh:0 1px 2px rgba(0,0,0,.5),0 14px 34px -18px rgba(0,0,0,.8);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);
+  font:16px/1.6 "Source Sans 3",-apple-system,"Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+.mn{font-family:"IBM Plex Mono",ui-monospace,Consolas,monospace;font-variant-numeric:tabular-nums}
+h1,h2,h3,h4{margin:0;font-family:Fraunces,Georgia,serif;font-weight:600;letter-spacing:-.01em;text-wrap:balance;line-height:1.14;color:var(--ink)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px 100px}
+:focus-visible{outline:2px solid var(--plum);outline-offset:2px}
+a{color:var(--plum-ink)}
+strong{font-weight:600;color:var(--ink)}
+em{font-style:italic}
+
+/* ── masthead ── */
+.top{padding:52px 0 30px;border-bottom:1px solid var(--line2)}
+.eye{font:600 11px/1 "Source Sans 3";letter-spacing:.14em;text-transform:uppercase;color:var(--plum-ink);margin:0 0 15px}
+.top h1{font-size:clamp(32px,5vw,50px);font-weight:680;max-width:16ch;margin-bottom:16px}
+.top .sub{font-size:18px;line-height:1.6;color:var(--ink2);max-width:66ch;margin:0 0 22px}
+.stats{display:flex;gap:22px;flex-wrap:wrap}
+.stat{display:flex;flex-direction:column;gap:2px}
+.stat b{font:600 24px/1 "IBM Plex Mono";color:var(--plum-ink);font-variant-numeric:tabular-nums}
+.stat span{font-size:11.5px;color:var(--ink3);letter-spacing:.02em}
+
+/* ── layout: rail + reading column ── */
+.body{display:grid;grid-template-columns:220px minmax(0,1fr);gap:52px;padding-top:38px;align-items:start}
+@media(max-width:920px){.body{grid-template-columns:1fr}}
+
+.rail{position:sticky;top:22px;display:flex;flex-direction:column;gap:1px}
+.rail .rlab{font:600 10.5px/1 "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin:0 0 10px}
+.rail a{display:grid;grid-template-columns:20px 1fr;gap:9px;align-items:baseline;padding:7px 0;
+  font-size:13.3px;color:var(--ink3);text-decoration:none;border-left:2px solid transparent;padding-left:10px}
+.rail a .rn{font:600 11px "IBM Plex Mono";color:var(--ink3)}
+.rail a:hover{color:var(--ink)}
+.rail a.on{color:var(--plum-ink);border-left-color:var(--plum);font-weight:600}
+.rail a.on .rn{color:var(--plum-ink)}
+@media(max-width:920px){
+  .rail{position:static;flex-direction:row;flex-wrap:wrap;gap:6px 4px;top:auto}
+  .rail .rlab{width:100%}
+  .rail a{padding:4px 9px;border-left:0;border:1px solid var(--line2);border-radius:2px;grid-template-columns:auto auto}
+  .rail a.on{background:var(--plum-wash);border-color:var(--plum)}
+}
+
+main{min-width:0;max-width:700px}
+
+/* ── degrau ── */
+.degrau{padding:44px 0;border-bottom:1px solid var(--line)}
+.degrau:first-child{padding-top:0}
+.degrau:last-of-type{border-bottom:0}
+.dhead{display:flex;gap:16px;align-items:flex-start;margin-bottom:18px}
+.dnum{flex-shrink:0;width:44px;height:44px;border:1.5px solid var(--plum);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font:600 17px "IBM Plex Mono";color:var(--plum-ink)}
+.dtitle{padding-top:4px}
+.dtitle .dstage{font:600 11px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);display:block;margin-bottom:3px}
+.dtitle h2{font-size:clamp(21px,2.6vw,27px)}
+.lede{font-size:16.5px;line-height:1.6;color:var(--ink2);margin:0 0 20px;font-style:italic}
+
+.prose p{font-size:16px;line-height:1.72;color:var(--ink2);margin:0 0 16px}
+.prose p:last-child{margin-bottom:0}
+.prose ul,.prose ol{margin:0 0 16px;padding-left:22px}
+.prose li{font-size:15.6px;line-height:1.6;color:var(--ink2);margin-bottom:6px}
+.prose li:last-child{margin-bottom:0}
+.prose li strong{color:var(--ink)}
+h4.sub{font-size:14px;font-weight:600;font-family:"Source Sans 3";letter-spacing:.01em;color:var(--ink);margin:26px 0 10px}
+h4.sub:first-child{margin-top:0}
+
+/* callouts */
+.aside{margin:20px 0;padding:15px 18px;border-left:3px solid var(--plum);background:var(--plum-wash)}
+.aside .albl{font:700 10.5px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;color:var(--plum-ink);margin-bottom:6px}
+.aside p{font-size:15.3px;line-height:1.6;color:var(--ink);margin:0}
+.aside p+p{margin-top:8px}
+
+.trap{margin:20px 0;padding:15px 18px;border-left:3px solid var(--carmine);background:var(--carmine-wash)}
+.trap .albl{font:700 10.5px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;color:var(--carmine-ink);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.trap .albl::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--carmine)}
+.trap p{font-size:15.3px;line-height:1.6;color:var(--ink);margin:0}
+.trap p+p{margin-top:8px}
+
+.star{margin:20px 0;padding:14px 18px;border:1px solid var(--line2);background:var(--card)}
+.star .albl{font:700 10.5px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:6px}
+.star p{font-size:15.3px;line-height:1.6;color:var(--ink);margin:0;font-weight:560}
+
+/* comparativos lado a lado */
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line2);border:1px solid var(--line2);margin:20px 0}
+.vs>div{background:var(--card);padding:14px 16px}
+.vs h5{font:700 11.5px "Source Sans 3";letter-spacing:.04em;text-transform:uppercase;margin:0 0 8px;color:var(--ink3)}
+.vs .a h5{color:var(--carmine-ink)}
+.vs .b h5{color:var(--plum-ink)}
+.vs p,.vs li{font-size:14.5px;line-height:1.55;color:var(--ink2)}
+.vs ul{margin:0;padding-left:18px}
+.vs li{margin-bottom:5px}
+@media(max-width:640px){.vs{grid-template-columns:1fr}}
+
+/* tabela-lista de criterios (nao e <table>, e grid) */
+.crit{border:1px solid var(--line2);margin:20px 0}
+.crit .row{display:grid;grid-template-columns:180px 1fr;gap:14px;padding:11px 15px;font-size:14.3px}
+.crit .row+.row{border-top:1px solid var(--line)}
+.crit .row .k{font-weight:600;color:var(--plum-ink)}
+.crit .row .v{color:var(--ink2);line-height:1.5}
+@media(max-width:640px){.crit .row{grid-template-columns:1fr;gap:3px}}
+
+/* toggle de referencia densa */
+details.ref{margin:20px 0;border:1px solid var(--line2);background:var(--card)}
+details.ref>summary{cursor:pointer;list-style:none;padding:12px 16px;font:600 13.5px "Source Sans 3";color:var(--plum-ink);
+  display:flex;align-items:center;gap:9px}
+details.ref>summary::-webkit-details-marker{display:none}
+details.ref>summary::before{content:"+";font:600 15px "IBM Plex Mono";width:16px}
+details.ref[open]>summary::before{content:"-"}
+details.ref .refbody{padding:0 16px 16px}
+details.ref .row{display:grid;grid-template-columns:150px 1fr;gap:12px;padding:8px 0;font-size:13.8px;border-top:1px solid var(--line)}
+details.ref .row:first-child{border-top:0}
+details.ref .k{font-weight:600;color:var(--ink)}
+details.ref .v{color:var(--ink2);line-height:1.5}
+
+/* sintese */
+.synth{background:var(--card);border:1px solid var(--line2);padding:32px 30px;margin-top:6px}
+.synth h2{font-size:23px;margin-bottom:14px}
+.synth .prose p{font-size:16.5px}
+.trig{max-width:100%;margin-top:22px;display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1px;background:var(--line2);border:1px solid var(--line2)}
+.trig div{background:var(--sunk);padding:13px 15px}
+.trig .tk{font:700 11px "IBM Plex Mono";color:var(--plum-ink);display:block;margin-bottom:4px}
+.trig .tv{font-size:13.6px;line-height:1.45;color:var(--ink2)}
+
+/* armadilhas final */
+.arms{display:flex;flex-direction:column;gap:1px;background:var(--line2);border:1px solid var(--line2);margin-top:18px}
+.arm{background:var(--card);padding:15px 18px;display:flex;gap:12px}
+.arm .dot{flex-shrink:0;width:9px;height:9px;border-radius:50%;background:var(--carmine);margin-top:7px}
+.arm p{font-size:15px;line-height:1.58;color:var(--ink2);margin:0}
+.arm p strong{color:var(--ink)}
+
+footer{margin-top:60px;padding-top:22px;border-top:1px solid var(--line2)}
+footer p{font-size:12.3px;color:var(--ink3);max-width:80ch;margin:0 0 7px;line-height:1.5}
+code{font-family:"IBM Plex Mono",Consolas,monospace;font-size:11.8px;background:var(--sunk);padding:1px 5px;border-radius:2px}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <p class="eye">MedHub · Aula-base · Ginecologia / Câncer de Mama</p>
+  <h1>A Escada do Câncer de Mama</h1>
+  <p class="sub">Revisão completa antes do bloco de questões -- nove degraus amarrados, do risco à conduta especial, fechando nos gatilhos que a prova mais cobra. Você já fez 24 questões neste tema (62,5%); esta é a passagem que fecha as lacunas que restaram.</p>
+  <div class="stats">
+    <div class="stat"><b>9</b><span>degraus</span></div>
+    <div class="stat"><b>12</b><span>armadilhas mapeadas</span></div>
+    <div class="stat"><b>D10</b><span>calibração</span></div>
+  </div>
+</header>
+
+<div class="body">
+<nav class="rail" id="rail" aria-label="Navegação da escada">
+  <p class="rlab">A escada</p>
+  <a href="#d0" data-r="d0"><span class="rn">0</span><span>A régua do normal</span></a>
+  <a href="#d1" data-r="d1"><span class="rn">1</span><span>Risco: geral x alto risco</span></a>
+  <a href="#d2" data-r="d2"><span class="rn">2</span><span>Rastreamento</span></a>
+  <a href="#d3" data-r="d3"><span class="rn">3</span><span>Diagnóstico e biópsia</span></a>
+  <a href="#d4" data-r="d4"><span class="rn">4</span><span>Apresentação clínica</span></a>
+  <a href="#d5" data-r="d5"><span class="rn">5</span><span>Histologia e subtipo molecular</span></a>
+  <a href="#d6" data-r="d6"><span class="rn">6</span><span>Estadiamento TNM</span></a>
+  <a href="#d7" data-r="d7"><span class="rn">7</span><span>Tratamento</span></a>
+  <a href="#d8" data-r="d8"><span class="rn">8</span><span>Casos especiais</span></a>
+  <a href="#synth" data-r="synth"><span class="rn">-></span><span>Síntese e gatilhos</span></a>
+  <a href="#arms" data-r="arms"><span class="rn">🔴</span><span>Armadilhas de prova</span></a>
+</nav>
+
+<main>
+
+<section class="degrau" id="d0">
+  <div class="dhead"><span class="dnum">0</span><div class="dtitle"><span class="dstage">Degrau 0</span><h2>A régua do normal</h2></div></div>
+  <p class="lede">Antes de qualquer critério, o número que orienta tudo: por que este tema pesa tanto na prova.</p>
+  <div class="prose">
+    <p>O câncer de mama é o câncer mais frequente entre mulheres, excluindo os tumores de pele não melanoma, e a segunda causa de morte por câncer no país. Essa dupla característica -- altíssima incidência e mortalidade relevante, mas tratável quando pego cedo -- é o motivo pelo qual a banca cobra rastreamento, estadiamento e conduta com tanta densidade: cada critério que você vai ver nos próximos degraus existe para empurrar o diagnóstico para o estágio mais precoce possível, porque é aí que a diferença de sobrevida é maior.</p>
+    <p>Isso também define a lógica de leitura da prova: praticamente toda questão deste tema testa <strong>em que ponto da linha do tempo</strong> uma paciente está -- rastreando (sem sintoma), investigando (achado suspeito), estadiando (diagnóstico fechado) ou tratando (conduta) -- e se você aplicou a régua certa para aquele ponto. Errar não costuma ser desconhecer um fato isolado; é aplicar o critério do degrau errado.</p>
+  </div>
+</section>
+
+<section class="degrau" id="d1">
+  <div class="dhead"><span class="dnum">1</span><div class="dtitle"><span class="dstage">Degrau 1</span><h2>Risco: fator geral x critério de alto risco</h2></div></div>
+  <p class="lede">A distinção que mais separa quem acerta de quem erra neste tema inteiro.</p>
+  <div class="prose">
+    <p>Existe uma lista longa de <strong>fatores de risco</strong> -- idade acima de 50 anos, raça negra, menarca precoce (antes dos 12 anos), menopausa tardia (depois dos 55), nuliparidade, primeira gestação depois dos 30, terapia hormonal por mais de cinco anos, obesidade pós-menopausa, sedentarismo, álcool, radiação torácica antes dos 30 anos -- e todos eles são reais. O erro mais comum é tratar qualquer item dessa lista como se abrisse a porta para a categoria seguinte, que é fechada e muito mais restrita: <strong>alto risco</strong>.</p>
+    <p>Alto risco não é "tem um fator de risco a mais". É um de cinco critérios objetivos: risco calculado acima de 20% ao longo da vida pelo modelo de Tyrer-Cuzick (ou razão de risco acima de 1,67 pelo modelo de Gail); parente de primeiro grau com câncer de mama ou ovário diagnosticado antes da menopausa; história familiar de câncer de mama <strong>num homem</strong> da família; biópsia prévia mostrando atipia (hiperplasia ductal ou lobular atípica) ou carcinoma lobular in situ; radioterapia torácica antes dos 30 anos; ou mutação genética confirmada -- BRCA1, BRCA2, Li-Fraumeni (p53) ou síndrome de Cowden (PTEN). Só essa lista muda o seguimento da paciente.</p>
+    <h4 class="sub">Por que a categoria importa tanto</h4>
+    <p>Entrar em alto risco muda três coisas ao mesmo tempo: o intervalo de rastreamento (vira anual, nunca bienal), a idade de início (amarrada ao critério específico, não a uma idade genérica) e, no caso de mutação confirmada, a própria natureza da conduta -- deixa de ser vigilância e passa a ser cirurgia de redução de risco.</p>
+  </div>
+  <div class="trap">
+    <div class="albl">Armadilha</div>
+    <p>Menarca precoce e nuliparidade são fatores de risco genuínos, mas são o distrator clássico numa questão que pede o critério de alto risco. A resposta certa é sempre um item da lista fechada -- biópsia com atipia, mutação confirmada, história familiar pré-menopausa, etc.</p>
+  </div>
+  <div class="star">
+    <div class="albl">Prevenção quando o risco já é alto</div>
+    <p>Quimioprevenção com tamoxifeno (funciona em qualquer status menopausal) ou inibidor de aromatase (só pós-menopausa); mastectomia bilateral profilática em mutação BRCA1/2 (reduz o risco em torno de 90%); salpingooforectomia, que reduz risco de mama além do de ovário nas portadoras de BRCA.</p>
+  </div>
+</section>
+
+<section class="degrau" id="d2">
+  <div class="dhead"><span class="dnum">2</span><div class="dtitle"><span class="dstage">Degrau 2</span><h2>Rastreamento: duas réguas, uma paciente</h2></div></div>
+  <p class="lede">A banca costuma nomear a fonte de propósito -- e cobrar exatamente aquela régua, não uma mistura das duas.</p>
+  <div class="prose">
+    <p>Existem duas diretrizes de rastreamento em risco habitual coexistindo no Brasil, e elas não concordam entre si. O Ministério da Saúde recomenda mamografia bienal (a cada dois anos) entre 50 e 69 anos. As sociedades médicas -- FEBRASGO, Sociedade Brasileira de Mastologia, Colégio Brasileiro de Radiologia -- recomendam mamografia anual a partir dos 40 anos, prosseguindo além dos 74 se a expectativa de vida ultrapassar sete anos.</p>
+  </div>
+  <div class="vs">
+    <div class="a"><h5>Ministério da Saúde</h5><ul><li>50 a 69 anos</li><li>Intervalo bienal</li><li>Abaixo dos 50: acompanhamento clínico, sem mamografia de rotina</li></ul></div>
+    <div class="b"><h5>FEBRASGO / SBM / CBR</h5><ul><li>A partir dos 40 anos</li><li>Intervalo anual</li><li>Segue além dos 74 se expectativa de vida > 7 anos</li></ul></div>
+  </div>
+  <div class="trap">
+    <div class="albl">Armadilha</div>
+    <p>"Mamografia bienal" está textualmente correta -- mas só serve para a paciente de 50 a 69 anos em risco habitual segundo o MS. Fora dessa janela etária, ou se a questão nomeou explicitamente a fonte, misturar a idade de uma diretriz com o intervalo da outra derruba a resposta.</p>
+  </div>
+  <div class="prose">
+    <h4 class="sub">Alto risco: a idade de início segue o critério, nunca uma idade fixa</h4>
+    <p>Toda categoria de alto risco vira rastreamento <strong>anual</strong>, não só a mutação BRCA -- esse é o ponto que mais escapa. O que muda entre os critérios é apenas quando começar.</p>
+  </div>
+  <div class="crit">
+    <div class="row"><span class="k">Hist. familiar pré-menopausa</span><span class="v">Anual, começando 10 anos antes da idade do diagnóstico da parente mais jovem (nunca antes dos 30)</span></div>
+    <div class="row"><span class="k">Mutação BRCA1</span><span class="v">Anual desde o diagnóstico da mutação, nunca antes dos 35</span></div>
+    <div class="row"><span class="k">Mutação BRCA2</span><span class="v">Anual desde o diagnóstico da mutação, nunca antes dos 30</span></div>
+    <div class="row"><span class="k">RT torácica prévia (&lt;30a)</span><span class="v">Anual, 8 anos após o tratamento, nunca antes dos 30</span></div>
+    <div class="row"><span class="k">Li-Fraumeni / Cowden / lesão precursora</span><span class="v">Anual desde o diagnóstico, nunca antes dos 30</span></div>
+  </div>
+  <p class="prose" style="font-size:14.5px;color:var(--ink3)">A ressonância magnética se soma à mamografia (nunca substitui) em todo alto risco, com pisos de idade um pouco mais precoces -- BRCA1 não antes dos 25, por exemplo.</p>
+  <details class="ref">
+    <summary>Rastreamento em pessoas trans (referência densa)</summary>
+    <div class="refbody">
+      <div class="row"><span class="k">Homem trans, sem mastectomia</span><span class="v">Segue a régua de mulher cis, pela exposição hormonal real da mama</span></div>
+      <div class="row"><span class="k">Homem trans, com mastectomia bilateral</span><span class="v">Não rastreia</span></div>
+      <div class="row"><span class="k">Mulher trans em hormonização feminizante</span><span class="v">Segue régua de mulher cis a partir dos 40 (FEBRASGO) ou conforme tempo de uso (MS: a partir de 20 anos de terapia hormonal)</span></div>
+    </div>
+  </details>
+</section>
+
+<section class="degrau" id="d3">
+  <div class="dhead"><span class="dnum">3</span><div class="dtitle"><span class="dstage">Degrau 3</span><h2>Diagnóstico: qual exame, qual biópsia</h2></div></div>
+  <p class="lede">Cada método tem uma indicação específica -- a prova gosta de trocar um pelo outro.</p>
+  <div class="prose">
+    <p>Diante de um nódulo palpável, a escolha do exame de imagem depende da idade: abaixo dos 40 anos, ultrassonografia (a mama densa da paciente jovem não ganha nada com mamografia); a partir dos 40 anos, mamografia bilateral, que além de caracterizar o nódulo avalia a mama contralateral. Uma punção que não retorna líquido confirma que o nódulo é sólido, mas não muda essa régua etária -- não se troca mamografia por ultrassom numa paciente de 40 anos ou mais só porque o nódulo já foi puncionado.</p>
+    <p>A <strong>BAG</strong> (biópsia por agulha grossa, core biopsy) é a primeira escolha para nódulo sólido suspeito: fornece material histológico completo, incluindo o painel imuno-histoquímico que decide o subtipo molecular no degrau 5. A <strong>PAAF</strong> serve para esvaziar cisto grande, doloroso ou em crescimento, e para diferenciar cisto espesso de nódulo sólido -- é citológica, não histológica. A <strong>mamotomia</strong> (agulha grossa a vácuo) tem indicação mais específica ainda: microcalcificação suspeita visível só na mamografia, guiada por estereotaxia.</p>
+  </div>
+  <div class="trap">
+    <div class="albl">Armadilha</div>
+    <p><strong>Biópsia excisional é contraindicada como método diagnóstico inicial</strong> -- remove a lesão sem margens planejadas, o que compromete a cirurgia definitiva depois. Nunca é a resposta para "qual a conduta diante de nódulo suspeito".</p>
+  </div>
+  <div class="prose">
+    <h4 class="sub">O BI-RADS é o vocabulário, não apenas uma nota</h4>
+    <p>BI-RADS 0 significa investigação inconclusa -- completar antes de classificar. BI-RADS 1 e 2 têm risco de malignidade essencialmente nulo e seguem rastreamento habitual. BI-RADS 3 tem risco de até 2% e vai para controle em 6 meses, depois 12, depois 24 -- estável nesse percurso, rebaixa para BI-RADS 2. BI-RADS 4 (risco de 2% a 95%, com subcortes 4A, 4B e 4C) e <strong>BI-RADS 5 (acima de 95%) sempre vão para biópsia</strong> -- mesmo sem nenhum outro achado. BI-RADS 6 já é malignidade confirmada, em acompanhamento de tratamento.</p>
+    <p>Reconhecer o padrão de imagem importa mais do que decorar a tabela: nódulo circunscrito, regular, ovalado, mais largo que alto (paralelo à pele) e com microcalcificações monomórficas aponta para BI-RADS 3, tranquilo. Nódulo irregular, heterogêneo, mais alto que largo (verticalizado, crescendo em profundidade), espiculado, com sombra acústica posterior ou microcalcificações pleomórficas em padrão de "letra chinesa" aponta para BI-RADS 4 ou 5.</p>
+  </div>
+</section>
+
+<section class="degrau" id="d4">
+  <div class="dhead"><span class="dnum">4</span><div class="dtitle"><span class="dstage">Degrau 4</span><h2>Apresentação clínica: o padrão e os dois disfarces</h2></div></div>
+  <p class="lede">O achado mais comum é o que menos engana. Os dois mimetismos são o que realmente testa o degrau 3 e 4 juntos.</p>
+  <div class="prose">
+    <p>O sinal mais frequente é o nódulo duro, irregular, mal definido e indolor. Ao redor dele, um conjunto de sinais secundários -- retração do mamilo, descarga papilar sanguinolenta ou em água de rocha (tipicamente unilateral e uniductal), peau d'orange, eritema, retração ou abaulamento da pele -- completa o quadro clássico. O problema de prova não é esse padrão; é reconhecer as duas apresentações que <strong>não</strong> seguem essa régua.</p>
+  </div>
+  <div class="vs">
+    <div class="a">
+      <h5>Carcinoma inflamatório</h5>
+      <ul>
+        <li>Edema + eritema + peau d'orange em pelo menos um terço da mama, evolução rápida (semanas a 6 meses)</li>
+        <li><strong>Sem nódulo palpável</strong> -- por isso confunde com mastite</li>
+        <li>Discriminador prático: mastite dói muito; carcinoma inflamatório geralmente não</li>
+        <li>Maioria já com linfonodo axilar comprometido; cerca de um terço já com metástase à distância</li>
+        <li>Mastectomia obrigatória, mesmo com resposta completa à quimioterapia neoadjuvante</li>
+      </ul>
+    </div>
+    <div class="b">
+      <h5>Doença de Paget</h5>
+      <ul>
+        <li>Eczema do complexo areolopapilar que não cicatriza</li>
+        <li>Sempre associada a um carcinoma subjacente -- nunca é lesão isolada de pele</li>
+        <li>Conduta: biopsiar a lesão do mamilo diretamente</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="degrau" id="d5">
+  <div class="dhead"><span class="dnum">5</span><div class="dtitle"><span class="dstage">Degrau 5</span><h2>Histologia e subtipo molecular: o mecanismo que decide o tratamento</h2></div></div>
+  <p class="lede">Este é o degrau que mais rende: quem entende por que o subtipo manda no tratamento nunca mais erra questão de quimioterapia.</p>
+  <div class="prose">
+    <p>O tipo histológico mais comum de longe é o carcinoma ductal invasivo (70 a 80% dos casos), tipicamente um nódulo duro e espiculado à mamografia. O lobular invasivo (5 a 15%) cresce em células dispostas "em fila indiana" e tem tendência à bilateralidade. Um grupo de tipos raros carrega prognóstico específico: tubular, mucinoso e medular tendem a ser mais indolentes; micropapilífero tem alto potencial de disseminação linfática; metaplásico é frequentemente triplo negativo e mais agressivo; secretório, apesar do nome incomum, tem excelente prognóstico e é o "tipo pediátrico" clássico de prova.</p>
+    <h4 class="sub">Por que a classificação molecular manda em tudo depois</h4>
+    <p>Todo carcinoma invasivo é testado para três marcadores no painel imuno-histoquímico -- receptor de estrogênio (RE), receptor de progesterona (RP) e HER2 -- mais o índice de proliferação Ki-67. A combinação desses quatro resultados não é só uma etiqueta de prognóstico: ela aponta diretamente qual classe de tratamento sistêmico vai funcionar, porque cada um mira um mecanismo diferente de crescimento do tumor.</p>
+  </div>
+  <div class="crit">
+    <div class="row"><span class="k">Luminal A</span><span class="v">RE+ RP+ HER2- Ki-67 abaixo de 20%. Melhor prognóstico do grupo. Cresce dependendo de estrogênio -- hormonioterapia isolada costuma bastar</span></div>
+    <div class="row"><span class="k">Luminal B</span><span class="v">RE+, com HER2 podendo ser + ou -, e RP abaixo de 20% e/ou Ki-67 acima de 20%. Prognóstico intermediário -- hormônio associado a quimioterapia</span></div>
+    <div class="row"><span class="k">HER2 puro</span><span class="v">RE- RP- HER2+++. O crescimento depende da via HER2 -- quimioterapia associada a trastuzumabe, o anticorpo que bloqueia essa via</span></div>
+    <div class="row"><span class="k">Triplo negativo</span><span class="v">RE- RP- HER2-. Sem alvo hormonal nem HER2 para mirar -- pior prognóstico, quimioterapia isolada (± pembrolizumabe)</span></div>
+  </div>
+  <div class="aside">
+    <div class="albl">O porquê</div>
+    <p>Hormonioterapia (tamoxifeno, inibidores de aromatase) só funciona se o tumor expressar receptor hormonal -- é um bloqueio de receptor, não uma quimioterapia citotóxica. Trastuzumabe só funciona se houver HER2 superexpresso, porque é um anticorpo dirigido especificamente contra esse receptor. Triplo negativo não tem nenhum dos dois alvos disponíveis, e por isso sobra só a quimioterapia citotóxica clássica -- daí o pior prognóstico relativo do grupo.</p>
+  </div>
+  <p class="prose">O Oncotype DX soma uma camada além da imuno-histoquímica: um teste genômico de 21 genes que gera um Recurrence Score de 0 a 100 (baixo abaixo de 18, intermediário entre 18 e 31, alto acima de 31), usado para decidir se soma quimioterapia à hormonioterapia em tumores RE+/HER2-/N0 (T1-T2, hoje estendido até IIA/T1N1). É tema frio, mas cai.</p>
+</section>
+
+<section class="degrau" id="d6">
+  <div class="dhead"><span class="dnum">6</span><div class="dtitle"><span class="dstage">Degrau 6</span><h2>Estadiamento TNM: um interruptor chamado cN3</h2></div></div>
+  <p class="lede">Um único achado de linfonodo pode virar a mesa e reescrever toda a sequência de tratamento.</p>
+  <div class="prose">
+    <p>No T, o corte é por tamanho: T1 até 2 cm, T2 de 2 a 5 cm, T3 acima de 5 cm, T4 com extensão à parede torácica ou pele (T4d reservado para o carcinoma inflamatório), Tis para doença in situ. No N clínico, cN0 é axila negativa, cN1 são linfonodos axilares móveis, cN2 são linfonodos axilares ou mamários internos fixos entre si ou a estruturas adjacentes.</p>
+  </div>
+  <div class="aside">
+    <div class="albl">O interruptor</div>
+    <p><strong>cN3 -- comprometimento de linfonodo supraclavicular, ipsilateral ou contralateral -- já é, por definição, estádio IV.</strong> Não é um detalhe a mais de estadiamento locorregional: é metástase à distância. Diante de uma imagem que mostra um tumor primário tecnicamente ressecável, a tentação natural é seguir direto para cirurgia local. Mas se algum achado já fechou cN3, ele exclui a cirurgia como primeira etapa -- o caso vira sistêmico primeiro, cirurgia depois, não importa quão localizado pareça o tumor na mama.</p>
+  </div>
+  <p class="prose">Essa lógica de "quem manda primeiro" se estende ao estadiamento como um todo: estádio I até IIB com T2N1 segue para cirurgia primeiro; de IIB com T3N0 até III (localmente avançado) a sequência se inverte e a quimioterapia neoadjuvante vem antes; estádio IV é doença metastática, tratamento sistêmico como eixo central.</p>
+</section>
+
+<section class="degrau" id="d7">
+  <div class="dhead"><span class="dnum">7</span><div class="dtitle"><span class="dstage">Degrau 7</span><h2>Tratamento: a árvore de decisão completa</h2></div></div>
+  <p class="lede">Cinco decisões encadeadas -- cirurgia local, axila, radioterapia, terapia sistêmica por subtipo, drogas-alvo.</p>
+  <div class="prose">
+    <h4 class="sub">Cirurgia local: conservar ou remover</h4>
+    <p>A escolha entre quadrantectomia (remove o tumor com margem, preservando a mama -- sempre seguida de radioterapia obrigatória) e mastectomia é decidida por uma lista fechada de contraindicações à cirurgia conservadora: tumor ocupando mais de um quadrante, microcalcificações extensas, impossibilidade de obter margens livres, radioterapia torácica prévia (contraindicação absoluta), doença multicêntrica, doença vascular do colágeno ativa -- exceto artrite reumatoide, que não impede radioterapia complementar -- , carcinoma inflamatório, e o desejo da própria paciente.</p>
+  </div>
+  <div class="trap">
+    <div class="albl">Armadilha</div>
+    <p>Agressividade biológica -- grau histológico alto, subtipo triplo negativo -- <strong>não entra nessa lista</strong> e não decide sozinha entre conservar e mastectomizar. Essa decisão é geometria (tamanho do tumor frente ao tamanho da mama) mais as contraindicações formais acima; biologia agressiva direciona a necessidade de quimioterapia sistêmica, não o tamanho da cirurgia local. Um tumor pequeno sem contraindicação formal, mesmo com histologia grave, segue conservador.</p>
+  </div>
+  <div class="prose">
+    <h4 class="sub">Axila: linfonodo sentinela</h4>
+    <p>A indicação de base é carcinoma invasivo com axila clinicamente negativa -- o sentinela existe para triar um risco oculto de metástase que ainda não se sabe se existe. Duas situações ficam fora dessa indicação, por razões opostas: carcinoma <strong>in situ</strong>, que não tem via de disseminação linfática relevante (exceto se a cirurgia planejada for mastectomia, que impede reabordar a axila depois); e axila <strong>já</strong> comprometida clinicamente, com linfonodo palpável e PAAF positiva -- aí a metástase já está confirmada, e a conduta vai direto para dissecção axilar, sem precisar do sentinela para triar o que já se sabe.</p>
+    <p>A marcação é dupla, com corante azul e radiofármaco (tecnécio). Pelo critério do estudo ACOSOG Z0011, o esvaziamento axilar completo pode ser dispensado quando a axila era clinicamente negativa, o tumor é T1-T2, no máximo dois linfonodos sentinela estão comprometidos, a cirurgia foi conservadora e haverá radioterapia. Fora dessas condições -- três ou mais linfonodos comprometidos, axila já comprometida clinicamente, ou contraindicação à radioterapia -- o esvaziamento é indicado.</p>
+    <h4 class="sub">Radioterapia, hormonioterapia, quimioterapia e drogas-alvo</h4>
+  </div>
+  <div class="crit">
+    <div class="row"><span class="k">Radioterapia</span><span class="v">Sempre após quadrantectomia; após mastectomia se T3/T4 ou 4+ linfonodos comprometidos. Nunca concomitante à quimioterapia. Proibida em qualquer trimestre da gestação</span></div>
+    <div class="row"><span class="k">Hormonioterapia</span><span class="v">Pré-menopausa: tamoxifeno, 5 a 10 anos (evitar fluoxetina/paroxetina/duloxetina/bupropiona, que inibem fortemente o CYP2D6 que ativa o tamoxifeno; preferir escitalopram/citalopram). Pós-menopausa: inibidor de aromatase (anastrozol, letrozol, exemestano)</span></div>
+    <div class="row"><span class="k">Quimioterapia</span><span class="v">Protocolo padrão AC seguido de taxano. Momento (neo ou adjuvante) e limiar de tamanho variam por subtipo molecular -- luminal, HER2 e triplo negativo cada um com seu próprio corte</span></div>
+    <div class="row"><span class="k">Drogas-alvo</span><span class="v">Trastuzumabe no HER2+++ (cardiotóxico, exige ecocardiograma de monitorização, nunca com antraciclina -- só com taxano); pertuzumabe para duplo bloqueio HER2; T-DM1 no HER2 metastático que progrediu ao trastuzumabe; pembrolizumabe no triplo negativo em esquema neoadjuvante</span></div>
+  </div>
+</section>
+
+<section class="degrau" id="d8">
+  <div class="dhead"><span class="dnum">8</span><div class="dtitle"><span class="dstage">Degrau 8</span><h2>Casos especiais: cada exceção com sua própria lógica</h2></div></div>
+  <p class="lede">Três populações em que a régua padrão dos degraus 1 a 7 precisa ser ajustada -- não substituída.</p>
+  <div class="prose">
+    <h4 class="sub">Câncer de mama no homem (cerca de 1% dos casos)</h4>
+    <p>O principal fator de risco é a mutação BRCA2 -- bem mais associada ao câncer masculino que a BRCA1. Outros fatores: síndrome de Klinefelter (46 XXY), uso de esteroide exógeno, disfunção hepática, patologia testicular. Apresenta-se como nódulo retroareolar com descarga sanguinolenta, e o tratamento segue a mesma lógica da mulher, geralmente com mastectomia.</p>
+    <h4 class="sub">Câncer de mama na gestação</h4>
+    <p>O diagnóstico é mais difícil pela mama densa e ingurgitada da gestante, e o prognóstico pior decorre do atraso diagnóstico -- não da gravidez em si. Ultrassom é liberado sem restrição; mamografia é permitida com proteção abdominal; ressonância é permitida sem contraste com gadolínio.</p>
+  </div>
+  <div class="crit">
+    <div class="row"><span class="k">Cirurgia</span><span class="v">Permitida em qualquer trimestre</span></div>
+    <div class="row"><span class="k">Linfonodo sentinela</span><span class="v">Só radiofármaco -- o corante azul é potencialmente teratogênico</span></div>
+    <div class="row"><span class="k">Quimioterapia</span><span class="v">Proibida no primeiro trimestre; permitida no segundo e terceiro</span></div>
+    <div class="row"><span class="k">Radioterapia</span><span class="v">Proibida em toda a gestação</span></div>
+    <div class="row"><span class="k">Tamoxifeno / trastuzumabe</span><span class="v">Contraindicados -- teratogênicos</span></div>
+  </div>
+  <div class="prose">
+    <p>Não amamentar durante quimioterapia, tamoxifeno ou trastuzumabe.</p>
+    <h4 class="sub">Contracepção depois de um câncer de mama</h4>
+  </div>
+  <div class="aside">
+    <div class="albl">O porquê</div>
+    <p>História pessoal de câncer de mama é contraindicação categórica -- critério de elegibilidade 4 da OMS -- a qualquer contracepção hormonal, combinada ou só progestágeno, em qualquer formulação. Isso vale <strong>mesmo se o tumor original era receptor hormonal negativo</strong>, por dois motivos: o hormônio exógeno aumenta o risco de um tumor novo e independente, e um tumor originalmente receptor-negativo pode recidivar com fenótipo receptor-positivo. O método de escolha vira o DIU de cobre -- a única opção não hormonal de alta eficácia, com índice de Pearl abaixo de 1.</p>
+  </div>
+  <div class="trap">
+    <div class="albl">Armadilha</div>
+    <p>"Sem receptor no tumor índice, hormônio é indiferente" -- esse raciocínio vale para decidir hormonioterapia oncológica (que só funciona em tumor receptor-positivo), não para decidir contracepção, onde a régua é a história pessoal em si, não o status do tumor.</p>
+  </div>
+</section>
+
+<section class="synth" id="synth">
+  <h2>A escada inteira numa respirada</h2>
+  <div class="prose">
+    <p>Uma paciente entra pela porta do rastreamento -- MS ou sociedades, risco habitual ou um dos cinco critérios fechados de alto risco. Um achado leva à investigação -- BI-RADS classifica a imagem, idade escolhe entre ultrassom e mamografia, BAG confirma a histologia. A apresentação clínica separa o padrão comum dos dois disfarces que fogem da régua. A histologia e o painel molecular (RE, RP, HER2, Ki-67) não são só rótulo de prognóstico: apontam exatamente qual arma sistêmica vai funcionar. O TNM situa o caso na linha do tempo -- e um único achado, cN3, pode reescrever a ordem inteira do tratamento. A árvore de tratamento decide, em sequência, cirurgia local, axila, radioterapia, terapia sistêmica por subtipo e drogas-alvo. E três populações -- homem, gestante, sobrevivente pensando em contracepção -- pedem a régua ajustada, nunca substituída.</p>
+  </div>
+  <div class="trig">
+    <div><span class="tk">BI-RADS 5</span><span class="tv">Biópsia sempre, mesmo isolado</span></div>
+    <div><span class="tk">cN3</span><span class="tv">Já é estádio IV -- sistêmico antes da cirurgia</span></div>
+    <div><span class="tk">Alto risco (lista fechada)</span><span class="tv">Nunca fator de risco genérico</span></div>
+    <div><span class="tk">Biópsia excisional</span><span class="tv">Nunca diagnóstica</span></div>
+    <div><span class="tk">Carcinoma inflamatório</span><span class="tv">Sem nódulo -- mastectomia sempre</span></div>
+    <div><span class="tk">Triplo negativo</span><span class="tv">Sem alvo hormonal nem HER2</span></div>
+    <div><span class="tk">Trastuzumabe</span><span class="tv">Nunca com antraciclina</span></div>
+    <div><span class="tk">Gestação</span><span class="tv">Rádio proibida sempre; quimio só a partir do 2º tri</span></div>
+    <div><span class="tk">Pós-CA de mama</span><span class="tv">Hormonal contraindicado mesmo com RE/RP negativo</span></div>
+  </div>
+</section>
+
+<section id="arms" style="margin-top:52px">
+  <h2 style="font-size:23px;margin-bottom:6px">Armadilhas de prova</h2>
+  <p style="font-size:14px;color:var(--ink3);margin:0 0 4px;max-width:72ch">As doze armadilhas cumulativas do resumo, na ordem em que a prova mais costuma testá-las.</p>
+  <div class="arms">
+    <div class="arm"><span class="dot"></span><p><strong>Mamografia não é contraindicada na gestação.</strong> É evitada como rastreio de rotina, mas a mamografia diagnóstica (nódulo palpável suspeito) é permitida em qualquer trimestre com proteção abdominal. Diante de nódulo suspeito em gestante, USG é o primeiro exame, mas não substitui a mamografia quando há indicação diagnóstica.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>BI-RADS 5 = biópsia</strong>, mesmo sem outros achados -- probabilidade de malignidade acima de 95%.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Biópsia excisional é contraindicada como método diagnóstico</strong> -- impede margens livres na cirurgia definitiva depois. BAG é a primeira escolha para nódulo suspeito sólido.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>CDIS tem risco de evolução para invasivo mais de duas vezes maior</strong> que a população geral. Mamotomia é biópsia percutânea -- pode não retirar a lesão inteira, então não trata. Tratamento exige exérese com margens livres ± radioterapia; tamoxifeno só entra com receptor hormonal confirmado positivo.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Carcinoma inflamatório não tem nódulo palpável</strong> -- edema, eritema e peau d'orange de evolução rápida confundem com mastite. Mastectomia é obrigatória mesmo com resposta completa à quimioterapia.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>cN3 (linfonodo supraclavicular ipsilateral) já é estádio IV</strong> -- metástase, não doença locorregional.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Linfonodo supraclavicular comprometido -- ipsi ou contralateral -- muda a ordem do tratamento</strong>, não só o estadiamento. Diante de imagem "operável", checar sempre se algum achado já fechou estádio IV antes de partir para cirurgia; se sim, ele exclui a cirurgia como primeira etapa.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Trastuzumabe nunca é associado a antraciclina</strong> (soma cardiotoxicidade) -- combina-se com taxano.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Fator de risco geral não é sinônimo de critério de alto risco.</strong> Menarca precoce, menopausa tardia e nuliparidade não classificam sozinhas a paciente em alto risco -- a resposta certa é sempre um item da lista restrita (biópsia com atipia, mutação confirmada, história familiar pré-menopausa, etc).</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Toda categoria de alto risco -- não só mutação confirmada -- muda o rastreamento para anual.</strong> Bienal (MS) e anual "geral" das sociedades são os dois protocolos de risco habitual; alto risco sai dos dois, com o intervalo anual, qualquer que seja o critério que o definiu.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>O intervalo bienal do MS só vale a partir dos 50 anos</strong> -- risco habitual mais jovem fica em acompanhamento clínico anual, sem mamografia. Questão que nomeia a fonte explicitamente cobra a régua daquela fonte, sem misturar idade de uma diretriz com intervalo da outra.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Mutação BRCA1/2 confirmada muda a conduta de rastreio para conduta cirúrgica</strong> -- mastectomia bilateral + salpingooforectomia, não apenas vigilância intensificada (que vale para alto risco sem mutação confirmada, ou como ponte até a cirurgia).</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Fatores prognósticos: só o receptor hormonal positivo é favorável.</strong> HER2 positivo, Ki-67 elevado e invasão linfovascular presente são todos de mau prognóstico -- o reflexo de ler "positivo/alto" como desfavorável funciona para esses três, mas quebra exatamente no receptor hormonal, a única exceção em que positivo é bom prognóstico.</p></div>
+  </div>
+</section>
+
+<footer>
+  <p><strong>Fonte:</strong> <code>resumos/GO/[GIN] CA de Mama.md</code> -- resumo já auditado contra a apostila-fonte, cobertura completa das 11 seções. Bloco anterior de questões: 24 feitas, 15 acertos (62,5%), sessão 148.</p>
+  <p>Calibração D10 (cobertura extensiva) -- tema sem nota explícita do usuário, tratado como revisão completa antes do bloco "Câncer de Mama (Revisão)" de 45 questões.</p>
+</footer>
+</main>
+</div>
+</div>
+
+<script>
+(function(){
+  var links = Array.prototype.slice.call(document.querySelectorAll('.rail a'));
+  var targets = links.map(function(a){ return document.getElementById(a.getAttribute('data-r')); }).filter(Boolean);
+  if (!('IntersectionObserver' in window) || !targets.length) return;
+  var byId = {};
+  links.forEach(function(a){ byId[a.getAttribute('data-r')] = a; });
+  var obs = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if (en.isIntersecting){
+        links.forEach(function(a){ a.classList.remove('on'); });
+        var a = byId[en.target.id];
+        if (a) a.classList.add('on');
+      }
+    });
+  }, { rootMargin: '-15% 0px -70% 0px', threshold: 0 });
+  targets.forEach(function(t){ obs.observe(t); });
+})();
+</script>

@@ -7,8 +7,8 @@ relates_to: [AGENTE, handoff-contract, estado-contract]
 
 # ESTADO -- MedHub
 
-*Atualizado: 2026-08-19 (sessão 149 -- nova frente: contrato de design de artifact para aula-base, modelo = motor reusável da Autópsia) | Ferramenta: Claude Code (Sonnet 5)*
-*Anterior: 2026-08-17 (sessão 146). Narrativa por sessão: [`history/INDEX.md`](history/INDEX.md) -- o header aqui é 1 linha por contrato.*
+*Atualizado: 2026-08-22 (sessão 151 -- 3 aula-base publicadas via forks + nova cláusula de contrato: reforja de card mira a frente, não o verso, `estilo-flashcard.md`) | Ferramenta: Claude Code (Sonnet 5)*
+*Anterior: 2026-08-19 (sessão 149). Narrativa por sessão: [`history/INDEX.md`](history/INDEX.md) -- o header aqui é 1 linha por contrato.*
 
 > **Boot:** ler [`AGENTE.md`](AGENTE.md) -> [`HANDOFF.md`](HANDOFF.md) (operacional curto) primeiro. Este arquivo é o snapshot **macro** (metas, indicador, marcos). Estrutura normatizada por [`core/contracts/estado-contract.md`](core/contracts/estado-contract.md).
 
@@ -26,20 +26,20 @@ relates_to: [AGENTE, handoff-contract, estado-contract]
 - **🔄 REFINADO em s134 (2026-08-03):** ENAMED também é **piso de registro no CRM** (~60% em simulado), condição anterior a qualquer competição por vaga de residência -- reordena a prioridade imediata, não reverte os marcos acima. Cadência da semana: 2 simulados (qua/qui + dom) + 30-50 cards/dia. Detalhe em `history/session_134.md`.
 - **Plano de fim de ano:** **12.500** questões até 12/2026 (stretch 15.000). Ver `project_novo_norte_multi_banca`.
 - **Custo/Q atual:** **R$ 0,91** (jun/2026, acumulado = investimento ÷ questões), em queda; alvo no fim do plano ≈ R$ 0,26.
-- **Indicador Atual:** **6.119 / 9.454** -- **64,7%** do marco da grade · 49,0% do 2º ciclo (12.500) · perf. **78,2%** · ritmo-alvo **~48,3q/dia** (69d p/ 25/10). *(derivado: `python tools/day_plan.py --handoff-block`; histórico do indicador em `history/INDEX.md`)*
-- **Performance Geral:** **78,2%** (`sessoes_bulk`). Fracos: Hepato 57% · Dermato 67% · Cardiologia/Otorrino 68% · Hemato 74%. **Gargalo nº1 = EXECUÇÃO DE PROVA, não conteúdo** (default-to-C, fechamento precoce, não fechar a conduta) -- confirmado de novo pelo Simulado 5 (10 das 37 erradas = "escala além do necessário", ver `history/session_146.md`).
-- **Contadores (derivados):** **125 resumos** · **849 erros** · **1.141 cards ativos** (`needs_qualitative<2`; sessão 146 somou 40 diretos do Simulado 5, cunhados por 4 subagents em paralelo) · **pool FSRS 684** · **taxonomia 244 temas** · **RAG gold-only** (`pdf_raw` deletada na consolidação part-2, ~130MB liberados).
+- **Indicador Atual:** **6.432 / 9.454** -- **68,0%** do marco da grade · 51,5% do 2º ciclo (12.500) · perf. **78,4%** · ritmo-alvo **~47,2q/dia** (64d p/ 25/10). *(derivado: `python tools/day_plan.py --handoff-block`; histórico do indicador em `history/INDEX.md`)*
+- **Performance Geral:** **78,4%** (`sessoes_bulk`). Fracos: Oftalmo 50% (pouco lastro) · Cardiologia 68,7% (99q, volume real) · Hemato 71% · GO 72% · Hepato 73% · Otorrino 74%. **Gargalo nº1 = EXECUÇÃO DE PROVA, não conteúdo** (default-to-C, fechamento precoce, não fechar a conduta) -- confirmado de novo pelo Simulado 5 (10 das 37 erradas = "escala além do necessário", ver `history/session_146.md`).
+- **Contadores (derivados):** **128 resumos** · **903 erros** · **1.213 cards ativos** (`needs_qualitative<2`) · **pool FSRS 676** · **taxonomia 244 temas** · **RAG gold-only** (`pdf_raw` deletada na consolidação part-2, ~130MB liberados).
 - **Cronograma -- DOIS SSOTs (achado s114, modelo revisto na s144):** detalhamento de cada tarefa = `Cronograma.pdf` (SSOT, derivado para `core/cronograma/grade.json`); **conclusão** = coluna `Realizada?` do `Dashboard EMED 2026` (Sheets nativo, texto puro, o agente lê); **ordem** = `Cronograma de Reta Final.xlsx` reordenado à mão (ritual do usuário, `--sync-drive` local). Norma: `cronograma-contract.md` Cláusula 5b. Datas em `core/provas.json` (ENAMED 13/09 = prova · fim-grade 25/10 = grade).
 
 ---
 
 ## Estado por frente (macro)
 
-- **Volume & Metas:** 6.119 / 9.454 (grade @ 25/10) · ritmo-alvo ~48,3q/dia (69d) · zona **COBERTURA** (avançar a grade, não refinar) · variância entre blocos alta -> prescreve simulado (S5 63% confirma).
-- **Conteúdo:** 125 resumos em `resumos/`. Gaps abertos: `TCE.md`, `Sistemas de Informação em Saúde.md`, aula-base de Pré-Natal I. Corpus EMED (275 decks) consultável via `tools/emed_flashcards.py`.
-- **Erros & Cards:** 849 erros · 1.141 cards ativos · ~280 não-atômicos na worklist (WARN, `audit_card_atomicity.py`, cifra pré-s146). Régua de autoria: `estilo-flashcard.md` (um critério de acerto; teste eixo × pacote).
-- **FSRS:** dívida 45 atrasados + 16 p/ hoje · pool 684 nunca introduzidos (entram <=80-100/dia, teto subiu na s146 -- ver `feedback_politica_cards_diaria`). Invariante C = trava técnica em `record_review` desde a s144.
-- **Posição:** conteúdo S14 (nominal S21, atraso 7 sem) *(derivado: `preparacao_estado`)*. S15 é o próximo passo (`HANDOFF.md`).
+- **Volume & Metas:** 6.432 / 9.454 (grade @ 25/10) · ritmo-alvo ~47,2q/dia (64d) · zona **COBERTURA** (avançar a grade, não refinar) · desvio 10,1pp entre blocos -> simulado prescrito (em dia, 1/7d).
+- **Conteúdo:** 128 resumos em `resumos/`. Gaps abertos: `TCE.md`, `Sistemas de Informação em Saúde.md`, aula-base de Pré-Natal I. Corpus EMED (275 decks) consultável via `tools/emed_flashcards.py`.
+- **Erros & Cards:** 903 erros · 1.213 cards ativos · ~280 não-atômicos na worklist (WARN, `audit_card_atomicity.py`, cifra pré-s146). Régua de autoria: `estilo-flashcard.md` (um critério de acerto; teste eixo × pacote; **s151: reforja por "confuso" mira a frente, não o verso**).
+- **FSRS:** dívida 45 atrasados + 53 p/ hoje · pool 676 nunca introduzidos (entram <=80-100/dia, teto sobe em regime de dívida -- ver `feedback_politica_cards_diaria`). Invariante C = trava técnica em `record_review` desde a s144.
+- **Posição:** conteúdo S16 (nominal S21, atraso ~5 sem) *(derivado: `preparacao_estado`)*. Ver `HANDOFF.md` para o detalhe das tarefas confirmadas.
 - **Infraestrutura:** contratos em `core/contracts/`; harness `auto_check` (B1 do reconcile = BLOCKING real desde a s144); watermark de dado nos writers; `core/provas.json` (multi-prova). `.venv` resincronizado com `requirements.txt` na s146 (7 pacotes faltando, incl. `fsrs`).
 
 > Narrativa de cada frente (s121-s144: atomicidade medida, pivô atômico, loop reforjar/split, curva de esquecimento, autogovernança) vive em `history/` -- ver `history/session_144.md §Anexo` e `history/INDEX.md`. Esta seção é **1 linha por frente**, por contrato.

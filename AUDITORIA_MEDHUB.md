@@ -642,6 +642,61 @@ relates_to: [AGENTE, ESTADO, HANDOFF]
 
 ---
 
+## 3j. Sessao de uso s152 (drenagem de 90 cards, regime de divida) -- achado F40
+
+> Origem: dreno de 90 cards (6 blocos de 15) apos analise de 11 erros (Aleitamento+CA de Mama).
+> O usuario pediu explicitamente (2026-08-23) capturar cada reforja como **data flywheel**: "utilizar
+> as regras para rastrear os mesmos problemas ou problemas parecidos em outros cards, em sessao de
+> auditoria ampla do banco que vira em breve" -- conecta direto com F7 (mesma familia: defeito de
+> autoria de card) e com a auditoria ampla ja pendente desde a s148 (ver HANDOFF.md).
+
+### F40 -- Quatro padroes novos de defeito de formulacao de card (estimulo, nao conteudo) -- **MEDIA** -- **PARCIAL (4 reforjados nesta sessao)**
+- **Evidencia:** 4 cards reforjados ao vivo por queixa do usuario durante a drenagem, nenhum por erro
+  factual -- todos por como a FRENTE estava formulada:
+  1. **Pacote de fatos, nao eixo unico** (`card_id=44`, Damage Control/Trauma Abdominal). Pedia lista
+     de N passos sequenciais (tamponar + ressecar + peritoneostomia + reoperar em 48h) como resposta
+     unica. Usuario: "demanda tempo para responder e cansa". Ja normatizado em principio por
+     `estilo-flashcard.md` (eixo unico x pacote), mas o card sobreviveu ate hoje -- sinal de que a
+     regra existe na norma e nao no linter.
+  2. **Frente ambigua sobre indicacao ja estabelecida** (`card_id=1063`, crise de asma pediatrica).
+     A pergunta ("por que nao e necessario corticoide EV?") deixava aberto SE o corticoide sistemico
+     era indicado, quando o unico ponto de decisao real era a VIA (oral x EV). Usuario pediu "explore
+     melhor a frente e a indicacao do corticoide sistemico".
+  3. **Pergunta circular** (`card_id=484`, TTA/trauma penetrante). A frente ja continha a resposta
+     ("por que a laparoscopia e a conduta especifica"), convidando a repetir a palavra-chave dada em
+     vez de produzir o racional. Usuario: "ela ja e a resposta para o contexto; pergunta circular".
+  4. **Pergunta composta com 2 informacoes** (`card_id=1039`, HPN/Hakim-Adams). Pedia simultaneamente
+     "o achado obrigatorio" E "o que a ausencia dele aponta em vez disso" na mesma frase. Usuario:
+     "da uma volta absurda para chegar no ponto central".
+- **Leitura de sistema:** os 4 sao variantes do mesmo genero (F7 ja cobria "discriminacao incompleta";
+  este achado amplia o catalogo para "estimulo mal-formulado mesmo com discriminacao correta").
+  `audit_card_atomicity.py`/`card_checks.py` ja detectam duplo-ask e resposta-multifato via regex/
+  contagem de interrogacao -- mas nenhum dos 4 casos acima disparou WARN no momento da autoria (3 sao
+  BEM formados sintaticamente: 1 pergunta, 1 "?"), porque o defeito e SEMANTICO (a pergunta e
+  logicamente composta, ou circular, ou pede uma lista, sem violar a sintaxe que o linter checa).
+  Confirma o padrao ja registrado em F7/`project_curadoria_e_temas_zero`: **defeito de formulacao e
+  de autoria, o linter e cego ao semantico** -- só um solucionador competente (o usuario) pega.
+- **Verificacao sugerida:** rodar uma passada de amostragem no baralho ativo (~780 cards) buscando os
+  4 padroes por heuristica leve: (a) verso_resposta com >=3 clausulas ligadas por "," ou ";" fora de
+  uma enumeracao curta -> candidato a pacote-de-fatos; (b) frente_pergunta comecando por "por que
+  nao e necessario/preciso X" sem X estar explicitamente confirmado como indicado no frente_contexto
+  -> candidato a ambiguidade de indicacao; (c) overlap de token entre frente_pergunta e
+  verso_resposta ja parcialmente coberto por `checar_resposta_embutida`, mas o caso "circular" aqui
+  passou porque a palavra-chave repetida era curta/comum (laparoscopia) -- conferir o limiar RUN_MIN/
+  JACCARD_MIN contra esse caso real; (d) frente_pergunta com 2 interrogativos implicitos ligados por
+  "e" mesmo sem 2x "?" (`checar_multi_parte` so pega ">1 interrogacao" ou conectivo composto via regex
+  -- conferir se "X, e o que Y" e "X e por que Y" estao no `RE_MULTI_CONECTIVO`).
+- **Hipotese de melhoria:** (1) curto prazo -- usar os 4 casos como fixtures de regressao para
+  `card_checks.py` (se o padrao se generaliza, os proximos exemplares do banco disparam WARN
+  automatico em vez de esperar o usuario tropecar neles um a um); (2) media prazo -- quando a
+  auditoria ampla do banco (pendente desde s148, ver HANDOFF.md) rodar, usar este achado como um dos
+  eixos de varredura, nao so atomicidade/atomicidade-de-resposta. Precedente de execucao: F39 (mesma
+  familia, `audit_card_atomicity.py` + `apply_reforja.py`/`recurate_cards.py` como gate de aplicacao).
+- **Nao resolvido nesta sessao (escopo):** os 4 cards fixados sao pontuais; a auditoria ampla
+  (rastrear os MESMOS padroes no banco inteiro) e trabalho futuro, registrado aqui como o gatilho.
+
+---
+
 ## 4. O que esta solido (nao mexer sem motivo)
 
 Registrado para o PRD nao "consertar" o que funciona:
@@ -730,4 +785,8 @@ na s127) e **F38** (erros analisados nao chegam a `questoes_erros` -- pipeline c
 elevou **F36 para ALTA** com o modo de falha precisado (limite de transcricao, nao de acesso).
 Ainda na **s128**, o dreno de 40 cards produziu **F39** (40% do baralho viola o principio atomico --
 detector entregue, 8 cards atomizados, ~350 na worklist), achado **do usuario**, nao do agente.
-**Proximos achados comecam em F40**. Ultima atualizacao: s128 (2026-07-26). **Adendo 2026-07-12 (Fable/ai-eng, ciclo mecanismo-de-conhecimento):** F21 RECONCILIADO em dois planos (conduta RESOLVIDA no contrato v1.2; enforcement mecanico na spec `mecanismo-conhecimento-consolidacao-part-3`) -- ver secao 3e. Ciclo de consolidacao do mecanismo de RAG/conhecimento em andamento (part-1 audit PASS: MCP obsidian aposentado, scaffold LangGraph/BM25 removido; part-2: reconciliacao de drift documental).*
+A **s152** (2026-08-23, drenagem de 90 cards em regime de divida) registrou **F40** (4 padroes novos
+de defeito de FORMULACAO de card -- pacote-de-fatos, frente ambigua, pergunta circular, pergunta
+composta -- mesma familia do F7, gatilho para a auditoria ampla do banco ja pendente desde a s148),
+**PARCIAL** (4 cards reforjados ao vivo; rastreio no banco inteiro fica para a auditoria ampla).
+**Proximos achados comecam em F41**. Ultima atualizacao: s152 (2026-08-23). **Adendo 2026-07-12 (Fable/ai-eng, ciclo mecanismo-de-conhecimento):** F21 RECONCILIADO em dois planos (conduta RESOLVIDA no contrato v1.2; enforcement mecanico na spec `mecanismo-conhecimento-consolidacao-part-3`) -- ver secao 3e. Ciclo de consolidacao do mecanismo de RAG/conhecimento em andamento (part-1 audit PASS: MCP obsidian aposentado, scaffold LangGraph/BM25 removido; part-2: reconciliacao de drift documental).*

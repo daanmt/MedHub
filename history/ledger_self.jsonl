@@ -604,3 +604,10 @@
 {"ts": "2026-08-22T22:27:04+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "d9b05184bb2b", "alvo": "card#1392", "payload": {"padrao": "duplo-ask/conectivo", "tema": "Assistência ao Parto"}}
 {"ts": "2026-08-22T22:27:04+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "05c76c41aaa0", "alvo": "card#1401", "payload": {"padrao": "duplo-ask/conectivo", "tema": "Parasitoses"}}
 {"ts": "2026-08-23T01:43:46+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "567d7f0d9195", "alvo": "card#1403", "payload": {"padrao": "duplo-ask/segundo-nucleo", "tema": "Dependência Química"}}
+{"ts": "2026-08-23T01:45:20+00:00", "event": "resolved", "check": "posicao_ssot", "fingerprint": "01755b5ba8cb", "alvo": "HANDOFF.md"}
+{"ts": "2026-08-24T02:17:57+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "a940389bf29c", "alvo": "card#1404", "payload": {"padrao": "resposta-multifato/paragrafo", "tema": "Aleitamento Materno e Mastite Lactacional"}}
+{"ts": "2026-08-24T02:17:57+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "715736d84fef", "alvo": "card#1409", "payload": {"padrao": "resposta-multifato/paragrafo", "tema": "Câncer de Mama"}}
+{"ts": "2026-08-24T02:17:57+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "2fca5fc38625", "alvo": "card#1413", "payload": {"padrao": "resposta-multifato/paragrafo", "tema": "Câncer de Mama"}}
+{"ts": "2026-08-24T02:17:57+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "7d7f0cc1a9d9", "alvo": "card#44"}
+{"ts": "2026-08-24T02:17:57+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "a5728045894d", "alvo": "card#484"}
+{"ts": "2026-08-24T02:17:57+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "f89de720e530", "alvo": "card#1039"}

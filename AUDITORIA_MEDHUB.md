@@ -697,6 +697,70 @@ relates_to: [AGENTE, ESTADO, HANDOFF]
 
 ---
 
+### F41 -- Sessao s154 (100 cards, regime de divida): 6 novas instancias de F40 + reincidencia do padrao id=120 em Gravidez Ectopica + subpadrao tautologico em cards `[bulk]` -- **MEDIA** -- **PARCIAL (6 reforjados + 5 cards novos nesta sessao)**
+- **Evidencia (extensao direta de F40, mesma familia -- pacote-de-fatos/pergunta composta/circular):**
+  drenagem de 100 cards em 10 blocos produziu 6 reforjas ao vivo por queixa do usuario, nenhuma por
+  erro factual de conteudo:
+  1. `card_id=1053` (Vulvovaginites/Tricomoniase) -- pergunta composta fundia "qual o farmaco" +
+     "por que nao pode ser topico", sendo que o mecanismo do "por que" nem constava na regra-mestre/
+     armadilha documentada do card (nao era o mesmo eixo do farmaco-por-IST). Trimado para so o
+     farmaco; mecanismo permanece no verso.
+  2. `card_id=553` (HAS/pontos de corte) -- pedia 5 cortes numericos (consultorio/MAPA-vigilia/
+     MAPA-sono/MAPA-24h/MRPA) numa unica frente. Dividido em 4 cards atomicos (553 = so consultorio;
+     3 novos = vigilia+MRPA parelhados pelo mesmo valor numerico, sono, 24h).
+  3. `card_id=155` (Puericultura/APS) -- "crianca baixo risco = so enfermeiro? E alto risco sai da
+     APS?" eram 2 perguntas independentes coladas por "E". Dividido em 2 cards -- cada meia-verdade
+     testada isoladamente, evitando que um acerto mascare o outro erro.
+  4. `card_id=576` (DIU de cobre) -- "exige barreira apos insercao? NIC1 contraindica?" mesma
+     familia de composta. Dividido em 2.
+  5. `card_id=293` (Binswanger x doenca prionica) -- "por que X e mais provavel que Y" respondida
+     com "porque X e mais comum" e quase tautologico uma vez que se sabe a prevalencia relativa.
+     Reformulado para testar o PRINCIPIO generalizavel (prevalencia de base vence causa rara sem
+     achado especifico), nao so esse par de doencas.
+  6. `card_id=325` (Peritonite/trauma) -- mesma familia tautologica: "por que a estabilidade
+     hemodinamica nao deve adiar a laparotomia" respondida com "porque a peritonite ja e indicacao".
+     Reformulado como pergunta direta de conduta (peritonite franca precisa de imagem antes da
+     laparotomia? Nao).
+- **Subpadrao novo dentro de F40: tautologia em cards de tema `[bulk]`.** Os casos 5 e 6 (293, 325)
+  compartilham um tracco que os 4 originais do F40 nao tinham: ambos vem de temas rotulados `[bulk]`
+  (ex.: "Cirurgia / [bulk] Cirurgia", "Neurologia / [bulk] Neurologia") -- import em lote,
+  presumivelmente com menos curadoria individual por card. A assinatura do defeito e especifica:
+  pergunta no formato "por que X (achado/decisao) ocorre/e-preferido", resposta que so reafirma X
+  com outras palavras, sem mecanismo ou principio transferivel por tras. Diferente das
+  composta/circular originais do F40 (que tinham 2 fatos distintos ou auto-referencia lexical), esta
+  e uma composta-por-tautologia -- sintaticamente 1 pergunta e 1 resposta, mas logicamente sem
+  conteudo discriminador novo.
+- **Reincidencia notavel: Gravidez Ectopica tem 2 cards historicamente mal-calibrados quanto a
+  probabilidade pre-teste.** F7 (s108) ja tinha marcado `card_id=120` (mesmo tema, heterotopica-vs-
+  corpo-luteo espontaneo) como "candidato a auditoria de evidencia" -- nunca executado. Hoje,
+  `card_id=114` (beta-hCG subdiscriminatorio, cisto anexial + liquido livre em fundo de saco) foi
+  auditado via `evidence-researcher` (mesmo protocolo do card GINA STEP1 da s153) e o veredito foi
+  PRECISA AJUSTE: nem o card ("gestacao topica normal", certeza que nem FEBRASGO nem ACOG sustentam)
+  nem a contestacao do usuario ("ectopica e a mais provavel") estavam certos -- o quadro real e
+  "pregnancy of unknown location" (PUL), com falha da gestacao (~50%) mais provavel que ectopica
+  (~11%) ou que "normal" confiante. Reformulado pra moldura de PUL + conduta de beta-hCG seriado 48h
+  (fontes: ACOG Practice Bulletin 193, Connolly et al. 2013 Obstet Gynecol, FEBRASGO). `card_id=120`
+  **segue sem auditoria** -- mesmo tema, mesmo padrao de calibracao, proximo candidato natural.
+- **Calibracao aberta: 3 flags do usuario sem defeito identificado pelo agente.** cards `1411`
+  (Ca mama, cirurgia previa x biopsia com atipia), `283` (estenose duodenal parcial em Down) e `319`
+  (secao ductal pancreatica, resposta banca-especifica). Nos 3, o agente nao conseguiu enxergar
+  pacote-de-fatos/composta/circular nem erro de conteudo -- para o `319` especificamente, o card e
+  DELIBERADAMENTE banca-dependente (ja sinalizado como tal na propria armadilha do card, categoria
+  legitima pelo `evidence-governance.md`). Pendente: usuario nao respondeu ainda o que especificamente
+  incomodou nesses 3 -- proxima sessao deve retomar a pergunta antes de decidir se e um 5o subtipo de
+  F40 ou ruido de calibracao do proprio usuario apos 6 reforjas bem-sucedidas seguidas na mesma sessao.
+- **Verificacao sugerida:** quando a auditoria ampla (F40) rodar, adicionar 2 buscas: (a) join
+  `taxonomia_cronograma`/tema contra o prefixo `[bulk]` para escopar os candidatos a
+  tautologia-de-base-rate; (b) revisar TODOS os cards do tema "Gravidez Ectopica" contra criterio de
+  calibracao de probabilidade pre-teste (nao so 114/120).
+- **Hipotese de melhoria:** (1) `card_id=120` vai para `/pesquisar-evidencia` na proxima sessao de
+  auditoria -- ja tem o precedente metodologico (114, GINA STEP1) pronto pra copiar; (2) fixture de
+  regressao pro `card_checks.py` com os 6 casos de hoje, mesma logica do F40; (3) resolver a
+  pendencia de calibracao (1411/283/319) diretamente com o usuario na abertura da proxima sessao,
+  antes de tratar como sinal de novo padrao.
+
+---
+
 ## 4. O que esta solido (nao mexer sem motivo)
 
 Registrado para o PRD nao "consertar" o que funciona:
@@ -789,4 +853,10 @@ A **s152** (2026-08-23, drenagem de 90 cards em regime de divida) registrou **F4
 de defeito de FORMULACAO de card -- pacote-de-fatos, frente ambigua, pergunta circular, pergunta
 composta -- mesma familia do F7, gatilho para a auditoria ampla do banco ja pendente desde a s148),
 **PARCIAL** (4 cards reforjados ao vivo; rastreio no banco inteiro fica para a auditoria ampla).
-**Proximos achados comecam em F41**. Ultima atualizacao: s152 (2026-08-23). **Adendo 2026-07-12 (Fable/ai-eng, ciclo mecanismo-de-conhecimento):** F21 RECONCILIADO em dois planos (conduta RESOLVIDA no contrato v1.2; enforcement mecanico na spec `mecanismo-conhecimento-consolidacao-part-3`) -- ver secao 3e. Ciclo de consolidacao do mecanismo de RAG/conhecimento em andamento (part-1 audit PASS: MCP obsidian aposentado, scaffold LangGraph/BM25 removido; part-2: reconciliacao de drift documental).*
+A **s154** (2026-08-24, drenagem de 100 cards em 10 blocos, regime de divida) registrou **F41**:
+6 novas instancias de F40 (cards 1053/553/155/576/293/325, 2 delas -- 293/325 -- um subpadrao
+tautologico novo em cards de tema `[bulk]`), a reincidencia do padrao de calibracao de probabilidade
+do F7 na tema Gravidez Ectopica (`card_id=114` auditado via `evidence-researcher`, veredito PRECISA
+AJUSTE -- moldura de PUL; `card_id=120` do F7 original segue sem auditoria) e 3 flags do usuario
+(1411/283/319) sem defeito identificado pelo agente, calibracao em aberto pra proxima sessao.
+**Proximos achados comecam em F42**. Ultima atualizacao: s154 (2026-08-24). **Adendo 2026-07-12 (Fable/ai-eng, ciclo mecanismo-de-conhecimento):** F21 RECONCILIADO em dois planos (conduta RESOLVIDA no contrato v1.2; enforcement mecanico na spec `mecanismo-conhecimento-consolidacao-part-3`) -- ver secao 3e. Ciclo de consolidacao do mecanismo de RAG/conhecimento em andamento (part-1 audit PASS: MCP obsidian aposentado, scaffold LangGraph/BM25 removido; part-2: reconciliacao de drift documental).*

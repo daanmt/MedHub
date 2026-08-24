@@ -32,7 +32,9 @@ Clusterização dos gaps por tema, não por card, revelou **3 clusters que capot
 
 Mais **8 erros pontuais** que não formaram cluster mas replicam armadilha catalogada: Integralidade (princípio SUS x atributo Starfield, reincidência confirmada 2x), DRGE cirúrgica, obstrução neonatal alta (dupla bolha), LRA renovascular pós-IECA, contracepção não-hormonal, sangramento pós-menopausa, delirium/EHH, step-up de asma pós-crise grave.
 
-Publicado como Artifact único (design com paleta/tokens herdados do motor da Autópsia dos Simulados -- `paper/card/ink/teal/rose/ochre` -- mas tipografia própria Fraunces+Source Serif 4 e estrutura de leitura vertical, sem os filtros JS complexos que não fazem sentido pra 11 temas): https://claude.ai/code/artifact/8645e661-e4c3-4006-bacd-d97936e2766b. `review_log` carimbado (`directed_review`) nos 3 temas centrais (ids 167, 301, 149).
+Publicado como Artifact único (design com paleta/tokens herdados do motor da Autópsia dos Simulados -- `paper/card/ink/teal/rose/ochre` -- mas tipografia própria Fraunces+Source Serif 4 e estrutura de leitura vertical, sem os filtros JS complexos que não fazem sentido pra 11 temas). `review_log` carimbado (`directed_review`) nos 3 temas centrais (ids 167, 301, 149).
+
+**Nota (2026-08-24):** a URL original deste Artifact foi deletada da conta por motivo desconhecido (detectado pelo lifecycle de watch da sessão seguinte) e republicada a partir do arquivo local salvo: https://claude.ai/code/artifact/a27d3a31-6da8-40f1-b388-c035799316d2.
 
 ## Padrões de erro identificados
 - **Ancoragem na gravidade** (novo, 3 instâncias no lote de erros): a opção mais grave/lembrada atrai a resposta por cima do que os dados apontam -- distinto do "discriminador que exclui" (que é sobre ignorar o dado que exclui, não sobre gravidade).

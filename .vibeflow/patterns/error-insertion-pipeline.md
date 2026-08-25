@@ -3,6 +3,9 @@ tags: [error-tracking, sqlite, flashcards, cli, data-ingestion, ipub]
 modules: [tools/, app/utils/]
 applies_to: [scripts, commands, data-ingestion]
 confidence: inferred
+status: active
+canonical_source: tools/insert_questao.py module docstring; .claude/commands/analisar-questao.md §9
+last_verified: 2026-08-25
 ---
 # Pattern: Error Insertion Pipeline
 

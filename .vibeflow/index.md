@@ -112,10 +112,11 @@ patterns:
     modules: [tools/auto_check.py, tools/doc_drift.py, tools/ledger_self.py]
 <!-- vibeflow:patterns:end -->
 
-**Obsolete patterns — files still on disk, do NOT follow them:**
-`patterns/streamlit-page-structure.md`, `patterns/design-system-usage.md` (the UI they
-describe was deleted) and `patterns/fsrs-review-flow.md` (describes the hand-rolled FSRS v4
-and the 4-button player; both replaced — see `core/contracts/fsrs-management-contract.md`).
+**Removed 2026-08-25:** `patterns/streamlit-page-structure.md`, `patterns/design-system-usage.md`
+(described the deleted Streamlit UI) and `patterns/fsrs-review-flow.md` (described the
+hand-rolled FSRS v4 and the 4-button player, both replaced by `py-fsrs` + `/revisar` — see
+`core/contracts/fsrs-management-contract.md`). Zero live references confirmed repo-wide before
+deletion; this line stays as the record.
 
 ## Pattern Docs Available
 

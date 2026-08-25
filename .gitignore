@@ -50,6 +50,9 @@ artifacts/backups/
 artifacts/llm_runs/
 artifacts/audits/
 
+# /graphify output — regeneravel a partir do source (tools/, resumos/, etc.)
+graphify-out/
+
 # ledger-of-self: estado DERIVADO (reconstruivel); o .jsonl de eventos e versionado
 history/ledger_self_state.json
 core/simulados/_s*_questoes.json

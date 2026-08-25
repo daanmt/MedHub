@@ -553,6 +553,15 @@ relates_to: [AGENTE, ESTADO, HANDOFF]
 - **Verificacao sugerida:** rastrear quem escreve o campo (`insert_questao.py`? migracao legada?) e
   decidir entre (a) reconciliar contra `sessoes_bulk`, (b) derivar on-the-fly, ou (c) **remover a
   coluna** -- preferivel, se ninguem legitimo a le. Enquanto existir, adicionar check no reconcile.
+- **Nova evidencia (s155, 25/08/2026, achada via /graphify em resumos/Pediatria+GO):** o campo segue
+  sendo escrito, nao e so residuo antigo. 128 de 269 temas (48%) compartilham `questoes_realizadas`
+  identico com >=2 outros temas de **areas nao relacionadas** (ex.: 105 questoes em 21 temas
+  cruzando Pediatria/Endocrino/Obstetricia). O caso mais flagrante: `Pediatria:PTI` (id 219),
+  `Pediatria:Traumatismo Cranioencefalico na crianca` (id 222) e `Pediatria:Asma na infancia`
+  (id 233) tem `questoes_realizadas=428`, `questoes_acertadas=358` e `percentual_acertos` **identicos
+  ate a casa decimal** (83.6448...%), todos com `ultima_revisao='2026-08-23'` -- 3 dias antes desta
+  sessao. Confirma que o campo continua sendo alimentado por alguma escrita em lote que nao calcula
+  por tema; nao e apenas herdado da migracao original de 2026-07-25.
 
 ### F38 -- Erros analisados na conversa nao chegam a `questoes_erros`; a analise evapora -- **ALTA** -- **ABERTO**
 - **Evidencia (s127 -> descoberto na s128, 2026-07-25):** o bloco de Pneumologia Intensiva II teve

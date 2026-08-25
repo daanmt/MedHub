@@ -3,6 +3,9 @@ tags: [sqlite, db, data-access, ipub, queries, pandas]
 modules: [app/utils/db.py, tools/]
 applies_to: [services, handlers, scripts]
 confidence: inferred
+status: active
+canonical_source: app/utils/db.py module docstring
+last_verified: 2026-08-25
 ---
 # Pattern: DB Access Layer
 
@@ -11,10 +14,10 @@ confidence: inferred
 All SQLite access is funneled through `app/utils/db.py`. Pages and components never import `sqlite3` directly — they call typed functions that return DataFrames or dicts. Standalone CLI tools (`tools/`) have their own connections as authorized exceptions. `app/engine/` wraps `db.py` for agent consumers, adding RAG and graceful error handling.
 
 ## Where
-- `app/utils/db.py` — the sole authorized DB module in the app layer
+- `app/utils/db.py` — the sole authorized DB module in the app layer (see its module docstring for the full contract)
 - `app/engine/` — domain API layer that wraps db.py calls for external agents; agents import `app.engine`, not `app.utils.db` directly
 - `tools/insert_questao.py` — standalone CLI with its own connection (authorized exception)
-- `tools/review_cli.py`, `tools/audit_*.py`, `tools/cleanup_db.py` — standalone CLIs (authorized exception)
+- `tools/audit_*.py`, `tools/fsrs_queue.py` — standalone CLIs (authorized exception)
 
 ## The Pattern
 
@@ -59,50 +62,24 @@ def update_cronograma_status(row_id, new_status):
     conn.close()
 ```
 
-**Read-write function (FSRS update):**
-```python
-def record_review(flashcard_id, rating):
-    conn = get_connection()
-    cursor = conn.cursor()
-    df = pd.read_sql("SELECT * FROM fsrs_cards WHERE card_id = ?", conn, params=(flashcard_id,))
-    if df.empty:
-        card_data = FSRS().init_card()
-        card_data['card_id'] = flashcard_id
-    else:
-        card_data = df.iloc[0].to_dict()
-    new_metrics = FSRS().evaluate(card_data, rating)
-    cursor.execute('UPDATE fsrs_cards SET state=?, due=?, ... WHERE card_id=?', (..., flashcard_id))
-    cursor.execute('INSERT INTO fsrs_revlog (...) VALUES (...)', (...))
-    conn.commit()
-    conn.close()
-    return new_metrics
-```
+**Read-write function (FSRS update):** `record_review(flashcard_id, rating, selection_reason=None)`
+now delegates to an optimistic-lock helper (`_aplicar_review`) that raises `ConcurrentReviewError`
+on a race rather than silently overwriting — see `record_review()` in `app/utils/db.py` for the
+current implementation; do not copy an inline example here, it will rot (db.py is 1000+ lines
+and this function has changed shape twice since this pattern was written).
 
 **UPSERT pattern (fsrs_cache_cards):**
 ```python
-cursor.execute('''
-    INSERT INTO fsrs_cache_cards (erro_origem, state, stability, ...)
-    VALUES (?, ?, ?, ...)
-    ON CONFLICT(erro_origem) DO UPDATE SET
-        state=excluded.state, stability=excluded.stability, ...
-''', (erro_origem, ...))
+conn.execute('''
+    INSERT INTO preparacao_estado (chave, valor, atualizado_em, fonte)
+    VALUES (?, ?, ?, ?)
+    ON CONFLICT(chave) DO UPDATE SET
+        valor = excluded.valor, atualizado_em = excluded.atualizado_em, fonte = excluded.fonte
+''', (chave, str(valor), datetime.now().isoformat(timespec="seconds"), fonte))
 ```
-
-**Graceful count with try/except:**
-```python
-def get_cache_due_count() -> int:
-    try:
-        init_fsrs_cache_tables()
-        conn = get_connection()
-        cursor = conn.cursor()
-        cursor.execute("SELECT COUNT(*) FROM fsrs_cache_cards WHERE due <= ? AND state > 0",
-                       (datetime.now(),))
-        count = cursor.fetchone()[0]
-        conn.close()
-        return count
-    except Exception:
-        return 0  # Safe default — never crash the UI
-```
+(`set_preparacao()` in `db.py` — idempotent key-value upsert. `fsrs_cache_cards`/
+`get_cache_due_count()` from an earlier version of this pattern no longer exist — removed
+with the pre-P3 cache layer.)
 
 ## Rules
 - `import sqlite3` only in `app/utils/db.py` and standalone CLI tools — never in pages
@@ -116,16 +93,14 @@ def get_cache_due_count() -> int:
 
 ## Examples from this codebase
 
-File: `app/utils/db.py` (lines 9-10) — connection helper
-File: `app/utils/db.py` (lines 12-33) — `get_db_metrics()` read pattern
-File: `app/utils/db.py` (lines 62-68) — `update_cronograma_status()` write pattern
-File: `app/utils/db.py` (lines 105-147) — `record_review()` read-write with dual INSERT+UPDATE
-File: `app/utils/db.py` (lines 217-260) — `record_cache_review()` with UPSERT pattern
-File: `app/utils/db.py` (lines 263-277) — `get_cache_due_count()` graceful try/except
+Line-number citations rot as `db.py` grows (now 1000+ lines, was ~150 when this pattern was
+written) — find functions by name instead: `get_connection()`, `get_db_metrics()`,
+`update_cronograma_status()`, `record_review()`, `set_preparacao()`. See the module docstring
+at the top of `app/utils/db.py` for the current contract.
 <!-- vibeflow:auto:end -->
 
 ## Anti-patterns
-- `import sqlite3` in a Streamlit page (found in `2_estudo.py` tab1 as legacy fallback — do not replicate)
+- `import sqlite3` outside `app/utils/db.py` or an authorized standalone CLI — there is no UI layer anymore (Streamlit was removed, see `AGENTE.md`); every `app/` caller goes through `db.py`
 - String interpolation in SQL: `f"SELECT * WHERE id = {user_id}"` — SQL injection risk
 - Forgetting `conn.close()` — SQLite WAL mode won't release the file lock
 - Returning raw cursor rows from db.py functions — callers would depend on positional column order

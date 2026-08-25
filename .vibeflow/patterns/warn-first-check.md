@@ -3,6 +3,10 @@ tags: [harness, auto-check, warn, governance, invariants, drift]
 modules: [tools/auto_check.py, tools/doc_drift.py, tools/ledger_self.py]
 applies_to: [scripts, governance-checks]
 confidence: established
+status: active
+canonical_source: tools/auto_check.py, tools/doc_drift.py, tools/ledger_self.py (code is the
+  contract here; no separate governance doc)
+last_verified: 2026-08-25
 ---
 # Pattern: Warn-First Check (invariante de governança no harness)
 

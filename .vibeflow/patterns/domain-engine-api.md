@@ -3,6 +3,9 @@ tags: [engine, domain-api, agent-interface, rag, flashcards, typed-api]
 modules: [app/engine/, tools/]
 applies_to: [services, commands, agents]
 confidence: inferred
+status: active
+canonical_source: app/engine/__init__.py + app/engine/rag.py; AGENTE.md §6 for the export count
+last_verified: 2026-08-25
 ---
 # Pattern: Domain Engine API
 
@@ -11,29 +14,26 @@ confidence: inferred
 `app/engine/` is a typed, side-effect-free domain library exposing the system's state to external agents (Claude Code, Cursor, external scripts). It sits above `app/utils/db.py` and wraps DB queries + RAG search into stable, well-documented function signatures. Pages and agents call `app.engine` — never `app.utils.db` directly from agent code.
 
 ## Where
-- `app/engine/__init__.py` — public API surface (2 re-exports estáveis)
+- `app/engine/__init__.py` — public API surface (1 re-export estável)
 - `app/engine/get_topic_context.py` — combined DB + RAG context lookup
-- `app/engine/get_review_queue.py` — FSRS bucket query (módulo interno, não re-exportado)
-- `app/engine/summarize_performance.py` — metrics + weakness patterns
-- `app/engine/analyze_error.py` — post-insertion context synthesis (módulo interno, não re-exportado)
-- `app/engine/generate_flashcards.py` — contextual LLM card generation (Claude Haiku — módulo interno, não re-exportado)
 - `app/engine/rag.py` — semantic search over resumos/ via ChromaDB + Ollama (Multi-Query + HyDE — módulo interno, importar como `from app.engine.rag import search`)
+
+**Removed 2026-08-25 (dead — files no longer exist on disk):** `get_review_queue.py`,
+`summarize_performance.py`, `analyze_error.py`, `generate_flashcards.py`. Per `AGENTE.md:153`,
+`summarize_performance()` "foi removido junto com a UI Streamlit -- performance sai pela skill
+`/performance` + CLIs." Performance/weakness analysis is no longer an `app.engine` concern.
 
 ## The Pattern
 
-**Public API (2 stable re-exports from `app.engine`):**
+**Public API (1 stable re-export from `app.engine`):**
 ```python
-from app.engine import (
-    get_topic_context,       # dict with resumo + erros + cards + weak_areas + rag chunks
-    summarize_performance,   # total_erros + taxa_acerto + padroes (weakness)
-)
+from app.engine import get_topic_context
+# dict with resumo + erros + cards + weak_areas + rag chunks
 ```
-
-Outros módulos do `app/engine/` (`rag`, `analyze_error`, `generate_flashcards`, `get_review_queue`) existem mas NÃO são re-exportados no `__init__.py` por decisão deliberada — agentes externos consomem apenas os 2 exports estáveis acima. As funções internas servem para composição entre módulos do próprio `app/engine/`.
 
 **Typical agent workflow:**
 ```python
-from app.engine import get_topic_context, summarize_performance
+from app.engine import get_topic_context
 
 ctx = get_topic_context("Sepse Neonatal", area="Pediatria")
 # ctx = {
@@ -44,10 +44,8 @@ ctx = get_topic_context("Sepse Neonatal", area="Pediatria")
 #   "weak_areas": [{"area": "Pediatria", "pattern": "...", "error_count": 4}],
 #   "relevant_chunks": [{"text": "...", "metadata": {...}, "distance": 0.12}],
 # }
-
-perf = summarize_performance(area="Pediatria")
-# perf = {"total_erros": 12, "taxa_acerto": 0.78, "padroes": [...]}
 ```
+For performance/weakness metrics, use the `/performance` skill or the underlying `tools/` CLIs — not `app.engine`.
 
 **get_topic_context — rich context object:**
 ```python
@@ -85,19 +83,14 @@ results = search(
 # Example: "[Sepse Neonatal (sepse, RN) > Diagnóstico]\nSIRS não se aplica..."
 ```
 
-**Flashcard quality tiers:**
-```python
-# Tier 1: contextual (LLM-generated from resumo chunk — highest quality)
-#   quality_source='contextual', needs_qualitative=0
-# Tier 2: heuristic (rule-based inversion of elo_quebrado — fast fallback)
-#   quality_source='heuristic', needs_qualitative=1
-```
+**Flashcard quality:** cards are authored by the agent directly (`--cards-file` on
+`tools/insert_questao.py`, see `error-insertion-pipeline.md`) — there is no in-engine LLM
+card-generation step anymore. `quality_source` values on `flashcards` still distinguish
+provenance; see `app/utils/db.py` module docstring and `AGENTE.md §5.2`.
 
 ## Rules
 - `app/engine/` functions NEVER raise exceptions — all errors are caught and return safe defaults (`[]`, `{}`, `None`)
 - Resumo lookup uses fuzzy matching (`difflib.get_close_matches`, cutoff=0.6) — aliases in frontmatter expand the match surface
-- RAG chunks (`relevant_chunks`) take priority over keyword-matched `resumo_content` for flashcard generation
-- `generate_contextual_cards` calls `load_dotenv()` then checks `ANTHROPIC_API_KEY`; falls back to heuristic on any failure
 - `search()` is safe to call unconditionally — returns `[]` when chromadb is absent or Ollama is offline
 - `_CHROMA_AVAILABLE` flag is set at import time and can be checked for early-exit logic (avoids even calling `search()`)
 - Engine functions do NOT write to the DB — write operations belong to `tools/insert_questao.py`
@@ -105,47 +98,6 @@ results = search(
 - HyDE document generation order: Anthropic Haiku → Ollama llama3 → raw query (graceful cascade)
 
 ## Examples from this codebase
-
-File: `app/engine/analyze_error.py`
-```python
-def analyze_error(tema: str, area: Optional[str] = None) -> dict:
-    try:
-        ctx = get_topic_context(tema, area)
-    except Exception:
-        ctx = {"resumo_path": None, "resumo_content": None,
-               "erros_recentes": [], "cards_ativos": 0, "weak_areas": []}
-    resumo_available = ctx.get("resumo_path") is not None
-    return {
-        "context": ctx,
-        "resumo_available": resumo_available,
-        "can_generate_cards": resumo_available,
-    }
-```
-
-File: `app/engine/generate_flashcards.py` — quality routing with dotenv
-```python
-def generate_contextual_cards(tema, elo_quebrado, armadilha=None,
-                               resumo_content=None, relevant_chunks=None):
-    if relevant_chunks:
-        trecho = relevant_chunks[0]["text"]   # RAG wins
-    elif resumo_content:
-        trecho = _extract_relevant_section(resumo_content, elo_quebrado)  # keyword fallback
-    else:
-        return _heuristic_generate(elo_quebrado, armadilha)  # no resumo at all
-
-    try:
-        from dotenv import load_dotenv
-        load_dotenv()
-        if not os.environ.get("ANTHROPIC_API_KEY"):
-            raise ValueError("ANTHROPIC_API_KEY não definida")
-        cards = _llm_generate(elo_quebrado, armadilha, trecho)
-        for c in cards:
-            c["quality_source"] = "contextual"
-            c["needs_qualitative"] = 0
-        return cards
-    except Exception:
-        return _heuristic_generate(elo_quebrado, armadilha)
-```
 
 File: `app/engine/rag.py` — Multi-Query search + context propagation in indexing
 ```python
@@ -191,6 +143,5 @@ def search(query, n_results=5, area=None, use_hyde=True, max_distance=0.35):
 ## Anti-patterns
 - Importing `app.utils.db` directly from agent workflows — use `app.engine` functions which handle errors gracefully
 - Calling `rag.search()` without checking `_CHROMA_AVAILABLE` first — will raise ImportError if chromadb not installed
-- Using `generate_contextual_cards` without passing `relevant_chunks` from `get_topic_context()` — loses precision of RAG-targeted chunks
 - Assuming resumo index is up-to-date during a long session — index is built once per process; restart if resumos were added
 - Renaming `.md` files without re-running `tools/index_resumos.py` — leaves orphan chunks in ChromaDB with deterministic `{stem}::N` IDs

@@ -3,6 +3,10 @@ tags: [agent, workflow, boot, closure, protocol, session, ssot]
 modules: [.agents/workflows/, AGENTE.md]
 applies_to: [workflows, commands, sessions]
 confidence: inferred
+status: active
+canonical_source: AGENTE.md §2-3 (boot/closure), §6 (siamese twins) — this pattern is a
+  gen-spec-time mirror, not the SSOT; on conflict AGENTE.md wins
+last_verified: 2026-08-25
 ---
 # Pattern: Agent Workflow Protocol
 

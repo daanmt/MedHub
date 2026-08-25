@@ -3,6 +3,10 @@ tags: [clinical-writing, resumo, formatting, markdown, exam-prep, armadilhas]
 modules: [resumos/, .claude/commands/]
 applies_to: [resumos, markdown-docs]
 confidence: inferred
+status: active
+canonical_source: .claude/commands/estilo-resumo.md (SSOT, enforced by tools/audit_resumos.py) —
+  this pattern is a gen-spec-time mirror, not the SSOT; on conflict estilo-resumo.md wins
+last_verified: 2026-08-25
 ---
 # Pattern: Clinical Summary Format
 

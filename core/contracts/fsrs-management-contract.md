@@ -44,8 +44,9 @@ O FSRS é o motor de retenção do MedHub. Este contrato evita os dois modos de 
 A tensão estrutural observada na s108 (44 agendados > teto de 30 antes de qualquer card novo) é resolvida por **teto dinâmico**, não por teto fixo + mutirão:
 
 - `TETO_BASE = 30` cards/dia (agendados + novos), vigente fora do regime de dívida.
-- **Regime de dívida:** `atrasados > TETO_BASE`. Nele, `teto_efetivo = min(TETO_BASE + atrasados, 2 * TETO_BASE)` -- na prática o teto **dobra (60) até a dívida drenar**, e volta a 30 quando `atrasados <= 30`.
-- A fonte dos números é `day_plan.py` (campo `divida` no `--json`; linha "Teto do dia" no render). Constantes nomeadas em `tools/day_plan.py` (`TETO_BASE`, `CAP_MULTIPLICADOR`) -- ajuste é edição de 1 linha + este contrato.
+- `CAP_MULTIPLICADOR = 2` — fator máximo de escala do teto em regime de dívida.
+- **Regime de dívida:** `atrasados > TETO_BASE`. Nele, `teto_efetivo = min(TETO_BASE + atrasados, CAP_MULTIPLICADOR * TETO_BASE)` — na prática o teto **dobra (60) até a dívida drenar**, e volta a 30 quando `atrasados <= 30`.
+- A fonte dos números é `day_plan.py` (campo `divida` no `--json`; linha "Teto do dia" no render). Constantes nomeadas em `tools/day_plan.py` (`TETO_BASE`, `CAP_MULTIPLICADOR`) — ajuste é edição de 1 linha + este contrato.
 - O teto **informa** a sessão de revisão; quem drena é o `/revisar`. Nenhuma drenagem automática.
 - Alternativa descartada: "modo mutirão" (teto fixo + sessão dedicada quando estourar) -- decisão registrada no PRD engenharia-ledger-f1-f13.
 

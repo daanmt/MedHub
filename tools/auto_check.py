@@ -13,126 +13,21 @@ if hasattr(sys.stdout, 'reconfigure'):
 
 ROOT_DIR = Path(__file__).parent.parent.resolve()
 
-# Ledger-of-self (degrau 2 -- spec ledger-auto-instrumentacao): os WARNs dos
-# checks viram memoria estruturada. Import resiliente: sem o modulo, a
-# deteccao segue intacta (so a memoria se perde).
-try:
-    from ledger_self import record as _ledger_record
-except Exception:
-    def _ledger_record(check, findings, root=None):
-        pass
-
-
-def _git_files(args):
-    """Roda `git -c core.quotepath=false <args>` (com -z) e devolve lista de paths.
-
-    quotepath=false + split por NUL garante que caminhos acentuados (ex.:
-    'resumos/Clínica Médica/...') e com espaços cheguem inteiros, sem aspas
-    literais nem escapes octais que fariam o Path().exists() falhar em silêncio.
-    """
-    cmd = ["git", "-c", "core.quotepath=false"] + args
-    try:
-        res = subprocess.run(cmd, cwd=ROOT_DIR, capture_output=True, text=True,
-                             encoding="utf-8", check=False)
-    except Exception as e:
-        print(f"[WARN] Falha ao consultar o git ({e}).")
-        return None
-    if res.returncode != 0:
-        return None
-    return [p for p in res.stdout.split("\0") if p.strip()]
-
-
-def get_changed_files():
-    """Modificados (working tree vs HEAD) + untracked. Quotepath-safe.
-
-    Usado pelo modo --changed (Reflexo Autônomo do agente: valida a árvore).
-    """
-    diff = _git_files(["diff", "--name-only", "-z", "HEAD"])
-    if diff is None:
-        return None
-    untracked = _git_files(["ls-files", "--others", "--exclude-standard", "-z"])
-    if untracked is None:
-        return None
-    return sorted(set(diff) | set(untracked))
-
-
-def get_staged_files():
-    """Apenas o que está staged para o commit (ACMR). Quotepath-safe.
-
-    Usado pelo modo --staged (git pre-commit hook: valida só o que será selado).
-    --diff-filter=ACMR exclui deleções (D) para não auditar arquivo removido.
-    """
-    staged = _git_files(["diff", "--cached", "--name-only", "-z", "--diff-filter=ACMR"])
-    if staged is None:
-        return None
-    return sorted(set(staged))
-
-
-# --- Watermark de dado dos cards (part-6, flashcards-integridade) -----------
-# Cards vivem no ipub.db, FORA do git — gatilho por arquivo staged nao detecta
-# INSERT/reforja/delete no banco (3a causa do incidente dos 68, §6.5.2). A
-# tripla (MAX(id), COUNT(*), MAX(card_version)) cobre insert, delete e reforja
-# in-place; timestamp foi rejeitado (nao pega UPDATE nem delete — mesma licao
-# do watermark set-diff recomendado ao daktus-hub).
-
-WATERMARK_PATH = ROOT_DIR / "history" / "card_watermark.json"
-
-
-def card_watermark_atual(db_path=None):
-    """Tripla do estado atual do dado, ou None se o banco esta inacessivel
-    (sensor quebrado = WARN visivel; quem chama trata None como 'mudou')."""
-    import sqlite3
-    dbp = Path(db_path) if db_path else ROOT_DIR / "ipub.db"
-    try:
-        con = sqlite3.connect(f"file:{dbp.as_posix()}?mode=ro", uri=True)
-        try:
-            row = con.execute(
-                "SELECT COALESCE(MAX(id), 0), COUNT(*), COALESCE(MAX(card_version), 0) "
-                "FROM flashcards").fetchone()
-        finally:
-            con.close()
-        return {"max_id": row[0], "count": row[1], "max_version": row[2]}
-    except Exception as e:
-        print(f"[WARN] CARD_WATERMARK: banco inacessivel ({e}) — "
-              f"checks de card rodam por precaucao (fail-open).")
-        return None
-
-
-def card_watermark_mudou(db_path=None, marco_path=None):
-    """(mudou: bool, atual) — True quando o dado avancou desde o ultimo marco,
-    quando nao ha marco, ou quando nao da para saber (fail-open p/ deteccao)."""
-    import json
-    atual = card_watermark_atual(db_path)
-    if atual is None:
-        return True, atual
-    mp = Path(marco_path) if marco_path else WATERMARK_PATH
-    if not mp.exists():
-        return True, atual
-    try:
-        antigo = json.loads(mp.read_text(encoding="utf-8"))
-    except Exception:
-        print("[WARN] CARD_WATERMARK: marco ilegivel — tratado como 'mudou'.")
-        return True, atual
-    return antigo != atual, atual
-
-
-def card_watermark_selar(atual, marco_path=None):
-    """Persiste o marco — chamar SO depois que os checks de card rodaram
-    (corrida interrompida nao avanca o watermark)."""
-    import json
-    if atual is None:
-        return
-    mp = Path(marco_path) if marco_path else WATERMARK_PATH
-    try:
-        mp.parent.mkdir(parents=True, exist_ok=True)
-        mp.write_text(json.dumps(atual), encoding="utf-8")
-    except Exception as e:
-        print(f"[WARN] CARD_WATERMARK: falha ao selar o marco ({e}).")
-
-
-
+# Utilitários extraídos para coesão (Graphify Missão 3)
+sys.path.insert(0, str(ROOT_DIR))
+from tools.utils.git_utils import get_changed_files, get_staged_files
+from tools.utils.state_utils import (
+    _ledger_record,
+    _warn_total,
+    card_watermark_atual,
+    card_watermark_mudou,
+    card_watermark_selar,
+    check_session_pointer,
+    check_posicao_drift,
+    check_handoff_len
+)
 def run_command(cmd_list, desc, capture=False):
-    print(f"\n[AUTO-CHECK] Executando: {desc}")
+    print(f"\\n[AUTO-CHECK] Executando: {desc}")
     print(f"            $ {' '.join(cmd_list)}")
     if capture:
         # Captura + eco: preserva a saída na tela E devolve o texto para que o
@@ -140,143 +35,12 @@ def run_command(cmd_list, desc, capture=False):
         res = subprocess.run(cmd_list, cwd=ROOT_DIR, capture_output=True,
                              text=True, encoding="utf-8", errors="replace")
         if res.stdout:
-            print(res.stdout, end="" if res.stdout.endswith("\n") else "\n")
+            print(res.stdout, end="" if res.stdout.endswith("\\n") else "\\n")
         if res.stderr:
-            print(res.stderr, end="" if res.stderr.endswith("\n") else "\n")
+            print(res.stderr, end="" if res.stderr.endswith("\\n") else "\\n")
         return res.returncode == 0, res.stdout or ""
     res = subprocess.run(cmd_list, cwd=ROOT_DIR)
     return res.returncode == 0, ""
-
-
-def _warn_total(output):
-    """Extrai WARN_TOTAL da linha machine-readable do audit_resumos. 0 se ausente."""
-    m = re.search(r"WARN_TOTAL=(\d+)", output)
-    return int(m.group(1)) if m else 0
-
-
-def check_session_pointer(handoff_path=None, history_dir=None):
-    """Invariante F1 (AUDITORIA_MEDHUB): o ponteiro de sessao do HANDOFF nunca
-    excede max(history/session_NNN) + 1. Renumeracao antecipada (+1) e legitima;
-    acima disso ha sessao anunciada sem log selado.
-
-    O ponteiro e o maior sNN citado nas linhas-ancora do HANDOFF (header
-    "*Atualizado:" e heading "Proximo passo") -- nao no arquivo inteiro, para
-    nao capturar mencoes historicas em prosa. Parse defensivo: sem match ou
-    sem dados -> None (check silencioso, nunca falso-positivo barulhento).
-
-    Retorna (pointer, max_sess) em drift; None quando coerente ou sem dados.
-    """
-    handoff = Path(handoff_path) if handoff_path else ROOT_DIR / "HANDOFF.md"
-    history = Path(history_dir) if history_dir else ROOT_DIR / "history"
-    if not handoff.exists() or not history.is_dir():
-        return None
-    try:
-        text = handoff.read_text(encoding="utf-8")
-    except Exception:
-        return None
-    nums = []
-    for line in text.splitlines():
-        s = line.strip()
-        if s.startswith("*Atualizado") or (
-                s.startswith("#") and re.search(r"pr[oó]ximo passo", s, re.IGNORECASE)):
-            nums += [int(n) for n in re.findall(r"\bs(\d{2,3})\b", s)]
-    if not nums:
-        return None
-    sessions = []
-    for p in history.rglob("session_*.md"):
-        m = re.fullmatch(r"session_(\d+)", p.stem)
-        if m:
-            sessions.append(int(m.group(1)))
-    if not sessions:
-        return None
-    pointer, max_sess = max(nums), max(sessions)
-    if pointer > max_sess + 1:
-        return (pointer, max_sess)
-    return None
-
-
-def check_posicao_drift(handoff_path=None, db_path=None):
-    """Invariante POSICAO_DRIFT (op-3 / PRD orquestracao part-1): a semana de
-    conteudo citada nas linhas-ancora do HANDOFF nao pode divergir da posicao
-    SSOT do db (preparacao_estado). Ancoras: header "*Atualizado", heading
-    "Proximo passo" e a linha derivada "- **Posicao:**". Semana = S maiusculo
-    + 1-2 digitos (sessoes usam s minusculo + 3 digitos; nao colidem).
-
-    Parse defensivo: sem posicao no db, sem HANDOFF ou sem mencao de semana
-    nas ancoras -> None (silencio, nunca falso-positivo barulhento).
-    Retorna (semana_handoff, semana_db) em drift; None quando coerente.
-    """
-    handoff = Path(handoff_path) if handoff_path else ROOT_DIR / "HANDOFF.md"
-    dbp = Path(db_path) if db_path else ROOT_DIR / "ipub.db"
-    if not handoff.exists() or not dbp.exists():
-        return None
-    con = None
-    try:
-        import sqlite3
-        con = sqlite3.connect(str(dbp))
-        row = con.execute(
-            "SELECT valor FROM preparacao_estado WHERE chave='semana_conteudo'"
-        ).fetchone()
-    except Exception:
-        return None
-    finally:
-        if con is not None:
-            con.close()
-    if not row:
-        return None
-    try:
-        semana_db = int(row[0])
-    except (TypeError, ValueError):
-        return None
-    try:
-        text = handoff.read_text(encoding="utf-8")
-    except Exception:
-        return None
-    mencoes = []
-    for line in text.splitlines():
-        s = line.strip()
-        if s.startswith("- **Posicao:**"):
-            # linha derivada cita conteudo E nominal -- so a semana de conteudo conta
-            mencoes += [int(n) for n in re.findall(r"conteudo\s+S(\d{1,2})\b", s)]
-        elif s.startswith("*Atualizado") or (
-                s.startswith("#") and re.search(r"pr[oó]ximo passo", s, re.IGNORECASE)):
-            mencoes += [int(n) for n in re.findall(r"\bS(\d{1,2})\b", s)]
-    if not mencoes:
-        return None
-    divergentes = [m for m in mencoes if m != semana_db]
-    if divergentes:
-        return (divergentes[0], semana_db)
-    return None
-
-LIMITE_HANDOFF = 60
-
-
-def check_handoff_len(handoff_path=None, limite=LIMITE_HANDOFF):
-    """Condicao B1 (reconcile-contract.md) -- BLOCKING de fato.
-
-    O contrato declara B1 (`HANDOFF.md > 60 linhas`) como BLOCKING desde a s075,
-    mas o check nunca existiu em codigo: era prosa, e o HANDOFF passou de 60 sem
-    nada bloquear (achado D3 da s144 -- "warning-first virou warning-only").
-    Aqui ele vira trava tecnica, com os checks-irmaos (F1 ponteiro, POSICAO_DRIFT).
-
-    Por que BLOCKING e nao WARN: o HANDOFF e lido no boot de TODA sessao; passar
-    do teto e o mecanismo pelo qual a narrativa se acumula na camada mais cara do
-    sistema. O conserto e barato e conhecido -- migrar o excedente para
-    history/session_NNN.md (nada se perde, muda de endereco).
-
-    Conta linhas fisicas (a mesma regra do contrato: "contagem de linhas").
-    Parse defensivo: sem arquivo -> None (silencio, nunca falso-positivo).
-    Retorna (n_linhas, limite) quando estoura; None quando dentro do teto.
-    """
-    handoff = Path(handoff_path) if handoff_path else ROOT_DIR / "HANDOFF.md"
-    if not handoff.exists():
-        return None
-    try:
-        texto = handoff.read_text(encoding="utf-8")
-    except Exception:
-        return None
-    n = len(texto.splitlines())
-    return (n, limite) if n > limite else None
 
 
 def main():

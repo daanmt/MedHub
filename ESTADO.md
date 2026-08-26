@@ -7,8 +7,8 @@ relates_to: [AGENTE, handoff-contract, estado-contract]
 
 # ESTADO -- MedHub
 
-*Atualizado: 2026-08-22 (sessão 151 -- 3 aula-base publicadas via forks + nova cláusula de contrato: reforja de card mira a frente, não o verso, `estilo-flashcard.md`) | Ferramenta: Claude Code (Sonnet 5)*
-*Anterior: 2026-08-19 (sessão 149). Narrativa por sessão: [`history/INDEX.md`](history/INDEX.md) -- o header aqui é 1 linha por contrato.*
+*Atualizado: 2026-08-25 (sessão 156 -- Refatoração Arquitetural, desmembramento de God Module e curadoria Limpa-Banco de cards duplo-ask) | Ferramenta: Antigravity (Gemini 3.1 Pro)*
+*Anterior: 2026-08-22 (sessão 151). Narrativa por sessão: [`history/INDEX.md`](history/INDEX.md) -- o header aqui é 1 linha por contrato.*
 
 > **Boot:** ler [`AGENTE.md`](AGENTE.md) -> [`HANDOFF.md`](HANDOFF.md) (operacional curto) primeiro. Este arquivo é o snapshot **macro** (metas, indicador, marcos). Estrutura normatizada por [`core/contracts/estado-contract.md`](core/contracts/estado-contract.md).
 

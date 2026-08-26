@@ -1,5 +1,5 @@
 # HANDOFF.md -- ESTADO OPERACIONAL CURTO
-*Atualizado: 2026-08-25 -- MVP /graphify (arquitetura + resumos Pediatria/GO com overlay de ipub.db) + limpeza .vibeflow/patterns + evidencia nova em F37 (sessao 155)*
+*Atualizado: 2026-08-25 -- S156 (Refatoração Arquitetural, correção FSRS e Operação Limpa-Banco)*
 
 ## > Proximo passo imediato
 
@@ -21,8 +21,8 @@
 - **/graphify MVP (nova frente exploratoria, nao versionada em git):** grafo de arquitetura (tools/+core, 1344 nos) e grafo de conteudo clinico Pediatria+GO fundido com performance real de ipub.db (1258 nos). Achados: VOP (vacina descontinuada) confirma-se estruturalmente como ima de erro; "rotular cada alternativa V/F" aparece como ponte Pediatria<->GO, nao so por tema -- valida a tese padrao-metacognitivo > conteudo-clinico por um segundo angulo. 23 temas com volume real de questoes (PTI, TCE, Kawasaki, Bronquiolite, entre outros) nao tem resumo dedicado -- candidatos a aula-base futura, sem urgencia. `graph.html` de ambos disponivel em `graphify-out/` (local, gitignored) pra exploracao visual.
 - **Datas:** ENAMED 13/09/2026 (19d) -- grade fecha 25/10/2026 (61d).
 
-## Ultima sessao -- s155 (/GRAPHIFY MVP + LIMPEZA .VIBEFLOW + EVIDENCIA F37)
-Sessao de tooling/auditoria, nao de estudo direto. **(1)** `/graphify` rodado 2x: primeiro em `tools/+core/` (piloto do skill, achou `taxonomia_cronograma` como no de maior centralidade -- 3 scripts de reparo dedicados, cicatriz dos pivots do projeto); depois em `resumos/Pediatria/+GO/` (42 notas pessoais, nao os PDFs-fonte) fundido deterministicamente com `ipub.db` (erros/flashcards+FSRS/habilidades recorrentes) via schema proprio do graphify -- sem LLM na fusao, so na extracao dos conceitos clinicos. Merge feito no nivel de extracao (nao via `merge-graphs` do CLI, que derrubava arestas cujo alvo so existia do outro lado). **(2)** Limpeza de `.vibeflow/patterns/`: 3 arquivos confirmados mortos (descreviam a UI Streamlit, removida ha varias sessoes, confirmado por 3 fontes independentes) foram deletados; 6 restantes ganharam frontmatter de rastreabilidade (`status`/`canonical_source`/`last_verified`) e 2 tiveram conteudo desatualizado corrigido. **(3)** Usuario notou contagem suspeita de 428 questoes repetida em PTI/TCE/Asma -- investigacao confirmou reincidencia do achado **F37** ja aberto desde a s128 (`questoes_realizadas` inflado/orfao), com prova nova de que o campo continua sendo escrito em lote (3 dias atras). Evidencia anexada ao F37 existente em `AUDITORIA_MEDHUB.md`, nao virou achado novo. **(4)** Status de preparacao entregue a partir das fontes que o proprio F37 confirma como limpas (`sessoes_bulk`, estado FSRS) -- zona COBERTURA, simulado em debito, deficit de ritmo de 34 dias, 29 temas dormentes. Nenhuma questao ou flashcard foi respondido nesta sessao (FSRS/volume do dia seguem zerados).
+## Ultima sessao -- s156 (REFATORAÇÃO ARQUITETURAL E LIMPA-BANCO)
+Sessao de refatoracao tecnica e curadoria do banco. **(1)** Clean & Drift: Removidos artefatos obsoletos (`app/pages/`, `app/components/`) e scripts orfaos apontados pelo Graphify. Correcoes de frontmatter (`Demências.md`) e doc drift de contratos. **(2)** God Module Desmembrado: O modulo de orquestracao e validacao (`tools/auto_check.py`) foi fatiado, migrando funcoes git e validacoes de estado para os novos `tools/utils/git_utils.py` e `state_utils.py`, mantendo a assinatura da esteira autônoma e CI integrados. **(3)** Correcao de Contrato FSRS: A ambiguidade (Ambiguous Edge) do grafo sobre a constante dinamica `CAP_MULTIPLICADOR` foi resolvida no contrato `fsrs-management-contract.md`. **(4)** Operacao Limpa-Banco: Lotes 1, 2 e 3 processados manualmente (15 flashcards pais "duplo-ask" purgados e transformados, injetando 14 novos cartoes-filho no ipub.db ja sincronizados com o escalonador FSRS). A fila de "duplo-asks" global reduziu consideravelmente (restando 129 cards). O RAG foi devidamente selado. Nenhuma questao respondida (Simulado e Ginecologia pendentes pro dia seguinte).
 
 ## Pendencias/observacoes ativas
 - 🗓️ **Auditoria ampla do banco** -- ver Proximo passo #2 (F37 com evidencia fresca, soma F40+F41).
@@ -37,4 +37,4 @@ Sessao de tooling/auditoria, nao de estudo direto. **(1)** `/graphify` rodado 2x
 - Guias estatisticos de UERJ/USP (fase 2, pos-ENAMED) ainda nao existem no repo.
 
 ---
-*Historico: history/INDEX.md * Macro: ESTADO.md * Sessao: history/session_155.md*
+*Historico: history/INDEX.md * Macro: ESTADO.md * Sessao: history/session_156.md*

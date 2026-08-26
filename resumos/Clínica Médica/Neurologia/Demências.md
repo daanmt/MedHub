@@ -1,9 +1,9 @@
 ---
 area: Clínica Médica
 tema: Demências
-type: resumo
+type: knowledge
 especialidade: Neurologia
-status: ativo
+status: active
 aliases: [Demencia, Alzheimer, HPN, DFT, DCL]
 ---
 

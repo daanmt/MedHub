@@ -15,8 +15,6 @@ The canonical pipeline for registering a wrong answer: one CLI call to `tools/in
 
 ## Where
 - `tools/insert_questao.py` — the CLI entry point (writes to DB)
-- `app/engine/analyze_error.py` — post-insertion context synthesis (read-only)
-- `app/engine/generate_flashcards.py` — contextual LLM card generation after insertion
 - `app/utils/db.py` — `record_review()` for FSRS updates post-registration
 - `.agents/workflows/analisar-questoes.md` — agent workflow that invokes this pipeline
 - `.claude/commands/analisar-questao.md` — skill spec for Claude
@@ -142,28 +140,10 @@ def _invert_elo_to_question(elo: str, tema: str) -> str:
 ```
 <!-- vibeflow:auto:end -->
 
-## Post-insertion engine flow (new, sessão 062+)
 
-After `insert_questao.py` succeeds, agents can call `app.engine` for enriched context:
-```python
-from app.engine import analyze_error, generate_contextual_cards
-
-# 1. Get context (resumo + erros + FSRS + weak_areas + RAG chunks)
-resultado = analyze_error("Sepse Neonatal", area="Pediatria")
-
-# 2. Optionally generate upgraded cards anchored in resumo
-if resultado["can_generate_cards"]:
-    cards = generate_contextual_cards(
-        tema="Sepse Neonatal",
-        elo_quebrado="critério de SIRS em neonatos",
-        armadilha="SIRS não se aplica igual a adultos",
-        resumo_content=resultado["context"]["resumo_content"],
-        relevant_chunks=resultado["context"]["relevant_chunks"],
-    )
-```
 
 ## Anti-patterns
 - Inserting errors directly in the DB without going through `insert_questao.py` — bypasses FSRS init and metrics update
 - Passing `--frente_pergunta` without `--verso_resposta` (or vice versa) — only one won't trigger qualitative path
 - Updating `taxonomia_cronograma.questoes_acertadas` manually — this is managed by the ETL import script, not by error insertion
-- Calling `generate_contextual_cards` before `insert_questao.py` — engine functions are read-only; writes must happen first via the CLI
+

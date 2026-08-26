@@ -78,6 +78,7 @@ Anticorpos exógenos presentes em transfusões de sangue ou imunoglobulinas poli
 
 - **Contraindicações absolutas:** anafilaxia em dose anterior; alergia grave a componente da vacina.
 - **Contraindicação a vacinas vivas:** imunodeprimidos, imunodeficientes, gestantes (mesmo o patógeno atenuado pode causar doença nesses grupos).
+- **Imunodeficiência Combinada Grave (SCID) na Triagem Neonatal:** a suspeita ou triagem positiva no teste do pezinho ampliado exige a **suspensão imediata de todas as vacinas vivas atenuadas** (BCG, rotavírus, etc.), mesmo em lactentes assintomáticos, pelo risco de infecção vacinal disseminada grave/fatal (ex.: BCGite). As **vacinas inativadas do calendário são mantidas** normalmente.
 - **Contraindicação pontual:** doença febril aguda com queda do estado geral -- aplicar após resolução do quadro.
 - 🔴 **Falsas contraindicações (a prova adora testar isso):**
   - Corticosteroide **inalatório ou tópico** (só dose imunossupressora sistêmica contraindica).
@@ -196,8 +197,12 @@ Disponibilizam vacinas/imunoglobulinas gratuitas para populações especiais: im
   - 🔴 A ACWY **já é parte oficial do calendário do adolescente do PNI** (11-14 anos) desde 2020 -- não é apenas recomendação da Sociedade Brasileira de Pediatria/Imunizações. Cuidado com questões que insinuam "o PNI só tem MenC": a tabela MS x Sociedades mostra onde as sociedades pedem MAIS cobertura (boosters extras aos 4-6/16 anos, MenB), não que o PNI não tenha ACWY nenhuma.
 - **Febre Amarela ganhou reforço aos 4 anos (desde 2020):**
   - 🔴 Deixou de ser "dose única para sempre". Quem toma a 1ª dose entre 9 meses e < 5 anos recebe uma dose de **reforço aos 4 anos**. Só a partir dos 5-59 anos (1ª vacinação nessa faixa) é que permanece dose única sem reforço.
-- **Flexibilização de Limites para o Rotavírus (VORH):**
-  - A vacina contra o rotavírus possui risco associado de invaginação intestinal (intussuscepção).
+- **Flexibilização de Limites e Contraindicações do Rotavírus (VORH):**
+  - A vacina contra o rotavírus é viva atenuada com excreção fecal e possui risco associado de intussuscepção / invaginação intestinal.
+  - **Contraindicações Específicas:**
+    - **Ambiente Hospitalar / Criança Internada:** contraindicada formalmente pela eliminação fecal do vírus vacinal vivo atenuado (risco de surto nosocomial em pacientes internados suscetíveis).
+    - **Malformações Gastrointestinais Congênitas Não Corrigidas (ex.: atresia duodenal, má rotação intestinal) ou história prévia de invaginação intestinal:** contraindicada pelo risco aumentado de intussuscepção.
+    - Conduta no internado/malformado aos 2 meses: aplicar todas as inativadas (**Pentavalente + VIP + Pneumocócica**) e **suspender a VORH**.
   - Sob as Notas Técnicas recentes do Ministério da Saúde, os limites de resgate foram estendidos para reduzir a perda de oportunidades:
     - **1ª dose (D1):** Pode ser administrada até **11 meses e 29 dias** de vida. ⭐
     - **2ª dose (D2):** Pode ser administrada até **23 meses e 29 dias** (1 ano, 11 meses e 29 dias) de vida.
@@ -301,6 +306,8 @@ Vacinas combinadas inativadas contra Difteria (toxina, pseudomembrana em orofari
 
 ### 8.1 Reações Adversas e Contraindicações (o vilão é sempre o componente coqueluche)
 - **Febre/choro persistentes** (horas após a dose): benigno, autolimitado -- **não contraindica** doses seguintes.
+- **Abscesso local quente** (sinais flogísticos, decorrente de contaminação bacteriana secundária / erro de técnica): **não contraindica** a vacina -- manter a **DTP** nas próximas doses e realizar **notificação compulsória** de evento adverso pós-vacinação. Não trocar para DTPa.
+- **Abscesso local frio** (relação com alumínio / aplicação superficial): notificar e manter esquema com DTP.
 - **Episódio hipotônico-hiporresponsivo** (até 48h, hipotonia + hiporresponsividade + cianose/palidez): benigno, mas contraindica DTPw -- usar **DTPa** nas doses seguintes.
 - **Convulsão tônico-clônica generalizada** (até 72h): contraindica DTPw -- usar **DTPa**.
 - **Encefalopatia pós-vacinal** (até 7 dias, paralisia/déficit sensitivo/convulsão focal ou generalizada): contraindica o componente pertussis inteiro -- usar **DT** (sem coqueluche).
@@ -414,3 +421,7 @@ Vacina **inativada** antirrábica + soro antirrábico (SAR) ou imunoglobulina hu
 - 🔴 **Sarampo pós-exposição -- vacina de bloqueio só a partir de 6 meses.** Contactante suscetível **imunocompetente >= 6 meses** -> **vacina de bloqueio** (até 72h). Contactante que **não pode receber vacina viva** -- **< 6 meses**, imunodeprimidos, gestantes -> **imunoglobulina** (até 6 dias). O lactente de 4-5 meses parece "imunocompetente, dá vacina", mas está **abaixo do piso etário** da vacina viva de sarampo -> recebe imunoglobulina, igual ao imunodeprimido. (O intervalo de bloqueio pós-contato é o mesmo racional da varicela: >= 9 meses imunocompetente -> vacina; grupos especiais -> imunoglobulina.)
 - 🔴 **BCG -- contraindicação ABSOLUTA x PONTUAL.** A absoluta (nunca aplica) é a **imunodeficiência crônica: HIV+ adulto (mesmo assintomático) e criança HIV sintomática** -- vacina viva vetada permanentemente. O **peso < 2.000g é contraindicação PONTUAL** (adia até atingir o peso, depois vacina), assim como dermatose no sítio e imunossupressão transitória. Quando o enunciado pede a "absoluta", o `< 2.000g` é o distrator mais decorado -- filtrar sempre pelo qualificador permanente x adiável.
 - 🔴 **Pneumocócica 10-valente x 20-valente (calendário desatualizado):** O esquema básico infantil trocou a pneumocócica 10-valente pela **20-valente** aos **2 e 12 meses** -- só a dose dos **4 meses** ainda é 10-valente, mantida até esgotar o estoque de transição. Lactente de 2 meses hígido em vacinação de rotina recebe pentavalente + VIP + **pneumocócica 20-valente** + rotavírus; marcar "10-valente" nessa idade é erro de conhecimento desatualizado -- o esquema antigo foi o padrão ensinado por anos, mas quem não atualizou o calendário mais recente do PNI erra por desatualização, não por raciocínio clínico.
+- 🔴 **SCID no Teste do Pezinho Ampliado -- Suspensão Imediata de Vivas:** Diante de triagem neonatal positiva para Imunodeficiência Combinada Grave (SCID), mesmo em recém-nascido assintomático, contraindicam-se de imediato **todas** as vacinas vivas atenuadas (tanto virais quanto bacterianas, como a BCG). O erro clássico da prova é achar que (1) deve-se esperar a confirmação diagnóstica antes de suspender, ou (2) que a contraindicação abrange apenas vírus vivos (esquecendo que a BCG é bactéria viva atenuada). As vacinas inativadas continuam liberadas.
+- 🔴 **Abscesso Quente Pós-DTP NÃO Troca para DTPa:** O abscesso quente no sítio de injeção da DTP decorre de contaminação bacteriana secundária / falha técnica, não de hiper-reatividade ao componente *pertussis*. Portanto, o esquema segue com a **mesma vacina (DTP)** nas doses seguintes, exigindo apenas **notificação compulsória** à vigilância epidemiológica. Troca para DTPa é exclusiva para EHH (episódio hipotônico-hiporresponsivo em até 48h) ou convulsão (até 72h); encefalopatia em até 7 dias troca para DT.
+- 🔴 **Rotavírus (VORH) em Criança Hospitalizada e Malformação GI:** A vacina oral de rotavírus é contraindicada em ambiente hospitalar (risco de disseminação nosocomial por excreção fecal do vírus vacinal) e em portadores de malformações gastrointestinais não corrigidas (como atresia intestinal, pelo risco de invaginação). Aos 2 meses, o lactente internado recebe o pacote inativado completo (**Pentavalente + Pneumocócica + VIP**), excluindo unicamente a VORH.
+

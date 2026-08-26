@@ -615,3 +615,22 @@
 {"ts": "2026-08-24T19:22:43+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "84bb4f37b76a", "alvo": "card#155"}
 {"ts": "2026-08-24T19:22:43+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "4514c8552786", "alvo": "card#576"}
 {"ts": "2026-08-24T19:22:43+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "3b66ed99ab02", "alvo": "card#1053"}
+{"ts": "2026-08-26T00:18:47+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "ae9b27c7cca5", "alvo": "card#1423", "payload": {"padrao": "duplo-ask/segundo-nucleo", "tema": "Imunizações"}}
+{"ts": "2026-08-26T00:18:47+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "56b1cc502dd0", "alvo": "card#1424", "payload": {"padrao": "duplo-ask/conectivo", "tema": "Imunizações"}}
+{"ts": "2026-08-26T00:18:47+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "406a3d32a4e3", "alvo": "card#1425", "payload": {"padrao": "duplo-ask/conectivo", "tema": "Imunizações"}}
+{"ts": "2026-08-26T01:11:38+00:00", "event": "opened", "check": "cobertura_semana", "fingerprint": "acc9f53f3462", "alvo": "11. Câncer de Mama", "payload": {"semana": 16}}
+{"ts": "2026-08-26T01:11:38+00:00", "event": "opened", "check": "cobertura_semana", "fingerprint": "4d42a0707dac", "alvo": "18. Aleitamento Materno", "payload": {"semana": 16}}
+{"ts": "2026-08-26T01:11:38+00:00", "event": "opened", "check": "cobertura_semana", "fingerprint": "6f50037344dc", "alvo": "9. Cirurgia Vascular", "payload": {"semana": 16}}
+{"ts": "2026-08-26T01:11:38+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "d065b59fd250", "alvo": "card#114"}
+{"ts": "2026-08-26T01:11:38+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "ae52affa64f4", "alvo": "card#541"}
+{"ts": "2026-08-26T01:11:38+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "406a3d32a4e3", "alvo": "card#1425"}
+{"ts": "2026-08-26T01:11:42+00:00", "event": "opened", "check": "reachability", "fingerprint": "4024082adc98", "alvo": "tools/aplica_acentos.py", "payload": {"referenciadores": 0}}
+{"ts": "2026-08-26T01:11:42+00:00", "event": "opened", "check": "reachability", "fingerprint": "c7c46a7bc8bf", "alvo": "tools/autopsia_template.py", "payload": {"referenciadores": 0}}
+{"ts": "2026-08-26T01:11:42+00:00", "event": "opened", "check": "reachability", "fingerprint": "efb872d1a21c", "alvo": "tools/fila_enamed.py", "payload": {"referenciadores": 0}}
+{"ts": "2026-08-26T01:11:42+00:00", "event": "opened", "check": "reachability", "fingerprint": "7a6678bc3763", "alvo": "tools/prep_reforja.py", "payload": {"referenciadores": 0}}
+{"ts": "2026-08-26T01:29:08+00:00", "event": "opened", "check": "reachability", "fingerprint": "26368cf4dde0", "alvo": "tools/autopsia_simulados.py", "payload": {"referenciadores": 0}}
+{"ts": "2026-08-26T01:29:08+00:00", "event": "resolved", "check": "reachability", "fingerprint": "4024082adc98", "alvo": "tools/aplica_acentos.py"}
+{"ts": "2026-08-26T01:29:08+00:00", "event": "resolved", "check": "reachability", "fingerprint": "c7c46a7bc8bf", "alvo": "tools/autopsia_template.py"}
+{"ts": "2026-08-26T01:29:08+00:00", "event": "resolved", "check": "reachability", "fingerprint": "efb872d1a21c", "alvo": "tools/fila_enamed.py"}
+{"ts": "2026-08-26T01:29:08+00:00", "event": "resolved", "check": "reachability", "fingerprint": "7a6678bc3763", "alvo": "tools/prep_reforja.py"}
+{"ts": "2026-08-26T01:29:25+00:00", "event": "resolved", "check": "doc_drift", "fingerprint": "62e9808a549c", "alvo": ".claude/commands/estilo-resumo.md:resumos/Cirurgia/Trauma.md"}

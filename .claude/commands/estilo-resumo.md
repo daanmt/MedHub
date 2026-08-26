@@ -101,7 +101,7 @@ Além das regras de formato, o resumo deve cobrir todos os tópicos clinicamente
 
 ## Referências de Estilo (exemplos reais)
 
-- `resumos/Cirurgia/Trauma.md` — formatação de referência para trauma
+- `resumos/Cirurgia/[CIR] Trauma.md` — formatação de referência para trauma
 - `resumos/Clínica Médica/Cardiologia/Insuficiência Cardíaca.md` — formatação de referência para clínica
 - `resumos/GO/Assistência ao Parto.md` — referência para obstetrícia: cobertura de mecanismo de parto, taquissistolia, VCE com detalhes, indicações de cesárea, HPP preventivo e armadilhas densas
 

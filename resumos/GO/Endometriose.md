@@ -166,6 +166,7 @@ O racional do tratamento clínico é bloquear/reduzir a menstruação e o estím
 ## 10. Armadilhas de Prova
 
 - 🔴 **Padrão-ouro diagnóstico = videolaparoscopia** (visualização dos implantes; biópsia não obrigatória pela ESHRE/ASRM). É a pergunta mais frequente do tema.
+- 🔴 **Padrão-ouro histológico ≠ técnica diagnóstica rotineira inicial:** a videolaparoscopia com biópsia é o padrão-ouro formal e definitivo, porém invasivo (reservada para falha clínica ou cirurgia). O **ultrassom transvaginal com preparo intestinal** e a **ressonância magnética** são os métodos de imagem não invasivos de primeira linha com alta acurácia para mapeamento de endometriose profunda e ovariana. Paralelamente, o tratamento clínico medicamentoso visa a indução de **amenorreia e supressão estrogênica** para atrofia dos focos.
 - 🔴 **Estádio não se correlaciona com sintomas nem com a dor** -- a dor depende da profundidade e da inervação, não do estádio (ASRM). A infertilidade também ocorre em estádios iniciais.
 - 🔴 **A endometriose não aumenta o fluxo menstrual** (diferencia de mioma e adenomiose, que aumentam). A dismenorreia não é critério de DIP, mas é sintoma principal da endometriose.
 - 🔴 **Endometrioma:** operar apenas se sintomático E > 5-6 cm; realizar **cistectomia, nunca punção**. Endometrioma < 5-6 cm não tem indicação cirúrgica de rotina, e **todo endometrioma exige investigar endometriose profunda associada** (USG com preparo ou RM).

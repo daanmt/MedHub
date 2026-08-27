@@ -634,3 +634,18 @@
 {"ts": "2026-08-26T01:29:08+00:00", "event": "resolved", "check": "reachability", "fingerprint": "efb872d1a21c", "alvo": "tools/fila_enamed.py"}
 {"ts": "2026-08-26T01:29:08+00:00", "event": "resolved", "check": "reachability", "fingerprint": "7a6678bc3763", "alvo": "tools/prep_reforja.py"}
 {"ts": "2026-08-26T01:29:25+00:00", "event": "resolved", "check": "doc_drift", "fingerprint": "62e9808a549c", "alvo": ".claude/commands/estilo-resumo.md:resumos/Cirurgia/Trauma.md"}
+{"ts": "2026-08-26T04:36:32+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "9aa080279495", "alvo": "card#1429", "payload": {"padrao": "duplo-ask/conectivo", "tema": "Asma"}}
+{"ts": "2026-08-26T04:36:32+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "3f4385b3eaef", "alvo": "card#1441", "payload": {"padrao": "resposta-multifato/paragrafo", "tema": "Indicadores de saúde e mortalidade"}}
+{"ts": "2026-08-26T04:36:32+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "3ed8d5073daf", "alvo": "card#12"}
+{"ts": "2026-08-26T04:36:32+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "c2d4461ff5bb", "alvo": "card#14"}
+{"ts": "2026-08-26T04:36:32+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "f14f68610b4a", "alvo": "card#17"}
+{"ts": "2026-08-26T04:36:32+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "7f556260d057", "alvo": "card#19"}
+{"ts": "2026-08-26T04:36:32+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "f11b0b55538f", "alvo": "card#35"}
+{"ts": "2026-08-26T04:36:32+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "5e946f2cda01", "alvo": "card#42"}
+{"ts": "2026-08-26T04:36:32+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "24cd745d7938", "alvo": "card#54"}
+{"ts": "2026-08-26T04:36:32+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "525484c97858", "alvo": "card#68"}
+{"ts": "2026-08-26T04:36:32+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "fc9e60183ad5", "alvo": "card#74"}
+{"ts": "2026-08-26T04:36:32+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "683690dcdd0b", "alvo": "card#82"}
+{"ts": "2026-08-26T04:36:32+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "c30b75f2f1ec", "alvo": "card#122"}
+{"ts": "2026-08-26T04:36:32+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "2c16ebed279c", "alvo": "card#128"}
+{"ts": "2026-08-26T04:36:32+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "40decb2e0825", "alvo": "card#152"}

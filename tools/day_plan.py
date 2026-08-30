@@ -324,7 +324,15 @@ def _cronograma_hoje(total_q, hoje):
     # misturando duas escalas de tempo. A grade tem calendário próprio e fecha ~6 semanas DEPOIS
     # da prova (S30 termina 25/10), então o divisor certo é o fim da grade, não a data do ENAMED.
     # Era isso que produzia o ritmo-alvo fictício de ~116q/dia.
-    fim_grade = max((s.get("fim") or "") for s in grade["semanas"])
+    # s159: o fim da grade e o fim do CONTEUDO, nao o fim do calendario do PDF.
+    # A leitura do xlsx do Drive (F36, adendo 4) mostrou que a planilha real do
+    # usuario tem 28 semanas, a ultima "05/10 a 09/10". O grade.json, derivado do
+    # Cronograma.pdf, tem 30 -- as S29/S30 (12/10-25/10) NAO existem na planilha e
+    # ja tinham 0 questoes. Usar max(fim) esticava a grade em 2 semanas e diluia
+    # o ritmo-alvo: a mesma familia do bug corrigido na s126 (divisor errado),
+    # so que na outra ponta. O divisor certo e a ultima semana COM conteudo.
+    semanas_com_conteudo = [s for s in grade["semanas"] if (s.get("total_questoes") or 0) > 0]
+    fim_grade = max((s.get("fim") or "") for s in (semanas_com_conteudo or grade["semanas"]))
     try:
         dias_grade = (date.fromisoformat(fim_grade) - hoje).days
     except (ValueError, TypeError):

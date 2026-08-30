@@ -141,7 +141,13 @@ def test_arquivo_real_tem_prova_e_grade():
     assert por_nome["ENAMED"]["tipo"] == "prova"
     assert por_nome["ENAMED"]["data"] == date(2026, 9, 13)
     assert por_nome["fim-grade-EMED"]["tipo"] == "grade"
-    assert por_nome["fim-grade-EMED"]["data"] == date(2026, 10, 25)
+    # s159: 25/10 -> 09/10. A leitura do xlsx do Drive (F36, adendo 4) mostrou que
+    # a planilha real do usuario tem 28 semanas e termina em "05/10 a 09/10"; as
+    # semanas 29 e 30 do Cronograma.pdf (que ja tinham 0 questoes) NAO existem
+    # nela. 09/10 e tambem o fim do internato e a colacao de grau.
+    assert por_nome["fim-grade-EMED"]["data"] == date(2026, 10, 9)
+    assert por_nome["UERJ/MFC"]["tipo"] == "prova"
+    assert por_nome["UERJ/MFC"]["data"] == date(2026, 11, 1)
 
 
 if __name__ == "__main__":

@@ -958,6 +958,83 @@ relates_to: [AGENTE, ESTADO, HANDOFF]
 
 ---
 
+## 3o. Sessao de auditoria de engenharia s160 (Fable, 2026-08-30) -- achados F45-F60 + matriz de portadores + swap test
+
+> Execucao do `docs/HANDOFF-AUDITORIA-MEDHUB.md` (goal, instrumentos, formato §10, salvaguardas).
+> Metodo: graphify re-rodado no HEAD (16:32, pos-s159) como mapa; 4 varreduras por dominio
+> (tools/, app/ RAG+memoria, contratos<->codigo, harness/governanca) + verificacao ao vivo
+> (suite 317 PASSED em ~65s; `auto_check --all` PASSED com 342 WARNs; queries read-only no
+> `ipub.db`/`medhub_memory.db`/indice Chroma). Read-only sobre o motor: zero patch nesta sessao.
+> Toda afirmacao de invariante foi tratada como hipotese (regra do handoff) -- e varias cairam.
+
+### Entregavel 1 -- tabela de achados (F45+)
+
+| id | onde | classe | evidencia | mitigacao atual | proposta | prio |
+|---|---|---|---|---|---|---|
+| F45 | memoria de fraquezas (boot) | 3 | `app/memory/manager.py:173` casa par exato, mas o vocabulario que o Haiku inventa nao bate com a taxonomia: so 60/349 WeakAreas (17%) tem `error_count>0`; 109 duplicatas (31%, pior par 7x); 6x par (area,especialidade) invertido; `inspect.py:158` desempata por `last_updated` -> **o ranking que abre toda sessao mostra o mais RECENTE, nao o mais fraco** | nenhuma (F37 consertou a outra camada) | schema: `WeakArea.area` restrito ao vocabulario real (Literal/validador) + vocabulario no prompt + upsert por par (nao UUID novo) + teste | ALTA |
+| F46 | consolidacao de memoria (paths) | 3 | `manager.py:29` `_IPUB_PATH = Path("ipub.db")` relativo ao cwd; 2 bancos-fantasma de 0 bytes (`tools/ipub.db` 06/07, `data/ipub.db`) provam runs com cwd errado; `history/memory_errors.log` tem 7 falhas HOJE (`no such table: questoes_erros`) e **nenhum check le esse arquivo** | guard `path.exists()` (derrotado pelo decoy 0-byte) | codigo: path por `__file__` + connect `mode=ro` no leitor; gate: auto_check exibe tail do memory_errors.log | ALTA |
+| F47 | calibragem de dificuldade | 1 | `day_plan.py:576-579`: variavel `nota_usuario` recebe QUALQUER nota persistida -- `dificuldade_fonte` nunca decide, `dificuldade_at` nunca e lido (Clausulas 2 e 7 do revisao-calibrada-contract sem implementacao). 12 de 21 temas calibrados hoje tem fonte `agente_inferida`/`aula` tratada como soberana; a msg §4.4 ("Voce marcou 3...") atribui ao usuario nota que ele nao deu | nenhuma | codigo: fonte entra na decisao + frescor 7d reinfere; teste de precedencia input>pergunta>inferencia | ALTA |
+| F48 | RAG (app/engine) | 2/3 | indice stale SEM sensor: reconstruido 26/08, 3 resumos editados depois, 6 chunks servindo texto desatualizado (medido); upsert nao deleta cauda quando resumo encolhe (`rag.py:229`); HyDE sem timeout (`rag.py:167`, pior caso ~30min pendurado) e sem `temperature=0` -- eval ja documentou swing de 17pp run-a-run; eval manual (ultimo run 15/08), fora do auto_check; `_chunk_by_headers` (76L, pura) sem NENHUM teste | eval honesto porem manual | gate: check de staleness (mtime resumos vs chroma) no auto_check; codigo: timeout+temperature no cliente, delete de cauda; teste: chunking | ALTA |
+| F49 | writer gates | 2 | `AGENTE.md:170` ("so insert_questao escreve taxonomia, excecao set_dificuldade") e violado por 5 arquivos: `insert_card_base.py:65`, `registrar_sessao_bulk.py:115,132` (muta as colunas que set_dificuldade jura nunca tocar), `normalize_taxonomia.py`, `dedup_taxonomia.py`; `test_writer_gates.py` testa qualidade de card, NAO gates de escrita (docstring admite); o gate `import sqlite3` so varre `app/**` | convencao + nome de teste que sugere cobertura inexistente | teste estatico: allowlist tabela->writers (grep INSERT/UPDATE/DELETE), padrao ja provado em `test_revisao_calibrada.py:127` | ALTA |
+| F50 | tools/autopsia_simulados.py | 3 | 852 linhas QUEBRADAS desde a s156: `:838` importa `tools.autopsia_template`, deletado no `dc8f460`; mascarado por `.pyc` orfao no `__pycache__`; PKs hardcoded (`range(622,668)`); 0 referenciadores vivos | reachability WARN (so em `--all`, pegou 5 dias depois) | decisao fica-ou-morre; gate: `compileall`/import-check dos CLIs no auto_check (pega import dangling na hora) | MEDIA |
+| F51 | tools/auto_recurate_duplo_ask.py | 2 | writer de `flashcards`+`fsrs_cards` que BYPASSA card_checks (unico writer sem gate de qualidade), flipa `needs_qualitative=0` por texto de LLM; dependencia fantasma `google.generativeai` fora do requirements (3a superficie LLM nao declarada); BOM U+FEFF quebra `ast.parse`; orfao (0 refs) -- nasceu na s156 | inerte por falta da dependencia (mitigacao acidental) | aposentar OU reescrever sob card_checks + requirements; o teste allowlist do F49 o pegaria | MEDIA |
+| F52 | contrato FSRS x codigo | 2 | (a) load balancer inteiro (`app/utils/fsrs_balance.py`, muta `due` em TODA gravacao state==2) fora do contrato que se declara governante do FSRS -- a norma efetiva vive em `revisar.md:68`; (b) invariante `needs_qualitative=1 nao deve existir` VIOLADO em dado: 6 cards, dentro da fila ativa (`<2`), sem sensor; (c) `state=3` (relearning) existe em 3 cards e nao esta no vocabulario do contrato | nenhuma p/ (b); (a) so doc de comando | contrato absorve o balanceador (params ja estaveis) + check `needs_qualitative=1` no auto_check + vocabulario state atualizado | MEDIA |
+| F53 | HANDOFF/ESTADO derivacao | 2 | so o cap de 60 linhas fisicas segura (BLOCK real); TODOS os caps estruturais violados no HANDOFF atual (10 bullets onde cabem 3; 6 itens numa linha fisica p/ evadir o cap de 5; frente `Erros & Cards` ausente; vocabulario fora do canone); causa mecanica: `render_handoff_block` nao deriva `Erros & Cards`; `ESTADO.md:36` rotula "derivados" contadores digitados a mao (so resumos e derivado) | teste de linhas fisicas (evadivel por construcao) | codigo: estender render_handoff_block (vocabulario completo); gate: check estrutural de frentes | MEDIA |
+| F54 | ledger-of-self (degrau 2) | 2 | 462 fingerprints, 279 abertos (263 `card_atomicidade`), mesmo WARN visto **102x em 36 dias**; nenhum codigo chama `ledger_self.abertos()`; auto_check nunca imprime o topo da divida; nao ha criterio de promocao WARN->BLOCK ("warning-first virou warning-only", D3 confirmado com numeros) | escrita fiel, leitura zero | codigo: auto_check imprime top-N de abertos + idade; regra de promocao (ex.: aberto ha >30d com >50 ocorrencias escala severidade) | ALTA |
+| F55 | pre-commit --staged | 2 | `git_utils.py:47` colhe so NOMES staged; `auto_check.py:225` roda pytest contra o FILESYSTEM -- commit parcial (`git add -p`) e validado pelo codigo errado nas duas direcoes | nenhuma | codigo: validar o indice (stash -k -u ou worktree temporaria) | MEDIA |
+| F56 | reconcile-contract | 2 | B2 declarada BLOCKING, implementada como WARN com `success=True` fixo (`auto_check.py:267`) -- e checa condicao aparentada (ponteiro>max+1), nao a escrita; B3/B4/W1/W3/W4 sem implementacao nenhuma (coluna "como checar" e prosa); mesma falha que o changelog v1.1 declarou consertada (consertou so B1) | B1 exemplar; resto convencao | promover B2 a BLOCK real OU re-ratificar contrato com o rebaixamento explicito; matriz condicao->instrumento | MEDIA |
+| F57 | camada de memoria do harness | 2 | **o achado-tese, com caso provado**: 51 `feedback_*` fora do git/invisiveis p/ outros harness; a s156 (Antigravity) deletou `tools/autopsia_template.py` que a memoria-CONTRATO de s149 (`feedback_aula_base_artifact_design_contract`) aponta como modelo canonico -- a sessao nao via a memoria, a memoria nao detecta a delecao (3 arquivos de memoria apontam p/ o morto); 2 memorias fora do indice MEMORY.md (1 regra ATIVA invisivel: `feedback_fsrs_override_autoconfirm`; 1 morta de s044: `project_semantic_architecture`); ~2/3 das 51 duplicam portador versionado sem reconciliador (assinatura TETO_BASE aplicada a memoria) | AGENTS.md avisa (prosa) | migrar regra load-bearing p/ portador versionado (skill/contrato; vereditos por familia abaixo); check barato: grep de paths `tools/*.py` citados em `memory/*.md` contra o disco | ALTA |
+| F58 | integridade de history/ | 3 | `session_156.md` corrompido NO SSOT: BOM + escapes comidos na escrita (`\t`ools -> tab literal, `pp/pages`, `uto_check`, `esumos/`, `srs-management`) -- nenhum gate olha history/; tabela do INDEX.md para na s144 (entradas novas so em prosa) | nenhuma | gate: check de encoding/estrutura minima de `session_NNN.md` novo no auto_check | BAIXA |
+| F59 | permissoes do harness | 2 | `settings.local.json`: 166 entradas allow, ZERO deny/ask; `Bash(python:*)` = execucao arbitraria pre-aprovada; `pip install:*`; ~40% e lixo one-shot de sessoes antigas (seds de arquivo que nem existe) -- lista ilegivel = entrada perigosa futura passa despercebida | julgamento do agente | config: bloco deny minimo (rm -rf, git reset --hard, git clean, push --force) + poda das entradas mortas | MEDIA |
+| F60 | robustez de exit code | 3 | `backup_db.py:104` imprime "BACKUP CORROMPIDO -- abortando" e sai **0**; `importar_sessoes.py` sai 0 com 100% das linhas rejeitadas; 18/45 CLIs nunca retornam !=0; 11 excepts silenciosos so no day_plan (plano pode sair sem zona/frieza/prescricao sem 1 aviso) | padrao certo ja existe (`insert_questao.py:474`, F27) e nao foi generalizado | codigo: exit simetrico nos writers + `[WARN]` impresso nas degradacoes do day_plan | MEDIA |
+
+**Anexo -- menores (nao-F, para varreduras futuras):** `DB_PATH` redefinido 22x em 8 grafias (env `MEDHUB_DB` resolveria); `AREAS_VALIDAS` duplicada com divergencia (performance.py sem "Simulado"); 4a definicao de "card ativo" sobrevivente (`detect_clones.py:38` sem COALESCE); `resolve_tema_id` reimplementado 5x sem o desempate deterministico; PRAGMA foreign_keys em so 6/12 caminhos de escrita (dedup/normalize deletam taxonomia SEM FK ativa); 4 CLIs "read-only por docstring" abrem conexao gravavel (variancia, performance, review_radar, detect_clones -- `mode=ro` custa 1 linha); funcoes-monstro `auto_check.main` 488L e `insert_questao` 198L; `sync_skills --check` cego a drift de `description` e a espelho orfao; reachability conta mencao textual como alcance (lapide passa) e so roda em `--all`; `suites_orfas` valida por substring (mencionada != inscrita); README.md errado em 5 pontos verificaveis (BM25, generate_flashcards.py, two-tier, summarize_performance, metricas velhas); AGENTS.md diz "13 checks/2 BLOCK" vs medicao 19 unidades/8 BLOCK; frontmatter version != titulo em 4/9 contratos; `resumo_read` e kind fantasma; model id `claude-haiku-4-5-20251001` pinado e duplicado em 2 modulos; DeprecationWarning do datetime adapter (95 no run da suite); `pubmedmcp` caiu NESTA sessao e nenhum sensor distingue declarado de conectavel; graphify reporta "Import Cycles: None" mas rag.py<->get_topic_context tem ciclo real gerenciado por import lazy (limite do extrator); AUDITORIA_MEDHUB.md so cresce (99->115KB em 5 dias, 29 RESOLVIDOS no corpo) violando a auto-higiene binaria do AGENTE.md:63 -- e higiene de scratch/tmp nao tem sensor.
+
+### Entregavel 2 -- matriz de portadores de regra (§10b, validada)
+
+| # | portador | onde vive | enforcement real | se ninguem carregar | versionado? |
+|---|---|---|---|---|---|
+| 1 | CLAUDE.md -> AGENTE.md | repo | nenhum (prosa de boot) | swap test provou: parte ignorada por agente externo | sim |
+| 2 | AGENTS.md | repo | nenhum | enquadramento p/ agente externo (entregue s159; ja com 1 drift de contagem) | sim |
+| 3 | core/contracts/ (9) | repo | parcial -- so onde ha teste-espelho (LIMITE_HANDOFF sim; balanceador/precedencia nao) | drift silencioso (TETO_BASE 30x40 5 semanas; F47/F52 vivos) | sim |
+| 4 | .claude/commands/ (11 skills) | repo | nenhum -- passo acontece se o agente ler | F42, override reprovado 3x | sim |
+| 5 | .agents/skills/ (espelhos) | repo | sync_skills --check (WARN; cego a description/orfao) | espelho mente p/ Codex/Antigravity | sim (gerado) |
+| 6 | .agents/workflows/ | repo | nenhum | orquestracao improvisada | sim |
+| 7 | hooks (SessionStart, PostToolUse(Write), pre-commit) | .claude/ + .git | **REAL** | -- | parcial (.git/hooks reinstalavel) |
+| 8 | tools/auto_check.py | repo | **8 BLOCK + 11 WARN** (medido; melhorou de 2 BLOCK na s159) | falso verde onde e WARN (F54) | sim |
+| 9 | suite pytest (317) | repo | REAL **quando coletada** (allowlist manual; 6/38 suites so em branches condicionais) | suite fantasma (test_handoff_teto, 3 sessoes) | sim |
+| 10 | schema/constraints ipub.db | db | REAL (UNIQUE, FK -- mas FK OFF em 6/12 caminhos de escrita) | orfaos p/ o check_fk_orphans achar depois | schema em init_db.py sim |
+| 11 | memorias ~/.claude (77; 51 feedback_*) | FORA do repo | **nenhum + invisivel p/ outros harness** | F57 (caso provado autopsia_template) | **NAO** |
+| 12 | medhub_memory.db (weak_areas) | fora do git | nenhum -- e 83% com error_count=0 (F45) | ranking do boot vira "mais recente" | NAO |
+
+**Leitura confirmada com ajuste:** vinculantes de verdade = 7, 9-quando-coletada, 10, e o 8 subiu de 2/13 p/ 8/19 BLOCK na s159. As 51 memorias que mais governam o comportamento seguem 100% decorativas e nao-versionadas. Vereditos por familia (§8 do handoff): **conduta do /revisar (8)** -> passo/template da skill versionada (+ relearning intra-sessao vira codigo na fila); **aula-base (10)** -> contrato versionado + gate barato p/ ancorar-PDF + lint p/ width; **padroes de erro do usuario (10)** -> dado/schema (ja e o dominio do weak_areas/habilidades -- hoje ha DOIS SSOTs do mesmo fato); **numeros (2)** -> constante+teste (feito p/ TETO_BASE; memoria encolhe p/ o porque); **flashcards/curadoria (8)** -> regua ja vive em estilo-flashcard.md, memorias-duplicata encolhem p/ ponteiro; **processo (13)** -> prosa legitima MAS com portador repo (AGENTE.md/workflows), nao memoria de harness. "Permanece prosa" so se declarado onde e por que.
+
+### Swap test retroativo (§11) -- s156-s158 (Antigravity/Gemini)
+
+| check mecanico | s156 (3.1 Pro) | s157 (3.7 Flash) | s158 (3.7 Flash) |
+|---|---|---|---|
+| HANDOFF atualizado | sim | sim | sim |
+| log criado + indexado | log sim; INDEX so no commit seguinte | sim | sim |
+| auto_check | "PASSED" **falso verde** (coleta quebrada por ele mesmo -- F44) | "PASSED" falso verde herdado | idem |
+| integridade do log | **corrompido** (F58: BOM + escapes comidos) | ok | ok |
+| ipub.db coerente c/ narrativa | plausivel | coerente (F38 nao acusa) | coerente |
+| contratos respeitados | **NAO**: TETO_BASE 30x40 mantido em commit "resolver ambiguidade"; quebrou coleta de suite (3 sessoes); criou CLI orfao com dep fantasma (F51); **deletou o alvo de memoria-CONTRATO invisivel (F57) e deixou o importador dangling (F50)** | ok mecanicamente | ok mecanicamente |
+
+**Placar por classe:** s156 = 5 divergencias estruturais, TODAS classe 2/3, NENHUMA travou; s157/s158 = 0 divergencias mecanicas proprias (mas herdaram o falso verde). **Hipotese do handoff CONFIRMADA:** a divida e classe 2 (contrato implicito sem gate), nao classe 4 (capacidade) -- nenhum dos defeitos exigiria modelo mais forte para ser evitado, todos exigiam um gate que nao existia. Maturidade (criterio §11.4): != 0, e nada travou ruidosamente.
+
+### O que esta solido (adicoes da s160 -- nao mexer sem motivo)
+
+- **Suite 317 PASSED em ~65s** e, desde a s159, o auto_check RODA o pytest (check 2d BLOCK + escalonamento por substrato compartilhado -- correcao de causa-raiz, nao remendo).
+- **Lock otimista no caminho FSRS** (`app/utils/db.py:420-481`): rowcount-check + rollback + revlog na mesma transacao. Concorrencia correta onde quase ninguem faria.
+- **Watermark de dado** (auto_check cobre o ipub.db, nao so o git): tripla (MAX id, COUNT, MAX card_version), mode=ro, fail-open, selo pos-checks. As 3 decisoes dificeis certas.
+- **`backup_db.py`**: copia -> integrity_check NA COPIA -> aborta sem tocar nada -> so entao rotaciona + COUNT-ASSERT. Ordem correta de operacao destrutiva (so falta o exit code, F60).
+- **Eval do RAG com honestidade epistemica rara**: "misses sao dados", CI declarado, ruido run-a-run isolado e quantificado, folclore superseded explicitamente.
+- **Meta-tooling de segunda ordem**: reachability + suites_orfas (auto-referente de proposito) atacam a classe "construido-e-nunca-conectado" que quase nenhum repo instrumenta.
+- **Densidade de rationale nos comentarios** (incidente + sessao + porque): foi o que permitiu a auditoria distinguir decisao de acidente.
+- **Zero SQL injection, zero bare except, zero path absoluto hardcoded, zero segredo vazado** (chave so via os.environ; .env/.db/.pdf fora do git -- verificado).
+
+---
+
 ## 4. O que esta solido (nao mexer sem motivo)
 
 Registrado para o PRD nao "consertar" o que funciona:

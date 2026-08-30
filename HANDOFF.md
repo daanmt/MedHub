@@ -1,5 +1,5 @@
 # HANDOFF.md -- ESTADO OPERACIONAL CURTO
-*Atualizado: 2026-08-30 -- S159 (VIRADA DE NORTE UERJ/MFC + bloco de engenharia F37/F38/F42 + preparo da auditoria de harness)*
+*Atualizado: 2026-08-30 -- S160 (auditoria de engenharia do motor: F45-F60 + handoff p/ /ai-eng)*
 
 ## > Proximo passo imediato
 
@@ -7,21 +7,18 @@
 2. **Ritmo novo: 60q/dia + 60 flashcards/dia** -- media sustentavel declarada pelo usuario (s159). Constancia acima de pico: nada de 500q em 5 dias e 3 dias parados.
 3. **Grade EMED na ordem atual ate 13/09** -- o rescope pro formato UERJ so acontece DEPOIS do ENAMED (decisao explicita do usuario).
 4. 🔴 **ABERTURA DA S160 = AUTOPSIA DO SIMULADO ENAMED.** O usuario se comprometeu a fazer o simulado na integra em **30/08, mais tarde no dia**, e entregar o resultado. Rodar sob `PLAYBOOK_EXECUCAO_PROVA.md`. Era o simulado em debito ha 7d.
-5. 🔬 **SESSAO PROPRIA DE ENGENHARIA PURA (contexto limpo, orquestrada pelo Fable).** Guia completo em
-   [`docs/HANDOFF-AUDITORIA-MEDHUB.md`](docs/HANDOFF-AUDITORIA-MEDHUB.md) -- ele E o objetivo daquela sessao.
-   Escopo: camada do motor (erros, flashcards/FSRS, gestao, contratos, gates) + camada de regra
-   (o que vira regra e o que a obriga). **Dois entregaveis:** tabela de achados F43+ e a matriz de
-   portadores de regra (§10b). **Colar a Parte 0 do guia como 1a mensagem** -- e o preambulo que
-   impede o Fable de travar pelo conteudo clinico do repo. Teto de 5 subagents Sonnet 5, fan-out por
-   dominio, grafo antes de arquivo (§13). Tese-mae: `~/ai-eng/HANDOFF-AUDITORIA-PERICIA.md` (Parte I).
-   Primeiro ato: re-rodar o graphify no HEAD (o grafo e de 25/08, anterior as 3 sessoes Antigravity).
-   🔑 Quem dispara e o usuario: enquanto ele nao chamar, este item NAO compete com o estudo.
+5. 🔬 **ENGENHARIA: auditoria s160 EXECUTADA (30/08) -> proximo ato e do /ai-eng.** Achados
+   F45-F60 + matriz de portadores + swap test selados em `AUDITORIA_MEDHUB.md §3o`. O dossie de
+   consumo para o /ai-eng (PRD da "cola": determinismo + consumo do harness + portabilidade;
+   perguntas P1-P7) esta no workspace DELE: `~/ai-eng/HANDOFF-MEDHUB-COLA.md` (precedente do
+   perito) -- autossuficiente, evidencia inline, nao re-derivar. Consertos NAO aplicados de proposito
+   (salvaguarda read-only). 🔑 Quem dispara o /ai-eng e o usuario.
 6. **Frente MFC (Gusso + Duncan)** -- abre em 14/09 junto do rescope. Vale 20% da prova e o lastro hoje e zero.
 
 ## Estado por frente
 - **Norte:** 🎯 **UERJ/MFC 01/11/2026** (63d). ENAMED 13/09 (14d) e **termometro**, nao piso -- o CRM e automatico. Horizonte real: UERJ -> R1/R2 MFC (mar/27-fev/29) -> RQE -> ENAMED com +10% p/ Psiquiatria.
 - **Volume & Metas:** 6631 / **10.400 @ 01/11** (perf. ~78.8%). Faltam 3769 em 63d -> ritmo-alvo **~59.8q/dia**. Marco antigo (grade 9454 @ 25/10) aposentado.
-- **FSRS:** divida 24 atrasados + 45 devidos hoje · pool 684 nunca introduzidos. **Teto 60/dia** (era 40). Projecao: pool zera **~29/09**; depois ~25/dia de manutencao.
+- **FSRS:** divida 24 atrasados + 21 p/ hoje · pool 684 nunca introduzidos. **Teto 60/dia** (era 40). Projecao: pool zera **~29/09**; depois ~25/dia de manutencao.
 - **Conteudo:** 128 resumos em `resumos/`. Faltam 2823q p/ fechar a grade EMED -- **a 60q/dia com MFC aberto ela NAO fecha inteira**; a cauda de baixo rendimento UERJ sai no rescope.
 - **Posicao:** conteudo S16 (nominal S22, atraso ~6 sem) [derivado: preparacao_estado].
 - **Zona (variancia.py):** COBERTURA -- desvio 10.2pp entre blocos, simulado prescrito.
@@ -35,8 +32,8 @@
 - Bibliografia do bloco MFC = **Gusso & Lopes (Tratado de MFC)** + **Duncan (Medicina Ambulatorial)**. E MFC clinica, **nao** saude coletiva.
 - Item 1.11: a partir de 15/03/2027 da p/ concorrer a vagas ociosas de outros programas AD sem nova taxa (a UERJ tem 5 vagas de Psiquiatria).
 
-## Ultima sessao -- s159 (RESET DE METAS)
-Sessao de replanejamento estrategico. **(1) Virada de norte:** o usuario abandonou a aposta em Psiquiatria via ENAMED 2026 (exigiria 90-95% sem o bonus de 10%) e adotou **UERJ/MFC** como prova-alvo, com Psiquiatria reposicionada p/ 2028/29 via RQE. **(2) Auditoria do edital:** achado o Edital 15/2026 (persistido em `data/Edital_UERJ_2027_Acesso_Direto.pdf`) -- formato 20x5, etapa unica, 5h. **(3) Correcao de leitura:** a hipotese de que o bloco de MFC seria "Preventiva ampla" foi **refutada pela bibliografia do Anexo II** (Gusso + Duncan, zero saude coletiva); as 834q de Preventiva do banco cobrem ~40% do bloco, nao o bloco. **(4) Reponderacao:** cruzado o `Guia_Estatistico_-_UERJ.pdf` com o formato novo -- CM cai de ~42% p/ 20%, MFC sobe de ~6.7% p/ 20%, Cirurgia e Pediatria sobem p/ 20%. **(5) Metas resetadas:** `MARCOS[0]` passa a ser UERJ 10.400 @ 01/11; teto FSRS 40 -> 60/dia; `CAP_MULTIPLICADOR` 2 -> 1.5. **(6)** Corrigido import quebrado desde a s156 em `test_handoff_teto.py`.
+## Ultima sessao -- s160 (AUDITORIA DE ENGENHARIA DO MOTOR)
+Sessao de engenharia pura (Fable), zero estudo, zero patch (salvaguarda read-only). **(1)** Executado `docs/HANDOFF-AUDITORIA-MEDHUB.md` na integra: 4 varreduras por dominio + verificacao ao vivo (suite 317 PASSED; 342 WARNs; queries read-only nos 3 bancos). **(2)** **16 achados F45-F60** selados em `AUDITORIA_MEDHUB.md §3o` + matriz de portadores (3 vinculantes, 9 decorativos) + swap test s156-s158 (5 divergencias, todas classe 2/3 -- tese confirmada; caso-sintese F57: s156 deletou o alvo de uma memoria-CONTRATO invisivel). **(3)** Bugs vivos achados: F47 (precedencia da nota de dificuldade ignora a fonte, 12/21 temas), F46 (consolidacao de memoria falhando no proprio dia), F45 (ranking de fraquezas do boot ordena por recencia), F50 (`autopsia_simulados.py` quebrado desde 25/08). **(4)** **Handoff autossuficiente entregue ao /ai-eng** em `~/ai-eng/HANDOFF-MEDHUB-COLA.md`, com perguntas de politica P1-P7 e as propostas marcadas como hipoteses a desafiar. Relatorio executivo em Artifact.
 
 ## Pendencias/observacoes ativas
 - 🔴 **Inscricao UERJ abre em 3 dias** (02/09, 14h) -- unica pendencia com data dura. Fecha 01/10; R$ 380 ate 02/10 (16h).
@@ -45,7 +42,7 @@ Sessao de replanejamento estrategico. **(1) Virada de norte:** o usuario abandon
 - 📚 **Frente MFC do zero** (Gusso + Duncan): MCCP, abordagem familiar, SOAP, prevencao quaternaria, rastreamento, manejo ambulatorial.
 - 🎯 **Recalibrar o `PLAYBOOK_EXECUCAO_PROVA.md`**: 5h/100q inverte a instrucao de ritmo. O gap de execucao (banco 78.8% x simulado 60.8%) e fechamento precoce, nao pressa.
 - 💉 **Diretrizes em versao nova na bibliografia**: Calendario Vacinal 2026, GINA 2026, Reanimacao SBP 2026. Imunizacoes e fraqueza persistente nº 8.
-- 🔬 **Auditoria de harness (sessao propria, sob demanda do usuario)** -- 51 contratos comportamentais fora do git, sem enforcement; 3 defeitos silenciosos atravessaram as sessoes Antigravity sem gate. Guia: `docs/HANDOFF-AUDITORIA-MEDHUB.md`.
+- 🔬 **Retorno do /ai-eng (PRD/implementacao da des-colagem)** -- dossie entregue (`~/ai-eng/HANDOFF-MEDHUB-COLA.md`); ao receber, reler HANDOFF/ESTADO antes de escrever (co-edicao) e revalidar ancoras F45-F60 via git log. Depois disso, volta o estudo.
 - 🗓️ **Auditoria ampla do banco** -- reforja cards 321, 273, 293 (+F37).
 - 🔍 **`card_id=120`** (Gravidez Ectopica) para `/pesquisar-evidencia`.
 - 📌 **2 padroes reincidentes sem Revisao Direcionada dedicada** ("remedio certo, sequencia errada"; "exame normal exclui").

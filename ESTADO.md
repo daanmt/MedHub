@@ -7,8 +7,8 @@ relates_to: [AGENTE, handoff-contract, estado-contract]
 
 # ESTADO -- MedHub
 
-*Atualizado: 2026-08-25 (sessão 156 -- Refatoração Arquitetural, desmembramento de God Module e curadoria Limpa-Banco de cards duplo-ask) | Ferramenta: Antigravity (Gemini 3.1 Pro)*
-*Anterior: 2026-08-22 (sessão 151). Narrativa por sessão: [`history/INDEX.md`](history/INDEX.md) -- o header aqui é 1 linha por contrato.*
+*Atualizado: 2026-08-30 (sessão 160 -- auditoria de engenharia do motor: F45-F60, matriz de portadores, handoff p/ /ai-eng) | Ferramenta: Claude Code (Fable 5)*
+*Anterior: 2026-08-25 (sessão 156). Narrativa por sessão: [`history/INDEX.md`](history/INDEX.md) -- o header aqui é 1 linha por contrato.*
 
 > **Boot:** ler [`AGENTE.md`](AGENTE.md) -> [`HANDOFF.md`](HANDOFF.md) (operacional curto) primeiro. Este arquivo é o snapshot **macro** (metas, indicador, marcos). Estrutura normatizada por [`core/contracts/estado-contract.md`](core/contracts/estado-contract.md).
 
@@ -42,7 +42,7 @@ relates_to: [AGENTE, handoff-contract, estado-contract]
 - **Erros & Cards:** 903 erros · 1.213 cards ativos · ~280 não-atômicos na worklist (WARN, `audit_card_atomicity.py`, cifra pré-s146). Régua de autoria: `estilo-flashcard.md` (um critério de acerto; teste eixo × pacote; **s151: reforja por "confuso" mira a frente, não o verso**).
 - **FSRS:** dívida 24 atrasados + 45 devidos hoje · pool 684 nunca introduzidos · **teto 60/dia** (s159; regime de dívida sobe até 90). Projeção sob 60/dia: **o pool zera ~29/09** e a carga cai p/ ~25/dia de manutenção antes da reta final. Invariante C = trava técnica em `record_review` desde a s144.
 - **Posição:** conteúdo S16 (nominal S22, atraso ~6 sem) *(derivado: `preparacao_estado`)*. **Ordem do cronograma congelada até 13/09** por decisão do usuário; rescope pró-UERJ em 14/09. Ver `HANDOFF.md`.
-- **Infraestrutura:** contratos em `core/contracts/`; harness `auto_check` (B1 do reconcile = BLOCKING real desde a s144); watermark de dado nos writers; `core/provas.json` (multi-prova). `.venv` resincronizado com `requirements.txt` na s146 (7 pacotes faltando, incl. `fsrs`).
+- **Infraestrutura:** contratos em `core/contracts/`; harness `auto_check` (8 BLOCK + 11 WARN desde a s159, pytest incluso); watermark de dado nos writers; `core/provas.json` (multi-prova). **s160: motor auditado ponta a ponta -- 16 achados F45-F60 abertos em `AUDITORIA_MEDHUB.md §3o` (zero patch, salvaguarda) e dossie entregue ao /ai-eng (`~/ai-eng/HANDOFF-MEDHUB-COLA.md`) p/ o PRD da des-colagem; frente aguarda o retorno dele.**
 
 > Narrativa de cada frente (s121-s144: atomicidade medida, pivô atômico, loop reforjar/split, curva de esquecimento, autogovernança) vive em `history/` -- ver `history/session_144.md §Anexo` e `history/INDEX.md`. Esta seção é **1 linha por frente**, por contrato.
 

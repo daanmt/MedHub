@@ -649,3 +649,5 @@
 {"ts": "2026-08-26T04:36:32+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "c30b75f2f1ec", "alvo": "card#122"}
 {"ts": "2026-08-26T04:36:32+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "2c16ebed279c", "alvo": "card#128"}
 {"ts": "2026-08-26T04:36:32+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "40decb2e0825", "alvo": "card#152"}
+{"ts": "2026-08-30T17:01:38+00:00", "event": "opened", "check": "reachability", "fingerprint": "a22a17374fbb", "alvo": "tools/auto_recurate_duplo_ask.py", "payload": {"referenciadores": 0}}
+{"ts": "2026-08-30T17:01:38+00:00", "event": "opened", "check": "erros_orfaos", "fingerprint": "923737d5d989", "alvo": "2026-06-18", "payload": {"erros_esperados": 15}}

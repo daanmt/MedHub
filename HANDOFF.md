@@ -1,12 +1,12 @@
 # HANDOFF.md -- ESTADO OPERACIONAL CURTO
-*Atualizado: 2026-08-30 -- S159 (VIRADA DE NORTE: UERJ/MFC vira a prova-alvo; metas resetadas)*
+*Atualizado: 2026-08-30 -- S159 ENCERRADA (VIRADA DE NORTE: UERJ/MFC vira a prova-alvo; metas resetadas)*
 
 ## > Proximo passo imediato
 
 1. **Inscricao UERJ 2027** -- abre **02/09 (14h)**, fecha 01/10 (23h59), site do Cepuerj, R$ 380 (pgto ate 02/10, 16h). Acao do usuario. Conferir no PDF oficial se a divisao 20/20/20/20/20 se mantem.
 2. **Ritmo novo: 60q/dia + 60 flashcards/dia** -- media sustentavel declarada pelo usuario (s159). Constancia acima de pico: nada de 500q em 5 dias e 3 dias parados.
 3. **Grade EMED na ordem atual ate 13/09** -- o rescope pro formato UERJ so acontece DEPOIS do ENAMED (decisao explicita do usuario).
-4. **Simulado em debito** (nenhum ha 7d) -- ensaio ENAMED sob `PLAYBOOK_EXECUCAO_PROVA.md`.
+4. 🔴 **ABERTURA DA S160: autopsia do simulado ENAMED.** O usuario se comprometeu a fazer o simulado na integra em **30/08, mais tarde no dia**, e entregar o resultado. Rodar sob `PLAYBOOK_EXECUCAO_PROVA.md`; a autopsia e o primeiro ato da proxima sessao. Era o simulado em debito ha 7d.
 5. **Frente MFC (Gusso + Duncan)** -- abre em 14/09 junto do rescope. Vale 20% da prova e o lastro hoje e zero.
 
 ## Estado por frente
@@ -30,7 +30,8 @@
 Sessao de replanejamento estrategico. **(1) Virada de norte:** o usuario abandonou a aposta em Psiquiatria via ENAMED 2026 (exigiria 90-95% sem o bonus de 10%) e adotou **UERJ/MFC** como prova-alvo, com Psiquiatria reposicionada p/ 2028/29 via RQE. **(2) Auditoria do edital:** achado o Edital 15/2026 (persistido em `data/Edital_UERJ_2027_Acesso_Direto.pdf`) -- formato 20x5, etapa unica, 5h. **(3) Correcao de leitura:** a hipotese de que o bloco de MFC seria "Preventiva ampla" foi **refutada pela bibliografia do Anexo II** (Gusso + Duncan, zero saude coletiva); as 834q de Preventiva do banco cobrem ~40% do bloco, nao o bloco. **(4) Reponderacao:** cruzado o `Guia_Estatistico_-_UERJ.pdf` com o formato novo -- CM cai de ~42% p/ 20%, MFC sobe de ~6.7% p/ 20%, Cirurgia e Pediatria sobem p/ 20%. **(5) Metas resetadas:** `MARCOS[0]` passa a ser UERJ 10.400 @ 01/11; teto FSRS 40 -> 60/dia; `CAP_MULTIPLICADOR` 2 -> 1.5. **(6)** Corrigido import quebrado desde a s156 em `test_handoff_teto.py`.
 
 ## Pendencias/observacoes ativas
-- 🔴 **Inscricao UERJ abre em 3 dias** (02/09) -- unica pendencia com data dura.
+- 🔴 **Inscricao UERJ abre em 3 dias** (02/09, 14h) -- unica pendencia com data dura. Fecha 01/10; R$ 380 ate 02/10 (16h).
+- 📥 **Simulado ENAMED de 30/08** -- feito pelo usuario apos o encerramento da s159; resultado entra na s160.
 - 🗓️ **Rescope do cronograma pro formato UERJ** -- executar em 14/09, apos o ENAMED.
 - 📚 **Frente MFC do zero** (Gusso + Duncan): MCCP, abordagem familiar, SOAP, prevencao quaternaria, rastreamento, manejo ambulatorial.
 - 🎯 **Recalibrar o `PLAYBOOK_EXECUCAO_PROVA.md`**: 5h/100q inverte a instrucao de ritmo. O gap de execucao (banco 78.8% x simulado 60.8%) e fechamento precoce, nao pressa.

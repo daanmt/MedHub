@@ -62,6 +62,16 @@ Cruzamento do Guia Estatístico (histórico 2017-2023) com o formato novo: **CM 
 - Memória: `project_norte_uerj_mfc.md` (novo) · `reference_edital_uerj_2027.md` (novo) · `project_objetivo_provas.md` · `project_novo_norte_multi_banca.md` (supersedida) · `feedback_politica_cards_diaria.md` · `MEMORY.md`
 
 ## Próximos passos
-- **Inscrição UERJ: abre 02/09 (14h), fecha 01/10.** Conferir no PDF oficial se a divisão 20/20/20/20/20 se mantém.
-- Retomar o volume hoje (0 questões até agora) e o simulado em débito (7 dias sem).
+- **Inscrição UERJ: abre 02/09 (14h), fecha 01/10.** Conferir no PDF oficial se a divisão 20/20/20/20/20 se mantém. Única pendência com data dura.
+- **Simulado ENAMED na íntegra:** o usuário se comprometeu a fazê-lo em 30/08, após o encerramento desta sessão, e entregar o resultado. **A autópsia abre a s160.**
 - Recalibrar o `PLAYBOOK_EXECUCAO_PROVA.md` para 5h/100q: o erro a combater é fechamento precoce, não pressa.
+- A partir de 14/09: rescope do cronograma pró-UERJ + abertura da frente MFC (Gusso + Duncan).
+
+## Encerramento
+Sessão de zero questões e zero cards por desenho — foi uma sessão de replanejamento, não de execução. O volume do dia (0q) fica registrado como tal. Ritmo vigente a partir de 31/08: **60q/dia + 60 flashcards/dia**.
+
+**Projeção até a UERJ (01/11, 63 dias):**
+- **Questões:** ~3.780 no período → **~10.400 acumuladas** na véspera. Marco batido no ritmo declarado, sem pico.
+- **Cronograma:** S16 → S28 é o conteúdo restante (2.823q). Com a frente MFC aberta a partir de 14/09, entrega-se ~1.850 — **a grade não fecha inteira**, e o corte sai da cauda de baixo rendimento UERJ (Ortopedia, Oftalmo, Dermato, Otorrino, Pneumo, Hepato ≈ 2 questões da prova somadas).
+- **Flashcards:** pool de 684 nunca-introduzidos **zera ~29/09** sob teto de 60/dia; depois ~25/dia de manutenção. Chega-se em 12/10 com o baralho inteiro introduzido.
+- **Marcos de calendário:** ENAMED 13/09 (termômetro) · fim do internato + fim do conteúdo da grade **09/10** · reta final 12/10→31/10 com dedicação integral · **prova 01/11**.

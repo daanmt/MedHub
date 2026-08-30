@@ -10,7 +10,10 @@ Executavel standalone (python tools/test_handoff_teto.py) e coletavel pelo pytes
 """
 import pytest
 
-from tools.auto_check import LIMITE_HANDOFF, check_handoff_len
+from tools.auto_check import check_handoff_len
+# s159: LIMITE_HANDOFF migrou para tools/utils/state_utils.py na refatoracao da s156
+# (desmembramento do God Module); o import antigo quebrava a coleta deste modulo.
+from tools.utils.state_utils import LIMITE_HANDOFF
 
 
 def _handoff(tmp_path, n_linhas, nome="HANDOFF.md"):

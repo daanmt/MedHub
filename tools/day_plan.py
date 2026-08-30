@@ -155,8 +155,12 @@ def render_countdown(provas):
 # Norma: core/contracts/fsrs-management-contract.md §Teto dinâmico.
 # s126: teto sobe 30 -> 40 (usuário pediu "flashcards mais frequentes" ao trocar o regime de
 # sprint pelo de constância; as questões caem de ~96 para ~55/dia e a folga vai pros cards).
-TETO_BASE = 40            # cards/dia fora do regime de dívida
-CAP_MULTIPLICADOR = 2     # teto_efetivo nunca excede CAP_MULTIPLICADOR * TETO_BASE
+# s159 (virada UERJ/MFC): teto sobe 40 -> 60, ritmo declarado sustentável pelo usuário
+# ("60q/dia + 60 flashcards/dia"). O CAP cai de 2x para 1.5x no mesmo movimento: dobrar o teto
+# em regime de dívida (120/dia) reinstalaria exatamente o pico-e-queda que o usuário rejeitou
+# ("de nada adianta fazer 500 questões em 5 dias e depois passar 2~3 dias sem estudar").
+TETO_BASE = 60            # cards/dia fora do regime de dívida
+CAP_MULTIPLICADOR = 1.5   # teto_efetivo nunca excede CAP_MULTIPLICADOR * TETO_BASE
 
 # Recomendador do dia (PRD orquestracao part-2).
 # Norma e significado de cada parâmetro: core/contracts/orquestracao-contract.md
@@ -176,7 +180,7 @@ def _teto_efetivo(atrasados):
     """Teto do dia: regime de dívida quando atrasados > TETO_BASE; o teto sobe
     até o cap para drenar (na prática, dobra até a dívida zerar)."""
     if atrasados > TETO_BASE:
-        return min(TETO_BASE + atrasados, CAP_MULTIPLICADOR * TETO_BASE)
+        return int(min(TETO_BASE + atrasados, CAP_MULTIPLICADOR * TETO_BASE))
     return TETO_BASE
 
 

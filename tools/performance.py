@@ -87,16 +87,29 @@ AREAS_VALIDAS = [
 # 10.000 ate 13/09 comprimia 13 semanas de grade em 50 dias e produzia o ritmo-alvo ficticio de
 # ~96q/dia. O ENAMED continua sendo prestado; so nao e mais uma corrida de volume.
 # MARCOS[0] dirige o ritmo-alvo do day_plan -- troca-lo muda a pressao diaria reportada.
-ENAMED_DATA = date(2026, 9, 13)      # prova (referencia de calendario, nao alvo de volume)
+#
+# 🔄 VIRADA s159 (2026-08-30) -- o norte passa a ser UERJ/MFC (prova 01/11/2026, Edital 15/2026
+# Cepuerj: 100q objetivas, 20 por conteudo -- CM, Cirurgia Geral, GO, Pediatria e Medicina de
+# Familia e Comunidade; etapa unica, sem prova pratica nem analise curricular).
+# O CRM e automatico (nao depende de proficiencia no ENAMED), entao o ENAMED deixa de ser piso
+# e vira TERMOMETRO: prestado, com a especialidade Psiquiatria escolhida na inscricao, mas nao
+# organiza o planejamento nem alvo de volume.
+# MARCOS[0] deixa de ser "fechar a grade do EMED" e passa a ser a prova da UERJ. O numero nao e
+# arbitrario: 6.631 (acumulado em 30/08) + 60q/dia x 63 dias = ~10.400 na vespera da prova.
+# 60q/dia e o ritmo que o usuario declarou sustentavel (media real, nao pico) -- ver
+# feedback_politica_cards_diaria e project_norte_uerj_mfc na memoria.
+ENAMED_DATA = date(2026, 9, 13)      # termometro (referencia de calendario, nao alvo de volume)
+UERJ_DATA = date(2026, 11, 1)        # 🎯 prova-alvo (Acesso Direto MFC, 15 vagas ampla concorrencia)
 MARCOS = [
-    ("Cronograma EMED (grade completa)", 9454, date(2026, 10, 25)),
-    ("2o ciclo UERJ/USP", 12500, date(2026, 12, 31)),
+    ("UERJ/MFC (prova 01/11)", 10400, UERJ_DATA),
+    ("Ciclo 2026", 12500, date(2026, 12, 31)),
     ("Stretch dez/2026", 15000, None),
 ]
 
 # Ritmos diários usados nas projeções dos marcos datados (q/dia).
 # s126: rebaixados de (80,90,100) -- o regime de constância opera em 40-70, não em 80-100.
-RITMOS_PROJECAO = (40, 55, 70)
+# s159: recentrados em 60 (ritmo declarado sustentável), com uma faixa abaixo e uma acima.
+RITMOS_PROJECAO = (45, 60, 75)
 
 
 def get_totais(conn, escopo="total"):

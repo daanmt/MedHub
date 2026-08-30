@@ -1,32 +1,43 @@
 # HANDOFF.md -- ESTADO OPERACIONAL CURTO
-*Atualizado: 2026-08-28 -- S158 (Maratona FSRS 100 cards concluída + Dívida Zerada + Redrill de Gaps)*
+*Atualizado: 2026-08-30 -- S159 (VIRADA DE NORTE: UERJ/MFC vira a prova-alvo; metas resetadas)*
 
 ## > Proximo passo imediato
 
-1. **Simulado ENAMED na íntegra (prova do ano passado)** -- treino em condições reais de prova e calibragem de tempo/estratégia sob o `PLAYBOOK_EXECUCAO_PROVA.md`.
-2. **Manutenção FSRS diária** -- manter a esteira limpa (dívida zerada).
-3. **Auditoria ampla do banco (pendente desde s148, soma F37+F40+F41)** -- reforja dos cards marcados (321, 273, 293).
-4. **`card_id=120`** (Gravidez Ectópica, achado F7 antigo) para `/pesquisar-evidencia` -- mesmo precedente metodológico do card 114 da s154.
-5. **Revisão Direcionada dedicada** pro padrão "remédio certo, sequência errada" (eclâmpsia + TCE, s154) + "exame normal exclui" (>=3 temas).
+1. **Inscricao UERJ 2027** -- abre **02/09 (14h)**, fecha 01/10 (23h59), site do Cepuerj, R$ 380 (pgto ate 02/10, 16h). Acao do usuario. Conferir no PDF oficial se a divisao 20/20/20/20/20 se mantem.
+2. **Ritmo novo: 60q/dia + 60 flashcards/dia** -- media sustentavel declarada pelo usuario (s159). Constancia acima de pico: nada de 500q em 5 dias e 3 dias parados.
+3. **Grade EMED na ordem atual ate 13/09** -- o rescope pro formato UERJ so acontece DEPOIS do ENAMED (decisao explicita do usuario).
+4. **Simulado em debito** (nenhum ha 7d) -- ensaio ENAMED sob `PLAYBOOK_EXECUCAO_PROVA.md`.
+5. **Frente MFC (Gusso + Duncan)** -- abre em 14/09 junto do rescope. Vale 20% da prova e o lastro hoje e zero.
 
 ## Estado por frente
-- **Volume & Metas:** 6631 / 9454 (perf. ~78.8%). Hoje: 0. Ritmo-alvo ~48.7q/dia (58d p/ Cronograma EMED (grade completa)).
-- **FSRS:** divida 0 atrasados + 1 p/ hoje -- pool 684 nunca introduzidos (entram <=40/dia).
-- **Conteudo:** 128 resumos em resumos/. [derivado: glob]
-- **Posicao:** conteudo S16 (nominal S22, atraso 6 sem) [derivado: preparacao_estado]
-- **Zona (variancia.py):** COBERTURA -- desempenho alto (média ~79%), cobertura em avanço. Simulado prescrito para a próxima sessão.
-- **Dormência:** 29 de 253 temas sem revisar há >=21d (cluster Cardio/Nefro/Endócrino + Anemias Hemolíticas no topo).
-- **Datas:** ENAMED 13/09/2026 (16d) -- grade fecha 25/10/2026 (58d).
+- **Norte:** 🎯 **UERJ/MFC 01/11/2026** (63d). ENAMED 13/09 (14d) e **termometro**, nao piso -- o CRM e automatico. Horizonte real: UERJ -> R1/R2 MFC (mar/27-fev/29) -> RQE -> ENAMED com +10% p/ Psiquiatria.
+- **Volume & Metas:** 6631 / **10.400 @ 01/11** (perf. ~78.8%). Faltam 3769 em 63d -> ritmo-alvo **~59.8q/dia**. Marco antigo (grade 9454 @ 25/10) aposentado.
+- **FSRS:** divida 24 atrasados + 45 devidos hoje · pool 684 nunca introduzidos. **Teto 60/dia** (era 40). Projecao: pool zera **~29/09**; depois ~25/dia de manutencao.
+- **Conteudo:** 128 resumos em `resumos/`. Faltam 2823q p/ fechar a grade EMED -- **a 60q/dia com MFC aberto ela NAO fecha inteira**; a cauda de baixo rendimento UERJ sai no rescope.
+- **Posicao:** conteudo S16 (nominal S22, atraso ~6 sem) [derivado: preparacao_estado].
+- **Zona (variancia.py):** COBERTURA -- desvio 10.2pp entre blocos, simulado prescrito.
+- **Datas:** ENAMED 13/09 (14d) · fim do internato + fim do conteudo da grade **09/10** (40d) · fim formal da grade 25/10 · **UERJ 01/11** (63d).
 
-## Ultima sessao -- s158 (MARATONA FSRS 100 CARDS + DÍVIDA ZERADA + REDRILL)
-Sessão de retenção mnemônica intensiva e saneamento do baralho. **(1) Drenagem Massiva FSRS:** 100 flashcards revisados em 10 blocos de 10 com feedbacks focados exclusivamente nas notas 1 e 2. Aproveitamento inicial: 77x Nota 4 (77%), 11x Nota 3 (11%), 7x Nota 2 (7%), 3x Nota 1 (3%). **(2) Redrill Intra-Sessão:** 10 cards com notas 1 e 2 reapresentados e consolidados ao final (janela de 3h do TXA, osteodistrofia renal na DRC, viremia curta da Febre Amarela <=7d, intervalo de 11m pós-IGIV 2g/kg no Kawasaki, SABA+CI baixa dose no Step 1 pediátrico 6-11a, manejo conservador sem ATB na necrose pancreática estéril, orientação comunitária na APS, prioridade da pancreatite aguda sobre colecistite, estenose duodenal fenestrada e ar retroperitoneal cirúrgico). **(3) Curadoria do Banco:** Aposentados 2 cards (`needs_qualitative = 2`: IDs 1352 e 319); marcados para reforja de redação os cards 321, 273 e 293. **(4) Zeramento da Dívida:** FSRS bateu **0 atrasados** (dívida de 71 cards completamente eliminada).
+## Prova da UERJ -- o que o edital diz (Ed. 15/2026, PDF em `data/`)
+- 100 questoes objetivas, **20 por conteudo**: Clinica Medica, Cirurgia Geral, GO, Pediatria, **Medicina de Familia e Comunidade**.
+- **Etapa unica.** Sem prova pratica, sem analise curricular. **5 horas** de prova (3 min/questao -- tempo nao e a restricao).
+- Aprovacao: >=50 pontos **e nao zerar nenhum conteudo**. Desempate: CM -> Cirurgia -> Pediatria -> MFC -> idade -> sorteio.
+- MFC: **20 vagas, sendo 15 de ampla concorrencia**. Duracao 2 anos. Bonus de 10% do PRMFC vale na propria UERJ (uso unico).
+- Bibliografia do bloco MFC = **Gusso & Lopes (Tratado de MFC)** + **Duncan (Medicina Ambulatorial)**. E MFC clinica, **nao** saude coletiva.
+- Item 1.11: a partir de 15/03/2027 da p/ concorrer a vagas ociosas de outros programas AD sem nova taxa (a UERJ tem 5 vagas de Psiquiatria).
+
+## Ultima sessao -- s159 (RESET DE METAS)
+Sessao de replanejamento estrategico. **(1) Virada de norte:** o usuario abandonou a aposta em Psiquiatria via ENAMED 2026 (exigiria 90-95% sem o bonus de 10%) e adotou **UERJ/MFC** como prova-alvo, com Psiquiatria reposicionada p/ 2028/29 via RQE. **(2) Auditoria do edital:** achado o Edital 15/2026 (persistido em `data/Edital_UERJ_2027_Acesso_Direto.pdf`) -- formato 20x5, etapa unica, 5h. **(3) Correcao de leitura:** a hipotese de que o bloco de MFC seria "Preventiva ampla" foi **refutada pela bibliografia do Anexo II** (Gusso + Duncan, zero saude coletiva); as 834q de Preventiva do banco cobrem ~40% do bloco, nao o bloco. **(4) Reponderacao:** cruzado o `Guia_Estatistico_-_UERJ.pdf` com o formato novo -- CM cai de ~42% p/ 20%, MFC sobe de ~6.7% p/ 20%, Cirurgia e Pediatria sobem p/ 20%. **(5) Metas resetadas:** `MARCOS[0]` passa a ser UERJ 10.400 @ 01/11; teto FSRS 40 -> 60/dia; `CAP_MULTIPLICADOR` 2 -> 1.5. **(6)** Corrigido import quebrado desde a s156 em `test_handoff_teto.py`.
 
 ## Pendencias/observacoes ativas
-- 📝 **Simulado ENAMED anterior completo** -- abertura da sessão 159.
-- 🗓️ **Auditoria ampla do banco** -- ver Próximo passo #3 (reforja cards 321, 273, 293 + F37).
-- 🔍 **`card_id=120`** (Gravidez Ectópica) para `/pesquisar-evidencia`.
-- 📌 **2 padrões reincidentes sem Revisão Direcionada dedicada**.
-- 📝 **23 temas sem resumo dedicado** (achado do grafo Pediatria/GO: PTI, TCE, Kawasaki, Bronquiolite, Meningite Tuberculosa, Anafilaxia, etc.).
+- 🔴 **Inscricao UERJ abre em 3 dias** (02/09) -- unica pendencia com data dura.
+- 🗓️ **Rescope do cronograma pro formato UERJ** -- executar em 14/09, apos o ENAMED.
+- 📚 **Frente MFC do zero** (Gusso + Duncan): MCCP, abordagem familiar, SOAP, prevencao quaternaria, rastreamento, manejo ambulatorial.
+- 🎯 **Recalibrar o `PLAYBOOK_EXECUCAO_PROVA.md`**: 5h/100q inverte a instrucao de ritmo. O gap de execucao (banco 78.8% x simulado 60.8%) e fechamento precoce, nao pressa.
+- 💉 **Diretrizes em versao nova na bibliografia**: Calendario Vacinal 2026, GINA 2026, Reanimacao SBP 2026. Imunizacoes e fraqueza persistente nº 8.
+- 🗓️ **Auditoria ampla do banco** -- reforja cards 321, 273, 293 (+F37).
+- 🔍 **`card_id=120`** (Gravidez Ectopica) para `/pesquisar-evidencia`.
+- 📌 **2 padroes reincidentes sem Revisao Direcionada dedicada** ("remedio certo, sequencia errada"; "exame normal exclui").
 
 ---
-*Histórico: history/INDEX.md * Macro: ESTADO.md * Sessão: history/session_158.md*
+*Historico: history/INDEX.md * Macro: ESTADO.md * Sessao: history/session_159.md*

@@ -7,11 +7,14 @@
 2. **Ritmo novo: 60q/dia + 60 flashcards/dia** -- media sustentavel declarada pelo usuario (s159). Constancia acima de pico: nada de 500q em 5 dias e 3 dias parados.
 3. **Grade EMED na ordem atual ate 13/09** -- o rescope pro formato UERJ so acontece DEPOIS do ENAMED (decisao explicita do usuario).
 4. 🔴 **ABERTURA DA S160 = AUTOPSIA DO SIMULADO ENAMED.** O usuario se comprometeu a fazer o simulado na integra em **30/08, mais tarde no dia**, e entregar o resultado. Rodar sob `PLAYBOOK_EXECUCAO_PROVA.md`. Era o simulado em debito ha 7d.
-5. 🔬 **SESSAO PROPRIA, DEPOIS (nao na s160): auditoria de harness do MedHub.** Guia pronto em
-   [`docs/HANDOFF-AUDITORIA-MEDHUB.md`](docs/HANDOFF-AUDITORIA-MEDHUB.md) -- ele E o objetivo daquela sessao,
-   ler antes de qualquer outra coisa. Tese-mae em `~/ai-eng/HANDOFF-AUDITORIA-PERICIA.md` (Parte I).
-   **Abrir com contexto limpo e nao misturar com estudo** -- a varredura consome a janela inteira.
-   Primeiro ato de la = re-rodar o graphify no HEAD (o grafo e de 25/08, anterior as 3 sessoes Antigravity).
+5. 🔬 **SESSAO PROPRIA DE ENGENHARIA PURA (contexto limpo, orquestrada pelo Fable).** Guia completo em
+   [`docs/HANDOFF-AUDITORIA-MEDHUB.md`](docs/HANDOFF-AUDITORIA-MEDHUB.md) -- ele E o objetivo daquela sessao.
+   Escopo: camada do motor (erros, flashcards/FSRS, gestao, contratos, gates) + camada de regra
+   (o que vira regra e o que a obriga). **Dois entregaveis:** tabela de achados F43+ e a matriz de
+   portadores de regra (§10b). **Colar a Parte 0 do guia como 1a mensagem** -- e o preambulo que
+   impede o Fable de travar pelo conteudo clinico do repo. Teto de 5 subagents Sonnet 5, fan-out por
+   dominio, grafo antes de arquivo (§13). Tese-mae: `~/ai-eng/HANDOFF-AUDITORIA-PERICIA.md` (Parte I).
+   Primeiro ato: re-rodar o graphify no HEAD (o grafo e de 25/08, anterior as 3 sessoes Antigravity).
    🔑 Quem dispara e o usuario: enquanto ele nao chamar, este item NAO compete com o estudo.
 6. **Frente MFC (Gusso + Duncan)** -- abre em 14/09 junto do rescope. Vale 20% da prova e o lastro hoje e zero.
 

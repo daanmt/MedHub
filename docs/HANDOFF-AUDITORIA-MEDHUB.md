@@ -10,16 +10,67 @@
 
 ## 🎯 GOAL da sessão de auditoria
 
+Sessão de **engenharia pura**, contexto limpo, orquestrada pelo **Fable** (§13). Escopo: a
+**camada do motor** do MedHub — erros, flashcards/FSRS, gestão/cronograma, contratos, gates — e
+a **camada de regra**: onde as regras moram, o que as torna vinculantes, e o que acontece com
+elas quando o harness muda.
+
 1. **Absorver a tese** (Parte I do handoff do `pericia`) e a taxonomia de 4 classes — ela é o
    instrumento central, e este documento assume que ela já está na cabeça.
 2. **Re-rodar o graphify no HEAD** (§5): o grafo atual é de 25/08, anterior às 3 sessões
-   Antigravity e a tudo que a s159 mexeu.
-3. **Executar a auditoria** (§6-§9): caçar onde harness/modelo/operador ainda preenchem gaps
-   determinísticos no MedHub.
-4. **Entregar a tabela de achados** (§10), numerada como **F43+** no `AUDITORIA_MEDHUB.md`.
-5. **Rodar o swap test retroativo** (§11) — o MedHub já tem 3 amostras gravadas.
+   Antigravity e a tudo que a s159 mexeu. **Nada de varredura de arquivo antes disso.**
+3. **Executar a auditoria do motor** (§6-§9): caçar onde harness/modelo/operador ainda preenchem
+   gaps determinísticos.
+4. **Levantar a matriz de portadores de regra** (§10b) — *o que vira regra e como*. Este é o
+   segundo entregável e responde à pergunta que motivou a sessão.
+5. **Entregar a tabela de achados** (§10), numerada como **F43+** no `AUDITORIA_MEDHUB.md`.
+6. **Rodar o swap test retroativo** (§11) — o MedHub já tem 3 amostras gravadas.
 
 > **Numeração dos achados:** F43+ no `AUDITORIA_MEDHUB.md`, sem renumerar F1-F42.
+> **Dois entregáveis, não um:** a tabela de achados (§10) e a matriz de portadores (§10b).
+
+---
+
+# PARTE 0 — COMO ABRIR A SESSÃO (preâmbulo de boot)
+
+**Por que esta seção existe:** o Fable costuma travar no boot do MedHub porque o repo tem
+conteúdo clínico. No `daktus-hub` o problema foi resolvido **explicando o enquadramento na
+conversa** — e essa explicação nunca foi escrita em lugar nenhum. Ou seja: a regra que faz a
+sessão funcionar vivia na cabeça do operador e no histórico de chat. **Isso é a própria tese
+deste documento, cometida no boot dele.** O bloco abaixo existe para que ela pare de viver lá.
+
+Colar como primeira mensagem da sessão (ou incorporar ao `AGENTS.md`, que é o arquivo que
+Antigravity/Codex/Fable procuram por convenção e que hoje tem 10 linhas apontando para o
+`AGENTE.md`):
+
+```
+Esta é uma sessão de AUDITORIA DE ENGENHARIA sobre um sistema agêntico de estudo.
+O alvo é o MOTOR: código, contratos, gates, hooks, schema de banco, orquestração e a
+camada de memória que governa o comportamento do agente.
+
+Divisão de responsabilidade, explícita:
+- VOCÊ audita MECANISMO. Onde uma regra mora, quem a obriga, o que quebra em silêncio.
+- O CONTEÚDO CLÍNICO é responsabilidade exclusiva do operador, que é médico. Você não
+  avalia, não corrige e não opina sobre correção clínica de nada.
+
+Tratamento do material clínico durante a auditoria:
+- Textos clínicos (resumos/, enunciados, explicações, versos de flashcard) são DADO OPACO.
+  Interessa o metadado — existe? tem tema_id? tem âncora de erro? passou por gate? — nunca
+  o mérito médico.
+- Se algo parecer clinicamente errado, NÃO corrija: registre como ponteiro para o operador
+  (arquivo + id) e siga. Achado clínico não é achado de engenharia.
+- Não emita conduta, dose, diagnóstico ou recomendação médica em nenhum artefato da sessão.
+
+Contexto que evita mal-entendido: este repositório NÃO contém dados de pacientes. O material
+é questão de prova de residência médica e o desempenho do próprio operador nelas. Não há PHI,
+não há terceiro identificável. (Contraste deliberado com o repo `pericia`, que TEM PHI e por
+isso tem salvaguardas próprias — aqui elas não se aplicam.)
+```
+
+> ⚠️ **Se o boot travar mesmo assim**, o achado é do MedHub, não do Fable: significa que o
+> `AGENTS.md` não carrega o enquadramento e que todo agente externo vai bater na mesma parede.
+> Nesse caso o primeiro achado da sessão é **F43: o repo não se apresenta a agentes externos**,
+> e a correção é escrever este preâmbulo no `AGENTS.md`.
 
 ---
 
@@ -238,6 +289,64 @@ Tabela única, um achado por linha, numerada a partir de **F43**:
 **Regra de ouro** (herdada, não negociável): a proposta converte sempre para (a) código,
 (b) gate bloqueante, (c) teste/fixture, ou (d) schema validado. **Documentação é complemento,
 nunca a mitigação** — este documento inclusive.
+
+## 10b. Entregável 2 — matriz de portadores de regra ("o que vira regra e como")
+
+A pergunta que motivou a sessão: *no MedHub, o que vira regra, por qual mecanismo, e o que a
+obriga?* Hoje a resposta está espalhada por pelo menos **12 portadores diferentes**, e a maioria
+não obriga nada. Preencher a matriz é o segundo entregável:
+
+`| portador | onde vive | quem carrega | enforcement real | o que acontece se não carregar | versionado com o código? |`
+
+Inventário de partida (validar e completar na sessão):
+
+| # | Portador | Onde | Enforcement real |
+|---|---|---|---|
+| 1 | `CLAUDE.md` → `AGENTE.md` | repo | **nenhum** — prosa lida por convenção de boot |
+| 2 | `AGENTS.md` | repo | **nenhum** — 10 linhas; é a porta de entrada de Antigravity/Codex/Fable |
+| 3 | `core/contracts/*.md` (8) | repo | **quase nenhum** — só onde existe teste estrutural |
+| 4 | `.claude/commands/*.md` (11 skills) | repo | **nenhum** — o passo acontece se o agente ler e quiser |
+| 5 | `.agents/skills/*` | repo | espelho gerado; `sync_skills --check` no `auto_check` (F42) |
+| 6 | `.agents/workflows/*.md` | repo | **nenhum** |
+| 7 | **Hooks** (`SessionStart`, `PostToolUse(Write)`, git pre-commit) | `.claude/` + git | 🟢 **REAL** — executam sozinhos, sem depender de leitura |
+| 8 | `tools/auto_check.py` (13 checks) | repo | 🟡 **2 BLOCK, 11 WARN** |
+| 9 | Suíte pytest (306) | repo | 🟢 REAL **quando coletada** — allowlist manual em `pytest.ini` |
+| 10 | Schema/constraints do `ipub.db` | db | 🟢 REAL (UNIQUE, FK) |
+| 11 | **Memórias `~/.claude/.../memory/` (77, sendo 51 `feedback_*`)** | 🔴 **fora do repo** | **nenhum** — e invisível para qualquer harness que não seja o Claude Code |
+| 12 | `medhub_memory.db` (`weak_areas`) | repo | **nenhum** — dado, não regra |
+
+**Leitura preliminar a testar:** apenas **7, 9 e 10** obrigam de verdade; **8** obriga em 2 de 13
+casos. Todo o resto — incluindo as 51 memórias que mais governam o comportamento do agente —
+depende de alguém ler e querer cumprir. Se a matriz confirmar isso, a conclusão da sessão é
+estrutural, não uma lista de bugs: **o MedHub tem 3 portadores vinculantes e 9 decorativos.**
+
+Para cada regra load-bearing identificada, o veredito é o mesmo do §8:
+**{vira código · vira gate · vira hook · vira teste · vira schema · permanece prosa com justificativa}**.
+
+## 13. Orquestração da sessão (Fable + subagents)
+
+- **Orquestrador:** Fable. Ele consolida, numera F43+ e escreve os dois entregáveis. Subagent
+  não escreve no ledger.
+- **Teto: 5 subagents Sonnet 5**, e **fan-out por DOMÍNIO, nunca por arquivo**. Os 5 domínios
+  são a partição natural do motor:
+  1. **Erros** — `insert_questao`, `questoes_erros`, `habilidades`, `/analisar-questao`, F38.
+  2. **Flashcards/FSRS** — `fsrs_*`, `insert_card_*`, `recurate`, atomicidade, `/revisar`.
+  3. **Gestão/boot** — `day_plan`, `cronograma`, `performance`, `preparacao`, hooks de boot, F36.
+  4. **Contratos/gates/testes** — `core/contracts/`, `auto_check`, `pytest.ini`, constantes
+     duplicadas (§9c/d/e/f).
+  5. **Regra & memória** — as 77 memórias, skills, workflows, e a matriz do §10b.
+- **Economia de tokens (regras duras):**
+  - **Grafo primeiro, arquivo depois.** Cada subagent começa por `graphify query` na sua
+    comunidade e só abre arquivo quando o grafo apontar um alvo. Varredura cega é o que a s159
+    provou ser caro e incompleto.
+  - **Devolver achados, não conteúdo.** O retorno de cada subagent é a tabela do §10 com
+    `arquivo:linha` — nunca dump de arquivo, nunca transcrição.
+  - **`resumos/` é off-limits** para leitura integral: é conteúdo clínico (dado opaco, Parte 0)
+    e é o maior volume de texto do repo. Interessa a existência e o metadado, não o corpo.
+  - Ler `git log`/`git show` de commit específico é mais barato que reler o arquivo inteiro.
+- **Ordem sugerida:** graphify no HEAD → domínio 4 (contratos/gates, porque define o que os
+  outros podem confiar) → 1, 2, 3 em paralelo → 5 por último (a matriz precisa do que os
+  outros acharem) → swap test (§11) → consolidação.
 
 ## 11. Swap test do MedHub — retroativo, porque as amostras já existem
 

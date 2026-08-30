@@ -1,13 +1,18 @@
 # HANDOFF.md -- ESTADO OPERACIONAL CURTO
-*Atualizado: 2026-08-30 -- S159 ENCERRADA (VIRADA DE NORTE: UERJ/MFC vira a prova-alvo; metas resetadas)*
+*Atualizado: 2026-08-30 -- S159 (VIRADA DE NORTE UERJ/MFC + bloco de engenharia F37/F38/F42 + preparo da auditoria de harness)*
 
 ## > Proximo passo imediato
 
 1. **Inscricao UERJ 2027** -- abre **02/09 (14h)**, fecha 01/10 (23h59), site do Cepuerj, R$ 380 (pgto ate 02/10, 16h). Acao do usuario. Conferir no PDF oficial se a divisao 20/20/20/20/20 se mantem.
 2. **Ritmo novo: 60q/dia + 60 flashcards/dia** -- media sustentavel declarada pelo usuario (s159). Constancia acima de pico: nada de 500q em 5 dias e 3 dias parados.
 3. **Grade EMED na ordem atual ate 13/09** -- o rescope pro formato UERJ so acontece DEPOIS do ENAMED (decisao explicita do usuario).
-4. 🔴 **ABERTURA DA S160: autopsia do simulado ENAMED.** O usuario se comprometeu a fazer o simulado na integra em **30/08, mais tarde no dia**, e entregar o resultado. Rodar sob `PLAYBOOK_EXECUCAO_PROVA.md`; a autopsia e o primeiro ato da proxima sessao. Era o simulado em debito ha 7d.
-5. **Frente MFC (Gusso + Duncan)** -- abre em 14/09 junto do rescope. Vale 20% da prova e o lastro hoje e zero.
+4. 🔬 **SESSAO DEDICADA (contexto limpo): auditoria de harness do MedHub.** Guia pronto em
+   [`docs/HANDOFF-AUDITORIA-MEDHUB.md`](docs/HANDOFF-AUDITORIA-MEDHUB.md) -- ele E o objetivo da sessao,
+   ler antes de qualquer outra coisa. Tese-mae em `~/ai-eng/HANDOFF-AUDITORIA-PERICIA.md` (Parte I).
+   **Nao misturar com estudo**: a varredura precisa de contexto limpo. Primeiro ato de la = re-rodar
+   o graphify no HEAD (o grafo e de 25/08, anterior as 3 sessoes Antigravity).
+5. 🔴 **AUTOPSIA DO SIMULADO ENAMED.** O usuario se comprometeu a fazer o simulado na integra em **30/08, mais tarde no dia**, e entregar o resultado. Rodar sob `PLAYBOOK_EXECUCAO_PROVA.md`; a autopsia e o primeiro ato da proxima sessao. Era o simulado em debito ha 7d.
+6. **Frente MFC (Gusso + Duncan)** -- abre em 14/09 junto do rescope. Vale 20% da prova e o lastro hoje e zero.
 
 ## Estado por frente
 - **Norte:** 🎯 **UERJ/MFC 01/11/2026** (63d). ENAMED 13/09 (14d) e **termometro**, nao piso -- o CRM e automatico. Horizonte real: UERJ -> R1/R2 MFC (mar/27-fev/29) -> RQE -> ENAMED com +10% p/ Psiquiatria.
@@ -36,6 +41,7 @@ Sessao de replanejamento estrategico. **(1) Virada de norte:** o usuario abandon
 - 📚 **Frente MFC do zero** (Gusso + Duncan): MCCP, abordagem familiar, SOAP, prevencao quaternaria, rastreamento, manejo ambulatorial.
 - 🎯 **Recalibrar o `PLAYBOOK_EXECUCAO_PROVA.md`**: 5h/100q inverte a instrucao de ritmo. O gap de execucao (banco 78.8% x simulado 60.8%) e fechamento precoce, nao pressa.
 - 💉 **Diretrizes em versao nova na bibliografia**: Calendario Vacinal 2026, GINA 2026, Reanimacao SBP 2026. Imunizacoes e fraqueza persistente nº 8.
+- 🔬 **Auditoria de harness (s160)** -- 51 contratos comportamentais fora do git, sem enforcement; 3 defeitos silenciosos atravessaram as sessoes Antigravity sem gate. Guia: `docs/HANDOFF-AUDITORIA-MEDHUB.md`.
 - 🗓️ **Auditoria ampla do banco** -- reforja cards 321, 273, 293 (+F37).
 - 🔍 **`card_id=120`** (Gravidez Ectopica) para `/pesquisar-evidencia`.
 - 📌 **2 padroes reincidentes sem Revisao Direcionada dedicada** ("remedio certo, sequencia errada"; "exame normal exclui").

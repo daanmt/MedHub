@@ -540,6 +540,36 @@ relates_to: [AGENTE, ESTADO, HANDOFF]
   o modo degradado (2)+(3) e **reproduzivel**, nao um acerto isolado da s128. `--fetch-drive` segue
   nao implementado -- 6a sessao seguida com a mesma lacuna de transporte.
 
+- **Adendo 4 (s159, 2026-08-30) -- o "modo degradado viavel" tem teto, e o teto foi medido.**
+  O adendo 2 concluiu que `read_file_content` "abre um modo degradado VIAVEL" porque devolve a
+  planilha inteira como texto. **Reproduzido pela 3a vez (s128, s134, s159): funciona.** Mas a
+  viabilidade nunca tinha sido testada para o uso que importa -- e ela NAO se sustenta:
+  - ✅ **Vale para LEITURA** (agente/humano lendo ordem e temas). Foi assim que a s159 confirmou
+    a divergencia de tamanho da grade (abaixo).
+  - ❌ **NAO vale para SYNC.** No dump, a fronteira de LINHA e um **espaco simples**,
+    indistinguivel do espaco interno da celula. Teste com `csv.reader` sobre uma amostra de
+    3 colunas x 3 linhas devolveu **7 campos em vez de 9**, com `13/04 a 19/04 GO` fundindo o
+    ultimo cabecalho de semana com o primeiro rotulo de material. Um `--from-text` construido
+    sobre isso desalinha colunas **em silencio** -- criaria um defeito classe 3 novo (item some
+    sem sinal) para consertar um classe 2. Nao construir.
+  - ❌ O texto tambem **nao carrega o tachado**, que e de onde `_parse_conclusao_xlsx` tira
+    `concluido` (`cell.font.strike`). Snapshot vindo do texto teria `concluido` falso para tudo --
+    e um snapshot fresco porem sintetico e pior que um velho, que ao menos grita "desatualizado"
+    (precedente registrado no adendo 2, item 4).
+  - **Veredito reforcado:** so `--fetch-drive <fileId>` com credencial local resolve. O agente
+    tem que DISPARAR o sync; nao existe caminho em que ele TRANSPORTE o dado com fidelidade --
+    nem em base64 (quantificado na s128) nem em texto (quantificado agora). **Bloqueado em
+    decisao do usuario:** exige service account ou OAuth em `.env`.
+- 🔍 **Achado colateral de alto valor (s159) -- os dois SSOTs divergem no TAMANHO da grade, nao so na ordem.**
+  A leitura do xlsx mostrou **28 semanas, a ultima "05/10 a 09/10"**. O `grade.json`, derivado do
+  `Cronograma.pdf`, tem **30 semanas ate 25/10**. As semanas 29 e 30 do PDF (que ja tinham 0
+  questoes) **nao existem na planilha do usuario**. Isso confirma na FONTE o que a s159 tinha
+  deduzido por inferencia (fim do conteudo = 09/10, coincidente com o fim do internato) e amplia
+  o `project_cronograma_dual_ssot`: a divergencia entre PDF e xlsx nao e so de ordenacao.
+  Consequencia pratica: `day_plan._cronograma_hoje` calcula `fim_grade` como `max(fim)` das
+  semanas do `grade.json` -> **25/10**, duas semanas alem do cronograma real. O ritmo-alvo da
+  grade sai diluido. Candidato a achado proprio na auditoria (F43+).
+
 ### F37 -- `taxonomia_cronograma.questoes_realizadas` inflado (3,7x na s127 -> 5,9x na s159) -- **ALTA** (era MEDIA) -- **CAUSA-RAIZ CORRIGIDA (s159); dado historico pendente de decisao**
 - **Evidencia (s127):** o campo acusa **19.597** questoes contra **5.232** reais em `sessoes_bulk`.
   Descoberto ao construir o eixo de cobertura de `tools/variancia.py`: a 1a versao lia esse campo e

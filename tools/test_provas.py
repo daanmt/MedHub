@@ -127,12 +127,57 @@ def test_countdown_aceita_provas_injetadas_sem_tocar_disco():
 # Fronteira dura + contrato do arquivo real
 # --------------------------------------------------------------------------
 
+def _codigo_sem_comentarios(func):
+    """Fonte da funcao sem comentarios nem docstring.
+
+    s159: a versao anterior deste teste greppava a fonte CRUA. Consequencia
+    absurda descoberta ao vivo: escrever um comentario explicando *por que* a
+    funcao nao le core/provas.json derrubava o teste, porque a palavra aparecia
+    no texto. O gate punia a documentacao da regra que ele mesmo protege.
+    A intencao sempre foi "o CODIGO nao consome provas" -- entao o teste passa
+    a olhar so o codigo. Continua caindo se alguem realmente ler provas aqui.
+    """
+    linhas = []
+    for linha in inspect.getsource(func).splitlines():
+        if linha.strip().startswith("#"):
+            continue
+        linhas.append(linha.split("  #")[0])
+    return chr(10).join(linhas)
+
+
 def test_ritmo_nao_consome_provas():
-    """s126: o ritmo mede a grade contra o FIM DA GRADE, nunca contra a prova.
-    O countdown e display -- se um dia ele entrar nesta funcao, o teste cai."""
-    src = inspect.getsource(_cronograma_hoje)
+    """s126: o ritmo NUNCA e medido contra a data de uma prova lida do countdown.
+    O countdown e display -- se um dia ele entrar nesta funcao, o teste cai.
+
+    s159: o divisor deixou de ser o fim da grade e passou a ser FIM_CONTEUDO_ALVO
+    (constante de planejamento declarada em performance.py). A fronteira nao
+    mudou: segue proibido consumir core/provas.json ou o countdown aqui dentro.
+    Uma constante nomeada e auditavel; um countdown de display nao e.
+    """
+    src = _codigo_sem_comentarios(_cronograma_hoje)
     assert "provas" not in src and "countdown" not in src
-    assert "dias_grade" in src   # o divisor do ritmo continua sendo a grade
+    assert "dias_grade" in src   # o ritmo continua tendo um divisor nomeado
+
+
+def test_ritmo_usa_alvo_de_conteudo_declarado():
+    """s159: o divisor do ritmo da grade e uma DECISAO DE PLANEJAMENTO nomeada.
+
+    Historico das duas correcoes do mesmo divisor:
+    - s126: dividia pela data do ENAMED e comprimia a grade -> ~116q/dia ficticio.
+      Corrigido para o fim da grade.
+    - s159: dividir pelo fim do calendario do curso (09-11/10) media "consigo
+      fechar dentro do EMED?", pergunta sem consequencia -- o curso acabar nao e
+      um prazo. Passou a dividir por `FIM_CONTEUDO_ALVO`, a data-alvo declarada
+      para cobrir o conteudo (hoje = data da UERJ).
+
+    O teste trava as duas pontas: usa o alvo declarado E continua sem consumir
+    provas/countdown (a fronteira dura da s126 segue valendo -- ver o teste
+    irmao abaixo).
+    """
+    from performance import FIM_CONTEUDO_ALVO
+    src = inspect.getsource(_cronograma_hoje)
+    assert "FIM_CONTEUDO_ALVO" in src, "o divisor deixou de ser o alvo declarado"
+    assert isinstance(FIM_CONTEUDO_ALVO, date), "o alvo tem que ser uma data"
 
 
 def test_arquivo_real_tem_prova_e_grade():

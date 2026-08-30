@@ -100,6 +100,22 @@ AREAS_VALIDAS = [
 # feedback_politica_cards_diaria e project_norte_uerj_mfc na memoria.
 ENAMED_DATA = date(2026, 9, 13)      # termometro (referencia de calendario, nao alvo de volume)
 UERJ_DATA = date(2026, 11, 1)        # 🎯 prova-alvo (Acesso Direto MFC, 15 vagas ampla concorrencia)
+
+# 🗓️ Data-alvo para TERMINAR O CONTEUDO da grade. Decisao de PLANEJAMENTO do
+# usuario -- nao e propriedade da grade nem data de prova, e por isso vive aqui,
+# nomeada, em vez de sair de um max() escondido dentro do day_plan.
+#
+# Por que existe (s159): o divisor do ritmo da grade era `max(fim)` das semanas,
+# o que respondia "consigo fechar dentro do calendario do curso?". Essa pergunta
+# nao tem consequencia -- 09/10 e o fim do EMED e do internato, nao um prazo. A
+# pergunta com consequencia e "consigo cobrir o conteudo antes da prova?".
+#
+# ⚠️ Efeito colateral a manter visivel: com o alvo NA data da prova, o plano
+# implica conteudo novo ate a vespera, ou seja, ZERO reta final. Antecipar esta
+# data e o mesmo que comprar semanas de consolidacao -- e o preco e o corte de
+# cauda ficar maior. A 60q/dia: alvo 01/11 -> corte de ~917q; 18/10 -> ~1.757q;
+# 11/10 -> ~2.177q. Mudar aqui move o plano inteiro de forma explicita.
+FIM_CONTEUDO_ALVO = date(2026, 11, 1)
 MARCOS = [
     ("UERJ/MFC (prova 01/11)", 10400, UERJ_DATA),
     ("Ciclo 2026", 12500, date(2026, 12, 31)),

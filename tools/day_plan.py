@@ -34,7 +34,12 @@ sys.path.insert(0, ROOT)
 
 import app.utils.db as db                                     # noqa: E402
 import dormant_refresh as dr                                  # noqa: E402
-from performance import get_totais, get_questoes_do_mes, MARCOS  # noqa: E402
+from performance import (  # noqa: E402
+    FIM_CONTEUDO_ALVO,
+    MARCOS,
+    get_questoes_do_mes,
+    get_totais,
+)
 
 
 def _fsrs_counts(con):
@@ -333,9 +338,19 @@ def _cronograma_hoje(total_q, hoje):
     # so que na outra ponta. O divisor certo e a ultima semana COM conteudo.
     semanas_com_conteudo = [s for s in grade["semanas"] if (s.get("total_questoes") or 0) > 0]
     fim_grade = max((s.get("fim") or "") for s in (semanas_com_conteudo or grade["semanas"]))
+
+    # s159 (2a correcao do divisor): `fim_grade` continua sendo reportado -- e o
+    # fim do CALENDARIO do curso, fato derivado da grade. Mas o divisor do RITMO
+    # passa a ser `FIM_CONTEUDO_ALVO` (performance.py), que e a data-alvo de
+    # planejamento para terminar o conteudo. Motivo: fechar dentro do calendario
+    # do EMED nao tem consequencia -- 09/10 e o fim do curso, nao um prazo. A
+    # pergunta com consequencia e "cubro o conteudo antes da prova?".
+    # 🔴 A fronteira da s126 continua valendo: isto NAO le core/provas.json nem o
+    # countdown. Le uma constante de planejamento nomeada, do mesmo lugar de onde
+    # ja saem os marcos -- que e o que torna a decisao auditavel.
     try:
-        dias_grade = (date.fromisoformat(fim_grade) - hoje).days
-    except (ValueError, TypeError):
+        dias_grade = (FIM_CONTEUDO_ALVO - hoje).days
+    except (TypeError, AttributeError):
         dias_grade = dias
     dias_grade = max(dias_grade, 1)
 
@@ -370,6 +385,7 @@ def _cronograma_hoje(total_q, hoje):
         "dias_enamed": dias,
         "dias_grade": dias_grade,
         "fim_grade": fim_grade or None,
+        "fim_conteudo_alvo": FIM_CONTEUDO_ALVO.isoformat(),
         "restante_q": restante,
         "ritmo_cronograma": round(restante / dias_grade, 1),
         "ritmo_meta": round(max(0, META_CICLO - total_q) / DIAS_ATE_CICLO(hoje), 1)
@@ -933,8 +949,9 @@ def render(p):
             out.append(f"    • Drive sincronizado: {c.get('drive_sync_data') or '—'}")
         if c["temas"]:
             out.append(f"    • próximos temas: {', '.join(c.get('temas_material', c['temas']))}")
-        out.append(f"    • ritmos-alvo: fechar a grade ~{c['ritmo_cronograma']}/dia "
-                   f"(até {c.get('fim_grade') or '?'}) · 2o ciclo {META_CICLO // 1000}k "
+        out.append(f"    • ritmos-alvo: cobrir o conteúdo ~{c['ritmo_cronograma']}/dia "
+                   f"(alvo {c.get('fim_conteudo_alvo') or '?'}; calendário do curso fecha "
+                   f"{c.get('fim_grade') or '?'}) · 2o ciclo {META_CICLO // 1000}k "
                    f"~{c['ritmo_meta']}/dia · ENAMED em {c['dias_enamed']}d (sem alvo de volume)")
     elif p.get("cronograma_hint"):
         out.append(f"- 🧭 **Cronograma:** {p['cronograma_hint'][:120]}")

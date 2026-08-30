@@ -254,6 +254,12 @@ python tools/insert_questao.py \
 
 **Fronteira dura:** este CLI escreve **apenas** em `habilidades` e `questao_habilidades`. Nunca toca FSRS, `flashcards`, `questoes_erros` ou `sessoes_bulk`.
 
+🔴 **`--add` COMPLEMENTA `insert_questao.py` — nunca o substitui (F38).** É o defeito mais caro já registrado neste pipeline e ele é **silencioso**: a s127 analisou 6 erros em profundidade, gravou 7 habilidades aqui e **zero** linhas em `questoes_erros`. Consequência: os cards nasceram sem âncora (`questao_id=NULL`) e o substrato canônico (`tipo_erro`, `alternativa_marcada`, `explicacao_correta`) ficou só em prosa no log da sessão — invisível para áreas fracas, armadilhas de resumo e reincidência.
+
+- **Erro de questão de bloco → SEMPRE `insert_questao.py` primeiro.** O `--add` entra depois, se você quiser promover a habilidade avulsa.
+- **`--add` sozinho só é correto quando não há erro**: questão acertada com lacuna colateral, ou `incerteza`.
+- A CLI **avisa em stderr** quando recebe `--veredito errou` sem `--questao-id`, e o `auto_check` levanta `[WARN] ERROS_ORFAOS` para qualquer dia-bloco com erros em `sessoes_bulk` e nenhuma linha em `questoes_erros` (janela d..d+1). Nenhum dos dois bloqueia — quem decide é você, mas agora em voz alta.
+
 ---
 
 ## 11. Taxonomia da questão e ORÇAMENTO de correção

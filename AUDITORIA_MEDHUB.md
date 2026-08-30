@@ -804,6 +804,32 @@ relates_to: [AGENTE, ESTADO, HANDOFF]
 
 ---
 
+## 3m. Sessao de engenharia s159 (2026-08-30) -- achado F42
+
+### F42 -- Editar o espelho da skill e silenciosamente revertido pelo `sync_skills` -- **BAIXA/MEDIA** -- **ABERTO**
+- **Evidencia (s159, ao vivo):** para entregar a direcao 3 do F38 editei
+  `.agents/skills/source-command-analisar-questao/SKILL.md`, rodei
+  `python tools/sync_skills.py` e o texto **desapareceu**. A fonte de verdade e
+  `.claude/commands/<nome>.md`; `.agents/skills/source-command-*/SKILL.md` e
+  ESPELHO GERADO. O sync sobrescreveu a edicao e reportou sucesso
+  (`~ source-command-analisar-questao/SKILL.md · 1 espelho atualizado`) --
+  indistinguivel, na saida, de um sync que preservou trabalho.
+- **Por que passa despercebido:** o espelho e o arquivo que o agente encontra
+  primeiro (e o que os `grep` de skill retornam, e o que a listagem de skills
+  expoe). Nada no cabecalho do SKILL.md diz "GERADO -- NAO EDITAR", e o
+  `git status` depois do sync fica limpo, entao a perda nao deixa rastro.
+  So percebi porque o arquivo nao apareceu na lista de staged do commit.
+- **Custo real:** 1 ciclo perdido e -- pior -- o ledger chegou a registrar a
+  direcao 3 do F38 como entregue quando ela nao existia mais em disco. Um gate
+  que afirma entrega inexistente e pior que gate nenhum.
+- **Direcao (nao implementada):** (a) banner `<!-- GERADO por tools/sync_skills.py
+  -- editar .claude/commands/<nome>.md -->` no topo de todo espelho; (b) o sync
+  avisar quando o espelho que ele vai sobrescrever tem mtime mais novo que a
+  fonte ("voce editou o espelho; a edicao sera perdida"); (c) avaliar tornar os
+  espelhos read-only. (a)+(b) sao baratos e resolvem o caso observado.
+
+---
+
 ## 4. O que esta solido (nao mexer sem motivo)
 
 Registrado para o PRD nao "consertar" o que funciona:

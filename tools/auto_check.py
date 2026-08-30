@@ -25,7 +25,8 @@ from tools.utils.state_utils import (
     check_session_pointer,
     check_posicao_drift,
     check_handoff_len,
-    check_erros_orfaos
+    check_erros_orfaos,
+    check_suites_orfas
 )
 def run_command(cmd_list, desc, capture=False):
     print(f"\\n[AUTO-CHECK] Executando: {desc}")
@@ -70,6 +71,7 @@ def main():
     doc_drift_relevant = (mode == "--all")
     card_relevant = (mode == "--all")
     fsrs_relevant = (mode == "--all")
+    substrato_relevant = (mode == "--all")
 
     if mode in ("--changed", "--staged"):
         changed_files = get_staged_files() if mode == "--staged" else get_changed_files()
@@ -81,6 +83,7 @@ def main():
             doc_drift_relevant = True
             card_relevant = True
             fsrs_relevant = True
+            substrato_relevant = True
         else:
             origem = "staged para commit" if mode == "--staged" else "modificado(s)/untracked na sessão"
             print(f"🔍 Detectados {len(changed_files)} arquivo(s) {origem}.")
@@ -108,6 +111,16 @@ def main():
                           "tools/check_fk_orphans.py",
                           ".claude/commands/estilo-flashcard.md"):
                     card_relevant = True
+                # F44 (s159): SUBSTRATO COMPARTILHADO. Modulo de utils, contrato
+                # ou config de teste nao tem consumidor local -- por definicao
+                # quem depende deles vive noutro arquivo, e o seletor por path
+                # nunca alcanca. Foi assim que a s156 moveu LIMITE_HANDOFF para
+                # tools/utils/ e quebrou a coleta de test_handoff_teto por 3
+                # sessoes com o harness reportando PASSED. Substrato mexeu ->
+                # suite COMPLETA, sem tentar adivinhar o consumidor.
+                if (fp.startswith("tools/utils/") or fp.startswith("core/contracts/")
+                        or fp in ("pytest.ini", "conftest.py")):
+                    substrato_relevant = True
                 # Load balancer FSRS (check 2c): o caminho de escrita vive em
                 # app/, que a classificação abaixo não varre -- daí a flag.
                 if fp in ("app/utils/fsrs_balance.py", "app/utils/fsrs.py",
@@ -134,7 +147,8 @@ def main():
 
             if (not resumos_to_check and not tools_to_check and not parity_relevant
                     and not pointer_relevant and not doc_drift_relevant
-                    and not card_relevant and not fsrs_relevant):
+                    and not card_relevant and not fsrs_relevant
+                    and not substrato_relevant):
                 print("\n✅ Nenhum arquivo crítico (resumos/*.md ou scripts python estruturais) foi alterado.")
                 print("   O harness não exige execução de suítes de teste para esta mudança. Aprovado!")
                 print("=" * 60)
@@ -192,6 +206,26 @@ def main():
             success_tel, _ = run_command(cmd_tel, desc_tel)
             all_passed = all_passed and success_tel
             results_summary.append((desc_tel, success_tel, 0))
+
+    # 2d. SUITE COMPLETA DO PYTEST (F44, s159). 🔴 BLOCKING.
+    #     Ate aqui o harness NUNCA invocava o pytest: rodava ~6 suites
+    #     script-style nomeadas a mao e mais nada. Os 300+ testes coletados pelo
+    #     `pytest.ini` so executavam se um humano digitasse `pytest` -- ou seja,
+    #     o hook de pre-commit deixava passar commit com suite vermelha, e foi
+    #     exatamente assim que a quebra de coleta da s156 sobreviveu 3 sessoes
+    #     com o relatorio dizendo "Todos os checks passaram".
+    #     Gatilho: --all, qualquer .py de tools/core tocado, ou substrato
+    #     compartilhado (tools/utils/, core/contracts/, pytest.ini, conftest.py).
+    #     Custo medido: ~17s. Barato demais para continuar sendo opcional.
+    if mode == "--all" or tools_to_check or substrato_relevant:
+        desc_pytest = "Suíte completa (pytest)"
+        motivo = "substrato compartilhado" if substrato_relevant and mode != "--all" else None
+        if motivo:
+            print(f"   ↳ {motivo} tocado -> suíte completa (o consumidor vive noutro arquivo).")
+        success_pt, _ = run_command([sys.executable, "-m", "pytest", "tools/", "-q"],
+                                    desc_pytest)
+        all_passed = all_passed and success_pt
+        results_summary.append((desc_pytest, success_pt, 0))
 
     # 2b. Suíte do check de auto-suficiência de card (Part 1). BLOCKING como
     #     todo teste de código: valida os detectores por fixtures (não depende
@@ -465,6 +499,23 @@ def main():
     results_summary.append((desc_f38, True, len(orfaos) if orfaos else 0))
     _ledger_record("erros_orfaos",
                    [{"alvo": d, "payload": {"erros_esperados": n}} for d, n in (orfaos or [])])
+
+    # 14. Invariante F43: suite que existe tem que estar em algum registro de
+    #     execucao. "Quais testes rodam" e mantido em TRES lugares (pytest.ini,
+    #     auto_check, test_pytest_bridge) e nenhum sabe do outro -- uma suite
+    #     fora dos tres existe, passa no review e nunca executa. WARN.
+    desc_f43 = "Registro de suite de teste (F43)"
+    suites_orfas = check_suites_orfas()
+    if suites_orfas:
+        print()
+        print(f"[WARN] SUITES_ORFAS (F43): {len(suites_orfas)} suite(s) em tools/ fora de "
+              f"TODOS os registros de execucao ({', '.join(suites_orfas[:4])}"
+              f"{', ...' if len(suites_orfas) > 4 else ''}). "
+              f"Inscrever em pytest.ini (python_files), no auto_check ou no "
+              f"test_pytest_bridge -- existir nao e o mesmo que rodar.")
+    results_summary.append((desc_f43, True, len(suites_orfas) if suites_orfas else 0))
+    _ledger_record("suites_orfas",
+                   [{"alvo": n, "payload": {}} for n in (suites_orfas or [])])
 
     # Resumo Final
     print("\n" + "=" * 60)

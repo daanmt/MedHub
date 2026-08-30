@@ -247,3 +247,55 @@ def check_erros_orfaos(db_path=None, piso=PISO_ERROS_ORFAOS, desde=None):
         if con is not None:
             con.close()
     return orfaos or None
+
+
+# ---------------------------------------------------------------------------
+# F43 (s159) -- suite que existe e nao roda.
+#
+# "Quais testes rodam" nao tem UM registro: tem TRES, todos mantidos a mao e
+# nenhum ciente do outro --
+#   1. `pytest.ini` -> `python_files` (allowlist explicita);
+#   2. `tools/auto_check.py` -> suites invocadas por nome no harness;
+#   3. `tools/test_pytest_bridge.py` -> os script-style rodados por subprocess.
+# Uma suite fora dos tres existe, passa no code review, e nunca executa. E o
+# mesmo modo de falha do D4/alcancabilidade ("artefato que funciona e ninguem
+# alcanca") e do que atingiu `test_handoff_teto` na s156 -- com a diferenca de
+# que la o arquivo estava registrado e a coleta e que quebrou.
+#
+# Nao ha orfa hoje (37/37 cobertas). Este check existe para que continue assim:
+# o autor da proxima suite descobre que esqueceu de inscrever ANTES do commit,
+# nao tres sessoes depois.
+# ---------------------------------------------------------------------------
+REGISTROS_DE_SUITE = (
+    ("pytest.ini", "python_files"),
+    ("tools/auto_check.py", None),
+    ("tools/test_pytest_bridge.py", None),
+)
+
+
+def check_suites_orfas(root=None):
+    """Invariante F43: toda `tools/test_*.py` citada em >= 1 registro de execucao.
+
+    Retorna lista dos nomes orfaos; None quando todas cobertas (mesma convencao
+    dos demais checks). Tolerante: registro ausente/ilegivel apenas nao cobre
+    nada -- nunca levanta.
+    """
+    base = Path(root) if root else ROOT_DIR
+    tools_dir = base / "tools"
+    if not tools_dir.is_dir():
+        return None
+    suites = sorted(p.name for p in tools_dir.glob("test_*.py"))
+    if not suites:
+        return None
+    corpus = []
+    for rel, _campo in REGISTROS_DE_SUITE:
+        alvo = base / rel
+        try:
+            corpus.append(alvo.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+    if not corpus:
+        return None
+    blob = "".join(corpus)   # busca por substring: separador e irrelevante
+    orfas = [nome for nome in suites if nome not in blob]
+    return orfas or None

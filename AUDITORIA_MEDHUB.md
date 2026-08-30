@@ -886,6 +886,48 @@ relates_to: [AGENTE, ESTADO, HANDOFF]
 
 ---
 
+## 3n. Sessao de engenharia s159 (2026-08-30) -- achados F43-F44 (gates que nao gateavam)
+
+### F43 -- "Quais testes rodam" tem TRES registros manuais e nenhum sabe do outro -- **MEDIA** -- **RESOLVIDO (s159)**
+- **Evidencia:** uma suite em `tools/test_*.py` so executa se estiver citada em (1) `pytest.ini`
+  -> `python_files` (allowlist explicita), (2) `tools/auto_check.py` (suites invocadas por nome)
+  ou (3) `tools/test_pytest_bridge.py` (script-style por subprocess). Sao **tres registros
+  mantidos a mao, nenhum ciente do outro**. Uma suite fora dos tres existe, passa no code review
+  e nunca roda -- e ninguem percebe, porque nao ha erro: ha ausencia.
+- **Medicao (s159):** 37 suites em disco, **37 cobertas** -- 31 no `pytest.ini`, 4 so no
+  `auto_check`, 3 so no bridge (1 em dois registros). **Zero orfas hoje.** O achado nao e um
+  defeito ativo: e a **ausencia de garantia**. `tools/test_erros_orfaos.py`, escrita nesta mesma
+  sessao, so e coletada porque o autor lembrou de inscrever a mao.
+- ✅ **Corrigido:** `check_suites_orfas()` em `tools/utils/state_utils.py` + check 14 do
+  `auto_check` (WARN). Suite `tools/test_suites_orfas.py` (10 testes), auto-referente de
+  proposito -- ela tambem precisou ser inscrita.
+
+### F44 -- O harness NUNCA invocava o pytest; a suite completa era manual-only -- **ALTA** -- **RESOLVIDO (s159)**
+- 🔴 **Evidencia:** `tools/auto_check.py` -- que roda no git hook de pre-commit e e a definicao
+  de "trabalho validado" neste projeto -- **nao continha uma unica chamada ao pytest**. Ele
+  rodava ~6 suites script-style nomeadas a mao e 8 checks estaticos. Os **306 testes** coletados
+  pelo `pytest.ini` so executavam se um humano digitasse `pytest`. Nem o `--all` os rodava.
+- **Consequencia medida:** commit com suite vermelha passava no hook com o relatorio dizendo
+  "🎉 Todos os checks passaram". Foi exatamente assim que a quebra de coleta de
+  `test_handoff_teto.py` (introduzida em `c4d4532`, s156) sobreviveu **3 sessoes** -- a s157
+  registrou no proprio log "auto_check.py PASSED (0 BLOCKs)" com a suite quebrada.
+- **Este e o F35 na sua forma real.** O F35 descrevia "o seletor da falso verde quando o
+  consumidor vive noutro arquivo"; o diagnostico estava certo e subdimensionado -- nao era o
+  seletor escolhendo mal, era **nao haver o que selecionar**.
+- ✅ **Corrigido (2 partes):**
+  1. **Check 2d, BLOCKING:** `auto_check` passa a rodar `pytest tools/ -q` quando o modo e
+     `--all`, quando ha `.py` de `tools/`/`core/` tocado, ou quando substrato compartilhado
+     mudou. Custo medido: ~17s.
+  2. **Escalonamento por substrato:** mudanca em `tools/utils/`, `core/contracts/`, `pytest.ini`
+     ou `conftest.py` forca a suite COMPLETA. Justificativa: substrato compartilhado **nao tem
+     consumidor local** -- por definicao quem depende dele vive noutro arquivo, entao qualquer
+     seletor por path erra. Em vez de adivinhar o consumidor, escala.
+- ⚠️ **Honestidade:** isto conserta o gate, nao a cobertura. A suite testa CODIGO; nada testa a
+  qualidade do output de estudo (aula-base, card, feedback) -- ver §9j do
+  `docs/HANDOFF-AUDITORIA-MEDHUB.md`.
+
+---
+
 ## 4. O que esta solido (nao mexer sem motivo)
 
 Registrado para o PRD nao "consertar" o que funciona:

@@ -563,7 +563,7 @@ relates_to: [AGENTE, ESTADO, HANDOFF]
   sessao. Confirma que o campo continua sendo alimentado por alguma escrita em lote que nao calcula
   por tema; nao e apenas herdado da migracao original de 2026-07-25.
 
-### F38 -- Erros analisados na conversa nao chegam a `questoes_erros`; a analise evapora -- **ALTA** -- **ABERTO**
+### F38 -- Erros analisados na conversa nao chegam a `questoes_erros`; a analise evapora -- **ALTA** -- **RESOLVIDO (s159) -- guarda entregue; 1 instancia historica a recuperar**
 - **Evidencia (s127 -> descoberto na s128, 2026-07-25):** o bloco de Pneumologia Intensiva II teve
   **6 erros analisados em profundidade** (elo quebrado, armadilha, conteudo faltante -- registrados
   em prosa no `history/session_127.md`). No `ipub.db`: `sessoes_bulk` recebeu o volume (22/16) e o
@@ -593,6 +593,40 @@ relates_to: [AGENTE, ESTADO, HANDOFF]
   em `sessoes_bulk` e 0 em `questoes_erros`"; (2) tornar explicito em `/analisar-questao` que
   `--add` **complementa** e nunca substitui `insert_questao.py`; (3) avaliar se `habilidades.py --add`
   com `veredito='errou'` e `questao_id=NULL` deveria simplesmente avisar na saida.
+
+- ✅ **RESOLVIDO na s159 (2026-08-30) -- as 3 direcoes implementadas.**
+  1. **Gate no `auto_check` (check 13, WARN):** `check_erros_orfaos()` em
+     `tools/utils/state_utils.py` cruza `sessoes_bulk` x `questoes_erros` e acusa
+     dia-bloco com >= 3 erros de volume e ZERO linhas de erro estruturado. Roda
+     SEMPRE (nao so no `--all`): o defeito nasce de uma escrita no db, nao de um
+     arquivo tocado, entao nenhuma heuristica de relevancia por path o alcanca.
+  2. **Aviso na origem:** `habilidades.py --add` com `--veredito errou` e sem
+     `--questao-id` imprime `[WARN] F38` em stderr (stdout fica limpo p/ script).
+  3. **Contrato explicito:** `/analisar-questao` secao 10 agora diz, com o caso da
+     s127 nominal, que `--add` **complementa** e nunca substitui `insert_questao.py`.
+  - **Suite:** `tools/test_erros_orfaos.py`, 18 testes (deteccao, as 2 defesas
+    contra falso positivo, parametros, modo defensivo, regressao viva). Registrada
+    na allowlist `python_files` do `pytest.ini` -- sem isso a suite existiria sem
+    ser coletada (mesmo modo de falha do D4/alcancabilidade).
+- 📐 **Calibracao medida, nao arbitrada.** Janela de credito = **d..d+1** e piso = 3
+  erros. Sobre os 52 dias-bloco reais (790 erros esperados): com d+1 o check acusa
+  **1 dia** e ele e **verdadeiro**, com **zero falsos positivos**; com d+2 o unico
+  positivo verdadeiro **desaparece** (os 19 erros de 20/06 sao de Cirurgia/GO/
+  Exantematicas -- tema nenhum em comum com o bloco de 18/06). Alargar a janela
+  compra silencio, nao precisao. Ambas as constantes travadas por teste.
+- 🔴 **Instancia historica confirmada, ainda NAO recuperada -- fica como divida:**
+  **2026-06-18 (s085, Pediatria 38/23 = 15 erros)**, bloco "Ictericia neonatal +
+  Sepse neonatal" (tema dormente ha 63d, radar cravou). O tema
+  `Pediatria / Ictericia e Sepse Neonatal` tem **26 flashcards e ZERO linhas em
+  `questoes_erros`** -- assinatura exata do F38: os cards existem, a analise que
+  os gerou nao. Recuperar exige o log da s085 + curadoria; nao e query.
+  *(Coerente com `ESTADO.md`, que ja listava "ictericia neonatal (so andaime)"
+  entre os gaps de resumo -- o tema esta subatendido em tres superficies.)*
+- ⚠️ **Honestidade sobre o alcance:** o gate e **guarda de REGRESSAO**, nao remedio.
+  Ele nao recupera analise perdida e nao mede qualidade do erro registrado -- so
+  garante que a proxima substituicao de `insert_questao.py` por `--add` fale alto.
+  O gap de ~28% dimensionado na s128 (131 de 466) continua sendo majoritariamente
+  volume importado sem itemizacao, que o filtro de migracao exclui de proposito.
 
 ### F39 -- 40% do baralho viola o principio atomico; a nota FSRS vira ininterpretavel -- **ALTA** -- **PARCIAL (detector entregue, reforja em 8/358)**
 - **Origem:** achado do USUARIO durante o dreno da s128, formulado melhor do que o contrato tinha:

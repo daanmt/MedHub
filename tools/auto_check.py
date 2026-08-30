@@ -24,7 +24,8 @@ from tools.utils.state_utils import (
     card_watermark_selar,
     check_session_pointer,
     check_posicao_drift,
-    check_handoff_len
+    check_handoff_len,
+    check_erros_orfaos
 )
 def run_command(cmd_list, desc, capture=False):
     print(f"\\n[AUTO-CHECK] Executando: {desc}")
@@ -441,6 +442,29 @@ def main():
         _ledger_record("reachability",
                        achados_reach if sensor_reach_ok
                        else [{"alvo": "sensor", "payload": {}}])
+
+    # 13. Invariante F38 (AUDITORIA_MEDHUB): erro analisado tem que PERSISTIR.
+    #     WARN, nao bloqueia. Roda SEMPRE (nao so no --all): o defeito nasce de
+    #     uma escrita no db, nao de um arquivo tocado, entao nenhuma heuristica
+    #     de relevancia por path o alcanca -- e a varredura e barata (dezenas de
+    #     dias-bloco). Guarda de REGRESSAO: nao recupera analise perdida, so
+    #     impede que a proxima evapore em silencio como a de 18/06 evaporou.
+    desc_f38 = "Persistencia de erro analisado (F38)"
+    orfaos = check_erros_orfaos()
+    if orfaos:
+        amostra = ", ".join(f"{d} ({n} erros)" for d, n in orfaos[:3])
+        print()
+        print(f"[WARN] ERROS_ORFAOS (F38): {len(orfaos)} dia(s)-bloco com erros em "
+              f"sessoes_bulk e ZERO linhas em questoes_erros: {amostra}"
+              f"{', ...' if len(orfaos) > 3 else ''}. "
+              f"`habilidades.py --add` COMPLEMENTA `insert_questao.py`, nunca o "
+              f"substitui -- sem a linha de erro os cards nascem sem ancora "
+              f"(questao_id=NULL) e a analise so existe em prosa. "
+              f"Norma: AUDITORIA_MEDHUB.md F38.")
+    # success=True: WARN nao rebaixa o veredito (nao altera all_passed).
+    results_summary.append((desc_f38, True, len(orfaos) if orfaos else 0))
+    _ledger_record("erros_orfaos",
+                   [{"alvo": d, "payload": {"erros_esperados": n}} for d, n in (orfaos or [])])
 
     # Resumo Final
     print("\n" + "=" * 60)

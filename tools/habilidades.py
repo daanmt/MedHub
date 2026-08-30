@@ -237,6 +237,25 @@ def registrar(texto, area=None, tema=None, veredito='errou', questao_id=None,
             'tema_id': tema_id, 'veredito': veredito}
 
 
+def _avisar_f38(veredito, questao_id):
+    """F38 (AUDITORIA_MEDHUB): `--add` COMPLEMENTA `insert_questao.py`, nao substitui.
+
+    O pipeline de analise tem dois finais e a s127 provou que da para tomar um
+    pelo outro: 6 erros analisados em profundidade, 7 habilidades gravadas aqui
+    e ZERO linhas em `questoes_erros`. Os cards nasceram sem ancora
+    (`questao_id=NULL`) e o substrato canonico (tipo_erro, alternativa marcada,
+    explicacao correta) ficou so em prosa no log da sessao.
+
+    Escreve em stderr de proposito: stdout desta CLI e consumido por script.
+    """
+    if veredito == 'errou' and questao_id is None:
+        print("[WARN] F38: habilidade de veredito='errou' gravada SEM questao_id. "
+              "Se este erro veio de uma questao de bloco, ele ainda precisa de "
+              "linha propria em questoes_erros -- rode tools/insert_questao.py. "
+              "Esta CLI complementa aquela, nunca a substitui "
+              "(AUDITORIA_MEDHUB.md F38).", file=sys.stderr)
+
+
 def reincidentes(limit=10, min_temas=1, db_path=None):
     """Habilidades ordenadas por dor: nº de ocorrencias e nº de temas DISTINTOS.
 
@@ -368,6 +387,7 @@ def main(argv=None):
                       veredito=args.veredito, questao_id=args.questao_id)
         print('Registrado: habilidade #%d (ocorrencia #%d, veredito=%s, tema_id=%s)'
               % (r['habilidade_id'], r['ocorrencia_id'], r['veredito'], r['tema_id']))
+        _avisar_f38(r['veredito'], args.questao_id)
         return 0
     return 1
 

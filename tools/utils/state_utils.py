@@ -168,3 +168,82 @@ def check_handoff_len(handoff_path=None, limite=LIMITE_HANDOFF):
         return None
     n = len(texto.splitlines())
     return (n, limite) if n > limite else None
+
+
+# ---------------------------------------------------------------------------
+# F38 (AUDITORIA_MEDHUB) -- erros analisados que nao chegam a `questoes_erros`.
+#
+# O pipeline de analise tem DOIS finais: `insert_questao.py` (erro completo +
+# cards) e `habilidades.py --add` (so a habilidade). Quando o agente SUBSTITUI
+# um pelo outro em vez de encadear, o bloco entra em `sessoes_bulk` com N erros
+# de volume e `questoes_erros` nao recebe uma linha -- os cards nascem sem
+# ancora (`questao_id=NULL`) e o substrato canonico (tipo_erro, alternativa
+# marcada, explicacao) so existe em prosa no log da sessao.
+#
+# 🔴 Fronteira: este check e um GUARDA DE REGRESSAO, nao um remendo. Ele nao
+# recupera analise perdida -- so impede que a proxima passe silenciosa.
+#
+# Duas defesas contra falso positivo, ambas exigidas pelo proprio F38:
+#   1. Volume importado da planilha (`/importar-planilha`) traz feitas/acertos
+#      SEM os erros terem sido itemizados -- ausencia esperada, nao defeito.
+#      Filtrado por `observacoes` de migracao historica.
+#   2. Registro TARDIO e a norma, nao a excecao (o erro costuma entrar no dia
+#      seguinte ao estudo). A janela de credito e d..d+1.
+#
+# 📐 Calibracao medida no historico real (52 dias-bloco, 790 erros esperados),
+#    nao arbitrada: com janela d+1 o check acusa 1 dia e ele e VERDADEIRO
+#    (2026-06-18, s085, Pediatria 38/23 -- "Ictericia e Sepse Neonatal" tem 26
+#    cards e ZERO erros no db, assinatura exata do F38), com zero falsos
+#    positivos. Com d+2 o unico positivo verdadeiro DESAPARECE: os 19 erros
+#    registrados em 20/06 sao de Cirurgia/GO/Exantematicas, tema nenhum em
+#    comum com o bloco de 18/06. Alargar a janela compra silencio, nao precisao.
+# ---------------------------------------------------------------------------
+MARCADORES_VOLUME_IMPORTADO = ("migracao historica", "migração histórica")
+PISO_ERROS_ORFAOS = 3          # abaixo disso o sinal e ruido de bloco pequeno
+JANELA_CREDITO_DIAS = 1        # d..d+1 conta como registro do bloco de d
+
+
+def check_erros_orfaos(db_path=None, piso=PISO_ERROS_ORFAOS, desde=None):
+    """Invariante F38: bloco com erros de volume tem que ter erro estruturado.
+
+    Retorna lista de (data_sessao, n_erros_esperados) para os dias-bloco em que
+    `sessoes_bulk` acusa >= `piso` erros e `questoes_erros` nao recebeu NENHUMA
+    linha na janela de credito. None quando limpo (mesma convencao dos demais
+    checks deste modulo).
+
+    `desde` (ISO date, opcional) limita a varredura; sem ele varre o historico
+    inteiro -- e barato (dezenas de dias-bloco) e o defeito e retroativo por
+    natureza, entao truncar a janela esconderia exatamente o que se procura.
+    """
+    dbp = Path(db_path) if db_path else ROOT_DIR / "ipub.db"
+    if not dbp.exists():
+        return None
+    con = None
+    try:
+        import sqlite3
+        con = sqlite3.connect(str(dbp))
+        filtro_import = " AND ".join(
+            "LOWER(COALESCE(observacoes,'')) NOT LIKE ?" for _ in MARCADORES_VOLUME_IMPORTADO)
+        params = [f"%{m}%" for m in MARCADORES_VOLUME_IMPORTADO]
+        sql = (f"SELECT data_sessao, SUM(questoes_feitas - questoes_acertadas) esperados "
+               f"FROM sessoes_bulk WHERE {filtro_import}")
+        if desde:
+            sql += " AND data_sessao >= ?"
+            params.append(desde)
+        sql += " GROUP BY data_sessao HAVING esperados >= ? ORDER BY data_sessao"
+        params.append(piso)
+        dias = con.execute(sql, params).fetchall()
+        orfaos = []
+        for data_sessao, esperados in dias:
+            registrados = con.execute(
+                "SELECT COUNT(*) FROM questoes_erros "
+                "WHERE date(data_registro) BETWEEN ? AND date(?, ?)",
+                (data_sessao, data_sessao, f"+{JANELA_CREDITO_DIAS} day")).fetchone()[0]
+            if registrados == 0:
+                orfaos.append((data_sessao, int(esperados)))
+    except Exception:
+        return None
+    finally:
+        if con is not None:
+            con.close()
+    return orfaos or None

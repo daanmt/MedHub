@@ -1,12 +1,14 @@
 # HANDOFF — Auditoria do MedHub: gaps determinísticos preenchidos pelo modelo
 
-> **Este documento é o OBJETIVO da próxima sessão (s160), com contexto limpo.**
+> **Este documento é o OBJETIVO de uma sessão dedicada, com contexto limpo — disparada pelo
+> usuário, não automaticamente.** A s160 abre com a autópsia do simulado ENAMED; a auditoria vem
+> depois, em janela própria (`HANDOFF.md` itens 4 e 5).
 > Escrito em 2026-08-30 (s159) a partir de `~/ai-eng/HANDOFF-AUDITORIA-PERICIA.md`, que
 > consolidou a tese "modelo como cola" no pipeline `pericia`. **A tese não se re-litiga aqui**
 > — ler a Parte I daquele documento primeiro. Este é o *guia de execução para o alvo MedHub*,
 > com o experimento natural, os instrumentos e os suspeitos que são deste repo.
 
-## 🎯 GOAL da s160
+## 🎯 GOAL da sessão de auditoria
 
 1. **Absorver a tese** (Parte I do handoff do `pericia`) e a taxonomia de 4 classes — ela é o
    instrumento central, e este documento assume que ela já está na cabeça.
@@ -16,6 +18,8 @@
    determinísticos no MedHub.
 4. **Entregar a tabela de achados** (§10), numerada como **F43+** no `AUDITORIA_MEDHUB.md`.
 5. **Rodar o swap test retroativo** (§11) — o MedHub já tem 3 amostras gravadas.
+
+> **Numeração dos achados:** F43+ no `AUDITORIA_MEDHUB.md`, sem renumerar F1-F42.
 
 ---
 

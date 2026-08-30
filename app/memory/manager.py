@@ -90,16 +90,36 @@ def _load_ipub_error_counts(ipub_path: Path) -> dict[tuple[str, str], int]:
     GROUP BY area, tema (não só area): dois temas da mesma área produzem
     linhas distintas. Linhas cujos rótulos normalizam para o mesmo par são
     SOMADAS (múltiplos matches somam).
+
+    🔴 F37 (corrigido na s159) — a fonte MUDOU, o contrato de retorno não.
+    Antes: `SUM(questoes_realizadas - questoes_acertadas)` de
+    `taxonomia_cronograma`. Esse campo é alimentado por sessões de volume que
+    são atribuídas à ÁREA, e até a s159 `registrar_sessao_bulk` as espalhava
+    por TODOS os temas da área — então cada tema carregava o acumulado inteiro
+    da sua área (39.077 contra 6.631 reais = 5,9x de inflação).
+
+    A consequência era silenciosa e séria: `_sync_error_counts` documenta
+    *"WeakArea sem par correspondente recebe 0 — nunca herda o total da área"*,
+    mas a defesa estava na camada errada — a fonte já tinha assado o total da
+    área dentro de cada tema. O ranking de fraquezas do boot media QUANTO A
+    ÁREA FOI ESTUDADA, não quão fraco o tema é. Exemplo medido na s159:
+    `Ginecologia / Gravidez ectópica` aparecia como fraqueza persistente com
+    "61 erros" e tinha **zero** erros atribuídos a ela em `questoes_erros`.
+
+    Agora conta `questoes_erros` — a única superfície com atribuição real por
+    tema (cada linha é um erro analisado, com tema_id resolvido no ato). Temas
+    sem erro registrado simplesmente não aparecem no dict, que é o mesmo que
+    receber 0 no chamador.
     """
     conn = sqlite3.connect(ipub_path)
     try:
         rows = conn.execute(
-            """SELECT area,
-                      tema,
-                      SUM(questoes_realizadas - questoes_acertadas) AS erros
-               FROM taxonomia_cronograma
-               WHERE questoes_realizadas > 0
-               GROUP BY area, tema"""
+            """SELECT t.area,
+                      t.tema,
+                      COUNT(q.id) AS erros
+               FROM questoes_erros q
+               JOIN taxonomia_cronograma t ON t.id = q.tema_id
+               GROUP BY t.area, t.tema"""
         ).fetchall()
     finally:
         conn.close()

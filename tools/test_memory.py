@@ -169,6 +169,22 @@ def test_consolidation() -> bool:
         conn.execute(
             "INSERT INTO taxonomia_cronograma (area, tema, questoes_realizadas, questoes_acertadas) VALUES ('AreaAlfa','TemaUm',100,40)"
         )
+        # s159/F37: o contador de erro por tema passou a ler `questoes_erros`
+        # (atribuicao real) em vez da subtracao de `taxonomia_cronograma` (que
+        # era inflada pelo fan-out por area do registrar_sessao_bulk). O fixture
+        # materializa os mesmos 60 erros como linhas atribuidas ao tema, entao a
+        # expectativa do teste (error_count == 60) segue valendo.
+        conn.execute(
+            """CREATE TABLE questoes_erros (
+                   id INTEGER PRIMARY KEY AUTOINCREMENT, tema_id INTEGER, data_registro TEXT)"""
+        )
+        _tid = conn.execute(
+            "SELECT id FROM taxonomia_cronograma WHERE area='AreaAlfa' AND tema='TemaUm'"
+        ).fetchone()[0]
+        conn.executemany(
+            "INSERT INTO questoes_erros (tema_id, data_registro) VALUES (?, '2026-08-30')",
+            [(_tid,)] * 60,
+        )
         conn.commit()
         conn.close()
 

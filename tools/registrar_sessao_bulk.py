@@ -88,8 +88,23 @@ def registrar(sessao_num: int, area: str, feitas: int, acertos: int,
             """, (sessao_num, area, feitas, acertos, data_sessao, obs))
 
         # 3. Atualiza acumulado em taxonomia_cronograma (para o "Foco Crítico")
+        #
+        # 🔴 F37 (corrigido na s159): este UPDATE tinha `WHERE area = ?` -- SEM
+        # filtro de tema. Uma sessao de 51 questoes de Pediatria somava 51 em
+        # TODOS os temas de Pediatria. Era a origem da inflacao do campo
+        # (39.077 em taxonomia contra 6.631 reais em sessoes_bulk = 5,9x) e da
+        # assinatura observada na s155: 16 temas de Pediatria com
+        # `questoes_realizadas` identico ate a casa decimal.
+        #
+        # Uma sessao bulk e ATRIBUIDA A AREA, nao ao tema -- nao existe
+        # atribuicao por tema para distribuir. Entao o acumulado vai para a
+        # linha `[bulk] <area>`, que e exatamente o balde de volume da area, e
+        # nunca e espalhado pelos temas reais. Quem quiser volume por tema tem
+        # que registrar por tema; quem quiser erro por tema le `questoes_erros`.
+        tema_bulk = f"[bulk] {area}"
         row = conn.execute(
-            "SELECT id FROM taxonomia_cronograma WHERE area = ? LIMIT 1", (area,)
+            "SELECT id FROM taxonomia_cronograma WHERE area = ? AND tema = ?",
+            (area, tema_bulk)
         ).fetchone()
 
         pct_feitas  = feitas
@@ -107,10 +122,10 @@ def registrar(sessao_num: int, area: str, feitas: int, acertos: int,
                         ELSE 0
                     END,
                     ultima_revisao = ?
-                WHERE area = ?
+                WHERE id = ?
             """, (pct_feitas, pct_acertos,
                   pct_feitas, pct_acertos, pct_feitas,
-                  data_sessao, area))
+                  data_sessao, row[0]))
         else:
             pct = round(acertos / feitas * 100, 2) if feitas else 0
             conn.execute("""
@@ -118,7 +133,7 @@ def registrar(sessao_num: int, area: str, feitas: int, acertos: int,
                     (area, tema, questoes_realizadas, questoes_acertadas,
                      percentual_acertos, ultima_revisao)
                 VALUES (?, ?, ?, ?, ?, ?)
-            """, (area, f"[bulk] {area}", feitas, acertos, pct, data_sessao))
+            """, (area, tema_bulk, feitas, acertos, pct, data_sessao))
 
         # 4. Posicao SSOT no ato do registro (part-1): mesmo caminho/tabela do
         # tools/preparacao.py (standalone: SQL direto, upsert idempotente).

@@ -25,16 +25,29 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from app.memory.manager import _norm, _sync_error_counts  # noqa: E402
+from app.memory.manager import (  # noqa: E402
+    _load_ipub_error_counts,
+    _norm,
+    _sync_error_counts,
+)
 from app.memory.store import SQLiteMemoryStore  # noqa: E402
 
 _NS = ("medhub", "weak_areas")
 
 
 def _make_ipub(tmpdir: str, rows: list[tuple[str, str, int, int]]) -> str:
-    """Cria um ipub.db sintetico com taxonomia_cronograma.
+    """Cria um ipub.db sintetico com taxonomia_cronograma + questoes_erros.
 
     rows: (area, tema, questoes_realizadas, questoes_acertadas)
+
+    s159/F37: a assinatura do fixture nao mudou -- o que mudou e ONDE o erro
+    passa a morar. `questoes_realizadas - questoes_acertadas` continua sendo o
+    numero de erros que cada teste espera, mas agora ele e MATERIALIZADO como
+    N linhas reais em `questoes_erros` com `tema_id` resolvido, porque essa
+    passou a ser a fonte de `_load_ipub_error_counts`. As colunas de volume
+    seguem populadas de proposito: servem de armadilha para o teste estrutural
+    `test_contador_nao_le_o_campo_inflado`, que falharia se alguem voltasse a
+    somar `questoes_realizadas - questoes_acertadas`.
     """
     path = os.path.join(tmpdir, "ipub_fake.db")
     conn = sqlite3.connect(path)
@@ -47,10 +60,25 @@ def _make_ipub(tmpdir: str, rows: list[tuple[str, str, int, int]]) -> str:
                questoes_acertadas INTEGER DEFAULT 0
            )"""
     )
+    conn.execute(
+        """CREATE TABLE questoes_erros (
+               id INTEGER PRIMARY KEY AUTOINCREMENT,
+               tema_id INTEGER,
+               data_registro TEXT
+           )"""
+    )
     conn.executemany(
         "INSERT INTO taxonomia_cronograma (area, tema, questoes_realizadas, questoes_acertadas) VALUES (?,?,?,?)",
         rows,
     )
+    for area, tema, feitas, acertos in rows:
+        tema_id = conn.execute(
+            "SELECT id FROM taxonomia_cronograma WHERE area=? AND tema=?", (area, tema)
+        ).fetchone()[0]
+        for _ in range(max(0, feitas - acertos)):
+            conn.execute(
+                "INSERT INTO questoes_erros (tema_id, data_registro) VALUES (?, '2026-08-30')",
+                (tema_id,))
     conn.commit()
     conn.close()
     return path
@@ -182,3 +210,32 @@ def test_registro_legado_sem_envelope_tambem_e_contado():
 
         item = store.get(_NS, "legado")
         assert item is not None and item.value["error_count"] == 60, item.value
+
+
+def test_contador_nao_le_o_campo_inflado():
+    """F37 (s159): a fonte do contador e `questoes_erros`, NUNCA a subtracao de
+    `taxonomia_cronograma`. O campo de volume e alimentado por sessoes bulk que
+    sao atribuidas a AREA -- ate a s159 espalhadas por todos os temas dela --,
+    entao usa-lo como proxy de erro por tema mede quanto a area foi estudada, e
+    nao quao fraco o tema e. Teste ESTRUTURAL: falha se alguem reintroduzir o
+    campo na query, mesmo que os numeros por acaso batam nas fixtures.
+    """
+    import inspect
+
+    src = inspect.getsource(_load_ipub_error_counts)
+    # Remove SO a docstring (que cita o campo de proposito, para explicar o
+    # defeito). Split por aspas triplas nao serve: a propria query e uma string
+    # tripla, entao o split comeria o SQL junto e o teste passaria vazio.
+    corpo = src.replace(_load_ipub_error_counts.__doc__ or "", "")
+    assert "questoes_realizadas" not in corpo,         "contador voltou a ler o campo inflado (F37)"
+    assert "questoes_erros" in corpo, "contador deixou de ler a fonte atribuida"
+
+
+def test_tema_sem_erro_atribuido_nao_entra_no_dict():
+    """Volume alto e zero erro atribuido => o tema nao aparece. Foi exatamente o
+    caso de `Ginecologia / Gravidez ectopica`, que figurava como fraqueza
+    persistente com '61 erros' e tinha zero linhas em `questoes_erros`."""
+    with tempfile.TemporaryDirectory() as tmp:
+        ipub = _make_ipub(tmp, [("AreaAlfa", "TemaSemErro", 335, 335)])
+        counts = _load_ipub_error_counts(Path(ipub))
+        assert counts == {}

@@ -540,7 +540,7 @@ relates_to: [AGENTE, ESTADO, HANDOFF]
   o modo degradado (2)+(3) e **reproduzivel**, nao um acerto isolado da s128. `--fetch-drive` segue
   nao implementado -- 6a sessao seguida com a mesma lacuna de transporte.
 
-### F37 -- `taxonomia_cronograma.questoes_realizadas` inflado ~3,7x -- **MEDIA** -- **ABERTO**
+### F37 -- `taxonomia_cronograma.questoes_realizadas` inflado (3,7x na s127 -> 5,9x na s159) -- **ALTA** (era MEDIA) -- **CAUSA-RAIZ CORRIGIDA (s159); dado historico pendente de decisao**
 - **Evidencia (s127):** o campo acusa **19.597** questoes contra **5.232** reais em `sessoes_bulk`.
   Descoberto ao construir o eixo de cobertura de `tools/variancia.py`: a 1a versao lia esse campo e
   produzia "89,5% da grade coberta / zona DIRECIONAMENTO" -- diagnostico **invertido** em relacao ao
@@ -562,6 +562,62 @@ relates_to: [AGENTE, ESTADO, HANDOFF]
   ate a casa decimal** (83.6448...%), todos com `ultima_revisao='2026-08-23'` -- 3 dias antes desta
   sessao. Confirma que o campo continua sendo alimentado por alguma escrita em lote que nao calcula
   por tema; nao e apenas herdado da migracao original de 2026-07-25.
+
+- 🔬 **CAUSA-RAIZ ENCONTRADA na s159 (2026-08-30) -- nao era import legado.**
+  `tools/registrar_sessao_bulk.py` fazia
+  `UPDATE taxonomia_cronograma SET questoes_realizadas = questoes_realizadas + ? ... WHERE area = ?`
+  -- **sem filtro de tema**. Uma sessao de 51 questoes de Pediatria somava 51 em
+  **todos** os temas de Pediatria. Assinatura confirmada no db: 16 temas de
+  Pediatria com `156/140` identico, 14 de Cirurgia com `56/49`, 9 de Cirurgia com
+  `153/131`, 7 de Obstetricia com `41/33`. Isso fecha a hipotese da s155 ("alguma
+  escrita em lote que nao calcula por tema") -- era esta, e ela rodava a cada
+  registro de bloco. Inflacao atual medida: **39.077 em taxonomia contra 6.631
+  reais em `sessoes_bulk` = 5,9x** (era 3,7x na s127 -- o campo piorou, como
+  previsto por "continua sendo alimentado").
+- 🔴 **O dano nao era cosmetico -- contaminava o RANKING DE FRAQUEZAS DO BOOT.**
+  `app/memory/manager._load_ipub_error_counts` derivava "erros por tema" de
+  `SUM(questoes_realizadas - questoes_acertadas)` desse campo, e
+  `_sync_error_counts` gravava isso em `WeakArea.error_count`, que
+  `_rank_weak_areas(top_n=8)` ordena -- **a lista "Areas de fraqueza persistentes"
+  que abre toda sessao**. Como cada tema carregava o acumulado da sua area, o
+  ranking media **quanto a area foi estudada**, nao quao fraco o tema e.
+  Ironia estrutural: `_sync_error_counts` documenta *"WeakArea sem par
+  correspondente recebe 0 -- NUNCA herda o total da area"*; a defesa existia, mas
+  na camada errada -- a fonte ja tinha assado o total da area dentro de cada tema.
+  - **Caso mais flagrante medido:** `Ginecologia / Gravidez ectopica` figurava
+    como fraqueza persistente **top-5 com "61 erros"** e tem **ZERO** linhas em
+    `questoes_erros`. (Existe sinal real -- 12 erros mencionam "ectopica" no
+    titulo/enunciado --, mas o numero exibido era fan-out, nao contagem.)
+  - Outros deltas exibido -> real: Epilepsias 64 -> 13 · Arboviroses 58 -> 17 ·
+    Lesao Renal Aguda 45 -> 8 · Doencas Exantematicas 51 -> 13 · Cirurgia
+    Infantil 62 -> 30 · Imunizacoes 43 -> 23. As **descricoes** das fraquezas sao
+    autorais e continuam validas; o que era artefato e a **contagem e a ordem**.
+- ✅ **Corrigido na s159 (codigo):**
+  1. `registrar_sessao_bulk` deixa de espalhar: o acumulado vai para a linha
+     `[bulk] <area>`, que e o balde de volume da area. Uma sessao bulk e
+     atribuida a AREA -- nao existe atribuicao por tema para distribuir.
+  2. `_load_ipub_error_counts` passa a contar `questoes_erros` (a unica
+     superficie com `tema_id` resolvido no ato do registro). Contrato de retorno
+     inalterado; so a fonte mudou.
+  - **Suites:** `tools/test_bulk_fanout.py` (8 testes -- temas intocados, outra
+    area intocada, acumulo na linha bulk, e o assert direto de que o delta em
+    taxonomia e EXATAMENTE o volume registrado, nao volume x nº de temas) e 2
+    testes novos em `test_memory_counter.py` (estrutural anti-regressao + tema
+    com volume alto e zero erro atribuido nao entra no ranking). 298 -> 306.
+- ⏸️ **PENDENTE -- decisao do usuario (operacao de dado, nao de codigo):** o
+  campo segue inflado para o historico ja gravado. Tres saidas: (a) zerar
+  `questoes_realizadas/acertadas` dos temas reais e concentrar o acumulado nas
+  linhas `[bulk] <area>`, reconciliando contra `sessoes_bulk`; (b) derivar
+  on-the-fly e parar de persistir; (c) remover a coluna -- **inviavel hoje**, o
+  grafo mostra leitores vivos (`app/utils/db.py` no widget Foco Critico,
+  `.agents/workflows/gerar-reforco.md`). Enquanto nao for decidido, o numero
+  segue errado nas superficies que leem o campo direto -- mas o ranking de
+  fraquezas ja esta correto, que era o consumidor critico.
+- 📝 **Doc drift achado de lambuja:** `.vibeflow/patterns/error-insertion-pipeline.md`
+  afirma que `insert_questao.py` incrementa `questoes_realizadas` ("it tracks
+  questions attempted"). O codigo faz o oposto e documenta o oposto desde a
+  separacao de responsabilidades (so atualiza `ultima_revisao`). Padrao descreve
+  comportamento que nao existe mais.
 
 ### F38 -- Erros analisados na conversa nao chegam a `questoes_erros`; a analise evapora -- **ALTA** -- **RESOLVIDO (s159) -- guarda entregue; 1 instancia historica a recuperar**
 - **Evidencia (s127 -> descoberto na s128, 2026-07-25):** o bloco de Pneumologia Intensiva II teve

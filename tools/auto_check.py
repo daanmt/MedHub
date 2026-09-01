@@ -28,6 +28,75 @@ from tools.utils.state_utils import (
     check_erros_orfaos,
     check_suites_orfas
 )
+_RE_SESSAO = re.compile(r"session_(\d{3})\.md")
+_RE_HEADER_SESSAO = re.compile(r"^#\s+Sess(?:ion|ao|ão)\b", re.IGNORECASE)
+
+
+def check_history_integrity(root=None, extras=None):
+    """F58 (descolar part-6): session log NOVO nasce integro -- ou e acusado no commit.
+
+    A s156 nasceu corrompida NO SSOT (BOM UTF-8 + escapes comidos: `\\t`ools
+    virou tab de verdade, `\\a`pp/ virou 0x07, `\\f` virou 0x0c) e nenhum gate
+    olhava `history/`. Aqui o sensor olha -- e SO o que e novo.
+
+    Recorte de "novo": `N > max(N)` do `history/INDEX.md` OU nome em `extras`
+    (o auto_check passa os arquivos alterados do run; e o proxy barato e
+    deterministico de "mtime > ultimo run", sem carimbo novo em disco). A
+    historia ja indexada nao e reaberta: reescrever historia e decisao do dono
+    (anti-scope da spec) -- a s156 fica como lapide.
+
+    Retorna lista de `(nome, problema)`. WARN-first: DETECTA e nomeia, nunca
+    reescreve o arquivo. `history/` ausente = silencio honesto.
+    """
+    root = Path(root) if root else ROOT_DIR
+    hist = root / "history"
+    if not hist.is_dir():
+        return []
+
+    max_index = 0
+    idx = hist / "INDEX.md"
+    if idx.is_file():
+        try:
+            nums = _RE_SESSAO.findall(idx.read_text(encoding="utf-8-sig",
+                                                    errors="replace"))
+            max_index = max((int(n) for n in nums), default=0)
+        except OSError:
+            return []
+
+    extras = set(extras or ())
+    achados = []
+    for p in sorted(hist.glob("session_*.md")):
+        m = _RE_SESSAO.fullmatch(p.name)
+        novo = (m and int(m.group(1)) > max_index) or p.name in extras
+        if not novo:
+            continue
+        try:
+            raw = p.read_bytes()
+        except OSError as e:
+            achados.append((p.name, f"ilegivel: {e}"))
+            continue
+
+        problemas = []
+        if raw.startswith(b"\xef\xbb\xbf"):
+            problemas.append("BOM UTF-8 no inicio")
+            raw = raw[3:]
+        ctrl = sorted({b for b in raw if b < 32 and b not in (9, 10, 13)})
+        if ctrl:
+            problemas.append("byte(s) de controle fora de \\n\\t: "
+                             + ", ".join(f"0x{b:02x}" for b in ctrl))
+        texto = raw.decode("utf-8", errors="replace")
+        linhas = [l for l in texto.splitlines() if l.strip()]
+        if not linhas or not _RE_HEADER_SESSAO.match(linhas[0]):
+            problemas.append("header fora do template (esperado '# Session NNN -- ...')")
+        # `Ferramenta:` e o campo que torna o swap test entre IDEs possivel.
+        if "**Ferramenta:" not in "\n".join(linhas[:8]):
+            problemas.append("campo `Ferramenta:` ausente (o swap test depende dele)")
+
+        if problemas:
+            achados.append((p.name, "; ".join(problemas)))
+    return achados
+
+
 def run_command(cmd_list, desc, capture=False):
     # part-1 (P1): tempo por bloco IMPRESSO -- o SLO do harness e informativo e medido,
     # nao um gate flaky por tempo. E o que habilita podar custo com dado (F61 foi achado assim).
@@ -78,6 +147,9 @@ def main():
     card_relevant = (mode == "--all")
     fsrs_relevant = (mode == "--all")
     substrato_relevant = (mode == "--all")
+    # F58: session logs tocados no run corrente entram no recorte de "novo"
+    # do check de integridade de history/ (proxy de "mtime > ultimo run").
+    hist_extras = set()
 
     if mode in ("--changed", "--staged"):
         changed_files = get_staged_files() if mode == "--staged" else get_changed_files()
@@ -95,6 +167,8 @@ def main():
             print(f"🔍 Detectados {len(changed_files)} arquivo(s) {origem}.")
             for f in changed_files:
                 fp = f.replace("\\", "/")
+                if fp.startswith("history/session_") and fp.endswith(".md"):
+                    hist_extras.add(fp.rsplit("/", 1)[-1])
                 # Paridade command<->skill: relevante se o canônico OU o espelho mudou.
                 if fp.startswith(".claude/commands/") or fp.startswith(".agents/skills/"):
                     parity_relevant = True
@@ -581,6 +655,23 @@ def main():
     results_summary.append((desc_imp, True, len(dangling)))
     _ledger_record("import_dangling",
                    [{"alvo": a, "payload": {"detalhe": b}} for a, b in dangling])
+
+    # 14c. Integridade do session log NOVO (descolar part-6, F58): a s156 nasceu
+    #      corrompida NO SSOT (BOM + escapes comidos) e nenhum gate olhava history/.
+    #      WARN, roda sempre (barato: so os arquivos fora do INDEX ou tocados no run).
+    #      NAO reabre a historia ja indexada -- reescrever historia e do dono.
+    desc_hist = "Integridade do session log novo (F58)"
+    hist_probs = check_history_integrity(extras=hist_extras)
+    if hist_probs:
+        amostra = "; ".join(f"{a}: {b}" for a, b in hist_probs[:3])
+        print(f"\n[WARN] HISTORY_INTEGRITY (F58): {len(hist_probs)} session log(s) novo(s) "
+              f"fora do padrao ({amostra}{'; ...' if len(hist_probs) > 3 else ''}). "
+              f"Reescrever o arquivo em UTF-8 SEM BOM, com os escapes literais "
+              f"preservados e o header do template (`# Session NNN` + `**Data:**` + "
+              f"`**Ferramenta:**`) -- o campo Ferramenta e o que torna o swap test possivel.")
+    results_summary.append((desc_hist, True, len(hist_probs)))
+    _ledger_record("history_integrity",
+                   [{"alvo": a, "payload": {"detalhe": b}} for a, b in hist_probs])
 
     # 14. Invariante F43: suite que existe tem que estar em algum registro de
     #     execucao. "Quais testes rodam" e mantido em TRES lugares (pytest.ini,

@@ -11,6 +11,7 @@ divergir. Suporta `dry_run=True` para inspecao sem escrita.
 """
 import shutil
 import sqlite3
+import sys
 from pathlib import Path
 from datetime import datetime
 
@@ -81,16 +82,25 @@ def backup():
     BACKUP_DIR.mkdir(parents=True, exist_ok=True)
     ts = datetime.now().strftime('%Y%m%d_%H%M%S')
     dest = BACKUP_DIR / f'{PREFIX}{ts}.db'
-    shutil.copy2(DB, dest)
-
-    # Verificar integridade
-    conn = sqlite3.connect(dest)
     try:
-        result = conn.execute('PRAGMA integrity_check').fetchone()
-    finally:
-        conn.close()
-    if result[0] != 'ok':
-        dest.unlink()
+        shutil.copy2(DB, dest)
+    except OSError as e:
+        print(f"BACKUP FALHOU na copia -- abortando: {e}")
+        return None
+
+    # Verificar integridade. Um arquivo que nem abre como SQLite (truncado,
+    # lixo) levanta sqlite3.DatabaseError aqui -- mesmo desfecho de um
+    # integrity_check reprovado: aborta e devolve None.
+    try:
+        conn = sqlite3.connect(dest)
+        try:
+            result = conn.execute('PRAGMA integrity_check').fetchone()
+        finally:
+            conn.close()
+    except sqlite3.Error as e:
+        result = (f"sqlite: {e}",)
+    if not result or result[0] != 'ok':
+        dest.unlink(missing_ok=True)
         print("BACKUP CORROMPIDO -- abortando.")
         return None
 
@@ -101,5 +111,16 @@ def backup():
     return dest
 
 
+def main():
+    """F60 (descolar part-6): o exit code reflete o resultado.
+
+    Padrao F27 (`insert_questao.py:474`) generalizado. "BACKUP CORROMPIDO --
+    abortando" impresso no stdout com exit 0 era a antitese do headless: o
+    chamador seguia para a operacao destrutiva achando que tinha rede.
+    Qualquer aborto (banco ausente, copia falha, integridade reprovada) = 1.
+    """
+    return 0 if backup() else 1
+
+
 if __name__ == '__main__':
-    backup()
+    sys.exit(main())

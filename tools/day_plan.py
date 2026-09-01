@@ -42,6 +42,21 @@ from performance import (  # noqa: E402
 )
 
 
+def _warn_degradacao(componente, erro):
+    """F60 (descolar part-6): a degradacao graciosa CONTINUA -- so deixa de ser muda.
+
+    Imprime `[WARN] <componente>: <erro curto>` em stderr (ASCII, 1 linha,
+    truncado). O plano do dia segue saindo com o bloco ausente -- o que muda e
+    que o operador passa a SABER que ele saiu sem zona/frieza/prescricao, em
+    vez de ler um plano incompleto como se fosse completo. stderr de proposito:
+    o stdout do day_plan e consumido pelo hook de SessionStart.
+    """
+    msg = str(erro).replace("\n", " ").strip() or type(erro).__name__
+    if len(msg) > 120:
+        msg = msg[:117] + "..."
+    print(f"[WARN] {componente}: {msg}", file=sys.stderr)
+
+
 def _fsrs_counts(con):
     now = datetime.now()
     ts = now.replace(hour=0, minute=0, second=0, microsecond=0).isoformat(" ")
@@ -208,15 +223,15 @@ def _diagnostico():
             out['cobertura_pct'] = z['cobertura']['pct']
             out['acao_variancia'] = z.get('acao_variancia')
         out['simulado'] = V.simulado_check()
-    except Exception:
-        pass
+    except Exception as e:
+        _warn_degradacao("zona/prescricao", e)
     try:
         import app.utils.db as _db
         df = _db.get_habilidades_reincidentes(limit=3, min_temas=2)
         if df is not None and not df.empty:
             out['habilidades'] = df.to_dict('records')
-    except Exception:
-        pass
+    except Exception as e:
+        _warn_degradacao("habilidades", e)
     return out or None
 
 
@@ -835,15 +850,16 @@ def review_plan(new_limit=10):
             c["total"] += 1
 
     # Sinal de frieza por cluster (F5) -- score de dormência do review_radar.
-    # Fallback silencioso: radar indisponível -> frieza=None (day_plan segue
-    # read-only e resiliente; o julgamento frio/quente é do contrato, não daqui).
+    # Fallback AUDÍVEL: radar indisponível -> frieza=None + [WARN] em stderr
+    # (F60; day_plan segue read-only e resiliente, o julgamento frio/quente é
+    # do contrato, não daqui -- mas a ausência do sinal deixa de ser muda).
     frieza = {}
     try:
         import review_radar
         for r in review_radar.coletar():
             frieza[(r.get("area"), r.get("tema"))] = r.get("score")
-    except Exception:
-        pass
+    except Exception as e:
+        _warn_degradacao("frieza", e)
     for c in clusters.values():
         c["frieza"] = frieza.get((c["area"], c["tema"]))
 

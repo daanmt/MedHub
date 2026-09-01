@@ -15,12 +15,19 @@ mapear colunas → normalizar área → gravar) está em
 ``.claude/commands/importar-planilha.md``.
 """
 import argparse
-import io
 import json
 import os
 import sys
 
-sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
+# Encoding do terminal Windows pela convencao do repo (auto_check.py:8): o
+# `TextIOWrapper` que estava aqui SEQUESTRAVA o stdout global de quem apenas
+# IMPORTA o modulo (quebrava qualquer harness que o coletasse). Reconfigurar e
+# in-place e no-op quando o stream nao suporta.
+if hasattr(sys.stdout, "reconfigure"):
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+    except Exception:
+        pass
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from tools.registrar_sessao_bulk import registrar, AREAS_VALIDAS  # noqa: E402
@@ -74,6 +81,15 @@ def main():
     for i, motivo in invalidas:
         print(f"  [linha {i}] {motivo}")
 
+    # F60 (descolar part-6): exit simetrico, no padrao do `insert_questao.py`
+    # (F27). Lote 100% rejeitado nao e sucesso -- sair 0 ali fazia o chamador
+    # headless seguir em frente achando que o volume entrou. Parcial CONTINUA
+    # saindo 0: o resumo acima ja conta as rejeitadas, linha a linha.
+    if rows and len(invalidas) == len(rows):
+        print("[ERRO] 100% das linhas foram rejeitadas -- nada foi importado.")
+        return 1
+    return 0
+
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

@@ -97,6 +97,53 @@ def check_history_integrity(root=None, extras=None):
     return achados
 
 
+_RE_MEM_PATH = re.compile(r"\b((?:tools|app)/[\w./-]+\.py)\b")
+_MEM_DIR_DEFAULT = (Path.home() / ".claude" / "projects"
+                    / "C--Users-daanm-medhub" / "memory")
+
+
+def check_memory_pointers(mem_dir=None, root=None):
+    """F57 (descolar part-7): ponteiro morto em memoria de harness, nomeado.
+
+    A s156 deletou `tools/autopsia_template.py` -- alvo de uma memoria-CONTRATO
+    que aquele harness nem via -- e a memoria seguiu mandando "ler na integra"
+    um arquivo inexistente por dias. Este e o detector que teria pego o caso na
+    hora: todo path `tools/*.py` / `app/*.py` citado em `memory/*.md` e
+    confrontado com o disco.
+
+    O diretorio de memoria vive FORA do repo (nao e versionado): ausente ou
+    inacessivel = lista vazia, silencio honesto (convencao de sensor). Linha
+    que AFIRMA a ausencia e pulada -- lapide nao e mentira, e o registro
+    correto do que morreu. A regua de lapide e a MESMA do `doc_drift`
+    (`RE_LAPIDE`), importada e nao copiada: duas reguas divergindo seria a
+    proxima ocorrencia da classe que este check existe para pegar.
+
+    Retorna lista de `(arquivo_de_memoria, path_morto)`. WARN-first: nomeia,
+    nunca edita a memoria.
+    """
+    mem = Path(mem_dir) if mem_dir else _MEM_DIR_DEFAULT
+    repo = Path(root) if root else ROOT_DIR
+    if not mem.is_dir():
+        return []
+    try:
+        from tools.doc_drift import RE_LAPIDE
+    except Exception:  # noqa: BLE001 -- sem a regua o sensor nao pode julgar
+        return []
+    mortos = []
+    try:
+        for md in sorted(mem.glob("*.md")):
+            texto = md.read_text(encoding="utf-8-sig", errors="replace")
+            for linha in texto.splitlines():
+                if RE_LAPIDE.search(linha) or "⚰️" in linha:
+                    continue
+                for alvo in dict.fromkeys(_RE_MEM_PATH.findall(linha)):
+                    if not (repo / alvo).exists():
+                        mortos.append((md.name, alvo))
+    except OSError:
+        return []
+    return sorted(dict.fromkeys(mortos))
+
+
 def run_command(cmd_list, desc, capture=False):
     # part-1 (P1): tempo por bloco IMPRESSO -- o SLO do harness e informativo e medido,
     # nao um gate flaky por tempo. E o que habilita podar custo com dado (F61 foi achado assim).
@@ -672,6 +719,23 @@ def main():
     results_summary.append((desc_hist, True, len(hist_probs)))
     _ledger_record("history_integrity",
                    [{"alvo": a, "payload": {"detalhe": b}} for a, b in hist_probs])
+
+    # 14d. Ponteiro morto em memoria de harness (descolar part-7, F57). WARN. SO no
+    #      --all: o dir de memoria vive fora do repo, entao nenhuma heuristica por
+    #      arquivo tocado o alcanca -- e a varredura le ~78 arquivos pequenos.
+    if mode == "--all":
+        desc_mem = "Ponteiros de memoria x disco (MEMORY_POINTERS)"
+        mem_mortos = check_memory_pointers()
+        if mem_mortos:
+            amostra = "; ".join(f"{a} -> {b}" for a, b in mem_mortos[:4])
+            print(f"\n[WARN] MEMORY_POINTERS (F57): {len(mem_mortos)} ponteiro(s) morto(s) "
+                  f"em memoria de harness ({amostra}"
+                  f"{'; ...' if len(mem_mortos) > 4 else ''}). Regra que aponta para "
+                  f"arquivo inexistente nao e regra: migrar para o portador do repo "
+                  f"(skill/contrato/AGENTE.md) ou marcar lapide na memoria.")
+        results_summary.append((desc_mem, True, len(mem_mortos)))
+        _ledger_record("memory_pointers",
+                       [{"alvo": f"{a}::{b}", "payload": {}} for a, b in mem_mortos])
 
     # 14. Invariante F43: suite que existe tem que estar em algum registro de
     #     execucao. "Quais testes rodam" e mantido em TRES lugares (pytest.ini,

@@ -198,6 +198,7 @@ Qualquer duplicação semântica entre workflow e skill é defeito por contrato.
 | Skill | Função |
 |---|---|
 | `/estilo-resumo` | Padrão de formatação **obrigatório** para resumos |
+| `/aula-base` | Contrato de **renderização** da aula-base (Artifact HTML com design de verdade, régua de tokens). O *gatilho* e a *profundidade* continuam em §1 — a skill só carrega a forma |
 | `/analisar-questao` | Protocolo de análise + invocação do `insert_questao.py` |
 | `/extrair-pdf` | Wrapper para `extract_pdfs.py` (política Zero PDF) |
 | `/auditar-resumos` | Linter de qualidade para `resumos/` |
@@ -293,3 +294,29 @@ Migrações one-shot já aplicadas vivem em `tools/_archive/migrations/` -- não
 - `medhub-ui-refresh-main/` -- projeto React legado (já fora do tree atual; resíduo só em git history).
 - `history/legacy/` -- sessões 001-028 referenciam artefatos retirados (`HANDOFF.md`, `caderno_erros.md`, `progresso.md`).
 - `.venv/`, `__pycache__/`, `data/chroma/`, `artifacts/backups/`, `artifacts/llm_runs/` -- artefatos locais ou gitignored.
+
+---
+
+## 10. Co-edição: dois agentes no mesmo repo (P7)
+
+Este repo é editado por **dois agentes em paralelo**: o agente de estudo (aqui) e o agente de
+engenharia do `/ai-eng`, que abre janela própria e commita. Sem lock e sem guard — a disciplina
+é textual, versionada aqui, e vale para **qualquer harness** (Claude Code, Antigravity, outro).
+
+1. **Reler antes de escrever.** Antes de tocar arquivo compartilhado (`ESTADO.md`,
+   `history/INDEX.md`, `AUDITORIA_MEDHUB.md`, `core/contracts/*`), **reler o arquivo no
+   disco** — não escrever sobre o que você leu no boot. O outro agente pode ter commitado no
+   meio da sua sessão.
+2. **Preservar bloco alheio.** Bloco de handoff de engenharia, contador de cobertura, linhas de
+   ledger: **não sobrescrever, não "limpar"**. Se o bloco parece obsoleto, marque com lápide
+   (`⚰️` + data + motivo) — apagar destrói a evidência de quem ainda não voltou.
+3. **Quem edita skill roda o sync.** `.claude/commands/<slug>.md` é o canônico; depois de
+   editar, `python tools/sync_skills.py` e `--check` (exit 0) **no mesmo commit**. Nunca
+   editar `.agents/skills/` à mão — é artefato de build (§5 e `.vibeflow/conventions.md`).
+4. **Deletar é ato com raio.** Antes de apagar arquivo que outro agente possa citar, `grep` do
+   nome no repo **e** nos portadores de regra. Foi assim que a s156 deletou o alvo de um
+   contrato que ela não via, deixando um segundo arquivo quebrado por 5 dias (F57/F50). O check
+   `MEMORY_POINTERS` do `auto_check` cobre a metade fora do repo; a metade dentro é o `grep`.
+5. **Regra load-bearing não mora na memória do harness.** Memória de harness é decorativa para
+   qualquer outra IDE e não é versionada: a regra vai para o portador do repo (skill, contrato,
+   `AGENTE.md`, teste, schema) e a memória fica só como **ponteiro + porquê**.

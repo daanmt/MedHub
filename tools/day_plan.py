@@ -419,6 +419,19 @@ def _degrau_de(nota):
     return "D2"
 
 
+def _nota_fresca(at, dias=7):
+    """True se o carimbo `dificuldade_at` (isoformat, espaço como separador) tem <= `dias`.
+    Ilegível/ausente = False (nota velha re-infere — F47). Puro e testável."""
+    if not at:
+        return False
+    try:
+        from datetime import datetime as _dt
+        carimbo = _dt.fromisoformat(str(at))
+        return (_dt.now() - carimbo).days <= dias
+    except Exception:
+        return False
+
+
 def _divergencia(nota_usuario, nota_inferida):
     """Divergência auto-nota × inferência (PRD §4.4). None se |Δ|<3 ou sem nota do usuário."""
     if nota_usuario is None or abs(nota_usuario - nota_inferida) < 3:
@@ -574,16 +587,28 @@ def difficulty_report(area, tema):
     sinais = montar_sinais(area, tema)
     nota_inferida = infer_nota(sinais)
     d = db.get_dificuldade(area, tema)
-    nota_usuario = d["nota"] if (d and d.get("nota") is not None) else None
+    nota_reg = d["nota"] if (d and d.get("nota") is not None) else None
     fonte = d["fonte"] if d else None
-    nota_efetiva = nota_usuario if nota_usuario is not None else nota_inferida
+    # F47 (descolar part-3): a FONTE decide — Cláusulas 2/7 do revisao-calibrada-contract,
+    # que estavam sem implementação (QUALQUER nota persistida virava "do usuário" e a msg
+    # de divergência atribuía ao usuário nota que ele não deu; 12/21 temas afetados).
+    # Precedência: 'usuario' soberana > nota persistida FRESCA (aula/agente_inferida, 7d)
+    # > inferência corrente (nota velha não-soberana re-infere; a fonte fica honesta).
+    nota_usuario = nota_reg if fonte == "usuario" else None
+    if nota_usuario is not None:
+        nota_efetiva, fonte_efetiva = nota_usuario, "usuario"
+    elif nota_reg is not None and _nota_fresca(d.get("at")):
+        nota_efetiva, fonte_efetiva = nota_reg, (fonte or "persistida")
+    else:
+        nota_efetiva, fonte_efetiva = nota_inferida, "inferencia_corrente"
 
     mat = _material_efetivo(tema, _material_do_tema(tema))   # F30: rebaixa se o .md nao existe
 
-    # G5: nota explícita do usuário NUNCA é sobrescrita. Só quando NÃO há nota explícita
-    # o extensivo aplica floor 9 (degrau D10, não D8) + dispara o dever de Deep-Researchness.
+    # G5: nota explícita do usuário NUNCA é sobrescrita. O floor extensivo só levanta nota
+    # que veio da INFERÊNCIA (calibração deliberada persistida e fresca também fica de pé —
+    # Cláusula 10: 'aula' não é sobrescrita por heurística).
     deep_research = False
-    if mat == "extensivo" and nota_usuario is None:
+    if mat == "extensivo" and fonte_efetiva == "inferencia_corrente":
         nota_efetiva = max(nota_inferida, 9)
         deep_research = True
 
@@ -597,6 +622,7 @@ def difficulty_report(area, tema):
     return {
         "area": area, "tema": tema,
         "nota_usuario": nota_usuario, "nota_fonte": fonte,
+        "fonte_efetiva": fonte_efetiva,
         "nota_inferida": nota_inferida, "nota_efetiva": nota_efetiva,
         "degrau": degrau, "paragrafos": list(DEGRAU_PARAGRAFOS[degrau]),
         "divergencia": _divergencia(nota_usuario, nota_inferida),

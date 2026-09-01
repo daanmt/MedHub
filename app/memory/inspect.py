@@ -12,10 +12,14 @@ from __future__ import annotations
 import argparse
 import json
 
+from pathlib import Path
+
 from app.memory.store import SQLiteMemoryStore
 
 
-_DEFAULT_DB = "medhub_memory.db"
+# F46 (descolar part-3): path por __file__ — o default relativo dependia do cwd
+# (a mesma classe do banco-fantasma do manager).
+_DEFAULT_DB = str(Path(__file__).resolve().parents[2] / "medhub_memory.db")
 _COL_W = {"namespace": 30, "key": 20, "updated": 20}
 
 

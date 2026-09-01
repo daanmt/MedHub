@@ -25,9 +25,14 @@ from pathlib import Path
 from app.memory.store import SQLiteMemoryStore
 
 
-_HISTORY_DIR = Path("history")
-_IPUB_PATH = Path("ipub.db")
-_ERROR_LOG = Path("history") / "memory_errors.log"
+# F46 (descolar part-3): paths por __file__, NUNCA relativos ao cwd — o spawn detached rodava
+# com cwd errado e criou 2 bancos-fantasma de 0 bytes (tools/ipub.db, data/ipub.db) + 7 falhas
+# num log que ninguém lia. O leitor abre mode=ro (leitor não cria banco por acidente).
+_ROOT = Path(__file__).resolve().parents[2]
+_HISTORY_DIR = _ROOT / "history"
+_IPUB_PATH = _ROOT / "ipub.db"
+_ERROR_LOG = _ROOT / "history" / "memory_errors.log"
+_MEMORY_DB = _ROOT / "medhub_memory.db"
 _HAIKU_MODEL = "claude-haiku-4-5-20251001"
 
 _WA_INSTRUCTIONS = """
@@ -111,7 +116,9 @@ def _load_ipub_error_counts(ipub_path: Path) -> dict[tuple[str, str], int]:
     sem erro registrado simplesmente não aparecem no dict, que é o mesmo que
     receber 0 no chamador.
     """
-    conn = sqlite3.connect(ipub_path)
+    # mode=ro (F46): leitor jamais cria/toca o arquivo — um path errado falha ALTO
+    # ("unable to open") em vez de fabricar um banco-fantasma de 0 bytes.
+    conn = sqlite3.connect(f"file:{Path(ipub_path).as_posix()}?mode=ro", uri=True)
     try:
         rows = conn.execute(
             """SELECT t.area,
@@ -184,6 +191,90 @@ def _sync_error_counts(store: SQLiteMemoryStore, ipub_path: Path | str = _IPUB_P
 
 
 # ---------------------------------------------------------------------------
+# Vocabulário + upsert por par (F45, descolar part-3)
+# ---------------------------------------------------------------------------
+
+def _vocabulario_taxonomia(ipub_path: Path) -> dict[str, str]:
+    """{area_normalizada -> area_canônica} da taxonomia REAL (derivado em runtime — lista
+    hardcoded driftaria). {} quando o db está inacessível (fallback conservador: aceita)."""
+    try:
+        conn = sqlite3.connect(f"file:{Path(ipub_path).as_posix()}?mode=ro", uri=True)
+        try:
+            rows = conn.execute(
+                "SELECT DISTINCT area FROM taxonomia_cronograma WHERE area IS NOT NULL"
+            ).fetchall()
+        finally:
+            conn.close()
+        return {_norm(a): str(a) for (a,) in rows if a}
+    except Exception as e:  # noqa: BLE001 — sem vocabulário, aceita e segue (recall-safe)
+        log_error("wa_vocab/read_ipub", e)
+        return {}
+
+
+def reconciliar_weak_areas(store: SQLiteMemoryStore,
+                           ipub_path: Path | str = None) -> dict:
+    """Pós-passe determinístico da consolidação (F45): o vocabulário que o Haiku inventa
+    não bate com a taxonomia (só 17% dos WeakAreas tinham error_count>0; 109 duplicatas;
+    o ranking do boot virava 'mais recente'). Três ações, todas recall-safe:
+
+      1. NORMALIZA `area` quando mapeável ao canônico (casefold/acentos) — nunca dropa;
+         área fora do vocabulário vira WARN no log (lido pelo painel part-1).
+      2. UPSERT por par (area, especialidade): duplicatas do MESMO par colapsam na melhor
+         entrada (maior error_count, depois mais recente) — as demais são DELETADAS.
+      3. Par (area, especialidade) invertido (area no lugar da especialidade) é detectado
+         quando a 'especialidade' casa com área canônica e a 'area' não — swap.
+
+    Retorna contadores {'normalizadas', 'colapsadas', 'fora_vocab'}."""
+    ipub = Path(ipub_path) if ipub_path else _IPUB_PATH
+    vocab = _vocabulario_taxonomia(ipub)
+    itens = store.search(("medhub", "weak_areas"), limit=1000)
+    stats = {"normalizadas": 0, "colapsadas": 0, "fora_vocab": 0}
+
+    por_par: dict[tuple, list] = {}
+    for item in itens:
+        val = item.value
+        content = val.get("content") if isinstance(val, dict) and isinstance(val.get("content"), dict) else val
+        if not isinstance(content, dict) or "area" not in content:
+            continue
+        area, esp = content.get("area") or "", content.get("especialidade") or ""
+        # (3) par invertido
+        if vocab and _norm(area) not in vocab and _norm(esp) in vocab:
+            content["area"], content["especialidade"] = esp, area
+            area, esp = content["area"], content["especialidade"]
+            store.put(("medhub", "weak_areas"), item.key, val)
+            stats["normalizadas"] += 1
+        # (1) normalização da área ao canônico
+        canon = vocab.get(_norm(area))
+        if canon and canon != area:
+            content["area"] = canon
+            store.put(("medhub", "weak_areas"), item.key, val)
+            stats["normalizadas"] += 1
+        elif vocab and not canon:
+            stats["fora_vocab"] += 1
+            log_error("wa_vocab/fora",
+                      f"area '{area}' fora do vocabulário da taxonomia (key={item.key})")
+        por_par.setdefault((_norm(content.get("area")), _norm(content.get("especialidade"))),
+                           []).append(item)
+
+    # (2) upsert por par: colapsa duplicatas na melhor entrada
+    for par, grupo in por_par.items():
+        if len(grupo) < 2:
+            continue
+
+        def _score(it):
+            c = it.value.get("content") if isinstance(it.value.get("content"), dict) else it.value
+            return (int((c or {}).get("error_count") or 0), str(it.updated_at or ""))
+
+        grupo.sort(key=_score, reverse=True)
+        for perdedor in grupo[1:]:
+            store.delete(("medhub", "weak_areas"), perdedor.key)
+            stats["colapsadas"] += 1
+    if any(stats.values()):
+        print(f"[memory/manager] reconciliação WeakAreas: {stats}")
+    return stats
+
+
+# ---------------------------------------------------------------------------
 # Consolidação
 # ---------------------------------------------------------------------------
 
@@ -223,7 +314,7 @@ def _llm_consolidate(
 def consolidate_session(
     session_num: int,
     store: SQLiteMemoryStore | None = None,
-    db_path: str = "medhub_memory.db",
+    db_path: str = str(_MEMORY_DB),
 ) -> None:
     """Entry point principal — consolida sessão na memória longa.
 
@@ -248,6 +339,10 @@ def consolidate_session(
         _llm_consolidate(log_text, session_num, store)
     else:
         print("[memory/manager] ANTHROPIC_API_KEY ausente — extração de WeakArea pulada.")
+
+    # Reconciliar vocabulário + colapsar duplicatas por par (F45) ANTES do sync —
+    # o match exato do sync só funciona com o vocabulário canônico.
+    reconciliar_weak_areas(store, _IPUB_PATH)
 
     # Sincronizar error_count de ipub.db (roda mesmo sem API key).
     # _IPUB_PATH explícito: mantém o path patchável em teste.

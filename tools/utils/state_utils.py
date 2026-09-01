@@ -80,7 +80,11 @@ def card_watermark_selar(atual, marco_path=None):
 # ---------------------------------------------------------------------------
 
 def check_session_pointer(handoff_path=None, history_dir=None):
-    """Invariante F1: o ponteiro de sessao do HANDOFF nunca excede max(history)+1."""
+    """Condição B2 do reconcile-contract (descolar part-4): o ponteiro de sessão do HANDOFF
+    tem que apontar sessão REAL — `history/session_NNN.md` existe — ou a PRÓXIMA (max+1,
+    a sessão em curso cujo log nasce no fechamento). Retorna (pointer, max, tipo) com tipo
+    'alem_do_max' | 'arquivo_ausente'; None = ok. (Antes: só o caso aparentado >max+1, como
+    WARN — F56: o contrato declarava BLOCKING e o código rebaixava em silêncio.)"""
     handoff = Path(handoff_path) if handoff_path else ROOT_DIR / "HANDOFF.md"
     history = Path(history_dir) if history_dir else ROOT_DIR / "history"
     if not handoff.exists() or not history.is_dir():
@@ -94,7 +98,9 @@ def check_session_pointer(handoff_path=None, history_dir=None):
         s = line.strip()
         if s.startswith("*Atualizado") or (
                 s.startswith("#") and re.search(r"pr[oó]ximo passo", s, re.IGNORECASE)):
-            nums += [int(n) for n in re.findall(r"\bs(\d{2,3})\b", s)]
+            # IGNORECASE (part-4): o HANDOFF real grafa 'S160' e o parser só via 's160' —
+            # o check inteiro no-opava em silêncio.
+            nums += [int(n) for n in re.findall(r"\bs(\d{2,3})\b", s, re.IGNORECASE)]
     if not nums:
         return None
     sessions = []
@@ -106,8 +112,31 @@ def check_session_pointer(handoff_path=None, history_dir=None):
         return None
     pointer, max_sess = max(nums), max(sessions)
     if pointer > max_sess + 1:
-        return (pointer, max_sess)
+        return (pointer, max_sess, "alem_do_max")
+    if pointer <= max_sess and not any(history.rglob(f"session_{pointer:03d}.md")):
+        return (pointer, max_sess, "arquivo_ausente")
     return None
+
+
+def check_needs_qualitative(db_path=None):
+    """F52(b) (descolar part-4): `needs_qualitative=1` em card na fila ATIVA (state<2) viola
+    o invariante do contrato FSRS e não tinha sensor (6 cards medidos na s160). Retorna a
+    contagem (>0) ou None. mode=ro, fail-open (sensor indisponível = None, nunca crash)."""
+    dbp = Path(db_path) if db_path else ROOT_DIR / "ipub.db"
+    if not dbp.exists():
+        return None
+    try:
+        import sqlite3
+        con = sqlite3.connect(f"file:{dbp.as_posix()}?mode=ro", uri=True)
+        try:
+            n = con.execute(
+                "SELECT COUNT(*) FROM flashcards f JOIN fsrs_cards c ON c.card_id = f.id "
+                "WHERE f.needs_qualitative = 1 AND c.state < 2").fetchone()[0]
+        finally:
+            con.close()
+        return int(n) if n else None
+    except Exception:
+        return None
 
 
 def check_posicao_drift(handoff_path=None, db_path=None):

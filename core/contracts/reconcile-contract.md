@@ -2,12 +2,12 @@
 type: contract
 layer: core
 status: canonical
-version: 1.1
+version: 1.2
 relates_to: [estado-contract, handoff-contract, fsrs-management-contract, AGENTE]
 ---
 
 # Contrato de Reconciliação (Reconcile Mode)
-**Versão 1.0 | 2026-06-03 (sessão 075) — primeira instância; adaptado do Reconcile Mode de `agente-daktus-content/core/contracts/handoff-contract.md`**
+**Versão 1.2 | 2026-09-01 (ciclo descolar) · v1.0 2026-06-03 (sessão 075) — adaptado do Reconcile Mode de `agente-daktus-content/core/contracts/handoff-contract.md`**
 
 > Documento normativo. Define o protocolo de detecção e resolução de *drift* de estado no boot.
 > Referenciado por: `AGENTE.md` (§2 boot), `estado-contract.md`, `handoff-contract.md`, `fsrs-management-contract.md`.
@@ -24,16 +24,21 @@ O MedHub tem **quatro superfícies de estado que podem divergir**: a planilha do
 
 Leitura rápida, read-only. Reporta divergências; não grava sem confirmação.
 
-| # | Condição | Tipo | Como checar |
+> **Matriz condição→instrumento (v1.2, 2026-09-01 — F56):** a coluna "enforcement REAL" diz a
+> VERDADE por linha. Linha `SEM IMPLEMENTAÇÃO` é prosa-declarada (checagem manual no boot),
+> nunca promessa de check automático — um contrato que afirma BLOCKING sem instrumento treina
+> o operador a ignorar o boot.
+
+| # | Condição | Tipo declarado | Enforcement REAL |
 |---|---|---|---|
-| **B1** | `HANDOFF.md` > 60 linhas | BLOCKING **(check real)** | `tools/auto_check.py::check_handoff_len` — check 10, `[BLOCK] HANDOFF_LONGO` |
-| **B2** | Header do HANDOFF aponta `sessão NNN` mas `history/session_NNN.md` não existe | BLOCKING | existência do arquivo |
-| **B3** | "Estado por frente" do HANDOFF contradiz o `ESTADO.md` | BLOCKING | cross-check macro |
-| **B4** | Indicador do `ESTADO.md` diverge do total de `sessoes_bulk` | BLOCKING | `/performance` vs ESTADO |
-| **W1** | Planilha Dashboard (somas das **abas por disciplina**) diverge de `sessoes_bulk` | WARNING | `/importar-planilha` (verificar) — comparar contra as abas, **nunca** o Quadro Geral |
-| **W2** | `history/session_NNN.md` existe mas não está no `history/INDEX.md` | WARNING | INDEX desatualizado |
-| **W3** | Backlog FSRS (`state=0`) cresceu sem drenagem há N sessões | WARNING | `fsrs-management-contract.md` |
-| **W4** | Áreas em `sessoes_bulk` fora de `AREAS_VALIDAS` | WARNING | vocabulário (ver sessão 075: `GO`, `Obstetricia`) |
+| **B1** | `HANDOFF.md` > 60 linhas | BLOCKING | ✅ **BLOCK** — `auto_check::check_handoff_len`, `[BLOCK] HANDOFF_LONGO` |
+| **B2** | Ponteiro do HANDOFF aponta `sessão NNN` sem `history/session_NNN.md` (exceção: NNN = max+1, a sessão em curso) OU além de max+1 | BLOCKING | ✅ **BLOCK** — `state_utils::check_session_pointer`, `[BLOCK] SESSION_POINTER` (promovida 2026-09-01; era WARN de condição aparentada) |
+| **B3** | "Estado por frente" do HANDOFF contradiz o `ESTADO.md` | BLOCKING | ⚠️ **SEM IMPLEMENTAÇÃO** — cross-check manual no boot |
+| **B4** | Indicador do `ESTADO.md` diverge do total de `sessoes_bulk` | BLOCKING | ⚠️ **SEM IMPLEMENTAÇÃO** — `/performance` vs ESTADO, manual |
+| **W1** | Planilha Dashboard (somas das **abas por disciplina**) diverge de `sessoes_bulk` | WARNING | ⚠️ manual — `/importar-planilha` (verificar); nunca o Quadro Geral |
+| **W2** | `history/session_NNN.md` existe mas não está no `history/INDEX.md` | WARNING | ⚠️ **SEM IMPLEMENTAÇÃO** — conferência manual |
+| **W3** | Backlog FSRS (`state=0`) cresceu sem drenagem há N sessões | WARNING | ⚠️ manual — `fsrs-management-contract.md`; visível no day_plan |
+| **W4** | Áreas em `sessoes_bulk` fora de `AREAS_VALIDAS` | WARNING | ⚠️ **SEM IMPLEMENTAÇÃO** — vocabulário (ver s075: `GO`, `Obstetricia`) |
 | **W5** | `grade.json` defasado vs `Cronograma.pdf` (sha256 difere) | WARNING | `python tools/cronograma.py --check` |
 | **W6** | "Próxima = SNN" (semana de conteúdo) no HANDOFF/ESTADO desatualizada vs o trabalho real | WARNING | ponteiro textual vs últimas sessões |
 | **W7** | Gap de meta materializado (`acum + cronograma restante < meta`) — **fork estratégico, reporta UMA vez** | WARNING | `python tools/cronograma.py --gap` |
@@ -104,5 +109,13 @@ A planilha do Drive (`Dashboard EMED 2026`) é o **SSOT de volume** e a fonte **
 
 ## Changelog
 
+- **v1.2 (2026-09-01, ciclo descolar/ai-eng — F56):** **B2 promovida a BLOCKING de fato**
+  (`state_utils::check_session_pointer` agora checa a condição CERTA — arquivo do ponteiro
+  existe, com a exceção max+1 da sessão em curso — e o `auto_check` sai exit 1; era WARN de
+  condição aparentada `>max+1`, com `success=True` fixo). **Matriz condição→instrumento**
+  substitui a coluna "Como checar": cada linha declara o enforcement REAL (`BLOCK`/`manual`/
+  `SEM IMPLEMENTAÇÃO`) — o changelog v1.1 declarou o rebaixamento consertado e consertou só
+  a B1; a mentira estrutural (contrato afirma o que o código não faz) morre aqui. Sensor novo
+  `NEEDS_QUALITATIVE_ATIVO` (WARN) cobre o invariante do contrato FSRS (F52b).
 - **v1.1 (2026-08-14, s144):** **B1 promovida a BLOCKING de fato** (`tools/auto_check.py::check_handoff_len`, check 10 — era prosa desde a s075 e foi violada sem consequência: achado D3). **W8 reescrita** com o modelo de dois sinais: conclusão pelo `Realizada?` do Dashboard EMED 2026 (Sheets nativo, `read_file_content`, texto puro, agente executa) × ordem pelo xlsx local (ritual do usuário, `--sync-drive`, sem MCP); proibido exigir binário via MCP em passo de boot; caveat honesto quando faltar. Spec `.vibeflow/specs/consolidacao-part-4.md`.
 - **v1.0 (2026-06-03, s075):** primeira instância; adaptado do Reconcile Mode do `agente-daktus-content`.

@@ -49,6 +49,29 @@ def get_connection():
     return conn
 
 
+def contar_erros_cards():
+    """Contadores da frente 'Erros & Cards' p/ o handoff-block (F53, descolar part-4):
+    os números do HANDOFF/ESTADO viram DERIVADOS de verdade (eram digitados à mão sob o
+    rótulo 'derivados'). Read-only."""
+    conn = get_connection()
+    try:
+        cur = conn.cursor()
+        erros = cur.execute("SELECT COUNT(*) FROM questoes_erros").fetchone()[0]
+        try:
+            ativos_n = cur.execute("SELECT COUNT(*) FROM flashcards_ativos").fetchone()[0]
+        except Exception:
+            ativos_n = cur.execute(
+                f"SELECT COUNT(*) FROM flashcards f WHERE {ativo_where('f.')}").fetchone()[0]
+        nq = cur.execute("SELECT COUNT(*) FROM flashcards f JOIN fsrs_cards c "
+                         "ON c.card_id = f.id WHERE f.needs_qualitative = 1 "
+                         "AND c.state < 2").fetchone()[0]
+        temas = cur.execute("SELECT COUNT(*) FROM taxonomia_cronograma").fetchone()[0]
+        return {"erros": int(erros), "cards_ativos": int(ativos_n),
+                "needs_qualitative": int(nq), "temas": int(temas)}
+    finally:
+        conn.close()
+
+
 def ativos():
     """Cards ativos (definição canônica) como DataFrame — helper único p/ os
     consumidores que hoje reimplementam o filtro."""

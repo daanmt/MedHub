@@ -2,7 +2,7 @@
 type: contract
 layer: core
 status: canonical
-version: 1.0
+version: 1.1
 relates_to: [reconcile-contract, estado-contract, AGENTE]
 ---
 
@@ -25,7 +25,17 @@ O FSRS é o motor de retenção do MedHub. Este contrato evita os dois modos de 
 - **Cards qualitativos** (`needs_qualitative = 0`): cunhados pelo agente pela régua `estilo-flashcard.md`. **São a fila ativa.**
 - **Cards aposentados** (`needs_qualitative = 2`): excluídos da fila pelo `fsrs_queue`. Inclui os 70 heurísticos legados após a **bankruptcy da sessão 075**.
 - **`needs_qualitative = 1`** (heurístico ativo): **não deve mais existir** após a bankruptcy. Se reaparecer (geração legada), é defeito.
-- **State FSRS** (`fsrs_cards.state`): 0 = novo (nunca revisado), 1 = aprendendo, 2 = revisão.
+- **State FSRS** (`fsrs_cards.state`): 0 = novo (nunca revisado), 1 = aprendendo, 2 = revisão, **3 = relearning** (card de revisão que caiu — passo intra-sessão do py-fsrs; existia no dado sem constar aqui, F52c/v1.1).
+- **Invariante `needs_qualitative`**: card com `needs_qualitative = 1` **não deve existir na fila ativa** (`state < 2`) — sensor `NEEDS_QUALITATIVE_ATIVO` (WARN) no `auto_check` (v1.1; antes o invariante era prosa sem sensor, violado em 6 cards).
+
+## Balanceador de carga do agendamento (v1.1 — absorve `app/utils/fsrs_balance.py`, F52a)
+
+O balanceador é PARTE DESTE CONTRATO (operava fora dele desde a s128; a norma efetiva vivia
+num doc de comando). Parâmetros estáveis, agora lei: em **toda gravação de card `state == 2`**
+com intervalo ≥ 4 dias, `record_review` pode mover o **`due`** (nunca `stability`/`difficulty`)
+para o dia de **menor carga** dentro da janela de **±5% do intervalo** (piso 1 dia, teto 10),
+nunca para hoje/passado; empate preserva o dia do FSRS. Falha no balanceamento degrada para o
+`due` original com WARN. Suíte `tools/test_fsrs_balance.py` é BLOCKING no `auto_check` (2c).
 
 ---
 

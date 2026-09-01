@@ -253,20 +253,27 @@ def main():
             _ledger_record("parity", [{"alvo": "command<->skill",
                                        "payload": {"n_drift": n_drift}}])
 
-    # 4. Invariante de ponteiro de sessao (F1 -- AUDITORIA_MEDHUB). WARN, não bloqueia:
-    #    nasce advertindo (política s106/107) e só endurece quando a base zerar.
+    # 4. Ponteiro de sessão — condição B2 do reconcile. 🔴 BLOCKING de fato (descolar part-4,
+    #    F56): o contrato declarava BLOCKING desde a s075 e o código fazia WARN com condição
+    #    APARENTADA (só >max+1) — a mesma exceção deliberada da B1 à política "nasce WARN":
+    #    não é regra nova, é implementação tardia de regra existente rebaixada em silêncio.
     if pointer_relevant:
         drift = check_session_pointer()
-        desc_pointer = "Invariante de ponteiro de sessão (F1)"
+        desc_pointer = "Ponteiro de sessão — B2 do reconcile"
         if drift:
-            print(f"\n[WARN] SESSION_POINTER_DRIFT: HANDOFF aponta s{drift[0]}, mas o log "
-                  f"mais recente é history/session_{drift[1]:03d}.md (limite = max + 1). "
-                  f"Selar a sessão pendente antes de avançar o ponteiro.")
-        # success=True: WARN não rebaixa o veredito (não altera all_passed).
-        results_summary.append((desc_pointer, True, 1 if drift else 0))
+            ptr, mx, tipo = drift
+            motivo = (f"aponta s{ptr} ALÉM de max(history)+1 (mais recente: s{mx})"
+                      if tipo == "alem_do_max" else
+                      f"aponta s{ptr} mas history/session_{ptr:03d}.md NÃO existe (max: s{mx})")
+            print(f"\n[BLOCK] SESSION_POINTER (B2): HANDOFF {motivo}. "
+                  f"Criar/reconstituir o log (marcar 'reconstituída') ou corrigir o ponteiro. "
+                  f"Norma: core/contracts/reconcile-contract.md B2.")
+            all_passed = False
+        results_summary.append((desc_pointer, not drift, 0))
         _ledger_record("session_pointer",
                        [{"alvo": "HANDOFF.md", "payload":
-                         {"pointer": drift[0], "max_sess": drift[1]}}] if drift else [])
+                         {"pointer": drift[0], "max_sess": drift[1], "tipo": drift[2]}}]
+                       if drift else [])
 
     # 5. Invariante de posicao SSOT (op-3 -- PRD orquestracao part-1). WARN, não bloqueia:
     #    mesma janela de relevância do ponteiro (HANDOFF no diff ou --all).
@@ -423,6 +430,21 @@ def main():
         _ledger_record("fk_orphans",
                        achados_fk if sensor_fk_ok
                        else [{"alvo": "sensor", "payload": {}}])
+
+    # 10b. Invariante do contrato FSRS: needs_qualitative=1 na fila ATIVA (F52b, descolar
+    #      part-4). WARN (nasce advertindo — política s106/107; 6 cards já existem na base):
+    #      o contrato dizia "não deve existir" e não havia sensor nenhum.
+    if card_relevant:
+        from tools.utils.state_utils import check_needs_qualitative
+        desc_nq = "needs_qualitative na fila ativa (contrato FSRS)"
+        n_nq = check_needs_qualitative()
+        if n_nq:
+            print(f"\n[WARN] NEEDS_QUALITATIVE_ATIVO: {n_nq} card(s) com needs_qualitative=1 "
+                  f"DENTRO da fila ativa (state<2) — o contrato FSRS declara que não devem "
+                  f"existir. Recurar via recurate_cards ou aposentar (needs_qualitative=2).")
+        results_summary.append((desc_nq, True, n_nq or 0))
+        _ledger_record("needs_qualitative",
+                       [{"alvo": "fila_ativa", "payload": {"n": n_nq}}] if n_nq else [])
 
     # part-6: sela o marco SO depois que os checks de card rodaram — uma
     # corrida interrompida antes daqui nao avanca o watermark.

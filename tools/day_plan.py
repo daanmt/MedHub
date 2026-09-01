@@ -917,6 +917,16 @@ def render_handoff_block(p):
     n_resumos = _contar_resumos()
     if n_resumos is not None:
         linhas.append(f"- **Conteudo:** {n_resumos} resumos em resumos/. [derivado: glob]")
+    # F53 (descolar part-4): a frente 'Erros & Cards' passa a ser DERIVADA — o vocabulario
+    # completo do handoff-contract sai do gerador, nao da mao.
+    try:
+        ec = db.contar_erros_cards()
+        linhas.append(
+            f"- **Erros & Cards:** {ec['erros']} erros registrados · {ec['cards_ativos']} "
+            f"cards ativos · {ec['needs_qualitative']} needs_qualitative na fila · "
+            f"taxonomia {ec['temas']} temas. [derivado: db]")
+    except Exception:
+        pass  # bloco derivado degrada em silencio aqui; o [WARN] do plano cobre a classe
     c = p.get("cronograma")
     if c:
         lag_txt = f", atraso {c['lag']} sem" if c.get("lag") else ""

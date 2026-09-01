@@ -164,10 +164,13 @@ def _generate_hypothetical_document(query: str) -> str:
     if os.environ.get("ANTHROPIC_API_KEY"):
         try:
             import anthropic
-            client = anthropic.Anthropic()
+            # F48 (descolar part-5): timeout explícito (pior caso medido ~30min pendurado)
+            # e temperature=0 (o eval documentou swing de 17pp run-a-run sem determinismo).
+            client = anthropic.Anthropic(timeout=30.0)
             response = client.messages.create(
                 model="claude-haiku-4-5-20251001",
                 max_tokens=256,
+                temperature=0,
                 system="Você é um assistente médico. Responda com um fato clínico objetivo que seria encontrado em um livro-texto, sem saudações.",
                 messages=[{"role": "user", "content": prompt}]
             )
@@ -231,8 +234,23 @@ def index_resumo(path: Path, collection=None) -> int:
             documents=docs,
             metadatas=metas,
         )
+        # F48 (descolar part-5): resumo que ENCOLHEU deixava cauda {stem}::N órfã no índice,
+        # servindo texto desatualizado (6 chunks stale medidos na s160). Deleta o excedente.
+        try:
+            cauda = caudas_orfas(ids, collection.get(where={"source": str(path)}).get("ids") or [])
+            if cauda:
+                collection.delete(ids=cauda)
+        except Exception:
+            pass  # higiene é melhor-esforço; o check de staleness cobre a classe
 
     return len(chunks)
+
+
+def caudas_orfas(ids_atuais: list, ids_existentes: list) -> list:
+    """Ids no índice que não estão no conjunto atual do MESMO resumo (a 'cauda' de um resumo
+    que encolheu). Pura e testável sem Chroma."""
+    atuais = set(ids_atuais)
+    return [i for i in ids_existentes if i not in atuais]
 
 
 def index_all(resumos_dir: str = "resumos", clear: bool = False) -> dict[str, int]:
@@ -259,7 +277,23 @@ def index_all(resumos_dir: str = "resumos", clear: bool = False) -> dict[str, in
             continue
         count = index_resumo(path, collection)
         results[path.name] = count
+    gravar_carimbo_indexacao(n_arquivos=len(results))
     return results
+
+
+def gravar_carimbo_indexacao(n_arquivos: int = 0) -> None:
+    """Carimbo da última indexação (F48, descolar part-5): habilita o sensor de staleness
+    (mtime dos resumos × este timestamp) no auto_check. Melhor-esforço."""
+    try:
+        import json as _json
+        from datetime import datetime as _dt
+        meta = Path(__file__).resolve().parents[2] / "data" / "chroma" / "index_meta.json"
+        meta.parent.mkdir(parents=True, exist_ok=True)
+        meta.write_text(_json.dumps(
+            {"indexed_at": _dt.now().isoformat(timespec="seconds"),
+             "n_arquivos": n_arquivos}), encoding="utf-8")
+    except Exception:
+        pass
 
 
 def _textual_fallback(query: str, n_results: int = 5, area: Optional[str] = None) -> list[dict]:

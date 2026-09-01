@@ -118,6 +118,34 @@ def check_session_pointer(handoff_path=None, history_dir=None):
     return None
 
 
+def check_rag_staleness(root=None):
+    """F48 (descolar part-5): índice RAG stale sem sensor — 6 chunks serviam texto velho.
+    Compara o mtime máximo de resumos/**/*.md com o carimbo `data/chroma/index_meta.json`
+    (gravado por `rag.index_all`). Retorna (n_mais_novos, carimbo|None); None = tudo em dia.
+    Sem carimbo = (n_resumos, None): 'indexação sem carimbo — re-rode index_resumos'."""
+    base = Path(root) if root else ROOT_DIR
+    resumos = base / "resumos"
+    if not resumos.is_dir():
+        return None
+    try:
+        import json
+        from datetime import datetime
+        meta = base / "data" / "chroma" / "index_meta.json"
+        arquivos = [p for p in resumos.rglob("*.md") if p.name != "INDEX.md"]
+        if not arquivos:
+            return None
+        if not meta.exists():
+            return (len(arquivos), None)
+        carimbo = json.loads(meta.read_text(encoding="utf-8")).get("indexed_at")
+        # tolerância de 2s: o carimbo tem resolução de segundos e é gravado logo APÓS a
+        # indexação dos arquivos — sem a folga, todo run acusaria os próprios arquivos.
+        ts = datetime.fromisoformat(carimbo).timestamp() + 2.0
+        novos = sum(1 for p in arquivos if p.stat().st_mtime > ts)
+        return (novos, carimbo) if novos else None
+    except Exception:
+        return None
+
+
 def check_needs_qualitative(db_path=None):
     """F52(b) (descolar part-4): `needs_qualitative=1` em card na fila ATIVA (state<2) viola
     o invariante do contrato FSRS e não tinha sensor (6 cards medidos na s160). Retorna a

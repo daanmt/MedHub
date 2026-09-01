@@ -498,6 +498,27 @@ def main():
                        achados_reach if sensor_reach_ok
                        else [{"alvo": "sensor", "payload": {}}])
 
+    # 12b. Staleness do índice RAG (F48, descolar part-5). WARN. SÓ no --all (estrutura,
+    #      não por-arquivo): resumo mais novo que o carimbo de indexação = get_topic_context
+    #      servindo texto velho em silêncio (6 chunks medidos na s160).
+    if mode == "--all":
+        from tools.utils.state_utils import check_rag_staleness
+        desc_rag = "Staleness do índice RAG (RAG_STALE)"
+        stale = check_rag_staleness()
+        if stale:
+            n_novos, carimbo = stale
+            if carimbo is None:
+                print(f"\n[WARN] RAG_STALE: indexação SEM carimbo ({n_novos} resumos no disco) "
+                      f"— re-rode `python tools/index_resumos.py` para carimbar e sincronizar.")
+            else:
+                print(f"\n[WARN] RAG_STALE: {n_novos} resumo(s) editado(s) DEPOIS da última "
+                      f"indexação ({carimbo}) — o RAG serve texto velho. Re-rode "
+                      f"`python tools/index_resumos.py`.")
+        results_summary.append((desc_rag, True, stale[0] if stale else 0))
+        _ledger_record("rag_stale",
+                       [{"alvo": "chroma/resumos", "payload":
+                         {"novos": stale[0], "carimbo": stale[1]}}] if stale else [])
+
     # 13. Invariante F38 (AUDITORIA_MEDHUB): erro analisado tem que PERSISTIR.
     #     WARN, nao bloqueia. Roda SEMPRE (nao so no --all): o defeito nasce de
     #     uma escrita no db, nao de um arquivo tocado, entao nenhuma heuristica

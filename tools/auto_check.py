@@ -499,6 +499,46 @@ def main():
     _ledger_record("erros_orfaos",
                    [{"alvo": d, "payload": {"erros_esperados": n}} for d, n in (orfaos or [])])
 
+    # 14b. Import-dangling nos CLIs (descolar part-2, classe F50): `autopsia_simulados`
+    #      ficou 852 linhas QUEBRADO por 5 dias importando módulo deletado, mascarado por
+    #      .pyc órfão. AST-only (utf-8-sig — lição do BOM/F51), NUNCA executa os CLIs.
+    #      WARN (nasce advertindo, política s106/107); roda sempre — é barato (dezenas de arquivos).
+    desc_imp = "Imports internos resolvem (IMPORT_DANGLING)"
+    import ast as _ast
+    dangling = []
+    try:
+        for f_py in sorted((ROOT_DIR / "tools").glob("*.py")):
+            try:
+                tree = _ast.parse(f_py.read_text(encoding="utf-8-sig", errors="replace"))
+            except SyntaxError as se:
+                dangling.append((f_py.name, f"syntax: {se.msg} (linha {se.lineno})"))
+                continue
+            for node in _ast.walk(tree):
+                mods = []
+                if isinstance(node, _ast.Import):
+                    mods = [a.name for a in node.names]
+                elif isinstance(node, _ast.ImportFrom) and node.module and node.level == 0:
+                    mods = [node.module]
+                for mod in mods:
+                    if not (mod == "tools" or mod.startswith("tools.")):
+                        continue
+                    sub = mod.split(".", 1)[1] if "." in mod else ""
+                    alvo_py = ROOT_DIR / (mod.replace(".", "/") + ".py")
+                    alvo_pkg = ROOT_DIR / mod.replace(".", "/")
+                    if sub and not alvo_py.exists() and not alvo_pkg.exists():
+                        dangling.append((f_py.name, f"import {mod} (módulo inexistente)"))
+    except Exception as e:  # noqa: BLE001 -- sensor indisponível é WARN visível
+        print(f"\n[WARN] IMPORT_DANGLING_SENSOR: sensor indisponível ({e}).")
+        dangling = [("sensor", str(e))]
+    if dangling:
+        amostra = "; ".join(f"{a}: {b}" for a, b in dangling[:4])
+        print(f"\n[WARN] IMPORT_DANGLING: {len(dangling)} problema(s) de import em tools/ "
+              f"({amostra}{'; ...' if len(dangling) > 4 else ''}). Morto-que-parece-vivo "
+              f"(classe F50): conectar, corrigir ou deletar com lápide.")
+    results_summary.append((desc_imp, True, len(dangling)))
+    _ledger_record("import_dangling",
+                   [{"alvo": a, "payload": {"detalhe": b}} for a, b in dangling])
+
     # 14. Invariante F43: suite que existe tem que estar em algum registro de
     #     execucao. "Quais testes rodam" e mantido em TRES lugares (pytest.ini,
     #     auto_check, test_pytest_bridge) e nenhum sabe do outro -- uma suite

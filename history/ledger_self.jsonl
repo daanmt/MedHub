@@ -651,3 +651,12 @@
 {"ts": "2026-08-26T04:36:32+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "40decb2e0825", "alvo": "card#152"}
 {"ts": "2026-08-30T17:01:38+00:00", "event": "opened", "check": "reachability", "fingerprint": "a22a17374fbb", "alvo": "tools/auto_recurate_duplo_ask.py", "payload": {"referenciadores": 0}}
 {"ts": "2026-08-30T17:01:38+00:00", "event": "opened", "check": "erros_orfaos", "fingerprint": "923737d5d989", "alvo": "2026-06-18", "payload": {"erros_esperados": 15}}
+{"ts": "2026-09-01T14:41:58+00:00", "event": "opened", "check": "import_dangling", "fingerprint": "ea15585d53f8", "alvo": "sabotagem_tmp.py", "payload": {"detalhe": "import tools.modulo_que_nao_existe (módulo inexistente)"}}
+{"ts": "2026-09-01T14:42:14+00:00", "event": "resolved", "check": "import_dangling", "fingerprint": "ea15585d53f8", "alvo": "sabotagem_tmp.py"}
+{"ts": "2026-09-01T15:19:52+00:00", "event": "opened", "check": "candidato_mecanizacao", "fingerprint": "d0b01a6fb650", "alvo": "fila_redrill_intrasessao_em_codigo", "payload": {"origem": "descolar part-7 DoD 2 (F57/P3)", "porque": "a prosa da skill /revisar ja falhou 3x em fazer o loop rodar; o PASSO foi versionado, a MECANIZACAO nao", "onde": "tools/fsrs_queue.py devolveria a fila de redrill; NAO implementado neste ciclo (escopo)"}}
+{"ts": "2026-09-01T15:21:40+00:00", "event": "opened", "check": "needs_qualitative", "fingerprint": "45c688b38129", "alvo": "fila_ativa", "payload": {"n": 2}}
+{"ts": "2026-09-01T15:21:42+00:00", "event": "resolved", "check": "reachability", "fingerprint": "26368cf4dde0", "alvo": "tools/autopsia_simulados.py"}
+{"ts": "2026-09-01T15:21:42+00:00", "event": "resolved", "check": "reachability", "fingerprint": "a22a17374fbb", "alvo": "tools/auto_recurate_duplo_ask.py"}
+{"ts": "2026-09-01T15:21:42+00:00", "event": "opened", "check": "rag_stale", "fingerprint": "cd2667ee26cc", "alvo": "chroma/resumos", "payload": {"novos": 127, "carimbo": null}}
+{"ts": "2026-09-01T15:21:43+00:00", "event": "opened", "check": "memory_pointers", "fingerprint": "ded64394a54a", "alvo": "project_decompose_bug_execucao_prova.md::tools/autopsia_simulados.py", "payload": {}}
+{"ts": "2026-09-01T15:21:43+00:00", "event": "opened", "check": "memory_pointers", "fingerprint": "57265d8029f3", "alvo": "project_decompose_bug_execucao_prova.md::tools/autopsia_template.py", "payload": {}}

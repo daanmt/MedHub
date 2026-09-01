@@ -1133,4 +1133,24 @@ tautologico novo em cards de tema `[bulk]`), a reincidencia do padrao de calibra
 do F7 na tema Gravidez Ectopica (`card_id=114` auditado via `evidence-researcher`, veredito PRECISA
 AJUSTE -- moldura de PUL; `card_id=120` do F7 original segue sem auditoria) e 3 flags do usuario
 (1411/283/319) sem defeito identificado pelo agente, calibracao em aberto pra proxima sessao.
-**Proximos achados comecam em F42**. Ultima atualizacao: s154 (2026-08-24). **Adendo 2026-07-12 (Fable/ai-eng, ciclo mecanismo-de-conhecimento):** F21 RECONCILIADO em dois planos (conduta RESOLVIDA no contrato v1.2; enforcement mecanico na spec `mecanismo-conhecimento-consolidacao-part-3`) -- ver secao 3e. Ciclo de consolidacao do mecanismo de RAG/conhecimento em andamento (part-1 audit PASS: MCP obsidian aposentado, scaffold LangGraph/BM25 removido; part-2: reconciliacao de drift documental).*
+**Proximos achados comecam em F42**. Ultima atualizacao: s154 (2026-08-24). **Ciclo DESCOLAR
+(Fable/ai-eng, 2026-09-01 — retorno do handoff `~/ai-eng/HANDOFF-MEDHUB-COLA.md`):** PRD
+`descolar-motor-determinismo` (P1-P7 respondidas) + 7 specs + implementacao. RESOLVIDOS:
+**F45** (vocabulario+upsert por par via `reconciliar_weak_areas`), **F46** (paths por __file__,
+leitor ro, 2 decoys deletados), **F47** (precedencia de fonte implementada), **F48** (timeout+
+temp0+cauda+RAG_STALE+testes do chunker), **F49** (allowlist tabela->writers TESTADA,
+`test_writer_allowlist`), **F50** (deletado; check IMPORT_DANGLING mata a classe), **F51**
+(aposentado sem substituto), **F52** (contrato FSRS v1.1 absorve balanceador + state=3 + sensor
+needs_qualitative), **F53** (Erros&Cards derivado; matriz de verdade no reconcile v1.2 — o
+derivado ja expos drift real: 922 erros vs 903 digitados), **F54** (painel de DIVIDA = leitor
+obrigatorio em todo run), **F56** (B2 BLOCK real + matriz condicao->instrumento), **F61** (novo,
+do discovery: duplas execucoes de suite mortas; tempo por bloco impresso). **F57** RESOLVIDO-parcial
+(5 memorias nomeadas resolvidas + check `memory_pointers` vigiando; 2 ponteiros mortos restantes
+= WARN no painel, migracao das demais 72 nas proximas sessoes), **F58** RESOLVIDO (check
+`history_integrity`: session novo nasce integro ou e acusado; s156 fica como lapide), **F59**
+RESOLVIDO (deny 0->4, allow 163->138 por poda mecanica), **F60** RESOLVIDO (exit simetrico em
+backup_db/importar_sessoes + day_plan degrada audivel; ~15 CLIs restantes = candidatos no
+painel). Suite 317->**358**. Ciclo verificado: audits em
+`.vibeflow/audits/descolar-motor-cycle-audit.md` (PASS 7/7).
+Anti-scope preservado: promocao automatica WARN->BLOCK (P2), golden de aula (P6, pos-ENAMED),
+F55, rotacao deste doc (**F62** candidata — politica do dono), ipub.db/conteudo clinico. **Adendo 2026-07-12 (Fable/ai-eng, ciclo mecanismo-de-conhecimento):** F21 RECONCILIADO em dois planos (conduta RESOLVIDA no contrato v1.2; enforcement mecanico na spec `mecanismo-conhecimento-consolidacao-part-3`) -- ver secao 3e. Ciclo de consolidacao do mecanismo de RAG/conhecimento em andamento (part-1 audit PASS: MCP obsidian aposentado, scaffold LangGraph/BM25 removido; part-2: reconciliacao de drift documental).*

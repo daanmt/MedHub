@@ -29,6 +29,10 @@ from tools.utils.state_utils import (
     check_suites_orfas
 )
 def run_command(cmd_list, desc, capture=False):
+    # part-1 (P1): tempo por bloco IMPRESSO -- o SLO do harness e informativo e medido,
+    # nao um gate flaky por tempo. E o que habilita podar custo com dado (F61 foi achado assim).
+    import time as _time
+    t0 = _time.monotonic()
     print(f"\\n[AUTO-CHECK] Executando: {desc}")
     print(f"            $ {' '.join(cmd_list)}")
     if capture:
@@ -40,8 +44,10 @@ def run_command(cmd_list, desc, capture=False):
             print(res.stdout, end="" if res.stdout.endswith("\\n") else "\\n")
         if res.stderr:
             print(res.stderr, end="" if res.stderr.endswith("\\n") else "\\n")
+        print(f"            [{_time.monotonic() - t0:.1f}s] {desc}")
         return res.returncode == 0, res.stdout or ""
     res = subprocess.run(cmd_list, cwd=ROOT_DIR)
+    print(f"            [{_time.monotonic() - t0:.1f}s] {desc}")
     return res.returncode == 0, ""
 
 
@@ -171,17 +177,16 @@ def main():
         all_passed = all_passed and success
         results_summary.append((desc, success, _warn_total(out)))
 
-    # 2. Auditar Motor Python / Testes de Calibração
+    # 2. Motor Python / Calibração — F61 (descolar part-1): test_revisao_calibrada e
+    #    test_autonomia_hooks rodavam DUAS vezes por run (execução direta aqui + de novo
+    #    dentro do pytest 2d: a calibrada via test_pytest_bridge, a autonomia por coleta
+    #    nativa do pytest.ini). As execuções diretas morreram; a cobertura é do 2d, cujo
+    #    gatilho foi AMPLIADO com fsrs_relevant (o gatilho que era só desta seção).
     if mode == "--all" or tools_to_check or fsrs_relevant:
-        cmd_test = [sys.executable, "tools/test_revisao_calibrada.py"]
-        desc = "Suíte Central de Testes (Revisão Calibrada e D10)"
-        success, _ = run_command(cmd_test, desc)
-        all_passed = all_passed and success
-        results_summary.append((desc, success, 0))
-
         # 2c. Load balancer do agendamento FSRS (s128). BLOCKING: mexe no
         #     caminho único de escrita do FSRS, então regressão aqui corrompe
-        #     a curva. Suíte pura (não depende do db vivo).
+        #     a curva. Suíte pura (não depende do db vivo). Fora do pytest.ini
+        #     (F43: registro = aqui) -> execução direta é a ÚNICA, não é dupla.
         test_bal = ROOT_DIR / "tools" / "test_fsrs_balance.py"
         if test_bal.exists() and (mode == "--all" or fsrs_relevant):
             desc_bal = "Suíte do load balancer FSRS"
@@ -189,16 +194,8 @@ def main():
             all_passed = all_passed and success_bal
             results_summary.append((desc_bal, success_bal, 0))
 
-        # Se houver teste específico de autonomia
-        test_autonomia_path = ROOT_DIR / "tools" / "test_autonomia_hooks.py"
-        if test_autonomia_path.exists() and (mode == "--all" or any("autonomia" in f or "hooks" in f for f in tools_to_check)):
-            cmd_auto = [sys.executable, "tools/test_autonomia_hooks.py"]
-            desc_auto = "Suíte de Testes do Harness de Autonomia e Hooks"
-            success_auto, _ = run_command(cmd_auto, desc_auto)
-            all_passed = all_passed and success_auto
-            results_summary.append((desc_auto, success_auto, 0))
-
         # Suíte de telemetria de fila (Part 2): roda quando day_plan mudou (ou --all).
+        # Fora do pytest.ini (F43: registro = aqui) -> execução única.
         test_telemetria_path = ROOT_DIR / "tools" / "test_day_plan_telemetria.py"
         if test_telemetria_path.exists() and (mode == "--all" or any("day_plan" in f for f in tools_to_check)):
             cmd_tel = [sys.executable, "tools/test_day_plan_telemetria.py"]
@@ -214,11 +211,13 @@ def main():
     #     o hook de pre-commit deixava passar commit com suite vermelha, e foi
     #     exatamente assim que a quebra de coleta da s156 sobreviveu 3 sessoes
     #     com o relatorio dizendo "Todos os checks passaram".
-    #     Gatilho: --all, qualquer .py de tools/core tocado, ou substrato
-    #     compartilhado (tools/utils/, core/contracts/, pytest.ini, conftest.py).
+    #     Gatilho: --all, qualquer .py de tools/core tocado, substrato
+    #     compartilhado (tools/utils/, core/contracts/, pytest.ini, conftest.py)
+    #     ou fsrs_relevant (F61: cobre a revisao-calibrada via bridge e a
+    #     autonomia via coleta nativa — as execuções diretas morreram).
     #     Custo medido: ~17s. Barato demais para continuar sendo opcional.
-    if mode == "--all" or tools_to_check or substrato_relevant:
-        desc_pytest = "Suíte completa (pytest)"
+    if mode == "--all" or tools_to_check or substrato_relevant or fsrs_relevant:
+        desc_pytest = "Suíte completa (pytest — inclui revisão-calibrada via bridge e autonomia)"
         motivo = "substrato compartilhado" if substrato_relevant and mode != "--all" else None
         if motivo:
             print(f"   ↳ {motivo} tocado -> suíte completa (o consumidor vive noutro arquivo).")
@@ -516,6 +515,17 @@ def main():
     results_summary.append((desc_f43, True, len(suites_orfas) if suites_orfas else 0))
     _ledger_record("suites_orfas",
                    [{"alvo": n, "payload": {}} for n in (suites_orfas or [])])
+
+    # PAINEL DE DÍVIDA (descolar part-1, F54/P5): o leitor obrigatório. Imprime SEMPRE
+    # (dívida invisível em run verde é exatamente o modo de falha F54). Sensor: detecta
+    # e reporta; a drenagem e a promoção WARN->BLOCK seguem a política s106/107 (base zera).
+    try:
+        from ledger_self import painel_divida
+        print()
+        for linha in painel_divida():
+            print(linha)
+    except Exception as e:  # noqa: BLE001 -- painel nunca derruba o harness
+        print(f"\n[WARN] PAINEL_DIVIDA: indisponível ({e}).")
 
     # Resumo Final
     print("\n" + "=" * 60)

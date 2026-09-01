@@ -128,6 +128,57 @@ def abertos(root=None):
                                         v.get("opened_at", "")))
 
 
+def _idade_dias(iso_ts):
+    """Dias desde um timestamp ISO do ledger; 0 se ilegivel (nunca crash)."""
+    try:
+        dt = datetime.fromisoformat(str(iso_ts))
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        return max(0, (datetime.now(timezone.utc) - dt).days)
+    except Exception:
+        return 0
+
+
+def painel_divida(root=None, top=5):
+    """Bloco DIVIDA (descolar part-1, F54/P5): o LEITOR obrigatorio que as superficies de
+    sinal nao tinham -- 279 abertos com o mesmo WARN visto 102x em 36 dias e zero chamadores
+    de abertos() em codigo. Ordena por idade x ocorrencias (o antigo E frequente sobe junto).
+    Sensor: detecta e reporta, nunca corrige/bloqueia (warn-first). Retorna linhas prontas."""
+    linhas = []
+    try:
+        vivos = abertos(root)
+        root_p = Path(root).resolve() if root else ROOT_DIR
+
+        def _score(v):
+            return _idade_dias(v.get("opened_at", "")) * int(v.get("occurrences", 1))
+
+        rank = sorted(vivos, key=_score, reverse=True)
+        linhas.append(f"== DIVIDA == ({len(vivos)} aberto(s) no ledger-of-self)")
+        for v in rank[:top]:
+            linhas.append(f"  [{int(v.get('occurrences', 1)):>3}x | {_idade_dias(v.get('opened_at', '')):>3}d] "
+                          f"{v.get('check', '?')} :: {v.get('alvo', '?')}")
+        if len(rank) > top:
+            por_check = {}
+            for v in rank[top:]:
+                por_check[v.get("check", "?")] = por_check.get(v.get("check", "?"), 0) + 1
+            resto = ", ".join(f"{c}: {n}" for c, n in sorted(por_check.items(), key=lambda x: -x[1])[:4])
+            linhas.append(f"  (+{len(rank) - top} abertos: {resto})")
+
+        mel = root_p / "history" / "memory_errors.log"
+        if mel.exists():
+            ls = [l for l in mel.read_text(encoding="utf-8", errors="replace").splitlines() if l.strip()]
+            if ls:
+                linhas.append(f"  memory_errors.log: {len(ls)} linha(s); ultima: {ls[-1][:90]}")
+        aud = root_p / "AUDITORIA_MEDHUB.md"
+        if aud.exists():
+            linhas.append(f"  AUDITORIA_MEDHUB.md: {aud.stat().st_size / 1024:.0f} KB")
+        if len(linhas) == 1:
+            linhas.append("  (sem divida registrada)")
+    except Exception as e:  # noqa: BLE001 -- painel nunca derruba o harness
+        linhas.append(f"== DIVIDA == (painel indisponivel: {e})")
+    return linhas
+
+
 def validar_jsonl(root=None):
     """Le o .jsonl defensivamente; linha corrompida vira WARN, nunca crash.
     Retorna (eventos_validos, linhas_corrompidas)."""

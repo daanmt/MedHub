@@ -44,6 +44,9 @@ Thumbs.db
 
 # Scratch — scripts one-shot e temporários de sessão
 tmp/
+# s162: `scratch/` nasceu como irmão de `tmp/` e escapou desta regra por sessões
+# (a s161 deixou 178 KB de dump de fila lá). Mesma função, mesmo tratamento.
+scratch/
 
 # Artefatos — backups e runs LLM (binários e JSONs grandes)
 artifacts/backups/
@@ -55,4 +58,7 @@ graphify-out/
 
 # ledger-of-self: estado DERIVADO (reconstruivel); o .jsonl de eventos e versionado
 history/ledger_self_state.json
+# sink de falha da consolidacao de memoria (AGENTE.md §8): log de RUNTIME, nao artefato.
+# O painel de DIVIDA le o arquivo no disco -- versionar so propagaria ruido de maquina.
+history/memory_errors.log
 core/simulados/_s*_questoes.json

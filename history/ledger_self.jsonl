@@ -660,3 +660,5 @@
 {"ts": "2026-09-01T15:21:42+00:00", "event": "opened", "check": "rag_stale", "fingerprint": "cd2667ee26cc", "alvo": "chroma/resumos", "payload": {"novos": 127, "carimbo": null}}
 {"ts": "2026-09-01T15:21:43+00:00", "event": "opened", "check": "memory_pointers", "fingerprint": "ded64394a54a", "alvo": "project_decompose_bug_execucao_prova.md::tools/autopsia_simulados.py", "payload": {}}
 {"ts": "2026-09-01T15:21:43+00:00", "event": "opened", "check": "memory_pointers", "fingerprint": "57265d8029f3", "alvo": "project_decompose_bug_execucao_prova.md::tools/autopsia_template.py", "payload": {}}
+{"ts": "2026-09-02T16:33:58+00:00", "event": "opened", "check": "posicao_ssot", "fingerprint": "01755b5ba8cb", "alvo": "HANDOFF.md", "payload": {"semana_handoff": 17, "semana_db": 16}}
+{"ts": "2026-09-02T20:42:10+00:00", "event": "resolved", "check": "posicao_ssot", "fingerprint": "01755b5ba8cb", "alvo": "HANDOFF.md"}

@@ -1154,3 +1154,188 @@ painel). Suite 317->**358**. Ciclo verificado: audits em
 `.vibeflow/audits/descolar-motor-cycle-audit.md` (PASS 7/7).
 Anti-scope preservado: promocao automatica WARN->BLOCK (P2), golden de aula (P6, pos-ENAMED),
 F55, rotacao deste doc (**F62** candidata — politica do dono), ipub.db/conteudo clinico. **Adendo 2026-07-12 (Fable/ai-eng, ciclo mecanismo-de-conhecimento):** F21 RECONCILIADO em dois planos (conduta RESOLVIDA no contrato v1.2; enforcement mecanico na spec `mecanismo-conhecimento-consolidacao-part-3`) -- ver secao 3e. Ciclo de consolidacao do mecanismo de RAG/conhecimento em andamento (part-1 audit PASS: MCP obsidian aposentado, scaffold LangGraph/BM25 removido; part-2: reconciliacao de drift documental).*
+
+---
+
+## 4o. Achado de uso vivo -- s162 (Claude Code/Opus 5, 2026-09-02)
+
+### F63 -- a prioridade que governa o estudo nao viaja com o repo (o usuario e a camada de transporte)
+
+**Classe:** input do boot nao e verdadeiro (mesma familia de F45/F47) + regra load-bearing fora
+do portador (P7, mas na camada de ESTUDO, nao na de engenharia).
+
+**Observado.** O usuario reordenou o xlsx do Drive a mao por um codigo de cores
+**Roxo > Rosa > Salmao** (prioridade por prevalencia no ENAMED, derivada do guia estatistico do
+EMED). Essa ordem e o que de fato decide o que ele estuda ate 13/09: das 11 tasks da S17, so
+**6 sao roxas** (Diarreia Teoria, SUA Teoria, APS Revisao, Diarreia Revisao, Urologia I,
+Pneumonias Bacterianas I). As outras 5 (Cirurgia Vascular Revisao, Vitalidade Fetal, Neoplasias
+de Estomago e Esofago, Nefrolitiase, APS Teoria III) nao entram na janela.
+
+**O defeito.** `core/cronograma/grade.json` e um parse **fiel** do `Cronograma.pdf` -- verificado
+task a task contra a planilha do usuario nesta sessao: 11/11 batem, mesma ordem. O que ele **nao**
+carrega e a cor. Logo:
+- nenhum consumidor (`day_plan.py`, `cronograma.py --radar`, `preparacao.py`) sabe distinguir
+  roxo de salmao; as 11 tasks pesam igual;
+- `infer_nota()` tem o **eixo 4 desenhado para consumir `prevalencia_enamed`** e roda em peso
+  neutro por falta do campo -- soquete cabeado, sinal existente, ninguem ligou os dois
+  (`core/contracts/revisao-calibrada-contract.md:119`, `docs/plans/s094-revisao-calibrada-PRD.md:265`);
+- o snapshot `--sync-drive` (unica ponte para o xlsx real) esta **38 dias velho**.
+
+**Consequencia medida.** A regra so existe em prosa (`HANDOFF.md:9`, `session_161.md:14`) e na
+cabeca do usuario. Resultado: ele **reenuncia a prioridade a cada sessao e a cada harness** --
+para o Antigravity em 02/09 e para o Claude Code no mesmo dia. O humano virou o transporte de um
+dado que o repo deveria carregar. Registrado como "achado registrado, nao resolvido" desde a
+**s147** (`history/session_147.md:18`) -- 15 dias em aberto.
+
+**Por que importa agora.** E a propria tese do ciclo DESCOLAR (P7: "regra load-bearing vai para o
+portador do repo, nao para a memoria do harness") violada na camada que o projeto existe para
+servir. A des-colagem consertou o motor; a prioridade do estudo continua colada no operador.
+
+**Direcao (nao implementada).** `grade.json` ganha `prioridade` por task (roxo|rosa|salmao) via
+`cronograma.py --sync-drive` lendo o fill/font color da celula do xlsx; `prevalencia_enamed`
+passa a ser derivada dela e o eixo 4 do `infer_nota()` liga sozinho -- **zero mudanca** em
+`infer_nota()` (o contrato ja previu essa porta). Sensor de staleness do snapshot do Drive vira
+WARN no painel de DIVIDA.
+
+**Severidade:** ALTA (governa a alocacao de tempo a 11 dias do ENAMED e 60 da UERJ).
+
+### F64 -- o gatilho do regime de divida le `atrasados`, o dono le `vencidos`
+
+**Classe:** gap de spec entre a formula e o modelo mental do operador.
+
+**Observado.** `tools/day_plan.py::_teto_efetivo(atrasados)` sobe o teto do dia so quando
+`atrasados > TETO_BASE` (60). Na s162 havia **45 atrasados + 22 p/ hoje = 67 vencidos**: o
+operador leu "vencidos > teto, logo regime de divida" e o codigo leu "45 < 60, teto base".
+O agente reportou o teto do codigo como se fosse fato pacifico e recomendou parar o estudo com
+base nele. O operador contestou -- e a leitura dele e a mais defensavel: card vencido hoje e
+divida igual a card vencido ontem.
+
+**O defeito.** A politica declarada (memoria `feedback_politica_cards_diaria`, s159: "teto 60/dia,
+CAP de divida 1,5x = 90") nao diz **qual contador** dispara o regime. `_teto_efetivo` decidiu por
+`atrasados` sem que a escolha esteja escrita em nenhum portador. Consequencia pratica: numa
+divida composta majoritariamente por cards de HOJE, o regime nunca dispara e o teto trava em 60
+com a fila inteira vencida.
+
+**Agravante medido na mesma sessao.** A sessao cruzou a meia-noite (02/09 -> 03/09). O teto e
+por dia de calendario, e nenhum aviso existe quando a fronteira e cruzada no meio de uma
+drenagem: o agente seguiu argumentando com o orcamento do dia anterior por 2 turnos. 02/09
+fechou em 75 (sob o CAP 90) e 03/09 abriu limpo -- mas isso foi descoberto por `date`, nao por
+sensor.
+
+**Direcao (nao implementada).** (a) Decidir e **escrever** o contador do gatilho em
+`fsrs-management-contract.md` (recomendacao: `vencidos = atrasados + hoje`, que e a leitura do
+dono); (b) `_teto_efetivo` passa a receber o contador decidido, com teste; (c) `day_plan`
+imprime o **consumo do dia** (`gravados_hoje / teto`) no bloco de FSRS -- hoje o teto aparece
+sem o saldo, o que obriga o agente a derivar a conta a mao e errar.
+
+**Severidade:** MEDIA (nao corrompe dado; distorce a prescricao de volume e ja produziu uma
+recomendacao errada de parar).
+
+### F65 -- o balde `[bulk] <Area>` esconde 72 cards do radar de dormencia
+
+**Classe:** taxonomia que corrompe sensor (familia F37/dedup de taxonomia).
+
+**Observado.** Drenando 45 cards na s162, cards de temas completamente distintos apareceram sob
+o pseudo-tema `[bulk] Cirurgia`: **pancreatite** (311, 313, 317), **trauma abdominal** (325),
+**demencia/MEEM** (291) e **esclerose multipla** (297). Contagem no banco:
+
+| balde | cards |
+|---|---|
+| `[bulk] Cirurgia` | 55 |
+| `[bulk] Pneumo` | 8 |
+| outros 6 baldes | 9 |
+| **total** | **72** |
+
+**O defeito.** `(area, tema)` e a chave de identidade do tema (invariante anti-poluicao, s083) e
+e o que alimenta `review_radar.py` (dormencia), o cluster de frieza do `day_plan --review-plan`
+e o gatilho de PREPARAR do `/revisar`. Card sem tema real e **invisivel para toda essa camada**:
+sua frieza e diluida num balde que nunca esfria como um tema, e ele nunca dispara aquecimento.
+Sintoma direto medido na sessao: `--review-plan` devolveu **40 clusters para 77 cards** e nenhum
+sinal frio acionavel (maximo 15.4, gatilho 25) -- fragmentacao que faz o sensor calar.
+
+**Efeito colateral confirmado no uso.** Os cards 311 e 313 (ambos "por que nao TC na
+pancreatite", eixos diferentes: etiologia x janela de 72h) cairam no **mesmo bloco** e se
+canibalizaram -- o usuario respondeu 313 com o conteudo de 311 e apagou no 311, 2 notas 1 de
+interferencia. Com tema real, `detect_clones.py` teria visto o par; no balde, nao ha por-tema
+para comparar.
+
+**Direcao (nao implementada).** Reclassificar os 72 por tema real (o texto do card carrega o
+tema; `normalize_taxonomia.py` + `dedup_taxonomia.py` sao os portadores existentes) e adicionar
+check no `auto_check`: card em tema `[bulk] *` nasce como WARN de taxonomia. Rodar
+`detect_clones.py` depois da reclassificacao -- o par 311/313 e o primeiro caso conhecido.
+
+**Severidade:** ALTA (72 cards, 5,7% do banco ativo, cegos ao mecanismo central do projeto).
+
+> **Adendo honesto ao F65.** A limpeza dos baldes `[bulk]`/`Geral` **ja estava listada** como
+> pendencia Tier-3 em `ESTADO.md §Proximos passos` item 5 -- este achado nao a descobre, ele a
+> **quantifica** (72 cards, 5,7% do banco) e nomeia o dano concreto (sensor de dormencia cego +
+> colisao de clones medida em 2 notas 1). E o padrao exato da frente de **alcancabilidade**
+> (`project_alcancabilidade_auditoria`): a pendencia estava escrita, correta e inalcancada por
+> tempo indeterminado, porque nada no harness a transformava em trabalho. O check de WARN
+> proposto acima e o que converte a linha de texto em fila.
+
+### F66 -- 45% da memoria de fraquezas e orfa por ABREVIACAO, e o log cresce sem teto
+
+**Classe:** F45 nao terminou o servico (o input do boot ainda nao e verdadeiro) + sensor que
+cresce sem limite. **Descoberto ao vivo:** o painel de DIVIDA saltou de 7 para **146 linhas**
+durante o proprio fechamento da s162, disparado pelo hook que consolida o session log novo.
+
+**Medido.** `reconciliar_weak_areas` (F45) roda em toda consolidacao e classifica cada WeakArea
+contra o vocabulario de `taxonomia_cronograma`:
+
+| | |
+|---|---|
+| WeakAreas no store | **244** |
+| areas canonicas no vocabulario | **23** |
+| **fora do vocabulario** | **111 (45%)** |
+| linhas `wa_vocab/fora` geradas numa consolidacao | **139** |
+
+**A causa NAO e alucinacao do modelo -- e abreviacao.** O vocabulario canonico usa forma curta
+(`Infecto`, `Gastro`, `Hepato`, `Dermato`, `Pneumo`, `Endocrino`, `Hemato`, `Reumato`,
+`Otorrino`) e o Haiku escreve a forma longa. As 8 areas invalidas mais frequentes sao todas
+especialidades **legitimas** em forma nao-abreviada:
+
+```
+10x Infectologia     4x Oncologia        3x Gastroenterologia   3x Emergencias Pediatricas
+ 7x Dermatologia     4x Hepatologia      3x Atencao Primaria    3x Clinica Geral
+```
+
+`_norm` faz casefold + remocao de acento e declara na propria docstring: *"NAO faz substring:
+dois rotulos so casam se forem o MESMO rotulo."* Logo `Infectologia` nunca casa `Infecto`. O
+mismatch e de **forma lexical**, nao de conteudo -- o dado esta certo e e descartado.
+
+**Duas consequencias, ambas na linha de mira do P3.**
+
+1. **O ranking de fraquezas do boot sai enviesado.** O bloco "Areas de fraqueza persistentes
+   (top 8)" -- o sinal mais importante que o agente le no primeiro turno -- e ordenado por
+   `error_count`, que vem de um match **exato** do par `(area, tema)` contra `ipub.db`. Area orfa
+   nunca casa, entao `error_count` fica 0 e a entrada **nunca sobe no ranking**, por real que
+   seja a fraqueza. O top 8 e disputado por 55% do store; os outros 45% sao invisiveis por erro
+   de grafia.
+2. **O log cresce 111-139 linhas por consolidacao, para sempre.** O gate e *recall-safe* por
+   desenho (nunca dropa: normaliza o que mapeia, loga o resto) -- correto como politica, mas
+   ninguem fecha o ciclo, entao os mesmos 111 itens sao re-logados a cada sessao. Isso torna a
+   linha `memory_errors.log: N linha(s)` do painel de DIVIDA **estritamente sem significado**:
+   ela mede quantas vezes o sensor rodou, nao quanta divida existe. Confirma a falha (b) do
+   veredito da s162 (painel conta linha, nao item aberto) com um caso de crescimento ilimitado.
+
+**Sujeira no proprio vocabulario canonico.** As 23 areas incluem `Clinica Medica/Cardiologia`,
+`Clínica Médica` **e** `Cardiologia` como entradas distintas -- a taxonomia tem drift proprio, e
+qualquer mapa de alias tem de ser construido **depois** de sanear isso (`normalize_taxonomia.py`
+e o portador).
+
+**Direcao (nao implementada).** (a) Tabela de alias explicita area-longa -> area-curta em UM
+portador versionado (candidato: `core/` ao lado da taxonomia, nao hardcoded no manager), com
+teste que falhe quando uma area canonica nova entra sem alias; (b) `reconciliar_weak_areas`
+consulta o alias antes de declarar `fora_vocab`; (c) o que sobrar fora do vocabulario apos o
+alias e **divida real** -- vai para um sink idempotente (chave por `item.key`, nao append), para
+o painel poder contar item aberto; (d) sanear as 3 entradas duplicadas do vocabulario primeiro.
+
+**Severidade:** ALTA (degrada o sinal do primeiro turno de toda sessao e polui o unico painel de
+divida que o harness tem).
+
+> **Nota de processo.** A s162 declarou a des-colagem APROVADA e este achado nasceu **no
+> fechamento da mesma sessao**, do painel que a reforma criou, disparado por um hook que a
+> reforma consertou. Nao contradiz o veredito -- ilustra-o: o P1 entregou o orgao sensorial que
+> viu isto, e o F66 e a prova de que o P3 ("o input do boot fica verdadeiro") ficou a meio
+> caminho. F45 consertou o **mecanismo** de reconciliacao; faltou o **dicionario**.

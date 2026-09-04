@@ -1,11 +1,11 @@
 # HANDOFF.md -- ESTADO OPERACIONAL CURTO
-*Atualizado: 2026-09-03 -- S162 (veredito da des-colagem + FSRS 45 cards, blocos 4-6)*
+*Atualizado: 2026-09-03 (noite) -- S163 (boot curto, nao-significativa: Simulado 6 FEITO pelo usuario; autopsia + drenagem na PROXIMA sessao)*
 
 ## > Proximo passo imediato
 
-1. 🔴 **REDRILL em debito 2 sessoes seguidas** -- 10 cards nota 1-2 da s162 (540, 570, 1290, 313, 311, 245, 650, 155, 1416, 1415) + 8 nota 3 + **16 da s161**. E passo OBRIGATORIO do protocolo (`/revisar` §Relearning intra-sessao), nao opcional. Fechar antes de abrir bloco novo.
-2. **Blocos 7-9 do FSRS** -- 43 vencidos restantes zeram a divida. O bloco 7 ja foi servido na s162 e NAO respondido (cards 422, 699, 709, 4, 244, 1354, 122, 485, 459, 1089, 1101, 1117, 706, 558, 297 -- seguem na fila, sem record).
-3. 🎯 **Simulado ENAMED na integra** -- em debito ha 10 dias, prova em 10. Sob `PLAYBOOK_EXECUCAO_PROVA.md`. Retorno: autopsia dos erros.
+1. 🎯 **AUTOPSIA DO SIMULADO 6** (prova real ENAMED, feita 03/09 -- 1a em prova real; anteriores Estrategia: 54/60/66/63). Usuario manda na proxima sessao: placar limpo (sem anuladas) + so as erradas (nº, marcada, gabarito oficial, comentario do ponto obscuro) + acertos na duvida. Ordem: `registrar_sessao_bulk.py --area Simulado --sessao <N>` ANTES dos erros; 1 subagent por lote de ~15 erros; gabarito Estrategia x oficial divergente = banca-dependente, nao lacuna; acertos na duvida -> ledger `incerteza`. Eixo da leitura do usuario: prova real mais facil que o Estrategia -> separar lacuna de conteudo (80%) de erro de execucao em coisa que sabe (20%), e achatar o segundo ate 13/09.
+2. 🔴 **REDRILL em debito 3 sessoes seguidas** -- **26 cards nota 1-2** (17 nota-1 + 9 nota-2, s161+s162) + 17 nota-3 = **43 cards < 4**. Prioridade nos 26 (`/revisar`: priorizar 1-2 sobre 3 quando a fila esta grande). Passo OBRIGATORIO do protocolo (§Relearning intra-sessao), nao opcional. *[numeros derivados de `fsrs_revlog` na s163 -- a cifra "34" digitada a mao na s162 estava errada]*
+3. **Blocos 7-9 do FSRS** -- 43 vencidos restantes zeram a divida. O bloco 7 ja foi servido na s162 e NAO respondido (cards 422, 699, 709, 4, 244, 1354, 122, 485, 459, 1089, 1101, 1117, 706, 558, 297 -- seguem na fila, sem record).
 4. **Inscricao UERJ 2027** -- aberta desde 02/09, fecha **01/10 (23h59)**, Cepuerj, R$ 380 (pgto ate 02/10, 16h). Acao do usuario.
 5. **Grade EMED S17, so os temas ROXOS** ate 13/09: Diarreia (Teoria) -> SUA (Teoria) -> APS (Revisao) -> Diarreia (Revisao) -> Urologia I -> Pneumonias I. As outras 5 tasks da S17 (Cirurgia Vascular Revisao, Vitalidade Fetal, Neoplasias de Estomago e Esofago, Nefrolitiase) **nao entram na janela**.
 6. **Frente MFC (Gusso + Duncan)** -- abre 14/09. Vale 20% da UERJ, lastro zero.
@@ -36,8 +36,8 @@
 **Acertos:** card 1358 (integralidade Starfield x SUS) -- gap que a s161 flagrou NA MESMA MANHA, fechado em horas; card 325 (peritonite dispensa imagem) -- o padrao "instavel = via aberta" que o pegou 3x na s161; card 1096 (endometriose) veio mais completo que o proprio verso.
 
 ## Pendencias/observacoes ativas
-- 🔴 **REDRILL de 34 cards** (10 nota 1-2 + 8 nota 3 da s162 + 16 da s161) -- 2 sessoes em debito.
-- 🎯 **Simulado ENAMED** -- 10 dias em debito, prova em 10 dias.
+- 🔴 **REDRILL de 43 cards < 4** (26 nota 1-2 + 17 nota-3) -- 2 sessoes em debito. Os 17 nota-1 estao em `state=3` (relearning) e sao rastreaveis pelo banco, nao por lista em prosa.
+- 🎯 **Simulado 6 feito (03/09), autopsia PENDENTE** -- entra na proxima sessao com os erros que o usuario enviar.
 - 🔴 **Inscricao UERJ** -- fecha 01/10.
 - 🔴 **F66 (NOVO, descoberto no fechamento):** 45% da memoria de fraquezas (111/244 WeakAreas) e ORFA por ABREVIACAO -- vocabulario canonico usa `Infecto`/`Gastro`/`Hepato`, o Haiku escreve `Infectologia`/`Gastroenterologia`, e `_norm` nao faz substring. O **top 8 de fraquezas do boot** e disputado por so 55% do store, e o log cresce 111-139 linhas por consolidacao pra sempre. Fix = dicionario de alias. **Maior prioridade de engenharia.**
 - 🔬 **F63** (prioridade roxa nao viaja com o repo) · **F64** (gatilho do teto: `atrasados` x `vencidos`; + a sessao cruzou a meia-noite sem nenhum aviso) · **F65** (72 cards em baldes `[bulk]` cegos ao radar de dormencia; `[bulk] Cirurgia` abriga demencia e esclerose multipla).
@@ -48,4 +48,4 @@
 - 🗓️ **Auditoria ampla do banco** -- reforja dos 15 itens da fila; rodar `detect_clones.py` apos reclassificar os `[bulk]`.
 
 ---
-*Historico: history/INDEX.md * Macro: ESTADO.md * Sessao: history/session_162.md*
+*Historico: history/INDEX.md * Macro: ESTADO.md * Sessao: history/session_162.md (s163 = pointer no INDEX, sem log)*

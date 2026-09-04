@@ -662,3 +662,5 @@
 {"ts": "2026-09-01T15:21:43+00:00", "event": "opened", "check": "memory_pointers", "fingerprint": "57265d8029f3", "alvo": "project_decompose_bug_execucao_prova.md::tools/autopsia_template.py", "payload": {}}
 {"ts": "2026-09-02T16:33:58+00:00", "event": "opened", "check": "posicao_ssot", "fingerprint": "01755b5ba8cb", "alvo": "HANDOFF.md", "payload": {"semana_handoff": 17, "semana_db": 16}}
 {"ts": "2026-09-02T20:42:10+00:00", "event": "resolved", "check": "posicao_ssot", "fingerprint": "01755b5ba8cb", "alvo": "HANDOFF.md"}
+{"ts": "2026-09-04T02:52:49+00:00", "event": "opened", "check": "session_pointer", "fingerprint": "a3d15712ce11", "alvo": "HANDOFF.md", "payload": {"pointer": 164, "max_sess": 162, "tipo": "alem_do_max"}}
+{"ts": "2026-09-04T02:53:14+00:00", "event": "resolved", "check": "session_pointer", "fingerprint": "a3d15712ce11", "alvo": "HANDOFF.md"}

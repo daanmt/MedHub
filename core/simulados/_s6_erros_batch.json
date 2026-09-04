@@ -1,0 +1,595 @@
+[
+ {
+  "area": "Cardiologia",
+  "tema": "Insuficiência Cardíaca Pt.2",
+  "titulo": "ICFER sintomatica em IECA: a droga de PROGNOSTICO e a espironolactona, nao o tiazidico",
+  "enunciado": "Mulher de 58 anos, HAS em tratamento irregular, fadiga e dispneia aos esforcos progressivas. Exame: ritmo em 4 tempos (B3 + B4), crepitos em bases, PA 148x90. Ecocardiograma: hipertrofia ventricular esquerda concentrica com fracao de ejecao de 38% (Simpson). Laboratorio normal exceto BNP elevado. Para melhorar o controle da HAS e o prognostico, o IECA foi mantido e o especialista associou determinado farmaco pelo impacto positivo no prognostico de sobrevida. O farmaco introduzido foi",
+  "correta": "espironolactona",
+  "marcada": "clortalidona",
+  "erro": "Erro de aplicacao",
+  "elo": "Ler o comando pelo desfecho pedido (prognostico de sobrevida) e selecionar a classe que reduz mortalidade na ICFER, nao a que apenas controla pressao",
+  "armadilha": "O comando cita 'controle da HAS' antes de 'prognostico': o candidato ancora em anti-hipertensivo (tiazidico) e ignora que FE 38% + BNP + B3 definem ICFER, onde so o quarteto (BB, IECA/ARNI, antagonista mineralocorticoide, iSGLT2) muda sobrevida",
+  "complexidade": "Media",
+  "habilidades": "Reconhecer ICFER pelo conjunto FE <= 40% + BNP + B3/congestao -> Separar drogas que reduzem MORTALIDADE (quarteto) das que so controlam PA/sintoma (tiazidico, hidralazina, clonidina) -> Escolher a classe do quarteto ainda ausente (antagonista mineralocorticoide)",
+  "faltou": "Distinguir, dentro do arsenal da IC, as 4 classes com beneficio de mortalidade (BB, IECA/BRA/ARNI, espironolactona/eplerenona, iSGLT2) das drogas de controle pressorico/sintomatico; o comando 'prognostico de sobrevida' e o filtro",
+  "explicacao": "ICFER (FE <= 40%) sintomatica apesar de IECA: associar antagonista mineralocorticoide (espironolactona) reduz mortalidade e hospitalizacao (RALES/EMPHASIS). Clortalidona controla PA e congestao, sem impacto em mortalidade; hidralazina + nitrato so em intolerantes a IECA/BRA ou negros; clonidina sem beneficio prognostico. Monitorar K e funcao renal.",
+  "cards": [
+   {
+    "tipo": "elo_quebrado",
+    "frente_contexto": "Mulher com ICFER (FE 38%), B3, BNP elevado, sintomatica, ja em uso de IECA.",
+    "frente_pergunta": "Qual classe deve ser associada por reduzir MORTALIDADE nessa paciente?",
+    "verso_resposta": "Antagonista mineralocorticoide (espironolactona ou eplerenona).",
+    "verso_regra_mestre": "Na ICFER, o filtro 'prognostico de sobrevida' seleciona o quarteto: betabloqueador, IECA/BRA/ARNI, antagonista mineralocorticoide e iSGLT2 (indicado com FE <= 40% e sintomas persistentes; monitorar potassio e creatinina).",
+    "verso_armadilha": "O comando cita 'controle da HAS' e induz a clortalidona (tiazidico), que baixa PA e alivia congestao mas nao altera mortalidade na ICFER."
+   },
+   {
+    "tipo": "discriminador",
+    "frente_contexto": "",
+    "frente_pergunta": "Clortalidona (tiazidico) na ICFER: reduz mortalidade ou apenas controla pressao e congestao?",
+    "verso_resposta": "Apenas controla pressao e congestao; nao reduz mortalidade.",
+    "verso_regra_mestre": "Diuretico tiazidico ou de alca na IC e sintomatico/pressorico; beneficio prognostico e exclusivo do quarteto (BB, IECA/ARNI, espironolactona, iSGLT2).",
+    "verso_armadilha": "Paciente hipertensa com IC: o tiazidico parece 'resolver os dois problemas', mas so um dos dois tem beneficio de sobrevida."
+   }
+  ]
+ },
+ {
+  "area": "Cardiologia",
+  "tema": "Hipertensão Arterial Sistêmica",
+  "titulo": "Octogenaria com PA 144-148/86-88 sem confirmacao fora do consultorio: expectante x losartana (banca-dependente)",
+  "enunciado": "Mulher de 82 anos, sem historia previa de hipertensao, preocupada com afericoes: 146x86 (farmacia, 1 semana), 144x88 (unidade, 2 semanas) e 148x88 na consulta. Assintomatica, sem outros agravos em acompanhamento. Qual a abordagem adequada?",
+  "correta": "Realizar uma conduta expectante, sem necessidade de medicamentos, com monitoramento de pressao arterial na unidade.",
+  "marcada": "Prescrever losartana 50 mg, 1 comprimido a noite, com monitoramento da pressao arterial na unidade.",
+  "erro": "Armadilha",
+  "elo": "Exigir confirmacao diagnostica fora do consultorio (MAPA/MRPA) e avaliacao de fragilidade/PA ortostatica antes de medicar HAS estagio 1 em muito idoso assintomatico",
+  "armadilha": "Alternativa C e defensavel (a propria Estrategia a classifica como 'plausivel'; turma dividida 49% x 45%). O gabarito oficial privilegia confirmacao (avental branco, hipotensao postural, quedas) antes de farmaco em octogenaria; banca-dependente, nao lacuna",
+  "complexidade": "Media",
+  "habilidades": "Classificar a PA (estagio 1) -> Reconhecer que 3 medidas em servico de saude sem MAPA/MRPA nao excluem avental branco -> Ponderar fragilidade e risco de hipotensao/queda em >= 80 anos -> Optar por confirmacao + MEV antes de farmaco",
+  "faltou": "Em >= 80 anos com HAS estagio 1 assintomatica e sem confirmacao fora do consultorio, a conduta esperada pela banca e confirmar (MAPA/MRPA, PA ortostatica) e MEV, nao iniciar farmaco",
+  "explicacao": "Gabarito oficial D; Estrategia considera C plausivel. Registro como banca-divergente para o gate de evidencia (SBC 2020: HAS estagio 1 de baixo risco pode iniciar com MEV por 3 meses; muito idosos exigem avaliacao de fragilidade e PA ortostatica).",
+  "status": "banca-divergente"
+ },
+ {
+  "area": "Ginecologia",
+  "tema": "Planejamento Familiar",
+  "titulo": "Enxaqueca com aura contraindica o combinado pelo risco de AVC isquemico, nao por CA de mama familiar",
+  "enunciado": "Adolescente de 15 anos deseja iniciar contracepcao. Refere episodios de enxaqueca com aura. Antecedentes familiares: avo materna com cancer de mama, mae hipertensa, irma diabetica. O uso do contraceptivo combinado esta contraindicado devido ao risco de",
+  "correta": "acidente vascular cerebral",
+  "marcada": "cancer de mama",
+  "erro": "Erro de aplicacao",
+  "elo": "Vincular a contraindicacao (aura = categoria 4) ao desfecho que a justifica: estrogenio + aura multiplicam o risco de AVC isquemico",
+  "armadilha": "O enunciado empilha antecedentes familiares (avo com CA de mama, mae hipertensa, irma diabetica) como distratores; nenhum e contraindicacao (parente de 2o grau nao define alto risco; historia familiar de CA de mama e categoria 1 na OMS). A unica condicao pessoal, a aura, e a que decide",
+  "complexidade": "Baixa",
+  "habilidades": "Separar antecedente PESSOAL de antecedente FAMILIAR na triagem do combinado -> Reconhecer enxaqueca com aura como categoria 4 -> Nomear o desfecho que fundamenta a categoria (AVC isquemico)",
+  "faltou": "O mecanismo da contraindicacao: aura e estrogenio sao fatores independentes de AVC isquemico (risco 2-6x na aura, potencializado pelo combinado); antecedente familiar de CA de mama nao altera a categoria",
+  "explicacao": "Enxaqueca com aura = categoria 4 (OMS) para todo metodo com estrogenio, porque a aura ja eleva 2-6x o risco de AVC isquemico e o estrogenio o potencializa. Historia familiar de CA de mama e categoria 1; so parente de 1o grau < 50 anos define alto risco, e mesmo assim nao e contraindicacao ao combinado.",
+  "cards": [
+   {
+    "tipo": "elo_quebrado",
+    "frente_contexto": "Adolescente com enxaqueca com aura pede contraceptivo; o combinado e categoria 4 para ela.",
+    "frente_pergunta": "Qual desfecho clinico justifica essa contraindicacao?",
+    "verso_resposta": "AVC isquemico (aura e estrogenio sao fatores de risco independentes que se potencializam).",
+    "verso_regra_mestre": "Toda contraindicacao absoluta ao combinado se ancora em um de tres eixos: trombose arterial/venosa, cancer hormonio-dependente ou hepatopatia; a aura pertence ao eixo arterial (AVC).",
+    "verso_armadilha": "Antecedentes familiares empilhados no enunciado (avo com cancer de mama) desviam para o eixo oncologico, que nao se aplica."
+   },
+   {
+    "tipo": "discriminador",
+    "frente_contexto": "",
+    "frente_pergunta": "Avo materna com cancer de mama muda a categoria do contraceptivo combinado para a neta?",
+    "verso_resposta": "Nao: historia familiar de cancer de mama e categoria 1 (OMS 2015).",
+    "verso_regra_mestre": "Alto risco familiar exige parente de 1o grau (mae ou irma) com diagnostico antes dos 50 anos, e ainda assim nao contraindica o combinado; so cancer de mama ATUAL e categoria 4.",
+    "verso_armadilha": "Confundir 'avo com cancer de mama' com contraindicacao; o dado e distrator, nao criterio."
+   }
+  ]
+ },
+ {
+  "area": "Preventiva",
+  "tema": "Vigilância em Saúde",
+  "titulo": "Manejo integrado de vetores (MIV): ciclo analise situacional -> planejamento -> implementacao -> monitoramento -> avaliacao",
+  "enunciado": "O virus Chikungunya e transmitido pelo Aedes sp. As acoes de controle do Aedes incluem o manejo integrado de vetores, que envolve atividades executadas pela equipe de vigilancia do territorio em um processo ciclico, tais como",
+  "correta": "analise situacional com base em informacoes epidemiologicas e entomologicas, desenho das operacoes de planificacao, implementacao, monitoramento e avaliacao",
+  "marcada": "levantamento do indice larvario, notificacao de vetores infectados e avaliacao dos indicadores entomologicos e epidemiologicos",
+  "erro": "Lacuna de conhecimento",
+  "elo": "Reconhecer o MIV como ciclo de gestao (analise situacional epi + entomo, planejamento, implementacao, monitoramento, avaliacao), distinto dos instrumentos de vigilancia entomologica (LIRAa/indices)",
+  "armadilha": "A alternativa A mistura um instrumento real (indice larvario/LIRAa) com um item inexistente ('notificacao de vetores infectados'); quem nao conhece o texto do MS valida pela metade verdadeira",
+  "complexidade": "Baixa",
+  "habilidades": "Distinguir vigilancia entomologica (LIRAa: IIP, ITR, Breteau) de manejo integrado de vetores (ciclo decisorio) -> Rotular cada item da alternativa como existente ou inventado",
+  "faltou": "Definicao do MS: MIV e processo ciclico de tomada de decisao para controle populacional de vetores, com as etapas analise situacional, desenho de operacoes/planejamento, implementacao, monitoramento e avaliacao; uso racional (nao intensivo) de inseticida",
+  "explicacao": "Segundo o MS, o manejo integrado de vetores obedece a um processo ciclico: analise situacional com dados epidemiologicos e entomologicos, desenho das operacoes e planejamento, implementacao, monitoramento e avaliacao. Nao existe 'notificacao de vetores infectados'; inseticida e usado racionalmente (resistencia e exposicao ocupacional).",
+  "cards": [
+   {
+    "tipo": "elo_quebrado",
+    "frente_contexto": "Equipe de vigilancia planeja o controle do Aedes no territorio segundo o Ministerio da Saude.",
+    "frente_pergunta": "O manejo integrado de vetores (MIV) e definido como que tipo de processo?",
+    "verso_resposta": "Um processo ciclico de tomada de decisao: analise situacional (dados epidemiologicos + entomologicos), planejamento, implementacao, monitoramento e avaliacao.",
+    "verso_regra_mestre": "MIV = ciclo de gestao (decidir com base em dados); LIRAa/indices larvarios sao o INSUMO entomologico que alimenta a analise situacional, nao o ciclo em si.",
+    "verso_armadilha": "Alternativa que cita 'levantamento do indice larvario' + 'notificacao de vetores infectados': o segundo item nao existe na vigilancia."
+   },
+   {
+    "tipo": "discriminador",
+    "frente_contexto": "",
+    "frente_pergunta": "No manejo integrado de vetores, o uso de inseticida deve ser intensivo ou racional?",
+    "verso_resposta": "Racional: uso criterioso, nunca intensivo.",
+    "verso_regra_mestre": "Uso intensivo seleciona mosquitos resistentes (piretroides) e expoe os agentes de endemias; o MIV prioriza controle mecanico/ambiental e inseticida dirigido.",
+    "verso_armadilha": "'Uso intensivo de inseticidas' aparece misturado a acoes corretas (treinamento, mutirao, pontos estrategicos) para invalidar a alternativa."
+   }
+  ]
+ },
+ {
+  "area": "Pediatria",
+  "tema": "Transtorno de Déficit de Atenção e Hiperatividade (TDAH)",
+  "titulo": "Metilfenidato: monitorar peso, estatura e PA/FC; efetividade e avaliada clinicamente",
+  "enunciado": "Crianca de 9 anos com TDAH ha 2 anos, em metilfenidato ha pelo menos 1 ano, com grande melhora escolar; o pai pede que o uso seja estendido. Quais estrategias de monitoramento referentes ao uso dessa medicacao devem ser utilizadas?",
+  "correta": "Agendar consultas periodicas para verificacao da estatura, peso e pressao arterial, com nova avaliacao para retirada apos 1 ano.",
+  "marcada": "Acompanhar com testes psicodinamicos parametros de atencao e desempenho escolar, a fim de avaliar a efetividade da estimulacao farmacologica.",
+  "erro": "Lacuna de conhecimento",
+  "elo": "Derivar o monitoramento do perfil de efeitos adversos do psicoestimulante: anorexigeno (peso/estatura) e noradrenergico (PA/FC), com reavaliacao periodica da necessidade",
+  "armadilha": "Alternativa B soa cientifica (testes de atencao para medir efetividade), mas testagem apoia o DIAGNOSTICO; a eficacia do tratamento e clinica (relato de escola e familia). Alternativa A inverte o efeito (o estimulante causa PERDA de peso, nao ganho)",
+  "complexidade": "Baixa",
+  "habilidades": "Conhecer os efeitos adversos dos psicoestimulantes (anorexia, perda de peso, elevacao de PA/FC) -> Traduzir efeito adverso em parametro de monitoramento (peso, estatura, PA) -> Saber que eficacia se mede clinicamente, nao por testes",
+  "faltou": "Psicoestimulantes (metilfenidato, lisdexanfetamina) tem efeito anorexigeno e noradrenergico: monitorar peso, estatura, PA e FC em consultas periodicas e reavaliar a retirada anualmente; testes neuropsicologicos servem ao diagnostico",
+  "explicacao": "O metilfenidato (1a linha a partir dos 6 anos) causa anorexia/perda de peso, com risco de prejuizo ao crescimento em uso prolongado, e discreta elevacao de PA e FC por efeito noradrenergico. O monitoramento e antropometrico e pressorico, com reavaliacao periodica da necessidade de manter a droga. A efetividade e avaliada clinicamente; escalas (SNAP-IV) e testes apoiam o diagnostico.",
+  "cards": [
+   {
+    "tipo": "elo_quebrado",
+    "frente_contexto": "Crianca de 9 anos em uso continuo de metilfenidato para TDAH, com boa resposta escolar.",
+    "frente_pergunta": "Quais parametros devem ser verificados nas consultas periodicas de monitoramento da droga?",
+    "verso_resposta": "Peso, estatura e pressao arterial (com frequencia cardiaca), reavaliando anualmente a necessidade de manter.",
+    "verso_regra_mestre": "O monitoramento espelha os efeitos adversos do psicoestimulante: anorexigeno (peso e crescimento) e noradrenergico (PA e FC).",
+    "verso_armadilha": "Alternativa que propoe seguir 'aumento de peso e dislipidemia' inverte o efeito: o estimulante emagrece."
+   },
+   {
+    "tipo": "discriminador",
+    "frente_contexto": "",
+    "frente_pergunta": "A efetividade do metilfenidato no TDAH e avaliada por testes neuropsicologicos ou clinicamente?",
+    "verso_resposta": "Clinicamente, pelo relato funcional de escola e familia.",
+    "verso_regra_mestre": "Testes psicodinamicos/neuropsicologicos e escalas (SNAP-IV) APOIAM o diagnostico; a resposta ao tratamento se mede no funcionamento diario.",
+    "verso_armadilha": "Alternativa que propoe 'testes psicodinamicos para avaliar a efetividade da estimulacao farmacologica' troca a ferramenta diagnostica pela de seguimento."
+   }
+  ]
+ },
+ {
+  "area": "Neurologia",
+  "tema": "Epilepsias",
+  "titulo": "West + manchas hipomelanoticas + astrocitoma subependimario de celulas gigantes = esclerose tuberosa (nao neurofibromatose)",
+  "enunciado": "Lactente de 9 meses com crises ha 3 meses: espasmos em flexao dos membros superiores sobre o tronco, semelhantes a sustos, nos horarios de maior sonolencia. Gestacao e parto normais. Interage com o observador mas nao consegue ficar sentado. Varias manchas hipomelanoticas em membros inferiores e tronco. RM de cranio: duas areas compativeis com astrocitomas de celulas gigantes subependimarias. A principal hipotese diagnostica e",
+  "correta": "esclerose tuberosa",
+  "marcada": "neurofibromatose",
+  "erro": "Lacuna de conhecimento",
+  "elo": "Mapear o marcador cutaneo a facomatose correta: manchas HIPOMELANOTICAS (folha de freixo) + SEGA/tuberes = esclerose tuberosa; manchas cafe-com-leite + neurofibromas + nodulos de Lisch = neurofibromatose tipo 1",
+  "armadilha": "As duas facomatoses cursam com manchas e epilepsia; o candidato que nao fixou qual mancha pertence a qual doenca chuta a mais famosa (NF1). O SEGA (astrocitoma subependimario de celulas gigantes) e criterio maior exclusivo da esclerose tuberosa",
+  "complexidade": "Media",
+  "habilidades": "Reconhecer sindrome de West (espasmos em salvas + regressao do DNPM em lactente) -> Buscar a etiologia nos marcadores cutaneos e de imagem -> Discriminar esclerose tuberosa (hipomelanotica, SEGA, nodulos subependimarios, rabdomioma) de NF1 (cafe-com-leite, neurofibromas, Lisch) -> Saber que West por esclerose tuberosa prefere vigabatrina",
+  "faltou": "Criterios maiores da esclerose tuberosa (>= 3 manchas hipomelanoticas >= 5 mm, angiofibromas faciais, placa de Shagreen, nodulos subependimarios, SEGA, rabdomioma cardiaco, angiomiolipoma renal, hamartoma retiniano; definitivo = 2 maiores) e o par cutaneo hipomelanotica (ET) x cafe-com-leite (NF1)",
+  "explicacao": "Espasmos infantis com regressao do DNPM em lactente = sindrome de West; a etiologia e dada pelos marcadores: manchas hipomelanoticas + astrocitoma subependimario de celulas gigantes sao 2 criterios maiores, definindo esclerose tuberosa (TSC1/TSC2). NF1 tem manchas cafe-com-leite, neurofibromas e nodulos de Lisch. West por esclerose tuberosa: vigabatrina de escolha (ACTH/corticoide nas demais etiologias, ex. encefalopatia hipoxico-isquemica).",
+  "cards": [
+   {
+    "tipo": "elo_quebrado",
+    "frente_contexto": "Lactente com espasmos em flexao (sindrome de West), manchas hipomelanoticas no tronco e RM com astrocitomas subependimarios de celulas gigantes.",
+    "frente_pergunta": "Qual facomatose explica o quadro?",
+    "verso_resposta": "Esclerose tuberosa (variantes em TSC1/TSC2).",
+    "verso_regra_mestre": "Manchas hipomelanoticas + SEGA sao 2 criterios maiores = diagnostico definitivo; esclerose tuberosa e causa classica de West, ao lado da encefalopatia hipoxico-isquemica.",
+    "verso_armadilha": "Neurofibromatose tambem da manchas e epilepsia, mas suas manchas sao cafe-com-leite e nao ha SEGA."
+   },
+   {
+    "tipo": "discriminador",
+    "frente_contexto": "",
+    "frente_pergunta": "Manchas hipomelanoticas x manchas cafe-com-leite: qual mancha pertence a qual facomatose?",
+    "verso_resposta": "Hipomelanoticas (folha de freixo) = esclerose tuberosa; cafe-com-leite = neurofibromatose tipo 1.",
+    "verso_regra_mestre": "O eixo e a cor da mancha: hipopigmentada aponta esclerose tuberosa; hiperpigmentada aponta NF1 (com neurofibromas e nodulos de Lisch).",
+    "verso_armadilha": "Lactente com manchas no tronco e crises: a primeira facomatose que vem a cabeca e a neurofibromatose, mas a cor da mancha decide."
+   },
+   {
+    "tipo": "discriminador",
+    "frente_contexto": "Sindrome de West em lactente.",
+    "frente_pergunta": "Em qual etiologia a vigabatrina passa a frente do ACTH/corticoide como droga de escolha?",
+    "verso_resposta": "Quando a causa e esclerose tuberosa.",
+    "verso_regra_mestre": "West por encefalopatia hipoxico-isquemica e outras etiologias: ACTH ou corticoide; West por esclerose tuberosa: vigabatrina (risco de constricao do campo visual).",
+    "verso_armadilha": "Responder 'ACTH' para todo West ignora a excecao etiologica mais cobrada."
+   }
+  ]
+ },
+ {
+  "area": "Ginecologia",
+  "tema": "Vulvovaginites",
+  "titulo": "Prurido + corrimento branco + aminas NEGATIVO + diabetes + antibiotico recente = candidiase (miconazol), nao vaginose (metronidazol)",
+  "enunciado": "Mulher de 35 anos, diabetica, com laqueadura, queixa de prurido genital e disuria terminal ha 7 dias; uso recente de antibiotico para abscesso dental. Exame especular: edema vulvar, hiperemia, fissura, corrimento esbranquicado e teste das aminas negativo. Com base no agente etiologico mais provavel, o tratamento e",
+  "correta": "miconazol, 1 aplicador, via vaginal, por 7 noites",
+  "marcada": "metronidazol, 1 aplicador, via vaginal, por 10 noites",
+  "erro": "Erro de aplicacao",
+  "elo": "Ler o teste das aminas NEGATIVO como dado que EXCLUI vaginose e tricomoniase, e o antibiotico recente + diabetes como fatores de risco de Candida (nao de vaginose)",
+  "armadilha": "'Antibiotico recente' e lido como 'disbiose = vaginose', quando o antibiotico elimina lactobacilos e favorece o FUNGO; o teste das aminas negativo, o prurido com inflamacao (edema, fissura) e o corrimento branco sem odor fecham candidiase. Metronidazol e o reflexo reincidente do usuario para corrimento (fraqueza catalogada no top-8)",
+  "complexidade": "Media",
+  "habilidades": "Rotular o teste das aminas: positivo = VB/trico, negativo = candida (ou citolitica/aerobia) -> Associar fatores de risco (diabetes, antibiotico, gravidez, corticoide) a candidiase -> Reconhecer o padrao inflamatorio pruriginoso (edema, fissura, corrimento branco grumoso) -> Prescrever azolico (miconazol vaginal 7 noites ou fluconazol VO)",
+  "faltou": "Teste das aminas NEGATIVO exclui vaginose bacteriana e tricomoniase; antibioticoterapia recente predispoe a candidiase (mata lactobacilos, o fungo prolifera), nao a vaginose",
+  "explicacao": "Candidiase vulvovaginal: prurido, ardor/disuria, corrimento branco grumoso inodoro, hiperemia, edema e fissuras; pH < 4,5; teste das aminas negativo. Fatores de risco: diabetes, antibiotico recente, gravidez, imunossupressao. Tratamento: miconazol creme 2% vaginal por 7 noites (ou nistatina 14 noites, ou fluconazol 150 mg VO dose unica). Metronidazol vaginal e para vaginose (5 noites) e o teste das aminas negativo a exclui.",
+  "cards": [
+   {
+    "tipo": "elo_quebrado",
+    "frente_contexto": "",
+    "frente_pergunta": "Antibiotico sistemico recente predispoe a qual vulvovaginite: candidiase ou vaginose bacteriana?",
+    "verso_resposta": "Candidiase (o antibiotico elimina os lactobacilos e o fungo prolifera).",
+    "verso_regra_mestre": "Fatores de risco de candida: antibiotico, diabetes, gravidez, corticoide/imunossupressao; vaginose e disbiose por anaerobios ligada a coito/duchas, nao a antibiotico.",
+    "verso_armadilha": "Ler 'uso recente de antibiotico' como 'disbiose = vaginose' e prescrever metronidazol, 1 aplicador, via vaginal; o antibiotico empurra para o fungo."
+   },
+   {
+    "tipo": "discriminador",
+    "frente_contexto": "",
+    "frente_pergunta": "Teste das aminas (whiff) NEGATIVO em mulher com corrimento: quais das tres vulvovaginites classicas ele exclui?",
+    "verso_resposta": "Vaginose bacteriana e tricomoniase (sobra a candidiase, confirmada por pH < 4,5 e prurido inflamatorio).",
+    "verso_regra_mestre": "O whiff e o divisor: positivo = aminas de anaerobios (VB, trico); negativo = candida, vaginite aerobia ou citolitica.",
+    "verso_armadilha": "Diabetica com corrimento e antibiotico recente: o reflexo 'metronidazol' ignora o dado que exclui vaginose (aminas negativo)."
+   }
+  ]
+ },
+ {
+  "area": "Hemato",
+  "tema": "Hemostasia I",
+  "titulo": "Trombofilia hereditaria: proteina S/C e antitrombina REDUZIDAS (freios deficientes); fator V de Leiden = presenca de fator resistente",
+  "enunciado": "Mulher de 35 anos com TVP ha 2 anos, tratada com anticoagulante oral por tempo limitado, alta ha 1 ano, sem investigacao adicional. Nos ultimos 6 meses, pai e irma tiveram trombose. O medico solicita rastreio de hipercoagulabilidade primaria. Qual alteracao laboratorial e compativel com a suspeita de doenca hereditaria?",
+  "correta": "Presenca de Fator V de Leiden.",
+  "marcada": "Niveis aumentados de proteina S.",
+  "erro": "Erro de aplicacao",
+  "elo": "Fixar a direcao pelo mecanismo: proteina C, proteina S e antitrombina sao ANTICOAGULANTES naturais; trombofilia hereditaria = deficiencia (niveis reduzidos), enquanto o fator V de Leiden e o unico marcado por PRESENCA (fator V resistente a proteina C ativada)",
+  "armadilha": "Alternativas B e C invertem a direcao ('niveis aumentados' de proteina S / antitrombina); quem decora 'proteina S = trombofilia' sem o mecanismo marca a inversao. D (FvW reduzido) e doenca hemorragica, nao trombofilia",
+  "complexidade": "Baixa",
+  "habilidades": "Classificar cada proteina como acelerador ou freio da coagulacao -> Deduzir que trombofilia = freio reduzido ou acelerador resistente -> Reconhecer o fator V de Leiden como a trombofilia hereditaria mais comum",
+  "faltou": "Direcao do marcador: deficiencia (nao aumento) de proteina C, proteina S e antitrombina causa trombose; fator V de Leiden = fator V mutado resistente a inativacao pela proteina C ativada, a trombofilia hereditaria mais comum",
+  "explicacao": "Trombofilias hereditarias: fator V de Leiden (mais comum, resistencia a proteina C ativada), mutacao G20210A da protrombina, deficiencias de proteina C, proteina S e antitrombina. Testar TEV com parente de 1o grau < 45 anos, recorrencia ou sitio incomum. Niveis AUMENTADOS de proteina S ou antitrombina nao sao trombofilia; FvW reduzido e doenca hemorragica.",
+  "cards": [
+   {
+    "tipo": "elo_quebrado",
+    "frente_contexto": "Investigacao de trombofilia hereditaria em mulher jovem com TVP e familiares com trombose.",
+    "frente_pergunta": "Nas trombofilias hereditarias, proteina C, proteina S e antitrombina estao aumentadas ou reduzidas?",
+    "verso_resposta": "Reduzidas (deficiencia): sao os freios naturais da coagulacao, e freio a menos = trombose.",
+    "verso_regra_mestre": "Direcao pelo mecanismo: trombofilia = freio deficiente (proteina C/S/antitrombina reduzidas) ou acelerador que nao freia (fator V de Leiden resistente a proteina C ativada).",
+    "verso_armadilha": "Alternativa com 'niveis aumentados de proteina S' inverte a direcao; quem decora o nome sem a funcao marca o aumento."
+   },
+   {
+    "tipo": "discriminador",
+    "frente_contexto": "",
+    "frente_pergunta": "Qual e a trombofilia hereditaria mais comum?",
+    "verso_resposta": "Fator V de Leiden (fator V mutado, resistente a inativacao pela proteina C ativada).",
+    "verso_regra_mestre": "E a unica trombofilia hereditaria descrita como PRESENCA de algo (a mutacao); as demais sao deficiencias (proteina C, S, antitrombina) ou excesso de protrombina (G20210A).",
+    "verso_armadilha": "Confundir com doenca de von Willebrand (FvW reduzido), que e hemorragica, nao trombotica."
+   }
+  ]
+ },
+ {
+  "area": "Endocrino",
+  "tema": "Diabetes Mellitus - Complicações Agudas",
+  "titulo": "CAD pediatrica: apos o fluido vem o POTASSIO, nunca 'correcao imediata da glicemia' (reincidencia do gate do K)",
+  "enunciado": "Menina de 11 anos na UPA com queda do estado geral, nauseas, dor abdominal, desidratacao e halito cetonico. Glicemia 410 mg/dL; gasometria venosa pH 7,15 e bicarbonato 13 mEq/L; cetonuria. Alem da fluidoterapia, o proximo passo e",
+  "correta": "reposicao de potassio",
+  "marcada": "correcao imediata da glicemia",
+  "erro": "Erro de aplicacao",
+  "elo": "Executar a sequencia da CAD: expansao volemica -> avaliar/repor potassio -> insulina (so com K >= 3,3, sem bolus na crianca); insulina nunca e 'correcao imediata'",
+  "armadilha": "A glicemia de 410 e o dado saliente e a alternativa B oferece 'corrigir a glicemia' como se fosse a urgencia; mas insulina antes do potassio pode precipitar hipocalemia fatal. Gabarito oficial A (Estrategia defende anulacao por faltar o K serico); a marcada e errada sob as duas leituras",
+  "complexidade": "Media",
+  "habilidades": "Diagnosticar CAD (glicemia > 200-250 + pH < 7,3/HCO3 < 15 + cetose) -> Aplicar a ordem de pilares: fluido, potassio, insulina, (bicarbonato quase proscrito na crianca), fator precipitante -> Reconhecer que a insulina entra apos o potassio e nunca em bolus na crianca",
+  "faltou": "A ordem fluido -> potassio -> insulina e um gate: insulina desloca K para dentro da celula num paciente com K corporal depletado; na CAD pediatrica a insulina (0,1 U/kg/h sem bolus) so comeca apos a expansao inicial e com K >= 3,3 (ISPAD 2022)",
+  "explicacao": "Manejo da CAD pediatrica (ISPAD 2022 / SBP): 1) expansao com SF 0,9% 10-20 mL/kg; 2) avaliar potassio e repor (K < 3,5: adiar insulina; 3,5-5,5: repor junto; > 5,5: insulina e reavaliar); 3) insulina regular 0,1 U/kg/h em BIC, sem bolus, iniciada 1 h apos o inicio da hidratacao; 4) bicarbonato praticamente proscrito (edema cerebral); 5) tratar o precipitante. A Estrategia defende anulacao por ausencia do K serico, mas 'correcao imediata da glicemia' e incorreta em qualquer leitura.",
+  "cards": [
+   {
+    "tipo": "elo_quebrado",
+    "frente_contexto": "Crianca em cetoacidose diabetica (glicemia 410, pH 7,15, HCO3 13), expansao volemica ja iniciada.",
+    "frente_pergunta": "Qual e o passo seguinte da sequencia terapeutica, antes da insulina?",
+    "verso_resposta": "Avaliar e repor o potassio (ISPAD 2022: insulina so apos a expansao inicial, com K >= 3,3, em infusao continua sem bolus).",
+    "verso_regra_mestre": "Ordem fixa da CAD: fluido, potassio, insulina, precipitante; o potassio e um portao que a insulina nao atravessa sem checagem.",
+    "verso_armadilha": "A alternativa 'correcao imediata da glicemia' usa o dado mais saliente (410 mg/dL) para inverter a ordem; hiperglicemia nao mata em minutos, hipocalemia mata."
+   },
+   {
+    "tipo": "mecanismo",
+    "frente_contexto": "",
+    "frente_pergunta": "Por que a insulina so entra depois do potassio na cetoacidose diabetica?",
+    "verso_resposta": "Porque a insulina empurra o potassio para dentro da celula num paciente ja com deficit corporal total de K, podendo causar hipocalemia grave e arritmia.",
+    "verso_regra_mestre": "Na CAD o K serico pode parecer normal ou alto (acidose desloca K para fora), mas o estoque corporal esta depletado; insulina + correcao da acidose derrubam o K.",
+    "verso_armadilha": "Ler 'K serico normal' como 'nao precisa repor' ou insulinizar antes de conhecer o potassio."
+   }
+  ]
+ },
+ {
+  "area": "Ginecologia",
+  "tema": "Rastreamento do Câncer de Colo do Útero",
+  "titulo": "ASC-H na citologia vai para colposcopia; conizacao so apos histologia (pulou o degrau diagnostico)",
+  "enunciado": "Mulher de 30 anos com citologia oncotica mostrando atipias de celulas escamosas de significado indeterminado, nao podendo afastar alto grau (ASC-H). Nega tabagismo e IST previa. A conduta adequada e a realizacao de",
+  "correta": "colposcopia",
+  "marcada": "conizacao",
+  "erro": "Erro de aplicacao",
+  "elo": "Respeitar a escada: citologia (rastreio) -> colposcopia + biopsia (diagnostico) -> tratamento excisional (apos histologia); ASC-H, HSIL, AGC e AIS vao para colposcopia, nunca direto para conizacao",
+  "armadilha": "'Nao se pode afastar alto grau' soa como 'alto grau confirmado' e induz a pular para o tratamento (conizacao, 2% da turma); mas ASC-H e resultado citologico, e conizacao/EZT exige NIC 2/3 na histologia (excecao: ver-e-tratar em HSIL com achados maiores na colposcopia)",
+  "complexidade": "Baixa",
+  "habilidades": "Classificar o resultado citologico por risco (ASC-US/LSIL = repetir; ASC-H/HSIL/AGC/AIS = colposcopia) -> Distinguir etapa diagnostica (colposcopia + biopsia) de etapa terapeutica (EZT/conizacao) -> Aplicar a conduta do no ASC-H",
+  "faltou": "ASC-H (12-68% de HSIL e 1-3% de cancer na histologia) = colposcopia em qualquer idade (INCA 2016); procedimento excisional so apos confirmacao histologica de NIC 2/3 ou microinvasao",
+  "explicacao": "Diretriz INCA 2016: todo ASC-H vai para colposcopia. Com JEC visivel e achados maiores, biopsia (excisao tipo 1/2 aceitavel); sem achados ou ZT tipo 3, investigar canal e seguir. Conizacao e conduta para NIC 2/3 confirmada ou suspeita de microinvasao na biopsia; CAF trata lesao de alto grau confirmada. Repetir citologia em 6 meses e conduta de ASC-US/LSIL, nao de ASC-H.",
+  "cards": [
+   {
+    "tipo": "elo_quebrado",
+    "frente_contexto": "Mulher de 30 anos com citologia ASC-H (atipia escamosa que nao afasta alto grau).",
+    "frente_pergunta": "Qual e o proximo passo?",
+    "verso_resposta": "Colposcopia, em qualquer idade (INCA 2016).",
+    "verso_regra_mestre": "ASC-H/HSIL/AGC/AIS = colposcopia; ASC-US/LSIL >= 25 anos = repetir citologia em 6 meses. O 'nao afasta alto grau' escala para diagnostico, nao para tratamento.",
+    "verso_armadilha": "Marcar conizacao: e tratamento e exige histologia (NIC 2/3 ou microinvasao) confirmada por biopsia colposcopica."
+   },
+   {
+    "tipo": "discriminador",
+    "frente_contexto": "",
+    "frente_pergunta": "Conizacao ou exerese da zona de transformacao e indicada a partir de qual tipo de resultado: citologico ou histologico?",
+    "verso_resposta": "Histologico (NIC 2/3 ou microinvasao confirmada por biopsia).",
+    "verso_regra_mestre": "A escada nao pula degrau: citologia rastreia, colposcopia com biopsia diagnostica, excisao trata; o unico atalho e o ver-e-tratar em HSIL com achados colposcopicos maiores.",
+    "verso_armadilha": "ASC-H ou HSIL na CITOLOGIA lidos como indicacao direta de conizacao ou CAF."
+   }
+  ]
+ },
+ {
+  "area": "Preventiva",
+  "tema": "Vigilância em Saúde",
+  "titulo": "Surto de escabiose em presidio superlotado: bloqueio coletivo simultaneo + notificar surto + intersetorial (nao isolamento individual)",
+  "enunciado": "Agentes penitenciarios informam aumento de prurido intenso e lesoes cutaneas entre pessoas privadas de liberdade; celas previstas para 35 pessoas com 75. As acoes prioritarias no manejo adequado dessa situacao sao",
+  "correta": "implementar bloqueio coletivo com tratamento simultaneo, notificar o surto ao servico de vigilancia em saude, reorganizar fluxos com a administracao prisional e planejar medidas educativas e estruturais",
+  "marcada": "solicitar o isolamento imediato dos casos sintomaticos, iniciar tratamento individual conforme avaliacao clinica, recomendar higienizacao de colchoes e ampliar o fornecimento de sabao e escovas pessoais",
+  "erro": "Lacuna de conhecimento",
+  "elo": "Trocar a logica clinica individual (isolar e tratar o sintomatico) pela logica de surto em coletividade fechada: tratar TODOS os contatos ao mesmo tempo (bloqueio), porque a escabiose transmite durante a incubacao de 2-6 semanas",
+  "armadilha": "Isolamento + tratamento individual e a resposta intuitiva de consultorio; em surto de escabiose ela perpetua a reinfestacao (assintomatico em incubacao continua transmitindo). Escabiose nao e de notificacao compulsoria, mas SURTO e notificado",
+  "complexidade": "Media",
+  "habilidades": "Reconhecer escabiose (prurido intenso noturno + lesoes em dobras) em coletividade -> Reconhecer surto (elevacao subita de casos em espaco restrito) -> Aplicar controle de surto: bloqueio coletivo simultaneo, notificacao, articulacao intersetorial (PNAISP), medidas estruturais",
+  "faltou": "Manejo de surto de escabiose em ambiente fechado: tratamento simultaneo de todos os expostos (ivermectina VO ou permetrina 5%, repetir em 7-10 dias), roupas/roupas de cama em agua >= 55 graus, notificacao do surto a vigilancia, reorganizacao com a administracao prisional",
+  "explicacao": "Surto de escabiose em presidio (superlotacao, contato pele a pele, roupas compartilhadas): bloqueio coletivo com tratamento simultaneo de todos os contatos (ivermectina dose unica repetida em 7-10 dias; permetrina 5% em < 15 kg, gestantes e lactantes conforme restricoes), lavagem de roupas em agua quente, notificacao do surto a vigilancia (notas tecnicas estaduais), reorganizacao de fluxos com a administracao (PNAISP) e medidas educativas/estruturais. Isolamento e tratamento so dos sintomaticos falham pela transmissao na incubacao de 2-6 semanas.",
+  "cards": [
+   {
+    "tipo": "elo_quebrado",
+    "frente_contexto": "Surto de prurido intenso e lesoes cutaneas em presidio com 214% de lotacao.",
+    "frente_pergunta": "Trata-se apenas os sintomaticos ou todos os expostos?",
+    "verso_resposta": "Todos os expostos, simultaneamente (bloqueio coletivo), com repeticao em 7-10 dias.",
+    "verso_regra_mestre": "Escabiose transmite durante a incubacao de 2-6 semanas: o assintomatico reinfesta o tratado; surto em coletividade fechada pede logica populacional, nao de consultorio.",
+    "verso_armadilha": "Alternativa de 'isolamento imediato dos sintomaticos + tratamento individual' e a resposta clinica intuitiva que perpetua o surto."
+   },
+   {
+    "tipo": "discriminador",
+    "frente_contexto": "",
+    "frente_pergunta": "Escabiose e agravo de notificacao compulsoria?",
+    "verso_resposta": "Nao; mas SURTO de escabiose deve ser notificado a vigilancia em saude (notas tecnicas estaduais).",
+    "verso_regra_mestre": "Doenca individual sem notificacao nacional; a elevacao subita de casos em espaco restrito (surto) e o que dispara a notificacao e a resposta coordenada.",
+    "verso_armadilha": "Descartar a alternativa correta por conter 'notificar o surto', achando que escabiose nunca se notifica."
+   }
+  ]
+ },
+ {
+  "area": "Ginecologia",
+  "tema": "Rastreamento do Câncer de Colo do Útero",
+  "titulo": "LSIL em mulher de 32 anos: repetir citologia em 6 meses, nao colposcopia (escalou um degrau)",
+  "enunciado": "Mulher de 32 anos, sexualmente ativa, faz o primeiro preventivo com o medico de familia; resultado apos 3 semanas: lesao intraepitelial de baixo grau (LSIL). Qual e a conduta adequada?",
+  "correta": "Repetir o exame citopatologico em 6 meses.",
+  "marcada": "Encaminhar para a realizacao de colposcopia.",
+  "erro": "Erro de aplicacao",
+  "elo": "Aplicar o no LSIL >= 25 anos: repetir citologia em 6 meses; colposcopia so se a repeticao mantiver alteracao (LSIL tem alta regressao e o ver-e-tratar e inaceitavel)",
+  "armadilha": "'Primeiro preventivo' + 'lesao' induzem a escalar para colposcopia; mas LSIL e a expressao citologica da infeccao pelo HPV, com alto potencial de regressao: conduta conservadora (repetir em 6 meses se >= 25 anos; 3 anos se < 25). Reincidencia em direcao oposta ao erro de LSIL < 25 anos (ja drilado)",
+  "complexidade": "Baixa",
+  "habilidades": "Classificar LSIL como baixo grau (equivalente citologico de NIC 1, alta regressao) -> Aplicar a regra por idade (< 25: repetir em 3 anos; >= 25: repetir em 6 meses) -> Reservar colposcopia para persistencia ou resultado mais grave",
+  "faltou": "LSIL em >= 25 anos = repetir citologia em 6 meses (INCA 2016); duas negativas consecutivas devolvem ao rastreio trienal; uma positiva no periodo de 1 ano encaminha a colposcopia. Colposcopia imediata e conduta de HSIL/ASC-H/AGC",
+  "explicacao": "Diretriz INCA 2016: LSIL em mulher >= 25 anos, repetir citopatologico em 6 meses (tratar antes infeccao ou atrofia); se 2 exames seguidos negativos, rastreio trienal; se qualquer repeticao positiva, colposcopia. Abaixo de 25 anos, repetir em 3 anos. Imunossuprimida vai a colposcopia ja no 1o exame alterado.",
+  "cards": [
+   {
+    "tipo": "elo_quebrado",
+    "frente_contexto": "Mulher de 32 anos, primeiro preventivo, citologia com lesao intraepitelial de baixo grau.",
+    "frente_pergunta": "Qual e a conduta?",
+    "verso_resposta": "Repetir a citologia em 6 meses (INCA 2016); colposcopia apenas se a repeticao vier alterada.",
+    "verso_regra_mestre": "LSIL = HPV com alta regressao: conduta conservadora; a idade so muda o intervalo (< 25 anos: 3 anos; >= 25: 6 meses).",
+    "verso_armadilha": "'Primeiro exame' e 'lesao' nao escalam a conduta; encaminhar para a realizacao de colposcopia e o degrau de HSIL, ASC-H e AGC."
+   },
+   {
+    "tipo": "discriminador",
+    "frente_contexto": "",
+    "frente_pergunta": "Na citologia cervical, o que separa 'repetir a citologia' de 'ir para colposcopia'?",
+    "verso_resposta": "O grau: ASC-US e LSIL repetem citologia; ASC-H, HSIL, AGC, AIS e celulas de origem indefinida vao para colposcopia.",
+    "verso_regra_mestre": "Baixo grau = vigiar (regride); alto grau ou suspeita de alto grau = diagnosticar (colposcopia + biopsia); tratar so apos histologia.",
+    "verso_armadilha": "Escalar LSIL para colposcopia e ASC-H para conizacao: mesma direcao de erro, um degrau a mais em cada."
+   }
+  ]
+ },
+ {
+  "area": "Infecto",
+  "tema": "Profilaxia Antirrábica",
+  "titulo": "Mordida de gato de rua nas maos (grave, animal nao observavel): agua e sabao + 4 doses (0,3,7,14) + soro/IGHAR; reacao adversa nao contraindica doses seguintes",
+  "enunciado": "Homem de 23 anos, higido, mordido ha 2 horas por gato de rua (fugiu apos o resgate), com feridas cortocontusas nos dedos da mao esquerda; sem agressoes previas. Na cidade houve raiva em felinos no ano anterior. A conduta adequada no atendimento imediato e",
+  "correta": "lavar os ferimentos com agua corrente abundante e sabao; administrar a vacina antirrabica em 4 doses, nos dias 0, 3, 7 e 14; aplicar imunoglobulina humana antirrabica.",
+  "marcada": "higienizar com solucao antisseptica; administrar a 1a dose da vacina antirrabica; na presenca de qualquer reacao adversa, contraindicar as doses subsequentes; aplicar o soro antirrabico.",
+  "erro": "Desatencao",
+  "elo": "Rotular V/F cada clausula de alternativa composta: 'reacao adversa contraindica as doses subsequentes' e FALSA (troca de fabricante e continua em ambiente hospitalar) e 'antisseptico' nao substitui agua e sabao",
+  "armadilha": "A alternativa D reune duas clausulas reconheciveis (1a dose da vacina + soro antirrabico) com duas falsas; quem valida pela metade que reconhece perde a questao que 93% acertaram. A alternativa correta usa 'imunoglobulina humana' em vez de 'soro', o que pode soar estranho a quem decorou SAR",
+  "complexidade": "Baixa",
+  "habilidades": "Classificar o ferimento (mao = grave) e o animal (gato de rua que fugiu = nao observavel) -> Indicar vacina 4 doses (0, 3, 7, 14) + soro/imunoglobulina de imediato -> Conferir cada clausula da alternativa (lavagem com agua e sabao; reacao adversa nao interrompe o esquema)",
+  "faltou": "Reacao adversa a vacina antirrabica nao contraindica as doses seguintes: substituir o fabricante e completar em ambiente hospitalar; soro heterologo (SAR) e imunoglobulina humana (IGHAR) sao equivalentes na indicacao (IGHAR se hipersensibilidade ou uso previo de soro)",
+  "explicacao": "Exposicao grave (mao) por gato nao observavel em area com raiva felina: lavar com agua corrente e sabao, nao suturar, vacina em 4 doses (dias 0, 3, 7 e 14) e soro antirrabico ou imunoglobulina humana infiltrados na ferida no dia 0 (MS 2022). Reacoes adversas a vacina nao interrompem o esquema (trocar fabricante, aplicar em hospital). Antibiotico preemptivo: amoxicilina-clavulanato.",
+  "cards": [
+   {
+    "tipo": "elo_quebrado",
+    "frente_contexto": "Paciente em esquema pos-exposicao de vacina antirrabica apresenta reacao adversa a uma das doses.",
+    "frente_pergunta": "Isso contraindica as doses subsequentes?",
+    "verso_resposta": "Nao: trocar o fabricante da vacina e completar o esquema em ambiente hospitalar com suporte para reacoes.",
+    "verso_regra_mestre": "Profilaxia da raiva nunca e interrompida por reacao adversa (a doenca e 100% letal); muda-se o produto e o local de aplicacao.",
+    "verso_armadilha": "Alternativa que diz 'na presenca de qualquer reacao adversa, contraindicar as doses subsequentes' e falsa mesmo vindo junto de 'aplicar o soro antirrabico'."
+   },
+   {
+    "tipo": "discriminador",
+    "frente_contexto": "Mordida de gato de rua nos dedos da mao, animal fugiu, cidade com raiva em felinos.",
+    "frente_pergunta": "Quantas doses de vacina antirrabica e em quais dias, alem do soro ou imunoglobulina?",
+    "verso_resposta": "4 doses, nos dias 0, 3, 7 e 14 (MS 2022), com soro ou imunoglobulina humana no dia 0.",
+    "verso_regra_mestre": "Ferimento em mao/pe/cabeca ou profundo/multiplo = grave; animal nao observavel = profilaxia imediata; grave = vacina + soro/IGHAR (equivalentes; IGHAR se hipersensibilidade ou soro previo).",
+    "verso_armadilha": "Alternativa que oferece so 'a 1a dose da vacina' ou que troca agua e sabao por antisseptico."
+   }
+  ]
+ },
+ {
+  "area": "Pediatria",
+  "tema": "Asma - Crise Aguda",
+  "titulo": "Crise grave em lactente SONOLENTA: corticoide EV (metilprednisolona); VNI exige consciencia preservada; MgSO4 so > 2 anos",
+  "enunciado": "Menina de 1 ano e 10 meses com tosse e dispneia ha 4 dias, sem melhora com salbutamol frequente, piora ha 6 horas; exacerbacoes frequentes nos ultimos 3 meses apesar de prednisolona; pais asmaticos. Exame: no colo, afebril, sonolenta, taquidispneica, choro entrecortado, SpO2 94% em ar ambiente, retracao de musculatura acessoria. Alem da internacao, a conduta adequada e prescrever",
+  "correta": "metilprednisolona endovenoso.",
+  "marcada": "ventilacao nao invasiva (VNI) com sedacao.",
+  "erro": "Erro de aplicacao",
+  "elo": "Traduzir 'sonolenta' em duas consequencias: a via oral do corticoide cai (EV) e a VNI fica contraindicada (exige nivel de consciencia, drive e sincronia); e lembrar que sulfato de magnesio nao se usa < 2 anos",
+  "armadilha": "A regra drilada 'corticoide VO tem a mesma eficacia que EV' faz descartar a metilprednisolona EV como 'desnecessaria', e a sonolencia (sinal de crise ameacadora) empurra para suporte ventilatorio; mas VNI com sedacao em crianca rebaixada e contraindicada e nunca e 1a linha no PS. Fato certo (VO = EV) aplicado no contexto errado (crianca que nao deglute)",
+  "complexidade": "Alta",
+  "habilidades": "Graduar a crise (< 6 anos: sonolencia, fala/choro entrecortado, musculatura acessoria, hipoxemia = grave/ameacadora) -> Montar o pacote (SABA + ipratropio continuo, corticoide sistemico, O2 se SpO2 < 92%) -> Escolher a VIA do corticoide pelo nivel de consciencia (sonolenta = EV) -> Excluir VNI (consciencia rebaixada) e MgSO4 (< 2 anos)",
+  "faltou": "A equivalencia VO = EV do corticoide vale para quem deglute e colabora; sonolencia/rebaixamento impoe a via EV. VNI exige consciencia preservada, drive e estabilidade; sulfato de magnesio IV so acima de 2 anos (GINA)",
+  "explicacao": "Lactente < 6 anos com crise grave/ameacadora (sonolencia, choro entrecortado, tiragem, SpO2 94%): salbutamol + ipratropio em nebulizacao continua, corticoide sistemico por via EV (metilprednisolona) porque a sonolencia inviabiliza a via oral, O2 apenas se SpO2 < 92%. VNI com sedacao nao e primeira linha e e contraindicada com rebaixamento; salbutamol EV e reserva de UTI; MgSO4 so em > 2 anos. Manutencao: a crianca precisa de corticoide inalatorio.",
+  "cards": [
+   {
+    "tipo": "elo_quebrado",
+    "frente_contexto": "Lactente de 22 meses em crise grave de asma, sonolenta, com choro entrecortado e tiragem.",
+    "frente_pergunta": "O corticoide sistemico deve ser dado por via oral ou endovenosa?",
+    "verso_resposta": "Endovenosa (metilprednisolona): a sonolencia impede a via oral.",
+    "verso_regra_mestre": "VO = EV em eficacia vale para a crianca que deglute e colabora; rebaixamento, vomitos ou incapacidade de deglutir impoem a via EV.",
+    "verso_armadilha": "Aplicar a regra 'VO e tao boa quanto EV' para descartar a metilprednisolona endovenosa numa crianca sonolenta."
+   },
+   {
+    "tipo": "discriminador",
+    "frente_contexto": "",
+    "frente_pergunta": "O que o paciente precisa ter para a ventilacao nao invasiva ser opcao na crise de asma?",
+    "verso_resposta": "Nivel de consciencia preservado, drive respiratorio e estabilidade hemodinamica (sincronia com o ventilador).",
+    "verso_regra_mestre": "VNI depende de cooperacao e vedacao; sonolencia/rebaixamento contraindica, e VNI com sedacao nunca e primeira linha no pronto-socorro (ultima linha antes do tubo, apos CNAF).",
+    "verso_armadilha": "Sonolencia lida como 'precisa de suporte ventilatorio agora' leva a marcar VNI com sedacao."
+   },
+   {
+    "tipo": "discriminador",
+    "frente_contexto": "",
+    "frente_pergunta": "Sulfato de magnesio IV na crise grave de asma pediatrica: a partir de que idade?",
+    "verso_resposta": "Acima de 2 anos (GINA).",
+    "verso_regra_mestre": "Abaixo de 2 anos o pacote da crise grave e SABA + ipratropio continuo + corticoide sistemico + O2 se SpO2 < 92%; sem MgSO4 e sem CI-formoterol de resgate.",
+    "verso_armadilha": "Marcar sulfato de magnesio em lactente de 22 meses porque a crise e grave."
+   }
+  ]
+ },
+ {
+  "area": "Ginecologia",
+  "tema": "Câncer de Endométrio",
+  "titulo": "Sangramento 19 anos pos-menopausa + endometrio 8 mm + obesa nulipara = hiperplasia endometrial; mioma nao sangra sem estrogenio",
+  "enunciado": "Mulher de 72 anos, higida, menopausa aos 53, obesa, nulipara, nunca fez TH. Sangramento vaginal ha 2 dias, estavel. Especular: mucosa vaginal normal, lesao polipoide exteriorizando pelo orificio externo, ectocervice normal. USG transvaginal: 3 nodulos uterinos (2,5 e 3,5 cm intramurais; 1,5 cm submucoso), endometrio de 8 mm, lesao polipoide de 1,5 cm no canal endocervical. Qual e a principal hipotese diagnostica?",
+  "correta": "Hiperplasia endometrial.",
+  "marcada": "Leiomioma submucoso.",
+  "erro": "Erro de aplicacao",
+  "elo": "Ancorar o sangramento pos-menopausa no ENDOMETRIO (espessura > 4-5 mm = hiperplasia/carcinoma) e reconhecer que miomas regridem no hipoestrogenismo e nao explicam sangramento 19 anos apos a menopausa",
+  "armadilha": "O USG lista 3 nodulos (um submucoso) e um polipo endocervical: dados salientes que oferecem uma 'causa visivel' do sangramento; o endometrio de 8 mm e o perfil (obesa, nulipara, menopausa tardia = estrogenio sem oposicao) sao os discriminadores que a banca escondeu no meio da vinheta",
+  "complexidade": "Media",
+  "habilidades": "Tratar todo sangramento pos-menopausa como suspeita de patologia endometrial -> Ler a espessura endometrial (> 4-5 mm = investigar hiperplasia/CA) -> Reconhecer fatores de risco de hiperplasia/CA tipo I (obesidade, nuliparidade, menopausa tardia) -> Excluir mioma como causa (regride sem estrogenio)",
+  "faltou": "Leiomioma e estrogenio-dependente: apos a menopausa regride e nao causa sangramento; sangramento pos-menopausa com endometrio > 4-5 mm aponta hiperplasia (o polipo e uma hiperplasia focal) ou carcinoma, sobretudo em obesa nulipara",
+  "explicacao": "Sangramento pos-menopausa e anormal ate prova em contrario; USG transvaginal com endometrio > 4-5 mm exige investigacao histologica (histeroscopia com biopsia dirigida). Obesidade, nuliparidade e menopausa tardia = estrogenio sem oposicao = hiperplasia/carcinoma endometrial tipo I. Miomas regridem no hipoestrogenismo e nao explicam sangramento 19 anos apos a menopausa; polipo endometrial e hiperplasia focal.",
+  "cards": [
+   {
+    "tipo": "elo_quebrado",
+    "frente_contexto": "Mulher de 72 anos, 19 anos apos a menopausa, com sangramento vaginal; USG mostra 3 miomas (um submucoso) e endometrio de 8 mm.",
+    "frente_pergunta": "O leiomioma explica o sangramento?",
+    "verso_resposta": "Nao: sem estrogenio o mioma regride; endometrio de 8 mm em pos-menopausa aponta hiperplasia ou carcinoma endometrial.",
+    "verso_regra_mestre": "Sangramento pos-menopausa e problema de ENDOMETRIO ate prova em contrario (corte 4-5 mm); mioma e patologia da menacme.",
+    "verso_armadilha": "A lista de nodulos no USG oferece uma causa 'visivel' (leiomioma submucoso) e desvia da espessura endometrial escondida no meio da vinheta."
+   },
+   {
+    "tipo": "discriminador",
+    "frente_contexto": "",
+    "frente_pergunta": "Obesidade, nuliparidade e menopausa tardia apontam para qual causa de sangramento pos-menopausa?",
+    "verso_resposta": "Hiperplasia ou carcinoma endometrial tipo I (estrogenio sem oposicao de progesterona).",
+    "verso_regra_mestre": "Os fatores de risco do tipo I sao todos 'mais estrogenio, menos progesterona': obesidade (aromatase periferica), nuliparidade, menarca precoce, menopausa tardia, anovulacao, tamoxifeno.",
+    "verso_armadilha": "Ler o perfil de risco como decorativo e escolher a estrutura anatomica mais chamativa (mioma, polipo endocervical)."
+   }
+  ]
+ },
+ {
+  "area": "Ginecologia",
+  "tema": "Úlceras Genitais",
+  "titulo": "Ulcera DOLOROSA de base mole + bubao inflamatorio = cancro mole (Gram: cocobacilos em cadeia; azitromicina 1 g), nao LGV (reincidencia da ancoragem na adenite)",
+  "enunciado": "Homem de 30 anos, profissional do sexo com uso irregular de preservativo, ha 3 meses com emagrecimento de 10 kg, astenia e febre baixa; ha 1 semana ulcera dolorosa no penis, sem secrecao uretral. Exame: emagrecido, lesao ulcerada de 3 cm abaixo da glande, bordas elevadas, rasa, base mole, sem secrecao, com linfonodomegalia inguinal direita com sinais inflamatorios, sem fistulizacao. A investigacao, o achado esperado e o tratamento referentes a ulcera devem ser, respectivamente,",
+  "correta": "microscopia de esfregaco do fundo da ulcera; Gram negativos agrupados em correntes; azitromicina 500 mg, via oral, 2 comprimidos em dose unica.",
+  "marcada": "sorologia para Chlamydia trachomatis; positiva; doxiciclina 100 mg, 2 vezes ao dia, via oral, por 7 dias.",
+  "erro": "Erro de aplicacao",
+  "elo": "Decidir o agente pela MORFOLOGIA da ulcera (dolorosa, base mole, rasa) antes da adenopatia: cancro mole = ulcera dolorosa contemporanea ao bubao; no LGV a ulcera e indolor, fugaz e ja sumiu quando o bubao aparece",
+  "armadilha": "Linfonodomegalia inguinal inflamatoria + sintomas sistemicos (emagrecimento, febre, contexto de HIV) ancoram em LGV/Chlamydia; a ulcera dolorosa de base mole exclui LGV e sifilis. Mesmo elo do erro registrado em abril (ancoragem em adenopatia -> LGV sem confrontar a ulcera)",
+  "complexidade": "Media",
+  "habilidades": "Separar ulceras dolorosas (cancro mole, herpes) de indolores (sifilis, LGV, donovanose) -> Reconhecer cancro mole (ulcera dolorosa, base mole, fundo sujo + adenite inflamatoria unilateral) -> Saber o metodo (Gram do fundo da ulcera: cocobacilos Gram-negativos em cadeia/cardume) -> Tratar com azitromicina 1 g VO dose unica (ou ceftriaxona 250 mg IM)",
+  "faltou": "No LGV a ulcera primaria e indolor e transitoria (some antes do bubao); ulcera DOLOROSA coexistindo com o bubao = cancro mole; achado do Gram = cocobacilos Gram-negativos em cadeias ('cardume de peixe'); tratamento azitromicina 500 mg 2 cp dose unica (MS 2022)",
+  "explicacao": "Cancro mole (Haemophilus ducreyi): ulcera(s) dolorosa(s), rasa(s), base mole, bordas irregulares, fundo purulento, com adenite inguinal dolorosa unilateral que pode fistulizar por orificio unico. Diagnostico por microscopia do esfregaco do fundo da ulcera (cocobacilos Gram-negativos em cadeias). Tratamento MS: azitromicina 1 g VO dose unica ou ceftriaxona 250 mg IM. LGV: ulcera indolor e fugaz, bubao com multiplos orificios, doxiciclina 21 dias. Sifilis primaria: cancro duro indolor, VDRL, penicilina benzatina 2,4 milhoes UI.",
+  "cards": [
+   {
+    "tipo": "elo_quebrado",
+    "frente_contexto": "Homem com ulcera peniana dolorosa, rasa, de base mole, e bubao inguinal inflamatorio contemporaneo a ulcera.",
+    "frente_pergunta": "Cancro mole ou linfogranuloma venereo?",
+    "verso_resposta": "Cancro mole (Haemophilus ducreyi).",
+    "verso_regra_mestre": "No LGV a ulcera inicial e indolor e fugaz e ja cicatrizou quando o bubao aparece; ulcera dolorosa VISIVEL junto do bubao aponta cancro mole. A morfologia da ulcera decide antes da adenopatia.",
+    "verso_armadilha": "Bubao inguinal + sintomas sistemicos + contexto de risco para HIV puxam para Chlamydia/LGV com doxiciclina."
+   },
+   {
+    "tipo": "discriminador",
+    "frente_contexto": "",
+    "frente_pergunta": "Qual e o achado da microscopia com Gram do fundo da ulcera no cancro mole?",
+    "verso_resposta": "Cocobacilos Gram-negativos agrupados em cadeias ('cardume de peixe' ou 'impressao digital').",
+    "verso_regra_mestre": "Diagnostico do cancro mole e microscopico (esfregaco do fundo da ulcera), nao sorologico; tratamento azitromicina 500 mg, 2 comprimidos, dose unica (MS 2022).",
+    "verso_armadilha": "Trocar por 'sorologia para Chlamydia positiva' (LGV) ou 'VDRL reagente' (sifilis, cuja ulcera e indolor e endurecida)."
+   }
+  ]
+ },
+ {
+  "area": "Pediatria",
+  "tema": "Baixa Estatura",
+  "titulo": "Idade ossea 10 meses abaixo da cronologica e COMPATIVEL; alvo genetico z -2 + VC normal = baixa estatura familiar, nao atraso constitucional",
+  "enunciado": "Menina de 7 anos, a menor da sala; gestacao e neonatal sem intercorrencias, sem doencas. Tanner M1P1; peso 19 kg (z -1); estatura 1,07 m (-3 < z < -2) com alvo de 1,50 m (z -2); IMC 16,6 (0 < z < +1); relacao segmento superior/inferior 1,02 (ref 1 a 1,3). Aos 6 anos e 8 meses: 17 kg, 1,05 m (-3 < z < -2), IMC 15,4, idade ossea de 5 anos e 10 meses. A hipotese diagnostica adequada e",
+  "correta": "baixa estatura familiar.",
+  "marcada": "atraso constitucional do crescimento.",
+  "erro": "Erro de aplicacao",
+  "elo": "Aplicar o cutoff da idade ossea (so conta como atrasada se > 2 anos ou > 2 DP abaixo da cronologica) e usar o alvo genetico baixo (z -2) como discriminador de baixa estatura familiar",
+  "armadilha": "A idade ossea vem numericamente menor que a cronologica (5a10m x 6a8m = 10 meses), e o candidato le 'atrasada' e marca ACCP, ignorando que 10 meses esta dentro da variacao normal e que o alvo genetico em z -2 ja explica a estatura. Reincidencia do padrao 'ancorar na idade ossea sem integrar os demais eixos'",
+  "complexidade": "Alta",
+  "habilidades": "Confirmar baixa estatura (z < -2) e calcular velocidade de crescimento (2 cm em 4 meses = 6 cm/ano, normal) -> Classificar como variante benigna (VC normal) -> Aplicar o cutoff da idade ossea (< 2 anos de diferenca = compativel) -> Cruzar com alvo genetico (z -2 = familiar) e relacao SS/SI normal (afasta displasia)",
+  "faltou": "Idade ossea e considerada atrasada apenas se > 2 anos (ou 2 DP) abaixo da cronologica; diferenca de 10 meses e compativel. BEF = alvo baixo + VC normal + IO compativel; ACCP = alvo normal + VC normal + IO atrasada + historia familiar de atraso puberal",
+  "explicacao": "Baixa estatura (z < -2) com velocidade de crescimento normal (6 cm/ano) e relacao SS/SI normal = variante benigna. Idade ossea de 5a10m aos 6a8m difere em 10 meses, dentro da normalidade (< 2 anos), logo compativel; alvo genetico em z -2 indica potencial familiar baixo. Diagnostico: baixa estatura familiar. ACCP exigiria idade ossea atrasada e alvo normal; Turner e hipotireoidismo cursariam com VC reduzida.",
+  "cards": [
+   {
+    "tipo": "elo_quebrado",
+    "frente_contexto": "Crianca de 6 anos e 8 meses com idade ossea de 5 anos e 10 meses.",
+    "frente_pergunta": "Essa idade ossea e atrasada ou compativel com a cronologica?",
+    "verso_resposta": "Compativel: so e atrasada se estiver mais de 2 anos (ou 2 desvios-padrao) abaixo da cronologica.",
+    "verso_regra_mestre": "Idade ossea se le por cutoff, nao por 'menor que': diferenca de ate 1-2 anos e variacao normal; atraso real (> 2 anos) e a assinatura do ACCP e das causas endocrinas.",
+    "verso_armadilha": "Ver '5a10m < 6a8m' e concluir 'idade ossea atrasada = atraso constitucional do crescimento'."
+   },
+   {
+    "tipo": "discriminador",
+    "frente_contexto": "",
+    "frente_pergunta": "Baixa estatura familiar x atraso constitucional: qual dos dois tem idade ossea compativel com a cronologica?",
+    "verso_resposta": "Baixa estatura familiar (alvo genetico baixo, VC normal, IO compativel).",
+    "verso_regra_mestre": "ACCP = alvo normal + IO atrasada + atraso puberal familiar; BEF = alvo baixo + IO compativel + puberdade no tempo. Os dois compartilham VC normal, que e o que os separa das causas patologicas.",
+    "verso_armadilha": "Alvo genetico em z -2 dado no enunciado e ignorado em favor de uma idade ossea 'um pouco menor'."
+   }
+  ]
+ },
+ {
+  "area": "Cirurgia",
+  "tema": "Abdome Agudo Inflamatório - Colecistite e Colangite Aguda",
+  "titulo": "Colestase com USG mostrando dilatacao biliar sem ver o calculo no coledoco: colangiorressonancia (TC nao ve calculo de colesterol)",
+  "enunciado": "Mulher de 43 anos internada com ictericia, coluria e acolia ha 72 horas, sem comorbidades. Exame: icterica +++/4, dor a palpacao profunda de hipocondrio direito, FC 83, PA 123x76, Tax 37,4. USG: multiplas imagens moveis arredondadas de 0,5-1 cm na vesicula e dilatacao de vias biliares intra e extra-hepaticas. Laboratorio com colestase (bilirrubina direta, FA e GGT elevadas) sem leucocitose. Diagnostico sindromico e exame complementar para prosseguir a investigacao?",
+  "correta": "Sindrome colestatica sem colangite; ressonancia nuclear magnetica de vias biliares.",
+  "marcada": "Sindrome colestatica sem colangite; tomografia de abdome com contraste venoso.",
+  "erro": "Erro de aplicacao",
+  "elo": "Escolher o exame do no 'USG mostra dilatacao biliar e colelitiase, mas nao ve o calculo no coledoco': colangiorressonancia (ou ecoendoscopia) confirma coledocolitiase; TC nao enxerga calculo de colesterol",
+  "armadilha": "Acertou o diagnostico sindromico (afebril, sem leucocitose = sem colangite) e errou o exame: a TC parece o 'proximo passo natural' apos o USG, mas calculos de colesterol sao isodensos a bile. Fato conhecido em outro contexto (TC ve mal calculo/microcalculo na pancreatite) nao transferido para a coledocolitiase",
+  "complexidade": "Media",
+  "habilidades": "Definir a sindrome (colestase obstrutiva sem triade de Charcot = sem colangite) -> Ler o USG (calculos na vesicula + dilatacao biliar = coledocolitiase provavel, calculo nao visualizado) -> Escolher o confirmatorio: colangioRM (S 95%/E 89%) ou ecoendoscopia; CPRE so apos confirmacao (terapeutica, com risco) -> Programar CPRE + colecistectomia na mesma internacao",
+  "faltou": "Quando o USG nao visualiza o calculo no coledoco, o proximo exame e a colangiorressonancia; a TC com contraste nao e boa para coledocolitiase porque calculos de colesterol nao sao visiveis; CPRE e reservada a coledocolitiase confirmada (pancreatite, sangramento, perfuracao)",
+  "explicacao": "Ictericia obstrutiva jovem com colelitiase e dilatacao biliar sem febre/leucocitose = coledocolitiase sem colangite. USG tem alta especificidade mas baixa sensibilidade para o calculo no coledoco; se nao o mostra, pedir colangiorressonancia (padrao para investigacao, S 95%/E 89%) ou ecoendoscopia. Confirmada, CPRE terapeutica e colecistectomia na mesma internacao. TC contrastada nao ve calculo de colesterol; CPRE direta so quando o USG ja mostrou o calculo.",
+  "cards": [
+   {
+    "tipo": "elo_quebrado",
+    "frente_contexto": "Ictericia obstrutiva afebril, sem leucocitose; USG mostra colelitiase e dilatacao de vias biliares intra e extra-hepaticas, mas nao visualiza calculo no coledoco.",
+    "frente_pergunta": "Qual e o proximo exame?",
+    "verso_resposta": "Colangiorressonancia (sensibilidade 95%, especificidade 89%); ecoendoscopia e alternativa.",
+    "verso_regra_mestre": "USG ja mostrou o calculo no coledoco = CPRE direta; USG nao mostrou = confirmar por colangioRM/USE antes da CPRE (terapeutica, com risco de pancreatite e perfuracao).",
+    "verso_armadilha": "Tomografia de abdome com contraste venoso como 'passo seguinte natural' apos o USG."
+   },
+   {
+    "tipo": "mecanismo",
+    "frente_contexto": "",
+    "frente_pergunta": "Por que a tomografia com contraste nao serve para procurar coledocolitiase?",
+    "verso_resposta": "Porque a maioria dos calculos biliares e de colesterol, isodensa a bile, e nao aparece na TC.",
+    "verso_regra_mestre": "TC na via biliar serve para complicacoes (abscesso, enfisematosa) e diagnostico diferencial (neoplasia); calculo e territorio do USG, da colangioRM e da ecoendoscopia.",
+    "verso_armadilha": "Transferir 'TC e o melhor exame' de outros abdomens agudos para a coledocolitiase."
+   }
+  ]
+ }
+]

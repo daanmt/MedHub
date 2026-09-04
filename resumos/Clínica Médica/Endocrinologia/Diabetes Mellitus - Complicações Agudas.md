@@ -443,5 +443,6 @@ aliases: [DM Agudo, CAD, HHS]
 - 🔴🔴 **REINCIDENTE (2x):** DM1 + criança doente (febre/infecção) + recusa alimentar + insulina mantida evoca CAD por reflexo (é o diagnóstico mais temido), mas o cluster **adrenérgico puro** (palidez, taquicardia, sudorese profusa, tremor, irritabilidade) **sem** poliúria/vômitos/dor abdominal/Kussmaul é **hipoglicemia** (excesso relativo de insulina), o espectro glicêmico oposto da CAD. Checar SEMPRE a ausência dos sinais hiperglicêmicos antes de fechar em CAD nesse cenário.
 - 🔴 Para **confirmar** CAD com glicemia e acidose já documentadas, o exame que falta é a **cetose** (cetonúria/β-HB), 3ª perna da tríade -- lactato **não** confirma CAD
 - 🔴 Em questão de "característica **MENOS comum** no EHH", a resposta é **dor abdominal** (proporcional à acidemia, ausente no EHH); os **sintomas neurológicos são MAIS comuns** no EHH (hiperosmolaridade) -- não inverter a relação
+- 🔴 **'Além da fluidoterapia, o próximo passo' na CAD pediátrica é o potássio, nunca 'correção imediata da glicemia':** a insulina (0,1 U/kg/h sem bolus, ISPAD 2022) só entra após a expansão inicial e com K ≥ 3,3, porque desloca potássio para dentro da célula num paciente com déficit corporal total. A glicemia de 400 é o dado saliente que induz a inverter a ordem: hiperglicemia não mata em minutos, hipocalemia mata.
 
 ---

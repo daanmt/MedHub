@@ -10,6 +10,15 @@
       "recebido": "2026-09-05",
       "cobertura": "aleitamento, Down, dx nutricional, crescimento/puberdade, convulsao febril, choque/sepse, TB infancia, ITU, reumato ped (IgA, Kawasaki, SIMP, FR)",
       "pendente": "Parte II (profa. Helena) e revisao de vespera (Asma/GINA 2026)"
+    },
+    {
+      "id": "emed-hdv-gin-1",
+      "titulo": "Hora da Verdade ENAMED 2026 - Ginecologia",
+      "autor": "Estrategia MED (prof. Alexandre Melito)",
+      "tipo": "aula ao vivo YouTube (transcricao enviada pelo usuario)",
+      "recebido": "2026-09-05",
+      "cobertura": "os 6 temas mais frequentes da engenharia reversa do INEP: rastreamento de colo (2 diretrizes + vacina HPV), planejamento familiar, SUA, vulvovaginites, climaterio/TH, rastreamento de mama/BI-RADS",
+      "estimativa_do_professor": "5-6 das 10 questoes de Ginecologia saem desses 6 temas"
     }
   ],
   "padroes_banca": [
@@ -30,6 +39,48 @@
       "padrao": "tratar na suspeita",
       "detalhe": "sepse/choque septico: tratar na SUSPEITA (triangulo alterado + historia infecciosa), Phoenix nao dita conduta; antibiotico em ate 1h (choque) ou 3h (sepse).",
       "fonte": "emed-hdv-ped-1"
+    },
+    {
+      "area": "Ginecologia",
+      "padrao": "duas diretrizes de colo coexistem",
+      "detalhe": "2016 (Papanicolaou, regra 1-2-3, 25-64) e 2025 parte 1 (DNA-HPV, 25-64, 5 anos se negativo; 16/18 -> colposcopia; outro oncogenico -> citologia reflexa; imunossuprimida: qualquer HPV -> colposcopia, 3 anos se negativo). Ler qual diretriz a questao cobra. Conduta frente ao Papa alterado ainda e a de 2016.",
+      "fonte": "emed-hdv-gin-1"
+    },
+    {
+      "area": "Ginecologia",
+      "padrao": "escalar um degrau no colo",
+      "detalhe": "ASC-US/LSIL: <25 repete em 3 anos; 25-29 (ASC-US) 1 ano; >=30 (ASC-US) ou >=25 (LSIL) 6 meses. ASC-H, AGC, AOI, HSIL, invasor -> colposcopia (nao conizacao). Imunossuprimida: qualquer alteracao -> colposcopia. Gravida: biopsia so se suspeita de invasao. Casa com o padrao 'escalar um degrau a mais' do Simulado 6 (Q68, Q83).",
+      "fonte": "emed-hdv-gin-1"
+    },
+    {
+      "area": "Ginecologia",
+      "padrao": "nenhum hormonio",
+      "detalhe": "cancer de mama atual ou previo (qualquer subtipo, para prova) e lupus com anticorpo positivo/desconhecido: nenhum metodo hormonal, so DIU de cobre. Combinado: lembrar tromboembolismo (cat 4) e lactante <6 semanas.",
+      "fonte": "emed-hdv-gin-1"
+    },
+    {
+      "area": "Ginecologia",
+      "padrao": "climaterio e diagnostico clinico",
+      "detalhe": "~50 anos + irregularidade + fogacho = climaterio; sem FSH e sem USG (FSH >25 x2 so se <45 anos com irregularidade). Pre-TH: mamografia <=1 ano + lipidios + glicemia, SEM USG transvaginal (nao existe rastreio de CA de endometrio). Janela: <=10 anos da menopausa E <=60 anos. Sem utero = so estrogenio, exceto endometriose grave (combinada). Via transdermica se hipertrigliceridemia/tabagista/hipertensa. TH topica pode fora da janela; nao se CA endometrio/mama/trombose. Nao hormonal: venlafaxina/desvenlafaxina (paroxetina nao com tamoxifeno), gabapentina, fezolinetant; sertralina/fluoxetina nao.",
+      "fonte": "emed-hdv-gin-1"
+    },
+    {
+      "area": "Ginecologia",
+      "padrao": "rastreamento de mama = MS",
+      "detalhe": "MS: mamografia 40-74 a cada 2 anos (40-49 'sob demanda', rastreio propriamente 50-74; FEBRASGO anual e o distrator). Alto risco (FEBRASGO): anual, 10 anos antes do parente de 1o grau mais jovem; BRCA1/2; RT toracica <30 anos -> 8 anos depois; Li-Fraumeni/Cowden; lesao precursora (atipia, CLIS). USG NAO e rastreamento (pegadinha da jovem): e complementar (solido x cisto, lesao palpavel, BI-RADS 0, mama densa). RM: alto risco junto com mamografia, protese, neoadjuvancia. BI-RADS: 3 = repetir 6 m (rebaixa a 2 so apos 2 anos); 4/5 = biopsia por agulha grossa; espiculado = 5.",
+      "fonte": "emed-hdv-gin-1"
+    },
+    {
+      "area": "Ginecologia",
+      "padrao": "SUA agudo",
+      "detalhe": "afastar gravidez -> estabilizar -> ACO combinado em alta dose (4-6 cp/dia) ou progestageno em alta dose ou acido tranexamico; cirurgia (curetagem) se instavel ou refratario. AINE nao serve no agudo (so cronico, -30%). Biopsia de endometrio: >45 com espessamento/fator de risco/exposicao estrogenica; 35-45 se falha medicamentosa ou anovulatorio; <35 se estimulo estrogenico prolongado.",
+      "fonte": "emed-hdv-gin-1"
+    },
+    {
+      "area": "Ginecologia",
+      "padrao": "vulvovaginites: parceiro e via",
+      "detalhe": "VB e candidiase: sem parceiro; VB oral ou topico, assintomatica tratar se gravida ou pre-procedimento (DIU). Candidiase complicada (>=3/ano, nao-albicans, gravida, diabetica descompensada, grave): inducao + manutencao 6 meses; gravida sempre topico. Tricomoniase: IST, metronidazol ORAL obrigatorio (uretra/Bartholin), tratar parceiro, gravida igual.",
+      "fonte": "emed-hdv-gin-1"
     }
   ],
   "temas": [
@@ -38,8 +89,8 @@
       "tema": "Imunizações",
       "tema_id": 265,
       "prevalencia": "alta",
-      "evidencia": "'de longe o tema mais quente' nas provas Revalida/ENAMED (07:35)",
-      "fonte": "emed-hdv-ped-1"
+      "evidencia": "'de longe o tema mais quente' nas provas Revalida/ENAMED (07:35) | vacina HPV: indicacoes atualizadas do PNI (9-14 dose unica; resgate 15-19; imunocomprometidos 9-45 3 doses; violencia sexual; PrEP; pos-NIC2/3) 'tem cara de ENAMED' (10:05-12:45)",
+      "fonte": "emed-hdv-ped-1,emed-hdv-gin-1"
     },
     {
       "area": "Pediatria",
@@ -264,6 +315,118 @@
       "prevalencia": "media",
       "evidencia": "dx diferencial de Kawasaki (2:29:30); nao listada explicitamente",
       "fonte": "emed-hdv-ped-1"
+    },
+    {
+      "area": "Ginecologia",
+      "tema": "Rastreamento do Câncer de Colo do Útero",
+      "tema_id": 236,
+      "prevalencia": "alta",
+      "evidencia": "'campeao de audiencia disparado'; conduta frente ao Papa alterado (2016) 'cai todo ano em toda prova do INEP'; diretriz 2025 parte 1 (DNA-HPV) 'enorme chance de cair' (07:10-31:29)",
+      "fonte": "emed-hdv-gin-1"
+    },
+    {
+      "area": "Ginecologia",
+      "tema": "Rastreamento do Cancer de Colo Uterino",
+      "tema_id": 410,
+      "prevalencia": "alta",
+      "evidencia": "idem (linha duplicada da taxonomia)",
+      "fonte": "emed-hdv-gin-1"
+    },
+    {
+      "area": "Ginecologia",
+      "tema": "Câncer de Colo do Útero",
+      "tema_id": 434,
+      "prevalencia": "media",
+      "evidencia": "tratamento das NIC: alto grau = excisional (EZT/conizacao); ver-e-tratar so com todos os criterios (30:17)",
+      "fonte": "emed-hdv-gin-1"
+    },
+    {
+      "area": "Ginecologia",
+      "tema": "Planejamento Familiar",
+      "tema_id": 258,
+      "prevalencia": "alta",
+      "evidencia": "'cai toda prova do INEP'; 2o tema mais frequente; criterios de elegibilidade cat 1-4, combinados, progestageno, DIU Cu/LNG, emergencia, laqueadura (31:58-46:48)",
+      "fonte": "emed-hdv-gin-1"
+    },
+    {
+      "area": "Ginecologia",
+      "tema": "Contracepção",
+      "tema_id": 329,
+      "prevalencia": "alta",
+      "evidencia": "idem Planejamento Familiar (linha duplicada)",
+      "fonte": "emed-hdv-gin-1"
+    },
+    {
+      "area": "Ginecologia",
+      "tema": "Sangramento Uterino Anormal",
+      "tema_id": null,
+      "prevalencia": "alta",
+      "evidencia": "3o tema mais frequente; PALM-COEIN, causas por idade, investigacao, biopsia de endometrio por idade, SUA agudo (51:28-1:03:10). SEM linha na taxonomia e SEM cards -- resumo [GIN] SUA existe",
+      "fonte": "emed-hdv-gin-1"
+    },
+    {
+      "area": "Ginecologia",
+      "tema": "Câncer de Endométrio",
+      "tema_id": 365,
+      "prevalencia": "media",
+      "evidencia": "SUA pos-menopausa e criterios de biopsia endometrial (58:50); TH so em CA endometrio inicial tratado (1:52:21)",
+      "fonte": "emed-hdv-gin-1"
+    },
+    {
+      "area": "Ginecologia",
+      "tema": "Vulvovaginites",
+      "tema_id": 264,
+      "prevalencia": "alta",
+      "evidencia": "4o tema; 'enorme' chance; VB (Amsel), candidiase nao complicada x complicada, tricomoniase (1:27:39-1:39:11)",
+      "fonte": "emed-hdv-gin-1"
+    },
+    {
+      "area": "Ginecologia",
+      "tema": "Doenças de Vulva e Vagina",
+      "tema_id": null,
+      "prevalencia": "media",
+      "evidencia": "cervicite = 'segundo plano' nesta altura (1:41:09)",
+      "fonte": "emed-hdv-gin-1"
+    },
+    {
+      "area": "Ginecologia",
+      "tema": "Climatério e Terapia Hormonal",
+      "tema_id": 159,
+      "prevalencia": "alta",
+      "evidencia": "5o tema; 'cai demais'; dx clinico, TH: indicacoes, janela de oportunidade, contraindicacoes SOBRAC, exames pre-TH, esquemas, via, topica, nao hormonal (1:41:09-2:04:20)",
+      "fonte": "emed-hdv-gin-1"
+    },
+    {
+      "area": "Ginecologia",
+      "tema": "Terapia Hormonal do Climaterio",
+      "tema_id": 404,
+      "prevalencia": "alta",
+      "evidencia": "idem Climaterio (linha duplicada)",
+      "fonte": "emed-hdv-gin-1"
+    },
+    {
+      "area": "Ginecologia",
+      "tema": "Câncer de Mama - Fatores de Risco",
+      "tema_id": 337,
+      "prevalencia": "alta",
+      "evidencia": "6o tema: rastreamento de mama MS 40-74 bienal (x FEBRASGO anual), alto risco FEBRASGO, USG nao e rastreamento, RM, BI-RADS (2:10:31-2:28:49)",
+      "fonte": "emed-hdv-gin-1"
+    },
+    {
+      "area": "Ginecologia",
+      "tema": "Câncer de Mama",
+      "tema_id": 441,
+      "prevalencia": "alta",
+      "evidencia": "idem rastreamento de mama/BI-RADS; 'o INEP adora BI-RADS'",
+      "fonte": "emed-hdv-gin-1"
+    },
+    {
+      "area": "Ginecologia",
+      "tema": "Doenças Benignas da Mama",
+      "tema_id": 161,
+      "prevalencia": "media",
+      "evidencia": "nodulo no USG: criterios de benignidade x suspeita; PAAF x core; BI-RADS 3 = 6 meses, rebaixa apos 2 anos (2:19:54; 2:27:12)",
+      "fonte": "emed-hdv-gin-1"
     }
   ]
 }

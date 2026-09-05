@@ -1339,3 +1339,15 @@ divida que o harness tem).
 > reforma consertou. Nao contradiz o veredito -- ilustra-o: o P1 entregou o orgao sensorial que
 > viu isto, e o F66 e a prova de que o P3 ("o input do boot fica verdadeiro") ficou a meio
 > caminho. F45 consertou o **mecanismo** de reconciliacao; faltou o **dicionario**.
+
+### F67 -- taxonomia duplicada divide o sinal do FSRS e da dormencia (s165, Claude Code/Fable 5.1, 2026-09-05)
+**Evidencia (db, read-only):** o mesmo tema vive em 2-5 linhas de `taxonomia_cronograma`: Rastreamento de colo x2 (`...do Câncer de Colo do Útero` 12 ativos/8 erros e `...do Cancer de Colo Uterino` 2/1), TH x2 (`Climatério e Terapia Hormonal` 6/2 e `Terapia Hormonal do Climaterio` 0/1), Asma x5 (`Asma`, `Asma - Crise Aguda`, `Asma na Infância`, `Asma na infância`, `Asma - Exacerbacao`), `Planejamento Familiar` x `Contracepção`, Ulceras x2, TCE x3 (Neuro, Cirurgia leve, Ped), `Cirurgia Infantil` x `Cirurgia Infantil I`, APS x2. **Efeito:** `review_radar`, `infer_nota` e `--cluster` leem metades; a dedup da s083 (`dedup_taxonomia.py`, merge MAX) nao pegou variantes por acento/caixa/sufixo. **Fix candidato:** normalizacao NFKD + casefold + tabela de alias em `normalize_taxonomia.py`, com `--dry-run`.
+
+### F68 -- 15 temas de alta/media prevalencia ENAMED sem linha na taxonomia (s165)
+**Evidencia:** `core/cronograma/prevalencia_enamed.json` (`tema_id: null`): SCA/dor toracica, DPOC, Derrame pleural, Crise hipertensiva, Parkinsonismo, Dermatoses infecciosas, SUA, Sindrome de Down, Dx nutricional, Choque em pediatria, TB na infancia, Vasculite IgA, SIMP, Saude do trabalhador, Doencas de vulva e vagina. Sem linha nao ha card, erro, dormencia nem nota -- o tema e invisivel ao motor. **Agrava F65:** `[bulk] Cirurgia` guarda **148 erros** sem tema (eram 72 cards na s162), `[bulk] Pneumo` 17. **Fix:** criar as linhas (via cunhagem/`insert_card_base`) e reclassificar os `[bulk]` pelo titulo do erro.
+
+### F69 -- resumos com lacuna de diretriz nova = risco banca-dependente (s165)
+**Evidencia (grep):** `[CIR] Trauma.md` ja tem X-ABCDE, torniquete, hipotensao permissiva, ABC score, pneumotorax oculto/3,5 cm, Beck, tranexamico; **falta** "sangue total > 1:1:1" e "Sellick contraindicada", e a classificacao do choque ainda cita "classe I" (11a ed = leve/moderado/grave). `Prevenção Secundária Pós-IAM (Dislipidemia).md`: 1 mencao a PREVENT/Lp(a)/bempedoico (diretriz 2025 rasa). `Sistemas de Informação em Saúde.md`: conferir SINAN 2026 (esporotricose, anomalias, Oropouche, parotidite). HAS Pt2 (130/80, MAPA) e Epilepsias (levetiracetam EV) ja atualizados. **Fix:** Revisao Direcionada com Regra de Acumulo; os `padroes_banca` do JSON sao a fonte.
+
+### F63 -- atualizacao (s165)
+O insumo `prevalencia_enamed` agora EXISTE (89 temas, 5 aulas EMED) e ja governa o bucket `novos` via `fsrs_queue --prevalencia`. Falta: `cronograma.py`/`day_plan.py` consumirem o mesmo arquivo para o eixo 4 do `infer_nota()` (contrato §7.7 previa "basta fornecer o campo") e para a prioridade roxa da grade.

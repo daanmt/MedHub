@@ -25,11 +25,13 @@ import argparse
 import io
 import json
 import os
+from pathlib import Path
 import sys
 
 # Saída sempre em UTF-8 — evita UnicodeEncodeError no console cp1252 do Windows
 # quando o card contém marcadores clínicos (🔴, ⚠️, ⭐) ou acentuação.
-sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
+if __name__ == "__main__" and hasattr(sys.stdout, "buffer"):
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 
 # Permite importar app.utils.db ao rodar como script standalone
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -43,7 +45,36 @@ def _cluster_key(card):
             card.get("tema") is None, card.get("tema") or "")
 
 
-def _ordered_queue(area=None, tema=None, limit=None, new_limit=10, cluster=False):
+PREVALENCIA_PATH = Path(__file__).resolve().parents[1] / "core" / "cronograma" / "prevalencia_enamed.json"
+_RANK = {"alta": 0, "media": 1, "baixa": 2}
+
+
+def load_prevalencia(path=None):
+    """Mapa (area, tema) -> rank (0 alta, 1 media, 2 baixa) lido de
+    core/cronograma/prevalencia_enamed.json (insumo manual, F63). Arquivo
+    ausente ou invalido -> {} (a fila volta ao FIFO, nunca quebra)."""
+    path = Path(path) if path else PREVALENCIA_PATH
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {}
+    return {(t.get("area"), t.get("tema")): _RANK.get(t.get("prevalencia"), 3)
+            for t in data.get("temas", []) if t.get("tema")}
+
+
+def rank_novos_por_prevalencia(cards, prev_map, new_limit):
+    """Reordena o bucket `novos` por prevalencia ENAMED (alta -> media -> baixa
+    -> sem sinal), desempate por card_id (FIFO original), e corta em new_limit.
+    Puro: nao toca banco nem FSRS -- so a ORDEM de introducao muda (s165:
+    'prevalencia = prioridade na fila dos nunca introduzidos')."""
+    def key(c):
+        return (prev_map.get((c.get("area"), c.get("tema")), 3), int(c.get("card_id", 0)))
+    ordered = sorted(cards, key=key)
+    return ordered[:new_limit] if new_limit is not None else ordered
+
+
+def _ordered_queue(area=None, tema=None, limit=None, new_limit=10, cluster=False,
+                   prevalencia=False):
     """Achata os buckets na ordem de prioridade, anotando o bucket de origem.
 
     P3 part-2: ordem `atrasados → erros_frescos → hoje → novos` — card de erro
@@ -52,7 +83,14 @@ def _ordered_queue(area=None, tema=None, limit=None, new_limit=10, cluster=False
     secundariamente por (area, tema) DENTRO de cada bucket — sort estável
     preserva a sub-ordem por due no mesmo tema.
     """
-    buckets = db.get_cards_by_bucket(area=area, tema=tema, new_limit=new_limit)
+    if prevalencia:
+        # puxa o pool inteiro de state=0 e reordena em Python (o LIMIT do SQL
+        # cortaria em FIFO antes da prevalencia agir)
+        buckets = db.get_cards_by_bucket(area=area, tema=tema, new_limit=10**6)
+        buckets["novos"] = rank_novos_por_prevalencia(
+            buckets.get("novos", []), load_prevalencia(), new_limit)
+    else:
+        buckets = db.get_cards_by_bucket(area=area, tema=tema, new_limit=new_limit)
     ordered = []
     for nome in ("atrasados", "erros_frescos", "hoje", "novos"):
         cards = buckets.get(nome, [])
@@ -97,6 +135,11 @@ def main():
     parser.add_argument("--area", help="Filtro de área (match exato)")
     parser.add_argument("--tema", help="Filtro de tema (LIKE)")
     parser.add_argument("--limit", type=int, help="Máximo de cards na fila (--list)")
+    parser.add_argument("--prevalencia", action="store_true",
+                        help="Reordena os cards NOVOS por prevalencia ENAMED "
+                             "(core/cronograma/prevalencia_enamed.json: alta -> media -> "
+                             "baixa -> sem sinal; desempate FIFO). Opt-in; so muda a "
+                             "ordem de introducao, nunca o FSRS (s165)")
     parser.add_argument("--new-limit", type=int, default=10, dest="new_limit",
                         help="Máximo de cards novos (state 0). Default: 10")
     parser.add_argument("--cluster", action="store_true",
@@ -149,7 +192,7 @@ def main():
         return
 
     ordered = _ordered_queue(area=args.area, tema=args.tema,
-                             limit=args.limit, new_limit=args.new_limit,
+                             limit=args.limit, new_limit=args.new_limit, prevalencia=args.prevalencia,
                              cluster=args.cluster)
 
     if args.next:

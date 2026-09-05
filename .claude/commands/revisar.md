@@ -42,7 +42,7 @@ Use quando o usuário pedir qualquer variação de: "revisar", "vamos revisar fl
 python tools/fsrs_queue.py --next [--area "Cardiologia"] [--tema "Insufic"]
 
 # Lote da fila (array JSON) — para ver o tamanho/escopo da sessão
-python tools/fsrs_queue.py --list [--area X] [--tema Y] [--limit N] [--new-limit M]
+python tools/fsrs_queue.py --list [--area X] [--tema Y] [--limit N] [--new-limit M] [--prevalencia]
 
 # Gravar a avaliação de um card (1=Novamente 2=Difícil 3=Bom 4=Fácil)
 # P3: propagar o selection_reason que veio no card servido (--next/--list)
@@ -85,6 +85,7 @@ vazamento de rótulo (modo de falha #8 do handoff de flashcards) era tribal:
 | `--tema` | Filtro de tema (LIKE parcial). |
 | `--limit` | Máximo de cards na fila (aplicado a `--list`). |
 | `--new-limit` | Máximo de cards novos (`state = 0`). Default 10. |
+| `--prevalencia` | **Opt-in (s165).** Reordena o bucket `novos` por prevalência ENAMED lida de `core/cronograma/prevalencia_enamed.json` (alta -> media -> baixa -> sem sinal; desempate FIFO por `card_id`) e só depois corta em `--new-limit`. Regra do usuário: **prevalência = prioridade na fila dos nunca introduzidos**. Não toca FSRS nem banco -- só a ordem de introdução. Sem o arquivo, degrada para FIFO. |
 
 **Ordem da fila:** atrasados → hoje → novos. Cards aposentados (`needs_qualitative >= 2`) são excluídos pela query. Campos de cada card: `card_id, frente_contexto, frente_pergunta, verso_resposta, verso_regra_mestre, verso_armadilha, needs_qualitative, due, area, tema, bucket`.
 

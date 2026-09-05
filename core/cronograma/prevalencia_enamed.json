@@ -19,6 +19,15 @@
       "recebido": "2026-09-05",
       "cobertura": "os 6 temas mais frequentes da engenharia reversa do INEP: rastreamento de colo (2 diretrizes + vacina HPV), planejamento familiar, SUA, vulvovaginites, climaterio/TH, rastreamento de mama/BI-RADS",
       "estimativa_do_professor": "5-6 das 10 questoes de Ginecologia saem desses 6 temas"
+    },
+    {
+      "id": "emed-hdv-cm-1",
+      "titulo": "Hora da Verdade ENAMED 2026 - Clinica Medica - Parte I",
+      "autor": "Estrategia MED (profs. Juan de Molinari/Pneumo, cardiologia HAS-crise-dislipidemia, Bruno Ferraz/SCA, Rodrigo Fresatti/Neuro, Endocrino, Bruno Souza/Dermato, Tales Talmaturgo/Psiquiatria)",
+      "tipo": "aula gravada YouTube (transcricao enviada pelo usuario)",
+      "recebido": "2026-09-05",
+      "cobertura": "asma + derrame pleural; HAS/crise hipertensiva/dislipidemia (diretrizes 2025); dor toracica e SCA; parkinsonismo, estado de mal, TCE; DM (dx, rastreio, CAD/EHH, classes), obesidade e sindrome metabolica; dermatoses infecciosas e dermatite atopica; cessacao do tabagismo (PCDT 2020)",
+      "pendente": "Parte II; DPOC (premonicao/revisao final); hanseniase (aula propria)"
     }
   ],
   "padroes_banca": [
@@ -81,6 +90,78 @@
       "padrao": "vulvovaginites: parceiro e via",
       "detalhe": "VB e candidiase: sem parceiro; VB oral ou topico, assintomatica tratar se gravida ou pre-procedimento (DIU). Candidiase complicada (>=3/ano, nao-albicans, gravida, diabetica descompensada, grave): inducao + manutencao 6 meses; gravida sempre topico. Tricomoniase: IST, metronidazol ORAL obrigatorio (uretra/Bartholin), tratar parceiro, gravida igual.",
       "fonte": "emed-hdv-gin-1"
+    },
+    {
+      "area": "Pneumo",
+      "padrao": "asma: controle x gravidade e a crise",
+      "detalhe": "Nunca SABA isolado (preditor de mortalidade): todo alivio leva corticoide inalatorio. Controle = DeLiSA (Despertar noturno e Limitacao no mes; Sintomas diurnos e Alivio >=3x/semana): 0 controlada, 1-2 parcial, >=3 nao controlada; exacerbacao no ultimo mes = nao controlada. Gravidade = etapa em que controlou (1-2 leve, 3-4 moderada, 5 grave). Ma adesao e a principal causa de mau controle. Via preferencial: CI-formoterol (etapas 1-2 alivio; 3 manutencao + alivio; 4 dose media; 5 tiotropio/biologicos). Crise: leve = SABA (4 jatos); moderada = SABA 4-6 jatos + ipratropio + prednisona 40-50 mg 5-7 d; grave = idem ate 10 jatos + corticoide VO ou EV + O2 alvo 92-95% + MgSO4 se refrataria; urticaria/edema de glote = anafilaxia -> adrenalina IM antes de tudo.",
+      "fonte": "emed-hdv-cm-1"
+    },
+    {
+      "area": "Pneumo",
+      "padrao": "derrame pleural: Light e quando drenar",
+      "detalhe": "Semiologia: macicez + MV abolido + FTV abolido; abaulado (atelectasia = retraido, desvia ipsilateral). Laurell >1 cm = puncionavel. Toracocentese so com duvida etiologica ou suspeita que exige confirmacao (TB, neoplasia), nao na IC bilateral. Light ('meia proteina 0,6 LDH'): prot LP/soro >0,5 ou LDH LP/soro >0,6 ou LDH LP >2/3 do LSN = exsudato (basta 1). Exsudato direto: proteina >3, LDH >200, colesterol >50. Diuretico -> pseudoexsudato: gradiente albumina soro-LP >1,2 (ou proteina >3,1) = transudato. Parapneumonico: drenar se pH <7,2, LDH >1000, glicose <40, pus ou bacteria; toracocentese SEMPRE antes da drenagem. TB pleural = exsudato linfocitico com ADA >40; confirmacao por biopsia pleural (cultura/TRM/baciloscopia do liquido tem baixa sensibilidade).",
+      "fonte": "emed-hdv-cm-1"
+    },
+    {
+      "area": "Cardiologia",
+      "padrao": "HAS 2025",
+      "detalhe": "Dx: >=140/90 em 2 ocasioes + MAPA/MRPA (preferir MAPA); wearables e AMPA so triagem; aparelho automatico > auscultatorio. Estagios: 140/90, 160/100, 180/110 (classificar pelo pior). Mascarada (consultorio normal, exame alto) tem mais LOA que avental branco. Meta <130/80 para TODOS (>80 anos: a menor tolerada). Terapia combinada e a regra (preferir comprimido unico); monoterapia so em pre-HAS de alto risco (apos 3 meses de MEV, se >=130/80), E1 de baixo risco (opcional), >80/fragil, hipotensao postural. 1a linha: tiazidico, IECA/BRA, BCC; beta-bloq so FA/IC/DAC. 4a droga = espironolactona. Pares: DM = IECA+BCC; DAC = IECA+BB; ICFEr = IECA+BB+espironolactona; DRC = IECA/BRA; negros e HSI do idoso = tiazidico+BCC. Exames anuais: + albuminuria/creatininuria; ureia e sodio NAO; fundo de olho = exame fisico. E3, ou E2 com qualquer fator de risco, ou qualquer LOA = alto risco; DCV/DRC 4-5 = muito alto.",
+      "fonte": "emed-hdv-cm-1"
+    },
+    {
+      "area": "Cardiologia",
+      "padrao": "crise hipertensiva 2025",
+      "detalhe": "Definicao >=180 e/ou >=110 (era 120), nao obrigatoria. Pseudocrise (dor, ansiedade, mal aderente): tratar o fator, SEM anti-hipertensivo no PS, ajustar para alta. 'Elevacao importante da PA sem LOA aguda' (ex-urgencia): VO (captopril, clonidina), controle em 24-48 h, retorno <=7 dias. Emergencia (LOA aguda): EV (nitroprussiato; nitroglicerina; nicardipina/labetalol nao ha no Brasil), -25% na 1a hora, 160/100-110 em 2-6 h, normal em 24-48 h. Com lesao cerebral (encefalopatia, HAS acelerada-maligna): -20-25% na 1a hora e 160/100 em 48 h, mais lento. Encefalopatia = PA + confusao + papiledema (TC: edema parieto-occipital); maligna = a mesma triade + LRA.",
+      "fonte": "emed-hdv-cm-1"
+    },
+    {
+      "area": "Cardiologia",
+      "padrao": "dislipidemia nova",
+      "detalhe": "Lp(a) 1x na vida em todo adulto (>50 mg/dL ou >125 nmol/L = risco; >180 = alto risco). Score = PREVENT (<5% baixo, >20% alto). Risco extremo = multiplos eventos maiores ou 1 evento + 2 condicoes de alto risco -> LDL <40. Muito alto = estenose >=50% ou CAC >300 (ou DM com evento / >=3 estratificadores) -> <50. Alto -> <70 (DM e no minimo alto; 6 As: LDL >=190, Lp(a) >180, aneurisma de aorta, aterosclerose subclinica, PREVENT >20%, agravante). Intermediario <100; baixo <115. Nao-HDL = meta LDL + 30. Agravantes reclassificam para cima (HF precoce, inflamatorias, HIV, transplante, pre-eclampsia/HELLP/parto prematuro, menarca precoce/tardia, PCR >=2). Alto/muito alto/extremo: MEV + combinada precoce (estatina alta potencia + ezetimiba; PCSK9 no muito alto/extremo; acido bempedoico). Baixo/intermediario: droga se LDL >=30 acima da meta. TG >=500 = fibrato (pancreatite); 150-499 + DCV/alto risco = icosapent etil. Colestiramina na gestante.",
+      "fonte": "emed-hdv-cm-1"
+    },
+    {
+      "area": "Cardiologia",
+      "padrao": "dor toracica e SCA",
+      "detalhe": "Angina tipica = 3 (retroesternal em aperto irradiando; ao esforco; alivia com repouso/nitrato <=5 min); 2 = atipica. Alta probabilidade -> exame funcional; baixa/intermediaria para descartar -> angioTC. Revascularizar por prognostico: tronco, DA proximal, multiarterial com FE reduzida, isquemia extensa; ou angina limitante. SCA: ECG em 10 min (V7-V8, V3R-V4R). HEART: 0-3 alta, 4-6 interna/nao invasivo, >=7 CATE precoce. Troponina: variacao >20% + isquemia = IAM (tipo 1 placa, tipo 2 oferta/demanda); sem isquemia = injuria; estavel = injuria cronica. Padroes de oclusao sem supra (OMI): T hiperaguda, De Winter, infra V1-V3 -> rodar V7-V8 (posterior), Sgarbossa concordante, Aslanger, bandeira da Africa do Sul. IAMCSST: ATC <=90 min; sem hemodinamica, transferir se <=120 min, senao fibrinolitico <=30 min. Antitrombotico: ATC = AAS + qualquer P2Y12 + HNF; trombolise = AAS + clopidogrel 300 + enoxaparina 30 mg EV e 1 mg/kg 12/12 h (>=75 anos: sem ataque, 0,75 mg/kg). IAMSSST com CATE <=24 h: segurar P2Y12. Fibrinolitico contraindicado: AVCh na vida, AVCi <3 m, trauma craniofacial <3 m, lesao cerebral que sangra, sangramento ativo/discrasia, dissecao de aorta. Nitrato nao em IAM inferior/VD nem com IPDE5; morfina 'por misericordia'. Reperfusao: queda do supra, da dor, RIVA, pico precoce de troponina.",
+      "fonte": "emed-hdv-cm-1"
+    },
+    {
+      "area": "Neurologia",
+      "padrao": "estado de mal",
+      "detalhe": "Crise >=5 min ou 2 crises sem recuperar consciencia. ABC/monitorizacao/glicemia antes da droga. BZD (diazepam EV ou midazolam IM; diazepam IM nao) -> fenitoina 20 mg/kg ate 50 mg/min OU levetiracetam EV (chegou ao Brasil 2025/26; escolha nos guidelines EUA/Europa) -> fenobarbital -> refratario (>120 min): sedacao continua (midazolam/propofol; depois cetamina/tiopental). Lacosamida so na profilaxia do TCE, nao no EME. RN: fenobarbital 1a linha.",
+      "fonte": "emed-hdv-cm-1"
+    },
+    {
+      "area": "Neurologia",
+      "padrao": "TCE: nao existe hipotensao permissiva",
+      "detalhe": "Glasgow 13-15 leve, 9-12 moderado, <=8 grave = IOT. Resposta motora e a que mais prediz prognostico; postura anormal = HIC descompensada. TC no leve: Glasgow <15 por 2 h, fratura aberta/afundamento/base (guaxinim, Battle, otoliquorreia, duplo halo), >=2 vomitos, >=65 anos, amnesia >30 min, alto impacto, anticoagulante, deficit focal/crise. Epidural = biconvexo, meningea media, intervalo lucido, temporal. Subdural = crescente, venoso, idoso, sem intervalo lucido, cronifica (agudo craniotomia; cronico trepanacao + embolizacao da meningea media). HSA em trauma sem cinematica clara: pensar aneurisma (angioTC, nimodipino). TCE grave: neuroprotecao (RASS -5, T <38, PAS >=100 [>=110 em <15 anos], PaCO2 35-45, SatO2 >=94, cabeceira 30); profilaxia de crise se grave, moderado com sangramento ou perfurante (fenitoina/lacosamida/levetiracetam). Cirurgia: subdural/epidural com rebaixamento atribuido. Monitorar PIC: grave com TC alterada (ou TC normal com 2 de 3: >40 anos, postura anormal, PAS <90). PIC >22 = tratar; PPC = PAM - PIC entre 60-70 -> PAM >=80: choque no TCE e inaceitavel (volume, depois vasopressor). Descompensacao clinica: Cushing, midriase/hemiparesia, postura anormal. 1a linha hipertonica (manitol ou salina; manitol nao se hipotenso); hiperventilacao (PaCO2 30-35) e ponte curta; heroicas: barbiturico, craniectomia, hipotermia. E o mecanismo por tras do card 540 e da familia 'reflexo neuro antes do ABC' (3a ocorrencia na s162).",
+      "fonte": "emed-hdv-cm-1"
+    },
+    {
+      "area": "Endocrino",
+      "padrao": "DM: numeros e CAD",
+      "detalhe": "Dx: sintomatico + glicemia aleatoria >=200 = 1 exame; assintomatico = 2 exames (GJ >=126, A1c >=6,5, TOTG 1 h >=209, 2 h >=200; pre-DM 100-125 / 5,7-6,4 / 155-208 / 140-199). Rastreio SBD: >=35 anos ou FINDRISC alto/muito alto ou excesso de peso + 1 FR; TOTG 1 h em todo pre-DM e no alto risco com rastreio normal. Complicacoes: rastrear ao dx no DM2, 5 anos no DM1 (neuropatia, creatinina + albuminuria, fundoscopia). Metas: A1c <7; idoso saudavel <7,5; comprometido <8 (GJ 90-150); muito comprometido evitar hipo/hiper. Pre-DM: MEV; metformina se <60 anos, IMC >=35, DMG previo. Metformina 2550 mg max; TFG 30-45 -> 1 g; <30 suspender; B12 anual apos 4 anos; suspender em cirurgia/internacao. SGLT2: CAD euglicemica (glicemia <250), ITU/candida; protege IC/DRC. GLP-1/tirzepatida: sem hipoglicemia; pancreatite; nao em gastroparesia. Insulina no DM2: falha de 3-4 drogas, sintomatico/catabolico, A1c >=9-10 com sintomas, glicemia >=300. CAD: cetonuria >=2+ ou BHB >=3, pH <7,3 ou HCO3 <18, glicemia >=200 ou DM; EHH: glicemia >=600, osm efetiva >300, pH >=7,3, HCO3 >=15, BHB <3. Tratamento: volume (1 L/h se grave; 250 mL em IC/DRC/idoso) -> POTASSIO decide a insulina (3,5-5 insulina + repor; <3,5 so repor; >5 so insulina) -> insulina regular EV; queda 50-70 mg/dL/h (rapido = edema cerebral, sobretudo crianca); bicarbonato so pH <6,9-7,0 em adulto, nunca em pediatria; ao chegar a 200-250 reduzir insulina + SG; resolucao CAD pH >7,3, HCO3 >18, BHB <0,6; transicao: regular SC 10 U ou 0,1 U/kg (+ basal), desligar bomba 1-2 h depois. Abdome agudo + DM = pensar CAD.",
+      "fonte": "emed-hdv-cm-1"
+    },
+    {
+      "area": "Endocrino",
+      "padrao": "obesidade e sindrome metabolica",
+      "detalhe": "NCEP ATP III 3 de 5: CA >102 H / >88 M, GJ >=110, TG >=150, HDL <40 H / <50 M, PA >=130/85 ou tratamento. LDL NAO e criterio (pegadinha classica). IMC: 25-30 sobrepeso, 30-35 G1, 35-40 G2, >=40 G3. Farmaco se IMC >=30 ou >=27 + comorbidade: GLP-1/tirzepatida preferidos; bupropiona-naltrexona (beliscador; nao em epilepsia/opioide); sibutramina (nao em alto risco CV); orlistate. Bariatrica: >=16 anos + falha clinica + IMC >=40, ou 35-40 com comorbidade que melhora com perda de peso (inclui psiquiatricas), ou 30-35 com DM2/AOS/OA grave. Bypass Y de Roux preferido no DM2 (incretinas); sleeve piora DRGE; banda e Scopinaro nao recomendados; balao = ponte pre-operatoria. Contraindicacao: psiquiatrica grave descompensada, risco cirurgico proibitivo.",
+      "fonte": "emed-hdv-cm-1"
+    },
+    {
+      "area": "Dermato",
+      "padrao": "dermatoses infecciosas: a imagem em palavras",
+      "detalhe": "Prurido NOTURNO + contactante = escabiose (papulas em interdigitos, punhos, axilas, genitais): permetrina 1a escolha (nao <2 meses; MS as vezes diz <2 anos); ivermectina VO em surto (repetir 7-14 d; nao <5 anos/<15 kg); enxofre em gestante/lactante/<2 meses. Tungiase = papula amarelada com ponto negro central no pe (remocao com agulha; checar tetano). Larva migrans cutanea = trajeto eritematoso serpiginoso em pe/gluteo apos praia (tiabendazol topico; extenso: VO/albendazol/ivermectina). Zoster em adulto jovem = pedir anti-HIV; unilateral, respeita linha media; aciclovir 800 mg 5x/d 7 d (ou valaciclovir 1 g 3x/d) em <=72 h previne neuralgia pos-herpetica (gabapentina/amitriptilina/carbamazepina); Ramsay Hunt = vesiculas no pavilhao + otalgia + paralisia facial periferica. Molusco = papula normocromica com UMBILICACAO central (curetagem). Tinea corporis = lesao circinada com borda descamativa e centro claro (terbinafina); tinea capitis = alopecia com pelos TONSURADOS, sempre sistemico (griseofulvina/terbinafina). Dermatite atopica: marcha eczema -> asma -> rinite; lactente face/extensoras, 2-12 anos flexuras, >12 liquenificacao; dx clinico; hidratante + corticoide/inibidor de calcineurina topicos; NUNCA corticoide sistemico.",
+      "fonte": "emed-hdv-cm-1"
+    },
+    {
+      "area": "Psiquiatria",
+      "padrao": "tabagismo = PCDT 2020",
+      "detalhe": "Todo profissional: PAAP (perguntar, avaliar, aconselhar, preparar) + acompanhar. Abordagem intensiva: Fagerstrom + grupo semanal no 1o mes, quinzenal no 2o, mensal ate 1 ano. Farmacoterapia para todos, EXCETO Fagerstrom <=4, <5 cigarros/dia, 1o cigarro >1 h apos acordar, sem abstinencia em tentativa previa, contraindicacao, recusa. Opcoes do PCDT: TRN combinada (adesivo 24 h + goma/pastilha) preferencial, bupropiona, TRN isolada, ou TRN + bupropiona em falhas repetidas. Bupropiona: iniciar 1-2 semanas antes de parar; contraindicada se risco de convulsao (convulsao febril na infancia, TCE grave, tumor SNC). Nicotina: nao se IAM <2 semanas; ulcera peptica ativa contraindica a via oral; ao colar o adesivo, nao fumar. Vareniclina, clonidina, nortriptilina: fora do PCDT/SUS. Gestante e adolescente: preferencialmente nao medicamentoso. Gestor: capacitar profissionais; medica da UBS: grupo semanal no 1o mes, nao consulta individual semanal nem palestra semanal.",
+      "fonte": "emed-hdv-cm-1"
     }
   ],
   "temas": [
@@ -145,8 +226,8 @@
       "tema": "Asma - Crise Aguda",
       "tema_id": 327,
       "prevalencia": "alta",
-      "evidencia": "idem Asma (subtema); Q92 do Simulado 6",
-      "fonte": "emed-hdv-ped-1"
+      "evidencia": "idem Asma (subtema); Q92 do Simulado 6 | crise leve/moderada/grave e tratamento por gravidade; anafilaxia -> adrenalina antes (22:08-28:24)",
+      "fonte": "emed-hdv-ped-1,emed-hdv-cm-1"
     },
     {
       "area": "Pediatria",
@@ -427,6 +508,190 @@
       "prevalencia": "media",
       "evidencia": "nodulo no USG: criterios de benignidade x suspeita; PAAF x core; BI-RADS 3 = 6 meses, rebaixa apos 2 anos (2:19:54; 2:27:12)",
       "fonte": "emed-hdv-gin-1"
+    },
+    {
+      "area": "Pneumo",
+      "tema": "Asma",
+      "tema_id": 184,
+      "prevalencia": "alta",
+      "evidencia": "'historicamente o tema mais cobrado em pneumologia'; crise/exacerbacao = 'o que o INEP mais gosta dentro de asma'; etapas GINA = 'ponto forte da prova' (05:27-28:24)",
+      "fonte": "emed-hdv-cm-1"
+    },
+    {
+      "area": "Pneumo",
+      "tema": "DPOC",
+      "tema_id": null,
+      "prevalencia": "media",
+      "evidencia": "2o tema mais cobrado em pneumo; nao coberto nesta aula (05:27). SEM linha na taxonomia e SEM resumo",
+      "fonte": "emed-hdv-cm-1"
+    },
+    {
+      "area": "Pneumo",
+      "tema": "Derrame Pleural",
+      "tema_id": null,
+      "prevalencia": "alta",
+      "evidencia": "'nos ultimos anos em 1o lugar junto com asma'; 'caiu no ENAMED do ultimo ano'; semiologia, Light, parapneumonico, TB pleural (28:24-47:20). Linha da taxonomia so 'Sindromes Pleuropulmonares (Semiologia)'",
+      "fonte": "emed-hdv-cm-1"
+    },
+    {
+      "area": "Pneumo",
+      "tema": "Síndromes Pleuropulmonares (Semiologia)",
+      "tema_id": 316,
+      "prevalencia": "alta",
+      "evidencia": "semiologia do derrame 'cai muito em prova do INEP' (30:05)",
+      "fonte": "emed-hdv-cm-1"
+    },
+    {
+      "area": "Cardiologia",
+      "tema": "Hipertensão Arterial Sistêmica",
+      "tema_id": 255,
+      "prevalencia": "alta",
+      "evidencia": "diretriz 2025 com atualizacoes 'muito provavel que sejam cobradas': MAPA/MRPA, meta <130/80 para todos, terapia combinada como regra, 4a droga espironolactona, albuminuria anual (47:43-1:09:06)",
+      "fonte": "emed-hdv-cm-1"
+    },
+    {
+      "area": "Cardiologia",
+      "tema": "Crise Hipertensiva",
+      "tema_id": null,
+      "prevalencia": "alta",
+      "evidencia": "atualizacao: corte >=180 e/ou >=110; pseudocrise; 'elevacao importante da PA sem LOA' (ex-urgencia); emergencia (1:09:06-1:17:26). SEM linha na taxonomia",
+      "fonte": "emed-hdv-cm-1"
+    },
+    {
+      "area": "Clinica Medica/Cardiologia",
+      "tema": "Dislipidemia e Estratificação de Risco Cardiovascular",
+      "tema_id": 420,
+      "prevalencia": "alta",
+      "evidencia": "diretriz nova: Lp(a) 1x na vida, nao-HDL coprimaria, PREVENT, risco extremo LDL <40, baixo risco <115, terapia combinada precoce, acido bempedoico (1:17:26-1:33:48)",
+      "fonte": "emed-hdv-cm-1"
+    },
+    {
+      "area": "Cardiologia",
+      "tema": "Prevenção Secundária Pós-IAM (Dislipidemia)",
+      "tema_id": 325,
+      "prevalencia": "alta",
+      "evidencia": "idem dislipidemia; LDL <50 no coronariopata (1:40:21)",
+      "fonte": "emed-hdv-cm-1"
+    },
+    {
+      "area": "Cardiologia",
+      "tema": "Dor Torácica e Síndrome Coronariana Aguda",
+      "tema_id": null,
+      "prevalencia": "alta",
+      "evidencia": "'tema que cai bastante, esta na moda'; angina tipica, HEART, troponina, OMI/NOMI, reperfusao, antitrombotico, fibrinolitico (1:34:09-2:02:22). SEM linha na taxonomia, SEM cards, SEM resumo",
+      "fonte": "emed-hdv-cm-1"
+    },
+    {
+      "area": "Cardiologia",
+      "tema": "Insuficiência Cardíaca Pt.2",
+      "tema_id": 173,
+      "prevalencia": "media",
+      "evidencia": "IC citada so como contexto (beta-bloq/espironolactona); Q1 do Simulado 6",
+      "fonte": "emed-hdv-cm-1"
+    },
+    {
+      "area": "Neurologia",
+      "tema": "Doença de Parkinson e Parkinsonismo",
+      "tema_id": null,
+      "prevalencia": "media",
+      "evidencia": "'distúrbios do movimento para o ENAMED = parkinsonismo': criterios MDS, Parkinson plus, medicamentoso, levodopa/agonistas (2:02:22-2:19:06). SEM linha na taxonomia, SEM resumo",
+      "fonte": "emed-hdv-cm-1"
+    },
+    {
+      "area": "Neurologia",
+      "tema": "Epilepsias",
+      "tema_id": 180,
+      "prevalencia": "alta",
+      "evidencia": "estado de mal: definicao operacional, BZD -> fenitoina OU levetiracetam EV (novo no Brasil 2025/26) -> fenobarbital -> sedacao (2:19:06-2:22:19)",
+      "fonte": "emed-hdv-cm-1"
+    },
+    {
+      "area": "Neurologia",
+      "tema": "Traumatismo Cranioencefálico",
+      "tema_id": 176,
+      "prevalencia": "alta",
+      "evidencia": "'gargalos onde as questoes trazem pegadinhas': Glasgow, indicacoes de TC no leve, lesoes primarias, subdural cronico + embolizacao da meningea media, neuroprotecao, PIC/PPC (2:22:19-2:46:41)",
+      "fonte": "emed-hdv-cm-1"
+    },
+    {
+      "area": "Pediatria",
+      "tema": "Traumatismo Cranioencefálico na criança",
+      "tema_id": 222,
+      "prevalencia": "alta",
+      "evidencia": "idem TCE (PAS >=110 em <15 anos)",
+      "fonte": "emed-hdv-cm-1"
+    },
+    {
+      "area": "Endocrino",
+      "tema": "Diabetes Mellitus - Complicações Agudas",
+      "tema_id": 169,
+      "prevalencia": "alta",
+      "evidencia": "DM = 53% das questoes de endocrino; 'todo ano cai cetoacidose'; a questao resolvida ao vivo (menina 11 anos, ENAMED/ENARE 2026, reposicao de potassio) e a Q66 do Simulado 6 (2:47:00; 3:09:49-3:22:05)",
+      "fonte": "emed-hdv-cm-1"
+    },
+    {
+      "area": "Endocrino",
+      "tema": "Diabetes Mellitus Tipo 2",
+      "tema_id": 170,
+      "prevalencia": "media",
+      "evidencia": "tratamento farmacologico 'nao e tao cobrado' mas e aposta (classes, insulinizacao no DM2 sintomatico 'ja foi tema de prova') (3:00:00-3:09:49)",
+      "fonte": "emed-hdv-cm-1"
+    },
+    {
+      "area": "Endocrino",
+      "tema": "Rastreamento de Diabetes Mellitus",
+      "tema_id": 370,
+      "prevalencia": "alta",
+      "evidencia": "criterios diagnosticos 'cobrados mais de uma vez'; rastreio SBD >=35 anos/FINDRISC; TOTG 1h (2:50:05-2:55:26)",
+      "fonte": "emed-hdv-cm-1"
+    },
+    {
+      "area": "Endocrino",
+      "tema": "Diabetes Mellitus - Complicações Crônicas",
+      "tema_id": 261,
+      "prevalencia": "media",
+      "evidencia": "rastreio de complicacoes ao dx (DM2) / 5 anos (DM1); metas por perfil (2:55:26-2:58:31)",
+      "fonte": "emed-hdv-cm-1"
+    },
+    {
+      "area": "Endocrino",
+      "tema": "Obesidade",
+      "tema_id": 275,
+      "prevalencia": "alta",
+      "evidencia": "obesidade e sindrome metabolica = '2o tema mais comum' de endocrino; NCEP ATP III (LDL nao e criterio), farmacoterapia, bariatrica (3:22:05-3:34:15)",
+      "fonte": "emed-hdv-cm-1"
+    },
+    {
+      "area": "Dermato",
+      "tema": "Dermatoses Infecciosas",
+      "tema_id": null,
+      "prevalencia": "media",
+      "evidencia": "escabiose, tungiase, larva migrans, herpes zoster, molusco, tineas: 'ja apareceram em provas anteriores do ENAMED' (3:34:33-3:52:15). SEM linha na taxonomia, SEM resumo",
+      "fonte": "emed-hdv-cm-1"
+    },
+    {
+      "area": "Clinica Medica",
+      "tema": "Dermatoses Eczematosas",
+      "tema_id": 429,
+      "prevalencia": "media",
+      "evidencia": "dermatite atopica 'eventualmente aparece' (3:52:15-3:56:40)",
+      "fonte": "emed-hdv-cm-1"
+    },
+    {
+      "area": "Dermato",
+      "tema": "Hanseníase",
+      "tema_id": 187,
+      "prevalencia": "alta",
+      "evidencia": "aula propria (nao coberta aqui); 'tema muito extenso, muito importante' (3:34:33)",
+      "fonte": "emed-hdv-cm-1"
+    },
+    {
+      "area": "Psiquiatria",
+      "tema": "Dependência Química",
+      "tema_id": 256,
+      "prevalencia": "alta",
+      "evidencia": "cessacao do tabagismo: 'cai todo ano', 'um dos temas de maior incidencia da psiquiatria'; PCDT 2020 (3:56:40-4:13:17)",
+      "fonte": "emed-hdv-cm-1"
     }
   ]
 }

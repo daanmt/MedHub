@@ -38,6 +38,15 @@
       "banca": "Revalida (INEP) -- engenharia reversa das provas do Revalida; PROXY para o ENAMED (mesma banca, temas compartilhados)",
       "cobertura": "cirurgia pediatrica (piloro, intussuscepcao, hernia inguinal, criptorquidia, escroto agudo, neuroblastoma x Wilms) e trauma ATLS 11a ed (X-ABCDE, avaliacao secundaria, torniquete, via aerea, trauma toracico, laceracao aortica, tamponamento, choque, reposicao, PTM, hipotensao permissiva, tranexamico)",
       "pendente": "Parte II (profa. Renata): temas complementares (trauma abdominal/pelvico, abdome agudo etc.)"
+    },
+    {
+      "id": "emed-hdv-prev-1",
+      "titulo": "Hora da Verdade ENAMED 2026 - Medicina Preventiva - Parte I",
+      "autor": "Estrategia MED (profa. Barbara)",
+      "tipo": "aula ao vivo YouTube (transcricao enviada pelo usuario)",
+      "recebido": "2026-09-05",
+      "cobertura": "4 bracos da vigilancia, SINAN 2026 e violencias, El Nino/mudancas climaticas, saude do trabalhador (SINAN x CAT, mercurio/cromo/benzeno, acidente oftalmologico), APS (territorializacao, atribuicoes, atributos), MCCP/SIFE, testes diagnosticos (valores preditivos, ROC), principios do SUS",
+      "pendente": "Parte II (12/09): DO/obito fetal e infantil, mortalidade materna, populacoes indigena/ribeirinha/LGBT/rua, etica, estudos epidemiologicos, niveis de prevencao"
     }
   ],
   "padroes_banca": [
@@ -202,6 +211,54 @@
       "padrao": "ATLS 11: choque e reposicao",
       "detalhe": "4 tipos: hipovolemico (hemorragico = principal causa de morte evitavel), obstrutivo (pneumotorax hipertensivo, tamponamento), distributivo (neurogenico, septico), cardiogenico (contusao miocardica = VENTRICULO DIREITO; IAM). Neurogenico: lesao acima de T6-T7, hipotensao SEM taquicardia (bradicardia), pele quente; 1000 mL -> vasopressor. Hemorragico: precoce = taquicardia, palidez, pressao de pulso estreita; tardio = hipotensao (perdeu 1500-2000 mL) e confusao. 11a ed: LEVE (FC normal/alta, PAS normal, nao transfunde), MODERADO (FC >100, PAS normal/baixa, transfunde se hipotenso), GRAVE (FC >120, PAS <90, protocolo de transfusao macica). Acessos: 2 perifericos 14-16 -> intraosseo (umero proximal/tibia; crianca: fêmur distal/tibia apos 2 tentativas) -> central; nunca IO em osso fraturado. Repor: sangue total > 1:1:1 > concentrado de hemacias > cristaloide (correndo atras de sangue). Resposta rapida/transitoria/ausente. PTM se choque grave, resposta transitoria/ausente ou ABC score >=2 (FC >=120, PAS <=90, FAST+, penetrante). Hipotensao permissiva (PAS ~90) em penetrante de tronco; PROIBIDA em TCE e TRM. Acido tranexamico ate 3 h: 1 g em 10 min + 1 g em 8 h. SVD: debito 0,5 mL/kg/h adulto, 1 crianca >1 ano, 1-2 lactente; hematuria na sonda = lesao urinaria.",
       "fonte": "emed-hdv-cir-1"
+    },
+    {
+      "area": "Preventiva",
+      "padrao": "4 bracos da vigilancia",
+      "detalhe": "Epidemiologica = PESSOAS (sorologia de comunicantes, quimioprofilaxia, busca ativa, bloqueio vacinal, SINAN, boletins, SIM; MONITORA vetores); Ambiental = MEIO (ar, agua, solo; REDUZ populacao de vetores/peconhentos: desratizacao, inseticida); Sanitaria = PRODUTOS e servicos (unica com poder de policia; executa a vigilancia epidemiologica em portos/aeroportos/fronteiras via ANVISA); Trabalhador = riscos do processo de trabalho. Todas fazem informacao/educacao/comunicacao. O INEP mistura as funcoes nas alternativas: riscar pelo mantra.",
+      "fonte": "emed-hdv-prev-1"
+    },
+    {
+      "area": "Preventiva",
+      "padrao": "SINAN 2026 e violencias",
+      "detalhe": "Esporotricose e anomalias congenitas = semanal (anomalia tambem no SINASC/DNV); parotidite: portaria diz imediata e semanal (MS: semanal) -> questao anulavel; Oropouche semanal, mas gestante/obito/obito fetal/anomalia por Oropouche = imediata. Violencias: TODAS semanais, exceto tentativa de suicidio e violencia sexual = imediatas. Comunicacao externa: crianca -> conselho tutelar; idoso -> autoridade policial, MP, conselhos do idoso; mulher -> policia em 24 h SEM nome (compendio); sem BO obrigatorio, sem conselho, sem psiquiatra de primeira; acolher, eMulti, plano de seguranca, 180.",
+      "fonte": "emed-hdv-prev-1"
+    },
+    {
+      "area": "Preventiva",
+      "padrao": "El Nino",
+      "detalhe": "Aguas quentes do Pacifico param na costa (alisios fracos): Amazonia seca (estiagem, queimadas, PM2,5 -> AVE/IAM/parto prematuro 10-20 dias depois; comunidade ribeirinha isolada -> perde ACESSO, depois LONGITUDINALIDADE; arraia: arrastar os pes), Sul/Sudeste chuvas (arboviroses expandem, agua e alimento reduzidos). Leptospirose: SEM profilaxia coletiva (sem eficacia); doxiciclina 200 mg dose unica ou semanal so para socorristas/casos individualizados; a resposta e diagnostico precoce (incubacao ate 30 dias). Queimadas: fechar portas/janelas nos picos, ambiente fechado com conforto termico, hidratar, evitar ar livre 12-16 h, evitar alimento/remedio com cinzas, N95/PFF2/P100.",
+      "fonte": "emed-hdv-prev-1"
+    },
+    {
+      "area": "Preventiva",
+      "padrao": "saude do trabalhador: SINAN x CAT",
+      "detalhe": "Acidente tipico e de trajeto (sem desvio pessoal) = SINAN imediato; exposicao a material biologico e intoxicacao exogena = semanal; doencas relacionadas (cancer, dermatoses, voz, LER/DORT, PAIR, pneumoconioses, transtornos mentais/burnout) = semanal, so essas. SINAN para todo trabalhador, formal ou nao, na suspeita. E acidente: no local e horario, incluindo agressao, terrorismo, desabamento; doenca endemica so se a exposicao do trabalho e maior que a da populacao. CAT = Previdencia: so formal (CLT), domestico (>=2x/semana continuo), segurado especial (economia familiar rural; indigena com atividade reconhecida pela FUNAI); PJ e estatutario nao; empregador emite ate o proximo dia util ou imediato se obito (senao multa); depois: acidentado, dependente, sindicato, medico assistente, juiz, sem prazo. Medico do trabalho pode discordar de atestado (assume a responsabilidade). SUS nao faz admissional/demissional/periodico; telemedicina nao (excecao: expatriado com exame presencial remoto).",
+      "fonte": "emed-hdv-prev-1"
+    },
+    {
+      "area": "Preventiva",
+      "padrao": "intoxicacoes ocupacionais",
+      "detalhe": "Mercurio elementar (liquido, INALACAO): garimpeiro, dentista aposentado, lampadas; agudo = respiratorio + gosto metalico; cronico = triade mercurial (gengivite + eretismo psiquico [chapeleiro maluco] + tremor) + neuro; dosar sangue/urina. Inorganico (sais, INGESTAO: pilha, autoexterminio) = agudo GI (boca cinza, hematemese) + nefrotoxico; principal forma no Brasil = crianca com pilha. Metilmercurio (peixes de garimpo; ribeirinho/indigena) = cronico, neuropsiquiatrico multifocal sem topografia (marcha + fala + aprendizagem/psicose); dx pela HISTORIA (garimpo + peixe diario), dosagem no cabelo; DMSA quela so o circulante; notificacao semanal; referencia. Cromo hexavalente (galvanoplastia, curtume) = ulcera/perfuracao de septo nasal, ulcera em olho de pombo. Benzeno (frentista, mecanico de aviao) = LMA/LMC/mielodisplasia. Acidente oftalmologico quimico (cal, TCA, organofosforado, piretroide do ACE): ainda nao lavou -> irrigar abundante 10-20 min de dentro para fora; ja lavou -> oftalmologista; perfuracao -> oftalmo imediato; trabalhador rural = CAT. Organofosforado = sindrome 'molhada'.",
+      "fonte": "emed-hdv-prev-1"
+    },
+    {
+      "area": "Preventiva",
+      "padrao": "APS: territorio, atribuicoes, atributos",
+      "detalhe": "Territorio: distrito (rede completa: municipio/regiao), area (abrangencia da UBS), microarea (menor unidade funcional, <=750 pessoas, homogenea socioeconomica/cultural, pode cruzar limite geografico), moradia (familia); equipe 2000-3500 pessoas (3-5 microareas). Territorializar = diagnostico comunitario + estimativa rapida porta a porta + georreferenciamento (nao mapa esquematico; DataSUS/IBGE = dados secundarios, desagregacao so municipal). Medico: encaminha MANTENDO a responsabilidade pelo plano; unico que INTERNA (erro da PNAB sobre ACS). Enfermeiro: SUPERVISIONA ACS/tecnico/acolhimento; prescreve e pede exame POR PROTOCOLO (sifilis, TB, hanseniase, IST, anticoncepcional; nao HAS/DM). ACS: PA, glicemia, antropometria, temperatura, curativo limpo, adesao a medicacao, situacoes de risco/violencia/aleitamento, beneficios sociais; NAO orienta alimentacao de desnutrido/obeso (tratamento); nao reencaminhar por ausencia de cicatriz de BCG. Atributos: competencia cultural = religiao, lingua, comida, metodos alternativos (curandeira); orientacao comunitaria = infraestrutura -> epidemiologia local (valao, via sem passarela, garimpo, rio raso); coordenacao = reorganizar o cuidado apos o secundario; El Nino isola ribeirinho -> acesso, depois longitudinalidade. MCCP: 4 componentes; componente 1 = SIFE (sentimentos, ideias, funcionalidade, expectativas): a ideia ameacadora e o que traz o paciente; explorar aumenta adesao e vinculo.",
+      "fonte": "emed-hdv-prev-1"
+    },
+    {
+      "area": "Preventiva",
+      "padrao": "testes diagnosticos: valores preditivos e ROC",
+      "detalhe": "Fatores dos valores preditivos: sensibilidade (S tem N: S sobe -> VPN sobe, pois caem os falso-negativos), especificidade (E tem P: E sobe -> VPP sobe), prevalencia/probabilidade pre-teste (sobe -> VPP sobe e VPN cai; cai -> VPN sobe e VPP cai). Prevalencia NAO altera S nem E (pegadinha). Teste migrando entre cidades: olhar se a prevalencia subiu ou caiu. APS = baixa probabilidade pre-teste; secundario/terciario = alta (gatekeeper filtra) -> teste que vai da APS ao secundario: VPP sobe, VPN cai. ROC: escolher a maior area sob a curva (= acuracia), mais proxima do canto superior esquerdo.",
+      "fonte": "emed-hdv-prev-1"
+    },
+    {
+      "area": "Preventiva",
+      "padrao": "SUS como casa",
+      "detalhe": "Universalidade = a PORTA aberta a todos (acesso); Integralidade = os COMODOS (cada acao/nivel: APS, saude mental, farmacia, prevencao, promocao); Equidade = o CAMINHO ate a porta (dar mais a quem esta mais longe: ribeirinho, indigena, LGBT, negros, romani, politicas especificas). Gabarito mais frequente do INEP: integralidade ou equidade. Grafico de quintis convergindo ao longo do tempo = equidade produzindo universalidade. Participacao popular cai como conselhos de saude.",
+      "fonte": "emed-hdv-prev-1"
     }
   ],
   "temas": [
@@ -828,6 +885,94 @@
       "prevalencia": "media",
       "evidencia": "grande area queimada e lesao termica de laringe = VA definitiva (1:20:13)",
       "fonte": "emed-hdv-cir-1"
+    },
+    {
+      "area": "Preventiva",
+      "tema": "Vigilância em Saúde",
+      "tema_id": 127,
+      "prevalencia": "alta",
+      "evidencia": "'o INEP gosta bastante de vigilancia em saude; tera questao': 4 bracos e suas intersecoes (07:02-21:12); El Nino = 'posso apostar dinheiro' (37:22-53:17)",
+      "fonte": "emed-hdv-prev-1"
+    },
+    {
+      "area": "Preventiva",
+      "tema": "Sistemas de Informação em Saúde",
+      "tema_id": 217,
+      "prevalencia": "alta",
+      "evidencia": "SINAN 2026: esporotricose e anomalias congenitas semanais, parotidite (portaria dubia), Oropouche; violencias e comunicacao externa (21:12-37:22)",
+      "fonte": "emed-hdv-prev-1"
+    },
+    {
+      "area": "Preventiva",
+      "tema": "Poluição Atmosférica e Queimadas",
+      "tema_id": 334,
+      "prevalencia": "alta",
+      "evidencia": "El Nino -> Amazonia seca -> queimadas -> PM2,5; orientacoes do MS 2026 (46:21-53:17)",
+      "fonte": "emed-hdv-prev-1"
+    },
+    {
+      "area": "Preventiva",
+      "tema": "Saúde do Trabalhador",
+      "tema_id": null,
+      "prevalencia": "alta",
+      "evidencia": "'vai cair, nao tenho duvidas': tipos de acidente, SINAN x CAT, mercurio/cromo/benzeno, acidente oftalmologico = 'minha grande aposta' (53:17-1:58:28). SEM linha na taxonomia; resumo ausente",
+      "fonte": "emed-hdv-prev-1"
+    },
+    {
+      "area": "Preventiva",
+      "tema": "Atenção Primária à Saúde no Brasil",
+      "tema_id": 440,
+      "prevalencia": "alta",
+      "evidencia": "territorializacao (distrito/area/microarea/moradia), atribuicoes medico/enfermeiro/ACS, atributos (competencia cultural x orientacao comunitaria, acesso -> longitudinalidade no El Nino) (1:58:28-2:59:03). Task roxa 'APS (Revisao)' da S17",
+      "fonte": "emed-hdv-prev-1"
+    },
+    {
+      "area": "Preventiva",
+      "tema": "Atenção Primária à Saúde",
+      "tema_id": 227,
+      "prevalencia": "alta",
+      "evidencia": "idem (linha duplicada)",
+      "fonte": "emed-hdv-prev-1"
+    },
+    {
+      "area": "Preventiva",
+      "tema": "Medicina de Família e Comunidade",
+      "tema_id": 263,
+      "prevalencia": "alta",
+      "evidencia": "atributos da APS e MCCP (2:44:16-3:06:32)",
+      "fonte": "emed-hdv-prev-1"
+    },
+    {
+      "area": "Preventiva",
+      "tema": "Método Clínico Centrado na Pessoa",
+      "tema_id": 269,
+      "prevalencia": "media",
+      "evidencia": "4 componentes; componente 1 = SIFE e o mais cobrado (2:59:03-3:06:32)",
+      "fonte": "emed-hdv-prev-1"
+    },
+    {
+      "area": "Preventiva",
+      "tema": "Delineamentos Epidemiologicos",
+      "tema_id": 401,
+      "prevalencia": "alta",
+      "evidencia": "testes diagnosticos: 'INEP vai subir o nivel' -- fatores dos valores preditivos, APS = baixa prob pre-teste, curva ROC (3:06:32-3:25:28)",
+      "fonte": "emed-hdv-prev-1"
+    },
+    {
+      "area": "Preventiva",
+      "tema": "Rastreamento e prevenção",
+      "tema_id": 221,
+      "prevalencia": "media",
+      "evidencia": "testes diagnosticos idem",
+      "fonte": "emed-hdv-prev-1"
+    },
+    {
+      "area": "Preventiva",
+      "tema": "Princípios e Diretrizes do SUS",
+      "tema_id": 297,
+      "prevalencia": "alta",
+      "evidencia": "'cobra universalidade, equidade ou integralidade com frequencia absurda; gabarito quase sempre integralidade ou equidade' (3:26:06-3:32:52). Fraqueza nº 4 do usuario (19 erros)",
+      "fonte": "emed-hdv-prev-1"
     }
   ]
 }

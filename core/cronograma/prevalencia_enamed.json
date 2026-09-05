@@ -28,6 +28,16 @@
       "recebido": "2026-09-05",
       "cobertura": "asma + derrame pleural; HAS/crise hipertensiva/dislipidemia (diretrizes 2025); dor toracica e SCA; parkinsonismo, estado de mal, TCE; DM (dx, rastreio, CAD/EHH, classes), obesidade e sindrome metabolica; dermatoses infecciosas e dermatite atopica; cessacao do tabagismo (PCDT 2020)",
       "pendente": "Parte II; DPOC (premonicao/revisao final); hanseniase (aula propria)"
+    },
+    {
+      "id": "emed-hdv-cir-1",
+      "titulo": "Hora da Verdade Revalida INEP 2026.2 - Cirurgia - Parte I",
+      "autor": "Estrategia MED (prof. Antonio Rivas)",
+      "tipo": "aula gravada YouTube (transcricao enviada pelo usuario)",
+      "recebido": "2026-09-05",
+      "banca": "Revalida (INEP) -- engenharia reversa das provas do Revalida; PROXY para o ENAMED (mesma banca, temas compartilhados)",
+      "cobertura": "cirurgia pediatrica (piloro, intussuscepcao, hernia inguinal, criptorquidia, escroto agudo, neuroblastoma x Wilms) e trauma ATLS 11a ed (X-ABCDE, avaliacao secundaria, torniquete, via aerea, trauma toracico, laceracao aortica, tamponamento, choque, reposicao, PTM, hipotensao permissiva, tranexamico)",
+      "pendente": "Parte II (profa. Renata): temas complementares (trauma abdominal/pelvico, abdome agudo etc.)"
     }
   ],
   "padroes_banca": [
@@ -162,6 +172,36 @@
       "padrao": "tabagismo = PCDT 2020",
       "detalhe": "Todo profissional: PAAP (perguntar, avaliar, aconselhar, preparar) + acompanhar. Abordagem intensiva: Fagerstrom + grupo semanal no 1o mes, quinzenal no 2o, mensal ate 1 ano. Farmacoterapia para todos, EXCETO Fagerstrom <=4, <5 cigarros/dia, 1o cigarro >1 h apos acordar, sem abstinencia em tentativa previa, contraindicacao, recusa. Opcoes do PCDT: TRN combinada (adesivo 24 h + goma/pastilha) preferencial, bupropiona, TRN isolada, ou TRN + bupropiona em falhas repetidas. Bupropiona: iniciar 1-2 semanas antes de parar; contraindicada se risco de convulsao (convulsao febril na infancia, TCE grave, tumor SNC). Nicotina: nao se IAM <2 semanas; ulcera peptica ativa contraindica a via oral; ao colar o adesivo, nao fumar. Vareniclina, clonidina, nortriptilina: fora do PCDT/SUS. Gestante e adolescente: preferencialmente nao medicamentoso. Gestor: capacitar profissionais; medica da UBS: grupo semanal no 1o mes, nao consulta individual semanal nem palestra semanal.",
       "fonte": "emed-hdv-cm-1"
+    },
+    {
+      "area": "Cirurgia",
+      "padrao": "cirurgia pediatrica: idade + sinal = diagnostico",
+      "detalhe": "Piloro: 2-8 semanas, vomito nao bilioso em jato progressivo, fome preservada, oliva pilorica (60%), ondas de Kussmaul; alcalose metabolica hipocloremica hipocalemica (bradipneia compensatoria); oliva palpavel fecha o dx, USG se duvida (espessamento + comprimento); tratamento inicial = COMPENSAR (volume/eletrolitos), depois piloromiotomia de Fredet-Ramstedt. Intussuscepcao: 4-12 meses, dias apos virose (placas de Peyer), dor em colica intermitente + fezes em geleia de framboesa, massa em salsicha no HCD + fossa iliaca vazia (Dance); 10% com cabeca (Meckel; tumor no adulto); USG = alvo/pseudorim (RX inespecifico); reducao hidrostatica/pneumatica resolve 80%; cirurgia se peritonite/instabilidade/cabeca anatomica/falha/recorrencias. Hernia inguinal pediatrica: conduto peritonio-vaginal patente, SEMPRE indireta, prematuro, meninos, direita; dx clinico (USG se duvida); cirurgia ELETIVA o quanto antes (so ligadura do saco, sem reforco/tela; prematuro no bercario: antes da alta); encarcerada (dura, dolorosa, irredutivel) = reduzir e operar em 24-48 h; estrangulada (hiperemia, toxemia, peritonite, obstrucao) = urgencia. Criptorquidia: 30% dos prematuros, 3% a termo; dx pelo exame fisico, sem imagem de rotina; 77% descem ate 3 meses; esperar ate 6-12 meses e operar (risco de tumor); palpavel no inguinal = orquidopexia; impalpavel = videolaparoscopia (<=2 cm do anel: 1 tempo; alto: Fowler-Stephens em 2 tempos); bilateral = pensar sindrome; + hipospadia = distúrbio da diferenciacao sexual. Escroto agudo: torcao (pico 14 anos; dor abrupta que acorda; cremasterico abolido; testiculo alto e horizontal (Angell); Prehn NEGATIVO; Doppler sem fluxo, SO se nao atrasar; janela 4-6 h; explorar, orquidopexia bilateral ou orquiectomia + fixar o contralateral) x orquiepididimite (Prehn positivo; hipervascular ao Doppler; ATB; principal causa em adulto). Tumores abdominais: neuroblastoma = mais comum (crista neural, adrenal 50%), irregular, CRUZA a linha media, consumptivo, catecolaminas (HAS, rubor, sudorese; VMA/HVA urinarios), metastase ossea, pior >1 ano; Wilms = 2o, <5 anos, liso, NAO cruza, HEMATURIA, pulmao/figado, anaplasia = mau prognostico; ambos TC; cirurgia + quimio.",
+      "fonte": "emed-hdv-cir-1"
+    },
+    {
+      "area": "Cirurgia",
+      "padrao": "ATLS 11: X-ABCDE e a fronteira da avaliacao secundaria",
+      "detalhe": "X (exsanguinacao): so hemorragia que mata em minutos; expor, comprimir, packing em cavidade; torniquete se membro nao controla com compressao, arterial em jato ou amputacao -- sobre a pele, 5-8 cm proximal, nunca sobre articulacao, pulso distal deve sumir, 2o torniquete 3-5 cm acima se falhar, anotar a hora, converter em <=2 h. Na avaliacao primaria so cabem RX de torax, RX de pelve e FAST; secundaria (exame completo, RX de membros/coluna, contrastados, TC, endoscopia) SO depois da primaria completa e com paciente estavel -- TC em instavel e sempre errado. Triade letal: hipotermia + acidose + coagulopatia (por isso o E controla hipotermia). SNG/SVD na etapa C ou na secundaria.",
+      "fonte": "emed-hdv-cir-1"
+    },
+    {
+      "area": "Cirurgia",
+      "padrao": "ATLS 11: via aerea",
+      "detalhe": "Obstrucao: queda da lingua (chin lift, canula), corpo estranho (remover sob visao direta), sangue/secrecao (aspirar), sempre com coluna protegida. O2 10-15 L/min em mascara nao reinalante se VA pervia. VA definitiva = tubo na traqueia com balonete abaixo das pregas vocais. Indicacoes: apneia/drive reduzido, Glasgow <=8, oxigenacao inadequada apos descartar pneumotorax (a ressalva vale SO quando a indicacao e dessaturacao persistente -- rebaixado, apneico ou sangrando na VA intuba sem descartar nada), grande area queimada, hematoma cervical expansivo, sangramento profuso de VA, trauma maxilofacial extenso, lesao termica de laringe. Cirurgica = cricotireoidostomia (11a ed nao cita mais nasotraqueal nem traqueostomia): falha de IOT, sangramento facial profuso, maxilofacial extenso, edema de glote. 10a ed (ainda pode cair): traqueostomia se fratura de laringe ou <12 anos. Novidades: todo sedativo (incluindo etomidato) pode hipotensar + a pressao positiva reduz o retorno venoso -> no chocado, volume/vasopressor ANTES de intubar; videolaringoscopio e bougie de escolha; manobra de Sellick contraindicada; a 1a tentativa e do mais experiente.",
+      "fonte": "emed-hdv-cir-1"
+    },
+    {
+      "area": "Cirurgia",
+      "padrao": "ATLS 11: trauma toracico",
+      "detalhe": "Pneumotorax simples: timpanico, MV e expansibilidade reduzidos; dreno no 5o EIC entre linha axilar anterior e media, 14 Fr, para tras e para cima (gestante: 1-2 espacos acima); conservador SO se pequeno (<=3,5 cm da parede) ou oculto (nao visto no RX) E assintomatico E sem ventilacao mecanica/transporte aereo. Hipertensivo: dx CLINICO, nenhum exame antes de tratar; turgencia jugular, desvio de traqueia, timpanismo, choque obstrutivo; descomprimir (agulha 5o EIC LAA-LAM ou 2o EIC linha hemiclavicular; digital no obeso) e DEPOIS drenar. Aberto: ferida >=2/3 do diametro da traqueia, soprante; curativo de 3 pontas -> dreno por contra-abertura + reconstrucao da parede (nunca o dreno pela ferida). Hemotorax: MACICEZ, jugular murcha, hipovolemia; drenar sempre; 10a ed (mais provavel na prova): >1500 mL de saida ou >=200 mL/h por 2-4 h = toracotomia; 11a ed: macico = sangue suficiente para hipotensao; 24 Fr no macico, 14 Fr no nao macico. Hipertensivo x hemotorax macico: timpanismo x macicez e jugular turgida x murcha (as provas omitem a percussao e deixam a jugular). Torax instavel: >=2 arcos consecutivos com >=2 fraturas cada = respiracao paradoxal (patognomonico); a gravidade e a contusao pulmonar (piora nas horas seguintes; crianca contunde sem fraturar); analgesia poupando opioide/bloqueio intercostal, evitar hiper-hidratacao, O2 -> VNI -> IOT se Sat <90 ou PaO2 <60. Laceracao aortica: desaceleracao, istmo (ligamento arterioso); triagem RX com alargamento de mediastino -> angioTC (99%); grau 1-2 observar, 3-4 cirurgia; manter PAS <100 e FC <100. Tamponamento: penetrante na cardiac box (claviculas, 10a costela, mamilos) ou torax inteiro; Beck completa em so 30%; pulso paradoxal; MV normal e o que o separa do pneumotorax hipertensivo; FAST pericardico; toracotomia anterolateral esquerda; pericardiocentese (Marfan) so como desespero.",
+      "fonte": "emed-hdv-cir-1"
+    },
+    {
+      "area": "Cirurgia",
+      "padrao": "ATLS 11: choque e reposicao",
+      "detalhe": "4 tipos: hipovolemico (hemorragico = principal causa de morte evitavel), obstrutivo (pneumotorax hipertensivo, tamponamento), distributivo (neurogenico, septico), cardiogenico (contusao miocardica = VENTRICULO DIREITO; IAM). Neurogenico: lesao acima de T6-T7, hipotensao SEM taquicardia (bradicardia), pele quente; 1000 mL -> vasopressor. Hemorragico: precoce = taquicardia, palidez, pressao de pulso estreita; tardio = hipotensao (perdeu 1500-2000 mL) e confusao. 11a ed: LEVE (FC normal/alta, PAS normal, nao transfunde), MODERADO (FC >100, PAS normal/baixa, transfunde se hipotenso), GRAVE (FC >120, PAS <90, protocolo de transfusao macica). Acessos: 2 perifericos 14-16 -> intraosseo (umero proximal/tibia; crianca: fêmur distal/tibia apos 2 tentativas) -> central; nunca IO em osso fraturado. Repor: sangue total > 1:1:1 > concentrado de hemacias > cristaloide (correndo atras de sangue). Resposta rapida/transitoria/ausente. PTM se choque grave, resposta transitoria/ausente ou ABC score >=2 (FC >=120, PAS <=90, FAST+, penetrante). Hipotensao permissiva (PAS ~90) em penetrante de tronco; PROIBIDA em TCE e TRM. Acido tranexamico ate 3 h: 1 g em 10 min + 1 g em 8 h. SVD: debito 0,5 mL/kg/h adulto, 1 crianca >1 ano, 1-2 lactente; hematuria na sonda = lesao urinaria.",
+      "fonte": "emed-hdv-cir-1"
     }
   ],
   "temas": [
@@ -610,8 +650,8 @@
       "tema": "Traumatismo Cranioencefálico",
       "tema_id": 176,
       "prevalencia": "alta",
-      "evidencia": "'gargalos onde as questoes trazem pegadinhas': Glasgow, indicacoes de TC no leve, lesoes primarias, subdural cronico + embolizacao da meningea media, neuroprotecao, PIC/PPC (2:22:19-2:46:41)",
-      "fonte": "emed-hdv-cm-1"
+      "evidencia": "'gargalos onde as questoes trazem pegadinhas': Glasgow, indicacoes de TC no leve, lesoes primarias, subdural cronico + embolizacao da meningea media, neuroprotecao, PIC/PPC (2:22:19-2:46:41) | hipotensao permissiva PROIBIDA em TCE/TRM: PAS bem acima de 90 (2:44:47) -- terceira fonte do mesmo mecanismo (neuro CM-1 e aqui)",
+      "fonte": "emed-hdv-cm-1,emed-hdv-cir-1"
     },
     {
       "area": "Pediatria",
@@ -692,6 +732,102 @@
       "prevalencia": "alta",
       "evidencia": "cessacao do tabagismo: 'cai todo ano', 'um dos temas de maior incidencia da psiquiatria'; PCDT 2020 (3:56:40-4:13:17)",
       "fonte": "emed-hdv-cm-1"
+    },
+    {
+      "area": "Cirurgia",
+      "tema": "Cirurgia Infantil",
+      "tema_id": 253,
+      "prevalencia": "alta",
+      "evidencia": "'despenca na prova do Revalida; todo ano tem questao, quando nao sao duas' (05:12). Cobertura: piloro, intussuscepcao, hernia inguinal, criptorquidia, escroto agudo, neuroblastoma x Wilms. E a fraqueza nº 1 do usuario (30 erros) e ha 43 cards no pool nunca introduzidos",
+      "fonte": "emed-hdv-cir-1"
+    },
+    {
+      "area": "Cirurgia",
+      "tema": "Cirurgia Infantil I",
+      "tema_id": 139,
+      "prevalencia": "alta",
+      "evidencia": "idem Cirurgia Infantil (linha duplicada)",
+      "fonte": "emed-hdv-cir-1"
+    },
+    {
+      "area": "Cirurgia",
+      "tema": "Patologias do Conduto Peritonio-Vaginal",
+      "tema_id": 248,
+      "prevalencia": "alta",
+      "evidencia": "hernia inguinal pediatrica: sempre indireta; cirurgia eletiva o quanto antes; encarcerada x estrangulada (22:17-33:49)",
+      "fonte": "emed-hdv-cir-1"
+    },
+    {
+      "area": "Cirurgia",
+      "tema": "Hérnias Inguinais",
+      "tema_id": 421,
+      "prevalencia": "media",
+      "evidencia": "hernia pediatrica coberta; adulto (Shouldice/Lichtenstein/TAPP) nao entra na crianca (28:00)",
+      "fonte": "emed-hdv-cir-1"
+    },
+    {
+      "area": "Cirurgia",
+      "tema": "Trauma - Avaliação Inicial, Vias Aéreas e Trauma Torácico",
+      "tema_id": 140,
+      "prevalencia": "alta",
+      "evidencia": "'talvez o bloco mais importante de todos para a prova de cirurgia'; X-ABCDE, avaliacao secundaria, torniquete, VA definitiva/cirurgica, pneumotorax, hemotorax, torax instavel, laceracao aortica, tamponamento (1:01:17-2:21:31)",
+      "fonte": "emed-hdv-cir-1"
+    },
+    {
+      "area": "Cirurgia",
+      "tema": "Controle de Hemorragia Exsanguinante (ATLS)",
+      "tema_id": 339,
+      "prevalencia": "alta",
+      "evidencia": "etapa X: torniquete (indicacoes, tecnica, conversao <=2 h), packing (1:07:13-1:13:13)",
+      "fonte": "emed-hdv-cir-1"
+    },
+    {
+      "area": "Cirurgia",
+      "tema": "Trauma Torácico (Tamponamento Cardíaco)",
+      "tema_id": 341,
+      "prevalencia": "alta",
+      "evidencia": "cardiac box, Beck (30%), pulso paradoxal, FAST, toracotomia anterolateral esquerda; MV normal diferencia do pneumotorax hipertensivo (2:12:22-2:21:31)",
+      "fonte": "emed-hdv-cir-1"
+    },
+    {
+      "area": "Cirurgia",
+      "tema": "Trauma - Choque",
+      "tema_id": 143,
+      "prevalencia": "alta",
+      "evidencia": "classificacao do choque hemorragico da 11a ed (leve/moderado/grave) 'despenca na prova, atualizada no ano passado, chance altissima'; PTM, ABC score, hipotensao permissiva, tranexamico (2:21:31-2:47:43)",
+      "fonte": "emed-hdv-cir-1"
+    },
+    {
+      "area": "Cirurgia",
+      "tema": "Trauma Abdominal e Pélvico",
+      "tema_id": 146,
+      "prevalencia": "alta",
+      "evidencia": "bloco trauma = o mais importante; abdominal/pelvico fica para a Parte II (04:10)",
+      "fonte": "emed-hdv-cir-1"
+    },
+    {
+      "area": "Cirurgia",
+      "tema": "Trauma Penetrante Tóraco-Abdominal",
+      "tema_id": 336,
+      "prevalencia": "alta",
+      "evidencia": "pneumotorax aberto, hemotorax, tamponamento em ferimento penetrante (1:47:03-2:21:31)",
+      "fonte": "emed-hdv-cir-1"
+    },
+    {
+      "area": "Cirurgia",
+      "tema": "Politrauma Ortopédico",
+      "tema_id": 288,
+      "prevalencia": "media",
+      "evidencia": "amputacao traumatica = torniquete (1:12:12)",
+      "fonte": "emed-hdv-cir-1"
+    },
+    {
+      "area": "Cirurgia",
+      "tema": "Queimaduras e Trauma Elétrico",
+      "tema_id": 428,
+      "prevalencia": "media",
+      "evidencia": "grande area queimada e lesao termica de laringe = VA definitiva (1:20:13)",
+      "fonte": "emed-hdv-cir-1"
     }
   ]
 }

@@ -1,0 +1,269 @@
+{
+  "_schema": "prevalencia_enamed v1 -- sinal de prevalencia por (area, tema); valores alta|media|baixa. Insumo MANUAL (aulas/guias), a ser consumido por tools/cronograma.py -> infer_nota() eixo 4 (ver revisao-calibrada-contract §7.7 e AUDITORIA F63). tema_id=null significa tema fora da taxonomia_cronograma (nome vindo do deck EMED).",
+  "atualizado": "2026-09-05",
+  "fontes": [
+    {
+      "id": "emed-hdv-ped-1",
+      "titulo": "Hora da Verdade ENAMED - Pediatria - Parte I",
+      "autor": "Estrategia MED (prof. Bruno Calvo)",
+      "tipo": "aula ao vivo YouTube (transcricao enviada pelo usuario)",
+      "recebido": "2026-09-05",
+      "cobertura": "aleitamento, Down, dx nutricional, crescimento/puberdade, convulsao febril, choque/sepse, TB infancia, ITU, reumato ped (IgA, Kawasaki, SIMP, FR)",
+      "pendente": "Parte II (profa. Helena) e revisao de vespera (Asma/GINA 2026)"
+    }
+  ],
+  "padroes_banca": [
+    {
+      "area": "Pediatria",
+      "padrao": "benigno x patologico",
+      "detalhe": "o INEP explora a distincao entre variante benigna e doenca (puberdade precoce x telarca/pubarca isolada; baixa estatura familiar/ACCP x patologica; convulsao febril simples x complexa; pseudoconstipacao do lactente). Regua: velocidade de crescimento (<4 cm/ano) + idade ossea (>=2 anos de desvio).",
+      "fonte": "emed-hdv-ped-1"
+    },
+    {
+      "area": "Pediatria",
+      "padrao": "mantra do aleitamento",
+      "detalhe": "alternativa correta = 'corrigir a tecnica + manter aleitamento em livre demanda'; evitar suspensao, formula, bico, mamadeira, horarios fixos.",
+      "fonte": "emed-hdv-ped-1"
+    },
+    {
+      "area": "Pediatria",
+      "padrao": "tratar na suspeita",
+      "detalhe": "sepse/choque septico: tratar na SUSPEITA (triangulo alterado + historia infecciosa), Phoenix nao dita conduta; antibiotico em ate 1h (choque) ou 3h (sepse).",
+      "fonte": "emed-hdv-ped-1"
+    }
+  ],
+  "temas": [
+    {
+      "area": "Pediatria",
+      "tema": "Imunizações",
+      "tema_id": 265,
+      "prevalencia": "alta",
+      "evidencia": "'de longe o tema mais quente' nas provas Revalida/ENAMED (07:35)",
+      "fonte": "emed-hdv-ped-1"
+    },
+    {
+      "area": "Pediatria",
+      "tema": "Calendario Vacinal PNI",
+      "tema_id": 406,
+      "prevalencia": "alta",
+      "evidencia": "idem Imunizações (subtema)",
+      "fonte": "emed-hdv-ped-1"
+    },
+    {
+      "area": "Pediatria",
+      "tema": "Icterícia e Sepse Neonatal",
+      "tema_id": 115,
+      "prevalencia": "alta",
+      "evidencia": "neonatologia 'aparece com certa frequencia' e 'segue dando as caras' (07:35)",
+      "fonte": "emed-hdv-ped-1"
+    },
+    {
+      "area": "Pediatria",
+      "tema": "Cuidados Neonatais",
+      "tema_id": 124,
+      "prevalencia": "alta",
+      "evidencia": "neonatologia (07:35)",
+      "fonte": "emed-hdv-ped-1"
+    },
+    {
+      "area": "Pediatria",
+      "tema": "Reanimação Neonatal",
+      "tema_id": 322,
+      "prevalencia": "alta",
+      "evidencia": "neonatologia (07:35)",
+      "fonte": "emed-hdv-ped-1"
+    },
+    {
+      "area": "Pediatria",
+      "tema": "Triagem Neonatal",
+      "tema_id": 369,
+      "prevalencia": "alta",
+      "evidencia": "neonatologia (07:35)",
+      "fonte": "emed-hdv-ped-1"
+    },
+    {
+      "area": "Pediatria",
+      "tema": "Asma",
+      "tema_id": 345,
+      "prevalencia": "alta",
+      "evidencia": "listada entre as mais cobradas (07:35); revisao de vespera; GINA atualizado em 2026",
+      "fonte": "emed-hdv-ped-1"
+    },
+    {
+      "area": "Pediatria",
+      "tema": "Asma - Crise Aguda",
+      "tema_id": 327,
+      "prevalencia": "alta",
+      "evidencia": "idem Asma (subtema); Q92 do Simulado 6",
+      "fonte": "emed-hdv-ped-1"
+    },
+    {
+      "area": "Pediatria",
+      "tema": "Aleitamento Materno e Mastite Lactacional",
+      "tema_id": 373,
+      "prevalencia": "alta",
+      "evidencia": "listada entre as mais cobradas (07:35); 'tema muito frequente'",
+      "fonte": "emed-hdv-ped-1"
+    },
+    {
+      "area": "Pediatria",
+      "tema": "Síndrome de Down",
+      "tema_id": null,
+      "prevalencia": "alta",
+      "evidencia": "sindromes geneticas, 'principalmente cuidados com Down'; ~5 questoes recentes (27:24); curvas especificas cairam no ultimo ENAMED",
+      "fonte": "emed-hdv-ped-1"
+    },
+    {
+      "area": "Pediatria",
+      "tema": "Doenca de Kawasaki",
+      "tema_id": 394,
+      "prevalencia": "alta",
+      "evidencia": "'tema favorito nos anos mais recentes' (07:35)",
+      "fonte": "emed-hdv-ped-1"
+    },
+    {
+      "area": "Pediatria",
+      "tema": "Diarreia",
+      "tema_id": 430,
+      "prevalencia": "alta",
+      "evidencia": "'tema favorito nos anos mais recentes' (07:35); plano C do MS x AHA (2:03:49)",
+      "fonte": "emed-hdv-ped-1"
+    },
+    {
+      "area": "Pediatria",
+      "tema": "Desidratacao e Terapia de Reidratacao Oral",
+      "tema_id": 389,
+      "prevalencia": "alta",
+      "evidencia": "idem Diarreia (subtema)",
+      "fonte": "emed-hdv-ped-1"
+    },
+    {
+      "area": "Pediatria",
+      "tema": "Puberdade Precoce",
+      "tema_id": 358,
+      "prevalencia": "alta",
+      "evidencia": "'umas 8 questoes recentes no INEP' (1:25:05); aposta final do professor: 'puberdade e baixa estatura, vem ano vai ano' (2:52:34)",
+      "fonte": "emed-hdv-ped-1"
+    },
+    {
+      "area": "Pediatria",
+      "tema": "Baixa Estatura",
+      "tema_id": 271,
+      "prevalencia": "alta",
+      "evidencia": "'o INEP gosta muito de cobrar' (50:33); aposta final do professor (2:52:34); Q97 do Simulado 6",
+      "fonte": "emed-hdv-ped-1"
+    },
+    {
+      "area": "Pediatria",
+      "tema": "Puericultura - Crescimento",
+      "tema_id": 312,
+      "prevalencia": "media",
+      "evidencia": "crescimento esperado, 'questao de puericultura batida' (47:48)",
+      "fonte": "emed-hdv-ped-1"
+    },
+    {
+      "area": "Pediatria",
+      "tema": "Diagnóstico Nutricional",
+      "tema_id": null,
+      "prevalencia": "media",
+      "evidencia": "curvas OMS, z-scores, desnutricao grave, obesidade endogena (37:46-46:50)",
+      "fonte": "emed-hdv-ped-1"
+    },
+    {
+      "area": "Pediatria",
+      "tema": "Convulsão Febril",
+      "tema_id": 343,
+      "prevalencia": "media",
+      "evidencia": "'cai bastante e geralmente sao questoes faceis' (1:35:10)",
+      "fonte": "emed-hdv-ped-1"
+    },
+    {
+      "area": "Pediatria",
+      "tema": "Sepse e Choque Séptico (Escore de Phoenix)",
+      "tema_id": 308,
+      "prevalencia": "media",
+      "evidencia": "'INEP esta gostando mais de cobrar nos ultimos anos' (07:58); questao anulada em 2025, 'podem tentar se redimir' (1:44:36)",
+      "fonte": "emed-hdv-ped-1"
+    },
+    {
+      "area": "Pediatria",
+      "tema": "Choque em Pediatria",
+      "tema_id": null,
+      "prevalencia": "media",
+      "evidencia": "triangulo de avaliacao, hipotensao 70+2xidade, DVA adrenalina/nora (1:44:57)",
+      "fonte": "emed-hdv-ped-1"
+    },
+    {
+      "area": "Pediatria",
+      "tema": "Anafilaxia e Urticária",
+      "tema_id": 418,
+      "prevalencia": "media",
+      "evidencia": "dose de adrenalina IM cobrada na prova pratica do Revalida (2:01:19)",
+      "fonte": "emed-hdv-ped-1"
+    },
+    {
+      "area": "Pediatria",
+      "tema": "Infeccao Latente por Tuberculose",
+      "tema_id": 413,
+      "prevalencia": "media",
+      "evidencia": "'parte quente para a prova': contactante <10a, ILTB, esquemas novos (2:11:32)",
+      "fonte": "emed-hdv-ped-1"
+    },
+    {
+      "area": "Pediatria",
+      "tema": "Tuberculose na Infância",
+      "tema_id": null,
+      "prevalencia": "media",
+      "evidencia": "atualizacoes recentes: score 40 pts, esquema encurtado 4 meses (2:06:26)",
+      "fonte": "emed-hdv-ped-1"
+    },
+    {
+      "area": "Pediatria",
+      "tema": "Meningite Tuberculosa",
+      "tema_id": 386,
+      "prevalencia": "media",
+      "evidencia": "TB SNC/osteoarticular = 12 meses + corticoide (2:09:14)",
+      "fonte": "emed-hdv-ped-1"
+    },
+    {
+      "area": "Pediatria",
+      "tema": "Infeccao do Trato Urinario na Infancia",
+      "tema_id": 353,
+      "prevalencia": "media",
+      "evidencia": "coleta por metodo, EAS x urocultura, USG/DMSA/UCM (2:16:26)",
+      "fonte": "emed-hdv-ped-1"
+    },
+    {
+      "area": "Pediatria",
+      "tema": "Febre Reumática",
+      "tema_id": 340,
+      "prevalencia": "media",
+      "evidencia": "'2 ou 3 questoes mais antigas sobre cardite'; profilaxia secundaria caiu no INEP (2:40:28)",
+      "fonte": "emed-hdv-ped-1"
+    },
+    {
+      "area": "Pediatria",
+      "tema": "Vasculite por IgA (Henoch-Schonlein)",
+      "tema_id": null,
+      "prevalencia": "media",
+      "evidencia": "'basicamente saber que existe' -- ja caiu no INEP (2:26:26)",
+      "fonte": "emed-hdv-ped-1"
+    },
+    {
+      "area": "Pediatria",
+      "tema": "SIMP (Sindrome Inflamatoria Multissistemica Pediatrica)",
+      "tema_id": null,
+      "prevalencia": "media",
+      "evidencia": "apareceu na ultima edicao do Revalida (2:32:58)",
+      "fonte": "emed-hdv-ped-1"
+    },
+    {
+      "area": "Pediatria",
+      "tema": "Doenças Exantemáticas",
+      "tema_id": 252,
+      "prevalencia": "media",
+      "evidencia": "dx diferencial de Kawasaki (2:29:30); nao listada explicitamente",
+      "fonte": "emed-hdv-ped-1"
+    }
+  ]
+}

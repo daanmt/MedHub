@@ -60,6 +60,7 @@ A tensão estrutural observada na s108 (44 agendados > teto de 30 antes de qualq
 - **Regime de dívida:** `atrasados > TETO_BASE`. Nele, `teto_efetivo = int(min(TETO_BASE + atrasados, CAP_MULTIPLICADOR * TETO_BASE))` — na prática o teto sobe **até 90 até a dívida drenar**, e volta a 60 quando `atrasados <= 60`.
 - A fonte dos números é `day_plan.py` (campo `divida` no `--json`; linha "Teto do dia" no render). Constantes nomeadas em `tools/day_plan.py` (`TETO_BASE`, `CAP_MULTIPLICADOR`) — ajuste é edição de 1 linha + este contrato.
 - O teto **informa** a sessão de revisão; quem drena é o `/revisar`. Nenhuma drenagem automática.
+- **Exceção datada (s165, 2026-09-05 -> 13/09/2026):** o usuário autorizou um *sprint* de **120 cards/dia** (2 blocos de 60) até o ENAMED, como decisão pontual e não como novo teto; `TETO_BASE`/`CAP_MULTIPLICADOR` não mudam e o regime de 60 (máx. 90 em dívida) volta automaticamente em 14/09. Registrado aqui para o contrato não contradizer o `HANDOFF.md` sem ponteiro (achado D1 da varredura de drift, s166).
 - Alternativa descartada: "modo mutirão" (teto fixo + sessão dedicada quando estourar) -- decisão registrada no PRD engenharia-ledger-f1-f13.
 
 ## Drenagem do backlog (ondas)

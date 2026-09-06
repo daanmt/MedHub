@@ -38,7 +38,7 @@ A fundação está pronta (agente LLM + workflows portáveis + `ipub.db` como SS
 - Migração completa da nomenclatura (remover prefixos legados `[GIN]`, `[OBS]`, `[CIR]`, `[ORL]`)
 - Eliminação de stubs (`TCE.md` precisa de conteúdo ou ser removido)
 - Cobertura crescente: áreas com mais erros no banco merecem mais resumos
-- **Retrieval baseline reproducible:** `tools/eval/REPORT.md` (R@5=0.778 / MRR@10=0.657 com HyDE; 18 queries; rodar via `python tools/eval/run_eval.py`)
+- **Retrieval baseline reproducible:** `tools/eval/REPORT.md` (R@5=0.889 / MRR@10=0.685 com HyDE, linha `hyde=on` da tabela Summary; 18 queries; rodar via `python tools/eval/run_eval.py`)
 - `/discover` (tech debt): Cross-Encoders dedicados, Reciprocal Rank Fusion (RRF), normalização de score → meta R@5 ≥ 0.95
 - Busca semântica via `sqlite-vec` como alternativa à busca literal (a implementar)
 
@@ -118,7 +118,7 @@ A fundação está pronta (agente LLM + workflows portáveis + `ipub.db` como SS
 **O que habilita:** Uso remoto real (remote-control pelo celular) sem hospedar app nem migrar o SQLite para a nuvem — a revisão acontece na conversa. Menos superfície frágil (Ollama/ChromaDB deixam de ser caminho crítico; heurística de cards desaparece). Um único fluxo de dados: erro/planilha → agente → CLI de persistência → `ipub.db`.
 
 **O que consolida:**
-- **Revisão conversacional de flashcards:** o agente puxa a fila vencida (buckets atrasado/hoje/novo), apresenta card a card no chat e grava o rating via `record_review()`. O player Streamlit (`app/pages/2_estudo.py`) vira opcional/desktop — corrigir os bugs de closure/`session_state` ou descontinuar.
+- **Revisão conversacional de flashcards:** o agente puxa a fila vencida (buckets atrasado/hoje/novo), apresenta card a card no chat e grava o rating via `record_review()`. ~~O player Streamlit (`app/pages/2_estudo.py`) vira opcional/desktop — corrigir os bugs de closure/`session_state` ou descontinuar.~~ **✅ FEITO (descontinuado):** o player foi removido como código morto na consolidação part-1 (2026-08-14); `app/pages/` não existe mais. `/revisar` é a única superfície de revisão.
 - **Geração de cards pelo agente:** aposentar `tools/regenerate_cards.py` + `regenerate_cards_llm.py` (421 linhas de heurística regex + batch LLM). Ao analisar um erro, o agente escreve o card de qualidade e passa pronto para `insert_questao.py` (que já aceita `--frente_*`/`--verso_*`).
 <!-- drift-check: path tools/test_fsrs.py exists -->
 - **FSRS fiel** (cruza com Linha 3): ~~substituir `app/utils/fsrs.py` caseiro pela lógica de referência (`fsrs4anki`/`py-fsrs`)~~. **✅ FEITO** (commit `46df800` "feat(fsrs): onda A — FSRS fiel (py-fsrs)"): `fsrs.py` é adapter fino sobre `py-fsrs`; `tools/test_fsrs.py` valida fidelidade à referência (incl. "stability bate com py-fsrs"). Reconciliado 2026-07-12.

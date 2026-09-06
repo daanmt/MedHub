@@ -89,6 +89,8 @@ vazamento de rótulo (modo de falha #8 do handoff de flashcards) era tribal:
 | `--tema` | Filtro de tema (LIKE parcial). |
 | `--limit` | Máximo de cards na fila (aplicado a `--list`). |
 | `--new-limit` | Máximo de cards novos (`state = 0`). Default 10. |
+| `--pre-bloco TEMA` | Mini-drill anti-reincidência (F23): lista só os cards de erro FRESCOS (`state 0`, dentro de `--janela-horas`) do tema-alvo, antes de um bloco de questões. O rating segue o `--record` normal com `--reason pre_bloco`. |
+| `--janela-horas N` | Janela de frescor (horas) usada por `--pre-bloco`. |
 | `--prevalencia` | **Opt-in (s165).** Reordena o bucket `novos` por prevalência ENAMED lida de `core/cronograma/prevalencia_enamed.json` (alta -> media -> baixa -> sem sinal; desempate FIFO por `card_id`) e só depois corta em `--new-limit`. Regra do usuário: **prevalência = prioridade na fila dos nunca introduzidos**. Não toca FSRS nem banco -- só a ordem de introdução. Sem o arquivo, degrada para FIFO. |
 
 **Ordem da fila:** atrasados → hoje → novos. Cards aposentados (`needs_qualitative >= 2`) são excluídos pela query. Campos de cada card: `card_id, frente_contexto, frente_pergunta, verso_resposta, verso_regra_mestre, verso_armadilha, needs_qualitative, due, area, tema, bucket`.

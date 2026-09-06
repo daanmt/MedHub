@@ -163,8 +163,8 @@ deletion; this line stays as the record.
 
 ## Known Issues / Tech Debt
 
-- `app/pages/` and `app/components/` are **empty directories** left by the UI removal — safe to delete
-- `.claude/commands/estilo-resumo.md:104` cites `resumos/Cirurgia/Trauma.md`, which does not exist (caught by `doc_drift --mode refs`; needs a clinical call on the replacement reference)
+- ~~`app/pages/` and `app/components/` are empty directories left by the UI removal~~ resolved: both directories were deleted (verified 2026-09-06)
+- ~~`.claude/commands/estilo-resumo.md:104` cites `resumos/Cirurgia/Trauma.md`, which does not exist~~ resolved: the reference is `resumos/Cirurgia/[CIR] Trauma.md`, which exists; `doc_drift --mode refs` reports 0 findings (verified 2026-09-06)
 - `flashcards_cache.json` — deprecated v1, archived to `artifacts/legacy/`; no longer used
 - `app/engine/rag.py`: orphan chunks accumulate when resumos are renamed (IDs are `{stem}::N`); fix with `python tools/index_resumos.py --clear`. The context-propagation prefix (`[tema > header]`) means the index must be rebuilt after alias changes too
 - Resumo index (`get_topic_context`) is in-process cached; new resumos in a live session are not found without a process restart

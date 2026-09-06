@@ -1,16 +1,23 @@
 # MedHub
 
-> Personal study system for Brazilian medical-residency preparation. Closes the loop between a wrong answer, a structured error log, a clinical-summary refinement, and a spaced-repetition card.
+> Agent-first study system for Brazilian medical-residency exams. A wrong answer becomes a structured error record, atomic flashcards, an FSRS schedule and a refined clinical summary. There is no application UI: the agent that boots from `AGENTE.md` is the interface, and the code is the deterministic substrate underneath it.
 
-**Status:** operational personal project, in active use. Single-user. No external deployment, no auth, no multi-user support.
+**Status:** operational personal project, in active use. Single user, single machine. No deployment, no auth, no multi-user support.
 
 ---
 
 ## What it is
 
-MedHub turns a failed practice question into a durable learning artifact. A single CLI invocation records the error with diagnostic metadata in a local SQLite database, generates a heuristic flashcard, and schedules a card in a simplified FSRS scheduler. A markdown knowledge base (`resumos/`) is then progressively refined through use. A Streamlit app sits on top for review, dashboards, and library browsing.
+MedHub splits the system in two: **the agent is the brain, the code is the deterministic substrate**. Any harness that reads [`AGENTE.md`](AGENTE.md) can drive it (Claude Code is the primary one; [`AGENTS.md`](AGENTS.md) exists so tools that look for that filename by convention find the same entry point). The agent reads the governance documents, runs the CLIs in `tools/`, and conducts the study session in conversation.
 
-The knowledge base is local by default — embeddings are computed by Ollama against summaries on disk and stored in a local ChromaDB. The Anthropic API is called only for three optional capabilities (HyDE query expansion, LLM-quality flashcard generation, and agent-memory session consolidation); each gracefully degrades to a local fallback or a heuristic when the key is absent.
+The code owns only what has to be deterministic:
+
+- **State** -- a local SQLite database, `ipub.db`, holding the curriculum taxonomy, structured errors, flashcards, FSRS card state and revlog, bulk session volume, theme-level review timestamps, the day plan, and the skills tables (schema in `tools/init_db.py`).
+- **Scheduling** -- `app/utils/fsrs.py` is a thin adapter over `py-fsrs` (`fsrs>=6.3.1`), the reference FSRS implementation, at `REQUEST_RETENTION = 0.9`. `app/utils/fsrs_balance.py` is a pure module that flattens calendar load inside the free slack around an interval (+/-5%, floor 1 day, cap 10, review cards with interval >= 4 days only) without ever touching `stability` or `difficulty`.
+- **Retrieval** -- `app/engine/rag.py`: a ChromaDB collection (`resumos`) over `resumos/**/*.md` chunked by H2/H3 headers, embedded with `nomic-embed-text` through a local Ollama, queried multi-query (raw plus an optional HyDE document) and filtered by a hard cosine-distance ceiling (`max_distance = 0.35`). When ChromaDB or Ollama are unavailable, `search()` degrades to a lexical fallback tagged `source = fallback_textual`.
+- **Harness** -- `tools/auto_check.py`, a warning-first linter and test runner wired into a git pre-commit hook, plus a pytest suite (365 tests collected).
+
+The Anthropic API is optional and used in exactly two places: HyDE query expansion in `app/engine/rag.py` and long-term memory consolidation in `app/memory/manager.py`, both `claude-haiku-4-5-20251001`. Without `ANTHROPIC_API_KEY`, HyDE falls back to the raw query and memory consolidation runs only the error-count sync.
 
 ---
 
@@ -18,89 +25,124 @@ The knowledge base is local by default — embeddings are computed by Ollama aga
 
 ```
 Wrong answer on a practice question
-        │
-        ▼
-tools/insert_questao.py (CLI)
-        │
-        ├─► questoes_erros          (structured error + metadata)
-        ├─► flashcards              (heuristic card from elo_quebrado)
-        ├─► fsrs_cards              (scheduled in spaced repetition)
-        └─► taxonomia_cronograma    (curriculum tracking updated)
-                │
-                ▼
-        app/engine/rag.py
-        ChromaDB + nomic-embed-text (Ollama, local)
-        + optional HyDE via Anthropic claude-haiku-4-5-20251001,
-          falling back to Ollama llama3, then to raw query
-                │
-                ▼
-        Streamlit app (3 pages: dashboard, study, library)
+        |
+        v
+python tools/insert_questao.py       (one atomic 4-step transaction)
+        |
+        +-- taxonomia_cronograma      (area + theme, created if missing)
+        +-- questoes_erros            (structured error + broken-link metadata)
+        +-- flashcards                (N atomic cards authored by the agent)
+        +-- fsrs_cards                (initial FSRS state per card)
+        |
+        v
+python tools/fsrs_queue.py --list    (due queue as JSON)
+        |
+        v
+/revisar  -- the agent presents card by card, grades 1-4,
+             and writes back through fsrs_queue.py --record
+        |
+        v
+app/utils/db.record_review           (single FSRS write path)
+        -> py-fsrs schedules, fsrs_balance shifts the due date
+           inside its slack, fsrs_revlog keeps the audit trail
 ```
 
-Retrieval is multi-query: the raw query and (when enabled) a HyDE-generated hypothetical answer are queried in parallel against a ChromaDB collection of H2/H3-chunked summaries. Results are deduplicated and filtered by a hard cosine-distance threshold (`0.35`). A BM25 hybrid rerank is implemented (`_bm25_rerank` in `app/engine/rag.py`) but disabled in code: re-enabling it regressed retrieval on this corpus.
+Two curves run in parallel. The **card-level** curve is FSRS, described above. The **theme-level** forgetting curve is separate: `tools/review_radar.py` ranks dormant themes, `tools/dormant_refresh.py --stamp --kind {dormant_refresh,directed_review}` records a thematic review in `review_log`, and the hard boundary is that this path never touches FSRS. The `/revisar` skill is the single review competence and carries both sub-modes: PREPARAR (calibrated re-teaching, FSRS read-only) and DRENAR (the card-by-card FSRS player).
 
-**Retrieval is measured by a reproducible eval** at `tools/eval/` — 18 (query, expected_resumo) pairs mined from session logs, runnable as `python tools/eval/run_eval.py --both` (requires Ollama + ChromaDB). Current baseline (file-level): Recall@5 = 0.778 / MRR@10 = 0.657 with HyDE on; 0.500 / 0.425 without. See `tools/eval/REPORT.md` for per-query detail and `tools/eval/README.md` for honest caveats (n=18 → ~22pp CI; file-level not section-level; not an end-to-end retrieval→generation eval).
+Two derived planning inputs sit next to it. `tools/cronograma.py` parses the EMED study schedule PDF (gitignored; looked up at the repo root, then `data/`) into the versioned, text-free `core/cronograma/grade.json` (30 weeks, 352 tasks, 10,218 planned questions) and is read-only against `ipub.db`. `core/cronograma/prevalencia_enamed.json` is a manual prevalence signal (89 themes, 5 sources, 35 exam-board patterns) that `tools/fsrs_queue.py --prevalencia` uses, opt-in, to reorder the never-introduced bucket of the queue.
+
+`tools/day_plan.py` composes all of this into the day plan the session boots with.
 
 ---
 
-## Stack
+## Architecture
 
-- **Language / app:** Python 3.10+, Streamlit (multipage via `st.navigation`)
-- **Storage:** SQLite — `ipub.db` for study state, `medhub_memory.db` for agent memory.
-- **Retrieval:** ChromaDB persistent client + `nomic-embed-text` via Ollama at `http://localhost:11434`. Chroma collection persisted at `data/chroma/`.
-- **LLM (optional):** Anthropic SDK (`claude-haiku-4-5-20251001`), used in three places: HyDE query expansion (`app/engine/rag.py`), LLM-quality flashcard generation (`app/engine/generate_flashcards.py`), and agent-memory session consolidation (`app/memory/manager.py`, via `langchain-anthropic`). Each call site falls back when `ANTHROPIC_API_KEY` is unset.
-- **Spaced repetition:** FSRS-inspired simplified scheduler (`app/utils/fsrs.py`, ~75 LOC). The 17-weight default vector is the canonical FSRS v4 `DEFAULT_W`, but `evaluate()` applies a single linear difficulty update and one stability formula — not faithful FSRS v4.
-- **Agent-memory:** LangMem-backed store on a separate `medhub_memory.db`. `consolidate_session` (triggered by a PostToolUse hook) writes; two read paths (`weak_areas` in `get_topic_context` and `summarize_performance`) consume it.
-- **PDF extraction:** pdfplumber, PyPDF2 (delete-after-extract policy — `tools/extract_pdfs.py`).
-- **Dashboards:** Plotly, pandas.
+**Governance layer.** [`AGENTE.md`](AGENTE.md) is the single governance document: boot sequence, closing protocol, conventions, non-reversible decisions, the skill/workflow/CLI contract, and the memory model. [`HANDOFF.md`](HANDOFF.md) is the short operational state (next immediate step, state per front). [`ESTADO.md`](ESTADO.md) is the macro snapshot (goals, indicator, milestones). Nine normative contracts in `core/contracts/` bind the behaviour: `cronograma`, `estado`, `evidence-governance`, `forgetting-curve`, `fsrs-management`, `handoff`, `orquestracao`, `reconcile`, `revisao-calibrada`.
+
+**Skills and workflows.** `.claude/commands/*.md` is the single canonical source of skills (12 files: 11 canonical plus `/refrescar`, a deprecated redirect stub). `.agents/skills/source-command-*/SKILL.md` are generated build artifacts produced by `tools/sync_skills.py` and are never edited by hand; `sync_skills.py --check` reports parity drift. `.agents/workflows/*.md` holds imperative task protocols (`analisar-questoes`, `criar-resumo`, `curar-cards`, `gerar-reforco`, `registrar-sessao`, plus `graphify`). The contract in `AGENTE.md` section 7.2: skills are atomic reference, workflows are orchestration and never restate skill content, and each CLI has its canonical signature in exactly one skill.
+
+**Code.** `app/engine/` exposes one stable surface to agents, `get_topic_context()`, built on `rag.py`. `app/memory/` is a LangMem-backed long-term store on a separate `medhub_memory.db` with a single live namespace, `("medhub", "weak_areas")`. `app/utils/db.py` is the only `import sqlite3` in `app/` and holds the canonical definition of an active card. CLIs under `tools/` use `sqlite3` directly by design.
+
+**Harness.** `tools/setup_hooks.py` installs a git pre-commit hook that runs `python -X utf8 tools/auto_check.py --staged`; the agent runs `--changed` before reporting any task done. `auto_check` has around 20 numbered checks with two severities: BLOCK (exit 1) and WARN (exit 0, aggregated) -- a new rule is born WARN. It runs the resumo linter, the full pytest suite, the FSRS load-balancer suite, skill/mirror parity, session-pointer and HANDOFF-length invariants, doc-vs-code drift, card self-sufficiency and atomicity, `ipub.db` referential integrity, reachability, and RAG index staleness.
+
+**SSOTs** (`AGENTE.md` section 5.5):
+
+| Domain | SSOT | Committed |
+|---|---|---|
+| Errors, FSRS, schedule, thematic review (`review_log`) | `ipub.db` | No (local only) |
+| Clinical knowledge | `resumos/**/*.md` | Yes |
+| Project state | `ESTADO.md` | Yes |
+| Workflows | `.agents/workflows/` | Yes |
+| Agent long-term memory | `medhub_memory.db` | No (local only) |
+| API keys | `.env` | No (gitignored) |
 
 ---
 
 ## Repository structure
 
 ```
-MedHub/
-├── streamlit_app.py             # entry point (page registry only)
-├── app/
-│   ├── pages/                   # 3 Streamlit pages: dashboard, study, library
-│   ├── engine/                  # 2-function read-only domain API
-│   │   ├── rag.py               # ChromaDB + Ollama + HyDE (two-tier gold/pdf_raw)
-│   │   ├── get_topic_context.py # bundles resumo + recent errors + weak_areas
-│   │   └── summarize_performance.py
-│   ├── memory/                  # LangMem long-term store
-│   │   ├── store.py             # SQLiteMemoryStore(BaseStore)
-│   │   ├── manager.py           # consolidate_session (ChatAnthropic)
-│   │   ├── schemas.py           # pydantic models
-│   │   └── inspect.py           # introspection CLI
-│   └── utils/
-│       ├── db.py                # primary sqlite3 access layer
-│       ├── fsrs.py              # FSRS-inspired simplified scheduler
-│       └── styles.py            # design tokens
-├── tools/                       # ~18 active CLIs: insert_questao, index_resumos,
-│                                # init_db, audits, performance, fsrs_queue, cards_regen_queue, ...
-│                                # plus tools/_archive/migrations/ (6 one-shots, kept for history)
-│                                # plus tools/eval/ (retrieval eval — queries.json + run_eval.py)
-├── resumos/                     # clinical-knowledge markdown, 5 areas
-├── .agents/workflows/           # markdown task protocols
-├── .claude/commands/            # slash-command specs
-├── history/                     # session logs
-├── requirements.txt
-├── LICENSE                      # MIT
-└── .gitignore                   # ipub.db, .env, data/chroma/ are local-only
+medhub/
+|-- AGENTE.md                  -- governance doc; every session boots here
+|-- AGENTS.md                  -- same entry point, conventional filename
+|-- CLAUDE.md                  -- pointer stub to AGENTE.md
+|-- HANDOFF.md                 -- short operational state, next step
+|-- ESTADO.md                  -- macro snapshot (goals, indicator, milestones)
+|-- ROADMAP.md                 -- evolutionary direction, no dates
+|-- AUDITORIA_MEDHUB.md        -- engineering findings ledger (F-numbered)
+|-- app/
+|   |-- engine/
+|   |   |-- rag.py                  -- ChromaDB + Ollama + optional HyDE
+|   |   `-- get_topic_context.py    -- resumo + recent errors + weak_areas
+|   |-- memory/                     -- LangMem long-term store
+|   |   |-- store.py                -- SQLiteMemoryStore
+|   |   |-- manager.py              -- consolidate_session (ChatAnthropic)
+|   |   |-- schemas.py
+|   |   `-- inspect.py              -- introspection CLI
+|   `-- utils/
+|       |-- db.py                   -- only `import sqlite3` in app/
+|       |-- fsrs.py                 -- adapter over py-fsrs
+|       `-- fsrs_balance.py         -- pure calendar load balancer
+|-- core/
+|   |-- contracts/                  -- 9 normative contracts
+|   |-- cronograma/
+|   |   |-- grade.json              -- derived from the schedule PDF, 30 weeks
+|   |   `-- prevalencia_enamed.json -- manual prevalence signal, 89 themes
+|   |-- simulados/                  -- mock-exam fixtures and guides
+|   `-- provas.json                 -- exam dates (countdown source)
+|-- tools/                          -- 43 non-test modules (CLIs + shared libs)
+|   |-- hooks/                      -- SessionStart / PostToolUse hook scripts
+|   |-- utils/                      -- git_utils, state_utils
+|   |-- eval/                       -- retrieval eval: queries.json, run_eval.py
+|   |-- test_*.py                   -- 46 test files
+|   `-- _archive/migrations/        -- one-shot migrations, do not re-run
+|-- resumos/                        -- 127 clinical summaries in 6 areas + INDEX.md
+|-- history/                        -- 124 session logs, INDEX.md, ledgers
+|-- docs/                           -- exam-execution playbook + plans
+|-- .claude/
+|   |-- commands/                   -- 12 skills (canonical source)
+|   `-- settings.json               -- SessionStart + PostToolUse hooks
+|-- .agents/
+|   |-- skills/                     -- generated mirrors (build artifacts)
+|   |-- workflows/                  -- imperative task protocols
+|   `-- rules/
+|-- .vibeflow/                      -- specs, PRDs, audits, patterns, decisions
+|-- conftest.py
+|-- pytest.ini
+|-- requirements.txt
+|-- LICENSE                         -- MIT
+`-- .gitignore
 ```
 
-`app/engine/` exports two functions: `summarize_performance` (consumed by the dashboard) and `get_topic_context` (which internally calls `rag.search`, consumed by the library page). Both are read-only and side-effect-free.
-
-The `import sqlite3` convention is "primary access via `app/utils/db.py`". It is currently also imported by `app/memory/{manager,store,inspect}.py` (separate `medhub_memory.db`) and by `app/pages/{1_dashboard,2_estudo}.py` (known tech debt). CLIs under `tools/` use `sqlite3` directly by design.
+Local-only, never committed: `ipub.db`, `medhub_memory.db`, `data/chroma/`, `.env`, every `*.pdf` (the EMED source PDFs are deliberately kept on disk inside `resumos/` and `data/` to feed the RAG, but they are the publisher's IP), `tmp/`, `scratch/`, `graphify-out/`.
 
 ---
 
 ## How to run
 
-Requirements: **Python 3.10+**, Ollama running locally with `nomic-embed-text` pulled (for RAG), ChromaDB installable.
+Requirements: **Python 3.10+**. Ollama with `nomic-embed-text` pulled is needed only for the semantic RAG path.
 
 ```bash
-# 1. Clone and create a virtualenv
+# 1. Create a virtualenv
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1                 # Windows PowerShell
 # source .venv/bin/activate                  # macOS / Linux
@@ -108,49 +150,61 @@ python -m venv .venv
 # 2. Install dependencies
 pip install -r requirements.txt
 
-# 3. (Optional) Configure environment
-#    .env (gitignored) may set ANTHROPIC_API_KEY for HyDE / LLM cards.
-#    Absence triggers Ollama llama3 / heuristic fallback paths.
+# 3. Create the SQLite schema (idempotent; path resolved from __file__)
+python -X utf8 tools/init_db.py
 
-# 4. Initialise the SQLite store (must be run from repo root)
-python tools/init_db.py
-
-# 5. (Optional) Pull the embedding model and index resumos for RAG
+# 4. (Optional) Index the knowledge base for semantic retrieval
 ollama pull nomic-embed-text
-python tools/index_resumos.py
+python -X utf8 tools/index_resumos.py        # run from the repo root
 
-# 6. Launch the app
-streamlit run streamlit_app.py
+# 5. Install the git pre-commit harness hook
+python -X utf8 tools/setup_hooks.py
+
+# 6. (Optional) .env, gitignored, may set ANTHROPIC_API_KEY
+#    for HyDE and long-term memory consolidation.
 ```
 
-`ANTHROPIC_API_KEY` is the only env var consumed by the codebase. Other paths (`OLLAMA_URL`, `CHROMA_PATH=data/chroma`, `DB_PATH=ipub.db`, `medhub_memory.db`) are currently hardcoded.
+On Windows, prefix Python invocations with `-X utf8`; the repo assumes UTF-8 output.
 
-The dashboard boots cleanly on a fresh, empty database created by `init_db.py`; it will display zero data until errors or sessions are recorded.
+**Starting a session:** open the repo in Claude Code. The `SessionStart` hook in `.claude/settings.json` runs `tools/hooks/memory_boot.py`, which injects the top weaknesses from long-term memory, a summary of `tools/day_plan.py`, a HANDOFF-vs-history drift flag and the "next immediate step" from `HANDOFF.md` before the first turn. The agent then follows the boot sequence in `AGENTE.md` section 2. A `PostToolUse(Write)` hook fires `tools/hooks/memory_session_log.py` when a new `history/session_NNN.md` is written, which consolidates the session into long-term memory in a detached process.
+
+Main CLIs (canonical signatures live in the matching skill under `.claude/commands/`):
+
+| CLI | What it does |
+|---|---|
+| `tools/day_plan.py` | day plan for the proactive boot; `--handoff-block`, `--difficulty`, `--tempo/--energia`, `--aderencia` |
+| `tools/fsrs_queue.py` | FSRS due queue as JSON; `--next`, `--list`, `--record`, `--cluster`, `--prevalencia` |
+| `tools/insert_questao.py` | canonical writer for a wrong answer: taxonomy, error, cards and FSRS state in one transaction |
+| `tools/performance.py` | accumulated volume, monthly target, cost per question, weak areas (read-only) |
+| `tools/cronograma.py` | read-only derivation of the schedule PDF into `grade.json`, crossed with performance and FSRS |
+| `tools/auto_check.py` | autonomous harness: `--changed` (working tree), `--staged` (pre-commit), `--all` |
 
 ---
 
 ## Status and limitations
 
 **What works**
-- End-to-end loop: error CLI → SQLite → flashcard → FSRS scheduling → review in the Streamlit app.
-- Local RAG over the markdown knowledge base via Ollama embeddings and ChromaDB.
-- Multi-query retrieval with optional HyDE (Anthropic → Ollama → identity fallback chain).
-- FSRS-inspired review flow with state in SQLite.
-- Graceful degradation: app boots without `chromadb`, without Ollama, and without `ANTHROPIC_API_KEY`.
+
+- The full loop: error CLI -> SQLite -> atomic cards -> FSRS scheduling -> conversational review with the ratings written back through a single write path.
+- Faithful FSRS via `py-fsrs`, with calendar load balancing that provably does not touch the memory model.
+- Local RAG over the markdown knowledge base, with an explicit lexical fallback when ChromaDB or Ollama are down.
+- A real harness: 46 test files, 388 test functions, 365 tests collected by `pytest`, run in full by `auto_check` and blocked at commit time by the pre-commit hook.
 
 **What is partial or known-fragile**
-- BM25 hybrid rerank is implemented and dormant; re-enabling regressed retrieval on this corpus (see comment in `app/engine/rag.py`).
-- The eval at `tools/eval/` measures file-level retrieval on 18 queries (n=18 → ~22pp 95% CI). It does not measure section-level retrieval, retrieval→generation end-to-end, or latency/cost. Older internal docs cite Recall@5 ≈ 0.90 / MRR ≈ 0.708 from an unrecoverable procedure — the committed baseline (0.778 / 0.657) supersedes them.
-- The FSRS scheduler is a simplified single-formula implementation, not a faithful FSRS v4.
-- `ipub.db` was tracked early on and removed via `git rm --cached`; the blob remains in git history. It is gitignored going forward.
-- Historical commits also contain a transcribed UMED study schedule (`data/cronograma_umed.csv`) and the author's own EMED performance log (`Dashboard EMED 2026.xlsx`); both have been removed from the current tree.
-- Test coverage is effectively zero (`tools/test_memory.py` only); no `pytest.ini`, no CI.
 
-**Out of scope**
-- No multi-user, no auth, no deployment. Single-machine study environment.
+- **Single user, local only.** `ipub.db` and `medhub_memory.db` are gitignored, so cloning this repo gives you the code, the contracts and the clinical summaries -- not the study state.
+- **The retrieval eval is small and stale.** `tools/eval/` measures file-level retrieval on 18 (query, expected resumo) pairs; the committed `REPORT.md` (2026-08-14) reads Recall@5 = 0.889 / MRR@10 = 0.685 with HyDE on and 0.444 / 0.409 without. At n = 18 the 95% CI is roughly 22pp. The report also documents up to 17pp run-to-run swing caused by a non-deterministic HyDE call; `temperature=0` was added to that call afterwards, so the baseline predates the fix and should be re-run. The runner still matches the current `rag.py` API (`search`, `_CHROMA_AVAILABLE`).
+- **Schedule truth is split across sources.** `grade.json` is derived from the PDF, but completion and ordering live in spreadsheets the owner edits by hand, so the derived grade can disagree with reality. By contract that divergence is management information, never corruption -- the reconcile checks for it are non-blocking.
+- **Open engineering debt is tracked, not fixed.** `AUDITORIA_MEDHUB.md` carries F-numbered findings; `ESTADO.md` and `HANDOFF.md` name the currently open ones (duplicated taxonomy rows splitting FSRS and dormancy, prevalent themes with no taxonomy row, bulk buckets invisible to the dormancy radar, summaries lagging new guidelines).
+- **Two CLIs in `tools/` are not reachable from any live reference** (`audit_fsrs.py`, `calibrate_card_checks.py`), per the generated table in `AGENTE.md` section 7.4. Some modules still have no docstring, which that table reports as a gap.
+- **History:** `ipub.db` was tracked early and removed with `git rm --cached`; the blob remains in git history. Historical commits also contain a transcribed study schedule and the author's own performance spreadsheet, both removed from the current tree.
+
+**History of the UI:** MedHub used to ship a Streamlit app. The agent-first pivot (session 074, 2026-06-03) shrank it, the residual pages and `summarize_performance` were deleted in the code-death consolidation of 2026-08-14, and the agent -- Claude Code, or any harness that boots from `AGENTE.md` -- has been the interface since.
+
+**Out of scope:** no multi-user, no auth, no deployment. Single-machine study environment. No patient data of any kind: the corpus is exam questions and the owner's own performance on them.
 
 ---
 
 ## License
 
-MIT — see [`LICENSE`](LICENSE). Covers both the code and the clinical content under `resumos/`.
+MIT -- see [`LICENSE`](LICENSE). Covers both the code and the clinical content under `resumos/`.

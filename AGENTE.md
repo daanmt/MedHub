@@ -187,7 +187,7 @@ relates_to: [ESTADO, AGENTE]      # máximo 3 referências
 
 As duas superfícies coexistem sob três regras invioláveis:
 
-- **Skills (`.claude/commands/*.md`) são referência atômica.** Especificam protocolo, assinatura de CLI, padrão de estilo, template de resposta. Não contêm sequência de passos numerados nem orquestração.
+- **Skills (`.claude/commands/*.md`) são referência atômica.** Especificam protocolo, assinatura de CLI, padrão de estilo, template de resposta. Não contêm orquestração de chamadas de CLI (sequência "rode X, depois Y" é do workflow). Protocolo cognitivo interno numerado (etapas de análise, loop conversacional) é permitido -- cláusula explicitada na s166 (drift D4: 5 de 12 skills já numeravam protocolo de raciocínio).
 - **Workflows (`.agents/workflows/*.md`) são orquestração imperativa.** Numeram passos, invocam skills por nome/path (`.claude/commands/<skill>.md`), mas nunca reespecificam o conteúdo das skills. Quando um workflow precisa de detalhe de CLI, regra de estilo ou protocolo de análise, ele referencia a skill e termina ali.
 - **Cada CLI em `tools/` tem assinatura canônica em UMA skill.** A assinatura completa (todos os flags, semântica de cada argumento) vive em exatamente um `.claude/commands/*.md`. Workflows referenciam por nome de skill + seção; jamais copiam a invocação.
 
@@ -218,41 +218,41 @@ Qualquer duplicação semântica entre workflow e skill é defeito por contrato.
 |---|---|---|
 | `tools/audit_card_atomicity.py` | Check de ATOMICIDADE de flashcard (spec: estilo-flashcard.md §Formato atomico) | `.agents/skills/source-command-estilo-flashcard/SKILL.md`, `.claude/commands/estilo-flashcard.md` (+5) |
 | `tools/audit_flashcard_quality.py` | — | `.agents/workflows/curar-cards.md` (+3) |
-| `tools/audit_resumos.py` | — | `.agents/skills/source-command-auditar-resumos/SKILL.md`, `.claude/commands/auditar-resumos.md` (+4) |
-| `tools/auto_check.py` | — | `.agents/skills/source-command-estilo-resumo/SKILL.md`, `.claude/commands/estilo-resumo.md` (+14) |
-| `tools/backfill_review_log.py` | semeia review_log com a ÚLTIMA REVISÃO REAL por tema | `core/contracts/forgetting-curve-contract.md` |
-| `tools/backup_db.py` | — | `.agents/workflows/curar-cards.md` (+2) |
+| `tools/audit_resumos.py` | — | `.agents/skills/source-command-auditar-resumos/SKILL.md`, `.claude/commands/auditar-resumos.md` (+5) |
+| `tools/auto_check.py` | — | `.agents/skills/source-command-estilo-resumo/SKILL.md`, `.claude/commands/estilo-resumo.md` (+20) |
+| `tools/backfill_review_log.py` | semeia review_log com a ÚLTIMA REVISÃO REAL por tema | `core/contracts/forgetting-curve-contract.md` (+1) |
+| `tools/backup_db.py` | Backup do ipub.db com integrity_check + rotacao keep-5 EMBUTIDA | `.agents/workflows/curar-cards.md` (+4) |
 | `tools/card_checks.py` | biblioteca ÚNICA de predicados de qualidade de flashcard | `pytest.ini` (+10) |
 | `tools/card_self_sufficiency.py` | Check de auto-suficiencia de flashcard (check 8 do auto_check -- spec | `tools/auto_check.py`, `tools/test_card_self_sufficiency.py` |
 | `tools/cards_regen_queue.py` | fila de regeneração de flashcards em JSON | `.agents/skills/source-command-estilo-flashcard/SKILL.md`, `.claude/commands/estilo-flashcard.md` (+1) |
 | `tools/check_fk_orphans.py` | varredura read-only de integridade do ipub.db | `.claude/settings.local.json` (+3) |
 | `tools/cobertura_conhecimento.py` | — | `.agents/skills/source-command-extrair-pdf/SKILL.md`, `.claude/commands/extrair-pdf.md` (+3) |
-| `tools/cronograma.py` | Derivador único do cronograma de Reta Final (read-only) | `.agents/skills/source-command-cronograma/SKILL.md`, `.agents/skills/source-command-importar-planilha/SKILL.md` (+15) |
-| `tools/day_plan.py` | Plano do Dia para o boot proativo | `.agents/skills/source-command-cronograma/SKILL.md`, `.agents/skills/source-command-revisar/SKILL.md` (+21) |
-| `tools/dedup_taxonomia.py` | colapsa linhas duplicadas (area,tema) em taxonomia_cronograma | `.agents/workflows/curar-cards.md`, `core/contracts/forgetting-curve-contract.md` (+2) |
+| `tools/cronograma.py` | Derivador único do cronograma de Reta Final (read-only) | `.agents/skills/source-command-cronograma/SKILL.md`, `.agents/skills/source-command-importar-planilha/SKILL.md` (+17) |
+| `tools/day_plan.py` | Plano do Dia para o boot proativo | `.agents/skills/source-command-cronograma/SKILL.md`, `.agents/skills/source-command-revisar/SKILL.md` (+23) |
+| `tools/dedup_taxonomia.py` | colapsa linhas duplicadas (area,tema) em taxonomia_cronograma | `.agents/workflows/curar-cards.md`, `core/contracts/forgetting-curve-contract.md` (+3) |
 | `tools/detect_clones.py` | near-duplicates de flashcards POR TEMA | `.agents/workflows/curar-cards.md` |
-| `tools/doc_drift.py` | Sensor de drift doc-vs-codigo (check 7 do auto_check -- degrau 1 da auto-evolucao) | `pytest.ini` (+6) |
+| `tools/doc_drift.py` | Sensor de drift doc-vs-codigo (check 7 do auto_check -- degrau 1 da auto-evolucao) | `pytest.ini` (+7) |
 | `tools/dormant_refresh.py` | ritual diário de refresh de tema DORMENTE | `.agents/skills/source-command-refrescar/SKILL.md`, `.agents/skills/source-command-revisar/SKILL.md` (+7) |
 | `tools/emed_flashcards.py` | Corpus de flashcards do EMED 2024 -- colheita, extracao e consulta | `.agents/skills/source-command-analisar-questao/SKILL.md`, `.agents/skills/source-command-estilo-flashcard/SKILL.md` (+4) |
 | `tools/event_log.py` | eventos append-only do pipeline de flashcards (P3 part-4) | `tools/insert_questao.py`, `tools/learning_efficacy.py` (+1) |
 | `tools/extract_pdfs.py` | — | `.agents/skills/source-command-extrair-pdf/SKILL.md`, `.agents/workflows/criar-resumo.md` (+2) |
 | `tools/fsrs_load.py` | Previsao de carga do calendario FSRS (s128) -- read-only | `tools/auto_check.py` |
-| `tools/fsrs_queue.py` | fila de revisão FSRS em JSON para revisão conversacional | `.agents/skills/source-command-revisar/SKILL.md`, `.claude/commands/revisar.md` (+9) |
-| `tools/habilidades.py` | — | `.agents/skills/source-command-analisar-questao/SKILL.md`, `.claude/commands/analisar-questao.md` (+5) |
-| `tools/importar_sessoes.py` | importa volume de sessões em lote a partir de JSON | `.agents/skills/source-command-importar-planilha/SKILL.md`, `.claude/commands/importar-planilha.md` (+1) |
-| `tools/index_resumos.py` | — | `.agents/workflows/registrar-sessao.md` (+2) |
+| `tools/fsrs_queue.py` | fila de revisão FSRS em JSON para revisão conversacional | `.agents/skills/source-command-revisar/SKILL.md`, `.claude/commands/revisar.md` (+11) |
+| `tools/habilidades.py` | — | `.agents/skills/source-command-analisar-questao/SKILL.md`, `.claude/commands/analisar-questao.md` (+10) |
+| `tools/importar_sessoes.py` | importa volume de sessões em lote a partir de JSON | `.agents/skills/source-command-importar-planilha/SKILL.md`, `.claude/commands/importar-planilha.md` (+2) |
+| `tools/index_resumos.py` | — | `.agents/workflows/registrar-sessao.md` (+4) |
 | `tools/init_db.py` | — | `tools/check_fk_orphans.py`, `tools/test_habilidades.py` (+1) |
-| `tools/insert_card_base.py` | insere flashcards de PRÉ-REQUISITO (altitude base) no ipub.db | `.agents/skills/source-command-estilo-flashcard/SKILL.md`, `.agents/skills/source-command-revisar/SKILL.md` (+7) |
-| `tools/insert_card_extra.py` | insere cards adicionais vinculados a um questao_id EXISTENTE | `.agents/workflows/curar-cards.md` (+3) |
-| `tools/insert_questao.py` | — | `.agents/skills/source-command-analisar-questao/SKILL.md`, `.agents/skills/source-command-estilo-flashcard/SKILL.md` (+28) |
+| `tools/insert_card_base.py` | insere flashcards de PRÉ-REQUISITO (altitude base) no ipub.db | `.agents/skills/source-command-estilo-flashcard/SKILL.md`, `.agents/skills/source-command-revisar/SKILL.md` (+8) |
+| `tools/insert_card_extra.py` | insere cards adicionais vinculados a um questao_id EXISTENTE | `.agents/workflows/curar-cards.md` (+4) |
+| `tools/insert_questao.py` | — | `.agents/skills/source-command-analisar-questao/SKILL.md`, `.agents/skills/source-command-estilo-flashcard/SKILL.md` (+34) |
 | `tools/learning_efficacy.py` | eficácia de aprendizado por dimensão (P3 part-4) | `tools/test_event_log_efficacy.py` |
-| `tools/ledger_self.py` | Ledger-of-self: memoria estruturada dos WARNs do harness (degrau 2 da auto-evolucao) | `pytest.ini` (+6) |
-| `tools/normalize_taxonomia.py` | saneia taxonomia_cronograma (Fase 1 da curadoria de cards, s097) | `.agents/workflows/curar-cards.md` |
-| `tools/performance.py` | — | `.agents/skills/source-command-cronograma/SKILL.md`, `.agents/skills/source-command-performance/SKILL.md` (+10) |
+| `tools/ledger_self.py` | Ledger-of-self: memoria estruturada dos WARNs do harness (degrau 2 da auto-evolucao) | `pytest.ini` (+8) |
+| `tools/normalize_taxonomia.py` | saneia taxonomia_cronograma (Fase 1 da curadoria de cards, s097) | `.agents/workflows/curar-cards.md` (+1) |
+| `tools/performance.py` | — | `.agents/skills/source-command-cronograma/SKILL.md`, `.agents/skills/source-command-performance/SKILL.md` (+11) |
 | `tools/preparacao.py` | — | `core/contracts/cronograma-contract.md`, `pytest.ini` (+7) |
 | `tools/reachability_check.py` | check de ALCANCABILIDADE v0 (consolidacao part-6) | `tools/auto_check.py`, `tools/test_reachability.py` |
-| `tools/recurate_cards.py` | o reescritor in-place CANONICO de flashcards | `.agents/workflows/curar-cards.md` (+4) |
-| `tools/registrar_sessao_bulk.py` | — | `.agents/skills/source-command-importar-planilha/SKILL.md`, `.agents/skills/source-command-performance/SKILL.md` (+10) |
+| `tools/recurate_cards.py` | o reescritor in-place CANONICO de flashcards | `.agents/workflows/curar-cards.md` (+5) |
+| `tools/registrar_sessao_bulk.py` | — | `.agents/skills/source-command-importar-planilha/SKILL.md`, `.agents/skills/source-command-performance/SKILL.md` (+14) |
 | `tools/review_radar.py` | Radar de dormência por TEMA | `.claude/settings.local.json`, `core/contracts/forgetting-curve-contract.md` (+2) |
 | `tools/setup_hooks.py` | — | `tools/test_autonomia_hooks.py` |
 | `tools/sync_skills.py` | gerador determinístico das skills agent-agnostic | `tools/auto_check.py` |

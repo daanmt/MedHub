@@ -42,8 +42,8 @@ Criar `history/session_NNN.md` com o seguinte formato:
 - [O que ficou pendente]
 ```
 
-### 3. Atualizar ESTADO.md
-Adicionar entrada na seção "Últimas sessões" do `ESTADO.md` com resumo de uma linha.
+### 3. Atualizar ESTADO.md (só se o macro mudou)
+O `ESTADO.md` **não** tem seção de sessões (proibido por `core/contracts/estado-contract.md`: narrativa de sessão vai em `history/`). Atualizar o ESTADO apenas se um indicador cruzou marco, uma frente abriu/fechou ou um contrato/skill foi versionado. O registro da sessão vai em `history/session_NNN.md` + uma linha em `history/INDEX.md`.
 
 ### 4. Sincronização Autônoma do RAG (Automático)
 Disparado automaticamente pelo hook `PostToolUse(Write)` quando `history/session_NNN.md` é criado.

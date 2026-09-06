@@ -244,7 +244,7 @@ python tools/insert_questao.py \
 | `--reincidentes [--limit N] [--min-temas N]` | Habilidades por reincidência + nº de temas distintos. |
 | `--add "texto" --area A --tema T [--veredito V] [--questao-id N]` | Registra habilidade avulsa. |
 
-**Vereditos (enum fechado):** `acertou` · `incerteza` · `errou` · `indefinido`. Valor fora do conjunto levanta `ValueError`.
+**Vereditos (enum fechado, 5 valores = `VEREDITOS` em `tools/habilidades.py`):** `acertou` · `incerteza` · `desatencao` · `errou` · `indefinido`. Os quatro primeiros são uso humano (`--add`/`--veredito`); `indefinido` é reservado ao backfill automático. Valor fora do conjunto levanta `ValueError`.
 
 🔴 **`incerteza` é estado de primeira classe.** "Acertei na dúvida" não é acerto — é uma bomba-relógio que a prova detona. Quando o usuário sinalizar hesitação numa questão que acertou, registrar `--veredito incerteza`, não deixar passar como acerto.
 
@@ -285,4 +285,4 @@ python tools/insert_questao.py \
 
 Acerto não encerra a análise. Pergunte: *executei todas as etapas, ou acertei por intuição/eliminação?* Habilidade resolvida "na sorte" registra-se com **`--veredito incerteza`** (§10) — e uma questão acertada pode expor 2-3 lacunas colaterais que valem `--add`. É o sinal que o pipeline de erro descartaria inteiro.
 
-**Os 4 estados por habilidade** (não 2): `acertou` · `incerteza` (sabia mais ou menos, hesitou) · `desatencao` (sabia e escorregou na leitura/marcação) · `errou` (não sabia). Separar `desatencao` de `errou` importa porque o tratamento é oposto: desatenção pede ritual de execução (rotular V/F, reler o comando), erro pede conteúdo.
+**Os 4 estados de uso humano por habilidade** (não 2; o 5º valor do enum, `indefinido`, é só do backfill -- ver "Vereditos" acima): `acertou` · `incerteza` (sabia mais ou menos, hesitou) · `desatencao` (sabia e escorregou na leitura/marcação) · `errou` (não sabia). Separar `desatencao` de `errou` importa porque o tratamento é oposto: desatenção pede ritual de execução (rotular V/F, reler o comando), erro pede conteúdo.

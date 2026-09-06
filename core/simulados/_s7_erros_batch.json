@@ -1,0 +1,652 @@
+[
+ {
+  "area": "Cardiologia",
+  "tema": "Semiologia Cardíaca",
+  "titulo": "BRE = desdobramento PARADOXAL de B2 (A2 atrasa e passa depois de P2); fixo e CIA",
+  "enunciado": "Homem de 68 anos, hipertenso, com cardiomiopatia dilatada, dispneia progressiva aos esforcos. PA 128x76, FC 72, ritmo regular. ECG: ritmo sinusal e bloqueio completo do ramo esquerdo. Na ausculta, qual o padrao de desdobramento da segunda bulha esperado?",
+  "correta": "Desdobramento paradoxal de B2.",
+  "marcada": "Desdobramento fixo de B2.",
+  "erro": "Lacuna de conhecimento",
+  "elo": "Mapear o padrao de desdobramento de B2 ao lado do coracao cujo fechamento valvar esta atrasado (esquerdo -> paradoxal; direito -> amplo; CIA -> fixo)",
+  "armadilha": "Quatro rotulos parecidos (fisiologico, amplo, fixo, paradoxal) sem ancora mecanica: o candidato sorteia entre 'fixo' e 'paradoxal' porque ambos soam 'patologicos'; o distrator fixo e a CIA, nao o BRE",
+  "complexidade": "Baixa",
+  "habilidades": "Identificar qual valva semilunar fecha atrasada a partir da lesao eletrica (BRE atrasa a ejecao do VE e o fechamento aortico A2) -> Deduzir a ordem dos componentes (A2 depois de P2 = inversao) -> Mapear o padrao de desdobramento de B2 ao lado do coracao cujo fechamento valvar esta atrasado",
+  "faltou": "Que o BRE atrasa A2 ate depois de P2: o desdobramento aparece na EXPIRACAO e fecha na inspiracao (paradoxal). Fixo = CIA (sem variacao respiratoria); amplo = BRD/estenose pulmonar (P2 atrasado, aumenta na inspiracao)",
+  "explicacao": "B2 = A2 + P2; normal A2 antes de P2 e desdobra na inspiracao. Atraso de P2 (BRD, estenose pulmonar, sobrecarga de VD) = amplo, presente na expiracao e aumenta na inspiracao. CIA = fixo, sem variacao respiratoria (o shunt compensa o retorno venoso). Atraso de A2 (BRE, estenose aortica grave, marca-passo de VD, disfuncao sistolica grave) = paradoxal: desdobra na expiracao e some na inspiracao. Questao direta: 1 fato, 1 mapa de 4 padroes.",
+  "cards": [
+   {
+    "tipo": "elo_quebrado",
+    "frente_contexto": "Paciente com cardiomiopatia dilatada e bloqueio completo do ramo esquerdo no ECG.",
+    "frente_pergunta": "Qual o padrao de desdobramento de B2 esperado e em que fase respiratoria ele aparece?",
+    "verso_resposta": "Desdobramento paradoxal: audivel na expiracao e desaparece na inspiracao.",
+    "verso_regra_mestre": "BRE atrasa a ejecao do VE e o fechamento aortico (A2), que passa a ocorrer DEPOIS de P2; na inspiracao P2 tambem atrasa e os dois se aproximam - por isso o comportamento e o inverso do fisiologico.",
+    "verso_armadilha": "Marcar 'fixo' por soar patologico: fixo e a marca da comunicacao interatrial, nao do bloqueio de ramo."
+   },
+   {
+    "tipo": "discriminador",
+    "frente_contexto": "",
+    "frente_pergunta": "Qual cardiopatia produz desdobramento FIXO de B2?",
+    "verso_resposta": "Comunicacao interatrial: o fluxo pelo defeito compensa a variacao do retorno venoso, e o volume que chega ao VD fica constante em inspiracao e expiracao.",
+    "verso_regra_mestre": "Fixo = CIA (sobrecarga cronica de volume do VD + shunt que anula a variacao respiratoria). Amplo = atraso de P2 por BRD/estenose pulmonar (aumenta na inspiracao). Paradoxal = atraso de A2 por BRE/estenose aortica (aparece na expiracao).",
+    "verso_armadilha": "Atribuir o fixo ao BRE ou ao BRD: bloqueio de ramo muda a ORDEM ou a largura, mas continua variando com a respiracao."
+   }
+  ]
+ },
+ {
+  "area": "Cirurgia",
+  "tema": "Hérnias Inguinais",
+  "titulo": "Hernia sintomatica em ASA IV transitorio (cirurgia cardiaca < 3 meses): ADIAR e otimizar, nao watchful waiting definitivo",
+  "enunciado": "Homem de 64 anos com abaulamento inguinal bilateral redutivel e dor aos esforcos ha 2 anos. HAS controlada, DM2 sem insulina, IC secundaria a cardiopatia congenita. Troca valvar cardiaca ha 2 meses, em anticoagulante oral. Sobre o manejo da hernia inguinal, assinale a correta.",
+  "correta": "Solicitar avaliacao cardiologica, otimizar as comorbidades, planejar o manejo perioperatorio da anticoagulacao e programar a correcao cirurgica eletiva apos adequada recuperacao da cirurgia cardiaca.",
+  "marcada": "Optar por tratamento conservador definitivo (watchful waiting), indicando cirurgia apenas em caso de encarceramento ou estrangulamento.",
+  "erro": "Erro de aplicacao",
+  "elo": "Distinguir alto risco cirurgico TRANSITORIO (evento/cirurgia cardiaca < 3 meses = ASA IV) que ADIA a eletiva de contraindicacao definitiva que justifica watchful waiting",
+  "armadilha": "O pos-operatorio cardiaco recente + anticoagulante fazem o candidato converter 'agora nao' em 'nunca': o watchful waiting e reservado a assintomatico ou a risco proibitivo permanente, e o paciente e sintomatico ha 2 anos",
+  "complexidade": "Media",
+  "habilidades": "Reconhecer indicacao cirurgica da hernia (sintomatica = opera) -> Estratificar o risco atual pela ASA (procedimento cardiaco < 3 meses = ASA IV) -> Distinguir alto risco cirurgico TRANSITORIO que adia a eletiva de contraindicacao definitiva que justifica watchful waiting -> Planejar otimizacao (cardiologia, anticoagulacao perioperatoria) e reagendar",
+  "faltou": "Que ASA IV por cirurgia cardiaca < 3 meses e um estado temporario: a conduta e otimizar e programar a eletiva depois da recuperacao, nao abandonar a indicacao cirurgica de uma hernia sintomatica",
+  "explicacao": "Hernia inguinal sintomatica tem indicacao cirurgica eletiva. ASA III = doenca sistemica grave com limitacao (evento cardiaco > 3 meses); ASA IV = evento/procedimento cardiaco < 3 meses. Risco elevado transitorio adia e otimiza (avaliacao cardiologica, ponte de anticoagulacao), nao contraindica de forma absoluta. Watchful waiting e opcao para hernia ASSINTOMATICA/minimamente sintomatica ou risco proibitivo permanente. Padrao de execucao: sequencia de conduta (adiar nao e cancelar).",
+  "cards": [
+   {
+    "tipo": "elo_quebrado",
+    "frente_contexto": "Hernia inguinal bilateral sintomatica ha 2 anos em paciente com troca valvar ha 2 meses, anticoagulado, IC e DM2.",
+    "frente_pergunta": "Qual a conduta para a hernia nesse momento?",
+    "verso_resposta": "Adiar: avaliacao cardiologica, otimizar comorbidades, planejar a anticoagulacao perioperatoria e operar eletivamente apos a recuperacao da cirurgia cardiaca.",
+    "verso_regra_mestre": "Hernia sintomatica = indicacao cirurgica; risco alto TRANSITORIO (ASA IV por evento cardiaco < 3 meses) muda o QUANDO, nao o SE. Watchful waiting e para assintomatico ou risco proibitivo permanente.",
+    "verso_armadilha": "Converter 'pos-operatorio recente' em watchful waiting definitivo, deixando um paciente sintomatico esperar encarceramento."
+   },
+   {
+    "tipo": "discriminador",
+    "frente_contexto": "",
+    "frente_pergunta": "Na classificacao ASA, o que separa a classe III da classe IV em um cardiopata?",
+    "verso_resposta": "O tempo do evento cardiaco: sindrome coronariana aguda ou procedimento cardiaco ha MENOS de 3 meses = ASA IV; ha mais de 3 meses = ASA III.",
+    "verso_regra_mestre": "ASA III = doenca sistemica grave com limitacao funcional (IMC >= 40, etilismo pesado, evento cardiaco > 3 meses); ASA IV = ameaca constante a vida, marcada pelo evento cardiaco recente (< 3 meses).",
+    "verso_armadilha": "Rotular o pos-operatorio cardiaco de 2 meses como ASA III e tratar como contraindicacao: e ASA IV, e ASA IV recente e transitorio, nao proibitivo."
+   }
+  ]
+ },
+ {
+  "area": "Cirurgia",
+  "tema": "Abdome Agudo Inflamatório - Colecistite e Colangite Aguda",
+  "titulo": "Ictericia obstrutiva + pancreatite 45 dias apos colecistectomia = coledocolitiase SECUNDARIA (calculo residual), nao lesao iatrogenica",
+  "enunciado": "Mulher de 47 anos com dor abdominal em faixa, ictericia, inapetencia e vomitos ha 2 dias. Colecistectomia videolaparoscopica ha 45 dias por colecistite aguda, alta assintomatica. BT 6,4 (BD 5,4), FA 498, GGT 1753, amilase 2966, TGO 320, TGP 230. Principal hipotese diagnostica?",
+  "correta": "Coledocolitiase secundaria.",
+  "marcada": "Lesao iatrogenica de via biliar.",
+  "erro": "Armadilha",
+  "elo": "Usar o INTERVALO livre de sintomas apos a cirurgia (alta assintomatica, 45 dias) e a pancreatite associada para excluir lesao iatrogenica e apontar calculo residual",
+  "armadilha": "A palavra 'colecistectomia' na historia ancora o candidato na complicacao cirurgica; ele ignora que lesao de via biliar se manifesta nos primeiros dias (coleperitonio, fistula, febre) e que pancreatite biliar exige CALCULO impactando a papila",
+  "complexidade": "Media",
+  "habilidades": "Reconhecer ictericia obstrutiva (BD > BI, FA/GGT >> transaminases) -> Reconhecer pancreatite aguda associada (amilase 2966 + dor em faixa) e inferir calculo na papila -> Usar o INTERVALO livre de sintomas apos a cirurgia e a pancreatite associada para excluir lesao iatrogenica e apontar calculo residual -> Classificar a coledocolitiase pelo tempo (< 2 anos = secundaria/residual)",
+  "faltou": "Que lesao iatrogenica de via biliar aparece nos primeiros dias/semanas com coleperitonio, fistula ou febre (e estenose tardia da ictericia progressiva SEM pancreatite); calculo residual e o que obstrui e faz pancreatite semanas apos a alta",
+  "explicacao": "Apos colecistectomia, ictericia obstrutiva com pancreatite aguda (amilase muito alta) = calculo residual do coledoco = coledocolitiase SECUNDARIA (definida ate 2 anos da cirurgia; depois disso considera-se primaria, formada no coledoco). Lesao iatrogenica: dias a semanas, dor/febre/coleperitonio/fistula biliar; estenose pos-operatoria: ictericia colestatica progressiva, tardia, sem pancreatite. Execucao: ancoragem na cirurgia recente ignorando os dados que EXCLUEM (alta assintomatica, pancreatite).",
+  "cards": [
+   {
+    "tipo": "elo_quebrado",
+    "frente_contexto": "Paciente colecistectomizada ha 45 dias, alta assintomatica, agora com ictericia obstrutiva, dor em faixa e amilase acima de 2.900.",
+    "frente_pergunta": "Qual a principal hipotese diagnostica?",
+    "verso_resposta": "Coledocolitiase secundaria: calculo residual do coledoco obstruindo a papila e causando pancreatite biliar.",
+    "verso_regra_mestre": "Pancreatite biliar exige calculo impactando a papila; intervalo assintomatico apos a cirurgia + ictericia subita + amilase alta apontam para calculo residual, e ate 2 anos da colecistectomia a coledocolitiase e chamada secundaria.",
+    "verso_armadilha": "A colecistectomia na historia puxa para 'lesao iatrogenica': ela se manifesta nos primeiros dias (coleperitonio, fistula, febre) e nao cursa com pancreatite."
+   },
+   {
+    "tipo": "discriminador",
+    "frente_contexto": "",
+    "frente_pergunta": "Como o TEMPO de aparecimento separa lesao iatrogenica, estenose pos-operatoria e calculo residual apos colecistectomia?",
+    "verso_resposta": "Lesao iatrogenica: primeiros dias, com dor, febre, coleperitonio ou fistula biliar; estenose: meses, ictericia colestatica progressiva sem pancreatite; calculo residual: semanas, ictericia subita com ou sem pancreatite/colangite.",
+    "verso_regra_mestre": "O padrao temporal e o eixo: agudo-precoce com bile fora da via = lesao; insidioso-tardio = estenose; subito apos intervalo livre, com amilase alta = calculo.",
+    "verso_armadilha": "Chamar de 'coledocolitiase primaria' um calculo que aparece em menos de 2 anos: o corte de 2 anos define secundaria (residual) versus primaria (formada no coledoco)."
+   }
+  ]
+ },
+ {
+  "area": "Cirurgia",
+  "tema": "Abdome Agudo Inflamatório - Colecistite e Colangite Aguda",
+  "titulo": "Bile inesperada no Calot sem origem visivel: DEFINIR A ANATOMIA (colangiografia intraoperatoria) antes de qualquer reparo",
+  "enunciado": "Paciente de 34 anos em colecistectomia videolaparoscopica por colecistite aguda. Na disseccao do triangulo de Calot com eletrocauterio, saida inesperada de bile; nao se identifica perfuracao da vesicula nem do ducto cistico. Qual a conduta correta?",
+  "correta": "Realizar uma colangiografia intraoperatoria.",
+  "marcada": "Realizar rafia da lesao suspeita com fio de polipropileno 6-0.",
+  "erro": "Erro de aplicacao",
+  "elo": "Sequenciar 'definir a anatomia e o local da lesao' ANTES de 'reparar' quando ha suspeita de lesao de via biliar no intraoperatorio",
+  "armadilha": "A saida de bile grita 'conserte' e o candidato pula para a rafia; mas a lesao nao foi identificada, e reparo as cegas agrava a lesao ou estenosa a via biliar - o primeiro passo e enxergar a arvore biliar",
+  "complexidade": "Media",
+  "habilidades": "Reconhecer bile sem origem na vesicula/cistico como suspeita de lesao de via biliar principal -> Sequenciar 'definir a anatomia e o local da lesao' ANTES de 'reparar' -> Escolher o reparo conforme tipo/extensao (Kehr se < 50% e nao termica; anastomose biliodigestiva se termica, > 50% ou alta)",
+  "faltou": "Que a conduta inicial na suspeita intraoperatoria de lesao de via biliar e a colangiografia intraoperatoria para confirmar, localizar e planejar; rafia so depois de identificada a lesao e conforme o tipo (lesao termica por eletrocauterio pede resseccao + biliodigestiva, nao sutura)",
+  "explicacao": "Bile inesperada no Calot sem origem = suspeita de lesao de via biliar principal. Passo 1: colangiografia intraoperatoria (define se ha lesao, onde e o tipo); conversao nao e obrigatoria. Passo 2: reparo conforme a lesao - ducto maior, nao termica, < 50% da circunferencia: dreno de Kehr; termica (eletrocauterio), > 50%, alta (proxima a bifurcacao) ou > 1 cm: resseccao + anastomose biliodigestiva. Nunca rafia as cegas. Execucao: ordem de conduta (investigar antes de tratar).",
+  "cards": [
+   {
+    "tipo": "elo_quebrado",
+    "frente_contexto": "Durante colecistectomia laparoscopica, ha saida inesperada de bile no triangulo de Calot e nenhuma perfuracao e identificada na vesicula ou no cistico.",
+    "frente_pergunta": "Qual o primeiro passo?",
+    "verso_resposta": "Colangiografia intraoperatoria para confirmar a lesao, localiza-la e planejar o reparo.",
+    "verso_regra_mestre": "Suspeita de lesao de via biliar = definir a anatomia ANTES de reparar; a conversao para aberta nao e obrigatoria se a colangiografia puder ser feita por laparoscopia.",
+    "verso_armadilha": "Rafiar a 'lesao suspeita' as cegas: agrava a lesao ou estenosa a via biliar, e uma lesao termica por eletrocauterio nem e candidata a sutura simples."
+   },
+   {
+    "tipo": "discriminador",
+    "frente_contexto": "Lesao de via biliar principal identificada no intraoperatorio.",
+    "frente_pergunta": "Quando o reparo pode ser um dreno de Kehr, e quando exige anastomose biliodigestiva?",
+    "verso_resposta": "Kehr: lesao em ducto maior, nao termica, com menos de 50% da circunferencia. Biliodigestiva: lesao termica pelo eletrocauterio, mais de 50% da circunferencia, alta (proxima a bifurcacao) ou maior que 1 cm.",
+    "verso_regra_mestre": "Mecanismo termico e extensao decidem: cauterio desvitaliza alem do visivel, por isso lesao termica e ressecada e reconstruida, nao suturada.",
+    "verso_armadilha": "Tratar toda lesao como 'sutura com fio fino': a maioria das lesoes por eletrocauterio exige resseccao do segmento."
+   }
+  ]
+ },
+ {
+  "area": "Cirurgia",
+  "tema": "Trauma - Avaliação Inicial, Vias Aéreas e Trauma Torácico",
+  "titulo": "TCE moderado com SpO2 83% em mascara 15 L e FR 10: via aerea definitiva (IOT) ANTES da TC, mesmo com Glasgow 10",
+  "enunciado": "Homem de 28 anos, colisao moto x carro, inconsciente no local e recuperando parcialmente no transporte. Abre os olhos ao chamado, sons incompreensiveis, localiza dor (Glasgow 10). PA 150x82, FC 52, FR 10, SpO2 83% em mascara nao reinalante 15 L/min. Conduta prioritaria?",
+  "correta": "Realizar intubacao orotraqueal com protecao da coluna cervical.",
+  "marcada": "Solicitar tomografia de cranio.",
+  "erro": "Erro de aplicacao",
+  "elo": "Sequenciar o XABCDE: hipoxemia refrataria ao O2 suplementar (SpO2 83% em MNR) + bradipneia = indicacao de via aerea definitiva, antes de qualquer propedeutica",
+  "armadilha": "Triade de Cushing (HAS + bradicardia + bradipneia) e o TCE puxam o candidato para o D e para a TC; ele nao le que o paciente NAO esta oxigenando com 15 L de O2 - e A/B vem antes do D. Glasgow 10 nao e 'menor ou igual a 8', o que da a falsa sensacao de que a via aerea esta garantida",
+  "complexidade": "Media",
+  "habilidades": "Calcular o Glasgow pelos tres eixos (O3 V2 M5 = 10, TCE moderado) -> Reconhecer sinais de hipertensao intracraniana (Cushing) sem abandonar a sequencia -> Sequenciar o XABCDE: hipoxemia refrataria ao O2 suplementar + bradipneia = indicacao de via aerea definitiva antes de qualquer propedeutica -> So depois TC de cranio, manitol e neurocirurgia",
+  "faltou": "Que 'incapacidade de manter oxigenacao apesar de O2 suplementar' e indicacao formal de via aerea definitiva no ATLS, independente do Glasgow; a TC vem apos a estabilizacao A-B-C",
+  "explicacao": "Indicacoes de via aerea definitiva no ATLS: apneia ou incapacidade de oxigenar mesmo com O2, Glasgow <= 8, risco iminente de comprometimento da via aerea, risco de aspiracao, paciente combativo. SpO2 83% em mascara nao reinalante 15 L + FR 10 = falha de oxigenacao/ventilacao = IOT com protecao cervical AGORA. TC de cranio, manitol e neurocirurgiao so apos a avaliacao primaria. Padrao documentado (fraqueza persistente): violar a ordem ATLS e checar gravidade/imagem antes de resolver A/B.",
+  "cards": [
+   {
+    "tipo": "elo_quebrado",
+    "frente_contexto": "Politraumatizado com Glasgow 10, triade de Cushing, FR 10 e SpO2 83% apesar de mascara nao reinalante a 15 L/min.",
+    "frente_pergunta": "Qual a conduta prioritaria?",
+    "verso_resposta": "Intubacao orotraqueal com protecao da coluna cervical: ele nao oxigena mesmo com O2 suplementar.",
+    "verso_regra_mestre": "Hipoxemia refrataria ao O2 + bradipneia e indicacao de via aerea definitiva no ATLS independente do Glasgow; A e B vem antes do D e de qualquer imagem.",
+    "verso_armadilha": "Correr para a TC de cranio (ou manitol) porque a triade de Cushing grita hipertensao intracraniana: o paciente pode parar de respirar no tubo da tomografia."
+   },
+   {
+    "tipo": "discriminador",
+    "frente_contexto": "",
+    "frente_pergunta": "Quais sao as indicacoes de via aerea definitiva no trauma que NAO dependem do Glasgow menor ou igual a 8?",
+    "verso_resposta": "Apneia ou incapacidade de manter oxigenacao apesar de O2 suplementar, risco iminente de perda da via aerea (queimadura inalatoria, hematoma cervical), risco de aspiracao e paciente combativo.",
+    "verso_regra_mestre": "Glasgow <= 8 e apenas UMA das indicacoes; falha de oxigenacao/ventilacao indica IOT em qualquer Glasgow.",
+    "verso_armadilha": "Achar que Glasgow 10 'dispensa' a intubacao: o criterio que manda aqui e a SpO2 de 83% com 15 L de O2."
+   }
+  ]
+ },
+ {
+  "area": "Preventiva",
+  "tema": "Indicadores de saúde e mortalidade",
+  "titulo": "RMM padrao: numerador = obitos ate 42 dias por causa obstetrica; EXCLUI acidental/incidental e obito materno TARDIO (43 dias a 1 ano)",
+  "enunciado": "Estado com 42.000 nascidos vivos: 21 obitos de mulheres durante a gestacao ou ate 42 dias por causas relacionadas ou agravadas pela gravidez, 6 obitos de gravidas por acidente automobilistico nao relacionado e 4 obitos maternos tardios (43 dias a 1 ano) por causas obstetricas diretas. RMM por 100.000 NV, pela definicao padrao de obito materno?",
+  "correta": "50,0 por 100.000 nascidos vivos",
+  "marcada": "59,5 por 100.000 nascidos vivos",
+  "erro": "Lacuna de conhecimento",
+  "elo": "Aplicar as exclusoes do numerador da RMM padrao (causa acidental/incidental e obito materno tardio ficam fora)",
+  "armadilha": "Os 4 obitos tardios sao 'por causas obstetricas diretas', o que soa como 'obito materno verdadeiro'; o candidato soma 21 + 4 e ignora que o corte temporal de 42 dias e parte da definicao - o tardio e indicador a parte",
+  "complexidade": "Baixa",
+  "habilidades": "Reconhecer a definicao padrao de obito materno (ate 42 dias, causa obstetrica direta/indireta, excluindo acidental) -> Aplicar as exclusoes do numerador da RMM padrao (acidental e tardio ficam fora) -> Calcular obitos/NV x 100.000",
+  "faltou": "Que o obito materno tardio (43 dias a 1 ano) NAO entra na RMM padrao mesmo sendo por causa obstetrica: compoe a Razao de Mortalidade Materna Tardia, indicador separado",
+  "explicacao": "Obito materno (CID-10/OMS): morte durante a gestacao ou ate 42 dias apos o termino, por causa relacionada ou agravada pela gravidez (direta ou indireta), EXCLUIDAS causas acidentais/incidentais. RMM = obitos maternos / nascidos vivos x 100.000 = 21/42.000 x 100.000 = 50. Obito materno tardio (43 dias a 1 ano) e indicador complementar (RMMt), nunca somado ao numerador classico. Questao direta de definicao.",
+  "cards": [
+   {
+    "tipo": "elo_quebrado",
+    "frente_contexto": "Calculo de RMM em que o enunciado lista obitos obstetricos ate 42 dias, obitos de gestantes por acidente de transito e obitos maternos tardios por causa obstetrica.",
+    "frente_pergunta": "Quais desses obitos entram no numerador da RMM padrao?",
+    "verso_resposta": "So os obitos por causa obstetrica direta ou indireta ocorridos na gestacao ou ate 42 dias apos o termino; acidentais e tardios ficam fora.",
+    "verso_regra_mestre": "A definicao padrao de obito materno tem tres filtros: janela de 42 dias, causa obstetrica (direta/indireta) e exclusao de causas acidentais/incidentais. O tardio (43 dias a 1 ano) tem indicador proprio.",
+    "verso_armadilha": "Somar o obito materno tardio porque 'e causa obstetrica direta': o corte temporal e parte da definicao, nao detalhe."
+   },
+   {
+    "tipo": "base",
+    "frente_contexto": "Estado com 42.000 nascidos vivos e 21 obitos maternos pela definicao padrao.",
+    "frente_pergunta": "Qual a RMM por 100.000 nascidos vivos?",
+    "verso_resposta": "50,0 por 100.000 nascidos vivos (21 / 42.000 x 100.000).",
+    "verso_regra_mestre": "RMM = obitos maternos / nascidos vivos x 100.000; nascidos vivos e o proxy do numero de gestacoes.",
+    "verso_armadilha": "Usar 25 (somando os 4 tardios) da 59,5; usar 27 (somando os 6 acidentais) da 64,3 - ambos sao distratores construidos com as exclusoes."
+   }
+  ]
+ },
+ {
+  "area": "Infecto",
+  "tema": "Micoses sistêmicas",
+  "titulo": "Sinal do halo em neutropenico pos-TCTH = aspergilose angioinvasiva -> VORICONAZOL (fluconazol nao cobre Aspergillus)",
+  "enunciado": "Homem de 42 anos, TCTH alogenico ha 45 dias por LMA, febre persistente, dor toracica pleuritica e hemoptise discreta ha 3 dias, neutrofilos 150/mm3. TC de torax: nodulos pulmonares cercados por vidro fosco (sinal do halo). Conduta terapeutica de primeira linha direcionada?",
+  "correta": "Voriconazol endovenoso.",
+  "marcada": "Fluconazol endovenoso.",
+  "erro": "Lacuna de conhecimento",
+  "elo": "Parear o fungo inferido pelo cenario (neutropenia profunda + sinal do halo = Aspergillus) com o antifungico que efetivamente o cobre",
+  "armadilha": "'Antifungico' generico: fluconazol e o azol mais familiar e o candidato o usa como classe; mas fluconazol cobre Candida e Cryptococcus, nao fungos filamentosos",
+  "complexidade": "Baixa",
+  "habilidades": "Reconhecer aspergilose pulmonar invasiva (neutropenia profunda + febre + dor pleuritica/hemoptise + sinal do halo) -> Parear o fungo inferido pelo cenario com o antifungico que efetivamente o cobre -> Definir duracao (6 a 12 semanas, ate recuperacao imune)",
+  "faltou": "Que o voriconazol e a primeira linha da aspergilose invasiva e que o fluconazol nao tem atividade contra Aspergillus",
+  "explicacao": "Aspergilose pulmonar angioinvasiva: neutropenia prolongada, leucemia aguda, TCTH. Sinal do halo = nodulo (infarto/necrose fungica) cercado por vidro fosco (hemorragia alveolar por invasao vascular). Tratamento: voriconazol (IV nos graves), 6 a 12 semanas. Fluconazol: Candida/Cryptococcus, sem atividade contra Aspergillus. SMX-TMP = pneumocistose (vidro fosco difuso, sem nodulos); ganciclovir = CMV (infiltrado difuso). Questao direta.",
+  "cards": [
+   {
+    "tipo": "elo_quebrado",
+    "frente_contexto": "Neutropenico profundo apos TCTH com febre, hemoptise e nodulos pulmonares com halo de vidro fosco na TC.",
+    "frente_pergunta": "Qual o antifungico de primeira linha?",
+    "verso_resposta": "Voriconazol (endovenoso no paciente grave), por 6 a 12 semanas.",
+    "verso_regra_mestre": "Sinal do halo em neutropenico = aspergilose angioinvasiva; o fungo filamentoso exige voriconazol - o fluconazol so cobre leveduras (Candida, Cryptococcus).",
+    "verso_armadilha": "Escolher fluconazol como 'o azol' generico: ele nao tem atividade contra Aspergillus."
+   },
+   {
+    "tipo": "mecanismo",
+    "frente_contexto": "",
+    "frente_pergunta": "O que representa o sinal do halo na TC de torax do neutropenico?",
+    "verso_resposta": "Nodulo central de necrose/infarto por invasao fungica dos vasos, cercado por vidro fosco que corresponde a hemorragia alveolar ao redor.",
+    "verso_regra_mestre": "Angioinvasao explica a triade dor pleuritica + hemoptise + halo; e a assinatura de Aspergillus em neutropenia profunda.",
+    "verso_armadilha": "Ler 'vidro fosco' e pensar em pneumocistose: la o vidro fosco e difuso e sem nodulo central."
+   }
+  ]
+ },
+ {
+  "area": "Gastro",
+  "tema": "Doença Inflamatória Intestinal",
+  "titulo": "Colite aguda grave sem resposta ao corticoide IV no D3: RESGATE (infliximabe ou ciclosporina) antes de colectomia",
+  "enunciado": "Mulher de 26 anos internada com colite aguda grave (8 evacuacoes sanguinolentas/dia, FC 108, Hb 8,6, PCR 68), em metilprednisolona IV. No 3o dia mantem 7 evacuacoes com sangue e PCR 52; coprocultura e toxina de C. difficile negativas, sigmoidoscopia afastou CMV. Conduta mais adequada?",
+  "correta": "Iniciar terapia de resgate com infliximabe ou ciclosporina IV.",
+  "marcada": "Suspender o corticoide e indicar colectomia total.",
+  "erro": "Erro de aplicacao",
+  "elo": "Posicionar a colectomia no fluxograma da colite aguda grave: so apos falha do RESGATE (dia 6) ou complicacao (megacolon, perfuracao, hemorragia refrataria, choque)",
+  "armadilha": "'Mantem-se sintomatica no D3 apesar do corticoide' soa como refratariedade terminal e o candidato pula o degrau intermediario; a colectomia e o ultimo no, nao o segundo",
+  "complexidade": "Media",
+  "habilidades": "Reconhecer colite aguda grave por Truelove-Witts (>= 6 evacuacoes sanguinolentas + criterio sistemico) -> Afastar infeccao que mimetiza/piora (C. difficile, CMV) antes de escalar -> Avaliar resposta ao corticoide IV no dia 3 -> Posicionar a colectomia no fluxograma: so apos falha do resgate ou complicacao",
+  "faltou": "O no intermediario do fluxograma: falha do corticoide IV no D3 = resgate com infliximabe 5 mg/kg (ou ciclosporina IV); colectomia se falha do resgate no D6 ou complicacao",
+  "explicacao": "Colite aguda grave (Truelove-Witts): internar, afastar C. difficile/CMV, tromboprofilaxia, metilprednisolona IV 0,8-1 mg/kg, reavaliar no D3. Sem resposta no D3 = resgate: infliximabe 5 mg/kg IV (escolha de prova) ou ciclosporina IV (alvo 150-250 ng/mL); inibidores de JAK como alternativa emergente. Colectomia: falha do resgate (D6) ou megacolon, perfuracao, hemorragia refrataria, choque. Azatioprina demora 2-3 meses - manutencao, nunca inducao. Execucao: pular degrau do fluxograma.",
+  "cards": [
+   {
+    "tipo": "elo_quebrado",
+    "frente_contexto": "Colite aguda grave por retocolite em corticoide IV; no 3o dia segue com 7 evacuacoes sanguinolentas e PCR alta; infeccao afastada.",
+    "frente_pergunta": "Qual o proximo passo?",
+    "verso_resposta": "Terapia de resgate: infliximabe 5 mg/kg IV (ou ciclosporina IV).",
+    "verso_regra_mestre": "O fluxograma tem um degrau entre corticoide e cirurgia: falha no D3 = resgate; colectomia so se o resgate falhar (D6) ou houver megacolon, perfuracao, hemorragia refrataria ou choque.",
+    "verso_armadilha": "'Sem resposta ao corticoide' lido como refratariedade total: a colectomia e o ultimo no, nao o segundo."
+   },
+   {
+    "tipo": "discriminador",
+    "frente_contexto": "",
+    "frente_pergunta": "Por que a azatioprina nao serve para induzir remissao na colite aguda grave?",
+    "verso_resposta": "Porque leva 2 a 3 meses para agir; e droga de manutencao, nao de inducao.",
+    "verso_regra_mestre": "Inducao rapida = corticoide IV, depois infliximabe/ciclosporina; manutencao = tiopurinas/biologicos.",
+    "verso_armadilha": "Alternativa que oferece azatioprina 'para inducao rapida' e contradicao farmacologica."
+   }
+  ]
+ },
+ {
+  "area": "Hepato",
+  "tema": "Cirrose",
+  "titulo": "PBE com Cr 1,8 e BT 4,5: ALBUMINA (1,5 g/kg D1 + 1 g/kg D3) reduz SHR e mortalidade; terlipressina e para SHR ja estabelecida",
+  "enunciado": "Homem de 54 anos, cirrose alcoolica, ascite volumosa e febre. Liquido ascitico: 600 leucocitos/mm3 com 75% de PMN. Creatinina 1,8, BT 4,5. Alem da cefotaxima, que medida deve ser iniciada para reduzir mortalidade e risco de insuficiencia renal?",
+  "correta": "Albumina humana intravenosa.",
+  "marcada": "Terlipressina intravenosa.",
+  "erro": "Lacuna de conhecimento",
+  "elo": "Separar a PREVENCAO da disfuncao renal na PBE (albumina IV junto do antibiotico) do TRATAMENTO da sindrome hepatorrenal ja instalada (terlipressina apos falha da expansao)",
+  "armadilha": "Creatinina 1,8 no cirrotico faz o candidato pensar em SHR e pular para terlipressina; mas a sequencia e expandir com albumina primeiro - SHR so se diagnostica apos 48h sem resposta a albumina e excluidas outras causas",
+  "complexidade": "Baixa",
+  "habilidades": "Diagnosticar PBE (PMN >= 250/mm3 no liquido ascitico) -> Separar a PREVENCAO da disfuncao renal na PBE (albumina) do TRATAMENTO da SHR instalada (terlipressina) -> Aplicar a dose (1,5 g/kg no D1 e 1 g/kg no D3)",
+  "faltou": "Que albumina IV e parte do tratamento da PBE para prevenir sindrome hepatorrenal e reduzir mortalidade (sobretudo com Cr > 1, BT > 4 ou ureia > 30), e que terlipressina so entra na SHR confirmada apos falha da expansao volemica",
+  "explicacao": "PBE: PMN >= 250/mm3 -> cefotaxima 2 g 12/12h por 5 dias + albumina 1,5 g/kg no D1 e 1 g/kg no D3 (reduz SHR e mortalidade; beneficio maior com Cr > 1, BT > 4, ureia > 30). Suspender betabloqueador e diureticos na disfuncao renal. Terlipressina = tratamento da SHR, diagnosticada apos 48h de expansao com albumina sem resposta e excluidas outras causas. Norfloxacino = profilaxia secundaria apos o episodio. Questao direta.",
+  "cards": [
+   {
+    "tipo": "elo_quebrado",
+    "frente_contexto": "Cirrotico com PBE confirmada (PMN 450/mm3), creatinina 1,8 e bilirrubina 4,5, iniciando cefotaxima.",
+    "frente_pergunta": "Que medida adicional reduz a mortalidade e o risco de insuficiencia renal?",
+    "verso_resposta": "Albumina humana IV: 1,5 g/kg no primeiro dia e 1 g/kg no terceiro dia.",
+    "verso_regra_mestre": "Na PBE a albumina e prevencao de sindrome hepatorrenal, indicada junto do antibiotico e com beneficio maximo quando Cr > 1, BT > 4 ou ureia > 30.",
+    "verso_armadilha": "Creatinina alta puxa para terlipressina: ela trata SHR ja estabelecida, diagnosticada so apos 48h de albumina sem resposta."
+   },
+   {
+    "tipo": "discriminador",
+    "frente_contexto": "",
+    "frente_pergunta": "Em que momento a terlipressina entra no cirrotico com disfuncao renal?",
+    "verso_resposta": "Apenas na sindrome hepatorrenal confirmada: sem melhora da creatinina apos 48h de expansao com albumina e excluidos choque, nefrotoxicos e doenca renal estrutural.",
+    "verso_regra_mestre": "Sequencia: suspender diureticos/nefrotoxicos -> albumina 1 g/kg/dia por 48h -> se nao responder, SHR -> terlipressina + albumina.",
+    "verso_armadilha": "Pular a expansao e ir direto ao vasoconstritor porque 'a creatinina esta alta'."
+   }
+  ]
+ },
+ {
+  "area": "Hepato",
+  "tema": "Nódulos Hepáticos Benignos",
+  "titulo": "Adenoma hepatico < 5 cm em mulher assintomatica: suspender ACO + observar (RM 6/6 meses); biopsia so na duvida diagnostica",
+  "enunciado": "Mulher de 28 anos, ACO ha 10 anos, USG de rotina com lesao hepatica solida de 3 cm no lobo direito. RM: hipercaptacao arterial intensa, sem washout, com gordura intracelular. Conduta mais adequada perante o provavel diagnostico?",
+  "correta": "Suspensao do anticoncepcional e observacao.",
+  "marcada": "Biopsia percutanea da lesao.",
+  "erro": "Lacuna de conhecimento",
+  "elo": "Reconhecer que a RM fecha o diagnostico de adenoma hepatico (mulher em ACO, realce arterial, gordura intralesional, sem washout) e que a conduta e definida por sexo, tamanho e sintomas - biopsia nao entra",
+  "armadilha": "Lesao hepatica 'solida' em jovem soa como 'precisa de histologia'; mas a RM ja define adenoma, e biopsia de adenoma sangra e nao muda a conduta - o distrator da falsa seguranca",
+  "complexidade": "Media",
+  "habilidades": "Reconhecer adenoma hepatico pela RM (mulher em ACO, hipercaptacao arterial, gordura intracelular, washout ausente) -> Reconhecer que a RM fecha o diagnostico e que a conduta e definida por sexo, tamanho e sintomas -> Aplicar a regra: < 5 cm, assintomatica, mulher = suspender estrogenio e observar com RM a cada 6 meses",
+  "faltou": "Que a imagem por RM e suficiente para adenoma (biopsia so em duvida) e que a ressecao e reservada a >= 5 cm, sintomatico, homem ou mutacao de beta-catenina",
+  "explicacao": "Adenoma hepatocelular: mulher em idade fertil, ACO (risco x30), anabolizantes, glicogenoses, obesidade. RM: realce arterial intenso, gordura intralesional, sem realce hepatobiliar (diferencia da HNF). Conduta: suspender estrogenio/anabolizante; mulher, < 5 cm, assintomatica = observacao com RM a cada 6 meses (anual se estavel). Resseccao: >= 5 cm, sintomatico, antes de engravidar, homem (qualquer tamanho), beta-catenina. Embolizacao na hemorragia. Biopsia: so duvida diagnostica (risco de sangramento). Fluxograma: no 'tamanho/sexo/sintoma'.",
+  "cards": [
+   {
+    "tipo": "elo_quebrado",
+    "frente_contexto": "Mulher de 28 anos em ACO ha 10 anos com lesao hepatica de 3 cm: RM com hipercaptacao arterial, gordura intracelular e sem washout, assintomatica.",
+    "frente_pergunta": "Qual a conduta?",
+    "verso_resposta": "Suspender o anticoncepcional e observar com RM a cada 6 meses (a lesao tende a regredir).",
+    "verso_regra_mestre": "Adenoma hepatico: a RM fecha o diagnostico; mulher + < 5 cm + assintomatica = observar. Ressecar se >= 5 cm, sintomatico, homem ou beta-catenina.",
+    "verso_armadilha": "Pedir biopsia por ser 'lesao solida em jovem': biopsia de adenoma sangra e so entra na duvida diagnostica."
+   },
+   {
+    "tipo": "discriminador",
+    "frente_contexto": "",
+    "frente_pergunta": "Quais achados de RM apontam adenoma hepatico em vez de hiperplasia nodular focal?",
+    "verso_resposta": "Realce arterial intenso com gordura intralesional e AUSENCIA de realce na fase hepatobiliar; a HNF realca na fase hepatobiliar e tem cicatriz central.",
+    "verso_regra_mestre": "Adenoma nao tem ductos biliares funcionais, por isso nao capta contraste hepatoespecifico; HNF tem e capta.",
+    "verso_armadilha": "Confundir os dois tumores da mulher jovem: HNF nao precisa de tratamento nem de suspensao obrigatoria de ACO; adenoma precisa."
+   },
+   {
+    "tipo": "base",
+    "frente_contexto": "",
+    "frente_pergunta": "Quais sao as indicacoes de resseccao do adenoma hepatico?",
+    "verso_resposta": "Lesao >= 5 cm, sintomatica, em homem (qualquer tamanho), com mutacao de beta-catenina, ou antes de gestacao planejada.",
+    "verso_regra_mestre": "Tamanho e sexo masculino marcam risco de ruptura e malignizacao (5 a 8%); gestacao faz a lesao crescer.",
+    "verso_armadilha": "Ressecar toda lesao de 3 cm em mulher assintomatica: abaixo de 5 cm a conduta e suspender estrogenio e vigiar."
+   }
+  ]
+ },
+ {
+  "area": "Pneumo",
+  "tema": "Sindrome da Veia Cava Superior",
+  "titulo": "SVCS em jovem com sintomas B e LDH alta = LINFOMA: internar, corticoide e biopsia urgente (nao timoma ambulatorial)",
+  "enunciado": "Homem de 29 anos com dispneia progressiva, tosse seca, pressao toracica ha 2 semanas, edema facial, piora ao deitar, cefaleia, perda de 7 kg em 3 meses e sudorese noturna. FR 26, SpO2 91%, turgencia jugular, edema de face/pescoco, circulacao colateral toracica, sem linfonodos perifericos. Hb 11,2, leucocitos 12.800, plaquetas 310.000, LDH 890. TC: massa de 11 cm no mediastino anterior comprimindo a VCS. Melhor conduta inicial e diagnostico mais provavel?",
+  "correta": "Iniciar corticoterapia e internar para realizar biopsia o mais breve possivel; linfoma.",
+  "marcada": "Iniciar diureticos e programar biopsia em regime ambulatorial; timoma.",
+  "erro": "Armadilha",
+  "elo": "Usar idade jovem + sintomas B + LDH elevada para eleger linfoma como causa da massa de mediastino anterior, e tratar a SVCS sintomatica como emergencia oncologica",
+  "armadilha": "'Massa de mediastino anterior + SVCS' evoca timoma (associacao classica com miastenia); o candidato ancora nessa associacao e ignora os dados que a EXCLUEM: 29 anos, perda de peso, sudorese noturna, LDH 890 e curso de 2 semanas - timoma e insidioso e sem sintomas B",
+  "complexidade": "Alta",
+  "habilidades": "Reconhecer SVCS pelo conjunto (edema facial, turgencia jugular, circulacao colateral, piora ao deitar) -> Localizar a causa na massa de mediastino anterior -> Usar idade jovem + sintomas B + LDH elevada para eleger linfoma -> Tratar SVCS sintomatica com hipoxemia como emergencia: internar, corticoide e biopsia o mais rapido possivel (o corticoide lisa o tecido e prejudica a histologia)",
+  "faltou": "Que timoma e neoplasia epitelial timica de crescimento lento, tipicamente em adulto de meia-idade, sem sintomas B nem LDH alta; em jovem com sintomas B e LDH alta, a massa de mediastino anterior e linfoma ate prova em contrario, e a SVCS com dessaturacao nao se maneja ambulatorialmente",
+  "explicacao": "SVCS = emergencia oncologica quando ha dispneia/hipoxemia. Causas: carcinoma de pequenas celulas (idoso tabagista), linfoma (jovem, sintomas B, LDH alta, massa volumosa de crescimento rapido), timoma (insidioso, miastenia), tumor germinativo (jovem, AFP/beta-hCG). Conduta no linfoma: internar, corticoide sistemico (regride rapido o tumor linfoide), biopsia o quanto antes porque o corticoide compromete a amostra; anticoagulacao so com trombo documentado; diuretico depleta volume e pode colapsar; toracotomia de urgencia e proscrita em tumor quimiossensivel. Execucao: ancoragem na associacao classica ignorando o dado que exclui.",
+  "cards": [
+   {
+    "tipo": "elo_quebrado",
+    "frente_contexto": "Homem de 29 anos com SVCS, dessaturacao, massa de 11 cm no mediastino anterior, perda de 7 kg, sudorese noturna e LDH 890.",
+    "frente_pergunta": "Qual o diagnostico mais provavel?",
+    "verso_resposta": "Linfoma; a conduta e internar, iniciar corticoide sistemico e biopsiar o mais rapido possivel.",
+    "verso_regra_mestre": "Jovem + sintomas B + LDH alta + massa volumosa de crescimento rapido = linfoma; a SVCS sintomatica e emergencia e o corticoide, embora encolha o tumor, lisa o tecido - por isso a biopsia nao pode esperar.",
+    "verso_armadilha": "Mediastino anterior + SVCS evocando timoma: timoma e insidioso, de meia-idade e nao da sintomas B nem LDH alta."
+   },
+   {
+    "tipo": "discriminador",
+    "frente_contexto": "Massa de mediastino anterior com sindrome da veia cava superior.",
+    "frente_pergunta": "Que dados do caso separam linfoma de timoma e de carcinoma de pequenas celulas?",
+    "verso_resposta": "Linfoma: jovem, sintomas B, LDH alta, crescimento em semanas. Timoma: meia-idade, curso lento, miastenia, sem sintomas B. Pequenas celulas: idoso tabagista, lesao central pulmonar.",
+    "verso_regra_mestre": "Idade e velocidade de crescimento discriminam; a associacao classica (timoma-miastenia, pequenas celulas-SVCS) nao substitui a leitura do caso.",
+    "verso_armadilha": "Responder pela associacao decorada e nao pelo conjunto de dados que a exclui."
+   },
+   {
+    "tipo": "mecanismo",
+    "frente_contexto": "",
+    "frente_pergunta": "Por que diuretico e conduta errada na SVCS sintomatica?",
+    "verso_resposta": "Porque o paciente ja tem retorno venoso limitado; a deplecao volemica reduz ainda mais a pre-carga e pode causar hipotensao e colapso circulatorio.",
+    "verso_regra_mestre": "O edema da SVCS e obstrutivo, nao hipervolemico; trata-se a causa (corticoide/quimio no linfoma) e a compressao, nao o volume.",
+    "verso_armadilha": "Tratar edema facial como congestao e prescrever furosemida."
+   }
+  ]
+ },
+ {
+  "area": "Hepato",
+  "tema": "Hepatites Virais",
+  "titulo": "HBsAg reagente = INFECCAO ATUAL, sempre; anti-HBc+ com anti-HBs- nao e 'resolvida'. Gestante: HBeAg + HBV-DNA, tenofovir se alta viremia, RN vacina + HBIG",
+  "enunciado": "Gestante de 31 anos, G2P1, 14 semanas, assintomatica, sem fatores de risco. Sorologia: HBsAg reagente, anti-HBc total reagente, anti-HBs nao reagente. Interpretacao e principal conduta na gestacao?",
+  "correta": "Resultado compativel com infeccao ativa pelo virus da hepatite B; solicitar HBeAg e carga viral (HBV-DNA), acompanhar a funcao hepatica e programar medidas para prevencao da transmissao vertical.",
+  "marcada": "Resultado compativel com infeccao resolvida; solicitar apenas repeticao da sorologia apos o parto.",
+  "erro": "Lacuna de conhecimento",
+  "elo": "Ler o HBsAg como marcador de PRESENCA DO VIRUS (infeccao atual, aguda ou cronica), antes de interpretar anti-HBc e anti-HBs",
+  "armadilha": "Anti-HBc reagente + gestante assintomatica sem risco soam como 'contato antigo, cicatriz'; o candidato inverte o marcador de superficie - infeccao resolvida exige HBsAg NEGATIVO com anti-HBs POSITIVO, o oposto do perfil",
+  "complexidade": "Baixa",
+  "habilidades": "Ler o HBsAg como marcador de presenca do virus (infeccao atual) antes de interpretar anti-HBc e anti-HBs -> Montar o perfil (HBsAg+ / anti-HBc+ / anti-HBs- = infeccao ativa, cronica se > 6 meses) -> Aplicar a conduta obstetrica (HBeAg, HBV-DNA, transaminases; tenofovir se HBV-DNA >= 200.000 UI/mL a partir de 28 semanas; RN com vacina + HBIG em 12h)",
+  "faltou": "Que HBsAg reagente significa virus circulante em qualquer cenario; resolvida = HBsAg-, anti-HBc+, anti-HBs+; vacinado = so anti-HBs+; janela imunologica = HBsAg- com anti-HBc IgM+",
+  "explicacao": "Marcadores HBV: HBsAg = infeccao atual (aguda ou cronica; cronica se > 6 meses); anti-HBc = contato com virus selvagem (IgM aguda, IgG cronica/cicatriz), nao protege; HBeAg/HBV-DNA = replicacao; anti-HBs = imunidade (vacina ou cura). Perfis: aguda HBsAg+ anti-HBc IgM+ anti-HBs-; cronica HBsAg+ anti-HBc IgG+ anti-HBs-; resolvida HBsAg- anti-HBc+ anti-HBs+; vacinado so anti-HBs+; janela HBsAg- anti-HBc IgM+. Gestante HBsAg+: HBeAg, HBV-DNA, transaminases; tenofovir se HBV-DNA >= 200.000 UI/mL, iniciar 28-32 semanas; RN: vacina + HBIG nas primeiras 12h independente da carga; via de parto por indicacao obstetrica. Erro de marcador basico - cards de base.",
+  "cards": [
+   {
+    "tipo": "base",
+    "frente_contexto": "",
+    "frente_pergunta": "O que significa um HBsAg reagente, independentemente dos outros marcadores?",
+    "verso_resposta": "Infeccao ATUAL pelo virus da hepatite B (aguda ou cronica): ha antigeno viral circulando.",
+    "verso_regra_mestre": "HBsAg e o marcador de presenca do virus; se ele esta positivo, nao existe 'resolvida' nem 'vacinado' - cronica quando persiste mais de 6 meses.",
+    "verso_armadilha": "Ler anti-HBc reagente como 'cicatriz' e ignorar o HBsAg positivo ao lado."
+   },
+   {
+    "tipo": "discriminador",
+    "frente_contexto": "",
+    "frente_pergunta": "Que perfil sorologico define infeccao RESOLVIDA pelo HBV?",
+    "verso_resposta": "HBsAg negativo, anti-HBc positivo e anti-HBs positivo (o vacinado tem apenas anti-HBs positivo).",
+    "verso_regra_mestre": "Anti-HBc so aparece apos contato com o virus selvagem; anti-HBs marca imunidade (cura ou vacina). Resolvida = os dois anticorpos sem o antigeno.",
+    "verso_armadilha": "Chamar de resolvida um perfil com anti-HBs NEGATIVO: sem anti-HBs nao houve clareamento."
+   },
+   {
+    "tipo": "elo_quebrado",
+    "frente_contexto": "Gestante com HBsAg reagente e anti-HBc total reagente, anti-HBs nao reagente, assintomatica no primeiro trimestre.",
+    "frente_pergunta": "Qual a conduta no pre-natal?",
+    "verso_resposta": "Solicitar HBeAg, HBV-DNA e transaminases; tenofovir se HBV-DNA >= 200.000 UI/mL a partir de 28-32 semanas; RN recebe vacina + imunoglobulina anti-HBV nas primeiras 12 horas.",
+    "verso_regra_mestre": "Infeccao ativa na gestante = quantificar replicacao para decidir antiviral, e profilaxia neonatal dupla independe da carga viral; via de parto por indicacao obstetrica.",
+    "verso_armadilha": "'Repetir sorologia apos o parto' deixa passar a janela de prevencao da transmissao vertical."
+   }
+  ]
+ },
+ {
+  "area": "Obstetrícia",
+  "tema": "Infecção Urinária na Gestação",
+  "titulo": "Pielonefrite na gestante: INTERNAR + antibiotico IV sempre, e profilaxia ate o fim da gestacao apos 1 pielonefrite (ou >= 2 cistites)",
+  "enunciado": "Primigesta de 24 anos, 28 semanas, febre 38,9 ha 24h, calafrios, dor lombar direita, nauseas, disuria ha 3 dias. FC 112, PA 108x68, FR 22, Giordano positivo a direita; sem dinamica uterina, BCF 150. Apos o tratamento inicial, resolucao completa e urocultura de controle negativa. Conduta mais adequada durante a internacao e apos a alta?",
+  "correta": "Internar a paciente para antibioticoterapia intravenosa e instituir profilaxia antibiotica continua ate o termino da gestacao",
+  "marcada": "Realizar antibioticoterapia ambulatorial e indicar profilaxia antibiotica ate o final da gestacao.",
+  "erro": "Lacuna de conhecimento",
+  "elo": "Reconhecer a gestacao como indicacao absoluta de internacao na pielonefrite, independente da aparencia de estabilidade",
+  "armadilha": "Paciente 'estavel' (PA normal, sem sepse) sugere tratamento ambulatorial como em nao gestante; o candidato acertou a profilaxia mas nao sabia que gestante e criterio de internacao por si",
+  "complexidade": "Baixa",
+  "habilidades": "Diagnosticar pielonefrite (febre + Giordano + sintomas urinarios) -> Reconhecer a gestacao como indicacao absoluta de internacao na pielonefrite -> Indicar profilaxia ate o termo apos 1 pielonefrite ou >= 2 cistites",
+  "faltou": "Que gestante com pielonefrite e SEMPRE internada para antibiotico IV (risco de sepse, parto prematuro, SDRA), mesmo estavel",
+  "explicacao": "Pielonefrite: febre/sinais sistemicos + dor lombar/Giordano + piuria/bacteriuria (cistite previa nao e obrigatoria). Internacao: sepse/choque, febre persistente, intolerancia oral e GESTANTE (sempre). Antibiotico IV (cefalosporina) ate 48h afebril, depois oral. Profilaxia ate o fim da gestacao: 1 episodio de pielonefrite ou >= 2 cistites (nitrofurantoina ou cefalexina). Questao direta.",
+  "cards": [
+   {
+    "tipo": "elo_quebrado",
+    "frente_contexto": "Gestante de 28 semanas com pielonefrite aguda, hemodinamicamente estavel, sem sinais de sepse.",
+    "frente_pergunta": "Onde tratar?",
+    "verso_resposta": "Internada, com antibiotico intravenoso; a gestacao por si so indica internacao.",
+    "verso_regra_mestre": "Criterios de internacao na pielonefrite: sepse/choque, febre persistente, intolerancia oral e gestante (sempre) - pela chance de sepse, trabalho de parto prematuro e SDRA.",
+    "verso_armadilha": "Tratar ambulatorialmente por 'estar estavel', como se fosse uma nao gestante."
+   },
+   {
+    "tipo": "base",
+    "frente_contexto": "",
+    "frente_pergunta": "Quando se indica profilaxia antibiotica ate o final da gestacao?",
+    "verso_resposta": "Apos 1 episodio de pielonefrite ou 2 ou mais episodios de cistite/bacteriuria na gestacao.",
+    "verso_regra_mestre": "Um unico episodio de pielonefrite ja basta; nao e preciso recorrencia.",
+    "verso_armadilha": "Negar profilaxia 'porque foi o primeiro episodio' - a regra do primeiro episodio vale para cistite, nao para pielonefrite."
+   }
+  ]
+ },
+ {
+  "area": "Dermato",
+  "tema": "Piodermites",
+  "titulo": "Crianca com bolhas flacidas que rompem e crostas amareladas em 2 semanas = IMPETIGO BOLHOSO (S. aureus), nao penfigo foliaceo",
+  "enunciado": "Crianca de 5 anos com lesoes bolhosas na face ha 2 semanas, algumas de conteudo turvo, que se rompem facilmente e deixam erosoes com crostas amareladas, em numero crescente. Diagnostico mais provavel?",
+  "correta": "Impetigo bolhoso de etiologia estafilococica.",
+  "marcada": "Penfigo foliaceo com infeccao bacteriana secundaria.",
+  "erro": "Armadilha",
+  "elo": "Usar idade (crianca), curso agudo em dias/semanas e crosta amarelada para reconhecer piodermite, antes de cogitar dermatose bolhosa autoimune",
+  "armadilha": "'Bolhas flacidas que se rompem facilmente' e frase que descreve tanto impetigo bolhoso quanto penfigo foliaceo (ambos com clivagem superficial); o candidato ancorou na fragilidade da bolha e ignorou os dados que EXCLUEM penfigo: 5 anos, 2 semanas, crostas amarelas, lesoes novas se somando",
+  "complexidade": "Media",
+  "habilidades": "Reconhecer lesao primaria (bolha superficial flacida com conteudo turvo) -> Usar idade, curso agudo e crosta amarelada para reconhecer piodermite antes de cogitar dermatose autoimune -> Separar impetigo bolhoso (S. aureus, toxina esfoliativa) de crostoso (aureus ou pyogenes) e de ectima (ulcera profunda)",
+  "faltou": "Que impetigo bolhoso e a piodermite da crianca pequena por S. aureus produtor de toxina esfoliativa (clivagem subcornea, bolhas flacidas que rompem em erosoes), e que penfigo foliaceo e doenca autoimune de adulto, cronica, com erosoes e descamacao em areas seborreicas",
+  "explicacao": "Impetigo bolhoso: S. aureus sempre (toxina esfoliativa, clivagem superficial), crianca pequena, vesiculas/bolhas flacidas com conteudo claro -> turvo, rompem em erosoes superficiais; face, tronco, intertrigo. Impetigo crostoso: erosoes com crostas melicericas, aureus ou pyogenes. Ectima: ulcera profunda com crosta aderente, membros inferiores, pyogenes. Penfigo foliaceo: autoimune (anti-desmogleina 1), adulto, cronico, erosoes/descamacao seborreica, acantolise subcornea. Execucao: ancoragem na morfologia da bolha ignorando idade e curso.",
+  "cards": [
+   {
+    "tipo": "elo_quebrado",
+    "frente_contexto": "Crianca de 5 anos com bolhas flacidas na face ha 2 semanas, conteudo turvo, que rompem e deixam erosoes com crostas amareladas, em numero crescente.",
+    "frente_pergunta": "Qual o diagnostico mais provavel?",
+    "verso_resposta": "Impetigo bolhoso por Staphylococcus aureus produtor de toxina esfoliativa.",
+    "verso_regra_mestre": "Crianca + curso agudo em dias/semanas + crosta amarelada = piodermite; a clivagem superficial da toxina explica a bolha flacida que rompe facil.",
+    "verso_armadilha": "'Bolha flacida' lida como penfigo foliaceo: e doenca autoimune de adulto, cronica, com erosoes e descamacao em areas seborreicas."
+   },
+   {
+    "tipo": "discriminador",
+    "frente_contexto": "",
+    "frente_pergunta": "Qual a diferenca etiologica entre impetigo bolhoso e impetigo crostoso?",
+    "verso_resposta": "Bolhoso: sempre S. aureus (toxina esfoliativa). Crostoso: S. aureus ou S. pyogenes.",
+    "verso_regra_mestre": "A bolha exige a toxina esfoliativa, exclusiva do estafilococo; a crosta melicerica pode vir de qualquer um dos dois.",
+    "verso_armadilha": "Atribuir o bolhoso ao estreptococo, ou esperar que tratar o impetigo previna glomerulonefrite pos-estreptococica (nao previne)."
+   }
+  ]
+ },
+ {
+  "area": "Pediatria",
+  "tema": "Desenvolvimento Neuropsicomotor (DNPM)",
+  "titulo": "Marco ausente da faixa etaria ANTERIOR = PROVAVEL ATRASO (encaminhar); marco ausente so da faixa atual = ALERTA (reavaliar em 30 dias)",
+  "enunciado": "Lactente de 11 meses, a termo, bom crescimento. Senta sem apoio, brinca de esconde-achou e transfere objetos entre as maos. Nao duplica silabas, nao anda com apoio e nao mostra o que quer. Pela Caderneta da Crianca, diagnostico e conduta?",
+  "correta": "Provavel atraso do desenvolvimento. Encaminhar para avaliacao especializada.",
+  "marcada": "Alerta para o desenvolvimento. Orientar estimulacao e reavaliar em 30 dias.",
+  "erro": "Erro de aplicacao",
+  "elo": "Aplicar o no da Caderneta: ausencia de marco da faixa etaria ANTERIOR classifica como provavel atraso, independentemente de quantos marcos da faixa atual faltam",
+  "armadilha": "Tres marcos ausentes listados juntos; o candidato viu 'andar com apoio' (faixa atual) e classificou alerta, sem separar 'duplicar silabas' (6-9 meses, faixa anterior) que sozinho muda a classificacao para provavel atraso",
+  "complexidade": "Media",
+  "habilidades": "Localizar a faixa etaria (11 meses = 9 a 12 meses; corrigir idade so se prematuro, ate 2 anos) -> Atribuir cada marco a sua faixa (duplicar silabas 6-9; andar com apoio 9-12; mostrar o que quer 12-15) -> Aplicar o no da Caderneta: ausencia de marco da faixa anterior = provavel atraso -> Conduta: encaminhar para avaliacao especializada",
+  "faltou": "Que duplicar silabas e marco de 6 a 9 meses (faixa anterior) e que um unico marco ausente da faixa anterior ja e 'provavel atraso', com encaminhamento imediato - alerta e reavaliacao em 30 dias valem so quando a ausencia e restrita a faixa atual",
+  "explicacao": "Algoritmo da Caderneta da Crianca: (1) faixa etaria (idade corrigida em prematuro ate 2 anos, so para DNPM e antropometria); (2) marcos presentes/ausentes; (3) todos presentes = adequado; ausente so da faixa atual = alerta, estimular e reavaliar em 30 dias; ausente da faixa anterior (ou perimetro cefalico alterado / 3+ alteracoes fenotipicas) = provavel atraso, encaminhar. Aqui: duplicar silabas (6-9 m) ausente aos 11 meses = provavel atraso. Fluxograma: no 'faixa anterior'.",
+  "cards": [
+   {
+    "tipo": "elo_quebrado",
+    "frente_contexto": "Lactente de 11 meses que senta sem apoio, brinca de esconde-achou e transfere objetos, mas nao duplica silabas nem anda com apoio.",
+    "frente_pergunta": "Como classificar o desenvolvimento pela Caderneta da Crianca?",
+    "verso_resposta": "Provavel atraso do desenvolvimento, com encaminhamento para avaliacao especializada.",
+    "verso_regra_mestre": "Duplicar silabas e marco de 6 a 9 meses (faixa anterior); um marco ausente da faixa ANTERIOR ja classifica como provavel atraso, mesmo que os demais estejam presentes.",
+    "verso_armadilha": "Classificar 'alerta' por causa do marco atual ausente (andar com apoio) sem checar a faixa anterior."
+   },
+   {
+    "tipo": "discriminador",
+    "frente_contexto": "",
+    "frente_pergunta": "O que separa 'alerta para o desenvolvimento' de 'provavel atraso' na Caderneta da Crianca?",
+    "verso_resposta": "Alerta: ausencia de marco apenas da faixa etaria ATUAL (reavaliar em 30 dias). Provavel atraso: ausencia de marco da faixa ANTERIOR, perimetro cefalico alterado ou 3 ou mais alteracoes fenotipicas (encaminhar).",
+    "verso_regra_mestre": "A faixa de origem do marco ausente define o degrau, nao o numero de marcos ausentes.",
+    "verso_armadilha": "Contar quantos marcos faltam em vez de perguntar de qual faixa eles sao."
+   },
+   {
+    "tipo": "base",
+    "frente_contexto": "",
+    "frente_pergunta": "Em que faixas etarias se esperam duplicar silabas, andar com apoio e mostrar o que quer?",
+    "verso_resposta": "Duplicar silabas: 6 a 9 meses. Andar com apoio: 9 a 12 meses. Mostrar o que quer: 12 a 15 meses.",
+    "verso_regra_mestre": "Sentar sem apoio, esconde-achou e transferir objetos tambem sao marcos de 6 a 9 meses.",
+    "verso_armadilha": "Tratar 'mostrar o que quer' ausente aos 11 meses como anormal: ainda esta fora da faixa."
+   }
+  ]
+ },
+ {
+  "area": "Pediatria",
+  "tema": "Asma - Crise Aguda",
+  "titulo": "Crise LEVE (PRAM baixo) em 6-11 anos na APS: 2 puffs de ICS-formoterol (ou 4 de salbutamol) UMA vez e reavaliar - sem corticoide sistemico (GINA 2026)",
+  "enunciado": "Menino de 8 anos na UBS com tosse seca e sibilancia, episodios previos, sem tratamento. Vias aereas pervias, FR 22, sibilancia expiratoria difusa com MV audivel, SpO2 94%, sem musculatura acessoria, estavel. Conduta mais adequada?",
+  "correta": "2 puffs de budesonida + formoterol com espacador e reavaliar apos 30 minutos.",
+  "marcada": "6 a 10 puffs de salbutamol de 20 em 20 minutos e corticoide sistemico.",
+  "erro": "Lacuna de conhecimento",
+  "elo": "Graduar a crise (PRAM: SpO2 94% = 1, sibilo expiratorio = 1, sem musculatura acessoria = 0 -> leve) e parear a gravidade com a intensidade do resgate",
+  "armadilha": "Reflexo 'crise de asma = SABA de 20/20 min + corticoide' aplica o protocolo da crise moderada/grave a uma crise leve; o GINA insiste em evitar tratamento excessivo, e a novidade e o ICS-formoterol como resgate em 6-11 anos",
+  "complexidade": "Media",
+  "habilidades": "Graduar a crise pelo PRAM (SpO2 94% = 1, sibilo expiratorio = 1, sem musculatura acessoria = 0 -> leve) -> Parear gravidade com intensidade do resgate (leve: dose unica e reavaliar) -> Escolher o resgate: 2 puffs ICS-formoterol ou 4 puffs SABA com espacador",
+  "faltou": "Que na crise leve o resgate e dose UNICA (2 puffs de budesonida-formoterol ou 4 puffs de salbutamol) com reavaliacao em 30 minutos; corticoide sistemico e ipratropio entram a partir da crise moderada. Diretriz GINA 2026; o resumo pode estar desatualizado",
+  "explicacao": "GINA (>= 6 anos): gravidade pelo PRAM (SpO2, retracoes, entrada de ar, sibilos; pontos-chave de prova: fala, musculatura acessoria, hipoxemia). Leve: 2 puffs ICS-formoterol OU 4 puffs SABA com espacador, uma vez, reavaliar em 30 min; sem corticoide sistemico. Moderada: SABA 4-10 puffs 20/20 min por 1h + corticoide oral (mesma eficacia do IV) +/- ipratropio. Grave: idem + O2 (94-98%), ipratropio, transferir da APS. Documentar diagnostico com espirometria/PFE apos. Diretriz 2026; resumo pode estar desatualizado.",
+  "cards": [
+   {
+    "tipo": "elo_quebrado",
+    "frente_contexto": "Escolar de 8 anos em crise de asma na UBS: SpO2 94%, sibilos expiratorios, sem musculatura acessoria, fala normal.",
+    "frente_pergunta": "Qual o resgate indicado?",
+    "verso_resposta": "2 puffs de budesonida-formoterol com espacador (ou 4 puffs de salbutamol), dose unica, e reavaliar em 30 minutos.",
+    "verso_regra_mestre": "Crise leve (PRAM baixo) = resgate em dose unica sem corticoide sistemico; o GINA de 2026 permite ICS-formoterol como resgate a partir dos 6 anos.",
+    "verso_armadilha": "Aplicar 'SABA de 20/20 min + corticoide sistemico', que e o esquema da crise moderada/grave."
+   },
+   {
+    "tipo": "discriminador",
+    "frente_contexto": "",
+    "frente_pergunta": "A partir de que gravidade entram corticoide sistemico e ipratropio na crise de asma da crianca?",
+    "verso_resposta": "A partir da crise moderada; na leve o resgate e broncodilatador em dose unica.",
+    "verso_regra_mestre": "Escalonar pelo PRAM: leve = dose unica; moderada = SABA 20/20 min por 1h + corticoide oral (+/- ipratropio); grave = tudo isso + O2 e transferencia.",
+    "verso_armadilha": "Dar corticoide 'por seguranca' numa crise leve - o GINA combate o tratamento excessivo."
+   },
+   {
+    "tipo": "base",
+    "frente_contexto": "",
+    "frente_pergunta": "Quais tres achados do exame fisico os examinadores mais usam para chamar a crise de asma de GRAVE?",
+    "verso_resposta": "Incapacidade de falar frases, uso de musculatura acessoria e hipoxemia.",
+    "verso_regra_mestre": "Sao os itens de maior peso no PRAM; se estao descritos, considere a crise grave mesmo sem pontuacao completa.",
+    "verso_armadilha": "Chamar de grave uma crise com SpO2 94%, fala preservada e sem retracoes."
+   }
+  ]
+ },
+ {
+  "area": "Pediatria",
+  "tema": "Puberdade Precoce",
+  "titulo": "Virilizacao com testiculos PRE-PUBERES (< 4 mL) = puberdade precoce PERIFERICA; o eixo ativado comeca pelo testiculo",
+  "enunciado": "Menino de 9 anos com acne, pele oleosa, odor axilar, estatura Z +1,5 (alvo -0,5), pelos pubianos escuros e grossos restritos a pubis, penis aumentado em comprimento mas nao em diametro, testiculos de 2 cm3 bilateralmente; inicio ha 6 meses. Diagnostico mais provavel?",
+  "correta": "Puberdade precoce periferica.",
+  "marcada": "Desenvolvimento puberal fisiologico.",
+  "erro": "Armadilha",
+  "elo": "Usar o volume testicular como marcador do eixo HHG: virilizacao com testiculos < 4 mL = androgenio de fonte periferica, nao puberdade central nem fisiologica",
+  "armadilha": "Aos 9 anos os sinais parecem 'puberdade normal chegando'; o candidato ancorou na idade limite e nos sinais androgenicos e ignorou o dado que EXCLUI puberdade fisiologica: testiculos de 2 mL (eixo desligado) com inicio antes dos 9 anos",
+  "complexidade": "Media",
+  "habilidades": "Datar o inicio (ha 6 meses = 8,5 anos, antes dos 9 = precoce no menino) -> Reconhecer virilizacao (acne, odor, pelos P4, penis em comprimento = G3) -> Usar o volume testicular como marcador do eixo HHG: virilizacao com testiculos < 4 mL = fonte periferica -> Pensar em HAC de apresentacao tardia, tumor produtor de androgenio ou exposicao exogena",
+  "faltou": "Que o primeiro sinal da puberdade fisiologica e central no menino e o aumento do volume testicular (>= 4 mL, G2), dependente de gonadotrofinas; virilizacao sem esse aumento significa androgenio independente do eixo (periferica)",
+  "explicacao": "Puberdade no menino: normal entre 9 e 14 anos, primeiro sinal = testiculo >= 4 mL (G2); G3 = penis cresce em comprimento; G4 = diametro + escroto pigmentado. Precoce = antes dos 9 anos. Central: eixo ativado, testiculos crescem (LH basal ultrassensivel elevado). Periferica: androgenio sem eixo, testiculos pre-puberes (< 4 mL) com virilizacao e aceleracao de crescimento; causas: HAC tardia, tumor adrenal/testicular, exogeno. Pubarca isolada: so pelos/odor, sem virilizacao expressiva nem aceleracao. Execucao: ancoragem na idade ignorando o volume testicular.",
+  "cards": [
+   {
+    "tipo": "elo_quebrado",
+    "frente_contexto": "Menino de 9 anos com acne, odor axilar, pelos pubianos grossos, penis alongado e crescimento acelerado, iniciados ha 6 meses; testiculos de 2 mL.",
+    "frente_pergunta": "Qual o diagnostico mais provavel?",
+    "verso_resposta": "Puberdade precoce periferica: virilizacao sem ativacao do eixo (testiculos pre-puberes).",
+    "verso_regra_mestre": "No menino o eixo ativado se anuncia pelo testiculo >= 4 mL; androgenio com testiculo pequeno vem de fora do eixo (adrenal, tumor, exogeno).",
+    "verso_armadilha": "Chamar de fisiologico por 'ter 9 anos': comecou aos 8,5 e o testiculo de 2 mL exclui puberdade normal ou central."
+   },
+   {
+    "tipo": "base",
+    "frente_contexto": "",
+    "frente_pergunta": "Qual e o primeiro sinal de puberdade no sexo masculino?",
+    "verso_resposta": "Aumento do volume testicular para 4 mL ou mais (G2 de Tanner), sinal de eixo hipotalamo-hipofise-gonadal ativado.",
+    "verso_regra_mestre": "Testiculo cresce por gonadotrofina; pelos, acne e odor podem vir de androgenio adrenal sem eixo.",
+    "verso_armadilha": "Usar pelos pubianos ou tamanho do penis como primeiro sinal."
+   },
+   {
+    "tipo": "discriminador",
+    "frente_contexto": "",
+    "frente_pergunta": "Como separar pubarca precoce isolada de puberdade precoce periferica?",
+    "verso_resposta": "Pubarca isolada: so pelos pubianos/axilares e odor, sem virilizacao expressiva nem aceleracao de crescimento. Periferica: virilizacao intensa (acne, penis, crescimento acelerado) com testiculos pre-puberes.",
+    "verso_regra_mestre": "Intensidade da virilizacao e velocidade de crescimento fazem a diferenca; o volume testicular e pequeno nas duas.",
+    "verso_armadilha": "Rotular como pubarca benigna um menino com penis aumentado e estatura 2 DP acima do alvo."
+   }
+  ]
+ },
+ {
+  "area": "Pediatria",
+  "tema": "Imunizações",
+  "titulo": "Calendario do idoso (PNI 2026): covid a cada 6 meses, influenza anual, dT reforco 10/10 anos, pneumo 20V dose unica se ACAMADO/institucionalizado",
+  "enunciado": "Idoso de 72 anos acamado apos AVC hemorragico ha 2 anos. Caderneta: hepatite B 3 doses ha 12 anos; dT 3 doses ha 20 anos; coronavirus ha 8 meses; influenza ha 8 meses. Pelo calendario do idoso do PNI, quais vacinas aplicar agora?",
+  "correta": "dT, coronavirus e pneumococica 20-valente.",
+  "marcada": "Coronavirus, influenza e dT.",
+  "erro": "Lacuna de conhecimento",
+  "elo": "Aplicar os intervalos do calendario do idoso (covid 6 meses, influenza 12 meses, dT 10 anos) e o criterio da pneumococica 20V (acamado ou institucionalizado)",
+  "armadilha": "Influenza 'ha 8 meses' parece vencida (campanha anual) e a pneumococica 20V e novidade que o candidato nao tinha no mapa; ele acertou dT e covid e trocou pneumo por influenza",
+  "complexidade": "Baixa",
+  "habilidades": "Conferir cada vacina do idoso contra o intervalo (hepatite B 3 doses = completa; dT reforco a cada 10 anos; covid a cada 6 meses; influenza a cada 12 meses) -> Aplicar o criterio da pneumococica 20V (acamado ou institucionalizado, dose unica) -> Montar a lista do dia",
+  "faltou": "Que a pneumococica 20-valente entrou no calendario do idoso para acamados e moradores de instituicoes fechadas (dose unica), que covid e semestral no idoso e influenza anual (8 meses nao repete). Calendario 2026; resumo pode estar desatualizado",
+  "explicacao": "Calendario do idoso PNI 2026: hepatite B (completar 3 doses; sem reforco), dT (3 doses + reforco a cada 10 anos), covid (a cada 6 meses no grupo de risco), influenza (anual), pneumococica 20-valente (dose unica para acamados e institucionalizados). Caso: dT vencida (20 anos), covid vencida (8 > 6 meses), influenza em dia (8 < 12 meses), hepatite B completa, pneumo 20V indicada por acamado. Diretriz 2026; resumo pode estar desatualizado.",
+  "cards": [
+   {
+    "tipo": "elo_quebrado",
+    "frente_contexto": "Idoso de 72 anos acamado: hepatite B completa ha 12 anos, dT ha 20 anos, covid e influenza ha 8 meses.",
+    "frente_pergunta": "Quais vacinas aplicar hoje pelo calendario do idoso do PNI?",
+    "verso_resposta": "dT (reforco de 10 anos vencido), covid (intervalo semestral vencido) e pneumococica 20-valente (dose unica por estar acamado).",
+    "verso_regra_mestre": "Intervalos do idoso: covid 6 meses, influenza 12 meses, dT 10 anos; pneumo 20V so para acamado ou institucionalizado.",
+    "verso_armadilha": "Repetir influenza com 8 meses (ainda dentro do ano) e esquecer a pneumococica do acamado."
+   },
+   {
+    "tipo": "base",
+    "frente_contexto": "",
+    "frente_pergunta": "Qual idoso recebe a vacina pneumococica 20-valente pelo PNI?",
+    "verso_resposta": "O idoso acamado ou morador de instituicao fechada, em dose unica.",
+    "verso_regra_mestre": "Nao e universal para todo idoso: o criterio e a condicao (acamado/institucionalizado), nao a idade.",
+    "verso_armadilha": "Achar que todo maior de 60 anos recebe pneumococica, ou que ela entra no lugar da influenza."
+   },
+   {
+    "tipo": "discriminador",
+    "frente_contexto": "",
+    "frente_pergunta": "No calendario do idoso (PNI 2026), a cada quantos meses se repete a vacina covid?",
+    "verso_resposta": "A cada 6 meses (a influenza e anual, a cada 12 meses).",
+    "verso_regra_mestre": "Dose ha 8 meses = covid vencida, influenza em dia.",
+    "verso_armadilha": "Tratar as duas como anuais e repetir influenza antes da hora."
+   }
+  ]
+ }
+]

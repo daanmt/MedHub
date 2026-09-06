@@ -24,7 +24,7 @@ Use this skill when the user asks to run the migrated source command `cronograma
 
 ## SSOT e derivado
 
-- **SSOT** = `Cronograma.pdf` (raiz, IP do EMED, gitignored).
+- **SSOT** = `Cronograma.pdf` (raiz, IP do EMED, gitignored; `data/Cronograma.pdf` e aceito como fallback pelo `resolve_pdf_path()` -- hotfix s166, o `--check` abortava sem ele).
 - **Derivado versionado** = `core/cronograma/grade.json` (estrutural, sem texto clínico → commitado).
 
 ## Subcomandos
@@ -36,6 +36,7 @@ python tools/cronograma.py --validate             # asserções da Fase 1 (S10=2
 python tools/cronograma.py --json [--semana N]    # imprime a grade inteira ou só a semana N
 python tools/cronograma.py --gap [--meta M] [--desde N]    # gap de volume: acum(ipub) + cronograma restante vs meta (default 10000)
 python tools/cronograma.py --radar [--desde N]    # cobertura futura × performance, fronteira pré/pós-ENAMED
+python tools/cronograma.py --sync-drive <xlsx>    # lê o "Cronograma de Reta Final.xlsx" local (ordem manual + conclusão) e grava o snapshot preparacao_estado.cronograma_conclusao_drive (W8 do reconcile; ritual do usuário, o agente só pede)
 ```
 
 - `--desde N`: semana inicial p/ `--gap`/`--radar`. **Default = semana nominal por data**; passe a semana de **conteúdo** (ex.: `--desde 11`) para o gap/radar refletirem a posição real do estudante (atrás do calendário).

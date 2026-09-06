@@ -11,6 +11,7 @@ Callers acima: `app/pages/*.py`, `app/engine/*.py`. CLIs em `tools/` usam
 """
 
 import sqlite3
+import sys
 import pandas as pd
 import os
 from datetime import datetime
@@ -356,8 +357,11 @@ def _balancear_due(cursor, metrics):
     metrics = dict(metrics)
     metrics["due"] = _dt.combine(novo_dia, due.time())
     metrics["scheduled_days"] = max(0, intervalo + desloc)
+    # Informe de operador em STDERR: o stdout dos CLIs que gravam revisao
+    # (fsrs_queue --record) e JSON puro por contrato (hotfix 2026-09-06).
     print(f"[FSRS_BALANCE] due {alvo} -> {novo_dia} ({desloc:+d}d; "
-          f"carga {carga.get(alvo, 0)} -> {carga.get(novo_dia, 0)})")
+          f"carga {carga.get(alvo, 0)} -> {carga.get(novo_dia, 0)})",
+          file=sys.stderr)
     return metrics
 
 
@@ -473,7 +477,8 @@ def _aplicar_review(conn, card_data, rating, card_novo=False, selection_reason=N
     try:
         new_metrics = _balancear_due(cursor, new_metrics)
     except Exception as e:                                    # pragma: no cover
-        print(f"[WARN] FSRS_BALANCE: balanceamento pulado ({e}); due original mantido.")
+        print(f"[WARN] FSRS_BALANCE: balanceamento pulado ({e}); due original mantido.",
+              file=sys.stderr)
 
     if card_novo:
         cursor.execute('''

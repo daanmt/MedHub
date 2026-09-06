@@ -41,7 +41,23 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 sys.path.insert(0, os.path.join(ROOT, "tools"))
 
-PDF_PATH = os.path.join(ROOT, "Cronograma.pdf")
+
+
+def resolve_pdf_path(root=None):
+    """Localiza o `Cronograma.pdf`: raiz do repo (canonico, contrato) e, como
+    fallback, `data/` (onde o arquivo vive ao lado dos outros PDFs de dados).
+    Devolve o caminho canonico mesmo quando nenhum existe, para a mensagem de
+    erro nomear o lugar certo (hotfix 2026-09-06: `--check` abortava com
+    FileNotFoundError e o instrumento W5 do reconcile ficava morto)."""
+    root = root or ROOT
+    canon = os.path.join(root, "Cronograma.pdf")
+    if os.path.exists(canon):
+        return canon
+    alt = os.path.join(root, "data", "Cronograma.pdf")
+    return alt if os.path.exists(alt) else canon
+
+
+PDF_PATH = resolve_pdf_path()
 GRADE_PATH = os.path.join(ROOT, "core", "cronograma", "grade.json")
 
 # Âncora de datas: derivada do fato documentado "26/06 calendário na S13" (ESTADO.md).
@@ -262,6 +278,10 @@ def check(pdf_path=PDF_PATH, grade_path=GRADE_PATH):
     if not os.path.exists(grade_path):
         return {"status": "missing", "msg": "grade.json não existe — rode --rebuild"}
     g = load_grade(grade_path)
+    if not os.path.exists(pdf_path):
+        return {"status": "missing_pdf",
+                "msg": f"Cronograma.pdf nao encontrado ({pdf_path}; tambem procurado em data/) "
+                       "-- W5 nao verificavel; a grade.json continua valida como derivado"}
     cur, old = sha256_file(pdf_path), g["_meta"].get("fonte_sha256")
     fresh = cur == old
     return {

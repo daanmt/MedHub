@@ -668,3 +668,14 @@
 {"ts": "2026-09-05T23:03:58+00:00", "event": "resolved", "check": "suites_orfas", "fingerprint": "2365ba185636", "alvo": "test_fsrs_queue_prevalencia.py"}
 {"ts": "2026-09-05T23:10:16+00:00", "event": "opened", "check": "history_integrity", "fingerprint": "a1219760d97b", "alvo": "session_164.md", "payload": {"detalhe": "header fora do template (esperado '# Session NNN -- ...'); campo `Ferramenta:` ausente (o swap test depende dele)"}}
 {"ts": "2026-09-05T23:10:16+00:00", "event": "opened", "check": "history_integrity", "fingerprint": "903ae26c9d52", "alvo": "session_165.md", "payload": {"detalhe": "header fora do template (esperado '# Session NNN -- ...'); campo `Ferramenta:` ausente (o swap test depende dele)"}}
+{"ts": "2026-09-05T23:10:57+00:00", "event": "resolved", "check": "history_integrity", "fingerprint": "a1219760d97b", "alvo": "session_164.md"}
+{"ts": "2026-09-05T23:10:57+00:00", "event": "resolved", "check": "history_integrity", "fingerprint": "903ae26c9d52", "alvo": "session_165.md"}
+{"ts": "2026-09-06T16:34:16+00:00", "event": "opened", "check": "cobertura_semana", "fingerprint": "c26d5099d6cf", "alvo": "48. Diarreia", "payload": {"semana": 17}}
+{"ts": "2026-09-06T16:34:16+00:00", "event": "opened", "check": "cobertura_semana", "fingerprint": "3a8384dc7a3f", "alvo": "15. Vitalidade Fetal", "payload": {"semana": 17}}
+{"ts": "2026-09-06T16:34:16+00:00", "event": "opened", "check": "cobertura_semana", "fingerprint": "164aa827f61f", "alvo": "21. Pneumonias Bacterianas", "payload": {"semana": 17}}
+{"ts": "2026-09-06T16:34:16+00:00", "event": "opened", "check": "cobertura_semana", "fingerprint": "f90ce40d5164", "alvo": "3. Urologia", "payload": {"semana": 17}}
+{"ts": "2026-09-06T16:34:16+00:00", "event": "opened", "check": "cobertura_semana", "fingerprint": "7d306b9222ec", "alvo": "8. Neoplasias de Estômago e Esôfago", "payload": {"semana": 17}}
+{"ts": "2026-09-06T16:34:16+00:00", "event": "resolved", "check": "cobertura_semana", "fingerprint": "acc9f53f3462", "alvo": "11. Câncer de Mama"}
+{"ts": "2026-09-06T16:34:16+00:00", "event": "resolved", "check": "cobertura_semana", "fingerprint": "4d42a0707dac", "alvo": "18. Aleitamento Materno"}
+{"ts": "2026-09-06T17:04:59+00:00", "event": "opened", "check": "history_integrity", "fingerprint": "02c1d95e563f", "alvo": "session_166.md", "payload": {"detalhe": "header fora do template (esperado '# Session NNN -- ...'); campo `Ferramenta:` ausente (o swap test depende dele)"}}
+{"ts": "2026-09-06T17:06:09+00:00", "event": "resolved", "check": "history_integrity", "fingerprint": "02c1d95e563f", "alvo": "session_166.md"}

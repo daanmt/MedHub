@@ -1,38 +1,35 @@
 # HANDOFF.md -- ESTADO OPERACIONAL CURTO
-*Atualizado: 2026-09-05 (noite) -- S165 (Claude Code / Fable 5.1): 5 aulas EMED digeridas -> `prevalencia_enamed.json` + `fsrs_queue --prevalencia`; NENHUM card gravado; redrill em debito pela 5a sessao*
+*Atualizado: 2026-09-06 (tarde) -- S166 (Claude Code / Fable 5.1): bloco 1 drenado (62 cards, 77% retencao) + sessao de engenharia curta (README reescrito, 2 hotfixes, varredura de drift F75)*
 
 ## > Proximo passo imediato
 
-1. 🎯 **DRENAGEM FSRS em 2 blocos de 60 (regra do usuario s165: 120/dia como sprint ate 13/09, NAO e o novo teto; s159 = 60 volta depois do ENAMED).** Redrill acumulado: **64 cards nota 1-2** (24 da s161/162 + 2 + 38 da s164) + 26 nota-3; **54 dos 64 ja estao vencidos** -- a drenagem E o redrill. Puxar com `python tools/fsrs_queue.py --list --limit 200 --new-limit 0 --cluster`.
-   - **Bloco 1 (62) = consolidar:** 54 redrill em cluster + 8 `fresh_error` do Simulado 6 (1472-1476, 1478-1480). Sub-blocos ja montados na s165: 1.1 Epilepsias 11 (1455,1456,788,789,790,792,1457,1185,1187,1191,1192) + 540 (TCE, 3a ocorrencia) + 4 + 244 + 245; 1.2 Vulvovaginites 9 (1444,665,667,740,741,744,745,747,937) + Ulceras 381, 908, 1478 + Planejamento 577, 1283, 1284; 1.3 Colecistite 6 (1089,1481,1482,823,1296,1381) + Apendicite 5 (727,728,734,736,1380) + bulk 297, 311, 313 + Polipos 706, 709; 1.4 GO/Ped/Prev singletons (1101,1117,485,122,1270,1404,1475,1476,558,1354,459,1472,1473,1474,1479,1480). Tronco (PREPARAR, sem versos) antes de cluster frio -- Epilepsias e Vulvovaginites ja carimbados no `review_log` (ids 111, 112). Nota honesta; a nota mede "pegou o framework". Redrill dos 1-2 so pela frente ao fim do bloco, + 10 nota-2 que o FSRS empurrou p/ outubro (155,383,570,650,828,1115,1290,1415,1416,1442), sem `--record`.
-   - **Bloco 2 (60) = expandir:** ~20 vencidos de menor estabilidade + **~32-40 NOVOS via `--prevalencia`** (`python tools/fsrs_queue.py --list --new-limit 40 --prevalencia`). Smoke da s165: o bucket abre com **Cirurgia Infantil 22** (fraqueza nº 1, 43 no pool, "cai todo ano" no INEP), depois Dependencia Quimica/tabagismo 4, Planejamento 4, SIS 3, MFC 3. Deslizar hoje: Vulvovaginites (ja tem 9 no redrill).
-2. 🔴 **Regra nova (usuario, s165): prevalencia = prioridade na fila dos nunca introduzidos.** Portador: `tools/fsrs_queue.py --prevalencia` (opt-in, so ordem de introducao, FSRS intocado) lendo `core/cronograma/prevalencia_enamed.json` (89 temas, 59 alta, 5 fontes, 35 padroes de banca). Ligar o mesmo arquivo ao `infer_nota()` eixo 4 (F63) e ao day_plan e engenharia pendente.
-3. **Cunhagem fraco-primeiro (dias 06-12/09), 8-10 atomicos/tema dos decks EMED, so onde o pool nao tem:** SCA (zero tudo), Derrame pleural, Crise hipertensiva, Dislipidemia nova, Obesidade/SM, Dermatoses infecciosas, SUA (roxo S17, zero cards, resumo existe), Down, Kawasaki, Diarreia, Puberdade/Baixa estatura, Convulsao febril, Choque/Phoenix, TB/ILTB, ITU, Saude do trabalhador.
-4. **Grade S17 roxos ate 13/09:** Diarreia (Teoria, sem resumo -> aula-base) -> SUA (Teoria) -> APS (Revisao) -> Diarreia (Revisao) -> Urologia I -> Pneumonias I. ~65q/dia.
-5. **Inscricao UERJ** fecha 01/10 (Cepuerj, R$ 380). Acao do usuario.
-6. 🔬 **Engenharia (ledger §4o): F63 (dado agora existe), F65 agravado (`[bulk] Cirurgia` 148 erros, `[bulk] Pneumo` 17), F66, F67-F69 novos** (ver AUDITORIA).
+1. 🎯 **Receber o Simulado 7 (ENAMED, feito em 06/09).** Registrar volume ANTES dos erros: `python tools/registrar_sessao_bulk.py --sessao 167 --area Simulado --feitas N --acertos Y`. Autopsia dos erros (fan-out de subagentes se 30+; senao 1 subagente) -> `insert_questao.py` -> cards `fresh_error`. Ler o resultado como termometro de EXECUCAO (S6: 80%, 10/18 erros por execucao): ritual "qual dado EXCLUI o que eu ia marcar?".
+2. 🔁 **Drenagem de 90 cards a noite de 06/09 (decisao do usuario: matar a fila do dia; sprint 120/dia ate 13/09).** Fila: 33 que venceram na virada do dia + 45 atrasados genuinos + 2 sobras do redrill (#245 Kasai, #741 flora anaerobia) + ~10 novos por prevalencia (`--prevalencia`, abre em **Cirurgia Infantil**, tronco D10 obrigatorio antes: fraqueza nº 1, 43 cards nunca vistos). 🔴 **10 cards em relearning ja gravados na s166 voltam como `vencido` no `--list`** (245, 740, 741, 577, 1381, 736, 313, 706, 709, 1270): so drillar pela frente, **nao regravar** ate a proxima sessao-calendario. Pipeline de 2 blocos; feedback so dos 1-2; redrill no fechamento.
+3. **Reforja pendente:** #792 (frente aberta), #4 (composta farmaco+concentracao), #1117 (contexto contradiz pergunta) + 15 itens anteriores (821,702,283,505,411,570,128,705,1360,470,1415,1086,1126 + 311/313 ja feitos).
+4. **Cunhagem fraco-primeiro (ate 12/09), 8-10 atomicos/tema dos decks EMED:** SCA (zero tudo), Derrame pleural, Crise hipertensiva, Dislipidemia nova, Obesidade/SM, Dermatoses infecciosas, SUA (roxo S17), Down, Kawasaki, Diarreia, Puberdade/Baixa estatura, Convulsao febril, Choque/Phoenix, TB/ILTB, ITU, Saude do trabalhador.
+5. **Grade S17 roxos ate 13/09:** Diarreia (Teoria, sem resumo -> aula-base) -> SUA (Teoria) -> APS (Revisao) -> Diarreia (Revisao) -> Urologia I -> Pneumonias I. ~66q/dia. (Ordem = esta lista, NAO a do `day_plan` -- Drive 42d sem sync, F72.)
+6. **Inscricao UERJ** fecha 01/10 (Cepuerj, R$ 380). Acao do usuario.
+7. 🔬 **Engenharia aberta (ledger §4p):** F71 balanceador x provas.json (S/M), F72 day_plan recomenda tema de snapshot stale (S), D5 skills `day-plan`/`curar-cards` (M), D11 escopo do doc_drift (S); F63/F65-F69 seguem.
 
 ## Estado por frente
-- **Norte:** 🎯 **UERJ/MFC 01/11/2026** (57d). ENAMED 13/09 (8d) termometro.
-- **Volume & Metas:** 6721 / 10400 (perf. ~78.8%). Hoje: 0. Ritmo-alvo ~64.5q/dia (57d p/ UERJ/MFC (prova 01/11)).
-- **FSRS:** divida 57 atrasados + 52 p/ hoje -- pool 642 nunca introduzidos (entram <=60/dia).
+- **Norte:** 🎯 **UERJ/MFC 01/11/2026** (56d). ENAMED 13/09 (7d) termometro.
+- **Volume & Metas:** 6721 / 10400 (perf. ~78.8%). Hoje: 0 (Simulado 7 ainda nao registrado). Ritmo-alvo ~65.7q/dia (56d p/ UERJ/MFC (prova 01/11)).
+- **FSRS:** divida 55 atrasados + 33 p/ hoje -- pool 634 nunca introduzidos (entram <=60/dia; sprint 120 ate 13/09).
 - **Conteudo:** 128 resumos em resumos/. [derivado: glob]
 - **Erros & Cards:** 940 erros registrados · 1289 cards ativos · 2 needs_qualitative na fila · taxonomia 270 temas. [derivado: db]
 - **Posicao:** conteudo S17 (nominal S23, atraso 6 sem) [derivado: preparacao_estado]
-- **Prevalencia (novo SSOT de insumo):** `core/cronograma/prevalencia_enamed.json` -- Ped I, Gineco, CM I, Cirurgia I (Revalida, proxy), Preventiva I. Pendentes: Ped II, Preventiva II (12/09), Cirurgia II, CM II, revisao de vespera.
-- **Reforja:** 15 itens (821,702,283,505,411 + 570,128,705,1360 + 311/313 clones, 470 + 1415,1086,1126).
+- **Prevalencia:** `core/cronograma/prevalencia_enamed.json` (5 aulas). Pendentes: Ped II, Preventiva II (12/09), Cirurgia II, CM II.
 - **Datas:** ENAMED 13/09 · fim da grade 25/10 · **UERJ 01/11**.
 
-## Ultima sessao -- s165 (2026-09-05): AULAS EMED -> PREVALENCIA, sem drenagem
-Boot achou a **s164 nao selada** (3 commits, sem log/HANDOFF/INDEX) -- reconstruida em `history/session_164.md`. Blocos 1.1 e 1.2 montados e entregues (troncos sem versos) mas o usuario preferiu enviar 5 transcricoes das Horas da Verdade do Estrategia MED (INEP). Cada aula virou: tabela tema x sinal do professor x pool/ativos/erros/resumo + padroes de banca, persistidos em `prevalencia_enamed.json` (5 commits). Achados: **SCA e o maior buraco do banco** (zero linha, zero card, zero resumo; "esta na moda"); **Cirurgia Infantil = fraqueza nº 1 com 43 cards nunca vistos** (a municao ja existe); **SUA** (3o tema de Gineco) sem card e sem linha; a **Q66 do Simulado 6 e a questao que o professor de endocrino resolve ao vivo** (volume -> potassio -> insulina); a aula de neuro + a de trauma dao pela 3a vez o mecanismo do card 540 (PPC = PAM - PIC, sem hipotensao permissiva em TCE). Resumos ja absorvem HAS 2025 (130/80, MAPA), levetiracetam EV e a maior parte do ATLS 11 (faltam "sangue total > 1:1:1", Sellick contraindicada, classificacao leve/moderado/grave a conferir). Fechou com o usuario fixando **prevalencia = prioridade** -> implementado `--prevalencia` no `fsrs_queue` (5 testes, auto_check PASSED 363).
+## Ultima sessao -- s166 (2026-09-05 noite -> 06 tarde): BLOCO 1 + ENGENHARIA
+**Estudo:** bloco 1 completo, 62 cards em 4 sub-blocos (Epilepsias+ABC 15, Vulvovaginites/Ulceras/Planejamento 15, Colecistite/Apendicite/bulk/Polipos 16, singletons 16): **40x4 / 8x3 / 3x2 / 11x1 = 77% retencao, 65% perfeito** (s164: 54%/43%); Epilepsias 27% -> 11/11 no nucleo; familia ABC (#788/#789/#540) caiu na 4a passagem. Erros repetidos: #1381 alitiasica (fecha pelo cenario, ignora Tokyo A+B), #1270 AGC (colposcopia x avaliacao endometrial). Lacunas limpas: #740 Thayer-Martin, #1478 Gram do cancro mole, #736 ATB profilatico, #706 peritoniectomia, #1473/#1474 VNI e MgSO4 (S6). Redrill 11/13 fechado. 5 reforjas in-place (#245, #667, #741, #577, #311/#313), 3 carimbos `review_log` (Vulvovaginites, Colecistite, Apendicite). Zero questoes nos 2 dias; o usuario fez o Simulado 7 fora da sessao.
+**Engenharia (pedido do usuario apos notar a contradicao day_plan x HANDOFF):** README reescrito do zero por subagente (30 afirmacoes obsoletas: Streamlit, RAG two-tier, "zero testes"); hotfix F70 (`[FSRS_BALANCE]` no stdout quebrava o JSON do `--record`) e F73 (`cronograma.py --check` morto: PDF em `data/`), ambos com teste vermelho->verde e trace em `.vibeflow/hotfixes/`; varredura de drift por subagente = 12 achados (F75), 9 corrigidos na hora (contrato FSRS com a excecao do sprint, tabela §7.4 regenerada, enum de veredito, flags faltantes em 2 skills, AGENTS.md, workflow registrar-sessao, ROADMAP x2, vibeflow index). auto_check --all e --changed PASSED.
 
 ## Pendencias/observacoes ativas
-- 🔴 **REDRILL 64 cards nota 1-2 -- 5 sessoes em debito.** Bloco 1 da proxima sessao paga.
-- 🔴 **Nenhuma questao/card hoje.** Dia zero de volume; o sprint 120 cards/dia comeca na proxima.
+- 🔴 **Simulado 7 nao registrado** -- primeira acao da s167.
 - 🔴 **Inscricao UERJ** -- fecha 01/10.
 - 📚 **Frente MFC (Gusso + Duncan)** -- abre 14/09. Rescope da grade pro formato UERJ em 14/09.
-- 🔬 **F66** (memoria de fraquezas orfa por abreviacao) segue a maior prioridade de engenharia; **F67** taxonomia duplicada (colo x2, TH x2, Asma x5, PF/Contracepcao, Ulceras x2) divide FSRS/dormencia; **F68** 15 temas prevalentes sem linha na taxonomia; **F69** resumos Trauma/Dislipidemia com lacunas de diretriz nova (banca-dependente).
-- 💉 Diretrizes novas a conferir nos resumos: Calendario Vacinal 2026, GINA 2026, Reanimacao SBP 2026, HAS 2025 (ok), Dislipidemia 2025, ATLS 11 (parcial), SINAN 2026.
+- 💉 Diretrizes novas a conferir nos resumos: Calendario Vacinal 2026, GINA 2026, Reanimacao SBP 2026, Dislipidemia 2025, ATLS 11 (parcial), SINAN 2026 (F69).
 
 ---
-*Historico: history/INDEX.md * Macro: ESTADO.md * Sessao: history/session_165.md*
+*Historico: history/INDEX.md * Macro: ESTADO.md * Sessao: history/session_166.md*

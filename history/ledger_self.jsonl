@@ -686,3 +686,4 @@
 {"ts": "2026-09-06T22:37:18+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "f33a7aad4670", "alvo": "card#1505", "payload": {"padrao": "resposta-multifato/multi-frase", "tema": "Sindrome da Veia Cava Superior"}}
 {"ts": "2026-09-06T22:37:18+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "e01d702f185d", "alvo": "card#1513", "payload": {"padrao": "resposta-multifato/multi-frase", "tema": "Piodermites"}}
 {"ts": "2026-09-06T22:37:18+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "0d709f43b6ea", "alvo": "card#1516", "payload": {"padrao": "resposta-multifato/multi-frase", "tema": "Desenvolvimento Neuropsicomotor (DNPM)"}}
+{"ts": "2026-09-07T18:21:37+00:00", "event": "opened", "check": "posicao_ssot", "fingerprint": "01755b5ba8cb", "alvo": "HANDOFF.md", "payload": {"semana_handoff": 20, "semana_db": 17}}

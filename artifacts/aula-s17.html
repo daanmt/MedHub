@@ -174,6 +174,16 @@ ul.plain li strong{color:var(--ink)}
   font-size:13.5px;line-height:1.6;color:var(--ink3)}
 .foot b{color:var(--ink2);font-weight:600}
 .src{font-size:13px;color:var(--ink3);margin-top:12px;line-height:1.55}
+
+/* tabela de tarefas e links */
+.tsk-off td{color:var(--ink3)}
+.tsk-off td:first-child,.tsk-off td:nth-child(2){font-weight:400;color:var(--ink3)}
+.tsk-on{display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--moss-ink);background:var(--moss-wash);border:1px solid var(--moss);padding:1px 5px;
+  margin-right:8px;vertical-align:1px}
+.tsk-tipo{display:block;font-size:12px;color:var(--ink3);margin-top:2px;font-weight:400}
+.tsk-none{font-size:12.5px;color:var(--ink3);font-style:italic}
+#tarefas td a{font-weight:600}
 </style>
 
 <div class="wrap">
@@ -208,6 +218,7 @@ ul.plain li strong{color:var(--ink)}
       <a href="#dmg"><span class="n">12</span>DM na Gestacao</a>
       <a href="#ic-has"><span class="n">13</span>IC e HAS</a>
       <a href="#sintese"><span class="n">14</span>Sintese</a>
+      <a href="#tarefas"><span class="n">15</span>Listas</a>
     </div>
   </nav>
 
@@ -2371,6 +2382,111 @@ ul.plain li strong{color:var(--ink)}
       <p class="src"><b>Uma nota de honestidade.</b> No PDF de Pneumonias Bacterianas, o quadro com os cinco criterios do CURB-65 saiu como figura e nao foi extraido no texto; os criterios listados sao os classicos do escore, e o que o material traz explicitamente sao as <b>faixas de mortalidade do CRB-65</b>. Nos PDFs novos, tambem sairam como figura e nao extrairam: a <b>tabela FIGO de estadiamento do cancer de ovario</b> (a aula da os passos cirurgicos e o tratamento por estadio, que estao no texto, mas nao os criterios I-IV); a <b>figura com os 10 grupos de Robson</b> (a aula da os 6 conceitos e as propriedades); a lista minima de servicos de uma <b>regiao de saude (Decreto 7.508/2011, art. 5o)</b>; a <b>tabela completa de classificacao da SBC 2025</b> (reconstruida a partir do texto e do quadro de consultorio x MRPA x MAPA, que extraiu); e o <b>algoritmo de tratamento da ICFER</b> (substituido pela tabela de drogas, que extraiu inteira). O PDF de <b>Financiamento e de 2023</b> e descreve o Previne Brasil como vigente; a revogacao (abril de 2024) e os seis componentes do novo cofinanciamento vem do PDF de APS (2026), e a aula sinaliza a fronteira. No PDF de Vitalidade Fetal, a nomenclatura "DIP" aparece de forma inconsistente entre precoce e variavel; a aula usa so os nomes descritivos. Onde o material apresenta divergencia entre referencias (exames da HPB; calculo vesical; dose de ferro PNSF x FEBRASGO x Zugaib; TSH e parasitologico como rotina), as posicoes estao no texto -- confira a bibliografia da sua banca.</p>
       <p class="src"><b>Depois de cada bloco de questoes:</b> a nota de dificuldade 1-10 de cada tema sai da <em>medicao</em> (o acerto real), nao desta aula. Os degraus usados aqui (D10 para APS, Etica, Pneumonias na Infancia, Vitalidade Fetal, Tumores Anexiais e Financiamento; D5 para Pre-Natal, SUS e IC; D2 para DM na Gestacao e HAS) sao a calibracao de entrada -- o SUS entrou em D5 por nota explicita sua, e recebeu a tabela discriminadora porque a fraqueza medida pede instrumento, nao profundidade.</p>
     </div>
+  </section>
+
+
+  <!-- ================= TAREFAS E LINKS ================= -->
+  <section id="tarefas">
+    <div class="band">
+      <div class="row">
+        <span class="num">OPERACIONAL</span>
+        <span class="area">Extraido do Cronograma.pdf -- 47 listas, 1.423 questoes</span>
+      </div>
+      <h2>As listas, com link e contagem</h2>
+      <p class="scope">Cada tarefa do cronograma aponta para um caderno de questoes no Estrategia MED. <b>As linhas destacadas sao as 24 tarefas do sprint</b> (725q); as demais ficam listadas para o caso de voce esticar o recorte. A contagem vem do proprio PDF (<span class="mn">"Link - NN questoes"</span>) e a soma por tarefa bate exatamente com o total de cada semana.</p>
+    </div>
+
+
+    <div class="tw" style="margin-top:26px">
+      <table>
+        <caption>Semana 17 &middot; 20/07 a 26/07 &middot; sprint 172q de 293q</caption>
+        <thead><tr><th style="width:38px">#</th><th>Tarefa</th><th style="width:64px">Questoes</th><th style="width:78px">Lista</th></tr></thead>
+        <tbody>
+          <tr class="tsk-off"><td><span class="mn">1</span></td><td>Atencao Primaria a Saude no Brasil<span class="tsk-tipo">Teoria III</span></td><td><span class="mn">--</span></td><td><span class="tsk-none">riscada</span></td></tr>
+          <tr><td><span class="mn">2</span></td><td><span class="tsk-on">sprint</span> Diarreia<span class="tsk-tipo">Teoria</span></td><td><span class="mn">22</span></td><td><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/0382f382-00f7-4a6a-9902-44eca6ad0f42/?per_page=20" target="_blank" rel="noopener">abrir</a></td></tr>
+          <tr class="tsk-off"><td><span class="mn">3</span></td><td>Cirurgia Vascular<span class="tsk-tipo">Revisao</span></td><td><span class="mn">43</span></td><td><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/a67fae67-457b-4554-b9cb-9cefba080e3b/?per_page=20" target="_blank" rel="noopener">abrir</a></td></tr>
+          <tr><td><span class="mn">4</span></td><td><span class="tsk-on">sprint</span> Sangramento Uterino Anormal<span class="tsk-tipo">Teoria</span></td><td><span class="mn">23</span></td><td><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/a11c14d5-ca0c-4246-863f-f329518b45a0/?per_page=20" target="_blank" rel="noopener">abrir</a></td></tr>
+          <tr class="tsk-off"><td><span class="mn">5</span></td><td>Vitalidade Fetal<span class="tsk-tipo">Teoria</span></td><td><span class="mn">25</span></td><td><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/3178cba8-2439-4a4e-af6e-0ceed3415043/?per_page=20" target="_blank" rel="noopener">abrir</a></td></tr>
+          <tr><td><span class="mn">6</span></td><td><span class="tsk-on">sprint</span> Atencao Primaria a Saude no Brasil<span class="tsk-tipo">Revisao</span></td><td><span class="mn">50</span></td><td><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/3adee5ee-b6df-4ede-8a84-e9e7a4c36b82/?per_page=20" target="_blank" rel="noopener">abrir</a></td></tr>
+          <tr><td><span class="mn">7</span></td><td><span class="tsk-on">sprint</span> Diarreia<span class="tsk-tipo">Revisao</span></td><td><span class="mn">41</span></td><td><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/57876df8-f4ae-4231-a6d4-d9e9857b1b3a/?per_page=20" target="_blank" rel="noopener">abrir</a></td></tr>
+          <tr><td><span class="mn">8</span></td><td><span class="tsk-on">sprint</span> Urologia<span class="tsk-tipo">Teoria I</span></td><td><span class="mn">20</span></td><td><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/30f44def-4346-46a1-93f3-79b277406c2e/?per_page=20" target="_blank" rel="noopener">abrir</a></td></tr>
+          <tr><td><span class="mn">9</span></td><td><span class="tsk-on">sprint</span> Pneumonias Bacterianas<span class="tsk-tipo">Teoria I</span></td><td><span class="mn">16</span></td><td><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/0202307d-5d30-494b-aab3-9fc13bd303cd/?per_page=20" target="_blank" rel="noopener">abrir</a></td></tr>
+          <tr class="tsk-off"><td><span class="mn">10</span></td><td>Neoplasias de Estomago e Esofago<span class="tsk-tipo">Teoria</span></td><td><span class="mn">27</span></td><td><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/b4a33205-e2ac-410d-acf6-48e8fb94861d/?per_page=20" target="_blank" rel="noopener">abrir</a></td></tr>
+          <tr class="tsk-off"><td><span class="mn">11</span></td><td>Nefrolitiase<span class="tsk-tipo">Teoria</span></td><td><span class="mn">26</span></td><td><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/b72e1c19-1ed0-44c4-b3b5-c5be0009a0b2/?per_page=20" target="_blank" rel="noopener">abrir</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="tw" style="margin-top:26px">
+      <table>
+        <caption>Semana 18 &middot; 27/07 a 02/08 &middot; sprint 195q de 380q</caption>
+        <thead><tr><th style="width:38px">#</th><th>Tarefa</th><th style="width:64px">Questoes</th><th style="width:78px">Lista</th></tr></thead>
+        <tbody>
+          <tr><td><span class="mn">1</span></td><td><span class="tsk-on">sprint</span> Etica Medica<span class="tsk-tipo">Teoria</span></td><td><span class="mn">20</span></td><td><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/a57a9aaf-d06b-4155-89d2-c2e288168b1d/?per_page=20" target="_blank" rel="noopener">abrir</a></td></tr>
+          <tr><td><span class="mn">2</span></td><td><span class="tsk-on">sprint</span> Pneumonias na Infancia<span class="tsk-tipo">Teoria</span></td><td><span class="mn">24</span></td><td><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/9535c433-bc7f-4fa9-98c3-d35f0100c496/?per_page=20" target="_blank" rel="noopener">abrir</a></td></tr>
+          <tr><td><span class="mn">3</span></td><td><span class="tsk-on">sprint</span> Urologia<span class="tsk-tipo">Teoria II</span></td><td><span class="mn">13</span></td><td><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/23734322-5ada-4fbe-9d1e-8f9f2f6e9ccd/?per_page=20" target="_blank" rel="noopener">abrir</a></td></tr>
+          <tr><td><span class="mn">4</span></td><td><span class="tsk-on">sprint</span> Sangramento Uterino Anormal<span class="tsk-tipo">Revisao</span></td><td><span class="mn">42</span></td><td><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/21cbc0c1-4c2b-462a-b8ea-a54eb0500b61/?per_page=20" target="_blank" rel="noopener">abrir</a></td></tr>
+          <tr class="tsk-off"><td><span class="mn">5</span></td><td>Vitalidade Fetal<span class="tsk-tipo">Revisao</span></td><td><span class="mn">36</span></td><td><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/79bcf75e-4e0d-42c6-973f-8c9d26fffab1/?per_page=20" target="_blank" rel="noopener">abrir</a></td></tr>
+          <tr><td><span class="mn">6</span></td><td><span class="tsk-on">sprint</span> Pneumonias Bacterianas<span class="tsk-tipo">Teoria II</span></td><td><span class="mn">17</span></td><td><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/52016cb5-a620-423f-8b33-5aef32e4ce5e/?per_page=20" target="_blank" rel="noopener">abrir</a></td></tr>
+          <tr class="tsk-off"><td><span class="mn">7</span></td><td>Hipotireoidismo<span class="tsk-tipo">Teoria</span></td><td><span class="mn">21</span></td><td><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/b964fc37-c1da-4d47-83db-7625936435e2/?per_page=20" target="_blank" rel="noopener">abrir</a></td></tr>
+          <tr class="tsk-off"><td><span class="mn">8</span></td><td>Disturbios do Movimento<span class="tsk-tipo">Teoria II</span></td><td><span class="mn">12</span></td><td><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/190aee72-d40c-48e9-ac93-bb8311db63c7/?per_page=20" target="_blank" rel="noopener">abrir</a></td></tr>
+          <tr class="tsk-off"><td><span class="mn">9</span></td><td>Hipertensao Arterial Sistemica<span class="tsk-tipo">Revisao</span></td><td><span class="mn">42</span></td><td><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/34e4ed4d-19ee-4e31-8bc6-52729bee36b6/?per_page=20" target="_blank" rel="noopener">abrir</a></td></tr>
+          <tr class="tsk-off"><td><span class="mn">10</span></td><td>Transtornos de Humor; Psiquiatria Social e Reforma Psiquiatrica<span class="tsk-tipo">Revisao</span></td><td><span class="mn">40</span></td><td><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/95edbcca-aaa3-49cd-ba14-bf5eba7a8a08/?per_page=20" target="_blank" rel="noopener">abrir</a></td></tr>
+          <tr class="tsk-off"><td><span class="mn">11</span></td><td>Doencas Inflamatorias do Tecido Conjuntivo<span class="tsk-tipo">Revisao</span></td><td><span class="mn">34</span></td><td><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/3ae22d62-3d65-4631-83f7-29b5c64147e1/?per_page=20" target="_blank" rel="noopener">abrir</a></td></tr>
+          <tr><td><span class="mn">12</span></td><td><span class="tsk-on">sprint</span> Pre-Natal; Assistencia ao Parto; Vitalidade Fetal<span class="tsk-tipo">Revisao por Questoes</span></td><td><span class="mn">36</span></td><td><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/6b7084b9-603a-4b2c-a4ef-d29ff0534333/?per_page=20" target="_blank" rel="noopener">abrir</a></td></tr>
+          <tr><td><span class="mn">13</span></td><td><span class="tsk-on">sprint</span> Insuficiencia Cardiaca e Hipertensao Arterial Sistemica<span class="tsk-tipo">Revisao por Questoes</span></td><td><span class="mn">43</span></td><td><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/c61863e9-3b78-4ceb-8165-4f25e6fcedec/?per_page=20" target="_blank" rel="noopener">abrir</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="tw" style="margin-top:26px">
+      <table>
+        <caption>Semana 19 &middot; 03/08 a 09/08 &middot; sprint 244q de 449q</caption>
+        <thead><tr><th style="width:38px">#</th><th>Tarefa</th><th style="width:64px">Questoes</th><th style="width:78px">Lista</th></tr></thead>
+        <tbody>
+          <tr><td><span class="mn">1</span></td><td><span class="tsk-on">sprint</span> Pneumonias na Infancia<span class="tsk-tipo">Revisao</span></td><td><span class="mn">47</span></td><td><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/0d4f8216-fa84-4fb8-8e6f-49de888c6b3c/?per_page=20" target="_blank" rel="noopener">abrir</a></td></tr>
+          <tr><td><span class="mn">2</span></td><td><span class="tsk-on">sprint</span> Urologia<span class="tsk-tipo">Teoria III</span></td><td><span class="mn">21</span></td><td><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/cfe72ef4-3d55-419d-b5df-5f15f0f6fbe5/?per_page=20" target="_blank" rel="noopener">abrir</a></td></tr>
+          <tr><td><span class="mn">3</span></td><td><span class="tsk-on">sprint</span> Tumores Anexiais e Cancer de Ovario<span class="tsk-tipo">Teoria</span></td><td><span class="mn">21</span></td><td><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/aae324a1-9d5d-4cec-a22a-1c94e34b7346/?per_page=20" target="_blank" rel="noopener">abrir</a></td></tr>
+          <tr><td><span class="mn">4</span></td><td><span class="tsk-on">sprint</span> Diabetes na Gestacao<span class="tsk-tipo">Teoria I</span></td><td><span class="mn">19</span></td><td><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/43dfee73-2eff-45e8-8e39-5c1cd7c7738f/?per_page=20" target="_blank" rel="noopener">abrir</a></td></tr>
+          <tr><td><span class="mn">5</span></td><td><span class="tsk-on">sprint</span> Etica Medica<span class="tsk-tipo">Revisao</span></td><td><span class="mn">39</span></td><td><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/ba0d4b31-8515-4162-a154-44131b78d236/?per_page=20" target="_blank" rel="noopener">abrir</a></td></tr>
+          <tr class="tsk-off"><td><span class="mn">6</span></td><td>Choque em Pediatria<span class="tsk-tipo">Teoria</span></td><td><span class="mn">24</span></td><td><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/2c9ecd04-7e11-4958-a36b-57590021a87d/?per_page=20" target="_blank" rel="noopener">abrir</a></td></tr>
+          <tr><td><span class="mn">7</span></td><td><span class="tsk-on">sprint</span> Urologia<span class="tsk-tipo">Revisao</span></td><td><span class="mn">38</span></td><td><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/bb464bf0-c3d8-411c-a545-984322a38f43/?per_page=20" target="_blank" rel="noopener">abrir</a></td></tr>
+          <tr class="tsk-off"><td><span class="mn">8</span></td><td>Neoplasias de Estomago e Esofago<span class="tsk-tipo">Revisao</span></td><td><span class="mn">40</span></td><td><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/f4b46598-2678-4b48-bcba-1c572c98e260/?per_page=20" target="_blank" rel="noopener">abrir</a></td></tr>
+          <tr class="tsk-off"><td><span class="mn">9</span></td><td>Nefrolitiase<span class="tsk-tipo">Revisao</span></td><td><span class="mn">42</span></td><td><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/c5e68c43-3eb3-4604-9c85-64ec2d2bc0ae/?per_page=20" target="_blank" rel="noopener">abrir</a></td></tr>
+          <tr class="tsk-off"><td><span class="mn">10</span></td><td>Complicacoes da Cirrose Hepatica<span class="tsk-tipo">Teoria I</span></td><td><span class="mn">15</span></td><td><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/e213f666-1c2c-4293-b82b-a1a3eb924a0b/?per_page=20" target="_blank" rel="noopener">abrir</a></td></tr>
+          <tr><td><span class="mn">11</span></td><td><span class="tsk-on">sprint</span> Principios e Diretrizes do SUS; Atencao Primaria a Saude no Brasil; Etica Medica<span class="tsk-tipo">Revisao por Questoes</span></td><td><span class="mn">59</span></td><td><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/6640c124-77ee-46fc-9648-5795e5c8a41d/?per_page=20" target="_blank" rel="noopener">abrir</a></td></tr>
+          <tr class="tsk-off"><td><span class="mn">12</span></td><td>Polipos e Neoplasias Intestinais; Doenca Inflamatoria Intestinal; Neoplasias de Estomago e Esofago<span class="tsk-tipo">Revisao por Questoes</span></td><td><span class="mn">41</span></td><td><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/42a01718-b387-4d1a-bad4-6b397decd8af/?per_page=20" target="_blank" rel="noopener">abrir</a></td></tr>
+          <tr class="tsk-off"><td><span class="mn">13</span></td><td>Disturbios Acido- Base; Disturbios do Potassio; Nefrolitiase<span class="tsk-tipo">Revisao por Questoes</span></td><td><span class="mn">43</span></td><td><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/31ce883b-20e7-4fcd-bfcd-766d91ff0918/?per_page=20" target="_blank" rel="noopener">abrir</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="tw" style="margin-top:26px">
+      <table>
+        <caption>Semana 20 &middot; 10/08 a 16/08 &middot; sprint 114q de 301q</caption>
+        <thead><tr><th style="width:38px">#</th><th>Tarefa</th><th style="width:64px">Questoes</th><th style="width:78px">Lista</th></tr></thead>
+        <tbody>
+          <tr><td><span class="mn">1</span></td><td><span class="tsk-on">sprint</span> Financiamento em Saude<span class="tsk-tipo">Teoria I</span></td><td><span class="mn">27</span></td><td><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/5949f381-eb2c-4a00-8e9b-6444b405bc4f/?per_page=20" target="_blank" rel="noopener">abrir</a></td></tr>
+          <tr class="tsk-off"><td><span class="mn">2</span></td><td>Choque em Pediatria<span class="tsk-tipo">Revisao</span></td><td><span class="mn">36</span></td><td><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/238a0a58-f261-4fee-a259-c0f5d81b6b3c/?per_page=20" target="_blank" rel="noopener">abrir</a></td></tr>
+          <tr class="tsk-off"><td><span class="mn">3</span></td><td>Hernias da Parede Abdominal<span class="tsk-tipo">Teoria I</span></td><td><span class="mn">25</span></td><td><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/04b9c19e-37f1-490d-88c7-cd2e7282e61f/?per_page=20" target="_blank" rel="noopener">abrir</a></td></tr>
+          <tr><td><span class="mn">4</span></td><td><span class="tsk-on">sprint</span> Tumores Anexiais e Cancer de Ovario<span class="tsk-tipo">Revisao</span></td><td><span class="mn">40</span></td><td><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/e6be5b67-b2b6-4798-8443-c0ed6a7256ec/?per_page=20" target="_blank" rel="noopener">abrir</a></td></tr>
+          <tr><td><span class="mn">5</span></td><td><span class="tsk-on">sprint</span> Diabetes na Gestacao<span class="tsk-tipo">Teoria II</span></td><td><span class="mn">33</span></td><td><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/3a478813-439f-4710-926f-41189ef12856/?per_page=20" target="_blank" rel="noopener">abrir</a></td></tr>
+          <tr><td><span class="mn">6</span></td><td><span class="tsk-on">sprint</span> Pneumonias Bacterianas<span class="tsk-tipo">Teoria III</span></td><td><span class="mn">14</span></td><td><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/a2aba305-0df6-4b23-8c13-b0f81608920a/?per_page=20" target="_blank" rel="noopener">abrir</a></td></tr>
+          <tr class="tsk-off"><td><span class="mn">7</span></td><td>Hipotireoidismo<span class="tsk-tipo">Revisao</span></td><td><span class="mn">29</span></td><td><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/105a8e4f-1ef6-4125-8ef5-c922cabbf328/?per_page=20" target="_blank" rel="noopener">abrir</a></td></tr>
+          <tr class="tsk-off"><td><span class="mn">8</span></td><td>Pneumologia Intensiva<span class="tsk-tipo">Revisao</span></td><td><span class="mn">31</span></td><td><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/b75e5897-f650-4ee5-aab6-37df32bc3249/?per_page=20" target="_blank" rel="noopener">abrir</a></td></tr>
+          <tr class="tsk-off"><td><span class="mn">9</span></td><td>Anemias Microciticas e Leucemias Agudas<span class="tsk-tipo">Teoria</span></td><td><span class="mn">27</span></td><td><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/cab17f2b-40cd-482f-8ee5-1215275a03e6/?per_page=20" target="_blank" rel="noopener">abrir</a></td></tr>
+          <tr class="tsk-off"><td><span class="mn">10</span></td><td>Infeccoes das Vias Aereas Superiores Pt. 2<span class="tsk-tipo">Teoria</span></td><td><span class="mn">24</span></td><td><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/0a736311-a118-44ae-919e-6095908b004d/?per_page=20" target="_blank" rel="noopener">abrir</a></td></tr>
+          <tr class="tsk-off"><td><span class="mn">11</span></td><td>Doencas do Polo Posterior<span class="tsk-tipo">Teoria</span></td><td><span class="mn">15</span></td><td><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/2088a541-e6dd-433a-b019-c973b6240e90/?per_page=20" target="_blank" rel="noopener">abrir</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="trig" style="margin-top:28px"><span class="lab">Fechamento da conta</span>
+    <p><b>Sprint: 725 questoes</b> em 24 listas. <b>Total das quatro semanas: 1423 questoes</b> em 47 listas.</p>
+    <p>A tarefa 1 da S17 (APS Teoria III) nao tem lista de exercicios no PDF e esta riscada no seu xlsx -- os dois sinais concordam, nao e falha de extracao.</p></div>
+
+    <div class="trap" style="margin-top:20px"><span class="lab">Nota de proveniencia</span>
+    <p>O <span class="mn">grade.json</span> do repo guarda apenas o <b>total de cada semana</b>, e o contrato do derivador manda ratear igual entre as tarefas -- o que na S17 daria 26,6q para tarefas que valem de 16q a 50q. Os numeros desta tabela foram extraidos <b>direto do PDF</b>, tarefa a tarefa, e validados: a soma bate exatamente com o total em todas as quatro semanas (293 &middot; 380 &middot; 449 &middot; 301). Achado registrado como <b>F77</b> no ledger de auditoria.</p></div>
   </section>
 
 </div>

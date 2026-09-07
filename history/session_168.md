@@ -47,7 +47,8 @@ Nenhum bloco de questoes foi resolvido nesta sessao. O que se confirmou por leit
 - **Dois dos tres blocos "Revisao por Questoes" do verde drillam frio:** Pre-Natal/Parto/Vitalidade Fetal (Vitalidade Fetal T e R ficaram fora do verde) e IC/HAS (HAS Revisao fora, IC ausente das 4 semanas). Sinalizado no `.scope` de cada bloco. O terceiro (SUS/APS/Etica) esta lastreado.
 
 ## Artefatos criados/modificados
-- `artifacts/aula-s17.html` -- 4 -> 13 temas, `<title>` "Sprint S17-20", 310 KB (publicado, mesma URL)
+- `artifacts/aula-s17.html` -- 4 -> 13 temas, `<title>` "Sprint S17-20" (publicado, mesma URL). **Adendo ao final da sessao:** bloco operacional `#tarefas` com as **47 listas do cronograma S17-S20** (link do caderno no Estrategia MED + contagem por tarefa; sprint 725q destacado dentro de 1.423q totais). 331 KB.
+- `scratch/gen_tarefas.py` -- gerador do bloco de listas (extrai `Link - NN questoes` + URL do PDF, remonta a URL quebrada em linhas e faz o splice no HTML)
 - `core/contracts/fsrs-management-contract.md` -- lapide da excecao de 120 cards/dia
 - `ESTADO.md` -- linha FSRS corrigida (excecao revogada + numeros da s167)
 - `HANDOFF.md`, `history/session_168.md`, `history/INDEX.md`

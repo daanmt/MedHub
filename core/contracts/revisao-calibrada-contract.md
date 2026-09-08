@@ -7,7 +7,7 @@ relates_to: [forgetting-curve-contract, fsrs-management-contract, cronograma-con
 ---
 
 # Contrato de Execução de Revisão Calibrada
-**Versão 1.2 | 2026-07-06 (s109+, F18c/F21 do pipeline de conhecimento: Invariante E + Cláusula 10) — anterior: 1.1, 2026-07-05 (s108+, F8/F9: Invariantes C e D); 1.0, 2026-06-28 (sessão 096). Materializa o PRD `docs/plans/s094-revisao-calibrada-PRD.md` (revisão adversarial) + PRD `pipeline-conhecimento` (Onda 3).**
+**Versão 1.3 | 2026-09-08 (s170: o sub-modo PREPARAR e a Camada 1 sao REVOGADOS; todo o ensino migra para a Revisao Direcionada de fechamento -- Clausula 11, Invariante F, lapide do Invariante D) — anterior: 1.2, 2026-07-06 (s109+, F18c/F21: Invariante E + Clausula 10); 1.1, 2026-07-05 (s108+, F8/F9: Invariantes C e D); 1.0, 2026-06-28 (sessao 096).**
 
 > Documento normativo. Governa a **competência única `/revisar`** cuja descompressão é calibrada por uma **nota de dificuldade-para-o-usuário (1-10) por tema**, sem cegar a curva de esquecimento. Consome o score de dormência e a retrievability de `forgetting-curve-contract.md` (não os redefine) e o `(tema, tipo)` de `cronograma-contract.md`. Referenciado por: `AGENTE.md` (§1.2, §6, §7.3), `.claude/commands/revisar.md`.
 
@@ -71,7 +71,9 @@ A nota explícita do usuário **escolhe o degrau diretamente**; sem nota, a faix
 
 **Invariante C — Janela de override ANTES do record (F9, v1.1).** No DRENAR, o rating só é gravado **depois** da janela de override: o agente **propõe** a nota (com justificativa de 1 linha), aguarda a resposta do usuário (confirmação, correção ou avanço), e **só então** chama `record_review` — **uma vez por card por sessão, sempre**. Não existe amend pós-record: `record_review` é append-only por design (INSERT em `fsrs_revlog` + UPDATE em `fsrs_cards`); re-gravar recalcula o FSRS sobre estado já mutado e corrompe o agendamento (caso real: card 403, s108 — nota 2 corrigida p/ 4 após o record moveu o due indevidamente e deixou 2 linhas de revlog). Se um erro de gravação real acontecer, registra-se o ocorrido em `history/session_NNN.md` como achado — **nunca** re-record. Esta invariante RESOLVE a contradição da v1.0 entre "o usuário pode sobrepor a nota" e a regra anti-duplo-registro: o override intencional acontece **dentro da janela**, antes da gravação. No modo lote, a janela é **única por lote** (notas propostas do lote inteiro → confirmação/correção → gravação do lote).
 
-**Invariante D — Isolamento de conteúdo do PREPARAR (F8, v1.1).** O PREPARAR aquece **conceitos e mecanismos**, **nunca** o par pergunta-resposta específico dos cards do bloco que vem a seguir. Regras operacionais: (a) o refresh é montado a partir do resumo/substrato do tema **sem abrir os versos** dos cards do bloco; (b) formulações sempre como **tendência** ("geralmente X; considerar Y se Z"), nunca como absoluto — uma imprecisão no aquecimento vira erro induzido no card seguinte (erro de ensino amplificado, 3º canal de viés observado na s108); (c) **distinção de classe de card**: em cards de **raciocínio/conduta**, aquecer o framework é legítimo — mas a nota pós-refresh mede "pegou o framework", não recall a frio, e isso é sinalizado; em cards de **fato puro** (definição/eponímia/dado seco), o refresh é **contraindicado** — aquecê-los É entregar a resposta; o refresh limita-se à orientação de entorno e o fato cobrado é retido para o recall.
+⚰️ **Invariante D — Isolamento de conteudo do PREPARAR (F8, v1.1) — REVOGADO na v1.3.** Existia para impedir que o aquecimento pre-drill vazasse a resposta dos cards do bloco. Com o PREPARAR revogado (Clausula 11) nao ha aquecimento antes do drill, logo nao ha o que isolar: toda nota do DRENAR volta a ser recall a frio, que e o sinal que o FSRS quer. O texto original fica no historico do git. **Nao re-derivar:** se alguem reintroduzir aquecimento pre-bloco, o Invariante D volta a ser necessario junto.
+
+**Invariante F — Silencio no meio do DRENAR (s170, v1.3).** Durante o DRENAR o agente entrega **verso + nota + tally, e nada mais**. Zero prosa explicativa entre blocos, **inclusive para nota 1 e 2**. Feedback no meio do drill quebra o ritmo e foi reprovado explicitamente pelo usuario em duas rodadas (s154: corta a prosa de nota 3; s170: corta tambem a de 1-2). **Unica excecao:** achado de **defeito de CARD** (pergunta composta, premissa embutida, contexto desalinhado, binaria) — e sobre a autoria do card, nao sobre o desempenho do usuario, e continua sendo reportado na hora, em uma linha. Auditavel por leitura do transcript, nao por teste automatico.
 
 **Invariante E — Cobertura de ponto de prova é piso fixo (F21, v1.2).** A descompressão (nota 1-10) calibra **profundidade/prosa**; a **cobertura do conjunto de pontos de decisão de alto rendimento** do tema é **inviolável**. Nenhum degrau — nem o D2 (flash) — autoriza **ELIMINAR** um ponto de prova testável: comprimir **encurta** um ponto, **nunca o corta** (detalhamento na Cláusula 10). Raiz: a Q2 da s109 caiu num ponto de decisão (ileotiflectomia) que a descompressão D10→D7 eliminou em vez de encurtar. Auditada pela presença da Cláusula 10 + do checklist de cobertura no render.
 
@@ -141,12 +143,36 @@ Duas dimensões **ortogonais** no render de qualquer aula/PREPARAR calibrado, qu
 
 ---
 
+## Cláusula 11 — Morte do PREPARAR: todo o ensino migra para o fechamento (s170, v1.3)
+
+**Decisão do usuário, tomada durante a s170.** A preparação pré-drill (`PREPARAR`, que já havia absorvido o `/refrescar` e a Camada 0) e a expansão por-card na virada (Camada 1) **deixam de existir**. A sessão de cards passa a ter **duas fases e não três**: `DRENAR` (executa e mede) -> `REVISÃO DIRECIONADA` (ensina, no fechamento).
+
+**Evidência que motivou:** na própria s170 o agente entregou um PREPARAR de 5 parágrafos antes do bloco de Cirurgia Infantil. O usuário respondeu os 8 cards **sem ter lido o bloco**, e o classificou como *"muito ruim, denso e confuso"*. Registro literal da decisão: *"proponho integrar tudo na revisão direcionada ao final"* e *"insisto em receber feedback via revisão direcionada no final da sessão de cards apenas, considerando as notas 1 e 2"*.
+
+**Três razões, registradas para impedir re-derivação:**
+1. **Ritual pulado não é degrau, é atrito.** Aquecimento que não é lido não aquece nada — e ainda consome o orçamento de atenção do drill.
+2. **Vocabulário colapsado.** `refrescar`, `PREPARAR`, `Revisão Direcionada` e `aula-base` eram quatro nomes para duas coisas. Sobram duas superfícies de ensino, cada uma com gatilho próprio: a **Revisão Direcionada** (pós-cards, dirigida por nota 1-2) e a **`/aula-base`** (pré-questões, gatilho híbrido por dificuldade em `AGENTE.md §1.2`).
+3. **Ensinar depois mira dado, ensinar antes mira palpite.** O gap tratado no fechamento foi **provado pelo drill**; o gap tratado no aquecimento é previsto pelo agente.
+
+🔴 **O que NÃO mudou:** a `/aula-base` segue viva e intocada — ela é pré-**QUESTÕES**, não pré-cards, e tem eficácia medida (Meningites 53% -> 75%). O que morreu foi o aquecimento pré-**CARDS**.
+
+**Realocações obrigatórias:**
+- **Invariante B (carimbo de `review_log`)** migra do PREPARAR para a **Revisão Direcionada** — um carimbo por tema reabordado, `--kind directed_review` (ou `dormant_refresh` quando o tema entrou pela dormência). A curva continua sem cegar.
+- **Tema dormente do dia** e **cluster frio (F5)** deixam de disparar aquecimento e passam a **entrar na fila de prioridade** da Revisão Direcionada de fechamento.
+- **Cláusula 3 (degraus D10/D8/D5/D2)** e **Cláusula 10 (cobertura = piso fixo)** continuam válidas, agora calibrando a **Revisão Direcionada** em vez do PREPARAR.
+- **Gatilho de andaime** (cunhar cards `base`/`mecanismo` quando um cluster inteiro cai) sobrevive, agora disparado **pelo resultado do drill**.
+
+**Cláusula de forma (s170).** O bloco de fechamento tem de ser **legível de primeira**: prosa com hierarquia tipográfica, cada fato dito **uma vez só**, sem pilha de bullets nem parágrafo-monólito. Densidade que não é lida não ensina — foi exatamente esse o modo de falha do PREPARAR revogado.
+
+---
+
 ## Fronteiras duras (resumo)
 
-- PREPARAR **nunca** escreve FSRS (Invariante A). DRENAR é a única superfície que move o FSRS.
-- TODO PREPARAR carimba `review_log` (Invariante B) — a curva nunca cega.
+- O ensino (**Revisão Direcionada**) **nunca** escreve FSRS (Invariante A). DRENAR é a única superfície que move o FSRS.
+- TODA Revisão Direcionada carimba `review_log` (Invariante B, realocado na v1.3) — a curva nunca cega.
 - Rating só grava **após a janela de override**, uma vez por card (Invariante C) — não existe amend pós-record.
-- PREPARAR isolado das respostas do bloco; fato puro não se aquece (Invariante D) — a validade do trial de recall é sagrada.
+- ⚰️ Invariante D (isolamento do PREPARAR) **revogado na v1.3** — sem aquecimento pré-drill não há o que isolar.
+- **Silêncio no meio do DRENAR** (Invariante F, v1.3): nota e tally durante o drill; prosa só no fechamento, sobre notas 1-2. Exceção: defeito de card.
 - A nota **nunca** governa o agendamento FSRS — só a profundidade da preparação.
 - Descompressão é calibrável; **cobertura de ponto de prova é piso fixo** (Invariante E / Cláusula 10) — compressão encurta, nunca corta.
 - A nota que calibrou a aula é **registrada no fechamento** (`fonte='aula'`, Cláusula 10), sem sobrescrever `fonte='usuario'`.

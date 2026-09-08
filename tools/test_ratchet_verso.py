@@ -187,3 +187,39 @@ def test_update_flashcard_fields_grava_telemetria(tmp_path, monkeypatch):
     assert ev["n_frases_antes"] == 3 and ev["n_frases_depois"] == 1
 if __name__ == "__main__":
     raise SystemExit(pytest.main([__file__, "-q"]))
+
+
+# --- guarda indisponivel => escrita RECUSADA (fail-loud, nao fail-open) -----
+
+def test_ratchet_indisponivel_recusa_a_escrita_do_verso(tmp_path, monkeypatch):
+    """Se o gate nao pode rodar, a escrita nao acontece.
+
+    Degradar para WARN aqui seria escrever sem guarda dentro do proprio fix que
+    existe para impedir isso -- achado do audit do /ai-eng sobre d2026a1.
+    """
+    from app.utils import db
+    con = _conn(tmp_path)
+    con.close()
+    monkeypatch.setattr(db, "DB_PATH", str(tmp_path / "t.db"))
+    monkeypatch.setitem(sys.modules, "audit_card_atomicity", None)  # -> ImportError
+    with pytest.raises(RuntimeError, match="RECUSADA"):
+        db.update_flashcard_fields(1, {"verso_resposta": _VERSO_CURTO})
+    con = sqlite3.connect(str(tmp_path / "t.db"))
+    try:
+        assert con.execute("SELECT card_version FROM flashcards WHERE id=1").fetchone()[0] == 3
+    finally:
+        con.close()
+
+
+def test_ratchet_indisponivel_nao_bloqueia_edicao_que_nao_toca_o_verso(tmp_path, monkeypatch):
+    # Recusar edicao de FRENTE por causa do ratchet do VERSO seria gratuito.
+    from app.utils import db
+    con = _conn(tmp_path)
+    con.close()
+    monkeypatch.setattr(db, "DB_PATH", str(tmp_path / "t.db"))
+    monkeypatch.setitem(sys.modules, "audit_card_atomicity", None)
+    assert db.update_flashcard_fields(1, {"frente_pergunta": "Qual o proximo passo?"}) is True
+
+
+if __name__ == "__main__":
+    raise SystemExit(pytest.main([__file__, "-q"]))

@@ -807,9 +807,19 @@ def update_flashcard_fields(card_id, fields) -> bool:
     verso_depois = sets.get('verso_resposta', verso_antes)
     try:
         from audit_card_atomicity import checar_ratchet_verso, medir_verso
-    except Exception as e:  # pragma: no cover — degradacao anunciada
-        print(f"[WARN] CARD_GATE: ratchet indisponivel ({e}) — reescrita sem guarda.")
+    except Exception as e:
+        # 🔴 FAIL-LOUD, nao fail-open (audit /ai-eng sobre d2026a1). Degradar
+        # para WARN aqui seria escrever sem guarda dentro do proprio fix que
+        # existe para impedir isso -- "aviso nao existe, vira gate". A recusa
+        # so vale quando a escrita TOCA o verso: bloquear uma edicao de frente
+        # por causa do ratchet seria gratuito.
         checar_ratchet_verso = medir_verso = None
+        if 'verso_resposta' in sets:
+            conn.close()
+            raise RuntimeError(
+                f"ratchet do verso indisponivel ({e}) — reescrita RECUSADA. "
+                "O gate nao roda, logo a escrita nao acontece.")
+        print(f"[WARN] CARD_GATE: telemetria de verso indisponivel ({e}).")
     if checar_ratchet_verso is not None and 'verso_resposta' in sets:
         r = checar_ratchet_verso(verso_antes, sets['verso_resposta'])
         if r:

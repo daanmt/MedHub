@@ -791,10 +791,12 @@ def update_flashcard_fields(card_id, fields) -> bool:
 
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT 1 FROM flashcards WHERE id = ?", (card_id,))
-    if cursor.fetchone() is None:
+    cursor.execute("SELECT card_version FROM flashcards WHERE id = ?", (card_id,))
+    row = cursor.fetchone()
+    if row is None:
         conn.close()
         return False
+    versao_antes = (row[0] if row[0] is not None else 1)
 
     # Nomes de coluna vêm de um allowlist fixo (não de input) — sem injeção.
     assignments = ", ".join(f"{col} = ?" for col in sets)
@@ -806,7 +808,30 @@ def update_flashcard_fields(card_id, fields) -> bool:
     )
     conn.commit()
     conn.close()
+    _log_reforja(card_id, 'db.update_flashcard_fields', versao_antes,
+                 versao_antes + 1, 'reforja', sorted(sets))
     return True
+
+
+def _log_reforja(card_id, writer, versao_antes, versao_depois, reason, campos):
+    """Evento append-only de REESCRITA de card — chamado SÓ pós-commit.
+
+    Fecha o buraco do hotfix 2026-09-08: `card_version` subia sem que nada
+    registrasse quem reescreveu, quando e por quê (o card #321 chegou a v2 com
+    o texto do defeito intacto, e não havia como provar). Carrega SÓ ids,
+    contagens e tags — nunca texto clínico (contrato de `tools/event_log.py`).
+    Falha de log jamais derruba a escrita do card: o `except` é largo de
+    propósito, e o card já está commitado quando chegamos aqui.
+    """
+    try:
+        import event_log
+        event_log.registrar('reforja', {
+            'card_id': card_id, 'writer': writer, 'version_antes': versao_antes,
+            'version_depois': versao_depois, 'reason': reason,
+            'campos': list(campos), 'n_campos': len(campos),
+        })
+    except Exception as e:  # pragma: no cover — nunca propaga
+        print(f"[WARN] REFORJA_LOG: evento nao registrado para card {card_id} ({e}).")
 
 
 # ---------------------------------------------------------------------------

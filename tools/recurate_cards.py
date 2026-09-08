@@ -173,11 +173,16 @@ def aplicar(plano, conn):
     """Aplica o plano em TRANSACAO UNICA (all-or-nothing na escrita, nao so na
     validacao): qualquer excecao no meio faz rollback do lote inteiro."""
     n_refeitos = n_aposentados = 0
+    # hotfix 2026-09-08: eventos ficam PENDENTES ate o commit. Emitir dentro do
+    # laco produziria evento-fantasma no rollback -- o lote e all-or-nothing, e
+    # o log tem que contar a mesma historia que o banco.
+    pendentes = []
     try:
         for tipo, cid, campos, ver, _antiga in plano:
             if tipo == "aposentar":
                 conn.execute("UPDATE flashcards SET needs_qualitative=2 WHERE id=?", (cid,))
                 n_aposentados += 1
+                pendentes.append((cid, ver, ver, "aposentar", []))
                 continue
             sets = [f"{col}=?" for col in campos]
             vals = list(campos.values())
@@ -185,11 +190,35 @@ def aplicar(plano, conn):
             vals += [ver + 1, 'qualitative', 0, cid]
             conn.execute(f"UPDATE flashcards SET {', '.join(sets)} WHERE id=?", vals)
             n_refeitos += 1
+            pendentes.append((cid, ver, ver + 1, "reforja", sorted(campos)))
         conn.commit()
     except Exception:
         conn.rollback()
         raise
+    _flush_eventos(pendentes)
     return n_refeitos, n_aposentados
+
+
+def _flush_eventos(pendentes):
+    """Emite os eventos de reescrita — SO pos-commit (hotfix 2026-09-08).
+
+    Ate aqui `card_version` subia sem rastro: nao havia como provar qual card
+    foi reforjado, por quem, nem quando (o card #321 chegou a v2 com o texto do
+    defeito intacto). Evento carrega SO ids/contagens/tags, nunca texto clinico
+    (contrato de `event_log.py`), e falha de log nunca derruba a escrita.
+    """
+    if not pendentes:
+        return
+    try:
+        import event_log
+        for cid, antes, depois, reason, campos in pendentes:
+            event_log.registrar('reforja', {
+                'card_id': cid, 'writer': 'recurate_cards',
+                'version_antes': antes, 'version_depois': depois,
+                'reason': reason, 'campos': list(campos), 'n_campos': len(campos),
+            })
+    except Exception as e:  # pragma: no cover — nunca propaga
+        print(f"[WARN] REFORJA_LOG: {len(pendentes)} evento(s) nao registrado(s) ({e}).")
 
 
 def main():

@@ -690,3 +690,5 @@
 {"ts": "2026-09-07T22:54:40+00:00", "event": "opened", "check": "suites_orfas", "fingerprint": "07f0333aa238", "alvo": "test_audit_resumos.py", "payload": {}}
 {"ts": "2026-09-07T22:55:30+00:00", "event": "resolved", "check": "suites_orfas", "fingerprint": "07f0333aa238", "alvo": "test_audit_resumos.py"}
 {"ts": "2026-09-08T01:36:29+00:00", "event": "resolved", "check": "posicao_ssot", "fingerprint": "01755b5ba8cb", "alvo": "HANDOFF.md"}
+{"ts": "2026-09-08T23:12:40+00:00", "event": "opened", "check": "history_integrity", "fingerprint": "a8f4c73140fc", "alvo": "session_170.md", "payload": {"detalhe": "campo `Ferramenta:` ausente (o swap test depende dele)"}}
+{"ts": "2026-09-08T23:13:08+00:00", "event": "resolved", "check": "history_integrity", "fingerprint": "a8f4c73140fc", "alvo": "session_170.md"}

@@ -1,44 +1,50 @@
 # HANDOFF.md -- ESTADO OPERACIONAL CURTO
-*Atualizado: 2026-09-07 -- S168 (Claude Code / Opus 5): sprint S17-S20 decidido (725q ate 12/09) + aula-base de 13 temas publicada + excecao de 120 cards/dia revogada*
+*Atualizado: 2026-09-07 -- S169 (Claude Code / Opus 5): 95 questoes (87,4%), 10 erros analisados, 60 cards drenados (divida FSRS zerada), 12 resumos tocados (10 novos/expandidos), substrato PubMed trocado, F78/F79/F79b/F80 no ledger*
 
 ## > Proximo passo imediato
 
-1. 🎯 **Receber as primeiras questoes do sprint.** O usuario vai resolver e trazer. 🔴 Registrar o volume com `registrar_sessao_bulk.py` **ANTES** de processar erros individuais (SSOT volumetrica, AGENTE §6). Depois, analise dos erros -- **1 subagent unico** por lote de ate ~15 erros, nao fan-out.
-2. 🔁 **Depois das questoes: 60 cards.** Fila de hoje = 47 (15 atrasados + 14 agendados + **8 erros frescos do S7** + 10 novos); completar ate 60 com novos por prevalencia (`fsrs_queue --list --prevalencia --cluster`). Drillar os 8 frescos cedo. 🔴 Os 10 relearning da s166 (#245, #740, #741, #577, #1381, #736, #313, #706, #709, #1270) so regravam em sessao-calendario nova.
-3. 📅 **Pico em 09/09: 34 cards agendados** (carga 07-13/09: 29/16/34/14/22/23/22). Puxar menos novos nesse dia.
-4. 📚 **Aula-base do sprint JA ENTREGUE** -- `artifacts/aula-s17.html` ("Sprint S17-20", 13 temas, 331 KB, publicado). Nao refazer aula por bloco; usar o artifact como material de abertura de cada tema. **A secao final `#tarefas` traz as 47 listas do cronograma S17-S20 com link do caderno e contagem por tarefa** (sprint 725q destacado dentro de 1.423q totais) -- e de la que o usuario abre cada bloco.
-5. **Ritual de execucao antes de cada bloco** (S7: 8 de 18 erros por execucao; corrigir so isso = ~90%): "qual dado aqui EXCLUI o que eu ia marcar?"; "a pergunta pede X **e** Y?"; enunciado negativo -> rotular cada alternativa V/F. Treinar em BLOCO DE QUESTOES, nao em card.
-6. **Reforja pendente (13 da s167 + 18 anteriores):** compostas #175, #1041, #1424, #572, #581; binarias #151, #837; #526, #1112, #258, #910, #527, #513. Anteriores: #792, #4, #1117, 821, 702, 283, 505, 411, 570, 128, 705, 1360, 470, 1415, 1086, 1126. Dedup F67: (GO, Endometriose) -> (Ginecologia, Endometriose).
-7. **Inscricao UERJ** fecha 01/10 (Cepuerj, R$ 380). Acao do usuario.
-8. 🔬 **Engenharia aberta (ledger §4q):** **F77 NOVO** (`grade.json` nao guarda questoes por tarefa; o contrato manda ratear igual e o rateio erra de 16 a 50q -- a contagem real so existe re-parseando o PDF, S/M). F76 (`--record --reason` sem proveniencia, S), F71 (balanceador x provas.json), F72 (day_plan x snapshot stale), D5, D11; F63/F65-F69 seguem.
+1. 🔁 **Cards de 08/09: 41 agendados** -- destes, **23 sao os erros desta sessao voltando** (17 nota-1 + 6 nota-2). Drillar cedo; e a fila mais valiosa da semana.
+2. 📚 **Questoes: seguir o sprint S17-S20.** Faltam ~630 das 725 (95 feitas em 07/09). Ritmo-alvo ~63,3q/dia p/ UERJ.
+3. 🎯 **Revisao Direcionada JA ENTREGUE na s169** em 3 eixos (SUA/PALM-COEIN + manejo do sangramento · o paciente etilista, 16 erros do historico · inversao Wilms x neuroblastoma). Nao repetir; usar como material de abertura.
 
-## Sprint S17-S20 (decisao do usuario, s168)
-- **Mira: S20 completa = 725q ate 12/09.** Pior caso aceito: nao chegar com a S20 inteira. **Piso garantido: S17+S18 = 367q** (61q/dia).
-- **24 tarefas verdes**, contagem real extraida do PDF (soma bate com o total em todas as semanas): **S17 172q** (6 tarefas) · **S18 195q** (7) · **S19 244q** (7) · **S20 114q** (4).
-- A aula cobre **267 das 725** (37%) e **194 das 367** do piso (53%): Urologia 92q, SUA 65q, Diarreia 63q, Pneumonias Bact. 47q.
-- 🔴 **Dois blocos "Revisao por Questoes" drillam frio:** Pre-Natal/Parto/Vitalidade Fetal (36q -- Vitalidade Fetal T e R fora do verde) e IC/HAS (43q -- HAS Revisao fora; cai na Cardiologia, 2a area mais fraca, 68,7%). O de SUS/APS/Etica (59q) esta lastreado.
+## Mix de cards 08-13/09 (decisao do usuario, s169)
+**Regra: agendado + intake DIRIGIDO. Nao puxar volume indiscriminado.**
+- **Carga agendada:** 41 (08) · 39 (09) · 20 (10) · 23 (11) · 24 (12) · 23 (13) = **170 em 6 dias**, media 28/dia. **Atrasados: 1.**
+- **08-09/09:** so o agendado (41/39). Sao os relearning desta sessao + estreia de Cirurgia Infantil; nao somar novos.
+- **10-13/09:** usar a folga com **intake dirigido a Cirurgia Infantil** (~40-50 cards no total, nao os 190 que a folga permitiria). Justificativa: fraqueza nº 1 (30 erros) + 9 de 10 cards do tema cairam na estreia de 07/09 = cluster com fundacao ausente. Puxar com `fsrs_queue --list --prevalencia --cluster`.
+- 🔴 **Por que NAO puxar os 190 disponiveis:** estreia rendeu **22% de retencao** na s169. Volume indiscriminado vira nota 1 e infla a fila em 10 dias. Teto 60/dia segue valendo (CAP 1,5x = 90).
+- ⚠️ **ENAMED 13/09 nao pede taper** -- e termometro desde a s159, o CRM e automatico. A prova decisiva e UERJ 01/11.
 
 ## Estado por frente
-- **Norte:** 🎯 **UERJ/MFC 01/11/2026** (55d). ENAMED 13/09 (6d) termometro: S6 80% -> S7 82%.
-- **Volume & Metas:** 6821 / 10400 (perf. ~78.8%). Hoje: 0. Ritmo-alvo ~65.1q/dia (55d p/ UERJ/MFC (prova 01/11)). Setembro: 190q em 6 dias; meta do mes pede ~62/dia.
-- **FSRS:** divida 15 atrasados + 14 p/ hoje -- pool 675 nunca introduzidos (entram <=60/dia). **Teto 60 (max. 90 em divida); excecao de 120/dia REVOGADA na s168.**
-- **Conteudo:** 128 resumos em resumos/. [derivado: glob]
-- **Erros & Cards:** 958 erros registrados · 1332 cards ativos · 2 needs_qualitative na fila · taxonomia 274 temas. [derivado: db]
+- **Norte:** 🎯 **UERJ/MFC 01/11/2026** (55d). ENAMED 13/09 (6d) termometro.
+- **Volume & Metas:** 6916 / 10400 (perf. ~78.9%). Hoje: 95. Ritmo-alvo ~63.3q/dia (55d p/ UERJ/MFC (prova 01/11)).
+- **FSRS:** divida 0 atrasados + 1 p/ hoje -- pool 665 nunca introduzidos (entram <=60/dia).
+- **Conteudo:** 136 resumos em resumos/. [derivado: glob]
+- **Erros & Cards:** 970 erros registrados · 1353 cards ativos · 2 needs_qualitative na fila · taxonomia 275 temas. [derivado: db]
 - **Posicao:** conteudo S17 (nominal S24, atraso 7 sem) [derivado: preparacao_estado]
-- **Prevalencia:** `core/cronograma/prevalencia_enamed.json` (5 de 9 aulas). Pendentes: Ped II, Preventiva II (12/09), **Cirurgia II, CM II** -- e por isso que Urologia e Pneumonias Bact. nao aparecem la; ausencia de dado, nao voto contra.
 - **Datas:** ENAMED 13/09 · fim da grade 25/10 · **UERJ 01/11**.
 
-## Ultima sessao -- s168 (2026-09-07): SPRINT DECIDIDO + AULA DE 13 TEMAS
-**Planejamento:** mix 07-13/09 fechado (cards a 60, tardes as questoes). Precificacao da grade S17-S20 -- achado **F77**: `grade.json` so guarda o total da semana e o contrato manda ratear igual; a contagem por tarefa saiu de re-parsear o PDF e bate exatamente (293/380/449/301). Anomalia da APS 0q **resolvida**: a linha esta riscada no xlsx do usuario, os dois sinais concordam. Escopo verde homologado em 3 iteracoes (minhas 2 leituras de cor erraram; o usuario mandou as listas em texto).
-**Aula-base:** `artifacts/aula-s17.html` de 4 -> **13 temas**, `<title>` "Sprint S17-20", 310 KB, mesma URL. Cunhada por **1 subagent fable** com brief travado (editar no lugar, nao publicar, preservar as 4 secoes originais, 1 unico `max-width`, ASCII limpo); verificacao independente antes de publicar passou em todos os eixos. **Alvo prioritario entregue:** tabela discriminadora **ENTRADA x ALOCACAO COMPARADA x COMPLETUDE** para o SUS (4a fraqueza persistente, 19 erros -- era falta de discriminador, nao de conteudo).
-**Higiene:** excecao do sprint de 120 cards/dia revogada 6 dias antes do prazo, com lapide no `fsrs-management-contract` + `ESTADO.md` corrigido. Sem mudanca de codigo. `auto_check --changed` PASSED.
-**Zero questoes e zero cards** -- a sessao foi planejamento + aula + contrato.
+## Ultima sessao -- s169 (2026-09-07): 95 QUESTOES + 60 CARDS + 10 RESUMOS DO SPRINT
+**Questoes (95, 87,4%):** Diarreia 22q/86,4% · SUA 23q/69,6% · APS 50q/**96,0%**. 10 erros analisados e persistidos (#961-#972), 21 cards cunhados (#1526-#1546).
+**Resumos:** 10 cunhados/expandidos por subagentes Sonnet em paralelo (Urologia 470 linhas, Pneumonias na Infancia, Diarreia, Tumores Anexiais, Etica Medica 37->364, DM na Gestacao 44->258, Pneumonias Bacterianas, HAS Parte 1, HAS Parte 3, Vitalidade Fetal) -- **cobertura escrita do sprint de ~30% para 100% dos temas**. Estadiamento FIGO preenchido com fonte auditada.
+**Cards (60 drenados):** atrasados 87% · hoje 79% · **erros frescos 25%** · novos 22%. Retencao sem estreia 70%.
+**Engenharia:** substrato `canonico` da governanca de evidencia trocado (`pubmedmcp` morto -> plugin `pubmed@life-sciences`), contrato v1.1; check 6 `[SPEC]` no linter de resumos + suite nova; `doc_drift` aceita server de plugin.
+
+## Padroes de erro confirmados na s169
+- 🔴 **O no do fluxograma nao e lido -- 3 disparos no mesmo dia.** SUA agudo: PA/FC medidas **APOS** o volume decidem clinico x cirurgico. Errou na prova (medroxiprogesterona) e no card (acido tranexamico), nas duas ficando no trilho clinico com paciente que ja falhou nele. Mesma habilidade de #947 (TC antes da via aerea, Trauma) e da fraqueza nº 3 (Sindromes Hipertensivas). **3 areas.**
+- 🔴 **Achado saliente sequestra o diagnostico -- 4 disparos.** Disenteria->Salmonella; leite->APLV; macula rubra->malignidade; "cruza a linha media"->neuroblastoma. O dado que EXCLUI estava no enunciado nas 4.
+- 🔴 **Inversao cristalizada Wilms x neuroblastoma:** 2 cards independentes, as 2 vezes respondeu neuroblastoma, as 2 vezes era Wilms. Regua: origem renal + hematuria + bom estado geral + metastase PULMONAR = Wilms.
+- 🔴 **Carbamazepina marcada como "a proibida" na SAA pela 3a vez** (#335 25/06, #847 17/08, card #560 hoje). Ela e 2a linha VALIDA; as proibidas sao clozapina e clorpromazina (baixam o limiar convulsivo).
+- **Pergunta composta:** parou na 1a metade em #1424, #610, #582, #583.
 
 ## Pendencias/observacoes ativas
-- 📚 **Frente MFC (Gusso + Duncan)** -- abre 14/09. Rescope da grade pro formato UERJ em 14/09. A fila de cards cai para ~10/dia a partir do 14, o que abre o espaco.
-- 🔴 **Lacunas honestas do artifact** (declaradas no rodape dele): estadios FIGO do CA de ovario, 10 grupos de Robson, minimo de servicos do Decreto 7.508 e a tabela SBC 2025 sairam como **figura** nos PDFs e nao extrairam -- conferir na lista se cair.
-- 💉 Diretrizes novas a conferir nos resumos: Calendario Vacinal 2026 (Q89), GINA 2026 (Q79), Reanimacao SBP 2026, Dislipidemia 2025, ATLS 11 (parcial), SINAN 2026 (F69).
-- ⚠️ Drive 43d sem sync (F72): a ordem confiavel e a lista verde que o usuario homologou na s168, nao a do `day_plan`.
+- 🃏 **Reforja: 7 cards da s169** -- compostas #419, #1424, #582, #583 · binarias #1381, #1359 · **#367 inrespondivel** (dexis com contexto vazio) · #365 (frente embute a premissa). Somar aos 13 da s167 + 18 anteriores.
+- 📚 **Frente MFC (Gusso + Duncan)** abre 14/09; rescope da grade pro formato UERJ. A fila de cards cai para ~10/dia a partir do 14, o que abre o espaco.
+- 🔬 **Engenharia aberta (ledger):** **F80** (writers discordam de fuso: revlog/erros em UTC, bulk em local -- ja produziu conclusao errada em subagente), **F79b** (`card_self_sufficiency` cego a dexis+contexto vazio), **F78** (extracao de PDF perde figura em silencio, e a figura que sobrevive pode estar desatualizada), F79 RESOLVIDO. Antigos: F76, F71, F72, D5, D11, F63, F65-F69.
+- 💉 Diretrizes a conferir nos resumos: Calendario Vacinal 2026, GINA 2026, Reanimacao SBP 2026, ATLS 11 (parcial), SINAN 2026. **SBC 2025 ja incorporada** (HAS Parte 1).
+- 🔴 **Lacunas honestas dos resumos novos:** O-RADS, torcao anexial e massa anexial na gestante (Tumores Anexiais); PSI/PORT, criterios IDSA/ATS, criterios de Light, PAV/PAH (Pneumonias Bacterianas, fora do escopo do livro); telemedicina e escala de penalidades do CEM (Etica); contracepcao pos-parto (DMG). Declaradas, nao inventadas.
+- ⚠️ Drive 43d sem sync (F72): a ordem confiavel e a lista verde homologada na s168.
+- 📅 **Inscricao UERJ** fecha 01/10 (Cepuerj, R$ 380). Acao do usuario.
 
 ---
-*Historico: history/INDEX.md * Macro: ESTADO.md * Sessao: history/session_168.md*
+*Historico: history/INDEX.md * Macro: ESTADO.md * Sessao: history/session_169.md*

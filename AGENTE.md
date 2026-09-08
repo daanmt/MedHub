@@ -320,3 +320,21 @@ engenharia do `/ai-eng`, que abre janela própria e commita. Sem lock e sem guar
 5. **Regra load-bearing não mora na memória do harness.** Memória de harness é decorativa para
    qualquer outra IDE e não é versionada: a regra vai para o portador do repo (skill, contrato,
    `AGENTE.md`, teste, schema) e a memória fica só como **ponteiro + porquê**.
+6. **Protocolo de achado com o `/ai-eng` (s170).** Divisão de trabalho fixa: **implement é do
+   MedHub** (esta janela tem o contexto do repo), **audit é do `/ai-eng`** (entre parts). Quando
+   uma auditoria produz relatório: o relatório **cru fica em arquivo** e o que trafega é o
+   **destilado (<= 3k chars) + o remédio proposto por achado** — classificado em `spec` |
+   `hotfix` | `só-dado` | `nada`. O `/ai-eng` responde **GO / NO-GO / ALTERA** num único envio.
+   Régua de classificação: **defeito reproduzível com teste de regressão escrito ANTES do fix ->
+   `hotfix`**; **lacuna de gate -> `spec`**. Triagem produzida por auditoria (ex.: baldes
+   APOSENTAR/REFORJAR/OK) é **dado, não ação** — não autoriza escrita por si.
+7. **Operação em massa sobre o `ipub.db` (s170).** Nunca `UPDATE` direto: passa pelos **writers**
+   com `card_checks` (allowlist testada em `tools/test_writer_allowlist.py`, F49). Toda operação
+   em lote exige **COUNT-ASSERT + dry-run escritos antes de executar** — o número esperado de
+   linhas afetadas é declarado, o dry-run confirma, e só então roda.
+8. **Gate que não pega vira registro, não silêncio (s170).** Achado de **leitura humana** que um
+   gate existente deveria ter capturado é um **gate-miss** e vai para o ledger como tal. F79,
+   F79b e F81 são as três fixtures iniciais dessa série. Corolário (*verification-stack*): quando
+   um eixo é conhecido mas **não verificável por gate** (ex.: o eixo C do F81, contrafactual e
+   semântico), ele é **declarado como não-verificado** — nunca convertido numa métrica inventada
+   só para o painel ficar verde.

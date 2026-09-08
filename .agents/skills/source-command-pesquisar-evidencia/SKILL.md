@@ -32,7 +32,7 @@ Reduzir a uma proposição testável: *"metformina é contraindicada com TFG < 3
 
 ### 2. Buscar por tier (parar quando a de maior peso responde)
 - **Tier 1 — sociedade BR / MS:** `WebSearch` "Diretriz [SBD/SBC/SBP/FEBRASGO…] [tema] [ano]" → `WebFetch` no PDF/página oficial. (Substrato `fallback` — PDFs de sociedade não estão no PubMed.)
-- **Tier 2 — RCT/meta + guideline INT:** `mcp__pubmedmcp__search_abstracts` com **query Entrez precisa** (contrato §5): `term="<PMID>[uid]"` ou frase exata do título; ler o **contexto** do número no abstract. (Substrato `canonico`.) Guidelines INT (ADA/AHA/IDSA/GINA…) por `WebSearch`.
+- **Tier 2 — RCT/meta + guideline INT:** PubMed MCP do plugin `pubmed@life-sciences`, com **query precisa** (contrato §5): PMID conhecido -> `mcp__plugin_pubmed_PubMed__get_article_metadata`; trial nomeado -> `mcp__plugin_pubmed_PubMed__search_articles` com frase exata do título ou tag de campo. Ler o **contexto** do número no abstract; se não bastar e houver PMCID, `mcp__plugin_pubmed_PubMed__get_full_text_article`. (Substrato `canonico`.) 🔴 Uso obriga atribuição ao PubMed + **DOI como link**. Guidelines INT (ADA/AHA/IDSA/GINA…) por `WebSearch`.
 - **Tier 3 — consenso/texto:** só se Tiers 1–2 não resolverem.
 - **Consistência interna:** RAG local `app.engine.rag.search` para ver o que os `resumos/` já afirmam (substrato `local`) — `python -c "from app.engine.rag import search; [print(r) for r in search('<query>', n_results=3)]"`.
 
@@ -66,6 +66,6 @@ AÇÃO NO CONTEÚDO: <manter | corrigir valor/conduta | adicionar 🔴 armadilha
 
 - **Honest-negative:** busca não-sustentada = `NÃO-VERIFICÁVEL`, nunca fabricar fonte/PMID/cifra.
 - **Boundary abstract-only:** achar o PMID ≠ confirmar a cifra; cifra em suplemento → `NÃO-VERIFICÁVEL [suplemento]`.
-- **Query Entrez precisa:** nunca relevance multi-termo solta no PubMed.
+- **Query precisa:** nunca relevance multi-termo solta no PubMed — resolver por PMID quando ele existe, e ler o `query_translation` que a busca devolve antes de confiar no resultado.
 - **BR-primacy + lente da banca:** contrato §2.
 - **Substrato `fallback` ≠ `canonico`** em força probatória — declarar sempre.

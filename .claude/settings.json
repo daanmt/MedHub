@@ -22,5 +22,8 @@
         ]
       }
     ]
+  },
+  "enabledPlugins": {
+    "pubmed@life-sciences": true
   }
 }

@@ -66,8 +66,11 @@ REFS_EXTS = (".py", ".md", ".json", ".txt", ".db", ".ini", ".cfg", ".toml",
              ".yml", ".yaml", ".sql", ".sh", ".ps1", ".csv", ".xlsx")
 
 # Servers MCP que legitimamente NAO estao no .mcp.json: os connectors da
-# claude.ai sao configurados no harness (OAuth), fora do repo. Prefixo.
-MCP_EXTERNOS = ("claude_ai_",)
+# claude.ai sao configurados no harness (OAuth) e os servers vindos de PLUGIN
+# sao instalados por marketplace (`/plugin install <x>@<market>`), ambos fora do
+# repo. Sem isto, doc que cite a tool de um deles vira falso-positivo de "server
+# morto" -- foi o caso de `plugin_pubmed_PubMed` na s169. Prefixo.
+MCP_EXTERNOS = ("claude_ai_", "plugin_")
 
 RE_BACKTICK = re.compile(r"`([^`\n]+)`")
 RE_MDLINK = re.compile(r"\]\(([^)\s]+)\)")

@@ -53,6 +53,32 @@ def _encoding_proibido(content):
     return issues
 
 
+# Proibicoes DURAS da spec (estilo-resumo.md) que o linter era cego a ver ate a
+# s169: os 10 resumos do sprint so sairam limpos porque as regras foram repetidas
+# a mao no brief de cada subagente e conferidas por fora. Regra nova nasce WARN.
+RE_EMOJI_HEADER = re.compile(
+    r"^#{1,3} .*[⭐⚠🔴💡🧭🕒🚨"
+    r"🟢🟡🔵]", re.M)
+RE_BULLET_PROIBIDO = re.compile(r"^\s*[-*]\s*[✅❌]", re.M)
+RE_RODAPE_EDITORIAL = re.compile(r"^\*(?:Este|Esse) resumo\b.*\*\s*$", re.M)
+
+
+def _spec_proibicoes(content):
+    """Proibicoes da spec que nao eram checadas. WARN. [] = ok."""
+    issues = []
+    if RE_EMOJI_HEADER.search(content):
+        issues.append("emoji em header H1/H2/H3")
+    if "```" in content:
+        issues.append("bloco de codigo (fluxograma/tabela ASCII disfarcada)")
+    if RE_BULLET_PROIBIDO.search(content):
+        issues.append("bullet com marcador proibido")
+    if re.search(r"^estilo\s*:", content, re.M):
+        issues.append("campo 'estilo:' no frontmatter")
+    if RE_RODAPE_EDITORIAL.search(content):
+        issues.append("rodape editorial em italico")
+    return issues
+
+
 def audit_summaries(file_list=None):
     if file_list is None and len(sys.argv) > 1:
         # Se passados pela CLI
@@ -120,6 +146,11 @@ def audit_summaries(file_list=None):
         proibidos = _encoding_proibido(content)
         if proibidos:
             issues.append((WARN, f"[ENCODING] caractere proibido: {' '.join(proibidos)}"))
+
+        # 6. Proibicoes duras da spec que o linter nao via (WARN -- regra nova, s169)
+        spec = _spec_proibicoes(content)
+        if spec:
+            issues.append((WARN, f"[SPEC] proibicao do estilo-resumo: {'; '.join(spec)}"))
 
         # Reportar BLOCK por arquivo (linha-a-linha); agregar WARN por tipo.
         blocks = [m for sev, m in issues if sev == BLOCK]

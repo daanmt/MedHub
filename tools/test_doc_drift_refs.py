@@ -106,6 +106,15 @@ def test_connector_da_claude_ai_e_externo_por_design(tmp_path):
     assert scan_refs(tmp_path) == []
 
 
+def test_server_de_plugin_e_externo_por_design(tmp_path):
+    # Server vindo de plugin (`/plugin install pubmed@life-sciences`) e instalado
+    # por marketplace, nunca no .mcp.json do repo -- mesma classe do connector.
+    _mk_repo(tmp_path)
+    _mk_norma(tmp_path, ".claude/agents",
+              ["Buscar via `mcp__plugin_pubmed_PubMed__get_article_metadata`."])
+    assert scan_refs(tmp_path) == []
+
+
 def test_mcp_json_ausente_nao_quebra(tmp_path):
     _mk_repo(tmp_path)
     (tmp_path / ".mcp.json").unlink()

@@ -168,6 +168,13 @@ aliases: [APS]
 ### 5.1 Territorialização e Adscrição de Usuários
 
 - ⭐ **Territorialização:** conhecer o território ANTES de planejar -- não apenas o espaço físico, mas as interações sociais, aspectos socioeconômicos, epidemiológicos e culturais que nele ocorrem. Só depois de territorializar, a equipe está apta a oferecer serviços que atendam às necessidades reais da população.
+- ⭐ **Conceito de território (Gusso):** espaço limitado político-administrativamente ou pela ação de um grupo social, onde se exercem os poderes do Estado e dos cidadãos. É **relativamente homogêneo** -- resultado de uma produção histórica, ambiental e social capaz de gerar **identidade própria**, com problemas e necessidades sociais que lhe são específicos.
+- ⭐ **A escada dos territórios -- o nível é dado pela ESCALA do recorte, não pelo tipo de ação:**
+  - **Território-moradia:** o domicílio. É a unidade da **visita domiciliar** a um paciente.
+  - **Território-microárea:** conjunto de domicílios com características homogêneas sob responsabilidade de **um** agente comunitário de saúde. Uma rua em surto de escabiose é microárea, não área.
+  - **Território-área (de abrangência):** toda a área coberta pela UBS, com **todas** as equipes de saúde da família da unidade. Atendimento de demanda espontânea de pacientes de todas as equipes é área.
+  - **Território-distrito (sanitário):** onde vive a **rede de atenção à saúde**, articulando pontos de complexidades diferentes. Transferência de paciente entre serviços de complexidade distinta só cabe aqui.
+- ⚠️ Padrão de prova: a questão de "conceito + exemplo" costuma **trocar o rótulo do degrau entre as alternativas** -- conferir sempre a escala do exemplo ANTES de aceitar o rótulo que a alternativa oferece.
 - ⭐ **Adscrição de usuários:** vai muito além de um cadastro -- desenvolve **vínculo** e **senso de responsabilização** entre a equipe e a população do território, facilitando a adesão aos cuidados. É a adscrição que operacionaliza, na prática, o atributo da longitudinalidade (ver 1.2).
 
 ### 5.2 Acesso, Acolhimento e Estratificação de Risco
@@ -240,6 +247,17 @@ O novo modelo de cofinanciamento federal organiza os repasses em **6 componentes
 
 ---
 
+### 7.4 Sofrimento Mental Específico da Diabetes (SMED)
+
+- Sofrimento mental relacionado à convivência com o diabetes: ansiedade, preocupação excessiva, tristeza e medo diante da doença e do tratamento.
+- ⭐ **Não é diagnóstico médico formal** -- é uma **constatação** clínica. Essa é a chave que governa toda a conduta.
+- **Epidemiologia:** acomete cerca de **um terço das mulheres diabéticas**, especialmente **jovens e com pouco tempo de doença** -- não o idoso do sexo masculino. Pessoas com doença clínica crônica têm maior predisposição a transtornos mentais, e mulheres jovens são cerca de 3 vezes mais acometidas por transtornos do humor e de ansiedade.
+- **Conduta da equipe de saúde da família:** abordagem individualizada das dúvidas e angústias sobre a doença e seu tratamento -- acolher, explicar, fortalecer vínculo. Tem poder terapêutico e cabe sempre.
+- -> se houver depressão maior ou transtorno de ansiedade caracterizado: aí sim antidepressivo. Não se medica o SMED em si.
+- ⚠️ Padrão de prova: rastreamento populacional ativo de SMED é "alternativa possível", nunca a melhor -- depende de viabilidade operacional, e não se rastreia o que não é diagnóstico.
+
+---
+
 ## 8. Armadilhas de Prova
 
 - 🔴 O gasto **privado** em saúde no Brasil supera o **público**: nas últimas duas décadas, o gasto público responde por apenas 40-47% do total -- não confundir esse dado com "antes do SUS não havia saúde pública". Havia antecedentes institucionais públicos relevantes: seguro social federal desde 1933 (Institutos de Aposentadoria e Pensão por categoria profissional), SUDS e INAMPS (que desde 1985 ampliava o acesso a não contribuintes). O SUS herdou e unificou estruturas prévias, não nasceu de um vazio privado.
@@ -263,3 +281,8 @@ O novo modelo de cofinanciamento federal organiza os repasses em **6 componentes
 - 🔴 A interoperabilidade ANS-Ministério da Saúde (dados de saúde suplementar acessíveis a médicos do SUS desde 2025) é de via única -- os planos de saúde NÃO acessam o histórico do paciente no SUS.
 - 🔴 O PSF (1994) foi renomeado para Estratégia Saúde da Família (ESF) em 2006, após o PROESF (2003) -- "programa" virou "estratégia" porque deixou de ser projeto pontual e passou a ser modelo estruturante da Atenção Básica.
 - 🔴 Nas equipes de Consultório na Rua (eCR), apenas a modalidade 3 tem médico -- as modalidades 1 e 2 não têm; o ACS também não existe nessas equipes, sendo substituído pelo agente social.
+- 🔴 **Visita domiciliar a um paciente é território-MORADIA, não microárea.** Microárea é sempre um **conjunto** de domicílios, sob responsabilidade de um único ACS. Trocar moradia por microárea é o erro de escala mais cobrado da escada.
+- 🔴 **Transferência de paciente entre serviços de complexidades diferentes só cabe no território-DISTRITO (sanitário)** -- nenhum degrau abaixo comporta a rede de atenção à saúde.
+- 🔴 Numa questão que pede "conceito de território + exemplo prático", os distratores **pareiam o rótulo de um degrau com o exemplo de outro**. Ler a escala do exemplo derruba várias alternativas de uma vez; ler o rótulo primeiro é cair na armadilha.
+- 🔴 **SMED não é diagnóstico médico formal**, é uma constatação: não se rastreia e não se medica por ele. Antidepressivo apenas se houver depressão maior ou transtorno de ansiedade caracterizado.
+- 🔴 **Em MFC, entre uma alternativa programática** (rastreio ou protocolo sem recomendação formal) **e uma relacional** (acolhimento, vínculo, abordagem individualizada), **quando ambas são defensáveis a banca premia a relacional** -- ela cabe sempre e não depende de viabilidade operacional. O reflexo programático, correto em saúde coletiva, é armadilha em MFC.

@@ -687,3 +687,6 @@
 {"ts": "2026-09-06T22:37:18+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "e01d702f185d", "alvo": "card#1513", "payload": {"padrao": "resposta-multifato/multi-frase", "tema": "Piodermites"}}
 {"ts": "2026-09-06T22:37:18+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "0d709f43b6ea", "alvo": "card#1516", "payload": {"padrao": "resposta-multifato/multi-frase", "tema": "Desenvolvimento Neuropsicomotor (DNPM)"}}
 {"ts": "2026-09-07T18:21:37+00:00", "event": "opened", "check": "posicao_ssot", "fingerprint": "01755b5ba8cb", "alvo": "HANDOFF.md", "payload": {"semana_handoff": 20, "semana_db": 17}}
+{"ts": "2026-09-07T22:54:40+00:00", "event": "opened", "check": "suites_orfas", "fingerprint": "07f0333aa238", "alvo": "test_audit_resumos.py", "payload": {}}
+{"ts": "2026-09-07T22:55:30+00:00", "event": "resolved", "check": "suites_orfas", "fingerprint": "07f0333aa238", "alvo": "test_audit_resumos.py"}
+{"ts": "2026-09-08T01:36:29+00:00", "event": "resolved", "check": "posicao_ssot", "fingerprint": "01755b5ba8cb", "alvo": "HANDOFF.md"}

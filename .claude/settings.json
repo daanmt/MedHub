@@ -20,6 +20,16 @@
             "timeout": 90
           }
         ]
+      },
+      {
+        "matcher": "SendMessage",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python -X utf8 \"$CLAUDE_PROJECT_DIR/tools/exchange_log.py\"",
+            "timeout": 15
+          }
+        ]
       }
     ]
   },

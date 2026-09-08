@@ -6,7 +6,7 @@ status: verified
 ## Symptom
 
 Reforja de flashcard executada **nao deixa nenhum rastro rastreavel**. Auditoria da s170
-(subagente Sonnet, relatorio em `scratchpad/audit_reforja_reincidencia.md`) mediu:
+(subagente Sonnet, relatorio em `.vibeflow/audits/s170-reforja-reincidencia-audit.md`) mediu:
 
 - Unico chamador de `event_log.registrar` no repo: `tools/insert_questao.py:39-41` e `:296-301`,
   e apenas para card NOVO (tipos `generation` / `reincidencia`).

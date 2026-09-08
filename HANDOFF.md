@@ -1,50 +1,48 @@
 # HANDOFF.md -- ESTADO OPERACIONAL CURTO
-*Atualizado: 2026-09-07 -- S169 (Claude Code / Opus 5): 95 questoes (87,4%), 10 erros analisados, 60 cards drenados (divida FSRS zerada), 12 resumos tocados (10 novos/expandidos), substrato PubMed trocado, F78/F79/F79b/F80 no ledger*
+*Atualizado: 2026-09-08 -- S170 (Claude Code / Opus 5): 50 cards (58%) + 20q de Etica (100%), contrato `/revisar` v1.3 (PREPARAR REVOGADO), auditoria do banco em 3 frentes com o `/ai-eng`, 9 commits, 395 testes*
+
+> 🔴 **ESTA SESSAO REINICIOU COM CONTEXTO LIMPO.** O `/ai-eng` tambem. Nada da conversa de 08/09 sobrevive na cabeca de nenhum dos dois -- so o que esta escrito aqui, no `history/session_170.md` e nos ledgers. **Ler `history/session_170.md` inteiro antes de agir**: ele tem os padroes de erro, os achados e a fila de trabalho acordada.
 
 ## > Proximo passo imediato
 
-1. 🔁 **Cards de 08/09: 41 agendados** -- destes, **23 sao os erros desta sessao voltando** (17 nota-1 + 6 nota-2). Drillar cedo; e a fila mais valiosa da semana.
-2. 📚 **Questoes: seguir o sprint S17-S20.** Faltam ~630 das 725 (95 feitas em 07/09). Ritmo-alvo ~63,3q/dia p/ UERJ.
-3. 🎯 **Revisao Direcionada JA ENTREGUE na s169** em 3 eixos (SUA/PALM-COEIN + manejo do sangramento · o paciente etilista, 16 erros do historico · inversao Wilms x neuroblastoma). Nao repetir; usar como material de abertura.
+1. 📄 **Dossie da auditoria** em `C:\Users\daanm\ai-eng\brain\observed-systems\medhub-dossier-2026-09-08.md` (141 linhas, escrito pelo `/ai-eng`) -> **ler inteiro**, copiar para `docs/MEMORIA-AUDITORIA.md`, **ponteiro de 1 linha aqui** + citacao no workflow de engenharia (2 fios mecanicos, nao 1). Pedido dele: divergencia na §3 (status literal dos F) ou §7 (G1-G11) contra o repo -> corrigir na copia de `docs/` e mandar a linha.
+2. 🤝 **Reencontro com o `/ai-eng`:** o endereco do canal muda no reinicio, o **nome reaparece no `ListAgents`**. Quem bootar primeiro manda 1 linha de presenca. **A memoria da troca de 08/09 esta do lado DELE** (22 registros com texto integral dos 2 sentidos, `python tools/exchange_log.py --report 25 --full`); o ledger daqui nasceu ontem com 2. Retomada dele: `brain/interactions/2026-09-08-handoff-canal-medhub-continuidade.md`.
+3. 🔁 **Cards:** fila de hoje pelo `day_plan`. 🔴 **Teto 60/dia** (90 SO em regime de divida). O sprint de 120/dia foi **revogado em 07/09** -- ler `fsrs-management-contract`, nao a memoria.
+4. 📚 **Questoes: sprint S17-S20.** Faltam ~610 das 725.
 
-## Mix de cards 08-13/09 (decisao do usuario, s169)
-**Regra: agendado + intake DIRIGIDO. Nao puxar volume indiscriminado.**
-- **Carga agendada:** 41 (08) · 39 (09) · 20 (10) · 23 (11) · 24 (12) · 23 (13) = **170 em 6 dias**, media 28/dia. **Atrasados: 1.**
-- **08-09/09:** so o agendado (41/39). Sao os relearning desta sessao + estreia de Cirurgia Infantil; nao somar novos.
-- **10-13/09:** usar a folga com **intake dirigido a Cirurgia Infantil** (~40-50 cards no total, nao os 190 que a folga permitiria). Justificativa: fraqueza nº 1 (30 erros) + 9 de 10 cards do tema cairam na estreia de 07/09 = cluster com fundacao ausente. Puxar com `fsrs_queue --list --prevalencia --cluster`.
-- 🔴 **Por que NAO puxar os 190 disponiveis:** estreia rendeu **22% de retencao** na s169. Volume indiscriminado vira nota 1 e infla a fila em 10 dias. Teto 60/dia segue valendo (CAP 1,5x = 90).
-- ⚠️ **ENAMED 13/09 nao pede taper** -- e termometro desde a s159, o CRM e automatico. A prova decisiva e UERJ 01/11.
+## Fila de engenharia acordada com o `/ai-eng` (GO dado, nao executada)
+Protocolo em `AGENTE.md §10.6-8`: destilado <=3k + remedio por achado -> ele responde GO/NO-GO/ALTERA. **Implement e daqui, audit e dele.**
+- **Spec F81** -- predicado contexto x pergunta em `card_checks.py`. DoD tem de provar que dispara pelo caminho de **CADA um dos 7 writers** (nao 5), nao isolado. 2º predicado no mesmo spec: **pergunta generica so como CONJUNCAO** (generica **E** contexto pobre) -- isolado flagaria 49 cards legitimos. Eixo C fica **declarado como nao verificavel**. Contador de gate-miss com F79/F79b/F81 como fixtures.
+- **Spec da fila de reforja** -- tabela `reforja_marks` com lifecycle (**nunca coluna booleana**: uma coluna que so flipa apaga a evidencia da reincidencia). A prosa vira CONSUMIDORA. Fechamento **explicito**, nunca inferido de `card_version` subir (#321 e a prova: v2 com o defeito intacto). Entrega inteira ou espera. Check de idade N=6 dentro do mesmo spec.
+- **Dry-run do lote 600-799** (132 cards) sob `§10.7`: COUNT-ASSERT + dry-run declarados ANTES. Gatilho e do operador, nunca do agente -- e conteudo clinico. Ja pode rodar: a guarda de nao-crescimento do verso existe desde `d2026a1`.
+- **4 achados de 08/09 sem F-id** (G2): hotfix do event_log, ratchet, fail-loud, justificativa orfa.
+- **Pendente do operador:** apagao do `/graphify` (**nao aprovado** -- fica de pe; sequencia fixture->GO->apagao parada no passo 1) · contexto obrigatorio em card novo (49% do pool nasce sem; bloquear congela metade da introducao).
 
 ## Estado por frente
-- **Norte:** 🎯 **UERJ/MFC 01/11/2026** (55d). ENAMED 13/09 (6d) termometro.
-- **Volume & Metas:** 6916 / 10400 (perf. ~78.9%). Hoje: 95. Ritmo-alvo ~63.3q/dia (55d p/ UERJ/MFC (prova 01/11)).
-- **FSRS:** divida 0 atrasados + 1 p/ hoje -- pool 665 nunca introduzidos (entram <=60/dia).
+- **Norte:** 🎯 **UERJ/MFC 01/11/2026** (54d). ENAMED 13/09 (5d) termometro.
+- **Volume & Metas:** 6936 / 10400 (perf. ~79.0%). Ritmo-alvo ~64.1q/dia (54d p/ UERJ/MFC (prova 01/11)).
+- **FSRS:** divida 0 atrasados + 13 p/ hoje -- pool 657 nunca introduzidos (entram <=60/dia).
 - **Conteudo:** 136 resumos em resumos/. [derivado: glob]
 - **Erros & Cards:** 970 erros registrados · 1353 cards ativos · 2 needs_qualitative na fila · taxonomia 275 temas. [derivado: db]
 - **Posicao:** conteudo S17 (nominal S24, atraso 7 sem) [derivado: preparacao_estado]
-- **Datas:** ENAMED 13/09 · fim da grade 25/10 · **UERJ 01/11**.
+- **Datas:** ENAMED 13/09 · fim da grade 25/10 · **UERJ 01/11**. Inscricao UERJ fecha **01/10** (acao do usuario).
 
-## Ultima sessao -- s169 (2026-09-07): 95 QUESTOES + 60 CARDS + 10 RESUMOS DO SPRINT
-**Questoes (95, 87,4%):** Diarreia 22q/86,4% · SUA 23q/69,6% · APS 50q/**96,0%**. 10 erros analisados e persistidos (#961-#972), 21 cards cunhados (#1526-#1546).
-**Resumos:** 10 cunhados/expandidos por subagentes Sonnet em paralelo (Urologia 470 linhas, Pneumonias na Infancia, Diarreia, Tumores Anexiais, Etica Medica 37->364, DM na Gestacao 44->258, Pneumonias Bacterianas, HAS Parte 1, HAS Parte 3, Vitalidade Fetal) -- **cobertura escrita do sprint de ~30% para 100% dos temas**. Estadiamento FIGO preenchido com fonte auditada.
-**Cards (60 drenados):** atrasados 87% · hoje 79% · **erros frescos 25%** · novos 22%. Retencao sem estreia 70%.
-**Engenharia:** substrato `canonico` da governanca de evidencia trocado (`pubmedmcp` morto -> plugin `pubmed@life-sciences`), contrato v1.1; check 6 `[SPEC]` no linter de resumos + suite nova; `doc_drift` aceita server de plugin.
+## Ultima sessao -- s170 (2026-09-08)
+**Cards (50, 58%):** 21x4 · 8x3 · 6x2 · 15x1. 🏆 **A inversao Wilms x neuroblastoma quebrou** (2 cards, os 2 certos). **SUA: 25% -> 73%** -- o re-ensino completo do dia anterior, com uma noite de sono, e o que produziu recall. **Etica Medica 20/20.**
+**Contrato:** `/revisar` v1.3 -- ⚰️ **PREPARAR, Camada 0, Camada 1 e Invariante D REVOGADOS**; a sessao passa a ter 2 fases (DRENAR -> **REVISAO DIRECIONADA de fechamento**, unica superficie de ensino, sobre notas **1-2**). **Invariante F:** silencio no meio do drill -- nota e tally, excecao unica para **defeito de card**. A **`/aula-base` NAO foi afetada** (e pre-questoes).
+**Engenharia:** reforja passou a **deixar rastro** (evento `reforja` nos 2 writers, pos-commit) + **ratchet de nao-crescimento do verso** (BLOCK nos 2 writers, fail-loud) + `ESTADO.md` que se contradizia corrigido + ledger de trocas agente<->agente com hook.
 
-## Padroes de erro confirmados na s169
-- 🔴 **O no do fluxograma nao e lido -- 3 disparos no mesmo dia.** SUA agudo: PA/FC medidas **APOS** o volume decidem clinico x cirurgico. Errou na prova (medroxiprogesterona) e no card (acido tranexamico), nas duas ficando no trilho clinico com paciente que ja falhou nele. Mesma habilidade de #947 (TC antes da via aerea, Trauma) e da fraqueza nº 3 (Sindromes Hipertensivas). **3 areas.**
-- 🔴 **Achado saliente sequestra o diagnostico -- 4 disparos.** Disenteria->Salmonella; leite->APLV; macula rubra->malignidade; "cruza a linha media"->neuroblastoma. O dado que EXCLUI estava no enunciado nas 4.
-- 🔴 **Inversao cristalizada Wilms x neuroblastoma:** 2 cards independentes, as 2 vezes respondeu neuroblastoma, as 2 vezes era Wilms. Regua: origem renal + hematuria + bom estado geral + metastase PULMONAR = Wilms.
-- 🔴 **Carbamazepina marcada como "a proibida" na SAA pela 3a vez** (#335 25/06, #847 17/08, card #560 hoje). Ela e 2a linha VALIDA; as proibidas sao clozapina e clorpromazina (baixam o limiar convulsivo).
-- **Pergunta composta:** parou na 1a metade em #1424, #610, #582, #583.
+## Padroes confirmados na s170
+- 🔴 **O no do fluxograma nao e lido -- 5o dia, e sobreviveu a 2 explicacoes no mesmo dia.** Acerta a CONDUTA (curetagem) e erra o CRITERIO que autoriza chegar nela (estabilidade **APOS** o volume). Tem o destino decorado, nao a regra de decisao. **5 areas.**
+- 🔴 **Erro repetido em 24h:** "reagiu ao leite" -> APLV. Substancia redutora e teste de ACUCAR e **afasta** a via alergica.
+- 🔴 **Clozapina x carbamazepina: 5o encontro.** O resumo cobre o ponto com clareza -- nao e falta de material, e alca de recuperacao que nao engata.
 
 ## Pendencias/observacoes ativas
-- 🃏 **Reforja: 7 cards da s169** -- compostas #419, #1424, #582, #583 · binarias #1381, #1359 · **#367 inrespondivel** (dexis com contexto vazio) · #365 (frente embute a premissa). Somar aos 13 da s167 + 18 anteriores.
-- 📚 **Frente MFC (Gusso + Duncan)** abre 14/09; rescope da grade pro formato UERJ. A fila de cards cai para ~10/dia a partir do 14, o que abre o espaco.
-- 🔬 **Engenharia aberta (ledger):** **F80** (writers discordam de fuso: revlog/erros em UTC, bulk em local -- ja produziu conclusao errada em subagente), **F79b** (`card_self_sufficiency` cego a dexis+contexto vazio), **F78** (extracao de PDF perde figura em silencio, e a figura que sobrevive pode estar desatualizada), F79 RESOLVIDO. Antigos: F76, F71, F72, D5, D11, F63, F65-F69.
-- 💉 Diretrizes a conferir nos resumos: Calendario Vacinal 2026, GINA 2026, Reanimacao SBP 2026, ATLS 11 (parcial), SINAN 2026. **SBC 2025 ja incorporada** (HAS Parte 1).
-- 🔴 **Lacunas honestas dos resumos novos:** O-RADS, torcao anexial e massa anexial na gestante (Tumores Anexiais); PSI/PORT, criterios IDSA/ATS, criterios de Light, PAV/PAH (Pneumonias Bacterianas, fora do escopo do livro); telemedicina e escala de penalidades do CEM (Etica); contracepcao pos-parto (DMG). Declaradas, nao inventadas.
-- ⚠️ Drive 43d sem sync (F72): a ordem confiavel e a lista verde homologada na s168.
-- 📅 **Inscricao UERJ** fecha 01/10 (Cepuerj, R$ 380). Acao do usuario.
+- 🃏 **Reforja: 6 cards da s170** (#243, #561, #582, #321, #365, #792) + passivo de ~37. 🔴 **#321 e #792 ja tinham sido marcados antes** (s158/s166) e nunca foram reforjados -- so descobrimos porque o `card_version` denunciou.
+- 🔬 **Ledger:** F81 novo. Abertos: F80, F79b, F78, F77, F77b, F76, F71, F72, D5, D11, F63, F65-F69.
+- 💉 Diretrizes a conferir: Calendario Vacinal 2026, GINA 2026, Reanimacao SBP 2026, ATLS 11 (parcial), SINAN 2026.
+- ⚠️ Drive 44d sem sync (F72): a ordem confiavel e a lista verde homologada na s168.
+- 📚 **Frente MFC (Gusso + Duncan)** abre 14/09; rescope da grade pro formato UERJ.
 
 ---
-*Historico: history/INDEX.md * Macro: ESTADO.md * Sessao: history/session_169.md*
+*Historico: history/INDEX.md * Macro: ESTADO.md * Sessao: history/session_170.md * Trocas: history/exchange-log.jsonl*

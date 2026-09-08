@@ -338,3 +338,11 @@ engenharia do `/ai-eng`, que abre janela própria e commita. Sem lock e sem guar
    um eixo é conhecido mas **não verificável por gate** (ex.: o eixo C do F81, contrafactual e
    semântico), ele é **declarado como não-verificado** — nunca convertido numa métrica inventada
    só para o painel ficar verde.
+9. **Memória da auditoria (s171).** Antes de retomar qualquer frente de engenharia com o
+   `/ai-eng`, ler [`docs/MEMORIA-AUDITORIA.md`](docs/MEMORIA-AUDITORIA.md) — índice F1->F81 por
+   status, timeline dos ciclos, mecanismos com seus gatilhos, decisões D53-D68 e as
+   inconsistências G1-G13 medidas. É o **único portador da auditoria que sobrevive ao reinício
+   dos dois agentes**: o ledger `AUDITORIA_MEDHUB.md` é o drill-down e **não é lido pelo boot**
+   (G1). Regra de manutenção herdada: **número sem data é claim que envelhece** — re-afirmar
+   exige re-medir. Numeração de 1-8 é estável (citada por `HANDOFF.md`, `history/session_170.md`
+   e pelo canal do `/ai-eng`): item novo entra no fim, nunca no meio.

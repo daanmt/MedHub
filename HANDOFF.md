@@ -5,8 +5,8 @@
 
 ## > Proximo passo imediato
 
-1. 📄 **Dossie da auditoria** em `C:\Users\daanm\ai-eng\brain\observed-systems\medhub-dossier-2026-09-08.md` (141 linhas, escrito pelo `/ai-eng`) -> **ler inteiro**, copiar para `docs/MEMORIA-AUDITORIA.md`, **ponteiro de 1 linha aqui** + citacao no workflow de engenharia (2 fios mecanicos, nao 1). Pedido dele: divergencia na §3 (status literal dos F) ou §7 (G1-G11) contra o repo -> corrigir na copia de `docs/` e mandar a linha.
-2. 🤝 **Reencontro com o `/ai-eng`:** o endereco do canal muda no reinicio, o **nome reaparece no `ListAgents`**. Quem bootar primeiro manda 1 linha de presenca. **A memoria da troca de 08/09 esta do lado DELE** (22 registros com texto integral dos 2 sentidos, `python tools/exchange_log.py --report 25 --full`); o ledger daqui nasceu ontem com 2. Retomada dele: `brain/interactions/2026-09-08-handoff-canal-medhub-continuidade.md`.
+1. 🧠 **MEMORIA DA AUDITORIA -> [`docs/MEMORIA-AUDITORIA.md`](docs/MEMORIA-AUDITORIA.md)** -- indice F1->F81 por status, ciclos, mecanismos, D53-D68 e as inconsistencias **G1-G13**; ler ANTES de qualquer frente de engenharia (2o fio: `AGENTE.md` §10 item 9). O ledger `AUDITORIA_MEDHUB.md` e o drill-down e **o boot nao le** (G1).
+2. 🔬 **Fila de engenharia s171 (ordem do `/ai-eng`; item 1 FECHADO):** (2) F-ids dos 4 achados de 09-08 + lapides F5/F8 · (3) spec F81 · (4) spec `reforja_marks` · (5) gate de selecao 0->1 · (6) alcancabilidade declarativa · (7) hotfix `db.py:765`. Cada item fecha com destilado <=3k + hash + contagem de testes; **audit e dele**.
 3. 🔁 **Cards:** fila de hoje pelo `day_plan`. 🔴 **Teto 60/dia** (90 SO em regime de divida). O sprint de 120/dia foi **revogado em 07/09** -- ler `fsrs-management-contract`, nao a memoria.
 4. 📚 **Questoes: sprint S17-S20.** Faltam ~610 das 725.
 

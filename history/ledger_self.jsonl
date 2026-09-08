@@ -692,3 +692,7 @@
 {"ts": "2026-09-08T01:36:29+00:00", "event": "resolved", "check": "posicao_ssot", "fingerprint": "01755b5ba8cb", "alvo": "HANDOFF.md"}
 {"ts": "2026-09-08T23:12:40+00:00", "event": "opened", "check": "history_integrity", "fingerprint": "a8f4c73140fc", "alvo": "session_170.md", "payload": {"detalhe": "campo `Ferramenta:` ausente (o swap test depende dele)"}}
 {"ts": "2026-09-08T23:13:08+00:00", "event": "resolved", "check": "history_integrity", "fingerprint": "a8f4c73140fc", "alvo": "session_170.md"}
+{"ts": "2026-09-08T23:38:16+00:00", "event": "resolved", "check": "cobertura_semana", "fingerprint": "c26d5099d6cf", "alvo": "48. Diarreia"}
+{"ts": "2026-09-08T23:38:16+00:00", "event": "resolved", "check": "cobertura_semana", "fingerprint": "3a8384dc7a3f", "alvo": "15. Vitalidade Fetal"}
+{"ts": "2026-09-08T23:38:16+00:00", "event": "resolved", "check": "cobertura_semana", "fingerprint": "164aa827f61f", "alvo": "21. Pneumonias Bacterianas"}
+{"ts": "2026-09-08T23:38:16+00:00", "event": "resolved", "check": "cobertura_semana", "fingerprint": "f90ce40d5164", "alvo": "3. Urologia"}

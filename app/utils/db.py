@@ -791,12 +791,30 @@ def update_flashcard_fields(card_id, fields) -> bool:
 
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT card_version FROM flashcards WHERE id = ?", (card_id,))
+    cursor.execute("SELECT card_version, verso_resposta FROM flashcards WHERE id = ?",
+                   (card_id,))
     row = cursor.fetchone()
     if row is None:
         conn.close()
         return False
     versao_antes = (row[0] if row[0] is not None else 1)
+    verso_antes = row[1]
+
+    # s170 — ratchet de nao-crescimento do verso. Este writer nao roda gate de
+    # atomicidade nenhum (so encoding/template/resposta-embutida), entao sem
+    # isto a guarda instalada no recurate seria contornavel por aqui: gate que
+    # nao cobre o caminho real e o defeito F79/F79b/F81 se repetindo.
+    verso_depois = sets.get('verso_resposta', verso_antes)
+    try:
+        from audit_card_atomicity import checar_ratchet_verso, medir_verso
+    except Exception as e:  # pragma: no cover — degradacao anunciada
+        print(f"[WARN] CARD_GATE: ratchet indisponivel ({e}) — reescrita sem guarda.")
+        checar_ratchet_verso = medir_verso = None
+    if checar_ratchet_verso is not None and 'verso_resposta' in sets:
+        r = checar_ratchet_verso(verso_antes, sets['verso_resposta'])
+        if r:
+            conn.close()
+            raise ValueError(f"ratchet do verso reprovou a reescrita: {r}")
 
     # Nomes de coluna vêm de um allowlist fixo (não de input) — sem injeção.
     assignments = ", ".join(f"{col} = ?" for col in sets)
@@ -808,12 +826,16 @@ def update_flashcard_fields(card_id, fields) -> bool:
     )
     conn.commit()
     conn.close()
+    len_a, fr_a = medir_verso(verso_antes) if medir_verso else (0, 0)
+    len_d, fr_d = medir_verso(verso_depois) if medir_verso else (0, 0)
     _log_reforja(card_id, 'db.update_flashcard_fields', versao_antes,
-                 versao_antes + 1, 'reforja', sorted(sets))
+                 versao_antes + 1, 'reforja', sorted(sets),
+                 (len_a, len_d, fr_a, fr_d))
     return True
 
 
-def _log_reforja(card_id, writer, versao_antes, versao_depois, reason, campos):
+def _log_reforja(card_id, writer, versao_antes, versao_depois, reason, campos,
+                 verso_metrica=(0, 0, 0, 0)):
     """Evento append-only de REESCRITA de card — chamado SÓ pós-commit.
 
     Fecha o buraco do hotfix 2026-09-08: `card_version` subia sem que nada
@@ -825,10 +847,13 @@ def _log_reforja(card_id, writer, versao_antes, versao_depois, reason, campos):
     """
     try:
         import event_log
+        len_a, len_d, fr_a, fr_d = verso_metrica
         event_log.registrar('reforja', {
             'card_id': card_id, 'writer': writer, 'version_antes': versao_antes,
             'version_depois': versao_depois, 'reason': reason,
             'campos': list(campos), 'n_campos': len(campos),
+            'len_verso_antes': len_a, 'len_verso_depois': len_d,
+            'n_frases_antes': fr_a, 'n_frases_depois': fr_d,
         })
     except Exception as e:  # pragma: no cover — nunca propaga
         print(f"[WARN] REFORJA_LOG: evento nao registrado para card {card_id} ({e}).")

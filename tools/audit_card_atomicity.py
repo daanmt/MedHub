@@ -149,6 +149,41 @@ def checar_verso(txt):
     return None
 
 
+def medir_verso(txt):
+    """(len, n_frases) do verso. Telemetria pura -- numeros, nunca o texto."""
+    if not txt:
+        return (0, 0)
+    return (len(txt), len(RE_TERMINADOR.findall(txt)))
+
+
+def checar_ratchet_verso(antes, depois):
+    """Rotulo do CRESCIMENTO do verso numa reescrita, ou None. (s170)
+
+    Complementa `checar_verso`, que e ABSOLUTO e por isso cego ao padrao real:
+    um verso que vai de 100 para 219 chars nao estoura `LIMITE_CHARS` e mesmo
+    assim inchou 2x. A auditoria da s170 mediu 46,8% de defeito nos cards em
+    `card_version=4` (20/47 por verso estourado) -- cada rodada de reforja
+    adicionava frase.
+
+    Ratchet (so encolhe, nunca cresce):
+        len(depois)      <= max(LIMITE_CHARS, len(antes))
+        n_frases(depois) <= n_frases(antes)
+
+    O teto usa `max(...)` de proposito: card que JA nascia acima do limite pode
+    ser reescrito no mesmo tamanho -- o gate mede crescimento, nao pune heranca.
+    """
+    if not depois:
+        return None
+    len_a, frases_a = medir_verso(antes)
+    len_d, frases_d = medir_verso(depois)
+    teto = max(LIMITE_CHARS, len_a)
+    if len_d > teto:
+        return (f"ratchet-verso/crescimento ({len_a} -> {len_d} chars, teto {teto})")
+    if frases_d > frases_a:
+        return (f"ratchet-verso/frase-a-mais ({frases_a} -> {frases_d} frases)")
+    return None
+
+
 def run_checks(db_path=None):
     """Varre os cards ativos. Retorna lista de achados (dicts). Read-only."""
     achados = []

@@ -106,7 +106,8 @@ def validar(edits, conn, permitir_atomicidade=False):
     """
     erros, avisos, plano = [], [], []
     try:
-        from audit_card_atomicity import checar_front, checar_verso
+        from audit_card_atomicity import (checar_front, checar_verso,
+                                          checar_ratchet_verso, medir_verso)
     except Exception as e:                                    # pragma: no cover
         erros.append(f"detector de atomicidade indisponivel ({e}) -- gate 4 impossivel")
         return erros, avisos, plano
@@ -118,12 +119,13 @@ def validar(edits, conn, permitir_atomicidade=False):
             erros.append(f"{rot}: card_id ausente ou nao-inteiro")
             continue
         row = conn.execute(
-            "SELECT frente_pergunta, card_version FROM flashcards WHERE id=?",
+            "SELECT frente_pergunta, card_version, verso_resposta "
+            "FROM flashcards WHERE id=?",
             (cid,)).fetchone()
         if not row:
             erros.append(f"{rot}: card_id inexistente no db")
             continue
-        antiga, ver = row[0], (row[1] or 1)
+        antiga, ver, verso_antigo = row[0], (row[1] or 1), row[2]
 
         if e.get('aposentar'):
             plano.append(("aposentar", cid, {}, ver, antiga))
@@ -157,6 +159,15 @@ def validar(edits, conn, permitir_atomicidade=False):
             if emb:
                 erros.append(f"{rot}: {emb}")
 
+        # gate 5 (s170) -- a reforja nao pode ENGORDAR o verso. Diferente do
+        # gate 4: aquele e absoluto (verso longo), este e RATCHET (verso que
+        # cresce). Entra em `erros` porque o achado que o motivou foi medido
+        # justamente onde o aviso nao segurava: 46,8% de defeito nos v4.
+        if "verso_resposta" in campos:
+            r = checar_ratchet_verso(verso_antigo, campos["verso_resposta"])
+            if r:
+                erros.append(f"{rot}: {r}")
+
         # gate 4 -- a reforja resolveu mesmo? (absorvido do apply_reforja)
         fp, vr = campos.get("frente_pergunta"), campos.get("verso_resposta")
         if isinstance(fp, str) and (p := checar_front(fp)):
@@ -177,20 +188,40 @@ def aplicar(plano, conn):
     # laco produziria evento-fantasma no rollback -- o lote e all-or-nothing, e
     # o log tem que contar a mesma historia que o banco.
     pendentes = []
+    from audit_card_atomicity import medir_verso
     try:
         for tipo, cid, campos, ver, _antiga in plano:
             if tipo == "aposentar":
                 conn.execute("UPDATE flashcards SET needs_qualitative=2 WHERE id=?", (cid,))
                 n_aposentados += 1
-                pendentes.append((cid, ver, ver, "aposentar", []))
+                pendentes.append({"card_id": cid, "writer": "recurate_cards",
+                                  "version_antes": ver, "version_depois": ver,
+                                  "reason": "aposentar", "campos": [], "n_campos": 0,
+                                  "len_verso_antes": 0, "len_verso_depois": 0,
+                                  "n_frases_antes": 0, "n_frases_depois": 0})
                 continue
             sets = [f"{col}=?" for col in campos]
             vals = list(campos.values())
             sets += ["card_version=?", "quality_source=?", "needs_qualitative=?"]
             vals += [ver + 1, 'qualitative', 0, cid]
+            # telemetria do verso ANTES do UPDATE (nota 1 do audit /ai-eng):
+            # o mesmo caminho que mede para bloquear (gate 5) grava os numeros,
+            # e e isso que converte o claim "a reforja engorda o verso" de
+            # [MEDIUM] em medicao ao longo das proximas sessoes.
+            row = conn.execute("SELECT verso_resposta FROM flashcards WHERE id=?",
+                               (cid,)).fetchone()
+            v_antes = row[0] if row else None
+            v_depois = campos.get("verso_resposta", v_antes)
+            len_a, fr_a = medir_verso(v_antes)
+            len_d, fr_d = medir_verso(v_depois)
             conn.execute(f"UPDATE flashcards SET {', '.join(sets)} WHERE id=?", vals)
             n_refeitos += 1
-            pendentes.append((cid, ver, ver + 1, "reforja", sorted(campos)))
+            pendentes.append({"card_id": cid, "writer": "recurate_cards",
+                              "version_antes": ver, "version_depois": ver + 1,
+                              "reason": "reforja", "campos": sorted(campos),
+                              "n_campos": len(campos),
+                              "len_verso_antes": len_a, "len_verso_depois": len_d,
+                              "n_frases_antes": fr_a, "n_frases_depois": fr_d})
         conn.commit()
     except Exception:
         conn.rollback()
@@ -211,12 +242,8 @@ def _flush_eventos(pendentes):
         return
     try:
         import event_log
-        for cid, antes, depois, reason, campos in pendentes:
-            event_log.registrar('reforja', {
-                'card_id': cid, 'writer': 'recurate_cards',
-                'version_antes': antes, 'version_depois': depois,
-                'reason': reason, 'campos': list(campos), 'n_campos': len(campos),
-            })
+        for payload in pendentes:
+            event_log.registrar('reforja', payload)
     except Exception as e:  # pragma: no cover — nunca propaga
         print(f"[WARN] REFORJA_LOG: {len(pendentes)} evento(s) nao registrado(s) ({e}).")
 

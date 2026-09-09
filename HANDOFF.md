@@ -1,14 +1,16 @@
 # HANDOFF.md -- ESTADO OPERACIONAL CURTO
-*Atualizado: 2026-09-08 -- S170 (Claude Code / Opus 5): 50 cards (58%) + 20q de Etica (100%), contrato `/revisar` v1.3 (PREPARAR REVOGADO), auditoria do banco em 3 frentes com o `/ai-eng`, 9 commits, 395 testes*
+*Atualizado: 2026-09-08 -- S171 (Claude Code / Opus 5): **Simulado 8 = 78/95 (82,1%)**, maior do ciclo; 17 erros triados 85->45 cards; 4 hotfixes de engenharia com o `/ai-eng`; 6o principio no contrato de flashcard; suite 395->413*
 
-> 🔴 **ESTA SESSAO REINICIOU COM CONTEXTO LIMPO.** O `/ai-eng` tambem. Nada da conversa de 08/09 sobrevive na cabeca de nenhum dos dois -- so o que esta escrito aqui, no `history/session_170.md` e nos ledgers. **Ler `history/session_170.md` inteiro antes de agir**: ele tem os padroes de erro, os achados e a fila de trabalho acordada.
+> 🔴 **A FILA DE ENGENHARIA ESTA CONGELADA** por decisao do operador -- retoma em sessao dedicada, contexto limpo dos dois lados. Esta sessao e de **ESTUDO**: inserir o lote do Simulado 8, drillar os cards e colher o feedback deles para reajustar o contrato. **Ler `history/session_171.md` inteiro antes de agir.**
 
 ## > Proximo passo imediato
 
-1. 🧠 **MEMORIA DA AUDITORIA -> [`docs/MEMORIA-AUDITORIA.md`](docs/MEMORIA-AUDITORIA.md)** -- indice F1->F81 por status, ciclos, mecanismos, D53-D68 e as inconsistencias **G1-G13**; ler ANTES de qualquer frente de engenharia (2o fio: `AGENTE.md` §10 item 9). O ledger `AUDITORIA_MEDHUB.md` e o drill-down e **o boot nao le** (G1).
-2. ❄️ **Fila de engenharia CONGELADA** ate sessao dedicada com contexto limpo (decisao do operador, 08/09; `/ai-eng` encerrou em `758b7fd`). Itens 3->7: spec **F81** (com campo `classe` no contador de gate-miss) · fila de reforja como ESTADO (`reforja_marks`) · gate de selecao 0->1 · checks de alcancabilidade + 3 riders · hotfix **F85** (`db.py:765`). **D71:** implement E audit sao daqui (loop vibeflow); o `/ai-eng` orquestra; silencio dele = GO. O que ficou decidido sai do **ledger**, nunca da memoria.
-3. 🔁 **Cards:** fila de hoje pelo `day_plan`. 🔴 **Teto 60/dia** (90 SO em regime de divida). O sprint de 120/dia foi **revogado em 07/09** -- ler `fsrs-management-contract`, nao a memoria.
-4. 📚 **Simulado 8 (ENARE/ENAMED 2025) ANALISADO: 78/95 = 82,1%** -- maior do ciclo, contra media historica de 60,8%. 17 erros com gabarito, marcacao e comentario oficial coletados; semente em `%TEMP%/claude/.../s8/seed.json`. Cunhagem dos cards em curso. **Sprint S17-S20 segue:** faltam ~610 das 725 questoes.
+1. 🧠 **MEMORIA DA AUDITORIA -> [`docs/MEMORIA-AUDITORIA.md`](docs/MEMORIA-AUDITORIA.md)** -- indice F1->F86 por status, ciclos, mecanismos, D53-D68, inconsistencias G1-G13; ler ANTES de qualquer frente de engenharia (2o fio: `AGENTE.md` §10 item 9).
+2. 🃏 **INSERIR O LOTE DO SIMULADO 8:** `python tools/insert_questao.py --errors-file core/simulados/_s8_erros_batch.json` -- 17 erros + **45 cards**, transacao unica com rollback total. Triagem de 85->45 explicada em `session_171.md` §5; os 85 candidatos ficam em `_s8_candidatos_full.json` **para o corte ser derrubado se ele quiser**. Seed com gabarito/marcacao/comentario: `_s8_seed.json`.
+3. 🎯 **COLHER O FEEDBACK DELE SOBRE OS CARDS durante o drill e reajustar o `estilo-flashcard.md`** -- pedido explicito no fechamento da s171. E o **primeiro teste em producao do 6o principio** (alternativas erradas = nos): se os cards de no vierem periferico demais ou o volume incomodar, o principio precisa de limite, e o limite vira texto no contrato.
+4. 🎥 **Duas aulonas do Estrategia**, transcricoes vem por ele: **Obstetricia** (avaliou como excelente) e **Pediatria parte 2** (assiste amanha).
+5. ❄️ **Engenharia CONGELADA** ate sessao dedicada (`/ai-eng` encerrou em `758b7fd`). Itens 3->7: spec **F81** (campo `classe` no contador) · `reforja_marks` · gate de selecao 0->1 · alcancabilidade + 3 riders · hotfix **F85**. **D71:** implement E audit daqui (loop vibeflow); ele orquestra; silencio = GO; o decidido sai do **ledger**.
+6. 🔁 **Cards:** fila de hoje pelo `day_plan`. 🔴 **Teto 60/dia** (90 SO em regime de divida).
 
 ## Fila de engenharia acordada com o `/ai-eng` (GO dado, nao executada)
 Protocolo em `AGENTE.md §10.6-8`: destilado <=3k + remedio por achado -> ele responde GO/NO-GO/ALTERA. **Implement e daqui, audit e dele.**
@@ -19,12 +21,14 @@ Protocolo em `AGENTE.md §10.6-8`: destilado <=3k + remedio por achado -> ele re
 - **Pendente do operador:** apagao do `/graphify` (**nao aprovado** -- fica de pe; sequencia fixture->GO->apagao parada no passo 1) · contexto obrigatorio em card novo (49% do pool nasce sem; bloquear congela metade da introducao).
 
 ## Estado por frente
+
 - **Norte:** 🎯 **UERJ/MFC 01/11/2026** (54d). ENAMED 13/09 (5d) termometro.
-- **Volume & Metas:** 6936 / 10400 (perf. ~79.0%). Ritmo-alvo ~64.1q/dia (54d p/ UERJ/MFC (prova 01/11)).
+- **Volume & Metas:** 6936 / 10400 (perf. ~79.0%). Hoje: 20. Ritmo-alvo ~64.1q/dia (54d p/ UERJ/MFC (prova 01/11)).
 - **FSRS:** divida 0 atrasados + 13 p/ hoje -- pool 657 nunca introduzidos (entram <=60/dia).
 - **Conteudo:** 136 resumos em resumos/. [derivado: glob]
 - **Erros & Cards:** 970 erros registrados · 1353 cards ativos · 2 needs_qualitative na fila · taxonomia 275 temas. [derivado: db]
 - **Posicao:** conteudo S17 (nominal S24, atraso 7 sem) [derivado: preparacao_estado]
+- 🔴 **VOLUME PENDENTE:** as **100 questoes do Simulado 8** ainda **nao foram registradas** em `sessoes_bulk` -- o numero acima nao as inclui. Registrar pelo fluxo dele (planilha -> `/importar-planilha`), **nunca digitando direto** (risco de dupla contagem, F37). Resultado a lancar: **78 certas / 17 erradas / 4 anuladas / 1 nao computada**.
 - **Datas:** ENAMED 13/09 · fim da grade 25/10 · **UERJ 01/11**. Inscricao UERJ fecha **01/10** (acao do usuario).
 
 ## Ultima sessao -- s170 (2026-09-08)

@@ -1,0 +1,107 @@
+{
+  "_nota": "Semente do Simulado 8 (ENARE/ENAMED 2025). O enunciado integral de cada questao esta em qNNN.txt no mesmo diretorio. Aqui vai o que NAO esta no PDF: gabarito, a alternativa que o usuario marcou, e o ponto de ensino do comentario oficial.",
+  "2": {
+    "area": "Infectologia", "tema": "HIV/AIDS",
+    "correta": "E - manter a TARV e acrescentar corticoide ate o final da investigacao, devido a reacao imune",
+    "marcada": "B - proceder a biopsia de linfonodo por provavel diagnostico de linfoma",
+    "comentario": "Sindrome inflamatoria de reconstituicao imune (SIRI/IRIS) associada a TB, 1 mes apos inicio da TARV com CD4 45. Conduta: MANTER a TARV (suspender permite progressao do HIV), investigar (biopsia + escarro + TRM-TB + cultura), iniciar tratamento de TB apos confirmacao, corticoide nos casos moderados a graves. O comentario ADMITE que a alternativa E e vaga quanto a investigacao da TB, que deveria ser prioridade, mas ainda e a melhor. Linfoma nao e a hipotese principal: linfadenomegalia COM FISTULIZACAO, centro necrotico, infiltrado reticulonodular e espessamento de ileo distal apontam TB. PPD 0 mm com CD4 45 e ANERGIA, nao ausencia de doenca."
+  },
+  "9": {
+    "area": "Clínica Médica", "tema": "Arritmias",
+    "correta": "D - varfarina, com dose de acordo com o INR",
+    "marcada": "A - rivaroxabana 15 mg, uma vez ao dia",
+    "comentario": "FA em estenose mitral moderada-grave = FA VALVAR: anticoagulacao INDEPENDE do escore CHA2DS2-VA, e DOAC e CONTRAINDICADO. Varfarina com alvo INR 2-3. As excecoes em que SO varfarina serve: estenose mitral moderada-grave, protese cardiaca metalica, gestacao, ClCr < 15, trombofilias. O ClCr de 46 no enunciado e ISCA (sugere dose renal de DOAC). Antiagregante nao previne cardioembolia na FA e aumenta sangramento. Metoprolol e controle de frequencia, nao anticoagulacao."
+  },
+  "11": {
+    "area": "Clínica Médica", "tema": "Dermatologia",
+    "correta": "E - sindrome de hipersensibilidade induzida por drogas (DRESS)",
+    "marcada": "C - sindrome de Stevens-Johnson (SSJ)",
+    "comentario": "DRESS: 2 a 6 semanas apos inicio da droga (principais: sulfonas, antiepilepticos aromaticos, ALOPURINOL). Febre (85%) e rash (75%); rash morbiliforme que se torna EDEMATOSO; linfonodos frequentemente aumentados; figado e o orgao visceral mais afetado; eosinofilia e linfocitose atipica. SSJ: eritema fosco -> necrose e DESCOLAMENTO da epiderme, Nikolsky positivo, lesoes em alvo atipicas de 2 zonas, acometimento MUCOSO em 90% dos casos (>=2 mucosas). O caso tem edema de face/maos/pes, adenomegalia generalizada, eosinofilia e transaminases elevadas - e nao tem mucosa nem descolamento."
+  },
+  "32": {
+    "area": "Cirurgia", "tema": "Cirurgia do Aparelho Digestivo",
+    "correta": "D - hiperplasia nodular focal",
+    "marcada": "C - hemangioma hepatico",
+    "comentario": "HNF na TC: realce marcadamente HIPERVASCULAR na fase arterial + CICATRIZ CENTRAL com realce tardio. E a 2a lesao hepatica benigna mais comum; a cicatriz central e o marco radiologico. HEMANGIOMA: realce progressivo, PERIFERICO, CENTRIPETO, DESCONTINUO e GLOBULIFORME - essas sao as palavras-chave. Adenoma: nao tem cicatriz central, tem gordura intralesional, e nao realca na fase hepatobiliar (a HNF realca - e assim que se diferencia com contraste hepatoespecifico). CHC: exige hepatopatia cronica/HBV e faz hiperrealce arterial com WASHOUT rapido."
+  },
+  "33": {
+    "area": "Cirurgia", "tema": "Coloproctologia",
+    "correta": "A - analgesicos topico e oral, e banho de assento",
+    "marcada": "B - excisao do trombo com anestesia local",
+    "comentario": "Trombose hemorroidaria EXTERNA (nodulo violaceo distal a linha denteada). A excisao do MAMILO trombosado (nao do trombo) esta indicada principalmente nas primeiras 48 HORAS. Acima de 3 DIAS de evolucao a reabsorcao do coagulo ja esta ocorrendo e o paciente ja melhora espontaneamente -> conduta CONSERVADORA (banho de assento morno, anti-inflamatorio, dieta rica em fibras, analgesicos), com remissao em 7 a 10 dias. O caso tem 4 dias. ATENCAO DE AUTORIA: o comentario diz 48h; o ASCRS trabalha com ate 72h - o card deve carregar a janela como 48-72h ANCORADA NO MECANISMO (apos 3 dias o coagulo ja esta reabsorvendo), nunca uma cifra unica. Ligadura elastica e escleroterapia sao para hemorroida INTERNA."
+  },
+  "36": {
+    "area": "Cirurgia", "tema": "Abdome Agudo Inflamatório - Colecistite e Colangite Aguda",
+    "correta": "A - hidratacao e medidas de suporte, somente",
+    "marcada": "B - papilotomia endoscopica de urgencia",
+    "status": "banca-divergente",
+    "comentario": "🔴 CASO ESPECIAL - LER INTEIRO. O comentario do curso DISCORDA da banca ('GABARITO EMED: B'). Auditoria de evidencia (evidence-governance) resolveu a favor da BANCA: nao ha drift banca x evidencia; quem diverge e o curso. Caso e GRAU I por Toquio 2018 - os 3 criterios informados sao negativos por margem estreita e deliberada: 38 C (nao >=39), BT 4,6 (nao >=5), 45 anos (nao >=75); leucograma ausente e inocuo (mesmo concedendo leucocitose seria 1 de 5, e Grau II exige 2). TG18 verbatim (Miura 2018, PMID 28941329): 'For mild acute cholangitis, in most cases initial treatment including antibiotics is sufficient, and most patients do not require biliary drainage. However, biliary drainage should be considered if a patient does not respond to initial treatment.' A serie que VALIDOU o TG13/18 (Kiriyama 2018, PMID 29032610) mostrou beneficio de mortalidade da drenagem precoce APENAS no Grau II - zero no Grau I. KILL SHOT LEXICAL: 'urgente' no TG18 e vocabulario reservado ao GRAU III; alternativa que oferece 'papilotomia de urgencia' num Grau I esta errada sob qualquer leitura. EIXO DO CARD, SEM HEDGE: o grau comanda o TIMING, nunca o SE. Grau I -> clinico + reavaliar em 24h; Grau II -> drenagem PRECOCE; Grau III -> drenagem URGENTE apos estabilizacao. CAUSA-RAIZ ja corrigida no repo: o resumo do usuario se contradizia e ensinava a resposta do curso."
+  },
+  "38": {
+    "area": "Cirurgia", "tema": "Abdome Agudo Obstrutivo",
+    "correta": "A - sindrome de Ogilvie e tratamento com neostigmina",
+    "marcada": "B - colite pseudomembranosa e tratamento com metronidazol",
+    "comentario": "Sindrome de Ogilvie (pseudo-obstrucao colonica aguda): distensao aguda do colon com sinais de obstrucao SEM causa fisica. Acomete hospitalizados/institucionalizados com doenca grave, desequilibrio metabolico ou farmacos. RX: colon dilatado do ceco a flexura esplenica, HAUSTRACOES NORMAIS. Diagnostico de exclusao - o essencial e descartar obstrucao mecanica. COLITE PSEUDOMEMBRANOSA exige DIARREIA AQUOSA + febre + dor; o caso NAO tem diarreia. ILEO PARALITICO e adinamia DIFUSA (delgado + colon), nao dilatacao restrita a ceco/ascendente. ATENCAO DE AUTORIA: o comentario condiciona a neostigmina a CECO > 12 cm. NAO cunhar 'conduta inicial da Ogilvie = neostigmina' - o card deve dizer que a neostigmina e o tratamento FARMACOLOGICO ESPECIFICO da Ogilvie, com o gatilho do calibre."
+  },
+  "45": {
+    "area": "Pediatria", "tema": "Neonatologia",
+    "correta": "C - RN a termo, ictericia desde 12 horas de vida, BT 2 mg/dL, BI 0,8 mg/dL",
+    "marcada": "E - RN prematuro, RN O+ e mae A+, icterico no 12o dia de vida",
+    "comentario": "Buscam-se DOIS criterios de ictericia patologica. Em C: (1) inicio PRECOCE, antes de 24h de vida; (2) hiperbilirrubinemia DIRETA - BD = BT - BI = 2,0 - 0,8 = 1,2 mg/dL, e BD acima de 1 mg/dL e criterio. Criterios de patologica: inicio <24h; aumento >0,2 mg/dL/hora; persistencia >7 dias no termo e >14 no pre-termo; ultrapassar limites fisiologicos de BI; BD >1 mg/dL; sinais de doenca sistemica. NA ALTERNATIVA E O ERRO E DE DIRECAO: incompatibilidade ABO exige mae O com RN A ou B. Mae A+ com RN O+ NAO gera incompatibilidade. Alem disso, ictericia no 12o dia so e criterio de prolongada no RN A TERMO (no pre-termo o limite e 14 dias)."
+  },
+  "49": {
+    "area": "Preventiva", "tema": "Saúde da Criança e do Adolescente",
+    "correta": "A - devera ser feita, pois existem fatos justificando a SUSPEITA de violencia",
+    "marcada": "E - podera ocorrer caso a adolescente manifeste o desejo de que haja denuncia",
+    "comentario": "Notificacao de violencia contra crianca/adolescente e feita com a MERA SUSPEITA. Nao depende de: prova/confirmacao, concordancia dos envolvidos, desejo da vitima, ou de quem detem a guarda legal. Deve-se AVISAR a pessoa que se esta notificando, mas nao pedir autorizacao. Suspeitados maus-tratos, a crianca deve ser internada para a propria protecao e o Conselho Tutelar ou a Vara da Infancia notificados. O caso configura violencia PSICOLOGICA (desvalorizacao dos genitores, culpabilizacao da adolescente pelo sofrimento da avo)."
+  },
+  "50": {
+    "area": "Pediatria", "tema": "Imunizações",
+    "correta": "C - uma dose de HB, uma de VFA, uma de triplice viral, uma de HPV e uma de meningo ACWY",
+    "marcada": "D - uma dose de HB, uma de DTP, duas de triplice viral, duas de HPV e uma de meningo ACWY",
+    "status": "anulada",
+    "comentario": "🔴 O COMENTARIO OFICIAL ABRE DIZENDO: 'Essa questao nao tem uma alternativa correta.' O gabarito C inclui meningococica ACWY, que e indicada APENAS dos 11 aos 14 anos - o adolescente tem 16. O conjunto correto seria: 1 HB + 1 VFA + 1 triplice viral + 1 HPV, SEM ACWY, e nenhuma alternativa oferece isso. NAO CUNHAR CARD QUE ENSINE 'a resposta e C'. O card deve ensinar o CONTEUDO: calendario do adolescente = 2 proprias (HPV 9-14, resgate ate 19, DOSE UNICA; ACWY 11-14, dose unica), 1 'chiclete' (dT, reforco de 10 em 10 anos) e 3 que 'olham para tras' (febre amarela, hepatite B, triplice viral). Regras do caso: HB tem 2 de 3 -> falta 1. VFA recebida antes dos 4 anos -> precisa de mais uma. Triplice viral: ate 29 anos sao 2 doses -> falta 1. PEGADINHA CENTRAL: 2 DTP na infancia + 1 dT ha 2 meses = TRES doses de componente tetanico = esquema basico COMPLETO, proxima em 10 anos. DTP so pode ate os 7 anos. Datar o card como PNI 2025."
+  },
+  "53": {
+    "area": "Pediatria", "tema": "Ortopedia Pediátrica",
+    "correta": "C - doenca de Osgood-Schlatter",
+    "marcada": "B - sindrome da dor patelofemoral",
+    "comentario": "Osgood-Schlatter: osteocondrite/apofisite da fise da TUBEROSIDADE ANTERIOR DA TIBIA (TAT), que ainda nao se fundiu. Meninos na pre-adolescencia, atividades de SALTO, chute ou explosao do quadriceps. Dor + edema sobre a insercao DISTAL do tendao patelar + PROEMINENCIA FIRME do tuberculo tibial. Autolimitada, resolve com a fusao da TAT. DOR PATELOFEMORAL: dor na patela, SEM edema ou inchaco, especialmente sem achado focal na TAT. SINDING-LARSEN-JOHANSSON: mesmo mecanismo, mas na insercao PROXIMAL do tendao patelar (polo inferior da patela). LEGG-CALVE-PERTHES: afeta o QUADRIL, nao o joelho (dor referida). LCA: exige trauma, edema imediato, e apos 2 meses daria instabilidade."
+  },
+  "54": {
+    "area": "Preventiva", "tema": "Vigilância Epidemiológica",
+    "correta": "A - elimina ovos viaveis a partir de 5 semanas apos a infeccao, por 6 a 10 anos, podendo chegar a mais de 20 anos",
+    "marcada": "D - elimina ovos viaveis a partir de 1 semana, por 6 meses a 1 ano",
+    "comentario": "Periodo de transmissibilidade da esquistossomose (Guia de Vigilancia em Saude/MS): a pessoa infectada comeca a eliminar ovos viaveis cerca de 5 SEMANAS apos a infeccao e a eliminacao persiste por 6 a 10 ANOS, podendo passar de 20 anos. O proprio comentario reconhece a questao como 'muito especifica e de dificuldade elevada'. Distratores derrubaveis por MECANISMO, nao so por decoreba: o caramujo se infecta pelo MIRACIDIO e elimina CERCARIA (a alternativa B inverte as formas); o caramujo vive ~1 ano, nao 3; hospedeiros reservatorios POR DEFINICAO eliminam ovos. Dado numerico solto - card dedicado, conforme feedback_epidemiologia_dados_cristalizar."
+  },
+  "55": {
+    "area": "Preventiva", "tema": "IST",
+    "correta": "C - ceftriaxona 500 mg IM dose unica + azitromicina 500 mg, 4 comprimidos VO dose unica",
+    "marcada": "B - ceftriaxona 1 g intramuscular, dose unica",
+    "comentario": "Uretrite gonococica: o tratamento e SEMPRE DUPLO - ceftriaxona 500 mg IM dose unica + azitromicina 1 g VO dose unica. A azitromicina cobre Chlamydia trachomatis, que frequentemente coexiste sem ser diagnosticada, E reduz o risco de selecao de cepas resistentes de N. gonorrhoeae. Ceftriaxona ISOLADA (a marcada) deixa a clamidia descoberta - e 1 g nao e a dose. Ciprofloxacino esta fora por resistencia. Doxiciclina e azitromicina em monoterapia sao para uretrite NAO gonococica. ATENCAO DE AUTORIA: o proprio comentario admite que 'a banca informa que a dose de azitromicina seria de 2 g, e nao de 1 g; no entanto, essa ainda e a melhor alternativa'. O card ensina 500 mg + 1 g; o 2 g do enunciado e escorregao da banca e nao entra no card como norma."
+  },
+  "60": {
+    "area": "Pediatria", "tema": "Hematologia Pediátrica",
+    "correta": "B - leucemia",
+    "marcada": "A - anemia falciforme",
+    "comentario": "LLA (leucemia linfoblastica aguda) - a leucemia mais comum da infancia e o cancer mais comum na faixa pediatrica. A tetrade: anemia (palidez + taquicardia + sopro funcional), plaquetopenia (peteqias), hepatoesplenomegalia e DOR OSSEA (infiltracao do periosteo) - mais emagrecimento e febre pelo metabolismo aumentado. Diagnostico por mielograma/biopsia de medula. ANEMIA FALCIFORME: manifesta-se entre 3 e 6 MESES de idade (quando a HbF cai), o que e incompativel com um quadro agudo aos 10 anos; alem disso plaquetopenia/peteqias nao sao achado da falciforme. Endocardite pode mimetizar sopro/peteqias/esplenomegalia mas nao explica a dor ossea metafisaria."
+  },
+  "75": {
+    "area": "GO", "tema": "Infecções Congênitas",
+    "correta": "A - realizacao do doppler da arteria cerebral media",
+    "marcada": "E - realizacao do teste de Coombs DIRETO no sangue materno",
+    "comentario": "Parvovirus B19 na gestacao: a principal complicacao fetal e a ANEMIA FETAL (citotoxicidade na eritropoiese), que leva a hidropisia fetal NAO IMUNE. O metodo que identifica indiretamente a anemia fetal e o PICO DE VELOCIDADE SISTOLICA DA ARTERIA CEREBRAL MEDIA (PVS-ACM) por dopplervelocimetria, seriada semanal a partir do 2o trimestre. PVS-ACM > 1,5 MoM -> cordocentese para confirmar e transfusao intrauterina. ERRO DE DIRECAO NA MARCADA: Coombs INDIRETO e feito na MAE (pesquisa anticorpos antieritrocitarios maternos, identifica aloimunizacao = hidropisia IMUNE); Coombs DIRETO e feito no RECEM-NASCIDO de mae aloimunizada. A alternativa marcada pede Coombs DIRETO no sangue MATERNO - errada duas vezes: exame errado e sitio errado. E nenhum dos dois avalia anemia NAO imune."
+  },
+  "77": {
+    "area": "GO", "tema": "Líquido Amniótico",
+    "correta": "B - displasia tanatoforica no feto",
+    "marcada": "D - restricao de crescimento fetal",
+    "comentario": "Maior bolsao vertical de 12 cm = POLIDRAMNIO (corte: maior bolsao > 8 cm, ou ILA >= 25 cm). Mecanismos de polidramnio: (a) AUMENTO da producao de urina fetal - diabetes materno (25% dos casos), insuficiencia cardiaca fetal por anemia (parvovirus B19, doenca hemolitica) ou arritmia; (b) REDUCAO da absorcao/degluticao - atresia de esofago e duodeno, anencefalia, mielomeningocele, hernia diafragmatica e DISPLASIAS ESQUELETICAS com comprometimento toracico (displasia tanatoforica, osteogenese imperfeita, acondrogenese). As OUTRAS QUATRO alternativas sao todas causas de OLIGOAMNIO: insuficiencia uteroplacentaria, agenesia renal bilateral (anidramnio/Potter), restricao de crescimento fetal e pos-datismo - as tres ultimas por reducao do fluxo renal na redistribuicao da circulacao fetal. Erro do usuario e de DIRECAO: leu 12 cm como liquido de menos."
+  },
+  "98": {
+    "area": "Preventiva", "tema": "Tuberculose",
+    "correta": "E - pessoas vivendo em situacao de rua",
+    "marcada": "D - pessoas privadas de liberdade",
+    "comentario": "Manual de Recomendacoes para o Controle da TB no Brasil (2a ed., atualizado em 29/05/2024) - risco de adoecimento comparado a populacao geral: pessoas em SITUACAO DE RUA 56 vezes; pessoas vivendo com HIV 28 vezes; pessoas privadas de liberdade 28 vezes; indigenas 3 vezes. Profissionais de saude tem exposicao ocupacional mas nao entram no topo. Dado numerico com ordem - card dedicado com a ORDEM e a ORDEM DE GRANDEZA, nao um multiplicador unico (os numeros oscilam por edicao do boletim). Selo de fonte e ano obrigatorio: MS, Manual de TB 2a ed. 2024."
+  }
+}

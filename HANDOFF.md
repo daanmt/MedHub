@@ -39,7 +39,7 @@ Protocolo em `AGENTE.md §10.6-8`: destilado <=3k + remedio por achado -> ele re
 
 ## Pendencias/observacoes ativas
 - 🃏 **Reforja: 6 cards da s170** (#243, #561, #582, #321, #365, #792) + passivo de ~37. 🔴 **#321 e #792 ja tinham sido marcados antes** (s158/s166) e nunca foram reforjados -- so descobrimos porque o `card_version` denunciou.
-- 🔬 **Ledger:** F81 novo. Abertos: F80, F79b, F78, F77, F77b, F76, F71, F72, D5, D11, F63, F65-F69.
+- 🔬 **Ledger (s171): F82-F85 numerados** (`AUDITORIA_MEDHUB.md §6o`) -- F82/F83/F84 nasceram RESOLVIDOS, **F85** (justificativa orfa `db.py:765`) fecha no item (7). Lapides de F5/F8 escritas. **Abertos (20 F + 2 D):** F85, F81, F80, F79b, F78, F77b, F77, F76, F72, F71, F42, F36, F35 · F63-F69 · D5, D11. 🔴 A lista viaja INTEIRA agora -- F35/F36/F42/F64 faltavam (metade do G4).
 - 💉 Diretrizes a conferir: Calendario Vacinal 2026, GINA 2026, Reanimacao SBP 2026, ATLS 11 (parcial), SINAN 2026.
 - ⚠️ Drive 44d sem sync (F72): a ordem confiavel e a lista verde homologada na s168.
 - 📚 **Frente MFC (Gusso + Duncan)** abre 14/09; rescope da grade pro formato UERJ.

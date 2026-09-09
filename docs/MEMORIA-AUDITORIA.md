@@ -23,7 +23,7 @@
 
 | fato | valor | fonte |
 |---|---|---|
-| ids no ledger | **83** (F1–F81 + F77b + F79b) | `AUDITORIA_MEDHUB.md` 1478 ln / 179 KB (grep `F[0-9]+[a-z]?`) |
+| ids no ledger | **87** (F1–F85 + F77b + F79b) | `AUDITORIA_MEDHUB.md` 1518 ln (**F82-F85 numerados na s171**, `§6o`) |
 | status escrito | 38 RESOLVIDO · **6+1 PARCIAL** (F7, F37-F41 + F57) · 12 ABERTO no cabeçalho · 7 ABERTO só em ESTADO/HANDOFF (F63-F69) · 2 ANTI-SCOPE (F55, F62) · 1 RECONCILIADO (F21) · **8 SEM STATUS** | §3 (remedido 09-08 por medhub-18) |
 | commits desde 2026-06-01 | **262** · **129** `history/session_*.md` · s170 **SELADA** (9 commits, `session_170.md` presente, pushada até `a9423d7`) | `git log`, medido 09-08 pós-selo |
 | suite | 317 (s160) → 358 (descolar 09-01) → 376 (s170 abertura) → **395** (após c4ce1db · d2026a1 · 06634b6, 09-08) | **re-medido no medhub 09-08: `395 passed em 16,68s`** |
@@ -58,20 +58,18 @@
 
 | status | ids |
 |---|---|
-| **RESOLVIDO** (38) | F1 · F10–F15 · F22–F26 · F29–F31 · F33 · F34 · F43–F54 · F56 · F58–F61 · F70 · F73 · F74 · F79 |
+| **RESOLVIDO** (41) | F1 · F10–F15 · F22–F26 · F29–F31 · F33 · F34 · F43–F54 · F56 · F58–F61 · F70 · F73 · F74 · F79 · **F82 · F83 · F84** (s171) |
 | **PARCIAL / causa-raiz** (6+1) | **F7 (heurística de competidor: WARN experimental, curadoria pendente — `:110-124`)** · F37 (dado histórico inflado: decisão do dono) · F38 (literal: `RESOLVIDO (s159) -- guarda entregue; 1 instância histórica a recuperar`) · F39 (detector ok; reforja 8/358) · F40/F41 (fila de reforja) · F57 (`RESOLVIDO-parcial`: 5 memórias nomeadas; 72 restantes) |
-| **ABERTO — cabeçalho** (12) | F35 · F36 (ALTA) · F42 · F71 · F72 · F76 · F77 · F77b · F78 · F79b · F80 · F81 |
+| **ABERTO — cabeçalho** (13) | F35 · F36 (ALTA) · F42 · F71 · F72 · F76 · F77 · F77b · F78 · F79b · F80 · F81 · **F85** (justificativa órfã, fecha no item 7) |
 | **ABERTO — só ESTADO/HANDOFF** (7) | F63 (ALTA) · F64 · F65 (ALTA) · F66 (ALTA) · F67 · F68 · F69 — sem marcador no ledger |
 | **ANTI-SCOPE** (2) | F55 (pre-commit `--staged` valida FS, não índice) · F62 (rotação do próprio ledger = política do dono) |
 | **RECONCILIADO** (1) | F21 |
 | **SEM STATUS ESCRITO** (8) | F16 · F17 · F18 · F19 · F20 · F27 · F28 · F32 |
 | ~~SEM STATUS~~ -> **status escrito, fora do heading** (9) | 🔧 **correção 09-08:** F1-F9 têm status explícito no bloco `**Status F1-F9:**` (`AUDITORIA_MEDHUB.md:110-124`), que a leitura por heading não alcança: F1/F3/F4/F5/F6/F8/F9 = **ENTREGUE (p1..p5)** · F2 = **NÃO REPRODUZIDO (medido, p5) / ABERTO-DORMENTE** · F7 = **PARCIAL**. A nota original ("F3/F4/F6/F9 entregues por contrato, sem marcador") subestimava: o marcador existe, só não está no `###` |
 | **contraditório** (1) | F75: cabeçalho "9 resolvidos/3 abertos", tabela = 10/2 (D5, D11 abertos) |
-| **obsoletos sem lápide** | F5 e F8: objeto (PREPARAR / Invariante D) revogado na v1.3 (s170) — lápide pendente. **Precisão 09-08:** ambos foram **ENTREGUES** (F5 p5, F8 p3) e só depois tiveram o objeto revogado — a lápide é sobre mecanismo entregue e morto, não sobre achado nunca classificado |
+| ~~obsoletos sem lápide~~ | ⚰️ **FECHADO na s171.** F5 e F8 receberam lápide na redação acordada: *mecanismo **ENTREGUE** (p5 / p3) -> **objeto revogado** em `revisao-calibrada-contract.md` Cláusula 11 / `:74` (v1.3, s170)*. Corpo preservado como evidência histórica, não norma ativa |
 
-Achados de hoje sem F-id (entram no ledger na próxima passagem, §10.6 pela metade): reforja-sem-rastro
-(hotfix c4ce1db) · ratchet do verso (d2026a1) · parâmetro morto `permitir_atomicidade` em `validar()` (DEFERIDO) ·
-justificativa órfã `db.py:765` (gate `card_checks` fail-open; DEFERIDO) · claims envelhecidos `db.py:9`, `fsrs_queue.py:9`.
+⚰️ ~~Achados de hoje sem F-id~~ -> **NUMERADOS na s171** (`AUDITORIA_MEDHUB.md §6o`), fechando o G2: **F82** reforja-sem-rastro (`c4ce1db`, RESOLVIDO) · **F83** ratchet do verso (`d2026a1`, RESOLVIDO; sub-achado `permitir_atomicidade` **DEFERIDO** dentro dele) · **F84** fail-open dentro do próprio fix (`06634b6`, RESOLVIDO) · **F85** justificativa órfã `db.py:765` (**ABERTO**, fecha no item 7). Claims envelhecidos `db.py:9` e `fsrs_queue.py:9` são **Classe 2** dentro do F85 — documentação, sem teste. `get_topic_context.py:19` é lápide em pretérito: **não tocar**.
 
 ## 4. Mecanismos construídos (o que existe e quem o dispara)
 
@@ -117,14 +115,14 @@ Do lado medhub (s170): §10.6 protocolo de achado com o /ai-eng (destilado ≤3k
 | # | achado | fonte |
 |---|---|---|
 | G1 | ledger (179 KB) fora do boot; 1 menção em AGENTE §10.1, 0 em HANDOFF/ESTADO; cresce sem rotação (F62 anti-scope) | `AGENTE.md:45-54` |
-| G2 | **METADE FECHADA (09-08).** Citação pendurada **resolvida** em `d9ecbbe`: o trace doc agora cita `.vibeflow/audits/s170-reforja-reincidencia-audit.md`, que **existe** (4 artefatos `s170-*` no repo). **Permanece:** `c4ce1db` sem F-id no ledger | `.vibeflow/hotfixes/2026-09-08-*.md:9`; `ls .vibeflow/audits/s170-*` |
+| G2 | ⚰️ **FECHADO (s171).** Citação pendurada resolvida em `d9ecbbe`; **F-ids escritos**: `c4ce1db`=**F82**, `d2026a1`=**F83**, `06634b6`=**F84**, `db.py:765`=**F85** | `AUDITORIA_MEDHUB.md §6o` |
 | G3 | F75 cabeçalho 9/3 × tabela 10/2 (consumidores ESTADO/HANDOFF seguem a tabela) | `:1385` vs `:1389-1401` |
 | G4 | **METADE FECHADA (09-08, `64a8a9a`).** A auto-contradição 970/1.353 × 903/1.213 **morreu**: *Volume & Metas* e *Erros & Cards* agora dizem "ver acima -- **fonte unica no arquivo** (G4, s170)". **Permanece:** F64, F35, F36, F42 fora da lista de abertos do HANDOFF (**14 de 19 viajam**; F81 citado à parte como "novo", não na lista). **Novo:** o cabeçalho do `ESTADO.md` ainda carimba **s166 / 2026-09-06** enquanto o corpo carrega edições da s170 — o arquivo foi editado sem re-carimbar | `ESTADO.md:10,33,42`; `HANDOFF.md:42` |
 | G5 | **DE PÉ, instância trocada (09-08).** `audit_fsrs.py` e `calibrate_card_checks.py` **já estão** na tabela — esse par envelheceu. Medição de hoje: `reachability_check --tabela` = **42 linhas**, `AGENTE.md` = **41**; o ausente é **`tools/exchange_log.py`** (nascido na s170, `3b034a5`). A tabela gerada volta a ficar stale a cada CLI novo — é a classe, não o par | `AGENTE.md:214`; diff contra `--tabela` |
 | G6 | ⚰️ **FECHADO (09-08, antes do reinício).** `history/session_170.md` existe (9.490 B, 20:13) e o `HANDOFF.md` está rotacionado para s170. **A causa mecânica permanece aberta:** `SESSION_POINTER` só pega ponteiro adiantado, não atrasado — G6 fechou por disciplina humana, não por gate | `history/session_170.md`; `HANDOFF.md:2` |
 | G7 | passivo de reforja: 12 / 13 / 15 / 38 (com duplicata #1424) — nenhuma cifra vive numa fila mecânica; #321 em v2 com o defeito intacto | `HANDOFF.md:41`, `session_167.md:17`, `:1409` |
 | G8 | `memory_errors.log` 7 → 505 → **630** linhas (F66 aberto: o número mede execuções do sensor, não dívida); `ledger_self.jsonl` 462 → 692 → **694**; ledger **179.476 B = 175 KiB** (o painel arredonda para "175 KB" — mesma medida). **Os três se moveram dentro do mesmo dia** — é o caso-exemplo da regra de manutenção (1): número sem data é claim que envelhece | `wc -l`, medido 09-08 pós-`a9423d7` |
-| G9 | F5/F8 obsoletos pela v1.3 sem lápide (§10.2) | `AUDITORIA_MEDHUB.md:68,90` |
+| G9 | ⚰️ **FECHADO (s171).** Lápides em `AUDITORIA_MEDHUB.md:68` e `:91`, na redação *ENTREGUE (pN) -> objeto revogado em `<contrato>`* | `AUDITORIA_MEDHUB.md:68,91` |
 | G10 | **DE PÉ.** Suite real medida hoje: **395 passed em 16,68s**. `README.md:18` e `:191` seguem dizendo **365**; `ESTADO.md:46` cita a série 317->358 (histórico legítimo). `ESTADO.md:64` continua apontando `tools/autopsia_template.py` como "modelo canônico" — `ls tools/autopsia*.py` = **No such file**. 🔴 **Gate-miss de categoria (§10.8):** o check `MEMORY_POINTERS` (F57) acusa **exatamente esses dois paths** — mas só porque estão citados em `memory/*.md`; a citação idêntica dentro do `ESTADO.md` **nenhum gate vê**. O sensor existe e o alcance dele para na fronteira do diretório | `pytest tools/ -q`; `auto_check --all`; README, ESTADO |
 | G11 | **CONFIRMADO literalmente (09-08).** `evidence-governance` frontmatter `1.0` × changelog `v1.1 (2026-09-07)`; `revisao-calibrada` frontmatter `1.0` × título **"Versão 1.3"**; `orquestracao-contract` sem campo `version`. Os outros 6 batem | `core/contracts/` |
 | **G12** 🆕 | 🔴 **`revisao-calibrada-contract.md` v1.3 contradiz a si mesmo.** A **Cláusula 11** (`:146`) mata o PREPARAR e declara que cluster frio (F5) "deixa de disparar aquecimento"; a **Cláusula 5b** (`:130`) **sobreviveu intacta** mandando o DRENAR "**oferecer** o PREPARAR proativamente" com limiar `>=25`. 5b é lida **antes** de 11. Mesma classe do G4 — dentro do contrato que a s170 acabou de reescrever, e no arquivo que o G11 já acusa | `core/contracts/revisao-calibrada-contract.md:130` vs `:146` |

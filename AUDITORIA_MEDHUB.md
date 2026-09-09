@@ -65,7 +65,8 @@ relates_to: [AGENTE, ESTADO, HANDOFF]
 
 ## 3. Achados de protocolo / carga cognitiva do agente
 
-### F5 -- PREPARAR (Camada 0) e reativo, nao proativo -- **BAIXA**
+### F5 -- PREPARAR (Camada 0) e reativo, nao proativo -- **BAIXA** -- ⚰️ **ENTREGUE (p5) -> OBJETO REVOGADO**
+- ⚰️ **LAPIDE (2026-09-08, s171).** Mecanismo **ENTREGUE (p5)** -- sinal de frieza por cluster no `--review-plan` + clausula de oferta proativa do PREPARAR (limiar >=25 no contrato) -- e depois **objeto revogado** em `revisao-calibrada-contract.md` Clausula 11 (v1.3, s170): o PREPARAR deixou de existir e o cluster frio passou a **entrar na fila de prioridade da Revisao Direcionada de fechamento**, nao a disparar aquecimento. O achado nao foi invalidado nem esquecido -- o gatilho que ele pedia MIGROU de superficie. **Nao re-derivar:** se alguem reintroduzir aquecimento pre-bloco, o F5 volta junto. O sinal (`review_radar.py` / `--review-plan`) segue vivo: morreu o consumidor, nao o sensor.
 - **Evidencia:** o refresh-antes-de-card-frio so aconteceu porque o operador pediu explicitamente ("quick refresh antes de pegar os cards a frio"). O contrato preve o PREPARAR, mas o gatilho ficou no operador, nao no agente.
 - **Leitura de sistema:** o sinal de "tema frio" e objetivo e ja esta nos dados (stability media + taxa de acerto do cluster + dormencia via `review_radar.py`). O agente poderia **detectar o cluster frio e oferecer o PREPARAR** antes de sondar, em vez de esperar o pedido.
 - **Verificacao sugerida:** conferir se `fsrs_queue`/`day_plan` ja expoem stability por card/cluster; se nao, o sinal vem de `review_radar.py`.
@@ -87,7 +88,8 @@ relates_to: [AGENTE, ESTADO, HANDOFF]
 - **Segundo caso (mesmo padrao, outra especialidade):** card `id=120` (tema Gravidez Ectopica). Stem: gestacao intrauterina viavel confirmada (embriao + CCN 3mm) + massa anexial **sem fluxo** ao Doppler + beta-hCG subindo, **em gestacao espontanea (sem TRA/FIV)**. Resposta esperada = **heterotopica**. Problema de calibracao: heterotopica espontanea e ~1:30.000; na ausencia de TRA e sem features de ectopica ativa (o "sem fluxo" ate argumenta *contra*), a resposta estatisticamente dominante e **gestacao topica + corpo luteo**. O card forca o diagnostico raro como se fosse o provavel. O operador respondeu "gestacao normal" -- **clinicamente mais defensavel** para o cenario espontaneo -- e o card marca como erro. Candidato a **auditoria de evidencia** (`/pesquisar-evidencia`): quando a banca espera heterotopica e a probabilidade basal diz corpo luteo, e o tipo de conflito banca-dependente que o `evidence-governance` existe para arbitrar.
 - **Hipotese de melhoria:** rodar `/curar-cards` (workflow `curar-cards.md`) com foco em "discriminacao incompleta" e "diagnostico raro forcado"; possivel heuristica para o linter `audit_flashcard_quality.py`: sinalizar cards cuja `verso_armadilha` nomeia um competidor de categoria **diferente** da resposta (ex.: Fallot=hipofluxo vs resposta=hiperfluxo) sem nomear nenhum competidor da **mesma** categoria. Sinal fraco, mas barato. Para o `id=120`, submeter a resposta esperada ao gate de evidencia antes de reforjar.
 
-### F8 -- Risco de vazamento de resposta no PREPARAR -- **BAIXA/MEDIA**
+### F8 -- Risco de vazamento de resposta no PREPARAR -- **BAIXA/MEDIA** -- ⚰️ **ENTREGUE (p3) -> OBJETO REVOGADO**
+- ⚰️ **LAPIDE (2026-09-08, s171).** Mecanismo **ENTREGUE (p3)** -- Invariante D (isolamento de conteudo do PREPARAR) no contrato v1.1 -- e depois **objeto revogado** em `revisao-calibrada-contract.md:74` (v1.3, s170), que ja carrega lapide propria: sem aquecimento pre-drill nao ha o que isolar, e toda nota do DRENAR volta a ser recall a frio. **Nao re-derivar:** aquecimento pre-bloco reintroduzido traz de volta o vazamento, e os TRES canais medidos abaixo (vazamento de resposta, card de fato puro, erro de ensino amplificado) seguem validos como descricao do risco. 🔴 **O corpo abaixo e evidencia historica, nao norma ativa.**
 - **Evidencia:** o refresh pre-bloco de Cardiopatias Congenitas nomeou explicitamente "TGA" como o exemplo canonico de cianotica de hiperfluxo, momentos antes de um card cuja resposta era HCE (tambem hiperfluxo). O aquecimento moldou a resposta.
 - **Leitura de sistema:** o PREPARAR (Camada 0) existe para aquecer o tema, mas ha uma fronteira fina entre **aquecer a fundacao** e **entregar a resposta do card que vem a seguir**. Quando o refresh e feito pelo mesmo agente que conhece as respostas dos cards, o vies e estrutural.
 - **Verificacao sugerida:** revisar o contrato de `/revisar` (Camada 0) -- ha alguma clausula que isole o conteudo do refresh das respostas especificas dos cards do bloco? (Aparentemente nao.)
@@ -1133,7 +1135,7 @@ tautologico novo em cards de tema `[bulk]`), a reincidencia do padrao de calibra
 do F7 na tema Gravidez Ectopica (`card_id=114` auditado via `evidence-researcher`, veredito PRECISA
 AJUSTE -- moldura de PUL; `card_id=120` do F7 original segue sem auditoria) e 3 flags do usuario
 (1411/283/319) sem defeito identificado pelo agente, calibracao em aberto pra proxima sessao.
-**Proximos achados comecam em F42**. Ultima atualizacao: s154 (2026-08-24). **Ciclo DESCOLAR
+~~**Proximos achados comecam em F42**~~ -> **proximos comecam em F86** (F82-F85 numerados na s171). Ultima atualizacao: s154 (2026-08-24). **Ciclo DESCOLAR
 (Fable/ai-eng, 2026-09-01 — retorno do handoff `~/ai-eng/HANDOFF-MEDHUB-COLA.md`):** PRD
 `descolar-motor-determinismo` (P1-P7 respondidas) + 7 specs + implementacao. RESOLVIDOS:
 **F45** (vocabulario+upsert por par via `reconciliar_weak_areas`), **F46** (paths por __file__,
@@ -1476,3 +1478,40 @@ Sensores existentes (`doc_drift.py`, `sync_skills --check`) reportavam 0 achados
 - **Remedio (S):** predicado `checar_contexto_desalinhado` em `tools/card_checks.py` cobrindo A (containment sobre `_norm_tokens`, reusando `_maior_run_comum` que ja existe) -- WARN, com o corte a calibrar sobre os 26. Eixo B entra como predicado separado, tambem WARN, porque tem falso-positivo legitimo.
 - **Remedio (M):** os 26 do eixo A sao passivo de **reforja de FRENTE** (memoria `feedback_reforja_mira_frente`): ou o contexto vira vinheta com dado concreto, ou vira vazio de verdade. Fila via `cards_regen_queue.py`.
 - **Nao fazer:** promover a BLOCK antes de zerar o passivo (convencao warning-first, AGENTE §6). E nao tentar medir o eixo C com regex -- e leitura.
+
+## 6o. Achados da s170 numerados na s171 (2026-09-08, Claude Code/Opus 5 + audit do `/ai-eng`)
+
+> Os quatro nasceram na s170 e foram entregues/deferidos SEM F-id -- o `§10.6` cumprido pela metade
+> (achado tratado, achado nao registrado). Numerados aqui a pedido do `/ai-eng` (G2 da colheita de 09-08).
+> **F82-F84 ja estavam RESOLVIDOS quando ganharam numero**; o registro existe para que o ledger tenha
+> a evidencia da CLASSE, nao para reabrir trabalho.
+
+### F82 -- Reforja executada nao deixava rastro: `event_log` so existia no caminho de CRIACAO -- **ALTA** -- **RESOLVIDO (hotfix s170, `c4ce1db`)**
+- **Evidencia:** unico chamador de `event_log.registrar` no repo era `tools/insert_questao.py:39-41` e `:296-301`, e so para card NOVO (tipos `generation`/`reincidencia`). `app/utils/db.py::update_flashcard_fields` reescrevia o card, incrementava `card_version` e commitava **sem emitir evento**. Como `flashcards` nao tem timestamp de update, a reforja era a **unica operacao do pipeline que muda o SSOT sem deixar registro**.
+- **A prova que forcou o hotfix:** o card **#321** estava em `card_version=2` com o texto do defeito **INTACTO** -- a versao subiu sem fix e nada registrava isso. Corolario duro: **`card_version` nao e evidencia de reforja feita**, e por isso o fechamento de marca nunca pode ser inferido dele (vira fixture do spec da fila de reforja).
+- **Fix:** evento `reforja` emitido **so pos-commit** nos 2 writers, com `card_id`, writer, version antes/depois, reason e nomes de campo -- **zero texto clinico** (contrato do `event_log`). No `recurate_cards.aplicar` os eventos acumulam em `pendentes` DENTRO da transacao e so saem em `_flush_eventos` apos o commit: emitir no laco daria evento-fantasma no rollback, e o lote e all-or-nothing.
+- **Regressao:** `tools/test_reforja_event_log.py`, 6 testes, **vermelho antes do fix**. Os 2 caminhos que commitam -> exatamente 1 evento; os 3 que NAO commitam (card inexistente, gate levantando, rollback do lote) -> ZERO; falha de log nao derruba a escrita do card.
+- **Classe:** *Reachability-Debt variante 1* -- a auditoria de reincidencia lia uma populacao que o pipeline nunca populou.
+
+### F83 -- Nada media CRESCIMENTO do verso, e o 2o writer nao tinha gate de atomicidade nenhum -- **MEDIA** -- **RESOLVIDO (s170, `d2026a1`)** + 1 sub-achado **DEFERIDO**
+- **Evidencia:** cards em `card_version=4` acusam **46,8%** de defeito, **20/47** por verso estourado. Cada rodada de reforja adiciona frase ao verso -- **a reforja mira a frente e engorda o verso** (memoria `feedback_reforja_mira_frente`), sem ninguem medir. 🔴 **Claim causal fica [MEDIUM]**, confundidor de selecao declarado: card com 3 rodadas E o card dificil que continua falhando. A evidencia DIRETA e o estouro de `LIMITE_CHARS`.
+- **O gate que faltava nao era "verso longo"** -- esse ja existia, **ABSOLUTO**, em `audit_card_atomicity.checar_verso`. Era **CRESCIMENTO**: um verso de 100 -> 219 chars passa limpo pelo absoluto e mesmo assim inchou 2x.
+- **Fix:** `medir_verso()` + `checar_ratchet_verso()` puros, ao lado da fonte unica `LIMITE_CHARS` (nao duplica a constante). Teto = `max(LIMITE_CHARS, len(antes))` -- card que ja nascia longo pode ser reescrito no mesmo tamanho: o gate mede crescimento, **nao pune heranca**. Gate 5 em `recurate_cards.validar` entra em `erros` (BLOCK), nao em `avisos`. Telemetria `len`/`n_frases` antes e depois no evento `reforja`: **o mesmo caminho que mede para bloquear grava para medir**, e e o que converte o [MEDIUM] em medicao.
+- 🔴 **O achado tem TRES partes, nao uma** (correcao do `/ai-eng` no audit): **(a)** parametro morto `permitir_atomicidade` em `validar()` -- **DEFERIDO**, segue aberto; **(b)** nada media crescimento -- resolvido; **(c)** `db.update_flashcard_fields` **nao rodava gate de atomicidade nenhum** -- resolvido. Sem (c) a guarda do recurate seria contornavel pelo outro writer: seria o F79/F79b/F81 (gate que nao cobre o caminho real) se repetindo pela quarta vez.
+- **Regressao:** `tools/test_ratchet_verso.py`.
+
+### F84 -- O gate novo era fail-open: `ImportError` virava WARN e a escrita passava SEM ratchet -- **MEDIA** -- **RESOLVIDO (s170, `06634b6`)**
+- **Origem:** achado do **audit do `/ai-eng`** sobre o `d2026a1` -- nao do harness, nao da sessao que escreveu o fix.
+- **Evidencia:** em `db.update_flashcard_fields`, `ImportError` de `audit_card_atomicity` virava `[WARN]` e a escrita seguia sem ratchet. 🔴 **E a regra de ouro do repo ("aviso que nao bloqueia nao existe -- vira gate") sendo violada DENTRO do proprio fix que existe para aplica-la.**
+- **Fix:** gate que nao pode rodar => **escrita RECUSADA** (`RuntimeError`). A recusa vale so quando a escrita **toca o verso** -- bloquear edicao de frente por causa do ratchet do verso seria gratuito; nesse caso so a telemetria degrada, com WARN. Ressalva aceita pelo `/ai-eng` no mesmo turno.
+- **Regressao:** 2 testes com `sys.modules` monkeypatchado para forcar o `ImportError`: escrita de verso recusada com `card_version` intacto; edicao de frente segue passando. O caminho do `recurate` ja era fail-closed -- confirmado no audit, o fix nao herdou o bug.
+- **Licao transferivel:** *o fix que introduz a classe que ele conserta*. Custo de deteccao: um audit externo entre parts. Sem ele o repo teria um gate BLOCK com porta dos fundos.
+
+### F85 -- Justificativa ORFA governando um `except`: a premissa morreu, o `except` continua -- **MEDIA** -- **ABERTO**
+- **Evidencia:** `app/utils/db.py:760-765` (comentario) e `:773-775` (o `except`). O 2o gate fail-open da MESMA funcao -- o import de `card_checks` -- carrega a justificativa escrita: *"indisponivel -> WARN e segue (a camada CLI ja valida; **o app nao pode quebrar sem tools/** -- degradacao anunciada)"*. Esse "app" era a **UI Streamlit, REMOVIDA** (AGENTE.md secao 6). **A justificativa sobreviveu ao seu proprio motivo** e segue autorizando escrita sem gate de qualidade.
+- **Por que nao foi corrigido junto:** observado durante o `06634b6` e deixado no ledger de proposito -- mudar blast radius alheio no mesmo commit de um fix de audit e o anti-padrao. *Uma chamada, um bug.*
+- **Varredura da assinatura (s170):** 4 ocorrencias brutas, triadas pelo discriminador **"a premissa esta no caminho de decisao?"** -- **Classe 1** (premissa governando codigo) **N=1**: este. **Classe 2** (claim envelhecido em docstring, nao governa): `db.py:9` ("Callers acima: `app/pages/*.py`") e `fsrs_queue.py:9` ("o player Streamlit local") -- correcao de **documentacao**, sem teste. `get_topic_context.py:19` = lapide em preterito, **NAO tocar**.
+- **Remedio (S) -- hotfix, item (7) da fila s171:** teste com `sys.modules` **ANTES** do fix (escrita recusada quando `card_checks` nao importa) -> fail-loud -> remover o comentario. Mesma forma do F84, que e o irmao gemeo desta funcao.
+- **Classe:** *Reachability-Debt variante 3* -- **le uma razao que ja nao existe**. Fecha a taxonomia das tres: (1) le o nada [F82] · (2) ninguem le [G1, graphify] · (3) le razao morta [F85].
+
+---

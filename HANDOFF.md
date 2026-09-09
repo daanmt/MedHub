@@ -1,7 +1,7 @@
 # HANDOFF.md -- ESTADO OPERACIONAL CURTO
 *Atualizado: 2026-09-09 -- S173 (Claude Code / Fable 5.1): **109 cards drenados**; a coorte do Simulado 8 estreou em **43%** (2x a media de estreia); re-drill ganhou a **regra do corte do loop**; Simulado 8 registrado (**7.036**); RAG reindexado; 3 cards reforjados + 2 aposentados*
 
-> 🔴 **A FILA DE ENGENHARIA SEGUE CONGELADA** por decisao do operador -- retoma em sessao dedicada, contexto limpo dos dois lados. Esta e semana de **ENAMED (dom 13/09)**: questoes, simulados e cards. **Ler `history/session_173.md §5` antes de agir** -- a semana esta decidida pelo usuario.
+> 🔴 **Engenharia so em sessao DEDICADA, contexto limpo dos dois lados** -- a proxima foi **autorizada em 09/09** (item 5). Janela de estudo nao toca engenharia. Esta e semana de **ENAMED (dom 13/09)**: questoes, simulados e cards. **Ler `history/session_173.md §5` antes de agir** -- a semana esta decidida pelo usuario.
 
 ## > Proximo passo imediato
 

@@ -23,14 +23,6 @@
     "verso_armadilha": "'excisao do trombo com anestesia local' num caso de 4 dias: procedimento certo, tempo errado -- e o 'ha 4 dias' do enunciado que exclui a alternativa."
    },
    {
-    "tipo": "mecanismo",
-    "frente_contexto": "Trombose hemorroidaria externa conduzida de forma conservadora.",
-    "frente_pergunta": "Em quanto tempo o quadro se resolve espontaneamente?",
-    "verso_resposta": "Em 7 a 10 dias, conforme o coagulo e reabsorvido.",
-    "verso_regra_mestre": "E essa resolucao espontanea que sustenta a conduta conservadora tardia: quem chega no 4o dia ja esta na descendente da curva de dor, e a cirurgia passaria a competir com uma melhora que ja comecou.",
-    "verso_armadilha": "Confundir 'ainda dolorido' com 'ainda operavel' -- a dor residual do 4o ao 7o dia e parte da resolucao, nao falha do tratamento clinico."
-   },
-   {
     "tipo": "base",
     "frente_contexto": "",
     "frente_pergunta": "Por que a doenca hemorroidaria externa e intensamente dolorosa enquanto a interna costuma ser indolor?",
@@ -86,14 +78,6 @@
     "verso_resposta": "A endoscopica, por CPRE com papilotomia.",
     "verso_regra_mestre": "A hierarquia e fixa: endoscopica primeiro; percutanea trans-hepatica quando a CPRE falha, nao esta disponivel ou a anatomia esta alterada; cirurgica com dreno de Kehr como ultimo recurso, por ser a de maior mortalidade no paciente septico.",
     "verso_armadilha": "'drenagem cirurgica com dreno de Kehr' e 'drenagem biliar externa trans-hepatica' aparecem como distratores oferecendo as vias de resgate no lugar da primeira linha."
-   },
-   {
-    "tipo": "nuance",
-    "frente_contexto": "Paciente que teve colangite aguda por coledocolitiase, ja resolvida.",
-    "frente_pergunta": "Em que momento se opera a vesicula desse paciente?",
-    "verso_resposta": "Apos a resolucao do quadro infeccioso, ainda na mesma internacao.",
-    "verso_regra_mestre": "A colecistectomia trata a FONTE dos calculos, nao a obstrucao infectada; por isso ela e sequencial a drenagem, e nao concorrente dela. Este e o ponto que separa colangite de colecistite aguda -- e na colecistite que a cirurgia precoce, nas primeiras 72 horas, e a propria conduta.",
-    "verso_armadilha": "'colecistectomia de urgencia com colangiografia' importa para a colangite o cronograma da colecistite aguda, somando cirurgia de grande porte a um paciente com infeccao de via biliar em atividade."
    }
   ]
  },
@@ -135,14 +119,6 @@
     "verso_resposta": "24 horas de vida.",
     "verso_regra_mestre": "A ictericia fisiologica depende do acumulo pos-natal de bilirrubina indireta e so aparece do 2o ao 3o dia, com pico entre o 3o e o 5o no termo e entre o 5o e o 7o no pre-termo. Ictericia no primeiro dia significa hemolise ou infeccao ate prova em contrario.",
     "verso_armadilha": "Um distrator da mesma questao trazia inicio com 37 horas de vida -- ja fora da janela; o caso correto trazia 12 horas, dentro dela."
-   },
-   {
-    "tipo": "conteudo",
-    "frente_contexto": "",
-    "frente_pergunta": "Qual a velocidade de elevacao da bilirrubina que caracteriza ictericia patologica?",
-    "verso_resposta": "Aumento maior que 0,2 mg/dl por hora.",
-    "verso_regra_mestre": "A velocidade e criterio independente do valor absoluto, porque mede hemolise em curso: total de 8 mg/dl subindo 0,1 mg/dl por hora e mais tranquila do que 5 mg/dl subindo 0,3.",
-    "verso_armadilha": "O distrator oferecia exatamente 0,1 mg/dl por hora -- metade do corte -- acompanhado de uma bilirrubina total de 8, que chama atencao pelo tamanho e nao pelo criterio."
    }
   ]
  },
@@ -203,12 +179,20 @@
     "verso_armadilha": "Ler '12 cm' como liquido de menos: o oligoamnio mora abaixo de 2 cm, entao 12 cm esta a uma ordem de grandeza do lado oposto do eixo."
    },
    {
-    "tipo": "conteudo",
+    "tipo": "mecanismo",
+    "frente_contexto": "Feto com displasia tanatoforica.",
+    "frente_pergunta": "Por que essa displasia esqueletica cursa com polidramnio?",
+    "verso_resposta": "Porque o torax estreito e a deformidade esqueletica prejudicam a degluticao fetal, e o liquido deixa de ser removido.",
+    "verso_regra_mestre": "Polidramnio tem so dois motores: produz demais (urina fetal aumentada -- diabetes materno, anemia fetal, arritmia) ou remove de menos (degluticao e absorcao impedidas -- atresia de esofago e de duodeno, anencefalia, hernia diafragmatica, displasias esqueleticas).",
+    "verso_armadilha": "Descartar a displasia tanatoforica por parecer um diagnostico sem relacao com liquido: ela entra pela porta da degluticao, a mesma das atresias altas e da anencefalia."
+   },
+   {
+    "tipo": "mecanismo",
     "frente_contexto": "",
-    "frente_pergunta": "Qual a causa mais frequente de polidramnio?",
-    "verso_resposta": "O diabetes materno, responsavel por cerca de 25% dos casos.",
-    "verso_regra_mestre": "A hiperglicemia materna gera hiperglicemia fetal, que gera diurese osmotica no feto -- e mais urina fetal e mais liquido amniotico. E o principal exemplo do motor 'produz demais'.",
-    "verso_armadilha": "Partir direto para malformacao diante de polidramnio: o rastreio de diabetes na gestacao vem antes, por ser a causa mais comum e a mais tratavel."
+    "frente_pergunta": "Por que insuficiencia uteroplacentaria, restricao de crescimento fetal e pos-datismo cursam com oligoamnio?",
+    "verso_resposta": "Porque a centralizacao da circulacao fetal desvia o fluxo renal, e menos urina fetal significa menos liquido.",
+    "verso_regra_mestre": "Os tres sao a mesma doenca em estagios diferentes: hipoperfusao placentaria -> centralizacao, que preserva cerebro, coracao e adrenais -> queda da diurese fetal. Por isso oligoamnio, nessas gestacoes, e sinal de gravidade e nao achado isolado.",
+    "verso_armadilha": "'restricao de crescimento fetal' e a causa de oligoamnio mais lembrada, o que a torna a isca preferida justamente em questao de POLIdramnio."
    }
   ]
  },
@@ -269,20 +253,20 @@
     "verso_armadilha": "Duas alternativas oferecem suspender o antirretroviral ate terminar a investigacao; parece prudente e e o erro classico."
    },
    {
-    "tipo": "conteudo",
-    "frente_contexto": "",
-    "frente_pergunta": "Em quanto tempo apos o inicio da terapia antirretroviral costuma surgir a sindrome inflamatoria de reconstituicao imune?",
-    "verso_resposta": "Nas primeiras 4 a 8 semanas, quase sempre dentro dos 3 primeiros meses.",
-    "verso_regra_mestre": "O risco e tanto maior quanto mais baixo o CD4 de partida (sobretudo abaixo de 100) e quanto mais rapida a queda da carga viral; por isso a janela temporal e parte do criterio diagnostico.",
-    "verso_armadilha": "Atribuir a piora a falha do esquema antirretroviral, quando a melhora imunologica e justamente o que produziu o quadro."
+    "tipo": "discriminador",
+    "frente_contexto": "Paciente com aids em terapia antirretroviral recente, febre vespertina e linfadenomegalias cervicais e axilares volumosas; a tomografia mostra ganglios mediastinais de centro necrotico.",
+    "frente_pergunta": "Que achado no exame das linfadenomegalias superficiais aponta tuberculose em vez de linfoma?",
+    "verso_resposta": "A fistulizacao para a pele (escrofuloderma) -- massa de linfoma cresce, mas nao drena para fora.",
+    "verso_regra_mestre": "Necrose central no ganglio e fistulizacao sao marcas de doenca granulomatosa, tipicas da tuberculose ganglionar do imunossuprimido; linfoma da massa firme e elastica, sem supuracao.",
+    "verso_armadilha": "Febre com sindrome consumptiva e adenomegalia generalizada convida a proceder a biopsia de linfonodo por provavel diagnostico de linfoma -- a biopsia esta certa, o rotulo diagnostico nao."
    },
    {
-    "tipo": "conteudo",
-    "frente_contexto": "Reconstituicao imune associada a tuberculose, com hipoxemia e piora clinica progressiva.",
-    "frente_pergunta": "Que classe de medicamento se acrescenta ao manejo nesse cenario?",
-    "verso_resposta": "Corticoide sistemico, reservado as formas moderadas a graves.",
-    "verso_regra_mestre": "O corticoide freia a resposta inflamatoria exagerada sem interromper o antirretroviral nem o tratamento da infeccao; nas formas leves basta sintomatico e observacao.",
-    "verso_armadilha": "Usar corticoide como reflexo em qualquer SIRI, ou recusa-lo por medo de imunossuprimir quem ja tem aids."
+    "tipo": "nuance",
+    "frente_contexto": "Paciente com aids e CD4 de 45 celulas/mm3 sob investigacao de tuberculose; a prova tuberculinica resulta em 0 mm.",
+    "frente_pergunta": "Como esse resultado deve ser interpretado?",
+    "verso_resposta": "Como anergia por imunossupressao grave -- o zero nao afasta tuberculose.",
+    "verso_regra_mestre": "O PPD depende de resposta celular mediada por linfocito T CD4; com CD4 muito baixo o teste perde sensibilidade e so tem valor quando positivo ou quando a imunidade esta preservada.",
+    "verso_armadilha": "Ler o 0 mm como ausencia de tuberculose e migrar a hipotese para neoplasia."
    }
   ]
  },
@@ -320,10 +304,10 @@
    {
     "tipo": "conteudo",
     "frente_contexto": "",
-    "frente_pergunta": "Qual o orgao visceral mais acometido no DRESS?",
-    "verso_resposta": "O figado, com hepatite e elevacao de transaminases.",
-    "verso_regra_mestre": "O S de DRESS e de sintomas sistemicos: rim e pulmao tambem podem entrar, e o comprometimento visceral e o que define gravidade e indica corticoide sistemico.",
-    "verso_armadilha": "Tratar como farmacodermia banal, apenas suspendendo a droga, sem dosar transaminases e funcao renal."
+    "frente_pergunta": "Que lesao elementar caracteriza o eritema multiforme?",
+    "verso_resposta": "A lesao em alvo tipica, de tres zonas concentricas, com predominio em extremidades.",
+    "verso_regra_mestre": "Alvo de tres zonas em extremidades e eritema multiforme, quase sempre pos-herpetico; alvo atipico de duas zonas com progressao para o tronco e mucosa e Stevens-Johnson, quase sempre por droga.",
+    "verso_armadilha": "Chamar de eritema multiforme qualquer exantema com maculas arredondadas; sem as tres zonas nao ha alvo tipico."
    }
   ]
  },
@@ -349,6 +333,22 @@
     "verso_resposta": "A cicatriz central com realce tardio, marca da hiperplasia nodular focal e ausente no hemangioma.",
     "verso_regra_mestre": "A hiperplasia nodular focal nasce de uma arteria anomala central com hepatocitos hiperplasicos ao redor: dai o realce arterial intenso e homogeneo com a cicatriz fibrosa no meio, que so capta contraste tardiamente.",
     "verso_armadilha": "Lesao hipervascular em mulher jovem faz o hemangioma hepatico parecer aposta segura; hemangioma nao tem cicatriz central."
+   },
+   {
+    "tipo": "conteudo",
+    "frente_contexto": "",
+    "frente_pergunta": "Como o hemangioma hepatico se comporta ao contraste na tomografia trifasica?",
+    "verso_resposta": "Realce periferico, globuliforme e descontinuo, com preenchimento centripeto progressivo nas fases tardias.",
+    "verso_regra_mestre": "Sao lagos vasculares que enchem de fora para dentro; por isso o realce comeca na periferia em nodulos e converge para o centro, o oposto do realce homogeneo e imediato da hiperplasia nodular focal.",
+    "verso_armadilha": "Guardar apenas que hemangioma capta contraste e marca-lo em qualquer lesao hipervascular; o que identifica o hemangioma e o padrao do enchimento, nao a intensidade."
+   },
+   {
+    "tipo": "discriminador",
+    "frente_contexto": "Nodulo hepatico hipervascular em mulher jovem, investigado por ressonancia com contraste hepatoespecifico.",
+    "frente_pergunta": "Hiperplasia nodular focal x adenoma hepatocelular: qual dos dois capta na fase hepatobiliar?",
+    "verso_resposta": "A hiperplasia nodular focal, porque tem hepatocitos e ductos biliares funcionantes; o adenoma nao capta.",
+    "verso_regra_mestre": "A distincao muda a conduta: hiperplasia nodular focal se acompanha, adenoma se aborda pelo risco de sangramento e de malignizacao, sobretudo acima de 5 cm ou em uso de anticoncepcional oral.",
+    "verso_armadilha": "Confiar so na cicatriz central: adenoma degenerado pode ter cicatriz de aspecto semelhante, e e a fase hepatobiliar que resolve."
    }
   ]
  },
@@ -377,11 +377,19 @@
    },
    {
     "tipo": "conteudo",
+    "frente_contexto": "Pseudo-obstrucao colonica aguda ja caracterizada, com obstrucao mecanica descartada, que nao cede ao suporte clinico.",
+    "frente_pergunta": "Qual o tratamento farmacologico especifico dessa condicao?",
+    "verso_resposta": "Neostigmina intravenosa, anticolinesterasico, sob monitorizacao cardiaca pelo risco de bradicardia.",
+    "verso_regra_mestre": "A base do manejo e suporte: jejum, correcao hidroeletrolitica, suspensao de opioide e anticolinergico, descompressao por sonda nasogastrica e retal e tratamento da doenca de base. A neostigmina e o passo farmacologico, quando esse suporte falha ou o ceco atinge calibre de risco.",
+    "verso_armadilha": "A prova costuma oferecer neostigmina como se fosse a primeira medida; ela e o tratamento farmacologico especifico, e nao o inicio do manejo."
+   },
+   {
+    "tipo": "nuance",
     "frente_contexto": "",
-    "frente_pergunta": "Qual o achado radiologico classico do volvo de sigmoide?",
-    "verso_resposta": "A imagem em grao de cafe, alca muito dilatada em U invertido que aponta para o quadrante superior.",
-    "verso_regra_mestre": "Volvo e obstrucao mecanica por torcao, com ponto de transicao; por isso o tratamento inicial e a descompressao endoscopica, e nao um farmaco procinetico.",
-    "verso_armadilha": "Aceitar volvo diante de qualquer colon dilatado: sem ponto de torcao e sem grao de cafe, a distensao difusa aponta pseudo-obstrucao."
+    "frente_pergunta": "A partir de que diametro do ceco a pseudo-obstrucao colonica exige descompressao ativa?",
+    "verso_resposta": "Acima de 12 cm, limite classico de risco de isquemia e perfuracao cecal.",
+    "verso_regra_mestre": "Pela lei de Laplace o ceco e o segmento de maior raio, logo o de maior tensao na parede, e por isso estoura primeiro; o calibre medido em radiografias seriadas, e nao a intensidade da dor, e o que dispara a descompressao.",
+    "verso_armadilha": "Acompanhar apenas a clinica em idoso sedado e distendido, sem medir o ceco nas radiografias seriadas."
    }
   ]
  },
@@ -410,11 +418,11 @@
    },
    {
     "tipo": "discriminador",
-    "frente_contexto": "Crianca de 6 anos com claudicacao e queixa de dor no joelho; o exame do joelho e normal e ha limitacao da rotacao interna e da abducao do quadril.",
-    "frente_pergunta": "Qual o diagnostico mais provavel?",
-    "verso_resposta": "Doenca de Legg-Calve-Perthes, necrose avascular da cabeca femoral.",
-    "verso_regra_mestre": "Dor de joelho na crianca obriga a examinar o quadril, porque a dor do quadril e referida no joelho pelo nervo obturatorio; exame do joelho normal com marcha alterada muda a busca de articulacao.",
-    "verso_armadilha": "Parar o exame no joelho que doi e perder a doenca do quadril, que e a que muda o prognostico."
+    "frente_contexto": "Adolescente com dor anterior no joelho por tracao repetida do aparelho extensor; a dor esta no polo inferior da patela, e nao no tuberculo tibial.",
+    "frente_pergunta": "Qual apofisite corresponde a essa localizacao?",
+    "verso_resposta": "A sindrome de Sinding-Larsen-Johansson, apofisite da insercao proximal do tendao patelar.",
+    "verso_regra_mestre": "Mesmo mecanismo de tracao, extremidades opostas do mesmo tendao: insercao distal no tuberculo tibial e Osgood-Schlatter; insercao proximal no polo inferior da patela e Sinding-Larsen-Johansson.",
+    "verso_armadilha": "As duas aparecem juntas na mesma questao; quem guardou so dor no joelho do atleta jovem nao tem como escolher."
    }
   ]
  },
@@ -481,6 +489,14 @@
     "verso_resposta": "Na FA valvar -- a indicacao e automatica.",
     "verso_regra_mestre": "O escore gradua risco em FA nao valvar. Na FA valvar o risco embolico ja e alto por definicao: anticoagula sempre.",
     "verso_armadilha": "Somar pontos do escore numa paciente com estenose mitral e concluir que o risco e baixo, dispensando anticoagulacao -- ou usar o escore para escolher a classe do farmaco, coisa que ele nunca fez."
+   },
+   {
+    "tipo": "discriminador",
+    "frente_contexto": "Paciente com FA por estenose mitral moderada e clearance de creatinina de 46 mL/min.",
+    "frente_pergunta": "Que peso o clearance de creatinina tem na escolha do anticoagulante quando a FA e valvar?",
+    "verso_resposta": "Nenhum: o DOAC esta vetado por classe, e ajustar a dose nao levanta o veto.",
+    "verso_regra_mestre": "Funcao renal ajusta DOSE de DOAC na FA nao valvar (rivaroxabana 15 mg; apixabana 2,5 mg de 12 em 12 horas, que alias exige 2 de 3 criterios -- idade 80 anos ou mais, peso 60 kg ou menos, creatinina 1,5 mg/dL ou mais). Na FA valvar a etapa anterior ja excluiu a classe: primeiro a classe, depois a dose.",
+    "verso_armadilha": "O enunciado planta o clearance de 46 mL/min justamente para que a rivaroxabana de 15 mg, que e a dose renal, pareca a alternativa bem pensada."
    }
   ]
  },
@@ -534,6 +550,14 @@
   "cards": [
    {
     "tipo": "conteudo",
+    "frente_contexto": "Adolescente de 16 anos com duas doses de DTP registradas na infancia e uma dose de dT aplicada ha 2 meses.",
+    "frente_pergunta": "Quantas doses ainda faltam para completar o esquema basico do componente tetanico?",
+    "verso_resposta": "Nenhuma -- DTP e dT contam para o mesmo componente, e as tres doses ja estao feitas.",
+    "verso_regra_mestre": "DTP, dT e dTpa se somam: o esquema basico e de 3 doses de qualquer combinacao delas. Completado, o reforco passa a ser de 10 em 10 anos (PNI 2025).",
+    "verso_armadilha": "Contar so as duas DTP da caderneta e prescrever uma dose de DTP para fechar o esquema. Alem de desnecessaria, a DTP nao pode ser aplicada apos os 7 anos -- dai em diante e dT ou dTpa."
+   },
+   {
+    "tipo": "conteudo",
     "frente_contexto": "Adolescente de 16 anos, saudavel, sem registro de vacina contra HPV na caderneta.",
     "frente_pergunta": "Quantas doses de HPV o PNI 2025 indica para ele?",
     "verso_resposta": "Uma dose unica.",
@@ -547,22 +571,6 @@
     "verso_resposta": "Porque a rotina do PNI vai so dos 11 aos 14 anos, e ele ja passou da janela.",
     "verso_regra_mestre": "Duas vacinas sao proprias do adolescente e as janelas nao coincidem: HPV dos 9 aos 14 com resgate ate 19; ACWY dos 11 aos 14, sem resgate -- ambas em dose unica (PNI 2025).",
     "verso_armadilha": "Tratar HPV e ACWY como um par que anda junto. Foi exatamente esse deslize que ANULOU a questao: o gabarito oficial prescreve ACWY a um jovem de 16 anos, fora da janela."
-   },
-   {
-    "tipo": "conteudo",
-    "frente_contexto": "Adolescente de 16 anos com uma unica dose de triplice viral registrada, aplicada aos 12 meses.",
-    "frente_pergunta": "Quantas doses de triplice viral o esquema dele ainda exige?",
-    "verso_resposta": "Uma -- ate os 29 anos o esquema completo e de 2 doses.",
-    "verso_regra_mestre": "A contagem muda com a faixa: 2 doses ate os 29 anos, 1 dose dos 30 aos 59 anos (PNI 2025). O que define e a idade atual, nao a idade em que a primeira dose foi dada.",
-    "verso_armadilha": "Prescrever duas doses de triplice viral, ignorando a que ja consta na caderneta -- o erro de reiniciar o esquema em vez de completar."
-   },
-   {
-    "tipo": "conteudo",
-    "frente_contexto": "Adolescente que recebeu uma unica dose de febre amarela aos 9 meses de vida e nenhuma depois.",
-    "frente_pergunta": "Ele ja tem o esquema de febre amarela considerado completo?",
-    "verso_resposta": "Nao -- falta o reforco, porque a dose foi aplicada antes dos 4 anos.",
-    "verso_regra_mestre": "Febre amarela: dose aos 9 meses mais reforco aos 4 anos; quem recebeu a primeira dose ANTES dos 4 anos precisa de mais uma, e quem recebeu depois dos 4 anos ja esta completo com dose unica. Hepatite B segue a mesma logica de resgate: 3 doses no total, entao 2 registradas deixam 1 faltando.",
-    "verso_armadilha": "Contar a dose de 9 meses como esquema fechado. A regra e etaria, nao contabil: o que decide e a IDADE em que a dose foi aplicada."
    }
   ]
  },
@@ -596,14 +604,6 @@
     "verso_resposta": "Azitromicina 1 g por via oral, em dose unica.",
     "verso_regra_mestre": "O tratamento da uretrite gonococica e sempre duplo -- nao existe uretrite gonococica tratada com um farmaco so (PCDT IST, Ministerio da Saude).",
     "verso_armadilha": "Alerta banca-dependente: esta questao escreveu a azitromicina como 4 comprimidos de 500 mg, isto e 2 g, e o proprio comentario oficial admite o escorregao. A norma do PCDT e 1 g."
-   },
-   {
-    "tipo": "discriminador",
-    "frente_contexto": "Homem com corrimento uretral mucoide, pesquisa de gonococo negativa.",
-    "frente_pergunta": "Qual o esquema de escolha para a uretrite nao gonococica?",
-    "verso_resposta": "Doxiciclina 100 mg por via oral, de 12 em 12 horas, por 7 dias.",
-    "verso_regra_mestre": "Azitromicina 1 g VO em dose unica e a alternativa quando ha duvida de adesao ou gestacao. Repare que a mesma azitromicina 1 g aparece nos dois quadros, mas ali como parceira da ceftriaxona e aqui como monoterapia.",
-    "verso_armadilha": "As alternativas plantaram doxiciclina por 30 dias e azitromicina 500 mg por 10 dias: a droga certa com duracao inventada engana mais que a droga errada."
    }
   ]
  },
@@ -637,6 +637,14 @@
     "verso_resposta": "O indireto.",
     "verso_regra_mestre": "Indireto = soro da MAE, procura anticorpo livre (rastreio de aloimunizacao no pre-natal). Direto = hemacias do RECEM-NASCIDO, mostra o anticorpo ja ligado a hemacia.",
     "verso_armadilha": "Pedir o teste de Coombs direto no sangue materno inverte os dois eixos de uma vez: exame errado no sitio errado."
+   },
+   {
+    "tipo": "discriminador",
+    "frente_contexto": "Feto anemico por infeccao materna por parvovirus B19, evoluindo com derrames cavitarios e edema de pele.",
+    "frente_pergunta": "Essa hidropisia fetal e do tipo imune ou nao imune?",
+    "verso_resposta": "Nao imune.",
+    "verso_regra_mestre": "Hidropisia imune = hemacias destruidas por anticorpo materno (aloimunizacao Rh), e so ai o Coombs tem papel. Parvovirose, cardiopatias, arritmias e talassemia alfa entram na nao imune, que hoje responde pela grande maioria dos casos.",
+    "verso_armadilha": "Puxar Coombs sempre que aparece anemia fetal. No eixo nao imune ele volta negativo e nao muda conduta nenhuma."
    }
   ]
  }

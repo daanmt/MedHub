@@ -1,6 +1,6 @@
 ---
 name: "source-command-estilo-flashcard"
-description: "Contrato de autoria de flashcards do MedHub — os 6 princípios para cunhar cards ancorados no erro metacognitivo, incluindo a leitura das alternativas erradas como nós. Consultar antes de gerar ou regenerar qualquer card."
+description: "Contrato de autoria de flashcards do MedHub — os 6 princípios para cunhar cards ancorados no erro metacognitivo, mais o teste de regenerabilidade que tria os candidatos antes de persistir. Consultar antes de gerar, triar ou regenerar qualquer card."
 ---
 
 # source-command-estilo-flashcard
@@ -36,6 +36,34 @@ O flashcard do MedHub não enuncia um fato genérico sobre um tema — ele **ref
    - **Não anula o princípio 2, amplia-o.** O erro continua definindo o **núcleo** e o primeiro card; o que muda é que o conjunto não para nele. A varredura proibida no princípio 2 é a genérica *sobre o tema*; esta é ancorada **nas alternativas que a banca de fato escreveu** — que são, por construção, o recorte que a prova considera discriminante.
    - **Mais cards, nunca cards maiores.** Ampliar o escopo não afrouxa a atomicidade: cada nó novo é um card novo com **um** critério de acerto, nunca um verso mais gordo. Ampliação que engorda o verso é a via direta para o passivo de não-atômicos (e para o ratchet do `d2026a1` recusar a escrita).
    - **Conectar a tema vizinho/nuclear é legítimo quando a ligação é estruturante** — é o que transforma conhecimento em rede em vez de lista, e é o mesmo princípio dos cards de altura graduada (`project_cards_altura_graduada`): o andaime a montante vale card quando o cluster inteiro depende dele.
+   - 🔴 **LIMITE (s172, primeiro teste em produção).** O 6o princípio foi aplicado ao Simulado 8 e o operador reverteu **25 dos 85** vereditos de triagem. Formulação dele: *"ampliou os pontos de conteúdo passíveis de expansão, mas cunhou bastante ruído -- o que eu justamente temia. nesse sentido, os cards realmente precisam de juízes de qualidade até mesmo pedagógica."* O princípio **fica** -- a ampliação é real e ele a confirma. O que ele ganha é o filtro do §Triagem abaixo. Sem esse filtro, ler o item inteiro produz volume, não rendimento.
+
+---
+
+## Triagem -- o teste de regenerabilidade (s172)
+
+Cunhar sob o 6o princípio e **triar** são atos separados. A cunhagem varre as alternativas; a triagem decide quais nós viram card. Sem a triagem o 6o princípio entrega ruído -- medido: 85 candidatos para 17 erros, dos quais o operador manteve 44.
+
+**O teste, aplicado card a card antes de persistir:**
+
+> O aluno consegue **regenerar** esta resposta a partir do card-núcleo do erro mais o mecanismo geral que ele já tem?
+>
+> - **Sim -> não é card.** O conteúdo pertence ao `verso_regra_mestre` do card-núcleo, ou a lugar nenhum. Card cuja resposta se deduz mede a dedução, não a memória -- e a nota FSRS que ele produz não informa nada.
+> - **Não -> é card.** Fato arbitrário: um número, uma janela de tempo, um nome próprio de achado, uma contagem de doses, um esquema posológico. Nada disso se deduz; ou está na memória ou não está.
+
+**O que as 25 inversões mostraram:**
+
+| ele RESGATOU (eu havia cortado) | ele CORTOU (eu havia mantido) |
+|---|---|
+| 12 cards, **8 deles `conteudo`** -- fato duro | 13 cards, **5 `discriminador` + 2 `mecanismo` + 2 `nuance`** |
+| "janela de 48-72 h para a excisão"; "resolve em 7 a 10 dias"; "SIRI em 4 a 8 semanas"; "bilirrubina > 0,2 mg/dl por hora"; "diabetes materno = 25% dos polidrâmnios"; "grão de café"; "doxiciclina 100 mg 12/12 h por 7 dias"; "falta o reforço da febre amarela" | "por que insuficiência uteroplacentária, RCF e pós-datismo cursam com oligoâmnio"; "fistulização aponta TB e não linfoma"; "PPD 0 é anergia"; "clearance não levanta o veto ao DOAC"; "hidropisia imune ou não imune" |
+| **Nenhum se deduz.** | **Todos se deduzem** do card-núcleo mais o mecanismo -- ou são o próprio raciocínio da questão reescrito como pergunta. |
+
+⚰️ **O caso que derruba a intuição.** *"Por que insuficiência uteroplacentária, restrição de crescimento fetal e pós-datismo cursam com oligoâmnio?"* foi celebrado na s171 como o melhor achado do 6o princípio -- um card que resolve três alternativas pelo mesmo mecanismo. O operador cortou. **Resolver três alternativas de uma vez é exatamente o sintoma:** se um mecanismo único explica as três, o aluno reconstrói as três a partir dele e o card não acrescenta recall. Economia de cards não é rendimento de cards.
+
+**Corolário que inverte a heurística de triagem.** O instinto metacognitivo puxa para o `discriminador` e o `mecanismo` -- parecem mais nobres que o fato solto. Contra este usuário o rendimento é o oposto: `conteudo` (cutoff, prazo, dose, prevalência, nome de achado, contagem de calendário) rende mais que `discriminador` derivado da mesma questão. Metade disso já estava em `feedback_epidemiologia_dados_cristalizar` ("dado numérico solto não tem âncora de raciocínio para este usuário; vira card dedicado sempre") -- a s172 generaliza de epidemiologia para **todo fato arbitrário**. O que **não** muda: o card-núcleo (`elo_quebrado`) é intocável -- os 12 núcleos das 85 triagens sobreviveram sem uma única inversão.
+
+🔴 **O juiz que falta é pedagógico, não estrutural.** Os 13 cards que o operador cortou **passam** no `audit_card_atomicity.py` e nos predicados de `card_checks.py`: são atômicos, têm um critério de acerto, frente gerativa, verso curto. O harness verifica FORMA e é cego a RENDIMENTO. Enquanto não existir predicado para isso, a triagem é humana e acontece **antes** do `insert_questao.py` -- e a lista integral de candidatos fica em disco para o operador derrubar o corte (`core/simulados/_s8_candidatos_full.json`; a proposta do agente, para o diff, em `_s8_erros_batch.PROPOSTA_AGENTE.json`).
 
 ---
 

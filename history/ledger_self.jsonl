@@ -698,3 +698,4 @@
 {"ts": "2026-09-08T23:38:16+00:00", "event": "resolved", "check": "cobertura_semana", "fingerprint": "f90ce40d5164", "alvo": "3. Urologia"}
 {"ts": "2026-09-09T00:29:56+00:00", "event": "opened", "check": "parity", "fingerprint": "ddf439b44739", "alvo": "command<->skill", "payload": {"n_drift": 2}}
 {"ts": "2026-09-09T01:39:16+00:00", "event": "resolved", "check": "parity", "fingerprint": "ddf439b44739", "alvo": "command<->skill"}
+{"ts": "2026-09-09T03:01:23+00:00", "event": "opened", "check": "card_autosuficiencia", "fingerprint": "ea53dcf01d83", "alvo": "card#1565", "payload": {"padrao": "deitico", "tema": "HIV"}}

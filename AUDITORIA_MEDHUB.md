@@ -1528,3 +1528,21 @@ Sensores existentes (`doc_drift.py`, `sync_skills --check`) reportavam 0 achados
 ---
 
 ---
+
+## 6p. Sessao de uso s172 (Claude Code/Opus 5, 2026-09-09) -- 1o teste em producao do 6o principio: achado F87
+
+> A fila de engenharia segue CONGELADA por decisao do operador. F87 e **registro**, nao agendamento --
+> existe para que a classe tenha evidencia quando a fila descongelar.
+
+### F87 -- O harness de flashcard verifica FORMA e e cego a RENDIMENTO: os 13 cards que o operador reprovou passam em TODOS os predicados -- **MEDIA** -- **ABERTO**
+
+- **Como apareceu:** o 6o principio do `estilo-flashcard` (alternativa errada = no) foi aplicado ao Simulado 8 e rendeu **85 candidatos para 17 erros**. O agente triou para 45; o operador julgou os 85 um a um numa bancada dedicada e **inverteu 25 vereditos (29%)**, fechando em 44. Veredito literal dele: *"ampliou os pontos de conteudo passiveis de expansao, mas cunhou bastante ruido -- o que eu justamente temia. nesse sentido, os cards realmente precisam de juizes de qualidade ate mesmo pedagogica."*
+- 🔴 **A evidencia dura:** os **13 cards que ele cortou passam** no `audit_card_atomicity.py`, no `card_self_sufficiency.py` e nos predicados de `tools/card_checks.py`. Sao atomicos, tem UM criterio de acerto, frente gerativa, verso curto, contexto alinhado. **Nenhum predicado do repo mede se o card vale a pena.** O harness responde "esta bem formado?" e nunca "isto acrescenta recall?".
+- **O sinal, medido:** o que ele RESGATOU (12 cards) era `conteudo` em 8 dos 12 -- fato arbitrario que nao se deduz (janela de 48-72 h; resolucao em 7-10 dias; SIRI em 4-8 semanas; bilirrubina > 0,2 mg/dl/h; diabetes = 25% dos polidramnios; "grao de cafe"; doxiciclina 100 mg 12/12 h por 7 d; reforco faltante da febre amarela). O que ele CORTOU (13 cards) era `discriminador` (5), `mecanismo` (2) e `nuance` (2) -- resposta **regeneravel** a partir do card-nucleo mais o mecanismo, ou o proprio raciocinio da questao reescrito como pergunta.
+- ⚰️ **O caso que derruba a intuicao do agente:** *"por que insuficiencia uteroplacentaria, RCF e pos-datismo cursam com oligoamnio?"* foi celebrado na s171 como o melhor achado do 6o principio (um card resolvendo tres alternativas pelo mesmo mecanismo). **O operador cortou.** Resolver tres alternativas de uma vez e o sintoma, nao a virtude: se um mecanismo unico explica as tres, o aluno as reconstroi e o card nao mede nada.
+- **O nucleo nunca oscilou:** dos 85 candidatos, os **12 `elo_quebrado` sobreviveram sem uma unica inversao**. O criterio "nucleo do erro intocavel" esta validado; o que falhou foi tudo o que orbita.
+- 🔎 **O unico predicado que reagiu -- e reagiu no lugar certo.** Apos aplicar o corte dele, o `insert_questao.py` emitiu `[AVISO-CARD] distrator-perdido` em exatamente **2 dos 17 erros** (Liquido Amniotico e HIV): sao os dois em que os cards cortados eram justamente os que carregavam a alternativa marcada. **Existe UM predicado adjacente a rendimento no repo, ele funciona, e ele nao bloqueia** -- ele marca a tensao real entre o 6o principio (ler as alternativas) e o filtro de regenerabilidade (cortar o que se deduz). Candidato natural a fixture de qualquer predicado futuro de rendimento.
+- **Remedio aplicado agora (documental, nao codigo):** `estilo-flashcard.md` ganhou o §Triagem com o **teste de regenerabilidade** e o corolario que inverte a heuristica (`conteudo` rende mais que `discriminador` derivado da mesma questao). A triagem fica **humana e antes do `insert_questao.py`**, com a lista integral guardada em disco para o operador derrubar o corte.
+- **Classe:** familia CONTEUDO (com F79/F79b/F81 -- `card_checks` cego a defeito de card), mas num eixo novo: os anteriores sao **defeito de forma que o gate nao ve**; F87 e **ausencia de forma defeituosa em card que nao deveria existir**. Um gate de rendimento, se algum dia existir, nao e um predicado sobre o texto do card -- e sobre a relacao entre o card e o resto do conjunto.
+
+---

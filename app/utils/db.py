@@ -569,6 +569,55 @@ def _ensure_revlog_columns(conn):
         conn.execute("ALTER TABLE fsrs_revlog ADD COLUMN card_version INTEGER")
     if "selection_reason" not in cols:
         conn.execute("ALTER TABLE fsrs_revlog ADD COLUMN selection_reason TEXT")
+    if "reason_servido" not in cols:
+        # F76 (s174): proveniencia RECOMPUTADA no ato do record (bucket real do
+        # card antes da revisao). Divergencia = selection_reason != reason_servido,
+        # consultavel por SQL -- o contador de gate-miss (B1) le daqui.
+        conn.execute("ALTER TABLE fsrs_revlog ADD COLUMN reason_servido TEXT")
+
+
+REASONS_EQUIVALENTES = {
+    # `pre_bloco` e MODO de servico (mini-drill de erros frescos de um tema), nao
+    # bucket: o card por baixo e fresh_error ou novo. Nao e divergencia.
+    "pre_bloco": {"fresh_error", "novo"},
+}
+
+
+def bucket_de(state, due, questao_id, instante=None):
+    """Bucket REAL de um card (puro): a mesma regra de `get_cards_by_bucket`, sem banco.
+
+    vencido    = state>0 e due antes de hoje 00:00
+    agendado   = state>0 e due dentro de hoje
+    fresh_error= state 0, nascido de erro (questao_id) e due (= criacao) na janela JANELA_FRESH_H
+    novo       = state 0 fora disso
+    futuro     = state>0 com due depois de hoje (servido fora de qualquer bucket)
+    """
+    from datetime import datetime as _dt, timedelta as _td
+    instante = instante or agora()          # relogio unico (F80)
+    if isinstance(due, str):
+        due = _dt.fromisoformat(due)
+    if not isinstance(due, _dt):
+        return "novo" if not int(state or 0) else "futuro"
+    if int(state or 0) == 0:
+        if questao_id is not None and due >= instante - _td(hours=JANELA_FRESH_H):
+            return "fresh_error"
+        return "novo"
+    inicio = instante.replace(hour=0, minute=0, second=0, microsecond=0)
+    fim = inicio + _td(days=1)
+    if due < inicio:
+        return "vencido"
+    if due < fim:
+        return "agendado"
+    return "futuro"
+
+
+def reason_diverge(recebido, servido) -> bool:
+    """Divergencia de proveniencia (F76). Sem `recebido` nao ha o que comparar."""
+    if not recebido or not servido:
+        return False
+    if recebido == servido:
+        return False
+    return servido not in REASONS_EQUIVALENTES.get(recebido, set())
 
 
 def record_review(flashcard_id, rating, selection_reason=None):
@@ -591,13 +640,27 @@ def record_review(flashcard_id, rating, selection_reason=None):
         else:
             card_data = df.iloc[0].to_dict()
             card_novo = False
-        return _aplicar_review(conn, card_data, rating, card_novo=card_novo,
-                               selection_reason=selection_reason)
+        # F76 (s174): proveniencia REAL recomputada ANTES de aplicar (a revisao
+        # muda state/due). `--reason auto` = usar a recomputada.
+        row_q = conn.execute("SELECT questao_id FROM flashcards WHERE id = ?",
+                             (flashcard_id,)).fetchone()
+        questao_id = row_q[0] if row_q else None
+        reason_servido = bucket_de(card_data.get('state'), card_data.get('due'), questao_id)
+        if selection_reason == "auto":
+            selection_reason = reason_servido
+        metrics = _aplicar_review(conn, card_data, rating, card_novo=card_novo,
+                                  selection_reason=selection_reason,
+                                  reason_servido=reason_servido)
+        metrics["reason_servido"] = reason_servido
+        metrics["selection_reason"] = selection_reason
+        metrics["reason_divergente"] = reason_diverge(selection_reason, reason_servido)
+        return metrics
     finally:
         conn.close()
 
 
-def _aplicar_review(conn, card_data, rating, card_novo=False, selection_reason=None):
+def _aplicar_review(conn, card_data, rating, card_novo=False, selection_reason=None,
+                    reason_servido=None):
     """Núcleo da gravação sobre um estado LIDO (testável em separado).
 
     Lock otimista: o UPDATE é condicionado ao `last_review` lido — duas
@@ -673,13 +736,13 @@ def _aplicar_review(conn, card_data, rating, card_novo=False, selection_reason=N
     cursor.execute('''
         INSERT INTO fsrs_revlog (card_id, rating, state, due, stability, difficulty,
                                  elapsed_days, last_elapsed_days, scheduled_days,
-                                 card_version, selection_reason, review_time)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                                 card_version, selection_reason, review_time, reason_servido)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ''', (
         flashcard_id, rating, new_metrics['state'], new_metrics['due'],
         new_metrics['stability'], new_metrics['difficulty'],
         new_metrics['elapsed_days'], elapsed_anterior, new_metrics['scheduled_days'],
-        versao_vista, selection_reason, carimbo()
+        versao_vista, selection_reason, carimbo(), reason_servido
     ))
 
     conn.commit()

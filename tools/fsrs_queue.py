@@ -129,9 +129,12 @@ def main():
     parser.add_argument("--rating", type=int, choices=[1, 2, 3, 4],
                         help="Avaliação 1=Novamente 2=Difícil 3=Bom 4=Fácil (com --record)")
     parser.add_argument("--reason", default=None,
-                        choices=["vencido", "fresh_error", "agendado", "novo", "pre_bloco"],
+                        choices=["vencido", "fresh_error", "agendado", "novo", "pre_bloco", "auto"],
                         help="P3: por que o card foi servido — propague o selection_reason "
-                             "que veio no --next/--list; persiste no revlog")
+                             "que veio no --next/--list; persiste no revlog. F76: o --record "
+                             "recomputa o bucket real e grava fsrs_revlog.reason_servido; "
+                             "divergencia vira [WARN] em stderr (nao bloqueia). "
+                             "`auto` = gravar o recomputado")
     parser.add_argument("--area", help="Filtro de área (match exato)")
     parser.add_argument("--tema", help="Filtro de tema (LIKE)")
     parser.add_argument("--limit", type=int, help="Máximo de cards na fila (--list)")
@@ -178,12 +181,21 @@ def main():
             _emit({"recorded": False, "card_id": args.record,
                    "error": f"rating nao gravado (estado mudou desde a leitura): {e}"})
             sys.exit(1)
+        # F76 (s174): proveniencia recomputada no ato -- divergencia AVISA (stderr,
+        # nao bloqueia) e fica GRAVADA em fsrs_revlog.reason_servido.
+        if metrics.get("reason_divergente"):
+            print(f"[WARN] reason divergente: servido={metrics.get('reason_servido')}, "
+                  f"recebido={metrics.get('selection_reason')} "
+                  f"(gravado em fsrs_revlog.reason_servido; revisar.md §4)", file=sys.stderr)
         _emit({
             "recorded": True,
             "card_id": args.record,
             "rating": args.rating,
             "next_due": metrics.get("due"),
             "state": metrics.get("state"),
+            "selection_reason": metrics.get("selection_reason"),
+            "reason_servido": metrics.get("reason_servido"),
+            "reason_divergente": bool(metrics.get("reason_divergente")),
         })
         return
 

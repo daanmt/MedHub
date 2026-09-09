@@ -55,7 +55,10 @@ python tools/fsrs_queue.py --list [--area X] [--tema Y] [--limit N] [--new-limit
 
 # Gravar a avaliação de um card (1=Novamente 2=Difícil 3=Bom 4=Fácil)
 # P3: propagar o selection_reason que veio no card servido (--next/--list)
-python tools/fsrs_queue.py --record <card_id> --rating <1-4> --reason <vencido|fresh_error|agendado|novo|pre_bloco>
+python tools/fsrs_queue.py --record <card_id> --rating <1-4> --reason <vencido|fresh_error|agendado|novo|pre_bloco|auto>
+# F76 (s174): o --record RECOMPUTA o bucket real do card e grava fsrs_revlog.reason_servido;
+# --reason divergente do servido => [WARN] em stderr (nao bloqueia) e a divergencia fica
+# consultavel por SQL (selection_reason != reason_servido). `auto` grava o recomputado.
 
 # P3: consequência dos 4 ratings para um card (sem gravar nada)
 python tools/fsrs_queue.py --preview <card_id>
@@ -80,7 +83,10 @@ vazamento de rótulo (modo de falha #8 do handoff de flashcards) era tribal:
    exibir de forma curta (`fresh_error` → "⚠ erro recente"; `vencido` →
    "↻ revisão vencida"; `agendado` → "agendado p/ hoje"; `novo` → "✦ novo").
 4. **Propagar a proveniência no record**: gravar SEMPRE com `--reason` igual ao
-   `selection_reason` servido — é o que torna a fila auditável no revlog.
+   `selection_reason` servido — é o que torna a fila auditável no revlog. Desde o
+   F76 (s174) o CLI recomputa o bucket e grava `reason_servido` na mesma linha: um
+   `[WARN] reason divergente` em stderr é gate-miss do agente (bloco misto gravado
+   com um reason só, como o #559 na s167) — corrigir o hábito, não silenciar.
 
 **Flags:**
 

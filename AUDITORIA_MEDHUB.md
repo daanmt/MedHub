@@ -1412,9 +1412,10 @@ Sensores existentes (`doc_drift.py`, `sync_skills --check`) reportavam 0 achados
 - **F67 (taxonomia duplicada):** #1095 (GO/Endometriose) e #1446 (Ginecologia/Endometriose) sao o mesmo card (USGTV com preparo p/ endometriose profunda) em dois temas; o `--cluster` serviu os dois no mesmo bloco. Dedup de (GO, Endometriose) -> (Ginecologia, Endometriose) e o candidato imediato.
 - **Leech candidato:** #245 (Kasai < 60 dias) caiu 4x em 2 sessoes antes de fechar; #1112 (swab EGB 35-37) oscilou 37/34/34-36 na mesma sessao; #567 (cefalohematoma) teve a coleção dita 3x e a conduta nunca. Os tres sao dado numerico/composto -- F40 e curva de esquecimento se tocam aqui.
 
-### F76 -- `fsrs_queue --record --reason` aceita proveniencia divergente do card servido sem aviso -- **BAIXA** -- **ABERTO**
+### F76 -- `fsrs_queue --record --reason` aceita proveniencia divergente do card servido sem aviso -- **BAIXA** -- **RESOLVIDO (hotfix s174, `.vibeflow/hotfixes/2026-09-09-reason-divergente-gravado.md`)**
 - **Evidencia (s167):** o bloco 7 misturava 1 card `vencido` (#559) com 8 `agendado`; o agente gravou os 9 com `--reason agendado`. O CLI aceitou e o revlog de #559 carrega proveniencia falsa. O contrato de apresentacao (`revisar.md` §4) diz "gravar SEMPRE com --reason igual ao selection_reason servido", mas nada verifica: o `selection_reason` e derivado (bucket) e o CLI poderia recomputa-lo no `--record` e avisar (ou corrigir) quando o argumento diverge.
 - **Remedio (S):** em `--record`, recomputar o bucket do card na hora e emitir `[WARN] reason divergente: servido=vencido, recebido=agendado` em stderr (nao bloquear). Opcional: `--reason auto`.
+- **Fechamento (s174, 2026-09-09; A4 do `/ai-eng`: WARN nao BLOCK + ALTERA "gravado, nao so impresso"):** `db.bucket_de` (puro) recomputa o bucket antes de aplicar; coluna nova `fsrs_revlog.reason_servido` (historico NULL); `reason_divergente` no retorno e no JSON do `--record`; `[WARN] reason divergente` em stderr; `--reason auto`. `pre_bloco` cobre `fresh_error`/`novo` (modo, nao bucket). Query do contador B1 fixada em `tools/test_reason_divergente.py` (9 testes, 9 vermelhos antes). `revisar.md` §4 atualizado + espelho regenerado.
 
 ## 4r. Sessao de uso s168 (Claude Code/Opus 5, 2026-09-07) -- precificacao da grade: achado F77
 

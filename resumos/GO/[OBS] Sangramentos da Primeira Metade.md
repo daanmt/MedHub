@@ -341,8 +341,9 @@ Imunoglobulina anti-D: todas as pacientes **Rh negativo**
 > ⚠️ β-hCG negativo em 1 semana = abortamento (mola levaria muito mais tempo para negativar)
 
 **Critérios diagnósticos de NTG (qualquer um é suficiente para diagnóstico):**
-- Platô do hCG por 3 semanas consecutivas (sem queda nem subida)
-- Aumento > 10% do hCG em 2 dosagens consecutivas (2 semanas)
+- ⭐ Platô do hCG (variação de ate 10%) em **4 dosagens** ao longo de **3 semanas** (dias 1, 7, 14, 21)
+- ⭐ Aumento > 10% do hCG em **3 dosagens** ao longo de **2 semanas** (dias 1, 7, 14)
+- 🔴 **O critério é CONTAGEM DE DOSAGENS, não duração isolada.** Este arquivo trazia "aumento em 2 dosagens" -- trocou o eixo e deixa passar o caso de 3. Regra de memória: **platô = 4 dosagens / 3 semanas · aumento = 3 dosagens / 2 semanas** (o platô precisa de mais pontos porque provar que algo NÃO mudou exige mais evidência do que provar que subiu).
 - hCG persistentemente positivo após 6 meses
 - Histologia confirmando coriocarcinoma
 

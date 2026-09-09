@@ -152,7 +152,7 @@ Anticorpos exógenos presentes em transfusões de sangue ou imunoglobulinas poli
 ### 4.3 Idoso (60+ anos)
 - dT + Hepatite B (olha pra trás; sem febre amarela/tríplice viral de rotina nessa faixa).
 - **Influenza:** dose única anual (grupo de risco).
-- **Pneumocócica 23-valente:** dose única para acamados ou moradores de instituição fechada.
+- ⭐ **Pneumocócica 20-valente:** dose única para acamados ou moradores de instituição fechada. 🔴 **A pneumo 20 substituiu a 23** -- e também a 10 (criança) e a 13 (CRIE): o PNI convergiu **tudo** para a 20. As *indicações* não mudaram, só o produto. Marcar "pneumo 23 no idoso" é a versão velha; e a demência **só** entra se houver acamamento ou institucionalização.
 
 ### 4.4 Gestante
 - **Influenza:** uma dose anual.
@@ -191,7 +191,8 @@ Disponibilizam vacinas/imunoglobulinas gratuitas para populações especiais: im
 
 - **Substituição Definitiva da VOP por VIP:**
   - A vacina oral (VOP - gotinha) foi completamente descontinuada. Todo o esquema de poliomielite agora é feito com a **VIP (Vacina Inativada Poliomielite - injetável)**.
-  - O esquema consolidado consiste em doses aos 2, 4, 6 e 15 meses. **O reforço aos 4 anos foi abolido.** ⭐
+  - ⭐ **O esquema atual tem DOIS reforços: 2, 4, 6 meses (primário) + 15 meses (1º reforço) + 4 anos (2º reforço).**
+  - 🔴 **REVERSÃO (03/08/2026, NT 64/2026 do MS -- anunciada em 22/06/2026):** o 2º reforço aos 4 anos, que havia sido abolido, **foi REINTRODUZIDO com VIP**. ⚰️ Este arquivo afirmou "o reforço aos 4 anos foi abolido" -- era verdade até 02/08/2026 e **hoje está errado**. Provas anteriores a agosto/2026 podem gabaritar o esquema sem ele; **ENAMED 13/09 e UERJ 01/11 não**. Se a memória trouxer "abolido", é a versão velha.
 - **Meningocócica ACWY aos 12 meses E no adolescente (desde 2020):**
   - O reforço de meningococo no primeiro ano de vida agora é feito com a vacina quadrivalente (ACWY), substituindo a monovalente C.
   - 🔴 A ACWY **já é parte oficial do calendário do adolescente do PNI** (11-14 anos) desde 2020 -- não é apenas recomendação da Sociedade Brasileira de Pediatria/Imunizações. Cuidado com questões que insinuam "o PNI só tem MenC": a tabela MS x Sociedades mostra onde as sociedades pedem MAIS cobertura (boosters extras aos 4-6/16 anos, MenB), não que o PNI não tenha ACWY nenhuma.
@@ -244,7 +245,8 @@ Disponibilizam vacinas/imunoglobulinas gratuitas para populações especiais: im
 
 ### 6.3 Situações Especiais
 - **Filho de mãe HIV+:** vacinar **ao nascer** (sem comprovação de imunodeficiência ainda); crianças maiores só se não forem imunodeficientes.
-- **Filho de mãe com TB bacilífera ativa no parto:** **NÃO vacinar ao nascer.** Iniciar quimioprofilaxia primária (isoniazida ou rifampicina) por 3 meses -> PPD: se **não reagente** (< 5mm), suspender QP e vacinar com BCG; se **reagente** (>= 5mm), manter isoniazida por mais 3-6 meses (ou rifampicina por +1 mês) e **não vacinar**. Amamentação liberada com máscara.
+- ⭐ **Filho de mãe com TB bacilífera ativa no parto:** **NÃO vacinar ao nascer.** Conduta atual = **rifampicina por 4 meses**; ao fim dos 4 meses, suspender a rifampicina e **vacinar com BCG**. 🔴 **Sem prova tuberculínica, sem raio-x, sem ramificação** -- o fluxo antigo (QP 3 meses -> PPD -> se não reagente vacina / se reagente mantém isoniazida) **só se usa quando não há rifampicina disponível**. Simplificou: se a memória trouxer o PPD como passo obrigatório, é a versão velha. Amamentação liberada com máscara.
+  - ⚠️ **O gatilho é BACILÍFERA, não "tem TB".** Mãe em tratamento com baciloscopia negativa comprovada -> vacina normalmente. Mãe em tratamento **sem exame que comprove a negativação** -> conta como bacilífera, não vacina. Vale igual para qualquer contactante domiciliar bacilífero, não só a mãe.
 - **Contactante domiciliar de hanseníase**, maior de 1 ano: dose extra de BCG.
 - **Contactante de TB bacilífera SEM vacinação prévia (não é RN de mãe bacilífera, é contato posterior):** iniciar quimioprofilaxia primária e testar PPD em 3 meses -- não vacinar de imediato.
 
@@ -316,7 +318,8 @@ Vacinas combinadas inativadas contra Difteria (toxina, pseudomembrana em orofari
 A última dose de DTP no calendário infantil é aos 4 anos; a imunidade cai após ~10 anos, deixando adultos suscetíveis. O lactente só recebe sua 1ª dose de DTP aos 2 meses (proteção plena só na 3ª dose, aos 6 meses) -- fica desprotegido nesse intervalo. A dTpa na gestante (>= 20 semanas) gera anticorpos maternos que atravessam a placenta e protegem o RN até ele completar sua própria vacinação. Se aplicada só no puerpério, protege apenas a mãe (sem transferência via leite).
 
 ### 8.3 Prevenção do Tétano Acidental (ferimento)
-- **Última dose há < 5 anos:** não aplicar vacina nem imunoglobulina, independente do tipo de ferimento.
+- ⭐ **MELHOR CENÁRIO -- e ele tem DUAS metades, não uma:** esquema **completo (>= 3 doses)** **E** última dose **há < 5 anos** -> não aplicar vacina nem imunoglobulina, **independente do tipo de ferimento** (fratura exposta, prego enferrujado, grande queimado: nada). 🔴 Esta linha já trazia só a metade do tempo ("última dose < 5 anos") e isentava, por exemplo, quem tomou **1** dose há 2 anos. Sem as 3 doses não existe esquema completo, e sem esquema completo não existe melhor cenário.
+- 🔴 **CONTAGEM DO COMPONENTE TETÂNICO -- a distinção que ele erra.** **DTP, DTPa, dT e dTpa somam no MESMO componente tetânico.** Duas DTP na infância + uma dT na adolescência = **três doses = esquema básico COMPLETO**; não falta nenhuma. O nome do produto muda com a idade (D grande até 7 anos, d pequeno depois) e com o que mais se quer cobrir (coqueluche), **mas o contador de tétano é um só e nunca zera**. Corolário: **dose dada não é dose perdida** -- não se reinicia esquema de vacina nenhuma, nunca, por maior que seja o intervalo.
 - **Ferimento de risco mínimo** (superficial, limpo, sem corpo estranho/tecido desvitalizado): nunca usa imunoglobulina. Vacina se esquema desconhecido (3 doses), incompleto (completar) ou última dose > 10 anos (1 reforço).
 - **Ferimento de alto risco** (profundo, sujo, corpo estranho, queimadura, puntiforme, arma branca/fogo, mordedura, politrauma, fratura exposta): vacina se desconhecido/incompleto/última dose > 5 anos; **imunoglobulina** se desconhecido, incompleto, OU última dose > 5 anos **em imunodeprimido/desnutrido grave/idoso**, OU > 10 anos com ferimento mal cuidado.
 - 🔴 **A imunoglobulina NÃO é automática só por o ferimento ser de alto risco.** Paciente saudável, esquema completo, última dose entre 5-10 anos: só precisa do reforço vacinal -- os critérios de imunoglobulina (esquema desconhecido/incompleto, OU população especial, OU > 10 anos mal cuidado) têm que ser checados um a um antes de indicá-la.
@@ -353,7 +356,7 @@ O *Clostridium tetani* é **anaeróbico** -- toda a lógica do cuidado local gir
 - **VOP (Sabin):** poliovírus 1 e 3, **vivo atenuado**. Oral. Vantagem: barata, fácil aplicação, gera imunidade de rebanho (excretada nas fezes, compete com vírus selvagem no intestino). Desvantagem: pode causar poliomielite associada à vacina.
 - **Prevenção:** paralisia flácida aguda (déficit motor, sensibilidade preservada) ou forma não paralítica (febre, mialgia, rigidez de nuca).
 - **História:** último caso no Brasil em 1989; Américas livres do vírus selvagem em 1994; sorotipo 2 erradicado globalmente em 2015 (VOP trivalente -> bivalente); sorotipo 3 erradicado em 2019. A OMS recomenda a transição de longo prazo VOP -> VIP para eliminar o risco de pólio vacinal.
-- **Idade (PNI):** VIP aos 2/4/6 meses; VOP de reforço aos 15 meses, 4 anos, e em campanhas (1 a 5 anos). ⭐ Ver seção 5 -- essa VOP de reforço já foi abolida e substituída por VIP nas atualizações mais recentes; checar a versão vigente no enunciado.
+- ⭐ **Idade (PNI, vigente):** **VIP em TODAS as doses** -- 2/4/6 meses (primário) + **15 meses** (1º reforço) + **4 anos** (2º reforço). ⚰️ **A VOP (gotinha) não existe mais em lugar nenhum do calendário**, nem em campanha. E o 2º reforço aos 4 anos, abolido por um período, foi **reintroduzido em 03/08/2026** (ver seção 5). Se o enunciado citar VOP, ou é questão antiga ou é distrator.
 - **Viajantes:** indo para área de risco -- < 5 anos com calendário completo; >= 5 anos precisam de >= 2 doses de VIP (idealmente 3), intervalo mínimo de 30 dias, antes da viagem. Chegando ao Brasil vindo de área de risco, não vacinado -- 1 dose de VIP imediata a partir de 6 semanas de vida.
 - **Reações adversas:** VIP bem tolerada (reações locais/febre/mal-estar). VOP: risco de poliomielite associada à vacina (no imunizado ou em contactantes); vírus excretado nas fezes por 4-6 semanas -- contraindicada em imunodeficientes, HIV-exposto sem definição diagnóstica, contactante de imunodeficiente, e ambiente hospitalar. Diarreia leve não contraindica (adiar só se descompensada/crônica).
 
@@ -373,7 +376,8 @@ O VSR é a principal causa de bronquiolite e pneumonia no lactente. A prevençã
   - **CRIEs:** todos os **< 37 semanas** no 1º ano de vida; portadores de comorbidades nos 2 primeiros anos (cardiopatia congênita, displasia broncopulmonar da prematuridade, imunocomprometidos, síndrome de Down, fibrose cística, doença neuromuscular, anomalias congênitas de via aérea).
   - **Sociedades (SBP/SBIM):** todas as crianças no 1º ano de vida.
   - ⭐ Monoclonal específico -- **não interfere** com nenhuma vacina (ver 1.4); o lactente segue o calendário sem atraso.
-- **Abrysvo (vacina anti-VSR da gestante):** inativada, bivalente, recombinante, intramuscular, **incorporada ao PNI**. Dose única na gestante entre **32 e 36 semanas** (bula: 24-36 semanas). Objetivo = passagem transplacentária de anticorpos que protegem o RN até os 6 meses -- mesma lógica da dTpa.
+- **Abrysvo (vacina anti-VSR da gestante):** inativada, bivalente, recombinante, intramuscular, **incorporada ao PNI**. ⭐ Dose única **a partir de 28 semanas** pelo PNI/MS. 🔴 A janela **32-36 semanas** é do **ACIP (EUA)**, não do Brasil -- este arquivo trazia a americana. Objetivo = passagem transplacentária de anticorpos que protegem o RN até os 6 meses, mesma lógica da dTpa (e mesma razão de ser "quanto mais perto do parto, melhor" ter limite: precisa de tempo para a mãe fabricar o anticorpo).
+  - ⚠️ **Vacina materna não cancela o nirsevimabe do bebê** quando o bebê tem indicação própria (prematuro, ou comorbidade no 2º ano) -- faz-se a dupla proteção. No RN a **termo**, o nirsevimabe só entra se a mãe recebeu a Abrysvo **menos de 14 dias antes do parto** (não deu tempo de fabricar anticorpo).
 
 ---
 

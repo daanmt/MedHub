@@ -29,9 +29,9 @@ aliases: [Icterícia Neonatal, Sepse Neonatal, Kernicterus, Listeria, Foterapia,
     - Bilirrubina predominante: **Indireta (não-conjugada)**.
 - ⚠️ **Padrão de prova -- sinais de icterícia patológica:**
     - Início **< 24h** de vida -> etiologia hemolítica até prova em contrário.
-    - Velocidade de ascensão > 0,5 mg/dL/h ou > 5 mg/dL/dia.
-    - Bilirrubina Direta (BD) > 1,0-2,0 mg/dL ou > 20% da BT -> sempre patológica.
-    - Icterícia persistente (> 14 dias no termo ou > 21 dias no prematuro).
+    - Velocidade de ascensão **> 5 mg/dL/dia**, o que equivale a **~0,2 mg/dL/h**. 🔴 **Selo de banca (ENARE/ENAMED 2025):** o comentário oficial cobra **> 0,2 mg/dL/h**. O valor **0,5 mg/dL/h**, que circula em parte da literatura, é 2,5x mais frouxo e **não fecha com o "5 mg/dL/dia" da mesma lista** -- guardar 0,2 para prova, e ler 0,5 como marcador de ritmo hemolítico agudo, não como o corte de "patológica".
+    - Bilirrubina Direta (BD) **> 1,0 mg/dL** -> sempre patológica (o corte de 2,0 mg/dL ou > 20% da BT aparece em referências mais antigas; a banca de 2025 usou **1,0**).
+    - Icterícia persistente: **> 7 dias no termo ou > 14 dias no prematuro** pelo ENARE/ENAMED 2025. ⚠️ O corte clássico de icterícia **prolongada** (> 14 dias no termo, > 21 no prematuro) segue valendo para disparar a investigação de colestase/AVB -- são **duas réguas distintas**: 7/14 responde "esta icterícia é patológica?", 14/21 responde "esta icterícia é prolongada e exige investigar BD?". Não colapsar as duas.
 
 ### 1.3 Avaliação Clínica (Zonas de Kramer)
 
@@ -148,6 +148,7 @@ A progressão cefalocaudal da icterícia permite estimar a Bilirrubina Total (BT
 ### 5.2 Classificação Cronológica
 
 - ⭐ **Sepse Precoce (< 72h de vida):** transmissão vertical (ascendente ou intraparto).
+    - ⚠️ **Exceção do GBS:** por *Streptococcus agalactiae* a doença ainda é classificada como **precoce até 7 dias de vida**. O corte de 72h vale para todo o resto. Um RN que abre quadro no 5º dia por GBS **não** é sepse tardia.
     - **Agentes:** *Streptococcus agalactiae* (GBS, Streptococcus do Grupo B) e *Escherichia coli*.
     - **Fatores de risco:** ruptura prolongada de membranas (PROM > 18h), corioamnionite, febre materna intraparto (> 38°C), prematuridade, colonização materna por GBS sem profilaxia adequada, **infecção urinária materna (ITU)**.
     - ⭐ **Listeria monocytogenes -- perfil discriminador:**
@@ -173,7 +174,8 @@ A progressão cefalocaudal da icterícia permite estimar a Bilirrubina Total (BT
 ### 5.4 Tratamento Empírico
 
 - ⭐ **Sepse Precoce:** **Ampicilina + Gentamicina** (cobertura de GBS e *E. coli*).
-- **Sepse Tardia Nosocomial:** **Vancomicina + Amicacina** (cobertura de *Staph* coagulase-negativo e Gram-negativos hospitalares); ajustar conforme cultura.
+- ⭐ **Sepse Tardia -- empírico padrão: Oxacilina + Amicacina.** É o que o MS/SBP preconizam e o que a banca cobra. A oxacilina cobre o *Staph aureus* sensível, que é o alvo do empírico.
+- **Sepse Tardia com perfil NOSOCOMIAL declarado:** trocar oxacilina por **Vancomicina** *apenas* quando a flora local ou o caso justificarem (*Staph* coagulase-negativo em cateter, MRSA documentado, UTI neonatal com resistência conhecida). 🔴 **Vancomicina não é o empírico de rotina da sepse tardia** -- a diretriz é explícita contra o uso rotineiro (stewardship: uso empírico amplo seleciona resistência e não melhora desfecho). Descalonar assim que a cultura voltar.
 - **Meningite Associada:** substituir aminoglicosídeo por **Cefotaxima** (penetra barreira hematoencefálica; evitar **Ceftriaxona** pelo risco de deslocamento da bilirrubina da albumina).
 - **Duração:** sepse sem foco -- 10 a 14 dias; meningite por GBS -- 14 a 21 dias; meningite por Gram-negativos -- 21 dias.
 
@@ -199,7 +201,8 @@ A progressão cefalocaudal da icterícia permite estimar a Bilirrubina Total (BT
 - 🔴 **Ceftriaxona no neonato:** proibida -- compete com a bilirrubina pela ligação à albumina, aumentando bilirrubina livre e risco de kernicterus.
 - 🔴 **Urocultura na sepse precoce:** não solicitar -- infecção urinária é rara nas primeiras 72h; é obrigatória apenas na sepse tardia.
 - 🔴 **G6PD e Coombs negativo:** hemólise grave com Coombs negativo em RN do sexo masculino deve sugerir deficiência de G6PD; dosar a enzima após resolução do episódio (falso-negativo durante a crise).
-- 🔴 **Sepse tardia nosocomial:** o regime empírico inclui **Vancomicina** (não Oxacilina) por conta do perfil de resistência do *Staph* coagulase-negativo em UTI neonatal.
+- 🔴 **Sepse tardia -- a armadilha inverteu de lado.** O empírico é **Oxacilina + Amicacina**; marcar Vancomicina como regime de partida é o erro. A vancomicina entra por **justificativa** (flora nosocomial, cateter, MRSA documentado), nunca por reflexo -- a diretriz desaconselha explicitamente o uso empírico rotineiro. ⚠️ Esta linha já ensinou o contrário neste arquivo: se a memória trouxer "vanco, não oxacilina", é a versão velha.
+- 🔴 **Trio fixo do neonato com febre:** hemograma + hemocultura + **líquor**. O líquor não é condicional -- meningite neonatal não tem sinal clínico próprio, e todo protocolo de suspeita de sepse o inclui. Urina entra na **tardia** (na precoce, ITU é rara e não se pede).
 - 🔴 **Profilaxia Rh:** a imunoglobulina anti-D deve ser administrada à mãe Rh− em até **72h pós-parto**; também indicada após abortamento, amniocentese e outras situações de contato feto-materno.
 - 🔴 **IGIV em icterícia neonatal:** não é adjuvante à fototerapia de rotina -- sua indicação é restrita a hemólise isoimune grave com BT ascendente apesar de fototerapia. Adicioná-la sem hemólise imune documentada é erro de indicação.
 - 🔴 **Icterícia tardia e leite materno:** icterícia em RN com > 14-15 dias e clínica de leite materno (AME, bom ganho de peso) NÃO permite suspender o leite sem primeiro dosar bilirrubinas. BD elevada muda completamente o fluxo para investigação de AVB.

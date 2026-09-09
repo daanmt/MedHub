@@ -18,18 +18,21 @@ aliases: [Cuidados Neonatais, Reanimação Neonatal, Neonato, RN, Prematuridade,
 - ≥ 34wk + respira ou chora e tem tônus
 	- contato pele a pele RN e mãe
 	- secar, retirar campos úmidos e por touca
-	- clampear tardiamente o cordão (>60s)
+	- clampear tardiamente o cordão: **mínimo 60s**
 	- amamentação na primeira meia hora
 	- avaliação contínua
 
 - < 34 wk
 	- contato pele a pele RN e mãe
-	- campos estéreis aquecidos e touca dupla
-	- clampear o cordão com, no mínimo, 30s.
+	- **não secar o corpo** (só a cabeça) -- saco plástico de polietileno, campos estéreis aquecidos e touca dupla
+	- clampear tardiamente o cordão: **mínimo 60s** (o mesmo do termo)
 	- mesa de reanimação + UTI neonatal
 
+- 🔴 **O tempo de clampeamento NÃO varia com a idade gestacional: 60s para todos.** Este arquivo trazia ">60s no >= 34 / 30s no < 34" e o [[Reanimação Neonatal]] trazia exatamente o **inverso** -- os dois estavam errados, em direções opostas. Diretriz SBP 12/06/2026: **um número só**.
+
 - não respira ou chora ou sem tônus
-	- estímulo tátil no dorso duas vezes
+	- estímulo tátil no dorso, circular, por no máximo **15 segundos** (não é mais "duas vezes" -- o critério virou tempo)
+	- sem resposta: **considerar ordenha de cordão** (3x, em direção ao bebê; só em >= 28 semanas) antes de clampear e levar à mesa
 	- clampear o cordão de imediato
 	- iniciar reanimação neonatal
 

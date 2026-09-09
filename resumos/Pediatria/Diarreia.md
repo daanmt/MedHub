@@ -148,7 +148,9 @@ Corresponde a mais de 90% das diarreias agudas. A maioria é transmitida por via
 
 ### 6.1 Antibioticoterapia
 - A maioria das diarreias agudas infecciosas é viral; antibioticoterapia **não deve ser rotina**. Primeiro conduz-se a desidratação, depois se avalia a necessidade de antimicrobianos.
-- **Indicações de antibioticoterapia empírica:** comprometimento do estado geral, disenteria, cólera grave.
+- ⭐ **Indicações de antibioticoterapia empírica -- são DUAS, e a primeira é uma CONJUNÇÃO:** (1) **disenteria COM comprometimento do estado geral**; (2) **cólera grave**.
+- 🔴 **Disenteria sozinha NÃO indica antibiótico.** Esta linha já listou "comprometimento do estado geral, disenteria, cólera grave" como três itens soltos -- a vírgula transformava a conjunção em três gatilhos independentes e liberava ATB para toda criança com sangue nas fezes. Criança disentérica **em bom estado geral não recebe antibiótico**. É a mesma família do erro de ler `E` como `OU` (ver o padrão de enunciado composto).
+  - ⚠️ **Cólera:** diarreia secretória, aspecto de **água de arroz**, odor de peixe podre. Azitromicina é a primeira escolha, mas a banca do INEP tem preferência declarada por **doxiciclina** -- guardar as duas, marcar a doxiciclina como a resposta esperada.
   - Crianças até 30 kg (a partir de 3 meses, sem imunodeficiência): azitromicina 10 mg/kg no 1º dia e 5 mg/kg por mais 4 dias, via oral; ou ceftriaxona 50 a 100 mg/kg/dia por 3 a 5 dias, endovenosa ou intramuscular.
   - Crianças com mais de 30 kg, adolescentes e adultos: ciprofloxacino 500 mg de 12/12h por 3 dias, via oral; ou ceftriaxona na mesma dose acima.
   - Preferência sempre pela via oral.

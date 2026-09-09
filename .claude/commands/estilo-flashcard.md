@@ -1,5 +1,5 @@
 ---
-description: "Contrato de autoria de flashcards do MedHub — os 5 princípios para cunhar cards ancorados no erro metacognitivo. Consultar antes de gerar ou regenerar qualquer card."
+description: "Contrato de autoria de flashcards do MedHub — os 6 princípios para cunhar cards ancorados no erro metacognitivo, incluindo a leitura das alternativas erradas como nós. Consultar antes de gerar ou regenerar qualquer card."
 type: skill
 layer: commands
 status: canonical

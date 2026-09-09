@@ -330,13 +330,102 @@ REGISTROS_DE_SUITE = (
 )
 
 
+# Verbos de EXECUCAO: uma suite citada como argumento de um destes esta sendo
+# rodada. Citada em qualquer outro lugar do arquivo -- comentario, docstring,
+# mensagem de WARN, lista de gatilho -- e mencao, nao inscricao (F86, s171).
+# vibeflow:allow SEC108: sao NOMES a reconhecer via AST, nao chamadas. Nada
+# aqui executa nada -- o conjunto e comparado contra `ast.Call.func`.
+_VERBOS_EXECUCAO = frozenset({
+    "run_command", "_run_suite", "_roda", "run", "call", "check_call",
+    "check_output", "Popen", "main",
+})
+
+
+def _padroes_python_files(texto):
+    """Padroes do campo `python_files` do pytest.ini (casados por fnmatch)."""
+    for linha in texto.splitlines():
+        limpa = linha.strip()
+        if limpa.startswith("python_files"):
+            _, _, valor = limpa.partition("=")
+            return valor.split()
+    return []
+
+
+def _suites_executadas(texto):
+    """Nomes de suite que aparecem como argumento de uma chamada de EXECUCAO.
+
+    Le a ESTRUTURA (AST), nao o texto. Cobre os dois formatos reais do repo:
+    a lista inline -- `run_command([sys.executable, "tools/test_x.py"], d)` --
+    e a lista montada em variavel antes da chamada, que o `auto_check` usa em
+    varios pontos (`cmd_tel = [...]; run_command(cmd_tel, ...)`).
+
+    Sintaxe quebrada = conjunto vazio: o registro deixa de cobrir, nunca
+    levanta (convencao de sensor).
+    """
+    import ast
+    from os.path import basename
+    try:
+        arvore = ast.parse(texto)
+    except Exception:  # noqa: BLE001 -- registro ilegivel apenas nao cobre
+        return set()
+
+    def _strings(no):
+        # so nomes de SUITE: a funcao promete isso, e devolver todo literal
+        # (flags, encodings, descricoes) tornaria a colisao com um nome de
+        # arquivo uma cobertura acidental.
+        return {basename(x.value) for x in ast.walk(no)
+                if isinstance(x, ast.Constant) and isinstance(x.value, str)
+                and basename(x.value).startswith("test_")
+                and x.value.endswith(".py")}
+
+    # variavel -> suites da lista literal que lhe foi atribuida
+    por_variavel = {}
+    for no in ast.walk(arvore):
+        if isinstance(no, ast.Assign) and isinstance(no.value, (ast.List, ast.Tuple)):
+            for alvo in no.targets:
+                if isinstance(alvo, ast.Name):
+                    por_variavel[alvo.id] = _strings(no.value)
+
+    achadas = set()
+    for no in ast.walk(arvore):
+        if not isinstance(no, ast.Call):
+            continue
+        f = no.func
+        nome = f.attr if isinstance(f, ast.Attribute) else getattr(f, "id", "")
+        if nome not in _VERBOS_EXECUCAO:
+            continue
+        for arg in list(no.args) + [k.value for k in no.keywords]:
+            if isinstance(arg, ast.Name):
+                achadas |= por_variavel.get(arg.id, set())
+            else:
+                achadas |= _strings(arg)
+    return achadas
+
+
 def check_suites_orfas(root=None):
-    """Invariante F43: toda `tools/test_*.py` citada em >= 1 registro de execucao.
+    """Invariante F43: toda `tools/test_*.py` de fato EXECUTADA por >= 1 registro.
+
+    🔴 O predicado mudou na s171 (F86). Ate entao a pergunta era *"o nome
+    aparece no texto de algum registro?"* -- substring sobre um blob dos tres
+    arquivos. Caso real que derrubou isso: uma suite de 12 testes nasceu fora
+    do `python_files`, **nunca rodou**, e o check passou VERDE porque o nome
+    dela aparecia numa mensagem de WARN escrita no mesmo commit dentro do
+    `auto_check.py`. *Mencionada != inscrita* -- e o gate se satisfazia com
+    uma mencao que o proprio autor acabara de criar.
+
+    Hoje cada registro e lido pela sua ESTRUTURA:
+    - `pytest.ini` -> padroes do campo `python_files`, casados por **fnmatch**
+      (e como o pytest decide). O predicado antigo tambem errava para o outro
+      lado aqui: com `python_files = test_*.py`, uma suite coletada de verdade
+      era acusada de orfa, porque o nome nao e substring do padrao.
+    - `tools/auto_check.py` e `tools/test_pytest_bridge.py` -> nomes passados a
+      uma chamada de EXECUCAO (AST), inclusive via lista montada em variavel.
 
     Retorna lista dos nomes orfaos; None quando todas cobertas (mesma convencao
     dos demais checks). Tolerante: registro ausente/ilegivel apenas nao cobre
     nada -- nunca levanta.
     """
+    from fnmatch import fnmatch
     base = Path(root) if root else ROOT_DIR
     tools_dir = base / "tools"
     if not tools_dir.is_dir():
@@ -344,15 +433,22 @@ def check_suites_orfas(root=None):
     suites = sorted(p.name for p in tools_dir.glob("test_*.py"))
     if not suites:
         return None
-    corpus = []
-    for rel, _campo in REGISTROS_DE_SUITE:
-        alvo = base / rel
+
+    padroes, executadas, algum_registro = [], set(), False
+    for rel, campo in REGISTROS_DE_SUITE:
         try:
-            corpus.append(alvo.read_text(encoding="utf-8"))
+            texto = (base / rel).read_text(encoding="utf-8")
         except Exception:
             continue
-    if not corpus:
+        algum_registro = True
+        if campo == "python_files":
+            padroes.extend(_padroes_python_files(texto))
+        else:
+            executadas |= _suites_executadas(texto)
+    if not algum_registro:
         return None
-    blob = "".join(corpus)   # busca por substring: separador e irrelevante
-    orfas = [nome for nome in suites if nome not in blob]
+
+    orfas = [nome for nome in suites
+             if nome not in executadas
+             and not any(fnmatch(nome, pat) for pat in padroes)]
     return orfas or None

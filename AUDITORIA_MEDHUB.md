@@ -1135,7 +1135,7 @@ tautologico novo em cards de tema `[bulk]`), a reincidencia do padrao de calibra
 do F7 na tema Gravidez Ectopica (`card_id=114` auditado via `evidence-researcher`, veredito PRECISA
 AJUSTE -- moldura de PUL; `card_id=120` do F7 original segue sem auditoria) e 3 flags do usuario
 (1411/283/319) sem defeito identificado pelo agente, calibracao em aberto pra proxima sessao.
-~~**Proximos achados comecam em F42**~~ -> **proximos comecam em F86** (F82-F85 numerados na s171). Ultima atualizacao: s154 (2026-08-24). **Ciclo DESCOLAR
+~~**Proximos achados comecam em F42**~~ -> **proximos comecam em F87** (F82-F86 numerados na s171). Ultima atualizacao: s154 (2026-08-24). **Ciclo DESCOLAR
 (Fable/ai-eng, 2026-09-01 — retorno do handoff `~/ai-eng/HANDOFF-MEDHUB-COLA.md`):** PRD
 `descolar-motor-determinismo` (P1-P7 respondidas) + 7 specs + implementacao. RESOLVIDOS:
 **F45** (vocabulario+upsert por par via `reconciliar_weak_areas`), **F46** (paths por __file__,
@@ -1513,5 +1513,18 @@ Sensores existentes (`doc_drift.py`, `sync_skills --check`) reportavam 0 achados
 - **Varredura da assinatura (s170):** 4 ocorrencias brutas, triadas pelo discriminador **"a premissa esta no caminho de decisao?"** -- **Classe 1** (premissa governando codigo) **N=1**: este. **Classe 2** (claim envelhecido em docstring, nao governa): `db.py:9` ("Callers acima: `app/pages/*.py`") e `fsrs_queue.py:9` ("o player Streamlit local") -- correcao de **documentacao**, sem teste. `get_topic_context.py:19` = lapide em preterito, **NAO tocar**.
 - **Remedio (S) -- hotfix, item (7) da fila s171:** teste com `sys.modules` **ANTES** do fix (escrita recusada quando `card_checks` nao importa) -> fail-loud -> remover o comentario. Mesma forma do F84, que e o irmao gemeo desta funcao.
 - **Classe:** *Reachability-Debt variante 3* -- **le uma razao que ja nao existe**. Fecha a taxonomia das tres: (1) le o nada [F82] · (2) ninguem le [G1, graphify] · (3) le razao morta [F85].
+
+### F86 -- O gate do F43 validava por SUBSTRING: mencao contava como inscricao -- **ALTA** -- **RESOLVIDO (hotfix s171, `.vibeflow/hotfixes/2026-09-08-suite-mencionada-nao-inscrita.md`)**
+- **Origem:** achado DENTRO do hotfix `clausula-revogada-em-vigor`, na mesma sessao. Nao veio de varredura -- veio de um numero que nao subiu.
+- **Evidencia:** `tools/test_contrato_revogado.py` nasceu com 12 testes e **fora do `python_files` do `pytest.ini`** (que e allowlist explicita, nao glob). **12 testes escritos, ZERO executados** -- a suite ficou em `395 passed` antes e depois de acrescentar 12 testes. E o `SUITES_ORFAS` **passou verde o tempo todo**: `check_suites_orfas` fazia `blob = "".join(corpus)` e testava `nome not in blob`, entao o nome bastava aparecer em QUALQUER lugar dos 3 registros -- e ele aparecia numa **mensagem de WARN** dentro do proprio `auto_check.py`, escrita no mesmo commit pelo autor do gate novo.
+- 🔴 **A falha e auto-infligivel por construcao:** quem escreve um gate novo naturalmente cita o nome da suite na mensagem de erro desse gate. A mencao que satisfez o verificador foi produzida pelo proprio ato de verificar. Um gate inteiro (`CONTRATO_REVOGADO`) esteve a um `git commit` de entrar sem nunca ter rodado, com o harness dizendo PASSED.
+- **O erro tinha DOIS sentidos.** Falso-negativo (mencao = inscricao) e falso-positivo simetrico: `python_files` sao **padroes** casados por fnmatch, e com `python_files = test_*.py` uma suite realmente coletada seria acusada de orfa, porque o nome nao e substring do padrao. Mesma causa unica: ignorar a estrutura.
+- **Ja estava registrado, sem caso e sem fixture:** anexo dos menores da s160 -- *"`suites_orfas` valida por substring (mencionada != inscrita)"*. Ficou como observacao por 9 dias. 🔴 **Observacao sem fixture nao e cobertura** -- e a mesma licao do D3 ("warning-first virou warning-only") aplicada ao ledger em vez do painel.
+- **Fix:** cada registro lido pela sua ESTRUTURA. `pytest.ini` -> campo `python_files` casado por **fnmatch** (como o pytest decide). `auto_check.py` e `test_pytest_bridge.py` -> `ast.parse` recolhendo nomes `test_*.py` passados a um **verbo de execucao**, inclusive via lista montada em variavel antes da chamada (formato real do `auto_check`). Registro ilegivel = nao cobre, nunca levanta.
+- **Contrafactual verificado:** `_suites_executadas(auto_check.py)` = `['test_card_self_sufficiency.py', 'test_day_plan_telemetria.py', 'test_fsrs_balance.py']` -- o nome do caso real NAO esta la, embora exista no arquivo como texto. Sem a inscricao no `pytest.ini`, o predicado novo o acusa.
+- **Serie gate-miss (§10.8), classe TOOLING** -- distinta da classe CONTEUDO (F79/F79b/F81, que e `card_checks` cego a defeito de card). Decisao do `/ai-eng` na s171: o contador de gate-miss carrega o campo `classe` e conta **por classe**; misturar as duas mata o numero. F86 e a **1a fixture da classe tooling**; o filtro `quality_source='heuristic'` da fila de reforja e o predicado que so vivia em `avisos` sao os casos historicos sem fixture.
+- **Classe:** *"le o nada" aplicado ao proprio verificador* -- um gate que valida por presenca TEXTUAL em vez de por EXECUCAO vigia uma populacao que ele mesmo pode fabricar.
+
+---
 
 ---

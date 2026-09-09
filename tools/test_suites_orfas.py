@@ -36,7 +36,18 @@ def _repo(tmp_path, suites=(), pytest_ini="", auto_check="", bridge=None):
     (tmp_path / "tools" / "auto_check.py").write_text(auto_check, encoding="utf-8")
     if bridge is not None:
         (tmp_path / "tools" / "test_pytest_bridge.py").write_text(
-            bridge + "  # test_pytest_bridge.py", encoding="utf-8")
+            bridge, encoding="utf-8")
+        # O bridge e registro E suite ao mesmo tempo. No repo real ele esta
+        # inscrito no `pytest.ini`; o fixture faz o equivalente. Ate a s171 ele
+        # se cobria com um COMENTARIO com o proprio nome -- o que so funcionava
+        # porque o predicado era substring. Esse era o defeito.
+        linha = "python_files = test_pytest_bridge.py"
+        atual = (tmp_path / "pytest.ini").read_text(encoding="utf-8")
+        if "python_files" in atual:
+            atual = atual.replace("python_files =", "python_files = test_pytest_bridge.py")
+        else:
+            atual = (atual + chr(10) + linha).strip()
+        (tmp_path / "pytest.ini").write_text(atual, encoding="utf-8")
     return str(tmp_path)
 
 
@@ -78,6 +89,69 @@ def test_mistura_orfa_e_coberta(tmp_path):
     r = _repo(tmp_path, suites=["test_ok.py", "test_solta.py"],
               pytest_ini="python_files = test_ok.py")
     assert check_suites_orfas(r) == ["test_solta.py"]
+
+
+# --------------------------------------------------------------------------
+# Mencionada != inscrita (F86, s171) -- o predicado le ESTRUTURA, nao substring
+# --------------------------------------------------------------------------
+
+def test_mencao_em_string_de_warn_nao_conta_como_inscricao(tmp_path):
+    """🔴 O CASO REAL que motivou o F86.
+
+    Na s171 a suite `test_contrato_revogado.py` nasceu fora do `python_files` --
+    12 testes escritos, ZERO executados -- e o `SUITES_ORFAS` passou VERDE
+    porque o nome aparecia numa mensagem de WARN dentro do proprio
+    `auto_check.py`, escrita no mesmo commit pelo autor do gate novo.
+    """
+    r = _repo(tmp_path, suites=["test_ok.py"],
+              auto_check='print(f"detalhe: pytest tools/test_ok.py -q")')
+    assert check_suites_orfas(r) == ["test_ok.py"]
+
+
+def test_mencao_em_comentario_nao_conta_como_inscricao(tmp_path):
+    r = _repo(tmp_path, suites=["test_ok.py"],
+              auto_check="# a suite real e tools/test_ok.py, ver adiante")
+    assert check_suites_orfas(r) == ["test_ok.py"]
+
+
+def test_mencao_em_lista_de_gatilho_nao_conta(tmp_path):
+    """Lista de arquivos que DISPARAM um check != comando que EXECUTA a suite.
+
+    O `auto_check` real tem as duas coisas, e so a segunda e inscricao.
+    """
+    r = _repo(tmp_path, suites=["test_ok.py"],
+              auto_check='tocados = ["tools/db.py", "tools/test_ok.py"]')
+    assert check_suites_orfas(r) == ["test_ok.py"]
+
+
+def test_python_files_casado_por_fnmatch(tmp_path):
+    """`python_files` sao PADROES, nao nomes literais -- e como o pytest le.
+
+    O predicado por substring dava falso-positivo aqui: `test_ok.py` nao e
+    substring de `test_*.py`, entao uma suite legitimamente coletada era
+    acusada de orfa.
+    """
+    r = _repo(tmp_path, suites=["test_ok.py"], pytest_ini="python_files = test_*.py")
+    assert check_suites_orfas(r) is None
+
+
+def test_comando_montado_em_variavel_conta_como_inscricao(tmp_path):
+    """O `auto_check` real monta `cmd_tel = [sys.executable, "tools/test_X.py"]`
+    e so depois chama `run_command(cmd_tel, ...)`. Ler so os argumentos da
+    chamada perderia esses casos."""
+    r = _repo(tmp_path, suites=["test_ok.py"],
+              auto_check=('cmd = [sys.executable, "tools/test_ok.py"]' + chr(10)
+                          + 'run_command(cmd, "d")'))
+    assert check_suites_orfas(r) is None
+
+
+def test_registro_ilegivel_nao_levanta_e_nao_cobre(tmp_path):
+    """Sensor tolerante: `auto_check.py` com sintaxe quebrada nao derruba o
+    check -- so deixa de cobrir."""
+    r = _repo(tmp_path, suites=["test_ok.py"],
+              pytest_ini="python_files = test_ok.py",
+              auto_check="def (((( isto nao parseia")
+    assert check_suites_orfas(r) is None
 
 
 # --------------------------------------------------------------------------

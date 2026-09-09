@@ -141,9 +141,10 @@ Anticorpos exógenos presentes em transfusões de sangue ou imunoglobulinas poli
 ⭐ **Mnemônico central:** a partir da adolescência, todo calendário do PNI se repete em 3 blocos: (1) a **"chicleta"** -- dT, que gruda em todo calendário daqui em diante, reforço a cada 10 anos; (2) as **3 vacinas que "olham para trás"** -- Hepatite B, Febre Amarela e Tríplice Viral, aplicadas **somente se o esquema anterior estiver incompleto/ausente**; (3) as vacinas **próprias daquela fase da vida**.
 
 ### 4.1 Adolescente (10 a 19 anos)
-- **HPV:** 9 a 14 anos. 🔴 Ver armadilha de dose única vs. duas doses (secção 8).
-- **Meningocócica ACWY:** 11 a 14 anos, dose única.
+- **HPV:** 9 a 14 anos, **dose única** (PNI 2025), com **resgate até os 19 anos** -- o adolescente de 16 sem registro ainda entra. Imunossuprimidos/PVHIV mantêm 3 doses (9-45 anos). 🔴 Ver armadilha de dose única vs. duas doses (secção 8).
+- **Meningocócica ACWY:** 11 a 14 anos, dose única, **sem resgate** -- aos 16 anos ele já saiu da janela. ⭐ HPV e ACWY são as duas vacinas próprias do adolescente, mas as janelas **não coincidem**: tratar as duas como um par que anda junto foi exatamente o deslize que anulou a questão 14 do ENARE/ENAMED 2025.
 - dT (chicleta) + as 3 que olham pra trás (Hepatite B, Febre Amarela, Tríplice Viral) se incompletas.
+- ⭐ **A conta de "quantas faltam" (as 3 que olham pra trás):** total exigido pela **idade atual** menos o que está registrado. Hepatite B = 3 doses no total; **Tríplice viral = 2 doses no total até os 29 anos** (1 dose dos 30 aos 59); Febre amarela = regra etária (1ª dose antes dos 4 anos -> falta o reforço; depois dos 4 -> dose única fecha). A idade em que a 1ª dose foi aplicada não muda o total. 🔴 Adolescente de 16 anos com **uma** tríplice aos 12 meses: falta **uma**, não duas (reiniciar o esquema) nem três (número da hepatite B vazando pro lugar errado).
 
 ### 4.2 Adulto (20 a 59 anos)
 - dT (reforço a cada 10 anos) + as 3 que olham pra trás.
@@ -429,3 +430,5 @@ Vacina **inativada** antirrábica + soro antirrábico (SAR) ou imunoglobulina hu
 - 🔴 **Abscesso Quente Pós-DTP NÃO Troca para DTPa:** O abscesso quente no sítio de injeção da DTP decorre de contaminação bacteriana secundária / falha técnica, não de hiper-reatividade ao componente *pertussis*. Portanto, o esquema segue com a **mesma vacina (DTP)** nas doses seguintes, exigindo apenas **notificação compulsória** à vigilância epidemiológica. Troca para DTPa é exclusiva para EHH (episódio hipotônico-hiporresponsivo em até 48h) ou convulsão (até 72h); encefalopatia em até 7 dias troca para DT.
 - 🔴 **Rotavírus (VORH) em Criança Hospitalizada e Malformação GI:** A vacina oral de rotavírus é contraindicada em ambiente hospitalar (risco de disseminação nosocomial por excreção fecal do vírus vacinal) e em portadores de malformações gastrointestinais não corrigidas (como atresia intestinal, pelo risco de invaginação). Aos 2 meses, o lactente internado recebe o pacote inativado completo (**Pentavalente + Pneumocócica + VIP**), excluindo unicamente a VORH.
 
+- 🔴 **Tríplice viral ≠ Hepatite B na contagem do resgate:** tríplice viral fecha com **2 doses** (até 29 anos); hepatite B fecha com **3**. O erro recorrente é transferir o "3" da hepatite B para a tríplice, ou reiniciar o esquema ignorando a dose já registrada. Sempre: total da faixa etária atual menos o que consta na caderneta. *(Simulado 8 / ENARE-ENAMED 2025, erro 14; reincidiu no drill da s173 mesmo após a análise.)*
+- 🔴 **ACWY não tem resgate, HPV tem:** ACWY é 11-14 anos e acabou; HPV é 9-14 com resgate até 19. Um jovem de 16 anos atualiza HPV (dose única) e **não** recebe ACWY pelo PNI. Gabarito oficial que prescreve ACWY aos 16 está errado -- e foi anulado.

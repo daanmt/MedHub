@@ -18,7 +18,13 @@ O agente deve chamar este script assim que o usuário informar:
 import sqlite3
 import argparse
 import os
-from datetime import date, datetime
+import sys
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# F80 (s174): o RELOGIO do ipub.db e unico -- app.utils.db.agora() (LOCAL naive).
+# `data_sessao` (o DIA de estudo, SSOT volumetrica) sai do mesmo relogio que os
+# carimbos de revlog/questoes_erros/review_log; `--data` explicito segue vencendo.
+import app.utils.db as db
 
 DB_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'ipub.db')
 
@@ -37,7 +43,7 @@ def registrar(sessao_num: int, area: str, feitas: int, acertos: int,
     if acertos > feitas:
         raise ValueError(f"Acertos ({acertos}) não pode ser maior que feitas ({feitas}).")
 
-    data_sessao = data or date.today().isoformat()
+    data_sessao = data or db.hoje().isoformat()
 
     conn = sqlite3.connect(DB_PATH)
     try:
@@ -153,7 +159,7 @@ def registrar(sessao_num: int, area: str, feitas: int, acertos: int,
                     valor = excluded.valor,
                     atualizado_em = excluded.atualizado_em,
                     fonte = excluded.fonte
-            """, (str(semana), datetime.now().isoformat(timespec="seconds")))
+            """, (str(semana), db.agora().isoformat(timespec="seconds")))
 
         conn.commit()
 

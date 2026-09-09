@@ -225,6 +225,11 @@ def _sandbox_cli():
     # part-3: o CLI importa a biblioteca de gate — vai junto pro sandbox.
     shutil.copy(os.path.join(os.path.dirname(_REAL_SCRIPT), "card_checks.py"),
                 os.path.join(tdir, "card_checks.py"))
+    # F80 (s174): o CLI importa o relogio unico de app/utils/db.py -- a camada app/
+    # vai junto pro sandbox (copia; o sandbox continua isolado do repo real).
+    shutil.copytree(os.path.join(os.path.dirname(os.path.dirname(_REAL_SCRIPT)), "app"),
+                    os.path.join(d, "app"),
+                    ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
     shutil.move(_db_temp(), os.path.join(d, "ipub.db"))  # reusa o schema de _db_temp
     return d, os.path.join(tdir, "insert_questao.py")
 

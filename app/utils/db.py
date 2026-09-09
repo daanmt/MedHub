@@ -6,8 +6,26 @@ explícitos; sempre fechar via `conn.close()`; queries parametrizadas
 (`params=(...)`) para evitar SQL injection. `DB_PATH` é resolvido relativo
 à raiz do repo.
 
-Callers acima: `app/pages/*.py`, `app/engine/*.py`. CLIs em `tools/` usam
-`sqlite3` diretamente por design (scripts standalone).
+Callers acima: `app/engine/*.py`, CLIs em `tools/` (`fsrs_queue`, `day_plan`,
+`cronograma`, ...). CLIs de escrita em `tools/` usam `sqlite3` diretamente por design
+(scripts standalone) -- mas o RELOGIO e um so (abaixo).
+
+## Zona canonica de tempo = LOCAL naive (F80, hotfix 2026-09-09, s174)
+
+Todo carimbo gravado no `ipub.db` sai de `agora()`/`carimbo()` deste modulo: hora LOCAL
+do sistema, sem tzinfo, formato `YYYY-MM-DD HH:MM:SS` (o mesmo shape do
+`CURRENT_TIMESTAMP`, entao `date(col)`/`MAX(col)` continuam funcionando). E a zona que
+o nucleo FSRS ja usa (`fsrs.py`: `due_local`/`last_review_local`), que a SSOT volumetrica
+(`sessoes_bulk.data_sessao`) ja usa e que todo leitor de "dia" assume (`date.today()`).
+Nenhum writer pode depender do `DEFAULT CURRENT_TIMESTAMP` do SQLite (que e UTC):
+`tools/test_fuso_unico.py` varre os INSERTs e falha nomeando o arquivo.
+
+🔴 HISTORICO: ate o commit-fronteira deste hotfix, `fsrs_revlog.review_time`,
+`questoes_erros.data_registro` e `review_log.reviewed_at` foram gravados em UTC pelo
+DEFAULT. Essas linhas NAO foram reescritas (SSOT; o revlog calibra o FSRS). Brasil nao
+tem horario de verao desde 2019, logo o deslocamento historico e um shift constante de
+-3h (`America/Sao_Paulo`); backfill = item separado, dry-run + COUNT-ASSERT (§10.7),
+gatilho do operador. Ledger: `AUDITORIA_MEDHUB.md` F80.
 """
 
 import sqlite3
@@ -18,6 +36,26 @@ from datetime import datetime
 from app.utils.fsrs import FSRS
 
 DB_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'ipub.db')
+
+FORMATO_CARIMBO = "%Y-%m-%d %H:%M:%S"
+
+
+def agora():
+    """O relogio unico do `ipub.db` (F80): hora LOCAL naive. Monkeypatchavel nos
+    testes (`db.agora = lambda: <instante>`) -- por isso os writers chamam pelo
+    atributo do modulo, nunca `from db import agora`."""
+    return datetime.now()
+
+
+def carimbo():
+    """`agora()` no formato de carimbo do banco (`YYYY-MM-DD HH:MM:SS`)."""
+    return agora().strftime(FORMATO_CARIMBO)
+
+
+def hoje():
+    """Dia local corrente, derivado do MESMO relogio (`sessoes_bulk.data_sessao`)."""
+    return agora().date()
+
 
 # Definição canônica de "card ativo" (part-5, flashcards-integridade) — FONTE
 # ÚNICA. Antes havia 3 definições divergentes em 5 arquivos (`!= 2`, `< 2` sem
@@ -108,7 +146,7 @@ def set_preparacao(chave, valor, fonte=None):
                 valor = excluded.valor,
                 atualizado_em = excluded.atualizado_em,
                 fonte = excluded.fonte
-        ''', (chave, str(valor), datetime.now().isoformat(timespec="seconds"), fonte))
+        ''', (chave, str(valor), agora().isoformat(timespec="seconds"), fonte))
         conn.commit()
     finally:
         conn.close()
@@ -631,16 +669,17 @@ def _aplicar_review(conn, card_data, rating, card_novo=False, selection_reason=N
     row_v = cursor.execute("SELECT card_version FROM flashcards WHERE id = ?",
                            (flashcard_id,)).fetchone()
     versao_vista = row_v[0] if row_v and row_v[0] is not None else None
+    # F80: carimbo explicito pelo relogio unico (LOCAL) -- nunca o DEFAULT do SQLite (UTC).
     cursor.execute('''
         INSERT INTO fsrs_revlog (card_id, rating, state, due, stability, difficulty,
                                  elapsed_days, last_elapsed_days, scheduled_days,
-                                 card_version, selection_reason)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                                 card_version, selection_reason, review_time)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ''', (
         flashcard_id, rating, new_metrics['state'], new_metrics['due'],
         new_metrics['stability'], new_metrics['difficulty'],
         new_metrics['elapsed_days'], elapsed_anterior, new_metrics['scheduled_days'],
-        versao_vista, selection_reason
+        versao_vista, selection_reason, carimbo()
     ))
 
     conn.commit()
@@ -1019,9 +1058,9 @@ def log_review(tema_id=None, resumo_path=None, kind='dormant_refresh',
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute('''
-        INSERT INTO review_log (tema_id, resumo_path, kind, source, note)
-        VALUES (?, ?, ?, ?, ?)
-    ''', (tema_id, resumo_path, kind, source, note))
+        INSERT INTO review_log (tema_id, resumo_path, kind, source, note, reviewed_at)
+        VALUES (?, ?, ?, ?, ?, ?)
+    ''', (tema_id, resumo_path, kind, source, note, carimbo()))   # F80: relogio unico
     conn.commit()
     rid = cursor.lastrowid
     conn.close()
@@ -1098,7 +1137,7 @@ def set_dificuldade(area, tema, nota, fonte) -> bool:
         "UPDATE taxonomia_cronograma "
         "SET dificuldade = ?, dificuldade_fonte = ?, dificuldade_at = ? "
         "WHERE id = ?",
-        (nota, fonte, datetime.now().isoformat(" "), tema_id))
+        (nota, fonte, agora().isoformat(" "), tema_id))
     conn.commit()
     conn.close()
     return True
@@ -1224,7 +1263,7 @@ def registrar_habilidade(texto, tema_id=None, veredito='errou', questao_id=None,
     import unicodedata
     _s = unicodedata.normalize('NFKD', str(texto))
     norm = ' '.join(''.join(c for c in _s if not unicodedata.combining(c)).lower().split())
-    agora = datetime.now().isoformat(timespec='seconds')
+    agora_iso = agora().isoformat(timespec='seconds')
     conn = get_connection()
     try:
         cur = conn.cursor()
@@ -1234,11 +1273,11 @@ def registrar_habilidade(texto, tema_id=None, veredito='errou', questao_id=None,
             hid = row[0]
         else:
             cur.execute('INSERT INTO habilidades (texto, texto_norm, precisa_curadoria, '
-                        'criado_em) VALUES (?, ?, 0, ?)', (str(texto).strip(), norm, agora))
+                        'criado_em) VALUES (?, ?, 0, ?)', (str(texto).strip(), norm, agora_iso))
             hid = cur.lastrowid
         cur.execute('INSERT INTO questao_habilidades (habilidade_id, questao_id, tema_id, '
                     'ordem, veredito, origem, criado_em) VALUES (?, ?, ?, 0, ?, ?, ?)',
-                    (hid, questao_id, tema_id, veredito, origem, agora))
+                    (hid, questao_id, tema_id, veredito, origem, agora_iso))
         conn.commit()
         return hid
     finally:

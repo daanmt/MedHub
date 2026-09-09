@@ -24,7 +24,12 @@ import os
 import re
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import card_checks  # gate de qualidade (part-3) — biblioteca pura, fonte unica
+# F80 (s174): o RELOGIO do ipub.db e unico -- app.utils.db.agora() (LOCAL naive).
+# Este CLI continua standalone no sqlite3 (AGENTE §6); so o carimbo vem de la,
+# chamado pelo ATRIBUTO do modulo (db.agora()) para o teste congelar o instante.
+import app.utils.db as db
 
 DB_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'ipub.db')
 
@@ -209,17 +214,19 @@ def insert_questao(area, tema, enunciado, correta, chamada, erro, elo, armadilha
             cursor.execute('''
                 INSERT INTO taxonomia_cronograma (area, tema, questoes_realizadas, questoes_acertadas, percentual_acertos, ultima_revisao)
                 VALUES (?, ?, 0, 0, 0, ?)
-            ''', (area, tema, datetime.now().strftime('%Y-%m-%d')))
+            ''', (area, tema, db.agora().strftime('%Y-%m-%d')))
             tema_id = cursor.lastrowid
 
         # 1. Inserir a Questão Erro com Schema Expandido (+status F26)
         cursor.execute('''
             INSERT INTO questoes_erros
             (tema_id, titulo, complexidade, enunciado, alternativa_correta, alternativa_marcada,
-             tipo_erro, habilidades_sequenciais, o_que_faltou, explicacao_correta, armadilha_prova, status)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+             tipo_erro, habilidades_sequenciais, o_que_faltou, explicacao_correta, armadilha_prova, status,
+             data_registro)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ''', (tema_id, titulo, complexidade, enunciado, correta, chamada,
-              erro, habilidades, faltou, explicacao, armadilha, status))
+              erro, habilidades, faltou, explicacao, armadilha, status,
+              db.carimbo()))   # F80: relogio unico (LOCAL), nunca o DEFAULT UTC
         questao_id = cursor.lastrowid
 
         # 2. Inserção dos cards (lista construída no topo — caminho qualitativo
@@ -238,7 +245,7 @@ def insert_questao(area, tema, enunciado, correta, chamada, erro, elo, armadilha
             cursor.execute('''
                 INSERT INTO fsrs_cards (card_id, state, due)
                 VALUES (?, 0, ?)
-            ''', (card_id, datetime.now()))
+            ''', (card_id, db.agora()))
 
         # 4. Atualizar ultima_revisao do tema (usado pelo widget Foco Crítico).
         #    NOTA ARQUITETURAL: questoes_realizadas e questoes_acertadas NÃO são
@@ -248,7 +255,7 @@ def insert_questao(area, tema, enunciado, correta, chamada, erro, elo, armadilha
             UPDATE taxonomia_cronograma
             SET ultima_revisao = ?
             WHERE id = ?
-        ''', (datetime.now().strftime('%Y-%m-%d'), tema_id))
+        ''', (db.agora().strftime('%Y-%m-%d'), tema_id))
 
         try:
             cursor.execute('''

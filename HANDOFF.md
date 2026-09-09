@@ -6,9 +6,9 @@
 ## > Proximo passo imediato
 
 1. 🧠 **MEMORIA DA AUDITORIA -> [`docs/MEMORIA-AUDITORIA.md`](docs/MEMORIA-AUDITORIA.md)** -- indice F1->F81 por status, ciclos, mecanismos, D53-D68 e as inconsistencias **G1-G13**; ler ANTES de qualquer frente de engenharia (2o fio: `AGENTE.md` §10 item 9). O ledger `AUDITORIA_MEDHUB.md` e o drill-down e **o boot nao le** (G1).
-2. 🔬 **Fila de engenharia s171 (ordem do `/ai-eng`; item 1 FECHADO):** (2) F-ids dos 4 achados de 09-08 + lapides F5/F8 · (3) spec F81 · (4) spec `reforja_marks` · (5) gate de selecao 0->1 · (6) alcancabilidade declarativa · (7) hotfix `db.py:765`. Cada item fecha com destilado <=3k + hash + contagem de testes; **audit e dele**.
+2. ❄️ **Fila de engenharia CONGELADA** ate sessao dedicada com contexto limpo (decisao do operador, 08/09; `/ai-eng` encerrou em `758b7fd`). Itens 3->7: spec **F81** (com campo `classe` no contador de gate-miss) · fila de reforja como ESTADO (`reforja_marks`) · gate de selecao 0->1 · checks de alcancabilidade + 3 riders · hotfix **F85** (`db.py:765`). **D71:** implement E audit sao daqui (loop vibeflow); o `/ai-eng` orquestra; silencio dele = GO. O que ficou decidido sai do **ledger**, nunca da memoria.
 3. 🔁 **Cards:** fila de hoje pelo `day_plan`. 🔴 **Teto 60/dia** (90 SO em regime de divida). O sprint de 120/dia foi **revogado em 07/09** -- ler `fsrs-management-contract`, nao a memoria.
-4. 📚 **Questoes: sprint S17-S20.** Faltam ~610 das 725.
+4. 📚 **Simulado 8 (ENARE/ENAMED 2025) ANALISADO: 78/95 = 82,1%** -- maior do ciclo, contra media historica de 60,8%. 17 erros com gabarito, marcacao e comentario oficial coletados; semente em `%TEMP%/claude/.../s8/seed.json`. Cunhagem dos cards em curso. **Sprint S17-S20 segue:** faltam ~610 das 725 questoes.
 
 ## Fila de engenharia acordada com o `/ai-eng` (GO dado, nao executada)
 Protocolo em `AGENTE.md §10.6-8`: destilado <=3k + remedio por achado -> ele responde GO/NO-GO/ALTERA. **Implement e daqui, audit e dele.**

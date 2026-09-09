@@ -16,7 +16,7 @@ Use this skill when the user asks to run the migrated source command `refrescar`
 
 ## O que mudou
 
-- **s096:** o re-ensino narrativo de tema dormente virou o sub-modo **PREPARAR** de `/revisar`, entregue **antes** de drillar, com descompressão calibrada pela nota 1-10.
+- **s096:** o re-ensino narrativo de tema dormente virou o antigo sub-modo **PREPARAR** de `/revisar`, entregue **antes** de drillar, com descompressão calibrada pela nota 1-10.
 - ⚰️ **s170:** o **PREPARAR morreu** (lápide em [`revisar.md`](revisar.md)). O re-ensino migrou inteiro para a **Revisão Direcionada de FECHAMENTO** — depois do drill, ancorado nos temas que caíram em nota **1 e 2**. Motivo: o aquecimento pré-drill não era lido, e o ensino pós-drill mira o gap que o próprio drill acabou de provar que existe.
 - O CLI permanece `tools/dormant_refresh.py` (`--pick`/`--context`/`--stamp`), com **`--kind {dormant_refresh,directed_review}`** (Invariante B — toda Revisão Direcionada carimba `review_log`, qualquer que seja o gatilho).
 - A fronteira dura permanece: **o ensino não toca o FSRS** (Invariante A).

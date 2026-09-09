@@ -19,13 +19,19 @@ O flashcard do MedHub não enuncia um fato genérico sobre um tema — ele **ref
 
 ---
 
-## Os 5 princípios
+## Os 6 princípios
 
 1. **Conteúdo clínico atômico.** Um conceito por card. Decompor em vez de combinar: se o erro toca duas listas (ex.: agentes de úlcera *e* de corrimento), são **dois cards**, não um. O card é **recall de conteúdo**, nunca um card sobre "o hábito de raciocínio".
 2. **O erro define o alvo.** `tipo_erro` + `o_que_faltou` apontam *qual* conteúdo drilar e *qual distinção/sobreposição* tornar central. O card é específico ao erro do aluno — não uma varredura genérica do tema.
 3. **Pergunta direta, sem vazar a resposta.** A `frente_pergunta` é uma pergunta clínica real terminando em "?". **Nunca** colar o `habilidades_sequenciais` cru, **nunca** embutir a resposta no contexto, **nunca** usar template tipo "Qual o distrator típico em...?".
 4. **Regra-mestre = a distinção/sobreposição** que previne a confusão. É o princípio transferível que costura este erro a outros (ex.: *Chlamydia* L1-L3 = úlcera vs D-K = corrimento).
 5. **Armadilha = o distrator específico** que pegou o usuário, ancorado no resumo (que carrega o alerta de incidência em prova). Não um distrator hipotético — o que de fato induziu o erro.
+
+
+6. **A questão errada é uma porta, não um alvo pontual (s171).** Formulação do usuário: *"mais do que treinar a distinção entre o marcado e o gabarito, a questão incorreta é uma oportunidade de revisar os nós que conectam o tema às alternativas e ao raciocínio mais complexo, conectando com outros temas próximos / nucleares."* **As alternativas erradas não são descarte — são nós.** Um distrator plausível carrega conteúdo que merece card próprio mesmo quando o usuário não o marcou: na Q77 da s171, as quatro alternativas erradas eram todas causas de **oligo**âmnio, cada uma por um mecanismo distinto — um mapa inteiro que se perderia se o conjunto parasse em "12 cm é poli". Ler o item inteiro rende 3-5 cards; ler só o par marcado↔gabarito rende 1.
+   - **Não anula o princípio 2, amplia-o.** O erro continua definindo o **núcleo** e o primeiro card; o que muda é que o conjunto não para nele. A varredura proibida no princípio 2 é a genérica *sobre o tema*; esta é ancorada **nas alternativas que a banca de fato escreveu** — que são, por construção, o recorte que a prova considera discriminante.
+   - **Mais cards, nunca cards maiores.** Ampliar o escopo não afrouxa a atomicidade: cada nó novo é um card novo com **um** critério de acerto, nunca um verso mais gordo. Ampliação que engorda o verso é a via direta para o passivo de não-atômicos (e para o ratchet do `d2026a1` recusar a escrita).
+   - **Conectar a tema vizinho/nuclear é legítimo quando a ligação é estruturante** — é o que transforma conhecimento em rede em vez de lista, e é o mesmo princípio dos cards de altura graduada (`project_cards_altura_graduada`): o andaime a montante vale card quando o cluster inteiro depende dele.
 
 ---
 

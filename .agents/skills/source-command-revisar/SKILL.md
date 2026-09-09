@@ -143,7 +143,7 @@ Comportamentos default desta skill, ajustáveis pelo usuário a qualquer momento
 
 > **Princípio: o card é a sonda, o resumo é a fonte.** Reforçar a sonda (re-drillar o card) sem reabordar a fonte (a matéria do resumo) é dispendioso e infrutífero — o card vira *leech* e ressurge eternamente. Quando um gap não está consolidado, a correção é **reabordar a matéria**, não repetir a pergunta. Feedback do usuário (s078): *"ficarei voltando eternamente nos cards se a matéria que trata do desafio do card não for reabordada"*.
 
-🔴 **Escopo (s170, regra do usuário):** a Revisão Direcionada é **onde TODO o ensino da sessão acontece** — absorveu o `/refrescar`, o PREPARAR e a Camada 1. A entrada é o conjunto de temas que caíram em **nota 1 e 2**. Racional do usuário: *"claramente são temas fracos, precisando de ancoragem teórica, o que faz com que a revisão direcionada cumpra sua função de direcionar para os gaps dos cards na teoria."* Nota 3 **não** entra por padrão (só se o mesmo tema já estiver entrando por um 1-2).
+🔴 **Escopo (s170, regra do usuário):** a Revisão Direcionada é **onde TODO o ensino da sessão acontece** — absorveu o `/refrescar`, o antigo PREPARAR e a antiga Camada 1. A entrada é o conjunto de temas que caíram em **nota 1 e 2**. Racional do usuário: *"claramente são temas fracos, precisando de ancoragem teórica, o que faz com que a revisão direcionada cumpra sua função de direcionar para os gaps dos cards na teoria."* Nota 3 **não** entra por padrão (só se o mesmo tema já estiver entrando por um 1-2).
 
 Ao fechar a sessão, **antes** de encerrar:
 
@@ -155,7 +155,7 @@ Ao fechar a sessão, **antes** de encerrar:
 3. **Entregar** no chat + aplicar as edições de resumo que o diagnóstico exigir. Editar `resumos/` é mudança de SSOT clínico: seguir `/estilo-resumo`, preservar armadilhas. Adicionar armadilha/discriminação (cumulativo) é in-bounds; reestruturação grande -> confirmar escopo antes.
 4. **Blast radius (s143).** Ao fechar o gap, não citar de passagem os temas vizinhos: abrir **5-6 eixos** — temas centrais, armadilhas, erros sistêmicos e fraquezas notáveis (sinalizadas ou percebidas) — **na mesma densidade** do eixo principal.
 5. **Calibrar a intensidade (papel de scrum master).** Gap pontual (1 card decoreba, resumo já cobre) -> re-ensino curto. Cluster reincidente (mesmo tema falhando em vários cards / em sessões anteriores) -> re-ensino denso + provável edição do resumo. Registrar os temas reabordados no `history/session_NNN.md` de fechamento.
-6. 🔴 **Forma (s170).** O bloco entregue tem de ser **legível de primeira**: prosa com hierarquia tipográfica, um fato dito **uma vez só**, sem pilha de bullets e sem parágrafo-monólito. O PREPARAR da s170 foi rejeitado sem ser lido (*"muito ruim, denso e confuso"*) — densidade que não é lida não ensina nada. Régua: [[feedback_aula_base_prosa_enxuta]].
+6. 🔴 **Forma (s170).** O bloco entregue tem de ser **legível de primeira**: prosa com hierarquia tipográfica, um fato dito **uma vez só**, sem pilha de bullets e sem parágrafo-monólito. O antigo PREPARAR da s170 foi rejeitado sem ser lido (*"muito ruim, denso e confuso"*) — densidade que não é lida não ensina nada. Régua: [[feedback_aula_base_prosa_enxuta]].
 7. 🔴 **Carimbar `review_log`** para cada tema reabordado (Invariante B) — `dormant_refresh.py --stamp --tema-id <id> --kind directed_review` (ou `dormant_refresh` quando o tema entrou por dormência).
 
 ---

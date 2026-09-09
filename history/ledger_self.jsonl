@@ -696,3 +696,4 @@
 {"ts": "2026-09-08T23:38:16+00:00", "event": "resolved", "check": "cobertura_semana", "fingerprint": "3a8384dc7a3f", "alvo": "15. Vitalidade Fetal"}
 {"ts": "2026-09-08T23:38:16+00:00", "event": "resolved", "check": "cobertura_semana", "fingerprint": "164aa827f61f", "alvo": "21. Pneumonias Bacterianas"}
 {"ts": "2026-09-08T23:38:16+00:00", "event": "resolved", "check": "cobertura_semana", "fingerprint": "f90ce40d5164", "alvo": "3. Urologia"}
+{"ts": "2026-09-09T00:29:56+00:00", "event": "opened", "check": "parity", "fingerprint": "ddf439b44739", "alvo": "command<->skill", "payload": {"n_drift": 2}}

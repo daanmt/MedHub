@@ -2,7 +2,7 @@
 type: contract
 layer: core
 status: canonical
-version: 1.0
+version: 1.3
 relates_to: [forgetting-curve-contract, fsrs-management-contract, cronograma-contract, AGENTE]
 ---
 
@@ -51,21 +51,21 @@ Quatro degraus de formato, com switches **auditáveis por contagem/regex** (não
 
 A nota explícita do usuário **escolhe o degrau diretamente**; sem nota, a faixa sai do `infer_nota()`. Implementação do mapa: `day_plan._degrau_de()` + `DEGRAU_PARAGRAFOS`.
 
-## Cláusula 4 — Fusão em sub-modos (PREPARAR / DRENAR)
+## Cláusula 4 — Fases da sessão de cards (DRENAR → Revisão Direcionada)
 
-`/refrescar` deixa de ser skill autônoma e vira o **sub-modo PREPARAR** dentro de `/revisar`. Uma porta só; a fronteira vira **interna** (dois sub-modos com permissões disjuntas).
+⚰️ **Reescrita na v1.3 (s170).** A clausula descrevia a fusao do `/refrescar` num sub-modo de aquecimento pre-drill. Esse sub-modo foi **revogado pela Clausula 11** — o texto original fica no historico do git. `/revisar` continua sendo **uma porta so**; o que mudou foi o numero de fases dentro dela: **duas, nao tres**.
 
-- **PREPARAR** (narrativo; FSRS read-only) — releitura calibrada ao degrau (Cláusula 3) e ao **propósito**: **amplo** rumo a EXERCÍCIOS (cobre o escopo do cronograma com postura proativa de revelar nuances e interconexões sob D10) ou **direcionado** rumo a FLASHCARDS (foca o cluster vencido). Largura (propósito) e profundidade (nota) são **ortogonais**.
-- **DRENAR** (card-a-card; ESCREVE FSRS) — o player FSRS atual (Camadas 1/2 do `/revisar`). Única superfície que move o FSRS.
-- A transição **PREPARAR → DRENAR** é o único ponto em que o FSRS passa a ser escrito.
+- **DRENAR** (card-a-card; **ESCREVE FSRS**) — o player FSRS. **Primeira fase e unica superficie que move o FSRS.** Durante o drill: nota e tally, nada mais (Invariante F).
+- **REVISAO DIRECIONADA** (narrativo; **FSRS read-only**) — **segunda fase, no fechamento**, ancorada nos temas de nota **1-2**. **Unica superficie de ensino da sessao de cards** (Clausula 11).
+- Nao ha aquecimento antes do drill: **toda nota do DRENAR e recall a frio**, que e o sinal que o FSRS quer.
 
-**Arquitetura por propósito (v1.2, s110 — correção de calibração).** O propósito não muda só a LARGURA; muda a **arquitetura** da preparação. **PREPARAR rumo a EXERCÍCIOS** (antes de questões): os **degraus são fundamentais** — cobre o **escopo-árvore inteiro** que a prova cobra (doses, diferenciais, a árvore de decisão completa) e **DESTRINCHA o mecanismo** dos conceitos/exames discriminadores (não só os nomeia), mesmo em nota média. **PREPARAR rumo a FLASHCARDS**: **refresh curto** + breve contexto dos problemas que os cards vão abordar (compressão ok — o card é o alvo fino). ⭐ **Descompressão (nota) ≠ cobertura de mecanismo:** nomear um discriminador ("whiff+", "clue cells") sem abrir **o que é e por que** é profundidade D2 disfarçada de D5 — e reforça o **Invariante E / Cláusula 10** (a cobertura do ponto de decisão inclui abrir o mecanismo, não só citá-lo). Precedente vivo: aula de Vulvovaginites (s110) — os exames whiff/KOH/clue cells foram nomeados e não destrinchados; refeita com os degraus.
+**Arquitetura por propósito (v1.2, s110 — correção de calibração; alvo remapeado na v1.3).** ⚰️ O texto original calibrava o sub-modo revogado. **A regra sobrevive nas duas superficies que a Clausula 11 preserva**, cada uma herdando uma metade: rumo a **EXERCÍCIOS** -> **`/aula-base`** (pre-questoes, intocada pela v1.3); rumo a **FLASHCARDS** -> **Revisao Direcionada** de fechamento. O propósito não muda só a LARGURA; muda a **arquitetura** do ensino. **`/aula-base`, antes de questões:** os **degraus são fundamentais** — cobre o **escopo-árvore inteiro** que a prova cobra (doses, diferenciais, a árvore de decisão completa) e **DESTRINCHA o mecanismo** dos conceitos/exames discriminadores (não só os nomeia), mesmo em nota média. **Revisão Direcionada, depois dos cards:** o alvo é **fino e provado pelo drill** — os temas de nota 1-2, não uma varredura do cluster (compressão ok; o card já disse onde dói). ⭐ **Descompressão (nota) ≠ cobertura de mecanismo:** nomear um discriminador ("whiff+", "clue cells") sem abrir **o que é e por que** é profundidade D2 disfarçada de D5 — e reforça o **Invariante E / Cláusula 10** (a cobertura do ponto de decisão inclui abrir o mecanismo, não só citá-lo). Precedente vivo: aula de Vulvovaginites (s110) — os exames whiff/KOH/clue cells foram nomeados e não destrinchados; refeita com os degraus.
 
 ## Cláusula 5 — Invariantes de integridade (barreiras invioláveis)
 
-**Invariante A — PREPARAR é read-only no FSRS.** Writes permitidos em PREPARAR: `review_log` (Invariante B) e, na Camada 2, edição de `resumos/` (acúmulo, nunca apaga). **Proibidos:** `record_review`, `insert_questao`, qualquer UPDATE em `fsrs_cards`/`fsrs_revlog`. Auditada por `tools/test_revisao_calibrada.py` (a contagem de `fsrs_revlog`/`fsrs_cards` não muda num PREPARAR) + gate estático (`dormant_refresh.py` não menciona `record_review`/`fsrs_*`).
+**Invariante A — o ensino é read-only no FSRS** *(sujeito remapeado na v1.3: era o sub-modo revogado, hoje é a **Revisão Direcionada** — Cláusula 11, Fronteiras duras)*. Writes permitidos na Revisão Direcionada: `review_log` (Invariante B) e edição de `resumos/` (acúmulo, nunca apaga). **Proibidos:** `record_review`, `insert_questao`, qualquer UPDATE em `fsrs_cards`/`fsrs_revlog`. **DRENAR é a única superfície que move o FSRS.** Auditada por `tools/test_revisao_calibrada.py` (a contagem de `fsrs_revlog`/`fsrs_cards` não muda numa Revisão Direcionada) + gate estático (`dormant_refresh.py` não menciona `record_review`/`fsrs_*`).
 
-**Invariante B — PREPARAR SEMPRE carimba `review_log`.** A curva de dormência é alimentada exclusivamente por `review_log`. Ao virar sub-modo acionável também por tema do cronograma (não-dormente), o carimbo deixaria de ser garantido — e o radar acharia que o tema "nunca foi revisto" (loop, score distorcido). **Regra:** todo PREPARAR, ao concluir, grava 1 linha via `db.log_review`/`dormant_refresh.py --stamp --kind`, com `kind` discriminado pelo gatilho:
+**Invariante B — a Revisão Direcionada SEMPRE carimba `review_log`** *(realocado na v1.3 — Cláusula 11: o carimbo migra do sub-modo revogado para o fechamento)*. A curva de dormência é alimentada exclusivamente por `review_log`. Sem o carimbo, o radar acharia que o tema "nunca foi revisto" (loop, score distorcido). **Regra:** toda Revisão Direcionada, ao concluir, grava **1 linha por tema reabordado** via `db.log_review`/`dormant_refresh.py --stamp --kind`, com `kind` discriminado pelo gatilho:
 - tema do **radar de dormência** → `kind='dormant_refresh'`;
 - tema do **cronograma / fila FSRS / pedido direto** → `kind='directed_review'`.
 
@@ -110,7 +110,7 @@ def infer_nota(sinais):
     return nota
 ```
 
-**Anti-circularidade (§7.6, invariante de sinal).** `infer_nota` lê **apenas sinais frios independentes da própria saída**: nunca (a) a profundidade da preparação que ela gerou, nem (b) o acerto "morno" medido logo após PREPARAR (o aquecimento infla o recall). **Histerese assimétrica:** a nota inferida **SOBE** com 1 sinal forte; só **DESCE** após ≥ 2 sinais frios consistentes (ex.: 2 blocos ≥ 80% **e** stability subindo). Errar para mais (descomprimir além) é mais barato que para menos.
+**Anti-circularidade (§7.6, invariante de sinal).** `infer_nota` lê **apenas sinais frios independentes da própria saída**: nunca (a) a profundidade do ensino que ela gerou, nem ⚰️ (b) *o acerto "morno" medido logo após o aquecimento pré-drill* — **exclusão órfã desde a v1.3**: sem aquecimento antes do drill, essa medição não pode mais ser produzida, e toda nota do DRENAR já é fria. A exclusão fica **como estava, não recalibrada** — mexer no `infer_nota` é spec própria, não hotfix de texto. 🔴 **Não re-derivar:** se o aquecimento pré-bloco voltar, (b) volta a ter alvo. **Histerese assimétrica:** a nota inferida **SOBE** com 1 sinal forte; só **DESCE** após ≥ 2 sinais frios consistentes (ex.: 2 blocos ≥ 80% **e** stability subindo). Errar para mais (descomprimir além) é mais barato que para menos.
 
 ## Cláusula 7 — Persistência da nota
 
@@ -126,20 +126,20 @@ Estado **de tema** em `taxonomia_cronograma` (local-only): `dificuldade INTEGER`
 2. **Frescor = 7 dias** para reinferir nota `agente_inferida`.
 3. **Histerese:** baixar a nota exige 2 sinais frios consistentes (blocos ≥ 80% + stability↑).
 4. **Prevalência:** peso neutro até a grade carregar o campo (Cláusula 8).
-5. **PREPARAR oferece DRENAR** em seguida (competência única); pode encerrar como pura preparação se o usuário parar.
-5b. **DRENAR oferece PREPARAR quando o cluster está frio (F5, v1.1):** o gatilho do aquecimento deixa de morar só no pedido do usuário — ao abrir um cluster no DRENAR com sinal frio (score de dormência `>= 25` via `day_plan --review-plan`/`review_radar`), o agente **oferece** o PREPARAR proativamente. Oferta, nunca execução automática; recusa do usuário vale para a sessão. O limiar vive AQUI (contrato), não no CLI — o CLI só expõe o score cru.
+5. ⚰️ **Revogado na v1.3** — o item mandava o aquecimento pré-drill oferecer o DRENAR em seguida. Sem aquecimento, **o DRENAR é a entrada da sessão de cards**, não a segunda etapa de nada.
+5b. **Cluster frio entra na fila da Revisão Direcionada (F5; reescrito na v1.3).** ⚰️ O item mandava o DRENAR **oferecer aquecimento** ao abrir um cluster frio — revogado pela Cláusula 11, que realoca o sinal em vez de descartá-lo. **Regra atual:** cluster com score de dormência `>= 25` (via `day_plan --review-plan`/`review_radar`) **entra na fila de prioridade da Revisão Direcionada de fechamento**, junto dos temas de nota 1-2. Não dispara nada antes do drill. O limiar vive AQUI (contrato), não no CLI — o CLI só expõe o score cru. 🔴 **O sensor não morreu, morreu o consumidor** (lápide do F5 em `AUDITORIA_MEDHUB.md:68`).
 6. **Soberania do usuário prevalece** mesmo com dormência alta — o agente sinaliza a divergência, não sobrescreve.
 
 ## Cláusula 10 — Descompressão (calibrável) × Cobertura (piso fixo) + registro no ato (F18c/F21, v1.2)
 
-Duas dimensões **ortogonais** no render de qualquer aula/PREPARAR calibrado, que **não se confundem**:
+Duas dimensões **ortogonais** no render de qualquer ensino calibrado — **`/aula-base`** (pré-questões) ou **Revisão Direcionada** (fechamento dos cards) —, que **não se confundem**:
 
 - **Descompressão = elástico (calibrável).** A nota 1-10 governa a **profundidade** narrativa, o nº de parágrafos e a prosa (Cláusula 3). Tema fácil/quente comprime; difícil/frio descomprime.
 - **Cobertura de pontos de decisão de alto rendimento = PISO FIXO (não calibrável).** O **conjunto** de pontos de prova testáveis do tema é um piso por tema, derivado do **sumário da fonte** (índice do resumo / aula-base; precedente s089 — o LCR lido por dado parcial, não pelo conjunto). Mesmo em **D2** (nota 1-3, flash) o render passa pelo **checklist de cobertura** antes de fechar: comprimir a **prosa** de um ponto é legítimo; **eliminar** o ponto não é. **Compressão encurta um ponto de decisão; nunca o exclui** (Invariante E). Raiz do F21: a Q2 da s109 caiu exatamente num ponto (ileotiflectomia) que a descompressão D10→D7 **eliminou** em vez de encurtar.
 
 **Dependência de operacionalização (não bloqueia a cláusula).** O checklist **mecânico** de cobertura deriva o piso do sumário da fonte — que depende da cobertura de `.md`/sumário (relatório de cobertura do pipeline de conhecimento; o RAG é **gold-only** — a collection `pdf_raw`/two-tier foi removida na consolidação part-2). Enquanto a cobertura mecânica não amadurece, o piso deriva **do que houver** (índice do resumo presente ou o escopo exato do cronograma). A cláusula é a **barreira de conduta agora**; o motor mecânico vem com a cobertura.
 
-**Registro no ato (F18c).** A nota 1-10 que **calibrou** a descompressão é **registrada no fechamento** da aula/PREPARAR via `db.set_dificuldade(area, tema, nota, fonte='aula')` — o sinal caro da forja da aula deixa de ser efêmero e passa a alimentar a Revisão Calibrada. **Respeita a precedência da Cláusula 2:** `fonte='aula'` **não sobrescreve** uma nota soberana `fonte='usuario'` (registra apenas quando a nota da aula não colide com input explícito do usuário). **Zero schema novo** — reusa as 3 colunas de dificuldade e o `set_dificuldade` existente.
+**Registro no ato (F18c).** A nota 1-10 que **calibrou** a descompressão é **registrada no fechamento** da aula via `db.set_dificuldade(area, tema, nota, fonte='aula')` — o sinal caro da forja da aula deixa de ser efêmero e passa a alimentar a Revisão Calibrada. **Respeita a precedência da Cláusula 2:** `fonte='aula'` **não sobrescreve** uma nota soberana `fonte='usuario'` (registra apenas quando a nota da aula não colide com input explícito do usuário). **Zero schema novo** — reusa as 3 colunas de dificuldade e o `set_dificuldade` existente.
 
 ---
 

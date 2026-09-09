@@ -97,6 +97,125 @@ def check_history_integrity(root=None, extras=None):
     return achados
 
 
+# --- CONTRATO_REVOGADO (G12/G11, s171) ------------------------------------
+# Registro de termos REVOGADOS: termo -> onde a revogacao foi declarada.
+# Extensivel: revogacao nova entra aqui e o gate passa a vigiar o termo em
+# TODOS os portadores. O registro e a fonte unica -- ninguem enumera a mao.
+_TERMOS_REVOGADOS = {
+    "PREPARAR": "revisao-calibrada v1.3 (s170), Clausula 11",
+    "Camada 0": "revisao-calibrada v1.3 (s170), Clausula 11",
+    "Camada 1": "revisao-calibrada v1.3 (s170), Clausula 11",
+}
+# Portadores da norma do /revisar. O contrato NAO basta: o agente que executa
+# le o command. Prescricao ativa sobrevivente num deles torna a lapide do
+# contrato decorativa -- que e exatamente o defeito G12.
+_PORTADORES_NORMA = (
+    "core/contracts/revisao-calibrada-contract.md",
+    ".claude/commands/revisar.md",
+    ".claude/commands/refrescar.md",
+    "AGENTE.md",
+    "ESTADO.md",
+    "HANDOFF.md",
+)
+_RE_HEADING = re.compile(r"^(#{1,6})\s")
+# Marcador de SECAO de lapide. Deliberadamente MAIS LARGO que o `RE_LAPIDE` do
+# doc_drift, que responde outra pergunta ("esta linha afirma que algo sumiu?").
+# Aqui a pergunta e "este bloco NARRA uma revogacao?" -- narrar a morte de uma
+# clausula e o registro correto, nao a violacao. As duas reguas convivem porque
+# medem eixos distintos; a do doc_drift e importada, nao copiada.
+_RE_SECAO_REVOGACAO = re.compile(
+    r"revogad|morte d[aoe]|morreu|morta|morto|l[aá]pide|antig[oa]|⚰", re.I)
+_RE_VERSAO_CORPO = re.compile(r"\*\*Vers[aã]o\s+(\d+\.\d+)")
+_RE_VERSAO_FM = re.compile(r"^version:\s*(\d+\.\d+)\s*$", re.M)
+
+
+try:  # regua irma do doc_drift: importada uma vez, nunca copiada
+    from tools.doc_drift import RE_LAPIDE as _RE_LAPIDE_IRMA
+except Exception:  # noqa: BLE001 -- sem ela, so o criterio local
+    _RE_LAPIDE_IRMA = None
+
+
+def _linha_e_lapide(linha):
+    """A propria linha se declara lapide (marcador ou vocabulario)."""
+    if _RE_SECAO_REVOGACAO.search(linha):
+        return True
+    return bool(_RE_LAPIDE_IRMA and _RE_LAPIDE_IRMA.search(linha))
+
+
+def check_contrato_revogado(root=None, portadores=None, termos=None):
+    """G12/G11 (s171): clausula REVOGADA que continua prescrevendo.
+
+    Dois predicados, um gate:
+
+    P1 -- termo REVOGADO em linha ATIVA de um portador da norma. Isento quando
+    (a) a propria linha e lapide, (b) a linha vive sob um heading de lapide
+    (isencao por SECAO -- sem ela o gate nasce cheio de falso-positivo nos
+    commands, que tem blocos inteiros narrando a revogacao, e e desligado na
+    segunda sessao), ou (c) e o cabecalho de versao do documento.
+
+    P2 -- `version:` do frontmatter divergente da versao declarada no corpo
+    (`**Versao X.Y`). Documento que mente sobre a propria versao nao pode ser
+    arbitro de nada.
+
+    Por que gate e nao leitura: no dia em que este defeito foi achado, tres
+    metodos deram tres numeros para a MESMA pergunta -- leitura humana 1,
+    enumeracao sobre grep truncado 10, grep integral 12. Contagem que vira DoD
+    sai de ferramenta.
+
+    Retorna lista de `(arquivo, linha, tipo, detalhe)`. `linha` = 0 no achado
+    de versao (e do documento, nao de uma linha).
+    """
+    repo = Path(root) if root else ROOT_DIR
+    alvos = portadores if portadores is not None else _PORTADORES_NORMA
+    vocab = termos if termos is not None else _TERMOS_REVOGADOS
+    achados = []
+    for rel in alvos:
+        f = repo / rel
+        if not f.is_file():
+            continue
+        try:
+            linhas = f.read_text(encoding="utf-8-sig", errors="replace").splitlines()
+        except OSError:
+            continue
+
+        # P2 -- frontmatter x cabecalho do corpo
+        cabeca = "\n".join(linhas[:20])
+        fm = _RE_VERSAO_FM.search(cabeca)
+        corpo = _RE_VERSAO_CORPO.search(cabeca)
+        if fm and corpo and fm.group(1) != corpo.group(1):
+            achados.append((rel, 0, "versao",
+                            f"frontmatter version: {fm.group(1)} x corpo "
+                            f"**Versao {corpo.group(1)}**"))
+
+        # P1 -- termo revogado em linha ativa, com isencao por SECAO
+        nivel_lapide = None  # nivel do heading que abriu a secao de lapide
+        for i, linha in enumerate(linhas, 1):
+            h = _RE_HEADING.match(linha)
+            if h:
+                nivel = len(h.group(1))
+                if _linha_e_lapide(linha):
+                    nivel_lapide = nivel
+                    continue
+                if nivel_lapide is not None and nivel <= nivel_lapide:
+                    nivel_lapide = None  # heading irmao/superior fecha a secao
+                # NAO faz `continue` aqui: um heading que ele mesmo nomeia o
+                # termo morto e o caso mais grave (`## Clausula 4 -- Fusao em
+                # sub-modos (PREPARAR / DRENAR)`), e escapou da 1a versao deste
+                # gate. O titulo e o que o leitor usa para decidir se a secao
+                # ainda vale.
+            if nivel_lapide is not None:
+                continue
+            if _linha_e_lapide(linha):
+                continue
+            if corpo and _RE_VERSAO_CORPO.search(linha):
+                continue  # cabecalho de versao do proprio documento
+            for termo, onde in vocab.items():
+                if termo in linha:
+                    achados.append((rel, i, "prescricao",
+                                    f"'{termo}' revogado em {onde}"))
+                    break
+    return achados
+
 _RE_MEM_PATH = re.compile(r"\b((?:tools|app)/[\w./-]+\.py)\b")
 _MEM_DIR_DEFAULT = (Path.home() / ".claude" / "projects"
                     / "C--Users-daanm-medhub" / "memory")
@@ -736,6 +855,31 @@ def main():
         results_summary.append((desc_mem, True, len(mem_mortos)))
         _ledger_record("memory_pointers",
                        [{"alvo": f"{a}::{b}", "payload": {}} for a, b in mem_mortos])
+
+    # 14e. Clausula REVOGADA que continua prescrevendo (G12/G11, s171).
+    #      Familia do MEMORY_POINTERS: regra que aponta para algo que nao
+    #      existe mais -- la um arquivo, aqui uma decisao.
+    #      SEVERIDADE: o BLOCK real e o `tools/test_contrato_revogado.py`, que
+    #      vive na suite e a suite e BLOCKING no pre-commit (check 2d, F44).
+    #      Esta linha aqui e o PAINEL -- torna a divida visivel no run. Nao e
+    #      "warning-first virou warning-only" (D3/F54): o gate ja morde, o
+    #      aviso so mostra. Duplicar o BLOCK aqui seria dois donos da mesma
+    #      regra, que e a doenca que o F43 registra.
+    desc_rev = "Clausula revogada em vigor (CONTRATO_REVOGADO)"
+    revogadas = check_contrato_revogado()
+    if revogadas:
+        amostra = "; ".join(f"{f}:{ln}" for f, ln, _, _ in revogadas[:4])
+        print()
+        print(f"[WARN] CONTRATO_REVOGADO (G12): {len(revogadas)} linha(s) de norma "
+              f"citando mecanismo REVOGADO fora de lapide ({amostra}"
+              f"{'; ...' if len(revogadas) > 4 else ''}). Clausula revogada que "
+              f"continua prescrevendo governa o agente na proxima sessao: lapidar "
+              f"ou remapear para a superficie que sobreviveu. Detalhe: "
+              f"pytest tools/test_contrato_revogado.py -q")
+    results_summary.append((desc_rev, True, len(revogadas)))
+    _ledger_record("contrato_revogado",
+                   [{"alvo": f"{f}:{ln}", "payload": {"tipo": t}}
+                    for f, ln, t, _ in revogadas])
 
     # 14. Invariante F43: suite que existe tem que estar em algum registro de
     #     execucao. "Quais testes rodam" e mantido em TRES lugares (pytest.ini,

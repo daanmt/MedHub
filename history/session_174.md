@@ -43,3 +43,9 @@
 
 `015dac0` F71 · `91c40e2` F88 · `37e0859` F80 · `f658e9f` F85 · `b8929b3` F76 · selo desta sessao (HANDOFF, session_174, INDEX, MEMORIA-AUDITORIA §1-3, ledger §6q + F89, consolidacao, dry-run A6, `exchange-log`; **destilado consumido**).
 Novos: `app/utils/provas.py` · `tools/test_{fsrs_blackout_provas,volume_fonte_unica,fuso_unico,card_gate_fail_loud,reason_divergente}.py` · 5 traces em `.vibeflow/hotfixes/2026-09-09-*.md` · `.vibeflow/audits/2026-09-09-hotfix-consolidation.md` · `docs/DRYRUN-F65-F67-2026-09-09.md`.
+
+## 5. Encerramento formal (pedido do operador, ~16h50)
+
+Pergunta dele: *"tudo de engenharia ja foi resolvido? E todos os ledgers anteriores?"* -- medido no ledger: **91 ids, 47 resolvidos, 11 abertos, 7 abertos so em ESTADO/HANDOFF (F63-F69), 7 parciais, 2 anti-scope, 8 SEM STATUS ESCRITO nunca (F16-F20 F27 F28 F32)**. Resposta: nao -- metade.
+Ordem dele: *"deixe tudo organizado no ai-eng; ele deve ter contexto de todos os tech debts, pois iremos resolve-los progressivamente. Apos, encerre formalmente a sessao; na proxima ja venho com questoes."*
+Feito: **`docs/MEMORIA-AUDITORIA.md §11` = inventario completo em 4 tiers** (Tier 0 ordem selada · Tier 1 engenharia pura · Tier 2 decisoes do operador · Tier 3 triagem dos 8 sem status), com classe, remedio e dependencia por item; §9 (fila do operador) recebeu lapide apontando para o Tier 2; `AGENTE.md §10.9` e o HANDOFF apontam para a §11; inventario enviado ao `ai-eng-9f` pelo canal (registrado no `exchange-log`). **Proxima janela dedicada abre com o Tier 3 (30 min) e segue o Tier 0.** Proxima sessao = ESTUDO com questoes; zero engenharia.

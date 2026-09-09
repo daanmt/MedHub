@@ -138,6 +138,8 @@ Do lado medhub (s170): §10.6 protocolo de achado com o /ai-eng (destilado ≤3k
 
 ## 9. Fila do operador (decisões empilhadas; ninguém decide por ele)
 
+> ⚰️ **Substituída na s174 (2026-09-09) pelo Tier 2 da §11** (lista ampliada: RODADA 3, 17 do overflow, backfill UTC→local, família planilha, F87, F63, F68/F69, F78, F37/F55/F62/graphify/contexto). Os 5 itens abaixo ficam como registro histórico.
+
 1. **Apagão do graphify** (`graphify-out/` + `.agents/rules|workflows/graphify.md`; skill global fica) — só após a fixture sintética do check de alcançabilidade declarativa estar verde (§5 categoria) e §10.4 grep.
 2. **Reforja dirigida do lote 600-799** (132 cards; state=0, fora da rotação) — dry-run + COUNT-ASSERT §10.7; guarda ratchet já existe; gatilho nominal, conteúdo clínico é do dono.
 3. **Contexto obrigatório em card novo?** (49% do pool com `frente_contexto` vazio) — decide se o gate de seleção 0→1 trata contexto vazio como WARN (hoje) ou BLOCK; eixo A (containment ≥0,70) = BLOCK.
@@ -150,3 +152,67 @@ Do lado medhub (s170): §10.6 protocolo de achado com o /ai-eng (destilado ≤3k
 `.vibeflow/hotfixes/2026-09-08-reforja-sem-rastro.md` · `tools/test_reforja_event_log.py` · `tools/test_ratchet_verso.py` · `history/INDEX.md` ·
 ai-eng: `brain/observability/sessions/2026-07-05-medhub-vibeflow-cycle.md` … `2026-09-01-descolagem-pericia-medhub.md` · `brain/observed-systems/exchange-log.jsonl` (17 trocas de 09-08, texto integral) ·
 `brain/feedback/preference-signal.md` (D53–D68) · `HANDOFF-MEDHUB-COLA.md` (dossiê s160, consumido).
+
+## 11. Inventário de dívida técnica — fila PROGRESSIVA (medido 2026-09-09, s174, HEAD `823b531`)
+
+> **Pedido do operador no fechamento da s174:** *"o /ai-eng deve ter contexto de todos os tech debts, pois iremos resolvê-los progressivamente."* Esta seção é o portador único dessa fila; o `/ai-eng` lê daqui (read-only) e ordena; o MedHub executa (D71). Regra de manutenção: item fechado ganha ⚰️ + commit, nunca sai da tabela; item novo entra no fim do tier certo. **Ordem dentro do Tier 0 foi selada pelo `/ai-eng` em 09/09** (`HANDOFF.md §Fila de engenharia`).
+
+### Tier 0 — próxima janela dedicada (ordem selada; nada depende do operador)
+| # | item | classe | remédio | vibeflow |
+|---|---|---|---|---|
+| 0.1 | **F80b** fila compara `fc.due` local × `datetime('now')` UTC (`get_cards_by_bucket`, `get_fresh_error_cards`): 3h de erro em 48h | leitor fora do relógio único (irmão do F80) | leitor único de "agora" = `db.agora()`; varredura estrutural que falha nomeando o arquivo se um SELECT usar `datetime('now')`; teste = 22h local, card due 23h não é vencido | hotfix |
+| 0.2 | **F81** `frente_contexto` desalinhado da `frente_pergunta` (3 eixos; fixtures #1568 #1574 no 1º predicado) | gate-miss conteúdo | predicado em `card_checks.py`; DoD por CADA um dos 7 writers; "pergunta genérica" só em conjunção; eixo C declarado não-verificável; **contador de gate-miss com classe lendo `fsrs_revlog.reason_servido`** (F76) | spec B1 |
+| 0.3 | **F40/F41 + G7** fila de reforja é prosa (12/13/15/38 cifras; #792 marcado 3× nunca reforjado; #321 v2 com defeito) | tooling: fila sem estado | `reforja_marks` com lifecycle (nunca booleana, fechamento explícito); backfill ±37 = dry-run + COUNT-ASSERT, execução do operador | spec B2 |
+| 0.4 | **F77/F77b** `grade.json` sem questões por tarefa (rateio erra 3×); `_parse_detail` só `Livro Digital:` | derivador incompleto | persistir contagem por tarefa no derivador; reconhecer "Revisão por Questões" | quick (≤1h) B4 |
+| 0.5 | **F35** reconcile W1 planilha×db é manual (Dashboard 6.288 × db 7.036) | gate ausente | reporta, não bloqueia, **com a IDADE da planilha** (data do último lançamento). A resposta do operador "planilha ainda é fonte?" muda o *peso*, não o mecanismo | spec B3 |
+| 0.6 | **F89** áreas fantasma `GO`/`Clínica Médica` voltaram (7 linhas) — nenhum writer de taxonomia valida `area` | gate-miss tooling | `AREAS_VALIDAS` única (app/ ou core/) + fail-loud nos 3 writers (`insert_questao`, `insert_card_base`, `registrar_sessao_bulk`) + WARN no auto_check (nasce WARN). Spec contra a lista ATUAL; a RODADA 3 muda a lista, não o mecanismo | spec, após B1 |
+| 0.7 | **Promotes** da consolidação 2026-09-09: contrato do calendário de provas (F71) · contrato da zona canônica LOCAL (F80) · `reason_servido` como campo do F81 (F76) | comportamento permanente sem portador em `core/contracts/` | 2 cláusulas no `fsrs-management-contract` + 1 parágrafo no spec F81 | gen-spec stubs |
+
+### Tier 1 — engenharia pura, sem ordem selada (o `/ai-eng` ordena)
+| # | item | classe | remédio proposto |
+|---|---|---|---|
+| 1.1 | **F79b** `card_self_sufficiency` cego a dêixis sobre contexto vazio | gate-miss conteúdo | predicado "dêixis + contexto vazio" = BLOCK; fixtures do s169 |
+| 1.2 | **F64** gatilho do regime de dívida lê `atrasados`, o dono lê `vencidos` (atrasados+hoje) | semântica divergente | um nome, uma definição em `day_plan._teto_efetivo` + contrato FSRS |
+| 1.3 | **F66** 45% da memória de fraquezas órfã por abreviação; `memory_errors.log` 1.164 linhas (hoje: "Pediatric Head Injury Assessment" fora do vocabulário) | vocabulário aberto | vocabulário restrito de (area, tema) na consolidação (F45 reaberto na prática); teto/rotação do log |
+| 1.4 | **F57** memórias nomeadas: 5 feitas, 72 restantes | reachability categoria | lote por sessão de estudo, não de engenharia; `MEMORY_POINTERS` já acusa paths mortos |
+| 1.5 | **F39** 40% do baralho não-atômico (269 WARN); reforja 8/358 | dívida de conteúdo com instrumento pronto | vira fila mecânica no B2; a reforja em si é do operador (régua F87) |
+| 1.6 | **F7** heurística de competidor (stem não exclui o competidor real) — WARN experimental | gate experimental | medir precisão sobre a base; promover a BLOCK ou matar |
+| 1.7 | **D5** (ALTA) CLIs sem assinatura canônica em skill: `day_plan` (4 de 10 flags em lugar nenhum), `recurate_cards`, `detect_clones`, `audit_flashcard_quality`, `normalize_taxonomia`, `backup_db`, `insert_card_*` | §7.2 violado | uma skill "engenharia-cli" ou seção por CLI; sensor de paridade skill×`--help` (D11-L) |
+| 1.8 | **D11** sensores de drift "verdes" não cobrem D1-D9 por desenho | falso conforto | documentar escopo em `doc_drift.py --help` (S); paridade skill×help (L) |
+| 1.9 | **G5** tabela §7.4 do AGENTE (gerada) envelhece a cada CLI novo | claim-aging de classe | check que compara `reachability_check --tabela` com o AGENTE (WARN) |
+| 1.10 | **G6 (causa)** `SESSION_POINTER` só pega ponteiro adiantado, não atrasado | gate meio-cego | segunda direção do check (HANDOFF cita sN e `session_N.md` ausente = WARN) |
+| 1.11 | **G10** `README.md` diz 365 testes (real 452); `ESTADO.md` cita `tools/autopsia_template.py` (não existe) — `MEMORY_POINTERS` só varre `memory/` | gate-miss categoria | estender `MEMORY_POINTERS` a README/ESTADO/HANDOFF |
+| 1.12 | **G11** frontmatter `version` ≠ corpo em `evidence-governance` (1.0 × v1.1) e `revisao-calibrada` (1.0 × v1.3); `orquestracao` sem campo | drift declarativo | check de paridade frontmatter×changelog (WARN) |
+| 1.13 | **G3** F75 cabeçalho 9/3 × tabela 10/2 | ledger contraditório | corrigir o cabeçalho (1 linha) |
+| 1.14 | **G1** ledger (196 KB) fora do boot · **G8** números sem data envelhecem | reachability | este arquivo é o índice; regra (1) de manutenção; F62 (rotação) é do operador |
+| 1.15 | smell `app/utils/db.py` → `tools/card_checks.py` por `__file__` (camada invertida) | arquitetura | mover predicados para `app/` (toca 7 writers) — spec sem data |
+| 1.16 | 2 traces de 09-06 em `status: partial` só por `reproduction: synthetic` (política do projeto) | convenção do `.vibeflow/` | decidir: `verified` com nota, ou `partial` = convenção local |
+| 1.17 | **F42** editar o espelho da skill é revertido em silêncio pelo `sync_skills` (WARN existe) | UX de gate | mensagem do WARN aponta o canônico; ou BLOCK |
+| 1.18 | **F72** `day_plan` recomenda tema de snapshot que ele mesmo declara não confiável (Drive 45d) | leitor ignora o próprio sensor | recomendação degrada para "sem cronograma" quando snapshot > N dias (família F34/F36/F63, W8) |
+
+### Tier 2 — depende de decisão ou conteúdo do OPERADOR (o `/ai-eng` leva numa rodada só)
+| # | item | decisão pedida | o que a engenharia faz depois |
+|---|---|---|---|
+| 2.1 | **F65/F67 RODADA 3** (`docs/DRYRUN-F65-F67-2026-09-09.md`): 10 grupos duplicados (193 cards + 104 erros); 35 cards e **201 erros** presos em `[bulk]` | fundir quais; tema real de cada card; destino dos erros | escrever as operações declarativas no `normalize_taxonomia`, dry-run, backup, `--apply`, `detect_clones` |
+| 2.2 | **17 cards em overflow no 14/09** (#321 #558 #788 #1187 #245 #706 #381 #823 #1479 #1159 #707 #553 #709 #419 #486 #632 #463) | mover à mão para antes da prova ou deixar | `fsrs_load --blackout` já lista; mover = UPDATE via writer com COUNT |
+| 2.3 | **backfill UTC→local** de `review_time`/`data_registro`/`reviewed_at` anteriores a `37e0859` (shift constante −3h) | sim/não | dry-run + COUNT-ASSERT por linhas que mudam de DIA; execução |
+| 2.4 | **família planilha (F36 ALTA, F35, F42, F72):** a planilha do Drive ainda é fonte? (Dashboard parou em 6.288) | sim/não | sim → F36 (binário via MCP) vira ritual com gate; não → F35 reporta abandono, F72 ignora snapshot |
+| 2.5 | **F87** régua de "card bom" (13 cards reprovados passam em todos os predicados) | co-definir a régua com o agente numa sessão | só depois vira spec de predicado de rendimento (relação card×conjunto, não texto) |
+| 2.6 | **F63** prioridade roxa do cronograma não viaja com o repo (usuário é a camada de transporte) | confirmar que `prevalencia_enamed.json` é o dado | ligar ao `infer_nota` |
+| 2.7 | **F68** 15 temas de alta/média prevalência sem linha na taxonomia · **F69** resumos com lacuna de diretriz nova (Calendário Vacinal 2026, GINA 2026, ATLS 11, SINAN 2026) | conteúdo | linhas + resumos (sessões de estudo) |
+| 2.8 | **F78** extração de PDF descarta figuras em silêncio (mitigação demonstrada) | vale spec? | sensor "página com figura sem texto" no `extract_pdfs` |
+| 2.9 | **F37** dado histórico inflado em `questoes_realizadas` (causa-raiz corrigida) · **F55** pre-commit `--staged` valida FS · **F62** rotação do ledger · apagão do `/graphify` (passo 1: fixture do check declarativo) · contexto obrigatório em card novo (WARN→BLOCK?) | política do dono | — |
+
+### Tier 3 — triagem: 8 achados SEM STATUS ESCRITO nunca (ciclo 3 de julho + handoff de integridade)
+| id | título (s108) | leitura de hoje (não re-medida — **triar = re-medir contra o código e escrever o marcador**) |
+|---|---|---|
+| F16 | tema cirúrgico de alto rendimento sem `.md` (só PDF) | provavelmente vivo em outra forma (6 temas do S8 sem resumo) — conferir e absorver em F68/backlog |
+| F17 | PDFs retidos "para o RAG" não indexados | provavelmente **superado** pela decisão *gold-only* do RAG (consolidação part-2) — lápide |
+| F18 | aula-base efêmera, sem artefato de persistência | provavelmente **superado** (Artifact HTML, s149) — lápide |
+| F19 | ambiente ENAMED-cêntrico, prova paralela sem suporte | provavelmente **superado** (multi-prova `core/provas.json`, s159) — lápide |
+| F20 | `.venv` dessincronizado do `requirements.txt` | re-medir (`pip check`) |
+| F27 | modo single do `insert_questao` sai 0 em falha | provavelmente **resolvido** (`test_batch_insert::test_single_*_exit_*`) — marcar |
+| F28 | `--elo` não persistido em coluna própria | re-medir (`habilidades_sequenciais`?) |
+| F32 | re-drill intra-sessão colide com relearning nativo (state=3) | parcialmente endereçado pela regra "só a 1ª nota grava" + corte do loop (s173) — re-medir |
+
+**Proposta de execução (MedHub):** abrir a próxima janela dedicada com **Tier 3 (30 min: re-medir e marcar os 8)**, depois **Tier 0 na ordem selada**, depois Tier 1 na ordem que o `/ai-eng` der. Tier 2 anda no ritmo das respostas do operador.

@@ -353,3 +353,5 @@ engenharia do `/ai-eng`, que abre janela própria e commita. Sem lock e sem guar
    (G1). Regra de manutenção herdada: **número sem data é claim que envelhece** — re-afirmar
    exige re-medir. Numeração de 1-8 é estável (citada por `HANDOFF.md`, `history/session_170.md`
    e pelo canal do `/ai-eng`): item novo entra no fim, nunca no meio.
+   **§11 do mesmo arquivo (s174) é o inventário de dívida técnica em 4 tiers** — a fila progressiva
+   que o `/ai-eng` ordena e o MedHub executa; item fechado ganha lápide, nunca sai da tabela.

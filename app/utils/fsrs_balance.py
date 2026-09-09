@@ -28,6 +28,14 @@ MENOR carga ja agendada -- achatando o calendario sem tocar no modelo de memoria
 - Modulo **PURO**: recebe a carga como dict e devolve uma data. Nao importa
   sqlite3, nao abre conexao (a consulta vive em `app/utils/db.py`, conforme a
   regra de SSOT). Isso o torna testavel sem banco.
+- **Calendario de provas (F71, hotfix 2026-09-09).** O balanceador recebe um
+  conjunto `dias_evitar` (blackout = dia da prova + o seguinte, derivado de
+  `core/provas.json` pelo caller -- nunca data no codigo). Regras: (a) nenhum
+  candidato pousa em dia de blackout; (b) nenhum candidato CRUZA a prova (um
+  card agendado antes dela fica antes; um agendado depois fica depois);
+  (c) alvo dentro do blackout vai para ANTES da prova, nunca depois; (d) sem
+  vaga antes da prova dentro da folga, o alvo e mantido -- o caller reconhece
+  o OVERFLOW por `dia in dias_evitar` e reporta, em vez de empurrar em silencio.
 """
 from datetime import date, timedelta
 
@@ -37,6 +45,38 @@ INTERVALO_MINIMO = 4
 FRACAO_JANELA = 0.05
 # Teto absoluto de deslocamento, para nao esticar demais intervalos longos.
 DESLOCAMENTO_MAXIMO = 10
+# Dias apos a prova que tambem ficam fora do calendario (F71): o dia seguinte e
+# o primeiro em que a revisao ja nao serve ao objetivo daquela semana.
+BLACKOUT_DIAS_APOS = 1
+
+
+def blackout_de(datas_prova, apos: int = BLACKOUT_DIAS_APOS) -> set:
+    """Conjunto de dias a evitar dado o calendario de provas (puro).
+
+    Cada prova contribui com o proprio dia e os `apos` seguintes. Entradas que
+    nao sao `date` sao ignoradas -- o parser tolerante e do caller.
+    """
+    dias = set()
+    for d in datas_prova or ():
+        if not isinstance(d, date):
+            continue
+        for k in range(0, int(apos) + 1):
+            dias.add(d + timedelta(days=k))
+    return dias
+
+
+def _inicio_do_blackout(dia: date, evitar: set) -> date:
+    """Primeiro dia da faixa continua de blackout que contem `dia`."""
+    inicio = dia
+    while (inicio - timedelta(days=1)) in evitar:
+        inicio -= timedelta(days=1)
+    return inicio
+
+
+def _cruza_blackout(a: date, b: date, evitar: set) -> bool:
+    """True se ha dia de blackout estritamente entre `a` e `b`."""
+    lo, hi = (a, b) if a <= b else (b, a)
+    return any(lo < d < hi for d in evitar)
 
 
 def folga_de(intervalo_dias: int) -> int:
@@ -69,7 +109,7 @@ def janela(alvo: date, intervalo_dias: int, hoje: date):
 
 
 def escolher_dia(alvo: date, intervalo_dias: int, carga: dict, hoje: date,
-                 state: int = 2):
+                 state: int = 2, dias_evitar=None):
     """Escolhe o dia de menor carga dentro da janela de folga.
 
     Args:
@@ -78,15 +118,35 @@ def escolher_dia(alvo: date, intervalo_dias: int, carga: dict, hoje: date,
         carga: {date: n_cards_ja_agendados}. Dias ausentes contam 0.
         hoje: data corrente (injetada -- mantem a funcao deterministica).
         state: estado FSRS; so 2 (revisao) e elegivel.
+        dias_evitar: blackout de provas (ver `blackout_de`). None/vazio =
+            regra do s128 sem calendario.
 
     Returns:
         (dia_escolhido, deslocamento_em_dias). Deslocamento 0 = nao mexeu.
+        Quando `alvo` esta no blackout e nao ha vaga antes da prova na folga,
+        devolve `(alvo, 0)` -- o caller reconhece o OVERFLOW por
+        `dia in dias_evitar`.
     """
     if int(state or 0) != 2:
         return alvo, 0
     candidatos = janela(alvo, intervalo_dias, hoje)
+    evitar = set(dias_evitar or ())
+    if evitar:
+        if alvo in evitar:
+            # (c) alvo em blackout: so vale candidato ANTES da faixa de prova.
+            limite = _inicio_do_blackout(alvo, evitar)
+            candidatos = [d for d in candidatos if d < limite and d not in evitar]
+            if not candidatos:
+                return alvo, 0            # (d) overflow -- o caller reporta
+        else:
+            # (a) nunca pousar em blackout; (b) nunca cruzar a prova.
+            candidatos = [d for d in candidatos
+                          if d not in evitar and not _cruza_blackout(alvo, d, evitar)]
     if len(candidatos) <= 1:
-        return alvo, 0
+        if not candidatos:
+            return alvo, 0
+        melhor = candidatos[0]
+        return melhor, (melhor - alvo).days
     # min() e estavel: preserva a ordem de preferencia no empate.
     melhor = min(candidatos, key=lambda d: carga.get(d, 0))
     return melhor, (melhor - alvo).days

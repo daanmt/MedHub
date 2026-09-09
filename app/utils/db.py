@@ -18,6 +18,10 @@ from datetime import datetime
 from app.utils.fsrs import FSRS
 
 DB_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'ipub.db')
+# Calendario de provas (F71): o balanceador FSRS le o blackout daqui, nunca de
+# data no codigo. O parser completo (countdown, WARNs nomeados) vive em
+# tools/day_plan.carregar_provas; este e o leitor MINIMO da camada app/.
+PROVAS_PATH = os.path.join(os.path.dirname(DB_PATH), 'core', 'provas.json')
 
 # Definição canônica de "card ativo" (part-5, flashcards-integridade) — FONTE
 # ÚNICA. Antes havia 3 definições divergentes em 5 arquivos (`!= 2`, `< 2` sem
@@ -326,11 +330,44 @@ def carga_agendada(cursor, inicio, fim):
     return out
 
 
-def _balancear_due(cursor, metrics):
+def blackout_provas(path=None):
+    """Dias a evitar no agendamento FSRS (F71): dia de cada prova + o seguinte.
+
+    Le `core/provas.json` (so `tipo == "prova"`; `grade` nao e blackout).
+    TOLERANTE: arquivo ausente/ilegivel/entrada malformada -> conjunto vazio
+    com WARN em **stderr** (stdout do `fsrs_queue --record` e JSON puro).
+    A regra de quantos dias entram e de `fsrs_balance.blackout_de` (pura).
+    """
+    import json as _json
+    from datetime import date as _date
+    from app.utils.fsrs_balance import blackout_de
+
+    alvo = path or PROVAS_PATH
+    try:
+        with open(alvo, encoding="utf-8") as fh:
+            dados = _json.load(fh)
+    except (OSError, ValueError, UnicodeDecodeError) as e:
+        print(f"[WARN] FSRS_BALANCE: core/provas.json ilegivel ({e}) -- sem blackout de prova.",
+              file=sys.stderr)
+        return set()
+    datas = []
+    for item in dados if isinstance(dados, list) else []:
+        if not isinstance(item, dict) or (item.get("tipo") or "prova") != "prova":
+            continue
+        try:
+            datas.append(_date.fromisoformat(str(item.get("data"))))
+        except (TypeError, ValueError):
+            continue
+    return blackout_de(datas)
+
+
+def _balancear_due(cursor, metrics, hoje=None, dias_evitar=None):
     """Aplica o load balancer ao `due` calculado pelo FSRS. Devolve metrics.
 
     Mantém `stability`/`difficulty` intocados; ajusta `due` e, por honestidade
     do revlog, `scheduled_days` para o intervalo efetivamente agendado.
+    `hoje`/`dias_evitar` sao injetaveis (testes e re-rodada sobre a fila);
+    por default = hoje real e o blackout de `core/provas.json` (F71).
     """
     from datetime import date as _date, datetime as _dt, timedelta as _td
     from app.utils.fsrs_balance import escolher_dia, folga_de
@@ -345,12 +382,21 @@ def _balancear_due(cursor, metrics):
     if int(metrics.get("state") or 0) != 2 or not folga_de(intervalo):
         return metrics
 
-    hoje = _date.today()
+    hoje = hoje or _date.today()
     alvo = due.date()
     f = folga_de(intervalo)
+    evitar = set(blackout_provas() if dias_evitar is None else dias_evitar)
     carga = carga_agendada(cursor, alvo - _td(days=f), alvo + _td(days=f))
     novo_dia, desloc = escolher_dia(alvo, intervalo, carga, hoje,
-                                    state=int(metrics.get("state") or 0))
+                                    state=int(metrics.get("state") or 0),
+                                    dias_evitar=evitar)
+    if novo_dia in evitar:
+        # F71 (d): alvo em blackout sem vaga antes da prova na folga. NAO empurra
+        # em silencio: mantem o due do FSRS e declara o overflow ao operador.
+        print(f"[FSRS_BALANCE] OVERFLOW: due {alvo} cai no blackout de prova e nao ha "
+              f"vaga antes da prova dentro da folga (+-{f}d); due mantido.",
+              file=sys.stderr)
+        return metrics
     if not desloc:
         return metrics
 
@@ -363,6 +409,81 @@ def _balancear_due(cursor, metrics):
           f"carga {carga.get(alvo, 0)} -> {carga.get(novo_dia, 0)})",
           file=sys.stderr)
     return metrics
+
+
+def rebalancear_blackout(conn, hoje=None, dias_evitar=None, aplicar=False):
+    """Re-roda o balanceador (F71) sobre a fila EXISTENTE: cards de revisao cujo
+    `due` cai no blackout de prova vao para antes da prova, dentro da folga.
+
+    Operacao em massa sobre `fsrs_cards` -> disciplina §10.7: `aplicar=False`
+    (default) e o dry-run que declara o diff; `aplicar=True` grava e faz o
+    COUNT-ASSERT (n de linhas escritas == n declarado; divergencia = rollback).
+    So toca `due`/`scheduled_days` -- `stability`/`difficulty` intocados, nenhuma
+    linha de revlog (nao e revisao). Cards sem vaga antes da prova ficam onde
+    estao e saem em `overflow` (nunca empurrados em silencio).
+
+    Returns: {movidos: [{card_id, de, para, deslocamento}], overflow: [{card_id,
+    due, motivo}], resumo: {"de -> para": n}, aplicado: bool, escritos: int}.
+    """
+    from datetime import date as _date, datetime as _dt, timedelta as _td
+    from app.utils.fsrs_balance import escolher_dia, folga_de, DESLOCAMENTO_MAXIMO
+
+    hoje = hoje or _date.today()
+    evitar = set(blackout_provas() if dias_evitar is None else dias_evitar)
+    vazio = {"movidos": [], "overflow": [], "resumo": {}, "aplicado": bool(aplicar),
+             "escritos": 0, "blackout": sorted(d.isoformat() for d in evitar)}
+    if not evitar:
+        return vazio
+    cursor = conn.cursor()
+    marcadores = ",".join("?" * len(evitar))
+    rows = cursor.execute(
+        "SELECT f.card_id, f.due, f.scheduled_days FROM fsrs_cards f "
+        "JOIN flashcards l ON l.id = f.card_id "
+        f"WHERE f.state = 2 AND {ativo_where('l.')} AND date(f.due) IN ({marcadores}) "
+        "ORDER BY f.due, f.card_id",
+        tuple(sorted(d.isoformat() for d in evitar))).fetchall()
+    if not rows:
+        return vazio
+    carga = carga_agendada(cursor, min(evitar) - _td(days=DESLOCAMENTO_MAXIMO),
+                           max(evitar) + _td(days=DESLOCAMENTO_MAXIMO))
+    movidos, overflow, resumo = [], [], {}
+    for card_id, due, intervalo in rows:
+        due_dt = _dt.fromisoformat(str(due))
+        alvo = due_dt.date()
+        intervalo = int(intervalo or 0)
+        if not folga_de(intervalo):
+            overflow.append({"card_id": int(card_id), "due": alvo.isoformat(),
+                             "motivo": f"intervalo {intervalo}d sem folga"})
+            continue
+        novo, desloc = escolher_dia(alvo, intervalo, carga, hoje, state=2, dias_evitar=evitar)
+        if novo in evitar or not desloc:
+            overflow.append({"card_id": int(card_id), "due": alvo.isoformat(),
+                             "motivo": f"sem vaga antes da prova na folga (+-{folga_de(intervalo)}d)"})
+            continue
+        movidos.append({"card_id": int(card_id), "de": alvo, "para": novo,
+                        "deslocamento": int(desloc), "due_novo": _dt.combine(novo, due_dt.time()),
+                        "scheduled_days": max(0, intervalo + desloc), "due_lido": str(due)})
+        carga[novo] = carga.get(novo, 0) + 1
+        carga[alvo] = max(0, carga.get(alvo, 0) - 1)
+        chave = f"{alvo.isoformat()} -> {novo.isoformat()}"
+        resumo[chave] = resumo.get(chave, 0) + 1
+    escritos = 0
+    if aplicar and movidos:
+        for m in movidos:
+            cursor.execute("UPDATE fsrs_cards SET due = ?, scheduled_days = ? "
+                           "WHERE card_id = ? AND due = ?",
+                           (m["due_novo"], m["scheduled_days"], m["card_id"], m["due_lido"]))
+            escritos += cursor.rowcount
+        if escritos != len(movidos):            # COUNT-ASSERT (§10.7)
+            conn.rollback()
+            raise RuntimeError(f"COUNT-ASSERT falhou: declarados {len(movidos)}, "
+                               f"escritos {escritos} -- rollback, nada gravado")
+        conn.commit()
+    for m in movidos:
+        m.pop("due_novo", None); m.pop("due_lido", None); m.pop("scheduled_days", None)
+    return {"movidos": movidos, "overflow": overflow, "resumo": resumo,
+            "aplicado": bool(aplicar), "escritos": escritos,
+            "blackout": sorted(d.isoformat() for d in evitar)}
 
 
 class ConcurrentReviewError(Exception):

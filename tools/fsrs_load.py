@@ -14,6 +14,12 @@ Uso:
   python tools/fsrs_load.py                 # 21 dias
   python tools/fsrs_load.py --dias 45
   python tools/fsrs_load.py --json
+  python tools/fsrs_load.py --blackout      # F71: painel do blackout de prova + DRY-RUN da
+                                            #      re-rodada do balanceador (diff declarado)
+  python tools/fsrs_load.py --blackout --apply   # grava o diff declarado (COUNT-ASSERT §10.7)
+
+`--blackout` e a UNICA acao que escreve, e so com `--apply`; a escrita passa por
+`app.utils.db.rebalancear_blackout` (writer allowlistado), nunca por SQL daqui.
 """
 import argparse
 import json
@@ -67,11 +73,50 @@ def coletar(dias):
     return serie, atrasados, pool
 
 
+def blackout(aplicar, como_json):
+    """Painel F71: dias de blackout (core/provas.json), carga neles, e a re-rodada do
+    balanceador sobre a fila -- dry-run por default, `--apply` grava. O diff sai
+    DECLARADO (COUNT por 'de -> para') no mesmo ato; overflow e listado, nunca movido."""
+    sys.path.insert(0, str(ROOT_DIR))
+    from app.utils import db
+    conn = db.get_connection()
+    try:
+        r = db.rebalancear_blackout(conn, aplicar=aplicar)
+    finally:
+        conn.close()
+    if como_json:
+        print(json.dumps(r, ensure_ascii=False, indent=1, default=str))
+        return 0
+    modo = "APLICADO" if r["aplicado"] else "DRY-RUN (nada gravado)"
+    print(f"# Blackout de prova (F71) -- {modo}")
+    print(f"  dias de blackout (core/provas.json): {', '.join(r['blackout']) or 'nenhum'}")
+    print(f"  cards movidos: {len(r['movidos'])} | overflow (ficam onde estao): {len(r['overflow'])}"
+          + (f" | escritos: {r['escritos']}" if r["aplicado"] else ""))
+    for chave, n in sorted(r["resumo"].items()):
+        print(f"    COUNT {n:>3}  {chave}")
+    if r["overflow"]:
+        print("  overflow:")
+        for o in r["overflow"]:
+            print(f"    #{o['card_id']} due {o['due']} -- {o['motivo']}")
+    if not r["aplicado"] and r["movidos"]:
+        print("  -> para gravar exatamente este diff: python tools/fsrs_load.py --blackout --apply")
+    return 0
+
+
 def main():
     ap = argparse.ArgumentParser(description="Previsao de carga do calendario FSRS (read-only).")
     ap.add_argument("--dias", type=int, default=21)
     ap.add_argument("--json", action="store_true")
+    ap.add_argument("--blackout", action="store_true",
+                    help="F71: painel do blackout de prova + re-rodada do balanceador (dry-run)")
+    ap.add_argument("--apply", action="store_true",
+                    help="com --blackout: grava o diff declarado (COUNT-ASSERT)")
     args = ap.parse_args()
+
+    if args.apply and not args.blackout:
+        ap.error("--apply so faz sentido com --blackout")
+    if args.blackout:
+        return blackout(args.apply, args.json)
 
     serie, atrasados, pool = coletar(args.dias)
     if args.json:

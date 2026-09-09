@@ -19,14 +19,14 @@
 > **G6 fechado**, G5/G8/G10 re-medidos, G11 confirmado literal. **Acrescentados: G12 e G13** (achados novos
 > desta passagem). §2, §4-§6 e §8-§10 não foram reverificados — ficam como o snapshot os deixou.
 
-## 1. Estado em uma leitura (medido 2026-09-08)
+## 1. Estado em uma leitura (medido 2026-09-09, s174; linhas não re-medidas mantêm a data própria)
 
 | fato | valor | fonte |
 |---|---|---|
-| ids no ledger | **87** (F1–F85 + F77b + F79b) | `AUDITORIA_MEDHUB.md` 1518 ln (**F82-F85 numerados na s171**, `§6o`) |
-| status escrito | 38 RESOLVIDO · **6+1 PARCIAL** (F7, F37-F41 + F57) · 12 ABERTO no cabeçalho · 7 ABERTO só em ESTADO/HANDOFF (F63-F69) · 2 ANTI-SCOPE (F55, F62) · 1 RECONCILIADO (F21) · **8 SEM STATUS** | §3 (remedido 09-08 por medhub-18) |
+| ids no ledger | **91** (F1–F89 + F77b + F79b) | `AUDITORIA_MEDHUB.md` ~1575 ln (**F82-F85 na s171**, `§6o`; **F87** s172 `§6p`; **F88-F89 na s174**, `§6q`) |
+| status escrito | **47 RESOLVIDO** (+F86 na s171; +F71 F76 F80 F85 F88 na s174) · **6+1 PARCIAL** (F7, F37-F41 + F57) · **11 ABERTO no cabeçalho** (F35 F36 F42 F72 F77 F77b F78 F79b F81 F87 F89) · 7 ABERTO só em ESTADO/HANDOFF (F63-F69) · 2 ANTI-SCOPE · 1 RECONCILIADO · 8 SEM STATUS | §3 (remedido **09-09 s174**, HEAD pós-ciclo A) |
 | commits desde 2026-06-01 | **262** · **129** `history/session_*.md` · s170 **SELADA** (9 commits, `session_170.md` presente, pushada até `a9423d7`) | `git log`, medido 09-08 pós-selo |
-| suite | 317 (s160) → 358 (descolar 09-01) → 376 (s170 abertura) → **395** (após c4ce1db · d2026a1 · 06634b6, 09-08) | **re-medido no medhub 09-08: `395 passed em 16,68s`** |
+| suite | 317 (s160) → 358 (09-01) → 395 (09-08) → 413 (s171) → **452** (ciclo A s174: +39 em 5 suites novas) | **re-medido 09-09: `452 passed em ~22s`**; `auto_check --changed` PASSED |
 | enforcement real | pre-commit `auto_check --staged` + suite pytest (check 2d BLOCKING) + schema do `ipub.db`; 2 BLOCK nominais (`HANDOFF_LONGO`, `SESSION_POINTER`) + 20 WARN | `auto_check.py`, matriz s160 `:1003` |
 | boot lê | HANDOFF → ESTADO → reconcile → day_plan (hook) → workflow → último session → memória (hook) → RAG. **NÃO lê o ledger** | `AGENTE.md:45-54` |
 | série gate-miss | F79 · F79b · F81 (conteúdo) + graphify/`reachability_check` (categoria) + fila-sem-estado/`avisos`/param-morto (tooling) | `AGENTE.md §10.8`; §5 |
@@ -53,14 +53,15 @@
 | 09-02/05 | s162-s165 | Opus/Fable no medhub | veredito da des-colagem; camada de PREVALÊNCIA (89 temas) | F63–F69 | — |
 | 09-05/07 | s166-s169 | Fable/Opus no medhub | README reescrito · 2 hotfixes · varredura drift D1-D12 · sprint 725q · substrato PubMed | F70–F80 (+F77b, F79b) | 2 traces hotfix |
 | 09-08 | s170 ↔ N=75 | medhub-18 ↔ ai-eng (canal direto) | contrato `revisao-calibrada` v1.3 (PREPARAR revogado) · §10.6-10.8 · 3 auditorias por subagente (reforja · pool · graphify) → **hotfix reforja-sem-rastro (c4ce1db)** · **guarda ratchet do verso (d2026a1, 06634b6)**; pytest 376→395 | F81 + achados §5 | 2 audits PASS (ai-eng) |
+| 09-09 | **s174 ↔ ai-eng-9f** (D71: implement E audit aqui; `/ai-eng` orquestra) | Fable 5.1 no medhub | **ciclo A do destilado**: F71 (`015dac0`, blackout de prova + re-rodada 34 movidos/17 overflow no db real) · F88 (`91c40e2`, conta unica de volume + leitor unico de `provas.json`) · F80 (`37e0859`, relogio unico LOCAL -- **a ALTERA "UTC no db" caiu diante da evidencia do nucleo FSRS**) · F85 (`f658e9f`, fail-loud) · F76 (`b8929b3`, `reason_servido` no revlog) · A6 dry-run (`docs/DRYRUN-F65-F67-2026-09-09.md`); pytest 413→452 | F88 novo (A5 numerado) · **F89** (areas fantasma voltaram) · F80b sub-achado | consolidacao vibeflow: 10 docs, 0 regressed, 3 promote |
 
 ## 3. Ledger F1→F81 por status (transcrito literalmente do cabeçalho; medido 2026-09-08)
 
 | status | ids |
 |---|---|
-| **RESOLVIDO** (41) | F1 · F10–F15 · F22–F26 · F29–F31 · F33 · F34 · F43–F54 · F56 · F58–F61 · F70 · F73 · F74 · F79 · **F82 · F83 · F84** (s171) |
+| **RESOLVIDO** (47) | F1 · F10–F15 · F22–F26 · F29–F31 · F33 · F34 · F43–F54 · F56 · F58–F61 · F70 · F73 · F74 · F79 · F82 · F83 · F84 · F86 (s171) · **F71 · F76 · F80 · F85 · F88** (s174, ciclo A) |
 | **PARCIAL / causa-raiz** (6+1) | **F7 (heurística de competidor: WARN experimental, curadoria pendente — `:110-124`)** · F37 (dado histórico inflado: decisão do dono) · F38 (literal: `RESOLVIDO (s159) -- guarda entregue; 1 instância histórica a recuperar`) · F39 (detector ok; reforja 8/358) · F40/F41 (fila de reforja) · F57 (`RESOLVIDO-parcial`: 5 memórias nomeadas; 72 restantes) |
-| **ABERTO — cabeçalho** (13) | F35 · F36 (ALTA) · F42 · F71 · F72 · F76 · F77 · F77b · F78 · F79b · F80 · F81 · **F85** (justificativa órfã, fecha no item 7) |
+| **ABERTO — cabeçalho** (11) | F35 · F36 (ALTA) · F42 · F72 · F77 · F77b · F78 · F79b · F81 · F87 · **F89** (áreas fantasma de volta; spec) — ⚰️ F71/F76/F80/F85 fechados na s174 |
 | **ABERTO — só ESTADO/HANDOFF** (7) | F63 (ALTA) · F64 · F65 (ALTA) · F66 (ALTA) · F67 · F68 · F69 — sem marcador no ledger |
 | **ANTI-SCOPE** (2) | F55 (pre-commit `--staged` valida FS, não índice) · F62 (rotação do próprio ledger = política do dono) |
 | **RECONCILIADO** (1) | F21 |

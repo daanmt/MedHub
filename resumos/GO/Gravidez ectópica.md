@@ -22,7 +22,12 @@ Implantação do blastocisto **fora da cavidade endometrial**. Mais de 95% são 
 ## Diagnóstico -- a escada
 
 - Ferramentas: **β-hCG quantitativo + USG transvaginal**.
-- ⭐ **Limiar (zona) discriminatório de β-hCG ≈ 1.500-2.000 mUI/mL.** Acima dele, uma gestação **tópica** normal **deve** ser visível na USG TV.
+- ⭐ **Limiar (zona) discriminatório de β-hCG = 1.500-2.000 mUI/mL (FEBRASGO nº 22/2018 -- referência brasileira).** Acima dele, uma gestação **tópica** normal **deve** ser visível na USG TV.
+- ⚠️ **Existe um segundo valor, 3.500 mUI/mL, e ele NÃO substitui o primeiro:** é da **ACOG (Practice Bulletin 193, 2018)**. Os dois números respondem a perguntas diferentes e trocam um tipo de erro pelo outro:
+  - **2.000 otimiza SENSIBILIDADE** -- é o ponto em que a USTV *deveria* enxergar o saco. Detecta ectópica mais cedo, ao custo de rotular como anormal alguma tópica ainda invisível.
+  - **3.500 otimiza ESPECIFICIDADE** -- é o ponto acima do qual a não-visualização é praticamente sempre anormal. Escolhido deliberadamente "conservador" para **não interromper uma gestação tópica viável** (gemelar, datação errada, USTV de menor resolução).
+  - 🔴 **A exceção que os dois carregam: gestação MÚLTIPLA.** Beta acima da zona sem imagem tópica é indicativo de anormalidade **exceto** na gravidez múltipla, em que o beta sobe mais rápido que a visibilidade.
+  - **Para prova brasileira, ancorar em 1.500-2.000.** ⚠️ A atribuição do 3.500 ao *Ministério da Saúde* circula em cursinho mas **não foi confirmada em fonte primária** -- o Manual de Gestação de Alto Risco não foi verificado neste ponto.
   - β-hCG **> 2.000 + útero vazio** -> suspeita forte de ectópica.
   - β-hCG **< 2.000 + útero vazio** -> pode ser **gestação incipiente normal** -> **repetir a curva, NÃO tratar**.
 - ⭐ **Curva de β-hCG (48h):** gestação tópica viável sobe **≥ 35-66%**; ectópica ou gestação inviável faz **platô ou subida lenta**. A curva é o que **confirma** o diagnóstico -- não se trata com um β-hCG isolado.

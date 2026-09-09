@@ -58,11 +58,12 @@ aliases: [HPP]
 
 - **Quadro clínico:** sangramento pós-parto associado a útero não contraído, palpável **acima** da cicatriz umbilical.
 - **Sequência terapêutica** (concomitante às medidas gerais da seção 5.1), preconizada por MS/OMS:
-    - **Massagem uterina bimanual (manobra de Hamilton):** primeira manobra manual, realizada enquanto se aguarda o efeito do uterotônico.
-    - **Ocitocina EV** (uterotônico de 1ª escolha): 20-40 UI, sendo 5 UI em bólus lento e o restante diluído em 500 mL de SF 0,9%. Deve ser a primeira conduta farmacológica em **todo** caso de HPP, mesmo antes de a causa estar definida -- até prova em contrário, assume-se atonia.
-    - **Ácido tranexâmico:** 1 g EV (em 100 mL SF, infusão em 10 min), repetido a cada 6h; administrado **concomitante** aos uterotônicos, não isoladamente.
-    - Sem resposta -> **metilergometrina/ergometrina** 0,2 mg IM, repetível a cada 2-4h (evitar em hipertensas).
+    - ⭐ **1º DEGRAU -- quatro coisas ao mesmo tempo, não em fila:** **ocitocina EV** (uterotônico de 1ª escolha da FIGO: 20-40 UI, sendo 5 UI em bólus lento e o restante em 500 mL de SF 0,9%) + **massagem uterina** + **ácido tranexâmico** + **cristaloides isotônicos**. A ocitocina é a primeira conduta farmacológica em **todo** caso de HPP, mesmo antes de a causa estar definida -- até prova em contrário, assume-se atonia.
+    - **Ácido tranexâmico:** 1 g EV em 100 mL de SF, infusão em 10 min. **Repetir 1 g se o sangramento persistir após 30 minutos ou recorrer dentro de 24 horas** (FIGO 2022) -- 🔴 não é "a cada 6 h", como este arquivo trazia.
+    - Sem resposta -> **metilergometrina/ergometrina** 0,2 mg IM, repetível a cada 2-4h (**evitar em hipertensas** -- na hipertensa pula-se a ergometrina e vai direto ao misoprostol).
     - Sem resposta -> **misoprostol** 800 mcg via retal.
+    - 🔴 **COMPRESSÃO BIMANUAL (manobra de Hamilton) e compressão aórtica externa entram AQUI, na refratariedade -- não no início.** A FIGO 2022 as classifica como **medida temporizadora até que o cuidado definitivo esteja disponível**, ao lado do traje antichoque não pneumático (NASG). ⚰️ Este arquivo dizia "primeira manobra manual" -- errado. **O que continua no 1º degrau é a massagem uterina; o que desceu de degrau foi a compressão bimanual.**
+      - ⚠️ **A confusão que a própria aula do cursinho comete:** o que a FIGO retirou não foi "a massagem do 1º degrau" -- foi a **massagem uterina sustentada como PREVENÇÃO** em quem já recebeu ocitocina profilática. No **tratamento**, a massagem segue recomendada. Prevenção e tratamento são eixos distintos.
     - Sem resposta -> dispositivo intrauterino (balão de tamponamento -- BIU -- ou dispositivo a vácuo JADA); antes de inserir, é obrigatório reconfirmar ausência de restos placentários e revisar/suturar lacerações.
     - Sem resposta -> intervenção cirúrgica: suturas compressivas (B-Lynch), ligaduras vasculares (artérias uterinas ou ilíacas internas).
     - **Histerectomia:** último recurso, reservada à falha de todas as medidas anteriores.

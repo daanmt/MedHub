@@ -133,7 +133,15 @@ São **cinco** diferenças, e só cinco:
 - **Interface da VPP.** >= 34 sem: máscara facial **ou laríngea**. ⚡ **< 34 sem: só máscara facial** -- a laríngea é proibida, não existe tamanho abaixo de 34 semanas.
 - **FiO2 inicial da VPP.** >= 34 sem: **21%** (ar ambiente). ⚡ **< 34 sem: 60%.**
 
-🔴 **Selo de fonte -- FiO2 do prematuro:** a diretriz **SBP 2022** mandava iniciar com **30%**, e é esse o valor que a literatura secundária ainda repete. O **60%** vem da diretriz SBP de **12/06/2026** conforme apresentada no aulão ENAMED 2026 do Estratégia; o PDF oficial é restrito a associados. Para a prova de 2026, usar **60%**; guardar que **30% era o valor de 2022** para reconhecer questão antiga.
+### 4.1 FiO2 do prematuro -- o ponto mais novo e mais instável da diretriz
+
+**Fonte primária, verbatim (§9.1):** *"o PRN-SBP recomenda iniciar a VPP do RN < 34 semanas com concentração de O2 de 60%, titulando-se a oferta de acordo com a monitoração da SpO2 pré-ductal pela oximetria de pulso. Se a SpO2 estiver fora do alvo, aumentar ou diminuir a concentração de O2 em 20% a cada 30 segundos. Para isso, é obrigatório dispor do blender O2/ar."* -- Guinsburg R, Almeida MFB, PRN-SBP, *Reanimação do recém-nascido < 34 semanas em sala de parto: Diretrizes 2026*, 12/06/2026, DOI 10.25060/PRN-SBP-2026-2.
+
+- ⚡ **Titulação: ±20% a cada 30 segundos**, guiada pela SpO2 pré-ductal. **Blender O2/ar é obrigatório** -- sem blender, não há como cumprir a diretriz.
+- ⚰️ **30% era a SBP 2022.** Não é "outra escola": é a versão anterior da mesma diretriz.
+- ⚠️ **A SBP foi ALÉM do ILCOR.** O ILCOR (out/2025) recomenda apenas **FiO2 >= 0,30** para iniciar a VPP no pré-termo -- é o Brasil que fixou 60%.
+- **A evidência que sustenta é fisiológica, não de desfecho duro.** No TORPIDO 30/60 (Oei JL et al., *JAMA* 2026;335(6):523-30), em RN de 23-28 semanas, 0,60 vs 0,30 deu **morte ou lesão cerebral em 47% vs 48% -- sem diferença**. O que mudou foi o caminho: o grupo 0,60 atingiu mais SpO2-alvo e FC >= 100 bpm aos 5 min, com menos hipóxia/bradicardia e **menos massagem cardíaca e adrenalina**. A metanálise NET-MOTION (Sotiropoulos JX et al., *JAMA Pediatr* 2024;178(8):774-83, PMID 38913382) apontou redução de mortalidade com FiO2 inicial alta em < 32 sem, mas com **certeza baixa a muito baixa**.
+- 🔴 **Alerta de banca -- a mudança tem 3 meses.** Uma questão redigida antes de junho/2026 vai gabaritar **30%**. Na prova de 13/09: se a alternativa **60%** existir, ela é a correta pela diretriz vigente no Brasil; se não existir e houver 30%, é questão anterior à mudança. **Guardar os dois números com a data de cada um** é mais seguro do que guardar só o novo.
 
 ⚠️ **CPAP no prematuro:** FC > 100 bpm mas com desconforto respiratório -> **CPAP**, porque o quadro provável é síndrome do desconforto respiratório (deficiência de surfactante, típica de < 35 semanas).
 

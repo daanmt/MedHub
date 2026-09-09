@@ -82,9 +82,14 @@ aliases: [DHEG, Pré-eclâmpsia, Eclâmpsia, Síndrome HELLP]
 
 ## 6. Síndrome HELLP
 
-- **H -- Hemolysis:** esquizócitos no esfregaço + LDH > 600 U/L + bilirrubina indireta elevada
-- **EL -- Elevated Liver enzymes:** TGO/TGP > 2× LSN
-- **LP -- Low Platelets:** plaquetas < 100.000/mm³
+Critérios de **Tennessee** (MS/Fiocruz-IFF 2023 e FEBRASGO nº 8/2018) -- com os valores absolutos, que é como o MS escreve:
+
+- **H -- Hemolysis:** esquizócitos/equinócitos no esfregaço **e/ou** LDH **>= 600 U/L** **e/ou** bilirrubina total **>= 1,2 mg/dL** (às custas da indireta).
+- **EL -- Elevated Liver enzymes:** TGO/TGP **>= 70 U/L** (que é, na prática, o mesmo que "> 2x LSN" -- é o **mesmo critério em unidade absoluta**, não um critério diferente).
+- **LP -- Low Platelets:** plaquetas **< 100.000/mm³**.
+
+🔴 **Não confundir os cortes de HELLP com os cortes de GRAVIDADE da pré-eclâmpsia -- são construtos diferentes.** Creatinina **> 1,1 mg/dL ou o dobro do basal** e transaminases **2x LSN** são critérios de **gravidade da PE** (ACOG 2020). Bilirrubina 1,2 / LDH 600 / TGO-TGP 70 / plaquetas 100.000 são critérios de **HELLP**. Uma aula de cursinho pode apresentar os dois blocos juntos como se fossem "os cutoffs da pré-eclâmpsia grave"; misturar os eixos faz marcar HELLP onde só há gravidade, e vice-versa.
+- ⚠️ **A creatinina de 1,2 mg/dL existe, mas com OUTRA finalidade:** é o limiar de disfunção renal para **reduzir à metade a dose de manutenção do MgSO4** (FEBRASGO; o infográfico do MS usa 1,3 mg/dL para o mesmo fim). Não é critério de gravidade.
 
 Ocorre com ou sem pico convulsivo adjunto. Pode se instalar sem hipertensão ou proteinúria evidentes.
 - ⚠️ Dor em hipocôndrio direito em PE é sinal de alarme para distensão da cápsula de Glisson -- iminência de rotura hepática.
@@ -137,7 +142,16 @@ Ocorre com ou sem pico convulsivo adjunto. Pode se instalar sem hipertensão ou 
 - Depressão respiratória: FR < 16 ipm
 - Oligúria: diurese < 25 mL/h
 
-⭐ **Antídoto:** Gluconato de cálcio 1 g IV -- suspender MgSO4 imediatamente e administrar.
+⭐ **Os três parâmetros NÃO são equivalentes -- suspender e antidotar são gatilhos diferentes.**
+
+- **Qualquer um dos três alterado -> SUSPENDER a infusão.** Este é o gatilho comum.
+- **Gluconato de cálcio 10% (1 g = 10 mL IV em bólus, em 3 minutos) -> só na toxicidade NEUROMUSCULAR/RESPIRATÓRIA:** reflexo patelar **diminuído ou abolido**, **ou** dificuldade/depressão respiratória. Em parada cardiorrespiratória: suspender + gluconato + IOT + ventilação assistida.
+- 🔴 **Oligúria ISOLADA não antidota.** Diurese < 25 mL/h manda **suspender a infusão e dosar magnésio sérico** -- não se dá gluconato por oligúria. A oligúria não é sinal de intoxicação: é o rim avisando que vai acumular.
+- **Fonte:** MS/Fiocruz-IFF, *Portal de Boas Práticas*, infográfico "Quando/Como usar o Sulfato de Magnésio" (2023, selo MS) + FEBRASGO Protocolo nº 8 (2018).
+
+⚠️ **Banca × evidência:** o gabarito clássico empacota os três numa "tríade de toxicidade -> suspende + gluconato". Se a alternativa só oferecer o pacote, marque o pacote; mas a separação acima é o discriminador que o próprio MS explicita, e é o que a UERJ pode cobrar.
+
+🔴 **Este arquivo já ensinou as DUAS versões erradas ao mesmo tempo:** esta linha mandava antidotar diante dos três (incluindo a oligúria, que não antidota), e a armadilha lá embaixo reservava o gluconato à depressão respiratória (excluindo a arreflexia, que antidota). Se a memória trouxer qualquer uma das duas, é versão velha.
 
 ---
 
@@ -180,7 +194,7 @@ Ocorre com ou sem pico convulsivo adjunto. Pode se instalar sem hipertensão ou 
 - 🔴 **Segunda onda trofoblástica:** destino anatômico exato = zona de junção miometrial (camada muscular média das artérias espiraladas). Distratores: endotélio da artéria uterina, decídua capsular.
 - 🔴 **Iminência de eclâmpsia = PE grave por si só:** cefaleia/turvação/escotomas/epigastralgia/hiperreflexia já classificam como grave, mesmo com PA 140/90. Conduta = estabilizar + MgSO4 + **resolução** (não apenas induzir nem observar). Marcar "PE leve" porque a PA não bateu 160/110 é a armadilha.
 - 🔴 **Crise hipertensiva em TRANSFERÊNCIA -> nifedipina VO:** hidralazina e nifedipina são ambas 1ª linha, mas a **hidralazina é endovenosa** -- no transporte (sem acesso/bomba), a **nifedipina oral** é a escolha segura. O contexto flipa a escolha. (Labetalol: indisponível no Brasil.)
-- 🔴 **Gluconato de cálcio só na DEPRESSÃO RESPIRATÓRIA:** qualquer sinal de toxicidade (reflexo patelar abolido -- 1º sinal --, FR < 16, diurese < 25) manda **suspender o Mg**; o **antídoto** (gluconato de cálcio 1 g IV) é reservado à **depressão respiratória**. Reflexo abolido isolado -> suspende, não antidota.
+- 🔴 **Gluconato de cálcio: o corte é NEUROMUSCULAR/RESPIRATÓRIO, não "os três sinais".** Os três parâmetros (reflexo patelar, FR < 16, diurese < 25 mL/h) mandam **suspender** o MgSO4. O **antídoto** entra na **arreflexia/hiporreflexia patelar OU na dificuldade respiratória** (e na PCR) -- ⚰️ *esta armadilha já disse "só na depressão respiratória", excluindo indevidamente a arreflexia, que É indicação*. E **oligúria isolada não antidota**: suspende e dosa magnésio sérico. Fonte: MS/Fiocruz-IFF 2023 + FEBRASGO nº 8/2018.
 - 🔴 **MgSO4 NÃO trata a hipertensão:** é anticonvulsivante (PE grave, iminência, eclâmpsia, HELLP) e neuroprotetor fetal (< 32 sem). O pico hipertensivo é tratado por hidralazina/nifedipina. Em enunciado EXCETO, esta é a falsa a isolar.
 - 🔴 **PE grave ≠ interrupção imediata:** a 1ª medida é estabilizar (anti-HAS de ação rápida se PA ≥ 160/110 + MgSO4). A resolução depende da IG (≥ 34 sem) e de complicações; via vaginal preferencial. "Tirar o bebê já / cesárea de urgência" é o reflexo de over-tratamento.
 - 🔴 **Reflexo de over-tratamento abaixo de 160/110:** PA 150/100 **não** é crise -- não usa hidralazina EV nem cesárea. PE sobreposta sem gravidade -> manter anti-HAS oral (metildopa) e resolver com **37 semanas**.

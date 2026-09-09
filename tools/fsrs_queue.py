@@ -6,8 +6,8 @@ Camada fina sobre ``app.utils.db``: lê a fila de cards vencidos via
 preservando o caminho de escrita único e o audit trail em ``fsrs_revlog``.
 
 Existe para que o agente (Claude Code) conduza a revisão dentro da conversa
-— inclusive via remote-control no celular, onde o player Streamlit local não
-é alcançável.
+— inclusive via remote-control no celular. É a ÚNICA superfície de revisão
+desde o pivot agent-first (s074): a UI local foi removida.
 
 Uso:
     python tools/fsrs_queue.py --next [--area X] [--tema Y]

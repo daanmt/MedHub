@@ -915,8 +915,12 @@ def update_flashcard_fields(card_id, fields) -> bool:
     # documentado fora dos CLIs (a regen queue instrui o agente a chamar
     # direto). Mesmos predicados parciais do recurate (campos presentes).
     # card_checks vive em tools/ (import lazy por __file__, imune a
-    # monkeypatch de DB_PATH); indisponível → WARN e segue (a camada CLI já
-    # valida; o app não pode quebrar sem tools/ — degradação anunciada).
+    # monkeypatch de DB_PATH).
+    # 🔴 FAIL-LOUD (F85, s174): se o gate nao importa, a escrita nao acontece.
+    # O `except` antigo degradava para WARN "porque o app nao pode quebrar sem
+    # tools/" -- esse app era a UI Streamlit, removida; a justificativa
+    # sobreviveu ao motivo (Reachability-Debt variante 3). Mesma forma do
+    # gemeo F84 (ratchet do verso), 20 linhas abaixo.
     try:
         _tools = os.path.join(os.path.dirname(os.path.dirname(
             os.path.dirname(os.path.abspath(__file__)))), 'tools')
@@ -924,24 +928,24 @@ def update_flashcard_fields(card_id, fields) -> bool:
         if _tools not in _sys.path:
             _sys.path.insert(0, _tools)
         import card_checks as _cc
-    except Exception as e:  # pragma: no cover
-        print(f"[WARN] CARD_GATE: card_checks indisponivel ({e}) — reescrita sem gate.")
-        _cc = None
-    if _cc is not None:
-        erros = list(_cc.checar_encoding(sets))
-        for k in ('frente_pergunta', 'verso_resposta'):
-            if k in sets and not str(sets[k]).strip():
-                erros.append(f"{k} vazia")
-        if sets.get('frente_pergunta'):
-            t = _cc.checar_pergunta_template(sets)
-            if t:
-                erros.append(t)
-            emb = _cc.checar_resposta_embutida(sets)
-            if emb:
-                erros.append(emb)
-        if erros:
-            raise ValueError("gate de qualidade reprovou a reescrita (regua "
-                             ".claude/commands/estilo-flashcard.md): " + " | ".join(erros))
+    except Exception as e:
+        raise RuntimeError(
+            f"gate de qualidade (card_checks) indisponivel ({e}) — reescrita RECUSADA. "
+            "O gate nao roda, logo a escrita nao acontece.") from e
+    erros = list(_cc.checar_encoding(sets))
+    for k in ('frente_pergunta', 'verso_resposta'):
+        if k in sets and not str(sets[k]).strip():
+            erros.append(f"{k} vazia")
+    if sets.get('frente_pergunta'):
+        t = _cc.checar_pergunta_template(sets)
+        if t:
+            erros.append(t)
+        emb = _cc.checar_resposta_embutida(sets)
+        if emb:
+            erros.append(emb)
+    if erros:
+        raise ValueError("gate de qualidade reprovou a reescrita (regua "
+                         ".claude/commands/estilo-flashcard.md): " + " | ".join(erros))
 
     conn = get_connection()
     cursor = conn.cursor()

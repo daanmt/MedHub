@@ -39,6 +39,7 @@ from performance import (  # noqa: E402
     MARCOS,
     get_questoes_do_mes,
     get_totais,
+    volume_vs_marco,
 )
 
 
@@ -94,51 +95,9 @@ def DIAS_ATE_CICLO(hoje):
 # da s126) -- nada daqui alimenta formula de ritmo.
 # UERJ/USP entram em core/provas.json quando houver edital -- sem codigo novo.
 # ---------------------------------------------------------------------------
-PROVAS_PATH = os.path.join(ROOT, "core", "provas.json")
-
-
-def carregar_provas(path=None):
-    """Le core/provas.json -> [{nome, data(date), tipo}] ordenado por data.
-
-    Parser TOLERANTE por contrato: arquivo ausente, ilegivel, JSON invalido ou
-    entrada malformada emitem WARN em stderr e sao ignorados -- o plano do dia
-    nunca quebra por causa do countdown (mesmo espirito da degradacao graciosa
-    do cronograma). Pior caso = lista vazia.
-    """
-    alvo = path or PROVAS_PATH
-    try:
-        with open(alvo, encoding="utf-8") as fh:
-            dados = json.load(fh)
-    except FileNotFoundError:
-        print(f"[WARN] PROVAS_AUSENTE: {alvo} nao encontrado -- plano segue sem countdown.",
-              file=sys.stderr)
-        return []
-    except (json.JSONDecodeError, OSError, UnicodeDecodeError, ValueError) as e:
-        print(f"[WARN] PROVAS_ILEGIVEL: {alvo} ({e}) -- plano segue sem countdown.",
-              file=sys.stderr)
-        return []
-    if not isinstance(dados, list):
-        print(f"[WARN] PROVAS_FORMATO: {alvo} nao contem uma lista -- plano segue sem countdown.",
-              file=sys.stderr)
-        return []
-    provas = []
-    for i, item in enumerate(dados):
-        if not isinstance(item, dict):
-            print(f"[WARN] PROVAS_ENTRADA: item {i} nao e objeto -- ignorado.", file=sys.stderr)
-            continue
-        nome, bruto = item.get("nome"), item.get("data")
-        tipo = item.get("tipo") or "prova"
-        try:
-            quando = date.fromisoformat(str(bruto))
-        except (ValueError, TypeError):
-            print(f"[WARN] PROVAS_DATA: '{nome or i}' com data invalida ({bruto!r}) -- ignorado.",
-                  file=sys.stderr)
-            continue
-        if not nome:
-            print(f"[WARN] PROVAS_NOME: item {i} sem nome -- ignorado.", file=sys.stderr)
-            continue
-        provas.append({"nome": str(nome), "data": quando, "tipo": str(tipo)})
-    return sorted(provas, key=lambda p: p["data"])
+# F88 (s174): o parser vive em app/utils/provas.py (leitor UNICO -- o balanceador FSRS
+# tambem le de la). Re-export para os consumidores e a suite test_provas.
+from app.utils.provas import PROVAS_PATH, carregar_provas  # noqa: E402,F401
 
 
 def _texto_countdown(nome, tipo, dias):
@@ -750,18 +709,19 @@ def recomendar_dia(sinais, tempo_h=None, energia=None):
 
 def build(tempo_h=None, energia=None):
     con = db.get_connection()
-    total_q, total_a = get_totais(con)
     hoje = date.today()
+    # F88 (s174): a conta acumulado/meta/faltam/ritmo e UMA, em performance.volume_vs_marco
+    # (o cronograma --gap chama a mesma). Nada de marco literal nem get_totais soltos aqui.
+    vm = volume_vs_marco(con, hoje)
     q_mes = get_questoes_do_mes(con, hoje.strftime("%Y-%m"))
     q_hoje = con.cursor().execute(
         "SELECT COALESCE(SUM(questoes_feitas),0) FROM sessoes_bulk "
         "WHERE data_sessao = ?",  # s126: simulado CONTA no volume (reverte s099)
         (hoje.isoformat(),)).fetchone()[0]
-    nome_marco, alvo, data_marco = MARCOS[0]       # s126: grade EMED completa @ 25/10/2026
-    faltam = max(0, alvo - (total_q or 0))
-    dias = (data_marco - hoje).days  # hoje inclusive, dia da prova exclusivo
-    ritmo_alvo = round(faltam / dias, 1) if dias > 0 else None
     fsrs = _fsrs_counts(con)
+    # F71 rider (s174): overflow do blackout de prova e ESTADO do banco, nao so stderr --
+    # o boot o mostra com card_id e due (leitor read-only db.overflow_blackout).
+    fsrs["overflow_blackout"] = db.overflow_blackout(con.cursor())
     con.close()
 
     dormant = dr.pick()
@@ -773,7 +733,7 @@ def build(tempo_h=None, energia=None):
     else:
         passo = "Seguir o cronograma: próximo tema previsto + questões."
 
-    cron = _cronograma_hoje(total_q or 0, hoje)
+    cron = _cronograma_hoje(vm["total"], hoje)
 
     # Sinais do recomendador (part-2) — todos derivados; falha de um sinal não
     # derruba o plano (degradação graciosa, mesmo espírito do cronograma).
@@ -807,11 +767,11 @@ def build(tempo_h=None, energia=None):
         "provas": countdown_provas(hoje),   # multi-prova: display, nao alimenta ritmo
         "dormant": dormant,
         "volume": {
-            "total": total_q or 0, "acertos": total_a or 0,
+            "total": vm["total"], "acertos": vm["acertos"],
             "hoje": q_hoje or 0, "mes": q_mes or 0,
-            "alvo_enamed": alvo, "faltam": faltam,
-            "dias_ate_marco": dias, "ritmo_alvo": ritmo_alvo,
-            "marco": nome_marco,   # s126: rótulo vem do MARCOS[0], não mais "ENAMED" fixo
+            "alvo_enamed": vm["meta"], "faltam": vm["faltam"],
+            "dias_ate_marco": vm["dias"], "ritmo_alvo": vm["ritmo_alvo"],
+            "marco": vm["marco"],   # s126: rótulo do marco-alvo via volume_vs_marco (F88)
         },
         "fsrs": fsrs,
         "divida": {
@@ -972,6 +932,13 @@ def render(p):
     t = telemetria_fila(f, p["divida"])
     out.append(f"- 🔁 **FSRS:** dívida {t['divida']} atrasados + {t['hoje']} p/ hoje "
                f"· pool {t['pool']} nunca introduzidos (entram <={t['teto']}/dia)")
+    ov = f.get("overflow_blackout") or []
+    if ov:
+        ids = " ".join(f"#{o['card_id']}" for o in ov[:12]) + (" ..." if len(ov) > 12 else "")
+        dias_ov = sorted({o["due"] for o in ov})
+        out.append(f"    • ⚠️ **Overflow de blackout (F71):** {len(ov)} card(s) presos em "
+                   f"{', '.join(dias_ov)} sem vaga antes da prova -- {ids} "
+                   f"(`python tools/fsrs_load.py --blackout`)")
     dv = p["divida"]
     regime = " · **REGIME DE DÍVIDA** (teto sobe até drenar)" if dv["regime_divida"] else ""
     out.append(f"- 🎯 **Teto do dia:** {dv['teto_efetivo']} cards (base {dv['teto_base']}{regime})")

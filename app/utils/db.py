@@ -18,10 +18,6 @@ from datetime import datetime
 from app.utils.fsrs import FSRS
 
 DB_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'ipub.db')
-# Calendario de provas (F71): o balanceador FSRS le o blackout daqui, nunca de
-# data no codigo. O parser completo (countdown, WARNs nomeados) vive em
-# tools/day_plan.carregar_provas; este e o leitor MINIMO da camada app/.
-PROVAS_PATH = os.path.join(os.path.dirname(DB_PATH), 'core', 'provas.json')
 
 # Definição canônica de "card ativo" (part-5, flashcards-integridade) — FONTE
 # ÚNICA. Antes havia 3 definições divergentes em 5 arquivos (`!= 2`, `< 2` sem
@@ -333,32 +329,30 @@ def carga_agendada(cursor, inicio, fim):
 def blackout_provas(path=None):
     """Dias a evitar no agendamento FSRS (F71): dia de cada prova + o seguinte.
 
-    Le `core/provas.json` (so `tipo == "prova"`; `grade` nao e blackout).
-    TOLERANTE: arquivo ausente/ilegivel/entrada malformada -> conjunto vazio
-    com WARN em **stderr** (stdout do `fsrs_queue --record` e JSON puro).
-    A regra de quantos dias entram e de `fsrs_balance.blackout_de` (pura).
+    Delega ao leitor UNICO `app.utils.provas` (F88): nenhuma data no codigo,
+    nenhum segundo parser de `core/provas.json`. Tolerante por contrato (WARN em
+    stderr, nunca excecao -- o stdout do `fsrs_queue --record` e JSON puro).
     """
-    import json as _json
-    from datetime import date as _date
-    from app.utils.fsrs_balance import blackout_de
+    from app.utils import provas
+    return provas.blackout_provas(path)
 
-    alvo = path or PROVAS_PATH
-    try:
-        with open(alvo, encoding="utf-8") as fh:
-            dados = _json.load(fh)
-    except (OSError, ValueError, UnicodeDecodeError) as e:
-        print(f"[WARN] FSRS_BALANCE: core/provas.json ilegivel ({e}) -- sem blackout de prova.",
-              file=sys.stderr)
-        return set()
-    datas = []
-    for item in dados if isinstance(dados, list) else []:
-        if not isinstance(item, dict) or (item.get("tipo") or "prova") != "prova":
-            continue
-        try:
-            datas.append(_date.fromisoformat(str(item.get("data"))))
-        except (TypeError, ValueError):
-            continue
-    return blackout_de(datas)
+
+def overflow_blackout(cursor, dias_evitar=None):
+    """Cards de revisao ATIVOS cujo `due` esta num dia de blackout (F71, rider do
+    `/ai-eng`): o overflow nao e so impresso -- e estado do banco, e este leitor
+    read-only o entrega a qualquer painel (boot `day_plan`, `fsrs_load --blackout`).
+    Returns: [{card_id, due}] ordenado por due, card_id."""
+    evitar = set(blackout_provas() if dias_evitar is None else dias_evitar)
+    if not evitar:
+        return []
+    marcadores = ",".join("?" * len(evitar))
+    rows = cursor.execute(
+        "SELECT f.card_id, date(f.due) FROM fsrs_cards f "
+        "JOIN flashcards l ON l.id = f.card_id "
+        f"WHERE f.state > 0 AND {ativo_where('l.')} AND date(f.due) IN ({marcadores}) "
+        "ORDER BY f.due, f.card_id",
+        tuple(sorted(d.isoformat() for d in evitar))).fetchall()
+    return [{"card_id": int(c), "due": d} for c, d in rows]
 
 
 def _balancear_due(cursor, metrics, hoje=None, dias_evitar=None):

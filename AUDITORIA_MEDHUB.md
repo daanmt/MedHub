@@ -1546,4 +1546,13 @@ Sensores existentes (`doc_drift.py`, `sync_skills --check`) reportavam 0 achados
 - **Remedio aplicado agora (documental, nao codigo):** `estilo-flashcard.md` ganhou o §Triagem com o **teste de regenerabilidade** e o corolario que inverte a heuristica (`conteudo` rende mais que `discriminador` derivado da mesma questao). A triagem fica **humana e antes do `insert_questao.py`**, com a lista integral guardada em disco para o operador derrubar o corte.
 - **Classe:** familia CONTEUDO (com F79/F79b/F81 -- `card_checks` cego a defeito de card), mas num eixo novo: os anteriores sao **defeito de forma que o gate nao ve**; F87 e **ausencia de forma defeituosa em card que nao deveria existir**. Um gate de rendimento, se algum dia existir, nao e um predicado sobre o texto do card -- e sobre a relacao entre o card e o resto do conjunto.
 
+## 6q. Sessao de engenharia s174 (Claude Code/Fable 5.1 + `/ai-eng` orquestrando, 2026-09-09) -- ciclo A do destilado: F71 · F88 (novo) · F80 · F85 · F76
+
+Protocolo `AGENTE.md §10.6` (D71): implement E audit aqui, vereditos do `/ai-eng` por item (GO com ALTERAs: ordem F71 -> F80 -> A5 -> F85 -> F76; A6 so dry-run). Traces em `.vibeflow/hotfixes/2026-09-09-*.md`.
+
+### F88 -- `cronograma --gap` e o boot reportavam pares DIFERENTES de acumulado/meta lidos do mesmo banco (duas contas, G4) -- **MEDIA** -- **RESOLVIDO (hotfix s174, `.vibeflow/hotfixes/2026-09-09-gap-volume-fonte-unica.md`)**
+- **Evidencia (s173, numerado aqui -- regra G2):** `--gap` = `meta 10000 / acumulado 6305`; `day_plan` do mesmo instante = `10400 / 7036`; db = 7.036. Causa: `--meta default=10000` literal de argparse (marco ENAMED revogado na s126, nunca re-medido -- D67) + `escopo="cronograma"` excluindo o Simulado (contra a decisao s126). So o `day_plan` lia `MARCOS`.
+- **Remedio (ALTERA do `/ai-eng`):** UMA funcao `performance.volume_vs_marco(conn, hoje)` chamada por `day_plan.build` e por `cronograma.gap_payload`; `--meta` vira what-if (`default=None`). Teste: mesma fixture, dois comandos, mesmo par + AST sem default literal >= 1000. **Absorveu os 2 riders do F71:** (a) overflow do blackout no painel do boot via `db.overflow_blackout` (estado do banco, nao log); (b) leitor UNICO de `core/provas.json` em `app/utils/provas.py` (`day_plan` re-exporta, `db` delega).
+- **Classe:** Claim-Aging (D67) em literal de CLI -- numero em canonico que nenhum leitor re-mede. 5 testes em `tools/test_volume_fonte_unica.py`, 5 vermelhos antes.
+
 ---

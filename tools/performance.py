@@ -140,6 +140,28 @@ def get_totais(conn, escopo="total"):
     return total_q, total_a
 
 
+def volume_vs_marco(conn, hoje=None):
+    """A UNICA conta de "acumulado / meta / faltam / ritmo-alvo" do repo (F88, s174).
+
+    Chamada pelo boot (`tools/day_plan.build`) e pelo `tools/cronograma.py --gap`.
+    Antes cada um tinha a sua: o `--gap` carregava `meta=10000` como literal de
+    argparse (marco ENAMED revogado na s126) e excluia o Simulado do acumulado --
+    reportava 10.000 / 6.305 enquanto o boot dizia 10.400 / 7.036 do mesmo banco.
+    Regras: acumulado = volume OFICIAL (`get_totais(escopo="total")`, inclui o
+    bloco Simulado -- s126); meta/data = `MARCOS[0]`; dias = hoje inclusive, dia
+    do marco exclusivo (mesma convencao de `_cronograma_hoje`).
+    """
+    hoje = hoje or date.today()
+    nome, alvo, data_marco = MARCOS[0]
+    total_q, total_a = get_totais(conn)
+    faltam = max(0, alvo - (total_q or 0))
+    dias = (data_marco - hoje).days if data_marco else None
+    ritmo = round(faltam / dias, 1) if dias and dias > 0 else None
+    return {"marco": nome, "meta": alvo, "data_marco": data_marco,
+            "total": total_q or 0, "acertos": total_a or 0,
+            "faltam": faltam, "dias": dias, "ritmo_alvo": ritmo}
+
+
 def get_por_area(conn):
     cur = conn.cursor()
     cur.execute("""

@@ -135,10 +135,11 @@ verification: red-green
   `--blackout [--apply]`. Nao e parte do fix do defeito (2 arquivos), e a superficie do item
   (iii) do veredito do `/ai-eng` (re-rodada com diff declarado) -- tratado como unidade
   separada no mesmo ciclo, com seus 3 testes proprios. Declarado aqui, nao escondido.
-- **Leitor de `provas.json` duplicado (deferido):** `db.blackout_provas` e
-  `day_plan.carregar_provas` leem o mesmo arquivo com parsers distintos (o de `tools/` nao pode
-  ser importado por `app/` sem inverter a camada). Mesma familia do G4/A5; consolidar num
-  `app/utils/provas.py` e tarefa de spec, nao deste hotfix.
+- ⚰️ ~~**Leitor de `provas.json` duplicado (deferido)**~~ -> **FECHADO no mesmo ciclo pelo F88**
+  (rider b do `/ai-eng`): `app/utils/provas.py` e o leitor unico; `db.blackout_provas` delega e
+  `day_plan` re-exporta. Teste `test_leitor_unico_de_provas_json`.
+- **Rider a do `/ai-eng` (overflow gravado, nao so impresso):** fechado no F88 --
+  `db.overflow_blackout` (estado do banco) + linha no boot `day_plan` com card_id e due.
 - **#381/#823 ficaram em overflow, nao voltaram para 12/09:** o alvo original (13/09) nao e
   recuperavel do banco (`scheduled_days` ja foi ajustado na 1a passagem); a partir do `due`
   gravado (14/09) a folga de +-1d nao alcanca nenhum dia antes da prova. Empurrar alem da

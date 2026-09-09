@@ -305,10 +305,23 @@ def semana_corrente(grade, hoje=None):
     return None
 
 
-def gap_volume(grade, total_acum, meta=10000, desde_semana=None):
-    """Gap honesto de volume (ultraplan §a.3): mesmo a 100% do cronograma, falta banco extra?"""
+def gap_payload(conn, grade, hoje=None, meta=None, desde=None):
+    """Payload do `--gap` (F88, s174): acumulado e meta vem da UNICA conta do repo,
+    `performance.volume_vs_marco` -- a mesma que o boot (`day_plan`) imprime. `meta`
+    explicita e what-if (override), nunca default literal. Read-only."""
+    from performance import volume_vs_marco
+    vm = volume_vs_marco(conn, hoje)
+    out = gap_volume(grade, vm["total"], meta if meta is not None else vm["meta"], desde,
+                     hoje=hoje)
+    out["marco"] = vm["marco"]
+    return out
+
+
+def gap_volume(grade, total_acum, meta, desde_semana=None, hoje=None):
+    """Gap honesto de volume (ultraplan §a.3): mesmo a 100% do cronograma, falta banco extra?
+    `meta`/`total_acum` chegam de `gap_payload` (fonte unica) -- sem default literal (F88)."""
     if desde_semana is None:
-        desde_semana = semana_corrente(grade) or 1
+        desde_semana = semana_corrente(grade, hoje) or 1
     restante = sum(s["total_questoes"] for s in grade["semanas"] if s["semana"] >= desde_semana)
     projecao = total_acum + restante
     return {
@@ -555,7 +568,8 @@ def main():
     ap.add_argument("--validate", action="store_true", help="asserções da Fase 1")
     ap.add_argument("--semana", type=int, help="filtra --json para a semana N")
     ap.add_argument("--desde", type=int, help="semana inicial p/ --gap/--radar (default: nominal por data)")
-    ap.add_argument("--meta", type=int, default=10000, help="meta de volume p/ --gap")
+    ap.add_argument("--meta", type=int, default=None,
+                    help="what-if p/ --gap (default: marco-alvo via performance.volume_vs_marco -- F88)")
     ap.add_argument("--sync-drive", metavar="XLSX_PATH", dest="sync_drive",
                     help="parseia o xlsx do Drive (já baixado via MCP) e grava o snapshot "
                          "de conclusão real em preparacao_estado")
@@ -578,14 +592,12 @@ def main():
         sys.exit(0 if ok else 1)
     if args.gap:
         import app.utils.db as db
-        from performance import get_totais
         con = db.get_connection()
-        # escopo 'cronograma': o gap mede o avanço da GRADE, então exclui o bloco de simulado
-        # (que desde a s126 conta no volume total, mas não empurra o cronograma).
-        tot, _ = get_totais(con, escopo="cronograma")
+        # F88: acumulado/meta da fonte unica (volume OFICIAL, inclui Simulado -- s126).
+        # `cronograma_restante` continua sendo a parte que so o cronograma sabe.
+        payload = gap_payload(con, load_grade(), meta=args.meta, desde=args.desde)
         con.close()
-        print(json.dumps(gap_volume(load_grade(), tot or 0, args.meta, args.desde),
-                         ensure_ascii=False, indent=2))
+        print(json.dumps(payload, ensure_ascii=False, indent=2, default=str))
         return
     if args.radar:
         import app.utils.db as db

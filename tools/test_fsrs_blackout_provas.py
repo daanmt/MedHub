@@ -25,6 +25,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from app.utils import db  # noqa: E402
+from app.utils import provas as provas_mod  # noqa: E402
 from app.utils import fsrs_balance as fb  # noqa: E402
 from app.utils.fsrs_balance import escolher_dia  # noqa: E402
 
@@ -100,13 +101,13 @@ def test_sem_blackout_comportamento_identico_ao_anterior():
 def test_nenhuma_data_de_prova_no_codigo():
     """(i) G4: o blackout vem de core/provas.json; nenhuma data de prova REAL vive no
     codigo (regra pura nem caller). Le o arquivo real so para saber o que procurar."""
-    real = Path(db.PROVAS_PATH)
+    real = Path(provas_mod.PROVAS_PATH)
     if not real.exists():
         pytest.skip("core/provas.json ausente neste checkout")
     datas = [str(i.get("data")) for i in json.loads(real.read_text(encoding="utf-8"))
              if isinstance(i, dict) and i.get("data")]
     assert datas, "provas.json real sem datas -- o guarda nao teria o que procurar"
-    for mod in (fb, db):
+    for mod in (fb, db, provas_mod):
         fonte = Path(mod.__file__).read_text(encoding="utf-8")
         for d in datas:
             assert d not in fonte, f"data de prova {d} hardcoded em {mod.__name__}"
@@ -178,7 +179,7 @@ def test_blackout_provas_tolerante_a_arquivo_ausente(tmp_path):
 def test_balancear_due_le_provas_json_e_evita_o_dia_seguinte(tmp_path, monkeypatch):
     """Integracao: o caller deriva o blackout do arquivo e o card do dia da prova vai
     para o dia ANTERIOR, embora o seguinte esteja mais vazio."""
-    monkeypatch.setattr(db, "PROVAS_PATH", _provas(tmp_path, [
+    monkeypatch.setattr(provas_mod, "PROVAS_PATH", _provas(tmp_path, [
         {"nome": "PROVA-X", "data": PROVA.isoformat(), "tipo": "prova"}]))
     con = _db_com_carga(tmp_path, {D(-1): 6, D(0): 8, D(1): 1})
     metrics = {"due": datetime.combine(D(0), datetime.min.time()),
@@ -192,7 +193,7 @@ def test_balancear_due_le_provas_json_e_evita_o_dia_seguinte(tmp_path, monkeypat
 
 def test_balancear_due_overflow_mantem_alvo_e_reporta(tmp_path, monkeypatch):
     """Sem vaga antes da prova na folga: due fica no alvo e stderr carrega OVERFLOW."""
-    monkeypatch.setattr(db, "PROVAS_PATH", _provas(tmp_path, [
+    monkeypatch.setattr(provas_mod, "PROVAS_PATH", _provas(tmp_path, [
         {"nome": "PROVA-X", "data": PROVA.isoformat(), "tipo": "prova"}]))
     con = _db_com_carga(tmp_path, {D(0): 5, D(1): 5, D(2): 0})
     metrics = {"due": datetime.combine(D(1), datetime.min.time()),

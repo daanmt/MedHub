@@ -355,3 +355,15 @@ engenharia do `/ai-eng`, que abre janela própria e commita. Sem lock e sem guar
    e pelo canal do `/ai-eng`): item novo entra no fim, nunca no meio.
    **§11 do mesmo arquivo (s174) é o inventário de dívida técnica em 4 tiers** — a fila progressiva
    que o `/ai-eng` ordena e o MedHub executa; item fechado ganha lápide, nunca sai da tabela.
+
+10. **Revogar uma cláusula tem TRÊS passos, e os três vão no MESMO commit (F90, s175).** (1) **declarar**
+   a revogação no contrato/ledger; (2) **lapidar** a cláusula morta no portador que o agente *lê no ato*
+   (a skill em `.claude/commands/`, não só o contrato) -- `⚰️` + data + motivo, no formato já usado ali;
+   (3) **cadastrar o termo** em `_TERMOS_REVOGADOS` (`tools/auto_check.py`), o registro do gate
+   `CONTRATO_REVOGADO`. Pular o (3) foi exatamente o **F90**: o gate mirava `.claude/commands/revisar.md`
+   nominalmente e imprimiu `PASSED` com três prescrições revogadas em vigor, porque o registro só vê o
+   que alguém lembrou de cadastrar. Declarar sem lapidar deixa o agente obedecendo cláusula morta em uso
+   real; lapidar sem cadastrar deixa o gate cego para a próxima. **Corolário:** o gate casa substring
+   literal -- pega a reintrodução verbatim, não a mesma regra reescrita com outras palavras; esse limite
+   é **declarado**, nunca maquiado (§10.8, *verification-stack*). A troca da enumeração manual por
+   derivação do ledger é o item 1.8 (ii') de `docs/MEMORIA-AUDITORIA.md §11`.

@@ -99,12 +99,39 @@ def check_history_integrity(root=None, extras=None):
 
 # --- CONTRATO_REVOGADO (G12/G11, s171) ------------------------------------
 # Registro de termos REVOGADOS: termo -> onde a revogacao foi declarada.
-# Extensivel: revogacao nova entra aqui e o gate passa a vigiar o termo em
-# TODOS os portadores. O registro e a fonte unica -- ninguem enumera a mao.
+# Revogacao nova entra aqui e o gate passa a vigiar o termo em TODOS os
+# portadores.
+#
+# 🔴 RITUAL DE ALIMENTACAO (F90, s175 -- a correcao do proprio comentario que
+# vivia aqui). Ate 10/09/2026 este bloco prometia "o registro e a fonte unica
+# -- ninguem enumera a mao" e, logo abaixo, enumerava tres termos a mao. O
+# gate mirava `.claude/commands/revisar.md` NOMINALMENTE e imprimiu PASSED com
+# tres prescricoes revogadas em vigor naquele arquivo, porque ninguem as
+# cadastrou. O defeito nao era o gate; era a ausencia do passo "cadastrar".
+#
+# Revogar uma clausula tem TRES passos, nao um, e os tres vao no MESMO commit:
+#   (1) declarar a revogacao (contrato/ledger);
+#   (2) lapidar a clausula no portador que o agente LE (skill, AGENTE.md);
+#   (3) cadastrar o termo AQUI.
+# Regra versionada em AGENTE.md secao 10, item 10.
+#
+# 🔴 ALCANCE DECLARADO (verification-stack, AGENTE.md 10.8): este gate casa
+# SUBSTRING literal. Ele pega a reintroducao verbatim de uma redacao morta --
+# nao pega a mesma regra reescrita com outras palavras, nem eixo semantico do
+# tipo "bloco menor que 10". Esse eixo fica DECLARADO como nao-verificavel por
+# este check, jamais convertido em metrica inventada. O mecanismo que troca a
+# enumeracao manual por derivacao do ledger e o item 1.8 (ii') do 11 de
+# docs/MEMORIA-AUDITORIA.md -- ate la, o ritual acima e o que sustenta o
+# alcance.
 _TERMOS_REVOGADOS = {
     "PREPARAR": "revisao-calibrada v1.3 (s170), Clausula 11",
     "Camada 0": "revisao-calibrada v1.3 (s170), Clausula 11",
     "Camada 1": "revisao-calibrada v1.3 (s170), Clausula 11",
+    # F90 (cadastrados em 10/09/2026, no mesmo commit da lapide em revisar.md)
+    "justificativa em 1 linha": "Invariante F, revisao-calibrada v1.3 (s170) -- F90",
+    "justificativa de 1 linha": "Invariante F, revisao-calibrada v1.3 (s170) -- F90",
+    "depois 5, depois 6": "regua de lote 10-15 (s130/s152) -- F90",
+    "junto das opções": "override passivo (s123) dissolveu as 'opcoes' -- F90",
 }
 # Portadores da norma do /revisar. O contrato NAO basta: o agente que executa
 # le o command. Prescricao ativa sobrevivente num deles torna a lapide do

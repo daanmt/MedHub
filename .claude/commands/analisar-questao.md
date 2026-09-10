@@ -12,6 +12,29 @@ status: canonical
 
 ---
 
+## 0. Orquestração -- quem executa a análise (régua canônica de subagents)
+
+> 🔴 **Ler ANTES de decidir delegar.** Esta seção governa **quem** faz a análise (o agente principal ou um subagente); o **como** é o §2 em diante. É protocolo de execução interno da skill, não orquestração de CLI -- a sequência "rode X, depois Y" continua sendo do workflow (`AGENTE.md §7.2`).
+>
+> **Origem (F93, s175):** numa janela de ESTUDO, 15 erros de questão consumiram **3 spawns, ~673k tokens de subagente e ~66 min** de wall-clock -- um deles para um lote de **3 erros**, em cadeia de 2 níveis (`evidence-researcher` invocado por um subagente). Veredito do usuário: *"deu uma volta muito grande para entregar algo simples ... como os blocos eram curtos, você mesmo poderia ter checado, que seja via websearch."* E a delegação **não poupou a verificação**: 2 afirmações load-bearing devolvidas pelos filhos foram rejeitadas por re-medição do principal (uma delas virou o **F91**). Até 10/09/2026 esta régua vivia **só na memória do harness** -- que não é versionada e é invisível para qualquer outra IDE (`AGENTE.md §10.5`). Por isso ela mora aqui.
+
+**As 10 cláusulas** (1-5 medidas no MedHub/s175; 6-10 do `/ai-eng` -- D22, D49, E3 -- e a regra do operador de 09/08):
+
+1. **Até ~8 erros/itens: o agente principal analisa sozinho, sem subagente.**
+2. **Verificar afirmação decisória em bloco curto = `WebSearch`/`WebFetch` direto.** O subagente `evidence-researcher` é para **varredura multi-afirmação** com hierarquia BR>INT>consenso + PubMed (`/pesquisar-evidencia`, `core/contracts/evidence-governance.md`) -- nunca para conferir um cutoff isolado.
+3. **Subagente só acima de ~8 erros, e UM SÓ por lote** (régua s148). Fan-out apenas em feição de **Simulado (30+)** ou pedido explícito do usuário.
+4. 🔴 **Nunca subagente que sumona subagente** neste porte -- o brief **proíbe sub-delegação em texto explícito**.
+5. **Subagente não escreve.** Não executa `insert_questao.py`, não edita `resumos/`: devolve texto. Triagem de card e persistência ficam com o principal (o teste de regenerabilidade de `estilo-flashcard.md` é decisão humana).
+6. **Retorno destilado <= 3k chars + arquivo para o detalhe** (drill-down sob demanda). Relatório de 15-20k no canal é falha do **brief**, não do filho.
+7. **Número vindo do filho é dado não-confiável até re-medição.** O brief exige que **cada número venha com o comando que o produziu** -- re-medir vira re-executar, não re-derivar. Número sem comando não entra em handoff nem em resposta ao usuário.
+8. **Brief com >3 itens ou >5 min:** declarar `D(x)` papel · objetivo · **evidência que fecha**; count-assert + dry-run em operação mutadora; gravação incremental (arquivo antes do 1º item, retorno = ponteiro + delta).
+9. **`model` sempre explícito no spawn** (Opus para análise, Sonnet para varredura) -- nunca herdar o do principal.
+10. **Custo é métrica:** cada spawn registra **tokens + minutos** no selo da sessão. É o que torna esta régua falsificável -- sem o número, ela vira intenção.
+
+**Teste de bolso, antes de qualquer spawn:** *quantos itens? o filho vai escrever em algum lugar? o retorno cabe em 3k? eu sei qual modelo estou pedindo?* Desconforto em qualquer uma das quatro = a régua já respondeu.
+
+---
+
 ## 1. Princípio Central: Raciocínio Sequencial com Habilidades
 
 Toda questão exige uma cadeia de **habilidades sequenciais**. Se identificar e seguir corretamente cada elo, é impossível errar a questão. O erro sempre ocorre em um elo específico — nunca "na questão toda".

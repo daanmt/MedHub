@@ -81,6 +81,8 @@ O único exame essencial para o diagnóstico de pneumonia é a **radiografia de 
 
 O perfil epidemiológico direciona a suspeita etiológica:
 
+🔴 **A lista abaixo é de ASSOCIAÇÃO, não de FREQUÊNCIA.** Ela responde "qual agente lembrar neste contexto", nunca "qual é o agente mais provável". O **pneumococo continua sendo o mais provável em praticamente todo cenário de PAC**, inclusive no diabético e no etilista -- responde por 30-45% dos casos, enquanto a Klebsiella, apesar da associação clássica, é rara na prática (ver 5.3). Fator de risco para agente raro aumenta a probabilidade relativa daquele agente; **não destrona o mais comum**.
+
 - -> DPOC com exacerbação infecciosa: **Haemophilus influenzae** (causa mais comum de descompensação bacteriana na DPOC) ou **Moraxella catarrhalis**.
 - -> Diabetes ou etilismo: **Klebsiella pneumoniae**.
 - -> Foco hematogênico (endocardite de câmaras direitas, artrite séptica, celulite), usuário de drogas injetáveis ou doença renal crônica dialítica: **Staphylococcus aureus**.
@@ -186,6 +188,21 @@ O perfil epidemiológico direciona a suspeita etiológica:
 - Testes específicos (cultura em meio especial, PCR de nasofaringe, secreção traqueal ou lavado broncoalveolar) só devem ser solicitados quando há suspeita de diferenciais (pneumonite intersticial não infecciosa, insuficiência cardíaca descompensada, DPOC exacerbada por outras bactérias).
 - Tratamento: macrolídeos (**azitromicina ou claritromicina**) por **5 a 7 dias**.
 
+### 5.10 Diferencial não bacteriano: as eosinofilias pulmonares
+
+Infiltrado pulmonar febril que não responde a antibiótico obriga a abrir o guarda-chuva das eosinofilias pulmonares -- entidades diferentes, com o eosinófilo em **compartimentos diferentes**.
+
+- **Pneumonia eosinofílica AGUDA (PEA):** quadro agudo (< 1 mês) de tosse, dispneia, febre e dor torácica, podendo evoluir para insuficiência respiratória tipo SDRA.
+    - ⭐ **Perfil:** homem jovem, **fumante recente** -- início, retomada ou mudança do padrão de tabagismo, incluindo vape; também exposição inalatória nova a poeira.
+    - Radiografia: opacidades bilaterais, infiltração intersticial e **derrame pleural** -- inespecíficas; a imagem não fecha o diagnóstico.
+    - 🔴 **O hemograma NÃO é o filtro:** a eosinofilia de sangue periférico está **ausente ou retardada na apresentação**. Escrever "PEA não tem eosinofilia" é impreciso; o correto é "não tem **na apresentação**" -- cerca de dois terços a desenvolvem ao longo do curso.
+    - ⭐ **Quem fecha o diagnóstico é o lavado broncoalveolar: eosinófilos >= 25%** no diferencial celular (critérios modificados de Philit, 2002). Escala do LBA: normal até 1-2%; acima de 5% já é aumentado; **>= 25% = PEA**; a PEC costuma vir com >= 40%.
+    - Tratamento: corticosteroide sistêmico, com melhora clínica em geral em 48h; recidiva é **incomum**.
+    - ⚠️ **Resposta ao corticoide não é critério diagnóstico** -- na coorte-fonte, 6 de 22 pacientes se resolveram espontaneamente.
+    - ⚠️ Antes de corticoidar paciente de área endêmica, lembrar da profilaxia com ivermectina (ver Parasitoses) -- isso é cuidado **pré-tratamento**, não é o que confirma a PEA.
+- **Pneumonia eosinofílica CRÔNICA (PEC):** evolução de semanas a meses; mulher não fumante com asma de início adulto; eosinofilia periférica **marcada**; radiografia com o "negativo fotográfico do edema pulmonar" (infiltrados periféricos); **recidiva ao desmame do corticoide**.
+- **Síndrome de Löffler (eosinofilia pulmonar simples, parasitária):** infiltrados **migratórios e fugazes**, sintomas leves ou ausentes, resolução espontânea em até ~1 mês. Agentes (mnemônico NASA): *Necator americanus*, *Ancylostoma duodenale*, *Strongyloides stercoralis*, *Ascaris lumbricoides*. Cursa **COM** eosinofilia circulante -- é aqui que o parasitológico de fezes tem valor, **não** na PEA.
+
 ---
 
 ## 6. Pneumonia Aspirativa
@@ -199,6 +216,12 @@ Ocorre, em geral, após aspiração de conteúdo gástrico.
   - Reflexo de tosse diminuído: doenças neurodegenerativas, demências, supressão medicamentosa da tosse.
 - Quadro clínico: tosse irritativa intensa, taquipneia e febre; em casos extensos, dor torácica ventilatório-dependente.
 - Complicação temida: **abscesso pulmonar** em **15 a 25%** dos casos, geralmente **ipsilateral** à região de macroaspiração, surgindo dias a semanas após o evento.
+- **A cronologia separa os dois quadros que a aspiração pode gerar:**
+    - Início em **horas** -> pneumonite química (Mendelson), inflamação por conteúdo ácido, sem necessidade obrigatória de antibiótico.
+    - Curso indolente, com sintomas surgindo **mais de uma semana** depois do evento -> infecção por **anaeróbios** da orofaringe (Peptostreptococcus, *Fusobacterium nucleatum* e *necrophorum*, Prevotella, *Bacteroides melaninogenicus*), tipicamente já com necrose/cavitação.
+- ⭐ **Sopro anfórico** ao exame (timbre metálico, como o som de quem sopra sobre a boca de uma garrafa) = **cavidade superficial em comunicação com brônquio**. No aspirador crônico significa **abscesso pulmonar**; fora desse contexto, pneumotórax.
+    - 🔴 O achado **não troca a droga** -- troca o **tempo** (curso prolongado) e obriga **seguimento por imagem** até a resolução da cavidade.
+- ⚠️ **O critério de escolha é o ESPECTRO, não a família.** O esquema precisa cobrir simultaneamente aeróbios (sobretudo estreptococos orais) e anaeróbios. **Nenhuma quinolona de espectro urinário serve.**
 - Radiografia: mais encontrada na **base pulmonar direita**, pois o brônquio-fonte direito é mais verticalizado, facilitando a passagem de líquidos e restos alimentares -- **80%** dos infiltrados broncopneumônicos dessa pneumonia ocorrem nessa base.
 - Tratamento: antibiótico **preemptivo apenas em casos graves** (insuficiência respiratória ou sepse associada).
   - Opções: betalactâmico + inibidor de betalactamase (**ampicilina-sulbactam, amoxicilina-clavulanato ou piperacilina-tazobactam**), **clindamicina** ou **moxifloxacino**.
@@ -261,6 +284,16 @@ Tratamento **independente de comorbidades ou uso recente de antibiótico**, com 
 - **C -- Betalactâmico isolado:** cefalosporina de 3a geração (ceftriaxona ou cefotaxima) OU amoxicilina-clavulanato.
   - ⚠️ Padrão de prova: a opção C cobre **somente germes típicos** -- não cobre atípicos.
 - Duração: mínimo **7 dias** com betalactâmicos, ou mais breve (**5 a 7 dias**) com fluoroquinolona respiratória.
+- 🔴 **"Quinolona" não é uma coisa só.** Apenas as **respiratórias** -- **levofloxacino** e **moxifloxacino** -- têm atividade antipneumocócica e servem em PAC. **Norfloxacino** e **ciprofloxacino** são de espectro Gram-negativo/urinário: não cobrem pneumococo nem anaeróbios. O ciprofloxacino só entra em pneumonia quando o alvo declarado é **Pseudomonas** (ver 5.5) -- e mesmo aí não cobre o pneumococo.
+
+### 8.6 Prevenção: vacinação antipneumocócica
+
+- 🔴 **A vacina pneumocócica é NÃO VIVA** (polissacarídica pura ou conjugada a proteína carreadora). Ela **não herda** a proibição das vacinas vivas atenuadas em imunodeprimido -- essa proibição vale para BCG, rotavírus, febre amarela, tríplice viral, varicela, tetraviral e dengue.
+- ⭐ **Comorbidade crônica é INDICAÇÃO, nunca contraindicação.** Constam da lista oficial (Manual dos CRIEs 6ª ed./MS 2023 item 16.6; Nota Técnica nº 52/2026-CGICI/DPNI/SVSA/MS item 6.1): **hepatopatias crônicas**, asplenia anatômica ou funcional, nefropatias crônicas/hemodiálise/síndrome nefrótica, cardiopatias crônicas, pneumopatias crônicas (exceto asma intermitente ou persistente leve), asma persistente moderada ou grave, diabetes, fibrose cística, doenças neurológicas crônicas incapacitantes, trissomias, doenças de depósito, fístula liquórica, implante coclear e as várias formas de imunodepressão.
+- ⭐ **A única contraindicação registrada** no capítulo oficial (item 16.7.1) é **anafilaxia prévia à própria vacina**. Cirrose, hepatopatia e imunossupressão **não constam** ali.
+- 🔴 **A armadilha:** o mesmo manual (item 16.4.1) registra que em idosos, cirróticos, DPOC, diabéticos e imunodeprimidos **a resposta vacinal é mais baixa**. Isso é argumento para **vacinar, e vacinar cedo** -- não para contraindicar. Resposta menor com risco muito maior dá benefício líquido maior.
+- ⚠️ **Candidato a transplante hepático: vacinar ANTES** -- os títulos caem a nível igual ou inferior ao pré-vacinal já 3 meses após o transplante; o Manual pede esquema completo até 14 dias antes, e vacinas inativadas só voltam 2 meses depois dele.
+- ⚠️ **Produto e esquema mudaram em 2026; as indicações, não.** A NT nº 52/2026 substitui VPC13/VPP23 pela **VPC20 em dose única a partir dos 5 anos, incluindo adultos** (exceto TCTH e CAR-T), acabando com o esquema sequencial e com a revacinação em 5 anos -- mas a troca só começa **após esgotar o estoque**, sem data-corte nacional. O serviço deixou de se chamar **CRIE** e passou a **RIE** (Portaria GM/MS nº 6.623, de 14/02/2025).
 
 ### 8.3 Pacientes em Tratamento Intensivo
 
@@ -300,3 +333,7 @@ Existem apenas duas situações em que se deve repetir a radiografia de tórax a
 - 🔴 Manifestações extrapulmonares por fenômeno autoimune (miringite bolhosa, anemia hemolítica por crioaglutininas, Raynaud, Stevens-Johnson) apontam para **Mycoplasma pneumoniae**, não para Chlamydophila pneumoniae -- esta última cursa sem manifestações extrapulmonares relevantes.
 - 🔴 MSSA responde a betalactâmicos e penicilinas sintéticas (oxacilina); **MRSA** exige troca para glicopeptídeo (vancomicina, teicoplanina) ou oxazolidinona (linezolida) -- a escolha depende do ambiente (comunidade x hospitalar), não apenas do agente identificado.
 - 🔴 A radiografia de tórax pós-tratamento só deve ser repetida em duas situações: persistência/piora dos sintomas, ou tabagista com carga > 50 anos-maço (repetir em 30 dias) para excluir câncer de pulmão -- repetição rotineira em paciente assintomático e sem fator de risco é conduta incorreta.
+- 🔴 **Fator de risco não destrona o agente mais comum.** "Etilista e diabético" evoca *Klebsiella*, mas o **pneumococo segue sendo o mais provável** da PAC nesse paciente. A assertiva "o pneumococo é o agente etiológico mais provável" é **verdadeira** mesmo com essas comorbidades -- marcá-la como falsa é aplicar a lista de associações fora da pergunta que ela responde.
+- 🔴 **Cirrose e hepatopatia crônica são INDICAÇÃO da vacina pneumocócica**, não contraindicação -- a vacina é não viva, e a única contraindicação oficial é anafilaxia prévia a ela. O distrator torce o fato verdadeiro de que o cirrótico responde menos para "logo não deve receber".
+- 🔴 **Subclasse de quinolona é discriminador de prova.** Levofloxacino e moxifloxacino = respiratórias, cobrem pneumococo. Norfloxacino e ciprofloxacino = urinárias/Gram-negativas, não cobrem pneumococo nem anaeróbios. Alternativa que oferece "norfloxacina" numa pneumonia conta com a generalização "é quinolona, logo serve para o pulmão".
+- 🔴 **PEA x Löffler -- o eosinófilo está em compartimentos opostos.** Na **PEA** o sangue é normal na apresentação e a eosinofilia mora no **LBA (>= 25%)**; na **Löffler/parasitária** a eosinofilia é **periférica** e o parasitológico de fezes é que confirma. Alternativa que combine "hemograma sem eosinofilia" com "parasitológico positivo" é internamente contraditória -- e bronquiectasia é achado **crônico** (ABPA), incompatível com quadro agudo.

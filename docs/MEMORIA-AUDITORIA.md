@@ -23,8 +23,8 @@
 
 | fato | valor | fonte |
 |---|---|---|
-| ids no ledger | **91** (F1–F89 + F77b + F79b) | `AUDITORIA_MEDHUB.md` ~1575 ln (**F82-F85 na s171**, `§6o`; **F87** s172 `§6p`; **F88-F89 na s174**, `§6q`) |
-| status escrito | **47 RESOLVIDO** (+F86 na s171; +F71 F76 F80 F85 F88 na s174) · **6+1 PARCIAL** (F7, F37-F41 + F57) · **11 ABERTO no cabeçalho** (F35 F36 F42 F72 F77 F77b F78 F79b F81 F87 F89) · 7 ABERTO só em ESTADO/HANDOFF (F63-F69) · 2 ANTI-SCOPE · 1 RECONCILIADO · 8 SEM STATUS | §3 (remedido **09-09 s174**, HEAD pós-ciclo A) |
+| ids no ledger | **92** (F1–F90 + F77b + F79b) | `AUDITORIA_MEDHUB.md` ~1583 ln (**F82-F85 na s171**, `§6o`; **F87** s172 `§6p`; **F88-F89 na s174**, `§6q`; **F90 na s175**, `§6r`) |
+| status escrito | **47 RESOLVIDO** (+F86 na s171; +F71 F76 F80 F85 F88 na s174) · **6+1 PARCIAL** (F7, F37-F41 + F57) · **12 ABERTO no cabeçalho** (F35 F36 F42 F72 F77 F77b F78 F79b F81 F87 F89 F90) · 7 ABERTO só em ESTADO/HANDOFF (F63-F69) · 2 ANTI-SCOPE · 1 RECONCILIADO · 8 SEM STATUS | §3 (remedido **09-09 s174**, HEAD pós-ciclo A) |
 | commits desde 2026-06-01 | **262** · **129** `history/session_*.md` · s170 **SELADA** (9 commits, `session_170.md` presente, pushada até `a9423d7`) | `git log`, medido 09-08 pós-selo |
 | suite | 317 (s160) → 358 (09-01) → 395 (09-08) → 413 (s171) → **452** (ciclo A s174: +39 em 5 suites novas) | **re-medido 09-09: `452 passed em ~22s`**; `auto_check --changed` PASSED |
 | enforcement real | pre-commit `auto_check --staged` + suite pytest (check 2d BLOCKING) + schema do `ipub.db`; 2 BLOCK nominais (`HANDOFF_LONGO`, `SESSION_POINTER`) + 20 WARN | `auto_check.py`, matriz s160 `:1003` |
@@ -61,7 +61,7 @@
 |---|---|
 | **RESOLVIDO** (47) | F1 · F10–F15 · F22–F26 · F29–F31 · F33 · F34 · F43–F54 · F56 · F58–F61 · F70 · F73 · F74 · F79 · F82 · F83 · F84 · F86 (s171) · **F71 · F76 · F80 · F85 · F88** (s174, ciclo A) |
 | **PARCIAL / causa-raiz** (6+1) | **F7 (heurística de competidor: WARN experimental, curadoria pendente — `:110-124`)** · F37 (dado histórico inflado: decisão do dono) · F38 (literal: `RESOLVIDO (s159) -- guarda entregue; 1 instância histórica a recuperar`) · F39 (detector ok; reforja 8/358) · F40/F41 (fila de reforja) · F57 (`RESOLVIDO-parcial`: 5 memórias nomeadas; 72 restantes) |
-| **ABERTO — cabeçalho** (11) | F35 · F36 (ALTA) · F42 · F72 · F77 · F77b · F78 · F79b · F81 · F87 · **F89** (áreas fantasma de volta; spec) — ⚰️ F71/F76/F80/F85 fechados na s174 |
+| **ABERTO — cabeçalho** (12) | F35 · F36 (ALTA) · F42 · F72 · F77 · F77b · F78 · F79b · F81 · F87 · **F89** (áreas fantasma de volta; spec) · **F90** (s175: `revisar.md` com 2 cláusulas revogadas sem lápide; achado do USUÁRIO em uso real) — ⚰️ F71/F76/F80/F85 fechados na s174 |
 | **ABERTO — só ESTADO/HANDOFF** (7) | F63 (ALTA) · F64 · F65 (ALTA) · F66 (ALTA) · F67 · F68 · F69 — sem marcador no ledger |
 | **ANTI-SCOPE** (2) | F55 (pre-commit `--staged` valida FS, não índice) · F62 (rotação do próprio ledger = política do dono) |
 | **RECONCILIADO** (1) | F21 |
@@ -190,6 +190,7 @@ ai-eng: `brain/observability/sessions/2026-07-05-medhub-vibeflow-cycle.md` … `
 | 1.16 | 2 traces de 09-06 em `status: partial` só por `reproduction: synthetic` (política do projeto) | convenção do `.vibeflow/` | decidir: `verified` com nota, ou `partial` = convenção local |
 | 1.17 | **F42** editar o espelho da skill é revertido em silêncio pelo `sync_skills` (WARN existe) | UX de gate | mensagem do WARN aponta o canônico; ou BLOCK |
 | 1.18 | **F72** `day_plan` recomenda tema de snapshot que ele mesmo declara não confiável (Drive 45d) | leitor ignora o próprio sensor | recomendação degrada para "sem cronograma" quando snapshot > N dias (família F34/F36/F63, W8) |
+| 1.19 | **F90** (s175, 10-09 — entra no FIM, regra §10.9) `revisar.md` carrega 2 cláusulas **revogadas sem lápide** que contradizem o Invariante F e a régua de lote 10-15: passo 4 *"justificativa em 1 linha"* e Modo conversacional *"lote de 3, depois 5, depois 6"*; a 3ª (preview P3 "junto das opções") ficou órfã do override passivo (s123) | 🔴 **gate-miss de ALCANCE** — o `CONTRATO_REVOGADO` (`auto_check.py:100-119`) existe, mira `revisar.md` **nominalmente** e imprimiu `PASSED` com o defeito em curso: seu registro `_TERMOS_REVOGADOS` tem **3 entradas** (PREPARAR, Camada 0, Camada 1) e o comentário do próprio código promete *"ninguém enumera a mão"* — mas enumera. Família F89/G5 (registro manual sem ritual de alimentação), distinto de F79/F79b/F81 (cegueira por poder expressivo) | **duas metades:** (i) lápide `⚰️` nas 2 + default 10-15 com proveniência + preview só no tally + `sync_skills` no mesmo commit; (ii) **cadastrar os termos no `_TERMOS_REVOGADOS` e dar ao registro um ritual de alimentação** (toda revogação futura entra no mesmo commit que a declara). Sem (ii), (i) conserta uma instância e o gate segue cego. **Barato (2 arquivos).** Nota ao `/ai-eng`: custou 1 bloco e 1 turno de janela de estudo pré-ENAMED — pelo princípio dele (*"primeiro o que mente ao operador durante o estudo"*) subiria, mas a ordem do Tier 1 está **selada** e eu não reordeno |
 
 ### Tier 2 — depende de decisão ou conteúdo do OPERADOR (o `/ai-eng` leva numa rodada só)
 | # | item | decisão pedida | o que a engenharia faz depois |

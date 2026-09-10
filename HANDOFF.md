@@ -1,12 +1,12 @@
 # HANDOFF.md -- ESTADO OPERACIONAL CURTO
-*Atualizado: 2026-09-09 -- S174 (Claude Code / Fable 5.1, sessao de ENGENHARIA com o `/ai-eng` ao lado): **ciclo A do destilado fechado** -- 5 hotfixes selados (F71 F88 F80 F85 F76), suite 413 -> 452, consolidacao vibeflow 10/10 sem regressao; A6 medido (dry-run), execucao e do operador*
+*Atualizado: 2026-09-10 -- S175 (Claude Code / Opus 5 1M, sessao de ESTUDO): **fila FSRS drenada por inteiro** -- 76 cards, 52x4 / 9x3 / 3x2 / 12x1; 6 das 12 notas 1 eram cards NOVOS (intake, nao buraco) -> nos 66 ja vistos, so 6 notas 1-2 (~91% funcional). O usuario corrigiu 3 furos de formato no DRENAR -> **F90***
 
 > 🔴 **Engenharia so em sessao DEDICADA, contexto limpo dos dois lados.** A sessao autorizada em 09/09 **aconteceu (s174)**; a proxima e o **bloco B** (specs F81 + fila de reforja), GO ja dado, **so quando o operador abrir outra janela**. Janela de estudo nao toca engenharia. Semana de **ENAMED (dom 13/09)**: questoes, simulados e cards. **Ler `history/session_173.md §5`** -- a semana esta decidida pelo usuario.
 
 ## > Proximo passo imediato
 
-1. 📥 **PROXIMA SESSAO = ESTUDO: ele vem com QUESTOES** (avisou no fechamento da s174). Provavelmente as listas de qua 09: Diarreia R (41) + Pneumonias Bact. T I (16) + Uro T I (20) + Pneumonias na Infancia T (24). Ordem dura: **`registrar_sessao_bulk` ANTES de analisar** -> `/analisar-questao` em **1 subagent por lote** -> cards sob o **teste de regenerabilidade**. ⚠️ Se as listas nao sairam, o `S17 verde` da s173 nao fechou -- perguntar, nao assumir. **Zero engenharia nessa janela.**
-2. 🃏 **Qui 10:** fila FSRS (o balanceador agora conhece a prova: **13/09 zerado**, 48 cards em 12/09, **17 presos em 14/09** -- ver item 5.b). Alvo do usuario ~100 cards/dia qui-sex-sab (acima do teto 60/90; alerta dado na s173). Intake FIFO ate ele redefinir a regua de "card bom" **com ele** (F87).
+1. 📥 **ELE VOLTA HOJE (10/09) COM AS QUESTOES DO DIA** -- disse no fechamento da s175: *"depois, retorno com as questoes do dia"*. 🔴 **Divida de registro herdada:** a **lista de revisao de Diarreia de 09/09** (~41q) foi feita e **nunca registrada** -- volume travado em 7036 desde 08/09. Ordem dura: **`registrar_sessao_bulk` ANTES de analisar** (pedir feitas/acertos das DUAS: a de ontem + a de hoje) -> `/analisar-questao` em **1 subagent por lote** -> cards sob o **teste de regenerabilidade**. **Zero engenharia nessa janela.**
+2. 🃏 **Re-drill dos 12 cards nota 1-2 da s175** na abertura da proxima sessao de cards (so as frentes; **nao gravar FSRS** -- e consolidacao). Fila de hoje **zerada**; amanha voltam 4 de relearning (#735 #1571 #1270 #1584) + o intake novo. Para o alvo de ~100/dia falta abrir o `--new-limit` (default 10) contra o pool de **647** -- **decisao do operador**, ligada a F87.
 3. 🎯 **Simulado 9 (qui) e 10 (sab):** `--area Simulado` direto no CLI; erros analisados no mesmo dia. Domingo: **ENAMED** = termometro.
 4. 📚 **Backlog de conteudo:** 6 temas do Simulado 8 sem resumo (Doenca Hemorroidaria, Lesoes Hepaticas Focais, Abdome Agudo Obstrutivo, Farmacodermias, Esquistossomose, Liquido Amniotico) + s172 (Disturbios Resp. Neonatais, Infeccoes Congenitas, cerclagem).
 5. 🧑‍⚖️ **Decisoes empilhadas do OPERADOR (o `/ai-eng` leva numa rodada so; ninguem decide por ele):** (a) **RODADA 3 do `normalize_taxonomia`** -- `docs/DRYRUN-F65-F67-2026-09-09.md` §4: 10 grupos duplicados (fundir?), 35 cards e 201 erros presos em `[bulk]` (tema real de cada um); (b) **17 cards em overflow no dia 14/09** (#321 #558 #788 #1187 #245 #706 #381 #823 #1479 #1159 #707 #553 #709 #419 #486 #632 #463) -- mover a mao para antes da prova ou deixar; (c) **backfill UTC->local** do historico de `review_time`/`data_registro`/`reviewed_at` (shift constante -3h; dry-run + COUNT por linhas que mudam de dia) -- sim/nao; (d) os de sempre: apagao do `/graphify`, contexto obrigatorio em card novo, F62/F55/F37, planilha ainda e fonte? (F35), **regua de "card bom" (F87)**.
@@ -18,31 +18,33 @@
 3. **F89 depois do B1:** o MECANISMO (`AREAS_VALIDAS` unica + fail-loud nos 3 writers de taxonomia + WARN no auto_check) e engenharia e nao depende do operador; a LISTA e conteudo dele (RODADA 3). Escrever a spec contra a lista atual; a RODADA 3 muda a lista, nao o mecanismo.
 4. **Promote dos 3 stubs** (`.vibeflow/audits/2026-09-09-hotfix-consolidation.md`) = GO, loop local: contrato do calendario de provas (F71) · contrato da zona canonica LOCAL (F80) · `reason_servido` como campo do F81 (F76).
 5. **Smell declarado, sem data:** `app/utils/db.py` importa `tools/card_checks.py` por `__file__`; mover = spec.
+6. **F90 (s175; entra no FIM -- nao reordeno lista selada; = `§11` item 1.19):** `revisar.md` tem 2 clausulas **revogadas sem lapide** que o agente obedeceu em uso real (passo 4 "justificativa em 1 linha" x Invariante F; "lote de 3/5/6" x a regua 10-15 da s130/s152) + o preview P3 orfao do override passivo. 🔴 **E gate-miss, nao so drift:** o `CONTRATO_REVOGADO` (`auto_check.py:100-119`) mira `revisar.md` **nominalmente** e imprimiu `PASSED` com o defeito em curso -- seu `_TERMOS_REVOGADOS` tem **3 entradas** e o comentario do codigo promete *"ninguem enumera a mao"*, mas enumera. Remedio em 2 metades: (i) lapidar as clausulas; **(ii) cadastrar os termos + dar ritual de alimentacao ao registro** -- sem (ii) o gate segue cego para a proxima revogacao. Barato (2 arquivos).
 
 ## Estado por frente
 
-- **Norte:** 🎯 **UERJ/MFC 01/11/2026** (53d). ENAMED 13/09 (**4d**) termometro.
-- **Volume & Metas:** 7036 / 10400 (perf. ~79.0%). Hoje: 0. Ritmo-alvo ~63.5q/dia (53d p/ UERJ/MFC (prova 01/11)).
-- **FSRS:** divida 0 atrasados + 9 p/ hoje -- pool 659 nunca introduzidos (entram <=60/dia).
+- **Norte:** 🎯 **UERJ/MFC 01/11/2026** (52d). ENAMED 13/09 (**3d**) termometro.
+- **Volume & Metas:** 7036 / 10400 (perf. ~79.0%). Hoje: 0. Ritmo-alvo ~64.7q/dia (52d p/ UERJ/MFC (prova 01/11)).
+- **FSRS:** divida 0 atrasados + 4 p/ hoje -- pool 647 nunca introduzidos (entram <=60/dia). **76 drenados na s175.**
 - **Conteudo:** 136 resumos em resumos/. [derivado: glob]
 - **Erros & Cards:** 987 erros registrados · 1395 cards ativos · 2 needs_qualitative na fila · taxonomia 286 temas. [derivado: db]
 - **Posicao:** conteudo S17 (nominal S24, atraso 7 sem) [derivado: preparacao_estado]. Sprint "S20 ate 12/09" da s168 esta **morto**.
 - **Datas:** ENAMED 13/09 · fim da grade 25/10 · **UERJ 01/11**. Inscricao UERJ fecha **01/10** (acao do usuario).
 
-## Ultima sessao -- s174 (2026-09-09, tarde) -- ENGENHARIA (operador fora do terminal; `/ai-eng` conduziu)
-**Ciclo A, ordem do `/ai-eng` (F71 -> F80 -> A5 -> F85 -> F76), 5 traces + 5 suites vermelhas antes de cada fix:** **F71** `015dac0` balanceador le `core/provas.json` (blackout = prova + 1 dia; alvo em blackout vai para ANTES; sem vaga = overflow declarado) + `fsrs_load.py --blackout [--apply]` (§10.7) -- **34 cards movidos no db real, 17 overflow**. **F88** `91c40e2` (A5 numerado) `performance.volume_vs_marco` e a unica conta de volume (`--gap` dizia 10000/6305, boot 10400/7036) + `app/utils/provas.py` leitor unico + overflow no boot. **F80** `37e0859` relogio unico `db.agora()` LOCAL nos 4 writers de carimbo -- **a ALTERA "UTC no db" do `/ai-eng` caiu** diante da evidencia de que o nucleo FSRS grava local; historico UTC declarado, backfill = operador. **F85** `f658e9f` gate de `card_checks` fail-loud (justificativa orfa da UI Streamlit removida). **F76** `b8929b3` `--record` recomputa o bucket e grava `reason_servido`; divergencia = WARN + SQL.
-**Audit:** `vibeflow --consolidate-hotfixes` sobre 10 docs: 0 regressed, 3 promote, Critical Gate limpo. **A6:** dry-run medido -- o normalizador esta VAZIO para F65/F67 (RODADA 2 ja aplicada); arquivo p/ operador. **Estudo: nenhum** (sessao dedicada).
+## Ultima sessao -- s175 (2026-09-10, manha) -- ESTUDO (76 cards, fila zerada)
+**Drenagem integral:** 9 atrasados + 2 erros frescos + 55 de hoje + 10 novos, servidos com `--cluster --prevalencia`. **52x nota 4 - 9x3 - 3x2 - 12x1.** 🔴 **A separacao que salvou o diagnostico:** 6 das 12 notas 1 eram **cards NOVOS** (Cirurgia Infantil, 1a exposicao) -- nos **66 ja vistos foram so 6** notas 1-2 (~91% funcional). *Nota 1 em card `state=0` e linha de base, nao sinal.*
+🔴 **Correcao do usuario (virou F90):** no 1o bloco eu dei prosa em card nota 3-4 (viola o **Invariante F**), usei lote de **6** (a regua e 10-15) e joguei `<sub>preview</sub>` HTML no terminal. *"Voce deu o boot direito, mestre?"* -- o boot estava certo; o `revisar.md` e que carrega **2 clausulas revogadas sem lapide** e eu obedeci as velhas. Corrigido no mesmo turno: blocos de 16 + pipeline de profundidade 2.
+**Achado clinico:** o bug **fato-no-contexto-errado** apareceu **vivo, 2x em 20 cards** -- #313 acerta "TC precoce subestima"; #311, 20 cards depois, repete a mesma frase quando a pergunta era a **etiologia biliar** do USG. **Ganhos:** resistiu ao hematoma "contido" (AAST IV), ao "cruza a linha media" (Wilms) e **fechou clozapina x carbamazepina no 5o encontro**. **Revisao Direcionada** em 6 eixos + 2 curtos (AGC 2 bracos · pancreatite/imagem · DRESS x SSJ · joelho da crianca · dreno na apendicectomia · imunizacoes do adolescente); `resumos/Cirurgia/Cirurgia Infantil.md` cobria os 6 pontos -> **nenhuma edicao de resumo**. Carimbos `review_log` 143-150; notas de aula F18c gravadas. **F71 em acao:** o #238 declarou OVERFLOW no blackout em vez de silenciar.
 
-## Padroes de erro ativos (ultima medicao: s173, leitura de drill -- sem nova medicao na s174)
-- 🔴 **Armadilha literal do card e o que ele marca** (6 cards) · 🔴 **Fato no contexto errado** / numero de protocolo vazando (hep B 3 -> triplice) · 🔴 **Ancoragem no achado saliente** (padrao-mestre) · 🔴 **No do fluxograma nao lido** + **clozapina x carbamazepina** (5o encontro).
+## Padroes de erro ativos (re-medidos na s175, leitura de drill de 76 cards)
+- 🔴 **Fato no contexto errado** -- **2x no mesmo drill** (pancreatite: a resposta de "TC precoce subestima" reaplicada na pergunta de "por que USG primeiro"). Ritual: *"a pergunta e sobre etiologia, gravidade ou complicacao?"* · 🔴 **Armadilha literal do card e o que ele marca** (dreno na apendicectomia) · 🔴 **Enunciado lido pela metade** ("quantas doses AINDA exige" respondido com o total do esquema -- em Imunizacoes, 2a maior area de erro) · 🔴 **Ancoragem no achado saliente** (padrao-mestre). ✅ **clozapina x carbamazepina fechado no 5o encontro.**
 
 ## Pendencias/observacoes ativas
 - 📄 Manual de Gestacao de Alto Risco (MS 2022) > 10 MB: baixar uma vez resolve beta-hCG e cortes da PE.
-- 🃏 Reforja: **#792 (3a marcacao)**, #582/#583 compostas, #243, #561, #321 (rated 4, defeito intacto) + passivo ~37 -- vira fila mecanica no B2.
-- 🔬 Ledger: **abertos (11 F + 7 so-ESTADO + 2 D):** F35 F36 F42 F72 F77 F77b F78 F79b F81 F87 **F89** · F63-F69 · D5 D11. **Fechados na s174:** F71 F76 F80 F85 F88.
+- 🃏 Reforja: **#792 (3a marcacao)**, **#582/#583 compostas (confirmadas em uso na s175** -- ele respondeu so a 1a metade das duas), **#1568 NOVO** (frente pede achado "ausente" e o que ele "afastaria" -- falta o *se estivesse presente*; fixture do F81), #243, #561, #321 (rated 4, defeito intacto) + passivo ~37 -- vira fila mecanica no B2.
+- 🔬 Ledger: **abertos (12 F + 7 so-ESTADO + 2 D):** F35 F36 F42 F72 F77 F77b F78 F79b F81 F87 F89 **F90** · F63-F69 · D5 D11. **Fechados na s174:** F71 F76 F80 F85 F88.
 - 💉 Diretrizes a conferir: Calendario Vacinal 2026, GINA 2026, ATLS 11 (parcial), SINAN 2026.
 - ⚠️ Drive 45d sem sync (F72); Dashboard EMED 6.288 x db 7.036 -- db e a fonte fiel (F35: planilha ainda e fonte? -> operador).
 - 📚 **Frente MFC (Gusso + Duncan)** abre 14/09; rescope da grade pro formato UERJ.
 
 ---
-*Historico: history/INDEX.md * Macro: ESTADO.md * Sessao: history/session_174.md * Trocas: history/exchange-log.jsonl * Auditoria: docs/MEMORIA-AUDITORIA.md*
+*Historico: history/INDEX.md * Macro: ESTADO.md * Sessao: history/session_175.md * Trocas: history/exchange-log.jsonl * Auditoria: docs/MEMORIA-AUDITORIA.md*

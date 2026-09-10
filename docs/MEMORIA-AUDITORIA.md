@@ -23,8 +23,8 @@
 
 | fato | valor | fonte |
 |---|---|---|
-| ids no ledger | **92** (F1–F90 + F77b + F79b) | `AUDITORIA_MEDHUB.md` ~1583 ln (**F82-F85 na s171**, `§6o`; **F87** s172 `§6p`; **F88-F89 na s174**, `§6q`; **F90 na s175**, `§6r`) |
-| status escrito | **47 RESOLVIDO** (+F86 na s171; +F71 F76 F80 F85 F88 na s174) · **6+1 PARCIAL** (F7, F37-F41 + F57) · **12 ABERTO no cabeçalho** (F35 F36 F42 F72 F77 F77b F78 F79b F81 F87 F89 F90) · 7 ABERTO só em ESTADO/HANDOFF (F63-F69) · 2 ANTI-SCOPE · 1 RECONCILIADO · 8 SEM STATUS | §3 (remedido **09-09 s174**, HEAD pós-ciclo A) |
+| ids no ledger | **94** (F1–F92 + F77b + F79b) | `AUDITORIA_MEDHUB.md` (**F82-F85 na s171**, `§6o`; **F87** s172 `§6p`; **F88-F89 na s174**, `§6q`; **F90 na s175**, `§6r`; **F91-F92 na s175**, `§6s`) |
+| status escrito | **47 RESOLVIDO** (+F86 na s171; +F71 F76 F80 F85 F88 na s174) · **6+1 PARCIAL** (F7, F37-F41 + F57) · **13 ABERTO no cabeçalho** (F35 F36 F42 F72 F77 F77b F78 F79b F81 F87 F89 F90 F91) · 7 ABERTO só em ESTADO/HANDOFF (F63-F69) · 2 ANTI-SCOPE · 1 RECONCILIADO · 8 SEM STATUS | §3 (remedido **09-09 s174**, HEAD pós-ciclo A) |
 | commits desde 2026-06-01 | **262** · **129** `history/session_*.md` · s170 **SELADA** (9 commits, `session_170.md` presente, pushada até `a9423d7`) | `git log`, medido 09-08 pós-selo |
 | suite | 317 (s160) → 358 (09-01) → 395 (09-08) → 413 (s171) → **452** (ciclo A s174: +39 em 5 suites novas) | **re-medido 09-09: `452 passed em ~22s`**; `auto_check --changed` PASSED |
 | enforcement real | pre-commit `auto_check --staged` + suite pytest (check 2d BLOCKING) + schema do `ipub.db`; 2 BLOCK nominais (`HANDOFF_LONGO`, `SESSION_POINTER`) + 20 WARN | `auto_check.py`, matriz s160 `:1003` |
@@ -61,7 +61,7 @@
 |---|---|
 | **RESOLVIDO** (47) | F1 · F10–F15 · F22–F26 · F29–F31 · F33 · F34 · F43–F54 · F56 · F58–F61 · F70 · F73 · F74 · F79 · F82 · F83 · F84 · F86 (s171) · **F71 · F76 · F80 · F85 · F88** (s174, ciclo A) |
 | **PARCIAL / causa-raiz** (6+1) | **F7 (heurística de competidor: WARN experimental, curadoria pendente — `:110-124`)** · F37 (dado histórico inflado: decisão do dono) · F38 (literal: `RESOLVIDO (s159) -- guarda entregue; 1 instância histórica a recuperar`) · F39 (detector ok; reforja 8/358) · F40/F41 (fila de reforja) · F57 (`RESOLVIDO-parcial`: 5 memórias nomeadas; 72 restantes) |
-| **ABERTO — cabeçalho** (12) | F35 · F36 (ALTA) · F42 · F72 · F77 · F77b · F78 · F79b · F81 · F87 · **F89** (áreas fantasma de volta; spec) · **F90** (s175: `revisar.md` com 2 cláusulas revogadas sem lápide; achado do USUÁRIO em uso real) — ⚰️ F71/F76/F80/F85 fechados na s174 |
+| **ABERTO — cabeçalho** (13) | F35 · F36 (ALTA) · F42 · F72 · F77 · F77b · F78 · F79b · F81 · F87 · **F89** (áreas fantasma de volta; spec) · **F90** (s175: `revisar.md` com 2 cláusulas revogadas sem lápide; achado do USUÁRIO em uso real) · 🔴 **F91 (ALTA, s175)** `rag.search()` devolve `[]` com o motor offline e um agente escreveu "não existe X no corpus" a partir disso — honest-negative violado na camada `local`; o fallback textual existe e falha em silêncio junto — ⚰️ F71/F76/F80/F85 fechados na s174, **F92 fechado na s175** (resumo com 2 afirmações opostas sem rótulo de fonte, que produziu o erro de prova) |
 | **ABERTO — só ESTADO/HANDOFF** (7) | F63 (ALTA) · F64 · F65 (ALTA) · F66 (ALTA) · F67 · F68 · F69 — sem marcador no ledger |
 | **ANTI-SCOPE** (2) | F55 (pre-commit `--staged` valida FS, não índice) · F62 (rotação do próprio ledger = política do dono) |
 | **RECONCILIADO** (1) | F21 |

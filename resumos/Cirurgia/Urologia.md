@@ -79,6 +79,16 @@ O diagnóstico de HPB é **clínico**. Todo paciente com LUTS deve ser submetido
 - **Uretrocistografia:** suspeita de estenose uretral como diferencial.
 - **Uretrocistoscopia:** hematúria (excluir neoplasia vesical) ou suspeita de estenose uretral.
 
+> ⚠️ **Padrão de prova -- quando o comando pede a conduta INICIAL, a resposta é investigar, não tratar.** O painel inicial **não confirma** a HPB (o diagnóstico já é clínico) -- ele procura o que **DESVIA** a conduta para longe do alfa-bloqueador:
+> - **Leucocitúria** -> ITU sobreposta, que mimetiza e agrava os sintomas; trata-se a infecção, não a próstata.
+> - **Hematúria** -> em homem > 35 anos obriga excluir neoplasia urotelial e litíase antes de creditá-la à própria HPB.
+> - **Ureia/creatinina alteradas** -> insuficiência renal pós-renal; a conduta passa a ser **desobstrução imediata com sonda vesical de demora**, não prescrição.
+> - **PSA** -> câncer de próstata, o principal diferencial.
+>
+> ⭐ E o PSA é ainda **pré-requisito da própria prescrição**: é um dos três gatilhos do inibidor da 5-alfa-redutase (PSA > 1,5 ng/mL, volume > 30 g ou aumento palpável ao toque -- AUA 2023, statement 13, Grade B). Como o 5-ARI derruba o PSA em cerca de 50% em 6 meses, dosá-lo **depois** de iniciar a droga apaga a linha de base antes de ela ser colhida.
+>
+> 🔴 **Armadilha banca-dependente -- hierarquia dos exames iniciais no LUTS masculino.** O único laboratorial **mandatório para todos** é a **Urina I**: AUA 2023 statement 1 (Clinical Principle) define a avaliação inicial como história + exame físico + IPSS + **urinálise**; EAU 2026 é *Strong* para urinálise. O **PSA está ausente** da avaliação inicial da AUA e é **condicional** na EAU. A **função renal** é condicional na EAU (suspeita de disfunção, hidronefrose ou planejamento cirúrgico) e a palavra *creatinine* não aparece no guideline da AUA. A **glicemia** não consta de nenhuma das duas -- justifica-se pela comorbidade, não pelo LUTS, e a glicosúria já sai na própria Urina I. Bancas brasileiras montam o painel como PSA + ureia/creatinina + glicemia e tratam a Urina I como dispensável sem febre. **Regra de execução: em questão de exames iniciais de LUTS, a Urina I nunca sai da lista; se nenhuma alternativa a contém, o item é defeituoso -- marque a mais próxima e siga.**
+
 ### 1.5 Tratamento Clínico
 
 **Terapia expectante (vigilância ativa):** indicada para sintomas leves. Medidas comportamentais (micção sentada, evitar líquidos noturnos, reduzir cafeína/álcool, esvaziamento vesical forçado 2x/dia); monitoramento regular, pois a regra é progressão dos sintomas.
@@ -89,6 +99,7 @@ O diagnóstico de HPB é **clínico**. Todo paciente com LUTS deve ser submetido
   - Não seletivos (alfa-1a e alfa-1b vascular): **doxazosina** -> mais efeitos colaterais por vasodilatação associada.
   - Efeitos colaterais: **hipotensão postural** (principal, risco de síncope), astenia, tontura, cefaleia, congestão nasal, disfunção ejaculatória.
   - Contraindicados em grande resíduo vesical (risco de retenção aguda) e em hipotensão postural prévia.
+  - ⚠️ **Atenção à direção da classe:** o tratamento é o **ANTAGONISTA** (bloqueador) alfa-1. O **AGONISTA** alfa-1 -- descongestionantes sistêmicos e nasais (pseudoefedrina, fenilefrina) -- faz o oposto: contrai a musculatura lisa do colo vesical e da próstata, e é causa clássica de **retenção urinária aguda** na HPB, ao lado de anticolinérgicos, anti-histamínicos de 1ª geração e opioides. Alternativa que escreve "alfa-agonista" não é sinônimo de alfa-bloqueador.
 - **Inibidores da 5-alfa-redutase (finasterida, dutasterida):** reduzem o volume glandular ao bloquear a conversão de testosterona em DHT. Efeito terapêutico demora 6 a 12 meses. Reduzem o PSA em 50% ou mais nos primeiros 6 meses -> ⭐ paciente em uso deve ter o PSA multiplicado por 2 (uso até 2 anos) ou por 2,5 (uso acima de 2 anos). Efeitos colaterais: disfunção sexual/erétil, distúrbios ejaculatórios, depressão, ginecomastia.
 - **Agentes anticolinérgicos (oxibutinina, tolterodina):** úteis nos sintomas irritativos (hiperatividade do detrusor). Efeitos: xerostomia, cicloplegia, taquicardia, constipação.
 - **Inibidores da fosfodiesterase-5 (tadalafila -- único aprovado pelo FDA para HPB):** melhora discreta dos sintomas, indicados em pacientes com disfunção erétil associada. Potencializam hipotensão dos alfa-bloqueadores.
@@ -109,7 +120,10 @@ O diagnóstico de HPB é **clínico**. Todo paciente com LUTS deve ser submetido
 - Hidronefrose.
 - Incontinência por transbordamento (critério da Sociedade Brasileira de Urologia).
 
-> ⚠️ Padrão de prova: até 2019, cálculo vesical era indicação absoluta isolada de cirurgia. A **AAU** revisou essa posição -- hoje a cirurgia fica reservada a **cálculos vesicais de repetição**; um cálculo único pode ser tratado com extração associada à terapia clínica.
+> ⚠️ Padrão de prova: cálculo vesical na HPB é indicação de operar a **PRÓSTATA**, não só o cálculo. Ele não é doença independente -- é prova de que a bexiga já descompensou pela obstrução: forma-se por estase em bexiga que não esvazia. Tratar só o cálculo trata o efeito e mantém a causa. Este é o princípio que organiza as sete indicações: **nenhuma delas é uma complicação a consertar isoladamente; todas são provas de que a bexiga ou o rim já pagaram o preço da obstrução.**
+> 🔴 **Armadilha banca-dependente -- as sociedades divergem na letra.** A **EAU 2026** lista "bladder stones or diverticula" **sem qualificador**: cálculo único é indicação absoluta. A **AUA 2023 (statement 26, Clinical Principle)** escreve "**recurrent** bladder stones" e exige recorrência, com lastro numa série retrospectiva de 23 casos tratados com extração + terapia clínica (Urology 2002, PMID 12137828) que mediu **17,4% de recidiva do cálculo e 17,4% de retenção urinária aguda em 30 meses**, em pacientes selecionados. Nas bancas brasileiras, **marque a indicação cirúrgica**.
+> ⭐ A AUA 2023 (statement 27) acrescenta que **divertículo vesical assintomático isolado não indica cirurgia** -- investigar obstrução infravesical antes.
+> ⭐ **Protrusão prostática intravesical (IPP / lobo mediano intravesical) desempata o caso pelo paciente:** acima de **10 mm** prediz obstrução infravesical com AUC 0,83 e falha do teste de retirada da sonda com AUC 0,74, superando o volume prostático como preditor (meta-análise de 18 estudos, 4.128 pacientes -- Eur Urol Focus 2022, PMID 34561198). Bexiga de paredes espessadas + IPP > 10 mm + cálculo formado in situ, juntos, descrevem **obstrução descompensada**: aí o tratamento clínico não é opção defensável em nenhuma das duas diretrizes.
 
 **Manejo da RUA:** cateterismo vesical é o tratamento inicial. -> se falha de progressão do cateter (obstrução intransponível): **cistostomia**. Após resolução, teste de micção espontânea sem sonda; falha em 2 ou mais testes -> indicação cirúrgica.
 
@@ -253,6 +267,8 @@ A escolha terapêutica depende do estágio, da estratificação de risco e da **
 Tema controverso, com posições distintas entre sociedades:
 - **Ministério da Saúde e OMS:** não recomendam rastreamento populacional; investigação apenas na vigência de sintomas.
 - **Sociedade Brasileira de Urologia (SBU):** recomenda rastreamento com toque retal e PSA a partir dos **50 anos** (ou dos **45 anos** se alto risco: negros ou histórico familiar de 1º grau), até os 70 anos, desde que expectativa de vida > 10 anos.
+  - ⚠️ **Corte superior a conferir (aberto em 10/09/2026):** auditoria de evidência desta data localizou o comunicado oficial da SBU de 20/10/2020 com corte em **75 anos**, não 70 ("Após os 75 anos, somente homens com perspectiva de vida maior do que 10 anos poderão fazer essa avaliação"). A janela "50 a 70" circula amplamente em material didático. **Ainda não reconferido em primeira mão** -- não sobrescrevi o número acima; conferir antes de cristalizar.
+  - 🔴 A janela de rastreamento **não governa o paciente SINTOMÁTICO**. No homem com LUTS o PSA entra por outra porta: diferencial de neoplasia e estimativa de volume/risco de progressão da HPB (é um dos gatilhos do inibidor da 5-alfa-redutase). Usar critério de rastreio para negar PSA a um sintomático é erro de moldura.
 
 ---
 
@@ -457,7 +473,7 @@ Forma menos frequente, tipicamente associada a **trauma peniano ou perineal** co
 - 🔴 **Vigilância ativa tem critérios rígidos:** T1-T2a, Gleason <= 6/Grupo de Grau 1 e PSA <= 10 (ou, em maiores de 70 anos, Gleason <= 7 e PSA <= 11). Fora desses critérios (risco intermediário desfavorável em diante), a vigilância ativa está **formalmente contraindicada**.
 - 🔴 **Doença metastática óssea de próstata:** tratamento de primeira linha é a **terapia de deprivação androgênica**, não a prostatectomia radical -- cirurgia radical não tem papel curativo em M1.
 - 🔴 **RTU de próstata e síndrome de intoxicação hídrica:** suspeitar sempre que, durante ou após RTU monopolar prolongada (> 1h30), surgirem **náuseas, confusão mental, bradicardia e cefaleia** -- não confundir com choque hipovolêmico (que cursaria com taquicardia).
-- 🔴 **Cálculo vesical na HPB:** deixou de ser indicação cirúrgica absoluta isolada (mudança AAU 2019); hoje a cirurgia é reservada a cálculos **de repetição**.
+- 🔴 **Cálculo vesical na HPB: indicação de operar a PRÓSTATA, não só o cálculo.** Ele é o recibo da obstrução (forma-se por estase), não doença independente -- por isso a divisão "clínico para a glândula, cirúrgico para o cálculo" é o distrator. **Divergência entre sociedades:** EAU 2026 lista "bladder stones" sem qualificador (cálculo único já indica); AUA 2023 escreve "recurrent bladder stones". Banca brasileira cobra a indicação cirúrgica. ⚰️ *Corrigido em 10/09/2026 -- a redação anterior ("deixou de ser indicação absoluta, mudança AAU 2019") ensinava a alternativa errada e produziu um erro real de prova; a datação "2019" nunca foi verificada.*
 - 🔴 **Retenção urinária aguda:** o tratamento inicial é sempre a **sondagem vesical (Foley)**, nunca cateter duplo J (que comunica rim a bexiga e não resolve obstrução uretral) nem nefrostomia de urgência.
 - 🔴 **Rastreamento de câncer de próstata é banca-dependente:** Ministério da Saúde/OMS não recomendam rastreamento populacional; a SBU recomenda a partir dos 50 anos (ou 45 anos se alto risco). Identificar qual referência a banca cobra evita erro de gabarito.
 - 🔴 **Hematúria em paciente > 35 anos:** sempre descartar câncer de bexiga antes de atribuir a causas benignas (HPB, ITU, litíase) -- cistoscopia é o exame obrigatório, mesmo com TC normal.

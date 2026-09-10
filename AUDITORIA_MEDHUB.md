@@ -1586,4 +1586,30 @@ Protocolo `AGENTE.md §10.6` (D71): implement E audit aqui, vereditos do `/ai-en
 - **Como foi descoberto (vale como metodo):** nao por varredura -- por **uso real**. O usuario bateu no comportamento, e a autopsia da causa (nao do sintoma) chegou no registro do gate. Reforca D67: *ler o mecanismo atual > ler o ledger*. O `auto_check` desta mesma sessao imprimiu `✅ PASSED - Clausula revogada em vigor (CONTRATO_REVOGADO)` **enquanto o defeito estava em curso**.
 - **Classe:** gate-miss de **alcance** (registro manual sem ritual de alimentacao) -- familia do F89 e do G5. Distinto do F79/F79b/F81, que sao gates cegos por **poder expressivo**; este e cego por **inventario**.
 
+## 6s. Sessao de ESTUDO s175, 2o bloco (autopsias de Diarreia e Urologia) -- F91 e F92
+
+### F91 -- `rag.search()` devolve `[]` com o motor OFFLINE e o consumidor le isso como "nao existe conteudo": honest-negative violado na camada `local` -- **ALTA** -- **ABERTO (remedio = spec)**
+
+- **Como apareceu:** durante a autopsia de Urologia (s175), o subagente `evidence-researcher` concluiu e escreveu num relatorio de evidencia que *"nao ha resumo indexado sobre HPB/LUTS"* e registrou o item como lacuna de cobertura do corpus. **A afirmacao e falsa:** `resumos/Cirurgia/Urologia.md` tem **39 chunks** indexados no ChromaDB (colecao com 2.353 chunks).
+- **Reproducao (medida por mim, 10/09/2026, nao herdada do subagente):**
+  ```
+  from app.engine.rag import search
+  search('hiperplasia prostatica benigna indicacao cirurgica', n_results=3)  ->  []
+  ```
+  Zero resultados, **zero excecao, zero WARN**. Ollama fora do ar (`WinError 10061` em `localhost:11434`).
+- 🔴 **Por que e pior do que "faltou um fallback":** o fallback **existe e foi bem desenhado**. `_textual_fallback()` (`app/engine/rag.py`) tem docstring explicita -- *"Fallback lexico quando o RAG semantico esta indisponivel (Chroma/Ollama offline)"* -- e marca a proveniencia em `metadata['source'] == 'fallback_textual'` justamente para o consumidor distinguir o degradado do curado. **A salvaguarda esta certa; ela e que falha em silencio.** O `except Exception: return []` no fim do proprio fallback (`:333-334`) colapsa "o motor caiu E o fallback tambem nao achou" no MESMO valor de retorno de "o indice nao tem isso": `[]`.
+- **O invariante violado:** `evidence-governance.md §7` (honest-negative) exige que ausencia de evidencia seja **declarada como ausencia de busca** quando a busca nao aconteceu. Aqui a busca **nao aconteceu** (motor offline) e o retorno e indistinguivel de **busca feita sem achados**. Um agente leu o `[]` como fato e o escreveu num relatorio.
+- **Classe:** falha silenciosa de degradacao em superficie de EVIDENCIA -- pior que a familia F79/F81 (gate cego), porque nao e um gate que deixa passar: e um **leitor que produz um fato falso**. Irma do F80 (relogio que mente sem avisar), mas com raio maior: o consumidor e um agente que escreve conclusao.
+- **Remedio (spec):** `search()` distingue tres estados e o **tipo de retorno carrega a distincao** -- (a) `hits` (semantico), (b) `hits` degradados (`source='fallback_textual'`, ja implementado), (c) **`engine-indisponivel`**: levantar, ou devolver um sentinela que o chamador nao consiga confundir com lista vazia. O `except Exception: return []` do fallback vira `except` que **registra e propaga o motivo**. Teste: Ollama derrubado + query on-topic **nao pode** retornar `[]` silencioso.
+- **Corolario de processo (vale alem do bug):** um subagente afirmou "nao existe X no corpus" a partir de um retorno vazio. A regra que faltou e simetrica a de nao fabricar fonte: **nao afirmar ausencia a partir de um retorno vazio sem confirmar que a busca rodou.** Candidato a clausula em `evidence-governance.md`.
+
+### F92 -- resumo com duas afirmacoes OPOSTAS sobre a mesma conduta, sem rotular fonte, PRODUZIU um erro de prova -- **MEDIA** -- **RESOLVIDO (s175, conteudo)**
+
+- **Evidencia:** `resumos/Cirurgia/Urologia.md` listava, na §1.6, "Alteracoes vesicais: calculos vesicais ou divertículos" entre as indicacoes cirurgicas da HPB (linha 107) e, **5 linhas abaixo** (linha 112) + na secao Armadilhas (linha 460), afirmava que *"calculo vesical deixou de ser indicacao absoluta isolada (mudanca AAU 2019); hoje a cirurgia e reservada a calculos de repeticao; um calculo unico pode ser tratado com extracao associada a terapia clinica."*
+- 🔴 **A segunda redacao E a alternativa C da questao que ele errou** (Urologia T I, Q3, 09/09). O aluno marcou o que o proprio material dele ensina -- e o material ensina na **secao Armadilhas**, que e a feita para ser memorizada.
+- **Causa:** as duas afirmacoes nao sao erro de conteudo -- sao **duas sociedades**. EAU 2026 lista "bladder stones or diverticula" sem qualificador; AUA 2023 (statement 26) escreve "**recurrent** bladder stones". O defeito e nao rotular a fonte de nenhuma das duas, deixando o leitor escolher a errada para a banca brasileira.
+- **Agravante de claim-aging (D67):** a datacao "mudanca AAU 2019" **nunca foi verificada** e nao foi possivel confirmar; foi removida com lapide.
+- **Remedio aplicado (10/09/2026):** as duas passagens reescritas com atribuicao explicita por sociedade + o principio que organiza as 7 indicacoes (nenhuma e complicacao a consertar isoladamente; todas sao prova de que bexiga ou rim ja pagaram o preco da obstrucao) + IPP > 10 mm como desempate (PMID 34561198) + lapide na redacao antiga.
+- **Classe:** familia CONTEUDO, eixo novo -- **material que produz o erro que depois e diagnosticado como lacuna do aluno**. Se a autopsia tivesse parado no "ele nao sabia o criterio n. 4", o remedio teria sido reforcar um card contra um resumo que ensina o contrario. Corolario: **ao diagnosticar erro em tema com resumo, ler o que o resumo diz sobre a alternativa MARCADA, nao so sobre a correta.**
+
 ---

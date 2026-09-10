@@ -39,6 +39,10 @@ Classificação válida tanto para diarreia aguda quanto crônica. É a "bússol
 - **Mecanismo:** solutos osmoticamente ativos e pouco absorvíveis retêm água no lúmen. **Cessa com o jejum.**
 - **Infecciosa:** microrganismos destroem as vilosidades, sede das dissacaridases; o açúcar não digerido se acumula, aumenta a osmolaridade e fermenta em radicais ácidos. Fezes aquosas, ácidas e explosivas, com dermatite perineal, distensão e flatulência. Principais agentes: **vírus** e *E. coli* enteropatogênica (EPEC).
 - **Não infecciosa:** deficiência de lactase, laxativos osmóticos (hidróxido/sulfato de magnésio, fosfato de sódio), sorbitol, manitol, xilitol, lactulose.
+- ⚠️ **Padrão de prova:** o examinador descreve o rotavírus com o verbo **"invasão do epitélio"** para puxar a resposta ao grupo inflamatório/invasivo. O verbo não classifica - a **consequência** classifica. Invadir o enterócito da vilosidade (delgado alto) e perder dissacaridase é diarreia **osmótica**; invadir a mucosa colônica e exsudar sangue, muco e pus é diarreia **inflamatória**.
+    - Os três discriminadores que fecham rotavírus num enunciado assim: **vilosidade** (estrutura do delgado, ausente no cólon), **duodeno e jejuno proximal** (endereço) e **queda da lactase** (assinatura funcional exclusiva do mecanismo osmótico).
+    - Ancoragem anatômica: rotavírus e EPEC acometem o **delgado proximal**; *Shigella* acomete **cólon e reto** e não altera a lactase.
+- O subtipo também inclina a natremia: as fezes da diarreia **osmótica/viral** são hipotônicas em relação ao plasma (sódio fecal baixo), de modo que a perda fecal isolada já tende a concentrar o sódio; as fezes da diarreia **secretora** (cólera) são quase isotônicas e ricas em sódio, com tendência iso ou hiponatrêmica.
 - **Gap osmolar fecal:** 290 - 2 x (sódio fecal + potássio fecal).
   - Gap < 50 mEq/L: diarreia **secretora**.
   - Gap > 125 mEq/L: diarreia **osmótica**.
@@ -227,6 +231,41 @@ A classificação do estado de hidratação é clínica e orienta diretamente o 
 - Indicada durante a internação, caso persistam perdas por diarreia ou vômitos.
 - Solução de soro glicosado 5% e soro fisiológico 0,9% na proporção **1:1**, na dose de 50 mL/kg/dia em 24 horas, podendo o volume ser ajustado para cima conforme a magnitude das perdas.
 
+### 7.5 Distúrbios Ácido-Básicos e do Potássio
+
+O sódio é apenas um dos três eixos que a diarreia move. Os outros dois são cobrados junto, e a prova espera a **tríade completa**.
+
+- ⭐ **O sódio sérico é uma razão, não um estoque.** Natremia = sódio dividido por água corporal. Antes de procurar a causa de uma disnatremia, identificar **qual dos dois termos se moveu**: entrada de sódio, entrada de água, perda de sódio ou perda de água.
+    - Nenhum mecanismo **renal** de retenção de sódio produz hipernatremia. Na hipovolemia o túbulo reabsorve sódio (aldosterona) e o ADH reabsorve água livre **ao mesmo tempo** - a conservação é aproximadamente isosmótica e a razão não sobe. As causas renais de hipernatremia são todas de **perda de água** (diabetes insípido, diurese osmótica).
+    - Corolário de leitura: numa criança com diarreia e sódio alto, o termo que se moveu está quase sempre na **ingesta**. Procurar no enunciado o que a família vinha oferecendo, não apenas o volume perdido.
+- ⭐ **O eixo ácido-básico é decidido pelo conteúdo do fluido perdido, ponderado pelo volume.**
+    - **Perda alta** (gástrica, vômito, sonda nasogástrica aberta): rica em H+ e cloreto. Perder ácido **alcaliniza** - alcalose metabólica hipoclorêmica.
+    - **Perda baixa** (intestinal, diarreia, fístula, ileostomia): rica em bicarbonato e potássio. Perder base **acidifica** - acidose metabólica hiperclorêmica, de ânion-gap normal.
+    - Com vômito **e** diarreia no mesmo paciente, decide a perda que **domina em volume e tempo**, não a ordem em que os sintomas aparecem no enunciado. Na gastroenterite com evacuações volumosas, a diarreia domina e o resultado é **acidose**.
+    - Hipoperfusão associada (enchimento capilar lentificado, taquicardia, prostração) acrescenta lactato e agrava a acidose. Taquipneia nesse contexto é compensação respiratória, não achado pulmonar.
+- ⭐ **Hipocalemia é regra na diarreia, e é exceção à regra geral do potássio.** A acidose metabólica costuma **elevar** o potássio sérico por deslocamento transcelular; na diarreia isso não se observa porque a acidose é hiperclorêmica (ácido mineral desloca potássio muito menos que ácido orgânico) e, sobretudo, porque a perda fecal de potássio é contínua e volumosa - o déficit corporal domina.
+    - Repercussões: fadiga muscular, **íleo paralítico** (abdome distendido e timpânico com ruídos hidroaéreos reduzidos ou ausentes), redução da função renal e arritmia.
+    - O SRO padrão OMS já contém 20 mmol/L de potássio: a terapia de reidratação oral bem conduzida **previne** a hipocalemia.
+- ⚠️ **Padrão de prova:** a tríade esperada na diarreia aguda com desidratação é **acidose metabólica + hiponatremia + hipocalemia**. A troca mais cobrada é "alcalose" no lugar de "acidose", ancorada no vômito que o enunciado cita de passagem.
+
+**Como distinguir hipo de hipernatrêmica na beira do leito**
+
+- 🔴 O discriminador mais confiável é **o que estava sendo oferecido em casa**, não a gravidade aparente.
+    - Água de coco, chá, água pura, leite de vaca **diluído**, sucos: líquidos pobres em sódio - puxam para **hiponatremia**.
+    - SRO como único líquido, SRO mal diluído, soro caseiro com excesso de sal, leite em pó reconstituído concentrado: oferta de sódio sem água livre - puxam para **hipernatremia**.
+- ⚠️ **Padrão de prova (checagem de segunda ordem):** na desidratação **hipernatrêmica** o extracelular hiperosmolar sustenta a volemia e os sinais clínicos ficam **atenuados** - a criança parece menos desidratada do que está, com **sede desproporcional aos sinais**. Sinais francos e precoces de desidratação grave depõem a favor de hipo ou isonatremia. É argumento **probabilístico** de desempate, não exclusão absoluta: hipernatremia com déficit grande também cursa com sinais francos. Quando o enunciado **já informa** o sódio, o número manda.
+
+**Correção: qual veículo e quando corrigir cada eletrólito**
+
+- ⭐ **O veículo da reposição volêmica é cristaloide isotônico de sódio - soro fisiológico 0,9% ou Ringer lactato.** Soro glicosado 5% não é veículo de expansão em nenhuma circunstância.
+    - A tonicidade que importa é a **efetiva, depois da metabolização**. O SG 5% tem osmolaridade próxima do plasma na bolsa, mas a glicose é oxidada em minutos e o que resta circulando é **água livre**: ela se distribui por toda a água corporal, quase nada permanece no intravascular, e o extracelular não expande.
+    - Em paciente já hiponatrêmico o efeito é duplamente adverso: além de não expandir, **dilui ainda mais o sódio**. É a mesma razão pela qual a solução isotônica substituiu a hipotônica na manutenção (ver 7.3).
+- ⭐ **Hiponatremia leve a moderada em paciente hipovolêmico corrige-se com VOLUME, não com sódio.** Restaurada a volemia, cessa o estímulo não osmótico ao ADH, o rim excreta a água livre e a natremia sobe sozinha.
+    - Salina hipertônica (NaCl 3%) fica reservada a sódio **muito baixo**, ou a **qualquer valor com sintoma neurológico** (convulsão, rebaixamento do nível de consciência).
+    - 🔴 O corte numérico é **banca-dependente**: parte da literatura trabalha com 120 e parte com 125 mEq/L, e **este ponto ainda não foi auditado contra diretriz primária**. O que não varia é o gatilho clínico - sintoma neurológico autoriza correção ativa em qualquer valor - e o princípio de que hiponatremia hipovolêmica se trata repondo volume.
+- ⭐ **Hipocalemia com repercussão corrige-se sempre.** Potássio abaixo de 3,0 mEq/L acompanhado de **íleo paralítico**, fraqueza muscular ou alteração eletrocardiográfica é hipocalemia já sintomática. Reposição com **KCl 19,1%** acrescentado à solução, nunca em bolus.
+- ⚠️ **Padrão de prova:** numa alternativa que combina **veículo + eletrólito a corrigir**, os dois erros clássicos são escolher soro glicosado como expansor e oferecer correção de sódio que não estava indicada. O potássio é o eletrólito que de fato se corrige nesses casos.
+
 ---
 
 ## 8. Diarreia Persistente e Crônica
@@ -235,6 +274,8 @@ A classificação do estado de hidratação é clínica e orienta diretamente o 
 - Principal causa de diarreia **persistente** em pediatria: um quadro de diarreia infecciosa aguda (predominantemente viral, mecanismo osmótico) melhora inicialmente e, em seguida, volta a apresentar fezes amolecidas e explosivas, podendo levar à dermatite perianal.
 - Mecanismo: destruição das vilosidades intestinais pelo agente viral leva à deficiência secundária de dissacaridases (lactase), mantendo o quadro diarreico mesmo após a resolução do processo infeccioso.
 - Conduta: restrição da lactose da dieta até a recuperação da mucosa, sem necessidade de exames complementares, antibioticoterapia ou investigação de imagem.
+- ⭐ **A trajetória, e não o sintoma residual, define a fase do quadro.** O padrão temporal característico é: início agudo e intenso (8 a 9 evacuações líquidas por dia, febre, cólica) -> melhora clínica clara (criança ativa, afebril, reaceitando dieta) -> **persistência de fezes amolecidas** além de 14 dias. Nesse arco o processo infeccioso já se resolveu; o que resta é mucosa em recuperação.
+- ⚠️ **Padrão de prova:** diarreia que ultrapassa 14 dias **numa criança que está bem** não é indicação de busca etiológica. Coprocultura, parasitológico e colonoscopia dependem de **gatilho** - sangue nas fezes, febre a partir de 38,5 °C, desidratação, antibioticoterapia recente, imunossupressão, lactente menor de 4 meses, surto na comunidade. Criança ativa, corada, hidratada e com exame abdominal normal não tem nenhum: a conduta é **dietética**, não investigativa.
 
 ### 8.2 Etiologia da Diarreia Crônica
 Ao contrário da diarreia aguda, a diarreia crônica quase sempre exige investigação etiológica.
@@ -249,6 +290,8 @@ Ao contrário da diarreia aguda, a diarreia crônica quase sempre exige investig
 - **Intolerância à lactose (hipolactasia do tipo adulto):** manifesta-se tipicamente a partir dos 3-4 anos de idade, com crescimento e desenvolvimento preservados.
 - **APLV:** manifesta-se nos primeiros meses a poucos anos de vida, costuma comprometer o crescimento pôndero-estatural e pode cursar com muco e sangue nas fezes (proctocolite alérgica).
 - Dosagem de IgE total e específica é útil na investigação de APLV mediada por IgE e não tem papel na investigação de intolerância à lactose.
+- **Cada exame pertence a uma via, e as duas não se cruzam.** Substâncias redutoras e pH fecal, teste de tolerância à lactose e teste do hidrogênio expirado investigam o **açúcar** (via enzimática). IgE total e específica, teste cutâneo e provocação oral investigam a **proteína** (via imune). Não existe anticorpo a dosar na intolerância à lactose: a hipolactasia é deficiência de enzima, não reação imunomediada.
+- ⚠️ **Padrão de prova:** quando a alternativa oferece **dois campos** (diagnóstico e conduta), a banca costuma acertar o primeiro e envenenar o segundo. Uma alternativa que diz "intolerância à lactose / dosagem de IgE" é **autocontraditória** - o achado que sustenta o diagnóstico é o mesmo que já excluiu a via que o exame investigaria. Validar as duas metades contra o mesmo dado antes de marcar.
 
 ### 8.4 Diagnóstico e Tratamento da Diarreia Crônica
 - Anamnese e exame físico seguem a lógica da diarreia aguda, somando-se a busca ativa por sinais de doença orgânica: sangue nas fezes, perda ponderal, hipotrofia muscular, febre, adenomegalias, massa abdominal, sinais carenciais, anemia, alterações cutâneas específicas (dermatite herpetiforme, eritema nodoso, pioderma gangrenoso).
@@ -256,6 +299,12 @@ Ao contrário da diarreia aguda, a diarreia crônica quase sempre exige investig
   - ⚠️ Padrão de prova: não faz sentido solicitar pesquisa de sangue oculto quando o enunciado já descreve sangue **vivo** nas fezes - esse exame serve exatamente para detectar sangramento não visível.
 - **Exames direcionados:** antígeno fecal para Giardia, calprotectina/lactoferrina fecal (positivas nas inflamatórias; normais tornam DII improvável), PCR (menos específico, reservado quando não há calprotectina/lactoferrina disponíveis), leucócitos fecais (pouca acurácia), dosagens de déficit nutricional específico (ferro, B12, ácido fólico, cálcio, magnésio, albumina, vitamina D), parasitológico de fezes, pesquisa de toxinas A/B para *C. difficile*.
 - **Exames de imagem/endoscópicos:** colonoscopia com biópsia na suspeita de DII, anemia ferropriva de causa a esclarecer ou rastreio de câncer colorretal; endoscopia digestiva alta com biópsia duodenal para doença celíaca; tomografia/ressonância para avaliação pancreática.
+- ⭐ **O padrão carencial localiza o segmento.** Cada nutriente tem seu sítio de absorção, e o déficit denuncia o endereço da lesão:
+    - **Vitamina B12** e **sais biliares**: absorvidos exclusivamente no **íleo terminal**. B12 baixa numa síndrome disabsortiva é o marcador topográfico mais específico do painel e aponta doença ileal - doença de Crohn, ressecção ileal, supercrescimento bacteriano.
+    - **Ferro, folato e vitamina D**: absorvidos no **delgado proximal** (duodeno e jejuno). É o padrão da doença celíaca, que **não** alcança o íleo e por isso **não** é causa típica de deficiência de B12.
+    - Corolário de prova: diante de disabsorção com B12 baixa, a doença celíaca perde força e a doença ileal ganha. O achado não é apenas mais um marcador de má absorção - ele **exclui** o diagnóstico proximal.
+- ⚠️ **Padrão de prova: ferritina é proteína de fase aguda.** Em vigência de inflamação (VHS ou PCR elevados) ela deveria estar alta; um valor no limite inferior da referência, nesse cenário, já significa **estoque de ferro esgotado**, e não normalidade. Ler o resultado contra o contexto clínico, nunca contra a faixa de referência isolada.
+- Adulto jovem (15 a 30 anos) com diarreia crônica, perda ponderal significativa, provas inflamatórias elevadas e hipovitaminose B12 tem **doença de Crohn ileal** como principal hipótese; a investigação é **ileocolonoscopia com intubação do íleo terminal e biópsia** - colonoscopia que não intuba o íleo pode não alcançar a doença ileal isolada.
 - Terapia empírica é aceitável quando a suspeita clínica é forte e o custo-benefício da investigação aprofundada é desfavorável: restrição de leite em jovem com diarreia aquosa crônica que piora com laticínios; antibioticoterapia empírica em supercrescimento bacteriano com fatores de risco; colestiramina (quelante de ácidos biliares) após colecistectomia ou ressecção ileal; metronidazol empírico após viagem a área endêmica com quadro sugestivo de giardíase.
 - **Sintomáticos:** loperamida (diarreia crônica não inflamatória; casos mais severos, codeína) e antagonistas do receptor 5-HT3 (alosetrona, ondansetrona) no alívio de diarreia e urgência na SII.
   - 🔴 Opioides antidiarreicos predispõem a **megacólon tóxico**, sobretudo em colites mais graves associadas a doenças inflamatórias intestinais.
@@ -290,3 +339,10 @@ Ao contrário da diarreia aguda, a diarreia crônica quase sempre exige investig
 - 🔴 Diante de crise convulsiva associada a diarreia, pensar em *Shigella*; diante de febre + dor abdominal + diarreia com evolução para pseudoapendicite ou de quadro neurológico ascendente pós-diarreico, pensar em *Campylobacter* e síndrome de Guillain-Barré.
 - 🔴 No Plano B, suspende-se a alimentação **exceto o aleitamento materno**; no Plano A, a alimentação habitual - incluindo leite de vaca e lactose - nunca é suspensa nem restringida.
 - 🔴 Nem todo sinal de desidratação pesa igual: segundo a OMS, **estado geral, olhos e sinal da prega abdominal** são as variáveis de maior sensibilidade e especificidade para classificar o grau. Rebaixamento do nível de consciência, incapacidade de beber ou pulso fraco/ausente já definem desidratação grave **por si só** -- não é necessário somar outros achados para indicar o Plano C.
+- 🔴 Diante de hipernatremia numa criança com diarreia, "reabsorção tubular de sódio" é um distrator fisiologicamente **verdadeiro** e mesmo assim errado: o rim conserva sódio e água juntos e a razão entre os dois não se altera. A causa está na **ingesta** - SRO mal diluído ou oferta de sódio sem água livre.
+- 🔴 A palavra "invasão" num enunciado de diarreia não define o mecanismo. Rotavírus invade o enterócito das vilosidades do duodeno e jejuno proximal, derruba as células absortivas e a lactase e produz diarreia **osmótica**; *Shigella* invade a mucosa colônica e produz diarreia **inflamatória** com sangue, muco e tenesmo, sem tocar na lactase. Classificar pela consequência funcional, nunca pelo verbo.
+- 🔴 Com substâncias redutoras positivas nas fezes a via alérgica já está fechada: **não se dosa IgE**. A alternativa "intolerância à lactose / dosagem de IgE" é o distrator mais capcioso do tema justamente porque acerta o diagnóstico - o dado que fecha o diagnóstico é o mesmo que exclui o exame. Confirmada a intolerância, a conduta é dietética e nenhum exame adicional é necessário.
+- 🔴 A tríade da diarreia aguda com desidratação é **acidose metabólica + hiponatremia + hipocalemia**. O vômito citado no enunciado é a âncora que induz a marcar "alcalose": perda alta alcaliniza, perda baixa acidifica, e manda a perda que **domina em volume**. O par "alcalose + hipocalemia" pertence à estenose hipertrófica de piloro, não à gastroenterite.
+- 🔴 Soro glicosado 5% **não corrige desidratação**. Ele parece isotônico na bolsa, mas a glicose é metabolizada e sobra água livre: não expande o extracelular e ainda dilui o sódio. Déficit volêmico se repõe com soro fisiológico 0,9% ou Ringer lactato. E hiponatremia de 130 a 135 em hipovolêmico **não se corrige com sódio** - corrige-se com volume isotônico, e a natremia sobe junto.
+- 🔴 Deficiência de vitamina B12 aponta **íleo terminal** e afasta doença celíaca, que é doença do delgado proximal. Em jovem com diarreia crônica, VHS alto e perda ponderal, o exame que resolve é o que **visualiza a mucosa** (ileocolonoscopia com biópsia), não a sorologia de celíaca. E os distratores plantados (colecistectomia recente, ISRS, gatilhos lácteos) são todos excluídos pelo mesmo conjunto: nenhum deles produz consumo nem inflamação sistêmica.
+- 🔴 Diarreia com mais de 14 dias em criança que **melhorou clinicamente** e está ativa, corada e hidratada é intolerância transitória à lactose pós-infecciosa, e a conduta é reduzir a lactose - não colher coprocultura. Pedir exame por "ainda tem diarreia" é ler o sintoma residual em vez da trajetória: o agente já foi embora, a lactase é que não voltou.

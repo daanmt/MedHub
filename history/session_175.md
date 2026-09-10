@@ -106,3 +106,63 @@ Seis eixos densos + dois curtos, ancorados em `resumos/` (diagnostico do resumo 
 2. **Re-drill dos 12 cards nota 1-2** na abertura da proxima sessao de cards.
 3. **Alvo ~100 cards/dia (qui-sex-sab)** -- a fila natural entregou 76. Para chegar a 100 e preciso abrir o `--new-limit` (default 10) contra o pool de **647** nunca introduzidos. **Decisao do operador**, ligada a F87 (regua de "card bom").
 4. **F90** -- lapidar as duas linhas mortas do `revisar.md` (passo 4 "justificativa em 1 linha"; "Modo conversacional" com lote de 3/5/6). **Fila de engenharia**, nao esta janela.
+
+
+---
+
+## 8. Segundo ato -- 90 questoes registradas e 15 erros analisados (tarde)
+
+O usuario voltou com **quatro listas** feitas em 09/09 e nunca registradas. Ordem dura respeitada: `registrar_sessao_bulk` **antes** de qualquer analise, em todas.
+
+| lista | area | feitas | acertos | % |
+|---|---|---|---|---|
+| Diarreia (revisao) | Pediatria | 41 | 34 | 82,9 |
+| Urologia T I | Cirurgia | 20 | 17 | 85,0 |
+| Pneumonias Bact. T I | Pneumo | 16 | 13 | 81,2 |
+| Urologia T II | Cirurgia (`--acumular`) | 13 | 11 | 84,6 |
+| **total** | | **90** | **75** | **83,3** |
+
+Volume **7036 -> 7126**. Estava congelado desde 08/09. Todas carimbadas com data de estudo 09/09 e observacao de que o registro e de 10/09.
+
+**15 erros analisados, 4 elos que reincidem, 24 cards cunhados, 7 cortes por regenerabilidade.**
+
+### 8.1 O achado clinico do dia -- confirmado no banco, nao inferido
+
+🔴 **A prescricao da HPB e o output default quando aparece uma prostata.** O erro **#997** (Uro I Q1) tem `alternativa_marcada` = *"Prescrever alfa-agonista isolado ou associado a inibidor da 5-alfarredutase"*. O erro de Uro II Q2 tem *"Alfa-bloqueador associado a inibidor da 5-alfa-redutase"*. **Mesma prescricao, duas listas, duas perguntas diferentes, mesmo dia.**
+
+Os dois **nao** se colapsam, e a diferenca manda o remedio: em #997 a droga era certa para a doenca e errada para o **momento** (investigar antes de tratar); em Uro II Q2 e errada para o **paciente** (I-PSS 7 < 8) e para a **pergunta** (o enunciado declara que ele veio para rastreamento de cancer). Formulacao correta = "output default diante de uma prostata", **nao** "trata antes de investigar", que so cobre um dos casos.
+
+Em Uro II Q2 **os dois cortes ja estavam escritos no resumo dele** (linhas 96 e 108). E "sabia mas nao aplicou".
+
+### 8.2 Os outros elos
+
+- **Fato no contexto errado (1c) foi a assinatura do dia -- 5 ocorrencias, em tres escalas diferentes:** molecula (norfloxacina generalizada de "fluoroquinolona respiratoria"), framework decisorio (criterios de HPB aplicados ao CaP), e motivo da consulta (tratou HPB em consulta de rastreamento). Mais as duas de pancreatite da manha (a resposta de "TC precoce" reaplicada na pergunta da etiologia biliar).
+- **Reincidencia exata em 2 dias:** Q3 de Diarreia e o erro **#963** (07/09) verbatim. Ele corrigiu a 1a metade e **repetiu a 2a identica** -- escolha estavel, nao desatencao.
+- **Enunciado negativo (PAC Q3): fork aberto, nao fechado.** Marcar a alternativa A exige afirmar que ela e falsa; nao saber a vacina, sozinho, nao produz esse clique. Rota (i) erro de comando x rota (iii) promocao da Klebsiella. A distribuicao da turma pende para (i) -- A ficou com 7%, o balde de erro de leitura. **Pergunta ao usuario ficou pendente** (§9).
+- **Buracos de cobertura de resumo, nao falha de estudo:** 3 dos 7 erros de Diarreia (§7 sem uma linha sobre acido-base ou potassio) e a §5.10 inteira de PAC (zero cobertura de eosinofilias pulmonares no repo).
+
+### 8.3 Achados de mecanismo (F90-F92) -- ver `AUDITORIA_MEDHUB.md §6r/§6s`
+
+- **F92 (RESOLVIDO):** o `Urologia.md` ensinava, na secao Armadilhas, **verbatim a alternativa que ele marcou e errou**. Corolario de metodo adotado: **ao diagnosticar erro em tema com resumo, ler o que o resumo diz sobre a alternativa MARCADA**, nao so sobre a correta.
+- **F91 (ABERTO, ALTA):** `rag.search()` devolve `[]` com o motor offline; um subagente leu isso e escreveu fato falso num relatorio de evidencia.
+- **F90 (ABERTO):** gate `CONTRATO_REVOGADO` cego por inventario.
+
+## 9. Pendencias abertas por este segundo ato
+
+1. **Pergunta ao usuario para fechar o fork da PAC Q3:** *"quando voce marcou A, estava afirmando que o pneumococo NAO e o agente mais provavel naquele etilista diabetico -- ou estava marcando a que achou verdadeira?"* Se rota (iii), resgatar o card cortado sobre "fator de risco nao destrona o agente mais comum".
+2. **Valores laboratoriais da Uro II Q2** (eram imagem, nao transcritos). Se havia relacao PSA livre/total, o gabarito fica alcancavel pelo criterio do proprio resumo, sem depender do corte NAO-VERIFICAVEL.
+3. **`resumos/Pediatria/Imunizacoes.md` §4.6** diz "as indicacoes nao mudaram, so o produto" -- desatualizado pela NT 52/2026 (19 -> 21 itens, esquema novo, CRIE -> RIE). Subproduto da auditoria, nao achado desta lista.
+4. **Corte de sodio para salina hipertonica (120 x 125)** -- marcado como banca-dependente no resumo e no card, **nao auditado**.
+5. **Corte superior do rastreamento SBU (70 x 75)** -- marcado no `Urologia.md §2.6` como "a conferir", numero **nao sobrescrito**.
+
+## 10. Feedback do usuario sobre uso de subagents (correcao de processo)
+
+Ao final, veredito literal: *"achei, no entanto, que voce deu uma volta muito grande para entregar algo simples. sumonou subagents que sumonaram outros subagents, para checar uma informacao. como os blocos eram curtos, voce mesmo poderia ter checado, que seja via websearch."*
+
+**Custo medido que da o argumento:** 3 spawns, **~673k tokens e ~66 min** para 15 erros. O spawn de Urologia gastou ~25 min e ~238k tokens em **3 erros**, com cadeia de 2 niveis. E a delegacao **nao poupou a verificacao**: re-medi as afirmacoes load-bearing e **rejeitei duas** (os "772 cards" que eram 647; o "nao ha resumo indexado" que era falso).
+
+Memoria `feedback_subagent_unico_analise_questoes` reescrita: **ate ~8 erros o agente principal analisa sozinho**; verificacao de cutoff via WebSearch direto; subagente so acima disso e **um so**; nunca subagente que sumona subagente. 🔴 A regra vive so na memoria do harness -- **candidata a portador versionado** (bifurcacao 6.1 do handoff de engenharia).
+
+## 11. Handoff de engenharia
+
+O `/ai-eng` (N=78, `ai-eng-ff`) reabriu o canal antes do fecho pedindo todos os achados. Entregue em **`docs/HANDOFF-ENG-2026-09-10.md`** (blob `db82fc3`), com destilado no canal (D22): achados de subagent, delta desde 09-09 16:00, Tier 3/0/1 em **ZERO** (gate de janela de estudo, desvio conforme), F90/F91/F92, contagens re-medidas e **3 bifurcacoes** para ele ordenar. Zero autorizacao concedida a peer.

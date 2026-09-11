@@ -212,7 +212,16 @@ def _vocabulario_taxonomia(ipub_path: Path) -> dict[str, str]:
     return {_norm(a): a for a in areas.AREAS_VALIDAS}
 
 
-PENDENTES_VOCAB_PATH = _ROOT / "history" / "wa_vocab_pendentes.json"
+#: Nome do sink. O CAMINHO e derivado de `_HISTORY_DIR` **no ato da chamada**, nao
+#: aqui -- `_HISTORY_DIR` ja e a costura de isolamento que os testes deste modulo
+#: patcham (`tools/test_memory.py`), e amarrar o sink a ela dispensa um segundo
+#: ponto de isolamento. Foi exatamente o que faltou na 1a versao: o sink de
+#: PRODUCAO foi sobrescrito por dado de fixture (100 itens reais -> 1 `wa_dummy`).
+PENDENTES_VOCAB_NOME = "wa_vocab_pendentes.json"
+
+
+def _pendentes_vocab_path() -> Path:
+    return Path(_HISTORY_DIR) / PENDENTES_VOCAB_NOME
 
 
 def _gravar_pendentes_vocab(pendentes: dict, path: Path | str = None) -> int:
@@ -223,7 +232,7 @@ def _gravar_pendentes_vocab(pendentes: dict, path: Path | str = None) -> int:
     quantas vezes o sensor rodou, e **cai** quando um item é resolvido. Nunca levanta:
     falha ao gravar o sink não pode derrubar a consolidação.
     """
-    alvo = Path(path) if path else PENDENTES_VOCAB_PATH
+    alvo = Path(path) if path else _pendentes_vocab_path()
     try:
         alvo.parent.mkdir(parents=True, exist_ok=True)
         payload = {"gerado_em": datetime.now().isoformat(timespec="seconds"),

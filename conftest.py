@@ -33,11 +33,11 @@ def _event_log_isolado(tmp_path, monkeypatch):
     # F66 (s176): MESMA classe, writer novo. `reconciliar_weak_areas` grava o sink de
     # divida de vocabulario; `test_boot_verdadeiro` a chama com store SINTETICO e, sem
     # este isolamento, o sink de PRODUCAO era sobrescrito por dado de fixture (medido:
-    # 100 itens reais viraram 1 `wa_dummy`). Escrita nova em caminho global entra aqui.
+    # 100 itens reais viraram 1 `wa_dummy`). Isolamos `_HISTORY_DIR` -- a costura que o
+    # proprio modulo ja expoe e que `tools/test_memory.py` (script-style, fora do pytest)
+    # ja patchava: um seam so, valido nos DOIS harnesses. Escrita nova em caminho global entra aqui.
     try:
-        from pathlib import Path as _P
         import app.memory.manager as _mgr
-        monkeypatch.setattr(_mgr, "PENDENTES_VOCAB_PATH",
-                            _P(tmp_path) / "wa_vocab_pendentes.json")
+        monkeypatch.setattr(_mgr, "_HISTORY_DIR", tmp_path)
     except Exception:
         pass

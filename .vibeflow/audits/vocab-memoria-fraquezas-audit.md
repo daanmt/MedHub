@@ -80,10 +80,15 @@ exec dinamico ou segredo.
 O sink gravava no **caminho de producao** e `tools/test_boot_verdadeiro.py` chama
 `reconciliar_weak_areas` com store **sintetico**: rodar a suite sobrescreveu os **100 itens reais
 por 1 `wa_dummy`**. So apareceu porque conferi o numero do painel depois da suite, e ele dizia 1.
-Corrigido no padrao que o repo **ja tinha** para o `event_log`: o `conftest` autouse redireciona
-`PENDENTES_VOCAB_PATH` para `tmp_path` em todo teste. Estado real restaurado e re-medido (100).
-Licao registrada no comentario do proprio `conftest`: **escrita nova em caminho global entra la**
--- a lacuna era do isolamento, nao do sink.
+A **primeira** correcao (um `PENDENTES_VOCAB_PATH` monkeypatchado no `conftest`) **nao bastou** --
+e o proprio painel denunciou, ainda dizendo `1` depois da suite. Motivo: `tools/test_memory.py` e
+**script-style, roda por subprocess** e nao ve fixture de pytest nenhuma. A correcao que vale nos
+DOIS harnesses foi derivar o caminho do sink de **`_HISTORY_DIR` no ato da chamada** -- a costura
+de isolamento que o modulo **ja expunha** e que aquele teste **ja patchava**. Um seam so, em vez de
+dois. Estado real restaurado e re-medido: **100**, agora **estavel apos a suite completa**.
+Licao dupla, registrada no comentario do `conftest`: (1) escrita nova em caminho global precisa de
+isolamento; (2) **isolamento que so existe no pytest nao cobre o harness script-style** -- prenda-o
+na costura que o modulo ja tem.
 
 ## Fronteiras DECLARADAS
 

@@ -3,6 +3,10 @@ name: "source-command-revisar"
 description: "Conduz uma sessão conversacional de revisão de flashcards FSRS — puxa a fila vencida via tools/fsrs_queue.py, apresenta card a card e grava a avaliação 1-4. Funciona via remote-control (celular)."
 ---
 
+<!-- 🔴 ARQUIVO GERADO por tools/sync_skills.py -- NAO EDITE AQUI.
+     Edite `.claude/commands/revisar.md` e rode `python tools/sync_skills.py`.
+     Qualquer edicao feita neste arquivo e SOBRESCRITA no proximo sync. -->
+
 # source-command-revisar
 
 Use this skill when the user asks to run the migrated source command `revisar`.

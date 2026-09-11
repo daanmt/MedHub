@@ -3,6 +3,10 @@ name: "source-command-importar-planilha"
 description: "Ingere o volume de questões das planilhas do Google (via Google Drive MCP) para sessoes_bulk, substituindo a extração manual de xlsx. O agente lê e mapeia; tools/importar_sessoes.py persiste."
 ---
 
+<!-- 🔴 ARQUIVO GERADO por tools/sync_skills.py -- NAO EDITE AQUI.
+     Edite `.claude/commands/importar-planilha.md` e rode `python tools/sync_skills.py`.
+     Qualquer edicao feita neste arquivo e SOBRESCRITA no proximo sync. -->
+
 # source-command-importar-planilha
 
 Use this skill when the user asks to run the migrated source command `importar-planilha`.

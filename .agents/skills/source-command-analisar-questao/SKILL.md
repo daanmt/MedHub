@@ -3,6 +3,10 @@ name: "source-command-analisar-questao"
 description: "Protocolo completo de análise de questão errada: habilidades sequenciais, diagnóstico do elo quebrado e inserção no ipub.db via insert_questao.py."
 ---
 
+<!-- 🔴 ARQUIVO GERADO por tools/sync_skills.py -- NAO EDITE AQUI.
+     Edite `.claude/commands/analisar-questao.md` e rode `python tools/sync_skills.py`.
+     Qualquer edicao feita neste arquivo e SOBRESCRITA no proximo sync. -->
+
 # source-command-analisar-questao
 
 Use this skill when the user asks to run the migrated source command `analisar-questao`.

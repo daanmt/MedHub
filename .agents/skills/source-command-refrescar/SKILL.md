@@ -3,6 +3,10 @@ name: "source-command-refrescar"
 description: "[DEPRECADO] Fundido em /revisar. Desde a s170 o re-ensino de tema dormente acontece na Revisão Direcionada de FECHAMENTO da sessão de cards, não antes do drill. Stub de redirecionamento."
 ---
 
+<!-- 🔴 ARQUIVO GERADO por tools/sync_skills.py -- NAO EDITE AQUI.
+     Edite `.claude/commands/refrescar.md` e rode `python tools/sync_skills.py`.
+     Qualquer edicao feita neste arquivo e SOBRESCRITA no proximo sync. -->
+
 # source-command-refrescar
 
 Use this skill when the user asks to run the migrated source command `refrescar`.

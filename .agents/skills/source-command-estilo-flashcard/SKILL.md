@@ -3,6 +3,10 @@ name: "source-command-estilo-flashcard"
 description: "Contrato de autoria de flashcards do MedHub — os 6 princípios para cunhar cards ancorados no erro metacognitivo, mais o teste de regenerabilidade que tria os candidatos antes de persistir. Consultar antes de gerar, triar ou regenerar qualquer card."
 ---
 
+<!-- 🔴 ARQUIVO GERADO por tools/sync_skills.py -- NAO EDITE AQUI.
+     Edite `.claude/commands/estilo-flashcard.md` e rode `python tools/sync_skills.py`.
+     Qualquer edicao feita neste arquivo e SOBRESCRITA no proximo sync. -->
+
 # source-command-estilo-flashcard
 
 Use this skill when the user asks to run the migrated source command `estilo-flashcard`.

@@ -3,6 +3,10 @@ name: "source-command-auditar-resumos"
 description: "Linter de qualidade para resumos em resumos/. Verifica conformidade com o padrão MedHub: seção Armadilhas de Prova, ausência de tabelas, presença de marcadores visuais."
 ---
 
+<!-- 🔴 ARQUIVO GERADO por tools/sync_skills.py -- NAO EDITE AQUI.
+     Edite `.claude/commands/auditar-resumos.md` e rode `python tools/sync_skills.py`.
+     Qualquer edicao feita neste arquivo e SOBRESCRITA no proximo sync. -->
+
 # source-command-auditar-resumos
 
 Use this skill when the user asks to run the migrated source command `auditar-resumos`.

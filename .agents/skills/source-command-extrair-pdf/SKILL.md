@@ -3,6 +3,10 @@ name: "source-command-extrair-pdf"
 description: "Extrai texto de PDFs para arquivos .txt temporários. Usar no início do workflow criar-resumo. Limpa apenas os .txt temporários — os PDFs-fonte do EMED são RETIDOS (política de retenção, s086)."
 ---
 
+<!-- 🔴 ARQUIVO GERADO por tools/sync_skills.py -- NAO EDITE AQUI.
+     Edite `.claude/commands/extrair-pdf.md` e rode `python tools/sync_skills.py`.
+     Qualquer edicao feita neste arquivo e SOBRESCRITA no proximo sync. -->
+
 # source-command-extrair-pdf
 
 Use this skill when the user asks to run the migrated source command `extrair-pdf`.

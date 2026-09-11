@@ -41,14 +41,28 @@ def _norm_body(body):
     return body.strip("\n") + "\n"
 
 
+#: F42 (s176): banner de ARTEFATO GERADO. O espelho e o arquivo que o agente
+#: encontra PRIMEIRO -- e o que o `grep` de skill retorna e o que a listagem
+#: expoe -- e nada nele dizia que editar ali e trabalho perdido. Na s159 uma
+#: edicao real foi sobrescrita, o sync reportou sucesso, o `git status` ficou
+#: limpo, e o ledger chegou a registrar como entregue algo que nao existia mais
+#: em disco. O banner e a metade barata do conserto; a outra e o aviso de mtime.
+_BANNER = (
+    "<!-- 🔴 ARQUIVO GERADO por tools/sync_skills.py -- NAO EDITE AQUI.\n"
+    "     Edite `.claude/commands/{slug}.md` e rode `python tools/sync_skills.py`.\n"
+    "     Qualquer edicao feita neste arquivo e SOBRESCRITA no proximo sync. -->\n"
+)
+
+
 def _render_skill(slug, description_line, body):
-    """Monta o SKILL.md: frontmatter agent-skill + wrapper + corpo verbatim."""
+    """Monta o SKILL.md: frontmatter agent-skill + banner + wrapper + corpo verbatim."""
     return (
         "---\n"
         f'name: "source-command-{slug}"\n'
         f"description: {description_line}\n"
         "---\n\n"
-        f"# source-command-{slug}\n\n"
+        + _BANNER.format(slug=slug) +
+        f"\n# source-command-{slug}\n\n"
         f"Use this skill when the user asks to run the migrated source command `{slug}`.\n\n"
         "## Command Template\n\n"
         f"{body}"
@@ -91,14 +105,49 @@ def check():
     return drift
 
 
+def _edicao_perdida(slug, skill_path, antigo, body):
+    """F42: o espelho tem edição à mão que este sync vai destruir?
+
+    Critério CONJUNTO — não basta mtime (muda por `git checkout`) nem basta
+    divergência (é o caso normal de "a fonte mudou"). Acusa quando o corpo do
+    espelho diverge da fonte **E** o espelho é mais NOVO que o command: essa é a
+    assinatura de "alguém editou aqui depois". Devolve a 1ª linha divergente —
+    é o que faz o autor reconhecer o próprio texto antes de perdê-lo.
+    """
+    cmd_path = COMMANDS_DIR / f"{slug}.md"
+    try:
+        if skill_path.stat().st_mtime <= cmd_path.stat().st_mtime:
+            return None
+    except OSError:
+        return None
+    atual = _mirror_body(antigo or "")
+    if atual is None or atual.strip() == body.strip():
+        return None
+    linhas_esp = atual.strip().splitlines()
+    linhas_src = body.strip().splitlines()
+    for i, linha in enumerate(linhas_esp):
+        if i >= len(linhas_src) or linhas_src[i] != linha:
+            return linha.strip()[:110] or "(linha em branco)"
+    return "(o espelho tem linhas a mais no fim)"
+
+
 def generate():
     """(Re)escreve todos os espelhos. Retorna nº de arquivos alterados."""
     changed = 0
     for slug in _commands():
-        skill_path, content, _body = _expected(slug)
+        skill_path, content, body = _expected(slug)
         skill_path.parent.mkdir(parents=True, exist_ok=True)
         antigo = skill_path.read_text(encoding="utf-8") if skill_path.exists() else None
         if antigo != content:
+            # F42: avisa ANTES de sobrescrever — depois o rastro some (o disco volta ao
+            # gerado e o `git status` fica limpo, indistinguível de um sync inocente).
+            perdida = _edicao_perdida(slug, skill_path, antigo, body)
+            if perdida:
+                print(f"[WARN] ESPELHO_EDITADO_A_MAO: source-command-{slug}/SKILL.md é mais "
+                      f"NOVO que .claude/commands/{slug}.md e diverge dele — a edição feita no "
+                      f"espelho vai ser PERDIDA agora. 1a linha divergente: {perdida!r}. "
+                      f"O canônico é `.claude/commands/{slug}.md`: leve a edição para lá e rode "
+                      f"o sync de novo (F42).", file=sys.stderr)
             skill_path.write_text(content, encoding="utf-8", newline="\n")
             changed += 1
             print(f"  ~ source-command-{slug}/SKILL.md")
@@ -110,8 +159,10 @@ def main():
         drift = check()
         if drift:
             for slug in drift:
-                print(f"PARITY_DRIFT: {slug} "
-                      f"(edite .claude/commands/{slug}.md e rode `python tools/sync_skills.py`)")
+                print(f"PARITY_DRIFT: {slug} -- o espelho .agents/skills/source-command-"
+                      f"{slug}/SKILL.md diverge do CANONICO. O canonico e "
+                      f".claude/commands/{slug}.md: edite LA -- editar o espelho e trabalho "
+                      f"PERDIDO (F42) -- e rode `python tools/sync_skills.py`.")
             return 1
         print("Paridade command<->skill: OK (todos os espelhos em sync).")
         return 0

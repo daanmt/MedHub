@@ -3,6 +3,10 @@ name: "source-command-aula-base"
 description: "Contrato de RENDERIZAÇÃO da aula-base — toda aula-base entregue sai como Artifact HTML com design de verdade (skill frontend-design), não Markdown liso. Consultar antes de montar qualquer aula-base."
 ---
 
+<!-- 🔴 ARQUIVO GERADO por tools/sync_skills.py -- NAO EDITE AQUI.
+     Edite `.claude/commands/aula-base.md` e rode `python tools/sync_skills.py`.
+     Qualquer edicao feita neste arquivo e SOBRESCRITA no proximo sync. -->
+
 # source-command-aula-base
 
 Use this skill when the user asks to run the migrated source command `aula-base`.

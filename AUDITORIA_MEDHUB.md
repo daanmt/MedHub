@@ -922,7 +922,7 @@ relates_to: [AGENTE, ESTADO, HANDOFF]
 
 ## 3m. Sessao de engenharia s159 (2026-08-30) -- achado F42
 
-### F42 -- Editar o espelho da skill e silenciosamente revertido pelo `sync_skills` -- **BAIXA/MEDIA** -- **ABERTO**
+### F42 -- Editar o espelho da skill e silenciosamente revertido pelo `sync_skills` -- **BAIXA/MEDIA** -- **RESOLVIDO (s176, item 1.4)**
 - **Evidencia (s159, ao vivo):** para entregar a direcao 3 do F38 editei
   `.agents/skills/source-command-analisar-questao/SKILL.md`, rodei
   `python tools/sync_skills.py` e o texto **desapareceu**. A fonte de verdade e
@@ -943,6 +943,23 @@ relates_to: [AGENTE, ESTADO, HANDOFF]
   avisar quando o espelho que ele vai sobrescrever tem mtime mais novo que a
   fonte ("voce editou o espelho; a edicao sera perdida"); (c) avaliar tornar os
   espelhos read-only. (a)+(b) sao baratos e resolvem o caso observado.
+- ✅ **Corrigido em 10/09/2026 (s176, item 1.4) -- (a)+(b), como o proprio achado previu.**
+  **(a)** todo espelho nasce com banner `🔴 ARQUIVO GERADO ... NAO EDITE AQUI`, **nomeando o
+  canonico daquele slug** (nao um generico) -- o espelho e o arquivo que o agente encontra
+  primeiro, e agora ele se declara. **(b)** o `generate()` avisa **ANTES de sobrescrever**, com
+  `[WARN] ESPELHO_EDITADO_A_MAO` em stderr, e devolve **a 1a linha divergente** -- que e o que faz
+  o autor **reconhecer o proprio texto** antes de perde-lo. Depois da escrita nao ha o que
+  reconhecer: o disco volta ao gerado e o `git status` fica limpo.
+- 🔴 **O criterio e CONJUNTO, e isso e o desenho, nao detalhe:** mtime sozinho daria ruido a cada
+  `git checkout` (mexe na data, nao no conteudo) e divergencia sozinha e o **fluxo normal**
+  ("a fonte mudou"). So a conjuncao *espelho mais NOVO que a fonte* **E** *corpo divergente* e a
+  assinatura de "alguem editou aqui depois". Os dois negativos tem teste proprio.
+- A mensagem de `PARITY_DRIFT` (a que o `auto_check` mostra) passou a dizer **onde editar** e que
+  editar o espelho e trabalho perdido -- era a outra metade da direcao.
+- ⚰️ **(c) espelho read-only: NAO feito, e deliberado.** Os espelhos sao **commitados** (o Codex os
+  consome) e tornar arquivo versionado read-only briga com `git checkout`/`sync` em toda maquina --
+  o custo recai sobre o fluxo correto para punir o incorreto. (a)+(b) cobrem o caso observado e
+  **falam a lingua do autor no momento do erro**; (c) fica registrado como avaliado e descartado.
 
 ---
 

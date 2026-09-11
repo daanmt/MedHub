@@ -39,5 +39,12 @@ def _event_log_isolado(tmp_path, monkeypatch):
     try:
         import app.memory.manager as _mgr
         monkeypatch.setattr(_mgr, "_HISTORY_DIR", tmp_path)
+        # F96 (s177): `_ERROR_LOG` e um SEGUNDO global derivado de `_ROOT`, fora da
+        # costura acima. O caminho de SUCESSO do sink ficou isolado no 1.3 e o de FALHA
+        # nao: `log_error` seguia escrevendo no `history/memory_errors.log` real, e o
+        # teste que forca a falha de proposito somava 1 linha por rodada (14 medidas
+        # entre 10 e 11/09/2026). O painel do `ledger_self` conta as linhas desse
+        # arquivo -- a suite inflava o numero que o operador le.
+        monkeypatch.setattr(_mgr, "_ERROR_LOG", tmp_path / "memory_errors.log")
     except Exception:
         pass

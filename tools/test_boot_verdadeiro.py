@@ -134,11 +134,25 @@ def test_fora_do_vocabulario_nao_dropa(tmp_path, monkeypatch):
 
 # ---- F46: paths por __file__ -----------------------------------------------------------
 
+#: Valor de `mgr._ERROR_LOG` no ATO DO IMPORT -- antes de a fixture autouse do conftest
+#: (isolamento F96) redirecionar o global para tmp_path. E este valor que o invariante
+#: F46 mede: o path foi calculado a partir de `__file__` do modulo, nao do cwd.
+_ERROR_LOG_NO_IMPORT = mgr._ERROR_LOG
+
 
 def test_paths_ancorados_no_repo():
+    """F46: o path nasce de `__file__`, nunca do cwd.
+
+    🔴 O oraculo le `_ERROR_LOG_NO_IMPORT`, capturado no topo deste modulo (importacao,
+    antes de qualquer fixture), e nao `mgr._ERROR_LOG` ao vivo: desde o F96 (s177) a
+    fixture autouse do `conftest.py` isola esse global em `tmp_path` durante a suite --
+    caso contrario o teste que forca a falha do sink escrevia no
+    `history/memory_errors.log` de PRODUCAO a cada rodada. O invariante continua sendo
+    o mesmo (path ancorado no repo no ato do import); muda so de onde se le o valor.
+    """
     root = Path(__file__).resolve().parent.parent
     assert mgr._IPUB_PATH == root / "ipub.db"
-    assert mgr._ERROR_LOG == root / "history" / "memory_errors.log"
+    assert _ERROR_LOG_NO_IMPORT == root / "history" / "memory_errors.log"
     import inspect as py_inspect
     from app.memory import inspect as mem_inspect
     assert Path(mem_inspect._DEFAULT_DB).is_absolute()

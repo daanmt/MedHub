@@ -19,6 +19,7 @@ import json
 import os
 import sys
 import tempfile
+from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 try:
@@ -141,6 +142,29 @@ def test_sink_nunca_derruba_a_consolidacao():
     """Falha ao gravar o sink e registrada, nunca propagada."""
     assert manager._gravar_pendentes_vocab({"k": {}}, path=os.path.join(
         "Z:", "caminho", "que", "nao", "existe", "p.json")) == 1
+
+
+def test_falha_do_sink_nao_suja_o_log_de_PRODUCAO():
+    """F96 (s177): o isolamento do 1.3 cobriu o sucesso do sink e deixou a FALHA passar.
+
+    `_gravar_pendentes_vocab` grava em `_HISTORY_DIR` (isolado no conftest), mas quando
+    falha chama `log_error`, que escreve em `_ERROR_LOG` -- um SEGUNDO global derivado de
+    `_ROOT`, fora da costura. O teste acima (`test_sink_nunca_derruba_a_consolidacao`)
+    forca a falha de proposito e, sem este isolamento, escrevia 1 linha no
+    `history/memory_errors.log` REAL a cada rodada da suite -- 14 linhas medidas entre
+    10 e 11/09/2026. A linha "memory_errors.log: N" do painel conta esse arquivo: a
+    propria suite inflava o numero que o operador le.
+    """
+    real = Path(ROOT) / "history" / "memory_errors.log"
+    antes = real.stat().st_size if real.exists() else -1
+    manager._gravar_pendentes_vocab({"k": {}}, path=os.path.join(
+        "Z:", "caminho", "que", "nao", "existe", "p.json"))
+    depois = real.stat().st_size if real.exists() else -1
+    assert depois == antes, (
+        "a suite escreveu no history/memory_errors.log de PRODUCAO: "
+        f"{antes} -> {depois} bytes. `_ERROR_LOG` tem que estar isolado junto com "
+        "`_HISTORY_DIR` (conftest.py, fixture _event_log_isolado)."
+    )
 
 
 def test_painel_cita_o_sink_e_rotula_o_log_como_falha():

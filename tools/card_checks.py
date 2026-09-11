@@ -91,6 +91,44 @@ _RE_CONDICIONAL = re.compile(
     r"|\bse\s+houvesse\b|\bcaso\s+houvesse\b", re.I)
 
 
+# F79b (s176, item 1.1): DEIXIS sobre contexto VAZIO -- a pergunta faz referencia
+# anaforica a um antecedente que a cunhagem descartou. Card literalmente
+# inrespondivel como posto (#367 no achado original da s169).
+#
+# 🔴 Provenienca do desenho, medida em 10/09/2026 sobre os 1419 cards ativos:
+#   - candidato AMPLO (`d[oa]|n[oa]` + substantivo clinico) -> **26 achados, todos
+#     falsos**: "do paciente asmatico", "na crianca", "no lactente" sao CLASSE
+#     generica, nao referencia a uma vinheta. Descartado.
+#   - candidato ESTREITO (DEMONSTRATIVO + substantivo de caso, ou anafora
+#     explicita) -> **1 achado**, e ainda falso (#620, "confirmacao do caso" =
+#     caso-indice epidemiologico). Dai a guarda `_RE_CASO_EPIDEMIOLOGICO`.
+#   - versao final -> **PASSIVO 0 e ZERO falso-positivo** em 1419 cards, com
+#     **95 cards de controle** que usam a mesma deixis e TEM vinheta (legitimos,
+#     corretamente fora).
+# E por isso que este predicado nasce BLOCK e nao WARN: a condicao da politica
+# warning-first ("vira BLOCK quando a base zerar") ja esta satisfeita -- a base
+# esta zerada e medida. O gate aqui e PROSPECTIVO: impede o defeito de reentrar
+# pela porta do writer, que foi exatamente como as areas fantasma voltaram (F89).
+CORTE_CONTEXTO_MINIMO = 15   # chars; abaixo disso nao ha vinheta que sustente deixis
+
+_RE_DEIXIS_ANTECEDENTE = re.compile(
+    r"\b(?:ess[ea]|est[ea]|aquel[ea]|dess[ea]|dest[ea]|daquel[ea]|ness[ea]|nest[ea]|naquel[ea])\s+"
+    r"(?:caso|paciente|quadro|cen[aá]rio|vinheta|gestante|crian[cç]a|lactente|homem|mulher|"
+    r"idos[oa]|rec[eé]m[- ]nascido|neonato|conduta|achado|exame|morte|[oó]bito|m[eé]dico|les[aã]o)\b",
+    re.I)
+_RE_ANAFORA_EXPLICITA = re.compile(
+    r"\b(?:descrit[oa]s?|apresentad[oa]s?|mencionad[oa]s?|citad[oa]s?|relatad[oa]s?)\s+"
+    r"(?:acima|anteriormente|no\s+caso|na\s+vinheta)\b"
+    r"|\bd[oa]\s+caso\s+(?:acima|descrito|apresentado|em\s+quest[aã]o)\b"
+    r"|\b[dn]a\s+vinheta\b|\bacima\s+descrit", re.I)
+# "caso" EPIDEMIOLOGICO (caso-indice, notificacao, bloqueio vacinal) nao e a
+# vinheta -- e o unico falso-positivo que a medicao encontrou (#620).
+_RE_CASO_EPIDEMIOLOGICO = re.compile(
+    r"\b(?:confirma[cç][aã]o|notifica[cç][aã]o|investiga[cç][aã]o|defini[cç][aã]o|"
+    r"encerramento|bloqueio)\s+d[oe]\s+caso\b"
+    r"|\bcaso\s+(?:[ií]ndice|suspeito|confirmado|novo)\b", re.I)
+
+
 def _norm_tokens(texto):
     """Tokens normalizados (casefold, sem acento, sem pontuação), EM ORDEM."""
     s = unicodedata.normalize("NFKD", texto or "")
@@ -307,6 +345,34 @@ PREDICADOS_VERIFICAVEIS = {
 }
 
 
+def checar_deixis_sem_contexto(card):
+    """F79b: a pergunta aponta para um antecedente que o card nao tem. BLOCK.
+
+    Dispara so na CONJUNCAO: `frente_pergunta` com deixis de antecedente (ou
+    anafora explicita) **E** `frente_contexto` vazio/abaixo de
+    `CORTE_CONTEXTO_MINIMO`. Com vinheta, a mesma deixis e legitima -- sao 95
+    cards do corpus, e nenhum deles e achado.
+
+    Achado do USUARIO no drill da s169, nao do harness: o card pedia "que
+    elementos DO CASO..." e nao havia caso. E a 3a vez da familia (F79/F79b/F81)
+    em que um gate existe e nao cobre o caso para o qual foi criado -- aqui o
+    `card_self_sufficiency` procurava auto-suficiencia por outros criterios e
+    nunca cruzava deixis com contexto vazio.
+    """
+    pergunta = (card.get("frente_pergunta") or "").strip()
+    contexto = (card.get("frente_contexto") or "").strip()
+    if not pergunta or len(contexto) >= CORTE_CONTEXTO_MINIMO:
+        return None
+    if _RE_CASO_EPIDEMIOLOGICO.search(pergunta):
+        return None                      # caso-indice epidemiologico, nao vinheta
+    m = _RE_DEIXIS_ANTECEDENTE.search(pergunta) or _RE_ANAFORA_EXPLICITA.search(pergunta)
+    if not m:
+        return None
+    return (f"deixis sem contexto: a pergunta refere '{m.group(0).strip()}' e o card nao "
+            f"tem vinheta (frente_contexto com {len(contexto)} chars). Ou a vinheta entra, "
+            f"ou a pergunta perde a referencia anaforica -- como posta, e inrespondivel a frio")
+
+
 def validar_card(card, contexto=None):
     """Valida UM card. Retorna {'erros': [...], 'avisos': [...]}.
 
@@ -337,6 +403,12 @@ def validar_card(card, contexto=None):
     a = checar_contexto_artefato(card)
     if a:
         avisos.append(a)
+    # F79b (s176): nasce BLOCK porque o passivo medido e ZERO (1419 cards ativos,
+    # 0 falso-positivo, 95 controles com vinheta corretamente fora) -- a condicao
+    # da politica warning-first ja esta satisfeita. Gate PROSPECTIVO.
+    d = checar_deixis_sem_contexto(card)
+    if d:
+        erros.append(d)
     # F81/B1 (s176): alinhamento interno da FRENTE. Os tres nascem WARN
     # (warning-first, AGENTE.md secao 6) -- viram BLOCK quando o passivo zerar.
     for predicado in (checar_contexto_redundante,

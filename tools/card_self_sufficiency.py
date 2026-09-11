@@ -74,6 +74,19 @@ PADROES = (
     ("pct-fake", RE_PCT_FAKE, "verso"),
 )
 
+# F79b (s176): o 4o anti-padrao NAO cabe em regex sobre texto concatenado -- ele
+# e uma CONJUNCAO (deixis na pergunta E contexto vazio), e o `_texto(front)` junta
+# contexto+pergunta, apagando justamente a distincao. Entra como PREDICADO, e a
+# implementacao e a de `card_checks` -- a biblioteca UNICA. Copiar a regex para ca
+# criaria a segunda fonte, que e o defeito que o F89 acabou de matar.
+try:
+    sys.path.insert(0, str(Path(__file__).parent))
+    from card_checks import checar_deixis_sem_contexto as _deixis_sem_contexto
+except Exception:                          # harness leve: sem a lib, os 3 regex seguem
+    _deixis_sem_contexto = None
+
+PREDICADOS = (("deixis-sem-contexto", _deixis_sem_contexto),)
+
 
 def _texto(card, campo):
     """Concatena os campos do front ou do verso do card. Defensivo a None."""
@@ -135,6 +148,14 @@ def run_checks(cards=None, db_path=None):
         for padrao, regex, campo in PADROES:
             try:
                 if regex.search(_texto(card, campo)):
+                    achados.append(_achado(card, padrao))
+            except Exception:
+                continue
+        for padrao, fn in PREDICADOS:      # F79b: conjuncao, nao regex de texto
+            if fn is None:
+                continue
+            try:
+                if fn(card):
                     achados.append(_achado(card, padrao))
             except Exception:
                 continue

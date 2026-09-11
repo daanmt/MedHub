@@ -236,6 +236,28 @@ Persistir via `insert_questao.py` (go-forward) ou via o caminho de UPDATE/`--car
 trabalho humano. Gate verde aqui não significa frente alinhada; significa que os três padrões
 nomeados não aparecem.
 
+### 🔴 Dêixis sem contexto — o 4º defeito, e o único que é **BLOCK** (F79b, s176)
+
+A pergunta aponta para um antecedente — *"neste paciente"*, *"esse médico"*, *"do caso acima"*,
+*"na vinheta"* — e **não existe vinheta**: `frente_contexto` está vazio. O card é literalmente
+**inrespondível a frio**, e nenhuma dose de conhecimento o salva. Foi assim que o usuário achou o
+`#367` no drill da s169 (*"que elementos DO CASO... classificam ESSA morte como suspeita?"*, com
+contexto vazio) — e o check de auto-suficiência tinha rodado e não o pegou.
+
+*Ao cunhar:* **ou a vinheta entra, ou a pergunta perde a referência anafórica.** "Qual a conduta
+neste paciente?" sem vinheta vira "Qual a conduta na *[condição]*?".
+
+🔴 **Este nasce BLOCK, não WARN** — a escrita é **recusada**. A regra warning-first diz "vira BLOCK
+quando a base zerar", e a base **está** zerada e medida: **passivo 0, falso-positivo 0 em 1419
+cards ativos**, com **95 cards de controle** que usam a mesma dêixis **e têm vinheta** (legítimos,
+corretamente fora). O gate aqui é **prospectivo**: impede o defeito de reentrar pela porta do
+writer — que foi exatamente como as áreas fantasma voltaram (F89).
+
+⚠️ **Dêixis é demonstrativo, não classe.** *"do paciente asmático"*, *"na criança"*, *"no
+lactente"* são **categoria clínica**, não referência a um caso — o candidato amplo do predicado
+pegava 26 cards assim, todos falsos. E *"confirmação **do caso**"* é caso-índice epidemiológico,
+não vinheta.
+
 ---
 
 ## Fila de reforja — `tools/reforja.py` (B2, s176)

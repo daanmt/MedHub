@@ -1493,12 +1493,39 @@ Sensores existentes (`doc_drift.py`, `sync_skills --check`) reportavam 0 achados
 - 🔴 **Nao corrigir retroativamente sem decisao explicita do usuario:** reescrever timestamps historicos e operacao destrutiva sobre SSOT (AGENTE §1.1) e distorceria o revlog que o FSRS usa para calibrar. O remedio e go-forward.
 - **Fechamento (s174, 2026-09-09; GO do `/ai-eng` com zona canonica = LOCAL, revertendo a ALTERA "UTC no db" diante da evidencia de que o nucleo FSRS grava local por construcao):** relogio unico `db.agora()/carimbo()/hoje()`; 4 writers (nao 3: `review_log.reviewed_at` tinha o mesmo defeito) passam o carimbo explicito; `tools/test_fuso_unico.py` congela o instante nos 4, prova o leitor `realizado_do_dia` e varre `tools/`+`app/` -- writer novo que caia no DEFAULT falha nomeando o arquivo. **Commit-fronteira:** o commit deste hotfix (s174, `git log --grep F80`); linhas anteriores das 3 colunas seguem em UTC (shift constante -3h, Brasil sem horario de verao desde 2019). **Backfill = item separado**, dry-run + COUNT-ASSERT contando linhas que mudam de DIA, gatilho do operador. **Sub-achado aberto (F80b):** `get_cards_by_bucket` compara `fc.due` (local) com `datetime('now', '-48 hours')` (UTC) na janela de erro fresco -- 3h de erro em 48h; nao tocado (uma chamada, um bug).
 
-### F79b -- `card_self_sufficiency.py` nao pega pergunta com DEIXIS sobre contexto vazio -- **MEDIA** -- **ABERTO**
+### F79b -- `card_self_sufficiency.py` nao pega pergunta com DEIXIS sobre contexto vazio -- **MEDIA** -- **RESOLVIDO (s176, item 1.1 -- abertura do Tier 1)**
 - **Evidencia (s169):** o card **#367** tem `frente_contexto = ''` e pergunta *"Que elementos **do caso** (historico do paciente e circunstancia do achado) classificam **essa** morte como suspeita...?"*. O caso nao existe no card -- a pergunta e literalmente inrespondivel como posta, e o usuario a sinalizou no drill ("reforja"). Rodei `card_self_sufficiency.py --json`: 10 achados no banco inteiro, e **367 nao esta entre eles**.
 - **O buraco:** o check procura auto-suficiencia por outros criterios, mas nao cruza **dexis** (`do caso`, `essa`, `esse paciente`, `nesse cenario`, `descrito acima`) com **contexto vazio ou minimo**. E justamente a combinacao que produz card impossivel: a pergunta faz referencia anaforica a um antecedente que foi descartado na cunhagem.
 - **Familia:** e o mesmo padrao do **F79** -- gate existe, gate nao cobre o caso que ele foi criado para cobrir. Dois checkers cegos descobertos na mesma sessao, os dois por leitura humana e nao por gate.
 - **Remedio (S):** predicado novo em `tools/card_checks.py` (a biblioteca UNICA de predicados de qualidade) -- `frente_pergunta` casa regex de dexis **E** `frente_contexto` vazio/< N caracteres -> achado. Nasce WARN, como o check 6 do F79.
 - **Remedio (M):** varredura do banco com o predicado novo para dimensionar o passivo antes de decidir promocao a BLOCK.
+- ✅ **Corrigido em 10/09/2026 (s176, item 1.1).** `checar_deixis_sem_contexto` em
+  `tools/card_checks.py` (a biblioteca UNICA), disparando **so na CONJUNCAO**: pergunta com
+  referencia a antecedente **E** `frente_contexto` abaixo de `CORTE_CONTEXTO_MINIMO` (15). O
+  `card_self_sufficiency.py` **importa o mesmo predicado** em vez de copiar a regex -- copiar
+  criaria a 2a fonte, que e o defeito que o F89 acabou de matar.
+- 🔬 **A varredura (remedio M) foi feita, e ela REVERTEU o remedio S.** O achado dizia "nasce
+  WARN"; a medicao diz **BLOCK**, e a politica warning-first concorda: *"vira BLOCK quando a base
+  zerar"* -- a base **esta** zerada. Tres candidatos sobre os **1419 cards ativos**:
+  **amplo** (`d[oa]|n[oa]` + substantivo clinico) -> **26 achados, TODOS falsos** (*"do paciente
+  asmatico"*, *"na crianca"*, *"no lactente"* sao CLASSE clinica, nao referencia a vinheta);
+  **estreito** (demonstrativo + substantivo de caso, ou anafora explicita) -> **1**, ainda falso
+  (**#620**, *"confirmacao do caso"* = caso-INDICE epidemiologico); **final** (estreito + guarda
+  epidemiologica) -> **passivo 0, falso-positivo 0**, com **95 cards de controle** que usam a
+  mesma deixis E tem vinheta, corretamente fora. Os falsos-positivos medidos viraram **fixture
+  negativa** -- se o predicado alargar, a suite acusa antes do usuario.
+- 🔴 **O fixture da s169 NAO reproduz mais, e isso e dado.** O **#367** foi **reforjado**: hoje tem
+  vinheta completa (*"Medico de familia com vinculo longitudinal e chamado para atestar o obito..."*)
+  e outra pergunta. O achado descrevia um card que ja nao existe nessa forma -- o texto original
+  virou **fixture sintetico**, com a proveniencia escrita. Fixture que cicatriza nao revoga a
+  CLASSE: o gate e **prospectivo**, e impedir a reentrada pela porta do writer e exatamente o que
+  faltou no F89.
+- **Ponto cego DECLARADO:** o predicado mede **ausencia de vinheta**, nao **suficiencia** dela --
+  vinheta de 20 chars que nao carrega o dado pedido passa no corte. E o corte de 15 e **convencao
+  declarada**: a distribuicao e bimodal e medida (vazio **468** · 1-14 chars **0** · 15-29 **5** ·
+  >=30 **946**), entao qualquer numero entre 1 e 15 daria o mesmo resultado hoje -- o valor exato
+  **nunca foi testado contra dado real**.
+  Spec `.vibeflow/specs/deixis-sem-contexto.md` · suite 540 -> 550.
 
 ### F81 -- `frente_contexto` DESALINHADO da `frente_pergunta`: 3 eixos de defeito que nenhum predicado de `card_checks.py` mede -- **MEDIA** -- **RESOLVIDO (s176, item 0.2 -- 3 predicados WARN nomeados, eixo C declarado nao-verificavel; commit `84e75ad`)**
 - **Origem (s170):** achado do USUARIO durante o DRENAR, nao do harness. Depois de sinalizar "reforja" em 3 cards do mesmo bloco (#243, #792, #321), ele nomeou o padrao: *"note que todas as perguntas aparentam o padrao da de crise convulsiva do bloco anterior: parece que contexto e pergunta 'falam de coisas diferentes'"*. E o 3o caso consecutivo de defeito de card descoberto por leitura humana e nao por gate (familia F79 / F79b).

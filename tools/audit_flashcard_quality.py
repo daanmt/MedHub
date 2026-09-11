@@ -367,8 +367,99 @@ def run(args):
     conn.close()
 
 
+MIN_REVISOES_PARA_LER = 300   # abaixo disto o contador DECLARA que nao informa
+
+
+def contar_gate_miss(conn):
+    """F81/B1 (s176): quantas vezes um card que os predicados de FRENTE pegariam foi
+    efetivamente SERVIDO ao aluno -- e por que bucket ele foi servido.
+
+    🔴 DENOMINADORES SEPARADOS. `fsrs_revlog.reason_servido` nasceu no F76 (s174): revisao
+    anterior a isso tem o campo NULL. Somar NULL como se fosse uma classe faria o painel
+    inventar uma categoria maior que todas as outras juntas. A janela e explicitamente
+    `reason_servido IS NOT NULL`, e o que ficou de fora e reportado COMO fora, com contagem
+    visivel.
+
+    🔴 NASCE DIZENDO QUE NAO SABE. Com poucas revisoes dentro da janela, a distribuicao por
+    classe e ruido. Abaixo de MIN_REVISOES_PARA_LER o contador imprime os numeros crus e
+    declara que ainda nao ha leitura -- em vez de nascer verde e ser citado como se informasse.
+
+    Retorna dict (puro no formato, nao imprime): a impressao e do chamador.
+    """
+    import card_checks as _cc
+    predicados = (("contexto_redundante", _cc.checar_contexto_redundante),
+                  ("pergunta_generica", _cc.checar_pergunta_generica_com_contexto),
+                  ("contrafactual_mal_formado", _cc.checar_contrafactual_mal_formado))
+
+    # Marca sobre o baralho INTEIRO, aposentados inclusive: a pergunta e historica
+    # ("um card defeituoso chegou ao aluno?"), e um card aposentado hoje pode ter
+    # sido servido ontem. O recorte ATIVO e reportado a parte para nao divergir em
+    # silencio da populacao que a spec declara (12/4/1 = 17 ativos).
+    marcados, marcados_ativos = {}, 0
+    for cid, ctx, perg, nq in conn.execute(
+            "SELECT id, frente_contexto, frente_pergunta, COALESCE(needs_qualitative,0) "
+            "FROM flashcards "
+            "WHERE COALESCE(frente_contexto,'') <> '' AND COALESCE(frente_pergunta,'') <> ''"):
+        card = {"frente_contexto": ctx, "frente_pergunta": perg}
+        classes = [nome for nome, fn in predicados if fn(card)]
+        if classes:
+            marcados[cid] = classes
+            if nq < 2:
+                marcados_ativos += 1
+
+    dentro = conn.execute(
+        "SELECT COUNT(*) FROM fsrs_revlog WHERE reason_servido IS NOT NULL").fetchone()[0]
+    fora = conn.execute(
+        "SELECT COUNT(*) FROM fsrs_revlog WHERE reason_servido IS NULL").fetchone()[0]
+
+    por_classe = {}
+    if marcados:
+        marcas = ",".join(str(i) for i in marcados)
+        for razao, cid, n in conn.execute(
+                f"SELECT reason_servido, card_id, COUNT(*) FROM fsrs_revlog "
+                f"WHERE reason_servido IS NOT NULL AND card_id IN ({marcas}) "
+                f"GROUP BY reason_servido, card_id"):
+            for classe in marcados[cid]:
+                por_classe.setdefault(classe, {}).setdefault(razao, 0)
+                por_classe[classe][razao] += n
+
+    return {"cards_marcados": len(marcados), "cards_marcados_ativos": marcados_ativos,
+            "revisoes_na_janela": dentro,
+            "revisoes_fora_da_janela": fora,
+            "por_classe": por_classe,
+            "informa": dentro >= MIN_REVISOES_PARA_LER,
+            "minimo_para_informar": MIN_REVISOES_PARA_LER}
+
+
+def print_gate_miss(conn):
+    r = contar_gate_miss(conn)
+    print()
+    print("=" * 60)
+    print("  Gate-miss da FRENTE (F81/B1) — defeito que chegou ao aluno")
+    print("=" * 60)
+    print(f"  cards marcados por algum predicado : {r['cards_marcados']}  (no baralho ativo: {r['cards_marcados_ativos']})")
+    print(f"  JANELA (reason_servido preenchido) : {r['revisoes_na_janela']} revisoes")
+    print(f"  FORA da janela (anterior ao F76)   : {r['revisoes_fora_da_janela']} revisoes "
+          f"— nao entram em nenhuma classe, por contrato")
+    if not r["informa"]:
+        print()
+        print(f"  [DECLARADO] A janela tem {r['revisoes_na_janela']} revisoes; o contador so "
+              f"passa a informar com >= {r['minimo_para_informar']}.")
+        print("  Os numeros abaixo sao crus e NAO devem ser lidos como distribuicao.")
+    print()
+    if not r["por_classe"]:
+        print("  (nenhuma revisao dentro da janela tocou um card marcado)")
+    for classe, razoes in sorted(r["por_classe"].items()):
+        total = sum(razoes.values())
+        detalhe = " · ".join(f"{k}={v}" for k, v in sorted(razoes.items()))
+        print(f"  {classe:28s} {total:4d}  ({detalhe})")
+    print()
+
+
 def main():
     p = argparse.ArgumentParser(description="MedHub — Auditoria de Qualidade de Flashcards")
+    p.add_argument('--gate-miss', action='store_true', dest='gate_miss',
+                   help='Contador de gate-miss da FRENTE (F81/B1), com janela declarada')
     p.add_argument('--examples', type=int, default=0,
                    help='Número de exemplos a mostrar por sinal')
     p.add_argument('--signal', default='alt_letter',
@@ -381,6 +472,13 @@ def main():
     p.add_argument('--only-needs-qual', action='store_true', dest='only_needs_qual',
                    help='Exportar apenas cards com needs_qualitative=1 (ignorar filtro de sinais)')
     args = p.parse_args()
+    if args.gate_miss:
+        conn = get_connection()
+        try:
+            print_gate_miss(conn)
+        finally:
+            conn.close()
+        return
     run(args)
 
 

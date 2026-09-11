@@ -1027,14 +1027,30 @@ def update_flashcard_fields(card_id, fields) -> bool:
 
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT card_version, verso_resposta FROM flashcards WHERE id = ?",
-                   (card_id,))
+    cursor.execute("SELECT card_version, verso_resposta, frente_contexto, "
+                   "frente_pergunta FROM flashcards WHERE id = ?", (card_id,))
     row = cursor.fetchone()
     if row is None:
         conn.close()
         return False
     versao_antes = (row[0] if row[0] is not None else 1)
     verso_antes = row[1]
+
+    # F81/B1 (s176) -- alinhamento interno da FRENTE, sobre a visao MERGEADA.
+    # Este writer e um dos dois caminhos de REFORJA, e a reforja mira a frente
+    # (memoria feedback_reforja_mira_frente). Rodar os predicados so sobre
+    # `sets` deixaria passar a edicao parcial: quem reescreve so a pergunta nao
+    # carrega o contexto no payload, o predicado veria contexto vazio e ficaria
+    # mudo -- que e a forma exata do F79/F79b/F81 (gate que nao cobre o caminho
+    # real). WARN, nunca bloqueio: warning-first ate o passivo zerar.
+    _frente = {"frente_contexto": sets.get("frente_contexto", row[2]),
+               "frente_pergunta": sets.get("frente_pergunta", row[3])}
+    for _pred in (_cc.checar_contexto_redundante,
+                  _cc.checar_pergunta_generica_com_contexto,
+                  _cc.checar_contrafactual_mal_formado):
+        _aviso = _pred(_frente)
+        if _aviso:
+            print(f"[WARN] card #{card_id}: {_aviso}", file=sys.stderr)
 
     # s170 — ratchet de nao-crescimento do verso. Este writer nao roda gate de
     # atomicidade nenhum (so encoding/template/resposta-embutida), entao sem

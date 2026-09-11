@@ -119,13 +119,14 @@ def validar(edits, conn, permitir_atomicidade=False):
             erros.append(f"{rot}: card_id ausente ou nao-inteiro")
             continue
         row = conn.execute(
-            "SELECT frente_pergunta, card_version, verso_resposta "
+            "SELECT frente_pergunta, card_version, verso_resposta, frente_contexto "
             "FROM flashcards WHERE id=?",
             (cid,)).fetchone()
         if not row:
             erros.append(f"{rot}: card_id inexistente no db")
             continue
         antiga, ver, verso_antigo = row[0], (row[1] or 1), row[2]
+        contexto_antigo = row[3]
 
         if e.get('aposentar'):
             plano.append(("aposentar", cid, {}, ver, antiga))
@@ -158,6 +159,20 @@ def validar(edits, conn, permitir_atomicidade=False):
             emb = card_checks.checar_resposta_embutida(campos)
             if emb:
                 erros.append(f"{rot}: {emb}")
+
+        # gate 6 (s176, F81/B1) -- alinhamento interno da FRENTE, sobre a visao
+        # MERGEADA (payload por cima do que ja esta no banco). Edicao parcial e
+        # legitima aqui, entao rodar so sobre `campos` deixaria o predicado ver
+        # contexto vazio e ficar mudo -- gate que nao cobre o caminho real, que
+        # e a forma do proprio F81. AVISO: warning-first ate o passivo zerar.
+        _frente = {"frente_contexto": campos.get("frente_contexto", contexto_antigo),
+                   "frente_pergunta": campos.get("frente_pergunta", antiga)}
+        for _pred in (card_checks.checar_contexto_redundante,
+                      card_checks.checar_pergunta_generica_com_contexto,
+                      card_checks.checar_contrafactual_mal_formado):
+            _av = _pred(_frente)
+            if _av:
+                avisos.append(f"{rot}: {_av}")
 
         # gate 5 (s170) -- a reforja nao pode ENGORDAR o verso. Diferente do
         # gate 4: aquele e absoluto (verso longo), este e RATCHET (verso que

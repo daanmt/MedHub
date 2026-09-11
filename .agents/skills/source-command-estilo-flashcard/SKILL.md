@@ -206,6 +206,36 @@ verso_armadilha:    [o distrator específico que pegou o usuário, ancorado no r
 
 Persistir via `insert_questao.py` (go-forward) ou via o caminho de UPDATE/`--cards-file` (regeneração) — ver `analisar-questao.md` §9 e a spec da Onda B.
 
+### 🔴 Alinhamento interno da FRENTE — os 3 defeitos nomeados (F81/B1, s176)
+
+> Todo predicado anterior comparava **frente × verso**. A relação entre `frente_contexto` e
+> `frente_pergunta` estava fora de cobertura — e foi de lá que saíram os três últimos defeitos
+> achados por **leitura do usuário**, não por gate. Os três abaixo nascem **WARN** no
+> `card_checks.py`; viram BLOCK quando o passivo zerar. Spec:
+> [`.vibeflow/specs/alinhamento-frente-do-card.md`](../../.vibeflow/specs/alinhamento-frente-do-card.md).
+
+1. **Contexto redundante** — a pergunta reengole o contexto (>= 80% dos tokens). O contexto existe
+   para trazer **dado que a pergunta precisa**; se a pergunta já diz tudo, ele só ocupa a tela
+   antes do texto se repetir. Caso extremo: contexto == pergunta, palavra por palavra.
+   *Ao cunhar:* ou o contexto carrega um dado concreto (idade, tempo, valor, achado de exame), ou
+   ele fica **vazio de verdade** — meio-termo é ruído.
+2. **Pergunta genérica com vinheta decorativa** — a pergunta nomeia um par `A x B` **e** pede um
+   discriminador geral (*"que achado separa"*, *"qual das duas"*), respondível direto do livro.
+   A vinheta não é lida, porque a resposta sai igual sem ela.
+   *A correção não é apagar a vinheta: é fazer a pergunta APLICAR ao caso* — "qual a hipótese mais
+   provável?" obriga a ler os dados; "que achado separa?" não. Mesmo par de diagnósticos, cards de
+   qualidade oposta.
+3. **Contrafactual mal-formado** — a pergunta afirma que um achado está **ausente neste quadro** e,
+   ao mesmo tempo, pede que esse achado **exclua** um diagnóstico. Falta o condicional.
+   *O conserto é uma expressão:* **"se estivesse presente"**. Compare — ❌ *"Qual achado, AUSENTE
+   nesse quadro, afastaria DRESS?"* × ✅ *"Qual achado, **se presente** durante o episódio, aponta
+   para crise não epiléptica?"*. Mesmo desenho, e só o segundo é respondível.
+
+⚠️ **O que os predicados NÃO pegam, e a spec declara:** o caso em que a vinheta trabalha
+**contra** a pergunta por razão puramente semântica. Isso é leitura, não regex — e continua sendo
+trabalho humano. Gate verde aqui não significa frente alinhada; significa que os três padrões
+nomeados não aparecem.
+
 ---
 
 ## Backfill — regenerar cards legados

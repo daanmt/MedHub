@@ -164,11 +164,26 @@ def painel_divida(root=None, top=5):
             resto = ", ".join(f"{c}: {n}" for c, n in sorted(por_check.items(), key=lambda x: -x[1])[:4])
             linhas.append(f"  (+{len(rank) - top} abertos: {resto})")
 
+        # F66 (s176): a divida de VOCABULARIO da memoria passou a ter sink idempotente
+        # (`wa_vocab_pendentes.json`, chaveado por item). O painel cita esse numero --
+        # ele conta ITEM ABERTO e CAI quando um item e resolvido. O contador de linhas
+        # do `memory_errors.log` media quantas vezes o sensor rodou, nunca a divida.
+        pend = root_p / "history" / "wa_vocab_pendentes.json"
+        if pend.exists():
+            try:
+                import json as _json
+                d = _json.loads(pend.read_text(encoding="utf-8"))
+                linhas.append(
+                    f"  vocab de memoria: {d.get('total', '?')} WeakArea(s) sem area canonica "
+                    f"(medido {str(d.get('gerado_em', ''))[:16]}) -- F66, divida de conteudo")
+            except Exception:
+                pass
         mel = root_p / "history" / "memory_errors.log"
         if mel.exists():
             ls = [l for l in mel.read_text(encoding="utf-8", errors="replace").splitlines() if l.strip()]
             if ls:
-                linhas.append(f"  memory_errors.log: {len(ls)} linha(s); ultima: {ls[-1][:90]}")
+                linhas.append(f"  memory_errors.log: {len(ls)} linha(s) [log de FALHA, nao de divida; "
+                              f"ultima: {ls[-1][:60]}]")
         aud = root_p / "AUDITORIA_MEDHUB.md"
         if aud.exists():
             linhas.append(f"  AUDITORIA_MEDHUB.md: {aud.stat().st_size / 1024:.0f} KB")

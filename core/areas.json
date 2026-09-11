@@ -27,5 +27,42 @@
   "agregadas": [
     "Simulado"
   ],
-  "_nota_agregadas": "Slot de volume/desempenho AGREGADO (tendencia/predicao), nao especialidade clinica: os erros individuais do simulado continuam vinculados aos temas clinicos reais. E valido para escrita e EXCLUIDO da lista de gaps do /performance -- diferenca por decisao declarada, nao por copia desatualizada (era a divergencia silenciosa entre registrar_sessao_bulk.py e performance.py)."
+  "_nota_agregadas": "Slot de volume/desempenho AGREGADO (tendencia/predicao), nao especialidade clinica: os erros individuais do simulado continuam vinculados aos temas clinicos reais. E valido para escrita e EXCLUIDO da lista de gaps do /performance -- diferenca por decisao declarada, nao por copia desatualizada (era a divergencia silenciosa entre registrar_sessao_bulk.py e performance.py).",
+  "_nota_aliases": "F66 (s176): mapa rotulo-longo -> area canonica. Existe porque o vocabulario canonico usa forma CURTA (Infecto, Gastro, Hepato) e o modelo que consolida a memoria escreve a forma longa -- o dado esta certo e era descartado. Toda entrada aqui foi MEDIDA no store (app.memory), nao inventada. 🔴 Rotulo AMBIGUO nao entra: 'Ginecologia-Obstetricia' e 'GO' sao Ginecologia OU Obstetricia, e chutar repetiria o erro da s110 -- vao para a divida declarada.",
+  "aliases": {
+    "infectologia": "Infecto",
+    "doencas infecciosas": "Infecto",
+    "dermatologia": "Dermato",
+    "hepatologia": "Hepato",
+    "pneumologia": "Pneumo",
+    "gastroenterologia": "Gastro",
+    "endocrinologia": "Endocrino",
+    "endocrinology": "Endocrino",
+    "reumatologia": "Reumato",
+    "hematologia": "Hemato",
+    "otorrinolaringologia": "Otorrino",
+    "oftalmologia": "Oftalmo",
+    "neurologia": "Neurologia",
+    "nefrologia": "Nefrologia",
+    "cardiologia": "Cardiologia",
+    "psiquiatria": "Psiquiatria",
+    "pediatria": "Pediatria",
+    "ortopedia": "Ortopedia",
+    "obstetricia": "Obstetrícia",
+    "ginecologia": "Ginecologia",
+    "medicina preventiva": "Preventiva",
+    "saude coletiva": "Preventiva",
+    "atencao primaria": "Preventiva",
+    "atencao primaria a saude": "Preventiva",
+    "epidemiologia": "Preventiva",
+    "fundamentos do sus": "Preventiva",
+    "cirurgia geral": "Cirurgia",
+    "cirurgia pediatrica": "Cirurgia",
+    "cirurgia colorrectal": "Cirurgia",
+    "cirurgia colorretal": "Cirurgia",
+    "gastroenterologia pediatrica": "Pediatria",
+    "cardiologia pediatrica": "Pediatria",
+    "emergencias pediatricas": "Pediatria",
+    "saude da crianca": "Pediatria"
+  }
 }

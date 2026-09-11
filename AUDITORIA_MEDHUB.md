@@ -1329,7 +1329,7 @@ check no `auto_check`: card em tema `[bulk] *` nasce como WARN de taxonomia. Rod
 > tempo indeterminado, porque nada no harness a transformava em trabalho. O check de WARN
 > proposto acima e o que converte a linha de texto em fila.
 
-### F66 -- 45% da memoria de fraquezas e orfa por ABREVIACAO, e o log cresce sem teto
+### F66 -- 45% da memoria de fraquezas e orfa por ABREVIACAO, e o log cresce sem teto -- **ALTA** -- **RESOLVIDO (s176, item 1.3)**
 
 **Classe:** F45 nao terminou o servico (o input do boot ainda nao e verdadeiro) + sensor que
 cresce sem limite. **Descoberto ao vivo:** o painel de DIVIDA saltou de 7 para **146 linhas**
@@ -1388,6 +1388,38 @@ o painel poder contar item aberto; (d) sanear as 3 entradas duplicadas do vocabu
 
 **Severidade:** ALTA (degrada o sinal do primeiro turno de toda sessao e polui o unico painel de
 divida que o harness tem).
+
+✅ **Corrigido em 10/09/2026 (s176, item 1.3).** As quatro direcoes, e a (d) **deixou de existir**:
+- **(a) Alias num portador versionado:** `core/areas.json` ganhou o mapa `aliases`
+  (**34 entradas, todas MEDIDAS no store**, nenhuma inventada) e `app/utils/areas.resolver_area()`
+  resolve em **tres camadas declaradas** -- (1) canonico por chave normalizada, (2) alias
+  explicito, (3) **prefixo de composto** (`"Pediatria - Sepse Neonatal"` no campo `area` era 8
+  ocorrencias medidas).
+- **(b) O reconciliador consulta o alias** antes de declarar `fora_vocab`.
+- **(c) O que sobra vai para um SINK IDEMPOTENTE** (`history/wa_vocab_pendentes.json`, chave =
+  `item.key`, arquivo reescrito a cada passe) e o painel cita **esse** numero. O contador de
+  linhas do `memory_errors.log` continua visivel, mas agora **rotulado pelo que ele realmente
+  mede** (*"log de FALHA, nao de divida"*): ele contava quantas vezes o sensor rodou.
+- ⚰️ **(d) sanear as 3 entradas duplicadas do vocabulario: NAO FOI PRECISO.** A direcao pressupunha
+  que o vocabulario vinha de `SELECT DISTINCT area FROM taxonomia_cronograma` -- e a taxonomia tem
+  drift proprio (`GO`, `Clinica Medica`, `Clínica Médica`, `Clinica Medica/Cardiologia`). Com o
+  **vocabulario unico do F89** (item 0.6, tres horas antes), a fonte passou a ser `core/areas.json`
+  e **nao ha o que sanear: a lista canonica nao tem fantasma por construcao**. Um item do Tier 0
+  apagou uma direcao do Tier 1.
+- 🔬 **Medicao (store real, antes -> depois):** **299 WeakAreas / 140 fora (47%) / 91 rotulos
+  distintos** -> **290 (9 duplicatas colapsadas) / 100 fora (34%) / 59 rotulos**, com **75
+  normalizadas**. Segunda passagem devolve `normalizadas: 0` -- a reconciliacao e **idempotente**.
+- 🔴 **Os 100 restantes NAO sao falha do alias -- sao tres classes diferentes, e o sink as torna
+  contaveis:** (i) **ambiguo** (`Clínica Médica`, `Ginecologia-Obstetrícia - *`) -- resolver seria
+  repetir o erro da s110; (ii) **nao e area** (`Conhecimento Desatualizado`, `Interpretacao de
+  Exames`, `Todas`) -- e habilidade ou tema no campo errado; (iii) 🔴 **especialidade legitima que
+  a lista canonica NAO TEM** (`Oncologia`, `Urologia`, `Radiologia`, `Medicina de Emergencia`) --
+  **isto e pergunta para o OPERADOR**, nao conserto de engenharia, e agora ele tem o numero.
+- ⚠️ **Defeito que eu mesmo introduzi e peguei medindo:** o sink gravava no caminho de PRODUCAO e
+  `test_boot_verdadeiro` chama o reconciliador com store SINTETICO -- os 100 itens reais viraram
+  **1 `wa_dummy`** ao rodar a suite. Consertado no padrao que o repo ja tinha para o `event_log`:
+  `conftest` redireciona `PENDENTES_VOCAB_PATH` para `tmp_path` em todo teste. **Escrita nova em
+  caminho global precisa entrar la** -- a lacuna era do isolamento, nao do sink.
 
 > **Nota de processo.** A s162 declarou a des-colagem APROVADA e este achado nasceu **no
 > fechamento da mesma sessao**, do painel que a reforma criou, disparado por um hook que a

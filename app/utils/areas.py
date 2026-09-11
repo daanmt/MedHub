@@ -24,6 +24,7 @@ ela mudar.
 import difflib
 import json
 import os
+import unicodedata
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 AREAS_PATH = os.path.join(ROOT, "core", "areas.json")
@@ -50,13 +51,14 @@ def _carregar(path=None):
         raise VocabularioIndisponivel(f"vocabulario de area ilegivel ({alvo}): {e}")
     clinicas = tuple(dados.get("clinicas") or ())
     agregadas = tuple(dados.get("agregadas") or ())
+    aliases = dict(dados.get("aliases") or {})
     if not clinicas:
         raise VocabularioIndisponivel(
             f"vocabulario de area VAZIO em {alvo} -- lista vazia nao e resposta valida.")
-    return clinicas, agregadas
+    return clinicas, agregadas, aliases
 
 
-AREAS_CLINICAS, AREAS_AGREGADAS = _carregar()
+AREAS_CLINICAS, AREAS_AGREGADAS, _ALIASES_BRUTO = _carregar()
 #: Aceitas para ESCRITA. `AREAS_CLINICAS` e o subconjunto que responde por "especialidade"
 #: -- e a lista dos gaps do `/performance`, onde "Simulado" seria ruido (ele e slot de
 #: volume agregado, nao materia que se possa deixar de estudar).
@@ -116,3 +118,60 @@ def validar_area(area, origem=""):
 def area_valida(area):
     """Predicado puro, sem excecao -- para sensores e relatorios."""
     return (area or "").strip() in AREAS_VALIDAS
+
+
+# --- Resolucao de rotulo livre -> area canonica (F66, s176) -------------------
+# O vocabulario canonico usa forma CURTA (`Infecto`, `Gastro`, `Hepato`) e o
+# modelo que consolida a memoria de fraquezas escreve a forma LONGA. Medido no
+# store em 10/09/2026: **140 de 299 WeakAreas (47%) fora do vocabulario**, e as
+# mais frequentes sao especialidades legitimas so que nao abreviadas
+# (11x Infectologia, 8x Dermatologia, 6x Hepatologia...). O dado estava certo e
+# era descartado -- e area orfa nunca casa `error_count`, entao nunca sobe no
+# ranking de fraquezas que o agente le no PRIMEIRO turno de toda sessao.
+#
+# 🔴 Esta resolucao e para LEITURA de rotulo livre (memoria, relatorio). O gate
+# de ESCRITA (`validar_area`) continua exigindo a forma canonica exata: ali,
+# adivinhar e o defeito.
+_SEPARADORES_COMPOSTO = (" - ", " – ", " — ", ": ", "/")
+
+
+def _chave(rotulo):
+    """casefold + sem acento + espacos colapsados. NAO faz substring."""
+    txt = unicodedata.normalize("NFKD", str(rotulo or "").strip())
+    txt = "".join(c for c in txt if not unicodedata.combining(c))
+    return " ".join(txt.casefold().split())
+
+
+_ALIASES = {_chave(k): v for k, v in _ALIASES_BRUTO.items()}
+_CANONICO_POR_CHAVE = {_chave(a): a for a in AREAS_VALIDAS}
+
+
+def resolver_area(rotulo):
+    """Rotulo livre -> area canonica, ou **None** quando nao resolve.
+
+    Tres camadas, cada uma declarada -- e o que sobra e **divida real**, nunca
+    um chute:
+      1. casamento direto com o canonico (casefold/acento);
+      2. **alias explicito** (`core/areas.json`), medido no store, nao inventado;
+      3. **composto**: o modelo escreve `"Pediatria - Sepse Neonatal"` no campo
+         `area`; o prefixo antes do separador e testado em (1) e (2).
+
+    🔴 Rotulo AMBIGUO nao resolve de proposito: `Ginecologia-Obstetricia`, `GO` e
+    `Clinica Medica` sao duas ou mais areas, e chutar uma repetiria o erro da
+    s110 (3 linhas de `Clinica Medica` eram Infecto, Hemato e Oftalmo).
+    """
+    if not rotulo:
+        return None
+    k = _chave(rotulo)
+    if k in _CANONICO_POR_CHAVE:
+        return _CANONICO_POR_CHAVE[k]
+    if k in _ALIASES:
+        return _ALIASES[k]
+    for sep in _SEPARADORES_COMPOSTO:
+        if sep in str(rotulo):
+            cabeca = _chave(str(rotulo).split(sep)[0])
+            if cabeca in _CANONICO_POR_CHAVE:
+                return _CANONICO_POR_CHAVE[cabeca]
+            if cabeca in _ALIASES:
+                return _ALIASES[cabeca]
+    return None

@@ -61,4 +61,7 @@ history/ledger_self_state.json
 # sink de falha da consolidacao de memoria (AGENTE.md §8): log de RUNTIME, nao artefato.
 # O painel de DIVIDA le o arquivo no disco -- versionar so propagaria ruido de maquina.
 history/memory_errors.log
+# F66 (s176): sink idempotente da divida de vocabulario -- estado DERIVADO,
+# reescrito a cada consolidacao; o numero citavel sai do painel, nao do git.
+history/wa_vocab_pendentes.json
 core/simulados/_s*_questoes.json

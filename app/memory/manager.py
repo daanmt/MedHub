@@ -16,12 +16,14 @@ contadores roda. Falhas são registradas em history/memory_errors.log
 
 from __future__ import annotations
 
+import json
 import os
 import sqlite3
 import unicodedata
 from datetime import datetime
 from pathlib import Path
 
+import app.utils.areas as areas
 from app.memory.store import SQLiteMemoryStore
 
 
@@ -195,20 +197,41 @@ def _sync_error_counts(store: SQLiteMemoryStore, ipub_path: Path | str = _IPUB_P
 # ---------------------------------------------------------------------------
 
 def _vocabulario_taxonomia(ipub_path: Path) -> dict[str, str]:
-    """{area_normalizada -> area_canônica} da taxonomia REAL (derivado em runtime — lista
-    hardcoded driftaria). {} quando o db está inacessível (fallback conservador: aceita)."""
+    """{area_normalizada -> area_canônica}. **Fonte: `core/areas.json`** (F66/F89, s176).
+
+    ⚰️ Era derivado de `SELECT DISTINCT area FROM taxonomia_cronograma`. A taxonomia tem
+    **drift próprio** -- em 10/09/2026 ela carregava `GO`, `Clinica Medica`, `Clínica Médica`
+    e `Clinica Medica/Cardiologia` como "áreas canônicas" (18 linhas fantasma, F89), então o
+    vocabulário que validava a memória era ele mesmo poluído. Com o vocabulário único do F89
+    não há o que sanear: a lista canônica **não tem fantasma por construção**.
+
+    Mantém o nome e a assinatura porque os testes e o chamador dependem deles; `ipub_path`
+    fica no lugar como parâmetro aceito e ignorado (a fonte deixou de ser o banco).
+    """
+    del ipub_path                                  # a fonte deixou de ser o db (F66)
+    return {_norm(a): a for a in areas.AREAS_VALIDAS}
+
+
+PENDENTES_VOCAB_PATH = _ROOT / "history" / "wa_vocab_pendentes.json"
+
+
+def _gravar_pendentes_vocab(pendentes: dict, path: Path | str = None) -> int:
+    """Sink IDEMPOTENTE da dívida de vocabulário (F66 (c)). Retorna quantos ficaram.
+
+    Substitui o `append` em `memory_errors.log` para esta classe. Chave = `item.key`,
+    e o arquivo é REESCRITO a cada passe -- então o número conta **item aberto**, não
+    quantas vezes o sensor rodou, e **cai** quando um item é resolvido. Nunca levanta:
+    falha ao gravar o sink não pode derrubar a consolidação.
+    """
+    alvo = Path(path) if path else PENDENTES_VOCAB_PATH
     try:
-        conn = sqlite3.connect(f"file:{Path(ipub_path).as_posix()}?mode=ro", uri=True)
-        try:
-            rows = conn.execute(
-                "SELECT DISTINCT area FROM taxonomia_cronograma WHERE area IS NOT NULL"
-            ).fetchall()
-        finally:
-            conn.close()
-        return {_norm(a): str(a) for (a,) in rows if a}
-    except Exception as e:  # noqa: BLE001 — sem vocabulário, aceita e segue (recall-safe)
-        log_error("wa_vocab/read_ipub", e)
-        return {}
+        alvo.parent.mkdir(parents=True, exist_ok=True)
+        payload = {"gerado_em": datetime.now().isoformat(timespec="seconds"),
+                   "total": len(pendentes), "itens": pendentes}
+        alvo.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+    except Exception as e:  # noqa: BLE001
+        log_error("wa_vocab/sink", e)
+    return len(pendentes)
 
 
 def reconciliar_weak_areas(store: SQLiteMemoryStore,
@@ -229,6 +252,12 @@ def reconciliar_weak_areas(store: SQLiteMemoryStore,
     vocab = _vocabulario_taxonomia(ipub)
     itens = store.search(("medhub", "weak_areas"), limit=1000)
     stats = {"normalizadas": 0, "colapsadas": 0, "fora_vocab": 0}
+    # F66 (c): o que sobra após o alias é DÍVIDA REAL e vai para um sink IDEMPOTENTE,
+    # chaveado por `item.key` -- não `append`. O log antigo re-registrava os mesmos ~111
+    # itens a cada consolidação, o que tornava a linha "memory_errors.log: N linhas" do
+    # painel **estritamente sem significado**: media quantas vezes o sensor rodou, não
+    # quanta dívida existe. Aqui N = itens ABERTOS, e cai quando um deles é resolvido.
+    pendentes: dict[str, dict] = {}
 
     por_par: dict[tuple, list] = {}
     for item in itens:
@@ -243,16 +272,17 @@ def reconciliar_weak_areas(store: SQLiteMemoryStore,
             area, esp = content["area"], content["especialidade"]
             store.put(("medhub", "weak_areas"), item.key, val)
             stats["normalizadas"] += 1
-        # (1) normalização da área ao canônico
-        canon = vocab.get(_norm(area))
+        # (1) normalização da área ao canônico -- via `resolver_area` (F66): casamento
+        # direto, ALIAS explícito (`Infectologia` -> `Infecto`) e prefixo de composto
+        # (`Pediatria - Sepse Neonatal` -> `Pediatria`). Rótulo ambíguo NÃO resolve.
+        canon = areas.resolver_area(area)
         if canon and canon != area:
             content["area"] = canon
             store.put(("medhub", "weak_areas"), item.key, val)
             stats["normalizadas"] += 1
         elif vocab and not canon:
             stats["fora_vocab"] += 1
-            log_error("wa_vocab/fora",
-                      f"area '{area}' fora do vocabulário da taxonomia (key={item.key})")
+            pendentes[str(item.key)] = {"area": area, "especialidade": esp}
         por_par.setdefault((_norm(content.get("area")), _norm(content.get("especialidade"))),
                            []).append(item)
 
@@ -269,6 +299,7 @@ def reconciliar_weak_areas(store: SQLiteMemoryStore,
         for perdedor in grupo[1:]:
             store.delete(("medhub", "weak_areas"), perdedor.key)
             stats["colapsadas"] += 1
+    _gravar_pendentes_vocab(pendentes)
     if any(stats.values()):
         print(f"[memory/manager] reconciliação WeakAreas: {stats}")
     return stats

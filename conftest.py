@@ -30,3 +30,14 @@ def _event_log_isolado(tmp_path, monkeypatch):
                             str(tmp_path / "generation_log.jsonl"))
     except Exception:
         pass  # sem event_log (arvore parcial) -> nada a isolar
+    # F66 (s176): MESMA classe, writer novo. `reconciliar_weak_areas` grava o sink de
+    # divida de vocabulario; `test_boot_verdadeiro` a chama com store SINTETICO e, sem
+    # este isolamento, o sink de PRODUCAO era sobrescrito por dado de fixture (medido:
+    # 100 itens reais viraram 1 `wa_dummy`). Escrita nova em caminho global entra aqui.
+    try:
+        from pathlib import Path as _P
+        import app.memory.manager as _mgr
+        monkeypatch.setattr(_mgr, "PENDENTES_VOCAB_PATH",
+                            _P(tmp_path) / "wa_vocab_pendentes.json")
+    except Exception:
+        pass

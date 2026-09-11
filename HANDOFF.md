@@ -1,7 +1,7 @@
 # HANDOFF.md -- ESTADO OPERACIONAL CURTO
 *Atualizado: 2026-09-11 -- **S178 (ENGENHARIA, janela 3)**: **Tier 1 FECHADO** (1.5 a 1.9), suite **578 -> 621**, **0 spawns**. HEAD `270ac57`, main == origin/main.*
 
-> 🔴 **A reforma acabou por FIM DE FILA, nao por teto de contexto.** Tier 0 e Tier 1 zerados em tres janelas. **Semana de ENAMED (dom 13/09): questoes, simulados e cards.** A janela 4 so abre por decisao do operador, e ja tem abertura definida (abaixo).
+> 🔴 **A reforma acabou por FIM DE FILA, nao por teto de contexto.** Tier 0 e Tier 1 zerados em tres janelas. **Semana de ENAMED (dom 13/09): questoes, simulados e cards.** 🔴 **O permit de engenharia de 10/09 esta CONSUMIDO** (encerramento formal do operador em 11/09 ~10:25: *"pode encerrar ambas as sessoes formalmente. a proxima no medhub sera de estudo"*). A janela 4 so reabre com **permit NOVO, citado verbatim**, via kickoff do `/ai-eng` pelo canal -- a abertura ja esta definida (abaixo), o que falta e a autorizacao.
 
 ## > Proximo passo imediato
 

@@ -25,6 +25,7 @@ from tools.utils.state_utils import (
     check_session_pointer,
     check_posicao_drift,
     check_handoff_len,
+    check_areas_fora_vocabulario,
     check_erros_orfaos,
     check_suites_orfas
 )
@@ -808,6 +809,28 @@ def main():
     results_summary.append((desc_f38, True, len(orfaos) if orfaos else 0))
     _ledger_record("erros_orfaos",
                    [{"alvo": d, "payload": {"erros_esperados": n}} for d, n in (orfaos or [])])
+
+    # 14a-bis. F89 (s176): area fora do vocabulario unico (`core/areas.json`).
+    #      O GATE de escrita vive nos 3 writers (fail-loud, `areas.validar_area`) e impede
+    #      o crescimento; este check conta o PASSIVO ja gravado. WARN por politica: limpar
+    #      as linhas existentes e conteudo do OPERADOR (RODADA 3), nao do harness -- ha
+    #      cards e erros pendurados nelas. Vira BLOCK quando a base zerar.
+    desc_f89 = "Vocabulario de area (AREAS_FANTASMA, F89)"
+    fantasmas = check_areas_fora_vocabulario()
+    if fantasmas:
+        amostra = ", ".join(f"{a!r} em {t} ({n} linha(s))" for t, a, n in fantasmas[:4])
+        total_linhas = sum(n for _, _, n in fantasmas)
+        print()
+        print(f"[WARN] AREAS_FANTASMA (F89): {len(fantasmas)} par(es) (tabela, area) fora de "
+              f"`core/areas.json` -- {total_linhas} linha(s) no total: {amostra}"
+              f"{', ...' if len(fantasmas) > 4 else ''}. "
+              f"Os writers ja RECUSAM criar novas (app/utils/areas.validar_area); estas sao o "
+              f"passivo que a RODADA 1 dissolveu e voltou. Reclassificar e decisao do operador "
+              f"(RODADA 3, Tier 2.1) -- ha cards e erros pendurados. Norma: AUDITORIA_MEDHUB.md F89.")
+    results_summary.append((desc_f89, True, len(fantasmas) if fantasmas else 0))
+    _ledger_record("areas_fantasma",
+                   [{"alvo": f"{t}:{a}", "payload": {"linhas": n}}
+                    for t, a, n in (fantasmas or [])])
 
     # 14b. Import-dangling nos CLIs (descolar part-2, classe F50): `autopsia_simulados`
     #      ficou 852 linhas QUEBRADO por 5 dias importando módulo deletado, mascarado por

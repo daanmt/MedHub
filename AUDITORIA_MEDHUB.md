@@ -1588,10 +1588,42 @@ Protocolo `AGENTE.md §10.6` (D71): implement E audit aqui, vereditos do `/ai-en
 - **Remedio (ALTERA do `/ai-eng`):** UMA funcao `performance.volume_vs_marco(conn, hoje)` chamada por `day_plan.build` e por `cronograma.gap_payload`; `--meta` vira what-if (`default=None`). Teste: mesma fixture, dois comandos, mesmo par + AST sem default literal >= 1000. **Absorveu os 2 riders do F71:** (a) overflow do blackout no painel do boot via `db.overflow_blackout` (estado do banco, nao log); (b) leitor UNICO de `core/provas.json` em `app/utils/provas.py` (`day_plan` re-exporta, `db` delega).
 - **Classe:** Claim-Aging (D67) em literal de CLI -- numero em canonico que nenhum leitor re-mede. 5 testes em `tools/test_volume_fonte_unica.py`, 5 vermelhos antes.
 
-### F89 -- Areas fantasma `GO` e `Clinica Medica` VOLTARAM apos a dissolucao da s097: nenhum writer de taxonomia valida `area` -- **MEDIA** -- **ABERTO (so-dado; remedio = spec)**
+### F89 -- Areas fantasma `GO` e `Clinica Medica` VOLTARAM apos a dissolucao da s097: nenhum writer de taxonomia valida `area` -- **MEDIA** -- **RESOLVIDO (s176, item 0.6)**
 - **Evidencia (dry-run A6, 2026-09-09, `docs/DRYRUN-F65-F67-2026-09-09.md`):** a RODADA 1 do `normalize_taxonomia.py` (s097) dissolveu as areas `GO` e `Clinica Medica`; hoje existem de novo, com ids novos: `GO` 299, 301, 347, 348, 417 · `Clinica Medica` 285, 286 -- 7 linhas, 39 cards + 33 erros. `AREAS_VALIDAS` vive so em `registrar_sessao_bulk.py`; `insert_questao.py` e `insert_card_base.py` criam a linha `(area, tema)` que receberem.
 - **Por que e gate-miss (§10.8, tooling):** a normalizacao foi operacao unica sem gate de retorno; o defeito reentrou pela porta dos writers. Mesma familia do F65/F67 (taxonomia que corrompe sensor): o `review_radar`/`infer_nota` leem metades.
 - **Remedio (spec, nao hotfix):** `AREAS_VALIDAS` vira fonte unica (em `app/utils/` ou `core/`), validada nos 3 writers de `taxonomia_cronograma` (F49 allowlist) com fail-loud; WARN no `auto_check` para linha com area fora da lista (nasce WARN, vira BLOCK quando a base zerar). Entra na RODADA 3 do normalizador (decisao do operador).
+- ✅ **Corrigido em 10/09/2026 (s176, janela 2, item 0.6 do Tier 0).** O vocabulario virou
+  **dado unico** (`core/areas.json`) com **leitor unico** (`app/utils/areas.py`), no molde do
+  `core/provas.json` + `app/utils/provas.py` (F88) -- entao a RODADA 3 do operador passou a ser
+  **edicao de dado, nao de codigo**, que e o que "a lista e dele, o mecanismo e nosso" exige
+  estruturalmente. Os **3 writers** (`registrar_sessao_bulk`, `insert_questao`, `insert_card_base`)
+  chamam `validar_area()` e **recusam** area fora da lista com `AreaInvalida` -- inclusive o
+  **acumulo em linha fantasma ja existente**: o fantasma para de crescer, nao so de nascer.
+  🔬 **Re-medicao (10/09, `SELECT area, COUNT(*) ... GROUP BY area` nas 2 tabelas):** o passivo e
+  **maior** do que as 7 linhas de 09-09 -- **18 linhas em 5 pares (tabela, area)**:
+  `GO` 9 + `Clinica Medica` 3 + `Clínica Médica` 3 (variante acentuada, nova) +
+  `Clinica Medica/Cardiologia` 1 em `taxonomia_cronograma`, mais `GO` 2 em `sessoes_bulk`.
+  Numero novo com o comando que o produziu, nao re-afirmacao do antigo (secao 10.9).
+- **Duas copias da lista MORRERAM, e elas ja divergiam.** `registrar_sessao_bulk.py:31` (21 itens)
+  x `performance.py:73` (20, **sem "Simulado"**) -- o Risk #8 do proprio spec de `performance`
+  (*"basta editar nos dois locais"*) materializado. Hoje ambos importam da fonte; a ausencia de
+  `Simulado` na lista de **gaps** virou **decisao declarada** (`AREAS_CLINICAS`), nao copia velha.
+  Um teste de varredura acusa copia literal nova em `tools/` ou `app/`.
+- 🔴 **O leitor NAO e tolerante, ao contrario do `provas.py` -- de proposito.** Vocabulario ausente,
+  ilegivel ou vazio **levanta** (`VocabularioIndisponivel`); nunca degrada para lista vazia.
+  Countdown ausente e cosmetico; vocabulario ausente e load-bearing -- sem ele, reprovar tudo e
+  aprovar tudo sao **ambos falsos** (licao do F91, aplicada antes de o defeito existir).
+- **O passivo virou WARN nomeado, nao BLOCK:** `AREAS_FANTASMA` no `auto_check`
+  (`state_utils.check_areas_fora_vocabulario`, read-only, as 2 tabelas) -- nasce WARN pela politica
+  warning-first (s106/107) porque limpar as linhas e **conteudo do operador** (RODADA 3, Tier 2.1):
+  ha cards e erros pendurados nelas. Vira BLOCK quando a base zerar.
+- 🔴 **Ponto cego DECLARADO:** o gate e de **vocabulario**, nao de **verdade**. Ele garante que a
+  area existe na lista, nunca que e a area **certa** para aquele tema -- registrar Apendicite sob
+  `Pediatria` passa por todos os checks. Essa camada e a RODADA 3 e segue **sem instrumento**
+  (secao 10.8). Tambem **nao normaliza**: `GO` e `Clinica Medica` sao ambiguos por natureza, e
+  chutar uma area repetiria o erro da s110 (3 linhas de `Clinica Medica` eram Infecto, Hemato e
+  Oftalmo) -- a mensagem entrega a **ambiguidade**, nao um palpite.
+  Spec `.vibeflow/specs/vocabulario-de-area-unico.md` · suite 523 -> 540.
 - **Achado-irmao (A6):** o `normalize_taxonomia.py` esta VAZIO para o problema -- suas operacoes declaradas ja foram aplicadas (perdedores 230/225 inexistentes) e simula 286 -> 286. Reachability-Debt variante 1 (le o nada). Medicao completa: F67 = 10 grupos / 22 linhas / 193 cards + 104 erros; F65 = 35 cards ativos presos em `[bulk]` (eram 72 na s162) + **201 erros** em balde (nao medido antes).
 
 ## 6r. Sessao de ESTUDO s175 (Claude Code/Opus 5, 2026-09-10) -- F90
@@ -1661,3 +1693,26 @@ Protocolo `AGENTE.md §10.6` (D71): implement E audit aqui, vereditos do `/ai-en
 - **Classe:** **portador ausente** (regra load-bearing so na memoria do harness, secao 10.5), com um eixo de **proporcionalidade de delegacao** que ate agora nao tinha nome no ledger.
 
 ---
+
+## 6u. Reforma remota, janela 2 (itens 0.5-0.6, ordem do `/ai-eng` N=78, 2026-09-10) -- F94
+
+### F94 -- Dois CLIs ainda SEQUESTRAVAM o stdout global de quem apenas os IMPORTA -- **MEDIA** -- **RESOLVIDO (s176, no ato)**
+- **Como apareceu:** escrevendo o teste do F89, `import insert_card_base` quebrou a captura do
+  pytest com `ValueError: I/O operation on closed file` em 9 testes que nem tocavam o modulo.
+- **Evidencia:** `tools/insert_card_base.py:51` e `tools/cards_regen_queue.py:29` faziam
+  `sys.stdout = io.TextIOWrapper(sys.stdout.buffer, ...)` **no topo do modulo, incondicional** --
+  trocando o stdout do PROCESSO inteiro no mero import. `tools/fsrs_queue.py:33` ja tinha a guarda
+  certa (`if __name__ == "__main__" and hasattr(sys.stdout, "buffer")`) e o `importar_sessoes.py`
+  ja tinha **corrigido o proprio sitio**, com o motivo escrito na docstring: *"SEQUESTRAVA o stdout
+  global de quem apenas IMPORTA o modulo (quebrava qualquer harness que o coletasse)"*.
+- 🔴 **Classe: sitio gemeo de defeito ja consertado** -- a mesma forma do F80b (leitores fora do
+  relogio unico) e do 2o silenciador do F91. O conserto foi aplicado onde doeu e os irmaos ficaram.
+  O que os manteve invisiveis: **nenhum deles era importado por teste nenhum** -- o defeito so
+  existe para quem IMPORTA, e ninguem importava. Reachability-Debt no instrumento, nao no alvo.
+- ✅ **Corrigido:** os 2 sitios receberam a guarda do `fsrs_queue`. Varredura fechada no ato:
+  `grep -rn "sys.stdout = io.TextIOWrapper" --include=*.py tools/ app/` -> restam apenas 3 usos em
+  **arquivos de teste**, todos sobre `io.BytesIO()` proprio (nao sobre `sys.stdout.buffer`), que e
+  uso legitimo de fixture.
+- **Rider honesto:** este achado nasceu **de graca**, como efeito colateral de escrever o teste do
+  F89 antes do codigo. E a terceira vez na s176 que o teste-antes-do-fix entrega um defeito que a
+  leitura do codigo nao entregaria.

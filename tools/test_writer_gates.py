@@ -109,7 +109,7 @@ def test_base_gate_reprova_e_nada_grava():
     icb = _import_writer("insert_card_base")
     db, lote = _db_temp(), _json_temp([CARD_OK, CARD_TEMPLATE])
     try:
-        code, out = _rodar(icb, ["insert_card_base.py", "--area", "A", "--tema", "T",
+        code, out = _rodar(icb, ["insert_card_base.py", "--area", "Cirurgia", "--tema", "T",
                                  "--from", lote], db)
         assert code == 1, f"gate reprovado deve sair 1 (got {code})"
         assert _count(db) == 0, "all-or-nothing: NADA gravado"
@@ -123,7 +123,7 @@ def test_base_grava_lote_valido():
     icb = _import_writer("insert_card_base")
     db, lote = _db_temp(), _json_temp([CARD_OK])
     try:
-        code, _ = _rodar(icb, ["insert_card_base.py", "--area", "A", "--tema", "T",
+        code, _ = _rodar(icb, ["insert_card_base.py", "--area", "Cirurgia", "--tema", "T",
                                "--from", lote], db)
         assert code == 0
         assert _count(db) == 1 and _count(db, "fsrs_cards") == 1
@@ -149,7 +149,7 @@ def test_extra_grava_valido():
     ice = _import_writer("insert_card_extra")
     db = _db_temp()
     con = sqlite3.connect(db)
-    con.execute("INSERT INTO taxonomia_cronograma (id, area, tema) VALUES (1, 'A', 'T')")
+    con.execute("INSERT INTO taxonomia_cronograma (id, area, tema) VALUES (1, 'Cirurgia', 'T')")
     con.execute("INSERT INTO questoes_erros (id, tema_id, titulo) VALUES (1, 1, 'caso')")
     con.commit()
     con.close()

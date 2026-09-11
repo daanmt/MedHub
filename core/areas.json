@@ -1,0 +1,31 @@
+{
+  "_doc": "Vocabulario UNICO de area do MedHub (F89, s176). Leitor unico: app/utils/areas.py. Editar a LISTA e decisao do OPERADOR (RODADA 3 do normalize_taxonomia, Tier 2.1) -- o mecanismo que a consome nao muda com ela.",
+  "versao": "1.0",
+  "atualizado_em": "2026-09-10",
+  "clinicas": [
+    "Pediatria",
+    "Preventiva",
+    "Cirurgia",
+    "Infecto",
+    "Obstetrícia",
+    "Ginecologia",
+    "Gastro",
+    "Endocrino",
+    "Cardiologia",
+    "Psiquiatria",
+    "Neurologia",
+    "Nefrologia",
+    "Hemato",
+    "Pneumo",
+    "Dermato",
+    "Reumato",
+    "Hepato",
+    "Otorrino",
+    "Ortopedia",
+    "Oftalmo"
+  ],
+  "agregadas": [
+    "Simulado"
+  ],
+  "_nota_agregadas": "Slot de volume/desempenho AGREGADO (tendencia/predicao), nao especialidade clinica: os erros individuais do simulado continuam vinculados aos temas clinicos reais. E valido para escrita e EXCLUIDO da lista de gaps do /performance -- diferenca por decisao declarada, nao por copia desatualizada (era a divergencia silenciosa entre registrar_sessao_bulk.py e performance.py)."
+}

@@ -25,23 +25,24 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # `data_sessao` (o DIA de estudo, SSOT volumetrica) sai do mesmo relogio que os
 # carimbos de revlog/questoes_erros/review_log; `--data` explicito segue vencendo.
 import app.utils.db as db
+import app.utils.areas as areas
 
 DB_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'ipub.db')
 
-AREAS_VALIDAS = [
-    "Pediatria", "Preventiva", "Cirurgia", "Infecto", "Obstetrícia",
-    "Ginecologia", "Gastro", "Endocrino", "Cardiologia", "Psiquiatria",
-    "Neurologia", "Nefrologia", "Hemato", "Pneumo", "Dermato",
-    "Reumato", "Hepato", "Otorrino", "Ortopedia", "Oftalmo",
-    "Simulado",  # slot dedicado a simulados: volume/desempenho AGREGADO (tendencia/predicao ENAMED);
-                 # os erros individuais continuam vinculados aos temas clinicos reais (resumos/flashcards)
-]
+# F89 (s176): a lista MORREU aqui. O vocabulario e unico, vive em `core/areas.json` e
+# e lido por `app/utils/areas.py` -- este nome segue importavel (o `importar_sessoes.py`
+# depende dele) como RE-EXPORT, nunca mais como copia. A copia gemea em `performance.py`
+# ja divergia desta (sem "Simulado"), que e o defeito que a fonte unica mata.
+AREAS_VALIDAS = list(areas.AREAS_VALIDAS)
 
 def registrar(sessao_num: int, area: str, feitas: int, acertos: int,
               data: str | None = None, obs: str = "",
               acumular: bool = False, semana: int | None = None):
     if acertos > feitas:
         raise ValueError(f"Acertos ({acertos}) não pode ser maior que feitas ({feitas}).")
+    # F89: writer de `taxonomia_cronograma` valida `area` na PORTA. Vale tambem para
+    # acumulo em linha fantasma ja existente -- o fantasma para de crescer.
+    area = areas.validar_area(area, origem="registrar_sessao_bulk")
 
     data_sessao = data or db.hoje().isoformat()
 

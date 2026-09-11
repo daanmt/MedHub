@@ -27,8 +27,8 @@ Seguir o **Boot Sequence** do `AGENTE.md`.
 ### 1. Sanear a taxonomia (pré-requisito da triagem)
 Cards mal-agrupados quebram a detecção de clones. Antes de auditar cards, limpar `taxonomia_cronograma`:
 - `dedup_taxonomia.py` resolve duplicatas `(area, tema)` **exatas**.
-- `normalize_taxonomia.py` resolve o que escapa: **encoding/acento**, **áreas fora de `AREAS_VALIDAS`** (dissolver na especialidade), **duplicatas conceituais** (mesmo tema, nomes diferentes), `[bulk]`/`Geral` vazios. Operações declarativas no topo do script; simula colisão e roda `--dry-run` por default.
-- Saída esperada: `dup=0`, `órfãos=0`, todas as áreas ∈ `AREAS_VALIDAS` (`tools/registrar_sessao_bulk.py`).
+- `normalize_taxonomia.py` resolve o que escapa: **encoding/acento**, **áreas fora de `AREAS_VALIDAS`** (dissolver na especialidade), **duplicatas conceituais** (mesmo tema, nomes diferentes), `[bulk]`/`Geral` vazios. Operações declarativas no topo do script; simula colisão e roda `--dry-run` por default. 🔴 **F89 (s176):** dissolver deixou de ser operação-sem-retorno — os 3 writers agora recusam área fora do vocabulário, e o `auto_check` conta o passivo (`AREAS_FANTASMA`, WARN). A RODADA 1 dissolveu `GO`/`Clínica Médica` e elas voltaram justamente por falta desse gate.
+- Saída esperada: `dup=0`, `órfãos=0`, todas as áreas ∈ `AREAS_VALIDAS` (**fonte única `core/areas.json`**, lida por `app/utils/areas.py` — F89).
 
 ### 2. Diagnóstico de qualidade
 - `python tools/audit_flashcard_quality.py` — sinais **sintáticos** (alt-letter, regra vazia, órfão sem âncora). É o piso, não o teto.

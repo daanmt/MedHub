@@ -30,6 +30,7 @@ import card_checks  # gate de qualidade (part-3) — biblioteca pura, fonte unic
 # Este CLI continua standalone no sqlite3 (AGENTE §6); so o carimbo vem de la,
 # chamado pelo ATRIBUTO do modulo (db.agora()) para o teste congelar o instante.
 import app.utils.db as db
+import app.utils.areas as areas
 
 DB_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'ipub.db')
 
@@ -139,6 +140,11 @@ def insert_questao(area, tema, enunciado, correta, chamada, erro, elo, armadilha
                    verso_resposta=None, verso_regra_mestre=None, verso_armadilha=None,
                    cards=None, status=None, conn=None):
     # print(f"DEBUG: Tentando inserir no banco: {os.path.abspath(DB_PATH)}")
+    # F89 (s176): `area` e a precondicao mais BARATA -- vale antes do contrato de
+    # cunhagem, para o chamador ver o primeiro problema real e nao o segundo. Foi por
+    # esta porta que `GO` e `Clinica Medica`, dissolvidas na s097, voltaram com ids
+    # novos: o writer criava a linha `(area, tema)` que recebesse.
+    area = areas.validar_area(area, origem="insert_questao")
     # conn externa (part-4): participa de transacao maior (lote) -- nao abre,
     # nao commita, nao fecha; excecao PROPAGA para o rollback total do lote.
     own_conn = conn is None

@@ -230,6 +230,12 @@ def _sandbox_cli():
     shutil.copytree(os.path.join(os.path.dirname(os.path.dirname(_REAL_SCRIPT)), "app"),
                     os.path.join(d, "app"),
                     ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
+    # F89 (s176): o vocabulario de area e DADO (`core/areas.json`) e o leitor NAO degrada
+    # para lista vazia -- entao o sandbox precisa dele, como precisa do schema. Sandbox sem
+    # o arquivo reproduz fielmente o que o CLI faz sem ele: recusa e diz por que.
+    os.makedirs(os.path.join(d, "core"), exist_ok=True)
+    shutil.copy(os.path.join(os.path.dirname(os.path.dirname(_REAL_SCRIPT)), "core", "areas.json"),
+                os.path.join(d, "core", "areas.json"))
     shutil.move(_db_temp(), os.path.join(d, "ipub.db"))  # reusa o schema de _db_temp
     return d, os.path.join(tdir, "insert_questao.py")
 

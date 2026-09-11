@@ -307,6 +307,61 @@ def check_erros_orfaos(db_path=None, piso=PISO_ERROS_ORFAOS, desde=None):
 
 
 # ---------------------------------------------------------------------------
+# F89 (s176) -- area fora do vocabulario unico.
+#
+# `GO` e `Clinica Medica` foram DISSOLVIDAS pela RODADA 1 do normalize_taxonomia
+# (s097) e voltaram, com ids novos, porque nenhum dos 3 writers de taxonomia
+# validava `area`. O gate de escrita (app/utils/areas.validar_area) impede o
+# crescimento; este check conta o PASSIVO que ja esta no banco.
+#
+# Nasce WARN (politica warning-first, s106/107): a limpeza das linhas existentes
+# e conteudo do OPERADOR (RODADA 3, Tier 2.1) -- 39 cards + 33 erros pendurados.
+# Vira BLOCK quando a base zerar.
+# ---------------------------------------------------------------------------
+
+def check_areas_fora_vocabulario(db_path=None):
+    """Linhas com `area` fora de `AREAS_VALIDAS`. None quando limpo.
+
+    Retorna [(tabela, area, n_linhas)] ordenado por n_linhas desc. Varre as duas
+    tabelas que guardam area crua: `taxonomia_cronograma` (a que reentrou) e
+    `sessoes_bulk` (a SSOT volumetrica). Read-only.
+
+    Sem `core/areas.json` legivel, devolve None -- ausencia de vocabulario NAO e
+    "esta tudo certo", e o check se cala em vez de acusar a base inteira; a
+    excecao ja aparece, alta e clara, nos WRITERS (que e onde ela para dano).
+    """
+    dbp = Path(db_path) if db_path else ROOT_DIR / "ipub.db"
+    if not dbp.exists():
+        return None
+    try:
+        sys.path.insert(0, str(ROOT_DIR))
+        from app.utils.areas import AREAS_VALIDAS
+    except Exception:
+        return None
+    con = None
+    try:
+        import sqlite3
+        con = sqlite3.connect(str(dbp))
+        achados = []
+        for tabela in ("taxonomia_cronograma", "sessoes_bulk"):
+            try:
+                linhas = con.execute(
+                    f"SELECT area, COUNT(*) FROM {tabela} GROUP BY area").fetchall()
+            except sqlite3.Error:
+                continue                      # tabela ausente num db parcial: nao e achado
+            for area, n in linhas:
+                if (area or "").strip() not in AREAS_VALIDAS:
+                    achados.append((tabela, area, int(n)))
+    except Exception:
+        return None
+    finally:
+        if con is not None:
+            con.close()
+    achados.sort(key=lambda t: t[2], reverse=True)
+    return achados or None
+
+
+# ---------------------------------------------------------------------------
 # F43 (s159) -- suite que existe e nao roda.
 #
 # "Quais testes rodam" nao tem UM registro: tem TRES, todos mantidos a mao e

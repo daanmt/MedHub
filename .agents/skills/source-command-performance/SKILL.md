@@ -38,7 +38,7 @@ O script imprime 5 blocos em markdown, nesta ordem:
    - *Acumulado*: investimento total ÷ todas as questões.
    - *Mês corrente*: parcela do mês ÷ questões feitas no mês.
    Cada um classificado em faixa visual (🟢 Meta / 🟡 Ótimo / 🟠 Bom / 🔴 Alto / 🟣 Crítico) com distância da meta final (R$ 0,20/q em dez/2026 — coerente com ESTADO.md: R$ 4.410 / 23.000q).
-5. **Áreas fracas e gaps** — áreas com performance < 75% ordenadas por pior, e áreas de `AREAS_VALIDAS` com 0 questões.
+5. **Áreas fracas e gaps** — áreas com performance < 75% ordenadas por pior, e áreas de **`AREAS_CLINICAS`** com 0 questões (fonte única `core/areas.json`; `Simulado` fica de fora **por decisão declarada** — é slot de volume agregado, não matéria que se possa deixar de estudar).
 
 ---
 

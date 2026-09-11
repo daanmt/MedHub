@@ -22,6 +22,9 @@ import sys
 import calendar
 from datetime import date, datetime
 
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+import app.utils.areas as areas  # noqa: E402  -- fonte unica do vocabulario (F89)
+
 DB_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'ipub.db')
 
 # Slot agregado de simulado (s098). Historico: a s099 decidiu que simulado NAO era volume.
@@ -70,12 +73,13 @@ FAIXAS_CUSTO = [
     (float('inf'), "🟣", "Crítico"),
 ]
 
-AREAS_VALIDAS = [
-    "Pediatria", "Preventiva", "Cirurgia", "Infecto", "Obstetrícia",
-    "Ginecologia", "Gastro", "Endocrino", "Cardiologia", "Psiquiatria",
-    "Neurologia", "Nefrologia", "Hemato", "Pneumo", "Dermato",
-    "Reumato", "Hepato", "Otorrino", "Ortopedia", "Oftalmo",
-]
+# F89 (s176): era uma COPIA da lista de `registrar_sessao_bulk.py`, ja divergente (faltava
+# "Simulado") -- o Risk #8 do proprio spec desta ferramenta, materializado. Agora importa da
+# fonte unica. A ausencia de "Simulado" nos GAPS vira decisao declarada (`AREAS_CLINICAS`,
+# `core/areas.json`), nao copia desatualizada: simulado e slot de volume agregado, nao uma
+# materia que se possa deixar de estudar.
+AREAS_VALIDAS = list(areas.AREAS_VALIDAS)
+AREAS_CLINICAS = list(areas.AREAS_CLINICAS)
 
 # (nome, alvo_acumulado, data_da_prova | None)
 # Marcos com data ganham projeções de ritmo (RITMOS_PROJECAO) no bloco 2.
@@ -358,7 +362,7 @@ def bloco_areas(por_area):
     linhas.append("")
 
     areas_com_q = {a for (a, q, _ac, _p) in por_area if q > 0}
-    gaps = [a for a in AREAS_VALIDAS if a not in areas_com_q]
+    gaps = [a for a in AREAS_CLINICAS if a not in areas_com_q]
     if gaps:
         linhas.append("**Áreas com 0 questões (gaps absolutos):**")
         linhas.append("- " + ", ".join(gaps))

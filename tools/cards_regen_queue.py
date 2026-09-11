@@ -26,7 +26,13 @@ import json
 import os
 import sys
 
-sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
+# Saída em UTF-8 — evita UnicodeEncodeError no console cp1252 do Windows.
+# 🔴 F94 (s176): a forma ANTIGA (`sys.stdout = io.TextIOWrapper(...)` incondicional)
+# SEQUESTRAVA o stdout global de quem apenas IMPORTA o modulo -- quebrava qualquer
+# harness que o coletasse (o `importar_sessoes.py` ja tinha corrigido o proprio sitio;
+# este ficou para tras). Guarda no padrao do `fsrs_queue.py:33`: so no caminho standalone.
+if __name__ == "__main__" and hasattr(sys.stdout, "buffer"):
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from app.utils import db  # noqa: E402

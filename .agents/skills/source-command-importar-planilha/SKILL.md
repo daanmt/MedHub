@@ -74,7 +74,7 @@ Para localizar a semana corrente: comparar a data de hoje com os ranges da linha
    {sessao:int, area:str, feitas:int, acertos:int, data?:"YYYY-MM-DD", obs?:str}
    ```
    `sessao` é o número da sessão de estudo; se a planilha não tiver, combinar com o usuário (ex.: usar a sessão corrente ou uma sequência).
-3. **Normalizar a área.** Converter o rótulo da planilha para um valor de `AREAS_VALIDAS` (em `registrar_sessao_bulk.py`): ex. "GO"→"Ginecologia"/"Obstetrícia", "Clínica/Cardio"→"Cardiologia". Linhas que não casarem serão reportadas (não gravadas erradas).
+3. **Normalizar a área.** Converter o rótulo da planilha para um valor de `AREAS_VALIDAS` — **fonte única: `core/areas.json`, lida por `app/utils/areas.py`** (F89, s176; não é mais `registrar_sessao_bulk.py`). Ex.: "GO"→"Ginecologia"/"Obstetrícia", "Clínica/Cardio"→"Cardiologia". 🔴 Desde a s176 os 3 writers de taxonomia **recusam** área fora da lista (`AreaInvalida`, com o palpite mais próximo); rótulo que não casar é **reportado, nunca gravado errado** — e `GO`/`Clínica Médica` são ambíguos por natureza, então a decisão é sua, não do código.
 4. **Gravar em lote.** Escrever as linhas mapeadas num JSON e chamar:
    ```bash
    python tools/importar_sessoes.py --rows-file <linhas.json>

@@ -1229,7 +1229,7 @@ WARN no painel de DIVIDA.
 
 **Severidade:** ALTA (governa a alocacao de tempo a 11 dias do ENAMED e 60 da UERJ).
 
-### F64 -- o gatilho do regime de divida le `atrasados`, o dono le `vencidos`
+### F64 -- o gatilho do regime de divida le `atrasados`, o dono le `vencidos` -- **MEDIA** -- **RESOLVIDO (s176, item 1.2)**
 
 **Classe:** gap de spec entre a formula e o modelo mental do operador.
 
@@ -1260,6 +1260,29 @@ sem o saldo, o que obriga o agente a derivar a conta a mao e errar.
 
 **Severidade:** MEDIA (nao corrompe dado; distorce a prescricao de volume e ja produziu uma
 recomendacao errada de parar).
+
+✅ **Corrigido em 10/09/2026 (s176, item 1.2).** O contador tem **um nome e uma definicao**:
+`vencidos = atrasados + hoje`, implementado em `day_plan.vencidos_de(fsrs)` e usado pelo
+**gatilho**, pelo campo `divida.vencidos` do `--json`, pelo texto do render **e** pela ordenacao
+dos clusters (mesmo conceito, outra granularidade -- soma manual ali recriaria a divergencia num
+lugar onde ninguem iria procura-la). Um teste de varredura recusa qualquer `atrasados + hoje`
+calculado a mao fora da funcao.
+- **A escolha agora esta ESCRITA**, que era o defeito: `fsrs-management-contract` **v1.2 -> v1.3**,
+  com a redacao antiga (`atrasados > TETO_BASE`) sob **lapide** -- nao apagada, porque os numeros
+  da s162 so se explicam com ela a vista. Ritual de revogacao em 3 passos cumprido
+  (`AGENTE.md §10 item 10`): declarar -> lapidar -> **cadastrar** o termo em `_TERMOS_REVOGADOS`.
+- **Direcao (c) tambem entregue:** o render passa a imprimir o **saldo do dia** junto do teto
+  (`usados/teto`, de `fsrs_revlog` via `realizado_do_dia`). Teto sem saldo obrigava quem le a
+  derivar a conta a mao -- foi como a s162 errou duas vezes no mesmo turno. Degrada com WARN se a
+  leitura falhar; o plano do dia nunca cai por causa disso.
+- 🔬 **Efeito medido hoje:** com `atrasados=0` e `hoje=4`, os dois criterios dao o mesmo veredito
+  (sem regime) -- a mudanca e **inerte no estado atual** e so passa a importar quando a divida
+  acumula. Isso e dado, nao atenuante: o criterio antigo falhava exatamente no caso em que a
+  divida e composta de cards de HOJE, que e quando o regime mais precisaria disparar.
+- **Fora de escopo, declarado:** o *agravante* registrado no achado -- a sessao que cruza a
+  meia-noite sem aviso -- **nao foi resolvido**. O teto segue por dia de calendario e nenhum
+  sensor avisa a virada; o saldo impresso agora torna a virada VISIVEL (o numero zera), mas isso
+  e sintoma legivel, nao sensor.
 
 ### F65 -- o balde `[bulk] <Area>` esconde 72 cards do radar de dormencia
 
@@ -1743,3 +1766,25 @@ Protocolo `AGENTE.md §10.6` (D71): implement E audit aqui, vereditos do `/ai-en
 - **Rider honesto:** este achado nasceu **de graca**, como efeito colateral de escrever o teste do
   F89 antes do codigo. E a terceira vez na s176 que o teste-antes-do-fix entrega um defeito que a
   leitura do codigo nao entregaria.
+
+### F95 -- O registro de PORTADORES do gate `CONTRATO_REVOGADO` era enumerado a mao, e tinha buraco -- **MEDIA** -- **RESOLVIDO (s176, item 1.2)**
+- **Como apareceu:** ao cadastrar o termo do F64, conferi se o contrato FSRS estava na varredura.
+  Nao estava -- e **carregava um `PREPARAR` vivo e PRESCRITIVO**: *"um PREPARAR aquece o tema e
+  drena o cluster inteiro"* (`fsrs-management-contract.md:72`), clausula revogada na **s170**
+  (`revisao-calibrada` v1.3, Clausula 11) e em vigor ha 3 dias num contrato canonico.
+- 🔴 **Classe: o F90 um nivel acima.** O F90 consertou o registro de **TERMOS** (que era manual e
+  sem ritual) e deu a ele os 3 passos. O registro de **PORTADORES** (`_PORTADORES_NORMA`) continuou
+  **manual e sem ritual nenhum** -- termo cadastrado corretamente nao alcanca arquivo que ninguem
+  mandou varrer. Familia **Reachability-Debt**, forma *sem perimetro* (a mesma do F80b).
+- 🔬 **Medicao do buraco (10/09):** varredura dos 7 termos revogados sobre `core/contracts/`,
+  `.claude/commands/` e `.agents/` fora da lista atual -> **1 portador real** com termo vivo
+  (`fsrs-management-contract.md`). Os demais hits sao os **espelhos** `.agents/skills/
+  source-command-*/SKILL.md`, que sao artefato de build gerado dos canonicos ja vigiados --
+  incluir os espelhos duplicaria todo achado sem acrescentar alcance, e por isso **nao** entraram.
+- ✅ **Corrigido:** lapide na linha do `PREPARAR` (a redacao morta preservada, o mecanismo atual
+  nomeado) + `core/contracts/fsrs-management-contract.md` na lista de portadores, com o porque no
+  proprio codigo. `tools/test_contador_divida.py` trava a entrada na lista.
+- 🔴 **O que NAO foi feito (declarado):** a lista de portadores continua **enumerada a mao**. Dar a
+  ela um ritual de alimentacao -- ou deriva-la (todo `core/contracts/*.md` + `.claude/commands/*.md`)
+  -- e da mesma familia do **(ii') do F90** e pertence a **varredura unica (1.8)**, nao a este item.
+  Ate la, o alcance depende de alguem lembrar, que e exatamente o defeito que este achado descreve.

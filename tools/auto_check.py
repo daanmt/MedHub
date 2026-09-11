@@ -133,12 +133,20 @@ _TERMOS_REVOGADOS = {
     "justificativa de 1 linha": "Invariante F, revisao-calibrada v1.3 (s170) -- F90",
     "depois 5, depois 6": "regua de lote 10-15 (s130/s152) -- F90",
     "junto das opções": "override passivo (s123) dissolveu as 'opcoes' -- F90",
+    # F64 (cadastrado em 10/09/2026, no mesmo commit da lapide no contrato FSRS)
+    "atrasados > TETO_BASE": "fsrs-management v1.3 (s176) -- F64: o contador e `vencidos`",
+    "atrasados > teto_base": "fsrs-management v1.3 (s176) -- F64: o contador e `vencidos`",
 }
 # Portadores da norma do /revisar. O contrato NAO basta: o agente que executa
 # le o command. Prescricao ativa sobrevivente num deles torna a lapide do
 # contrato decorativa -- que e exatamente o defeito G12.
 _PORTADORES_NORMA = (
     "core/contracts/revisao-calibrada-contract.md",
+    # F95 (s176, item 1.2): o contrato FSRS estava FORA desta lista e carregava um
+    # `PREPARAR` vivo e prescritivo -- revogado desde a s170, invisivel porque o
+    # arquivo nunca foi varrido. Mesma familia do F90 um nivel acima: o registro de
+    # TERMOS ganhou ritual de alimentacao, o de PORTADORES continuava manual e sem.
+    "core/contracts/fsrs-management-contract.md",
     ".claude/commands/revisar.md",
     ".claude/commands/refrescar.md",
     "AGENTE.md",

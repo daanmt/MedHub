@@ -2,12 +2,12 @@
 type: contract
 layer: core
 status: canonical
-version: 1.2
+version: 1.3
 relates_to: [reconcile-contract, estado-contract, AGENTE]
 ---
 
 # Contrato de Gerenciamento do FSRS
-**Versão 1.2 | 2026-09-10 (s176, item 0.7 -- promotes F71 e F80) · v1.1 2026-07-05 (s108+, F3/F4 do ledger AUDITORIA_MEDHUB) · v1.0 2026-06-03 (sessão 075)**
+**Versão 1.3 | 2026-09-10 (s176, item 1.2 -- F64, o contador do regime) · v1.2 (s176, item 0.7 -- promotes F71 e F80) · v1.1 2026-07-05 (s108+, F3/F4 do ledger AUDITORIA_MEDHUB) · v1.0 2026-06-03 (sessão 075)**
 
 > Documento normativo. Define como a fila de repetição espaçada é gerenciada, drenada e mantida.
 > Referenciado por: `AGENTE.md`, `reconcile-contract.md` (W3), `.claude/commands/revisar.md`, `.claude/commands/estilo-flashcard.md`.
@@ -69,7 +69,7 @@ anterior a `37e0859` continua gravado em UTC (backfill é decisão do operador, 
 - **Cap de novos por sessão:** default `--new-limit 10`. Não despejar o backlog inteiro — drenar em ondas.
 - **Priorização por área fraca:** ao drenar, filtrar por `--area`/`--tema` das áreas com pior performance (cruzar com `/performance`). Cards de Cardiologia/Hepato/Dermato/FA antes de áreas fortes.
 - **Ordem natural da fila:** atrasados → hoje → novos (definida no `fsrs_queue`).
-- **Revisão em cluster (F3, v1.1):** `fsrs_queue.py --cluster` preserva a prioridade de bucket e agrupa por (area, tema) dentro de cada bucket -- um PREPARAR aquece o tema e drena o cluster inteiro. `day_plan.py --review-plan` emite os clusters do dia com contagem derivada da fila real (contagem manual foi fonte de erro 3x na s108). A flag é opt-in: sem ela, a ordem é a natural.
+- **Revisão em cluster (F3, v1.1):** `fsrs_queue.py --cluster` preserva a prioridade de bucket e agrupa por (area, tema) dentro de cada bucket -- ⚰️ *a redação original dizia "um PREPARAR aquece o tema e drena o cluster inteiro"; o **PREPARAR foi revogado na s170** (`revisao-calibrada` v1.3, Cláusula 11) e o aquecimento pré-drill deixou de existir* — hoje o cluster drena e o re-ensino acontece na **Revisão Direcionada de fechamento**. `day_plan.py --review-plan` emite os clusters do dia com contagem derivada da fila real (contagem manual foi fonte de erro 3x na s108). A flag é opt-in: sem ela, a ordem é a natural.
 - **Ratings honestos:** o agente avalia 1-4 pela resposta do usuário (contrato em `revisar.md` §Modo conversacional); honestidade > generosidade — a precisão do FSRS depende disso.
 
 ---
@@ -82,7 +82,24 @@ A tensão estrutural observada na s108 (44 agendados > teto de 30 antes de qualq
   *(histórico: 30 na v1.1 → 40 na s126 → **60 na s159**, ritmo declarado sustentável pelo usuário na virada UERJ/MFC: "60q/dia + 60 flashcards/dia".)*
 - `CAP_MULTIPLICADOR = 1.5` — fator máximo de escala do teto em regime de dívida.
   *(era 2 até a s159; caiu junto com a subida do TETO_BASE — dobrar 60 daria 120/dia e reinstalaria o pico-e-queda que o usuário rejeitou explicitamente.)*
-- **Regime de dívida:** `atrasados > TETO_BASE`. Nele, `teto_efetivo = int(min(TETO_BASE + atrasados, CAP_MULTIPLICADOR * TETO_BASE))` — na prática o teto sobe **até 90 até a dívida drenar**, e volta a 60 quando `atrasados <= 60`.
+- 🔴 **Regime de dívida (v1.3, F64): o contador é `vencidos = atrasados + hoje`.** Nele,
+  `teto_efetivo = int(min(TETO_BASE + vencidos, CAP_MULTIPLICADOR * TETO_BASE))` — o teto sobe
+  **até 90 até a dívida drenar** e volta a 60 quando `vencidos <= 60`. **O que define dívida é a
+  fila não drenada, não a data em que ela venceu:** card vencido hoje é dívida igual a card
+  vencido ontem.
+  ⚰️ **Revogado nesta versão:** *"Regime de dívida: `atrasados > TETO_BASE`"* — a redação anterior
+  (v1.1, 2026-07-05) escolhia `atrasados` **sem que a escolha estivesse escrita em portador
+  nenhum**, e o resultado foi medido na **s162**: havia **45 atrasados + 22 para hoje = 67
+  vencidos**; o operador leu *"67 > 60, logo regime de dívida"*, o código leu *"45 < 60, teto
+  base"*, e o agente **recomendou parar o estudo** com o número do código. O operador contestou, e
+  a leitura dele é a que fica. Efeito perverso da redação morta: numa dívida composta
+  majoritariamente por cards de HOJE, o regime **nunca disparava** e o teto travava em 60 com a
+  fila inteira vencida.
+- **Uma definição, um nome:** `day_plan.vencidos_de(fsrs)` é a única implementação; o gatilho, o
+  campo `divida.vencidos` do `--json` e a linha "Teto do dia" leem dela. O `--json` também expõe
+  `divida.consumo_hoje` (revisões já gravadas hoje, de `fsrs_revlog`) e o render imprime
+  **`usados/teto`**: teto sem saldo obriga quem lê a derivar a conta à mão, que foi como a s162
+  errou duas vezes no mesmo turno.
 - A fonte dos números é `day_plan.py` (campo `divida` no `--json`; linha "Teto do dia" no render). Constantes nomeadas em `tools/day_plan.py` (`TETO_BASE`, `CAP_MULTIPLICADOR`) — ajuste é edição de 1 linha + este contrato.
 - O teto **informa** a sessão de revisão; quem drena é o `/revisar`. Nenhuma drenagem automática.
 - ⚰️ **Exceção datada (s165, 2026-09-05 -> 13/09/2026) -- ENCERRADA ANTES DO PRAZO em 2026-09-07 (s168).** O usuário autorizou um *sprint* de **120 cards/dia** (2 blocos de 60) até o ENAMED, como decisão pontual e não como novo teto. **Revogada pelo próprio usuário na s168**, ao decidir o sprint de questões S17-S20: *"Manteremos o teto de 60 cards e, se necessário subimos se o teto estourar."* Efeito: o regime canônico (**60/dia, máx. 90 em dívida**) volta a valer de 07/09 em diante, sem esperar 14/09 -- o "subimos se estourar" é exatamente o `CAP_MULTIPLICADOR` já vigente, não uma segunda exceção. `TETO_BASE`/`CAP_MULTIPLICADOR` nunca mudaram. Lápide mantida (e não deletada) porque a s165/s166/s167 rodaram sob ela e os números daquelas sessões só se explicam com ela à vista.
@@ -121,6 +138,14 @@ No check de boot (`reconcile-contract.md`), reportar: total de cards qualitativo
 
 ## Changelog
 
+- **v1.3 (2026-09-10, s176 -- item 1.2 do Tier 1, F64):** o **contador do regime de dívida** deixa
+  de ser ambíguo e passa a ser `vencidos = atrasados + hoje`, com **uma** implementação
+  (`day_plan.vencidos_de`) servindo gatilho, JSON e render; o render passa a imprimir o **saldo do
+  dia** junto do teto. A redação `atrasados > TETO_BASE` ganhou lápide e foi **cadastrada no
+  registro do gate `CONTRATO_REVOGADO`** (ritual de 3 passos, `AGENTE.md §10 item 10`). Rider da
+  mesma passagem: este contrato **entrou na lista de portadores** que o gate vigia -- e a primeira
+  coisa que ele encontrou foi um **`PREPARAR` vivo e prescritivo** aqui dentro, revogado desde a
+  s170 e invisível porque o arquivo não era varrido.
 - **v1.2 (2026-09-10, s176 -- item 0.7 do Tier 0):** dois **promotes** de comportamento que já era
   permanente e não tinha portador em `core/contracts/` -- **calendário de provas** (blackout +
   overflow declarado, datas sempre de `core/provas.json`; F71) e **zona canônica LOCAL** (relógio

@@ -155,11 +155,29 @@ FSRS_LEVE_CAP = 15                # cap de cards no dia leve/descanso
 FATOR_ENERGIA = {"alta": 1.0, "media": 0.85, "baixa": 0.6}  # modula a capacidade
 
 
-def _teto_efetivo(atrasados):
-    """Teto do dia: regime de dívida quando atrasados > TETO_BASE; o teto sobe
-    até o cap para drenar (na prática, dobra até a dívida zerar)."""
-    if atrasados > TETO_BASE:
-        return int(min(TETO_BASE + atrasados, CAP_MULTIPLICADOR * TETO_BASE))
+def vencidos_de(fsrs):
+    """F64 (s176): o contador do regime de dívida tem UM nome -- `vencidos`.
+
+    `vencidos = atrasados + hoje`. A divergência que o achado registra: o código
+    disparava o regime por `atrasados` e o operador lia `vencidos`. Na s162 havia
+    **45 atrasados + 22 p/ hoje = 67**: o dono leu "67 > 60, logo regime de
+    dívida", o código leu "45 < 60, teto base", e o agente recomendou PARAR o
+    estudo com base no número do código. A leitura do dono prevaleceu e está
+    escrita: **card vencido hoje é dívida igual a card vencido ontem** -- o que
+    define dívida é a fila não drenada, não a data em que ela venceu.
+
+    Consequência do critério antigo: numa dívida composta majoritariamente por
+    cards de HOJE, o regime nunca disparava e o teto travava em 60 com a fila
+    inteira vencida. Norma: `core/contracts/fsrs-management-contract.md`.
+    """
+    return int(fsrs.get("atrasados", 0) or 0) + int(fsrs.get("hoje", 0) or 0)
+
+
+def _teto_efetivo(vencidos):
+    """Teto do dia: regime de dívida quando `vencidos` > TETO_BASE; o teto sobe
+    até o cap para drenar. O argumento é `vencidos` (F64), NUNCA `atrasados`."""
+    if vencidos > TETO_BASE:
+        return int(min(TETO_BASE + vencidos, CAP_MULTIPLICADOR * TETO_BASE))
     return TETO_BASE
 
 
@@ -867,10 +885,18 @@ def build(tempo_h=None, energia=None):
     # F71 rider (s174): overflow do blackout de prova e ESTADO do banco, nao so stderr --
     # o boot o mostra com card_id e due (leitor read-only db.overflow_blackout).
     fsrs["overflow_blackout"] = db.overflow_blackout(con.cursor())
+    # F64 (c): o teto sem o SALDO obriga o agente a derivar a conta a mao -- e errar.
+    # `consumo_hoje` = revisoes JA gravadas hoje (fsrs_revlog), a mesma fonte do
+    # `realizado_do_dia` da aderencia.
+    try:
+        consumo_hoje = realizado_do_dia(con, hoje.isoformat())["cards"]
+    except Exception as e:
+        _warn_degradacao("consumo_hoje", e)
+        consumo_hoje = None
     con.close()
 
     dormant = dr.pick()
-    vencidos = fsrs["atrasados"] + fsrs["hoje"]
+    vencidos = vencidos_de(fsrs)      # F64: UMA definicao, usada pelo gatilho E pelo texto
     if (q_hoje or 0) == 0:
         passo = "Quebrar o zero do dia: bloco de questões da área prioritária (refresh pré-bloco antes)."
     elif vencidos > 0:
@@ -899,7 +925,7 @@ def build(tempo_h=None, energia=None):
         "restante_grade_q": (cron or {}).get("restante_q") or 0,
         "ritmo_real": ritmo_real,
         "vencidos": vencidos,
-        "teto_efetivo": _teto_efetivo(fsrs["atrasados"]),
+        "teto_efetivo": _teto_efetivo(vencidos),
         "backlog_novos": fsrs["backlog_novos"],
         "semana_conteudo": (cron or {}).get("conteudo"),
         "lag": (cron or {}).get("lag"),
@@ -921,9 +947,11 @@ def build(tempo_h=None, energia=None):
         "fsrs": fsrs,
         "divida": {
             "atrasados": fsrs["atrasados"],
-            "regime_divida": fsrs["atrasados"] > TETO_BASE,
+            "vencidos": vencidos,                      # F64: o contador do gatilho
+            "regime_divida": vencidos > TETO_BASE,
             "teto_base": TETO_BASE,
-            "teto_efetivo": _teto_efetivo(fsrs["atrasados"]),
+            "teto_efetivo": _teto_efetivo(vencidos),
+            "consumo_hoje": consumo_hoje,              # F64 (c): teto sem saldo obriga conta a mao
         },
         "cronograma": cron,
         "planilha": reconcile_planilha(hoje),    # W1 reporta, nunca bloqueia (B3/F35)
@@ -969,9 +997,11 @@ def review_plan(new_limit=10):
     for c in clusters.values():
         c["frieza"] = frieza.get((c["area"], c["tema"]))
 
+    # F64: mesmo conceito, outra granularidade -- o cluster tambem ordena por
+    # VENCIDOS, e pela mesma definicao. Soma manual aqui recriaria a divergencia
+    # num lugar onde ninguem iria procura-la.
     return sorted(clusters.values(),
-                  key=lambda c: (-(c["atrasados"] + c["hoje"]), -c["total"],
-                                 c["area"], c["tema"]))
+                  key=lambda c: (-vencidos_de(c), -c["total"], c["area"], c["tema"]))
 
 
 def render_review_plan(clusters):
@@ -1087,7 +1117,14 @@ def render(p):
                    f"(`python tools/fsrs_load.py --blackout`)")
     dv = p["divida"]
     regime = " · **REGIME DE DÍVIDA** (teto sobe até drenar)" if dv["regime_divida"] else ""
-    out.append(f"- 🎯 **Teto do dia:** {dv['teto_efetivo']} cards (base {dv['teto_base']}{regime})")
+    # F64: o gatilho é `vencidos` (atrasados + hoje), e o saldo do dia sai junto do teto --
+    # teto sem saldo obriga o leitor a derivar a conta a mão, que foi como a s162 errou.
+    consumo = dv.get("consumo_hoje")
+    saldo = (f" · **{consumo}/{dv['teto_efetivo']} usados hoje** "
+             f"({max(0, dv['teto_efetivo'] - consumo)} restantes)") if consumo is not None else ""
+    out.append(f"- 🎯 **Teto do dia:** {dv['teto_efetivo']} cards (base {dv['teto_base']}"
+               f"{regime}) · gatilho = **{dv.get('vencidos', 0)} vencidos** "
+               f"(atrasados + hoje){saldo}")
     c = p.get("cronograma")
     if c:
         lag = f" · calendário em S{c['nominal']} (~{c['lag']} sem atrás)" if c.get("lag") else ""

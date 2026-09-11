@@ -10,6 +10,7 @@ Limitações documentadas:
 from __future__ import annotations
 
 import difflib
+import sys
 from pathlib import Path
 from typing import Optional
 
@@ -173,10 +174,28 @@ def get_topic_context(tema: str, area: Optional[str] = None) -> dict:
         pass
 
     # 5. RAG chunks — busca semântica sobre resumos indexados
+    # 🔴 F91: este bloco era `except Exception: pass` — o SEGUNDO silenciador em série.
+    # Mesmo uma exceção honesta vinda do RAG virava `relevant_chunks: []`, e o consumidor
+    # (um agente que escreve conclusão) lia isso como "o corpus não tem o tema". Foi assim
+    # que um subagente afirmou que "não há resumo indexado sobre HPB/LUTS" — havia 39 chunks.
+    # A degradação agora é DECLARADA no próprio payload.
     try:
-        from app.engine.rag import search as rag_search
+        from app.engine.rag import search as rag_search, RagIndisponivel
+    except Exception as e:  # o módulo do RAG nem carregou
+        result["relevant_chunks"] = []
+        result["rag_degradado"] = f"motor de RAG indisponivel no import: {type(e).__name__}: {e}"
+        print(f"[WARN] get_topic_context: {result['rag_degradado']}", file=sys.stderr)
+        return result
+
+    try:
         result["relevant_chunks"] = rag_search(tema, n_results=3)
-    except Exception:
-        pass
+    except RagIndisponivel as e:
+        result["relevant_chunks"] = []
+        result["rag_degradado"] = str(e)
+        print(f"[WARN] get_topic_context: {e}", file=sys.stderr)
+    except Exception as e:
+        result["relevant_chunks"] = []
+        result["rag_degradado"] = f"falha inesperada na busca: {type(e).__name__}: {e}"
+        print(f"[WARN] get_topic_context: {result['rag_degradado']}", file=sys.stderr)
 
     return result

@@ -20,6 +20,7 @@ from __future__ import annotations
 import re
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
+import sys
 from typing import Optional
 
 try:
@@ -296,6 +297,47 @@ def gravar_carimbo_indexacao(n_arquivos: int = 0) -> None:
         pass
 
 
+class RagIndisponivel(RuntimeError):
+    """F91: a busca NAO ACONTECEU -- distinto de "aconteceu e nao achou nada".
+
+    Existe porque `list` nao carrega essa distincao e o `[]` ficou sobrecarregado:
+    na s175 um subagente leu um `[]` produzido por Ollama offline e escreveu num
+    relatorio que "nao ha resumo indexado sobre HPB/LUTS" -- havia 39 chunks. O
+    leitor produziu um fato falso porque o tipo de retorno permitia.
+
+    Honest-negative (`core/contracts/evidence-governance.md` secao 7): ausencia de
+    evidencia so pode ser declarada quando a busca rodou. Quem capturar esta
+    excecao deve reportar "nao consegui buscar", jamais "nao existe".
+    """
+
+
+def _warn(msg: str) -> None:
+    """Degradacao vai para stderr NOMEANDO o backend -- nunca silenciosa (F91)."""
+    print(f"[WARN] {msg}", file=sys.stderr)
+
+
+def _degradar(query: str, n_results: int, area: Optional[str], motivo: str) -> list[dict]:
+    """Motor semantico fora do ar: tenta o fallback lexico e NUNCA devolve [] mudo.
+
+    Tres saidas possiveis, todas distinguiveis pelo chamador:
+      - hits marcados `source='fallback_textual'` (degradado, mas honesto);
+      - `RagIndisponivel` quando o fallback nao casa nada -- nao da para afirmar
+        ausencia sem ter buscado de verdade;
+      - `RagIndisponivel` propagada de dentro do proprio fallback, se ele quebrar.
+    """
+    _warn(f"RAG semantico indisponivel ({motivo}) -- degradando para o fallback lexico. "
+          f"Backend: ChromaDB/Ollama. Hits, se houver, vem marcados "
+          f"metadata['source']='fallback_textual'.")
+    hits = _textual_fallback(query, n_results, area)
+    if not hits:
+        raise RagIndisponivel(
+            f"busca NAO ACONTECEU para {query!r}: o motor semantico (ChromaDB/Ollama) esta "
+            f"fora ({motivo}) e o fallback lexico nao casou nenhum resumo. Vazio AQUI nao e "
+            f"ausencia de conteudo no corpus -- nao afirme que o tema nao existe "
+            f"(honest-negative, evidence-governance secao 7).")
+    return hits
+
+
 def _textual_fallback(query: str, n_results: int = 5, area: Optional[str] = None) -> list[dict]:
     """Fallback léxico quando o RAG semântico está indisponível (Chroma/Ollama offline).
 
@@ -303,7 +345,11 @@ def _textual_fallback(query: str, n_results: int = 5, area: Optional[str] = None
     próximo do query e o chunker canônico `_chunk_by_headers` para fatiá-lo em seções
     H2/H3. Retorna no mesmo shape de search(), com `metadata['source'] == 'fallback_textual'`
     (marca de proveniência explícita) e `distance = None` — o consumidor distingue o
-    resultado degradado do semântico curado. `[]` se nada casar.
+    resultado degradado do semântico curado.
+
+    🔴 F91: `[]` daqui significa APENAS "nenhum resumo casou o termo" (os dois `return []`
+    honestos abaixo). Falha INTERNA do fallback levanta `RagIndisponivel` — antes ela caía
+    no mesmo `[]`, e "a salvaguarda quebrou" virava indistinguível de "não há nada".
 
     O import de get_topic_context é lazy: evita ciclo de import (get_topic_context importa rag).
     """
@@ -330,8 +376,13 @@ def _textual_fallback(query: str, n_results: int = 5, area: Optional[str] = None
                 "distance": None,
             })
         return out
-    except Exception:
-        return []
+    except RagIndisponivel:
+        raise
+    except Exception as e:
+        raise RagIndisponivel(
+            f"o fallback lexico QUEBROU ao responder {query!r} ({type(e).__name__}: {e}). "
+            f"A salvaguarda falhou junto com o que ela protege -- nao confunda com "
+            f"ausencia de conteudo.") from e
 
 
 def search(query: str, n_results: int = 5, area: Optional[str] = None, use_hyde: bool = True, max_distance: float = 0.35) -> list[dict]:
@@ -352,7 +403,7 @@ def search(query: str, n_results: int = 5, area: Optional[str] = None, use_hyde:
         list[dict] com chaves: text, metadata (source, section, area, especialidade), distance.
     """
     if not _CHROMA_AVAILABLE:
-        return _textual_fallback(query, n_results, area)
+        return _degradar(query, n_results, area, motivo="ChromaDB ausente do ambiente")
     try:
         query_texts = [query]
         if use_hyde:
@@ -390,7 +441,11 @@ def search(query: str, n_results: int = 5, area: Optional[str] = None, use_hyde:
                     })
 
         combined.sort(key=lambda x: x["distance"])
+        # 🔴 F91: ESTE e o unico `[]` honesto de search() -- o motor rodou, consultou o
+        # indice e nao achou nada acima do corte. Fail-loud nao pode virar fail-sempre.
         return combined[:n_results]
-    except Exception:
-        return _textual_fallback(query, n_results, area)
+    except RagIndisponivel:
+        raise
+    except Exception as e:
+        return _degradar(query, n_results, area, motivo=f"{type(e).__name__}: {e}")
 

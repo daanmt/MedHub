@@ -186,10 +186,15 @@ def get_ritmo_real(janela_dias=14, incluir_simulado=True):
     filtro = "" if incluir_simulado else "area <> 'Simulado' AND "
     conn = get_connection()
     try:
+        # F80b: o corte vem do relogio unico (LOCAL), nunca do date('now') do
+        # SQLite (UTC) -- entre 21h e a meia-noite locais o dia UTC ja virou e a
+        # janela inteira desliza. `data_sessao` e gravado local pelo writer.
+        from datetime import timedelta as _td
+        corte = (agora().date() - _td(days=int(janela_dias))).isoformat()
         row = conn.execute(
             "SELECT COALESCE(SUM(questoes_feitas), 0) FROM sessoes_bulk "
-            "WHERE " + filtro + "data_sessao >= date('now', ?)",
-            ("-%d day" % int(janela_dias),)).fetchone()
+            "WHERE " + filtro + "data_sessao >= ?",
+            (corte,)).fetchone()
     finally:
         conn.close()
     total = row[0] if row else 0
@@ -204,7 +209,11 @@ def get_fresh_error_cards(tema=None, janela_horas=48):
     conn = get_connection()
     try:
         extra = ""
-        params = ["-%d hours" % int(janela_horas)]
+        # F80b: corte derivado de `agora()` (LOCAL), o mesmo relogio que gravou
+        # o `due`. Com datetime('now') o SQLite responde em UTC e a janela de
+        # `janela_horas` encolhe pelo offset da zona (3h em BRT).
+        from datetime import timedelta as _td
+        params = [(agora() - _td(hours=int(janela_horas))).strftime(FORMATO_CARIMBO)]
         if tema:
             extra = " AND (t.tema LIKE ? OR t.area LIKE ?)"
             params += ["%" + tema + "%", "%" + tema + "%"]
@@ -213,7 +222,7 @@ def get_fresh_error_cards(tema=None, janela_horas=48):
             FROM flashcards f
             JOIN fsrs_cards fc ON fc.card_id = f.id
             JOIN taxonomia_cronograma t ON t.id = f.tema_id
-            WHERE fc.state = 0 AND fc.due >= datetime('now', ?)
+            WHERE fc.state = 0 AND fc.due >= ?
               AND COALESCE(f.needs_qualitative, 0) < 2''' + extra + '''
             ORDER BY f.id DESC
         ''', conn, params=params)
@@ -889,7 +898,11 @@ def get_cards_by_bucket(area=None, tema=None, new_limit=10) -> dict:
         excluídos pela definição canônica (ativo_where).
     """
     conn = get_connection()
-    now = datetime.now()
+    # F80b: UM relogio para a funcao inteira. Antes, `atrasados`/`hoje` usavam
+    # este `now` local e a banda `erros_frescos` perguntava as horas ao SQLite
+    # (UTC) -- duas bandas da mesma fila em dois relogios.
+    from datetime import timedelta as _td
+    now = agora()
     today_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
     today_end = now.replace(hour=23, minute=59, second=59, microsecond=999999)
 
@@ -925,8 +938,10 @@ def get_cards_by_bucket(area=None, tema=None, new_limit=10) -> dict:
     # questao_id) NÃO fura a fila — não é anti-reincidência.
     df_frescos = pd.read_sql(
         base + extra + ''' AND fc.state = 0 AND f.questao_id IS NOT NULL
-            AND fc.due >= datetime('now', ?) ORDER BY fc.due DESC LIMIT ?''',
-        conn, params=(*extra_params, "-%d hours" % JANELA_FRESH_H, CAP_FRESH))
+            AND fc.due >= ? ORDER BY fc.due DESC LIMIT ?''',
+        conn, params=(*extra_params,
+                      (now - _td(hours=JANELA_FRESH_H)).strftime(FORMATO_CARIMBO),
+                      CAP_FRESH))
     ids_frescos = [int(x) for x in df_frescos["card_id"].tolist()]
 
     not_in = ""

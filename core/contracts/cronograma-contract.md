@@ -7,7 +7,8 @@ relates_to: [reconcile-contract, forgetting-curve-contract, estado-contract, AGE
 ---
 
 # Contrato do Cronograma (Sync Cronograma ↔ Performance ↔ FSRS)
-**Versão 1.0 | 2026-06-27 (sessão 095) — primeira instância. Materializa o ultraplan `docs/plans/s094-ultraplan.md §c/§d`.**
+**Versão 1.2 | 2026-06-27 (sessão 095), primeira instância; v1.1-1.2 nas sessões seguintes.**
+**Origem: Materializa o ultraplan `docs/plans/s094-ultraplan.md §c/§d`.**
 
 > Documento normativo. Governa a **camada derivada do cronograma de Reta Final** (EMED) e seu sync com os SSOTs de estado. O cronograma é um **plano**, não verdade-de-estado: divergência plano↔realidade é *informação de gestão*, nunca corrupção. Referenciado por: `AGENTE.md` (§2 passo 4, §6, §7.3/§7.4), `reconcile-contract.md` (W5-W7), `forgetting-curve-contract.md` (Boot).
 

@@ -349,7 +349,30 @@ def run_checks(root=None, db_path=None, modo="all"):
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Sensor de drift doc-vs-codigo (WARN-first; exit 0 sempre).")
+        description="Sensor de drift doc-vs-codigo (WARN-first; exit 0 sempre).",
+        epilog=(
+            "ESCOPO -- o que '0 achados' significa, e o que NAO significa (D11, s177).\n"
+            "\n"
+            "  Este sensor cobre DUAS coisas, ambas sintaticas:\n"
+            "    * annot -- anotacoes `drift-check` nos 4 docs de estado;\n"
+            "    * refs  -- referencia MORTA (path citado que nao existe) em\n"
+            "               .claude/commands, .claude/agents, .agents/workflows,\n"
+            "               core/contracts.\n"
+            "\n"
+            "  Ele NAO le semantica. A varredura F75 achou 12 drifts (D1-D12) e este\n"
+            "  sensor, rodando verde, nao cobria D1-D9 por DESENHO: doc que descreve\n"
+            "  arquitetura extinta, numero desatualizado, assinatura de CLI ausente --\n"
+            "  todos citam paths que EXISTEM. 'Verde' aqui quer dizer 'nenhuma anotacao\n"
+            "  vencida e nenhum path quebrado', nunca 'os docs estao corretos'.\n"
+            "\n"
+            "  Quem cobre o resto, hoje:\n"
+            "    * assinatura de CLI ausente (D5) -> tools/cli_signature_check.py (BLOCK)\n"
+            "    * tabela gerada stale, ponteiro morto em doc de RAIZ, status\n"
+            "      contraditorio (G5/G10/G14) -> tools/consistencia_check.py\n"
+            "    * clausula revogada em vigor -> auto_check.check_contrato_revogado\n"
+            "  O que segue SEM sensor esta declarado, nao maquiado: prosa que descreve\n"
+            "  mecanismo extinto sem citar path nem termo cadastrado."),
+        formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--json", action="store_true",
                         help="saida machine-readable (lista JSON de achados)")
     parser.add_argument("--mode", choices=("all", "annot", "refs"), default="all",

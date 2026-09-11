@@ -2,10 +2,12 @@
 type: contract
 layer: core
 status: ativo
+version: 1.0
 relates_to: [AGENTE, fsrs-management-contract, forgetting-curve-contract]
 ---
 
 # Contrato de Orquestracao da Preparacao (Recomendador do Dia)
+**Versao 1.0 | 2026-07-06 (PRD orquestracao-preparacao, part-2) -- primeira instancia.**
 
 > Norma do recomendador (PRD orquestracao-preparacao, part-2; 2026-07-06).
 > Mecanica: `tools/day_plan.py::recomendar_dia` (funcao pura, deterministica).

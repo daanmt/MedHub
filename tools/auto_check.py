@@ -120,11 +120,16 @@ def check_history_integrity(root=None, extras=None):
 # SUBSTRING literal. Ele pega a reintroducao verbatim de uma redacao morta --
 # nao pega a mesma regra reescrita com outras palavras, nem eixo semantico do
 # tipo "bloco menor que 10". Esse eixo fica DECLARADO como nao-verificavel por
-# este check, jamais convertido em metrica inventada. O mecanismo que troca a
-# enumeracao manual por derivacao do ledger e o item 1.8 (ii') do 11 de
-# docs/MEMORIA-AUDITORIA.md -- ate la, o ritual acima e o que sustenta o
-# alcance.
-_TERMOS_REVOGADOS = {
+# este check, jamais convertido em metrica inventada.
+#
+# ⚰️ **O (ii') foi entregue em 11/09/2026 (s177, item 1.8).** O dict abaixo deixou
+# de ser o registro e virou **SEMENTE**: a fonte e a secao 12 do
+# `docs/MEMORIA-AUDITORIA.md`, onde cada revogacao deixa um marcador
+# `<!-- TERMO-REVOGADO: termo | onde -->` no MESMO commit que a declara -- o
+# cadastro passa a morar junto da decisao, que e o que faltava no F90. A semente
+# fica como **fallback declarado**: se o doc sumir ou nao parsear, o gate nao
+# fica sem vocabulario (falhar aberto aqui seria pior que a enumeracao).
+_TERMOS_SEMENTE = {
     "PREPARAR": "revisao-calibrada v1.3 (s170), Clausula 11",
     "Camada 0": "revisao-calibrada v1.3 (s170), Clausula 11",
     "Camada 1": "revisao-calibrada v1.3 (s170), Clausula 11",
@@ -140,10 +145,19 @@ _TERMOS_REVOGADOS = {
     "NÃO vira marca sozinho": "estilo-flashcard, redacao s177 -- F39: `--ingerir` abre marca em "
                               "lote; marca ABERTA e candidato, e quem ENCERRA continua sendo gente",
 }
-# Portadores da norma do /revisar. O contrato NAO basta: o agente que executa
-# le o command. Prescricao ativa sobrevivente num deles torna a lapide do
-# contrato decorativa -- que e exatamente o defeito G12.
-_PORTADORES_NORMA = (
+# Portadores da norma. O contrato NAO basta: o agente que executa le o command.
+# Prescricao ativa sobrevivente num deles torna a lapide do contrato decorativa
+# -- que e exatamente o defeito G12.
+#
+# ⚰️ **A lista abaixo tambem deixou de ser o registro (s177, item 1.8).** Ela e
+# SEMENTE/fallback; a lista real e DERIVADA por
+# `consistencia_check.portadores_derivados()`: todo `core/contracts/*.md`, toda
+# skill em `.claude/commands/`, os docs de raiz e os dois portadores de CODIGO do
+# F97. Enumerar a mao falhou duas vezes seguidas -- o F95 achou o contrato FSRS
+# fora da lista com um `PREPARAR` vivo, e a medicao que trocou a lista achou
+# outro no `README.md`, que tambem estava de fora. **Medido antes de trocar:**
+# manual 10 portadores / 0 achados; derivada 29 / **3 achados reais**.
+_PORTADORES_SEMENTE = (
     "core/contracts/revisao-calibrada-contract.md",
     # F95 (s176, item 1.2): o contrato FSRS estava FORA desta lista e carregava um
     # `PREPARAR` vivo e prescritivo -- revogado desde a s170, invisivel porque o
@@ -172,6 +186,35 @@ _PORTADORES_NORMA = (
     "tools/day_plan.py",
     "tools/dormant_refresh.py",
 )
+
+
+def _derivar_registro():
+    """Vocabulario e portadores EFETIVOS: derivados, com a semente como fallback.
+
+    Fallback e deliberado e declarado: se o doc sumir ou o modulo de consistencia
+    quebrar, o gate degrada para a semente em vez de rodar **sem vocabulario** --
+    um gate que passa por estar vazio e pior que um enumerado a mao.
+    """
+    termos, portadores = dict(_TERMOS_SEMENTE), _PORTADORES_SEMENTE
+    try:
+        _tools = str(Path(__file__).resolve().parent)
+        if _tools not in sys.path:
+            sys.path.insert(0, _tools)
+        from consistencia_check import (portadores_derivados,
+                                        termos_revogados_do_ledger)
+        do_ledger = termos_revogados_do_ledger(root=ROOT_DIR)
+        if do_ledger:
+            termos = {**termos, **do_ledger}
+        derivados = portadores_derivados(root=ROOT_DIR)
+        if derivados:
+            portadores = derivados
+    except Exception:  # noqa: BLE001 -- degradacao declarada, nunca gate vazio
+        pass
+    return termos, portadores
+
+
+_TERMOS_REVOGADOS, _PORTADORES_NORMA = _derivar_registro()
+
 _RE_HEADING = re.compile(r"^(#{1,6})\s")
 # Marcador de SECAO de lapide. Deliberadamente MAIS LARGO que o `RE_LAPIDE` do
 # doc_drift, que responde outra pergunta ("esta linha afirma que algo sumiu?").
@@ -1023,6 +1066,56 @@ def main():
     _ledger_record("cli_assinatura",
                    [{"alvo": a["alvo"], "payload": {"orfas": a["payload"]["orfas"]}}
                     for a in sem_assinatura])
+
+    # 16. Varredura de consistencia entre REGISTROS (s177, item 1.8): G5 tabela
+    #     gerada stale · G10 ponteiro morto em doc de raiz · G14 status do ledger
+    #     x lapide do §11. Os tres tem a mesma forma: um registro que envelheceu
+    #     em silencio porque nada perguntava se ele ainda dizia a verdade. WARN --
+    #     nenhum deles quebra codigo, e a politica s106/107 manda nascer WARN.
+    desc_cons = "Consistencia entre registros (G5/G10/G14)"
+    inconsistencias = []
+    try:
+        from consistencia_check import run_checks as cons_run
+        inconsistencias = cons_run()
+    except Exception as e:  # noqa: BLE001
+        print(f"\n[WARN] CONSISTENCIA_SENSOR: sensor indisponivel ({e}).")
+    if inconsistencias:
+        por_check = {}
+        for a in inconsistencias:
+            por_check.setdefault(a["check"], []).append(a["alvo"])
+        resumo_cons = "; ".join(f"{k}: {len(v)} ({v[0]})" for k, v in por_check.items())
+        print()
+        print(f"[WARN] CONSISTENCIA (G5/G10/G14): {len(inconsistencias)} registro(s) "
+              f"divergente(s) -- {resumo_cons}. "
+              f"Tabela gerada re-cola com `python tools/reachability_check.py --tabela`; "
+              f"ponteiro morto vira lapide ou some; status contraditorio se resolve no "
+              f"cabecalho do ledger. Detalhe: python tools/consistencia_check.py")
+    results_summary.append((desc_cons, True, len(inconsistencias)))
+    _ledger_record("consistencia_registros",
+                   [{"alvo": a["alvo"], "payload": {"check": a["check"]}}
+                    for a in inconsistencias])
+
+    # 16b. Paridade do registro de termos revogados: tudo que a SEMENTE conhece
+    #      tem de existir como marcador no §12 do inventario. E o que impede o
+    #      (ii') de regredir para "o dict e a fonte" -- se alguem cadastrar so no
+    #      codigo, o marcador falta e isto acusa.
+    desc_termos = "Registro de termo revogado derivado (ii')"
+    try:
+        from consistencia_check import termos_revogados_do_ledger
+        no_ledger = set(termos_revogados_do_ledger(root=ROOT_DIR))
+    except Exception:  # noqa: BLE001
+        no_ledger = set()
+    so_no_codigo = sorted(set(_TERMOS_SEMENTE) - no_ledger)
+    if so_no_codigo:
+        print()
+        print(f"[WARN] TERMO_SEM_MARCADOR (ii'): {len(so_no_codigo)} termo(s) revogado(s) "
+              f"existem so no codigo e nao no §12 de docs/MEMORIA-AUDITORIA.md "
+              f"({', '.join(repr(t) for t in so_no_codigo[:3])}"
+              f"{', ...' if len(so_no_codigo) > 3 else ''}). O cadastro mora junto da "
+              f"decisao: acrescentar `<!-- TERMO-REVOGADO: termo | onde -->`.")
+    results_summary.append((desc_termos, True, len(so_no_codigo)))
+    _ledger_record("termo_sem_marcador",
+                   [{"alvo": t, "payload": {}} for t in so_no_codigo])
 
     # PAINEL DE DÍVIDA (descolar part-1, F54/P5): o leitor obrigatório. Imprime SEMPRE
     # (dívida invisível em run verde é exatamente o modo de falha F54). Sensor: detecta

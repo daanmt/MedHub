@@ -2,7 +2,7 @@
 type: contract
 layer: core
 status: canonical
-version: 1.0
+version: 1.1
 relates_to: [AGENTE, fsrs-management-contract, reconcile-contract]
 ---
 

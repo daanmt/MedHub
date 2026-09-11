@@ -42,6 +42,24 @@ arquivo**. Extração pela **AST**, não por regex sobre o texto — a 1ª vers�
 docstring e se acusou. Limites declarados na docstring do módulo (parser dinâmico escapa; mede
 presença, não semântica; flag genérica pode colar em skill vizinha e **inflar** a cobertura).
 
+### `tools/consistencia_check.py` — consistência entre registros (G5 · G10 · G14)
+
+| Flag | Função |
+|---|---|
+| `--json` | Achados em JSON: `[{check, alvo, payload}]`. |
+| `--check {todos,tabela,paths,status}` | Roda só um sub-check (default `todos`). |
+
+Três registros que envelheciam em silêncio porque nada perguntava se ainda diziam a verdade:
+**`tabela`** (a §7.4 do `AGENTE.md` é gerada e colada — cada CLI novo a deixa stale) ·
+**`paths`** (`tools/*.py` inexistente citado num doc de raiz; o `MEMORY_POINTERS` só alcançava
+`memory/`) · **`status`** (achado `**ABERTO**` no `AUDITORIA_MEDHUB.md` com lápide de `FEITO` no
+`§11`). 🔴 Duas regras de precisão nasceram de medição: linha que **afirma a ausência** é lápide,
+não ponteiro morto; e `PARCIAL` **não** é contradição — é o meio-termo declarado.
+
+O módulo também é a casa de duas **derivações** que o `auto_check` consome no lugar de listas
+digitadas: `portadores_derivados()` (F95) e `termos_revogados_do_ledger()` (o (ii') do F90, lido
+dos marcadores `<!-- TERMO-REVOGADO: ... -->` do §12 do inventário).
+
 ### `tools/doc_drift.py` — drift doc-vs-código
 
 | Flag | Função |

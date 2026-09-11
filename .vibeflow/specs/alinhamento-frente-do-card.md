@@ -84,6 +84,27 @@ a viver sob a métrica que de fato o descreve (bifurcação levada ao `/ai-eng` 
 6. **Craftsmanship gate:** `python -X utf8 tools/auto_check.py --changed` verde; suíte completa
    verde (baseline **465**); ASCII limpo, sem seta Unicode nem LaTeX (`AGENTE.md §4.5`).
 
+## Promote: `fsrs_revlog.reason_servido` é CAMPO, não instrumentação (item 0.7, s176 -- F76)
+
+> Promovido em 10/09/2026 porque é comportamento **permanente** e estava sem portador: vivia como
+> detalhe de um hotfix. Este spec é o portador certo -- o contador do DoD 5 acima **existe por causa
+> dele**, e quem for reimplementar a leitura precisa achar a regra antes, não depois.
+
+`reason_servido` é o bucket **recomputado no ato da gravação** (`db.bucket_de`, função pura, sobre
+`state`/`due`/`questao_id` do card **antes** da revisão), gravado em toda linha de `fsrs_revlog` por
+`record_review`. Ele não é telemetria opcional: é a **única** resposta confiável a *"por que este
+card apareceu?"*, porque `selection_reason` é o que o **chamador alegou** e pode divergir do estado
+real da fila. A divergência `selection_reason != reason_servido` é **WARN em stderr, nunca bloqueio**
+-- a revisão do usuário jamais é derrubada por discordância de rótulo -- e fica consultável por SQL.
+
+🔴 **A consequência que governa quem usar o campo:** `NULL` significa **"revisão anterior ao F76"**,
+e isso é **fora da janela**, nunca uma classe. Qualquer leitura que trate `NULL` como um bucket
+inventa uma população que não existe. Toda métrica construída sobre ele declara **os dois
+denominadores** (dentro e fora da janela) e declara também quando a amostra ainda é pequena demais
+para informar -- é o que o DoD 5 faz ao se calar abaixo de 300 revisões. Norma de fundo:
+`AGENTE.md §10.8` (*verification-stack*) -- eixo conhecido e não verificável se declara, não se
+maquia.
+
 ## Escopo
 
 - `tools/card_checks.py`: +3 predicados puros + o parâmetro de corte nomeado; os três entram em

@@ -809,7 +809,7 @@ relates_to: [AGENTE, ESTADO, HANDOFF]
 > auditoria ampla do banco que vira em breve" -- conecta direto com F7 (mesma familia: defeito de
 > autoria de card) e com a auditoria ampla ja pendente desde a s148 (ver HANDOFF.md).
 
-### F40 -- Quatro padroes novos de defeito de formulacao de card (estimulo, nao conteudo) -- **MEDIA** -- **PARCIAL (4 reforjados nesta sessao)**
+### F40 -- Quatro padroes novos de defeito de formulacao de card (estimulo, nao conteudo) -- **MEDIA** -- **RESOLVIDO (s176, item 0.3 -- a fila de reforja virou ESTADO append-only com fechamento VERIFICADO; commit `315ae01`)**
 - **Evidencia:** 4 cards reforjados ao vivo por queixa do usuario durante a drenagem, nenhum por erro
   factual -- todos por como a FRENTE estava formulada:
   1. **Pacote de fatos, nao eixo unico** (`card_id=44`, Damage Control/Trauma Abdominal). Pedia lista
@@ -856,7 +856,7 @@ relates_to: [AGENTE, ESTADO, HANDOFF]
 
 ---
 
-### F41 -- Sessao s154 (100 cards, regime de divida): 6 novas instancias de F40 + reincidencia do padrao id=120 em Gravidez Ectopica + subpadrao tautologico em cards `[bulk]` -- **MEDIA** -- **PARCIAL (6 reforjados + 5 cards novos nesta sessao)**
+### F41 -- Sessao s154 (100 cards, regime de divida): 6 novas instancias de F40 + reincidencia do padrao id=120 em Gravidez Ectopica + subpadrao tautologico em cards `[bulk]` -- **MEDIA** -- **RESOLVIDO (s176, item 0.3 -- idem F40; commit `315ae01`)**
 - **Evidencia (extensao direta de F40, mesma familia -- pacote-de-fatos/pergunta composta/circular):**
   drenagem de 100 cards em 10 blocos produziu 6 reforjas ao vivo por queixa do usuario, nenhuma por
   erro factual de conteudo:
@@ -1449,7 +1449,7 @@ Sensores existentes (`doc_drift.py`, `sync_skills --check`) reportavam 0 achados
 
 ## 4r. Sessao de uso s168 (Claude Code/Opus 5, 2026-09-07) -- precificacao da grade: achado F77
 
-### F77 -- `grade.json` nao guarda questoes por tarefa, e o rateio igual que o contrato manda erra por ate 3x -- **MEDIA** -- **ABERTO**
+### F77 -- `grade.json` nao guarda questoes por tarefa, e o rateio igual que o contrato manda erra por ate 3x -- **MEDIA** -- **RESOLVIDO (s176, item 0.4 -- `questoes_fonte` por tarefa, 27/30 semanas reconciliam; commit `1948457`)**
 - **Evidencia (s168):** o usuario pediu "quantas questoes somam estes temas?". `core/cronograma/grade.json` so tem `total_questoes` no nivel da SEMANA; o comentario do `parse_grade` (`tools/cronograma.py`, bloco do `wq`) instrui explicitamente: *"NAO atribuimos count por task: o PDF nao amarra link[i]<->task[i] de forma garantida (ultraplan §c.5) -> o consumidor rateia igual (total_questoes / n_tasks)"*. Na S17 o rateio daria **26,6q para toda tarefa**, quando as tarefas reais valem de **16q (Pneumonias Bacterianas) a 50q (APS Revisao)** -- erro de ate 3x, justamente na dimensao que o usuario usa para planejar o dia.
 - **O dado ja existe e nao e gravado:** `_parse_detail()` **ja calcula** `questoes` por tarefa (soma dos `Link - NN questoes` dentro do bloco da tarefa). O valor e computado e descartado -- `parse_grade` monta o dict de task sem ele.
 - **A desconfianca do contrato e testavel, e passou:** re-parseei S17-S20 e a **soma das tarefas bate exatamente com o total da semana nas quatro** (293/380/449/301). Nenhum link ficou orfao. Sobrou uma anomalia -- APS (Teoria III) da S17 com 0q -- que tinha a forma de atribuicao trocada e **foi resolvida por evidencia externa**: no xlsx do usuario essa linha esta **riscada**. Dois sinais independentes concordando.
@@ -1457,7 +1457,7 @@ Sensores existentes (`doc_drift.py`, `sync_skills --check`) reportavam 0 achados
 - **Remedio (M):** `cronograma.py --semana N` passar a imprimir a coluna de questoes por tarefa -- hoje o usuario nao tem CLI que responda "quanto vale esta tarefa?" sem re-parsear o PDF a mao.
 - **Padrao de fundo:** e um primo do achado de alcancabilidade -- um dado **construido e deliberadamente descartado** por uma desconfianca que nunca foi medida. A desconfianca era razoavel em 2026-07; custou 3 sessoes de planejamento cego e nao tinha teste.
 
-### F77b -- `_parse_detail` so reconhece `Livro Digital:` e perde o tema dos blocos "Revisao por Questoes" -- **BAIXA** -- **ABERTO**
+### F77b -- `_parse_detail` so reconhece `Livro Digital:` e perde o tema dos blocos "Revisao por Questoes" -- **BAIXA** -- **RESOLVIDO (s176, item 0.4 -- tarefas sem tema 35 -> 15; commit `1948457`)**
 - **Evidencia (s168):** ao montar o bloco de links do artifact, as 5 tarefas do tipo "Revisao por Questoes" (S18 t12/t13, S19 t11/t12/t13) sairam com `tema_detail` vazio. Causa: o regex de `_parse_detail` (`tools/cronograma.py`) exige o literal `Livro Digital:`, mas essas tarefas usam `Assunto:` -- ex.: *"Obstetricia Assunto: Pre-Natal; Assistencia ao Parto; Vitalidade Fetal (Revisao por Questoes)"*. Resultado: o `grade.json` grava essas 5 tarefas por ciclo com `tema` vazio.
 - **Impacto:** e exatamente a familia do drift "Revisao por Questoes" ja registrado (tarefa multi-tema que cai em campo emprestado e fica subnotificada). O tema esta escrito no PDF e o parser o joga fora -- mesmo padrao do F77, um degrau abaixo.
 - **Remedio (S):** trocar o literal por `(?:Livro Digital|Assunto):` no regex de `_parse_detail`. Uma linha; 5 tarefas por ciclo deixam de nascer sem nome.
@@ -1500,7 +1500,7 @@ Sensores existentes (`doc_drift.py`, `sync_skills --check`) reportavam 0 achados
 - **Remedio (S):** predicado novo em `tools/card_checks.py` (a biblioteca UNICA de predicados de qualidade) -- `frente_pergunta` casa regex de dexis **E** `frente_contexto` vazio/< N caracteres -> achado. Nasce WARN, como o check 6 do F79.
 - **Remedio (M):** varredura do banco com o predicado novo para dimensionar o passivo antes de decidir promocao a BLOCK.
 
-### F81 -- `frente_contexto` DESALINHADO da `frente_pergunta`: 3 eixos de defeito que nenhum predicado de `card_checks.py` mede -- **MEDIA** -- **ABERTO**
+### F81 -- `frente_contexto` DESALINHADO da `frente_pergunta`: 3 eixos de defeito que nenhum predicado de `card_checks.py` mede -- **MEDIA** -- **RESOLVIDO (s176, item 0.2 -- 3 predicados WARN nomeados, eixo C declarado nao-verificavel; commit `84e75ad`)**
 - **Origem (s170):** achado do USUARIO durante o DRENAR, nao do harness. Depois de sinalizar "reforja" em 3 cards do mesmo bloco (#243, #792, #321), ele nomeou o padrao: *"note que todas as perguntas aparentam o padrao da de crise convulsiva do bloco anterior: parece que contexto e pergunta 'falam de coisas diferentes'"*. E o 3o caso consecutivo de defeito de card descoberto por leitura humana e nao por gate (familia F79 / F79b).
 - **O buraco estrutural:** `checar_resposta_embutida` compara **frente x verso**. Nenhum predicado compara **contexto x pergunta**. O eixo inteiro do alinhamento interno da FRENTE esta fora de cobertura.
 - **Varredura (read-only, 904 cards ativos com contexto+pergunta preenchidos), 3 eixos:**
@@ -1652,7 +1652,7 @@ Protocolo `AGENTE.md §10.6` (D71): implement E audit aqui, vereditos do `/ai-en
 
 ## 6s. Sessao de ESTUDO s175, 2o bloco (autopsias de Diarreia e Urologia) -- F91 e F92
 
-### F91 -- `rag.search()` devolve `[]` com o motor OFFLINE e o consumidor le isso como "nao existe conteudo": honest-negative violado na camada `local` -- **ALTA** -- **ABERTO (remedio = spec)**
+### F91 -- `rag.search()` devolve `[]` com o motor OFFLINE e o consumidor le isso como "nao existe conteudo": honest-negative violado na camada `local` -- **ALTA** -- **RESOLVIDO (s176, item 0.1b -- 3 estados distintos + `RagIndisponivel`; commit `b9058c9`)**
 
 - **Como apareceu:** durante a autopsia de Urologia (s175), o subagente `evidence-researcher` concluiu e escreveu num relatorio de evidencia que *"nao ha resumo indexado sobre HPB/LUTS"* e registrou o item como lacuna de cobertura do corpus. **A afirmacao e falsa:** `resumos/Cirurgia/Urologia.md` tem **39 chunks** indexados no ChromaDB (colecao com 2.353 chunks).
 - **Reproducao (medida por mim, 10/09/2026, nao herdada do subagente):**

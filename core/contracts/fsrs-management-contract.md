@@ -2,12 +2,12 @@
 type: contract
 layer: core
 status: canonical
-version: 1.1
+version: 1.2
 relates_to: [reconcile-contract, estado-contract, AGENTE]
 ---
 
 # Contrato de Gerenciamento do FSRS
-**Versão 1.1 | 2026-07-05 (s108+, F3/F4 do ledger AUDITORIA_MEDHUB) — anterior: 1.0, 2026-06-03 (sessão 075)**
+**Versão 1.2 | 2026-09-10 (s176, item 0.7 -- promotes F71 e F80) · v1.1 2026-07-05 (s108+, F3/F4 do ledger AUDITORIA_MEDHUB) · v1.0 2026-06-03 (sessão 075)**
 
 > Documento normativo. Define como a fila de repetição espaçada é gerenciada, drenada e mantida.
 > Referenciado por: `AGENTE.md`, `reconcile-contract.md` (W3), `.claude/commands/revisar.md`, `.claude/commands/estilo-flashcard.md`.
@@ -36,6 +36,31 @@ com intervalo ≥ 4 dias, `record_review` pode mover o **`due`** (nunca `stabili
 para o dia de **menor carga** dentro da janela de **±5% do intervalo** (piso 1 dia, teto 10),
 nunca para hoje/passado; empate preserva o dia do FSRS. Falha no balanceamento degrada para o
 `due` original com WARN. Suíte `tools/test_fsrs_balance.py` é BLOCKING no `auto_check` (2c).
+
+### Calendário de provas: blackout e overflow (v1.2 -- promote do F71, s174)
+
+O balanceador **conhece o calendário**, e isso é lei, não detalhe de implementação. A janela de
+**blackout** -- o **dia da prova e o dia seguinte** -- **não recebe card e não é atravessada**:
+um alvo que caia nela é movido para **antes** da prova; sem vaga dentro da folga de ±5%, o card
+**fica onde está** e passa a ser **overflow DECLARADO**, nunca um card silenciosamente empurrado
+para depois. 🔴 **As datas saem de `core/provas.json`** (leitor único `app/utils/provas.py`) --
+**data literal no código é proibida**: um blackout hardcoded envelhece exatamente quando importa,
+que é na véspera da prova seguinte. O overflow é **estado do banco**, não log: `db.overflow_blackout`
+o expõe com `card_id` e `due`, o Plano do Dia o imprime no boot, e `tools/fsrs_load.py --blackout`
+re-roda o balanceador sobre a fila com **dry-run + COUNT-ASSERT**. Resolver um overflow (mover à
+mão para antes da prova) é **decisão do operador**, não do harness.
+
+### Zona canônica: o relógio é LOCAL e é um só (v1.2 -- promote do F80/F80b, s174/s176)
+
+Todo instante que o `ipub.db` grava ou compara é **hora LOCAL naive**, e vem de **`db.agora()`** --
+o relógio único. A regra vale para **writers E leitores**: `SELECT ... datetime('now')` devolve
+**UTC** e comparar isso com uma coluna gravada em local é erro silencioso de fuso. Medido no F80b:
+a janela de "erro fresco" de 48h operava como **45h**, e a janela de volume deslizava um dia inteiro
+entre 21h e a meia-noite. `db.agora()` é monkeypatchável nos testes, e por isso os chamadores a
+invocam **pelo atributo do módulo** (`db.agora()`), nunca por `from db import agora`.
+🔴 **Escopo DECLARADO:** a varredura estrutural que impõe isto cobre `app/`; os sítios gêmeos em
+`tools/` (`audit_fsrs.py`, `variancia.py`) seguem **deferidos, não esquecidos** -- e o histórico
+anterior a `37e0859` continua gravado em UTC (backfill é decisão do operador, Tier 2.3).
 
 ---
 
@@ -91,3 +116,17 @@ Backlog = cards `state = 0` (nunca revisados). Após a bankruptcy, ~307 cards qu
 ## Reconciliação FSRS (boot)
 
 No check de boot (`reconcile-contract.md`), reportar: total de cards qualitativos, backlog (`state=0`), fila vencida hoje, e tendência do backlog. Drift sem drenagem → W3.
+
+---
+
+## Changelog
+
+- **v1.2 (2026-09-10, s176 -- item 0.7 do Tier 0):** dois **promotes** de comportamento que já era
+  permanente e não tinha portador em `core/contracts/` -- **calendário de provas** (blackout +
+  overflow declarado, datas sempre de `core/provas.json`; F71) e **zona canônica LOCAL** (relógio
+  único `db.agora()`, writers **e** leitores; F80/F80b). Nenhuma mudança de código: o que muda é
+  que a regra passa a existir onde alguém a lê antes de reimplementá-la. O terceiro promote do
+  item (o campo `fsrs_revlog.reason_servido`, F76) ficou no spec do F81, que é o portador certo
+  dele.
+- **v1.1 (2026-07-05, s108+):** balanceador de carga absorvido como lei (F52a); teto dinâmico (F4).
+- **v1.0 (2026-06-03, s075):** contrato inicial -- backlog represado e poluição por cards legados.

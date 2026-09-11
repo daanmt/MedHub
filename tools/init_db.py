@@ -155,6 +155,37 @@ def init_db():
     CREATE INDEX IF NOT EXISTS idx_review_log_tema ON review_log(tema_id, reviewed_at)
     ''')
 
+    # reforja_marks (B2/F40+F41+G7, s176) -- a fila de reforja como ESTADO.
+    #
+    # 🔴 APPEND-ONLY DE PROPOSITO. Cada linha e um EVENTO ('marcada' | 'fechada' |
+    # 'descartada'); o estado atual e DERIVADO, nunca guardado. Sem isso o #792 --
+    # marcado em tres sessoes diferentes e ainda em card_version=1 -- continuaria
+    # sendo anedota em vez de contagem: aqui ele e simplesmente 3 linhas.
+    #
+    # NAO existe coluna booleana de status. Foi a licao do F82: `card_version` NAO
+    # e evidencia de reforja feita (#321 em v2 com o defeito intacto; #1568 com
+    # evento de reforja em 09-09 e ainda disparando o predicado hoje). Qualquer
+    # campo que alguem possa "virar" reproduziria o mesmo engano num lugar novo.
+    #
+    # `evidencia` registra COMO a marca fechou: o nome do predicado que re-rodou
+    # limpo, ou 'humana' quando o defeito nao tem predicado que o meca -- fronteira
+    # declarada, nunca metrica inventada.
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS reforja_marks (
+        id         INTEGER PRIMARY KEY AUTOINCREMENT,
+        card_id    INTEGER NOT NULL,
+        evento     TEXT NOT NULL CHECK (evento IN ('marcada','fechada','descartada')),
+        motivo     TEXT NOT NULL,
+        evidencia  TEXT,
+        origem     TEXT,
+        criado_em  DATETIME,
+        FOREIGN KEY (card_id) REFERENCES flashcards(id)
+    )
+    ''')
+    cursor.execute('''
+    CREATE INDEX IF NOT EXISTS idx_reforja_marks_card ON reforja_marks(card_id, criado_em)
+    ''')
+
     # Tabela 8: Plano do dia PERSISTIDO (spec telemetria-estudo-part-1).
     #           O que o day_plan recomendou, com flags de contexto do run — o
     #           PLANEJADO para a aderência planejado×real (part-2). Só metadado

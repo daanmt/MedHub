@@ -1145,6 +1145,136 @@ def resolve_tema_id(area, tema):
     return row[0] if row else None
 
 
+# --- reforja_marks (B2 / F40+F41+G7, s176) --------------------------------
+# A fila de reforja como ESTADO. Tres writers e um leitor; ninguem mais toca a
+# tabela (allowlist F49). Append-only por contrato: nao ha UPDATE aqui, e nao ha
+# coluna de status para dar UPDATE.
+
+class ReforjaAindaDefeituosa(ValueError):
+    """Fechamento RECUSADO: o predicado que motivou a marca ainda dispara.
+
+    Existe porque "alguem editou" nunca foi evidencia de "o defeito saiu". F82
+    mediu #321 em card_version=2 com o defeito intacto; a s176 mediu #1568 com
+    evento `reforja` registrado em 09-09 e ainda disparando o predicado. Quem
+    fecha uma marca afirma que o defeito acabou -- e a afirmacao e checavel.
+    """
+
+
+def _card_para_predicado(conn, card_id):
+    row = conn.execute(
+        "SELECT frente_contexto, frente_pergunta, verso_resposta, verso_regra_mestre, "
+        "verso_armadilha FROM flashcards WHERE id = ?", (card_id,)).fetchone()
+    if row is None:
+        return None
+    return {"frente_contexto": row[0], "frente_pergunta": row[1],
+            "verso_resposta": row[2], "verso_regra_mestre": row[3],
+            "verso_armadilha": row[4]}
+
+
+def _registrar_marca(card_id, evento, motivo, evidencia=None, origem=None):
+    conn = get_connection()
+    try:
+        cur = conn.execute(
+            "INSERT INTO reforja_marks (card_id, evento, motivo, evidencia, origem, "
+            "criado_em) VALUES (?, ?, ?, ?, ?, ?)",
+            (int(card_id), evento, motivo, evidencia, origem, carimbo()))
+        conn.commit()
+        return cur.lastrowid
+    finally:
+        conn.close()
+
+
+def marcar_reforja(card_id, motivo, origem=None) -> int:
+    """Abre uma marca de reforja. Marcar o MESMO card de novo cria outra linha --
+    e proposital: '#792 marcado 3x' deixa de ser anedota de HANDOFF e vira COUNT."""
+    if not (motivo or "").strip():
+        raise ValueError("motivo e obrigatorio -- marca sem motivo nao fecha nem audita")
+    return _registrar_marca(card_id, "marcada", motivo.strip(), origem=origem)
+
+
+def fechar_reforja(card_id, motivo, forcar=False, justificativa=None, origem=None) -> int:
+    """Fecha uma marca RE-VERIFICANDO o defeito que a motivou.
+
+    Se `motivo` nomeia um predicado de `card_checks.PREDICADOS_VERIFICAVEIS`, ele e
+    re-executado sobre o card COMO ESTA no banco agora. Ainda dispara -> recusa
+    (`ReforjaAindaDefeituosa`), a menos que `forcar=True` COM justificativa escrita,
+    que fica gravada na linha para auditoria.
+
+    Motivo fora do registro (pacote-de-fatos, pergunta circular, o eixo C semantico)
+    nao tem predicado que o meca: fecha com `evidencia='humana'`. Fronteira
+    DECLARADA, nunca metrica inventada (AGENTE.md secao 10.8).
+    """
+    import card_checks as _cc
+    predicado = _cc.PREDICADOS_VERIFICAVEIS.get((motivo or "").strip())
+    conn = get_connection()
+    try:
+        card = _card_para_predicado(conn, card_id)
+    finally:
+        conn.close()
+    if card is None:
+        raise ValueError(f"card #{card_id} nao existe")
+
+    if predicado is None:
+        if forcar and not (justificativa or "").strip():
+            raise ValueError("forcar exige justificativa escrita")
+        return _registrar_marca(card_id, "fechada", motivo, evidencia="humana", origem=origem)
+
+    ainda = predicado(card)
+    if ainda and not forcar:
+        raise ReforjaAindaDefeituosa(
+            f"card #{card_id} AINDA dispara '{motivo}' apos a reforja: {ainda}. "
+            f"Reescrever nao e o mesmo que resolver -- a marca continua aberta. "
+            f"Para fechar assim mesmo, use forcar=True com justificativa escrita.")
+    if ainda and forcar:
+        if not (justificativa or "").strip():
+            raise ValueError("forcar exige justificativa escrita")
+        return _registrar_marca(card_id, "fechada", motivo,
+                                evidencia=f"forcado: {justificativa.strip()}", origem=origem)
+    return _registrar_marca(card_id, "fechada", motivo,
+                            evidencia=f"predicado {motivo} re-rodou limpo", origem=origem)
+
+
+def descartar_reforja(card_id, motivo, justificativa, origem=None) -> int:
+    """'Olhei e nao era defeito' -- desfecho legitimo e DIFERENTE de 'resolvi'.
+
+    Sem este estado, marca falsa fecharia como conserto e a metrica de passivo
+    mentiria para cima."""
+    if not (justificativa or "").strip():
+        raise ValueError("descartar exige justificativa escrita")
+    return _registrar_marca(card_id, "descartada", motivo,
+                            evidencia=f"descartada: {justificativa.strip()}", origem=origem)
+
+
+def fila_reforja(incluir_fechadas=False):
+    """Estado DERIVADO dos eventos -- a unica cifra citavel do passivo (G7).
+
+    Uma marca (card_id, motivo) esta ABERTA quando o numero de 'marcada' excede o de
+    'fechada' + 'descartada' para aquele par. Devolve lista de dicts ordenada por
+    n_marcacoes desc (o reincidente primeiro), depois card_id.
+    """
+    conn = get_connection()
+    try:
+        linhas = conn.execute(
+            "SELECT card_id, motivo, evento, COUNT(*) FROM reforja_marks "
+            "GROUP BY card_id, motivo, evento").fetchall()
+    finally:
+        conn.close()
+    agrupado = {}
+    for card_id, motivo, evento, n in linhas:
+        d = agrupado.setdefault((card_id, motivo),
+                                {"card_id": card_id, "motivo": motivo,
+                                 "marcada": 0, "fechada": 0, "descartada": 0})
+        d[evento] = n
+    saida = []
+    for d in agrupado.values():
+        d["n_marcacoes"] = d["marcada"]
+        d["aberta"] = d["marcada"] > (d["fechada"] + d["descartada"])
+        if d["aberta"] or incluir_fechadas:
+            saida.append(d)
+    saida.sort(key=lambda d: (-d["n_marcacoes"], d["card_id"]))
+    return saida
+
+
 def log_review(tema_id=None, resumo_path=None, kind='dormant_refresh',
                source='agent', note=None) -> int:
     """Registra uma revisão TEMÁTICA em review_log e retorna o id da linha.

@@ -201,12 +201,18 @@ def _resumo_docstring(rel):
         txt = (ROOT_DIR / rel).read_text(encoding="utf-8", errors="replace")
     except Exception:
         return ""
-    m = re.search(r'^\s*(?:"""|\'\'\')(.*?)(?:\n|"""|\'\'\')', txt, re.S)
+    # O `^` ancora no inicio do ARQUIVO: sem tolerar o shebang, todo CLI executavel
+    # perdia a descricao e a tabela do AGENTE secao 7.4 exibia "—" (= "modulo sem
+    # docstring"), afirmando uma lacuna que nao existe. Achado ao gerar a tabela na
+    # s176, com `tools/reforja.py` recem-criado e docstring completa.
+    m = re.search(r'^(?:#![^\n]*\n)?\s*(?:"""|\'\'\')(.*?)(?:"""|\'\'\')', txt, re.S)
     if not m:
         return ""
-    linha = m.group(1).strip()
-    linha = re.sub(r"^[\w./]+\.py\s*[-—:]\s*", "", linha)   # tira o "nome.py — "
-    linha = re.sub(r"^MedHub\s*[-—:]\s*", "", linha)
+    # 1a linha NAO-VAZIA do corpo: docstring que abre com quebra de linha e a
+    # convencao de metade dos CLIs, e a leitura rigida devolvia string vazia.
+    linha = next((l.strip() for l in m.group(1).splitlines() if l.strip()), "")
+    linha = re.sub(r"^[\w./]+\.py\s*[-—:]+\s*", "", linha)   # tira o "nome.py — " (ou " -- ")
+    linha = re.sub(r"^MedHub\s*[-—:]+\s*", "", linha)
     return linha.split(". ")[0].strip().rstrip(".")[:88]
 
 

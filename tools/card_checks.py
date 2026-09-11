@@ -290,6 +290,23 @@ def checar_contrafactual_mal_formado(card):
     return None
 
 
+# Registro nome -> predicado, para quem precisa RE-VERIFICAR um defeito nomeado
+# (B2/F40: o fechamento de uma marca de reforja re-roda o predicado que a motivou,
+# em vez de confiar em `card_version` ou na palavra de quem editou -- licao do F82).
+# So entram predicados chamaveis com UM dict de card. Defeito fora deste registro
+# nao e verificavel por maquina, e o fechamento dele fica declarado como humano.
+PREDICADOS_VERIFICAVEIS = {
+    "contexto_redundante": lambda c: checar_contexto_redundante(c),
+    "pergunta_generica": lambda c: checar_pergunta_generica_com_contexto(c),
+    "contrafactual_mal_formado": lambda c: checar_contrafactual_mal_formado(c),
+    "pergunta_template": lambda c: checar_pergunta_template(c),
+    "resposta_embutida": lambda c: checar_resposta_embutida(c),
+    "multi_parte": lambda c: checar_multi_parte(c),
+    "negativo_orfao": lambda c: checar_negativo_orfao(c),
+    "contexto_artefato": lambda c: checar_contexto_artefato(c),
+}
+
+
 def validar_card(card, contexto=None):
     """Valida UM card. Retorna {'erros': [...], 'avisos': [...]}.
 

@@ -163,6 +163,12 @@ def test_p3_o_condicional_e_o_que_separa_o_bem_formado_do_defeituoso():
     -- o condicional que torna a pergunta respondivel -- e por isso NAO e defeito neste eixo.
     #1568 nao traz, e por isso e. Se o predicado disparasse nos dois, ele estaria medindo
     "pergunta fala de ausencia", que nao e o defeito.
+
+    🔴 SIGNIFICADO DA FALHA AQUI: **REGRESSAO**. #792 entra neste teste no papel de fixture
+    NEGATIVO do P3 -- falhar significa que o predicado perdeu a discriminacao e passou a acusar
+    contrafactual bem-formado. Nao confundir com o papel de SENTINELA que o mesmo card exerce em
+    `test_ponto_cego_declarado_...`, onde falhar significa o oposto (atualize a declaracao).
+    Dois papeis, dois testes, dois significados -- denominadores separados de proposito.
     """
     assert cc.checar_contrafactual_mal_formado(C792) is None
     assert cc.checar_contrafactual_mal_formado(C1568)
@@ -184,9 +190,15 @@ def test_ponto_cego_declarado_o_eixo_C_pleno_nao_e_pego_por_nenhum_predicado():
     cobra o achado de crise NAO epileptica) e nenhuma das tres metricas o alcanca --
     containment 0.000, maior_run 0, pergunta bem-formada.
 
-    Se este teste um dia FALHAR, a leitura correta e "atualize a declaracao do ponto cego",
-    JAMAIS "regressao": significaria que um predicado passou a cobrir o que a spec declara nao
-    cobrir, e a spec e que precisa mudar (AGENTE.md secao 10.8, verification-stack).
+    🔴 SIGNIFICADO DA FALHA AQUI: **ATUALIZE A DECLARACAO**, jamais "regressao". Falhar
+    significaria que um predicado passou a cobrir o que a spec declara NAO cobrir -- e entao e a
+    spec que precisa mudar (AGENTE.md secao 10.8, verification-stack).
+
+    🔴 O MESMO #792 exerce um SEGUNDO papel, noutro teste: fixture negativo do P3 em
+    `test_p3_o_condicional_e_o_que_separa_...`, onde falhar significa REGRESSAO. Dois papeis do
+    mesmo card, deliberadamente em testes SEPARADOS: um teste unico com dois significados de
+    falha e denominador misturado -- quem lesse o vermelho nao saberia qual das duas leituras
+    aplicar.
     """
     assert cc.checar_contexto_redundante(C792) is None
     assert cc.checar_pergunta_generica_com_contexto(C792) is None

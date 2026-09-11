@@ -22,8 +22,11 @@ ROOT = Path(__file__).resolve().parent.parent
 # porque o scanner vê SQL de escrita, não qual arquivo .db a conexão abre.
 ALLOWLIST = {
     "app/memory/store.py": {"memory_store"},
+    # reforja_marks (B2, s176): append-only, e `app/utils/db.py` e o UNICO writer --
+    # o CLI `tools/reforja.py` e camada fina e nao abre sqlite3 proprio.
     "app/utils/db.py": {"cronograma_progresso", "flashcards", "fsrs_cards", "fsrs_revlog",
-                        "habilidades", "preparacao_estado", "questao_habilidades", "review_log"},
+                        "habilidades", "preparacao_estado", "questao_habilidades", "review_log",
+                        "reforja_marks"},
     "tools/backfill_review_log.py": {"review_log"},
     "tools/day_plan.py": {"plano_dia"},
     "tools/dedup_taxonomia.py": {"flashcards", "questoes_erros", "taxonomia_cronograma"},

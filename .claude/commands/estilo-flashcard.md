@@ -234,6 +234,40 @@ nomeados não aparecem.
 
 ---
 
+## Fila de reforja — `tools/reforja.py` (B2, s176)
+
+> **Assinatura canônica deste CLI** (`AGENTE.md §7.2`: a assinatura completa vive em UMA skill).
+> Spec: [`.vibeflow/specs/fila-de-reforja-como-estado.md`](../../.vibeflow/specs/fila-de-reforja-como-estado.md).
+
+**Por que existe:** marcar um card para reforja era escrever uma frase num `HANDOFF.md`. O passivo
+foi contado como **12, 13, 15 e 38** em sessões diferentes, e o **#792** atravessou três sessões
+marcado e está em `card_version = 1` — nunca foi tocado.
+
+| Comando | Função |
+|---|---|
+| `--fila [--todas] [--json]` | O passivo. **É a única cifra citável** — número escrito à mão em HANDOFF é claim que envelhece. |
+| `--marcar ID --motivo M [--origem S]` | Abre uma marca. Marcar o mesmo par de novo **cria outra linha** (append-only): 3 marcações são 3 linhas, e a fila conta. |
+| `--fechar ID --motivo M` | Fecha **re-verificando**. Se `M` nomeia um predicado de `card_checks`, ele re-roda sobre o card como está agora e **recusa** o fechamento se ainda acusar. |
+| `--fechar ... --forcar --justificativa "..."` | Fecha mesmo assim. A justificativa fica **gravada na linha**. |
+| `--descartar ID --motivo M --justificativa "..."` | *"Olhei e não era defeito"* — desfecho legítimo e **diferente** de "resolvi". |
+| `--backfill --dry-run` / `--apply` | Migra as marcas que viviam em prosa. Declara o COUNT **antes** de escrever; o `--apply` é decisão do operador. |
+
+🔴 **Fechar é uma afirmação checável.** `card_version` **não** é evidência de reforja feita — o
+F82 mediu **#321** em `v2` com o defeito intacto, e a s176 mediu o caso mais duro: **#1568** tem
+evento de reforja de 09/09 (`v1 -> v2`, mexeu na `frente_pergunta`) e **continua disparando** o
+predicado de contrafactual. *Reescrever não é o mesmo que resolver.* Nenhum sinal de "alguém
+editou" fecha uma marca.
+
+⚠️ **Fronteira declarada:** defeito sem predicado que o meça — *pacote de fatos*, *pergunta
+circular*, o eixo C semântico — fecha por palavra humana, e a linha grava `evidencia: 'humana'`.
+Não é falha: é o limite do que hoje é verificável, escrito em vez de maquiado.
+
+🔴 **Um WARN dos predicados NÃO vira marca sozinho.** O CLI oferece candidatos; quem marca é
+gente. Lição do **F87**: o harness mede *forma*, não *rendimento* — 13 cards que o operador
+reprovou passam em todos os predicados.
+
+---
+
 ## Backfill — regenerar cards legados
 
 > **Histórico:** sessão 075 aposentou (`needs_qualitative = 2`) os 70 cards heurísticos flagueados (`needs_qualitative = 1`). A sessão 076 descobriu **87 heurísticos remanescentes** (`quality_source = 'heuristic'`, `nq = 0`) que escaparam do filtro da bankruptcy e os **regenerou** por este protocolo (decisão do usuário: regenerar, não aposentar). O critério da fila foi corrigido de `nq = 1` para `quality_source = 'heuristic' AND nq != 2`. Após s076 **não há heurísticos ativos** — esta seção volta a ficar dormente; só reaparece se a geração heurística for reintroduzida (não deve).

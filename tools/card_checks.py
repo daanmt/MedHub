@@ -333,6 +333,37 @@ def checar_contrafactual_mal_formado(card):
 # em vez de confiar em `card_version` ou na palavra de quem editou -- licao do F82).
 # So entram predicados chamaveis com UM dict de card. Defeito fora deste registro
 # nao e verificavel por maquina, e o fechamento dele fica declarado como humano.
+def checar_nao_atomico(card):
+    """F39 (s177, item 1.6): o card viola o principio atomico.
+
+    Dois anti-padroes, um por campo: FRENTE com duas demandas (`duplo-ask`) ou
+    VERSO respondendo em paragrafo (`resposta-multifato`). Por que ALTA e nao
+    cosmetico: card com dois criterios de acerto admite "acertei metade", e a
+    nota FSRS deixa de significar alguma coisa -- o defeito corrompe a MEDIDA que
+    governa a repeticao espacada, nao so a experiencia.
+
+    🔴 NAO reimplementa os regexes: importa os predicados de
+    `audit_card_atomicity`, onde eles nasceram e onde vivem os dois guardas de
+    falso-positivo ja calibrados (copula sem acento "qual e a unica vacina"; par
+    "entre X e Y"). Copiar criaria a 2a fonte -- a licao do 1.1/F79b, em que o
+    `card_self_sufficiency` passou a IMPORTAR o predicado em vez de duplicar a
+    regex. A direcao do import e a unica coisa invertida aqui (a biblioteca puxa
+    do CLI), e e deliberada: mover os regexes arrastaria `medir_verso` e
+    `checar_ratchet_verso`, que compartilham as mesmas constantes.
+
+    🔴 FALSO-POSITIVO CONHECIDO, DECLARADO: **card discriminador** ("A x B: qual
+    das duas ...?") dispara `duplo-ask` e e LEGITIMO pela regra 5 do formato
+    atomico -- o desempate e contar CRITERIOS DE ACERTO, nao entidades citadas, e
+    isso nenhum regex faz. Consequencia no lifecycle: para um discriminador este
+    predicado nunca para de disparar, entao `--fechar` sempre recusa e o desfecho
+    correto e `--descartar` (palavra humana + justificativa), que e um estado
+    DIFERENTE de "resolvi" e mantem o passivo honesto.
+    """
+    from audit_card_atomicity import checar_front, checar_verso
+    return (checar_front(card.get("frente_pergunta"))
+            or checar_verso(card.get("verso_resposta")))
+
+
 PREDICADOS_VERIFICAVEIS = {
     "contexto_redundante": lambda c: checar_contexto_redundante(c),
     "pergunta_generica": lambda c: checar_pergunta_generica_com_contexto(c),
@@ -342,6 +373,9 @@ PREDICADOS_VERIFICAVEIS = {
     "multi_parte": lambda c: checar_multi_parte(c),
     "negativo_orfao": lambda c: checar_negativo_orfao(c),
     "contexto_artefato": lambda c: checar_contexto_artefato(c),
+    # F39 (s177, 1.6): entra no registro para que a fila de reforja tenha
+    # LIFECYCLE sobre ele -- fechar re-verifica, em vez de aceitar "eu editei".
+    "nao_atomico": lambda c: checar_nao_atomico(c),
 }
 
 

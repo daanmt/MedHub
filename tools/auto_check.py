@@ -136,6 +136,9 @@ _TERMOS_REVOGADOS = {
     # F64 (cadastrado em 10/09/2026, no mesmo commit da lapide no contrato FSRS)
     "atrasados > TETO_BASE": "fsrs-management v1.3 (s176) -- F64: o contador e `vencidos`",
     "atrasados > teto_base": "fsrs-management v1.3 (s176) -- F64: o contador e `vencidos`",
+    # F39 (cadastrado em 11/09/2026, no mesmo commit da lapide em estilo-flashcard.md)
+    "NÃO vira marca sozinho": "estilo-flashcard, redacao s177 -- F39: `--ingerir` abre marca em "
+                              "lote; marca ABERTA e candidato, e quem ENCERRA continua sendo gente",
 }
 # Portadores da norma do /revisar. O contrato NAO basta: o agente que executa
 # le o command. Prescricao ativa sobrevivente num deles torna a lapide do
@@ -149,6 +152,12 @@ _PORTADORES_NORMA = (
     "core/contracts/fsrs-management-contract.md",
     ".claude/commands/revisar.md",
     ".claude/commands/refrescar.md",
+    # F39 (s177, item 1.6): entra porque a revogacao desta sessao mora AQUI -- a
+    # clausula "um WARN nao vira marca sozinho" foi lapidada em estilo-flashcard.md
+    # quando o `--ingerir` passou a abrir marcas em lote. Cadastrar o termo sem
+    # cadastrar o portador que o carrega seria repetir o F95: registro alimentado,
+    # arquivo fora da varredura, gate verde com a clausula morta em vigor.
+    ".claude/commands/estilo-flashcard.md",
     "AGENTE.md",
     "ESTADO.md",
     "HANDOFF.md",
@@ -668,9 +677,25 @@ def main():
             por_padrao_atom = Counter(a["padrao"] for a in achados_atom)
             resumo_atom = ", ".join(f"{p}: {n}" for p, n in por_padrao_atom.most_common())
             n_cards_atom = len({a["id"] for a in achados_atom})
+            # F39 (s177, 1.6): o WARN deixa de ser SOLTO. Ele reimprimia o mesmo
+            # numero ha 47 dias porque nao havia onde registrar "ja olhei" -- e
+            # WARN nao distingue "nao triado" de "triado, e e falso-positivo".
+            # A fila de reforja distingue, entao o numero ACIONAVEL e quanto
+            # ainda esta FORA dela: esse cai quando alguem tria; o total, nao.
+            try:
+                from app.utils import db as _db_reforja
+                _rastreados = {d["card_id"] for d in _db_reforja.fila_reforja()
+                               if d["motivo"] == "nao_atomico"}
+                _fora = len({a["id"] for a in achados_atom} - _rastreados)
+                _fila_txt = (f"Na fila de reforja: {len(_rastreados)} · FORA dela: {_fora}"
+                             + (" (python tools/reforja.py --ingerir nao_atomico)"
+                                if _fora else ""))
+            except Exception:
+                _fila_txt = "Fila de reforja indisponível (sensor degradado; não bloqueia)."
             print(f"\n[WARN] CARD_ATOMICIDADE: {n_cards_atom} card(s) não atômico(s) "
-                  f"[{resumo_atom}]. Worklist: python tools/audit_card_atomicity.py --json. "
-                  f"Triar por CRITÉRIOS DE ACERTO (card discriminador é falso-positivo conhecido).")
+                  f"[{resumo_atom}]. {_fila_txt} "
+                  f"Triar por CRITÉRIOS DE ACERTO (card discriminador é falso-positivo conhecido): "
+                  f"`--fechar` re-verifica o predicado, `--descartar` é \"olhei e não era defeito\".")
         # success=True: WARN não rebaixa o veredito (não altera all_passed).
         results_summary.append((desc_atom, True,
                                 len(achados_atom) if sensor_atom_ok else 1))

@@ -20,6 +20,8 @@ Uso:
     python tools/reforja.py --fechar 1568 --motivo contrafactual_mal_formado
     python tools/reforja.py --fechar 1568 --motivo X --forcar --justificativa "..."
     python tools/reforja.py --descartar 243 --motivo X --justificativa "olhei, nao era defeito"
+    python tools/reforja.py --ingerir nao_atomico       # worklist de detector -> fila (dry-run)
+    python tools/reforja.py --ingerir nao_atomico --apply
     python tools/reforja.py --backfill --dry-run        # declara o COUNT antes de escrever
     python tools/reforja.py --backfill --apply          # decisao do OPERADOR
 
@@ -74,12 +76,29 @@ def cmd_fila(args):
     print("  Fila de reforja -- a UNICA cifra citavel do passivo (G7)")
     print("=" * 66)
     print(f"  abertas: {len(abertas)}" + (f"   (listando {len(fila)}, com fechadas)" if args.todas else ""))
+
+    # Resumo por motivo (s177, 1.6): com a ingestao de detector a fila passa de
+    # dezenas para centenas de linhas. Sem o agregado, a cifra citavel voltaria a
+    # ser "role a tela e conte" -- que e a doenca que este CLI curou no 0.3.
+    por_motivo = {}
+    for d in abertas:
+        por_motivo[d["motivo"]] = por_motivo.get(d["motivo"], 0) + 1
+    if len(por_motivo) > 1 or len(abertas) > args.limit:
+        print()
+        print("  por motivo (abertas):")
+        for motivo, n in sorted(por_motivo.items(), key=lambda kv: (-kv[1], kv[0])):
+            selo = "" if motivo in card_checks.PREDICADOS_VERIFICAVEIS else "  [sem predicado]"
+            print(f"    {n:>4}  {motivo}{selo}")
     print()
-    for d in fila:
+
+    mostradas = fila[:args.limit]
+    for d in mostradas:
         estado = "ABERTA " if d["aberta"] else "fechada"
         marca = f"{d['n_marcacoes']}x" if d["n_marcacoes"] > 1 else "  "
         verificavel = "" if d["motivo"] in card_checks.PREDICADOS_VERIFICAVEIS else "  [sem predicado]"
         print(f"  {estado} #{d['card_id']:<5} {marca:>3}  {d['motivo']}{verificavel}")
+    if len(fila) > len(mostradas):
+        print(f"  ... +{len(fila) - len(mostradas)} linha(s) (--limit N, ou --json para a lista inteira)")
     print()
     nao_verificaveis = {d["motivo"] for d in fila
                         if d["motivo"] not in card_checks.PREDICADOS_VERIFICAVEIS}
@@ -157,6 +176,88 @@ def cmd_backfill(args):
     return 0
 
 
+def cmd_ingerir(args):
+    """F39 (s177, 1.6): a worklist de um detector vira ESTADO com lifecycle.
+
+    O defeito que isto encerra: o check de atomicidade acusa ~270 cards a cada
+    rodada do harness ha 47 dias, e o numero nao se move -- nao porque ninguem
+    olhou, mas porque olhar nao tinha onde ser gravado. WARN solto nao distingue
+    "ainda nao triado" de "triado e e falso-positivo". A fila distingue: ABERTA,
+    `fechada` (predicado re-verificado) e `descartada` (palavra humana: olhei e
+    nao era defeito).
+
+    Idempotente por construcao -- par (card, motivo) que ja tem QUALQUER marca
+    nao recebe outra:
+      * ABERTA      -> re-marcar inflaria `n_marcacoes`, cujo significado e
+                       "marcado de novo e ninguem tocou". Detector re-rodando
+                       nao e sinal humano novo.
+      * descartada  -> o veredito humano seria apagado a cada varredura.
+      * fechada E AINDA acusando -> NAO re-marca em silencio: reporta. E a classe
+                       F82 ("edicao != resolucao"); re-abrir sozinho esconderia
+                       que um fechamento nao valeu.
+    """
+    motivo = args.ingerir.strip()
+    predicado = card_checks.PREDICADOS_VERIFICAVEIS.get(motivo)
+    if predicado is None:
+        print(f"[RECUSADO] '{motivo}' nao esta em card_checks.PREDICADOS_VERIFICAVEIS.",
+              file=sys.stderr)
+        print("  Ingerir por motivo sem predicado criaria marca que NENHUMA maquina "
+              "sabe fechar -- fila que so cresce.", file=sys.stderr)
+        print("  Disponiveis: " + ", ".join(sorted(card_checks.PREDICADOS_VERIFICAVEIS)),
+              file=sys.stderr)
+        return 1
+
+    cards = db.cards_ativos_para_predicado()
+    acusados = [c["id"] for c in cards if predicado(c)]
+
+    marcas = {(d["card_id"], d["motivo"]): d for d in db.fila_reforja(incluir_fechadas=True)}
+    novos, ja_abertas, encerradas_reacusando = [], [], []
+    for card_id in acusados:
+        d = marcas.get((card_id, motivo))
+        if d is None:
+            novos.append(card_id)
+        elif d["aberta"]:
+            ja_abertas.append(card_id)
+        else:
+            encerradas_reacusando.append(card_id)
+
+    print()
+    print(f"  Ingestao de '{motivo}' sobre {len(cards)} cards ATIVOS.")
+    print(f"  predicado acusa : {len(acusados)}")
+    print(f"  ja ABERTAS      : {len(ja_abertas)} (nao re-marca: inflaria n_marcacoes)")
+    print(f"  ja encerradas   : {len(encerradas_reacusando)}", end="")
+    if encerradas_reacusando:
+        print(f"  🔴 fechada/descartada e o predicado AINDA acusa: "
+              f"{encerradas_reacusando[:10]}{' ...' if len(encerradas_reacusando) > 10 else ''}")
+        print("                    -> classe F82 (edicao != resolucao) ou descarte consciente "
+              "de falso-positivo; nao re-marco em silencio.")
+    else:
+        print()
+    print(f"  COUNT-ASSERT declarado ANTES de escrever: {len(novos)} linha(s) a criar.")
+    print()
+    print("  🔴 FALSO-POSITIVO CONHECIDO no lote: card DISCRIMINADOR (\"A x B: qual das")
+    print("     duas ...?\") dispara duplo-ask e e legitimo. O desempate e contar CRITERIOS")
+    print("     DE ACERTO, e nenhum regex faz isso -- por desenho o desfecho desses e")
+    print("     `--descartar` com justificativa, nunca `--fechar`.")
+    print()
+
+    if not args.apply:
+        print("  [DRY-RUN] nada foi escrito. Rodar de novo com --apply.")
+        return 0
+
+    origem = args.origem or f"detector:{motivo}"
+    escritas = 0
+    for card_id in novos:
+        db.marcar_reforja(card_id, motivo, origem=origem)
+        escritas += 1
+    if escritas != len(novos):
+        print(f"  [ERRO] COUNT-ASSERT falhou: declarei {len(novos)}, escrevi {escritas}.",
+              file=sys.stderr)
+        return 1
+    print(f"  [APLICADO] {escritas} linha(s) criadas -- bate com o COUNT declarado.")
+    return 0
+
+
 def main():
     p = argparse.ArgumentParser(description="Fila de reforja de flashcards como estado (B2)")
     p.add_argument("--fila", action="store_true", help="Lista o passivo (default)")
@@ -173,14 +274,22 @@ def main():
     p.add_argument("--forcar", action="store_true",
                    help="Fecha mesmo com o predicado ainda acusando (exige --justificativa)")
     p.add_argument("--origem", help="Sessao/contexto que originou a marca")
+    p.add_argument("--ingerir", metavar="MOTIVO",
+                   help="Varre os cards ATIVOS com um predicado de card_checks e "
+                        "propoe marcas (dry-run; --apply escreve)")
+    p.add_argument("--limit", type=int, default=25,
+                   help="Quantas linhas detalhar em --fila (default 25; --json nao corta)")
     p.add_argument("--backfill", action="store_true", help="Migra as marcas que viviam em prosa")
     p.add_argument("--dry-run", action="store_true", dest="dry_run",
-                   help="Com --backfill: so declara o COUNT, nao escreve")
-    p.add_argument("--apply", action="store_true", help="Com --backfill: executa (decisao do operador)")
+                   help="Com --backfill/--ingerir: so declara o COUNT, nao escreve")
+    p.add_argument("--apply", action="store_true",
+                   help="Com --backfill/--ingerir: executa apos o COUNT-ASSERT")
     args = p.parse_args()
 
     if args.backfill:
         return cmd_backfill(args)
+    if args.ingerir:
+        return cmd_ingerir(args)
     for flag, fn in (("marcar", cmd_marcar), ("fechar", cmd_fechar), ("descartar", cmd_descartar)):
         if getattr(args, flag) is not None:
             if not args.motivo:

@@ -281,6 +281,8 @@ marcado e está em `card_version = 1` — nunca foi tocado.
 | `--fechar ... --forcar --justificativa "..."` | Fecha mesmo assim. A justificativa fica **gravada na linha**. |
 | `--descartar ID --motivo M --justificativa "..."` | *"Olhei e não era defeito"* — desfecho legítimo e **diferente** de "resolvi". |
 | `--backfill --dry-run` / `--apply` | Migra as marcas que viviam em prosa. Declara o COUNT **antes** de escrever; o `--apply` é decisão do operador. |
+| `--ingerir MOTIVO [--apply] [--origem S]` | **(s177, F39)** Varre os cards ativos com um predicado de `card_checks.PREDICADOS_VERIFICAVEIS` e abre marcas em lote. Dry-run por default, com COUNT-ASSERT declarado antes de escrever. **Idempotente**: par que já tem marca (aberta, fechada ou descartada) não recebe outra. Motivo **sem** predicado é **recusado** — marca que nenhuma máquina sabe fechar é fila que só cresce. |
+| `--limit N` | Quantas linhas detalhar em `--fila` (default 25). O `--fila` sempre imprime o **resumo por motivo**; `--json` nunca corta. |
 
 🔴 **Fechar é uma afirmação checável.** `card_version` **não** é evidência de reforja feita — o
 F82 mediu **#321** em `v2` com o defeito intacto, e a s176 mediu o caso mais duro: **#1568** tem
@@ -292,9 +294,20 @@ editou" fecha uma marca.
 circular*, o eixo C semântico — fecha por palavra humana, e a linha grava `evidencia: 'humana'`.
 Não é falha: é o limite do que hoje é verificável, escrito em vez de maquiado.
 
-🔴 **Um WARN dos predicados NÃO vira marca sozinho.** O CLI oferece candidatos; quem marca é
-gente. Lição do **F87**: o harness mede *forma*, não *rendimento* — 13 cards que o operador
-reprovou passam em todos os predicados.
+🔴 **Marca é CANDIDATO; veredito é humano (redação da s177).** `--ingerir MOTIVO` deixa um
+predicado do registro abrir marcas em lote, e uma marca **ABERTA** significa *"candidato ainda
+não triado"* — nunca *"defeito confirmado"*. O que máquina nenhuma faz é **encerrar**: `--fechar`
+só passa se o predicado parar de acusar, e `--descartar` (*"olhei e não era defeito"*) é palavra
+humana com justificativa gravada. A lição do **F87** continua inteira — o harness mede *forma*,
+não *rendimento*; 13 cards que o operador reprovou passam em todos os predicados — e é por ela
+que o falso-positivo **declarado** de um detector (card discriminador, regra 5) sai por
+`--descartar`, e não por um regex melhor.
+
+⚰️ *Redação anterior — "**Um WARN dos predicados NÃO vira marca sozinho.** O CLI oferece
+candidatos; quem marca é gente." — **revogada em 11/09/2026 (s177, item 1.6, F39)**. Motivo: os
+270 cards não-atômicos passaram 47 dias como WARN que ninguém conseguia triar, porque marcar 270
+vezes à mão não é triagem, é transcrição — e sem marca não havia onde gravar "já olhei, é falso-
+positivo". O que mudou foi a **porta de entrada**; a porta de **saída** continua sendo gente.*
 
 ---
 

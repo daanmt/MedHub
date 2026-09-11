@@ -1171,6 +1171,28 @@ def _card_para_predicado(conn, card_id):
             "verso_armadilha": row[4]}
 
 
+def cards_ativos_para_predicado():
+    """Todos os cards ATIVOS no shape que os predicados de `card_checks` consomem.
+
+    Existe para a ingestao da fila de reforja (F39, s177): varrer o baralho com um
+    predicado do registro e propor marcas. Read-only, e o shape e IDENTICO ao de
+    `_card_para_predicado` -- se divergissem, a marca proposta pela varredura e a
+    re-verificacao do fechamento estariam lendo campos diferentes do mesmo card,
+    que e como um gate passa a mentir. Ativo = `ATIVO_WHERE`, a definicao canonica.
+    """
+    conn = get_connection()
+    try:
+        linhas = conn.execute(
+            "SELECT id, frente_contexto, frente_pergunta, verso_resposta, "
+            f"verso_regra_mestre, verso_armadilha FROM flashcards WHERE {ATIVO_WHERE} "
+            "ORDER BY id").fetchall()
+    finally:
+        conn.close()
+    return [{"id": r[0], "frente_contexto": r[1], "frente_pergunta": r[2],
+             "verso_resposta": r[3], "verso_regra_mestre": r[4],
+             "verso_armadilha": r[5]} for r in linhas]
+
+
 def _registrar_marca(card_id, evento, motivo, evidencia=None, origem=None):
     conn = get_connection()
     try:

@@ -160,11 +160,18 @@ def _parse_payload(payload_lines):
 
 
 def _parse_detail(detail_lines):
-    """{N: {tema_detail, questoes, raw}} — tema via 'Livro Digital: tema (Tipo)' + contagem de Links."""
+    """{N: {tema_detail, questoes, raw}} — tema via '(Livro Digital|Assunto): tema (Tipo)' + Links.
+
+    F77b (s176): o literal era só `Livro Digital:`. As tarefas de **Revisão por Questões** usam
+    `Assunto:` -- ex.: *"Obstetricia Assunto: Pre-Natal; Assistencia ao Parto; Vitalidade Fetal
+    (Revisao por Questoes)"* -- e nasciam com `tema` VAZIO no `grade.json`, 5 por ciclo. O tema
+    estava escrito no PDF e o parser o jogava fora; é a mesma família do drift "Revisão por
+    Questões" (tarefa multi-tema que cai em campo emprestado e fica subnotificada).
+    """
     out = {}
     for n, lines in _split_tarefas(detail_lines).items():
         s = _dewrap(" ".join(lines))
-        m = re.search(r"Livro Digital:\s*(.+?)\s*\((?:Teoria|Revis[ãa]o)[^)]*\)", s)
+        m = re.search(r"(?:Livro Digital|Assunto):\s*(.+?)\s*\((?:Teoria|Revis[ãa]o)[^)]*\)", s)
         counts = [int(c) for c in re.findall(r"Link\s*-\s*(\d+)\s*quest", s)]
         out[n] = {"tema_detail": m.group(1).strip() if m else "", "questoes": sum(counts), "raw": s}
     return out
@@ -214,19 +221,48 @@ def parse_grade(paginas, semana_1_inicio=SEMANA_1_INICIO):
                 "tipo": tipo_v,
                 "tipo_norm": tipo_norm,
                 "material_indicado": mat,
+                "questoes": int(d.get("questoes", 0) or 0),
             })
 
         # total da SEMANA = soma de TODOS os "Link - NN questões" da semana (validado: S10=273,
-        # S11-28=6689). NÃO atribuímos count por task: o PDF não amarra link[i]↔task[i] de forma
-        # garantida (ultraplan §c.5) → o consumidor rateia igual (total_questoes / n_tasks).
+        # S11-28=6689).
         wq = sum(int(c) for c in re.findall(r"Link\s*-\s*(\d+)\s*quest", "\n".join(wl)))
         total_q += wq
+
+        # F77 (s176) -- a contagem POR TAREFA passa a viajar, com marca de confiança.
+        #
+        # ⚰️ A regra antiga dizia: "NÃO atribuímos count por task: o PDF não amarra
+        # link[i]<->task[i] de forma garantida (ultraplan §c.5) -> o consumidor rateia igual".
+        # O dado já era calculado por `_parse_detail` e **descartado**. O rateio igual erra por
+        # até 3x na dimensão que o usuário usa para planejar o dia: na S17 ele daria 26,6q para
+        # toda tarefa, quando as reais valem de 16q (Pneumonias Bacterianas) a 50q (APS Revisão).
+        #
+        # A desconfiança era razoável em 2026-07 e nunca foi medida. Medida na s168: em S17-S20 a
+        # soma das tarefas bate EXATAMENTE com o total da semana nas quatro (293/380/449/301).
+        # Então o dado bom viaja e o caso duvidoso degrada -- em vez de jogar fora o dado bom em
+        # 100% das semanas por causa de uma dúvida que nunca se materializou.
+        soma_tasks = sum(t["questoes"] for t in tasks)
+        if tasks and soma_tasks == wq and wq > 0:
+            fonte = "link_no_bloco"          # reconciliou: a atribuição por tarefa é confiável
+        else:
+            fonte = "rateio_igual"           # degradação declarada, com o motivo no WARN
+            rate = (wq / len(tasks)) if tasks else 0.0
+            for t in tasks:
+                t["questoes"] = round(rate, 1)
+            if tasks and wq > 0:
+                print(f"[WARN] S{n:02d}: soma das tarefas ({soma_tasks}q) != total da semana "
+                      f"({wq}q) -- questoes por tarefa degradadas para rateio igual "
+                      f"({rate:.1f}q/tarefa). O `questoes_fonte` declara isso.", file=sys.stderr)
+        for t in tasks:
+            t["questoes_fonte"] = fonte
+
         inicio = s1 + timedelta(days=(n - 1) * 7)
         semanas.append({
             "semana": n,
             "inicio": inicio.isoformat(),
             "fim": (inicio + timedelta(days=6)).isoformat(),
             "total_questoes": wq,
+            "questoes_fonte": fonte,
             "n_tasks": len(tasks),
             "tasks": tasks,
         })
@@ -371,13 +407,18 @@ def radar(grade, por_area, desde_semana=None, enamed=ENAMED):
     for s in grade["semanas"]:
         if s["semana"] < desde_semana or s["n_tasks"] == 0:
             continue
-        rate = s["total_questoes"] / s["n_tasks"]          # rateio igual (ultraplan §c.5)
+        # F77 (s176): usa a contagem POR TAREFA quando ela reconciliou com o total da semana
+        # (`questoes_fonte == "link_no_bloco"`); cai para o rateio igual só quando não
+        # reconciliou -- e aí o próprio campo já vem rateado pelo derivador. Grade antiga, sem o
+        # campo, continua no rateio: o leitor não quebra com `grade.json` de antes desta sessão.
+        rate = s["total_questoes"] / s["n_tasks"]          # fallback (ultraplan §c.5)
         bucket = cov_pre if s["inicio"] <= enamed else cov_post
         for t in s["tasks"]:
             if t["multi_area"]:
                 continue
             A = t["area_norm"]
-            bucket[A] = bucket.get(A, 0.0) + rate
+            q_task = t.get("questoes") if t.get("questoes_fonte") else None
+            bucket[A] = bucket.get(A, 0.0) + (q_task if q_task is not None else rate)
             weeks_by_area.setdefault(A, set()).add(s["semana"])
 
     rows = []

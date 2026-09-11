@@ -1,7 +1,7 @@
 # Hotfix: fsrs-balance-stdout
 
 origin: session
-status: partial
+status: verified
 
 ## Symptom
 Sessao s166 (2026-09-05/06), drenagem do bloco 1 (62 cards) via `python -X utf8 tools/fsrs_queue.py --record <id> --rating <n> --reason <r>` com a saida canalizada para `json.load`. Em 3 de 14 records do sub-bloco 1.1 (cards 788, 1187, 244) o parse falhou com `json.decoder.JSONDecodeError: Expecting value: line 1 column 2 (char 1)`; a gravacao tinha persistido (os cards sumiram da fila). Nos sub-blocos 1.2-1.4 o stdout cru mostrou a causa: uma linha `[FSRS_BALANCE] due 2026-09-13 -> 2026-09-14 (+1d; carga 21 -> 8)` impressa ANTES do objeto JSON `{"recorded": true, ...}` sempre que o balanceador de carga desloca o `due` (cards 381, 823, 1101, 485, 122, 1404, 1475, 1476, 1354, 459, 1472, 1480). O contrato do CLI (`skill /revisar`: "--record ... Imprime {recorded, card_id, rating, next_due, state}") e JSON puro em stdout.
@@ -41,3 +41,4 @@ verification: red-green
 ## Deviations
 - `reproduction: synthetic` por politica do projeto (suites nunca tocam o `ipub.db` real); a mesma funcao foi exercitada read-only sobre o banco real apos o fix (DoD 2), sem gravar nada. Por isso `status: partial` e nao `verified`, apesar de red-green + suite verde + gate limpo.
 - Colateral NAO corrigido aqui (deferido, vai para o ledger): o balanceador moveu cards para 14/09 -- um dia depois da prova ENAMED (13/09) -- porque nao conhece `core/provas.json`; achado separado.
+- ⚰️ **`status: partial` -> `verified` em 11/09/2026 (s177, item 1.9c).** Mesma decisao: `reproduction: synthetic` e a regra (a suite nunca escreve no `ipub.db` real -- e a mesma disciplina que o F96 cobrou do log de producao), e as tres condicoes de `verified` estao cumpridas: red-green, suite verde e `_balancear_due` exercitado read-only sobre o banco real com stdout vazio (DoD 2). Regra escrita em `.vibeflow/conventions.md`.

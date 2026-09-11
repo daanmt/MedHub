@@ -125,3 +125,28 @@
 - Do NOT re-run `tools/day_plan.py` at boot — the hook already did it
 
 <!-- vibeflow:auto:end -->
+
+## Hotfix traces — what `reproduction` and `status` mean here (decided s177, 2026-09-11)
+
+These two fields were being conflated, and the cost was real: two traces from 2026-09-06
+(`cronograma-pdf-path`, `fsrs-balance-stdout`) sat at `status: partial` for five days with
+red-before-green tests, green suites, clean gates **and** post-fix verification against the real
+artifact — parked in the consolidation debt list forever, for no defect. That is claim-aging of
+status, the same class the G14 check exists to catch one level up.
+
+**They measure different things. Keep them apart.**
+
+- **`reproduction`** records how the RED test was reproduced. In MedHub `synthetic` is the
+  **rule, not a weakness**: suites never touch the real `ipub.db` (the writer-allowlist discipline,
+  F49 — a suite that writes to the production db is itself a defect, see F96 for the same lesson
+  about production logs). Writing `reproduction: real` to avoid a downgrade would be lying about
+  the fixture.
+- **`status`** records whether the fix is verified. `verified` requires all three:
+  1. a regression test written **before** the fix, red then green;
+  2. the full suite green and the harness gate clean;
+  3. **post-fix verification against the real artifact**, read-only, written into the `DoD`.
+- `status: partial` is for a fix whose **DoD is genuinely incomplete** — a half-measure, a deferred
+  branch, a known case left uncovered. It is not a penalty for a synthetic fixture.
+
+🔴 **Corollary:** `reproduction: synthetic` + the three conditions above = **`verified`**. If a
+trace cannot show condition 3, it stays `partial` and says which artifact was not exercised.

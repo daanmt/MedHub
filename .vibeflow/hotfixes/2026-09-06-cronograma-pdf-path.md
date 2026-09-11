@@ -1,7 +1,7 @@
 # Hotfix: cronograma-pdf-path
 
 origin: session
-status: partial
+status: verified
 
 ## Symptom
 `python -X utf8 tools/cronograma.py --check` (instrumento da condicao W5 do `reconcile-contract.md`) aborta com `FileNotFoundError: [Errno 2] No such file or directory: 'C:\Users\daanm\medhub\Cronograma.pdf'` (observado 2026-09-06, s166, durante a revisao do README). O PDF-fonte existe no disco em `data/Cronograma.pdf` (mtime 2026-03-24), ao lado dos outros PDFs de dados (edital, guias estatisticos). `core/cronograma/grade.json` existe e foi derivado dele. Resultado: o check de frescor da grade esta morto ha um tempo indeterminado sem que nada acuse -- W5 e "manual, WARNING", entao ninguem rodava.
@@ -41,3 +41,4 @@ verification: red-green
 ## Deviations
 - `reproduction: synthetic` (tmp_path) por politica do projeto; o `--check` real foi rodado apos o fix e voltou `fresh`. Status `partial` pela regra do skill, nao por duvida sobre o fix.
 - Nao investigado (deferido): quando e por que o PDF saiu da raiz. O contrato `cronograma-contract.md` segue dizendo "raiz"; o fallback nao muda a norma.
+- ⚰️ **`status: partial` -> `verified` em 11/09/2026 (s177, item 1.9c).** A regra local foi decidida e escrita em `.vibeflow/conventions.md`: `reproduction` mede o FIXTURE, `status` mede o FIX. `synthetic` e a regra na casa (suite nao toca o `ipub.db` real), e este trace tem as tres condicoes de `verified` -- red-green, suite verde e verificacao pos-fix sobre o artefato real (`--check` devolveu `fresh`, sha256 batendo). Ficou 5 dias em `partial` por conflacao, nao por duvida sobre o fix.

@@ -115,4 +115,24 @@ python tools/importar_sessoes.py --abandonada "<motivo>"
 - **Persistência canônica** continua em `sessoes_bulk` via `registrar()`. Este fluxo não cria caminho de dados paralelo.
 - **Áreas válidas** são a fonte de verdade do vocabulário; normalizar sempre antes de gravar.
 - Para registro pontual (uma sessão só, sem planilha), usar `tools/registrar_sessao_bulk.py` direto (ver `AGENTE.md` decisão "SSOT volumétrica").
+
+---
+
+## Assinatura canônica — `tools/registrar_sessao_bulk.py`
+
+> **Portador canônico deste CLI** (`AGENTE.md §7.2`). É o **writer da SSOT volumétrica**
+> (`sessoes_bulk`): ao ouvir *"fiz X questões, acertei Y"*, o agente chama isto **antes** de
+> processar erros individuais. O `importar_sessoes.py` (lote a partir da planilha) é uma camada
+> por cima deste writer, não um segundo caminho de escrita.
+
+| Flag | Função |
+|---|---|
+| `--sessao N` | Número da sessão (ex.: 67). |
+| `--area AREA` | Área clínica. Válidas: **`core/areas.json`** via `app/utils/areas.py` (F89) — writer **recusa** área fora da lista, com o palpite mais próximo. |
+| `--feitas N` | Total de questões feitas. |
+| `--acertos N` | Total de acertos. Validado: `acertos <= feitas`. |
+| `--data YYYY-MM-DD` | Data da sessão (default: hoje). 🔴 Quando o estudo e o registro caem em dias diferentes, informar a data **do estudo**. |
+| `--obs "..."` | Observação livre (ex.: *"Bloco ATLS"*). |
+| `--acumular` | **F22:** soma este bloco a um registro existente da mesma `(sessao, area)` em vez de recusar — é o 2º bloco do mesmo dia, não uma duplicata. |
+| `--semana N` | Atualiza no mesmo ato a **posição SSOT** (semana de conteúdo) — ver `preparacao.py` em `engenharia-cli.md`. |
 - O read da planilha é responsabilidade do agente via MCP; o código nunca lê o Drive sozinho.

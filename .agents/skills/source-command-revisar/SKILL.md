@@ -175,6 +175,30 @@ Ao fechar a sessão, **antes** de encerrar:
 
 ---
 
+## Assinatura canônica — `tools/dormant_refresh.py`
+
+> **Portador canônico deste CLI** (`AGENTE.md §7.2`). O `refrescar.md` é stub de redirecionamento
+> e **não** carrega assinatura. A do `tools/day_plan.py` (usado aqui via `--difficulty`) vive em
+> `engenharia-cli.md`, para não existir em dois lugares.
+
+| Flag | Função |
+|---|---|
+| `--pick` | Escolhe o tema dormente do dia (JSON). Ordem: tema com cards ativos, não-`[bulk]`/`Geral`, não reabordado na janela, maior score de dormência. |
+| `--context` | Substrato narrativo do tema (JSON) — resumo + erros + cards + chunks do RAG. Exige `--tema`. |
+| `--stamp` | Carimba em `review_log` (**Invariante B**). Exige `--tema-id`. |
+| `--area AREA` | Filtro de área (match exato), com `--pick`/`--context`. |
+| `--tema TEMA` | Tema a contextualizar (com `--context`). |
+| `--tema-id N` | id do tema (com `--stamp`). |
+| `--resumo PATH` | Caminho do resumo reabordado, gravado na linha do carimbo (com `--stamp`). |
+| `--note "..."` | Nota curta do que foi reabordado, gravada na linha (com `--stamp`). |
+| `--kind {dormant_refresh,directed_review}` | Gatilho: dormência **vs** gap do drill/cronograma/pedido. |
+| `--window-days N` | Janela anti-repetição do `--pick`, em dias (default 7) — impede o radar de devolver o mesmo tema dia após dia. |
+
+🔴 **Fronteira dura:** nenhuma dessas flags toca o FSRS. `--stamp` escreve **só** em `review_log`,
+que é o SSOT do tempo-de-revisão **temática** (a curva do TEMA ≠ a do card).
+
+---
+
 ## Regra anti-duplo-registro (reconciliada com o override — F9)
 
 O CLI é **stateless** — cada `--record` grava uma linha em `fsrs_revlog`. A deduplicação é responsabilidade do agente: **mantenha o conjunto de `card_id` já avaliados nesta conversa** e nunca chame `--record` duas vezes para o mesmo card na mesma sessão. (A dedup vive **só** no agente: não há mais camada de UI guardando estado de sessão.)

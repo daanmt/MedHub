@@ -133,12 +133,19 @@ VALID_KINDS = ("dormant_refresh", "directed_review")
 
 
 def stamp(tema_id, resumo=None, note=None, kind="dormant_refresh"):
-    """Carimba o refresh/PREPARAR em review_log. NÃO toca o FSRS (Invariante A).
+    """Carimba o re-ensino de tema em review_log. NÃO toca o FSRS (Invariante A).
 
-    kind ∈ {dormant_refresh, directed_review}: discrimina o gatilho do PREPARAR
-    (radar de dormência vs cronograma/fila FSRS/pedido direto). Invariante B da
-    Revisão Calibrada — TODO PREPARAR carimba review_log para a curva nunca cegar.
-    Ver core/contracts/revisao-calibrada-contract.md.
+    kind ∈ {dormant_refresh, directed_review}: discrimina o GATILHO (radar de
+    dormência vs cronograma/fila FSRS/pedido direto). Invariante B da Revisão
+    Calibrada — todo re-ensino carimba review_log, para a curva do TEMA nunca
+    cegar. Ver core/contracts/revisao-calibrada-contract.md.
+
+    ⚰️ Esta docstring dizia "refresh/PREPARAR" e "o gatilho do PREPARAR" (3x),
+    sub-modo revogado na s170 e substituído pela Revisão Direcionada de
+    fechamento. F97 (s177): o gate CONTRATO_REVOGADO só varria markdown, então a
+    prescrição morta sobreviveu no código — incluindo no texto de `--help`, que é
+    o que o agente lê no ato de usar o CLI. O mecanismo aqui nunca mudou: o
+    carimbo continua sendo o SSOT do tempo-de-revisão temática.
     """
     if kind not in VALID_KINDS:
         raise ValueError(f"kind inválido: {kind!r} (use {VALID_KINDS})")
@@ -159,7 +166,7 @@ def main():
     ap.add_argument("--resumo", help="Caminho do resumo refrescado (com --stamp)")
     ap.add_argument("--note", help="Nota curta do que foi refrescado (com --stamp)")
     ap.add_argument("--kind", choices=VALID_KINDS, default="dormant_refresh",
-                    help="Gatilho do PREPARAR (com --stamp): dormant_refresh|directed_review")
+                    help="Gatilho do re-ensino (com --stamp): dormant_refresh|directed_review")
     ap.add_argument("--window-days", type=int, default=REPETITION_WINDOW_DAYS, dest="window_days",
                     help=f"Janela anti-repetição em dias (default {REPETITION_WINDOW_DAYS})")
     args = ap.parse_args()

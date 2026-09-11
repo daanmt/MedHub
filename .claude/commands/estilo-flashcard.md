@@ -66,6 +66,13 @@ Cunhar sob o 6o princípio e **triar** são atos separados. A cunhagem varre as 
 ## Formato atômico (referência EMED — sessão 124)
 
 > **A régua de formulação foi calibrada.** Os 5 princípios acima definem *o que* testar (o elo quebrado); esta seção define *como escrever* — no **minimum information principle** (Wozniak), aferido contra os decks oficiais do EMED (275 decks colhidos em `resumos/**/Flashcards - <Tema>.pdf`, consultáveis por `python tools/emed_flashcards.py --query --tema "<tema>"`).
+>
+> **Assinatura canônica de `tools/emed_flashcards.py`** (`AGENTE.md §7.2`) — dois modos, mutuamente
+> exclusivos: **`--harvest`** colhe e extrai os decks do corpus EMED, com **`--source RAIZ`** para
+> apontar a raiz do corpus (ex.: `D:\Med\Estrategia 2024 Extensivo\Extensivo`) e **`--force`** para
+> re-extrair tudo, ignorando a idempotência; **`--query`** consulta o deck de um tema, com
+> **`--tema TEMA`** (obrigatório) e **`--area AREA`** como filtro opcional. 🔴 O corpus é insumo de
+> **autoria** — `AGENTE.md §6` proíbe import em massa dos decks EMED para o `ipub.db`.
 
 **O modo de falha que isto corrige — o "paragraph card":** empacotar `frente_contexto` + `frente_pergunta` + `verso_resposta` + `verso_regra_mestre` + `verso_armadilha` num item só. O aluno acerta 3 de 5 pedaços, marca "Bom", e os 2 esquecidos somem (illusion of competence). A auditoria da s124 reprovou a safra por isto (833 double-barreled; 350/398 sim/não com muro no verso; 835 set).
 
@@ -96,6 +103,12 @@ Cunhar sob o 6o princípio e **triar** são atos separados. A cunhagem varre as 
 🔴 **Reforja por "confuso"/"mandado" mira a FRENTE, não o verso (sessão 151).** Quando o usuário sinaliza que um card está confuso sem apontar erro de conteúdo, o defeito normalmente mora no ESTÍMULO -- `frente_contexto` truncando achados demais numa frase só, ou `frente_pergunta` abstrata demais para gerar recall. Reescrever o verso, mesmo que o conteúdo fique melhor, não resolve essa queixa: confirmado numa drenagem de 80 cards em que dois cards foram reforjados mexendo principalmente no verso, com a frente quase intocada -- o usuário leu os dois como "idênticos" nas duas vezes que foram re-apresentados. Só depois de reescrever a frente de verdade (cortar achado redundante, separar clínica de exame em frases distintas, converter pergunta abstrata em mini-caso concreto que já embute o padrão discriminador) é que o usuário confirmou. Ao reforjar por queixa de confusão, editar primeiro/principalmente `frente_contexto`+`frente_pergunta`; só tocar no verso se o conteúdo também estiver errado. Se a queixa persistir após uma rodada, perguntar explicitamente qual campo incomoda em vez de adivinhar de novo.
 
 **Fronteira com a execução de prova:** questão de prova *legitimamente* cobra duas metades ao mesmo tempo. Isso se treina **resolvendo questões**, não no flashcard -- espelhar a demanda composta no card contamina a medida de recall. Detector: `python tools/audit_card_atomicity.py` (WARN no `auto_check`); triar a worklist pelo critério acima, não pelo regex.
+
+> **Assinatura canônica de `tools/audit_card_atomicity.py`** (`AGENTE.md §7.2`): `--json` (worklist
+> machine-readable) · `--limit N` (achados no modo texto, default 25) · `--padrao PREFIXO` (filtra
+> por prefixo do padrão, ex.: `duplo-ask`, útil para separar as duas famílias antes de triar).
+> O predicado que este CLI expõe alimenta a fila de reforja pelo motivo `nao_atomico`
+> (`reforja.py --ingerir`, abaixo) -- é o **mesmo** predicado, importado, nunca copiado.
 
 ### Reconciliação com o targeting metacognitivo
 

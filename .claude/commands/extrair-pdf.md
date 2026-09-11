@@ -79,8 +79,9 @@ python tools/extract_pdfs.py "arq1.pdf" "arq2.pdf" "arq3.pdf"
 
 🔴 **NÃO deletar os PDFs do EMED.** A política "Zero PDF" foi **revertida na s086**:
 os PDFs-fonte são **retidos** (gitignored, fora do versionamento) porque alimentam
-`tools/cobertura_conhecimento.py` (F16a) e o gate de lastro de
-`tools/insert_questao.py::_tem_lastro` (F31) e são IP-fonte **não-reconstruível**.
+`tools/cobertura_conhecimento.py` (F16a — assinatura canônica: **`--dir DIR`**, raiz dos
+resumos a varrer, default `resumos`; read-only, reporta tema com PDF e sem `.md`) e o gate
+de lastro de `tools/insert_questao.py::_tem_lastro` (F31) e são IP-fonte **não-reconstruível**.
 O vault opera em Markdown; os PDFs ficam como matéria-prima local.
 
 > Correção 2026-08-14 (auditoria de sistemas): esta seção instruía deletar os

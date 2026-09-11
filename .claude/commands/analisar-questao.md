@@ -235,6 +235,11 @@ python tools/insert_questao.py \
 
 **Parâmetros de qualidade (sempre fornecer):** `--frente_contexto`, `--frente_pergunta`, `--verso_resposta`, `--verso_regra_mestre`, `--verso_armadilha`
 
+**`--status {anulada,banca-divergente}` (F26).** Registra o erro **sem cunhar card** e o marca para
+o gate de evidência. Existe porque questão anulada ou de gabarito divergente **não é lacuna real**:
+cunhar card a partir dela ensinaria o erro da banca, e contá-la como buraco de conhecimento
+envenenaria o ranking de fraquezas. O registro fica — o que não acontece é virar card.
+
 **Mapeamento arg → coluna em `questoes_erros` (F28 — evita criar coluna redundante):**
 
 | Argumento | Coluna persistida |

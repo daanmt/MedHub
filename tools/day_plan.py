@@ -582,8 +582,9 @@ def infer_nota(sinais):
 
     `sinais`: dict com acerto_hist (None se 0q), acerto_bloco (None se inexistente),
     score_dorm (float), leu_tema (bool), prevalencia ('alta'|'media'|'baixa').
-    Só sinais FRIOS independentes da saída (§7.6): nunca a profundidade da
-    preparação nem o acerto "morno" pós-PREPARAR.
+    Só sinais FRIOS independentes da saída (§7.6): nunca a profundidade do
+    ensino nem o acerto "morno" medido logo depois dele (⚰️ dizia "pós-PREPARAR",
+    sub-modo revogado na s170 -- o mecanismo descrito segue igual).
     """
     acerto_hist = sinais.get("acerto_hist")
     acerto_bloco = sinais.get("acerto_bloco")
@@ -753,9 +754,15 @@ def difficulty_report(area, tema):
     proposito, vencidos = _proposito(area, tema)
     largura = ("amplo (escopo do cronograma)" if proposito == "exercicios"
                else "direcionado (cluster vencido)")
-    passo = (f"Revisar {tema} como dif-{nota_efetiva} ({degrau}) [Material: {mat}], PREPARAR "
-             f"{'descomprimido' if nota_efetiva >= 7 else 'comprimido'}+mecanismo, "
-             f"{largura}; depois DRENAR.")
+    # ⚰️ F97 (s177): esta string dizia "..., PREPARAR {descomprimido}+mecanismo,
+    # {largura}; depois DRENAR" -- prescrevendo, no plano que o agente le no 1o
+    # turno, um sub-modo REVOGADO na s170. O gate CONTRATO_REVOGADO nao a via
+    # porque so varria markdown. A ordem do contrato v1.3 e a inversa: DRENAR
+    # primeiro, e o ensino acontece so na Revisao Direcionada de FECHAMENTO.
+    passo = (f"Revisar {tema} como dif-{nota_efetiva} ({degrau}) [Material: {mat}]: "
+             f"DRENAR a fila e fechar com Revisao Direcionada "
+             f"{'descomprimida' if nota_efetiva >= 7 else 'comprimida'}+mecanismo, "
+             f"{largura}.")
     return {
         "area": area, "tema": tema,
         "nota_usuario": nota_usuario, "nota_fonte": fonte,

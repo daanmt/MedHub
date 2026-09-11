@@ -161,6 +161,16 @@ _PORTADORES_NORMA = (
     "AGENTE.md",
     "ESTADO.md",
     "HANDOFF.md",
+    # 🔴 F97 (s177, item 1.7): ate aqui a lista era SO markdown -- e a prescricao
+    # revogada estava viva em CODIGO. `day_plan.py` montava o passo do dia com
+    # "..., PREPARAR descomprimido+mecanismo; depois DRENAR" (a ordem que a s170
+    # inverteu) e o `--help` do `dormant_refresh` chamava o gatilho de "gatilho do
+    # PREPARAR". Nenhum dos dois e documento: sao as strings que o agente LE no 1o
+    # turno e no ato de usar o CLI -- o portador mais proximo da execucao que
+    # existe. O F90 mirou o registro de TERMOS, o F95 o de PORTADORES; este e o
+    # FORMATO do portador. Achado lendo `--help` para o item 1.7 (D5).
+    "tools/day_plan.py",
+    "tools/dormant_refresh.py",
 )
 _RE_HEADING = re.compile(r"^(#{1,6})\s")
 # Marcador de SECAO de lapide. Deliberadamente MAIS LARGO que o `RE_LAPIDE` do
@@ -980,6 +990,39 @@ def main():
     results_summary.append((desc_f43, True, len(suites_orfas) if suites_orfas else 0))
     _ledger_record("suites_orfas",
                    [{"alvo": n, "payload": {}} for n in (suites_orfas or [])])
+
+    # 15. D5 (s177, item 1.7): assinatura canonica de CLI x skill (AGENTE.md 7.2).
+    #     🔴 NASCE BLOCK, e a politica warning-first CONCORDA: "regra nova nasce
+    #     WARN e vira BLOCK quando a base zerar" -- a base zerou NESTE commit
+    #     (65 flags orfas e 17 CLIs sem skill dona, medidos em 11/09, foram a
+    #     ZERO com `engenharia-cli.md` + as assinaturas nas skills donas). Mesmo
+    #     criterio do F79b na s176: promocao por MEDICAO, nunca por vontade.
+    #     Barato de satisfazer: flag nova exige uma linha de doc no mesmo commit.
+    desc_d5 = "Assinatura canonica de CLI (D5)"
+    sem_assinatura = []
+    try:
+        from cli_signature_check import run_checks as sig_run
+        sem_assinatura = sig_run()
+    except Exception as e:  # noqa: BLE001 -- sensor fora do ar nao derruba o harness
+        print(f"\n[WARN] CLI_ASSINATURA_SENSOR: sensor indisponivel ({e}).")
+    if sem_assinatura:
+        amostra = "; ".join(f"{a['alvo']} ({' '.join(a['payload']['orfas'][:3])})"
+                            for a in sem_assinatura[:3])
+        n_flags = sum(len(a["payload"]["orfas"]) for a in sem_assinatura)
+        print()
+        print(f"[BLOCK] CLI_ASSINATURA (D5): {n_flags} flag(s) em "
+              f"{len(sem_assinatura)} CLI(s) sem assinatura em skill nenhuma "
+              f"({amostra}{'; ...' if len(sem_assinatura) > 3 else ''}). "
+              f"AGENTE.md 7.2: a assinatura completa vive em UMA skill. "
+              f"Documentar na skill dona ou em `.claude/commands/engenharia-cli.md`, "
+              f"depois `python tools/sync_skills.py`. Detalhe: "
+              f"python tools/cli_signature_check.py")
+        all_passed = False
+    results_summary.append((desc_d5, not sem_assinatura,
+                            sum(len(a["payload"]["orfas"]) for a in sem_assinatura)))
+    _ledger_record("cli_assinatura",
+                   [{"alvo": a["alvo"], "payload": {"orfas": a["payload"]["orfas"]}}
+                    for a in sem_assinatura])
 
     # PAINEL DE DÍVIDA (descolar part-1, F54/P5): o leitor obrigatório. Imprime SEMPRE
     # (dívida invisível em run verde é exatamente o modo de falha F54). Sensor: detecta

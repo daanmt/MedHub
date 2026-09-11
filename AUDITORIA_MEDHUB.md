@@ -484,7 +484,7 @@ relates_to: [AGENTE, ESTADO, HANDOFF]
 > ledger (F35 desde a s124, F36 novo na s125). Registrados aqui na reconciliacao de fechamento da
 > s125 para que o ponteiro tenha lastro.
 
-### F35 -- Reconcile de volume (W1) segue manual e o `auto_check --changed` nao cobre a suite impactada -- **MEDIA** -- **ABERTO**
+### F35 -- Reconcile de volume (W1) segue manual e o `auto_check --changed` nao cobre a suite impactada -- **MEDIA** -- **RESOLVIDO (s176, item 0.5)**
 - **Origem:** herdado como "nao resolvido" do escopo do F34/s115 (secao 3h) e carregado no HANDOFF
   desde a s124 sem entrada propria.
 - **Duas faces:**
@@ -496,6 +496,26 @@ relates_to: [AGENTE, ESTADO, HANDOFF]
     so o `pytest` completo do audit pegou. O seletor da falso verde quando a mudanca e de contrato
     (tupla->dict) e o consumidor vive noutro arquivo.
 - **Impacto:** falso verde no gate barato; drift de volume so aparece quando alguem olha.
+- ✅ **Face 2 (seletor de suite) fechada na s159** -- ver F44, que e "o F35 na sua forma real":
+  nao era o seletor escolhendo mal, era nao haver o que selecionar (o `auto_check` nao chamava o
+  pytest). Bullet ja existente naquele achado.
+- ✅ **Face 1 (reconcile de volume) fechada em 10/09/2026 (s176, janela 2, item 0.5 do Tier 0).**
+  O W1 passou de `manual` a **REPORTA**: `day_plan.reconcile_planilha` emite **uma linha por boot**,
+  inclusive `NAO MEDIDO` quando nao ha snapshot -- ausencia de medicao virou estado reportado, nunca
+  silencio nem delta zero assumido. O snapshot da planilha (`preparacao_estado.planilha_snapshot`,
+  gravado por `importar_sessoes.py --snapshot`) e tomado no unico instante em que os numeros dela
+  existem: quando o agente a le via MCP.
+  🔬 **Medicao que motivou (10/09, comando na mao):** `grep -rniE "planilha|dashboard" --include=*.py
+  tools/ app/` -> **zero comparacoes** no codigo vivo; os dois unicos reconciles da historia do
+  projeto viraram script one-shot (`tools/_archive/migrations/fix_data_delta_075.py` e
+  `fix_data_delta_110.py`). A docstring do segundo guarda quem deu o alarme: *"Usuario reportou
+  performance desatualizada (4660 real vs 4584 relatado)"*.
+  🔴 **O que a fixture da s110 ensinou ao desenho:** de 4 achados, **3 eram mislabel de area** e o
+  relabeling **nao mudou o total** (4584 antes e depois). Logo `alinhado` **exige** detalhe por aba;
+  sem ele o estado e `sem_detalhe_area`, que declara o que nao foi verificado em vez de dar verde.
+  **Nao bloqueia** (W1 segue WARNING), **nao le o Drive** (F36 intocado) e **nao valida vocabulario
+  de area** -- area fantasma aparece crua no relatorio; consertar na origem e o **F89** (item 0.6).
+  Spec `.vibeflow/specs/reconcile-planilha-reporta.md` · `reconcile-contract` v1.3 · suite 503 -> 523.
 
 ### F36 -- Agente nao materializa binario grande baixado via MCP -> `--sync-drive` pulado 5 sessoes seguidas -- **ALTA** (era MEDIA) -- **ABERTO**
 - **Evidencia (s124, s125, s126, s127 e s128):** o boot sinalizou `Drive desatualizado`

@@ -2,12 +2,12 @@
 type: contract
 layer: core
 status: canonical
-version: 1.2
+version: 1.3
 relates_to: [estado-contract, handoff-contract, fsrs-management-contract, AGENTE]
 ---
 
 # Contrato de Reconciliação (Reconcile Mode)
-**Versão 1.2 | 2026-09-01 (ciclo descolar) · v1.0 2026-06-03 (sessão 075) — adaptado do Reconcile Mode de `agente-daktus-content/core/contracts/handoff-contract.md`**
+**Versão 1.3 | 2026-09-10 (B3/F35) · v1.2 2026-09-01 (ciclo descolar) · v1.0 2026-06-03 (sessão 075) — adaptado do Reconcile Mode de `agente-daktus-content/core/contracts/handoff-contract.md`**
 
 > Documento normativo. Define o protocolo de detecção e resolução de *drift* de estado no boot.
 > Referenciado por: `AGENTE.md` (§2 boot), `estado-contract.md`, `handoff-contract.md`, `fsrs-management-contract.md`.
@@ -35,7 +35,7 @@ Leitura rápida, read-only. Reporta divergências; não grava sem confirmação.
 | **B2** | Ponteiro do HANDOFF aponta `sessão NNN` sem `history/session_NNN.md` (exceção: NNN = max+1, a sessão em curso) OU além de max+1 | BLOCKING | ✅ **BLOCK** — `state_utils::check_session_pointer`, `[BLOCK] SESSION_POINTER` (promovida 2026-09-01; era WARN de condição aparentada) |
 | **B3** | "Estado por frente" do HANDOFF contradiz o `ESTADO.md` | BLOCKING | ⚠️ **SEM IMPLEMENTAÇÃO** — cross-check manual no boot |
 | **B4** | Indicador do `ESTADO.md` diverge do total de `sessoes_bulk` | BLOCKING | ⚠️ **SEM IMPLEMENTAÇÃO** — `/performance` vs ESTADO, manual |
-| **W1** | Planilha Dashboard (somas das **abas por disciplina**) diverge de `sessoes_bulk` | WARNING | ⚠️ manual — `/importar-planilha` (verificar); nunca o Quadro Geral |
+| **W1** | Planilha Dashboard (somas das **abas por disciplina**) diverge de `sessoes_bulk` | WARNING | ✅ **REPORTA** (B3/F35, s176) — `day_plan.reconcile_planilha` emite a linha no Plano do Dia e `python tools/day_plan.py --planilha` sob demanda; nunca o Quadro Geral |
 | **W2** | `history/session_NNN.md` existe mas não está no `history/INDEX.md` | WARNING | ⚠️ **SEM IMPLEMENTAÇÃO** — conferência manual |
 | **W3** | Backlog FSRS (`state=0`) cresceu sem drenagem há N sessões | WARNING | ⚠️ manual — `fsrs-management-contract.md`; visível no day_plan |
 | **W4** | Áreas em `sessoes_bulk` fora de `AREAS_VALIDAS` | WARNING | ⚠️ **SEM IMPLEMENTAÇÃO** — vocabulário (ver s075: `GO`, `Obstetricia`) |
@@ -62,7 +62,14 @@ PASSO 2 — Resolver BLOCKING
   → B3/B4: alinhar HANDOFF/ESTADO ao estado real (preferir o db/repositório).
 
 PASSO 3 — Resolver WARNING (se houver)
-  → W1: rodar a conciliação planilha↔db; importar delta via tools/importar_sessoes.py (com confirmação).
+  → W1: o boot JÁ reporta (day_plan). Ler o estado nomeado e agir pelo que ele diz:
+       `nao_medido`      -> ler a planilha via MCP e gravar o snapshot:
+                            tools/importar_sessoes.py --snapshot --por-area @abas.json
+                            --ultimo-lancamento AAAA-MM-DD
+       `import_pendente` -> planilha à frente: importar o delta via --rows-file (com confirmação).
+       `divergente_por_area` / `divergente` -> conciliar aba a aba (assinatura de mislabel, s110).
+       `planilha_atrasada` / `sem_detalhe_area` / `alinhado` -> informar; nada a fazer.
+       `abandonada`      -> declarado pelo operador; segue reportando, suspenso.
   → W2: adicionar entry no history/INDEX.md.
   → W3: agendar onda de drenagem (ver fsrs-management-contract.md).
   → W4: normalizar rótulos (migração one-shot em tools/, nunca SQL direto inline).
@@ -102,12 +109,22 @@ A planilha do Drive (`Dashboard EMED 2026`) é o **SSOT de volume** e a fonte **
 - ⚠️ **Falso-positivo por delay de leitura:** a leitura via MCP (content snippet / read) pode **atrasar vs a edição ao vivo** do Google. Em s075 o QG do Infecto pareceu não somar (177 vs 217 da aba), mas era **delay de propagação** — minutos depois mostrava 217. **Re-checar após alguns minutos antes de concluir que é bug de fórmula.** Não alertar o usuário sobre "bug" sem reconfirmar.
 - **Sinal de conclusão de tema (v1.1 — caminho trocado):** a conclusão é lida da coluna **`Realizada?`** do `Dashboard EMED 2026` (Sheets nativo) via `read_file_content` — **texto puro, sem base64, sem openpyxl**. O caminho antigo (`download_file_content` + openpyxl sobre o xlsx riscado) exigia binário via MCP e **não fecha**: fica como ritual local do usuário (`cronograma.py --sync-drive`), que é também o único portador da **ordem**. Ver `cronograma-contract.md` Cláusula 5b.
 - **Delta, não total:** a planilha guarda acumulados por tarefa; importar só `(soma da aba) − (total no db)` por área — via `/importar-planilha` → `tools/importar_sessoes.py`.
+- 🔴 **O reconcile W1 deixou de depender de alguém lembrar (v1.3, B3/F35).** O momento em que o agente lê a planilha é o único em que os números dela existem: ali ele grava o **snapshot** (`preparacao_estado.planilha_snapshot` via `importar_sessoes.py --snapshot`) com `por_area`, `total` e `ultimo_lancamento`. O boot compara e emite **uma linha, sempre** — inclusive `NAO MEDIDO` quando não há snapshot. **Duas idades, duas perguntas:** `ultimo_lancamento` responde *"a planilha ainda é alimentada?"*; `lido_em` responde *"minha cópia dela é velha?"*. **Total batendo não é alinhado:** na s110, 3 dos 4 achados foram mislabel de área e o relabeling não mudou o total — por isso `alinhado` exige detalhe por aba e, sem ele, o estado é `sem_detalhe_area` (declara o que não foi verificado, §10.8 do `AGENTE.md`). **Ponto cego declarado:** quem alimenta o snapshot é o agente; a validação é de coerência interna (soma das abas × total declarado, datas no passado), nunca de fidelidade ao Drive — enquanto o F36 não tiver transporte próprio, essa fidelidade fica **não verificável**.
 - **Usuário relata "fiz X, acertei Y" (sem ter lançado na planilha ainda):** `tools/registrar_sessao_bulk.py` ANTES de processar erros (decisão "SSOT volumétrica" em `AGENTE.md §6`). O usuário tipicamente lança na planilha em paralelo — conciliar, não somar em dobro.
 - **Cronograma:** a planilha `Cronograma de Reta Final.xlsx` NÃO persiste no db — leitura sob demanda para guiar prioridades e ler os marcadores de conclusão (decisão sessão 075). **v1.1:** a leitura do xlsx é do **usuário** (ritual local); o agente lê conclusão pelo `Realizada?` do Dashboard (Sheets nativo, texto) — ver `cronograma-contract.md` Cláusula 5b.
 
 ---
 
 ## Changelog
+
+- **v1.3 (2026-09-10, s176 -- item 0.5 do Tier 0, B3/F35):** **W1 deixou de ser manual.** A matriz
+  troca `manual` pelo instrumento real (`day_plan.reconcile_planilha` + `--planilha`), o PASSO 3
+  ganha a acao por estado nomeado, e a secao de absorcao normatiza o **snapshot da planilha**
+  (`preparacao_estado.planilha_snapshot`, gravado por `importar_sessoes.py --snapshot`). O achado
+  que motivou: os dois unicos reconciles da historia do projeto (s075, s110) viraram script
+  one-shot em `tools/_archive/migrations/`, e o drift de 76q da s110 foi achado **pelo operador**.
+  Fronteiras declaradas: nao bloqueia, nao le o Drive, e a fidelidade do snapshot ao Drive segue
+  **nao verificavel** enquanto o F36 nao tiver transporte proprio.
 
 - **v1.2 (2026-09-01, ciclo descolar/ai-eng — F56):** **B2 promovida a BLOCKING de fato**
   (`state_utils::check_session_pointer` agora checa a condição CERTA — arquivo do ponteiro

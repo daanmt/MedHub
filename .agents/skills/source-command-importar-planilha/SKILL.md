@@ -81,6 +81,11 @@ Para localizar a semana corrente: comparar a data de hoje com os ranges da linha
    ```
    O importador valida cada linha (área válida, `acertos<=feitas`), pula duplicatas `(sessao, area)` por idempotência, e imprime resumo: **inseridas / puladas / inválidas**.
 5. **Reportar.** Relayar o resumo ao usuário, listando explicitamente as linhas inválidas (área não reconhecida, números inconsistentes) para correção.
+6. 🔴 **Gravar o snapshot — SEMPRE que ler a planilha, mesmo sem importar nada (B3/F35).** Este é o **único** momento em que os números da planilha existem; se eles não forem gravados agora, o reconcile W1 volta a depender de alguém lembrar de olhar — que é o achado. Passar as somas das **abas por disciplina** (autoritativas) e a data do **último lançamento dentro da planilha**:
+   ```bash
+   python tools/importar_sessoes.py --snapshot --por-area @abas.json --ultimo-lancamento 2026-07-20
+   ```
+   O boot passa a emitir uma linha por sessão (`Planilha x db (W1/F35)`) com o delta e a **idade da planilha**. Enquanto não houver snapshot, ele diz `NAO MEDIDO` — nunca assume delta zero.
 
 ---
 
@@ -88,11 +93,24 @@ Para localizar a semana corrente: comparar a data de hoje com os ranges da linha
 
 ```bash
 python tools/importar_sessoes.py --rows-file <path.json>
+python tools/importar_sessoes.py --snapshot [--total N] [--por-area '{"Pediatria": 512}'|@abas.json] --ultimo-lancamento AAAA-MM-DD
+python tools/importar_sessoes.py --show-snapshot
+python tools/importar_sessoes.py --abandonada "<motivo>"
 ```
 
-- `--rows-file` (obrigatório): JSON com lista de linhas no shape acima (UTF-8).
+**Importação de volume:**
+- `--rows-file`: JSON com lista de linhas no shape acima (UTF-8).
 - Reusa `registrar()` — mesma idempotência e validação do registro manual.
 - Não aborta o lote em linha inválida: reporta e segue.
+
+**Snapshot da planilha (alimenta o reconcile W1; não importa volume):**
+- `--snapshot`: grava `preparacao_estado.planilha_snapshot`. Exige `--ultimo-lancamento`.
+- `--por-area`: somas das **abas por disciplina**, inline ou `@arquivo.json`. Quando presente, o `--total` é derivado da soma.
+- `--total`: total declarado. Junto com `--por-area`, é **conferido** contra a soma — divergência é recusada com os dois números na mensagem (é o bug de fórmula do Quadro Geral, s075). Sozinho, grava sem detalhe por área e o boot declara que o mislabel de área **não foi verificado**.
+- `--ultimo-lancamento AAAA-MM-DD`: data da última tarefa lançada **dentro** da planilha — é a *idade* dela, e responde "a planilha ainda é alimentada?". Data no futuro é recusada. Distinta de `lido_em` (idade da nossa cópia), gravada sozinha.
+- `--show-snapshot`: imprime o snapshot gravado (JSON).
+- `--abandonada "<motivo>"`: registra a resposta do operador a *"a planilha ainda é fonte?"*. O boot para de cobrar e passa a dizer **comparação suspensa**, preservando o último delta medido — muda o peso, não o mecanismo.
+- Leitura do reconcile: `python tools/day_plan.py --planilha` (read-only, nunca bloqueia).
 
 ---
 

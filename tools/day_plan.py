@@ -271,6 +271,151 @@ def _conclusao_drive():
             "fresco": fresco, "atualizado_em": data_sync}
 
 
+def _dias_desde(iso, hoje):
+    try:
+        return (hoje - date.fromisoformat(str(iso)[:10])).days
+    except Exception:
+        return None
+
+
+def reconcile_planilha(hoje=None, con=None):
+    """W1 do reconcile-contract deixa de ser manual: REPORTA planilha x db (B3/F35).
+
+    Read-only e nunca bloqueante. Compara o snapshot gravado por
+    `importar_sessoes.py --snapshot` com `sessoes_bulk` e devolve um dos OITO
+    estados nomeados. Regras que vieram das duas unicas reconciliacoes que o
+    projeto teve (s075 e s110, ambas script one-shot):
+
+    - **total batendo nao e alinhado.** Na s110, 3 dos 4 achados eram mislabel
+      de area (`GO`, `Clinica Medica`) e o relabeling NAO mudou o total. Por
+      isso `alinhado` exige detalhe por area; sem ele o estado e
+      `sem_detalhe_area`, que diz o que nao foi verificado.
+    - **as duas idades sao perguntas diferentes.** `ultimo_lancamento` responde
+      "a planilha ainda e alimentada?" (a idade do F35); `lido_em` responde
+      "minha copia dela e velha?". Colapsar as duas perde a primeira.
+    - **db > planilha com a planilha parada nao e drift**, e planilha atrasada;
+      **planilha > db e `import_pendente`** -- o caso dos 76q da s110, achado
+      pelo operador, nao pelo sistema.
+    """
+    hoje = hoje or date.today()
+    base = {"estado": "nao_medido", "planilha_total": None, "db_total": None, "delta": None,
+            "ultimo_lancamento": None, "idade_planilha_dias": None, "lido_em": None,
+            "idade_leitura_dias": None, "db_ultimo_registro": None, "areas_divergentes": [],
+            "detalhe_por_area": False, "declarado_em": None, "motivo_abandono": None,
+            "degradou": False,
+            "acao": "python tools/importar_sessoes.py --snapshot --total N "
+                    "--por-area @abas.json --ultimo-lancamento AAAA-MM-DD"}
+    proprio = con is None
+    try:
+        import importar_sessoes as imp
+        snap = imp.ler_snapshot()
+        con = con or db.get_connection()
+        linha = con.execute("SELECT COALESCE(SUM(questoes_feitas),0), MAX(data_sessao) "
+                            "FROM sessoes_bulk").fetchone()
+        base["db_total"], base["db_ultimo_registro"] = linha[0], linha[1]
+        db_por_area = {r[0]: r[1] for r in con.execute(
+            "SELECT area, SUM(questoes_feitas) FROM sessoes_bulk GROUP BY area")}
+    except Exception as e:                      # leitor quebrado NUNCA derruba o boot (DoD 4)
+        _warn_degradacao("reconcile_planilha", e)
+        base["degradou"] = True
+        return base
+    finally:
+        if proprio and con is not None:
+            try:
+                con.close()
+            except Exception:
+                pass
+
+    if not snap:
+        return base
+
+    base["lido_em"] = (snap.get("lido_em") or "")[:10] or None
+    base["idade_leitura_dias"] = _dias_desde(base["lido_em"], hoje)
+    base["ultimo_lancamento"] = snap.get("ultimo_lancamento")
+    base["idade_planilha_dias"] = _dias_desde(base["ultimo_lancamento"], hoje)
+    base["planilha_total"] = snap.get("total")
+    base["declarado_em"] = snap.get("declarado_em")
+    base["motivo_abandono"] = snap.get("motivo_abandono")
+    if base["planilha_total"] is not None:
+        base["delta"] = base["db_total"] - base["planilha_total"]
+
+    if not snap.get("fonte_viva", True):
+        base["estado"] = "abandonada"
+        base["acao"] = None
+        return base
+    if base["planilha_total"] is None:
+        return base                              # declaracao sem numero -> segue nao_medido
+
+    por_area = snap.get("por_area") or None
+    base["detalhe_por_area"] = bool(por_area)
+    if por_area:
+        for area in sorted(set(por_area) | set(db_por_area)):
+            p, d = por_area.get(area), db_por_area.get(area)
+            if (p or 0) != (d or 0):
+                base["areas_divergentes"].append(
+                    {"area": area, "planilha": p, "db": d, "delta": (d or 0) - (p or 0)})
+        base["areas_divergentes"].sort(key=lambda a: abs(a["delta"]), reverse=True)
+
+    delta = base["delta"]
+    if delta == 0:
+        if base["areas_divergentes"]:
+            base["estado"] = "divergente_por_area"
+        elif por_area:
+            base["estado"] = "alinhado"
+            base["acao"] = None
+        else:
+            base["estado"] = "sem_detalhe_area"
+    elif delta < 0:
+        base["estado"] = "import_pendente"
+    elif (base["ultimo_lancamento"] and base["db_ultimo_registro"]
+          and base["ultimo_lancamento"] < base["db_ultimo_registro"][:10]):
+        base["estado"] = "planilha_atrasada"
+    else:
+        base["estado"] = "divergente"
+    return base
+
+
+def render_planilha(r):
+    """Uma linha, SEMPRE (DoD 1) -- inclusive `NAO MEDIDO`. Ausencia de medicao e
+    um estado reportado, nao silencio."""
+    e = r["estado"]
+    if e == "nao_medido":
+        extra = " (leitor degradou -- ver stderr)" if r.get("degradou") else ""
+        return (f"- 📋 **Planilha x db (W1/F35):** ⚠️ **NAO MEDIDO**{extra} — nenhum snapshot da "
+                f"planilha registrado; db tem {r.get('db_total') if r.get('db_total') is not None else '?'}q. "
+                f"Registrar ao ler o Drive: `{r['acao']}`")
+    idade = (f"planilha parada ha **{r['idade_planilha_dias']}d** ({r['ultimo_lancamento']})"
+             if r["idade_planilha_dias"] is not None else "idade da planilha desconhecida")
+    leitura = (f" · copia lida ha {r['idade_leitura_dias']}d"
+               if r["idade_leitura_dias"] else "")
+    if e == "abandonada":
+        quando = r["declarado_em"] or "?"
+        return (f"- 📋 **Planilha x db (W1/F35):** comparacao **suspensa** — planilha declarada "
+                f"fora de uso em {quando} ({r['motivo_abandono'] or 'sem motivo'}); ultimo delta "
+                f"medido {r['delta'] if r['delta'] is not None else '—'}")
+    cab = (f"- 📋 **Planilha x db (W1/F35):** {r['planilha_total']} x {r['db_total']} "
+           f"· delta **{r['delta']:+d}** · {idade}{leitura}")
+    rotulos = {
+        "alinhado": "✅ alinhado (total e todas as abas)",
+        "sem_detalhe_area": "⚠️ total bate, mas o snapshot veio **sem detalhe por area** — "
+                            "mislabel de area NAO foi verificado (s110: 3 de 4 achados eram isso)",
+        "divergente_por_area": "🔴 total bate e as **abas nao** — assinatura de mislabel de area (F89)",
+        "import_pendente": "🔴 planilha **a frente** do db: volume lancado e nunca importado "
+                           "(`--rows-file`)",
+        "planilha_atrasada": "planilha **atrasada** em relacao ao db — delta explicado pela idade, "
+                             "nao por import perdido",
+        "divergente": "🔴 **divergente** sem explicacao pela idade",
+    }
+    linhas = [cab, f"    • {rotulos.get(e, e)}"]
+    for a in r["areas_divergentes"][:5]:
+        linhas.append(f"    • {a['area']}: planilha {a['planilha'] if a['planilha'] is not None else '—'}"
+                      f" x db {a['db'] if a['db'] is not None else '—'} ({a['delta']:+d})")
+    resto = len(r["areas_divergentes"]) - 5
+    if resto > 0:
+        linhas.append(f"    • ... +{resto} area(s) divergente(s)")
+    return "\n".join(linhas)
+
+
 def _ordenar_por_drive(tasks, ordem_by_task, semana):
     """Ordena as tasks da semana pela ordem real do xlsx do Drive (ordem_by_task).
     Estável: tasks sem ordem conhecida vão para o fim, preservando a ordem do
@@ -781,6 +926,7 @@ def build(tempo_h=None, energia=None):
             "teto_efetivo": _teto_efetivo(fsrs["atrasados"]),
         },
         "cronograma": cron,
+        "planilha": reconcile_planilha(hoje),    # W1 reporta, nunca bloqueia (B3/F35)
         "cronograma_hint": _cronograma_hint(),   # fallback se a grade não existir
         "diagnostico": _diagnostico(),           # variância/zona + habilidades (s126)
         "sugestao_passo": passo,
@@ -974,6 +1120,8 @@ def render(p):
                    f"~{c['ritmo_meta']}/dia · ENAMED em {c['dias_enamed']}d (sem alvo de volume)")
     elif p.get("cronograma_hint"):
         out.append(f"- 🧭 **Cronograma:** {p['cronograma_hint'][:120]}")
+    # W1 do reconcile (B3/F35): a linha sai SEMPRE, inclusive como NAO MEDIDO.
+    out.append(render_planilha(p.get("planilha") or reconcile_planilha()))
     d = p.get("diagnostico")
     if d:
         if d.get("zona"):
@@ -1220,6 +1368,9 @@ def main():
                     help="Simulação: monta o plano sem gravar em plano_dia")
     ap.add_argument("--plano-de", metavar="YYYY-MM-DD", dest="plano_de",
                     help="Imprime o plano PERSISTIDO de uma data (JSON)")
+    ap.add_argument("--planilha", action="store_true",
+                    help="Reconcile W1 planilha x db com a idade da planilha (read-only, "
+                         "nunca bloqueia); com --json sai o dict cru")
     ap.add_argument("--aderencia", action="store_true",
                     help="Relatório aderência planejado×real por dia (derivado do db)")
     ap.add_argument("--semanas", type=int, default=1, metavar="N",
@@ -1232,6 +1383,10 @@ def main():
         dias = aderencia(semanas=max(1, args.semanas))
         print(json.dumps(dias, ensure_ascii=False, indent=2) if args.json
               else render_aderencia(dias))
+        return
+    if args.planilha:
+        r = reconcile_planilha()
+        print(json.dumps(r, ensure_ascii=False, indent=2) if args.json else render_planilha(r))
         return
     if args.handoff_block:
         print(render_handoff_block(build()))

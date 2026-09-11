@@ -240,3 +240,17 @@
 {"ts": "2026-09-09T13:12:04", "tipo": "reforja", "card_id": 367, "writer": "recurate_cards", "version_antes": 2, "version_depois": 3, "reason": "reforja", "campos": ["frente_contexto", "frente_pergunta", "verso_armadilha", "verso_regra_mestre", "verso_resposta"], "n_campos": 5, "len_verso_antes": 196, "len_verso_depois": 204, "n_frases_antes": 1, "n_frases_depois": 1}
 {"ts": "2026-09-09T13:12:04", "tipo": "reforja", "card_id": 1568, "writer": "recurate_cards", "version_antes": 1, "version_depois": 2, "reason": "reforja", "campos": ["frente_pergunta", "verso_resposta"], "n_campos": 2, "len_verso_antes": 75, "len_verso_depois": 140, "n_frases_antes": 1, "n_frases_depois": 1}
 {"ts": "2026-09-09T13:12:04", "tipo": "reforja", "card_id": 1574, "writer": "recurate_cards", "version_antes": 1, "version_depois": 2, "reason": "reforja", "campos": ["frente_contexto", "frente_pergunta"], "n_campos": 2, "len_verso_antes": 103, "len_verso_depois": 103, "n_frases_antes": 1, "n_frases_depois": 1}
+{"ts": "2026-09-10T12:36:42", "tipo": "generation", "questao_id": 990, "n_cards": 2, "avisos": 0}
+{"ts": "2026-09-10T12:36:42", "tipo": "generation", "questao_id": 991, "n_cards": 2, "avisos": 0}
+{"ts": "2026-09-10T12:36:42", "tipo": "generation", "questao_id": 992, "n_cards": 2, "avisos": 1}
+{"ts": "2026-09-10T12:36:42", "tipo": "generation", "questao_id": 993, "n_cards": 2, "avisos": 1}
+{"ts": "2026-09-10T12:36:42", "tipo": "generation", "questao_id": 994, "n_cards": 2, "avisos": 0}
+{"ts": "2026-09-10T12:36:42", "tipo": "generation", "questao_id": 995, "n_cards": 1, "avisos": 0}
+{"ts": "2026-09-10T12:37:09", "tipo": "generation", "questao_id": 996, "n_cards": 1, "avisos": 0}
+{"ts": "2026-09-10T12:43:56", "tipo": "generation", "questao_id": 997, "n_cards": 2, "avisos": 0}
+{"ts": "2026-09-10T12:43:56", "tipo": "generation", "questao_id": 999, "n_cards": 2, "avisos": 1}
+{"ts": "2026-09-10T20:12:26", "tipo": "generation", "questao_id": 1000, "n_cards": 2, "avisos": 0}
+{"ts": "2026-09-10T20:12:26", "tipo": "generation", "questao_id": 1001, "n_cards": 2, "avisos": 0}
+{"ts": "2026-09-10T20:12:26", "tipo": "generation", "questao_id": 1002, "n_cards": 1, "avisos": 1}
+{"ts": "2026-09-10T20:12:26", "tipo": "generation", "questao_id": 1003, "n_cards": 1, "avisos": 0}
+{"ts": "2026-09-10T20:12:26", "tipo": "generation", "questao_id": 1004, "n_cards": 1, "avisos": 0}

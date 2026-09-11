@@ -699,3 +699,8 @@
 {"ts": "2026-09-09T00:29:56+00:00", "event": "opened", "check": "parity", "fingerprint": "ddf439b44739", "alvo": "command<->skill", "payload": {"n_drift": 2}}
 {"ts": "2026-09-09T01:39:16+00:00", "event": "resolved", "check": "parity", "fingerprint": "ddf439b44739", "alvo": "command<->skill"}
 {"ts": "2026-09-09T03:01:23+00:00", "event": "opened", "check": "card_autosuficiencia", "fingerprint": "ea53dcf01d83", "alvo": "card#1565", "payload": {"padrao": "deitico", "tema": "HIV"}}
+{"ts": "2026-09-10T15:39:14+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "e64cef0e6087", "alvo": "card#1598", "payload": {"padrao": "duplo-ask/segundo-nucleo", "tema": "Diarreia"}}
+{"ts": "2026-09-10T23:19:18+00:00", "event": "opened", "check": "handoff_teto", "fingerprint": "abeed62c0ff8", "alvo": "HANDOFF.md", "payload": {"linhas": 61, "limite": 60}}
+{"ts": "2026-09-10T23:19:45+00:00", "event": "resolved", "check": "handoff_teto", "fingerprint": "abeed62c0ff8", "alvo": "HANDOFF.md"}
+{"ts": "2026-09-10T23:44:53+00:00", "event": "opened", "check": "handoff_teto", "fingerprint": "abeed62c0ff8", "alvo": "HANDOFF.md", "payload": {"linhas": 61, "limite": 60}}
+{"ts": "2026-09-10T23:46:20+00:00", "event": "resolved", "check": "handoff_teto", "fingerprint": "abeed62c0ff8", "alvo": "HANDOFF.md"}

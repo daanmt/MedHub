@@ -1,0 +1,396 @@
+<title>Revisão dos Top-Erros</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#F6F7F4; --surface:#FFFFFF; --surface-2:#EEF1EC; --ink:#1B2321; --ink-2:#3E4A46; --muted:#5E6B66; --rule:#D9DED9; --rule-2:#C4CBC5;
+  --accent:#177A55; --accent-ink:#0F5C40; --accent-soft:rgba(23,122,85,.10);
+  --marcada:#85342D; --marcada-soft:rgba(133,52,45,.10);
+  --exec:#B7791F; --exec-soft:rgba(183,121,31,.14);
+  --lacuna:#3567C9; --lacuna-soft:rgba(53,103,201,.12);
+  --shadow:0 1px 0 rgba(27,35,33,.04), 0 6px 20px -12px rgba(27,35,33,.18);
+  --display:"Barlow Semi Condensed",'Arial Narrow',Arial,sans-serif;
+  --body:"Source Sans 3","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --mono:"IBM Plex Mono",Consolas,"Courier New",monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#14181A; --surface:#1C2224; --surface-2:#232B2D; --ink:#E6EAE7; --ink-2:#C2CBC6; --muted:#9AA6A1; --rule:#2C3436; --rule-2:#3B4548;
+    --accent:#3FBF8C; --accent-ink:#6FD3AA; --accent-soft:rgba(63,191,140,.14);
+    --marcada:#D9776B; --marcada-soft:rgba(217,119,107,.14);
+    --exec:#BD8622; --exec-soft:rgba(189,134,34,.20);
+    --lacuna:#4F80D2; --lacuna-soft:rgba(79,128,210,.20);
+    --shadow:0 1px 0 rgba(0,0,0,.2), 0 8px 24px -14px rgba(0,0,0,.6);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#14181A; --surface:#1C2224; --surface-2:#232B2D; --ink:#E6EAE7; --ink-2:#C2CBC6; --muted:#9AA6A1; --rule:#2C3436; --rule-2:#3B4548;
+  --accent:#3FBF8C; --accent-ink:#6FD3AA; --accent-soft:rgba(63,191,140,.14);
+  --marcada:#D9776B; --marcada-soft:rgba(217,119,107,.14);
+  --exec:#BD8622; --exec-soft:rgba(189,134,34,.20);
+  --lacuna:#4F80D2; --lacuna-soft:rgba(79,128,210,.20);
+  --shadow:0 1px 0 rgba(0,0,0,.2), 0 8px 24px -14px rgba(0,0,0,.6);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:860px;margin:0 auto;padding-inline:clamp(16px,4vw,36px);padding-block:32px 80px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.05}
+h1{font-size:clamp(38px,6.5vw,58px);font-weight:700;letter-spacing:-.01em}
+h2{font-size:clamp(26px,3.4vw,32px);font-weight:600}
+h3{font-size:22px;font-weight:600}
+p{margin:0 0 12px}
+strong{font-weight:600}
+em{font-style:italic}
+a{color:var(--accent-ink)}
+.eyebrow{font-family:var(--display);font-weight:600;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-ink);margin-bottom:6px}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+header.hero{border-bottom:2px solid var(--ink);padding-bottom:22px;margin-bottom:26px}
+.lede{font-size:19px;color:var(--ink-2);margin-top:10px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.chip{font-family:var(--mono);font-size:13px;color:var(--ink-2);background:var(--surface-2);border:1px solid var(--rule);border-radius:4px;padding:3px 9px}
+.chip b{color:var(--ink);font-weight:500}
+nav.toc{display:flex;flex-wrap:wrap;gap:6px 18px;margin:0 0 40px;font-family:var(--display);font-size:16px;font-weight:600}
+nav.toc a{text-decoration:none;color:var(--accent-ink);border-bottom:1px solid var(--rule-2)}
+nav.toc a:hover,nav.toc a:focus-visible{border-bottom-color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+section.area{margin-bottom:56px}
+.area-head{margin-bottom:18px}
+.area-head p{color:var(--ink-2);margin:6px 0 0}
+article.tema{background:var(--surface);border:1px solid var(--rule);border-radius:6px;box-shadow:var(--shadow);padding:20px 22px 8px;margin-bottom:18px}
+article.tema header{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:6px 14px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--rule)}
+article.tema .meta{display:flex;flex-wrap:wrap;gap:6px 12px;font-family:var(--mono);font-size:13px;color:var(--muted)}
+article.tema .meta b{color:var(--ink);font-weight:500}
+.tag{display:inline-block;font-family:var(--display);font-weight:600;font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:3px;background:var(--exec-soft);color:var(--ink)}
+.tag.lac{background:var(--lacuna-soft)}
+.tag.disc{background:var(--marcada-soft)}
+.tag.acc{background:var(--accent-soft)}
+.gatilhos{background:var(--surface-2);border-left:3px solid var(--accent);border-radius:0 4px 4px 0;padding:10px 14px 4px;margin:6px 0 14px}
+.gatilhos .k{font-family:var(--display);font-weight:600;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink);margin-bottom:6px}
+.gatilhos ul{margin:0 0 6px;padding-left:18px}
+.gatilhos li{margin:0 0 4px;font-size:16px}
+.padroes{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.padrao{background:var(--surface);border:1px solid var(--rule);border-radius:6px;box-shadow:var(--shadow);padding:16px 18px 10px;display:flex;flex-direction:column;gap:6px}
+.padrao h3{font-size:19px}
+.padrao .onde{font-size:15px;color:var(--ink-2);margin:0}
+.padrao .ritual{font-size:16px;margin:0;padding-top:8px;border-top:1px solid var(--rule)}
+.padrao .ritual b{color:var(--accent-ink)}
+.padrao .n{font-family:var(--mono);font-size:12px;color:var(--muted)}
+@media (max-width:640px){.padroes{grid-template-columns:1fr}}
+footer.fontes{margin-top:40px;padding-top:14px;border-top:1px solid var(--rule);font-family:var(--mono);font-size:13px;color:var(--muted);line-height:1.5}
+@media (prefers-reduced-motion:no-preference){a{transition:border-color .15s}}
+</style>
+
+<div class="wrap">
+<header class="hero">
+  <div class="eyebrow">MedHub · véspera do ENAMED · 12/09/2026</div>
+  <h1>Revisão dos Top-Erros</h1>
+  <p class="lede">Os 14 temas e os 9 padrões que mais custaram pontos nos nove simulados, um por um, na profundidade que corrige o erro que você de fato cometeu: onde você tropeça, o mecanismo que segura o fato, os gatilhos de prova. Cada tema cabe em três ou quatro parágrafos. Leia por grande área.</p>
+  <div class="chips">
+    <span class="chip"><b>9</b> simulados · 28/06 a 11/09</span>
+    <span class="chip"><b>239</b> erros · 60% execução · 40% lacuna</span>
+    <span class="chip"><b>14</b> temas · <b>9</b> padrões</span>
+    <span class="chip">Cirurgia <b>4</b> · Pediatria <b>2</b> · GO <b>3</b> · Clínica <b>4</b> · Preventiva <b>1</b></span>
+  </div>
+</header>
+
+<nav class="toc" aria-label="Índice">
+  <a href="#cirurgia">Cirurgia</a>
+  <a href="#pediatria">Pediatria</a>
+  <a href="#go">Ginecologia e Obstetrícia</a>
+  <a href="#clinica">Clínica Médica</a>
+  <a href="#preventiva">Preventiva</a>
+  <a href="#padroes">Por padrão de erro</a>
+</nav>
+
+<!-- ===================== CIRURGIA ===================== -->
+<section class="area" id="cirurgia">
+  <div class="area-head">
+    <div class="eyebrow">Cirurgia · 41 erros em S2-S9 · 18% dos erros para 20% da UERJ</div>
+    <h2>Quatro temas, e três deles são a mesma pergunta: qual quadro comanda o timing?</h2>
+    <p>Cirurgia Infantil é o tema com mais erros acumulados do banco inteiro. Colecistite, trauma e HPB erram menos por conteúdo e mais por comporta: você reconhece o critério e executa na ordem errada.</p>
+  </div>
+
+  <article class="tema">
+    <header>
+      <h3>Cirurgia Infantil</h3>
+      <div class="meta"><span><b>30</b> erros</span><span><b>53</b> cards</span><span class="tag disc">discriminador que exclui</span><span class="tag lac">fato arbitrário</span></div>
+    </header>
+    <p>O abdome obstrutivo do recém-nascido se lê pela <strong>imagem</strong>, e cada imagem tem um dono. Dupla bolha é obstrução duodenal, e só ela (atresia duodenal, que supera o pâncreas anular quando a questão pede "mais provável"; Down é a associação clássica). Múltiplos níveis hidroaéreos distais são atresia jejunoileal. Na enterocolite necrosante, <strong>pneumatose é o achado patognomônico e pneumoperitônio é indicação cirúrgica absoluta</strong>: a sequência de imagens conta a história de um ECN que progride até perfurar, e confundir os dois é exatamente a fraqueza que o seu banco registra. A bile localiza a obstrução: vômito sem bile é pilórico (estenose hipertrófica, urgência metabólica de corrigir a alcalose hipoclorêmica antes de operar), vômito bilioso é pós-ampular.</p>
+    <p>Quatro fatos deste tema caíram em três sessões seguidas e são arbitrários, então o gancho é o mecanismo. Na <strong>atresia de vias biliares</strong> a colangiorressonância falha porque as vias do neonato são finas demais; a <strong>biópsia hepática percutânea</strong> vê o padrão obstrutivo e é o exame mais acurado antes da cirurgia, e o Kasai precisa acontecer antes dos 60 dias. Na apendicite da criança o USG confirma com <strong>diâmetro maior que 6 mm</strong> em estrutura não compressível; 5 mm é limítrofe e pede reavaliação seriada. Abaixo dos 5 anos o apêndice inflamado irrita mesentério e cólon e produz <strong>diarreia reativa</strong>, o que faz 40% delas receberem diagnóstico inicial de gastroenterite: dor localizada ou defesa é o que desconfia. No Hirschsprung, diarreia explosiva com febre e distensão é <strong>enterocolite (HAEC)</strong>, principal causa de morte, nunca "reação às lavagens".</p>
+    <p>O resto do tema é um conjunto de pares que a prova troca. Massa abdominal: <strong>neuroblastoma</strong> é o mais novo (adrenal, cruza a linha média, calcifica), <strong>Wilms</strong> é o pré-escolar (renal, não cruza). Intussuscepção: o enema é diagnóstico e terapêutico, contraindicado só em peritonite ou instabilidade; acima dos 2 anos, procure o ponto de condução (Meckel). Hérnia inguinal é sempre cirúrgica e sem espera, a umbilical espera até os 5 anos. Criptorquidia palpável depois dos 6 meses é orquidopexia aberta, não palpável é laparoscopia, e testículo retrátil é normal. Hidronefrose persistente grau 3-4 sem dilatação ureteral se decide pelo <strong>renograma com diurético</strong>, o único exame que responde se há obstrução funcional e qual a função de cada rim.</p>
+    <div class="gatilhos"><div class="k">Gatilhos de prova</div><ul>
+      <li>Pneumatose = ECN; pneumoperitônio = opera. Vômito bilioso no RN = cirúrgico até prova em contrário.</li>
+      <li>Colestase neonatal com USG inconclusiva = biópsia hepática; Kasai antes de 60 dias.</li>
+      <li>Apêndice maior que 6 mm; diarreia não exclui apendicite no pré-escolar.</li>
+      <li>Hirschsprung com diarreia e febre = HAEC. Toque retal explosivo é o sinal da doença, não da complicação.</li>
+      <li>Hidronefrose = renograma diurético; VUP = uretrocistografia miccional; RVU IV-V = cirurgia.</li>
+    </ul></div>
+  </article>
+
+  <article class="tema">
+    <header>
+      <h3>Colecistite e Colangite Aguda</h3>
+      <div class="meta"><span><b>19</b> erros</span><span><b>27</b> cards</span><span class="tag">comporta de conduta</span><span class="tag disc">qual quadro comanda</span></div>
+    </header>
+    <p>O TG18 fecha o diagnóstico definitivo, tanto de colecistite quanto de colangite, com <strong>A + B + C</strong>: sinal local, sinal sistêmico e imagem. O critério C exige <strong>sinal de inflamação</strong> na imagem (parede espessada acima de 4 mm, líquido perivesicular, Murphy ultrassonográfico, ou dilatação e obstrução na colangite); cálculo existe até na colelitíase assintomática e não prova nada. Você errou isso nas duas direções: fechou colecistite alitiásica pelo cenário de UTI com o critério B zerado, e aceitou "microcálculos" como critério C. Cenário de risco não substitui a contagem.</p>
+    <p>Quando dois quadros coexistem, a pergunta é <strong>qual comanda o timing</strong>. Colecistite com bilirrubina pouco elevada, via biliar pouco dilatada e amilase três vezes o limite é <strong>pancreatite aguda biliar</strong>, e ela manda: a via biliar entra depois, e a colestase é só marcador de passagem de cálculo. Na colangite, a etiologia da obstrução não muda a urgência: Charcot presente é emergência independentemente da causa. O grau decide o procedimento: grau I é antibiótico e suporte, com drenagem só se não responder em 24 horas; graus II e III drenam por CPRE precocemente. A colecistectomia da coledocolitíase é eletiva, na mesma internação, depois da resolução.</p>
+    <p>Três decisões de imagem e via que a banca cobra sempre: USG é o primeiro exame, HIDA é padrão-ouro só para USG duvidosa, e na HIDA a <strong>vesícula que enche afasta</strong> colecistite. Colecistostomia percutânea entra por <strong>instabilidade atual</strong>, nunca pela comorbidade de base: cirrótico estável e orientado segue para colecistectomia. Colecistectomia é precoce, idealmente em 72 horas; na gestante a laparoscopia é preferida em qualquer trimestre, e só no terceiro se posterga. Colangite com anatomia alterada (Y de Roux, Whipple) vai para drenagem trans-hepática, não para insistência na CPRE.</p>
+    <div class="gatilhos"><div class="k">Gatilhos de prova</div><ul>
+      <li>Critério C = inflamação, não cálculo. Sem B, nem suspeita.</li>
+      <li>Amilase maior que 3 vezes ao lado de colestase discreta: a pancreatite comanda.</li>
+      <li>Colangite grau I = antibiótico; II e III = drenagem em 24 h. Colecistectomia depois, eletiva.</li>
+      <li>Colecistostomia = instabilidade agora. HIDA cheia = afasta. Enfisematosa = TC.</li>
+    </ul></div>
+  </article>
+
+  <article class="tema">
+    <header>
+      <h3>Trauma: a comporta estável ou instável</h3>
+      <div class="meta"><span><b>ledger</b> #6 e #9</span><span class="tag">comporta de conduta</span><span class="tag acc">diretriz nova</span></div>
+    </header>
+    <p>A primeira pergunta de todo abdome traumatizado é uma só: <strong>estável ou instável?</strong> Instável nunca vai para a tomografia; decide-se à beira do leito com FAST ou lavado, e FAST positivo com instabilidade é laparotomia. Estável vai para a TC, e aí a lesão de víscera maciça sem blush arterial é tratamento não operatório mesmo com líquido livre; blush em paciente estável é embolização. Peritonite ao exame físico é laparotomia, e uma PA sustentada ou o hálito etílico não revogam a descompressão dolorosa difusa. Taquicardia em ferimento penetrante nunca é atribuída à dor: é hemorragia até prova em contrário.</p>
+    <p>A exceção que você errou mais de uma vez é a <strong>transição tóraco-abdominal penetrante</strong>: aqui a estabilidade não autoriza conduta conservadora, porque a lesão diafragmática oculta escapa da TC e do FAST. Paciente estável faz videolaparoscopia obrigatória, e a exploração digital do ferimento, que serve na parede anterior, não serve na transição. Hérnia diafragmática traumática se aborda pelo abdome. Sinal do cinto de segurança com líquido livre e sem lesão de víscera maciça aponta para delgado ou mesentério.</p>
+    <p>A ordem também mudou de nome: o ATLS 11 colocou o <strong>X</strong> antes do A, e a hemorragia exsanguinante externa se controla antes de qualquer outra coisa. Dentro do ABCDE, B vence C: a tríade de Beck ao lado de sinais de peritonite manda descomprimir o pericárdio antes de abrir o abdome. Nas escalas AAST de víscera oca, a fração da circunferência decide o grau e <strong>50% já é grau III</strong>, não "ainda menos da metade". No TCE, hipotensão permissiva é contraindicada porque o encéfalo precisa de pressão de perfusão.</p>
+    <div class="gatilhos"><div class="k">Gatilhos de prova</div><ul>
+      <li>Instável = FAST/LPD e sala, nunca TC. Estável sem blush = observar, mesmo com líquido livre.</li>
+      <li>Transição tóraco-abdominal penetrante = VLP sempre, estabilidade não muda.</li>
+      <li>xABCDE: sangramento externo exsanguinante primeiro. Beck antes de peritonite.</li>
+      <li>AAST: 50% da circunferência já sobe o grau. Hilo esplênico = grau V.</li>
+    </ul></div>
+  </article>
+
+  <article class="tema">
+    <header>
+      <h3>Urologia: HPB e a prescrição que sai por reflexo</h3>
+      <div class="meta"><span>Uro I e II de 09/09</span><span class="tag">fato no contexto errado</span><span class="tag disc">dado que exclui</span></div>
+    </header>
+    <p>Na s175 dois erros diferentes terminaram na <strong>mesma prescrição</strong>, alfa-bloqueador com inibidor da 5-alfa-redutase, em perguntas que não pediam tratamento: a combinação virou o output padrão sempre que aparece uma próstata. A régua que impede isso é o I-PSS. De 0 a 7 o sintoma é leve e a conduta é expectante com medidas comportamentais; <strong>a partir de 8 há indicação formal de medicação</strong>; a terapia combinada só entra com I-PSS de 20 ou mais, ou falha da monoterapia. Um I-PSS 7 em paciente "satisfeito com a qualidade de vida" é o dado plantado para excluir a prescrição, e você marcou tratar.</p>
+    <p>Os pares que a banca troca: a HPB nasce na <strong>zona de transição</strong>, o câncer na zona periférica. PSA não é específico (sobe em HPB, prostatite, sondagem, ejaculação), o padrão-ouro é a biópsia, e sob finasterida o PSA se multiplica por 2 antes de interpretar. Retenção urinária aguda se resolve com sonda vesical, nunca com duplo J. Cálculo vesical na HPB é recibo de obstrução e indica operar a próstata, não só o cálculo. Hematúria acima dos 35 anos exige cistoscopia mesmo com TC normal. Nódulo testicular indolor em jovem é câncer até prova em contrário, e a orquiectomia é inguinal, nunca transescrotal.</p>
+    <div class="gatilhos"><div class="k">Gatilhos de prova</div><ul>
+      <li>I-PSS 0-7 observa, 8-19 medica, 20 ou mais combina. Satisfação com a vida exclui prescrever.</li>
+      <li>Zona de transição = HPB; periférica = câncer. PSA sob 5-ARI = multiplicar por 2.</li>
+      <li>Retenção = Foley. Cálculo vesical = opera a glândula.</li>
+    </ul></div>
+  </article>
+</section>
+
+<!-- ===================== PEDIATRIA ===================== -->
+<section class="area" id="pediatria">
+  <div class="area-head">
+    <div class="eyebrow">Pediatria · 42 erros em S2-S9 · 19% dos erros para 20% da UERJ</div>
+    <h2>Imunizações é calendário por agente; diarreia é hidroeletrolítico disfarçado</h2>
+    <p>Imunizações é o segundo tema com mais erros do banco e a fonte da maior parte dos seus erros por diretriz desatualizada. Diarreia é onde a nefro que você declarou difícil aparece na Pediatria.</p>
+  </div>
+
+  <article class="tema">
+    <header>
+      <h3>Imunizações</h3>
+      <div class="meta"><span><b>25</b> erros</span><span><b>37</b> cards</span><span class="tag acc">diretriz desatualizada</span><span class="tag disc">reforço por agente</span></div>
+    </header>
+    <p>Sua fraqueza registrada é o mapa de <strong>reforço por agente</strong>: a Hepatite B ganhou um reforço que não existe (confusão com a lógica da dT) e a Febre Amarela perdeu um reforço que existe. A regra por vacina: <strong>Hepatite B</strong> não tem reforço periódico, esquema completo é definitivo (3 doses fora da infância, 4 no RN via penta). <strong>dT/dTpa</strong> reforça a cada 10 anos para sempre. <strong>Febre Amarela</strong>: quem tomou a primeira dose entre 9 meses e 5 anos recebe reforço aos 4 anos; acima de 5 anos é dose única vitalícia; a genuinamente "única sem reforço" do calendário infantil é a Hepatite A. <strong>Tríplice viral</strong> fecha com 2 doses até 29 anos e 1 dose dos 30 aos 59, e a contagem é pela idade atual, aproveitando a dose registrada.</p>
+    <p>O PNI de 2025 mudou coisas que as apostilas antigas ainda cobram ao contrário: HPV é <strong>dose única</strong> dos 9 aos 14, com resgate até 19; ACWY é dos 11 aos 14 e não tem resgate, então um jovem de 16 atualiza HPV e não recebe ACWY; a pólio é 100% injetável (2, 4, 6 e 15 meses); a pneumocócica passou para a 20-valente aos 2 e 12 meses, com a dose dos 4 ainda em 10-valente enquanto durar o estoque. Rotavírus estendeu os prazos para 11m29d e 23m29d. Ano citado no enunciado é alerta de qual versão a banca assume.</p>
+    <p>As exceções que caem como pegadinha: vivas podem no mesmo dia, exceto <strong>sarampo e febre amarela abaixo de 2 anos</strong>, que pedem 30 dias de intervalo. BCG adia por peso abaixo de 2.000 g (contraindicação pontual) e é vetada permanentemente no HIV (adulto, ou criança sintomática). Nutriz vacinada contra febre amarela com lactente menor de 6 meses suspende a amamentação por 10 dias. Bloqueio de sarampo: vacina até 72 h no contactante imunocompetente com 6 meses ou mais; imunoglobulina até 6 dias em menores de 6 meses, gestantes e imunodeprimidos. Triagem positiva para SCID suspende todas as vivas na hora. Esquema completo que adoece é falha secundária: investigar imunodeficiência, não repetir doses.</p>
+    <div class="gatilhos"><div class="k">Gatilhos de prova</div><ul>
+      <li>Hep B sem reforço; dT a cada 10 anos; FA reforço aos 4 anos; tríplice 2 doses até 29.</li>
+      <li>HPV dose única com resgate até 19; ACWY 11-14 sem resgate; VIP 100%.</li>
+      <li>Sarampo + FA em menor de 2 anos = 30 dias. BCG: peso adia, HIV veta.</li>
+      <li>Nutriz vacinada contra FA com bebê menor de 6 meses = suspender 10 dias.</li>
+    </ul></div>
+  </article>
+
+  <article class="tema">
+    <header>
+      <h3>Diarreia aguda e desidratação</h3>
+      <div class="meta"><span>lista de 09/09: 41 feitas, 7 erros</span><span class="tag disc">dado que exclui</span><span class="tag lac">hidroeletrolítico</span></div>
+    </header>
+    <p>O que mais te derrubou aqui foi o eletrólito, não o germe. A desidratação da diarreia produz a tríade <strong>acidose metabólica + hiponatremia + hipocalemia</strong>: perda baixa acidifica, e o vômito citado no enunciado é a âncora que induz a marcar alcalose; manda a perda que domina em volume. Soro glicosado a 5% não corrige desidratação, porque a glicose é metabolizada e sobra água livre que dilui o sódio: déficit de volume se repõe com fisiológico ou Ringer. Hipernatremia na criança com diarreia vem da ingesta (soro mal diluído), não de "reabsorção tubular de sódio", que é fisiologicamente verdadeira e ainda assim errada. Holliday-Segar é escalonada por degraus de peso, nunca 100 mL/kg sobre o peso inteiro.</p>
+    <p>Os planos: A mantém alimentação habitual, inclusive leite e lactose; B suspende tudo menos o aleitamento e usa SRO; C é venoso. Antidiarreicos são contraindicados (megacólon tóxico, SHU); o único antiemético aceito é a ondansetrona, só no plano B com vômitos persistentes. A síndrome hemolítico-urêmica se define pelo <strong>mecanismo</strong>, toxina Shiga: E. coli O157:H7 e Shigella dysenteriae tipo 1 causam, Salmonella não, e antibiótico na STEC aumenta o risco. Rotavírus e E. coli enteropatogênica são osmóticas por destruição de vilosidade; enterotoxigênica e cólera são secretoras. Só a enteroinvasiva e a entero-hemorrágica dão disenteria.</p>
+    <p>Diarreia que passou de 14 dias numa criança que melhorou clinicamente é intolerância transitória à lactose pós-infecciosa: reduz a lactose, sem coprocultura. Substâncias redutoras positivas nas fezes fecham o carboidrato como substrato e <strong>excluem a dosagem de IgE</strong>, porque APLV é mediada por proteína. Convulsão com diarreia é Shigella; pseudoapendicite ou quadro neurológico ascendente pós-diarreico é Campylobacter e Guillain-Barré. Colite pseudomembranosa se trata por via oral mesmo internado.</p>
+    <div class="gatilhos"><div class="k">Gatilhos de prova</div><ul>
+      <li>Tríade: acidose + hipoNa + hipoK. Vômito no enunciado não vira alcalose.</li>
+      <li>SG5% não repõe volume. Holliday por degraus.</li>
+      <li>SHU = Shiga (O157, Shigella 1); Salmonella não. Antibiótico na STEC piora.</li>
+      <li>Redutoras positivas = lactose, e a via alérgica fecha.</li>
+    </ul></div>
+  </article>
+</section>
+
+<!-- ===================== GO ===================== -->
+<section class="area" id="go">
+  <div class="area-head">
+    <div class="eyebrow">Ginecologia e Obstetrícia · 47 erros em S2-S9 · 21% dos erros para 20% da UERJ</div>
+    <h2>Três temas em que o critério é conhecido e a ordem, ou o contexto, é o que falha</h2>
+    <p>Síndromes hipertensivas é o retrato do bug de comporta: você diferencia grave de leve e age no tempo errado. Vulvovaginites e rastreio de colo são discriminação por régua, e a régua você já tem.</p>
+  </div>
+
+  <article class="tema">
+    <header>
+      <h3>Síndromes Hipertensivas da Gestação</h3>
+      <div class="meta"><span><b>21</b> erros</span><span><b>25</b> cards</span><span class="tag">comporta de conduta</span></div>
+    </header>
+    <p>A sequência é fixa e você a inverte: primeiro <strong>estabilizar</strong>, depois decidir a resolução. Estabilizar significa anti-hipertensivo de ação rápida <strong>só se a PA atingir 160/110</strong> (hidralazina venosa; nifedipina oral, nunca sublingual, e a escolha no transporte sem acesso) e sulfato de magnésio na pré-eclâmpsia grave, na iminência e na eclâmpsia. A resolução vem depois e depende da idade gestacional e das complicações: grave resolve a partir de 34 semanas, sem gravidade resolve com 37, e o Bishop escolhe a técnica de indução, nunca adia. A via de parto padrão é vaginal; cesárea entra por indicação obstétrica (diástole zero ou reversa, categoria III), não pela hipertensão.</p>
+    <p>O reflexo de over-tratamento tem duas caras que a banca explora. PA 150/100 não é crise: não usa hidralazina venosa nem cesárea de urgência; pré-eclâmpsia sobreposta sem gravidade mantém metildopa e resolve com 37 semanas. No sentido oposto, <strong>iminência de eclâmpsia já é grave</strong> com PA 140/90: cefaleia, escotomas, epigastralgia ou hiperreflexia classificam por si e pedem sulfato e resolução. Proteinúria, inclusive maciça, saiu dos critérios de gravidade. HELLP pode existir sem hipertensão e sem proteinúria: o diagnóstico é laboratorial. Dor em hipocôndrio direito é hematoma hepático até prova em contrário, resolução imediata.</p>
+    <p>O sulfato tem regras próprias. Ele <strong>não trata hipertensão</strong>, e essa é a falsa em todo EXCETO. Dura 24 horas fixas após o parto ou a última convulsão. Os três parâmetros (patelar, frequência respiratória abaixo de 16, diurese abaixo de 25 mL/h) mandam suspender; o antídoto, <strong>gluconato de cálcio 1 g</strong>, entra na arreflexia ou na dificuldade respiratória. Na eclâmpsia ativa a primeira conduta é proteger a via aérea, porque a convulsão é autolimitada e o sulfato previne a próxima. IECA e BRA são proibidos e trocar um pelo outro mantém o dano. Restrição de sal e diurético não pertencem à pré-eclâmpsia.</p>
+    <div class="gatilhos"><div class="k">Gatilhos de prova</div><ul>
+      <li>160/110 é o limiar da droga rápida; 150/100 não é crise.</li>
+      <li>Iminência = grave, mesmo com 140/90. Proteinúria não é gravidade.</li>
+      <li>Grave: estabilizar, sulfatar, resolver a partir de 34 sem. Leve: 37 sem, Bishop só escolhe a técnica.</li>
+      <li>Sulfato 24 h fixas; gluconato de cálcio na arreflexia ou depressão respiratória.</li>
+    </ul></div>
+  </article>
+
+  <article class="tema">
+    <header>
+      <h3>Vulvovaginites</h3>
+      <div class="meta"><span><b>17</b> erros</span><span><b>30</b> cards</span><span class="tag disc">discriminador que exclui</span></div>
+    </header>
+    <p>Três medidas resolvem quase tudo: <strong>pH, teste das aminas e inflamação</strong>. Candidíase tem pH normal, aminas negativas, corrimento grumoso sem odor e prurido com fissura; trata com azólico, e na gestante exclusivamente tópico, porque o oral é teratogênico. Vaginose tem pH alto, aminas positivas, clue cells e corrimento acinzentado homogêneo, e é <strong>não inflamatória</strong>: sem prurido, sem hiperemia, sem dispareunia. Tricomoníase tem pH alto, aminas positivas e é <strong>inflamatória</strong>, bolhosa e fétida. Quando aminas e pH empatam vaginose com tricomoníase, o prurido intenso com hiperemia exclui a vaginose e aponta o protozoário; quando o prurido puxa para candida, o pH alto e as aminas positivas a excluem.</p>
+    <p>O seu erro registrado é o contexto hormonal: pH alto <strong>sem lactobacilos</strong> numa mulher hipoestrogênica (menopausa, lactação, só-progestágeno) é <strong>vaginite atrófica</strong>, e o tratamento é estrogênio tópico, nunca metronidazol e nunca progesterona. Antibiótico sistêmico recente predispõe a candidíase (mata o lactobacilo, o fungo prolifera), não a vaginose, que é disbiose ligada a coito e duchas. Vaginite aeróbia é purulenta, inflamatória, com pH alto e aminas negativas (E. coli, S. aureus, GBS, Enterococcus), e vai de clindamicina. Vaginose citolítica tem pH baixo, lactobacilos abundantes e clínica de candida sem hifas: alcaliniza com bicarbonato.</p>
+    <p>Locus e parceiro fecham o tema. Exame vaginal normal com colo inflamado é <strong>cervicite</strong>, ceftriaxona com azitromicina; vaginose pura é só metronidazol, sem empilhar. Só a tricomoníase trata o parceiro e pede sorologias, e ela é tratada por via oral porque o tópico não alcança uretra e Bartholin. Doxiciclina é de clamídia, não de tricomonas. Vulvovaginite não dá dor à mobilização anexial nem obstrução tubária: isso é DIP.</p>
+    <div class="gatilhos"><div class="k">Gatilhos de prova</div><ul>
+      <li>pH normal = candida. pH alto + aminas positivas: inflamação decide entre vaginose e tricomonas.</li>
+      <li>pH alto sem lactobacilo em hipoestrogênica = atrofia = estrogênio tópico.</li>
+      <li>Antibiótico recente = candida. Gestante = azólico tópico.</li>
+      <li>Trico = oral + parceiro. Colo inflamado com vagina normal = cervicite.</li>
+    </ul></div>
+  </article>
+
+  <article class="tema">
+    <header>
+      <h3>Rastreamento do câncer de colo</h3>
+      <div class="meta"><span>escalada de um degrau, reincidente nas duas direções</span><span class="tag">comporta de conduta</span><span class="tag acc">diretriz 2025</span></div>
+    </header>
+    <p>A escada não pula degrau: <strong>citologia rastreia, colposcopia com biópsia diagnostica, excisão trata</strong>. Você errou nas duas direções, subindo um degrau (ASC-H direto para conização) e descendo um (LSIL para colposcopia). A régua da citologia: ASC-US e LSIL em mulher de 25 anos ou mais repetem a citologia (LSIL em 6 meses; ASC-US em 12 meses dos 25 aos 29 e em 6 a partir dos 30), e só depois de duas negativas consecutivas voltam ao trienal. ASC-H, HSIL, AGC e AIS vão à colposcopia em qualquer idade; "não afasta alto grau" escala para diagnóstico, não para tratamento. AGC leva colposcopia com atenção ao canal, e a avaliação endometrial só entra com sangramento anormal ou citologia sugestiva.</p>
+    <p>A excisão exige <strong>histologia</strong>: NIC 2/3 ou microinvasão confirmada por biópsia. O único atalho é o ver-e-tratar no HSIL com achados colposcópicos maiores, e ele é contraindicado se há suspeita de invasão. NIC 2/3 confirmada em quem pede histerectomia faz EZT ou conização primeiro, porque a biópsia dirigida é amostra e não exclui microinvasão; trocar a via da histerectomia não resolve o erro. Microinvasão na biópsia é conização para estadiar, não histerectomia. Colposcopia insatisfatória (ZT tipo 3) investiga o canal com curetagem.</p>
+    <p>Na gestante, lesão pré-invasiva de qualquer grau é <strong>expectante até o puerpério</strong>: colposcopia pode, biópsia só com suspeita de invasão, EZT e conização são os distratores proibidos; o Pap se colhe normalmente, inclusive o endocervical. Diretriz de 2025: rastreio encerra com exame negativo aos 60 anos, nunca para quem tratou HSIL ou adenocarcinoma in situ (25 anos de seguimento); imunossuprimida com qualquer HPV oncogênico vai à colposcopia direta e rastreia indefinidamente. Ectopia é fisiológica, não se cauteriza; sinorragia com ectopia friável investiga lesão. Cervicite folicular é clamídia até prova em contrário.</p>
+    <div class="gatilhos"><div class="k">Gatilhos de prova</div><ul>
+      <li>ASC-US/LSIL com 25 ou mais = repetir citologia. ASC-H/HSIL/AGC/AIS = colposcopia.</li>
+      <li>Conização só com histologia. Ver-e-tratar só em HSIL com achado maior e sem suspeita de invasão.</li>
+      <li>Gestante com NIC = expectante. Microinvasão = conização para estadiar.</li>
+      <li>2025: encerra aos 60 se negativo; imunossuprimida rastreia sempre.</li>
+    </ul></div>
+  </article>
+</section>
+
+<!-- ===================== CLÍNICA ===================== -->
+<section class="area" id="clinica">
+  <div class="area-head">
+    <div class="eyebrow">Clínica Médica · 74 erros em S2-S9 · 33% dos erros para 20% da UERJ</div>
+    <h2>Um terço dos erros para um quinto da prova: aqui o corte rende mais</h2>
+    <p>Pólipos e neoplasias é lacuna estrutural, e o resumo que faltava existe sob outro nome. Arboviroses é recall de número. Pancreatite é fato no contexto errado. E o eixo ácido-base e potássio, que você declarou hoje como a maior dificuldade, ganha a versão curta da escada.</p>
+  </div>
+
+  <article class="tema">
+    <header>
+      <h3>Pólipos e Neoplasias Intestinais</h3>
+      <div class="meta"><span><b>19</b> erros</span><span><b>32</b> cards</span><span class="tag lac">lacuna estrutural</span></div>
+    </header>
+    <p>Sua memória registra isto como conhecimento estrutural ausente, não confusão pontual, e o remédio é montar a estrutura em quatro blocos. Primeiro o <strong>rastreamento por risco</strong>: risco habitual começa aos 45 nas diretrizes atualizadas (bancas antigas trazem 50), colonoscopia a cada 10 anos; parente de primeiro grau com câncer antes dos 60 começa aos 40 ou 10 anos antes do caso índice e repete a cada 5. Adenoma tubular pequeno de baixo grau repete em 5 a 10 anos, nunca em 1. O histotipo de maior risco é o viloso. Anemia ferropriva sem causa em idoso é colonoscopia e endoscopia, porque o cólon direito sangra em silêncio, embora mais da metade dos tumores fique no retossigmoide.</p>
+    <p>Segundo, as <strong>síndromes hereditárias por gene e fenótipo</strong>. PAF é APC, centenas de pólipos, colectomia profilática; Turcot é PAF ou Lynch com tumor de SNC. Lynch é reparo de DNA (MSH2, MLH1, MSH6, PMS2), poucos pólipos, instabilidade de microssatélites, critérios de Amsterdã 3-2-1; o extracolônico mais comum na mulher é endométrio, e pelve renal e ureter pertencem à síndrome enquanto tireoide não. Nas hamartomatosas, papilomas orais com ceratose palmoplantar é <strong>Cowden</strong> (PTEN); máculas melanóticas planas nos lábios é Peutz-Jeghers. Na prevenção do câncer esporádico, o fator com evidência é a atividade física regular.</p>
+    <p>Terceiro, a <strong>profundidade de invasão</strong> no pólipo pediculado malignizado: Haggitt 0 não chega à submucosa (in situ, polipectomia com margem basta), 1 é cabeça, 2 colo, 3 pedículo, 4 base ou parede; o séssil invasivo é sempre 4. Quarto, a <strong>conduta por sítio</strong>: diagnóstico histológico feito, estadia-se com TC de tórax, abdome e pelve mais CEA basal, sem laparoscopia diagnóstica e sem tratar antes. Cólon é cirurgia com 12 linfonodos e quimioterapia adjuvante; reto T3/T4 ou N+ é neoadjuvância para preservar esfíncter. Reto baixo obstruído na urgência recebe colostomia em alça, nunca ressecção radical primária. Mucinoso restrito ao apêndice complementa com hemicolectomia direita. Cisto pancreático com amilase acima de 1.000, CEA baixo e mucina negativa é pseudocisto.</p>
+    <div class="gatilhos"><div class="k">Gatilhos de prova</div><ul>
+      <li>Familiar antes dos 60: 40 anos ou 10 antes, a cada 5. Habitual: 45.</li>
+      <li>APC = PAF; MMR = Lynch (endométrio, pelve renal sim, tireoide não); PTEN + boca + palma = Cowden.</li>
+      <li>Haggitt: cabeça 1, colo 2, pedículo 3, base 4; séssil = 4.</li>
+      <li>Diagnóstico feito = TC + CEA. Reto baixo obstruído = colostomia em alça.</li>
+    </ul></div>
+  </article>
+
+  <article class="tema">
+    <header>
+      <h3>Arboviroses</h3>
+      <div class="meta"><span><b>17</b> erros</span><span><b>30</b> cards</span><span class="tag disc">dengue C x D</span><span class="tag lac">número solto</span></div>
+    </header>
+    <p>Dengue C contra D é a sua terceira reincidência, e a distinção é de gatilho e de dose. <strong>Sinal de alarme isolado</strong> (dor abdominal, vômito persistente, sangramento de mucosa, letargia, hepatomegalia, hematócrito subindo) reclassifica para o <strong>grupo C: 10 mL/kg na primeira hora</strong>, conduta protocolizada, não "aumentar hidratação e reavaliar". <strong>Choque, hemorragia grave ou disfunção orgânica</strong> é <strong>grupo D: 20 mL/kg em até 20 minutos</strong>. A banca troca os números entre os grupos e transfere a expansão rápida para chikungunya, que não a recebe. O choque da dengue é extravasamento plasmático por disfunção endotelial, não perda sanguínea; dengue grave exige extravasamento (hemoconcentração de 20%, derrame, hipoproteinemia), sangramento com plaquetopenia sem extravasamento é dengue clássica. Grupo B exige hemograma antes de decidir alta. Segunda infecção por outro sorotipo eleva o risco.</p>
+    <p>O diferencial em uma linha por vírus: prostração com hemoconcentração e sinais de alarme é dengue; poliartralgia incapacitante com febre alta é chikungunya; exantema pruriginoso, conjuntivite não purulenta, edema periarticular e febre baixa ou ausente é Zika. Quando o caso mistura, artralgia exuberante com febre alta decide chikungunya. Diagnóstico da dengue: NS1 ou PCR até o quinto dia, IgM a partir do sexto. Prova do laço na criança: 3 minutos e 10 petéquias; no adulto, 5 minutos e 20.</p>
+    <p>Febre amarela é o depósito de números que você precisa cristalizar, não deduzir: incubação de 3 a 6 dias, viremia de 24-48 h antes dos sintomas até o quinto dia (isolar 14 dias é a alternativa errada), sinal de Faget, vírus RNA da família Flavivirus, vetor urbano Aedes e silvestre Haemagogus e Sabethes. Vacina aos 9 meses com reforço aos 4 anos, dose única acima de 5, viajante com 10 dias de antecedência; contraindicada em imunossuprimidos e gestantes de regra, e <strong>não</strong> contraindicada na doença renal crônica estável. Os eventos graves são a doença viscerotrópica e a neurotrópica. Imunização é a medida principal de controle da FA, não o vetor.</p>
+    <div class="gatilhos"><div class="k">Gatilhos de prova</div><ul>
+      <li>Alarme = C = 10 mL/kg/h. Choque = D = 20 mL/kg em 20 min. Chikungunya não expande.</li>
+      <li>Grave = extravasamento, não sangramento. NS1 até o 5º dia, IgM do 6º.</li>
+      <li>FA: incubação 3-6 d, viremia até o 5º dia, Faget, RNA, Aedes urbano.</li>
+      <li>Vacina FA: 9 meses + 4 anos; DRC estável não contraindica.</li>
+    </ul></div>
+  </article>
+
+  <article class="tema">
+    <header>
+      <h3>Pancreatite aguda</h3>
+      <div class="meta"><span>#311 e #313: a mesma frase em duas perguntas</span><span class="tag">fato no contexto errado</span></div>
+    </header>
+    <p>Dois exames respondem perguntas diferentes, e o seu erro foi responder a pergunta anterior. O <strong>USG responde "é biliar?"</strong> e entra na porta para todo suspeito. A <strong>TC responde "há necrose?"</strong> e só responde bem depois de 72 horas; pedida antes, subestima a gravidade e não muda conduta, então fica reservada à dúvida diagnóstica. A gravidade precoce é clínica e laboratorial: SIRS persistente, disfunção orgânica, PCR acima de 150, hematócrito acima de 44, ureia acima de 20. BISAP é BUN, alteração mental, SIRS, idade acima de 60 e derrame pleural, o "P" do mnemônico; glicemia acima de 200 é Ranson, que tem critérios de admissão e de 48 horas. Amilase não gradua gravidade e pode ser normal na hipertrigliceridemia e no etilista crônico.</p>
+    <p>A conduta segue três proibições e uma prioridade. <strong>Antibiótico profilático nunca</strong>: só com infecção demonstrada (gás na TC ou punção positiva). Necrose estéril não se drena nem se opera por rotina; quando a necrosectomia é indicada, é tardia, após 4 a 6 semanas, no step-up. <strong>CPRE só com colangite associada ou obstrução biliar persistente documentada</strong>; icterícia isolada costuma ser edema do ducto e a manipulação da ampola agrava a pancreatite. A prioridade é nutrição enteral precoce, contraindicada apenas na instabilidade grave. O índice de Balthazar soma morfologia e necrose.</p>
+    <div class="gatilhos"><div class="k">Gatilhos de prova</div><ul>
+      <li>USG = etiologia, na chegada. TC = necrose, após 72 h.</li>
+      <li>BISAP tem derrame pleural e não tem glicemia; glicemia é Ranson.</li>
+      <li>Sem antibiótico profilático. CPRE só com colangite ou obstrução persistente.</li>
+      <li>Necrose estéril = conservador; necrosectomia tardia. Enteral precoce.</li>
+    </ul></div>
+  </article>
+
+  <article class="tema">
+    <header>
+      <h3>Ácido-base e potássio</h3>
+      <div class="meta"><span>declarado hoje como a maior dificuldade</span><span><b>4 + 7</b> cards, 0 de 4 na gasometria</span><span class="tag lac">onboarding</span></div>
+    </header>
+    <p>A gasometria com acidose metabólica se lê em quatro perguntas, na ordem. <strong>HCO3 e base excess</strong> dizem que existe e quanto pesa. O <strong>ânion gap</strong> (Na menos cloro mais bicarbonato, normal 8 a 12) diz de que tipo: alto quando entrou ácido novo (cetoácido, lactato, uremia, álcool), normal quando só se perdeu bicarbonato pela diarreia ou pelo túbulo, e nesse caso o rim retém cloro para manter a eletroneutralidade, por isso <strong>cloro alto é a assinatura da hiperclorêmica</strong>. <strong>Winter</strong> diz se o pulmão compensou: PaCO2 esperada é 1,5 vezes o HCO3 mais 8, com folga de 2; PaCO2 "normal" numa acidose com HCO3 12 devia estar em 26 e é acidose respiratória associada. Compensação se julga contra o esperado, nunca contra a faixa normal, o mesmo bug da glicorraquia. O <strong>gap osmolar</strong> (medida menos calculada, normal abaixo de 10) entra quando o AG é alto sem causa óbvia: alto aponta metanol (amaurose) ou etilenoglicol (oxalato, lesão renal), fomepizol e diálise.</p>
+    <p>O potássio tem uma lógica de direção. Necessidade basal é modesta, <strong>1 mEq/kg/dia</strong>, 60 a 100 mEq; doses de 3 a 12 mEq/kg são o distrator. Hipocalemia com <strong>acidose</strong> veio do intestino (diarreia) ou do túbulo (ATR); com <strong>alcalose</strong> veio de vômito, diurético ou excesso de mineralocorticoide. Hipertenso jovem com hipocalemia e pressão que a losartana não segura é hiperaldosteronismo primário: suspender o bloqueador do SRAA, trocar por anlodipino e só então dosar aldosterona e renina. Recém-nascido de duas semanas com hiponatremia, hipercalemia, hipoglicemia e acidose é insuficiência adrenal por hiperplasia adrenal congênita; ATR daria hipocalemia, e é o potássio que a exclui.</p>
+    <p>Na hipercalemia o ECG segue o nível: onda T apiculada em torno de 6, achatamento de P e alargamento de QRS mais acima; QTc prolongado é cálcio ou magnésio. Gluconato de cálcio estabiliza a membrana e não baixa o potássio; quem baixa é o shift (insulina, beta-2) e a eliminação (resina, diurético de alça, diálise). Na cetoacidose o potássio sérico normal ou alto esconde déficit corporal, porque acidose e falta de insulina o empurram para fora da célula: abaixo de 3,3 repõe antes da insulina, entre 3,3 e 5,2 repõe junto, acima de 5,2 só monitora. E na CAD pediátrica não há bolus de insulina nem reidratação rápida, porque a queda brusca da osmolaridade produz edema cerebral.</p>
+    <div class="gatilhos"><div class="k">Gatilhos de prova</div><ul>
+      <li>BE = quanto; AG = tipo; Winter = compensou?; gap osmolar = álcool?</li>
+      <li>Cloro alto + AG normal = perdeu bicarbonato. PaCO2 "normal" na acidose grave = misto.</li>
+      <li>HipoK com acidose = intestino ou ATR; com alcalose = diurético ou mineralocorticoide.</li>
+      <li>HAS jovem + hipoK = suspender SRAA, anlodipino, dosar aldo/renina. RN com hipoNa + hiperK + hipoglicemia = adrenal.</li>
+      <li>Gluconato não baixa K. CAD: K abaixo de 3,3 repõe antes da insulina.</li>
+    </ul></div>
+  </article>
+</section>
+
+<!-- ===================== PREVENTIVA ===================== -->
+<section class="area" id="preventiva">
+  <div class="area-head">
+    <div class="eyebrow">Preventiva · 19 erros em S2-S9 · e a base da APS que a UERJ cobra em MFC</div>
+    <h2>Três princípios, três perguntas diferentes</h2>
+    <p>Sua fraqueza registrada é precisa: você conhece as três definições e erra a operacionalização, porque cada princípio responde a uma pergunta diferente e a banca troca as perguntas.</p>
+  </div>
+
+  <article class="tema">
+    <header>
+      <h3>Princípios e Diretrizes do SUS</h3>
+      <div class="meta"><span><b>19</b> erros</span><span><b>22</b> cards</span><span class="tag disc">discriminador operacional</span><span class="tag">enunciado V/F</span></div>
+    </header>
+    <p>Pergunte o que a vinheta está decidindo. <strong>Universalidade</strong> responde "quem entra?": todos, em todos os níveis, sem condição de disponibilidade na atenção primária (essa restrição é fabricada). <strong>Equidade</strong> responde "quanto para cada um?": alocação comparada, mais recurso onde há mais necessidade, e é o que a competência cultural materializa no fim. <strong>Integralidade</strong> responde "o cuidado está completo?": todas as ações da promoção à reabilitação e a articulação entre níveis. <strong>Igualdade</strong> é o termo literal da Lei 8.080, mesmo tratamento sem privilégio, e trocá-la por equidade é o erro clássico. As três combinações par a par já caíram em três questões diferentes deste bloco.</p>
+    <p>A arquitetura legal que a prova pergunta por V/F: as três diretrizes explícitas do artigo 198 são descentralização, atendimento integral e participação da comunidade; direção única por esfera significa um gestor autônomo por esfera, não hierarquia entre elas; a municipalização não exclui estados e União; a iniciativa privada participa de forma complementar por contrato ou convênio, afirmação correta que você descarta por desconfiança. As decisões do Conselho de Saúde são homologadas pelo chefe do Executivo da esfera, não pelo secretário. Comissões <strong>intergestoras</strong> (CIT, CIB, CIR) pactuam entre gestores sem subordinação ao conselho; <strong>intersetoriais</strong> são outra coisa. A Lei 8.080 já tem 16 princípios, o mais novo é a atenção humanizada de 2025.</p>
+    <p>Na APS, que é o chão do bloco de MFC da UERJ: os atributos essenciais de Starfield são acesso de primeiro contato, longitudinalidade, integralidade e coordenação; os derivados são orientação familiar, orientação comunitária e competência cultural. A APS é porta de entrada preferencial, não única. ACS insuficiente prejudica o acesso de primeiro contato, não a coordenação. Profissional que caminha o território, levanta dados e participa do conselho é orientação comunitária, mesmo que a frase termine em "planejamento". E a sua reincidência exata: cuidado continuado e longitudinalidade são vínculo ao longo do tempo na APS; integralidade é completude do cuidado, inclusive na secundária.</p>
+    <div class="gatilhos"><div class="k">Gatilhos de prova</div><ul>
+      <li>Universalidade = entrada; equidade = alocação comparada; integralidade = completude; igualdade = literal.</li>
+      <li>Art. 198: descentralização, atendimento integral, participação. Comando único não é hierarquia.</li>
+      <li>Conselho homologa o chefe do Executivo. Intergestora não é intersetorial.</li>
+      <li>Essenciais: acesso, longitudinalidade, integralidade, coordenação. Derivados: família, comunidade, cultura.</li>
+    </ul></div>
+  </article>
+</section>
+
+<!-- ===================== PADRÕES ===================== -->
+<section class="area" id="padroes">
+  <div class="area-head">
+    <div class="eyebrow">Por padrão de erro · 144 dos 239 erros foram em conteúdo sabido</div>
+    <h2>Nove padrões, cada um com o ritual que o desarma</h2>
+    <p>O conteúdo acima corrige os 95 erros de lacuna. Estes nove corrigem os outros 144, e o único que não depende de tema nenhum é o último.</p>
+  </div>
+  <div class="padroes">
+    <div class="padrao"><span class="n">30 em S2-S4 · 7 no S6 · padrão-mestre</span><h3>O discriminador que exclui</h3><p class="onde">Vulvovaginites (atrofia lida como vaginose), Cirurgia Infantil (Wilms que cruza a linha média), Colecistite (qual quadro comanda), dengue C x D, Diarreia (redutoras fecham a via alérgica).</p><p class="ritual"><b>Ritual:</b> antes de marcar, pergunte "qual dado aqui exclui o que eu ia marcar?". Achado normal é exclusão, não silêncio.</p></div>
+    <div class="padrao"><span class="n">26 em S2-S4 · ledger #6 e #9</span><h3>Comporta de conduta não checada</h3><p class="onde">Síndromes Hipertensivas (critério certo, ordem errada), Trauma (estável?), Colecistite (pancreatite primeiro), CAD pediátrica, rastreio de colo (degrau pulado).</p><p class="ritual"><b>Ritual:</b> antes da conduta, a comporta: estável ou instável? limiar atingido? idade gestacional? degrau da escada?</p></div>
+    <div class="padrao"><span class="n">10 em S2-S4 · 7 temas no ledger</span><h3>Diretriz desatualizada</h3><p class="onde">Imunizações (PNI 2025), rastreio de colo (2025), HAS SBC 2025, ATLS 11 (xABCDE), rastreio de CCR aos 45, TG18.</p><p class="ritual"><b>Ritual:</b> ano citado no enunciado é alerta. Se a alternativa "antiga" e a "nova" coexistem, a banca quer a nova, salvo bibliografia declarada.</p></div>
+    <div class="padrao"><span class="n">9 em S2-S4 · #311 na s175</span><h3>Fato no contexto errado</h3><p class="onde">Pancreatite (USG responde etiologia, TC responde necrose), CAD (potássio x edema cerebral), HPB (a prescrição como output padrão), Arboviroses.</p><p class="ritual"><b>Ritual:</b> "a pergunta é sobre etiologia, gravidade, complicação ou conduta?". Fixar cada fato na pergunta que ele responde.</p></div>
+    <div class="padrao"><span class="n">5 em S2-S4 · ledger #2, #4, #8 · Q73 do S9</span><h3>Enunciado negativo e V/F</h3><p class="onde">Princípios do SUS (19 erros), melanoma, psoríase, BISAP, câncer de ovário no S9, sulfato "trata hipertensão".</p><p class="ritual"><b>Ritual:</b> rotular cada alternativa com V ou F e contar os F: tem de dar exatamente um. O número de F é o checksum.</p></div>
+    <div class="padrao"><span class="n">4 em S2-S4 · 2 vezes na s179</span><h3>Inversão de direção</h3><p class="onde">PTH na doença adinâmica, via oral x tópica na gestante, obesidade pós-menopausa x ciclos anovulatórios, infertilidade que eleva (não reduz) o câncer de ovário, HIDA que enche e afasta.</p><p class="ritual"><b>Ritual:</b> fixar a direção no mecanismo, nunca no número. Se não consegue dizer por que sobe, não sabe se sobe.</p></div>
+    <div class="padrao"><span class="n">bug nº 1 · facetas 1a, 1b, 1c</span><h3>Ancoragem no número, no fármaco, no fato solto</h3><p class="onde">PaCO2 "normal" contra a tabela e não contra Winter, glicorraquia, VR de leucócitos impresso para a gestante, exame lido por dado parcial.</p><p class="ritual"><b>Ritual:</b> todo número se lê contra o esperado pelo contexto, não contra a faixa de referência. O valor impresso na questão pode ser o distrator.</p></div>
+    <div class="padrao"><span class="n">1 em S2-S4 · #582/#583 · Q28 e Q82 do S9</span><h3>Par incompleto e pergunta composta</h3><p class="onde">Alternativas de par duplo (Billings e sintotérmico; via a evitar e como regularizar), APC e atividade física na mesma alternativa.</p><p class="ritual"><b>Ritual:</b> alternativa de par só é correta com as duas metades verdadeiras. Meia-verdade é a assinatura do distrator. E nota 4 exige as duas partes.</p></div>
+    <div class="padrao"><span class="n">13 de 13 no S9 · custo de 4 a 5 questões</span><h3>Override do modal</h3><p class="onde">Nenhum tema. A análise clínica termina certa e uma segunda decisão a descarta: "fácil demais", "assertiva demais", "a banca não faria isso".</p><p class="ritual"><b>Regra dos dois finalistas:</b> restaram duas, marca a que a análise apontou. Só troca se conseguir nomear o erro da favorita. A pegadinha real mora no enunciado, não na alternativa que parece certa.</p></div>
+  </div>
+</section>
+
+<footer class="fontes">
+  Fontes: Raio-X dos Simulados (s180) · memória de fraquezas (erros acumulados por tema, medidos em 12/09/2026) · seções de Armadilhas de Prova dos resumos em resumos/ · ledger de habilidades (habilidades.py --reincidentes) · sessão 181 (113 cards, notas 1-2 em ácido-base e potássio). Profundidade D5-7 por tema, por pedido: onde você erra, o mecanismo, os gatilhos.
+</footer>
+</div>

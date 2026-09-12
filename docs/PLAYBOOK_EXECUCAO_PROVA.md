@@ -49,6 +49,32 @@ Um **gatilho saliente** no enunciado (um número fora da faixa, um fármaco, uma
 
 ---
 
+## Sub-familia a parte: o OVERRIDE DO MODAL (caca a pegadinha fantasma)
+
+*Adicionado na s180 (Simulado 9, ENARE 2024, 100q, 86%). Mecanismo distinto de tudo acima: nao e falha de leitura clinica nem regua desatualizada. Aqui a analise clinica **chegou na resposta certa** e uma segunda decisao, meta-cognitiva, a descartou.*
+
+**O que e.** Diante de duas alternativas plausiveis, ele identifica corretamente a mais provavel -- e entao a abandona, por supor que uma resposta obvia demais "tem pegadinha". Nas palavras dele, na propria analise: *"eu tenho esse costume: ficar entre duas alternativas, confiar que a mais provavel era a certa, mas resolver 'inventar moda e tentar pensar de forma diferente para nao ser pego em pegadinhas', mas acabar errando por justamente nao haver pegadinha na questao."*
+
+🔴 **Medido, nao inferido.** O Simulado 9 traz a distribuicao de respostas de todos os candidatos por alternativa. Cruzando as 13 erradas reais (a 14a era anulada):
+
+- **Em 13 de 13 ele marcou uma alternativa NAO-modal.** Zero excecoes.
+- Media do percentual da alternativa **marcada: 17,9%**. Media do percentual do **gabarito: 63,5%**.
+- Casos extremos: **Q66** -- marcou a de **2%**, gabarito tinha **88%**; **Q33** -- marcou a de 10%, gabarito 86%.
+- Em **4 questoes ele declarou textualmente** que a certa era a que tinha considerado primeiro (Q26 *"achava que a B fazia mais sentido"*; Q28 *"apostei na alternativa menos provavel"*; Q66 *"a mais provavel era a resposta obviamente"*; Q81 rejeitou o gabarito por *"excesso de assertividade"*), mais a Q33 parcialmente.
+- **Custo aritmetico: 4 a 5 questoes.** Sem o override, o 86 teria sido **90 ou 91**.
+
+**Por que e uma sub-familia propria.** O bug n1 e da familia *parou cedo na analise clinica*. Este e o oposto: a analise clinica terminou e estava certa. O erro nasce **depois**, numa camada de meta-decisao que so existe em prova. Por isso ele **nao se corrige com conteudo** -- reler o tema nao muda nada, porque o tema estava sabido.
+
+**Gatilhos:** (a) ficar entre exatamente duas alternativas; (b) a alternativa favorita parecer "simples demais" ou "assertiva demais" (Q81: rejeitou por nao ter ressalva -- o comentario oficial dizia *"correta, sem ressalvas"*); (c) numero que parece exagerado em magnitude (Q73: rejeitou "protecao ate 25 anos", que era literal do Williams); (d) alternativa que ele proprio montou com duas metades verdadeiras (Q28: sabia APC **e** sabia atividade fisica, e marcou outra).
+
+**Reflexo a treinar -- a regra dos dois finalistas:**
+
+> Quando restarem **duas** alternativas, marque a que o seu raciocinio clinico apontou. **Ponto.** So troque se conseguir **nomear, em voz alta, o erro especifico** da favorita -- um fato, um criterio, uma direcao invertida. *"Parece facil demais"*, *"a banca nao faria isso"* e *"e assertiva demais"* **nao sao erros nomeaveis** e nao autorizam a troca.
+
+**Corolario.** A pegadinha real quase nunca mora na alternativa que parece certa -- mora no **enunciado**. Na Q26 a armadilha existia e era o valor de referencia de 10.000 plantado para uma gestante (que tem leucocitose fisiologica); ele aceitou o enunciado sem questionar e gastou a desconfianca na alternativa. **Desconfie do enunciado, confie na sua analise.**
+
+---
+
 ## Evidência da s085 — 6 temas em 1 dia
 
 Na revisão e no bloco de neonatologia, a **mesma assinatura** disparou em:
@@ -109,6 +135,7 @@ Segundo simulado completo pós-virada multi-banca, analisado retroativamente (pr
    - **"Qual dado aqui EXCLUI a opção óbvia?"** (achado normal/ausente conta como exclusão, não como silêncio)
    - **"Isso é protocolo/diretriz que mudou recentemente — minha régua pode estar velha?"**
    - **"Estou pulando o exame/conduta inicial pro avançado só porque o quadro parece grave?"**
+7. **(s180) A regra dos dois finalistas:** restaram duas? Marque a que a sua analise apontou. So troque se puder **nomear o erro** da favorita. "Facil demais" / "assertiva demais" / "a banca nao faria isso" nao sao erros nomeaveis. Medido: em 13/13 erradas do Simulado 9 ele marcou a alternativa nao-modal (media 17,9% x gabarito 63,5%); o override custou 4-5 questoes.
 
 ---
 

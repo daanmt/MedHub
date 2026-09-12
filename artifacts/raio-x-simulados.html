@@ -1,0 +1,477 @@
+<title>Raio-X dos Simulados</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#F6F7F4; --surface:#FFFFFF; --surface-2:#EEF1EC; --ink:#1B2321; --ink-2:#3E4A46; --muted:#5E6B66; --rule:#D9DED9; --rule-2:#C4CBC5;
+  --accent:#177A55; --accent-ink:#0F5C40; --accent-soft:rgba(23,122,85,.10);
+  --marcada:#85342D; --marcada-soft:rgba(133,52,45,.10);
+  --exec:#B7791F; --exec-soft:rgba(183,121,31,.14);
+  --lacuna:#3567C9; --lacuna-soft:rgba(53,103,201,.12);
+  --warn:#B45309; --crit:#9F2D26;
+  --shadow:0 1px 0 rgba(27,35,33,.04), 0 6px 20px -12px rgba(27,35,33,.18);
+  --display:"Barlow Semi Condensed",'Arial Narrow',Arial,sans-serif;
+  --body:"Source Sans 3","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --mono:"IBM Plex Mono",Consolas,"Courier New",monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#14181A; --surface:#1C2224; --surface-2:#232B2D; --ink:#E6EAE7; --ink-2:#C2CBC6; --muted:#9AA6A1; --rule:#2C3436; --rule-2:#3B4548;
+    --accent:#3FBF8C; --accent-ink:#6FD3AA; --accent-soft:rgba(63,191,140,.14);
+    --marcada:#D9776B; --marcada-soft:rgba(217,119,107,.14);
+    --exec:#BD8622; --exec-soft:rgba(189,134,34,.20);
+    --lacuna:#4F80D2; --lacuna-soft:rgba(79,128,210,.20);
+    --warn:#E0A43A; --crit:#E07A70;
+    --shadow:0 1px 0 rgba(0,0,0,.2), 0 8px 24px -14px rgba(0,0,0,.6);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#14181A; --surface:#1C2224; --surface-2:#232B2D; --ink:#E6EAE7; --ink-2:#C2CBC6; --muted:#9AA6A1; --rule:#2C3436; --rule-2:#3B4548;
+  --accent:#3FBF8C; --accent-ink:#6FD3AA; --accent-soft:rgba(63,191,140,.14);
+  --marcada:#D9776B; --marcada-soft:rgba(217,119,107,.14);
+  --exec:#BD8622; --exec-soft:rgba(189,134,34,.20);
+  --lacuna:#4F80D2; --lacuna-soft:rgba(79,128,210,.20);
+  --warn:#E0A43A; --crit:#E07A70;
+  --shadow:0 1px 0 rgba(0,0,0,.2), 0 8px 24px -14px rgba(0,0,0,.6);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1040px;margin:0 auto;padding-inline:clamp(16px,4vw,40px);padding-block:32px 72px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.05}
+h1{font-size:clamp(40px,7vw,64px);font-weight:700;letter-spacing:-.01em}
+h2{font-size:clamp(26px,3.6vw,34px);font-weight:600;margin-bottom:6px}
+h3{font-size:20px;font-weight:600;margin-bottom:4px}
+p{margin:0 0 12px;max-width:68ch}
+.lede{font-size:19px;color:var(--ink-2);max-width:62ch}
+a{color:var(--accent-ink)}
+strong{font-weight:600}
+.eyebrow{font-family:var(--display);font-weight:600;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-ink);margin-bottom:6px}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+code{font-family:var(--mono);font-size:.86em;background:var(--surface-2);padding:1px 6px;border-radius:4px}
+.mark{padding:0 .25em;border-radius:3px}
+.mark.exec{background:var(--exec-soft);color:var(--ink)}
+.mark.lac{background:var(--lacuna-soft);color:var(--ink)}
+.stamp{font-family:var(--mono);font-size:13px;color:var(--muted);margin-top:14px}
+
+header.hero{border-bottom:2px solid var(--ink);padding-bottom:22px;margin-bottom:28px}
+header.hero .sub{display:flex;flex-wrap:wrap;gap:8px 22px;margin-top:12px;color:var(--muted);font-size:15px}
+header.hero .sub span b{color:var(--ink);font-weight:600}
+
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:0 0 40px}
+.tile{background:var(--surface);border:1px solid var(--rule);border-radius:6px;padding:16px 18px 14px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:6px}
+.tile .k{font-family:var(--display);text-transform:uppercase;letter-spacing:.12em;font-size:12px;color:var(--muted);font-weight:600}
+.tile .v{font-family:var(--mono);font-size:34px;line-height:1;font-weight:500;color:var(--ink)}
+.tile .v small{font-size:16px;color:var(--muted);font-weight:400}
+.tile .d{font-size:14px;color:var(--ink-2);line-height:1.35}
+.tile.exec .v{color:var(--exec)} .tile.lac .v{color:var(--lacuna)} .tile.acc .v{color:var(--accent-ink)}
+@media (max-width:760px){.tiles{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:420px){.tiles{grid-template-columns:1fr}}
+
+section{margin-bottom:52px}
+.section-head{display:grid;grid-template-columns:1fr;gap:4px;margin-bottom:18px}
+.section-head p{color:var(--ink-2);margin:6px 0 0}
+
+.fig{background:var(--surface);border:1px solid var(--rule);border-radius:6px;padding:18px 18px 12px;box-shadow:var(--shadow);margin-bottom:16px}
+.fig .cap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:baseline;margin-bottom:8px}
+.fig .cap h3{margin:0}
+.fig .cap .legend{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:2px;vertical-align:-1px;margin-right:6px}
+.legend i.exec{background:var(--exec)} .legend i.lac{background:var(--lacuna)} .legend i.acc{background:var(--accent)} .legend i.line{width:16px;height:0;border-top:2px dashed var(--muted);border-radius:0;vertical-align:3px}
+svg.chart{width:100%;height:auto;display:block;font-family:var(--mono);font-size:11px}
+svg.chart text{fill:var(--muted)}
+svg.chart .grid{stroke:var(--rule);stroke-width:1}
+svg.chart .axis{stroke:var(--rule-2);stroke-width:1}
+svg.chart .ref{stroke:var(--muted);stroke-width:1.5;stroke-dasharray:5 5}
+svg.chart .line{fill:none;stroke:var(--accent);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+svg.chart .pt{fill:var(--accent);stroke:var(--surface);stroke-width:2}
+svg.chart .pt.partial{fill:var(--surface);stroke:var(--accent);stroke-width:2}
+svg.chart .pt.end{r:6}
+svg.chart .hit{fill:transparent;cursor:pointer}
+svg.chart .lbl{fill:var(--ink);font-weight:500}
+svg.chart .lbl.acc{fill:var(--accent-ink)}
+svg.chart .area{fill:var(--accent);opacity:.08}
+
+.tip{position:fixed;z-index:10;pointer-events:none;background:var(--ink);color:var(--bg);font-family:var(--mono);font-size:12px;line-height:1.35;padding:8px 10px;border-radius:4px;max-width:260px;opacity:0;transform:translateY(4px);transition:opacity .12s,transform .12s}
+.tip.on{opacity:1;transform:none}
+.tip b{font-weight:500;color:var(--bg)}
+
+.tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{padding:9px 10px;border-bottom:1px solid var(--rule);text-align:left;vertical-align:top}
+th{font-family:var(--display);text-transform:uppercase;letter-spacing:.08em;font-size:12px;color:var(--muted);font-weight:600;border-bottom:1px solid var(--rule-2)}
+td.n,th.n{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+tr.total td{border-top:1px solid var(--rule-2);border-bottom:0;font-weight:600}
+td .sm{display:block;font-size:13px;color:var(--muted)}
+.heat{--v:0;background:color-mix(in oklab, var(--accent) calc(var(--v) * 62%), var(--surface));text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums}
+.pill{display:inline-block;font-family:var(--display);font-weight:600;font-size:12px;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:3px;border:1px solid var(--rule-2);color:var(--ink-2);white-space:nowrap}
+.pill.acc{border-color:var(--accent);color:var(--accent-ink);background:var(--accent-soft)}
+.pill.warn{border-color:var(--warn);color:var(--warn)}
+.pill.crit{border-color:var(--crit);color:var(--crit)}
+.pill.exec{border-color:var(--exec);color:var(--exec);background:var(--exec-soft)}
+.pill.lac{border-color:var(--lacuna);color:var(--lacuna);background:var(--lacuna-soft)}
+
+.bars{display:grid;grid-template-columns:auto 1fr auto;gap:8px 12px;align-items:center;font-size:14px}
+.bars .lab{font-family:var(--mono);color:var(--ink-2);white-space:nowrap}
+.bars .bar{display:flex;height:18px;gap:2px;border-radius:3px;overflow:hidden}
+.bars .seg{height:100%;min-width:2px}
+.bars .seg.exec{background:var(--exec);border-radius:3px 0 0 3px}
+.bars .seg.lac{background:var(--lacuna);border-radius:0 3px 3px 0}
+.bars .val{font-family:var(--mono);font-variant-numeric:tabular-nums;color:var(--muted);white-space:nowrap;font-size:13px}
+.bars .val b{color:var(--ink);font-weight:500}
+.hbar{display:grid;grid-template-columns:minmax(160px,220px) 1fr auto;gap:6px 12px;align-items:center;font-size:14px}
+.hbar .lab{color:var(--ink-2);line-height:1.25}
+.hbar .track{height:14px;background:var(--surface-2);border-radius:3px;overflow:hidden}
+.hbar .fill{height:100%;background:var(--accent);border-radius:3px}
+.hbar .fill.exec{background:var(--exec)} .hbar .fill.lac{background:var(--lacuna)}
+.hbar .val{font-family:var(--mono);font-variant-numeric:tabular-nums;color:var(--muted);white-space:nowrap;font-size:13px}
+@media (max-width:520px){.hbar{grid-template-columns:1fr auto}.hbar .track{grid-column:1 / -1}}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:820px){.grid2{grid-template-columns:1fr}}
+
+.callout{border-left:3px solid var(--accent);background:var(--accent-soft);padding:14px 18px;border-radius:0 6px 6px 0;margin:16px 0}
+.callout.exec{border-color:var(--exec);background:var(--exec-soft)}
+.callout.crit{border-color:var(--crit);background:var(--marcada-soft)}
+.callout p:last-child{margin-bottom:0}
+blockquote{margin:12px 0;padding:0 0 0 16px;border-left:2px solid var(--rule-2);color:var(--ink-2);font-style:italic}
+
+ol.plan{padding-left:22px;margin:0}
+ol.plan li{margin-bottom:10px}
+ul.tight{margin:0;padding-left:20px}
+ul.tight li{margin-bottom:6px}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;font-size:15px}
+.kv dt{font-family:var(--mono);color:var(--muted);white-space:nowrap}
+.kv dd{margin:0}
+.foot{border-top:1px solid var(--rule-2);margin-top:40px;padding-top:14px;font-size:13px;color:var(--muted);font-family:var(--mono)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){.tip{transition:none}}
+</style>
+
+<div class="wrap">
+
+<header class="hero">
+  <div class="eyebrow">MedHub · preparação UERJ/MFC 01/11/2026</div>
+  <h1>Raio-X dos Simulados</h1>
+  <p class="lede">Nove provas em 76 dias, 239 erros autopsiados, 1.419 cards em rotação. O que a série inteira diz sobre onde os pontos estão — e o padrão novo que só ficou visível na nona.</p>
+  <div class="sub">
+    <span>Período <b>28/06 → 11/09/2026</b></span>
+    <span>Banco de questões <b>7.226 · 79,1%</b></span>
+    <span>Emitido <b>12/09/2026</b>, véspera do ENAMED</span>
+  </div>
+</header>
+
+<div class="tiles">
+  <div class="tile acc"><div class="k">Trajetória</div><div class="v">54 <small>→</small> 86<small>%</small></div><div class="d">S2 (02/08) → S9 (11/09). Três provas seguidas acima do banco de 79%.</div></div>
+  <div class="tile exec"><div class="k">Erros de execução</div><div class="v">60<small>%</small></div><div class="d">144 dos 239 erros aconteceram em conteúdo que você sabia. Processo, não lacuna.</div></div>
+  <div class="tile lac"><div class="k">Lacuna real</div><div class="v">40<small>%</small></div><div class="d">95 erros de conteúdo — concentrados em 6 temas que aparecem repetidos abaixo.</div></div>
+  <div class="tile"><div class="k">Baralho</div><div class="v">1.419</div><div class="d">cards ativos em 272 temas · <span class="num">676</span> nunca introduzidos · <span class="num">272</span> na fila de reforja</div></div>
+</div>
+
+<!-- ============ 1. TRAJETÓRIA ============ -->
+<section id="trajetoria">
+  <div class="section-head">
+    <div class="eyebrow">1 · Trajetória</div>
+    <h2>De 54 a 86 em seis semanas — e a inflexão tem data</h2>
+    <p>Até o S5 a curva oscila entre 54 e 66. Do S6 em diante ela salta para 80+ e não volta. O que mudou entre 17/08 e 03/09 não foi conteúdo novo: foi o playbook de execução (o tripé "o que exclui / régua velha / degrau inicial"), adotado depois da autópsia do S4.</p>
+  </div>
+
+  <div class="fig">
+    <div class="cap">
+      <h3>Acerto por simulado</h3>
+      <div class="legend"><span><i class="acc"></i>simulado</span><span><i class="line"></i>banco de questões (79,0%)</span><span>○ prova parcial (41q)</span></div>
+    </div>
+    <svg class="chart" viewBox="0 0 720 300" role="img" aria-label="Linha de acerto dos nove simulados, de 61% no S1 a 86% no S9, com referência do banco em 79%">
+      <g class="gridlines">
+        <line class="grid" x1="44" x2="696" y1="216.7" y2="216.7"/><text x="36" y="220" text-anchor="end">50</text>
+        <line class="grid" x1="44" x2="696" y1="177.3" y2="177.3"/><text x="36" y="181" text-anchor="end">60</text>
+        <line class="grid" x1="44" x2="696" y1="138" y2="138"/><text x="36" y="142" text-anchor="end">70</text>
+        <line class="grid" x1="44" x2="696" y1="98.7" y2="98.7"/><text x="36" y="102" text-anchor="end">80</text>
+        <line class="grid" x1="44" x2="696" y1="59.3" y2="59.3"/><text x="36" y="63" text-anchor="end">90</text>
+        <line class="grid" x1="44" x2="696" y1="20" y2="20"/><text x="36" y="24" text-anchor="end">100</text>
+      </g>
+      <line class="axis" x1="44" x2="696" y1="256" y2="256"/>
+      <line class="ref" x1="44" x2="696" y1="102.6" y2="102.6"/>
+      <text x="694" y="115" text-anchor="end">banco 79,0</text>
+      <path class="area" d="M44,173.4 L125.5,200.9 L207,177.3 L288.5,153.7 L370,165.5 L451.5,98.7 L533,90.8 L614.5,90.4 L696,75.1 L696,256 L44,256 Z"/>
+      <path class="line" d="M44,173.4 L125.5,200.9 L207,177.3 L288.5,153.7 L370,165.5 L451.5,98.7 L533,90.8 L614.5,90.4 L696,75.1"/>
+      <g class="pts">
+        <circle class="pt partial" cx="44" cy="173.4" r="5"/><circle class="hit" cx="44" cy="173.4" r="14" data-tip="<b>S1 · 28/06</b><br>25/41 = 61% (interrompido)<br>16 erros · 10 execução"/>
+        <circle class="pt" cx="125.5" cy="200.9" r="5"/><circle class="hit" cx="125.5" cy="200.9" r="14" data-tip="<b>S2 · 02/08</b> ENARE/ENAMED<br>54/100 · 46 erros<br>28 execução · 18 lacuna"/>
+        <circle class="pt" cx="207" cy="177.3" r="5"/><circle class="hit" cx="207" cy="177.3" r="14" data-tip="<b>S3 · 06/08</b><br>60/100 · 40 erros<br>17 execução · 23 lacuna"/>
+        <circle class="pt" cx="288.5" cy="153.7" r="5"/><circle class="hit" cx="288.5" cy="153.7" r="14" data-tip="<b>S4 · 13/08</b><br>66/100 · 34 erros<br>27 execução · 7 lacuna"/>
+        <circle class="pt" cx="370" cy="165.5" r="5"/><circle class="hit" cx="370" cy="165.5" r="14" data-tip="<b>S5 · 17/08</b> Estratégia MED<br>63/100 · 37 erros<br>22 execução · 15 lacuna"/>
+        <circle class="pt" cx="451.5" cy="98.7" r="5"/><circle class="hit" cx="451.5" cy="98.7" r="14" data-tip="<b>S6 · 03/09</b> ENARE/ENAMED 2026 (prova real)<br>72/90 = 80% · 18 erros<br>14 execução · 4 lacuna"/>
+        <circle class="pt" cx="533" cy="90.8" r="5"/><circle class="hit" cx="533" cy="90.8" r="14" data-tip="<b>S7 · 06/09</b> Estratégia MED, Final ENAMED<br>82/100 · 18 erros<br>9 execução · 9 lacuna"/>
+        <circle class="pt" cx="614.5" cy="90.4" r="5"/><circle class="hit" cx="614.5" cy="90.4" r="14" data-tip="<b>S8 · 08/09</b> ENARE/ENAMED 2025<br>78/95 = 82,1% · 17 erros<br>10 execução · 7 lacuna"/>
+        <circle class="pt end" cx="696" cy="75.1" r="6"/><circle class="hit" cx="696" cy="75.1" r="14" data-tip="<b>S9 · 11/09</b> ENARE 2024<br>86/100 (87 c/ anulada) · 13 erros reais<br>7 execução · 6 lacuna"/>
+      </g>
+      <text class="lbl acc" x="696" y="64" text-anchor="end">86</text>
+      <text class="lbl" x="125.5" y="218" text-anchor="middle">54</text>
+      <text class="lbl" x="451.5" y="90" text-anchor="middle">80</text>
+      <g class="xaxis">
+        <text x="44" y="274" text-anchor="middle">S1</text><text x="44" y="288" text-anchor="middle">28/06</text>
+        <text x="125.5" y="274" text-anchor="middle">S2</text><text x="125.5" y="288" text-anchor="middle">02/08</text>
+        <text x="207" y="274" text-anchor="middle">S3</text><text x="207" y="288" text-anchor="middle">06/08</text>
+        <text x="288.5" y="274" text-anchor="middle">S4</text><text x="288.5" y="288" text-anchor="middle">13/08</text>
+        <text x="370" y="274" text-anchor="middle">S5</text><text x="370" y="288" text-anchor="middle">17/08</text>
+        <text x="451.5" y="274" text-anchor="middle">S6</text><text x="451.5" y="288" text-anchor="middle">03/09</text>
+        <text x="533" y="274" text-anchor="middle">S7</text><text x="533" y="288" text-anchor="middle">06/09</text>
+        <text x="614.5" y="274" text-anchor="middle">S8</text><text x="614.5" y="288" text-anchor="middle">08/09</text>
+        <text x="696" y="274" text-anchor="middle">S9</text><text x="696" y="288" text-anchor="middle">11/09</text>
+      </g>
+    </svg>
+  </div>
+
+  <div class="tscroll">
+  <table>
+    <thead><tr><th>#</th><th>Data</th><th>Prova</th><th class="n">Acerto</th><th class="n">Erros</th><th>Leitura</th></tr></thead>
+    <tbody>
+      <tr><td class="num">S1</td><td class="num">28/06</td><td>Simulado dominical, 41q <span class="sm">interrompido</span></td><td class="n">61%<span class="sm">25/41</span></td><td class="n">16</td><td>10 dos 16 já eram execução: o bug nº 1 nasce aqui com nome.</td></tr>
+      <tr><td class="num">S2</td><td class="num">02/08</td><td>ENARE/ENAMED, 100q</td><td class="n">54%</td><td class="n">46</td><td>Bloco 4 (Q61-80) em 35% com multitarefa durante a prova. Variância intra-prova também é execução.</td></tr>
+      <tr><td class="num">S3</td><td class="num">06/08</td><td>100q</td><td class="n">60%</td><td class="n">40</td><td>Único simulado com <em>mais</em> lacuna (23) que execução (17). Enunciado negativo falhou 3×.</td></tr>
+      <tr><td class="num">S4</td><td class="num">13/08</td><td>100q</td><td class="n">66%</td><td class="n">34</td><td>27 de 34 em coisa sabida. Nasce a Autópsia: 120 erros de S2-S4 classificados por mecanismo.</td></tr>
+      <tr><td class="num">S5</td><td class="num">17/08</td><td>Estratégia MED, 100q</td><td class="n">63%</td><td class="n">37</td><td>Regressão de 3 pontos. Primeiro volume depois de duas sessões só de engenharia.</td></tr>
+      <tr><td class="num">S6</td><td class="num">03/09</td><td>ENARE/ENAMED 2026 — prova real<span class="sm">90 válidas, 10 anuladas</span></td><td class="n">80%<span class="sm">72/90</span></td><td class="n">18</td><td>+14 pontos. Primeira vez acima do banco. GO concentrou 5 erros, 4 em conteúdo dominado.</td></tr>
+      <tr><td class="num">S7</td><td class="num">06/09</td><td>Estratégia MED, Final ENAMED, 100q</td><td class="n">82%</td><td class="n">18</td><td>Feito na tarde de uma sessão de 90 cards. Meio a meio: 9 lacuna, 9 execução.</td></tr>
+      <tr><td class="num">S8</td><td class="num">08/09</td><td>ENARE/ENAMED 2025<span class="sm">95 válidas, 4 anuladas</span></td><td class="n">82,1%<span class="sm">78/95</span></td><td class="n">17</td><td>O gap banco × simulado inverte. E um detalhe passou despercebido: "nunca marcou a alternativa dominante".</td></tr>
+      <tr><td class="num">S9</td><td class="num">11/09</td><td>ENARE 2024, 100q<span class="sm">5 anuladas</span></td><td class="n">86%<span class="sm">87 c/ anulada</span></td><td class="n">13</td><td>13 de 13 erros em alternativa não-modal. O padrão ganha nome e número.</td></tr>
+      <tr class="total"><td></td><td></td><td>9 provas · 826 questões respondidas</td><td class="n">—</td><td class="n">239</td><td>144 execução (60%) · 95 lacuna (40%)</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<!-- ============ 2. ANATOMIA DO ERRO ============ -->
+<section id="anatomia">
+  <div class="section-head">
+    <div class="eyebrow">2 · Anatomia do erro</div>
+    <h2>Seis em cada dez erros são de execução</h2>
+    <p>Todo erro autopsiado recebe um tipo no banco. Somando os nove simulados, <span class="mark exec">execução</span> (erro de aplicação, armadilha, desatenção) responde por 144 e <span class="mark lac">lacuna de conteúdo</span> por 95. A proporção não mudou com a nota: mesmo no S9, 7 dos 13 erros foram em coisa sabida. O que mudou foi o <em>volume</em> — a execução caiu de 28 erros para 7.</p>
+  </div>
+
+  <div class="fig">
+    <div class="cap"><h3>Execução × lacuna, por simulado</h3><div class="legend"><span><i class="exec"></i>execução</span><span><i class="lac"></i>lacuna</span></div></div>
+    <div class="bars" id="bars-tipo">
+      <div class="lab">S1</div><div class="bar"><div class="seg exec" style="width:21.7%" data-tip="<b>S1</b> execução 10"></div><div class="seg lac" style="width:13%" data-tip="<b>S1</b> lacuna/outros 6"></div></div><div class="val"><b>16</b> · 10/6</div>
+      <div class="lab">S2</div><div class="bar"><div class="seg exec" style="width:60.9%" data-tip="<b>S2</b> execução 28"></div><div class="seg lac" style="width:39.1%" data-tip="<b>S2</b> lacuna 18"></div></div><div class="val"><b>46</b> · 28/18</div>
+      <div class="lab">S3</div><div class="bar"><div class="seg exec" style="width:37%" data-tip="<b>S3</b> execução 17"></div><div class="seg lac" style="width:50%" data-tip="<b>S3</b> lacuna 23"></div></div><div class="val"><b>40</b> · 17/23</div>
+      <div class="lab">S4</div><div class="bar"><div class="seg exec" style="width:58.7%" data-tip="<b>S4</b> execução 27"></div><div class="seg lac" style="width:15.2%" data-tip="<b>S4</b> lacuna 7"></div></div><div class="val"><b>34</b> · 27/7</div>
+      <div class="lab">S5</div><div class="bar"><div class="seg exec" style="width:47.8%" data-tip="<b>S5</b> execução 22"></div><div class="seg lac" style="width:32.6%" data-tip="<b>S5</b> lacuna 15"></div></div><div class="val"><b>37</b> · 22/15</div>
+      <div class="lab">S6</div><div class="bar"><div class="seg exec" style="width:30.4%" data-tip="<b>S6</b> execução 14"></div><div class="seg lac" style="width:8.7%" data-tip="<b>S6</b> lacuna 4"></div></div><div class="val"><b>18</b> · 14/4</div>
+      <div class="lab">S7</div><div class="bar"><div class="seg exec" style="width:19.6%" data-tip="<b>S7</b> execução 9"></div><div class="seg lac" style="width:19.6%" data-tip="<b>S7</b> lacuna 9"></div></div><div class="val"><b>18</b> · 9/9</div>
+      <div class="lab">S8</div><div class="bar"><div class="seg exec" style="width:21.7%" data-tip="<b>S8</b> execução 10"></div><div class="seg lac" style="width:15.2%" data-tip="<b>S8</b> lacuna 7"></div></div><div class="val"><b>17</b> · 10/7</div>
+      <div class="lab">S9</div><div class="bar"><div class="seg exec" style="width:15.2%" data-tip="<b>S9</b> execução 7"></div><div class="seg lac" style="width:13%" data-tip="<b>S9</b> lacuna 6"></div></div><div class="val"><b>13</b> · 7/6</div>
+    </div>
+    <p class="stamp">Barra = nº de erros na mesma escala (S2 = 46 é o comprimento máximo). Tipo lido do campo <code>tipo_erro</code> em <code>questoes_erros</code>; o S1 usa a leitura da sessão 098 (10 de 16 = execução).</p>
+  </div>
+
+  <div class="grid2">
+    <div class="fig">
+      <div class="cap"><h3>Mecanismo — os 120 erros de S2 a S4</h3><div class="legend"><span>classificação da Autópsia (s143)</span></div></div>
+      <div class="hbar">
+        <div class="lab">Discriminador que <b>exclui</b></div><div class="track"><div class="fill" style="width:100%"></div></div><div class="val">30</div>
+        <div class="lab">Comporta de conduta não checada</div><div class="track"><div class="fill" style="width:86.7%"></div></div><div class="val">26</div>
+        <div class="lab">Lacuna de conteúdo pura</div><div class="track"><div class="fill lac" style="width:76.7%"></div></div><div class="val">23</div>
+        <div class="lab">Diretriz desatualizada</div><div class="track"><div class="fill" style="width:33.3%"></div></div><div class="val">10</div>
+        <div class="lab">Fato no contexto errado</div><div class="track"><div class="fill" style="width:30%"></div></div><div class="val">9</div>
+        <div class="lab">Classifica por impressão, não pela régua</div><div class="track"><div class="fill" style="width:20%"></div></div><div class="val">6</div>
+        <div class="lab">Enunciado negativo</div><div class="track"><div class="fill" style="width:16.7%"></div></div><div class="val">5</div>
+        <div class="lab">Inversão de direção</div><div class="track"><div class="fill" style="width:13.3%"></div></div><div class="val">4</div>
+        <div class="lab">Termo de categoria adjacente</div><div class="track"><div class="fill" style="width:13.3%"></div></div><div class="val">4</div>
+        <div class="lab">Responde a pergunta anterior</div><div class="track"><div class="fill" style="width:6.7%"></div></div><div class="val">2</div>
+        <div class="lab">Par ou sequência incompleta</div><div class="track"><div class="fill" style="width:3.3%"></div></div><div class="val">1</div>
+      </div>
+      <p class="stamp">Só um mecanismo é conteúdo (azul). Os outros dez, somados, são 97 de 120: <b>81% de processo</b>. O S5 não recebeu classificação por mecanismo.</p>
+    </div>
+
+    <div class="fig">
+      <div class="cap"><h3>Padrões de raciocínio no ledger</h3><div class="legend"><span>mesma habilidade falhando em ≥ 3 temas</span></div></div>
+      <div class="tscroll"><table>
+        <thead><tr><th>Habilidade que falha</th><th class="n">ocorr.</th><th class="n">temas</th></tr></thead>
+        <tbody>
+          <tr><td>Incorporar atualização recente de diretriz</td><td class="n">7</td><td class="n">7</td></tr>
+          <tr><td>Rotular cada alternativa V/F</td><td class="n">5</td><td class="n">5</td></tr>
+          <tr><td>Ler exame NORMAL como dado que exclui</td><td class="n">5</td><td class="n">5</td></tr>
+          <tr><td>Marcar a falsa (enunciado negativo)</td><td class="n">4</td><td class="n">4</td></tr>
+          <tr><td>Discriminar cluster pelo achado específico</td><td class="n">4</td><td class="n">4</td></tr>
+          <tr><td>Respeitar a hierarquia do exame inicial</td><td class="n">4</td><td class="n">3</td></tr>
+          <tr><td>Lente da especialidade antes da instabilidade</td><td class="n">3</td><td class="n">3</td></tr>
+          <tr><td>Termo familiar de OUTRA categoria</td><td class="n">3</td><td class="n">3</td></tr>
+          <tr><td>Escalonar além do que o protocolo pede</td><td class="n">3</td><td class="n">3</td></tr>
+          <tr><td><strong>Override do modal</strong> <span class="pill acc">novo · s180</span></td><td class="n">13</td><td class="n">13</td></tr>
+        </tbody>
+      </table></div>
+      <p class="stamp">Fonte: <code>habilidades.py --reincidentes</code>. A última linha é medida no S9 (13 questões, 13 temas distintos), ainda não backfillada no ledger.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3. ONDE OS ERROS MORAM ============ -->
+<section id="areas">
+  <div class="section-head">
+    <div class="eyebrow">3 · Onde os erros moram</div>
+    <h2>Clínica Médica vaza mais do que pesa</h2>
+    <p>Um terço dos erros (74 de 223, S2-S9) é Clínica Médica — para 27% da prova no blueprint medido do ENAMED e <strong>20% na UERJ</strong>. Cirurgia é o inverso: 18% dos erros para 21,5% de peso. E a coluna que vale 20 pontos na UERJ, Medicina de Família, não aparece em simulado nenhum: não há como errar o que não foi testado.</p>
+  </div>
+
+  <div class="fig">
+    <div class="cap"><h3>Erros por área e simulado</h3><div class="legend"><span>célula mais escura = mais erros</span></div></div>
+    <div class="tscroll"><table>
+      <thead><tr><th>Área</th><th class="n">S2</th><th class="n">S3</th><th class="n">S4</th><th class="n">S5</th><th class="n">S6</th><th class="n">S7</th><th class="n">S8</th><th class="n">S9</th><th class="n">Total</th><th class="n">% erros</th><th class="n">ENAMED</th><th class="n">UERJ</th></tr></thead>
+      <tbody>
+        <tr><td>Clínica Médica</td><td class="heat" style="--v:.57">8</td><td class="heat" style="--v:.93">13</td><td class="heat" style="--v:1">14</td><td class="heat" style="--v:.93">13</td><td class="heat" style="--v:.43">6</td><td class="heat" style="--v:.57">8</td><td class="heat" style="--v:.43">6</td><td class="heat" style="--v:.43">6</td><td class="n">74</td><td class="n">33%</td><td class="n">27,1%</td><td class="n">20%</td></tr>
+        <tr><td>Ginecologia e Obstetrícia</td><td class="heat" style="--v:.86">12</td><td class="heat" style="--v:.79">11</td><td class="heat" style="--v:.21">3</td><td class="heat" style="--v:.64">9</td><td class="heat" style="--v:.43">6</td><td class="heat" style="--v:.07">1</td><td class="heat" style="--v:.14">2</td><td class="heat" style="--v:.21">3</td><td class="n">47</td><td class="n">21%</td><td class="n">21,4%</td><td class="n">20%</td></tr>
+        <tr><td>Pediatria</td><td class="heat" style="--v:.64">9</td><td class="heat" style="--v:.43">6</td><td class="heat" style="--v:.57">8</td><td class="heat" style="--v:.5">7</td><td class="heat" style="--v:.21">3</td><td class="heat" style="--v:.29">4</td><td class="heat" style="--v:.29">4</td><td class="heat" style="--v:.07">1</td><td class="n">42</td><td class="n">19%</td><td class="n">19,6%</td><td class="n">20%</td></tr>
+        <tr><td>Cirurgia</td><td class="heat" style="--v:.86">12</td><td class="heat" style="--v:.57">8</td><td class="heat" style="--v:.43">6</td><td class="heat" style="--v:.29">4</td><td class="heat" style="--v:.07">1</td><td class="heat" style="--v:.29">4</td><td class="heat" style="--v:.29">4</td><td class="heat" style="--v:.14">2</td><td class="n">41</td><td class="n">18%</td><td class="n">21,5%</td><td class="n">20%</td></tr>
+        <tr><td>Preventiva</td><td class="heat" style="--v:.36">5</td><td class="heat" style="--v:.14">2</td><td class="heat" style="--v:.21">3</td><td class="heat" style="--v:.29">4</td><td class="heat" style="--v:.14">2</td><td class="heat" style="--v:.07">1</td><td class="heat" style="--v:.07">1</td><td class="heat" style="--v:.07">1</td><td class="n">19</td><td class="n">9%</td><td class="n">10,4%</td><td class="n">—</td></tr>
+        <tr><td>Medicina de Família <span class="sm">Gusso + Duncan</span></td><td class="heat" style="--v:0">–</td><td class="heat" style="--v:0">–</td><td class="heat" style="--v:0">–</td><td class="heat" style="--v:0">–</td><td class="heat" style="--v:0">–</td><td class="heat" style="--v:0">–</td><td class="heat" style="--v:0">–</td><td class="heat" style="--v:0">–</td><td class="n">0</td><td class="n">—</td><td class="n">—</td><td class="n"><strong>20%</strong></td></tr>
+        <tr class="total"><td>Total</td><td class="n">46</td><td class="n">40</td><td class="n">34</td><td class="n">37</td><td class="n">18</td><td class="n">18</td><td class="n">17</td><td class="n">13</td><td class="n">223</td><td class="n">100%</td><td class="n">100%</td><td class="n">100%</td></tr>
+      </tbody>
+    </table></div>
+    <p class="stamp">ENAMED = blueprint pooled medido em duas amostras (<code>core/simulados/blueprint_enamed.json</code>). UERJ = Edital 15/2026, 20 questões por conteúdo. S1 excluído (41q, sem quebra por área). Cirurgia Infantil está em Cirurgia; Neonatologia em Pediatria.</p>
+  </div>
+
+  <div class="callout">
+    <p><strong>O que isso muda no rescope de segunda.</strong> Na UERJ, Clínica Médica encolhe de 27% para 20% — e a cauda longa (Oftalmo 50%, Otorrino 74%, Hepato 72%, Hemato 71%) vive inteira dentro dessas 20 questões, valendo ~2 somada. É de onde sai o corte. O bloco que cresce de 10% para 20% é MFC, que hoje tem zero questões, zero cards e zero erros registrados — cobertura nula não é força, é incerteza.</p>
+  </div>
+</section>
+
+<!-- ============ 4. O BARALHO ============ -->
+<section id="baralho">
+  <div class="section-head">
+    <div class="eyebrow">4 · O baralho</div>
+    <h2>Os cards já sabem onde dói — e onde falta lastro</h2>
+    <p>Os oito temas de maior erro acumulado são também os de maior baralho: a cunhagem seguiu o erro. O que ela não resolveu sozinha aparece na coluna da direita — um tema com 32 cards e nenhum resumo, e três temas em que o card existe mas a fonte nunca foi reaberta.</p>
+  </div>
+
+  <div class="grid2">
+    <div class="fig">
+      <div class="cap"><h3>Fraquezas persistentes</h3><div class="legend"><span>memória de longo prazo · erros acumulados</span></div></div>
+      <div class="tscroll"><table>
+        <thead><tr><th>Tema</th><th class="n">erros</th><th class="n">cards</th><th>estado</th></tr></thead>
+        <tbody>
+          <tr><td>Cirurgia Infantil<span class="sm">imagem no abdome neonatal; 3 pontos falharam 2× após ensino (s179)</span></td><td class="n">30</td><td class="n">53</td><td><span class="pill exec">exposição</span></td></tr>
+          <tr><td>Imunizações<span class="sm">reforço por agente; calendário PNI 2025</span></td><td class="n">25</td><td class="n">37</td><td><span class="pill acc">virando</span></td></tr>
+          <tr><td>Síndromes Hipertensivas<span class="sm">reconhece o critério, viola a priorização</span></td><td class="n">21</td><td class="n">25</td><td><span class="pill exec">comporta</span></td></tr>
+          <tr><td>Pólipos e Neoplasias Intestinais<span class="sm">9 de 9 cards capotaram; Q28 do S9</span></td><td class="n">19</td><td class="n">32</td><td><span class="pill crit">sem resumo</span></td></tr>
+          <tr><td>Princípios do SUS<span class="sm">universalidade × equidade × integralidade</span></td><td class="n">19</td><td class="n">22</td><td><span class="pill lac">discriminador</span></td></tr>
+          <tr><td>Colecistite e Colangite<span class="sm">qual quadro comanda o timing</span></td><td class="n">19</td><td class="n">27</td><td><span class="pill acc">virando</span></td></tr>
+          <tr><td>Arboviroses<span class="sm">dengue C × D; Faget/Paget</span></td><td class="n">17</td><td class="n">30</td><td><span class="pill exec">recall</span></td></tr>
+          <tr><td>Vulvovaginites<span class="sm">pH alto sem lactobacilo = atrofia, não vaginose</span></td><td class="n">17</td><td class="n">30</td><td><span class="pill exec">exclui</span></td></tr>
+        </tbody>
+      </table></div>
+      <p class="stamp">"Virando" = nota 4 hoje nos cards que caíam (Imunizações #1584/#1582/#1583; Colecistite #1089/#1553/#1090).</p>
+    </div>
+
+    <div class="fig">
+      <div class="cap"><h3>Onde a fila não anda</h3><div class="legend"><span>dias sem revisar · acerto no banco</span></div></div>
+      <div class="tscroll"><table>
+        <thead><tr><th>Tema</th><th class="n">dorm.</th><th class="n">acerto</th><th class="n">cards</th></tr></thead>
+        <tbody>
+          <tr><td>Anemias Hemolíticas</td><td class="n">71d</td><td class="n">60%</td><td class="n">8</td></tr>
+          <tr><td>Síndrome do Olho Vermelho</td><td class="n">71d</td><td class="n">50%</td><td class="n">10</td></tr>
+          <tr><td>Distúrbios Ácido-Base</td><td class="n">64d</td><td class="n">68%</td><td class="n">5</td></tr>
+          <tr><td>Distúrbios do Potássio</td><td class="n">64d</td><td class="n">—</td><td class="n">7</td></tr>
+          <tr><td>DM — Complicações Crônicas</td><td class="n">63d</td><td class="n">88%</td><td class="n">12</td></tr>
+          <tr><td>Pneumologia Intensiva</td><td class="n">48d</td><td class="n">73%</td><td class="n">19 <span class="sm">todos novos</span></td></tr>
+          <tr><td>Hepatites Virais</td><td class="n">5d</td><td class="n">68%</td><td class="n">22 <span class="sm">todos novos</span></td></tr>
+          <tr><td>Hemostasia I</td><td class="n">0d</td><td class="n">72%</td><td class="n">40 <span class="sm">24 novos</span></td></tr>
+        </tbody>
+      </table></div>
+      <p class="stamp">Piores acertos no banco com ≥ 30 questões: Anemias Hemolíticas 60 · Endometriose 63 · Insuf. Cardíaca 65 · LRA 67 · Pré-Natal 67 · Hepatites 68 · Cirrose 68 · Sepse 69.</p>
+    </div>
+  </div>
+
+  <div class="fig">
+    <div class="cap"><h3>Padrão → tema → remédio</h3><div class="legend"><span>a conexão que o usuário pediu</span></div></div>
+    <div class="tscroll"><table>
+      <thead><tr><th style="width:24%">Padrão</th><th style="width:36%">Onde ele mora (temas e cards)</th><th>O que corrige</th></tr></thead>
+      <tbody>
+        <tr><td><strong>O discriminador que exclui</strong><span class="sm">30 em S2-S4 · 7 no S6 · ledger #3</span></td><td>Vulvovaginites (atrofia lida como vaginose) · Cirurgia Infantil (Wilms que "cruza a linha média") · Colecistite (qual quadro comanda) · dengue C × D</td><td>Ritual: <em>"qual dado aqui exclui o que eu ia marcar?"</em> Achado normal é exclusão, não silêncio. Cards discriminadores em tabela lado a lado.</td></tr>
+        <tr><td><strong>Comporta de conduta</strong><span class="sm">26 em S2-S4 · ledger #6 e #9</span></td><td>Síndromes Hipertensivas (21 erros: critério certo, ordem errada) · Trauma (estável?) · Colecistite (pancreatite primeiro) · CAD pediátrica</td><td>Antes da conduta, a comporta: estável ou instável? limiar atingido? IG? A tabela de comportas por tema vive no playbook.</td></tr>
+        <tr><td><strong>Diretriz desatualizada</strong><span class="sm">10 em S2-S4 · ledger #1, 7 temas</span></td><td>Imunizações (PNI 2025: HPV dose única, ACWY 11-14 sem resgate) · HAS SBC 2025 · ATLS 11 (xABCDE) · SBD 2024</td><td>Ano citado no enunciado = alerta. Diretrizes a conferir: Calendário 2026, GINA 2026, ATLS 11, SINAN 2026.</td></tr>
+        <tr><td><strong>Lacuna pura</strong><span class="sm">23 em S2-S4 · 37 no S5 · 6 no S9</span></td><td>Pólipos e Neoplasias (19 erros, 32 cards, <strong>sem resumo</strong>) · Hemostasia I (40 cards, 24 novos) · Hepatites Virais (22 novos) · Farmacodermias (sem resumo)</td><td>Conteúdo de verdade: criar o resumo que falta e abrir o intake. É o único padrão que se corrige estudando.</td></tr>
+        <tr><td><strong>Fato no contexto errado</strong><span class="sm">9 em S2-S4 · #311 na s175</span></td><td>Pancreatite (USG responde "é biliar?", TC responde "há necrose?" após 72h) · CAD (potássio vs edema cerebral) · Arboviroses</td><td><em>"A pergunta é sobre etiologia, gravidade ou complicação?"</em> Fixar o fato na condição que o governa.</td></tr>
+        <tr><td><strong>Enunciado negativo / V-F</strong><span class="sm">5 em S2-S4 · ledger #2, #4, #8 · Q73 do S9</span></td><td>Princípios do SUS (19 erros) · melanoma/psoríase/BISAP no S3 · CA de ovário no S9</td><td>Rotular cada alternativa V/F e contar os F: tem de dar exatamente 1. O número de F é o checksum.</td></tr>
+        <tr><td><strong>Inversão de direção</strong><span class="sm">4 em S2-S4 · 2× na s179</span></td><td>PTH na doença adinâmica · via oral × tópica na gestante · obesidade pós-menopausa × ciclos anovulatórios (resumos corrigidos)</td><td>Fixar a direção no mecanismo, nunca no número. Quando dois resumos ensinam o mesmo mecanismo para órgãos diferentes, escrever o discriminador nos dois.</td></tr>
+        <tr><td><strong>Par incompleto</strong><span class="sm">1 em S2-S4 · #582/#583 · Q28, Q82 do S9</span></td><td>Cards compostos (Billings/sintotérmico; via a evitar/como regularizar) · alternativas de par duplo</td><td>Alternativa de par só é correta com as duas metades verdadeiras. Meia-verdade é a assinatura do distrator. E card composto é defeito de autoria, não de recall.</td></tr>
+        <tr><td><strong>Override do modal</strong> <span class="pill acc">novo</span><span class="sm">13 de 13 no S9 · precursor no S8</span></td><td>Nenhum tema. É puro processo: a análise clínica termina certa e uma segunda decisão a descarta.</td><td>Regra dos dois finalistas: restaram duas, marca a que a análise apontou. Só troca se conseguir <em>nomear</em> o erro da favorita. "Fácil demais" não é erro nomeável.</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+
+<!-- ============ 5. O QUE APRENDI HOJE ============ -->
+<section id="hoje">
+  <div class="section-head">
+    <div class="eyebrow">5 · O que a sessão de ontem mudou</div>
+    <h2>Dois achados que a série inteira não tinha mostrado</h2>
+  </div>
+
+  <div class="callout exec">
+    <h3>O override do modal — medido, não inferido</h3>
+    <p>O PDF do Estratégia traz a distribuição de respostas de todos os candidatos por alternativa. Cruzando as 13 erradas reais do S9: em <strong>13 de 13</strong> você marcou uma alternativa <strong>não-modal</strong>. Média do que marcou: <span class="num">17,9%</span>. Média do gabarito: <span class="num">63,5%</span>. No extremo, Q66: marcou a de 2%, o gabarito tinha 88%.</p>
+    <p>Em quatro questões você narrou o mecanismo sem que eu perguntasse — Q26 <em>"achava que a B fazia mais sentido"</em>, Q28 <em>"apostei na alternativa menos provável"</em>, Q66 <em>"a mais provável era a resposta obviamente"</em>, Q81 descartou a certa por <em>"excesso de assertividade"</em>. <strong>Custo: 4 a 5 questões. O 86 era 90-91.</strong></p>
+    <p>E o S8 já tinha mostrado a assinatura: a autópsia registrou que você <em>"nunca marcou o distrator dominante"</em> (7%, 6%, 18%, 14%) — e leu isso como nota de extração, não como comportamento. É a primeira família de erro que <strong>não se corrige com conteúdo</strong>, porque o conteúdo estava sabido. Foi para o playbook como item 7 do reflexo.</p>
+  </div>
+
+  <div class="callout">
+    <h3>Ensinar não fecha fato arbitrário (F100)</h3>
+    <p>Três pontos de Cirurgia Infantil ensinados na Revisão Direcionada de 10/09 falharam <strong>duas vezes cada</strong> em 11/09 — apêndice > 6 mm (você foi de 5 para <em>3</em> mm), GECA em 40%, biópsia hepática na atresia. O resumo cobre os três, com marcador. Resumo correto + aula dada + carimbo gravado = zero retenção em 24h.</p>
+    <p>A leitura é estreita de propósito: no mesmo fechamento, <strong>14 pontos fecharam</strong> (Faget, PTH baixo, via oral na gestante, os dois braços do AGC, 47 × 69). A Revisão Direcionada funciona onde há mecanismo e falha onde o fato é arbitrário. Para 6 mm, 40% e HAEC o remédio é <em>exposição repetida</em>, não prosa.</p>
+  </div>
+
+  <div class="kv" style="margin-top:14px">
+    <dt>resumos corrigidos</dt><dd>CA de Mama + CA de Endométrio (mesma aromatização, nenhum dizia como separar) · HIV (IRIS: 2-10 sem de espera <em>antes</em> ≠ 4-8 sem de instalação <em>depois</em>)</dd>
+    <dt>cards novos</dt><dd>13 do S9 (#1615-1627), 11 reforjados antes de entrar na fila — 7 nasceram compostos, o defeito que te pegou no #583 no mesmo dia</dd>
+    <dt>fila de reforja</dt><dd><span class="num">272</span> marcas abertas; triar é do operador (<code>--fechar</code> re-verifica, <code>--descartar</code> = "olhei e não era defeito")</dd>
+    <dt>ledger</dt><dd>F98 (blackout não cobre intervalo < 4d — 9 cards de ontem caíram em 13-14/09) · F99 (nenhum CLI serve card por id) · F100 (acima)</dd>
+  </div>
+</section>
+
+<!-- ============ 6. PLANO ============ -->
+<section id="plano">
+  <div class="section-head">
+    <div class="eyebrow">6 · Sábado 12/09 — descanso com fila andando</div>
+    <h2>Cem a duzentos cards, escolhidos para refrescar temas distintos</h2>
+    <p>A fila de hoje já tem <span class="num">86</span> vencidos (14 atrasados + 8 erros frescos de Diarreia e Urologia + 64 de hoje — o pico que as 16 notas 1 de ontem produziram). O resto vem do pool de <span class="num">676</span> nunca introduzidos (os 13 do S9 acabaram de entrar), e é aí que o "temas distintos" se decide.</p>
+  </div>
+  <ol class="plan">
+    <li><strong>Primeiro os 86 vencidos.</strong> Sem filtro, <code>--cluster --prevalencia</code>. Os 14 de relearning de ontem levam nota normal hoje — é outro dia, outra sessão.</li>
+    <li><strong>Depois, intake dirigido aos dormentes com nota baixa</strong> — é o que refresca de verdade: Anemias Hemolíticas (71d, 60%), Olho Vermelho (71d, 50%), Potássio e Ácido-Base (64d), DM Crônicas (63d), Pneumologia Intensiva (19 novos), Hepatites Virais (22 novos), Meningites (20 novos). Um <code>--tema</code> por bloco de 15.</li>
+    <li><strong>Teto:</strong> o contrato diz 60, ou 90 em regime de dívida. Num dia sem questões há folga, mas o pico-e-queda que você mesmo recusou na s159 continua valendo — 150 é defensável, 200 é o número que vira dívida na terça.</li>
+    <li><strong>O que cai em 13-14/09 reaparece dia 15 como atrasado</strong> (F98). Não é defeito da sessão, é o blackout do ENAMED funcionando pela metade. Deixa.</li>
+    <li><strong>Domingo:</strong> ENAMED. Termômetro, não alvo. Uma instrução só: quando restarem duas, marca a primeira.</li>
+  </ol>
+</section>
+
+<div class="foot">Fontes: <code>sessoes_bulk</code> · <code>questoes_erros</code> · <code>core/simulados/_s{6,7,8}_erros_batch.json</code> · Autópsia dos Simulados (s143, 157 erros S2-S5) · <code>habilidades.py --reincidentes</code> · <code>review_radar.py --all</code> · <code>fsrs_queue.py --list</code> · <code>blueprint_enamed.json</code> · Edital UERJ 15/2026. Percentuais de área excluem o S1 (41q). Números de baralho medidos em 12/09/2026 ~00h30.</div>
+
+</div>
+<div class="tip" id="tip" role="status" aria-live="polite"></div>
+<script>
+(function(){
+  var tip=document.getElementById('tip');
+  var els=document.querySelectorAll('[data-tip]');
+  function show(e){
+    var t=e.currentTarget.getAttribute('data-tip'); if(!t) return;
+    tip.innerHTML=t; tip.classList.add('on'); move(e);
+  }
+  function move(e){
+    var x=(e.clientX||0)+14, y=(e.clientY||0)+14;
+    var w=tip.offsetWidth, h=tip.offsetHeight;
+    if(x+w>window.innerWidth-8) x=(e.clientX||0)-w-14;
+    if(y+h>window.innerHeight-8) y=(e.clientY||0)-h-14;
+    tip.style.left=x+'px'; tip.style.top=y+'px';
+  }
+  function hide(){ tip.classList.remove('on'); }
+  for(var i=0;i<els.length;i++){
+    els[i].addEventListener('mouseenter',show);
+    els[i].addEventListener('mousemove',move);
+    els[i].addEventListener('mouseleave',hide);
+    els[i].addEventListener('focus',show);
+    els[i].addEventListener('blur',hide);
+    els[i].setAttribute('tabindex','0');
+  }
+})();
+</script>

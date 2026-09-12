@@ -719,3 +719,15 @@
 {"ts": "2026-09-11T13:00:19+00:00", "event": "resolved", "check": "consistencia_registros", "fingerprint": "ae675f4ff819", "alvo": "AGENTE.md §7.4"}
 {"ts": "2026-09-11T13:08:33+00:00", "event": "opened", "check": "handoff_teto", "fingerprint": "abeed62c0ff8", "alvo": "HANDOFF.md", "payload": {"linhas": 63, "limite": 60}}
 {"ts": "2026-09-11T13:09:05+00:00", "event": "resolved", "check": "handoff_teto", "fingerprint": "abeed62c0ff8", "alvo": "HANDOFF.md"}
+{"ts": "2026-09-12T02:39:55+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "9ed0b607ed8f", "alvo": "card#1615", "payload": {"padrao": "resposta-multifato/multi-frase", "tema": "Hanseníase"}}
+{"ts": "2026-09-12T02:39:55+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "e317433fb14e", "alvo": "card#1616", "payload": {"padrao": "resposta-multifato/paragrafo", "tema": "Pneumonias Bacterianas"}}
+{"ts": "2026-09-12T02:39:55+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "02e3de19dde6", "alvo": "card#1617", "payload": {"padrao": "resposta-multifato/paragrafo", "tema": "Arritmias"}}
+{"ts": "2026-09-12T02:39:55+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "849c2a38d8ff", "alvo": "card#1618", "payload": {"padrao": "duplo-ask/segundo-nucleo", "tema": "IST"}}
+{"ts": "2026-09-12T02:39:55+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "d45e71214156", "alvo": "card#1620", "payload": {"padrao": "resposta-multifato/paragrafo", "tema": "Apendicite Aguda"}}
+{"ts": "2026-09-12T02:39:55+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "d4c92a577255", "alvo": "card#1622", "payload": {"padrao": "resposta-multifato/paragrafo", "tema": "Cicatrizacao"}}
+{"ts": "2026-09-12T02:39:55+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "bc2b3fa047b6", "alvo": "card#1623", "payload": {"padrao": "duplo-ask/conectivo", "tema": "Herpes genital na gestação"}}
+{"ts": "2026-09-12T02:39:55+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "2914b4e61949", "alvo": "card#1624", "payload": {"padrao": "resposta-multifato/paragrafo", "tema": "Tumores Anexiais e Câncer de Ovário"}}
+{"ts": "2026-09-12T02:39:55+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "b82c6f93dc48", "alvo": "card#1625", "payload": {"padrao": "duplo-ask/conectivo", "tema": "Doenças de Vulva e Vagina"}}
+{"ts": "2026-09-12T02:39:55+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "cb2bebd3f933", "alvo": "card#1627", "payload": {"padrao": "duplo-ask/segundo-nucleo", "tema": "Emergências Pediátricas"}}
+{"ts": "2026-09-12T03:21:30+00:00", "event": "opened", "check": "handoff_teto", "fingerprint": "abeed62c0ff8", "alvo": "HANDOFF.md", "payload": {"linhas": 61, "limite": 60}}
+{"ts": "2026-09-12T03:22:03+00:00", "event": "resolved", "check": "handoff_teto", "fingerprint": "abeed62c0ff8", "alvo": "HANDOFF.md"}

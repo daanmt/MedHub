@@ -5,7 +5,8 @@
 
 ## > Proximo passo imediato
 
-1. 🃏 **Divida FSRS: 78 atrasados + 28 de hoje = 106 vencidos** (o blackout de 13-14/09 caiu hoje); teto 90 em regime de divida. **Re-sondar #787 (hiperaldosteronismo) e #597 (Winter)** antes de ensino novo (herdado da s181). Os 44 cards do ENAMED estao no **pool (685)**, nao na fila vencida.
+1. 🃏📚 **Terca 16/09 (decisao do usuario em 15/09): retoma o cronograma EMED a 60 questoes/dia + 60 cards/dia** -- nao 90, mesmo com **106 vencidos** (78 atrasados + 28; o blackout de 13-14/09 caiu hoje). A divida rola; nao subir o teto por conta propria. **Re-sondar #787 (hiperaldosteronismo) e #597 (Winter)** antes de ensino novo (herdado da s181). Os 44 cards do ENAMED estao no **pool (685)**, nao na fila vencida.
+1b. 🔴 **CONTRATO novo (s182, `analisar-questao.md §3.2`):** dissecar cada erro por inteiro, **perguntar o raciocinio dele quando nao for evidente** antes de diagnosticar; regua de prova = solido 80-85; chute certo = `incerteza`.
 2. 🗓️ **Rescope UERJ + abertura da frente MFC (atrasado desde 14/09).** A prova real confirmou o miolo: **29/100 de Preventiva/APS**, cenario de UBS na maioria das demais, RAPS/indicadores/PrEP cobrados por portaria. Insumo: `artifacts/raio-x-simulados.html §3` + `history/session_182.md §2`.
 3. 📚 **8 temas SEM RESUMO cairam no ENAMED:** RAPS, Anafilaxia (adulto), FA/Arritmias, Osteoporose, HPB/PSA, Oncologia pediatrica (Wilms x neuroblastoma), Coqueluche, TEA. Criar na ordem do peso UERJ (RAPS e APS primeiro). Farmacodermias e Vulva/Vagina seguem sem lastro.
 4. 🔴 **Cluster = aula comparativa, nao cards (2a evidencia, s182).** Q52: *"fiz tantos cards de wilms x neuroblastoma e perdi uma questao de graca"*; Q53: Cirurgia Infantil com 53 cards caiu numa facil. Wilms x neuroblastoma e hernia x hidrocele x criptorquidia pedem tabela lado a lado na aula, nao mais cards.

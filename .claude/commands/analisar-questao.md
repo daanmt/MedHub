@@ -106,6 +106,14 @@ Padrões de execução de prova já catalogados (bug nº1, enunciado negativo, a
 
 **Regra de peso:** ~80% da análise vai para o diagnóstico técnico/clínico específico (qual mecanismo, critério, conduta ou discriminador da matéria não foi dominado -- Etapas 1-4 acima, aplicadas a fundo). Os ~20% restantes cobrem a camada de execução de prova (se um padrão já catalogado também se aplica). Diagnosticar o elo tecnicamente **primeiro**; só depois, e de forma breve, verificar se o padrão de execução se encaixa -- nunca o contrário.
 
+### 3.2 Racional declarado, pergunta obrigatória e sobriedade (CONTRATO do usuário, s182)
+
+Formulação do usuário em 15/09/2026, após o ENAMED 2026 (75/100, *"notei mais lacunas que outra coisa. É uma prova fácil, que o sólido deveria ser 80-85 questões"*): *"preciso que a partir de hoje você disseque os meus erros dessa forma, inclusive me perguntando o meu raciocínio, quando ele não for evidente. É preciso sobriedade e seriedade na análise de cada erro, pois ele é uma oportunidade de jogar luz em diversos nós de conhecimento médico."*
+
+- **O racional declarado é o insumo primário** do diagnóstico (regra da s179, `feedback_usuario_declara_racional_erro`). Quando ele **não vier ou não for evidente** (letra sem motivo, motivo que cabe em dois padrões diferentes), **perguntar antes de diagnosticar** -- uma linha por questão, nunca inferir o caminho mental a partir da letra marcada. Esperar a resposta é parte da análise, não atraso.
+- **Cada erro é dissecado por inteiro:** o nó que quebrou **e** os nós vizinhos que a questão ilumina (as alternativas erradas como portas -- 6o princípio de `estilo-flashcard.md`). Sobriedade significa: sem rótulo apressado de padrão de execução, sem "erro tolo" como diagnóstico, sem suavizar quando o raciocínio declarado está errado.
+- **A régua de resultado é a dele, não a média da prova:** em prova de dificuldade média/fácil, o sólido esperado é **80-85** com margem de sorte até 90-95; acerto no chute conta como `incerteza` (§10), nunca como acerto.
+
 ---
 
 ## 4. O que Extrair para o Resumo

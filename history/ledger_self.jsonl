@@ -731,3 +731,7 @@
 {"ts": "2026-09-12T02:39:55+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "cb2bebd3f933", "alvo": "card#1627", "payload": {"padrao": "duplo-ask/segundo-nucleo", "tema": "Emergências Pediátricas"}}
 {"ts": "2026-09-12T03:21:30+00:00", "event": "opened", "check": "handoff_teto", "fingerprint": "abeed62c0ff8", "alvo": "HANDOFF.md", "payload": {"linhas": 61, "limite": 60}}
 {"ts": "2026-09-12T03:22:03+00:00", "event": "resolved", "check": "handoff_teto", "fingerprint": "abeed62c0ff8", "alvo": "HANDOFF.md"}
+{"ts": "2026-09-15T22:03:45+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "b9d84c8f2fd4", "alvo": "card#1629", "payload": {"padrao": "duplo-ask/conectivo", "tema": "Síndrome Coronariana Aguda"}}
+{"ts": "2026-09-15T22:03:45+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "6357f6eaa3b6", "alvo": "card#1645", "payload": {"padrao": "resposta-multifato/paragrafo", "tema": "Tumores Sólidos da Infância"}}
+{"ts": "2026-09-15T22:03:45+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "ed77db545467", "alvo": "card#1655", "payload": {"padrao": "resposta-multifato/paragrafo", "tema": "Osteoporose"}}
+{"ts": "2026-09-15T22:03:45+00:00", "event": "opened", "check": "erros_orfaos", "fingerprint": "7c665373e6db", "alvo": "2026-09-13", "payload": {"erros_esperados": 25}}

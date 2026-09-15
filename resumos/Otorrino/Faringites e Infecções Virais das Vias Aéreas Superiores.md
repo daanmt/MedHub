@@ -52,3 +52,6 @@ aliases: [IVAS]
 - 🔴 O monoteste (anticorpos heterófilos) é rápido, mas pouco específico -- a sorologia IgM/IgG para EBV é o exame mais sensível e específico para mononucleose, não o monoteste.
 - 🔴 Amoxicilina na mononucleose desencadeia/exacerba exantema pruriginoso -- é a associação mais cobrada em prova sobre o tema; nunca prescrever beta-lactâmico empírico em quadro sugestivo de mononucleose.
 - 🔴 Cultura x teste rápido para GAS: a especificidade é SEMELHANTE entre os dois; a CULTURA é mais SENSÍVEL -- não confundir qual parâmetro diferencia os métodos.
+- 🔴 No estridor agudo da crianca, o eixo diagnostico e a velocidade de instalacao somada a curva febril: horas com febre alta e toxemia apontam epiglotite; dias com prodromo catarral e febre baixa apontam laringite viral; segundos, sem febre e com engasgo testemunhado, apontam corpo estranho.
+- 🔴 Sialorreia com postura em tripe e aspecto toxico exclui laringite viral: a crianca nao deglute a propria saliva por dor e por obstrucao supraglotica. Voz abafada, e nao rouquidao, e o padrao da epiglotite.
+- ⚠️ Diante de suspeita de epiglotite, e proscrito examinar ou manipular a orofaringe antes da via aerea definitiva, obtida em ambiente controlado, com cefalosporina de terceira geracao.

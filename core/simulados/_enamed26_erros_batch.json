@@ -1,0 +1,917 @@
+[
+ {
+  "_q": 6,
+  "_tipo_questao": "fluxograma",
+  "_padrao_execucao": null,
+  "area": "Pediatria",
+  "tema": "Anafilaxia e Urticária",
+  "titulo": "Anafilaxia que nao responde a adrenalina em paciente betabloqueado pede glucagon, que ativa a adenilato ciclase por fora do receptor beta",
+  "enunciado": "Homem de 68 anos, com quadro de perda de consciência após picada de abelha, é levado a uma Unidade de Pronto Atendimento ainda confuso e com falta de ar. Vem realizando acompanhamento por hipertensão arterial, insuficiência cardíaca de fração de ejeção reduzida e glaucoma. Faz uso de propranolol, enalapril e espironolactona. O exame físico revela: paciente sonolento e confuso (escala de coma de Glasgow 13); presença de estridor inspiratório; PA 76 x 42 mmHg; FC 54 bpm; FR 28 irpm; temperatura axilar 35,9 °C e glicemia capilar 102 mg/dL. Após administração de 0,5 mg de adrenalina intramuscular, o paciente mantém o quadro descrito. Qual é a próxima conduta medicamentosa para o caso?",
+  "correta": "A - Glucagon.",
+  "marcada": "C - Adrenalina.",
+  "erro": "Lacuna de conhecimento",
+  "elo": "Racional declarado: 'nao conhecia o algoritmo e que o glucagon deveria ser indicado em caso de betabloqueador'. O elo que quebrou nao e o diagnostico de anafilaxia nem a escolha da adrenalina: e o ramo de refratariedade do algoritmo, que ele nao tinha. Ele nao possuia a regra de que o betabloqueio cria resistencia farmacologica no receptor e que a saida e um farmaco que gere AMP ciclico por via independente do receptor beta. Ressalva honesta: a alternativa que ele marcou (repetir adrenalina) e defensavel pelo enunciado, mas ele nao a escolheu por ter lido 'so uma dose foi dada' -- escolheu por desconhecer que existia a etapa seguinte.",
+  "armadilha": "O examinador monta o cenario completo do betabloqueio (propranolol em uso, FC 54 bpm em plena PA 76x42) e conta com o candidato que trata anafilaxia por reflexo, repetindo adrenalina indefinidamente. Choque que nao taquicardiza e a assinatura do bloqueio beta. Na cabeca dele, porem, a alternativa 'Adrenalina' pareceu certa por ser o unico farmaco de anafilaxia que ele conhecia, e nao por uma leitura do intervalo entre doses.",
+  "complexidade": "Alta",
+  "habilidades": "Reconhecer anafilaxia por criterio clinico e tratar com adrenalina IM na coxa -> Repetir a adrenalina IM a cada 5-15 minutos enquanto nao houver resposta -> Ler bradicardia em plena hipotensao grave como assinatura de betabloqueio -> Indicar glucagon quando a refratariedade a adrenalina vier de bloqueio beta-adrenergico [QUEBROU]",
+  "faltou": "A regra do resgate no paciente betabloqueado: glucagon 1 a 5 mg IV em bolus lento, seguido de infusao de 5 a 15 mcg/min, porque ele ativa a adenilato ciclase por um receptor proprio, contornando o bloqueio competitivo do receptor beta.",
+  "explicacao": "Em anafilaxia, adrenalina IM e sempre o primeiro passo, e a falta de resposta manda repetir a dose a cada 5 a 15 minutos. Quando o paciente usa betabloqueador, a adrenalina esbarra em receptores beta ocupados e o quadro se torna farmacologicamente refratario: hipotensao que nao sobe e bradicardia paradoxal. O glucagon estimula a adenilato ciclase por via independente do receptor beta, elevando o AMP ciclico e restaurando inotropismo e cronotropismo (ASBAI, Guia pratico de anafilaxia, atualizacoes 2024; WAO 2020; EAACI 2021). REGISTRO DE DIVERGENCIA: o gabarito preliminar e A, mas o enunciado descreve apenas UMA dose de 0,5 mg e nao informa o intervalo decorrido; como todas as diretrizes colocam a repeticao da adrenalina como passo imediato e reservam o glucagon ao caso refratario (ao menos duas doses), a alternativa C e literalmente defensavel e a questao comporta anulacao.",
+  "status": "banca-divergente",
+  "cards": [],
+  "_draft_resumo": null,
+  "_resumo_path": null
+ },
+ {
+  "_q": 15,
+  "_tipo_questao": "raciocinio",
+  "_padrao_execucao": "ancoragem no fato saliente",
+  "area": "Cardiologia",
+  "tema": "Síndrome Coronariana Aguda",
+  "titulo": "Sincope com epigastralgia, nausea e sudorese em idosa diabetica e equivalente anginoso, e o AAS mastigado e a unica medida com beneficio de mortalidade que independe de ECG",
+  "enunciado": "Mulher de 66 anos, hipertensa, diabética e tabagista, é levada a uma Unidade Básica de Saúde (UBS) por quadro de síncope há 40 minutos, após discussão familiar. Apresenta-se ansiosa, com mal-estar intenso, tontura, náuseas e sudorese, e tem um episódio de vômito na UBS. Relata sensação de desconforto moderado em andar superior do abdome. Nega alergias, etilismo ou uso de drogas ilícitas. Ao exame físico, apresenta- se eupneica, com PA 86 x 53 mmHg, FC 49 bpm e SpO 95% em ar ambiente. O desconforto abdominal não é reproduzível à palpação. Não há outras alterações ao exame físico. A UBS não dispõe de eletrocardiograma ou monitor cardíaco. Além de se acionar o SAMU, a conduta de suporte nesse caso deve incluir",
+  "correta": "A - AAS via oral mastigado.",
+  "marcada": "D - diazepam via oral.",
+  "erro": "Lacuna de conhecimento",
+  "elo": "Racional declarado: 'nao reconheci a SCA, achei que a idosa estava bugada pelo estresse e achei que o diazepam ajudaria'. O elo quebrou no primeiro degrau, o do reconhecimento: ele nao tem o repertorio de apresentacao atipica do infarto no idoso e no diabetico, em que sincope, dor epigastrica nao reprodutivel a palpacao, nausea, vomito e sudorese substituem a dor toracica tipica. Sem esse degrau, os demais nao chegaram a ser exercidos -- ele nunca chegou a pensar em conduta de SCA.",
+  "armadilha": "O enunciado planta um gatilho emocional explicito ('apos discussao familiar') e uma unidade sem ECG, dois convites a fechar crise de ansiedade ou dispepsia. Na cabeca dele o gatilho emocional virou o diagnostico: o diazepam 'ajudaria' porque a paciente estava 'bugada pelo estresse'. A ausencia de ECG nao muda a probabilidade pre-teste, e sedar uma paciente com PA 86x53 e FC 49 bpm e potencialmente fatal.",
+  "complexidade": "Alta",
+  "habilidades": "Reconhecer apresentacao atipica de infarto no idoso e no diabetico como equivalente anginoso [QUEBROU] -> Ler o par hipotensao + bradicardia como padrao de infarto inferior e possivel acometimento de ventriculo direito -> Escolher a medida com beneficio de mortalidade disponivel no primeiro contato, independente de exame complementar -> Vetar nitrato diante de hipotensao, bradicardia ou suspeita de ventriculo direito",
+  "faltou": "O conceito de equivalente anginoso: em idoso, diabetico e mulher, a SCA pode se apresentar sem dor toracica, com sincope, epigastralgia, nausea, vomito e sudorese. E o corolario operacional: AAS 160 a 325 mg mastigado se faz na suspeita, antes e independentemente do ECG.",
+  "explicacao": "Sincope, mal-estar, nausea, vomito, sudorese e desconforto epigastrico nao reprodutivel a palpacao em mulher de 66 anos hipertensa, diabetica e tabagista configuram equivalente anginoso ate prova em contrario. O par PA 86x53 com FC 49 bpm aponta infarto de parede inferior com reflexo de Bezold-Jarisch e possivel acometimento de ventriculo direito -- o mesmo par que proibe nitrato, porque a queda de pre-carga precipita colapso. Na UBS sem ECG, a unica medida farmacologica com beneficio de mortalidade e o AAS 160 a 325 mg mastigado, enquanto se aciona o transporte (SBC, Diretriz de SCA com supra de ST e Diretriz de Dor Toracica na Emergencia; Linha de Cuidado do IAM, Ministerio da Saude).",
+  "cards": [
+   {
+    "tipo": "elo_quebrado",
+    "frente_contexto": "Mulher de 66 anos, hipertensa, diabetica e tabagista, com sincope ha 40 minutos, mal-estar, nausea, vomito, sudorese e desconforto epigastrico nao reprodutivel a palpacao. PA 86x53 mmHg, FC 49 bpm.",
+    "frente_pergunta": "Qual e a principal hipotese diagnostica?",
+    "verso_resposta": "Sindrome coronariana aguda com apresentacao atipica (equivalente anginoso), provavelmente de parede inferior.",
+    "verso_regra_mestre": "Idoso, diabetico e mulher sao os tres perfis em que a SCA dispensa a dor toracica e se apresenta por sincope, epigastralgia, nausea, vomito ou sudorese. Probabilidade pre-teste alta vence o carater atipico da queixa.",
+    "verso_armadilha": "Um gatilho emocional no enunciado ('apos discussao familiar') e a ausencia de ECG na unidade convidam a fechar crise de ansiedade ou dispepsia. Alternativa marcada na prova: 'diazepam via oral'."
+   },
+   {
+    "tipo": "conteudo",
+    "frente_contexto": "Suspeita de sindrome coronariana aguda em unidade basica que nao dispoe de eletrocardiograma.",
+    "frente_pergunta": "Qual medicacao deve ser administrada antes mesmo de qualquer exame, e em que dose?",
+    "verso_resposta": "AAS 160 a 325 mg, mastigado, por via oral.",
+    "verso_regra_mestre": "E a unica medida farmacologica de beneficio de mortalidade que se toma sobre a suspeita, sem depender de ECG ou troponina; mastigar acelera a absorcao bucal e o bloqueio plaquetario.",
+    "verso_armadilha": "Esperar o ECG para medicar. A falta do exame nao reduz a probabilidade pre-teste -- apenas obriga a transferir o paciente."
+   },
+   {
+    "tipo": "conteudo",
+    "frente_contexto": "Suspeita de infarto agudo do miocardio.",
+    "frente_pergunta": "Quais parametros hemodinamicos contraindicam formalmente o nitrato?",
+    "verso_resposta": "Pressao arterial sistolica abaixo de 90 a 100 mmHg, bradicardia, taquicardia importante e suspeita de infarto de ventriculo direito (alem do uso recente de inibidor de fosfodiesterase-5).",
+    "verso_regra_mestre": "O nitrato reduz pre-carga; no infarto de ventriculo direito o debito depende justamente da pre-carga, e a venodilatacao derruba o paciente.",
+    "verso_armadilha": "Em infarto inferior, a duplinha hipotensao + bradicardia e simultaneamente o dado que confirma a suspeita e o que proibe a isossorbida."
+   }
+  ],
+  "_draft_resumo": null,
+  "_resumo_path": null
+ },
+ {
+  "_q": 19,
+  "_tipo_questao": "raciocinio",
+  "_padrao_execucao": "discriminador que exclui (identificou e nao usou)",
+  "area": "Ginecologia",
+  "tema": "Gravidez ectópica",
+  "titulo": "Na ectopica integra e estavel, e a CINETICA do beta-hCG que separa conduta expectante de metotrexato: titulo em queda espontanea dispensa o farmaco",
+  "enunciado": "Mulher de 23 anos, G2P0A1, com última menstruação há 8 semanas, é atendida em uma emergência com dor pélvica leve e sangramento vaginal em pequena quantidade. PA 120 x 70 mmHg e FC 82 bpm. Ao exame físico, apresenta- se lúcida e orientada, sem dor à palpação de abdômen e pelve. Tem beta-HCG quantitativo de 1920 mUI/mL na primeira dosagem e 700 mUI/mL na segunda dosagem. Na ultrassonografia transvaginal: ausência de saco gestacional na cavidade uterina; presença de massa anexial esquerda de 2,0 cm com sinal de anel tubário e ausência de batimento cardíaco fetal ou de líquido livre na cavidade pélvica. Qual é a estratégia de manejo indicada nesse caso?",
+  "correta": "A - Orientar beta-HCG quantitativo seriado.",
+  "marcada": "C - Prescrever o uso de metotrexate.",
+  "erro": "Erro de aplicacao",
+  "elo": "Racional declarado: 'eu reconheci os 3 criterios do metotrexato, e estranhei o beta descer; ate supus que era uma conduta expectante, mas nao linkei a alternativa A a isso'. O elo nao foi conhecimento: ele viu o dado que exclui o metotrexato, formulou em voz alta a hipotese correta (conduta expectante) e nao reconheceu que 'orientar beta-hCG quantitativo seriado' E a conduta expectante. REINCIDENCIA do mesmo elo da s085 -- 'tratou antes de checar a comporta': aplicou a checklist de elegibilidade ao MTX e disparou o tratamento sem passar pelo dado que revogava a indicacao.",
+  "armadilha": "A banca monta uma paciente que preenche TODOS os criterios de elegibilidade ao metotrexato (estavel, integra, massa de 2,0 cm, sem BCF, sem liquido livre) e planta, no meio dos numeros, a unica coisa que o revoga: o beta-hCG caindo de 1.920 para 700. E oferece a conduta expectante disfarcada de exame ('orientar beta-hCG seriado'), de modo que quem pensa em conduta, e nao em seguimento, nao a reconhece.",
+  "complexidade": "Alta",
+  "habilidades": "Diagnosticar gravidez ectopica por beta-hCG positivo com cavidade uterina vazia e massa anexial com anel tubario -> Estratificar a ectopica nos tres trilhos (cirurgico, medicamentoso, expectante) pela estabilidade e pela integridade -> Usar a cinetica do beta-hCG como comporta entre conduta expectante e metotrexato [QUEBROU] -> Reconhecer que o seguimento com beta-hCG seriado e a materializacao da conduta expectante",
+  "faltou": "A regra que fecha o trilho expectante: paciente estavel, ectopica integra, sem BCF, sem liquido livre E beta-hCG em queda espontanea -> acompanhar com dosagem seriada ate a negativacao, resgatando para metotrexato apenas se os titulos estabilizarem ou voltarem a subir.",
+  "explicacao": "Beta-hCG positivo, cavidade uterina vazia e massa anexial com sinal do anel tubario fecham gravidez ectopica. A escolha entre os tres trilhos e sequencial: instabilidade, rotura ou hemoperitonio -> cirurgia; paciente integra e estavel -> a cinetica do beta-hCG decide. Titulo em queda espontanea significa aborto tubario em curso, ou seja, resolucao ja iniciada, e expor a paciente ao metotrexato nesse cenario e iatrogenia sem ganho. Titulos estaveis ou ascendentes, com massa abaixo de 3,5 cm e sem BCF, e que indicam MTX 50 mg/m2 IM (FEBRASGO, Protocolo de Prenhez Ectopica; ACOG Practice Bulletin sobre gravidez tubaria).",
+  "cards": [
+   {
+    "tipo": "elo_quebrado",
+    "frente_contexto": "Gravidez ectopica integra, paciente estavel, massa anexial de 2,0 cm sem BCF, sem liquido livre; beta-hCG de 1.920 mUI/mL na primeira dosagem e 700 mUI/mL na segunda.",
+    "frente_pergunta": "Qual e a estrategia de manejo indicada?",
+    "verso_resposta": "Conduta expectante, com beta-hCG quantitativo seriado ate a negativacao.",
+    "verso_regra_mestre": "Preencher os criterios de elegibilidade ao metotrexato nao e o mesmo que ter indicacao de metotrexato: o titulo em queda espontanea sinaliza aborto tubario em curso e revoga a indicacao do farmaco.",
+    "verso_armadilha": "A conduta expectante aparece nas alternativas com cara de exame ('orientar beta-hCG seriado'), e nao com cara de conduta -- quem procura um tratamento nao a reconhece. Alternativa marcada na prova: 'Prescrever o uso de metotrexate'."
+   }
+  ],
+  "_draft_resumo": "- 🔴 Preencher os criterios de elegibilidade ao metotrexato nao equivale a ter indicacao de metotrexato: em ectopica integra e paciente estavel, e a CINETICA do beta-hCG que decide -- titulo em queda espontanea indica aborto tubario em curso e conduta expectante com dosagem seriada ate a negativacao; titulo estavel ou ascendente e que indica o farmaco.\n- 🔴 A conduta expectante costuma ser oferecida em prova sob a forma de um exame ('beta-hCG quantitativo seriado') e nao sob a forma de um tratamento, o que faz o candidato que procura uma intervencao nao a reconhecer entre as alternativas.",
+  "_resumo_path": "resumos/GO/Gravidez ectópica.md",
+  "_triagem_principal": "cortados 1 card(s) dedutiveis do nucleo (teste de regenerabilidade)"
+ },
+ {
+  "_q": 27,
+  "_tipo_questao": "raciocinio",
+  "_padrao_execucao": "ancoragem no fato saliente",
+  "area": "Infecto",
+  "tema": "Tuberculose",
+  "titulo": "Em retratamento de tuberculose por abandono, o tratamento reinicia no servico onde o paciente esta hoje -- cada encaminhamento e uma chance de perde-lo de novo",
+  "enunciado": "Homem de 42 anos, em situação de rua, comparece a uma Unidade Básica de Saúde (UBS) em atendimento de demanda espontânea, apresentando adinamia, tosse persistente, febre vespertina e perda de peso. Relata diagnóstico de tuberculose pulmonar há 6 meses e início de tratamento em outra UBS, interrompido após cerca de 3 semanas por dificuldades relacionadas à instabilidade de moradia e ao acesso a serviços. No momento do atendimento, não apresenta documentação pessoal e refere receio em retomar o tratamento, relatando experiências anteriores de discriminação nos serviços de saúde. Como parte do plano terapêutico singular, onde deve ser reiniciado o tratamento para esse paciente?",
+  "correta": "A - Na UBS atual, na qual compareceu para atendimento.",
+  "marcada": "C - No Consultório na Rua responsável pela região.",
+  "erro": "Armadilha",
+  "elo": "Racional declarado: 'fiquei entre A e C; achava que pelo historico o paciente poderia ser atendido diretamente pelo consultorio de rua, que teria mais recursos para buscar e principalmente encontrar o paciente nas ruas'. O elo que quebrou foi o da natureza da equipe de Consultorio na Rua: ele a tratou como um servico-destino, para onde se encaminha e se encerra o vinculo, quando ela e equipe de APOIO que atua em conjunto com a UBS e com a rede. O raciocinio dele sobre busca ativa esta correto -- e exatamente o que a eCR faz -- mas isso e motivo para compartilhar o cuidado, nao para adiar o inicio do tratamento.",
+  "armadilha": "O examinador construiu a alternativa sobre um atalho quase automatico: 'situacao de rua -> Consultorio na Rua'. Ele funciona porque parece mais tecnico e mais compassivo que atender na UBS comum. Na cabeca dele, a eCR tinha 'mais recursos', o que transformou o encaminhamento em um upgrade de cuidado -- quando, na pratica, reproduz a mesma barreira de acesso que causou o abandono.",
+  "complexidade": "Media",
+  "habilidades": "Classificar o caso de tuberculose como retratamento por abandono pelo tempo de interrupcao -> Aplicar o principio de acesso universal do SUS, que veda condicionar atendimento a documento ou adscricao territorial -> Reconhecer equipe de apoio matricial (Consultorio na Rua) como cuidado compartilhado, nao como servico-destino de encaminhamento [QUEBROU] -> Aproveitar o contato oportuno em populacao vulneravel em vez de encaminhar",
+  "faltou": "A regra operacional da tuberculose em populacao vulneravel: o tratamento se reinicia no ponto de contato, hoje, e a equipe de Consultorio na Rua entra como apoio matricial ao lado da UBS -- nem todo territorio dispoe de eCR, e o encaminhamento e o principal preditor de novo abandono.",
+  "explicacao": "Interrupcao por 30 dias consecutivos ou mais define abandono; o retratamento se reinicia apos reavaliacao com TRM-TB ou baciloscopia e cultura com teste de sensibilidade. O enunciado nomeia as barreiras (instabilidade de moradia, ausencia de documento, discriminacao previa) e qualquer alternativa que desloque o paciente para outro ponto da rede reproduz exatamente a barreira que produziu o abandono. Falta de documento nao e obstaculo legal, e nao existe exigencia de retorno ao servico de origem; internacao se reserva a indicacao clinica, nunca a vulnerabilidade social (MS, Manual de Recomendacoes para o Controle da Tuberculose no Brasil, 2a ed., 2019; PNAB, Portaria GM/MS 2.436/2017; Decreto 7.053/2009).",
+  "cards": [
+   {
+    "tipo": "elo_quebrado",
+    "frente_contexto": "Homem em situacao de rua, sem documentos, que abandonou o tratamento de tuberculose ha meses em outra unidade, comparece hoje por demanda espontanea a uma UBS.",
+    "frente_pergunta": "Onde deve ser reiniciado o tratamento?",
+    "verso_resposta": "Na propria UBS em que ele esta sendo atendido, no mesmo contato.",
+    "verso_regra_mestre": "Em populacao vulneravel, o contato oportuno vale mais que a organizacao do fluxo: cada encaminhamento e uma chance de perder o paciente. A equipe de Consultorio na Rua entra como apoio matricial, compartilhando o cuidado, e nao como servico para onde se transfere o caso.",
+    "verso_armadilha": "O atalho 'situacao de rua igual a Consultorio na Rua' parece mais tecnico e mais compassivo, mas devolve o paciente a mesma barreira de acesso que causou o abandono -- e nem todo territorio dispoe de eCR. Alternativa marcada na prova: 'No Consultório na Rua responsável pela região'."
+   },
+   {
+    "tipo": "conteudo",
+    "frente_contexto": "Paciente que interrompeu o tratamento da tuberculose por conta propria.",
+    "frente_pergunta": "Quantos dias de interrupcao definem abandono?",
+    "verso_resposta": "Trinta dias consecutivos ou mais.",
+    "verso_regra_mestre": "O abandono e um criterio de tempo, nao de impressao clinica, e e ele que reclassifica o caso como retratamento, mudando a conduta de entrada.",
+    "verso_armadilha": "Tratar qualquer interrupcao como abandono, ou reiniciar o esquema padrao sem reavaliar o caso."
+   }
+  ],
+  "_draft_resumo": "- 🔴 Interrupcao do tratamento por 30 dias consecutivos ou mais define abandono e reclassifica o caso como retratamento: o reinicio exige nova avaliacao diagnostica com TRM-TB ou baciloscopia, somada a cultura com teste de sensibilidade, pelo risco de resistencia selecionada.\n- 🔴 Em pessoa em situacao de rua, o tratamento se reinicia no servico onde ela esta no momento do contato: ausencia de documento ou de adscricao territorial nao condiciona o atendimento, e nao existe exigencia de retorno a unidade que iniciou o esquema.\n- ⚠️ A equipe de Consultorio na Rua e ponto de APOIO que compartilha o cuidado com a UBS, nao servico-destino de encaminhamento; transferir o caso para ela reproduz a barreira de acesso que costuma ter causado o abandono.",
+  "_resumo_path": "resumos/Clínica Médica/Infectologia/Tuberculose.md",
+  "_triagem_principal": "cortados 1 card(s) dedutiveis do nucleo (teste de regenerabilidade)"
+ },
+ {
+  "_q": 30,
+  "_tipo_questao": "raciocinio",
+  "_padrao_execucao": "aborda pela etiqueta, ignora instabilidade",
+  "area": "Pneumo",
+  "tema": "Pneumonias Bacterianas",
+  "titulo": "Confusao mental em idoso com pneumonia ja e criterio de gravidade pelo CRB-65: a decisao na UBS e onde tratar, nao qual exame pedir",
+  "enunciado": "Homem de 75 anos, residente em instituição de longa permanência, com histórico de declínio cognitivo leve, é levado a uma Unidade Básica de Saúde devido a quadro de confusão mental progressiva iniciado há 7 dias, associado a astenia, tosse e agitação psicomotora. No segundo dia de sintomas, foi iniciada ciprofloxacina empiricamente, sem melhora. O paciente apresenta hipertensão arterial e dislipidemia bem controladas. O exame físico revela: paciente confuso no tempo e no espaço; temperatura axilar 36,1 °C; PA 110 x 60 mmHg; FC 98 bpm; FR 21 irpm; SatO 94% em ar ambiente. Ausculta respiratória com estertores finos em bases bilateralmente. Qual é a conduta inicial para esse paciente?",
+  "correta": "B - Encaminhar para Unidade de Pronto Atendimento.",
+  "marcada": "C - Solicitar tomografia de tórax.",
+  "erro": "Erro de aplicacao",
+  "elo": "Racional declarado: ele nao quis 'terceirizar a responsabilidade pelo paciente', cogitou neoplasia ou quadro fungico e pediu a TC para 'entender melhor o diagnostico', mas 'nao me atentei que na UBS essa seria uma decisao ruim e que, pelo risco do paciente evoluir mal, regular via SAMU, ou enviar a UPA... fosse mais eficiente'. O elo que quebrou foi o da estratificacao de gravidade antes da investigacao etiologica: ele pulou o passo 'onde tratar' e foi direto para 'o que ele tem'. O raciocinio diferencial dele (afastar neoplasia, afastar fungo) nao e errado em si -- e errado como PROXIMO passo num paciente que ja preenche criterio de internacao.",
+  "armadilha": "O enunciado oferece dois desvios simetricos: a furosemida, que capitaliza o 'estertores finos bilaterais igual a insuficiencia cardiaca', e a tomografia, que capitaliza o desejo de fechar diagnostico. Ele rejeitou corretamente a furosemida e caiu na TC. Na cabeca dele, pedir a imagem era assumir o paciente em vez de repassa-lo; a temperatura de 36,1 graus ajudou a fazer o quadro parecer arrastado e nao grave.",
+  "complexidade": "Alta",
+  "habilidades": "Reconhecer que infeccao no idoso se apresenta de forma atipica, com delirium e queda funcional e sem febre -> Estratificar a gravidade da pneumonia pelo CRB-65 antes de decidir conduta [QUEBROU] -> Somar modificadores nao contemplados no escore (falha de antibiotico previo, institucionalizacao, declinio cognitivo) -> Definir o local de tratamento antes de aprofundar a investigacao etiologica",
+  "faltou": "O CRB-65 como escore de atencao primaria e o que ele pontua aqui: confusao (1) mais idade igual ou acima de 65 anos (1) igual a 2 pontos, faixa em que se considera hospitalizacao -- decisao que precede qualquer exame de imagem e que independe de o diagnostico etiologico estar fechado.",
+  "explicacao": "No idoso, delirium e astenia podem ser a unica manifestacao de infeccao, e temperatura normal nao afasta pneumonia nem indica benignidade. Tosse com estertores finos bilaterais e hipoxemia relativa apontam pneumonia; insuficiencia cardiaca so entra com evidencia positiva, que o enunciado nao oferece (PA 110x60, sem turgencia jugular, edema, B3 ou ortopneia). O CRB-65 foi desenhado justamente para a atencao basica por dispensar laboratorio: 0 ponto ambulatorial, 1 a 2 pontos considerar hospitalizacao, 3 ou mais avaliar UTI. Somando a falha de sete dias de ciprofloxacina e a institucionalizacao, a conduta inicial e elevar o nivel de atencao (SBPT, Diretrizes brasileiras para PAC em adultos imunocompetentes; ATS/IDSA CAP Guideline 2019).",
+  "cards": [
+   {
+    "tipo": "elo_quebrado",
+    "frente_contexto": "Homem de 75 anos, institucionalizado, com confusao mental progressiva ha 7 dias, tosse, estertores finos bilaterais, afebril, sem melhora apos ciprofloxacina iniciada no segundo dia de sintomas. Atendimento em UBS.",
+    "frente_pergunta": "Qual e a conduta inicial?",
+    "verso_resposta": "Encaminhar para unidade de pronto atendimento, elevando o nivel de atencao.",
+    "verso_regra_mestre": "Na atencao primaria a primeira decisao e ONDE tratar, nao QUAL exame pedir: com criterio de gravidade presente, qualquer conduta que mantenha o paciente em manejo domiciliar -- trocar antibiotico ou solicitar imagem eletiva -- adia o cuidado.",
+    "verso_armadilha": "Afebril no idoso soa tranquilizador e faz o quadro parecer arrastado; a ausencia de febre nao afasta pneumonia nem reduz a gravidade. Alternativa marcada na prova: 'Solicitar tomografia de tórax'."
+   },
+   {
+    "tipo": "conteudo",
+    "frente_contexto": "Pneumonia adquirida na comunidade avaliada em unidade basica, sem exame laboratorial disponivel.",
+    "frente_pergunta": "A partir de quantos pontos no CRB-65 se considera hospitalizacao?",
+    "verso_resposta": "A partir de 1 ponto ja se considera hospitalizacao (1 a 2 pontos); com 3 ou mais, avaliar UTI.",
+    "verso_regra_mestre": "O CRB-65 foi desenhado para a atencao basica porque dispensa exame: confusao, frequencia respiratoria igual ou acima de 30, pressao baixa e idade igual ou acima de 65 anos.",
+    "verso_armadilha": "Confusao mental no idoso conta duas vezes -- pontua no escore e sinaliza gravidade -- e ainda assim costuma ser lida como 'declinio cognitivo de base'."
+   }
+  ],
+  "_draft_resumo": "- 🔴 No idoso, delirium, astenia e queda funcional podem ser a unica manifestacao de pneumonia, e a ausencia de febre nao afasta o diagnostico nem indica benignidade.\n- 🔴 Na atencao primaria a primeira decisao e o local de tratamento, nao a investigacao etiologica: com CRB-65 de 1 a 2 pontos considera-se hospitalizacao, e falha de antibiotico ambulatorial previo, institucionalizacao e declinio cognitivo reforcam a referencia mesmo sem diagnostico fechado.\n- ⚠️ Estertores finos bilaterais em idoso nao autorizam presumir congestao: sem turgencia jugular, edema, B3 ou ortopneia, prescrever diuretico piora a perfusao de um paciente infectado e frequentemente desidratado.",
+  "_resumo_path": "resumos/Clínica Médica/Infectologia/Pneumonias Bacterianas.md",
+  "_triagem_principal": "cortados 1 card(s) dedutiveis do nucleo (teste de regenerabilidade)"
+ },
+ {
+  "_q": 31,
+  "_tipo_questao": "raciocinio",
+  "_padrao_execucao": "ancoragem no fato saliente",
+  "area": "Otorrino",
+  "tema": "Faringites e Infeccoes Virais das Vias Aereas Superiores",
+  "titulo": "No estridor agudo, a curva febril e a toxemia sao o eixo diagnostico: febre de 40 graus com sialorreia e aspecto toxico excluem corpo estranho e definem epiglotite",
+  "enunciado": "Criança de 4 anos, previamente saudável, é levada a uma Unidade de Pronto Atendimento após início súbito de dificuldade respiratória, estridor inspiratório intenso, sialorreia, postura sentada em tripé, aspecto tóxico e rebaixamento de nível de consciência. A mãe relata que a criança estava bem até poucas horas antes do episódio. Ao exame: FC 160 bpm; FR 50 irpm; SatO 86% em ar ambiente; temperatura axilar 40 °C. A criança apresenta piora da dispneia à manipulação. Qual é a principal hipótese diagnóstica nesse caso?",
+  "correta": "C - Epiglotite aguda.",
+  "marcada": "B - Obstrução por corpo estranho.",
+  "erro": "Lacuna de conhecimento",
+  "elo": "Racional declarado: 'eu associei a toxemia ao corpo estranho, erro core... descartei apenas PAC e a primeira coisa que veio a cabeca foi a laringite pelo estridor, mas senti falta da disfonia; em suma chutei B, pelo onset abrupto, mas toxemia levaria tempo'. O elo que quebrou foi o repertorio sindromico das causas de estridor: ele localizou corretamente a obstrucao pelo som e ate percebeu que faltava disfonia para laringite, mas nao tinha a sindrome da epiglotite (sialorreia, disfagia, voz abafada, postura em tripe, toxemia) para colocar no lugar. Sem o quadro completo na memoria, sobrou decidir pela velocidade de instalacao.",
+  "armadilha": "O examinador escreve 'inicio subito' e 'estava bem ate poucas horas antes' para puxar o candidato para aspiracao de corpo estranho, e coloca febre de 40 graus e aspecto toxico como o dado que a exclui -- aspiracao nao produz febre alta nem toxemia. Na cabeca dele a toxemia foi lida como consequencia da obstrucao, e nao como marca de infeccao bacteriana, o que anulou justamente o discriminador.",
+  "complexidade": "Media",
+  "habilidades": "Localizar a obstrucao pelo som (estridor inspiratorio indica via aerea extratoracica) -> Usar a velocidade de instalacao e a curva febril como eixo diagnostico no estridor agudo [QUEBROU] -> Reconhecer a sindrome da epiglotite pelos achados de sialorreia, disfagia, postura em tripe e voz abafada -> Indicar a conduta de nao manipular a orofaringe e garantir via aerea definitiva em ambiente controlado",
+  "faltou": "O eixo tempo mais febre no estridor da crianca: horas com febre alta e toxemia apontam infeccao bacteriana supraglotica (epiglotite); dias com prodromo catarral e febre baixa apontam crupe viral; segundos, sem febre, apontam corpo estranho. E a sialorreia como achado que sozinho ja exclui laringite viral.",
+  "explicacao": "Estridor inspiratorio localiza a obstrucao acima ou na glote. A sialorreia (a crianca nao engole a propria saliva porque doi e porque a supraglote esta obstruida), somada a febre de 40 graus, ao aspecto toxico e a postura em tripe, e a sindrome classica da epiglotite aguda, classicamente por Haemophilus influenzae tipo b. Laringite viral cursa com tosse ladrante, rouquidao, prodromo catarral e instalacao em dias, sem sialorreia nem toxemia; corpo estranho tem inicio abrupto, em geral com engasgo testemunhado, e nao produz febre alta. A conduta e nao examinar a orofaringe, transportar em posicao de conforto e garantir via aerea definitiva em centro cirurgico, com cefalosporina de terceira geracao (Nelson Textbook of Pediatrics; Tratado de Pediatria da SBP).",
+  "cards": [
+   {
+    "tipo": "elo_quebrado",
+    "frente_contexto": "Crianca de 4 anos, previamente hígida, com estridor inspiratorio intenso iniciado ha poucas horas, sialorreia, postura sentada em tripe, aspecto toxico e temperatura axilar de 40 graus.",
+    "frente_pergunta": "Qual e a principal hipotese diagnostica?",
+    "verso_resposta": "Epiglotite aguda.",
+    "verso_regra_mestre": "No estridor da crianca, o par tempo mais febre decide: horas com febre alta e toxemia indicam infeccao bacteriana supraglotica; dias com prodromo catarral e febre baixa indicam crupe viral; segundos sem febre indicam corpo estranho.",
+    "verso_armadilha": "'Inicio subito' puxa para aspiracao de corpo estranho, mas aspiracao nao cursa com febre de 40 graus nem com aspecto toxico. Alternativa marcada na prova: 'Obstrução por corpo estranho'."
+   },
+   {
+    "tipo": "conteudo",
+    "frente_contexto": "Crianca com suspeita de epiglotite aguda.",
+    "frente_pergunta": "Quais sao os quatro achados classicos da sindrome?",
+    "verso_resposta": "Disfagia, sialorreia, dispneia e voz abafada (os quatro D), tipicamente com postura em tripe e recusa do decubito.",
+    "verso_regra_mestre": "A sialorreia e o achado de maior peso isolado: a crianca nao engole a propria saliva porque doi e porque a supraglote esta obstruida -- e ela nao existe no crupe viral.",
+    "verso_armadilha": "Procurar rouquidao e tosse ladrante, que pertencem a laringite viral; na epiglotite a voz e abafada, nao rouca."
+   }
+  ],
+  "_draft_resumo": "- 🔴 No estridor agudo da crianca, o eixo diagnostico e a velocidade de instalacao somada a curva febril: horas com febre alta e toxemia apontam epiglotite; dias com prodromo catarral e febre baixa apontam laringite viral; segundos, sem febre e com engasgo testemunhado, apontam corpo estranho.\n- 🔴 Sialorreia com postura em tripe e aspecto toxico exclui laringite viral: a crianca nao deglute a propria saliva por dor e por obstrucao supraglotica. Voz abafada, e nao rouquidao, e o padrao da epiglotite.\n- ⚠️ Diante de suspeita de epiglotite, e proscrito examinar ou manipular a orofaringe antes da via aerea definitiva, obtida em ambiente controlado, com cefalosporina de terceira geracao.",
+  "_resumo_path": "resumos/Otorrino/Faringites e Infecções Virais das Vias Aéreas Superiores.md",
+  "_triagem_principal": "cortados 1 card(s) dedutiveis do nucleo (teste de regenerabilidade)"
+ },
+ {
+  "_q": 37,
+  "_tipo_questao": "fluxograma",
+  "_padrao_execucao": "discriminador que exclui (identificou e nao usou)",
+  "area": "Cardiologia",
+  "tema": "Arritmias",
+  "titulo": "Fibrilacao atrial com 48 horas ou mais em paciente estavel proibe cardioversao imediata: o no de decisao esta na anamnese, nao no tracado",
+  "enunciado": "Mulher de 67 anos procura unidade de emergência com queixa de fadiga, fraqueza e palpitação, com início há 3 dias. Encontra-se hemodinamicamente estável. Seu eletrocardiograma é apresentado na imagem a seguir. Qual é a conduta imediata para esse caso?",
+  "correta": "C - Indicar anticoagulação.",
+  "marcada": "A - Realizar cardioversão elétrica.",
+  "erro": "Erro de aplicacao",
+  "elo": "Racional declarado: 'ate circulei os 3 dias, mas nao o utilizei como cutoff/comporta. inclusive sublinhei o hemodinamicamente estavel, mas tambem nao o utilizei... consigo identificar em algumas questoes bem os discriminadores da questao, mas nao os utilizo'. O no que falhou nao e o do ritmo -- ele identificou a FA corretamente -- e sim o no temporal: ele sabia que tempo e estabilidade importavam, mas nao tinha a REGRA que os dois dados executam (48 horas sem anticoagulacao proibe cardioverter; estabilidade retira a excecao). Marcar fisicamente o dado na prova nao e o mesmo que ter a regra que o consome.",
+  "armadilha": "A questao esconde a comporta fora do ECG: quem le so a imagem ve fibrilacao atrial com resposta ventricular elevada e responde cardioversao por reflexo. As duas alternativas de reversao (choque e amiodarona em bolus) sofrem o mesmo veto temporal, e o candidato que hesita entre elas ja perdeu o item. Na cabeca dele, sabia que as duas se relacionavam a FA, mas nao lembrava COMO -- entao decidiu pela mais agressiva.",
+  "complexidade": "Media",
+  "habilidades": "Definir o ritmo pelos tres sinais da fibrilacao atrial (RR irregularmente irregular, ausencia de onda P, ondulacao fibrilatoria em V1) -> Checar estabilidade hemodinamica como unico gatilho de cardioversao imediata -> Datar o inicio dos sintomas e aplicar o veto temporal de 48 horas antes de qualquer reversao [QUEBROU] -> Indicar anticoagulacao com base no risco embolico, decisao independente da estrategia de ritmo ou frequencia",
+  "faltou": "O no temporal do algoritmo: FA com 48 horas ou mais (24 horas pela diretriz europeia de 2024) exige 3 semanas de anticoagulacao previa ou ecocardiograma transesofagico afastando trombo atrial antes de cardioverter, seja por choque, seja por farmaco.",
+  "explicacao": "Na fibrilacao atrial, a sequencia de decisao e fixa: primeiro estabilidade, depois tempo. Instabilidade (hipotensao, isquemia, insuficiencia cardiaca aguda, rebaixamento) e o unico gatilho que autoriza cardioversao eletrica imediata, independentemente da duracao. Paciente estavel com arritmia de 48 horas ou mais tem trombo atrial potencialmente formado: cardioverter sem anticoagulacao dispara embolizacao. Exige-se anticoagulacao por pelo menos 3 semanas antes e 4 semanas apos, ou ETE previo. A anticoagulacao em si segue o risco embolico e e decisao independente do controle de ritmo ou de frequencia (ESC 2024; AHA/ACC/ACCP/HRS 2023; SBC, Diretriz Brasileira de Fibrilacao Atrial apresentada em 2025).",
+  "cards": [
+   {
+    "tipo": "elo_quebrado",
+    "frente_contexto": "Mulher de 67 anos, hemodinamicamente estavel, com palpitacao iniciada ha 3 dias e eletrocardiograma mostrando fibrilacao atrial com resposta ventricular elevada.",
+    "frente_pergunta": "Qual e a conduta imediata?",
+    "verso_resposta": "Indicar anticoagulacao; nao cardioverter agora.",
+    "verso_regra_mestre": "A ordem de decisao na FA e estabilidade primeiro, tempo depois: com paciente estavel e arritmia de 48 horas ou mais, o veto temporal vale para toda reversao, eletrica ou quimica.",
+    "verso_armadilha": "O dado que decide esta na anamnese, nao no tracado -- quem le so a imagem responde cardioversao. Alternativa marcada na prova: 'Realizar cardioversão elétrica'."
+   },
+   {
+    "tipo": "conteudo",
+    "frente_contexto": "Fibrilacao atrial com duracao igual ou superior a 48 horas, sem ecocardiograma transesofagico disponivel.",
+    "frente_pergunta": "Por quantas semanas se anticoagula antes e depois da cardioversao?",
+    "verso_resposta": "Pelo menos 3 semanas antes e 4 semanas depois.",
+    "verso_regra_mestre": "As 3 semanas previas servem para organizar ou dissolver trombo ja formado; as 4 semanas seguintes cobrem o atordoamento atrial pos-cardioversao, em que o atrio ainda nao contrai e pode formar trombo novo.",
+    "verso_armadilha": "Suspender a anticoagulacao logo apos o retorno ao ritmo sinusal, como se o risco terminasse com o choque."
+   }
+  ],
+  "_draft_resumo": null,
+  "_resumo_path": null,
+  "_triagem_principal": "cortados 1 card(s) dedutiveis do nucleo (teste de regenerabilidade)"
+ },
+ {
+  "_q": 40,
+  "_tipo_questao": "direta",
+  "_padrao_execucao": null,
+  "area": "Obstetrícia",
+  "tema": "Diabetes Mellitus na Gestação",
+  "titulo": "O seguimento do diabetes gestacional se faz por automonitorizacao da glicemia capilar; a hemoglobina glicada nao diagnostica nem monitora DMG",
+  "enunciado": "Mulher de 21 anos, G1P0, com 27 semanas e 1 dia de gestação, procura Unidade Básica de Saúde para mostrar o resultado do exame de curva glicêmica (teste oral de tolerância à glicose 75 g), conforme descrito na seguinte tabela. Exame Resultado Valor de referência Glicemia de jejum 89 mg/dL < 92 mg/dL 1 hora após ingestão 182 mg/dL < 180 mg/dL 2 horas após ingestão 152 mg/dL < 153 mg/dL Além de orientação de dieta pobre em carboidrato e atividade física regular, qual a medida imediata deve ser adotada no seguimento do tratamento dessa paciente?",
+  "correta": "D - Monitorar a glicemia capilar.",
+  "marcada": "C - Solicitar dosagem de HbA1c.",
+  "erro": "Lacuna de conhecimento",
+  "elo": "Racional declarado: 'eu reconheci a alteracao no totg, e inclusive identifiquei que o discriminador era o seguimento, mas achei que o fariamos com a HbA1c e nao com a glicemia capilar; erro tolo'. Toda a cadeia funcionou -- ele leu o valor de 182 mg/dL contra o corte de 180, fechou o diagnostico com um unico valor alterado e entendeu que a questao pedia o instrumento de seguimento. O elo que quebrou foi um fato isolado: qual exame monitora o DMG. Nao e falha de raciocinio, e ausencia do dado.",
+  "armadilha": "O examinador constroi o valor de 182 mg/dL apenas 2 mg/dL acima do corte, para que o candidato apressado leia 'tudo dentro da faixa' e escolha repetir a curva. Ele nao caiu nessa. A armadilha que o pegou foi a segunda: HbA1c e o exame de seguimento mais familiar do diabetes fora da gestacao, e transportar esse habito para a gestante e o erro esperado.",
+  "complexidade": "Baixa",
+  "habilidades": "Conferir cada linha do TOTG de 75 g contra o corte correspondente e fechar DMG com um unico valor alterado -> Iniciar o tratamento por terapia nutricional e atividade fisica -> Escolher a automonitorizacao da glicemia capilar como instrumento de seguimento do DMG [QUEBROU] -> Indicar insulina quando as metas nao forem atingidas em uma a duas semanas",
+  "faltou": "A hemoglobina glicada nao diagnostica nem monitora diabetes gestacional: reflete dois a tres meses, sofre com a hemodiluicao e com o turnover eritrocitario aumentado da gestacao e responde lentamente demais para guiar ajuste terapeutico semanal. Quem monitora e a glicemia capilar de jejum e pos-prandial.",
+  "explicacao": "Os cortes do TOTG de 75 g na gestacao sao jejum igual ou acima de 92, uma hora igual ou acima de 180 e duas horas igual ou acima de 153 mg/dL, e UM valor alterado ja fecha o diagnostico -- a exigencia de dois pontos e heranca do antigo criterio de Carpenter-Coustan, com sobrecarga de 100 g. Feito o diagnostico, o tratamento comeca por terapia nutricional e atividade fisica, e o instrumento que informa se isso bastou e a automonitorizacao da glicemia capilar, com metas de jejum abaixo de 95, uma hora pos-prandial abaixo de 140 e duas horas abaixo de 120 mg/dL; a insulina nasce dessa monitorizacao (MS/OPAS/FEBRASGO/SBD, Rastreamento e diagnostico de DMG no Brasil; Diretriz da SBD, edicoes 2023-2025).",
+  "cards": [
+   {
+    "tipo": "elo_quebrado",
+    "frente_contexto": "Gestante de 27 semanas com diagnostico de diabetes mellitus gestacional, ja orientada quanto a dieta e atividade fisica.",
+    "frente_pergunta": "Qual exame informa se a terapia nutricional foi suficiente?",
+    "verso_resposta": "A automonitorizacao da glicemia capilar, em jejum e no periodo pos-prandial.",
+    "verso_regra_mestre": "A hemoglobina glicada nao serve no DMG: reflete dois a tres meses, sofre com a hemodiluicao e o turnover eritrocitario da gestacao e responde lenta demais para um ajuste que precisa acontecer em uma a duas semanas.",
+    "verso_armadilha": "Transportar para a gestante o habito de seguimento do diabetes fora da gestacao, em que a HbA1c e o exame de rotina. Alternativa marcada na prova: 'Solicitar dosagem de HbA1c'."
+   },
+   {
+    "tipo": "conteudo",
+    "frente_contexto": "Gestante com diabetes mellitus gestacional em automonitorizacao da glicemia capilar.",
+    "frente_pergunta": "Quais sao as metas de glicemia capilar?",
+    "verso_resposta": "Jejum abaixo de 95 mg/dL, uma hora pos-prandial abaixo de 140 mg/dL e duas horas pos-prandial abaixo de 120 mg/dL.",
+    "verso_regra_mestre": "Sao essas metas, e nao um exame de media, que disparam a insulinizacao quando nao alcancadas em uma a duas semanas de tratamento nao farmacologico.",
+    "verso_armadilha": "Confundir as metas do seguimento com os cortes diagnosticos do TOTG (92 / 180 / 153 mg/dL), que servem a outra pergunta."
+   }
+  ],
+  "_draft_resumo": "- 🔴 Um unico valor alterado no TOTG de 75 g (jejum 92, 1 hora 180, 2 horas 153 mg/dL) ja fecha o diagnostico de diabetes gestacional; a exigencia de dois pontos alterados e heranca do criterio antigo de Carpenter-Coustan com sobrecarga de 100 g e nao se aplica.\n- 🔴 A hemoglobina glicada nao diagnostica nem monitora o diabetes gestacional: reflete dois a tres meses, sofre interferencia da hemodiluicao e do turnover eritrocitario aumentado da gestacao e nao guia ajuste terapeutico semanal. O seguimento se faz por automonitorizacao da glicemia capilar, com metas de jejum abaixo de 95, 1 hora abaixo de 140 e 2 horas abaixo de 120 mg/dL.",
+  "_resumo_path": "resumos/GO/Diabetes Mellitus na Gestação.md"
+ },
+ {
+  "_q": 41,
+  "_tipo_questao": "direta",
+  "_padrao_execucao": null,
+  "area": "Pediatria",
+  "tema": "Dislipidemia na Infância",
+  "titulo": "Crianca com fator de risco cai na janela de rastreamento SELETIVO (2-8 e 12-16 anos), e o exame de rastreio e o perfil lipidico completo, nunca um marcador isolado",
+  "enunciado": "Mãe leva filha de 6 anos para consulta de puericultura em Unidade Básica de Saúde. A criança tem histórico familiar de hipercolesterolemia (pai e mãe), mas não apresenta comorbidades nem faz uso de medicações. Durante o exame físico, identifica-se IMC na faixa de sobrepeso. Considerando-se as diretrizes brasileiras de dislipidemia e prevenção de aterosclerose, além das orientações sobre mudança de estilo de vida, qual é a conduta indicada nesse caso?",
+  "correta": "B - Solicitar dosagem de triglicerídeos, colesterol total, HDL-c e LDL-c e, se normais, repetir entre 12 e 16 anos de idade.",
+  "marcada": "D - Solicitar dosagem de LDL-c e, se alterado, ampliar para perfil lipídico completo e prescrever estatina.",
+  "erro": "Lacuna de conhecimento",
+  "elo": "Racional declarado: 'identifiquei a idade, a historia familiar, a ausencia de comorbidades e a faixa de sobrepeso do imc, mas nao conhecia o protocolo, excluindo apenas a alternativa A, mas chutando D por parecer mais economica'. Ele extraiu corretamente todos os gatilhos do enunciado e parou na porta do protocolo: faltava o calendario (universal x seletivo) e faltava saber que o exame de rastreio e o perfil lipidico completo. Sem o protocolo, a decisao virou criterio de custo -- que nao e criterio clinico de rastreamento.",
+  "armadilha": "A alternativa marcada e desenhada para parecer racional e economica (um exame barato primeiro, ampliar se alterado) e ainda embute a palavra 'estatina', que soa plausivel por associacao com hipercolesterolemia familiar. Prescrever estatina aos 6 anos, na primeira consulta, e o erro que a alternativa esconde atras da economia.",
+  "complexidade": "Baixa",
+  "habilidades": "Separar rastreamento lipidico universal de rastreamento seletivo pela presenca de fator de risco [QUEBROU] -> Reconhecer historia familiar de hipercolesterolemia e sobrepeso como gatilhos do rastreamento seletivo -> Escolher o perfil lipidico completo como exame de rastreio, e nao um marcador isolado -> Reservar estatina em pediatria para excecao, apos teste terapeutico com mudanca de estilo de vida",
+  "faltou": "O calendario do rastreamento lipidico na infancia: UNIVERSAL aos 9-11 anos e de novo aos 17-21; SELETIVO aos 2-8 e aos 12-16 anos, apenas para quem tem fator de risco. Crianca de 6 anos com historia familiar e sobrepeso ja esta elegivel hoje, e a proxima janela, se normal, e 12-16 anos.",
+  "explicacao": "Historia familiar de hipercolesterolemia e sobrepeso sao gatilhos do rastreamento seletivo, que se aplica dos 2 aos 8 anos e dos 12 aos 16 -- por isso 'rastrear a partir dos 9 anos' e a alternativa que a idade da crianca derruba. O exame de rastreio e o perfil lipidico completo (colesterol total, HDL-c, LDL-c e triglicerideos), nao um marcador isolado; a lipoproteina (a) e complementar, reservada a historia de doenca cardiovascular prematura. Estatina em pediatria e excecao: idade igual ou acima de 10 anos, com LDL persistentemente muito alto apos 6 a 12 meses de mudanca de estilo de vida (Diretriz Brasileira de Dislipidemias e Prevencao da Aterosclerose, SBC; Atualizacao da Diretriz Brasileira de Hipercolesterolemia Familiar, SBC 2021; esquema NHLBI 2011 endossado por AAP e SBC).",
+  "cards": [
+   {
+    "tipo": "elo_quebrado",
+    "frente_contexto": "Menina de 6 anos em puericultura, com pai e mae com hipercolesterolemia e IMC na faixa de sobrepeso, sem comorbidades.",
+    "frente_pergunta": "Qual exame de rastreamento deve ser solicitado?",
+    "verso_resposta": "O perfil lipidico completo: colesterol total, HDL-c, LDL-c e triglicerideos.",
+    "verso_regra_mestre": "O rastreio lipidico e sempre o perfil completo; marcadores isolados como LDL-c sozinho ou lipoproteina (a) sao complementares, e a Lp(a) fica reservada a historia de doenca cardiovascular prematura.",
+    "verso_armadilha": "Alternativas que propoem um exame barato primeiro e ampliacao depois soam economicas, mas economia nao e criterio de rastreamento. Alternativa marcada na prova: 'Solicitar dosagem de LDL-c e, se alterado, ampliar para perfil lipídico completo e prescrever estatina'."
+   },
+   {
+    "tipo": "conteudo",
+    "frente_contexto": "Rastreamento de dislipidemia na infancia e na adolescencia.",
+    "frente_pergunta": "Quais sao as janelas etarias do rastreamento universal e do seletivo?",
+    "verso_resposta": "Universal aos 9-11 anos e aos 17-21 anos; seletivo aos 2-8 anos e aos 12-16 anos, apenas na presenca de fator de risco.",
+    "verso_regra_mestre": "As janelas seletivas existem exatamente para preencher os intervalos entre as universais: crianca com fator de risco nunca espera a janela universal chegar.",
+    "verso_armadilha": "Marcar 'rastrear a partir dos 9 anos' numa crianca que ja tem fator de risco -- esse corte vale para quem nao tem gatilho."
+   }
+  ],
+  "_draft_resumo": null,
+  "_resumo_path": null
+ },
+ {
+  "_q": 52,
+  "_tipo_questao": "raciocinio",
+  "_padrao_execucao": "ancoragem no fato saliente",
+  "area": "Pediatria",
+  "tema": "Tumores Sólidos da Infância",
+  "titulo": "Massa abdominal que cruza a linha media com equimose periorbitaria bilateral e sintomas sistemicos e neuroblastoma: o comportamento do tumor decorre da origem, nao de uma lista de sinais",
+  "enunciado": "Criança de 3 anos é levada para consulta de rotina. Apresenta- se irritada, com relato materno de febre intermitente e perda ponderal de 2 kg nos últimos 2 meses. O exame físico mostra que a PA está no percentil 95 para a idade e altura. Nota-se presença de equimoses periorbitárias bilaterais e de massa firme em flanco direito que ultrapassa a linha média abdominal. Qual é o diagnóstico mais provável nessa situação?",
+  "correta": "B - Neuroblastoma.",
+  "marcada": "A - Tumor de Wilms.",
+  "erro": "Erro de aplicacao",
+  "elo": "Racional declarado: 'fiz tantos cards de wilms x neuroblastoma e perdi uma questao de graca, por justamente me ater mais na fixacao atomica do card do que com conhecer a fundo as duas sindromes; imaginei que o nefroblastoma seria o provavel quadro, considerando a hipertensao apenas'. O elo nao foi falta de fato: ele TINHA os fatos em cards e mesmo assim nao os usou, porque nenhum deles estava ancorado no mecanismo que os gera. Ancorou na hipertensao, que nao discrimina (ocorre nos dois), e nao integrou os tres achados que decidem: massa cruzando a linha media, equimose periorbitaria bilateral e sindrome consumptiva com febre e perda ponderal.",
+  "armadilha": "O tumor de Wilms e a massa renal mais lembrada da infancia e a hipertensao arterial reforca esse reflexo -- mas ela ocorre nas duas doencas e, portanto, nao discrimina nada. O examinador entrega dois achados que isoladamente ja bastariam (equimose periorbitaria bilateral e massa que ultrapassa a linha media) e conta com o candidato que se contenta com o primeiro dado saliente. A perda ponderal de 2 kg com febre intermitente e o terceiro, tambem ignorado.",
+  "complexidade": "Media",
+  "habilidades": "Separar as massas abdominais do pre-escolar pelo comportamento do tumor em relacao a linha media -> Ancorar o comportamento da massa na origem do tumor (intrarrenal encapsulado x cadeia simpatica infiltrativa) [QUEBROU] -> Valorizar sintomas sistemicos (febre, perda ponderal, irritabilidade) como marca de neuroblastoma -> Reconhecer equimose periorbitaria bilateral como metastase orbitaria e de base de cranio",
+  "faltou": "O mecanismo que unifica os achados: por nascer na crista neural simpatica (cadeia paravertebral ou suprarrenal), no retroperitonio medial, e por crescer de forma infiltrativa e nao encapsulada, o neuroblastoma cruza a linha media e metastatiza precocemente para osso, inclusive orbita e base de cranio. O Wilms nasce dentro do rim, e encapsulado e desloca as estruturas em vez de infiltra-las.",
+  "explicacao": "A distincao nao se decora como par de listas, deriva da origem. Neuroblastoma e tumor de crista neural simpatica, retroperitoneal medial, infiltrativo e sem capsula, o que explica ao mesmo tempo a massa irregular que ultrapassa a linha media, o tropismo metastatico osseo (equimose periorbitaria bilateral, os olhos de guaxinim) e a sindrome consumptiva com febre e perda ponderal. O tumor de Wilms e intrarrenal, encapsulado e tende a respeitar a linha media, com crianca em bom estado geral; hipertensao pode ocorrer nos dois e nao discrimina. A confirmacao do neuroblastoma comeca por catecolaminas urinarias, alteradas em mais de 90% dos casos (literatura pediatrica brasileira sobre neuroblastoma com metastase orbitaria; anais SPSP).",
+  "cards": [
+   {
+    "tipo": "elo_quebrado",
+    "frente_contexto": "Crianca de 3 anos, irritada, com febre intermitente e perda de 2 kg em 2 meses, pressao arterial no percentil 95, equimoses periorbitarias bilaterais e massa firme em flanco direito que ultrapassa a linha media.",
+    "frente_pergunta": "Qual e o diagnostico mais provavel?",
+    "verso_resposta": "Neuroblastoma.",
+    "verso_regra_mestre": "Dois achados decidem sozinhos: massa que ultrapassa a linha media e equimose periorbitaria bilateral. A hipertensao arterial ocorre tanto no neuroblastoma quanto no tumor de Wilms e nao discrimina.",
+    "verso_armadilha": "Fechar Wilms por ser a massa renal mais lembrada da infancia, apoiado apenas na hipertensao; e tambem ler a equimose periorbitaria como trauma ou suspeita de maus-tratos."
+   },
+   {
+    "tipo": "mecanismo",
+    "frente_contexto": "Neuroblastoma e tumor de Wilms em pre-escolar com massa abdominal.",
+    "frente_pergunta": "Que propriedade do neuroblastoma explica, ao mesmo tempo, a massa que cruza a linha media e a equimose periorbitaria bilateral?",
+    "verso_resposta": "Ser um tumor de crista neural simpatica, de origem paravertebral ou suprarrenal, portanto retroperitoneal medial, de crescimento infiltrativo e sem capsula, com tropismo metastatico osseo que alcanca orbita e base do cranio.",
+    "verso_regra_mestre": "O comportamento do tumor decorre da origem: nascer na cadeia simpatica, junto a linha media, e crescer infiltrando permite ultrapassar o meio e disseminar cedo; o Wilms nasce dentro do rim, e encapsulado e por isso empurra as estruturas em vez de atravessa-las.",
+    "verso_armadilha": "Guardar 'cruza a linha media' como regra absoluta. O Wilms pode cruzar quando muito volumoso -- e menos provavel, nao impossivel; o que sustenta a decisao e a origem somada aos demais achados."
+   }
+  ],
+  "_draft_resumo": null,
+  "_resumo_path": null,
+  "_triagem_principal": "cortados 1 card(s) dedutiveis do nucleo (teste de regenerabilidade)"
+ },
+ {
+  "_q": 53,
+  "_tipo_questao": "fluxograma",
+  "_padrao_execucao": null,
+  "area": "Cirurgia",
+  "tema": "Cirurgia Infantil",
+  "titulo": "Hernia inguinal na crianca NAO fecha sozinha: quem pode ser observada ate 1-2 anos e a hidrocele comunicante, e quem admite espera hormonal e a criptorquidia",
+  "enunciado": "Menina de 1 ano é levada a uma Unidade de Pronto Atendimento com história de abaulamento em região inguinal até o lábio maior esquerdo, há cerca de 6 meses. O exame físico revela abaulamento inguinal esquerdo, com conteúdo fibroelástico, pequeno e redutível. Qual é a conduta adequada nesse caso?",
+  "correta": "A - Indicar cirurgia eletiva.",
+  "marcada": "C - Manter conduta expectante.",
+  "erro": "Lacuna de conhecimento",
+  "elo": "Racional declarado: 'hernia e uma tortura pra mim. havia decorado o seguinte: que hernias inguinais em criancas poderiam melhorar e em adultos nao, que aparentemente e falso. Supunha que ate tal corte, como parece existir na criptorquidia, podemos aguardar antes de operar'. O elo aqui nao e uma ausencia, e um FATO FALSO instalado: ele carrega como regra que a hernia inguinal infantil pode fechar espontaneamente. Isso nao existe. A regra de espera que ele lembra pertence a hidrocele comunicante (o conduto pode fechar ate 1-2 anos) e a criptorquidia (descida espontanea ate os 6 meses, correcao ate 12-18 meses) -- duas condicoes vizinhas, com corte de tempo, que contaminaram a hernia.",
+  "armadilha": "As tres entidades do canal inguinal na infancia compartilham a mesma origem embriologica (persistencia do conduto peritoneovaginal) e apenas uma delas admite espera, o que torna a transferencia quase automatica. A alternativa 'manter conduta expectante' e escrita exatamente para colher quem fez essa transferencia; a alternativa de urgencia recolhe o erro oposto, o de operar de madrugada uma hernia redutivel.",
+  "complexidade": "Media",
+  "habilidades": "Reconhecer abaulamento inguinal que progride ate o grande labio ou a bolsa escrotal como hernia por persistencia do conduto peritoneovaginal -> Separar hernia de hidrocele comunicante pela possibilidade de fechamento espontaneo do conduto [QUEBROU] -> Classificar a reducibilidade para separar cirurgia eletiva de urgencia -> Nao adiar a correcao pelo risco de encarceramento nos menores de 2 anos",
+  "faltou": "A regra dura: hernia inguinal na crianca nao regride, so aumenta e encarcera -- cirurgia eletiva assim que diagnosticada. A janela de observacao ate 1-2 anos pertence a hidrocele nao complicada, e a tentativa hormonal (gonadotrofina corionica) pertence a criptorquidia.",
+  "explicacao": "Abaulamento inguinal fibroelastico que progride ate o grande labio significa conteudo herniario dentro de um conduto peritoneovaginal patente, e esse conduto nao se fecha depois de ja ter permitido passagem de visceras. Ser redutivel, sem dor, vomitos ou sinais de sofrimento, exclui encarceramento e, portanto, exclui urgencia -- mas ser hernia, e nao hidrocele, exclui conduta expectante. A indicacao e cirurgia eletiva assim que diagnosticada: o risco de encarceramento e maior nos menores de 2 anos, e ha dados de que ele dobra quando a correcao e adiada por 14 dias ou mais; em meninas soma-se o risco de encarceramento ovariano (literatura brasileira de cirurgia pediatrica, Rev Col Bras Cir).",
+  "cards": [
+   {
+    "tipo": "elo_quebrado",
+    "frente_contexto": "Menina de 1 ano com abaulamento inguinal esquerdo ha 6 meses, que progride ate o grande labio, de conteudo fibroelastico, pequeno e redutivel, sem dor ou vomitos.",
+    "frente_pergunta": "Qual e a conduta adequada?",
+    "verso_resposta": "Indicar correcao cirurgica eletiva, assim que diagnosticada.",
+    "verso_regra_mestre": "Hernia inguinal na crianca nao regride espontaneamente: o conduto peritoneovaginal que ja deixou passar viscera nao se fecha. Ser redutivel afasta a urgencia; ser hernia afasta a espera.",
+    "verso_armadilha": "Transportar para a hernia a janela de observacao que pertence a hidrocele, ou a espera hormonal que pertence a criptorquidia. Alternativa marcada na prova: 'Manter conduta expectante'."
+   },
+   {
+    "tipo": "discriminador",
+    "frente_contexto": "Abaulamento inguinoescrotal no lactente por persistencia do conduto peritoneovaginal.",
+    "frente_pergunta": "Qual das duas condicoes -- hernia inguinal ou hidrocele comunicante -- pode ser observada ate 1 a 2 anos na expectativa de fechamento espontaneo?",
+    "verso_resposta": "Apenas a hidrocele comunicante.",
+    "verso_regra_mestre": "O que decide e o calibre do conduto: estreito o bastante para passar so liquido, ele ainda pode obliterar; largo o bastante para passar alca ou ovario, nao fecha mais e vira indicacao cirurgica.",
+    "verso_armadilha": "A terceira vizinha do grupo, a criptorquidia, tambem admite espera -- mas por descida espontanea ate cerca de 6 meses, com correcao ate 12-18 meses, e nao por fechamento de conduto."
+   }
+  ],
+  "_draft_resumo": "- 🔴 Hernia inguinal na infancia nao regride espontaneamente: a indicacao e correcao cirurgica eletiva assim que diagnosticada. A janela de observacao ate 1 a 2 anos pertence a hidrocele comunicante, e a tentativa com gonadotrofina corionica pertence a criptorquidia -- transferir qualquer uma delas para a hernia e erro de conduta.\n- 🔴 Reducibilidade separa eletivo de urgente, nao operar de nao operar: hernia redutivel e assintomatica vai para cirurgia eletiva; hernia irredutivel com dor, vomitos ou sinais de sofrimento e urgencia.\n- ⚠️ Em meninas, o conteudo encarcerado pode ser o ovario, com risco de torcao e perda gonadal mesmo na ausencia de sinais de obstrucao intestinal.",
+  "_resumo_path": "resumos/Cirurgia/Cirurgia Infantil.md",
+  "_triagem_principal": "cortados 1 card(s) dedutiveis do nucleo (teste de regenerabilidade)"
+ },
+ {
+  "_q": 56,
+  "_tipo_questao": "direta",
+  "_padrao_execucao": null,
+  "area": "Psiquiatria",
+  "tema": "Transtorno do Espectro Autista",
+  "titulo": "Responsividade preservada durante todo o evento e ausencia de periodo pos-ictal definem crise de desregulacao comportamental (meltdown) no TEA, nao crise epileptica",
+  "enunciado": "Adolescente de 15 anos, com quadro de transtorno do espectro autista, é levado pela mãe a uma Unidade de Pronto Atendimento após ter apresentado, na escola, episódio de agitação progressiva, vocalizações intensas e repetitivas, movimentos amplos dos membros superiores, chegando a cair ao chão. Durante todo o episódio, manteve os olhos abertos e reagia aos estímulos do ambiente. Não houve liberação esfincteriana, confusão mental ou sonolência após o episódio. O quadro em questão é compatível com o diagnóstico de crise",
+  "correta": "D - crise de desregulação comportamental.",
+  "marcada": "B - crise de ansiedade aguda.",
+  "erro": "Lacuna de conhecimento",
+  "elo": "Racional declarado: 'fiquei entre B e D e chutei B; desconhecia o meltdown'. Ele chegou ao par final correto, o que indica que a exclusao da crise epileptica e da crise conversiva funcionou. O elo que quebrou foi de repertorio nominal e fenomenologico: ele nao tinha a entidade 'crise de desregulacao comportamental' com seus marcadores (escalada progressiva a partir de gatilho ambiental ou sensorial, vocalizacoes repetitivas, movimentacao motora ampla, responsividade preservada, recuperacao sem confusao), e sem ela restou o rotulo generico mais proximo.",
+  "armadilha": "Toda a construcao do enunciado e de exclusao: olhos abertos, reatividade mantida durante TODO o episodio, sem liberacao esfincteriana e sem qualquer alteracao pos-ictal. Quem nao conhece o meltdown fica com um evento nao epileptico sem nome e escolhe 'ansiedade aguda' por ser o rotulo de sofrimento agudo mais familiar -- mas crise de ansiedade tem nucleo autonomico e cognicoes de medo ou morte iminente, ausentes aqui.",
+  "complexidade": "Media",
+  "habilidades": "Rastrear os marcadores de crise epileptica generalizada (perda de contato, abalos estereotipados, periodo pos-ictal) -> Classificar evento nao epileptico pela fenomenologia e pelo contexto -> Reconhecer a crise de desregulacao comportamental do TEA pela escalada com gatilho e responsividade preservada [QUEBROU] -> Manejar com regulacao sensorial e ambiente de baixa estimulacao, sem antiepileptico",
+  "faltou": "A entidade clinica do meltdown: desregulacao emocional, sensorial e comportamental do TEA, com gatilho ambiental identificavel, escalada progressiva, vocalizacoes repetitivas, movimentacao ampla, responsividade integral e recuperacao sem confusao -- manejada por reducao de estimulo e identificacao do gatilho.",
+  "explicacao": "Os tres marcadores da crise epileptica generalizada sao perda de contato com o ambiente, abalos ou automatismos estereotipados e estado pos-ictal com confusao ou sonolencia, eventualmente com liberacao esfincteriana e mordedura de lingua. O enunciado nega explicitamente todos eles, o que encerra a hipotese epileptica. Em adolescente com TEA, escalada progressiva a partir de gatilho escolar, com vocalizacoes repetitivas e movimentacao ampla, define a crise de desregulacao comportamental, cujo manejo e regulacao sensorial e ambiente de baixa estimulacao. RESSALVA DE EVIDENCIA: o comentado registra que a base e literatura brasileira e material de sociedades de apoio ao TEA somada a semiologia diferencial de neurologia; diretriz formal brasileira especifica para esse diferencial esta como NAO VERIFICADO.",
+  "cards": [
+   {
+    "tipo": "elo_quebrado",
+    "frente_contexto": "Adolescente de 15 anos com TEA apresenta, na escola, agitacao progressiva com vocalizacoes intensas e repetitivas e movimentos amplos dos membros superiores, chegando a cair. Manteve os olhos abertos e reagia aos estimulos durante todo o episodio, sem liberacao esfincteriana e sem sonolencia ou confusao depois.",
+    "frente_pergunta": "Qual e o diagnostico?",
+    "verso_resposta": "Crise de desregulacao comportamental (meltdown) do transtorno do espectro autista.",
+    "verso_regra_mestre": "A escalada progressiva a partir de um gatilho ambiental ou sensorial, com responsividade integral e recuperacao sem confusao, e a assinatura do meltdown; o manejo e regulacao sensorial e ambiente de baixa estimulacao, nao antiepileptico.",
+    "verso_armadilha": "Sem a entidade na memoria, sobra rotular como crise de ansiedade aguda -- que tem nucleo autonomico e cognicoes de medo ou morte iminente, ausentes aqui."
+   }
+  ],
+  "_draft_resumo": null,
+  "_resumo_path": null,
+  "_triagem_principal": "cortados 1 card(s) dedutiveis do nucleo (teste de regenerabilidade)"
+ },
+ {
+  "_q": 57,
+  "_tipo_questao": "direta",
+  "_padrao_execucao": null,
+  "area": "Pediatria",
+  "tema": "Coqueluche",
+  "titulo": "Na coqueluche, o tempo de tosse seleciona o metodo: passada a segunda semana a cultura cai e a confirmacao e por PCR em swab de nasofaringe",
+  "enunciado": "Lactente de 3 meses é levado a uma Unidade Básica de Saúde por apresentar crises de tosse intensa há 15 dias, acentuando- se há 10 dias em crises sucessivas, com associação de vômitos. Durante as crises, apresenta cianose, hemorragia conjuntival, petéquias e rubor facial. Foi realizada imunização somente ao nascimento. Qual exame deve ser realizado para confirmação da hipótese diagnóstica nesse caso?",
+  "correta": "C - Reação em cadeia da polimerase em amostra de swab de nasofaringe.",
+  "marcada": "A - Bacterioscopia pelo Gram em amostra de swab de nasofaringe.",
+  "erro": "Lacuna de conhecimento",
+  "elo": "Racional declarado: 'nao conhecia a informacao, chute'. Lacuna limpa, sem raciocinio intermediario quebrado: ele nao tinha o metodo confirmatorio da coqueluche nem a regra de que a escolha entre cultura e PCR depende do tempo de tosse. Marcou a bacterioscopia por Gram, que e o exame mais generico de identificacao bacteriana e nao tem valor diagnostico aqui.",
+  "armadilha": "A banca escreve 'swab de nasofaringe' em duas alternativas, de modo que acertar o sitio de coleta nao resolve nada -- o que se cobra e o metodo. E oferece o hemograma, que de fato apoia a suspeita (leucocitose com linfocitose) e tem valor prognostico no lactente, para colher quem confunde exame que sugere com exame que confirma.",
+  "complexidade": "Baixa",
+  "habilidades": "Reconhecer a fase paroxistica da coqueluche pelos acessos de tosse com vomito, cianose e sinais de hiperpressao -> Escolher o metodo laboratorial de confirmacao pela duracao da tosse [QUEBROU] -> Coletar swab ou aspirado de nasofaringe antes do antibiotico ou ate 3 dias apos o inicio dele -> Notificar imediatamente, tratar com macrolideo e fazer quimioprofilaxia dos contatos",
+  "faltou": "A regra de escolha do metodo: a cultura de nasofaringe rende bem nas duas primeiras semanas de tosse e cai muito depois; a PCR em tempo real mantem sensibilidade ate cerca de 3 a 4 semanas de sintomas e e metodo confirmatorio aceito pelo Ministerio da Saude.",
+  "explicacao": "Tosse em acessos sucessivos com vomito pos-tosse, cianose, hemorragia conjuntival, petequias e rubor facial em lactente de 3 meses vacinado apenas ao nascimento (BCG e hepatite B, portanto sem nenhuma dose de componente pertussis, que comeca aos 2 meses na pentavalente) e coqueluche em fase paroxistica. Com 15 dias de tosse, a janela de melhor rendimento da cultura ja passou, e o exame confirmatorio e a PCR em tempo real em swab de nasofaringe. Bordetella pertussis e cocobacilo gram-negativo exigente, que nao se identifica por bacterioscopia; o hemograma com linfocitose apoia e tem valor prognostico, mas nao confirma; a sorologia nao e metodo de rotina no Brasil (MS, Guia de Vigilancia em Saude, 6a edicao, capitulo Coqueluche).",
+  "cards": [
+   {
+    "tipo": "elo_quebrado",
+    "frente_contexto": "Lactente de 3 meses com 15 dias de tosse em acessos sucessivos, vomito pos-tosse, cianose e hemorragia conjuntival, imunizado apenas ao nascimento.",
+    "frente_pergunta": "Qual exame confirma o diagnostico?",
+    "verso_resposta": "A reacao em cadeia da polimerase em tempo real, em amostra de swab de nasofaringe.",
+    "verso_regra_mestre": "Na coqueluche, o tempo de tosse seleciona o metodo: cultura rende nas duas primeiras semanas, PCR mantem sensibilidade ate cerca de 3 a 4 semanas. Hemograma com linfocitose sugere e tem valor prognostico, mas nao confirma.",
+    "verso_armadilha": "Acertar o sitio de coleta e errar o metodo: Bordetella pertussis e cocobacilo gram-negativo exigente e nao se identifica por bacterioscopia pelo Gram. Alternativa marcada na prova: 'Bacterioscopia pelo Gram em amostra de swab de nasofaringe'."
+   }
+  ],
+  "_draft_resumo": null,
+  "_resumo_path": null,
+  "_triagem_principal": "cortados 1 card(s) dedutiveis do nucleo (teste de regenerabilidade)"
+ },
+ {
+  "_q": 59,
+  "_tipo_questao": "raciocinio",
+  "_padrao_execucao": "discriminador que exclui (nao identificou)",
+  "area": "Ginecologia",
+  "tema": "Amenorreia Primária",
+  "titulo": "Na amenorreia primaria, mama desenvolvida prova acao estrogenica e eixo funcionante -- com puberdade completa, a causa e anatomica, no trato de saida",
+  "enunciado": "Adolescente de 16 anos comparece à consulta em ambulatório de ginecologia referindo ainda não ter menstruado, a despeito de ter apresentado telarca aos 10 anos e pubarca logo em seguida. Ela não tem outras queixas. Tem 1,68 m de estatura e pesa 65 kg. A paciente tem pilificação axilar habitual, acne grau II em face, tórax e região dorsal. O exame ginecológico mostra: mamas com configuração normal; distribuição de pelos pubianos adequada para o sexo feminino; órgãos genitais externos sem alterações evidentes; hímen íntegro, com orifício orbicular permeável. No exame, não se procedeu ao toque vaginal. Considerando-se o caso descrito, qual é a hipótese diagnóstica a ser investigada?",
+  "correta": "D - Anomalia Mülleriana.",
+  "marcada": "C - Amenorreia hipotalâmica primária.",
+  "erro": "Lacuna de conhecimento",
+  "elo": "Racional declarado: 'cancelei turner pela altura (mas desconheco a sindrome a fundo), e insensibilidade androgenica pelos pelos, mas chutei C, pois desconhecia a relacao com o estrogenio e como o enunciado nao tocou na vagina em fundo cego, nao fui de D'. Duas falhas declaradas, na mesma raiz. Primeira: ele nao tinha a regra que decide a questao -- mama desenvolvida significa estrogenio circulante, logo eixo hipotalamo-hipofise-ovario funcionante, o que EXCLUI amenorreia hipotalamica, exatamente a alternativa que ele marcou. Segunda: ele condicionou o diagnostico de anomalia mulleriana a um achado de exame fisico que o enunciado diz explicitamente nao ter sido feito ('nao se procedeu ao toque vaginal') -- esperou um sinal que a questao avisou que nao viria.",
+  "armadilha": "O examinador faz duas jogadas. Retira o toque vaginal para impedir que o candidato resolva pelo achado decorado (vagina em fundo cego) e o obriga a decidir pela fisiologia. E oferece insensibilidade androgenica como isca classica de 'amenorreia primaria com mamas presentes', neutralizando-a com acne e pilificacao habituais. Ele escapou da isca principal e caiu na alternativa que a propria fisiologia ja havia excluido.",
+  "complexidade": "Alta",
+  "habilidades": "Definir amenorreia primaria e usar a mama como marcador de acao estrogenica e o pelo como marcador de acao androgenica [QUEBROU] -> Concluir eixo hipotalamo-hipofise-ovario funcionante diante de puberdade completa e deslocar o problema para jusante -> Excluir insensibilidade androgenica completa pela presenca de pelos e acne -> Investigar anomalia do trato de saida por imagem quando o exame fisico e insuficiente",
+  "faltou": "A regra dos marcadores hormonais na amenorreia primaria: mama presente igual a estrogenio igual a eixo funcionante, o que derruba causas centrais (hipotalamica, hipofisaria) e disgenesia gonadal; pelo e acne presentes provam acao androgenica nos receptores, o que derruba insensibilidade androgenica. Sobrando eixo integro e ausencia de fluxo, a causa e anatomica.",
+  "explicacao": "Adolescente de 16 anos com telarca aos 10, pubarca, pilificacao habitual, acne grau II e estatura de 1,68 m tem puberdade completa: ha estrogenio e ha androgenio atuando, logo o eixo funciona e os receptores respondem. Amenorreia hipotalamica cursaria com hipoestrogenismo e puberdade atrasada ou interrompida; Turner cursaria com baixa estatura, ausencia de telarca espontanea e hipogonadismo hipergonadotrofico; insensibilidade androgenica completa cursaria com mamas presentes mas pelos escassos e sem acne. Com hime integro e permeavel afastando hime imperfurado, restam as demais anomalias mullerianas -- agenesia tipo Mayer-Rokitansky-Kuster-Hauser, septo vaginal transverso -- investigadas por ultrassonografia pelvica e ressonancia, com cariotipo quando necessario (FEBRASGO; literatura brasileira sobre MRKH).",
+  "cards": [
+   {
+    "tipo": "elo_quebrado",
+    "frente_contexto": "Adolescente de 16 anos sem menarca, com telarca aos 10 anos, pubarca, pilificacao axilar habitual, acne grau II e 1,68 m de estatura. Genitalia externa normal, hime integro e permeavel; nao se procedeu ao toque vaginal.",
+    "frente_pergunta": "Qual e a hipotese diagnostica a ser investigada?",
+    "verso_resposta": "Anomalia mulleriana (obstrucao ou agenesia do trato de saida).",
+    "verso_regra_mestre": "Mama desenvolvida prova acao estrogenica, portanto eixo hipotalamo-hipofise-ovario funcionante; pelo e acne provam acao androgenica nos receptores. Com puberdade completa e ausencia de fluxo, o problema esta a jusante, no trato de saida.",
+    "verso_armadilha": "Exigir 'vagina em fundo cego' para pensar em anomalia mulleriana. O enunciado pode retirar o toque vaginal justamente para obrigar a decisao pela fisiologia, e amenorreia hipotalamica ficaria incompativel com puberdade completa. Alternativa marcada na prova: 'Amenorreia hipotalâmica primária'."
+   }
+  ],
+  "_draft_resumo": "- 🔴 Na amenorreia primaria, a mama e o marcador de acao estrogenica e o pelo o de acao androgenica: mama desenvolvida indica eixo hipotalamo-hipofise-ovario funcionante e afasta causas centrais e disgenesia gonadal; pelos e acne presentes afastam insensibilidade androgenica completa.\n- 🔴 Puberdade completa com ausencia de fluxo desloca a causa para o trato de saida: a investigacao e por imagem (ultrassonografia pelvica e ressonancia), e nao depende do achado de vagina em fundo cego, que pode nem constar quando o toque vaginal nao foi realizado.\n- ⚠️ Estatura normal ou alta com telarca espontanea aos 10 anos e incompativel com sindrome de Turner, que cursa com baixa estatura e hipogonadismo hipergonadotrofico.",
+  "_resumo_path": "resumos/GO/[GIN] Amenorreia.md",
+  "_triagem_principal": "cortados 1 card(s) dedutiveis do nucleo (teste de regenerabilidade)"
+ },
+ {
+  "_q": 61,
+  "_tipo_questao": "raciocinio",
+  "_padrao_execucao": null,
+  "area": "Infecto",
+  "tema": "Esquistossomose",
+  "titulo": "Hipertensao portal com figado de dimensoes preservadas, sem nodulacoes e com fibrose periportal em area endemica e esquistossomose -- e quem confirma e o parasitologico de fezes",
+  "enunciado": "Homem de 42 anos está sob investigação em Unidade Básica de Saúde, devido a aumento progressivo do volume abdominal e astenia. O paciente é natural e residente de uma cidade no interior da Bahia, nunca tendo viajado para fora do seu estado. Nega etilismo. O exame físico revela ascite moderada e circulação colateral na parede abdominal. A ultrassonografia mostra: fígado de dimensões preservadas, bordas rombas e sem nodulações; presença de fibrose periportal; esplenomegalia e aumento do calibre da veia porta e líquido ascítico na cavidade peritoneal. A endoscopia digestiva alta indica varizes esofágicas. Qual o exame indicado para confirmação da principal hipótese diagnóstica?",
+  "correta": "D - Exame parasitológico.",
+  "marcada": "A - Doppler de sistema portal.",
+  "erro": "Lacuna de conhecimento",
+  "elo": "Racional declarado: 'chutei D, nao consegui identificar a sindrome'. A letra coincide com o gabarito, mas o elo quebrou antes da escolha do exame: ele nao reconheceu o padrao sindromico de hipertensao portal pre-sinusoidal (figado de dimensoes preservadas, sem nodulacoes, com fibrose periportal, em paciente que nega etilismo e e natural de area endemica). Sem a hipotese, a escolha do exame confirmatorio foi sorteio, e a questao nao mede conhecimento -- mede sorte. Marcada pendente de confirmacao do usuario.",
+  "armadilha": "O examinador oferece tres exames que sao verdadeiros e uteis no caso, mas respondem a outra pergunta: o Doppler confirma a hipertensao portal que a ultrassonografia ja demonstrou, a paracentese classifica a ascite pelo GASA e a sorologia investiga a causa alternativa. Confundir 'confirmar a sindrome' com 'confirmar a etiologia' e o eixo da questao.",
+  "complexidade": "Media",
+  "habilidades": "Separar hipertensao portal pre-sinusoidal de cirrose pelo padrao ultrassonografico do parenquima hepatico [QUEBROU] -> Ancorar a hipotese na epidemiologia de area endemica -> Distinguir exame que confirma a sindrome de exame que confirma a etiologia -> Confirmar parasitose intestinal cronica por pesquisa direta do agente nas fezes",
+  "faltou": "O padrao de imagem da esquistossomose hepatoesplenica: fibrose periportal (fibrose de Symmers) com figado de dimensoes preservadas, bordas rombas e sem nodulacoes -- doenca do espaco porta, nao do parenquima -- em contraste com a cirrose, que da figado heterogeneo, nodular e retraido.",
+  "explicacao": "Ascite, circulacao colateral, esplenomegalia, veia porta calibrosa e varizes esofagicas definem hipertensao portal; o que decide a etiologia e o parenquima hepatico. Figado de dimensoes preservadas, sem nodulacoes, com fibrose periportal, em homem que nega etilismo e e natural e residente do interior da Bahia, aponta fibrose de Symmers por Schistosoma mansoni -- hipertensao portal pre-sinusoidal com funcao hepatocelular tipicamente preservada. A confirmacao e parasitologica, pelo metodo de Kato-Katz; na forma hepatoesplenica cronica a carga parasitaria e baixa e pode exigir multiplas amostras ou biopsia retal (MS, Guia de Vigilancia em Saude, capitulo esquistossomose mansoni).",
+  "cards": [
+   {
+    "tipo": "elo_quebrado",
+    "frente_contexto": "Homem de 42 anos, natural e residente do interior da Bahia, que nega etilismo, com ascite, circulacao colateral, esplenomegalia, veia porta calibrosa e varizes esofagicas. Ultrassonografia: figado de dimensoes preservadas, bordas rombas, sem nodulacoes, com fibrose periportal.",
+    "frente_pergunta": "Qual exame confirma a principal hipotese diagnostica?",
+    "verso_resposta": "O exame parasitologico de fezes.",
+    "verso_regra_mestre": "Confirmar a sindrome nao e confirmar a etiologia: a hipertensao portal ja esta demonstrada pela imagem e pela endoscopia; o que falta e provar o agente, e parasitose cronica se prova por pesquisa direta nas fezes.",
+    "verso_armadilha": "Doppler portal, paracentese e sorologia de hepatites sao todos exames corretos e uteis no caso -- e todos respondem a outra pergunta. Alternativa marcada na prova: 'Doppler de sistema portal'."
+   },
+   {
+    "tipo": "conteudo",
+    "frente_contexto": "Esquistossomose mansonica na forma hepatoesplenica.",
+    "frente_pergunta": "Como se chama a fibrose periportal caracteristica da doenca?",
+    "verso_resposta": "Fibrose de Symmers, tambem descrita como fibrose em haste de cachimbo.",
+    "verso_regra_mestre": "E fibrose do espaco porta, e nao do parenquima: por isso o figado mantem dimensoes e arquitetura, sem nodulacoes, e a funcao hepatocelular costuma estar preservada mesmo com hipertensao portal grave.",
+    "verso_armadilha": "Ler hipertensao portal como sinonimo de cirrose; a cirrose da figado heterogeneo, nodular e retraido, padrao ausente aqui."
+   }
+  ],
+  "_draft_resumo": "- 🔴 Hipertensao portal com figado de dimensoes preservadas, bordas rombas, sem nodulacoes e com fibrose periportal (fibrose de Symmers) caracteriza esquistossomose hepatoesplenica, forma pre-sinusoidal com funcao hepatocelular preservada -- padrao oposto ao da cirrose, que da figado heterogeneo, nodular e retraido.\n- 🔴 O exame que confirma a hipotese e o parasitologico de fezes (Kato-Katz); Doppler portal, paracentese e sorologia de hepatites confirmam ou classificam a sindrome, nao a etiologia.\n- ⚠️ Na forma hepatoesplenica cronica a carga parasitaria e baixa: parasitologico negativo isolado nao afasta o diagnostico, exigindo multiplas amostras ou biopsia retal.",
+  "_resumo_path": "resumos/Clínica Médica/Infectologia/Parasitoses.md",
+  "_triagem_principal": "cortados 1 card(s) dedutiveis do nucleo (teste de regenerabilidade)"
+ },
+ {
+  "_q": 62,
+  "_tipo_questao": "raciocinio",
+  "_padrao_execucao": null,
+  "area": "Preventiva",
+  "tema": "Ética Médica",
+  "titulo": "Autolesao repetida ja e risco de dano a propria pessoa e ativa a excecao ao sigilo -- mas quebra-se o sigilo apenas do conteudo que gera risco, nunca da consulta inteira",
+  "enunciado": "Adolescente de 15 anos, acompanhada pelos pais, é atendida em Unidade Básica de Saúde. A mãe relata que a paciente passa quase todo o tempo no quarto e não conversa com os familiares, preferindo usar o celular. Durante exame físico, a sós com a médica, a paciente refere estar apaixonada por uma colega de classe e afirma que tem medo de que os pais descubram. Reforça que \"gosta de garotas\" e se reconhece como mulher. Refere, ainda, que, devido à angústia relacionada ao preconceito da família, vem fazendo cortes em face interna de coxas, para \"diminuir o sofrimento\". Ao final, pede à médica que não conte nada disso aos pais. Considerando-se o caso descrito, qual é a conduta adequada a ser adotada pela médica?",
+  "correta": "A - Preservar sigilo sobre a orientação sexual e revelar aos pais os comportamentos autolesivos.",
+  "marcada": "B - Guardar sigilo tanto sobre a orientação sexual quanto sobre os comportamentos autolesivos.",
+  "erro": "Erro de aplicacao",
+  "elo": "Racional declarado: 'por ter certeza sobre a questao sexual, mas imaginei que os cortes, sem a ideacao, preservava o sigilo. alem de tudo, como os cortes estavam associados ao quadro da frustracao sobre a aceitacao sobre a sexualidade, preferi me abster dessa anunciacao'. Ele tinha a regra do sigilo e tinha a metade correta da resposta (nao revelar a orientacao sexual). O elo que quebrou foi o LIMIAR da excecao: ele exigiu ideacao suicida para configurar risco. Autolesao repetida ja e comportamento de risco por si; nao existe requisito de intencao suicida declarada. O segundo erro declarado e de estrategia: ele achou que revelar agravaria o sofrimento, o que e uma ponderacao de consequencia sobre um dever que o Codigo ja definiu.",
+  "armadilha": "O enunciado encerra com o pedido explicito da adolescente ('pede a medica que nao conte nada disso aos pais') e ainda oferece a explicacao causal que liga os cortes ao preconceito familiar -- material perfeito para o candidato concluir que revelar seria expor a paciente ao proprio agente do sofrimento. A alternativa que blinda tudo e a mais compassiva e a mais errada: deixa a adolescente sem rede de protecao.",
+  "complexidade": "Media",
+  "habilidades": "Reconhecer o sigilo como regra no atendimento ao adolescente com capacidade de discernimento, inclusive perante os pais -> Identificar risco de dano a propria pessoa ou a terceiros como unica excecao [QUEBROU] -> Segmentar a informacao e quebrar o sigilo apenas do conteudo que gera risco -> Comunicar primeiro a propria adolescente antes de envolver a familia",
+  "faltou": "O limiar da excecao: autolesao repetida configura risco de dano a propria pessoa independentemente de ideacao suicida declarada. E a regra de segmentacao: revela-se o comportamento autolesivo e preserva-se a orientacao sexual, que e identidade, nao risco.",
+  "explicacao": "O Codigo de Etica Medica, art. 74, veda revelar sigilo de paciente menor de idade com capacidade de discernimento, inclusive a seus pais, salvo quando a nao revelacao possa acarretar dano ao paciente. A leitura correta da excecao e dupla: ela se ativa com o comportamento de risco, e nao apenas com intencao suicida explicita; e ela se limita ao conteudo que gera risco, o que preserva a orientacao sexual, que nao e risco e cuja exposicao agravaria justamente o fator de sofrimento descrito. O dever de protecao nao dispensa a conversa previa com a propria adolescente (ECA; SBP, Consulta do Adolescente: abordagem clinica e orientacoes eticas; pareceres CFM/CREMESP).",
+  "cards": [
+   {
+    "tipo": "elo_quebrado",
+    "frente_contexto": "Adolescente de 15 anos, com capacidade de discernimento, relata a sos que faz cortes na face interna das coxas por angustia, nega ideacao suicida e pede que a medica nao conte nada aos pais.",
+    "frente_pergunta": "O pedido de sigilo deve ser respeitado quanto aos cortes?",
+    "verso_resposta": "Nao: autolesao repetida ja configura risco de dano a propria pessoa e ativa a excecao ao sigilo, com comunicacao previa a propria adolescente antes de envolver a familia.",
+    "verso_regra_mestre": "A excecao se ativa pelo comportamento de risco, nao pela intencao suicida declarada; e ela se limita ao conteudo que gera risco -- orientacao sexual e identidade e permanece sob sigilo.",
+    "verso_armadilha": "Exigir ideacao suicida para configurar risco, ou blindar a consulta inteira por compaixao, o que deixa a adolescente sem rede de protecao. Alternativa marcada na prova: 'Guardar sigilo tanto sobre a orientação sexual quanto sobre os comportamentos autolesivos'."
+   }
+  ],
+  "_draft_resumo": "- 🔴 Sigilo e a regra no atendimento ao adolescente com capacidade de discernimento, inclusive perante os pais (Codigo de Etica Medica, art. 74); a unica excecao e o risco de dano a propria pessoa ou a terceiros.\n- 🔴 Autolesao repetida ja configura risco e ativa a excecao independentemente de ideacao suicida declarada -- exigir intencao suicida explicita para quebrar o sigilo e leitura restritiva incorreta do artigo.\n- ⚠️ A quebra e segmentada: revela-se apenas o conteudo que gera risco, e a comunicacao e feita primeiro com o proprio adolescente. Orientacao sexual e identidade, nao risco, e sua revelacao configura exposicao desnecessaria.",
+  "_resumo_path": "resumos/Preventiva/Ética Médica.md",
+  "_triagem_principal": "cortados 1 card(s) dedutiveis do nucleo (teste de regenerabilidade)"
+ },
+ {
+  "_q": 68,
+  "_tipo_questao": "raciocinio",
+  "_padrao_execucao": null,
+  "area": "Cirurgia",
+  "tema": "Trauma Pelvico",
+  "titulo": "Hipotensao que persiste depois de a cinta ja ter fechado o anel pelvico indica sangramento arterial, e o proximo passo e controle vascular, nao mais estabilizacao mecanica",
+  "enunciado": "Homem de 22 anos, vítima de atropelamento, foi levado pelo suporte avançado do SAMU a uma emergência terciária de trauma, onde chegou em prancha rígida, com colar cervical e com queixa de dor em andar inferior de abdome. Avaliação inicial: paciente consciente; contactante; descorado 2+/4+; FC 120 bpm; FR 24 irpm; PA 80 x 60 mmHg; abdome plano, normotenso, doloroso à palpação profunda em andar inferior; descompressão brusca negativa; bacia instável e hematoma em região escrotal. Foram realizadas: medidas de estabilização na sala de emergência; ultrassonografia FAST, cujo resultado foi negativo para líquido livre abdominal; e radiografia da pelve, conforme a seguinte figura. Após, foi aplicada cinta pélvica, o que resultou em estabilização mecânica do anel pélvico, com fechamento do quadril. Radiografia simples da pelve na admissão Nesse caso, mantendo-se um quadro de hipotensão, qual é a próxima conduta a ser realizada?",
+  "correta": "C - Estabilização cirúrgica do quadril.",
+  "marcada": "A - Angiografia com embolização.",
+  "erro": "Armadilha",
+  "elo": "Racional declarado: 'pra mim a estabilizacao ja estava garantida e que a embolizacao poderia atacar do outro lado, chutando A incorretamente'. O raciocinio dele esta correto e e exatamente o que as diretrizes sustentam: o proprio enunciado declara que a cinta produziu estabilizacao mecanica do anel com fechamento do quadril, de modo que repetir a medida mecanica nao acrescenta hemostasia, e a hipotensao remanescente com FAST negativo aponta sangramento arterial retroperitoneal. O que quebrou nao foi o elo dele -- foi a coincidencia com o gabarito. Registrado como banca-divergente, sem card.",
+  "armadilha": "Neste item a armadilha opera ao contrario: quem tem o algoritmo do ATLS na ponta da lingua marca angioembolizacao e perde o ponto pelo gabarito preliminar. O distrator 'de verdade' seria tratar o osso em vez do vaso, mas o enunciado ja havia anulado esse caminho ao declarar o anel fechado. A alternativa de tamponamento pre-peritoneal, que resolveria a ambiguidade, nao foi oferecida.",
+  "complexidade": "Alta",
+  "habilidades": "Localizar o sangramento nos cinco compartimentos do choque hemorragico no trauma -> Reconhecer que o FAST nao enxerga o retroperitonio, de modo que FAST negativo com bacia instavel joga a fonte para a pelve -> Distinguir sangramento venoso e osseo, tamponavel por compressao, de sangramento arterial, que exige controle vascular -> Nao repetir medida mecanica ja obtida [QUEBROU apenas pela leitura da banca; pela evidencia a cadeia foi executada corretamente]",
+  "faltou": "Nada de conteudo, na leitura da evidencia: a cadeia foi executada corretamente. O que existe e o registro da divergencia -- pelo ATLS 10a/11a edicao e pela WSES 2017, hipotensao persistente apos fechamento do anel com FAST negativo indica angioembolizacao ou tamponamento pre-peritoneal.",
+  "explicacao": "Em fratura pelvica com fisiologia anormal apos estabilizacao nao invasiva e FAST negativo, o ATLS 10a e 11a edicoes e a diretriz da WSES (Pelvic Trauma: Classification and Guidelines, 2017) indicam angioembolizacao pelvica e/ou tamponamento pre-peritoneal, conforme o recurso institucional. A cinta reduz o volume do anel e tampona sangramento venoso e osseo; hipotensao que persiste depois dela caracteriza sangramento arterial, que a fixacao adicional nao trata. REGISTRO DE DIVERGENCIA: o gabarito preliminar aponta C (estabilizacao cirurgica do quadril), efeito que o proprio enunciado declara ja alcancado pela cinta; o caso se passa em emergencia terciaria de trauma, com angiografia disponivel. Pedido de alteracao do gabarito para A, subsidiariamente anulacao, por ausencia da opcao 'tamponamento pre-peritoneal' e por haver duas leituras defensaveis de 'estabilizacao cirurgica' (fixacao externa temporaria x osteossintese definitiva).",
+  "status": "banca-divergente",
+  "cards": [],
+  "_draft_resumo": "- 🔴 A cinta pelvica reduz o volume do anel e tampona sangramento venoso e osseo; hipotensao que persiste apos o fechamento mecanico do anel caracteriza sangramento arterial retroperitoneal, cujo controle e angioembolizacao ou tamponamento pre-peritoneal -- repetir estabilizacao mecanica ja obtida nao acrescenta hemostasia (ATLS 10a/11a ed.; WSES 2017).\n- 🔴 O FAST nao avalia o retroperitonio: FAST negativo com bacia instavel e choque nao afasta hemorragia, desloca a fonte para a pelve. Laparotomia so entra com FAST positivo, e o tomografo nao e lugar para paciente hemodinamicamente anormal.\n- ⚠️ Armadilha banca-dependente: ha bancas que consideram 'estabilizacao cirurgica' (fixacao externa) como o passo seguinte a cinta mesmo com o anel ja fechado; a conduta sustentada pela diretriz, nesse cenario, e o controle vascular.",
+  "_resumo_path": "resumos/Cirurgia/Politrauma Ortopédico.md"
+ },
+ {
+  "_q": 69,
+  "_tipo_questao": "direta",
+  "_padrao_execucao": "override do modal",
+  "area": "Endocrino",
+  "tema": "Osteoporose",
+  "titulo": "Pelo protocolo nacional, a primeira linha na osteoporose com fratura de fragilidade e o bisfosfonato oral; teriparatida e romosozumabe entram apos falha, nunca de entrada",
+  "enunciado": "Mulher de 72 anos procura atendimento em Unidade Básica de Saúde com queixas de dores na coluna lombar e histórico de fratura de fêmur após ter sofrido queda da própria altura há 2 anos. É hipertensa, faz uso de hidroclorotiazida e teve menopausa há 22 anos. Não usa nenhum outro medicamento nem fez uso de terapia hormonal. Realizou densitometria óssea recentemente, que indicou um alto risco para fraturas. A paciente não possui história de doenças secundárias associadas à osteoporose nem doenças crônicas, além da hipertensão arterial sistêmica. Não apresenta queixas relacionadas à intolerância gastrointestinal ou à dificuldade de deglutição. Iniciou uso de vitamina D e cálcio via oral. Com base no protocolo clínico nacional para osteoporose, qual é a opção inicial de tratamento medicamentoso?",
+  "correta": "A - Bisfosfonato.",
+  "marcada": "C - Teriparatida.",
+  "erro": "Erro de aplicacao",
+  "elo": "Racional declarado: 'tipico erro que me refiro quando digo que quero inventar moda e erro. Eu sabia que bifosfonado era usado na osteoporose; alendronato, etc. O problema e que eu circulei trinta vezes alto risco e associei as duas medicacoes diferentes... Como apareceram as duas, fui inocente e chutei uma delas, fazendo mais sentido logico a A. Quis saber a droga alternativa, sem saber inicialmente os criterios do tratamento'. Ele tinha a resposta correta e a descartou por meta-decisao: a presenca de dois farmacos exoticos nas alternativas foi lida como sinal de que a resposta obvia era obvia demais. O elo tecnico que faltava era o criterio de entrada dos anabolicos, que so se acessa depois da primeira linha -- ele quis a excecao sem ter a regra. Marcada pendente (C ou D).",
+  "armadilha": "A banca coloca 'alto risco para fraturas' no enunciado e duas drogas de alto custo nas alternativas, criando a leitura de que risco alto pede droga potente. E o mesmo enunciado neutraliza de proposito a unica contraindicacao pratica ao bisfosfonato oral ('nao apresenta queixas relacionadas a intolerancia gastrointestinal ou a dificuldade de degluticao') e ancora explicitamente a pergunta no 'protocolo clinico nacional'. Na cabeca dele, porem, a decisao nem chegou a ser clinica: foi a estranheza de ver duas alternativas exoticas juntas.",
+  "complexidade": "Baixa",
+  "habilidades": "Reconhecer osteoporose estabelecida por fratura de fragilidade somada a densitometria de alto risco -> Tratar calcio e vitamina D como adjuvantes, nunca como tratamento isolado -> Aplicar a linha de tratamento do protocolo nacional antes de considerar alternativas de excecao [QUEBROU] -> Ler o comando que fixa a referencia normativa (protocolo nacional x diretriz internacional)",
+  "faltou": "O criterio de entrada de cada linha no PCDT nacional: bisfosfonato oral (alendronato 70 mg por semana ou risedronato) e a primeira escolha, associado a calcio e vitamina D, desde que nao haja intolerancia gastrointestinal ou disfagia; teriparatida e romosozumabe sao de excecao, apos falha ou contraindicacao.",
+  "explicacao": "Fratura de femur apos queda da propria altura e fratura de fragilidade e, somada a densitometria de alto risco, define osteoporose estabelecida. Calcio e vitamina D sao adjuvantes. O PCDT da Osteoporose (MS/Conitec, Portaria Conjunta SAES/SCTIE n. 19/2022 e atualizacoes) coloca o bisfosfonato oral como tratamento preferencial; o estrogenio conjugado esta fora da janela de oportunidade em mulher com 22 anos de menopausa; a teriparatida e de excecao; e o romosozumabe foi incorporado com criterio estreito -- mulheres a partir de 70 anos, com risco muito alto e falha ao tratamento padrao com duas ou mais fraturas (Conitec, Deliberacao 785/2022 e Portaria 166). A estrategia de anabolico primeiro no risco muito alto pertence a AACE e a Endocrine Society, e o comando pede explicitamente o protocolo nacional.",
+  "cards": [
+   {
+    "tipo": "elo_quebrado",
+    "frente_contexto": "Mulher de 72 anos com fratura de femur apos queda da propria altura ha 2 anos e densitometria de alto risco, sem intolerancia gastrointestinal ou disfagia, ja em uso de calcio e vitamina D. Referencia: protocolo clinico nacional.",
+    "frente_pergunta": "Qual e a opcao inicial de tratamento medicamentoso?",
+    "verso_resposta": "Bisfosfonato oral (alendronato 70 mg por semana ou risedronato).",
+    "verso_regra_mestre": "Risco alto nao promove a droga de excecao a primeira linha: no PCDT nacional o bisfosfonato oral e o tratamento preferencial, e a unica contraindicacao pratica que o desloca e intolerancia gastrointestinal ou disfagia -- exatamente o que o enunciado costuma negar de proposito.",
+    "verso_armadilha": "Quando duas drogas caras aparecem juntas nas alternativas, a presenca delas e lida como pista de que a resposta obvia esta errada; aqui elas sao o distrator, nao a pista."
+   },
+   {
+    "tipo": "conteudo",
+    "frente_contexto": "Tratamento da osteoporose pos-menopausa pelo protocolo nacional (SUS).",
+    "frente_pergunta": "Em que momento entram teriparatida e romosozumabe?",
+    "verso_resposta": "Apenas como excecao, apos falha ou contraindicacao ao bisfosfonato; o romosozumabe com criterio ainda mais estreito, restrito a mulheres a partir de 70 anos, com risco muito alto e falha ao tratamento padrao com duas ou mais fraturas.",
+    "verso_regra_mestre": "O eixo e a sequencia: no protocolo nacional os anabolicos e o anticorpo monoclonal vem depois da primeira linha, ao contrario da estrategia internacional de anabolico primeiro no risco muito alto.",
+    "verso_armadilha": "Aplicar o raciocinio da AACE ou da Endocrine Society num enunciado que fixa expressamente o protocolo nacional como referencia."
+   }
+  ],
+  "_draft_resumo": null,
+  "_resumo_path": null
+ },
+ {
+  "_q": 75,
+  "_tipo_questao": "direta",
+  "_padrao_execucao": null,
+  "area": "Cirurgia",
+  "tema": "Trauma Pediátrico",
+  "titulo": "As diferencas anatomicas da via aerea pediatrica sao um bloco fechado de descritores, e cada um deles traduz uma consequencia tecnica na intubacao",
+  "enunciado": "Criança de 5 anos é levada a um pronto-socorro após sofrer acidente automobilístico grave, com rebaixamento do nível de consciência, respiração irregular e sinais de comprometimento respiratório, sem sinais de sangramento ativo externo. É indicada obtenção de via aérea eficaz e definitiva. Nesse caso, a particularidade anatômica a ser considerada para a realização de procedimento seguro é o fato de que crianças dessa idade, em comparação com adultos, apresentam",
+  "correta": "D - epiglote mais anteriorizada e rígida.",
+  "marcada": "C - laringe mais baixa e anterior.",
+  "erro": "Lacuna de conhecimento",
+  "elo": "Racional declarado: 'simplesmente nao conhecia os descritores da questao, como proporcao da lingua, anel mais largo, posicoes anatomicas etc'. Lacuna direta e assumida: ele nao tinha memorizado o bloco de diferencas anatomicas da via aerea pediatrica, que e conteudo de eliminacao pura. Sem os descritores, nao havia como excluir tres alternativas invertidas. Registre-se, porem, que o item e contestavel: a alternativa dada como correta afirma epiglote 'rigida', e o ATLS descreve o oposto.",
+  "armadilha": "Tres alternativas invertem o sentido de um fato anatomico consagrado (lingua menor, cricoide mais largo, laringe mais baixa) e a quarta contem metade verdadeira. O efeito e perverso: quem domina bem a anatomia trava, porque percebe que D tambem contem um erro, e quem decorou a lista superficialmente marca D sem hesitar. Ele nao chegou a essa encruzilhada -- faltava a lista inteira.",
+  "complexidade": "Media",
+  "habilidades": "Memorizar o bloco de diferencas anatomicas da via aerea pediatrica que alteram a tecnica de intubacao [QUEBROU] -> Traduzir cada diferenca anatomica em consequencia tecnica (lamina reta, coxim sob os ombros, calibre do tubo) -> Obter via aerea definitiva no trauma com estabilizacao cervical em linha",
+  "faltou": "O bloco: occipucio proeminente (coxim sob os ombros, nao sob a cabeca), lingua proporcionalmente MAIOR, laringe mais CEFALICA (C3-C4 contra C5-C6) e anterior, epiglote em U ou omega, angulada sobre a glote e FLACIDA (por isso lamina reta no lactente), cricoide como ponto MAIS ESTREITO e traqueia curta, com risco de intubacao seletiva.",
+  "explicacao": "A lingua da crianca e proporcionalmente maior em relacao a cavidade oral e obstrui mais facilmente; a laringe e mais cefalica e anterior, e nao mais baixa; o anel cricoide e o ponto mais estreito da via aerea pediatrica, e nao o mais largo. REGISTRO DE DIVERGENCIA: a alternativa apontada como correta afirma que a epiglote e 'mais anteriorizada e rigida', mas o ATLS 10a edicao e as referencias brasileiras de via aerea pediatrica descrevem a epiglote infantil como mais macia e flacida, em U ou omega, angulada sobre a abertura glotica -- caracteristica que fundamenta o uso da lamina reta em menores de 1 a 2 anos. Como a alternativa C acerta a anteriorizacao e erra a altura, nenhuma alternativa e integralmente verdadeira e o item comporta anulacao. Parte da literatura de anestesia pediatrica usa 'mais estreita e angulada', e alguns textos usam 'stiffer', mas essa nao e a redacao do ATLS, referencia obrigatoria no cenario de trauma do enunciado.",
+  "status": "banca-divergente",
+  "cards": [],
+  "_draft_resumo": "- 🔴 Bloco anatomico da via aerea pediatrica e sua consequencia tecnica: occipucio proeminente (coxim sob os ombros, nunca sob a cabeca), lingua proporcionalmente maior (obstrucao facil), laringe mais cefalica em C3-C4 e anterior, epiglote em U ou omega, angulada sobre a glote e flacida (indicacao de lamina reta no lactente), anel cricoide como ponto mais estreito e traqueia curta (risco de intubacao seletiva).\n- ⚠️ Armadilha banca-dependente: ha bancas que descrevem a epiglote infantil como mais rigida, adjetivo oposto ao do ATLS, que a caracteriza como macia e flacida. Guardar a descricao do ATLS como referencia de trauma e reconhecer a divergencia quando ela aparecer.",
+  "_resumo_path": "resumos/Cirurgia/[CIR] Trauma.md"
+ },
+ {
+  "_q": 77,
+  "_tipo_questao": "direta",
+  "_padrao_execucao": null,
+  "area": "Preventiva",
+  "tema": "Atenção Primária à Saúde",
+  "titulo": "No indicador composto de gestacao e puerperio do novo cofinanciamento da APS, a boa pratica do 1o trimestre exige sifilis, HIV E hepatites B e C",
+  "enunciado": "O Ministério da Saúde lançou, em 2025, os novos indicadores do componente de qualidade do cofinanciamento federal da atenção primária à saúde no SUS. Considerando-se os novos indicadores de cuidado na gestação e puerpério, é necessário garantir a realização",
+  "correta": "B - dos testes para sífilis, HIV e hepatites B e C no 1º trimestre da gestação.",
+  "marcada": "A - de pelo menos um exame de ultrassonografia obstétrica durante a gestação.",
+  "erro": "Lacuna de conhecimento",
+  "elo": "Racional declarado: 'fiquei na duvida entre A e B, pois achava que ao menos um usg ajudaria a identificar causas potencialmente mais graves, subestimando as ISTs. olhando hoje, eu chutaria a B muito mais claramente, mas eu realmente nao conhecia o tema'. O elo e de conteudo normativo puro: ele nao tinha o rol de boas praticas do indicador e decidiu por plausibilidade clinica, escolhendo o que lhe parecia mais util na pratica. Indicador de cofinanciamento nao se deduz por relevancia clinica -- e uma lista fechada, publicada em nota metodologica.",
+  "armadilha": "Todas as alternativas descrevem condutas que existem no pre-natal, o que impede a eliminacao por absurdo: a ultrassonografia e rotina assistencial mas nao integra o rol monitorado; 'antes da 20a semana' mistura o marco da dTpa com o da captacao precoce, que e a 12a semana; e 'pelo menos quatro consultas' e o parametro antigo de cobertura, nao o atual, que sao sete.",
+  "complexidade": "Media",
+  "habilidades": "Distinguir rol normativo fechado de plausibilidade clinica ao responder questao de indicador [QUEBROU] -> Reconhecer o indicador de gestacao e puerperio como composto por boas praticas pontuadas isoladamente -> Reter os parametros numericos duros do indicador (captacao ate a 12a semana, minimo de sete consultas)",
+  "faltou": "O texto da boa pratica (G) da nota metodologica: registro dos testes rapidos ou exames para sifilis, HIV e hepatites B e C realizados no 1o trimestre de cada gestacao. A boa pratica (H), do 3o trimestre, exige apenas sifilis e HIV -- quem decorou so o par 'sifilis e HIV' julga a alternativa incompleta e a descarta.",
+  "explicacao": "O Previne Brasil foi substituido pelo novo modelo de cofinanciamento federal da APS (Portaria GM/MS n. 3.493/2024), cujo componente de qualidade se organiza em indicadores compostos por boas praticas pontuadas isoladamente. Na NOTA METODOLOGICA C3 (Cuidado na Gestacao e Puerperio, MS/SAPS/DESCO), a boa pratica (G) exige testes para sifilis, HIV e hepatites B e C no 1o trimestre; a (H) exige sifilis e HIV no 3o trimestre; a (A) fixa a 1a consulta ate a 12a semana e a (B), pelo menos sete consultas na gestacao. Nao ha boa pratica de ultrassonografia no rol, que monitora consulta, pressao arterial, peso e altura, visita de agente comunitario, dTpa, testes e atendimento odontologico. Observacao de auditoria ja registrada: material secundario de consultoria reproduz o criterio sem a hepatite C, mas a fonte primaria do MS a inclui.",
+  "cards": [
+   {
+    "tipo": "elo_quebrado",
+    "frente_contexto": "Cofinanciamento federal da APS pelo modelo da Portaria GM/MS n. 3.493/2024, boas praticas do pre-natal monitoradas no componente de qualidade.",
+    "frente_pergunta": "Quais testes precisam estar registrados no primeiro trimestre para pontuar a boa pratica de rastreio de infeccoes do indicador?",
+    "verso_resposta": "Testes para sifilis, HIV e hepatites B e C.",
+    "verso_regra_mestre": "O rol do 1o trimestre e mais amplo que o do 3o, que cobra apenas sifilis e HIV -- por isso a lista completa costuma parecer 'inflada' para quem so guardou o par classico.",
+    "verso_armadilha": "Ultrassonografia obstetrica e rotina assistencial mas nao integra o rol monitorado; indicador e lista fechada, nao se deduz por relevancia clinica. Alternativa marcada na prova: 'de pelo menos um exame de ultrassonografia obstétrica durante a gestação'."
+   },
+   {
+    "tipo": "conteudo",
+    "frente_contexto": "Cofinanciamento federal da APS pelo modelo da Portaria GM/MS n. 3.493/2024, boas praticas do pre-natal monitoradas no componente de qualidade.",
+    "frente_pergunta": "Ate que semana de gestacao deve ocorrer a primeira consulta de pre-natal para caracterizar captacao precoce?",
+    "verso_resposta": "Ate a 12a semana.",
+    "verso_regra_mestre": "A 12a semana e o marco da captacao precoce; a 20a semana pertence a outro item do calendario (dTpa), e misturar os dois numeros e o erro que a alternativa explora.",
+    "verso_armadilha": "Transportar 'primeira consulta no 1o trimestre' do calendario classico como se fosse o criterio do indicador."
+   },
+   {
+    "tipo": "conteudo",
+    "frente_contexto": "Cofinanciamento federal da APS pelo modelo da Portaria GM/MS n. 3.493/2024, boas praticas do pre-natal monitoradas no componente de qualidade.",
+    "frente_pergunta": "Quantas consultas de pre-natal o indicador exige?",
+    "verso_resposta": "Pelo menos sete consultas, por medico ou enfermeiro, durante a gestacao.",
+    "verso_regra_mestre": "Os cortes mudaram com o novo modelo: sete consultas e captacao ate a 12a semana substituem os parametros antigos de quatro a seis consultas.",
+    "verso_armadilha": "Responder 'quatro consultas', que era o parametro antigo de cobertura minima de pre-natal e nao o indicador atual."
+   }
+  ],
+  "_draft_resumo": "- 🔴 No novo modelo de cofinanciamento federal da APS (Portaria GM/MS n. 3.493/2024), o indicador de cuidado na gestacao e puerperio e COMPOSTO: cada boa pratica pontua isoladamente. Parametros duros: primeira consulta ate a 12a semana (captacao precoce) e pelo menos sete consultas por medico ou enfermeiro durante a gestacao.\n- 🔴 Testes exigidos: sifilis, HIV e hepatites B e C no 1o trimestre; apenas sifilis e HIV no 3o trimestre. Ultrassonografia obstetrica nao integra o rol monitorado, que cobre consulta, pressao arterial, peso e altura, visita de agente comunitario, dTpa, testes e atendimento odontologico.\n- ⚠️ Os cortes antigos do Previne Brasil e do calendario classico de pre-natal (quatro ou seis consultas, primeira consulta 'no 1o trimestre', 20a semana) nao valem para este indicador e sao usados como distratores.",
+  "_resumo_path": "resumos/Preventiva/Atenção Primária à Saúde no Brasil.md"
+ },
+ {
+  "_q": 79,
+  "_tipo_questao": "direta",
+  "_padrao_execucao": null,
+  "area": "Preventiva",
+  "tema": "Rede de Atenção Psicossocial (RAPS)",
+  "titulo": "A RAPS tem componente proprio de urgencia e emergencia -- SAMU e UPA 24h estao dentro dela; quem esta fora e o CRAS, que pertence ao SUAS",
+  "enunciado": "Homem de 60 anos, sem emprego formal, está em acompanhamento em um Centro de Atenção Psicossocial (CAPS) por esquizofrenia. Nos últimos meses, retomou uso de álcool, isolou-se mais e foi visto pelos vizinhos diversas vezes embriagado, em casa, falando sozinho. Apresenta dificuldades de pagar o aluguel, de comprar alimentos e medicamentos da mãe de 80 anos, com quem habita. Considerando-se a composição da rede de atenção psicossocial, quais pontos de atenção, além do CAPS, são apropriados para a articulação do cuidado desse paciente?",
+  "correta": "A - Unidade de Pronto Atendimento; atenção primária à saúde; e centros de convivência e cultura.",
+  "marcada": "C - Unidade de acolhimento; centro de referência em assistência social; e unidades ambulatoriais especializadas.",
+  "erro": "Lacuna de conhecimento",
+  "elo": "Racional declarado: 'nao conheco devidamente a RAS, fiquei entre A e C e chutei a C, por conta da atencao secundaria/UPA estar mais relacionada com a rede de urgencia e emergencia'. O elo esta explicito no proprio motivo: ele excluiu a alternativa correta por acreditar que a UPA pertence a outra rede. A RAPS tem um componente proprio de atencao de urgencia e emergencia, que inclui SAMU, sala de estabilizacao, UPA 24 horas e portas hospitalares -- e a pergunta era de composicao legal, nao de pertinencia clinica.",
+  "armadilha": "O caso e escrito para induzir escolha por adequacao social: o paciente tem dificuldade de pagar aluguel e de comprar alimentos, e o CRAS e o parceiro intersetorial obvio. Mas basta uma entrada estranha a RAPS para derrubar a alternativa inteira, e o CRAS pertence ao SUAS. O enunciado diz 'considerando-se a composicao da rede de atencao psicossocial' justamente para marcar que a pergunta e normativa.",
+  "complexidade": "Media",
+  "habilidades": "Memorizar os sete componentes da RAPS e os pontos de atencao de cada um [QUEBROU] -> Diferenciar servicos do SUS de servicos do SUAS -> Ler o comando para identificar quando a pergunta e de composicao legal e nao de pertinencia clinica -> Descartar a alternativa inteira quando um unico ponto listado esta fora da rede",
+  "faltou": "Os sete componentes da RAPS: atencao primaria (UBS, equipe de consultorio na rua, centros de convivencia e cultura), atencao psicossocial especializada (CAPS e equipes ambulatoriais), atencao de urgencia e emergencia (SAMU, sala de estabilizacao, UPA 24h, portas hospitalares), atencao residencial de carater transitorio (unidade de acolhimento), atencao hospitalar, estrategias de desinstitucionalizacao (servicos residenciais terapeuticos) e reabilitacao psicossocial.",
+  "explicacao": "A RAPS foi instituida pela Portaria GM/MS n. 3.088/2011, com alteracoes da Portaria GM/MS n. 3.588/2017, consolidadas na Portaria de Consolidacao n. 3/2017, e organiza-se em sete componentes -- entre eles um de urgencia e emergencia, o que coloca SAMU e UPA 24 horas dentro da rede. Na alternativa correta, os tres pontos (UPA, atencao primaria e centros de convivencia e cultura) sao integralmente da RAPS, e o centro de convivencia ainda responde diretamente ao isolamento social descrito. Ficam fora: 'centro de orientacao e aconselhamento', que nao e ponto da RAPS; o CRAS/CREAS, que pertence ao SUAS; e os NASF-AB, extintos como arranjo financiado desde 2020 e substituidos pelas equipes multiprofissionais (eMulti), alem do servico de atencao domiciliar, que pertence a rede de urgencias.",
+  "cards": [
+   {
+    "tipo": "elo_quebrado",
+    "frente_contexto": "Composicao legal da Rede de Atencao Psicossocial (Portaria GM/MS n. 3.088/2011).",
+    "frente_pergunta": "A qual componente da RAPS pertencem o SAMU e a UPA 24 horas?",
+    "verso_resposta": "Ao componente de atencao de urgencia e emergencia, que integra a RAPS.",
+    "verso_regra_mestre": "A RAPS nao e uma rede so de servicos especializados em saude mental: ela atravessa atencao primaria, urgencia, hospitalar, residencial de carater transitorio, desinstitucionalizacao e reabilitacao psicossocial.",
+    "verso_armadilha": "Excluir a alternativa que contem UPA por supor que urgencia pertence 'a outra rede' -- e justamente esse raciocinio que derruba a resposta correta. Alternativa marcada na prova: 'Unidade de acolhimento; centro de referência em assistência social; e unidades ambulatoriais especializadas'."
+   },
+   {
+    "tipo": "conteudo",
+    "frente_contexto": "Articulacao do cuidado de paciente em acompanhamento no CAPS com dificuldades financeiras e de moradia.",
+    "frente_pergunta": "A que sistema pertencem o CRAS e o CREAS?",
+    "verso_resposta": "Ao SUAS, o Sistema Unico de Assistencia Social, e nao a RAPS.",
+    "verso_regra_mestre": "Ser parceiro intersetorial indispensavel nao transforma o servico em ponto de atencao da rede: quando a pergunta e de composicao legal, um unico ponto estranho invalida a alternativa inteira.",
+    "verso_armadilha": "Escolher pela adequacao social do caso -- o paciente precisa de assistencia social, logo CRAS -- quando o comando pede a composicao da rede."
+   },
+   {
+    "tipo": "conteudo",
+    "frente_contexto": "Arranjos de apoio a atencao primaria no SUS.",
+    "frente_pergunta": "Os NASF-AB ainda existem como arranjo financiado?",
+    "verso_resposta": "Nao: foram extintos como arranjo financiado em 2020 e substituidos pelas equipes multiprofissionais (eMulti).",
+    "verso_regra_mestre": "Alternativas de prova costumam usar nomenclatura revogada como distrator silencioso; conferir a vigencia do arranjo e parte da leitura do item.",
+    "verso_armadilha": "Reconhecer o NASF como estrutura familiar do SUS e aceitar a alternativa sem checar se ele ainda existe."
+   }
+  ],
+  "_draft_resumo": null,
+  "_resumo_path": null
+ },
+ {
+  "_q": 84,
+  "_tipo_questao": "direta",
+  "_padrao_execucao": "regua velha / diretriz nova",
+  "area": "Endocrino",
+  "tema": "Diabetes Mellitus - Complicações Crônicas",
+  "titulo": "Beers e cautela condicionada, nao proibicao: com ECG normal e sem cardiopatia, o triciclico em dose baixa noturna e primeira linha na neuropatia diabetica dolorosa do SUS",
+  "enunciado": "Homem de 74 anos comparece a uma Unidade Básica de Saúde para consulta. Mora sozinho e tem como renda o Benefício de Prestação Continuada. Relata que, há 6 meses, sente dor e queimação em ambos os pés, de moderada intensidade, com predomínio noturno, associada a parestesias em \"bota\", sem alívio com analgésicos simples. Tem diagnóstico de diabetes mellitus tipo 2 há 18 anos, em uso de metformina e insulina NPH em esquema basal. Não há evidência de cardiopatia associada. A hemoglobina glicada se mantém estável em 6,5% e a taxa de filtração glomerular é 75 mL/min/1,73m2. O eletrocardiograma é normal. Ao exame físico, deambula sem dificuldade e evidencia-se hipoestesia tátil e vibratória em padrão distal simétrico, em \"bota\", com pulsos distais palpáveis. Não há lesões cutâneas nos membros inferiores. Qual é a medicação de primeira linha para o manejo da dor nesse paciente?",
+  "correta": "C - Amitriptilina.",
+  "marcada": "A - Carbamazepina.",
+  "erro": "Erro de aplicacao",
+  "elo": "Racional declarado: 'fiquei entre A e C, e sinceramente estou puto com essa questao, pq tenho pra mim e inclusive aprendi na faculdade que nao se da triciclico nem benzo pra idoso, que eles caem. chutei A'. O elo que quebrou foi o estatuto da regra: ele carrega o criterio de Beers como PROIBICAO absoluta por idade, quando ele e alerta de cautela condicionada -- checar cardiopatia e ECG, iniciar em dose baixa a noite, titular devagar e monitorar carga anticolinergica, queda e retencao urinaria. O enunciado blindou de proposito exatamente essas condicoes ('nao ha evidencia de cardiopatia associada', 'o eletrocardiograma e normal'), e ele nao leu esses dois dados como liberacao.",
+  "armadilha": "A banca planta dois dados que existem unicamente para levantar o veto do triciclico e oferece a carbamazepina como o 'anticonvulsivante para dor neuropatica', que e verdadeiro para neuralgia do trigemeo e falso para polineuropatia diabetica. O paciente idoso com 74 anos funciona como gatilho emocional da regra decorada -- e, uma vez acionada, a regra impediu que ele visse os dois dados que a enunciavam como inaplicavel.",
+  "complexidade": "Baixa",
+  "habilidades": "Reconhecer polineuropatia simetrica distal diabetica pelo carater neuropatico da dor e pela hipoestesia tatil e vibratoria em bota -> Excluir doenca arterial periferica por pulsos distais palpaveis e ausencia de lesao cutanea -> Saber que dor neuropatica nao responde a analgesico simples nem a anti-inflamatorio -> Tratar criterio de cautela geriatrica como condicionado a checagem, e nao como proibicao por idade [QUEBROU]",
+  "faltou": "A leitura correta do criterio de Beers para triciclicos: e recomendacao de evitar quando ha alternativa melhor e de usar com cautela checada -- nao veto por idade. Com ECG normal, sem cardiopatia e em dose baixa noturna titulada, a amitriptilina e primeira linha de dor neuropatica na rede basica; a carbamazepina e primeira linha de neuralgia do trigemeo, nao de polineuropatia diabetica.",
+  "explicacao": "Dor em queimacao de predominio noturno, parestesia em bota e hipoestesia tatil e vibratoria distal simetrica, com pulsos palpaveis e sem lesao cutanea, definem polineuropatia simetrica distal diabetica. Dor neuropatica nao responde a analgesico simples nem a anti-inflamatorio, e a primeira linha sao antidepressivos triciclicos, duloxetina ou gabapentinoides -- na rede basica do SUS, amitriptilina em dose baixa a noite, titulada (MS, Caderno de Atencao Basica n. 36; ADA Standards of Care 2025; AAN 2022). O criterio de Beers nao proibe o triciclico no idoso: ele exige checar cardiopatia e ECG pelo risco de arritmia e prolongamento do QT, alem de vigiar carga anticolinergica, hipotensao postural e queda. DIVERGENCIA REGISTRADA: ADA e AAN preferem duloxetina ou gabapentinoide no idoso, mas nenhum deles esta entre as alternativas.",
+  "cards": [
+   {
+    "tipo": "elo_quebrado",
+    "frente_contexto": "Homem de 74 anos com diabetes tipo 2 ha 18 anos, dor em queimacao noturna nos pes com parestesia em bota, hipoestesia tatil e vibratoria distal simetrica, pulsos palpaveis. Sem evidencia de cardiopatia e com eletrocardiograma normal, acompanhado na atencao basica.",
+    "frente_pergunta": "Qual e a medicacao de primeira linha para a dor?",
+    "verso_resposta": "Amitriptilina, em dose baixa a noite, com titulacao lenta.",
+    "verso_regra_mestre": "Criterio de Beers para triciclico e cautela condicionada, nao proibicao por idade: checado o ECG e afastada a cardiopatia, o triciclico permanece primeira linha de dor neuropatica na rede basica, ao lado de duloxetina e gabapentinoides.",
+    "verso_armadilha": "Um enunciado que informa 'sem cardiopatia' e 'ECG normal' esta liberando o triciclico de proposito; ler esses dados como enfeite e perder a autorizacao que a banca deu."
+   },
+   {
+    "tipo": "conteudo",
+    "frente_contexto": "Prescricao de amitriptilina para idoso com dor neuropatica.",
+    "frente_pergunta": "Qual exame precede a prescricao?",
+    "verso_resposta": "O eletrocardiograma.",
+    "verso_regra_mestre": "O triciclico bloqueia canais de sodio cardiacos e pode prolongar o intervalo QT e alargar o QRS; o ECG e o que separa o paciente em que ele e seguro do paciente em que esta contraindicado.",
+    "verso_armadilha": "Tratar o risco do triciclico no idoso como risco apenas de queda e confusao, esquecendo que o veto duro e cardiaco."
+   },
+   {
+    "tipo": "conteudo",
+    "frente_contexto": "Escolha de anticonvulsivante para dor neuropatica.",
+    "frente_pergunta": "Para qual dor neuropatica a carbamazepina e primeira linha?",
+    "verso_resposta": "Para a neuralgia do trigemeo.",
+    "verso_regra_mestre": "Carbamazepina nao e droga de polineuropatia diabetica; nessa indicacao os anticonvulsivantes de escolha sao os gabapentinoides, pregabalina e gabapentina.",
+    "verso_armadilha": "Generalizar 'anticonvulsivante serve para dor neuropatica' e marcar carbamazepina, que ainda traz risco de hiponatremia e interacoes no idoso."
+   }
+  ],
+  "_draft_resumo": "- 🔴 A polineuropatia simetrica distal diabetica nao responde a analgesico simples nem a anti-inflamatorio: a primeira linha sao antidepressivos triciclicos, duloxetina ou gabapentinoides; na rede basica, amitriptilina em dose baixa noturna com titulacao lenta.\n- 🔴 O criterio de Beers para triciclicos no idoso e cautela condicionada, nao proibicao por idade: exige afastar cardiopatia e obter eletrocardiograma (risco de prolongamento do QT e alargamento do QRS), iniciar em dose baixa e vigiar carga anticolinergica, hipotensao postural e queda. Com ECG normal e sem cardiopatia, o farmaco esta liberado.\n- ⚠️ Carbamazepina e primeira linha de neuralgia do trigemeo, e nao de polineuropatia diabetica; tramadol com paracetamol e resgate de segunda ou terceira linha, com risco de sedacao, queda e sindrome serotoninergica no idoso.",
+  "_resumo_path": "resumos/Clínica Médica/Endocrinologia/Diabetes Mellitus - Complicações Crônicas.md"
+ },
+ {
+  "_q": 88,
+  "_tipo_questao": "raciocinio",
+  "_padrao_execucao": "ancoragem no fato saliente",
+  "area": "Preventiva",
+  "tema": "Vigilância em Saúde",
+  "titulo": "Em surto de doenca de veiculacao hidrica, a acao que interrompe a cadeia e a intervencao no determinante ambiental -- isolar nao muda o curso porque a transmissao e pre-ictericia",
+  "enunciado": "Determinado médico de uma Unidade Básica de Saúde, durante reunião com equipe interprofissional, discute a ocorrência de cinco casos de hepatite A em crianças de uma ocupação habitacional sem rede de esgoto formal. O Conselho Local de Saúde e a Associação de Moradores relatam insegurança quanto à qualidade da água e dificuldade de adesão às medidas de higiene por falta de insumos. A análise epidemiológica indica que há um grande número de crianças na comunidade que não completaram o esquema vacinal e que a transmissão está ativa no território. Além da vacinação, qual é a próxima ação adequada para essa comunidade?",
+  "correta": "C - Acionar a Vigilância Sanitária com vistas à melhoria do tratamento da água.",
+  "marcada": "A - Instituir o isolamento das crianças acometidas e de seus familiares.",
+  "erro": "Lacuna de conhecimento",
+  "elo": "Racional declarado: 'fiquei entre A e C e chutei A'. Ele chegou ao par final correto e nao tinha o dado que o desempata: a maior transmissibilidade da hepatite A ocorre nas duas semanas ANTES do inicio da ictericia, de modo que isolar quem ja adoeceu chega tarde e nao altera o curso do surto. Sem esse fato, sobrou o reflexo de que doenca transmissivel se responde com isolamento.",
+  "armadilha": "O enunciado ja nomeia o vetor ('inseguranca quanto a qualidade da agua', 'ocupacao sem rede de esgoto formal') e oferece o isolamento como resposta imediata e familiar a qualquer doenca transmissivel. O mutirao de limpeza captura o candidato que quer agir pela propria equipe, mas nao trata a agua e desloca a responsabilidade do poder publico para a comunidade.",
+  "complexidade": "Media",
+  "habilidades": "Identificar o mecanismo de transmissao da doenca antes de escolher a medida de controle -> Checar o periodo de transmissibilidade antes de indicar isolamento [QUEBROU] -> Intervir no determinante ambiental por acao intersetorial quando o vetor esta fora da governabilidade da equipe -> Distinguir profilaxia pos-exposicao existente de profilaxia inventada",
+  "faltou": "O periodo de transmissibilidade da hepatite A: a excrecao viral e maxima nas duas semanas que antecedem a ictericia e cai rapidamente depois do seu inicio -- por isso isolar o caso ja identificado nao interrompe a cadeia, alem de ser medida estigmatizante.",
+  "explicacao": "A hepatite A tem transmissao fecal-oral, e seu determinante e saneamento e qualidade da agua. A resposta a um surto de veiculacao hidrica combina vacinacao com intervencao no determinante ambiental, atribuicao da vigilancia sanitaria e ambiental em acao intersetorial -- fora da governabilidade isolada da equipe da UBS. O isolamento nao altera o curso porque a maior transmissibilidade e pre-ictericia; o mutirao de limpeza nao trata a agua; e nao existe antiviral profilatico para hepatite A: a profilaxia pos-exposicao e a vacina e, em situacoes especificas, a imunoglobulina (MS, Guia de Vigilancia em Saude, capitulo de hepatites virais; Manual Tecnico das Hepatites Virais).",
+  "cards": [
+   {
+    "tipo": "elo_quebrado",
+    "frente_contexto": "Cinco casos de hepatite A em criancas de uma ocupacao habitacional sem rede de esgoto formal, com inseguranca quanto a qualidade da agua e transmissao ativa no territorio.",
+    "frente_pergunta": "Alem da vacinacao, qual e a proxima acao adequada?",
+    "verso_resposta": "Acionar a vigilancia sanitaria para melhoria do tratamento da agua.",
+    "verso_regra_mestre": "Em surto de veiculacao hidrica, a acao que interrompe a cadeia e a intervencao no determinante ambiental, por acao intersetorial -- o vetor esta fora da governabilidade da equipe de saude.",
+    "verso_armadilha": "Mutirao de limpeza coordenado pela propria equipe parece acao concreta, mas nao trata a agua e transfere a responsabilidade do poder publico para a comunidade. Alternativa marcada na prova: 'Instituir o isolamento das crianças acometidas e de seus familiares'."
+   },
+   {
+    "tipo": "conteudo",
+    "frente_contexto": "Hepatite A sintomatica.",
+    "frente_pergunta": "Qual e o periodo de maior transmissibilidade?",
+    "verso_resposta": "As duas semanas que antecedem o inicio da ictericia.",
+    "verso_regra_mestre": "E esse dado que torna o isolamento do caso ja identificado inutil para o controle do surto: quando o paciente fica ictericico, a excrecao viral maxima ja passou.",
+    "verso_armadilha": "Responder isolamento por reflexo diante de qualquer doenca transmissivel, sem checar a janela de transmissibilidade."
+   }
+  ],
+  "_draft_resumo": "- 🔴 A maior transmissibilidade da hepatite A ocorre nas duas semanas que antecedem a ictericia: isolar o caso ja identificado nao interrompe a cadeia de transmissao e ainda e medida estigmatizante.\n- 🔴 Em surto de doenca de veiculacao hidrica, a medida que interrompe a cadeia e a intervencao no determinante ambiental, atribuicao da vigilancia sanitaria e ambiental em acao intersetorial, e nao uma acao restrita a governabilidade da equipe de saude.\n- ⚠️ Nao existe profilaxia antiviral para hepatite A: a profilaxia pos-exposicao e a vacina e, em situacoes especificas, a imunoglobulina.",
+  "_resumo_path": "resumos/Preventiva/Vigilância em Saúde.md",
+  "_triagem_principal": "cortados 1 card(s) dedutiveis do nucleo (teste de regenerabilidade)"
+ },
+ {
+  "_q": 96,
+  "_tipo_questao": "direta",
+  "_padrao_execucao": "leitura do comando",
+  "area": "Cirurgia",
+  "tema": "Urologia",
+  "titulo": "Na zona cinzenta do PSA (4 a 10 ng/mL), quem acrescenta especificidade e a relacao livre/total; a biopsia e o exame de confirmacao, que e outra pergunta",
+  "enunciado": "Paciente de 65 anos, em acompanhamento em Unidade Básica de Saúde, retorna para sua consulta anual e relata piora de sintomas do trato urinário inferior, como jato urinário fraco, disúria e noctúria. O exame de toque evidencia próstata aumentada, de consistência elástica e superfície lisa. O PSA total (antígeno prostático específico), realizado há 2 semanas, revela o valor de 6,5 ng/mL (VR: até 4,0 ng/mL). Qual exame deve ser solicitado para comprovar a especificidade diagnóstica nesse caso?",
+  "correta": "A - PSA fração total e livre.",
+  "marcada": "B - Ultrassonografia transretal.",
+  "erro": "Desatencao",
+  "elo": "Racional declarado: 'fiquei entre B e D, chutando B. Nao li o comando direito da questao'. O comando pedia o exame que 'comprova a especificidade diagnostica', ou seja, refinamento da acuracia do marcador -- e ele resolveu a questao como se ela pedisse o proximo passo diagnostico da vida real, ficando entre imagem e biopsia. Com o comando lido, a alternativa correta e a unica que dialoga com especificidade, e o par que ele considerou nem entra na disputa.",
+  "armadilha": "A questao cobra semantica de teste diagnostico dentro de um cenario que parece pedir fluxograma de urologia -- e oferece a biopsia, que e a conduta clinicamente mais tentadora, e a ultrassonografia transretal, que soa como o passo intermediario razoavel. Vale registrar que o enunciado e tecnicamente impreciso: nenhum exame 'comprova especificidade'. Ainda assim, so uma alternativa se relaciona ao conceito.",
+  "complexidade": "Baixa",
+  "habilidades": "Ler o comando e identificar se a questao pede confirmacao diagnostica ou refinamento de acuracia do teste [QUEBROU] -> Reconhecer PSA total entre 4 e 10 ng/mL com toque benigno como zona cinzenta de baixa especificidade -> Usar a relacao PSA livre/total para aumentar a especificidade antes de indicar biopsia -> Ordenar a sequencia: refinar risco primeiro, biopsiar depois",
+  "faltou": "O papel da relacao PSA livre/total na zona cinzenta: a hiperplasia benigna produz proporcionalmente mais PSA livre e o cancer mais PSA ligado a proteinas, de modo que a razao aumenta a especificidade e reduz biopsias desnecessarias na faixa de 4 a 10 ng/mL.",
+  "explicacao": "Toque retal benigno (prostata aumentada, elastica, de superficie lisa) com PSA total de 6,5 ng/mL coloca o paciente na zona cinzenta de 4 a 10 ng/mL, faixa em que o PSA total nao distingue hiperplasia de neoplasia. A relacao PSA livre/total refina essa distincao porque a fracao livre predomina na doenca benigna; relacao baixa eleva a suspeita e relacao alta a reduz. A sequencia diagnostica e refinar o risco primeiro (relacao livre/total, densidade do PSA, ressonancia multiparametrica) e indicar a biopsia depois, que e o exame de confirmacao histologica, nao o que agrega especificidade ao marcador (posicionamento conjunto SBU e SBPC/ML sobre rastreamento de cancer de prostata).",
+  "cards": [
+   {
+    "tipo": "elo_quebrado",
+    "frente_contexto": "Homem de 65 anos com sintomas do trato urinario inferior, toque retal com prostata aumentada, elastica e de superficie lisa, e PSA total de 6,5 ng/mL (valor de referencia ate 4,0).",
+    "frente_pergunta": "Qual exame aumenta a especificidade diagnostica antes de indicar biopsia?",
+    "verso_resposta": "A dosagem das fracoes total e livre do PSA, para calcular a relacao livre/total.",
+    "verso_regra_mestre": "Refinar a acuracia do marcador e confirmar o diagnostico sao perguntas diferentes: a relacao livre/total refina o risco, a biopsia confirma a histologia.",
+    "verso_armadilha": "Responder pela conduta de vida real e marcar biopsia, ou escolher a ultrassonografia transretal, que serve para medir volume e guiar a biopsia, sem acuracia diagnostica propria."
+   },
+   {
+    "tipo": "conteudo",
+    "frente_contexto": "PSA total na faixa de 4 a 10 ng/mL com relacao livre/total calculada.",
+    "frente_pergunta": "Que valor da relacao eleva a suspeita de neoplasia?",
+    "verso_resposta": "Relacao abaixo de cerca de 15% (valores acima de 25% tornam a neoplasia pouco provavel).",
+    "verso_regra_mestre": "A hiperplasia benigna produz proporcionalmente mais PSA livre e o cancer mais PSA ligado a proteinas -- por isso quanto menor a fracao livre, maior a suspeita.",
+    "verso_armadilha": "Inverter a direcao da razao e ler relacao BAIXA como sinal de benignidade."
+   }
+  ],
+  "_draft_resumo": null,
+  "_resumo_path": null
+ },
+ {
+  "_q": 97,
+  "_tipo_questao": "raciocinio",
+  "_padrao_execucao": null,
+  "area": "Ginecologia",
+  "tema": "Tumores Anexiais e Câncer de Ovário",
+  "titulo": "Parede espessada com anel vascular periferico e centro avascular, em fase lutea do ciclo, define cisto de corpo luteo -- parede fina e o que caracteriza o folicular",
+  "enunciado": "Mulher de 28 anos, com ciclos menstruais regulares, comparece a uma Unidade de Pronto Atendimento apresentando dor pélvica iniciada há 2 dias e localizada na fossa ilíaca direita. Nega febre, corrimento vaginal ou outros sintomas associados. Refere data da última menstruação há 16 dias e uso regular de preservativo masculino nas relações sexuais. O exame físico mostra dor à palpação superficial na fossa ilíaca direita, sem sinais de irritação peritoneal e sem outras alterações. Foi realizada ultrassonografia transvaginal, que revelou imagem medindo 2,5 cm no ovário direito, com componente cístico central, parede espessada e regular, ecos internos avasculares e vascularização periférica, conforme a imagem a seguir. Ovário direito (ultrassonografia transvaginal) Com base nos achados da ultrassonografia e no contexto clínico descrito, a hipótese diagnóstica mais provável é cisto",
+  "correta": "D - cisto lúteo.",
+  "marcada": "B - cisto folicular.",
+  "erro": "Lacuna de conhecimento",
+  "elo": "Racional declarado: 'chute total, desconhecia os cistos ovarianos'. Lacuna de conteudo sem raciocinio intermediario aproveitavel: faltavam os tres eixos que resolvem a questao -- datar o ciclo (DUM ha 16 dias coloca a paciente em fase lutea), ler o Doppler (vascularizacao periferica circunferencial com centro avascular e o anel de fogo do corpo luteo) e diferenciar os cistos funcionais pela parede e pelo conteudo.",
+  "armadilha": "O enunciado descreve 'ecos internos', palavra que puxa para cisto hemorragico, e neutraliza a leitura ao especificar que sao AVASCULARES e que a parede e espessada e regular. Para quem so guarda 'cisto funcional igual a folicular', o folicular e o candidato natural -- e a parede espessada e exatamente o achado que o exclui. O uso regular de preservativo e a data do ciclo ainda servem para afastar gestacao ectopica, o diferencial de seguranca.",
+  "complexidade": "Media",
+  "habilidades": "Datar o ciclo menstrual e localizar a paciente na fase folicular ou lutea antes de interpretar a imagem anexial [QUEBROU] -> Ler o padrao Doppler da massa anexial (vascularizacao periferica com centro avascular) -> Diferenciar cistos funcionais pela espessura da parede e pelo conteudo -> Afastar gestacao ectopica como diferencial de seguranca na dor pelvica aguda",
+  "faltou": "Os descritores ultrassonograficos dos tres cistos funcionais: folicular anecoico, unilocular, de parede FINA, com reforco acustico posterior; luteo com parede ESPESSA e regular, ecos internos avasculares e anel vascular periferico; hemorragico com padrao reticular em favo de mel ou coagulo retraido.",
+  "explicacao": "DUM ha 16 dias em ciclos regulares coloca a paciente na fase lutea, logo apos a ovulacao, quando o corpo luteo e a estrutura ovariana esperada. Componente cistico central com parede espessada e regular, ecos internos avasculares e vascularizacao periferica em anel de fogo e a descricao literal do cisto de corpo luteo. O cisto folicular pertence a primeira metade do ciclo, e anecoico, unilocular, de parede fina e sem anel vascular; o hemorragico mostra padrao reticular ou coagulo retraido, explicitamente ausente; e o paraovariano fica adjacente ao ovario, separado dele, e nao responde ao ciclo (Radiologia Brasileira, Ultrassonografia nas massas anexiais; criterios IOTA).",
+  "cards": [
+   {
+    "tipo": "elo_quebrado",
+    "frente_contexto": "Mulher de 28 anos, ciclos regulares, DUM ha 16 dias, com dor em fossa iliaca direita ha 2 dias. Ultrassonografia transvaginal: imagem de 2,5 cm no ovario direito, componente cistico central, parede espessada e regular, ecos internos avasculares e vascularizacao periferica.",
+    "frente_pergunta": "Qual e a hipotese diagnostica mais provavel?",
+    "verso_resposta": "Cisto de corpo luteo.",
+    "verso_regra_mestre": "Datar o ciclo e o primeiro passo da leitura de massa anexial: dia 16 em ciclo regular e fase lutea, quando o corpo luteo e a estrutura esperada; a parede espessada com anel vascular periferico confirma.",
+    "verso_armadilha": "A expressao 'ecos internos' puxa para cisto hemorragico, mas eles sao descritos como avasculares e sem padrao reticular; e a parede espessada e o que exclui o cisto folicular."
+   },
+   {
+    "tipo": "conteudo",
+    "frente_contexto": "Cisto funcional do ovario a ultrassonografia transvaginal.",
+    "frente_pergunta": "Qual e o padrao de parede do cisto folicular?",
+    "verso_resposta": "Parede fina, com conteudo anecoico, unilocular e reforco acustico posterior, sem anel vascular.",
+    "verso_regra_mestre": "A espessura da parede e o divisor entre os dois cistos funcionais: fina no folicular, espessa e com anel vascular periferico no luteo, que ja e uma estrutura endocrina vascularizada.",
+    "verso_armadilha": "Tratar 'cisto funcional' como sinonimo de folicular e ignorar a fase do ciclo em que a paciente se encontra."
+   },
+   {
+    "tipo": "conteudo",
+    "frente_contexto": "Massa anexial cistica a ultrassonografia transvaginal.",
+    "frente_pergunta": "Qual padrao interno caracteriza o cisto hemorragico?",
+    "verso_resposta": "Ecos internos em padrao reticular, em favo de mel, ou coagulo retraido, sempre avasculares.",
+    "verso_regra_mestre": "O reticulado corresponde a fibrina organizada dentro do cisto; sua ausencia, mesmo havendo ecos internos, afasta o diagnostico.",
+    "verso_armadilha": "Marcar hemorragico sempre que o laudo mencionar ecos internos, sem checar o padrao descrito."
+   }
+  ],
+  "_draft_resumo": "- 🔴 A leitura de massa anexial comeca pela data do ciclo: DUM ha cerca de 14 a 16 dias em ciclo regular coloca a paciente em fase lutea, quando o corpo luteo e a estrutura ovariana esperada.\n- 🔴 Descritores que separam os cistos funcionais: folicular anecoico, unilocular, de parede FINA, com reforco acustico posterior e sem anel vascular; luteo com parede ESPESSA e regular, ecos internos avasculares e vascularizacao periferica em anel de fogo; hemorragico com padrao reticular em favo de mel ou coagulo retraido.\n- ⚠️ A presenca de ecos internos nao caracteriza cisto hemorragico por si: se sao avasculares e a parede e espessada e regular, a descricao e de corpo luteo.",
+  "_resumo_path": "resumos/GO/Tumores Anexiais e Câncer de Ovário.md"
+ }
+]

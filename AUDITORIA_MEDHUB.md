@@ -1933,3 +1933,19 @@ Protocolo `AGENTE.md §10.6` (D71): implement E audit aqui, vereditos do `/ai-en
 - **Como apareceu:** o usuario flagrou 6 "pergunta dupla" em 2 blocos (3 recusou responder). Mais #784 (frente "qual afirmativa esta correta" sem alternativas), #720 (frente pergunta "por que confunde", verso ensina "diarreia nao exclui" -- desconversam), #379 (frente ambigua), #1444 (pacote de fatos), #412 (card de HAS arquivado em DM Agudas).
 - 🔴 **Classe:** Reachability-Debt, forma "sem escopo": o WARN existe ha 47 dias com 270 abertos e ninguem tria; o card so foi triado quando o aluno tropecou nele. 3 cards **nao gravados** (sem tentativa) para nao poluir o FSRS com "nota 1 por defeito".
 - **Remedio proposto:** `so-dado` -- 11 marcas em `reforja.py --marcar ... --origem s181` (fila 272 -> 283). A triagem e do operador (decisao (a) da pilha).
+
+## 6x. Sessao de ESTUDO s182 (Claude Code/Fable 5.1, 2026-09-15, analise do ENAMED 2026 real) -- F106 · F107
+
+Sessao de estudo: ENAMED 2026 (Caderno 02) 75/100; gabarito comentado das 100 questoes via 5 subagentes; 25 erros persistidos em lote (`core/simulados/_enamed26_erros_batch.json`, ids 1019-1043, 44 cards 1630-1673). Detalhe em `history/session_182.md`.
+
+### F106 -- `[SEM-LASTRO]` falso por NOME de tema, 2a ocorrencia (`Infecto/Esquistossomose` -> conteudo em `resumos/Clínica Médica/Infectologia/Parasitoses.md`) -- **BAIXA** -- **ABERTO (so-dado; classe F103)**
+
+- **Sintoma:** o writer `insert_questao.py` imprimiu `[SEM-LASTRO] 'Infecto / Esquistossomose' nao tem resumo (.md) nem PDF-fonte par` ao inserir o erro da Q61, e o tema TEM lastro: a esquistossomose vive em `Parasitoses.md` (que recebeu 3 armadilhas na mesma sessao). Mesma classe do F103 (Polipos -> `Polipose Intestinal e Cancer Colorretal.md`): o match e por nome literal do tema, cego a resumo-guarda-chuva.
+- **Medido:** 2 ocorrencias em 2 sessoes de estudo (s180, s182). `Preventiva/Rede de Atenção Psicossocial (RAPS)` acusado na mesma rodada e REAL (zero lastro).
+- **Remedio proposto:** `so-dado` ate a 3a ocorrencia; entao `spec` pequena -- o check de lastro consulta o RAG (`get_topic_context`) ou um mapa tema -> resumo em `core/`, nao o nome do arquivo.
+
+### F107 -- gate `resposta-embutida` (run >= 6 com o titulo do erro) so acusa dentro do writer; lote de 25 sofreu **2 rollbacks totais** antes do pre-check -- **MEDIA** -- **ABERTO (hotfix candidato)**
+
+- **Sintoma:** `insert_questao.py --errors-file` com 25 itens abortou 2x (`card 0: resposta-embutida (titulo do erro, run>=6)`, Q77) com ROLLBACK TOTAL -- comportamento correto do gate, mas o autor do lote (subagente) nao tinha como rodar o predicado antes, e o principal so o descobriu lendo `tools/card_checks.py` (assinatura `checar_resposta_embutida(card, contexto={"titulo": ...})`, nao documentada em skill).
+- **Medido:** 2 execucoes perdidas (~2 min cada) + 1 tentativa com pre-check errado (assinatura). Banco intacto nas 3 (verificado 1016/1432 antes e depois; COUNT-ASSERT batido na 3a: 1041/1476).
+- **Remedio proposto:** `hotfix` -- `insert_questao.py --errors-file X --dry-run` que roda TODOS os predicados de `card_checks` sobre o lote e imprime os achados sem abrir transacao; assinatura na skill `/analisar-questao §9`. Teste de regressao: lote com 1 card `resposta-embutida` -> dry-run acusa e exit 1, banco inalterado.

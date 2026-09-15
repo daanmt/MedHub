@@ -1,52 +1,52 @@
 # HANDOFF.md -- ESTADO OPERACIONAL CURTO
-*Atualizado: 2026-09-12 (tarde) -- **s181 (ESTUDO)**: sabado de descanso com **113 cards** (fila vencida ZERADA + intake dos dormentes), eixo **nefro declarado nota 9**, pendencia fantasma de Diarreia desfeita, **Revisao dos Top-Erros** publicada. Volume inalterado em **7.226**.*
+*Atualizado: 2026-09-15 (noite) -- **s182 (ESTUDO)**: **ENAMED 2026 real = 75/100** (prova de 13/09), gabarito comentado das 100 questoes publicado, 25 erros persistidos com racional declarado (44 cards), 13 acertos-no-chute no ledger, 15 resumos com armadilhas novas. Volume **7.226 -> 7.326**.*
 
-> 🔴 **ENAMED e AMANHA (dom 13/09) -- termometro, nao alvo.** Uma instrucao: **quando restarem duas, marca a que a analise apontou** (`docs/PLAYBOOK_EXECUCAO_PROVA.md` item 7). Ler de manha o artifact **Revisao dos Top-Erros** (14 temas D5-7 + 9 padroes): https://claude.ai/code/artifact/13609541-3e16-4599-9f48-b0501ac76b6e (copia em `artifacts/revisao-top-erros.html`). Permit de engenharia **CONSUMIDO**; janela 4 so com permit novo, verbatim, via `/ai-eng`.
+> 🔴 **RECURSOS DO ENAMED ATE 17/09 (acao do usuario).** As dele: **Q68** (pelve: angioembolizacao, nao "estabilizacao cirurgica") e **Q75** (epiglote "rigida" -- anulacao), mais **Q6** (A/C). Tambem cabem Q48 (PrEP 2025 = 7 dias), Q5 e Q99. Fundamentos por questao no artifact: https://claude.ai/artifact/TuXkndfMBRRjpErzM2fWEJ (copia em `artifacts/enamed-2026-comentado.html`). Permit de engenharia segue **CONSUMIDO**.
 
 ## > Proximo passo imediato
 
-1. 🎯 **Domingo: ENAMED.** Regra dos dois finalistas. Cards do dia 13-14 reaparecem dia 15 como atrasados (F98) -- **inclusive os 29 nota 1 de hoje**. Deixar.
-2. 🗓️ **Segunda 14/09 = DECISAO:** rescope da grade para o formato UERJ (Clinica Medica 27% -> 20%, **MFC 6,7% -> 20% com zero questoes/cards/erros**), abertura da frente MFC (Gusso + Duncan) e **quais ~460 dos 641** nunca-introduzidos entram ate 01/11. Insumo: `artifacts/raio-x-simulados.html` §3.
-3. 🃏 **Terca 15/09 = dia de divida** (~55 agendados + 29 do blackout; teto 90). **Re-sondar #787 (hiperaldosteronismo) e #597 (Winter)**, que travaram 2x no re-drill, ANTES de novo ensino. Os 3 nao gravados por defeito (#686, #784, #599) so voltam reforjados.
-4. 🔴 **Eixo nefro = tema-zero DECLARADO** (nota 9 `usuario` em Acido-Base e Potassio; memoria `user_nefro_gasometria_dificuldade_declarada`). Quando a grade chegar em Nefrologia: `/aula-base` D9-D10 com onboarding do zero, escada fixa (HCO3/BE -> AG -> Winter -> gap osmolar).
-5. 📚 **Conteudo sem lastro REAL:** Farmacodermias (DRESS falhou s179 x2 + s181) e Doencas de Vulva e Vagina (so PDF + cards.json). ⚰️ **Polipos e Neoplasias Intestinais TEM resumo** (`Polipose Intestinal e Cancer Colorretal.md`, 146 linhas) -- o `[SEM-LASTRO]` da s180 era falso por nome (F103). `Neurologia/TCE.md` esta coloquial e `[CIR] TCE.md` e stub (F104): reescrever, nao card.
-6. 🔴 **Reforja: 283 abertas** (272 + 11 marcas da s181: 6 compostas, 1 frente nao autossuficiente, 1 frente/verso desconversam, 1 ambigua, 1 pacote, 1 taxonomia). Triar e do operador.
+1. 🃏 **Divida FSRS: 78 atrasados + 28 de hoje = 106 vencidos** (o blackout de 13-14/09 caiu hoje); teto 90 em regime de divida. **Re-sondar #787 (hiperaldosteronismo) e #597 (Winter)** antes de ensino novo (herdado da s181). Os 44 cards do ENAMED estao no **pool (685)**, nao na fila vencida.
+2. 🗓️ **Rescope UERJ + abertura da frente MFC (atrasado desde 14/09).** A prova real confirmou o miolo: **29/100 de Preventiva/APS**, cenario de UBS na maioria das demais, RAPS/indicadores/PrEP cobrados por portaria. Insumo: `artifacts/raio-x-simulados.html §3` + `history/session_182.md §2`.
+3. 📚 **8 temas SEM RESUMO cairam no ENAMED:** RAPS, Anafilaxia (adulto), FA/Arritmias, Osteoporose, HPB/PSA, Oncologia pediatrica (Wilms x neuroblastoma), Coqueluche, TEA. Criar na ordem do peso UERJ (RAPS e APS primeiro). Farmacodermias e Vulva/Vagina seguem sem lastro.
+4. 🔴 **Cluster = aula comparativa, nao cards (2a evidencia, s182).** Q52: *"fiz tantos cards de wilms x neuroblastoma e perdi uma questao de graca"*; Q53: Cirurgia Infantil com 53 cards caiu numa facil. Wilms x neuroblastoma e hernia x hidrocele x criptorquidia pedem tabela lado a lado na aula, nao mais cards.
+5. 🔴 **Eixo nefro = tema-zero DECLARADO** (nota 9 `usuario` em Acido-Base e Potassio; herdado). Quando a grade chegar: `/aula-base` D9-D10 com onboarding do zero.
+6. 🔴 **Reforja: 283 abertas** (sem marca nova nesta sessao). Triar e do operador.
 
 ## Fila de engenharia -- TIER 0 e 1 ZERADOS; permit consumido. Inventario: `docs/MEMORIA-AUDITORIA.md §11`
 
-- 🧑‍⚖️ **Abertos:** **F98** (blackout so ve intervalo >= 4d) · **F99** (sem CLI por id) · **F100** (re-ensino nao fecha fato arbitrario -- **3a medicao s181:** cairam de novo no drill, fecharam 4/4 no re-drill pos-mecanismo; testar em 15/09) · 🆕 **F101** (pendencia fantasma no HANDOFF sobreviveu 2 sessoes sem medir) · 🆕 **F102** (hook de drift: regex case-sensitive, falso positivo -- **hotfix de 1 linha**) · 🆕 **F103** (`[SEM-LASTRO]` falso por nome de tema) · 🆕 **F104** (TCE.md coloquial) · 🆕 **F105** (6 compostas antigas fora do alcance do WARN por 47 dias). Candidato s180: backfill do override no ledger de habilidades.
+- 🧑‍⚖️ **Abertos:** **F98** (blackout so ve intervalo >= 4d -- **materializou hoje: 78 atrasados**) · **F99** (sem CLI por id -- a s182 leu ids por SELECT read-only) · **F100** (re-ensino nao fecha fato arbitrario; 4a medicao pendente no re-drill) · **F101-F105** (herdados). 🆕 **F106** `[SEM-LASTRO]` falso por NOME de tema outra vez (`Infecto/Esquistossomose` -> conteudo em `Parasitoses.md`; classe F103) · **F107** o gate `resposta-embutida` so acusa no writer -- **2 rollbacks** do lote hoje ate o pre-check com `card_checks.checar_resposta_embutida(card, {"titulo": ...})`; `insert_questao.py` nao tem `--dry-run`.
 - 🔜 **Janela 4 (decidida pelo `/ai-eng`):** smell `db.py -> tools/card_checks` por `__file__`; por spec.
-- 🧑‍⚖️ **Decisoes empilhadas do OPERADOR:** (a) `reforja.py --backfill --apply`; (b) RODADA 3 do `normalize_taxonomia`; (c) overflow 13-14/09 -> 15/09+; (d) backfill UTC->local; (e) `--new-limit` x pool; (f) areas fantasma; (g) F64; (h) rotacao do ledger (~260 KB); (i) F57 lote de ESTUDO; (j) `/graphify`, F35, F87.
+- 🧑‍⚖️ **Decisoes empilhadas do OPERADOR:** (a) `reforja.py --backfill --apply`; (b) RODADA 3 do `normalize_taxonomia` (8 temas novos entraram hoje); (c) overflow -> 15/09+ (aconteceu); (d) backfill UTC->local; (e) `--new-limit` x pool; (f) areas fantasma; (g) F64; (h) rotacao do ledger (~263 KB); (i) F57 lote de ESTUDO; (j) `/graphify`, F35, F87.
 
 ## Estado por frente
 
-- **Norte:** 🎯 **UERJ/MFC 01/11/2026** (50d). ENAMED 13/09 (**amanha**) termometro.
-- **Volume & Metas:** 7226 / 10400 (perf. ~79.1%). Hoje: 0. Ritmo-alvo ~63.5q/dia (50d p/ UERJ/MFC (prova 01/11)). 🔴 A grade NAO fecha a meta (~1.250 abaixo).
-- **Simulados:** 9 provas · S6 80 · S7 82 · S8 82,1 · S9 86. Serie: 239 erros = 60% execucao x 40% lacuna. Gargalo: override do modal (13/13 no S9).
-- **FSRS:** divida 0 atrasados + 13 p/ hoje -- pool 641 nunca introduzidos (entram <=60/dia). (13 = relearning de hoje.) **s181: 113 cards, 53x4/26x3/5x2/29x1**; vencidos 79% >= 3, novos 41%.
-- **Conteudo:** 136 resumos em resumos/. [derivado: glob] Sem lastro: Farmacodermias, Vulva/Vagina. 3 armadilhas somadas hoje (Meningites, Anexiais, Epilepsias).
-- **Erros & Cards:** 1016 erros registrados · 1432 cards ativos · 2 needs_qualitative na fila · taxonomia 294 temas. [derivado: db] Reforja: **283 abertas**.
-- **Engenharia:** suite 621 · `auto_check --all` PASSED · ledger **107 ids** (F101-F105 novos).
-- **Posicao:** conteudo S17 (nominal S24, atraso 7 sem) [derivado: preparacao_estado]
-- **Datas:** ENAMED 13/09 · fim da grade 25/10 · **UERJ 01/11**. Inscricao UERJ fecha **01/10** (acao do usuario).
+- **Norte:** 🎯 **UERJ/MFC 01/11/2026** (47d). **ENAMED 13/09 FEITO: 75/100** (termometro; abaixo da serie S6-S9).
+- **Volume & Metas:** 7326 / 10400 (perf. ~79.1%). Hoje: 0. Ritmo-alvo ~65.4q/dia (47d p/ UERJ/MFC (prova 01/11)). 🔴 A grade NAO fecha a meta.
+- **Simulados:** 9 provas + ENAMED real · S6 80 · S7 82 · S8 82,1 · S9 86 · **ENAMED 75**. Serie: 264 erros. ENAMED: 62 solidas / 13 chute / 25 erradas; Cardio 3/5, Preventiva 5/29.
+- **FSRS:** divida 78 atrasados + 28 p/ hoje -- pool 685 nunca introduzidos (entram <=90/dia). **s182: 44 cards novos (ids 1630-1673); zero drenagem hoje.**
+- **Conteudo:** 136 resumos em resumos/. [derivado: glob] **+15 resumos com 2-3 armadilhas do ENAMED.** Sem lastro: 8 temas do ENAMED + Farmacodermias + Vulva/Vagina.
+- **Erros & Cards:** 1041 erros registrados · 1476 cards ativos · 2 needs_qualitative na fila · taxonomia 302 temas. [derivado: db] Reforja: **283 abertas**. Ledger: +6 padroes com `--questao-id`, +13 `incerteza`.
+- **Engenharia:** suite 621 · `auto_check --changed` PASSED · ledger **109 ids** (F106, F107 novos).
+- **Posicao:** conteudo S17 (nominal S25, atraso 8 sem) [derivado: preparacao_estado]
+- **Datas:** fim da grade 09/10 · **UERJ 01/11**. Inscricao UERJ fecha **01/10** (acao do usuario). Recurso ENAMED ate **17/09**.
 
-## Ultima sessao -- s181 (2026-09-12, manha -> tarde) -- ESTUDO
+## Ultima sessao -- s182 (2026-09-15, 12h -> 19h) -- ESTUDO
 
-Detalhe integral em `history/session_181.md`. 🃏 **113 cards** em 8 blocos (pipeline de 2; ele respondeu 30 por turno): fila vencida de 86 zerada (79% >= 3; Vulvovaginites 10/10, Cirurgia Infantil com os 4 fatos do F100 caindo pela 3a vez) + intake de 27 novos dos dormentes (41%). Re-drill de 34: 28 fecharam, 3 parciais, 2 travaram (#787, #597), 1 reforja. RD em 6 eixos, 18 carimbos, 4 notas (2 `usuario`). 🔴 **Ele declarou:** *"dificuldade muito grande com hidroeletroliticos x fisiologia renal x gasometria"*. 🕵️ **Pendencia fantasma:** Diarreia 41/34 JA estava no banco (s175 §2o ato, Pediatria, 09/09) -- s179/s180 copiaram o texto do 1o ato; nao registrei (dobraria). 🎯 **Revisao dos Top-Erros** publicada (14 temas em 5 areas + 9 padroes).
+Detalhe integral em `history/session_182.md`. 📄 **Gabarito comentado das 100** via 5 subagentes Opus em paralelo (794k tokens, ~25 min): 94 CONCORDA / 6 CONTESTAVEIS; 2 claims re-medidos pelo principal (PCDT PrEP 2025 = 7 dias; ATLS 11 = 3 mL x kg x %SCQ em 16 h). 🔴 **Os 25 erros com a letra dele:** discriminador **identificado e nao usado** (Q19, Q37, Q40 -- *"circulei os 3 dias... mas nao os utilizei"*) vira sub-estado do padrao-mestre; override do modal declarado na Q69; 2 fatos FALSOS carregados (hernia infantil "fecha", "triciclico nunca em idoso"); Q19 = reincidencia da ectopica da s085. 44 cards de 57 candidatos (13 cortados pelo teste de regenerabilidade); 3 erros `banca-divergente` sem card. Custo total de subagentes: **6 spawns, ~1,03M tokens, ~53 min**.
 
 ## Fronteiras DECLARADAS (nao ler verde de gate como limpeza)
 
-- **F100 3a medicao:** n=1 sessao, sonda imediata apos ensino; o teste e o retorno de 15/09. **Override do modal:** n=13, uma prova.
-- **F98/F99:** guarda de blackout nao ve intervalo < 4d · sem leitor por id. **F7:** classe real, nao-verificavel por gate. **F104:** coloquialismo e semantico, o linter nao pega.
+- **ENAMED sem distribuicao de candidatos:** o override do modal e n=1 DECLARADO (Q69), nao medido; "8 faceis perdidas" e proxy.
+- **F100 4a medicao:** pendente (re-drill de 15/09 nao aconteceu). **F98** materializou (78 atrasados). **F7/F104:** classes semanticas, nao-verificaveis por gate.
 - **D5** mede presenca, nao semantica · **G10** isenta por LINHA · **G5** sensivel a arquivo novo · gate de revogacao casa substring literal.
 - Herdadas e vivas: **F35** · **F89** · **F79b** · **F66** (34% de orfandade) · **F64** · eixo C do **F81** · sitios gemeos do **F80b**.
 
 ## Pendencias/observacoes ativas
 
 - 📄 Manual de Gestacao de Alto Risco (MS 2022) > 10 MB: baixar uma vez resolve beta-hCG e cortes da PE.
-- 💉 Diretrizes a conferir: Calendario Vacinal 2026, GINA 2026, ATLS 11 (parcial), SINAN 2026.
-- ⚠️ Drive 47d sem sync (F72); Dashboard EMED x db medido pelo boot (F35).
+- 💉 Diretrizes a conferir: Calendario Vacinal 2026, GINA 2026, ATLS 11 (parcial -- queimados ja conferido), SINAN 2026.
+- ⚠️ Drive 50d sem sync (F72); Dashboard EMED x db medido pelo boot (F35).
 - 📡 Canal com o `/ai-eng` em `history/exchange-log.jsonl`.
 
 ---
-*Historico: history/INDEX.md * Macro: ESTADO.md * Sessao: history/session_181.md * Trocas: history/exchange-log.jsonl * Auditoria: docs/MEMORIA-AUDITORIA.md*
+*Historico: history/INDEX.md * Macro: ESTADO.md * Sessao: history/session_182.md * Trocas: history/exchange-log.jsonl * Auditoria: docs/MEMORIA-AUDITORIA.md*

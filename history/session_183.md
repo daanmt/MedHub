@@ -1,5 +1,5 @@
 # Session 183 -- Hibrido aprovado: Reta Final rescopada ate 01/11 + extensivo como espinha do ENAMED 2027; o bloco MFC da UERJ lido nos cadernos
-**Data:** 2026-09-16 (13h -> 17h30)
+**Data:** 2026-09-16 (13h -> 18h)
 **Ferramenta:** Claude Code / Fable 5.1 (principal) + 5 subagentes (Opus x3, Sonnet x2)
 **Continuidade:** Sessao 182 (ENAMED 2026 = 75/100)
 **Tipo:** PLANEJAMENTO + ENGENHARIA (zero questoes, zero cards; PRD + P6 + P5 executada)
@@ -94,10 +94,14 @@ RF S17-S28: 149 tarefas, **139 pendentes / 4.036q**. Prioridade 1 (MFC/PED/CIR/G
 - **Premissa corrigida** -- "bloco MFC e novidade do edital 2027" (s159) era falsa: existe desde 2021.
 
 ## 6. Custo dos subagentes (F93, clausula 10)
-5 spawns: Opus cronograma 158.523 tokens / 34 min · Sonnet cards 203.825 / 28 min · Opus guias 272.626 / 40 min · Sonnet INEP 118.672 / 16 min · Opus UERJ-MFC 254.032 / 29 min. Part-1 Sonnet 261.175 / 27 min · Part-9 Opus 243.067 / 25 min · Part-2 Opus 212.815 / 24 min · Part-3 Opus 195.747 / 22 min. **Total ~1,92M tokens, ~245 min de filho, ~150 min de relogio em 5 ondas.** 6 numeros load-bearing re-medidos pelo principal (735 tarefas; fronteira S21; 123 cards; CM 42,0%/MFC 6,71%; bloco MFC desde 2021; 23 PDFs) -- todos confirmados.
+5 spawns: Opus cronograma 158.523 tokens / 34 min · Sonnet cards 203.825 / 28 min · Opus guias 272.626 / 40 min · Sonnet INEP 118.672 / 16 min · Opus UERJ-MFC 254.032 / 29 min. Part-1 Sonnet 261.175 / 27 min · Part-9 Opus 243.067 / 25 min · Part-2 Opus 212.815 / 24 min · Part-3 Opus 195.747 / 22 min. **Total do dia: 10 spawns, ~2,17M tokens (analise ~1,01M + implementacao ~1,16M), ~270 min de filho, ~170 min de relogio em 6 ondas.** 6 numeros load-bearing re-medidos pelo principal (735 tarefas; fronteira S21; 123 cards; CM 42,0%/MFC 6,71%; bloco MFC desde 2021; 23 PDFs) -- todos confirmados.
+
+## 6b. Fechamento -- o player em uso real e o corte da sessao
+- O usuario pediu o encerramento formal (limite do Fable) e ficou **testando o player**. Leitura via `ArtifactData` as 17h2x: **34 notas gravadas pela pagina** (26x4, 4x3, 4x1; 0 defeitos) -- a capability `db` esta provada em runtime, o maior risco declarado da part-9 caiu. Notas NAO gravadas no FSRS nesta sessao (lote em curso); parcial salvo em `tmp/player_2026-09-16_notas_parcial.json` e o export do lote em `artifacts/player-2026-09-16.lote.json` (fora do `tmp/`). A gravacao (`--record-lote --apply --expect N`) e o item 1 do HANDOFF.
+- Parts 4 e 6 NAO foram iniciadas (deixadas para sessao com contexto limpo, em paralelo).
 
 ## 7. Pendencias
-- Recursos do ENAMED ate 17/09 (usuario). Inscricao UERJ ate 01/10.
+- Recursos do ENAMED ENVIADOS. Inscricao UERJ ate 01/10.
 - Divida FSRS: 106 vencidos (nao drenados hoje). Re-sondar #787/#597.
 - Frente MFC-UERJ: cunhar Prevencao Quaternaria, AMI, Raciocinio diagnostico quantitativo, MCCP, Polifarmacia, Paliativos, Rastreamento BR (2/semana).
-- P1 (`plano_tarefas` + `grade_extensivo.json`) e a proxima spec; depois P2, P3, P4. Conciliar as 7 areas divergentes na planilha deixa de ser necessario quando P3 congelar o Drive -- registrar o delta uma vez e seguir pelo banco.
+- Reforma: parts 4 + 6 (paralelo) -> 7 -> 8. Revisao das 173 linhas aproximadas por area. Rebalancear a Fase 1 (~3.050q para 2.760). Conciliar as 7 areas divergentes na planilha deixa de ser necessario quando P3 congelar o Drive -- registrar o delta uma vez e seguir pelo banco.

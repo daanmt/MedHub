@@ -452,6 +452,389 @@ def test_fontes_reais_nao_inventam_area():
         "6 tarefas de Radiologia (S41-S47) + 20 de 'Todas as Disciplinas' (S50-S52)")
 
 
+# =====================================================================================
+# part-3 -- progresso do plano: concluir / cortar / mover / reabrir / revisar por area
+#
+# O que estes testes protegem, em ordem de dano:
+#   1. **`--concluir` sem sessao em `sessoes_bulk` nao grava** -- "feito sem volume" e
+#      exatamente a ficcao que a part-3 existe para fechar, e `--sessao` e o ID da linha
+#      (nao o `sessao_num`, que se repete entre areas).
+#   2. **`--expect` errado nao grava** -- o lote da `--confirmar-area` toca a AREA
+#      INTEIRA; errar o N e reescrever a origem de ~100 linhas sem conferencia.
+#   3. **id fora da area derruba o lote** -- marcar a tarefa errada e o defeito
+#      confessado pelo usuario que originou esta parte.
+#   4. **a conferencia carimba quem NAO mudou de status** -- sem isso o
+#      `--pendencia-revisao` nunca chega a zero (criterio 2 do PRD).
+# =====================================================================================
+
+def _criar_sessoes_bulk(caminho, linhas=((175, "Pediatria", 30, 24, "2026-09-15"),)):
+    """`sessoes_bulk` sintetica (mesmo schema de `tools/init_db.py`). Devolve os ids
+    INSERIDOS -- de proposito diferentes do `sessao_num`, que e o par que o CLI pode
+    confundir."""
+    conn = sqlite3.connect(caminho)
+    try:
+        conn.execute('''
+            CREATE TABLE IF NOT EXISTS sessoes_bulk (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                sessao_num INTEGER,
+                area TEXT NOT NULL,
+                questoes_feitas INTEGER DEFAULT 0,
+                questoes_acertadas INTEGER DEFAULT 0,
+                data_sessao DATE DEFAULT CURRENT_DATE,
+                observacoes TEXT)
+        ''')
+        conn.executemany(
+            "INSERT INTO sessoes_bulk (sessao_num, area, questoes_feitas, "
+            "questoes_acertadas, data_sessao) VALUES (?, ?, ?, ?, ?)", linhas)
+        conn.commit()
+        return [r[0] for r in conn.execute("SELECT id FROM sessoes_bulk ORDER BY id")]
+    finally:
+        conn.close()
+
+
+def _semeado(tmp_path, monkeypatch):
+    """Banco sintetico com as 10 linhas da semeadura. Devolve `(caminho, indice)`,
+    indexado pela chave estavel `(fonte, ref_semana_fonte, tarefa_fonte)`."""
+    caminho = _usar_db(tmp_path, monkeypatch)
+    plano.semear(apply=True, expect=10, out=lambda *_: None, **_fontes())
+    return caminho, _linhas_por_chave(db.plano_listar())
+
+
+def _mudo():
+    return lambda *_: None
+
+
+# ------------------------------------------------------------ --concluir (DoD 1)
+
+def test_concluir_recusa_sessao_inexistente(tmp_path, monkeypatch):
+    caminho, idx = _semeado(tmp_path, monkeypatch)
+    _criar_sessoes_bulk(caminho)
+    alvo = idx[("extensivo", 21, 2)]                 # Diarreia Aguda, pendente
+    saida = []
+    code, res = plano.concluir(alvo["id"], 999, out=saida.append)
+    assert code == 2 and res is None
+    texto = "\n".join(saida)
+    assert "nao existe em sessoes_bulk" in texto
+    assert "sessao_num" in texto, "a recusa tem que nomear a confusao id x sessao_num"
+    assert db.plano_obter(alvo["id"])["status"] == "pendente", "recusa nao pode gravar"
+
+
+def test_set_status_recusa_sessao_inexistente_na_porta(tmp_path, monkeypatch):
+    """O gate nao e so do CLI: o writer recusa sozinho (nenhum caller escapa)."""
+    _caminho, idx = _semeado(tmp_path, monkeypatch)
+    alvo = idx[("extensivo", 21, 2)]
+    try:
+        db.plano_set_status(alvo["id"], "feita", sessao_bulk_id=999,
+                            origem_conclusao=db.ORIGEM_USUARIO)
+        assert False, "sessao fantasma passou pela porta do writer"
+    except ValueError as e:
+        assert "sessoes_bulk" in str(e)
+    assert db.plano_obter(alvo["id"])["status"] == "pendente"
+
+
+def test_set_status_recusa_vinculo_fora_de_feita(tmp_path, monkeypatch):
+    _caminho, idx = _semeado(tmp_path, monkeypatch)
+    alvo = idx[("extensivo", 21, 2)]
+    for kwargs in ({"sessao_bulk_id": 1}, {"data_conclusao": "2026-09-15"}):
+        try:
+            db.plano_set_status(alvo["id"], "cortada",
+                                origem_conclusao=db.ORIGEM_USUARIO, **kwargs)
+            assert False, f"vinculo de conclusao aceito fora de 'feita': {kwargs}"
+        except ValueError as e:
+            assert "status='feita'" in str(e)
+
+
+def test_concluir_e_idempotente(tmp_path, monkeypatch):
+    caminho, idx = _semeado(tmp_path, monkeypatch)
+    ids = _criar_sessoes_bulk(caminho)
+    alvo = idx[("extensivo", 21, 2)]
+    for _ in range(2):                               # 2a execucao nao pode divergir
+        code, _res = plano.concluir(alvo["id"], ids[0], data="2026-09-15", out=_mudo())
+        assert code == 0
+    d = db.plano_obter(alvo["id"])
+    assert d["status"] == "feita"
+    assert d["data_conclusao"] == "2026-09-15"
+    assert d["sessao_bulk_id"] == ids[0]
+    assert d["origem_conclusao"] == db.ORIGEM_USUARIO
+    assert len(db.plano_listar()) == 10, "concluir nao insere linha nova"
+    assert sum(1 for l in db.plano_listar() if l["status"] == "feita") == 2
+
+
+def test_concluir_recusa_id_inexistente(tmp_path, monkeypatch):
+    caminho, _idx = _semeado(tmp_path, monkeypatch)
+    ids = _criar_sessoes_bulk(caminho)
+    saida = []
+    code, res = plano.concluir(99999, ids[0], out=saida.append)
+    assert code == 2 and res is None
+    assert "nao existe em plano_tarefas" in "\n".join(saida)
+
+
+def test_concluir_recusa_data_malformada(tmp_path, monkeypatch):
+    caminho, idx = _semeado(tmp_path, monkeypatch)
+    ids = _criar_sessoes_bulk(caminho)
+    alvo = idx[("extensivo", 21, 2)]
+    code, _res = plano.concluir(alvo["id"], ids[0], data="15/09/2026", out=_mudo())
+    assert code == 2
+    assert db.plano_obter(alvo["id"])["status"] == "pendente"
+
+
+# -------------------------------------------------------------- --cortar (DoD 1)
+
+def test_compor_nota_corte_preserva_marcas_e_nao_empilha():
+    assert plano.compor_nota_corte(None, "sem tempo") == "corte: sem tempo"
+    assert plano.compor_nota_corte("q_estimada", "sem tempo") == \
+        "q_estimada; corte: sem tempo"
+    # corte repetido SUBSTITUI o motivo anterior
+    assert plano.compor_nota_corte("q_estimada; corte: sem tempo", "mudou o plano") == \
+        "q_estimada; corte: mudou o plano"
+
+
+def test_cortar_grava_status_e_motivo(tmp_path, monkeypatch):
+    _caminho, idx = _semeado(tmp_path, monkeypatch)
+    alvo = idx[("extensivo", 21, 3)]                 # Cirurgia Vascular (nota q_estimada)
+    code, _res = plano.cortar(alvo["id"], "coberto pela Reta Final", out=_mudo())
+    assert code == 0
+    d = db.plano_obter(alvo["id"])
+    assert d["status"] == "cortada"
+    assert "corte: coberto pela Reta Final" in d["nota"]
+    assert "q_estimada" in d["nota"], "a marca da semeadura nao pode ser sobrescrita"
+    assert d["origem_conclusao"] == db.ORIGEM_USUARIO
+
+
+def test_cortar_sem_motivo_recusa(tmp_path, monkeypatch):
+    _caminho, idx = _semeado(tmp_path, monkeypatch)
+    alvo = idx[("extensivo", 21, 3)]
+    code, res = plano.cortar(alvo["id"], "   ", out=_mudo())
+    assert code == 2 and res is None
+    assert db.plano_obter(alvo["id"])["status"] == "pendente"
+
+
+# --------------------------------------------------------------- --mover (DoD 1)
+
+def test_mover_regrava_semana_e_ordem_sem_tocar_status(tmp_path, monkeypatch):
+    _caminho, idx = _semeado(tmp_path, monkeypatch)
+    alvo = idx[("extensivo", 21, 1)]                 # feita pelo Dashboard
+    code, _res = plano.mover(alvo["id"], 4, ordem=2, out=_mudo())
+    assert code == 0
+    d = db.plano_obter(alvo["id"])
+    assert (d["semana_plano"], d["ordem"]) == (4, 2)
+    assert d["status"] == "feita", "mover e replanejar, nao concluir"
+    assert d["origem_conclusao"] == plano.ORIGEM_DASHBOARD, "mover nao confirma origem"
+    # --ordem omitida PRESERVA a ordem
+    plano.mover(alvo["id"], 6, out=_mudo())
+    d2 = db.plano_obter(alvo["id"])
+    assert (d2["semana_plano"], d2["ordem"]) == (6, 2)
+
+
+def test_mover_recusa_semana_invalida_e_id_inexistente(tmp_path, monkeypatch):
+    _caminho, idx = _semeado(tmp_path, monkeypatch)
+    alvo = idx[("extensivo", 21, 1)]
+    antes = db.plano_obter(alvo["id"])["semana_plano"]
+    code, _res = plano.mover(alvo["id"], 0, out=_mudo())
+    assert code == 2
+    assert db.plano_obter(alvo["id"])["semana_plano"] == antes
+    code, _res = plano.mover(99999, 3, out=_mudo())
+    assert code == 2
+
+
+# ------------------------------------------------------------- --reabrir (DoD 1)
+
+def test_reabrir_volta_a_pendente_e_apaga_o_vinculo(tmp_path, monkeypatch):
+    caminho, idx = _semeado(tmp_path, monkeypatch)
+    ids = _criar_sessoes_bulk(caminho)
+    alvo = idx[("extensivo", 21, 2)]
+    plano.concluir(alvo["id"], ids[0], data="2026-09-15", out=_mudo())
+    code, _res = plano.reabrir(alvo["id"], out=_mudo())
+    assert code == 0
+    d = db.plano_obter(alvo["id"])
+    assert d["status"] == "pendente"
+    assert d["data_conclusao"] is None and d["sessao_bulk_id"] is None
+    assert d["origem_conclusao"] == db.ORIGEM_USUARIO, "quem reabriu foi o usuario"
+
+
+# ------------------------------------------------- --revisar-area (DoD 2, leitura)
+
+def test_revisar_area_imprime_em_blocos_de_25(tmp_path, monkeypatch):
+    caminho, _idx = _semeado(tmp_path, monkeypatch)
+    # 30 linhas custom em Preventiva -> 2 blocos com o teto de 25
+    custom = {"_doc": "sintetico", "atualizado_em": "2026-09-16", "tarefas": [
+        {"tarefa_fonte": n, "semana_plano": 1, "ordem": n, "area": "Preventiva",
+         "tema": f"Tema {n}", "tipo": "resumo", "tipo_norm": "teoria",
+         "url_lista": None, "q_previstas": 0, "nota": None} for n in range(1, 31)]}
+    plano.semear(apply=True, expect=29, out=_mudo(), **_fontes(custom=custom))
+    saida = []
+    code, linhas = plano.revisar_area("Preventiva", out=saida.append)
+    assert code == 0
+    assert len(linhas) == 31                     # 30 custom + a tarefa do extensivo
+    texto = "\n".join(saida)
+    assert "bloco 1/2: linhas 1-25 de 31" in texto
+    assert "bloco 2/2: linhas 26-31 de 31" in texto
+    assert "--confirmar-area" in texto, "a lista tem que ensinar o comando seguinte"
+
+
+def test_revisar_area_recusa_area_fantasma(tmp_path, monkeypatch):
+    _semeado(tmp_path, monkeypatch)
+    saida = []
+    code, linhas = plano.revisar_area("Clinica Medica", out=saida.append)
+    assert code == 2 and linhas == []
+    assert "fora do vocabulario" in "\n".join(saida)
+
+
+# ------------------------------------------- --confirmar-area (DoD 2, COUNT-ASSERT)
+
+def test_ids_da_lista():
+    assert plano.ids_da_lista("1, 4,9") == [1, 4, 9]
+    assert plano.ids_da_lista("") == [] and plano.ids_da_lista(None) == []
+    try:
+        plano.ids_da_lista("1,quatro")
+        assert False, "id nao inteiro passou em silencio"
+    except ValueError as e:
+        assert "quatro" in str(e)
+
+
+def test_confirmar_area_expect_errado_nao_grava(tmp_path, monkeypatch):
+    _caminho, idx = _semeado(tmp_path, monkeypatch)
+    feita = idx[("extensivo", 21, 1)]                # Pediatria, feita/dashboard
+    saida = []
+    code, medida = plano.confirmar_area("Pediatria", feitas="", pendentes=str(feita["id"]),
+                                        apply=True, expect=99, out=saida.append)
+    assert code == 2
+    assert medida["alvo"] == 3, "Pediatria tem 3 linhas no banco sintetico"
+    assert "RECUSADO" in "\n".join(saida)
+    d = db.plano_obter(feita["id"])
+    assert d["status"] == "feita" and d["origem_conclusao"] == plano.ORIGEM_DASHBOARD
+
+
+def test_confirmar_area_dry_run_nao_grava(tmp_path, monkeypatch):
+    _caminho, idx = _semeado(tmp_path, monkeypatch)
+    feita = idx[("extensivo", 21, 1)]
+    code, medida = plano.confirmar_area("Pediatria", apply=False, out=_mudo())
+    assert code == 0 and medida["alvo"] == 3 and medida["so_origem"] == 3
+    assert medida["aproximadas"] == 1
+    assert db.plano_obter(feita["id"])["origem_conclusao"] == plano.ORIGEM_DASHBOARD
+
+
+def test_confirmar_area_recusa_id_fora_da_area(tmp_path, monkeypatch):
+    _caminho, idx = _semeado(tmp_path, monkeypatch)
+    de_cirurgia = idx[("extensivo", 21, 3)]
+    saida = []
+    code, medida = plano.confirmar_area("Pediatria", feitas=str(de_cirurgia["id"]),
+                                        apply=True, expect=3, out=saida.append)
+    assert code == 2 and medida is None
+    assert "fora da area Pediatria" in "\n".join(saida)
+    assert db.plano_obter(de_cirurgia["id"])["status"] == "pendente"
+
+
+def test_confirmar_area_recusa_id_nos_dois_lados(tmp_path, monkeypatch):
+    _caminho, idx = _semeado(tmp_path, monkeypatch)
+    alvo = str(idx[("extensivo", 21, 1)]["id"])
+    saida = []
+    code, _m = plano.confirmar_area("Pediatria", feitas=alvo, pendentes=alvo,
+                                    apply=True, expect=3, out=saida.append)
+    assert code == 2
+    assert "--feitas E --pendentes" in "\n".join(saida)
+
+
+def test_confirmar_area_marca_origem_em_toda_a_area(tmp_path, monkeypatch):
+    """O coracao do DoD 2: a linha que NAO mudou de status tambem e carimbada -- a
+    conferencia e a evidencia, e sem isso a pendencia nunca chega a zero."""
+    caminho, idx = _semeado(tmp_path, monkeypatch)
+    ids = _criar_sessoes_bulk(caminho)
+    marcada_errada = idx[("extensivo", 21, 1)]       # estava feita pelo Dashboard
+    de_verdade = idx[("extensivo", 21, 2)]           # o usuario diz que ESTA foi feita
+    intocada = idx[("extensivo", 22, 2)]             # pendente, continua pendente
+    # a linha "feita de verdade" ja tinha vinculo de sessao: o lote nao pode apaga-lo
+    plano.concluir(de_verdade["id"], ids[0], data="2026-09-15", out=_mudo())
+
+    code, medida = plano.confirmar_area(
+        "Pediatria", feitas=str(de_verdade["id"]), pendentes=str(marcada_errada["id"]),
+        apply=True, expect=3, out=_mudo())
+    assert code == 0
+    assert (medida["feitas"], medida["pendentes"], medida["so_origem"]) == (1, 1, 1)
+
+    depois = {l["id"]: l for l in db.plano_listar(area="Pediatria")}
+    assert len(depois) == 3
+    assert all(l["origem_conclusao"] == db.ORIGEM_USUARIO for l in depois.values())
+    assert depois[marcada_errada["id"]]["status"] == "pendente"
+    assert depois[marcada_errada["id"]]["data_conclusao"] is None
+    assert depois[de_verdade["id"]]["status"] == "feita"
+    assert depois[de_verdade["id"]]["sessao_bulk_id"] == ids[0], (
+        "o lote e retro-confirmacao: nao apaga o vinculo de um --concluir anterior")
+    assert depois[intocada["id"]]["status"] == "pendente"
+    assert db.plano_obter(idx[("custom", 0, 1)]["id"])["origem_conclusao"] is None, (
+        "a confirmacao e POR AREA: nao pode vazar para Preventiva")
+
+
+# ---------------------------------------------------- --pendencia-revisao (DoD 3)
+
+def test_pendencia_revisao_zera_apos_confirmar(tmp_path, monkeypatch):
+    _caminho, _idx = _semeado(tmp_path, monkeypatch)
+    antes = db.plano_pendencia_revisao()
+    assert [(d["area"], d["aproximadas"], d["total"]) for d in antes] == \
+        [("Pediatria", 1, 3)]
+    code, _m = plano.confirmar_area("Pediatria", apply=True, expect=3, out=_mudo())
+    assert code == 0
+    assert db.plano_pendencia_revisao() == [], (
+        "zero aproximadas e o criterio de sucesso 2 do PRD")
+
+
+def test_pendencia_revisao_sem_plano_semeado(tmp_path, monkeypatch):
+    _usar_db(tmp_path, monkeypatch)
+    assert db.plano_pendencia_revisao() == [], "leitura sem plano nao levanta nem cria"
+
+
+def test_cli_pendencia_revisao_pelo_main(tmp_path, monkeypatch, capsys):
+    _semeado(tmp_path, monkeypatch)
+    assert plano.main(["--pendencia-revisao"]) == 0
+    texto = capsys.readouterr().out
+    assert "pendencia de revisao: 1 linha(s)" in texto
+    assert "--revisar-area" in texto, "o output tem que apontar o proximo comando"
+    assert plano.main(["--pendencia-revisao", "--json"]) == 0
+    dados = json.loads(capsys.readouterr().out)
+    assert dados[0]["area"] == "Pediatria" and dados[0]["bloco"] == "PED"
+
+
+# ------------------------------------------------------------- CLI: um modo so
+
+def test_main_exige_exatamente_um_modo(tmp_path, monkeypatch):
+    _usar_db(tmp_path, monkeypatch)
+    for argv in ([], ["--semear", "--listar"], ["--listar", "--pendencia-revisao"]):
+        try:
+            plano.main(argv)
+            assert False, f"argv ambiguo aceito: {argv}"
+        except SystemExit as e:
+            assert e.code == 2
+
+
+def test_main_exige_argumento_companheiro(tmp_path, monkeypatch):
+    _usar_db(tmp_path, monkeypatch)
+    for argv in (["--concluir", "1"],            # sem --sessao
+                 ["--mover", "1"],               # sem --semana
+                 ["--confirmar-area", "Pediatria", "--apply"]):   # sem --expect
+        try:
+            plano.main(argv)
+            assert False, f"argv incompleto aceito: {argv}"
+        except SystemExit as e:
+            assert e.code == 2
+
+
 if __name__ == "__main__":
     import pytest
     sys.exit(pytest.main([__file__, "-q"]))
+
+
+
+def test_reseed_preserva_nota_do_usuario(tmp_path, monkeypatch):
+    """Defeito declarado na part-3: `nota` esta em CAMPOS_SEMEADOS e um re-seed apagava o
+    motivo do --cortar. Regra (orquestrador, s183): nota de linha com origem_conclusao='usuario'
+    sobrevive ao re-seed; so a nota SEMEADA e reescrita."""
+    _caminho, idx = _semeado(tmp_path, monkeypatch)
+    alvo = idx[("extensivo", 21, 3)]
+    code, _res = plano.cortar(alvo["id"], "coberto pela Reta Final", out=_mudo())
+    assert code == 0
+    code, _, _ = plano.semear(apply=True, expect=0, out=lambda *_: None, **_fontes())  # re-seed
+    assert code == 0
+    d = db.plano_obter(alvo["id"])
+    assert d["status"] == "cortada"
+    assert "corte: coberto pela Reta Final" in d["nota"], "re-seed apagou a nota do usuario"
+    assert d["origem_conclusao"] == db.ORIGEM_USUARIO

@@ -1575,6 +1575,21 @@ def get_serie_blocos(piso_questoes=15, ultimos=None, incluir_simulado=False):
 FONTES_PLANO = ("extensivo", "rf", "custom")
 STATUS_PLANO = ("pendente", "feita", "cortada")
 
+#: Carimbo do status inicial vindo do snapshot do Dashboard do Drive (congelado em
+#: 2026-09-16, planilha modificada em 10/09). É sinal APROXIMADO por confissão do
+#: usuário -- ele marcava tarefa no lugar de outra. `tools/plano.py` importa daqui:
+#: a string mora num lugar só, senão o contador de pendência mede outra coisa.
+ORIGEM_APROXIMADA = "dashboard_2026-09-10"
+
+#: Carimbo de status CONFERIDO pelo usuário (part-3). Zerar as linhas
+#: `ORIGEM_APROXIMADA` é o critério de sucesso 2 do PRD.
+#:
+#: 🔴 Semântica ALARGADA na part-3: até a part-2, `origem_conclusao` só era escrita em
+#: linha `feita` (as outras nasciam NULL). A partir da revisão por área ela responde
+#: "quem AFIRMOU este status", inclusive em `pendente` e `cortada` -- a conferência do
+#: usuário é a evidência, e é ela que precisa ficar registrada na linha que NÃO mudou.
+ORIGEM_USUARIO = "usuario"
+
 #: Blocos de peso da prova da UERJ. Agrupamento de LEITURA (filtro do `--listar`),
 #: não coluna: bloco é derivado de `area`, e área já tem vocabulário único (F89).
 #: Toda área fora do mapa é `CM` -- inclusive as clínicas que a Fase 1 corta.
@@ -1720,7 +1735,10 @@ def plano_upsert_tarefas(rows, aplicar=True):
                     tipo_norm     = excluded.tipo_norm,
                     url_lista     = excluded.url_lista,
                     q_previstas   = excluded.q_previstas,
-                    nota          = excluded.nota,
+                    -- nota do usuario (--cortar/--concluir, origem usuario) sobrevive ao re-seed;
+                    -- so a nota SEMEADA e reescrita (defeito apontado na part-3, fechado pelo orquestrador)
+                    nota          = CASE WHEN plano_tarefas.origem_conclusao = 'usuario'
+                                         THEN plano_tarefas.nota ELSE excluded.nota END,
                     atualizado_em = excluded.atualizado_em
             ''', (fonte, chave[1], chave[2],
                   linha.get("semana_plano"), linha.get("ordem"), area,
@@ -1736,7 +1754,7 @@ def plano_upsert_tarefas(rows, aplicar=True):
         conn.close()
 
 
-def plano_listar(semana=None, bloco=None, status=None, fonte=None):
+def plano_listar(semana=None, bloco=None, status=None, fonte=None, area=None):
     """Leitura de `plano_tarefas` (read-only): lista de dicts com `bloco` derivado de
     `area`. Filtros combinam por AND; `bloco` é aplicado em Python porque a coluna
     não existe (derivada, nunca duplicada)."""
@@ -1748,6 +1766,9 @@ def plano_listar(semana=None, bloco=None, status=None, fonte=None):
         if semana is not None:
             onde.append("semana_plano = ?")
             params.append(int(semana))
+        if area:
+            onde.append("area = ?")
+            params.append(str(area))
         if status:
             onde.append("status = ?")
             params.append(str(status))
@@ -1770,3 +1791,247 @@ def plano_listar(semana=None, bloco=None, status=None, fonte=None):
     if bloco:
         linhas = [d for d in linhas if d["bloco"] == bloco]
     return linhas
+
+
+# --- Progresso do plano (part-3): concluir, cortar, mover, revisar por área --------
+#
+# A part-2 semeou o status; esta parte o torna EDITÁVEL por comando e rastreável.
+# A regra que sustenta tudo: `origem_conclusao` é a TRILHA DE AUDITORIA, não o
+# `status`. Uma linha pode continuar `feita` e migrar de `ORIGEM_APROXIMADA` para
+# `ORIGEM_USUARIO` -- é o que permite "zero aproximadas" sem reescrever histórico.
+#
+# `tools/plano.py` continua sem abrir `sqlite3` próprio: todo INSERT/UPDATE entra aqui.
+
+def plano_obter(tarefa_id):
+    """Uma linha de `plano_tarefas` por `id` (read-only): dict ou `None`."""
+    if tarefa_id is None:
+        return None
+    colunas = [c for c in _COLUNAS_PLANO if c not in ("criado_em", "atualizado_em")]
+    conn = get_connection()
+    try:
+        sql = "SELECT " + ", ".join(colunas) + " FROM plano_tarefas WHERE id = ?"
+        try:
+            row = conn.execute(sql, (int(tarefa_id),)).fetchone()
+        except sqlite3.OperationalError:
+            return None            # plano ainda não semeado: leitura não cria tabela
+    finally:
+        conn.close()
+    if row is None:
+        return None
+    d = dict(zip(colunas, row))
+    d["bloco"] = bloco_de(d.get("area"))
+    return d
+
+
+def sessao_bulk_resumo(sessao_id):
+    """Linha de `sessoes_bulk` por `id` (read-only): dict ou `None`.
+
+    É o gate do `--concluir` -- "feito sem volume" não passa -- e, de quebra, o eco
+    que denuncia o id trocado: `sessao_bulk_id` é o **id da linha**, nunca o
+    `sessao_num` (que se repete entre áreas).
+    """
+    if sessao_id is None:
+        return None
+    colunas = ("id", "sessao_num", "area", "questoes_feitas", "questoes_acertadas",
+               "data_sessao", "observacoes")
+    conn = get_connection()
+    try:
+        try:
+            row = conn.execute(
+                "SELECT " + ", ".join(colunas) + " FROM sessoes_bulk WHERE id = ?",
+                (int(sessao_id),)).fetchone()
+        except sqlite3.OperationalError:
+            return None
+    finally:
+        conn.close()
+    return dict(zip(colunas, row)) if row else None
+
+
+def plano_set_status(tarefa_id, status, *, sessao_bulk_id=None, data_conclusao=None,
+                     origem_conclusao, nota=None):
+    """Escreve o PROGRESSO de uma tarefa do plano. Devolve `{antes, depois}` ou `None`
+    quando o `id` não existe (quem chamou recusa nomeando; escrita silenciosa em id
+    inexistente seria a pior falha desta parte).
+
+    Regras de porta, todas fail-loud (`ValueError`):
+      - `status` do vocabulário (`STATUS_PLANO`);
+      - `origem_conclusao` é OBRIGATÓRIA (keyword-only sem default): status sem origem
+        declarada é exatamente o que a part-3 existe para acabar;
+      - `sessao_bulk_id` / `data_conclusao` só existem em `status='feita'`;
+      - `sessao_bulk_id` tem que existir em `sessoes_bulk`.
+
+    Status diferente de `feita` **limpa** `data_conclusao` e `sessao_bulk_id`: reabrir
+    ou cortar apaga o vínculo de conclusão, senão sobra trilha órfã apontando para uma
+    conclusão que o usuário acabou de negar. `nota=None` PRESERVA a nota existente
+    (as marcas da semeadura -- `q_estimada`, `area_fonte=` -- moram lá).
+    """
+    status = (status or "").strip()
+    if status not in STATUS_PLANO:
+        raise ValueError(f"status invalido: {status!r} (validos: {list(STATUS_PLANO)})")
+    origem = (origem_conclusao or "").strip()
+    if not origem:
+        raise ValueError("origem_conclusao e obrigatoria: status sem origem declarada "
+                         "e o que a revisao por area existe para zerar")
+    if status != "feita" and (sessao_bulk_id is not None or data_conclusao is not None):
+        raise ValueError(f"sessao_bulk_id/data_conclusao so existem em status='feita' "
+                         f"(recebido status={status!r})")
+    if sessao_bulk_id is not None and sessao_bulk_resumo(sessao_bulk_id) is None:
+        raise ValueError(f"sessao {sessao_bulk_id} nao existe em sessoes_bulk "
+                         f"(--sessao e o id da linha, nao o sessao_num)")
+
+    antes = plano_obter(tarefa_id)
+    if antes is None:
+        return None
+    conn = get_connection()
+    try:
+        conn.execute('''
+            UPDATE plano_tarefas
+               SET status           = ?,
+                   data_conclusao   = ?,
+                   sessao_bulk_id   = ?,
+                   origem_conclusao = ?,
+                   nota             = COALESCE(?, nota),
+                   atualizado_em    = ?
+             WHERE id = ?
+        ''', (status,
+              data_conclusao if status == "feita" else None,
+              int(sessao_bulk_id) if (status == "feita" and sessao_bulk_id is not None)
+              else None,
+              origem, nota, carimbo(), int(tarefa_id)))
+        conn.commit()
+    finally:
+        conn.close()
+    return {"antes": antes, "depois": plano_obter(tarefa_id)}
+
+
+def plano_mover(tarefa_id, semana, ordem=None):
+    """Regrava `semana_plano` (e `ordem`, quando dada). Devolve `{antes, depois}` ou
+    `None` se o `id` não existe.
+
+    NÃO toca em `status` nem em `origem_conclusao`: mover é REPLANEJAR, não concluir.
+    Substitui o ritual de reordenar o xlsx do Drive à mão (`project_cronograma_dual_ssot`).
+    `ordem=None` preserva a ordem atual -- inclusive quando ela é NULL (linha que estava
+    `feita`/`cortada` e volta para uma semana: a ordem dentro da semana é decisão à parte).
+    """
+    if semana is None:
+        raise ValueError("--mover exige --semana N")
+    semana = int(semana)
+    if semana < 1:
+        raise ValueError(f"semana invalida: {semana} (o plano comeca na semana 1)")
+    antes = plano_obter(tarefa_id)
+    if antes is None:
+        return None
+    conn = get_connection()
+    try:
+        conn.execute(
+            "UPDATE plano_tarefas SET semana_plano = ?, ordem = COALESCE(?, ordem), "
+            "atualizado_em = ? WHERE id = ?",
+            (semana, None if ordem is None else int(ordem), carimbo(), int(tarefa_id)))
+        conn.commit()
+    finally:
+        conn.close()
+    return {"antes": antes, "depois": plano_obter(tarefa_id)}
+
+
+def plano_confirmar_area(area, feitas=(), pendentes=(), origem_conclusao=ORIGEM_USUARIO,
+                         aplicar=False):
+    """Revisão por ÁREA em lote. Devolve o COUNT-ASSERT medido:
+    `{area, alvo, feitas, pendentes, so_origem, ja_confirmadas, aproximadas}`.
+
+    `alvo` é o número de linhas da área que serão TOCADAS -- e são todas, porque a
+    conferência carimba `origem_conclusao` até em quem não mudou de status. É esse N
+    que o `--expect` tem que casar (AGENTE.md §10.7).
+
+    `aplicar=False` percorre o MESMO caminho de medição do `aplicar=True` (o dry-run
+    não pode divergir do apply) e não escreve nada. Ids fora da área -- inclusive id
+    inexistente -- derrubam o lote inteiro com `ValueError` nomeando os culpados:
+    marcar a tarefa errada é o defeito que originou esta parte.
+
+    O que a confirmação faz com o vínculo de conclusão:
+      - `feitas`: só o `status`. `data_conclusao`/`sessao_bulk_id` de um `--concluir`
+        anterior ficam INTACTOS (o lote é retro-confirmação, não conclusão nova;
+        vincular sessão é a part-6);
+      - `pendentes`: `status` + LIMPA `data_conclusao`/`sessao_bulk_id`, porque o
+        usuário acabou de negar aquela conclusão.
+    """
+    from app.utils.areas import validar_area
+    area = validar_area(area, origem="plano_tarefas[confirmar-area]")
+    origem = (origem_conclusao or "").strip()
+    if not origem:
+        raise ValueError("origem_conclusao e obrigatoria na confirmacao por area")
+    feitas = {int(i) for i in (feitas or ())}
+    pendentes = {int(i) for i in (pendentes or ())}
+    ambos = sorted(feitas & pendentes)
+    if ambos:
+        raise ValueError(f"id(s) em --feitas E --pendentes ao mesmo tempo: {ambos}. "
+                         f"Decida um dos dois e repita.")
+
+    conn = get_connection()
+    try:
+        try:
+            linhas = {r[0]: (r[1], r[2]) for r in conn.execute(
+                "SELECT id, status, origem_conclusao FROM plano_tarefas WHERE area = ?",
+                (area,)).fetchall()}
+        except sqlite3.OperationalError:
+            linhas = {}                       # plano ainda não semeado
+        fora = sorted((feitas | pendentes) - set(linhas))
+        if fora:
+            raise ValueError(
+                f"id(s) fora da area {area}: {fora}. Nada gravado -- confira com "
+                f'python tools/plano.py --revisar-area "{area}"')
+        medida = {
+            "area": area,
+            "alvo": len(linhas),
+            "feitas": len(feitas),
+            "pendentes": len(pendentes),
+            "so_origem": len(linhas) - len(feitas) - len(pendentes),
+            "ja_confirmadas": sum(1 for _s, o in linhas.values() if o == origem),
+            "aproximadas": sum(1 for _s, o in linhas.values() if o == ORIGEM_APROXIMADA),
+        }
+        if not aplicar:
+            return medida
+        ts = carimbo()
+        conn.execute("UPDATE plano_tarefas SET origem_conclusao = ?, atualizado_em = ? "
+                     "WHERE area = ?", (origem, ts, area))
+        if feitas:
+            marcas = ", ".join("?" * len(feitas))
+            conn.execute(f"UPDATE plano_tarefas SET status = 'feita', atualizado_em = ? "
+                         f"WHERE id IN ({marcas})", (ts, *sorted(feitas)))
+        if pendentes:
+            marcas = ", ".join("?" * len(pendentes))
+            conn.execute(f"UPDATE plano_tarefas SET status = 'pendente', "
+                         f"data_conclusao = NULL, sessao_bulk_id = NULL, "
+                         f"atualizado_em = ? WHERE id IN ({marcas})",
+                         (ts, *sorted(pendentes)))
+        conn.commit()
+        return medida
+    finally:
+        conn.close()
+
+
+def plano_pendencia_revisao(origem=ORIGEM_APROXIMADA):
+    """Quanto falta da passada de revisão, POR ÁREA (read-only).
+
+    Devolve só as áreas que ainda têm linha com o carimbo aproximado -- lista vazia é
+    o critério de sucesso 2 do PRD (zero aproximadas). Cada item:
+    `{area, bloco, aproximadas, total}`. `area` NULL (o `Multi` da part-2) aparece como
+    `(sem area)`: contá-la fora seria esconder dívida que a revisão por área não alcança.
+    """
+    conn = get_connection()
+    try:
+        try:
+            rows = conn.execute('''
+                SELECT COALESCE(area, '(sem area)'),
+                       SUM(CASE WHEN origem_conclusao = ? THEN 1 ELSE 0 END),
+                       COUNT(*)
+                  FROM plano_tarefas
+              GROUP BY COALESCE(area, '(sem area)')
+            ''', (str(origem),)).fetchall()
+        except sqlite3.OperationalError:
+            rows = []
+    finally:
+        conn.close()
+    saida = [{"area": r[0], "bloco": bloco_de(r[0]), "aproximadas": int(r[1] or 0),
+              "total": int(r[2] or 0)} for r in rows if int(r[1] or 0) > 0]
+    saida.sort(key=lambda d: (-d["aproximadas"], d["area"]))
+    return saida

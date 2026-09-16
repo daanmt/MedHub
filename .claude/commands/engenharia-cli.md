@@ -289,12 +289,25 @@ a posição real, e o derivador do cronograma é `tools/cronograma.py` (assinatu
 | `--dry-run` | Explicita o default do `--semear`: mede, imprime o COUNT-ASSERT e **não grava**. |
 | `--apply` | Grava. Exige `--expect N`. Mutuamente exclusivo com `--dry-run`. |
 | `--expect N` | COUNT-ASSERT: N de linhas **NOVAS** esperadas. Difere do medido na hora -> **recusa (exit 2)** sem gravar nada. Na 2a execução o N correto é `0` (idempotência). |
-| `--listar` | Lista a tabela (read-only). Mutuamente exclusivo com `--semear`. |
-| `--semana N` | Filtro do `--listar`: semana do **plano** (não a da fonte). |
+| `--listar` | Lista a tabela (read-only). |
+| `--semana N` | Filtro do `--listar`: semana do **plano** (não a da fonte). No `--mover`, é a semana de **destino**. |
 | `--bloco {MFC,PED,CIR,GO,CM}` | Filtro do `--listar`: bloco de peso UERJ, **derivado** de `area` (`MFC`=Preventiva, `GO`=Ginecologia+Obstetrícia, `CM`=o resto). Não é coluna. |
 | `--status {pendente,feita,cortada}` | Filtro do `--listar`. |
 | `--fonte {extensivo,rf,custom}` | Filtro do `--listar`. |
-| `--json` | Saída do `--listar` em JSON (uma linha por tarefa, com `bloco`). |
+| `--json` | Saída do `--listar` ou do `--pendencia-revisao` em JSON. |
+| `--concluir ID` | Marca a tarefa como `feita`: grava `data_conclusao`, `sessao_bulk_id` e `origem_conclusao=usuario`. **Exige `--sessao`.** |
+| `--sessao N` | **O `id` da linha em `sessoes_bulk`, não o `sessao_num`** (que se repete entre áreas). Sessão inexistente -> **recusa (exit 2)**; o output ecoa área/data/questões da sessão casada, que é como o id trocado se denuncia. |
+| `--data AAAA-MM-DD` | Data de conclusão do `--concluir` (default: hoje). Formato diferente -> recusa. |
+| `--cortar ID` | Tira a tarefa do plano (`status='cortada'`). **Exige `--motivo`.** |
+| `--motivo "..."` | Por que a tarefa foi cortada. Vai **anexado** à `nota` (`corte: ...`), preservando as marcas da semeadura; corte repetido substitui o motivo anterior em vez de empilhar. |
+| `--mover ID` | Regrava `semana_plano`/`ordem`. **Exige `--semana`.** Não toca em `status` nem em `origem_conclusao` -- mover é replanejar, não concluir. |
+| `--ordem K` | Ordem dentro da semana no `--mover`. Omitida, **preserva** a ordem atual. |
+| `--reabrir ID` | Volta a tarefa para `pendente` e **apaga** `data_conclusao`/`sessao_bulk_id` (o usuário acabou de negar aquela conclusão). |
+| `--revisar-area AREA` | Lista de **conferência** da área (read-only), em blocos de <= 25 linhas: `id`, fonte + semana da fonte, status, origem, tipo, tema. Ordenada pela **fonte** (não pelo plano), que é a ordem do Dashboard/PDF contra o qual se confere. |
+| `--confirmar-area AREA` | Revisão da área **em lote**. Dry-run por default; `--apply` exige `--expect N`. |
+| `--feitas "1,4,9"` | Ids do `--confirmar-area` que estão **feitos**. |
+| `--pendentes "2,3"` | Ids do `--confirmar-area` que estão **pendentes** (limpa o vínculo de conclusão de cada um). |
+| `--pendencia-revisao` | Quantas linhas ainda têm `origem_conclusao=dashboard_2026-09-10`, **por área** (read-only), ordenado por peso de bloco UERJ. Zero = passada completa. |
 
 As três fontes, todas versionadas em `core/cronograma/`: `grade_extensivo.json` (735 tarefas /
 52 semanas, part-1) · `grade.json` (Reta Final -- entram só as **pendentes** de S17-S28) ·
@@ -310,8 +323,31 @@ para o extensivo S21-S48 a partir da semana 8) -- não por regra em JSON. Área 
 das tarefas de Radiologia) grava `area=NULL` **com a nota dizendo qual rótulo era**, que é dívida
 declarada e não chute.
 
-Escrita só por `app/utils/db.py::plano_upsert_tarefas` (o CLI é camada fina e não abre `sqlite3`
-próprio); leitura por `plano_listar`. Idempotente por `UNIQUE(fonte, ref_semana_fonte,
-tarefa_fonte)`: re-semear insere 0 e reescreve apenas `CAMPOS_SEMEADOS` -- `status`,
-`data_conclusao`, `sessao_bulk_id` e `origem_conclusao` são **progresso** e ficam fora do UPDATE.
-Spec `.vibeflow/specs/plano-ssot-e-cards-v2-part-2.md`.
+Escrita só por `app/utils/db.py` (`plano_upsert_tarefas`, `plano_set_status`, `plano_mover`,
+`plano_confirmar_area`) -- o CLI é camada fina e não abre `sqlite3` próprio; leitura por
+`plano_listar`, `plano_obter` e `plano_pendencia_revisao`. Idempotente por
+`UNIQUE(fonte, ref_semana_fonte, tarefa_fonte)`: re-semear insere 0 e reescreve apenas
+`CAMPOS_SEMEADOS` -- `status`, `data_conclusao`, `sessao_bulk_id` e `origem_conclusao` são
+**progresso** e ficam fora do UPDATE. ⚠️ `nota` **está** em `CAMPOS_SEMEADOS`: o motivo de um
+`--cortar` é reescrito por um `--semear --apply` futuro (o `status='cortada'` sobrevive) --
+dívida declarada, o motivo é explicação e não o dado de controle.
+
+**Exatamente UM modo por invocação** (`--semear` | `--listar` | `--concluir` | `--cortar` |
+`--mover` | `--reabrir` | `--revisar-area` | `--confirmar-area` | `--pendencia-revisao`); dois
+modos ligados -> `exit 2` nomeando os dois. Mutação de UMA linha grava direto: dry-run +
+`--expect` são o rito da operação **em lote** (`--semear`, `--confirmar-area`), AGENTE.md §10.7.
+
+🔴 **A revisão por área existe porque o status semeado é aproximado**: o usuário confessou marcar
+tarefa no lugar de outra no Dashboard. O ciclo é `--revisar-area` (o agente lê os blocos com ele) ->
+`--confirmar-area --dry-run` -> `--apply --expect N`, com `N` = **a área inteira**, porque a
+conferência carimba `origem_conclusao=usuario` até em quem **não muda de status** -- a conferência
+é a evidência, e é isso que faz o `--pendencia-revisao` chegar a zero. Id fora da área (ou
+inexistente) derruba o lote **inteiro**, sem gravar nada. `--confirmar-area` é retro-confirmação:
+não inventa `sessao_bulk_id` nem apaga o de um `--concluir` anterior.
+
+🔴 **Semântica de `origem_conclusao` alargada na part-3**: até a part-2 ela só era escrita em linha
+`feita`; agora responde *"quem afirmou este status"* em qualquer status (`usuario` vs.
+`dashboard_2026-09-10`). É trilha de auditoria, não `status` -- uma linha pode continuar `feita` e
+só trocar de origem, que é como "zero aproximadas" acontece sem reescrever histórico.
+
+Specs `.vibeflow/specs/plano-ssot-e-cards-v2-part-2.md` (semeadura) e `-part-3.md` (progresso).

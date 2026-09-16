@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""plano.py -- o plano de estudo como DADO (`plano_tarefas`): semeadura e listagem.
+"""plano.py -- o plano de estudo como DADO (`plano_tarefas`): semeadura, listagem e
+progresso (concluir / cortar / mover / revisar por area).
 
-Spec: `.vibeflow/specs/plano-ssot-e-cards-v2-part-2.md` (PRD plano-ssot-e-cards-v2, P1).
-Depende da part-1 (`core/cronograma/grade_extensivo.json`).
+Specs: `.vibeflow/specs/plano-ssot-e-cards-v2-part-2.md` (semeadura) e `-part-3.md`
+(mutacoes e revisao por area). Depende da part-1 (`core/cronograma/grade_extensivo.json`).
 
 Ate a s183 o "plano" era a soma de tres coisas que nunca conversaram: `grade.json`
 (calendario do PDF da Reta Final), um snapshot do Dashboard do Drive e a cabeca do
@@ -18,16 +19,26 @@ que e sinal APROXIMADO por confissao do usuario. Sem match de nome -> `pendente`
 numero de nao-casados e IMPRESSO no dry-run. A verdade e fixada na revisao por area (part-3).
 
 Rito (mesmo do `tools/cards_prune.py`, AGENTE.md secao 10.7): dry-run e o default,
-`--apply` exige `--expect N` e RECUSA (exit 2) se N != o numero medido na hora.
+`--apply` exige `--expect N` e RECUSA (exit 2) se N != o numero medido na hora. Vale
+para o `--semear` e para o lote da `--confirmar-area`; mutacao de UMA linha
+(`--concluir`/`--cortar`/`--mover`/`--reabrir`) grava direto -- nao e operacao em lote.
 
 Uso:
     python tools/plano.py --semear --dry-run
     python tools/plano.py --semear --apply --expect 896
     python tools/plano.py --listar --semana 1
     python tools/plano.py --listar --bloco MFC --status pendente --json
+    python tools/plano.py --concluir 123 --sessao 126
+    python tools/plano.py --cortar 124 --motivo "coberto pela Reta Final"
+    python tools/plano.py --mover 125 --semana 4 --ordem 2
+    python tools/plano.py --reabrir 126
+    python tools/plano.py --revisar-area Preventiva
+    python tools/plano.py --confirmar-area Preventiva --feitas "1,4" --pendentes "2" --dry-run
+    python tools/plano.py --pendencia-revisao
 
 Camada fina sobre `app.utils.db` -- nao abre `sqlite3` proprio (toda escrita e
-`plano_upsert_tarefas`). Assinatura canonica em `.claude/commands/engenharia-cli.md`.
+`plano_upsert_tarefas`, `plano_set_status`, `plano_mover` ou `plano_confirmar_area`).
+Assinatura canonica em `.claude/commands/engenharia-cli.md`.
 """
 import argparse
 import json
@@ -35,6 +46,7 @@ import math
 import os
 import sys
 import unicodedata
+from datetime import datetime
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -55,8 +67,17 @@ P_GRADE_RF = os.path.join(DIR_CRONO, "grade.json")
 P_CUSTOM = os.path.join(DIR_CRONO, "plano_custom.json")
 
 #: Carimbo da origem do status inicial. Fixo: o snapshot e dado CONGELADO, e a data
-#: que importa e a da planilha (modificada em 10/09), nao a da leitura.
-ORIGEM_DASHBOARD = "dashboard_2026-09-10"
+#: que importa e a da planilha (modificada em 10/09), nao a da leitura. A string mora
+#: em `db` (part-3): quem conta a pendencia de revisao e quem semeia tem que casar.
+ORIGEM_DASHBOARD = db.ORIGEM_APROXIMADA
+
+#: Tamanho do bloco de conferencia do `--revisar-area` (spec part-3): a passada tem
+#: ~900 linhas e conferir tudo de uma vez e como nao conferir.
+BLOCO_REVISAO = 25
+
+#: Ordem de ataque da revisao por area = peso do bloco na prova da UERJ (20q por
+#: conteudo, `reference_edital_uerj_2027`). MFC primeiro, cauda de CM por ultimo.
+PESO_BLOCO = {"MFC": 0, "PED": 1, "CIR": 2, "GO": 3, "CM": 4}
 
 #: Media por lista medida no PDF da Reta Final. Usada so quando a fonte NAO declara
 #: o numero -- e nesse caso a linha leva `q_estimada` na nota (numero derivado nunca
@@ -503,9 +524,267 @@ def listar(semana=None, bloco=None, status=None, fonte=None, como_json=False, ou
     return 0, linhas
 
 
+# ------------------------------------------------- progresso (part-3): helpers
+
+def ids_da_lista(texto):
+    """`"1, 4,9"` -> `[1, 4, 9]`. Vazio -> `[]`. Item nao inteiro LEVANTA (silenciar
+    um id malformado seria confirmar a area sem a linha que o usuario apontou)."""
+    itens = [p.strip() for p in str(texto or "").replace(";", ",").split(",") if p.strip()]
+    saida = []
+    for item in itens:
+        if not item.isdigit():
+            raise ValueError(f"id invalido na lista: {item!r} (esperado inteiro positivo)")
+        saida.append(int(item))
+    return saida
+
+
+def data_valida(texto):
+    """`AAAA-MM-DD` -> a propria string. Formato errado LEVANTA nomeando o esperado."""
+    try:
+        datetime.strptime(str(texto), "%Y-%m-%d")
+    except (TypeError, ValueError):
+        raise ValueError(f"data invalida: {texto!r} (esperado AAAA-MM-DD)")
+    return str(texto)
+
+
+def compor_nota_corte(nota_atual, motivo):
+    """Motivo do corte ANEXADO a nota, nunca no lugar dela: a nota da semeadura carrega
+    marcas que ninguem pode perder (`q_estimada`, `area_fonte=...`). Corte repetido
+    SUBSTITUI o motivo anterior em vez de empilhar. Funcao pura.
+
+    🔴 `nota` esta em `db.CAMPOS_SEMEADOS`: um `--semear --apply` futuro reescreve a
+    nota e o motivo do corte se perde (o `status='cortada'` sobrevive, esse fica fora
+    do UPDATE). Divida declarada -- o motivo e explicacao, nao o dado de controle.
+    """
+    pedacos = [p.strip() for p in str(nota_atual or "").split(";")
+               if p.strip() and not p.strip().casefold().startswith("corte:")]
+    return "; ".join(pedacos + [f"corte: {str(motivo).strip()}"])
+
+
+def _origem_curta(valor):
+    """Rotulo de coluna: `dash` (aproximado), `usuario`, `--` (nunca afirmado)."""
+    if not valor:
+        return "--"
+    return "dash" if valor == db.ORIGEM_APROXIMADA else str(valor)
+
+
+def _sem_fonte(linha):
+    ref = linha.get("ref_semana_fonte")
+    return "--" if not ref else f"S{ref}"
+
+
+def _linha_conferencia(l):
+    return (f"  {l['id']:>5} {l['fonte'][:3]:<4} {_sem_fonte(l):>4}  "
+            f"{l['status']:<8} {_origem_curta(l['origem_conclusao']):<8} "
+            f"{(l['tipo'] or '--')[:20]:<20}  {l['tema'] or '(sem tema)'}")
+
+
+# ------------------------------------------------- progresso (part-3): comandos
+
+def concluir(tarefa_id, sessao, data=None, out=print):
+    """`--concluir`: a tarefa foi feita, e o volume dela esta em `sessoes_bulk`."""
+    resumo = db.sessao_bulk_resumo(sessao)
+    if resumo is None:
+        out(f"[plano] RECUSADO: sessao {sessao} nao existe em sessoes_bulk. "
+            f"`--sessao` e o ID da linha, nao o `sessao_num`.")
+        out(f"  Registre o volume primeiro (tools/registrar_sessao_bulk.py, assinatura "
+            f"em /importar-planilha) e repita: --concluir {tarefa_id} --sessao <id>.")
+        return 2, None
+    try:
+        quando = data_valida(data) if data else db.hoje().isoformat()
+        resultado = db.plano_set_status(tarefa_id, "feita", sessao_bulk_id=int(sessao),
+                                        data_conclusao=quando,
+                                        origem_conclusao=db.ORIGEM_USUARIO)
+    except ValueError as e:
+        out(f"[plano] RECUSADO: {e}")
+        return 2, None
+    if resultado is None:
+        out(f"[plano] RECUSADO: tarefa {tarefa_id} nao existe em plano_tarefas. "
+            f"Confira o id com: python tools/plano.py --listar --semana N")
+        return 2, None
+    d = resultado["depois"]
+    out(f"[plano] OK: tarefa {d['id']} FEITA em {quando} "
+        f"({d['area'] or '(sem area)'} | {d['tema']})")
+    out(f"  sessao {resumo['id']}: bloco #{resumo['sessao_num']} de {resumo['area']} em "
+        f"{resumo['data_sessao']}, {resumo['questoes_feitas']}q "
+        f"({resumo['questoes_acertadas']} acertos)")
+    out(f"  origem_conclusao: {resultado['antes']['origem_conclusao'] or '--'} -> "
+        f"{d['origem_conclusao']}")
+    return 0, resultado
+
+
+def cortar(tarefa_id, motivo, out=print):
+    """`--cortar`: a tarefa sai do plano, e o motivo fica escrito na linha."""
+    motivo = (motivo or "").strip()
+    if not motivo:
+        out("[plano] RECUSADO: --cortar exige --motivo \"...\". Corte sem motivo "
+            "e tema que some do plano sem ninguem saber por que.")
+        return 2, None
+    atual = db.plano_obter(tarefa_id)
+    if atual is None:
+        out(f"[plano] RECUSADO: tarefa {tarefa_id} nao existe em plano_tarefas. "
+            f"Confira o id com: python tools/plano.py --listar --semana N")
+        return 2, None
+    resultado = db.plano_set_status(tarefa_id, "cortada",
+                                    origem_conclusao=db.ORIGEM_USUARIO,
+                                    nota=compor_nota_corte(atual.get("nota"), motivo))
+    d = resultado["depois"]
+    out(f"[plano] OK: tarefa {d['id']} CORTADA ({d['area'] or '(sem area)'} | {d['tema']})")
+    out(f"  nota: {d['nota']}")
+    return 0, resultado
+
+
+def mover(tarefa_id, semana, ordem=None, out=print):
+    """`--mover`: replanejar semana/ordem sem tocar em status (substitui o ritual de
+    reordenar o xlsx do Drive a mao)."""
+    try:
+        resultado = db.plano_mover(tarefa_id, semana, ordem=ordem)
+    except ValueError as e:
+        out(f"[plano] RECUSADO: {e}")
+        return 2, None
+    if resultado is None:
+        out(f"[plano] RECUSADO: tarefa {tarefa_id} nao existe em plano_tarefas. "
+            f"Confira o id com: python tools/plano.py --listar --semana N")
+        return 2, None
+    a, d = resultado["antes"], resultado["depois"]
+    out(f"[plano] OK: tarefa {d['id']} movida da semana {a['semana_plano'] or '--'} "
+        f"para a {d['semana_plano']} (ordem {a['ordem'] or '--'} -> {d['ordem'] or '--'})")
+    out(f"  status inalterado: {d['status']} ({d['area'] or '(sem area)'} | {d['tema']})")
+    return 0, resultado
+
+
+def reabrir(tarefa_id, out=print):
+    """`--reabrir`: volta a `pendente` e APAGA o vinculo de conclusao (data/sessao)."""
+    resultado = db.plano_set_status(tarefa_id, "pendente",
+                                    origem_conclusao=db.ORIGEM_USUARIO)
+    if resultado is None:
+        out(f"[plano] RECUSADO: tarefa {tarefa_id} nao existe em plano_tarefas. "
+            f"Confira o id com: python tools/plano.py --listar --semana N")
+        return 2, None
+    a, d = resultado["antes"], resultado["depois"]
+    out(f"[plano] OK: tarefa {d['id']} REABERTA ({a['status']} -> {d['status']}; "
+        f"{d['area'] or '(sem area)'} | {d['tema']})")
+    if a["sessao_bulk_id"] or a["data_conclusao"]:
+        out(f"  vinculo de conclusao apagado (era sessao {a['sessao_bulk_id'] or '--'} "
+            f"em {a['data_conclusao'] or '--'})")
+    if d["semana_plano"]:
+        out(f"  a tarefa continua na semana {d['semana_plano']}")
+    else:
+        out("  a tarefa esta SEM semana no plano -- enfileire com "
+            f"--mover {d['id']} --semana N")
+    return 0, resultado
+
+
+def revisar_area(area, out=print):
+    """`--revisar-area`: lista de CONFERENCIA em blocos de <= 25 linhas (read-only)."""
+    from app.utils.areas import AreaInvalida, validar_area
+    try:
+        area = validar_area(area, origem="plano.py --revisar-area")
+    except AreaInvalida as e:
+        out(f"[plano] RECUSADO: {e}")
+        return 2, []
+    # Ordem da FONTE (extensivo S1..S52, depois RF, depois custom), nao a do plano: a
+    # conferencia e feita contra o Dashboard/PDF, que estao nessa ordem. Ordenar pela
+    # semana do plano obrigaria o usuario a procurar cada linha na planilha.
+    linhas = sorted(db.plano_listar(area=area),
+                    key=lambda l: (l["fonte"], l["ref_semana_fonte"] or 0,
+                                   l["tarefa_fonte"] or 0))
+    if not linhas:
+        out(f"[plano] nenhuma tarefa da area {area} (o plano foi semeado? "
+            f"python tools/plano.py --semear --dry-run)")
+        return 0, []
+    aprox = [l for l in linhas if l["origem_conclusao"] == db.ORIGEM_APROXIMADA]
+    total = len(linhas)
+    blocos = (total + BLOCO_REVISAO - 1) // BLOCO_REVISAO
+    out(f"[plano] {area}: {total} tarefa(s) | {len(aprox)} ainda com origem aproximada "
+        f"({db.ORIGEM_APROXIMADA})")
+    for i in range(blocos):
+        fatia = linhas[i * BLOCO_REVISAO:(i + 1) * BLOCO_REVISAO]
+        out(f"  -- bloco {i + 1}/{blocos}: linhas {i * BLOCO_REVISAO + 1}-"
+            f"{i * BLOCO_REVISAO + len(fatia)} de {total} --")
+        out(f"  {'id':>5} {'font':<4} {'sem':>4}  {'status':<8} {'origem':<8} "
+            f"{'tipo':<20}  tema")
+        for l in fatia:
+            out(_linha_conferencia(l))
+    out(f"  Conferido? Liste o que esta FEITO e o que esta PENDENTE; o resto da area so "
+        f"recarimba a origem (a conferencia e a evidencia).")
+    out(f'    python tools/plano.py --confirmar-area "{area}" --feitas "" '
+        f'--pendentes "" --dry-run')
+    return 0, linhas
+
+
+def confirmar_area(area, feitas="", pendentes="", apply=False, expect=None, out=print):
+    """`--confirmar-area`: revisao por area em LOTE, com dry-run + COUNT-ASSERT.
+
+    `N` do `--expect` = linhas da area que serao TOCADAS = a area inteira, porque a
+    conferencia carimba `origem_conclusao` ate em quem nao muda de status.
+    """
+    try:
+        ids_f = ids_da_lista(feitas)
+        ids_p = ids_da_lista(pendentes)
+        medida = db.plano_confirmar_area(area, ids_f, ids_p, aplicar=False)
+    except ValueError as e:                     # AreaInvalida herda de ValueError
+        out(f"[plano] RECUSADO: {e}")
+        return 2, None
+
+    out(f"[plano] confirmar-area {medida['area']}: {medida['alvo']} linha(s) na area")
+    out("  COUNT-ASSERT:")
+    out(f"    marcar feita      = {medida['feitas']}")
+    out(f"    marcar pendente   = {medida['pendentes']}")
+    out(f"    so recarimbar     = {medida['so_origem']}  (status inalterado; a "
+        f"conferencia e a evidencia)")
+    out("    ---------------------------")
+    out(f"    linhas tocadas    = {medida['alvo']}  <- este e o N do --expect")
+    out(f"  origem hoje: {medida['aproximadas']} aproximada(s), "
+        f"{medida['ja_confirmadas']} ja confirmada(s) por {db.ORIGEM_USUARIO}")
+
+    if not apply:
+        out(f"  DRY-RUN: nada gravado. Para aplicar, repita com "
+            f"--apply --expect {medida['alvo']}")
+        return 0, medida
+    if expect is None or int(expect) != medida["alvo"]:
+        out(f"  RECUSADO: --expect {expect} != {medida['alvo']} linha(s) medida(s) na "
+            f"hora. Nada gravado -- rode o --dry-run e use o N impresso.")
+        return 2, medida
+    final = db.plano_confirmar_area(area, ids_f, ids_p, aplicar=True)
+    out(f"  OK: {final['alvo']} linha(s) de {final['area']} com "
+        f"origem_conclusao={db.ORIGEM_USUARIO} ({final['feitas']} feita(s), "
+        f"{final['pendentes']} pendente(s), {final['so_origem']} sem mudanca de status).")
+    restante = db.plano_pendencia_revisao()
+    out(f"  falta revisar: {sum(d['aproximadas'] for d in restante)} linha(s) em "
+        f"{len(restante)} area(s) -- python tools/plano.py --pendencia-revisao")
+    return 0, final
+
+
+def pendencia_revisao(como_json=False, out=print):
+    """`--pendencia-revisao`: quanto falta da passada, por area (read-only). Zero e o
+    criterio de sucesso 2 do PRD; o `day_plan.py` (part-4) consome este numero."""
+    linhas = sorted(db.plano_pendencia_revisao(),
+                    key=lambda d: (PESO_BLOCO.get(d["bloco"], 9), -d["aproximadas"],
+                                   d["area"]))
+    if como_json:
+        out(json.dumps(linhas, ensure_ascii=False, indent=1))
+        return 0, linhas
+    total = sum(d["aproximadas"] for d in linhas)
+    if not linhas:
+        out(f"[plano] pendencia de revisao: 0 -- nenhuma linha com origem "
+            f"{db.ORIGEM_APROXIMADA}. Passada COMPLETA (criterio 2 do PRD).")
+        return 0, linhas
+    out(f"[plano] pendencia de revisao: {total} linha(s) com origem aproximada "
+        f"({db.ORIGEM_APROXIMADA}) em {len(linhas)} area(s)")
+    out(f"  {'bloco':<6} {'area':<14} {'aprox':>6} {'total':>6}")
+    for d in linhas:
+        out(f"  {d['bloco']:<6} {d['area']:<14} {d['aproximadas']:>6} {d['total']:>6}")
+    out(f"  {'TOTAL':<6} {'':<14} {total:>6}")
+    out(f"  Ordem de ataque = peso do bloco na UERJ. Proxima: "
+        f'python tools/plano.py --revisar-area "{linhas[0]["area"]}"')
+    return 0, linhas
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(
-        description="Plano de estudo como dado (plano_tarefas): semeadura e listagem.")
+        description="Plano de estudo como dado (plano_tarefas): semeadura, listagem "
+                    "e progresso (concluir/cortar/mover/revisar por area).")
     ap.add_argument("--semear", action="store_true",
                     help="semeia plano_tarefas das 3 fontes (dry-run por default)")
     ap.add_argument("--dry-run", action="store_true",
@@ -514,22 +793,94 @@ def main(argv=None):
     ap.add_argument("--expect", type=int,
                     help="COUNT-ASSERT: N de linhas NOVAS esperadas; difere -> exit 2")
     ap.add_argument("--listar", action="store_true", help="lista a tabela (read-only)")
-    ap.add_argument("--semana", type=int, help="filtro: semana do plano")
+    ap.add_argument("--semana", type=int,
+                    help="filtro do --listar: semana do plano; alvo do --mover")
     ap.add_argument("--bloco", choices=["MFC", "PED", "CIR", "GO", "CM"],
                     help="filtro: bloco de peso UERJ (derivado da area)")
     ap.add_argument("--status", choices=list(db.STATUS_PLANO), help="filtro: status")
     ap.add_argument("--fonte", choices=list(db.FONTES_PLANO), help="filtro: fonte")
-    ap.add_argument("--json", action="store_true", help="saida do --listar em JSON")
+    ap.add_argument("--json", action="store_true",
+                    help="saida do --listar / --pendencia-revisao em JSON")
+    ap.add_argument("--concluir", type=int, metavar="ID",
+                    help="marca a tarefa como feita (exige --sessao)")
+    ap.add_argument("--sessao", type=int, metavar="N",
+                    help="id da linha em sessoes_bulk (NAO o sessao_num); precisa existir")
+    ap.add_argument("--data", metavar="AAAA-MM-DD",
+                    help="data de conclusao do --concluir (default: hoje)")
+    ap.add_argument("--cortar", type=int, metavar="ID",
+                    help="tira a tarefa do plano (exige --motivo)")
+    ap.add_argument("--motivo", help="por que a tarefa foi cortada; vai para a nota")
+    ap.add_argument("--mover", type=int, metavar="ID",
+                    help="regrava semana/ordem da tarefa (exige --semana)")
+    ap.add_argument("--ordem", type=int, metavar="K",
+                    help="ordem dentro da semana no --mover (default: preserva)")
+    ap.add_argument("--reabrir", type=int, metavar="ID",
+                    help="volta a tarefa para pendente e apaga o vinculo de conclusao")
+    ap.add_argument("--revisar-area", metavar="AREA",
+                    help="lista de conferencia da area em blocos de 25 (read-only)")
+    ap.add_argument("--confirmar-area", metavar="AREA",
+                    help="revisao da area em lote (dry-run por default; --apply exige "
+                         "--expect N)")
+    ap.add_argument("--feitas", default="",
+                    help='ids do --confirmar-area que estao FEITOS (ex.: "1,4,9")')
+    ap.add_argument("--pendentes", default="",
+                    help='ids do --confirmar-area que estao PENDENTES (ex.: "2,3")')
+    ap.add_argument("--pendencia-revisao", action="store_true",
+                    help="quantas linhas ainda tem origem aproximada, por area (read-only)")
     args = ap.parse_args(argv)
 
-    if args.semear == args.listar:
-        ap.error("informe --semear OU --listar")
+    modos = {
+        "--semear": args.semear,
+        "--listar": args.listar,
+        "--concluir": args.concluir is not None,
+        "--cortar": args.cortar is not None,
+        "--mover": args.mover is not None,
+        "--reabrir": args.reabrir is not None,
+        "--revisar-area": bool(args.revisar_area),
+        "--confirmar-area": bool(args.confirmar_area),
+        "--pendencia-revisao": args.pendencia_revisao,
+    }
+    ligados = [nome for nome, ativo in modos.items() if ativo]
+    if len(ligados) != 1:
+        ap.error("informe exatamente UM modo (" + " | ".join(modos) + "); recebido: "
+                 + (", ".join(ligados) if ligados else "nenhum"))
     if args.apply and args.dry_run:
         ap.error("--apply e --dry-run sao mutuamente exclusivos")
-    if args.semear:
+    modo = ligados[0]
+
+    if modo == "--semear":
         if args.apply and args.expect is None:
             ap.error("--apply exige --expect N")
         code, _, _ = semear(apply=args.apply, expect=args.expect)
+        return code
+    if modo == "--concluir":
+        if args.sessao is None:
+            ap.error("--concluir exige --sessao N (o id da linha em sessoes_bulk)")
+        code, _ = concluir(args.concluir, args.sessao, data=args.data)
+        return code
+    if modo == "--cortar":
+        code, _ = cortar(args.cortar, args.motivo)
+        return code
+    if modo == "--mover":
+        if args.semana is None:
+            ap.error("--mover exige --semana N")
+        code, _ = mover(args.mover, args.semana, ordem=args.ordem)
+        return code
+    if modo == "--reabrir":
+        code, _ = reabrir(args.reabrir)
+        return code
+    if modo == "--revisar-area":
+        code, _ = revisar_area(args.revisar_area)
+        return code
+    if modo == "--confirmar-area":
+        if args.apply and args.expect is None:
+            ap.error("--apply exige --expect N")
+        code, _ = confirmar_area(args.confirmar_area, feitas=args.feitas,
+                                 pendentes=args.pendentes, apply=args.apply,
+                                 expect=args.expect)
+        return code
+    if modo == "--pendencia-revisao":
+        code, _ = pendencia_revisao(como_json=args.json)
         return code
     code, _ = listar(semana=args.semana, bloco=args.bloco, status=args.status,
                      fonte=args.fonte, como_json=args.json)

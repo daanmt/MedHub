@@ -67,6 +67,12 @@
 - **Decisoes do orquestrador sobre os 5 pontos do filho:** formula enumerada `1 + (S-17)//2` (o `*7//12` do brief era typo); CM dirigida `3 + (S-17)*5//12`; `semana_plano=NULL` para feita/cortada; `Multi`/Radiologia = `area=NULL` + nota F89 (26 linhas, sem chute); marca `q_rateio` nas 15 tarefas da RF com rateio.
 - **Semeadura no banco real (orquestrador):** backup `ipub_backup_20260916_165237.db` -> `--semear --apply --expect 896` -> **896 linhas** (extensivo 735 / rf 139 / custom 22; pendente 632 / feita 173 / cortada 91; 101 sem match de nome nascem pendente; 173 com `origem_conclusao=dashboard_2026-09-10` a revisar na part-3). Fase 1 (semanas 1-7): 104 tarefas pendentes / ~3.050q -- acima do orcamento de 2.760; rebalancear com `--mover` (part-3) quando a semana 3 (794q) chegar.
 
+### 1.10 Onda 3 -- part-3 mutacoes do plano + revisao por area (Opus, 196k tokens, 22 min)
+- `db.py`: `plano_set_status`, `plano_mover`, `plano_confirmar_area` (1 transacao), `plano_pendencia_revisao`; `plano.py --concluir/--cortar/--mover/--reabrir/--revisar-area/--confirmar-area/--pendencia-revisao` (13 flags, todas na skill); workflow `registrar-sessao` ganha o passo 0 (concluir a tarefa ao registrar o bulk); 25 testes novos (49 no arquivo).
+- **Pendencia de revisao medida no banco real: 173 linhas aproximadas em 20 areas** (Preventiva 24/115, Pediatria 29/118, Cirurgia 22/102, Ginecologia 19/75, Obstetricia 13/76, Infecto 14/54, ...). `--confirmar-area Preventiva` toca 115 linhas (N do `--expect`).
+- Divergencias declaradas pelo filho e aceitas: `--sessao` e o `id` da linha de `sessoes_bulk` (nao o `sessao_num`; o output ecoa area/data/questoes); `origem_conclusao` vale para qualquer status ("quem afirmou isto"); 3 writers em vez de 2.
+- **Defeito apontado pelo filho e fechado pelo orquestrador:** `nota` estava em `CAMPOS_SEMEADOS` e um re-seed apagaria o motivo do `--cortar` -> `ON CONFLICT ... nota = CASE WHEN origem_conclusao='usuario' THEN nota antiga ELSE excluded.nota END` + `test_reseed_preserva_nota_do_usuario`. Suite **688 -> 714**.
+
 ## 2. Decisoes tomadas (usuario, 16/09/2026)
 - **Hibrido APROVADO** (Cenario C). Fase 1: RF rescopada por peso UERJ ate 01/11 (2.760q). Fase 2: extensivo S21-S48 de 02/11 ate o ENAMED 2027.
 - **Norte reordenado:** foco nº1 = Psiquiatria/IPUB via ENAMED 2027 (corte 940, alvo 95%); UERJ/MFC = plano B. USP fora.
@@ -88,7 +94,7 @@ RF S17-S28: 149 tarefas, **139 pendentes / 4.036q**. Prioridade 1 (MFC/PED/CIR/G
 - **Premissa corrigida** -- "bloco MFC e novidade do edital 2027" (s159) era falsa: existe desde 2021.
 
 ## 6. Custo dos subagentes (F93, clausula 10)
-5 spawns: Opus cronograma 158.523 tokens / 34 min · Sonnet cards 203.825 / 28 min · Opus guias 272.626 / 40 min · Sonnet INEP 118.672 / 16 min · Opus UERJ-MFC 254.032 / 29 min. Part-1 Sonnet 261.175 / 27 min · Part-9 Opus 243.067 / 25 min · Part-2 Opus 212.815 / 24 min. **Total ~1,72M tokens, ~223 min de filho, ~125 min de relogio em 4 ondas.** 6 numeros load-bearing re-medidos pelo principal (735 tarefas; fronteira S21; 123 cards; CM 42,0%/MFC 6,71%; bloco MFC desde 2021; 23 PDFs) -- todos confirmados.
+5 spawns: Opus cronograma 158.523 tokens / 34 min · Sonnet cards 203.825 / 28 min · Opus guias 272.626 / 40 min · Sonnet INEP 118.672 / 16 min · Opus UERJ-MFC 254.032 / 29 min. Part-1 Sonnet 261.175 / 27 min · Part-9 Opus 243.067 / 25 min · Part-2 Opus 212.815 / 24 min · Part-3 Opus 195.747 / 22 min. **Total ~1,92M tokens, ~245 min de filho, ~150 min de relogio em 5 ondas.** 6 numeros load-bearing re-medidos pelo principal (735 tarefas; fronteira S21; 123 cards; CM 42,0%/MFC 6,71%; bloco MFC desde 2021; 23 PDFs) -- todos confirmados.
 
 ## 7. Pendencias
 - Recursos do ENAMED ate 17/09 (usuario). Inscricao UERJ ate 01/10.

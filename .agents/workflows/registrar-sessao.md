@@ -12,6 +12,13 @@ Ao final de qualquer sessão de trabalho significativa (criação de resumo, an�
 
 ## Passos
 
+### 0. Fechar no plano as tarefas dos blocos do dia (antes do log)
+`plano_tarefas` é a SSOT do que já foi feito -- e ela só sabe o que alguém fechou. **Ao registrar o volume de um bloco em `sessoes_bulk`, feche na mesma passada a tarefa correspondente do plano**, com `tools/plano.py --concluir` apontando para a sessão recém-registrada. A sessão precisa existir (o CLI recusa id inexistente), e é assim que "feito" deixa de ser afirmação sem volume.
+
+Bloco que não corresponde a nenhuma tarefa do plano não fecha nada. Tarefa que o dia mostrou ser inviável sai por `--cortar` com motivo, ou muda de semana por `--mover` -- nunca fica pendente em silêncio.
+
+Assinatura completa dos flags (incluindo o que `--sessao` espera): `.claude/commands/engenharia-cli.md`, seção `tools/plano.py`. O registro do volume em si é do `registrar_sessao_bulk.py`, cuja assinatura vive em `.claude/commands/importar-planilha.md` -- o workflow aponta, não copia (`AGENTE.md §7.2`).
+
 ### 1. Identificar o próximo número
 Criar `history/session_NNN.md` seguindo o protocolo de fechamento do `AGENTE.md`.
 

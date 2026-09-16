@@ -2,12 +2,12 @@
 type: contract
 layer: core
 status: canonical
-version: 1.3
+version: 1.4
 relates_to: [forgetting-curve-contract, fsrs-management-contract, cronograma-contract, AGENTE]
 ---
 
 # Contrato de Execução de Revisão Calibrada
-**Versão 1.3 | 2026-09-08 (s170: o sub-modo PREPARAR e a Camada 1 sao REVOGADOS; todo o ensino migra para a Revisao Direcionada de fechamento -- Clausula 11, Invariante F, lapide do Invariante D) — anterior: 1.2, 2026-07-06 (s109+, F18c/F21: Invariante E + Clausula 10); 1.1, 2026-07-05 (s108+, F8/F9: Invariantes C e D); 1.0, 2026-06-28 (sessao 096).**
+**Versão 1.4 | 2026-09-16 (s183: o DRENAR ganha uma SEGUNDA superficie -- o player de cards como pagina, Clausula 12. Nenhuma clausula revogada; A, C e F preservados por construcao) -- anterior: 1.3, 2026-09-08 (s170: o sub-modo PREPARAR e a Camada 1 sao REVOGADOS; todo o ensino migra para a Revisao Direcionada de fechamento -- Clausula 11, Invariante F, lapide do Invariante D); 1.2, 2026-07-06 (s109+, F18c/F21: Invariante E + Clausula 10); 1.1, 2026-07-05 (s108+, F8/F9: Invariantes C e D); 1.0, 2026-06-28 (sessao 096).**
 
 > Documento normativo. Governa a **competência única `/revisar`** cuja descompressão é calibrada por uma **nota de dificuldade-para-o-usuário (1-10) por tema**, sem cegar a curva de esquecimento. Consome o score de dormência e a retrievability de `forgetting-curve-contract.md` (não os redefine) e o `(tema, tipo)` de `cronograma-contract.md`. Referenciado por: `AGENTE.md` (§1.2, §6, §7.3), `.claude/commands/revisar.md`.
 
@@ -58,6 +58,7 @@ A nota explícita do usuário **escolhe o degrau diretamente**; sem nota, a faix
 - **DRENAR** (card-a-card; **ESCREVE FSRS**) — o player FSRS. **Primeira fase e unica superficie que move o FSRS.** Durante o drill: nota e tally, nada mais (Invariante F).
 - **REVISAO DIRECIONADA** (narrativo; **FSRS read-only**) — **segunda fase, no fechamento**, ancorada nos temas de nota **1-2**. **Unica superficie de ensino da sessao de cards** (Clausula 11).
 - Nao ha aquecimento antes do drill: **toda nota do DRENAR e recall a frio**, que e o sinal que o FSRS quer.
+- **Duas superficies para a MESMA fase (v1.4):** o DRENAR acontece no chat **ou** no player de cards (Clausula 12). Continuam sendo **duas fases, nao tres** -- o player troca o veiculo do drill, nunca o lugar do ensino.
 
 **Arquitetura por propósito (v1.2, s110 — correção de calibração; alvo remapeado na v1.3).** ⚰️ O texto original calibrava o sub-modo revogado. **A regra sobrevive nas duas superficies que a Clausula 11 preserva**, cada uma herdando uma metade: rumo a **EXERCÍCIOS** -> **`/aula-base`** (pre-questoes, intocada pela v1.3); rumo a **FLASHCARDS** -> **Revisao Direcionada** de fechamento. O propósito não muda só a LARGURA; muda a **arquitetura** do ensino. **`/aula-base`, antes de questões:** os **degraus são fundamentais** — cobre o **escopo-árvore inteiro** que a prova cobra (doses, diferenciais, a árvore de decisão completa) e **DESTRINCHA o mecanismo** dos conceitos/exames discriminadores (não só os nomeia), mesmo em nota média. **Revisão Direcionada, depois dos cards:** o alvo é **fino e provado pelo drill** — os temas de nota 1-2, não uma varredura do cluster (compressão ok; o card já disse onde dói). ⭐ **Descompressão (nota) ≠ cobertura de mecanismo:** nomear um discriminador ("whiff+", "clue cells") sem abrir **o que é e por que** é profundidade D2 disfarçada de D5 — e reforça o **Invariante E / Cláusula 10** (a cobertura do ponto de decisão inclui abrir o mecanismo, não só citá-lo). Precedente vivo: aula de Vulvovaginites (s110) — os exames whiff/KOH/clue cells foram nomeados e não destrinchados; refeita com os degraus.
 
@@ -166,11 +167,36 @@ Duas dimensões **ortogonais** no render de qualquer ensino calibrado — **`/au
 
 ---
 
+## Cláusula 12 -- O player de cards é superfície de DRENAR, não uma terceira fase (s183, v1.4)
+
+**Decisão do usuário (PRD `plano-ssot-e-cards-v2`, P4).** Drenar 60 cards no chat custa turnos demais. O DRENAR passa a ter **duas superfícies**, e só o veículo muda:
+
+- **Conversacional** -- o loop card-a-card desta skill, que continua sendo o default.
+- **Player** -- uma página (Artifact) com teclado: `Espaço` vira, `1-4` dá a nota, `D` marca defeito com motivo curto. Gerada por `tools/fsrs_queue.py --export-player` + `--build-player` sobre `core/templates/player.html`, publicada com `capabilities: {db: {}}`.
+
+**As duas são a MESMA fase.** A sessão continua tendo **duas fases e não três** (Cláusula 4): o player substitui o veículo do DRENAR, nunca a Revisão Direcionada, que segue no chat, no fechamento, sobre as notas 1-2.
+
+🔴 **Os invariantes são preservados por CONSTRUÇÃO, não por disciplina:**
+
+- **Invariante A (o ensino não escreve FSRS)** -- a página não ensina: ela mostra frente, verso e tally. Nenhuma prosa, nenhum re-ensino. O ensino inteiro continua na Revisão Direcionada.
+- **Invariante C (trava técnica em `record_review`)** -- a página **não tem caminho de escrita para o FSRS**. Ela grava a primeira nota de cada card na capability `db` (coleção `sessoes/<sessao>/notas`, 1 doc por card: `{card_id, rating_primeira, ts, defeito?, motivo?}`); quem move o FSRS é `fsrs_queue.py --record-lote`, que chama `record_review`. A janela de override do lote acontece **no dry-run**, antes do `--apply`; depois do `--apply` não há amend, como sempre. Auditado por `tools/test_fsrs_queue_player.py` (o `fsrs_queue.py` não ganha tabela nova na allowlist F49).
+- **Invariante F (silêncio no meio)** -- estrutural: não há canal para prosa durante o drill. A exceção de sempre (defeito de card) é a tecla `D`, que vira marca de reforja (`origem='player'`) em vez de uma linha no chat.
+- **Regra anti-duplo-registro** -- o relearning da página recoloca o card no **fim do lote** e **não gera segunda nota gravável**: a página guarda `rating_primeira` e nunca a sobrescreve. O CLI reforça: `card_id` repetido no arquivo de notas conta **uma** revisão, com WARN.
+
+**Rito de gravação (mesma disciplina de operação em massa, `AGENTE.md §10.7`):** dry-run -> `--apply --expect N` com o N medido -> COUNT-ASSERT pós (`fsrs_revlog` cresceu exatamente N). A página é **input não confiável**: `card_id` é validado contra o export e `rating` tem de estar em 1..4 antes de qualquer escrita.
+
+**Degradação declarada.** Se `claude.use("db")` devolver `null` (capability não concedida, visualização sem runtime), a página **declara na tela** que o armazenamento está fora e expõe as notas em JSON para colar no chat -- mesmo formato que o `--record-lote` consome. Nunca perde o lote em silêncio.
+
+**Fora de escopo por decisão:** sem botão "aposentar" na página (aposentar é `reforja.py` / `cards_prune.py`) e sem Revisão Direcionada dentro dela.
+
+---
+
 ## Fronteiras duras (resumo)
 
 - O ensino (**Revisão Direcionada**) **nunca** escreve FSRS (Invariante A). DRENAR é a única superfície que move o FSRS.
 - TODA Revisão Direcionada carimba `review_log` (Invariante B, realocado na v1.3) — a curva nunca cega.
-- Rating só grava **após a janela de override**, uma vez por card (Invariante C) — não existe amend pós-record.
+- Rating só grava **após a janela de override**, uma vez por card (Invariante C) -- não existe amend pós-record. No player (Cláusula 12) a janela é o **dry-run** do `--record-lote`, e a página não tem caminho de escrita para o FSRS.
+- O **player é veículo do DRENAR**, não fase nova (Cláusula 12, v1.4): duas superfícies, dois invariantes preservados por construção, uma só Revisão Direcionada no chat.
 - ⚰️ Invariante D (isolamento do PREPARAR) **revogado na v1.3** — sem aquecimento pré-drill não há o que isolar.
 - **Silêncio no meio do DRENAR** (Invariante F, v1.3): nota e tally durante o drill; prosa só no fechamento, sobre notas 1-2. Exceção: defeito de card.
 - A nota **nunca** governa o agendamento FSRS — só a profundidade da preparação.

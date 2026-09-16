@@ -62,6 +62,11 @@ python tools/fsrs_queue.py --record <card_id> --rating <1-4> --reason <vencido|f
 
 # P3: consequência dos 4 ratings para um card (sem gravar nada)
 python tools/fsrs_queue.py --preview <card_id>
+
+# DRENAR no player (s183): exportar o lote -> montar a página -> gravar as notas
+python tools/fsrs_queue.py --export-player [--limit N] [--sessao ID] [--out tmp/player_<data>.json]
+python tools/fsrs_queue.py --build-player --lote tmp/player_<data>.json [--out artifacts/player-<data>.html]
+python tools/fsrs_queue.py --record-lote tmp/player_<data>_notas.json --lote tmp/player_<data>.json [--apply --expect N]
 ```
 
 ---
@@ -110,6 +115,39 @@ vazamento de rótulo (modo de falha #8 do handoff de flashcards) era tribal:
 | `--prevalencia` | **Opt-in (s165).** Reordena o bucket `novos` por prevalência ENAMED lida de `core/cronograma/prevalencia_enamed.json` (alta -> media -> baixa -> sem sinal; desempate FIFO por `card_id`) e só depois corta em `--new-limit`. Regra do usuário: **prevalência = prioridade na fila dos nunca introduzidos**. Não toca FSRS nem banco -- só a ordem de introdução. Sem o arquivo, degrada para FIFO. |
 
 **Ordem da fila:** atrasados → hoje → novos. Cards aposentados (`needs_qualitative >= 2`) são excluídos pela query. Campos de cada card: `card_id, frente_contexto, frente_pergunta, verso_resposta, verso_regra_mestre, verso_armadilha, needs_qualitative, due, area, tema, bucket`.
+
+---
+
+## DRENAR no player (s183 -- spec `plano-ssot-e-cards-v2-part-9`)
+
+> O DRENAR ganha uma **segunda superfície**: uma página (Artifact) onde o usuário responde no teclado, em vez de o agente apresentar bloco a bloco no chat. **Não é uma terceira fase** -- é o mesmo DRENAR da Cláusula 4 do contrato, com outro veículo. A **Revisão Direcionada continua no chat**, no fechamento, sobre as notas 1-2.
+>
+> 🔴 **A página NUNCA grava FSRS.** Ela guarda a primeira nota de cada card na capability `db`; quem grava é o `--record-lote`, por `record_review` -- o caminho de escrita único (Invariante C). Contrato: `core/contracts/revisao-calibrada-contract.md` v1.4.
+
+**Assinatura das 3 flags (+ os 5 argumentos que elas consomem):**
+
+| Flag | Semântica |
+|---|---|
+| `--export-player` | Exporta o lote do dia em JSON: `{sessao, gerado_em, total, cards[]}`. **Mesma ordem e mesmos buckets do `--list`** (aceita `--area`, `--tema`, `--cluster`, `--prevalencia`, `--new-limit`). Sem `--limit`, corta no **teto do dia** (`day_plan._teto_efetivo`, F64: `vencidos = atrasados + hoje`). Cada card leva **só o que vai para a tela** -- `needs_qualitative` e `due` ficam de fora de propósito. |
+| `--build-player` | Injeta o lote (`--lote`) no `core/templates/player.html` dentro do `<script id="lote" type="application/json">` e grava a página. `<`, `>` e `&` viajam escapados em `\uXXXX` (card com `</script>` não quebra a página); a página lê com `JSON.parse(textContent)`. |
+| `--record-lote NOTAS.json` | Grava o lote de notas do player. **Dry-run por default** (lista `card_id -> rating` e o N). Exige `--lote` (o export) -- é contra ele que cada `card_id` é validado. `rating` fora de 1..4 ou `card_id` fora do lote = **ERRO** (recusa o `--apply`, exit 2); `card_id` repetido = **1 revisão + WARN** (a primeira nota é a gravável). Os `defeito` viram `db.marcar_reforja(card_id, motivo, origem='player')` e **não contam como revisão**. |
+| `--out PATH` | Saída do `--export-player` (default `tmp/player_<sessao>.json`) ou do `--build-player` (default `artifacts/player-<sessao>.html`). |
+| `--lote PATH` | O JSON exportado. Exigido por `--build-player` e por `--record-lote`. |
+| `--sessao ID` | Id da sessão (default: a data de hoje). Vira a coleção `sessoes/<sessao>/notas` na página -- dois lotes no mesmo dia pedem ids diferentes. |
+| `--apply` | `--record-lote`: grava de verdade. Sem ele, dry-run. |
+| `--expect N` | **COUNT-ASSERT.** Obrigatório com `--apply`; diferente do N medido, recusa e não grava (exit 2). Depois de gravar, o CLI confere que `fsrs_revlog` cresceu **exatamente N** -- se não bateu, sai 2 dizendo o quanto cresceu. |
+
+**Rito (nunca pular um passo):**
+
+1. `--export-player` -> confere o `total` e a sessão.
+2. `--build-player` -> a página em `artifacts/player-<data>.html`.
+3. **Publicar como Artifact com `capabilities: {db: {}}`** -- sem a capability a página cai no fallback e as notas só existem na tela.
+4. O usuário drena: `Espaço` vira, `1-4` dá a nota, `D` marca defeito com motivo curto. Nota `< 4` recoloca o card no fim do lote (relearning) e **não gera segunda nota** -- só a primeira é gravável (regra anti-duplo-registro).
+5. O agente lê as notas com `ArtifactData` (coleção `sessoes/<sessao>/notas`, 1 doc por card: `{card_id, rating_primeira, ts, defeito?, motivo?}`) e grava `tmp/player_<data>_notas.json` no formato `{"sessao": ..., "notas": [...]}`. **Fallback:** se a página declarou `db` indisponível, o usuário cola o JSON do fim da página -- é o mesmo formato.
+6. `--record-lote` em **dry-run**, depois `--apply --expect N` com o N que o dry-run mediu.
+7. **Revisão Direcionada no chat**, sobre os temas de nota 1-2 -- exatamente como no DRENAR conversacional (Invariante B: carimbar `review_log`).
+
+🔴 **O que NÃO muda:** o Invariante F (silêncio no meio) é estrutural aqui -- a página não ensina. O Invariante C também: a janela de override do lote acontece **antes** do `--apply`, olhando o dry-run; depois do `--apply` não há amend. E não existe botão "aposentar" na página -- aposentar é `reforja.py` / `cards_prune.py`.
 
 ---
 

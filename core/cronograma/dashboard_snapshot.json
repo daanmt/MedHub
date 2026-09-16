@@ -1,0 +1,6372 @@
+{
+ "_doc": "Snapshot da coluna Realizada? do Dashboard EMED 2026 (Google Sheets, fileId em /importar-planilha), lido via MCP em 2026-09-16 (planilha modificada em 2026-09-10). 707 tarefas = catalogo das S1-S48 do Cronograma Extensivo. SINAL APROXIMADO por confissao do usuario (marcava tarefas no lugar de outras): serve so como status inicial de plano_tarefas (origem_conclusao=dashboard_2026-09-10), a verdade e fixada na revisao por area (spec part-3). Dado congelado -- nunca reler o Drive em runtime (cronograma-contract 5b).",
+ "lido_em": "2026-09-16",
+ "planilha_modificada_em": "2026-09-10",
+ "n_tarefas": 707,
+ "n_realizadas": 186,
+ "tarefas": [
+  {
+   "area": "Pediatria",
+   "tarefa": 1,
+   "assunto": "Imunizações",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 23,
+   "acertos": 18
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 2,
+   "assunto": "Imunizações",
+   "tipo": "Teoria II",
+   "realizada": true,
+   "q": 29,
+   "acertos": 24
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 3,
+   "assunto": "Imunizações",
+   "tipo": "Teoria III",
+   "realizada": true,
+   "q": 25,
+   "acertos": 18
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 4,
+   "assunto": "Imunizações",
+   "tipo": "Revisão",
+   "realizada": true,
+   "q": 55,
+   "acertos": 53
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 5,
+   "assunto": "Doenças Exantemáticas",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 25,
+   "acertos": 18
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 6,
+   "assunto": "Doenças Exantemáticas",
+   "tipo": "Teoria II",
+   "realizada": true,
+   "q": 18,
+   "acertos": 16
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 7,
+   "assunto": "Doenças Exantemáticas",
+   "tipo": "Revisão",
+   "realizada": true,
+   "q": 41,
+   "acertos": 35
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 8,
+   "assunto": "Icterícia e Sepse Neonatal",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 24,
+   "acertos": 19
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 9,
+   "assunto": "Icterícia e Sepse Neonatal",
+   "tipo": "Teoria II",
+   "realizada": true,
+   "q": 17,
+   "acertos": 14
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 10,
+   "assunto": "Icterícia e Sepse Neonatal",
+   "tipo": "Revisão",
+   "realizada": true,
+   "q": 38,
+   "acertos": 23
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 11,
+   "assunto": "Emergências Pediátricas",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 28,
+   "acertos": 24
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 12,
+   "assunto": "Emergências Pediátricas",
+   "tipo": "Teoria II",
+   "realizada": true,
+   "q": 28,
+   "acertos": 28
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 13,
+   "assunto": "Emergências Pediátricas",
+   "tipo": "Teoria III",
+   "realizada": true,
+   "q": 23,
+   "acertos": 22
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 14,
+   "assunto": "Emergências Pediátricas",
+   "tipo": "Revisão",
+   "realizada": true,
+   "q": 46,
+   "acertos": 42
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 15,
+   "assunto": "Imunizações Doenças Exantemáticas Icterícia e Sepse Neonatal Emergências Pediátricas",
+   "tipo": "Revisão por Questões",
+   "realizada": true,
+   "q": 49,
+   "acertos": 43
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 16,
+   "assunto": "Cardiopatias Congênitas",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 20,
+   "acertos": 16
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 17,
+   "assunto": "Cardiopatias Congênitas",
+   "tipo": "Teoria II",
+   "realizada": true,
+   "q": 20,
+   "acertos": 13
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 18,
+   "assunto": "Cardiopatias Congênitas",
+   "tipo": "Revisão",
+   "realizada": true,
+   "q": 40,
+   "acertos": 34
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 19,
+   "assunto": "Cuidados Neonatais",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 24,
+   "acertos": 17
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 20,
+   "assunto": "Cuidados Neonatais",
+   "tipo": "Teoria II",
+   "realizada": true,
+   "q": 20,
+   "acertos": 15
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 21,
+   "assunto": "Cuidados Neonatais",
+   "tipo": "Revisão",
+   "realizada": true,
+   "q": 40,
+   "acertos": 34
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 22,
+   "assunto": "Asma",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 20,
+   "acertos": 18
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 23,
+   "assunto": "Asma",
+   "tipo": "Teoria II",
+   "realizada": true,
+   "q": 30,
+   "acertos": 28
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 24,
+   "assunto": "Asma",
+   "tipo": "Teoria III",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 25,
+   "assunto": "Asma",
+   "tipo": "Revisão",
+   "realizada": true,
+   "q": 36,
+   "acertos": 30
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 26,
+   "assunto": "Aleitamento Materno",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 23,
+   "acertos": 20
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 27,
+   "assunto": "Aleitamento Materno",
+   "tipo": "Teoria II",
+   "realizada": true,
+   "q": 21,
+   "acertos": 20
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 28,
+   "assunto": "Aleitamento Materno",
+   "tipo": "Revisão",
+   "realizada": true,
+   "q": 46,
+   "acertos": 42
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 29,
+   "assunto": "Cardiopatias Congênitas Cuidados Neonatais Asma Aleitamento Materno",
+   "tipo": "Revisão por Questões",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 30,
+   "assunto": "Diarreia",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 22,
+   "acertos": 19
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 31,
+   "assunto": "Diarreia",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 32,
+   "assunto": "Diarreia",
+   "tipo": "Revisão",
+   "realizada": true,
+   "q": 41,
+   "acertos": 34
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 33,
+   "assunto": "Pneumonias na Infância",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 34,
+   "assunto": "Pneumonias na Infância",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 35,
+   "assunto": "Pneumonias na Infância",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 36,
+   "assunto": "Choque em Pediatria",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 37,
+   "assunto": "Choque em Pediatria",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 38,
+   "assunto": "Choque em Pediatria",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 39,
+   "assunto": "Alergia Alimentar",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 40,
+   "assunto": "Alergia Alimentar",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 41,
+   "assunto": "Diarreia Pneumonias na Infância Choque em Pediatria Alergia Alimentar",
+   "tipo": "Revisão por Questões",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 42,
+   "assunto": "Reanimação Neonatal",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 43,
+   "assunto": "Reanimação Neonatal",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 44,
+   "assunto": "Crescimento",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 45,
+   "assunto": "Constipação Intestinal Hiperplasia Adrenal Congênita",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 46,
+   "assunto": "Crescimento",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 47,
+   "assunto": "Doença Celíaca em Pediatria Febre Reumática",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 48,
+   "assunto": "Tópicos em Pediatria",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 49,
+   "assunto": "Tópicos em Pediatria",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 50,
+   "assunto": "Reanimação Neonatal Crescimento Tópicos em Pediatria",
+   "tipo": "Revisão por Questões",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 51,
+   "assunto": "Diagnóstico Nutricional",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 52,
+   "assunto": "Diagnóstico Nutricional",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 53,
+   "assunto": "Vitaminas Doença do Refluxo Gastroesofágico em Pediatria",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 54,
+   "assunto": "Desnutrição na Infância",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 55,
+   "assunto": "Desnutrição na Infância",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 56,
+   "assunto": "Febre Sem Sinais Localizatórios Hipertensão Arterial na Criança e Adolescente Coqueluche",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 57,
+   "assunto": "Desnutrição na Infância",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 58,
+   "assunto": "Obesidade Infantil e na Adolescência",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 59,
+   "assunto": "Obesidade Infantil e na Adolescência",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 60,
+   "assunto": "Obesidade Infantil e na Adolescência",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 61,
+   "assunto": "Infecção de Trato Urinário em Pediatria",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 62,
+   "assunto": "Diagnóstico Nutricional Desnutrição na Infância Obesidade Infantil e na Adolescência",
+   "tipo": "Revisão por Questões",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 63,
+   "assunto": "Infecção de Trato Urinário em Pediatria",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 64,
+   "assunto": "Bronquiolite",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 65,
+   "assunto": "Bronquiolite",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 66,
+   "assunto": "Anafilaxia e Urticária",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 67,
+   "assunto": "Anafilaxia e Urticária",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 68,
+   "assunto": "Anafilaxia e Urticária",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 69,
+   "assunto": "Puberdade",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 70,
+   "assunto": "Puberdade",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 71,
+   "assunto": "Doença de Kawasaki",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 72,
+   "assunto": "Infecção de Trato Urinário em Pediatria Bronquiolite Anafilaxia e Urticária Puberdade",
+   "tipo": "Revisão por Questões",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 73,
+   "assunto": "Doença de Kawasaki",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 74,
+   "assunto": "Distúrbios Metabólicos do Neonato",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 75,
+   "assunto": "Distúrbios Metabólicos do Neonato",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 76,
+   "assunto": "Distúrbios Metabólicos do Neonato",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 77,
+   "assunto": "Síndromes Genéticas e Erros Inatos do Metabolismo",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 78,
+   "assunto": "Síndromes Genéticas e Erros Inatos do Metabolismo",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 79,
+   "assunto": "Síndromes Genéticas e Erros Inatos do Metabolismo",
+   "tipo": "Teoria III",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 80,
+   "assunto": "Síndromes Genéticas e Erros Inatos do Metabolismo",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 81,
+   "assunto": "Tuberculose",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 82,
+   "assunto": "Tuberculose",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 83,
+   "assunto": "Tuberculose",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 84,
+   "assunto": "Distúrbios Respiratórios do Período Neonatal",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 85,
+   "assunto": "Doença de Kawasaki Distúrbios Metabólicos do Neonato Síndromes Genéticas e Erros Inatos do Metabolismo Tuberculose",
+   "tipo": "Revisão por Questões",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 86,
+   "assunto": "Distúrbios Respiratórios do Período Neonatal",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 87,
+   "assunto": "Distúrbios Respiratórios do Período Neonatal",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 88,
+   "assunto": "Desenvolvimento Neuropsicomotor",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 89,
+   "assunto": "Desenvolvimento Neuropsicomotor",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 90,
+   "assunto": "Desenvolvimento Neuropsicomotor",
+   "tipo": "Teoria III",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 91,
+   "assunto": "Desenvolvimento Neuropsicomotor",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 92,
+   "assunto": "Infecções Congênitas",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 93,
+   "assunto": "Infecções Congênitas",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 94,
+   "assunto": "Infecções Congênitas",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 95,
+   "assunto": "Fibrose Cística",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 96,
+   "assunto": "Fibrose Cística",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pediatria",
+   "tarefa": 97,
+   "assunto": "Distúrbios Respiratórios do Período Neonatal Desenvolvimento Neuropsicomotor Infecções Congênitas Fibrose Cística",
+   "tipo": "Revisão por Questões",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 1,
+   "assunto": "Vigilância em Saúde",
+   "tipo": "Teoria",
+   "realizada": true,
+   "q": 92,
+   "acertos": 69
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 2,
+   "assunto": "Vigilância em Saúde",
+   "tipo": "Revisão",
+   "realizada": true,
+   "q": 72,
+   "acertos": 64
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 3,
+   "assunto": "Sistemas de Informação em Saúde",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 23,
+   "acertos": 18
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 4,
+   "assunto": "Sistemas de Informação em Saúde",
+   "tipo": "Teoria II",
+   "realizada": true,
+   "q": 26,
+   "acertos": 24
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 5,
+   "assunto": "Sistemas de Informação em Saúde",
+   "tipo": "Teoria III",
+   "realizada": true,
+   "q": 23,
+   "acertos": 22
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 6,
+   "assunto": "Sistemas de Informação em Saúde",
+   "tipo": "Revisão",
+   "realizada": true,
+   "q": 42,
+   "acertos": 38
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 7,
+   "assunto": "Vigilância em Saúde Sistemas de Informação em Saúde",
+   "tipo": "Revisão por Questões",
+   "realizada": true,
+   "q": 53,
+   "acertos": 51
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 27,
+   "assunto": "Medidas de Saúde Coletiva Pt. I Medidas de Saúde Coletiva Pt. II Medidas de Saúde Coletiva Pt. III",
+   "tipo": "Revisão por Questões",
+   "realizada": true,
+   "q": 46,
+   "acertos": 39
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 8,
+   "assunto": "Medidas de Saúde Coletiva Pt. I",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 28,
+   "acertos": 21
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 9,
+   "assunto": "Medidas de Saúde Coletiva Pt. I",
+   "tipo": "Teoria II",
+   "realizada": true,
+   "q": 43,
+   "acertos": 33
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 10,
+   "assunto": "Medidas de Saúde Coletiva Pt. I",
+   "tipo": "Revisão I",
+   "realizada": true,
+   "q": 47,
+   "acertos": 38
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 11,
+   "assunto": "Medidas de Saúde Coletiva Pt. I",
+   "tipo": "Teoria III",
+   "realizada": true,
+   "q": 34,
+   "acertos": 34
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 12,
+   "assunto": "Medidas de Saúde Coletiva Pt. I",
+   "tipo": "Teoria IV",
+   "realizada": true,
+   "q": 38,
+   "acertos": 37
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 13,
+   "assunto": "Medidas de Saúde Coletiva Pt. I",
+   "tipo": "Revisão II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 14,
+   "assunto": "Medidas de Saúde Coletiva Pt. II",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 19,
+   "acertos": 11
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 15,
+   "assunto": "Medidas de Saúde Coletiva Pt. II",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 16,
+   "assunto": "Medidas de Saúde Coletiva Pt. II",
+   "tipo": "Revisão I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 17,
+   "assunto": "Medidas de Saúde Coletiva Pt. II",
+   "tipo": "Teoria III",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 18,
+   "assunto": "Medidas de Saúde Coletiva Pt. II",
+   "tipo": "Teoria IV",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 19,
+   "assunto": "Medidas de Saúde Coletiva Pt. II",
+   "tipo": "Revisão II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 20,
+   "assunto": "Medidas de Saúde Coletiva Pt. III",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 21,
+   "assunto": "Medidas de Saúde Coletiva Pt. III",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 22,
+   "assunto": "Medidas de Saúde Coletiva Pt. III",
+   "tipo": "Revisão I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 23,
+   "assunto": "Medidas de Saúde Coletiva Pt. III",
+   "tipo": "Teoria III",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 24,
+   "assunto": "Medidas de Saúde Coletiva Pt. III",
+   "tipo": "Teoria IV",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 25,
+   "assunto": "Medidas de Saúde Coletiva Pt. III",
+   "tipo": "Revisão II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 26,
+   "assunto": "Processo Saúde-Doença",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 20,
+   "acertos": 17
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 28,
+   "assunto": "Processo Saúde-Doença",
+   "tipo": "Teoria II",
+   "realizada": true,
+   "q": 19,
+   "acertos": 14
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 29,
+   "assunto": "Processo Saúde-Doença",
+   "tipo": "Revisão",
+   "realizada": true,
+   "q": 41,
+   "acertos": 38
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 30,
+   "assunto": "Medicina de Família e Comunidade",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 31,
+   "acertos": 27
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 31,
+   "assunto": "Medicina de Família e Comunidade",
+   "tipo": "Teoria II",
+   "realizada": true,
+   "q": 19,
+   "acertos": 16
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 32,
+   "assunto": "Medicina de Família e Comunidade",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 33,
+   "assunto": "Saúde do Idoso",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 34,
+   "assunto": "Saúde do Idoso",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 35,
+   "assunto": "Processo Saúde-Doença Medicina de Família e Comunidade Saúde do Idoso",
+   "tipo": "Revisão por Questões",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 36,
+   "assunto": "Princípios e Diretrizes do SUS",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 22,
+   "acertos": 16
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 37,
+   "assunto": "Princípios e Diretrizes do SUS",
+   "tipo": "Teoria II",
+   "realizada": true,
+   "q": 30,
+   "acertos": 27
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 38,
+   "assunto": "Princípios e Diretrizes do SUS",
+   "tipo": "Revisão",
+   "realizada": true,
+   "q": 43,
+   "acertos": 33
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 39,
+   "assunto": "Atenção Primária à Saúde no Brasil",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 23,
+   "acertos": 21
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 40,
+   "assunto": "Atenção Primária à Saúde no Brasil",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 41,
+   "assunto": "Atenção Primária à Saúde no Brasil",
+   "tipo": "Teoria III",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 42,
+   "assunto": "Atenção Primária à Saúde no Brasil",
+   "tipo": "Revisão",
+   "realizada": true,
+   "q": 50,
+   "acertos": 48
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 43,
+   "assunto": "Processos Epidêmicos e Epidemiologia das Doenças Infecciosas",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 44,
+   "assunto": "Ética Médica",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 20,
+   "acertos": 20
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 45,
+   "assunto": "Ética Médica",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 46,
+   "assunto": "Ética Médica",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 47,
+   "assunto": "Financiamento em Saúde",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 48,
+   "assunto": "Financiamento em Saúde",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 49,
+   "assunto": "Financiamento em Saúde",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 50,
+   "assunto": "Estatística Médica",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 51,
+   "assunto": "Princípios e Diretrizes do SUS Atenção Primária à Saúde no Brasil Ética Médica Financiamento em Saúde",
+   "tipo": "Revisão por Questões",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 52,
+   "assunto": "Estatística Médica",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 53,
+   "assunto": "Estatística Médica",
+   "tipo": "Revisão I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 54,
+   "assunto": "Estatística Médica",
+   "tipo": "Teoria III",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 55,
+   "assunto": "Estatística Médica",
+   "tipo": "Teoria IV",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 56,
+   "assunto": "Estatística Médica",
+   "tipo": "Revisão II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 57,
+   "assunto": "Normas Regulamentadoras",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 58,
+   "assunto": "Normas Regulamentadoras",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 59,
+   "assunto": "Normas Regulamentadoras",
+   "tipo": "Teoria III",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 60,
+   "assunto": "Normas Regulamentadoras",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 61,
+   "assunto": "Marcos Legais do SUS",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 62,
+   "assunto": "Marcos Legais do SUS",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 63,
+   "assunto": "Marcos Legais do SUS",
+   "tipo": "Teoria III",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 64,
+   "assunto": "Marcos Legais do SUS",
+   "tipo": "Revisão I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 65,
+   "assunto": "Marcos Legais do SUS",
+   "tipo": "Teoria IV",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 66,
+   "assunto": "Marcos Legais do SUS",
+   "tipo": "Teoria V",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 67,
+   "assunto": "Marcos Legais do SUS",
+   "tipo": "Revisão II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 68,
+   "assunto": "Bases de Saúde do Trabalhador",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 69,
+   "assunto": "Bases de Saúde do Trabalhador",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 70,
+   "assunto": "Estatística Médica Normas Regulamentadoras Marcos Legais do SUS",
+   "tipo": "Revisão por Questões",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 71,
+   "assunto": "Bases de Saúde do Trabalhador",
+   "tipo": "Teoria III",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 72,
+   "assunto": "Bases de Saúde do Trabalhador",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 73,
+   "assunto": "Políticas de Saúde",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 74,
+   "assunto": "Políticas de Saúde",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 75,
+   "assunto": "Políticas de Saúde",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 76,
+   "assunto": "Processo de Descentralização e Reg. do SUS",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 77,
+   "assunto": "Processo de Descentralização e Reg. do SUS",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 78,
+   "assunto": "Processo de Descentralização e Reg. do SUS",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 79,
+   "assunto": "Bases de Saúde do Trabalhador Políticas de Saúde Processo de Descentralização e Reg. do SUS",
+   "tipo": "Revisão por Questões",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 80,
+   "assunto": "Pesquisa Epidemiológica e Medidas de Associação",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 81,
+   "assunto": "Pesquisa Epidemiológica e Medidas de Associação",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 82,
+   "assunto": "Pesquisa Epidemiológica e Medidas de Associação",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 83,
+   "assunto": "História do SUS",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 84,
+   "assunto": "História do SUS",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 85,
+   "assunto": "Testes Diagnósticos",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 86,
+   "assunto": "Testes Diagnósticos",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Preventiva",
+   "tarefa": 87,
+   "assunto": "Pesquisa Epidemiológica e Medidas de Associação História do SUS Testes Diagnósticos",
+   "tipo": "Revisão por Questões",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 1,
+   "assunto": "Cirurgia Infantil I",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 22,
+   "acertos": 16
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 2,
+   "assunto": "Cirurgia Infantil I",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 3,
+   "assunto": "Cirurgia Infantil I",
+   "tipo": "Revisão",
+   "realizada": true,
+   "q": 84,
+   "acertos": 80
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 4,
+   "assunto": "Cirurgia Infantil II",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 22,
+   "acertos": 18
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 5,
+   "assunto": "Cirurgia Infantil II",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 6,
+   "assunto": "Cirurgia Infantil II",
+   "tipo": "Revisão",
+   "realizada": true,
+   "q": 43,
+   "acertos": 23
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 7,
+   "assunto": "Cirurgia Infantil III",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 23,
+   "acertos": 19
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 8,
+   "assunto": "Cirurgia Infantil III",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 9,
+   "assunto": "Cirurgia Infantil III",
+   "tipo": "Revisão",
+   "realizada": true,
+   "q": 33,
+   "acertos": 22
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 10,
+   "assunto": "Cirurgia Infantil Pt. I Cirurgia Infantil Pt. II Cirurgia Infantil Pt. III",
+   "tipo": "Revisão por Questões",
+   "realizada": true,
+   "q": 46,
+   "acertos": 39
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 11,
+   "assunto": "Trauma - Avaliação Inicial, Vias Aéreas e Trauma Torácico",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 27,
+   "acertos": 21
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 12,
+   "assunto": "Trauma - Avaliação Inicial, Vias Aéreas e Trauma Torácico",
+   "tipo": "Teoria II",
+   "realizada": true,
+   "q": 30,
+   "acertos": 21
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 13,
+   "assunto": "Trauma - Avaliação Inicial, Vias Aéreas e Trauma Torácico",
+   "tipo": "Revisão",
+   "realizada": true,
+   "q": 42,
+   "acertos": 31
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 14,
+   "assunto": "Trauma - Choque",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 39,
+   "acertos": 33
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 15,
+   "assunto": "Trauma - Choque",
+   "tipo": "Teoria II",
+   "realizada": true,
+   "q": 17,
+   "acertos": 13
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 16,
+   "assunto": "Trauma - Choque",
+   "tipo": "Revisão",
+   "realizada": true,
+   "q": 35,
+   "acertos": 30
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 17,
+   "assunto": "Trauma Abdominal e Pélvico",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 25,
+   "acertos": 15
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 18,
+   "assunto": "Trauma Abdominal e Pélvico",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 19,
+   "assunto": "Trauma Abdominal e Pélvico",
+   "tipo": "Teoria III",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 20,
+   "assunto": "Trauma Abdominal e Pélvico",
+   "tipo": "Revisão I",
+   "realizada": true,
+   "q": 44,
+   "acertos": 33
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 21,
+   "assunto": "Trauma Abdominal e Pélvico",
+   "tipo": "Teoria IV",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 22,
+   "assunto": "Trauma Abdominal e Pélvico",
+   "tipo": "Teoria V",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 23,
+   "assunto": "Trauma Abdominal e Pélvico",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 24,
+   "assunto": "Trauma - Avaliação Inicial, Vias Aéreas e Trauma Torácico Trauma - Choque Trauma Abdominal e Pélvico",
+   "tipo": "Revisão por Questões",
+   "realizada": true,
+   "q": 60,
+   "acertos": 46
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 25,
+   "assunto": "Abdome Agudo Inflamatório - Apendicite Aguda",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 18,
+   "acertos": 13
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 26,
+   "assunto": "Abdome Agudo Inflamatório - Apendicite Aguda",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 27,
+   "assunto": "Abdome Agudo Inflamatório - Apendicite Aguda",
+   "tipo": "Revisão",
+   "realizada": true,
+   "q": 42,
+   "acertos": 32
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 28,
+   "assunto": "Abdome Agudo Inflamatório - Colecistite e Colangite Aguda",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 18,
+   "acertos": 15
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 29,
+   "assunto": "Abdome Agudo Inflamatório - Colecistite e Colangite Aguda",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 30,
+   "assunto": "Abdome Agudo Inflamatório - Colecistite e Colangite Aguda",
+   "tipo": "Revisão",
+   "realizada": true,
+   "q": 44,
+   "acertos": 39
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 31,
+   "assunto": "Abdome Agudo Inflamatório - Diverticulite Aguda",
+   "tipo": "Teoria",
+   "realizada": true,
+   "q": 26,
+   "acertos": 22
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 32,
+   "assunto": "Abdome Agudo Inflamatório - Diverticulite Aguda",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 33,
+   "assunto": "Abdome Agudo Inflamatório - Apendicite Aguda Abdome Agudo Inflamatório - Colecistite e Colangite Aguda Abdome Agudo Inflamatório - Diverticulite Aguda",
+   "tipo": "Revisão por Questões",
+   "realizada": true,
+   "q": 56,
+   "acertos": 48
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 34,
+   "assunto": "Cirurgia Vascular",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 35,
+   "assunto": "Cirurgia Vascular",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 36,
+   "assunto": "Cirurgia Vascular",
+   "tipo": "Revisão I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 37,
+   "assunto": "Cirurgia Vascular",
+   "tipo": "Teoria III",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 38,
+   "assunto": "Cirurgia Vascular",
+   "tipo": "Teoria IV",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 39,
+   "assunto": "Cirurgia Vascular",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 40,
+   "assunto": "Urologia",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 20,
+   "acertos": 17
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 41,
+   "assunto": "Urologia",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 42,
+   "assunto": "Urologia",
+   "tipo": "Teoria III",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 43,
+   "assunto": "Urologia",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 44,
+   "assunto": "Urgências Abdominais - Abdome Agudo Abdome Agudo Vascular",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 45,
+   "assunto": "Hérnias da Parede Abdominal",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 46,
+   "assunto": "Hérnias da Parede Abdominal",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 47,
+   "assunto": "Hérnias da Parede Abdominal",
+   "tipo": "Teoria III",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 48,
+   "assunto": "Hérnias da Parede Abdominal",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 49,
+   "assunto": "Resposta Endócrino-Metabólica-Inflamatória ao Trauma Cicatrização de Feridas",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 50,
+   "assunto": "Princípios da Anestesiologia",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 51,
+   "assunto": "Princípios da Anestesiologia",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 52,
+   "assunto": "Princípios da Anestesiologia",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 53,
+   "assunto": "Cirurgia Vascular Urologia Hérnias da Parede Abdominal Princípios da Anestesiologia",
+   "tipo": "Revisão por Questões",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 54,
+   "assunto": "Abdome Agudo Obstrutivo",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 55,
+   "assunto": "Abdome Agudo Obstrutivo",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 56,
+   "assunto": "Abdome Agudo Obstrutivo",
+   "tipo": "Revisão I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 57,
+   "assunto": "Abdome Agudo Obstrutivo",
+   "tipo": "Teoria III",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 58,
+   "assunto": "Abdome Agudo Obstrutivo",
+   "tipo": "Teoria IV",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 59,
+   "assunto": "Abdome Agudo Obstrutivo",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 60,
+   "assunto": "Complicações Pós-Operatórias",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 61,
+   "assunto": "Complicações Pós-Operatórias",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 62,
+   "assunto": "Complicações Pós-Operatórias",
+   "tipo": "Teoria III",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 63,
+   "assunto": "Complicações Pós-Operatórias",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 64,
+   "assunto": "Vesícula e Vias Biliares",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 65,
+   "assunto": "Vesícula e Vias Biliares",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 66,
+   "assunto": "Vesícula e Vias Biliares",
+   "tipo": "Teoria III",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 67,
+   "assunto": "Vesícula e Vias Biliares",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 68,
+   "assunto": "Cirurgia Plástica",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 69,
+   "assunto": "Cirurgia Plástica",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 70,
+   "assunto": "Cirurgia Plástica",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 71,
+   "assunto": "Abdome Agudo Obstrutivo Complicações Pós-Operatórias Vesícula e Vias Biliares Cirurgia Plástica",
+   "tipo": "Revisão por Questões",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 72,
+   "assunto": "Queimaduras e Trauma Elétrico",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 73,
+   "assunto": "Queimaduras e Trauma Elétrico",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 74,
+   "assunto": "Abdome Agudo Perfurativo",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 75,
+   "assunto": "Abdome Agudo Perfurativo",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 76,
+   "assunto": "Proctologia",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 77,
+   "assunto": "Proctologia",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 78,
+   "assunto": "Proctologia",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 79,
+   "assunto": "Nutrição em Cirurgia",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 80,
+   "assunto": "Nutrição em Cirurgia",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 81,
+   "assunto": "Nutrição em Cirurgia",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 82,
+   "assunto": "Temas Gerais em Cirurgia",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 83,
+   "assunto": "Temas Gerais em Cirurgia",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 84,
+   "assunto": "Temas Gerais em Cirurgia",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cirurgia",
+   "tarefa": 85,
+   "assunto": "Queimaduras e Trauma Elétrico Abdome Agudo Perfurativo Proctologia Nutrição em cirurgia Temas Gerais em Cirurgia",
+   "tipo": "Revisão por Questões",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Infecto",
+   "tarefa": 1,
+   "assunto": "Arboviroses",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 19,
+   "acertos": 17
+  },
+  {
+   "area": "Infecto",
+   "tarefa": 2,
+   "assunto": "Arboviroses",
+   "tipo": "Teoria II",
+   "realizada": true,
+   "q": 40,
+   "acertos": 25
+  },
+  {
+   "area": "Infecto",
+   "tarefa": 3,
+   "assunto": "Arboviroses",
+   "tipo": "Teoria III",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Infecto",
+   "tarefa": 4,
+   "assunto": "Arboviroses",
+   "tipo": "Revisão",
+   "realizada": true,
+   "q": 57,
+   "acertos": 52
+  },
+  {
+   "area": "Infecto",
+   "tarefa": 5,
+   "assunto": "HIV",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 28,
+   "acertos": 17
+  },
+  {
+   "area": "Infecto",
+   "tarefa": 6,
+   "assunto": "HIV",
+   "tipo": "Teoria II",
+   "realizada": true,
+   "q": 19,
+   "acertos": 17
+  },
+  {
+   "area": "Infecto",
+   "tarefa": 7,
+   "assunto": "HIV",
+   "tipo": "Teoria III",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Infecto",
+   "tarefa": 8,
+   "assunto": "HIV",
+   "tipo": "Revisão",
+   "realizada": true,
+   "q": 39,
+   "acertos": 31
+  },
+  {
+   "area": "Infecto",
+   "tarefa": 9,
+   "assunto": "Tuberculose",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 18,
+   "acertos": 14
+  },
+  {
+   "area": "Infecto",
+   "tarefa": 10,
+   "assunto": "Tuberculose",
+   "tipo": "Teoria II",
+   "realizada": true,
+   "q": 19,
+   "acertos": 18
+  },
+  {
+   "area": "Infecto",
+   "tarefa": 11,
+   "assunto": "Tuberculose",
+   "tipo": "Revisão",
+   "realizada": true,
+   "q": 35,
+   "acertos": 27
+  },
+  {
+   "area": "Infecto",
+   "tarefa": 12,
+   "assunto": "Meningites e Meningoencefalites",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 24,
+   "acertos": 18
+  },
+  {
+   "area": "Infecto",
+   "tarefa": 13,
+   "assunto": "Meningites e Meningoencefalites",
+   "tipo": "Teoria II",
+   "realizada": true,
+   "q": 50,
+   "acertos": 37
+  },
+  {
+   "area": "Infecto",
+   "tarefa": 14,
+   "assunto": "Meningites e Meningoencefalites",
+   "tipo": "Teoria III",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Infecto",
+   "tarefa": 15,
+   "assunto": "Meningites e Meningoencefalites",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Infecto",
+   "tarefa": 16,
+   "assunto": "Arboviroses HIV Tuberculose Meningites e Meningoencefalites",
+   "tipo": "Revisão por Questões",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Infecto",
+   "tarefa": 17,
+   "assunto": "Micoses Invasivas",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Infecto",
+   "tarefa": 18,
+   "assunto": "Sepse",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 25,
+   "acertos": 21
+  },
+  {
+   "area": "Infecto",
+   "tarefa": 19,
+   "assunto": "Sepse",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Infecto",
+   "tarefa": 20,
+   "assunto": "Sepse",
+   "tipo": "Revisão",
+   "realizada": true,
+   "q": 37,
+   "acertos": 31
+  },
+  {
+   "area": "Infecto",
+   "tarefa": 21,
+   "assunto": "Neutropenia Febril e Febre de Origem Indeterminada Piodermites",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Infecto",
+   "tarefa": 22,
+   "assunto": "Parasitoses",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 27,
+   "acertos": 20
+  },
+  {
+   "area": "Infecto",
+   "tarefa": 23,
+   "assunto": "Parasitoses",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Infecto",
+   "tarefa": 24,
+   "assunto": "Parasitoses",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Infecto",
+   "tarefa": 25,
+   "assunto": "IRAS",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Infecto",
+   "tarefa": 26,
+   "assunto": "IRAS",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Infecto",
+   "tarefa": 27,
+   "assunto": "IRAS",
+   "tipo": "Revisão",
+   "realizada": true,
+   "q": 40,
+   "acertos": 36
+  },
+  {
+   "area": "Infecto",
+   "tarefa": 28,
+   "assunto": "Pneumonias Bacterianas",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Infecto",
+   "tarefa": 29,
+   "assunto": "Pneumonias Bacterianas",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Infecto",
+   "tarefa": 30,
+   "assunto": "Pneumonias Bacterianas",
+   "tipo": "Revisão I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Infecto",
+   "tarefa": 31,
+   "assunto": "Pneumonias Bacterianas",
+   "tipo": "Teoria III",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Infecto",
+   "tarefa": 32,
+   "assunto": "Pneumonias Bacterianas",
+   "tipo": "Teoria IV",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Infecto",
+   "tarefa": 33,
+   "assunto": "Pneumonias Bacterianas",
+   "tipo": "Revisão II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Infecto",
+   "tarefa": 34,
+   "assunto": "Sepse Parasitoses Infecção Hospitalar (IRAS) Pneumonias Bacterianas",
+   "tipo": "Revisão por Questões",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Infecto",
+   "tarefa": 35,
+   "assunto": "COVID",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Infecto",
+   "tarefa": 36,
+   "assunto": "COVID",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Infecto",
+   "tarefa": 37,
+   "assunto": "Endocardite Bacteriana - Endocardite Infecciosa",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Infecto",
+   "tarefa": 38,
+   "assunto": "Endocardite Bacteriana - Endocardite Infecciosa",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Infecto",
+   "tarefa": 39,
+   "assunto": "Endocardite Bacteriana - Endocardite Infecciosa",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Infecto",
+   "tarefa": 40,
+   "assunto": "Antibióticos",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Infecto",
+   "tarefa": 41,
+   "assunto": "Antibióticos",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Infecto",
+   "tarefa": 42,
+   "assunto": "Antibióticos",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Infecto",
+   "tarefa": 43,
+   "assunto": "Animais Peçonhentos",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Infecto",
+   "tarefa": 44,
+   "assunto": "Animais Peçonhentos",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Infecto",
+   "tarefa": 45,
+   "assunto": "COVID Endocardite Bacteriana - Endocardite Infecciosa Antibióticos Animais Peçonhentos",
+   "tipo": "Revisão por Questões",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 1,
+   "assunto": "Pré-Natal",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 18,
+   "acertos": 13
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 2,
+   "assunto": "Pré-Natal",
+   "tipo": "Teoria II",
+   "realizada": true,
+   "q": 21,
+   "acertos": 18
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 3,
+   "assunto": "Pré-Natal",
+   "tipo": "Teoria III",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 4,
+   "assunto": "Pré-Natal",
+   "tipo": "Revisão",
+   "realizada": true,
+   "q": 38,
+   "acertos": 24
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 5,
+   "assunto": "Distúrbios Hipertensivos da Gestação",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 25,
+   "acertos": 19
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 6,
+   "assunto": "Distúrbios Hipertensivos da Gestação",
+   "tipo": "Teoria II",
+   "realizada": true,
+   "q": 24,
+   "acertos": 17
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 7,
+   "assunto": "Distúrbios Hipertensivos da Gestação",
+   "tipo": "Teoria III",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 8,
+   "assunto": "Distúrbios Hipertensivos da Gestação",
+   "tipo": "Revisão",
+   "realizada": true,
+   "q": 41,
+   "acertos": 34
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 9,
+   "assunto": "Sífilis na Gestação e Sífilis Congênita",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 28,
+   "acertos": 25
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 10,
+   "assunto": "Sífilis na Gestação e Sífilis Congênita",
+   "tipo": "Teoria II",
+   "realizada": true,
+   "q": 19,
+   "acertos": 18
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 11,
+   "assunto": "Sífilis na Gestação e Sífilis Congênita",
+   "tipo": "Revisão",
+   "realizada": true,
+   "q": 40,
+   "acertos": 39
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 12,
+   "assunto": "Sangramento da Primeira Metade",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 17,
+   "acertos": 15
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 13,
+   "assunto": "Sangramento da Primeira Metade",
+   "tipo": "Teoria II",
+   "realizada": true,
+   "q": 20,
+   "acertos": 15
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 14,
+   "assunto": "Sangramento da Primeira Metade",
+   "tipo": "Teoria III",
+   "realizada": true,
+   "q": 22,
+   "acertos": 21
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 15,
+   "assunto": "Sangramento da Primeira Metade",
+   "tipo": "Revisão",
+   "realizada": true,
+   "q": 48,
+   "acertos": 39
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 16,
+   "assunto": "Pré-Natal Distúbios Hipertensivos da Gestação Sífilis na Gestação e Sífilis Congênita Sangramento da Primeira Metade",
+   "tipo": "Revisão por Questões",
+   "realizada": true,
+   "q": 46,
+   "acertos": 31
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 17,
+   "assunto": "Assistência ao Parto",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 34,
+   "acertos": 22
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 18,
+   "assunto": "Assistência ao Parto",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 19,
+   "assunto": "Assistência ao Parto",
+   "tipo": "Teoria III",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 20,
+   "assunto": "Assistência ao Parto",
+   "tipo": "Revisão",
+   "realizada": true,
+   "q": 41,
+   "acertos": 33
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 21,
+   "assunto": "Vitalidade Fetal",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 22,
+   "assunto": "Vitalidade Fetal",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 23,
+   "assunto": "Vitalidade Fetal",
+   "tipo": "Teoria III",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 24,
+   "assunto": "Vitalidade Fetal",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 25,
+   "assunto": "Diabetes na Gestação",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 26,
+   "assunto": "Diabetes na Gestação",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 27,
+   "assunto": "Mecanismo de Parto e Fases Clínicas do Parto",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 28,
+   "assunto": "Sangramento da Segunda Metade",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 29,
+   "assunto": "Sangramento da Segunda Metade",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 30,
+   "assunto": "Sangramento da Segunda Metade",
+   "tipo": "Teoria III",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 31,
+   "assunto": "Sangramento da Segunda Metade",
+   "tipo": "Revisão I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 32,
+   "assunto": "Sangramento da Segunda Metade",
+   "tipo": "Teoria IV",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 33,
+   "assunto": "Sangramento da Segunda Metade",
+   "tipo": "Teoria V",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 34,
+   "assunto": "Sangramento da Segunda Metade",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 35,
+   "assunto": "Assistência ao Parto Vitalidade Fetal Diabetes na Gestação Sangramento da Segunda Metade",
+   "tipo": "Revisão por Questões",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 36,
+   "assunto": "Partograma e Distocia",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 37,
+   "assunto": "Partograma e Distocia",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 38,
+   "assunto": "Partograma e Distocia",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 39,
+   "assunto": "Infecções Congênitas Parto Vaginal Operatório",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 40,
+   "assunto": "Gestação Múltipla",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 41,
+   "assunto": "Gestação Múltipla",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 42,
+   "assunto": "Infecção Puerperal Indução do Parto e Pós-Datismo",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 43,
+   "assunto": "Hemorragia Pós-Parto",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 44,
+   "assunto": "Hemorragia Pós-Parto",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 45,
+   "assunto": "Hemorragia Pós-Parto",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 46,
+   "assunto": "Bacia Obstétrica, Pelvimetria e Estática Fetal",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 47,
+   "assunto": "Bacia Obstétrica, Pelvimetria e Estática Fetal",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 48,
+   "assunto": "Bacia Obstétrica, Pelvimetria e Estática Fetal",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 49,
+   "assunto": "Partograma e Distocia Gestação Múltipla Hemorragia Pós-Parto Bacia Obstétrica, Pelvimetria e Estática Fetal",
+   "tipo": "Revisão por Questões",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 50,
+   "assunto": "Prematuridade e Trabalho de Parto Prematuro",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 51,
+   "assunto": "Prematuridade e Trabalho de Parto Prematuro",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 52,
+   "assunto": "Rotura Prematura de Membranas",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 53,
+   "assunto": "Rotura Prematura de Membranas",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 54,
+   "assunto": "Rotura Prematura de Membranas",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 55,
+   "assunto": "Restrição de Crescimento Fetal e Óbito Fetal",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 56,
+   "assunto": "Restrição de Crescimento Fetal e Óbito Fetal",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 57,
+   "assunto": "Restrição de Crescimento Fetal e Óbito Fetal",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 58,
+   "assunto": "Modificações Fisiológicas da Gestação",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 59,
+   "assunto": "Modificações Fisiológicas da Gestação",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 60,
+   "assunto": "Modificações Fisiológicas da Gestação",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Obstetrícia",
+   "tarefa": 61,
+   "assunto": "Prematuridade e Trabalho de Parto Prematuro Rotura Prematura de Membranas Restrição de Crescimento Fetal e Óbito Fetal Modificações Fisiológicas da Gestação",
+   "tipo": "Revisão por Questões",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 1,
+   "assunto": "Planejamento Familiar",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 30,
+   "acertos": 27
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 2,
+   "assunto": "Planejamento Familiar",
+   "tipo": "Teoria II",
+   "realizada": true,
+   "q": 42,
+   "acertos": 32
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 3,
+   "assunto": "Planejamento Familiar",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 4,
+   "assunto": "Úlceras Genitais",
+   "tipo": "Teoria",
+   "realizada": true,
+   "q": 26,
+   "acertos": 23
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 5,
+   "assunto": "Úlceras Genitais",
+   "tipo": "Revisão",
+   "realizada": true,
+   "q": 43,
+   "acertos": 38
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 6,
+   "assunto": "Rastreamento do Câncer de Colo Uterino",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 34,
+   "acertos": 29
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 7,
+   "assunto": "Rastreamento do Câncer de Colo Uterino",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 8,
+   "assunto": "Rastreamento do Câncer de Colo Uterino",
+   "tipo": "Revisão",
+   "realizada": true,
+   "q": 46,
+   "acertos": 36
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 9,
+   "assunto": "Climatério e Terapia Hormonal",
+   "tipo": "Teoria",
+   "realizada": true,
+   "q": 38,
+   "acertos": 26
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 10,
+   "assunto": "Climatério e Terapia Hormonal",
+   "tipo": "Revisão",
+   "realizada": true,
+   "q": 46,
+   "acertos": 41
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 12,
+   "assunto": "Planejamento Familiar Úlceras Genitais Rastreamento do Câncer de Colo Uterino Climatério e Terapia Hormonal",
+   "tipo": "Revisão por Questões",
+   "realizada": true,
+   "q": 57,
+   "acertos": 52
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 11,
+   "assunto": "Doenças Benignas da Mama",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 26,
+   "acertos": 17
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 13,
+   "assunto": "Doenças Benignas da Mama",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 14,
+   "assunto": "Doenças Benignas da Mama",
+   "tipo": "Revisão",
+   "realizada": true,
+   "q": 44,
+   "acertos": 32
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 15,
+   "assunto": "Vulvovaginites",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 21,
+   "acertos": 16
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 16,
+   "assunto": "Vulvovaginites",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 17,
+   "assunto": "Vulvovaginites",
+   "tipo": "Revisão",
+   "realizada": true,
+   "q": 51,
+   "acertos": 40
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 18,
+   "assunto": "Endometriose",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 26,
+   "acertos": 19
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 19,
+   "assunto": "Endometriose",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 20,
+   "assunto": "Endometriose",
+   "tipo": "Revisão",
+   "realizada": true,
+   "q": 41,
+   "acertos": 34
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 21,
+   "assunto": "Câncer de Mama",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 24,
+   "acertos": 15
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 22,
+   "assunto": "Câncer de Mama",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 23,
+   "assunto": "Câncer de Mama",
+   "tipo": "Teoria III",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 24,
+   "assunto": "Câncer de Mama",
+   "tipo": "Revisão",
+   "realizada": true,
+   "q": 45,
+   "acertos": 38
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 25,
+   "assunto": "Doenças Benignas da Mama Vulvovaginites Endometriose Câncer de Mama",
+   "tipo": "Revisão por Questões",
+   "realizada": true,
+   "q": 54,
+   "acertos": 41
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 26,
+   "assunto": "Sangramento Uterino Anormal",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 23,
+   "acertos": 16
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 27,
+   "assunto": "Sangramento Uterino Anormal",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 28,
+   "assunto": "Sangramento Uterino Anormal",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 29,
+   "assunto": "Tumores Anexiais e Câncer de Ovário",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 30,
+   "assunto": "Tumores Anexiais e Câncer de Ovário",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 31,
+   "assunto": "Tumores Anexiais e Câncer de Ovário",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 32,
+   "assunto": "Prolapsos de Órgãos Pélvicos",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 33,
+   "assunto": "Prolapsos de Órgãos Pélvicos",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 34,
+   "assunto": "Câncer de Colo Uterino",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 35,
+   "assunto": "Câncer de Colo Uterino",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 36,
+   "assunto": "Sangramento Uterino Anormal Tumores Anexiais e Câncer de Ovário Prolapsos de Órgãos Pélvicos Câncer de Colo Uterino",
+   "tipo": "Revisão por Questões",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 37,
+   "assunto": "Incontinência Urinária",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 38,
+   "assunto": "Incontinência Urinária",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 39,
+   "assunto": "Anatomia e Embriologia do Trato Genital Feminino Doenças de Vulva e Vagina",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 40,
+   "assunto": "Câncer do Corpo do Útero",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 41,
+   "assunto": "Câncer do Corpo do Útero",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 42,
+   "assunto": "Câncer do Corpo do Útero",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 43,
+   "assunto": "Adenomiose Abdome Agudo em Ginecologia",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 44,
+   "assunto": "Amenorreia",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 45,
+   "assunto": "Amenorreia",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 46,
+   "assunto": "Amenorreia",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 47,
+   "assunto": "Ciclo menstrual Dor Pélvica Crônica e Dismenorreia",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 48,
+   "assunto": "Infertilidade Conjugal",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 49,
+   "assunto": "Infertilidade Conjugal",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 50,
+   "assunto": "Infertilidade Conjugal",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 51,
+   "assunto": "Incontinência Urinária Câncer do Corpo do Útero Amenorreia Infertilidade Conjugal",
+   "tipo": "Revisão por Questões",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 52,
+   "assunto": "Miomatose",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 53,
+   "assunto": "Miomatose",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 54,
+   "assunto": "Miomatose",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 55,
+   "assunto": "Rastreamento do Câncer de Mama",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 56,
+   "assunto": "Rastreamento do Câncer de Mama",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 57,
+   "assunto": "Rastreamento do Câncer de Mama",
+   "tipo": "",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 58,
+   "assunto": "Síndrome dos Ovários Policísticos",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 59,
+   "assunto": "Síndrome dos Ovários Policísticos",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 60,
+   "assunto": "Síndrome dos Ovários Policísticos",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 61,
+   "assunto": "Assistência à Vítima de Violência Sexual",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 62,
+   "assunto": "Assistência à Vítima de Violência Sexual",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Ginecologia",
+   "tarefa": 63,
+   "assunto": "Miomatose Rastreamento do Câncer de Mama Síndrome dos Ovários Policísticos Assistência à Vítima de Violência Sexual",
+   "tipo": "Revisão por Questões",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Gastro",
+   "tarefa": 1,
+   "assunto": "Pólipos e Neoplasias Intestinais",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 23,
+   "acertos": 18
+  },
+  {
+   "area": "Gastro",
+   "tarefa": 2,
+   "assunto": "Pólipos e Neoplasias Intestinais",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Gastro",
+   "tarefa": 3,
+   "assunto": "Pólipos e Neoplasias Intestinais",
+   "tipo": "Revisão I",
+   "realizada": true,
+   "q": 36,
+   "acertos": 22
+  },
+  {
+   "area": "Gastro",
+   "tarefa": 4,
+   "assunto": "Pólipos e Neoplasias Intestinais",
+   "tipo": "Teoria III",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Gastro",
+   "tarefa": 5,
+   "assunto": "Pólipos e Neoplasias Intestinais",
+   "tipo": "Teoria IV",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Gastro",
+   "tarefa": 6,
+   "assunto": "Pólipos e Neoplasias Intestinais",
+   "tipo": "Revisão II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Gastro",
+   "tarefa": 7,
+   "assunto": "Pancreatite Aguda e Crônica",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 25,
+   "acertos": 18
+  },
+  {
+   "area": "Gastro",
+   "tarefa": 8,
+   "assunto": "Pancreatite Aguda e Crônica",
+   "tipo": "Teoria II",
+   "realizada": true,
+   "q": 41,
+   "acertos": 37
+  },
+  {
+   "area": "Gastro",
+   "tarefa": 9,
+   "assunto": "Pancreatite Aguda e Crônica",
+   "tipo": "Teoria III",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Gastro",
+   "tarefa": 10,
+   "assunto": "Pancreatite Aguda e Crônica",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Gastro",
+   "tarefa": 11,
+   "assunto": "Doença do Refluxo Gastroesofágico, Esofagites e Corpo Estranho",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 31,
+   "acertos": 24
+  },
+  {
+   "area": "Gastro",
+   "tarefa": 12,
+   "assunto": "Doença do Refluxo Gastroesofágico, Esofagites e Corpo Estranho",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Gastro",
+   "tarefa": 13,
+   "assunto": "Doença do Refluxo Gastroesofágico, Esofagites e Corpo Estranho",
+   "tipo": "Revisão",
+   "realizada": true,
+   "q": 47,
+   "acertos": 37
+  },
+  {
+   "area": "Gastro",
+   "tarefa": 14,
+   "assunto": "Pólipos e Neoplasias Intestinais Pancreatite Aguda e Crônica (Pancreatites) Doença do Refluxo Gastroesofágico, Esofagites e Corpo Estranho",
+   "tipo": "Revisão por Questões",
+   "realizada": true,
+   "q": 44,
+   "acertos": 36
+  },
+  {
+   "area": "Gastro",
+   "tarefa": 15,
+   "assunto": "Doença Inflamatória Intestinal",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 26,
+   "acertos": 19
+  },
+  {
+   "area": "Gastro",
+   "tarefa": 16,
+   "assunto": "Doença Inflamatória Intestinal",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Gastro",
+   "tarefa": 17,
+   "assunto": "Doença Inflamatória Intestinal",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Gastro",
+   "tarefa": 18,
+   "assunto": "Síndromes Disabsortivas Tumores Neuroendócrinos",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Gastro",
+   "tarefa": 19,
+   "assunto": "Neoplasias de Estômago e Esôfago",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Gastro",
+   "tarefa": 20,
+   "assunto": "Neoplasias de Estômago e Esôfago",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Gastro",
+   "tarefa": 21,
+   "assunto": "Neoplasias de Estômago e Esôfago",
+   "tipo": "Teoria III",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Gastro",
+   "tarefa": 22,
+   "assunto": "Neoplasias de Estômago e Esôfago",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Gastro",
+   "tarefa": 23,
+   "assunto": "Anatomia do Intestino e Síndrome do Intestino Irritável",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Gastro",
+   "tarefa": 24,
+   "assunto": "Anatomia do Intestino e Síndrome do Intestino Irritável",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Gastro",
+   "tarefa": 25,
+   "assunto": "Doença Inflamatória Intestinal Neoplasias de Estômago e Esôfago Anatomia do Intestino e Síndrome do Intestino Irritável",
+   "tipo": "Revisão por Questões",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Gastro",
+   "tarefa": 26,
+   "assunto": "Disfagia, Alterações Estruturais e Dist. Motilidade",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Gastro",
+   "tarefa": 27,
+   "assunto": "Disfagia, Alterações Estruturais e Dist. Motilidade",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Gastro",
+   "tarefa": 28,
+   "assunto": "Disfagia, Alterações Estruturais e Dist. Motilidade",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Gastro",
+   "tarefa": 29,
+   "assunto": "Hemorragia Digestiva Alta Varicosa",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Gastro",
+   "tarefa": 30,
+   "assunto": "Hemorragia Digestiva Alta Varicosa",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Gastro",
+   "tarefa": 31,
+   "assunto": "Disfagia, Alterações Estruturais e Dist. Motilidade  Hemorragia Digestiva Alta Varicosa",
+   "tipo": "Revisão por Questões",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Endocrino",
+   "tarefa": 1,
+   "assunto": "Tireotoxicose",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 24,
+   "acertos": 13
+  },
+  {
+   "area": "Endocrino",
+   "tarefa": 2,
+   "assunto": "Tireotoxicose",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Endocrino",
+   "tarefa": 3,
+   "assunto": "Tireotoxicose",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Endocrino",
+   "tarefa": 4,
+   "assunto": "Introdução ao Diabetes Mellitus Insulinoterapia e Cirurgia Metabólica",
+   "tipo": "Teoria",
+   "realizada": true,
+   "q": 29,
+   "acertos": 21
+  },
+  {
+   "area": "Endocrino",
+   "tarefa": 5,
+   "assunto": "Diabetes Mellitus - Complicações Agudas",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 19,
+   "acertos": 17
+  },
+  {
+   "area": "Endocrino",
+   "tarefa": 6,
+   "assunto": "Diabetes Mellitus - Complicações Agudas",
+   "tipo": "Teoria II",
+   "realizada": true,
+   "q": 34,
+   "acertos": 27
+  },
+  {
+   "area": "Endocrino",
+   "tarefa": 7,
+   "assunto": "Diabetes Mellitus - Complicações Agudas",
+   "tipo": "Revisão",
+   "realizada": true,
+   "q": 47,
+   "acertos": 41
+  },
+  {
+   "area": "Endocrino",
+   "tarefa": 8,
+   "assunto": "Adrenal - Hipocortisolismo",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Endocrino",
+   "tarefa": 9,
+   "assunto": "Metabolismo Ósseo e Mineral - Princípios e Fisiologia Hipercalcemia",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Endocrino",
+   "tarefa": 10,
+   "assunto": "Diabetes Mellitus Tipo 2",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 47,
+   "acertos": 34
+  },
+  {
+   "area": "Endocrino",
+   "tarefa": 11,
+   "assunto": "Diabetes Mellitus Tipo 2",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Endocrino",
+   "tarefa": 12,
+   "assunto": "Perioperatório - Controle Glicêmico e Manejo dos Glicocorticóides",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Endocrino",
+   "tarefa": 13,
+   "assunto": "Diabetes Mellitus Tipo 2 Perioperatório - Controle Glicêmico e Manejo dos Glicocorticóides",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Endocrino",
+   "tarefa": 14,
+   "assunto": "Tireotoxicose Diabetes Mellitus - Complicações Agudas Diabetes Mellitus Tipo 2",
+   "tipo": "Revisão por Questões",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Endocrino",
+   "tarefa": 15,
+   "assunto": "Metabolismo Ósseo e Mineral - Vitamina D e Osteomalácia",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Endocrino",
+   "tarefa": 16,
+   "assunto": "Tireoide - Fisiologia, Semiologia e Avaliação Diagnóstica",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Endocrino",
+   "tarefa": 17,
+   "assunto": "Hipotireoidismo",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Endocrino",
+   "tarefa": 18,
+   "assunto": "Hipotireoidismo",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Endocrino",
+   "tarefa": 19,
+   "assunto": "Diabetes Mellitus - Complicações Crônicas",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 17,
+   "acertos": 13
+  },
+  {
+   "area": "Endocrino",
+   "tarefa": 20,
+   "assunto": "Diabetes Mellitus - Complicações Crônicas",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Endocrino",
+   "tarefa": 21,
+   "assunto": "Diabetes Mellitus - Complicações Crônicas",
+   "tipo": "Revisão",
+   "realizada": true,
+   "q": 58,
+   "acertos": 51
+  },
+  {
+   "area": "Endocrino",
+   "tarefa": 22,
+   "assunto": "Perioperatório - Controle Glicêmico e Manejo dos Glicocorticóides Hipotireoidismo Diabetes Mellitus - Complicações Crônicas",
+   "tipo": "Revisão por Questões",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Endocrino",
+   "tarefa": 23,
+   "assunto": "Obesidade e Síndrome Metabólica",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Endocrino",
+   "tarefa": 24,
+   "assunto": "Obesidade e Síndrome Metabólica",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Endocrino",
+   "tarefa": 25,
+   "assunto": "Obesidade e Síndrome Metabólica",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Endocrino",
+   "tarefa": 26,
+   "assunto": "Cirurgia Bariátrica e Metabólica (Tratamento Cir. Obesidade)",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Endocrino",
+   "tarefa": 27,
+   "assunto": "Cirurgia Bariátrica e Metabólica (Tratamento Cir. Obesidade)",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Endocrino",
+   "tarefa": 28,
+   "assunto": "Cirurgia Bariátrica e Metabólica (Tratamento Cir. Obesidade)",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Endocrino",
+   "tarefa": 29,
+   "assunto": "Osteoporose e Doença Óssea de Paget",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Endocrino",
+   "tarefa": 30,
+   "assunto": "Osteoporose e Doença Óssea de Paget",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Endocrino",
+   "tarefa": 31,
+   "assunto": "Osteoporose e Doença Óssea de Paget",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Endocrino",
+   "tarefa": 32,
+   "assunto": "Obesidade e Síndrome Metabólica Cirurgia Bariátrica e Metabólica (Tratamento Cir. Obesidade) Osteoporose e Doença óssea de Paget",
+   "tipo": "Revisão por Questões",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cardiologia",
+   "tarefa": 1,
+   "assunto": "Hipertensão Arterial Sistêmica Pt. 1",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 13,
+   "acertos": 8
+  },
+  {
+   "area": "Cardiologia",
+   "tarefa": 2,
+   "assunto": "Hipertensão Arterial Sistêmica Pt. 1",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cardiologia",
+   "tarefa": 3,
+   "assunto": "Hipertensão Arterial Sistêmica Pt. 2",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 20,
+   "acertos": 15
+  },
+  {
+   "area": "Cardiologia",
+   "tarefa": 4,
+   "assunto": "Hipertensão Arterial Sistêmica Pt. 1 Hipertensão Arterial Sistêmica Pt. 2 (Teoria I)",
+   "tipo": "Revisão I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cardiologia",
+   "tarefa": 5,
+   "assunto": "Hipertensão Arterial Sistêmica Pt. 2",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cardiologia",
+   "tarefa": 6,
+   "assunto": "Hipertensão Arterial Sistêmica Pt. 3",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cardiologia",
+   "tarefa": 7,
+   "assunto": "Hipertensão Arterial Sistêmica Pt. 3",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cardiologia",
+   "tarefa": 8,
+   "assunto": "Hipertensão Arterial Sistêmica Pt. 1 Hipertensão Arterial Sistêmica Pt. 2 Hipertensão Arterial Sistêmica Pt. 3",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cardiologia",
+   "tarefa": 9,
+   "assunto": "Avaliação Perioperatória",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cardiologia",
+   "tarefa": 10,
+   "assunto": "Avaliação Perioperatória",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cardiologia",
+   "tarefa": 11,
+   "assunto": "Hipertensão Arterial Sistêmica Pt. 1 Hipertensão Arterial Sistêmica Pt. 2 Hipertensão Arterial Sistêmica Pt. 3 Avaliação Perioperatória",
+   "tipo": "Revisão por Questões",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cardiologia",
+   "tarefa": 12,
+   "assunto": "Insuficiência Cardíaca Pt.1",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 13,
+   "acertos": 7
+  },
+  {
+   "area": "Cardiologia",
+   "tarefa": 13,
+   "assunto": "Insuficiência Cardíaca Pt.1",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cardiologia",
+   "tarefa": 14,
+   "assunto": "Insuficiência Cardíaca Pt.1",
+   "tipo": "Revisão",
+   "realizada": true,
+   "q": 40,
+   "acertos": 30
+  },
+  {
+   "area": "Cardiologia",
+   "tarefa": 15,
+   "assunto": "Parada Cardiorrespiratória Dislipidemia e Estratificação de Risco Cardiovascular",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cardiologia",
+   "tarefa": 16,
+   "assunto": "Fibrilação e Flutter Atrial",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cardiologia",
+   "tarefa": 17,
+   "assunto": "Insuficiência Cardíaca Pt.2",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 13,
+   "acertos": 8
+  },
+  {
+   "area": "Cardiologia",
+   "tarefa": 18,
+   "assunto": "Insuficiência Cardíaca Pt.2",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cardiologia",
+   "tarefa": 19,
+   "assunto": "Insuficiência Cardíaca Aguda",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cardiologia",
+   "tarefa": 20,
+   "assunto": "Insuficiência Cardíaca Pt.1 Insuficiência Cardíaca Pt.2 Insuficiência Cardíaca Aguda",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cardiologia",
+   "tarefa": 21,
+   "assunto": "Eletrocardiograma",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cardiologia",
+   "tarefa": 22,
+   "assunto": "Taquiarritmias Bradiarritmias",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cardiologia",
+   "tarefa": 23,
+   "assunto": "Valvopatias",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cardiologia",
+   "tarefa": 24,
+   "assunto": "Valvopatias",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cardiologia",
+   "tarefa": 25,
+   "assunto": "Valvopatias",
+   "tipo": "Teoria III",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cardiologia",
+   "tarefa": 26,
+   "assunto": "Valvopatias",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cardiologia",
+   "tarefa": 27,
+   "assunto": "SCASSST Síncope",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cardiologia",
+   "tarefa": 28,
+   "assunto": "Síndromes Aórticas Agudas (Resumo) Cardiomiopatias (Resumo) Pericardiopatias",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cardiologia",
+   "tarefa": 29,
+   "assunto": "IAMCSSST",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cardiologia",
+   "tarefa": 30,
+   "assunto": "IAMCSSST",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cardiologia",
+   "tarefa": 31,
+   "assunto": "IAMCSSST",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Cardiologia",
+   "tarefa": 32,
+   "assunto": "Insuficiência Cardíaca Pt.1 Insuficiência Cardíaca Pt.2 Insuficiência Cardíaca Aguda Valvopatias IAMCSSST",
+   "tipo": "Revisão por Questões",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Psiquiatria",
+   "tarefa": 1,
+   "assunto": "Intoxicações Exógenas",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 23,
+   "acertos": 20
+  },
+  {
+   "area": "Psiquiatria",
+   "tarefa": 2,
+   "assunto": "Intoxicações Exógenas",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Psiquiatria",
+   "tarefa": 3,
+   "assunto": "Intoxicações Exógenas",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Psiquiatria",
+   "tarefa": 4,
+   "assunto": "Dependência Química",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 51,
+   "acertos": 44
+  },
+  {
+   "area": "Psiquiatria",
+   "tarefa": 5,
+   "assunto": "Dependência Química",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Psiquiatria",
+   "tarefa": 6,
+   "assunto": "Dependência Química",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Psiquiatria",
+   "tarefa": 7,
+   "assunto": "Transtornos Psicóticos",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Psiquiatria",
+   "tarefa": 8,
+   "assunto": "Transtorno de Ansiedade",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Psiquiatria",
+   "tarefa": 9,
+   "assunto": "Transtornos de Humor",
+   "tipo": "Teoria",
+   "realizada": true,
+   "q": 33,
+   "acertos": 25
+  },
+  {
+   "area": "Psiquiatria",
+   "tarefa": 10,
+   "assunto": "Transtornos de Humor",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Psiquiatria",
+   "tarefa": 11,
+   "assunto": "Psicopatologia",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Psiquiatria",
+   "tarefa": 12,
+   "assunto": "Psiquiatria Social e Reforma Psiquiátrica",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Psiquiatria",
+   "tarefa": 13,
+   "assunto": "Psiquiatria Social e Reforma Psiquiátrica",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Psiquiatria",
+   "tarefa": 14,
+   "assunto": "Psicofarmacologia",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Psiquiatria",
+   "tarefa": 15,
+   "assunto": "Psicofarmacologia",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Psiquiatria",
+   "tarefa": 16,
+   "assunto": "Psiquiatria Infantil",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Psiquiatria",
+   "tarefa": 17,
+   "assunto": "Psiquiatria Infantil",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Neurologia",
+   "tarefa": 1,
+   "assunto": "Anatomia, Fisiologia e Semiologia Neurológica",
+   "tipo": "Teoria",
+   "realizada": true,
+   "q": 100,
+   "acertos": 70
+  },
+  {
+   "area": "Neurologia",
+   "tarefa": 2,
+   "assunto": "Coma e Alterações da Consciência",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Neurologia",
+   "tarefa": 3,
+   "assunto": "Coma e Alterações da Consciência",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Neurologia",
+   "tarefa": 4,
+   "assunto": "Coma e Alterações da Consciência",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Neurologia",
+   "tarefa": 5,
+   "assunto": "Traumatismo Cranioencefálico",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 25,
+   "acertos": 19
+  },
+  {
+   "area": "Neurologia",
+   "tarefa": 6,
+   "assunto": "Traumatismo Cranioencefálico",
+   "tipo": "Teoria II",
+   "realizada": true,
+   "q": 20,
+   "acertos": 15
+  },
+  {
+   "area": "Neurologia",
+   "tarefa": 7,
+   "assunto": "Traumatismo Cranioencefálico",
+   "tipo": "Revisão",
+   "realizada": true,
+   "q": 40,
+   "acertos": 29
+  },
+  {
+   "area": "Neurologia",
+   "tarefa": 8,
+   "assunto": "Doenças Neuromusculares",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Neurologia",
+   "tarefa": 9,
+   "assunto": "Doenças Neuromusculares",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Neurologia",
+   "tarefa": 10,
+   "assunto": "Doenças Neuromusculares",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Neurologia",
+   "tarefa": 11,
+   "assunto": "Acidentes Vasculares Cerebrais",
+   "tipo": "Teoria",
+   "realizada": true,
+   "q": 100,
+   "acertos": 75
+  },
+  {
+   "area": "Neurologia",
+   "tarefa": 12,
+   "assunto": "Acidentes Vasculares Cerebrais",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Neurologia",
+   "tarefa": 13,
+   "assunto": "Cefaleias",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 30,
+   "acertos": 20
+  },
+  {
+   "area": "Neurologia",
+   "tarefa": 14,
+   "assunto": "Cefaleias",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Neurologia",
+   "tarefa": 15,
+   "assunto": "Cefaleias",
+   "tipo": "Teoria III",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Neurologia",
+   "tarefa": 16,
+   "assunto": "Cefaleias",
+   "tipo": "Revisão",
+   "realizada": true,
+   "q": 48,
+   "acertos": 38
+  },
+  {
+   "area": "Neurologia",
+   "tarefa": 17,
+   "assunto": "Demências",
+   "tipo": "Teoria",
+   "realizada": true,
+   "q": 156,
+   "acertos": 137
+  },
+  {
+   "area": "Neurologia",
+   "tarefa": 18,
+   "assunto": "Epilepsias",
+   "tipo": "Teoria",
+   "realizada": true,
+   "q": 148,
+   "acertos": 115
+  },
+  {
+   "area": "Neurologia",
+   "tarefa": 19,
+   "assunto": "Distúrbios do Movimento",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Neurologia",
+   "tarefa": 20,
+   "assunto": "Distúrbios do Movimento Demências Epilepsias",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Nefrologia",
+   "tarefa": 1,
+   "assunto": "Doenças Glomerulares",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Nefrologia",
+   "tarefa": 2,
+   "assunto": "Doenças Glomerulares",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Nefrologia",
+   "tarefa": 3,
+   "assunto": "Doenças Glomerulares",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Nefrologia",
+   "tarefa": 4,
+   "assunto": "Infecção do Trato Urinário",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Nefrologia",
+   "tarefa": 5,
+   "assunto": "Infecção do Trato Urinário",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Nefrologia",
+   "tarefa": 6,
+   "assunto": "Lesão Renal Aguda",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 21,
+   "acertos": 14
+  },
+  {
+   "area": "Nefrologia",
+   "tarefa": 7,
+   "assunto": "Lesão Renal Aguda",
+   "tipo": "Teoria II",
+   "realizada": true,
+   "q": 35,
+   "acertos": 27
+  },
+  {
+   "area": "Nefrologia",
+   "tarefa": 8,
+   "assunto": "Lesão Renal Aguda",
+   "tipo": "Teoria III",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Nefrologia",
+   "tarefa": 9,
+   "assunto": "Lesão Renal Aguda",
+   "tipo": "Revisão",
+   "realizada": true,
+   "q": 40,
+   "acertos": 31
+  },
+  {
+   "area": "Nefrologia",
+   "tarefa": 10,
+   "assunto": "Distúrbios Ácido-Base",
+   "tipo": "Teoria",
+   "realizada": true,
+   "q": 19,
+   "acertos": 14
+  },
+  {
+   "area": "Nefrologia",
+   "tarefa": 11,
+   "assunto": "Distúrbios Ácido-Base",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Nefrologia",
+   "tarefa": 12,
+   "assunto": "Doenças Glomerulares Infecção do Trato Urinário Lesão Renal Aguda Distúrbios Ácido-Base",
+   "tipo": "Revisão por Questões",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Nefrologia",
+   "tarefa": 13,
+   "assunto": "Distúrbios do Potássio",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 22,
+   "acertos": 15
+  },
+  {
+   "area": "Nefrologia",
+   "tarefa": 14,
+   "assunto": "Distúrbios do Potássio",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Nefrologia",
+   "tarefa": 15,
+   "assunto": "Distúrbios do Potássio",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Nefrologia",
+   "tarefa": 16,
+   "assunto": "Nefrolitíase",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Nefrologia",
+   "tarefa": 17,
+   "assunto": "Nefrolitíase",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Nefrologia",
+   "tarefa": 18,
+   "assunto": "Nefrolitíase",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Nefrologia",
+   "tarefa": 19,
+   "assunto": "Disnatremias",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Nefrologia",
+   "tarefa": 20,
+   "assunto": "Disnatremias",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Nefrologia",
+   "tarefa": 21,
+   "assunto": "Disnatremias",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Nefrologia",
+   "tarefa": 22,
+   "assunto": "Distúrbios do Potássio Nefrolitíase Disnatremias",
+   "tipo": "Revisão por Questões",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Nefrologia",
+   "tarefa": 23,
+   "assunto": "Doença Renal Crônica I e II",
+   "tipo": "Teoria",
+   "realizada": true,
+   "q": 40,
+   "acertos": 32
+  },
+  {
+   "area": "Hemato",
+   "tarefa": 1,
+   "assunto": "Introdução ao Estudo das Anemias",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Hemato",
+   "tarefa": 2,
+   "assunto": "Anemias Hemolíticas",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 25,
+   "acertos": 17
+  },
+  {
+   "area": "Hemato",
+   "tarefa": 3,
+   "assunto": "Anemias Hemolíticas",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Hemato",
+   "tarefa": 4,
+   "assunto": "Anemias Hemolíticas",
+   "tipo": "Teoria III",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Hemato",
+   "tarefa": 5,
+   "assunto": "Anemias Hemolíticas",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Hemato",
+   "tarefa": 6,
+   "assunto": "Leucemias Agudas",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Hemato",
+   "tarefa": 7,
+   "assunto": "Leucemias Agudas",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Hemato",
+   "tarefa": 8,
+   "assunto": "Leucemias Agudas",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Hemato",
+   "tarefa": 9,
+   "assunto": "Hemostasia I",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 20,
+   "acertos": 18
+  },
+  {
+   "area": "Hemato",
+   "tarefa": 10,
+   "assunto": "Hemostasia I",
+   "tipo": "Teoria II",
+   "realizada": true,
+   "q": 37,
+   "acertos": 24
+  },
+  {
+   "area": "Hemato",
+   "tarefa": 11,
+   "assunto": "Hemostasia I",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Hemato",
+   "tarefa": 12,
+   "assunto": "Hemostasia II",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Hemato",
+   "tarefa": 13,
+   "assunto": "Hemostasia II",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Hemato",
+   "tarefa": 14,
+   "assunto": "Hemostasia II",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Hemato",
+   "tarefa": 15,
+   "assunto": "Anemias Microcíticas",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Hemato",
+   "tarefa": 16,
+   "assunto": "Anemias Microcíticas",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Hemato",
+   "tarefa": 17,
+   "assunto": "Anemias Microcíticas",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Hemato",
+   "tarefa": 18,
+   "assunto": "Anemias Macrocíticas Leucemias Crônicas, Linfomas, Mielodisplasias e Mieloproliferações",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pneumo",
+   "tarefa": 1,
+   "assunto": "Introdução a Pneumologia",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pneumo",
+   "tarefa": 2,
+   "assunto": "Pneumologia Intensiva",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 15,
+   "acertos": 12
+  },
+  {
+   "area": "Pneumo",
+   "tarefa": 3,
+   "assunto": "Pneumologia Intensiva",
+   "tipo": "Teoria II",
+   "realizada": true,
+   "q": 22,
+   "acertos": 16
+  },
+  {
+   "area": "Pneumo",
+   "tarefa": 4,
+   "assunto": "Pneumologia Intensiva",
+   "tipo": "Revisão I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pneumo",
+   "tarefa": 5,
+   "assunto": "Pneumologia Intensiva",
+   "tipo": "Teoria III",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pneumo",
+   "tarefa": 6,
+   "assunto": "Pneumologia Intensiva",
+   "tipo": "Teoria IV",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pneumo",
+   "tarefa": 7,
+   "assunto": "Pneumologia Intensiva",
+   "tipo": "Teoria V",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pneumo",
+   "tarefa": 8,
+   "assunto": "Pneumologia Intensiva",
+   "tipo": "Revisão II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pneumo",
+   "tarefa": 9,
+   "assunto": "Neoplasias Pulmonares",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pneumo",
+   "tarefa": 10,
+   "assunto": "Tromboembolismo Pulmonar",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pneumo",
+   "tarefa": 11,
+   "assunto": "Doença Pulmonar Obstrutiva Crônica",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pneumo",
+   "tarefa": 12,
+   "assunto": "Doença Pulmonar Obstrutiva Crônica",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pneumo",
+   "tarefa": 13,
+   "assunto": "Doença Pulmonar Obstrutiva Crônica",
+   "tipo": "Teoria III",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pneumo",
+   "tarefa": 14,
+   "assunto": "Doença Pulmonar Obstrutiva Crônica",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pneumo",
+   "tarefa": 15,
+   "assunto": "Asma",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 17,
+   "acertos": 12
+  },
+  {
+   "area": "Pneumo",
+   "tarefa": 16,
+   "assunto": "Asma",
+   "tipo": "Teoria II",
+   "realizada": true,
+   "q": 27,
+   "acertos": 21
+  },
+  {
+   "area": "Pneumo",
+   "tarefa": 17,
+   "assunto": "Asma",
+   "tipo": "Revisão",
+   "realizada": true,
+   "q": 36,
+   "acertos": 28
+  },
+  {
+   "area": "Pneumo",
+   "tarefa": 18,
+   "assunto": "Derrame Pleural",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pneumo",
+   "tarefa": 19,
+   "assunto": "Derrame Pleural",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Pneumo",
+   "tarefa": 20,
+   "assunto": "Derrame Pleural",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Dermato",
+   "tarefa": 1,
+   "assunto": "Oncologia Cutânea (Câncer de Pele)",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Dermato",
+   "tarefa": 2,
+   "assunto": "Oncologia Cutânea (Câncer de Pele)",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Dermato",
+   "tarefa": 3,
+   "assunto": "Oncologia Cutânea (Câncer de Pele)",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Dermato",
+   "tarefa": 4,
+   "assunto": "Hanseníase",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 24,
+   "acertos": 16
+  },
+  {
+   "area": "Dermato",
+   "tarefa": 5,
+   "assunto": "Hanseníase",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Dermato",
+   "tarefa": 6,
+   "assunto": "Hanseníase",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Dermato",
+   "tarefa": 7,
+   "assunto": "Síndromes Verrucosas",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Dermato",
+   "tarefa": 8,
+   "assunto": "Síndromes Verrucosas",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Dermato",
+   "tarefa": 9,
+   "assunto": "Dermatoses Infecciosas Dermatoses Eczematosas",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Reumato",
+   "tarefa": 1,
+   "assunto": "Doenças Inflamatória do Tecido Conjuntivo I",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 21,
+   "acertos": 21
+  },
+  {
+   "area": "Reumato",
+   "tarefa": 2,
+   "assunto": "Doenças Inflamatória do Tecido Conjuntivo I",
+   "tipo": "Teoria II",
+   "realizada": true,
+   "q": 21,
+   "acertos": 20
+  },
+  {
+   "area": "Reumato",
+   "tarefa": 3,
+   "assunto": "Doenças Inflamatória do Tecido Conjuntivo I",
+   "tipo": "Teoria III",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Reumato",
+   "tarefa": 4,
+   "assunto": "Doenças Inflamatória do Tecido Conjuntivo I",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Reumato",
+   "tarefa": 5,
+   "assunto": "Doenças Inflamatória do Tecido Conjuntivo II",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 24,
+   "acertos": 11
+  },
+  {
+   "area": "Reumato",
+   "tarefa": 6,
+   "assunto": "Doenças Inflamatória do Tecido Conjuntivo II",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Reumato",
+   "tarefa": 7,
+   "assunto": "Doenças Inflamatória do Tecido Conjuntivo II",
+   "tipo": "Revisão I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Reumato",
+   "tarefa": 8,
+   "assunto": "Doenças Inflamatória do Tecido Conjuntivo II",
+   "tipo": "Teoria III",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Reumato",
+   "tarefa": 9,
+   "assunto": "Doenças Inflamatória do Tecido Conjuntivo II",
+   "tipo": "Teoria IV",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Reumato",
+   "tarefa": 10,
+   "assunto": "Doenças Inflamatória do Tecido Conjuntivo II",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Reumato",
+   "tarefa": 11,
+   "assunto": "Artrite Reumatoide",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Reumato",
+   "tarefa": 12,
+   "assunto": "Vasculites",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Reumato",
+   "tarefa": 13,
+   "assunto": "Vasculites",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Reumato",
+   "tarefa": 14,
+   "assunto": "Vasculites",
+   "tipo": "Teoria III",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Reumato",
+   "tarefa": 15,
+   "assunto": "Vasculites",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Reumato",
+   "tarefa": 16,
+   "assunto": "Artrites Microcristalinas",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Reumato",
+   "tarefa": 17,
+   "assunto": "Síndromes Dolorosas Crônicas",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Hepato",
+   "tarefa": 1,
+   "assunto": "Introdução à Hepatologia e Icterícia Não Obstrutiva",
+   "tipo": "Teoria",
+   "realizada": true,
+   "q": 14,
+   "acertos": 8
+  },
+  {
+   "area": "Hepato",
+   "tarefa": 2,
+   "assunto": "Hepatites Virais",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 25,
+   "acertos": 22
+  },
+  {
+   "area": "Hepato",
+   "tarefa": 3,
+   "assunto": "Hepatites Virais",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Hepato",
+   "tarefa": 4,
+   "assunto": "Hepatites Virais",
+   "tipo": "Teoria III",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Hepato",
+   "tarefa": 5,
+   "assunto": "Hepatites Virais",
+   "tipo": "Revisão I",
+   "realizada": true,
+   "q": 41,
+   "acertos": 28
+  },
+  {
+   "area": "Hepato",
+   "tarefa": 6,
+   "assunto": "Hepatites Virais",
+   "tipo": "Teoria IV",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Hepato",
+   "tarefa": 7,
+   "assunto": "Hepatites Virais",
+   "tipo": "Teoria V",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Hepato",
+   "tarefa": 8,
+   "assunto": "Hepatites Virais",
+   "tipo": "Revisão II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Hepato",
+   "tarefa": 9,
+   "assunto": "Complicações da Cirrose Hepática",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Hepato",
+   "tarefa": 10,
+   "assunto": "Complicações da Cirrose Hepática",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Hepato",
+   "tarefa": 11,
+   "assunto": "Complicações da Cirrose Hepática",
+   "tipo": "Revisão I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Hepato",
+   "tarefa": 12,
+   "assunto": "Complicações da Cirrose Hepática",
+   "tipo": "Teoria III",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Hepato",
+   "tarefa": 13,
+   "assunto": "Complicações da Cirrose Hepática",
+   "tipo": "Teoria IV",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Hepato",
+   "tarefa": 14,
+   "assunto": "Complicações da Cirrose Hepática",
+   "tipo": "Revisão II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Hepato",
+   "tarefa": 15,
+   "assunto": "Cirrose Hepática",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Hepato",
+   "tarefa": 16,
+   "assunto": "Transplante Hepático e Hepatite Fulminante",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Hepato",
+   "tarefa": 17,
+   "assunto": "Tumores Hepáticos",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Hepato",
+   "tarefa": 18,
+   "assunto": "Tumores Hepáticos",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Otorrino",
+   "tarefa": 1,
+   "assunto": "Neoplasias beningas e malignas de cabeça e pescoço, doenças congênitas cervicofaciais e traqueostomia",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 19,
+   "acertos": 13
+  },
+  {
+   "area": "Otorrino",
+   "tarefa": 2,
+   "assunto": "Neoplasias beningas e malignas de cabeça e pescoço, doenças congênitas cervicofaciais e traqueostomia",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Otorrino",
+   "tarefa": 3,
+   "assunto": "Neoplasias beningas e malignas de cabeça e pescoço, doenças congênitas cervicofaciais e traqueostomia",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Otorrino",
+   "tarefa": 4,
+   "assunto": "Infecções das Vias Aéreas Superiores Pt. 1",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 19,
+   "acertos": 15
+  },
+  {
+   "area": "Otorrino",
+   "tarefa": 5,
+   "assunto": "Infecções das Vias Aéreas Superiores Pt. 1",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Otorrino",
+   "tarefa": 6,
+   "assunto": "Infecções das Vias Aéreas Superiores Pt. 1",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Otorrino",
+   "tarefa": 7,
+   "assunto": "Infecções das Vias Aéreas Superiores Pt. 2",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Otorrino",
+   "tarefa": 8,
+   "assunto": "Infecções das Vias Aéreas Superiores Pt. 2",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Otorrino",
+   "tarefa": 9,
+   "assunto": "Infecções das Vias Aéreas Superiores Pt. 2",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Otorrino",
+   "tarefa": 10,
+   "assunto": "Manejo dos Nódulos de Tireoide, Câncer de Tireoide e Tireoidectomia",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Otorrino",
+   "tarefa": 11,
+   "assunto": "Infecções das Vias Aéreas Superiores Pt. 3",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Ortopedia",
+   "tarefa": 1,
+   "assunto": "Quadril Pediátrico",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 29,
+   "acertos": 24
+  },
+  {
+   "area": "Ortopedia",
+   "tarefa": 2,
+   "assunto": "Quadril Pediátrico",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Ortopedia",
+   "tarefa": 3,
+   "assunto": "Quadril Pediátrico",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Ortopedia",
+   "tarefa": 4,
+   "assunto": "Politrauma Ortopédico",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Ortopedia",
+   "tarefa": 5,
+   "assunto": "Politrauma Ortopédico",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Ortopedia",
+   "tarefa": 6,
+   "assunto": "Politrauma Ortopédico",
+   "tipo": "Teoria III",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Ortopedia",
+   "tarefa": 7,
+   "assunto": "Politrauma Ortopédico",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Ortopedia",
+   "tarefa": 8,
+   "assunto": "Maus Tratos",
+   "tipo": "Teoria",
+   "realizada": true,
+   "q": 27,
+   "acertos": 21
+  },
+  {
+   "area": "Ortopedia",
+   "tarefa": 9,
+   "assunto": "Maus Tratos",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Ortopedia",
+   "tarefa": 10,
+   "assunto": "Conceitos Básicos do Trauma Ortopédico",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Ortopedia",
+   "tarefa": 11,
+   "assunto": "Miscelânea Ortopédica",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Ortopedia",
+   "tarefa": 12,
+   "assunto": "Complicações do Trauma Ortopédico",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Ortopedia",
+   "tarefa": 13,
+   "assunto": "Oncologia Ortopédica",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Ortopedia",
+   "tarefa": 14,
+   "assunto": "Doenças da Coluna Vertebral",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Oftalmo",
+   "tarefa": 1,
+   "assunto": "Síndrome do Olho Vermelho",
+   "tipo": "Teoria I",
+   "realizada": true,
+   "q": 20,
+   "acertos": 10
+  },
+  {
+   "area": "Oftalmo",
+   "tarefa": 2,
+   "assunto": "Síndrome do Olho Vermelho",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Oftalmo",
+   "tarefa": 3,
+   "assunto": "Síndrome do Olho Vermelho",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Oftalmo",
+   "tarefa": 4,
+   "assunto": "Doenças do Polo Posterior",
+   "tipo": "Teoria I",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Oftalmo",
+   "tarefa": 5,
+   "assunto": "Doenças do Polo Posterior",
+   "tipo": "Teoria II",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Oftalmo",
+   "tarefa": 6,
+   "assunto": "Doenças do Polo Posterior",
+   "tipo": "Revisão",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  },
+  {
+   "area": "Oftalmo",
+   "tarefa": 7,
+   "assunto": "Glaucoma",
+   "tipo": "Teoria",
+   "realizada": false,
+   "q": 0,
+   "acertos": 0
+  }
+ ]
+}

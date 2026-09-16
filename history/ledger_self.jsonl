@@ -742,3 +742,11 @@
 {"ts": "2026-09-16T18:24:06+00:00", "event": "opened", "check": "consistencia_registros", "fingerprint": "ae675f4ff819", "alvo": "AGENTE.md §7.4", "payload": {"check": "tabela"}}
 {"ts": "2026-09-16T18:28:17+00:00", "event": "resolved", "check": "consistencia_registros", "fingerprint": "ae675f4ff819", "alvo": "AGENTE.md §7.4"}
 {"ts": "2026-09-16T18:28:17+00:00", "event": "resolved", "check": "consistencia_registros", "fingerprint": "801e8c7d73f5", "alvo": "HANDOFF.md:18"}
+{"ts": "2026-09-16T19:14:29+00:00", "event": "opened", "check": "parity", "fingerprint": "ddf439b44739", "alvo": "command<->skill", "payload": {"n_drift": 1}}
+{"ts": "2026-09-16T19:14:30+00:00", "event": "opened", "check": "suites_orfas", "fingerprint": "a49db632a449", "alvo": "test_fsrs_queue_player.py", "payload": {}}
+{"ts": "2026-09-16T19:14:30+00:00", "event": "opened", "check": "cli_assinatura", "fingerprint": "618c6719b232", "alvo": "tools/cronograma.py", "payload": {"orfas": ["--check-extensivo", "--expect-tasks", "--rebuild-extensivo"]}}
+{"ts": "2026-09-16T19:14:36+00:00", "event": "opened", "check": "consistencia_registros", "fingerprint": "ae675f4ff819", "alvo": "AGENTE.md §7.4", "payload": {"check": "tabela"}}
+{"ts": "2026-09-16T19:24:19+00:00", "event": "resolved", "check": "parity", "fingerprint": "ddf439b44739", "alvo": "command<->skill"}
+{"ts": "2026-09-16T19:24:20+00:00", "event": "resolved", "check": "suites_orfas", "fingerprint": "a49db632a449", "alvo": "test_fsrs_queue_player.py"}
+{"ts": "2026-09-16T19:24:20+00:00", "event": "resolved", "check": "cli_assinatura", "fingerprint": "618c6719b232", "alvo": "tools/cronograma.py"}
+{"ts": "2026-09-16T19:24:27+00:00", "event": "resolved", "check": "consistencia_registros", "fingerprint": "ae675f4ff819", "alvo": "AGENTE.md §7.4"}

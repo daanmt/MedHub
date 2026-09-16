@@ -13,15 +13,25 @@ Uso:
     python tools/fsrs_queue.py --next [--area X] [--tema Y]
     python tools/fsrs_queue.py --list [--area X] [--tema Y] [--limit N] [--new-limit M] [--cluster]
     python tools/fsrs_queue.py --record <card_id> --rating <1-4>
+    python tools/fsrs_queue.py --export-player [--limit N] [--sessao ID] [--out ARQ.json]
+    python tools/fsrs_queue.py --build-player --lote ARQ.json [--out PAGINA.html]
+    python tools/fsrs_queue.py --record-lote NOTAS.json --lote ARQ.json [--apply --expect N]
 
 Ordem da fila: atrasados -> hoje -> novos. Com --cluster (F3), a prioridade de
 bucket é preservada e, dentro de cada bucket, os cards são agrupados por
 (area, tema) — revisão em cluster sem re-agrupamento manual. Cards aposentados
 (needs_qualitative >= 2) são excluídos pela própria query do db.
 
+Player (spec plano-ssot-e-cards-v2-part-9): o trio --export-player /
+--build-player / --record-lote leva o DRENAR para uma pagina (Artifact) e
+traz as notas de volta. A pagina NUNCA grava FSRS: quem grava e o
+--record-lote, por `record_review` -- o caminho de escrita unico continua
+sendo `app/utils/db.py` (Invariante C do revisao-calibrada-contract).
+
 Assinatura canônica documentada em .claude/commands/revisar.md (contrato §7.2).
 """
 import argparse
+from datetime import date, datetime
 import io
 import json
 import os
@@ -35,6 +45,8 @@ if __name__ == "__main__" and hasattr(sys.stdout, "buffer"):
 
 # Permite importar app.utils.db ao rodar como script standalone
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# ...e os CLIs irmaos de tools/ (day_plan detem o teto do dia -- F64, um contador so)
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from app.utils import db  # noqa: E402
 
@@ -109,6 +121,200 @@ def _emit(obj):
     print(json.dumps(obj, ensure_ascii=False, default=str))
 
 
+# ---------------------------------------------------------------------------
+# Player de cards (spec plano-ssot-e-cards-v2-part-9)
+# ---------------------------------------------------------------------------
+
+#: Campos que viajam do banco para a TELA do player. Tudo que a pagina nao
+#: mostra fica fora do export de proposito (`needs_qualitative` e `due` sao
+#: estado do FSRS, nao conteudo de card). `selection_reason` vai porque a
+#: pagina o exibe ("por que o card veio", revisar.md) E porque o --record-lote
+#: o propaga para o revlog.
+CAMPOS_PLAYER = ("card_id", "frente_contexto", "frente_pergunta", "verso_resposta",
+                 "verso_regra_mestre", "verso_armadilha", "area", "tema",
+                 "selection_reason", "bucket")
+
+TEMPLATE_PLAYER = Path(__file__).resolve().parents[1] / "core" / "templates" / "player.html"
+MARCA_ABRE = '<script id="lote" type="application/json">'
+MARCA_FECHA = "</script>"
+TETO_FALLBACK = 60
+
+
+def teto_do_dia(ordered):
+    """Teto de cards do dia. O SSOT do numero e `day_plan` (F64: UM contador --
+    `vencidos = atrasados + hoje`, nunca `atrasados` sozinho). Import indisponivel
+    -> TETO_FALLBACK com WARN em stderr: degrada, mas nunca em silencio (F60)."""
+    vencidos = sum(1 for c in ordered if c.get("bucket") in ("atrasados", "hoje"))
+    try:
+        import day_plan
+        return int(day_plan._teto_efetivo(vencidos))
+    except Exception as e:
+        print("[WARN] teto do dia veio do fallback (%s): day_plan indisponivel (%s)"
+              % (TETO_FALLBACK, e), file=sys.stderr)
+        return TETO_FALLBACK
+
+
+def montar_lote(ordered, limit=None, sessao=None, gerado_em=None):
+    """Lote do player a partir da fila JA ordenada. Puro: nao toca banco.
+
+    Preserva a ordem e os buckets do --list e corta em `limit`. So os
+    CAMPOS_PLAYER viajam."""
+    if limit is not None:
+        ordered = ordered[:limit]
+    cards = []
+    for c in ordered:
+        item = {k: c.get(k) for k in CAMPOS_PLAYER}
+        if item.get("card_id") is not None:
+            item["card_id"] = int(item["card_id"])
+        cards.append(item)
+    return {
+        "sessao": sessao or date.today().isoformat(),
+        "gerado_em": gerado_em or datetime.now().isoformat(timespec="seconds"),
+        "total": len(cards),
+        "cards": cards,
+    }
+
+
+def injetar_lote(template, lote):
+    """Injeta o lote no `<script id="lote" type="application/json">` do template.
+
+    `<`, `>` e `&` viram escape \\uXXXX: dentro de uma string JSON isso e
+    equivalente e torna `</script>` impossivel de fechar por dentro do texto do
+    card. A pagina le com `JSON.parse(textContent)`."""
+    bruto = json.dumps(lote, ensure_ascii=False, default=str)
+    seguro = (bruto.replace("&", "\\u0026")
+                   .replace("<", "\\u003c")
+                   .replace(">", "\\u003e"))
+    ocorrencias = template.count(MARCA_ABRE)
+    if ocorrencias != 1:
+        # Guarda nascida de um bug real: um comentario do template citava a
+        # propria tag, o `find` casava com a MENCAO e a injecao comia a pagina
+        # inteira ate o proximo </script>. Marcador ambiguo falha ALTO.
+        raise ValueError("template com %d ocorrencia(s) do marcador %r -- "
+                         "tem de ser exatamente 1" % (ocorrencias, MARCA_ABRE))
+    i = template.find(MARCA_ABRE)
+    ini = i + len(MARCA_ABRE)
+    fim = template.find(MARCA_FECHA, ini)
+    if fim < 0:
+        raise ValueError("template sem </script> depois do marcador do lote")
+    return template[:ini] + seguro + template[fim:]
+
+
+def ler_notas(obj, cards):
+    """Normaliza o JSON de notas vindo da pagina (input NAO confiavel).
+
+    Aceita `{"notas": [...]}` ou a lista crua. Devolve `(registros, erros,
+    avisos)`; `registros` = [{card_id, rating, defeito, motivo, selection_reason}].
+    Regras: card_id fora do lote e rating fora de 1..4 sao ERRO (recusam o
+    --apply); card_id repetido conta UMA vez -- a primeira nota -- com AVISO
+    (o relearning da pagina nunca gera segunda nota gravavel)."""
+    notas = obj.get("notas") if isinstance(obj, dict) else obj
+    if not isinstance(notas, list):
+        return [], ["JSON de notas sem a lista `notas`"], []
+    validos = {}
+    for c in cards or []:
+        if c.get("card_id") is not None:
+            validos[int(c["card_id"])] = c
+    registros, erros, avisos, vistos = [], [], [], set()
+    for i, n in enumerate(notas):
+        if not isinstance(n, dict):
+            erros.append("nota #%d nao e objeto" % i)
+            continue
+        try:
+            cid = int(n.get("card_id"))
+        except (TypeError, ValueError):
+            erros.append("nota #%d sem card_id inteiro" % i)
+            continue
+        if cid not in validos:
+            erros.append("card_id %d fora do lote exportado" % cid)
+            continue
+        if cid in vistos:
+            avisos.append("card_id %d repetido -- so a 1a nota conta "
+                          "(relearning nao regrava)" % cid)
+            continue
+        vistos.add(cid)
+        cru = n.get("rating_primeira", n.get("rating"))
+        rating = None
+        if cru is not None:
+            try:
+                rating = int(cru)
+            except (TypeError, ValueError):
+                rating = None
+            if rating not in (1, 2, 3, 4):
+                erros.append("card_id %d com rating invalido: %r" % (cid, cru))
+                continue
+        defeito = bool(n.get("defeito"))
+        motivo = (n.get("motivo") or "").strip()
+        if defeito and not motivo:
+            erros.append("card_id %d marcado como defeito SEM motivo "
+                         "(marca sem motivo nao fecha nem audita)" % cid)
+            continue
+        if rating is None and not defeito:
+            erros.append("card_id %d sem rating e sem defeito" % cid)
+            continue
+        registros.append({"card_id": cid, "rating": rating, "defeito": defeito,
+                          "motivo": motivo,
+                          "selection_reason": validos[cid].get("selection_reason")})
+    return registros, erros, avisos
+
+
+def _contar_revlog():
+    """COUNT do fsrs_revlog pela conexao canonica (leitura; nao abre sqlite3 proprio)."""
+    conn = db.get_connection()
+    try:
+        return int(conn.execute("SELECT COUNT(*) FROM fsrs_revlog").fetchone()[0])
+    finally:
+        conn.close()
+
+
+def aplicar_notas(registros, apply=False, expect=None, out=print,
+                  record_fn=None, reforja_fn=None, count_fn=None):
+    """Grava o lote de notas. Dry-run por default (mesmo rito do cards_prune).
+
+    `--apply` exige `--expect` igual ao N medido (COUNT-ASSERT pre) e confere
+    que `fsrs_revlog` cresceu EXATAMENTE N (COUNT-ASSERT pos). Os `defeito`
+    viram marca de reforja (`origem='player'`), que nao conta como revisao.
+    Retorna (exit_code, N)."""
+    record_fn = record_fn or db.record_review
+    reforja_fn = reforja_fn or db.marcar_reforja
+    count_fn = count_fn or _contar_revlog
+    com_nota = [r for r in registros if r["rating"] is not None]
+    defeitos = [r for r in registros if r["defeito"]]
+    n = len(com_nota)
+    out("[record-lote] notas=%d defeito(s)=%d" % (n, len(defeitos)))
+    for r in com_nota:
+        out("  %d -> %d (%s)" % (r["card_id"], r["rating"], r["selection_reason"] or "auto"))
+    for r in defeitos:
+        out("  %d -> DEFEITO: %s" % (r["card_id"], r["motivo"]))
+    if not apply:
+        out("  DRY-RUN: nada gravado. Para aplicar: --apply --expect %d" % n)
+        return 0, n
+    if expect is None or expect != n:
+        out("  RECUSADO: --expect %s != N medido %d. Nada gravado." % (expect, n))
+        return 2, n
+    antes = count_fn()
+    gravados = 0
+    for r in com_nota:
+        try:
+            record_fn(r["card_id"], r["rating"], selection_reason=r["selection_reason"])
+            gravados += 1
+        except db.ConcurrentReviewError as e:
+            out("  [WARN] card %d NAO gravado (estado mudou desde a leitura): %s"
+                % (r["card_id"], e))
+    marcas = 0
+    for r in defeitos:
+        reforja_fn(r["card_id"], r["motivo"], origem="player")
+        marcas += 1
+    depois = count_fn()
+    out("  gravados=%d marcas_reforja=%d fsrs_revlog %d -> %d" % (gravados, marcas, antes, depois))
+    if depois - antes != n:
+        out("  COUNT-ASSERT pos FALHOU: fsrs_revlog cresceu %d, esperado %d"
+            % (depois - antes, n))
+        return 2, n
+    out("  OK: %d revisao(oes) gravada(s); COUNT-ASSERT pos batido." % n)
+    return 0, n
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Fila de revisão FSRS em JSON para revisão conversacional."
@@ -122,6 +328,16 @@ def main():
                       help="Grava a avaliação de um card (exige --rating)")
     acao.add_argument("--preview", type=int, metavar="CARD_ID",
                       help="P3: consequencia dos 4 ratings p/ um card (JSON), sem gravar nada")
+    acao.add_argument("--export-player", dest="export_player", action="store_true",
+                      help="Exporta o lote do dia p/ o player (JSON com sessao, "
+                           "gerado_em, cards[]). Mesma ordem/buckets do --list; "
+                           "sem --limit, corta no teto do dia")
+    acao.add_argument("--build-player", dest="build_player", action="store_true",
+                      help="Injeta o lote (--lote) em core/templates/player.html "
+                           "e grava a pagina em --out")
+    acao.add_argument("--record-lote", dest="record_lote", metavar="NOTAS.json",
+                      help="Grava o lote de notas do player por record_review. "
+                           "Dry-run por default; exige --lote (o export) p/ validar")
     acao.add_argument("--pre-bloco", dest="pre_bloco", metavar="TEMA",
                       help="Mini-drill anti-reincidência (F23): lista SÓ os cards de erro "
                            "FRESCOS (state 0, janela --janela-horas) do tema-alvo, antes de "
@@ -152,6 +368,18 @@ def main():
     parser.add_argument("--janela-horas", type=int, default=48, dest="janela_horas",
                         help="Janela de frescor do --pre-bloco em horas (default 48; "
                              "norma: core/contracts/orquestracao-contract.md)")
+    parser.add_argument("--out", help="Arquivo de saida do --export-player "
+                                      "(default tmp/player_<sessao>.json) ou do "
+                                      "--build-player (default artifacts/player-<sessao>.html)")
+    parser.add_argument("--lote", help="Caminho do JSON exportado pelo --export-player "
+                                       "(exigido por --build-player e --record-lote)")
+    parser.add_argument("--sessao", help="Id da sessao do player (default: data de hoje). "
+                                         "Vira a colecao sessoes/<sessao>/notas na pagina")
+    parser.add_argument("--apply", action="store_true",
+                        help="--record-lote: grava de verdade (default: dry-run)")
+    parser.add_argument("--expect", type=int,
+                        help="--record-lote: COUNT-ASSERT, N esperado de revisoes; "
+                             "obrigatorio com --apply e recusado se != N medido")
     args = parser.parse_args()
 
     if args.pre_bloco:
@@ -168,6 +396,55 @@ def main():
             card["bucket"] = "pre-bloco"
             out.append(card)
         _emit(out)
+        return
+
+    if args.export_player:
+        ordered = _ordered_queue(area=args.area, tema=args.tema, limit=None,
+                                 new_limit=args.new_limit,
+                                 prevalencia=args.prevalencia, cluster=args.cluster)
+        limite = args.limit if args.limit is not None else teto_do_dia(ordered)
+        lote = montar_lote(ordered, limit=limite, sessao=args.sessao)
+        destino = Path(args.out) if args.out else Path("tmp") / ("player_%s.json" % lote["sessao"])
+        destino.parent.mkdir(parents=True, exist_ok=True)
+        destino.write_text(json.dumps(lote, ensure_ascii=False, indent=1, default=str),
+                           encoding="utf-8")
+        _emit({"export": str(destino), "sessao": lote["sessao"],
+               "total": lote["total"], "teto": limite, "pool": len(ordered)})
+        return
+
+    if args.build_player:
+        if not args.lote:
+            parser.error("--build-player exige --lote ARQ.json")
+        lote = json.loads(Path(args.lote).read_text(encoding="utf-8"))
+        html = injetar_lote(TEMPLATE_PLAYER.read_text(encoding="utf-8"), lote)
+        destino = (Path(args.out) if args.out
+                   else Path("artifacts") / ("player-%s.html" % lote.get("sessao", "sessao")))
+        destino.parent.mkdir(parents=True, exist_ok=True)
+        destino.write_text(html, encoding="utf-8")
+        _emit({"build": str(destino), "sessao": lote.get("sessao"),
+               "cards": len(lote.get("cards", []))})
+        return
+
+    if args.record_lote:
+        notas_obj = json.loads(Path(args.record_lote).read_text(encoding="utf-8"))
+        caminho = args.lote or (notas_obj.get("lote") if isinstance(notas_obj, dict) else None)
+        if not caminho:
+            print("[record-lote] RECUSADO: informe --lote ARQ.json (o export que gerou "
+                  "a pagina) -- e contra ele que o card_id e validado", file=sys.stderr)
+            sys.exit(2)
+        lote = json.loads(Path(caminho).read_text(encoding="utf-8"))
+        registros, erros, avisos = ler_notas(notas_obj, lote.get("cards", []))
+        for a in avisos:
+            print("[WARN] " + a, file=sys.stderr)
+        for e in erros:
+            print("[ERRO] " + e, file=sys.stderr)
+        if erros and args.apply:
+            print("[record-lote] RECUSADO: %d erro(s) no arquivo de notas. Nada gravado."
+                  % len(erros), file=sys.stderr)
+            sys.exit(2)
+        code, _ = aplicar_notas(registros, apply=args.apply, expect=args.expect)
+        if code:
+            sys.exit(code)
         return
 
     if args.record is not None:

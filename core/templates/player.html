@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Player de Cards</title>
+<!--
+  Template do player de cards (DRENAR) -- spec plano-ssot-e-cards-v2-part-9.
+  O lote e injetado por `python tools/fsrs_queue.py --build-player` dentro do
+  script de id "lote" (type application/json) que fica no fim do body.
+  O marcador de abertura tem de ser UNICO no arquivo -- nao repetir a tag aqui.
+
+  FRONTEIRA DURA: esta pagina NUNCA grava FSRS. Ela guarda a primeira nota de
+  cada card na capability `db` (colecao sessoes/<sessao>/notas) e o agente
+  grava em lote por `--record-lote`, que chama `record_review` -- o caminho de
+  escrita unico (Invariante C do revisao-calibrada-contract).
+-->
+<style>
+:root{
+  --papel:#f6f4f0;
+  --card:#ffffff;
+  --afundado:#edeae4;
+  --tinta:#191817;
+  --tinta2:#54504a;
+  --tinta3:#8b857b;
+  --linha:#e0dbd2;
+  --acento:#0e6b5c;
+  --acento-fraco:#d9ece7;
+  --alerta:#a2412a;
+  --alerta-fraco:#f6e4de;
+  --wrap:58rem;
+  --raio:14px;
+  --sombra:0 1px 2px rgba(0,0,0,.05), 0 10px 30px rgba(0,0,0,.06);
+  --transicao:140ms ease;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --papel:#131519;
+    --card:#1b1e24;
+    --afundado:#23272f;
+    --tinta:#edeff3;
+    --tinta2:#b4bac4;
+    --tinta3:#7e8794;
+    --linha:#2d323b;
+    --acento:#4fd0b3;
+    --acento-fraco:#123630;
+    --alerta:#f0917a;
+    --alerta-fraco:#3a221c;
+    --sombra:0 1px 2px rgba(0,0,0,.45), 0 10px 30px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  --papel:#131519;
+  --card:#1b1e24;
+  --afundado:#23272f;
+  --tinta:#edeff3;
+  --tinta2:#b4bac4;
+  --tinta3:#7e8794;
+  --linha:#2d323b;
+  --acento:#4fd0b3;
+  --acento-fraco:#123630;
+  --alerta:#f0917a;
+  --alerta-fraco:#3a221c;
+  --sombra:0 1px 2px rgba(0,0,0,.45), 0 10px 30px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background:var(--papel);
+  color:var(--tinta);
+  font-family:ui-sans-serif,system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  font-size:clamp(15px,.95rem + .2vw,17px);
+  line-height:1.55;
+  overflow-wrap:break-word;
+}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:22px 16px 72px}
+h1{font-size:clamp(1.15rem,1rem + .7vw,1.5rem);margin:0;letter-spacing:-.01em}
+h2{margin:0}
+p{margin:0}
+kbd{
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:.78em;background:var(--afundado);border:1px solid var(--linha);
+  border-bottom-width:2px;border-radius:6px;padding:1px 6px;color:var(--tinta2);
+}
+.topo{display:flex;flex-wrap:wrap;gap:12px;align-items:baseline;justify-content:space-between}
+.sub{color:var(--tinta3);font-size:.85em;margin-top:2px}
+.metros{display:flex;gap:14px;align-items:baseline;font-variant-numeric:tabular-nums}
+.metro{color:var(--tinta2);font-size:.85em}
+.metro b{color:var(--tinta);font-size:1.05em}
+.barra{height:6px;background:var(--afundado);border-radius:99px;margin:14px 0 10px;overflow:hidden}
+.barra i{display:block;height:100%;width:0;background:var(--acento);transition:width var(--transicao)}
+.tally{
+  display:flex;flex-wrap:wrap;gap:8px 14px;color:var(--tinta3);
+  font-size:.8em;font-variant-numeric:tabular-nums;margin-bottom:18px;
+}
+.tally b{color:var(--tinta2)}
+.card{
+  background:var(--card);border:1px solid var(--linha);border-radius:var(--raio);
+  box-shadow:var(--sombra);padding:26px 22px;min-height:190px;
+}
+.card:focus-visible,button:focus-visible,input:focus-visible{
+  outline:3px solid var(--acento);outline-offset:3px;
+}
+.reason{
+  display:inline-block;font-size:.72em;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--acento);background:var(--acento-fraco);border-radius:99px;
+  padding:3px 10px;margin-bottom:14px;
+}
+.contexto{color:var(--tinta2);font-size:.95em;margin-bottom:12px}
+.pergunta{font-size:clamp(1.05rem,1rem + .5vw,1.35rem);line-height:1.35;font-weight:650}
+.verso{margin-top:20px;border-top:1px solid var(--linha);padding-top:18px;display:grid;gap:14px}
+.rot{font-size:.7em;letter-spacing:.09em;text-transform:uppercase;color:var(--tinta3);margin-bottom:4px}
+.resposta{font-size:1.02em}
+.bloco{background:var(--afundado);border-radius:10px;padding:12px 14px}
+.bloco.alerta{background:var(--alerta-fraco)}
+.bloco.alerta .rot{color:var(--alerta)}
+.taxonomia{color:var(--tinta3);font-size:.8em}
+.acoes{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+button{
+  font:inherit;cursor:pointer;border-radius:10px;border:1px solid var(--linha);
+  background:var(--card);color:var(--tinta);padding:11px 16px;
+  transition:transform var(--transicao),background var(--transicao);
+}
+button:hover{background:var(--afundado)}
+button:active{transform:translateY(1px)}
+button[disabled]{opacity:.45;cursor:not-allowed}
+.primario{background:var(--acento);border-color:var(--acento);color:var(--papel);font-weight:650}
+.primario:hover{background:var(--acento);filter:brightness(1.06)}
+.fantasma{background:transparent;border-style:dashed;color:var(--tinta2);font-size:.88em}
+.notas{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-top:18px}
+.notas button{display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:13px 14px;min-height:64px}
+.notas button b{font-size:1.15em;font-variant-numeric:tabular-nums}
+.notas button span{font-size:.78em;color:var(--tinta3)}
+.dica{color:var(--tinta3);font-size:.82em;margin-top:14px}
+.aviso{
+  border-left:3px solid var(--alerta);background:var(--alerta-fraco);color:var(--tinta);
+  padding:12px 14px;border-radius:8px;margin-top:18px;font-size:.88em;
+}
+.linha-defeito{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.linha-defeito input{
+  flex:1 1 220px;font:inherit;padding:10px 12px;border-radius:10px;
+  border:1px solid var(--linha);background:var(--card);color:var(--tinta);
+}
+.painel-fim{
+  margin-top:26px;background:var(--card);border:1px solid var(--linha);
+  border-radius:var(--raio);padding:20px 18px;
+}
+.painel-fim h2{font-size:1.05rem;margin-bottom:6px}
+pre{
+  background:var(--afundado);border:1px solid var(--linha);border-radius:10px;
+  padding:12px;overflow:auto;font-size:.78em;line-height:1.45;margin:12px 0 0;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+footer{color:var(--tinta3);font-size:.76em;margin-top:28px;border-top:1px solid var(--linha);padding-top:14px}
+[hidden]{display:none !important}
+@media (prefers-reduced-motion: reduce){
+  *{transition:none !important;animation:none !important}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="topo">
+    <div>
+      <h1>Player de cards</h1>
+      <p class="sub">DRENAR &#183; sessao <span id="sessao">-</span></p>
+    </div>
+    <div class="metros">
+      <span class="metro"><b id="feitos">0</b>/<span id="total">0</span> feitos</span>
+      <span class="metro">fila <b id="pendentes">0</b></span>
+      <span class="metro"><b id="relogio">00:00</b></span>
+    </div>
+  </header>
+
+  <div class="barra"><i id="progresso"></i></div>
+  <p class="tally" id="tally"></p>
+
+  <div id="aviso" class="aviso" hidden></div>
+
+  <main id="drill">
+    <article class="card" id="card" tabindex="0" aria-live="polite">
+      <p class="reason" id="reason" hidden></p>
+      <p class="contexto" id="contexto" hidden></p>
+      <h2 class="pergunta" id="pergunta">Carregando o lote...</h2>
+      <div class="verso" id="verso" hidden>
+        <div><p class="rot">Resposta</p><p class="resposta" id="resposta"></p></div>
+        <div class="bloco" id="bloco-regra" hidden><p class="rot">Regra-mestre</p><p id="regra"></p></div>
+        <div class="bloco alerta" id="bloco-armadilha" hidden><p class="rot">Armadilha</p><p id="armadilha"></p></div>
+        <p class="taxonomia" id="taxonomia"></p>
+      </div>
+    </article>
+
+    <div class="acoes">
+      <button id="btn-virar" class="primario">Virar o card <kbd>Espaco</kbd></button>
+      <button id="btn-defeito" class="fantasma">Marcar defeito do card <kbd>D</kbd></button>
+    </div>
+
+    <form class="linha-defeito" id="form-defeito" hidden>
+      <input id="motivo" type="text" maxlength="120" placeholder="Motivo curto do defeito (ex.: pergunta composta)" aria-label="Motivo do defeito">
+      <button type="submit">Marcar e pular</button>
+      <button type="button" id="btn-cancelar">Cancelar</button>
+    </form>
+
+    <div class="notas" id="notas-botoes" hidden>
+      <button data-nota="1"><b>1</b><span>nao lembrei</span></button>
+      <button data-nota="2"><b>2</b><span>dificil</span></button>
+      <button data-nota="3"><b>3</b><span>bom</span></button>
+      <button data-nota="4"><b>4</b><span>facil</span></button>
+    </div>
+
+    <p class="dica"><kbd>Espaco</kbd> vira o card &#183; <kbd>1</kbd>-<kbd>4</kbd> da a nota &#183; <kbd>D</kbd> marca defeito. Nota abaixo de 4 recoloca o card no fim do lote (relearning) e nao gera segunda nota: so a primeira e gravavel.</p>
+  </main>
+
+  <section class="painel-fim" id="fim" hidden>
+    <h2 id="fim-titulo">Lote drenado</h2>
+    <p class="sub" id="fim-sub"></p>
+    <p class="dica" id="fim-origem"></p>
+    <pre id="json-notas"></pre>
+    <div class="acoes"><button id="btn-copiar">Copiar JSON das notas</button></div>
+  </section>
+
+  <footer>
+    Esta pagina nao escreve no FSRS. As notas ficam na sessao e o agente grava em lote por
+    <code>fsrs_queue.py --record-lote</code>, que chama <code>record_review</code> -- caminho de escrita unico.
+  </footer>
+
+</div>
+
+<script id="lote" type="application/json">{"sessao":"exemplo","gerado_em":"","total":0,"cards":[]}</script>
+<script>
+(function(){
+  "use strict";
+
+  var LOTE = {sessao:"exemplo", gerado_em:"", total:0, cards:[]};
+  try{
+    LOTE = JSON.parse(document.getElementById("lote").textContent) || LOTE;
+  }catch(e){
+    LOTE = {sessao:"erro", gerado_em:"", total:0, cards:[]};
+  }
+  var CARDS = Array.isArray(LOTE.cards) ? LOTE.cards : [];
+
+  var $ = function(id){ return document.getElementById(id); };
+  var notas = new Map();      // card_id -> {card_id, rating_primeira, ts, defeito, motivo}
+  var fila = [];              // cards pendentes, na ordem de apresentacao
+  var virado = false;
+  var colecao = null;         // ref da colecao sessoes/<sessao>/notas
+  var dbOk = false;
+  var dbDeclarado = false;    // ja avisamos que o db esta fora?
+  var interagiu = false;      // trava o remount tardio depois do 1o gesto
+  var inicio = Date.now();
+
+  var ROTULO = {
+    vencido:"revisao vencida", fresh_error:"erro recente",
+    agendado:"agendado p/ hoje", novo:"novo", pre_bloco:"pre-bloco"
+  };
+
+  // ---------------------------------------------------------------- avisos
+  function avisar(texto){
+    var el = $("aviso");
+    el.textContent = texto;
+    el.hidden = false;
+  }
+
+  // ------------------------------------------------------------- persistir
+  function pacoteNotas(){
+    var lista = [];
+    notas.forEach(function(n){ lista.push(n); });
+    lista.sort(function(a,b){ return a.card_id - b.card_id; });
+    return {sessao: LOTE.sessao, gerado_em: LOTE.gerado_em, notas: lista};
+  }
+
+  function renderFallback(){
+    $("json-notas").textContent = JSON.stringify(pacoteNotas(), null, 1);
+  }
+
+  function salvar(registro){
+    atualizarPainel();
+    renderFallback();
+    if(!dbOk || !colecao){
+      if(!dbDeclarado){
+        dbDeclarado = true;
+        avisar("Armazenamento da sessao indisponivel nesta visualizacao. As notas seguem sendo contadas aqui: copie o JSON do fim da pagina e cole no chat para o agente gravar.");
+        $("fim").hidden = false;
+        $("fim-titulo").textContent = "Notas desta sessao (copiar e colar)";
+        $("fim-origem").textContent = "Fallback declarado: a capability db nao respondeu, entao nada foi gravado remotamente.";
+      }
+      return Promise.resolve();
+    }
+    return colecao.doc(String(registro.card_id)).set(registro).catch(function(err){
+      dbOk = false;
+      avisar("Falha ao gravar a nota (" + ((err && err.code) || "erro") + "). As notas continuam aqui: copie o JSON do fim da pagina.");
+      $("fim").hidden = false;
+      $("fim-titulo").textContent = "Notas desta sessao (copiar e colar)";
+      renderFallback();
+    });
+  }
+
+  // ---------------------------------------------------------------- painel
+  function atualizarPainel(){
+    var t = {1:0,2:0,3:0,4:0,defeito:0};
+    var feitos = 0;
+    notas.forEach(function(n){
+      if(n.defeito){ t.defeito += 1; }
+      if(n.rating_primeira){ t[n.rating_primeira] += 1; }
+      feitos += 1;
+    });
+    $("feitos").textContent = String(feitos);
+    $("total").textContent = String(CARDS.length);
+    $("pendentes").textContent = String(fila.length);
+    var pct = CARDS.length ? Math.round(100 * feitos / CARDS.length) : 0;
+    $("progresso").style.width = pct + "%";
+    $("tally").innerHTML = "";
+    [["1",t[1]],["2",t[2]],["3",t[3]],["4",t[4]],["defeito",t.defeito]].forEach(function(par){
+      var s = document.createElement("span");
+      s.textContent = par[0] + ": ";
+      var b = document.createElement("b");
+      b.textContent = String(par[1]);
+      s.appendChild(b);
+      $("tally").appendChild(s);
+    });
+  }
+
+  function tique(){
+    var seg = Math.floor((Date.now() - inicio) / 1000);
+    var m = Math.floor(seg / 60), s = seg % 60;
+    $("relogio").textContent = (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s;
+  }
+
+  // ----------------------------------------------------------- apresentacao
+  function texto(id, valor, container){
+    var alvo = $(id);
+    alvo.textContent = valor || "";
+    if(container){ $(container).hidden = !valor; }
+    else { alvo.hidden = !valor; }
+  }
+
+  function mostrar(){
+    var c = fila[0];
+    if(!c){ return encerrar(); }
+    virado = false;
+    $("verso").hidden = true;
+    $("notas-botoes").hidden = true;
+    $("btn-virar").hidden = false;
+    $("form-defeito").hidden = true;
+    // Contrato de apresentacao: area/tema NUNCA aparecem antes da revelacao.
+    texto("reason", ROTULO[c.selection_reason] || c.selection_reason || "");
+    texto("contexto", c.frente_contexto);
+    $("pergunta").textContent = c.frente_pergunta || "(card sem pergunta)";
+    $("resposta").textContent = c.verso_resposta || "";
+    texto("regra", c.verso_regra_mestre, "bloco-regra");
+    texto("armadilha", c.verso_armadilha, "bloco-armadilha");
+    $("taxonomia").textContent = [c.area, c.tema].filter(Boolean).join(" / ");
+    $("card").focus();
+    atualizarPainel();
+  }
+
+  function virar(){
+    if(!fila.length || virado){ return; }
+    virado = true;
+    $("verso").hidden = false;
+    $("btn-virar").hidden = true;
+    $("notas-botoes").hidden = false;
+  }
+
+  function encerrar(){
+    $("drill").hidden = true;
+    $("fim").hidden = false;
+    $("fim-titulo").textContent = "Lote drenado";
+    var feitos = notas.size;
+    $("fim-sub").textContent = feitos + " card(s) com nota registrada em " + $("relogio").textContent + ".";
+    $("fim-origem").textContent = dbOk
+      ? "Notas gravadas na sessao. O agente le por ArtifactData e grava o FSRS com --record-lote."
+      : "Fallback declarado: copie o JSON abaixo e cole no chat para o agente gravar.";
+    renderFallback();
+    atualizarPainel();
+  }
+
+  // -------------------------------------------------------------- acoes
+  function avaliar(nota){
+    if(!fila.length){ return; }
+    if(!virado){ avisar("Vire o card antes de dar a nota (Espaco)."); return; }
+    var c = fila[0];
+    var id = c.card_id;
+    interagiu = true;
+    if(!notas.has(id)){
+      var registro = {card_id:id, rating_primeira:nota, ts:new Date().toISOString()};
+      notas.set(id, registro);
+      salvar(registro);
+    }
+    fila.shift();
+    if(nota < 4){ fila.push(c); }   // relearning: volta ao FIM, sem segunda nota gravavel
+    mostrar();
+  }
+
+  function marcarDefeito(motivo){
+    if(!fila.length){ return; }
+    var c = fila[0], id = c.card_id;
+    interagiu = true;
+    var anterior = notas.get(id) || {card_id:id, ts:new Date().toISOString()};
+    var registro = {card_id:id, ts:anterior.ts, defeito:true, motivo:motivo};
+    if(anterior.rating_primeira){ registro.rating_primeira = anterior.rating_primeira; }
+    notas.set(id, registro);
+    salvar(registro);
+    fila = fila.filter(function(x){ return x.card_id !== id; });
+    mostrar();
+  }
+
+  function abrirDefeito(){
+    if(!fila.length){ return; }
+    $("form-defeito").hidden = false;
+    $("motivo").value = "";
+    $("motivo").focus();
+  }
+
+  // -------------------------------------------------------------- teclado
+  document.addEventListener("keydown", function(ev){
+    if(ev.target && (ev.target.tagName === "INPUT" || ev.target.tagName === "TEXTAREA")){
+      if(ev.key === "Escape"){ $("form-defeito").hidden = true; $("card").focus(); }
+      return;
+    }
+    if(ev.key === " " || ev.code === "Space"){ ev.preventDefault(); virar(); return; }
+    if(ev.key >= "1" && ev.key <= "4"){ ev.preventDefault(); avaliar(parseInt(ev.key, 10)); return; }
+    if(ev.key === "d" || ev.key === "D"){ ev.preventDefault(); abrirDefeito(); }
+  });
+
+  $("btn-virar").addEventListener("click", virar);
+  $("btn-defeito").addEventListener("click", abrirDefeito);
+  $("btn-cancelar").addEventListener("click", function(){ $("form-defeito").hidden = true; $("card").focus(); });
+  $("form-defeito").addEventListener("submit", function(ev){
+    ev.preventDefault();
+    var m = ($("motivo").value || "").trim();
+    if(!m){ $("motivo").focus(); return; }
+    $("form-defeito").hidden = true;
+    marcarDefeito(m);
+  });
+  Array.prototype.forEach.call(document.querySelectorAll("#notas-botoes button"), function(b){
+    b.addEventListener("click", function(){ avaliar(parseInt(b.getAttribute("data-nota"), 10)); });
+  });
+  $("btn-copiar").addEventListener("click", function(){
+    var txt = $("json-notas").textContent;
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(txt).then(function(){ $("btn-copiar").textContent = "Copiado"; });
+    }
+  });
+
+  // ---------------------------------------------------------------- boot
+  function montarFila(){
+    var novos = [], relearning = [];
+    CARDS.forEach(function(c){
+      var n = notas.get(c.card_id);
+      if(!n){ novos.push(c); return; }
+      if(n.defeito){ return; }                        // defeito sai do lote
+      if(n.rating_primeira >= 4){ return; }           // resolvido
+      relearning.push(c);                             // nota < 4 volta ao fim
+    });
+    fila = novos.concat(relearning);
+  }
+
+  function restaurar(docs){
+    docs.forEach(function(d){
+      var dado = d.data && d.data();
+      if(!dado || typeof dado.card_id === "undefined"){ return; }
+      notas.set(Number(dado.card_id), {
+        card_id: Number(dado.card_id),
+        rating_primeira: dado.rating_primeira,
+        ts: dado.ts,
+        defeito: dado.defeito,
+        motivo: dado.motivo
+      });
+    });
+    var ts = [];
+    notas.forEach(function(n){ if(n.ts){ ts.push(Date.parse(n.ts)); } });
+    ts = ts.filter(function(x){ return !isNaN(x); });
+    if(ts.length){ inicio = Math.min.apply(null, ts); }
+  }
+
+  function iniciar(){
+    $("sessao").textContent = LOTE.sessao || "-";
+    montarFila();
+    atualizarPainel();
+    tique();
+    setInterval(tique, 1000);
+    if(!CARDS.length){
+      $("pergunta").textContent = "Lote vazio -- nada para drenar.";
+      $("btn-virar").hidden = true;
+      $("btn-defeito").hidden = true;
+      return;
+    }
+    mostrar();
+  }
+
+  // A capability chega por promessa; a pagina renderiza SEM ela e acende o
+  // armazenamento quando (e se) ele resolver. `use("db")` devolve null quando
+  // esta visualizacao nao pode rodar o db -- caso tratado, nunca silencioso.
+  iniciar();
+  try{
+    window.claude.use("db").then(function(db){
+      if(!db){
+        dbOk = false;
+        dbDeclarado = true;
+        avisar("Armazenamento da sessao indisponivel nesta visualizacao. As notas seguem sendo contadas aqui: copie o JSON do fim da pagina e cole no chat para o agente gravar.");
+        $("fim").hidden = false;
+        $("fim-titulo").textContent = "Notas desta sessao (copiar e colar)";
+        $("fim-origem").textContent = "Fallback declarado: a capability db nao respondeu, entao nada foi gravado remotamente.";
+        renderFallback();
+        return;
+      }
+      colecao = db.collection("sessoes/" + LOTE.sessao + "/notas");
+      dbOk = true;
+      return colecao.get().then(function(snap){
+        restaurar(snap.docs || []);
+        atualizarPainel();
+        renderFallback();
+        // Remontar a fila DEPOIS do 1o gesto embaralharia o card na tela; o
+        // progresso ja restaurado continua valendo para o painel.
+        if(interagiu){ return; }
+        montarFila();
+        mostrar();
+      });
+    }).catch(function(){
+      dbOk = false;
+      avisar("Armazenamento da sessao indisponivel. Copie o JSON do fim da pagina e cole no chat.");
+      renderFallback();
+    });
+  }catch(e){
+    dbOk = false;
+    avisar("Armazenamento da sessao indisponivel (pagina fora do runtime do Artifact). Copie o JSON do fim da pagina e cole no chat.");
+    renderFallback();
+  }
+})();
+</script>
+</body>
+</html>

@@ -14,6 +14,7 @@
 
 ## Fila de engenharia -- permit CONSUMIDO; itens novos por spec (GO do `/ai-eng`)
 
+- 🆕 **PRD `plano-ssot-e-cards-v2` (s183, permit do usuario em 16/09 -- *"planejamento mais estavel, orquestrado por voce"*):** 6 partes em ordem P6 Autopsia diaria -> P5 poda (lote 1 = **125 aposentados sem revlog/reforja** de 192; 67 com historico ficam) -> P1 `plano_tarefas` SSOT + `grade_extensivo.json` -> P2 ledger de listas (`sessoes_bulk.tarefa_id`, `tools/listas.py`) -> P3 painel gerado (Drive deixa de ser SSOT) -> P4 player de cards em Artifact. Abertas p/ o usuario: Drive vira historico?; aprovar lote 1; player desktop ou celular-first. `.vibeflow/prds/plano-ssot-e-cards-v2.md`.
 - 🆕 **E1** `grade_extensivo.json` derivado do `[52 wk] Cronograma Extensivo.pdf` (parser prototipo no scratch da s183): o `Realizada?` do Dashboard passa a casar 1:1 (674/735 por nome) e a familia **F72** morre. **E2** CLI `tools/medcards.py --query --tema` (espelho do `emed_flashcards`, `html.parser`). **F108** extrator regex de HTML engoliu cutoffs (123 cards; licao na memoria).
 - Abertos herdados: F98-F107 (s182). Decisoes empilhadas do OPERADOR: (a)-(j) da s182 + **(k) conciliar 7 areas divergentes na planilha** (Obst -59, Dermato +41, Cirurgia +40, Ortopedia -27, Endocrino -24, Pneumo +16, Gineco -26).
 

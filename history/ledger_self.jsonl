@@ -735,3 +735,5 @@
 {"ts": "2026-09-15T22:03:45+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "6357f6eaa3b6", "alvo": "card#1645", "payload": {"padrao": "resposta-multifato/paragrafo", "tema": "Tumores Sólidos da Infância"}}
 {"ts": "2026-09-15T22:03:45+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "ed77db545467", "alvo": "card#1655", "payload": {"padrao": "resposta-multifato/paragrafo", "tema": "Osteoporose"}}
 {"ts": "2026-09-15T22:03:45+00:00", "event": "opened", "check": "erros_orfaos", "fingerprint": "7c665373e6db", "alvo": "2026-09-13", "payload": {"erros_esperados": 25}}
+{"ts": "2026-09-16T17:57:34+00:00", "event": "opened", "check": "posicao_ssot", "fingerprint": "01755b5ba8cb", "alvo": "HANDOFF.md", "payload": {"semana_handoff": 21, "semana_db": 17}}
+{"ts": "2026-09-16T17:57:40+00:00", "event": "opened", "check": "consistencia_registros", "fingerprint": "6c4b41fa1526", "alvo": "HANDOFF.md:17", "payload": {"check": "paths"}}

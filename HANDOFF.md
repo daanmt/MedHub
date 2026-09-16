@@ -1,53 +1,48 @@
 # HANDOFF.md -- ESTADO OPERACIONAL CURTO
-*Atualizado: 2026-09-15 (noite) -- **s182 (ESTUDO)**: **ENAMED 2026 real = 75/100** (prova de 13/09), gabarito comentado das 100 questoes publicado, 25 erros persistidos com racional declarado (44 cards), 13 acertos-no-chute no ledger, 15 resumos com armadilhas novas. Volume **7.226 -> 7.326**.*
+*Atualizado: 2026-09-16 (tarde) -- **s183 (PLANEJAMENTO)**: **hibrido APROVADO** (RF rescopada ate 01/11 + extensivo S21-S48 como espinha do ENAMED 2027); **norte reordenado** (Psiquiatria/IPUB via ENAMED 2027, alvo 95%; UERJ/MFC = plano B; USP fora); Dashboard do Drive = catalogo do EXTENSIVO; corpus INEP (23 PDFs) + cadernos UERJ 2021-2026 em `simulados/`; Medcards = banco de referencia. Volume 7.326 (sem estudo hoje).*
 
-> 🔴 **RECURSOS DO ENAMED ATE 17/09 (acao do usuario).** As dele: **Q68** (pelve: angioembolizacao, nao "estabilizacao cirurgica") e **Q75** (epiglote "rigida" -- anulacao), mais **Q6** (A/C). Tambem cabem Q48 (PrEP 2025 = 7 dias), Q5 e Q99. Fundamentos por questao no artifact: https://claude.ai/artifact/TuXkndfMBRRjpErzM2fWEJ (copia em `artifacts/enamed-2026-comentado.html`). Permit de engenharia segue **CONSUMIDO**.
+> 🔴 **RECURSOS DO ENAMED ATE 17/09 (acao do usuario):** Q68, Q75, Q6 (+Q48, Q5, Q99) -- fundamentos em `artifacts/enamed-2026-comentado.html`. **Inscricao UERJ fecha 01/10.** Permit de engenharia segue CONSUMIDO.
 
 ## > Proximo passo imediato
 
-1. 🃏📚 **Terca 16/09 (decisao do usuario em 15/09): retoma o cronograma EMED a 60 questoes/dia + 60 cards/dia** -- nao 90, mesmo com **106 vencidos** (78 atrasados + 28; o blackout de 13-14/09 caiu hoje). A divida rola; nao subir o teto por conta propria. **Re-sondar #787 (hiperaldosteronismo) e #597 (Winter)** antes de ensino novo (herdado da s181). Os 44 cards do ENAMED estao no **pool (685)**, nao na fila vencida.
-1b. 🔴 **CONTRATO novo (s182, `analisar-questao.md §3.2`):** dissecar cada erro por inteiro, **perguntar o raciocinio dele quando nao for evidente** antes de diagnosticar; regua de prova = solido 80-85; chute certo = `incerteza`.
-2. 🗓️ **Rescope UERJ + abertura da frente MFC (atrasado desde 14/09).** A prova real confirmou o miolo: **29/100 de Preventiva/APS**, cenario de UBS na maioria das demais, RAPS/indicadores/PrEP cobrados por portaria. Insumo: `artifacts/raio-x-simulados.html §3` + `history/session_182.md §2`.
-3. 📚 **8 temas SEM RESUMO cairam no ENAMED:** RAPS, Anafilaxia (adulto), FA/Arritmias, Osteoporose, HPB/PSA, Oncologia pediatrica (Wilms x neuroblastoma), Coqueluche, TEA. Criar na ordem do peso UERJ (RAPS e APS primeiro). Farmacodermias e Vulva/Vagina seguem sem lastro.
-4. 🔴 **Cluster = aula comparativa, nao cards (2a evidencia, s182).** Q52: *"fiz tantos cards de wilms x neuroblastoma e perdi uma questao de graca"*; Q53: Cirurgia Infantil com 53 cards caiu numa facil. Wilms x neuroblastoma e hernia x hidrocele x criptorquidia pedem tabela lado a lado na aula, nao mais cards.
-5. 🔴 **Eixo nefro = tema-zero DECLARADO** (nota 9 `usuario` em Acido-Base e Potassio; herdado). Quando a grade chegar: `/aula-base` D9-D10 com onboarding do zero.
-6. 🔴 **Reforja: 283 abertas** (sem marca nova nesta sessao). Triar e do operador.
+1. 🃏📚 **Quarta 17/09:** 60 cards (106 vencidos; teto 60, regime de divida) + 60 questoes da Fase 1: **Vitalidade Fetal T (25) + Cirurgia Vascular R (35 de 43)** da S17. Re-sondar #787 (hiperaldosteronismo) e #597 (Winter) antes de ensino novo.
+2. 📚 **Frente MFC-UERJ abre 17/09 (2 resumos/semana, ordem do ranking REAL 2021-2026):** Prevencao Quaternaria -> Avaliacao Multidimensional do Idoso -> Raciocinio diagnostico quantitativo (vinheta dor precordial + TE, caiu nas 6 edicoes) -> MCCP -> Polifarmacia/desprescricao -> Paliativos na APS -> Rastreamento BR. Fonte por subtema (Gusso/Duncan): `simulados/uerj/UERJ_MFC_por_edicao_2021-2026.md §3.1`. Treino: bloco Q81-100 dos cadernos 2023-2026 em `simulados/uerj/` + REVALIDA em `simulados/inep/`.
+3. 🗓️ **Fase 1 (16/09 -> 01/11, 2.760q a 60/dia):** RF S17-S28 pendente = 139 tarefas / 4.036q; orcamento: MFC-EMED ~210 (MFC Revisao 50, Idoso 32, RpQ 41, Etica R 39, Financiamento ~50) · PED 564 · CIR 469 · GO ~790 · CM dirigida ~320 (Acido-base/K RpQ, Nefrolitiase R, HAS R, FA/PCR, Polipos RpQ, DITC, Anemias/Leucemias) · 8 temas sem resumo 160 · INEP/UERJ MFC ~200. **Cortado ate 01/11:** Estatistica Medica, NRs, IVAS pt.2, Polo Posterior, Cirrose, DPOC, Derrame/Neoplasia pulmonar, Onco cutanea, Ortopedia. Detalhe: `history/session_183.md §3`.
+4. 🔴 **8 temas SEM RESUMO do ENAMED seguem:** RAPS, Anafilaxia, FA/Arritmias, Osteoporose, HPB/PSA, Onco ped, Coqueluche, TEA (Medcards cobre 6/8 como referencia; RAPS e TEA = 0).
+5. 🧭 **Termometro mensal INEP:** REVALIDA 2025/2 como 1o (data a marcar). ~95% no INEP calibra o 90-95+ do ENAMED.
+6. 🔴 Reforja: 283 abertas (sem marca nova).
 
-## Fila de engenharia -- TIER 0 e 1 ZERADOS; permit consumido. Inventario: `docs/MEMORIA-AUDITORIA.md §11`
+## Fila de engenharia -- permit CONSUMIDO; itens novos por spec (GO do `/ai-eng`)
 
-- 🧑‍⚖️ **Abertos:** **F98** (blackout so ve intervalo >= 4d -- **materializou hoje: 78 atrasados**) · **F99** (sem CLI por id -- a s182 leu ids por SELECT read-only) · **F100** (re-ensino nao fecha fato arbitrario; 4a medicao pendente no re-drill) · **F101-F105** (herdados). 🆕 **F106** `[SEM-LASTRO]` falso por NOME de tema outra vez (`Infecto/Esquistossomose` -> conteudo em `Parasitoses.md`; classe F103) · **F107** o gate `resposta-embutida` so acusa no writer -- **2 rollbacks** do lote hoje ate o pre-check com `card_checks.checar_resposta_embutida(card, {"titulo": ...})`; `insert_questao.py` nao tem `--dry-run`.
-- 🔜 **Janela 4 (decidida pelo `/ai-eng`):** smell `db.py -> tools/card_checks` por `__file__`; por spec.
-- 🧑‍⚖️ **Decisoes empilhadas do OPERADOR:** (a) `reforja.py --backfill --apply`; (b) RODADA 3 do `normalize_taxonomia` (8 temas novos entraram hoje); (c) overflow -> 15/09+ (aconteceu); (d) backfill UTC->local; (e) `--new-limit` x pool; (f) areas fantasma; (g) F64; (h) rotacao do ledger (~263 KB); (i) F57 lote de ESTUDO; (j) `/graphify`, F35, F87.
+- 🆕 **E1** `grade_extensivo.json` derivado do `[52 wk] Cronograma Extensivo.pdf` (parser prototipo no scratch da s183): o `Realizada?` do Dashboard passa a casar 1:1 (674/735 por nome) e a familia **F72** morre. **E2** CLI `tools/medcards.py --query --tema` (espelho do `emed_flashcards`, `html.parser`). **F108** extrator regex de HTML engoliu cutoffs (123 cards; licao na memoria).
+- Abertos herdados: F98-F107 (s182). Decisoes empilhadas do OPERADOR: (a)-(j) da s182 + **(k) conciliar 7 areas divergentes na planilha** (Obst -59, Dermato +41, Cirurgia +40, Ortopedia -27, Endocrino -24, Pneumo +16, Gineco -26).
 
 ## Estado por frente
 
-- **Norte:** 🎯 **UERJ/MFC 01/11/2026** (47d). **ENAMED 13/09 FEITO: 75/100** (termometro; abaixo da serie S6-S9).
-- **Volume & Metas:** 7326 / 10400 (perf. ~79.1%). Hoje: 0. Ritmo-alvo ~65.4q/dia (47d p/ UERJ/MFC (prova 01/11)). 🔴 A grade NAO fecha a meta.
-- **Simulados:** 9 provas + ENAMED real · S6 80 · S7 82 · S8 82,1 · S9 86 · **ENAMED 75**. Serie: 264 erros. ENAMED: 62 solidas / 13 chute / 25 erradas; Cardio 3/5, Preventiva 5/29.
-- **FSRS:** divida 78 atrasados + 28 p/ hoje -- pool 685 nunca introduzidos (entram <=90/dia). **s182: 44 cards novos (ids 1630-1673); zero drenagem hoje.**
-- **Conteudo:** 136 resumos em resumos/. [derivado: glob] **+15 resumos com 2-3 armadilhas do ENAMED.** Sem lastro: 8 temas do ENAMED + Farmacodermias + Vulva/Vagina.
-- **Erros & Cards:** 1041 erros registrados · 1476 cards ativos · 2 needs_qualitative na fila · taxonomia 302 temas. [derivado: db] Reforja: **283 abertas**. Ledger: +6 padroes com `--questao-id`, +13 `incerteza`.
-- **Engenharia:** suite 621 · `auto_check --changed` PASSED · ledger **109 ids** (F106, F107 novos).
-- **Posicao:** conteudo S17 (nominal S25, atraso 8 sem) [derivado: preparacao_estado]
-- **Datas:** fim da grade 09/10 · **UERJ 01/11**. Inscricao UERJ fecha **01/10** (acao do usuario). Recurso ENAMED ate **17/09**.
+- **Norte:** 🎯 **Psiquiatria/IPUB via ENAMED 2027 (corte 940, alvo 95%)**. Plano B: **UERJ/MFC 01/11/2026 (46d)**. USP fora. Hibrido: Fase 1 = RF rescopada ate 01/11; Fase 2 = extensivo **S21-S48** (425 tarefas, 1.002 h, ~6.600q) de 02/11 ate o ENAMED 2027 (~set/2027, data ASSUMIDA); horas 12-15/sem em R1 ou 20+ trabalhando.
+- **Volume & Metas:** 7326 / 10400 (perf. ~79.1%). Hoje: 0. Ritmo-alvo ~66.8q/dia (46d p/ UERJ/MFC (prova 01/11)). [derivado: day_plan --handoff-block]
+- **Simulados:** 9 provas + ENAMED real 75. **Corpus novo:** `simulados/inep/` (ENAMED 2025 x2 cadernos + gabaritos; REVALIDA 2022/1-2026/1; 23 PDFs oficiais) e `simulados/uerj/` (cadernos AD 2021-2026).
+- **FSRS:** divida 106 atrasados + 27 p/ hoje -- pool 685 nunca introduzidos (entram <=90/dia). [derivado]
+- **Conteudo:** 136 resumos em resumos/. [derivado: glob] Preventiva: **so 3/22 decks pagam aluguel na UERJ** (MFC, Idoso, Testes Dx); P4, polifarmacia, paliativos e MCCP **sem resumo**.
+- **Erros & Cards:** 1041 erros registrados · 1476 cards ativos · 2 needs_qualitative na fila · taxonomia 302 temas. [derivado: db] Reforja 283.
+- **Cronograma:** Dashboard do Drive = **707 tarefas do EXTENSIVO** (nao da RF); feitas 178 (25%), temas tocados 39%; entrada util = **S21**. W1 gravado 16/09 (planilha 6.349 x db 7.326).
+- **Engenharia:** `.gitignore` cobre `*.apkg` e `Medcards 2022/`; suite 621; ledger 109 ids (+E1, E2, F108 propostos).
+- **Posicao:** conteudo S17 (nominal S25, atraso 8 sem) [derivado: preparacao_estado] -- na RF; no extensivo, ver linha Cronograma.
+- **Datas:** fim da grade 09/10 · **UERJ 01/11** · inscricao UERJ ate **01/10** · recurso ENAMED ate **17/09**.
 
-## Ultima sessao -- s182 (2026-09-15, 12h -> 19h) -- ESTUDO
+## Ultima sessao -- s183 (2026-09-16, 13h -> 17h30) -- PLANEJAMENTO
 
-Detalhe integral em `history/session_182.md`. 📄 **Gabarito comentado das 100** via 5 subagentes Opus em paralelo (794k tokens, ~25 min): 94 CONCORDA / 6 CONTESTAVEIS; 2 claims re-medidos pelo principal (PCDT PrEP 2025 = 7 dias; ATLS 11 = 3 mL x kg x %SCQ em 16 h). 🔴 **Os 25 erros com a letra dele:** discriminador **identificado e nao usado** (Q19, Q37, Q40 -- *"circulei os 3 dias... mas nao os utilizei"*) vira sub-estado do padrao-mestre; override do modal declarado na Q69; 2 fatos FALSOS carregados (hernia infantil "fecha", "triciclico nunca em idoso"); Q19 = reincidencia da ectopica da s085. 44 cards de 57 candidatos (13 cortados pelo teste de regenerabilidade); 3 erros `banca-divergente` sem card. Custo total de subagentes: **6 spawns, ~1,03M tokens, ~53 min**.
+Detalhe em `history/session_183.md`. **5 subagentes (Opus x3, Sonnet x2), ~1,01M tokens, ~75 min de relogio em 2 ondas**; 6 numeros load-bearing re-medidos pelo principal e confirmados. Achados: Dashboard = catalogo do extensivo (raiz do F72); extensivo nativo = 33,5 h/sem e **39 q/dia** (migrar ja = +25% horas e ~1.380q a menos ate a UERJ); guia UERJ classifica por TEMA e o caderno por BLOCO -- **o bloco MFC de 20q existe desde 2021** (104q lidas: 92% MFC clinica, **Etica 0/104**, P4 = tema-mestre); Medcards 54% atomico + 1 bug MEU de extracao medido e corrigido (F108).
 
 ## Fronteiras DECLARADAS (nao ler verde de gate como limpeza)
 
-- **ENAMED sem distribuicao de candidatos:** o override do modal e n=1 DECLARADO (Q69), nao medido; "8 faceis perdidas" e proxy.
-- **F100 4a medicao:** pendente (re-drill de 15/09 nao aconteceu). **F98** materializou (78 atrasados). **F7/F104:** classes semanticas, nao-verificaveis por gate.
-- **D5** mede presenca, nao semantica · **G10** isenta por LINHA · **G5** sensivel a arquivo novo · gate de revogacao casa substring literal.
-- Herdadas e vivas: **F35** · **F89** · **F79b** · **F66** (34% de orfandade) · **F64** · eixo C do **F81** · sitios gemeos do **F80b**.
+- Data do ENAMED 2027 e horas na residencia sao **ASSUNCOES**. UERJ 2019-2020 nao verificadas (PDFs removidos da Cepuerj). Gabarito REVALIDA 2026/1 so com login. 2 graficos do guia UERJ corrompidos (Endocrino, Pneumo). Top-5 das outras 4 areas na UERJ = leitura qualitativa, nao contagem.
+- Herdadas e vivas: **F100** 4a medicao pendente · **F98** · F7/F104 (semanticas) · D5 · G10 · G5 · F35 · F89 · F79b · F66 · F64 · eixo C do F81 · F80b.
 
 ## Pendencias/observacoes ativas
 
-- 📄 Manual de Gestacao de Alto Risco (MS 2022) > 10 MB: baixar uma vez resolve beta-hCG e cortes da PE.
-- 💉 Diretrizes a conferir: Calendario Vacinal 2026, GINA 2026, ATLS 11 (parcial -- queimados ja conferido), SINAN 2026.
-- ⚠️ Drive 50d sem sync (F72); Dashboard EMED x db medido pelo boot (F35).
+- 📄 Manual de Gestacao de Alto Risco (MS 2022) > 10 MB. 💉 Diretrizes 2026 a conferir: Calendario Vacinal, GINA, ATLS 11 (parcial), SINAN.
 - 📡 Canal com o `/ai-eng` em `history/exchange-log.jsonl`.
 
 ---
-*Historico: history/INDEX.md * Macro: ESTADO.md * Sessao: history/session_182.md * Trocas: history/exchange-log.jsonl * Auditoria: docs/MEMORIA-AUDITORIA.md*
+*Historico: history/INDEX.md * Macro: ESTADO.md * Sessao: history/session_183.md * Trocas: history/exchange-log.jsonl * Auditoria: docs/MEMORIA-AUDITORIA.md*

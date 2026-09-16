@@ -1,74 +1,67 @@
-# PRD: Plano estável como SSOT, ledger de listas, Autópsia diária e cards rápidos (v2)
+# PRD: Plano como SSOT, ledger de listas, painel gerado e player de cards (v2)
 
-> Escrito em 2026-09-16 (s183) a partir do pedido textual do usuário; substitui o fluxo "usuário preenche o Drive -> agente importa".
-> Permit: *"Preciso de um planejamento mais estável, orquestrado por você, que tem mais contexto sobre mim do que as planilhas."*
+> Generated via discover on 2026-09-16 (s183). Refina a 1ª versão escrita à mão na mesma sessão; incorpora as decisões do usuário de 16/09 e os cortes do discover.
+> Permit textual: *"Preciso de um planejamento mais estável, orquestrado por você, que tem mais contexto sobre mim do que as planilhas."*
+> ⚰️ **P5 (`tools/cards_prune.py`, lote 1 = 125 aposentados) e P6 (cláusula Autópsia, `analisar-questao.md §3.3`) foram ENTREGUES na s183** e ficam fora deste PRD. Spec de P5: `.vibeflow/specs/plano-ssot-e-cards-v2-part-5.md`.
 
 ## Problem
 
-1. **O plano não tem SSOT.** O detalhamento vive no `Cronograma.pdf` (30 sem), a ordem no xlsx do Drive, a conclusão no `Dashboard EMED 2026` -- que cataloga as **707 tarefas do EXTENSIVO**, não as 352 da Reta Final (s183). O usuário fazia tarefas que não existiam no Dashboard e marcava outras no lugar: a coluna `Realizada?` é aproximada. O `grade.json` nunca casou 1:1 com a conclusão real (família F72).
-2. **As listas de exercícios não têm ledger.** `links_exercicios.json` guarda URL + nº de questões só para S15-S30 da Reta Final; `sessoes_bulk` (126 sessões) não referencia tarefa nem link (0 linhas com `http`). Não dá para responder "qual lista fiz, quantas, quantos acertos" sem ler prosa em `observacoes`.
-3. **O banco de cards acumula defeito declarado.** 1.668 cards: 1.476 ativos, **192 aposentados** (`needs_qualitative=2`), 810 nunca introduzidos; 278 WARN de atomicidade, 11 de auto-suficiência, 283 marcas de reforja. Não existe CLI de exclusão -- só reescrita in-place (`recurate_cards.py`).
-4. **Fazer cards é lento.** O `/revisar` conversacional (card a card no chat, nota digitada) custa tempo e contexto; o usuário pede UI mais amigável e mais rápida.
-5. **A análise de questão do dia é mais rasa que a do ENAMED.** A s182 entregou cadeia + comporta + armadilha + fonte verificada + veredito por questão numa página; o bloco diário não.
+O plano de estudo não tem dono único. O detalhamento vive no `Cronograma.pdf` (Reta Final, 30 semanas), a ordem no xlsx do Drive, e a conclusão no `Dashboard EMED 2026`, que cataloga as **707 tarefas do Cronograma Extensivo** (52 semanas), não as 352 da Reta Final. O usuário fazia tarefas que não existiam no Dashboard e marcava outras no lugar; a coluna `Realizada?` é aproximada por confissão dele. O `grade.json` nunca casou 1:1 com a conclusão real (família F72), e o boot lidera com uma posição projetada pelo calendário, não lida.
 
-## Target audience
+As listas de exercícios não têm ledger: `links_exercicios.json` guarda URL e nº de questões só para S15-S30 da Reta Final; `sessoes_bulk` (126 sessões) não referencia tarefa nem link. "Qual lista fiz, quantas, quantos acertos" só se responde lendo prosa em `observacoes`.
 
-Usuário único (médico, foco nº1 Psiquiatria/IPUB via ENAMED 2027, alvo 95%; plano B UERJ/MFC 01/11/2026), regime 60q + 60 cards/dia, operando por chat (desktop/celular) e Artifacts.
+Drenar cards é lento: o `/revisar` conversacional apresenta card a card no chat e a nota é digitada; 60 cards custam 5-6 blocos de conversa e contexto. O usuário pede UI mais amigável e mais rápida.
 
-## Proposed solution -- 6 partes, nesta ordem de dependência
+## Target Audience
 
-### P1 -- Plano como SSOT no `ipub.db` (`plano_tarefas`)
-- Tabela `plano_tarefas`: `id, fonte ('extensivo'|'rf'|'custom'), ref_semana_fonte, tarefa_fonte, semana_plano, ordem, area, tema, tipo, url_lista, q_previstas, status ('pendente'|'feita'|'cortada'), data_conclusao, sessao_bulk_id, origem_conclusao, nota`.
-- Derivador `tools/cronograma.py --rebuild-extensivo` -> `core/cronograma/grade_extensivo.json` (parser prototipado na s183: 52 semanas, 735 tarefas, páginas do Livro Digital, links de lista quando houver).
-- Semeadura: RF S17-S28 pendente (139 tarefas) + extensivo S21-S48 (425) + tarefas `custom` (7 resumos MFC-UERJ, 8 temas sem resumo, termômetros INEP). `status` inicial = `Realizada?` do Dashboard de 10/09 com `origem_conclusao='dashboard_2026-09-10'` (sinal aproximado, **revisado por área com o usuário** numa passada única -- ele corrige, o agente grava).
-- `semana_plano`/`ordem` são do AGENTE (Fase 1 por peso UERJ; Fase 2 extensivo reordenado), editáveis por CLI (`tools/plano.py --mover ID --semana N`, `--cortar`, `--concluir ID --sessao N`). Reordenar deixa de ser ritual no xlsx.
-- `day_plan.py` passa a ler `plano_tarefas` (não mais calendário do PDF); W8 do reconcile morre; W5 vira "grade_extensivo em dia vs PDF".
-- 🔴 Fronteira: `taxonomia_cronograma`, FSRS e `review_log` intocados.
+Usuário único: médico, foco nº1 Psiquiatria/IPUB via ENAMED 2027 (alvo 95%), plano B UERJ/MFC em 01/11/2026; regime 60 questões + 60 cards/dia; opera por chat no desktop (teclado) com celular como fallback; consome páginas como Artifact.
 
-### P2 -- Ledger de listas de exercícios
-- `sessoes_bulk.tarefa_id` (FK nullable) + `registrar_sessao_bulk.py --tarefa ID`; o writer valida que `area` bate com a tarefa.
-- Backfill único das 104 sessões com `observacoes` por casamento de nome de tema (dry-run + COUNT-ASSERT; sem match fica NULL, nunca chute).
-- `tools/listas.py` (read-only): por tarefa `url | q previstas | feitas | acertos | %`, por bloco UERJ, por semana; `--pendentes`, `--progresso`. Substitui as 20 tabelas do Dashboard.
+## Proposed Solution
 
-### P3 -- Painel gerado (o Drive deixa de ser SSOT)
-- `tools/painel.py --html` gera `artifacts/painel.html` (progresso por bloco, listas feitas, FSRS, custo/Q, próximas 7 tarefas) -> publicado como Artifact fixado; regenerado no fechamento de sessão.
-- Opcional: `--sheet` exporta o mesmo dado como Google Sheet gerado via MCP (`create_file`), **nunca editado à mão**. A tabela de investimento/mês continua manual no Drive (é input, não derivado) e é lida pelo `/performance`.
-- O `Cronograma de Reta Final.xlsx` e o `Dashboard EMED 2026` viram histórico: `--sync-drive` e `importar-planilha` ganham lápide; `--abandonada` no snapshot W1.
+Quatro partes, nesta ordem de dependência:
 
-### P4 -- Player de cards como Artifact (rápido e UI-friendly)
-- Página `Cards do dia`: fila do `fsrs_queue.py` embutida no publish (frente/verso/regra-mestre/armadilha), teclado `1-4` e toque, relearning intra-sessão na própria página (nota < 4 volta ao fim do lote), botões `defeito` (-> fila de reforja com motivo) e `aposentar`; contador e tally.
-- Estado gravado pela capability de dados do Artifact (`artifact-capabilities`: carregar o skill antes de escrever a página); no fechamento o agente lê o estado e grava em lote via `fsrs_queue.py --record` (**o caminho único de escrita do FSRS não muda**; Invariante A/C preservados; só a 1ª nota de cada card grava).
-- Revisão Direcionada de fechamento continua no chat (v1.3 do contrato). O `/revisar` conversacional fica como fallback (celular sem página).
+**P1 -- Plano como SSOT no `ipub.db`.** Uma tabela `plano_tarefas` passa a ser a única verdade de "o que estudar, em que ordem, e o que já foi feito". Ela é semeada de três fontes: o Cronograma Extensivo (derivado do PDF de 52 semanas para `core/cronograma/grade_extensivo.json`, mesmo modelo do `grade.json`), a Reta Final (S17-S28 pendentes) e tarefas custom (7 resumos MFC-UERJ, 8 temas sem resumo, termômetros INEP). O status inicial vem do `Realizada?` do Dashboard de 10/09 marcado como **aproximado**; a verdade é fixada numa **revisão completa por área com o usuário**, começando pelos blocos de maior peso (MFC, Pediatria, Cirurgia, GO), em passadas curtas: o agente lista, o usuário corrige, o agente grava. A semana do plano e a ordem são do agente (Fase 1 por peso UERJ até 01/11; Fase 2 = extensivo S21-S48 reordenado), editáveis por comando (`concluir`, `cortar`, `mover`). O Plano do Dia passa a ler essa tabela; o W8 do reconcile morre.
 
-### P5 -- Curadoria e poda do banco
-- `tools/cards_prune.py --dry-run|--apply --criterio aposentados|--ids ...`: exige `backup_db.py` no mesmo comando, exporta as linhas (flashcards + fsrs_cards + fsrs_revlog + reforja_marks) para `artifacts/backups/pruned_<data>.json` antes de apagar, COUNT-ASSERT declarado. Nada é perdido; só sai do banco vivo.
-- Lote 1 (decisão do usuário, lista gerada na s183): os 192 aposentados -- **poda os sem revlog e sem marca de reforja**; os com histórico ficam até triagem.
-- Regra permanente de intake: **card nunca introduzido só entra na fila depois de passar pelo teste de regenerabilidade feito pelo agente** (60/dia inclui a triagem); WARN de atomicidade/auto-suficiência é resolvido **no toque** (quando o card sobe na fila), nunca em lote cego.
-- Erros: `banca-divergente`/`anulada` ficam (são dado); erros sem card (21) ganham card ou lápide na próxima Autópsia do tema.
+**P2 -- Ledger de listas de exercícios.** Cada sessão registrada aponta para a tarefa (e portanto para o link da lista e o nº previsto). Backfill único das 104 sessões com `observacoes` por casamento de nome, sem match = vazio, nunca chute. Um comando read-only responde progresso por tarefa, por bloco UERJ e por semana.
 
-### P6 -- Autópsia diária na profundidade do ENAMED
-- Cláusula nova em `analisar-questao.md`: todo bloco de questões gera **uma página Autópsia** (Artifact + cópia em `artifacts/autopsia-AAAA-MM-DD.html`) com, por questão errada ou chutada: enunciado, cadeia de habilidades e o elo que quebrou, comporta/discriminador, armadilha, fonte verificada (WebSearch/PubMed, com URL), veredito (CONCORDA/CONTESTÁVEL), racional declarado do usuário e os cards cunhados (com o teste de regenerabilidade explícito). Template = estrutura de `artifacts/enamed-2026-comentado.html`.
-- Régua F93 inalterada: <= 8 erros o principal faz; acima, um subagente por bloco, `model` explícito, retorno <= 3k + arquivo.
+**P3 -- Painel gerado.** Uma página fixada, regenerada a cada fechamento de sessão, com progresso por bloco, listas feitas x previstas, FSRS, custo/questão e as próximas 7 tarefas. O Drive deixa de ser fonte: o snapshot W1 é marcado `--abandonada` (mecanismo já existente), e a tabela de investimento/mês continua manual porque é entrada, não derivado. Sem exportação para Sheet no v0.
 
-## Success criteria
+**P4 -- Player de cards como Artifact (desktop-first).** Uma página com a fila do dia embutida no publish, teclado `1-4` e toque, relearning intra-sessão (nota < 4 volta ao fim do lote), botão `defeito` com motivo, contador e tally. O estado sobrevive a refresh e é lido pelo agente no fechamento, que grava em lote pelo caminho único do FSRS (`record_review` via `fsrs_queue.py --record`), gravando **só a primeira nota** de cada card. Sem botão "aposentar" (é decisão de triagem, não de drill). A Revisão Direcionada de fechamento continua no chat; o `/revisar` conversacional fica como fallback.
 
-1. `python tools/day_plan.py` lidera com a próxima tarefa vinda de `plano_tarefas` (fonte, link, q previstas) e o boot não emite mais `Drive desatualizado`.
-2. `python tools/listas.py --progresso` responde, por bloco UERJ, listas feitas x previstas com acertos -- sem ler o Drive.
-3. `python tools/cards_prune.py --dry-run --criterio aposentados` imprime N; `--apply` remove exatamente N, com backup + export verificáveis; `check_fk_orphans.py` limpo depois.
-4. Uma sessão de 60 cards fecha na página em menos tempo que no chat (medir: minutos por 60 cards, hoje ~6 blocos conversacionais) e grava 60 revisões via `--record`.
-5. Toda sessão de questões desde 17/09 tem `artifacts/autopsia-<data>.html`.
-6. Painel publicado e fixado; Dashboard do Drive com lápide.
+## Success Criteria
 
-## Scope v0 (ordem de execução)
+1. `python tools/day_plan.py` lidera com a próxima tarefa vinda de `plano_tarefas` (fonte, link, nº previsto) e o boot não emite mais `Drive desatualizado`.
+2. Revisão de status concluída: 100% das tarefas com `origem_conclusao` = `usuario` ou `cortada`; zero linhas ainda `dashboard_2026-09-10` ao fim da passada.
+3. `python tools/listas.py --progresso` responde listas feitas x previstas com acertos por bloco UERJ sem ler o Drive; backfill com N declarado e conferido.
+4. Painel publicado e fixado; `day_plan --planilha` diz `comparação suspensa`.
+5. Uma sessão de 60 cards fecha no player em menos tempo que no chat (métrica: minutos por 60 cards, medidos 3 sessões antes e 3 depois) e grava 60 revisões via `--record`, com exatamente 1 revisão por card.
+6. Toda operação em lote (semeadura, backfill, gravação das notas) tem dry-run + COUNT-ASSERT escritos antes de rodar; `test_writer_allowlist.py` lista cada writer novo.
 
-P6 (protocolo + template, 17/09) -> P5 lote 1 (poda dos aposentados, após aprovação da lista) -> P1 (grade_extensivo + plano_tarefas + revisão por área) -> P2 (ledger + backfill) -> P3 (painel) -> P4 (player). Uma spec por parte; audit por `/vibeflow:audit`; GO do `/ai-eng` por silêncio (AGENTE §10.6).
+## Scope v0
+
+- P1: `tools/cronograma.py --rebuild-extensivo` -> `core/cronograma/grade_extensivo.json`; tabela `plano_tarefas`; `tools/plano.py` (`--semear`, `--listar`, `--concluir ID --sessao N`, `--cortar ID`, `--mover ID --semana N`, `--revisar-area AREA`); `day_plan.py` lendo a tabela; contrato `cronograma-contract.md` v1.3.
+- P2: `sessoes_bulk.tarefa_id`; `registrar_sessao_bulk.py --tarefa ID`; `tools/plano.py --backfill-sessoes` (dry-run/COUNT-ASSERT); `tools/listas.py`.
+- P3: `tools/painel.py --html` -> `artifacts/painel.html` (publicado pelo agente no fechamento); `importar_sessoes.py --abandonada` executado; lápides em `/importar-planilha` e `/cronograma` (`--sync-drive`).
+- P4: `tools/fsrs_queue.py --export-player` (JSON do lote) + template `artifacts/player.html` + `tools/fsrs_queue.py --record-lote ARQUIVO` (dry-run + COUNT-ASSERT, 1 nota por card, chama `record_review`); contrato `revisao-calibrada-contract.md` v1.4 (o player é a Fase DRENAR; Invariantes A/C/F preservados).
 
 ## Anti-scope
 
-- Editar à mão o Dashboard/xlsx do Drive; scraping de listas do Estratégia; import em massa dos Medcards; migrar o FSRS para Anki; reintroduzir Streamlit; mudar `stability`/`difficulty` de qualquer card.
+- Editar à mão o Dashboard/xlsx do Drive; exportar Sheet; scraping de listas do Estratégia.
+- Botão "aposentar" no player; Revisão Direcionada dentro do player; migrar o FSRS para Anki; qualquer UI fora de Artifact (zero Streamlit).
+- Import em massa dos Medcards; alterar `stability`/`difficulty`; tocar `taxonomia_cronograma` e `review_log` por estas partes.
+- Revisar o status de tarefas fora de uma passada explícita com o usuário (nada é marcado "feito" por inferência).
 
-## Open questions (para o usuário)
+## Technical Context
 
-1. Drive deixa de ser SSOT (P3) -- confirma? Alternativa: o agente gera um Sheet novo por semana e o antigo fica congelado.
-2. Poda lote 1: aprovar a lista dos aposentados sem histórico (número no dry-run da s183).
-3. Player (P4): desktop-first com teclado, ou celular-first com toque? Define o layout.
+- `app/utils/db.py` é o único arquivo com `import sqlite3` (conventions §Database access); writers novos passam por ele e entram na allowlist de `tools/test_writer_allowlist.py`. Padrão `db-access-layer.md`.
+- `tools/cronograma.py` já deriva `grade.json` do PDF da Reta Final (PyPDF2); o parser do extensivo foi prototipado na s183 (52 semanas, 735 tarefas, `paginas_livro`, `n_links_questoes`) e vira `--rebuild-extensivo`. Fronteira do contrato: read-only no db (o único write da feature de cronograma é o ponteiro textual) -- **P1 muda isso e precisa versionar `cronograma-contract.md`** (v1.3) para declarar `plano_tarefas` como tabela da feature.
+- `day_plan.py` hoje lê grade + `preparacao_estado.cronograma_conclusao_drive` (`_conclusao_drive`, `_cronograma_hoje`, `_ordenar_por_drive`); P1 substitui essas três por uma leitura de `plano_tarefas`.
+- `fsrs_queue.py --list` já emite o lote em JSON e `--record CARD_ID --rating --reason` grava por `record_review` (único caminho; balanceador e blackout dentro). P4 só embrulha: exporta o lote e reimporta as notas.
+- `importar_sessoes.py --abandonada MOTIVO` já existe (F35, s176) e é o mecanismo para congelar o Drive.
+- Padrões: `warn-first-check.md` (regra nova nasce WARN), `error-insertion-pipeline.md`, `agent-workflow-protocol.md` (skill = referência atômica; workflow = orquestração; toda flag nova documentada na skill dona -- gate D5 BLOQUEIA).
+- Orçamento: <= 6 arquivos por task (index) -> P1 e P4 vão se dividir em partes no gen-spec.
+
+## Open Questions
+
+- Capacidade de estado do Artifact para o player (P4): confirmar no skill `artifact-capabilities` qual capability guarda estado por viewer que o agente consegue ler de volta; se nenhuma servir, o fallback v0 é a página gerar um bloco de texto com as notas que o usuário cola no chat.
+- Data do ENAMED 2027 (assumida ~set/2027) e horas na residência (12-15 h/sem) seguem assunções para a Fase 2 do plano.

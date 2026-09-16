@@ -1560,3 +1560,213 @@ def get_serie_blocos(piso_questoes=15, ultimos=None, incluir_simulado=False):
     if ultimos:
         df = df.tail(int(ultimos))
     return df
+
+
+# --- Plano de estudo como DADO (`plano_tarefas`; PRD plano-ssot-e-cards-v2, part-2) ---
+#
+# O "plano" era a soma de `grade.json` (calendário do PDF), do snapshot do Drive e da
+# cabeça do usuário. Aqui ele vira linha de banco: uma tarefa por linha, com a FONTE
+# declarada (extensivo / reta final / custom) e o status inicial carregando a ORIGEM
+# (`origem_conclusao`), porque o sinal do Dashboard é aproximado por confissão do
+# usuário. Semear NUNCA infere conclusão: sem match, a linha nasce `pendente`.
+#
+# O semeador vive em `tools/plano.py` (camada fina, não abre `sqlite3` próprio).
+
+FONTES_PLANO = ("extensivo", "rf", "custom")
+STATUS_PLANO = ("pendente", "feita", "cortada")
+
+#: Blocos de peso da prova da UERJ. Agrupamento de LEITURA (filtro do `--listar`),
+#: não coluna: bloco é derivado de `area`, e área já tem vocabulário único (F89).
+#: Toda área fora do mapa é `CM` -- inclusive as clínicas que a Fase 1 corta.
+BLOCOS_UERJ = {
+    "MFC": ("Preventiva",),
+    "PED": ("Pediatria",),
+    "CIR": ("Cirurgia",),
+    "GO": ("Ginecologia", "Obstetrícia"),
+}
+
+#: Campos de que a SEMEADURA é dona e que ela pode reescrever num re-seed. `status`,
+#: `data_conclusao`, `sessao_bulk_id` e `origem_conclusao` ficam de FORA de propósito:
+#: são progresso (part-3), e re-semear não pode apagar o que foi vivido.
+CAMPOS_SEMEADOS = ("semana_plano", "ordem", "area", "tema", "tipo", "tipo_norm",
+                   "url_lista", "q_previstas", "nota")
+
+_COLUNAS_PLANO = ("id", "fonte", "ref_semana_fonte", "tarefa_fonte", "semana_plano",
+                  "ordem", "area", "tema", "tipo", "tipo_norm", "url_lista",
+                  "q_previstas", "status", "data_conclusao", "sessao_bulk_id",
+                  "origem_conclusao", "nota", "criado_em", "atualizado_em")
+
+
+def bloco_de(area):
+    """Área canônica -> bloco UERJ (`MFC`/`PED`/`CIR`/`GO`/`CM`). Função pura."""
+    for bloco, areas in BLOCOS_UERJ.items():
+        if area in areas:
+            return bloco
+    return "CM"
+
+
+def _ensure_plano_table(conn):
+    """DDL idempotente de `plano_tarefas` (mesmo padrão de `_ensure_preparacao_table`).
+
+    `UNIQUE(fonte, ref_semana_fonte, tarefa_fonte)` é o que torna a semeadura
+    idempotente e permite re-rodar depois de um rebuild da grade. Fonte sem semana
+    própria (custom) usa `ref_semana_fonte = 0`, nunca NULL: no SQLite dois NULLs são
+    distintos num UNIQUE, e a chave deixaria de deduplicar em silêncio.
+    """
+    conn.execute('''
+        CREATE TABLE IF NOT EXISTS plano_tarefas (
+            id                INTEGER PRIMARY KEY AUTOINCREMENT,
+            fonte             TEXT NOT NULL CHECK (fonte IN ('extensivo','rf','custom')),
+            ref_semana_fonte  INTEGER,
+            tarefa_fonte      INTEGER,
+            semana_plano      INTEGER,
+            ordem             INTEGER,
+            area              TEXT,
+            tema              TEXT,
+            tipo              TEXT,
+            tipo_norm         TEXT,
+            url_lista         TEXT,
+            q_previstas       REAL,
+            status            TEXT NOT NULL DEFAULT 'pendente'
+                              CHECK (status IN ('pendente','feita','cortada')),
+            data_conclusao    TEXT,
+            sessao_bulk_id    INTEGER,
+            origem_conclusao  TEXT,
+            nota              TEXT,
+            criado_em         TEXT,
+            atualizado_em     TEXT,
+            UNIQUE (fonte, ref_semana_fonte, tarefa_fonte)
+        )
+    ''')
+    conn.execute('CREATE INDEX IF NOT EXISTS ix_plano_semana '
+                 'ON plano_tarefas (semana_plano, ordem)')
+
+
+def _chaves_plano(conn):
+    """Chaves ja gravadas. Tabela inexistente devolve conjunto VAZIO em vez de criar
+    a tabela: o dry-run tem que ser read-only de verdade, DDL inclusive."""
+    try:
+        return {(r[0], r[1], r[2]) for r in conn.execute(
+            "SELECT fonte, ref_semana_fonte, tarefa_fonte FROM plano_tarefas")}
+    except sqlite3.OperationalError:
+        return set()
+
+
+def _validar_linha_plano(linha):
+    """Gate de porta: fonte/status do vocabulário e ÁREA validada (F89).
+
+    `area` ausente é DECLARAÇÃO de que a fonte não tem área canônica (o `Multi` das
+    tarefas de Radiologia / 'Todas as Disciplinas' do extensivo). Isso é dívida
+    visível -- o semeador conta e imprime --, não um chute. Área PRESENTE e fora do
+    vocabulário é recusada por `validar_area`, como em todo writer.
+    """
+    fonte = (linha.get("fonte") or "").strip()
+    if fonte not in FONTES_PLANO:
+        raise ValueError(f"fonte invalida: {fonte!r} (validas: {list(FONTES_PLANO)})")
+    status = (linha.get("status") or "pendente").strip()
+    if status not in STATUS_PLANO:
+        raise ValueError(f"status invalido: {status!r} (validos: {list(STATUS_PLANO)})")
+    area = linha.get("area")
+    if area is not None and str(area).strip():
+        from app.utils.areas import validar_area
+        area = validar_area(area, origem=f"plano_tarefas[{fonte}]")
+    else:
+        area = None
+    return fonte, status, area
+
+
+def plano_upsert_tarefas(rows, aplicar=True):
+    """Semeia/atualiza `plano_tarefas`. Devolve `{novas, existentes, ids_novos}`.
+
+    Idempotente por `UNIQUE(fonte, ref_semana_fonte, tarefa_fonte)`: a 2a execução
+    insere 0 e só reescreve `CAMPOS_SEMEADOS` da linha já existente.
+
+    `aplicar=False` faz a CONTA sem escrever -- é o mesmo caminho de código que o
+    `--apply` usa para medir, então o dry-run não pode divergir do apply. A validação
+    de área roda ANTES de qualquer escrita: área fantasma derruba o lote inteiro.
+    """
+    preparadas = []
+    for linha in rows:
+        fonte, status, area = _validar_linha_plano(linha)
+        preparadas.append((linha, fonte, status, area))
+
+    conn = get_connection()
+    try:
+        if aplicar:
+            _ensure_plano_table(conn)
+        existentes = _chaves_plano(conn)
+        chaves = [(f, l.get("ref_semana_fonte"), l.get("tarefa_fonte"))
+                  for l, f, _s, _a in preparadas]
+        novas = [k for k in chaves if k not in existentes]
+        if not aplicar:
+            # dry-run NAO cria nem a tabela: "nao grava" inclui DDL.
+            return {"novas": len(novas), "existentes": len(chaves) - len(novas),
+                    "ids_novos": []}
+        ts = carimbo()
+        ids_novos = []
+        for (linha, fonte, status, area), chave in zip(preparadas, chaves):
+            cur = conn.execute('''
+                INSERT INTO plano_tarefas
+                    (fonte, ref_semana_fonte, tarefa_fonte, semana_plano, ordem, area,
+                     tema, tipo, tipo_norm, url_lista, q_previstas, status,
+                     origem_conclusao, nota, criado_em, atualizado_em)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ON CONFLICT (fonte, ref_semana_fonte, tarefa_fonte) DO UPDATE SET
+                    semana_plano  = excluded.semana_plano,
+                    ordem         = excluded.ordem,
+                    area          = excluded.area,
+                    tema          = excluded.tema,
+                    tipo          = excluded.tipo,
+                    tipo_norm     = excluded.tipo_norm,
+                    url_lista     = excluded.url_lista,
+                    q_previstas   = excluded.q_previstas,
+                    nota          = excluded.nota,
+                    atualizado_em = excluded.atualizado_em
+            ''', (fonte, chave[1], chave[2],
+                  linha.get("semana_plano"), linha.get("ordem"), area,
+                  linha.get("tema"), linha.get("tipo"), linha.get("tipo_norm"),
+                  linha.get("url_lista"), linha.get("q_previstas"), status,
+                  linha.get("origem_conclusao"), linha.get("nota"), ts, ts))
+            if chave not in existentes:
+                ids_novos.append(cur.lastrowid)
+        conn.commit()
+        return {"novas": len(novas), "existentes": len(chaves) - len(novas),
+                "ids_novos": ids_novos}
+    finally:
+        conn.close()
+
+
+def plano_listar(semana=None, bloco=None, status=None, fonte=None):
+    """Leitura de `plano_tarefas` (read-only): lista de dicts com `bloco` derivado de
+    `area`. Filtros combinam por AND; `bloco` é aplicado em Python porque a coluna
+    não existe (derivada, nunca duplicada)."""
+    colunas = [c for c in _COLUNAS_PLANO if c not in ("criado_em", "atualizado_em")]
+    conn = get_connection()
+    try:
+        sql = "SELECT " + ", ".join(colunas) + " FROM plano_tarefas"
+        onde, params = [], []
+        if semana is not None:
+            onde.append("semana_plano = ?")
+            params.append(int(semana))
+        if status:
+            onde.append("status = ?")
+            params.append(str(status))
+        if fonte:
+            onde.append("fonte = ?")
+            params.append(str(fonte))
+        if onde:
+            sql += " WHERE " + " AND ".join(onde)
+        sql += (" ORDER BY CASE WHEN semana_plano IS NULL THEN 1 ELSE 0 END, "
+                "semana_plano, ordem, fonte, ref_semana_fonte, tarefa_fonte")
+        try:
+            linhas = [dict(zip(colunas, r))
+                      for r in conn.execute(sql, tuple(params)).fetchall()]
+        except sqlite3.OperationalError:
+            linhas = []      # plano ainda nao semeado: leitura nao cria tabela
+    finally:
+        conn.close()
+    for d in linhas:
+        d["bloco"] = bloco_de(d.get("area"))
+    if bloco:
+        linhas = [d for d in linhas if d["bloco"] == bloco]
+    return linhas

@@ -280,3 +280,38 @@ portadores do gate.
 `--set-semana` e `--show` são **mutuamente exclusivos e obrigatórios** (um dos dois). A distinção
 que este CLI carrega: semana de **conteúdo** ≠ semana de **calendário** — o atraso entre as duas é
 a posição real, e o derivador do cronograma é `tools/cronograma.py` (assinatura em `cronograma.md`).
+
+### `tools/plano.py` -- o plano de estudo como DADO (`plano_tarefas`)
+
+| Flag | Função |
+|---|---|
+| `--semear` | Semeia `plano_tarefas` das 3 fontes (extensivo, Reta Final pendente, custom). **Dry-run é o default.** |
+| `--dry-run` | Explicita o default do `--semear`: mede, imprime o COUNT-ASSERT e **não grava**. |
+| `--apply` | Grava. Exige `--expect N`. Mutuamente exclusivo com `--dry-run`. |
+| `--expect N` | COUNT-ASSERT: N de linhas **NOVAS** esperadas. Difere do medido na hora -> **recusa (exit 2)** sem gravar nada. Na 2a execução o N correto é `0` (idempotência). |
+| `--listar` | Lista a tabela (read-only). Mutuamente exclusivo com `--semear`. |
+| `--semana N` | Filtro do `--listar`: semana do **plano** (não a da fonte). |
+| `--bloco {MFC,PED,CIR,GO,CM}` | Filtro do `--listar`: bloco de peso UERJ, **derivado** de `area` (`MFC`=Preventiva, `GO`=Ginecologia+Obstetrícia, `CM`=o resto). Não é coluna. |
+| `--status {pendente,feita,cortada}` | Filtro do `--listar`. |
+| `--fonte {extensivo,rf,custom}` | Filtro do `--listar`. |
+| `--json` | Saída do `--listar` em JSON (uma linha por tarefa, com `bloco`). |
+
+As três fontes, todas versionadas em `core/cronograma/`: `grade_extensivo.json` (735 tarefas /
+52 semanas, part-1) · `grade.json` (Reta Final -- entram só as **pendentes** de S17-S28) ·
+`plano_custom.json` (editável à mão). O status inicial vem de `dashboard_snapshot.json`, snapshot
+**congelado** do Drive (`origem_conclusao=dashboard_2026-09-10`) -- nunca se lê o Drive em runtime
+(`cronograma-contract` Cláusula 5b).
+
+🔴 **Semear nunca infere conclusão.** Nome que não casa entre o PDF e o Dashboard nasce `pendente`,
+e o número de não-casados é impresso no dry-run. A `semana_plano` é decidida por duas funções
+puras testadas (`ordenar_fase1`, para as 7 semanas até a prova da UERJ em 01/11, e `ordenar_fase2`,
+para o extensivo S21-S48 a partir da semana 8) -- não por regra em JSON. Área fora de
+`core/areas.json` é **recusada na porta** (F89); rótulo que a fonte não tem como resolver (o `Multi`
+das tarefas de Radiologia) grava `area=NULL` **com a nota dizendo qual rótulo era**, que é dívida
+declarada e não chute.
+
+Escrita só por `app/utils/db.py::plano_upsert_tarefas` (o CLI é camada fina e não abre `sqlite3`
+próprio); leitura por `plano_listar`. Idempotente por `UNIQUE(fonte, ref_semana_fonte,
+tarefa_fonte)`: re-semear insere 0 e reescreve apenas `CAMPOS_SEMEADOS` -- `status`,
+`data_conclusao`, `sessao_bulk_id` e `origem_conclusao` são **progresso** e ficam fora do UPDATE.
+Spec `.vibeflow/specs/plano-ssot-e-cards-v2-part-2.md`.

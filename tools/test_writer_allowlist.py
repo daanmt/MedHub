@@ -24,9 +24,12 @@ ALLOWLIST = {
     "app/memory/store.py": {"memory_store"},
     # reforja_marks (B2, s176): append-only, e `app/utils/db.py` e o UNICO writer --
     # o CLI `tools/reforja.py` e camada fina e nao abre sqlite3 proprio.
+    # plano_tarefas (PRD plano-ssot-e-cards-v2 P1, s183): o plano de estudo como DADO.
+    # `tools/plano.py` NAO aparece nesta lista de proposito -- ele e camada fina e nao
+    # escreve nada por conta propria; todo INSERT/UPDATE passa por `plano_upsert_tarefas`.
     "app/utils/db.py": {"cronograma_progresso", "flashcards", "fsrs_cards", "fsrs_revlog",
-                        "habilidades", "preparacao_estado", "questao_habilidades", "review_log",
-                        "reforja_marks"},
+                        "habilidades", "plano_tarefas", "preparacao_estado",
+                        "questao_habilidades", "review_log", "reforja_marks"},
     "tools/backfill_review_log.py": {"review_log"},
     # cards_prune (PRD plano-ssot-e-cards-v2 P5, s183): unico writer de EXCLUSAO de card;
     # apaga as 4 tabelas juntas, com backup + export + COUNT-ASSERT (spec part-5).

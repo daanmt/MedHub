@@ -229,13 +229,13 @@ Qualquer duplicação semântica entre workflow e skill é defeito por contrato.
 | `tools/backup_db.py` | Backup do ipub.db com integrity_check + rotacao keep-5 EMBUTIDA | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.agents/workflows/curar-cards.md` (+7) |
 | `tools/card_checks.py` | biblioteca ÚNICA de predicados de qualidade de flashcard | `.agents/skills/source-command-estilo-flashcard/SKILL.md`, `.claude/commands/estilo-flashcard.md` (+17) |
 | `tools/card_self_sufficiency.py` | Check de auto-suficiencia de flashcard (check 8 do auto_check -- spec | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.claude/commands/engenharia-cli.md` (+4) |
-| `tools/cards_prune.py` | poda de flashcards APOSENTADOS do ipub.db [DESTRUTIVO], dry-run por default | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.agents/skills/source-command-revisar/SKILL.md` (+7) |
+| `tools/cards_prune.py` | poda de flashcards APOSENTADOS do ipub.db [DESTRUTIVO], dry-run por default | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.agents/skills/source-command-revisar/SKILL.md` (+9) |
 | `tools/cards_regen_queue.py` | fila de regeneração de flashcards em JSON | `.agents/skills/source-command-estilo-flashcard/SKILL.md`, `.claude/commands/estilo-flashcard.md` (+1) |
 | `tools/check_fk_orphans.py` | varredura read-only de integridade do ipub.db | `.claude/settings.local.json` (+3) |
 | `tools/cli_signature_check.py` | Check de ASSINATURA CANONICA de CLI (D5, s177 -- AGENTE.md secao 7.2) | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.claude/commands/engenharia-cli.md` (+3) |
 | `tools/cobertura_conhecimento.py` | cobertura_conhecimento -- relatorio read-only de cobertura de SSOT clinico (F16a) | `.agents/skills/source-command-extrair-pdf/SKILL.md`, `.claude/commands/extrair-pdf.md` (+3) |
 | `tools/consistencia_check.py` | Varredura unica de CONSISTENCIA entre registros (item 1.8, s177) | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.claude/commands/engenharia-cli.md` (+3) |
-| `tools/cronograma.py` | Derivador único do cronograma de Reta Final (read-only) | `.agents/skills/source-command-cronograma/SKILL.md`, `.agents/skills/source-command-engenharia-cli/SKILL.md` (+23) |
+| `tools/cronograma.py` | Derivador único do cronograma de Reta Final (read-only) | `.agents/skills/source-command-cronograma/SKILL.md`, `.agents/skills/source-command-engenharia-cli/SKILL.md` (+25) |
 | `tools/day_plan.py` | Plano do Dia para o boot proativo | `.agents/skills/source-command-cronograma/SKILL.md`, `.agents/skills/source-command-engenharia-cli/SKILL.md` (+37) |
 | `tools/dedup_taxonomia.py` | colapsa linhas duplicadas (area,tema) em taxonomia_cronograma | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.agents/workflows/curar-cards.md` (+5) |
 | `tools/detect_clones.py` | near-duplicates de flashcards POR TEMA | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.agents/workflows/curar-cards.md` (+1) |
@@ -258,6 +258,7 @@ Qualquer duplicação semântica entre workflow e skill é defeito por contrato.
 | `tools/ledger_self.py` | Ledger-of-self: memoria estruturada dos WARNs do harness (degrau 2 da auto-evolucao) | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.claude/commands/engenharia-cli.md` (+11) |
 | `tools/normalize_taxonomia.py` | saneia taxonomia_cronograma (Fase 1 da curadoria de cards, s097) | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.agents/workflows/curar-cards.md` (+5) |
 | `tools/performance.py` | performance.py | `.agents/skills/source-command-cronograma/SKILL.md`, `.agents/skills/source-command-performance/SKILL.md` (+16) |
+| `tools/plano.py` | o plano de estudo como DADO (`plano_tarefas`): semeadura e listagem | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.claude/commands/engenharia-cli.md` (+25) |
 | `tools/preparacao.py` | posicao SSOT da preparacao no cronograma (PRD orquestracao, part-1) | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.agents/skills/source-command-importar-planilha/SKILL.md` (+11) |
 | `tools/reachability_check.py` | check de ALCANCABILIDADE v0 (consolidacao part-6) | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.claude/commands/engenharia-cli.md` (+4) |
 | `tools/recurate_cards.py` | o reescritor in-place CANONICO de flashcards | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.agents/workflows/curar-cards.md` (+9) |

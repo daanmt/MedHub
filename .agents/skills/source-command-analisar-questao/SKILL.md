@@ -122,6 +122,18 @@ Formulação do usuário em 15/09/2026, após o ENAMED 2026 (75/100, *"notei mai
 - **Cada erro é dissecado por inteiro:** o nó que quebrou **e** os nós vizinhos que a questão ilumina (as alternativas erradas como portas -- 6o princípio de `estilo-flashcard.md`). Sobriedade significa: sem rótulo apressado de padrão de execução, sem "erro tolo" como diagnóstico, sem suavizar quando o raciocínio declarado está errado.
 - **A régua de resultado é a dele, não a média da prova:** em prova de dificuldade média/fácil, o sólido esperado é **80-85** com margem de sorte até 90-95; acerto no chute conta como `incerteza` (§10), nunca como acerto.
 
+
+### 3.3 Autópsia do bloco -- profundidade ENAMED em todo bloco de questões (CONTRATO do usuário, s183)
+
+Formulação do usuário em 16/09/2026: *"Quero que a análise das questões passe a ser da mesma profundidade que você conduziu a análise do ENAMED. Vou tratar meus erros desta forma a partir de hoje, e quero sua ajuda para gerenciar os cards -- sobretudo no aspecto de qualidade deles."*
+
+- **Todo bloco de questões gera UMA página "Autópsia"** (Artifact HTML + cópia em `artifacts/autopsia-AAAA-MM-DD.html`; vários blocos no mesmo dia = uma página com seções). Template de estrutura: `artifacts/enamed-2026-comentado.html` (card por questão, filtro por área/veredito, busca).
+- **Por questão errada OU chutada (`incerteza`), a página carrega, nesta ordem:** enunciado; cadeia de habilidades numerada com **o elo que quebrou marcado**; a **comporta** (o dado que exclui a alternativa marcada -- `feedback_bug_discriminador_exclui`); a armadilha da banca; **fonte verificada** (diretriz BR/PCDT/sociedade ou PubMed, com URL -- `evidence-governance.md`); **veredito** `CONCORDA` / `CONTESTÁVEL` com o motivo; o **racional declarado** do usuário (§3.2 -- se não veio, a pergunta fica registrada na página e o veredito do elo fica `pendente`); e os **cards cunhados** com o teste de regenerabilidade explícito (`estilo-flashcard.md §Triagem`: o que ficou e o que foi cortado, um por linha).
+- **A profundidade não muda o orçamento por tipo (§11):** questão Direta rende 2-4 linhas e 1 card na página; Fluxograma marca o nó; Raciocínio recebe a cadeia inteira. A página é a régua de completude, não licença para 20 min por questão.
+- **Persistência continua igual:** `insert_questao.py` por erro (§9), `habilidades.py --add` para os chutes (§10), armadilha somada ao resumo (§4). A página **não é** o registro; ela é a leitura. Sem a linha no banco, a Autópsia é prosa (F38).
+- **Régua F93 inalterada (§0):** até ~8 erros o principal analisa e renderiza; acima disso, **um** subagente por bloco com `model` explícito, retorno <= 3k + arquivo, e todo número/fonte load-bearing re-medido pelo principal antes de entrar na página.
+- **Gestão de qualidade dos cards é parte do rito:** cada card novo passa pelo teste de regenerabilidade antes de `insert`; card que surgir defeituoso no DRENAR vai para a fila de reforja com motivo (`reforja.py`), nunca é "consertado de cabeça" no chat.
+
 ---
 
 ## 4. O que Extrair para o Resumo

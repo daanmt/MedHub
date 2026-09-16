@@ -1,7 +1,7 @@
 # HANDOFF.md -- ESTADO OPERACIONAL CURTO
 *Atualizado: 2026-09-16 (tarde) -- **s183 (PLANEJAMENTO)**: **hibrido APROVADO** (RF rescopada ate 01/11 + extensivo S21-S48 como espinha do ENAMED 2027); **norte reordenado** (Psiquiatria/IPUB via ENAMED 2027, alvo 95%; UERJ/MFC = plano B; USP fora); Dashboard do Drive = catalogo do EXTENSIVO; corpus INEP (23 PDFs) + cadernos UERJ 2021-2026 em `simulados/`; Medcards = banco de referencia. Volume 7.326 (sem estudo hoje).*
 
-> 🔴 **RECURSOS DO ENAMED ATE 17/09 (acao do usuario):** Q68, Q75, Q6 (+Q48, Q5, Q99) -- fundamentos em `artifacts/enamed-2026-comentado.html`. **Inscricao UERJ fecha 01/10.** Permit de engenharia segue CONSUMIDO.
+> 🔴 **RECURSOS DO ENAMED ATE 17/09 (acao do usuario):** Q68, Q75, Q6 (+Q48, Q5, Q99) -- fundamentos em `artifacts/enamed-2026-comentado.html`. **Inscricao UERJ fecha 01/10.** **Permit de engenharia NOVO (16/09, verbatim no PRD)**: PRD `plano-ssot-e-cards-v2`, executar por spec com GO do `/ai-eng` (silencio = GO).
 
 ## > Proximo passo imediato
 
@@ -12,10 +12,10 @@
 5. 🧭 **Termometro mensal INEP:** REVALIDA 2025/2 como 1o (data a marcar). ~95% no INEP calibra o 90-95+ do ENAMED.
 6. 🔴 Reforja: 283 abertas (sem marca nova).
 
-## Fila de engenharia -- permit CONSUMIDO; itens novos por spec (GO do `/ai-eng`)
+## Fila de engenharia -- permit NOVO de 16/09 (PRD plano-ssot-e-cards-v2); por spec, GO do `/ai-eng`
 
-- 🆕 **PRD `plano-ssot-e-cards-v2` (s183, permit do usuario em 16/09 -- *"planejamento mais estavel, orquestrado por voce"*):** 6 partes em ordem P6 Autopsia diaria -> P5 poda (lote 1 = **125 aposentados sem revlog/reforja** de 192; 67 com historico ficam) -> P1 `plano_tarefas` SSOT + `grade_extensivo.json` -> P2 ledger de listas (`sessoes_bulk.tarefa_id`, `tools/listas.py`) -> P3 painel gerado (Drive deixa de ser SSOT) -> P4 player de cards em Artifact. Abertas p/ o usuario: Drive vira historico?; aprovar lote 1; player desktop ou celular-first. `.vibeflow/prds/plano-ssot-e-cards-v2.md`.
-- 🆕 **E1** `grade_extensivo.json` derivado do `[52 wk] Cronograma Extensivo.pdf` (parser prototipo no scratch da s183): o `Realizada?` do Dashboard passa a casar 1:1 (674/735 por nome) e a familia **F72** morre. **E2** CLI `tools/medcards.py --query --tema` (espelho do `emed_flashcards`, `html.parser`). **F108** extrator regex de HTML engoliu cutoffs (123 cards; licao na memoria).
+- 🆕 **PRD `plano-ssot-e-cards-v2` (s183, permit do usuario em 16/09 -- *"planejamento mais estavel, orquestrado por voce"*):** 6 partes em ordem P6 Autopsia diaria -> P5 poda (lote 1 = **125 aposentados sem revlog/reforja** de 192; 67 com historico ficam) -> P1 `plano_tarefas` SSOT + `grade_extensivo.json` -> P2 ledger de listas (`sessoes_bulk.tarefa_id`, `tools/listas.py`) -> P3 painel gerado (Drive deixa de ser SSOT) -> P4 player de cards em Artifact. **Decididas 16/09:** banco e a fonte (Drive congelado); **poda lote 1 EXECUTADA** (125 cards, backup + export `artifacts/backups/pruned_20260916_152847.json`, orfaos 0; aposentados 192 -> 67); player desktop-first. **P6 entregue** (`analisar-questao.md §3.3`), **P5 entregue** (`cards_prune.py`, suite 627). **Proxima spec: P1** (`plano_tarefas` + `grade_extensivo.json`). `.vibeflow/prds/plano-ssot-e-cards-v2.md`.
+- 🆕 **E1** `grade_extensivo.json` derivado do `[52 wk] Cronograma Extensivo.pdf` (parser prototipo no scratch da s183): o `Realizada?` do Dashboard passa a casar 1:1 (674/735 por nome) e a familia **F72** morre. **E2** CLI de consulta dos Medcards por tema (a criar; espelho do `emed_flashcards`, com parser de HTML). **F108** extrator regex de HTML engoliu cutoffs (123 cards; licao na memoria).
 - Abertos herdados: F98-F107 (s182). Decisoes empilhadas do OPERADOR: (a)-(j) da s182 + **(k) conciliar 7 areas divergentes na planilha** (Obst -59, Dermato +41, Cirurgia +40, Ortopedia -27, Endocrino -24, Pneumo +16, Gineco -26).
 
 ## Estado por frente
@@ -27,7 +27,7 @@
 - **Conteudo:** 136 resumos em resumos/. [derivado: glob] Preventiva: **so 3/22 decks pagam aluguel na UERJ** (MFC, Idoso, Testes Dx); P4, polifarmacia, paliativos e MCCP **sem resumo**.
 - **Erros & Cards:** 1041 erros registrados · 1476 cards ativos · 2 needs_qualitative na fila · taxonomia 302 temas. [derivado: db] Reforja 283.
 - **Cronograma:** Dashboard do Drive = **707 tarefas do EXTENSIVO** (nao da RF); feitas 178 (25%), temas tocados 39%; entrada util = **S21**. W1 gravado 16/09 (planilha 6.349 x db 7.326).
-- **Engenharia:** `.gitignore` cobre `*.apkg` e `Medcards 2022/`; suite 621; ledger 109 ids (+E1, E2, F108 propostos).
+- **Engenharia:** `.gitignore` cobre `*.apkg` e `Medcards 2022/`; **suite 627**; `cards_prune.py` = unico caminho de exclusao de card; ledger 109 ids (+E1, E2, F108 propostos; F38 falso positivo de 13/09 declarado no teste vivo).
 - **Posicao:** conteudo S17 (nominal S25, atraso 8 sem) [derivado: preparacao_estado] -- na RF; no extensivo, ver linha Cronograma.
 - **Datas:** fim da grade 09/10 · **UERJ 01/11** · inscricao UERJ ate **01/10** · recurso ENAMED ate **17/09**.
 

@@ -28,6 +28,9 @@ ALLOWLIST = {
                         "habilidades", "preparacao_estado", "questao_habilidades", "review_log",
                         "reforja_marks"},
     "tools/backfill_review_log.py": {"review_log"},
+    # cards_prune (PRD plano-ssot-e-cards-v2 P5, s183): unico writer de EXCLUSAO de card;
+    # apaga as 4 tabelas juntas, com backup + export + COUNT-ASSERT (spec part-5).
+    "tools/cards_prune.py": {"flashcards", "fsrs_cards", "fsrs_revlog", "reforja_marks"},
     "tools/day_plan.py": {"plano_dia"},
     "tools/dedup_taxonomia.py": {"flashcards", "questoes_erros", "taxonomia_cronograma"},
     "tools/habilidades.py": {"habilidades", "questao_habilidades"},

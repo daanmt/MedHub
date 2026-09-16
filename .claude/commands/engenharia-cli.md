@@ -132,6 +132,23 @@ Resolve o que a dedup **não** pega: encoding/acento, área inválida fora de `c
 duplicata **conceitual** (mesmo tema, nomes diferentes), `[bulk]`/`Geral` vazios. Transação
 atômica, re-aponta FKs, recria `UNIQUE(area,tema)` no fim — duplicata restante causa rollback.
 
+### `tools/cards_prune.py` — poda de flashcards **[DESTRUTIVO]**, o único caminho de EXCLUSÃO
+
+| Flag | Função |
+|---|---|
+| `--criterio {aposentados-sem-historico}` | Critério nomeado de seleção (v0: `needs_qualitative=2` sem `fsrs_revlog` e sem `reforja_marks`). Novo critério entra por nome no código, nunca por SQL livre. |
+| `--ids A,B,C` | Ids explícitos (lote triado à mão); vence `--criterio`. Id inexistente é ignorado e o `--expect` denuncia. |
+| `--apply` | Grava (default: dry-run imprime N + ids). Exige `--expect`. |
+| `--expect N` | COUNT-ASSERT pré: N esperado; se diferir do N medido na hora, **recusa (exit 2)** sem rodar nem o backup. |
+| `--db PATH` | Caminho do banco (default: `ipub.db` da raiz). |
+
+Rito do `--apply`, nunca pulado: `backup_db.py` -> export das linhas das 4 tabelas para
+`artifacts/backups/pruned_<ts>.json` -> DELETE em UMA transação (`fsrs_revlog` -> `reforja_marks`
+-> `fsrs_cards` -> `flashcards`) -> COUNT-ASSERT pós (caiu exatamente N, nenhum id sobreviveu).
+Não existe flag para pular o backup. Não toca `questoes_erros`, taxonomia, `review_log`, nem
+`stability`/`difficulty`. Origem: PRD `plano-ssot-e-cards-v2` P5 (s183) -- lote 1 = 125 aposentados
+sem histórico; os 67 com histórico ficam até triagem. Spec `.vibeflow/specs/plano-ssot-e-cards-v2-part-5.md`.
+
 ### `tools/dedup_taxonomia.py` — colapsa `(area,tema)` duplicados **exatos**
 
 | Flag | Função |

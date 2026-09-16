@@ -2,7 +2,7 @@
 **Data:** 2026-09-16 (13h -> 17h30)
 **Ferramenta:** Claude Code / Fable 5.1 (principal) + 5 subagentes (Opus x3, Sonnet x2)
 **Continuidade:** Sessao 182 (ENAMED 2026 = 75/100)
-**Tipo:** PLANEJAMENTO (zero questoes, zero cards; engenharia so `.gitignore`)
+**Tipo:** PLANEJAMENTO + ENGENHARIA (zero questoes, zero cards; PRD + P6 + P5 executada)
 
 ---
 
@@ -47,6 +47,12 @@
 - **104 questoes em 6 edicoes, 100% fonte primaria.** 92,3% MFC clinica/ferramentas; SUS 3,8%; Epi 3,8%; **Etica 0/104**. Top: Prevencao quaternaria (19 mencoes; quase sempre 2a camada da vinheta), Saude do idoso (13), Testes diagnosticos/probabilidade pre-teste (12; a vinheta dor precordial + TE caiu nas 6 edicoes), Condicoes cronicas na APS (11; 0 desde 2024), Rastreamento (11), MCCP (11), Polifarmacia/desprescricao (8), Ciclos de vida (7), Paliativos/dor (6), Saude mental/AUDIT/Prochaska (5), Violencia (5), IVAS/ATB racional (5), Vigilancia/DO (5), Dengue (4), MBE (4).
 - Gap: `resumos/Preventiva/` tem 22 decks; **3 pagam aluguel** (MFC, Idoso, Testes Dx); nao existe resumo para P4, polifarmacia, paliativos nem MCCP. Mapeamento Gusso/Duncan por subtema em `simulados/uerj/UERJ_MFC_por_edicao_2021-2026.md §3.1`. Cadernos persistidos em `simulados/uerj/` (gitignored). 2019-2020 nao verificados (PDFs removidos da Cepuerj).
 
+### 1.7 Engenharia executada apos a 2a decisao do usuario (permit textual: *"planejamento mais estavel, orquestrado por voce"*)
+- **PRD `plano-ssot-e-cards-v2`** (`.vibeflow/prds/`): 6 partes -- P6 Autopsia diaria, P5 poda, P1 `plano_tarefas` SSOT + `grade_extensivo.json`, P2 ledger de listas, P3 painel gerado (Drive vira historico), P4 player de cards em Artifact. Tres decisoes por pergunta direta: **banco e a fonte** (Drive congelado; so investimento/mes manual), **poda lote 1 aprovada**, **player desktop-first**.
+- **P6 entregue como cláusula:** `analisar-questao.md §3.3 Autopsia do bloco` (CONTRATO s183) -- toda sessao de questoes gera `artifacts/autopsia-AAAA-MM-DD.html` com enunciado, cadeia + elo, comporta, armadilha, fonte com URL, veredito, racional declarado e cards com teste de regenerabilidade; orcamento por tipo (§11) e regua F93 inalterados. Espelho regenerado (`sync_skills`).
+- **P5 entregue e EXECUTADO:** `tools/cards_prune.py` (unico writer de exclusao; criterio nomeado, `--ids`, `--apply` exige `--expect`, backup + export + DELETE em 1 transacao + COUNT-ASSERT) + `tools/test_cards_prune.py` (6 testes, db sintetico, backup injetado) + allowlist + `pytest.ini` + `/engenharia-cli`. Spec `.vibeflow/specs/plano-ssot-e-cards-v2-part-5.md`. **Lote 1 no banco real:** dry-run 125 -> `--apply --expect 125` -> backup `artifacts/backups/ipub_backup_20260916_152847.db`, export `artifacts/backups/pruned_20260916_152847.json` (250 linhas), apagadas `fsrs_cards=125, flashcards=125, revlog=0, marks=0`; `check_fk_orphans` limpo. Cards: 1.668 -> **1.543** (ativos 1.476 intocados; aposentados 192 -> **67**, todos com historico).
+- **Harness:** 3 gates acusaram e foram atendidos sem silenciar -- (a) allowlist nao via `DELETE FROM {tabela}` em f-string (SQL virou literal); (b) G5 tabela §7.4 regenerada + G10 ponteiro futuro `tools/medcards.py` removido do HANDOFF; (c) **F38 falso positivo declarado**: o bloco ENAMED de 13/09 tem os 25 erros persistidos em 15/09 (ids 1019-1043, d+2, fora da janela d..d+1) -- instancia declarada no teste vivo com a causa, janela NAO alargada. Suite **621 -> 627**, `auto_check --changed` PASSED.
+
 ## 2. Decisoes tomadas (usuario, 16/09/2026)
 - **Hibrido APROVADO** (Cenario C). Fase 1: RF rescopada por peso UERJ ate 01/11 (2.760q). Fase 2: extensivo S21-S48 de 02/11 ate o ENAMED 2027.
 - **Norte reordenado:** foco nº1 = Psiquiatria/IPUB via ENAMED 2027 (corte 940, alvo 95%); UERJ/MFC = plano B. USP fora.
@@ -57,7 +63,7 @@
 RF S17-S28: 149 tarefas, **139 pendentes / 4.036q**. Prioridade 1 (MFC/PED/CIR/GO) 76 tarefas / 2.272q; CM 50 / 1.423q; cauda 13 / 341q. Orcamento 2.760: MFC-EMED ~210 (MFC Revisao 50, Saude do Idoso T+R 32, RpQ 41, Etica R 39, Financiamento ~50) · PED 564 · CIR 469 · GO ~790 · CM dirigida ~320 · 8 temas sem resumo 160 · treino MFC nos blocos Q81-100 da UERJ 2023-2026 + REVALIDA ~200. **Cortado ate 01/11:** Estatistica Medica (126), NRs (63), IVAS pt.2, Polo Posterior, Cirrose, DPOC, Derrame/Neoplasia pulmonar, Onco cutanea, Ortopedia.
 
 ## 4. Artefatos criados/modificados
-- `.gitignore` (+`*.apkg`, `Medcards 2022/`) · `simulados/inep/` (23 PDFs gitignored + `INVENTARIO.md`) · `simulados/uerj/` (13 PDFs gitignored + `UERJ_MFC_por_edicao_2021-2026.md`) · `HANDOFF.md` · `ESTADO.md` · `history/INDEX.md` · este log.
+- `tools/cards_prune.py`, `tools/test_cards_prune.py`, `tools/test_writer_allowlist.py`, `tools/test_erros_orfaos.py`, `pytest.ini`, `.claude/commands/{engenharia-cli,analisar-questao}.md` (+espelhos), `AGENTE.md §7.4` (tabela regenerada), `.vibeflow/prds/plano-ssot-e-cards-v2.md`, `.vibeflow/specs/plano-ssot-e-cards-v2-part-5.md` · `.gitignore` (+`*.apkg`, `Medcards 2022/`) · `simulados/inep/` (23 PDFs gitignored + `INVENTARIO.md`) · `simulados/uerj/` (13 PDFs gitignored + `UERJ_MFC_por_edicao_2021-2026.md`) · `HANDOFF.md` · `ESTADO.md` · `history/INDEX.md` · este log.
 - `preparacao_estado.planilha_snapshot` (W1) gravado. Nada escrito em `taxonomia_cronograma`, `sessoes_bulk`, FSRS ou `resumos/`.
 - Memoria: `project_norte_2027_psiquiatria_ipub`, `project_plano_hibrido_extensivo_2027`, `project_dashboard_drive_catalogo_extensivo`, `project_medcards_2022_corpus`, `project_anki_html_extraction_lesson` (+ ponteiros em `project_norte_uerj_mfc` e `reference_edital_uerj_2027`).
 
@@ -74,4 +80,4 @@ RF S17-S28: 149 tarefas, **139 pendentes / 4.036q**. Prioridade 1 (MFC/PED/CIR/G
 - Recursos do ENAMED ate 17/09 (usuario). Inscricao UERJ ate 01/10.
 - Divida FSRS: 106 vencidos (nao drenados hoje). Re-sondar #787/#597.
 - Frente MFC-UERJ: cunhar Prevencao Quaternaria, AMI, Raciocinio diagnostico quantitativo, MCCP, Polifarmacia, Paliativos, Rastreamento BR (2/semana).
-- Conciliar as 7 areas divergentes na planilha (usuario). E1/E2 por spec.
+- P1 (`plano_tarefas` + `grade_extensivo.json`) e a proxima spec; depois P2, P3, P4. Conciliar as 7 areas divergentes na planilha deixa de ser necessario quando P3 congelar o Drive -- registrar o delta uma vez e seguir pelo banco.

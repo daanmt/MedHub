@@ -168,8 +168,14 @@ def test_db_real_nao_ganha_orfao_novo():
     """O historico tem 1 orfao conhecido (2026-06-18, s085, Ictericia e Sepse
     Neonatal: 15 erros esperados, 0 registrados, 26 cards sem ancora). Se
     aparecer um SEGUNDO, alguem voltou a substituir insert_questao por --add."""
+    # 2026-09-13 (s182): FALSO POSITIVO da janela d..d+1, nao orfao -- o ENAMED foi
+    # domingo 13/09 (bulk com --data 2026-09-13) e os 25 erros foram analisados e
+    # persistidos na terca 15/09 (ids 1019-1043, data_registro 2026-09-15). Medido na
+    # s183. A janela NAO foi alargada (ver test_janela_de_credito_do_contrato_e_1);
+    # a instancia e declarada aqui com a causa, como manda AGENTE.md 10.8.
+    CONHECIDOS = {"2026-06-18", "2026-09-13"}
     orfaos = check_erros_orfaos() or []
-    novos = [o for o in orfaos if o[0] != "2026-06-18"]
+    novos = [o for o in orfaos if o[0] not in CONHECIDOS]
     assert not novos, f"orfao novo detectado: {novos}"
 
 

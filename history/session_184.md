@@ -30,7 +30,8 @@
 
 ### 1.4 `graphify --update` escopado
 - Deteccao incremental: 683 arquivos mudados desde 30/08 (104 codigo, 579 docs; 3 deletados). Re-extrair 579 docs custaria milhoes de tokens: escopo restrito a **43 portadores de governanca/ensino** (raiz, docs, workflows, contratos, skills, `session_170-183`) em 3 extratores Sonnet; **104 arquivos de codigo pelo AST** (gratis: 1.755 nos, 3.732 arestas); 536 docs mudados ficam **pendentes no manifesto** por desenho (`clear_semantic`), nao carimbados.
-- [RESULTADO DO GRAFO: ver §1.4b abaixo, preenchido no fechamento]
+- **Resultado:** grafo **1.940 -> 3.383 nos, 3.374 -> 5.993 arestas, 178 -> 253 comunidades**; 97% EXTRACTED; saude OK (0 dangling/missing/self-loop). 70 comunidades rotuladas a mao, 183 finas pelo no de maior grau. `graph.html` (3,1 MB) e `GRAPH_REPORT.md` regenerados; cost.json corrigido com os tokens reais dos extratores.
+- **Amarracao do contexto logico:** os 31 nos do `FUNDAMENTOS` entraram como arestas `implements` para os mecanismos (P9 -> estilo-flashcard + audit_card_atomicity; P12 -> aula-base; P4 -> /revisar; P5 -> gatilho hibrido + F100; P3 -> fsrs_balance; P6 -> fsrs_queue; P11 -> contrato FSRS; F109 -> F3), com centro de gravidade na comunidade "Revisao Calibrada - contrato v1.3". Pontes: `Skill: Revisar` (betweenness 0,078 -- onde o F112 vive), evidence-governance (0,053), Session 183 (0,052). God nodes: `get_connection()` 67, Session 183 47, `SQLiteMemoryStore` 34, AGENTE 27. Lacuna apontada: 191 nos fracos, incluindo `DORMENTE_DIAS = 21` e `REPETITION_WINDOW_DAYS` (constantes da curva por tema citadas por um portador so).
 
 ### 1.5 Portadores criados/atualizados
 - `docs/FUNDAMENTOS-APRENDIZAGEM.md` (novo; explicativo, nao normativo; P1-P17, ledger de friccoes, 6 secoes de fontes com forca de evidencia).
@@ -56,7 +57,7 @@
 `docs/FUNDAMENTOS-APRENDIZAGEM.md` · `PLANEJAMENTO-APRENDIZAGEM-2026-09-17.md` · `AUDITORIA_MEDHUB.md` · `AGENTE.md` · `README.md` · `docs/research/2026-09-17-0{1,2,3,4}-*.md` · `graphify-out/` (graph.json, GRAPH_REPORT.md, graph.html, manifest.json, cost.json) · `HANDOFF.md` · `ESTADO.md` · `history/INDEX.md` · este log. Nada escrito em `ipub.db`, `resumos/`, `core/contracts/`, `.claude/commands/`, `tools/`.
 
 ## 5. Custo dos subagentes (F93, clausula 10)
-Varredura 1 Opus 178.290 tokens / 16 min · Varredura 2 Sonnet 154.674 / 14 min · Varredura 3 Sonnet 161.177 / 12 min · Varredura 4 Sonnet 123.522 / 7 min = **617.663 tokens, ~49 min de filho, ~23 min de relogio (3 em paralelo + 1)**. Extratores graphify: [preenchido no fechamento]. Zero sub-delegacao; zero escrita fora do scratch; numeros load-bearing re-medidos pelo principal: rating semantics (codigo instalado + revlog), Kornell 90%/72% (abstract), Bastani +48%/-17% (PNAS), py-fsrs Optimizer (pacote 6.3.2 no `.venv`).
+Varredura 1 Opus 178.290 tokens / 16 min · Varredura 2 Sonnet 154.674 / 14 min · Varredura 3 Sonnet 161.177 / 12 min · Varredura 4 Sonnet 123.522 / 7 min = **617.663 tokens, ~49 min de filho, ~23 min de relogio (3 em paralelo + 1)**. Extratores graphify (Sonnet): chunk 1 477.932 / 30 min · chunk 2 262.134 / 21 min · chunk 3 269.827 / 24 min = **~1,01M tokens, ~75 min de filho, ~30 de relogio**. **Total da sessao: 7 spawns, ~1,63M tokens.** Zero sub-delegacao; zero escrita fora do scratch; numeros load-bearing re-medidos pelo principal: rating semantics (codigo instalado + revlog), Kornell 90%/72% (abstract), Bastani +48%/-17% (PNAS), py-fsrs Optimizer (pacote 6.3.2 no `.venv`).
 
 ## 6. Proximos passos
 - **Proximo ato de estudo:** lote do player (regime de divida: 115 vencidos, teto 90) e `/aula-base` D10 de Acido-Base + Potassio antes de re-drillar #787/#597.

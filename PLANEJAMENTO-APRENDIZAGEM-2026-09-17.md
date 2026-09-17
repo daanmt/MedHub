@@ -137,7 +137,28 @@ Ja abertos e reafirmados: **F107** (`insert_questao --errors-file --dry-run`, ho
 
 ## 6. Mapa do grafo (graphify --update, escopo de governanca e ensino)
 
-*Secao preenchida ao fim da atualizacao do grafo (3 extratores Sonnet em execucao no momento da escrita): tamanho antes/depois, god nodes, comunidades que tocam a camada de ensino, conexoes surpreendentes e a posicao do `FUNDAMENTOS` no grafo.*
+**O que foi feito.** `graphify --update` sobre o repo: deteccao incremental achou **683 arquivos mudados desde 30/08** (104 codigo, 579 docs, 3 deletados). Re-extrair 579 docs custaria milhoes de tokens, entao a extracao semantica foi **restrita a 43 portadores** (raiz, `docs/`, workflows, contratos, skills, `session_170-183`) em 3 extratores Sonnet isolados; os 104 arquivos de codigo passaram pelo AST (deterministico, gratis: 1.755 nos, 3.732 arestas). Os **536 docs mudados e nao re-extraidos ficam pendentes no manifesto** por desenho (`clear_semantic`), nunca carimbados como feitos. Saidas em `graphify-out/` (gitignored, regeneravel): `graph.json`, `graph.html`, `GRAPH_REPORT.md`.
+
+| Medida | 30/08 (s160) | 17/09 (s184) |
+|---|---|---|
+| nos / arestas | 1.940 / 3.374 | **3.383 / 5.993** (+1.785 nos, +3.253 arestas; -342 / -634 removidos por re-extracao e poda) |
+| comunidades | 178 | **253** (152 mostradas, 101 finas) |
+| proveniencia | 96% EXTRACTED | **97% EXTRACTED**, 3% INFERRED (171 arestas, confianca media 0,84), 0% AMBIGUOUS |
+| saude | -- | OK: 0 dangling, 0 missing, 0 self-loop, 0 colapso |
+
+**Onde o `FUNDAMENTOS` caiu.** 31 nos; centro de gravidade = comunidade **"Revisao Calibrada - contrato v1.3"** (8 nos), depois "Autoria e triagem de flashcards", "Fila FSRS e Reachability-Debt" e "Writers e balanceador FSRS". Os principios entraram como arestas `implements` **para o mecanismo que os realiza** -- P9 -> `/estilo-flashcard` + `audit_card_atomicity.py`; P12 -> `/aula-base`; P1 -> Revisao Calibrada (nota 1-10); P4 -> `/revisar`; P5 -> gatilho hibrido da aula-base + F100; P3 -> `fsrs_balance.py`; P11 -> `fsrs-management-contract`; P6 -> `fsrs_queue.py`; F109 -> F3 e o contrato FSRS (`rationale_for`); F111 -> `/estilo-flashcard` e ESTADO. Ou seja: o contexto logico "principio -> portador -> codigo" agora e navegavel no grafo, e nao so em prosa.
+
+**Camada de ensino no grafo** (comunidades com mais nos de revisar/aula/FSRS/flashcard/Autopsia): Autoria e triagem de flashcards (18) · Player de cards (17) · Revisao Calibrada - contrato v1.3 (16) · Writer gates e ratchet do verso (13) · Contrato Revisao Calibrada e player (13) · Plano hibrido e PRD v2 (13) · Drenagem de cards s173-s179 (13) · Camada de acesso ao DB (12).
+
+**God nodes** (mais conectados): `get_connection()` (67 arestas) · Session 183 (47) · `SQLiteMemoryStore` (34) · Session 172 (31) · Session 174 (29) · Session 175 (29) · `AGENTE.md` (27) · Session 170 (26). Leitura: as **sessoes** sao os hubs do lado da narrativa e o **DB** e o hub do lado do codigo -- coerente com "estado em duas camadas".
+
+**Pontes** (betweenness alta): `Skill: Revisar` (0,078) liga o hub de skills ao player, ao `fsrs.py`, ao DB, ao contrato, ao Plano do Dia, ao RAG e ao cronograma -- e a peca com maior raio de acao do sistema, e por isso o F112 (que vive exatamente nessa ponte) e ALTA. `Contrato de Governanca de Evidencia` (0,053) e `Session 183` (0,052) sao as outras duas pontes.
+
+**Conexoes surpreendentes que valem nota:** `Warn-First Check Pattern` (novo invariante nasce WARN) e semanticamente similar ao `Invariante A` (ensino read-only no FSRS) -- as duas sao a mesma disciplina de "fronteira declarada antes de virar bloqueio"; `Decision: Sensor de Drift Doc-vs-Codigo` ~ `audit_resumos.py` (dois linters que medem eixos diferentes com a mesma forma).
+
+**Lacunas que o grafo aponta:** 191 nos fracamente conectados, entre eles **`DORMENTE_DIAS = 21`**, **`REPETITION_WINDOW_DAYS`** e "ai-eng (principios de grounding)" -- as constantes da curva por TEMA estao documentadas num unico portador (`forgetting-curve-contract`, nao re-extraido desta vez) e ninguem mais as cita; e o mesmo sinal da nota do P2 (limiar heuristico, nao derivado). Duas arestas AMBIGUOUS do proprio HANDOFF (F108 "proposto, nao detalhado" -- fechado nesta sessao com o registro em §6y; F35 x F36).
+
+**Uso previsto:** `graphify query "<pergunta>"` para perguntas de arquitetura (o fast path da skill); R11 da fila mantem o grafo em dia por sessao.
 
 ---
 
@@ -149,8 +170,14 @@ Ja abertos e reafirmados: **F107** (`insert_questao --errors-file --dry-run`, ho
 | Varredura 2 -- agentes de IA e offloading | Sonnet | 154.674 | 14 | 25 / 35 |
 | Varredura 3 -- engenharia de agentes | Sonnet | 161.177 | 12 | 34 / 39 |
 | Varredura 4 -- open-spaced-repetition | Sonnet | 123.522 | 7 | 30 / 34 |
-| graphify chunk 1-3 (extracao semantica) | Sonnet | *(a preencher)* | | |
+| graphify chunk 1 (raiz + docs + workflows; ledger de 276 KB) | Sonnet | 477.932 | 30 | 43 tool uses |
+| graphify chunk 2 (11 skills + 6 contratos) | Sonnet | 262.134 | 21 | 29 |
+| graphify chunk 3 (session_170-183) | Sonnet | 269.827 | 24 | 55 |
 | **Total de pesquisa** | | **~617.7k** | **~49 de filho / ~23 de relogio** | zero sub-delegacao; zero escrita fora do scratch |
+| **Total do grafo** | | **~1.010k** | **~75 de filho / ~30 de relogio** | 43 docs; AST gratis |
+| **Total da sessao (filhos)** | | **~1.63M** | | 7 spawns; cada numero load-bearing re-medido pelo principal |
+
+Licao de custo: o chunk 1 custou o dobro dos outros porque leu o ledger inteiro (276 KB). Proxima rodada (R11): o `AUDITORIA_MEDHUB.md` vai em chunk proprio, e os 536 docs pendentes entram em ondas de 3 extratores por sessao de engenharia, nunca de uma vez.
 
 ---
 

@@ -117,7 +117,7 @@ medhub/
 |   `-- _archive/migrations/        -- one-shot migrations, do not re-run
 |-- resumos/                        -- 127 clinical summaries in 6 areas + INDEX.md
 |-- history/                        -- 124 session logs, INDEX.md, ledgers
-|-- docs/                           -- exam-execution playbook + plans
+|-- docs/                           -- exam-execution playbook, learning-science foundations (FUNDAMENTOS-APRENDIZAGEM.md), plans
 |-- .claude/
 |   |-- commands/                   -- 12 skills (canonical source)
 |   `-- settings.json               -- SessionStart + PostToolUse hooks

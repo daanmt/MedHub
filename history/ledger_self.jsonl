@@ -755,3 +755,5 @@
 {"ts": "2026-09-16T20:21:09+00:00", "event": "resolved", "check": "parity", "fingerprint": "ddf439b44739", "alvo": "command<->skill"}
 {"ts": "2026-09-16T20:21:18+00:00", "event": "resolved", "check": "consistencia_registros", "fingerprint": "ae675f4ff819", "alvo": "AGENTE.md §7.4"}
 {"ts": "2026-09-16T20:28:41+00:00", "event": "resolved", "check": "posicao_ssot", "fingerprint": "01755b5ba8cb", "alvo": "HANDOFF.md"}
+{"ts": "2026-09-17T22:44:10+00:00", "event": "opened", "check": "consistencia_registros", "fingerprint": "6c4b41fa1526", "alvo": "HANDOFF.md:17", "payload": {"check": "paths"}}
+{"ts": "2026-09-17T22:57:42+00:00", "event": "resolved", "check": "consistencia_registros", "fingerprint": "6c4b41fa1526", "alvo": "HANDOFF.md:17"}

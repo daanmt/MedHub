@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Player de Cards</title>
+<!--
+  Template do player de cards (DRENAR) -- spec plano-ssot-e-cards-v2-part-9.
+  O lote e injetado por `python tools/fsrs_queue.py --build-player` dentro do
+  script de id "lote" (type application/json) que fica no fim do body.
+  O marcador de abertura tem de ser UNICO no arquivo -- nao repetir a tag aqui.
+
+  FRONTEIRA DURA: esta pagina NUNCA grava FSRS. Ela guarda a primeira nota de
+  cada card na capability `db` (colecao sessoes/<sessao>/notas) e o agente
+  grava em lote por `--record-lote`, que chama `record_review` -- o caminho de
+  escrita unico (Invariante C do revisao-calibrada-contract).
+-->
+<style>
+:root{
+  --papel:#f6f4f0;
+  --card:#ffffff;
+  --afundado:#edeae4;
+  --tinta:#191817;
+  --tinta2:#54504a;
+  --tinta3:#8b857b;
+  --linha:#e0dbd2;
+  --acento:#0e6b5c;
+  --acento-fraco:#d9ece7;
+  --alerta:#a2412a;
+  --alerta-fraco:#f6e4de;
+  --wrap:58rem;
+  --raio:14px;
+  --sombra:0 1px 2px rgba(0,0,0,.05), 0 10px 30px rgba(0,0,0,.06);
+  --transicao:140ms ease;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --papel:#131519;
+    --card:#1b1e24;
+    --afundado:#23272f;
+    --tinta:#edeff3;
+    --tinta2:#b4bac4;
+    --tinta3:#7e8794;
+    --linha:#2d323b;
+    --acento:#4fd0b3;
+    --acento-fraco:#123630;
+    --alerta:#f0917a;
+    --alerta-fraco:#3a221c;
+    --sombra:0 1px 2px rgba(0,0,0,.45), 0 10px 30px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  --papel:#131519;
+  --card:#1b1e24;
+  --afundado:#23272f;
+  --tinta:#edeff3;
+  --tinta2:#b4bac4;
+  --tinta3:#7e8794;
+  --linha:#2d323b;
+  --acento:#4fd0b3;
+  --acento-fraco:#123630;
+  --alerta:#f0917a;
+  --alerta-fraco:#3a221c;
+  --sombra:0 1px 2px rgba(0,0,0,.45), 0 10px 30px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background:var(--papel);
+  color:var(--tinta);
+  font-family:ui-sans-serif,system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  font-size:clamp(15px,.95rem + .2vw,17px);
+  line-height:1.55;
+  overflow-wrap:break-word;
+}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:22px 16px 72px}
+h1{font-size:clamp(1.15rem,1rem + .7vw,1.5rem);margin:0;letter-spacing:-.01em}
+h2{margin:0}
+p{margin:0}
+kbd{
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:.78em;background:var(--afundado);border:1px solid var(--linha);
+  border-bottom-width:2px;border-radius:6px;padding:1px 6px;color:var(--tinta2);
+}
+.topo{display:flex;flex-wrap:wrap;gap:12px;align-items:baseline;justify-content:space-between}
+.sub{color:var(--tinta3);font-size:.85em;margin-top:2px}
+.metros{display:flex;gap:14px;align-items:baseline;font-variant-numeric:tabular-nums}
+.metro{color:var(--tinta2);font-size:.85em}
+.metro b{color:var(--tinta);font-size:1.05em}
+.barra{height:6px;background:var(--afundado);border-radius:99px;margin:14px 0 10px;overflow:hidden}
+.barra i{display:block;height:100%;width:0;background:var(--acento);transition:width var(--transicao)}
+.tally{
+  display:flex;flex-wrap:wrap;gap:8px 14px;color:var(--tinta3);
+  font-size:.8em;font-variant-numeric:tabular-nums;margin-bottom:18px;
+}
+.tally b{color:var(--tinta2)}
+.card{
+  background:var(--card);border:1px solid var(--linha);border-radius:var(--raio);
+  box-shadow:var(--sombra);padding:26px 22px;min-height:190px;
+}
+.card:focus-visible,button:focus-visible,input:focus-visible{
+  outline:3px solid var(--acento);outline-offset:3px;
+}
+.reason{
+  display:inline-block;font-size:.72em;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--acento);background:var(--acento-fraco);border-radius:99px;
+  padding:3px 10px;margin-bottom:14px;
+}
+.contexto{color:var(--tinta2);font-size:.95em;margin-bottom:12px}
+.pergunta{font-size:clamp(1.05rem,1rem + .5vw,1.35rem);line-height:1.35;font-weight:650}
+.verso{margin-top:20px;border-top:1px solid var(--linha);padding-top:18px;display:grid;gap:14px}
+.rot{font-size:.7em;letter-spacing:.09em;text-transform:uppercase;color:var(--tinta3);margin-bottom:4px}
+.resposta{font-size:1.02em}
+.bloco{background:var(--afundado);border-radius:10px;padding:12px 14px}
+.bloco.alerta{background:var(--alerta-fraco)}
+.bloco.alerta .rot{color:var(--alerta)}
+.taxonomia{color:var(--tinta3);font-size:.8em}
+.acoes{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+button{
+  font:inherit;cursor:pointer;border-radius:10px;border:1px solid var(--linha);
+  background:var(--card);color:var(--tinta);padding:11px 16px;
+  transition:transform var(--transicao),background var(--transicao);
+}
+button:hover{background:var(--afundado)}
+button:active{transform:translateY(1px)}
+button[disabled]{opacity:.45;cursor:not-allowed}
+.primario{background:var(--acento);border-color:var(--acento);color:var(--papel);font-weight:650}
+.primario:hover{background:var(--acento);filter:brightness(1.06)}
+.fantasma{background:transparent;border-style:dashed;color:var(--tinta2);font-size:.88em}
+.notas{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-top:18px}
+.notas button{display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:13px 14px;min-height:64px}
+.notas button b{font-size:1.15em;font-variant-numeric:tabular-nums}
+.notas button span{font-size:.78em;color:var(--tinta3)}
+.dica{color:var(--tinta3);font-size:.82em;margin-top:14px}
+.aviso{
+  border-left:3px solid var(--alerta);background:var(--alerta-fraco);color:var(--tinta);
+  padding:12px 14px;border-radius:8px;margin-top:18px;font-size:.88em;
+}
+.linha-defeito{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.linha-defeito input{
+  flex:1 1 220px;font:inherit;padding:10px 12px;border-radius:10px;
+  border:1px solid var(--linha);background:var(--card);color:var(--tinta);
+}
+.painel-fim{
+  margin-top:26px;background:var(--card);border:1px solid var(--linha);
+  border-radius:var(--raio);padding:20px 18px;
+}
+.painel-fim h2{font-size:1.05rem;margin-bottom:6px}
+pre{
+  background:var(--afundado);border:1px solid var(--linha);border-radius:10px;
+  padding:12px;overflow:auto;font-size:.78em;line-height:1.45;margin:12px 0 0;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+footer{color:var(--tinta3);font-size:.76em;margin-top:28px;border-top:1px solid var(--linha);padding-top:14px}
+[hidden]{display:none !important}
+@media (prefers-reduced-motion: reduce){
+  *{transition:none !important;animation:none !important}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="topo">
+    <div>
+      <h1>Player de cards</h1>
+      <p class="sub">DRENAR &#183; sessao <span id="sessao">-</span></p>
+    </div>
+    <div class="metros">
+      <span class="metro"><b id="feitos">0</b>/<span id="total">0</span> feitos</span>
+      <span class="metro">fila <b id="pendentes">0</b></span>
+      <span class="metro"><b id="relogio">00:00</b></span>
+    </div>
+  </header>
+
+  <div class="barra"><i id="progresso"></i></div>
+  <p class="tally" id="tally"></p>
+
+  <div id="aviso" class="aviso" hidden></div>
+
+  <main id="drill">
+    <article class="card" id="card" tabindex="0" aria-live="polite">
+      <p class="reason" id="reason" hidden></p>
+      <p class="contexto" id="contexto" hidden></p>
+      <h2 class="pergunta" id="pergunta">Carregando o lote...</h2>
+      <div class="verso" id="verso" hidden>
+        <div><p class="rot">Resposta</p><p class="resposta" id="resposta"></p></div>
+        <div class="bloco" id="bloco-regra" hidden><p class="rot">Regra-mestre</p><p id="regra"></p></div>
+        <div class="bloco alerta" id="bloco-armadilha" hidden><p class="rot">Armadilha</p><p id="armadilha"></p></div>
+        <p class="taxonomia" id="taxonomia"></p>
+      </div>
+    </article>
+
+    <div class="acoes">
+      <button id="btn-virar" class="primario">Virar o card <kbd>Espaco</kbd></button>
+      <button id="btn-defeito" class="fantasma">Marcar defeito do card <kbd>D</kbd></button>
+    </div>
+
+    <form class="linha-defeito" id="form-defeito" hidden>
+      <input id="motivo" type="text" maxlength="120" placeholder="Motivo curto do defeito (ex.: pergunta composta)" aria-label="Motivo do defeito">
+      <button type="submit">Marcar e pular</button>
+      <button type="button" id="btn-cancelar">Cancelar</button>
+    </form>
+
+    <div class="notas" id="notas-botoes" hidden>
+      <button data-nota="1"><b>1</b><span>nao lembrei</span></button>
+      <button data-nota="2"><b>2</b><span>dificil</span></button>
+      <button data-nota="3"><b>3</b><span>bom</span></button>
+      <button data-nota="4"><b>4</b><span>facil</span></button>
+    </div>
+
+    <p class="dica"><kbd>Espaco</kbd> vira o card &#183; <kbd>1</kbd>-<kbd>4</kbd> da a nota &#183; <kbd>D</kbd> marca defeito. Nota abaixo de 4 recoloca o card no fim do lote (relearning) e nao gera segunda nota: so a primeira e gravavel.</p>
+  </main>
+
+  <section class="painel-fim" id="fim" hidden>
+    <h2 id="fim-titulo">Lote drenado</h2>
+    <p class="sub" id="fim-sub"></p>
+    <p class="dica" id="fim-origem"></p>
+    <pre id="json-notas"></pre>
+    <div class="acoes"><button id="btn-copiar">Copiar JSON das notas</button></div>
+  </section>
+
+  <footer>
+    Esta pagina nao escreve no FSRS. As notas ficam na sessao e o agente grava em lote por
+    <code>fsrs_queue.py --record-lote</code>, que chama <code>record_review</code> -- caminho de escrita unico.
+  </footer>
+
+</div>
+
+<script id="lote" type="application/json">{"sessao": "2026-09-17", "gerado_em": "2026-09-17T20:16:08", "total": 90, "cards": [{"card_id": 724, "frente_contexto": "Lactente de 25 dias, previamente bem, com vômitos biliosos súbitos há 6 horas, letargia, má perfusão, distensão abdominal e RX com pobreza de gás intestinal.", "frente_pergunta": "Qual o diagnóstico?", "verso_resposta": "Má-rotação intestinal com volvo de intestino médio.", "verso_regra_mestre": "Vômito bilioso de início súbito em criança que estava bem é volvo de intestino médio até prova em contrário -- emergência cirúrgica por torção sobre a artéria mesentérica superior.", "verso_armadilha": "Marcar atresia jejunoileal em um lactente de 25 dias: a atresia se manifesta nas primeiras 24-48h e dá múltiplos níveis hidroaéreos, não pobreza de gás.", "area": "Cirurgia", "tema": "Cirurgia Infantil", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 788, "frente_contexto": "Lactente com DVP e IVAS febril; estado de mal abortado com midazolam IM + diazepam IV. Agora nao responsiva, FR 10, SatO2 90% na Venturi 50%, expansibilidade reduzida, PA 82/40.", "frente_pergunta": "Qual a conduta emergencial imediata neste momento?", "verso_resposta": "Ventilacao com pressao positiva: ha depressao respiratoria pos-benzodiazepinico (bradipneia + dessaturacao); ABC vem primeiro.", "verso_regra_mestre": "Depois de abortar a crise, reavalie A-B-C: dessaturacao + bradipneia apos benzo = insuficiencia ventilatoria, tratada com ventilacao, nao com conduta neurologica (manitol/DVE).", "verso_armadilha": "DVP + febre seduz para hipertensao intracraniana/ventriculite (manitol, cabeceira, DVE) e ignora a via aerea/ventilacao, a ameaca real.", "area": "Neurologia", "tema": "Epilepsias", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 1187, "frente_contexto": "Estado de mal epileptico em paciente JA diagnosticado com epilepsia.", "frente_pergunta": "Qual a causa mais comum de EME nesse paciente?", "verso_resposta": "Ma aderencia/tratamento irregular.", "verso_regra_mestre": "EME tem causas diferentes por populacao: ja epileptico -\u003e ma aderencia; sem epilepsia previa -\u003e AVC, TCE, intoxicacao sao as mais comuns.", "verso_armadilha": "Intoxicacao exogena, AVC e TCE sao causas reais de EME, mas pertencem ao grupo SEM epilepsia previa -- nao se aplicam aqui.", "area": "Neurologia", "tema": "Epilepsias", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 245, "frente_contexto": "Lactente de 6 semanas com icterícia persistente, acolia fecal e colúria; bilirrubina direta elevada (colestase neonatal). A hipótese cirúrgica é atresia de vias biliares.", "frente_pergunta": "Até que idade a portoenterostomia de Kasai precisa ser feita para ter boa chance de restabelecer o fluxo biliar?", "verso_resposta": "Antes de 60 dias de vida (8 semanas). Depois disso a chance de drenagem cai e a evolução é para cirrose biliar e transplante hepático.", "verso_regra_mestre": "Colestase neonatal é urgência diagnóstica porque a atresia de vias biliares, a causa cirúrgica, tem janela curta -- o atraso custa o fígado. Toda icterícia com bilirrubina direta elevada após 14 dias de vida entra em investigação (USG, cintilografia/biópsia), sem esperar 'icterícia do leite materno'.", "verso_armadilha": "Tratar icterícia prolongada do lactente como fisiológica ou do leite materno sem fracionar a bilirrubina -- acolia e colúria dizem que a bilirrubina é direta e que a janela do Kasai está correndo.", "area": "Pediatria", "tema": "Icterícia e Sepse Neonatal", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 706, "frente_contexto": "Adenocarcinoma mucinoso invasivo restrito ao apêndice, achado após apendicectomia por apendicite sem perfuração; nenhum implante peritoneal descrito.", "frente_pergunta": "O que precisaria estar presente para se associar peritoniectomia ao tratamento?", "verso_resposta": "Doença peritoneal já instalada -- carcinomatose ou pseudomixoma peritoneal confirmado.", "verso_regra_mestre": "A peritoniectomia (com HIPEC) trata implantes existentes; não é profilática. Sem disseminação, o tratamento é apenas a hemicolectomia direita oncológica.", "verso_armadilha": "A palavra 'mucinoso' puxa a lembrança do pseudomixoma e faz somar peritoniectomia num tumor que sequer rompeu.", "area": "Gastro", "tema": "Pólipos e Neoplasias Intestinais", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 381, "frente_contexto": "Gestante com episódio de herpes genital recorrente (não primário).", "frente_pergunta": "A terapia supressiva com aciclovir na gestante com herpes genital recorrente começa a partir de quantas semanas de gestação?", "verso_resposta": "36 semanas -- salvo exceção de episódio já no 3º trimestre, que mantém aciclovir contínuo desde o episódio até o parto.", "verso_regra_mestre": "São dois cortes temporais distintos que não podem ser confundidos: 28 semanas marca o início do 3º trimestre e é usado para decidir a VIA DE PARTO (episódio após 28s pode indicar cesárea); 36 semanas é o marco fixo de início da TERAPIA SUPRESSIVA, independente de quando ocorreu o episódio.", "verso_armadilha": "Usar o número 28 (que é do critério de via de parto) para decidir quando iniciar a supressão -- os dois cortes têm gatilhos e decisões diferentes, e a prova explora exatamente essa mistura.", "area": "Ginecologia", "tema": "Úlceras Genitais", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 823, "frente_contexto": "Idoso em UTI, instavel (noradrenalina, confuso, creatinina alta), colecistite aguda Tokyo III; TC: colecistite com calculo no infundibulo, SEM dilatacao da via biliar.", "frente_pergunta": "Qual a drenagem indicada na colecistite grave (Tokyo III) do paciente instavel/alto risco?", "verso_resposta": "Colecistostomia percutanea (drenagem da vesicula guiada por imagem) + antibiotico; a colecistectomia fica ELETIVA, apos melhora clinica. O paciente instavel nao tolera a cirurgia imediata.", "verso_regra_mestre": "A drenagem segue a ESTRUTURA obstruida: colecistite (vesicula/cistico) -\u003e COLECISTOSTOMIA; colangite (via biliar/coledoco) -\u003e CPRE. 'Sem dilatacao da via biliar' afasta colangite.", "verso_armadilha": "Marcar CPRE numa colecistite -- a CPRE drena a via biliar (colangite); aqui a doenca e da vesicula (colecistostomia).", "area": "Cirurgia", "tema": "Abdome Agudo Inflamatório - Colecistite e Colangite Aguda", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 1543, "frente_contexto": "Especular com macula rubra facilmente sangrante ao redor do orificio externo do colo.", "frente_pergunta": "O que esse achado representa?", "verso_resposta": "Ectopia (ectropio) cervical, achado benigno comum, sem relacao com malignidade.", "verso_regra_mestre": "Sangramento ao toque do colo indica fragilidade do epitelio colunar exposto, nao neoplasia -- o achado e de origem cervical e nao explica sangramento uterino.", "verso_armadilha": "A palavra sangrante no exame do colo puxa a hipotese de malignidade e faz classificar como SUA-M.", "area": "Ginecologia", "tema": "Sangramento Uterino Anormal", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 1479, "frente_contexto": "Crianca de 6 anos e 8 meses com idade ossea de 5 anos e 10 meses.", "frente_pergunta": "Essa idade ossea e atrasada ou compativel com a cronologica?", "verso_resposta": "Compativel: so e atrasada se estiver mais de 2 anos (ou 2 desvios-padrao) abaixo da cronologica.", "verso_regra_mestre": "Idade ossea se le por cutoff, nao por 'menor que': diferenca de ate 1-2 anos e variacao normal; atraso real (\u003e 2 anos) e a assinatura do ACCP e das causas endocrinas.", "verso_armadilha": "Ver '5a10m \u003c 6a8m' e concluir 'idade ossea atrasada = atraso constitucional do crescimento'.", "area": "Pediatria", "tema": "Baixa Estatura", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 1574, "frente_contexto": "Adolescente atleta com dor anterior no joelho ha semanas, sem trauma.", "frente_pergunta": "Dor patelofemoral x Osgood-Schlatter: que achado do exame fisico separa uma da outra?", "verso_resposta": "A proeminencia firme e dolorosa do tuberculo tibial, com edema local, que so a Osgood-Schlatter produz.", "verso_regra_mestre": "Osgood-Schlatter e apofisite de tracao e por isso da achado palpavel e localizado; a dor patelofemoral e sobrecarga difusa, retropatelar, sem sinal inflamatorio local.", "verso_armadilha": "Joelho de adolescente atleta sem trauma faz a sindrome da dor patelofemoral parecer aposta segura; edema e proeminencia no tuberculo tibial derrubam esse rotulo.", "area": "Pediatria", "tema": "Ortopedia Pediátrica", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 1159, "frente_contexto": "Homem de 60a, HAS, obesidade grau I, pos-operatorio de retossigmoidectomia de emergencia, 1o PO, sem sangramento ativo, deambulando com auxilio.", "frente_pergunta": "Qual e a melhor estrategia de profilaxia para tromboembolismo venoso nesse paciente?", "verso_resposta": "Deambulacao precoce e enoxaparina profilatica.", "verso_regra_mestre": "Escore de Caprini 3-4 = risco moderado = profilaxia farmacologica preferencial (se baixo risco de sangramento), associada a deambulacao. Deambulacao isolada so basta para risco muito baixo (escore 0).", "verso_armadilha": "Escolher deambulacao precoce isolada por parecer conduta segura, sem calcular o escore de Caprini que classifica esse paciente como risco moderado.", "area": "Cirurgia", "tema": "Profilaxia de Tromboembolismo Venoso", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 707, "frente_contexto": "Pólipo retal pediculado de 2 cm ressecado integralmente por via endoscópica, margens livres (\u003e 2 mm); laudo: adenocarcinoma invadindo até a lâmina própria.", "frente_pergunta": "Qual a conduta oncológica complementar?", "verso_resposta": "Nenhuma -- apenas seguimento colonoscópico; a polipectomia já foi curativa.", "verso_regra_mestre": "Invasão até a lâmina própria não ultrapassa a muscular da mucosa: é carcinoma in situ (pTis), e a mucosa não tem vasos linfáticos -- risco nulo de metástase linfonodal.", "verso_armadilha": "A expressão 'adenocarcinoma no reto' dispara quimiorradioterapia neoadjuvante ou retossigmoidectomia; leia ATÉ ONDE a invasão chegou antes de escalar.", "area": "Gastro", "tema": "Pólipos e Neoplasias Intestinais", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 553, "frente_contexto": "", "frente_pergunta": "Qual o corte diagnóstico de HAS medido em CONSULTÓRIO?", "verso_resposta": "140/90 mmHg.", "verso_regra_mestre": "É o único cenário que usa 140/90 -- todo cenário fora do consultório (MAPA/MRPA) usa cortes mais baixos, porque a leitura fora do ambiente médico tende a ser menor (sem o efeito do jaleco branco).", "verso_armadilha": "Aplicar 140/90 numa leitura de MAPA ou MRPA -- os sistemas não compartilham corte.", "area": "Cardiologia", "tema": "Hipertensão Arterial Sistêmica", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 709, "frente_contexto": "Homem de 59 anos com abdome agudo obstrutivo; lesão ulcerada circunferencial a 6 cm da borda anal e linfonodos aumentados no mesorreto à TC.", "frente_pergunta": "Qual a conduta cirúrgica na urgência?", "verso_resposta": "Colostomia em alça (derivação descompressiva), sem ressecar o tumor.", "verso_regra_mestre": "Obstrução por tumor de CÓLON = ressecção já na urgência (Hartmann ou anastomose). Obstrução por tumor de RETO médio/baixo = derivar agora, neoadjuvância depois, ressecção no 2o tempo.", "verso_armadilha": "Levar o Hartmann do cólon esquerdo para o reto extraperitoneal: queima a neoadjuvância e aumenta a taxa de amputação definitiva do esfíncter.", "area": "Gastro", "tema": "Pólipos e Neoplasias Intestinais", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 419, "frente_contexto": "Idosa desidratada (vômitos/diarreia) em uso de captopril e nimesulida; Na urinário 10, osmolalidade urinária 720, parcial de urina sem alterações.", "frente_pergunta": "Qual a topografia da LRA e por que os fármacos nefrotóxicos não mudam essa leitura?", "verso_resposta": "Pré-renal. Na urinário \u003c 20 e osmolalidade \u003e 500 indicam reabsorção tubular ávida (túbulo íntegro respondendo à hipovolemia). NIA traria leucocitúria/eosinofilúria; NTA traria Na \u003e 40 e urina diluída -- ambas ausentes.", "verso_regra_mestre": "A urina define a topografia: índices de avidez (Na baixo, osm alta) = pré-renal, mesmo com IECA/AINE na lista de medicamentos.", "verso_armadilha": "Atribuir a LRA ao captopril/nimesulida (NIA/NTA) ignorando a urina ávida -- o fármaco na história não sobrepuja os índices.", "area": "Nefrologia", "tema": "Lesão Renal Aguda", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 486, "frente_contexto": "", "frente_pergunta": "Na gravidez ectopica ESTAVEL confirmada, qual trio de criterios libera o tratamento com metotrexato (MTX)?", "verso_resposta": "Beta-hCG \u003c 5.000 (ideal \u003c 1.500) + massa \u003c 3,5-4cm + SEM batimento cardiaco embrionario (BCF).", "verso_regra_mestre": "Fora desse trio (beta alto, massa grande, ou BCF presente), ou em falha/contraindicacao ao MTX, a conduta e cirurgia por laparoscopia (salpingostomia conservadora ou salpingectomia).", "verso_armadilha": "Indicar laparotomia no estável (é laparoscopia) ou MTX com BCF/massa grande/β-hCG alto (alta taxa de falha). Na gestação HETEROTÓPICA, MTX é contraindicado (mataria a gestação tópica viável) -\u003e cirurgia.", "area": "Ginecologia", "tema": "Gravidez ectópica", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 632, "frente_contexto": "", "frente_pergunta": "Hidronefrose fetal UNILATERAL com rim contralateral normal -- qual a conduta antenatal?", "verso_resposta": "NENHUMA intervenção antenatal: aguardar o nascimento e investigar no pós-natal (USG). Não antecipar o parto nem tratar in utero.", "verso_regra_mestre": "Só a uretero-hidronefrose BILATERAL com bexiga espessada (sugere VUP em feto masculino) E com deterioração (oligo/anidrâmnio -\u003e hipoplasia pulmonar) justifica intervenção intrauterina (derivação vésico-amniótica). Unilateral = espera.", "verso_armadilha": "Indicar tratamento intrauterino ou antecipar o parto em hidronefrose unilateral com rim contralateral normal.", "area": "Cirurgia", "tema": "Cirurgia Infantil", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 463, "frente_contexto": "Quadro insidioso de Addison (TB previa, hipotensao, hipercalemia desproporcional a disfuncao renal leve, hipoglicemia, eosinofilia).", "frente_pergunta": "Na insuficiencia adrenal primaria, qual o padrao esperado de sodio, potassio e calcio?", "verso_resposta": "Hiponatremia + hipercalemia (deficiencia de aldosterona) + HIPERcalcemia (hipocortisolismo aumenta a reabsorcao ossea e a contracao volemica concentra o calcio).", "verso_regra_mestre": "Hipercalemia desproporcional a uma disfuncao renal leve deve redirecionar para hipoaldosteronismo/Addison; a hiperK e exclusiva da forma PRIMARIA (distingue da insuficiencia adrenal central).", "verso_armadilha": "Esperar hipocalcemia e hipernatremia: na crise adrenal o calcio SOBE e o sodio CAI.", "area": "Endocrino", "tema": "Insuficiencia Adrenal", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 311, "frente_contexto": "Suspeita de pancreatite aguda no pronto-socorro, com dor típica e lipase acima de 3 vezes o limite superior.", "frente_pergunta": "Por que o USG de abdome, e não a TC, é o primeiro exame de imagem na pancreatite aguda?", "verso_resposta": "Porque o USG define a etiologia biliar (colelitíase, dilatação de via biliar), e isso muda a conduta: CPRE se houver colangite e colecistectomia na mesma internação. A TC não cumpre essa função etiológica.", "verso_regra_mestre": "Na pancreatite, cada exame responde a uma pergunta: USG responde 'é biliar?' (etiologia, dia 1); TC responde 'há necrose ou coleção?' (complicações locais, após 72 horas) ou resolve dúvida diagnóstica no dia 1. Não trocar uma pergunta pela outra.", "verso_armadilha": "Pedir a TC de saída por parecer o exame mais completo; ela não vê a maioria dos cálculos (colesterol isodenso à bile) e por isso não faz a triagem etiológica.", "area": "Cirurgia", "tema": "[bulk] Cirurgia", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 1539, "frente_contexto": "Acetato de medroxiprogesterona oferecido como alternativa em questao de SUA agudo.", "frente_pergunta": "O que ha de errado com a posologia de 150 mg intramuscular nesse contexto?", "verso_resposta": "Essa e a dose contraceptiva de deposito, nao a posologia usada no controle do sangramento uterino agudo.", "verso_regra_mestre": "Farmaco certo com posologia de outra indicacao e alternativa errada -- conferir a dose, nao so o nome da droga.", "verso_armadilha": "Reconhecer o farmaco na lista de opcoes do SUA agudo basta para a alternativa parecer correta.", "area": "Ginecologia", "tema": "Sangramento Uterino Anormal", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 90, "frente_contexto": "", "frente_pergunta": "Qual a cardiopatia congênita CIANÓTICA mais comum no período neonatal?", "verso_resposta": "Transposição das grandes artérias (TGA).", "verso_regra_mestre": "'Mais comum' exige sempre o qualificador do grupo: no geral = CIV (acianogênica); entre as cianóticas = TGA no recém-nascido e T4F depois do período neonatal.", "verso_armadilha": "Marcar CIV por ser 'a mais comum de todas': ela é acianogênica (shunt E-\u003eD) e o adjetivo 'cianótica' do enunciado já a exclui, junto de CIA, PCA e DSAVT.", "area": "Pediatria", "tema": "Cardiopatias Congênitas", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 170, "frente_contexto": "Necrose pancreatica infectada confirmada (gas na TC ou puncao com cultura positiva), com piora clinica apos 7-10 dias.", "frente_pergunta": "Qual e o PRIMEIRO passo terapeutico e em que momento se reserva a necrosectomia cirurgica?", "verso_resposta": "Step-up approach (do menos para o mais invasivo): 1o) Antibioticoterapia (imipenem, ou cefepima/quinolona + metronidazol) -- minoria resolve so com ATB; 2o) Drenagem minimamente invasiva -- percutanea guiada por TC se houver janela segura, ou endoscopica transgastrica/EUS se contato \u003c 1 cm com o estomago; 3o) Necrosectomia minimamente invasiva (videolaparoscopica/retroperitoneal); 4o) Necrosectomia cirurgica ABERTA = ultima opcao. O timing cirurgico e ADIADO ao maximo, idealmente apos 4-6 semanas, quando a necrose se organiza e demarca (Walled-Off Necrosis) -- reduz ressecao de tecido viavel e a morbimortalidade.", "verso_regra_mestre": "Necrose infectada se trata em escalada (step-up), nunca direto ao bisturi: ATB -\u003e drenagem -\u003e necrosectomia minimamente invasiva -\u003e cirurgia aberta. E sempre o mais TARDIA possivel (\u003e=4-6 sem): operar necrose nao demarcada ressecca tecido viavel e aumenta a mortalidade.", "verso_armadilha": "Marcar 'necrosectomia/cirurgia imediata' como a indicacao principal (fato generico de 'tratar a infeccao operando'). A intervencao cirurgica e o ULTIMO degrau e o mais TARDIO (\u003e4-6 sem, apos demarcacao); o 1o passo e antibiotico, nao o bisturi.", "area": "Gastro", "tema": "Pancreatite Aguda e Crônica", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 179, "frente_contexto": "Pancreatite cronica avancada com calcificacoes pancreaticas e esteatorreia.", "frente_pergunta": "Por que esse paciente desenvolve deficiencia de vitamina B12 e osteoporose?", "verso_resposta": "Pela insuficiencia pancreatica EXOCRINA (perda \u003e 90% da funcao), que gera ma digestao e ma absorcao: (1) sem lipase -\u003e esteatorreia -\u003e ma absorcao das vitaminas LIPOSSOLUVEIS A, D, E, K -\u003e a falta de vitamina D leva a osteoporose; (2) sem proteases pancreaticas -\u003e a B12 nao e liberada da proteina-R para ligar o fator intrinseco -\u003e ma absorcao de B12 -\u003e anemia megaloblastica. Outras complicacoes da PC: SIBO, trombose de veia esplenica (varizes gastricas isoladas), DM (insuficiencia endocrina) e maior risco de cancer de pancreas.", "verso_regra_mestre": "Insuficiencia exocrina nao e so esteatorreia: a ma digestao arrasta junto as vitaminas lipossoluveis (A,D,E,K -\u003e osteoporose pela D) e a B12 (proteases nao a liberam da proteina-R). Toda deficiencia nutricional 'inesperada' num pancreas calcificado se explica por ma absorcao.", "verso_armadilha": "Descartar B12 e osteoporose como 'nao tem a ver com pancreas' e marcar uma complicacao mais obvia (fato generico). B12 e osteoporose SAO complicacoes classicas da PC -- consequencia direta da insuficiencia exocrina/ma absorcao.", "area": "Gastro", "tema": "Pancreatite Aguda e Crônica", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 1409, "frente_contexto": "Mesma questao de associacao -- discriminar obesidade pos-menopausa de ciclos anovulatorios.", "frente_pergunta": "Obesidade POS-MENOPAUSA e fator de risco mais especifico para qual neoplasia: mama ou endometrio?", "verso_resposta": "Mama -- apos a menopausa, o tecido adiposo aromatiza androgenios em estrogeno, criando estimulo estrogenico continuo sobre a mama. Ciclos ANOVULATORIOS (hiperestrogenismo sem oposicao de progesterona) sao o fator mais especifico de endometrio.", "verso_regra_mestre": "Mama: obesidade POS-menopausa (aromatizacao periferica). Endometrio: exposicao a estrogenio SEM oposicao de progesterona (anovulacao, SOP, tamoxifeno, TRH sem progestagenio).", "verso_armadilha": "Obesidade tambem e fator classico de endometrio, o que tenta trocar os dois pares -- mas a questao isola 'obesidade pos-menopausa' para mama e reserva 'ciclos anovulatorios' para endometrio.", "area": "Ginecologia", "tema": "Câncer de Mama", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 538, "frente_contexto": "Paciente com colonoscopia + biópsia confirmando adenocarcinoma de cólon direito (lesão ocupando 50% da luz).", "frente_pergunta": "Com o diagnóstico já confirmado, qual o próximo passo?", "verso_resposta": "Estadiar com TOMOGRAFIA de tórax, abdome e pelve + dosagem de CEA (basal). O diagnóstico está feito; falta definir a extensão (TNM) antes de tratar.", "verso_regra_mestre": "CCR com diagnóstico histológico -\u003e estadiamento por IMAGEM (TC tórax/abdome/pelve) + CEA basal (prognóstico/seguimento, não diagnóstico). A própria TC avalia metástase e carcinomatose, então não se indica laparoscopia diagnóstica nem se parte para tratamento antes de estadiar.", "verso_armadilha": "'Laparoscopia diagnóstica para investigar carcinomatose' soa minuciosa diante de um tumor pouco diferenciado, mas o estadiamento padrão é por TC -- a laparoscopia não é etapa inicial. Marcar tratamento (neoadjuvância/derivação) também pula o estadiamento.", "area": "Gastro", "tema": "Pólipos e Neoplasias Intestinais", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 540, "frente_contexto": "Atendimento inicial do TCE, com foco em prevenir a lesao cerebral SECUNDARIA.", "frente_pergunta": "Quais as DUAS medidas de maior impacto para evitar a progressao da lesao cerebral no atendimento inicial?", "verso_resposta": "Oxigenacao adequada (via aerea pervia) + reanimacao volemica (manter a circulacao) -- ou seja, evitar HIPOXIA e HIPOTENSAO, os dois maiores determinantes da lesao secundaria. Sao as primeiras letras do ABCDE.", "verso_regra_mestre": "A lesao secundaria e movida por hipoxia + hipotensao; logo o maior impacto vem do A-B-C (oxigenar + repor volume), nao das medidas neuro-especificas de PIC.", "verso_armadilha": "'Cabeceira elevada + salina hipertonica' sao medidas de controle de PIC -- importantes, mas NAO as de maior impacto inicial; vem depois do ABC.", "area": "Neurologia", "tema": "Traumatismo Cranioencefálico", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 297, "frente_contexto": "Esclerose Múltipla com queixa de declínio cognitivo, após afastar depressão ativa pelo PHQ-9.", "frente_pergunta": "Após descartar depressão ativa pelo PHQ-9, qual é a conduta terapêutica primária indicada para o declínio cognitivo associado a Esclerose Múltipla?", "verso_resposta": "Reabilitação cognitiva.", "verso_regra_mestre": "O comprometimento cognitivo na Esclerose Múltipla costuma ter causa orgânica própria da doença, independente do humor; por isso, afastada a depressão, o primeiro degrau terapêutico e a reabilitação cognitiva, não a escalada farmacológica.", "verso_armadilha": "A queixa cognitiva puxa o raciocínio para o eixo depressivo/farmacológico, mas com PHQ-9 baixo a causa e orgânica da própria EM, e o tratamento correto e não farmacológico (reabilitação), não um ajuste de medicação.", "area": "Cirurgia", "tema": "[bulk] Cirurgia", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 1553, "frente_contexto": "Colangite aguda com indicacao ja estabelecida de descomprimir a via biliar.", "frente_pergunta": "Qual a via de drenagem de primeira escolha?", "verso_resposta": "A endoscopica, por CPRE com papilotomia.", "verso_regra_mestre": "A hierarquia e fixa: endoscopica primeiro; percutanea trans-hepatica quando a CPRE falha, nao esta disponivel ou a anatomia esta alterada; cirurgica com dreno de Kehr como ultimo recurso, por ser a de maior mortalidade no paciente septico.", "verso_armadilha": "'drenagem cirurgica com dreno de Kehr' e 'drenagem biliar externa trans-hepatica' aparecem como distratores oferecendo as vias de resgate no lugar da primeira linha.", "area": "Cirurgia", "tema": "Abdome Agudo Inflamatório - Colecistite e Colangite Aguda", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 625, "frente_contexto": "Menino de 8 anos com dor escrotal de início insidioso e progressivo (3h), testículo bem posicionado, ponto azulado de ~1 cm no polo superior e sem queixas urinárias.", "frente_pergunta": "Qual o diagnóstico?", "verso_resposta": "Torção do apêndice testicular (hidátide de Morgagni), com pico dos 6 aos 12 anos.", "verso_regra_mestre": "Insidioso + blue dot + reflexo cremastérico PRESERVADO = apêndice testicular; súbito + cremastérico abolido + testículo alto/horizontalizado = torção testicular; disúria/febre + Prehn positivo = epididimite.", "verso_armadilha": "Chamar de epididimite e prescrever antibiótico -- o enunciado nega sintoma urinário e febre de propósito, justamente para afastá-la.", "area": "Cirurgia", "tema": "Cirurgia Infantil", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 1548, "frente_contexto": "Trombose hemorroidaria externa conduzida de forma conservadora.", "frente_pergunta": "Em quanto tempo o quadro se resolve espontaneamente?", "verso_resposta": "Em 7 a 10 dias, conforme o coagulo e reabsorvido.", "verso_regra_mestre": "E essa resolucao espontanea que sustenta a conduta conservadora tardia: quem chega no 4o dia ja esta na descendente da curva de dor, e a cirurgia passaria a competir com uma melhora que ja comecou.", "verso_armadilha": "Confundir 'ainda dolorido' com 'ainda operavel' -- a dor residual do 4o ao 7o dia e parte da resolucao, nao falha do tratamento clinico.", "area": "Cirurgia", "tema": "Doenca Hemorroidaria", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 628, "frente_contexto": "", "frente_pergunta": "Em que idade se corrige a hipospádia?", "verso_resposta": "No segundo semestre de vida -- entre 6 e 18 meses, antes da idade escolar.", "verso_regra_mestre": "Não é cirurgia neonatal: espera-se o pênis crescer, e o prepúcio é a matéria-prima do enxerto -- nunca circuncidar antes de corrigir.", "verso_armadilha": "Questão anulável: hidrocele comunicante TAMBÉM é de conduta diferida. Quando a banca força uma só resposta, o gabarito costuma ser a hipospádia -- banca-dependente.", "area": "Cirurgia", "tema": "Cirurgia Infantil", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 1307, "frente_contexto": "", "frente_pergunta": "A participacao da iniciativa privada no SUS e permitida -- em que condicoes, segundo a CF/88 e a Lei 8080/90?", "verso_resposta": "Sim, em carater COMPLEMENTAR, mediante contrato ou convenio, quando o setor publico e insuficiente para atender a demanda -- sem fins lucrativos nessa relacao especifica com o SUS.", "verso_regra_mestre": "Complementaridade privada, ordenacao da formacao de RH em saude e controle social deliberativo (conselhos) sao 3 atribuicoes formais e simultaneas do SUS -- nao sao mutuamente exclusivas nem raras de aparecerem juntas corretas.", "verso_armadilha": "Marcar apenas as afirmativas I e III corretas, descartando a II (participacao complementar da iniciativa privada) por desconfianca de que a banca raramente da 3 afirmativas verdadeiras ao mesmo tempo -- aqui elas realmente sao.", "area": "Preventiva", "tema": "Princípios e Diretrizes do SUS", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 122, "frente_contexto": "Paciente com diagnóstico de doença trofoblástica gestacional (DTG). Discute-se se o hipertireoidismo ou hipotireoidismo é a complicação endócrina esperada.", "frente_pergunta": "Qual é a disfunção tireoidiana clinicamente e laboratorialmente associada aos quadros graves de Doença Trofoblástica Gestacional (mola hidatiforme)?", "verso_resposta": "Hipertireoidismo.", "verso_regra_mestre": "O hCG não bloqueia o eixo hipotálamo-hipófise-tireoide, mas estimula a glândula tireoide diretamente como um agonista do receptor de TSH. A supressão do TSH sérico é consequência secundária do hipertireoidismo, não sua causa primária. Lembrar: DTG = tudo é HIPER (pré-eclâmpsia, hipertireoidismo, hiperemese).", "verso_armadilha": "Confundir que o TSH sérico baixo na DTG resulta de bloqueio hipofisário pelo hCG (levando a hipotireoidismo primário) quando na verdade o TSH baixo é feedback negativo secundário ao hipertireoidismo tireoidiano direto causado pela estimulação do receptor de TSH pelo hCG.", "area": "Obstetrícia", "tema": "Doença trofoblástica gestacional", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 1475, "frente_contexto": "Mulher de 72 anos, 19 anos apos a menopausa, com sangramento vaginal; USG mostra 3 miomas (um submucoso) e endometrio de 8 mm.", "frente_pergunta": "O leiomioma explica o sangramento?", "verso_resposta": "Nao: sem estrogenio o mioma regride; endometrio de 8 mm em pos-menopausa aponta hiperplasia ou carcinoma endometrial.", "verso_regra_mestre": "Sangramento pos-menopausa e problema de ENDOMETRIO ate prova em contrario (corte 4-5 mm); mioma e patologia da menacme.", "verso_armadilha": "A lista de nodulos no USG oferece uma causa 'visivel' (leiomioma submucoso) e desvia da espessura endometrial escondida no meio da vinheta.", "area": "Ginecologia", "tema": "Câncer de Endométrio", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 1476, "frente_contexto": "", "frente_pergunta": "Obesidade, nuliparidade e menopausa tardia apontam para qual causa de sangramento pos-menopausa?", "verso_resposta": "Hiperplasia ou carcinoma endometrial tipo I (estrogenio sem oposicao de progesterona).", "verso_regra_mestre": "Os fatores de risco do tipo I sao todos 'mais estrogenio, menos progesterona': obesidade (aromatase periferica), nuliparidade, menarca precoce, menopausa tardia, anovulacao, tamoxifeno.", "verso_armadilha": "Ler o perfil de risco como decorativo e escolher a estrutura anatomica mais chamativa (mioma, polipo endocervical).", "area": "Ginecologia", "tema": "Câncer de Endométrio", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 1472, "frente_contexto": "Lactente de 22 meses em crise grave de asma, sonolenta, com choro entrecortado e tiragem.", "frente_pergunta": "O corticoide sistemico deve ser dado por via oral ou endovenosa?", "verso_resposta": "Endovenosa (metilprednisolona): a sonolencia impede a via oral.", "verso_regra_mestre": "VO = EV em eficacia vale para a crianca que deglute e colabora; rebaixamento, vomitos ou incapacidade de deglutir impoem a via EV.", "verso_armadilha": "Aplicar a regra 'VO e tao boa quanto EV' para descartar a metilprednisolona endovenosa numa crianca sonolenta.", "area": "Pediatria", "tema": "Asma - Crise Aguda", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 1586, "frente_contexto": "Jovem de 18 anos com uretrite gonococica atendido na atencao basica.", "frente_pergunta": "Qual a dose de ceftriaxona indicada nesse tratamento?", "verso_resposta": "500 mg por via intramuscular, em dose unica.", "verso_regra_mestre": "500 mg IM e a dose do PCDT IST do Ministerio da Saude para gonococcia nao complicada; 1 g pertence a outros cenarios, como as formas disseminadas.", "verso_armadilha": "Marcar ceftriaxona 1 g, intramuscular, dose unica por parecer a opcao mais potente -- a dose esta acima da norma e, pior, vem sozinha.", "area": "Infecto", "tema": "IST", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 1480, "frente_contexto": "", "frente_pergunta": "Baixa estatura familiar x atraso constitucional: qual dos dois tem idade ossea compativel com a cronologica?", "verso_resposta": "Baixa estatura familiar (alvo genetico baixo, VC normal, IO compativel).", "verso_regra_mestre": "ACCP = alvo normal + IO atrasada + atraso puberal familiar; BEF = alvo baixo + IO compativel + puberdade no tempo. Os dois compartilham VC normal, que e o que os separa das causas patologicas.", "verso_armadilha": "Alvo genetico em z -2 dado no enunciado e ignorado em favor de uma idade ossea 'um pouco menor'.", "area": "Pediatria", "tema": "Baixa Estatura", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 792, "frente_contexto": "Adolescente com movimentos generalizados, versao ocular e perda de consciencia por 1 min seguida de sonolencia.", "frente_pergunta": "Qual achado, se presente durante o episodio, aponta para crise NAO epileptica?", "verso_resposta": "Localizar/responder a estimulo doloroso durante o episodio, pois indica consciencia preservada, incompativel com crise generalizada.", "verso_regra_mestre": "Na crise generalizada a consciencia esta abolida (sem resposta a dor). Resposta a dor/consciencia preservada = crise nao epileptica. Cianose, mordedura lateral, incontinencia e pos-ictal sao epilepticos.", "verso_armadilha": "Cianose central parece o achado estranho, mas e tipica da fase tonica (apneia); o achado atipico e a resposta a dor.", "area": "Neurologia", "tema": "Epilepsias", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 1582, "frente_contexto": "Adolescente de 16 anos, saudavel, sem registro de vacina contra HPV na caderneta.", "frente_pergunta": "Quantas doses de HPV o PNI 2025 indica para ele?", "verso_resposta": "Uma dose unica.", "verso_regra_mestre": "Rotina dos 9 aos 14 anos em dose unica, com resgate ate os 19 anos -- por isso um jovem de 16 anos ainda entra. Imunossuprimidos e pessoas vivendo com HIV mantem 3 doses, dos 9 aos 45 anos (PNI 2025).", "verso_armadilha": "Prescrever duas doses de HPV: o esquema de 2 doses com intervalo de 6 meses e a norma ANTIGA, ainda presente em decks e resumos desatualizados.", "area": "Pediatria", "tema": "Imunizações", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 580, "frente_contexto": "", "frente_pergunta": "Qual o procedimento indispensável antes de inserir um DIU?", "verso_resposta": "Exame pélvico -- o toque bimanual (descarta infecção e avalia a cavidade). USG transvaginal e citologia NÃO são indispensáveis; antibioticoprofilaxia não é recomendada.", "verso_regra_mestre": "Indispensável = exame pélvico; USG é opcional (prática, não teoria).", "verso_armadilha": "Marcar USG transvaginal como obrigatória -- na teoria não é.", "area": "Ginecologia", "tema": "Planejamento Familiar", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 1541, "frente_contexto": "Miomas em diferentes localizacoes no utero.", "frente_pergunta": "O que determina se um mioma vai se manifestar por sangramento ou por dor?", "verso_resposta": "A proximidade da cavidade endometrial: quanto mais proximo dela, mais sangra (submucoso da metrorragia, intramural da hipermenorragia); o subseroso so incomoda quando volumoso, e por compressao, causando dor.", "verso_regra_mestre": "O sintoma segue a distancia ate o endometrio, porque e o endometrio que sangra -- por isso subseroso volumoso doi mas nao e culpado por menorragia.", "verso_armadilha": "Ter mioma descrito no laudo nao prova que ele e a causa do sangramento; a localizacao precisa ser compativel com o sintoma.", "area": "Ginecologia", "tema": "Sangramento Uterino Anormal", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 588, "frente_contexto": "Questão de 'assinale a correta' sobre refluxo vesicoureteral (RVU)", "frente_pergunta": "A quimioprofilaxia antibiótica de longo prazo está indicada para TODO paciente com refluxo vesicoureteral?", "verso_resposta": "Não. A profilaxia é SELETIVA: graus baixos (I-III) que tendem à resolução espontânea, RN, refluxo unilateral e/ou pielonefrites de repetição. Graus altos (IV-V) e baixo grau refratário após 2-3 anos vão para CIRURGIA (reimplante). Não é indicação universal.", "verso_regra_mestre": "RVU: baixo grau (I-III) = quimioprofilaxia até resolução; alto grau (IV-V) ou refratário = cirurgia. Conduta GRADUADA pelo grau -- quantificadores absolutos ('sempre', 'todo', 'nunca') quase sempre marcam a alternativa falsa.", "verso_armadilha": "A palavra 'SEMPRE' (profilaxia para todos) é o veneno que torna a afirmação falsa -- a profilaxia é familiar/correta em parte, mas não universal.", "area": "Cirurgia", "tema": "Cirurgia Infantil", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 446, "frente_contexto": "Mulher de 20 anos com colpocitologia mostrando LSIL (LIE-BG). Rastreamento MS 2016.", "frente_pergunta": "Qual a conduta?", "verso_resposta": "Repetir a colpocitologia em 3 anos. Abaixo dos 25 anos a paciente está fora da faixa de rastreio e o LSIL tem altíssima taxa de regressão espontânea -- conduta conservadora, sem antecipar colposcopia.", "verso_regra_mestre": "A conduta no LSIL é idade-dependente: \u003c25 anos -\u003e repetir em 3 anos; \u003e=25 anos -\u003e repetir em 6 meses. (ASCUS 25-29 anos -\u003e 12 meses.) Alto grau (ASC-H/LIE-AG/AGC) -\u003e colposcopia em qualquer idade.", "verso_armadilha": "'6 meses' é a regra dos \u003e=25 anos e '1 ano' é a do ASCUS 25-29 -- ambas verdadeiras, mas para a idade/atipia erradas. O gatilho é a idade \u003c25.", "area": "Ginecologia", "tema": "Rastreamento do Câncer de Colo do Útero", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 630, "frente_contexto": "Menina de 8 anos com 1 mês de dor abdominal, perda de 5 kg, abdome aumentado e fezes esbranquiçadas (acolia), SEM febre.", "frente_pergunta": "O mecanismo do quadro é infeccioso (colangite) ou obstrutivo?", "verso_resposta": "Obstrutivo -- acolia significa que a bile não chega ao intestino, ou seja, obstrução mecânica da via biliar.", "verso_regra_mestre": "Colangite exige a tríade de Charcot (febre + icterícia + dor em hipocôndrio direito); sem febre, o raciocínio vai para massa ou cisto comprimindo a via biliar.", "verso_armadilha": "Marcar colangite pela icterícia isolada, sem exigir febre nem dor.", "area": "Cirurgia", "tema": "Cirurgia Infantil", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 1366, "frente_contexto": "Lactente com sibilância e taquidispneia que já usou SABA com espaçador em casa, de 4/4h, sem melhora.", "frente_pergunta": "Além da oxigenoterapia, qual conduta é OBRIGATÓRIA neste momento?", "verso_resposta": "Iniciar corticosteroide sistêmico oral.", "verso_regra_mestre": "Ipratrópio não é a resposta padrão à falha do SABA -- é reservado à crise já classificada como grave.", "verso_armadilha": "Acrescentar brometo de ipratrópio parece intensificação lógica do broncodilatador já usado, mas o passo obrigatório diante da falha do SABA é o corticoide oral.", "area": "Pediatria", "tema": "Asma", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 937, "frente_contexto": "Tricomoníase confirmada em mulher não gestante.", "frente_pergunta": "Qual o tratamento?", "verso_resposta": "Metronidazol por via ORAL -- 2 g em dose única ou 500 mg 12/12h por 7 dias.", "verso_regra_mestre": "O tratamento tópico não erradica: o protozoário coloniza uretra e glândulas parauretrais, fora do alcance do creme vaginal.", "verso_armadilha": "Prescrever metronidazol gel vaginal: alivia o corrimento, deixa o reservatório uretral intacto e a paciente recidiva.", "area": "Ginecologia", "tema": "Vulvovaginites", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 165, "frente_contexto": "O Índice de Swaroop-Uemura (ISU) é calculado como: óbitos em maiores de 50 anos dividido pelo total de óbitos, multiplicado por 100.", "frente_pergunta": "O Índice de Swaroop-Uemura é uma proporção ou uma taxa?", "verso_resposta": "É uma proporção. O numerador (óbitos ≥50 anos) é um subconjunto do denominador (total de óbitos), caracterizando proporção, não taxa.", "verso_regra_mestre": "Proporção: numerador é subconjunto do denominador. Taxa: numerador é evento e denominador é população em risco. Como no ISU o numerador está contido no denominador, trata-se de proporção, não taxa.", "verso_armadilha": "O nome 'índice' de Swaroop-Uemura pode induzir à classificação como 'índice composto'. A estrutura da fórmula (numerador ⊂ denominador) é o critério definitivo para classificar como proporção.", "area": "Preventiva", "tema": "Indicadores de saúde e mortalidade", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 1572, "frente_contexto": "Idoso internado ha dias em antibiotico, com distensao abdominal importante e colon dilatado do ceco ao ascendente na radiografia.", "frente_pergunta": "Colite pseudomembranosa x pseudo-obstrucao colonica aguda: qual sintoma esta sempre presente na colite e ausente na pseudo-obstrucao?", "verso_resposta": "A diarreia aquosa; na sindrome de Ogilvie ha distensao e parada de eliminacao de gases e fezes.", "verso_regra_mestre": "Antibiotico no hospital arma as duas hipoteses, mas a colite por Clostridioides difficile e inflamacao da mucosa com diarreia, febre e dor, enquanto Ogilvie e colon parado e cheio de ar, com mucosa intacta.", "verso_armadilha": "Dias de antibiotico em paciente internado empurram para colite pseudomembranosa e tratamento com metronidazol; sem diarreia, esse diagnostico nao se sustenta.", "area": "Cirurgia", "tema": "Abdome Agudo Obstrutivo", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 1570, "frente_contexto": "", "frente_pergunta": "Qual o orgao visceral mais acometido no DRESS?", "verso_resposta": "O figado, com hepatite e elevacao de transaminases.", "verso_regra_mestre": "O S de DRESS e de sintomas sistemicos: rim e pulmao tambem podem entrar, e o comprometimento visceral e o que define gravidade e indica corticoide sistemico.", "verso_armadilha": "Tratar como farmacodermia banal, apenas suspendendo a droga, sem dosar transaminases e funcao renal.", "area": "Dermato", "tema": "Farmacodermias", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 1532, "frente_contexto": "Mulher de 48 anos, tabagista, com sangramento uterino anormal e necessidade de controle hormonal.", "frente_pergunta": "Que dado do enunciado retira o contraceptivo combinado da lista de opcoes?", "verso_resposta": "O tabagismo somado a idade: a partir dos 35 anos, fumar torna o combinado categoria 3 ou 4 nos criterios de elegibilidade da OMS, conforme a carga tabagica.", "verso_regra_mestre": "Criterio de elegibilidade e filtro de seguranca e roda ANTES da escolha por eficacia -- nenhum metodo entra na comparacao se ja foi excluido por categoria 3 ou 4.", "verso_armadilha": "O resumo lista o combinado como 1a escolha do SUA nao estrutural; a idade e o cigarro no enunciado sao o que revoga essa 1a escolha.", "area": "Ginecologia", "tema": "Sangramento Uterino Anormal", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 1557, "frente_contexto": "", "frente_pergunta": "Abaixo de quantas horas de vida o simples inicio da ictericia ja a torna patologica?", "verso_resposta": "24 horas de vida.", "verso_regra_mestre": "A ictericia fisiologica depende do acumulo pos-natal de bilirrubina indireta e so aparece do 2o ao 3o dia, com pico entre o 3o e o 5o no termo e entre o 5o e o 7o no pre-termo. Ictericia no primeiro dia significa hemolise ou infeccao ate prova em contrario.", "verso_armadilha": "Um distrator da mesma questao trazia inicio com 37 horas de vida -- ja fora da janela; o caso correto trazia 12 horas, dentro dela.", "area": "Pediatria", "tema": "Icterícia e Sepse Neonatal", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 1563, "frente_contexto": "", "frente_pergunta": "Qual grupo populacional tem o maior risco de adoecer por tuberculose no Brasil, segundo o Manual de Recomendacoes para o Controle da TB do Ministerio da Saude?", "verso_resposta": "A populacao em situacao de rua, com cerca de 56 vezes o risco da populacao geral.", "verso_regra_mestre": "Hierarquia completa (MS, Manual de TB, 2a ed., 2024): situacao de rua cerca de 56x; pessoas vivendo com HIV cerca de 28x; pessoas privadas de liberdade cerca de 28x; indigenas cerca de 3x. Guardar a ordem e a escala, nao o multiplicador exato -- os numeros oscilam a cada edicao.", "verso_armadilha": "'pessoas privadas de liberdade' e a escolha intuitiva pelo ambiente fechado e superlotado, mas vale metade do risco da populacao em situacao de rua.", "area": "Infecto", "tema": "Tuberculose", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 1578, "frente_contexto": "Mulher de 42 anos com febre reumatica na infancia, estenose mitral moderada ao ecocardiograma e episodios de fibrilacao atrial no Holter.", "frente_pergunta": "Qual anticoagulante oral esta indicado para prevenir embolia sistemica nessa paciente?", "verso_resposta": "Varfarina, com a dose ajustada pelo INR (alvo 2 a 3).", "verso_regra_mestre": "Estenose mitral moderada a grave e protese valvar mecanica definem a FA valvar, e a FA valvar so aceita antagonista da vitamina K.", "verso_armadilha": "Rivaroxabana 15 mg uma vez ao dia parece correta por ser a dose renal do farmaco; a questao nem chega na dose, porque a classe inteira esta vetada.", "area": "Cardiologia", "tema": "Arritmias", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 1585, "frente_contexto": "Adolescente que recebeu uma unica dose de febre amarela aos 9 meses de vida e nenhuma depois.", "frente_pergunta": "Ele ja tem o esquema de febre amarela considerado completo?", "verso_resposta": "Nao -- falta o reforco, porque a dose foi aplicada antes dos 4 anos.", "verso_regra_mestre": "Febre amarela: dose aos 9 meses mais reforco aos 4 anos; quem recebeu a primeira dose ANTES dos 4 anos precisa de mais uma, e quem recebeu depois dos 4 anos ja esta completo com dose unica. Hepatite B segue a mesma logica de resgate: 3 doses no total, entao 2 registradas deixam 1 faltando.", "verso_armadilha": "Contar a dose de 9 meses como esquema fechado. A regra e etaria, nao contabil: o que decide e a IDADE em que a dose foi aplicada.", "area": "Pediatria", "tema": "Imunizações", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 1590, "frente_contexto": "Investigacao de doenca hemolitica perinatal por aloimunizacao materna.", "frente_pergunta": "Qual dos testes de Coombs e colhido no sangue da mae, o direto ou o indireto?", "verso_resposta": "O indireto.", "verso_regra_mestre": "Indireto = soro da MAE, procura anticorpo livre (rastreio de aloimunizacao no pre-natal). Direto = hemacias do RECEM-NASCIDO, mostra o anticorpo ja ligado a hemacia.", "verso_armadilha": "Pedir o teste de Coombs direto no sangue materno inverte os dois eixos de uma vez: exame errado no sitio errado.", "area": "Obstetrícia", "tema": "Infecções Congênitas", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 1117, "frente_contexto": "Paciente com dor e sangramento vaginal, beta-hCG de 200 mUI/mL e USG sem gestacao intrauterina.", "frente_pergunta": "E correto indicar cirurgia invasiva por suspeita de ectopica em gestante assintomatica com beta-hCG \u003c 1.500 mUI/mL e USG sem saco gestacional?", "verso_resposta": "Nao (com beta-hCG \u003c 1.500 a ausencia de saco intrauterino e normal).", "verso_regra_mestre": "Sem instabilidade e com beta \u003c 1.500 mUI/mL, o correto e acompanhar a curva seriada.", "verso_armadilha": "Operar gestante assintomatica antes de atingir a zona discriminatoria do beta-hCG.", "area": "GO", "tema": "Gravidez ectópica", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 1559, "frente_contexto": "Pessoa que entrou em contato com agua de colecao hidrica contaminada.", "frente_pergunta": "Quanto tempo depois da infeccao ela comeca a eliminar ovos viaveis de S. mansoni nas fezes?", "verso_resposta": "Cerca de 5 semanas.", "verso_regra_mestre": "O intervalo e o tempo de maturacao, nao um prazo arbitrario: a cercaria penetra a pele, vira esquistossomulo, migra pelo pulmao ate o sistema porta, amadurece em verme adulto e so entao acasala no canal ginecoforo para ovipor -- nao ha ovo antes de haver casal adulto. (MS, Guia de Vigilancia em Saude.)", "verso_armadilha": "'a partir de 1 semana': em sete dias o parasita ainda esta migrando pelo pulmao -- o periodo pre-patente e biologicamente incompressivel.", "area": "Infecto", "tema": "Esquistossomose", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 1457, "frente_contexto": "Sindrome de West em lactente.", "frente_pergunta": "Em qual etiologia a vigabatrina passa a frente do ACTH/corticoide como droga de escolha?", "verso_resposta": "Quando a causa e esclerose tuberosa.", "verso_regra_mestre": "West por encefalopatia hipoxico-isquemica e outras etiologias: ACTH ou corticoide; West por esclerose tuberosa: vigabatrina (risco de constricao do campo visual).", "verso_armadilha": "Responder 'ACTH' para todo West ignora a excecao etiologica mais cobrada.", "area": "Neurologia", "tema": "Epilepsias", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 1555, "frente_contexto": "Recem-nascido icterico cujo laboratorio traz apenas bilirrubina total e bilirrubina indireta.", "frente_pergunta": "Acima de que valor a fracao direta, sozinha, ja classifica a ictericia como patologica?", "verso_resposta": "Acima de 1 mg/dl.", "verso_regra_mestre": "Bilirrubina direta e bilirrubina ja conjugada: ela so se acumula se houver obstrucao, lesao hepatocelular ou infeccao. A ictericia fisiologica e integralmente indireta (sobrecarga de hemacias mais glicuroniltransferase imatura), entao qualquer colestase relevante e patologica por definicao, independentemente de quao baixa esteja a bilirrubina total.", "verso_armadilha": "A prova quase nunca entrega a fracao direta: entrega total e indireta e espera a subtracao. Total de 2 mg/dl com indireta de 0,8 parece 'quase normal' e esconde uma direta de 1,2 mg/dl.", "area": "Pediatria", "tema": "Icterícia e Sepse Neonatal", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 1575, "frente_contexto": "Crianca de 6 anos com claudicacao e queixa de dor no joelho; o exame do joelho e normal e ha limitacao da rotacao interna e da abducao do quadril.", "frente_pergunta": "Qual o diagnostico mais provavel?", "verso_resposta": "Doenca de Legg-Calve-Perthes, necrose avascular da cabeca femoral.", "verso_regra_mestre": "Dor de joelho na crianca obriga a examinar o quadril, porque a dor do quadril e referida no joelho pelo nervo obturatorio; exame do joelho normal com marcha alterada muda a busca de articulacao.", "verso_armadilha": "Parar o exame no joelho que doi e perder a doenca do quadril, que e a que muda o prognostico.", "area": "Pediatria", "tema": "Ortopedia Pediátrica", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 1569, "frente_contexto": "", "frente_pergunta": "Quanto tempo depois do inicio da droga costuma aparecer o DRESS?", "verso_resposta": "De 2 a 6 semanas -- latencia longa, bem maior que a das reacoes cutaneas imediatas.", "verso_regra_mestre": "Os deflagradores classicos sao alopurinol, sulfonas e antiepilepticos aromaticos (carbamazepina, fenitoina, fenobarbital); pela latencia longa, droga em uso ha mais de um mes segue suspeita.", "verso_armadilha": "Descartar a droga como causa porque o paciente ja a toma ha semanas -- essa e justamente a janela do DRESS.", "area": "Dermato", "tema": "Farmacodermias", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 685, "frente_contexto": "Criança falcemica com febre e quadro compativel com crise aplastica por Parvovirus B19.", "frente_pergunta": "Como se encontram as series leucocitaria e plaquetaria no hemograma e qual a conduta em relacao a internacao?", "verso_resposta": "Leucocitos e plaquetas normais (aplasia eritroide pura). A internacao hospitalar e obrigatoria devido a queda imprevisivel da hemoglobina.", "verso_regra_mestre": "O Parvovirus B19 ataca apenas precursores eritroides. Leucocitos e plaquetas estao poupados. Como a sobrevida da hemacia SS e muito curta (10-20 dias), a interrupcao da eritropoiese causa queda subita de Hb, exigindo internacao pelo nadir imprevisivel.", "verso_armadilha": "Achar que ocorre pancitopenia generalizada (diminuicao de leucocitos e plaquetas), ou dar alta para acompanhamento ambulatorial por ser autolimitada.", "area": "Clínica Médica", "tema": "Anemias Hemolíticas", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 689, "frente_contexto": "Paciente com dor ocular unilateral moderada, congestao periciliar (ciliar), cornea clara e reflexo pupilar fraco a luz.", "frente_pergunta": "Qual o principal diagnostico diferencial a ser suspeitado?", "verso_resposta": "Uveite anterior aguda.", "verso_regra_mestre": "Na uveite anterior, a cornea permanece clara e a pupila fica em miose/hiporreativa por espasmo. Na ceratite, a cornea apresenta opacidades ou infiltrados visiveis.", "verso_armadilha": "Marcar ceratite infecciosa mesmo com o enunciado informando que a cornea encontra-se clara.", "area": "Clínica Médica", "tema": "Síndrome do Olho Vermelho", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 695, "frente_contexto": "Menino de 9 anos com exoftalmia unilateral de evolução rápida, sem sinais sistêmicos inflamatorios evidentes.", "frente_pergunta": "Qual o diagnostico cobrado por bancas de prova como principal hipotese nesse cenario onco-oftalmologico?", "verso_resposta": "Rabdomiossarcoma (sarcoma de tecidos moles).", "verso_regra_mestre": "Epidemiologicamente na pratica clinica, a celulite orbitaria e a principal causa de exoftalmia unilateral na infancia. Mas em provas de residência, o Rabdomiossarcoma e o tumor primario maligno orbital mais comum em criancas, cursando com proptose nao-axial de evolucao rapida.", "verso_armadilha": "Errar a questao por insistir no diagnostico infeccioso de celulite orbitaria quando a banca busca o diagnostico do tumor primario.", "area": "Clínica Médica", "tema": "Síndrome do Olho Vermelho", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 1536, "frente_contexto": "Sangramento uterino anormal agudo, com sangramento ativo pelo colo.", "frente_pergunta": "Qual dado decide entre tratamento clinico e tratamento cirurgico no SUA agudo?", "verso_resposta": "A estabilidade hemodinamica apos a reposicao volemica: paciente que estabiliza segue no clinico; paciente que permanece instavel apos o volume vai para o cirurgico.", "verso_regra_mestre": "O no e a resposta a volemia, nao a quantidade de sangue vista no especular nem a gravidade aparente do quadro.", "verso_armadilha": "Sangramento ativo impressiona e puxa para a intervencao, mas sozinho ele nao move o degrau -- so a instabilidade que persiste apos o volume move.", "area": "Ginecologia", "tema": "Sangramento Uterino Anormal", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 1620, "frente_contexto": "Gestante de 25 semanas com dor em flanco direito, nauseas e vomitos; leucocitos 11.500 com VR do laboratorio em 10.000.", "frente_pergunta": "A leucocitose sustenta o diagnostico de processo inflamatorio agudo?", "verso_resposta": "Nao. A gestacao cursa com leucocitose FISIOLOGICA (ate ~15.000 no 2o e 3o trimestres, e mais no trabalho de parto). A suspeita de apendicite aqui e CLINICA -- dor em flanco pelo deslocamento cefalico do apendice --, nao laboratorial.", "verso_regra_mestre": "Na gestante, leucograma nao discrimina inflamacao. O que sustenta a suspeita e a topografia da dor, e o 1o exame e a USG; persistindo duvida, RM sem contraste (nunca TC).", "verso_armadilha": "O enunciado entrega o VR de 10.000 como se fosse o da gestante. O valor de referencia impresso na questao e o distrator -- ele valida um raciocinio que a fisiologia da gravidez derruba.", "area": "Cirurgia", "tema": "Apendicite Aguda", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 688, "frente_contexto": "Paciente com sinusite desenvolve edema/hiperemia palpebral associado a dor a movimentacao do olho.", "frente_pergunta": "Qual o diagnostico sindromico correspondente, o exame de imagem indicado e a via de antibioticoterapia?", "verso_resposta": "Celulite orbitaria (pos-septal); Tomografia Computadorizada (TC); Antibioticoterapia intravenosa imediata (com internacao).", "verso_regra_mestre": "A dor a movimentacao ocular e o sinal que define a infeccao como pos-septal. Isso exige TC para afastar abscessos e internacao para ATB venoso. O raio-x simples e inadequado.", "verso_armadilha": "Tratar como celulite pre-septal simples com antibiotico oral e compressas, ou pedir raio-x de seios da face.", "area": "Clínica Médica", "tema": "Síndrome do Olho Vermelho", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 450, "frente_contexto": "Úlcera genital com mais de 4 semanas de evolução (lesão crônica). Abordagem sindrômica do MS.", "frente_pergunta": "Quais agentes o tratamento deve cobrir?", "verso_resposta": "Sífilis (penicilina benzatina 2,4 mi UI) + cancro mole (azitromicina 1g OU ciprofloxacino) + LGV/donovanose (DOXICICLINA 100mg 12/12h por 21 dias). Lesão crônica também exige biópsia para excluir neoplasia.", "verso_regra_mestre": "Úlcera \u003e4 semanas = expandir a cobertura para os agentes crônicos (LGV/donovanose -\u003e doxiciclina 21 dias) + biópsia. Azitromicina em dose única NÃO cobre LGV nem donovanose.", "verso_armadilha": "A opção sem doxiciclina cobre só sífilis + cancro mole -- insuficiente na lesão crônica.", "area": "Ginecologia", "tema": "Úlceras Genitais", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 824, "frente_contexto": "", "frente_pergunta": "Quais os agentes mais comuns da colangite aguda?", "verso_resposta": "Enterobacterias (Gram-negativas entericas): E. coli e a principal (25-50%), seguida de Klebsiella (15-20%) e Enterobacter. Entre as Gram-positivas, Enterococcus (10-20%); anaerobios (Bacteroides, Clostridium) em infeccao mista.", "verso_regra_mestre": "Colangite = infeccao ASCENDENTE do duodeno -\u003e predominam enterobacterias (E. coli). A obstrucao rompe as barreiras (esfincter de Oddi, sais biliares).", "verso_armadilha": "Excluir as enterobacterias -- sao justamente a causa principal da colangite (E. coli em 25-50%).", "area": "Cirurgia", "tema": "Abdome Agudo Inflamatório - Colecistite e Colangite Aguda", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 750, "frente_contexto": "", "frente_pergunta": "Quais os principais fatores de risco para candidiase vulvovaginal?", "verso_resposta": "Antibioticoterapia, diabetes, gravidez e imunossupressao (corticoide/HIV). O HPV NAO se associa a vaginite citolitica.", "verso_regra_mestre": "Candidiase = fungo oportunista: ATB elimina os lactobacilos, DM oferta glicose, gravidez e imunossupressao criam o terreno.", "verso_armadilha": "Associar HPV a vaginite citolitica -- nao ha essa relacao; a citolitica decorre de EXCESSO de lactobacilos (pH muito acido).", "area": "Ginecologia", "tema": "Vulvovaginites", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 281, "frente_contexto": "RN a termo com vômitos não biliosos e distensão abdominal; RX mostra sinal da dupla bolha.", "frente_pergunta": "Por que o sinal da dupla bolha afasta atresia ileal, mesmo com vômitos e distensão abdominal?", "verso_resposta": "Porque a atresia ileal produziria múltiplos níveis hidroaéreos, ausentes na dupla bolha.", "verso_regra_mestre": "O número e a distribuição dos niveis hidroaéreos no RX localizam o ponto de obstrução no tubo digestivo: poucos niveis proximais indicam obstrução alta (duodenal); múltiplos niveis distribuidos indicam obstrução baixa (ileal/colônica).", "verso_armadilha": "Ver distensão abdominal e vômitos e pensar em obstrução intestinal generica (incluindo ileal), sem usar o padrão radiologico específico (dupla bolha = apenas 2 niveis, localização alta) para descartar causas mais distais.", "area": "Cirurgia", "tema": "[bulk] Cirurgia", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 964, "frente_contexto": "", "frente_pergunta": "A partir de que dia de sintomas o diagnostico da dengue passa a ser feito por sorologia IgM (ELISA)?", "verso_resposta": "A partir do 6o dia.", "verso_regra_mestre": "Fase viremica (ate o 5o dia) = detectar o VIRUS (NS1 ou RT-PCR); fase tardia (do 6o dia em diante) = detectar o ANTICORPO (IgM).", "verso_armadilha": "Pedir NS1 no 8o dia de doenca: fora da janela viremica o antigeno ja negativou.", "area": "Infecto", "tema": "Arboviroses", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 120, "frente_contexto": "beta-hCG inicial 2.300; 1a US sem imagem intrauterina; 2a US: saco gestacional intrauterino com embriao (CCN 3mm) + massa anexial direita SEM fluxo ao Doppler; beta-hCG em elevacao significativa.", "frente_pergunta": "Qual o diagnostico mais provavel?", "verso_resposta": "Gestação heterotópica -- coexistência de gestação intrauterina viável com gestação ectópica simultânea. A ausência de fluxo ao Doppler não exclui ectópica; o diagnóstico é firmado pela presença de dois sítios gestacionais com β-hCG elevado.", "verso_regra_mestre": "Gestação heterotópica (incidência 1:30.000 espontânea, maior com FIV) pode não apresentar vascularização ao Doppler. O 'ring of fire' é clássico em GE tubária, mas sua ausência não afasta o diagnóstico. Sempre suspeitar quando há saco intrauterino viável + imagem anexial + β-hCG com evolução significativa.", "verso_armadilha": "Ausência de fluxo ao Doppler pode erroneamente sugerir tumor benigno (teratoma), levando a descartar gestação ectópica. A presença simultânea de gestação intrauterina confirmada + estrutura em anexo + β-hCG elevado é pista crítica. Tratamento é cirúrgico (MTX contraindicado com gestação intrauterina viável).", "area": "Ginecologia", "tema": "Gravidez ectópica", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 148, "frente_contexto": "O Brasil observou uma desaceleração no ritmo de queda da razão de mortalidade materna a partir de 2009, apesar de investimentos contínuos em saúde materna.", "frente_pergunta": "Qual é a explicação epidemiológica mais correta para a redução do ritmo de queda da mortalidade materna no Brasil?", "verso_resposta": "A investigação aprimorada de óbitos por causa mal definida em mulheres em idade fértil identificou mortes maternas previamente não registradas, aumentando o numerador da Razão de Mortalidade Materna. Essa melhoria na notificação mascara a queda real do indicador, resultando em desaceleração aparente da tendência.", "verso_regra_mestre": "A melhoria dos sistemas de vigilância epidemiológica pode aumentar o número absoluto de casos registrados sem que haja piora real da saúde. A redução de óbitos por causa mal definida é uma estratégia que expõe mortalidade materna oculta, criando o paradoxo de um indicador que parece estabilizar enquanto a mortalidade real continua diminuindo.", "verso_armadilha": "Não confundir com aumento do financiamento em saúde como causa: financiamento melhora acesso, mas não explica por que o indicador desacelerou. A desaceleração reflete melhor detecção, não piora de qualidade assistencial.", "area": "Preventiva", "tema": "Indicadores de saúde e mortalidade", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 1545, "frente_contexto": "Paciente grave e transferido de um hospital de baixa complexidade para um hospital de referencia de outro municipio.", "frente_pergunta": "Em qual nivel de territorio se expressa essa articulacao entre pontos de atencao?", "verso_resposta": "Territorio-distrito (distrito sanitario).", "verso_regra_mestre": "O distrito sanitario e o nivel onde a rede de atencao a saude existe: e ali que servicos de complexidades diferentes se articulam e o paciente transita entre pontos de atencao.", "verso_armadilha": "Procurar o nivel pelo tipo de acao (assistencial, educativa) em vez da escala. Movimento ENTRE servicos so cabe no distrito -- nenhum degrau abaixo comporta a rede.", "area": "Preventiva", "tema": "Atenção Primária à Saúde no Brasil", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 373, "frente_contexto": "Diferenciação entre a periodicidade de notificação de agravos crônicos/degenerativos e agudos, como Chagas e Doença de Creutzfeldt-Jakob.", "frente_pergunta": "Por que classificar a Doença de Creutzfeldt-Jakob como notificação IMEDIATA é um erro, mesmo sendo uma doença rara e gravíssima?", "verso_resposta": "Porque a periodicidade não depende da gravidade ou raridade -- por ser degenerativa e sem transmissão aguda ativa, a notificação da DCJ é SEMANAL, não imediata.", "verso_regra_mestre": "A periodicidade segue o risco de transmissão ativa e a urgência de resposta em saúde pública, não a gravidade clínica isolada: agravo agudo com risco de disseminação -\u003e imediata (24h); agravo crônico ou degenerativo, mesmo grave, -\u003e semanal.", "verso_armadilha": "Associar 'doença grave e rara' a 'precisa de notificação urgente' -- raciocínio intuitivo, mas errado nesse sistema de classificação, que se baseia em risco de transmissão, não em gravidade.", "area": "Preventiva", "tema": "Sistemas de Informação em Saúde", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 629, "frente_contexto": "", "frente_pergunta": "Criptorquidia com testículo NÃO PALPÁVEL após o período de espera -- qual o exame/conduta de escolha?", "verso_resposta": "VIDEOLAPAROSCOPIA (acurácia ~100%): localiza e trata. Se intra-abdominal viável -\u003e orquidopexia em 1 ou 2 tempos (Fowler-Stephens); se atrófico/hipodesenvolvido -\u003e orquiectomia. Indicada após espera de 4-6 meses (executar entre 6 meses e 1 ano).", "verso_regra_mestre": "O achado do exame define a via: PALPÁVEL -\u003e orquidopexia aberta inguinal; NÃO PALPÁVEL -\u003e laparoscopia. USG tem baixa acurácia (44%) e não substitui a laparoscopia.", "verso_armadilha": "Indicar exploração inguinal/orquidopexia aberta no NÃO palpável -- a via correta é laparoscópica (o testículo pode ser intra-abdominal).", "area": "Cirurgia", "tema": "Cirurgia Infantil", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 1355, "frente_contexto": "", "frente_pergunta": "Segundo o Art 199 CF §1º, as diretrizes para a participação complementar de instituições privadas no SUS são fixadas por contrato de direito público ou de direito privado?", "verso_resposta": "Contrato de DIREITO PÚBLICO (ou convênio) -- nunca contrato de direito privado.", "verso_regra_mestre": "A natureza jurídica do vínculo é pública mesmo quando o prestador é uma entidade privada -- é o SUS regulando a relação, não um contrato comercial comum.", "verso_armadilha": "'Contrato de direito privado' é a troca de substantivo mais cobrada do Art 199 -- soa neutro/plausível, mas inverte a natureza jurídica exigida pela Constituição.", "area": "Preventiva", "tema": "Princípios e Diretrizes do SUS", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 1356, "frente_contexto": "", "frente_pergunta": "A vedação constitucional à participação de empresas ou capitais estrangeiros na assistência à saúde (Art 199 §3º) é absoluta, sem nenhuma exceção?", "verso_resposta": "Não -- é vedada, salvo nos casos previstos em lei (a Lei 13.097/2015 abriu exceções regulamentadas para capital estrangeiro no setor de saúde).", "verso_regra_mestre": "Tratar a vedação como regra geral COM exceção legal expressa, não como proibição total e absoluta.", "verso_armadilha": "Quem decora a vedação como 'total, sem exceção' marca como falsa uma afirmativa que na verdade reproduz corretamente a ressalva 'salvo casos previstos em lei'.", "area": "Preventiva", "tema": "Princípios e Diretrizes do SUS", "selection_reason": "vencido", "bucket": "atrasados"}, {"card_id": 650, "frente_contexto": "Crianca de 6-11 anos com sintomas de asma menos de 2x por semana.", "frente_pergunta": "Qual o esquema de STEP 1 do GINA para essa faixa etaria?", "verso_resposta": "SABA por demanda, sempre com CI (corticoide inalatorio) em dose baixa concomitante -- em inaladores combinados ou separados. CI-formoterol (MART) so entra a partir do STEP 3-4 nessa faixa etaria.", "verso_regra_mestre": "GINA aboliu o SABA TOTALMENTE isolado (sem nenhum CI) a partir dos 6 anos -- mas o ESQUEMA muda por idade: 6-11 anos mantem SABA de resgate + CI concomitante; so a partir dos 12 anos o resgate vira CI-formoterol por demanda desde o STEP 1.", "verso_armadilha": "Aplicar o esquema do adolescente/adulto (CI-formoterol por demanda desde o STEP 1) a uma crianca de 6-11 anos -- o STEP 1 pediatrico ainda usa SABA de resgate, so que nunca mais sozinho sem CI.", "area": "Pediatria", "tema": "Asma na Infância", "selection_reason": "agendado", "bucket": "hoje"}, {"card_id": 537, "frente_contexto": "Homem de 67 anos, assintomático, com anemia microcítica/hipocrômica em exame de rotina e pai com câncer de cólon aos 56 anos.", "frente_pergunta": "Por que a pesquisa de sangue oculto nas fezes é conduta INADEQUADA aqui?", "verso_resposta": "Porque a anemia ferropriva no idoso já é um ACHADO que obriga investigação do TGI com COLONOSCOPIA (e EDA) -- a PSO tem baixa sensibilidade e não serve para investigar; ela é teste de rastreio de assintomático. O paciente precisa do exame que vê e biopsia a lesão.", "verso_regra_mestre": "Mesma regra do paciente que sangra: sintoma/achado (anemia ferropriva) -\u003e colonoscopia diagnóstica, nunca sangue oculto. Idoso + anemia microcítica sem causa = colonoscopia obrigatória (a causa mais temida é o CCR de cólon direito, que sangra devagar).", "verso_armadilha": "A armadilha desvia a atenção para a USG de aorta (rastreio de AAA, que É adequado em homem 65-75 anos que fumou), fazendo parecer que ELA é a inadequada. A inadequada é o sangue oculto num paciente que precisa de colonoscopia.", "area": "Gastro", "tema": "Pólipos e Neoplasias Intestinais", "selection_reason": "agendado", "bucket": "hoje"}, {"card_id": 734, "frente_contexto": "Apendicite de cerca de 1 semana de evolucao com massa palpavel no quadrante inferior direito; paciente estavel.", "frente_pergunta": "Qual a conduta diante de um plastrao apendicular (massa bloqueada) em paciente estavel?", "verso_resposta": "Conservadora: ATB 4 a 7 dias, TC para caracterizar, e apendicectomia de intervalo depois. NAO operar de imediato. Drenagem so se houver abscesso maior ou igual a 4 cm.", "verso_regra_mestre": "Massa bloqueada + estavel = conservador (esfria e opera de intervalo). Cirurgia imediata e so para nao-complicada ou peritonite difusa/instavel. Grave e bloqueado nao significa operar ja.", "verso_armadilha": "A palavra apendicite puxa para indicacao cirurgica agora; mas o plastrao bloqueado e estavel pede o contrario, conservador. Mesmo reflexo do liquido livre = operar do trauma.", "area": "Cirurgia", "tema": "Apendicite Aguda", "selection_reason": "agendado", "bucket": "hoje"}, {"card_id": 1550, "frente_contexto": "", "frente_pergunta": "Ligadura elastica e escleroterapia sao procedimentos indicados para hemorroida interna ou externa?", "verso_resposta": "Somente para a interna.", "verso_regra_mestre": "Sao procedimentos ambulatoriais aplicados ACIMA da linha denteada, na zona sem inervacao somatica -- e por isso dispensam anestesia. Abaixo dela seriam intoleravelmente dolorosos, o que ja explica por que nao servem para doenca externa.", "verso_armadilha": "As duas aparecem como distratores em caso de trombose EXTERNA; e a hemorroidectomia de urgencia, o terceiro distrator, so cabe na hemorroida interna prolapsada, estrangulada ou gangrenada.", "area": "Cirurgia", "tema": "Doenca Hemorroidaria", "selection_reason": "agendado", "bucket": "hoje"}, {"card_id": 1537, "frente_contexto": "Paciente com sangramento uterino ativo no momento do atendimento.", "frente_pergunta": "Por que a histeroscopia nao entra na conduta do episodio agudo?", "verso_resposta": "Porque o sangue na cavidade impede a visualizacao e inviabiliza o exame; a histeroscopia e investigacao eletiva, feita apos o controle do sangramento.", "verso_regra_mestre": "Exame de cavidade exige cavidade limpa -- sangramento ativo e contraindicacao tecnica, nao apenas preferencia de momento.", "verso_armadilha": "O rotulo de padrao-ouro faz a histeroscopia parecer resposta segura em qualquer cenario de sangramento.", "area": "Ginecologia", "tema": "Sangramento Uterino Anormal", "selection_reason": "agendado", "bucket": "hoje"}, {"card_id": 1535, "frente_contexto": "Mulher de 47 anos com fluxo aumentado, intervalo menstrual de 40 a 50 dias, exame fisico e ultrassonografia pelvica normais.", "frente_pergunta": "Qual a causa do sangramento pela classificacao PALM-COEIN?", "verso_resposta": "Disturbio ovulatorio (SUA-O), por esgotamento folicular da perimenopausa.", "verso_regra_mestre": "Imagem normal elimina o bloco PALM inteiro, que e por definicao estrutural -- restando apenas o COEIN, o intervalo alargado aponta o O.", "verso_armadilha": "Nomear adenomiose pela idade e pelo fluxo aumentado, sem o achado que a define, e o erro que a USG normal deveria ter barrado.", "area": "Ginecologia", "tema": "Sangramento Uterino Anormal", "selection_reason": "agendado", "bucket": "hoje"}, {"card_id": 1534, "frente_contexto": "Mulher na pos-menopausa, sem terapia hormonal, com sangramento vaginal ha quatro meses e multiplos fatores de risco para cancer de endometrio.", "frente_pergunta": "Qual exame abre a investigacao?", "verso_resposta": "Ultrassonografia transvaginal.", "verso_regra_mestre": "Ser padrao-ouro define acuracia, nao posicao na fila -- a histeroscopia so entra depois, se a espessura endometrial vier alterada (acima de 4 a 5 mm sem terapia hormonal).", "verso_armadilha": "Fatores de risco empilhados no enunciado criam sensacao de urgencia e fazem saltar direto para a histeroscopia diagnostica.", "area": "Ginecologia", "tema": "Sangramento Uterino Anormal", "selection_reason": "agendado", "bucket": "hoje"}, {"card_id": 1533, "frente_contexto": "Transicao menopausal com ciclos anovulatorios e sangramento aumentado.", "frente_pergunta": "Por que o progestagenio de segunda fase corrige o mecanismo do sangramento anovulatorio?", "verso_resposta": "Porque repoe a oposicao progestogenica que o corpo luteo deixou de produzir, estabilizando o endometrio proliferado por estrogenio isolado e gerando descamacao programada.", "verso_regra_mestre": "No ciclo anovulatorio nao ha corpo luteo, logo nao ha progesterona -- o tratamento devolve exatamente a peca que falta, em vez de sobrepor um ciclo artificial inteiro.", "verso_armadilha": "Tratar como se o problema fosse falta de controle hormonal generico leva ao combinado; o problema e a falta de UMA das duas fases.", "area": "Ginecologia", "tema": "Sangramento Uterino Anormal", "selection_reason": "agendado", "bucket": "hoje"}, {"card_id": 1096, "frente_contexto": "Paciente com endometriose e implantes endometrioticos pelvicos.", "frente_pergunta": "Qual e a principal alteracao molecular receptorial observada no endometrio de mulheres com endometriose?", "verso_resposta": "Resistencia a progesterona.", "verso_regra_mestre": "A resistencia a progesterona impede o efeito antiestrogenico e antiproliferativo normal no tecido endometriotico; a aromatase tambem esta sobre-expressa.", "verso_armadilha": "Confundir producao local de estrogenio (aromatase) com a alteracao receptorial canonica (resistencia a progesterona).", "area": "GO", "tema": "Endometriose", "selection_reason": "agendado", "bucket": "hoje"}, {"card_id": 1556, "frente_contexto": "", "frente_pergunta": "Que combinacao de tipagem sanguinea entre mae e recem-nascido e necessaria para haver doenca hemolitica por incompatibilidade ABO?", "verso_resposta": "Mae do grupo O com recem-nascido do grupo A ou B.", "verso_regra_mestre": "A direcao e obrigatoria e vem do mecanismo: so a mae do grupo O produz anti-A e anti-B da classe IgG, que atravessam a placenta; maes A ou B produzem anticorpos IgM, que nao passam.", "verso_armadilha": "'RN O+ e mae A+' parece incompatibilidade porque os grupos sao diferentes, mas esta na direcao invertida -- e um bebe do grupo O nao tem antigeno para o anticorpo materno atacar.", "area": "Pediatria", "tema": "Icterícia e Sepse Neonatal", "selection_reason": "agendado", "bucket": "hoje"}], "teto": 90, "nota_orquestrador": "6 cards do cluster nefro (acido-base/potassio) segurados para aula-base D10 antes do re-drill; preenchido com os proximos vencidos"}</script>
+<script>
+(function(){
+  "use strict";
+
+  var LOTE = {sessao:"exemplo", gerado_em:"", total:0, cards:[]};
+  try{
+    LOTE = JSON.parse(document.getElementById("lote").textContent) || LOTE;
+  }catch(e){
+    LOTE = {sessao:"erro", gerado_em:"", total:0, cards:[]};
+  }
+  var CARDS = Array.isArray(LOTE.cards) ? LOTE.cards : [];
+
+  var $ = function(id){ return document.getElementById(id); };
+  var notas = new Map();      // card_id -> {card_id, rating_primeira, ts, defeito, motivo}
+  var fila = [];              // cards pendentes, na ordem de apresentacao
+  var virado = false;
+  var colecao = null;         // ref da colecao sessoes/<sessao>/notas
+  var dbOk = false;
+  var dbDeclarado = false;    // ja avisamos que o db esta fora?
+  var interagiu = false;      // trava o remount tardio depois do 1o gesto
+  var inicio = Date.now();
+
+  var ROTULO = {
+    vencido:"revisao vencida", fresh_error:"erro recente",
+    agendado:"agendado p/ hoje", novo:"novo", pre_bloco:"pre-bloco"
+  };
+
+  // ---------------------------------------------------------------- avisos
+  function avisar(texto){
+    var el = $("aviso");
+    el.textContent = texto;
+    el.hidden = false;
+  }
+
+  // ------------------------------------------------------------- persistir
+  function pacoteNotas(){
+    var lista = [];
+    notas.forEach(function(n){ lista.push(n); });
+    lista.sort(function(a,b){ return a.card_id - b.card_id; });
+    return {sessao: LOTE.sessao, gerado_em: LOTE.gerado_em, notas: lista};
+  }
+
+  function renderFallback(){
+    $("json-notas").textContent = JSON.stringify(pacoteNotas(), null, 1);
+  }
+
+  function salvar(registro){
+    atualizarPainel();
+    renderFallback();
+    if(!dbOk || !colecao){
+      if(!dbDeclarado){
+        dbDeclarado = true;
+        avisar("Armazenamento da sessao indisponivel nesta visualizacao. As notas seguem sendo contadas aqui: copie o JSON do fim da pagina e cole no chat para o agente gravar.");
+        $("fim").hidden = false;
+        $("fim-titulo").textContent = "Notas desta sessao (copiar e colar)";
+        $("fim-origem").textContent = "Fallback declarado: a capability db nao respondeu, entao nada foi gravado remotamente.";
+      }
+      return Promise.resolve();
+    }
+    return colecao.doc(String(registro.card_id)).set(registro).catch(function(err){
+      dbOk = false;
+      avisar("Falha ao gravar a nota (" + ((err && err.code) || "erro") + "). As notas continuam aqui: copie o JSON do fim da pagina.");
+      $("fim").hidden = false;
+      $("fim-titulo").textContent = "Notas desta sessao (copiar e colar)";
+      renderFallback();
+    });
+  }
+
+  // ---------------------------------------------------------------- painel
+  function atualizarPainel(){
+    var t = {1:0,2:0,3:0,4:0,defeito:0};
+    var feitos = 0;
+    notas.forEach(function(n){
+      if(n.defeito){ t.defeito += 1; }
+      if(n.rating_primeira){ t[n.rating_primeira] += 1; }
+      feitos += 1;
+    });
+    $("feitos").textContent = String(feitos);
+    $("total").textContent = String(CARDS.length);
+    $("pendentes").textContent = String(fila.length);
+    var pct = CARDS.length ? Math.round(100 * feitos / CARDS.length) : 0;
+    $("progresso").style.width = pct + "%";
+    $("tally").innerHTML = "";
+    [["1",t[1]],["2",t[2]],["3",t[3]],["4",t[4]],["defeito",t.defeito]].forEach(function(par){
+      var s = document.createElement("span");
+      s.textContent = par[0] + ": ";
+      var b = document.createElement("b");
+      b.textContent = String(par[1]);
+      s.appendChild(b);
+      $("tally").appendChild(s);
+    });
+  }
+
+  function tique(){
+    var seg = Math.floor((Date.now() - inicio) / 1000);
+    var m = Math.floor(seg / 60), s = seg % 60;
+    $("relogio").textContent = (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s;
+  }
+
+  // ----------------------------------------------------------- apresentacao
+  function texto(id, valor, container){
+    var alvo = $(id);
+    alvo.textContent = valor || "";
+    if(container){ $(container).hidden = !valor; }
+    else { alvo.hidden = !valor; }
+  }
+
+  function mostrar(){
+    var c = fila[0];
+    if(!c){ return encerrar(); }
+    virado = false;
+    $("verso").hidden = true;
+    $("notas-botoes").hidden = true;
+    $("btn-virar").hidden = false;
+    $("form-defeito").hidden = true;
+    // Contrato de apresentacao: area/tema NUNCA aparecem antes da revelacao.
+    texto("reason", ROTULO[c.selection_reason] || c.selection_reason || "");
+    texto("contexto", c.frente_contexto);
+    $("pergunta").textContent = c.frente_pergunta || "(card sem pergunta)";
+    $("resposta").textContent = c.verso_resposta || "";
+    texto("regra", c.verso_regra_mestre, "bloco-regra");
+    texto("armadilha", c.verso_armadilha, "bloco-armadilha");
+    $("taxonomia").textContent = [c.area, c.tema].filter(Boolean).join(" / ");
+    $("card").focus();
+    atualizarPainel();
+  }
+
+  function virar(){
+    if(!fila.length || virado){ return; }
+    virado = true;
+    $("verso").hidden = false;
+    $("btn-virar").hidden = true;
+    $("notas-botoes").hidden = false;
+  }
+
+  function encerrar(){
+    $("drill").hidden = true;
+    $("fim").hidden = false;
+    $("fim-titulo").textContent = "Lote drenado";
+    var feitos = notas.size;
+    $("fim-sub").textContent = feitos + " card(s) com nota registrada em " + $("relogio").textContent + ".";
+    $("fim-origem").textContent = dbOk
+      ? "Notas gravadas na sessao. O agente le por ArtifactData e grava o FSRS com --record-lote."
+      : "Fallback declarado: copie o JSON abaixo e cole no chat para o agente gravar.";
+    renderFallback();
+    atualizarPainel();
+  }
+
+  // -------------------------------------------------------------- acoes
+  function avaliar(nota){
+    if(!fila.length){ return; }
+    if(!virado){ avisar("Vire o card antes de dar a nota (Espaco)."); return; }
+    var c = fila[0];
+    var id = c.card_id;
+    interagiu = true;
+    if(!notas.has(id)){
+      var registro = {card_id:id, rating_primeira:nota, ts:new Date().toISOString()};
+      notas.set(id, registro);
+      salvar(registro);
+    }
+    fila.shift();
+    if(nota < 4){ fila.push(c); }   // relearning: volta ao FIM, sem segunda nota gravavel
+    mostrar();
+  }
+
+  function marcarDefeito(motivo){
+    if(!fila.length){ return; }
+    var c = fila[0], id = c.card_id;
+    interagiu = true;
+    var anterior = notas.get(id) || {card_id:id, ts:new Date().toISOString()};
+    var registro = {card_id:id, ts:anterior.ts, defeito:true, motivo:motivo};
+    if(anterior.rating_primeira){ registro.rating_primeira = anterior.rating_primeira; }
+    notas.set(id, registro);
+    salvar(registro);
+    fila = fila.filter(function(x){ return x.card_id !== id; });
+    mostrar();
+  }
+
+  function abrirDefeito(){
+    if(!fila.length){ return; }
+    $("form-defeito").hidden = false;
+    $("motivo").value = "";
+    $("motivo").focus();
+  }
+
+  // -------------------------------------------------------------- teclado
+  document.addEventListener("keydown", function(ev){
+    if(ev.target && (ev.target.tagName === "INPUT" || ev.target.tagName === "TEXTAREA")){
+      if(ev.key === "Escape"){ $("form-defeito").hidden = true; $("card").focus(); }
+      return;
+    }
+    if(ev.key === " " || ev.code === "Space"){ ev.preventDefault(); virar(); return; }
+    if(ev.key >= "1" && ev.key <= "4"){ ev.preventDefault(); avaliar(parseInt(ev.key, 10)); return; }
+    if(ev.key === "d" || ev.key === "D"){ ev.preventDefault(); abrirDefeito(); }
+  });
+
+  $("btn-virar").addEventListener("click", virar);
+  $("btn-defeito").addEventListener("click", abrirDefeito);
+  $("btn-cancelar").addEventListener("click", function(){ $("form-defeito").hidden = true; $("card").focus(); });
+  $("form-defeito").addEventListener("submit", function(ev){
+    ev.preventDefault();
+    var m = ($("motivo").value || "").trim();
+    if(!m){ $("motivo").focus(); return; }
+    $("form-defeito").hidden = true;
+    marcarDefeito(m);
+  });
+  Array.prototype.forEach.call(document.querySelectorAll("#notas-botoes button"), function(b){
+    b.addEventListener("click", function(){ avaliar(parseInt(b.getAttribute("data-nota"), 10)); });
+  });
+  $("btn-copiar").addEventListener("click", function(){
+    var txt = $("json-notas").textContent;
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(txt).then(function(){ $("btn-copiar").textContent = "Copiado"; });
+    }
+  });
+
+  // ---------------------------------------------------------------- boot
+  function montarFila(){
+    var novos = [], relearning = [];
+    CARDS.forEach(function(c){
+      var n = notas.get(c.card_id);
+      if(!n){ novos.push(c); return; }
+      if(n.defeito){ return; }                        // defeito sai do lote
+      if(n.rating_primeira >= 4){ return; }           // resolvido
+      relearning.push(c);                             // nota < 4 volta ao fim
+    });
+    fila = novos.concat(relearning);
+  }
+
+  function restaurar(docs){
+    docs.forEach(function(d){
+      var dado = d.data && d.data();
+      if(!dado || typeof dado.card_id === "undefined"){ return; }
+      notas.set(Number(dado.card_id), {
+        card_id: Number(dado.card_id),
+        rating_primeira: dado.rating_primeira,
+        ts: dado.ts,
+        defeito: dado.defeito,
+        motivo: dado.motivo
+      });
+    });
+    var ts = [];
+    notas.forEach(function(n){ if(n.ts){ ts.push(Date.parse(n.ts)); } });
+    ts = ts.filter(function(x){ return !isNaN(x); });
+    if(ts.length){ inicio = Math.min.apply(null, ts); }
+  }
+
+  function iniciar(){
+    $("sessao").textContent = LOTE.sessao || "-";
+    montarFila();
+    atualizarPainel();
+    tique();
+    setInterval(tique, 1000);
+    if(!CARDS.length){
+      $("pergunta").textContent = "Lote vazio -- nada para drenar.";
+      $("btn-virar").hidden = true;
+      $("btn-defeito").hidden = true;
+      return;
+    }
+    mostrar();
+  }
+
+  // A capability chega por promessa; a pagina renderiza SEM ela e acende o
+  // armazenamento quando (e se) ele resolver. `use("db")` devolve null quando
+  // esta visualizacao nao pode rodar o db -- caso tratado, nunca silencioso.
+  iniciar();
+  try{
+    window.claude.use("db").then(function(db){
+      if(!db){
+        dbOk = false;
+        dbDeclarado = true;
+        avisar("Armazenamento da sessao indisponivel nesta visualizacao. As notas seguem sendo contadas aqui: copie o JSON do fim da pagina e cole no chat para o agente gravar.");
+        $("fim").hidden = false;
+        $("fim-titulo").textContent = "Notas desta sessao (copiar e colar)";
+        $("fim-origem").textContent = "Fallback declarado: a capability db nao respondeu, entao nada foi gravado remotamente.";
+        renderFallback();
+        return;
+      }
+      colecao = db.collection("sessoes/" + LOTE.sessao + "/notas");
+      dbOk = true;
+      return colecao.get().then(function(snap){
+        restaurar(snap.docs || []);
+        atualizarPainel();
+        renderFallback();
+        // Remontar a fila DEPOIS do 1o gesto embaralharia o card na tela; o
+        // progresso ja restaurado continua valendo para o painel.
+        if(interagiu){ return; }
+        montarFila();
+        mostrar();
+      });
+    }).catch(function(){
+      dbOk = false;
+      avisar("Armazenamento da sessao indisponivel. Copie o JSON do fim da pagina e cole no chat.");
+      renderFallback();
+    });
+  }catch(e){
+    dbOk = false;
+    avisar("Armazenamento da sessao indisponivel (pagina fora do runtime do Artifact). Copie o JSON do fim da pagina e cole no chat.");
+    renderFallback();
+  }
+})();
+</script>
+</body>
+</html>

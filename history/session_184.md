@@ -59,7 +59,13 @@
 ## 5. Custo dos subagentes (F93, clausula 10)
 Varredura 1 Opus 178.290 tokens / 16 min · Varredura 2 Sonnet 154.674 / 14 min · Varredura 3 Sonnet 161.177 / 12 min · Varredura 4 Sonnet 123.522 / 7 min = **617.663 tokens, ~49 min de filho, ~23 min de relogio (3 em paralelo + 1)**. Extratores graphify (Sonnet): chunk 1 477.932 / 30 min · chunk 2 262.134 / 21 min · chunk 3 269.827 / 24 min = **~1,01M tokens, ~75 min de filho, ~30 de relogio**. **Total da sessao: 7 spawns, ~1,63M tokens.** Zero sub-delegacao; zero escrita fora do scratch; numeros load-bearing re-medidos pelo principal: rating semantics (codigo instalado + revlog), Kornell 90%/72% (abstract), Bastani +48%/-17% (PNAS), py-fsrs Optimizer (pacote 6.3.2 no `.venv`).
 
+## 6b. Lote do player (2o ato, 20h16 -> 20h46) -- 90 cards, 86 gravadas
+- Rito: `--export-player --limit 90 --sessao 2026-09-17` (o 1o export saiu com 60 por copiar a escolha manual de ontem; o usuario cobrou o teto do contrato = 90 e foi corrigido antes de qualquer nota). **6 cards do cluster nefro segurados** (#595 #596 #598 #783 #786 #787 -- regra s173/s183: travou 2x+ = aula-base D10 antes do re-drill), lote completado com os proximos vencidos; `--build-player`; republicado na MESMA URL (versao 3) com `capabilities: {db: {}}`.
+- **Resultado:** 90 docs em `sessoes/2026-09-17/notas`; **86 gravadas** (`--record-lote --apply --expect 86`; `fsrs_revlog` 2.981 -> **3.067**, COUNT-ASSERT ok); tally **61x4 / 8x3 / 2x2 / 15x1** (+4 defeito sem nota) = **80% >= 3**; 30 min para 90 cards. **5 defeitos -> reforja** (288): #419 e #688 pergunta composta; #685 e #689 *"erros de portugues"* (cards sem acentuacao -> **F113**); #373 "card mal escrito". Pedido do usuario: *"aplicar o feedback a todos os cards da sessao"* -> item da sessao de engenharia (reforja em lote so de acentos).
+- **Revisao Direcionada** (chat, fechamento) sobre os 17 cards de nota 1-2 em 14 temas; **14 carimbos** `review_log` (`directed_review`). Nota da aula (F18c) **nao registrada** -- declarado. Aula-base D10 de Acido-Base + Potassio fica para o proximo dia de estudo, antes de re-drillar os 6 segurados.
+- **Usuario:** inscricao na UERJ **feita** (17/09). Proxima sessao = **engenharia dedicada**.
+
 ## 6. Proximos passos
-- **Proximo ato de estudo:** lote do player (regime de divida: 115 vencidos, teto 90) e `/aula-base` D10 de Acido-Base + Potassio antes de re-drillar #787/#597.
+- **Proximo ato:** sessao de ENGENHARIA dedicada (ordem no `HANDOFF.md` item 1); estudo do dia seguinte = cards (fila ~31 + intake ~30) + `/aula-base` D10 de Acido-Base + Potassio + Pneumonias na Infancia T (24q).
 - **Fila de engenharia (GO do `/ai-eng`):** R1 -> R3+R4+R5+R6 -> R2 -> R7 -> R8 (antes de 02/11) -> R9 -> R10 -> R11; mais F107 e F99. Detalhe: `PLANEJAMENTO-APRENDIZAGEM-2026-09-17.md §5`.
 - Inscricao UERJ ate 01/10.

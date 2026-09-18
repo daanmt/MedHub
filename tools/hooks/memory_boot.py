@@ -63,29 +63,37 @@ def _read_handoff() -> str:
         return ""
 
 
-def _handoff_session(handoff: str) -> int | None:
-    """Sessão citada no HANDOFF (primeira ocorrência de sNNN)."""
-    m = re.search(r"\bs(\d{2,3})\b", handoff)
-    return int(m.group(1)) if m else None
+def _drift_flag(handoff: str = "", *, handoff_path=None, history_dir=None) -> str:
+    """Flag textual (nao bloqueio) se o ponteiro do HANDOFF e o history divergem.
 
+    F102 (17/09/2026): delega para `state_utils.check_session_pointer` -- a MESMA
+    regra que o `auto_check` aplica (condicao B2 do reconcile-contract). O parser
+    local era um gemeo ingenuo, com tres defeitos que o canonico nao tem:
+    era case-sensitive (o cabecalho grafa "S180" e ele nao via), lia a PRIMEIRA
+    ocorrencia do texto inteiro (qualquer "regra da s179" no corpo sequestrava o
+    ponteiro) e tratava `cited == latest + 1` como drift, sendo que esse e o caso
+    legitimo da sessao em curso, cujo log so nasce no fechamento. Dois sensores
+    para a mesma condicao, com regras diferentes -- F95 um nivel abaixo.
 
-def _latest_session() -> int | None:
-    """Maior NNN entre history/session_NNN.md."""
-    nums = []
-    for p in (PROJECT_ROOT / "history").glob("session_*.md"):
-        m = re.match(r"session_(\d+)\.md$", p.name)
-        if m:
-            nums.append(int(m.group(1)))
-    return max(nums) if nums else None
-
-
-def _drift_flag(handoff: str) -> str:
-    """Flag textual (não bloqueio) se HANDOFF e history divergem."""
-    cited, latest = _handoff_session(handoff), _latest_session()
-    if cited is None or latest is None or cited == latest:
+    `handoff` e aceito por compatibilidade e ignorado: o leitor canonico abre o
+    arquivo por conta propria. Teste: `tools/test_memory_boot_drift.py`.
+    """
+    hp = handoff_path or (PROJECT_ROOT / "HANDOFF.md")
+    hd = history_dir or (PROJECT_ROOT / "history")
+    try:
+        from tools.utils.state_utils import check_session_pointer
+        divergencia = check_session_pointer(handoff_path=hp, history_dir=hd)
+    except Exception:
+        return ""  # hook de boot degrada para silencio; nunca derruba o boot
+    if not divergencia:
         return ""
-    return (f"⚠️ Drift de estado: HANDOFF.md cita s{cited}, mas o último log é "
-            f"history/session_{latest:03d}.md — considerar reconcile antes de seguir.")
+    ponteiro, maior, tipo = divergencia
+    if tipo == "arquivo_ausente":
+        return (f"⚠️ Drift de estado: HANDOFF.md cita s{ponteiro}, mas "
+                f"history/session_{ponteiro:03d}.md nao existe (ultimo log: "
+                f"session_{maior:03d}.md) -- considerar reconcile antes de seguir.")
+    return (f"⚠️ Drift de estado: HANDOFF.md cita s{ponteiro}, mas o ultimo "
+            f"log e history/session_{maior:03d}.md -- considerar reconcile antes de seguir.")
 
 
 def _proximo_passo(handoff: str) -> str:

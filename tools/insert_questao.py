@@ -134,6 +134,154 @@ def _tem_lastro(tema):
     return False
 
 
+MSG_SEM_CARDS = (
+    "cards ausente/vazio: todo erro valido exige cards cunhados "
+    "pela regua (.claude/commands/estilo-flashcard.md) ou o par "
+    "frente_pergunta+verso_resposta; erro SEM card so com "
+    "status anulada/banca-divergente")
+MSG_GATE_REPROVOU = (
+    "gate de qualidade reprovou a cunhagem (regua "
+    ".claude/commands/estilo-flashcard.md): ")
+
+
+def avaliar_cunhagem(*, cards, status, titulo, tema, area, chamada,
+                     frente_contexto=None, frente_pergunta=None,
+                     verso_resposta=None, verso_regra_mestre=None,
+                     verso_armadilha=None):
+    """Deriva a lista de cards e roda o gate de qualidade. PURA: nao toca o banco.
+
+    F107 (s185): fonte UNICA do contrato de cunhagem, usada pelos DOIS caminhos --
+    o writer (`insert_questao`) e o pre-check (`checar_lote`, atras de `--dry-run`).
+    Escrever um segundo sensor para o pre-check reproduziria o defeito de classe do
+    F95/F102: dois sensores para a mesma condicao, com regras que divergem no tempo.
+
+    Retorna {"cards", "tuplas", "erros", "avisos", "sem_cards"}. `erros` nao-vazio
+    ou `sem_cards` = a cunhagem reprova; o que fazer com isso e do chamador (o writer
+    levanta ValueError e o lote faz ROLLBACK TOTAL; o pre-check imprime e sai 1).
+    """
+    if status in ("anulada", "banca-divergente"):
+        # F26: anulada/banca-divergente registra o ERRO mas NAO cunha card.
+        return {"cards": [], "tuplas": [], "erros": [], "avisos": [],
+                "sem_cards": False}
+    if cards is None and frente_pergunta and verso_resposta:
+        # Modo flags individuais (CLI single): converge para o caminho unico.
+        cards = [{
+            "tipo": "elo_quebrado",
+            "frente_contexto": frente_contexto,
+            "frente_pergunta": frente_pergunta,
+            "verso_resposta": verso_resposta,
+            "verso_regra_mestre": verso_regra_mestre,
+            "verso_armadilha": verso_armadilha,
+        }]
+    if not cards:
+        return {"cards": [], "tuplas": [], "erros": [], "avisos": [],
+                "sem_cards": True}
+    ctx = {"titulo": titulo, "tema": tema, "area": area}
+    erros, avisos, tuplas = [], [], []
+    for i, c in enumerate(cards):
+        res = card_checks.validar_card(c, contexto=ctx)
+        erros += [f"card {i}: {e_}" for e_ in res["erros"]]
+        avisos += [f"card {i}: {a_}" for a_ in res["avisos"]]
+        tuplas.append((
+            c.get('tipo') or 'conteudo',
+            c.get('frente_contexto') or '',
+            (c.get('frente_pergunta') or '').strip(),
+            (c.get('verso_resposta') or '').strip(),
+            c.get('verso_regra_mestre') or '',
+            c.get('verso_armadilha') or '',
+        ))
+    av_distrator = card_checks.checar_distrator(
+        {"alternativa_marcada": chamada}, cards)
+    if av_distrator:
+        avisos.append(av_distrator)
+    return {"cards": cards, "tuplas": tuplas, "erros": erros, "avisos": avisos,
+            "sem_cards": False}
+
+
+def checar_lote(errors_file):
+    """Pre-check READ-ONLY de um errors-file: campos obrigatorios + o MESMO gate de
+    cunhagem sobre o lote inteiro, SEM abrir transacao nem conexao.
+
+    F107: o gate so existia dentro do writer, entao um lote de 25 so descobria o card
+    reprovado depois de abrir a transacao -- e cada descoberta custava um ROLLBACK
+    TOTAL. Medido na s184: 2 execucoes perdidas. Aqui os achados saem todos de uma vez.
+
+    LIMITE DECLARADO (AGENTE 10.8): sem banco nao ha como modelar o dedupe por conteudo
+    (area, tema, enunciado) que o writer aplica ANTES do gate. Item que o writer PULARIA
+    por ja estar registrado ainda e avaliado aqui -- falso positivo conservador,
+    declarado em vez de virar divergencia silenciosa entre os dois caminhos.
+
+    Retorna [{"item": i, "titulo": str, "erros": [...], "avisos": [...]}]; vazio = passa.
+    """
+    try:
+        with open(errors_file, encoding="utf-8") as fh:
+            itens = json.load(fh)
+    except Exception as e:
+        return [{"item": -1, "titulo": "(arquivo)",
+                 "erros": [f"errors-file ilegivel/JSON invalido: {e}"], "avisos": []}]
+    if not isinstance(itens, list) or not itens:
+        return [{"item": -1, "titulo": "(arquivo)",
+                 "erros": ["errors-file deve ser um array JSON nao-vazio"],
+                 "avisos": []}]
+    achados = []
+    for i, item in enumerate(itens):
+        if not isinstance(item, dict):
+            achados.append({"item": i, "titulo": "?",
+                            "erros": ["deve ser objeto JSON"], "avisos": []})
+            continue
+        erros, avisos = [], []
+        titulo = item.get("titulo", "?")
+        faltando = [c for c in CAMPOS_OBRIGATORIOS if not str(item.get(c) or "").strip()]
+        if faltando:
+            erros.append("campos obrigatorios ausentes: " + ", ".join(faltando))
+        st = item.get("status")
+        if st and st not in ("anulada", "banca-divergente"):
+            erros.append(f"status invalido '{st}'")
+        try:
+            areas.validar_area(item.get("area"), origem="checar_lote")
+        except Exception as e:
+            erros.append(f"area: {e}")
+        crds = item.get("cards")
+        if not st and crds is not None and (not isinstance(crds, list) or not crds):
+            erros.append("'cards' deve ser lista nao-vazia (o fallback heuristico foi removido)")
+        else:
+            aval = avaliar_cunhagem(
+                cards=crds, status=st, titulo=titulo, tema=item.get("tema"),
+                area=item.get("area"), chamada=item.get("marcada"),
+                frente_contexto=item.get("frente_contexto"),
+                frente_pergunta=item.get("frente_pergunta"),
+                verso_resposta=item.get("verso_resposta"),
+                verso_regra_mestre=item.get("verso_regra_mestre"),
+                verso_armadilha=item.get("verso_armadilha"))
+            if aval["sem_cards"]:
+                erros.append("sem 'cards' e sem par frente_pergunta+verso_resposta")
+            erros += aval["erros"]
+            avisos += aval["avisos"]
+        if erros or avisos:
+            achados.append({"item": i, "titulo": titulo,
+                            "erros": erros, "avisos": avisos})
+    return achados
+
+
+def relatar_lote(achados, out=print):
+    """Imprime os achados do pre-check. Retorna True se o lote passa (zero erro)."""
+    com_erro = [a for a in achados if a["erros"]]
+    for a in achados:
+        alvo = "(arquivo)" if a["item"] < 0 else f"item {a['item']} ('{a['titulo']}')"
+        for e in a["erros"]:
+            out(f"[ERRO-DRY] {alvo}: {e}")
+        for av in a["avisos"]:
+            out(f"[AVISO-DRY] {alvo}: {av}")
+    if com_erro:
+        out(f"[DRY-RUN] REPROVADO: {len(com_erro)} item(ns) com erro. "
+            f"NADA seria inserido (o writer faria ROLLBACK TOTAL).")
+        return False
+    avisos = sum(len(a["avisos"]) for a in achados)
+    out(f"[DRY-RUN] OK: lote passa no gate de cunhagem"
+        + (f" ({avisos} aviso(s), warn-first -- nao bloqueiam)." if avisos else "."))
+    return True
+
+
 def insert_questao(area, tema, enunciado, correta, chamada, erro, elo, armadilha,
                    complexidade="Media", habilidades="N/A", faltou="N/A", explicacao="N/A", titulo="Erro sem titulo",
                    frente_contexto=None, frente_pergunta=None,
@@ -155,54 +303,18 @@ def insert_questao(area, tema, enunciado, correta, chamada, erro, elo, armadilha
         # reapareceu no incidente dos 68, 2026-08-13; so remocao de codigo segura).
         # F26: anulada/banca-divergente registra o ERRO (memoria do caso) mas NAO
         # cunha card (nao e lacuna real) e fica marcada p/ gate de evidencia.
-        if status in ("anulada", "banca-divergente"):
-            cards_to_insert = []
-        else:
-            if cards is None and frente_pergunta and verso_resposta:
-                # Modo flags individuais (CLI single): autoria qualitativa
-                # legitima — converge para o caminho unico como card atomico.
-                cards = [{
-                    "tipo": "elo_quebrado",
-                    "frente_contexto": frente_contexto,
-                    "frente_pergunta": frente_pergunta,
-                    "verso_resposta": verso_resposta,
-                    "verso_regra_mestre": verso_regra_mestre,
-                    "verso_armadilha": verso_armadilha,
-                }]
-            if not cards:
-                raise ValueError(
-                    "cards ausente/vazio: todo erro valido exige cards cunhados "
-                    "pela regua (.claude/commands/estilo-flashcard.md) ou o par "
-                    "frente_pergunta+verso_resposta; erro SEM card so com "
-                    "status anulada/banca-divergente")
-            # Gate de qualidade (part-3): os MESMOS predicados da auditoria,
-            # na escrita. Erros bloqueiam (todos relatados de uma vez); avisos
-            # sao warn-first (nao bloqueiam, viram [AVISO-CARD] no stdout).
-            ctx = {"titulo": titulo, "tema": tema, "area": area}
-            gate_erros, gate_avisos = [], []
-            cards_to_insert = []
-            for i, c in enumerate(cards):
-                res = card_checks.validar_card(c, contexto=ctx)
-                gate_erros += [f"card {i}: {e_}" for e_ in res["erros"]]
-                gate_avisos += [f"card {i}: {a_}" for a_ in res["avisos"]]
-                cards_to_insert.append((
-                    c.get('tipo') or 'conteudo',
-                    c.get('frente_contexto') or '',
-                    (c.get('frente_pergunta') or '').strip(),
-                    (c.get('verso_resposta') or '').strip(),
-                    c.get('verso_regra_mestre') or '',
-                    c.get('verso_armadilha') or '',
-                ))
-            if gate_erros:
-                raise ValueError(
-                    "gate de qualidade reprovou a cunhagem (regua "
-                    ".claude/commands/estilo-flashcard.md): " + " | ".join(gate_erros))
-            av_distrator = card_checks.checar_distrator(
-                {"alternativa_marcada": chamada}, cards)
-            if av_distrator:
-                gate_avisos.append(av_distrator)
-            for a_ in gate_avisos:
-                print(f"[AVISO-CARD] {a_}")
+        aval = avaliar_cunhagem(
+            cards=cards, status=status, titulo=titulo, tema=tema, area=area,
+            chamada=chamada, frente_contexto=frente_contexto,
+            frente_pergunta=frente_pergunta, verso_resposta=verso_resposta,
+            verso_regra_mestre=verso_regra_mestre, verso_armadilha=verso_armadilha)
+        if aval["sem_cards"]:
+            raise ValueError(MSG_SEM_CARDS)
+        if aval["erros"]:
+            raise ValueError(MSG_GATE_REPROVOU + " | ".join(aval["erros"]))
+        cards_to_insert = aval["tuplas"]
+        for a_ in aval["avisos"]:
+            print(f"[AVISO-CARD] {a_}")
 
         if own_conn:
             conn = sqlite3.connect(DB_PATH)
@@ -277,7 +389,7 @@ def insert_questao(area, tema, enunciado, correta, chamada, erro, elo, armadilha
         if cards_to_insert:
             _EVENTOS_PENDENTES.append(("generation", {
                 "questao_id": questao_id, "n_cards": len(cards_to_insert),
-                "avisos": len(gate_avisos)}))
+                "avisos": len(aval["avisos"])}))
 
         if own_conn:
             conn.commit()
@@ -344,7 +456,7 @@ CAMPOS_OBRIGATORIOS = ("area", "tema", "enunciado", "correta", "marcada",
                        "erro", "elo", "armadilha")
 
 
-def insert_batch(errors_file):
+def insert_batch(errors_file, dry_run=False):
     """F24: insere um LOTE de erros (JSON array) numa transacao UNICA.
 
     - Validacao PRE-transacao: campos obrigatorios por item -> erro aponta item/campo,
@@ -355,6 +467,9 @@ def insert_batch(errors_file):
     Cada item aceita os campos do modo single + opcionais `cards` (lista) e
     `status` (anulada | banca-divergente). Retorna True/False.
     """
+    if dry_run:
+        # F107: pre-check sem transacao -- o MESMO gate, todos os achados de uma vez.
+        return relatar_lote(checar_lote(errors_file))
     try:
         with open(errors_file, encoding="utf-8") as fh:
             itens = json.load(fh)
@@ -460,6 +575,12 @@ if __name__ == "__main__":
     parser.add_argument("--faltou", default="N/A")
     parser.add_argument("--explicacao", default="N/A")
     parser.add_argument("--titulo", default="Erro sem titulo")
+    parser.add_argument("--dry-run", dest="dry_run", action="store_true",
+                        help="F107: com --errors-file, roda campos obrigatorios + o "
+                             "gate de cunhagem sobre o lote inteiro e imprime TODOS os "
+                             "achados, sem abrir transacao nem conexao. exit 1 se "
+                             "reprovar. Nao modela o dedupe por conteudo (limite "
+                             "declarado na docstring de checar_lote).")
     # Campos estruturados para flashcard qualitativo (opcionais)
     parser.add_argument("--frente_contexto", default=None)
     parser.add_argument("--frente_pergunta", default=None)
@@ -483,8 +604,10 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.errors_file:
-        ok = insert_batch(args.errors_file)
+        ok = insert_batch(args.errors_file, dry_run=args.dry_run)
         sys.exit(0 if ok else 1)
+    if args.dry_run:
+        parser.error("--dry-run so existe com --errors-file (pre-check de lote)")
 
     faltando = ["--" + c for c in CAMPOS_OBRIGATORIOS if not getattr(args, c)]
     if faltando:

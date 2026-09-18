@@ -273,6 +273,24 @@ envenenaria o ranking de fraquezas. O registro fica — o que não acontece é v
 
 **Exit code (F27):** modo single retorna `0` em sucesso e `1` em falha (simétrico ao `--errors-file`) — um wrapper/hook pode confiar no código de saída.
 
+### `--errors-file LOTE.json --dry-run` — pré-check do lote (F107, s185)
+
+```bash
+python -X utf8 tools/insert_questao.py --errors-file lote.json --dry-run   # 1o: sempre
+python -X utf8 tools/insert_questao.py --errors-file lote.json             # 2o: só se passou
+```
+
+🔴 **Rodar SEMPRE antes do lote real.** O `--errors-file` insere numa transação única e **qualquer** card reprovado no gate de cunhagem derruba o lote inteiro com **ROLLBACK TOTAL** — comportamento correto, mas caro: na s184 um lote de 25 abortou **duas vezes seguidas**, uma por card ruim, porque só dava para descobrir um defeito por execução.
+
+O `--dry-run` roda **os mesmos predicados** (`card_checks.validar_card` + `checar_distrator`, via `avaliar_cunhagem`) sobre o lote inteiro **sem abrir transação nem conexão**, e relata **todos** os achados de uma vez:
+
+- `[ERRO-DRY] item N ('titulo'): ...` — reprova (exit **1**); o writer faria rollback total.
+- `[AVISO-DRY] item N ('titulo'): ...` — warn-first, **não** bloqueia.
+
+**É o mesmo gate, não um segundo sensor.** Writer e pré-check chamam a mesma função pura `avaliar_cunhagem()`; a paridade é testada em `tools/test_insert_dry_run.py::test_dry_run_e_writer_dao_o_mesmo_veredito` (anti-F95).
+
+⚠️ **Limite declarado:** sem banco, o `--dry-run` **não modela o dedupe por conteúdo** `(area, tema, enunciado)` que o writer aplica **antes** do gate. Um item que o writer pularia por já estar registrado ainda é avaliado aqui — falso positivo conservador, nunca falso negativo.
+
 **Resultado:** Insere em `questoes_erros` + gera 1-2 flashcards IPUB v5.0 com campos estruturados em `flashcards` + inicializa estado FSRS em `fsrs_cards`.
 
 > **Dica PowerShell:** Evitar caracteres especiais (emojis, unicode) nos argumentos CLI — usar apenas ASCII simples. Se o valor contiver aspas, usar apostrofos internos ou escapar com `\"`.

@@ -121,7 +121,8 @@ maquia.
 - 🔴 **Não medir o eixo C pleno com regex.** P3 é uma **sub-forma estreita** dele. O eixo
   contrafactual semântico -- **#792**, vinheta de crise inequivocamente epiléptica pedindo o
   achado de crise NÃO epiléptica -- continua **declarado não-verificável**. Ver §Ponto cego.
-- Não reforjar os cards do passivo: os 12 do P1 são fila de reforja de FRENTE (remédio M do F81,
+- ⚠️ **Populacao re-medida em 17/09/2026 (s185): P1 = 13, era 12.** O card que entrou nao e novo nem piorou: a restauracao de acentuacao do **F113** (1.796 correcoes) fez `frente_contexto` e `frente_pergunta` passarem a grafar as MESMAS palavras, e a sobreposicao que o predicado mede cruzou o corte 0.8. A redundancia sempre esteve la -- a divergencia de acentuacao entre os dois campos e que escondia dele. Medicao mais verdadeira, nao regressao. P2 e P3 inalterados.
+- Não reforjar os cards do passivo: os 13 do P1 são fila de reforja de FRENTE (remédio M do F81,
   `cards_regen_queue.py`), e a reforja é do operador.
 - Não tocar FSRS, agendamento, estabilidade ou o texto clínico de card algum.
 - Não mexer no corte 0.7 citado no F81: ele foi estimado sobre 904 cards e esta spec o substitui

@@ -48,6 +48,7 @@ Uso:
   python tools/recurate_cards.py --from tmp/curadoria.json --apply --permitir-atomicidade
 """
 import sqlite3
+import unicodedata
 import os
 import json
 import argparse
@@ -94,6 +95,38 @@ def _campos_do_item(e):
     return campos
 
 
+def _dobrar(s):
+    """Texto sem acentuacao, para comparar duas redacoes do MESMO texto."""
+    s = unicodedata.normalize("NFKD", s or "")
+    return "".join(c for c in s if not unicodedata.combining(c))
+
+
+def _so_acentuacao(campos, atual):
+    """A edicao difere do banco APENAS por acentuacao, em TODO campo tocado?
+
+    F113 (s185) -- este e o invariante que da ESCOPO DE INTENCAO aos gates 4 e 6.
+    Eles perguntam *"a reforja resolveu mesmo o defeito?"*, o que pressupoe que
+    toda edicao por este CLI e uma reforja. Uma edicao so-acento nao mira defeito
+    nenhum e nao pode criar nem resolver pergunta composta, verso multifato ou
+    contrafactual mal-formado -- entao cobra-la por "nao ter resolvido" nao mede o
+    que o gate pensa medir. Foi o que travou 125 cards no lote de restauracao de
+    acentuacao de 17/09/2026 (ALL-OR-NOTHING derrubou o lote inteiro).
+
+    🔴 A isencao e VERIFICADA POR ITEM, nunca declarada por flag: flag se usa
+    errado, invariante se prova. Campo que nasce (banco NULL) nao e reacentuacao
+    e derruba a isencao do item inteiro. Os demais gates -- schema, encoding,
+    formulacao, resposta-embutida e o ratchet do verso -- seguem valendo, porque
+    nenhum deles pergunta sobre intencao: eles medem o texto proposto.
+    """
+    for col, novo in campos.items():
+        if not isinstance(novo, str):
+            return False
+        antigo = atual.get(col)
+        if antigo is None or _dobrar(antigo) != _dobrar(novo):
+            return False
+    return True
+
+
 def validar(edits, conn, permitir_atomicidade=False):
     """Roda os 4 gates sobre o lote INTEIRO. Retorna (erros, avisos, plano).
 
@@ -119,7 +152,8 @@ def validar(edits, conn, permitir_atomicidade=False):
             erros.append(f"{rot}: card_id ausente ou nao-inteiro")
             continue
         row = conn.execute(
-            "SELECT frente_pergunta, card_version, verso_resposta, frente_contexto "
+            "SELECT frente_pergunta, card_version, verso_resposta, frente_contexto, "
+            "verso_regra_mestre, verso_armadilha "
             "FROM flashcards WHERE id=?",
             (cid,)).fetchone()
         if not row:
@@ -127,12 +161,18 @@ def validar(edits, conn, permitir_atomicidade=False):
             continue
         antiga, ver, verso_antigo = row[0], (row[1] or 1), row[2]
         contexto_antigo = row[3]
+        atual_do_banco = {"frente_pergunta": row[0], "verso_resposta": row[2],
+                          "frente_contexto": row[3], "verso_regra_mestre": row[4],
+                          "verso_armadilha": row[5]}
 
         if e.get('aposentar'):
             plano.append(("aposentar", cid, {}, ver, antiga))
             continue
 
         campos = _campos_do_item(e)
+        # F113: a edicao e so-acento? Se for, os gates de INTENCAO (4 e 6)
+        # nao se aplicam -- ver `_so_acentuacao`.
+        so_acento = bool(campos) and _so_acentuacao(campos, atual_do_banco)
         # part-4: fim do no-op disfarcado — item sem campo valido NAO executa
         # UPDATE, NAO incrementa card_version, NAO flipa quality_source.
         if not campos:
@@ -165,14 +205,15 @@ def validar(edits, conn, permitir_atomicidade=False):
         # legitima aqui, entao rodar so sobre `campos` deixaria o predicado ver
         # contexto vazio e ficar mudo -- gate que nao cobre o caminho real, que
         # e a forma do proprio F81. AVISO: warning-first ate o passivo zerar.
-        _frente = {"frente_contexto": campos.get("frente_contexto", contexto_antigo),
-                   "frente_pergunta": campos.get("frente_pergunta", antiga)}
-        for _pred in (card_checks.checar_contexto_redundante,
-                      card_checks.checar_pergunta_generica_com_contexto,
-                      card_checks.checar_contrafactual_mal_formado):
-            _av = _pred(_frente)
-            if _av:
-                avisos.append(f"{rot}: {_av}")
+        if not so_acento:
+            _frente = {"frente_contexto": campos.get("frente_contexto", contexto_antigo),
+                       "frente_pergunta": campos.get("frente_pergunta", antiga)}
+            for _pred in (card_checks.checar_contexto_redundante,
+                          card_checks.checar_pergunta_generica_com_contexto,
+                          card_checks.checar_contrafactual_mal_formado):
+                _av = _pred(_frente)
+                if _av:
+                    avisos.append(f"{rot}: {_av}")
 
         # gate 5 (s170) -- a reforja nao pode ENGORDAR o verso. Diferente do
         # gate 4: aquele e absoluto (verso longo), este e RATCHET (verso que
@@ -184,11 +225,12 @@ def validar(edits, conn, permitir_atomicidade=False):
                 erros.append(f"{rot}: {r}")
 
         # gate 4 -- a reforja resolveu mesmo? (absorvido do apply_reforja)
-        fp, vr = campos.get("frente_pergunta"), campos.get("verso_resposta")
-        if isinstance(fp, str) and (p := checar_front(fp)):
-            avisos.append(f"{rot}: frente ainda acusa {p} -- {fp[:70]}")
-        if isinstance(vr, str) and (p := checar_verso(vr)):
-            avisos.append(f"{rot}: verso ainda acusa {p}")
+        if not so_acento:
+            fp, vr = campos.get("frente_pergunta"), campos.get("verso_resposta")
+            if isinstance(fp, str) and (p := checar_front(fp)):
+                avisos.append(f"{rot}: frente ainda acusa {p} -- {fp[:70]}")
+            if isinstance(vr, str) and (p := checar_verso(vr)):
+                avisos.append(f"{rot}: verso ainda acusa {p}")
 
         plano.append(("refazer", cid, campos, ver, antiga))
 

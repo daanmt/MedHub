@@ -241,6 +241,11 @@ def test_populacao_medida_e_a_que_a_spec_declara():
         "P2": sum(1 for k in cards if cc.checar_pergunta_generica_com_contexto(k)),
         "P3": sum(1 for k in cards if cc.checar_contrafactual_mal_formado(k)),
     }
-    assert medido == {"P1": 12, "P2": 4, "P3": 1}, (
+    # P1 12 -> 13 em 17/09/2026 (s185): a restauracao de acentuacao do F113 fez
+    # `frente_contexto` e `frente_pergunta` grafarem as mesmas palavras, e a
+    # sobreposicao que o predicado mede cruzou o corte 0.8 num card que ja era
+    # redundante -- a divergencia de acentuacao entre os campos e que escondia
+    # dele. Medicao mais verdadeira, nao regressao; o predicado nao foi tocado.
+    assert medido == {"P1": 13, "P2": 4, "P3": 1}, (
         "populacao divergiu da spec (.vibeflow/specs/alinhamento-frente-do-card.md): "
         f"{medido}. Re-medir e ATUALIZAR a spec -- nunca afrouxar o predicado.")

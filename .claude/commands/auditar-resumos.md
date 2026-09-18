@@ -42,9 +42,16 @@ Não requer argumentos. Varre `resumos/**/*.md` recursivamente.
    ↳ [FALTA ESTRUTURA] Seção 'Armadilhas de Prova' ausente.
    ↳ [ANTI-PATTERN] Tabela ASCII detectada (Proibido pelo estilo-resumo.md)
 
-✅ AUDITORIA PERFEITA! Todos os resumos seguem o padrão MedHub.
+✅ ESTRUTURA OK: todos os resumos auditados seguem o padrão MedHub.
 ⚠️  RESULTADO: 2 erro(s) crítico(s) em 1 arquivo(s).
+========================================
+ESCOPO: este linter mede ESTRUTURA e ENCODING (secao Armadilhas, tabela,
+        marcadores, frontmatter, proibicoes do estilo-resumo).
+        NAO verifica VERDADE CLINICA -- mecanismo, dose, cutoff e conduta
+        passam intactos. PASSED != 'clinicamente correto'.
 ```
+
+> 🔴 **O verde deste linter NUNCA significa "clinicamente correto" (F104, s187).** Ele rodou sobre `Neurologia/TCE.md` e imprimiu PASSED enquanto o arquivo afirmava que o manitol *"perfura a barreira encefálica"* -- o **oposto** do mecanismo (ele age porque **não** atravessa a BHE íntegra). Também deixou passar "Tríade Branca de Cushing", hiperventilação agindo em "macro artérias" e ~25 erros de digitação. O linter mede **forma**; quem valida **verdade** é leitura humana. A saída passou a declarar isso em toda execução -- a regra do item 1.10 aplicada ao próprio sensor: **todo sensor diz o que NÃO verifica**.  <!-- NAO-NORMATIVA: declara o LIMITE do sensor (o que ele nao ve), nao prescreve conduta -->
 
 - **❌ + [FALTA ESTRUTURA]** — resumo sem seção de armadilhas (crítico, corrigir)
 - **❌ + [ANTI-PATTERN]** — tabela proibida presente (crítico, converter para bullets)  <!-- CHECK: test_audit_resumos -->

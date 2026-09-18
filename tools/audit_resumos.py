@@ -169,7 +169,7 @@ def audit_summaries(file_list=None):
 
     print("\n" + "=" * 40)
     if block_total == 0 and warn_total == 0:
-        print("✅ AUDITORIA PERFEITA! Todos os resumos seguem o padrão MedHub.")
+        print("✅ ESTRUTURA OK: todos os resumos auditados seguem o padrão MedHub.")
     else:
         if block_total:
             print(f"🛑 BLOCK: {block_total} erro(s) crítico(s) em {arquivos_com_block} arquivo(s). (bloqueia)")
@@ -179,6 +179,17 @@ def audit_summaries(file_list=None):
             print(f"⚠️  WARN: {warn_total} aviso(s) — não bloqueia (agregado por tipo):")
             for tipo, n in sorted(warn_agg.items()):
                 print(f"      • {tipo}: {n} arquivo(s)")
+    print("=" * 40)
+    # 🔴 ESCOPO DECLARADO (F104/F116, s187). Este linter mede FORMA, nunca VERDADE
+    # CLINICA. Ele rodou sobre `Neurologia/TCE.md` e imprimiu PASSED enquanto o
+    # arquivo dizia que o manitol "perfura a barreira encefalica" -- o oposto do
+    # mecanismo. Verde aqui nunca quer dizer "clinicamente correto"; a regra do
+    # item 1.10 vale para sensor tambem: todo sensor declara o que NAO verifica.
+    print("ESCOPO: este linter mede ESTRUTURA e ENCODING (secao Armadilhas, tabela,")
+    print("        marcadores, frontmatter, proibicoes do estilo-resumo).")
+    print("        NAO verifica VERDADE CLINICA -- mecanismo, dose, cutoff e conduta")
+    print("        passam intactos. PASSED != 'clinicamente correto'. Quem valida o")
+    print("        conteudo e leitura humana (fonte: F104, s187).")
     print("=" * 40)
     # Linha machine-readable para o auto_check distinguir WARN de BLOCK sem reimplementar a regra.
     print(f"[AUTO-CHECK-META] BLOCK_TOTAL={block_total} WARN_TOTAL={warn_total}")

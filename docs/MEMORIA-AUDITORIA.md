@@ -282,6 +282,9 @@ nunca convertido em métrica para o painel ficar verde.
 <!-- TERMO-REVOGADO: Nota `< 4` recoloca | revisao-calibrada v1.6 (s186), Clausula 14 -- R2/F112: o limiar de relearning do player passou a `< 3`; sob a v2 o 4 e 'sem esforco' (raro) e exigi-lo faria todo acerto comum repetir para sempre -->
 <!-- TERMO-REVOGADO: --sync-drive | cronograma.md + tools/cronograma.py (s186, part-8) -- o Drive deixou de ser fonte; o flag e as 4 funcoes foram REMOVIDOS, nao so lapidados. Snapshot reversivel em artifacts/snapshot-cronograma-drive-2026-07-26.json -->
 <!-- TERMO-REVOGADO: cronograma_conclusao_drive | cronograma-contract + reconcile (s186, part-8) -- a chave segue no banco mas NINGUEM a le nem a escreve; conclusao e coluna (plano_tarefas.status/origem_conclusao) desde a part-4 -->
+<!-- TERMO-REVOGADO: avaliado **< 4** (1, 2 ou 3) | revisar.md secao Relearning (s187, F117) -- a redacao do DRENAR CONVERSACIONAL sobreviveu a troca da regua: o cadastro da s186 tinha so a redacao do PLAYER ("Nota `< 4` recoloca"), e o gate casa substring literal -->
+<!-- TERMO-REVOGADO: ate sair 4 | revisar.md secao Relearning (s187, F117) -- sob a regua v2 o 4 e 'sem esforco' (raro); exigi-lo faria todo acerto comum repetir indefinidamente. O alvo e `>= 3` -->
+<!-- TERMO-REVOGADO: Priorizar 1 e 2 sobre 3 | revisar.md secao Relearning (s187, F117) -- sob a v2 o 3 nunca entra na fila de relearning -->
 <!-- TERMO-REVOGADO: Realizada? | importar-planilha.md (s186, part-8) -- a coluna do Dashboard do Drive deixou de ser sinal de conclusao; quem conclui e `plano.py --concluir ID --sessao N` -->
 
 > **Por que os marcadores são comentários HTML:** eles não aparecem no render do documento (o

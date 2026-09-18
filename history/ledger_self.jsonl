@@ -757,3 +757,54 @@
 {"ts": "2026-09-16T20:28:41+00:00", "event": "resolved", "check": "posicao_ssot", "fingerprint": "01755b5ba8cb", "alvo": "HANDOFF.md"}
 {"ts": "2026-09-17T22:44:10+00:00", "event": "opened", "check": "consistencia_registros", "fingerprint": "6c4b41fa1526", "alvo": "HANDOFF.md:17", "payload": {"check": "paths"}}
 {"ts": "2026-09-17T22:57:42+00:00", "event": "resolved", "check": "consistencia_registros", "fingerprint": "6c4b41fa1526", "alvo": "HANDOFF.md:17"}
+{"ts": "2026-09-18T00:58:32+00:00", "event": "opened", "check": "cli_assinatura", "fingerprint": "cf1714b5a536", "alvo": "tools/listas.py", "payload": {"orfas": ["--apply", "--backfill", "--bloco", "--dry-run", "--expect", "--json", "--pendentes", "--progresso", "--semana"]}}
+{"ts": "2026-09-18T00:58:32+00:00", "event": "opened", "check": "cli_assinatura", "fingerprint": "06ef1696c75f", "alvo": "tools/registrar_sessao_bulk.py", "payload": {"orfas": ["--tarefa", "--vincular"]}}
+{"ts": "2026-09-18T00:58:39+00:00", "event": "opened", "check": "consistencia_registros", "fingerprint": "ae675f4ff819", "alvo": "AGENTE.md §7.4", "payload": {"check": "tabela"}}
+{"ts": "2026-09-18T01:05:43+00:00", "event": "opened", "check": "suites_orfas", "fingerprint": "9e83b544d920", "alvo": "test_insert_dry_run.py", "payload": {}}
+{"ts": "2026-09-18T01:05:43+00:00", "event": "opened", "check": "suites_orfas", "fingerprint": "4b934598e2cd", "alvo": "test_listas.py", "payload": {}}
+{"ts": "2026-09-18T01:13:45+00:00", "event": "opened", "check": "suites_orfas", "fingerprint": "e2d69374878b", "alvo": "test_fsrs_optimize.py", "payload": {}}
+{"ts": "2026-09-18T01:13:45+00:00", "event": "resolved", "check": "suites_orfas", "fingerprint": "9e83b544d920", "alvo": "test_insert_dry_run.py"}
+{"ts": "2026-09-18T01:13:45+00:00", "event": "opened", "check": "cli_assinatura", "fingerprint": "8f4f6bf47608", "alvo": "tools/fsrs_optimize.py", "payload": {"orfas": ["--dry-run", "--duracao-ms", "--holdout", "--leech", "--limiar-lapsos", "--write"]}}
+{"ts": "2026-09-18T01:13:45+00:00", "event": "resolved", "check": "cli_assinatura", "fingerprint": "06ef1696c75f", "alvo": "tools/registrar_sessao_bulk.py"}
+{"ts": "2026-09-18T01:27:02+00:00", "event": "resolved", "check": "suites_orfas", "fingerprint": "4b934598e2cd", "alvo": "test_listas.py"}
+{"ts": "2026-09-18T01:27:02+00:00", "event": "resolved", "check": "suites_orfas", "fingerprint": "e2d69374878b", "alvo": "test_fsrs_optimize.py"}
+{"ts": "2026-09-18T01:27:03+00:00", "event": "resolved", "check": "cli_assinatura", "fingerprint": "cf1714b5a536", "alvo": "tools/listas.py"}
+{"ts": "2026-09-18T01:27:03+00:00", "event": "resolved", "check": "cli_assinatura", "fingerprint": "8f4f6bf47608", "alvo": "tools/fsrs_optimize.py"}
+{"ts": "2026-09-18T01:27:09+00:00", "event": "resolved", "check": "consistencia_registros", "fingerprint": "ae675f4ff819", "alvo": "AGENTE.md §7.4"}
+{"ts": "2026-09-18T01:50:52+00:00", "event": "resolved", "check": "needs_qualitative", "fingerprint": "45c688b38129", "alvo": "fila_ativa"}
+{"ts": "2026-09-18T02:05:26+00:00", "event": "opened", "check": "contrato_revogado", "fingerprint": "d73491d16fe8", "alvo": "core/contracts/fsrs-management-contract.md:0", "payload": {"tipo": "versao"}}
+{"ts": "2026-09-18T02:05:26+00:00", "event": "opened", "check": "contrato_revogado", "fingerprint": "1bd7bdda3401", "alvo": "core/contracts/revisao-calibrada-contract.md:0", "payload": {"tipo": "versao"}}
+{"ts": "2026-09-18T02:09:02+00:00", "event": "resolved", "check": "contrato_revogado", "fingerprint": "d73491d16fe8", "alvo": "core/contracts/fsrs-management-contract.md:0"}
+{"ts": "2026-09-18T02:09:02+00:00", "event": "resolved", "check": "contrato_revogado", "fingerprint": "1bd7bdda3401", "alvo": "core/contracts/revisao-calibrada-contract.md:0"}
+{"ts": "2026-09-18T02:24:12+00:00", "event": "opened", "check": "consistencia_registros", "fingerprint": "ae675f4ff819", "alvo": "AGENTE.md §7.4", "payload": {"check": "tabela"}}
+{"ts": "2026-09-18T02:26:27+00:00", "event": "resolved", "check": "consistencia_registros", "fingerprint": "ae675f4ff819", "alvo": "AGENTE.md §7.4"}
+{"ts": "2026-09-18T02:39:17+00:00", "event": "opened", "check": "consistencia_registros", "fingerprint": "ae675f4ff819", "alvo": "AGENTE.md §7.4", "payload": {"check": "tabela"}}
+{"ts": "2026-09-18T02:41:31+00:00", "event": "resolved", "check": "consistencia_registros", "fingerprint": "ae675f4ff819", "alvo": "AGENTE.md §7.4"}
+{"ts": "2026-09-18T02:57:56+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "052b9305a924", "alvo": "card#53", "payload": {"padrao": "duplo-ask/conectivo", "tema": "Diabetes Mellitus Tipo 2"}}
+{"ts": "2026-09-18T02:57:56+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "790fcdea7cb3", "alvo": "card#55", "payload": {"padrao": "duplo-ask/conectivo", "tema": "Diabetes Mellitus Tipo 2"}}
+{"ts": "2026-09-18T02:57:56+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "f6e41422588e", "alvo": "card#57", "payload": {"padrao": "duplo-ask/segundo-nucleo", "tema": "Diabetes Mellitus Tipo 2"}}
+{"ts": "2026-09-18T02:57:56+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "39f634c0d53f", "alvo": "card#61", "payload": {"padrao": "resposta-multifato/multi-frase", "tema": "Rastreamento e prevenção"}}
+{"ts": "2026-09-18T02:57:56+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "03521fadab56", "alvo": "card#65", "payload": {"padrao": "resposta-multifato/paragrafo", "tema": "Diabetes Mellitus Tipo 2"}}
+{"ts": "2026-09-18T02:57:56+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "2fe6e2f7c9fd", "alvo": "card#69", "payload": {"padrao": "resposta-multifato/paragrafo", "tema": "Diabetes Mellitus Tipo 2"}}
+{"ts": "2026-09-18T02:57:56+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "64570537a128", "alvo": "card#73", "payload": {"padrao": "resposta-multifato/paragrafo", "tema": "Traumatismo Cranioencefálico na criança"}}
+{"ts": "2026-09-18T02:57:56+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "9b9bee06b06f", "alvo": "card#77", "payload": {"padrao": "resposta-multifato/multi-frase", "tema": "Traumatismo Cranioencefálico"}}
+{"ts": "2026-09-18T02:57:56+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "1c91ab81449e", "alvo": "card#81", "payload": {"padrao": "resposta-multifato/multi-frase", "tema": "Trauma - Choque"}}
+{"ts": "2026-09-18T02:57:56+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "5c5294ecd300", "alvo": "card#83", "payload": {"padrao": "duplo-ask/segundo-nucleo", "tema": "Trauma - Avaliação Inicial, Vias Aéreas e Trauma Torácico"}}
+{"ts": "2026-09-18T02:57:56+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "887c4a39cee6", "alvo": "card#85", "payload": {"padrao": "resposta-multifato/multi-frase", "tema": "Trauma - Choque"}}
+{"ts": "2026-09-18T02:57:56+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "2719a4afe267", "alvo": "card#89", "payload": {"padrao": "duplo-ask/conectivo", "tema": "Cardiopatias Congênitas"}}
+{"ts": "2026-09-18T02:57:56+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "55df7775c3b0", "alvo": "card#91", "payload": {"padrao": "duplo-ask/conectivo", "tema": "Cardiopatias Congênitas"}}
+{"ts": "2026-09-18T02:57:56+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "41cbbf26f00c", "alvo": "card#92", "payload": {"padrao": "resposta-multifato/paragrafo", "tema": "Cardiopatias Congênitas"}}
+{"ts": "2026-09-18T02:57:56+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "3ef609cfd71a", "alvo": "card#93", "payload": {"padrao": "resposta-multifato/paragrafo", "tema": "Cardiopatias Congênitas"}}
+{"ts": "2026-09-18T02:57:56+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "7e22b4e4f576", "alvo": "card#96", "payload": {"padrao": "resposta-multifato/paragrafo", "tema": "Cardiopatias Congênitas"}}
+{"ts": "2026-09-18T02:57:56+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "ee42b14a7e5b", "alvo": "card#105", "payload": {"padrao": "duplo-ask/segundo-nucleo", "tema": "Cardiopatias Congênitas"}}
+{"ts": "2026-09-18T02:57:56+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "0012494d0ebb", "alvo": "card#109", "payload": {"padrao": "resposta-multifato/multi-frase", "tema": "Cardiopatias Congênitas"}}
+{"ts": "2026-09-18T02:57:56+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "6058a5896fc1", "alvo": "card#111", "payload": {"padrao": "resposta-multifato/paragrafo", "tema": "Gravidez ectópica"}}
+{"ts": "2026-09-18T02:57:56+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "9909af67b47a", "alvo": "card#469", "payload": {"padrao": "resposta-multifato/paragrafo", "tema": "Doenca Mineral e Ossea (DRC)"}}
+{"ts": "2026-09-18T02:57:56+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "f972ef2ae36c", "alvo": "card#474", "payload": {"padrao": "resposta-multifato/paragrafo", "tema": "Cardiopatias Congênitas"}}
+{"ts": "2026-09-18T02:58:04+00:00", "event": "opened", "check": "consistencia_registros", "fingerprint": "ae675f4ff819", "alvo": "AGENTE.md §7.4", "payload": {"check": "tabela"}}
+{"ts": "2026-09-18T03:01:12+00:00", "event": "resolved", "check": "consistencia_registros", "fingerprint": "ae675f4ff819", "alvo": "AGENTE.md §7.4"}
+{"ts": "2026-09-18T03:24:21+00:00", "event": "opened", "check": "consistencia_registros", "fingerprint": "ae675f4ff819", "alvo": "AGENTE.md §7.4", "payload": {"check": "tabela"}}
+{"ts": "2026-09-18T03:26:28+00:00", "event": "resolved", "check": "consistencia_registros", "fingerprint": "ae675f4ff819", "alvo": "AGENTE.md §7.4"}
+{"ts": "2026-09-18T11:55:23+00:00", "event": "opened", "check": "consistencia_registros", "fingerprint": "ae675f4ff819", "alvo": "AGENTE.md §7.4", "payload": {"check": "tabela"}}
+{"ts": "2026-09-18T11:59:08+00:00", "event": "resolved", "check": "consistencia_registros", "fingerprint": "ae675f4ff819", "alvo": "AGENTE.md §7.4"}
+{"ts": "2026-09-18T12:05:04+00:00", "event": "opened", "check": "history_integrity", "fingerprint": "8e13d9283b04", "alvo": "session_185.md", "payload": {"detalhe": "header fora do template (esperado '# Session NNN -- ...'); campo `Ferramenta:` ausente (o swap test depende dele)"}}

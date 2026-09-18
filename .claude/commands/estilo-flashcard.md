@@ -133,6 +133,19 @@ Isto **não** repudia o card ancorado no erro -- **refina**. O diagnóstico meta
 - **Usar exclusivamente ASCII/Markdown limpo:** seta simples (`->`), sinais diretos (`< 60`, `> 1000`, `<=`, `>=`), aspas retas (' ou ") e hifens simples/duplos (- ou --).
 - Essa regra garante legibilidade limpa, evita quebras de encoding na exportação para Anki/FSRS e previne ruídos de leitura no terminal Windows.
 
+🔴 **A regra e sobre PONTUACAO e NOTACAO, NUNCA sobre ORTOGRAFIA (F113, s185).** Portugues
+acentuado e **obrigatorio** no texto clinico: `criança`, `síndrome`, `função`, `após`, `não`,
+`diagnóstico`, `critério`. Escrever "Crianca falcemica" ou "compativel" nao e conformidade com
+esta secao -- e **erro de portugues**, e foi assim que o operador o leu no player (17/09/2026).
+O que esta secao proibe sao os caracteres de **pontuacao/notacao** listados acima (LaTeX, setas
+Unicode, aspas e travessoes inteligentes). Acentos e cedilha sao **ortografia**, e ficam.
+
+⚰️ *A frase "usar exclusivamente ASCII" acima foi a causa-raiz do F113: lida por quem cunha card,
+ela virou "tire os acentos". Medido em 17/09/2026: **875 de 1.476 cards ativos (59,3%)** tinham
+acentuacao removida do texto clinico -- 94,2% nas safras recentes (id 1500+), 42% nas antigas.
+Classe: regra certa aplicada ao alvo errado -- o F90 do encoding.*
+
+
 ---
 
 ## Granularidade

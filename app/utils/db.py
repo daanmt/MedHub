@@ -2035,3 +2035,147 @@ def plano_pendencia_revisao(origem=ORIGEM_APROXIMADA):
               "total": int(r[2] or 0)} for r in rows if int(r[1] or 0) > 0]
     saida.sort(key=lambda d: (-d["aproximadas"], d["area"]))
     return saida
+
+
+# --- Ledger de listas de exercicios (part-6): `sessoes_bulk.tarefa_id` ------------
+#
+# A SSOT volumetrica (`sessoes_bulk`) sempre soube QUANTAS questoes foram feitas e
+# NUNCA soube de QUAL lista -- o elo morava em prosa livre (`observacoes`: "Lista
+# Urologia T I (EMED)") e o unico lugar que olhava "por lista" era o Dashboard do
+# Drive. Aqui o elo vira coluna: `sessoes_bulk.tarefa_id -> plano_tarefas.id`.
+#
+# 🔴 Fronteiras da part-6, todas deliberadas:
+#   - N:1 sessao -> tarefa (nao ha tabela ponte): uma sessao registra UMA lista; bloco
+#     que cobre duas listas ja e registrado como duas sessoes.
+#   - o vinculo NAO conclui a tarefa. `status='feita'` continua sendo decisao do
+#     usuario/agente por `plano.py --concluir` (part-3) -- inferir conclusao a partir
+#     de volume e exatamente o que a revisao por area existe para desfazer.
+#   - `feitas`/`acertos` por tarefa sao SEMPRE derivados de `sessoes_bulk` (AGENTE
+#     secao 6); `plano_tarefas` nao ganha contagem propria.
+#
+# O leitor de `tools/listas.py` entra por aqui: aquele CLI nao abre `sqlite3` proprio
+# e nao escreve nada -- o backfill grava por `vincular_sessao_tarefa`.
+
+
+class VinculoAreaDivergente(ValueError):
+    """Sessao e tarefa de areas diferentes. Recusa nomeando as duas areas.
+
+    E o unico gate do vinculo, e existe porque o casamento por texto (o backfill da
+    part-6) erra para o lado de colar volume de Pediatria numa lista de Cirurgia --
+    e volume no balde errado e pior do que volume sem balde.
+    """
+
+
+def _ensure_sessoes_bulk_tarefa_id(conn):
+    """P6: coluna `tarefa_id INTEGER` em `sessoes_bulk` -- o elo sessao -> lista do
+    plano. `ALTER TABLE ... ADD COLUMN` so se ausente (mesmo padrao idempotente de
+    `_ensure_revlog_columns`); historico antigo fica NULL e e o backfill que casa.
+
+    `sessoes_bulk` e SSOT volumetrica (AGENTE secao 6): a DDL canonica vive em
+    `tools/init_db.py` (db do zero ja nasce com a coluna) e este ALTER e a ponte para
+    os bancos que ja existem. Tabela ainda inexistente = no-op silencioso: quem cria
+    `sessoes_bulk` e o writer de volume, nao este.
+    """
+    try:
+        cols = {r[1] for r in conn.execute("PRAGMA table_info(sessoes_bulk)")}
+    except sqlite3.OperationalError:
+        return
+    if not cols:
+        return
+    if "tarefa_id" not in cols:
+        conn.execute("ALTER TABLE sessoes_bulk ADD COLUMN tarefa_id INTEGER")
+
+
+def _tem_coluna_tarefa_id(conn):
+    """A coluna existe? Usado pelos LEITORES, que nao podem criar nem alterar nada
+    (a licao do dry-run da part-2: 'nao grava' inclui DDL)."""
+    try:
+        return "tarefa_id" in {r[1] for r in conn.execute("PRAGMA table_info(sessoes_bulk)")}
+    except sqlite3.OperationalError:
+        return False
+
+
+def vincular_sessao_tarefa(sessao_id, tarefa_id):
+    """Liga uma linha de `sessoes_bulk` a uma tarefa de `plano_tarefas`. Writer unico.
+
+    Devolve `{sessao_id, tarefa_id, area, tema, antes}` -- `antes` e o vinculo anterior
+    (`None` quando a sessao estava solta), o que torna a operacao auditavel e o re-vinculo
+    do mesmo par um no-op visivel em vez de silencioso.
+
+    Recusa, sempre fail-loud:
+      - `ValueError` se a sessao ou a tarefa nao existem (escrita silenciosa em id
+        inexistente seria a pior falha desta parte -- mesma regra do `plano_set_status`);
+      - `VinculoAreaDivergente` se as areas divergem. Tarefa com `area` NULL (o `Multi`
+        declarado da part-2) tambem e recusada: sem area nao ha o que conferir, e o
+        vinculo nasceria sem gate.
+    """
+    if sessao_id is None or tarefa_id is None:
+        raise ValueError("vincular_sessao_tarefa exige sessao_id e tarefa_id")
+    sid, tid = int(sessao_id), int(tarefa_id)
+    conn = get_connection()
+    try:
+        _ensure_sessoes_bulk_tarefa_id(conn)
+        try:
+            sessao = conn.execute(
+                "SELECT id, area, tarefa_id FROM sessoes_bulk WHERE id = ?", (sid,)).fetchone()
+        except sqlite3.OperationalError:
+            sessao = None
+        if sessao is None:
+            raise ValueError(f"sessao_bulk id={sid} nao existe (o id da LINHA, "
+                             f"nunca o sessao_num, que se repete entre areas)")
+        try:
+            tarefa = conn.execute(
+                "SELECT id, area, tema FROM plano_tarefas WHERE id = ?", (tid,)).fetchone()
+        except sqlite3.OperationalError:
+            tarefa = None
+        if tarefa is None:
+            raise ValueError(f"plano_tarefas id={tid} nao existe (plano ja semeado? "
+                             f"`python tools/plano.py --listar`)")
+        area_sessao, area_tarefa = sessao[1], tarefa[1]
+        if not area_tarefa or str(area_tarefa) != str(area_sessao):
+            raise VinculoAreaDivergente(
+                f"area divergente: sessao {sid} e '{area_sessao}' e a tarefa {tid} e "
+                f"'{area_tarefa or '(sem area)'}' -- vinculo RECUSADO")
+        conn.execute("UPDATE sessoes_bulk SET tarefa_id = ? WHERE id = ?", (tid, sid))
+        conn.commit()
+        return {"sessao_id": sid, "tarefa_id": tid, "area": area_sessao,
+                "tema": tarefa[2], "antes": sessao[2]}
+    finally:
+        conn.close()
+
+
+def sessoes_bulk_listar(area=None, vinculadas=None):
+    """Sessoes de volume (read-only): lista de dicts com `tarefa_id`.
+
+    `vinculadas=True` filtra as ja ligadas, `False` as soltas, `None` traz tudo. Banco
+    anterior a esta parte (sem a coluna) devolve `tarefa_id=None` em todas -- o leitor
+    NUNCA roda DDL para se consertar.
+    """
+    colunas = ("id", "sessao_num", "area", "questoes_feitas", "questoes_acertadas",
+               "data_sessao", "observacoes")
+    conn = get_connection()
+    try:
+        tem = _tem_coluna_tarefa_id(conn)
+        campos = ", ".join(colunas) + (", tarefa_id" if tem else ", NULL")
+        sql = f"SELECT {campos} FROM sessoes_bulk"
+        onde, params = [], []
+        if area:
+            onde.append("area = ?")
+            params.append(str(area))
+        if vinculadas is True and tem:
+            onde.append("tarefa_id IS NOT NULL")
+        elif vinculadas is False and tem:
+            onde.append("tarefa_id IS NULL")
+        if onde:
+            sql += " WHERE " + " AND ".join(onde)
+        sql += " ORDER BY data_sessao, id"
+        try:
+            rows = conn.execute(sql, tuple(params)).fetchall()
+        except sqlite3.OperationalError:
+            rows = []        # `sessoes_bulk` ainda nao existe: leitura nao a cria
+    finally:
+        conn.close()
+    saida = [dict(zip(colunas + ("tarefa_id",), r)) for r in rows]
+    if not tem and vinculadas is True:
+        return []
+    return saida

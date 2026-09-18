@@ -10,10 +10,17 @@ Uso (pelo agente ou manualmente):
         --area Cirurgia \\
         --feitas 30 \\
         --acertos 24 \\
-        [--obs "Bloco ATLS"]
+        [--obs "Bloco ATLS"] [--tarefa 412]
+
+    python tools/registrar_sessao_bulk.py --vincular 126 --tarefa 412
 
 O agente deve chamar este script assim que o usuário informar:
     "Fiz X questões, acertei Y, abaixo vão Z erros."
+
+P6 (spec `plano-ssot-e-cards-v2-part-6.md`): `--tarefa ID` liga a sessao a uma lista de
+`plano_tarefas` no ato da insercao e `--vincular SESSAO_ID --tarefa ID` conserta uma
+sessao antiga. O vinculo NAO conclui a tarefa (isso e `plano.py --concluir`) e nao muda
+nada do registro de volume -- e adicao pura. Leitura do ledger: `tools/listas.py`.
 """
 import sqlite3
 import argparse
@@ -37,12 +44,28 @@ AREAS_VALIDAS = list(areas.AREAS_VALIDAS)
 
 def registrar(sessao_num: int, area: str, feitas: int, acertos: int,
               data: str | None = None, obs: str = "",
-              acumular: bool = False, semana: int | None = None):
+              acumular: bool = False, semana: int | None = None,
+              tarefa: int | None = None):
     if acertos > feitas:
         raise ValueError(f"Acertos ({acertos}) não pode ser maior que feitas ({feitas}).")
     # F89: writer de `taxonomia_cronograma` valida `area` na PORTA. Vale tambem para
     # acumulo em linha fantasma ja existente -- o fantasma para de crescer.
     area = areas.validar_area(area, origem="registrar_sessao_bulk")
+
+    # P6 (`--tarefa`): o elo com a lista do plano e OPCIONAL e so ADICIONA o vinculo --
+    # idempotencia, validacao de area e o fan-out de taxonomia continuam identicos.
+    # O gate roda ANTES de qualquer escrita: sessao gravada + vinculo recusado seria
+    # meia operacao, e a metade que sobra e justamente a que ninguem ve.
+    if tarefa is not None:
+        alvo = db.plano_obter(tarefa)
+        if alvo is None:
+            print("[ERRO] plano_tarefas id=%s nao existe (o plano foi semeado? "
+                  "`python tools/plano.py --listar`). Nada gravado." % tarefa)
+            return False
+        if not alvo.get("area") or str(alvo["area"]) != str(area):
+            print("[ERRO] Area divergente: sessao e '%s' e a tarefa %s e '%s'. "
+                  "Nada gravado." % (area, tarefa, alvo.get("area") or "(sem area)"))
+            return False
 
     data_sessao = data or db.hoje().isoformat()
 
@@ -86,13 +109,15 @@ def registrar(sessao_num: int, area: str, feitas: int, acertos: int,
                 WHERE id = ?
             """, (feitas, acertos, obs, obs, existing[0]))
             acumulado = True
+            sessao_id = existing[0]
         else:
             # 3. Insere o registro da sessao
-            conn.execute("""
+            cur = conn.execute("""
                 INSERT INTO sessoes_bulk
                     (sessao_num, area, questoes_feitas, questoes_acertadas, data_sessao, observacoes)
                 VALUES (?, ?, ?, ?, ?, ?)
             """, (sessao_num, area, feitas, acertos, data_sessao, obs))
+            sessao_id = cur.lastrowid
 
         # 3. Atualiza acumulado em taxonomia_cronograma (para o "Foco Crítico")
         #
@@ -164,11 +189,21 @@ def registrar(sessao_num: int, area: str, feitas: int, acertos: int,
 
         conn.commit()
 
+        # P6: o vinculo entra pelo writer de `app/utils/db.py` (allowlist F49), nunca
+        # por UPDATE proprio -- e so DEPOIS do commit do volume, para o gate de area
+        # nao ter uma transacao aberta por baixo.
+        elo = None
+        if tarefa is not None and sessao_id:
+            elo = db.vincular_sessao_tarefa(sessao_id, tarefa)
+
         erros = feitas - acertos
         pct   = acertos / feitas * 100 if feitas else 0
         sufixo = " (acumulado: bloco somado a linha existente)" if acumulado else ""
         print("[OK] Sessao %03d | %s%s" % (sessao_num, area, sufixo))
         print("     Questoes: %d | Acertos: %d | Erros: %d | %.1f%%" % (feitas, acertos, erros, pct))
+        if elo:
+            print("     Lista do plano: tarefa #%d (%s) <- sessoes_bulk.id=%d" % (
+                elo["tarefa_id"], elo["tema"] or "(sem tema)", elo["sessao_id"]))
         if semana:
             print("     Posicao atualizada: semana de conteudo S%d [preparacao_estado]" % semana)
         return True
@@ -181,17 +216,36 @@ def registrar(sessao_num: int, area: str, feitas: int, acertos: int,
         conn.close()
 
 
+def vincular(sessao_bulk_id: int, tarefa: int):
+    """Modo `--vincular`: liga uma sessao JA registrada a uma tarefa do plano (P6).
+
+    Nao toca volume nenhum -- e o conserto de um registro antigo (ou do que o backfill
+    de `tools/listas.py` deixou ambiguo). Escrita unica: `db.vincular_sessao_tarefa`.
+    """
+    try:
+        elo = db.vincular_sessao_tarefa(sessao_bulk_id, tarefa)
+    except (ValueError, db.VinculoAreaDivergente) as e:
+        print("[ERRO] %s" % e)
+        return False
+    antes = elo["antes"]
+    print("[OK] sessoes_bulk.id=%d -> tarefa #%d | %s | %s" % (
+        elo["sessao_id"], elo["tarefa_id"], elo["area"], elo["tema"] or "(sem tema)"))
+    if antes and int(antes) != int(elo["tarefa_id"]):
+        print("     (vinculo anterior: tarefa #%d -- substituido)" % int(antes))
+    return True
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Registra bulk de questões de uma sessão de estudo."
     )
-    parser.add_argument("--sessao",   required=True, type=int,
+    parser.add_argument("--sessao",   type=int,
                         help="Número da sessão (ex: 67)")
-    parser.add_argument("--area",     required=True,
+    parser.add_argument("--area",
                         help=f"Área clínica. Válidas: {', '.join(AREAS_VALIDAS)}")
-    parser.add_argument("--feitas",   required=True, type=int,
+    parser.add_argument("--feitas",   type=int,
                         help="Total de questões feitas")
-    parser.add_argument("--acertos",  required=True, type=int,
+    parser.add_argument("--acertos",  type=int,
                         help="Total de questões acertadas")
     parser.add_argument("--data",     default=None,
                         help="Data da sessão (YYYY-MM-DD). Padrão: hoje")
@@ -202,8 +256,26 @@ if __name__ == "__main__":
                              "(sessao, area) em vez de recusar (F22: 2o bloco do dia)")
     parser.add_argument("--semana",   default=None, type=int,
                         help="Atualiza a posicao SSOT (semana de conteudo) no ato do registro")
+    parser.add_argument("--tarefa",   default=None, type=int, metavar="ID",
+                        help="P6: id da tarefa em plano_tarefas -- grava o vinculo "
+                             "sessao -> lista no ato da insercao (opcional)")
+    parser.add_argument("--vincular", default=None, type=int, metavar="SESSAO_ID",
+                        help="P6: vincula uma sessao JA registrada (o id da LINHA em "
+                             "sessoes_bulk) a --tarefa ID. Nao registra volume")
 
     args = parser.parse_args()
+
+    if args.vincular is not None:
+        if args.tarefa is None:
+            parser.error("--vincular SESSAO_ID exige --tarefa ID")
+        sys.exit(0 if vincular(args.vincular, args.tarefa) else 2)
+
+    faltando = [nome for nome, valor in (("--sessao", args.sessao), ("--area", args.area),
+                                         ("--feitas", args.feitas),
+                                         ("--acertos", args.acertos)) if valor is None]
+    if faltando:
+        parser.error("argumento(s) obrigatorio(s) ausente(s): " + ", ".join(faltando))
+
     registrar(
         sessao_num=args.sessao,
         area=args.area,
@@ -213,4 +285,5 @@ if __name__ == "__main__":
         obs=args.obs,
         acumular=args.acumular,
         semana=args.semana,
+        tarefa=args.tarefa,
     )

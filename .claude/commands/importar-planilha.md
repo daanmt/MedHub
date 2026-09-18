@@ -135,4 +135,14 @@ python tools/importar_sessoes.py --abandonada "<motivo>"
 | `--obs "..."` | Observação livre (ex.: *"Bloco ATLS"*). |
 | `--acumular` | **F22:** soma este bloco a um registro existente da mesma `(sessao, area)` em vez de recusar — é o 2º bloco do mesmo dia, não uma duplicata. |
 | `--semana N` | Atualiza no mesmo ato a **posição SSOT** (semana de conteúdo) — ver `preparacao.py` em `engenharia-cli.md`. |
+| `--tarefa ID` | **P6:** grava o **vínculo** com a lista do plano (`plano_tarefas.id`) no ato da inserção. Opcional; **só adiciona o elo** — idempotência, validação de área e o fan-out de taxonomia continuam idênticos. |
+| `--vincular SESSAO_ID` | **P6:** vincula uma sessão **já registrada** (o `id` da LINHA em `sessoes_bulk`, nunca o `sessao_num`) à `--tarefa ID`. Não registra volume nenhum — é o conserto de um registro antigo ou de uma ambígua do backfill. |
+
+🔴 **Gate do vínculo (P6):** `plano_tarefas.area` tem de ser **igual** a `sessoes_bulk.area`, e tarefa
+com `area` NULL (o `Multi` declarado da part-2) é **recusada** — sem área não há o que conferir. No
+caminho do `--tarefa` o gate roda **antes** de qualquer escrita: área divergente não deixa a sessão
+gravada com o vínculo recusado (meia operação é a metade que ninguém vê). O vínculo **não conclui**
+a tarefa — concluir é `plano.py --concluir`, decisão do usuário/agente. Escrita única:
+`db.vincular_sessao_tarefa`. Leitura do ledger e backfill em massa: `tools/listas.py`
+(`engenharia-cli.md`). Spec `.vibeflow/specs/plano-ssot-e-cards-v2-part-6.md`.
 - O read da planilha é responsabilidade do agente via MCP; o código nunca lê o Drive sozinho.

@@ -124,6 +124,9 @@ def init_db():
     ''')
 
     # Tabela 6: Sessoes bulk (agregados por sessão; SSOT de totais no dashboard)
+    #           `tarefa_id` (part-6) e o elo com a lista do plano (`plano_tarefas.id`):
+    #           db do zero JA nasce com a coluna; banco que ja existia recebe o ALTER
+    #           idempotente de `db._ensure_sessoes_bulk_tarefa_id`.
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS sessoes_bulk (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -132,7 +135,8 @@ def init_db():
         questoes_feitas INTEGER DEFAULT 0,
         questoes_acertadas INTEGER DEFAULT 0,
         data_sessao DATE DEFAULT CURRENT_DATE,
-        observacoes TEXT
+        observacoes TEXT,
+        tarefa_id INTEGER
     )
     ''')
 

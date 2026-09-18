@@ -128,8 +128,15 @@ minimiza **numero de revisoes**, nao tempo, e sai de grade de 6 valores.
 - **`db.get_db_metrics`** soma o campo inflado do F37 e **nao tem chamador vivo** -- superficie
   orfa, candidata a lapide.
 - **R1:** nada adotado. `app/utils/fsrs.py` com `git diff` vazio; o adaptador nao le o JSON.
-- **1.9 e 1.10** do Tier 1: ja estavam ⚰️ FEITOS desde 11/09 (s177). A fila do `/ai-eng`
-  estava velha -- claim-aging do proprio inventario.
+- 🔴 **CORRIGIDO EM 18/09 -- eu respondi errado ao `/ai-eng`.** Declarei que "1.9a/1.10 ja
+  estavam FEITOS desde a s177". **A numeracao diverge entre os dois inventarios.** O
+  `~~1.9~~`/`~~1.10~~` do nosso `§11` sao G5/varredura e `check_session_pointer`, esses sim
+  fechados. Os dele, do handoff de 10-09, sao outros: **1.9(a)** = refactor `db.py ->
+  tools/card_checks` por `__file__` (por spec, raio > 7 writers) e **1.10** = toda clausula
+  normativa vira CHECK nomeado ou marca literal "nao-verificavel" + data de revisao. **Os dois
+  NAO foram iniciados** -- o smell do 1.9(a) segue vivo em `app/utils/db.py:1046`, e o 1.10
+  depende de GO do operador. Licao: **ao responder item numerado do `/ai-eng`, casar por
+  CONTEUDO, nunca por numero** -- os inventarios sao independentes e o numero colide.
 
 ## Rito e higiene
 

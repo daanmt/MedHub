@@ -41,7 +41,8 @@ Detalhe em `history/session_185.md`. 3 filhos Opus 5 na onda 1 (~820k tokens, ~4
 
 - 📄 Manual de Gestacao de Alto Risco (MS 2022) > 10 MB. 💉 Diretrizes 2026 a conferir: Calendario Vacinal, GINA, ATLS 11 (parcial), SINAN.
 - 📡 **Canal com o `/ai-eng` = `SendMessage` entre sessoes locais** (descobrir com `ListAgents`). 🔴 **O endereco MUDA a cada sessao dele** -- em 18/09 ele reiniciou (N=80) e avisou que mensagens ao endereco antigo se perdem. **Sempre responder pelo `from` da mensagem mais recente.** Hook grava as trocas em `history/exchange-log.jsonl`.
-- 📬 **Devido a ele no proximo contato:** decision brief do **R8/F111** (<=10 linhas: o que muda no dia do operador, o que e reversivel; prazo 02/11). Os outros 3 itens que ele pediu ja foram entregues no destilado de fechamento.
+- 📬 **Devido a ele no proximo contato (3 itens):** (a) decision brief do **R8/F111** (<=10 linhas: o que muda no dia do operador, o que e reversivel; prazo 02/11); (b) **status do 1.9(a)** -- refactor `db.py -> tools/card_checks` por `__file__`, por spec, raio > 7 writers: **NAO INICIADO**, o smell segue em `app/utils/db.py:1046`; (c) **status do 1.10** -- toda clausula normativa vira CHECK nomeado ou marca literal "nao-verificavel" + data de revisao: **NAO INICIADO**, e depende de **GO do operador**.
+- 🔴 **Erro meu, corrigido em 18/09:** respondi a ele que "1.9a/1.10 ja estavam feitos desde a s177". Estava errado -- **a numeracao diverge**. O `~~1.9~~`/`~~1.10~~` do nosso `§11` (G5 e `check_session_pointer`) nao sao os dele; o handoff dele de 10-09 numera outras duas coisas. **Ao responder item numerado dele, casar por CONTEUDO, nunca por numero** -- os dois inventarios sao independentes.
 
 ---
 *Historico: history/INDEX.md * Macro: ESTADO.md * Sessao: history/session_185.md * Trocas: history/exchange-log.jsonl * Auditoria: docs/MEMORIA-AUDITORIA.md*

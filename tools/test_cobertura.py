@@ -92,8 +92,16 @@ def test_db_taxonomia_rendimento(tmp_path):
             questoes_realizadas INTEGER DEFAULT 0,
             questoes_acertadas INTEGER DEFAULT 0
         )""")
+    # F37 (s185): `erros` passou a vir de `questoes_erros`, nao da aritmetica sobre
+    # `questoes_realizadas` -- que esta inflado 5,4x e errava por duas ordens de
+    # grandeza (`[bulk] Neurologia`: 149 pelo campo, 1 real). A fixture ganha a
+    # tabela porque o leitor legitimamente precisa dela; degradar para 0 em silencio
+    # seria o honest-negative que o F91 proibe.
+    con.execute("CREATE TABLE questoes_erros (id INTEGER PRIMARY KEY AUTOINCREMENT, tema_id INTEGER)")
     con.execute("INSERT INTO taxonomia_cronograma (area, tema, questoes_realizadas, questoes_acertadas) "
                 "VALUES ('Cirurgia', 'Apendicite Aguda', 30, 18)")
+    for _ in range(12):
+        con.execute("INSERT INTO questoes_erros (tema_id) VALUES (1)")
     con.commit()
     con.close()
 
@@ -108,7 +116,7 @@ def test_db_taxonomia_rendimento(tmp_path):
     r = rows[0]
     assert r["tema"] == "Apendicite Aguda"
     assert r["volume"] == 30
-    assert r["erros"] == 12  # 30 - 18
+    assert r["erros"] == 12  # contagem REAL em questoes_erros (F37), nao 30-18
 
 
 if __name__ == "__main__":

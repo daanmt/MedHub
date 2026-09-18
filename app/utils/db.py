@@ -267,16 +267,38 @@ def get_db_metrics():
 def get_taxonomia_rendimento():
     """Lista (area, tema, volume, erros) por tema da taxonomia — read-only.
 
-    Sinal de rendimento para priorização de cobertura de SSOT (F16a): `volume` =
-    `questoes_realizadas`; `erros` = `questoes_realizadas - questoes_acertadas`.
+    Sinal de rendimento para priorização de cobertura de SSOT (F16a). O consumidor
+    é `tools/cobertura_conhecimento.py`, que ordena por `erros` para dizer qual PDF
+    órfão vira resumo primeiro.
+
+    🔴 **`erros` vem de `questoes_erros`, NÃO de `questoes_realizadas -
+    questoes_acertadas` (F37, s185).** O campo `questoes_realizadas` está inflado
+    **5,4x** (39.772 contra 7.326 reais em `sessoes_bulk`; era 3,7x na s127 e 5,9x
+    na s159). A causa-raiz morreu na s159 -- o writer parou de incrementar -- mas o
+    dado histórico ficou, e a aritmética sobre ele errava por duas ordens de
+    grandeza: `[bulk] Neurologia` acusava 149 erros contra **1** real, `[bulk]
+    Simulado` 270 contra **0**, e a distorção ia nos dois sentidos. A prioridade de
+    escrita de resumo -- decisão de estudo -- estava sendo dirigida por isso.
+
+    ⚠️ Por que não se repara a coluna: `sessoes_bulk` tem **área, não tema**, e a
+    coluna é por `(area, tema)` -- o SSOT não carrega a dimensão que ela precisa.
+    (`sessoes_bulk.tarefa_id`, da Parte 6, é a ponte futura; hoje o backfill casa 1
+    de 126 sessões.) Então o remédio troca a **fonte do leitor**, não o número: a
+    coluna fica como dado histórico e o que fazer com ela segue sendo decisão do
+    operador -- ela só para de dirigir decisão.
+
+    `volume` continua vindo da coluna e continua inflado: é declarado, não corrigido,
+    porque não há de onde derivá-lo por tema. Quem ordenar por `volume` ordena por um
+    número errado -- use `erros`.
+
     Temas sem questões entram com volume/erros 0. Retorna list[dict].
     """
     conn = get_connection()
     df = pd.read_sql(
-        'SELECT area, tema, '
-        'questoes_realizadas AS volume, '
-        '(questoes_realizadas - questoes_acertadas) AS erros '
-        'FROM taxonomia_cronograma',
+        'SELECT t.area, t.tema, '
+        't.questoes_realizadas AS volume, '
+        '(SELECT COUNT(*) FROM questoes_erros q WHERE q.tema_id = t.id) AS erros '
+        'FROM taxonomia_cronograma t',
         conn)
     conn.close()
     return df.to_dict('records')

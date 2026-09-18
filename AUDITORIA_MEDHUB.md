@@ -610,7 +610,7 @@ relates_to: [AGENTE, ESTADO, HANDOFF]
   semanas do `grade.json` -> **25/10**, duas semanas alem do cronograma real. O ritmo-alvo da
   grade sai diluido. Candidato a achado proprio na auditoria (F43+).
 
-### F37 -- `taxonomia_cronograma.questoes_realizadas` inflado (3,7x na s127 -> 5,9x na s159) -- **ALTA** (era MEDIA) -- **CAUSA-RAIZ CORRIGIDA (s159); dado historico pendente de decisao**
+### F37 -- `taxonomia_cronograma.questoes_realizadas` inflado (3,7x na s127 -> 5,9x na s159) -- **ALTA** (era MEDIA) -- **RESOLVIDO no CONSUMIDOR (s185); coluna historica segue, e decisao do operador**
 - **Evidencia (s127):** o campo acusa **19.597** questoes contra **5.232** reais em `sessoes_bulk`.
   Descoberto ao construir o eixo de cobertura de `tools/variancia.py`: a 1a versao lia esse campo e
   produzia "89,5% da grade coberta / zona DIRECIONAMENTO" -- diagnostico **invertido** em relacao ao
@@ -688,6 +688,14 @@ relates_to: [AGENTE, ESTADO, HANDOFF]
   questions attempted"). O codigo faz o oposto e documenta o oposto desde a
   separacao de responsabilidades (so atualiza `ultima_revisao`). Padrao descreve
   comportamento que nao existe mais.
+
+- 🔬 **RE-MEDIDO em 18/09/2026 (s185):** a inflacao **piorou** -- `questoes_realizadas` soma **39.772** contra **7.326** reais em `sessoes_bulk` = **5,4x** (era 3,7x na s127, 5,9x na s159). 216 linhas com valor > 0.
+- 🔴 **O REMEDIO (a) DO ENUNCIADO NAO E EXECUTAVEL, e isso nunca tinha sido dito.** "Recomputar a partir de `sessoes_bulk`" pressupoe que o SSOT tenha a dimensao da coluna. Nao tem: `sessoes_bulk` e por **(area, sessao)**, sem tema, e `questoes_realizadas` e por **(area, tema)**. Nao ha de onde derivar volume por tema. (⚡ A **Parte 6**, na mesma sessao, criou `sessoes_bulk.tarefa_id` -> `plano_tarefas.tema`, que e a ponte futura; hoje o backfill casa **1 de 126** sessoes, entao nao serve ainda.)
+- 🔴 **O DANO REAL nao era o numero -- era quem ele dirigia.** `db.get_taxonomia_rendimento` derivava `erros = questoes_realizadas - questoes_acertadas`, e o consumidor e `tools/cobertura_conhecimento.py`, que ordena por isso para dizer **qual PDF orfao vira resumo primeiro**. Distorcao medida, nos dois sentidos: `[bulk] Neurologia` acusava **149** erros contra **1** real; `[bulk] Pediatria` 135 x 3; `[bulk] Preventiva` 128 x 2; `Trauma - Avaliacao Inicial` 108 x 1; `[bulk] Simulado` **270 x 0**. Decisao de estudo guiada por numero errado em duas ordens de grandeza.
+- ✅ **RESOLVIDO (s185) trocando a FONTE do leitor, nao o numero** (opcao (b) do enunciado, aplicada ao consumidor): `erros` passa a ser `COUNT(*)` de `questoes_erros` por `tema_id` -- real, per-tema, ja no banco. A coluna **fica**: e dado historico e o que fazer com ele segue sendo decisao do operador; o que muda e que ela **para de dirigir decisao**. `volume` continua vindo dela e continua inflado -- **declarado na docstring**, nao corrigido, porque nao ha de onde derivar.
+- 🔬 **Validacao independente:** o ranking corrigido devolve `Cirurgia Infantil 31 · Imunizacoes 25 · Sindromes Hipertensivas 21 · Polipos e Neoplasias 20`, que sao **exatamente** os numeros das areas de fraqueza da memoria longa (`weak_areas`, injetada no boot). Dois sistemas que deveriam concordar passaram a concordar -- antes, nao concordavam.
+- 🧪 `tools/test_rendimento_fonte.py` (6 testes, escritos antes do fix): super e subnotificacao, a **mudanca de ordem do ranking**, o shape que `cobertura_conhecimento.py:189` consome, e que o leitor **nao escreve** no banco. `test_cobertura.py` ganhou a tabela na fixture -- degradar para 0 erros num banco sem `questoes_erros` seria o honest-negative que o F91 proibe.
+- ⚠️ **Fica declarado:** `db.get_db_metrics` tambem soma o campo inflado e **nao tem chamador vivo** (a UI Streamlit morreu; so ha citacao em doc). Superficie orfa -- candidata a lapide numa varredura de alcancabilidade, nao tocada aqui por escopo.
 
 ### F38 -- Erros analisados na conversa nao chegam a `questoes_erros`; a analise evapora -- **ALTA** -- **RESOLVIDO (s159) -- guarda entregue; 1 instancia historica a recuperar**
 - **Evidencia (s127 -> descoberto na s128, 2026-07-25):** o bloco de Pneumologia Intensiva II teve

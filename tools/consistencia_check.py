@@ -239,10 +239,90 @@ def termos_revogados_do_ledger(root=None):
 
 
 # --------------------------------------------------------------- API ---------
+def _registros_de_volume():
+    """[(data_sessao, area, feitas)] de `sessoes_bulk`. None = nao deu para ler.
+
+    Vai pelo leitor de `app/utils/db.py` (AGENTE 6: agente/CLI nao faz SQL direto).
+    `get_trend_sessoes` ja filtra `questoes_feitas > 0`, que e exatamente o que uma
+    pendencia do tipo "sem feitas/acertos" afirma NAO existir.
+    """
+    try:
+        sys.path.insert(0, str(ROOT_DIR))
+        from app.utils import db
+        df = db.get_trend_sessoes()
+        if df is None or getattr(df, "empty", True):
+            return None
+        return [(str(r.data_sessao)[:10], str(r.area), int(r.questoes_feitas))
+                for r in df.itertuples()]
+    except Exception:
+        return None
+
+
+#: a linha precisa COBRAR registro -- data solta nao e pendencia
+_RX_COBRANCA = re.compile(
+    r"registrar_sessao_bulk|sem\s+feitas|sem\s+volume|nunca\s+entrou|"
+    r"n[ãa]o\s+(?:foi\s+)?registrad|falta\s+(?:registrar|lan[çc]ar)|"
+    r"pendente\s+de\s+registro", re.IGNORECASE)
+_RX_ISO = re.compile(r"\b(\d{4})-(\d{2})-(\d{2})\b")
+_RX_BR = re.compile(r"\b(\d{2})/(\d{2})(?:/(\d{4}))?\b")
+
+
+def _datas_da_linha(linha, anos_conhecidos):
+    """Datas ISO extraidas da linha. `dd/mm` sem ano vira candidato em cada ano visto."""
+    datas = {f"{a}-{m}-{d}" for a, m, d in _RX_ISO.findall(linha)}
+    for d, m, a in _RX_BR.findall(linha):
+        if a:
+            datas.add(f"{a}-{m}-{d}")
+        else:
+            datas.update(f"{ano}-{m}-{d}" for ano in anos_conhecidos)
+    return datas
+
+
+def check_pendencia_fantasma(root=None, _registros=None):
+    """F101: pendencia do HANDOFF que o proprio banco ja desmente.
+
+    O HANDOFF da s179 e da s180 cobrou o registro da lista de Diarreia de 09/09
+    "sem feitas/acertos"; o registro existia desde a s175 (`175 | Pediatria | 41 |
+    34 | 2026-09-09`). Texto herdado do 1o ato, escrito ANTES do registro, copiado
+    por duas sessoes sem ninguem re-medir. Custo evitado: +41 questoes duplicadas
+    no SSOT volumetrico. Classe: claim que envelhece (AGENTE 10.9).
+
+    ⚠️ LIMITE DECLARADO, e e grande: so alcanca pendencia com FORMA reconhecivel --
+    palavra que cobra registro MAIS uma data. "Falta lancar o bloco de ontem" e
+    invisivel para este check, e isso fica dito em vez de maquiado (10.8). WARN por
+    nascimento (AGENTE 6: regra nova nasce warn-first).
+    """
+    base = Path(root).resolve() if root else ROOT_DIR
+    handoff = base / "HANDOFF.md"
+    if not handoff.is_file():
+        return []
+    registros = _registros if _registros is not None else _registros_de_volume()
+    if not registros:
+        return []          # nao da para checar -> silencio, nunca acusacao
+    por_data = {}
+    for data, area, feitas in registros:
+        por_data.setdefault(data, []).append((area, feitas))
+    anos = {d[:4] for d in por_data}
+    achados = []
+    for n, linha in enumerate(handoff.read_text(encoding="utf-8", errors="replace").splitlines(), 1):
+        if not _RX_COBRANCA.search(linha):
+            continue
+        for data in sorted(_datas_da_linha(linha, anos)):
+            if data in por_data:
+                quem = "; ".join(f"{a} {f}q" for a, f in por_data[data])
+                achados.append({
+                    "alvo": f"HANDOFF.md:{n}",
+                    "payload": {"data": data, "registrado": quem,
+                                "linha": linha.strip()[:160]}})
+                break
+    return achados
+
+
 CHECKS = {
     "tabela": ("G5  tabela gerada (AGENTE §7.4) stale", check_tabela_gerada),
     "paths": ("G10 ponteiro morto em doc de raiz", check_paths_mortos),
     "status": ("G14 status do ledger x lapide do §11", check_status_ledger),
+    "fantasma": ("F101 pendencia do HANDOFF que o banco desmente", check_pendencia_fantasma),
 }
 
 

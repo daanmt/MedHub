@@ -1086,7 +1086,7 @@ def main():
     #     x lapide do §11. Os tres tem a mesma forma: um registro que envelheceu
     #     em silencio porque nada perguntava se ele ainda dizia a verdade. WARN --
     #     nenhum deles quebra codigo, e a politica s106/107 manda nascer WARN.
-    desc_cons = "Consistencia entre registros (G5/G10/G14)"
+    desc_cons = "Consistencia entre registros (G5/G10/G14/F101)"
     inconsistencias = []
     try:
         from consistencia_check import run_checks as cons_run
@@ -1099,7 +1099,7 @@ def main():
             por_check.setdefault(a["check"], []).append(a["alvo"])
         resumo_cons = "; ".join(f"{k}: {len(v)} ({v[0]})" for k, v in por_check.items())
         print()
-        print(f"[WARN] CONSISTENCIA (G5/G10/G14): {len(inconsistencias)} registro(s) "
+        print(f"[WARN] CONSISTENCIA (G5/G10/G14/F101): {len(inconsistencias)} registro(s) "
               f"divergente(s) -- {resumo_cons}. "
               f"Tabela gerada re-cola com `python tools/reachability_check.py --tabela`; "
               f"ponteiro morto vira lapide ou some; status contraditorio se resolve no "

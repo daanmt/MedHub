@@ -461,7 +461,9 @@ def rebalancear_blackout(conn, hoje=None, dias_evitar=None, aplicar=False):
     COUNT-ASSERT (n de linhas escritas == n declarado; divergencia = rollback).
     So toca `due`/`scheduled_days` -- `stability`/`difficulty` intocados, nenhuma
     linha de revlog (nao e revisao). Cards sem vaga antes da prova ficam onde
-    estao e saem em `overflow` (nunca empurrados em silencio).
+    estao e saem em `overflow` (nunca empurrados em silencio). F98 (s185): a varredura
+    cobre `state IN (1,2,3)` -- card em learning/relearning nao se move
+    (clausula (c)), mas APARECE no painel; antes sumia da consulta inteira.
 
     Returns: {movidos: [{card_id, de, para, deslocamento}], overflow: [{card_id,
     due, motivo}], resumo: {"de -> para": n}, aplicado: bool, escritos: int}.
@@ -477,10 +479,19 @@ def rebalancear_blackout(conn, hoje=None, dias_evitar=None, aplicar=False):
         return vazio
     cursor = conn.cursor()
     marcadores = ",".join("?" * len(evitar))
+    # F98 (s185): a varredura cobria so `state = 2` e por isso NAO VIA o card em
+    # relearning -- que e exatamente o que a sessao produz (nota 1 -> state 3).
+    # Na s183, 9 cards ficaram com `due` no dia do ENAMED e o painel reportava
+    # "0 movidos": eles nunca chegavam a ser candidatos. Gate-miss por ESCOPO DE
+    # CONSULTA -- a varredura nao cobria a populacao que o defeito habita.
+    # 🔴 O remedio e VISIBILIDADE, nao movimento: card fora do balanceador
+    # continua ficando onde esta (`AGENTE.md §6`: "sem vaga na folga, fica onde
+    # esta e vira OVERFLOW declarado"), mas passa a APARECER no painel.
     rows = cursor.execute(
-        "SELECT f.card_id, f.due, f.scheduled_days FROM fsrs_cards f "
+        "SELECT f.card_id, f.due, f.scheduled_days, f.state FROM fsrs_cards f "
         "JOIN flashcards l ON l.id = f.card_id "
-        f"WHERE f.state = 2 AND {ativo_where('l.')} AND date(f.due) IN ({marcadores}) "
+        f"WHERE f.state IN (1, 2, 3) AND {ativo_where('l.')} "
+        f"AND date(f.due) IN ({marcadores}) "
         "ORDER BY f.due, f.card_id",
         tuple(sorted(d.isoformat() for d in evitar))).fetchall()
     if not rows:
@@ -488,10 +499,19 @@ def rebalancear_blackout(conn, hoje=None, dias_evitar=None, aplicar=False):
     carga = carga_agendada(cursor, min(evitar) - _td(days=DESLOCAMENTO_MAXIMO),
                            max(evitar) + _td(days=DESLOCAMENTO_MAXIMO))
     movidos, overflow, resumo = [], [], {}
-    for card_id, due, intervalo in rows:
+    _NOME_STATE = {1: "learning", 2: "revisao", 3: "relearning"}
+    for card_id, due, intervalo, state in rows:
         due_dt = _dt.fromisoformat(str(due))
         alvo = due_dt.date()
         intervalo = int(intervalo or 0)
+        state = int(state or 0)
+        if state != 2:
+            # Passo de aprendizado/relearning e intra-sessao: fora do balanceador
+            # pela clausula (c) do s128. Fica onde esta -- mas DECLARADO.
+            overflow.append({"card_id": int(card_id), "due": alvo.isoformat(),
+                             "motivo": f"state {state} ({_NOME_STATE.get(state, '?')}) "
+                                       f"-- fora do balanceador (clausula (c))"})
+            continue
         if not folga_de(intervalo):
             overflow.append({"card_id": int(card_id), "due": alvo.isoformat(),
                              "motivo": f"intervalo {intervalo}d sem folga"})

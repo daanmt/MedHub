@@ -34,6 +34,7 @@ import pandas as pd
 import os
 from datetime import datetime
 from app.utils.fsrs import FSRS
+from app.utils.regua import REGUA_ATUAL
 
 DB_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'ipub.db')
 
@@ -625,6 +626,15 @@ def _ensure_revlog_columns(conn):
         # card antes da revisao). Divergencia = selection_reason != reason_servido,
         # consultavel por SQL -- o contador de gate-miss (B1) le daqui.
         conn.execute("ALTER TABLE fsrs_revlog ADD COLUMN reason_servido TEXT")
+    if "regua_versao" not in cols:
+        # R2/F112 (s186): sob QUAL regua de notas esta revisao foi dada. Sem isso,
+        # trocar o vocabulario da regua reescreveria o sentido do historico inteiro
+        # -- as 340 notas 2 dadas como "sem o alvo" virariam "lembrou com esforco"
+        # retroativamente. Historico anterior fica NULL, e NULL significa v1 por
+        # declaracao (`app/utils/regua.regua_da_linha`), nunca por inferencia no
+        # ponto de uso. Sem backfill: reescrever 3.067 linhas para repetir o que a
+        # ausencia ja afirma e escrita sem ganho sobre SSOT.
+        conn.execute("ALTER TABLE fsrs_revlog ADD COLUMN regua_versao INTEGER")
 
 
 REASONS_EQUIVALENTES = {
@@ -787,13 +797,15 @@ def _aplicar_review(conn, card_data, rating, card_novo=False, selection_reason=N
     cursor.execute('''
         INSERT INTO fsrs_revlog (card_id, rating, state, due, stability, difficulty,
                                  elapsed_days, last_elapsed_days, scheduled_days,
-                                 card_version, selection_reason, review_time, reason_servido)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                                 card_version, selection_reason, review_time, reason_servido,
+                                 regua_versao)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ''', (
         flashcard_id, rating, new_metrics['state'], new_metrics['due'],
         new_metrics['stability'], new_metrics['difficulty'],
         new_metrics['elapsed_days'], elapsed_anterior, new_metrics['scheduled_days'],
-        versao_vista, selection_reason, carimbo(), reason_servido
+        versao_vista, selection_reason, carimbo(), reason_servido,
+        REGUA_ATUAL                       # R2/F112: a nota so e interpretavel com ela
     ))
 
     conn.commit()

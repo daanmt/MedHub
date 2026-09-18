@@ -141,6 +141,9 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from app.utils import regua as _regua  # noqa: E402
+
 if hasattr(sys.stdout, 'reconfigure'):
     try:
         sys.stdout.reconfigure(encoding='utf-8')
@@ -159,9 +162,12 @@ MIN_REVLOG = 512
 #: Duracao sintetica por revisao, em ms -- ver limite (a) da docstring.
 DURACAO_MS_DEFAULT = 16500
 
-#: Visao (ii). Chaves = nota MedHub, valores = nota FSRS. Justificativa por
-#: nota na secao 1 da docstring, ancorada no passo 4 do `/revisar`.
-REMAP_F112 = {1: 1, 2: 1, 3: 2, 4: 3}
+#: Visao (ii). Chaves = nota da regua v1, valores = nota FSRS nativa.
+#: 🔴 R2/F112 (s186): este mapa DEIXOU de nascer aqui. Ele vive em
+#: `app/utils/regua.py`, o portador unico da regua, e este modulo o LE -- se as
+#: duas copias divergissem, os numeros com que o operador decidiu a opcao (b)
+#: deixariam de valer sem ninguem notar. Nome mantido por ser citado no ledger.
+REMAP_F112 = _regua.MAPA_V1_PARA_NATIVO
 
 CITACAO_REVISAR_PASSO4 = (
     "Criterio: cravou conceito + regra-mestre -> 4; acertou o nucleo, faltou "
@@ -169,14 +175,7 @@ CITACAO_REVISAR_PASSO4 = (
     "'nao sei' -> 1."
 )
 
-JUSTIFICATIVA_REMAP = {
-    "1->1": "errou ou 'nao sei' = Again (identidade)",
-    "2->1": "recall parcial/na zona mas SEM O ALVO = falha de recuperacao, "
-            "nao 'recuperou com esforco' (F112)",
-    "3->2": "acertou o nucleo, faltou detalhe = Hard (recuperou com esforco)",
-    "4->3": "cravou conceito + regra-mestre = Good (acerto padrao); a regua do "
-            "MedHub nao tem degrau de 'sem esforco', entao Easy fica vazio",
-}
+JUSTIFICATIVA_REMAP = _regua.JUSTIFICATIVA_V1
 
 AVISO_RETENCAO = (
     "retencao otima e NUMERO REPORTADO, nunca adotado: a carga diaria de cards "
@@ -214,20 +213,31 @@ def _conectar_ro(db_path=None):
 
 
 def ler_revlog(db_path=None):
-    """[(card_id, rating, datetime_utc)] ordenado no tempo. Somente leitura."""
+    """[(card_id, rating, datetime_utc, regua)] ordenado no tempo. Somente leitura.
+
+    R2/F112 (s186): a **regua** entrou na tupla porque ela e propriedade da
+    LINHA, nao do corpus. Antes do R2 todo o revlog foi gravado sob a v1; depois
+    dele as duas safras convivem, e a mesma nota 2 significa coisas opostas em
+    cada uma. Banco que ainda nao rodou o ALTER nao tem a coluna -- isso nao e
+    erro, e o estado esperado, e le como v1 (`regua.regua_da_linha(None)`).
+    """
     conn = _conectar_ro(db_path)
     try:
+        tem_regua = any(r[1] == "regua_versao"
+                        for r in conn.execute("PRAGMA table_info(fsrs_revlog)"))
+        col = "regua_versao" if tem_regua else "NULL"
         cru = conn.execute(
-            "SELECT card_id, rating, review_time FROM fsrs_revlog "
+            "SELECT card_id, rating, review_time, %s FROM fsrs_revlog "
             "WHERE review_time IS NOT NULL AND rating BETWEEN 1 AND 4 "
-            "ORDER BY review_time, id").fetchall()
+            "ORDER BY review_time, id" % col).fetchall()
     finally:
         conn.close()
     linhas = []
-    for card_id, rating, rt in cru:
+    for card_id, rating, rt, regua in cru:
         quando = _parse_utc(rt)
         if quando is not None:
-            linhas.append((int(card_id), int(rating), quando))
+            linhas.append((int(card_id), int(rating), quando,
+                           _regua.regua_da_linha(regua)))
     linhas.sort(key=lambda x: x[2])
     return linhas
 
@@ -248,29 +258,39 @@ def ler_cards(db_path=None):
 # ------------------------------------------------------------------- remap
 
 def aplicar_remap(rating, remap=None):
-    """Nota MedHub -> nota FSRS. `remap=None` e a visao crua (identidade)."""
+    """Nota -> nota FSRS por MAPA GLOBAL. `remap=None` = identidade.
+
+    Caminho do R1, preservado porque o **gate de paridade** do R2 o usa como
+    referencia: sobre um revlog 100% v1 o caminho novo (por linha) tem que
+    devolver exatamente isto. Nao chamar em codigo novo -- use `nota_da_linha`.
+    """
     if not remap:
         return int(rating)
     return int(remap[int(rating)])
 
 
-def distribuicao(linhas, remap=None):
-    """{nota_efetiva: contagem} depois do remap."""
+def nota_da_linha(rating, regua, visao):
+    """Nota efetiva de UMA linha sob a visao pedida. Delega ao portador unico."""
+    return _regua.nota_efetiva(rating, regua, visao=visao)
+
+
+def distribuicao(linhas, visao="nativo"):
+    """{nota_efetiva: contagem} sob a visao pedida."""
     fora = {}
-    for _cid, rating, _q in linhas:
-        n = aplicar_remap(rating, remap)
+    for _cid, rating, _q, regua in linhas:
+        n = nota_da_linha(rating, regua, visao)
         fora[n] = fora.get(n, 0) + 1
     return {str(k): fora[k] for k in sorted(fora)}
 
 
-def construir_review_logs(linhas, remap=None, duracao_ms=DURACAO_MS_DEFAULT):
-    """[(card_id, rating, dt)] -> [ReviewLog] com a nota ja remapeada."""
+def construir_review_logs(linhas, visao="nativo", duracao_ms=DURACAO_MS_DEFAULT):
+    """[(card_id, rating, dt, regua)] -> [ReviewLog] com a nota ja traduzida."""
     from fsrs import Rating, ReviewLog
     return [ReviewLog(card_id=cid,
-                      rating=Rating(aplicar_remap(rating, remap)),
+                      rating=Rating(nota_da_linha(rating, regua, visao)),
                       review_datetime=quando,
                       review_duration=int(duracao_ms))
-            for cid, rating, quando in linhas]
+            for cid, rating, quando, regua in linhas]
 
 
 # ----------------------------------------------------------- holdout + metrica
@@ -301,7 +321,7 @@ def _scheduler(parametros):
     return Scheduler(**kwargs)
 
 
-def log_loss(linhas, parametros, corte=None, remap=None):
+def log_loss(linhas, parametros, corte=None, visao="nativo"):
     """(loss_media, n_pontos) na cauda. Menor = melhor. Ver secao 2.
 
     Replay cronologico por card sobre o historico COMPLETO; so as revisoes em
@@ -311,14 +331,14 @@ def log_loss(linhas, parametros, corte=None, remap=None):
     from fsrs import Card, Rating
     sched = _scheduler(parametros)
     por_card = {}
-    for cid, rating, quando in linhas:
-        por_card.setdefault(cid, []).append((quando, rating))
+    for cid, rating, quando, regua in linhas:
+        por_card.setdefault(cid, []).append((quando, rating, regua))
     eps = 1e-9
     soma, n = 0.0, 0
     for cid in sorted(por_card):
         historico = sorted(por_card[cid], key=lambda x: x[0])
         card = None
-        for i, (quando, rating) in enumerate(historico):
+        for i, (quando, rating, regua) in enumerate(historico):
             if i == 0:
                 card = Card(card_id=cid, due=quando)
             pontua = (card.last_review is not None
@@ -327,11 +347,11 @@ def log_loss(linhas, parametros, corte=None, remap=None):
             if pontua:
                 p = sched.get_card_retrievability(card, current_datetime=quando)
                 p = min(max(float(p), eps), 1.0 - eps)
-                y = 0.0 if aplicar_remap(rating, remap) == 1 else 1.0
+                y = 0.0 if nota_da_linha(rating, regua, visao) == 1 else 1.0
                 soma += -(y * math.log(p) + (1.0 - y) * math.log(1.0 - p))
                 n += 1
             card, _ = sched.review_card(
-                card=card, rating=Rating(aplicar_remap(rating, remap)),
+                card=card, rating=Rating(nota_da_linha(rating, regua, visao)),
                 review_datetime=quando)
     return (soma / n if n else None), n
 
@@ -400,19 +420,20 @@ def _resumo_difficulty(valores):
             "bandas": bandas}
 
 
-def contar_lapsos(linhas, remap=None):
+def contar_lapsos(linhas, visao="nativo"):
     """{card_id: lapsos} reconstruido do revlog.
 
     Lapso = nota Again que NAO e a 1a revisao do card -- exatamente a regra de
     `app/utils/fsrs.py::evaluate` (`if rating == 1 and not is_new`).
     """
     por_card = {}
-    for cid, rating, quando in linhas:
-        por_card.setdefault(cid, []).append((quando, rating))
+    for cid, rating, quando, regua in linhas:
+        por_card.setdefault(cid, []).append((quando, rating, regua))
     fora = {}
     for cid, hist in por_card.items():
         hist.sort(key=lambda x: x[0])
-        fora[cid] = sum(1 for _q, r in hist[1:] if aplicar_remap(r, remap) == 1)
+        fora[cid] = sum(1 for _q, r, g in hist[1:]
+                        if nota_da_linha(r, g, visao) == 1)
     return fora
 
 
@@ -421,8 +442,8 @@ def medir_leech(linhas, cards, limiar=3):
     dif = {cid: d for cid, _l, d in cards}
     ativos = set(dif)
     armazenado = {cid: l for cid, l, _d in cards}
-    recon_cru = contar_lapsos(linhas, None)
-    recon_remap = contar_lapsos(linhas, REMAP_F112)
+    recon_cru = contar_lapsos(linhas, visao="cru")
+    recon_remap = contar_lapsos(linhas, visao="nativo")
 
     def painel(cont):
         alvos = sorted(c for c in ativos if cont.get(c, 0) >= limiar)
@@ -449,11 +470,11 @@ def medir_leech(linhas, cards, limiar=3):
 
 # -------------------------------------------------------------------- payload
 
-def analisar_visao(linhas, remap, nome, fracao, duracao_ms):
+def analisar_visao(linhas, visao, nome, fracao, duracao_ms):
     """Roda uma visao inteira: parametros, retencao, metrica default x otimizado."""
     corte = corte_holdout(linhas, fracao)
     treino, cauda = particionar(linhas, corte)
-    logs_full = construir_review_logs(linhas, remap, duracao_ms)
+    logs_full = construir_review_logs(linhas, visao, duracao_ms)
     exigir_minimo(len(logs_full))
 
     parametros = otimizar(logs_full)
@@ -461,7 +482,7 @@ def analisar_visao(linhas, remap, nome, fracao, duracao_ms):
 
     # Ajuste auxiliar so no treino -- limite (e): a metrica nao pode ser medida
     # com parametros que ja viram a cauda.
-    logs_treino = construir_review_logs(treino, remap, duracao_ms)
+    logs_treino = construir_review_logs(treino, visao, duracao_ms)
     if len(logs_treino) >= MIN_REVLOG:
         params_treino = otimizar(logs_treino)
         base_metrica = "fit nos ~%d%% iniciais" % round((1 - fracao) * 100)
@@ -470,12 +491,20 @@ def analisar_visao(linhas, remap, nome, fracao, duracao_ms):
         base_metrica = ("treino abaixo de %d revisoes -- metrica medida com o "
                         "fit COMPLETO (contaminada, declarada)" % MIN_REVLOG)
 
-    m_default, n_pts = log_loss(linhas, None, corte, remap)
-    m_otim, _ = log_loss(linhas, params_treino, corte, remap)
+    m_default, n_pts = log_loss(linhas, None, corte, visao)
+    m_otim, _ = log_loss(linhas, params_treino, corte, visao)
+    reguas = sorted({g for _c, _r, _q, g in linhas})
     return {
         "visao": nome,
-        "remap": ({str(k): v for k, v in remap.items()} if remap else None),
-        "distribuicao_notas_efetivas": distribuicao(linhas, remap),
+        "remap": ({str(k): v for k, v in REMAP_F112.items()}
+                  if visao == "nativo" else None),
+        # R2: sob QUAL regua este conjunto foi ajustado. E o campo que
+        # `app/utils/regua.carregar_parametros` exige para permitir a adocao --
+        # parametro sem a regua do fit e numero orfao (F114).
+        "regua_do_fit": (_regua.REGUA_ATUAL if visao == "nativo"
+                         else (reguas[0] if len(reguas) == 1 else None)),
+        "reguas_no_corpus": reguas,
+        "distribuicao_notas_efetivas": distribuicao(linhas, visao),
         "parametros": [round(x, 6) for x in parametros],
         "parametros_holdout_fit": [round(x, 6) for x in params_treino],
         "retencao_otima": retencao,
@@ -505,7 +534,7 @@ def construir_payload(linhas, visoes, fracao, duracao_ms, fsrs_version):
         "py_fsrs_version": fsrs_version,
         "fonte": "ipub.db::fsrs_revlog (conexao mode=ro; zero escrita)",
         "revisoes_usadas": len(linhas),
-        "cards_no_revlog": len({c for c, _r, _q in linhas}),
+        "cards_no_revlog": len({c for c, _r, _q, _g in linhas}),
         "janela": {
             "primeira_revisao": linhas[0][2].isoformat() if linhas else None,
             "ultima_revisao": linhas[-1][2].isoformat() if linhas else None,
@@ -622,7 +651,7 @@ def main(argv=None):
     print("  FSRS OPTIMIZE (R1) -- READ-ONLY; zero escrita no ipub.db")
     print("=" * 70)
     print("  revisoes no revlog: %d   cards: %d"
-          % (len(linhas), len({c for c, _r, _q in linhas})))
+          % (len(linhas), len({c for c, _r, _q, _g in linhas})))
 
     if args.leech:
         _print_leech(medir_leech(linhas, ler_cards(), args.limiar_lapsos))
@@ -646,8 +675,8 @@ def main(argv=None):
     print("\n  Ajustando 2 visoes x 2 fits (pode levar minutos)...\n")
 
     visoes = []
-    for nome, remap in (("cru", None), ("remap", REMAP_F112)):
-        visoes.append(analisar_visao(linhas, remap, nome, args.holdout,
+    for nome, visao in (("cru", "cru"), ("remap", "nativo")):
+        visoes.append(analisar_visao(linhas, visao, nome, args.holdout,
                                      args.duracao_ms))
     payload = construir_payload(linhas, visoes, args.holdout, args.duracao_ms,
                                 fsrs_version)

@@ -139,16 +139,22 @@ def test_remap_transforma_as_notas_certas():
 
 
 def test_remap_chega_no_optimizer_como_rating(db_grande):
-    """O ReviewLog entregue ao Optimizer ja vem com a nota traduzida."""
+    """O ReviewLog entregue ao Optimizer ja vem com a nota traduzida.
+
+    R2 (s186): o corpus sintetico deste teste nao tem `regua_versao`, entao todas
+    as linhas leem como v1 -- e e exatamente por isso que ele segue sendo a prova
+    de PARIDADE com o R1: mesma entrada, mesmos numeros, caminho novo.
+    """
     linhas = fsrs_optimize.ler_revlog(db_grande)
-    cru = fsrs_optimize.construir_review_logs(linhas, None)
-    remap = fsrs_optimize.construir_review_logs(linhas, fsrs_optimize.REMAP_F112)
+    assert {g for _c, _r, _q, g in linhas} == {1}    # 100% v1, como o revlog real
+    cru = fsrs_optimize.construir_review_logs(linhas, "cru")
+    remap = fsrs_optimize.construir_review_logs(linhas, "nativo")
     n_cru = sorted({int(rl.rating) for rl in cru})
     n_remap = sorted({int(rl.rating) for rl in remap})
     assert n_cru == [1, 2, 3, 4]
     assert n_remap == [1, 2, 3]                     # Easy some, Again engorda
-    d_cru = fsrs_optimize.distribuicao(linhas, None)
-    d_remap = fsrs_optimize.distribuicao(linhas, fsrs_optimize.REMAP_F112)
+    d_cru = fsrs_optimize.distribuicao(linhas, "cru")
+    d_remap = fsrs_optimize.distribuicao(linhas, "nativo")
     assert d_remap["1"] == d_cru["1"] + d_cru["2"]
     assert d_remap["2"] == d_cru["3"]
     assert d_remap["3"] == d_cru["4"]
@@ -177,8 +183,8 @@ def test_conexao_e_read_only(db_grande):
 def test_json_carrega_a_metadata_do_remap(db_grande, mock_optimizer):
     """Parametro sem a regua que o gerou e numero orfao -- a regua viaja junto."""
     linhas = fsrs_optimize.ler_revlog(db_grande)
-    visoes = [fsrs_optimize.analisar_visao(linhas, r, n, 0.2, 16500)
-              for n, r in (("cru", None), ("remap", fsrs_optimize.REMAP_F112))]
+    visoes = [fsrs_optimize.analisar_visao(linhas, v, n, 0.2, 16500)
+              for n, v in (("cru", "cru"), ("remap", "nativo"))]
     payload = fsrs_optimize.construir_payload(linhas, visoes, 0.2, 16500, "6.3.1")
 
     meta = payload["metadata_remap"]
@@ -196,6 +202,10 @@ def test_json_carrega_a_metadata_do_remap(db_grande, mock_optimizer):
     assert set(payload["visoes"]) == {"cru", "remap"}
     assert payload["visoes"]["cru"]["remap"] is None
     assert payload["visoes"]["remap"]["remap"] == {"1": 1, "2": 1, "3": 2, "4": 3}
+    # R2: a regua do fit viaja com o conjunto -- sem ela o adaptador RECUSA adotar
+    assert payload["visoes"]["remap"]["regua_do_fit"] == 2
+    assert payload["visoes"]["cru"]["regua_do_fit"] == 1
+    assert payload["visoes"]["cru"]["reguas_no_corpus"] == [1]
     for v in payload["visoes"].values():
         assert v["parametros"] == [round(x, 6) for x in PARAMS_FAKE]
         assert v["retencao_otima"] == 0.85
@@ -231,13 +241,12 @@ def test_metrica_e_a_mesma_nas_duas_visoes_e_usa_a_cauda(db_grande, mock_optimiz
     assert all(l[2] < corte for l in treino)
     assert all(l[2] >= corte for l in cauda)
 
-    _, n_tudo = fsrs_optimize.log_loss(linhas, None, None, None)
-    _, n_cauda = fsrs_optimize.log_loss(linhas, None, corte, None)
+    _, n_tudo = fsrs_optimize.log_loss(linhas, None, None, "cru")
+    _, n_cauda = fsrs_optimize.log_loss(linhas, None, corte, "cru")
     assert 0 < n_cauda < n_tudo
 
-    v_cru = fsrs_optimize.analisar_visao(linhas, None, "cru", 0.2, 16500)
-    v_remap = fsrs_optimize.analisar_visao(linhas, fsrs_optimize.REMAP_F112,
-                                           "remap", 0.2, 16500)
+    v_cru = fsrs_optimize.analisar_visao(linhas, "cru", "cru", 0.2, 16500)
+    v_remap = fsrs_optimize.analisar_visao(linhas, "nativo", "remap", 0.2, 16500)
     assert v_cru["metrica"]["nome"] == v_remap["metrica"]["nome"] == "log_loss"
     assert v_cru["metrica"]["n_pontos"] == v_remap["metrica"]["n_pontos"]
     # rotulos diferentes -> numeros diferentes (por isso nao se comparam entre si)
@@ -315,7 +324,7 @@ def test_leech_conta_x2(tmp_path, monkeypatch):
 
 def test_lapso_nao_conta_a_primeira_revisao(tmp_path):
     """Regra copiada de app/utils/fsrs.py::evaluate -- `if rating == 1 and not is_new`."""
-    linhas = [(1, 1, fsrs_optimize._parse_utc(_dia(1))),
-              (1, 1, fsrs_optimize._parse_utc(_dia(2)))]
-    assert fsrs_optimize.contar_lapsos(linhas, None) == {1: 1}
-    assert fsrs_optimize.contar_lapsos([linhas[0]], None) == {1: 0}
+    linhas = [(1, 1, fsrs_optimize._parse_utc(_dia(1)), 1),
+              (1, 1, fsrs_optimize._parse_utc(_dia(2)), 1)]
+    assert fsrs_optimize.contar_lapsos(linhas, visao="cru") == {1: 1}
+    assert fsrs_optimize.contar_lapsos([linhas[0]], visao="cru") == {1: 0}

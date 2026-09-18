@@ -18,15 +18,31 @@ Datas: py-fsrs opera em UTC tz-aware; o MedHub armazena datetimes naive
 locais (compatível com os dados existentes). O adapter converte nas bordas.
 
 Retenção-alvo: `REQUEST_RETENTION = 0.9`.
+
+Parâmetros (R2/F112, s186): o adapter passou a **consultar** `core/fsrs_params.json`
+por `app.utils.regua.carregar_parametros`, que só entrega quando o arquivo se
+declara `adotado` E a régua sob a qual foi ajustado é a régua de escrita. Nas
+demais saídas -- e hoje é o caso -- vale o default de referência do py-fsrs, e
+`MOTIVO_PARAMETROS` diz qual delas foi. A meta de retenção fica em **0,90** até
+haver `review_duration_ms` medido pelo player (rider declarado do R2: sem duração
+real, 0,70/0,80 é a saída mais fraca por construção).
 """
 
 from datetime import datetime, timezone
 
 from fsrs import Scheduler, Card, Rating
 
+from app.utils.regua import REGUA_ATUAL, carregar_parametros
+
 REQUEST_RETENTION = 0.9
 
-# Scheduler único reutilizado (parâmetros default de referência do py-fsrs).
+#: Parâmetros em vigor + por que são esses. O motivo é exposto (e não só logado)
+#: porque "está usando o default" e "está usando o que o R1 mediu" são estados
+#: diferentes que produzem o MESMO agendamento silencioso -- e a diferença entre
+#: eles é exatamente o que o operador precisa saber ao ler um intervalo.
+PARAMETROS, MOTIVO_PARAMETROS = carregar_parametros(regua=REGUA_ATUAL)
+
+# Scheduler único reutilizado.
 # - learning_steps=(): sem fase de "passos curtos" (minutos) — cada review opera
 #   direto no modelo DSR, com intervalos em dias desde a 1ª revisão. Isso é fiel
 #   ao FSRS (modelo de memória) e evita depender do `step` (que o schema não
@@ -35,8 +51,11 @@ REQUEST_RETENTION = 0.9
 #   um card de Review recebe Again; o reset de step é inócuo (passo único gradua
 #   de volta a Review num Good).
 # - enable_fuzzing=False: intervalos determinísticos/reproduzíveis.
-_SCHEDULER = Scheduler(desired_retention=REQUEST_RETENTION,
-                       learning_steps=(), enable_fuzzing=False)
+_KWARGS_SCHEDULER = dict(desired_retention=REQUEST_RETENTION,
+                         learning_steps=(), enable_fuzzing=False)
+if PARAMETROS is not None:
+    _KWARGS_SCHEDULER["parameters"] = PARAMETROS
+_SCHEDULER = Scheduler(**_KWARGS_SCHEDULER)
 
 
 def _parse_dt(value):

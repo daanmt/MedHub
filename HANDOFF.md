@@ -1,50 +1,52 @@
 # HANDOFF.md -- ESTADO OPERACIONAL CURTO
-*Atualizado: 2026-09-18 (tarde) -- **s186 (ENGENHARIA, janela 5 / onda 3)**: a fila inteira do `/ai-eng` zerada. **7 commits, harness verde em cada um, suite 811 -> 858.** R2 pousado e **F112 RESOLVIDO** (o operador drenou a previa e confirmou a regua); part-7 (painel) e part-8 (Drive congelado) entregues; **1.9(a)** fechado. 2 achados novos: **F114** e **F115**. 3 cards revisados (as 3 primeiras linhas sob a regua v2); zero questoes.*
+*Atualizado: 2026-09-18 (noite) -- **s187 (ENGENHARIA, janela 6)**: a reforma de engenharia fechou com **SELO DERIVADO**. **11 commits, harness verde em cada um, suite 858 -> 912, ZERO subagentes.** 3 achados novos (F115 F116 F117), 4 fechados, 14 cabecalhos mentirosos corrigidos.*
 
-> 🔧 **A proxima:** **F115** (spec; o `/ai-eng` deu GO depois do 1.9a) -- comprimento TOTAL do card nao tem gate. 🔴 **O limiar sai dos rotulos do operador (#92 p98 · #96 p99 marcados; #53 p57 nao), reportando precisao sobre as marcas dele -- nunca um numero escolhido.** Depois: **1.10**, que segue **SEM GO** dele.
+> 🔒 **O SELO:** `python tools/selo.py` -- **0 item sem terminal, 0 discordancia**. 99 achados: 78 FEITO · 5 SUPERADO · 5 PARCIAL · 1 FEITO(parcial) · **4 GATE do operador**. A tabela e **DERIVADA** (ledger + `git log` + `clausulas_check` + `consistencia_check` + docstring das suites), nunca digitada. `--markdown` para colar; `--sensores` para o escopo que cada sensor declara NAO alcancar.
 
 ## > Proximo passo imediato
 
-1. ✅ **R2 ENTREGUE / F112 RESOLVIDO** (`bf7f7e9` + `d97fb32`). Regua nativa (`1 falhou · 2 com esforco · 3 lembrou · 4 sem esforco`), versionada por linha (`fsrs_revlog.regua_versao`, sem backfill: NULL = v1 por declaracao). Gate do operador cumprido pelo ATO -- ele drenou a previa e respondeu que as notas 4 foram "cards faceis", nao habito. Player com relearning `< 3`. **Parametros NAO adotados** (F114): `w3`/`w16` da visao remap sao o default intocado, porque aquela visao tem zero exemplo de Easy. Gatilho do re-fit: quando houver nota 4 v2 em volume que os mova (hoje: 3 linhas).
-2. ✅ **part-7 (painel) e part-8 (Drive congelado) ENTREGUES em 18/09.** Painel: https://claude.ai/artifact/QctZqVoJriSviJetF8FYBQ (regenerar no fechamento, mesma url). Drive: planilha declarada abandonada (W1 **suspenso**, nao desligado; ultimo delta +977 preservado) e o sync REMOVIDO do codigo sob snapshot reversivel em `artifacts/snapshot-cronograma-drive-2026-07-26.json`.
-3. 🃏 **Cards:** divida **72 atrasados + 31 p/ hoje**, pool 685. 🔺 **3 marcas de reforja novas do player (18/09): #92 e #96 "card longo" (p98 e p99 do baralho -- e o F115), #53 "pergunta composta".** 🔴 **Aula-base D10 de Acido-Base + Potassio ANTES de re-drillar os 6 segurados** (#595 #596 #598 #783 #786 #787). Baralho com acentuacao restaurada (1.796 correcoes) -- **#685 e #689 seguem com erro de portugues irregular** que regra nenhuma pega.
-4. 📚 **Questoes (Fase 1, semana 1 = 14 tarefas, 369q; `plano.py --listar --semana 1`):** Prevencao Quaternaria (resumo) -> AMI (resumo) -> MFC extensivo Revisao (50) -> Saude do Idoso T+R (32) -> ... Bulk -> `plano.py --concluir ID --sessao <id>`; erros -> Autopsia.
-5. ⚠️ **Acao do operador, pequena:** tirar **RAPS** da fila de "temas sem resumo". O conteudo existe (`## 4. Rede de Atencao Psicossocial (RAPS)` em `Psiquiatria Social e Reforma Psiquiatrica.md`) -- escrever outro produziria duplicado. Foi o F106 invertido.
-6. 🗓️ Revisao de status por area (173 linhas) e rebalanceio da semana 3 seguem pendentes.
+1. 🔴 **NAO HA FILA DE ENGENHARIA ABERTA.** A proxima janela so abre por ordem do operador, com as respostas dos gates abaixo. O default voltou a ser **ESTUDO**.
+2. 🔺 **6 GATES do operador, cada um com a pergunta de 1 linha:**
+   - **stub `[CIR] TCE.md`** -- apago? (17 linhas, `status: stub`, 3 armadilhas genericas; grep §10.4 feito, zero citador vivo). Parei por `§1.1(b)`: destrutivo sobre `resumos/` e a clausula e dele.
+   - **`Neurologia/TCE.md` reescrito** -- validar clinicamente. Eu garanto FORMA (`/estilo-resumo`), nao VERDADE.
+   - **F87** -- quais cards pagam aluguel? O harness ve FORMA, nunca RENDIMENTO.
+   - **F100** -- re-ensinar nao fechou 3 pontos da s175: mudo o metodo de re-ensino?
+   - **F105** -- triar as 11 marcas de pergunta composta abertas na fila de reforja?
+   - **F111/R8** -- o extensivo leitura-first garante recall no dia 1? (decision brief, prazo **02/11**).
+3. 🃏 **Cards:** divida **72 atrasados + 31 p/ hoje**, pool 685. **Fila de reforja 318** (+30: os candidatos `comprimento_total` do F115, ingeridos sob o rito §10.7, reversiveis por `--descartar`). 🔴 **Aula-base D10 de Acido-Base + Potassio ANTES de re-drillar os 6 segurados** (#595 #596 #598 #783 #786 #787). **#685 e #689** seguem com erro de portugues que regra nenhuma pega (F113).
+4. 📚 **Questoes (Fase 1, semana 1 = 14 tarefas, 369q; `plano.py --listar --semana 1`):** Prevencao Quaternaria (resumo) -> AMI (resumo) -> MFC extensivo Revisao (50) -> Saude do Idoso T+R (32). Bulk -> `plano.py --concluir ID --sessao <id>`; erros -> Autopsia.
 
 ## Estado por frente
 
 - **Norte:** 🎯 Psiquiatria/IPUB via ENAMED 2027 (corte 940, alvo 95%). Plano B: UERJ/MFC 01/11/2026 (44d; **inscrito**). Hibrido: Fase 1 = RF rescopada ate 01/11; Fase 2 = extensivo S21-S48.
 - **Volume & Metas:** 7326 / 10400 (perf. ~79.1%). Hoje: 0. Ritmo-alvo ~69.9q/dia (44d p/ UERJ/MFC (prova 01/11)). [derivado: day_plan --handoff-block]
 - **Simulados:** 9 provas + ENAMED real 75. Proximo slot ~10/10 (cadencia de 4 semanas).
-- **FSRS:** divida **72 atrasados + 31 p/ hoje** -- pool 685 nunca introduzidos (entram <=90/dia). Regua **v2 em vigor** desde 18/09; revlog misto (3.067 v1 + 3 v2). Parametros seguem DEFAULT por decisao (F114).
-- **Conteudo:** 136 resumos. Preventiva: so 3/22 decks pagam aluguel na UERJ.
-- **Erros & Cards:** 1041 erros · **1507 cards ativos** · 0 needs_qualitative na fila · taxonomia 302 temas. Reforja 288.
-- **Cronograma:** `plano_tarefas` = SSOT, e agora **unica** -- o Drive foi congelado (part-8). W1 **suspenso**, nao desligado (ultimo delta +977). Visao consolidada: o painel.
-- **Engenharia:** suite **858**; `auto_check` PASSED; ledger ate **F115** (§6z novo); `app/` nao alcanca mais `tools/` por `sys.path` (1.9a). Divida com o `/ai-eng`: so o **decision brief do R8/F111** (prazo 02/11) e o **1.10** (sem GO).
+- **FSRS:** divida **72 atrasados + 31 p/ hoje** -- pool 685 nunca introduzidos (entram <=90/dia). Regua **v2** desde 18/09; revlog misto (3.067 v1 + 3 v2). Parametros seguem DEFAULT por decisao (F114).
+- **Conteudo:** 136 resumos. `Neurologia/TCE.md` **reescrito** (F104). Preventiva: so 3/22 decks pagam aluguel na UERJ.
+- **Erros & Cards:** 1041 erros · **1507 cards ativos** · 0 needs_qualitative na fila · taxonomia 302 temas. Reforja **318**.
+- **Cronograma:** `plano_tarefas` = SSOT unica (Drive congelado na part-8). Visao consolidada: o painel.
+- **Engenharia:** suite **912**; `auto_check` PASSED; ledger ate **F117**. **Item 1.10:** 247 clausulas normativas -- **53 com CHECK · 69 declaradas · 125 orfas (49,4%)**. Os 4 portadores centrais estao **100%**: `analisar-questao` 28/28 · `revisar` 30/30 · `AGENTE` 41/41 · `revisao-calibrada` 50/50. Maiores orfaos restantes: `estilo-flashcard` 21 · `engenharia-cli` 18 · `cronograma-contract` 18 · `estilo-resumo` 17.
 - **Posicao:** plano semana 1 (fase 1) · 0/14 tarefas da semana feitas [derivado: plano_tarefas]
-- **Datas & links:** fim da grade 09/10 · **UERJ 01/11** (inscrito) · 📊 **Painel** (regenerar no fechamento, republicar na MESMA url): https://claude.ai/artifact/QctZqVoJriSviJetF8FYBQ
+- **Datas & links:** fim da grade 09/10 · **UERJ 01/11** (inscrito) · 📊 **Painel** (regenerar no fechamento, MESMA url): https://claude.ai/artifact/QctZqVoJriSviJetF8FYBQ
 
-## Ultima sessao -- s185 (2026-09-17/18) -- ENGENHARIA DEDICADA (janela 4)
+## Ultima sessao -- s187 (2026-09-18) -- ENGENHARIA, janela 6 (selo da reforma)
 
-Detalhe em `history/session_185.md`. 3 filhos Opus 5 na onda 1 (~820k tokens, ~45 min, arquivos disjuntos); ondas 0 e 2 sem filho. **11 commits.** Todo fix nasceu com teste antes do codigo; em 3 casos o teste pegou defeito meu antes do commit. Toda operacao em lote passou pelo rito §10.7 (4 snapshots do banco). FSRS preservado do inicio ao fim (1543 / 3067 / 1543).
+Detalhe em `history/session_187.md`. **ZERO subagentes** (nenhum lote passou o limiar do F93). Todo fix nasceu com teste antes do codigo; em 4 casos o teste pegou defeito meu antes do commit. 🔴 **A janela inteira tem UMA pergunta:** *o sensor alcanca exatamente o que diz alcancar?* -- **F115** (escopo MENOR que o necessario), **Invariante A** (sensor mirando a coisa vizinha), **G14b** (sensor olhando o registro vizinho), **F116** (escopo MAIOR que o declarado). Quatro faces, quatro gates novos.
 
 ## Fronteiras DECLARADAS (nao ler verde de gate como limpeza)
 
-- 🔴 **F113 PARCIAL:** 1.796 correcoes de acentuacao, mas o residuo e **irregular e nao fecha por regra** -- `apendicite`/`artrite`/`abortaria` estao CERTAS sem acento, `arteria`/`bacteria`/`etaria` precisam, e nenhum sufixo distingue. **#685** e **#689** seguem defeituosos. Exige lexico ou olho humano.
-- 🔴 **Reportei "875 -> 0" e era FALSO:** medidor e corretor compartilhavam a lista de palavras. Detector independente mediu 897 (60,8%). *Quando o sensor e o remedio nascem do mesmo insumo, o verde nao e evidencia.*
-- 🔴 **Eu corrompi 23 cards e reverti:** `-encia` virou verbo em substantivo. **"So-acento" nao e "semanticamente nulo" em portugues.** Pegou-se a olho, nao por gate.
-- **F110** sem gate por construcao. **`db.get_db_metrics`** soma campo inflado e nao tem chamador vivo (superficie orfa). **R1:** nada adotado, `app/utils/fsrs.py` sem diff.
-- 🔴 **A lista de "herdadas e vivas" era FALSA e foi triada por CONTEUDO em 18/09 (s187)** -- lida contra o ledger e contra os portadores, nao contra ela mesma. Das 15, **7 ja estavam fechadas** (G5 e G10 na s177; F89, F79b, F66, F64 e F80b na s176), **1 declarada** (eixo C do F81, nao-verificavel por gate) e **2 tinham os riders pousados desde a s185 com o cabecalho do ledger dizendo ABERTO** (F109 e F110). Sobravam 5, e **F99 foi resolvido na s187**.
-- **Vivas de verdade, por terminal:** **F104** (conteudo -- `Neurologia/TCE.md` coloquial + stub `[CIR] TCE.md` duplicado) · **F100** (achado de METODO, nao de codigo) · GATE do operador: **F105**, **F87**, **F111/R8** (prazo 02/11), **F89 passivo** (18 linhas, RODADA 3), **F66 passivo** (115 WeakAreas).
-- ⚠️ **Por que a lista mentia e o gate nao pegou:** o check G14 compara o cabecalho do achado contra a **lapide do §11** do `MEMORIA-AUDITORIA`; achado que nunca entrou no §11 (F109, F110) nao e visto por ninguem. Gate-miss por escopo de alvo -- a mesma forma do F115.
+- 🔴 **DECLARADO e NAO construido, com a contagem que sustenta cada decisao:** (a) **3a forma de cabecalho mentiroso** -- achado cujo SUJEITO foi removido (F36/F72); nem o G14 (quer lapide no §11) nem o G14b (quer portador reivindicando) a veem; base = 2, nao paga gate. (b) **Familia de tokens no `CONTRATO_REVOGADO`** -- dos 23 termos do §12 so **2** tem limiar numerico, e sao a mesma regra do F117: maquinaria para N=1. (c) **Coluna `origem` no revlog** (player x chat) -- hoje a origem se infere por timestamp; candidato, nao construido.
+- 🔴 **`audit_resumos` mede ESTRUTURA, nunca VERDADE CLINICA** -- e agora diz isso na propria saida. Ele imprimia PASSED sobre um `TCE.md` que afirmava que o manitol "perfura a barreira encefalica", o oposto do mecanismo. **PASSED != clinicamente correto.**
+- 🔴 **O item 1.10 nao esta completo:** 125 clausulas orfas em 14 portadores. O mecanismo e o entregavel; a anotacao restante e julgamento por portador, com a contagem acima e o WARN 16c como burn-down.
+- 🔴 **O gate `CONTRATO_REVOGADO` casa substring LITERAL.** O F117 provou: a s186 cadastrou a redacao do player e a do chat sobreviveu. Uma 4a parafrase passaria. A garantia e o rito de cadastrar TODAS as redacoes.
+- **F113 PARCIAL** (#685/#689 intocados, residuo irregular). **F110** sem gate por construcao. **F78** e **F2** DECLARADOS nao-verificaveis com data de revisao.
 
 ## Pendencias/observacoes ativas
 
 - 📄 Manual de Gestacao de Alto Risco (MS 2022) > 10 MB. 💉 Diretrizes 2026 a conferir: Calendario Vacinal, GINA, ATLS 11 (parcial), SINAN.
-- 📡 **Canal com o `/ai-eng` = `SendMessage` entre sessoes locais** (descobrir com `ListAgents`). 🔴 **O endereco MUDA a cada sessao dele** -- em 18/09 ele reiniciou (N=80) e avisou que mensagens ao endereco antigo se perdem. **Sempre responder pelo `from` da mensagem mais recente.** Hook grava as trocas em `history/exchange-log.jsonl`.
-- 📬 **Devido a ele no proximo contato (2 itens):** (a) decision brief do **R8/F111** (<=10 linhas: o que muda no dia do operador, o que e reversivel; prazo 02/11); (b) **status do 1.10** -- toda clausula normativa vira CHECK nomeado ou marca literal "nao-verificavel" + data de revisao: **NAO INICIADO**. ⚰️ *O antigo item (b) -- 1.9(a) "NAO INICIADO", smell vivo em `app/utils/db.py:1046` -- morreu em 18/09/2026, no dia em que foi escrito: o 1.9(a) foi ENTREGUE na s186 (`98148fa`), `card_checks` migrou para `app/utils/` e `app/` nao alcanca mais `tools/` por `sys.path`. A linha sobreviveu a propria entrega e contradizia as linhas 2, 4 e 24 deste mesmo arquivo -- **a premissa morta no proprio portador**, a classe que a janela 5 fechou.*
-- 🔴 **Erro meu, corrigido em 18/09:** respondi a ele que "1.9a/1.10 ja estavam feitos desde a s177". Estava errado -- **a numeracao diverge**. O `~~1.9~~`/`~~1.10~~` do nosso `§11` (G5 e `check_session_pointer`) nao sao os dele; o handoff dele de 10-09 numera outras duas coisas. **Ao responder item numerado dele, casar por CONTEUDO, nunca por numero** -- os dois inventarios sao independentes.
+- 📡 **Canal com o `/ai-eng` = `SendMessage` entre sessoes locais** (descobrir com `ListAgents`). 🔴 **O endereco MUDA a cada sessao dele** -- responder sempre pelo `from` da mensagem mais recente. Hook grava em `history/exchange-log.jsonl`.
+- 🔴 **Convencao que a janela escreveu, e o gate que a sustenta: regex sempre em string RAW.** Escrevi uma sequencia de escape numa string nao-raw por heredoc e gravei **backspace (0x08)** dentro de dois regexes do `selo.py` -- um deles fazia TODO achado RESOLVIDO aparecer como "SEM TERMINAL". O ledger ja registrava essa classe para o `audit_resumos` ("linter verde, check morto"). Virou `test_sem_caracter_de_controle` (BLOCK), **que me pegou repetindo o mesmo erro 10 minutos depois**.
+- 🔴 **Ao responder item numerado do `/ai-eng`, casar por CONTEUDO, nunca por numero** -- os dois inventarios sao independentes.
 
 ---
-*Historico: history/INDEX.md * Macro: ESTADO.md * Sessao: history/session_185.md * Trocas: history/exchange-log.jsonl * Auditoria: docs/MEMORIA-AUDITORIA.md*
+*Historico: history/INDEX.md * Macro: ESTADO.md * Sessao: history/session_187.md * Trocas: history/exchange-log.jsonl * Auditoria: docs/MEMORIA-AUDITORIA.md * Selo: `python tools/selo.py`*

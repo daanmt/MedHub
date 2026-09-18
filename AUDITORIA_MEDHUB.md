@@ -33,7 +33,7 @@ relates_to: [AGENTE, ESTADO, HANDOFF]
 
 ## 1. Achados de integridade de estado
 
-### F1 -- Drift do ponteiro de sessao no HANDOFF -- **MEDIA**
+### F1 -- Drift do ponteiro de sessao no HANDOFF -- **MEDIA** -- **RESOLVIDO** (gate `Ponteiro de sessao -- B2 do reconcile` no `auto_check`; `check_session_pointer` trata as duas direcoes, e a 2a e BLOCK)
 - **Evidencia:** `HANDOFF.md` declara no cabecalho "s108" e "Proximo passo -- s109", mas o log mais recente em `history/` e `session_107.md`. Nao existe `session_108.md`. O hook de boot (`SessionStart`) sinalizou: *"HANDOFF.md cita s108, mas o ultimo log e history/session_107.md -- considerar reconcile"*.
 - **Leitura de sistema:** o Protocolo de Fechamento (AGENTE.md secao 3) tem 4 passos -- (1) atualizar HANDOFF, (2) ESTADO se macro mudou, (3) **registrar `history/session_NNN.md`**, (4) git. O passo 1 avancou o ponteiro sem o passo 3 selar a sessao. A disciplina de fechamento permite essa dessincronia sem barreira automatica.
 - **RESOLVIDO na s108:** o "s108" do HANDOFF era renumeracao antecipada (o s107 escreveu o ponteiro apontando para a proxima sessao antes dela existir). Esta sessao **e** a s108 (drenagem FSRS + auditoria), entao o fechamento correto -- registrar `history/session_108.md` -- **fecha o drift naturalmente** (o ponteiro passa a ter log correspondente). Nao foi preciso sessao retroativa.
@@ -43,20 +43,20 @@ relates_to: [AGENTE, ESTADO, HANDOFF]
 
 ## 2. Achados de tooling / DX / confiabilidade de hooks
 
-### F2 -- Latencia de shell no ambiente Windows -- **MEDIA**
+### F2 -- Latencia de shell no ambiente Windows -- **MEDIA** -- **DECLARADO nao-verificavel** (propriedade do ambiente, nao do repo; nenhum codigo nosso a controla -- revisar: 2027-03-31)
 - **Evidencia:** comandos via Bash (`git log`, `ls resumos/**`) estouraram o timeout de 120s nesta sessao. CLIs Python (`fsrs_queue.py`, etc.) rodam normalmente e rapido.
 - **Leitura de sistema:** qualquer hook ou rotina que faca *shell-out* pesado -- em especial o pre-commit `auto_check --staged` e o `day_plan.py` se dependerem de globbing amplo ou de `git` custoso -- herda essa latencia. Risco: hook lento demais ser abortado ou o operador aprender a fazer bypass.
 - **Verificacao sugerida:** cronometrar `auto_check --staged` e `day_plan.py` isoladamente; identificar se o custo esta no `git`, no profile do shell, ou no glob de `resumos/**`. Testar se o gargalo e o carregamento do profile PowerShell/Bash vs. o comando em si.
 - **Hipotese de melhoria:** (a) garantir que hooks usem caminhos diretos e evitem `ls`/`find` recursivo (preferir Python `pathlib` com escopo staged); (b) cache de indice quando aplicavel; (c) documentar em AGENTE.md que a superficie de tooling e Python-CLI-first, shell-glob-last.
 
-### F3 -- Ordenacao da fila FSRS ignora clusterizacao por tema -- **MEDIA**
+### F3 -- Ordenacao da fila FSRS ignora clusterizacao por tema -- **MEDIA** -- **RESOLVIDO** (`fsrs_queue --cluster` opt-in; e a PREMISSA do achado morreu no F109 -- a ordem intercalada e o default deliberado, `fsrs-management` v1.4)
 - **Evidencia:** `fsrs_queue.py::_ordered_queue` achata os buckets na ordem `atrasados -> hoje -> novos`, intercalando temas. Na fila real observada (59 cards) os temas ja vinham naturalmente agrupados nos dados, mas a ordem de entrega mistura Dermato, Gineco, Cirurgia, etc. O agente teve de **re-agrupar manualmente por tema** para conduzir a revisao em cluster.
 - **Leitura de sistema:** a Camada 0 do contrato de `/revisar` prega "esquentar o tema antes de sondar". Revisar em cluster (todos os cards de um tema juntos) permite **um** refresh que aquece o tema e drena o cluster inteiro -- pedagogicamente superior e alinhado ao contrato. A ordem atual forca ou o re-agrupamento manual (custo de agente) ou refreshes fragmentados.
 - **Verificacao sugerida:** confirmar em `app/utils/db.py::get_cards_by_bucket` se ha campo `tema` disponivel para ordenacao secundaria (ha -- os cards trazem `area`/`tema`).
 - **Hipotese de melhoria:** flag `--cluster` (ou `--by-tema`) em `fsrs_queue.py` que, preservando a prioridade de bucket, ordene secundariamente por `(area, tema)` e mantenha cards do mesmo tema contiguos. Alternativa/adicional: `day_plan.py` emite um "plano de revisao" que ja lista os clusters do dia com contagem. Ganho barato, observado direto do uso.
 - ⚰️ **LAPIDE (2026-09-17, s184, F109) sobre a premissa "pedagogicamente superior".** O mecanismo entregue (`--cluster` opt-in, `--review-plan`) fica; a **justificativa** desta leitura nao se sustenta: a literatura de intercalacao (Kornell & Bjork 2008; Hatala, Brooks & Norman 2003 em ECG, 46% x 30%; Rozenshtein 2016) mostra que misturar categorias confundiveis treina DISCRIMINACAO -- a familia nº 1 de erro deste usuario -- e que o bloqueio so PARECE melhor (mesma ilusao metacognitiva do cramming). A ordem natural intercalada da fila e **default deliberado**; `--cluster` serve a onboarding de cluster frio/andaime, nunca vira default. Fundamentos: `docs/FUNDAMENTOS-APRENDIZAGEM.md` P6. Riders no `fsrs-management-contract` e em `revisar.md` = fila do `PLANEJAMENTO-APRENDIZAGEM-2026-09-17.md` (nao executados: sessao de planejamento).
 
-### F4 -- Backlog FSRS vs. politica de teto diario -- **MEDIA**
+### F4 -- Backlog FSRS vs. politica de teto diario -- **MEDIA** -- **RESOLVIDO** (teto dinamico, `fsrs-management-contract` v1.1; contador unico `vencidos = atrasados + hoje` no F64/v1.3)
 - **Evidencia:** fila do dia = 40 atrasados + 4 hoje + 15 novos puxados; backlog de novos reportado em ~322-351 (day_plan/HANDOFF divergem: 322 vs 351 -- ver F5). A politica de cards diaria registrada em memoria e "teto 30/dia (agendados + 15 backlog)". Os **44 agendados (atrasados+hoje) ja excedem o teto** antes de qualquer card novo.
 - **Leitura de sistema:** ha tensao estrutural entre a politica de teto e a divida real de cards vencidos. Se o teto e respeitado, o backlog de atrasados nunca drena; se o backlog e drenado, o teto e violado todo dia. Nenhum dos dois esta errado isoladamente -- falta uma **estrategia de drenagem de divida** explicitada.
 - **Verificacao sugerida:** medir a taxa de crescimento do backlog (novos/dia entrando) vs. taxa de drenagem sustentavel; conferir a fonte da divergencia 322 vs 351.
@@ -73,7 +73,7 @@ relates_to: [AGENTE, ESTADO, HANDOFF]
 - **Verificacao sugerida:** conferir se `fsrs_queue`/`day_plan` ja expoem stability por card/cluster; se nao, o sinal vem de `review_radar.py`.
 - **Hipotese de melhoria:** ao abrir um cluster no fluxo DRENAR, o protocolo de `/revisar` checa o sinal de frieza e, se frio, oferece o PREPARAR proativamente ("cluster X esta frio -- aqueco antes?"). Mantem a fronteira dura (PREPARAR nao toca FSRS).
 
-### F6 -- Divergencia de numeros entre HANDOFF e day_plan -- **BAIXA/MEDIA**
+### F6 -- Divergencia de numeros entre HANDOFF e day_plan -- **BAIXA/MEDIA** -- **RESOLVIDO** (o bloco numerico do HANDOFF e GERADO por `day_plan.py --handoff-block`, nunca digitado -- `AGENTE.md §3`)
 - **Evidencia:** volume acumulado -- HANDOFF diz "4.418"; day_plan do boot diz "4454 acum.". Backlog de novos -- HANDOFF "322"; day_plan "351". FSRS atrasados -- HANDOFF "27 atrasados + 13 hoje"; day_plan "40 atrasados + 4 hoje"; fila real puxada agora = 40 atrasados + 4 hoje.
 - **Leitura de sistema:** o `day_plan.py` (derivado, ao vivo do db) e a fila real concordam (40+4). O `HANDOFF.md` (texto, escrito a mao no fechamento) esta defasado. Confirma que **a fonte viva (db/day_plan) e fiel; o HANDOFF textual drifta** -- mesmo padrao de F1.
 - **Verificacao sugerida:** nenhuma -- e consequencia de F1 (fechamento incompleto). Tratar junto.
@@ -109,7 +109,7 @@ relates_to: [AGENTE, ESTADO, HANDOFF]
 
 ---
 
-### F9 -- Sem caminho de amend/override para rating FSRS ja gravado -- **MEDIA**
+### F9 -- Sem caminho de amend/override para rating FSRS ja gravado -- **MEDIA** -- **RESOLVIDO** (Invariante C: a janela de override acontece ANTES do record; nao existe amend pos-record por desenho -- `revisao-calibrada` v1.1)
 - **Evidencia:** o contrato de `/revisar` (passo 4) diz que "o usuario pode sobrepor a nota". O CLI `fsrs_queue.py --record` e **append-only** (`db.record_review` = INSERT em `fsrs_revlog` + UPDATE em `fsrs_cards`). Quando o override chega **depois** do record, honra-lo grava uma **2a linha** no revlog e recalcula o FSRS a partir do estado **ja mutado** pela 1a nota -- resultado != "nota correta de primeira". Observado nesta sessao: card `id=403` gravado 2 (o operador escreveu "Paget"), depois corrigido para 4 (sabia "Faget"); o re-record moveu o `due` de 2026-07-19 para 2026-07-26, deixando 2 linhas de revlog para o mesmo card na mesma sessao.
 - **Leitura de sistema:** contradicao entre duas clausulas do proprio contrato -- "usuario pode sobrepor" vs. "nunca `--record` duas vezes o mesmo card (regra anti-duplo-registro)". A regra anti-dup protege contra o duplo **acidental**, mas nao previu o override **intencional** pos-record.
 - **Verificacao sugerida:** confirmar que `db.record_review` nao expoe rollback/replace; medir se ha outros pontos que assumem um-record-por-card-por-sessao.
@@ -223,7 +223,7 @@ relates_to: [AGENTE, ESTADO, HANDOFF]
 
 > Corrida de escrita respeitada (convencao da secao 3d): a rodada 1 do ciclo 2 tomou 3d e F20; esta continuacao da s109 usa 3e e F21. Origem: analise do 1o lote de apendicite (18 questoes, 5 erros) -- trilha de ENGENHARIA. O conteudo clinico (os 5 cards ancorados nos erros) foi para o `ipub.db` via `insert_questao.py` (flashcards 727-731), nao aqui (secao 7.6).
 
-### F21 -- Compressao por dificuldade (Revisao Calibrada) eliminou um ponto de decisao de alto rendimento, nao so encurtou profundidade -- **MEDIA**
+### F21 -- Compressao por dificuldade (Revisao Calibrada) eliminou um ponto de decisao de alto rendimento, nao so encurtou profundidade -- **MEDIA** -- **RESOLVIDO** (Invariante E + Clausula 10: cobertura e PISO FIXO, so a profundidade e calibravel -- `revisao-calibrada` v1.2)
 - **Evidencia:** a aula-base de apendicite foi re-renderizada em D7 (pedido do operador, baixando do D10). A compressao D10 -> D7 removeu o galho "isquemia de base apendicular junto ao ceco -> ileotiflectomia/ileocolectomia" (presente no D10; cortado no D7 como "detalhe cirurgico de baixo rendimento"). A Q2 do lote (42% de acerto) caiu exatamente nesse galho -- o operador marcou Ochsner (invaginacao), gabarito ileotiflectomia. Erro em parte atribuivel ao corte da aula.
 - **Leitura de sistema:** a Revisao Calibrada mapeia a nota 1-10 a degraus de descompressao (D10/D8/D5/D2). Mas a regra de cobertura (`feedback_aula_base_cobertura_escopo`, normada em AGENTE secao 1.2) diz que a profundidade calibra, a **cobertura nao** -- nunca cortar tema/ponto de pega de banca. O D7 violou isso: comprimiu ELIMINANDO um ponto de decisao testavel em vez de encurta-lo. O knob de dificuldade nao tem um "piso de cobertura" operacional no ato de render a aula.
 - **Verificacao sugerida:** revisar `core/contracts/revisao-calibrada-contract.md` -- ha clausula que separe "profundidade/descompressao" (calibravel pela nota) de "cobertura de pontos de decisao de alto rendimento" (piso fixo por tema)? A regra existe em memoria/AGENTE mas nao esta operacionalizada por nota.
@@ -527,7 +527,7 @@ relates_to: [AGENTE, ESTADO, HANDOFF]
   de area** -- area fantasma aparece crua no relatorio; consertar na origem e o **F89** (item 0.6).
   Spec `.vibeflow/specs/reconcile-planilha-reporta.md` · `reconcile-contract` v1.3 · suite 503 -> 523.
 
-### F36 -- Agente nao materializa binario grande baixado via MCP -> `--sync-drive` pulado 5 sessoes seguidas -- **ALTA** (era MEDIA) -- **ABERTO**
+### F36 -- Agente nao materializa binario grande baixado via MCP -> `--sync-drive` pulado 5 sessoes seguidas -- **ALTA** (era MEDIA) -- **SUPERADO (s186 part-8; medido na s187)** -- o sujeito do achado deixou de existir: o Drive foi congelado e `--sync-drive` REMOVIDO do codigo sob snapshot reversivel. Nao ha mais binario grande a materializar.
 - **Evidencia (s124, s125, s126, s127 e s128):** o boot sinalizou `Drive desatualizado`
   (10 dias no boot de 19/07) e o `--sync-drive` **nao rodou** nas duas: o `.xlsx` do Drive volta do
   MCP como base64 grande e o agente nao tem caminho pratico para materializa-lo em disco "a mao"
@@ -1233,7 +1233,7 @@ F55, rotacao deste doc (**F62** candidata — politica do dono), ipub.db/conteud
 
 ## 4o. Achado de uso vivo -- s162 (Claude Code/Opus 5, 2026-09-02)
 
-### F63 -- a prioridade que governa o estudo nao viaja com o repo (o usuario e a camada de transporte)
+### F63 -- a prioridade que governa o estudo nao viaja com o repo (o usuario e a camada de transporte) -- **MEDIA** -- **PARCIAL** (o DADO viajou na s165: `core/cronograma/prevalencia_enamed.json`, 89 temas, + `fsrs_queue --prevalencia`; falta ligar ao `infer_nota` -- residuo nomeado)
 
 **Classe:** input do boot nao e verdadeiro (mesma familia de F45/F47) + regra load-bearing fora
 do portador (P7, mas na camada de ESTUDO, nao na de engenharia).
@@ -1328,7 +1328,7 @@ calculado a mao fora da funcao.
   sensor avisa a virada; o saldo impresso agora torna a virada VISIVEL (o numero zera), mas isso
   e sintoma legivel, nao sensor.
 
-### F65 -- o balde `[bulk] <Area>` esconde 72 cards do radar de dormencia
+### F65 -- o balde `[bulk] <Area>` esconde 72 cards do radar de dormencia -- **MEDIA** -- **GATE do operador** (RODADA 3: reclassificar balde e decisao de DADO dele, nao de codigo; `normalize_taxonomia` esta vazio para isto por medicao -- `docs/DRYRUN-F65-F67-2026-09-09.md`)
 
 **Classe:** taxonomia que corrompe sensor (familia F37/dedup de taxonomia).
 
@@ -1471,13 +1471,13 @@ divida que o harness tem).
 > viu isto, e o F66 e a prova de que o P3 ("o input do boot fica verdadeiro") ficou a meio
 > caminho. F45 consertou o **mecanismo** de reconciliacao; faltou o **dicionario**.
 
-### F67 -- taxonomia duplicada divide o sinal do FSRS e da dormencia (s165, Claude Code/Fable 5.1, 2026-09-05)
+### F67 -- taxonomia duplicada divide o sinal do FSRS e da dormencia (s165, Claude Code/Fable 5.1, 2026-09-05) -- **MEDIA** -- **GATE do operador** (RODADA 3, mesma familia do F65: colapsar par e edicao de DADO com cards e erros pendurados)
 **Evidencia (db, read-only):** o mesmo tema vive em 2-5 linhas de `taxonomia_cronograma`: Rastreamento de colo x2 (`...do Câncer de Colo do Útero` 12 ativos/8 erros e `...do Cancer de Colo Uterino` 2/1), TH x2 (`Climatério e Terapia Hormonal` 6/2 e `Terapia Hormonal do Climaterio` 0/1), Asma x5 (`Asma`, `Asma - Crise Aguda`, `Asma na Infância`, `Asma na infância`, `Asma - Exacerbacao`), `Planejamento Familiar` x `Contracepção`, Ulceras x2, TCE x3 (Neuro, Cirurgia leve, Ped), `Cirurgia Infantil` x `Cirurgia Infantil I`, APS x2. **Efeito:** `review_radar`, `infer_nota` e `--cluster` leem metades; a dedup da s083 (`dedup_taxonomia.py`, merge MAX) nao pegou variantes por acento/caixa/sufixo. **Fix candidato:** normalizacao NFKD + casefold + tabela de alias em `normalize_taxonomia.py`, com `--dry-run`. **Re-medido em 2026-09-09 (s174, dry-run A6):** chave NFKD+casefold (sem sufixo romano/"na infancia") acha **10 grupos / 22 linhas / 193 cards + 104 erros**; 5 dos 10 sao a area fantasma `GO`/`Clinica Medica` de volta (F89). Decisao de fusao por grupo = operador (`docs/DRYRUN-F65-F67-2026-09-09.md` §4).
 
-### F68 -- 15 temas de alta/media prevalencia ENAMED sem linha na taxonomia (s165)
+### F68 -- 15 temas de alta/media prevalencia ENAMED sem linha na taxonomia (s165) -- **MEDIA** -- **GATE do operador** (criar linha de tema e decisao de escopo de estudo dele)
 **Evidencia:** `core/cronograma/prevalencia_enamed.json` (`tema_id: null`): SCA/dor toracica, DPOC, Derrame pleural, Crise hipertensiva, Parkinsonismo, Dermatoses infecciosas, SUA, Sindrome de Down, Dx nutricional, Choque em pediatria, TB na infancia, Vasculite IgA, SIMP, Saude do trabalhador, Doencas de vulva e vagina. Sem linha nao ha card, erro, dormencia nem nota -- o tema e invisivel ao motor. **Agrava F65:** `[bulk] Cirurgia` guarda **148 erros** sem tema (eram 72 cards na s162), `[bulk] Pneumo` 17. **Fix:** criar as linhas (via cunhagem/`insert_card_base`) e reclassificar os `[bulk]` pelo titulo do erro.
 
-### F69 -- resumos com lacuna de diretriz nova = risco banca-dependente (s165)
+### F69 -- resumos com lacuna de diretriz nova = risco banca-dependente (s165) -- **MEDIA** -- **GATE do operador** (quais diretrizes 2026 entram e decisao clinica dele; lista viva no HANDOFF)
 **Evidencia (grep):** `[CIR] Trauma.md` ja tem X-ABCDE, torniquete, hipotensao permissiva, ABC score, pneumotorax oculto/3,5 cm, Beck, tranexamico; **falta** "sangue total > 1:1:1" e "Sellick contraindicada", e a classificacao do choque ainda cita "classe I" (11a ed = leve/moderado/grave). `Prevenção Secundária Pós-IAM (Dislipidemia).md`: 1 mencao a PREVENT/Lp(a)/bempedoico (diretriz 2025 rasa). `Sistemas de Informação em Saúde.md`: conferir SINAN 2026 (esporotricose, anomalias, Oropouche, parotidite). HAS Pt2 (130/80, MAPA) e Epilepsias (levetiracetam EV) ja atualizados. **Fix:** Revisao Direcionada com Regra de Acumulo; os `padroes_banca` do JSON sao a fonte.
 
 ### F63 -- atualizacao (s165)
@@ -1496,7 +1496,7 @@ Contexto: drenagem do bloco 1 (62 cards, 4 sub-blocos, 40x4 / 8x3 / 3x2 / 11x1),
 **Fix candidato (S/M):** `escolher_dia` ganha um parametro opcional `dias_evitar: set[date]` (prova e o dia seguinte, derivados de `core/provas.json` pelo caller em `db._balancear_due`); dentro da folga, um candidato em `dias_evitar` so vence se for o unico. Regra continua pura e testavel (`tools/test_fsrs_balance.py`, BLOCKING). Ate la, na semana de prova o efeito e pequeno (deslocamento max +-1d), mas e um pico movido para o lugar errado.
 - **Fechamento (s174, 2026-09-09, veredito A3 do `/ai-eng` com 3 ALTERAs):** (i) blackout lido de `core/provas.json` por `db.blackout_provas` (G4: teste prova que nenhuma data real esta no codigo); (ii) alvo em blackout vai para ANTES da prova, nunca depois -- sem vaga na folga = OVERFLOW em stderr, due mantido; (iii) re-rodada sobre a fila via `fsrs_load.py --blackout [--apply]` (dry-run + COUNT-ASSERT §10.7): **34 movidos** (23 de 13/09 -> 12/09), **17 overflow** em 14/09 (inclui #381/#823: o alvo original nao e recuperavel, folga +-1d nao alcanca antes da prova). 15 testes em `tools/test_fsrs_blackout_provas.py`, 11 nasceram vermelhos. Deferido: leitor de `provas.json` duplicado entre `db` e `day_plan`.
 
-### F72 -- `day_plan` recomenda tema de um snapshot que ele mesmo declara nao confiavel (Drive 42d) -- **MEDIA** -- **ABERTO** (familia F34/F36/F63, W8 do reconcile)
+### F72 -- `day_plan` recomenda tema de um snapshot que ele mesmo declara nao confiavel (Drive 42d) -- **MEDIA** -- **SUPERADO (s186 part-8; medido na s187)** (familia F34/F36/F63, W8 do reconcile) -- `day_plan` nao le mais snapshot do Drive: as 3 leituras viraram lapide e o plano passou a sair de `plano_tarefas`.
 **Evidencia (`python tools/day_plan.py`, 2026-09-06):** o cabecalho avisa `Drive desatualizado (42d atras) -- rodar --sync-drive antes de confiar na lista abaixo`, e no mesmo relatorio a "Recomendacao do dia" abre com `1. questoes 51 -- Atencao Primaria a Saude no Brasil` e lista `proximos temas: APS (extensivo), Diarreia, Cirurgia Vascular`. A ordem real (roxos da S17: Diarreia Teoria -> SUA -> APS Revisao -> Diarreia Revisao -> Urologia I -> Pneumonias I) vive so no HANDOFF, decidida pelo usuario (F63). O WARN existe, mas a recomendacao nao degrada: o agente que le so o plano recomenda o tema errado. O usuario percebeu a contradicao na propria sessao ("inconsistencias no seu motor").
 **Fix candidato (S):** quando `cron.conclusao_desatualizada` (W8), o passo 1 da recomendacao deixa de nomear um tema do snapshot e passa a apontar o ponteiro textual do HANDOFF ("Grade S17 roxos", ou o campo equivalente em `preparacao_estado`), e a lista `proximos temas` sai rotulada `(snapshot de N dias, ordem manual do usuario nao capturada)`. Nao cria dado novo: reaproveita o WARN que ja e calculado.
 
@@ -1561,7 +1561,9 @@ Sensores existentes (`doc_drift.py`, `sync_skills --check`) reportavam 0 achados
 - **Impacto:** e exatamente a familia do drift "Revisao por Questoes" ja registrado (tarefa multi-tema que cai em campo emprestado e fica subnotificada). O tema esta escrito no PDF e o parser o joga fora -- mesmo padrao do F77, um degrau abaixo.
 - **Remedio (S):** trocar o literal por `(?:Livro Digital|Assunto):` no regex de `_parse_detail`. Uma linha; 5 tarefas por ciclo deixam de nascer sem nome.
 
-### F78 -- Extracao de PDF descarta em silencio todo conteudo que vive em FIGURA, e nada no harness mede essa perda -- **MEDIA** -- **ABERTO (mitigacao demonstrada)**
+> 🔴 **Terceira forma de cabecalho-mentiroso, medida na s187 e SEM sensor.** F36 e F72 nao envelheceram porque um remedio pousou (F109/F110, que o **G14b** pega pela linha de versao do portador) nem porque o §11 ganhou lapide (o **G14** pega). Eles morreram porque **o SUJEITO do achado foi removido** -- o `--sync-drive` e a leitura do snapshot do Drive deixaram de existir na part-8. Nenhum dos dois gates ve isso: nao ha portador reivindicando o F-id nem lapide no §11. O sinal seria *"o achado cita um simbolo que nao existe mais no codigo"*, parente do `G10` (ponteiro morto) aplicado ao ledger. **Declarado, nao construido** -- a base hoje e 2 e o custo de um terceiro gate nao se paga sem mais dado.
+
+### F78 -- Extracao de PDF descarta em silencio todo conteudo que vive em FIGURA, e nada no harness mede essa perda -- **MEDIA** -- **DECLARADO nao-verificavel (s187)** -- medir a perda exigiria comparar o PDF-fonte com o `.txt` extraido por conteudo SEMANTICO (a figura nao deixa marca no texto: a extracao retorna sucesso e o buraco e invisivel). Sensor nenhum existe hoje e o custo nao se paga sem mais dado. A mitigacao demonstrada segue sendo a leitura humana do resumo contra a fonte -- revisar: 2027-03-31
 - **Evidencia (s169):** 10 resumos do sprint S17-S20 foram cunhados em paralelo a partir dos PDFs do EMED. Dois agentes independentes reportaram a mesma lacuna com origem unica: `tools/extract_pdfs.py` so captura camada de texto; infografico e tabela renderizados como imagem saem VAZIOS do `.txt`.
   - Caso 1 (Tumores Anexiais): o `.txt` traz literalmente *"a seguir esta o estadiamento da FIGO"* e a pagina seguinte vem so com cabecalho/rodape. O estadiamento inteiro (IA a IVB) evaporou.
   - Caso 2 (Pneumonias Bacterianas): CURB-65, CRB-65 e os tres algoritmos de antibioticoterapia por nivel de cuidado estavam todos em figura.

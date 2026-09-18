@@ -32,6 +32,11 @@ outra coisa havia tempo, e nenhum gate comparava os dois.
 Classe: **escopo MAIOR que o declarado** -- a imagem espelhada do F115 (escopo menor
 que o necessario). A familia toda da janela s187 e a mesma pergunta: *o sensor
 alcanca exatamente o que ele diz que alcanca?*
+
+LIMITE DECLARADO: estes testes travam a construcao do COMANDO e do ROTULO (funcoes
+puras). Eles nao provam que o conjunto `resumos_to_check` foi montado corretamente a
+partir do git -- essa metade depende de `get_staged_files` e de um repo real, e fica
+coberta so indiretamente pelo uso no pre-commit hook.
 """
 import os
 import sys

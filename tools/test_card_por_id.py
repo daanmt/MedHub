@@ -18,6 +18,11 @@ certa que nao alcanca, um nivel acima do F90.
 Invariante que estes testes protegem: o leitor e **READ-ONLY**. Um leitor que mexesse no
 `due` ao servir transformaria "eu olhei o card" em "eu revisei o card" -- o mesmo modo de
 falha do Invariante A (`test_invariante_a`), com outra porta.
+
+LIMITE DECLARADO: o gate prova que a PORTA existe e nao escreve. Ele nao prova que o
+agente a USA -- nada obriga o re-drill inter-sessao a passar por `--card` em vez de
+reconstruir a frente de um session log, que foi o defeito original. Essa metade e conduta
+do agente e segue nao-verificavel (secao 10.8).
 """
 import os
 import sqlite3

@@ -47,13 +47,16 @@ presença, não semântica; flag genérica pode colar em skill vizinha e **infla
 | Flag | Função |
 |---|---|
 | `--json` | Achados em JSON: `[{check, alvo, payload}]`. |
-| `--check {todos,tabela,paths,status}` | Roda só um sub-check (default `todos`). |
+| `--check {todos,tabela,paths,status,portador,fantasma}` | Roda só um sub-check (default `todos`). |
 
 Três registros que envelheciam em silêncio porque nada perguntava se ainda diziam a verdade:
 **`tabela`** (a §7.4 do `AGENTE.md` é gerada e colada — cada CLI novo a deixa stale) ·
 **`paths`** (`tools/*.py` inexistente citado num doc de raiz; o `MEMORY_POINTERS` só alcançava
 `memory/`) · **`status`** (achado `**ABERTO**` no `AUDITORIA_MEDHUB.md` com lápide de `FEITO` no
-`§11`). 🔴 Duas regras de precisão nasceram de medição: linha que **afirma a ausência** é lápide,
+`§11`) · **`portador`** (G14b, s187 — o mesmo cabeçalho contra a **linha de versão do
+portador**, porque o `status` só enxerga achado que alguém lembrou de pôr no `§11`, e
+**F109/F110 nunca entraram lá**: tiveram os riders entregues na s185 e ficaram `ABERTO` até
+alguém ler os portadores a olho). 🔴 Duas regras de precisão nasceram de medição: linha que **afirma a ausência** é lápide,
 não ponteiro morto; e `PARCIAL` **não** é contradição — é o meio-termo declarado.
 
 O módulo também é a casa de duas **derivações** que o `auto_check` consome no lugar de listas
@@ -102,6 +105,34 @@ sem data, é **BLOCK desde o nascimento**: essa base é zero por construção, e
 aparente é pior que cobertura ausente. Limites do detector (lexical, ~86% de precisão
 amostrada; a metade semântica — *o gate testa mesmo AQUELA cláusula?* — fica declarada
 não-verificável) estão na docstring do módulo, nunca maquiados.
+
+### `tools/selo.py` — a tabela item -> terminal da reforma (DERIVADA)
+
+Prova, item a item e **por conteúdo**, que todo achado do ledger chegou a um terminal
+nomeado: **FEITO** (commit + suíte) · **DECLARADO** (marca "não-verificável" + data) ·
+**GATE** (pergunta de 1 linha ao operador) · **SUPERADO** (o sujeito do achado deixou de
+existir). Read-only.
+
+🔴 **A tabela é derivada, nunca digitada** — uma tabela de selo mantida à mão é a mesma
+classe do G5 e do F95, e seria absurda aqui, já que o que ela audita são justamente
+registros que mentiam sobre o próprio status. Fontes: cabeçalho de cada achado no ledger ·
+`git log --grep` para o commit · `clausulas_check` para o item 1.10 · `consistencia_check`
+para as discordâncias (G14 + G14b) · a docstring de cada suíte para o escopo que o sensor
+**declara não alcançar**.
+
+| Flag | Função |
+|---|---|
+| `--markdown` | Tabela item · terminal · evidência, para colar no selo. |
+| `--sensores` | Só o escopo que cada sensor novo DECLARA não alcançar, lido da docstring da suíte. |
+
+Sem flag: resumo com contagem por terminal, abertos com o GATE nomeado, cobertura do item
+1.10 e discordâncias. **Exit 1 se não fecha.**
+
+⚠️ **Limite declarado:** a coluna `terminal` sai do **cabeçalho** do achado — se um
+cabeçalho mentir, o selo herda a mentira (foi o que houve com F109/F110 e F36/F72). Por
+isso o selo só fecha com as discordâncias em **zero**: o G14 e o G14b são o contra-peso, e
+o próprio selo os imprime. A única parte digitada é a **pergunta de cada GATE**, porque ela
+é um contrato com o operador e não existe no repo de onde derivá-la.
 
 ### `tools/card_self_sufficiency.py` — card que não se sustenta sozinho
 

@@ -12,6 +12,11 @@ e DERIVADO do auto_check e das suites, e toda anotacao e conferida contra ele.
 
 Nasce BLOCK (nao WARN) pela mesma condicao que promoveu F79b e D5: o passivo e zero por
 construcao -- nao existe anotacao nenhuma hoje, entao a primeira que mentir sera nova.
+
+LIMITE DECLARADO: o gate confere que o nome do CHECK existe, nunca que aquele gate testa
+MESMO aquela clausula. A metade semantica (a anotacao e honesta?) nao tem sensor e fica
+com a leitura humana. O detector tambem e lexical (~86% de precisao amostrada): clausula
+escrita sem marcador deontico e invisivel para o inventario inteiro.
 """
 import datetime as dt
 import os

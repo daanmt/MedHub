@@ -103,35 +103,24 @@ def _ensure_status_column(cursor):
 
 
 def _tem_lastro(tema):
-    """F31: o tema tem lastro escrito? True se resolve a um .md (engine `_find_resumo`,
-    indexa stem desde s096) OU existe um PDF-fonte par em resumos/** (taxonomia EMED).
-    Read-only. Conservador: se nao consegue nem checar o .md, assume True (nao acusa
-    ausencia por falha de import) -- o par Siamese Twins so e sinalizado quando a
-    ausencia e POSITIVAMENTE confirmada."""
+    """F31: o tema tem lastro escrito? Delega para `tools/utils/lastro.tem_lastro`.
+
+    F103/F106 (s185): a regra era local e casava o tema contra o NOME do arquivo, cega a
+    resumo guarda-chuva -- `Rede de Atencao Psicossocial (RAPS)` acusava `[SEM-LASTRO]` com
+    um `## 4.` dedicado ja escrito, e a pendencia "criar resumo" produziria duplicado. A
+    regra virou unica e mora em `tools/utils/lastro.py` (5 camadas, motivo nomeado, menção
+    solta no corpo deliberadamente FORA). Reimplementar aqui seria o defeito do F95.
+
+    Conservador: falha de leitura devolve True -- nunca acusar ausencia por nao conseguir
+    checar (o par Siamese Twins so e sinalizado com ausencia POSITIVAMENTE confirmada).
+    """
     try:
-        import importlib
-        gtc = importlib.import_module("app.engine.get_topic_context")
-        if gtc._find_resumo(tema) is not None:
-            return True
+        from tools.utils.lastro import tem_lastro
+        return tem_lastro(tema)[0]
     except Exception:
         return True
-    try:
-        import glob
-        import unicodedata
 
-        def _n(s):
-            s = unicodedata.normalize("NFKD", s or "")
-            return "".join(c for c in s if not unicodedata.combining(c)).casefold().strip()
 
-        alvo = _n(tema)
-        raiz = os.path.join(os.path.dirname(os.path.dirname(__file__)), "resumos")
-        if alvo:
-            for p in glob.glob(os.path.join(raiz, "**", "*.pdf"), recursive=True):
-                if alvo in _n(os.path.splitext(os.path.basename(p))[0]):
-                    return True
-    except Exception:
-        pass
-    return False
 
 
 MSG_SEM_CARDS = (

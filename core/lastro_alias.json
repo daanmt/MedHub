@@ -1,0 +1,17 @@
+{
+  "_comentario": [
+    "Camada 5 de tools/utils/lastro.py -- escape hatch MANUAL do check de lastro.",
+    "Entrada aqui e DIVIDA DECLARADA, nao solucao: significa que o nome do tema na",
+    "taxonomia (vocabulario EMED) diverge do nome do arquivo E de todo heading do",
+    "resumo que de fato o cobre. As camadas 1-4 (arquivo, pdf, secao, alias do",
+    "frontmatter) sao automaticas e devem resolver o caso comum.",
+    "",
+    "NAO usar para calar um [SEM-LASTRO] verdadeiro. O sinal existe para pegar tema",
+    "sem conteudo escrito; silencia-lo por conveniencia destroi a unica porta que",
+    "avisa quando um erro entra no banco sem resumo par (Siamese Twins, AGENTE 6).",
+    "Antes de cadastrar: abrir o resumo e confirmar que ha SECAO dedicada, nao",
+    "mencao solta -- foi assim que o F106 nasceu achado falso (1 linha sobre",
+    "esquistossomose hepatoesplenica num diferencial de cirrose virou 'tem lastro')."
+  ],
+  "Polipos e Neoplasias Intestinais": "resumos/Clínica Médica/Gastroenterologia/Polipose Intestinal e Câncer Colorretal.md"
+}

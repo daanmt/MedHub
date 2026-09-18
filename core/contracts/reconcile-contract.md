@@ -88,7 +88,7 @@ PASSO 3 — Resolver WARNING (se houver)
   → W7: reportar UMA vez; registrar a decisão do usuário em ESTADO §Metas; silenciar até a premissa mudar.
        🔴 Resolução de W5-W7 NÃO grava no db (cronograma-contract.md, Cláusula 5).
   ⚰️ W8: REVOGADA em 17/09/2026 (v1.4) -- NAO executar, NAO restaurar.
-       Era: "DOIS sinais, DOIS caminhos" -- conclusao lida da coluna `Realizada?` do
+       ⚰️ Era (morto): "DOIS sinais, DOIS caminhos" -- conclusao lida da coluna `Realizada?` do
        Dashboard EMED pelo agente, e ordem vinda do xlsx local pelo ritual do usuario
        (`cronograma.py --sync-drive`). Morreu porque a pergunta que ela fazia ("qual e a
        fronteira real do cronograma?") deixou de ser desconhecida: a conclusao virou
@@ -160,5 +160,5 @@ A planilha do Drive (`Dashboard EMED 2026`) é o **SSOT de volume** e a fonte **
   `SEM IMPLEMENTAÇÃO`) — o changelog v1.1 declarou o rebaixamento consertado e consertou só
   a B1; a mentira estrutural (contrato afirma o que o código não faz) morre aqui. Sensor novo
   `NEEDS_QUALITATIVE_ATIVO` (WARN) cobre o invariante do contrato FSRS (F52b).
-- **v1.1 (2026-08-14, s144):** **B1 promovida a BLOCKING de fato** (`tools/auto_check.py::check_handoff_len`, check 10 — era prosa desde a s075 e foi violada sem consequência: achado D3). **W8 reescrita** com o modelo de dois sinais: conclusão pelo `Realizada?` do Dashboard EMED 2026 (Sheets nativo, `read_file_content`, texto puro, agente executa) × ordem pelo xlsx local (ritual do usuário, `--sync-drive`, sem MCP); proibido exigir binário via MCP em passo de boot; caveat honesto quando faltar. Spec `.vibeflow/specs/consolidacao-part-4.md`.
+- **v1.1 (2026-08-14, s144):** **B1 promovida a BLOCKING de fato** — *a metade desta entrada sobre a W8 e o Drive está ⚰️ revogada desde 18/09/2026 (Parte 8); fica como registro:* (`tools/auto_check.py::check_handoff_len`, check 10 — era prosa desde a s075 e foi violada sem consequência: achado D3). **W8 reescrita** com o modelo de dois sinais: conclusão pelo `Realizada?` do Dashboard EMED 2026 (Sheets nativo, `read_file_content`, texto puro, agente executa) × ordem pelo xlsx local (ritual do usuário, `--sync-drive`, sem MCP); proibido exigir binário via MCP em passo de boot; caveat honesto quando faltar. Spec `.vibeflow/specs/consolidacao-part-4.md`.
 - **v1.0 (2026-06-03, s075):** primeira instância; adaptado do Reconcile Mode do `agente-daktus-content`.

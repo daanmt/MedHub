@@ -7,15 +7,20 @@ O boot (AGENTE §2 passo 4) roda isto e lidera com o plano.
 ⚰️ **O ramo CALENDÁRIO do bloco de cronograma morreu em 17/09/2026** (PRD
 `plano-ssot-e-cards-v2`, Parte 4; `cronograma-contract` v1.3). Até aqui
 `_cronograma_hoje` respondia "o que vem agora" com TRÊS fontes que nunca
-conversaram: `grade.json` (calendário do PDF da Reta Final), o snapshot do Drive
-em `preparacao_estado.cronograma_conclusao_drive` (`_conclusao_drive`, lido por
-`cronograma.py --sync-drive`) e a ordem manual do xlsx (`_ordenar_por_drive`).
+conversaram, e as três estão mortas:
+  ⚰️ `grade.json` como fonte de ordem (calendário do PDF da Reta Final);
+  ⚰️ o snapshot em `preparacao_estado.cronograma_conclusao_drive`, morto,
+     ⚰️ que `_conclusao_drive` lia e `cronograma.py --sync-drive` escrevia --
+     os dois removidos (Partes 4 e 8);
+  ⚰️ a ordem manual do xlsx (`_ordenar_por_drive`), morta.
 Nenhuma delas era verdade-de-estado: o snapshot envelhecia em silêncio (banner de
 42 dias no boot real de 06/09) e a ordem que o usuário reordenava à mão nunca
 chegava ao agente. Agora a fonte é UMA -- `plano_tarefas` (`tools/plano.py`), a
 mesma tabela que `--concluir`/`--cortar`/`--mover` editam. As três funções foram
-REMOVIDAS, não comentadas; o código do `--sync-drive` segue vivo em
-`tools/cronograma.py` (remoção = Parte 8, com o congelamento do Drive).
+REMOVIDAS, não comentadas. ⚰️ *A frase que este parágrafo trazia até 17/09 --
+"o código do sync segue vivo em `tools/cronograma.py`, remoção = Parte 8" --
+expirou em 18/09/2026: a Parte 8 chegou e o sync do Drive foi removido de lá
+também, sob snapshot reversível.*
 
 Escritas (únicas, ambas de metadado de processo): a condição declarada do dia
 (condicao_dia via db.registrar_condicao_dia) e o PLANO recomendado do dia

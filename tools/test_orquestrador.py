@@ -5,6 +5,7 @@ db (db temp) + paridade contrato<->CLI. Pytest-nativo (coleta direta); standalon
 python tools/test_orquestrador.py. Nada aqui toca o ipub.db real.
 """
 import os
+import pathlib
 import re
 import sqlite3
 import sys
@@ -204,96 +205,45 @@ def test_get_fresh_error_cards():
         os.remove(tmp)
 
 
-# ───────────── Sync Drive / W8 (spec cronograma-sync-conclusao-drive) ─────────────
-
-def _xlsx_temp(cells):
-    """xlsx minimo em disco p/ teste: linha 2 com >=10 semanas 'DD/MM a DD/MM'
-    (exigido por _parse_conclusao_xlsx), celulas conforme `cells` =
-    [(semana, row, texto, strike), ...]."""
-    import openpyxl
-    from openpyxl.styles import Font
-    wb = openpyxl.Workbook()
-    ws = wb.active
-    ws.title = "Plan1"
-    n_semanas = max(10, max((c[0] for c in cells), default=1))
-    for col in range(1, n_semanas + 1):
-        ws.cell(row=2, column=col, value=f"{col:02d}/01 a {(col + 6):02d}/01")
-    for semana, row, texto, strike in cells:
-        c = ws.cell(row=row, column=semana, value=texto)
-        if strike:
-            c.font = Font(strike=True)
-    fd, path = tempfile.mkstemp(suffix=".xlsx")
-    os.close(fd)
-    wb.save(path)
-    return path
+# ⚰️ ───── Sync Drive / W8 -- REMOVIDO em 18/09/2026 (part-8) ─────
+# Aqui viviam `_xlsx_temp` e os 4 testes do parser do xlsx do Drive
+# (`_norm_tema_xlsx`, `diff_drive`, `_parse_conclusao_xlsx`). O codigo que eles
+# cobriam saiu de `tools/cronograma.py` no mesmo commit: o Drive deixou de ser
+# fonte de plano e progresso e a conclusao virou coluna (`plano_tarefas.status`).
+#
+# Eles nao somem sem deixar nada. Viram a GUARDA abaixo -- mesmo padrao do F7
+# (s177): para clausula de texto o registro da revogacao e o `_TERMOS_REVOGADOS`;
+# para CODIGO morto o registro e um teste que cai se ele voltar. Sem isso, o unico
+# obstaculo a um revert e alguem lembrar da decisao.
 
 
-def test_norm_tema_xlsx_ignora_acentos_e_quebras():
-    a = cr._norm_tema_xlsx("Doenças\nInflamatória do Tecido\nConjuntivo II (Teoria)")
-    b = cr._norm_tema_xlsx("doencas inflamatoria do tecido   conjuntivo ii (teoria)")
-    assert a == b, f"normalizacao deve casar acentos/quebras/espacos (got {a!r} vs {b!r})"
-
-
-def test_diff_drive_matching_por_semana_tema_tipo():
-    xlsx = _xlsx_temp([
-        (1, 4, "Apendicite Aguda (Teoria)", True),
-        (1, 5, "Apendicite Aguda (Revisão)", False),
-    ])
-    try:
-        grade = {"semanas": [{"semana": 1, "tasks": [
-            {"tarefa": 1, "area_norm": "Cirurgia", "tema": "Apendicite Aguda", "tipo_norm": "teoria"},
-            {"tarefa": 2, "area_norm": "Cirurgia", "tema": "Apendicite Aguda", "tipo_norm": "revisao"},
-        ]}]}
-        r = cr.diff_drive(xlsx, grade=grade)
-        by_tarefa = {t["tarefa"]: t["concluido"] for t in r["tasks"]}
-        assert by_tarefa[1] is True, "teoria riscada -> concluido"
-        assert by_tarefa[2] is False, "revisao nao riscada -> pendente"
-        assert not r["sem_match"], f"ambas tasks deveriam casar por (semana,tema,tipo) (got {r['sem_match']})"
-    finally:
-        os.remove(xlsx)
-
-
-def test_diff_drive_sem_match_fica_pendente():
-    xlsx = _xlsx_temp([(1, 4, "Outro Tema Qualquer (Teoria)", True)])
-    try:
-        grade = {"semanas": [{"semana": 1, "tasks": [
-            {"tarefa": 1, "area_norm": "Cirurgia", "tema": "Apendicite Aguda", "tipo_norm": "teoria"},
-        ]}]}
-        r = cr.diff_drive(xlsx, grade=grade)
-        assert r["tasks"][0]["concluido"] is False, "sem match no xlsx -> conservador (pendente)"
-        assert len(r["sem_match"]) == 1, "tema sem match deve ser reportado (nao falha silente)"
-    finally:
-        os.remove(xlsx)
-
-
-def test_parse_conclusao_xlsx_rejeita_estrutura_invalida():
-    import openpyxl
-    wb = openpyxl.Workbook()
-    ws = wb.active
-    ws.title = "Plan1"
-    ws.cell(row=2, column=1, value="lixo nao-data")
-    fd, path = tempfile.mkstemp(suffix=".xlsx")
-    os.close(fd)
-    wb.save(path)
-    try:
-        try:
-            cr._parse_conclusao_xlsx(path)
-            assert False, "estrutura invalida deveria levantar ValueError"
-        except ValueError:
-            pass
-    finally:
-        os.remove(path)
+def test_sync_do_drive_continua_revogado():
+    """GUARDA da revogacao (part-8, 18/09/2026). Se qualquer uma destas voltar a
+    existir, alguem reintroduziu a leitura do xlsx do Drive -- e com ela os DOIS
+    sinais de conclusao (Drive x `plano_tarefas`) que o part-4 dissolveu."""
+    mortas = ("_norm_tema_xlsx", "_parse_conclusao_xlsx", "diff_drive", "sync_drive")
+    vivas = [nome for nome in mortas if hasattr(cr, nome)]
+    assert not vivas, (
+        "revogadas no part-8 e de volta em `tools/cronograma.py`: %s. "
+        "O dado do ultimo snapshot esta em "
+        "`artifacts/snapshot-cronograma-drive-2026-07-26.json`; reativar o sync "
+        "exige decisao do operador, nao um revert." % ", ".join(vivas))
+    fonte = (pathlib.Path(cr.__file__).read_text(encoding="utf-8")
+             if hasattr(cr, "__file__") else "")
+    ativas = [l for l in fonte.splitlines()
+              if "openpyxl" in l and not l.lstrip().startswith("#")]
+    assert not ativas, "openpyxl voltou a ser import vivo do cronograma.py: %s" % ativas
 
 
 # ⚰️ **Os quatro testes do snapshot do Drive sairam em 17/09/2026**
 # (`plano-ssot-e-cards-v2` Parte 4): `day_plan._conclusao_drive`,
 # `_ordenar_por_drive` e o ramo calendario de `_cronograma_hoje` foram REMOVIDOS --
 # a conclusao e a ordem passaram a vir de `plano_tarefas`, e nenhum teste da suite
-# le `preparacao_estado.cronograma_conclusao_drive` como fonte VIVA. Os testes do
-# parser (`diff_drive`, `_parse_conclusao_xlsx`, `_norm_tema_xlsx`) FICAM: o codigo
-# do `cronograma.py --sync-drive` segue vivo ate a Parte 8, e suite verde sobre
-# codigo vivo nao se apaga junto com o consumidor. A cobertura do novo bloco de
-# cronograma vive em `tools/test_plano_dia.py`.
+# le `preparacao_estado.cronograma_conclusao_drive` como fonte VIVA. ⚰️ *A frase que
+# esta nota trazia ate 17/09 -- "os testes do parser FICAM: o codigo do `--sync-drive`
+# segue vivo ate a Parte 8" -- expirou em 18/09/2026: a Parte 8 chegou, o codigo saiu
+# e os testes viraram a guarda acima.* A cobertura do novo bloco de cronograma vive em
+# `tools/test_plano_dia.py`.
 
 
 if __name__ == "__main__":
@@ -303,8 +253,7 @@ if __name__ == "__main__":
            test_folga_positiva_limita_pelo_necessario, test_paridade_contrato_cli,
            test_render_inclui_recomendacao, test_get_ritmo_real_janela,
            test_get_fresh_error_cards,
-           test_norm_tema_xlsx_ignora_acentos_e_quebras, test_diff_drive_matching_por_semana_tema_tipo,
-           test_diff_drive_sem_match_fica_pendente, test_parse_conclusao_xlsx_rejeita_estrutura_invalida]
+           test_sync_do_drive_continua_revogado]
     falhas = 0
     for fn in fns:
         try:

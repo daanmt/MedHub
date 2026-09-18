@@ -1,87 +1,45 @@
 ---
-description: "Ingere o volume de questões das planilhas do Google (via Google Drive MCP) para sessoes_bulk, substituindo a extração manual de xlsx. O agente lê e mapeia; tools/importar_sessoes.py persiste."
+description: "⚰️ REVOGADA em 18/09/2026 (part-8): o Drive deixou de ser fonte de plano e progresso -- NÃO importar planilha, não pedir download. Sobrevivem só a tabela de investimento/mês (input do /performance) e o CLI importar_sessoes.py (--snapshot, --abandonada). Plano e progresso: plano.py, listas.py, painel.py."
 type: skill
 layer: commands
 status: canonical
 ---
 
-# Skill: Importar Planilha
+# ⚰️ Skill: Importar Planilha — **O DRIVE DEIXOU DE SER FONTE (18/09/2026)**
 
-Ingere o volume de questões a partir de uma planilha do Google (Sheets/xlsx no Drive) para a tabela `sessoes_bulk` do `ipub.db`. Coerente com a tese agent-first: **o agente lê e interpreta a planilha via MCP; o código (`tools/importar_sessoes.py` → `registrar_sessao_bulk.registrar`) persiste**.
+> **Não importar plano nem progresso do Google Drive. Não pedir ao usuário para baixar,
+> preencher ou riscar planilha.** Decisão do operador em 16/09/2026, perguntado direto:
+> *"Sim, banco é a fonte"*. Executada no **part-8** do PRD `plano-ssot-e-cards-v2`.
 
-Use quando o usuário pedir: "importa minha planilha", "puxa as questões do Drive", "atualiza o volume a partir da planilha do EMED", "verifica minhas planilhas".
+**O que esta skill descrevia e não vale mais:** o ritual de ler o `Dashboard EMED 2026` e o
+`Cronograma de Reta Final.xlsx` via Google Drive MCP para saber o que estava feito, em que ordem e
+quanto volume havia. As seções *Pré-requisito: Google Drive MCP*, *Planilhas canônicas*,
+*Estrutura mapeada* (Dashboard e Cronograma de Reta Final) e *Fluxo* saíram no mesmo commit — o
+conteúdo vive no git e em `history/session_113.md`.
 
----
+**Quem responde hoje pelo que elas respondiam:**
 
-## Pré-requisito: Google Drive MCP
+| pergunta | portador de hoje |
+|---|---|
+| o que vem agora, em que ordem | `tools/plano.py --listar` (`plano_tarefas`; ordem é coluna) |
+| o que já foi feito | `plano_tarefas.status`, por `plano.py --concluir ID --sessao N` |
+| quanto volume por lista | `tools/listas.py --progresso` (`sessoes_bulk.tarefa_id`) |
+| a visão consolidada de progresso | `tools/painel.py --html` — substituiu as 20 tabelas do Dashboard |
 
-Não existe MCP oficial do Google específico para Sheets — o acesso é via o connector oficial **claude.ai Google Drive** (tools `mcp__claude_ai_Google_Drive__*`), que lê Google Sheets como arquivos do Drive (export CSV/tabela). **OAuth já vinculado em 2026-06-03**; as tools aparecem após restart do Claude Code. Se algum dia desautenticar:
+**O que SOBREVIVE aqui, e só isso:**
 
-> Rode `/mcp` e selecione **"claude.ai Google Drive"** para reautenticar.
+1. **A tabela de investimento/mês** — dado manual do operador, sem outra fonte, e alimenta o
+   custo/questão do `/performance` (`performance.METAS_MENSAIS`). Continua sendo digitada à mão.
+2. **O CLI `importar_sessoes.py`** — `--snapshot`/`--show-snapshot` (que alimentam o W1) e
+   sobretudo **`--abandonada`**, o mecanismo que declarou este abandono. O `--rows-file` continua
+   existindo para um lote pontual vindo de qualquer lugar; deixou de ser ritual de Drive.
 
-(O caminho de persistência local funciona independentemente do MCP.)
+🔴 **O W1 do reconcile não foi desligado — foi SUSPENSO.** `python tools/day_plan.py --planilha`
+passa a imprimir *"comparação suspensa"* preservando o último delta medido (**+977**: planilha
+6.349 x db 7.326, em 16/09). Nenhum check some — ele muda de estado (padrão `warn-first-check`).
+Se o operador voltar a alimentar a planilha, um `--snapshot` novo a reativa.
 
----
-
-## Planilhas canônicas (registro)
-
-As planilhas do Drive são a **fonte primária dos dados de performance e desempenho**, e uma delas é o **cronograma**. Registrado na primeira sessão com acesso (2026-06-03, sessão 075):
-
-| Papel | Nome no Drive | ID | Destino no `ipub.db` |
-|---|---|---|---|
-| Volume/desempenho (questões por sessão) | `Dashboard EMED 2026` (Google Sheets nativo) | `1SCgQMK31WkaRzhjrCXTM04Zc2FuSG9IrTCCQwAoAxaA` | `sessoes_bulk` (via `importar_sessoes.py`) |
-| Cronograma de estudos | `Cronograma de Reta Final.xlsx` (xlsx no Drive) | `157JEKQA9O49JxQHApOutKrVn7jW8JdIY` | conciliação com `taxonomia_cronograma` (leitura; persistência a definir) |
-
-### Estrutura mapeada — Dashboard EMED 2026
-
-`read_file_content` retorna o spreadsheet inteiro como tabelas markdown concatenadas, **sem os nomes das abas**. Ordem observada:
-
-1. Tabela mensal: `Mês | Investimento | Questões | Meta | Custo/Q` (questões = acumulado no fim do mês).
-2. Quadro Geral: `Disciplina | Tarefas Feitas | % Tarefas Feitas | Questões Feitas | % Acertos` (20 disciplinas). ⚠️ Pode divergir das abas por bug de fórmula (visto em Obstetrícia); **as abas por disciplina são a fonte autoritativa**.
-3. 20 tabelas de tarefas (`Tarefa | Assunto | Tipo de Tarefa | Realizada? | Questões Feitas | Acertos | % Acertos`), uma por disciplina, nesta ordem: Pediatria, Preventiva, Cirurgia, Infecto, Obstetrícia, Ginecologia, Gastro, Endocrino, Cardiologia, Psiquiatria, Neuro, Nefrologia, Hemato, Pneumo, Dermato, Reumato, Hepato, Otorrino, Ortopedia, Oftalmo. ⚠️ A ordem **não** segue o Quadro Geral — confirmar cada tabela pelo conteúdo (assuntos) e validar a soma contra o Quadro Geral.
-4. Tabelas `Disciplina | Questões Feitas | Acertos | % Acertos` adicionais (seções de acompanhamento, zeradas em 2026-06-03 — ignorar até ganharem dados).
-
-Normalização de rótulos planilha → `AREAS_VALIDAS`: `Neuro`→`Neurologia`; demais coincidem. A planilha guarda **acumulados por tarefa**, não sessões — o delta a importar é `(total na aba) − (total em sessoes_bulk)` por área.
-
-Regras:
-- **Verificação:** quando o usuário pedir para "verificar as planilhas", ler via MCP e conciliar com o estado do `ipub.db` (`sessoes_bulk` via `/performance`, cronograma via `taxonomia_cronograma`), reportando divergências — sem gravar nada sem confirmação.
-- **Cronograma (decisão sessão 075): NÃO persistir no `ipub.db`.** A planilha é o SSOT do cronograma e o usuário a edita manualmente — uma cópia local ficaria stale. `taxonomia_cronograma` segue alimentada apenas pelo pipeline de erros (`insert_questao.py`), sem relação de escrita com a planilha.
-- 🔴 **Dois sinais, dois donos (`cronograma-contract.md` Cláusula 5b).** **Conclusão** ("esta tarefa saiu da fila?") vem da coluna **`Realizada?`** do **Dashboard EMED 2026** — Sheets **nativo**, lido em **texto puro** por `read_file_content`, executável **pelo agente** em runtime. **Ordem** (a sequência que o usuário reordenou) vive só no `Cronograma de Reta Final.xlsx` binário e é **ritual do usuário**: `python tools/cronograma.py --sync-drive <path-local>`, **sem MCP**. Regra dura: **se a leitura precisa de bytes, ela não é do agente** — nenhum passo pode exigir binário via MCP. Faltando qualquer um dos dois sinais, seguir com **caveat honesto**, nunca em silêncio e nunca bloqueando.
-
-### Estrutura mapeada — Cronograma de Reta Final.xlsx
-
-> Esta seção descreve o arquivo que o **usuário** processa localmente no ritual `--sync-drive`. O agente **não** baixa este xlsx: `read_file_content` embola a grade e o caminho binário via MCP não fecha (defeito D5). Aba única `Plan1`:
-
-- **Linha 2** — 28 semanas, colunas 1–28: `"30/03 a 03/04/26"` … `"05/10 a 09/10/26"` (⚠️ typo na semana 11: `"08/06 a 12/06/25"`, ano errado).
-- **Linha 3** — trilha da semana: `GO` ×2 → `U/E` ×6 → `CIRURGIA` ×7 → `OPCIONAL` ×7 → `CLÍNICA 2` ×6.
-- **Linhas 4–16** — slots de tarefas da semana, formato `"Tema (Tipo)"` com quebras de linha internas (normalizar whitespace). Tipos: `Teoria [I-IV]`, `Revisão [I-II]`, `Revisão por Questões` (blocos multi-tema separados por `;`). Linhas 4–8 tendem a seguir trilhas fixas (Preventiva, Pediatria, Cirurgia, GIN, OBS); 9–16 são mistas/esparsas.
-
-Para localizar a semana corrente: comparar a data de hoje com os ranges da linha 2. Os temas do cronograma casam com os `Assunto` das abas do Dashboard — a conciliação tarefa-a-tarefa entre as duas planilhas é possível por (tema, tipo).
-
-**Marcador de conclusão (workflow do usuário):** o usuário **risca / muda a cor** do tema no cronograma ao concluí-lo (lê + faz exercícios, lança no dashboard). A formatação só é legível pelo **binário local**, no ritual do usuário — `cronograma.py --sync-drive` lê `cell.fill.fgColor.rgb` (cor de fundo) e `cell.font.strike` (tachado) via `openpyxl`; célula sem preenchimento/sem strike = pendente. **O agente não tem esse caminho**: o sinal de conclusão que ele lê é a coluna `Realizada?` do Dashboard EMED (texto puro). Ver `core/contracts/reconcile-contract.md §Absorção de dados de performance` e `cronograma-contract.md` Cláusula 5b.
-
----
-
-## Fluxo
-
-1. **Localizar a planilha.** Após autenticado, usar as tools do Google Drive MCP para encontrar e ler a planilha indicada pelo usuário (por nome ou link). Sheets pode ser exportado/lido como CSV/tabela.
-2. **Mapear colunas.** A estrutura varia por planilha. Mapear para o shape canônico por linha:
-   ```
-   {sessao:int, area:str, feitas:int, acertos:int, data?:"YYYY-MM-DD", obs?:str}
-   ```
-   `sessao` é o número da sessão de estudo; se a planilha não tiver, combinar com o usuário (ex.: usar a sessão corrente ou uma sequência).
-3. **Normalizar a área.** Converter o rótulo da planilha para um valor de `AREAS_VALIDAS` — **fonte única: `core/areas.json`, lida por `app/utils/areas.py`** (F89, s176; não é mais `registrar_sessao_bulk.py`). Ex.: "GO"→"Ginecologia"/"Obstetrícia", "Clínica/Cardio"→"Cardiologia". 🔴 Desde a s176 os 3 writers de taxonomia **recusam** área fora da lista (`AreaInvalida`, com o palpite mais próximo); rótulo que não casar é **reportado, nunca gravado errado** — e `GO`/`Clínica Médica` são ambíguos por natureza, então a decisão é sua, não do código.
-4. **Gravar em lote.** Escrever as linhas mapeadas num JSON e chamar:
-   ```bash
-   python tools/importar_sessoes.py --rows-file <linhas.json>
-   ```
-   O importador valida cada linha (área válida, `acertos<=feitas`), pula duplicatas `(sessao, area)` por idempotência, e imprime resumo: **inseridas / puladas / inválidas**.
-5. **Reportar.** Relayar o resumo ao usuário, listando explicitamente as linhas inválidas (área não reconhecida, números inconsistentes) para correção.
-6. 🔴 **Gravar o snapshot — SEMPRE que ler a planilha, mesmo sem importar nada (B3/F35).** Este é o **único** momento em que os números da planilha existem; se eles não forem gravados agora, o reconcile W1 volta a depender de alguém lembrar de olhar — que é o achado. Passar as somas das **abas por disciplina** (autoritativas) e a data do **último lançamento dentro da planilha**:
-   ```bash
-   python tools/importar_sessoes.py --snapshot --por-area @abas.json --ultimo-lancamento 2026-07-20
-   ```
-   O boot passa a emitir uma linha por sessão (`Planilha x db (W1/F35)`) com o delta e a **idade da planilha**. Enquanto não houver snapshot, ele diz `NAO MEDIDO` — nunca assume delta zero.
+**Os arquivos no Drive não foram tocados** — ficam lá, congelados, como histórico dele.
 
 ---
 

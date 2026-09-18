@@ -123,48 +123,21 @@ Sem marcadores e sem secao de armadilhas.
         self.assertIn("--changed", res.stdout)
         self.assertIn("--all", res.stdout)
 
-    def test_05_diff_drive_captura_ordem(self):
-        """Part 1: diff_drive anexa 'ordem' (linha do xlsx) por task; ordenar por
-        'ordem' reflete a reordenacao manual do usuario, nao a sequencia do PDF."""
+    def test_05_sync_do_drive_revogado(self):
+        """⚰️ **Era `test_05_diff_drive_captura_ordem`** (Part 1 do
+        boot-cronograma): `diff_drive` anexava `ordem` (a linha da celula no xlsx)
+        a cada task. REMOVIDO em 18/09/2026 (plano-ssot-e-cards-v2 part-8) -- o
+        Drive deixou de ser fonte, e a ordem ja era `plano_tarefas.ordem` desde a
+        Parte 4.
+
+        Vira GUARDA, como o test_06 ao lado: se a funcao voltar, isto cai."""
         if not _CRONOGRAMA_OK:
             self.skipTest("cronograma indisponivel")
-        try:
-            import openpyxl
-            from openpyxl.styles import Font
-        except Exception:
-            self.skipTest("openpyxl indisponivel")
-        tmp = tempfile.mkdtemp(prefix="medhub_ordem_")
-        try:
-            xlsx = Path(tmp) / "cron.xlsx"
-            wb = openpyxl.Workbook()
-            ws = wb.active
-            # linha de datas: 10 colunas validas (parser exige >=10 semanas)
-            for col in range(1, 11):
-                ws.cell(row=cronograma.DRIVE_DATA_ROW, column=col, value="30/03 a 05/04")
-            # semana 1 (col 1): Apendicite na linha 4, MFC na linha 5 (ordem do usuario)
-            txt_ap = "Apendicite Aguda - Teoria - Link - 15 questoes"
-            txt_mfc = "Medicina de Familia - Teoria - Link - 20 questoes"
-            ws.cell(row=4, column=1, value=txt_ap)
-            c_mfc = ws.cell(row=5, column=1, value=txt_mfc)
-            c_mfc.font = Font(strike=True)      # MFC concluido (riscado)
-            wb.save(xlsx)
-            # grade stub: MFC ANTES de Apendicite (ordem do PDF) -- inverso do xlsx
-            grade = {"semanas": [{"semana": 1, "tasks": [
-                {"tarefa": "t_mfc", "area_norm": "MFC", "tema": "Medicina de Familia",
-                 "tipo_norm": cronograma.normaliza_tipo(txt_mfc)},
-                {"tarefa": "t_ap", "area_norm": "Cirurgia", "tema": "Apendicite Aguda",
-                 "tipo_norm": cronograma.normaliza_tipo(txt_ap)},
-            ]}]}
-            res = cronograma.diff_drive(str(xlsx), grade=grade)
-            by = {t["tarefa"]: t for t in res["tasks"]}
-            self.assertEqual(by["t_ap"]["ordem"], 4, "Apendicite deveria herdar a linha 4 do xlsx.")
-            self.assertEqual(by["t_mfc"]["ordem"], 5, "MFC deveria herdar a linha 5 do xlsx.")
-            self.assertTrue(by["t_mfc"]["concluido"], "MFC riscado -> concluido True.")
-            # ordenar por 'ordem' => Apendicite (4) antes de MFC (5): ordem do usuario, nao do PDF
-            ordenado = sorted(res["tasks"], key=lambda t: t["ordem"])
-            self.assertEqual([t["tarefa"] for t in ordenado], ["t_ap", "t_mfc"])
-        finally:
-            shutil.rmtree(tmp, ignore_errors=True)
+        for morta in ("diff_drive", "sync_drive", "_parse_conclusao_xlsx"):
+            self.assertFalse(
+                hasattr(cronograma, morta),
+                "%s foi revogada no part-8 -- nao reintroduzir. Snapshot do dado "
+                "em artifacts/snapshot-cronograma-drive-2026-07-26.json" % morta)
 
     def test_06_ordem_do_plano_substituiu_a_ordem_do_xlsx(self):
         """⚰️ **Era `test_06_ordenar_por_drive_fallback`** (Part 1 do boot-cronograma):
@@ -173,8 +146,9 @@ Sem marcadores e sem secao de armadilhas.
         a coluna `plano_tarefas.ordem`, editavel por `plano.py --mover ID --semana N
         --ordem K`, e quem a le agora e `db.plano_listar` (ORDER BY semana_plano, ordem).
 
-        O teste vira GUARDA da revogacao: se a funcao voltar, ele cai. O `diff_drive` do
-        `cronograma.py` (test_05, acima) continua vivo -- o CLI so morre na Parte 8."""
+        O teste vira GUARDA da revogacao: se a funcao voltar, ele cai. ⚰️ *A frase
+        "o `diff_drive` do `cronograma.py` continua vivo -- o CLI so morre na Parte 8"
+        valeu ate 18/09/2026: a Parte 8 chegou e o test_05 ao lado virou guarda.*"""
         if not _DAY_PLAN_OK:
             self.skipTest("day_plan indisponivel")
         self.assertFalse(hasattr(day_plan, "_ordenar_por_drive"),

@@ -280,6 +280,9 @@ nunca convertido em métrica para o painel ficar verde.
 <!-- TERMO-REVOGADO: cravou conceito + regra-mestre | revisao-calibrada v1.6 (s186), Clausula 14 -- R2/F112: a regua v1 media COMPLETUDE da resposta; a v2 mede ESFORCO DE RECUPERACAO (semantica nativa do FSRS) -->
 <!-- TERMO-REVOGADO: recall parcial/na zona mas sem o alvo | revisao-calibrada v1.6 (s186), Clausula 14 -- R2/F112: era a definicao da nota 2 na regua v1; sob a v2 o 2 e 'lembrou com esforco', que e ACERTO -->
 <!-- TERMO-REVOGADO: Nota `< 4` recoloca | revisao-calibrada v1.6 (s186), Clausula 14 -- R2/F112: o limiar de relearning do player passou a `< 3`; sob a v2 o 4 e 'sem esforco' (raro) e exigi-lo faria todo acerto comum repetir para sempre -->
+<!-- TERMO-REVOGADO: --sync-drive | cronograma.md + tools/cronograma.py (s186, part-8) -- o Drive deixou de ser fonte; o flag e as 4 funcoes foram REMOVIDOS, nao so lapidados. Snapshot reversivel em artifacts/snapshot-cronograma-drive-2026-07-26.json -->
+<!-- TERMO-REVOGADO: cronograma_conclusao_drive | cronograma-contract + reconcile (s186, part-8) -- a chave segue no banco mas NINGUEM a le nem a escreve; conclusao e coluna (plano_tarefas.status/origem_conclusao) desde a part-4 -->
+<!-- TERMO-REVOGADO: Realizada? | importar-planilha.md (s186, part-8) -- a coluna do Dashboard do Drive deixou de ser sinal de conclusao; quem conclui e `plano.py --concluir ID --sessao N` -->
 
 > **Por que os marcadores são comentários HTML:** eles não aparecem no render do documento (o
 > leitor humano lê a prosa acima, não a lista), mas são triviais de extrair. O registro fica onde a

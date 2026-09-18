@@ -33,13 +33,17 @@ python tools/cronograma.py --validate             # asserções da Fase 1 (S10=2
 python tools/cronograma.py --json [--semana N]    # imprime a grade inteira ou só a semana N
 python tools/cronograma.py --gap [--meta M] [--desde N]    # gap de volume: acum(ipub) + cronograma restante vs meta (default 10000)
 python tools/cronograma.py --radar [--desde N]    # cobertura futura × performance, fronteira pré/pós-ENAMED
-python tools/cronograma.py --sync-drive <xlsx>    # ⚰️ REVOGADO 17/09/2026 -- não invocar, não pedir ao usuário (ver a lápide abaixo)
 ```
 
-### ⚰️ `--sync-drive` — REVOGADO em 17/09/2026 (PRD `plano-ssot-e-cards-v2`, Parte 4)
+### ⚰️ `--sync-drive` — REVOGADO em 17/09 e **REMOVIDO do código em 18/09/2026** (PRD `plano-ssot-e-cards-v2`, Partes 4 e 8)
 
-> **Não invocar e não pedir o ritual ao usuário.** O flag **continua existindo em código** e ainda
-> grava `preparacao_estado.cronograma_conclusao_drive` — mas **ninguém lê mais esse snapshot**:
+> **Não existe mais.** ⚰️ *Até 17/09/2026 esta lápide dizia que o flag "continua existindo em
+> código"; na Parte 8 (18/09) `--sync-drive`, `diff_drive`, `_parse_conclusao_xlsx` e
+> `_norm_tema_xlsx` foram **removidos** de `tools/cronograma.py`, e `openpyxl` deixou de ser
+> import do módulo.* O último snapshot que ele produziu (2026-07-26) está exportado em
+> `artifacts/snapshot-cronograma-drive-2026-07-26.json` com sha256 e instruções de reversão —
+> remoção reversível, nunca deleção seca (AGENTE §10.4). A chave
+> `preparacao_estado.cronograma_conclusao_drive` **segue no banco, intocada**, e ninguém a lê:
 > `day_plan._conclusao_drive`, `_ordenar_por_drive`, o ramo calendário de `_cronograma_hoje`, o
 > banner `Drive desatualizado` e a condição **W8** do reconcile foram todos removidos/revogados
 > no mesmo commit.

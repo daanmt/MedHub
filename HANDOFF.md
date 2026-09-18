@@ -37,7 +37,7 @@ Detalhe em `history/session_184.md`. 4 varreduras isoladas (~618k tokens) + 3 ex
 ## Pendencias/observacoes ativas
 
 - 📄 Manual de Gestacao de Alto Risco (MS 2022) > 10 MB. 💉 Diretrizes 2026 a conferir: Calendario Vacinal, GINA, ATLS 11 (parcial), SINAN.
-- 📡 Canal com o `/ai-eng` em `history/exchange-log.jsonl` -- levar o destilado do PLANEJAMENTO §5 (fila R1-R11 + F113) para GO/NO-GO na abertura da sessao de engenharia.
+- 📡 **Canal exclusivo com o `/ai-eng` = `SendMessage` entre sessoes locais** (descobrir com `ListAgents`; em 17/09 a sessao era `ai-eng-38`, Fable 5.1 orquestrando a reforma). O hook em `.claude/settings.json` grava cada troca em `history/exchange-log.jsonl` (append-only, runtime, fora dos selos). **Destilado da fila R1-R11 + F112/F113 ENVIADO em 17/09 antes do clear**, com uma duvida de escopo (R1: adaptador le `core/fsrs_params.json` atras de flag, ou fica intocado ate o R2?). **Proximo eu: esperar GO / NO-GO / ALTERA por item; silencio = GO (§10.6); responder pelo `from` da mensagem.** Nao re-enviar o destilado.
 
 ---
 *Historico: history/INDEX.md * Macro: ESTADO.md * Sessao: history/session_184.md * Trocas: history/exchange-log.jsonl * Auditoria: docs/MEMORIA-AUDITORIA.md*

@@ -38,7 +38,7 @@ O FSRS agenda a revisão **de cada card**. Mas o estudante esquece **temas intei
 Operado por `.claude/commands/refrescar.md` + `tools/dormant_refresh.py` (`--pick`/`--context`/`--stamp`).
 
 - **Forma:** prosa clínica reconstrutiva (3-6 parágrafos) — mecanismo → conduta → armadilha + "o elo que você costuma quebrar aqui". Densidade Gold Standard (AGENTE §4), sem tabelas. Substrato: `app.engine.get_topic_context` (resumo + erros + RAG + weak_areas), com fallback de resumo por nome de arquivo.
-- 🔴 **Fronteira dura — NÃO toca o FSRS:** nunca chama `record_review`/`insert_questao`/`insert_card_base`; não cunha card; não grava rating. O único write é `--stamp` → `review_log` (`kind=dormant_refresh`). A fila FSRS (`fsrs-management-contract.md`) permanece intacta.  <!-- NAO-VERIFICAVEL: a allowlist F49 cobre escrita SQL DIRETA por arquivo, nao chamada a db.record_review a partir do caminho de ensino (revisar: 2026-12-31) -->
+- 🔴 **Fronteira dura — NÃO toca o FSRS:** nunca chama `record_review`/`insert_questao`/`insert_card_base`; não cunha card; não grava rating. O único write é `--stamp` → `review_log` (`kind=dormant_refresh`). A fila FSRS (`fsrs-management-contract.md`) permanece intacta.  <!-- CHECK: test_invariante_a -->
 
 ---
 

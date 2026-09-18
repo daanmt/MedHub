@@ -112,6 +112,7 @@ vazamento de rótulo (modo de falha #8 do handoff de flashcards) era tribal:
 |---|---|
 | `--next` | Imprime o próximo card da fila como objeto JSON. Fila vazia → `{"empty": true}`. |
 | `--list` | Imprime a fila inteira (respeitando filtros/limites) como array JSON. |
+| `--card CARD_ID` | **(F99, s187)** Serve **UM card por id**, com as frentes, o verso e o estado FSRS. **READ-ONLY** -- não toca a fila nem o FSRS. Serve card **fora da fila** (`due` no futuro) e **aposentado** (`ativo: false`, em vez de sumir -- quem depura um card defeituoso precisa justamente dele). Id inexistente -> `{found: false}`. 🔴 É o leitor que o **re-drill inter-sessão** exige: antes dele, `--next`/`--list` serviam só o vencido, e o re-drill que este mesmo arquivo prescreve só funcionava por acaso (s178: 3 dos 12 cards ficaram inalcançáveis e as frentes foram reconstruídas de um session log, que **não é a fonte**). `selection_reason` vem `por_id` -- o objeto tem a forma da fila mas **não mente a origem** (classe F76). |
 | `--record CARD_ID` | Grava a avaliação do card. **Exige `--rating`.** Delega a `record_review()` (UPDATE `fsrs_cards` + INSERT `fsrs_revlog`). Imprime `{recorded, card_id, rating, next_due, state}`. |
 | `--rating 1..4` | Avaliação. Só com `--record`. |
 | `--area` | Filtro de área (match exato). |

@@ -35,7 +35,9 @@ Detalhe em `history/session_185.md`. 3 filhos Opus 5 na onda 1 (~820k tokens, ~4
 - 🔴 **Reportei "875 -> 0" e era FALSO:** medidor e corretor compartilhavam a lista de palavras. Detector independente mediu 897 (60,8%). *Quando o sensor e o remedio nascem do mesmo insumo, o verde nao e evidencia.*
 - 🔴 **Eu corrompi 23 cards e reverti:** `-encia` virou verbo em substantivo. **"So-acento" nao e "semanticamente nulo" em portugues.** Pegou-se a olho, nao por gate.
 - **F110** sem gate por construcao. **`db.get_db_metrics`** soma campo inflado e nao tem chamador vivo (superficie orfa). **R1:** nada adotado, `app/utils/fsrs.py` sem diff.
-- Herdadas e vivas: F100 · F104 · F105 · F87 · F99 · F109 · F111 · G10 · G5 · F89 · F79b · F66 · F64 · eixo C do F81 · F80b.
+- 🔴 **A lista de "herdadas e vivas" era FALSA e foi triada por CONTEUDO em 18/09 (s187)** -- lida contra o ledger e contra os portadores, nao contra ela mesma. Das 15, **7 ja estavam fechadas** (G5 e G10 na s177; F89, F79b, F66, F64 e F80b na s176), **1 declarada** (eixo C do F81, nao-verificavel por gate) e **2 tinham os riders pousados desde a s185 com o cabecalho do ledger dizendo ABERTO** (F109 e F110). Sobravam 5, e **F99 foi resolvido na s187**.
+- **Vivas de verdade, por terminal:** **F104** (conteudo -- `Neurologia/TCE.md` coloquial + stub `[CIR] TCE.md` duplicado) · **F100** (achado de METODO, nao de codigo) · GATE do operador: **F105**, **F87**, **F111/R8** (prazo 02/11), **F89 passivo** (18 linhas, RODADA 3), **F66 passivo** (115 WeakAreas).
+- ⚠️ **Por que a lista mentia e o gate nao pegou:** o check G14 compara o cabecalho do achado contra a **lapide do §11** do `MEMORIA-AUDITORIA`; achado que nunca entrou no §11 (F109, F110) nao e visto por ninguem. Gate-miss por escopo de alvo -- a mesma forma do F115.
 
 ## Pendencias/observacoes ativas
 

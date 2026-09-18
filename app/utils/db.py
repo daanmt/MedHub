@@ -631,6 +631,50 @@ class ConcurrentReviewError(Exception):
 ROTULOS_RATING = {1: "again", 2: "hard", 3: "good", 4: "easy"}
 
 
+def card_por_id(card_id):
+    """UM card por id, com conteudo. READ-ONLY: nao toca a fila nem o FSRS. (F99, s187)
+
+    O defeito que isto encerra: **nao existia superficie que servisse um card arbitrario
+    com as frentes.** `fsrs_queue --next/--list` servem so o que esta VENCIDO; `--preview`
+    aceita id arbitrario mas devolve so o calendario das 4 notas; `reforja`/`cards_regen`
+    operam por predicado. Entao o re-drill inter-sessao -- que o `revisar.md` prescreve e
+    que a primeira linha do HANDOFF costuma mandar fazer -- **so funcionava por acaso**,
+    quando o card calhava de estar vencido. Na s178, 3 dos 12 cards do re-drill ficaram
+    inalcancaveis e as frentes foram reconstruidas de um session log, que NAO e a fonte.
+
+    🔴 Classe: Reachability-Debt, forma *sem consulta* -- o dado existe, esta correto, e
+    nao havia porta. Irma declarada do F39 e do F91.
+
+    Mesma forma de card da fila (`get_cards_by_bucket`), mais `ativo` e `state`: card
+    APOSENTADO e devolvido com `ativo: False` em vez de sumir -- quem depura um card
+    defeituoso precisa exatamente do que foi aposentado, e o silencio seria a mesma
+    negativa ambigua que o F91 matou. Devolve None so quando o id nao existe.
+    """
+    conn = get_connection()
+    try:
+        linha = conn.execute(
+            '''SELECT f.id, f.frente_contexto, f.frente_pergunta, f.verso_resposta,
+                      f.verso_regra_mestre, f.verso_armadilha, f.needs_qualitative,
+                      f.questao_id, f.card_version, fc.due, fc.state, fc.stability,
+                      fc.difficulty, fc.reps, fc.lapses, t.area, t.tema
+               FROM flashcards f
+               LEFT JOIN fsrs_cards fc ON f.id = fc.card_id
+               LEFT JOIN taxonomia_cronograma t ON f.tema_id = t.id
+               WHERE f.id = ?''', (int(card_id),)).fetchone()
+    finally:
+        conn.close()
+    if linha is None:
+        return None
+    campos = ("card_id", "frente_contexto", "frente_pergunta", "verso_resposta",
+              "verso_regra_mestre", "verso_armadilha", "needs_qualitative",
+              "questao_id", "card_version", "due", "state", "stability",
+              "difficulty", "reps", "lapses", "area", "tema")
+    card = dict(zip(campos, linha))
+    card["ativo"] = (card["needs_qualitative"] or 0) < 2
+    card["selection_reason"] = "por_id"          # nunca veio da fila -- nao mente a origem
+    return card
+
+
 def preview_ratings(flashcard_id):
     """P3 part-3: a consequência dos 4 ratings ANTES da escolha — rating é
     input do modelo, não intervalo fixo. Read-only: roda o scheduler sobre

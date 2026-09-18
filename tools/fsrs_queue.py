@@ -326,6 +326,11 @@ def main():
                       help="Imprime o lote da fila (array JSON)")
     acao.add_argument("--record", type=int, metavar="CARD_ID",
                       help="Grava a avaliação de um card (exige --rating)")
+    acao.add_argument("--card", type=int, metavar="CARD_ID",
+                      help="Serve UM card por id, com as frentes e o verso. READ-ONLY: "
+                           "nao toca a fila nem o FSRS, e serve card fora da fila "
+                           "(inclusive APOSENTADO, com ativo=false). E o leitor que o "
+                           "re-drill inter-sessao exige -- F99.")
     acao.add_argument("--preview", type=int, metavar="CARD_ID",
                       help="P3: consequencia dos 4 ratings p/ um card (JSON), sem gravar nada")
     acao.add_argument("--export-player", dest="export_player", action="store_true",
@@ -474,6 +479,15 @@ def main():
             "reason_servido": metrics.get("reason_servido"),
             "reason_divergente": bool(metrics.get("reason_divergente")),
         })
+        return
+
+    if args.card is not None:
+        card = db.card_por_id(args.card)
+        if card is None:
+            _emit({"card_id": args.card, "found": False,
+                   "erro": f"card #{args.card} nao existe em flashcards"})
+            return
+        _emit({**card, "found": True})
         return
 
     if args.preview is not None:

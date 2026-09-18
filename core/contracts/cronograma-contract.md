@@ -2,12 +2,12 @@
 type: contract
 layer: core
 status: canonical
-version: 1.2
+version: 1.3
 relates_to: [reconcile-contract, forgetting-curve-contract, estado-contract, AGENTE]
 ---
 
 # Contrato do Cronograma (Sync Cronograma ↔ Performance ↔ FSRS)
-**Versão 1.2 | 2026-06-27 (sessão 095), primeira instância; v1.1-1.2 nas sessões seguintes.**
+**Versão 1.3 | 2026-06-27 (sessão 095), primeira instância; v1.1-1.3 nas sessões seguintes.**
 **Origem: Materializa o ultraplan `docs/plans/s094-ultraplan.md §c/§d`.**
 
 > Documento normativo. Governa a **camada derivada do cronograma de Reta Final** (EMED) e seu sync com os SSOTs de estado. O cronograma é um **plano**, não verdade-de-estado: divergência plano↔realidade é *informação de gestão*, nunca corrupção. Referenciado por: `AGENTE.md` (§2 passo 4, §6, §7.3/§7.4), `reconcile-contract.md` (W5-W7), `forgetting-curve-contract.md` (Boot).
@@ -50,9 +50,20 @@ O estudante segue um cronograma de 30 semanas (EMED), mas **por conteúdo**, atr
 - **Rótulos sujos (W4: `GO`, mojibake `Obstetrícia`) são normalizados NA LEITURA, com WARNING** — o db **não** é tocado. A migração destrutiva que limpa o db de fato é fork à parte.
 - **Writes permitidos pela feature de cronograma (v1.1, corrigido): a tabela `preparacao_estado`** (`ipub.db`, chave/valor/`atualizado_em`/`fonte` — PRD `orquestracao-preparacao` part-1, 2026-07-06), NUNCA `taxonomia_cronograma`/`sessoes_bulk`/FSRS. Duas chaves hoje:
   - `semana_conteudo` — posição SSOT (semana de conteúdo), gravada por `python tools/preparacao.py --set-semana N`. **Substitui** o antigo "ponteiro de texto `Próxima = SNN` em `HANDOFF.md`/`ESTADO.md`" (v1.0 desta cláusula) — esse caminho está **deprecado**: `day_plan.py::_resolver_semana_conteudo()` só cai nele quando `preparacao_estado` está vazio, e emite `[WARN] POSICAO_VIA_TEXTO (deprecado)` em stderr quando isso acontece. Não editar mais o texto do HANDOFF/ESTADO como fonte — é saída derivada, não input.
-  - `cronograma_conclusao_drive` — snapshot da fronteira real de conclusão **e da ordem real das tarefas por semana** (`ordem` = linha da célula no xlsx, onde o usuário reordena à mão), gravado por `python tools/cronograma.py --sync-drive <xlsx>` (specs `cronograma-sync-conclusao-drive` + `boot-cronograma-drive-confiavel-part-1`, W8/`reconcile-contract.md`). Cada task do snapshot: `{semana, tarefa, area_norm, tema, tipo_norm, concluido, ordem}` (`ordem=None` quando o tema não casa nenhuma célula do xlsx). Frescor = dia-calendário de `atualizado_em`; `day_plan.py` degrada pro comportamento calendário puro (semana inteira, ordem do PDF) quando o snapshot está ausente, de dia anterior, ou em formato antigo sem `ordem`. Snapshot velho **nunca é silencioso**: o `day_plan` emite banner `Drive desatualizado`.
+  - ⚰️ **REVOGADA em 17/09/2026 (v1.3, PRD `plano-ssot-e-cards-v2` Parte 4)** — a chave `cronograma_conclusao_drive` deixou de ser fonte do boot, e com ela morreram `day_plan._conclusao_drive`, `_ordenar_por_drive`, o ramo calendário de `_cronograma_hoje` e o banner `Drive desatualizado`. *Motivo:* o snapshot envelhecia em silêncio útil-zero (42 dias no boot medido de 06/09) e a ordem que o usuário reordenava à mão nunca chegava ao agente — três fontes para uma pergunta, nenhuma delas verdade-de-estado. A conclusão e a ordem passaram a viver em `plano_tarefas` (bullet abaixo). ⚰️ **`cronograma.py --sync-drive` também está revogado em 17/09/2026** — não é invocado pelo agente nem pedido ao usuário, pelo mesmo motivo: o snapshot que ele grava não tem mais leitor. O **código** segue vivo e ainda escreve a chave; a remoção é a **Parte 8**, junto do congelamento do Drive, e está bloqueada até o operador confirmar que não faz mais o ritual de reordenação manual do xlsx — lápide, não deleção. Lápide operacional (a que o agente lê no ato) em [`/cronograma`](../../.claude/commands/cronograma.md). Texto original em `git show HEAD~:core/contracts/cronograma-contract.md`.
+  - **`plano_tarefas` — a tabela da feature (v1.3).** É a **única exceção** ao read-only desta Cláusula, e a exceção é declarada com os **writers nomeados**: `db.plano_upsert_tarefas` (semeadura), `db.plano_set_status` (`--concluir`/`--cortar`/`--reabrir`), `db.plano_mover` e `db.plano_confirmar_area` — todos em `app/utils/db.py`, todos acionados por `tools/plano.py`, que não abre `sqlite3` próprio. Leitores: `db.plano_listar`, `db.plano_obter`, `db.plano_pendencia_revisao`; `day_plan.py` só lê. Uma linha por tarefa, com a `fonte` declarada (`extensivo`/`rf`/`custom`) e `origem_conclusao` como trilha de auditoria — `dashboard_2026-09-10` é status APROXIMADO por confissão do usuário, e zerá-lo é a passada de revisão por área (`--revisar-area`/`--confirmar-area`). 🔴 A fronteira do resto da Cláusula 5 continua intacta: `taxonomia_cronograma`, `sessoes_bulk`, FSRS e `review_log` seguem proibidos para esta feature. Norma de origem: PRD `plano-ssot-e-cards-v2`, partes 2-4. A tabela legada `cronograma_progresso` (escrita por `insert_questao`) fica como **legado lido por ninguém** — lápide, não deleção.
 
-## Cláusula 5b — 🔴 Sync do Drive: dois sinais, dois donos (v1.2, achado §8 da s144)
+## ⚰️ Cláusula 5b — REVOGADA (Sync do Drive: dois sinais, dois donos) — v1.2, morta em 17/09/2026
+
+> ⚰️ **Revogada em 17/09/2026 pela v1.3** (PRD `plano-ssot-e-cards-v2`, Parte 4). **Motivo:** a
+> cláusula separava dois sinais do Drive — **conclusão** (coluna `Realizada?` do Dashboard EMED,
+> lida pelo agente) e **ordem** (o xlsx reordenado à mão, ritual do usuário via `--sync-drive`) —
+> e ambos deixaram de alimentar o boot: a conclusão e a ordem agora são colunas de `plano_tarefas`
+> (`status`/`origem_conclusao` e `semana_plano`/`ordem`), editáveis por comando. O que **sobrevive
+> como princípio geral**, e por isso continua valendo fora desta cláusula: *nenhum passo de boot
+> pode exigir binário via MCP* e *caveat honesto no lugar de obrigação impossível*. O texto abaixo
+> fica como registro histórico — **não é prescrição**; o `--sync-drive` segue existindo em código
+> até a Parte 8, mas nada no boot o pede.
 
 O sync era um passo único e **impossível**: mandava o agente baixar o xlsx via MCP no boot. `read_file_content` devolve xlsx como **base64** e `--sync-drive` precisa do arquivo binário real — o caminho não fecha. Tentá-lo foi o que produziu o boot de ~15 chamadas da s144 (defeito **D5**). Os dois sinais que estavam acoplados no xlsx se separam:
 
@@ -78,7 +89,7 @@ O sync era um passo único e **impossível**: mandava o agente baixar o xlsx via
 
 ## Integração
 
-- **Boot (`AGENTE §2 passo 4`):** `day_plan.py` importa `cronograma.py` e renderiza semana de conteúdo vs nominal, q previstas, próximos temas e **dois ritmos-alvo** (terminar a grade vs meta-prova). É a 4ª fonte do Plano do Dia (dormência × volume × FSRS × **cronograma**).
+- **Boot (`AGENTE §2 passo 4`) — v1.3:** `day_plan.py` deriva o bloco `🧭 Cronograma` de **`plano_tarefas`**: semana do plano corrente (menor `semana_plano` com pendência), fase (1 até 01/11 / 2 daí em diante), X/Y tarefas feitas da semana, as próximas 3-5 tarefas pendentes em ordem (`fonte`, `tema`, `tipo`, `q_previstas`, `url_lista`) e o ritmo-alvo. É a 4ª fonte do Plano do Dia (dormência × volume × FSRS × **plano**). ⚰️ *Era "importa `cronograma.py` e renderiza semana de conteúdo vs nominal ... próximos temas"* — o ramo calendário morreu em 17/09/2026 (Parte 4). `cronograma.py` segue sendo o derivador do PDF (Cláusula 4) e a fonte da **semeadura** do plano; deixou de ser a fonte do "o que vem agora".
 - **Reconcile:** condições **W5/W6/W7** (sempre WARNING, nunca BLOCKING — ver `reconcile-contract.md`). Travar boot por estar atrasado seria hostil.
 - **`/performance`, `/refrescar`, `/revisar`:** consumidores opcionais (bloco "Cronograma vs Meta"; tie-break de dormência a favor do tema da semana; filtro de cards da semana). Nenhum altera política FSRS.
 
@@ -95,6 +106,19 @@ O sync era um passo único e **impossível**: mandava o agente baixar o xlsx via
 
 ## Changelog
 
+- **v1.3 (2026-09-17, s185 — PRD `plano-ssot-e-cards-v2`, Parte 4):** **o plano vira dado e o
+  Drive sai do boot.** (a) **`plano_tarefas` declarada como a tabela da feature** na Cláusula 5 —
+  a única exceção ao read-only, com os quatro writers nomeados (`plano_upsert_tarefas`,
+  `plano_set_status`, `plano_mover`, `plano_confirmar_area`, todos em `app/utils/db.py`); as
+  fronteiras sobre `taxonomia_cronograma`/`sessoes_bulk`/FSRS/`review_log` ficam intactas.
+  (b) ⚰️ **Cláusula 5b revogada** e o bullet `cronograma_conclusao_drive` da Cláusula 5 lapidado:
+  conclusão e ordem passaram a ser colunas do plano. (c) ⚰️ **`--sync-drive` lapidado na skill**
+  [`/cronograma`](../../.claude/commands/cronograma.md) — o CLI continua existindo (remoção =
+  Parte 8, com o congelamento do Drive), mas nenhum passo de boot o pede. (d) Espelhado em
+  `reconcile-contract.md` (**W8 revogado**, **W5b novo** = `--check-extensivo`) e em
+  `AGENTE.md §2 passo 4`/§6. (e) Termos cadastrados em `docs/MEMORIA-AUDITORIA.md §12` —
+  ⚰️ revogados: `Drive desatualizado`, `conclusao_desatualizada`, `dois sinais, dois donos` —,
+  fechando os três passos de AGENTE §10.10 no mesmo commit (declarar + lapidar + cadastrar).
 - **v1.2 (2026-08-14, s144):** **Cláusula 5b** — o sync do Drive deixa de ser passo único e impossível. Conclusão migra para a coluna `Realizada?` do **Dashboard EMED 2026** (Sheets nativo, texto puro via `read_file_content`), executável pelo agente; ordem vira **ritual do usuário** com o xlsx local (`--sync-drive`, sem MCP). Proibido exigir binário via MCP em passo de boot; caveat honesto quando faltar qualquer um dos dois sinais. Origem: achado §8 da auditoria de sistemas (s144, defeito D5 — boot de ~15 chamadas); spec `.vibeflow/specs/consolidacao-part-4.md`. Espelhado em `reconcile-contract.md` W8 e `AGENTE.md §2 passo 4` (reescrito de 272 para 56 palavras).
 - **v1.1 (2026-07-08):** implementa R8 (marcador de conclusão real do xlsx do Drive) — `tools/cronograma.py --sync-drive` (parse `cell.font.strike` + matching `(semana,tema,tipo_norm)` contra `grade.json`) grava snapshot em `preparacao_estado.cronograma_conclusao_drive`; `day_plan.py` filtra "próximos temas" pela fronteira real quando o snapshot é do dia-calendário corrente (W8, `reconcile-contract.md`). Corrige a Cláusula 5, que estava desatualizada desde a migração do ponteiro de posição para `preparacao_estado` (PRD `orquestracao-preparacao`, 2026-07-06) — achado **F33** (`AUDITORIA_MEDHUB.md`), spec `.vibeflow/specs/cronograma-sync-conclusao-drive.md`.
 - **v1.0 (2026-06-27, s095):** primeira instância. F1 `tools/cronograma.py` (derivador + `AREA_PDF_TO_CANON`) + `core/cronograma/grade.json` (30 sem · 352 tasks · 10218q; validado S10=273, S11-28=6689/222); F2 `--radar` (cobertura × performance, fronteira pré/pós-ENAMED); F3 integração no `day_plan.py` (conteúdo×calendário, ponteiro `Próxima=SNN`); F4 este contrato + patches reconcile/AGENTE/forgetting-curve + skill. Adaptado da arquitetura contract-driven do irmão `agente-daktus-content`.

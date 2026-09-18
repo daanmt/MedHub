@@ -41,8 +41,29 @@ python tools/cronograma.py --validate             # asserções da Fase 1 (S10=2
 python tools/cronograma.py --json [--semana N]    # imprime a grade inteira ou só a semana N
 python tools/cronograma.py --gap [--meta M] [--desde N]    # gap de volume: acum(ipub) + cronograma restante vs meta (default 10000)
 python tools/cronograma.py --radar [--desde N]    # cobertura futura × performance, fronteira pré/pós-ENAMED
-python tools/cronograma.py --sync-drive <xlsx>    # lê o "Cronograma de Reta Final.xlsx" local (ordem manual + conclusão) e grava o snapshot preparacao_estado.cronograma_conclusao_drive (W8 do reconcile; ritual do usuário, o agente só pede)
+python tools/cronograma.py --sync-drive <xlsx>    # ⚰️ REVOGADO 17/09/2026 -- não invocar, não pedir ao usuário (ver a lápide abaixo)
 ```
+
+### ⚰️ `--sync-drive` — REVOGADO em 17/09/2026 (PRD `plano-ssot-e-cards-v2`, Parte 4)
+
+> **Não invocar e não pedir o ritual ao usuário.** O flag **continua existindo em código** e ainda
+> grava `preparacao_estado.cronograma_conclusao_drive` — mas **ninguém lê mais esse snapshot**:
+> `day_plan._conclusao_drive`, `_ordenar_por_drive`, o ramo calendário de `_cronograma_hoje`, o
+> banner `Drive desatualizado` e a condição **W8** do reconcile foram todos removidos/revogados
+> no mesmo commit.
+>
+> **Motivo:** o snapshot era a terceira fonte de "o que vem agora" (junto do `grade.json` e da
+> cabeça do usuário) e envelhecia em silêncio útil-zero — 42 dias no boot medido de 06/09, com a
+> recomendação do dia nomeando tema já feito. Conclusão e ordem passaram a ser **colunas** de
+> `plano_tarefas` (`status`/`origem_conclusao` e `semana_plano`/`ordem`), editáveis por comando:
+> `python tools/plano.py --concluir ID --sessao N` · `--cortar ID --motivo "..."` ·
+> `--mover ID --semana N` · `--confirmar-area AREA --feitas "..." --pendentes "..."`.
+> Assinatura completa desses flags em [`/engenharia-cli`](engenharia-cli.md).
+>
+> A **remoção do código** é a **Parte 8** do mesmo PRD, e está bloqueada aguardando o operador
+> confirmar que não faz mais o ritual de reordenação manual do xlsx. Até lá, o flag fica: lápide,
+> não deleção. Norma: `cronograma-contract.md` v1.3 (Cláusula 5 + Cláusula 5b revogada) e
+> `reconcile-contract.md` v1.4 (W8).
 
 - `--desde N`: semana inicial p/ `--gap`/`--radar`. **Default = semana nominal por data**; passe a semana de **conteúdo** (ex.: `--desde 11`) para o gap/radar refletirem a posição real do estudante (atrás do calendário).
 - `--meta M`: meta de volume p/ `--gap` (default 10000 = meta-prova ENAMED; 12000 = teto).
@@ -60,9 +81,18 @@ python tools/cronograma.py --sync-drive <xlsx>    # lê o "Cronograma de Reta Fi
 - `gap_volume(grade, total_acum, meta, desde_semana)` · `radar(grade, por_area, desde_semana)` + `render_radar(r)`.
 - `AREA_PDF_TO_CANON` (linchpin do JOIN) · `ENAMED` · `SEMANA_1_INICIO`.
 
-## Ponteiro de semana de conteúdo
+## ⚰️ Ponteiro de semana de conteúdo — REVOGADO em 17/09/2026 (Parte 4)
 
-`day_plan.py` lê o ponteiro textual **`Próxima = SNN`** (HANDOFF > ESTADO; fallback = semana nominal por data). É o **único write** que a feature de cronograma autoriza (Cláusula 5), atualizado no fechamento quando a semana de conteúdo vira.
+> ⚰️ *Era: "`day_plan.py` lê o ponteiro textual **`Próxima = SNN`** (HANDOFF > ESTADO; fallback =
+> semana nominal por data). É o **único write** que a feature de cronograma autoriza (Cláusula 5)".*
+> **As duas metades morreram.** `day_plan._semana_conteudo`/`_resolver_semana_conteudo` foram
+> removidos: a posição do boot passou a ser a **semana do plano** (menor `semana_plano` com
+> pendência em `plano_tarefas`), impressa por `python tools/day_plan.py --handoff-block` e
+> vigiada pelo `POSICAO_DRIFT` do `auto_check`. E o write deixou de ser único — `plano_tarefas`
+> é a tabela da feature (`cronograma-contract` v1.3, Cláusula 5). A chave
+> `preparacao_estado.semana_conteudo` sobrevive com **um** leitor
+> (`tools/cobertura_conhecimento.py`); `preparacao.py --set-semana` alimenta só esse leitor e
+> **não move mais o boot**.
 
 ## Extensivo (52 semanas) -- segundo derivador
 

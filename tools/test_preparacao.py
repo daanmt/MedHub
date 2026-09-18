@@ -1,7 +1,15 @@
 """test_preparacao.py -- testes da part-1 (PRD orquestracao-preparacao).
 
-Cobre: posicao SSOT (roundtrip db + fontes db/texto do resolver), registro
-acumulativo (F22, delta-only na taxonomia) e invariante POSICAO_DRIFT.
+Cobre: posicao SSOT (roundtrip db), registro acumulativo (F22, delta-only na
+taxonomia) e invariante POSICAO_DRIFT.
+
+⚰️ **Os dois testes do resolver de semana de conteudo sairam em 17/09/2026**
+(plano-ssot-e-cards-v2 Parte 4): `day_plan._resolver_semana_conteudo` e
+`_semana_conteudo` foram REMOVIDOS junto do ramo calendario -- o boot nao le mais
+a posicao nem do `preparacao_estado` nem do texto do HANDOFF/ESTADO. A chave
+`semana_conteudo` sobrevive com UM leitor vivo (`tools/cobertura_conhecimento.py`),
+e por isso o roundtrip do db continua testado aqui. O POSICAO_DRIFT passou a
+comparar o HANDOFF com `plano_tarefas`.
 
 Pytest-nativo (coletado direto pela raiz, precedente test_autonomia_hooks);
 standalone: python tools/test_preparacao.py. Todos os writes em db/arquivos
@@ -23,7 +31,6 @@ except Exception:
 
 import app.utils.db as db            # noqa: E402
 import auto_check as ac              # noqa: E402
-import day_plan as dp                # noqa: E402
 import registrar_sessao_bulk as rsb  # noqa: E402
 
 
@@ -53,37 +60,6 @@ def test_posicao_roundtrip():
         assert raw and int(raw[0]) == 13, "posicao persiste no arquivo"
     finally:
         db.DB_PATH = orig
-        os.remove(tmp)
-
-
-def test_resolver_fonte_db():
-    tmp = _tmp_db()
-    orig = db.DB_PATH
-    db.DB_PATH = tmp
-    try:
-        db.set_preparacao("semana_conteudo", 12, fonte="teste")
-        semana, fonte = dp._resolver_semana_conteudo()
-        assert (semana, fonte) == (12, "db"), f"db-first (got {semana}, {fonte})"
-    finally:
-        db.DB_PATH = orig
-        os.remove(tmp)
-
-
-def test_resolver_fonte_texto_warn():
-    tmp = _tmp_db()  # db SEM posicao -> resolver cai no texto
-    orig_path = db.DB_PATH
-    orig_texto = dp._semana_conteudo
-    db.DB_PATH = tmp
-    dp._semana_conteudo = lambda: 15
-    try:
-        buf = io.StringIO()
-        with contextlib.redirect_stderr(buf):
-            semana, fonte = dp._resolver_semana_conteudo()
-        assert (semana, fonte) == (15, "texto"), f"fallback texto (got {semana}, {fonte})"
-        assert "POSICAO_VIA_TEXTO" in buf.getvalue(), "WARN de deprecacao em stderr"
-    finally:
-        db.DB_PATH = orig_path
-        dp._semana_conteudo = orig_texto
         os.remove(tmp)
 
 
@@ -162,36 +138,55 @@ def _handoff_tmp(texto):
     return path
 
 
-def test_posicao_drift():
+def _db_com_plano(linhas):
+    """db temporario com `plano_tarefas` minimo: linhas = [(semana, status), ...]."""
     tmp = _tmp_db()
     con = sqlite3.connect(tmp)
-    con.execute("CREATE TABLE preparacao_estado (chave TEXT PRIMARY KEY, valor TEXT NOT NULL, "
-                "atualizado_em TEXT NOT NULL, fonte TEXT)")
-    con.execute("INSERT INTO preparacao_estado VALUES ('semana_conteudo', '12', '2026-07-05', 't')")
+    con.execute("CREATE TABLE plano_tarefas (id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                "semana_plano INTEGER, status TEXT NOT NULL DEFAULT 'pendente')")
+    con.executemany("INSERT INTO plano_tarefas (semana_plano, status) VALUES (?, ?)", linhas)
     con.commit()
     con.close()
+    return tmp
+
+
+def test_posicao_drift():
+    """POSICAO_DRIFT compara o HANDOFF com `plano_tarefas` (Parte 4), nao mais com
+    `preparacao_estado.semana_conteudo` -- a fonte que deixou de governar o boot."""
+    # semana corrente do plano = 3 (menor semana_plano PENDENTE; a 2 ja fechou)
+    tmp = _db_com_plano([(2, "feita"), (3, "pendente"), (4, "pendente"), (3, "feita")])
     divergente = _handoff_tmp(
-        "*Atualizado: 2026-07-05 -- s109 fechada*\n"
-        "## > Proximo passo imediato -- s110\n"
-        "- **Posicao:** conteudo S13 (nominal S14) [derivado: preparacao_estado]\n"
+        "*Atualizado: 2026-09-17 -- s184 fechada*\n"
+        "## > Proximo passo imediato -- s185\n"
+        "- **Posicao:** plano semana 4 (fase 1) · 0/6 tarefas da semana feitas "
+        "[derivado: plano_tarefas]\n"
         "- corpo em prosa cita S99 fora de ancora e sessao s108\n")
     coerente = _handoff_tmp(
-        "*Atualizado: 2026-07-05 -- s109 fechada*\n"
-        "- **Posicao:** conteudo S12 (nominal S13, atraso 1 sem) [derivado: preparacao_estado]\n")
-    sem_mencao = _handoff_tmp("*Atualizado: 2026-07-05*\ncorpo sem semana\n")
+        "*Atualizado: 2026-09-17 -- s184 fechada*\n"
+        "- **Posicao:** plano semana 3 (fase 1) · 1/2 tarefas da semana feitas "
+        "[derivado: plano_tarefas]\n")
+    sem_mencao = _handoff_tmp("*Atualizado: 2026-09-17*\ncorpo sem semana\n")
     try:
         drift = ac.check_posicao_drift(handoff_path=divergente, db_path=tmp)
-        assert drift == (13, 12), f"drift detectado (got {drift})"
+        assert drift == (4, 3), f"drift detectado (got {drift})"
         assert ac.check_posicao_drift(handoff_path=coerente, db_path=tmp) is None, \
             "coerente = silencio"
         assert ac.check_posicao_drift(handoff_path=sem_mencao, db_path=tmp) is None, \
             "sem mencao de semana = silencio"
-        # db sem posicao = silencio (nunca falso-positivo)
+        # 🔴 tabela AUSENTE = silencio (nunca falso-positivo -- F1/POSICAO/B1)
         vazio = _tmp_db()
         try:
             assert ac.check_posicao_drift(handoff_path=divergente, db_path=vazio) is None
         finally:
             os.remove(vazio)
+        # 🔴 tabela VAZIA e plano 100% fechado = silencio pelo mesmo motivo
+        for linhas in ([], [(3, "feita"), (4, "cortada")]):
+            outro = _db_com_plano(linhas)
+            try:
+                assert ac.check_posicao_drift(handoff_path=divergente, db_path=outro) is None, \
+                    f"plano sem pendencia nao pode acusar drift (linhas={linhas})"
+            finally:
+                os.remove(outro)
     finally:
         for p in (divergente, coerente, sem_mencao):
             os.remove(p)

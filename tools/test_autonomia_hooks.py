@@ -166,17 +166,21 @@ Sem marcadores e sem secao de armadilhas.
         finally:
             shutil.rmtree(tmp, ignore_errors=True)
 
-    def test_06_ordenar_por_drive_fallback(self):
-        """Part 1: _ordenar_por_drive ordena por ordem_by_task (estavel, faltantes
-        ao fim); sem ordem -> identidade (fallback PDF puro, DoD 3)."""
+    def test_06_ordem_do_plano_substituiu_a_ordem_do_xlsx(self):
+        """⚰️ **Era `test_06_ordenar_por_drive_fallback`** (Part 1 do boot-cronograma):
+        `day_plan._ordenar_por_drive` reordenava os temas da semana pela linha da celula
+        no xlsx. REMOVIDO em 17/09/2026 (plano-ssot-e-cards-v2 Parte 4) -- a ordem virou
+        a coluna `plano_tarefas.ordem`, editavel por `plano.py --mover ID --semana N
+        --ordem K`, e quem a le agora e `db.plano_listar` (ORDER BY semana_plano, ordem).
+
+        O teste vira GUARDA da revogacao: se a funcao voltar, ele cai. O `diff_drive` do
+        `cronograma.py` (test_05, acima) continua vivo -- o CLI so morre na Parte 8."""
         if not _DAY_PLAN_OK:
             self.skipTest("day_plan indisponivel")
-        tasks = [{"tarefa": "a"}, {"tarefa": "b"}, {"tarefa": "c"}]
-        ordem = {(1, "a"): 5, (1, "b"): 4}      # 'c' sem ordem -> fim
-        out = day_plan._ordenar_por_drive(tasks, ordem, 1)
-        self.assertEqual([t["tarefa"] for t in out], ["b", "a", "c"])
-        # sem ordem_by_task -> identidade (ordem do PDF preservada)
-        self.assertEqual(day_plan._ordenar_por_drive(tasks, {}, 1), tasks)
+        self.assertFalse(hasattr(day_plan, "_ordenar_por_drive"),
+                         "_ordenar_por_drive foi revogado na Parte 4 -- nao reintroduzir.")
+        self.assertFalse(hasattr(day_plan, "_conclusao_drive"),
+                         "_conclusao_drive foi revogado na Parte 4 -- nao reintroduzir.")
 
     def test_07_material_efetivo_rebaixa_sem_md(self):
         """Part 2 (F30): 'resumo' vira 'extensivo' quando o tema nao tem .md;

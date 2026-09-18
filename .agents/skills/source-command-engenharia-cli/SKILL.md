@@ -289,6 +289,13 @@ portadores do gate.
 que este CLI carrega: semana de **conteúdo** ≠ semana de **calendário** — o atraso entre as duas é
 a posição real, e o derivador do cronograma é `tools/cronograma.py` (assinatura em `cronograma.md`).
 
+⚰️ **`--set-semana` não move mais o boot (17/09/2026, `plano-ssot-e-cards-v2` Parte 4).** A posição do
+Plano do Dia passou a ser a **semana do PLANO** (menor `semana_plano` com pendência em `plano_tarefas`),
+e `day_plan._resolver_semana_conteudo`/`_semana_conteudo` foram removidos. A chave
+`preparacao_estado.semana_conteudo` sobrevive com **um** leitor: `tools/cobertura_conhecimento.py`.
+Gravar a posição aqui alimenta só esse check -- para mover a posição do boot, use
+`python tools/plano.py --mover ID --semana N`. Norma: `cronograma-contract.md` v1.3.
+
 ### `tools/plano.py` -- o plano de estudo como DADO (`plano_tarefas`)
 
 | Flag | Função |
@@ -359,3 +366,57 @@ não inventa `sessao_bulk_id` nem apaga o de um `--concluir` anterior.
 só trocar de origem, que é como "zero aproximadas" acontece sem reescrever histórico.
 
 Specs `.vibeflow/specs/plano-ssot-e-cards-v2-part-2.md` (semeadura) e `-part-3.md` (progresso).
+
+### `tools/listas.py` -- ledger de LISTAS de exercicios (`sessoes_bulk.tarefa_id`)
+
+| Flag | Função |
+|---|---|
+| `--backfill` | Casa `sessoes_bulk.observacoes` com `plano_tarefas.tema` e grava o vínculo das sessões **inequívocas**. **Dry-run é o default.** |
+| `--dry-run` | Explicita o default do `--backfill`: mede, imprime `N casadas / M ambíguas / K sem match` (com as três listas nominais) e **não grava**. |
+| `--apply` | Grava. Exige `--expect N`. Mutuamente exclusivo com `--dry-run`. |
+| `--expect N` | COUNT-ASSERT: N de sessões **casadas** esperadas. Difere do medido na hora -> **recusa (exit 2)** sem gravar nada. |
+| `--progresso` | Por tarefa: `url_lista \| q_previstas \| feitas \| acertos \| %`, só das listas com sessão vinculada, com totais por bloco UERJ. Read-only. |
+| `--pendentes` | As listas **previstas** que ainda não têm sessão vinculada (exclui `cortada`; marca a `feita` sem volume, que é dívida do status aproximado). Read-only. |
+| `--bloco {MFC,PED,CIR,GO,CM}` | Filtro do `--progresso`/`--pendentes`: bloco de peso UERJ, **derivado** de `area` (não é coluna). |
+| `--semana N` | Filtro do `--progresso`/`--pendentes`: semana do **plano**. |
+| `--json` | Saída do `--progresso` ou do `--pendentes` em JSON. |
+
+🔴 **O backfill nunca chuta.** O casamento é por normalização (casefold + sem acento, a mesma
+`plano.normalizar`) e **substring exata do tema** dentro da observação, delimitada por fronteira de
+palavra -- sem fuzzy, sem stemming, sem "melhor candidata". A s183 mediu 54/735 nomes divergentes
+entre as fontes: fuzzy compraria falso vínculo em tema homônimo (Pneumonias na Infância x Pneumonias
+Bacterianas). **2+ candidatas = ambígua**, fica `NULL` e sai na lista para o humano decidir com
+`registrar_sessao_bulk.py --vincular ID --tarefa ID`. Sessão de `area='Simulado'` é **termômetro**:
+não entra no casamento e é reportada à parte. Tema bundlado ("A; B") é casado inteiro, nunca por
+partes -- limite declarado, não maquiado.
+
+`feitas`/`acertos` são **sempre** derivados de `sessoes_bulk` (SSOT volumétrica, `AGENTE.md §6`);
+`plano_tarefas` não carrega contagem própria, e o vínculo **não conclui** tarefa nenhuma (concluir é
+`plano.py --concluir`). Os dois modos de leitura fecham com o delta contra o **orçamento da Fase 1**
+(2.760 questões, semanas 1-7, `history/session_183.md §3`), medido sempre sobre o plano **inteiro** e
+nunca sobre o recorte dos filtros; o `--progresso` reporta ainda o volume que ficou **sem lista**,
+para que nenhuma questão suma do relatório.
+
+Escrita só por `app/utils/db.py` (`vincular_sessao_tarefa`, o único writer de `sessoes_bulk.tarefa_id`)
+-- o CLI não abre `sqlite3` próprio e não tem escrita própria; leitura por `plano_listar` e
+`sessoes_bulk_listar`. Spec `.vibeflow/specs/plano-ssot-e-cards-v2-part-6.md`.
+
+### `tools/fsrs_optimize.py` -- parâmetros pessoais do FSRS (R1, **read-only**)
+
+| Flag | Função |
+|---|---|
+| `--write` | Grava `core/fsrs_params.json`. **Nunca** escreve no `ipub.db` (conexão `mode=ro`). |
+| `--dry-run` | **(default)** imprime sem gravar; vence `--write` se os dois vierem juntos. |
+| `--holdout F` | Fração final do revlog reservada para a métrica de hold-out (default `0.2`). |
+| `--duracao-ms N` | `review_duration` sintético em ms (default `16500`): o schema não grava duração e o `compute_optimal_retention` a exige. |
+| `--leech` | **R7:** painel de leech (cards com `lapses >= N` + distribuição de `difficulty`) **x2** -- contagem crua e sob o remap. Não roda o Optimizer. |
+| `--limiar-lapsos N` | Limiar de lapsos do painel `--leech` (default `3`). |
+
+Roda o `Optimizer` do py-fsrs sobre **duas visões do mesmo revlog**: **cru** (notas como
+gravadas) e **remap** (`2 -> 1`, `3 -> 2`, `4 -> 3`, derivado da régua literal do passo 4 do
+`/revisar`). O remap existe porque a perda do Optimizer é binária Again x não-Again
+(`optimizer.py:86`) e a nota 2 do MedHub -- "recall parcial sem o alvo" -- entraria como acerto
+(**F112**). 🔴 O remap acontece **só na entrada do Optimizer**: o `fsrs_revlog` é imutável e o
+mapa aplicado viaja como `metadata` no JSON. Parâmetros e retenção ótima são **REPORTADOS,
+nunca adotados** -- `app/utils/fsrs.py` não lê o arquivo; adotar é o item **R2** da fila e é
+decisão do operador.

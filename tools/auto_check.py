@@ -144,6 +144,15 @@ _TERMOS_SEMENTE = {
     # F39 (cadastrado em 11/09/2026, no mesmo commit da lapide em estilo-flashcard.md)
     "NÃO vira marca sozinho": "estilo-flashcard, redacao s177 -- F39: `--ingerir` abre marca em "
                               "lote; marca ABERTA e candidato, e quem ENCERRA continua sendo gente",
+    # plano-ssot-e-cards-v2 Parte 4 (cadastrados em 17/09/2026, no mesmo commit em que o
+    # `cronograma-contract` foi a v1.3, o `reconcile-contract` a v1.4 e a skill /cronograma
+    # ganhou a lapide do `--sync-drive`). Os tres passos de AGENTE §10.10 num commit so.
+    "Drive desatualizado": "cronograma-contract v1.3 (s185) -- Parte 4: a conclusao vem de "
+                           "`plano_tarefas`, nao do snapshot do xlsx",
+    "conclusao_desatualizada": "reconcile-contract v1.4 (s185) -- W8 revogada: a fronteira do "
+                               "cronograma virou coluna do plano",
+    "dois sinais, dois donos": "cronograma-contract v1.3 (s185) -- Clausula 5b revogada: "
+                               "conclusao e ordem viraram colunas de `plano_tarefas`",
 }
 # Portadores da norma. O contrato NAO basta: o agente que executa le o command.
 # Prescricao ativa sobrevivente num deles torna a lapide do contrato decorativa
@@ -615,13 +624,18 @@ def main():
 
     # 5. Invariante de posicao SSOT (op-3 -- PRD orquestracao part-1). WARN, não bloqueia:
     #    mesma janela de relevância do ponteiro (HANDOFF no diff ou --all).
+    #    ⚰️ Fonte trocada em 17/09/2026 (plano-ssot-e-cards-v2 Parte 4): o oráculo era
+    #    `preparacao_estado.semana_conteudo` e passou a ser `plano_tarefas` -- a chave
+    #    antiga deixou de governar o boot, e comparar com fonte morta é WARN vazio.
     if pointer_relevant:
         pdrift = check_posicao_drift()
         desc_posicao = "Invariante de posição SSOT (POSICAO_DRIFT)"
         if pdrift:
-            print(f"\n[WARN] POSICAO_DRIFT: HANDOFF cita S{pdrift[0]}, mas a posição SSOT "
-                  f"(preparacao_estado) é S{pdrift[1]}. Corrigir o texto ou atualizar via "
-                  f"tools/preparacao.py --set-semana.")
+            print(f"\n[WARN] POSICAO_DRIFT: HANDOFF cita plano semana {pdrift[0]}, mas a "
+                  f"semana corrente do plano (menor semana_plano com pendência em "
+                  f"plano_tarefas) é {pdrift[1]}. Regerar a linha com "
+                  f"`python tools/day_plan.py --handoff-block` ou mover as tarefas "
+                  f"(`python tools/plano.py --mover ID --semana N`).")
         # success=True: WARN não rebaixa o veredito (não altera all_passed).
         results_summary.append((desc_posicao, True, 1 if pdrift else 0))
         _ledger_record("posicao_ssot",

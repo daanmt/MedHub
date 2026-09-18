@@ -109,6 +109,28 @@ def test_registro_de_termos_nao_esta_vazio():
     assert _TERMOS_REVOGADOS, "registro vazio = gate que nunca dispara"
 
 
+#: Termos cadastrados pela Parte 4 do PRD `plano-ssot-e-cards-v2` (17/09/2026), no
+#: mesmo commit que (1) declarou a revogacao nos contratos `cronograma` v1.3 e
+#: `reconcile` v1.4 e (2) lapidou o `--sync-drive` em `.claude/commands/cronograma.md`.
+#: Este teste e o passo (3) com dentes: sem ele, pular o cadastro volta a ser o F90.
+TERMOS_PARTE_4 = ("Drive desatualizado", "conclusao_desatualizada", "dois sinais, dois donos")
+
+
+@pytest.mark.parametrize("termo", TERMOS_PARTE_4)
+def test_termo_da_parte_4_esta_cadastrado(termo):
+    """O gate so ve o que alguem cadastrou. Cadastro real = marcador
+    `<!-- TERMO-REVOGADO: ... -->` no §12 do `docs/MEMORIA-AUDITORIA.md`; a semente do
+    `auto_check` e fallback declarado. O teste exige o marcador E o registro efetivo --
+    passar so pela semente significaria que o ledger nao foi alimentado."""
+    assert termo in _TERMOS_REVOGADOS, (
+        f"termo revogado {termo!r} fora do registro: o gate CONTRATO_REVOGADO fica cego "
+        f"para a reintroducao dele (F90). Cadastrar em docs/MEMORIA-AUDITORIA.md §12.")
+    mem = (ROOT / "docs" / "MEMORIA-AUDITORIA.md").read_text(encoding="utf-8")
+    assert f"<!-- TERMO-REVOGADO: {termo} |" in mem, (
+        f"termo {termo!r} so existe na semente do auto_check -- o cadastro tem de morar "
+        f"junto da decisao (§12 do inventario), que e o (ii') do F90.")
+
+
 @pytest.mark.parametrize("tipo", ["prescricao", "versao"])
 def test_repo_sem_clausula_revogada_em_vigor(tipo):
     """🔴 O TESTE QUE NASCEU VERMELHO.

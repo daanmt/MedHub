@@ -1,18 +1,24 @@
-"""Suite da persistencia do plano do dia (spec telemetria-estudo-part-1).
+"""Suite do plano do dia: persistencia (telemetria-estudo-part-1) + o bloco de
+cronograma derivado de `plano_tarefas` (plano-ssot-e-cards-v2 Parte 4).
 
 Cobre: persistencia dos blocos com flags do run, idempotencia por dia
 (delete+insert substitui, nunca acumula), leitura ordenada (ler_plano),
 schema sem coluna de texto clinico e resiliencia (db indisponivel -> WARN,
-plano segue). Fixtures 100%% sinteticas: labels/ids fake, zero conteudo real.
+plano segue). Parte 4: semana corrente = menor `semana_plano` com pendencia, as
+proximas tarefas em ordem com fonte/tipo/q/url, a linha `Posicao:` do
+`--handoff-block` e o SILENCIO com tabela vazia (regra dos irmaos F1/POSICAO/B1).
+Fixtures 100%% sinteticas: labels/ids fake, zero conteudo real.
 
 Executavel standalone (python tools/test_plano_dia.py) e coletavel pelo pytest.
 """
 import sqlite3
 import sys
+from datetime import date
 
 import pytest
 
 import app.utils.db as db
+from tools import day_plan
 from tools.day_plan import ler_plano, persistir_plano
 
 COLS_PERMITIDAS = {"id", "data", "ordem", "task_tipo", "alvo_tema",
@@ -100,6 +106,167 @@ def test_falha_de_db_warn_e_nao_lanca(monkeypatch, capsys):
     finally:
         pass
     assert "PLANO_DIA" in capsys.readouterr().out
+
+
+# --------------------------------------------------------------------------
+# Parte 4 -- o bloco de cronograma sai de `plano_tarefas`, nao do calendario.
+# --------------------------------------------------------------------------
+
+def _tarefa(n, **kw):
+    """Linha sintetica de `plano_tarefas`. Area sempre do vocabulario canonico
+    (o writer valida por `validar_area` -- area fantasma derruba o lote)."""
+    base = {"fonte": "extensivo", "ref_semana_fonte": 40, "tarefa_fonte": n,
+            "semana_plano": 1, "ordem": n, "area": "Preventiva",
+            "tema": "Tema %d" % n, "tipo": "Teoria I", "tipo_norm": "teoria",
+            "url_lista": None, "q_previstas": 10, "status": "pendente"}
+    base.update(kw)
+    return base
+
+
+def _semear(linhas):
+    db.plano_upsert_tarefas(linhas, aplicar=True)
+
+
+def _p_render(cron, pendencia=None):
+    """`p` minimo para `day_plan.render` -- so o que o bloco de cronograma usa."""
+    return {"data": "2026-09-17", "dormant": {"empty": True},
+            "volume": {"total": 1, "acertos": 1, "hoje": 0, "mes": 0, "alvo_enamed": 2,
+                       "faltam": 1, "dias_ate_marco": 1, "ritmo_alvo": 1.0, "marco": "m"},
+            "fsrs": {"atrasados": 0, "hoje": 0, "backlog_novos": 0},
+            "divida": {"atrasados": 0, "vencidos": 0, "regime_divida": False,
+                       "teto_base": 60, "teto_efetivo": 60},
+            "cronograma": cron,
+            "planilha": {"estado": "nao_medido", "acao": "-", "db_total": 0},
+            "plano_pendencia": pendencia or [], "sugestao_passo": "x"}
+
+
+def test_semana_corrente_e_a_menor_com_pendencia(tmp_db):
+    """Nao e a semana do calendario nem a menor da tabela: e a menor com PENDENCIA.
+    Semana 1 fechada -> a corrente passa a ser a 2 (Technical Decision da spec)."""
+    _semear([
+        _tarefa(1, semana_plano=1, status="feita"),
+        _tarefa(2, semana_plano=1, status="cortada"),
+        _tarefa(3, semana_plano=2, status="pendente", q_previstas=30),
+        _tarefa(4, semana_plano=2, status="feita", q_previstas=12),
+        _tarefa(5, semana_plano=3, status="pendente", q_previstas=99),
+    ])
+    c = day_plan._cronograma_hoje(0, date.today())
+    assert c["semana"] == 2, "menor semana_plano com pendente (got %s)" % c["semana"]
+    assert c["fase"] == 1, "semanas 1-7 sao Fase 1"
+    assert (c["feitas_semana"], c["tarefas_semana"]) == (1, 2), \
+        "X/Y conta a semana SEM as cortadas (got %s/%s)" % (c["feitas_semana"],
+                                                            c["tarefas_semana"])
+    assert c["previstas"] == 42, "q previstas da semana (got %s)" % c["previstas"]
+    assert c["restante_q"] == 129, "restante = q de TODAS as pendentes, nao so da semana"
+
+
+def test_proximas_tarefas_em_ordem_com_os_campos_do_dod(tmp_db):
+    _semear([
+        _tarefa(1, ordem=2, tema="Segundo"),
+        _tarefa(2, ordem=1, tema="Primeiro", fonte="rf", ref_semana_fonte=17,
+                tipo="Revisao por Questoes", q_previstas=51,
+                url_lista="https://exemplo/lista"),
+        _tarefa(3, ordem=3, tema="Feito", status="feita"),
+        _tarefa(4, ordem=4, tema="Terceiro"),
+    ])
+    c = day_plan._cronograma_hoje(0, date.today())
+    temas = [t["tema"] for t in c["proximas"]]
+    assert temas == ["Primeiro", "Segundo", "Terceiro"], \
+        "ordem do plano, sem as feitas (got %s)" % temas
+    p0 = c["proximas"][0]
+    assert (p0["fonte"], p0["tipo"], p0["q_previstas"], p0["url_lista"]) == (
+        "rf", "Revisao por Questoes", 51, "https://exemplo/lista"), \
+        "campos do DoD 1 (got %s)" % p0
+    assert len(c["proximas"]) <= day_plan.PROXIMAS_TAREFAS, "teto de 3-5 tarefas"
+    render = day_plan.render(_p_render(c))
+    assert "Cronograma:** plano **semana 1**" in render, "DoD 1: a linha sai do plano"
+    assert "https://exemplo/lista" in render and "51q" in render, "url + q no render"
+    assert "Drive desatualizado" not in render, "DoD 1: o banner do Drive morreu"
+
+
+def test_fronteira_de_fase_nao_diverge_de_plano_py():
+    """A fronteira Fase 1 / Fase 2 mora em UM lugar so: `plano.semana_fase2(21)` e a
+    primeira semana da Fase 2 por construcao, e `day_plan` nao pode digitar outra."""
+    import plano as pl
+    assert day_plan.PRIMEIRA_SEMANA_FASE2 == pl.semana_fase2(21)
+    assert day_plan._fase_do_plano(pl.semana_fase2(21) - 1) == 1
+    assert day_plan._fase_do_plano(pl.semana_fase2(21)) == 2
+    assert day_plan._fase_do_plano(None) is None
+
+
+def test_handoff_block_reporta_posicao_do_plano(tmp_db):
+    _semear([_tarefa(1, status="feita"), _tarefa(2), _tarefa(3)])
+    c = day_plan._cronograma_hoje(0, date.today())
+    p = {"volume": {"total": 10, "acertos": 8, "hoje": 0, "alvo_enamed": 100,
+                    "faltam": 90, "dias_ate_marco": 30, "ritmo_alvo": 3.0, "marco": "m"},
+         "fsrs": {"atrasados": 0, "hoje": 0, "backlog_novos": 0},
+         "divida": {"atrasados": 0, "vencidos": 0, "teto_efetivo": 60, "teto_base": 60,
+                    "regime_divida": False},
+         "cronograma": c}
+    linhas = [l for l in day_plan.render_handoff_block(p).splitlines()
+              if l.startswith("- **Posicao:**")]
+    assert linhas, "o bloco do HANDOFF continua declarando a posicao"
+    esperado = ("- **Posicao:** plano semana 1 (fase 1) · 1/3 tarefas da "
+                "semana feitas")
+    assert linhas[0].startswith(esperado), "formato do DoD 1 (got %r)" % linhas[0]
+    assert "nominal S" not in linhas[0], "a posicao nominal por calendario morreu"
+
+
+def test_tabela_vazia_silencia_em_vez_de_inventar(tmp_db):
+    """Regra dos irmaos F1/POSICAO/B1: plano nao semeado NAO produz bloco, NAO
+    produz linha de pendencia e NAO derruba o plano do dia."""
+    assert day_plan._cronograma_hoje(0, date.today()) is None, "tabela ausente -> None"
+    assert day_plan._plano_pendencia() == [], "tabela ausente -> zero pendencia"
+    _semear([_tarefa(1, status="feita")])      # semeada, mas sem NENHUMA pendencia
+    c = day_plan._cronograma_hoje(0, date.today())
+    assert c is not None and c["semana"] is None, "sem pendencia -> semana desconhecida"
+    assert c["proximas"] == [] and c["pendentes_total"] == 0
+    assert day_plan._plano_pendencia() == [], "origem NULL nao e pendencia de revisao"
+    assert "Status do plano por conferir" not in day_plan.render(_p_render(c))
+
+
+def test_pendencia_de_revisao_sai_enquanto_houver_origem_aproximada(tmp_db):
+    """DoD 3: UMA linha enquanto restar `dashboard_2026-09-10`; silencio ao zerar."""
+    _semear([
+        _tarefa(1, status="feita", origem_conclusao=db.ORIGEM_APROXIMADA),
+        _tarefa(2, status="pendente", origem_conclusao=db.ORIGEM_USUARIO),
+    ])
+    pend = day_plan._plano_pendencia()
+    assert [(x["area"], x["aproximadas"]) for x in pend] == [("Preventiva", 1)], \
+        "conta por area (got %s)" % pend
+    com = day_plan.render(_p_render(None, pend)).splitlines()
+    linhas = [l for l in com if "Status do plano por conferir" in l]
+    assert len(linhas) == 1, "UMA linha, nunca um bloco (got %d)" % len(linhas)
+    assert db.ORIGEM_APROXIMADA in linhas[0] and "--revisar-area" in linhas[0], \
+        "a linha nomeia a origem e o comando corretivo"
+    assert "Status do plano por conferir" not in day_plan.render(_p_render(None, []))
+
+
+def test_calendario_e_snapshot_do_drive_sairam_do_codigo():
+    """DoD 2: as funcoes do ramo calendario/Drive foram REMOVIDAS, nao comentadas,
+    e nenhuma suite volta a tratar o snapshot do Drive como fonte VIVA.
+
+    O oraculo do codigo e a CHAMADA (`get_preparacao(...)`), nao a mencao: a lapide
+    do modulo cita a chave morta de proposito -- narrar a revogacao e o registro
+    correto (mesma regra de isencao do gate CONTRATO_REVOGADO)."""
+    import inspect
+    from pathlib import Path
+    for morto in ("_conclusao_drive", "_ordenar_por_drive",
+                  "_resolver_semana_conteudo", "_semana_conteudo"):
+        assert not hasattr(day_plan, morto), "%s deveria ter sido removido" % morto
+    fonte = inspect.getsource(day_plan)
+    for chamada in ('get_preparacao("cronograma_conclusao_drive")',
+                    "get_preparacao('cronograma_conclusao_drive')"):
+        assert chamada not in fonte, "day_plan voltou a ler o snapshot: %s" % chamada
+    culpadas = []
+    for suite in sorted(Path(day_plan.__file__).parent.glob("test_*.py")):
+        if suite.name == Path(__file__).name:
+            continue                      # esta suite DECLARA o invariante
+        for linha in suite.read_text(encoding="utf-8").splitlines():
+            if "cronograma_conclusao_drive" in linha and not linha.strip().startswith("#"):
+                culpadas.append("%s: %s" % (suite.name, linha.strip()[:70]))
+    assert culpadas == [], \
+        "DoD 2: suite tratando o snapshot do Drive como fonte viva: %s" % culpadas
 
 
 if __name__ == "__main__":

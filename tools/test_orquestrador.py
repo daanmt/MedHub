@@ -4,13 +4,12 @@ Fixtures DETERMINISTICAS sobre a funcao pura recomendar_dia() + queries novas de
 db (db temp) + paridade contrato<->CLI. Pytest-nativo (coleta direta); standalone:
 python tools/test_orquestrador.py. Nada aqui toca o ipub.db real.
 """
-import json
 import os
 import re
 import sqlite3
 import sys
 import tempfile
-from datetime import date, timedelta
+from datetime import date
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -286,119 +285,15 @@ def test_parse_conclusao_xlsx_rejeita_estrutura_invalida():
         os.remove(path)
 
 
-def test_conclusao_drive_ausente():
-    tmp = _db_temp_minimo()
-    orig = db.DB_PATH
-    db.DB_PATH = tmp
-    try:
-        drive = dp._conclusao_drive()
-        assert drive["by_task"] is None and drive["fresco"] is False, "sem snapshot gravado -> ausente"
-        assert drive["ordem_by_task"] == {} and drive["atualizado_em"] is None
-    finally:
-        db.DB_PATH = orig
-        os.remove(tmp)
-
-
-def test_conclusao_drive_desatualizada_cai_no_fallback():
-    tmp = _db_temp_minimo()
-    orig = db.DB_PATH
-    db.DB_PATH = tmp
-    try:
-        snap = {"gerado_em": "2026-07-07T10:00:00",
-                "tasks": [{"semana": 12, "tarefa": 1, "concluido": True}]}
-        db.set_preparacao("cronograma_conclusao_drive", json.dumps(snap), fonte="drive_sync")
-        ontem = (date.today() - timedelta(days=1)).isoformat() + "T10:00:00"
-        con = sqlite3.connect(tmp)
-        con.execute("UPDATE preparacao_estado SET atualizado_em = ? WHERE chave = ?",
-                    (ontem, "cronograma_conclusao_drive"))
-        con.commit()
-        con.close()
-        drive = dp._conclusao_drive()
-        assert drive["fresco"] is False, "snapshot de ontem -> nao fresco (fallback pro calendario)"
-        assert drive["by_task"] == {(12, 1): True}, "mapa ainda retorna (so a flag de frescor muda)"
-    finally:
-        db.DB_PATH = orig
-        os.remove(tmp)
-
-
-def test_conclusao_drive_fresca():
-    tmp = _db_temp_minimo()
-    orig = db.DB_PATH
-    db.DB_PATH = tmp
-    try:
-        snap = {"gerado_em": "now", "tasks": [
-            {"semana": 12, "tarefa": 1, "concluido": True},
-            {"semana": 12, "tarefa": 2, "concluido": False}]}
-        db.set_preparacao("cronograma_conclusao_drive", json.dumps(snap), fonte="drive_sync")
-        drive = dp._conclusao_drive()
-        assert drive["fresco"] is True, "snapshot de hoje -> fresco"
-        assert drive["by_task"] == {(12, 1): True, (12, 2): False}
-        assert drive["ordem_by_task"] == {}, "snapshot antigo sem 'ordem' -> mapa vazio (fallback PDF)"
-    finally:
-        db.DB_PATH = orig
-        os.remove(tmp)
-
-
-def test_cronograma_hoje_filtra_por_conclusao_fresca():
-    """DoD 2/3: com snapshot fresco, task concluida some de 'temas'; snapshot velho
-    cai no comportamento antigo (semana inteira) + sinaliza conclusao_desatualizada."""
-    tmp = _db_temp_minimo()
-    orig = db.DB_PATH
-    db.DB_PATH = tmp
-    grade = {"_meta": {}, "semanas": [{
-        "semana": 12, "inicio": "2026-06-15", "fim": "2026-06-21",
-        "total_questoes": 100, "n_tasks": 2,
-        "tasks": [
-            {"tarefa": 1, "area_norm": "Preventiva", "tema": "Tema Feito",
-             "tipo_norm": "teoria", "material_indicado": "resumo"},
-            {"tarefa": 2, "area_norm": "Preventiva", "tema": "Tema Pendente",
-             "tipo_norm": "teoria", "material_indicado": "resumo"},
-        ],
-    }]}
-
-    class _FakeCr:
-        ENAMED = cr.ENAMED
-
-        @staticmethod
-        def load_grade():
-            return grade
-
-        @staticmethod
-        def semana_corrente(g, hoje):
-            return 12
-
-        @staticmethod
-        def get_semana(g, n):
-            return g["semanas"][0] if n == 12 else None
-
-    orig_mod = sys.modules.get("cronograma")
-    sys.modules["cronograma"] = _FakeCr
-    try:
-        db.set_preparacao("semana_conteudo", 12, fonte="operador")
-        snap = {"gerado_em": "now", "tasks": [{"semana": 12, "tarefa": 1, "concluido": True}]}
-        db.set_preparacao("cronograma_conclusao_drive", json.dumps(snap), fonte="drive_sync")
-        hoje = date.today()
-        c = dp._cronograma_hoje(0, hoje)
-        assert c["conclusao_desatualizada"] is False, "snapshot de hoje -> nao desatualizado"
-        assert c["temas"] == ["Tema Pendente"], f"tema feito deve sumir (got {c['temas']})"
-
-        ontem = (hoje - timedelta(days=1)).isoformat() + "T10:00:00"
-        con = sqlite3.connect(tmp)
-        con.execute("UPDATE preparacao_estado SET atualizado_em = ? WHERE chave = ?",
-                    (ontem, "cronograma_conclusao_drive"))
-        con.commit()
-        con.close()
-        c2 = dp._cronograma_hoje(0, hoje)
-        assert c2["conclusao_desatualizada"] is True, "snapshot velho -> sinaliza desatualizado"
-        assert set(c2["temas"]) == {"Tema Feito", "Tema Pendente"}, \
-            f"fallback lista a semana inteira sem filtro (got {c2['temas']})"
-    finally:
-        if orig_mod is not None:
-            sys.modules["cronograma"] = orig_mod
-        else:
-            sys.modules.pop("cronograma", None)
-        db.DB_PATH = orig
-        os.remove(tmp)
+# ⚰️ **Os quatro testes do snapshot do Drive sairam em 17/09/2026**
+# (`plano-ssot-e-cards-v2` Parte 4): `day_plan._conclusao_drive`,
+# `_ordenar_por_drive` e o ramo calendario de `_cronograma_hoje` foram REMOVIDOS --
+# a conclusao e a ordem passaram a vir de `plano_tarefas`, e nenhum teste da suite
+# le `preparacao_estado.cronograma_conclusao_drive` como fonte VIVA. Os testes do
+# parser (`diff_drive`, `_parse_conclusao_xlsx`, `_norm_tema_xlsx`) FICAM: o codigo
+# do `cronograma.py --sync-drive` segue vivo ate a Parte 8, e suite verde sobre
+# codigo vivo nao se apaga junto com o consumidor. A cobertura do novo bloco de
+# cronograma vive em `tools/test_plano_dia.py`.
 
 
 if __name__ == "__main__":
@@ -409,9 +304,7 @@ if __name__ == "__main__":
            test_render_inclui_recomendacao, test_get_ritmo_real_janela,
            test_get_fresh_error_cards,
            test_norm_tema_xlsx_ignora_acentos_e_quebras, test_diff_drive_matching_por_semana_tema_tipo,
-           test_diff_drive_sem_match_fica_pendente, test_parse_conclusao_xlsx_rejeita_estrutura_invalida,
-           test_conclusao_drive_ausente, test_conclusao_drive_desatualizada_cai_no_fallback,
-           test_conclusao_drive_fresca, test_cronograma_hoje_filtra_por_conclusao_fresca]
+           test_diff_drive_sem_match_fica_pendente, test_parse_conclusao_xlsx_rejeita_estrutura_invalida]
     falhas = 0
     for fn in fns:
         try:

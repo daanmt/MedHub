@@ -168,7 +168,20 @@ def check_needs_qualitative(db_path=None):
 
 
 def check_posicao_drift(handoff_path=None, db_path=None):
-    """Invariante POSICAO_DRIFT: semana do HANDOFF nao pode divergir da SSOT do db."""
+    """Invariante POSICAO_DRIFT: a semana citada no HANDOFF nao pode divergir do plano.
+
+    ⚰️ **A fonte mudou em 17/09/2026** (PRD `plano-ssot-e-cards-v2`, Parte 4). Ate
+    aqui o oraculo era `preparacao_estado.semana_conteudo` -- a semana de CONTEUDO
+    do calendario da Reta Final, gravada por `preparacao.py --set-semana`. Essa
+    posicao deixou de governar o boot: o `day_plan` nao a le mais, e a semana que o
+    `--handoff-block` imprime e a do PLANO (`plano semana N`, menor `semana_plano`
+    com pendencia em `plano_tarefas`). Comparar com a chave antiga era comparar o
+    HANDOFF novo com uma fonte morta -- WARN garantido e sem informacao.
+
+    Retorna `(semana_handoff, semana_plano)` no drift, `None` no silencio. 🔴 Tabela
+    ausente, vazia ou sem pendencia com semana => `None`: linha de WARN sobre plano
+    que nao existe e o falso-positivo que os irmaos F1/POSICAO/B1 ja pagaram.
+    """
     handoff = Path(handoff_path) if handoff_path else ROOT_DIR / "HANDOFF.md"
     dbp = Path(db_path) if db_path else ROOT_DIR / "ipub.db"
     if not handoff.exists() or not dbp.exists():
@@ -178,36 +191,36 @@ def check_posicao_drift(handoff_path=None, db_path=None):
         import sqlite3
         con = sqlite3.connect(str(dbp))
         row = con.execute(
-            "SELECT valor FROM preparacao_estado WHERE chave='semana_conteudo'"
+            "SELECT MIN(semana_plano) FROM plano_tarefas "
+            "WHERE status = 'pendente' AND semana_plano IS NOT NULL"
         ).fetchone()
     except Exception:
-        return None
+        return None            # tabela inexistente / db ilegivel: silencio
     finally:
         if con is not None:
             con.close()
-    if not row:
-        return None
+    if not row or row[0] is None:
+        return None            # plano vazio ou 100% fechado: nada a comparar
     try:
-        semana_db = int(row[0])
+        semana_plano = int(row[0])
     except (TypeError, ValueError):
         return None
     try:
         text = handoff.read_text(encoding="utf-8")
     except Exception:
         return None
+    # So a linha GERADA pelo `day_plan --handoff-block` e oraculo (F6: numero
+    # derivado). Prosa do corpo cita semana por mil motivos e nao e ponteiro.
     mencoes = []
     for line in text.splitlines():
         s = line.strip()
         if s.startswith("- **Posicao:**"):
-            mencoes += [int(n) for n in re.findall(r"conteudo\s+S(\d{1,2})\b", s)]
-        elif s.startswith("*Atualizado") or (
-                s.startswith("#") and re.search(r"pr[oó]ximo passo", s, re.IGNORECASE)):
-            mencoes += [int(n) for n in re.findall(r"\bS(\d{1,2})\b", s)]
+            mencoes += [int(n) for n in re.findall(r"plano\s+semana\s+(\d{1,3})\b", s)]
     if not mencoes:
         return None
-    divergentes = [m for m in mencoes if m != semana_db]
+    divergentes = [m for m in mencoes if m != semana_plano]
     if divergentes:
-        return (divergentes[0], semana_db)
+        return (divergentes[0], semana_plano)
     return None
 
 

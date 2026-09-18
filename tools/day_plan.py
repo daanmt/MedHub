@@ -1,8 +1,21 @@
 """day_plan.py — Plano do Dia para o boot proativo.
 
 Compõe: tema dormente do dia, volume vs ritmo-alvo (ENAMED), fila FSRS
-(vencidos + backlog), dica do cronograma e uma sugestão de passo imediato.
+(vencidos + backlog), a próxima tarefa do PLANO e uma sugestão de passo imediato.
 O boot (AGENTE §2 passo 4) roda isto e lidera com o plano.
+
+⚰️ **O ramo CALENDÁRIO do bloco de cronograma morreu em 17/09/2026** (PRD
+`plano-ssot-e-cards-v2`, Parte 4; `cronograma-contract` v1.3). Até aqui
+`_cronograma_hoje` respondia "o que vem agora" com TRÊS fontes que nunca
+conversaram: `grade.json` (calendário do PDF da Reta Final), o snapshot do Drive
+em `preparacao_estado.cronograma_conclusao_drive` (`_conclusao_drive`, lido por
+`cronograma.py --sync-drive`) e a ordem manual do xlsx (`_ordenar_por_drive`).
+Nenhuma delas era verdade-de-estado: o snapshot envelhecia em silêncio (banner de
+42 dias no boot real de 06/09) e a ordem que o usuário reordenava à mão nunca
+chegava ao agente. Agora a fonte é UMA -- `plano_tarefas` (`tools/plano.py`), a
+mesma tabela que `--concluir`/`--cortar`/`--mover` editam. As três funções foram
+REMOVIDAS, não comentadas; o código do `--sync-drive` segue vivo em
+`tools/cronograma.py` (remoção = Parte 8, com o congelamento do Drive).
 
 Escritas (únicas, ambas de metadado de processo): a condição declarada do dia
 (condicao_dia via db.registrar_condicao_dia) e o PLANO recomendado do dia
@@ -226,69 +239,6 @@ def _cronograma_hint():
     return lm.group(1).strip() if lm else None
 
 
-def _semana_conteudo():
-    """Ponteiro de semana de CONTEÚDO (HANDOFF > ESTADO). Marca canônica: 'Próxima = SNN'.
-    O usuário segue por conteúdo, atrás do calendário nominal — este é o ponteiro textual
-    permitido pelo contrato (ultraplan §d.2). None se ausente."""
-    for fn in ("HANDOFF.md", "ESTADO.md"):
-        try:
-            txt = open(os.path.join(ROOT, fn), encoding="utf-8").read()
-        except Exception:
-            continue
-        m = re.search(r"Pr[óo]xima\s*=\s*(?:Semana\s*)?S?\s*(\d+)", txt)
-        if m:
-            return int(m.group(1))
-    return None
-
-
-def _resolver_semana_conteudo():
-    """Posição SSOT db-first (PRD orquestracao part-1): preparacao_estado > texto
-    (deprecado, WARN em stderr) > None. Retorna (semana|None, fonte) com fonte em
-    {'db', 'texto', None}. O WARN vai a stderr para não poluir stdout/--json."""
-    try:
-        s = db.get_semana_conteudo()
-    except Exception:
-        s = None
-    if s is not None:
-        return s, "db"
-    s = _semana_conteudo()
-    if s is not None:
-        print("[WARN] POSICAO_VIA_TEXTO (deprecado): semana de conteudo lida por regex "
-              "de HANDOFF/ESTADO. Registre a posicao SSOT com: "
-              "python tools/preparacao.py --set-semana %d" % s, file=sys.stderr)
-        return s, "texto"
-    return None, None
-
-
-def _conclusao_drive():
-    """Snapshot de conclusão real + ordem do xlsx do Drive (preparacao_estado.cronograma_conclusao_drive,
-    gravado por `python tools/cronograma.py --sync-drive`). Read-only, sem MCP aqui — day_plan
-    só consome o que o agente já sincronizou no boot. Retorna dict:
-    by_task = {(semana, tarefa): concluido} ou None se ausente/corrompido;
-    ordem_by_task = {(semana, tarefa): ordem_xlsx} (vazio se snapshot antigo sem 'ordem' -> fallback PDF);
-    fresco = True só se atualizado_em é do dia-calendário corrente (W8/reconcile-contract);
-    atualizado_em = 'YYYY-MM-DD' da última sync ou None."""
-    vazio = {"by_task": None, "ordem_by_task": {}, "fresco": False, "atualizado_em": None}
-    try:
-        item = db.get_preparacao("cronograma_conclusao_drive")
-    except Exception:
-        return vazio
-    if not item:
-        return vazio
-    try:
-        snap = json.loads(item["valor"])
-        tasks = snap.get("tasks", [])
-        by_task = {(t["semana"], t["tarefa"]): t["concluido"] for t in tasks}
-        ordem_by_task = {(t["semana"], t["tarefa"]): t["ordem"] for t in tasks
-                         if t.get("ordem") is not None}
-    except Exception:
-        return vazio
-    data_sync = (item.get("atualizado_em") or "")[:10] or None
-    fresco = data_sync == date.today().isoformat()
-    return {"by_task": by_task, "ordem_by_task": ordem_by_task,
-            "fresco": fresco, "atualizado_em": data_sync}
-
-
 def _dias_desde(iso, hoje):
     try:
         return (hoje - date.fromisoformat(str(iso)[:10])).days
@@ -434,94 +384,103 @@ def render_planilha(r):
     return "\n".join(linhas)
 
 
-def _ordenar_por_drive(tasks, ordem_by_task, semana):
-    """Ordena as tasks da semana pela ordem real do xlsx do Drive (ordem_by_task).
-    Estável: tasks sem ordem conhecida vão para o fim, preservando a ordem do
-    grade.json (PDF). Sem ordem_by_task -> identidade (fallback PDF puro, DoD 3)."""
-    if not ordem_by_task:
-        return tasks
-    return sorted(tasks, key=lambda t: ordem_by_task.get((semana, t["tarefa"]), 10 ** 6))
+#: Quantas tarefas pendentes o boot lista por vez (DoD 1 da Parte 4: 3-5).
+PROXIMAS_TAREFAS = 5
+
+#: Primeira semana da FASE 2 do plano (`plano_tarefas.semana_plano`). A fronteira
+#: nao e digitada duas vezes: por construcao ela e `plano.semana_fase2(21)` -- a
+#: Fase 2 comeca no extensivo S21 -- e `tools/test_plano_dia.py` trava as duas
+#: contra divergencia silenciosa. Fase 1 = semanas 1-7 (16/09 -> 01/11, UERJ).
+PRIMEIRA_SEMANA_FASE2 = 8
+
+
+def _fase_do_plano(semana):
+    """Semana do plano -> fase (1 | 2). `None` quando a semana e desconhecida."""
+    if semana is None:
+        return None
+    try:
+        return 1 if int(semana) < PRIMEIRA_SEMANA_FASE2 else 2
+    except (TypeError, ValueError):
+        return None
+
+
+def _q_prevista(linha):
+    """`q_previstas` como inteiro tolerante (a coluna e REAL e aceita NULL)."""
+    try:
+        return int(round(float(linha.get("q_previstas") or 0)))
+    except (TypeError, ValueError):
+        return 0
+
+
+def _plano_pendencia():
+    """Pendência da revisão de status por área (`db.plano_pendencia_revisao`, Parte 3).
+
+    Devolve SEMPRE uma lista -- vazia quando a passada zerou, quando a tabela está
+    vazia e quando o leitor falha. O boot silencia nos três casos: linha de
+    pendência com tabela vazia seria falso-positivo, o defeito que os irmãos
+    F1/POSICAO/B1 já pagaram.
+    """
+    try:
+        return db.plano_pendencia_revisao() or []
+    except Exception as e:
+        _warn_degradacao("plano_pendencia_revisao", e)
+        return []
 
 
 def _cronograma_hoje(total_q, hoje):
-    """Substitui _cronograma_hint: lê a grade (cronograma.py) e cruza com a posição real.
-    Read-only. Retorna None se a grade não existir (degradação graciosa → fallback hint)."""
+    """Bloco de cronograma do Plano do Dia, derivado de `plano_tarefas` (o SSOT).
+
+    Read-only. Semana corrente = **menor `semana_plano` com pendencia**, nunca a
+    data: estar atrasado vira "a semana 3 ainda tem 4 tarefas", que e informacao
+    de gestao (mesmo espirito do `cronograma-contract`: plano nao e
+    verdade-de-estado, e por isso nao ha projecao por calendario aqui).
+
+    Tabela ausente ou vazia -> `None` (degradacao graciosa: o plano do dia sai sem
+    o bloco, jamais com um bloco inventado -- regra dos irmaos F1/POSICAO/B1).
+    """
     try:
-        import cronograma as cr
-        grade = cr.load_grade()
-    except Exception:
+        linhas = db.plano_listar()
+    except Exception as e:
+        _warn_degradacao("plano_tarefas", e)
         return None
-    nominal = cr.semana_corrente(grade, hoje)
-    conteudo, fonte_pos = _resolver_semana_conteudo()
-    if conteudo is None:
-        conteudo, fonte_pos = nominal, "nominal"
-    wk = cr.get_semana(grade, conteudo)
-    if not wk:
-        return None
-    enamed = datetime.strptime(cr.ENAMED, "%Y-%m-%d").date()
-    dias = (enamed - hoje).days  # dias de estudo: hoje inclusive, dia da prova exclusivo
-    restante = sum(s["total_questoes"] for s in grade["semanas"] if s["semana"] >= conteudo)
+    if not linhas:
+        return None      # plano nao semeado: silencio, nunca bloco fabricado
+    pendentes = [l for l in linhas if l.get("status") == "pendente"]
+    semanas = sorted({l["semana_plano"] for l in pendentes
+                      if l.get("semana_plano") is not None})
+    semana = semanas[0] if semanas else None
+    da_semana = [l for l in linhas if l.get("semana_plano") == semana] if semana else []
+    vivas = [l for l in da_semana if l.get("status") != "cortada"]
 
-    # s126 -- BUG corrigido: ritmo_cronograma dividia a grade INTEIRA pelos dias até o ENAMED,
-    # misturando duas escalas de tempo. A grade tem calendário próprio e fecha ~6 semanas DEPOIS
-    # da prova (S30 termina 25/10), então o divisor certo é o fim da grade, não a data do ENAMED.
-    # Era isso que produzia o ritmo-alvo fictício de ~116q/dia.
-    # s159: o fim da grade e o fim do CONTEUDO, nao o fim do calendario do PDF.
-    # A leitura do xlsx do Drive (F36, adendo 4) mostrou que a planilha real do
-    # usuario tem 28 semanas, a ultima "05/10 a 09/10". O grade.json, derivado do
-    # Cronograma.pdf, tem 30 -- as S29/S30 (12/10-25/10) NAO existem na planilha e
-    # ja tinham 0 questoes. Usar max(fim) esticava a grade em 2 semanas e diluia
-    # o ritmo-alvo: a mesma familia do bug corrigido na s126 (divisor errado),
-    # so que na outra ponta. O divisor certo e a ultima semana COM conteudo.
-    semanas_com_conteudo = [s for s in grade["semanas"] if (s.get("total_questoes") or 0) > 0]
-    fim_grade = max((s.get("fim") or "") for s in (semanas_com_conteudo or grade["semanas"]))
+    proximas = [{
+        "id": l.get("id"), "fonte": l.get("fonte"), "area": l.get("area"),
+        "tema": l.get("tema"), "tipo": l.get("tipo"), "tipo_norm": l.get("tipo_norm"),
+        "q_previstas": _q_prevista(l), "url_lista": l.get("url_lista"),
+        "semana_plano": l.get("semana_plano"),
+    } for l in pendentes[:PROXIMAS_TAREFAS]]
 
-    # s159 (2a correcao do divisor): `fim_grade` continua sendo reportado -- e o
-    # fim do CALENDARIO do curso, fato derivado da grade. Mas o divisor do RITMO
-    # passa a ser `FIM_CONTEUDO_ALVO` (performance.py), que e a data-alvo de
-    # planejamento para terminar o conteudo. Motivo: fechar dentro do calendario
-    # do EMED nao tem consequencia -- 09/10 e o fim do curso, nao um prazo. A
-    # pergunta com consequencia e "cubro o conteudo antes da prova?".
-    # 🔴 A fronteira da s126 continua valendo: isto NAO le core/provas.json nem o
-    # countdown. Le uma constante de planejamento nomeada, do mesmo lugar de onde
-    # ja saem os marcos -- que e o que torna a decisao auditavel.
+    restante = sum(_q_prevista(l) for l in pendentes)
+    # s159/s174: o divisor do ritmo continua sendo FIM_CONTEUDO_ALVO -- data-alvo
+    # DECLARADA de planejamento (performance.py), auditavel, nunca um countdown de
+    # display. A fronteira da s126 segue valendo aqui dentro.
     try:
         dias_grade = (FIM_CONTEUDO_ALVO - hoje).days
     except (TypeError, AttributeError):
-        dias_grade = dias
+        dias_grade = 1
     dias_grade = max(dias_grade, 1)
 
-    # W8: fronteira REAL de conclusão (xlsx riscado) em vez de só posição calendário.
-    # Sem snapshot fresco -> degradação graciosa pro comportamento antigo (lista a semana
-    # inteira) + sinaliza conclusao_desatualizada pro render() avisar (nunca falha silente).
-    drive = _conclusao_drive()
-    conclusao_by_task = drive["by_task"]
-    tasks_semana = wk["tasks"]
-    conclusao_desatualizada = True
-    if conclusao_by_task is not None and drive["fresco"]:
-        conclusao_desatualizada = False
-        tasks_semana = [t for t in wk["tasks"]
-                        if not conclusao_by_task.get((wk["semana"], t["tarefa"]), False)]
-        # ordena pela ordem real do xlsx (o usuário reordena à mão); fallback = ordem do PDF
-        tasks_semana = _ordenar_por_drive(tasks_semana, drive["ordem_by_task"], wk["semana"])
-    drive_data = drive["atualizado_em"]
-    drive_dias = (hoje - date.fromisoformat(drive_data)).days if drive_data else None
-
     return {
-        "conteudo": conteudo,
-        "nominal": nominal,
-        "posicao_fonte": fonte_pos,
-        "lag": (nominal - conteudo) if (nominal and conteudo and nominal > conteudo) else None,
-        "previstas": wk["total_questoes"],
-        "n_tasks": wk["n_tasks"],
-        "temas": [t["tema"] for t in tasks_semana if t.get("tema")][:3],
-        "temas_material": [f"{t['tema']} ({_material_efetivo(t['tema'], t.get('material_indicado', 'resumo'))})" for t in tasks_semana if t.get("tema")][:3],
-        "conclusao_desatualizada": conclusao_desatualizada,
-        "drive_sync_data": drive_data,
-        "drive_sync_dias": drive_dias,
-        "dias_enamed": dias,
+        "semana": semana,
+        "fase": _fase_do_plano(semana),
+        "tarefas_semana": len(vivas),
+        "feitas_semana": sum(1 for l in vivas if l.get("status") == "feita"),
+        "pendentes_semana": sum(1 for l in vivas if l.get("status") == "pendente"),
+        "previstas": sum(_q_prevista(l) for l in vivas),
+        "sem_semana": sum(1 for l in pendentes if l.get("semana_plano") is None),
+        "proximas": proximas,
+        "temas": [t["tema"] for t in proximas if t.get("tema")][:3],
+        "pendentes_total": len(pendentes),
         "dias_grade": dias_grade,
-        "fim_grade": fim_grade or None,
         "fim_conteudo_alvo": FIM_CONTEUDO_ALVO.isoformat(),
         "restante_q": restante,
         "ritmo_cronograma": round(restante / dias_grade, 1),
@@ -927,15 +886,20 @@ def build(tempo_h=None, energia=None):
     except Exception:
         frescos = []
     sinais = {
-        "dias_enamed": (cron or {}).get("dias_enamed") or dias,
-        "dias_grade": (cron or {}).get("dias_grade") or dias,
+        # Parte 4: `dias_enamed` saiu (era lido do cronograma.py e o fallback `dias`
+        # sequer existia neste escopo -- NameError latente quando `cron` era None).
+        # O divisor do recomendador continua sendo `dias_grade`, que agora nasce do
+        # alvo declarado FIM_CONTEUDO_ALVO, nunca de uma data de prova.
+        "dias_grade": (cron or {}).get("dias_grade") or 1,
         "restante_grade_q": (cron or {}).get("restante_q") or 0,
         "ritmo_real": ritmo_real,
         "vencidos": vencidos,
         "teto_efetivo": _teto_efetivo(vencidos),
         "backlog_novos": fsrs["backlog_novos"],
-        "semana_conteudo": (cron or {}).get("conteudo"),
-        "lag": (cron or {}).get("lag"),
+        # R3 (simulado periodico) le esta chave. O NOME e do `orquestracao-contract`
+        # (§R3); a FONTE mudou na Parte 4 -- era a semana de calendario/
+        # `preparacao_estado`, agora e a semana do PLANO (`plano_tarefas`).
+        "semana_conteudo": (cron or {}).get("semana"),
         "tema_alvo": tema_alvo,
         "frescos_tema_alvo": frescos,
     }
@@ -961,6 +925,10 @@ def build(tempo_h=None, energia=None):
             "consumo_hoje": consumo_hoje,              # F64 (c): teto sem saldo obriga conta a mao
         },
         "cronograma": cron,
+        # Parte 3 -> Parte 4: quanto ainda falta da passada de revisão de status por
+        # área. Lista VAZIA quando zerou E quando a tabela nem existe -- o boot
+        # silencia nos dois casos (nunca falso-positivo com tabela vazia).
+        "plano_pendencia": _plano_pendencia(),
         "planilha": reconcile_planilha(hoje),    # W1 reporta, nunca bloqueia (B3/F35)
         "cronograma_hint": _cronograma_hint(),   # fallback se a grade não existir
         "diagnostico": _diagnostico(),           # variância/zona + habilidades (s126)
@@ -1087,13 +1055,11 @@ def render_handoff_block(p):
     except Exception:
         pass  # bloco derivado degrada em silencio aqui; o [WARN] do plano cobre a classe
     c = p.get("cronograma")
-    if c:
-        lag_txt = f", atraso {c['lag']} sem" if c.get("lag") else ""
-        fonte = c.get("posicao_fonte")
-        origem = "preparacao_estado" if fonte == "db" else (fonte or "?")
+    if c and c.get("semana"):
         linhas.append(
-            f"- **Posicao:** conteudo S{c['conteudo']} (nominal S{c['nominal']}{lag_txt}) "
-            f"[derivado: {origem}]")
+            f"- **Posicao:** plano semana {c['semana']} (fase {c.get('fase') or '?'}) "
+            f"· {c.get('feitas_semana', 0)}/{c.get('tarefas_semana', 0)} tarefas da semana "
+            f"feitas [derivado: plano_tarefas]")
     return "\n".join(linhas)
 
 
@@ -1134,36 +1100,46 @@ def render(p):
                f"(atrasados + hoje){saldo}")
     c = p.get("cronograma")
     if c:
-        lag = f" · calendário em S{c['nominal']} (~{c['lag']} sem atrás)" if c.get("lag") else ""
-        fonte_pos = c.get("posicao_fonte")
-        if fonte_pos == "nominal":
-            aviso_pos = (" · ⚠️ posição ASSUMIDA pelo calendário — registre: "
-                         "preparacao.py --set-semana N")
-        elif fonte_pos == "texto":
-            aviso_pos = " · ⚠️ posição via texto (deprecado)"
+        # Parte 4: a fonte do "o que vem agora" é `plano_tarefas`, não o calendário
+        # do PDF nem o snapshot do xlsx. Semana corrente = menor `semana_plano` com
+        # pendência -- sem projeção por data (plano não é verdade-de-estado).
+        if c.get("semana"):
+            out.append(f"- 🧭 **Cronograma:** plano **semana {c['semana']}** "
+                       f"(fase {c.get('fase') or '?'}) · "
+                       f"{c.get('feitas_semana', 0)}/{c.get('tarefas_semana', 0)} tarefas feitas "
+                       f"· {c.get('previstas', 0)}q previstas na semana")
         else:
-            aviso_pos = ""
-        out.append(f"- 🧭 **Cronograma:** conteúdo **S{c['conteudo']}** · {c['previstas']}q previstas "
-                   f"· {c['n_tasks']} tasks{lag}{aviso_pos}")
-        # Banner de frescor do Drive (Part 1 -- disparo forçado): o snapshot carrega conclusão
-        # real E ordem das tarefas; velho => os "próximos temas" podem vir fora de ordem ou já
-        # feitos. Nunca silencioso -- o sync vira ação obrigatória do boot (AGENTE §2 passo 4).
-        if c.get("conclusao_desatualizada"):
-            nd = c.get("drive_sync_dias")
-            quando = f"{nd}d atrás" if nd is not None else "nunca sincronizado"
-            out.append(f"    • ⚠️ **Drive desatualizado ({quando})** -- rodar `python tools/"
-                       f"cronograma.py --sync-drive <xlsx>` antes de confiar na lista abaixo "
-                       f"(pode conter temas já feitos ou fora da ordem real)")
-        else:
-            out.append(f"    • Drive sincronizado: {c.get('drive_sync_data') or '—'}")
-        if c["temas"]:
-            out.append(f"    • próximos temas: {', '.join(c.get('temas_material', c['temas']))}")
-        out.append(f"    • ritmos-alvo: cobrir o conteúdo ~{c['ritmo_cronograma']}/dia "
-                   f"(alvo {c.get('fim_conteudo_alvo') or '?'}; calendário do curso fecha "
-                   f"{c.get('fim_grade') or '?'}) · 2o ciclo {META_CICLO // 1000}k "
-                   f"~{c['ritmo_meta']}/dia · ENAMED em {c['dias_enamed']}d (sem alvo de volume)")
+            out.append(f"- 🧭 **Cronograma:** plano sem semana atribuída — "
+                       f"{c.get('pendentes_total', 0)} tarefa(s) pendente(s) fora de semana "
+                       f"(`python tools/plano.py --mover ID --semana N`)")
+        for i, t in enumerate(c.get("proximas") or [], 1):
+            qtd = f" · {t['q_previstas']}q" if t.get("q_previstas") else ""
+            url = f" · {t['url_lista']}" if t.get("url_lista") else ""
+            sem = (f" [S{t['semana_plano']}]"
+                   if t.get("semana_plano") and t["semana_plano"] != c.get("semana") else "")
+            out.append(f"    {i}. [{t.get('fonte') or '?'}]{sem} {t.get('tema') or '(sem tema)'}"
+                       f" ({t.get('tipo') or '?'}{qtd}){url}")
+        if c.get("sem_semana"):
+            out.append(f"    • {c['sem_semana']} tarefa(s) pendente(s) SEM semana do plano "
+                       f"(`python tools/plano.py --listar --status pendente`)")
+        out.append(f"    • ritmos-alvo: cobrir o plano ~{c['ritmo_cronograma']}/dia "
+                   f"({c.get('restante_q', 0)}q pendentes até "
+                   f"{c.get('fim_conteudo_alvo') or '?'}) · 2o ciclo {META_CICLO // 1000}k "
+                   f"~{c['ritmo_meta']}/dia")
     elif p.get("cronograma_hint"):
         out.append(f"- 🧭 **Cronograma:** {p['cronograma_hint'][:120]}")
+    # Pendência da revisão de status por área (Parte 3). UMA linha enquanto houver
+    # tarefa com origem aproximada; SILÊNCIO quando zerar -- e também quando a
+    # tabela está vazia, que é o falso-positivo que os irmãos F1/POSICAO/B1 pagaram.
+    pend = p.get("plano_pendencia") or []
+    if pend:
+        n = sum(a.get("aproximadas", 0) for a in pend)
+        amostra = "; ".join(f"{a['area']} {a['aproximadas']}/{a['total']}" for a in pend[:4])
+        resto = len(pend) - 4
+        out.append(f"- 📋 **Status do plano por conferir:** {n} tarefa(s) ainda com origem "
+                   f"`{db.ORIGEM_APROXIMADA}` em {len(pend)} área(s) — {amostra}"
+                   f"{f'; +{resto} área(s)' if resto > 0 else ''} "
+                   f"(`python tools/plano.py --revisar-area AREA`)")
     # W1 do reconcile (B3/F35): a linha sai SEMPRE, inclusive como NAO MEDIDO.
     out.append(render_planilha(p.get("planilha") or reconcile_planilha()))
     d = p.get("diagnostico")

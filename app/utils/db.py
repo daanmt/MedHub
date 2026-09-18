@@ -348,6 +348,51 @@ def get_due_cards_count():
     conn.close()
     return count
 
+def get_retencao_revlog(dias=7, agora_=None):
+    """Retenção medida das revisões dos últimos `dias` (read-only, part-7).
+
+    Retenção = fração das revisões que **não** foram lapso. E aqui mora uma
+    armadilha que o F112 já cobrou uma vez: "lapso" é `Again`, e saber se uma
+    nota é `Again` **depende da régua sob a qual ela foi dada**. Sob a régua v1
+    a nota 2 significava "recall parcial, sem o alvo" -- falha de recuperação --
+    e contá-la como acerto infla a retenção exatamente como inflava o
+    agendamento. Por isso cada linha passa por `regua.nota_nativa`, com a versão
+    gravada na própria linha; nunca por um limiar fixo em `rating`.
+
+    Devolve `{dias, revisoes, acertos, lapsos, retencao, por_regua}`.
+    `retencao` é `None` quando não houve revisão na janela -- nunca 0.0, que
+    seria lido como "errou tudo".
+    """
+    from app.utils.regua import nota_nativa, regua_da_linha
+    agora_ = agora_ or agora()
+    corte = (agora_ - pd.Timedelta(days=int(dias))).strftime("%Y-%m-%d %H:%M:%S")
+    conn = get_connection()
+    try:
+        tem_regua = any(r[1] == "regua_versao"
+                        for r in conn.execute("PRAGMA table_info(fsrs_revlog)"))
+        col = "regua_versao" if tem_regua else "NULL"
+        rows = conn.execute(
+            f"SELECT rating, {col} FROM fsrs_revlog "
+            "WHERE review_time >= ? AND rating BETWEEN 1 AND 4", (corte,)).fetchall()
+    except sqlite3.OperationalError:
+        rows = []            # tabela ausente: leitura não a cria
+    finally:
+        conn.close()
+    acertos = lapsos = 0
+    por_regua = {}
+    for rating, gravada in rows:
+        v = regua_da_linha(gravada)
+        por_regua[v] = por_regua.get(v, 0) + 1
+        if nota_nativa(rating, v) == 1:
+            lapsos += 1
+        else:
+            acertos += 1
+    n = acertos + lapsos
+    return {"dias": int(dias), "revisoes": n, "acertos": acertos, "lapsos": lapsos,
+            "retencao": (round(acertos / n, 3) if n else None),
+            "por_regua": {str(k): por_regua[k] for k in sorted(por_regua)}}
+
+
 def get_caderno_detalhado(area=None):
     """Caderno de erros detalhado para a página de consulta (read-only).
 

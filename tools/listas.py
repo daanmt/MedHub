@@ -287,7 +287,7 @@ def _cabecalho_tabela():
     print("  " + "-" * 100)
 
 
-def progresso(bloco=None, semana=None, como_json=False):
+def progresso(bloco=None, semana=None, como_json=False, out=print):
     """Listas FEITAS (ao menos uma sessao vinculada), por tarefa, com totais por bloco
     UERJ e o delta do orcamento da Fase 1. Read-only."""
     sessoes = db.sessoes_bulk_listar()
@@ -302,41 +302,41 @@ def progresso(bloco=None, semana=None, como_json=False):
                "orcamento_fase1": _orcamento_fase1(todas),
                "sem_vinculo": {"sessoes": len(soltas), "questoes": vol_solto}}
     if como_json:
-        print(json.dumps(payload, ensure_ascii=False, indent=2, default=str))
+        out(json.dumps(payload, ensure_ascii=False, indent=2, default=str))
         return 0, payload
 
-    print()
-    print("=" * 74)
-    print("  Listas FEITAS -- progresso por tarefa do plano")
-    print("=" * 74)
+    out()
+    out("=" * 74)
+    out("  Listas FEITAS -- progresso por tarefa do plano")
+    out("=" * 74)
     if not filtradas:
-        print("  Nenhuma tarefa com sessao vinculada neste recorte "
+        out("  Nenhuma tarefa com sessao vinculada neste recorte "
               "(rode `--backfill --dry-run`).")
     else:
         _cabecalho_tabela()
         for l in filtradas:
-            print(_linha_tarefa(l))
-        print()
-        print("  Totais por bloco UERJ:")
+            out(_linha_tarefa(l))
+        out()
+        out("  Totais por bloco UERJ:")
         for b in BLOCOS:
             t = payload["blocos"].get(b)
             if not t:
                 continue
             pct = "%.1f%%" % t["pct"] if t["pct"] is not None else "--"
-            print("    %-4s %3d lista(s) | previstas %6.0f | feitas %5d | acertos %5d | %s"
+            out("    %-4s %3d lista(s) | previstas %6.0f | feitas %5d | acertos %5d | %s"
                   % (b, t["tarefas"], t["q_previstas"], t["feitas"], t["acertos"], pct))
     o = payload["orcamento_fase1"]
-    print()
-    print("  Orcamento Fase 1 (semanas 1-%d, history/session_183.md secao 3): "
+    out()
+    out("  Orcamento Fase 1 (semanas 1-%d, history/session_183.md secao 3): "
           "%d previstas | %d feitas (%.1f%%) | faltam %d"
           % (SEMANAS_FASE1, o["orcamento"], o["feitas"], o["pct"], o["falta"]))
-    print("  Volume SEM lista (termometros + nao casadas): %d sessao(oes) / %d questoes"
+    out("  Volume SEM lista (termometros + nao casadas): %d sessao(oes) / %d questoes"
           % (len(soltas), vol_solto))
-    print()
+    out()
     return 0, payload
 
 
-def pendentes(bloco=None, semana=None, como_json=False):
+def pendentes(bloco=None, semana=None, como_json=False, out=print):
     """Listas previstas e ainda sem nenhuma sessao vinculada. Read-only.
 
     `status='cortada'` fica de fora (saiu do plano por decisao do usuario) e `feita`
@@ -353,41 +353,41 @@ def pendentes(bloco=None, semana=None, como_json=False):
                "orcamento_fase1": _orcamento_fase1(todas),
                "feitas_sem_volume": [l["id"] for l in linhas if l["status"] == "feita"]}
     if como_json:
-        print(json.dumps(payload, ensure_ascii=False, indent=2, default=str))
+        out(json.dumps(payload, ensure_ascii=False, indent=2, default=str))
         return 0, payload
 
-    print()
-    print("=" * 74)
-    print("  Listas PREVISTAS sem sessao vinculada")
-    print("=" * 74)
+    out()
+    out("=" * 74)
+    out("  Listas PREVISTAS sem sessao vinculada")
+    out("=" * 74)
     if not linhas:
-        print("  Nenhuma: toda tarefa do recorte tem volume vinculado.")
-        print()
+        out("  Nenhuma: toda tarefa do recorte tem volume vinculado.")
+        out()
         return 0, payload
     _cabecalho_tabela()
     for l in linhas:
-        print(_linha_tarefa(l))
-    print()
-    print("  Totais por bloco UERJ:")
+        out(_linha_tarefa(l))
+    out()
+    out("  Totais por bloco UERJ:")
     for b in BLOCOS:
         t = payload["blocos"].get(b)
         if not t:
             continue
-        print("    %-4s %3d lista(s) | previstas %6.0f questoes" % (b, t["tarefas"],
+        out("    %-4s %3d lista(s) | previstas %6.0f questoes" % (b, t["tarefas"],
                                                                     t["q_previstas"]))
     o = payload["orcamento_fase1"]
-    print()
-    print("  Orcamento Fase 1 (semanas 1-%d, history/session_183.md secao 3): "
+    out()
+    out("  Orcamento Fase 1 (semanas 1-%d, history/session_183.md secao 3): "
           "%d previstas | %d feitas (%.1f%%) | faltam %d"
           % (SEMANAS_FASE1, o["orcamento"], o["feitas"], o["pct"], o["falta"]))
     marcadas = payload["feitas_sem_volume"]
     if marcadas:
-        print()
-        print("  🔴 %d tarefa(s) com status='feita' e ZERO volume vinculado "
+        out()
+        out("  🔴 %d tarefa(s) com status='feita' e ZERO volume vinculado "
               "(divida do status aproximado): %s" % (
                   len(marcadas), ", ".join("#%d" % i for i in marcadas[:12])
                   + (", ..." if len(marcadas) > 12 else "")))
-    print()
+    out()
     return 0, payload
 
 

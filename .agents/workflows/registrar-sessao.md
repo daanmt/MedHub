@@ -63,3 +63,19 @@ Fallback manual (se o hook falhar):
 python -m app.memory.manager <NNN>
 ```
 Onde `<NNN>` é o número da sessão recém-registrada (e.g., `048`).
+
+### 6. Regenerar e republicar o painel (part-7)
+
+O painel substitui as 20 tabelas do Dashboard do Drive como visão de progresso -- ele só vale se for
+regenerado no fechamento, senão vira número que envelhece.
+
+```powershell
+python tools/painel.py --html          # grava artifacts/painel.html
+```
+
+Depois, **publicar na MESMA URL** (passar `url` no publish, nunca republicar sem ela -- sem `url`
+nasce um artifact novo e o link fixado do operador aponta para a versão velha). A URL fixa e
+**https://claude.ai/artifact/QctZqVoJriSviJetF8FYBQ** e vive tambem na linha de Datas & links do `HANDOFF.md`. O operador fixa a página **uma vez**; daí em diante é sempre
+atualização no mesmo endereço.
+
+O CLI **não** fala com a API de Artifact -- publicar é ato do agente, não do script.

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Painel MedHub</title>
+<style>
+:root{
+  --papel:#f6f4f0; --card:#ffffff; --afundado:#edeae4;
+  --tinta:#191817; --tinta2:#54504a; --tinta3:#8b857b;
+  --linha:#e0dbd2; --acento:#0e6b5c; --acento-fraco:#d9ece7;
+  --alerta:#a2412a; --alerta-fraco:#f6e4de;
+  --wrap:64rem; --raio:14px;
+  --sombra:0 1px 2px rgba(0,0,0,.05), 0 10px 30px rgba(0,0,0,.06);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --papel:#131519; --card:#1b1e24; --afundado:#23272f;
+    --tinta:#edeff3; --tinta2:#b4bac4; --tinta3:#7e8794;
+    --linha:#2d323b; --acento:#4fd0b3; --acento-fraco:#123630;
+    --alerta:#f0917a; --alerta-fraco:#3a221c;
+    --sombra:0 1px 2px rgba(0,0,0,.45), 0 10px 30px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  --papel:#131519; --card:#1b1e24; --afundado:#23272f;
+  --tinta:#edeff3; --tinta2:#b4bac4; --tinta3:#7e8794;
+  --linha:#2d323b; --acento:#4fd0b3; --acento-fraco:#123630;
+  --alerta:#f0917a; --alerta-fraco:#3a221c;
+  --sombra:0 1px 2px rgba(0,0,0,.45), 0 10px 30px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--papel); color:var(--tinta);
+  font-family:ui-sans-serif,system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  font-size:clamp(15px,.95rem + .2vw,17px); line-height:1.55; overflow-wrap:break-word;
+}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:24px 16px 72px}
+h1{font-size:clamp(1.2rem,1rem + .8vw,1.6rem);margin:0;letter-spacing:-.01em}
+h2{font-size:1.02rem;margin:0 0 14px;letter-spacing:-.005em}
+p{margin:0}
+a{color:var(--acento)}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.86em}
+.topo{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:baseline;justify-content:space-between;margin-bottom:22px}
+.sub{color:var(--tinta3);font-size:.84em}
+.bloco{background:var(--card);border:1px solid var(--linha);border-radius:var(--raio);
+       box-shadow:var(--sombra);padding:20px 18px;margin-bottom:18px}
+.fonte{color:var(--tinta3);font-size:.74em;margin-top:14px;border-top:1px solid var(--linha);padding-top:10px}
+.metro{color:var(--tinta2);font-size:.86em;margin-top:12px}
+.tenue{color:var(--tinta3)}
+.tag{display:inline-block;font-size:.68em;letter-spacing:.06em;text-transform:uppercase;
+     color:var(--alerta);background:var(--alerta-fraco);border-radius:99px;padding:2px 8px;margin-left:6px}
+.metros{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.m{background:var(--afundado);border-radius:10px;padding:12px 14px}
+.m b{display:block;font-size:1.35em;font-variant-numeric:tabular-nums;line-height:1.2}
+.m span{font-size:.76em;color:var(--tinta3)}
+table{width:100%;border-collapse:collapse;font-size:.88em;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--linha)}
+thead th{font-size:.74em;letter-spacing:.06em;text-transform:uppercase;color:var(--tinta3);font-weight:600}
+tbody th{font-weight:650}
+ul{margin:10px 0 0;padding-left:20px}
+li{margin-bottom:6px}
+.barra{height:6px;background:var(--afundado);border-radius:99px;margin-top:8px;overflow:hidden}
+.barra i{display:block;height:100%;background:var(--acento)}
+.aviso{border-left:3px solid var(--alerta);background:var(--alerta-fraco);
+       padding:10px 12px;border-radius:8px;margin-top:14px;font-size:.84em}
+footer{color:var(--tinta3);font-size:.76em;margin-top:26px;border-top:1px solid var(--linha);padding-top:14px}
+@media (max-width:460px){
+  .bloco{padding:16px 13px}
+  th,td{padding:7px 6px}
+  table{font-size:.8em}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="topo">
+    <div>
+      <h1>Painel MedHub</h1>
+      <p class="sub">gerado em 2026-09-18T12:20:47 &middot; semana 1 do plano</p>
+    </div>
+    <p class="sub">pagina gerada por <code>tools/painel.py --html</code> &middot; read-only</p>
+  </header>
+<section class="bloco" data-bloco="plano">
+  <h2>Progresso por bloco</h2>
+<table><thead><tr><th>bloco</th><th>tarefas feitas</th><th>pendentes</th><th>cortadas</th><th>questoes feitas / previstas</th><th>do previsto</th><th>acerto</th></tr></thead><tbody><tr><th scope="row">CIR</th><td>22/102</td><td>79</td><td>1</td><td>856 / 1883</td><td>45.5%</td><td>79.3%</td></tr><tr><th scope="row">CM</th><td>66/410</td><td>268</td><td>76</td><td>2564 / 7207</td><td>35.6%</td><td>77.4%</td></tr><tr><th scope="row">GO</th><td>32/151</td><td>117</td><td>2</td><td>1114 / 2873</td><td>38.8%</td><td>80.3%</td></tr><tr><th scope="row">MFC</th><td>24/115</td><td>80</td><td>11</td><td>904 / 1931</td><td>46.8%</td><td>85.8%</td></tr><tr><th scope="row">PED</th><td>29/118</td><td>88</td><td>1</td><td>872 / 2291</td><td>38.1%</td><td>84.5%</td></tr><tr><th scope="row">Simulado <span class="tenue">fora dos blocos</span></th><td>--</td><td>--</td><td>--</td><td>931 / --</td><td>--</td><td>71.0%</td></tr></tbody></table>
+<p class="metro">Orcamento Fase 1 (semanas 1-7): <b>0</b> de 2760 questoes <b>vinculadas a tarefa</b> (0.0%)</p><div class="barra"><i style="width:0.0%"></i></div>
+<p class="aviso"><b>Duas camadas, e elas medem coisas diferentes.</b> o volume acima vem de `sessoes_bulk` por AREA (cobre tudo). O elo por TAREFA (`tarefa_id`, part-6) cobre 0 sessao(oes): o backfill casa 1 de 126 de forma inequivoca, entao a coluna `q_feitas_por_elo` e granularidade fina com cobertura parcial -- declarada, nao escondida.</p>
+<p class="metro tenue">Areas sem bloco no plano (ficam fora da tabela, nunca somadas a palpite): GO (85q).</p>
+<p class="fonte">[plano] tools/listas.py --progresso · [db] plano_tarefas</p>
+</section>
+<section class="bloco" data-bloco="semana">
+  <h2>Listas da semana</h2>
+<p class="metro">Semana <b>1</b> &middot; 14 tarefas &middot; 369 questoes previstas</p><ul><li><b>#1</b> Medicina de Família e Comunidade <span class="tenue">MFC &middot; revisao</span> -- 50 q previstas &middot; <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/939313f4-8c62-426d-899b-317270c8f3c4/?per_page=20" rel="noopener noreferrer">lista</a></li><li><b>#2</b> Saúde do Idoso <span class="tenue">MFC &middot; teoria</span> -- 0 q previstas &middot; <span class="tenue">sem lista</span></li><li><b>#3</b> Saúde do Idoso <span class="tenue">MFC &middot; revisao</span> -- 32 q previstas &middot; <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/5e89c2cb-3ac4-4607-aef9-0c7a3d533ec8/?per_page=20" rel="noopener noreferrer">lista</a></li><li><b>#4</b> Processo Saúde-Doença | Medicina de Família e Comunidade | Saúde do Idoso <span class="tenue">MFC &middot; revisao_questoes</span> -- 41 q previstas &middot; <span class="tenue">sem lista</span></li><li><b>#8</b> Cirurgia Vascular <span class="tenue">CIR &middot; revisao</span> -- 43 q previstas &middot; <span class="tenue">sem lista</span></li><li><b>#9</b> Vitalidade Fetal <span class="tenue">GO &middot; teoria</span> -- 25 q previstas &middot; <span class="tenue">sem lista</span></li><li><b>#13</b> Pneumonias na Infância <span class="tenue">PED &middot; teoria</span> -- 24 q previstas &middot; <span class="tenue">sem lista</span></li><li><b>#14</b> Sangramento Uterino Anormal <span class="tenue">GO &middot; revisao</span> -- 42 q previstas &middot; <span class="tenue">sem lista</span></li><li><b>#15</b> Vitalidade Fetal <span class="tenue">GO &middot; revisao</span> -- 36 q previstas &middot; <span class="tenue">sem lista</span></li><li><b>#22</b> Pré-Natal; Assistência ao Parto; Vitalidade Fetal <span class="tenue">GO &middot; revisao_questoes</span> -- 36 q previstas &middot; <span class="tenue">sem lista</span></li><li><b>#875</b> Prevencao Quaternaria e sobrediagnostico <span class="tenue">MFC &middot; teoria</span> -- 0 q previstas &middot; <span class="tenue">sem lista</span></li><li><b>#876</b> Avaliacao Multidimensional do Idoso <span class="tenue">MFC &middot; teoria</span> -- 0 q previstas &middot; <span class="tenue">sem lista</span></li><li><b>#882</b> RAPS (Rede de Atencao Psicossocial) e saude mental na APS <span class="tenue">MFC &middot; teoria</span> -- 20 q previstas &middot; <span class="tenue">sem lista</span></li><li><b>#890</b> UERJ 2026 bloco MFC (Q81-100) <span class="tenue">MFC &middot; revisao_questoes</span> -- 20 q previstas &middot; <span class="tenue" title="caminho local, nao navegavel aqui">simulados/uerj/uerj_ad_2026_prova.pdf</span></li></ul>
+<p class="fonte">[plano] tools/listas.py --pendentes --semana N</p>
+</section>
+<section class="bloco" data-bloco="fsrs">
+  <h2>Cards (FSRS)</h2>
+<div class="metros"><div class="m"><b>106</b><span>vencidos (75 atrasados + 31 hoje)</span></div><div class="m"><b>90</b><span>teto do dia <span class="tag">REGIME DE DIVIDA</span></span></div><div class="m"><b>685</b><span>pool nunca introduzidos</span></div><div class="m"><b>75.3%</b><span>retencao 7d (304 revisoes, 75 lapsos)</span></div></div><p class="metro">Retencao medida pela regua de cada linha (<code>regua_versao</code>): nota 2 dada sob a regua v1 e LAPSO, sob a v2 e acerto. Revisoes por regua: v1: 304.</p>
+<p class="fonte">[db] day_plan._fsrs_counts · db.get_retencao_revlog · app/utils/regua</p>
+</section>
+<section class="bloco" data-bloco="projecao">
+  <h2>Volume, custo e projecao</h2>
+<div class="metros"><div class="m"><b>7326</b><span>questoes acumuladas</span></div><div class="m"><b>79.1%</b><span>acerto acumulado</span></div><div class="m"><b>R$ 0.52/q <span class="tenue">(meta R$ 0.35)</span></b><span>custo por questao</span></div></div><table><thead><tr><th>marco</th><th>data</th><th>faltam</th><th>questoes</th><th>ritmo-alvo</th></tr></thead><tbody><tr><th scope="row">UERJ/MFC (prova 01/11)</th><td>2026-11-01</td><td>44 d</td><td>3074</td><td>69.9 q/dia</td></tr><tr><th scope="row">Ciclo 2026</th><td>2026-12-31</td><td>104 d</td><td>5174</td><td>49.8 q/dia</td></tr></tbody></table><p class="aviso"><b>ENAMED 2027 sem projecao.</b> sem ancora: ENAMED 2027 nao esta em `core/provas.json` nem em `performance.MARCOS`. Cadastre a data para o painel projetar em vez de adivinhar.</p>
+<p class="fonte">[performance] volume_vs_marco · METAS_MENSAIS · [db] sessoes_bulk</p>
+</section>
+<section class="bloco" data-bloco="proximas">
+  <h2>Proximas 7 tarefas</h2>
+<table><thead><tr><th>id</th><th>sem</th><th>bloco</th><th>tema</th><th>q prev</th><th>lista</th></tr></thead><tbody><tr><td>#875</td><td>S1</td><td>MFC</td><td>Prevencao Quaternaria e sobrediagnostico</td><td>0</td><td><span class="tenue">--</span></td></tr><tr><td>#876</td><td>S1</td><td>MFC</td><td>Avaliacao Multidimensional do Idoso</td><td>0</td><td><span class="tenue">--</span></td></tr><tr><td>#1</td><td>S1</td><td>MFC</td><td>Medicina de Família e Comunidade</td><td>50</td><td><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/939313f4-8c62-426d-899b-317270c8f3c4/?per_page=20" rel="noopener noreferrer">lista</a></td></tr><tr><td>#2</td><td>S1</td><td>MFC</td><td>Saúde do Idoso</td><td>0</td><td><span class="tenue">--</span></td></tr><tr><td>#3</td><td>S1</td><td>MFC</td><td>Saúde do Idoso</td><td>32</td><td><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/5e89c2cb-3ac4-4607-aef9-0c7a3d533ec8/?per_page=20" rel="noopener noreferrer">lista</a></td></tr><tr><td>#4</td><td>S1</td><td>MFC</td><td>Processo Saúde-Doença | Medicina de Família e Comunidade | Saúde do Idoso</td><td>41</td><td><span class="tenue">--</span></td></tr><tr><td>#882</td><td>S1</td><td>MFC</td><td>RAPS (Rede de Atencao Psicossocial) e saude mental na APS</td><td>20</td><td><span class="tenue">--</span></td></tr></tbody></table>
+<p class="fonte">[plano] db.plano_listar(status=&#x27;pendente&#x27;)</p>
+</section>
+  <footer>
+    Todo numero vem do banco pela funcao citada no rodape de cada bloco. Esta pagina
+    nao guarda estado e nao escreve nada: e leitura. Regenerar a cada fechamento de
+    sessao e republicar na mesma URL.
+  </footer>
+</div>
+</body>
+</html>

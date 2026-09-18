@@ -23,7 +23,7 @@
 - **Cronograma:** `plano_tarefas` = SSOT. **O boot le o plano** (part-4): o banner "Drive desatualizado" morreu depois de 42 dias abrindo toda sessao.
 - **Engenharia:** suite **811**; `auto_check` PASSED; ledger ate F113 (§6y); indice de status **F1-F113 completo** (§3 + §3b novo).
 - **Posicao:** plano semana 1 (fase 1) · 0/14 tarefas da semana feitas [derivado: plano_tarefas]
-- **Datas:** fim da grade 09/10 · **UERJ 01/11** (inscrito).
+- **Datas & links:** fim da grade 09/10 · **UERJ 01/11** (inscrito) · 📊 **Painel** (regenerar no fechamento, republicar na MESMA url): https://claude.ai/artifact/QctZqVoJriSviJetF8FYBQ
 
 ## Ultima sessao -- s185 (2026-09-17/18) -- ENGENHARIA DEDICADA (janela 4)
 

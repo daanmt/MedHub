@@ -393,6 +393,37 @@ Escrita só por `app/utils/db.py` (`vincular_sessao_tarefa`, o único writer de 
 -- o CLI não abre `sqlite3` próprio e não tem escrita própria; leitura por `plano_listar` e
 `sessoes_bulk_listar`. Spec `.vibeflow/specs/plano-ssot-e-cards-v2-part-6.md`.
 
+### `tools/painel.py` -- painel de progresso gerado do banco (**read-only**)
+
+| Flag | Função |
+|---|---|
+| `--json` | Imprime o dado estruturado dos 5 blocos. **É o contrato** -- é o que `tools/test_painel.py` prova; o HTML é render por cima dele. |
+| `--html` | Gera a página autocontida. Default: `artifacts/painel.html`. |
+| `--out PATH` | Destino do `--html`. |
+
+Os 5 blocos, cada um com a **função-fonte no rodapé** (`[db]`/`[plano]`/`[performance]`), para que
+nenhum número da página seja órfão: progresso por bloco UERJ · listas da semana corrente · FSRS
+(vencidos, pool, teto do dia, retenção 7d) · volume/custo/projeção · próximas 7 tarefas.
+
+🔴 **Duas camadas de volume, e elas medem coisas diferentes.** As questões feitas por bloco vêm de
+`sessoes_bulk` agregado por **área** (cobre as 7.326), não do elo `sessoes_bulk.tarefa_id` do
+part-6: medido em 18/09/2026, o backfill casa **1 de 126 sessões**, e um painel alimentado só pelo
+elo mostraria ~0 questões feitas em todo bloco. O elo aparece como `q_feitas_por_elo`, camada fina
+de cobertura declarada. **Nenhum mapa novo:** o bloco sai de `db.bloco_de`, `Simulado` sai de
+`areas.AREAS_AGREGADAS` (termômetro, 13% do volume -- dobrado em CM pelo fallback, inflaria um
+oitavo) e área fantasma do F89 sai de `areas.area_valida`, cada uma em linha nomeada.
+
+🔴 **Retenção 7d é lida PELA RÉGUA de cada linha** (`db.get_retencao_revlog` -> `app/utils/regua`):
+nota 2 sob a régua v1 é **lapso**, sob a v2 é acerto. Contar por limiar fixo de `rating` inflaria a
+retenção exatamente como o F112 inflava o agendamento. **ENAMED 2027 não tem projeção** e a página
+diz por quê: a data não está em `core/provas.json` nem em `performance.MARCOS` -- declarar é o certo,
+estimar de data inventada seria o defeito (§10.8).
+
+**O CLI não publica.** Ele grava arquivo; quem publica o Artifact (mesma URL, `url` no publish) é o
+agente no fechamento de sessão (`.agents/workflows/registrar-sessao.md §6`). Read-only absoluto: não
+abre `sqlite3` próprio e está fora da allowlist de writers (F49).
+Spec `.vibeflow/specs/plano-ssot-e-cards-v2-part-7.md`.
+
 ### `tools/fsrs_optimize.py` -- parâmetros pessoais do FSRS (R1, **read-only**)
 
 | Flag | Função |

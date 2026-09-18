@@ -136,6 +136,8 @@ Segundo simulado completo pós-virada multi-banca, analisado retroativamente (pr
    - **"Isso é protocolo/diretriz que mudou recentemente — minha régua pode estar velha?"**
    - **"Estou pulando o exame/conduta inicial pro avançado só porque o quadro parece grave?"**
 7. **(s180) A regra dos dois finalistas:** restaram duas? Marque a que a sua analise apontou. So troque se puder **nomear o erro** da favorita. "Facil demais" / "assertiva demais" / "a banca nao faria isso" nao sao erros nomeaveis. Medido: em 13/13 erradas do Simulado 9 ele marcou a alternativa nao-modal (media 17,9% x gabarito 63,5%); o override custou 4-5 questoes.
+   - 🔴 **A regra dos dois finalistas NÃO é "confie no primeiro instinto".** O folclore de prova ("a primeira resposta costuma ser a certa") é **falso**: a literatura de *answer changing* mede que a maioria das trocas vai de **errada para certa**, não o contrário -- o que pesa na memória é a troca que deu errado, não a que salvou. Se a regra fosse "nunca troque", ela custaria pontos. O que a regra proíbe é o override **sem erro nomeado**: trocar por "fácil demais", "assertiva demais", "a banca não faria isso". Trocar porque você **releu e achou o dado que exclui a favorita** é exatamente o que se deve fazer.
+   - 📏 **Medir no próximo simulado, não argumentar:** contar (i) quantas trocas houve, (ii) quantas foram certa->errada e errada->certa, (iii) em quantas o erro da favorita foi **nomeável**. Sem esse número, "eu troco demais" segue sendo impressão. Baseline a bater: os 13/13 do Simulado 9.
 
 ---
 

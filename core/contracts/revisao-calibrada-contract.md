@@ -2,12 +2,12 @@
 type: contract
 layer: core
 status: canonical
-version: 1.4
+version: 1.5
 relates_to: [forgetting-curve-contract, fsrs-management-contract, cronograma-contract, AGENTE]
 ---
 
 # Contrato de Execução de Revisão Calibrada
-**Versão 1.4 | 2026-09-16 (s183: o DRENAR ganha uma SEGUNDA superficie -- o player de cards como pagina, Clausula 12. Nenhuma clausula revogada; A, C e F preservados por construcao) -- anterior: 1.3, 2026-09-08 (s170: o sub-modo PREPARAR e a Camada 1 sao REVOGADOS; todo o ensino migra para a Revisao Direcionada de fechamento -- Clausula 11, Invariante F, lapide do Invariante D); 1.2, 2026-07-06 (s109+, F18c/F21: Invariante E + Clausula 10); 1.1, 2026-07-05 (s108+, F8/F9: Invariantes C e D); 1.0, 2026-06-28 (sessao 096).**
+**Versão 1.5 | 2026-09-17 (s185, F110: Cláusula 13 -- fricção virtuosa não se automatiza; declarada SEM gate) -- anterior: 1.4, 2026-09-16 (s183: o DRENAR ganha uma SEGUNDA superficie -- o player de cards como pagina, Clausula 12. Nenhuma clausula revogada; A, C e F preservados por construcao) -- anterior: 1.3, 2026-09-08 (s170: o sub-modo PREPARAR e a Camada 1 sao REVOGADOS; todo o ensino migra para a Revisao Direcionada de fechamento -- Clausula 11, Invariante F, lapide do Invariante D); 1.2, 2026-07-06 (s109+, F18c/F21: Invariante E + Clausula 10); 1.1, 2026-07-05 (s108+, F8/F9: Invariantes C e D); 1.0, 2026-06-28 (sessao 096).**
 
 > Documento normativo. Governa a **competência única `/revisar`** cuja descompressão é calibrada por uma **nota de dificuldade-para-o-usuário (1-10) por tema**, sem cegar a curva de esquecimento. Consome o score de dormência e a retrievability de `forgetting-curve-contract.md` (não os redefine) e o `(tema, tipo)` de `cronograma-contract.md`. Referenciado por: `AGENTE.md` (§1.2, §6, §7.3), `.claude/commands/revisar.md`.
 
@@ -205,3 +205,22 @@ Duas dimensões **ortogonais** no render de qualquer ensino calibrado — **`/au
 - `set_dificuldade` toca só as 3 colunas de dificuldade. `infer_nota` é read-only e só lê sinais frios.
 
 *Ratificação:* este contrato nasce `pending-ratification`; vira `canonical` após validação em uso (1ª abertura de task calibrada de ponta a ponta).
+
+---
+
+## Cláusula 13 -- fricção virtuosa não se automatiza (v1.5, F110, s185)
+
+Nem todo atrito no estudo é desperdício. Recall antes de virar o verso, recall a frio, nota honesta,
+relearning até o critério, racional declarado, ritual de prova e triagem humana de card são
+**dificuldades desejáveis**: é delas que vem a retenção. O atrito vicioso é outro -- copiar id à mão,
+descobrir um defeito de lote por vez, procurar o card certo sem porta de consulta.
+
+🔴 **Antes de propor qualquer reforma cujo argumento seja "reduzir atrito", ler o ledger de fricções
+em [`docs/FUNDAMENTOS-APRENDIZAGEM.md`](../../docs/FUNDAMENTOS-APRENDIZAGEM.md) e dizer de qual dos
+dois se trata.** Toda spec nova responde, em uma linha: **"que fricção esta spec remove, e ela é
+virtuosa ou viciosa?"** Remover fricção virtuosa é regressão pedagógica com cara de melhoria de
+produto -- e o gate não pega, porque o código fica mais limpo.
+
+⚠️ **Limite declarado (§10.8):** esta cláusula **não tem gate**. Nenhum check distingue as duas
+fricções, e inventar uma métrica para o painel ficar verde seria pior que declarar o buraco. O
+portador é a leitura obrigatória, e a falha de leitura é invisível por construção.

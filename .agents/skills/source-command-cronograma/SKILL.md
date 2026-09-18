@@ -60,9 +60,10 @@ python tools/cronograma.py --sync-drive <xlsx>    # ⚰️ REVOGADO 17/09/2026 -
 > `--mover ID --semana N` · `--confirmar-area AREA --feitas "..." --pendentes "..."`.
 > Assinatura completa desses flags em [`/engenharia-cli`](engenharia-cli.md).
 >
-> A **remoção do código** é a **Parte 8** do mesmo PRD, e está bloqueada aguardando o operador
-> confirmar que não faz mais o ritual de reordenação manual do xlsx. Até lá, o flag fica: lápide,
-> não deleção. Norma: `cronograma-contract.md` v1.3 (Cláusula 5 + Cláusula 5b revogada) e
+> ✅ **DESTRAVADO em 17/09/2026:** o operador confirmou que **não reordena mais o xlsx à mão**.
+> A **remoção do código** é a **Parte 8** do mesmo PRD e passa a estar **liberada** -- sob snapshot
+> reversível (export + chave) antes de cortar, nunca deleção seca. Até a Parte 8 rodar, o flag fica:
+> lápide, não deleção. Norma: `cronograma-contract.md` v1.3 (Cláusula 5 + Cláusula 5b revogada) e
 > `reconcile-contract.md` v1.4 (W8).
 
 - `--desde N`: semana inicial p/ `--gap`/`--radar`. **Default = semana nominal por data**; passe a semana de **conteúdo** (ex.: `--desde 11`) para o gap/radar refletirem a posição real do estudante (atrás do calendário).

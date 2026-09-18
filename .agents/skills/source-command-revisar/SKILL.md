@@ -161,7 +161,7 @@ vazamento de rótulo (modo de falha #8 do handoff de flashcards) era tribal:
 
 ## Protocolo do loop conversacional
 
-1. **Abrir a sessão.** Rodar `--list` (com os filtros que o usuário pediu, se houver) para saber quantos cards há e anunciar o tamanho da sessão ("você tem 12 cards: 8 atrasados, 2 de hoje, 2 novos"). Para conduzir por tema, usar `--cluster` (mantém buckets, agrupa temas) e/ou `day_plan.py --review-plan` (clusters com contagem + sinal de frieza derivados).
+1. **Abrir a sessão.** Rodar `--list` (com os filtros que o usuário pediu, se houver) para saber quantos cards há e anunciar o tamanho da sessão ("você tem 12 cards: 8 atrasados, 2 de hoje, 2 novos"). Para conduzir por tema, usar `--cluster` (mantém buckets, agrupa temas) e/ou `day_plan.py --review-plan` (clusters com contagem + sinal de frieza derivados). 🔴 **A ordem default é intercalada de propósito (F109):** o ganho da intercalação é em **discriminação**, que é o eixo do padrão-mestre do operador. `--cluster` é para **onboarding de cluster frio ou andaime** -- não é o modo bom que ninguém liga. Norma: `fsrs-management-contract.md` v1.4 §Política de fila.
    - **Cluster frio -> nota da Revisão Direcionada (F5, reescrito na s170).** Cluster com sinal **frio** (`frieza >= 25` no `--review-plan`) **não** recebe aquecimento antes do drill (o PREPARAR morreu — ver lápide acima). O sinal de frieza é **anotado** na abertura e usado no fechamento para **priorizar** esse tema na Revisão Direcionada, junto com os gaps de nota 1-2 que o próprio drill produzir.
 
 2. **Apresentar a FRENTE.** Para o card atual, mostrar `frente_contexto` (se houver) como contexto e `frente_pergunta` como a pergunta. **Não revelar o verso ainda.** Convidar o usuário a tentar responder.

@@ -2,12 +2,12 @@
 type: contract
 layer: core
 status: canonical
-version: 1.3
+version: 1.4
 relates_to: [reconcile-contract, estado-contract, AGENTE]
 ---
 
 # Contrato de Gerenciamento do FSRS
-**Versão 1.3 | 2026-09-10 (s176, item 1.2 -- F64, o contador do regime) · v1.2 (s176, item 0.7 -- promotes F71 e F80) · v1.1 2026-07-05 (s108+, F3/F4 do ledger AUDITORIA_MEDHUB) · v1.0 2026-06-03 (sessão 075)**
+**Versão 1.4 | 2026-09-17 (s185, F109: a ordem intercalada é o default DELIBERADO; `--cluster` só onboarding de cluster frio / andaime) · v1.3 2026-09-10 (s176, item 1.2 -- F64, o contador do regime) · v1.2 (s176, item 0.7 -- promotes F71 e F80) · v1.1 2026-07-05 (s108+, F3/F4 do ledger AUDITORIA_MEDHUB) · v1.0 2026-06-03 (sessão 075)**
 
 > Documento normativo. Define como a fila de repetição espaçada é gerenciada, drenada e mantida.
 > Referenciado por: `AGENTE.md`, `reconcile-contract.md` (W3), `.claude/commands/revisar.md`, `.claude/commands/estilo-flashcard.md`.
@@ -69,6 +69,8 @@ anterior a `37e0859` continua gravado em UTC (backfill é decisão do operador, 
 - **Cap de novos por sessão:** default `--new-limit 10`. Não despejar o backlog inteiro — drenar em ondas.
 - **Priorização por área fraca:** ao drenar, filtrar por `--area`/`--tema` das áreas com pior performance (cruzar com `/performance`). Cards de Cardiologia/Hepato/Dermato/FA antes de áreas fortes.
 - **Ordem natural da fila:** atrasados → hoje → novos (definida no `fsrs_queue`).
+- 🔴 **A ordem natural é INTERCALADA, e isso é deliberado (F109, v1.4 -- s185).** A fila mistura temas dentro de cada bucket, e **é assim que deve ser**: a literatura de prática intercalada mede ganho justamente em **discriminação** -- Kornell & Bjork 2008 (0,61 x 0,35; 78% acertam mais no intercalado e 78% *acham* o bloqueado melhor), Hatala/Brooks/Norman 2003 (ECG 46% x 30%, PMID 12652166), Rozenshtein 2016 (radiografia 57% x 43%, PMID 27236286). É exatamente o eixo do padrão-mestre do operador, "o discriminador que EXCLUI". ⚰️ *A justificativa escrita até a v1.3 dizia que a revisão em cluster era pedagogicamente superior; a premissa está **morta** (F109) e sobrevivia só como convite para alguém "corrigir" o default. O comportamento do código sempre esteve certo.* **Não re-derivar:** intercalar não é efeito colateral do `_ordered_queue`, é a escolha.
+- **Quando `--cluster` é legítimo:** **onboarding de cluster frio** e **andaime de pré-requisito** -- casos em que ainda não há o que discriminar, porque a base não existe. Fora disso, opt-in sem razão nomeada é trocar ganho de discriminação por sensação de fluência (é esse o "78% acham melhor").
 - **Revisão em cluster (F3, v1.1):** `fsrs_queue.py --cluster` preserva a prioridade de bucket e agrupa por (area, tema) dentro de cada bucket -- ⚰️ *a redação original dizia "um PREPARAR aquece o tema e drena o cluster inteiro"; o **PREPARAR foi revogado na s170** (`revisao-calibrada` v1.3, Cláusula 11) e o aquecimento pré-drill deixou de existir* — hoje o cluster drena e o re-ensino acontece na **Revisão Direcionada de fechamento**. `day_plan.py --review-plan` emite os clusters do dia com contagem derivada da fila real (contagem manual foi fonte de erro 3x na s108). A flag é opt-in: sem ela, a ordem é a natural.
 - **Ratings honestos:** o agente avalia 1-4 pela resposta do usuário (contrato em `revisar.md` §Modo conversacional); honestidade > generosidade — a precisão do FSRS depende disso.
 
@@ -137,6 +139,13 @@ No check de boot (`reconcile-contract.md`), reportar: total de cards qualitativo
 ---
 
 ## Changelog
+
+- **v1.4 (2026-09-17, s185 -- F109):** a §Política de fila passa a **declarar** que a ordem
+  intercalada é escolha, não efeito colateral, com as fontes primárias da prática intercalada
+  (Kornell & Bjork 2008; Hatala 2003; Rozenshtein 2016) e o eixo do padrão-mestre do operador
+  ("o discriminador que EXCLUI"). ⚰️ A justificativa de que a revisão em cluster seria
+  pedagogicamente superior morreu: era premissa sem lastro e convite para "corrigir" o default.
+  `--cluster` fica nomeado nos dois casos em que é legítimo. Rider-espelho em `revisar.md` passo 1.
 
 - **v1.3 (2026-09-10, s176 -- item 1.2 do Tier 1, F64):** o **contador do regime de dívida** deixa
   de ser ambíguo e passa a ser `vencidos = atrasados + hoje`, com **uma** implementação

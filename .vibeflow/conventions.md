@@ -150,3 +150,17 @@ status, the same class the G14 check exists to catch one level up.
 
 🔴 **Corollary:** `reproduction: synthetic` + the three conditions above = **`verified`**. If a
 trace cannot show condition 3, it stays `partial` and says which artifact was not exercised.
+
+## Pergunta obrigatória em toda spec (F110, s185)
+
+Toda spec deste projeto responde, em **uma linha**, antes do Definition of Done:
+
+> **Que fricção esta spec remove -- e ela é virtuosa ou viciosa?**
+
+Fricção **viciosa** (automatizar): copiar id à mão, descobrir defeito de lote um por vez, dado sem
+porta de consulta. Fricção **virtuosa** (proteger): recall antes do verso, recall a frio, nota
+honesta, relearning até o critério, racional declarado, triagem humana de card.
+
+Norma: `core/contracts/revisao-calibrada-contract.md` Cláusula 13. Ledger das fricções:
+`docs/FUNDAMENTOS-APRENDIZAGEM.md`. Spec que remove fricção virtuosa é regressão pedagógica com
+cara de melhoria de produto -- e nenhum gate pega, porque o código fica mais limpo.

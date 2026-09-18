@@ -808,3 +808,10 @@
 {"ts": "2026-09-18T11:55:23+00:00", "event": "opened", "check": "consistencia_registros", "fingerprint": "ae675f4ff819", "alvo": "AGENTE.md §7.4", "payload": {"check": "tabela"}}
 {"ts": "2026-09-18T11:59:08+00:00", "event": "resolved", "check": "consistencia_registros", "fingerprint": "ae675f4ff819", "alvo": "AGENTE.md §7.4"}
 {"ts": "2026-09-18T12:05:04+00:00", "event": "opened", "check": "history_integrity", "fingerprint": "8e13d9283b04", "alvo": "session_185.md", "payload": {"detalhe": "header fora do template (esperado '# Session NNN -- ...'); campo `Ferramenta:` ausente (o swap test depende dele)"}}
+{"ts": "2026-09-18T12:06:04+00:00", "event": "resolved", "check": "history_integrity", "fingerprint": "8e13d9283b04", "alvo": "session_185.md"}
+{"ts": "2026-09-18T12:13:03+00:00", "event": "opened", "check": "history_integrity", "fingerprint": "8e13d9283b04", "alvo": "session_185.md", "payload": {"detalhe": "header fora do template (esperado '# Session NNN -- ...'); campo `Ferramenta:` ausente (o swap test depende dele)"}}
+{"ts": "2026-09-18T14:21:36+00:00", "event": "resolved", "check": "history_integrity", "fingerprint": "8e13d9283b04", "alvo": "session_185.md"}
+{"ts": "2026-09-18T14:49:41+00:00", "event": "opened", "check": "parity", "fingerprint": "ddf439b44739", "alvo": "command<->skill", "payload": {"n_drift": 1}}
+{"ts": "2026-09-18T14:55:01+00:00", "event": "resolved", "check": "parity", "fingerprint": "ddf439b44739", "alvo": "command<->skill"}
+{"ts": "2026-09-18T16:42:23+00:00", "event": "opened", "check": "history_integrity", "fingerprint": "7999e2e1bbfd", "alvo": "session_186.md", "payload": {"detalhe": "header fora do template (esperado '# Session NNN -- ...'); campo `Ferramenta:` ausente (o swap test depende dele)"}}
+{"ts": "2026-09-18T16:44:24+00:00", "event": "resolved", "check": "history_integrity", "fingerprint": "7999e2e1bbfd", "alvo": "session_186.md"}

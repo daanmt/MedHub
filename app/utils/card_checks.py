@@ -64,6 +64,34 @@ JACCARD_MIN_TOKENS = 5
 # qualidade esta em 0.8-0.9. Spec: .vibeflow/specs/alinhamento-frente-do-card.md
 CORTE_CONTEXTO_REDUNDANTE = 0.8
 
+# --- F115 (s187): comprimento TOTAL do card ------------------------------------------
+# Existe `card_atomicity.LIMITE_CHARS = 220`, mas ele mede **o verso** e so roda **na
+# reforja** (`checar_ratchet_verso`): um card nasce com 1.130 chars espalhados por
+# contexto+pergunta+verso sem estourar nada. Gate-miss por ESCOPO DE ALVO -- o sensor
+# existe, mede a coisa vizinha, e o painel fica verde.
+#
+# 🔴 O CORTE NAO FOI ESCOLHIDO. Ele sai das marcas do operador, e a derivacao entrega uma
+# BANDA. Medido em 18/09/2026 sobre 1.507 cards ativos (mediana 562, p90 880), sobre o
+# lote de 6 que ele drenou na previa do R2 e rotulou a olho, sem ver numero:
+#     marcado "card longo"   #96  1130 (p99,2) · #92  1059 (p98,0)
+#     NAO marcado por isso   #474  735 (p77,2) · #286 685 · #69 617 · #53 597
+#     -> as marcas bound-eiam o corte em [736, 1059]
+# Dentro da banda todo corte tem precisao IDENTICA no lote (2/2 e 4/4): n=6 nao
+# discrimina por dentro, por construcao. E a banda e cara: 736 -> 334 cards (22,2%);
+# 1059 -> 29 cards (1,9%).
+#
+# 1059 e o unico ponto com regra de evidencia declarada: *nenhum card sinalizado e mais
+# curto que o mais curto que ele mesmo chamou de longo*. Corte menor sinaliza card que
+# ele nunca viu. `test_comprimento_total.py` guarda a banda -- mover o numero sem mover
+# a evidencia derruba a suite. A banda e uma QUERY sobre as marcas, nao um sensor: no
+# fechamento de cada janela re-derivar [maior nao-marcado, menor marcado] das marcas
+# novas do player, nunca arbitrar.
+#
+# ⚠️ Comprimento e PROXY, nao defeito: vinheta clinica pode ser load-bearing (#284/F81).
+# Por isso AVISO e nao ERRO -- sinaliza CANDIDATO, e o desfecho e leitura humana pelo
+# lifecycle da fila de reforja (`--descartar` e desfecho legitimo).
+CORTE_COMPRIMENTO_TOTAL = 1059
+
 # P2: pergunta que pede um DISCRIMINADOR GERAL entre duas entidades nomeadas --
 # respondivel de cabeca, sem a vinheta. Distinta da que manda APLICAR ao caso.
 _RE_PAR_NOMEADO = re.compile(r"\S\s+x\s+\S", re.I)
@@ -328,6 +356,43 @@ def checar_contrafactual_mal_formado(card):
     return None
 
 
+def comprimento_total(card):
+    """Soma dos chars dos CINCO campos do card. Telemetria pura -- numero, nunca texto.
+
+    🔴 A soma e o achado. `card_atomicity.LIMITE_CHARS` mede so `verso_resposta`, entao
+    um card com verso de 100 chars e contexto de 900 passa limpo por ele. O #92 e o #96,
+    que o operador marcou a olho, sao exatamente esse padrao.
+    """
+    return sum(len(card.get(c) or "") for c in CAMPOS_CARD)
+
+
+def checar_comprimento_total(card):
+    """AVISO (F115): o card inteiro passa de `CORTE_COMPRIMENTO_TOTAL` chars.
+
+    Sinaliza **CANDIDATO a reforja**, nunca veredito: comprimento e proxy de um defeito
+    (card que tenta ensinar mais de uma coisa), nao o defeito. Vinheta longa pode ser
+    load-bearing -- o #284 do F81 e o precedente vivo. Quem decide e leitura humana, e o
+    `--descartar` da fila de reforja e desfecho legitimo, nao falha.
+
+    Nasce AVISO tambem por warning-first (AGENTE.md secao 6): o passivo medido NAO e zero
+    (29 cards em 18/09/2026), entao promover a BLOCK agora desligaria o gate na segunda
+    sessao. Vira BLOCK quando a base zerar -- a mesma condicao do F79b e do D5.
+
+    Corte parametrizado em `CORTE_COMPRIMENTO_TOTAL`, derivado das marcas do operador.
+    Ver a proveniencia no bloco da constante; nunca literal aqui dentro.
+    """
+    n = comprimento_total(card)
+    # 🔴 `>=`, nao `>`. O #92 tem EXATAMENTE 1059 chars e foi marcado pelo operador; com
+    # `>` o gate perderia um dos dois cards que o originaram -- gate que falha na propria
+    # evidencia fundadora. Com `>=` a banda [736, 1059] fica literal: o corte e o menor
+    # comprimento que ele chamou de longo, e ele dispara.
+    if n >= CORTE_COMPRIMENTO_TOTAL:
+        return (f"comprimento-total ({n} chars nos 5 campos; corte "
+                f"{CORTE_COMPRIMENTO_TOTAL}) -- CANDIDATO a reforja, nao veredito: "
+                f"vinheta longa pode ser necessaria, quem decide e leitura humana")
+    return None
+
+
 # Registro nome -> predicado, para quem precisa RE-VERIFICAR um defeito nomeado
 # (B2/F40: o fechamento de uma marca de reforja re-roda o predicado que a motivou,
 # em vez de confiar em `card_version` ou na palavra de quem editou -- licao do F82).
@@ -376,6 +441,12 @@ PREDICADOS_VERIFICAVEIS = {
     # F39 (s177, 1.6): entra no registro para que a fila de reforja tenha
     # LIFECYCLE sobre ele -- fechar re-verifica, em vez de aceitar "eu editei".
     "nao_atomico": lambda c: checar_nao_atomico(c),
+    # F115 (s187): entra no registro por DOIS motivos. (1) `reforja.py --ingerir
+    # comprimento_total` passa a ser o SENSOR DE PE sobre o baralho que o achado pedia --
+    # sem isso o predicado so rodaria no nascimento, e os 29 cards que ja existem
+    # seguiriam invisiveis (o defeito do LIMITE_CHARS, que so roda na reforja, repetido
+    # com outro alvo). (2) `--fechar` re-verifica em vez de aceitar "eu encurtei".
+    "comprimento_total": lambda c: checar_comprimento_total(c),
 }
 
 
@@ -445,9 +516,13 @@ def validar_card(card, contexto=None):
         erros.append(d)
     # F81/B1 (s176): alinhamento interno da FRENTE. Os tres nascem WARN
     # (warning-first, AGENTE.md secao 6) -- viram BLOCK quando o passivo zerar.
+    # F115 (s187): o card INTEIRO passa a ser medido no NASCIMENTO, nao so na reforja --
+    # era o escopo de alvo que faltava. AVISO por contrato: comprimento e proxy, e
+    # CANDIDATO nunca BLOCK (vinheta load-bearing existe, #284/F81).
     for predicado in (checar_contexto_redundante,
                       checar_pergunta_generica_com_contexto,
-                      checar_contrafactual_mal_formado):
+                      checar_contrafactual_mal_formado,
+                      checar_comprimento_total):
         v = predicado(card)
         if v:
             avisos.append(v)

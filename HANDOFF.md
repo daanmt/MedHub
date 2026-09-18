@@ -1,43 +1,47 @@
 # HANDOFF.md -- ESTADO OPERACIONAL CURTO
-*Atualizado: 2026-09-17 (noite) -- **s184 (ABSORCAO + PLANEJAMENTO + lote do player)**: fundamentos pedagogicos nomeados (`docs/FUNDAMENTOS-APRENDIZAGEM.md`), sintese + fila R1-R11 em **`PLANEJAMENTO-APRENDIZAGEM-2026-09-17.md`** (raiz), ledger F108-F113, grafo atualizado. **Lote de 90 no player: 86 gravadas, 80% >= 3, 30 min; 5 defeitos marcados.** Achado ALTO **F112** (nota 2 = acerto no FSRS). **Inscricao na UERJ FEITA pelo usuario.** Zero questoes hoje.*
+*Atualizado: 2026-09-18 (madrugada) -- **s185 (ENGENHARIA DEDICADA, janela 4)**: ondas 0, 1 e 2 fechadas. **11 commits, harness verde em cada um, suite 714 -> 811.** 8 achados fechados (F102 F107 F103 F101 F98 F37 + F106 RETRATADO + F113 parcial), R1 entregue com os numeros do R2, PRD part-4 e part-6 entregues, riders R3-R6 commitados. **Operador decidiu R2 = (b) e destravou o part-8.** Zero questoes e zero cards hoje (sessao de engenharia).*
 
-> ✅ Recursos do ENAMED enviados (16/09). ✅ **Inscricao UERJ feita (17/09).** 🔧 **Proxima sessao = ENGENHARIA DEDICADA** (decisao do usuario): permit do PRD `plano-ssot-e-cards-v2` (GO do `/ai-eng`, silencio = GO) + fila R1-R11 por spec (`PLANEJAMENTO §5`).
+> 🔧 **Onda 3 e a proxima:** spec do **R2** (regua nova). 🔴 **Nao pousa sem mostrar a tela do player ao operador antes** -- muda o que ele le todo dia. Depois: **part-7** (painel) e **part-8** (congelar Drive, agora liberado).
 
 ## > Proximo passo imediato
 
-1. 🔧 **Sessao de engenharia (ordem):** (a) em PARALELO, arquivos disjuntos -- **R1** CLI read-only de otimizacao do FSRS (`Optimizer` + CMRR do py-fsrs sobre 3.067 revisoes; parametros em dado versionado; adaptador so le apos GO) + **PRD part-4** (`day_plan` le o plano; contratos v1.3) + **PRD part-6** (ledger de listas); (b) **commit de docs**: R3 riders F109 (contrato FSRS + `revisar.md`), R4 web isolada (`analisar-questao §0`), R5 playbook answer-changing, R6 ponteiro do ledger de friccoes, **F113** regra de acentuacao em `estilo-flashcard.md` (+ `sync_skills`); (c) **R2** decisao do operador sobre a regua de notas (F112), com o numero do R1 na mao; (d) part-7 painel -> part-8 congelar Drive; (e) **R7** leech proprio + **F113** reforja em lote (`recurate_cards.py`, so acentos); (f) R8 intake da Fase 2 antes de 02/11. Regra que funcionou: 1 subagente por parte, `model` explicito, commit antes da onda seguinte; `AUDITORIA_MEDHUB.md` em chunk proprio se o grafo for atualizado (R11).
-2. 🃏 **Cards (rito do player):** fila baixa nos proximos dias (18/09: 31 · 19/09: 26 · 20/09: 24 · 21/09: 25 · 22/09: 24) -> lote = vencidos + **intake ~30/dia fraco-primeiro** do pool de 685 ate o teto 60. 🔴 **Aula-base D10 de Acido-Base + Potassio ANTES de re-drillar os 6 segurados** (#595 #596 #598 #783 #786 #787, ainda vencidos). Defeitos abertos: #419 #685 #688 #689 #373 (reforja 288).
-3. 📚 **Questoes (Fase 1, semana 1 = 14 tarefas, ~389q; `plano.py --listar --semana 1`):** Pneumonias na Infancia T (24) -> SUA R (42) + Vitalidade Fetal (25+36) -> Cirurgia Vascular R (43) -> MFC extensivo (50) + Saude do Idoso (32+41) -> RAPS (20) + UERJ 2026 bloco MFC Q81-100 (20) -> Pre-natal/parto (36). Resumos custom da semana: **Prevencao Quaternaria** e **AMI**. Bulk -> `plano.py --concluir ID --sessao <id>`; erros -> Autopsia.
-4. 🧭 **Conduta que ja vale (`PLANEJAMENTO §4.4`):** ler o ledger de friccoes antes de propor "reducao de atrito"; `errou` com racional declarado = insumo nº 1; regra dos dois finalistas nao e "primeiro instinto".
-5. 🗓️ Revisao de status por area (173 linhas) e rebalanceio da semana 3 (794q) seguem pendentes; 8 temas sem resumo = tarefas `custom`.
+1. 🔧 **R2 -- spec sob a opcao (b)** (decidida pelo operador em 17/09): regua nativa do FSRS (`1 falhou · 2 lembrou com esforco · 3 lembrou · 4 sem esforco`). Escopo no ledger **F112**: remap historico versionado **so na ENTRADA do Optimizer** (revlog imutavel), adaptador lendo `core/fsrs_params.json` com fallback default + versao da regua, `record_review` gravando a versao, **F9** (override de nota ja gravada) no mesmo caminho unico, **paridade como gate**. Baseline ja escrita: `tools/test_fsrs_blackout_curto.py::test_baseline_do_R2_intervalo_por_nota` -- quando o R2 pousar esse teste MUDA, e o diff dele e a evidencia. Riders de schema abertos: gravar `review_duration_ms` quando o player medir; **meta de retencao FICA em 0,90** ate haver duracao real.
+2. 🧩 **part-7 (painel)** -> **part-8 (congelar Drive)**. O part-8 foi **destravado em 17/09** (o operador confirmou que nao reordena mais o xlsx a mao): remover `cronograma.py --sync-drive` **sob snapshot reversivel** (export + chave), nunca delecao seca.
+3. 🃏 **Cards:** divida **75 atrasados + 31 p/ hoje**, pool 685. 🔴 **Aula-base D10 de Acido-Base + Potassio ANTES de re-drillar os 6 segurados** (#595 #596 #598 #783 #786 #787). Baralho com acentuacao restaurada (1.796 correcoes) -- **#685 e #689 seguem com erro de portugues irregular** que regra nenhuma pega.
+4. 📚 **Questoes (Fase 1, semana 1 = 14 tarefas, 369q; `plano.py --listar --semana 1`):** Prevencao Quaternaria (resumo) -> AMI (resumo) -> MFC extensivo Revisao (50) -> Saude do Idoso T+R (32) -> ... Bulk -> `plano.py --concluir ID --sessao <id>`; erros -> Autopsia.
+5. ⚠️ **Acao do operador, pequena:** tirar **RAPS** da fila de "temas sem resumo". O conteudo existe (`## 4. Rede de Atencao Psicossocial (RAPS)` em `Psiquiatria Social e Reforma Psiquiatrica.md`) -- escrever outro produziria duplicado. Foi o F106 invertido.
+6. 🗓️ Revisao de status por area (173 linhas) e rebalanceio da semana 3 seguem pendentes.
 
 ## Estado por frente
 
-- **Norte:** 🎯 Psiquiatria/IPUB via ENAMED 2027 (corte 940, alvo 95%). Plano B: UERJ/MFC 01/11/2026 (45d; **inscrito**). Hibrido: Fase 1 = RF rescopada ate 01/11; Fase 2 = extensivo S21-S48 de 02/11 ate o ENAMED 2027 (data ASSUMIDA).
-- **Volume & Metas:** 7326 / 10400 (perf. ~79.1%). Hoje: 0. Ritmo-alvo ~68.3q/dia (45d p/ UERJ/MFC (prova 01/11)). [derivado: day_plan --handoff-block, antes do lote]
-- **Simulados:** 9 provas + ENAMED real 75. Corpus `simulados/inep/` e `simulados/uerj/`.
-- **FSRS:** **86 revisoes gravadas em 17/09 (revlog 3.067)**: 61x4 / 8x3 / 2x2 / 15x1 (+4 defeito sem nota) = 80% >= 3; atrasados remanescentes 10 (6 nefro segurados + 4 defeitos); pool 685. 🔴 **F112:** nota 2 agenda em 14,2 d e nota 4 (52% do revlog) em 34,3 -- regua deslocada; parametros DEFAULT.
-- **Conteudo:** 136 resumos. Preventiva: so 3/22 decks pagam aluguel na UERJ; P4, polifarmacia, paliativos e MCCP sem resumo.
-- **Erros & Cards:** 1041 erros · 1476 cards ativos · taxonomia 302 temas. Reforja **288** (+5 do player). **F113:** cards recentes sem acentuacao lidos como "erro de portugues" (feedback no player).
-- **Cronograma:** `plano_tarefas` = SSOT (896). Fase 1 = semanas 1-7 (~3.050q para 2.760). Dashboard do Drive congelado.
-- **Ensino (s184):** `docs/FUNDAMENTOS-APRENDIZAGEM.md` (P1-P17; 14 CONFIRMA; F109-F112) + ledger de friccoes; `AGENTE.md §6` aponta; fontes em `docs/research/`.
-- **Engenharia:** suite 714; `auto_check` PASSED; ledger ate **F113** (§6y); grafo 3.383 nos / 253 comunidades (536 docs pendentes no manifesto).
-- **Posicao:** conteudo S17 (nominal S25, atraso 8 sem) [derivado: preparacao_estado]
-- **Datas:** fim da grade 09/10 · **UERJ 01/11** (inscrito) · proximo slot de simulado ~10/10 (R3, cadencia de 4 semanas).
+- **Norte:** 🎯 Psiquiatria/IPUB via ENAMED 2027 (corte 940, alvo 95%). Plano B: UERJ/MFC 01/11/2026 (44d; **inscrito**). Hibrido: Fase 1 = RF rescopada ate 01/11; Fase 2 = extensivo S21-S48.
+- **Volume & Metas:** 7326 / 10400 (perf. ~79.1%). Hoje: 0. Ritmo-alvo ~69.9q/dia (44d p/ UERJ/MFC (prova 01/11)). [derivado: day_plan --handoff-block]
+- **Simulados:** 9 provas + ENAMED real 75. Proximo slot ~10/10 (cadencia de 4 semanas).
+- **FSRS:** divida **75 atrasados + 31 p/ hoje** -- pool 685 nunca introduzidos (entram <=90/dia). 🔴 **F112 decidido: regua vai para a opcao (b) no R2.** Parametros seguem DEFAULT -- o R1 mediu, nada foi adotado.
+- **Conteudo:** 136 resumos. Preventiva: so 3/22 decks pagam aluguel na UERJ.
+- **Erros & Cards:** 1041 erros · **1507 cards ativos** · 0 needs_qualitative na fila · taxonomia 302 temas. Reforja 288.
+- **Cronograma:** `plano_tarefas` = SSOT. **O boot le o plano** (part-4): o banner "Drive desatualizado" morreu depois de 42 dias abrindo toda sessao.
+- **Engenharia:** suite **811**; `auto_check` PASSED; ledger ate F113 (§6y); indice de status **F1-F113 completo** (§3 + §3b novo).
+- **Posicao:** plano semana 1 (fase 1) · 0/14 tarefas da semana feitas [derivado: plano_tarefas]
+- **Datas:** fim da grade 09/10 · **UERJ 01/11** (inscrito).
 
-## Ultima sessao -- s184 (2026-09-17, 18h45 -> 21h) -- ABSORCAO + PLANEJAMENTO + lote do player
+## Ultima sessao -- s185 (2026-09-17/18) -- ENGENHARIA DEDICADA (janela 4)
 
-Detalhe em `history/session_184.md`. 4 varreduras isoladas (~618k tokens) + 3 extratores graphify (~1,01M) + 1 medicao read-only (F112). Portadores: FUNDAMENTOS, PLANEJAMENTO (raiz), ledger §6y (F108-F113 + lapide no F3), `docs/research/`, memoria x2 (+ indice compactado). **Lote do player: 90 cards em 30 min, 86 gravadas (COUNT-ASSERT ok), 5 defeitos -> reforja; Revisao Direcionada em 14 temas com carimbo `review_log`.** Nenhum contrato, skill ou codigo tocado (sessao de planejamento).
+Detalhe em `history/session_185.md`. 3 filhos Opus 5 na onda 1 (~820k tokens, ~45 min, arquivos disjuntos); ondas 0 e 2 sem filho. **11 commits.** Todo fix nasceu com teste antes do codigo; em 3 casos o teste pegou defeito meu antes do commit. Toda operacao em lote passou pelo rito §10.7 (4 snapshots do banco). FSRS preservado do inicio ao fim (1543 / 3067 / 1543).
 
 ## Fronteiras DECLARADAS (nao ler verde de gate como limpeza)
 
-- Data do ENAMED 2027 e horas na residencia sao ASSUNCOES. F112 mede intervalo agendado, nao retencao por nota. Ledger de friccoes sem gate (F110). F113 sem medicao de proporcao no baralho. Nota da aula (F18c) **nao registrada** na RD de hoje. Grafo: 536 docs mudados nao re-extraidos.
-- Herdadas e vivas: F100 (4a medicao: #787 falhou) · F98 · F7/F104 · D5 · G10 · G5 · F35 · F89 · F79b · F66 · F64 · eixo C do F81 · F80b.
+- 🔴 **F113 PARCIAL:** 1.796 correcoes de acentuacao, mas o residuo e **irregular e nao fecha por regra** -- `apendicite`/`artrite`/`abortaria` estao CERTAS sem acento, `arteria`/`bacteria`/`etaria` precisam, e nenhum sufixo distingue. **#685** e **#689** seguem defeituosos. Exige lexico ou olho humano.
+- 🔴 **Reportei "875 -> 0" e era FALSO:** medidor e corretor compartilhavam a lista de palavras. Detector independente mediu 897 (60,8%). *Quando o sensor e o remedio nascem do mesmo insumo, o verde nao e evidencia.*
+- 🔴 **Eu corrompi 23 cards e reverti:** `-encia` virou verbo em substantivo. **"So-acento" nao e "semanticamente nulo" em portugues.** Pegou-se a olho, nao por gate.
+- **F110** sem gate por construcao. **`db.get_db_metrics`** soma campo inflado e nao tem chamador vivo (superficie orfa). **R1:** nada adotado, `app/utils/fsrs.py` sem diff.
+- Herdadas e vivas: F100 · F104 · F105 · F87 · F99 · F109 · F111 · G10 · G5 · F89 · F79b · F66 · F64 · eixo C do F81 · F80b.
 
 ## Pendencias/observacoes ativas
 
 - 📄 Manual de Gestacao de Alto Risco (MS 2022) > 10 MB. 💉 Diretrizes 2026 a conferir: Calendario Vacinal, GINA, ATLS 11 (parcial), SINAN.
-- 📡 **Canal exclusivo com o `/ai-eng` = `SendMessage` entre sessoes locais** (descobrir com `ListAgents`; em 17/09 a sessao era `ai-eng-38`, Fable 5.1 orquestrando a reforma). O hook em `.claude/settings.json` grava cada troca em `history/exchange-log.jsonl` (append-only, runtime, fora dos selos). **Destilado da fila R1-R11 + F112/F113 ENVIADO em 17/09 antes do clear**, com uma duvida de escopo (R1: adaptador le `core/fsrs_params.json` atras de flag, ou fica intocado ate o R2?). **Proximo eu: esperar GO / NO-GO / ALTERA por item; silencio = GO (§10.6); responder pelo `from` da mensagem.** Nao re-enviar o destilado.
+- 📡 **Canal com o `/ai-eng` = `SendMessage` entre sessoes locais** (descobrir com `ListAgents`). 🔴 **O endereco MUDA a cada sessao dele** -- em 18/09 ele reiniciou (N=80) e avisou que mensagens ao endereco antigo se perdem. **Sempre responder pelo `from` da mensagem mais recente.** Hook grava as trocas em `history/exchange-log.jsonl`.
+- 📬 **Devido a ele no proximo contato:** decision brief do **R8/F111** (<=10 linhas: o que muda no dia do operador, o que e reversivel; prazo 02/11). Os outros 3 itens que ele pediu ja foram entregues no destilado de fechamento.
 
 ---
-*Historico: history/INDEX.md * Macro: ESTADO.md * Sessao: history/session_184.md * Trocas: history/exchange-log.jsonl * Auditoria: docs/MEMORIA-AUDITORIA.md*
+*Historico: history/INDEX.md * Macro: ESTADO.md * Sessao: history/session_185.md * Trocas: history/exchange-log.jsonl * Auditoria: docs/MEMORIA-AUDITORIA.md*

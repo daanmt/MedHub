@@ -318,10 +318,65 @@ def check_pendencia_fantasma(root=None, _registros=None):
     return achados
 
 
+def _cabecalhos_do_ledger(led):
+    saida = {}
+    for m in re.finditer(r"^###\s+(F\d+)\b(.*)$",
+                         led.read_text(encoding="utf-8", errors="replace"), re.M):
+        saida[m.group(1)] = m.group(2)
+    return saida
+
+
+def check_status_portador(root=None):
+    """G14b (s187): cabecalho do achado x o PORTADOR real, nao o §11.
+
+    🔴 **O buraco que isto fecha, medido em 18/09/2026.** O `check_status_ledger`
+    so enxerga achado que alguem lembrou de por no `§11` do `MEMORIA-AUDITORIA`.
+    **F109 e F110 nunca entraram la** -- e os dois tiveram os riders de doc
+    pousados na s185 com o cabecalho do ledger dizendo `ABERTO` por um dia, ate
+    a s187 ler os portadores. Gate-miss por **escopo de alvo**: o sensor existe,
+    olha o registro vizinho, e o painel fica verde. Mesma forma do F115 e do
+    proprio Invariante A (s187) -- a terceira ocorrencia da serie na mesma janela.
+
+    O sinal usado e **derivado, nao digitado**: contrato e skill carimbam o F-id
+    na propria linha de versao (`**Versao 1.4 | ... (s185, F109: ...)**`). Se um
+    portador declara ter absorvido o achado, o cabecalho nao pode dizer ABERTO.
+
+    ⚠️ **LIMITE DECLARADO:** so alcanca achado cujo remedio virou **versao de
+    portador**. Remedio que e so codigo (sem bump de contrato) continua invisivel
+    aqui -- fica com o `check_status_ledger` e com o §11. Nao maquiar: isto e
+    uma segunda lente, nao a lente completa (10.8, verification-stack).
+    """
+    base = Path(root).resolve() if root else ROOT_DIR
+    led = base / "AUDITORIA_MEDHUB.md"
+    if not led.is_file():
+        return []
+    cabecalhos = _cabecalhos_do_ledger(led)
+    fontes = sorted((base / "core" / "contracts").glob("*.md"))
+    fontes += sorted((base / ".claude" / "commands").glob("*.md"))
+    reivindicado = {}
+    for f in fontes:
+        for linha in f.read_text(encoding="utf-8", errors="replace").splitlines():
+            if not linha.startswith("**Vers"):
+                continue
+            for fid in re.findall(r"\bF\d{1,3}\b", linha):
+                reivindicado.setdefault(fid, set()).add(f.name)
+    achados = []
+    for fid in sorted(reivindicado, key=lambda s: int(s[1:])):
+        linha = cabecalhos.get(fid)
+        if linha is None:
+            continue
+        if re.search(r"\*\*ABERTO", linha) and "⚰️" not in linha and "RESOLVIDO" not in linha:
+            achados.append({"alvo": f"AUDITORIA_MEDHUB.md §{fid}",
+                            "payload": {"cabecalho": "ABERTO",
+                                        "portadores": sorted(reivindicado[fid])}})
+    return achados
+
+
 CHECKS = {
     "tabela": ("G5  tabela gerada (AGENTE §7.4) stale", check_tabela_gerada),
     "paths": ("G10 ponteiro morto em doc de raiz", check_paths_mortos),
     "status": ("G14 status do ledger x lapide do §11", check_status_ledger),
+    "portador": ("G14b status do ledger x versao do portador", check_status_portador),
     "fantasma": ("F101 pendencia do HANDOFF que o banco desmente", check_pendencia_fantasma),
 }
 

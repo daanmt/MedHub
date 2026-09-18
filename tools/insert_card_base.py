@@ -57,7 +57,7 @@ if __name__ == "__main__" and hasattr(sys.stdout, "buffer"):
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-import card_checks  # gate de qualidade (part-4) — mesma biblioteca dos demais writers
+from app.utils import card_checks  # gate de qualidade — biblioteca PURA em app/ (1.9a)
 import app.utils.areas as areas  # fonte unica do vocabulario de area (F89)
 
 DB_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'ipub.db')

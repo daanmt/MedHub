@@ -22,7 +22,7 @@ except Exception:
     pass
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-import card_checks  # gate de qualidade (part-4) — mesma biblioteca dos demais writers
+from app.utils import card_checks  # gate de qualidade — biblioteca PURA em app/ (1.9a)
 
 DB_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'ipub.db')
 

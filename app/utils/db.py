@@ -35,6 +35,12 @@ import os
 from datetime import datetime
 from app.utils.fsrs import FSRS
 from app.utils.regua import REGUA_ATUAL
+# 1.9a (s186): gates de card importados como MODULO, nao por cirurgia de
+# `sys.path` com `__file__`. Se qualquer um quebrar, `db` nao importa e nenhum
+# writer roda -- mais fail-loud que o `try/except` por chamada que havia antes
+# (F85 preservado por construcao, nao por codigo).
+from app.utils import card_checks as _cc
+from app.utils.card_atomicity import checar_ratchet_verso, medir_verso
 
 DB_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'ipub.db')
 
@@ -1091,24 +1097,11 @@ def update_flashcard_fields(card_id, fields) -> bool:
     # P3 part-4: gate de qualidade TAMBÉM aqui — este é o caminho de escrita
     # documentado fora dos CLIs (a regen queue instrui o agente a chamar
     # direto). Mesmos predicados parciais do recurate (campos presentes).
-    # card_checks vive em tools/ (import lazy por __file__, imune a
-    # monkeypatch de DB_PATH).
-    # 🔴 FAIL-LOUD (F85, s174): se o gate nao importa, a escrita nao acontece.
-    # O `except` antigo degradava para WARN "porque o app nao pode quebrar sem
-    # tools/" -- esse app era a UI Streamlit, removida; a justificativa
-    # sobreviveu ao motivo (Reachability-Debt variante 3). Mesma forma do
-    # gemeo F84 (ratchet do verso), 20 linhas abaixo.
-    try:
-        _tools = os.path.join(os.path.dirname(os.path.dirname(
-            os.path.dirname(os.path.abspath(__file__)))), 'tools')
-        import sys as _sys
-        if _tools not in _sys.path:
-            _sys.path.insert(0, _tools)
-        import card_checks as _cc
-    except Exception as e:
-        raise RuntimeError(
-            f"gate de qualidade (card_checks) indisponivel ({e}) — reescrita RECUSADA. "
-            "O gate nao roda, logo a escrita nao acontece.") from e
+    # 🔴 FAIL-LOUD (F85, s174) preservado, e agora por CONSTRUCAO: `_cc` e
+    # importado no topo do modulo (1.9a). Gate indisponivel deixa de ser um
+    # `try/except` que cada chamada resolve sozinha e passa a ser `db` que nao
+    # importa -- se o gate nao existe, writer nenhum roda. ⚰️ *Ate 17/09/2026
+    # este bloco montava `sys.path` com `__file__` para achar `tools/`.*
     erros = list(_cc.checar_encoding(sets))
     for k in ('frente_pergunta', 'verso_resposta'):
         if k in sets and not str(sets[k]).strip():
@@ -1156,22 +1149,14 @@ def update_flashcard_fields(card_id, fields) -> bool:
     # isto a guarda instalada no recurate seria contornavel por aqui: gate que
     # nao cobre o caminho real e o defeito F79/F79b/F81 se repetindo.
     verso_depois = sets.get('verso_resposta', verso_antes)
-    try:
-        from audit_card_atomicity import checar_ratchet_verso, medir_verso
-    except Exception as e:
-        # 🔴 FAIL-LOUD, nao fail-open (audit /ai-eng sobre d2026a1). Degradar
-        # para WARN aqui seria escrever sem guarda dentro do proprio fix que
-        # existe para impedir isso -- "aviso nao existe, vira gate". A recusa
-        # so vale quando a escrita TOCA o verso: bloquear uma edicao de frente
-        # por causa do ratchet seria gratuito.
-        checar_ratchet_verso = medir_verso = None
-        if 'verso_resposta' in sets:
-            conn.close()
-            raise RuntimeError(
-                f"ratchet do verso indisponivel ({e}) — reescrita RECUSADA. "
-                "O gate nao roda, logo a escrita nao acontece.")
-        print(f"[WARN] CARD_GATE: telemetria de verso indisponivel ({e}).")
-    if checar_ratchet_verso is not None and 'verso_resposta' in sets:
+    # 🔴 FAIL-LOUD, nao fail-open (audit /ai-eng sobre d2026a1): escrever sem
+    # guarda dentro do proprio fix que existe para impedir isso seria "aviso que
+    # nao existe vira gate". ⚰️ *Ate 17/09 havia aqui um import lazy com
+    # fallback `checar_ratchet_verso = medir_verso = None`, que so recusava a
+    # escrita quando ela TOCAVA o verso -- edicao de frente seguia com a
+    # telemetria zerada e um WARN. Com o import no topo (1.9a) o estado "gate
+    # ausente" deixou de existir: ou o modulo carrega, ou `db` nao importa.*
+    if 'verso_resposta' in sets:
         r = checar_ratchet_verso(verso_antes, sets['verso_resposta'])
         if r:
             conn.close()
@@ -1187,8 +1172,8 @@ def update_flashcard_fields(card_id, fields) -> bool:
     )
     conn.commit()
     conn.close()
-    len_a, fr_a = medir_verso(verso_antes) if medir_verso else (0, 0)
-    len_d, fr_d = medir_verso(verso_depois) if medir_verso else (0, 0)
+    len_a, fr_a = medir_verso(verso_antes)
+    len_d, fr_d = medir_verso(verso_depois)
     _log_reforja(card_id, 'db.update_flashcard_fields', versao_antes,
                  versao_antes + 1, 'reforja', sorted(sets),
                  (len_a, len_d, fr_a, fr_d))
@@ -1325,7 +1310,8 @@ def fechar_reforja(card_id, motivo, forcar=False, justificativa=None, origem=Non
     nao tem predicado que o meca: fecha com `evidencia='humana'`. Fronteira
     DECLARADA, nunca metrica inventada (AGENTE.md secao 10.8).
     """
-    import card_checks as _cc
+    # `_cc` vem do topo do modulo (1.9a) -- este import local era o terceiro
+    # sitio que alcancava `tools/` por vizinhanca de `sys.path`.
     predicado = _cc.PREDICADOS_VERIFICAVEIS.get((motivo or "").strip())
     conn = get_connection()
     try:

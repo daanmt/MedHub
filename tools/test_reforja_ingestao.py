@@ -32,7 +32,7 @@ sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "tools"))
 
 from app.utils import db  # noqa: E402
-import card_checks  # noqa: E402
+from app.utils import card_checks  # noqa: E402
 import init_db  # noqa: E402
 import reforja  # noqa: E402
 
@@ -96,12 +96,12 @@ def banco(tmp_path, monkeypatch):
 
 def test_predicado_esta_no_registro_e_delega_sem_copiar_regex(monkeypatch):
     assert "nao_atomico" in card_checks.PREDICADOS_VERIFICAVEIS
-    import audit_card_atomicity as aca
+    from app.utils import card_atomicity as aca   # 1.9a: o nucleo puro mora aqui
     # Se `card_checks` tivesse COPIADO a regex, trocar a fonte nao mudaria nada.
     monkeypatch.setattr(aca, "checar_front", lambda t: "sentinela-de-delegacao")
     assert card_checks.checar_nao_atomico({"frente_pergunta": "x", "verso_resposta": "y"}) \
         == "sentinela-de-delegacao", \
-        "checar_nao_atomico tem que DELEGAR a audit_card_atomicity, nunca reimplementar"
+        "checar_nao_atomico tem que DELEGAR a app.utils.card_atomicity, nunca reimplementar"
 
 
 def test_shape_do_scan_bate_com_o_shape_do_fechamento(banco):

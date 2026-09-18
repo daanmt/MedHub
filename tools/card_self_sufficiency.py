@@ -80,8 +80,8 @@ PADROES = (
 # implementacao e a de `card_checks` -- a biblioteca UNICA. Copiar a regex para ca
 # criaria a segunda fonte, que e o defeito que o F89 acabou de matar.
 try:
-    sys.path.insert(0, str(Path(__file__).parent))
-    from card_checks import checar_deixis_sem_contexto as _deixis_sem_contexto
+    sys.path.insert(0, str(Path(__file__).parent.parent))
+    from app.utils.card_checks import checar_deixis_sem_contexto as _deixis_sem_contexto
 except Exception:                          # harness leve: sem a lib, os 3 regex seguem
     _deixis_sem_contexto = None
 

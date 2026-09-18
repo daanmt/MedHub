@@ -25,7 +25,7 @@ import re
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-import card_checks  # gate de qualidade (part-3) — biblioteca pura, fonte unica
+from app.utils import card_checks  # gate de qualidade — biblioteca pura, fonte unica (1.9a)
 # F80 (s174): o RELOGIO do ipub.db e unico -- app.utils.db.agora() (LOCAL naive).
 # Este CLI continua standalone no sqlite3 (AGENTE §6); so o carimbo vem de la,
 # chamado pelo ATRIBUTO do modulo (db.agora()) para o teste congelar o instante.

@@ -14,7 +14,7 @@ try:
 except Exception:
     pass
 
-import card_checks as cc  # noqa: E402
+from app.utils import card_checks as cc  # noqa: E402
 
 
 def _card(**kw):

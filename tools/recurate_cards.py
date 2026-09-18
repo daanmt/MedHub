@@ -63,7 +63,7 @@ _TOOLS_DIR = os.path.dirname(os.path.abspath(__file__))
 _ROOT_DIR = os.path.dirname(_TOOLS_DIR)
 sys.path.insert(0, _TOOLS_DIR)
 sys.path.insert(0, _ROOT_DIR)
-import card_checks  # gate de qualidade (part-4) — mesma biblioteca dos demais writers
+from app.utils import card_checks  # gate de qualidade — biblioteca PURA em app/ (1.9a)
 
 DB_PATH = os.path.join(_ROOT_DIR, 'ipub.db')
 

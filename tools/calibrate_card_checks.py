@@ -22,7 +22,7 @@ try:
 except Exception:
     pass
 
-import card_checks  # noqa: E402
+from app.utils import card_checks  # noqa: E402
 
 DB_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "ipub.db")
 META = 66  # de 68

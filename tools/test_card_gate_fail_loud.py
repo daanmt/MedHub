@@ -11,6 +11,8 @@ import inspect
 import io
 import os
 import sqlite3
+import pathlib
+import subprocess
 import sys
 from pathlib import Path
 
@@ -20,6 +22,8 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from test_ratchet_verso import _conn  # noqa: E402  -- mesma fixture do gemeo F84
+ROOT = pathlib.Path(__file__).resolve().parent.parent
+
 from app.utils import db  # noqa: E402
 
 
@@ -31,17 +35,49 @@ def _versao(tmp_path):
         con.close()
 
 
-def test_card_checks_indisponivel_recusa_qualquer_reescrita(tmp_path, monkeypatch):
-    con = _conn(tmp_path)
-    con.close()
-    monkeypatch.setattr(db, "DB_PATH", str(tmp_path / "t.db"))
-    monkeypatch.setitem(sys.modules, "card_checks", None)   # -> ImportError
-    antes = _versao(tmp_path)
-    out = io.StringIO()
-    with contextlib.redirect_stdout(out), pytest.raises(RuntimeError, match="RECUSADA"):
-        db.update_flashcard_fields(1, {"frente_pergunta": "Qual o proximo passo?"})
-    assert _versao(tmp_path) == antes, "fail-open: gravou sem gate"
-    assert out.getvalue() == "", f"nada em stdout (contrato JSON dos CLIs); veio {out.getvalue()!r}"
+def test_gate_indisponivel_derruba_o_IMPORT_do_db(tmp_path):
+    """⚰️ **Era `test_card_checks_indisponivel_recusa_qualquer_reescrita`.**
+
+    Ate 17/09/2026 o gate era importado LAZY, dentro do writer, montando
+    `sys.path` com `__file__` para achar `tools/` -- e o teste simulava a
+    indisponibilidade com `sys.modules["card_checks"] = None`, esperando um
+    `RuntimeError` por chamada.
+
+    No 1.9a a seta foi invertida: `app/utils/db.py` importa
+    `app.utils.card_checks` no TOPO. O estado "gate ausente e o writer decide o
+    que fazer" deixou de existir -- se o gate nao carrega, **o proprio `db` nao
+    importa**, e nenhum writer roda. A garantia do F85 ficou mais forte, e o
+    teste tinha que subir junto: em vez de provar uma excecao por chamada, prova
+    que a falha acontece **antes**, no import.
+
+    Roda em SUBPROCESSO de proposito: envenenar o import de um modulo ja
+    carregado neste processo nao reproduz o boot real.
+    """
+    codigo = (
+        "import sys\n"
+        "sys.modules['app.utils.card_checks'] = None\n"
+        "import app.utils.db\n"
+    )
+    r = subprocess.run([sys.executable, "-X", "utf8", "-c", codigo],
+                       cwd=str(ROOT), capture_output=True, text=True, encoding="utf-8")
+    assert r.returncode != 0, (
+        "`import app.utils.db` passou com o gate quebrado -- fail-open no boot. "
+        f"stdout={r.stdout!r}")
+    assert "card_checks" in (r.stderr or ""), r.stderr
+
+
+def test_db_nao_alcanca_tools_por_sys_path(tmp_path):
+    """1.9a: a cirurgia de `sys.path` com `__file__` nao pode voltar.
+
+    Guarda estrutural. `DB_PATH` usa `__file__` legitimamente (e a raiz do
+    repo); o que morreu foi montar caminho ate `tools/` para importar gate.
+    """
+    fonte = inspect.getsource(db)
+    for morto in ("sys.path.insert(0, _tools", "import card_checks as _cc\n    ",
+                  "from audit_card_atomicity import"):
+        assert morto not in fonte, f"cirurgia de sys.path de volta em db.py: {morto!r}"
+    assert "from app.utils import card_checks as _cc" in fonte
+    assert "from app.utils.card_atomicity import" in fonte
 
 
 def test_justificativa_orfa_removida():

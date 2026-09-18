@@ -29,7 +29,7 @@ if sys.platform == 'win32':
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from app.utils.db import get_connection, ativo_where
-import card_checks  # detectores cross-field (part-5) — mesma biblioteca do write-gate
+from app.utils import card_checks  # detectores cross-field — biblioteca PURA em app/ (1.9a)
 
 SIGNALS = {
     'alt_letter': {

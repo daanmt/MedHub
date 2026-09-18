@@ -16,7 +16,7 @@ try:
 except Exception:
     pass
 
-import audit_card_atomicity as aca  # noqa: E402
+from tools import audit_card_atomicity as aca  # noqa: E402
 
 
 # --- checar_front: assinaturas de duplo-ask -----------------------------------

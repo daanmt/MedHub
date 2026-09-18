@@ -359,7 +359,7 @@ def checar_nao_atomico(card):
     correto e `--descartar` (palavra humana + justificativa), que e um estado
     DIFERENTE de "resolvi" e mantem o passivo honesto.
     """
-    from audit_card_atomicity import checar_front, checar_verso
+    from app.utils.card_atomicity import checar_front, checar_verso
     return (checar_front(card.get("frente_pergunta"))
             or checar_verso(card.get("verso_resposta")))
 

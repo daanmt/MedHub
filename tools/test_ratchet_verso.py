@@ -22,6 +22,7 @@ import json
 import os
 import sqlite3
 import sys
+from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -32,7 +33,7 @@ except Exception:
 
 import pytest  # noqa: E402
 
-import audit_card_atomicity as aca  # noqa: E402
+from tools import audit_card_atomicity as aca  # noqa: E402
 import event_log  # noqa: E402
 import recurate_cards  # noqa: E402
 
@@ -191,34 +192,48 @@ if __name__ == "__main__":
 
 # --- guarda indisponivel => escrita RECUSADA (fail-loud, nao fail-open) -----
 
-def test_ratchet_indisponivel_recusa_a_escrita_do_verso(tmp_path, monkeypatch):
-    """Se o gate nao pode rodar, a escrita nao acontece.
+def test_ratchet_indisponivel_derruba_o_IMPORT_do_db(tmp_path):
+    """⚰️ **Era `test_ratchet_indisponivel_recusa_a_escrita_do_verso`.**
 
-    Degradar para WARN aqui seria escrever sem guarda dentro do proprio fix que
-    existe para impedir isso -- achado do audit do /ai-eng sobre d2026a1.
+    O teste antigo envenenava `sys.modules["audit_card_atomicity"]` e esperava
+    `RuntimeError` na chamada. No 1.9a o nucleo puro do ratchet mudou para
+    `app/utils/card_atomicity.py` e `db` o importa no topo: gate que nao carrega
+    derruba o import do modulo inteiro, nao uma chamada. Prova disso, em
+    subprocesso.
+    """
+    import subprocess
+    codigo = (
+        "import sys\n"
+        "sys.modules['app.utils.card_atomicity'] = None\n"
+        "import app.utils.db\n"
+    )
+    r = subprocess.run([sys.executable, "-X", "utf8", "-c", codigo],
+                       cwd=str(Path(__file__).resolve().parent.parent),
+                       capture_output=True, text=True, encoding="utf-8")
+    assert r.returncode != 0, "`import app.utils.db` passou com o ratchet quebrado"
+
+
+def test_a_simulacao_antiga_de_indisponibilidade_ficou_VAZIA(tmp_path, monkeypatch):
+    """⚰️ **Era `test_ratchet_indisponivel_nao_bloqueia_edicao_que_nao_toca_o_verso`.**
+
+    🔴 Este e o teste que mais importa deste arquivo, e nasce da propria
+    refatoracao. O antigo envenenava `sys.modules["audit_card_atomicity"]` e
+    afirmava que a edicao de FRENTE seguia passando. Depois do 1.9a esse nome
+    **nao e mais consultado por `db`** -- entao o teste continuava VERDE sem
+    testar coisa alguma: verde decorativo, a pior especie.
+
+    Ele fica, invertido: prova que a simulacao antiga e de fato inerte. Se um dia
+    `db` voltar a importar `audit_card_atomicity` por nome, este teste cai e
+    avisa que a seta da dependencia se inverteu de novo.
     """
     from app.utils import db
     con = _conn(tmp_path)
     con.close()
     monkeypatch.setattr(db, "DB_PATH", str(tmp_path / "t.db"))
-    monkeypatch.setitem(sys.modules, "audit_card_atomicity", None)  # -> ImportError
-    with pytest.raises(RuntimeError, match="RECUSADA"):
-        db.update_flashcard_fields(1, {"verso_resposta": _VERSO_CURTO})
-    con = sqlite3.connect(str(tmp_path / "t.db"))
-    try:
-        assert con.execute("SELECT card_version FROM flashcards WHERE id=1").fetchone()[0] == 3
-    finally:
-        con.close()
-
-
-def test_ratchet_indisponivel_nao_bloqueia_edicao_que_nao_toca_o_verso(tmp_path, monkeypatch):
-    # Recusar edicao de FRENTE por causa do ratchet do VERSO seria gratuito.
-    from app.utils import db
-    con = _conn(tmp_path)
-    con.close()
-    monkeypatch.setattr(db, "DB_PATH", str(tmp_path / "t.db"))
     monkeypatch.setitem(sys.modules, "audit_card_atomicity", None)
+    # inerte: a escrita de FRENTE e a de VERSO seguem normais
     assert db.update_flashcard_fields(1, {"frente_pergunta": "Qual o proximo passo?"}) is True
+    assert db.update_flashcard_fields(1, {"verso_resposta": _VERSO_CURTO}) is True
 
 
 if __name__ == "__main__":

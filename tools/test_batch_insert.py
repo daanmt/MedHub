@@ -222,9 +222,10 @@ def _sandbox_cli():
     tdir = os.path.join(d, "tools")
     os.makedirs(tdir)
     shutil.copy(_REAL_SCRIPT, os.path.join(tdir, "insert_questao.py"))
-    # part-3: o CLI importa a biblioteca de gate — vai junto pro sandbox.
-    shutil.copy(os.path.join(os.path.dirname(_REAL_SCRIPT), "card_checks.py"),
-                os.path.join(tdir, "card_checks.py"))
+    # part-3: o CLI importa a biblioteca de gate. ⚰️ *Ate 17/09 ela era copiada
+    # de `tools/card_checks.py` para o sandbox; no 1.9a ela mudou para
+    # `app/utils/card_checks.py` e passou a viajar dentro do `copytree` de `app/`
+    # logo abaixo -- uma copia a menos, e pelo motivo certo.*
     # F80 (s174): o CLI importa o relogio unico de app/utils/db.py -- a camada app/
     # vai junto pro sandbox (copia; o sandbox continua isolado do repo real).
     shutil.copytree(os.path.join(os.path.dirname(os.path.dirname(_REAL_SCRIPT)), "app"),

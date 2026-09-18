@@ -26,7 +26,7 @@ try:
 except Exception:
     pass
 
-import card_checks as cc                    # noqa: E402
+from app.utils import card_checks as cc                    # noqa: E402
 import card_self_sufficiency as css         # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -114,7 +114,7 @@ def test_contexto_curto_demais_conta_como_vazio_e_longo_nao():
 
 def test_corte_e_parametrizado_com_proveniencia():
     assert cc.CORTE_CONTEXTO_MINIMO == 15
-    with open(os.path.join(ROOT, "tools", "card_checks.py"), encoding="utf-8") as fh:
+    with open(os.path.join(ROOT, "app", "utils", "card_checks.py"), encoding="utf-8") as fh:
         fonte = fh.read()
     assert "PASSIVO 0 e ZERO falso-positivo" in fonte, \
         "o corte e o nascimento em BLOCK precisam carregar a medicao que os justifica"

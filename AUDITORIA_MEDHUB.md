@@ -2010,7 +2010,7 @@ Sessao de ABSORCAO + PLANEJAMENTO, sem reforma executada (decisao do usuario: *"
 - **Evidencia a favor de agir:** Rawson 2013 (relearning ate criterio: >60% x <20% em 24 dias); Murre & Dros (primeiro intervalo apos uma noite). **Evidencia que limita o remedio:** Deng 2015 (deck pronto nao prediz; cards proprios predizem) e Step 2 CK sem beneficio de Anki -- intake **filtrado e pequeno**, nunca bulk.
 - **Remedio proposto (spec, apos GO do operador):** intake por tarefa concluida -- `plano.py --concluir` -> `emed_flashcards.py --query` do tema -> triagem pelo teste de regenerabilidade (humana) -> `insert_card_base` dos sobreviventes no mesmo dia, dentro do teto 60. Muda politica de estudo: precedente F64 (politica e posicao do operador).
 
-### F112 -- a regua de notas 1-4 do agente esta deslocada um degrau em relacao a semantica do py-fsrs: nota 2 ("recall parcial sem o alvo") e agendada como ACERTO (Hard) e nota 4 (acerto normal) recebe o bonus de Easy -- **ALTA** -- **RESOLVIDO no mecanismo (s186, R2); PENDENTE do olho do operador na tela do player**
+### F112 -- a regua de notas 1-4 do agente esta deslocada um degrau em relacao a semantica do py-fsrs: nota 2 ("recall parcial sem o alvo") e agendada como ACERTO (Hard) e nota 4 (acerto normal) recebe o bonus de Easy -- **ALTA** -- **RESOLVIDO (s186, R2: mecanismo + gate do operador cumprido em 18/09)**
 - **Como apareceu:** a varredura 4 (open-spaced-repetition) trouxe a regra oficial do tutorial FSRS: Again e o unico lapso; "Hard" e *recuperou com esforco*, **nunca** erro parcial; "Easy" e *sem esforco*. Conferido no codigo instalado (`fsrs` 6.3.2, `Scheduler.review_card`, ramo `State.Review`: `case Rating.Hard | Rating.Good | Rating.Easy` = caminho de acerto) e no adaptador `app/utils/fsrs.py` (`Rating(rating)` direto; `lapses` so em 1).
 - 🔬 **Medido em 17/09/2026 (read-only, `file:ipub.db?mode=ro`; `fsrs_revlog` com `state=2`, 2.981 revisoes no total):** rating 1 -> 280 revisoes, intervalo medio **1,0 dia**; rating 2 -> **312 revisoes, 14,2 dias**; rating 3 -> 525, 16,7 dias; rating 4 -> **1.551 revisoes (52% do revlog), 34,3 dias**. Distribuicao total por nota: 1 = 563 · 2 = 338 · 3 = 528 · 4 = 1.552.
 - 🔴 **Classe:** contrato-verdade (vocabulario do portador != semantica do motor). `revisar.md` passo 4 define 2 como nao-acerto por conteudo; o motor le 2 como acerto com esforco. Consequencia: o card que o aluno nao lembrou volta em ~2 semanas em vez de amanha -- causa plausivel de "consolidado 85% / erros frescos 25%" (s169) e das reincidencias de fato arbitrario (F100: #719/#721/#722, #787 pela 3a vez).
@@ -2040,7 +2040,7 @@ Sessao de ABSORCAO + PLANEJAMENTO, sem reforma executada (decisao do usuario: *"
 
 ---
 
-## 6z. Sessao de ENGENHARIA s186 (Claude Code/Opus 5, 2026-09-18) -- R2 (fecha o F112) · F114
+## 6z. Sessao de ENGENHARIA s186 (Claude Code/Opus 5, 2026-09-18) -- R2 (fecha o F112) · F114 · F115 · part-7
 
 ### F114 -- parametro do modelo que o otimizador NAO ajustou (por ausencia de exemplo) sai do JSON indistinguivel de parametro ajustado: `w3` e `w16` da visao `remap` sao o default do py-fsrs, e a regua nova VAI emitir o rotulo que eles governam -- **MEDIA** -- **MITIGADO (s186: gate de `regua_do_fit` no carregador); a causa de fundo fica DECLARADA**
 
@@ -2063,4 +2063,32 @@ python -X utf8 -c "<diff: Scheduler().parameters x core/fsrs_params.json::visoes
 
 - ✅ **Entregue (s186, commits `bf7f7e9` + este):** portador unico `app/utils/regua.py`; `fsrs_revlog.regua_versao` carimbada por `record_review` (ALTER idempotente, rito §10.7, backup `ipub_backup_20260918_114258.db`, COUNT-ASSERT 14->15 colunas e 3067 linhas intocadas); remap **por linha** na entrada do Optimizer; regua v1 revogada pelos 3 passos do F90 (declaracao aqui + lapide em `revisar.md` e na Clausula 14 do `revisao-calibrada-contract` v1.6 + 3 marcadores `TERMO-REVOGADO` em `docs/MEMORIA-AUDITORIA.md`); player com rotulos v2 e limiar de relearning `< 3`.
 - 🔒 **GATE DE PARIDADE, por sensor independente do remedio:** a distribuicao de notas efetivas sob o caminho novo bate exatamente com o `core/fsrs_params.json` que o R1 escreveu em 17/09, **antes deste codigo existir** -- `cru {1:578, 2:340, 3:536, 4:1613}` e `remap {1:918, 2:536, 3:1613}` sobre as 3.067 linhas reais. Escolha deliberada de metodo, depois do F113: o sensor nao podia nascer do mesmo insumo que o remedio.
-- ⚠️ **NAO FECHADO (por isso o F112 nao esta RESOLVIDO):** o operador ainda nao viu a tela do player, que e a condicao que ele mesmo pos. Enquanto ele nao olhar, o que existe e mecanismo verde, nao mudanca aceita.
+- ✅ **GATE DO OPERADOR CUMPRIDO (18/09/2026, ~15h25 UTC).** Ele nao so viu a tela -- **drenou** os 6 cards da previa e devolveu 3 notas + 3 marcas de defeito. Perguntado explicitamente sob QUAL regua tinha dado as notas (as tres foram 4, e sob a v2 o 4 e o degrau raro), respondeu: *"a regua foi minha memoria mesmo. achei cards faceis."* -- ou seja, 4 = **sem esforco** de fato, nao habito da regua velha. A regua trocou na mao dele, nao so no portador. Fork (a) do limiar de relearning (`< 3`) confirmado no mesmo ato.
+- 🔬 **A PROVA no dado real, nao em fixture.** As 3 notas viraram as **3 primeiras linhas v2** do `fsrs_revlog` (3067 -> 3070, gravadas por `--record-lote --apply --expect 3` com COUNT-ASSERT). O revlog ficou **misto**, que e o caso que o R2 existe para tratar, e a traducao respeitou a linha:
+
+```
+visao nativa sobre o revlog real misto (3067 v1 + 3 v2):
+  nota 4 -> 3 linhas      (so as v2 -- "sem esforco" de verdade)
+  nota 3 -> 1613 linhas   (as notas 4 da v1, que significavam "cravou")
+```
+
+  Sem o versionamento, as 1.613 notas 4 antigas teriam sido relidas HOJE como "sem esforco". O defeito que o F112 nomeia teria voltado, inserido por nos, na mesma sessao que o consertou.
+
+### F115 -- o COMPRIMENTO TOTAL do card nao tem gate: `LIMITE_CHARS` mede so o verso e so durante a reforja, e o operador achou a olho os dois cards do topo 2% do baralho -- **MEDIA** -- **ABERTO (spec)**
+
+- **Como apareceu:** drenando os 6 cards da previa do R2 (18/09/2026), o operador marcou defeito em **#92** (*"card muito longo"*) e **#96** (*"mesmo feedback da outra, card longo"*). Nao viu numero nenhum -- leu os cards.
+- 🔬 **Medido na hora, sobre os 1.507 cards ativos** (soma de `frente_contexto + frente_pergunta + verso_resposta + verso_regra_mestre + verso_armadilha`): mediana **562** chars, p90 **880**.
+
+```
+  card#96   1130 chars  percentil 99,2%   <-- marcado a olho
+  card#92   1059 chars  percentil 98,0%   <-- marcado a olho
+  card#53    597 chars  percentil 57,1%   (marcado, mas por OUTRO defeito:
+                                           "pergunta composta" -- nao e comprimento)
+  card#474   735 / #286  685 / #69  617   (nao marcados)
+```
+
+  Ele marcou **exatamente os dois extremos do lote, ambos no topo 2% do baralho**, e nao marcou o de percentil 57 por comprimento. A precisao do olho dele e o achado: o eixo e real e e mensuravel.
+- 🔴 **Classe (serie §10.8): gate-miss por ESCOPO DE ALVO.** Existe um limite -- `audit_card_atomicity.LIMITE_CHARS = 220` -- mas ele mede **o verso**, nao o card, e so roda **na reforja** (`ratchet_verso`), nao como sensor de pe sobre o baralho. Entao um card pode nascer com 1.130 chars distribuidos entre contexto, pergunta e verso sem estourar nada. Irma do `cli_signature_check` (presenca != cobertura) e do "gate sem escopo de intencao" do F113: *o sensor existe, mede a coisa vizinha, e o painel fica verde.*
+- **Remedio proposto:** `spec` -- (1) medir a distribuicao de comprimento TOTAL e decidir o corte com o operador (p95 = ~950 seria ~75 cards; p98 = ~1.050 seria ~30); (2) predicado WARN em `card_checks` sobre a soma dos campos, com o corte como parametro nomeado, nunca constante enterrada; (3) nascer WARN pelo `warn-first-check` -- o passivo nao e zero, entao promover a BLOCK agora desligaria o gate na segunda sessao.
+- ⚠️ **Limite declarado:** comprimento e proxy, nao o defeito. Card longo pode ser longo com razao (vinheta clinica que a pergunta precisa -- o #284 do F81 e o precedente). O predicado sinaliza CANDIDATO a reforja; quem decide segue sendo leitura humana. Nao converter em BLOCK sem triagem.
+- ⚠️ **O que segue aberto e o Fork (b):** os parametros NAO foram adotados (ver F114). Gatilho do re-fit acordado com o `/ai-eng`: quando a visao v2 tiver nota 4 real em volume que mova `w3`/`w16` para fora do default -- o teste e o mesmo diff indice a indice que achou o F114, e o sensor ja existe. Hoje sao 3 linhas.

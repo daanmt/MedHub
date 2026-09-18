@@ -277,6 +277,9 @@ nunca convertido em métrica para o painel ficar verde.
 <!-- TERMO-REVOGADO: Drive desatualizado | cronograma-contract v1.3 (s185, plano-ssot-e-cards-v2 Parte 4) -- o banner morreu junto com `day_plan._conclusao_drive`: a conclusao vem de `plano_tarefas`, nao do snapshot do xlsx -->
 <!-- TERMO-REVOGADO: conclusao_desatualizada | reconcile-contract v1.4 (s185, Parte 4) -- W8 revogada: a fronteira do cronograma deixou de ser desconhecida porque virou coluna (`plano_tarefas.status`/`origem_conclusao`) -->
 <!-- TERMO-REVOGADO: dois sinais, dois donos | cronograma-contract v1.3 (s185, Parte 4) -- Clausula 5b revogada: conclusao (Dashboard) e ordem (xlsx) deixaram de ser dois sinais do Drive e viraram colunas do plano -->
+<!-- TERMO-REVOGADO: cravou conceito + regra-mestre | revisao-calibrada v1.6 (s186), Clausula 14 -- R2/F112: a regua v1 media COMPLETUDE da resposta; a v2 mede ESFORCO DE RECUPERACAO (semantica nativa do FSRS) -->
+<!-- TERMO-REVOGADO: recall parcial/na zona mas sem o alvo | revisao-calibrada v1.6 (s186), Clausula 14 -- R2/F112: era a definicao da nota 2 na regua v1; sob a v2 o 2 e 'lembrou com esforco', que e ACERTO -->
+<!-- TERMO-REVOGADO: Nota `< 4` recoloca | revisao-calibrada v1.6 (s186), Clausula 14 -- R2/F112: o limiar de relearning do player passou a `< 3`; sob a v2 o 4 e 'sem esforco' (raro) e exigi-lo faria todo acerto comum repetir para sempre -->
 
 > **Por que os marcadores são comentários HTML:** eles não aparecem no render do documento (o
 > leitor humano lê a prosa acima, não a lista), mas são triviais de extrair. O registro fica onde a

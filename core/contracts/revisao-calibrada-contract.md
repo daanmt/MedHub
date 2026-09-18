@@ -2,12 +2,12 @@
 type: contract
 layer: core
 status: canonical
-version: 1.5
+version: 1.6
 relates_to: [forgetting-curve-contract, fsrs-management-contract, cronograma-contract, AGENTE]
 ---
 
 # Contrato de Execução de Revisão Calibrada
-**Versão 1.5 | 2026-09-17 (s185, F110: Cláusula 13 -- fricção virtuosa não se automatiza; declarada SEM gate) -- anterior: 1.4, 2026-09-16 (s183: o DRENAR ganha uma SEGUNDA superficie -- o player de cards como pagina, Clausula 12. Nenhuma clausula revogada; A, C e F preservados por construcao) -- anterior: 1.3, 2026-09-08 (s170: o sub-modo PREPARAR e a Camada 1 sao REVOGADOS; todo o ensino migra para a Revisao Direcionada de fechamento -- Clausula 11, Invariante F, lapide do Invariante D); 1.2, 2026-07-06 (s109+, F18c/F21: Invariante E + Clausula 10); 1.1, 2026-07-05 (s108+, F8/F9: Invariantes C e D); 1.0, 2026-06-28 (sessao 096).**
+**Versão 1.6 | 2026-09-18 (s186, R2/F112: Cláusula 14 -- a régua de notas passa a ser a NATIVA do FSRS e vira propriedade VERSIONADA de cada linha do revlog; a régua v1 é REVOGADA) -- anterior: 1.5, 2026-09-17 (s185, F110: Cláusula 13 -- fricção virtuosa não se automatiza; declarada SEM gate) -- anterior: 1.4, 2026-09-16 (s183: o DRENAR ganha uma SEGUNDA superficie -- o player de cards como pagina, Clausula 12. Nenhuma clausula revogada; A, C e F preservados por construcao) -- anterior: 1.3, 2026-09-08 (s170: o sub-modo PREPARAR e a Camada 1 sao REVOGADOS; todo o ensino migra para a Revisao Direcionada de fechamento -- Clausula 11, Invariante F, lapide do Invariante D); 1.2, 2026-07-06 (s109+, F18c/F21: Invariante E + Clausula 10); 1.1, 2026-07-05 (s108+, F8/F9: Invariantes C e D); 1.0, 2026-06-28 (sessao 096).**
 
 > Documento normativo. Governa a **competência única `/revisar`** cuja descompressão é calibrada por uma **nota de dificuldade-para-o-usuário (1-10) por tema**, sem cegar a curva de esquecimento. Consome o score de dormência e a retrievability de `forgetting-curve-contract.md` (não os redefine) e o `(tema, tipo)` de `cronograma-contract.md`. Referenciado por: `AGENTE.md` (§1.2, §6, §7.3), `.claude/commands/revisar.md`.
 
@@ -199,12 +199,50 @@ Duas dimensões **ortogonais** no render de qualquer ensino calibrado — **`/au
 - O **player é veículo do DRENAR**, não fase nova (Cláusula 12, v1.4): duas superfícies, dois invariantes preservados por construção, uma só Revisão Direcionada no chat.
 - ⚰️ Invariante D (isolamento do PREPARAR) **revogado na v1.3** — sem aquecimento pré-drill não há o que isolar.
 - **Silêncio no meio do DRENAR** (Invariante F, v1.3): nota e tally durante o drill; prosa só no fechamento, sobre notas 1-2. Exceção: defeito de card.
-- A nota **nunca** governa o agendamento FSRS — só a profundidade da preparação.
+- A nota **nunca** governa o agendamento FSRS — só a profundidade da preparação. *(Esta fronteira fala da nota de DIFICULDADE-POR-TEMA 1-10. A nota de card 1-4 é outra coisa: ela é o input do modelo, e desde a v1.6 tem régua declarada -- Cláusula 14.)*
+- A **régua da nota de card é a nativa do FSRS** e cada revisão carrega a versão sob a qual foi dada (Cláusula 14) — trocar o vocabulário nunca reinterpreta o histórico.
 - Descompressão é calibrável; **cobertura de ponto de prova é piso fixo** (Invariante E / Cláusula 10) — compressão encurta, nunca corta.
 - A nota que calibrou a aula é **registrada no fechamento** (`fonte='aula'`, Cláusula 10), sem sobrescrever `fonte='usuario'`.
 - `set_dificuldade` toca só as 3 colunas de dificuldade. `infer_nota` é read-only e só lê sinais frios.
 
 *Ratificação:* este contrato nasce `pending-ratification`; vira `canonical` após validação em uso (1ª abertura de task calibrada de ponta a ponta).
+
+---
+
+## Cláusula 14 -- a régua da nota de card é a NATIVA do FSRS, e é versionada (v1.6, R2/F112, s186)
+
+**A régua.** No DRENAR a nota 1-4 mede **esforço de recuperação**, não completude da resposta:
+
+| nota | significado | como o motor a trata |
+|---|---|---|
+| **1** | falhou -- não recuperou, ou "não sei" | único lapso; o card volta hoje |
+| **2** | lembrou **com esforço** -- chegou lá, mas custou | acerto difícil; intervalo curto |
+| **3** | lembrou -- recuperação normal | **o caso padrão** |
+| **4** | lembrou **sem esforço** -- imediato | raro por construção |
+
+**Portador único:** [`app/utils/regua.py`](../../app/utils/regua.py). O `revisar.md`, o player e o
+otimizador **leem** de lá; nenhum deles redefine a tabela.
+
+⚰️ **A régua v1 (completude: *"cravou conceito + regra-mestre -> 4 ... recall parcial sem o alvo -> 2"*)
+está REVOGADA desde 18/09/2026.** Medido no F112: como o motor lê a escala por esforço, a nota 2 --
+o card que o usuário **não** lembrou -- era agendada como acerto e voltava em ~14 dias. Decisão do
+operador em 17/09 (opção (b)), com os números do R1 na mão.
+
+🔴 **Revogar o vocabulário não pode reescrever o passado.** As 3.067 revisões gravadas sob a v1
+continuam existindo, e sob a régua nova elas significariam outra coisa. Por isso a régua é
+propriedade **da linha**: `fsrs_revlog.regua_versao` carimba toda revisão nova, o histórico fica
+`NULL` (= v1 **por declaração**, nunca por inferência), e a tradução v1 -> nativa acontece **só na
+entrada do Optimizer**. O revlog é imutável; não há backfill.
+
+**Consequência no player (Cláusula 12):** o relearning intra-sessão passa de `nota < 4` para
+**`nota < 3`** -- repete enquanto falhou ou custou. Sob a v1, exigir 4 era exigir domínio; sob a v2
+seria exigir ausência de esforço, e o 3 nunca sairia da fila.
+
+**Parâmetros do modelo seguem os de referência do py-fsrs.** `app/utils/fsrs.py` consulta
+`core/fsrs_params.json` e **recusa** adotar conjunto cuja régua de ajuste não seja a régua de
+escrita (F114: na visão `remap` do R1, `w3` e `w16` -- stability inicial e bônus de Easy -- são o
+default intocado, porque aquela visão mapeia `4 -> 3` e não tem um único exemplo de Easy). A meta
+de retenção fica em **0,90** até haver `review_duration_ms` medido.
 
 ---
 

@@ -10,6 +10,10 @@
   script de id "lote" (type application/json) que fica no fim do body.
   O marcador de abertura tem de ser UNICO no arquivo -- nao repetir a tag aqui.
 
+  REGUA v2 (R2/F112, 18/09/2026): a nota mede ESFORCO DE RECUPERACAO, nao
+  completude -- 1 falhou / 2 com esforco / 3 lembrou / 4 sem esforco. Portador
+  unico da regua: app/utils/regua.py.
+
   FRONTEIRA DURA: esta pagina NUNCA grava FSRS. Ela guarda a primeira nota de
   cada card na capability `db` (colecao sessoes/<sessao>/notas) e o agente
   grava em lote por `--record-lote`, que chama `record_review` -- o caminho de
@@ -204,13 +208,13 @@ footer{color:var(--tinta3);font-size:.76em;margin-top:28px;border-top:1px solid 
     </form>
 
     <div class="notas" id="notas-botoes" hidden>
-      <button data-nota="1"><b>1</b><span>nao lembrei</span></button>
-      <button data-nota="2"><b>2</b><span>dificil</span></button>
-      <button data-nota="3"><b>3</b><span>bom</span></button>
-      <button data-nota="4"><b>4</b><span>facil</span></button>
+      <button data-nota="1"><b>1</b><span>falhei</span></button>
+      <button data-nota="2"><b>2</b><span>com esforco</span></button>
+      <button data-nota="3"><b>3</b><span>lembrei</span></button>
+      <button data-nota="4"><b>4</b><span>sem esforco</span></button>
     </div>
 
-    <p class="dica"><kbd>Espaco</kbd> vira o card &#183; <kbd>1</kbd>-<kbd>4</kbd> da a nota &#183; <kbd>D</kbd> marca defeito. Nota abaixo de 4 recoloca o card no fim do lote (relearning) e nao gera segunda nota: so a primeira e gravavel.</p>
+    <p class="dica"><kbd>Espaco</kbd> vira o card &#183; <kbd>1</kbd>-<kbd>4</kbd> da a nota &#183; <kbd>D</kbd> marca defeito. A nota mede o ESFORCO que a lembranca custou, nao o quanto a resposta foi completa &#183; <b>3 e o caso normal</b>, 4 e raro. Nota abaixo de 3 recoloca o card no fim do lote (relearning) e nao gera segunda nota: so a primeira e gravavel.</p>
   </main>
 
   <section class="painel-fim" id="fim" hidden>
@@ -390,7 +394,10 @@ footer{color:var(--tinta3);font-size:.76em;margin-top:28px;border-top:1px solid 
       salvar(registro);
     }
     fila.shift();
-    if(nota < 4){ fila.push(c); }   // relearning: volta ao FIM, sem segunda nota gravavel
+    if(nota < 3){ fila.push(c); }   // relearning: volta ao FIM, sem segunda nota gravavel
+                                    // R2/F112: era `< 4` sob a regua v1, onde 4 = "cravou".
+                                    // Sob a v2, 4 = "sem esforco" (raro) e 3 = lembrou (normal):
+                                    // manter `< 4` faria todo acerto comum repetir para sempre.
     mostrar();
   }
 
@@ -452,8 +459,8 @@ footer{color:var(--tinta3);font-size:.76em;margin-top:28px;border-top:1px solid 
       var n = notas.get(c.card_id);
       if(!n){ novos.push(c); return; }
       if(n.defeito){ return; }                        // defeito sai do lote
-      if(n.rating_primeira >= 4){ return; }           // resolvido
-      relearning.push(c);                             // nota < 4 volta ao fim
+      if(n.rating_primeira >= 3){ return; }           // resolvido (R2: era >= 4 sob a regua v1)
+      relearning.push(c);                             // nota < 3 volta ao fim (R2)
     });
     fila = novos.concat(relearning);
   }

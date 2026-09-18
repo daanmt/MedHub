@@ -8,7 +8,7 @@ status: canonical
 # Skill: Cronograma
 
 > Assinatura canônica de `tools/cronograma.py`. Governado por `core/contracts/cronograma-contract.md`.
-> 🔴 **Read-only:** este CLI NUNCA escreve no `ipub.db` (nem taxonomia, nem sessoes_bulk, nem FSRS, nem review_log). Cláusula 5 do contrato.
+> 🔴 **Read-only:** este CLI NUNCA escreve no `ipub.db` (nem taxonomia, nem sessoes_bulk, nem FSRS, nem review_log). Cláusula 5 do contrato.  <!-- CHECK: test_writer_allowlist -->
 
 ---
 
@@ -101,10 +101,10 @@ python tools/cronograma.py --check-extensivo                # grade_extensivo.js
 python tools/cronograma.py --rebuild-extensivo --expect-tasks N   # override da contagem esperada (default 735) -- SÓ quando o PDF do EMED mudou de verdade
 ```
 
-- 🔴 **Falha dura por decisão da spec:** `--rebuild-extensivo` recusa gravar `grade_extensivo.json` quando a contagem parseada não bate **735 tarefas / 52 semanas** (ou quando alguma tarefa fica sem disciplina reconhecida) -- levanta `ExtensivoContagemDivergente`, nunca versiona um catálogo com buraco silencioso.
+- 🔴 **Falha dura por decisão da spec:** `--rebuild-extensivo` recusa gravar `grade_extensivo.json` quando a contagem parseada não bate **735 tarefas / 52 semanas** (ou quando alguma tarefa fica sem disciplina reconhecida) -- levanta `ExtensivoContagemDivergente`, nunca versiona um catálogo com buraco silencioso.  <!-- CHECK: test_cronograma_extensivo -->
 - `--expect-tasks N` é a **única** válvula de escape: quando passada, destrava a checagem inteira (tarefas *e* semanas, contra o que o parser efetivamente encontrou) -- porque a spec só previu um flag para "o PDF do EMED mudou de verdade". Sem o flag, os dois números continuam invariantes.
 - `_meta` de `grade_extensivo.json`: `{fonte, sha256, gerado_em, n_semanas, n_tasks, n_teoria, n_revisao, n_rpq}`. Cada task: `{tarefa, disciplina, area_norm, assunto, subtemas[], tipo, tipo_norm, paginas_livro[[ini,fim]], n_paginas, n_links_questoes, n_questoes|null, url_lista|null}`.
 - `tipo_norm` tem **3 valores** (`teoria` | `revisao` | `revisao_questoes`, via `normaliza_tipo` -- o mesmo da Reta Final); `tipo` preserva o rótulo bruto (`Teoria I/II/III`, `Revisão I/II`, `Revisão por Questões`, `Questões Erradas`, `Diversos Assuntos`).
 - `area_norm` reusa `AREA_PDF_TO_CANON` (mesma taxonomia EMED -> canônica da Reta Final -- um só lugar, não uma segunda tabela). Duas exceções documentadas caem em `Multi`: **"Todas as Disciplinas"** (coringa multi-área, igual à Reta Final) e **"Radiologia"** (não está em `core/areas.json` -- mudar a lista é decisão do operador, F89). Tarefas com lista encadeada de disciplinas (ex. Semana 52 "Revisão Final": *"Cardio, Psiquiatria e Nefro"*) também viram `Todas as Disciplinas`/`Multi` em vez de ficarem presas à primeira disciplina da lista.
-- `url_lista` é **best-effort**, nunca scraping -- só o que o texto do PDF já expõe (link "Caderno de Questões" quando a tarefa declara um); `null` quando o PDF não expõe. `n_questoes` só existe em ~76/735 tarefas (as que declaram N explícito na lista) -- o resto é `null`.
+- `url_lista` é **best-effort**, nunca scraping -- só o que o texto do PDF já expõe (link "Caderno de Questões" quando a tarefa declara um); `null` quando o PDF não expõe. `n_questoes` só existe em ~76/735 tarefas (as que declaram N explícito na lista) -- o resto é `null`.  <!-- NAO-VERIFICAVEL: anti-escopo -- ausencia de comportamento de rede nao e observavel por gate (revisar: 2027-03-31) -->
 - Anti-scope: nenhuma escrita no `ipub.db` nesta parte (mesma fronteira read-only do `cronograma-contract`); nenhuma extração de URL além do que o PDF expõe.

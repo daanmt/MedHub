@@ -68,7 +68,7 @@ Nenhuma outra mudança é necessária.
 
 ## Notas
 
-- Script é **read-only**. Nunca altera `ipub.db`. Pode ser rodado a qualquer momento da sessão sem side effects.
+- Script é **read-only**. Nunca altera `ipub.db`. Pode ser rodado a qualquer momento da sessão sem side effects.  <!-- CHECK: test_writer_allowlist -->
 - Depende apenas da tabela `sessoes_bulk` — fonte de verdade para volume por área (populada via `tools/registrar_sessao_bulk.py`).
 - Se o mês corrente sair da série `METAS_MENSAIS` (ex.: rodar em jan/2027 sem atualizar), o script degrada graciosamente: blocos 3 e 4 trazem aviso, blocos 1/2/5 seguem funcionais (marcos datados perdem só o custo/q projetado).
 - Se a data de um marco já passou, o bloco 2 avisa para atualizar `MARCOS` em vez de projetar ritmo negativo.

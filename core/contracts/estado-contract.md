@@ -65,7 +65,7 @@ O MedHub tem 4 frentes + infraestrutura. Toda seção "por frente" (aqui e no HA
 
 **Permitido:** metas e marcos, indicador macro, estado de fase por frente (1 linha), contadores, fila de prioridades macro.
 
-**Proibido:**
+**Proibido:**  <!-- NAO-NORMATIVA: rotulo de secao; as proibicoes sao as linhas seguintes -->
 - Narrativa de sessão ("o que foi feito na sessão 074…") → vai em `history/`.
 - Pendências operacionais imediatas → vão no `HANDOFF.md`.
 - Lista session-by-session acumulada (o ESTADO antigo tinha "Últimas 10 sessões" — isso é pointer para `history/INDEX.md`, não conteúdo).

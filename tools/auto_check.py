@@ -1131,6 +1131,43 @@ def main():
     _ledger_record("termo_sem_marcador",
                    [{"alvo": t, "payload": {}} for t in so_no_codigo])
 
+    # 16c. Clausula normativa sem terminal nomeado (item 1.10, s187). Toda prescricao
+    #      de skill/contrato tem de chegar a CHECK nomeado, marca "nao-verificavel" com
+    #      data, ou marca "nao-normativa" (imprecisao declarada do detector lexical).
+    #      🔴 DUAS severidades por motivo medido: `orfa` nasce WARN porque o passivo
+    #      nasce em 271 -- BLOCK aqui desligaria o gate na segunda sessao. Mas anotacao
+    #      que nomeia gate INEXISTENTE, ou marca sem data, e BLOCK desde o nascimento,
+    #      porque essa base e ZERO por construcao: e o F90 um nivel acima (cobertura
+    #      aparente e pior que cobertura ausente).
+    desc_clau = "Clausula normativa com terminal (1.10)"
+    clau_ok, clau_warns = True, 0
+    try:
+        from clausulas_check import run_checks as clau_run
+        achados_clau, resumo_clau = clau_run()
+        graves_clau = [a for a in achados_clau if a["severidade"] == "BLOCK"]
+        clau_warns = sum(1 for a in achados_clau if a["severidade"] == "WARN")
+        if graves_clau:
+            clau_ok = False
+            print()
+            for a in graves_clau[:10]:
+                print(f"[BLOCK] CLAUSULA_{a['tipo'].upper()}: {a['portador']}:{a['linha']} "
+                      f"-- {a['texto'][:110]}")
+            print("  Anotacao que aponta para gate inexistente fabrica aparencia de "
+                  "cobertura. Conferir o nome contra o registro derivado: "
+                  "`python tools/clausulas_check.py --json`.")
+        else:
+            print()
+            print(f"[WARN] CLAUSULA_ORFA (1.10): {resumo_clau['orfas']} de "
+                  f"{resumo_clau['normativas']} clausulas normativas sem terminal "
+                  f"({resumo_clau['cobertura_pct']}% cobertas; "
+                  f"{resumo_clau['nao_normativas']} marcadas nao-normativa). "
+                  f"Terminal = `<!-- CHECK: nome -->` ou "
+                  f"`<!-- NAO-VERIFICAVEL: motivo (revisar: AAAA-MM-DD) -->`. "
+                  f"Detalhe: `python tools/clausulas_check.py --por-portador`.")
+    except Exception as e:  # noqa: BLE001
+        print(f"\n[WARN] CLAUSULA_CHECK: sensor indisponivel ({e}).")
+    results_summary.append((desc_clau, clau_ok, clau_warns))
+
     # PAINEL DE DÍVIDA (descolar part-1, F54/P5): o leitor obrigatório. Imprime SEMPRE
     # (dívida invisível em run verde é exatamente o modo de falha F54). Sensor: detecta
     # e reporta; a drenagem e a promoção WARN->BLOCK seguem a política s106/107 (base zera).

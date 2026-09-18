@@ -47,7 +47,7 @@ Não requer argumentos. Varre `resumos/**/*.md` recursivamente.
 ```
 
 - **❌ + [FALTA ESTRUTURA]** — resumo sem seção de armadilhas (crítico, corrigir)
-- **❌ + [ANTI-PATTERN]** — tabela proibida presente (crítico, converter para bullets)
+- **❌ + [ANTI-PATTERN]** — tabela proibida presente (crítico, converter para bullets)  <!-- CHECK: test_audit_resumos -->
 - **❌ + [AVISO STYLE]** — sem marcadores visuais (não crítico, mas indica resumo "passivo")
 
 ---

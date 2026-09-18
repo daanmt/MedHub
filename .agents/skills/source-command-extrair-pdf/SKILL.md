@@ -95,7 +95,7 @@ O vault opera em Markdown; os PDFs ficam como matéria-prima local.
 > Correção 2026-08-14 (auditoria de sistemas): esta seção instruía deletar os
 > PDFs — norma morta cujo cumprimento causava perda irreversível (`AGENTE.md §6`
 > já admitia o drift). Único caso: PDF temporário de terceiros sem valor de
-> fonte pode ser removido a critério do usuário, nunca por default do agente.
+> fonte pode ser removido a critério do usuário, nunca por default do agente.  <!-- NAO-VERIFICAVEL: default de NAO-remocao e ato do agente, sem rastro estrutural (revisar: 2027-03-31) -->
 >
 > Correção 2026-08-14 (consolidacao-part-2): o tier bruto de RAG sobre PDF
 > (`pdf_raw`, `tools/index_pdf_raw.py`) foi removido — o gold (`resumos/**/*.md`)

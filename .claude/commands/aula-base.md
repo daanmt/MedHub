@@ -33,7 +33,7 @@ artifact pode ser tratado como peça de leitura de alta qualidade, sem medo de a
 
 🔴 **Fronteira de SSOT:** o Artifact é **camada de apresentação**. O que precisa sobreviver à
 aula (armadilhas, discriminações, condutas) vai para `resumos/` seguindo `/estilo-resumo` —
-nunca fica só no artifact.
+nunca fica só no artifact.  <!-- NAO-VERIFICAVEL: ato do agente na sessao; nada liga o artifact publicado ao resumo (revisar: 2027-03-31) -->
 
 ---
 

@@ -82,6 +82,35 @@ dos marcadores `<!-- TERMO-REVOGADO: ... -->` do §12 do inventário).
 | `--json` | Achados em JSON (alvo sem nenhum referenciador vivo). |
 | `--tabela` | Tabela markdown dos CLIs vivos + quem os alcança. **É a fonte da §7.4 do `AGENTE.md`** — aquela tabela é GERADA: regenerar e colar, nunca editar à mão. |
 
+### `tools/clausulas_check.py` — cláusula normativa sem terminal nomeado (item 1.10)
+
+Inventário das prescrições de `.claude/commands/`, `core/contracts/` e `AGENTE.md`, e se
+cada uma chega a um terminal. Read-only. O defeito que encerra: **não havia como responder
+"esta regra é verificada?"** — F90/F97 são a forma aguda (cláusula revogada seguiu
+prescrevendo, painel PASSED), e 271 órfãs são a crônica.
+
+Terminais, anotados **no próprio portador** (§10.5 — registro separado drifta em silêncio):
+
+| Marca | Significa |
+|---|---|
+| `<!-- CHECK: NOME -->` | verificada por gate nomeado; o nome é conferido contra registro **derivado** do `auto_check` + suítes. |
+| `<!-- NAO-VERIFICAVEL: motivo (revisar: AAAA-MM-DD) -->` | regra real sem gate possível. **A data é o que a torna dívida e não anistia.** |
+| `<!-- NAO-NORMATIVA: motivo -->` | o detector errou: a linha é prosa, não prescrição. Fica em coluna própria, **nunca somada à cobertura**. |
+
+| Flag | Função |
+|---|---|
+| `--json` | Resumo + achados em JSON (contrato de máquina). |
+| `--por-portador` | Contagem agregada por arquivo — a fila de trabalho, do maior para o menor. |
+| `--orfas` | Só as cláusulas sem terminal. |
+| `--portador SUBSTR` | Filtra por caminho. |
+
+🔴 **Duas severidades, por motivo medido.** `orfa` é WARN (o passivo nasce em 271 — BLOCK
+desligaria o gate na segunda sessão). Anotação que nomeia **gate inexistente**, ou marca
+sem data, é **BLOCK desde o nascimento**: essa base é zero por construção, e cobertura
+aparente é pior que cobertura ausente. Limites do detector (lexical, ~86% de precisão
+amostrada; a metade semântica — *o gate testa mesmo AQUELA cláusula?* — fica declarada
+não-verificável) estão na docstring do módulo, nunca maquiados.
+
 ### `tools/card_self_sufficiency.py` — card que não se sustenta sozinho
 
 | Flag | Função |

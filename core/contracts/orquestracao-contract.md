@@ -46,7 +46,7 @@ sustentavel -- nao maximizar volume num dia isolado.
   vencidos. A avaliacao ENCERRA aqui (nao empilha questoes num dia de descanso).
 - **R3 simulado:** semana de conteudo multipla de `PERIODO_SIMULADO_SEMANAS` ->
   slot de simulado (area 'Simulado' do registro de volume). Recomendacao de slot,
-  nunca geracao de conteudo.
+  nunca geracao de conteudo.  <!-- NAO-VERIFICAVEL: fronteira recomendar x gerar e semantica (revisar: 2027-03-31) -->
 - **R4 questoes da grade:** qtd = min(capacidade do dia, ritmo necessario arredondado
   para cima). Grade ATRASADA (folga < 0) -> capacidade maxima do dia.
   capacidade = tempo_h x `QUESTOES_POR_HORA` x fator de energia.

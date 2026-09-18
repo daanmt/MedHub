@@ -60,7 +60,7 @@ Ele **não é** histórico de sessões. **Não é** sumário acumulativo. É um 
 
 **Permitido:** próximo passo imediato; 1 linha por frente; última sessão (≤5 bullets); pendências cross-frente (≤3 linhas).
 
-**Proibido:**
+**Proibido:**  <!-- NAO-NORMATIVA: rotulo de secao; as proibicoes sao as linhas seguintes -->
 - Conteúdo de sessões anteriores à última (vive em `history/`).
 - Narrativa de mais de uma sessão.
 - Duplicação do que está em `history/session_NNN.md`.

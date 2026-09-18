@@ -2084,6 +2084,23 @@ visao nativa sobre o revlog real misto (3067 v1 + 3 v2):
 
   Sem o versionamento, as 1.613 notas 4 antigas teriam sido relidas HOJE como "sem esforco". O defeito que o F112 nomeia teria voltado, inserido por nos, na mesma sessao que o consertou.
 
+### F116 -- o linter de resumos no modo `--staged` auditava o CORPUS INTEIRO enquanto se rotulava "(N arquivos)": o modo do pre-commit hook estava de fora da condicao que anexa a lista -- **MEDIA** -- **RESOLVIDO (s187)**
+
+- **Como apareceu:** no proprio commit do F104. Eu tinha acabado de reescrever UM resumo e o harness imprimiu `✅ PASSED - Linter de Qualidade de Resumos (1 arquivos)  ⚠️ 35 WARN`. Rodado direto sobre o arquivo, `audit_resumos.py` devolvia `WARN_TOTAL=0`. **Eu ia registrar os 35 no ledger como propriedade do `TCE.md`** -- foi a divergencia entre os dois numeros que abriu o achado, nao leitura de codigo.
+- 🔬 **Causa medida, uma linha:**
+
+```
+cmd = [sys.executable, "tools/audit_resumos.py"]
+if mode == "--changed" and resumos_to_check:     # <- `--staged` de fora
+    cmd.extend(resumos_to_check)
+```
+
+  `resumos_to_check` e preenchido nos DOIS modos incrementais, mas a lista so era anexada no `--changed`. No `--staged` o CLI rodava **sem argumento**, e sem argumento ele varre os 136. `python tools/audit_resumos.py` devolve exatamente `WARN_TOTAL=35` -- o mesmo numero, confirmado por execucao independente.
+- 🔴 **Duas consequencias, e a segunda e a grave:** (i) **o rotulo mente** -- "(1 arquivos) 35 WARN" faz quem le atribuir 35 defeitos ao arquivo recem-escrito; (ii) **o escopo do GATE e outro** -- um BLOCK preexistente em resumo alheio derrubaria um commit que nao o toca, apontando para o arquivo errado. Nao mordeu ate hoje porque o `BLOCK_TOTAL` global esta em 0: **sorte, nao desenho**.
+- 🔴 **Contradizia o contrato escrito.** `AGENTE.md §6` diz verbatim *"o git pre-commit hook roda `--staged` (audita so o que sera selado)"*. Codigo e prosa divergiam, e nenhum gate comparava os dois -- a mesma forma do 1.10 uma camada abaixo.
+- 🔴 **Classe: escopo MAIOR que o declarado** -- a imagem espelhada do F115 (escopo menor que o necessario) e do Invariante A (sensor mirando a coisa vizinha). Os quatro achados da janela s187 sao a mesma pergunta: *o sensor alcanca exatamente o que diz alcancar?*
+- ✅ **Resolvido (s187):** `cmd_linter_resumos` e `label_linter_resumos` viram funcoes PURAS e testadas; modo incremental com lista vazia devolve `None` (nao rodar) em vez de varrer tudo -- era por ali que o defeito entrava. 6 testes, um deles prendendo a frase do contrato no `AGENTE.md` para prosa e codigo nao voltarem a divergir em silencio.
+
 ### F115 -- o COMPRIMENTO TOTAL do card nao tem gate: `LIMITE_CHARS` mede so o verso e so durante a reforja, e o operador achou a olho os dois cards do topo 2% do baralho -- **MEDIA** -- **RESOLVIDO (s187)**
 
 - **Como apareceu:** drenando os 6 cards da previa do R2 (18/09/2026), o operador marcou defeito em **#92** (*"card muito longo"*) e **#96** (*"mesmo feedback da outra, card longo"*). Nao viu numero nenhum -- leu os cards.

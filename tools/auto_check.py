@@ -393,6 +393,43 @@ def run_command(cmd_list, desc, capture=False):
     return res.returncode == 0, ""
 
 
+MODOS_INCREMENTAIS = ("--changed", "--staged")
+
+
+def cmd_linter_resumos(mode, resumos):
+    """Comando do linter de resumos para o modo dado. Puro -- so monta a lista.
+
+    🔴 **F116 (s187).** Esta funcao existe porque a construcao inline tinha o modo
+    `--staged` de fora da condicao:
+
+        if mode == "--changed" and resumos_to_check:   # <- faltava --staged
+
+    `--staged` e **o modo do git pre-commit hook**. Sem a lista, `audit_resumos.py`
+    roda sem argumento e audita o CORPUS INTEIRO, enquanto o rotulo anuncia
+    "(1 arquivos)". Medido: o commit do F104 imprimiu `(1 arquivos) 35 WARN` com o
+    arquivo staged tendo `WARN_TOTAL=0` -- os 35 eram o passivo global dos 136.
+    Contradizia `AGENTE.md §6` verbatim ("audita so o que sera selado").
+
+    `None` = nao ha o que auditar. Modo incremental com lista vazia **nunca** vira
+    varredura global: era por ali que o defeito entrava.
+    """
+    exe = [sys.executable, str(ROOT_DIR / "tools" / "audit_resumos.py")]
+    if mode == "--all":
+        return exe
+    if not resumos:
+        return None
+    return exe + list(resumos)
+
+
+def label_linter_resumos(mode, resumos):
+    """Rotulo do check. Tem de declarar o ESCOPO REAL da varredura -- foi o rotulo,
+    mais que o escopo, que enganou no F116: "(1 arquivos)" sobre 136 auditados."""
+    base = "Linter de Qualidade de Resumos"
+    if mode == "--all":
+        return f"{base} (Global)"
+    return f"{base} ({len(resumos)} arquivos)"
+
+
 def main():
     mode = "--changed"
     if len(sys.argv) > 1 and sys.argv[1] in ("--all", "-a"):
@@ -515,11 +552,8 @@ def main():
 
     # 1. Auditar Resumos
     if mode == "--all" or resumos_to_check:
-        cmd = [sys.executable, "tools/audit_resumos.py"]
-        if mode == "--changed" and resumos_to_check:
-            cmd.extend(resumos_to_check)
-        
-        desc = "Linter de Qualidade de Resumos" + (" (Global)" if mode == "--all" else f" ({len(resumos_to_check)} arquivos)")
+        cmd = cmd_linter_resumos(mode, resumos_to_check)
+        desc = label_linter_resumos(mode, resumos_to_check)
         success, out = run_command(cmd, desc, capture=True)
         all_passed = all_passed and success
         results_summary.append((desc, success, _warn_total(out)))

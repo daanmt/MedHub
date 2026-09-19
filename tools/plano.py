@@ -46,7 +46,7 @@ import math
 import os
 import sys
 import unicodedata
-from datetime import datetime
+from datetime import date, datetime
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -416,6 +416,19 @@ def aplicar_trilha(decididas, trilha):
         saida.append(d)
     stats["sem_linha"] = sorted(k for k in por_chave if k not in vistos)
     return saida, stats
+
+
+def calendario_trilha(trilha=None):
+    """`calendario` da trilha -> `{semana_plano: (inicio, fim)}` em `date`. PURA sobre o
+    dict; sem argumento le `plano_trilha.json` (ausente ou sem calendario -> `{}`).
+
+    s189 (F123b): e o UNICO calendario da Fase 1 -- a cota do dia do `day_plan` le daqui, a
+    mesma fonte que o `aplicar_trilha` consome. Data malformada LEVANTA: calendario errado
+    nao vira cota silenciosa."""
+    if trilha is None:
+        trilha = _ler(P_TRILHA) if os.path.exists(P_TRILHA) else {}
+    return {int(s): (date.fromisoformat(f["inicio"]), date.fromisoformat(f["fim"]))
+            for s, f in ((trilha or {}).get("calendario") or {}).items()}
 
 
 # ------------------------------------------------------------------ q_previstas

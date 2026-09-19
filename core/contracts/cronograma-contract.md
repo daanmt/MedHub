@@ -2,12 +2,12 @@
 type: contract
 layer: core
 status: canonical
-version: 1.3
+version: 1.4
 relates_to: [reconcile-contract, forgetting-curve-contract, estado-contract, AGENTE]
 ---
 
 # Contrato do Cronograma (Sync Cronograma ↔ Performance ↔ FSRS)
-**Versão 1.3 | 2026-06-27 (sessão 095), primeira instância; v1.1-1.3 nas sessões seguintes.**
+**Versão 1.4 | 2026-06-27 (sessão 095), primeira instância; v1.1-1.4 nas sessões seguintes.**
 **Origem: Materializa o ultraplan `docs/plans/s094-ultraplan.md §c/§d`.**
 
 > Documento normativo. Governa a **camada derivada do cronograma de Reta Final** (EMED) e seu sync com os SSOTs de estado. O cronograma é um **plano**, não verdade-de-estado: divergência plano↔realidade é *informação de gestão*, nunca corrupção. Referenciado por: `AGENTE.md` (§2 passo 4, §6, §7.3/§7.4), `reconcile-contract.md` (W5-W7), `forgetting-curve-contract.md` (Boot).
@@ -89,7 +89,7 @@ O sync era um passo único e **impossível**: mandava o agente baixar o xlsx via
 
 ## Integração
 
-- **Boot (`AGENTE §2 passo 4`) — v1.3:** `day_plan.py` deriva o bloco `🧭 Cronograma` de **`plano_tarefas`**: semana do plano corrente (menor `semana_plano` com pendência), fase (1 até 01/11 / 2 daí em diante), X/Y tarefas feitas da semana, as próximas 3-5 tarefas pendentes em ordem (`fonte`, `tema`, `tipo`, `q_previstas`, `url_lista`) e o ritmo-alvo. É a 4ª fonte do Plano do Dia (dormência × volume × FSRS × **plano**). ⚰️ *Era "importa `cronograma.py` e renderiza semana de conteúdo vs nominal ... próximos temas"* — o ramo calendário morreu em 17/09/2026 (Parte 4). `cronograma.py` segue sendo o derivador do PDF (Cláusula 4) e a fonte da **semeadura** do plano; deixou de ser a fonte do "o que vem agora".
+- **Boot (`AGENTE §2 passo 4`) — v1.3:** `day_plan.py` deriva o bloco `🧭 Cronograma` de **`plano_tarefas`**: semana do plano corrente (menor `semana_plano` com pendência), fase (1 até 01/11 / 2 daí em diante), X/Y tarefas feitas da semana, as próximas 3-5 tarefas pendentes em ordem (`fonte`, `tema`, `tipo`, `q_previstas`, `url_lista`), o **ritmo da Fase 1** e a **cota do dia** (v1.4). 🔴 **Numerador e denominador da MESMA fase (F123, s189):** o ritmo soma só as pendentes das semanas 1-7 e divide pelos dias até `FIM_CONTEUDO_ALVO`; a Fase 2 e a reserva ficam fora da conta e declaradas (⚰️ *até 18/09/2026 somava TODAS as pendentes, Fase 2 inclusa: 273 q/dia, que também governava o recomendador*). A **cota do dia** = pendentes até a semana de CALENDÁRIO corrente / dias que faltam nela (atraso soma e é declarado); o calendário é o `calendario` do `plano_trilha.json` (`plano.calendario_trilha`), a mesma fonte do `aplicar_trilha`. A POSIÇÃO continua sendo a semana do plano (menor com pendência) -- a cota responde outra pergunta. A cota vai também no cabeçalho do bloco: o hook de SessionStart injeta só as 8 primeiras linhas do plano. É a 4ª fonte do Plano do Dia (dormência × volume × FSRS × **plano**). ⚰️ *Era "importa `cronograma.py` e renderiza semana de conteúdo vs nominal ... próximos temas"* — o ramo calendário morreu em 17/09/2026 (Parte 4). `cronograma.py` segue sendo o derivador do PDF (Cláusula 4) e a fonte da **semeadura** do plano; deixou de ser a fonte do "o que vem agora".
 - **Reconcile:** condições **W5/W6/W7** (sempre WARNING, nunca BLOCKING — ver `reconcile-contract.md`). Travar boot por estar atrasado seria hostil.
 - **`/performance`, `/refrescar`, `/revisar`:** consumidores opcionais (bloco "Cronograma vs Meta"; tie-break de dormência a favor do tema da semana; filtro de cards da semana). Nenhum altera política FSRS.
 
@@ -105,6 +105,13 @@ O sync era um passo único e **impossível**: mandava o agente baixar o xlsx via
 ---
 
 ## Changelog
+
+- **v1.4 (2026-09-18, s189 — spec `trilha-autoridade-unica`, F123):** **os números do plano
+  que o operador lê passam a ser da mesma fase.** (a) O ritmo do bloco `🧭 Cronograma` soma só
+  as pendentes das semanas 1-7 (era TODAS: 12.027q / 44d = 273 q/dia, e o recomendador lia o
+  mesmo número); divisor segue `FIM_CONTEUDO_ALVO` (s159), e alvo vencido não ganha divisor.
+  (b) **Cota do dia** nova, sobre o `calendario` do `plano_trilha.json`. (c) Cada régua diz o
+  que mede: marco de volume (linha Volume), ritmo da Fase 1 e cota (bloco do plano).
 
 - **v1.3 (2026-09-17, s185 — PRD `plano-ssot-e-cards-v2`, Parte 4):** **o plano vira dado e o
   Drive sai do boot.** (a) **`plano_tarefas` declarada como a tabela da feature** na Cláusula 5 —

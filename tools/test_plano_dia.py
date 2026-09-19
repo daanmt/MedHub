@@ -157,7 +157,8 @@ def test_semana_corrente_e_a_menor_com_pendencia(tmp_db):
         "X/Y conta a semana SEM as cortadas (got %s/%s)" % (c["feitas_semana"],
                                                             c["tarefas_semana"])
     assert c["previstas"] == 42, "q previstas da semana (got %s)" % c["previstas"]
-    assert c["restante_q"] == 129, "restante = q de TODAS as pendentes, nao so da semana"
+    assert c["restante_q"] == 129, "restante = q de TODAS as pendentes da Fase 1 (s189: " \
+                                   "nunca as da Fase 2), nao so as da semana"
 
 
 def test_proximas_tarefas_em_ordem_com_os_campos_do_dod(tmp_db):
@@ -267,6 +268,81 @@ def test_calendario_e_snapshot_do_drive_sairam_do_codigo():
                 culpadas.append("%s: %s" % (suite.name, linha.strip()[:70]))
     assert culpadas == [], \
         "DoD 2: suite tratando o snapshot do Drive como fonte viva: %s" % culpadas
+
+
+# --------------------------------------------------------------------------
+# s189 (F123, spec trilha-autoridade-unica) -- ritmo da Fase 1 e cota do dia:
+# numerador e denominador da MESMA fase.
+# --------------------------------------------------------------------------
+
+HOJE_F123 = date(2026, 9, 18)          # 44 dias ate FIM_CONTEUDO_ALVO (01/11)
+CALENDARIO_FAKE = {1: (date(2026, 9, 19), date(2026, 9, 20)),
+                   2: (date(2026, 9, 21), date(2026, 9, 27)),
+                   3: (date(2026, 9, 28), date(2026, 10, 4))}
+
+
+def test_ritmo_da_fase1_nao_conta_fase2_nem_reserva(tmp_db):
+    """F123a: o boot somava TODAS as pendentes (a Fase 2 vai ate set/2027, mais a reserva)
+    e dividia pelos dias da Fase 1 -- 273 q/dia no banco real de 18/09. Com Fase 2 e reserva
+    NO BANCO, so as semanas 1-7 entram no numerador. Alvo vencido -> sem divisor."""
+    _semear([
+        _tarefa(1, semana_plano=1, status="feita", q_previstas=40),
+        _tarefa(2, semana_plano=2, q_previstas=30),
+        _tarefa(3, semana_plano=7, q_previstas=70),
+        _tarefa(4, semana_plano=8, q_previstas=500),                 # Fase 2
+        _tarefa(5, semana_plano=20, q_previstas=300),                # Fase 2
+        _tarefa(6, semana_plano=None, ordem=None, q_previstas=77),   # reserva
+    ])
+    c = day_plan._cronograma_hoje(0, HOJE_F123, calendario={})
+    assert c["restante_q"] == 100, "so a Fase 1 no numerador (got %s)" % c["restante_q"]
+    assert c["fora_da_fase1_q"] == 877, "Fase 2 + reserva ficam FORA, mas declaradas"
+    assert c["dias_grade"] == 44, "o divisor segue sendo FIM_CONTEUDO_ALVO (s159)"
+    assert c["ritmo_cronograma"] == round(100 / 44, 1)
+    render = day_plan.render(_p_render(c))
+    assert "ritmo da Fase 1" in render and "100q pendentes" in render
+    assert "977" not in render and "900q" not in render, "a soma de todas as fases vazou"
+    vencido = day_plan._cronograma_hoje(0, date(2026, 11, 2), calendario={})
+    assert vencido["ritmo_cronograma"] is None and vencido["dias_grade"] is None, \
+        "alvo vencido nao ganha divisor inventado (era max(dias, 1))"
+    assert "sem divisor" in day_plan.render(_p_render(vencido))
+
+
+def test_cota_do_dia_divide_o_restante_da_semana_pelos_dias():
+    """F123b: cota = q pendentes ate a semana de CALENDARIO corrente / dias que faltam nela.
+    Atraso soma (e e declarado); Fase 2 e reserva nunca entram; sem calendario, ou depois
+    dele, a cota e None -- nunca um numero inventado."""
+    pend = [{"semana_plano": 1, "q_previstas": 162, "status": "pendente"},
+            {"semana_plano": 2, "q_previstas": 500, "status": "pendente"},
+            {"semana_plano": 9, "q_previstas": 999, "status": "pendente"},     # Fase 2
+            {"semana_plano": None, "q_previstas": 77, "status": "pendente"}]   # reserva
+    c = day_plan.cota_do_dia(pend, CALENDARIO_FAKE, date(2026, 9, 18))        # vespera
+    assert (c["semana"], c["dias"], c["q_restantes"], c["cota"], c["comecou"]) == \
+        (1, 2, 162, 81, False), c
+    c = day_plan.cota_do_dia(pend, CALENDARIO_FAKE, date(2026, 9, 20))        # ultimo dia
+    assert (c["dias"], c["cota"], c["comecou"]) == (1, 162, True), c
+    c = day_plan.cota_do_dia(pend, CALENDARIO_FAKE, date(2026, 9, 22))        # semana 2
+    assert (c["semana"], c["dias"], c["q_restantes"], c["q_atrasadas"]) == \
+        (2, 6, 662, 162), "a semana 1 atrasada soma e e declarada (got %s)" % c
+    assert c["cota"] == 111, "ceil(662 / 6)"
+    assert day_plan.cota_do_dia(pend, CALENDARIO_FAKE, date(2026, 10, 5)) is None
+    assert day_plan.cota_do_dia(pend, {}, date(2026, 9, 22)) is None
+
+
+def test_render_declara_o_que_cada_regua_mede(tmp_db):
+    """F123 + pedido do /ai-eng: duas reguas para 'quantas questoes por dia' so convivem se
+    cada uma disser o que mede -- marco de volume, ritmo da Fase 1, cota do dia."""
+    _semear([_tarefa(1, semana_plano=1, q_previstas=162),
+             _tarefa(2, semana_plano=9, q_previstas=999)])
+    c = day_plan._cronograma_hoje(0, HOJE_F123, calendario=CALENDARIO_FAKE)
+    render = day_plan.render(_p_render(c))
+    assert "Cota do dia:** ~81q" in render, "cota da semana 1 = 162q / 2 dias"
+    assert "marco de volume" in render, "a linha de Volume declara que mede o marco"
+    assert "2o ciclo 12k" not in render, "o rotulo arredondava 12.500 para 12k"
+    cabecalho = [l for l in render.splitlines() if "**Cronograma:**" in l]
+    assert cabecalho and "cota ~81q/dia" in cabecalho[0], \
+        "a cota vai no cabecalho: o hook de boot so injeta as 8 primeiras linhas"
+    bloco = day_plan.render_handoff_block(_p_render(c))
+    assert "Ritmo do marco de volume" in bloco and "cota ~81q/dia" in bloco
 
 
 if __name__ == "__main__":

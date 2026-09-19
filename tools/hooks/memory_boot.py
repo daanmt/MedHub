@@ -40,6 +40,22 @@ def _memory_context() -> str:
         return f"[Memory v1] Aviso: {e}"
 
 
+def _resumir_plano(texto: str, cap: int) -> str:
+    """As `cap` primeiras linhas nao-vazias do Plano do Dia -- e o corte DECLARADO.
+
+    s189: o corte era mudo. A linha do ritmo do plano era a 14a e nunca chegou ao boot,
+    e o agente (e o /ai-eng) tratavam o numero como "lido pelo operador todo dia". Cap que
+    avisa > cap que trunca em silencio: o boot diz quantas linhas ficaram de fora e onde
+    ler o resto."""
+    linhas = [ln for ln in (texto or "").strip().splitlines() if ln.strip()]
+    corte = len(linhas) - cap
+    saida = linhas[:cap]
+    if corte > 0:
+        saida.append(f"(+{corte} linha(s) do plano cortadas no boot; completo: "
+                     f"`python tools/day_plan.py --no-persist`)")
+    return "\n".join(saida)
+
+
 def _day_plan_summary() -> str:
     """Resumo do Plano do Dia por subprocess isolado; fallback silencioso."""
     try:
@@ -50,8 +66,7 @@ def _day_plan_summary() -> str:
         )
         if r.returncode != 0:
             return ""
-        lines = [ln for ln in r.stdout.strip().splitlines() if ln.strip()]
-        return "\n".join(lines[:_DAY_PLAN_MAX_LINES])
+        return _resumir_plano(r.stdout, _DAY_PLAN_MAX_LINES)
     except Exception:
         return ""
 

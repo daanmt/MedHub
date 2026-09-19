@@ -340,9 +340,48 @@ def test_render_declara_o_que_cada_regua_mede(tmp_db):
     assert "2o ciclo 12k" not in render, "o rotulo arredondava 12.500 para 12k"
     cabecalho = [l for l in render.splitlines() if "**Cronograma:**" in l]
     assert cabecalho and "cota ~81q/dia" in cabecalho[0], \
-        "a cota vai no cabecalho: o hook de boot so injeta as 8 primeiras linhas"
+        "a cota vai no cabecalho: o hook de boot so injeta as primeiras linhas"
     bloco = day_plan.render_handoff_block(_p_render(c))
     assert "Ritmo do marco de volume" in bloco and "cota ~81q/dia" in bloco
+
+
+def _hook_de_boot():
+    """O hook nao e pacote importavel: carrega por path (mesmo padrao do F102)."""
+    import importlib.util
+    from pathlib import Path
+    spec = importlib.util.spec_from_file_location(
+        "memory_boot_s189", Path(day_plan.__file__).parent / "hooks" / "memory_boot.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def test_cota_cabe_no_corte_do_boot(tmp_db):
+    """s189 (nota do /ai-eng): a cota tem de CHEGAR ao boot. O teste prende a posicao contra
+    o cap REAL do hook, nunca contra um literal -- baixar o cap sem subir a cota derruba
+    aqui. Pior caso de linhas acima do bloco: com Datas E overflow de blackout (F71)."""
+    mb = _hook_de_boot()
+    _semear([_tarefa(1, semana_plano=1, q_previstas=162)])
+    c = day_plan._cronograma_hoje(0, HOJE_F123, calendario=CALENDARIO_FAKE)
+    p = _p_render(c)
+    p["provas"] = day_plan.countdown_provas(HOJE_F123)
+    p["fsrs"] = dict(p["fsrs"], overflow_blackout=[{"card_id": 1, "due": "2026-11-01"}])
+    texto = day_plan.render(p)
+    linhas = [l for l in texto.splitlines() if l.strip()]
+    posicao = next(i for i, l in enumerate(linhas, 1) if "cota ~" in l)
+    assert posicao <= mb._DAY_PLAN_MAX_LINES, \
+        "a cota e a linha %d e o boot injeta %d" % (posicao, mb._DAY_PLAN_MAX_LINES)
+    assert "cota ~81q/dia" in mb._resumir_plano(texto, mb._DAY_PLAN_MAX_LINES)
+
+
+def test_corte_do_boot_se_declara():
+    """Cap que avisa > cap que trunca em silencio: o boot diz quantas linhas cortou."""
+    mb = _hook_de_boot()
+    texto = "\n".join("linha %d" % i for i in range(1, 13))
+    resumo = mb._resumir_plano(texto, 8).splitlines()
+    assert resumo[:8] == ["linha %d" % i for i in range(1, 9)]
+    assert "+4 linha(s) do plano cortadas" in resumo[8]
+    assert "cortadas" not in mb._resumir_plano("a\n\nb", 8), "sem corte, sem aviso"
 
 
 if __name__ == "__main__":

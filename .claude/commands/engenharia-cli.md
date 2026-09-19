@@ -106,6 +106,34 @@ aparente é pior que cobertura ausente. Limites do detector (lexical, ~86% de pr
 amostrada; a metade semântica — *o gate testa mesmo AQUELA cláusula?* — fica declarada
 não-verificável) estão na docstring do módulo, nunca maquiados.
 
+### `tools/cards_rendimento.py` — o card que consome revisão e não retém
+
+Read-only. O harness inteiro mede **forma** de card; nada media **rendimento**. Medido em
+18/09/2026: **#70 tem 11 revisões e stability de 0,67 dia** — onze passagens compraram
+menos de um dia de retenção.
+
+| Flag | Função |
+|---|---|
+| `--json` | Resumo + candidatos em JSON (contrato de máquina). |
+| `--limit N` | Quantos listar no modo texto (default 20). |
+
+🔴 **O corte é DERIVADO do próprio baralho, nunca importado.** O limiar clássico do Anki
+(8 lapsos) acharia **zero** aqui — o máximo do baralho é 4. Âncora: `lapses >= 2` (falhou
+mais de uma vez) **e** `stability < mediana do baralho` (depois das falhas, o modelo ainda
+não espera sobrevivência ao intervalo típico). A mediana é **re-medida a cada execução**,
+então o corte acompanha o baralho em vez de envelhecer como número fixo. Em 18/09/2026:
+**48 de 822 revisados (5,8%)**.
+
+⚠️ **NÃO fecha o F87.** Aquele eixo é triagem na **autoria** ("este card deveria
+existir?"), e os 13 cards que o operador cortou **nunca entraram no baralho** — não têm
+`reps`, `lapses` nem stability, então nenhum sinal do FSRS os alcança. Este sensor mede o
+eixo **irmão**: entre os cards que existem, quais não pagam aluguel. Dizer o contrário
+seria cobertura aparente — a classe que o item 1.10 existe para impedir.
+
+⚠️ Baixo rendimento **não é defeito do card**: pode ser tema genuinamente difícil ou
+lacuna de fundação (pede **andaime**, não reforja). Saída é **candidato a triagem**, nunca
+veredito — como no F115.
+
 ### `tools/selo.py` — a tabela item -> terminal da reforma (DERIVADA)
 
 Prova, item a item e **por conteúdo**, que todo achado do ledger chegou a um terminal

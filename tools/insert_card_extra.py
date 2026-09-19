@@ -21,7 +21,10 @@ try:
 except Exception:
     pass
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+# 🔴 RAIZ do repo, nao `tools/` (F118, s187). O 1.9(a) moveu `card_checks` para
+# `app/utils/`, e ancorar no proprio diretorio deixou este CLI inalcancavel como
+# CLI -- a suite nao via porque o pytest insere a raiz antes de importar.
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from app.utils import card_checks  # gate de qualidade — biblioteca PURA em app/ (1.9a)
 
 DB_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'ipub.db')

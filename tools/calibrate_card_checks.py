@@ -16,7 +16,10 @@ import os
 import sqlite3
 import sys
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+# 🔴 RAIZ do repo, nao `tools/` (F118, s187). O 1.9(a) moveu `card_checks` para
+# `app/utils/`, e ancorar no proprio diretorio deixou este CLI inalcancavel como
+# CLI -- a suite nao via porque o pytest insere a raiz antes de importar.
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 try:
     sys.stdout.reconfigure(encoding="utf-8")
 except Exception:

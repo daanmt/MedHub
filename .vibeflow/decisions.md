@@ -1,6 +1,20 @@
 # Decision Log
 > Newest first. Updated automatically by the architect agent.
 
+## 2026-09-19 — A trilha da Fase 1 com UMA autoridade: gerador no repo, dado em 3 camadas (spec `trilha-autoridade-unica`, audit PASS)
+
+**Contexto:** s189, sessao de engenharia na vespera do primeiro simulado UERJ, na ordem do `/ai-eng`. Commits `7f311fd`..`521c885`, suite 933 -> 954.
+
+**Decisoes estruturais:**
+1. **Artefato gerado nunca e editavel a mao.** `plano_trilha.json` = SAIDA de `tools/trilha.py`; estrategia em `core/cronograma/trilha/parametros.json`, ajuste de linha em `trilha/custom.json` (unica camada manual, `racional` obrigatorio, vence o gerado por chave), entrada fixada em `trilha/entrada/`. Golden (arquivo == saida) + propriedade (a mesma funcao que o `--gravar` roda antes de escrever).
+2. **Guard no ponto da mutacao** quando ha autoridade unica: o `--mover` recusa linha da Fase 1 e aponta a camada manual, em vez de gravar e ser desfeito.
+3. **Dry-run tem de provar "nada muda", nao so "nada entra":** `diferenca_semeada` espelha o UPSERT e conta as linhas existentes que mudariam.
+4. **Regua declarada, nao escondida:** o piso/teto da trilha e verificado na regua do proprio gerador (auto-consistencia); a lente independente (area) sai no relatorio com as linhas divergentes nominais, sem gate.
+
+**Pitfalls:** (a) mover codigo que decide o estudo exige **golden de PARTIDA medido antes** (o scratch re-rodado em copia fora do repo); (b) laco de agendamento que zera o contador de tentativas antes do teste de capacidade trava com parametros novos (F125) -- a execucao que ja deu certo nao exercita o caso; (c) "o operador le X" e claim de ALCANCE: o hook de boot injeta 8 linhas; (d) contagem atribuida a uma sessao se mede em worktree do commit, nunca por subtracao de numero velho (o "+7 da s188" era da s187).
+
+---
+
 ## 2026-07-12 — Série auto-evolução COMPLETA (5 specs, 5 PASS): o MedHub agora se lê, se lembra, se mede e se julga sob portão
 
 **Contexto:** 4 handoff PRDs do arquiteto (ai-eng) → 5 specs → implement+audit **PASS 5/5**, executados pelo próprio arquiteto (delegação do operador). pytest 63→115. Degraus: sensor doc-drift (check 7) · ledger-of-self · plano persistido · aderência planejado×real · reflect gated.

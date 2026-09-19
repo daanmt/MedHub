@@ -3,7 +3,7 @@ type: spec
 projeto: MedHub
 feature: trilha-autoridade-unica
 slug: trilha-autoridade-unica
-status: in-progress
+status: implemented
 relates_to:
   - .vibeflow/specs/trilha-uerj-plano-como-dado.md
   - tools/day_plan.py
@@ -14,7 +14,7 @@ relates_to:
 
 > Sessao de ENGENHARIA s189 (madrugada de 18 -> 19/09/2026), vespera do primeiro simulado
 > UERJ. Ordem e decisoes do `/ai-eng` (`ai-eng-5a`): veredito da s188
-> (`docs/VEREDITO-AIENG-s188.md`) + kickoff da noite, com errata sobre o gerador. Audit = loop
+> (verbatim em `git show ec61a1b:docs/VEREDITO-AIENG-s188.md` -- o arquivo saiu no selo da s189, executado) + kickoff da noite, com errata sobre o gerador. Audit = loop
 > do vibeflow, deste lado (AGENTE.md secao 10.6).
 >
 > 🔴 **Restricao da noite:** nada muda o CONTEUDO da trilha nem o que o boot de estudo
@@ -96,6 +96,31 @@ denominador da mesma fase.
 14. Campo de custo auto-relatado fora do template dos filhos (custo = `usage` do harness).
 
 **Toda fatia:** suite verde, `auto_check --changed` PASSED, `selo.py` verde, commit proprio.
+
+## Implementacao (s189, 18-19/09/2026) -- DoD item a item
+
+| DoD | Estado | Evidencia |
+|---|---|---|
+| 1 ritmo da Fase 1 | FEITO | `7f311fd`; `test_ritmo_da_fase1_nao_conta_fase2_nem_reserva` (Fase 2 e reserva NO BANCO); banco real 273,3 -> 74,8 |
+| 2 cota do dia | FEITO | `7f311fd`; `test_cota_do_dia_divide_o_restante_da_semana_pelos_dias`; real ~81q (19-20/09) |
+| 3 reguas declaradas | FEITO | `7f311fd` + `f12c4ef` (corte do boot declarado; cota presa ao cap do hook) |
+| 4 tres camadas de dado | FEITO | `342a86e`; `core/cronograma/trilha/{parametros,custom}.json`; `_doc` "NAO EDITAR A MAO" + `gerado_por` |
+| 5 entrada fixada | FEITO | `core/cronograma/trilha/entrada/` + mapa UERJ versionado (identico ao do scratch) |
+| 6 GOLDEN | FEITO, delta 0 | golden de PARTIDA no scratch (copia) + `test_golden_o_arquivo_gravado_e_a_saida_do_gerador`; `--semear --dry-run`: 0 nova, 0 mudaria |
+| 7 PROPRIEDADE | FEITO | `test_propriedades_da_trilha_gravada` + `test_propriedade_pega_saida_adulterada`; regua do gerador (declarado) |
+| 8 so o re-executado entra | FEITO | agrega/reconcilia/gera/custom portados; relatorio/selo/veredito/links/classificacao ficam no scratch |
+| 9 reserva | FEITO | `83b3e50`; `docs/RESERVA-FASE1.md` (174 linhas; 13 de faixa ALTA sem cobertura na fila) |
+| 10 guard do `--mover` | FEITO | `390ee43`; `test_mover_recusa_linha_da_fase1_com_a_trilha_ativa` + `test_cli_mover_le_a_trilha_do_disco`; banco real recusou |
+| 11 `links_exercicios.json` | FEITO | `390ee43`; 0 consumidores; lapides |
+| 12 estado "nao existe lista" | FEITO | `390ee43`; `test_links_listas_da_estado_explicito_a_toda_tarefa` (faltando = 0) |
+| 13 clausulas + catraca | FEITO | `521c885`; 134 -> 127; `BASE_ORFAS` + `test_catraca_de_orfas_so_avisa_quando_a_contagem_sobe` |
+| 14 custo pelo harness | FEITO | `521c885`; clausula 10 do F93 + AGENTE 1.1 |
+
+**Achados de implementacao (fora do DoD):** F125 -- loop infinito herdado no agendamento do gerador
+(corrigido, regressao com prazo); `diferenca_semeada` no dry-run (sem ela, "0 diferenca" nao tinha
+prova); o "+7 orfas da s188" era atribuicao errada (medido em worktree: s187). **Nao feito:** fatia 6
+(regra de recalibracao como dado + gold set de MFC) -- opcional por decisao do `/ai-eng`; a regra
+estatistica vai como TEXTO no HANDOFF da s190.
 
 ## Scope
 `tools/day_plan.py`, `tools/plano.py`, `tools/trilha.py` (novo), `core/cronograma/trilha/`

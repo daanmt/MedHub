@@ -826,3 +826,9 @@
 {"ts": "2026-09-19T00:06:29+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "8b54773edd68", "alvo": "card#685"}
 {"ts": "2026-09-19T00:06:29+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "05d018edd7f7", "alvo": "card#686"}
 {"ts": "2026-09-19T00:06:29+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "1604c209978e", "alvo": "card#691"}
+{"ts": "2026-09-19T02:43:08+00:00", "event": "opened", "check": "consistencia_registros", "fingerprint": "ae675f4ff819", "alvo": "AGENTE.md §7.4", "payload": {"check": "tabela"}}
+{"ts": "2026-09-19T02:47:20+00:00", "event": "resolved", "check": "consistencia_registros", "fingerprint": "ae675f4ff819", "alvo": "AGENTE.md §7.4"}
+{"ts": "2026-09-19T03:11:47+00:00", "event": "opened", "check": "consistencia_registros", "fingerprint": "ae675f4ff819", "alvo": "AGENTE.md §7.4", "payload": {"check": "tabela"}}
+{"ts": "2026-09-19T03:15:21+00:00", "event": "resolved", "check": "consistencia_registros", "fingerprint": "ae675f4ff819", "alvo": "AGENTE.md §7.4"}
+{"ts": "2026-09-19T03:45:08+00:00", "event": "opened", "check": "consistencia_registros", "fingerprint": "ae675f4ff819", "alvo": "AGENTE.md §7.4", "payload": {"check": "tabela"}}
+{"ts": "2026-09-19T03:49:25+00:00", "event": "resolved", "check": "consistencia_registros", "fingerprint": "ae675f4ff819", "alvo": "AGENTE.md §7.4"}

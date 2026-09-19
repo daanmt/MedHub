@@ -1,5 +1,5 @@
 {
- "_schema": "prevalencia_uerj v1 -- incidencia por (area, tema) nas provas UERJ Acesso Direto 2021-2026 (520q). `n` = questoes em 6 edicoes; `peso` = soma com 2021-2022 valendo 0,7 (formato 60q, mais antigo); `prevalencia` alta>=4, media 2-3, baixa 1. Analogo UERJ do prevalencia_enamed.json. Fonte por questao: simulados/uerj/uerj_mapa_questoes_2021-2026.json.",
+ "_schema": "prevalencia_uerj v1 -- incidencia por (area, tema) nas provas UERJ Acesso Direto 2021-2026 (520q). `n` = questoes em 6 edicoes; `peso` = soma com 2021-2022 valendo 0,7 (formato 60q, mais antigo); `prevalencia` alta>=4, media 2-3, baixa 1. Analogo UERJ do prevalencia_enamed.json. Fonte por questao: simulados/uerj/uerj_mapa_questoes_2021-2026.json. || ACURACIA DA CLASSIFICACAO ~80-90% (veredito do /ai-eng sobre o F121, aplicado na s189): a amostra a olho 15/15 so garante erro <= ~18% (regra de tres, IC95) e a concordancia com o mapeamento manual de MFC foi 78% estrito / ~90% lido; o 'gabarito web 5/5' valida o GABARITO, nao a classificacao. Consumir em FAIXAS (alta/media/baixa), nunca em rank fino: tema com n <= 2 em 520 questoes e ruido. O piso/teto por bloco protege a alocacao ENTRE blocos (5 x 20 e fato da prova); o ruido so mexe na ordem DENTRO do bloco.",
  "atualizado": "2026-09-18",
  "n_questoes": 520,
  "edicoes": [

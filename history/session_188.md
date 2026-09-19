@@ -54,3 +54,13 @@ O operador encerrou aqui (janela de contexto esgotada) e volta na proxima sessao
 - **Geradores preservados:** `scratch/s188_trilha/` (gitignored, local): `agrega_uerj.py` -> `reconcilia.py` -> `gera_trilha.py [--gravar]` -> `build_relatorio.py`, mais `consolida_uerj.py`, `monta_links.py`, `extrair_links.py` e os insumos (`class_*.jsonl`, `q_*.json`, `links_*.json`). Rodam do proprio diretorio. 🔴 A DERIVACAO da trilha nao esta versionada -- so o JSON resultante; declarado ao `/ai-eng` como divida a julgar.
 - **A reconciliar na s189, nesta ordem:** (1) bulk do simulado + `--concluir 893`, com acerto POR BLOCO e racional declarado dos erros; (2) recalibrar a S2 e re-semear; (3) volume e cards feitos fora de sessao (#38, #26, #96; divida FSRS de 103 em 18/09); (4) resposta do `/ai-eng`; (5) cadernos UERJ 2017-2020 que ele cria no EMED.
 - **Nao feito, declarado:** `links_exercicios.json` superado continua no repo; +7 clausulas orfas no 1.10; F122 nao re-medido pelo principal; o artifact do relatorio nao foi conferido em navegador (uma passada de leitura do texto renderizado, sem screenshot).
+
+## 7. Veredito do `/ai-eng`, chegado DEPOIS do selo (23h30)
+
+**GO no conjunto, 2 ALTERA.** Verbatim em `docs/VEREDITO-AIENG-s188.md`; ordem de execucao no `HANDOFF.md`. **Nada executado nesta sessao, por ordem do operador** ("tudo que ele te pediu pra fazer fica para a proxima sessao"). Inclui o rotulo honesto de acuracia (~80-90%, consumir em faixas) no `_schema` do `prevalencia_uerj.json`: cheguei a aplica-lo por falha de um corte de script e REVERTI (`git checkout`) antes do commit.
+
+- **F123 fatiado, e o item (a) e o mais urgente da lista:** o `~273 q/dia` do boot e numero errado lido todo dia; corrigir ou remover. Ate la o HANDOFF manda ignorar (o certo e ~77).
+- **F120 = gate sim, mais forte que WARN:** `--mover` que reporta sucesso e e desfeito depois e CLI que mente; com trilha ativa deve RECUSAR linha da Fase 1 com ponteiro para o JSON.
+- **Trilha:** heuristica sem gate e aceitavel (estrategia = juizo); a divida real e o `_doc` prometer invariantes (19-25% por bloco, calendario, 6 simulados) que ninguem verifica nos 115 overrides -> teste de PROPRIEDADE sobre o dado. E duas fontes para "o que faco hoje" (artifact congelado x `day_plan` sem cota): remedio e divisao, nao scheduler.
+- **`fase1_exclusiva`:** risco confirmado -- depois do seed ninguem alcanca as 46; listar a reserva por peso UERJ e o operador olhar uma vez; terminal datado 02/11.
+- **Leitura honesta das lentes (aceita):** 15/15 a olho so garante erro <= ~18%; "gabarito 5/5" valida o gabarito, nao a classificacao -- a mesma classe do F121 em miniatura, cometida por mim ao listar as lentes.

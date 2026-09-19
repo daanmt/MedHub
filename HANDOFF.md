@@ -12,6 +12,14 @@
 5. 🔺 **Gates dele seguem abertos:** F87 · **F111/R8** (decidir junto da Fase 2, 02/11) · validacao clinica do `TCE.md`. **Para o `/ai-eng` auditar:** F119-F123 no ledger + spec `trilha-uerj-plano-como-dado` (F122/F123 DECLARADOS, com remedio proposto).
 6. 🃏 **Cards:** divida **72 atrasados + 31 p/ hoje**, pool 690, reforja 308 abertas. Aula-base D10 de Acido-Base + Potassio antes de re-drillar #595 #596 #598 #783 #786 #787.
 
+## A RECONCILIAR na proxima sessao (s189) -- ele chega com o resultado da UERJ 2023
+
+1. **Registrar ANTES de analisar:** `registrar_sessao_bulk --area Simulado --feitas 100 --acertos N --data <dia da prova>` -> `plano.py --concluir 893 --sessao <id da LINHA>`. Pedir o acerto **por bloco** (Q1-20 CM · 21-40 CIR · 41-60 GO · 61-80 PED · 81-100 MFC) e o **racional declarado** de cada erro.
+2. **Recalibrar a S2 pelo acerto por bloco:** geradores em `scratch/s188_trilha/` (local, fora do git): ajustar `PISO`/`TETO` ou `trilha_custom.py`, `python -X utf8 gera_trilha.py --gravar`, depois `plano.py --semear --dry-run` -> `--apply --expect 0`. So entao abrir o mapa da prova FEITA (`uerj_mapa_questoes_2021-2026.json`) para a Autopsia.
+3. **Volume feito fora de sessao:** listas da S1 (#38 Hernias · #26 DMG · #96 Topicos Ped) e cards -> `--concluir` + bulk; conferir a divida FSRS (103 vencidos em 18/09).
+4. **`/ai-eng` (`ai-eng-5a`, destilado enviado 18/09 23h):** ler a resposta GO/NO-GO/ALTERA sobre F119-F123 (`history/exchange-log.jsonl`); responder pelo `from` mais recente. 5 perguntas abertas la: gate do `--mover`, derivacao da trilha fora do repo, 46 linhas escondidas pela `fase1_exclusiva`, +7 clausulas orfas, `links_exercicios.json` superado.
+5. **Dele:** criar os 2 cadernos UERJ 2017-2020 no banco do EMED (#1798/#1799 sem link) · gates F87, F111/R8, `TCE.md`.
+
 ## Estado por frente
 
 - **Norte:** 🎯 Psiquiatria/IPUB via ENAMED 2027 (corte 940, alvo 95%). Plano B: UERJ/MFC 01/11/2026 (44d; **inscrito**). Hibrido: Fase 1 = RF rescopada ate 01/11; Fase 2 = extensivo S21-S48.

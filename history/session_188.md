@@ -45,3 +45,12 @@ F119 (link nunca conectado, RESOLVIDO) · F120 (estrategia cravada em codigo + `
 3. `links_exercicios.json` superado (deslocamento na S15): auto-higiene com grep, nao feita.
 4. +7 clausulas orfas (skill/spec novas) no burn-down do 1.10.
 5. F122/F123 aguardam triagem do `/ai-eng`; F87, F111/R8 e `TCE.md` seguem gates dele.
+
+## 6. Selo formal (23h20) -- o que fica para RECONCILIAR na s189
+
+O operador encerrou aqui (janela de contexto esgotada) e volta na proxima sessao com o resultado do simulado UERJ 2023.
+
+- **Comunicado ao `/ai-eng`:** destilado <= 3k enviado a sessao `ai-eng-5a` (F119-F123 com remedio por achado + 5 pontos para ele atacar). Sem resposta ate o selo; silencio = GO para seguir, resposta so se ALTERA/NO-GO.
+- **Geradores preservados:** `scratch/s188_trilha/` (gitignored, local): `agrega_uerj.py` -> `reconcilia.py` -> `gera_trilha.py [--gravar]` -> `build_relatorio.py`, mais `consolida_uerj.py`, `monta_links.py`, `extrair_links.py` e os insumos (`class_*.jsonl`, `q_*.json`, `links_*.json`). Rodam do proprio diretorio. 🔴 A DERIVACAO da trilha nao esta versionada -- so o JSON resultante; declarado ao `/ai-eng` como divida a julgar.
+- **A reconciliar na s189, nesta ordem:** (1) bulk do simulado + `--concluir 893`, com acerto POR BLOCO e racional declarado dos erros; (2) recalibrar a S2 e re-semear; (3) volume e cards feitos fora de sessao (#38, #26, #96; divida FSRS de 103 em 18/09); (4) resposta do `/ai-eng`; (5) cadernos UERJ 2017-2020 que ele cria no EMED.
+- **Nao feito, declarado:** `links_exercicios.json` superado continua no repo; +7 clausulas orfas no 1.10; F122 nao re-medido pelo principal; o artifact do relatorio nao foi conferido em navegador (uma passada de leitura do texto renderizado, sem screenshot).

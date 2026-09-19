@@ -26,6 +26,7 @@
 - Piso/teto conferido na regua do gerador (GO do `/ai-eng`); lente por area declarada, com as 7 linhas divergentes nominais.
 - **Recalibracao pos-prova:** regra estatistica do `/ai-eng` adotada como texto no HANDOFF (nao por UMA prova; acerto acumulado a partir da 3a). Fatia 6 (regra como DADO) NAO feita.
 - `scratch/s188_trilha/` fica local (gitignored) como registro; `extrair_links.py` e a referencia do F122.
+- **Fechamento do `/ai-eng` (01h50):** aceitou as 5 fatias e os 6 achados sem ressalva; registrou F125 como furo do DoD DELE (golden + propriedade certificam o PONTO, nao a vizinhanca: ferramenta de re-execucao leva >= 1 corrida perturbada com prazo) e o `--expect 0` como premissa de alcance nao medida. Duas decisoes, reversiveis pelo operador: prevalencia em FAIXAS entra junto da 1a recalibracao legitima; `plano_custom.json` x trilha + redesenho do `--mover` = mesma decisao, pos-02/11. Canal fechado do lado dele.
 
 ## 4. Custo
 **ZERO subagentes** (o porte nao passava o limiar do F93). Canal com o `/ai-eng`: kickoff + 1 checkpoint (resposta dele: GO na ordem e no default do achado 3, 3 notas aplicadas) + destilado final.

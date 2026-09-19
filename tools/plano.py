@@ -966,9 +966,44 @@ def cortar(tarefa_id, motivo, out=print):
     return 0, resultado
 
 
-def mover(tarefa_id, semana, ordem=None, out=print):
+def _trava_da_trilha(atual, semana, trilha):
+    """Motivo de recusa do `--mover` com a trilha ativa, ou `None`. PURA.
+
+    s189 (F120, fatia 4 do /ai-eng): com `fase1_exclusiva`, `semana_plano`/`ordem` da Fase 1
+    sao reescritos pelo proximo re-seed -- o `--mover` reportava sucesso e o efeito sumia (CLI
+    que mente). A Fase 1 tem UMA autoridade: linha que ESTA nela, ou que iria PARA ela, e
+    recusada no ponto da mutacao, com a entrada exata da camada manual no lugar."""
+    if not (trilha or {}).get("fase1_exclusiva"):
+        return None
+    de, para = atual.get("semana_plano"), int(semana)
+    if de not in SEMANAS_FASE1 and para not in SEMANAS_FASE1:
+        return None
+    entrada = (f'{{"fonte": "{atual.get("fonte")}", "ref_semana_fonte": '
+               f'{atual.get("ref_semana_fonte")}, "tarefa_fonte": {atual.get("tarefa_fonte")}, '
+               f'"semana_plano": {para}, "ordem": N, "racional": "..."}}')
+    return (f"a trilha da Fase 1 esta ativa (fase1_exclusiva) e a tarefa {atual.get('id')} "
+            f"{'esta' if de in SEMANAS_FASE1 else 'iria'} na Fase 1 (semana {de or '--'} -> "
+            f"{para}): o proximo re-seed desfaria o --mover. Caminho que dura: acrescentar em "
+            f"core/cronograma/trilha/custom.json a entrada {entrada} e rodar "
+            f"`python tools/trilha.py --gravar` + `python tools/plano.py --semear --dry-run`.")
+
+
+def mover(tarefa_id, semana, ordem=None, out=print, trilha=None):
     """`--mover`: replanejar semana/ordem sem tocar em status (substitui o ritual de
-    reordenar o xlsx do Drive a mao)."""
+    reordenar o xlsx do Drive a mao). `trilha=None` le o `plano_trilha.json` do disco; os
+    testes do banco sintetico injetam `{}`. Com a trilha ativa, linha da Fase 1 e RECUSADA
+    (`_trava_da_trilha`)."""
+    if trilha is None:
+        trilha = _ler(P_TRILHA) if os.path.exists(P_TRILHA) else {}
+    atual = db.plano_obter(tarefa_id)
+    if atual is not None and semana is not None:
+        try:
+            motivo = _trava_da_trilha(atual, semana, trilha)
+        except (TypeError, ValueError):
+            motivo = None                # semana malformada: o writer recusa com a mensagem dele
+        if motivo:
+            out(f"[plano] RECUSADO: {motivo}")
+            return 2, None
     try:
         resultado = db.plano_mover(tarefa_id, semana, ordem=ordem)
     except ValueError as e:

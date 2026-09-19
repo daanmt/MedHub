@@ -373,8 +373,9 @@ a posição real, e o derivador do cronograma é `tools/cronograma.py` (assinatu
 Plano do Dia passou a ser a **semana do PLANO** (menor `semana_plano` com pendência em `plano_tarefas`),
 e `day_plan._resolver_semana_conteudo`/`_semana_conteudo` foram removidos. A chave
 `preparacao_estado.semana_conteudo` sobrevive com **um** leitor: `tools/cobertura_conhecimento.py`.
-Gravar a posição aqui alimenta só esse check -- para mover a posição do boot, use
-`python tools/plano.py --mover ID --semana N`. Norma: `cronograma-contract.md` v1.3.
+Gravar a posição aqui alimenta só esse check -- para mover a posição do boot: na Fase 1, a camada manual
+da trilha (`core/cronograma/trilha/custom.json` + `python tools/trilha.py --gravar`); na Fase 2,
+`python tools/plano.py --mover ID --semana N`. Norma: `cronograma-contract.md` v1.4.
 
 ### `tools/plano.py` -- o plano de estudo como DADO (`plano_tarefas`)
 
@@ -395,7 +396,7 @@ Gravar a posição aqui alimenta só esse check -- para mover a posição do boo
 | `--data AAAA-MM-DD` | Data de conclusão do `--concluir` (default: hoje). Formato diferente -> recusa. |
 | `--cortar ID` | Tira a tarefa do plano (`status='cortada'`). **Exige `--motivo`.** |
 | `--motivo "..."` | Por que a tarefa foi cortada. Vai **anexado** à `nota` (`corte: ...`), preservando as marcas da semeadura; corte repetido substitui o motivo anterior em vez de empilhar. |
-| `--mover ID` | Regrava `semana_plano`/`ordem`. **Exige `--semana`.** Não toca em `status` nem em `origem_conclusao` -- mover é replanejar, não concluir. |
+| `--mover ID` | Regrava `semana_plano`/`ordem`. **Exige `--semana`.** Não toca em `status` nem em `origem_conclusao` -- mover é replanejar, não concluir. 🔴 **Com a trilha ativa (`fase1_exclusiva`), RECUSA (exit 2)** linha que está na Fase 1 ou iria para ela (s189, F120) e imprime a entrada exata da camada manual (`core/cronograma/trilha/custom.json`) -- o re-seed desfaria o movimento. |
 | `--ordem K` | Ordem dentro da semana no `--mover`. Omitida, **preserva** a ordem atual. |
 | `--reabrir ID` | Volta a tarefa para `pendente` e **apaga** `data_conclusao`/`sessao_bulk_id` (o usuário acabou de negar aquela conclusão). |
 | `--revisar-area AREA` | Lista de **conferência** da área (read-only), em blocos de <= 25 linhas: `id`, fonte + semana da fonte, status, origem, tipo, tema. Ordenada pela **fonte** (não pelo plano), que é a ordem do Dashboard/PDF contra o qual se confere. |
@@ -455,7 +456,11 @@ ambas em `core/cronograma/` e ambas opcionais -- arquivo ausente = a política p
   **anotações de hiperlink** dos dois PDFs (no texto a URL vem quebrada em linhas; na anotação vem
   inteira). `montar_linhas` preenche `url_lista` de linhas `rf` e `extensivo`; tarefa sem entrada fica
   `None` -- **nunca inventa** -- e o `url_lista` que a fonte já traz sobrevive. Antes disso a Reta Final  <!-- CHECK: test_plano -->
-  nascia com `url_lista=None` cravado e o `links_exercicios.json` da s147 não tinha consumidor.
+  nascia com `url_lista=None` cravado e o `links_exercicios.json` da s147 não tinha consumidor (⚰️ removido
+  em 19/09/2026, s189: dado com deslocamento conhecido e nome plausível, zero leitores). **Estado explícito
+  (s189, F119):** toda tarefa tem UMA entrada -- `url`, ou `url: null` + `estado` `sem_link_no_pdf` /
+  `varios_links_no_pdf` (`tipo_pede_lista: true` = tipo com Exercícios/Revisão e sem link no PDF, a
+  suspeita); ausência de entrada = FALTANDO (zero, travado por teste).
 - **`plano_trilha.json`** (F120) -- a **trilha da Fase 1**: overrides por
   `(fonte, ref_semana_fonte, tarefa_fonte)` que regravam `semana_plano`/`ordem` e, quando pedidos,
   `status` (`pendente`|`cortada` -- **nunca `feita`**: conclusão só nasce de `--concluir`) e `nota`.  <!-- CHECK: test_plano -->
@@ -467,8 +472,9 @@ ambas em `core/cronograma/` e ambas opcionais -- arquivo ausente = a política p
   `python tools/trilha.py --gravar` (assinatura abaixo), seguido de `--semear --dry-run` ->
   `--apply --expect N`. ⚰️ *Revogado em 19/09/2026: "mudar a estratégia de estudo = editar o JSON +
   `--semear --apply`" (s188) -- o `--gravar` do gerador sobrescrevia a edição manual em silêncio (duas
-  autoridades; o F120 uma camada acima).* O `--mover` continua existindo, mas **é desfeito pelo próximo
-  re-seed** (`semana_plano`/`ordem` estão em `CAMPOS_SEMEADOS`) -- o que é para durar mora na trilha.
+  autoridades; o F120 uma camada acima).* O `--mover` **recusa** linha da Fase 1 com a trilha ativa (s189);
+  fora dela ele grava, mas **é desfeito pelo próximo re-seed** (`semana_plano`/`ordem` estão em
+  `CAMPOS_SEMEADOS`) -- resíduo DECLARADO, redesenho depois de 02/11.
 
 O dry-run imprime `links aplicados`, `override(s) aplicado(s)` e `linha(s) tiradas da Fase 1`; override
 **sem linha correspondente** é listado e **derruba o `--apply`** (exit 2): o plano pedido não é o que

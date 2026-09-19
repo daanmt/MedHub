@@ -614,14 +614,14 @@ def test_cortar_sem_motivo_recusa(tmp_path, monkeypatch):
 def test_mover_regrava_semana_e_ordem_sem_tocar_status(tmp_path, monkeypatch):
     _caminho, idx = _semeado(tmp_path, monkeypatch)
     alvo = idx[("extensivo", 21, 1)]                 # feita pelo Dashboard
-    code, _res = plano.mover(alvo["id"], 4, ordem=2, out=_mudo())
+    code, _res = plano.mover(alvo["id"], 4, ordem=2, out=_mudo(), trilha={})
     assert code == 0
     d = db.plano_obter(alvo["id"])
     assert (d["semana_plano"], d["ordem"]) == (4, 2)
     assert d["status"] == "feita", "mover e replanejar, nao concluir"
     assert d["origem_conclusao"] == plano.ORIGEM_DASHBOARD, "mover nao confirma origem"
     # --ordem omitida PRESERVA a ordem
-    plano.mover(alvo["id"], 6, out=_mudo())
+    plano.mover(alvo["id"], 6, out=_mudo(), trilha={})
     d2 = db.plano_obter(alvo["id"])
     assert (d2["semana_plano"], d2["ordem"]) == (6, 2)
 
@@ -630,10 +630,10 @@ def test_mover_recusa_semana_invalida_e_id_inexistente(tmp_path, monkeypatch):
     _caminho, idx = _semeado(tmp_path, monkeypatch)
     alvo = idx[("extensivo", 21, 1)]
     antes = db.plano_obter(alvo["id"])["semana_plano"]
-    code, _res = plano.mover(alvo["id"], 0, out=_mudo())
+    code, _res = plano.mover(alvo["id"], 0, out=_mudo(), trilha={})
     assert code == 2
     assert db.plano_obter(alvo["id"])["semana_plano"] == antes
-    code, _res = plano.mover(99999, 3, out=_mudo())
+    code, _res = plano.mover(99999, 3, out=_mudo(), trilha={})
     assert code == 2
 
 
@@ -989,7 +989,7 @@ def test_dry_run_conta_as_linhas_existentes_que_mudariam(tmp_path, monkeypatch):
     assert code == 0 and rel["mudariam"] == 0 and rel["mudariam_campos"] == {}
     assert any("mudariam nos campos semeados: 0" in s for s in saida)
     alvo = idx[("extensivo", 22, 2)]
-    plano.mover(alvo["id"], 5, out=_mudo())
+    plano.mover(alvo["id"], 5, out=_mudo(), trilha={})
     code, _, rel = plano.semear(apply=False, out=_mudo(), **_fontes())
     assert rel["mudariam"] == 1 and rel["mudariam_campos"] == {"semana_plano": 1}, rel
 
@@ -1055,3 +1055,58 @@ def test_cli_reserva_pelo_main(tmp_path, monkeypatch, capsys):
     _semeado(tmp_path, monkeypatch)
     assert plano.main(["--reserva"]) == 0
     assert "Reserva da Fase 1" in capsys.readouterr().out
+
+
+def test_links_listas_da_estado_explicito_a_toda_tarefa():
+    """F119 (pergunta do /ai-eng, s189): linha sem link distinguia "nao existe lista" de "link
+    faltando"? Nao distinguia -- o estado medido na extracao (`match: sem_link`/`multi`) ficou
+    no scratch. Agora TODA tarefa das duas grades tem UMA entrada: `url`, ou `estado`
+    `sem_link_no_pdf` / `varios_links_no_pdf`. Ausencia volta a significar FALTANDO -- e e zero.
+    Le so JSON versionado."""
+    links = plano._ler(plano.P_LINKS)
+    grades = {"rf": plano._ler(plano.P_GRADE_RF), "extensivo": plano._ler(plano.P_EXTENSIVO)}
+    for fonte, grade in grades.items():
+        tarefas = {(s["semana"], t["tarefa"]) for s in grade["semanas"] for t in s["tasks"]}
+        entradas = [(i["semana"], i["tarefa"]) for i in links[fonte]]
+        assert len(entradas) == len(set(entradas)), f"{fonte}: tarefa com duas entradas"
+        faltando = sorted(tarefas - set(entradas))
+        assert faltando == [], f"{fonte}: {len(faltando)} tarefa(s) sem estado: {faltando[:5]}"
+        for i in links[fonte]:
+            assert bool(i.get("url")) != bool(i.get("estado")), f"{fonte}: url XOR estado ({i})"
+            assert i.get("estado") in (None, "sem_link_no_pdf", "varios_links_no_pdf"), i
+    idx = plano.indexar_links(links)
+    assert all(v for v in idx.values()), "entrada sem url nunca vira link"
+
+
+# =====================================================================================
+# s189 -- o --mover RECUSA linha da Fase 1 com a trilha ativa (F120, fatia 4 do /ai-eng)
+# =====================================================================================
+
+def test_mover_recusa_linha_da_fase1_com_a_trilha_ativa(tmp_path, monkeypatch):
+    """F120: o `--mover` reportava sucesso e o proximo re-seed o desfazia -- CLI que mente.
+    Com a trilha ativa, a Fase 1 tem UMA autoridade: mover linha que ESTA na Fase 1, ou que
+    iria PARA ela, e recusado com o ponteiro para a camada manual. Fase 2 -> Fase 2 segue
+    permitido (residuo declarado: tambem e desfeito pelo re-seed)."""
+    _caminho, idx = _semeado(tmp_path, monkeypatch)
+    ativa = {"fase1_exclusiva": True, "overrides": []}
+    na_fase1 = idx[("rf", 17, 2)]                     # semana 1 pela regra pura
+    na_fase2 = idx[("extensivo", 22, 2)]              # semana 9
+    saida = []
+    code, _ = plano.mover(na_fase1["id"], 3, out=saida.append, trilha=ativa)
+    assert code == 2 and db.plano_obter(na_fase1["id"])["semana_plano"] == 1
+    assert any("custom.json" in s and "trilha.py --gravar" in s for s in saida), saida
+    code, _ = plano.mover(na_fase2["id"], 5, out=_mudo(), trilha=ativa)
+    assert code == 2 and db.plano_obter(na_fase2["id"])["semana_plano"] == 9,         "entrar na Fase 1 por --mover tambem e desfeito pelo re-seed"
+    code, _ = plano.mover(na_fase2["id"], 12, out=_mudo(), trilha=ativa)
+    assert code == 0 and db.plano_obter(na_fase2["id"])["semana_plano"] == 12
+    code, _ = plano.mover(na_fase1["id"], 3, out=_mudo(), trilha={"fase1_exclusiva": False})
+    assert code == 0, "sem exclusividade da trilha, o --mover volta a valer"
+
+
+def test_cli_mover_le_a_trilha_do_disco(tmp_path, monkeypatch, capsys):
+    """Caminho de producao: sem `trilha` injetada, o `main` le o `plano_trilha.json` real --
+    que esta ativo -- e recusa mover a linha da semana 1."""
+    _caminho, idx = _semeado(tmp_path, monkeypatch)
+    alvo = idx[("rf", 17, 2)]
+    assert plano.main(["--mover", str(alvo["id"]), "--semana", "3"]) == 2
+    assert "RECUSADO" in capsys.readouterr().out

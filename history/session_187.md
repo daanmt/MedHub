@@ -93,23 +93,64 @@ Duas consequencias: o rotulo mente (**eu ia registrar os 35 no ledger como propr
 
 ---
 
+## 7. Segundo ato: o operador retomou o comando e resolveu os gates
+
+Depois do selo, ele decidiu os 6 gates. **4 resolvidos, 2 seguem dele.**
+
+- **Stub `[CIR] TCE.md` removido** (grep §10.4 antes; zero citador vivo; recuperavel pelo git).
+- **F105** -- os 6 cards de pergunta composta, sob o rito §10.7 (backup, COUNT-ASSERT 1543 -> 1548, revlog **intocado**, FSRS dos reescritos preservado). 5 divididos em 2 eixos; 13 marcas encerradas: **10 fechadas com RE-VERIFICACAO do predicado**, 1 com evidencia humana, **2 DESCARTADAS como falso-positivo declarado**. O #599 ("por que o K esconde o deficit **e** como isso muda a conduta") e **eixo unico**: a conduta e derivada direta do mecanismo, e separar daria protocolo-sem-razao.
+  🔴 **O gate me pegou DUAS vezes antes de gravar:** a minha reescrita do #682 ainda era duplo-ask, e **eu ia inserir 10 cards SEM ACENTO** num baralho que o F113 acabou de reparar.
+- **F100** -- decisao dele: **testar no mesmo ato**. A Revisao Direcionada passa a fechar cada tema com 2-3 perguntas de **recall imediato**, e ficou escrito que a pergunta e de **recuperacao**, nao de conferencia ("ficou claro?" nao vale, porque a resposta e sempre sim).
+- 🔴 **F87 -- tive que contrariar a FORMA do pedido dele.** Ele escolheu "derivar do FSRS"; construindo, ficou claro que **o FSRS nao pode alcancar aquele achado** -- os 13 cards que ele cortou **nunca entraram no baralho**. Entreguei o eixo IRMAO (`cards_rendimento.py`) e **declarei no doc e num teste que isto nao fecha o F87**. Corte DERIVADO do baralho (`lapses >= 2` e `stability < mediana`, re-medida): o limiar do Anki (8 lapsos) acharia **zero**, porque o maximo daqui e 4. Resultado: **48 de 822 (5,8%)**, com **#70 em 11 revisoes e stability 0,67d**. Corroboracao do limite declarado: 2 dos 6 piores sao de `Polipos`, area de **fundacao ausente** -- pedem andaime, nao reforja.
+- **R8/F111** -- decision brief de 10 linhas entregue no ledger. Risco nomeado: **465 tarefas de teoria x 5 cards = 2.300** se a triagem afrouxar. Decisao fica para a proxima sessao, junto da adocao do extensivo.
+
+## 8. F118 -- a 1.9(a) quebrou dois CLIs, e a suite era cega por construcao
+
+Fui **usar** o `insert_card_extra.py` para dividir os cards do F105 e ele morreu: `ModuleNotFoundError: No module named 'app'`. A refatoracao **1.9(a) da s186 -- minha** -- moveu `card_checks` para `app/utils/`, e dois CLIs ancoravam o `sys.path` no **proprio diretorio**. Medido: **2 de 53**, sendo um deles o **writer canonico de card adicional**.
+
+🔴 **Por que nenhum gate via:** o pytest insere a raiz do repo no `sys.path` antes de importar, entao `test_writer_gates` importa o modulo **com o path que o proprio CLI deveria fornecer**. **O gate alcanca o MODULO; nao alcanca o PONTO DE ENTRADA.** `IMPORT_DANGLING` resolve estaticamente, D5 le flags, `reachability_check` conta referenciadores -- os tres veem o arquivo, **nenhum o executa**. `test_cli_importavel` agora roda `--help` por subprocess nos 53. E o **F116 pelo avesso**: la o escopo do gate era maior que o declarado; aqui e menor que o uso real.
+
+## 9. A premissa de ESTUDO que ele derrubou -- e nenhum gate acharia
+
+Ele apontou que o plano super-pondera **MFC** e que a UERJ tem **peso igual entre as 5 areas**. Medi antes de responder:
+
+```
+Guia Estatistico (Estrategia MED, 2017-2023, N=835)   x   Edital 2027
+  Cirurgia    13,89%                                        20%
+  Pediatria   13,17%                                        20%
+  Preventiva  11,50%                                        20%
+  GO (gineco 10,42 + obst 8,62) = 19,04%                    20%
+  CM fatiada em 9 subespecialidades ~ 36%                   20%
+```
+
+O guia mede **incidencia historica por tema**, nao a **estrutura da prova**: sub-representa Cirurgia, Pediatria e MFC e infla CM em ~16 pontos. **Quem aloca esforco por ele estuda uma prova que nao existe.**
+
+🔴 **Segundo defeito, e e da nossa casa:** a unica analise por edicao feita sobre os **cadernos originais** e a de MFC (104 questoes, 468 linhas, s183). **As outras 80 questoes de cada prova nao tem mapeamento nenhum** -- 80% do exame apoiado num guia de terceiro com amostra e ponderacao incompativeis. A profundidade foi para o bloco de 20% que **parecia novo**, nao para os 80% que decidem a aprovacao.
+
+**Classe: unidade de medida errada** -- o instrumento existe, mede, e o que ele mede nao e o que a decisao precisa. Nao e escopo menor, maior nem vizinho. Nenhum gate de engenharia acha isso, porque nao ha codigo errado: ha premissa errada num insumo externo. Quem achou foi o olho dele, como no F115.
+
+Material: **6 edicoes (2021-2026)**, nao 10 -- as de 2019/2020 sairam do ar na Cepuerj.
+
 ## Erros meus nesta sessao
 
 1. 🔴 **Reproduzi um defeito que o proprio ledger ja registrava.** Escrevendo `selo.py` por heredoc, pus uma sequencia de escape numa string **nao-raw** e gravei **backspace (0x08)** dentro de dois regexes. Um deles fazia **todo achado RESOLVIDO aparecer como "SEM TERMINAL"**. O modulo importava, o regex compilava, a saida era *plausivel* e simplesmente nao era verdade -- e o ledger ja tinha isso escrito para o `audit_resumos`: *"regex corrompido por 0x08 ... linter verde, check morto"*. Virou `test_sem_caracter_de_controle` (BLOCK, com a prova do DANO e nao so da presenca), **e o gate me pegou repetindo o mesmo erro 10 minutos depois**. Convencao que fica: **regex sempre em string RAW**.
 2. 🔴 **Escrevi `>` onde devia ser `>=` no F115** -- o gate perderia o #92, um dos dois cards que o originaram. Pego pela suite, nao por leitura.
 3. 🔴 **Um teste meu tinha `or True`** (tautologia) em `test_status_portador`. Verde sem testar nada -- a licao da s186, cometida por mim. Reescrito com positivo sintetico.
 4. 🔴 **Um fixture meu dropou o prefixo que tornava a corrupcao fatal.** Em `test_sem_caracter_de_controle`, simplifiquei o padrao e o teste falhou -- por sorte, porque a simplificacao apagava justamente o que fazia o byte importar.
-5. Escrevi o `clausulas_check` **antes** do teste. Compensei plantando o defeito (desligando a validacao do registro) e confirmando que a suite cai -- nao aceitei verde de nascenca.
+5. 🔴 **Quebrei dois CLIs na s186 e so descobri ao USAR um deles** (F118). A refatoracao passou em 924 testes porque o pytest fornecia o path que o arquivo devia fornecer.
+6. 🔴 **Ia inserir 10 cards SEM ACENTO** no baralho que o F113 acabou de reparar -- peguei porque o gate de atomicidade reclamou por outro motivo e me obrigou a reler o JSON.
+7. 🔴 **Minha reescrita do #682 ainda era duplo-ask** ("qual teste... e o que ele detecta"). O gate recusou; a segunda metade pertencia a regra-mestre.
+8. Escrevi o `clausulas_check` **antes** do teste. Compensei plantando o defeito (desligando a validacao do registro) e confirmando que a suite cai -- nao aceitei verde de nascenca.
 
 ---
 
 ## Numeros da janela
 
-- **Commits:** 11 (`a9dfb34` `140e284` `9ea675a` `966995a` `011eb83` `ed61f16` `4230cdd` `29b4e61` `ffc7bde` + 2 de fechamento)
-- **Suite:** 858 -> **912** (+13 F115, +11 1.10, +5 Invariante A, +8 F99, +7 G14b, +6 F116, +4 controle)
+- **Commits:** 14 (`a9dfb34` `140e284` `9ea675a` `966995a` `011eb83` `ed61f16` `4230cdd` `29b4e61` `ffc7bde` `b96348b` + painel + `d4f0bb8` dos gates + 2 de fechamento)
+- **Suite:** 858 -> **924** (+13 F115, +11 1.10, +5 Invariante A, +8 F99, +7 G14b, +6 F116, +4 controle, +4 F118, +8 rendimento)
 - **Subagentes:** **0**
-- **Operacao em lote sob o rito §10.7:** ingestao dos 30 candidatos do F115 (backup `ipub_backup_20260918_175908`, COUNT-ASSERT 291 -> 321)
-- **FSRS preservado:** 1543 cards / 3070 revlog o tempo todo -- nenhuma escrita de revisao nesta janela
+- **Operacoes em lote sob o rito §10.7:** ingestao dos 30 candidatos do F115 (COUNT-ASSERT 291 -> 321) e o split do F105 (backup `ipub_backup_20260918_205509`, COUNT-ASSERT 1543 -> 1548, revlog intocado)
+- **FSRS preservado:** revlog **3070 o tempo todo** -- nenhuma escrita de revisao nesta janela. Cards 1543 -> 1548 (+5 do split), FSRS dos 5 reescritos intacto (card_id preservado)
 - **Item 1.10:** 0% -> **49,4%** (53 CHECK · 69 declaradas · 125 orfas em 247 normativas)
 - **AGENTE.md §7.4 regenerado 5x** (tabela GERADA, por contrato)
 

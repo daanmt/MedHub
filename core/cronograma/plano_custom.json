@@ -1,6 +1,6 @@
 {
- "_doc": "Tarefas CUSTOM do plano (fonte=custom), editavel a mao. Semeadas em plano_tarefas pela spec part-2. semana_plano 1-7 = Fase 1 (16/09 -> 01/11/2026, por peso UERJ); 8+ = Fase 2 (extensivo S21-S48). Areas SEMPRE de core/areas.json. q_previstas = orcamento de questoes da tarefa (0 para resumo/aula).",
- "atualizado_em": "2026-09-16",
+ "_doc": "Tarefas CUSTOM do plano (fonte=custom), editavel a mao. Semeadas em plano_tarefas pela spec part-2. semana_plano 1-7 = Fase 1 (16/09 -> 01/11/2026, por peso UERJ); 8+ = Fase 2 (extensivo S21-S48). Areas SEMPRE de core/areas.json. q_previstas = orcamento de questoes da tarefa (0 para resumo/aula). || s188 (2026-09-18): as 4 listas \"UERJ bloco MFC (Q81-100)\" viraram PROVAS INTEIRAS (16-19) e entraram 2021/2022 (23-24): o operador vai resolver as provas como simulado, e recortar o bloco MFC antes estragaria o instrumento. Semana/ordem da Fase 1 agora sao ditadas por plano_trilha.json (a trilha vence este arquivo).",
+ "atualizado_em": "2026-09-18",
  "tarefas": [
   {
    "tarefa_fonte": 1,
@@ -184,51 +184,51 @@
   },
   {
    "tarefa_fonte": 16,
-   "semana_plano": 1,
-   "ordem": 3,
-   "area": "Preventiva",
-   "tema": "UERJ 2026 bloco MFC (Q81-100)",
-   "tipo": "lista",
+   "semana_plano": 6,
+   "ordem": 1,
+   "area": "Simulado",
+   "tema": "UERJ 2026 -- prova INTEIRA (100q), cronometrada, 5 blocos",
+   "tipo": "simulado",
    "tipo_norm": "revisao_questoes",
-   "url_lista": "simulados/uerj/uerj_ad_2026_prova.pdf",
-   "q_previstas": 20,
-   "nota": "caderno oficial; gabarito no arquivo _b quando houver"
+   "url_lista": "simulados/uerj/uerj_ad_2026_a.pdf",
+   "q_previstas": 100,
+   "nota": "simulado semanal da trilha UERJ (s188). Gabarito: simulados/uerj/uerj_ad_2026_b.pdf. Depois: Autopsia por bloco. NAO abrir simulados/uerj/uerj_mapa_questoes_2021-2026.json antes (spoiler)."
   },
   {
    "tarefa_fonte": 17,
-   "semana_plano": 2,
-   "ordem": 3,
-   "area": "Preventiva",
-   "tema": "UERJ 2025 bloco MFC (Q81-100)",
-   "tipo": "lista",
+   "semana_plano": 5,
+   "ordem": 1,
+   "area": "Simulado",
+   "tema": "UERJ 2025 -- prova INTEIRA (100q), cronometrada, 5 blocos",
+   "tipo": "simulado",
    "tipo_norm": "revisao_questoes",
    "url_lista": "simulados/uerj/uerj_ad_2025_prova.pdf",
-   "q_previstas": 20,
-   "nota": "caderno oficial; gabarito no arquivo _b quando houver"
+   "q_previstas": 100,
+   "nota": "simulado semanal da trilha UERJ (s188). Gabarito: simulados/uerj/gabaritos_2021-2026.json (pos-recurso; anuladas 36, 66, 96). Depois: Autopsia por bloco. NAO abrir simulados/uerj/uerj_mapa_questoes_2021-2026.json antes (spoiler)."
   },
   {
    "tarefa_fonte": 18,
-   "semana_plano": 3,
-   "ordem": 3,
-   "area": "Preventiva",
-   "tema": "UERJ 2024 bloco MFC (Q81-100)",
-   "tipo": "lista",
+   "semana_plano": 4,
+   "ordem": 1,
+   "area": "Simulado",
+   "tema": "UERJ 2024 -- prova INTEIRA (100q), cronometrada, 5 blocos",
+   "tipo": "simulado",
    "tipo_norm": "revisao_questoes",
    "url_lista": "simulados/uerj/uerj_ad_2024_a.pdf",
-   "q_previstas": 20,
-   "nota": "caderno oficial; gabarito no arquivo _b quando houver"
+   "q_previstas": 100,
+   "nota": "simulado semanal da trilha UERJ (s188). Gabarito: simulados/uerj/uerj_ad_2024_b.pdf. Depois: Autopsia por bloco. NAO abrir simulados/uerj/uerj_mapa_questoes_2021-2026.json antes (spoiler)."
   },
   {
    "tarefa_fonte": 19,
-   "semana_plano": 4,
-   "ordem": 3,
-   "area": "Preventiva",
-   "tema": "UERJ 2023 bloco MFC (Q81-100)",
-   "tipo": "lista",
+   "semana_plano": 1,
+   "ordem": 1,
+   "area": "Simulado",
+   "tema": "UERJ 2023 -- prova INTEIRA (100q), cronometrada, 5 blocos",
+   "tipo": "simulado",
    "tipo_norm": "revisao_questoes",
-   "url_lista": "simulados/uerj/uerj_ad_2023_prova.pdf",
-   "q_previstas": 20,
-   "nota": "caderno oficial; gabarito no arquivo _b quando houver"
+   "url_lista": "simulados/uerj/uerj_ad_2023_a.pdf",
+   "q_previstas": 100,
+   "nota": "simulado semanal da trilha UERJ (s188). Gabarito: simulados/uerj/uerj_ad_2023_b.pdf. Depois: Autopsia por bloco. NAO abrir simulados/uerj/uerj_mapa_questoes_2021-2026.json antes (spoiler)."
   },
   {
    "tarefa_fonte": 20,
@@ -265,6 +265,90 @@
    "url_lista": "simulados/inep/revalida_2025_1_prova.pdf",
    "q_previstas": 100,
    "nota": null
+  },
+  {
+   "tarefa_fonte": 23,
+   "semana_plano": 2,
+   "ordem": 1,
+   "area": "Simulado",
+   "tema": "UERJ 2021 -- prova INTEIRA (60q), cronometrada, 5 blocos",
+   "tipo": "simulado",
+   "tipo_norm": "revisao_questoes",
+   "url_lista": "simulados/uerj/uerj_ad_2021_a.pdf",
+   "q_previstas": 60,
+   "nota": "simulado semanal da trilha UERJ (s188). Gabarito: simulados/uerj/gabaritos_2021-2026.json. Depois: Autopsia por bloco. NAO abrir simulados/uerj/uerj_mapa_questoes_2021-2026.json antes (spoiler)."
+  },
+  {
+   "tarefa_fonte": 24,
+   "semana_plano": 3,
+   "ordem": 1,
+   "area": "Simulado",
+   "tema": "UERJ 2022 -- prova INTEIRA (60q), cronometrada, 5 blocos",
+   "tipo": "simulado",
+   "tipo_norm": "revisao_questoes",
+   "url_lista": "simulados/uerj/uerj_ad_2022_a.pdf",
+   "q_previstas": 60,
+   "nota": "simulado semanal da trilha UERJ (s188). Gabarito: simulados/uerj/uerj_ad_2022_b.pdf. Depois: Autopsia por bloco. NAO abrir simulados/uerj/uerj_mapa_questoes_2021-2026.json antes (spoiler)."
+  },
+  {
+   "tarefa_fonte": 25,
+   "semana_plano": 5,
+   "ordem": 2,
+   "area": "Preventiva",
+   "tema": "Abordagem familiar e ciclos de vida (genograma, ecomapa, tipos de familia, crises)",
+   "tipo": "resumo",
+   "tipo_norm": "teoria",
+   "url_lista": null,
+   "q_previstas": 0,
+   "nota": "MFC-UERJ: Gusso II. Cobranca direta do NOME da ferramenta (2021 Q55, 2022 Q56)."
+  },
+  {
+   "tarefa_fonte": 26,
+   "semana_plano": 5,
+   "ordem": 2,
+   "area": "Preventiva",
+   "tema": "Condicoes cronicas na APS: metas e manejo ambulatorial (HAS, DM2, DRC, DPOC, IC)",
+   "tipo": "resumo",
+   "tipo_norm": "teoria",
+   "url_lista": null,
+   "q_previstas": 0,
+   "nota": "MFC-UERJ: Duncan. Vinheta de UBS com conteudo de clinica: iSGLT2, estadiamento de DRC, quando encaminhar."
+  },
+  {
+   "tarefa_fonte": 27,
+   "semana_plano": 2,
+   "ordem": 2,
+   "area": "Infecto",
+   "tema": "Tuberculose 360: adulto, crianca (RIP sem etambutol < 10a), ILTB, contatos, extrapulmonar/intestinal, TB-HIV",
+   "tipo": "resumo",
+   "tipo_norm": "teoria",
+   "url_lista": null,
+   "q_previstas": 0,
+   "nota": "refresh dirigido: tema nº1 da UERJ 2021-2026, cobrado em 4 blocos (CM, CIR, PED, MFC). Tema ja feito; a aula amarra as 4 portas de entrada. Questoes: banco EMED filtrado por instituicao=UERJ + tuberculose."
+  },
+  {
+   "tarefa_fonte": 28,
+   "semana_plano": 7,
+   "ordem": 2,
+   "area": "Simulado",
+   "tema": "Caderno UERJ 2017-2020 no banco do EMED (filtro instituicao=UERJ, anos 2017-2020) -- parte 1",
+   "tipo": "lista",
+   "tipo_norm": "revisao_questoes",
+   "url_lista": null,
+   "q_previstas": 60,
+   "nota": "questoes autenticas da banca que NAO existem em PDF publico (Cepuerj tirou do ar). Criar o caderno no banco do EMED; e o melhor material da semana final."
+  },
+  {
+   "tarefa_fonte": 29,
+   "semana_plano": 7,
+   "ordem": 2,
+   "area": "Simulado",
+   "tema": "Caderno UERJ 2017-2020 no banco do EMED (filtro instituicao=UERJ, anos 2017-2020) -- parte 2",
+   "tipo": "lista",
+   "tipo_norm": "revisao_questoes",
+   "url_lista": null,
+   "q_previstas": 60,
+   "nota": "idem parte 1."
   }
  ]
 }

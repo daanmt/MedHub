@@ -838,3 +838,138 @@ def test_reseed_preserva_nota_do_usuario(tmp_path, monkeypatch):
     assert d["status"] == "cortada"
     assert "corte: coberto pela Reta Final" in d["nota"], "re-seed apagou a nota do usuario"
     assert d["origem_conclusao"] == db.ORIGEM_USUARIO
+
+
+# =====================================================================================
+# s188 -- a TRILHA como dado (`plano_trilha.json`) e os LINKS das listas
+# (`links_listas.json`)
+#
+# O que estes testes protegem, em ordem de dano:
+#   1. **o link da lista viaja ate `plano_tarefas.url_lista`** (F119): as URLs extraidas
+#      do PDF nunca tiveram consumidor e a Reta Final nascia com `url_lista=None` fixo --
+#      o operador abria o PDF para achar cada lista.
+#   2. **a ordem da Fase 1 e DADO versionado, nao regra cravada em codigo** (F120): mudar
+#      a estrategia de estudo deixa de exigir mudar `ordenar_fase1`.
+#   3. **override que nao acha a linha nunca some em silencio** -- aparece no relatorio e
+#      derruba o `--apply`.
+#   4. **fontes injetadas nunca leem trilha/links do disco** -- senao o dado real vazaria
+#      para dentro do teste sintetico.
+# =====================================================================================
+
+def _links():
+    return {"_doc": "sintetico",
+            "rf": [{"semana": 17, "tarefa": 2, "url": "https://med.exemplo/cadernos/rf-17-2/"}],
+            "extensivo": [{"semana": 21, "tarefa": 3,
+                           "url": "https://med.exemplo/cadernos/ext-21-3/"}]}
+
+
+def _trilha(overrides, exclusiva=True):
+    return {"_doc": "sintetico", "versao": "teste", "fase1_exclusiva": exclusiva,
+            "overrides": overrides}
+
+
+def test_links_preenchem_url_lista_de_rf_e_extensivo():
+    linhas, rel = plano.montar_linhas(**_fontes(links=_links()))
+    por = _linhas_por_chave(linhas)
+    assert por[("rf", 17, 2)]["url_lista"] == "https://med.exemplo/cadernos/rf-17-2/"
+    assert por[("extensivo", 21, 3)]["url_lista"] == "https://med.exemplo/cadernos/ext-21-3/"
+    assert por[("rf", 17, 4)]["url_lista"] is None, "sem link no arquivo = None, nunca inventado"
+    assert rel["links_aplicados"] == 2
+
+
+def test_link_do_arquivo_nao_apaga_o_da_fonte():
+    """Tarefa sem entrada no arquivo de links conserva o `url_lista` que a fonte ja traz."""
+    ext = _extensivo()
+    ext["semanas"][1]["tasks"][1]["url_lista"] = "https://med.exemplo/cadernos/da-fonte/"
+    linhas, _ = plano.montar_linhas(**_fontes(extensivo=ext, links=_links()))
+    por = _linhas_por_chave(linhas)
+    assert por[("extensivo", 22, 2)]["url_lista"] == "https://med.exemplo/cadernos/da-fonte/"
+
+
+def test_trilha_sobrepoe_semana_ordem_status_e_nota():
+    trilha = _trilha([
+        {"fonte": "rf", "ref_semana_fonte": 17, "tarefa_fonte": 3, "semana_plano": 2,
+         "ordem": 7, "status": "pendente", "nota": "trilha UERJ: teste"},
+        {"fonte": "rf", "ref_semana_fonte": 17, "tarefa_fonte": 2, "semana_plano": 1,
+         "ordem": 1},
+        {"fonte": "rf", "ref_semana_fonte": 17, "tarefa_fonte": 4, "semana_plano": 3,
+         "ordem": 1},
+        {"fonte": "extensivo", "ref_semana_fonte": 21, "tarefa_fonte": 4,
+         "semana_plano": 1, "ordem": 2},
+        {"fonte": "custom", "ref_semana_fonte": 0, "tarefa_fonte": 1, "semana_plano": 1,
+         "ordem": 3},
+    ])
+    linhas, rel = plano.montar_linhas(**_fontes(trilha=trilha))
+    por = _linhas_por_chave(linhas)
+    glaucoma = por[("rf", 17, 3)]
+    assert glaucoma["semana_plano"] == 2 and glaucoma["ordem"] == 7
+    assert glaucoma["status"] == "pendente", "a politica pura cortava (cauda); a trilha reabre"
+    assert glaucoma["nota"] == "trilha UERJ: teste"
+    assert rel["trilha_aplicados"] == 5 and rel["trilha_sem_linha"] == []
+
+
+def test_trilha_exclusiva_tira_da_fase1_quem_nao_esta_nela():
+    """Fase 1 tem UMA autoridade: linha que a politica pura poria nas semanas 1-7 e que
+    a trilha nao lista sai da fila (semana NULL + nota), sem mudar de status."""
+    trilha = _trilha([{"fonte": "rf", "ref_semana_fonte": 17, "tarefa_fonte": 2,
+                       "semana_plano": 1, "ordem": 1}])
+    linhas, rel = plano.montar_linhas(**_fontes(trilha=trilha))
+    por = _linhas_por_chave(linhas)
+    acido_base = por[("rf", 17, 4)]
+    assert acido_base["semana_plano"] is None and acido_base["status"] == "pendente"
+    assert plano.NOTA_FORA_DA_TRILHA in (acido_base["nota"] or "")
+    assert por[("rf", 17, 2)]["semana_plano"] == 1
+    assert rel["trilha_fora"] >= 1
+    fase2 = por[("extensivo", 22, 2)]
+    assert fase2["semana_plano"] == plano.semana_fase2(22), "a Fase 2 nao e tocada"
+
+
+def test_trilha_nao_exclusiva_preserva_a_politica_pura():
+    trilha = _trilha([{"fonte": "rf", "ref_semana_fonte": 17, "tarefa_fonte": 2,
+                       "semana_plano": 5, "ordem": 9}], exclusiva=False)
+    linhas, _ = plano.montar_linhas(**_fontes(trilha=trilha))
+    por = _linhas_por_chave(linhas)
+    assert por[("rf", 17, 2)]["semana_plano"] == 5
+    assert por[("rf", 17, 4)]["semana_plano"] == plano.semana_fase1_cm(17)
+
+
+def test_trilha_com_chave_inexistente_aparece_e_recusa_o_apply(tmp_path, monkeypatch):
+    _usar_db(tmp_path, monkeypatch)
+    trilha = _trilha([{"fonte": "rf", "ref_semana_fonte": 99, "tarefa_fonte": 1,
+                       "semana_plano": 1, "ordem": 1}], exclusiva=False)
+    linhas, rel = plano.montar_linhas(**_fontes(trilha=trilha))
+    assert rel["trilha_sem_linha"] == [("rf", 99, 1)]
+    saida = []
+    code, _, _ = plano.semear(apply=True, expect=10, out=saida.append,
+                              **_fontes(trilha=trilha))
+    assert code == 2, "override orfao derruba o apply: o plano pedido nao e o que seria gravado"
+    assert any("sem linha" in s for s in saida)
+    assert not os.path.exists(db.DB_PATH) or not db.plano_listar()
+
+
+def test_trilha_recusa_semana_e_status_invalidos():
+    import pytest
+    for ruim in ({"semana_plano": 0}, {"status": "feita"}, {"status": "qualquer"}):
+        o = {"fonte": "rf", "ref_semana_fonte": 17, "tarefa_fonte": 2, "semana_plano": 1,
+             "ordem": 1}
+        o.update(ruim)
+        with pytest.raises(ValueError):
+            plano.montar_linhas(**_fontes(trilha=_trilha([o])))
+
+
+def test_fontes_injetadas_nao_leem_trilha_nem_links_do_disco():
+    """Hermetismo: com fonte injetada, `trilha`/`links` omitidos valem VAZIO."""
+    linhas, rel = plano.montar_linhas(**_fontes())
+    assert rel["trilha_aplicados"] == 0 and rel["links_aplicados"] == 0
+    por = _linhas_por_chave(linhas)
+    assert por[("rf", 17, 2)]["url_lista"] is None
+
+
+def test_trilha_real_nao_tem_override_orfao():
+    """Regressao viva: todo override de `core/cronograma/plano_trilha.json` acha a sua
+    linha nas fontes versionadas. Le so JSON: nenhum banco e aberto."""
+    if not os.path.exists(plano.P_TRILHA):
+        return
+    _, rel = plano.montar_linhas()
+    assert rel["trilha_sem_linha"] == [], rel["trilha_sem_linha"][:5]
+    assert rel["trilha_aplicados"] > 0

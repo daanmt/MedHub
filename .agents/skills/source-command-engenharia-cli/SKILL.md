@@ -419,9 +419,10 @@ As três fontes, todas versionadas em `core/cronograma/`: `grade_extensivo.json`
 (`cronograma-contract` Cláusula 5b).
 
 🔴 **Semear nunca infere conclusão.** Nome que não casa entre o PDF e o Dashboard nasce `pendente`,
-e o número de não-casados é impresso no dry-run. A `semana_plano` é decidida por duas funções
+e o número de não-casados é impresso no dry-run. A `semana_plano` nasce de duas funções
 puras testadas (`ordenar_fase1`, para as 7 semanas até a prova da UERJ em 01/11, e `ordenar_fase2`,
-para o extensivo S21-S48 a partir da semana 8) -- não por regra em JSON. Área fora de
+para o extensivo S21-S48 a partir da semana 8) -- ⚰️ *era "não por regra em JSON"; em 18/09/2026
+(s188, F120) a Fase 1 ganhou uma camada de DADO por cima delas, abaixo.* Área fora de
 `core/areas.json` é **recusada na porta** (F89); rótulo que a fonte não tem como resolver (o `Multi`
 das tarefas de Radiologia) grava `area=NULL` **com a nota dizendo qual rótulo era**, que é dívida
 declarada e não chute.
@@ -453,7 +454,31 @@ não inventa `sessao_bulk_id` nem apaga o de um `--concluir` anterior.
 `dashboard_2026-09-10`). É trilha de auditoria, não `status` -- uma linha pode continuar `feita` e
 só trocar de origem, que é como "zero aproximadas" acontece sem reescrever histórico.
 
-Specs `.vibeflow/specs/plano-ssot-e-cards-v2-part-2.md` (semeadura) e `-part-3.md` (progresso).
+🔴 **Duas camadas de DADO por cima das regras puras (s188, spec `trilha-uerj-plano-como-dado`)**,
+ambas em `core/cronograma/` e ambas opcionais -- arquivo ausente = a política pura continua valendo:
+
+- **`links_listas.json`** (F119) -- link da lista de exercícios por `(fonte, semana, tarefa)`, extraído das
+  **anotações de hiperlink** dos dois PDFs (no texto a URL vem quebrada em linhas; na anotação vem
+  inteira). `montar_linhas` preenche `url_lista` de linhas `rf` e `extensivo`; tarefa sem entrada fica
+  `None` -- **nunca inventa** -- e o `url_lista` que a fonte já traz sobrevive. Antes disso a Reta Final  <!-- CHECK: test_plano -->
+  nascia com `url_lista=None` cravado e o `links_exercicios.json` da s147 não tinha consumidor.
+- **`plano_trilha.json`** (F120) -- a **trilha da Fase 1**: overrides por
+  `(fonte, ref_semana_fonte, tarefa_fonte)` que regravam `semana_plano`/`ordem` e, quando pedidos,
+  `status` (`pendente`|`cortada` -- **nunca `feita`**: conclusão só nasce de `--concluir`) e `nota`.  <!-- CHECK: test_plano -->
+  Com `fase1_exclusiva: true`, linha pendente que a regra pura poria nas semanas 1-7 e que a trilha
+  não lista **sai da fila** (semana NULL + nota `fora da trilha da Fase 1 (reserva)`), sem mudar de
+  status; a Fase 2 não é tocada. Mudar a estratégia de estudo = editar o JSON + `--semear --apply`;
+  o `--mover` continua existindo, mas **é desfeito pelo próximo re-seed** (`semana_plano`/`ordem` estão
+  em `CAMPOS_SEMEADOS`) -- o que é para durar mora na trilha.
+
+O dry-run imprime `links aplicados`, `override(s) aplicado(s)` e `linha(s) tiradas da Fase 1`; override
+**sem linha correspondente** é listado e **derruba o `--apply`** (exit 2): o plano pedido não é o que
+seria gravado. ⚠️ **Limite declarado:** o re-seed não muda `status` de linha que JÁ existe no banco
+(contrato da part-3) -- a trilha fixa o status INICIAL; no banco vivo a transição é `--reabrir`/`--cortar`.
+Fontes injetadas (testes) nunca leem os dois arquivos do disco.  <!-- CHECK: test_plano -->
+
+Specs `.vibeflow/specs/plano-ssot-e-cards-v2-part-2.md` (semeadura), `-part-3.md` (progresso) e
+`trilha-uerj-plano-como-dado.md` (camadas de dado).
 
 ### `tools/listas.py` -- ledger de LISTAS de exercicios (`sessoes_bulk.tarefa_id`)
 

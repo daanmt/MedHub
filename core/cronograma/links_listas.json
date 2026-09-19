@@ -1,0 +1,3498 @@
+{
+"_doc": "Link da LISTA DE EXERCICIOS por (fonte, semana, tarefa), extraido das ANOTACOES de hiperlink dos dois PDFs de cronograma do Estrategia MED (s188, F119). Consumido por tools/plano.py::montar_linhas -> plano_tarefas.url_lista. So entra tarefa com UM link inequivoco (match=ok); tarefa de teoria sem lista e as semanas finais de \"Diversos Assuntos\" (20 listas por tarefa) ficam de fora -- nunca se inventa link. URL canonizada para .../cadernos/<uuid>/?per_page=20 (o PDF traz 1 anotacao truncada em per_page=2 e algumas sem a query). Substitui links_exercicios.json (s147, texto+ordem de aparicao), que tinha deslocamento de 1 tarefa na S15 T06-T12 e nunca teve consumidor.",
+"extraido_em": "2026-09-18",
+"fontes": {
+"rf": {
+"pdf": "data/Cronograma.pdf",
+"sha256": "7cd56385092d8acf0f38ec5c16e82bdcdbb7ae06339a2ba6e3a995cef050b762"
+},
+"extensivo": {
+"pdf": "[52 wk] Cronograma Extensivo.pdf",
+"sha256": "5f61da795836b7b9423d6f097a81e6ad82cfc2f608b99c728e67e5a8b7e256e1"
+}
+},
+"contagem": {
+"rf": {
+"tarefas": 352,
+"blocos_do_pdf_fora_do_json": 0,
+"com_link": 334,
+"multi": 14,
+"sem_link": 4,
+"url_fora_do_padrao": 0
+},
+"extensivo": {
+"tarefas": 735,
+"blocos_do_pdf_fora_do_json": 6,
+"com_link": 243,
+"multi": 14,
+"sem_link": 479,
+"url_fora_do_padrao": 0
+}
+},
+"rf": [
+{
+"semana": 1,
+"tarefa": 1,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/4e8cbd9c-fed5-41fb-bf6a-59b850434875/?per_page=20",
+"n_questoes_link": 20
+},
+{
+"semana": 1,
+"tarefa": 2,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/1bdc5b37-02b1-4c6e-b05d-afc548bb59f4/?per_page=20",
+"n_questoes_link": 24
+},
+{
+"semana": 1,
+"tarefa": 3,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/4a818ee2-34bc-4dbd-bed1-ea712c1d5324/?per_page=20",
+"n_questoes_link": 27
+},
+{
+"semana": 1,
+"tarefa": 4,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/de9e7b47-9ed7-46c9-a0f2-5d7f022c40ef/?per_page=20",
+"n_questoes_link": 26
+},
+{
+"semana": 1,
+"tarefa": 5,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/709280cb-6f03-43df-a095-3388b43e9b3c/?per_page=20",
+"n_questoes_link": 17
+},
+{
+"semana": 1,
+"tarefa": 6,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/51c2927b-842b-4748-9993-d352aa711ebb/?per_page=20",
+"n_questoes_link": 19
+},
+{
+"semana": 1,
+"tarefa": 7,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/40cee74e-fc50-4282-8af8-ffae24588ca9/?per_page=20",
+"n_questoes_link": 20
+},
+{
+"semana": 1,
+"tarefa": 8,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/dcd79d82-992b-4135-a3d1-ac427d00782e/?per_page=20",
+"n_questoes_link": 18
+},
+{
+"semana": 1,
+"tarefa": 9,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/6493f6b7-c473-472c-8ae6-99a743dd59e7/?per_page=20",
+"n_questoes_link": 31
+},
+{
+"semana": 1,
+"tarefa": 10,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/23b71e23-592f-4f79-af54-356c6b5c0007/?per_page=20",
+"n_questoes_link": 23
+},
+{
+"semana": 2,
+"tarefa": 1,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/2c1749e1-7b77-4327-aaa3-a1eec5e45b05/?per_page=20",
+"n_questoes_link": 41
+},
+{
+"semana": 2,
+"tarefa": 2,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/a3578d85-6a51-40c4-b987-27d0b4a1e987/?per_page=20",
+"n_questoes_link": 40
+},
+{
+"semana": 2,
+"tarefa": 3,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/88d00d65-f919-4953-903a-0916d859da97/?per_page=20",
+"n_questoes_link": 30
+},
+{
+"semana": 2,
+"tarefa": 4,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/de61b098-8e7f-4411-87c3-369c59efa2a3/?per_page=20",
+"n_questoes_link": 44
+},
+{
+"semana": 2,
+"tarefa": 5,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/0d3717ea-db58-46bb-a996-2bdda295471e/?per_page=20",
+"n_questoes_link": 20
+},
+{
+"semana": 2,
+"tarefa": 6,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/837c4074-98e0-4814-8e63-96bea173c95c/?per_page=20",
+"n_questoes_link": 35
+},
+{
+"semana": 2,
+"tarefa": 7,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/24efeaf5-581d-4128-aadc-47fdfbf1ff0c/?per_page=20",
+"n_questoes_link": 42
+},
+{
+"semana": 2,
+"tarefa": 8,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/930ee32c-5387-4d5a-a787-b43c0e20e1e7/?per_page=20",
+"n_questoes_link": 29
+},
+{
+"semana": 2,
+"tarefa": 9,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/b3471ac6-5585-4358-a276-fbae624f43b4/?per_page=20",
+"n_questoes_link": 25
+},
+{
+"semana": 2,
+"tarefa": 10,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/26ee5ced-0bf1-49cf-bc64-48bd746c085b/?per_page=20",
+"n_questoes_link": 17
+},
+{
+"semana": 3,
+"tarefa": 1,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/bacd5095-cd05-46c0-be0b-827589a71ee1/?per_page=20",
+"n_questoes_link": 28
+},
+{
+"semana": 3,
+"tarefa": 2,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/3276c913-476e-4be2-b5d1-6b13a41d99b4/?per_page=20",
+"n_questoes_link": 20
+},
+{
+"semana": 3,
+"tarefa": 3,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/da9788aa-d1a2-4a0a-be78-4722ee7bf594/?per_page=20",
+"n_questoes_link": 39
+},
+{
+"semana": 3,
+"tarefa": 4,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/0a43aad9-768e-41b8-a208-4988eb28c6b5/?per_page=20",
+"n_questoes_link": 38
+},
+{
+"semana": 3,
+"tarefa": 5,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/28175fc6-c6a2-460e-bffc-e32c22629896/?per_page=20",
+"n_questoes_link": 22
+},
+{
+"semana": 3,
+"tarefa": 6,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/7bf0341c-7d71-4bb5-8d75-77b16e6ef56a/?per_page=20",
+"n_questoes_link": 50
+},
+{
+"semana": 3,
+"tarefa": 7,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/68de99c0-2f1e-444f-924f-1a6546aa9c04/?per_page=20",
+"n_questoes_link": 20
+},
+{
+"semana": 3,
+"tarefa": 8,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/839d7bb3-0adb-4255-95e5-3b5c8a388f81/?per_page=20",
+"n_questoes_link": 23
+},
+{
+"semana": 3,
+"tarefa": 9,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/8d33e95b-97ce-4eda-90ee-890d4846bfd5/?per_page=20",
+"n_questoes_link": 47
+},
+{
+"semana": 3,
+"tarefa": 10,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/5cf88efc-f847-4cef-8258-e06e8c5cdcc3/?per_page=20",
+"n_questoes_link": 43
+},
+{
+"semana": 3,
+"tarefa": 11,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/c6f32642-ef29-4581-bf01-4e2869e12dd1/?per_page=20",
+"n_questoes_link": 26
+},
+{
+"semana": 4,
+"tarefa": 1,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/b408cc75-8e34-49ba-a6e0-ce8f4370c721/?per_page=20",
+"n_questoes_link": 19
+},
+{
+"semana": 4,
+"tarefa": 2,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/d8da383c-a4cf-40d9-b287-1a6fa7b0b1ab/?per_page=20",
+"n_questoes_link": 40
+},
+{
+"semana": 4,
+"tarefa": 3,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/72f3095c-edf9-42c3-837b-cd3d65451e3e/?per_page=20",
+"n_questoes_link": 17
+},
+{
+"semana": 4,
+"tarefa": 4,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/c6974d84-8153-40f7-af15-3ef019beb10f/?per_page=20",
+"n_questoes_link": 46
+},
+{
+"semana": 4,
+"tarefa": 5,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/324766b0-37f5-4bc5-a674-d577252793b9/?per_page=20",
+"n_questoes_link": 48
+},
+{
+"semana": 4,
+"tarefa": 6,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/a9b5f202-0f9b-4af7-86bf-9510b1822684/?per_page=20",
+"n_questoes_link": 39
+},
+{
+"semana": 4,
+"tarefa": 7,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/0ae9d2e4-a3ff-46eb-ac68-399a90260999/?per_page=20",
+"n_questoes_link": 35
+},
+{
+"semana": 4,
+"tarefa": 8,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/6123a649-88bd-4cb8-8512-75b4fb59630d/?per_page=20",
+"n_questoes_link": 47
+},
+{
+"semana": 4,
+"tarefa": 9,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/1ecab949-2f74-4b77-a086-9900e860aefb/?per_page=20",
+"n_questoes_link": 20
+},
+{
+"semana": 4,
+"tarefa": 10,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/f1fa07e9-20cf-465c-b8b6-7b779fe549c9/?per_page=20",
+"n_questoes_link": 27
+},
+{
+"semana": 4,
+"tarefa": 11,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/bc4bdc27-c498-4b94-91b1-cee1ed968940/?per_page=20",
+"n_questoes_link": 20
+},
+{
+"semana": 4,
+"tarefa": 12,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/5416ff65-2447-4a31-8622-c1cc39b6adf7/?per_page=20",
+"n_questoes_link": 41
+},
+{
+"semana": 5,
+"tarefa": 1,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/4143dee9-974e-47c1-b1ec-5c6655cc5cf5/?per_page=20",
+"n_questoes_link": 43
+},
+{
+"semana": 5,
+"tarefa": 2,
+"url": "https://med.estrategiaeducacional.com.br/cadernos-e-simulados/cadernos/4f23f60d-76a0-4390-b3d7-a3580753c007/?per_page=20",
+"n_questoes_link": 28
+},
+{
+"semana": 5,
+"tarefa": 3,
+"url": "http://med.estrategia.com/cadernos-e-simulados/cadernos/70a17db0-2fd8-4eb8-af88-f24bdea5d107/?per_page=20",
+"n_questoes_link": 25
+},
+{
+"semana": 5,
+"tarefa": 4,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/3131bc01-29c5-494e-8738-ee3e1d3643df/?per_page=20",
+"n_questoes_link": 34
+},
+{
+"semana": 5,
+"tarefa": 5,
+"url": "https://med.estrategiaeducacional.com.br/cadernos-e-simulados/cadernos/1cd46103-f980-4a88-87b0-9457e78b93fd/?per_page=20",
+"n_questoes_link": 29
+},
+{
+"semana": 5,
+"tarefa": 6,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/9cdc70c2-8eb6-4372-8b48-1747c5dedbdd/?per_page=20",
+"n_questoes_link": 34
+},
+{
+"semana": 5,
+"tarefa": 7,
+"url": "https://med.estrategiaeducacional.com.br/cadernos-e-simulados/cadernos/9662f288-c6ef-4185-af11-78da47b95494/?per_page=20",
+"n_questoes_link": 30
+},
+{
+"semana": 5,
+"tarefa": 8,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/f7b25097-bf4f-4526-ad75-bb7a669fdf86/?per_page=20",
+"n_questoes_link": 25
+},
+{
+"semana": 5,
+"tarefa": 9,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/a258ed19-bb37-4b93-89cd-9e4cdbd19ec8/?per_page=20",
+"n_questoes_link": 22
+},
+{
+"semana": 5,
+"tarefa": 10,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/343cd310-a1b1-4c88-b6db-7835ef722ed1/?per_page=20",
+"n_questoes_link": 23
+},
+{
+"semana": 5,
+"tarefa": 11,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/f4d3ba5b-51da-431e-aadd-c75fdebe5670/?per_page=20",
+"n_questoes_link": 21
+},
+{
+"semana": 6,
+"tarefa": 1,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/93c74c63-1ad0-42f5-a75f-6cb9f69aa10f/?per_page=20",
+"n_questoes_link": 38
+},
+{
+"semana": 6,
+"tarefa": 2,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/eca1a2f6-561f-42b0-9f85-59d62ea6d53f/?per_page=20",
+"n_questoes_link": 23
+},
+{
+"semana": 6,
+"tarefa": 3,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/98f1eeb7-478e-4a90-9400-93ff36350c5d/?per_page=20",
+"n_questoes_link": 25
+},
+{
+"semana": 6,
+"tarefa": 4,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/4fadcec2-a51a-4ecf-9720-a9f13479b3ff/?per_page=20",
+"n_questoes_link": 46
+},
+{
+"semana": 6,
+"tarefa": 5,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/1f7b02ec-f1ec-4984-b460-c2b371de45cd/?per_page=20",
+"n_questoes_link": 19
+},
+{
+"semana": 6,
+"tarefa": 6,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/494d85d7-e6ae-4a51-835f-bb394dacde85/?per_page=20",
+"n_questoes_link": 19
+},
+{
+"semana": 6,
+"tarefa": 7,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/f61bc93c-75a3-405a-961e-c4fd97bc4217/?per_page=20",
+"n_questoes_link": 19
+},
+{
+"semana": 6,
+"tarefa": 8,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/cd546912-3084-48fb-8629-1a90df940d93/?per_page=20",
+"n_questoes_link": 40
+},
+{
+"semana": 6,
+"tarefa": 9,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/04b940c5-7db7-46ac-a118-f78e287a8857/?per_page=20",
+"n_questoes_link": 17
+},
+{
+"semana": 6,
+"tarefa": 10,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/62071b91-6d17-4f13-a3cc-6d25a2187e16/?per_page=20",
+"n_questoes_link": 24
+},
+{
+"semana": 6,
+"tarefa": 11,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/8bddae8b-258b-4d73-872a-fcc23dcb82b7/?per_page=20",
+"n_questoes_link": 19
+},
+{
+"semana": 6,
+"tarefa": 12,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/5ed5a178-5073-404a-9857-cd2c7065c1d8/?per_page=20",
+"n_questoes_link": 46
+},
+{
+"semana": 7,
+"tarefa": 1,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/1b0b85d8-b728-499f-a6c5-4bf12c2a6eb3/?per_page=20",
+"n_questoes_link": 27
+},
+{
+"semana": 7,
+"tarefa": 2,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/0137d54b-cff3-482f-81da-2fc24e1f9b2e/?per_page=20",
+"n_questoes_link": 46
+},
+{
+"semana": 7,
+"tarefa": 3,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/ebd8ca7a-c69e-4940-bbfa-77667844f4f2/?per_page=20",
+"n_questoes_link": 44
+},
+{
+"semana": 7,
+"tarefa": 4,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/7b8f6931-d5dd-485f-a3b3-9356fd8892cc/?per_page=20",
+"n_questoes_link": 26
+},
+{
+"semana": 7,
+"tarefa": 5,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/0c799cdb-fa31-4ddd-b609-07068d8f5497/?per_page=20",
+"n_questoes_link": 40
+},
+{
+"semana": 7,
+"tarefa": 6,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/18919e79-a9ea-4086-88a5-414eb691c4d1/?per_page=20",
+"n_questoes_link": 24
+},
+{
+"semana": 7,
+"tarefa": 7,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/bce8eab0-27d8-4d81-a8a4-46a78678d73e/?per_page=20",
+"n_questoes_link": 22
+},
+{
+"semana": 7,
+"tarefa": 8,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/b14462a8-e4cf-4c20-b1bb-a1d6bcbe8988/?per_page=20",
+"n_questoes_link": 41
+},
+{
+"semana": 7,
+"tarefa": 9,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/b68ebd31-fd0b-4ec2-9040-c2647c053cce/?per_page=20",
+"n_questoes_link": 21
+},
+{
+"semana": 7,
+"tarefa": 10,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/c18238a0-106c-4a64-a54c-1d37e543c65c/?per_page=20",
+"n_questoes_link": 36
+},
+{
+"semana": 7,
+"tarefa": 11,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/6ff313e6-9163-4a18-b9fe-20f0a3524740/?per_page=20",
+"n_questoes_link": 29
+},
+{
+"semana": 7,
+"tarefa": 12,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/294eab83-ba4a-47db-a3d9-12e11b4400c5/?per_page=20",
+"n_questoes_link": 60
+},
+{
+"semana": 7,
+"tarefa": 13,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/3db01554-8d24-4833-8140-f07831b3ad4f/?per_page=20",
+"n_questoes_link": 44
+},
+{
+"semana": 8,
+"tarefa": 1,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/9b074c91-1d26-4b7b-aa37-9f3a2fe1fb48/?per_page=20",
+"n_questoes_link": 45
+},
+{
+"semana": 8,
+"tarefa": 2,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/9819a8be-db88-4d96-a289-790753de2077/?per_page=20",
+"n_questoes_link": 17
+},
+{
+"semana": 8,
+"tarefa": 3,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/583914fc-b04a-45fe-ace3-09cc2983d58e/?per_page=20",
+"n_questoes_link": 44
+},
+{
+"semana": 8,
+"tarefa": 4,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/21f804f4-75ed-4135-b6ab-bcdf8227440e/?per_page=20",
+"n_questoes_link": 43
+},
+{
+"semana": 8,
+"tarefa": 5,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/b125bcd4-6fb3-4fe2-8c11-153d2bb1f10f/?per_page=20",
+"n_questoes_link": 25
+},
+{
+"semana": 8,
+"tarefa": 6,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/0160a138-66c2-4431-8b82-2045af2a8026/?per_page=20",
+"n_questoes_link": 23
+},
+{
+"semana": 8,
+"tarefa": 7,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/3a8abe39-9323-4c3d-9024-39683c402e4a/?per_page=20",
+"n_questoes_link": 40
+},
+{
+"semana": 8,
+"tarefa": 8,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/9f52c486-82f8-49c6-b8ef-9c0628ab7f53/?per_page=20",
+"n_questoes_link": 34
+},
+{
+"semana": 8,
+"tarefa": 9,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/d34cd528-8fa8-4a64-92a5-ecfac52e8510/?per_page=20",
+"n_questoes_link": 35
+},
+{
+"semana": 8,
+"tarefa": 10,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/f18928bc-cac3-401d-9042-50c161dffdd0/?per_page=20",
+"n_questoes_link": 37
+},
+{
+"semana": 8,
+"tarefa": 11,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/c51e96eb-62af-457c-b519-c034ff11d546/?per_page=20",
+"n_questoes_link": 21
+},
+{
+"semana": 8,
+"tarefa": 12,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/c8178e1c-c24c-4a6b-8159-afe81a26bf95/?per_page=20",
+"n_questoes_link": 54
+},
+{
+"semana": 8,
+"tarefa": 13,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/5ece2178-a1f6-40f1-ac85-2bedc00a2bba/?per_page=20",
+"n_questoes_link": 40
+},
+{
+"semana": 9,
+"tarefa": 1,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/5d9e0758-1d4f-4684-b94c-b6d697a5a3a2/?per_page=20",
+"n_questoes_link": 26
+},
+{
+"semana": 9,
+"tarefa": 2,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/55ec496d-5119-4bf3-a258-cde4e40fb536/?per_page=20",
+"n_questoes_link": 38
+},
+{
+"semana": 9,
+"tarefa": 3,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/c3660238-ae09-446e-b293-3e028e1fd825/?per_page=20",
+"n_questoes_link": 22
+},
+{
+"semana": 9,
+"tarefa": 4,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/bacf99fa-d2e0-4f5e-b03e-4c28156c9c46/?per_page=20",
+"n_questoes_link": 30
+},
+{
+"semana": 9,
+"tarefa": 5,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/14cbdcae-b7e6-45ac-a131-8b87180ccb1a/?per_page=20",
+"n_questoes_link": 24
+},
+{
+"semana": 9,
+"tarefa": 6,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/d41dcfc8-ace5-4ec5-ac30-6a93203786f6/?per_page=20",
+"n_questoes_link": 25
+},
+{
+"semana": 9,
+"tarefa": 7,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/ab166773-5cf2-45d1-aa0b-0dbc5bea7823/?per_page=20",
+"n_questoes_link": 43
+},
+{
+"semana": 9,
+"tarefa": 8,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/764d9f9d-2456-420d-b59d-752ceefc2ba0/?per_page=20",
+"n_questoes_link": 24
+},
+{
+"semana": 9,
+"tarefa": 9,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/2a8355b6-8dee-4346-a7ca-d674b7efdf19/?per_page=20",
+"n_questoes_link": 23
+},
+{
+"semana": 9,
+"tarefa": 10,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/0f3aed8e-3377-4860-8204-3f3959598f2d/?per_page=20",
+"n_questoes_link": 40
+},
+{
+"semana": 9,
+"tarefa": 11,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/e437f4b5-d00c-43f4-88e9-e1e22c6cf5ee/?per_page=20",
+"n_questoes_link": 13
+},
+{
+"semana": 9,
+"tarefa": 12,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/d22124db-2f02-435a-aaad-13f2252bb7d6/?per_page=20",
+"n_questoes_link": 51
+},
+{
+"semana": 9,
+"tarefa": 13,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/586cd174-824c-4a86-bae4-301ec9aa5b76/?per_page=20",
+"n_questoes_link": 49
+},
+{
+"semana": 10,
+"tarefa": 1,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/597f61e6-c663-4191-99f9-a1f27e21ad76/?per_page=20",
+"n_questoes_link": 23
+},
+{
+"semana": 10,
+"tarefa": 2,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/6346eef5-97d2-49cd-835c-8123f4a54e14/?per_page=20",
+"n_questoes_link": 18
+},
+{
+"semana": 10,
+"tarefa": 3,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/085af252-e054-4412-b761-5c4d62b08b25/?per_page=20",
+"n_questoes_link": 22
+},
+{
+"semana": 10,
+"tarefa": 4,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/8a8fe086-3061-4d3a-935a-b42b69f316de/?per_page=20",
+"n_questoes_link": 42
+},
+{
+"semana": 10,
+"tarefa": 6,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/2f758e9b-5cbb-4bf5-a293-f63b5e1c97b3/?per_page=20",
+"n_questoes_link": 42
+},
+{
+"semana": 10,
+"tarefa": 7,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/9a156118-094e-482a-9d26-52b980ebe7f1/?per_page=20",
+"n_questoes_link": 50
+},
+{
+"semana": 10,
+"tarefa": 8,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/d8cdb786-0e44-4171-b7a4-269aabd0d6d2/?per_page=20",
+"n_questoes_link": 17
+},
+{
+"semana": 10,
+"tarefa": 9,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/0470b9c2-ad33-420a-aa7f-719bc470fd90/?per_page=20",
+"n_questoes_link": 19
+},
+{
+"semana": 10,
+"tarefa": 10,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/7e4b38e2-5d57-4adc-80a0-26dc5a9e65f5/?per_page=20",
+"n_questoes_link": 15
+},
+{
+"semana": 10,
+"tarefa": 11,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/d249890c-3490-4039-b192-58b346d3c78b/?per_page=20",
+"n_questoes_link": 25
+},
+{
+"semana": 11,
+"tarefa": 1,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/9092074b-a960-425c-9509-b3f7433d7f87/?per_page=20",
+"n_questoes_link": 31
+},
+{
+"semana": 11,
+"tarefa": 2,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/9a4702f1-4f13-495b-a174-54f31dc76791/?per_page=20",
+"n_questoes_link": 41
+},
+{
+"semana": 11,
+"tarefa": 3,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/64692613-c556-47dc-9ff9-f3da99ee38ab/?per_page=20",
+"n_questoes_link": 33
+},
+{
+"semana": 11,
+"tarefa": 4,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/a06b9690-bb8c-4a22-9e22-a314cb5859a1/?per_page=20",
+"n_questoes_link": 21
+},
+{
+"semana": 11,
+"tarefa": 5,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/94184fac-c637-4dac-b106-681c3312195f/?per_page=20",
+"n_questoes_link": 41
+},
+{
+"semana": 11,
+"tarefa": 6,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/ffb476e8-0850-48b3-b5cf-99a1d8901311/?per_page=20",
+"n_questoes_link": 23
+},
+{
+"semana": 11,
+"tarefa": 7,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/cfbe0503-88fc-4e6b-984e-11baa4c8f5bc/?per_page=20",
+"n_questoes_link": 25
+},
+{
+"semana": 11,
+"tarefa": 8,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/1c4f590e-4fcb-4e22-96fd-a816222c74f7/?per_page=20",
+"n_questoes_link": 36
+},
+{
+"semana": 11,
+"tarefa": 9,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/731687ba-63cd-4c4d-96e5-0ee1b8d8643e/?per_page=20",
+"n_questoes_link": 25
+},
+{
+"semana": 11,
+"tarefa": 10,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/4c626aef-63d8-455a-a760-ae1a9fcf6c29/?per_page=20",
+"n_questoes_link": 24
+},
+{
+"semana": 11,
+"tarefa": 11,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/2253a353-9de7-4f32-b840-5ea145426c53/?per_page=20",
+"n_questoes_link": 20
+},
+{
+"semana": 11,
+"tarefa": 12,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/b00f093b-5ed3-4a9b-9ae2-57c495c03631/?per_page=20",
+"n_questoes_link": 46
+},
+{
+"semana": 11,
+"tarefa": 13,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/5d32fd94-7eec-4082-a109-a4171b63a15a/?per_page=20",
+"n_questoes_link": 46
+},
+{
+"semana": 12,
+"tarefa": 1,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/5c60a74d-297d-4ede-ace0-f8962ac69d7d/?per_page=20",
+"n_questoes_link": 19
+},
+{
+"semana": 12,
+"tarefa": 2,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/2ba133bb-6809-47b6-8148-4fe490cd2b54/?per_page=20",
+"n_questoes_link": 29
+},
+{
+"semana": 12,
+"tarefa": 3,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/c69ac240-fdf6-4cf0-8e7f-3dba77bb487e/?per_page=20",
+"n_questoes_link": 18
+},
+{
+"semana": 12,
+"tarefa": 4,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/1290fefd-78f7-4f55-abb9-ce3fc1ea6013/?per_page=20",
+"n_questoes_link": 52
+},
+{
+"semana": 12,
+"tarefa": 5,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/4014b94a-eca7-4153-97be-f4e3831aa7ed/?per_page=20",
+"n_questoes_link": 18
+},
+{
+"semana": 12,
+"tarefa": 6,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/f8a3f70e-0aee-405d-ac0c-c0e470f58d28/?per_page=20",
+"n_questoes_link": 43
+},
+{
+"semana": 12,
+"tarefa": 7,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/764d794c-1c25-453c-a0e0-a5e14977989b/?per_page=20",
+"n_questoes_link": 42
+},
+{
+"semana": 12,
+"tarefa": 8,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/7d12dda9-6a72-4f28-9071-f7b97927b08b/?per_page=20",
+"n_questoes_link": 58
+},
+{
+"semana": 12,
+"tarefa": 9,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/4eca85f2-8bb5-4657-9334-663039371aa5/?per_page=20",
+"n_questoes_link": 22
+},
+{
+"semana": 12,
+"tarefa": 10,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/cc0df355-0b6f-44bc-aac6-1e6779a14943/?per_page=20",
+"n_questoes_link": 30
+},
+{
+"semana": 12,
+"tarefa": 11,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/8d7a9643-8fcc-48ed-a47a-a70dc3e73240/?per_page=20",
+"n_questoes_link": 20
+},
+{
+"semana": 12,
+"tarefa": 12,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/f33acd06-a0c9-46b4-9cb3-578000f2cb60/?per_page=20",
+"n_questoes_link": 53
+},
+{
+"semana": 12,
+"tarefa": 13,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/9b8e4506-2b80-4afd-b653-fab82882e5b8/?per_page=20",
+"n_questoes_link": 47
+},
+{
+"semana": 13,
+"tarefa": 1,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/d5bf7ebd-cc86-4bec-8f1b-8c8976362a1d/?per_page=20",
+"n_questoes_link": 22
+},
+{
+"semana": 13,
+"tarefa": 2,
+"url": "https://med.estrategiaeducacional.com.br/cadernos-e-simulados/cadernos/8d3de4c3-0be1-4cca-ac12-7201c3f929a9/?per_page=20",
+"n_questoes_link": 29
+},
+{
+"semana": 13,
+"tarefa": 3,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/039a338a-f3ab-4623-997d-235bb30dea0a/?per_page=20",
+"n_questoes_link": 18
+},
+{
+"semana": 13,
+"tarefa": 4,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/0680bb49-f241-4711-87eb-0e69fde931c9/?per_page=20",
+"n_questoes_link": 26
+},
+{
+"semana": 13,
+"tarefa": 5,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/dce9b923-112b-4f24-912b-8388451a050c/?per_page=20",
+"n_questoes_link": 21
+},
+{
+"semana": 13,
+"tarefa": 6,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/338052cb-da0d-429a-adf3-acb75db993e0/?per_page=20",
+"n_questoes_link": 55
+},
+{
+"semana": 13,
+"tarefa": 7,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/5156f274-2eb5-4b47-8069-287bf0862589/?per_page=20",
+"n_questoes_link": 37
+},
+{
+"semana": 13,
+"tarefa": 8,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/a65d397c-0d89-44c3-be93-0a53ef4e06ac/?per_page=20",
+"n_questoes_link": 26
+},
+{
+"semana": 13,
+"tarefa": 9,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/61720535-5459-4fa2-8fdb-2ebb2e84e34a/?per_page=20",
+"n_questoes_link": 22
+},
+{
+"semana": 13,
+"tarefa": 10,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/20c067d3-5959-46a3-87f6-99070d2c55ae/?per_page=20",
+"n_questoes_link": 33
+},
+{
+"semana": 13,
+"tarefa": 11,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/05cd4e25-e314-429e-98b0-9b06ddfbbbb5/?per_page=20",
+"n_questoes_link": 41
+},
+{
+"semana": 13,
+"tarefa": 12,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/9137cd9e-b97d-40dd-9dc8-7e0231e7f83f/?per_page=20",
+"n_questoes_link": 57
+},
+{
+"semana": 14,
+"tarefa": 1,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/65c7de65-058b-4c80-905c-e3808caf0de1/?per_page=20",
+"n_questoes_link": 30
+},
+{
+"semana": 14,
+"tarefa": 2,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/086b5629-c82b-4b97-abe9-b78592e76a13/?per_page=20",
+"n_questoes_link": 20
+},
+{
+"semana": 14,
+"tarefa": 3,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/4e28bb85-ba4a-49c4-8147-058f068245e9/?per_page=20",
+"n_questoes_link": 44
+},
+{
+"semana": 14,
+"tarefa": 4,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/a92dd00e-dbd4-4f3f-b920-7321fc747874/?per_page=20",
+"n_questoes_link": 41
+},
+{
+"semana": 14,
+"tarefa": 5,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/1f5b5e0c-c776-499b-a9c2-85077beb21f7/?per_page=20",
+"n_questoes_link": 38
+},
+{
+"semana": 14,
+"tarefa": 6,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/8147510f-7be4-4e11-b910-6eb2739bbed8/?per_page=20",
+"n_questoes_link": 24
+},
+{
+"semana": 14,
+"tarefa": 7,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/4ac5dce8-c035-43cd-9b27-41477625f9d7/?per_page=20",
+"n_questoes_link": 26
+},
+{
+"semana": 14,
+"tarefa": 8,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/b2db8f4f-fc66-4dcb-98d1-cabd4df1bcfd/?per_page=20",
+"n_questoes_link": 48
+},
+{
+"semana": 14,
+"tarefa": 9,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/aee91cc3-8103-4855-a1a9-247ada5494f5/?per_page=20",
+"n_questoes_link": 41
+},
+{
+"semana": 14,
+"tarefa": 10,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/d157cba7-443b-4525-b399-085360cf7fe6/?per_page=20",
+"n_questoes_link": 27
+},
+{
+"semana": 14,
+"tarefa": 11,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/d533d3b2-d30d-4943-824c-1baec4279b9d/?per_page=20",
+"n_questoes_link": 19
+},
+{
+"semana": 15,
+"tarefa": 1,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/0a9496dd-1c7a-4979-a7c5-75f1489b38e3/?per_page=20",
+"n_questoes_link": 43
+},
+{
+"semana": 15,
+"tarefa": 2,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/bf3ea228-2aad-473e-badf-70704bb7468c/?per_page=20",
+"n_questoes_link": 36
+},
+{
+"semana": 15,
+"tarefa": 3,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/05e13a53-a662-44f7-ba55-438d7e90aaed/?per_page=20",
+"n_questoes_link": 42
+},
+{
+"semana": 15,
+"tarefa": 4,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/38c4e2e0-cb49-4715-884c-34d1660fb513/?per_page=20",
+"n_questoes_link": 24
+},
+{
+"semana": 15,
+"tarefa": 5,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/26c7eefd-d7d3-4ebe-9787-c57a36aa6c1d/?per_page=20",
+"n_questoes_link": 34
+},
+{
+"semana": 15,
+"tarefa": 7,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/a4a43e67-df28-4a4a-a8ec-23d8d83b703a/?per_page=20",
+"n_questoes_link": 23
+},
+{
+"semana": 15,
+"tarefa": 8,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/a408b04b-5c42-4bd3-ac9e-7b5b71a422c6/?per_page=20",
+"n_questoes_link": 27
+},
+{
+"semana": 15,
+"tarefa": 9,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/5e6b8ac4-6e3c-479b-86dc-73ce2e71b324/?per_page=20",
+"n_questoes_link": 33
+},
+{
+"semana": 15,
+"tarefa": 10,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/c282df98-11c9-46f8-875a-dd62ec024d17/?per_page=20",
+"n_questoes_link": 47
+},
+{
+"semana": 15,
+"tarefa": 11,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/46497d52-0826-4351-889d-8edb46331579/?per_page=20",
+"n_questoes_link": 19
+},
+{
+"semana": 15,
+"tarefa": 12,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/7cda8aa0-b2c3-41ef-b711-c3fafbbe47c4/?per_page=20",
+"n_questoes_link": 56
+},
+{
+"semana": 16,
+"tarefa": 1,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/f83443ab-4021-49e1-8e3d-033b72b6f227/?per_page=20",
+"n_questoes_link": 23
+},
+{
+"semana": 16,
+"tarefa": 2,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/43ba1d48-bf0b-4e7b-b369-2e4210504fc7/?per_page=20",
+"n_questoes_link": 46
+},
+{
+"semana": 16,
+"tarefa": 3,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/bbfe7e33-5e07-41fb-b6cc-f813fee5cede/?per_page=20",
+"n_questoes_link": 19
+},
+{
+"semana": 16,
+"tarefa": 4,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/69ecc0a0-3f4d-4c26-bb35-4533522c0a52/?per_page=20",
+"n_questoes_link": 45
+},
+{
+"semana": 16,
+"tarefa": 5,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/061eb5c4-a381-4282-976c-f04851b23dd7/?per_page=20",
+"n_questoes_link": 41
+},
+{
+"semana": 16,
+"tarefa": 6,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/adce974c-e453-4e96-a655-d99cee11516e/?per_page=20",
+"n_questoes_link": 40
+},
+{
+"semana": 16,
+"tarefa": 7,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/04f6bfe4-c622-4340-976e-91c1ddf5d288/?per_page=20",
+"n_questoes_link": 36
+},
+{
+"semana": 16,
+"tarefa": 8,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/243d5981-e62f-4990-afc4-aade72683f82/?per_page=20",
+"n_questoes_link": 22
+},
+{
+"semana": 16,
+"tarefa": 9,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/e905ce9c-be16-4f0e-a73b-e8ee2a3352c7/?per_page=20",
+"n_questoes_link": 15
+},
+{
+"semana": 16,
+"tarefa": 10,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/355bda7e-80cb-42e1-a7c3-b12ae82d8db4/?per_page=20",
+"n_questoes_link": 39
+},
+{
+"semana": 16,
+"tarefa": 11,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/2af10f18-31a9-40fc-bd36-808fc24eb9d9/?per_page=20",
+"n_questoes_link": 51
+},
+{
+"semana": 16,
+"tarefa": 12,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/af9a9e78-38bb-4690-b7ef-e9250a664f6b/?per_page=20",
+"n_questoes_link": 57
+},
+{
+"semana": 17,
+"tarefa": 2,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/0382f382-00f7-4a6a-9902-44eca6ad0f42/?per_page=20",
+"n_questoes_link": 22
+},
+{
+"semana": 17,
+"tarefa": 3,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/a67fae67-457b-4554-b9cb-9cefba080e3b/?per_page=20",
+"n_questoes_link": 43
+},
+{
+"semana": 17,
+"tarefa": 4,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/a11c14d5-ca0c-4246-863f-f329518b45a0/?per_page=20",
+"n_questoes_link": 23
+},
+{
+"semana": 17,
+"tarefa": 5,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/3178cba8-2439-4a4e-af6e-0ceed3415043/?per_page=20",
+"n_questoes_link": 25
+},
+{
+"semana": 17,
+"tarefa": 6,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/3adee5ee-b6df-4ede-8a84-e9e7a4c36b82/?per_page=20",
+"n_questoes_link": 50
+},
+{
+"semana": 17,
+"tarefa": 7,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/57876df8-f4ae-4231-a6d4-d9e9857b1b3a/?per_page=20",
+"n_questoes_link": 41
+},
+{
+"semana": 17,
+"tarefa": 8,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/30f44def-4346-46a1-93f3-79b277406c2e/?per_page=20",
+"n_questoes_link": 20
+},
+{
+"semana": 17,
+"tarefa": 9,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/0202307d-5d30-494b-aab3-9fc13bd303cd/?per_page=20",
+"n_questoes_link": 16
+},
+{
+"semana": 17,
+"tarefa": 10,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/b4a33205-e2ac-410d-acf6-48e8fb94861d/?per_page=20",
+"n_questoes_link": 27
+},
+{
+"semana": 17,
+"tarefa": 11,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/b72e1c19-1ed0-44c4-b3b5-c5be0009a0b2/?per_page=20",
+"n_questoes_link": 26
+},
+{
+"semana": 18,
+"tarefa": 1,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/a57a9aaf-d06b-4155-89d2-c2e288168b1d/?per_page=20",
+"n_questoes_link": 20
+},
+{
+"semana": 18,
+"tarefa": 2,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/9535c433-bc7f-4fa9-98c3-d35f0100c496/?per_page=20",
+"n_questoes_link": 24
+},
+{
+"semana": 18,
+"tarefa": 3,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/23734322-5ada-4fbe-9d1e-8f9f2f6e9ccd/?per_page=20",
+"n_questoes_link": 13
+},
+{
+"semana": 18,
+"tarefa": 4,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/21cbc0c1-4c2b-462a-b8ea-a54eb0500b61/?per_page=20",
+"n_questoes_link": 42
+},
+{
+"semana": 18,
+"tarefa": 5,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/79bcf75e-4e0d-42c6-973f-8c9d26fffab1/?per_page=20",
+"n_questoes_link": 36
+},
+{
+"semana": 18,
+"tarefa": 6,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/52016cb5-a620-423f-8b33-5aef32e4ce5e/?per_page=20",
+"n_questoes_link": 17
+},
+{
+"semana": 18,
+"tarefa": 7,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/b964fc37-c1da-4d47-83db-7625936435e2/?per_page=20",
+"n_questoes_link": 21
+},
+{
+"semana": 18,
+"tarefa": 8,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/190aee72-d40c-48e9-ac93-bb8311db63c7/?per_page=20",
+"n_questoes_link": 12
+},
+{
+"semana": 18,
+"tarefa": 9,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/34e4ed4d-19ee-4e31-8bc6-52729bee36b6/?per_page=20",
+"n_questoes_link": 42
+},
+{
+"semana": 18,
+"tarefa": 10,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/95edbcca-aaa3-49cd-ba14-bf5eba7a8a08/?per_page=20",
+"n_questoes_link": 40
+},
+{
+"semana": 18,
+"tarefa": 11,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/3ae22d62-3d65-4631-83f7-29b5c64147e1/?per_page=20",
+"n_questoes_link": 34
+},
+{
+"semana": 18,
+"tarefa": 12,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/6b7084b9-603a-4b2c-a4ef-d29ff0534333/?per_page=20",
+"n_questoes_link": 36
+},
+{
+"semana": 18,
+"tarefa": 13,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/c61863e9-3b78-4ceb-8165-4f25e6fcedec/?per_page=20",
+"n_questoes_link": 43
+},
+{
+"semana": 19,
+"tarefa": 1,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/0d4f8216-fa84-4fb8-8e6f-49de888c6b3c/?per_page=20",
+"n_questoes_link": 47
+},
+{
+"semana": 19,
+"tarefa": 2,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/cfe72ef4-3d55-419d-b5df-5f15f0f6fbe5/?per_page=20",
+"n_questoes_link": 21
+},
+{
+"semana": 19,
+"tarefa": 3,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/aae324a1-9d5d-4cec-a22a-1c94e34b7346/?per_page=20",
+"n_questoes_link": 21
+},
+{
+"semana": 19,
+"tarefa": 4,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/43dfee73-2eff-45e8-8e39-5c1cd7c7738f/?per_page=20",
+"n_questoes_link": 19
+},
+{
+"semana": 19,
+"tarefa": 5,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/ba0d4b31-8515-4162-a154-44131b78d236/?per_page=20",
+"n_questoes_link": 39
+},
+{
+"semana": 19,
+"tarefa": 6,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/2c9ecd04-7e11-4958-a36b-57590021a87d/?per_page=20",
+"n_questoes_link": 24
+},
+{
+"semana": 19,
+"tarefa": 7,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/bb464bf0-c3d8-411c-a545-984322a38f43/?per_page=20",
+"n_questoes_link": 38
+},
+{
+"semana": 19,
+"tarefa": 8,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/f4b46598-2678-4b48-bcba-1c572c98e260/?per_page=20",
+"n_questoes_link": 40
+},
+{
+"semana": 19,
+"tarefa": 9,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/c5e68c43-3eb3-4604-9c85-64ec2d2bc0ae/?per_page=20",
+"n_questoes_link": 42
+},
+{
+"semana": 19,
+"tarefa": 10,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/e213f666-1c2c-4293-b82b-a1a3eb924a0b/?per_page=20",
+"n_questoes_link": 15
+},
+{
+"semana": 19,
+"tarefa": 11,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/6640c124-77ee-46fc-9648-5795e5c8a41d/?per_page=20",
+"n_questoes_link": 59
+},
+{
+"semana": 19,
+"tarefa": 12,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/42a01718-b387-4d1a-bad4-6b397decd8af/?per_page=20",
+"n_questoes_link": 41
+},
+{
+"semana": 19,
+"tarefa": 13,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/31ce883b-20e7-4fcd-bfcd-766d91ff0918/?per_page=20",
+"n_questoes_link": 43
+},
+{
+"semana": 20,
+"tarefa": 1,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/5949f381-eb2c-4a00-8e9b-6444b405bc4f/?per_page=20",
+"n_questoes_link": 27
+},
+{
+"semana": 20,
+"tarefa": 2,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/238a0a58-f261-4fee-a259-c0f5d81b6b3c/?per_page=20",
+"n_questoes_link": 36
+},
+{
+"semana": 20,
+"tarefa": 3,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/04b9c19e-37f1-490d-88c7-cd2e7282e61f/?per_page=20",
+"n_questoes_link": 25
+},
+{
+"semana": 20,
+"tarefa": 4,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/e6be5b67-b2b6-4798-8443-c0ed6a7256ec/?per_page=20",
+"n_questoes_link": 40
+},
+{
+"semana": 20,
+"tarefa": 5,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/3a478813-439f-4710-926f-41189ef12856/?per_page=20",
+"n_questoes_link": 33
+},
+{
+"semana": 20,
+"tarefa": 6,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/a2aba305-0df6-4b23-8c13-b0f81608920a/?per_page=20",
+"n_questoes_link": 14
+},
+{
+"semana": 20,
+"tarefa": 7,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/105a8e4f-1ef6-4125-8ef5-c922cabbf328/?per_page=20",
+"n_questoes_link": 29
+},
+{
+"semana": 20,
+"tarefa": 8,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/b75e5897-f650-4ee5-aab6-37df32bc3249/?per_page=20",
+"n_questoes_link": 31
+},
+{
+"semana": 20,
+"tarefa": 9,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/cab17f2b-40cd-482f-8ee5-1215275a03e6/?per_page=20",
+"n_questoes_link": 27
+},
+{
+"semana": 20,
+"tarefa": 10,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/0a736311-a118-44ae-919e-6095908b004d/?per_page=20",
+"n_questoes_link": 24
+},
+{
+"semana": 20,
+"tarefa": 11,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/2088a541-e6dd-433a-b019-c973b6240e90/?per_page=20",
+"n_questoes_link": 15
+},
+{
+"semana": 21,
+"tarefa": 1,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/b9bd5317-ac52-4f12-9f31-94053a34c6bc/?per_page=20",
+"n_questoes_link": 15
+},
+{
+"semana": 21,
+"tarefa": 2,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/24105a4b-7367-49d0-acb9-49a603334474/?per_page=20",
+"n_questoes_link": 21
+},
+{
+"semana": 21,
+"tarefa": 3,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/34f8cbcc-0e8a-4aff-ab7f-1dca2c9b4a6c/?per_page=20",
+"n_questoes_link": 21
+},
+{
+"semana": 21,
+"tarefa": 4,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/cff0301b-c8f9-4184-ad91-4951570288c2/?per_page=20",
+"n_questoes_link": 25
+},
+{
+"semana": 21,
+"tarefa": 5,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/1093d168-744a-4ce4-90ab-bc856c649d12/?per_page=20",
+"n_questoes_link": 43
+},
+{
+"semana": 21,
+"tarefa": 6,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/395f1a06-889a-439b-8fea-17e18dbd946e/?per_page=20",
+"n_questoes_link": 38
+},
+{
+"semana": 21,
+"tarefa": 7,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/d83db7b3-b13c-4afb-a2a6-5b9bd719f378/?per_page=20",
+"n_questoes_link": 18
+},
+{
+"semana": 21,
+"tarefa": 8,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/c5c51810-62d1-44e7-aab6-6e082ff5bfe2/?per_page=20",
+"n_questoes_link": 31
+},
+{
+"semana": 21,
+"tarefa": 9,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/de2cad4c-c6b5-420f-b31f-98938473cc75/?per_page=20",
+"n_questoes_link": 21
+},
+{
+"semana": 21,
+"tarefa": 10,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/56fbc824-e3c0-4c4a-9a48-1b224df00c7d/?per_page=20",
+"n_questoes_link": 14
+},
+{
+"semana": 21,
+"tarefa": 11,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/6563e4c6-33b7-4f55-b40a-ed02f78bd9a8/?per_page=20",
+"n_questoes_link": 22
+},
+{
+"semana": 21,
+"tarefa": 12,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/05ae6461-05f0-482a-93fd-473ed25bf723/?per_page=20",
+"n_questoes_link": 43
+},
+{
+"semana": 22,
+"tarefa": 1,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/affae8f9-4253-4d69-9a62-a78c1ac39d1a/?per_page=20",
+"n_questoes_link": 39
+},
+{
+"semana": 22,
+"tarefa": 2,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/8ae39ba4-f3af-4f4a-b104-f5e36cfe3f24/?per_page=20",
+"n_questoes_link": 27
+},
+{
+"semana": 22,
+"tarefa": 3,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/a9db430a-a12f-4696-830c-36880d5fab09/?per_page=20",
+"n_questoes_link": 15
+},
+{
+"semana": 22,
+"tarefa": 4,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/2cb19e0e-8570-449e-b372-0b7e822fb28a/?per_page=20",
+"n_questoes_link": 41
+},
+{
+"semana": 22,
+"tarefa": 5,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/e095bde4-9bb4-4343-9fec-0c8aaae11188/?per_page=20",
+"n_questoes_link": 24
+},
+{
+"semana": 22,
+"tarefa": 6,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/cc77db1b-d959-4146-a1ec-e349fd05b7a1/?per_page=20",
+"n_questoes_link": 13
+},
+{
+"semana": 22,
+"tarefa": 7,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/bfa9a64a-bbd0-49b3-9e66-b8784a807185/?per_page=20",
+"n_questoes_link": 37
+},
+{
+"semana": 22,
+"tarefa": 8,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/d8387dc3-8d41-4490-95b6-13d07b0a013e/?per_page=20",
+"n_questoes_link": 32
+},
+{
+"semana": 22,
+"tarefa": 9,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/5a9ffec7-f186-4e0d-9f1b-745b731185e4/?per_page=20",
+"n_questoes_link": 25
+},
+{
+"semana": 22,
+"tarefa": 10,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/74c07227-b248-4aaf-98f6-980662d77bea/?per_page=20",
+"n_questoes_link": 21
+},
+{
+"semana": 22,
+"tarefa": 11,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/18659bea-db6e-4616-9a64-5d9b956b1f3f/?per_page=20",
+"n_questoes_link": 27
+},
+{
+"semana": 22,
+"tarefa": 12,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/e1acac69-553d-4fc5-b3ab-d9e375c1021c/?per_page=20",
+"n_questoes_link": 41
+},
+{
+"semana": 23,
+"tarefa": 1,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/e0c0e375-c4aa-44fb-97df-e939222c7fc1/?per_page=20",
+"n_questoes_link": 13
+},
+{
+"semana": 23,
+"tarefa": 2,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/73e3a18a-c6c8-441e-b817-6829130b97b2/?per_page=20",
+"n_questoes_link": 43
+},
+{
+"semana": 23,
+"tarefa": 3,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/f082d47b-76fe-4772-ad3d-8b0645b076c1/?per_page=20",
+"n_questoes_link": 12
+},
+{
+"semana": 23,
+"tarefa": 4,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/cc28ea36-1bae-48dc-91ca-be6daf45c2ac/?per_page=20",
+"n_questoes_link": 25
+},
+{
+"semana": 23,
+"tarefa": 5,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/a049f2a3-06c4-431d-858b-cf4f7b8de936/?per_page=20",
+"n_questoes_link": 38
+},
+{
+"semana": 23,
+"tarefa": 6,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/fc08c886-6cf8-4567-8976-7570d7ba4288/?per_page=20",
+"n_questoes_link": 18
+},
+{
+"semana": 23,
+"tarefa": 7,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/32890eb2-480d-43be-b06d-931639dad17c/?per_page=20",
+"n_questoes_link": 27
+},
+{
+"semana": 23,
+"tarefa": 8,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/c2eac977-985b-4061-8835-0d607c100ed7/?per_page=20",
+"n_questoes_link": 19
+},
+{
+"semana": 23,
+"tarefa": 9,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/5619583c-362f-4582-8060-9b60bb90cc67/?per_page=20",
+"n_questoes_link": 18
+},
+{
+"semana": 23,
+"tarefa": 10,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/ace282ea-eb35-413f-a3ac-108c33c9f5b2/?per_page=20",
+"n_questoes_link": 26
+},
+{
+"semana": 23,
+"tarefa": 11,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/a1823ec2-cfec-4cd4-b591-717ce8d361c9/?per_page=20",
+"n_questoes_link": 20
+},
+{
+"semana": 24,
+"tarefa": 1,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/f08871a8-65d1-4635-a444-dfaab4b17eb9/?per_page=20",
+"n_questoes_link": 24
+},
+{
+"semana": 24,
+"tarefa": 2,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/fafdde71-7a10-4ef8-8036-c28372255591/?per_page=20",
+"n_questoes_link": 31
+},
+{
+"semana": 24,
+"tarefa": 3,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/3ef9a57d-f807-4e94-91a8-9224ee21497a/?per_page=20",
+"n_questoes_link": 24
+},
+{
+"semana": 24,
+"tarefa": 4,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/bad4caf5-9753-495a-a2e8-36d43678d16a/?per_page=20",
+"n_questoes_link": 38
+},
+{
+"semana": 24,
+"tarefa": 5,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/dcb36bb6-829e-4d22-a1be-62a45286959f/?per_page=20",
+"n_questoes_link": 17
+},
+{
+"semana": 24,
+"tarefa": 6,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/1367be9a-98fc-4362-a2eb-ab55cd00d92b/?per_page=20",
+"n_questoes_link": 10
+},
+{
+"semana": 24,
+"tarefa": 7,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/9ac75240-a512-4168-963a-d74f21181999/?per_page=20",
+"n_questoes_link": 40
+},
+{
+"semana": 24,
+"tarefa": 8,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/8134083b-b401-49ad-9a0c-24986cd1a4bd/?per_page=20",
+"n_questoes_link": 27
+},
+{
+"semana": 24,
+"tarefa": 9,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/460d4259-7986-4ba1-a725-5394e6ef8991/?per_page=20",
+"n_questoes_link": 34
+},
+{
+"semana": 24,
+"tarefa": 10,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/e23a42ca-ebde-40b3-9b38-bc88fc80959e/?per_page=20",
+"n_questoes_link": 20
+},
+{
+"semana": 24,
+"tarefa": 11,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/a261a066-c70c-41e2-b1d3-8bad7f08047b/?per_page=20",
+"n_questoes_link": 35
+},
+{
+"semana": 24,
+"tarefa": 12,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/ba1c1bb6-940e-4926-b159-ce5da06b0b1b/?per_page=20",
+"n_questoes_link": 41
+},
+{
+"semana": 24,
+"tarefa": 13,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/881f65bb-abde-4411-9e8e-f24637b00431/?per_page=20",
+"n_questoes_link": 35
+},
+{
+"semana": 24,
+"tarefa": 14,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/732acc5e-a1f1-43c2-8128-e8d28a43d2e9/?per_page=20",
+"n_questoes_link": 44
+},
+{
+"semana": 25,
+"tarefa": 1,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/ffb8dc21-e7d3-4aa4-aa94-12d6484a5bff/?per_page=20",
+"n_questoes_link": 22
+},
+{
+"semana": 25,
+"tarefa": 2,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/8b3e96e1-7997-4da0-8059-e72fe75ac4f8/?per_page=20",
+"n_questoes_link": 18
+},
+{
+"semana": 25,
+"tarefa": 3,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/83ebf1f0-07c9-4c18-8cd4-ccec122122fe/?per_page=20",
+"n_questoes_link": 20
+},
+{
+"semana": 25,
+"tarefa": 4,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/1b4ae6d2-f7a1-4580-b5f5-3d8606a989ef/?per_page=20",
+"n_questoes_link": 21
+},
+{
+"semana": 25,
+"tarefa": 5,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/c4df4466-9c1c-43d5-8124-c01c49a1c242/?per_page=20",
+"n_questoes_link": 39
+},
+{
+"semana": 25,
+"tarefa": 6,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/50ac88dd-db3b-4707-814b-54fd7aa5f3ed/?per_page=20",
+"n_questoes_link": 36
+},
+{
+"semana": 25,
+"tarefa": 7,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/7eb1692a-67f7-488e-86ce-780b35480eee/?per_page=20",
+"n_questoes_link": 19
+},
+{
+"semana": 25,
+"tarefa": 8,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/6dd270aa-7906-4bb8-a5ca-e60fd7dd58e6/?per_page=20",
+"n_questoes_link": 23
+},
+{
+"semana": 25,
+"tarefa": 9,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/b8b189eb-7e05-4d1c-8354-fd3ed8753de0/?per_page=20",
+"n_questoes_link": 17
+},
+{
+"semana": 25,
+"tarefa": 10,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/0f8f71b5-bed9-4842-ad8c-0339555cc6d5/?per_page=20",
+"n_questoes_link": 27
+},
+{
+"semana": 25,
+"tarefa": 11,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/705807ce-f619-4073-a8f4-a58a3e9bdf1b/?per_page=20",
+"n_questoes_link": 15
+},
+{
+"semana": 25,
+"tarefa": 12,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/bd59db44-7a5a-468b-ac4d-fe2c49d8499e/?per_page=20",
+"n_questoes_link": 49
+},
+{
+"semana": 25,
+"tarefa": 13,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/d3364386-d293-4aaf-b538-357704eea4d5/?per_page=20",
+"n_questoes_link": 19
+},
+{
+"semana": 26,
+"tarefa": 1,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/c1f5461e-819a-4f74-9396-2f0962670e98/?per_page=20",
+"n_questoes_link": 44
+},
+{
+"semana": 26,
+"tarefa": 2,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/6226e8b2-153b-43fd-8425-dc6cc3f1ccdc/?per_page=20",
+"n_questoes_link": 16
+},
+{
+"semana": 26,
+"tarefa": 3,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/fc48cfc6-9528-482f-a0a8-385997e4e7c9/?per_page=20",
+"n_questoes_link": 37
+},
+{
+"semana": 26,
+"tarefa": 4,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/cfd8b7ed-0523-4521-b5a8-29e1f1c01d58/?per_page=20",
+"n_questoes_link": 37
+},
+{
+"semana": 26,
+"tarefa": 5,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/645b48aa-cc0e-4d59-b318-1f7c477e10ba/?per_page=20",
+"n_questoes_link": 24
+},
+{
+"semana": 26,
+"tarefa": 6,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/eb029fc3-2f3d-43e2-9865-3be5d21272cf/?per_page=20",
+"n_questoes_link": 12
+},
+{
+"semana": 26,
+"tarefa": 7,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/1f68e70a-68d6-440a-a9b5-9da774c42eab/?per_page=20",
+"n_questoes_link": 20
+},
+{
+"semana": 26,
+"tarefa": 8,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/a158376a-d708-4a0e-8465-3fe0d9229d07/?per_page=20",
+"n_questoes_link": 33
+},
+{
+"semana": 26,
+"tarefa": 9,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/9f77c6e1-8658-4a55-b66d-dc292cbe2bf3/?per_page=20",
+"n_questoes_link": 22
+},
+{
+"semana": 26,
+"tarefa": 10,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/c7e38fa2-0875-498e-bb21-fd5a3776d12d/?per_page=20",
+"n_questoes_link": 35
+},
+{
+"semana": 26,
+"tarefa": 11,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/f91b3293-00a7-4f79-a94d-ad3fd055529d/?per_page=20",
+"n_questoes_link": 32
+},
+{
+"semana": 26,
+"tarefa": 12,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/dddba9b5-6072-4539-8ba6-fca136ec8879/?per_page=20",
+"n_questoes_link": 49
+},
+{
+"semana": 27,
+"tarefa": 1,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/6b4654a0-8777-4abd-ae35-9823f1bfcb45/?per_page=20",
+"n_questoes_link": 13
+},
+{
+"semana": 27,
+"tarefa": 2,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/5b565a37-83f5-45e3-a1b0-48a3d278ada8/?per_page=20",
+"n_questoes_link": 47
+},
+{
+"semana": 27,
+"tarefa": 3,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/1053a9ad-d0a1-432c-9584-e4cdaa712208/?per_page=20",
+"n_questoes_link": 26
+},
+{
+"semana": 27,
+"tarefa": 4,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/2c101542-29dd-47f4-895f-ff3a9813e1f6/?per_page=20",
+"n_questoes_link": 28
+},
+{
+"semana": 27,
+"tarefa": 5,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/0a12cfb3-9a40-4f41-ac3c-09c02701e464/?per_page=20",
+"n_questoes_link": 36
+},
+{
+"semana": 27,
+"tarefa": 6,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/aa81ed9e-1522-42e9-bacf-43f346fd8c86/?per_page=20",
+"n_questoes_link": 26
+},
+{
+"semana": 27,
+"tarefa": 7,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/49fcd27f-e7d1-420d-ae04-b6018d827bbb/?per_page=20",
+"n_questoes_link": 20
+},
+{
+"semana": 27,
+"tarefa": 8,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/42eb70ec-9d74-4eae-9787-86db36bda8c5/?per_page=20",
+"n_questoes_link": 28
+},
+{
+"semana": 27,
+"tarefa": 9,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/6071510c-c449-49c0-8fa8-9c0b2f491843/?per_page=20",
+"n_questoes_link": 36
+},
+{
+"semana": 27,
+"tarefa": 10,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/cfcb1107-e9da-4975-8c9b-381749d24d0e/?per_page=20",
+"n_questoes_link": 26
+},
+{
+"semana": 27,
+"tarefa": 11,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/b202874b-7ae8-4d3a-8b54-2408f147d462/?per_page=20",
+"n_questoes_link": 26
+},
+{
+"semana": 27,
+"tarefa": 12,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/87b7977d-79ff-4c31-a46e-bc64f6dd10d5/?per_page=20",
+"n_questoes_link": 50
+},
+{
+"semana": 27,
+"tarefa": 13,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/b600d233-171d-455b-b8b7-7bfc363893b3/?per_page=20",
+"n_questoes_link": 24
+},
+{
+"semana": 27,
+"tarefa": 14,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/a96f810b-a20d-4b63-8470-6b04c63ccb21/?per_page=20",
+"n_questoes_link": 36
+},
+{
+"semana": 27,
+"tarefa": 15,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/2182e1d8-659c-4c40-90aa-6099fad02577/?per_page=20",
+"n_questoes_link": 44
+},
+{
+"semana": 28,
+"tarefa": 2,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/670c75b6-370b-4245-8747-6e0100293400/?per_page=20",
+"n_questoes_link": 31
+},
+{
+"semana": 28,
+"tarefa": 3,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/00a51ab2-d883-4340-a947-a1e9fa2a0f90/?per_page=20",
+"n_questoes_link": 16
+},
+{
+"semana": 28,
+"tarefa": 4,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/61b0497b-d1af-4b00-94aa-de8eba0a771e/?per_page=20",
+"n_questoes_link": 35
+},
+{
+"semana": 28,
+"tarefa": 5,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/d26fcc67-724b-4a6e-9543-75af93c3ba5b/?per_page=20",
+"n_questoes_link": 24
+},
+{
+"semana": 28,
+"tarefa": 6,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/140d6672-23c5-4c0d-ad3d-ba18908c4304/?per_page=20",
+"n_questoes_link": 33
+},
+{
+"semana": 28,
+"tarefa": 7,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/b0ac284d-d883-4f90-b811-545fbad82046/?per_page=20",
+"n_questoes_link": 24
+},
+{
+"semana": 28,
+"tarefa": 8,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/526bc301-0ac3-4bed-aff7-8e4583b8ac8a/?per_page=20",
+"n_questoes_link": 58
+},
+{
+"semana": 28,
+"tarefa": 9,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/57840f57-4502-468f-88b6-c649ff6f168c/?per_page=20",
+"n_questoes_link": 20
+},
+{
+"semana": 28,
+"tarefa": 10,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/5f6dbf33-cece-459d-af7a-b33ee4070045/?per_page=20",
+"n_questoes_link": 38
+},
+{
+"semana": 28,
+"tarefa": 11,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/e8f98a5a-6ff9-44e8-8caf-f14d7f364a92/?per_page=20",
+"n_questoes_link": 41
+},
+{
+"semana": 28,
+"tarefa": 12,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/282f1491-c38b-4f28-a07a-e41fb4c39def/?per_page=20",
+"n_questoes_link": 35
+}
+],
+"extensivo": [
+{
+"semana": 1,
+"tarefa": 7,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/1f795ce5-b195-4c1d-af06-61ebe46dd88d/?per_page=20",
+"n_questoes_link": 43
+},
+{
+"semana": 2,
+"tarefa": 3,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/cbfdda44-a5b0-4e0d-a8bc-a0b1dc2b272c/?per_page=20",
+"n_questoes_link": 43
+},
+{
+"semana": 2,
+"tarefa": 4,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/24b870be-713d-4c6e-9522-c8b56991236e/?per_page=20",
+"n_questoes_link": 41
+},
+{
+"semana": 2,
+"tarefa": 6,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/ffc5a579-8ba9-4221-bfa1-482111c59e1b/?per_page=20",
+"n_questoes_link": 46
+},
+{
+"semana": 3,
+"tarefa": 5,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/ec49eb51-f981-42df-b02e-cb14bff4afa3/?per_page=20",
+"n_questoes_link": 44
+},
+{
+"semana": 3,
+"tarefa": 7,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/cab11bd0-5170-482d-956f-87820047e718/?per_page=20",
+"n_questoes_link": 48
+},
+{
+"semana": 3,
+"tarefa": 8,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/fba8a193-74ac-467a-b578-1b577a6e2941/?per_page=20",
+"n_questoes_link": 48
+},
+{
+"semana": 3,
+"tarefa": 10,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/fb567ff5-8c88-431e-8a3c-ac5ea98be1ba/?per_page=20",
+"n_questoes_link": 34
+},
+{
+"semana": 3,
+"tarefa": 13,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/3a3a5ecc-9b4b-4030-a06b-972ca15893bd/?per_page=20",
+"n_questoes_link": 51
+},
+{
+"semana": 4,
+"tarefa": 1,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/65c24bae-a675-4a82-84a5-64bac81a928b/?per_page=20",
+"n_questoes_link": 46
+},
+{
+"semana": 4,
+"tarefa": 4,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/945cf736-b27d-4d07-95de-eef6bd1dfc66/?per_page=20",
+"n_questoes_link": 34
+},
+{
+"semana": 4,
+"tarefa": 6,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/86112f3f-971b-4daa-988b-04d25df76f29/?per_page=20",
+"n_questoes_link": 48
+},
+{
+"semana": 5,
+"tarefa": 7,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/799efa9e-ac4d-4cbe-aea6-81bca4b6b707/?per_page=20",
+"n_questoes_link": 33
+},
+{
+"semana": 6,
+"tarefa": 1,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/e62f53db-d9fe-4564-b7d4-b473486d70cf/?per_page=20",
+"n_questoes_link": 40
+},
+{
+"semana": 6,
+"tarefa": 3,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/f3a04a78-45a8-4897-886e-92256887e423/?per_page=20",
+"n_questoes_link": 48
+},
+{
+"semana": 6,
+"tarefa": 9,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/eb64cfa1-4164-47b9-999d-fef5f7940093/?per_page=20",
+"n_questoes_link": 42
+},
+{
+"semana": 6,
+"tarefa": 10,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/1febf33c-0916-4e4a-9e34-926345f79192/?per_page=20",
+"n_questoes_link": 40
+},
+{
+"semana": 6,
+"tarefa": 11,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/38c26e27-b1fc-4fd7-9e98-28fe75a69506/?per_page=20",
+"n_questoes_link": 37
+},
+{
+"semana": 6,
+"tarefa": 14,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/ad4cd075-35c8-4b5e-88f5-e929ed0beec1/?per_page=20",
+"n_questoes_link": 59
+},
+{
+"semana": 7,
+"tarefa": 2,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/9799119c-b4a4-4e07-a8e9-0074104fb995/?per_page=20",
+"n_questoes_link": 45
+},
+{
+"semana": 7,
+"tarefa": 4,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/0d657379-33c4-43b4-9d87-e82dd292ebaf/?per_page=20",
+"n_questoes_link": 47
+},
+{
+"semana": 7,
+"tarefa": 5,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/5282ff61-3cc4-4820-905b-ac0a393e8961/?per_page=20",
+"n_questoes_link": 52
+},
+{
+"semana": 7,
+"tarefa": 8,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/d74996b2-3086-44b3-aca8-bf0a3b9423e6/?per_page=20",
+"n_questoes_link": 49
+},
+{
+"semana": 8,
+"tarefa": 1,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/ec744277-f0fe-422c-adb6-e5bdcdf91163/?per_page=20",
+"n_questoes_link": 41
+},
+{
+"semana": 8,
+"tarefa": 10,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/36103e70-1fb6-4a1b-be4f-d2dab37b8a9a/?per_page=20",
+"n_questoes_link": 37
+},
+{
+"semana": 8,
+"tarefa": 14,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/0200ae72-0d15-4e5e-90d5-59e7422f8575/?per_page=20",
+"n_questoes_link": 48
+},
+{
+"semana": 9,
+"tarefa": 2,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/709866b3-e3cb-4d32-a593-0448cf0ec94f/?per_page=20",
+"n_questoes_link": 41
+},
+{
+"semana": 9,
+"tarefa": 3,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/675fcad1-7bea-4a33-9722-5e93f7ddb02b/?per_page=20",
+"n_questoes_link": 38
+},
+{
+"semana": 9,
+"tarefa": 4,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/af7416cb-1663-4224-a2b1-0a7be72e42ec/?per_page=20",
+"n_questoes_link": 43
+},
+{
+"semana": 9,
+"tarefa": 9,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/cd76d25c-f8b5-465b-9ac3-f52506f423d7/?per_page=20",
+"n_questoes_link": 49
+},
+{
+"semana": 9,
+"tarefa": 11,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/51c9bf2e-0e9f-4b91-946c-6f1ea4063308/?per_page=20",
+"n_questoes_link": 42
+},
+{
+"semana": 9,
+"tarefa": 12,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/b5af4246-3fa7-4486-8bb0-0287c205560b/?per_page=20",
+"n_questoes_link": 15
+},
+{
+"semana": 9,
+"tarefa": 14,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/49fc008a-69a9-4383-b94f-43dbebc01ead/?per_page=20",
+"n_questoes_link": 46
+},
+{
+"semana": 10,
+"tarefa": 1,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/254df9fd-324b-47be-a931-d81206d3ea12/?per_page=20",
+"n_questoes_link": 47
+},
+{
+"semana": 10,
+"tarefa": 5,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/6b62f73b-d245-4ddd-91a1-afd8d767d01a/?per_page=20",
+"n_questoes_link": 37
+},
+{
+"semana": 10,
+"tarefa": 7,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/131c0c56-fb83-4ceb-b8c5-f9ef6539ced2/?per_page=20",
+"n_questoes_link": 47
+},
+{
+"semana": 10,
+"tarefa": 11,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/1abcd9c7-c031-4903-9323-57a6b6cab365/?per_page=20",
+"n_questoes_link": 35
+},
+{
+"semana": 11,
+"tarefa": 4,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/7ad0b675-20df-43d7-9766-5b9a26a7e99d/?per_page=20",
+"n_questoes_link": 43
+},
+{
+"semana": 11,
+"tarefa": 6,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/3040340f-9fe2-4462-a5d3-607d9ff8fc58/?per_page=20",
+"n_questoes_link": 47
+},
+{
+"semana": 11,
+"tarefa": 11,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/75d49073-92d7-460b-b8e2-3321d3f70e6f/?per_page=20",
+"n_questoes_link": 47
+},
+{
+"semana": 12,
+"tarefa": 2,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/4622e17e-9486-4c5b-a0b9-7707fde6e173/?per_page=20",
+"n_questoes_link": 28
+},
+{
+"semana": 12,
+"tarefa": 3,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/7608b279-9861-423b-b56e-4e13f64a5de4/?per_page=20",
+"n_questoes_link": 43
+},
+{
+"semana": 12,
+"tarefa": 7,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/07d096f7-5825-4d99-a986-d4b9d18c0f3a/?per_page=20",
+"n_questoes_link": 40
+},
+{
+"semana": 12,
+"tarefa": 12,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/c0eb6fab-773f-4913-a660-cdd26c050341/?per_page=20",
+"n_questoes_link": 28
+},
+{
+"semana": 13,
+"tarefa": 5,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/ae197e6d-3c72-4ae1-af82-595265080f9b/?per_page=20",
+"n_questoes_link": 53
+},
+{
+"semana": 13,
+"tarefa": 8,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/fd1586e9-c615-4523-beb7-88ad28239ec1/?per_page=20",
+"n_questoes_link": 48
+},
+{
+"semana": 13,
+"tarefa": 9,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/7332bd00-0325-4f7f-9fe3-d295282e9eea/?per_page=20",
+"n_questoes_link": 41
+},
+{
+"semana": 13,
+"tarefa": 10,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/18eea403-2aa2-46ae-91a5-a2a8fa583bc0/?per_page=20",
+"n_questoes_link": 42
+},
+{
+"semana": 13,
+"tarefa": 14,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/c3ea4526-7125-448a-bc19-c2adeaf51010/?per_page=20",
+"n_questoes_link": 53
+},
+{
+"semana": 13,
+"tarefa": 15,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/19afce0f-57b8-4ff6-a42f-f5e5acbf05e1/?per_page=20",
+"n_questoes_link": 56
+},
+{
+"semana": 14,
+"tarefa": 1,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/0efbd49c-a6f3-4cd1-bebf-3c91188815a3/?per_page=20",
+"n_questoes_link": 43
+},
+{
+"semana": 14,
+"tarefa": 2,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/ee88f0f3-3ccd-4be8-af39-303adbc93527/?per_page=20",
+"n_questoes_link": 39
+},
+{
+"semana": 14,
+"tarefa": 4,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/55f7897f-2be5-4780-b5f2-27fdab33dee4/?per_page=20",
+"n_questoes_link": 49
+},
+{
+"semana": 14,
+"tarefa": 12,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/b7bd6140-d752-405f-81e8-77432e0cba51/?per_page=20",
+"n_questoes_link": 32
+},
+{
+"semana": 14,
+"tarefa": 13,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/6f92a924-1f90-48a4-a248-5bd70aba5397/?per_page=20",
+"n_questoes_link": 34
+},
+{
+"semana": 14,
+"tarefa": 14,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/8eff1300-ac3f-4f75-b798-d60075225366/?per_page=20",
+"n_questoes_link": 60
+},
+{
+"semana": 15,
+"tarefa": 6,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/e88677cf-5c3c-44f0-b159-bb749f7882df/?per_page=20",
+"n_questoes_link": 47
+},
+{
+"semana": 15,
+"tarefa": 7,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/2c1749e1-7b77-4327-aaa3-a1eec5e45b05/?per_page=20",
+"n_questoes_link": 45
+},
+{
+"semana": 15,
+"tarefa": 13,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/bb7434e9-d679-4a18-bc79-3efe00c15d24/?per_page=20",
+"n_questoes_link": 44
+},
+{
+"semana": 15,
+"tarefa": 14,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/577b0839-d9b5-42fd-990c-7914eb09ae13/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 16,
+"tarefa": 3,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/be16c509-a49e-4df3-af33-2407527c986b/?per_page=20",
+"n_questoes_link": 48
+},
+{
+"semana": 16,
+"tarefa": 9,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/b81a648e-d20a-45ad-b2fd-03853ab8dc09/?per_page=20",
+"n_questoes_link": 42
+},
+{
+"semana": 16,
+"tarefa": 12,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/1f6b3925-4209-47ac-ae8c-e578501cc5b7/?per_page=20",
+"n_questoes_link": 41
+},
+{
+"semana": 17,
+"tarefa": 4,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/30422a3f-706d-4a88-9dab-a951ec8a16e5/?per_page=20",
+"n_questoes_link": 43
+},
+{
+"semana": 17,
+"tarefa": 5,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/30c79b01-33d2-4178-8a31-3fbf9a77faa4/?per_page=20",
+"n_questoes_link": 39
+},
+{
+"semana": 17,
+"tarefa": 6,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/3a82b234-1d25-492f-b812-c8127e46c941/?per_page=20",
+"n_questoes_link": 35
+},
+{
+"semana": 17,
+"tarefa": 7,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/939313f4-8c62-426d-899b-317270c8f3c4/?per_page=20",
+"n_questoes_link": 50
+},
+{
+"semana": 17,
+"tarefa": 8,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/4cbbbfc2-a025-410f-990a-dafe0433749b/?per_page=20",
+"n_questoes_link": 43
+},
+{
+"semana": 17,
+"tarefa": 10,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/d575fcf6-6b42-44ef-a9b6-795924f2bd6b/?per_page=20",
+"n_questoes_link": 37
+},
+{
+"semana": 17,
+"tarefa": 13,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/6488622e-9714-41f9-8b70-ef6ac5630ec3/?per_page=20",
+"n_questoes_link": 35
+},
+{
+"semana": 17,
+"tarefa": 14,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/532d07b8-6ebd-4b03-b294-704dae4f140f/?per_page=20",
+"n_questoes_link": 55
+},
+{
+"semana": 18,
+"tarefa": 7,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/5e89c2cb-3ac4-4607-aef9-0c7a3d533ec8/?per_page=20",
+"n_questoes_link": 32
+},
+{
+"semana": 18,
+"tarefa": 8,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/1b2311e1-ab7f-4881-851e-de416affbe21/?per_page=20",
+"n_questoes_link": 48
+},
+{
+"semana": 18,
+"tarefa": 10,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/5d82a8c7-ef37-4ae7-bc21-5c3e118b1b68/?per_page=20",
+"n_questoes_link": 38
+},
+{
+"semana": 18,
+"tarefa": 12,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/9476ecd0-af16-4baf-8a7f-b7bca631d31c/?per_page=20",
+"n_questoes_link": 43
+},
+{
+"semana": 18,
+"tarefa": 14,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/3a861d4a-7e7d-44f9-8ac0-d1ceb9e65ba7/?per_page=20",
+"n_questoes_link": 41
+},
+{
+"semana": 18,
+"tarefa": 15,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/44f75926-125c-4999-9216-309e5856e162/?per_page=20",
+"n_questoes_link": 52
+},
+{
+"semana": 19,
+"tarefa": 1,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/7b356f51-72d3-4bac-add2-95bfd487aa73/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 19,
+"tarefa": 10,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/8d3b25af-7b5d-4b0a-9197-ada65d2f68bb/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 19,
+"tarefa": 14,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/563cb5e8-eefd-494a-934b-171347c14dc0/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 20,
+"tarefa": 2,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/4dea485a-2b3b-478d-af47-4c34faec9df8/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 20,
+"tarefa": 4,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/19b27a22-2855-4514-a6e9-8e2e38826b95/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 20,
+"tarefa": 5,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/e1e37be6-bfd8-4f14-983a-c11ecf98aa30/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 20,
+"tarefa": 7,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/153a9380-35fa-4882-94bc-b4dfd0ad787d/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 20,
+"tarefa": 9,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/a355c00d-8a1b-4e81-9175-be4b04d76b92/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 20,
+"tarefa": 10,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/09d8f120-6e83-4754-9d57-802388ebe823/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 20,
+"tarefa": 11,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/37c1ed35-094e-42de-b8d3-8bc9165d609e/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 20,
+"tarefa": 13,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/ae8eb20e-9015-4201-b5b5-729334988cb8/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 20,
+"tarefa": 14,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/72e60515-e1d9-45ae-bd2b-1d75ede3468a/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 20,
+"tarefa": 15,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/3c7f7715-09f4-4ceb-a705-7466a31147a7/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 21,
+"tarefa": 1,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/139e5ab3-2c60-4773-8f22-ddef78595c72/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 21,
+"tarefa": 3,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/a747bae0-1a93-4d20-b721-be79b8eacdc3/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 21,
+"tarefa": 9,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/df966cdf-5fa6-4eaf-82ae-58ea4d133310/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 21,
+"tarefa": 12,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/af8c467f-29f9-49c8-91aa-abb49366f4de/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 22,
+"tarefa": 1,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/cad93efb-a7c6-4665-9de1-854466215c31/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 22,
+"tarefa": 5,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/05e9921b-5d62-4460-925d-4627cc7f00d0/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 22,
+"tarefa": 7,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/acd2ab46-c001-40d4-898a-b5a8b0b92ecb/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 22,
+"tarefa": 8,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/10eadd5f-d220-4d44-b6f9-a527d686f9d5/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 22,
+"tarefa": 13,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/08ac3ed1-878b-4e8c-a745-45e1915d1ac0/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 23,
+"tarefa": 1,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/eec76fbb-81ab-466e-98b8-e47d24b95be3/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 23,
+"tarefa": 4,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/284e2e15-7b4c-4de1-9229-1503e170fb65/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 23,
+"tarefa": 12,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/c7d12e1a-ba5f-4469-8e8c-8553afa9e4be/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 24,
+"tarefa": 1,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/b72ec3ed-d785-4a37-8ed5-37d12b87225d/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 24,
+"tarefa": 2,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/c49f0171-115f-4495-9a14-13cd02fab580/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 24,
+"tarefa": 6,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/325831fc-462e-400a-8e4f-d71643b6e80e/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 24,
+"tarefa": 7,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/8f84b20b-ccb4-467f-a5bb-95720934cabd/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 24,
+"tarefa": 12,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/782421d9-7b9a-492b-8141-4272a49e41d3/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 24,
+"tarefa": 14,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/b3b1f9c5-50da-40c8-9cec-e71d93ce5f72/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 25,
+"tarefa": 3,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/b15ff75c-19cf-4722-b62d-9e54ec1f5f06/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 25,
+"tarefa": 6,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/167b7e78-17a4-4f4b-b387-0f74c5604874/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 25,
+"tarefa": 8,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/6dab49d7-859d-4220-9039-cf3cfa886714/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 25,
+"tarefa": 9,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/7b44df7a-dd54-4313-9c85-42bec7d302f6/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 25,
+"tarefa": 10,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/eb26590a-1ef1-4345-87d6-d226006b9af7/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 25,
+"tarefa": 14,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/b59a4100-4ae3-465c-9b7b-6ca3310ae144/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 26,
+"tarefa": 2,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/e77e0b60-cbd1-4c5c-b7b7-18c97d632516/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 26,
+"tarefa": 5,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/ce521ef3-6a61-4e27-96bb-8c0b57889f49/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 26,
+"tarefa": 6,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/06d823ac-bc8a-46e9-bbdb-a6fd02e1ef35/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 26,
+"tarefa": 12,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/52ac6ec7-6197-476f-bdb6-c6c8d1f380e2/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 26,
+"tarefa": 14,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/c7363f36-9760-460a-8cbd-8f427a829e84/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 27,
+"tarefa": 4,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/62ae6371-881b-4079-a2fe-76fde2326daa/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 27,
+"tarefa": 7,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/9f8cc552-7c18-497f-8d4f-bd7ee36e2a2f/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 27,
+"tarefa": 8,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/1d011cf4-1447-4be5-a489-d2f6832f8ad3/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 27,
+"tarefa": 11,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/8181508e-552e-40f0-9d82-43fafa567106/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 27,
+"tarefa": 13,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/64bcbac5-b9ad-4766-8c47-2ca40767daca/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 28,
+"tarefa": 1,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/1fa35c81-4dac-4fd1-ac95-a9698ba3acad/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 28,
+"tarefa": 7,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/cce0cc7e-471b-4544-998a-c4855b66a5c1/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 28,
+"tarefa": 8,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/d0fee970-a8e6-4af2-b1a6-5d83b6377eef/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 28,
+"tarefa": 12,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/91b9a348-852f-4ed9-b8b5-2f87b7e2d4c4/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 28,
+"tarefa": 14,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/343698fe-67ea-4a2f-ace1-f3d3b8584865/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 29,
+"tarefa": 3,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/d952a250-75a1-4d7d-9604-47a4cee17e03/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 29,
+"tarefa": 4,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/a18e0b36-da4f-4cfe-831f-aa9338b1bb8b/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 29,
+"tarefa": 8,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/70633a17-f431-42a2-9754-723974c548a8/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 29,
+"tarefa": 11,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/faf3ba41-ee09-4fdd-ac24-f6b24077c9a6/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 29,
+"tarefa": 12,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/76998317-9c1d-44fb-97fe-843c4e703c7d/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 29,
+"tarefa": 14,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/2e5839ac-6d11-495d-9dbb-2dd403642687/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 29,
+"tarefa": 15,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/0ea0c233-bd55-4412-9aee-09ad1e2b0e04/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 30,
+"tarefa": 1,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/60209c62-b75f-45eb-af34-cfd28335fb99/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 30,
+"tarefa": 8,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/18c0bbea-9f9a-452e-a3e0-848ec6f9cbe7/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 30,
+"tarefa": 9,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/56f227c1-e8dd-40cc-8b57-0de752c06a1a/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 30,
+"tarefa": 14,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/08b87a3a-5e55-4bd1-8e4d-8d492cbd8097/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 30,
+"tarefa": 15,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/b66ab0a9-851d-4a9c-ad79-8647a9df2797/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 30,
+"tarefa": 16,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/9df18aaa-3c90-4d5b-b61c-1291b1c87153/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 31,
+"tarefa": 1,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/bf99b230-04a9-4060-bf31-227da8894ea3/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 31,
+"tarefa": 4,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/5b506766-6ab8-4ea3-92e9-cf3de883c8bb/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 31,
+"tarefa": 5,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/d4691d16-1838-4de0-9453-210eb7cc7cfd/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 31,
+"tarefa": 7,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/f816f9bb-19b7-4a53-aedb-f6526ba39ab1/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 31,
+"tarefa": 8,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/83b05783-b5d1-48a2-94e4-720bf51b9d3c/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 31,
+"tarefa": 13,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/55e6618c-de30-4870-867f-f760eca79676/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 32,
+"tarefa": 1,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/d5f56c65-4a19-4bb0-8dac-99f56c7b99e7/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 32,
+"tarefa": 7,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/cb1613ca-1d02-4b5d-9829-7ad7319f9218/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 32,
+"tarefa": 11,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/7ca74c5d-f86b-4537-a271-1e1f462c05a2/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 32,
+"tarefa": 13,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/cae3de8e-34c0-463c-8c1a-c68dbd17a12d/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 33,
+"tarefa": 3,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/fc289f68-1dce-4cb7-a61e-e0c7ec3faee2/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 33,
+"tarefa": 5,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/4d9b0b58-7de2-4e25-bdaf-37f7d217a400/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 33,
+"tarefa": 9,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/0be1fbde-63f0-4fb0-9023-49a56ecf1ee6/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 33,
+"tarefa": 11,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/20543bfb-f4e7-49d1-85fd-1793f1b1c340/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 33,
+"tarefa": 12,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/d1d193b6-dbfb-4ce4-a69d-ce0da8b3234d/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 34,
+"tarefa": 1,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/b5a01682-ad2c-496a-abd8-307db791a53b/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 34,
+"tarefa": 2,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/8b9084ed-309c-4757-94e5-5e23cd04fb38/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 34,
+"tarefa": 11,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/58174e31-99d3-4e7b-90a5-14418a3e134e/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 34,
+"tarefa": 12,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/eb099233-8095-4c69-b5e5-bc7daf12e774/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 35,
+"tarefa": 1,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/e153f534-b909-45c0-bc48-06f10cf608a7/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 35,
+"tarefa": 7,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/4b48ff43-aab1-47dc-8381-8e70f1f49583/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 35,
+"tarefa": 8,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/7aa2a5b2-b535-44c8-9cac-f7470f620706/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 35,
+"tarefa": 9,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/33dc92ca-532c-44df-80d6-79f668c61652/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 35,
+"tarefa": 13,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/47b767a8-b896-48b7-9626-cf392b54906c/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 35,
+"tarefa": 14,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/2ca28a13-168b-4b0f-96c8-cbf7d4ba115c/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 35,
+"tarefa": 15,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/a9edfac8-7bdf-4763-9a5a-a842541742ca/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 36,
+"tarefa": 1,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/f9fa0982-0040-4ea2-87f7-5a27989333e2/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 36,
+"tarefa": 3,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/8f40bf0e-f2f1-4cff-81ed-a03f32bf20a4/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 36,
+"tarefa": 4,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/ce200bcd-cc01-41f0-9101-5b0e4e420d8e/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 36,
+"tarefa": 8,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/4632c564-b131-43ff-a90f-af66253ddad7/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 36,
+"tarefa": 9,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/bc01ddca-49f3-41f2-acd1-aeebc6da5cb2/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 36,
+"tarefa": 14,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/b946cfda-2e0c-489a-a3aa-bf2f2a76c05d/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 37,
+"tarefa": 7,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/f9135839-957b-4281-8e7c-411852cf65d6/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 37,
+"tarefa": 10,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/5b726b6b-5a50-402c-9f35-4c356d219c17/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 37,
+"tarefa": 11,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/d85deac5-ec64-4999-964b-caafa15355a7/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 37,
+"tarefa": 14,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/baf18009-e9b8-4c6f-a5b1-ff43fc8238c7/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 38,
+"tarefa": 1,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/02c11b13-6d77-4b27-8ce1-ad393c25edb3/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 38,
+"tarefa": 3,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/4f935dc6-cf68-46c2-b55c-153264ba1e7c/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 38,
+"tarefa": 5,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/93957c04-593f-486a-8ebb-14ec10c12897/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 38,
+"tarefa": 9,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/a2ab4687-aee2-41c1-9d4e-70d57edfcfc4/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 38,
+"tarefa": 14,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/3a27da7a-f31f-4f74-98bf-46ce17e60ca0/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 39,
+"tarefa": 2,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/8e150b2b-c01c-4ac0-8e15-4ab4c07bf446/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 39,
+"tarefa": 4,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/420d2cbe-6292-4f9c-bffa-04e66e847ef5/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 39,
+"tarefa": 12,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/1761fb40-c28c-4fbb-bc79-4e56db723d02/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 39,
+"tarefa": 14,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/04c4c25a-2301-450a-87cb-b1f948e68f2e/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 40,
+"tarefa": 1,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/35e1cef0-9f3a-4919-9156-82076d354768/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 40,
+"tarefa": 3,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/05504ca9-25ae-493e-b274-56570bd4f93b/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 40,
+"tarefa": 5,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/7d689cce-d82b-44e1-8961-d8d70dbdbcf0/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 40,
+"tarefa": 6,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/55bdbb2f-366e-434a-a093-ad473028a52e/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 40,
+"tarefa": 12,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/4b468e29-d3f6-4516-adfb-86a41822a072/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 40,
+"tarefa": 13,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/f723c17e-0471-44a7-bcf2-0d0dad5e8efb/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 40,
+"tarefa": 14,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/e5866928-b51e-4f57-ba83-82fa21ad03cb/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 40,
+"tarefa": 15,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/cb6f72ed-4c67-4315-b91a-a02df0b1782b/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 41,
+"tarefa": 8,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/f6285a82-ee0e-4821-a602-dfc9c6fa3d47/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 41,
+"tarefa": 9,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/9fab718a-a6d9-44f8-aba9-31bc88aa803f/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 41,
+"tarefa": 10,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/b4c9609c-4cbc-452a-8acc-de8dd812f154/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 41,
+"tarefa": 13,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/c3cd8dc4-3bd9-431b-800d-72f681c8c3ed/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 42,
+"tarefa": 1,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/c350b92e-04d7-4361-aa33-a287ffc94978/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 42,
+"tarefa": 2,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/9fc5c5a8-6e66-4073-8fa3-4e096164dbdb/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 42,
+"tarefa": 7,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/b3d81443-1f6a-4de7-9ec9-942a07792b52/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 42,
+"tarefa": 8,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/ecff07cb-e14f-44cf-88e0-baae6ad9baea/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 42,
+"tarefa": 9,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/22ba84c1-9605-4f27-90e2-7763d41c6fc1/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 42,
+"tarefa": 10,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/3dd77684-295a-463f-b35f-1f5be0bfec7a/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 42,
+"tarefa": 11,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/067bae14-31fb-46f7-8e34-36d6472444c2/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 42,
+"tarefa": 13,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/2d5046bc-8338-46fd-9688-cc54a2db57c6/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 42,
+"tarefa": 14,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/85bc4b19-2193-4d8e-acb7-0772cddf8845/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 43,
+"tarefa": 5,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/5d6aae22-6933-44d7-88c3-edaeb0e548e4/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 43,
+"tarefa": 8,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/faf1dc21-26ef-43ea-9131-633ba47af28c/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 43,
+"tarefa": 9,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/d9209904-5ffd-40d6-8267-41e12629ce66/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 44,
+"tarefa": 2,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/5b40efb6-2957-4210-858c-c0fdd9cf74e5/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 44,
+"tarefa": 3,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/84466e01-cdc1-40bf-918f-f5a857e01e1b/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 45,
+"tarefa": 4,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/acc3e6a2-de26-4890-914a-462c2a9260e6/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 45,
+"tarefa": 7,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/b731b2b5-8f3a-4d74-b231-73e178d8272d/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 45,
+"tarefa": 9,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/71982fe3-ecde-4a36-989d-f42a7378b95c/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 46,
+"tarefa": 1,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/972088b8-5e0d-4c17-826b-8f9bfff998de/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 46,
+"tarefa": 2,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/3307b5bc-9e25-4363-91ed-04d7bc049664/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 46,
+"tarefa": 8,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/741a2b00-5d39-4636-a45a-f8057a42af3d/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 46,
+"tarefa": 12,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/c824c6d3-d524-477e-aed0-8fa66ce67c29/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 46,
+"tarefa": 13,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/57b003de-4e62-48b2-bbb9-4faad08fd095/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 47,
+"tarefa": 3,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/fb92999b-c38d-4713-99b6-4e909e09a7c4/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 47,
+"tarefa": 5,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/4ff1ff09-47ae-4325-bb44-ee9c9e7354f9/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 47,
+"tarefa": 8,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/963cbe5f-5dba-400c-bd3c-c1acc48790da/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 47,
+"tarefa": 9,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/00ddb4d7-976c-4322-afd0-36b46c862351/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 47,
+"tarefa": 11,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/c4230432-27aa-4969-bc50-e0bd65b3e1c7/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 47,
+"tarefa": 12,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/ef19a551-bd4b-451b-af6c-d56e01736b7e/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 47,
+"tarefa": 13,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/8b54e818-5abe-4f9d-82f6-9de6f8f302c0/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 48,
+"tarefa": 2,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/b1df7f4f-3922-4ec4-9358-a18e9aaab1a0/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 48,
+"tarefa": 3,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/c34392de-e488-420b-94eb-cf9e6c84f70b/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 48,
+"tarefa": 4,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/0b9cb702-14ed-4d57-ae74-c62f29fd0e24/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 48,
+"tarefa": 5,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/67f87ed2-7b96-459d-b874-585af7e3f8c7/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 48,
+"tarefa": 6,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/140d6672-23c5-4c0d-ad3d-ba18908c4304/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 48,
+"tarefa": 7,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/7c1a9f42-5b7c-41ce-b90d-fb44e11ac2d2/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 48,
+"tarefa": 8,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/f159a856-bf4f-46d8-a077-e2d81ab8d090/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 48,
+"tarefa": 9,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/20ffe51a-d622-4fda-a21d-751c4d70df54/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 48,
+"tarefa": 10,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/319ac17f-c92e-4802-8c1b-0c17b6a09334/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 48,
+"tarefa": 11,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/1cf3365a-75e6-43df-b1e3-8a216348301d/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 48,
+"tarefa": 12,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/2d3dbcda-22c3-42c7-b9b6-6a396440df27/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 48,
+"tarefa": 13,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/4f5dc027-d78e-438d-97cc-18d157214247/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 48,
+"tarefa": 14,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/df8ff070-d496-4df5-8ccd-e5448c6a5329/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 48,
+"tarefa": 15,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/7bb7623a-4425-4c73-82cd-dd4cfae24631/?per_page=20",
+"n_questoes_link": null
+},
+{
+"semana": 48,
+"tarefa": 16,
+"url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/641d28a8-90e5-430c-a7db-1423b2224575/?per_page=20",
+"n_questoes_link": null
+}
+]
+}

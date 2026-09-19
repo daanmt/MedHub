@@ -1,0 +1,580 @@
+<title>Raio-X UERJ</title>
+<style>
+:root{
+  --papel:#f6f4f0; --card:#ffffff; --afundado:#edeae4;
+  --tinta:#191817; --tinta2:#54504a; --tinta3:#8b857b;
+  --linha:#e0dbd2; --acento:#0e6b5c; --acento-fraco:#d9ece7;
+  --alerta:#a2412a; --alerta-fraco:#f6e4de;
+  --b-cm:#2a78d6; --b-cir:#eb6834; --b-go:#1baf7a; --b-ped:#eda100; --b-mfc:#e87ba4;
+  --e-tocado:#86b6ef; --e-parcial:#3987e5; --e-feito:#184f95; --e-zero:#d03b3b;
+  --wrap:68rem; --raio:12px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --papel:#131519; --card:#1b1e24; --afundado:#23272f;
+    --tinta:#edeff3; --tinta2:#b4bac4; --tinta3:#7e8794;
+    --linha:#2d323b; --acento:#4fd0b3; --acento-fraco:#123630;
+    --alerta:#f0917a; --alerta-fraco:#3a221c;
+    --b-cm:#3987e5; --b-cir:#d95926; --b-go:#199e70; --b-ped:#c98500; --b-mfc:#d55181;
+    --e-tocado:#1c5cab; --e-parcial:#3987e5; --e-feito:#9ec5f4; --e-zero:#d03b3b;
+  }
+}
+:root[data-theme="dark"]{
+  --papel:#131519; --card:#1b1e24; --afundado:#23272f;
+  --tinta:#edeff3; --tinta2:#b4bac4; --tinta3:#7e8794;
+  --linha:#2d323b; --acento:#4fd0b3; --acento-fraco:#123630;
+  --alerta:#f0917a; --alerta-fraco:#3a221c;
+  --b-cm:#3987e5; --b-cir:#d95926; --b-go:#199e70; --b-ped:#c98500; --b-mfc:#d55181;
+  --e-tocado:#1c5cab; --e-parcial:#3987e5; --e-feito:#9ec5f4; --e-zero:#d03b3b;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--papel);color:var(--tinta);
+  font-family:"Source Sans 3",ui-sans-serif,system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  font-size:clamp(15px,.95rem + .15vw,17px);line-height:1.55;overflow-wrap:break-word}
+.wrap{max-width:var(--wrap);margin:0 auto;padding-inline:16px;padding-block:28px 80px;display:flex;flex-direction:column;gap:22px}
+h1,h2,h3{font-family:"Source Serif 4",Georgia,"Times New Roman",serif;text-wrap:balance;margin:0;letter-spacing:-.01em}
+h1{font-size:clamp(1.6rem,1.2rem + 1.6vw,2.4rem);line-height:1.12}
+h2{font-size:clamp(1.2rem,1.05rem + .5vw,1.5rem);line-height:1.2}
+h3{font-size:1.05rem}
+p{margin:0;max-width:68ch}
+a{color:var(--acento)}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--acento);outline-offset:2px;border-radius:4px}
+.olho{font-size:.74rem;letter-spacing:.09em;text-transform:uppercase;color:var(--tinta3);font-weight:600}
+.topo{display:flex;flex-direction:column;gap:10px;padding-block:6px 4px}
+.sub{color:var(--tinta2)}
+.nota{color:var(--tinta3);font-size:.84em}
+section{background:var(--card);border:1px solid var(--linha);border-radius:var(--raio);padding:22px 20px;display:flex;flex-direction:column;gap:14px}
+.prosa{display:flex;flex-direction:column;gap:10px}
+.achados{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,19rem),1fr));gap:14px;margin:0;padding:0;list-style:none}
+.achados li{background:var(--afundado);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:6px}
+.achados b.n{font-family:"Source Serif 4",Georgia,serif;font-size:1.7rem;line-height:1;font-variant-numeric:tabular-nums}
+.rolagem{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.9em;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--linha);vertical-align:top}
+thead th{font-size:.72rem;letter-spacing:.07em;text-transform:uppercase;color:var(--tinta3);font-weight:600;white-space:nowrap}
+td.num,th.num{text-align:right;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+.bl{display:inline-flex;align-items:center;gap:6px;font-size:.78em;font-weight:600;color:var(--tinta2);white-space:nowrap}
+.bl i{width:10px;height:10px;border-radius:3px;display:inline-block}
+.bl-cm i{background:var(--b-cm)} .bl-cir i{background:var(--b-cir)} .bl-go i{background:var(--b-go)}
+.bl-ped i{background:var(--b-ped)} .bl-mfc i{background:var(--b-mfc)} .bl-sim i{background:var(--tinta3)}
+.est{display:inline-block;font-size:.72em;font-weight:600;border-radius:99px;padding:1px 9px;white-space:nowrap;border:1px solid var(--linha);color:var(--tinta2)}
+.est-zero{background:var(--alerta-fraco);color:var(--alerta);border-color:transparent}
+.est-feito{background:var(--acento-fraco);color:var(--acento);border-color:transparent}
+.barra{display:flex;gap:2px;height:22px;width:100%;min-width:180px}
+.barra span{display:block;height:100%;min-width:2px}
+.barra span:first-child{border-radius:4px 0 0 4px} .barra span:last-child{border-radius:0 4px 4px 0}
+.seg-zero{background:var(--e-zero)} .seg-tocado{background:var(--e-tocado)} .seg-parcial{background:var(--e-parcial)} .seg-feito{background:var(--e-feito)}
+.legenda{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.8em;color:var(--tinta2)}
+.legenda span{display:inline-flex;align-items:center;gap:6px}
+.legenda i{width:11px;height:11px;border-radius:3px;display:inline-block}
+.mini{display:flex;align-items:center;gap:8px}
+.mini b{display:block;height:10px;border-radius:0 4px 4px 0;background:var(--acento);min-width:2px}
+.filtros{display:flex;flex-wrap:wrap;gap:6px}
+.filtros button{font:inherit;font-size:.82em;font-weight:600;color:var(--tinta2);background:var(--afundado);border:1px solid transparent;border-radius:99px;padding:4px 12px;cursor:pointer}
+.filtros button[aria-pressed="true"]{background:var(--tinta);color:var(--papel)}
+details{border-top:1px solid var(--linha);padding-top:10px}
+summary{cursor:pointer;font-weight:600;color:var(--tinta2)}
+.semana{border:1px solid var(--linha);border-radius:10px;overflow:hidden}
+.semana header{display:flex;flex-wrap:wrap;gap:4px 14px;align-items:baseline;justify-content:space-between;background:var(--afundado);padding:10px 14px}
+.semana header b{font-family:"Source Serif 4",Georgia,serif;font-size:1.08rem}
+.dia{display:grid;grid-template-columns:5.2rem 1fr;gap:4px 12px;padding:10px 14px;border-top:1px solid var(--linha)}
+.dia .quando{font-size:.8em;color:var(--tinta3);font-variant-numeric:tabular-nums;line-height:1.35}
+.dia .quando b{display:block;color:var(--tinta);font-size:1.05em}
+.dia ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px}
+.dia li{display:flex;flex-wrap:wrap;gap:3px 10px;align-items:baseline}
+.dia li .t{flex:1 1 16rem}
+.dia li .q{font-variant-numeric:tabular-nums;color:var(--tinta2);font-size:.86em;white-space:nowrap}
+.dia li.sim .t{font-weight:700}
+.pill{font-size:.7em;letter-spacing:.05em;text-transform:uppercase;color:var(--tinta3);border:1px solid var(--linha);border-radius:4px;padding:0 5px;white-space:nowrap}
+.dupla{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,22rem),1fr));gap:18px}
+.coluna{display:flex;flex-direction:column;gap:8px}
+ul.lista{margin:0;padding-left:1.1rem;display:flex;flex-direction:column;gap:6px}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.86em}
+@media (max-width:520px){.dia{grid-template-columns:1fr} section{padding:18px 14px}}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap">
+<div class="wrap">
+<div class="topo">
+  <span class="olho">UERJ · Residência Médica · Acesso Direto · prova em 01/11/2026 · faltam 44 dias</span>
+  <h1>O que a UERJ cobra, o que eu já estudei e o caminho até a prova</h1>
+  <p class="sub">520 questões das 6 últimas edições (2021–2026), classificadas uma a uma por tema e cruzadas com o meu histórico, com o cronograma de 30 semanas, com o de 52 e com as marcações roxas do Drive.</p>
+</div>
+<section>
+  <span class="olho">O veredito</span>
+  <h2>A ênfase em MFC estava mal distribuída, não errada</h2>
+  <div class="prosa">
+    <p>A prova tem peso igual entre os cinco blocos, 20 questões cada. O plano antigo abria com duas semanas dominadas por MFC, mandava escrever sete resumos antes de qualquer lista e cortava quase toda a Clínica Médica. Isso foi corrigido.</p>
+    <p>Os dados também mostram por que MFC não pode ser rebaixada. O bloco de MFC concentra as 20 questões em poucos temas que voltam todo ano, enquanto Clínica Médica espalha as suas por dezenas. Tema por tema, os assuntos de MFC são os de maior retorno da prova inteira. A trilha nova mantém MFC em sessões curtas, uma ou duas por semana, intercaladas com os outros quatro blocos.</p>
+  </div>
+  <ul class="achados">
+    <li><b class="n">53%</b><span>das questões caem em temas <b>sem nenhum registro de estudo</b> meu: nem tarefa marcada, nem resumo, nem erros ou cards. Por bloco: CM 53%, CIR 65%, GO 42%, PED 43%, MFC 63%.</span></li>
+    <li><b class="n">8 temas</b><span>cobrem metade do bloco de <b>MFC</b>. Em <b>Clínica Médica</b> são 20. Por isso cada tema de MFC rende mais do que cada tema de clínica.</span></li>
+    <li><b class="n">36</b><span>temas que a UERJ cobrou duas vezes ou mais <b>não existem</b> no cronograma de 30 semanas. Somam 113 questões e só aparecem no extensivo de 52.</span></li>
+    <li><b class="n">1 por semana</b><span>As seis provas entram <b>inteiras</b>, como simulado de fim de semana. A de 2023 abre como diagnóstico por bloco e recalibra a trilha.</span></li>
+  </ul>
+</section>
+<section>
+  <span class="olho">Cobertura</span>
+  <h2>Quanto de cada bloco já passou pelo meu estudo</h2>
+  <p class="sub">Cada barra soma as questões do bloco nas seis edições, pela situação do tema no meu histórico. O vermelho é o que decide a trilha.</p>
+  <div class="legenda" aria-hidden="true">
+    <span><i class="seg-zero"></i>sem registro de estudo</span><span><i class="seg-tocado"></i>só erros ou cards</span>
+    <span><i class="seg-parcial"></i>parte das tarefas feitas</span><span><i class="seg-feito"></i>tarefas feitas</span>
+  </div>
+  <div class="rolagem"><table>
+    <thead><tr><th>Bloco</th><th style="width:48%">Distribuição</th><th class="num">Sem registro</th><th class="num">Só erros/cards</th><th class="num">Parcial</th><th class="num">Feito</th></tr></thead><tbody>
+<tr><td><span class="bl bl-cm"><i></i>Clínica Médica</span></td><td><div class="barra" role="img" aria-label="Clínica Médica: 55 sem registro de estudo, 7 só erros ou cards, 29 parcial, 13 feito"><span class="seg-zero" style="flex:55 1 0" title="sem registro de estudo: 55 de 104 questões (53%)"></span><span class="seg-tocado" style="flex:7 1 0" title="só erros ou cards: 7 de 104 questões (7%)"></span><span class="seg-parcial" style="flex:29 1 0" title="parte das tarefas: 29 de 104 questões (28%)"></span><span class="seg-feito" style="flex:13 1 0" title="tarefas feitas: 13 de 104 questões (12%)"></span></div></td><td class="num">55 <span class="nota">(53%)</span></td><td class="num">7 <span class="nota">(7%)</span></td><td class="num">29 <span class="nota">(28%)</span></td><td class="num">13 <span class="nota">(12%)</span></td></tr>
+<tr><td><span class="bl bl-cir"><i></i>Cirurgia Geral</span></td><td><div class="barra" role="img" aria-label="Cirurgia Geral: 68 sem registro de estudo, 1 só erros ou cards, 21 parcial, 14 feito"><span class="seg-zero" style="flex:68 1 0" title="sem registro de estudo: 68 de 104 questões (65%)"></span><span class="seg-tocado" style="flex:1 1 0" title="só erros ou cards: 1 de 104 questões (1%)"></span><span class="seg-parcial" style="flex:21 1 0" title="parte das tarefas: 21 de 104 questões (20%)"></span><span class="seg-feito" style="flex:14 1 0" title="tarefas feitas: 14 de 104 questões (13%)"></span></div></td><td class="num">68 <span class="nota">(65%)</span></td><td class="num">1 <span class="nota">(1%)</span></td><td class="num">21 <span class="nota">(20%)</span></td><td class="num">14 <span class="nota">(13%)</span></td></tr>
+<tr><td><span class="bl bl-go"><i></i>Ginecologia e Obstetrícia</span></td><td><div class="barra" role="img" aria-label="Ginecologia e Obstetrícia: 44 sem registro de estudo, 14 só erros ou cards, 35 parcial, 11 feito"><span class="seg-zero" style="flex:44 1 0" title="sem registro de estudo: 44 de 104 questões (42%)"></span><span class="seg-tocado" style="flex:14 1 0" title="só erros ou cards: 14 de 104 questões (13%)"></span><span class="seg-parcial" style="flex:35 1 0" title="parte das tarefas: 35 de 104 questões (34%)"></span><span class="seg-feito" style="flex:11 1 0" title="tarefas feitas: 11 de 104 questões (11%)"></span></div></td><td class="num">44 <span class="nota">(42%)</span></td><td class="num">14 <span class="nota">(13%)</span></td><td class="num">35 <span class="nota">(34%)</span></td><td class="num">11 <span class="nota">(11%)</span></td></tr>
+<tr><td><span class="bl bl-ped"><i></i>Pediatria</span></td><td><div class="barra" role="img" aria-label="Pediatria: 45 sem registro de estudo, 16 só erros ou cards, 18 parcial, 25 feito"><span class="seg-zero" style="flex:45 1 0" title="sem registro de estudo: 45 de 104 questões (43%)"></span><span class="seg-tocado" style="flex:16 1 0" title="só erros ou cards: 16 de 104 questões (15%)"></span><span class="seg-parcial" style="flex:18 1 0" title="parte das tarefas: 18 de 104 questões (17%)"></span><span class="seg-feito" style="flex:25 1 0" title="tarefas feitas: 25 de 104 questões (24%)"></span></div></td><td class="num">45 <span class="nota">(43%)</span></td><td class="num">16 <span class="nota">(15%)</span></td><td class="num">18 <span class="nota">(17%)</span></td><td class="num">25 <span class="nota">(24%)</span></td></tr>
+<tr><td><span class="bl bl-mfc"><i></i>Medicina de Família</span></td><td><div class="barra" role="img" aria-label="Medicina de Família: 66 sem registro de estudo, 10 só erros ou cards, 18 parcial, 10 feito"><span class="seg-zero" style="flex:66 1 0" title="sem registro de estudo: 66 de 104 questões (63%)"></span><span class="seg-tocado" style="flex:10 1 0" title="só erros ou cards: 10 de 104 questões (10%)"></span><span class="seg-parcial" style="flex:18 1 0" title="parte das tarefas: 18 de 104 questões (17%)"></span><span class="seg-feito" style="flex:10 1 0" title="tarefas feitas: 10 de 104 questões (10%)"></span></div></td><td class="num">66 <span class="nota">(63%)</span></td><td class="num">10 <span class="nota">(10%)</span></td><td class="num">18 <span class="nota">(17%)</span></td><td class="num">10 <span class="nota">(10%)</span></td></tr>
+</tbody></table></div>
+  <p class="nota">"Feito" e "parcial" vêm das tarefas que marquei no Dashboard do EMED até 10/09. "Só erros ou cards" é tema sem tarefa marcada, mas com resumo, erros registrados ou pelo menos cinco cards no banco. É um sinal aproximado: tarefa marcada não prova domínio.</p>
+</section>
+<section>
+  <span class="olho">Anatomia da prova</span>
+  <h2>Cada bloco puxa conteúdo de outras especialidades</h2>
+  <p class="sub">O bloco oficial é o cabeçalho do caderno. A especialidade é o conhecimento que a questão exige de fato.</p>
+  <div class="rolagem"><table>
+    <thead><tr><th>Bloco</th><th class="num">Questões</th><th class="num">Temas distintos</th><th class="num">Temas para 50%</th><th class="num">Temas para 80%</th><th>De onde vem o conteúdo</th></tr></thead><tbody>
+<tr><td><span class="bl bl-cm"><i></i>Clínica Médica</span></td><td class="num">104</td><td class="num">66</td><td class="num">20</td><td class="num">46</td><td>Infecto 19 · Cardiologia 16 · Pneumo 11 · Endocrino 11 · Hemato 8 · Neurologia 8</td></tr>
+<tr><td><span class="bl bl-cir"><i></i>Cirurgia Geral</span></td><td class="num">104</td><td class="num">42</td><td class="num">11</td><td class="num">23</td><td>Cirurgia 62 · Gastro 18 · Endocrino 7 · Otorrino 4 · Nefrologia 4 · Hepato 3</td></tr>
+<tr><td><span class="bl bl-go"><i></i>Ginecologia e Obstetrícia</span></td><td class="num">104</td><td class="num">44</td><td class="num">12</td><td class="num">25</td><td>Ginecologia 53 · Obstetrícia 45 · Infecto 2 · Pediatria 2 · Pneumo 1 · Reumato 1</td></tr>
+<tr><td><span class="bl bl-ped"><i></i>Pediatria</span></td><td class="num">104</td><td class="num">50</td><td class="num">15</td><td class="num">30</td><td>Pediatria 67 · Infecto 8 · Hemato 5 · Nefrologia 4 · Psiquiatria 4 · Dermato 3</td></tr>
+<tr><td><span class="bl bl-mfc"><i></i>Medicina de Família</span></td><td class="num">104</td><td class="num">45</td><td class="num">8</td><td class="num">25</td><td>Preventiva 76 · Infecto 9 · Endocrino 4 · Ginecologia 4 · Psiquiatria 2 · Pediatria 2</td></tr>
+</tbody></table></div></section>
+<section>
+  <span class="olho">O que mais cai</span>
+  <h2>Os temas de cada bloco, com a minha situação em cada um</h2>
+  <div class="filtros" role="group" aria-label="Filtrar por bloco">
+<button type="button" id="f-CM" data-bloco="CM" aria-pressed="true">Clínica Médica</button>
+<button type="button" id="f-CIR" data-bloco="CIR" aria-pressed="false">Cirurgia Geral</button>
+<button type="button" id="f-GO" data-bloco="GO" aria-pressed="false">Ginecologia e Obstetrícia</button>
+<button type="button" id="f-PED" data-bloco="PED" aria-pressed="false">Pediatria</button>
+<button type="button" id="f-MFC" data-bloco="MFC" aria-pressed="false">Medicina de Família</button>
+</div>
+<div class="rolagem tab-bloco" data-bloco="CM"><table><thead><tr><th>Tema</th><th>Especialidade</th><th class="num">Questões</th><th class="num">Edições</th><th>Minha situação</th><th>No cronograma</th></tr></thead><tbody>
+<tr><td>Tuberculose</td><td>Infecto</td><td class="num">5</td><td class="num">4 de 6</td><td><span class="est est-feito">tarefas feitas</span></td><td class="nota">30 sem: feito · 52 sem: S10</td></tr>
+<tr><td>Doenças Neuromusculares</td><td>Neurologia</td><td class="num">4</td><td class="num">4 de 6</td><td><span class="est est-zero">sem registro de estudo</span></td><td class="nota">30 sem: 1 pendente(s) (1 salmao) · 52 sem: S21</td></tr>
+<tr><td>Meningites e Meningoencefalites</td><td>Infecto</td><td class="num">4</td><td class="num">3 de 6</td><td><span class="est est-parcial">parte das tarefas</span></td><td class="nota">30 sem: feito · 52 sem: S14</td></tr>
+<tr><td>Síndromes Aórticas Agudas (Resumo) Cardiomiopatias (Resumo) Pericardiopatias</td><td>Cardiologia</td><td class="num">4</td><td class="num">3 de 6</td><td><span class="est est-zero">sem registro de estudo</span></td><td class="nota">fora das 30 semanas · 52 sem: S43</td></tr>
+<tr><td>Asma</td><td>Pneumo</td><td class="num">3</td><td class="num">3 de 6</td><td><span class="est est-feito">tarefas feitas</span></td><td class="nota">30 sem: feito · 52 sem: S36</td></tr>
+<tr><td>Doenças Glomerulares</td><td>Nefrologia</td><td class="num">3</td><td class="num">3 de 6</td><td><span class="est est-zero">sem registro de estudo</span></td><td class="nota">30 sem: 2 pendente(s) (2 rosa) · 52 sem: S2</td></tr>
+<tr><td>Hemostasia I</td><td>Hemato</td><td class="num">3</td><td class="num">3 de 6</td><td><span class="est est-parcial">parte das tarefas</span></td><td class="nota">30 sem: feito · 52 sem: S23</td></tr>
+<tr><td>Valvopatias</td><td>Cardiologia</td><td class="num">3</td><td class="num">3 de 6</td><td><span class="est est-zero">sem registro de estudo</span></td><td class="nota">30 sem: 2 pendente(s) (2 salmao) · 52 sem: S36</td></tr>
+<tr><td>Abdome Agudo Inflamatório - Colecistite e Colangite Aguda</td><td>Cirurgia</td><td class="num">2</td><td class="num">2 de 6</td><td><span class="est est-parcial">parte das tarefas</span></td><td class="nota">30 sem: feito · 52 sem: S16</td></tr>
+<tr><td>Anemias Macrocíticas Leucemias Crônicas, Linfomas, Mielodisplasias e Mieloproliferações</td><td>Hemato</td><td class="num">2</td><td class="num">2 de 6</td><td><span class="est est-zero">sem registro de estudo</span></td><td class="nota">fora das 30 semanas · 52 sem: S46</td></tr>
+<tr><td>Diabetes Mellitus - Complicações Agudas</td><td>Endocrino</td><td class="num">2</td><td class="num">2 de 6</td><td><span class="est est-feito">tarefas feitas</span></td><td class="nota">30 sem: feito · 52 sem: S8</td></tr>
+<tr><td>Diabetes Mellitus Tipo 2</td><td>Endocrino</td><td class="num">2</td><td class="num">2 de 6</td><td><span class="est est-parcial">parte das tarefas</span></td><td class="nota">30 sem: feito · 52 sem: S14</td></tr>
+<tr><td>Endocardite Bacteriana - Endocardite Infecciosa</td><td>Infecto</td><td class="num">2</td><td class="num">2 de 6</td><td><span class="est est-zero">sem registro de estudo</span></td><td class="nota">30 sem: 1 pendente(s) (1 salmao) · 52 sem: S39</td></tr>
+<tr><td>IAMCSSST</td><td>Cardiologia</td><td class="num">2</td><td class="num">2 de 6</td><td><span class="est est-zero">sem registro de estudo</span></td><td class="nota">fora das 30 semanas · 52 sem: S44</td></tr>
+<tr><td>Introdução a Pneumologia</td><td>Pneumo</td><td class="num">2</td><td class="num">2 de 6</td><td><span class="est est-tocado">só erros ou cards</span></td><td class="nota">30 sem: 2 pendente(s) (2 salmao) · 52 sem: S3</td></tr>
+<tr><td>Metabolismo Ósseo e Mineral - Princípios e Fisiologia Hipercalcemia</td><td>Endocrino</td><td class="num">2</td><td class="num">2 de 6</td><td><span class="est est-zero">sem registro de estudo</span></td><td class="nota">fora das 30 semanas · 52 sem: S13</td></tr>
+<tr><td>Neoplasias Pulmonares</td><td>Pneumo</td><td class="num">2</td><td class="num">2 de 6</td><td><span class="est est-zero">sem registro de estudo</span></td><td class="nota">30 sem: 1 pendente(s) (1 salmao) · 52 sem: S21</td></tr>
+<tr><td>Oncologia Ortopédica</td><td>Ortopedia</td><td class="num">2</td><td class="num">2 de 6</td><td><span class="est est-zero">sem registro de estudo</span></td><td class="nota">fora das 30 semanas · 52 sem: S41</td></tr>
+<tr><td>Osteoporose e Doença Óssea de Paget</td><td>Endocrino</td><td class="num">2</td><td class="num">2 de 6</td><td><span class="est est-zero">sem registro de estudo</span></td><td class="nota">30 sem: 2 pendente(s) (2 salmao) · 52 sem: S44</td></tr>
+<tr><td>Pneumonias Bacterianas</td><td>Infecto</td><td class="num">2</td><td class="num">2 de 6</td><td><span class="est est-tocado">só erros ou cards</span></td><td class="nota">30 sem: 5 pendente(s) (5 roxo) · 52 sem: S29</td></tr>
+<tr><td>Tromboembolismo Pulmonar</td><td>Pneumo</td><td class="num">2</td><td class="num">2 de 6</td><td><span class="est est-zero">sem registro de estudo</span></td><td class="nota">fora das 30 semanas · 52 sem: S23</td></tr>
+<tr><td>Adrenal - Hipocortisolismo</td><td>Endocrino</td><td class="num">2</td><td class="num">1 de 6</td><td><span class="est est-zero">sem registro de estudo</span></td><td class="nota">fora das 30 semanas · 52 sem: S12</td></tr>
+</tbody></table><p class="nota">66 temas distintos neste bloco. A tabela mostra os 22 primeiros.</p></div>
+<div class="rolagem tab-bloco" data-bloco="CIR" hidden><table><thead><tr><th>Tema</th><th>Especialidade</th><th class="num">Questões</th><th class="num">Edições</th><th>Minha situação</th><th>No cronograma</th></tr></thead><tbody>
+<tr><td>Temas Gerais em Cirurgia</td><td>Cirurgia</td><td class="num">7</td><td class="num">5 de 6</td><td><span class="est est-zero">sem registro de estudo</span></td><td class="nota">fora das 30 semanas · 52 sem: S47</td></tr>
+<tr><td>Hérnias da Parede Abdominal</td><td>Cirurgia</td><td class="num">7</td><td class="num">4 de 6</td><td><span class="est est-zero">sem registro de estudo</span></td><td class="nota">30 sem: 5 pendente(s) (4 rosa, 1 roxo) · 52 sem: S26</td></tr>
+<tr><td>Trauma - Avaliação Inicial, Vias Aéreas e Trauma Torácico</td><td>Cirurgia</td><td class="num">6</td><td class="num">4 de 6</td><td><span class="est est-feito">tarefas feitas</span></td><td class="nota">30 sem: feito · 52 sem: S6</td></tr>
+<tr><td>Resposta Endócrino-Metabólica-Inflamatória ao Trauma Cicatrização de Feridas</td><td>Cirurgia</td><td class="num">6</td><td class="num">3 de 6</td><td><span class="est est-zero">sem registro de estudo</span></td><td class="nota">fora das 30 semanas · 52 sem: S27</td></tr>
+<tr><td>Complicações Pós-Operatórias</td><td>Cirurgia</td><td class="num">5</td><td class="num">4 de 6</td><td><span class="est est-zero">sem registro de estudo</span></td><td class="nota">30 sem: 4 pendente(s) (4 roxo) · 52 sem: S33</td></tr>
+<tr><td>Doença do Refluxo Gastroesofágico, Esofagites e Corpo Estranho</td><td>Gastro</td><td class="num">5</td><td class="num">4 de 6</td><td><span class="est est-parcial">parte das tarefas</span></td><td class="nota">30 sem: feito · 52 sem: S15</td></tr>
+<tr><td>Trauma - Choque</td><td>Cirurgia</td><td class="num">4</td><td class="num">4 de 6</td><td><span class="est est-feito">tarefas feitas</span></td><td class="nota">30 sem: feito · 52 sem: S8</td></tr>
+<tr><td>Manejo dos Nódulos de Tireoide, Câncer de Tireoide e Tireoidectomia</td><td>Otorrino</td><td class="num">4</td><td class="num">3 de 6</td><td><span class="est est-zero">sem registro de estudo</span></td><td class="nota">fora das 30 semanas · 52 sem: S16</td></tr>
+<tr><td>Neoplasias de Estômago e Esôfago</td><td>Gastro</td><td class="num">4</td><td class="num">2 de 6</td><td><span class="est est-zero">sem registro de estudo</span></td><td class="nota">30 sem: 3 pendente(s) (2 rosa, 1 salmao) · 52 sem: S27</td></tr>
+<tr><td>Abdome Agudo Obstrutivo</td><td>Cirurgia</td><td class="num">3</td><td class="num">3 de 6</td><td><span class="est est-zero">sem registro de estudo</span></td><td class="nota">30 sem: 2 pendente(s) (2 roxo) · 52 sem: S30</td></tr>
+<tr><td>Hemorragia Digestiva Alta Varicosa</td><td>Gastro</td><td class="num">3</td><td class="num">3 de 6</td><td><span class="est est-zero">sem registro de estudo</span></td><td class="nota">fora das 30 semanas · 52 sem: S45</td></tr>
+<tr><td>Pancreatite Aguda e Crônica</td><td>Gastro</td><td class="num">3</td><td class="num">3 de 6</td><td><span class="est est-parcial">parte das tarefas</span></td><td class="nota">30 sem: feito · 52 sem: S7</td></tr>
+<tr><td>Princípios da Anestesiologia</td><td>Cirurgia</td><td class="num">3</td><td class="num">3 de 6</td><td><span class="est est-zero">sem registro de estudo</span></td><td class="nota">30 sem: 4 pendente(s) (3 sem-cor, 1 rosa) · 52 sem: S28</td></tr>
+<tr><td>Vesícula e Vias Biliares</td><td>Cirurgia</td><td class="num">3</td><td class="num">3 de 6</td><td><span class="est est-zero">sem registro de estudo</span></td><td class="nota">fora das 30 semanas · 52 sem: S36</td></tr>
+<tr><td>Abdome Agudo Inflamatório - Colecistite e Colangite Aguda</td><td>Cirurgia</td><td class="num">3</td><td class="num">2 de 6</td><td><span class="est est-parcial">parte das tarefas</span></td><td class="nota">30 sem: feito · 52 sem: S16</td></tr>
+<tr><td>Disnatremias</td><td>Nefrologia</td><td class="num">3</td><td class="num">2 de 6</td><td><span class="est est-zero">sem registro de estudo</span></td><td class="nota">fora das 30 semanas · 52 sem: S38</td></tr>
+<tr><td>Nutrição em Cirurgia</td><td>Cirurgia</td><td class="num">3</td><td class="num">2 de 6</td><td><span class="est est-zero">sem registro de estudo</span></td><td class="nota">fora das 30 semanas · 52 sem: S45</td></tr>
+<tr><td>Abdome Agudo Inflamatório - Apendicite Aguda</td><td>Cirurgia</td><td class="num">3</td><td class="num">1 de 6</td><td><span class="est est-parcial">parte das tarefas</span></td><td class="nota">30 sem: feito · 52 sem: S14</td></tr>
+<tr><td>Cirurgia Bariátrica e Metabólica (Tratamento Cir. Obesidade)</td><td>Endocrino</td><td class="num">2</td><td class="num">2 de 6</td><td><span class="est est-zero">sem registro de estudo</span></td><td class="nota">30 sem: 2 pendente(s) (1 rosa, 1 salmao) · 52 sem: S38</td></tr>
+<tr><td>Obesidade e Síndrome Metabólica</td><td>Endocrino</td><td class="num">2</td><td class="num">2 de 6</td><td><span class="est est-zero">sem registro de estudo</span></td><td class="nota">30 sem: 2 pendente(s) (1 rosa, 1 salmao) · 52 sem: S32</td></tr>
+<tr><td>Proctologia</td><td>Cirurgia</td><td class="num">2</td><td class="num">2 de 6</td><td><span class="est est-zero">sem registro de estudo</span></td><td class="nota">fora das 30 semanas · 52 sem: S43</td></tr>
+<tr><td>Trauma Abdominal e Pélvico</td><td>Cirurgia</td><td class="num">2</td><td class="num">2 de 6</td><td><span class="est est-parcial">parte das tarefas</span></td><td class="nota">30 sem: feito · 52 sem: S10</td></tr>
+</tbody></table><p class="nota">42 temas distintos neste bloco. A tabela mostra os 22 primeiros.</p></div>
+<div class="rolagem tab-bloco" data-bloco="GO" hidden><table><thead><tr><th>Tema</th><th>Especialidade</th><th class="num">Questões</th><th class="num">Edições</th><th>Minha situação</th><th>No cronograma</th></tr></thead><tbody>
+<tr><td>Rastreamento do Câncer de Colo Uterino</td><td>Ginecologia</td><td class="num">6</td><td class="num">6 de 6</td><td><span class="est est-parcial">parte das tarefas</span></td><td class="nota">30 sem: 2 pendente(s) (2 roxo) · 52 sem: S5</td></tr>
+<tr><td>Diabetes na Gestação</td><td>Obstetrícia</td><td class="num">6</td><td class="num">5 de 6</td><td><span class="est est-tocado">só erros ou cards</span></td><td class="nota">30 sem: 4 pendente(s) (4 roxo) · 52 sem: S21</td></tr>
+<tr><td>Distúrbios Hipertensivos da Gestação</td><td>Obstetrícia</td><td class="num">6</td><td class="num">5 de 6</td><td><span class="est est-parcial">parte das tarefas</span></td><td class="nota">30 sem: feito · 52 sem: S4</td></tr>
+<tr><td>Endometriose</td><td>Ginecologia</td><td class="num">5</td><td class="num">5 de 6</td><td><span class="est est-parcial">parte das tarefas</span></td><td class="nota">30 sem: feito · 52 sem: S15</td></tr>
+<tr><td>Assistência ao Parto</td><td>Obstetrícia</td><td class="num">4</td><td class="num">4 de 6</td><td><span class="est est-parcial">parte das tarefas</span></td><td class="nota">30 sem: 1 pendente(s) (1 roxo) · 52 sem: S14</td></tr>
+<tr><td>Gestação Múltipla</td><td>Obstetrícia</td><td class="num">4</td><td class="num">4 de 6</td><td><span class="est est-zero">sem registro de estudo</span></td><td class="nota">30 sem: 2 pendente(s) (2 rosa) · 52 sem: S32</td></tr>
+<tr><td>Sangramento da Primeira Metade</td><td>Obstetrícia</td><td class="num">4</td><td class="num">4 de 6</td><td><span class="est est-feito">tarefas feitas</span></td><td class="nota">30 sem: feito · 52 sem: S10</td></tr>
+<tr><td>Sangramento da Segunda Metade</td><td>Obstetrícia</td><td class="num">4</td><td class="num">4 de 6</td><td><span class="est est-zero">sem registro de estudo</span></td><td class="nota">30 sem: 3 pendente(s) (3 roxo) · 52 sem: S23</td></tr>
+<tr><td>Anatomia e Embriologia do Trato Genital Feminino Doenças de Vulva e Vagina</td><td>Ginecologia</td><td class="num">4</td><td class="num">3 de 6</td><td><span class="est est-zero">sem registro de estudo</span></td><td class="nota">fora das 30 semanas · 52 sem: S31</td></tr>
+<tr><td>Assistência à Vítima de Violência Sexual</td><td>Ginecologia</td><td class="num">3</td><td class="num">3 de 6</td><td><span class="est est-zero">sem registro de estudo</span></td><td class="nota">30 sem: 2 pendente(s) (2 rosa) · 52 sem: S47</td></tr>
+<tr><td>Câncer de Mama</td><td>Ginecologia</td><td class="num">3</td><td class="num">3 de 6</td><td><span class="est est-parcial">parte das tarefas</span></td><td class="nota">30 sem: feito · 52 sem: S17</td></tr>
+<tr><td>Câncer do Corpo do Útero</td><td>Ginecologia</td><td class="num">3</td><td class="num">3 de 6</td><td><span class="est est-zero">sem registro de estudo</span></td><td class="nota">fora das 30 semanas · 52 sem: S32</td></tr>
+<tr><td>Infertilidade Conjugal</td><td>Ginecologia</td><td class="num">3</td><td class="num">3 de 6</td><td><span class="est est-zero">sem registro de estudo</span></td><td class="nota">fora das 30 semanas · 52 sem: S37</td></tr>
+<tr><td>Miomatose</td><td>Ginecologia</td><td class="num">3</td><td class="num">3 de 6</td><td><span class="est est-zero">sem registro de estudo</span></td><td class="nota">fora das 30 semanas · 52 sem: S40</td></tr>
+<tr><td>Planejamento Familiar</td><td>Ginecologia</td><td class="num">3</td><td class="num">3 de 6</td><td><span class="est est-parcial">parte das tarefas</span></td><td class="nota">30 sem: feito · 52 sem: S1</td></tr>
+<tr><td>Pré-Natal</td><td>Obstetrícia</td><td class="num">3</td><td class="num">3 de 6</td><td><span class="est est-parcial">parte das tarefas</span></td><td class="nota">30 sem: 1 pendente(s) (1 roxo) · 52 sem: S1</td></tr>
+<tr><td>Rotura Prematura de Membranas</td><td>Obstetrícia</td><td class="num">3</td><td class="num">3 de 6</td><td><span class="est est-zero">sem registro de estudo</span></td><td class="nota">fora das 30 semanas · 52 sem: S41</td></tr>
+<tr><td>Úlceras Genitais</td><td>Ginecologia</td><td class="num">3</td><td class="num">3 de 6</td><td><span class="est est-feito">tarefas feitas</span></td><td class="nota">30 sem: feito · 52 sem: S3</td></tr>
+<tr><td>Aleitamento Materno</td><td>Pediatria</td><td class="num">2</td><td class="num">2 de 6</td><td><span class="est est-feito">tarefas feitas</span></td><td class="nota">30 sem: feito · 52 sem: S14</td></tr>
+<tr><td>Amenorreia</td><td>Ginecologia</td><td class="num">2</td><td class="num">2 de 6</td><td><span class="est est-tocado">só erros ou cards</span></td><td class="nota">fora das 30 semanas · 52 sem: S34</td></tr>
+<tr><td>Bacia Obstétrica, Pelvimetria e Estática Fetal</td><td>Obstetrícia</td><td class="num">2</td><td class="num">2 de 6</td><td><span class="est est-zero">sem registro de estudo</span></td><td class="nota">fora das 30 semanas · 52 sem: S36</td></tr>
+<tr><td>Câncer de Colo Uterino</td><td>Ginecologia</td><td class="num">2</td><td class="num">2 de 6</td><td><span class="est est-zero">sem registro de estudo</span></td><td class="nota">30 sem: 3 pendente(s) (3 roxo) · 52 sem: S5</td></tr>
+</tbody></table><p class="nota">44 temas distintos neste bloco. A tabela mostra os 22 primeiros.</p></div>
+<div class="rolagem tab-bloco" data-bloco="PED" hidden><table><thead><tr><th>Tema</th><th>Especialidade</th><th class="num">Questões</th><th class="num">Edições</th><th>Minha situação</th><th>No cronograma</th></tr></thead><tbody>
+<tr><td>Tópicos em Pediatria</td><td>Pediatria</td><td class="num">5</td><td class="num">4 de 6</td><td><span class="est est-zero">sem registro de estudo</span></td><td class="nota">30 sem: 3 pendente(s) (2 rosa, 1 roxo) · 52 sem: S25</td></tr>
+<tr><td>Infecções Congênitas</td><td>Pediatria</td><td class="num">4</td><td class="num">4 de 6</td><td><span class="est est-zero">sem registro de estudo</span></td><td class="nota">fora das 30 semanas · 52 sem: S46</td></tr>
+<tr><td>Doença Celíaca em Pediatria Febre Reumática</td><td>Pediatria</td><td class="num">4</td><td class="num">3 de 6</td><td><span class="est est-tocado">só erros ou cards</span></td><td class="nota">fora das 30 semanas · 52 sem: S24</td></tr>
+<tr><td>Doença de Kawasaki</td><td>Pediatria</td><td class="num">4</td><td class="num">3 de 6</td><td><span class="est est-zero">sem registro de estudo</span></td><td class="nota">fora das 30 semanas · 52 sem: S35</td></tr>
+<tr><td>Infecção de Trato Urinário em Pediatria</td><td>Pediatria</td><td class="num">4</td><td class="num">3 de 6</td><td><span class="est est-tocado">só erros ou cards</span></td><td class="nota">fora das 30 semanas · 52 sem: S30</td></tr>
+<tr><td>Aleitamento Materno</td><td>Pediatria</td><td class="num">3</td><td class="num">3 de 6</td><td><span class="est est-feito">tarefas feitas</span></td><td class="nota">30 sem: feito · 52 sem: S14</td></tr>
+<tr><td>Anemias Hemolíticas</td><td>Hemato</td><td class="num">3</td><td class="num">3 de 6</td><td><span class="est est-parcial">parte das tarefas</span></td><td class="nota">30 sem: 1 pendente(s) (1 salmao) · 52 sem: S4</td></tr>
+<tr><td>Cuidados Neonatais</td><td>Pediatria</td><td class="num">3</td><td class="num">3 de 6</td><td><span class="est est-feito">tarefas feitas</span></td><td class="nota">30 sem: feito · 52 sem: S10</td></tr>
+<tr><td>Dermatoses Infecciosas Dermatoses Eczematosas</td><td>Dermato</td><td class="num">3</td><td class="num">3 de 6</td><td><span class="est est-zero">sem registro de estudo</span></td><td class="nota">fora das 30 semanas · 52 sem: S36</td></tr>
+<tr><td>Diarreia</td><td>Pediatria</td><td class="num">3</td><td class="num">3 de 6</td><td><span class="est est-parcial">parte das tarefas</span></td><td class="nota">30 sem: 1 pendente(s) (1 roxo) · 52 sem: S16</td></tr>
+<tr><td>Doenças Glomerulares</td><td>Nefrologia</td><td class="num">3</td><td class="num">3 de 6</td><td><span class="est est-zero">sem registro de estudo</span></td><td class="nota">30 sem: 2 pendente(s) (2 rosa) · 52 sem: S2</td></tr>
+<tr><td>Meningites e Meningoencefalites</td><td>Infecto</td><td class="num">3</td><td class="num">3 de 6</td><td><span class="est est-parcial">parte das tarefas</span></td><td class="nota">30 sem: feito · 52 sem: S14</td></tr>
+<tr><td>Psiquiatria Infantil</td><td>Psiquiatria</td><td class="num">3</td><td class="num">3 de 6</td><td><span class="est est-zero">sem registro de estudo</span></td><td class="nota">30 sem: 2 pendente(s) (2 rosa) · 52 sem: S44</td></tr>
+<tr><td>Reanimação Neonatal</td><td>Pediatria</td><td class="num">3</td><td class="num">3 de 6</td><td><span class="est est-tocado">só erros ou cards</span></td><td class="nota">30 sem: 3 pendente(s) (3 roxo) · 52 sem: S22</td></tr>
+<tr><td>Síndromes Genéticas e Erros Inatos do Metabolismo</td><td>Pediatria</td><td class="num">3</td><td class="num">3 de 6</td><td><span class="est est-zero">sem registro de estudo</span></td><td class="nota">fora das 30 semanas · 52 sem: S38</td></tr>
+<tr><td>Tuberculose</td><td>Pediatria</td><td class="num">3</td><td class="num">3 de 6</td><td><span class="est est-feito">tarefas feitas</span></td><td class="nota">30 sem: feito · 52 sem: S10</td></tr>
+<tr><td>Doenças Exantemáticas</td><td>Pediatria</td><td class="num">3</td><td class="num">2 de 6</td><td><span class="est est-feito">tarefas feitas</span></td><td class="nota">30 sem: feito · 52 sem: S3</td></tr>
+<tr><td>Anafilaxia e Urticária</td><td>Pediatria</td><td class="num">2</td><td class="num">2 de 6</td><td><span class="est est-zero">sem registro de estudo</span></td><td class="nota">fora das 30 semanas · 52 sem: S33</td></tr>
+<tr><td>Asma</td><td>Pediatria</td><td class="num">2</td><td class="num">2 de 6</td><td><span class="est est-feito">tarefas feitas</span></td><td class="nota">30 sem: feito · 52 sem: S36</td></tr>
+<tr><td>Cardiopatias Congênitas</td><td>Pediatria</td><td class="num">2</td><td class="num">2 de 6</td><td><span class="est est-feito">tarefas feitas</span></td><td class="nota">30 sem: feito · 52 sem: S9</td></tr>
+<tr><td>Cirurgia Infantil I</td><td>Cirurgia</td><td class="num">2</td><td class="num">2 de 6</td><td><span class="est est-parcial">parte das tarefas</span></td><td class="nota">30 sem: feito · 52 sem: S1</td></tr>
+<tr><td>Constipação Intestinal Hiperplasia Adrenal Congênita</td><td>Pediatria</td><td class="num">2</td><td class="num">2 de 6</td><td><span class="est est-zero">sem registro de estudo</span></td><td class="nota">fora das 30 semanas · 52 sem: S23</td></tr>
+</tbody></table><p class="nota">52 temas distintos neste bloco. A tabela mostra os 22 primeiros.</p></div>
+<div class="rolagem tab-bloco" data-bloco="MFC" hidden><table><thead><tr><th>Tema</th><th>Especialidade</th><th class="num">Questões</th><th class="num">Edições</th><th>Minha situação</th><th>No cronograma</th></tr></thead><tbody>
+<tr><td>Raciocinio diagnostico quantitativo (S/E, VPP/VPN, RV, probabilidade pre-teste)</td><td>Preventiva</td><td class="num">9</td><td class="num">6 de 6</td><td><span class="est est-zero">sem registro de estudo</span></td><td class="nota">fora das 30 semanas</td></tr>
+<tr><td>Avaliacao Multidimensional do Idoso</td><td>Preventiva</td><td class="num">7</td><td class="num">5 de 6</td><td><span class="est est-zero">sem registro de estudo</span></td><td class="nota">fora das 30 semanas</td></tr>
+<tr><td>Rastreamento (criterios e programas)</td><td>Preventiva</td><td class="num">7</td><td class="num">5 de 6</td><td><span class="est est-tocado">só erros ou cards</span></td><td class="nota">fora das 30 semanas</td></tr>
+<tr><td>Metodo Clinico Centrado na Pessoa e decisao compartilhada</td><td>Preventiva</td><td class="num">7</td><td class="num">4 de 6</td><td><span class="est est-zero">sem registro de estudo</span></td><td class="nota">fora das 30 semanas</td></tr>
+<tr><td>Polifarmacia, desprescricao e RAM no idoso</td><td>Preventiva</td><td class="num">6</td><td class="num">5 de 6</td><td><span class="est est-zero">sem registro de estudo</span></td><td class="nota">fora das 30 semanas</td></tr>
+<tr><td>Prevencao Quaternaria e sobrediagnostico</td><td>Preventiva</td><td class="num">6</td><td class="num">4 de 6</td><td><span class="est est-zero">sem registro de estudo</span></td><td class="nota">fora das 30 semanas</td></tr>
+<tr><td>Condicoes cronicas na APS (HAS, DM, DPOC, asma: manejo ambulatorial)</td><td>Preventiva</td><td class="num">5</td><td class="num">4 de 6</td><td><span class="est est-zero">sem registro de estudo</span></td><td class="nota">fora das 30 semanas</td></tr>
+<tr><td>Cuidados paliativos e dor cronica na APS</td><td>Preventiva</td><td class="num">5</td><td class="num">3 de 6</td><td><span class="est est-zero">sem registro de estudo</span></td><td class="nota">fora das 30 semanas</td></tr>
+<tr><td>Pesquisa Epidemiológica e Medidas de Associação</td><td>Preventiva</td><td class="num">4</td><td class="num">3 de 6</td><td><span class="est est-zero">sem registro de estudo</span></td><td class="nota">fora das 30 semanas · 52 sem: S41</td></tr>
+<tr><td>Arboviroses</td><td>Infecto</td><td class="num">4</td><td class="num">2 de 6</td><td><span class="est est-parcial">parte das tarefas</span></td><td class="nota">30 sem: feito · 52 sem: S1</td></tr>
+<tr><td>Atenção Primária à Saúde no Brasil</td><td>Preventiva</td><td class="num">3</td><td class="num">3 de 6</td><td><span class="est est-parcial">parte das tarefas</span></td><td class="nota">30 sem: 1 pendente(s) (1 roxo) · 52 sem: S21</td></tr>
+<tr><td>Abordagem familiar e ciclos de vida (genograma, ecomapa)</td><td>Preventiva</td><td class="num">2</td><td class="num">2 de 6</td><td><span class="est est-zero">sem registro de estudo</span></td><td class="nota">fora das 30 semanas</td></tr>
+<tr><td>COVID</td><td>Infecto</td><td class="num">2</td><td class="num">2 de 6</td><td><span class="est est-zero">sem registro de estudo</span></td><td class="nota">fora das 30 semanas · 52 sem: S37</td></tr>
+<tr><td>Climatério e Terapia Hormonal</td><td>Ginecologia</td><td class="num">2</td><td class="num">2 de 6</td><td><span class="est est-feito">tarefas feitas</span></td><td class="nota">30 sem: feito · 52 sem: S8</td></tr>
+<tr><td>Dependência Química</td><td>Psiquiatria</td><td class="num">2</td><td class="num">2 de 6</td><td><span class="est est-parcial">parte das tarefas</span></td><td class="nota">30 sem: feito · 52 sem: S13</td></tr>
+<tr><td>Medicina de Família e Comunidade</td><td>Preventiva</td><td class="num">2</td><td class="num">2 de 6</td><td><span class="est est-parcial">parte das tarefas</span></td><td class="nota">30 sem: feito · 52 sem: S16</td></tr>
+<tr><td>Saúde do Idoso</td><td>Preventiva</td><td class="num">2</td><td class="num">2 de 6</td><td><span class="est est-zero">sem registro de estudo</span></td><td class="nota">fora das 30 semanas · 52 sem: S18</td></tr>
+<tr><td>Tuberculose</td><td>Infecto</td><td class="num">2</td><td class="num">1 de 6</td><td><span class="est est-feito">tarefas feitas</span></td><td class="nota">30 sem: feito · 52 sem: S10</td></tr>
+<tr><td>Demências</td><td>Neurologia</td><td class="num">1</td><td class="num">1 de 6</td><td><span class="est est-feito">tarefas feitas</span></td><td class="nota">30 sem: feito · 52 sem: S45</td></tr>
+<tr><td>Diabetes Mellitus Tipo 2</td><td>Endocrino</td><td class="num">1</td><td class="num">1 de 6</td><td><span class="est est-parcial">parte das tarefas</span></td><td class="nota">30 sem: feito · 52 sem: S14</td></tr>
+<tr><td>Diabetes na Gestação</td><td>Obstetrícia</td><td class="num">1</td><td class="num">1 de 6</td><td><span class="est est-tocado">só erros ou cards</span></td><td class="nota">30 sem: 4 pendente(s) (4 roxo) · 52 sem: S21</td></tr>
+<tr><td>Doença Renal Crônica I e II</td><td>Nefrologia</td><td class="num">1</td><td class="num">1 de 6</td><td><span class="est est-feito">tarefas feitas</span></td><td class="nota">30 sem: feito · 52 sem: S43</td></tr>
+</tbody></table><p class="nota">45 temas distintos neste bloco. A tabela mostra os 22 primeiros.</p></div>
+</section>
+<section>
+  <span class="olho">52 semanas × 30 semanas</span>
+  <h2>O que o cronograma de 30 semanas deixa de fora</h2>
+  <div class="prosa"><p>O de 30 semanas é o de 52 comprimido pela prevalência do ENAMED. Dos 246 temas do extensivo, 87 não aparecem em nenhuma das 352 tarefas do de 30. Para o ENAMED isso era aceitável. Para a UERJ não é: vários desses temas estão entre os que a banca mais repete.</p></div>
+  <div class="rolagem"><table><thead><tr><th>Tema ausente das 30 semanas</th><th>Especialidade</th><th class="num">Questões UERJ</th><th class="num">Semana no de 52</th><th>Minha situação</th></tr></thead><tbody>
+<tr><td>Temas Gerais em Cirurgia</td><td>Cirurgia</td><td class="num">7</td><td class="num">S47</td><td><span class="est est-zero">sem registro de estudo</span></td></tr>
+<tr><td>Resposta Endócrino-Metabólica-Inflamatória ao Trauma Cicatrização de Feridas</td><td>Cirurgia</td><td class="num">6</td><td class="num">S27</td><td><span class="est est-zero">sem registro de estudo</span></td></tr>
+<tr><td>Vesícula e Vias Biliares</td><td>Cirurgia</td><td class="num">5</td><td class="num">S36</td><td><span class="est est-zero">sem registro de estudo</span></td></tr>
+<tr><td>Pesquisa Epidemiológica e Medidas de Associação</td><td>Preventiva</td><td class="num">4</td><td class="num">S41</td><td><span class="est est-zero">sem registro de estudo</span></td></tr>
+<tr><td>Infecções Congênitas</td><td>Pediatria</td><td class="num">4</td><td class="num">S46</td><td><span class="est est-zero">sem registro de estudo</span></td></tr>
+<tr><td>Doença de Kawasaki</td><td>Pediatria</td><td class="num">4</td><td class="num">S35</td><td><span class="est est-zero">sem registro de estudo</span></td></tr>
+<tr><td>Doença Celíaca em Pediatria Febre Reumática</td><td>Pediatria</td><td class="num">4</td><td class="num">S24</td><td><span class="est est-tocado">só erros ou cards</span></td></tr>
+<tr><td>Manejo dos Nódulos de Tireoide, Câncer de Tireoide e Tireoidectomia</td><td>Otorrino</td><td class="num">4</td><td class="num">S16</td><td><span class="est est-zero">sem registro de estudo</span></td></tr>
+<tr><td>Disnatremias</td><td>Nefrologia</td><td class="num">4</td><td class="num">S38</td><td><span class="est est-zero">sem registro de estudo</span></td></tr>
+<tr><td>Anatomia e Embriologia do Trato Genital Feminino Doenças de Vulva e Vagina</td><td>Ginecologia</td><td class="num">4</td><td class="num">S31</td><td><span class="est est-zero">sem registro de estudo</span></td></tr>
+<tr><td>Síndromes Aórticas Agudas (Resumo) Cardiomiopatias (Resumo) Pericardiopatias</td><td>Cardiologia</td><td class="num">4</td><td class="num">S43</td><td><span class="est est-zero">sem registro de estudo</span></td></tr>
+<tr><td>Síndromes Genéticas e Erros Inatos do Metabolismo</td><td>Pediatria</td><td class="num">3</td><td class="num">S38</td><td><span class="est est-zero">sem registro de estudo</span></td></tr>
+<tr><td>Febre Sem Sinais Localizatórios Hipertensão Arterial na Criança e Adolescente Coqueluche</td><td>Pediatria</td><td class="num">3</td><td class="num">S27</td><td><span class="est est-zero">sem registro de estudo</span></td></tr>
+<tr><td>Oncologia Ortopédica</td><td>Ortopedia</td><td class="num">3</td><td class="num">S41</td><td><span class="est est-zero">sem registro de estudo</span></td></tr>
+<tr><td>Rotura Prematura de Membranas</td><td>Obstetrícia</td><td class="num">3</td><td class="num">S41</td><td><span class="est est-zero">sem registro de estudo</span></td></tr>
+<tr><td>Anemias Macrocíticas Leucemias Crônicas, Linfomas, Mielodisplasias e Mieloproliferações</td><td>Hemato</td><td class="num">3</td><td class="num">S46</td><td><span class="est est-zero">sem registro de estudo</span></td></tr>
+<tr><td>Miomatose</td><td>Ginecologia</td><td class="num">3</td><td class="num">S40</td><td><span class="est est-zero">sem registro de estudo</span></td></tr>
+<tr><td>Infertilidade Conjugal</td><td>Ginecologia</td><td class="num">3</td><td class="num">S37</td><td><span class="est est-zero">sem registro de estudo</span></td></tr>
+<tr><td>Câncer do Corpo do Útero</td><td>Ginecologia</td><td class="num">3</td><td class="num">S32</td><td><span class="est est-zero">sem registro de estudo</span></td></tr>
+<tr><td>Hemorragia Digestiva Alta Varicosa</td><td>Gastro</td><td class="num">3</td><td class="num">S45</td><td><span class="est est-zero">sem registro de estudo</span></td></tr>
+<tr><td>Adrenal - Hipocortisolismo</td><td>Endocrino</td><td class="num">3</td><td class="num">S12</td><td><span class="est est-zero">sem registro de estudo</span></td></tr>
+<tr><td>Dermatoses Infecciosas Dermatoses Eczematosas</td><td>Dermato</td><td class="num">3</td><td class="num">S36</td><td><span class="est est-zero">sem registro de estudo</span></td></tr>
+<tr><td>Proctologia</td><td>Cirurgia</td><td class="num">3</td><td class="num">S43</td><td><span class="est est-zero">sem registro de estudo</span></td></tr>
+<tr><td>Nutrição em Cirurgia</td><td>Cirurgia</td><td class="num">3</td><td class="num">S45</td><td><span class="est est-zero">sem registro de estudo</span></td></tr>
+</tbody></table></div></section>
+<section>
+  <span class="olho">As marcações do Drive</span>
+  <h2>Roxo media ENAMED. Para a UERJ a ordem muda</h2>
+  <p class="sub">Li a cor da fonte de cada tarefa pendente na planilha do Drive, versão de 10/09. O código era roxo, depois rosa, depois salmão, por prevalência no ENAMED.</p>
+  <div class="rolagem"><table><thead><tr><th>Cor no Drive</th><th class="num">Tarefas pendentes</th><th class="num">Com tema cobrado pela UERJ</th><th class="num">Sem nenhuma questão em 6 edições</th></tr></thead><tbody>
+<tr><td>roxo</td><td class="num">50</td><td class="num">39</td><td class="num">11</td></tr>
+<tr><td>rosa</td><td class="num">51</td><td class="num">40</td><td class="num">11</td></tr>
+<tr><td>salmão</td><td class="num">43</td><td class="num">22</td><td class="num">21</td></tr>
+<tr><td>sem cor</td><td class="num">3</td><td class="num">3</td><td class="num">0</td></tr>
+</tbody></table></div>
+<p><b>Roxas que saem da fila até 01/11</b>, por não terem caído nenhuma vez na UERJ em seis edições: Estatística Médica, Financiamento em Saúde, Financiamento em saúde, Insuficiência Cardíaca e Hipertensão Arterial Sistêmica, Ética Médica. Voltam na Fase 2, que mira o ENAMED 2027.</p>
+</section>
+<section>
+  <span class="olho">A trilha</span>
+  <h2>Semana a semana, dia a dia, até 31/10</h2>
+  <div class="prosa">
+    <p>Cada dia traz as listas na ordem em que devem ser feitas, com o link do caderno do EMED. A cota diária é de 60 questões nos dias de internato e de 95 depois de 12/10. Os cards do dia entram por fora: teto de 90 enquanto houver dívida, 60 depois.</p>
+    <p>Tema marcado como "sem registro de estudo" começa por uma aula-base minha, curta, e só então vai para a lista. Se um dia estourar, a tarefa escorrega para o seguinte. O plano do dia sempre mostra a próxima pendente, sem depender do calendário.</p>
+  </div>
+<div class="semana"><header><b>Semana 1</b><span class="nota">19/09 a 20/09 · 5 tarefas · 162 questões · SIM 100 · CIR 25 · GO 19 · PED 18</span></header>
+<div class="dia"><div class="quando"><b>sáb 19/09</b>100 questões</div><ul>
+<li class="sim"><span class="bl bl-sim"><i></i>SIM</span><span class="t">UERJ 2023 -- prova INTEIRA (100q), cronometrada, 5 blocos <span class="pill">simulado</span> </span><span class="q">100 q <code>simulados/uerj/uerj_ad_2023_a.pdf</code> <span class="nota"></span></span></li>
+</ul></div>
+<div class="dia"><div class="quando"><b>dom 20/09</b>62 questões</div><ul>
+<li class=""><span class="bl bl-cir"><i></i>CIR</span><span class="t">Hérnias da Parede Abdominal <span class="pill">teoria + lista</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">25 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/04b9c19e-37f1-490d-88c7-cd2e7282e61f/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#38</span></span></li>
+<li class=""><span class="bl bl-go"><i></i>GO</span><span class="t">Diabetes na Gestação <span class="pill">teoria + lista</span> </span><span class="q">19 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/43dfee73-2eff-45e8-8e39-5c1cd7c7738f/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#26</span></span></li>
+<li class=""><span class="bl bl-ped"><i></i>PED</span><span class="t">Tópicos em Pediatria <span class="pill">teoria + lista</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">18 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/8b3e96e1-7997-4da0-8059-e72fe75ac4f8/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#96</span></span></li>
+<li class=""><span class="bl bl-mfc"><i></i>MFC</span><span class="t">Raciocinio diagnostico quantitativo (S/E, VPP/VPN, RV, probabilidade pre-teste) <span class="pill">aula-base</span> </span><span class="q">sem lista  <span class="nota"></span></span></li>
+</ul></div>
+</div>
+<div class="semana"><header><b>Semana 2</b><span class="nota">21/09 a 27/09 · 19 tarefas · 517 questões · PED 122 · GO 100 · MFC 82 · CM 80 · CIR 73 · SIM 60</span></header>
+<div class="dia"><div class="quando"><b>seg 21/09</b>54 questões</div><ul>
+<li class=""><span class="bl bl-cir"><i></i>CIR</span><span class="t">Hérnias da Parede Abdominal <span class="pill">teoria + lista</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">21 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/34f8cbcc-0e8a-4aff-ab7f-1dca2c9b4a6c/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#49</span></span></li>
+<li class=""><span class="bl bl-go"><i></i>GO</span><span class="t">Diabetes na Gestação <span class="pill">teoria + lista</span> </span><span class="q">33 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/3a478813-439f-4710-926f-41189ef12856/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#40</span></span></li>
+</ul></div>
+<div class="dia"><div class="quando"><b>ter 22/09</b>57 questões</div><ul>
+<li class=""><span class="bl bl-ped"><i></i>PED</span><span class="t">Tópicos em Pediatria <span class="pill">revisão</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">36 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/50ac88dd-db3b-4707-814b-54fd7aa5f3ed/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#100</span></span></li>
+<li class=""><span class="bl bl-mfc"><i></i>MFC</span><span class="t">Prevencao Quaternaria e sobrediagnostico <span class="pill">aula-base</span> </span><span class="q">sem lista  <span class="nota"></span></span></li>
+<li class=""><span class="bl bl-cm"><i></i>CM</span><span class="t">Doenças Glomerulares <span class="pill">teoria + lista</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">21 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/74c07227-b248-4aaf-98f6-980662d77bea/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#68</span></span></li>
+</ul></div>
+<div class="dia"><div class="quando"><b>qua 23/09</b>71 questões</div><ul>
+<li class=""><span class="bl bl-mfc"><i></i>MFC</span><span class="t">Saúde do Idoso <span class="pill">revisão</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">32 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/5e89c2cb-3ac4-4607-aef9-0c7a3d533ec8/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#3</span></span></li>
+<li class=""><span class="bl bl-cir"><i></i>CIR</span><span class="t">Hérnias da Parede Abdominal <span class="pill">teoria + lista</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">15 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/a9db430a-a12f-4696-830c-36880d5fab09/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#61</span></span></li>
+<li class=""><span class="bl bl-go"><i></i>GO</span><span class="t">Sangramento da Segunda Metade <span class="pill">teoria + lista</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">24 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/e095bde4-9bb4-4343-9fec-0c8aaae11188/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#63</span></span></li>
+</ul></div>
+<div class="dia"><div class="quando"><b>qui 24/09</b>86 questões</div><ul>
+<li class=""><span class="bl bl-go"><i></i>GO</span><span class="t">Diabetes na Gestação <span class="pill">revisão</span> </span><span class="q">43 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/1093d168-744a-4ce4-90ab-bc856c649d12/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#51</span></span></li>
+<li class=""><span class="bl bl-ped"><i></i>PED</span><span class="t">Doença de Kawasaki <span class="pill">revisão</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">43 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/f9fa0982-0040-4ea2-87f7-5a27989333e2/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#651</span></span></li>
+</ul></div>
+<div class="dia"><div class="quando"><b>sex 25/09</b>74 questões</div><ul>
+<li class=""><span class="bl bl-cm"><i></i>CM</span><span class="t">Tuberculose 360: adulto, crianca (RIP sem etambutol &lt; 10a), ILTB, contatos, extrapulmonar/intestinal, TB-HIV <span class="pill">aula-base</span> </span><span class="q">sem lista  <span class="nota"></span></span></li>
+<li class=""><span class="bl bl-cm"><i></i>CM</span><span class="t">Doenças Neuromusculares <span class="pill">teoria + lista</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">24 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/b0ac284d-d883-4f90-b811-545fbad82046/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#141</span></span></li>
+<li class=""><span class="bl bl-mfc"><i></i>MFC</span><span class="t">Medicina de Família e Comunidade <span class="pill">revisão</span> </span><span class="q">50 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/939313f4-8c62-426d-899b-317270c8f3c4/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#1</span></span></li>
+</ul></div>
+<div class="dia"><div class="quando"><b>sáb 26/09</b>97 questões</div><ul>
+<li class="sim"><span class="bl bl-sim"><i></i>SIM</span><span class="t">UERJ 2021 -- prova INTEIRA (60q), cronometrada, 5 blocos <span class="pill">simulado</span> </span><span class="q">60 q <code>simulados/uerj/uerj_ad_2021_a.pdf</code> <span class="nota"></span></span></li>
+<li class=""><span class="bl bl-cir"><i></i>CIR</span><span class="t">Hérnias da Parede Abdominal <span class="pill">revisão</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">37 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/bfa9a64a-bbd0-49b3-9e66-b8784a807185/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#65</span></span></li>
+<li class=""><span class="bl bl-go"><i></i>GO</span><span class="t">Anatomia e Embriologia do Trato Genital Feminino | Doenças de vulva e vagina <span class="pill">leitura</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">sem lista  <span class="nota">#590</span></span></li>
+</ul></div>
+<div class="dia"><div class="quando"><b>dom 27/09</b>78 questões</div><ul>
+<li class=""><span class="bl bl-ped"><i></i>PED</span><span class="t">Infecções Congênitas <span class="pill">revisão</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">43 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/4ff1ff09-47ae-4325-bb44-ee9c9e7354f9/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#819</span></span></li>
+<li class=""><span class="bl bl-cm"><i></i>CM</span><span class="t">Doenças Neuromusculares <span class="pill">revisão</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">35 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/282f1491-c38b-4f28-a07a-e41fb4c39def/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#146</span></span></li>
+<li class=""><span class="bl bl-cir"><i></i>CIR</span><span class="t">Resposta Endócrino- | Metabólica-Inflamatória ao Trauma | Cicatrização de Feridas <span class="pill">leitura</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">sem lista  <span class="nota">#530</span></span></li>
+</ul></div>
+</div>
+<div class="semana"><header><b>Semana 3</b><span class="nota">28/09 a 04/10 · 17 tarefas · 510 questões · CIR 117 · GO 93 · PED 86 · MFC 86 · CM 68 · SIM 60</span></header>
+<div class="dia"><div class="quando"><b>seg 28/09</b>67 questões</div><ul>
+<li class=""><span class="bl bl-cir"><i></i>CIR</span><span class="t">Temas Gerais em Cirurgia <span class="pill">revisão</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">43 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/c34392de-e488-420b-94eb-cf9e6c84f70b/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#833</span></span></li>
+<li class=""><span class="bl bl-go"><i></i>GO</span><span class="t">Gestação Múltipla <span class="pill">teoria + lista</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">24 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/645b48aa-cc0e-4d59-b318-1f7c477e10ba/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#112</span></span></li>
+</ul></div>
+<div class="dia"><div class="quando"><b>ter 29/09</b>86 questões</div><ul>
+<li class=""><span class="bl bl-ped"><i></i>PED</span><span class="t">Síndromes Genéticas e Erros Inatos do Metabolismo <span class="pill">revisão</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">43 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/35e1cef0-9f3a-4919-9156-82076d354768/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#710</span></span></li>
+<li class=""><span class="bl bl-mfc"><i></i>MFC</span><span class="t">Metodo Clinico Centrado na Pessoa e decisao compartilhada <span class="pill">aula-base</span> </span><span class="q">sem lista  <span class="nota"></span></span></li>
+<li class=""><span class="bl bl-cm"><i></i>CM</span><span class="t">Síndromes Aórticas Agudas | Cardiomiopatias | Pericardiopatias <span class="pill">leitura</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">sem lista  <span class="nota">#768</span></span></li>
+<li class=""><span class="bl bl-mfc"><i></i>MFC</span><span class="t">Testes Diagnósticos <span class="pill">revisão</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">43 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/b1df7f4f-3922-4ec4-9358-a18e9aaab1a0/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#832</span></span></li>
+</ul></div>
+<div class="dia"><div class="quando"><b>qua 30/09</b>81 questões</div><ul>
+<li class=""><span class="bl bl-cir"><i></i>CIR</span><span class="t">Vesícula e Vias Biliares <span class="pill">revisão</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">43 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/4f935dc6-cf68-46c2-b55c-153264ba1e7c/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#683</span></span></li>
+<li class=""><span class="bl bl-go"><i></i>GO</span><span class="t">Sangramento da Segunda Metade <span class="pill">revisão</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">38 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/a049f2a3-06c4-431d-858b-cf4f7b8de936/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#75</span></span></li>
+</ul></div>
+<div class="dia"><div class="quando"><b>qui 01/10</b>80 questões</div><ul>
+<li class=""><span class="bl bl-ped"><i></i>PED</span><span class="t">Infecção de Trato Urinário em Pediatria <span class="pill">revisão</span> </span><span class="q">43 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/bf99b230-04a9-4060-bf31-227da8894ea3/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#577</span></span></li>
+<li class=""><span class="bl bl-mfc"><i></i>MFC</span><span class="t">Avaliacao Multidimensional do Idoso <span class="pill">aula-base</span> </span><span class="q">sem lista  <span class="nota"></span></span></li>
+<li class=""><span class="bl bl-cm"><i></i>CM</span><span class="t">Meningites e Meningoencefalites <span class="pill">revisão</span> </span><span class="q">37 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/d575fcf6-6b42-44ef-a9b6-795924f2bd6b/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#376</span></span></li>
+</ul></div>
+<div class="dia"><div class="quando"><b>sex 02/10</b>74 questões</div><ul>
+<li class=""><span class="bl bl-mfc"><i></i>MFC</span><span class="t">Pesquisa Epidemiológica e Medidas de Associação <span class="pill">revisão</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">43 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/9fc5c5a8-6e66-4073-8fa3-4e096164dbdb/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#743</span></span></li>
+<li class=""><span class="bl bl-cir"><i></i>CIR</span><span class="t">Complicações Pós-Operatórias <span class="pill">teoria + lista</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">31 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/1053a9ad-d0a1-432c-9584-e4cdaa712208/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#122</span></span></li>
+</ul></div>
+<div class="dia"><div class="quando"><b>sáb 03/10</b>91 questões</div><ul>
+<li class="sim"><span class="bl bl-sim"><i></i>SIM</span><span class="t">UERJ 2022 -- prova INTEIRA (60q), cronometrada, 5 blocos <span class="pill">simulado</span> </span><span class="q">60 q <code>simulados/uerj/uerj_ad_2022_a.pdf</code> <span class="nota"></span></span></li>
+<li class=""><span class="bl bl-go"><i></i>GO</span><span class="t">Gestação Múltipla <span class="pill">revisão</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">31 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/0a12cfb3-9a40-4f41-ac3c-09c02701e464/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#124</span></span></li>
+</ul></div>
+<div class="dia"><div class="quando"><b>dom 04/10</b>31 questões</div><ul>
+<li class=""><span class="bl bl-cm"><i></i>CM</span><span class="t">Endocardite Bacteriana - Endocardite Infecciosa <span class="pill">revisão</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">31 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/42eb70ec-9d74-4eae-9787-86db36bda8c5/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#127</span></span></li>
+<li class=""><span class="bl bl-cir"><i></i>CIR</span><span class="t">Manejo dos Nódulos de Tireoide, Câncer de Tireoide e Tireoidectomia <span class="pill">leitura</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">sem lista  <span class="nota">#367</span></span></li>
+</ul></div>
+</div>
+<div class="semana"><header><b>Semana 4</b><span class="nota">05/10 a 11/10 · 18 tarefas · 536 questões · CIR 128 · GO 101 · SIM 100 · PED 98 · CM 89 · MFC 20</span></header>
+<div class="dia"><div class="quando"><b>seg 05/10</b>52 questões</div><ul>
+<li class=""><span class="bl bl-cir"><i></i>CIR</span><span class="t">Complicações Pós-Operatórias <span class="pill">teoria + lista</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">31 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/49fcd27f-e7d1-420d-ae04-b6018d827bbb/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#126</span></span></li>
+<li class=""><span class="bl bl-go"><i></i>GO</span><span class="t">Incontinência Urinária <span class="pill">teoria + lista</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">21 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/1b4ae6d2-f7a1-4580-b5f5-3d8606a989ef/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#98</span></span></li>
+</ul></div>
+<div class="dia"><div class="quando"><b>ter 06/10</b>80 questões</div><ul>
+<li class=""><span class="bl bl-ped"><i></i>PED</span><span class="t">Reanimação Neonatal <span class="pill">teoria + lista</span> </span><span class="q">27 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/8ae39ba4-f3af-4f4a-b104-f5e36cfe3f24/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#60</span></span></li>
+<li class=""><span class="bl bl-mfc"><i></i>MFC</span><span class="t">RAPS (Rede de Atencao Psicossocial) e saude mental na APS <span class="pill">aula-base</span> </span><span class="q">20 q  <span class="nota"></span></span></li>
+<li class=""><span class="bl bl-cm"><i></i>CM</span><span class="t">Anemias macrocíticas | Leucemias Crônicas, Linfomas, Mielodisplasias e Mieloproliferações <span class="pill">leitura</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">sem lista  <span class="nota">#811</span></span></li>
+<li class=""><span class="bl bl-cm"><i></i>CM</span><span class="t">Doenças Glomerulares Infecção do Trato Urinário <span class="pill">revisão</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">33 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/a158376a-d708-4a0e-8465-3fe0d9229d07/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#115</span></span></li>
+</ul></div>
+<div class="dia"><div class="quando"><b>qua 07/10</b>53 questões</div><ul>
+<li class=""><span class="bl bl-cir"><i></i>CIR</span><span class="t">Complicações Pós-Operatórias <span class="pill">teoria + lista</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">16 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/00a51ab2-d883-4340-a947-a1e9fa2a0f90/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#137</span></span></li>
+<li class=""><span class="bl bl-go"><i></i>GO</span><span class="t">Incontinência Urinária <span class="pill">revisão</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">37 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/cfd8b7ed-0523-4521-b5a8-29e1f1c01d58/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#111</span></span></li>
+</ul></div>
+<div class="dia"><div class="quando"><b>qui 08/10</b>81 questões</div><ul>
+<li class=""><span class="bl bl-ped"><i></i>PED</span><span class="t">Reanimação Neonatal <span class="pill">revisão</span> </span><span class="q">43 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/73e3a18a-c6c8-441e-b817-6829130b97b2/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#72</span></span></li>
+<li class=""><span class="bl bl-cm"><i></i>CM</span><span class="t">Adrenal - Hipocortisolismo <span class="pill">leitura</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">sem lista  <span class="nota">#310</span></span></li>
+<li class=""><span class="bl bl-mfc"><i></i>MFC</span><span class="t">Rastreamento: criterios e programas BR <span class="pill">aula-base</span> </span><span class="q">sem lista  <span class="nota"></span></span></li>
+<li class=""><span class="bl bl-cir"><i></i>CIR</span><span class="t">Complicações Pós-Operatórias <span class="pill">revisão</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">38 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/5f6dbf33-cece-459d-af7a-b33ee4070045/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#144</span></span></li>
+</ul></div>
+<div class="dia"><div class="quando"><b>sex 09/10</b>71 questões</div><ul>
+<li class=""><span class="bl bl-go"><i></i>GO</span><span class="t">Infertilidade Conjugal <span class="pill">revisão</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">43 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/420d2cbe-6292-4f9c-bffa-04e66e847ef5/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#698</span></span></li>
+<li class=""><span class="bl bl-ped"><i></i>PED</span><span class="t">Anemias Hemolíticas <span class="pill">revisão</span> </span><span class="q">28 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/c0eb6fab-773f-4913-a660-cdd26c050341/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#308</span></span></li>
+</ul></div>
+<div class="dia"><div class="quando"><b>sáb 10/10</b>100 questões</div><ul>
+<li class="sim"><span class="bl bl-sim"><i></i>SIM</span><span class="t">UERJ 2024 -- prova INTEIRA (100q), cronometrada, 5 blocos <span class="pill">simulado</span> </span><span class="q">100 q <code>simulados/uerj/uerj_ad_2024_a.pdf</code> <span class="nota"></span></span></li>
+</ul></div>
+<div class="dia"><div class="quando"><b>dom 11/10</b>99 questões</div><ul>
+<li class=""><span class="bl bl-cm"><i></i>CM</span><span class="t">Valvopatias <span class="pill">teoria + lista</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">21 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/de2cad4c-c6b5-420f-b31f-98938473cc75/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#55</span></span></li>
+<li class=""><span class="bl bl-cir"><i></i>CIR</span><span class="t">Disnatremias <span class="pill">revisão</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">43 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/3dd77684-295a-463f-b35f-1f5be0bfec7a/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#751</span></span></li>
+<li class=""><span class="bl bl-cm"><i></i>CM</span><span class="t">Valvopatias <span class="pill">revisão</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">35 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/a261a066-c70c-41e2-b1d3-8bad7f08047b/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#91</span></span></li>
+</ul></div>
+</div>
+<div class="semana"><header><b>Semana 5</b><span class="nota">12/10 a 18/10 · 24 tarefas · 677 questões · CIR 167 · CM 156 · GO 129 · PED 125 · SIM 100</span></header>
+<div class="dia"><div class="quando"><b>seg 12/10</b>108 questões</div><ul>
+<li class=""><span class="bl bl-cir"><i></i>CIR</span><span class="t">Neoplasias de Estômago e Esôfago <span class="pill">teoria + lista</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">27 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/b4a33205-e2ac-410d-acf6-48e8fb94861d/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#11</span></span></li>
+<li class=""><span class="bl bl-go"><i></i>GO</span><span class="t">Câncer de Colo Uterino <span class="pill">teoria + lista</span> </span><span class="q">25 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/cc28ea36-1bae-48dc-91ca-be6daf45c2ac/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#74</span></span></li>
+<li class=""><span class="bl bl-ped"><i></i>PED</span><span class="t">Febre Sem Sinais Localizatórios | Hipertensão Arterial na Criança e Adolescente <span class="pill">leitura</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">sem lista  <span class="nota">#529</span></span></li>
+<li class=""><span class="bl bl-mfc"><i></i>MFC</span><span class="t">Polifarmacia, desprescricao e RAM no idoso <span class="pill">aula-base</span> </span><span class="q">sem lista  <span class="nota"></span></span></li>
+<li class=""><span class="bl bl-cm"><i></i>CM</span><span class="t">Obesidade e Síndrome Metabólica (Teoria) Cirurgia Bariátrica e Metabólica <span class="pill">teoria + lista</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">25 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/5a9ffec7-f186-4e0d-9f1b-745b731185e4/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#67</span></span></li>
+<li class=""><span class="bl bl-ped"><i></i>PED</span><span class="t">Obesidade Infantil e na Adolescência <span class="pill">teoria + lista</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">31 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/aa81ed9e-1522-42e9-bacf-43f346fd8c86/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#125</span></span></li>
+</ul></div>
+<div class="dia"><div class="quando"><b>ter 13/10</b>109 questões</div><ul>
+<li class=""><span class="bl bl-cir"><i></i>CIR</span><span class="t">Neoplasias de Estômago e Esôfago <span class="pill">revisão</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">40 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/f4b46598-2678-4b48-bcba-1c572c98e260/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#30</span></span></li>
+<li class=""><span class="bl bl-go"><i></i>GO</span><span class="t">Câncer de Colo Uterino <span class="pill">revisão</span> </span><span class="q">38 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/bad4caf5-9753-495a-a2e8-36d43678d16a/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#84</span></span></li>
+<li class=""><span class="bl bl-ped"><i></i>PED</span><span class="t">Dermatoses Infecciosas | Dermatoses Eczematosas <span class="pill">leitura</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">sem lista  <span class="nota">#666</span></span></li>
+<li class=""><span class="bl bl-cm"><i></i>CM</span><span class="t">Disfagia, Alterações Estruturais e Dist. Mot. <span class="pill">revisão</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">31 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/6071510c-c449-49c0-8fa8-9c0b2f491843/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#128</span></span></li>
+</ul></div>
+<div class="dia"><div class="quando"><b>qua 14/10</b>85 questões</div><ul>
+<li class=""><span class="bl bl-cm"><i></i>CM</span><span class="t">Obesidade e Síndrome Metabólica Cirurgia Bariátrica e Metabólica <span class="pill">revisão</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">34 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/460d4259-7986-4ba1-a725-5394e6ef8991/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#89</span></span></li>
+<li class=""><span class="bl bl-mfc"><i></i>MFC</span><span class="t">Condicoes cronicas na APS: metas e manejo ambulatorial (HAS, DM2, DRC, DPOC, IC) <span class="pill">aula-base</span> </span><span class="q">sem lista  <span class="nota"></span></span></li>
+<li class=""><span class="bl bl-cir"><i></i>CIR</span><span class="t">Abdome Agudo Obstrutivo <span class="pill">teoria + lista</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">20 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/83ebf1f0-07c9-4c18-8cd4-ccec122122fe/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#97</span></span></li>
+<li class=""><span class="bl bl-go"><i></i>GO</span><span class="t">Assistência à Vítima de Violência Sexual <span class="pill">teoria + lista</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">31 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/2c101542-29dd-47f4-895f-ff3a9813e1f6/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#123</span></span></li>
+<li class=""><span class="bl bl-ped"><i></i>PED</span><span class="t">Doença Celíaca em Pediatria | Febre Reumática <span class="pill">leitura</span> </span><span class="q">sem lista  <span class="nota">#483</span></span></li>
+</ul></div>
+<div class="dia"><div class="quando"><b>qui 15/10</b>80 questões</div><ul>
+<li class=""><span class="bl bl-cm"><i></i>CM</span><span class="t">Doença Inflamatória Intestinal <span class="pill">revisão</span> </span><span class="q">43 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/eb26590a-1ef1-4345-87d6-d226006b9af7/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#494</span></span></li>
+<li class=""><span class="bl bl-cir"><i></i>CIR</span><span class="t">Abdome Agudo Obstrutivo <span class="pill">revisão</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">37 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/fc48cfc6-9528-482f-a0a8-385997e4e7c9/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#110</span></span></li>
+</ul></div>
+<div class="dia"><div class="quando"><b>sex 16/10</b>109 questões</div><ul>
+<li class=""><span class="bl bl-go"><i></i>GO</span><span class="t">Assistência à Vítima de Violência Sexual <span class="pill">revisão</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">35 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/61b0497b-d1af-4b00-94aa-de8eba0a771e/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#138</span></span></li>
+<li class=""><span class="bl bl-ped"><i></i>PED</span><span class="t">Anafilaxia e Urticária <span class="pill">revisão</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">43 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/b5a01682-ad2c-496a-abd8-307db791a53b/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#620</span></span></li>
+<li class=""><span class="bl bl-ped"><i></i>PED</span><span class="t">Obesidade Infantil e na Adolescência <span class="pill">revisão</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">31 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/670c75b6-370b-4245-8747-6e0100293400/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#136</span></span></li>
+</ul></div>
+<div class="dia"><div class="quando"><b>sáb 17/10</b>100 questões</div><ul>
+<li class="sim"><span class="bl bl-sim"><i></i>SIM</span><span class="t">UERJ 2025 -- prova INTEIRA (100q), cronometrada, 5 blocos <span class="pill">simulado</span> </span><span class="q">100 q <code>simulados/uerj/uerj_ad_2025_prova.pdf</code> <span class="nota"></span></span></li>
+</ul></div>
+<div class="dia"><div class="quando"><b>dom 18/10</b>86 questões</div><ul>
+<li class=""><span class="bl bl-cm"><i></i>CM</span><span class="t">Disfagia, Alterações Estruturais e Dist. Mort. <span class="pill">teoria + lista</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">23 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/6dd270aa-7906-4bb8-a5ca-e60fd7dd58e6/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#102</span></span></li>
+<li class=""><span class="bl bl-ped"><i></i>PED</span><span class="t">Oncologia pediatrica: Wilms x neuroblastoma (aula comparativa em tabela, cluster de Cirurgia Infantil) <span class="pill">aula-base</span> </span><span class="q">20 q  <span class="nota"></span></span></li>
+<li class=""><span class="bl bl-cir"><i></i>CIR</span><span class="t">Nutrição em cirurgia <span class="pill">revisão</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">43 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/741a2b00-5d39-4636-a45a-f8057a42af3d/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#805</span></span></li>
+</ul></div>
+</div>
+<div class="semana"><header><b>Semana 6</b><span class="nota">19/10 a 25/10 · 20 tarefas · 601 questões · GO 178 · CM 155 · CIR 119 · SIM 100 · PED 49</span></header>
+<div class="dia"><div class="quando"><b>seg 19/10</b>86 questões</div><ul>
+<li class=""><span class="bl bl-cir"><i></i>CIR</span><span class="t">Hemorragia Digestiva Alta Varicosa <span class="pill">revisão</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">43 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/00ddb4d7-976c-4322-afd0-36b46c862351/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#823</span></span></li>
+<li class=""><span class="bl bl-go"><i></i>GO</span><span class="t">Câncer do Corpo do Útero <span class="pill">revisão</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">43 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/0be1fbde-63f0-4fb0-9023-49a56ecf1ee6/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#613</span></span></li>
+</ul></div>
+<div class="dia"><div class="quando"><b>ter 20/10</b>104 questões</div><ul>
+<li class=""><span class="bl bl-ped"><i></i>PED</span><span class="t">Reanimação neonatal Crescimento Tópicos em Pediatria Desnutrição na Infância <span class="pill">revisão mista</span> </span><span class="q">49 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/dddba9b5-6072-4539-8ba6-fca136ec8879/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#119</span></span></li>
+<li class=""><span class="bl bl-mfc"><i></i>MFC</span><span class="t">Cuidados paliativos e dor cronica na APS <span class="pill">aula-base</span> </span><span class="q">sem lista  <span class="nota"></span></span></li>
+<li class=""><span class="bl bl-cm"><i></i>CM</span><span class="t">Oncologia Ortopédica e Osteomielite <span class="pill">leitura</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">sem lista  <span class="nota">#740</span></span></li>
+<li class=""><span class="bl bl-cir"><i></i>CIR</span><span class="t">Princípios da Anestesiologia <span class="pill">teoria + lista</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">12 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/f082d47b-76fe-4772-ad3d-8b0645b076c1/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#73</span></span></li>
+<li class=""><span class="bl bl-go"><i></i>GO</span><span class="t">Miomatose Uterina <span class="pill">revisão</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">43 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/9fab718a-a6d9-44f8-aba9-31bc88aa803f/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#734</span></span></li>
+</ul></div>
+<div class="dia"><div class="quando"><b>qua 21/10</b>86 questões</div><ul>
+<li class=""><span class="bl bl-cm"><i></i>CM</span><span class="t">Neoplasias Pulmonares <span class="pill">teoria + lista</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">19 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/d3364386-d293-4aaf-b538-357704eea4d5/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#107</span></span></li>
+<li class=""><span class="bl bl-cir"><i></i>CIR</span><span class="t">Princípios da Anestesiologia <span class="pill">teoria + lista</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">24 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/3ef9a57d-f807-4e94-91a8-9224ee21497a/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#83</span></span></li>
+<li class=""><span class="bl bl-mfc"><i></i>MFC</span><span class="t">Abordagem familiar e ciclos de vida (genograma, ecomapa, tipos de familia, crises) <span class="pill">aula-base</span> </span><span class="q">sem lista  <span class="nota"></span></span></li>
+<li class=""><span class="bl bl-go"><i></i>GO</span><span class="t">Rotura Prematura de Membranas <span class="pill">revisão</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">43 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/ecff07cb-e14f-44cf-88e0-baae6ad9baea/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#749</span></span></li>
+</ul></div>
+<div class="dia"><div class="quando"><b>qui 22/10</b>109 questões</div><ul>
+<li class=""><span class="bl bl-cm"><i></i>CM</span><span class="t">Osteoporose e Doença óssea de Paget <span class="pill">teoria + lista</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">20 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/1f68e70a-68d6-440a-a9b5-9da774c42eab/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#114</span></span></li>
+<li class=""><span class="bl bl-cir"><i></i>CIR</span><span class="t">Princípios da Anestesiologia <span class="pill">revisão</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">40 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/9ac75240-a512-4168-963a-d74f21181999/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#87</span></span></li>
+<li class=""><span class="bl bl-go"><i></i>GO</span><span class="t">Diabetes na Gestação Sangramento da Segunda Metade Partograma e Distocia <span class="pill">revisão mista</span> </span><span class="q">49 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/bd59db44-7a5a-468b-ac4d-fe2c49d8499e/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#106</span></span></li>
+</ul></div>
+<div class="dia"><div class="quando"><b>sex 23/10</b>96 questões</div><ul>
+<li class=""><span class="bl bl-cm"><i></i>CM</span><span class="t">Anafilaxia no adulto <span class="pill">aula-base</span> </span><span class="q">20 q  <span class="nota"></span></span></li>
+<li class=""><span class="bl bl-cm"><i></i>CM</span><span class="t">Tromboembolismo Pulmonar <span class="pill">leitura</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">sem lista  <span class="nota">#467</span></span></li>
+<li class=""><span class="bl bl-cm"><i></i>CM</span><span class="t">Osteoporose e Doença óssea de Paget <span class="pill">revisão</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">33 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/140d6672-23c5-4c0d-ad3d-ba18908c4304/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#140</span></span></li>
+<li class=""><span class="bl bl-cm"><i></i>CM</span><span class="t">Disfagia, Alterações Estruturais e Distúrbios da Motilidade | Hemorragia Digestiva Alta Varicosa <span class="pill">revisão mista</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">43 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/ef19a551-bd4b-451b-af6c-d56e01736b7e/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#826</span></span></li>
+</ul></div>
+<div class="dia"><div class="quando"><b>sáb 24/10</b>100 questões</div><ul>
+<li class="sim"><span class="bl bl-sim"><i></i>SIM</span><span class="t">UERJ 2026 -- prova INTEIRA (100q), cronometrada, 5 blocos <span class="pill">simulado</span> </span><span class="q">100 q <code>simulados/uerj/uerj_ad_2026_a.pdf</code> <span class="nota"></span></span></li>
+</ul></div>
+<div class="dia"><div class="quando"><b>dom 25/10</b>20 questões</div><ul>
+<li class=""><span class="bl bl-cm"><i></i>CM</span><span class="t">Transtorno do espectro autista (TEA) <span class="pill">aula-base</span> </span><span class="q">20 q  <span class="nota"></span></span></li>
+</ul></div>
+</div>
+<div class="semana"><header><b>Semana 7</b><span class="nota">26/10 a 31/10 · 6 tarefas · 290 questões · SIM 120 · PED 86 · MFC 84</span></header>
+<div class="dia"><div class="quando"><b>seg 26/10</b>120 questões</div><ul>
+<li class="sim"><span class="bl bl-sim"><i></i>SIM</span><span class="t">Caderno UERJ 2017-2020 no banco do EMED (filtro instituicao=UERJ, anos 2017-2020) -- parte 1 <span class="pill">simulado</span> </span><span class="q">60 q  <span class="nota"></span></span></li>
+<li class="sim"><span class="bl bl-sim"><i></i>SIM</span><span class="t">Caderno UERJ 2017-2020 no banco do EMED (filtro instituicao=UERJ, anos 2017-2020) -- parte 2 <span class="pill">simulado</span> </span><span class="q">60 q  <span class="nota"></span></span></li>
+</ul></div>
+<div class="dia"><div class="quando"><b>ter 27/10</b>84 questões</div><ul>
+<li class=""><span class="bl bl-ped"><i></i>PED</span><span class="t">Reanimação neonatal | Crescimento | Tópicos em Pediatria <span class="pill">revisão mista</span> </span><span class="q">43 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/b59a4100-4ae3-465c-9b7b-6ca3310ae144/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#498</span></span></li>
+<li class=""><span class="bl bl-mfc"><i></i>MFC</span><span class="t">Processo Saúde-Doença | Medicina de Família e Comunidade | Saúde do Idoso <span class="pill">revisão mista</span> </span><span class="q">41 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/3a861d4a-7e7d-44f9-8ac0-d1ceb9e65ba7/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#4</span></span></li>
+</ul></div>
+<div class="dia"><div class="quando"><b>qua 28/10</b>86 questões</div><ul>
+<li class=""><span class="bl bl-ped"><i></i>PED</span><span class="t">Doença de Kawasaki | Distúrbios Metabólicos do Neonato | Síndromes Genéticas e Erros Inatos do Metabolismo | Tuberculose <span class="pill">revisão mista</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">43 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/2d5046bc-8338-46fd-9688-cc54a2db57c6/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#754</span></span></li>
+<li class=""><span class="bl bl-mfc"><i></i>MFC</span><span class="t">Pesquisa Epidemiológica e Medidas de Associação | História do SUS | Testes Diagnósticos <span class="pill">revisão mista</span> <span class="est est-zero">sem registro de estudo</span></span><span class="q">43 q <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/641d28a8-90e5-430c-a7db-1423b2224575/?per_page=20" target="_blank" rel="noopener">abrir lista</a> <span class="nota">#846</span></span></li>
+</ul></div>
+</div>
+<p class="nota">O número depois de # é o id da tarefa no banco. Ao terminar uma lista, basta me dizer quantas fez e quantas acertou. Eu registro o volume, marco a tarefa e faço a autópsia dos erros.</p></section>
+<section>
+  <span class="olho">Como a banca pergunta</span>
+  <h2>O estilo muda de bloco para bloco</h2>
+  <div class="rolagem"><table><thead><tr><th>Bloco</th><th class="num">Com caso clínico</th><th class="num">Conteúdo básico</th><th class="num">Detalhe de rodapé de livro</th></tr></thead><tbody>
+<tr><td><span class="bl bl-cm"><i></i>Clínica Médica</span></td><td class="num">98%</td><td class="num">38%</td><td class="num">6%</td></tr>
+<tr><td><span class="bl bl-cir"><i></i>Cirurgia Geral</span></td><td class="num">45%</td><td class="num">46%</td><td class="num">12%</td></tr>
+<tr><td><span class="bl bl-go"><i></i>Ginecologia e Obstetrícia</span></td><td class="num">74%</td><td class="num">45%</td><td class="num">5%</td></tr>
+<tr><td><span class="bl bl-ped"><i></i>Pediatria</span></td><td class="num">81%</td><td class="num">34%</td><td class="num">7%</td></tr>
+<tr><td><span class="bl bl-mfc"><i></i>Medicina de Família</span></td><td class="num">58%</td><td class="num">35%</td><td class="num">3%</td></tr>
+</tbody></table></div>
+  <div class="dupla">
+    <div class="coluna"><h3>O que se repete nas seis edições</h3><ul class="lista">
+      <li><b>Resposta dupla na mesma alternativa.</b> Diagnóstico mais conduta, ou mecanismo mais fármaco. É preciso acertar as duas pontas, então ler a alternativa inteira.</li>
+      <li><b>Cirurgia pergunta seco.</b> Epônimos, classificações e fisiologia perioperatória: Lichtenstein, McVay, Strasberg, Borrmann, citocinas da cicatrização, síndrome de realimentação.</li>
+      <li><b>GO segue o Ministério da Saúde.</b> Rastreamento, conduta em LSIL, aborto legal, lei do planejamento familiar. A resposta é a da norma brasileira.</li>
+      <li><b>Pediatria cobra protocolo nacional.</b> Esquema de tuberculose abaixo de 10 anos, sífilis congênita, profilaxia de HIV vertical, reanimação neonatal.</li>
+    </ul></div>
+    <div class="coluna"><h3>O que é próprio do bloco de MFC</h3><ul class="lista">
+      <li><b>Cobra o nome da ferramenta.</b> Método clínico centrado na pessoa, genograma, ecomapa, modelo transteórico, prevenção quaternária.</li>
+      <li><b>Raciocínio diagnóstico com conta.</b> Probabilidade pré-teste, sensibilidade e especificidade, testes em série e em paralelo. Apareceu em todas as edições.</li>
+      <li><b>Clínica disfarçada de UBS.</b> HIV, tuberculose, dengue, DRC e diabetes entram no bloco com cenário de atenção primária.</li>
+      <li><b>Quase nada de SUS e ética.</b> Legislação, financiamento e ética somam poucas questões nas seis edições.</li>
+    </ul></div>
+  </div>
+  <p class="nota">As observações de estilo vêm dos cinco agentes que classificaram as provas e foram conferidas por mim em amostra. São leitura qualitativa, não contagem.</p>
+</section>
+<section>
+  <span class="olho">Método e limites</span>
+  <h2>De onde vem cada número</h2>
+  <ul class="lista">
+    <li><b>Provas.</b> Texto extraído dos cadernos oficiais da Cepuerj, 520 questões, com o bloco do cabeçalho. Gabarito oficial local para 2022, 2023, 2024 e 2026. O de 2025 é o pós-recurso, com as questões 36, 66 e 96 anuladas. O de 2021 veio de espelho do PDF oficial e não diz se é preliminar ou definitivo. As provas de 2017 a 2020 não estão públicas.</li>
+    <li><b>Classificação.</b> Cinco agentes leram as provas e escolheram, para cada questão, um tema do catálogo do EMED. Conferi 15 questões sorteadas contra o texto e as 15 estavam certas. Contra o mapeamento manual do bloco de MFC feito em 16/09, a concordância foi de 82% por correspondência estrita e de cerca de 92% depois de ler as divergências, que em maioria eram sinônimos.</li>
+    <li><b>Tema único por questão.</b> Uma questão de sífilis congênita conta para um tema só. Com uma a duas questões por tema em seis anos, a ordem fina dentro de um bloco é ruído. O que é sólido é o grupo dos temas que voltam em três edições ou mais.</li>
+    <li><b>Minha situação.</b> Tarefas marcadas no Dashboard até 10/09, mais erros, cards e resumos do banco. O volume de questões por tema do banco está inflado e não foi usado.</li>
+    <li><b>Trilha.</b> Prioridade igual à incidência na UERJ, com 2021 e 2022 valendo menos, multiplicada pela lacuna. Cada bloco recebe entre 19% e 25% das questões de lista. É uma heurística: o simulado de cada semana corrige o peso dos blocos da semana seguinte.</li>
+  </ul>
+</section>
+</div>
+<script>
+(function(){
+  var bs=document.querySelectorAll('.filtros button'), ts=document.querySelectorAll('.tab-bloco');
+  bs.forEach(function(b){b.addEventListener('click',function(){
+    bs.forEach(function(x){x.setAttribute('aria-pressed', x===b ? 'true':'false');});
+    ts.forEach(function(t){t.hidden = t.getAttribute('data-bloco')!==b.getAttribute('data-bloco');});
+    try{localStorage.setItem('raiox-bloco', b.getAttribute('data-bloco'));}catch(e){}
+  });});
+  try{var s=localStorage.getItem('raiox-bloco'); if(s){var b=document.getElementById('f-'+s); if(b) b.click();}}catch(e){}
+})();
+</script>

@@ -65,6 +65,13 @@ P_EXTENSIVO = os.path.join(DIR_CRONO, "grade_extensivo.json")
 P_DASHBOARD = os.path.join(DIR_CRONO, "dashboard_snapshot.json")
 P_GRADE_RF = os.path.join(DIR_CRONO, "grade.json")
 P_CUSTOM = os.path.join(DIR_CRONO, "plano_custom.json")
+#: Links das listas de exercicios por (fonte, semana, tarefa), extraidos das ANOTACOES de
+#: hiperlink dos dois PDFs (s188, F119). Dado versionado; ausente = nenhum link aplicado.
+P_LINKS = os.path.join(DIR_CRONO, "links_listas.json")
+#: A TRILHA da Fase 1 como dado (s188, F120): overrides de semana/ordem/status/nota por
+#: (fonte, ref_semana_fonte, tarefa_fonte), aplicados DEPOIS das regras puras. Ausente =
+#: vale a politica pura de `ordenar_fase1`.
+P_TRILHA = os.path.join(DIR_CRONO, "plano_trilha.json")
 
 #: Carimbo da origem do status inicial. Fixo: o snapshot e dado CONGELADO, e a data
 #: que importa e a da planilha (modificada em 10/09), nao a da leitura. A string mora
@@ -198,6 +205,14 @@ NOTA_CM_EXTENSIVO = "Fase 1: coberto pelo extensivo na Fase 2"
 NOTA_RESERVA = "reserva: aprofundamento por fraqueza"
 NOTA_FINAL_FSRS = "revisão final substituída pelo FSRS"
 NOTA_MFC_PUXADA = "Fase 1: bloco MFC/APS da UERJ, puxado do extensivo"
+NOTA_FORA_DA_TRILHA = "fora da trilha da Fase 1 (reserva)"
+
+#: Semanas do plano que pertencem a Fase 1 (16/09 -> 01/11/2026). A trilha exclusiva so
+#: tem autoridade sobre esta faixa; a Fase 2 (8+) nunca e tocada por ela.
+SEMANAS_FASE1 = range(1, 8)
+#: Status que um override PODE pedir. `feita` fica de fora de proposito: conclusao so
+#: nasce de `--concluir` com sessao vinculada (part-3), nunca de arquivo de plano.
+STATUS_TRILHA = ("pendente", "cortada")
 
 
 def semana_fase1_pri1(semana_rf):
@@ -324,6 +339,85 @@ def ordenar_fase2(linhas):
     return saida
 
 
+# ------------------------------------------------------- trilha como dado (s188)
+
+def indexar_links(links):
+    """`links_listas.json` -> {(fonte, semana, tarefa): url}. So entra quem tem URL."""
+    idx = {}
+    for fonte in ("rf", "extensivo"):
+        for item in (links or {}).get(fonte) or []:
+            if item.get("url"):
+                idx[(fonte, int(item["semana"]), int(item["tarefa"]))] = item["url"]
+    return idx
+
+
+def _validar_override(o):
+    chave = (o.get("fonte"), o.get("ref_semana_fonte"), o.get("tarefa_fonte"))
+    if None in chave:
+        raise ValueError(
+            f"override sem chave completa (fonte, ref_semana_fonte, tarefa_fonte): {o}")
+    semana = o.get("semana_plano")
+    if semana is not None and (not isinstance(semana, int) or semana < 1):
+        raise ValueError(f"override {chave}: semana_plano invalida ({semana!r})")
+    status = o.get("status")
+    if status is not None and status not in STATUS_TRILHA:
+        raise ValueError(f"override {chave}: status {status!r} fora de {STATUS_TRILHA} "
+                         f"(conclusao nasce de --concluir, nunca da trilha)")
+    return chave
+
+
+def aplicar_trilha(decididas, trilha):
+    """Aplica a trilha (dado) sobre as linhas ja decididas pelas regras puras. PURA.
+
+    Cada override casa por `(fonte, ref_semana_fonte, tarefa_fonte)` e regrava
+    `semana_plano`/`ordem` (sempre) e `status`/`nota` (quando presentes). Com
+    `fase1_exclusiva`, toda linha PENDENTE que estaria nas semanas da Fase 1 e NAO esta na
+    trilha sai da fila (semana/ordem NULL + nota) sem mudar de status -- a Fase 1 passa a
+    ter UMA autoridade. Devolve `(linhas, {"aplicados", "sem_linha", "fora"})`.
+
+    Limite declarado: o re-seed so reescreve `CAMPOS_SEMEADOS`; o `status` de linha que JA
+    existe no banco nao muda por aqui -- muda por `--reabrir`/`--cortar`.
+    """
+    stats = {"aplicados": 0, "sem_linha": [], "fora": 0}
+    overrides = (trilha or {}).get("overrides") or []
+    if not overrides:
+        return decididas, stats
+    por_chave = {}
+    for o in overrides:
+        chave = _validar_override(o)
+        if chave in por_chave:
+            raise ValueError(f"override duplicado na trilha: {chave}")
+        por_chave[chave] = o
+    vistos = set()
+    saida = []
+    for d in decididas:
+        chave = (d["fonte"], d["ref_semana_fonte"], d["tarefa_fonte"])
+        o = por_chave.get(chave)
+        if o is not None:
+            vistos.add(chave)
+            novo = {**d, "semana_plano": o.get("semana_plano"), "ordem": o.get("ordem")}
+            if o.get("status") is not None:
+                novo["status"] = o["status"]
+            elif novo.get("status") == "cortada" and o.get("semana_plano") is not None:
+                novo["status"] = "pendente"   # agendar e reabrir: cortada nao tem semana
+            if "nota" in o:
+                novo["nota"] = o["nota"]
+            elif d.get("status") == "cortada" and novo["status"] == "pendente":
+                novo["nota"] = None           # a nota de corte da politica pura caducou
+            stats["aplicados"] += 1
+            saida.append(novo)
+            continue
+        if (trilha.get("fase1_exclusiva") and d.get("semana_plano") in SEMANAS_FASE1
+                and d.get("status", "pendente") == "pendente"):
+            stats["fora"] += 1
+            saida.append({**d, "semana_plano": None, "ordem": None,
+                          "nota": _nota(d.get("nota"), NOTA_FORA_DA_TRILHA)})
+            continue
+        saida.append(d)
+    stats["sem_linha"] = sorted(k for k in por_chave if k not in vistos)
+    return saida, stats
+
+
 # ------------------------------------------------------------------ q_previstas
 
 def q_prevista(n_questoes, tipo_norm):
@@ -347,9 +441,20 @@ def _ler(caminho):
         return json.load(fh)
 
 
-def montar_linhas(extensivo=None, dashboard=None, grade_rf=None, custom=None):
+def montar_linhas(extensivo=None, dashboard=None, grade_rf=None, custom=None,
+                  links=None, trilha=None):
     """As tres fontes -> linhas prontas para `db.plano_upsert_tarefas`, mais o
-    relatorio de COUNT-ASSERT. Nada de I/O de banco aqui: puro sobre os JSONs."""
+    relatorio de COUNT-ASSERT. Nada de I/O de banco aqui: puro sobre os JSONs.
+
+    `links` e `trilha` (s188) sao camadas de DADO por cima das regras puras. So sao lidas
+    do disco no caminho de PRODUCAO (nenhuma fonte injetada); com fonte injetada, omitidas
+    valem vazio -- o dado real nunca vaza para dentro de um teste sintetico."""
+    producao = all(f is None for f in (extensivo, dashboard, grade_rf, custom))
+    if links is None:
+        links = _ler(P_LINKS) if producao and os.path.exists(P_LINKS) else {}
+    if trilha is None:
+        trilha = _ler(P_TRILHA) if producao and os.path.exists(P_TRILHA) else {}
+    idx_links = indexar_links(links)
     extensivo = extensivo if extensivo is not None else _ler(P_EXTENSIVO)
     dashboard = dashboard if dashboard is not None else _ler(P_DASHBOARD)
     grade_rf = grade_rf if grade_rf is not None else _ler(P_GRADE_RF)
@@ -369,7 +474,9 @@ def montar_linhas(extensivo=None, dashboard=None, grade_rf=None, custom=None):
                 "fonte": "extensivo", "ref_semana_fonte": semana["semana"],
                 "tarefa_fonte": t["tarefa"], "area": area, "tema": t["assunto"],
                 "tipo": t["tipo"], "tipo_norm": t["tipo_norm"],
-                "url_lista": t.get("url_lista"), "q_previstas": q,
+                "url_lista": (idx_links.get(("extensivo", semana["semana"], t["tarefa"]))
+                              or t.get("url_lista")),
+                "q_previstas": q,
                 "feita": feita, "sem_match": feita is None,
                 "_marcas": _nota("q_estimada" if estimada else None,
                                  None if area else
@@ -409,7 +516,8 @@ def montar_linhas(extensivo=None, dashboard=None, grade_rf=None, custom=None):
             rf_linhas.append({
                 "fonte": "rf", "ref_semana_fonte": semana["semana"],
                 "tarefa_fonte": t["tarefa"], "area": t["area_norm"], "tema": t["tema"],
-                "tipo": t["tipo"], "tipo_norm": t["tipo_norm"], "url_lista": None,
+                "tipo": t["tipo"], "tipo_norm": t["tipo_norm"],
+                "url_lista": idx_links.get(("rf", semana["semana"], t["tarefa"])),
                 "q_previstas": q, "_marcas": marca,
             })
 
@@ -425,6 +533,13 @@ def montar_linhas(extensivo=None, dashboard=None, grade_rf=None, custom=None):
             "q_previstas": float(t.get("q_previstas") or 0.0), "status": "pendente",
             "nota": t.get("nota"), "_marcas": None, "origem_conclusao": None,
         })
+
+    decididas, st_trilha = aplicar_trilha(decididas, trilha)
+    links_aplicados = sum(
+        1 for d in decididas
+        if d["fonte"] in ("rf", "extensivo") and d.get("url_lista")
+        and idx_links.get((d["fonte"], d["ref_semana_fonte"], d["tarefa_fonte"]))
+        == d.get("url_lista"))
 
     linhas = []
     for d in decididas:
@@ -450,6 +565,10 @@ def montar_linhas(extensivo=None, dashboard=None, grade_rf=None, custom=None):
         "rf_total_s17_s28": rf_total,
         "rf_pendentes": len(rf_linhas),
         "custom": len(custom["tarefas"]),
+        "links_aplicados": links_aplicados,
+        "trilha_aplicados": st_trilha["aplicados"],
+        "trilha_sem_linha": st_trilha["sem_linha"],
+        "trilha_fora": st_trilha["fora"],
     }
     return linhas, relatorio
 
@@ -486,12 +605,22 @@ def semear(apply=False, expect=None, out=print, **fontes):
     out(f"  sem area canonica (F89, area=NULL + nota): {rel['extensivo_sem_area']}")
     out(f"  puxadas do extensivo para a Fase 1 (bloco MFC/APS): "
         f"{rel['extensivo_puxadas_fase1']}")
+    out(f"  links de lista aplicados (links_listas.json): {rel['links_aplicados']}")
+    out(f"  trilha (plano_trilha.json): {rel['trilha_aplicados']} override(s) aplicado(s), "
+        f"{rel['trilha_fora']} linha(s) tiradas da Fase 1 por nao estarem nela")
+    if rel["trilha_sem_linha"]:
+        out(f"  ATENCAO: trilha com {len(rel['trilha_sem_linha'])} override(s) sem linha "
+            f"correspondente: {rel['trilha_sem_linha'][:8]}")
     out(f"  no banco: {medida['novas']} nova(s), {medida['existentes']} ja existente(s)")
 
     if not apply:
         out(f"  DRY-RUN: nada gravado. Para aplicar: --semear --apply --expect "
             f"{medida['novas']}")
         return 0, linhas, rel
+    if rel["trilha_sem_linha"]:
+        out("  RECUSADO: a trilha tem override sem linha correspondente -- o plano pedido "
+            "nao e o que seria gravado. Nada gravado.")
+        return 2, linhas, rel
     if expect is None or int(expect) != medida["novas"]:
         out(f"  RECUSADO: --expect {expect} != {medida['novas']} nova(s) medida(s). "
             f"Nada gravado.")

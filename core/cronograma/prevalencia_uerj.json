@@ -1,0 +1,3149 @@
+{
+ "_schema": "prevalencia_uerj v1 -- incidencia por (area, tema) nas provas UERJ Acesso Direto 2021-2026 (520q). `n` = questoes em 6 edicoes; `peso` = soma com 2021-2022 valendo 0,7 (formato 60q, mais antigo); `prevalencia` alta>=4, media 2-3, baixa 1. Analogo UERJ do prevalencia_enamed.json. Fonte por questao: simulados/uerj/uerj_mapa_questoes_2021-2026.json.",
+ "atualizado": "2026-09-18",
+ "n_questoes": 520,
+ "edicoes": [
+  2021,
+  2022,
+  2023,
+  2024,
+  2025,
+  2026
+ ],
+ "n_temas": 204,
+ "temas": [
+  {
+   "area": "Infecto",
+   "tema": "Tuberculose",
+   "n": 13,
+   "peso": 12.4,
+   "edicoes": [
+    2022,
+    2023,
+    2024,
+    2025,
+    2026
+   ],
+   "blocos": {
+    "CM": 5,
+    "PED": 4,
+    "CIR": 2,
+    "MFC": 2
+   },
+   "rodape": 3,
+   "prevalencia": "alta"
+  },
+  {
+   "area": "Preventiva",
+   "tema": "Raciocinio diagnostico quantitativo (S/E, VPP/VPN, RV, probabilidade pre-teste)",
+   "n": 9,
+   "peso": 8.4,
+   "edicoes": [
+    2021,
+    2022,
+    2023,
+    2024,
+    2025,
+    2026
+   ],
+   "blocos": {
+    "MFC": 9
+   },
+   "rodape": 0,
+   "prevalencia": "alta"
+  },
+  {
+   "area": "Cirurgia",
+   "tema": "Hérnias da Parede Abdominal",
+   "n": 7,
+   "peso": 6.7,
+   "edicoes": [
+    2021,
+    2023,
+    2024,
+    2026
+   ],
+   "blocos": {
+    "CIR": 7
+   },
+   "rodape": 0,
+   "prevalencia": "alta"
+  },
+  {
+   "area": "Pneumo",
+   "tema": "Asma",
+   "n": 7,
+   "peso": 6.7,
+   "edicoes": [
+    2021,
+    2023,
+    2024,
+    2025,
+    2026
+   ],
+   "blocos": {
+    "CM": 3,
+    "GO": 1,
+    "PED": 3
+   },
+   "rodape": 0,
+   "prevalencia": "alta"
+  },
+  {
+   "area": "Preventiva",
+   "tema": "Avaliacao Multidimensional do Idoso",
+   "n": 7,
+   "peso": 6.7,
+   "edicoes": [
+    2021,
+    2023,
+    2024,
+    2025,
+    2026
+   ],
+   "blocos": {
+    "MFC": 7
+   },
+   "rodape": 0,
+   "prevalencia": "alta"
+  },
+  {
+   "area": "Preventiva",
+   "tema": "Metodo Clinico Centrado na Pessoa e decisao compartilhada",
+   "n": 7,
+   "peso": 6.7,
+   "edicoes": [
+    2022,
+    2023,
+    2024,
+    2026
+   ],
+   "blocos": {
+    "MFC": 7
+   },
+   "rodape": 0,
+   "prevalencia": "alta"
+  },
+  {
+   "area": "Ginecologia",
+   "tema": "Rastreamento do Câncer de Colo Uterino",
+   "n": 7,
+   "peso": 6.4,
+   "edicoes": [
+    2021,
+    2022,
+    2023,
+    2024,
+    2025,
+    2026
+   ],
+   "blocos": {
+    "GO": 6,
+    "MFC": 1
+   },
+   "rodape": 0,
+   "prevalencia": "alta"
+  },
+  {
+   "area": "Infecto",
+   "tema": "Meningites e Meningoencefalites",
+   "n": 7,
+   "peso": 6.4,
+   "edicoes": [
+    2021,
+    2022,
+    2023,
+    2024,
+    2026
+   ],
+   "blocos": {
+    "CM": 4,
+    "PED": 3
+   },
+   "rodape": 0,
+   "prevalencia": "alta"
+  },
+  {
+   "area": "Obstetrícia",
+   "tema": "Diabetes na Gestação",
+   "n": 7,
+   "peso": 6.4,
+   "edicoes": [
+    2021,
+    2022,
+    2023,
+    2024,
+    2025,
+    2026
+   ],
+   "blocos": {
+    "GO": 6,
+    "MFC": 1
+   },
+   "rodape": 0,
+   "prevalencia": "alta"
+  },
+  {
+   "area": "Preventiva",
+   "tema": "Rastreamento (criterios e programas)",
+   "n": 7,
+   "peso": 6.4,
+   "edicoes": [
+    2021,
+    2022,
+    2024,
+    2025,
+    2026
+   ],
+   "blocos": {
+    "MFC": 7
+   },
+   "rodape": 0,
+   "prevalencia": "alta"
+  },
+  {
+   "area": "Cirurgia",
+   "tema": "Temas Gerais em Cirurgia",
+   "n": 7,
+   "peso": 6.1,
+   "edicoes": [
+    2021,
+    2022,
+    2023,
+    2024,
+    2025
+   ],
+   "blocos": {
+    "CIR": 7
+   },
+   "rodape": 1,
+   "prevalencia": "alta"
+  },
+  {
+   "area": "Cirurgia",
+   "tema": "Resposta Endócrino-Metabólica-Inflamatória ao Trauma Cicatrização de Feridas",
+   "n": 6,
+   "peso": 6.0,
+   "edicoes": [
+    2023,
+    2024,
+    2026
+   ],
+   "blocos": {
+    "CIR": 6
+   },
+   "rodape": 1,
+   "prevalencia": "alta"
+  },
+  {
+   "area": "Cirurgia",
+   "tema": "Trauma - Avaliação Inicial, Vias Aéreas e Trauma Torácico",
+   "n": 6,
+   "peso": 5.7,
+   "edicoes": [
+    2022,
+    2023,
+    2024,
+    2025
+   ],
+   "blocos": {
+    "CIR": 6
+   },
+   "rodape": 0,
+   "prevalencia": "alta"
+  },
+  {
+   "area": "Gastro",
+   "tema": "Doença do Refluxo Gastroesofágico, Esofagites e Corpo Estranho",
+   "n": 6,
+   "peso": 5.7,
+   "edicoes": [
+    2021,
+    2024,
+    2025,
+    2026
+   ],
+   "blocos": {
+    "CIR": 5,
+    "CM": 1
+   },
+   "rodape": 0,
+   "prevalencia": "alta"
+  },
+  {
+   "area": "Obstetrícia",
+   "tema": "Distúrbios Hipertensivos da Gestação",
+   "n": 6,
+   "peso": 5.7,
+   "edicoes": [
+    2022,
+    2023,
+    2024,
+    2025,
+    2026
+   ],
+   "blocos": {
+    "GO": 6
+   },
+   "rodape": 0,
+   "prevalencia": "alta"
+  },
+  {
+   "area": "Preventiva",
+   "tema": "Prevencao Quaternaria e sobrediagnostico",
+   "n": 6,
+   "peso": 5.7,
+   "edicoes": [
+    2022,
+    2023,
+    2024,
+    2025
+   ],
+   "blocos": {
+    "MFC": 6
+   },
+   "rodape": 0,
+   "prevalencia": "alta"
+  },
+  {
+   "area": "Nefrologia",
+   "tema": "Doenças Glomerulares",
+   "n": 6,
+   "peso": 5.4,
+   "edicoes": [
+    2021,
+    2024,
+    2025,
+    2026
+   ],
+   "blocos": {
+    "CM": 3,
+    "PED": 3
+   },
+   "rodape": 0,
+   "prevalencia": "alta"
+  },
+  {
+   "area": "Preventiva",
+   "tema": "Polifarmacia, desprescricao e RAM no idoso",
+   "n": 6,
+   "peso": 5.4,
+   "edicoes": [
+    2021,
+    2022,
+    2024,
+    2025,
+    2026
+   ],
+   "blocos": {
+    "MFC": 6
+   },
+   "rodape": 1,
+   "prevalencia": "alta"
+  },
+  {
+   "area": "Infecto",
+   "tema": "Arboviroses",
+   "n": 5,
+   "peso": 5.0,
+   "edicoes": [
+    2024,
+    2025,
+    2026
+   ],
+   "blocos": {
+    "MFC": 4,
+    "CM": 1
+   },
+   "rodape": 0,
+   "prevalencia": "alta"
+  },
+  {
+   "area": "Pediatria",
+   "tema": "Aleitamento Materno",
+   "n": 5,
+   "peso": 5.0,
+   "edicoes": [
+    2023,
+    2024,
+    2026
+   ],
+   "blocos": {
+    "PED": 3,
+    "GO": 2
+   },
+   "rodape": 0,
+   "prevalencia": "alta"
+  },
+  {
+   "area": "Pediatria",
+   "tema": "Tópicos em Pediatria",
+   "n": 5,
+   "peso": 5.0,
+   "edicoes": [
+    2023,
+    2024,
+    2025,
+    2026
+   ],
+   "blocos": {
+    "PED": 5
+   },
+   "rodape": 1,
+   "prevalencia": "alta"
+  },
+  {
+   "area": "Cirurgia",
+   "tema": "Vesícula e Vias Biliares",
+   "n": 5,
+   "peso": 4.7,
+   "edicoes": [
+    2021,
+    2023,
+    2026
+   ],
+   "blocos": {
+    "CIR": 3,
+    "CM": 2
+   },
+   "rodape": 2,
+   "prevalencia": "alta"
+  },
+  {
+   "area": "Preventiva",
+   "tema": "Cuidados paliativos e dor cronica na APS",
+   "n": 5,
+   "peso": 4.7,
+   "edicoes": [
+    2021,
+    2025,
+    2026
+   ],
+   "blocos": {
+    "MFC": 5
+   },
+   "rodape": 0,
+   "prevalencia": "alta"
+  },
+  {
+   "area": "Cirurgia",
+   "tema": "Abdome Agudo Inflamatório - Colecistite e Colangite Aguda",
+   "n": 5,
+   "peso": 4.4,
+   "edicoes": [
+    2022,
+    2026
+   ],
+   "blocos": {
+    "CM": 2,
+    "CIR": 3
+   },
+   "rodape": 0,
+   "prevalencia": "alta"
+  },
+  {
+   "area": "Cirurgia",
+   "tema": "Complicações Pós-Operatórias",
+   "n": 5,
+   "peso": 4.4,
+   "edicoes": [
+    2022,
+    2024,
+    2025,
+    2026
+   ],
+   "blocos": {
+    "CIR": 5
+   },
+   "rodape": 0,
+   "prevalencia": "alta"
+  },
+  {
+   "area": "Ginecologia",
+   "tema": "Endometriose",
+   "n": 5,
+   "peso": 4.4,
+   "edicoes": [
+    2021,
+    2022,
+    2023,
+    2024,
+    2025
+   ],
+   "blocos": {
+    "GO": 5
+   },
+   "rodape": 0,
+   "prevalencia": "alta"
+  },
+  {
+   "area": "Preventiva",
+   "tema": "Condicoes cronicas na APS (HAS, DM, DPOC, asma: manejo ambulatorial)",
+   "n": 5,
+   "peso": 4.1,
+   "edicoes": [
+    2021,
+    2022,
+    2023,
+    2025
+   ],
+   "blocos": {
+    "MFC": 5
+   },
+   "rodape": 0,
+   "prevalencia": "alta"
+  },
+  {
+   "area": "Cardiologia",
+   "tema": "Síndromes Aórticas Agudas (Resumo) Cardiomiopatias (Resumo) Pericardiopatias",
+   "n": 4,
+   "peso": 4.0,
+   "edicoes": [
+    2024,
+    2025,
+    2026
+   ],
+   "blocos": {
+    "CM": 4
+   },
+   "rodape": 1,
+   "prevalencia": "alta"
+  },
+  {
+   "area": "Gastro",
+   "tema": "Pancreatite Aguda e Crônica",
+   "n": 4,
+   "peso": 4.0,
+   "edicoes": [
+    2023,
+    2024,
+    2025,
+    2026
+   ],
+   "blocos": {
+    "CIR": 3,
+    "CM": 1
+   },
+   "rodape": 1,
+   "prevalencia": "alta"
+  },
+  {
+   "area": "Ginecologia",
+   "tema": "Anatomia e Embriologia do Trato Genital Feminino Doenças de Vulva e Vagina",
+   "n": 4,
+   "peso": 4.0,
+   "edicoes": [
+    2024,
+    2025,
+    2026
+   ],
+   "blocos": {
+    "GO": 4
+   },
+   "rodape": 2,
+   "prevalencia": "alta"
+  },
+  {
+   "area": "Nefrologia",
+   "tema": "Disnatremias",
+   "n": 4,
+   "peso": 4.0,
+   "edicoes": [
+    2023,
+    2025,
+    2026
+   ],
+   "blocos": {
+    "CM": 1,
+    "CIR": 3
+   },
+   "rodape": 0,
+   "prevalencia": "alta"
+  },
+  {
+   "area": "Obstetrícia",
+   "tema": "Sangramento da Primeira Metade",
+   "n": 4,
+   "peso": 4.0,
+   "edicoes": [
+    2023,
+    2024,
+    2025,
+    2026
+   ],
+   "blocos": {
+    "GO": 4
+   },
+   "rodape": 0,
+   "prevalencia": "alta"
+  },
+  {
+   "area": "Gastro",
+   "tema": "Doença Inflamatória Intestinal",
+   "n": 4,
+   "peso": 3.7,
+   "edicoes": [
+    2021,
+    2023,
+    2026
+   ],
+   "blocos": {
+    "CM": 1,
+    "PED": 2,
+    "CIR": 1
+   },
+   "rodape": 1,
+   "prevalencia": "alta"
+  },
+  {
+   "area": "Hemato",
+   "tema": "Anemias Hemolíticas",
+   "n": 4,
+   "peso": 3.7,
+   "edicoes": [
+    2022,
+    2024,
+    2026
+   ],
+   "blocos": {
+    "PED": 3,
+    "CM": 1
+   },
+   "rodape": 0,
+   "prevalencia": "alta"
+  },
+  {
+   "area": "Neurologia",
+   "tema": "Doenças Neuromusculares",
+   "n": 4,
+   "peso": 3.7,
+   "edicoes": [
+    2021,
+    2023,
+    2025,
+    2026
+   ],
+   "blocos": {
+    "CM": 4
+   },
+   "rodape": 1,
+   "prevalencia": "alta"
+  },
+  {
+   "area": "Obstetrícia",
+   "tema": "Gestação Múltipla",
+   "n": 4,
+   "peso": 3.7,
+   "edicoes": [
+    2021,
+    2023,
+    2025,
+    2026
+   ],
+   "blocos": {
+    "GO": 4
+   },
+   "rodape": 0,
+   "prevalencia": "alta"
+  },
+  {
+   "area": "Obstetrícia",
+   "tema": "Sangramento da Segunda Metade",
+   "n": 4,
+   "peso": 3.7,
+   "edicoes": [
+    2022,
+    2024,
+    2025,
+    2026
+   ],
+   "blocos": {
+    "GO": 4
+   },
+   "rodape": 0,
+   "prevalencia": "alta"
+  },
+  {
+   "area": "Otorrino",
+   "tema": "Manejo dos Nódulos de Tireoide, Câncer de Tireoide e Tireoidectomia",
+   "n": 4,
+   "peso": 3.7,
+   "edicoes": [
+    2021,
+    2024,
+    2025
+   ],
+   "blocos": {
+    "CIR": 4
+   },
+   "rodape": 0,
+   "prevalencia": "alta"
+  },
+  {
+   "area": "Pediatria",
+   "tema": "Doença Celíaca em Pediatria Febre Reumática",
+   "n": 4,
+   "peso": 3.7,
+   "edicoes": [
+    2021,
+    2024,
+    2026
+   ],
+   "blocos": {
+    "PED": 4
+   },
+   "rodape": 1,
+   "prevalencia": "alta"
+  },
+  {
+   "area": "Pediatria",
+   "tema": "Doença de Kawasaki",
+   "n": 4,
+   "peso": 3.7,
+   "edicoes": [
+    2021,
+    2025,
+    2026
+   ],
+   "blocos": {
+    "PED": 4
+   },
+   "rodape": 0,
+   "prevalencia": "alta"
+  },
+  {
+   "area": "Pediatria",
+   "tema": "Infecção de Trato Urinário em Pediatria",
+   "n": 4,
+   "peso": 3.7,
+   "edicoes": [
+    2022,
+    2023,
+    2025
+   ],
+   "blocos": {
+    "PED": 4
+   },
+   "rodape": 0,
+   "prevalencia": "alta"
+  },
+  {
+   "area": "Pediatria",
+   "tema": "Infecções Congênitas",
+   "n": 4,
+   "peso": 3.7,
+   "edicoes": [
+    2022,
+    2023,
+    2024,
+    2025
+   ],
+   "blocos": {
+    "PED": 4
+   },
+   "rodape": 0,
+   "prevalencia": "alta"
+  },
+  {
+   "area": "Preventiva",
+   "tema": "Pesquisa Epidemiológica e Medidas de Associação",
+   "n": 4,
+   "peso": 3.7,
+   "edicoes": [
+    2022,
+    2023,
+    2024
+   ],
+   "blocos": {
+    "MFC": 4
+   },
+   "rodape": 0,
+   "prevalencia": "alta"
+  },
+  {
+   "area": "Cirurgia",
+   "tema": "Trauma - Choque",
+   "n": 4,
+   "peso": 3.4,
+   "edicoes": [
+    2021,
+    2022,
+    2025,
+    2026
+   ],
+   "blocos": {
+    "CIR": 4
+   },
+   "rodape": 0,
+   "prevalencia": "alta"
+  },
+  {
+   "area": "Hemato",
+   "tema": "Hemostasia I",
+   "n": 4,
+   "peso": 3.4,
+   "edicoes": [
+    2021,
+    2025,
+    2026
+   ],
+   "blocos": {
+    "CM": 3,
+    "CIR": 1
+   },
+   "rodape": 0,
+   "prevalencia": "alta"
+  },
+  {
+   "area": "Obstetrícia",
+   "tema": "Assistência ao Parto",
+   "n": 4,
+   "peso": 3.4,
+   "edicoes": [
+    2021,
+    2022,
+    2024,
+    2026
+   ],
+   "blocos": {
+    "GO": 4
+   },
+   "rodape": 0,
+   "prevalencia": "alta"
+  },
+  {
+   "area": "Gastro",
+   "tema": "Neoplasias de Estômago e Esôfago",
+   "n": 4,
+   "peso": 3.1,
+   "edicoes": [
+    2021,
+    2024
+   ],
+   "blocos": {
+    "CIR": 4
+   },
+   "rodape": 0,
+   "prevalencia": "alta"
+  },
+  {
+   "area": "Cirurgia",
+   "tema": "Abdome Agudo Inflamatório - Apendicite Aguda",
+   "n": 3,
+   "peso": 3.0,
+   "edicoes": [
+    2025
+   ],
+   "blocos": {
+    "CIR": 3
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Cirurgia",
+   "tema": "Abdome Agudo Obstrutivo",
+   "n": 3,
+   "peso": 3.0,
+   "edicoes": [
+    2024,
+    2025,
+    2026
+   ],
+   "blocos": {
+    "CIR": 3
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Cirurgia",
+   "tema": "Nutrição em Cirurgia",
+   "n": 3,
+   "peso": 3.0,
+   "edicoes": [
+    2024,
+    2026
+   ],
+   "blocos": {
+    "CIR": 3
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Cirurgia",
+   "tema": "Urologia",
+   "n": 3,
+   "peso": 3.0,
+   "edicoes": [
+    2023,
+    2026
+   ],
+   "blocos": {
+    "CM": 2,
+    "CIR": 1
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Endocrino",
+   "tema": "Adrenal - Hipocortisolismo",
+   "n": 3,
+   "peso": 3.0,
+   "edicoes": [
+    2024,
+    2026
+   ],
+   "blocos": {
+    "CIR": 1,
+    "CM": 2
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Gastro",
+   "tema": "Hemorragia Digestiva Alta Varicosa",
+   "n": 3,
+   "peso": 3.0,
+   "edicoes": [
+    2023,
+    2024,
+    2025
+   ],
+   "blocos": {
+    "CIR": 3
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Ginecologia",
+   "tema": "Incontinência Urinária",
+   "n": 3,
+   "peso": 3.0,
+   "edicoes": [
+    2023,
+    2025
+   ],
+   "blocos": {
+    "GO": 2,
+    "MFC": 1
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Ginecologia",
+   "tema": "Infertilidade Conjugal",
+   "n": 3,
+   "peso": 3.0,
+   "edicoes": [
+    2023,
+    2024,
+    2026
+   ],
+   "blocos": {
+    "GO": 3
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Ginecologia",
+   "tema": "Úlceras Genitais",
+   "n": 3,
+   "peso": 3.0,
+   "edicoes": [
+    2023,
+    2024,
+    2025
+   ],
+   "blocos": {
+    "GO": 3
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Hemato",
+   "tema": "Anemias Macrocíticas Leucemias Crônicas, Linfomas, Mielodisplasias e Mieloproliferações",
+   "n": 3,
+   "peso": 3.0,
+   "edicoes": [
+    2023,
+    2026
+   ],
+   "blocos": {
+    "CM": 2,
+    "PED": 1
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Infecto",
+   "tema": "Endocardite Bacteriana - Endocardite Infecciosa",
+   "n": 3,
+   "peso": 3.0,
+   "edicoes": [
+    2023,
+    2024
+   ],
+   "blocos": {
+    "CM": 2,
+    "GO": 1
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Infecto",
+   "tema": "HIV",
+   "n": 3,
+   "peso": 3.0,
+   "edicoes": [
+    2023,
+    2024
+   ],
+   "blocos": {
+    "GO": 1,
+    "PED": 1,
+    "MFC": 1
+   },
+   "rodape": 1,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Nefrologia",
+   "tema": "Doença Renal Crônica I e II",
+   "n": 3,
+   "peso": 3.0,
+   "edicoes": [
+    2023,
+    2026
+   ],
+   "blocos": {
+    "MFC": 1,
+    "CM": 1,
+    "CIR": 1
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Pediatria",
+   "tema": "Diarreia",
+   "n": 3,
+   "peso": 3.0,
+   "edicoes": [
+    2023,
+    2024,
+    2025
+   ],
+   "blocos": {
+    "PED": 3
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Pediatria",
+   "tema": "Doenças Exantemáticas",
+   "n": 3,
+   "peso": 3.0,
+   "edicoes": [
+    2024,
+    2026
+   ],
+   "blocos": {
+    "PED": 3
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Pediatria",
+   "tema": "Reanimação Neonatal",
+   "n": 3,
+   "peso": 3.0,
+   "edicoes": [
+    2023,
+    2025,
+    2026
+   ],
+   "blocos": {
+    "PED": 3
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Pediatria",
+   "tema": "Síndromes Genéticas e Erros Inatos do Metabolismo",
+   "n": 3,
+   "peso": 3.0,
+   "edicoes": [
+    2023,
+    2025,
+    2026
+   ],
+   "blocos": {
+    "PED": 3
+   },
+   "rodape": 1,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Preventiva",
+   "tema": "Atenção Primária à Saúde no Brasil",
+   "n": 3,
+   "peso": 3.0,
+   "edicoes": [
+    2023,
+    2024,
+    2026
+   ],
+   "blocos": {
+    "MFC": 3
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Cardiologia",
+   "tema": "Valvopatias",
+   "n": 3,
+   "peso": 2.7,
+   "edicoes": [
+    2022,
+    2023,
+    2024
+   ],
+   "blocos": {
+    "CM": 3
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Cirurgia",
+   "tema": "Cirurgia Infantil I",
+   "n": 3,
+   "peso": 2.7,
+   "edicoes": [
+    2022,
+    2023,
+    2026
+   ],
+   "blocos": {
+    "PED": 2,
+    "CIR": 1
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Cirurgia",
+   "tema": "Princípios da Anestesiologia",
+   "n": 3,
+   "peso": 2.7,
+   "edicoes": [
+    2022,
+    2023,
+    2026
+   ],
+   "blocos": {
+    "CIR": 3
+   },
+   "rodape": 1,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Cirurgia",
+   "tema": "Proctologia",
+   "n": 3,
+   "peso": 2.7,
+   "edicoes": [
+    2022,
+    2025
+   ],
+   "blocos": {
+    "CIR": 2,
+    "MFC": 1
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Dermato",
+   "tema": "Dermatoses Infecciosas Dermatoses Eczematosas",
+   "n": 3,
+   "peso": 2.7,
+   "edicoes": [
+    2021,
+    2023,
+    2026
+   ],
+   "blocos": {
+    "PED": 3
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Endocrino",
+   "tema": "Diabetes Mellitus Tipo 2",
+   "n": 3,
+   "peso": 2.7,
+   "edicoes": [
+    2022,
+    2023,
+    2024
+   ],
+   "blocos": {
+    "CM": 2,
+    "MFC": 1
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Endocrino",
+   "tema": "Obesidade e Síndrome Metabólica",
+   "n": 3,
+   "peso": 2.7,
+   "edicoes": [
+    2021,
+    2023,
+    2024
+   ],
+   "blocos": {
+    "CIR": 2,
+    "MFC": 1
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Ginecologia",
+   "tema": "Assistência à Vítima de Violência Sexual",
+   "n": 3,
+   "peso": 2.7,
+   "edicoes": [
+    2021,
+    2023,
+    2026
+   ],
+   "blocos": {
+    "GO": 3
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Ginecologia",
+   "tema": "Climatério e Terapia Hormonal",
+   "n": 3,
+   "peso": 2.7,
+   "edicoes": [
+    2022,
+    2024,
+    2025
+   ],
+   "blocos": {
+    "GO": 1,
+    "MFC": 2
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Ginecologia",
+   "tema": "Câncer do Corpo do Útero",
+   "n": 3,
+   "peso": 2.7,
+   "edicoes": [
+    2022,
+    2023,
+    2026
+   ],
+   "blocos": {
+    "GO": 3
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Ginecologia",
+   "tema": "Miomatose",
+   "n": 3,
+   "peso": 2.7,
+   "edicoes": [
+    2021,
+    2025,
+    2026
+   ],
+   "blocos": {
+    "GO": 3
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Ginecologia",
+   "tema": "Planejamento Familiar",
+   "n": 3,
+   "peso": 2.7,
+   "edicoes": [
+    2022,
+    2024,
+    2025
+   ],
+   "blocos": {
+    "GO": 3
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Infecto",
+   "tema": "Parasitoses",
+   "n": 3,
+   "peso": 2.7,
+   "edicoes": [
+    2021,
+    2025
+   ],
+   "blocos": {
+    "PED": 1,
+    "CM": 2
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Obstetrícia",
+   "tema": "Pré-Natal",
+   "n": 3,
+   "peso": 2.7,
+   "edicoes": [
+    2022,
+    2024,
+    2025
+   ],
+   "blocos": {
+    "GO": 3
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Obstetrícia",
+   "tema": "Rotura Prematura de Membranas",
+   "n": 3,
+   "peso": 2.7,
+   "edicoes": [
+    2021,
+    2023,
+    2026
+   ],
+   "blocos": {
+    "GO": 3
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Pediatria",
+   "tema": "Febre Sem Sinais Localizatórios Hipertensão Arterial na Criança e Adolescente Coqueluche",
+   "n": 3,
+   "peso": 2.7,
+   "edicoes": [
+    2021,
+    2025,
+    2026
+   ],
+   "blocos": {
+    "PED": 2,
+    "CM": 1
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Psiquiatria",
+   "tema": "Psiquiatria Infantil",
+   "n": 3,
+   "peso": 2.7,
+   "edicoes": [
+    2022,
+    2024,
+    2026
+   ],
+   "blocos": {
+    "PED": 3
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Ginecologia",
+   "tema": "Câncer de Mama",
+   "n": 3,
+   "peso": 2.4,
+   "edicoes": [
+    2021,
+    2022,
+    2026
+   ],
+   "blocos": {
+    "GO": 3
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Ortopedia",
+   "tema": "Oncologia Ortopédica",
+   "n": 3,
+   "peso": 2.4,
+   "edicoes": [
+    2021,
+    2022,
+    2025
+   ],
+   "blocos": {
+    "CM": 2,
+    "PED": 1
+   },
+   "rodape": 1,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Pediatria",
+   "tema": "Cuidados Neonatais",
+   "n": 3,
+   "peso": 2.4,
+   "edicoes": [
+    2021,
+    2022,
+    2024
+   ],
+   "blocos": {
+    "PED": 3
+   },
+   "rodape": 1,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Endocrino",
+   "tema": "Cirurgia Bariátrica e Metabólica (Tratamento Cir. Obesidade)",
+   "n": 2,
+   "peso": 2.0,
+   "edicoes": [
+    2023,
+    2025
+   ],
+   "blocos": {
+    "CIR": 2
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Endocrino",
+   "tema": "Osteoporose e Doença Óssea de Paget",
+   "n": 2,
+   "peso": 2.0,
+   "edicoes": [
+    2023,
+    2025
+   ],
+   "blocos": {
+    "CM": 2
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Gastro",
+   "tema": "Disfagia, Alterações Estruturais e Dist. Motilidade",
+   "n": 2,
+   "peso": 2.0,
+   "edicoes": [
+    2023,
+    2025
+   ],
+   "blocos": {
+    "CIR": 1,
+    "CM": 1
+   },
+   "rodape": 1,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Ginecologia",
+   "tema": "Câncer de Colo Uterino",
+   "n": 2,
+   "peso": 2.0,
+   "edicoes": [
+    2023,
+    2026
+   ],
+   "blocos": {
+    "GO": 2
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Ginecologia",
+   "tema": "Rastreamento do Câncer de Mama",
+   "n": 2,
+   "peso": 2.0,
+   "edicoes": [
+    2023,
+    2024
+   ],
+   "blocos": {
+    "GO": 2
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Ginecologia",
+   "tema": "Tumores Anexiais e Câncer de Ovário",
+   "n": 2,
+   "peso": 2.0,
+   "edicoes": [
+    2024,
+    2025
+   ],
+   "blocos": {
+    "CIR": 1,
+    "GO": 1
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Ginecologia",
+   "tema": "Vulvovaginites",
+   "n": 2,
+   "peso": 2.0,
+   "edicoes": [
+    2025,
+    2026
+   ],
+   "blocos": {
+    "GO": 2
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Neurologia",
+   "tema": "Demências",
+   "n": 2,
+   "peso": 2.0,
+   "edicoes": [
+    2024,
+    2026
+   ],
+   "blocos": {
+    "MFC": 1,
+    "CM": 1
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Obstetrícia",
+   "tema": "Bacia Obstétrica, Pelvimetria e Estática Fetal",
+   "n": 2,
+   "peso": 2.0,
+   "edicoes": [
+    2025,
+    2026
+   ],
+   "blocos": {
+    "GO": 2
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Pediatria",
+   "tema": "Anafilaxia e Urticária",
+   "n": 2,
+   "peso": 2.0,
+   "edicoes": [
+    2024,
+    2025
+   ],
+   "blocos": {
+    "PED": 2
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Pediatria",
+   "tema": "Cardiopatias Congênitas",
+   "n": 2,
+   "peso": 2.0,
+   "edicoes": [
+    2023,
+    2025
+   ],
+   "blocos": {
+    "PED": 2
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Pediatria",
+   "tema": "Imunizações",
+   "n": 2,
+   "peso": 2.0,
+   "edicoes": [
+    2025,
+    2026
+   ],
+   "blocos": {
+    "PED": 2
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Pediatria",
+   "tema": "Pneumonias na Infância",
+   "n": 2,
+   "peso": 2.0,
+   "edicoes": [
+    2023,
+    2025
+   ],
+   "blocos": {
+    "PED": 2
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Pneumo",
+   "tema": "Neoplasias Pulmonares",
+   "n": 2,
+   "peso": 2.0,
+   "edicoes": [
+    2023,
+    2024
+   ],
+   "blocos": {
+    "CM": 2
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Pneumo",
+   "tema": "Tromboembolismo Pulmonar",
+   "n": 2,
+   "peso": 2.0,
+   "edicoes": [
+    2024,
+    2025
+   ],
+   "blocos": {
+    "CM": 2
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Preventiva",
+   "tema": "Saúde do Idoso",
+   "n": 2,
+   "peso": 2.0,
+   "edicoes": [
+    2024,
+    2025
+   ],
+   "blocos": {
+    "MFC": 2
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Cardiologia",
+   "tema": "Hipertensão Arterial Sistêmica Pt. 1",
+   "n": 2,
+   "peso": 1.7,
+   "edicoes": [
+    2022,
+    2023
+   ],
+   "blocos": {
+    "MFC": 1,
+    "CM": 1
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Cardiologia",
+   "tema": "IAMCSSST",
+   "n": 2,
+   "peso": 1.7,
+   "edicoes": [
+    2021,
+    2023
+   ],
+   "blocos": {
+    "CM": 2
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Cirurgia",
+   "tema": "Trauma Abdominal e Pélvico",
+   "n": 2,
+   "peso": 1.7,
+   "edicoes": [
+    2022,
+    2026
+   ],
+   "blocos": {
+    "CIR": 2
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Endocrino",
+   "tema": "Diabetes Mellitus - Complicações Agudas",
+   "n": 2,
+   "peso": 1.7,
+   "edicoes": [
+    2021,
+    2026
+   ],
+   "blocos": {
+    "CM": 2
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Endocrino",
+   "tema": "Introdução ao Diabetes Mellitus Insulinoterapia e Cirurgia Metabólica",
+   "n": 2,
+   "peso": 1.7,
+   "edicoes": [
+    2021,
+    2025
+   ],
+   "blocos": {
+    "PED": 1,
+    "MFC": 1
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Endocrino",
+   "tema": "Metabolismo Ósseo e Mineral - Princípios e Fisiologia Hipercalcemia",
+   "n": 2,
+   "peso": 1.7,
+   "edicoes": [
+    2022,
+    2024
+   ],
+   "blocos": {
+    "CM": 2
+   },
+   "rodape": 1,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Ginecologia",
+   "tema": "Amenorreia",
+   "n": 2,
+   "peso": 1.7,
+   "edicoes": [
+    2021,
+    2023
+   ],
+   "blocos": {
+    "GO": 2
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Hepato",
+   "tema": "Complicações da Cirrose Hepática",
+   "n": 2,
+   "peso": 1.7,
+   "edicoes": [
+    2021,
+    2024
+   ],
+   "blocos": {
+    "CIR": 1,
+    "CM": 1
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Infecto",
+   "tema": "Pneumonias Bacterianas",
+   "n": 2,
+   "peso": 1.7,
+   "edicoes": [
+    2022,
+    2026
+   ],
+   "blocos": {
+    "CM": 2
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Obstetrícia",
+   "tema": "Modificações Fisiológicas da Gestação",
+   "n": 2,
+   "peso": 1.7,
+   "edicoes": [
+    2022,
+    2024
+   ],
+   "blocos": {
+    "GO": 2
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Otorrino",
+   "tema": "Neoplasias beningas e malignas de cabeça e pescoço, doenças congênitas cervicofaciais e traqueostomia",
+   "n": 2,
+   "peso": 1.7,
+   "edicoes": [
+    2021,
+    2023
+   ],
+   "blocos": {
+    "PED": 2
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Pediatria",
+   "tema": "Constipação Intestinal Hiperplasia Adrenal Congênita",
+   "n": 2,
+   "peso": 1.7,
+   "edicoes": [
+    2022,
+    2024
+   ],
+   "blocos": {
+    "PED": 2
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Pediatria",
+   "tema": "Desenvolvimento Neuropsicomotor",
+   "n": 2,
+   "peso": 1.7,
+   "edicoes": [
+    2021,
+    2023
+   ],
+   "blocos": {
+    "PED": 2
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Pediatria",
+   "tema": "Obesidade Infantil e na Adolescência",
+   "n": 2,
+   "peso": 1.7,
+   "edicoes": [
+    2021,
+    2023
+   ],
+   "blocos": {
+    "PED": 2
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Pneumo",
+   "tema": "Introdução a Pneumologia",
+   "n": 2,
+   "peso": 1.7,
+   "edicoes": [
+    2022,
+    2026
+   ],
+   "blocos": {
+    "CM": 2
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Preventiva",
+   "tema": "Medicina de Família e Comunidade",
+   "n": 2,
+   "peso": 1.7,
+   "edicoes": [
+    2022,
+    2023
+   ],
+   "blocos": {
+    "MFC": 2
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Psiquiatria",
+   "tema": "Dependência Química",
+   "n": 2,
+   "peso": 1.7,
+   "edicoes": [
+    2021,
+    2023
+   ],
+   "blocos": {
+    "MFC": 2
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Infecto",
+   "tema": "COVID",
+   "n": 2,
+   "peso": 1.4,
+   "edicoes": [
+    2021,
+    2022
+   ],
+   "blocos": {
+    "MFC": 2
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Preventiva",
+   "tema": "Abordagem familiar e ciclos de vida (genograma, ecomapa)",
+   "n": 2,
+   "peso": 1.4,
+   "edicoes": [
+    2021,
+    2022
+   ],
+   "blocos": {
+    "MFC": 2
+   },
+   "rodape": 0,
+   "prevalencia": "media"
+  },
+  {
+   "area": "Cardiologia",
+   "tema": "Hipertensão Arterial Sistêmica Pt. 2",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2025
+   ],
+   "blocos": {
+    "CM": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Cardiologia",
+   "tema": "Insuficiência Cardíaca Aguda",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2025
+   ],
+   "blocos": {
+    "CM": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Cardiologia",
+   "tema": "Insuficiência Cardíaca Pt.2",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2025
+   ],
+   "blocos": {
+    "CM": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Cardiologia",
+   "tema": "Parada Cardiorrespiratória Dislipidemia e Estratificação de Risco Cardiovascular",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2024
+   ],
+   "blocos": {
+    "CM": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Cardiologia",
+   "tema": "SCASSST Síncope",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2024
+   ],
+   "blocos": {
+    "CM": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Cirurgia",
+   "tema": "Cirurgia Plástica",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2026
+   ],
+   "blocos": {
+    "CIR": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Cirurgia",
+   "tema": "Cirurgia Vascular",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2023
+   ],
+   "blocos": {
+    "CIR": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Cirurgia",
+   "tema": "FORA: Tumores desmoides (partes moles, associação com FAP)",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2023
+   ],
+   "blocos": {
+    "CIR": 1
+   },
+   "rodape": 1,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Dermato",
+   "tema": "Hanseníase",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2024
+   ],
+   "blocos": {
+    "CM": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Endocrino",
+   "tema": "FORA: Fisiologia da medula adrenal (catecolaminas)",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2023
+   ],
+   "blocos": {
+    "CIR": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Endocrino",
+   "tema": "FORA: Investigação do incidentaloma adrenal",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2025
+   ],
+   "blocos": {
+    "CIR": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Endocrino",
+   "tema": "Hipotireoidismo",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2025
+   ],
+   "blocos": {
+    "MFC": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Endocrino",
+   "tema": "Tireotoxicose",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2025
+   ],
+   "blocos": {
+    "CM": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Gastro",
+   "tema": "FORA: Doença Ulcerosa Péptica e H. pylori",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2026
+   ],
+   "blocos": {
+    "CM": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Ginecologia",
+   "tema": "Adenomiose Abdome Agudo em Ginecologia",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2026
+   ],
+   "blocos": {
+    "GO": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Ginecologia",
+   "tema": "Prolapsos de Órgãos Pélvicos",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2024
+   ],
+   "blocos": {
+    "GO": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Ginecologia",
+   "tema": "Sangramento Uterino Anormal",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2024
+   ],
+   "blocos": {
+    "GO": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Ginecologia",
+   "tema": "Síndrome dos Ovários Policísticos",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2024
+   ],
+   "blocos": {
+    "GO": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Hemato",
+   "tema": "FORA: Reações transfusionais agudas (TRALI)",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2023
+   ],
+   "blocos": {
+    "CM": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Hemato",
+   "tema": "Leucemias Agudas",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2025
+   ],
+   "blocos": {
+    "PED": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Hepato",
+   "tema": "FORA: Síndrome de Budd-Chiari (hipertensão portal pós-sinusoidal)",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2025
+   ],
+   "blocos": {
+    "CIR": 1
+   },
+   "rodape": 1,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Hepato",
+   "tema": "Introdução à Hepatologia e Icterícia Não Obstrutiva",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2026
+   ],
+   "blocos": {
+    "CM": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Hepato",
+   "tema": "Transplante Hepático e Hepatite Fulminante",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2025
+   ],
+   "blocos": {
+    "CIR": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Hepato",
+   "tema": "Tumores Hepáticos",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2026
+   ],
+   "blocos": {
+    "CM": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Infecto",
+   "tema": "FORA: Artrite gonocócica disseminada",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2025
+   ],
+   "blocos": {
+    "CM": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Infecto",
+   "tema": "FORA: Uretrite gonocócica (IST) em adolescente do sexo masculino",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2023
+   ],
+   "blocos": {
+    "PED": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Infecto",
+   "tema": "Neutropenia Febril e Febre de Origem Indeterminada Piodermites",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2023
+   ],
+   "blocos": {
+    "PED": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Infecto",
+   "tema": "Sepse",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2024
+   ],
+   "blocos": {
+    "CM": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Neurologia",
+   "tema": "Acidentes Vasculares Cerebrais",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2024
+   ],
+   "blocos": {
+    "CM": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Neurologia",
+   "tema": "Cefaleias",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2024
+   ],
+   "blocos": {
+    "CM": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Neurologia",
+   "tema": "Epilepsias",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2024
+   ],
+   "blocos": {
+    "PED": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Neurologia",
+   "tema": "Traumatismo Cranioencefálico",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2025
+   ],
+   "blocos": {
+    "CIR": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Obstetrícia",
+   "tema": "FORA: Aloimunização Rh e profilaxia com imunoglobulina anti-D",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2026
+   ],
+   "blocos": {
+    "GO": 1
+   },
+   "rodape": 1,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Obstetrícia",
+   "tema": "FORA: Colestase intra-hepatica da gestacao",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2024
+   ],
+   "blocos": {
+    "GO": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Obstetrícia",
+   "tema": "FORA: Hiperêmese gravídica e encefalopatia de Wernicke",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2023
+   ],
+   "blocos": {
+    "GO": 1
+   },
+   "rodape": 1,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Obstetrícia",
+   "tema": "Hemorragia Pós-Parto",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2023
+   ],
+   "blocos": {
+    "GO": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Obstetrícia",
+   "tema": "Partograma e Distocia",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2025
+   ],
+   "blocos": {
+    "GO": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Obstetrícia",
+   "tema": "Sífilis na Gestação e Sífilis Congênita",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2024
+   ],
+   "blocos": {
+    "PED": 1
+   },
+   "rodape": 1,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Obstetrícia",
+   "tema": "Vitalidade Fetal",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2023
+   ],
+   "blocos": {
+    "GO": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Ortopedia",
+   "tema": "Doenças da Coluna Vertebral",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2026
+   ],
+   "blocos": {
+    "MFC": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Ortopedia",
+   "tema": "Maus Tratos",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2024
+   ],
+   "blocos": {
+    "MFC": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Otorrino",
+   "tema": "FORA: Vertigem Postural Paroxística Benigna -- semiologia vestibular (Weber-Rinne, Dix-Hallpike)",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2023
+   ],
+   "blocos": {
+    "CM": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Otorrino",
+   "tema": "Infecções das Vias Aéreas Superiores Pt. 1",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2026
+   ],
+   "blocos": {
+    "MFC": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Pediatria",
+   "tema": "Alergia Alimentar",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2024
+   ],
+   "blocos": {
+    "PED": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Pediatria",
+   "tema": "Crescimento",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2025
+   ],
+   "blocos": {
+    "PED": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Pediatria",
+   "tema": "Desnutrição na Infância",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2026
+   ],
+   "blocos": {
+    "PED": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Pediatria",
+   "tema": "Diagnóstico Nutricional",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2025
+   ],
+   "blocos": {
+    "PED": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Pediatria",
+   "tema": "Fibrose Cística",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2026
+   ],
+   "blocos": {
+    "CM": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Pediatria",
+   "tema": "Icterícia e Sepse Neonatal",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2023
+   ],
+   "blocos": {
+    "PED": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Pediatria",
+   "tema": "Puberdade",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2023
+   ],
+   "blocos": {
+    "MFC": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Pediatria",
+   "tema": "Vitaminas Doença do Refluxo Gastroesofágico em Pediatria",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2025
+   ],
+   "blocos": {
+    "PED": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Pneumo",
+   "tema": "Derrame Pleural",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2025
+   ],
+   "blocos": {
+    "CM": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Preventiva",
+   "tema": "FORA: Critérios de risco social na primeira consulta da criança",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2026
+   ],
+   "blocos": {
+    "MFC": 1
+   },
+   "rodape": 1,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Preventiva",
+   "tema": "FORA: Lombalgia inespecífica: história natural e uso de imagem",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2025
+   ],
+   "blocos": {
+    "MFC": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Preventiva",
+   "tema": "FORA: Tipologia da violência doméstica/negligência infantil e rede de proteção",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2026
+   ],
+   "blocos": {
+    "MFC": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Preventiva",
+   "tema": "Políticas de Saúde",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2023
+   ],
+   "blocos": {
+    "MFC": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Preventiva",
+   "tema": "Princípios e Diretrizes do SUS",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2024
+   ],
+   "blocos": {
+    "MFC": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Preventiva",
+   "tema": "Problemas comuns/indiferenciados na APS (sintomas sem explicacao medica, MUS)",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2025
+   ],
+   "blocos": {
+    "MFC": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Preventiva",
+   "tema": "Saude mental na APS e RAPS",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2026
+   ],
+   "blocos": {
+    "MFC": 1
+   },
+   "rodape": 1,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Preventiva",
+   "tema": "Testes Diagnósticos",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2024
+   ],
+   "blocos": {
+    "MFC": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Psiquiatria",
+   "tema": "FORA: Transtornos alimentares (anorexia nervosa) -- complicações e mortalidade",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2023
+   ],
+   "blocos": {
+    "PED": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Reumato",
+   "tema": "Artrite Reumatoide",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2024
+   ],
+   "blocos": {
+    "CM": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Reumato",
+   "tema": "Artrites Microcristalinas",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2023
+   ],
+   "blocos": {
+    "CM": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Reumato",
+   "tema": "Doenças Inflamatória do Tecido Conjuntivo I",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2024
+   ],
+   "blocos": {
+    "GO": 1
+   },
+   "rodape": 1,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Reumato",
+   "tema": "Doenças Inflamatória do Tecido Conjuntivo II",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2024
+   ],
+   "blocos": {
+    "CM": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Reumato",
+   "tema": "FORA: Espondilite anquilosante / espondiloartrite axial",
+   "n": 1,
+   "peso": 1.0,
+   "edicoes": [
+    2025
+   ],
+   "blocos": {
+    "CM": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Cardiologia",
+   "tema": "Hipertensão Arterial Sistêmica Pt. 3",
+   "n": 1,
+   "peso": 0.7,
+   "edicoes": [
+    2022
+   ],
+   "blocos": {
+    "CM": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Endocrino",
+   "tema": "FORA: Insulinoma / hipoglicemia hiperinsulinêmica",
+   "n": 1,
+   "peso": 0.7,
+   "edicoes": [
+    2022
+   ],
+   "blocos": {
+    "PED": 1
+   },
+   "rodape": 1,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Gastro",
+   "tema": "Síndromes Disabsortivas Tumores Neuroendócrinos",
+   "n": 1,
+   "peso": 0.7,
+   "edicoes": [
+    2022
+   ],
+   "blocos": {
+    "CIR": 1
+   },
+   "rodape": 1,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Ginecologia",
+   "tema": "Ciclo menstrual Dor Pélvica Crônica e Dismenorreia",
+   "n": 1,
+   "peso": 0.7,
+   "edicoes": [
+    2021
+   ],
+   "blocos": {
+    "GO": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Hemato",
+   "tema": "Anemias Microcíticas",
+   "n": 1,
+   "peso": 0.7,
+   "edicoes": [
+    2022
+   ],
+   "blocos": {
+    "CM": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Infecto",
+   "tema": "Antibióticos",
+   "n": 1,
+   "peso": 0.7,
+   "edicoes": [
+    2021
+   ],
+   "blocos": {
+    "CM": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Infecto",
+   "tema": "IRAS",
+   "n": 1,
+   "peso": 0.7,
+   "edicoes": [
+    2022
+   ],
+   "blocos": {
+    "CIR": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Nefrologia",
+   "tema": "Distúrbios Ácido-Base",
+   "n": 1,
+   "peso": 0.7,
+   "edicoes": [
+    2022
+   ],
+   "blocos": {
+    "PED": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Neurologia",
+   "tema": "FORA: Esclerose Múltipla",
+   "n": 1,
+   "peso": 0.7,
+   "edicoes": [
+    2022
+   ],
+   "blocos": {
+    "CM": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Obstetrícia",
+   "tema": "Restrição de Crescimento Fetal e Óbito Fetal",
+   "n": 1,
+   "peso": 0.7,
+   "edicoes": [
+    2021
+   ],
+   "blocos": {
+    "GO": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Oftalmo",
+   "tema": "Doenças do Polo Posterior",
+   "n": 1,
+   "peso": 0.7,
+   "edicoes": [
+    2021
+   ],
+   "blocos": {
+    "PED": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Pediatria",
+   "tema": "Emergências Pediátricas",
+   "n": 1,
+   "peso": 0.7,
+   "edicoes": [
+    2022
+   ],
+   "blocos": {
+    "PED": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Pneumo",
+   "tema": "Doença Pulmonar Obstrutiva Crônica",
+   "n": 1,
+   "peso": 0.7,
+   "edicoes": [
+    2021
+   ],
+   "blocos": {
+    "CM": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Preventiva",
+   "tema": "Medidas de Saúde Coletiva Pt. I",
+   "n": 1,
+   "peso": 0.7,
+   "edicoes": [
+    2021
+   ],
+   "blocos": {
+    "MFC": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Preventiva",
+   "tema": "Processo Saúde-Doença",
+   "n": 1,
+   "peso": 0.7,
+   "edicoes": [
+    2022
+   ],
+   "blocos": {
+    "MFC": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Preventiva",
+   "tema": "Sistemas de Informação em Saúde",
+   "n": 1,
+   "peso": 0.7,
+   "edicoes": [
+    2021
+   ],
+   "blocos": {
+    "MFC": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Reumato",
+   "tema": "Síndromes Dolorosas Crônicas",
+   "n": 1,
+   "peso": 0.7,
+   "edicoes": [
+    2022
+   ],
+   "blocos": {
+    "CM": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  },
+  {
+   "area": "Reumato",
+   "tema": "Vasculites",
+   "n": 1,
+   "peso": 0.7,
+   "edicoes": [
+    2021
+   ],
+   "blocos": {
+    "CM": 1
+   },
+   "rodape": 0,
+   "prevalencia": "baixa"
+  }
+ ]
+}

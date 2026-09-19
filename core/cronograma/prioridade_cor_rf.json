@@ -1,0 +1,3399 @@
+{
+ "_doc": "Prioridade por COR do 'Cronograma de Reta Final.xlsx' do Drive (F63): o operador marcou a cor da FONTE de cada tarefa pendente -- Roxo > Rosa > Salmao = prevalencia no ENAMED, derivada do guia estatistico do EMED. Leitura UNICA, a pedido do operador, em 2026-09-18 (s188); o Drive segue CONGELADO (part-8) e nada aqui e relido em runtime. `tarefa`=null quando a celula nao casou 1:1 com o grade.json (texto_drive preservado). `feito_drive` = celula tachada. A cor mede ENAMED, nao UERJ: para a prova de 01/11 o sinal e `prevalencia_uerj.json`.",
+ "fonte": {
+  "arquivo": "Cronograma de Reta Final.xlsx",
+  "drive_file_id": "157JEKQA9O49JxQHApOutKrVn7jW8JdIY",
+  "modificado_em": "2026-09-10T15:13:18Z",
+  "lido_em": "2026-09-18",
+  "bytes": 23079
+ },
+ "codigo_rgb": {
+  "roxo": "FF9900FF",
+  "rosa": "FFFF00FF",
+  "salmao": "FFFF8080"
+ },
+ "contagem_pendentes": {
+  "rosa": 52,
+  "salmao": 45,
+  "roxo": 51,
+  "sem_cor": 3
+ },
+ "contagem": {
+  "celulas_tarefa": 337,
+  "tachadas": 186,
+  "pendentes": 151,
+  "sem_par_no_grade": 8
+ },
+ "tarefas": [
+  {
+   "semana_rf": 1,
+   "tarefa": 2,
+   "area": "Pediatria",
+   "tema": "Cuidados Neonatais",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Cuidados Neonatais (Teoria I)"
+  },
+  {
+   "semana_rf": 1,
+   "tarefa": 3,
+   "area": "Cirurgia",
+   "tema": "Trauma - Avaliação Inicial, Vias Aéreas e Trauma Torácico",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Doença Renal Crônica - Pts. 1 e 2 (Teoria)"
+  },
+  {
+   "semana_rf": 1,
+   "tarefa": 4,
+   "area": "Ginecologia",
+   "tema": "",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Doenças Benignas da Mama (Teoria)"
+  },
+  {
+   "semana_rf": 1,
+   "tarefa": 5,
+   "area": "Obstetrícia",
+   "tema": "Sangramento da Primeira Metade",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Sangramento da Primeira Metade (Teoria I)"
+  },
+  {
+   "semana_rf": 1,
+   "tarefa": 6,
+   "area": "Preventiva",
+   "tema": "Processo Saúde- Doença",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Processo Saúde- Doença (Teoria II)"
+  },
+  {
+   "semana_rf": 1,
+   "tarefa": 7,
+   "area": "Pediatria",
+   "tema": "Cuidados Neonatais",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Cuidados Neonatais (Teoria II)"
+  },
+  {
+   "semana_rf": 1,
+   "tarefa": 8,
+   "area": "Infecto",
+   "tema": "Tuberculose",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Tuberculose (Teoria)"
+  },
+  {
+   "semana_rf": 1,
+   "tarefa": 9,
+   "area": "Gastro",
+   "tema": "Doença do Refluxo Gastroesofágico, Esofagites e Corpo Estranho",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Doença do Refluxo Gastroesofágico, Esofagites e Corpo Estranho (Teoria)"
+  },
+  {
+   "semana_rf": 1,
+   "tarefa": null,
+   "area": null,
+   "tema": null,
+   "tipo": null,
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Processo Saúde- Doença (Teoria I)"
+  },
+  {
+   "semana_rf": 1,
+   "tarefa": null,
+   "area": null,
+   "tema": null,
+   "tipo": null,
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Trauma - (Teoria I)"
+  },
+  {
+   "semana_rf": 2,
+   "tarefa": 1,
+   "area": "Preventiva",
+   "tema": "Processo Saúde- Doença",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Processo Saúde- Doença (Revisão)"
+  },
+  {
+   "semana_rf": 2,
+   "tarefa": 2,
+   "area": "Pediatria",
+   "tema": "Cuidados Neonatais",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Cuidados Neonatais (Revisão)"
+  },
+  {
+   "semana_rf": 2,
+   "tarefa": 4,
+   "area": "Ginecologia",
+   "tema": "Doenças Benignas da Mama",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Doenças Benignas da Mama (Revisão)"
+  },
+  {
+   "semana_rf": 2,
+   "tarefa": 5,
+   "area": "Obstetrícia",
+   "tema": "Sangramento da Primeira Metade",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Sangramento da Primeira Metade (Teoria II)"
+  },
+  {
+   "semana_rf": 2,
+   "tarefa": 6,
+   "area": "Infecto",
+   "tema": "Tuberculose",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Tuberculose (Revisão)"
+  },
+  {
+   "semana_rf": 2,
+   "tarefa": 7,
+   "area": "Cirurgia",
+   "tema": "Trauma - Avaliação Inicial, Vias Aéreas e Trauma Torácico",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Trauma - (Revisão)"
+  },
+  {
+   "semana_rf": 2,
+   "tarefa": 8,
+   "area": "Endocrino",
+   "tema": "Diabetes Mellitus Tipo 2",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Diabetes Mellitus Tipo 2 (Teoria)"
+  },
+  {
+   "semana_rf": 2,
+   "tarefa": 9,
+   "area": "Neurologia",
+   "tema": "Traumatismo Cranioencefálico",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Traumatismo Cranioencefálico (Teoria I)"
+  },
+  {
+   "semana_rf": 2,
+   "tarefa": 10,
+   "area": "Pneumo",
+   "tema": "Asma",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Asma (Teoria I)"
+  },
+  {
+   "semana_rf": 2,
+   "tarefa": null,
+   "area": null,
+   "tema": null,
+   "tipo": null,
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Trauma - (Teoria II)"
+  },
+  {
+   "semana_rf": 3,
+   "tarefa": 1,
+   "area": "Preventiva",
+   "tema": "Medidas de Saúde Coletiva Pt 1",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Medidas de Saúde Coletiva Pt 1 (Teoria)"
+  },
+  {
+   "semana_rf": 3,
+   "tarefa": 2,
+   "area": "Pediatria",
+   "tema": "Cardiopatias Congênitas",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Cardiopatias Congênitas (Teoria I)"
+  },
+  {
+   "semana_rf": 3,
+   "tarefa": 3,
+   "area": "Cirurgia",
+   "tema": "Trauma - Choque",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Trauma - Choque (Teoria I)"
+  },
+  {
+   "semana_rf": 3,
+   "tarefa": 4,
+   "area": "Ginecologia",
+   "tema": "Climatério e Terapia Hormonal",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Climatério e Terapia Hormonal (Teoria)"
+  },
+  {
+   "semana_rf": 3,
+   "tarefa": 5,
+   "area": "Obstetrícia",
+   "tema": "Sangramento da Primeira Metade",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Sangramento da Primeira Metade (Teoria III)"
+  },
+  {
+   "semana_rf": 3,
+   "tarefa": 6,
+   "area": "Preventiva",
+   "tema": "Medidas de Saúde Coletiva Pt. 1",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Medidas de Saúde Coletiva Pt. 1 (Revisão)"
+  },
+  {
+   "semana_rf": 3,
+   "tarefa": 7,
+   "area": "Pediatria",
+   "tema": "Cardiopatias Congênitas",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Cardiopatias Congênitas (Teoria II)"
+  },
+  {
+   "semana_rf": 3,
+   "tarefa": 8,
+   "area": "Infecto",
+   "tema": "HIV",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "HIV (Teoria)"
+  },
+  {
+   "semana_rf": 3,
+   "tarefa": 9,
+   "area": "Gastro",
+   "tema": "Doença do Refluxo Gastroesofágico, Esofagites e Corpo Estranho",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Doença do Refluxo Gastroesofágico, Esofagites e Corpo Estranho (Revisão)"
+  },
+  {
+   "semana_rf": 3,
+   "tarefa": 10,
+   "area": "Nefrologia",
+   "tema": "Doença Renal Crônica - Pt. 1 e 2",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Doença Renal Crônica - Pt. 1 e 2 (Revisão)"
+  },
+  {
+   "semana_rf": 3,
+   "tarefa": 11,
+   "area": "Cardiologia",
+   "tema": "Insuficiência Cardíaca Pt. 1 e 2",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Insuficiência Cardíaca Pt. 1 e 2 (Teoria)"
+  },
+  {
+   "semana_rf": 4,
+   "tarefa": 1,
+   "area": "Preventiva",
+   "tema": "Medidas de Saúde Coletiva Pt 2",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Medidas de Saúde Coletiva Pt 2 (Teoria)"
+  },
+  {
+   "semana_rf": 4,
+   "tarefa": 2,
+   "area": "Pediatria",
+   "tema": "",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Cardiopatias Congênitas (Revisão)"
+  },
+  {
+   "semana_rf": 4,
+   "tarefa": 3,
+   "area": "Cirurgia",
+   "tema": "Trauma - Choque",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Trauma - Choque (Teoria II)"
+  },
+  {
+   "semana_rf": 4,
+   "tarefa": 4,
+   "area": "Ginecologia",
+   "tema": "Climatério e Terapia Hormonal",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Climatério e Terapia Hormonal (Revisão)"
+  },
+  {
+   "semana_rf": 4,
+   "tarefa": 5,
+   "area": "Obstetrícia",
+   "tema": "Sangramento da Primeira Metade",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Sangramento da Primeira Metade (Revisão)"
+  },
+  {
+   "semana_rf": 4,
+   "tarefa": 6,
+   "area": "Infecto",
+   "tema": "HIV",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "HIV (Revisão)"
+  },
+  {
+   "semana_rf": 4,
+   "tarefa": 7,
+   "area": "Cirurgia",
+   "tema": "Trauma - Choque",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Trauma - Choque (Revisão)"
+  },
+  {
+   "semana_rf": 4,
+   "tarefa": 8,
+   "area": "Endocrino",
+   "tema": "Diabetes Mellitus Tipo 2",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Diabetes Mellitus Tipo 2 (Revisão)"
+  },
+  {
+   "semana_rf": 4,
+   "tarefa": 9,
+   "area": "Neurologia",
+   "tema": "Traumatismo Cranioencefálico",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Traumatismo Cranioencefálico (Teoria II)"
+  },
+  {
+   "semana_rf": 4,
+   "tarefa": 10,
+   "area": "Pneumo",
+   "tema": "Asma",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Asma (Teoria II)"
+  },
+  {
+   "semana_rf": 4,
+   "tarefa": 11,
+   "area": "Hemato",
+   "tema": "Hemostasia Pt. I e II",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Hemostasia Pt. I e II (Teoria)"
+  },
+  {
+   "semana_rf": 4,
+   "tarefa": 12,
+   "area": "Infecto",
+   "tema": "Tuberculose e HIV",
+   "tipo": "Revisão por Questões",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Tuberculose e HIV (Revisão por Questões)"
+  },
+  {
+   "semana_rf": 5,
+   "tarefa": 1,
+   "area": "Preventiva",
+   "tema": "Medidas de Saúde Coletiva Pt. 2",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Medidas de Saúde Coletiva Pt. 2 (Revisão)"
+  },
+  {
+   "semana_rf": 5,
+   "tarefa": 2,
+   "area": "Pediatria",
+   "tema": "Emergências Pediátricas",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Emergências Pediátricas (Teoria I)"
+  },
+  {
+   "semana_rf": 5,
+   "tarefa": 3,
+   "area": "Cirurgia",
+   "tema": "Trauma Abdominal e Pélvico",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Trauma Abdominal e Pélvico (Teoria I)"
+  },
+  {
+   "semana_rf": 5,
+   "tarefa": 4,
+   "area": "Ginecologia",
+   "tema": "Rastreamento do Câncer de Colo Uterino",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Rastreamento do Câncer de Colo Uterino (Teoria)"
+  },
+  {
+   "semana_rf": 5,
+   "tarefa": 5,
+   "area": "Obstetrícia",
+   "tema": "Sífilis na Gestação e Sífilis Congênita",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Sífilis na Gestação e Sífilis Congênita (Teoria I)"
+  },
+  {
+   "semana_rf": 5,
+   "tarefa": 6,
+   "area": "Preventiva",
+   "tema": "Medidas de Saúde Coletiva Pt 3",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Medidas de Saúde Coletiva Pt 3 (Teoria)"
+  },
+  {
+   "semana_rf": 5,
+   "tarefa": 7,
+   "area": "Pediatria",
+   "tema": "Emergências Pediátricas",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Emergências Pediátricas (Teoria II)"
+  },
+  {
+   "semana_rf": 5,
+   "tarefa": 8,
+   "area": "Gastro",
+   "tema": "Pancreatite Aguda e Crônica",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Pancreatite Aguda e Crônica (Teoria)"
+  },
+  {
+   "semana_rf": 5,
+   "tarefa": 9,
+   "area": "Nefrologia",
+   "tema": "Lesão Renal Aguda",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Lesão Renal Aguda (Teoria)"
+  },
+  {
+   "semana_rf": 5,
+   "tarefa": 10,
+   "area": "Psiquiatria",
+   "tema": "Dependência Química e Intoxicações Exógenas",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Dependência Química e Intoxicações Exógenas (Teoria)"
+  },
+  {
+   "semana_rf": 5,
+   "tarefa": 11,
+   "area": "Reumato",
+   "tema": "Doenças Inflamatória do Tecido Conjuntivo I",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Doenças Inflamatória do Tecido Conjuntivo I (Teoria I)"
+  },
+  {
+   "semana_rf": 6,
+   "tarefa": 1,
+   "area": "Preventiva",
+   "tema": "Medidas de Saúde Coletiva Pt. 3",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Medidas de Saúde Coletiva Pt. 3 (Revisão)"
+  },
+  {
+   "semana_rf": 6,
+   "tarefa": 2,
+   "area": "Pediatria",
+   "tema": "Emergências Pediátricas",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Emergências Pediátricas (Teoria III)"
+  },
+  {
+   "semana_rf": 6,
+   "tarefa": 3,
+   "area": "Cirurgia",
+   "tema": "Trauma Abdominal e Pélvico",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Trauma Abdominal e Pélvico (Teoria II)"
+  },
+  {
+   "semana_rf": 6,
+   "tarefa": 4,
+   "area": "Ginecologia",
+   "tema": "Rastreamento do Câncer de Colo Uterino",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Rastreamento do Câncer de Colo Uterino (Revisão)"
+  },
+  {
+   "semana_rf": 6,
+   "tarefa": 5,
+   "area": "Obstetrícia",
+   "tema": "Sífilis na Gestação e Sífilis Congênita",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Sífilis na Gestação e Sífilis Congênita (Teoria II)"
+  },
+  {
+   "semana_rf": 6,
+   "tarefa": 6,
+   "area": "Infecto",
+   "tema": "Arboviroses",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Arboviroses (Teoria)"
+  },
+  {
+   "semana_rf": 6,
+   "tarefa": 7,
+   "area": "Endocrino",
+   "tema": "Diabetes Mellitus - Complicações Agudas",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Diabetes Mellitus - Complicações Agudas (Teoria)"
+  },
+  {
+   "semana_rf": 6,
+   "tarefa": 8,
+   "area": "Cardiologia",
+   "tema": "Insuficiência Cardíaca Pt. 1 e 2",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Insuficiência Cardíaca Pt. 1 e 2 (Revisão)"
+  },
+  {
+   "semana_rf": 6,
+   "tarefa": 9,
+   "area": "Hepato",
+   "tema": "Introdução à Hepatologia e Icterícia Não obstrutiva",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Introdução à Hepatologia e Icterícia Não obstrutiva (Teoria)"
+  },
+  {
+   "semana_rf": 6,
+   "tarefa": 10,
+   "area": "Dermato",
+   "tema": "Hanseníase e Síndromes Verrucosas",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Hanseníase e Síndromes Verrucosas (Teoria)"
+  },
+  {
+   "semana_rf": 6,
+   "tarefa": 11,
+   "area": "Otorrino",
+   "tema": "Neoplasias benignas e malignas de cabeça e pescoço, doenças congênitas cervicofaciais e traqueostomia",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Neoplasias benignas e malignas de cabeça e pescoço, doenças congênitas cervicofaciais e traqueostomia (Teoria)"
+  },
+  {
+   "semana_rf": 6,
+   "tarefa": 12,
+   "area": "Preventiva",
+   "tema": "Processo Saúde- Doença; Medidas de Saúde Coletiva 1, 2 e 3",
+   "tipo": "Revisão por Questões",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Processo Saúde- Doença; Medidas de Saúde  Coletiva 1, 2 e 3 (Revisão por Questões)"
+  },
+  {
+   "semana_rf": 7,
+   "tarefa": 1,
+   "area": "Preventiva",
+   "tema": "Vigilância em Saúde",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Vigilância em Saúde (Teoria)"
+  },
+  {
+   "semana_rf": 7,
+   "tarefa": 2,
+   "area": "Pediatria",
+   "tema": "Emergências Pediátricas",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Emergências Pediátricas (Revisão)"
+  },
+  {
+   "semana_rf": 7,
+   "tarefa": 3,
+   "area": "Cirurgia",
+   "tema": "Trauma Abdominal e Pélvico",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Trauma Abdominal e Pélvico (Revisão)"
+  },
+  {
+   "semana_rf": 7,
+   "tarefa": 4,
+   "area": "Ginecologia",
+   "tema": "Úlceras Genitais",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Úlceras Genitais (Teoria)"
+  },
+  {
+   "semana_rf": 7,
+   "tarefa": 5,
+   "area": "Obstetrícia",
+   "tema": "Sífilis na Gestação e Sífilis Congênita",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Sífilis na Gestação e Sífilis Congênita (Revisão)"
+  },
+  {
+   "semana_rf": 7,
+   "tarefa": 6,
+   "area": "Pediatria",
+   "tema": "Icterícia e Sepse Neonatal",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Icterícia e Sepse Neonatal (Teoria I)"
+  },
+  {
+   "semana_rf": 7,
+   "tarefa": 7,
+   "area": "Cirurgia",
+   "tema": "Cirurgia Infantil Pt 1",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Cirurgia Infantil Pt 1 (Teoria)"
+  },
+  {
+   "semana_rf": 7,
+   "tarefa": 8,
+   "area": "Gastro",
+   "tema": "Pancreatite Aguda e Crônica",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Pancreatite Aguda e Crônica (Revisão)"
+  },
+  {
+   "semana_rf": 7,
+   "tarefa": 9,
+   "area": "Neurologia",
+   "tema": "Demências",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Demências (Teoria)"
+  },
+  {
+   "semana_rf": 7,
+   "tarefa": 10,
+   "area": "Pneumo",
+   "tema": "Asma",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Asma (Revisão)"
+  },
+  {
+   "semana_rf": 7,
+   "tarefa": 11,
+   "area": "Ortopedia",
+   "tema": "Quadril Pediátrico; Politrauma Ortopédico",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Assistência ao Parto (Teoria)"
+  },
+  {
+   "semana_rf": 7,
+   "tarefa": 12,
+   "area": "Cirurgia",
+   "tema": "Trauma - Avaliação Inicial, Vias Aéreas e Trauma Torácico; Trauma - Choque; Trauma Abdominal e Pélvico",
+   "tipo": "Revisão por Questões",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Trauma - Avaliação Inicial, Vias Aéreas e Trauma Torácico; Trauma - Choque; Trauma Abdominal e Pélvico (Revisão por Questões)"
+  },
+  {
+   "semana_rf": 7,
+   "tarefa": 13,
+   "area": "Gastro",
+   "tema": "Doença do Refluxo Gastroesofágico, Esofagites e Corpo Estranho; Pancreatite Aguda e Crônica",
+   "tipo": "Revisão por Questões",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Doença do Refluxo Gastroesofágico, Esofagites e Corpo Estranho; Pancreatite Aguda e Crônica (Revisão por Questões)"
+  },
+  {
+   "semana_rf": 8,
+   "tarefa": 1,
+   "area": "Preventiva",
+   "tema": "Vigilância em Saúde",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Vigilância em Saúde (Revisão)"
+  },
+  {
+   "semana_rf": 8,
+   "tarefa": 2,
+   "area": "Pediatria",
+   "tema": "Icterícia e Sepse Neonatal",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Icterícia e Sepse Neonatal (Teoria II)"
+  },
+  {
+   "semana_rf": 8,
+   "tarefa": 3,
+   "area": "Cirurgia",
+   "tema": "Cirurgia Infantil Pt 1",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Cirurgia Infantil Pt 1 (Revisão)"
+  },
+  {
+   "semana_rf": 8,
+   "tarefa": 4,
+   "area": "Ginecologia",
+   "tema": "Úlceras Genitais",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Úlceras Genitais (Revisão)"
+  },
+  {
+   "semana_rf": 8,
+   "tarefa": 5,
+   "area": "Obstetrícia",
+   "tema": "Síndromes Hipertensivas da Gestação",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Síndromes Hipertensivas da Gestação (Teoria I)"
+  },
+  {
+   "semana_rf": 8,
+   "tarefa": 6,
+   "area": "Preventiva",
+   "tema": "Sistemas de Informação em Saúde",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Sistemas de Informação em Saúde (Teoria I)"
+  },
+  {
+   "semana_rf": 8,
+   "tarefa": 7,
+   "area": "Infecto",
+   "tema": "Arboviroses",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Arboviroses (Revisão)"
+  },
+  {
+   "semana_rf": 8,
+   "tarefa": 8,
+   "area": "Endocrino",
+   "tema": "Diabetes Mellitus - Complicações Agudas",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Diabetes Mellitus - Complicações Agudas (Revisão)"
+  },
+  {
+   "semana_rf": 8,
+   "tarefa": 9,
+   "area": "Nefrologia",
+   "tema": "Lesão Renal Aguda",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Lesão Renal Aguda (Revisão)"
+  },
+  {
+   "semana_rf": 8,
+   "tarefa": 10,
+   "area": "Hemato",
+   "tema": "Hemostasia I e II",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Hemostasia I e II (Revisão)"
+  },
+  {
+   "semana_rf": 8,
+   "tarefa": 11,
+   "area": "Reumato",
+   "tema": "Doenças Inflamatória do Tecido Conjuntivo I",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Doenças Inflamatória do Tecido Conjuntivo I (Teoria II)"
+  },
+  {
+   "semana_rf": 8,
+   "tarefa": 12,
+   "area": "Ginecologia",
+   "tema": "Trauma - Doenças Benignas da Mama; Climatério e Terapia Hormonal; Rastreamento do Câncer de Colo Uterino; Úlceras Genitais",
+   "tipo": "Revisão por Questões",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Doenças Benignas da Mama; Climatério e Terapia Hormonal; Rastreamento do Câncer de Colo Uterino; Úlceras Genitais (Revisão por Questões)"
+  },
+  {
+   "semana_rf": 8,
+   "tarefa": 13,
+   "area": "Nefrologia",
+   "tema": "Doença Renal Crônica - Pts. 1 e 2; Lesão Renal Aguda",
+   "tipo": "Revisão por Questões",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Doença Renal Crônica - Pts. 1 e 2; Lesão Renal Aguda (Revisão por Questões)"
+  },
+  {
+   "semana_rf": 9,
+   "tarefa": 1,
+   "area": "Preventiva",
+   "tema": "Sistemas de Informação em Saúde",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Sistemas de Informação em Saúde (Teoria II)"
+  },
+  {
+   "semana_rf": 9,
+   "tarefa": 2,
+   "area": "Pediatria",
+   "tema": "Icterícia e Sepse Neonatal",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Icterícia e Sepse Neonatal (Revisão)"
+  },
+  {
+   "semana_rf": 9,
+   "tarefa": 3,
+   "area": "Cirurgia",
+   "tema": "Cirurgia Infantil Pt 2",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Cirurgia Infantil Pt 2 (Teoria)"
+  },
+  {
+   "semana_rf": 9,
+   "tarefa": 4,
+   "area": "Ginecologia",
+   "tema": "Planejamento Familiar",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Planejamento Familiar (Teoria)"
+  },
+  {
+   "semana_rf": 9,
+   "tarefa": 5,
+   "area": "Obstetrícia",
+   "tema": "Síndromes Hipertensivas da Gestação",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Síndromes Hipertensivas da Gestação (Teoria II)"
+  },
+  {
+   "semana_rf": 9,
+   "tarefa": 6,
+   "area": "Pediatria",
+   "tema": "Doenças Exantemáticas",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Doenças Exantemáticas (Teoria I)"
+  },
+  {
+   "semana_rf": 9,
+   "tarefa": 7,
+   "area": "Cirurgia",
+   "tema": "Cirurgia Infantil Pt 2",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Cirurgia Infantil Pt 2 (Revisão)"
+  },
+  {
+   "semana_rf": 9,
+   "tarefa": 8,
+   "area": "Infecto",
+   "tema": "Meningites",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Meningites (Teoria)"
+  },
+  {
+   "semana_rf": 9,
+   "tarefa": 9,
+   "area": "Gastro",
+   "tema": "Polipose Intestinal e Câncer Colorretal",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Polipose Intestinal e Câncer Colorretal (Teoria)"
+  },
+  {
+   "semana_rf": 9,
+   "tarefa": 10,
+   "area": "Neurologia",
+   "tema": "Traumatismo Cranioencefálico e Demências",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Traumatismo Cranioencefálico e Demências (Revisão)"
+  },
+  {
+   "semana_rf": 9,
+   "tarefa": 11,
+   "area": "Cardiologia",
+   "tema": "Hipertensão Arterial Sistêmica Pt. 1",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Hipertensão Arterial Sistêmica Pt. 1 (Teoria)"
+  },
+  {
+   "semana_rf": 9,
+   "tarefa": 12,
+   "area": "Psiquiatria",
+   "tema": "Dependência Química e Intoxicações Exógenas",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Dependência Química e Intoxicações Exógenas (Revisão)"
+  },
+  {
+   "semana_rf": 9,
+   "tarefa": 13,
+   "area": "Pediatria",
+   "tema": "Cuidados Neonatais; Cardiopatias Congênitas; Emergências Pediátricas; Icterícia e Sepse Neonatal",
+   "tipo": "Revisão por Questões",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Cuidados Neonatais; Cardiopatias Congênitas; Emergências Pediátricas; Icterícia e Sepse Neonatal (Revisão por Questões)"
+  },
+  {
+   "semana_rf": 10,
+   "tarefa": 1,
+   "area": "Preventiva",
+   "tema": "Sistemas de Informação em Saúde",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Sistemas de Informação em Saúde (Teoria III)"
+  },
+  {
+   "semana_rf": 10,
+   "tarefa": 2,
+   "area": "Pediatria",
+   "tema": "Doenças Exantemáticas",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Doenças Exantemáticas (Teoria II)"
+  },
+  {
+   "semana_rf": 10,
+   "tarefa": 3,
+   "area": "Cirurgia",
+   "tema": "Cirurgia Infantil Pt 3",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Cirurgia Infantil Pt 3 (Teoria)"
+  },
+  {
+   "semana_rf": 10,
+   "tarefa": 4,
+   "area": "Ginecologia",
+   "tema": "Planejamento Familiar",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Planejamento Familiar (Revisão)"
+  },
+  {
+   "semana_rf": 10,
+   "tarefa": 5,
+   "area": "Obstetrícia",
+   "tema": "Síndromes Hipertensivas da Gestação",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Síndromes Hipertensivas da Gestação (Teoria III)"
+  },
+  {
+   "semana_rf": 10,
+   "tarefa": 6,
+   "area": "Preventiva",
+   "tema": "Sistemas de Informação em Saúde",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Sistemas de Informação em Saúde (Revisão)"
+  },
+  {
+   "semana_rf": 10,
+   "tarefa": 7,
+   "area": "Infecto",
+   "tema": "Meningites",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Meningites (Revisão)"
+  },
+  {
+   "semana_rf": 10,
+   "tarefa": 8,
+   "area": "Endocrino",
+   "tema": "Diabetes Mellitus - Complicações Crônicas",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Diabetes Mellitus - Complicações Crônicas (Teoria)"
+  },
+  {
+   "semana_rf": 10,
+   "tarefa": 9,
+   "area": "Nefrologia",
+   "tema": "Distúrbios Ácido-Base",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Distúrbios Ácido-Base (Teoria)"
+  },
+  {
+   "semana_rf": 10,
+   "tarefa": 10,
+   "area": "Pneumo",
+   "tema": "Pneumologia Intensiva",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Pneumologia Intensiva (Teoria I)"
+  },
+  {
+   "semana_rf": 10,
+   "tarefa": 11,
+   "area": "Hepato",
+   "tema": "Hepatites Virais",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Hepatites Virais (Teoria)"
+  },
+  {
+   "semana_rf": 11,
+   "tarefa": 1,
+   "area": "Preventiva",
+   "tema": "Medicina de Família e Comunidade",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Medicina de Família e Comunidade (Teoria I)"
+  },
+  {
+   "semana_rf": 11,
+   "tarefa": 2,
+   "area": "Pediatria",
+   "tema": "Doenças Exantemáticas",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Doenças Exantemáticas (Revisão)"
+  },
+  {
+   "semana_rf": 11,
+   "tarefa": 3,
+   "area": "Cirurgia",
+   "tema": "Cirurgia Infantil Pt 3",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Cirurgia Infantil Pt 3 (Revisão)"
+  },
+  {
+   "semana_rf": 11,
+   "tarefa": 4,
+   "area": "Ginecologia",
+   "tema": "Vulvovaginites",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Vulvovaginites (Teoria)"
+  },
+  {
+   "semana_rf": 11,
+   "tarefa": 5,
+   "area": "Obstetrícia",
+   "tema": "Síndromes Hipertensivas da Gestação",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Síndromes Hipertensivas da Gestação (Revisão)"
+  },
+  {
+   "semana_rf": 11,
+   "tarefa": 6,
+   "area": "Pediatria",
+   "tema": "Imunizações",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Imunizações (Teoria I)"
+  },
+  {
+   "semana_rf": 11,
+   "tarefa": 7,
+   "area": "Infecto",
+   "tema": "Sepse",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Sepse (Teoria)"
+  },
+  {
+   "semana_rf": 11,
+   "tarefa": 8,
+   "area": "Gastro",
+   "tema": "Pólipos e Neoplasias Intestinais",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Pólipos e Neoplasias Intestinais (Revisão)"
+  },
+  {
+   "semana_rf": 11,
+   "tarefa": 9,
+   "area": "Hemato",
+   "tema": "Anemias Hemolíticas",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Anemias Hemolíticas (Teoria)"
+  },
+  {
+   "semana_rf": 11,
+   "tarefa": 10,
+   "area": "Reumato",
+   "tema": "Doenças Inflamatória do Tecido Conjuntivo II",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Quadril Pediátrico; Politrauma Ortopédico (Teoria)"
+  },
+  {
+   "semana_rf": 11,
+   "tarefa": 11,
+   "area": "Oftalmo",
+   "tema": "Síndrome do Olho Vermelho",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Síndrome do Olho Vermelho (Teoria)"
+  },
+  {
+   "semana_rf": 11,
+   "tarefa": 12,
+   "area": "Cirurgia",
+   "tema": "Cirurgia Infantil Pts. 1, 2 e 3",
+   "tipo": "Revisão por Questões",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Cirurgia Infantil Pts. 1, 2 e 3 (Revisão por Questões)"
+  },
+  {
+   "semana_rf": 11,
+   "tarefa": 13,
+   "area": "Obstetrícia",
+   "tema": "Sangramento da Primeira Metade; Sífilis na Gestação e Sífilis Congênita; Distúrbios Hipertensivos da Gestação",
+   "tipo": "Revisão por Questões",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Sangramento da Primeira Metade; Sífilis na Gestação e Sífilis Congênita; Distúrbios Hipertensivos da Gestação (Revisão por Questões)"
+  },
+  {
+   "semana_rf": 12,
+   "tarefa": 1,
+   "area": "Preventiva",
+   "tema": "Medicina de Família e Comunidade",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Medicina de Família e Comunidade (Teoria II)"
+  },
+  {
+   "semana_rf": 12,
+   "tarefa": 2,
+   "area": "Pediatria",
+   "tema": "Imunizações",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Imunizações (Teoria II)"
+  },
+  {
+   "semana_rf": 12,
+   "tarefa": 3,
+   "area": "Cirurgia",
+   "tema": "Apendicite Aguda",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Apendicite Aguda (Teoria)"
+  },
+  {
+   "semana_rf": 12,
+   "tarefa": 4,
+   "area": "Ginecologia",
+   "tema": "Vulvovaginites",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Vulvovaginites (Revisão)"
+  },
+  {
+   "semana_rf": 12,
+   "tarefa": 5,
+   "area": "Obstetrícia",
+   "tema": "Pré-Natal",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Pré-Natal (Teoria I)"
+  },
+  {
+   "semana_rf": 12,
+   "tarefa": 7,
+   "area": "Cirurgia",
+   "tema": "Apendicite Aguda",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Apendicite Aguda (Revisão)"
+  },
+  {
+   "semana_rf": 12,
+   "tarefa": 8,
+   "area": "Endocrino",
+   "tema": "Diabetes Mellitus - Complicações Crônicas",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Diabetes Mellitus - Complicações Crônicas (Revisão)"
+  },
+  {
+   "semana_rf": 12,
+   "tarefa": 9,
+   "area": "Nefrologia",
+   "tema": "Distúrbios do Potássio",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Distúrbios do Potássio (Teoria)"
+  },
+  {
+   "semana_rf": 12,
+   "tarefa": 10,
+   "area": "Neurologia",
+   "tema": "Cefaleias; Epilepsias",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Cefaleias; Epilepsias (Teoria)"
+  },
+  {
+   "semana_rf": 12,
+   "tarefa": 11,
+   "area": "Cardiologia",
+   "tema": "Hipertensão Arterial Sistêmica Pt. 2",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Hipertensão Arterial Sistêmica Pt. 2 (Teoria)"
+  },
+  {
+   "semana_rf": 12,
+   "tarefa": 12,
+   "area": "Preventiva",
+   "tema": "Vigilância em Saúde; Sistemas de Informação em Saúde; Medicina de Família e Comunidade",
+   "tipo": "Revisão por Questões",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Vigilância em Saúde; Sistemas de Informação em Saúde; Medicina de Família e Comunidade (Revisão por Questões)"
+  },
+  {
+   "semana_rf": 12,
+   "tarefa": 13,
+   "area": "Endocrino",
+   "tema": "Diabetes Mellitus Tipo 2; Complicações Agudas; Complicações Crônicas",
+   "tipo": "Revisão por Questões",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Diabetes Mellitus Tipo 2; Complicações Agudas; Complicações Crônicas (Revisão por Questões)"
+  },
+  {
+   "semana_rf": 12,
+   "tarefa": null,
+   "area": null,
+   "tema": null,
+   "tipo": null,
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Doenças Inflamatória do Tecido Conjuntivo II (Teoria)"
+  },
+  {
+   "semana_rf": 13,
+   "tarefa": 1,
+   "area": "Preventiva",
+   "tema": "Princípios e Diretrizes do SUS",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Princípios e Diretrizes do SUS (Teoria I)"
+  },
+  {
+   "semana_rf": 13,
+   "tarefa": 2,
+   "area": "Pediatria",
+   "tema": "Imunizações",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Imunizações (Teoria III)"
+  },
+  {
+   "semana_rf": 13,
+   "tarefa": 3,
+   "area": "Cirurgia",
+   "tema": "Abdome Agudo Inflamatório - Colecistite e Colangite Aguda",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Abdome Agudo Inflamatório - Colecistite e Colangite Aguda (Teoria)"
+  },
+  {
+   "semana_rf": 13,
+   "tarefa": 4,
+   "area": "Ginecologia",
+   "tema": "Endometriose",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Endometriose (Teoria)"
+  },
+  {
+   "semana_rf": 13,
+   "tarefa": 5,
+   "area": "Obstetrícia",
+   "tema": "Pré-Natal",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Pré-Natal (Teoria II)"
+  },
+  {
+   "semana_rf": 13,
+   "tarefa": 6,
+   "area": "Pediatria",
+   "tema": "Imunizações",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Imunizações (Revisão)"
+  },
+  {
+   "semana_rf": 13,
+   "tarefa": 7,
+   "area": "Infecto",
+   "tema": "Sepse",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Sepse (Revisão)"
+  },
+  {
+   "semana_rf": 13,
+   "tarefa": 8,
+   "area": "Gastro",
+   "tema": "Doença Inflamatória Intestinal",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Doença Inflamatória Intestinal (Teoria)"
+  },
+  {
+   "semana_rf": 13,
+   "tarefa": 9,
+   "area": "Pneumo",
+   "tema": "Pneumologia Intensiva",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Pneumologia Intensiva (Teoria II)"
+  },
+  {
+   "semana_rf": 13,
+   "tarefa": 10,
+   "area": "Psiquiatria",
+   "tema": "Transtornos de Humor; Psiquiatria Social e Reforma Psiquiátrica",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Transtornos de Humor; Psiquiatria Social e Reforma Psiquiátrica (Teoria)"
+  },
+  {
+   "semana_rf": 13,
+   "tarefa": 11,
+   "area": "Hepato",
+   "tema": "Introdução à Hepatologia e Icterícia Não obstrutiva; Hepatites Virais",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Introdução à Hepatologia e Icterícia Não obstrutiva; Hepatites Virais (Revisão)"
+  },
+  {
+   "semana_rf": 13,
+   "tarefa": 12,
+   "area": "Infecto",
+   "tema": "Arboviroses; Meningites e Meningoencefalites; Sepse",
+   "tipo": "Revisão por Questões",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Arboviroses; Meningites e Meningoencefalites; Sepse (Revisão por Questões)"
+  },
+  {
+   "semana_rf": 14,
+   "tarefa": 1,
+   "area": "Preventiva",
+   "tema": "Princípios e Diretrizes do SUS",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Princípios e Diretrizes do SUS (Teoria II)"
+  },
+  {
+   "semana_rf": 14,
+   "tarefa": 2,
+   "area": "Pediatria",
+   "tema": "Asma",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Asma (Teoria)"
+  },
+  {
+   "semana_rf": 14,
+   "tarefa": 3,
+   "area": "Cirurgia",
+   "tema": "Colecistite e Colangite Aguda",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Colecistite e Colangite Aguda (Revisão)"
+  },
+  {
+   "semana_rf": 14,
+   "tarefa": 4,
+   "area": "Ginecologia",
+   "tema": "Endometriose",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Endometriose (Revisão)"
+  },
+  {
+   "semana_rf": 14,
+   "tarefa": 5,
+   "area": "Obstetrícia",
+   "tema": "Pré-Natal",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Pré-Natal (Revisão)"
+  },
+  {
+   "semana_rf": 14,
+   "tarefa": 6,
+   "area": "Endocrino",
+   "tema": "Tireotoxicose",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Tireotoxicose (Teoria)"
+  },
+  {
+   "semana_rf": 14,
+   "tarefa": 7,
+   "area": "Cirurgia",
+   "tema": "Diverticulite Aguda",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Diverticulite Aguda (Teoria)"
+  },
+  {
+   "semana_rf": 14,
+   "tarefa": 8,
+   "area": "Neurologia",
+   "tema": "Cefaleias; Epilepsias",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Cefaleias; Epilepsias (Revisão)"
+  },
+  {
+   "semana_rf": 14,
+   "tarefa": 9,
+   "area": "Dermato",
+   "tema": "Hanseníase; Síndromes Verrucosas",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Hanseníase; Síndromes Verrucosas (Revisão)"
+  },
+  {
+   "semana_rf": 14,
+   "tarefa": 10,
+   "area": "Ortopedia",
+   "tema": "Doenças da Coluna Vertebral; Maus Tratos",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Doenças da Coluna Vertebral; Maus Tratos (Teoria)"
+  },
+  {
+   "semana_rf": 14,
+   "tarefa": 11,
+   "area": "Otorrino",
+   "tema": "Infecções das Vias Aéreas Superiores Pt. 1",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Infecções das Vias Aéreas Superiores Pt. 1 (Teoria)"
+  },
+  {
+   "semana_rf": 15,
+   "tarefa": 1,
+   "area": "Preventiva",
+   "tema": "Princípios e Diretrizes do SUS",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Princípios e Diretrizes do SUS (Revisão)"
+  },
+  {
+   "semana_rf": 15,
+   "tarefa": 2,
+   "area": "Pediatria",
+   "tema": "Asma",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Asma (Revisão)"
+  },
+  {
+   "semana_rf": 15,
+   "tarefa": 3,
+   "area": "Cirurgia",
+   "tema": "Diverticulite Aguda",
+   "tipo": "Revisão",
+   "cor": "rosa",
+   "feito_drive": false,
+   "texto_drive": "Diverticulite Aguda (Revisão)"
+  },
+  {
+   "semana_rf": 15,
+   "tarefa": 4,
+   "area": "Ginecologia",
+   "tema": "Câncer de Mama",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Câncer de Mama (Teoria)"
+  },
+  {
+   "semana_rf": 15,
+   "tarefa": 6,
+   "area": "Preventiva",
+   "tema": "Atenção Primária à Saúde no Brasil",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Atenção Primária à Saúde no Brasil (Teoria I)"
+  },
+  {
+   "semana_rf": 15,
+   "tarefa": 7,
+   "area": "Pediatria",
+   "tema": "Aleitamento Materno",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Aleitamento Materno (Teoria)"
+  },
+  {
+   "semana_rf": 15,
+   "tarefa": 8,
+   "area": "Infecto",
+   "tema": "Parasitoses; Infecções Relacionadas à Assistência em Saúde",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Parasitoses; Infecções Relacionadas à Assistência em Saúde (Teoria)"
+  },
+  {
+   "semana_rf": 15,
+   "tarefa": 9,
+   "area": "Gastro",
+   "tema": "Doença Inflamatória Intestinal",
+   "tipo": "Revisão",
+   "cor": "rosa",
+   "feito_drive": false,
+   "texto_drive": "Doença Inflamatória Intestinal (Revisão)"
+  },
+  {
+   "semana_rf": 15,
+   "tarefa": 10,
+   "area": "Nefrologia",
+   "tema": "Distúrbios Ácido-Base; Distúrbios do Potássio",
+   "tipo": "Revisão",
+   "cor": "salmao",
+   "feito_drive": false,
+   "texto_drive": "Distúrbios Ácido-Base; Distúrbios do Potássio (Revisão)"
+  },
+  {
+   "semana_rf": 15,
+   "tarefa": 11,
+   "area": "Cardiologia",
+   "tema": "Hipertensão Arterial Sistêmica Pt. 3",
+   "tipo": "Teoria + Exercícios",
+   "cor": "rosa",
+   "feito_drive": false,
+   "texto_drive": "Hipertensão Arterial Sistêmica Pt. 3 (Teoria)"
+  },
+  {
+   "semana_rf": 15,
+   "tarefa": 12,
+   "area": "Cirurgia",
+   "tema": "Apendicite Aguda; Colecistite e Colangite Aguda; Diverticulite Aguda",
+   "tipo": "Revisão por Questões",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Apendicite Aguda; Colecistite e Colangite Aguda; Diverticulite Aguda (Revisão por Questões)"
+  },
+  {
+   "semana_rf": 15,
+   "tarefa": null,
+   "area": null,
+   "tema": null,
+   "tipo": null,
+   "cor": "salmao",
+   "feito_drive": false,
+   "texto_drive": "Medicina de Família e Comunidade (Revisão)"
+  },
+  {
+   "semana_rf": 16,
+   "tarefa": 1,
+   "area": "Preventiva",
+   "tema": "Atenção Primária à Saúde no Brasil",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Atenção Primária à Saúde no Brasil (Teoria II)"
+  },
+  {
+   "semana_rf": 16,
+   "tarefa": 2,
+   "area": "Pediatria",
+   "tema": "Aleitamento Materno",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Aleitamento Materno (Revisão)"
+  },
+  {
+   "semana_rf": 16,
+   "tarefa": 3,
+   "area": "Cirurgia",
+   "tema": "Cirurgia Vascular",
+   "tipo": "Teoria + Exercícios",
+   "cor": "rosa",
+   "feito_drive": false,
+   "texto_drive": "Cirurgia Vascular (Teoria)"
+  },
+  {
+   "semana_rf": 16,
+   "tarefa": 4,
+   "area": "Ginecologia",
+   "tema": "Câncer de Mama",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Câncer de Mama (Revisão)"
+  },
+  {
+   "semana_rf": 16,
+   "tarefa": 5,
+   "area": "Obstetrícia",
+   "tema": "Assistência ao Parto",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Assistência ao Parto (Revisão)"
+  },
+  {
+   "semana_rf": 16,
+   "tarefa": 6,
+   "area": "Infecto",
+   "tema": "Parasitoses; Infecção Hospitalar",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Parasitoses; Infecção Hospitalar (Revisão)"
+  },
+  {
+   "semana_rf": 16,
+   "tarefa": 7,
+   "area": "Endocrino",
+   "tema": "Tireotoxicose",
+   "tipo": "Revisão",
+   "cor": "rosa",
+   "feito_drive": false,
+   "texto_drive": "Tireotoxicose (Revisão)"
+  },
+  {
+   "semana_rf": 16,
+   "tarefa": 8,
+   "area": "Neurologia",
+   "tema": "Distúrbios do Movimento",
+   "tipo": "Teoria + Exercícios",
+   "cor": "salmao",
+   "feito_drive": false,
+   "texto_drive": "Distúrbios do Movimento (Teoria I)"
+  },
+  {
+   "semana_rf": 16,
+   "tarefa": 9,
+   "area": "Pneumo",
+   "tema": "Pneumologia Intensiva",
+   "tipo": "Teoria + Exercícios",
+   "cor": "salmao",
+   "feito_drive": false,
+   "texto_drive": "Pneumologia Intensiva (Teoria III)"
+  },
+  {
+   "semana_rf": 16,
+   "tarefa": 10,
+   "area": "Hemato",
+   "tema": "Anemias Hemolíticas",
+   "tipo": "Revisão",
+   "cor": "salmao",
+   "feito_drive": false,
+   "texto_drive": "Anemias Hemolíticas (Revisão)"
+  },
+  {
+   "semana_rf": 16,
+   "tarefa": 11,
+   "area": "Pediatria",
+   "tema": "Doenças Exantemáticas; Imunizações; Asma; Aleitamento Materno",
+   "tipo": "Revisão por Questões",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Doenças Exantemáticas; Imunizações; Asma; Aleitamento Materno (Revisão por Questões)"
+  },
+  {
+   "semana_rf": 16,
+   "tarefa": 12,
+   "area": "Ginecologia",
+   "tema": "Planejamento Familiar; Vulvovaginites; Endometriose; Câncer de Mama",
+   "tipo": "Revisão por Questões",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Planejamento Familiar; Vulvovaginites; Endometriose; Câncer de Mama (Revisão por Questões)"
+  },
+  {
+   "semana_rf": 17,
+   "tarefa": 1,
+   "area": "Preventiva",
+   "tema": "Atenção Primária à Saúde no Brasil",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Atenção Primária à Saúde no Brasil (Teoria III)"
+  },
+  {
+   "semana_rf": 17,
+   "tarefa": 2,
+   "area": "Pediatria",
+   "tema": "Diarreia",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Diarreia (Teoria)"
+  },
+  {
+   "semana_rf": 17,
+   "tarefa": 3,
+   "area": "Cirurgia",
+   "tema": "Cirurgia Vascular",
+   "tipo": "Revisão",
+   "cor": "rosa",
+   "feito_drive": false,
+   "texto_drive": "Cirurgia Vascular (Revisão)"
+  },
+  {
+   "semana_rf": 17,
+   "tarefa": 4,
+   "area": "Ginecologia",
+   "tema": "Sangramento Uterino Anormal",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Sangramento Uterino Anormal (Teoria)"
+  },
+  {
+   "semana_rf": 17,
+   "tarefa": 5,
+   "area": "Obstetrícia",
+   "tema": "Vitalidade Fetal",
+   "tipo": "Teoria + Exercícios",
+   "cor": "rosa",
+   "feito_drive": false,
+   "texto_drive": "Vitalidade Fetal (Teoria)"
+  },
+  {
+   "semana_rf": 17,
+   "tarefa": 6,
+   "area": "Preventiva",
+   "tema": "Atenção Primária à Saúde no Brasil",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Atenção Primária à Saúde no Brasil (Revisão)"
+  },
+  {
+   "semana_rf": 17,
+   "tarefa": 7,
+   "area": "Pediatria",
+   "tema": "Diarreia",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Diarreia (Revisão)"
+  },
+  {
+   "semana_rf": 17,
+   "tarefa": 8,
+   "area": "Cirurgia",
+   "tema": "Urologia",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Urologia (Teoria I)"
+  },
+  {
+   "semana_rf": 17,
+   "tarefa": 9,
+   "area": "Infecto",
+   "tema": "Pneumonias Bacterianas",
+   "tipo": "Teoria + Exercícios",
+   "cor": "roxo",
+   "feito_drive": false,
+   "texto_drive": "Pneumonias Bacterianas (Teoria I)"
+  },
+  {
+   "semana_rf": 17,
+   "tarefa": 10,
+   "area": "Gastro",
+   "tema": "Neoplasias de Estômago e Esôfago",
+   "tipo": "Teoria + Exercícios",
+   "cor": "rosa",
+   "feito_drive": false,
+   "texto_drive": "Neoplasias de Estômago e Esôfago (Teoria)"
+  },
+  {
+   "semana_rf": 17,
+   "tarefa": 11,
+   "area": "Nefrologia",
+   "tema": "Nefrolitíase",
+   "tipo": "Teoria + Exercícios",
+   "cor": "salmao",
+   "feito_drive": false,
+   "texto_drive": "Nefrolitíase (Teoria)"
+  },
+  {
+   "semana_rf": 18,
+   "tarefa": 1,
+   "area": "Preventiva",
+   "tema": "Ética Médica",
+   "tipo": "Teoria + Exercícios",
+   "cor": null,
+   "feito_drive": true,
+   "texto_drive": "Ética Médica (Teoria)"
+  },
+  {
+   "semana_rf": 18,
+   "tarefa": 2,
+   "area": "Pediatria",
+   "tema": "Pneumonias na Infância",
+   "tipo": "Teoria + Exercícios",
+   "cor": "roxo",
+   "feito_drive": false,
+   "texto_drive": "Pneumonias na Infância (Teoria)"
+  },
+  {
+   "semana_rf": 18,
+   "tarefa": 3,
+   "area": "Cirurgia",
+   "tema": "Urologia",
+   "tipo": "Teoria + Exercícios",
+   "cor": "roxo",
+   "feito_drive": false,
+   "texto_drive": "Urologia (Teoria II)"
+  },
+  {
+   "semana_rf": 18,
+   "tarefa": 4,
+   "area": "Ginecologia",
+   "tema": "Sangramento Uterino Anormal",
+   "tipo": "Revisão",
+   "cor": "roxo",
+   "feito_drive": false,
+   "texto_drive": "Sangramento Uterino Anormal (Revisão)"
+  },
+  {
+   "semana_rf": 18,
+   "tarefa": 5,
+   "area": "Obstetrícia",
+   "tema": "Vitalidade Fetal",
+   "tipo": "Revisão",
+   "cor": "rosa",
+   "feito_drive": false,
+   "texto_drive": "Vitalidade Fetal (Revisão)"
+  },
+  {
+   "semana_rf": 18,
+   "tarefa": 6,
+   "area": "Infecto",
+   "tema": "Pneumonias Bacterianas",
+   "tipo": "Teoria + Exercícios",
+   "cor": "roxo",
+   "feito_drive": false,
+   "texto_drive": "Pneumonias Bacterianas (Teoria II)"
+  },
+  {
+   "semana_rf": 18,
+   "tarefa": 7,
+   "area": "Endocrino",
+   "tema": "Hipotireoidismo",
+   "tipo": "Teoria + Exercícios",
+   "cor": "rosa",
+   "feito_drive": false,
+   "texto_drive": "Hipotireoidismo (Teoria)"
+  },
+  {
+   "semana_rf": 18,
+   "tarefa": 8,
+   "area": "Neurologia",
+   "tema": "Distúrbios do Movimento",
+   "tipo": "Teoria + Exercícios",
+   "cor": "salmao",
+   "feito_drive": false,
+   "texto_drive": "Distúrbios do Movimento (Teoria II)"
+  },
+  {
+   "semana_rf": 18,
+   "tarefa": 9,
+   "area": "Cardiologia",
+   "tema": "Hipertensão Arterial Sistêmica",
+   "tipo": "Revisão",
+   "cor": "rosa",
+   "feito_drive": false,
+   "texto_drive": "Hipertensão Arterial Sistêmica (Revisão)"
+  },
+  {
+   "semana_rf": 18,
+   "tarefa": 10,
+   "area": "Psiquiatria",
+   "tema": "Transtornos de Humor; Psiquiatria Social e Reforma Psiquiátrica",
+   "tipo": "Revisão",
+   "cor": "rosa",
+   "feito_drive": false,
+   "texto_drive": "Transtornos de Humor; Psiquiatria Social e Reforma Psiquiátrica (Revisão)"
+  },
+  {
+   "semana_rf": 18,
+   "tarefa": 11,
+   "area": "Reumato",
+   "tema": "Doenças Inflamatórias do Tecido Conjuntivo",
+   "tipo": "Revisão",
+   "cor": "salmao",
+   "feito_drive": false,
+   "texto_drive": "Doenças Inflamatórias do Tecido Conjuntivo (Revisão)"
+  },
+  {
+   "semana_rf": 18,
+   "tarefa": 12,
+   "area": "Obstetrícia",
+   "tema": "Pré-Natal; Assistência ao Parto; Vitalidade Fetal",
+   "tipo": "Revisão por Questões",
+   "cor": "roxo",
+   "feito_drive": false,
+   "texto_drive": "Pré-Natal; Assistência ao Parto; Vitalidade Fetal (Revisão por Questões)"
+  },
+  {
+   "semana_rf": 18,
+   "tarefa": 13,
+   "area": "Cardiologia",
+   "tema": "Insuficiência Cardíaca e Hipertensão Arterial Sistêmica",
+   "tipo": "Revisão por Questões",
+   "cor": "roxo",
+   "feito_drive": false,
+   "texto_drive": "Insuficiência Cardíaca e Hipertensão Arterial Sistêmica (Revisão por Questões)"
+  },
+  {
+   "semana_rf": 19,
+   "tarefa": 1,
+   "area": "Pediatria",
+   "tema": "Pneumonias na Infância",
+   "tipo": "Revisão",
+   "cor": "roxo",
+   "feito_drive": false,
+   "texto_drive": "Pneumonias na Infância (Revisão)"
+  },
+  {
+   "semana_rf": 19,
+   "tarefa": 2,
+   "area": "Cirurgia",
+   "tema": "Urologia",
+   "tipo": "Teoria + Exercícios",
+   "cor": "roxo",
+   "feito_drive": false,
+   "texto_drive": "Urologia (Teoria III)"
+  },
+  {
+   "semana_rf": 19,
+   "tarefa": 3,
+   "area": "Ginecologia",
+   "tema": "Tumores Anexiais e Câncer de Ovário",
+   "tipo": "Teoria + Exercícios",
+   "cor": "roxo",
+   "feito_drive": false,
+   "texto_drive": "Tumores Anexiais e Câncer de Ovário (Teoria)"
+  },
+  {
+   "semana_rf": 19,
+   "tarefa": 4,
+   "area": "Obstetrícia",
+   "tema": "Diabetes na Gestação",
+   "tipo": "Teoria + Exercícios",
+   "cor": "roxo",
+   "feito_drive": false,
+   "texto_drive": "Diabetes na Gestação (Teoria I)"
+  },
+  {
+   "semana_rf": 19,
+   "tarefa": 5,
+   "area": "Preventiva",
+   "tema": "Ética Médica",
+   "tipo": "Revisão",
+   "cor": "roxo",
+   "feito_drive": false,
+   "texto_drive": "Ética Médica (Revisão)"
+  },
+  {
+   "semana_rf": 19,
+   "tarefa": 6,
+   "area": "Pediatria",
+   "tema": "Choque em Pediatria",
+   "tipo": "Teoria + Exercícios",
+   "cor": "rosa",
+   "feito_drive": false,
+   "texto_drive": "Choque em Pediatria (Teoria)"
+  },
+  {
+   "semana_rf": 19,
+   "tarefa": 7,
+   "area": "Cirurgia",
+   "tema": "Urologia",
+   "tipo": "Revisão",
+   "cor": "roxo",
+   "feito_drive": false,
+   "texto_drive": "Urologia (Revisão)"
+  },
+  {
+   "semana_rf": 19,
+   "tarefa": 8,
+   "area": "Gastro",
+   "tema": "Neoplasias de Estômago e Esôfago",
+   "tipo": "Revisão",
+   "cor": "rosa",
+   "feito_drive": false,
+   "texto_drive": "Neoplasias de Estômago e Esôfago (Revisão)"
+  },
+  {
+   "semana_rf": 19,
+   "tarefa": 9,
+   "area": "Nefrologia",
+   "tema": "Nefrolitíase",
+   "tipo": "Revisão",
+   "cor": "salmao",
+   "feito_drive": false,
+   "texto_drive": "Nefrolitíase (Revisão)"
+  },
+  {
+   "semana_rf": 19,
+   "tarefa": 10,
+   "area": "Hepato",
+   "tema": "Complicações da Cirrose Hepática",
+   "tipo": "Teoria + Exercícios",
+   "cor": "salmao",
+   "feito_drive": false,
+   "texto_drive": "Complicações da Cirrose Hepática (Teoria I)"
+  },
+  {
+   "semana_rf": 19,
+   "tarefa": 11,
+   "area": "Preventiva",
+   "tema": "Princípios e Diretrizes do SUS; Atenção Primária à Saúde no Brasil; Ética Médica",
+   "tipo": "Revisão por Questões",
+   "cor": "roxo",
+   "feito_drive": false,
+   "texto_drive": "Princípios e Diretrizes do SUS; Atenção Primária à Saúde no Brasil; Ética Médica (Revisão por Questões)"
+  },
+  {
+   "semana_rf": 19,
+   "tarefa": 12,
+   "area": "Gastro",
+   "tema": "Pólipos e Neoplasias Intestinais; Doença Inflamatória Intestinal; Neoplasias de Estômago e Esôfago",
+   "tipo": "Revisão por Questões",
+   "cor": "salmao",
+   "feito_drive": false,
+   "texto_drive": "Pólipos e Neoplasias Intestinais; Doença Inflamatória Intestinal; Neoplasias de Estômago e Esôfago (Revisão por Questões)"
+  },
+  {
+   "semana_rf": 19,
+   "tarefa": 13,
+   "area": "Nefrologia",
+   "tema": "Distúrbios Ácido- Base; Distúrbios do Potássio; Nefrolitíase",
+   "tipo": "Revisão por Questões",
+   "cor": "salmao",
+   "feito_drive": false,
+   "texto_drive": "Distúrbios Ácido- Base; Distúrbios do Potássio; Nefrolitíase (Revisão por Questões)"
+  },
+  {
+   "semana_rf": 20,
+   "tarefa": 1,
+   "area": "Preventiva",
+   "tema": "Financiamento em Saúde",
+   "tipo": "Teoria + Exercícios",
+   "cor": "roxo",
+   "feito_drive": false,
+   "texto_drive": "Financiamento em Saúde (Teoria I)"
+  },
+  {
+   "semana_rf": 20,
+   "tarefa": 2,
+   "area": "Pediatria",
+   "tema": "Choque em Pediatria",
+   "tipo": "Revisão",
+   "cor": "rosa",
+   "feito_drive": false,
+   "texto_drive": "Choque em Pediatria (Revisão)"
+  },
+  {
+   "semana_rf": 20,
+   "tarefa": 3,
+   "area": "Cirurgia",
+   "tema": "Hérnias da Parede Abdominal",
+   "tipo": "Teoria + Exercícios",
+   "cor": "rosa",
+   "feito_drive": false,
+   "texto_drive": "Hérnias da Parede Abdominal (Teoria I)"
+  },
+  {
+   "semana_rf": 20,
+   "tarefa": 4,
+   "area": "Ginecologia",
+   "tema": "Tumores Anexiais e Câncer de Ovário",
+   "tipo": "Revisão",
+   "cor": "roxo",
+   "feito_drive": false,
+   "texto_drive": "Tumores Anexiais e Câncer de Ovário (Revisão)"
+  },
+  {
+   "semana_rf": 20,
+   "tarefa": 5,
+   "area": "Obstetrícia",
+   "tema": "Diabetes na Gestação",
+   "tipo": "Teoria + Exercícios",
+   "cor": "roxo",
+   "feito_drive": false,
+   "texto_drive": "Diabetes na Gestação (Teoria II)"
+  },
+  {
+   "semana_rf": 20,
+   "tarefa": 6,
+   "area": "Infecto",
+   "tema": "Pneumonias Bacterianas",
+   "tipo": "Teoria + Exercícios",
+   "cor": "roxo",
+   "feito_drive": false,
+   "texto_drive": "Pneumonias Bacterianas (Teoria III)"
+  },
+  {
+   "semana_rf": 20,
+   "tarefa": 7,
+   "area": "Endocrino",
+   "tema": "Hipotireoidismo",
+   "tipo": "Revisão",
+   "cor": "rosa",
+   "feito_drive": false,
+   "texto_drive": "Hipotireoidismo (Revisão)"
+  },
+  {
+   "semana_rf": 20,
+   "tarefa": 8,
+   "area": "Pneumo",
+   "tema": "Pneumologia Intensiva",
+   "tipo": "Revisão",
+   "cor": "salmao",
+   "feito_drive": false,
+   "texto_drive": "Pneumologia Intensiva (Revisão)"
+  },
+  {
+   "semana_rf": 20,
+   "tarefa": 9,
+   "area": "Hemato",
+   "tema": "Anemias Microcíticas e Leucemias Agudas",
+   "tipo": "Teoria + Exercícios",
+   "cor": "salmao",
+   "feito_drive": false,
+   "texto_drive": "Anemias Microcíticas e Leucemias Agudas (Teoria)"
+  },
+  {
+   "semana_rf": 20,
+   "tarefa": 10,
+   "area": "Otorrino",
+   "tema": "Infecções das Vias Aéreas Superiores Pt. 2",
+   "tipo": "Teoria + Exercícios",
+   "cor": "salmao",
+   "feito_drive": false,
+   "texto_drive": "Infecções das Vias Aéreas Superiores Pt. 2 (Teoria)"
+  },
+  {
+   "semana_rf": 20,
+   "tarefa": 11,
+   "area": "Oftalmo",
+   "tema": "Doenças do Polo Posterior",
+   "tipo": "Teoria + Exercícios",
+   "cor": "salmao",
+   "feito_drive": false,
+   "texto_drive": "Doenças do Polo Posterior (Teoria)"
+  },
+  {
+   "semana_rf": 21,
+   "tarefa": 1,
+   "area": "Preventiva",
+   "tema": "Financiamento em Saúde",
+   "tipo": "Teoria + Exercícios",
+   "cor": "roxo",
+   "feito_drive": false,
+   "texto_drive": "Financiamento em Saúde (Teoria II)"
+  },
+  {
+   "semana_rf": 21,
+   "tarefa": 2,
+   "area": "Pediatria",
+   "tema": "Alergia Alimentar",
+   "tipo": "Teoria + Exercícios",
+   "cor": "rosa",
+   "feito_drive": false,
+   "texto_drive": "Alergia Alimentar (Teoria)"
+  },
+  {
+   "semana_rf": 21,
+   "tarefa": 3,
+   "area": "Cirurgia",
+   "tema": "Hérnias da Parede Abdominal",
+   "tipo": "Teoria + Exercícios",
+   "cor": "rosa",
+   "feito_drive": false,
+   "texto_drive": "Hérnias da Parede Abdominal (Teoria II)"
+  },
+  {
+   "semana_rf": 21,
+   "tarefa": 4,
+   "area": "Ginecologia",
+   "tema": "Prolapsos de Órgãos Pélvicos",
+   "tipo": "Teoria + Exercícios",
+   "cor": "rosa",
+   "feito_drive": false,
+   "texto_drive": "Prolapsos de Órgãos Pélvicos (Teoria)"
+  },
+  {
+   "semana_rf": 21,
+   "tarefa": 5,
+   "area": "Obstetrícia",
+   "tema": "Diabetes na Gestação",
+   "tipo": "Revisão",
+   "cor": "roxo",
+   "feito_drive": false,
+   "texto_drive": "Diabetes na Gestação (Revisão)"
+  },
+  {
+   "semana_rf": 21,
+   "tarefa": 6,
+   "area": "Pediatria",
+   "tema": "Alergia Alimentar",
+   "tipo": "Revisão",
+   "cor": "rosa",
+   "feito_drive": false,
+   "texto_drive": "Alergia Alimentar (Revisão)"
+  },
+  {
+   "semana_rf": 21,
+   "tarefa": 7,
+   "area": "Gastro",
+   "tema": "Anatomia do Intestino e Síndrome do Intestino Irritável",
+   "tipo": "Teoria + Exercícios",
+   "cor": "salmao",
+   "feito_drive": false,
+   "texto_drive": "Anatomia do Intestino e Síndrome do Intestino Irritável (Teoria)"
+  },
+  {
+   "semana_rf": 21,
+   "tarefa": 8,
+   "area": "Neurologia",
+   "tema": "Distúrbios do Movimento",
+   "tipo": "Revisão",
+   "cor": "salmao",
+   "feito_drive": false,
+   "texto_drive": "Distúrbios do Movimento (Revisão)"
+  },
+  {
+   "semana_rf": 21,
+   "tarefa": 9,
+   "area": "Cardiologia",
+   "tema": "Valvopatias",
+   "tipo": "Teoria + Exercícios",
+   "cor": "salmao",
+   "feito_drive": false,
+   "texto_drive": "Valvopatias (Teoria)"
+  },
+  {
+   "semana_rf": 21,
+   "tarefa": 10,
+   "area": "Reumato",
+   "tema": "Vasculites",
+   "tipo": "Teoria + Exercícios",
+   "cor": "salmao",
+   "feito_drive": false,
+   "texto_drive": "Vasculites (Teoria)"
+  },
+  {
+   "semana_rf": 21,
+   "tarefa": 11,
+   "area": "Ortopedia",
+   "tema": "Fraturas e Luxações; Complicações do Trauma Ortopédico",
+   "tipo": "Teoria + Exercícios",
+   "cor": "salmao",
+   "feito_drive": false,
+   "texto_drive": "Fraturas e Luxações; Complicações do Trauma Ortopédico (Teoria)"
+  },
+  {
+   "semana_rf": 21,
+   "tarefa": 12,
+   "area": "Pediatria",
+   "tema": "Diarreia; Pneumonias na Infância; Choque em Pediatria; Alergia Alimentar",
+   "tipo": "Revisão por Questões",
+   "cor": "roxo",
+   "feito_drive": false,
+   "texto_drive": "Diarreia; Pneumonias na Infância; Choque em Pediatria; Alergia Alimentar (Revisão por Questões)"
+  },
+  {
+   "semana_rf": 22,
+   "tarefa": 1,
+   "area": "Preventiva",
+   "tema": "Financiamento em saúde",
+   "tipo": "Revisão",
+   "cor": "roxo",
+   "feito_drive": false,
+   "texto_drive": "Financiamento em Saúde (Revisão)"
+  },
+  {
+   "semana_rf": 22,
+   "tarefa": 2,
+   "area": "Pediatria",
+   "tema": "Reanimação Neonatal",
+   "tipo": "Teoria",
+   "cor": "roxo",
+   "feito_drive": false,
+   "texto_drive": "Reanimação Neonatal (Teoria)"
+  },
+  {
+   "semana_rf": 22,
+   "tarefa": 3,
+   "area": "Cirurgia",
+   "tema": "Hérnias da Parede Abdominal",
+   "tipo": "Teoria III",
+   "cor": "roxo",
+   "feito_drive": false,
+   "texto_drive": "Hérnias da Parede Abdominal (Teoria III)"
+  },
+  {
+   "semana_rf": 22,
+   "tarefa": 4,
+   "area": "Ginecologia",
+   "tema": "Prolapsos de Órgãos Pélvicos",
+   "tipo": "Revisão",
+   "cor": "rosa",
+   "feito_drive": false,
+   "texto_drive": "Prolapsos de Órgãos Pélvicos (Revisão)"
+  },
+  {
+   "semana_rf": 22,
+   "tarefa": 5,
+   "area": "Obstetrícia",
+   "tema": "Sangramento da Segunda Metade",
+   "tipo": "Teoria",
+   "cor": "roxo",
+   "feito_drive": false,
+   "texto_drive": "Sangramento da Segunda Metade (Teoria)"
+  },
+  {
+   "semana_rf": 22,
+   "tarefa": 6,
+   "area": "Preventiva",
+   "tema": "Estatística Médica",
+   "tipo": "Teoria I",
+   "cor": "roxo",
+   "feito_drive": false,
+   "texto_drive": "Estatística Médica (Teoria I)"
+  },
+  {
+   "semana_rf": 22,
+   "tarefa": 7,
+   "area": "Cirurgia",
+   "tema": "Hérnias da Parede Abdominal",
+   "tipo": "Revisão",
+   "cor": "rosa",
+   "feito_drive": false,
+   "texto_drive": "Hérnias da Parede Abdominal (Revisão)"
+  },
+  {
+   "semana_rf": 22,
+   "tarefa": 8,
+   "area": "Infecto",
+   "tema": "Pneumonias Bacterianas",
+   "tipo": "Revisão",
+   "cor": "roxo",
+   "feito_drive": false,
+   "texto_drive": "Pneumonias Bacterianas (Revisão)"
+  },
+  {
+   "semana_rf": 22,
+   "tarefa": 9,
+   "area": "Endocrino",
+   "tema": "Obesidade e Síndrome Metabólica (Teoria) Cirurgia Bariátrica e Metabólica",
+   "tipo": "Teoria",
+   "cor": "rosa",
+   "feito_drive": false,
+   "texto_drive": "Obesidade e Síndrome Metabólica; Cirurgia Bariátrica e Metabólica (Teoria)"
+  },
+  {
+   "semana_rf": 22,
+   "tarefa": 10,
+   "area": "Nefrologia",
+   "tema": "Doenças Glomerulares",
+   "tipo": "Teoria",
+   "cor": "rosa",
+   "feito_drive": false,
+   "texto_drive": "Doenças Glomerulares (Teoria)"
+  },
+  {
+   "semana_rf": 22,
+   "tarefa": 11,
+   "area": "Psiquiatria",
+   "tema": "Psicofarmacologia (Teoria) Psiquiatria Infantil",
+   "tipo": "Teoria",
+   "cor": "rosa",
+   "feito_drive": false,
+   "texto_drive": "Psicofarmacologia; Psiquiatria Infantil (Teoria)"
+  },
+  {
+   "semana_rf": 22,
+   "tarefa": 12,
+   "area": "Infecto",
+   "tema": "Revisão por Questões : Parasitoses Infecção Hospitalar Pneumonias Bacterianas",
+   "tipo": "",
+   "cor": "roxo",
+   "feito_drive": false,
+   "texto_drive": "Parasitoses; Infecção Hospitalar; Pneumonias Bacterianas (Revisão por Questões)"
+  },
+  {
+   "semana_rf": 23,
+   "tarefa": 1,
+   "area": "Preventiva",
+   "tema": "Estatística Médica",
+   "tipo": "Teoria II",
+   "cor": "roxo",
+   "feito_drive": false,
+   "texto_drive": "Estatística Médica (Teoria II)"
+  },
+  {
+   "semana_rf": 23,
+   "tarefa": 2,
+   "area": "Pediatria",
+   "tema": "Reanimação Neonatal",
+   "tipo": "Revisão",
+   "cor": "roxo",
+   "feito_drive": false,
+   "texto_drive": "Reanimação Neonatal (Revisão)"
+  },
+  {
+   "semana_rf": 23,
+   "tarefa": 3,
+   "area": "Cirurgia",
+   "tema": "Princípios da Anestesiologia",
+   "tipo": "Teoria I",
+   "cor": null,
+   "feito_drive": false,
+   "texto_drive": "Princípios da Anestesiologia (Teoria I)"
+  },
+  {
+   "semana_rf": 23,
+   "tarefa": 4,
+   "area": "Ginecologia",
+   "tema": "Câncer de Colo Uterino",
+   "tipo": "Teoria",
+   "cor": "roxo",
+   "feito_drive": false,
+   "texto_drive": "Câncer de Colo Uterino (Teoria)"
+  },
+  {
+   "semana_rf": 23,
+   "tarefa": 5,
+   "area": "Obstetrícia",
+   "tema": "Sangramento da Segunda Metade",
+   "tipo": "Revisão",
+   "cor": "roxo",
+   "feito_drive": false,
+   "texto_drive": "Sangramento da Segunda Metade (Revisão)"
+  },
+  {
+   "semana_rf": 23,
+   "tarefa": 6,
+   "area": "Pediatria",
+   "tema": "Crescimento",
+   "tipo": "Teoria",
+   "cor": "roxo",
+   "feito_drive": false,
+   "texto_drive": "Crescimento (Teoria)"
+  },
+  {
+   "semana_rf": 23,
+   "tarefa": 7,
+   "area": "Infecto",
+   "tema": "Animais Peçonhentos",
+   "tipo": "Teoria",
+   "cor": "salmao",
+   "feito_drive": false,
+   "texto_drive": "Animais Peçonhentos (Teoria)"
+  },
+  {
+   "semana_rf": 23,
+   "tarefa": 8,
+   "area": "Gastro",
+   "tema": "Anatomia do Intestino e Síndrome do Intestino Irritável",
+   "tipo": "Revisão",
+   "cor": "salmao",
+   "feito_drive": false,
+   "texto_drive": "Anatomia do Intestino e Síndrome do Intestino Irritável (Revisão)"
+  },
+  {
+   "semana_rf": 23,
+   "tarefa": 9,
+   "area": "Neurologia",
+   "tema": "Acidentes Vasculares Cerebrais",
+   "tipo": "Teoria",
+   "cor": "rosa",
+   "feito_drive": false,
+   "texto_drive": "Acidentes Vasculares Cerebrais (Teoria)"
+  },
+  {
+   "semana_rf": 23,
+   "tarefa": 10,
+   "area": "Pneumo",
+   "tema": "Doença Pulmonar Obstrutiva Crônica",
+   "tipo": "Teoria",
+   "cor": "salmao",
+   "feito_drive": false,
+   "texto_drive": "Doença Pulmonar Obstrutiva Crônica (Teoria)"
+  },
+  {
+   "semana_rf": 23,
+   "tarefa": 11,
+   "area": "Hepato",
+   "tema": "Complicações da Cirrose Hepática",
+   "tipo": "Teoria II",
+   "cor": "salmao",
+   "feito_drive": false,
+   "texto_drive": "Complicações da Cirrose Hepática (Teoria II)"
+  },
+  {
+   "semana_rf": 24,
+   "tarefa": 1,
+   "area": "Preventiva",
+   "tema": "Estatística Médica",
+   "tipo": "Revisão I",
+   "cor": "roxo",
+   "feito_drive": false,
+   "texto_drive": "Estatística Médica (Revisão I)"
+  },
+  {
+   "semana_rf": 24,
+   "tarefa": 2,
+   "area": "Pediatria",
+   "tema": "Crescimento",
+   "tipo": "Revisão",
+   "cor": "roxo",
+   "feito_drive": false,
+   "texto_drive": "Crescimento (Revisão)"
+  },
+  {
+   "semana_rf": 24,
+   "tarefa": 3,
+   "area": "Cirurgia",
+   "tema": "Princípios da Anestesiologia",
+   "tipo": "Teoria II",
+   "cor": null,
+   "feito_drive": false,
+   "texto_drive": "Princípios da Anestesiologia (Teoria II)"
+  },
+  {
+   "semana_rf": 24,
+   "tarefa": 4,
+   "area": "Ginecologia",
+   "tema": "Câncer de Colo Uterino",
+   "tipo": "Revisão",
+   "cor": "roxo",
+   "feito_drive": false,
+   "texto_drive": "Câncer de Colo Uterino (Revisão)"
+  },
+  {
+   "semana_rf": 24,
+   "tarefa": 5,
+   "area": "Obstetrícia",
+   "tema": "Partograma e Distocia",
+   "tipo": "Teoria",
+   "cor": "rosa",
+   "feito_drive": false,
+   "texto_drive": "Partograma e Distocia (Teoria)"
+  },
+  {
+   "semana_rf": 24,
+   "tarefa": 6,
+   "area": "Preventiva",
+   "tema": "Estatística Médica",
+   "tipo": "Teoria III",
+   "cor": "roxo",
+   "feito_drive": false,
+   "texto_drive": "Estatística Médica (Teoria III)"
+  },
+  {
+   "semana_rf": 24,
+   "tarefa": 7,
+   "area": "Cirurgia",
+   "tema": "Princípios da Anestesiologia",
+   "tipo": "Revisão",
+   "cor": null,
+   "feito_drive": false,
+   "texto_drive": "Princípios da Anestesiologia (Revisão)"
+  },
+  {
+   "semana_rf": 24,
+   "tarefa": 8,
+   "area": "Infecto",
+   "tema": "Animais Peçonhentos",
+   "tipo": "Revisão",
+   "cor": "salmao",
+   "feito_drive": false,
+   "texto_drive": "Animais Peçonhentos (Revisão)"
+  },
+  {
+   "semana_rf": 24,
+   "tarefa": 9,
+   "area": "Endocrino",
+   "tema": "Obesidade e Síndrome Metabólica Cirurgia Bariátrica e Metabólica",
+   "tipo": "Revisão",
+   "cor": "salmao",
+   "feito_drive": false,
+   "texto_drive": "Obesidade e Síndrome Metabólica; Cirurgia Bariátrica e Metabólica (Revisão)"
+  },
+  {
+   "semana_rf": 24,
+   "tarefa": 10,
+   "area": "Nefrologia",
+   "tema": "Infecção do Trato Urinário",
+   "tipo": "Teoria",
+   "cor": "rosa",
+   "feito_drive": false,
+   "texto_drive": "Infecção do Trato Urinário (Teoria)"
+  },
+  {
+   "semana_rf": 24,
+   "tarefa": 11,
+   "area": "Cardiologia",
+   "tema": "Valvopatias",
+   "tipo": "Revisão",
+   "cor": "salmao",
+   "feito_drive": false,
+   "texto_drive": "Valvopatias (Revisão)"
+  },
+  {
+   "semana_rf": 24,
+   "tarefa": 12,
+   "area": "Cirurgia",
+   "tema": "Cirurgia Vascular Urologia Hérnias da Parede Abdominal Princípios da Anestesiologia",
+   "tipo": "Revisão por Questões",
+   "cor": "rosa",
+   "feito_drive": false,
+   "texto_drive": "Cirurgia Vascular; Urologia; Hérnias da Parede Abdominal; Princípios da Anestesiologia (Revisão por Questões)"
+  },
+  {
+   "semana_rf": 24,
+   "tarefa": 13,
+   "area": "Ginecologia",
+   "tema": "Sangramento Uterino Anormal Tumores Anexiais e Câncer de Ovário Prolapsos de Órgãos Pélvicos Câncer de Colo Uterino",
+   "tipo": "Revisão por Questões",
+   "cor": "roxo",
+   "feito_drive": false,
+   "texto_drive": "Sangramento Uterino Anormal; Tumores Anexiais e Câncer de Ovário; Prolapsos de Órgãos Pélvicos; Câncer de Colo Uterino (Revisão por Questões)"
+  },
+  {
+   "semana_rf": 25,
+   "tarefa": 1,
+   "area": "Preventiva",
+   "tema": "Estatística Médica",
+   "tipo": "Teoria IV",
+   "cor": "roxo",
+   "feito_drive": false,
+   "texto_drive": "Estatística Médica (Teoria IV)"
+  },
+  {
+   "semana_rf": 25,
+   "tarefa": 2,
+   "area": "Pediatria",
+   "tema": "Tópicos em Pediatria",
+   "tipo": "Teoria",
+   "cor": "rosa",
+   "feito_drive": false,
+   "texto_drive": "Tópicos em Pediatria (Teoria)"
+  },
+  {
+   "semana_rf": 25,
+   "tarefa": 3,
+   "area": "Cirurgia",
+   "tema": "Abdome Agudo Obstrutivo",
+   "tipo": "Teoria",
+   "cor": "roxo",
+   "feito_drive": false,
+   "texto_drive": "Abdome Agudo Obstrutivo (Teoria)"
+  },
+  {
+   "semana_rf": 25,
+   "tarefa": 4,
+   "area": "Ginecologia",
+   "tema": "Incontinência Urinária",
+   "tipo": "Teoria",
+   "cor": "rosa",
+   "feito_drive": false,
+   "texto_drive": "Incontinência Urinária (Teoria)"
+  },
+  {
+   "semana_rf": 25,
+   "tarefa": 5,
+   "area": "Obstetrícia",
+   "tema": "Partograma e Distocia",
+   "tipo": "Revisão",
+   "cor": "rosa",
+   "feito_drive": false,
+   "texto_drive": "Partograma e Distocia (Revisão)"
+  },
+  {
+   "semana_rf": 25,
+   "tarefa": 6,
+   "area": "Pediatria",
+   "tema": "Tópicos em Pediatria",
+   "tipo": "Revisão",
+   "cor": "rosa",
+   "feito_drive": false,
+   "texto_drive": "Tópicos em Pediatria (Revisão)"
+  },
+  {
+   "semana_rf": 25,
+   "tarefa": 7,
+   "area": "Infecto",
+   "tema": "Endocardites",
+   "tipo": "Teoria",
+   "cor": "salmao",
+   "feito_drive": false,
+   "texto_drive": "Endocardites (Teoria)"
+  },
+  {
+   "semana_rf": 25,
+   "tarefa": 8,
+   "area": "Gastro",
+   "tema": "Disfagia, Alterações Estruturais e Dist. Mort.",
+   "tipo": "Teoria",
+   "cor": "salmao",
+   "feito_drive": false,
+   "texto_drive": "Disfagia, Alterações Estruturais e Distúrbios da Motilidade do Esôfago (Teoria)"
+  },
+  {
+   "semana_rf": 25,
+   "tarefa": 9,
+   "area": "Pneumo",
+   "tema": "Derrame Pleural",
+   "tipo": "Teoria",
+   "cor": "salmao",
+   "feito_drive": false,
+   "texto_drive": "Derrame Pleural (Teoria)"
+  },
+  {
+   "semana_rf": 25,
+   "tarefa": 10,
+   "area": "Hemato",
+   "tema": "Anemias Microcíticas Leucemias Agudas",
+   "tipo": "Revisão",
+   "cor": "salmao",
+   "feito_drive": false,
+   "texto_drive": "Anemias Microcíticas; Leucemias Agudas (Revisão)"
+  },
+  {
+   "semana_rf": 25,
+   "tarefa": 11,
+   "area": "Reumato",
+   "tema": "Artrite Reumatóide",
+   "tipo": "Teoria",
+   "cor": "salmao",
+   "feito_drive": false,
+   "texto_drive": "Artrite Reumatóide (Teoria)"
+  },
+  {
+   "semana_rf": 25,
+   "tarefa": 12,
+   "area": "Obstetrícia",
+   "tema": "Diabetes na Gestação Sangramento da Segunda Metade Partograma e Distocia",
+   "tipo": "Revisão por Questões",
+   "cor": "roxo",
+   "feito_drive": false,
+   "texto_drive": "Diabetes na Gestação; Sangramento da Segunda Metade; Partograma e Distocia (Revisão por Questões)"
+  },
+  {
+   "semana_rf": 25,
+   "tarefa": 13,
+   "area": "Pneumo",
+   "tema": "Neoplasias Pulmonares",
+   "tipo": "Teoria",
+   "cor": "salmao",
+   "feito_drive": false,
+   "texto_drive": "Neoplasias Pulmonares (Teoria)"
+  },
+  {
+   "semana_rf": 26,
+   "tarefa": 1,
+   "area": "Preventiva",
+   "tema": "Estatística Médica",
+   "tipo": "Revisão II",
+   "cor": "roxo",
+   "feito_drive": false,
+   "texto_drive": "Estatística Médica (Revisão II)"
+  },
+  {
+   "semana_rf": 26,
+   "tarefa": 2,
+   "area": "Pediatria",
+   "tema": "Desnutrição na Infância",
+   "tipo": "Teoria",
+   "cor": "rosa",
+   "feito_drive": false,
+   "texto_drive": "Desnutrição na Infância (Teoria)"
+  },
+  {
+   "semana_rf": 26,
+   "tarefa": 3,
+   "area": "Cirurgia",
+   "tema": "Abdome Agudo Obstrutivo",
+   "tipo": "Revisão",
+   "cor": "roxo",
+   "feito_drive": false,
+   "texto_drive": "Abdome Agudo Obstrutivo (Revisão)"
+  },
+  {
+   "semana_rf": 26,
+   "tarefa": 4,
+   "area": "Ginecologia",
+   "tema": "Incontinência Urinária",
+   "tipo": "Revisão",
+   "cor": "rosa",
+   "feito_drive": false,
+   "texto_drive": "Incontinência Urinária (Revisão)"
+  },
+  {
+   "semana_rf": 26,
+   "tarefa": 5,
+   "area": "Obstetrícia",
+   "tema": "Gestação Múltipla",
+   "tipo": "Teoria",
+   "cor": "rosa",
+   "feito_drive": false,
+   "texto_drive": "Gestação Múltipla (Teoria)"
+  },
+  {
+   "semana_rf": 26,
+   "tarefa": 6,
+   "area": "Preventiva",
+   "tema": "Normas Regulamentadoras",
+   "tipo": "Teoria I",
+   "cor": "rosa",
+   "feito_drive": false,
+   "texto_drive": "Normas Regulamentadoras (Teoria I)"
+  },
+  {
+   "semana_rf": 26,
+   "tarefa": 7,
+   "area": "Endocrino",
+   "tema": "Osteoporose e Doença óssea de Paget",
+   "tipo": "Teoria",
+   "cor": "salmao",
+   "feito_drive": false,
+   "texto_drive": "Osteoporose e Doença óssea de Paget (Teoria)"
+  },
+  {
+   "semana_rf": 26,
+   "tarefa": 8,
+   "area": "Nefrologia",
+   "tema": "Doenças Glomerulares Infecção do Trato Urinário",
+   "tipo": "Revisão",
+   "cor": "rosa",
+   "feito_drive": false,
+   "texto_drive": "Doenças Glomerulares; Infecção do Trato Urinário (Revisão)"
+  },
+  {
+   "semana_rf": 26,
+   "tarefa": 9,
+   "area": "Neurologia",
+   "tema": "Coma e alterações da consciência",
+   "tipo": "Teoria",
+   "cor": "salmao",
+   "feito_drive": false,
+   "texto_drive": "Coma e Alterações da Consciência (Teoria)"
+  },
+  {
+   "semana_rf": 26,
+   "tarefa": 10,
+   "area": "Psiquiatria",
+   "tema": "Psicofarmacologia Psiquiatria Infantil",
+   "tipo": "Revisão",
+   "cor": "rosa",
+   "feito_drive": false,
+   "texto_drive": "Psicofarmacologia; Psiquiatria Infantil (Revisão)"
+  },
+  {
+   "semana_rf": 26,
+   "tarefa": 11,
+   "area": "Hepato",
+   "tema": "Complicações da Cirrose Hepática",
+   "tipo": "Revisão",
+   "cor": "salmao",
+   "feito_drive": false,
+   "texto_drive": "Complicações da Cirrose Hepática (Revisão)"
+  },
+  {
+   "semana_rf": 26,
+   "tarefa": 12,
+   "area": "Pediatria",
+   "tema": "Reanimação neonatal Crescimento Tópicos em Pediatria Desnutrição na Infância",
+   "tipo": "Revisão por Questões",
+   "cor": "roxo",
+   "feito_drive": false,
+   "texto_drive": "Reanimação Neonatal; Crescimento; Tópicos em Pediatria; Desnutrição na Infância (Revisão por Questões)"
+  },
+  {
+   "semana_rf": 26,
+   "tarefa": null,
+   "area": null,
+   "tema": null,
+   "tipo": null,
+   "cor": "rosa",
+   "feito_drive": false,
+   "texto_drive": "Tireotoxicose; Hipotireoidismo; Obesidade e Síndrome Metabólica; Cirurgia Bariátrica e Metabólica (Revisão por Questões)"
+  },
+  {
+   "semana_rf": 27,
+   "tarefa": 1,
+   "area": "Preventiva",
+   "tema": "Normas Regulamentadoras",
+   "tipo": "Teoria II",
+   "cor": "rosa",
+   "feito_drive": false,
+   "texto_drive": "Normas Regulamentadoras (Teoria II)"
+  },
+  {
+   "semana_rf": 27,
+   "tarefa": 2,
+   "area": "Pediatria",
+   "tema": "Desnutrição na Infância",
+   "tipo": "Revisão",
+   "cor": "rosa",
+   "feito_drive": false,
+   "texto_drive": "Desnutrição na Infância (Revisão)"
+  },
+  {
+   "semana_rf": 27,
+   "tarefa": 3,
+   "area": "Cirurgia",
+   "tema": "Complicações Pós-Operatórias",
+   "tipo": "Teoria I",
+   "cor": "roxo",
+   "feito_drive": false,
+   "texto_drive": "Complicações Pós-Operatórias (Teoria I)"
+  },
+  {
+   "semana_rf": 27,
+   "tarefa": 4,
+   "area": "Ginecologia",
+   "tema": "Assistência à Vítima de Violência Sexual",
+   "tipo": "Teoria",
+   "cor": "rosa",
+   "feito_drive": false,
+   "texto_drive": "Assistência à Vítima de Violência Sexual (Teoria)"
+  },
+  {
+   "semana_rf": 27,
+   "tarefa": 5,
+   "area": "Obstetrícia",
+   "tema": "Gestação Múltipla",
+   "tipo": "Revisão",
+   "cor": "rosa",
+   "feito_drive": false,
+   "texto_drive": "Gestação Múltipla (Revisão)"
+  },
+  {
+   "semana_rf": 27,
+   "tarefa": 6,
+   "area": "Pediatria",
+   "tema": "Obesidade Infantil e na Adolescência",
+   "tipo": "Teoria",
+   "cor": "rosa",
+   "feito_drive": false,
+   "texto_drive": "Obesidade Infantil e na Adolescência (Teoria)"
+  },
+  {
+   "semana_rf": 27,
+   "tarefa": 7,
+   "area": "Cirurgia",
+   "tema": "Complicações Pós-Operatórias",
+   "tipo": "Teoria II",
+   "cor": "roxo",
+   "feito_drive": false,
+   "texto_drive": "Complicações Pós-Operatórias (Teoria II)"
+  },
+  {
+   "semana_rf": 27,
+   "tarefa": 8,
+   "area": "Infecto",
+   "tema": "Endocardite Bacteriana - Endocardite Infecciosa",
+   "tipo": "Revisão",
+   "cor": "salmao",
+   "feito_drive": false,
+   "texto_drive": "Endocardite Bacteriana - Endocardite Infecciosa (Revisão)"
+  },
+  {
+   "semana_rf": 27,
+   "tarefa": 9,
+   "area": "Gastro",
+   "tema": "Disfagia, Alterações Estruturais e Dist. Mot.",
+   "tipo": "Revisão",
+   "cor": "salmao",
+   "feito_drive": false,
+   "texto_drive": "Disfagia, Alterações Estruturais e Distúrbios da Motilidade do Esôfago (Revisão)"
+  },
+  {
+   "semana_rf": 27,
+   "tarefa": 10,
+   "area": "Cardiologia",
+   "tema": "Fibrilação e Flutter Atrial Parada Cardiorrespiratória",
+   "tipo": "Teoria",
+   "cor": "rosa",
+   "feito_drive": false,
+   "texto_drive": "Fibrilação e Flutter Atrial; Parada Cardiorrespiratória (Teoria)"
+  },
+  {
+   "semana_rf": 27,
+   "tarefa": 11,
+   "area": "Dermato",
+   "tema": "Oncologia Cutânea",
+   "tipo": "Teoria",
+   "cor": "salmao",
+   "feito_drive": false,
+   "texto_drive": "Oncologia Cutânea (Teoria)"
+  },
+  {
+   "semana_rf": 27,
+   "tarefa": 12,
+   "area": "Neurologia",
+   "tema": "AVC Coma e alterações da consciência",
+   "tipo": "Revisão",
+   "cor": "rosa",
+   "feito_drive": false,
+   "texto_drive": "AVC; Coma e Alterações da Consciência (Revisão)"
+  },
+  {
+   "semana_rf": 27,
+   "tarefa": 13,
+   "area": "Reumato",
+   "tema": "Artrite Reumatoide",
+   "tipo": "Revisão",
+   "cor": "salmao",
+   "feito_drive": false,
+   "texto_drive": "Artrite Reumatoide (Revisão)"
+  },
+  {
+   "semana_rf": 28,
+   "tarefa": 1,
+   "area": "Preventiva",
+   "tema": "Normas Regulamentadoras",
+   "tipo": "Teoria III",
+   "cor": "rosa",
+   "feito_drive": false,
+   "texto_drive": "Normas Regulamentadoras (Teoria III)"
+  },
+  {
+   "semana_rf": 28,
+   "tarefa": 2,
+   "area": "Pediatria",
+   "tema": "Obesidade Infantil e na Adolescência",
+   "tipo": "Revisão",
+   "cor": "rosa",
+   "feito_drive": false,
+   "texto_drive": "Obesidade Infantil e na Adolescência (Revisão)"
+  },
+  {
+   "semana_rf": 28,
+   "tarefa": 3,
+   "area": "Cirurgia",
+   "tema": "Complicações Pós-Operatórias",
+   "tipo": "Teoria III",
+   "cor": "roxo",
+   "feito_drive": false,
+   "texto_drive": "Complicações Pós-Operatórias (Teoria III)"
+  },
+  {
+   "semana_rf": 28,
+   "tarefa": 4,
+   "area": "Ginecologia",
+   "tema": "Assistência à Vítima de Violência Sexual",
+   "tipo": "Revisão",
+   "cor": "rosa",
+   "feito_drive": false,
+   "texto_drive": "Assistência à Vítima de Violência Sexual (Revisão)"
+  },
+  {
+   "semana_rf": 28,
+   "tarefa": 5,
+   "area": "Obstetrícia",
+   "tema": "Hemorragia Pós-Parto",
+   "tipo": "Teoria",
+   "cor": "roxo",
+   "feito_drive": false,
+   "texto_drive": "Hemorragia Pós-Parto (Teoria)"
+  },
+  {
+   "semana_rf": 28,
+   "tarefa": 6,
+   "area": "Endocrino",
+   "tema": "Osteoporose e Doença óssea de Paget",
+   "tipo": "Revisão",
+   "cor": "salmao",
+   "feito_drive": false,
+   "texto_drive": "Osteoporose e Doença óssea de Paget (Revisão)"
+  },
+  {
+   "semana_rf": 28,
+   "tarefa": 8,
+   "area": "Ortopedia",
+   "tema": "Quadril Pediátrico Politrauma Ortopédico Doenças da coluna vertebral Maus Tratos Fraturas e Luxações Complicações do trauma ortopédico",
+   "tipo": "Revisão",
+   "cor": "salmao",
+   "feito_drive": false,
+   "texto_drive": "Quadril Pediátrico; Politrauma Ortopédico; Doenças da coluna vertebral; Maus Tratos; Fraturas e Luxações; Complicações do trauma ortopédico (Revisão)"
+  },
+  {
+   "semana_rf": 28,
+   "tarefa": 9,
+   "area": "Preventiva",
+   "tema": "Normas Regulamentadoras",
+   "tipo": "Revisão",
+   "cor": "rosa",
+   "feito_drive": false,
+   "texto_drive": "Normas Regulamentadoras (Revisão)"
+  },
+  {
+   "semana_rf": 28,
+   "tarefa": 10,
+   "area": "Cirurgia",
+   "tema": "Complicações Pós-Operatórias",
+   "tipo": "Revisão",
+   "cor": "roxo",
+   "feito_drive": false,
+   "texto_drive": "Complicações Pós-Operatórias (Revisão)"
+  },
+  {
+   "semana_rf": 28,
+   "tarefa": 11,
+   "area": "Obstetrícia",
+   "tema": "Hemorragia Pós-Parto",
+   "tipo": "Revisão",
+   "cor": "roxo",
+   "feito_drive": false,
+   "texto_drive": "Hemorragia Pós-Parto (Revisão)"
+  },
+  {
+   "semana_rf": 28,
+   "tarefa": 12,
+   "area": "Neurologia",
+   "tema": "Doenças Neuromusculares",
+   "tipo": "Revisão",
+   "cor": "salmao",
+   "feito_drive": false,
+   "texto_drive": "Doenças Neuromusculares (Revisão)"
+  },
+  {
+   "semana_rf": 28,
+   "tarefa": null,
+   "area": null,
+   "tema": null,
+   "tipo": null,
+   "cor": "roxo",
+   "feito_drive": false,
+   "texto_drive": "Fibrilação e Flutter Atrial; Parada Cardiorrespiratória (Revisão)"
+  },
+  {
+   "semana_rf": 28,
+   "tarefa": null,
+   "area": null,
+   "tema": null,
+   "tipo": null,
+   "cor": "salmao",
+   "feito_drive": false,
+   "texto_drive": "Oncologia Cutânea (Revisão)"
+  }
+ ]
+}

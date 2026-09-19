@@ -1198,6 +1198,12 @@ def main():
                   f"Terminal = `<!-- CHECK: nome -->` ou "
                   f"`<!-- NAO-VERIFICAVEL: motivo (revisar: AAAA-MM-DD) -->`. "
                   f"Detalhe: `python tools/clausulas_check.py --por-portador`.")
+            # s189: a CATRACA -- o passivo pode ficar, mas nao cresce em silencio.
+            from clausulas_check import catraca
+            subiu = catraca(resumo_clau["orfas"])
+            if subiu:
+                clau_warns += 1
+                print(f"[WARN] CLAUSULA_ORFA_SUBIU (catraca 1.10): {subiu}")
     except Exception as e:  # noqa: BLE001
         print(f"\n[WARN] CLAUSULA_CHECK: sensor indisponivel ({e}).")
     results_summary.append((desc_clau, clau_ok, clau_warns))

@@ -117,7 +117,7 @@ menos de um dia de retenção.
 | `--json` | Resumo + candidatos em JSON (contrato de máquina). |
 | `--limit N` | Quantos listar no modo texto (default 20). |
 
-🔴 **O corte é DERIVADO do próprio baralho, nunca importado.** O limiar clássico do Anki
+🔴 **O corte é DERIVADO do próprio baralho, nunca importado.** O limiar clássico do Anki  <!-- CHECK: test_cards_rendimento -->
 (8 lapsos) acharia **zero** aqui — o máximo do baralho é 4. Âncora: `lapses >= 2` (falhou
 mais de uma vez) **e** `stability < mediana do baralho` (depois das falhas, o modelo ainda
 não espera sobrevivência ao intervalo típico). A mediana é **re-medida a cada execução**,
@@ -125,13 +125,13 @@ então o corte acompanha o baralho em vez de envelhecer como número fixo. Em 18
 **48 de 822 revisados (5,8%)**.
 
 ⚠️ **NÃO fecha o F87.** Aquele eixo é triagem na **autoria** ("este card deveria
-existir?"), e os 13 cards que o operador cortou **nunca entraram no baralho** — não têm
+existir?"), e os 13 cards que o operador cortou **nunca entraram no baralho** — não têm  <!-- CHECK: test_cards_rendimento -->
 `reps`, `lapses` nem stability, então nenhum sinal do FSRS os alcança. Este sensor mede o
 eixo **irmão**: entre os cards que existem, quais não pagam aluguel. Dizer o contrário
 seria cobertura aparente — a classe que o item 1.10 existe para impedir.
 
 ⚠️ Baixo rendimento **não é defeito do card**: pode ser tema genuinamente difícil ou
-lacuna de fundação (pede **andaime**, não reforja). Saída é **candidato a triagem**, nunca
+lacuna de fundação (pede **andaime**, não reforja). Saída é **candidato a triagem**, nunca  <!-- CHECK: test_cards_rendimento -->
 veredito — como no F115.
 
 ### `tools/selo.py` — a tabela item -> terminal da reforma (DERIVADA)
@@ -466,7 +466,7 @@ ambas em `core/cronograma/` e ambas opcionais -- arquivo ausente = a política p
   `status` (`pendente`|`cortada` -- **nunca `feita`**: conclusão só nasce de `--concluir`) e `nota`.  <!-- CHECK: test_plano -->
   Com `fase1_exclusiva: true`, linha pendente que a regra pura poria nas semanas 1-7 e que a trilha
   não lista **sai da fila** (semana NULL + nota `fora da trilha da Fase 1 (reserva)`), sem mudar de
-  status; a Fase 2 não é tocada. 🔴 **O arquivo é GERADO (s189) -- nunca editar à mão:** a estratégia
+  status; a Fase 2 não é tocada. 🔴 **O arquivo é GERADO (s189) -- nunca editar à mão:** a estratégia  <!-- CHECK: test_trilha -->
   mora em `core/cronograma/trilha/parametros.json`, o ajuste de UMA linha em
   `core/cronograma/trilha/custom.json` (camada manual, vence o gerado por chave), e o arquivo sai de
   `python tools/trilha.py --gravar` (assinatura abaixo), seguido de `--semear --dry-run` ->
@@ -497,7 +497,7 @@ Specs `.vibeflow/specs/plano-ssot-e-cards-v2-part-2.md` (semeadura), `-part-3.md
 do `/ai-eng`): `core/cronograma/trilha/parametros.json` (a ESTRATÉGIA: calendário, capacidade de
 listas por semana, piso/teto por bloco, simulados, pesos; e `entrada`, os arquivos fixados que o
 gerador lê) -> `core/cronograma/trilha/custom.json` (a ÚNICA camada editável à mão: override por
-`(fonte, ref_semana_fonte, tarefa_fonte)` com `racional` obrigatório; vence o gerado na mesma chave)
+`(fonte, ref_semana_fonte, tarefa_fonte)` com `racional` obrigatório; vence o gerado na mesma chave)  <!-- CHECK: test_trilha -->
 -> `tools/trilha.py` -> `plano_trilha.json` (GERADO, com `gerado_por`). Entrada + parâmetros +
 custom + código = saída. Rito de recalibração (depois de cada prova UERJ): editar parâmetros ou
 custom -> `python tools/trilha.py` (ler o diff) -> `--gravar` -> `python tools/plano.py --semear

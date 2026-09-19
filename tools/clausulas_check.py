@@ -77,6 +77,25 @@ RE_NAOVERIF = re.compile(
 RE_NAOVERIF_SEM_DATA = re.compile(r"<!--\s*NAO-VERIFICAVEL:(?!.*revisar:)")
 RE_NAONORM = re.compile(r"<!--\s*NAO-NORMATIVA:\s*(.+?)\s*-->")
 
+#: CATRACA do item 1.10 (s189, pedido do /ai-eng): a contagem de orfas NAO SOBE sem declaracao.
+#: Subir exige editar ESTA linha no mesmo commit que cria a clausula sem terminal -- o diff do
+#: git e a declaracao. Descer e livre (e desejado): baixe a base quando a contagem cair.
+#: Historico medido na s189 (o sensor rodado em worktree de cada commit): 127 no selo da janela
+#: 6 da s187 (b96348b), 132 no ultimo commit da s187 (d4f0bb8: +5 da secao do cards_rendimento
+#: e do recall imediato do /revisar), 132 na s188 (+0 -- o "+7 da s188" do HANDOFF era
+#: atribuicao errada sobre um 125 medido antes), 134 com a s189, 127 depois de anotar as 7.
+BASE_ORFAS = 127
+
+
+def catraca(orfas, base=BASE_ORFAS):
+    """`None` se a contagem de orfas nao passou da base; senao a mensagem do WARN. PURA."""
+    if orfas <= base:
+        return None
+    return (f"{orfas} orfas > base {base}: {orfas - base} clausula(s) nova(s) sem terminal. "
+            f"Anote no mesmo ato (`<!-- CHECK: nome -->`, `NAO-VERIFICAVEL` com data ou "
+            f"`NAO-NORMATIVA`) ou suba BASE_ORFAS em tools/clausulas_check.py no MESMO commit "
+            f"-- o diff e a declaracao.")
+
 
 def extrair(path):
     """Clausulas candidatas de UM portador. Lista de dicts, sem I/O alem da leitura."""

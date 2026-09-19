@@ -163,3 +163,13 @@ def test_inventario_do_repo_tem_a_forma_esperada():
     _, resumo = cn.run_checks()
     assert 150 <= resumo["clausulas"] <= 600, resumo
     assert resumo["gates_conhecidos"] > 300, resumo
+
+
+def test_catraca_de_orfas_so_avisa_quando_a_contagem_sobe():
+    """s189 (pedido do /ai-eng): a contagem de orfas do 1.10 nao sobe sem DECLARACAO. Subir
+    exige editar `BASE_ORFAS` no mesmo commit (o diff e a declaracao); descer e livre. WARN,
+    nunca BLOCK -- por isso nenhuma assercao sobre o repo real aqui."""
+    from clausulas_check import BASE_ORFAS, catraca
+    assert catraca(BASE_ORFAS) is None and catraca(BASE_ORFAS - 3) is None
+    msg = catraca(BASE_ORFAS + 2)
+    assert msg and "2 clausula(s) nova(s)" in msg and "BASE_ORFAS" in msg

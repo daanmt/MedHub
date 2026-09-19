@@ -35,6 +35,7 @@ Uso:
     python tools/plano.py --revisar-area Preventiva
     python tools/plano.py --confirmar-area Preventiva --feitas "1,4" --pendentes "2" --dry-run
     python tools/plano.py --pendencia-revisao
+    python tools/plano.py --reserva > docs/RESERVA-FASE1.md
 
 Camada fina sobre `app.utils.db` -- nao abre `sqlite3` proprio (toda escrita e
 `plano_upsert_tarefas`, `plano_set_status`, `plano_mover` ou `plano_confirmar_area`).
@@ -72,6 +73,8 @@ P_LINKS = os.path.join(DIR_CRONO, "links_listas.json")
 #: (fonte, ref_semana_fonte, tarefa_fonte), aplicados DEPOIS das regras puras. Ausente =
 #: vale a politica pura de `ordenar_fase1`.
 P_TRILHA = os.path.join(DIR_CRONO, "plano_trilha.json")
+#: Incidencia por (area, tema) nas provas UERJ 2021-2026 (s188, F121). Lida pela RESERVA (s189).
+P_PREVALENCIA = os.path.join(DIR_CRONO, "prevalencia_uerj.json")
 
 #: Carimbo da origem do status inicial. Fixo: o snapshot e dado CONGELADO, e a data
 #: que importa e a da planilha (modificada em 10/09), nao a da leitura. A string mora
@@ -702,6 +705,157 @@ def listar(semana=None, bloco=None, status=None, fonte=None, como_json=False, ou
     return 0, linhas
 
 
+# ------------------------------------------------------------ reserva (s189)
+
+#: Faixa de incidencia UERJ do `prevalencia_uerj.json` (alta >= 4 questoes, media 2-3, baixa 1).
+ORDEM_FAIXA = {"alta": 0, "media": 1, "baixa": 2}
+
+
+def _grupo_reserva(nota):
+    nota = nota or ""
+    if NOTA_FORA_DA_TRILHA in nota:
+        return "fora da trilha"
+    if NOTA_RESERVA in nota:
+        return "reserva do extensivo"
+    return "sem semana"
+
+
+def reserva(linhas, prevalencia, estados=None):
+    """Linhas PENDENTES fora da fila (`semana_plano` NULL) x peso UERJ. PURA.
+
+    s189 (fatia 2 do /ai-eng): a `fase1_exclusiva` tira linhas da fila e nenhum fluxo as le --
+    forma "sem consulta" por construcao; o tema de alta incidencia pode sumir sem ninguem ver.
+    Cruza dois dados que ja existiam: as linhas e o `prevalencia_uerj.json`. Casamento pelo
+    MESMO `casa` do gerador (`tools/trilha.py`, limite (d)): linha que nao casa sai com
+    `temas_uerj=[]` e `faixa=None` -- nao-medida, nunca peso zero silencioso. Ordena por peso
+    desc, nao casadas por ultimo. `na_fila_por` = as linhas AGENDADAS na Fase 1 que ja cobrem o
+    mesmo tema UERJ (o risco real e a faixa alta sem nenhuma). `estados` (opcional) =
+    `{(area, tema): ZERO|TOCADO|PARCIAL|FEITO}` da reconciliacao do gerador -- diz POR QUE a
+    trilha deixou a linha de fora (tema ja feito x nunca estudado)."""
+    import trilha
+    temas = [(t["area"], trilha.toks(t["tema"]), t)
+             for t in (prevalencia or {}).get("temas") or []]
+
+    def casados_de(l):
+        partes = ([trilha.toks(x) for x in trilha.partes_da_tarefa(l.get("tema"))]
+                  or [trilha.toks(l.get("tema"))])
+        return [t for a, tk, t in temas
+                if a == l.get("area") and any(trilha.casa(tk, p) for p in partes)]
+
+    # quem JA cobre cada tema UERJ na fila da Fase 1: tema em reserva que outra linha agendada
+    # cobre nao sumiu -- o risco real e o tema de faixa alta sem NENHUMA linha na fila
+    na_fila = {}
+    for l in linhas:
+        if l.get("semana_plano") in SEMANAS_FASE1 and l.get("status") != "cortada":
+            for t in casados_de(l):
+                na_fila.setdefault((t["area"], t["tema"]), []).append(
+                    (l.get("id"), l.get("semana_plano")))
+    saida = []
+    for l in linhas:
+        if l.get("status") != "pendente" or l.get("semana_plano") is not None:
+            continue
+        casados = casados_de(l)
+        faixas = sorted({t["prevalencia"] for t in casados}, key=lambda f: ORDEM_FAIXA.get(f, 9))
+        cobertura = sorted({x for t in casados for x in na_fila.get((t["area"], t["tema"]), [])},
+                           key=lambda x: (x[1], x[0] or 0))
+        saida.append({
+            "id": l.get("id"), "fonte": l.get("fonte"),
+            "ref_semana_fonte": l.get("ref_semana_fonte"), "tarefa_fonte": l.get("tarefa_fonte"),
+            "area": l.get("area"), "tema": l.get("tema"), "tipo": l.get("tipo"),
+            "q_previstas": l.get("q_previstas"), "grupo": _grupo_reserva(l.get("nota")),
+            "temas_uerj": [t["tema"] for t in casados],
+            "n_uerj": sum(t["n"] for t in casados),
+            "peso_uerj": round(sum(t["peso"] for t in casados), 1),
+            "faixa": faixas[0] if faixas else None,
+            "na_fila_por": [{"id": i, "semana": s} for i, s in cobertura],
+            "estado": sorted({(estados or {}).get((t["area"], t["tema"])) or "?"
+                              for t in casados}) if estados is not None else [],
+        })
+    saida.sort(key=lambda x: (not x["temas_uerj"], -x["peso_uerj"], x["grupo"], x["id"] or 0))
+    return saida
+
+
+def _estados_da_trilha():
+    """`{(area, tema): estado}` da reconciliacao do gerador (`tools/trilha.py`), sobre a entrada
+    fixada. Falha -> `None` + WARN: a coluna sai `--`, a reserva nao cai."""
+    try:
+        import trilha
+        params = trilha.carregar_parametros()
+        e = trilha.carregar_entrada(params)
+        temas = trilha.pontuar(trilha.reconciliar(e["mapa"], e["catalogo"], e["dashboard"],
+                                                  e["cobertura"]), e["mapa"], params)
+        return {(t["area"], t["tema"]): t["estado"] for t in temas}
+    except Exception as erro:                    # noqa: BLE001 -- degrada visivel
+        print(f"[WARN] reserva: estado da trilha indisponivel ({erro})", file=sys.stderr)
+        return None
+
+
+def _celula(valor):
+    return str(valor if valor not in (None, "") else "--").replace("|", "\\|")
+
+
+def _tabela_reserva(itens):
+    saida = ["| id | grupo | area | tarefa | tipo | q | UERJ n (peso) | faixa | tema(s) UERJ "
+             "| tema ja na fila por | estado (18/09) |",
+             "|---|---|---|---|---|---|---|---|---|---|---|"]
+    for x in itens:
+        q = "--" if x["q_previstas"] is None else f"{float(x['q_previstas']):.0f}"
+        fila = ", ".join(f"#{c['id']} (S{c['semana']})" for c in x["na_fila_por"][:4])
+        if len(x["na_fila_por"]) > 4:
+            fila += f" +{len(x['na_fila_por']) - 4}"
+        saida.append("| #%s | %s | %s | %s | %s | %s | %s (%s) | %s | %s | %s | %s |" % (
+            x["id"], x["grupo"], _celula(x["area"]), _celula(x["tema"]), _celula(x["tipo"]), q,
+            x["n_uerj"], x["peso_uerj"], _celula(x["faixa"]), _celula("; ".join(x["temas_uerj"])),
+            _celula(fila or "NENHUMA"), _celula("/".join(x["estado"]))))
+    return saida
+
+
+def render_reserva(itens, hoje):
+    """A reserva em Markdown, para o operador ler UMA vez (o gate e o olho, nao o aviso)."""
+    altas = [x for x in itens if x["faixa"] == "alta"]
+    orfas = [x for x in altas if not x["na_fila_por"]]
+    casadas = [x for x in itens if x["temas_uerj"]]
+    sem_par = [x for x in itens if not x["temas_uerj"]]
+    grupos = {}
+    for x in itens:
+        grupos[x["grupo"]] = grupos.get(x["grupo"], 0) + 1
+    out = [
+        "# Reserva da Fase 1 -- linhas pendentes FORA da fila",
+        "",
+        f"> Gerado por `python tools/plano.py --reserva` em {hoje}. Nao editar: regenerar. Para "
+        f"o operador ler UMA vez (fatia 2 do `/ai-eng`, s189): o gate e o olho, nao o aviso. "
+        f"Terminal datado: 02/11/2026, junto do F111.",
+        "",
+        f"**{len(itens)} linha(s) pendente(s) sem semana** -- "
+        + ", ".join(f"{n} {g}" for g, n in sorted(grupos.items()))
+        + f". **{len(altas)} em faixa ALTA** da UERJ (tema com >= 4 questoes em 2021-2026), "
+        f"das quais **{len(orfas)} sem NENHUMA linha na fila da Fase 1 cobrindo o tema** (o risco "
+        f"real: as outras tem o tema agendado por outra tarefa, coluna `tema ja na fila por`); "
+        f"{len(sem_par)} sem tema casado na prevalencia.",
+        "",
+        "Como ler: `UERJ n (peso)` = questoes das provas UERJ 2021-2026 nos temas que a tarefa "
+        "cobre (2021-2022 valem 0,7 no peso). `fora da trilha` = a trilha da Fase 1 nao a "
+        "escolheu (`fase1_exclusiva`); `reserva do extensivo` = S1-S20 do extensivo, fora do "
+        "plano por regra da part-2. `estado (18/09)` = como o gerador da trilha via o tema "
+        "(ZERO nunca estudado, TOCADO, PARCIAL, FEITO) -- e o porque da exclusao: a prioridade e "
+        "peso UERJ x lacuna. Para trazer uma linha para a Fase 1: entrada em "
+        "`core/cronograma/trilha/custom.json` (com `racional`) + `python tools/trilha.py "
+        "--gravar` + `python tools/plano.py --semear --dry-run`.",
+        "",
+    ]
+    if orfas:
+        out += ["## 🔴 Faixa ALTA sem nenhuma linha na fila -- conferir primeiro", ""] +             _tabela_reserva(orfas) + [""]
+    cobertas = [x for x in altas if x["na_fila_por"]]
+    if cobertas:
+        out += ["## ⚠️ Faixa ALTA com o tema ja na fila por outra tarefa", ""] +             _tabela_reserva(cobertas) + [""]
+    out += ["## Todas as casadas, por peso UERJ", ""] + _tabela_reserva(casadas) + [""]
+    if sem_par:
+        out += ["## Sem tema casado na prevalencia UERJ -- conferir a olho", "",
+                "O casamento e por tokens (o mesmo do gerador da trilha): linha aqui NAO tem peso "
+                "zero, tem peso NAO MEDIDO.", ""] + _tabela_reserva(sem_par) + [""]
+    return "\n".join(out)
+
+
 # ------------------------------------------------- progresso (part-3): helpers
 
 def ids_da_lista(texto):
@@ -978,7 +1132,7 @@ def main(argv=None):
     ap.add_argument("--status", choices=list(db.STATUS_PLANO), help="filtro: status")
     ap.add_argument("--fonte", choices=list(db.FONTES_PLANO), help="filtro: fonte")
     ap.add_argument("--json", action="store_true",
-                    help="saida do --listar / --pendencia-revisao em JSON")
+                    help="saida do --listar / --pendencia-revisao / --reserva em JSON")
     ap.add_argument("--concluir", type=int, metavar="ID",
                     help="marca a tarefa como feita (exige --sessao)")
     ap.add_argument("--sessao", type=int, metavar="N",
@@ -1005,6 +1159,9 @@ def main(argv=None):
                     help='ids do --confirmar-area que estao PENDENTES (ex.: "2,3")')
     ap.add_argument("--pendencia-revisao", action="store_true",
                     help="quantas linhas ainda tem origem aproximada, por area (read-only)")
+    ap.add_argument("--reserva", action="store_true",
+                    help="linhas pendentes FORA da fila (semana NULL) por peso UERJ, com aviso de "
+                         "faixa alta -- Markdown no stdout (read-only)")
     args = ap.parse_args(argv)
 
     modos = {
@@ -1017,6 +1174,7 @@ def main(argv=None):
         "--revisar-area": bool(args.revisar_area),
         "--confirmar-area": bool(args.confirmar_area),
         "--pendencia-revisao": args.pendencia_revisao,
+        "--reserva": args.reserva,
     }
     ligados = [nome for nome, ativo in modos.items() if ativo]
     if len(ligados) != 1:
@@ -1060,6 +1218,19 @@ def main(argv=None):
     if modo == "--pendencia-revisao":
         code, _ = pendencia_revisao(como_json=args.json)
         return code
+    if modo == "--reserva":
+        prev = _ler(P_PREVALENCIA) if os.path.exists(P_PREVALENCIA) else {"temas": []}
+        itens = reserva(db.plano_listar(), prev, estados=_estados_da_trilha())
+        if args.json:
+            print(json.dumps(itens, ensure_ascii=False, indent=1))
+        else:
+            print(render_reserva(itens, db.hoje().isoformat()))
+        orfas = sum(1 for x in itens if x["faixa"] == "alta" and not x["na_fila_por"])
+        if orfas:
+            print(f"[WARN] RESERVA: {orfas} linha(s) de faixa ALTA da UERJ sem NENHUMA linha na "
+                  f"fila da Fase 1 cobrindo o tema -- o operador confere a lista uma vez",
+                  file=sys.stderr)
+        return 0
     code, _ = listar(semana=args.semana, bloco=args.bloco, status=args.status,
                      fonte=args.fonte, como_json=args.json)
     return code

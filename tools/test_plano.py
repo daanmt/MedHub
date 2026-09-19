@@ -1001,3 +1001,57 @@ def test_nota_do_usuario_nao_conta_como_mudanca(tmp_path, monkeypatch):
     plano.cortar(idx[("extensivo", 21, 3)]["id"], "coberto pela Reta Final", out=_mudo())
     _code, _, rel = plano.semear(apply=False, out=_mudo(), **_fontes())
     assert rel["mudariam"] == 0, rel["mudariam_campos"]
+
+
+# =====================================================================================
+# s189 -- a RESERVA vista uma vez (fatia 2 do /ai-eng): quem saiu da fila, por peso UERJ
+# =====================================================================================
+
+def _linha_reserva(i, **kw):
+    base = {"id": i, "fonte": "rf", "ref_semana_fonte": 17, "tarefa_fonte": i,
+            "area": "Pediatria", "tema": "Tema %d" % i, "tipo": "Revisão",
+            "q_previstas": 30.0, "status": "pendente", "semana_plano": None,
+            "nota": plano.NOTA_FORA_DA_TRILHA}
+    base.update(kw)
+    return base
+
+
+def test_reserva_ordena_por_peso_uerj_avisa_faixa_alta_e_nomeia_o_nao_casado():
+    """A `fase1_exclusiva` tira linhas da fila e ninguem as le (forma "sem consulta" por
+    construcao). A reserva lista TODA pendente sem semana, por peso UERJ desc; faixa ALTA vira
+    aviso; linha sem tema casado aparece como tal -- nunca como peso zero silencioso."""
+    linhas = [
+        _linha_reserva(1, tema="Tema Raro"),
+        _linha_reserva(2, tema="Tema Forte; Tema Raro", nota=plano.NOTA_RESERVA,
+                       fonte="extensivo", ref_semana_fonte=5),
+        _linha_reserva(3, tema="Tema Sem Par", area="Cirurgia"),
+        _linha_reserva(4, tema="Tema Forte", semana_plano=2),      # na fila: fora da reserva
+        _linha_reserva(5, tema="Tema Forte", status="feita"),      # feita: fora da reserva
+    ]
+    prev = {"temas": [
+        {"area": "Pediatria", "tema": "Tema Forte", "n": 9, "peso": 8.4, "prevalencia": "alta"},
+        {"area": "Pediatria", "tema": "Tema Raro", "n": 1, "peso": 1.0, "prevalencia": "baixa"},
+    ]}
+    r = plano.reserva(linhas, prev, estados={("Pediatria", "Tema Forte"): "FEITO",
+                                             ("Pediatria", "Tema Raro"): "ZERO"})
+    assert [x["id"] for x in r] == [2, 1, 3], "peso desc; nao casado por ultimo (got %s)" % r
+    assert r[0]["estado"] == ["FEITO", "ZERO"] and r[1]["estado"] == ["ZERO"],         "o estado diz POR QUE a trilha deixou a linha de fora"
+    assert (r[0]["faixa"], r[0]["n_uerj"], r[0]["grupo"]) == ("alta", 10, "reserva do extensivo")
+    assert r[1]["grupo"] == "fora da trilha" and r[1]["faixa"] == "baixa"
+    assert r[2]["temas_uerj"] == [] and r[2]["faixa"] is None
+    assert r[0]["na_fila_por"] == [{"id": 4, "semana": 2}],         "tema de faixa alta que OUTRA linha cobre na fila nao sumiu -- a coluna diz quem cobre"
+    assert r[1]["na_fila_por"] == [], "ninguem na fila cobre o Tema Raro"
+    md = plano.render_reserva(r, "2026-09-19")
+    assert "Faixa ALTA com o tema ja na fila" in md and "#2" in md and "#4 (S2)" in md
+    assert "das quais **0 sem NENHUMA linha" in md, "0 orfa de faixa alta aqui"
+    assert "Faixa ALTA sem nenhuma linha na fila" not in md, "secao de orfas so quando ha orfa"
+    assert "sem tema casado" in md and "#3" in md
+    r_orfa = plano.reserva([l for l in linhas if l["id"] != 4], prev)
+    md_orfa = plano.render_reserva(r_orfa, "2026-09-19")
+    assert "Faixa ALTA sem nenhuma linha na fila" in md_orfa, "sem #4, o Tema Forte ficou orfao"
+
+
+def test_cli_reserva_pelo_main(tmp_path, monkeypatch, capsys):
+    _semeado(tmp_path, monkeypatch)
+    assert plano.main(["--reserva"]) == 0
+    assert "Reserva da Fase 1" in capsys.readouterr().out

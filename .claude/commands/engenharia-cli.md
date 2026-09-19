@@ -389,7 +389,7 @@ Gravar a posição aqui alimenta só esse check -- para mover a posição do boo
 | `--bloco {MFC,PED,CIR,GO,CM}` | Filtro do `--listar`: bloco de peso UERJ, **derivado** de `area` (`MFC`=Preventiva, `GO`=Ginecologia+Obstetrícia, `CM`=o resto). Não é coluna. |
 | `--status {pendente,feita,cortada}` | Filtro do `--listar`. |
 | `--fonte {extensivo,rf,custom}` | Filtro do `--listar`. |
-| `--json` | Saída do `--listar` ou do `--pendencia-revisao` em JSON. |
+| `--json` | Saída do `--listar`, do `--pendencia-revisao` ou do `--reserva` em JSON. |
 | `--concluir ID` | Marca a tarefa como `feita`: grava `data_conclusao`, `sessao_bulk_id` e `origem_conclusao=usuario`. **Exige `--sessao`.** |
 | `--sessao N` | **O `id` da linha em `sessoes_bulk`, não o `sessao_num`** (que se repete entre áreas). Sessão inexistente -> **recusa (exit 2)**; o output ecoa área/data/questões da sessão casada, que é como o id trocado se denuncia. |
 | `--data AAAA-MM-DD` | Data de conclusão do `--concluir` (default: hoje). Formato diferente -> recusa. |
@@ -403,6 +403,7 @@ Gravar a posição aqui alimenta só esse check -- para mover a posição do boo
 | `--feitas "1,4,9"` | Ids do `--confirmar-area` que estão **feitos**. |
 | `--pendentes "2,3"` | Ids do `--confirmar-area` que estão **pendentes** (limpa o vínculo de conclusão de cada um). |
 | `--pendencia-revisao` | Quantas linhas ainda têm `origem_conclusao=dashboard_2026-09-10`, **por área** (read-only), ordenado por peso de bloco UERJ. Zero = passada completa. |
+| `--reserva` | **(s189)** As linhas PENDENTES **fora da fila** (`semana_plano` NULL: as que a `fase1_exclusiva` tirou + a reserva do extensivo S1-S20), por **peso UERJ** desc (`prevalencia_uerj.json`, casamento pelo mesmo `casa` do gerador da trilha), em **Markdown no stdout** (read-only; `--json` para a lista crua). Colunas que decidem: `tema ja na fila por` (outra linha agendada já cobre o tema) e `estado (18/09)` (ZERO/TOCADO/PARCIAL/FEITO, o porquê da exclusão). **WARN no stderr** só para faixa ALTA sem NENHUMA linha na fila -- o risco real; linha sem tema casado sai como *não medida*, nunca peso zero. Uso: `python tools/plano.py --reserva > docs/RESERVA-FASE1.md`; o gate é o olho do operador, uma vez. |
 
 As três fontes, todas versionadas em `core/cronograma/`: `grade_extensivo.json` (735 tarefas /
 52 semanas, part-1) · `grade.json` (Reta Final -- entram só as **pendentes** de S17-S28) ·
@@ -429,7 +430,8 @@ Escrita só por `app/utils/db.py` (`plano_upsert_tarefas`, `plano_set_status`, `
 dívida declarada, o motivo é explicação e não o dado de controle.
 
 **Exatamente UM modo por invocação** (`--semear` | `--listar` | `--concluir` | `--cortar` |
-`--mover` | `--reabrir` | `--revisar-area` | `--confirmar-area` | `--pendencia-revisao`); dois
+`--mover` | `--reabrir` | `--revisar-area` | `--confirmar-area` | `--pendencia-revisao` |
+`--reserva`); dois
 modos ligados -> `exit 2` nomeando os dois. Mutação de UMA linha grava direto: dry-run +
 `--expect` são o rito da operação **em lote** (`--semear`, `--confirmar-area`), AGENTE.md §10.7.
 

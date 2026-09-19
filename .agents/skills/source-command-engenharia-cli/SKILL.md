@@ -391,7 +391,7 @@ Gravar a posição aqui alimenta só esse check -- para mover a posição do boo
 | `--semear` | Semeia `plano_tarefas` das 3 fontes (extensivo, Reta Final pendente, custom). **Dry-run é o default.** |
 | `--dry-run` | Explicita o default do `--semear`: mede, imprime o COUNT-ASSERT e **não grava**. |
 | `--apply` | Grava. Exige `--expect N`. Mutuamente exclusivo com `--dry-run`. |
-| `--expect N` | COUNT-ASSERT: N de linhas **NOVAS** esperadas. Difere do medido na hora -> **recusa (exit 2)** sem gravar nada. Na 2a execução o N correto é `0` (idempotência). |
+| `--expect N` | COUNT-ASSERT: N de linhas **NOVAS** esperadas. Difere do medido na hora -> **recusa (exit 2)** sem gravar nada. Na 2a execução o N correto é `0` (idempotência). O `--semear` imprime também quantas linhas **EXISTENTES mudariam** nos campos semeados (s189, `diferenca_semeada`, que espelha o UPSERT): `0` = o re-seed não muda nada no banco -- é essa linha, e não o `--expect 0`, que prova "nada mudou". |
 | `--listar` | Lista a tabela (read-only). |
 | `--semana N` | Filtro do `--listar`: semana do **plano** (não a da fonte). No `--mover`, é a semana de **destino**. |
 | `--bloco {MFC,PED,CIR,GO,CM}` | Filtro do `--listar`: bloco de peso UERJ, **derivado** de `area` (`MFC`=Preventiva, `GO`=Ginecologia+Obstetrícia, `CM`=o resto). Não é coluna. |
@@ -467,9 +467,14 @@ ambas em `core/cronograma/` e ambas opcionais -- arquivo ausente = a política p
   `status` (`pendente`|`cortada` -- **nunca `feita`**: conclusão só nasce de `--concluir`) e `nota`.  <!-- CHECK: test_plano -->
   Com `fase1_exclusiva: true`, linha pendente que a regra pura poria nas semanas 1-7 e que a trilha
   não lista **sai da fila** (semana NULL + nota `fora da trilha da Fase 1 (reserva)`), sem mudar de
-  status; a Fase 2 não é tocada. Mudar a estratégia de estudo = editar o JSON + `--semear --apply`;
-  o `--mover` continua existindo, mas **é desfeito pelo próximo re-seed** (`semana_plano`/`ordem` estão
-  em `CAMPOS_SEMEADOS`) -- o que é para durar mora na trilha.
+  status; a Fase 2 não é tocada. 🔴 **O arquivo é GERADO (s189) -- nunca editar à mão:** a estratégia
+  mora em `core/cronograma/trilha/parametros.json`, o ajuste de UMA linha em
+  `core/cronograma/trilha/custom.json` (camada manual, vence o gerado por chave), e o arquivo sai de
+  `python tools/trilha.py --gravar` (assinatura abaixo), seguido de `--semear --dry-run` ->
+  `--apply --expect N`. ⚰️ *Revogado em 19/09/2026: "mudar a estratégia de estudo = editar o JSON +
+  `--semear --apply`" (s188) -- o `--gravar` do gerador sobrescrevia a edição manual em silêncio (duas
+  autoridades; o F120 uma camada acima).* O `--mover` continua existindo, mas **é desfeito pelo próximo
+  re-seed** (`semana_plano`/`ordem` estão em `CAMPOS_SEMEADOS`) -- o que é para durar mora na trilha.
 
 O dry-run imprime `links aplicados`, `override(s) aplicado(s)` e `linha(s) tiradas da Fase 1`; override
 **sem linha correspondente** é listado e **derruba o `--apply`** (exit 2): o plano pedido não é o que
@@ -479,6 +484,38 @@ Fontes injetadas (testes) nunca leem os dois arquivos do disco.  <!-- CHECK: tes
 
 Specs `.vibeflow/specs/plano-ssot-e-cards-v2-part-2.md` (semeadura), `-part-3.md` (progresso) e
 `trilha-uerj-plano-como-dado.md` (camadas de dado).
+
+### `tools/trilha.py` -- o GERADOR da trilha da Fase 1 (`plano_trilha.json`)
+
+| Flag | Função |
+|---|---|
+| (sem flag) | Gera e **compara** com o `plano_trilha.json` gravado -- read-only. Imprime escolhidas/agendadas, as listas por bloco nas DUAS réguas (bloco em que a UERJ cobra x área do EMED, com as linhas em que divergem, nominais), o resultado das propriedades e `IDENTICO`/`DIFERE (+a -r ~m)`. |
+| `--tabela` | Acrescenta a trilha semana a semana (ordem, id, bloco, área, tema, tipo, q, valor V, origem gerador/manual). |
+| `--gravar` | Escreve `core/cronograma/plano_trilha.json`. Roda `verificar_propriedades` ANTES e **recusa (exit 2) sem gravar** se a saída violar o que os parâmetros declaram. |
+
+**Autoridade em três camadas, todas DADO versionado** (s189, spec `trilha-autoridade-unica`, decisão
+do `/ai-eng`): `core/cronograma/trilha/parametros.json` (a ESTRATÉGIA: calendário, capacidade de
+listas por semana, piso/teto por bloco, simulados, pesos; e `entrada`, os arquivos fixados que o
+gerador lê) -> `core/cronograma/trilha/custom.json` (a ÚNICA camada editável à mão: override por
+`(fonte, ref_semana_fonte, tarefa_fonte)` com `racional` obrigatório; vence o gerado na mesma chave)
+-> `tools/trilha.py` -> `plano_trilha.json` (GERADO, com `gerado_por`). Entrada + parâmetros +
+custom + código = saída. Rito de recalibração (depois de cada prova UERJ): editar parâmetros ou
+custom -> `python tools/trilha.py` (ler o diff) -> `--gravar` -> `python tools/plano.py --semear
+--dry-run` -> `--apply --expect N`.
+
+🔴 **Gates:** `tools/test_trilha.py` -- GOLDEN (o arquivo gravado é exatamente a saída do gerador:
+edição à mão no gerado, ou parâmetro mudado sem `--gravar`, derruba o commit) e PROPRIEDADE (a
+mesma `verificar_propriedades` do `--gravar`, sobre o arquivo gravado). Parâmetro inválido (bloco
+fora do rodízio, piso > teto, capacidade sem calendário) é recusado na carga.  <!-- CHECK: test_trilha -->
+
+⚠️ **Limites declarados** (docstring do módulo): (a) a entrada é um snapshot de 18/09 -- progresso
+posterior muda o status no banco, não a prioridade; re-snapshot = arquivos novos com data, sem
+exportador. (b) Regra do bloco: bloco do tema = o bloco UERJ majoritário entre os que têm >= 3
+questões dele (senão, a área); tema cobrado em vários blocos cai INTEIRO no majoritário. (c) O
+piso/teto é conferido na régua do PRÓPRIO gerador -- auto-consistência, não independência; a lente
+por área sai no relatório, sem gate. (d) Casamento linha <-> tema por tokens: linha que não casa
+fica fora dos candidatos. O resto do `scratch/s188_trilha/` (relatório, selo, veredito, extração de
+links, classificação por edição) ficou fora do repo: é registro, não é re-executado.
 
 ### `tools/listas.py` -- ledger de LISTAS de exercicios (`sessoes_bulk.tarefa_id`)
 

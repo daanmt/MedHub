@@ -1,6 +1,7 @@
 {
- "_doc": "TRILHA da Fase 1 (19/09 -> 31/10/2026, prova UERJ em 01/11) como DADO -- s188, spec trilha-uerj-plano-como-dado. Overrides aplicados por tools/plano.py::aplicar_trilha POR CIMA das regras puras; com fase1_exclusiva, linha pendente das semanas 1-7 que nao esta aqui sai da fila (reserva). Derivacao: incidencia por tema nas provas UERJ 2021-2026 (core/cronograma/prevalencia_uerj.json) x o que o operador ja estudou (dashboard_snapshot + banco) -> prioridade P = peso_uerj x lacuna; piso de 19% e teto de 25% das questoes de lista por bloco (CM, CIR, GO, PED); MFC entra por sessoes de aula-base + o bloco de 20q dentro das 6 provas inteiras. Editavel a mao: mudar a estrategia = editar este arquivo + `plano.py --semear --apply`. Status de linha ja existente muda por --reabrir/--cortar.",
- "versao": "2026-09-18 (s188)",
+ "_doc": "GERADO por tools/trilha.py --gravar -- NAO EDITAR A MAO (a proxima gravacao sobrescreve, e o teste golden derruba o commit). TRILHA da Fase 1 (prova UERJ em 01/11) como DADO: overrides aplicados por tools/plano.py::aplicar_trilha POR CIMA das regras puras; com fase1_exclusiva, linha pendente das semanas 1-7 que nao esta aqui sai da fila (reserva: `plano.py --reserva`). Mudar a estrategia = core/cronograma/trilha/parametros.json; mover UMA linha a mao = core/cronograma/trilha/custom.json; depois `python tools/trilha.py --gravar` + `python tools/plano.py --semear --dry-run` -> `--apply --expect N`. Derivacao: incidencia por tema nas provas UERJ 2021-2026 x o que o operador ja estudou -> prioridade P = peso_uerj x lacuna; piso/teto por bloco CM/CIR/GO/PED sobre o orcamento de listas; MFC entra por sessoes de aula-base + o bloco de 20q das 6 provas inteiras. Status de linha ja existente muda por --reabrir/--cortar, nunca por aqui.",
+ "gerado_por": "tools/trilha.py --gravar",
+ "versao": "2026-09-18 (s188; gerador trazido para o repo na s189)",
  "fase1_exclusiva": true,
  "calendario": {
   "1": {

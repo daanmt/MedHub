@@ -1,0 +1,94 @@
+{
+ "_doc": "PARAMETROS do gerador da trilha da Fase 1 (tools/trilha.py) -- a ESTRATEGIA como dado (s189, spec trilha-autoridade-unica; valores da s188). Mudar a estrategia = editar AQUI (ou a camada manual custom.json) + `python tools/trilha.py --gravar` + `python tools/plano.py --semear --dry-run` -> `--apply --expect N`. NUNCA editar o plano_trilha.json: ele e SAIDA. piso/teto = fracao do orcamento de listas (soma de cap_listas) por bloco CM/CIR/GO/PED; bloco = o bloco em que a UERJ cobra o tema. peso_edicao: 2021-2022 valem 0,7 (formato 60q, mais antigo). mfc_para_emed: tema MFC-clinica (fora do catalogo EMED) -> tema EMED cuja LISTA cobre o conteudo. teto_sessoes: aulas-base de tema SEM lista no EMED por semana. `entrada` = os arquivos FIXADOS que o gerador le (entrada + parametros + custom + codigo = saida).",
+ "versao": "2026-09-18 (s188; gerador trazido para o repo na s189)",
+ "fase1_exclusiva": true,
+ "calendario": {
+  "1": {
+   "inicio": "2026-09-19",
+   "fim": "2026-09-20"
+  },
+  "2": {
+   "inicio": "2026-09-21",
+   "fim": "2026-09-27"
+  },
+  "3": {
+   "inicio": "2026-09-28",
+   "fim": "2026-10-04"
+  },
+  "4": {
+   "inicio": "2026-10-05",
+   "fim": "2026-10-11"
+  },
+  "5": {
+   "inicio": "2026-10-12",
+   "fim": "2026-10-18"
+  },
+  "6": {
+   "inicio": "2026-10-19",
+   "fim": "2026-10-25"
+  },
+  "7": {
+   "inicio": "2026-10-26",
+   "fim": "2026-10-31"
+  }
+ },
+ "cap_listas": {
+  "1": 45,
+  "2": 440,
+  "3": 440,
+  "4": 400,
+  "5": 540,
+  "6": 540,
+  "7": 140
+ },
+ "simulados_uerj": {
+  "1": 2023,
+  "2": 2021,
+  "3": 2022,
+  "4": 2024,
+  "5": 2025,
+  "6": 2026
+ },
+ "bloco_de_area": {
+  "Preventiva": "MFC",
+  "Pediatria": "PED",
+  "Cirurgia": "CIR",
+  "Ginecologia": "GO",
+  "Obstetrícia": "GO"
+ },
+ "peso_edicao": {
+  "2021": 0.7,
+  "2022": 0.7
+ },
+ "piso": 0.19,
+ "teto": 0.25,
+ "excluir_temas": [
+  "COVID"
+ ],
+ "mfc_para_emed": {
+  "Metodo Clinico Centrado na Pessoa e decisao compartilhada": "Medicina de Família e Comunidade",
+  "Prevencao Quaternaria e sobrediagnostico": "Medicina de Família e Comunidade",
+  "Abordagem familiar e ciclos de vida (genograma, ecomapa)": "Medicina de Família e Comunidade",
+  "Registro clinico e gestao da clinica (SOAP, CIAP, acesso avancado)": "Medicina de Família e Comunidade",
+  "Problemas comuns/indiferenciados na APS (sintomas sem explicacao medica, MUS)": "Medicina de Família e Comunidade",
+  "Avaliacao Multidimensional do Idoso": "Saúde do Idoso",
+  "Polifarmacia, desprescricao e RAM no idoso": "Saúde do Idoso",
+  "Raciocinio diagnostico quantitativo (S/E, VPP/VPN, RV, probabilidade pre-teste)": "Testes Diagnósticos",
+  "Rastreamento (criterios e programas)": "Medicina de Família e Comunidade"
+ },
+ "teto_sessoes": {
+  "2": 2,
+  "3": 2,
+  "4": 2,
+  "5": 3,
+  "6": 3
+ },
+ "entrada": {
+  "plano": "core/cronograma/trilha/entrada/plano_2026-09-18.json",
+  "cobertura": "core/cronograma/trilha/entrada/cobertura_2026-09-18.json",
+  "catalogo": "core/cronograma/trilha/entrada/catalogo_uerj.json",
+  "mapa_uerj": "simulados/uerj/uerj_mapa_questoes_2021-2026.json",
+  "dashboard": "core/cronograma/dashboard_snapshot.json",
+  "plano_custom": "core/cronograma/plano_custom.json"
+ }
+}

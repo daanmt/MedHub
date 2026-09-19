@@ -595,6 +595,37 @@ def _contar(linhas, chave):
     return saida
 
 
+def _comparavel(campo, valor):
+    """`q_previstas` e REAL no banco e float/int no JSON: compara como float."""
+    if campo == "q_previstas" and valor is not None:
+        return float(valor)
+    return valor
+
+
+def diferenca_semeada(linhas, atuais):
+    """Linhas JA EXISTENTES que o re-seed reescreveria, e em quais campos. PURA.
+
+    s189: o `--expect N` so prova quantas linhas NOVAS entram; "o re-seed nao muda nada"
+    ficava sem prova. Espelha o UPSERT de `db.plano_upsert_tarefas`: so `CAMPOS_SEMEADOS`,
+    e a `nota` de linha com `origem_conclusao = usuario` sobrevive (nao conta como mudanca).
+    Devolve `(chaves_que_mudam, {campo: n})`."""
+    por_chave = {(a["fonte"], a["ref_semana_fonte"], a["tarefa_fonte"]): a for a in atuais}
+    mudam, campos = [], {}
+    for l in linhas:
+        chave = (l["fonte"], l["ref_semana_fonte"], l["tarefa_fonte"])
+        a = por_chave.get(chave)
+        if a is None:
+            continue
+        dif = [c for c in db.CAMPOS_SEMEADOS
+               if not (c == "nota" and a.get("origem_conclusao") == db.ORIGEM_USUARIO)
+               and _comparavel(c, l.get(c)) != _comparavel(c, a.get(c))]
+        if dif:
+            mudam.append(chave)
+            for c in dif:
+                campos[c] = campos.get(c, 0) + 1
+    return mudam, campos
+
+
 def semear(apply=False, expect=None, out=print, **fontes):
     """Rito de semeadura. Devolve `(exit_code, linhas, relatorio)`."""
     linhas, rel = montar_linhas(**fontes)
@@ -625,6 +656,11 @@ def semear(apply=False, expect=None, out=print, **fontes):
         out(f"  ATENCAO: trilha com {len(rel['trilha_sem_linha'])} override(s) sem linha "
             f"correspondente: {rel['trilha_sem_linha'][:8]}")
     out(f"  no banco: {medida['novas']} nova(s), {medida['existentes']} ja existente(s)")
+    mudam, campos = diferenca_semeada(linhas, db.plano_listar())
+    rel["mudariam"], rel["mudariam_campos"] = len(mudam), campos
+    out(f"  mudariam nos campos semeados: {len(mudam)} linha(s) existente(s)"
+        + (f" -- {', '.join(f'{c} {n}' for c, n in sorted(campos.items()))}; ex.: "
+           f"{mudam[:3]}" if mudam else " (re-seed idempotente sobre o banco atual)"))
 
     if not apply:
         out(f"  DRY-RUN: nada gravado. Para aplicar: --semear --apply --expect "

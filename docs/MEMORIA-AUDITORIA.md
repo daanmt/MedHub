@@ -286,6 +286,8 @@ nunca convertido em métrica para o painel ficar verde.
 <!-- TERMO-REVOGADO: ate sair 4 | revisar.md secao Relearning (s187, F117) -- sob a regua v2 o 4 e 'sem esforco' (raro); exigi-lo faria todo acerto comum repetir indefinidamente. O alvo e `>= 3` -->
 <!-- TERMO-REVOGADO: Priorizar 1 e 2 sobre 3 | revisar.md secao Relearning (s187, F117) -- sob a v2 o 3 nunca entra na fila de relearning -->
 <!-- TERMO-REVOGADO: Realizada? | importar-planilha.md (s186, part-8) -- a coluna do Dashboard do Drive deixou de ser sinal de conclusao; quem conclui e `plano.py --concluir ID --sessao N` -->
+<!-- TERMO-REVOGADO: editar o JSON + `--semear --apply` | engenharia-cli.md + HANDOFF (s189, spec trilha-autoridade-unica) -- plano_trilha.json passou a ser GERADO por tools/trilha.py; a edicao a mao era sobrescrita pelo --gravar em silencio e hoje derruba o golden. Estrategia = trilha/parametros.json; linha = trilha/custom.json -->
+<!-- TERMO-REVOGADO: Editavel a mao: mudar a estrategia = editar este arquivo | _doc do plano_trilha.json (s188), regravado na s189 -- o arquivo e SAIDA do gerador; o _doc novo diz NAO EDITAR A MAO -->
 
 > **Por que os marcadores são comentários HTML:** eles não aparecem no render do documento (o
 > leitor humano lê a prosa acima, não a lista), mas são triviais de extrair. O registro fica onde a

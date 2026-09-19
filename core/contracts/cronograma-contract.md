@@ -111,7 +111,10 @@ O sync era um passo único e **impossível**: mandava o agente baixar o xlsx via
   as pendentes das semanas 1-7 (era TODAS: 12.027q / 44d = 273 q/dia, e o recomendador lia o
   mesmo número); divisor segue `FIM_CONTEUDO_ALVO` (s159), e alvo vencido não ganha divisor.
   (b) **Cota do dia** nova, sobre o `calendario` do `plano_trilha.json`. (c) Cada régua diz o
-  que mede: marco de volume (linha Volume), ritmo da Fase 1 e cota (bloco do plano).
+  que mede: marco de volume (linha Volume), ritmo da Fase 1 e cota (bloco do plano). (d) O `plano_trilha.json`
+  passa a ser SAÍDA de `tools/trilha.py` (F124): estratégia em `core/cronograma/trilha/parametros.json`,
+  ajuste de linha em `trilha/custom.json`, entrada fixada em `trilha/entrada/`; golden + propriedade
+  em `tools/test_trilha.py`.
 
 - **v1.3 (2026-09-17, s185 — PRD `plano-ssot-e-cards-v2`, Parte 4):** **o plano vira dado e o
   Drive sai do boot.** (a) **`plano_tarefas` declarada como a tabela da feature** na Cláusula 5 —

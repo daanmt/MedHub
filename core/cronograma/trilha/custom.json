@@ -1,0 +1,33 @@
+{
+ "_doc": "Camada MANUAL da trilha da Fase 1 -- a UNICA camada editavel a mao (s189). Cada entrada e um override por chave (fonte, ref_semana_fonte, tarefa_fonte) e VENCE o que o gerador decidiu para a mesma chave; pode mirar qualquer fonte (custom, rf, extensivo). Campos: semana_plano, ordem, racional (obrigatorio: por que a mao passou por cima do gerador) e, opcionais, status (pendente|cortada; default pendente) e nota. semana > 7 = fora da Fase 1. Depois de editar: `python tools/trilha.py --gravar` + `plano.py --semear`. E aqui que vai o que antes era `plano.py --mover` numa linha da Fase 1 (o --mover e desfeito pelo re-seed e, com a trilha ativa, recusa). Origem: trilha_custom.py da s188.",
+ "overrides": [
+  {"fonte": "custom", "ref_semana_fonte": 0, "tarefa_fonte": 19, "semana_plano": 1, "ordem": 1, "racional": "diagnóstico: primeira prova inteira, mede o acerto por bloco na banca real e recalibra a trilha"},
+  {"fonte": "custom", "ref_semana_fonte": 0, "tarefa_fonte": 23, "semana_plano": 2, "ordem": 90, "racional": "simulado do fim de semana (60 questões, cabe no internato)"},
+  {"fonte": "custom", "ref_semana_fonte": 0, "tarefa_fonte": 24, "semana_plano": 3, "ordem": 90, "racional": "simulado do fim de semana (60 questões, cabe no internato)"},
+  {"fonte": "custom", "ref_semana_fonte": 0, "tarefa_fonte": 18, "semana_plano": 4, "ordem": 90, "racional": "simulado do fim de semana, o primeiro depois da colação"},
+  {"fonte": "custom", "ref_semana_fonte": 0, "tarefa_fonte": 17, "semana_plano": 5, "ordem": 90, "racional": "simulado do fim de semana"},
+  {"fonte": "custom", "ref_semana_fonte": 0, "tarefa_fonte": 16, "semana_plano": 6, "ordem": 90, "racional": "ensaio geral: a prova mais recente, a uma semana da real"},
+  {"fonte": "custom", "ref_semana_fonte": 0, "tarefa_fonte": 3, "semana_plano": 1, "ordem": 12, "racional": "raciocínio diagnóstico com conta: caiu em 6 de 6 edições"},
+  {"fonte": "custom", "ref_semana_fonte": 0, "tarefa_fonte": 1, "semana_plano": 2, "ordem": 12, "racional": "prevenção quaternária: é a lente do bloco inteiro, não só um tema"},
+  {"fonte": "custom", "ref_semana_fonte": 0, "tarefa_fonte": 27, "semana_plano": 2, "ordem": 17, "racional": "tuberculose: tema número 1 da prova, cobrado em 4 blocos"},
+  {"fonte": "custom", "ref_semana_fonte": 0, "tarefa_fonte": 4, "semana_plano": 3, "ordem": 12, "racional": "método clínico centrado na pessoa"},
+  {"fonte": "custom", "ref_semana_fonte": 0, "tarefa_fonte": 2, "semana_plano": 3, "ordem": 17, "racional": "avaliação multidimensional do idoso"},
+  {"fonte": "custom", "ref_semana_fonte": 0, "tarefa_fonte": 8, "semana_plano": 4, "ordem": 12, "racional": "saúde mental na APS (álcool, tabaco, depressão): 6 de 6 edições"},
+  {"fonte": "custom", "ref_semana_fonte": 0, "tarefa_fonte": 7, "semana_plano": 4, "ordem": 17, "racional": "rastreamento: critério numérico de elegibilidade é a pegadinha"},
+  {"fonte": "custom", "ref_semana_fonte": 0, "tarefa_fonte": 5, "semana_plano": 5, "ordem": 12, "racional": "polifarmácia e desprescrição"},
+  {"fonte": "custom", "ref_semana_fonte": 0, "tarefa_fonte": 26, "semana_plano": 5, "ordem": 17, "racional": "condições crônicas na APS"},
+  {"fonte": "custom", "ref_semana_fonte": 0, "tarefa_fonte": 14, "semana_plano": 9, "ordem": 2, "racional": "coqueluche: coberta na S5 pela sessão do extensivo (febre sem sinais, HAS na criança, coqueluche); o resumo próprio fica para a Fase 2"},
+  {"fonte": "custom", "ref_semana_fonte": 0, "tarefa_fonte": 13, "semana_plano": 5, "ordem": 25, "racional": "oncologia pediátrica (Wilms x neuroblastoma, linfoma): 4 questões, aula comparativa"},
+  {"fonte": "custom", "ref_semana_fonte": 0, "tarefa_fonte": 6, "semana_plano": 6, "ordem": 12, "racional": "cuidados paliativos e dor crônica"},
+  {"fonte": "custom", "ref_semana_fonte": 0, "tarefa_fonte": 25, "semana_plano": 6, "ordem": 17, "racional": "abordagem familiar e ciclos de vida"},
+  {"fonte": "custom", "ref_semana_fonte": 0, "tarefa_fonte": 9, "semana_plano": 6, "ordem": 21, "racional": "anafilaxia: 2 questões no bloco de Pediatria, tema sem resumo"},
+  {"fonte": "custom", "ref_semana_fonte": 0, "tarefa_fonte": 15, "semana_plano": 6, "ordem": 25, "racional": "TEA e psiquiatria infantil: 2 questões, tema sem resumo"},
+  {"fonte": "custom", "ref_semana_fonte": 0, "tarefa_fonte": 28, "semana_plano": 7, "ordem": 5, "racional": "UERJ 2017-2020 pelo banco do EMED"},
+  {"fonte": "custom", "ref_semana_fonte": 0, "tarefa_fonte": 29, "semana_plano": 7, "ordem": 6, "racional": "UERJ 2017-2020 pelo banco do EMED"},
+  {"fonte": "custom", "ref_semana_fonte": 0, "tarefa_fonte": 10, "semana_plano": 9, "ordem": 2, "racional": "FA e arritmias: 1 questão em 6 edições, fica para a Fase 2"},
+  {"fonte": "custom", "ref_semana_fonte": 0, "tarefa_fonte": 11, "semana_plano": 9, "ordem": 2, "racional": "osteoporose: a Reta Final já traz teoria e lista do tema; o resumo fica para a Fase 2"},
+  {"fonte": "custom", "ref_semana_fonte": 0, "tarefa_fonte": 12, "semana_plano": 9, "ordem": 2, "racional": "HPB e PSA: 1 questão em 6 edições, fica para a Fase 2"},
+  {"fonte": "custom", "ref_semana_fonte": 0, "tarefa_fonte": 20, "semana_plano": 9, "ordem": 9, "racional": "termômetro INEP: depois da UERJ"},
+  {"fonte": "custom", "ref_semana_fonte": 0, "tarefa_fonte": 21, "semana_plano": 13, "ordem": 9, "racional": "termômetro INEP: depois da UERJ"}
+ ]
+}

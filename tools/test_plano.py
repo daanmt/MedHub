@@ -973,3 +973,31 @@ def test_trilha_real_nao_tem_override_orfao():
     _, rel = plano.montar_linhas()
     assert rel["trilha_sem_linha"] == [], rel["trilha_sem_linha"][:5]
     assert rel["trilha_aplicados"] > 0
+
+
+# =====================================================================================
+# s189 -- o dry-run prova "o re-seed nao muda nada" (spec trilha-autoridade-unica)
+# =====================================================================================
+
+def test_dry_run_conta_as_linhas_existentes_que_mudariam(tmp_path, monkeypatch):
+    """`--expect N` so prova quantas linhas NOVAS entram. A prova pedida na vespera da prova
+    -- mover o gerador de casa nao muda o banco -- exige contar as EXISTENTES que o re-seed
+    reescreveria, por campo semeado. Um `--mover` vira exatamente 1 mudanca de semana."""
+    _caminho, idx = _semeado(tmp_path, monkeypatch)
+    saida = []
+    code, _, rel = plano.semear(apply=False, out=saida.append, **_fontes())
+    assert code == 0 and rel["mudariam"] == 0 and rel["mudariam_campos"] == {}
+    assert any("mudariam nos campos semeados: 0" in s for s in saida)
+    alvo = idx[("extensivo", 22, 2)]
+    plano.mover(alvo["id"], 5, out=_mudo())
+    code, _, rel = plano.semear(apply=False, out=_mudo(), **_fontes())
+    assert rel["mudariam"] == 1 and rel["mudariam_campos"] == {"semana_plano": 1}, rel
+
+
+def test_nota_do_usuario_nao_conta_como_mudanca(tmp_path, monkeypatch):
+    """Espelha o UPSERT: a nota de linha com origem `usuario` sobrevive ao re-seed, logo nao
+    e diferenca -- senao o dry-run acusaria mudanca que o apply nao faz."""
+    _caminho, idx = _semeado(tmp_path, monkeypatch)
+    plano.cortar(idx[("extensivo", 21, 3)]["id"], "coberto pela Reta Final", out=_mudo())
+    _code, _, rel = plano.semear(apply=False, out=_mudo(), **_fontes())
+    assert rel["mudariam"] == 0, rel["mudariam_campos"]

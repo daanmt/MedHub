@@ -398,7 +398,7 @@ da trilha (`core/cronograma/trilha/custom.json` + `python tools/trilha.py --grav
 | `--bloco {MFC,PED,CIR,GO,CM}` | Filtro do `--listar`: bloco de peso UERJ, **derivado** de `area` (`MFC`=Preventiva, `GO`=Ginecologia+Obstetrícia, `CM`=o resto). Não é coluna. |
 | `--status {pendente,feita,cortada}` | Filtro do `--listar`. |
 | `--fonte {extensivo,rf,custom}` | Filtro do `--listar`. |
-| `--json` | Saída do `--listar`, do `--pendencia-revisao` ou do `--reserva` em JSON. |
+| `--json` | Saída do `--listar`, do `--pendencia-revisao`, do `--reserva` ou do `--panorama` em JSON. |
 | `--concluir ID` | Marca a tarefa como `feita`: grava `data_conclusao`, `sessao_bulk_id` e `origem_conclusao=usuario`. **Exige `--sessao`.** |
 | `--sessao N` | **O `id` da linha em `sessoes_bulk`, não o `sessao_num`** (que se repete entre áreas). Sessão inexistente -> **recusa (exit 2)**; o output ecoa área/data/questões da sessão casada, que é como o id trocado se denuncia. |
 | `--data AAAA-MM-DD` | Data de conclusão do `--concluir` (default: hoje). Formato diferente -> recusa. |
@@ -413,6 +413,7 @@ da trilha (`core/cronograma/trilha/custom.json` + `python tools/trilha.py --grav
 | `--pendentes "2,3"` | Ids do `--confirmar-area` que estão **pendentes** (limpa o vínculo de conclusão de cada um). |
 | `--pendencia-revisao` | Quantas linhas ainda têm `origem_conclusao=dashboard_2026-09-10`, **por área** (read-only), ordenado por peso de bloco UERJ. Zero = passada completa. |
 | `--reserva` | **(s189)** As linhas PENDENTES **fora da fila** (`semana_plano` NULL: as que a `fase1_exclusiva` tirou + a reserva do extensivo S1-S20), por **peso UERJ** desc (`prevalencia_uerj.json`, casamento pelo mesmo `casa` do gerador da trilha), em **Markdown no stdout** (read-only; `--json` para a lista crua). Colunas que decidem: `tema ja na fila por` (outra linha agendada já cobre o tema) e `estado (18/09)` (ZERO/TOCADO/PARCIAL/FEITO, o porquê da exclusão). **WARN no stderr** só para faixa ALTA sem NENHUMA linha na fila -- o risco real; linha sem tema casado sai como *não medida*, nunca peso zero. Uso: `python tools/plano.py --reserva > docs/RESERVA-FASE1.md`; o gate é o olho do operador, uma vez. |
+| `--panorama` | **(s190, pedido do operador)** O plano **EM ABERTO** como o boot o entrega, em **Markdown no stdout** (read-only; `--json` para o dict cru): semana de **calendário** da trilha (a mesma régua da cota do `day_plan`; fora do calendário cai para a posição do plano, sem data), as pendentes dela e as **atrasadas** de semana anterior na ordem do plano, a **sequência de simulados** da Fase 1 com status e o "da vez", a próxima semana e a Fase 1 inteira **contadas por classe**. A classe diz o que FAZER com a tarefa e sai de **campos** (`url_lista`, `q_previstas`, `fonte`), não de substring da `nota`: `lista` (link pronto) · `caderno` (sem link, com questões previstas: montar no banco do EMED pelo filtro) · `aula` (custom sem lista: aula-base do agente) · `sem_lista` (aula-base + 10-15 questões pelo filtro do tema). Lista por extenso as 12 primeiras abertas e **declara** o resto. Consumidor: `tools/hooks/memory_boot.py` (seção "Panorama do plano" do boot). Reserva e Fase 2 além da próxima semana ficam de fora -- os inventários são `--reserva` e `--listar`. |
 
 As três fontes, todas versionadas em `core/cronograma/`: `grade_extensivo.json` (735 tarefas /
 52 semanas, part-1) · `grade.json` (Reta Final -- entram só as **pendentes** de S17-S28) ·
@@ -440,7 +441,7 @@ dívida declarada, o motivo é explicação e não o dado de controle.
 
 **Exatamente UM modo por invocação** (`--semear` | `--listar` | `--concluir` | `--cortar` |
 `--mover` | `--reabrir` | `--revisar-area` | `--confirmar-area` | `--pendencia-revisao` |
-`--reserva`); dois
+`--reserva` | `--panorama`); dois
 modos ligados -> `exit 2` nomeando os dois. Mutação de UMA linha grava direto: dry-run +
 `--expect` são o rito da operação **em lote** (`--semear`, `--confirmar-area`), AGENTE.md §10.7.
 

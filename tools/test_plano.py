@@ -1057,6 +1057,100 @@ def test_cli_reserva_pelo_main(tmp_path, monkeypatch, capsys):
     assert "Reserva da Fase 1" in capsys.readouterr().out
 
 
+# =====================================================================================
+# s190 -- o PANORAMA do boot (pedido do operador): o que esta em aberto e o que fazer
+# =====================================================================================
+
+from datetime import date  # noqa: E402
+
+CAL_PANORAMA = {1: (date(2026, 9, 19), date(2026, 9, 20)),
+                2: (date(2026, 9, 21), date(2026, 9, 27))}
+
+
+def _linha_pan(i, semana, **kw):
+    base = {"id": i, "fonte": "rf", "area": "Cirurgia", "bloco": "CIR", "tema": "Tema %d" % i,
+            "q_previstas": 20.0, "status": "pendente", "semana_plano": semana, "ordem": i,
+            "url_lista": "https://lista/%d" % i, "nota": None}
+    base.update(kw)
+    return base
+
+
+def test_classe_da_tarefa_sai_de_campos_nunca_da_nota():
+    """A nota e prosa e muda de redacao: a classe (o que FAZER com a tarefa) sai de
+    `url_lista`, `q_previstas` e `fonte`. Link vence tudo; sem link, questao prevista =
+    caderno a criar; sem link e sem questao, custom = aula do agente, o resto = sem lista."""
+    assert plano.classe_da_tarefa(_linha_pan(1, 1)) == "lista"
+    assert plano.classe_da_tarefa(_linha_pan(1, 1, url_lista=None)) == "caderno"
+    assert plano.classe_da_tarefa(
+        _linha_pan(1, 1, url_lista=None, q_previstas=0, fonte="custom")) == "aula"
+    assert plano.classe_da_tarefa(
+        _linha_pan(1, 1, url_lista="", q_previstas=None, fonte="extensivo",
+                   nota="lista pronta no link")) == "sem_lista", "a nota nao decide a classe"
+    assert set(plano.CLASSES_PANORAMA) == {"lista", "caderno", "aula", "sem_lista"}
+
+
+def test_panorama_semana_de_calendario_atraso_simulados_e_proxima():
+    """O operador abriu o plano e nao soube o que fazer com tarefa sem lista nem a ordem dos
+    simulados (20/09/2026). O panorama junta: a semana de CALENDARIO (a regua da cota), as
+    pendentes dela e as ATRASADAS de semana anterior, a sequencia de simulados com status, e
+    a proxima semana contada por classe. Reserva, cortada e feita ficam fora das abertas."""
+    linhas = [
+        _linha_pan(1, 1, area="Simulado", tema="UERJ 2023 -- prova INTEIRA", q_previstas=100,
+                   status="feita"),
+        _linha_pan(2, 1),                                                   # atrasada
+        _linha_pan(3, 2, url_lista=None, q_previstas=0, fonte="custom",
+                   nota="MFC-UERJ: Gusso II"),                              # aula
+        _linha_pan(4, 2, status="cortada"),
+        _linha_pan(5, 2, area="Simulado", tema="UERJ 2021 -- prova INTEIRA", q_previstas=60,
+                   url_lista="simulados/uerj/uerj_ad_2021_a.pdf"),
+        _linha_pan(6, 3, url_lista=None, q_previstas=0, fonte="extensivo"),  # proxima semana
+        _linha_pan(7, None),                                                # reserva
+        _linha_pan(8, 9),                                                   # Fase 2
+    ]
+    p = plano.panorama(linhas, CAL_PANORAMA, date(2026, 9, 22))
+    assert (p["semana"], p["inicio"], p["fim"], p["dias"]) == (2, "2026-09-21", "2026-09-27", 6)
+    assert [t["id"] for t in p["abertas"]] == [2, 3, 5], "atrasada primeiro; sem cortada/feita"
+    assert p["abertas"][0]["atrasada"] and not p["abertas"][1]["atrasada"]
+    assert (p["atrasadas"], p["q_abertas"]) == (1, 80)
+    assert p["classes_abertas"] == {"lista": 2, "caderno": 0, "aula": 1, "sem_lista": 0}
+    assert [(s["id"], s["status"]) for s in p["simulados"]] == [(1, "feita"), (5, "pendente")]
+    assert p["proxima"]["semana"] == 3 and p["proxima"]["classes"]["sem_lista"] == 1
+    assert p["proxima"]["inicio"] is None, "semana fora do calendario: sem data inventada"
+    assert p["fase1"]["tarefas"] == 4, "pendentes das semanas 1-7: sem reserva e sem Fase 2"
+
+    md = plano.render_panorama(p)
+    assert "semana 2 (21/09 -> 27/09, 6 dia(s) com hoje)" in md
+    assert "**1 atrasada(s)**" in md and "#2 [S1 atrasada]" in md
+    assert "1/2 feitos" in md and "**da vez: UERJ 2021**" in md and "~~S1 UERJ 2023~~" in md
+    assert "**aula** -- MFC-UERJ: Gusso II" in md, "tarefa sem lista sai com o que fazer"
+    assert "`aula` = " in md and "`caderno` = " not in md, "legenda so das classes em uso"
+
+
+def test_panorama_sem_calendario_cai_para_a_posicao_do_plano():
+    """Depois do fim do calendario da trilha (ou sem ele) a semana e a POSICAO do plano --
+    menor semana com pendencia -- e as datas somem: nunca janela inventada."""
+    linhas = [_linha_pan(1, 8), _linha_pan(2, 9)]
+    p = plano.panorama(linhas, CAL_PANORAMA, date(2026, 11, 5))
+    assert (p["semana"], p["inicio"], p["dias"]) == (8, None, None)
+    assert "fora do calendario da trilha" in plano.render_panorama(p)
+    assert plano.panorama([], {}, date(2026, 11, 5)) is None
+    assert "sem tarefa pendente" in plano.render_panorama(None)
+
+
+def test_panorama_corta_a_lista_e_declara_o_resto():
+    linhas = [_linha_pan(i, 1) for i in range(1, plano.PANORAMA_TAREFAS + 4)]
+    md = plano.render_panorama(plano.panorama(linhas, CAL_PANORAMA, date(2026, 9, 19)))
+    assert "+3 tarefa(s) em aberto" in md and "--listar --semana 1" in md
+
+
+def test_cli_panorama_pelo_main(tmp_path, monkeypatch, capsys):
+    _semeado(tmp_path, monkeypatch)
+    assert plano.main(["--panorama"]) == 0
+    assert "Panorama do plano" in capsys.readouterr().out
+    assert plano.main(["--panorama", "--json"]) == 0
+    assert "classes_abertas" in capsys.readouterr().out
+
+
 def test_links_listas_da_estado_explicito_a_toda_tarefa():
     """F119 (pergunta do /ai-eng, s189): linha sem link distinguia "nao existe lista" de "link
     faltando"? Nao distinguia -- o estado medido na extracao (`match: sem_link`/`multi`) ficou

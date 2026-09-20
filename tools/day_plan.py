@@ -1227,9 +1227,9 @@ def render(p):
         # do PDF nem o snapshot do xlsx. Semana corrente = menor `semana_plano` com
         # pendência -- sem projeção por data (plano não é verdade-de-estado).
         if c.get("semana"):
-            # s189: a cota vai TAMBEM no cabecalho -- o hook de SessionStart injeta so as
-            # 8 primeiras linhas do plano (`memory_boot._DAY_PLAN_MAX_LINES`), e a linha
-            # detalhada, la embaixo do bloco, nunca chegaria ao boot.
+            # s189: a cota vai TAMBEM no cabecalho -- o hook de SessionStart corta o plano em
+            # `memory_boot._DAY_PLAN_MAX_LINES` linhas (eram 8; 40 desde a s190), e a linha
+            # detalhada, la embaixo do bloco, pode nao chegar ao boot.
             cota = c.get("cota")
             cab_cota = (f" · 🎯 cota ~{cota['cota']}q/dia ate {_dm(cota['fim'])}"
                         if cota else "")

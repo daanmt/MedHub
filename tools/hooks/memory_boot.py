@@ -2,10 +2,17 @@
 """
 SessionStart hook v2: injeta o boot compacto no início da sessão.
 
-Bloco injetado: fraquezas top-N (memória longa) + resumo do Plano do Dia
-(day_plan.py via subprocess, timeout 8s, fallback silencioso) + flag de
-drift HANDOFF↔history + "Próximo passo imediato" do HANDOFF + texto-contrato
-Presença->Expansão (o boot OFERECE o próximo ato, não executa a sessão).
+Bloco injetado: fraquezas top-N (memória longa) + Plano do Dia (day_plan.py via
+subprocess, timeout 8s, fallback silencioso) + Panorama do plano (plano.py
+--panorama, idem) + flag de drift HANDOFF↔history + "Próximo passo imediato" do
+HANDOFF + texto-contrato Presença->Expansão (o boot ABRE com o panorama para o
+operador e OFERECE o próximo ato; não executa a sessão).
+
+s190 (pedido do operador, 20/09/2026): o boot entrega o PANORAMA -- o que está em
+aberto e o que fazer em cada tarefa, a meta, os passos e as métricas. Por isso o
+Plano do Dia deixou de ser cortado em 8 linhas (as métricas -- ritmo real x
+necessário, diagnóstico, recomendação -- moravam depois do corte e nunca chegavam)
+e o panorama entra como seção própria. Os caps seguem existindo e se DECLARANDO.
 """
 import json
 import os
@@ -20,7 +27,10 @@ os.chdir(PROJECT_ROOT)
 sys.path.insert(0, str(PROJECT_ROOT))
 
 _DAY_PLAN_TIMEOUT = 8   # segundos; o boot nunca depende da saúde do day_plan
-_DAY_PLAN_MAX_LINES = 8
+_DAY_PLAN_MAX_LINES = 40     # s190: era 8 -- as métricas do panorama moram depois da 8a linha
+_PANORAMA_MAX_LINES = 30
+_CMD_DAY_PLAN = "python tools/day_plan.py --no-persist"
+_CMD_PANORAMA = "python tools/plano.py --panorama"
 
 
 def _memory_context() -> str:
@@ -40,7 +50,7 @@ def _memory_context() -> str:
         return f"[Memory v1] Aviso: {e}"
 
 
-def _resumir_plano(texto: str, cap: int) -> str:
+def _resumir_plano(texto: str, cap: int, completo: str = _CMD_DAY_PLAN) -> str:
     """As `cap` primeiras linhas nao-vazias do Plano do Dia -- e o corte DECLARADO.
 
     s189: o corte era mudo. A linha do ritmo do plano era a 14a e nunca chegou ao boot,
@@ -52,7 +62,7 @@ def _resumir_plano(texto: str, cap: int) -> str:
     saida = linhas[:cap]
     if corte > 0:
         saida.append(f"(+{corte} linha(s) do plano cortadas no boot; completo: "
-                     f"`python tools/day_plan.py --no-persist`)")
+                     f"`{completo}`)")
     return "\n".join(saida)
 
 
@@ -67,6 +77,24 @@ def _day_plan_summary() -> str:
         if r.returncode != 0:
             return ""
         return _resumir_plano(r.stdout, _DAY_PLAN_MAX_LINES)
+    except Exception:
+        return ""
+
+
+def _panorama_summary() -> str:
+    """Panorama do plano (`plano.py --panorama`) por subprocess isolado; fallback silencioso.
+
+    Read-only sobre `plano_tarefas`. Falha, timeout ou exit != 0 -> seção ausente, nunca
+    panorama inventado (mesma regra do `_day_plan_summary`)."""
+    try:
+        r = subprocess.run(
+            [sys.executable, "-X", "utf8", "tools/plano.py", "--panorama"],
+            capture_output=True, text=True, encoding="utf-8", errors="replace",
+            timeout=_DAY_PLAN_TIMEOUT, cwd=str(PROJECT_ROOT),
+        )
+        if r.returncode != 0:
+            return ""
+        return _resumir_plano(r.stdout, _PANORAMA_MAX_LINES, completo=_CMD_PANORAMA)
     except Exception:
         return ""
 
@@ -126,9 +154,15 @@ def _proximo_passo(handoff: str) -> str:
 
 _CONTRATO = (
     "[Boot v2 — contrato Presença->Expansão]\n"
-    "Abra a sessão OFERECENDO o próximo ato — \"Próximo ato: X — sigo nele salvo "
-    "redireção\" — e devolva o turno ao usuário. NÃO execute a sessão inteira na "
-    "abertura: o boot oferece, o usuário decide."
+    "Abra a sessão entregando ao usuário o PANORAMA, montado SÓ dos blocos derivados "
+    "acima (Plano do Dia + Panorama do plano; número digitado de memória é proibido), "
+    "nesta ordem: (1) META e datas; (2) ONDE ESTAMOS — semana do plano, feitas x "
+    "pendentes, atraso, simulado da vez e a sequência; (3) TAREFAS EM ABERTO — cada "
+    "uma com o que fazer: lista pronta (link), caderno a criar no banco, aula-base ou "
+    "sem lista; (4) PASSOS DE HOJE, em ordem, com a cota; (5) MÉTRICAS — ritmo real x "
+    "necessário, performance/zona, cards (dívida e teto). Feche OFERECENDO o próximo "
+    "ato — \"Próximo ato: X — sigo nele salvo redireção\" — e devolva o turno ao "
+    "usuário. NÃO execute a sessão inteira na abertura: o boot oferece, o usuário decide."
 )
 
 
@@ -139,6 +173,10 @@ def build_context() -> str:
     day_plan = _day_plan_summary()
     if day_plan:
         sections.append("## Plano do Dia (day_plan.py)\n" + day_plan)
+
+    panorama = _panorama_summary()
+    if panorama:
+        sections.append(panorama)
 
     drift = _drift_flag(handoff)
     if drift:

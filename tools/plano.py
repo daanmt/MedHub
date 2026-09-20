@@ -856,6 +856,189 @@ def render_reserva(itens, hoje):
     return "\n".join(out)
 
 
+# ---------------------------------------------------------- panorama (s190)
+
+#: O QUE FAZER com uma tarefa pendente, derivado de CAMPOS (`url_lista`, `q_previstas`,
+#: `fonte`) -- nunca de substring da `nota`, que e prosa e muda de redacao. A ordem e a de
+#: leitura: a classe mais pronta primeiro.
+CLASSES_PANORAMA = {
+    "lista": "lista pronta -- abrir o link",
+    "caderno": "sem link, com questoes previstas -- montar o caderno no banco do EMED pelo filtro",
+    "aula": "aula-base do agente (tarefa custom, sem lista no EMED)",
+    "sem_lista": "sem link de lista -- aula-base + 10-15 questoes do banco pelo filtro do tema",
+}
+
+#: Quantas tarefas em aberto o panorama lista por extenso; o resto sai CONTADO, com o comando.
+PANORAMA_TAREFAS = 12
+
+AREA_SIMULADO = "Simulado"
+
+
+def classe_da_tarefa(linha):
+    """Classe de `CLASSES_PANORAMA` de uma linha de `plano_tarefas`. PURA."""
+    if linha.get("url_lista"):
+        return "lista"
+    try:
+        q = float(linha.get("q_previstas") or 0)
+    except (TypeError, ValueError):
+        q = 0
+    if q > 0:
+        return "caderno"
+    return "aula" if linha.get("fonte") == "custom" else "sem_lista"
+
+
+def _q(linha):
+    try:
+        return int(round(float(linha.get("q_previstas") or 0)))
+    except (TypeError, ValueError):
+        return 0
+
+
+def _por_classe(linhas):
+    contagem = {c: 0 for c in CLASSES_PANORAMA}
+    for l in linhas:
+        contagem[classe_da_tarefa(l)] += 1
+    return contagem
+
+
+def panorama(linhas, calendario, hoje):
+    """O plano EM ABERTO como o operador precisa ler no boot. PURA.
+
+    s190 (pedido do operador, 20/09/2026): ele abriu os artifacts, viu tarefa sem lista e nao
+    soube o que fazer nem qual era a ordem dos simulados -- a informacao existia no banco e
+    nenhuma tela a entregava junta. Aqui ela sai de `plano_tarefas` + calendario da trilha:
+
+    - `semana`: a de CALENDARIO (primeira cujo `fim` >= hoje), a mesma regua da cota do
+      `day_plan`; sem calendario, ou depois do fim dele, cai para a POSICAO do plano (menor
+      semana com pendencia) e `inicio`/`fim` saem `None` -- nunca data inventada;
+    - `abertas`: pendentes da semana e de semana ANTERIOR (`atrasada`), na ordem do plano,
+      cada uma com a `classe` (o que fazer com ela);
+    - `simulados`: a sequencia de provas da Fase 1 com o status de cada uma;
+    - `proxima`: a semana seguinte, contada por classe;
+    - `fase1`: a fila inteira da Fase 1, contada por classe.
+
+    Reserva (semana NULL) e Fase 2 alem da proxima semana ficam de fora: e panorama de
+    execucao, nao inventario (`--reserva` e `--listar` sao os inventarios)."""
+    vivas = [l for l in linhas if l.get("semana_plano") is not None
+             and l.get("status") != "cortada"]
+    pendentes = [l for l in vivas if l.get("status") == "pendente"]
+    futuras = [s for s in sorted(calendario or {}) if calendario[s][1] >= hoje]
+    if futuras:
+        semana = futuras[0]
+        inicio, fim = calendario[semana]
+        dias = (fim - max(hoje, inicio)).days + 1
+    else:
+        semanas = sorted({l["semana_plano"] for l in pendentes})
+        semana, inicio, fim, dias = (semanas[0] if semanas else None), None, None, None
+    if semana is None:
+        return None
+
+    # a ordem DENTRO da semana e a do leitor (`db.plano_listar`), a mesma que o `day_plan`
+    # mostra: sort estavel so por semana -- uma segunda regra de ordem seria outra autoridade
+    chave = lambda l: l["semana_plano"]
+    abertas = sorted((l for l in pendentes if l["semana_plano"] <= semana), key=chave)
+    da_semana = [l for l in vivas if l["semana_plano"] == semana]
+    seguinte = [l for l in pendentes if l["semana_plano"] == semana + 1]
+    fase1 = [l for l in pendentes if l["semana_plano"] in SEMANAS_FASE1]
+    sims = sorted((l for l in vivas if l.get("area") == AREA_SIMULADO
+                   and l["semana_plano"] in SEMANAS_FASE1), key=chave)
+
+    def item(l):
+        return {"id": l.get("id"), "semana": l["semana_plano"],
+                "atrasada": l["semana_plano"] < semana, "bloco": l.get("bloco"),
+                "area": l.get("area"), "tema": l.get("tema"), "q": _q(l),
+                "classe": classe_da_tarefa(l), "url_lista": l.get("url_lista"),
+                "nota": l.get("nota")}
+
+    cal_seg = (calendario or {}).get(semana + 1)
+    return {
+        "hoje": hoje.isoformat(), "semana": semana,
+        "inicio": inicio.isoformat() if inicio else None,
+        "fim": fim.isoformat() if fim else None, "dias": dias,
+        "feitas_semana": sum(1 for l in da_semana if l.get("status") == "feita"),
+        "tarefas_semana": len(da_semana),
+        "abertas": [item(l) for l in abertas],
+        "q_abertas": sum(_q(l) for l in abertas),
+        "atrasadas": sum(1 for l in abertas if l["semana_plano"] < semana),
+        "classes_abertas": _por_classe(abertas),
+        "simulados": [{"id": l.get("id"), "semana": l["semana_plano"], "tema": l.get("tema"),
+                       "q": _q(l), "status": l.get("status"),
+                       "url_lista": l.get("url_lista")} for l in sims],
+        "proxima": {"semana": semana + 1,
+                    "inicio": cal_seg[0].isoformat() if cal_seg else None,
+                    "fim": cal_seg[1].isoformat() if cal_seg else None,
+                    "tarefas": len(seguinte), "q": sum(_q(l) for l in seguinte),
+                    "classes": _por_classe(seguinte)} if seguinte else None,
+        "fase1": {"tarefas": len(fase1), "q": sum(_q(l) for l in fase1),
+                  "classes": _por_classe(fase1)},
+    }
+
+
+def _dm(iso):
+    return f"{iso[8:10]}/{iso[5:7]}" if iso else "?"
+
+
+def _classes_em_texto(classes):
+    rotulo = {"lista": "com lista", "caderno": "caderno a criar", "aula": "aula-base",
+              "sem_lista": "sem lista"}
+    return ", ".join(f"{n} {rotulo[c]}" for c, n in classes.items() if n) or "nenhuma"
+
+
+def _nome_curto(tema):
+    return (tema or "(sem tema)").split(" -- ")[0].split(" (")[0][:48]
+
+
+def render_panorama(p):
+    """O panorama em Markdown compacto -- e o que o hook de boot injeta."""
+    if not p:
+        return "## 🧭 Panorama do plano\n- plano sem tarefa pendente em semana atribuida."
+    janela = (f" ({_dm(p['inicio'])} -> {_dm(p['fim'])}, {p['dias']} dia(s) com hoje)"
+              if p["inicio"] else " (fora do calendario da trilha: posicao pelo plano)")
+    atraso = f" · **{p['atrasadas']} atrasada(s)** de semana anterior" if p["atrasadas"] else ""
+    out = [f"## 🧭 Panorama do plano -- semana {p['semana']}{janela}",
+           f"- **Em aberto:** {len(p['abertas'])} tarefa(s) · {p['q_abertas']}q{atraso} · "
+           f"{p['feitas_semana']}/{p['tarefas_semana']} feitas na semana · "
+           f"{_classes_em_texto(p['classes_abertas'])}"]
+    sims = p["simulados"]
+    if sims:
+        feitos = sum(1 for s in sims if s["status"] == "feita")
+        prox = next((s for s in sims if s["status"] == "pendente"), None)
+        seq = " -> ".join(("~~%s~~" if s["status"] == "feita" else "%s")
+                          % f"S{s['semana']} {_nome_curto(s['tema'])}" for s in sims)
+        da_vez = (f" · **da vez: {_nome_curto(prox['tema'])}** ({prox['q']}q"
+                  + (f", {prox['url_lista']}" if prox["url_lista"] else ", SEM link")
+                  + ")") if prox else ""
+        out.append(f"- **Simulados da Fase 1:** {feitos}/{len(sims)} feitos{da_vez} · {seq}")
+    out.append("- **Tarefas em aberto (ordem do plano):**")
+    for i, t in enumerate(p["abertas"][:PANORAMA_TAREFAS], 1):
+        marca = f" [S{t['semana']} atrasada]" if t["atrasada"] else ""
+        q = f" · {t['q']}q" if t["q"] else ""
+        if t["classe"] == "lista":
+            acao = f"lista: {t['url_lista']}"
+        else:
+            nota = f" -- {t['nota'][:110]}" if t.get("nota") else ""
+            acao = f"**{t['classe']}**{nota}"
+        out.append(f"    {i}. #{t['id']}{marca} [{t['bloco'] or '?'}] {t['area'] or '?'} | "
+                   f"{(t['tema'] or '(sem tema)')[:70]}{q} · {acao}")
+    resto = len(p["abertas"]) - PANORAMA_TAREFAS
+    if resto > 0:
+        out.append(f"    • +{resto} tarefa(s) em aberto "
+                   f"(`python tools/plano.py --listar --semana {p['semana']} --status pendente`)")
+    nx = p["proxima"]
+    if nx:
+        quando = f", {_dm(nx['inicio'])} -> {_dm(nx['fim'])}" if nx["inicio"] else ""
+        out.append(f"- **Proxima semana (S{nx['semana']}{quando}):** {nx['tarefas']} tarefa(s) · "
+                   f"{nx['q']}q · {_classes_em_texto(nx['classes'])}")
+    f1 = p["fase1"]
+    out.append(f"- **Fase 1 inteira:** {f1['tarefas']} pendente(s) · {f1['q']}q · "
+               f"{_classes_em_texto(f1['classes'])}")
+    usadas = [c for c in CLASSES_PANORAMA if c != "lista" and f1["classes"].get(c)]
+    if usadas:
+        out.append("- **Legenda:** " + "; ".join(f"`{c}` = {CLASSES_PANORAMA[c]}"
+                                                 for c in usadas))
+    return "\n".join(out)
+
+
 # ------------------------------------------------- progresso (part-3): helpers
 
 def ids_da_lista(texto):
@@ -1167,7 +1350,7 @@ def main(argv=None):
     ap.add_argument("--status", choices=list(db.STATUS_PLANO), help="filtro: status")
     ap.add_argument("--fonte", choices=list(db.FONTES_PLANO), help="filtro: fonte")
     ap.add_argument("--json", action="store_true",
-                    help="saida do --listar / --pendencia-revisao / --reserva em JSON")
+                    help="saida do --listar / --pendencia-revisao / --reserva / --panorama em JSON")
     ap.add_argument("--concluir", type=int, metavar="ID",
                     help="marca a tarefa como feita (exige --sessao)")
     ap.add_argument("--sessao", type=int, metavar="N",
@@ -1197,6 +1380,10 @@ def main(argv=None):
     ap.add_argument("--reserva", action="store_true",
                     help="linhas pendentes FORA da fila (semana NULL) por peso UERJ, com aviso de "
                          "faixa alta -- Markdown no stdout (read-only)")
+    ap.add_argument("--panorama", action="store_true",
+                    help="o plano EM ABERTO para o boot: semana de calendario, tarefas pendentes "
+                         "com o que fazer em cada (lista / caderno / aula / sem_lista), sequencia "
+                         "de simulados, proxima semana -- Markdown no stdout (read-only)")
     args = ap.parse_args(argv)
 
     modos = {
@@ -1210,6 +1397,7 @@ def main(argv=None):
         "--confirmar-area": bool(args.confirmar_area),
         "--pendencia-revisao": args.pendencia_revisao,
         "--reserva": args.reserva,
+        "--panorama": args.panorama,
     }
     ligados = [nome for nome, ativo in modos.items() if ativo]
     if len(ligados) != 1:
@@ -1265,6 +1453,11 @@ def main(argv=None):
             print(f"[WARN] RESERVA: {orfas} linha(s) de faixa ALTA da UERJ sem NENHUMA linha na "
                   f"fila da Fase 1 cobrindo o tema -- o operador confere a lista uma vez",
                   file=sys.stderr)
+        return 0
+    if modo == "--panorama":
+        pan = panorama(db.plano_listar(), calendario_trilha(), db.hoje())
+        print(json.dumps(pan, ensure_ascii=False, indent=1) if args.json
+              else render_panorama(pan))
         return 0
     code, _ = listar(semana=args.semana, bloco=args.bloco, status=args.status,
                      fonte=args.fonte, como_json=args.json)

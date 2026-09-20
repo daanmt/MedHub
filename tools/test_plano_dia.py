@@ -382,6 +382,33 @@ def test_corte_do_boot_se_declara():
     assert resumo[:8] == ["linha %d" % i for i in range(1, 9)]
     assert "+4 linha(s) do plano cortadas" in resumo[8]
     assert "cortadas" not in mb._resumir_plano("a\n\nb", 8), "sem corte, sem aviso"
+    corte = mb._resumir_plano(texto, 8, completo=mb._CMD_PANORAMA).splitlines()[8]
+    assert "plano.py --panorama" in corte, "o corte do panorama aponta para o comando DELE"
+
+
+def test_boot_entrega_o_panorama(monkeypatch):
+    """s190 (pedido do operador, 20/09/2026): o boot abre com o PANORAMA -- tarefas em aberto
+    com o que fazer em cada, meta, passos, metricas. Tres pecas, as tres presas aqui: (1) o
+    panorama do plano entra como secao propria; (2) as metricas do Plano do Dia moram depois
+    da 8a linha, entao o cap antigo as cortava -- o cap cobre o plano inteiro de hoje; (3) o
+    texto-contrato manda o agente ENTREGAR o panorama, e continua mandando oferecer o
+    proximo ato sem executar a sessao. Falha do panorama -> secao ausente, boot de pe."""
+    mb = _hook_de_boot()
+    monkeypatch.setattr(mb, "_memory_context", lambda: "")
+    monkeypatch.setattr(mb, "_day_plan_summary", lambda: "- plano")
+    monkeypatch.setattr(mb, "_drift_flag", lambda *_a, **_k: "")
+    monkeypatch.setattr(mb, "_panorama_summary", lambda: "## 🧭 Panorama do plano -- semana 2")
+    ctx = mb.build_context()
+    assert ctx.index("## Plano do Dia") < ctx.index("Panorama do plano -- semana 2") \
+        < ctx.index("[Boot v2"), "plano, panorama e so entao o contrato"
+    for secao in ("PANORAMA", "META", "ONDE ESTAMOS", "TAREFAS EM ABERTO", "PASSOS DE HOJE",
+                  "MÉTRICAS", "Próximo ato", "NÃO execute a sessão inteira"):
+        assert secao in mb._CONTRATO, f"o contrato do boot perdeu: {secao}"
+    assert mb._DAY_PLAN_MAX_LINES >= 30, \
+        "ritmo real x necessario e diagnostico sao as linhas ~20-27 do Plano do Dia"
+
+    monkeypatch.setattr(mb, "_panorama_summary", lambda: "")
+    assert "Panorama do plano" not in mb.build_context().split("[Boot v2")[0]
 
 
 if __name__ == "__main__":

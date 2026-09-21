@@ -148,15 +148,6 @@
    "nota": "trilha UERJ: n=7 em 4 ed. | ZERO | tema-zero: aula-base antes da lista"
   },
   {
-   "fonte": "rf",
-   "ref_semana_fonte": 21,
-   "tarefa_fonte": 5,
-   "semana_plano": 2,
-   "ordem": 16,
-   "status": "pendente",
-   "nota": "trilha UERJ: n=7 em 6 ed. | TOCADO"
-  },
-  {
    "fonte": "custom",
    "ref_semana_fonte": 0,
    "tarefa_fonte": 27,
@@ -352,6 +343,14 @@
   },
   {
    "fonte": "extensivo",
+   "ref_semana_fonte": 44,
+   "tarefa_fonte": 7,
+   "semana_plano": 3,
+   "ordem": 18,
+   "status": "pendente"
+  },
+  {
+   "fonte": "extensivo",
    "ref_semana_fonte": 42,
    "tarefa_fonte": 2,
    "semana_plano": 3,
@@ -508,6 +507,14 @@
    "ordem": 19,
    "status": "pendente",
    "nota": "trilha UERJ: n=3 em 3 ed. | ZERO | tema-zero: aula-base antes da lista"
+  },
+  {
+   "fonte": "rf",
+   "ref_semana_fonte": 18,
+   "tarefa_fonte": 12,
+   "semana_plano": 4,
+   "ordem": 19,
+   "status": "pendente"
   },
   {
    "fonte": "extensivo",
@@ -696,6 +703,14 @@
    "nota": "trilha UERJ: n=3 em 3 ed. | ZERO | tema-zero: aula-base antes da lista"
   },
   {
+   "fonte": "extensivo",
+   "ref_semana_fonte": 15,
+   "tarefa_fonte": 14,
+   "semana_plano": 5,
+   "ordem": 23,
+   "status": "pendente"
+  },
+  {
    "fonte": "rf",
    "ref_semana_fonte": 28,
    "tarefa_fonte": 4,
@@ -864,12 +879,11 @@
   },
   {
    "fonte": "extensivo",
-   "ref_semana_fonte": 42,
-   "tarefa_fonte": 8,
+   "ref_semana_fonte": 13,
+   "tarefa_fonte": 15,
    "semana_plano": 6,
    "ordem": 18,
-   "status": "pendente",
-   "nota": "trilha UERJ: n=3 em 3 ed. | ZERO | tema-zero: aula-base antes da lista"
+   "status": "pendente"
   },
   {
    "fonte": "rf",
@@ -1031,6 +1045,22 @@
    "tarefa_fonte": 14,
    "semana_plano": 9,
    "ordem": 2,
+   "status": "pendente"
+  },
+  {
+   "fonte": "extensivo",
+   "ref_semana_fonte": 42,
+   "tarefa_fonte": 8,
+   "semana_plano": 9,
+   "ordem": 3,
+   "status": "pendente"
+  },
+  {
+   "fonte": "rf",
+   "ref_semana_fonte": 21,
+   "tarefa_fonte": 5,
+   "semana_plano": 9,
+   "ordem": 3,
    "status": "pendente"
   },
   {

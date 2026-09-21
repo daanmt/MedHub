@@ -1,54 +1,52 @@
 # HANDOFF.md -- ESTADO OPERACIONAL CURTO
-*Atualizado: 2026-09-19 (01h30) -- **s189 (ENGENHARIA, madrugada antes do simulado)**: a fila do `/ai-eng` executada em 5 fatias, cada uma com commit verde; **suite 933 -> 954, audit vibeflow PASS, selo verde, ZERO subagentes.** O plano de estudo NAO mudou (golden: os 115 overrides identicos; re-seed com 0 linha nova e 0 mudada). A proxima sessao e de ESTUDO (s190).*
+*Atualizado: 2026-09-21 (~00h40) -- **s190 (ESTUDO + 1 fatia de engenharia)**: simulado **UERJ 2023 = 58/100** (39 chutes), Autopsia das 56 questoes publicada, trilha ajustada com OK dele, boot passou a entregar o PANORAMA (F126). A proxima sessao (s191) e de ESTUDO: cards, questoes e revisao do simulado.*
 
-> 🔒 **O SELO:** `python tools/selo.py` -- 0 item sem terminal, 0 discordancia. 107 achados: 87 FEITO · 5 SUPERADO · 5 PARCIAL · 1 FEITO(parcial) · **2 GATE do operador** (F87, F111). Tabela DERIVADA, nunca digitada.
+> 🔒 **O SELO:** `python tools/selo.py` -- tabela DERIVADA, nunca digitada. Ledger ate **F128** (F127/F128 DECLARADOS, aguardam triagem do `/ai-eng`); 2 GATE do operador seguem (F87, F111).
 
 ## > Proximo passo imediato
 
-1. 🔴 **SABADO 19/09 = DIAGNOSTICO: UERJ 2023 INTEIRA (100q, cronometrada)** -- `simulados/uerj/uerj_ad_2023_a.pdf`, gabarito `_b`. Registrar como `Simulado`, Autopsia por BLOCO. 🔴 **NAO abrir `simulados/uerj/uerj_mapa_questoes_2021-2026.json` antes de ele resolver cada prova (spoiler).**
-2. 🔴 **Recalibrar a trilha NAO e reflexo de UMA prova (regra do `/ai-eng`, aritmetica):** 20q por bloco dao IC95 de +-21 pp num acerto de 60%; 3 provas +-12 pp; 6 provas +-9 pp. Logo: nao mexer em piso/teto por uma prova; peso de bloco so se move pelo acerto ACUMULADO nas provas UERJ (a partir da 3a). A Autopsia da 2023 e diagnostico de CONTEUDO. Quando for a hora: `core/cronograma/trilha/parametros.json` (estrategia) ou `trilha/custom.json` (uma linha, com `racional`) -> `python tools/trilha.py` (le o diff) -> `--gravar` -> `python tools/plano.py --semear --dry-run` -> `--apply --expect N`. Na 1a recalibracao legitima entra JUNTO a prevalencia em FAIXAS, nao em rank (uma mudanca de trilha, nao duas; golden regravado no mesmo commit -- decisao do `/ai-eng`, fechamento da s189). Reverter a regra = 1 frase do operador.
-3. 📚 **Trilha no banco** (`plano.py --listar --semana N`): S1 = UERJ 2023 + Hernias T1 (25q) + DMG T1 (19q) + aula de raciocinio diagnostico + Topicos em Pediatria (18q). **O boot agora da a cota do dia** (cabecalho do bloco Cronograma) e o ritmo da Fase 1 -- os dois DERIVADOS; numero de q/dia digitado aqui e proibido. Tema `sem registro de estudo` = aula-base ANTES da lista.
-4. 👀 **Olhar UMA vez, sem pressa: `docs/RESERVA-FASE1.md`** -- 174 tarefas fora da fila; **13 de faixa ALTA da UERJ sem nenhuma tarefa na fila cobrindo o tema** (quase todas PARCIAL no Dashboard: Assistencia ao Parto, Pancreatite, DRGE, Endometriose, Colecistite T2, Arboviroses T3...). Trazer alguma = entrada em `trilha/custom.json`. Terminal 02/11, junto do F111.
-5. 🔺 **Pedir a ele:** criar no banco do EMED 2 cadernos **UERJ 2017-2020** (filtro instituicao) -- estao na S7 (#1798/#1799) sem link.
-6. 🃏 **Cards:** divida **103 atrasados + 26 p/ hoje** (129 vencidos), pool 690. Aula-base D10 de Acido-Base + Potassio antes de re-drillar #595 #596 #598 #783 #786 #787.
-
-## A RECONCILIAR na proxima sessao (s190) -- ele chega com o resultado da UERJ 2023
-
-1. **Registrar ANTES de analisar:** `registrar_sessao_bulk --area Simulado --feitas 100 --acertos N --data <dia da prova>` -> `plano.py --concluir 893 --sessao <id da LINHA>`. Pedir o acerto **por bloco** (Q1-20 CM · 21-40 CIR · 41-60 GO · 61-80 PED · 81-100 MFC) e o **racional declarado** de cada erro. So entao abrir o mapa da prova FEITA para a Autopsia.
-2. **Volume feito fora de sessao:** listas da S1 (#38 Hernias · #26 DMG · #96 Topicos Ped) e cards -> `--concluir` + bulk. Conferir a divida FSRS (129 vencidos em 19/09).
-3. **Dele:** gates F87 · **F111/R8** (decidir junto da Fase 2, 02/11) · validacao clinica do `TCE.md`.
+1. 🔴 **ELE TRAZ O RACIONAL dos erros da UERJ 2023 -- 21 perguntas, 1 linha cada** (texto completo na secao "Perguntas em aberto" da Autopsia e em `artifacts/autopsia-2026-09-20.json`, campo `pergunta_ao_aluno`). Resumo:
+   - **CM:** Q8 calculou o GASA (2,0-1,3=0,7)? por que circulou a amilase 80? · Q9 Janeway/Roth disseram algo? · Q11 por que TB e nao criptococo (circulou glicorraquia "normal")? · Q13 massa cistica = vesicula ou figado? · Q14 febre 38,8 + borramento perirrenal mudaram o plano? · Q16 RM pelo nistagmo ou por nao lembrar que Dix-Hallpike e o exame?
+   - **CIR:** Q30 o que "NAO obstruido" mudou na flora? · Q36 por que celula T antes do neutrofilo (a C estava com "?")?
+   - **GO:** Q43 que estadio FIGO deu a "6 cm limitada ao colo"? · Q45 o "desejo de gestar" entrou no filtro? · Q47 considerou origem endometrial do AGC? · Q50 hesitou entre menopausa materna e idade > 30? · Q51 calculou a subida do beta (145->554 em 72h) x zona discriminatoria? · Q56 eliminou A e B por principio antes de chutar? · Q57 como foi de confusao+ataxia+nistagmo a miastenia? · Q58 classificou a desaceleracao antes de escolher a causa?
+   - **PED:** Q73 cipro por esquema antigo ou por nao lembrar o PCDT? · Q74 leu "nega antibiotico ha 2 meses"? · Q77 descartou a A (antibiotico contraindicado) por que?
+   - **MFC:** Q91 "mimetizar" = doenca que ACOMPANHA ou que PRODUZ o quadro? · Q99 calculou o IMC (118/4 = 29,5) antes de marcar "obesidade"?
+2. 🔴 **So DEPOIS do racional: persistir.** `insert_questao.py` por erro (42) + `habilidades.py --add` para os 14 chutes certos; triar os 81 cards CANDIDATOS da Autopsia pelo teste de regenerabilidade (nenhum foi cunhado). Ate la o `auto_check` avisa F38 para 2026-09-20 (42 erros em `sessoes_bulk.id=130`, zero linhas em `questoes_erros`) -- divida DECLARADA, nao surpresa.
+3. 📚 **Estudo, na ordem do boot (panorama):** atrasadas da S1 -- Hernias #38 (25q, aula-base ANTES: 2 chutes na prova) · DMG #26 (19q) · aula de raciocinio diagnostico #877 (Q97 errada no chute) · Topicos em Pediatria #96 (18q). S2 (21-27/09) = 474q + 62 atrasadas; fim de semana = **UERJ 2021** (60q). Tema de chute = aula-base ANTES da lista. REMIT/cicatrizacao #530 e o maior cluster da prova (Q26, 29, 31, 35, 36).
+4. 🃏 **Cards:** divida **153 atrasados + 25 p/ hoje**, pool 690, teto 90. Aula-base D10 de Acido-Base + Potassio antes de re-drillar #595 #596 #598 #783 #786 #787.
+5. 🔺 **Pedir a ele:** 2 cadernos **UERJ 2017-2020** no banco do EMED (S7, #1798/#1799, sem link) e, quando a semana chegar, cadernos pelo filtro do tema para as tarefas `sem_lista`/`caderno` do panorama.
+6. 🔴 **Recalibrar a trilha NAO e reflexo de UMA prova (regra do `/ai-eng`, s189):** peso de bloco so pelo acerto ACUMULADO, a partir da 3a prova UERJ; na 1a recalibracao legitima entram JUNTO as faixas de prevalencia e a correcao do mapa (F128). O contraste CIR 8 x MFC 16 e candidato forte -- conferir na UERJ 2021. O que foi feito na s190 NAO e recalibracao: sao 6 linhas na camada manual (`trilha/custom.json`, com `racional`), abaixo.
 
 ## Estado por frente
 
 - **Norte:** 🎯 Psiquiatria/IPUB via ENAMED 2027 (corte 940, alvo 95%). Plano B: UERJ/MFC 01/11/2026 (**inscrito**). Hibrido: Fase 1 = RF rescopada ate 01/11; Fase 2 = extensivo S21-S48.
-- **Volume & Metas:** 7326 / 10400 (perf. ~79.1%). Hoje: 0. Ritmo do marco de volume ~71.5q/dia (43d p/ UERJ/MFC (prova 01/11)). [derivado: day_plan --handoff-block]
-- **Simulados:** 9 provas + ENAMED real 75. Agora: 1 prova UERJ inteira por fim de semana (2023 -> 2021 -> 2022 -> 2024 -> 2025 -> 2026).
-- **FSRS:** divida 103 atrasados + 26 p/ hoje -- pool 690 nunca introduzidos (entram <=90/dia). Regua **v2** desde 18/09. Parametros seguem DEFAULT (F114).
+- **Volume & Metas:** 7426 / 10400 (perf. ~78.8%). Hoje: 0. Ritmo do marco de volume ~72.5q/dia (41d p/ UERJ/MFC (prova 01/11)). [derivado: day_plan --handoff-block]
+- **Simulados:** 10 provas + ENAMED real 75. **UERJ 2023 = 58** (CM 13 · CIR 8 · GO 10 · PED 11 · MFC 16; solidas 44/61 = 72%; chutes 14/39 ~ acaso). Leitura: COBERTURA, nao raciocinio; CIR = ciencia basica de Sabiston (15 chutes). Sequencia: ~~2023~~ -> 2021 -> 2022 -> 2024 -> 2025 -> 2026.
+- **FSRS:** divida 153 atrasados + 25 p/ hoje -- pool 690 nunca introduzidos (entram <=90/dia). Regua **v2** desde 18/09. Parametros seguem DEFAULT (F114).
 - **Conteudo:** 135 resumos em resumos/. [derivado: glob] `Neurologia/TCE.md` reescrito (F104) -- pendente de validacao clinica dele.
 - **Erros & Cards:** 1041 erros registrados · 1512 cards ativos · 0 needs_qualitative na fila · taxonomia 302 temas. [derivado: db] Reforja **308 abertas**.
-- **Cronograma:** `plano_tarefas` = SSOT; **a Fase 1 sai de `tools/trilha.py`** (dado em 3 camadas em `core/cronograma/trilha/`: `parametros.json`, `custom.json`, `entrada/` fixada em 18/09) -> `plano_trilha.json` GERADO (115 overrides; editar a mao derruba o golden). `--mover` RECUSA linha da Fase 1 com a trilha ativa. `links_listas.json` com estado por tarefa (577 url / 482 sem link no PDF / 28 varios; faltando 0).
-- **Engenharia:** suite **954**; `auto_check` PASSED; ledger ate **F125**; selo verde. Item 1.10: **127 orfas** (51,0%) com **catraca** (`BASE_ORFAS`). Spec `trilha-autoridade-unica`: audit **PASS**.
-- **Posicao:** plano semana 1 (fase 1) · 0/5 tarefas da semana feitas · cota ~81q/dia ate 20/09 · Fase 1 ~76.6q/dia [derivado: plano_tarefas]
-- **Datas & links:** fim da grade 09/10 · **UERJ 01/11** · 📊 **Painel**: https://claude.ai/artifact/QctZqVoJriSviJetF8FYBQ · 🩻 **Raio-X UERJ + trilha**: https://claude.ai/artifact/1tCT3CqnSR3Wb2kSRqcESc
+- **Cronograma:** `plano_tarefas` = SSOT; Fase 1 GERADA por `tools/trilha.py` (119 overrides, **34 da camada manual**). **Ajuste da s190 (OK dele em 21/09):** ENTRAM SCA/IAMCSST #777 (S3, aula-base + filtro) · pre-natal/parto/vitalidade fetal #22 (S4, 36q) · disturbios hipertensivos #325 (S6, 56q) · aleitamento/neonatal #354 (S5, 43q); SAEM para a S9 a 3a lista de DMG #51 e RPMO #749 (o TETO de 25% recusou somar: GO iria a 28,0% -- virou troca; GO fechou em 24,6%); MCCP e abordagem familiar viram REFRESH CURTO. Fase 1 = 3242q pendentes.
+- **Engenharia:** suite **960**; `auto_check` PASSED; **boot = panorama** (`plano.py --panorama` + Plano do Dia inteiro; contrato de 5 secoes no hook, `test_boot_entrega_o_panorama`). Item 1.10: 127 orfas (catraca).
+- **Posicao:** plano semana 1 (fase 1) · 1/5 tarefas da semana feitas · cota ~77q/dia ate 27/09 · Fase 1 ~79.1q/dia [derivado: plano_tarefas]
+- **Datas & links:** fim da grade 09/10 · **UERJ 01/11** · 🩺 **Autopsia UERJ 2023**: https://claude.ai/artifact/XLCeFfczezCANirt5ykdvP · 📊 Painel: https://claude.ai/artifact/QctZqVoJriSviJetF8FYBQ · 🩻 Raio-X UERJ (foto de 18/09): https://claude.ai/artifact/1tCT3CqnSR3Wb2kSRqcESc
 
-## Ultima sessao -- s189 (2026-09-18/19) -- ENGENHARIA: a Fase 1 com UMA autoridade
+## Ultima sessao -- s190 (2026-09-20/21) -- UERJ 2023 = 58 e a Autopsia; o boot vira panorama
 
-Detalhe em `history/session_189.md`. Na ordem do `/ai-eng` (`ai-eng-5a`): (1) F123 -- o "273 q/dia" do boot somava a Fase 2 e governava o recomendador; virou ritmo da Fase 1 + cota do dia, e o corte do hook de boot (8 linhas) passou a se declarar; (3) o gerador da trilha entrou no repo (F124) e trouxe um **loop infinito** herdado da s188 que travaria a recalibracao (F125, corrigido); (2) `plano.py --reserva`; (4) guard do `--mover`, estado explicito dos links, `links_exercicios.json` removido; (5) catraca do 1.10 e custo de subagente so pelo harness. Fatia 6 (regra de recalibracao como DADO) NAO feita -- o item 2 acima carrega a regra como texto.
+Detalhe em `history/session_190.md`. (1) Overview pedido por ele virou feature: `plano.py --panorama` + hook de boot sem o corte de 8 linhas (F126, `442d924`). (2) Ele deu **autonomia total de git** (commit + push sem pedir). (3) Video de analise da UERJ absorvido e cruzado com o nosso mapa (concorda no grupo, diverge no tema; ignora TB/Infecto). (4) Simulado: PDF anotado a tinta lido por vetor + pixel + olho; 56 -> 58 com Q32/Q56 declaradas depois; reconferido por 3 lentes quando ele duvidou do numero. (5) Autopsia: fan-out de 5 filhos Opus (regra do Simulado), 56 questoes, 43 de base ausente, 3 contestaveis (Q16, Q73, Q77). (6) Trilha ajustada como TROCA.
 
 ## Fronteiras DECLARADAS (nao ler verde de gate como limpeza)
 
-- 🔴 **O piso/teto da trilha e conferido na regua do PROPRIO gerador** (bloco em que a UERJ cobra o tema) -- auto-consistencia. Pela area do EMED: CM 27,1% / CIR 18,7%, com as 7 linhas divergentes nominais em `python tools/trilha.py`; sem gate, por decisao do `/ai-eng`.
-- 🔴 **A entrada do gerador e um snapshot de 18/09:** progresso posterior muda o status no banco, nunca a prioridade; re-snapshot sem exportador. O fim da Fase 1 tem duas fontes (ritmo: `FIM_CONTEUDO_ALVO` 01/11; cota: calendario da trilha 31/10).
-- 🔴 **Duas autoridades que sobraram:** o `--mover` fora da Fase 1 ainda e desfeito pelo re-seed; `plano_custom.json` tem semana/ordem que a trilha sobrepoe em 28 de 29 tarefas custom. As duas sao a MESMA decisao (onde mora a edicao manual), juntas depois de 02/11 (`/ai-eng`).
-- 🔴 **`audit_resumos` mede ESTRUTURA, nunca VERDADE CLINICA.** O gate `CONTRATO_REVOGADO` casa substring LITERAL.
-- **F113 PARCIAL** (#689), **F110** sem gate, **F78**/**F2** DECLARADOS. `cards_rendimento` NAO fecha o F87.
-- **Backlog de engenharia (depois de 02/11):** F122, redesenho do `--mover`, terminal da reserva, F111, fatia 6 (regra de recalibracao como dado + gold set de MFC com `concordancia_mfc.py`).
+- 🔴 **A Autopsia e LEITURA, nao registro:** 0 erros da UERJ 2023 em `questoes_erros`, 0 cards cunhados; os vereditos de elo dos erros sem chute estao `pendente` ate o racional. Das 56 fontes, so 5 foram ABERTAS na sessao (as outras sao referencia canonica, rotuladas na pagina).
+- 🔴 **O mapa UERJ erra rotulo (F128):** Q8/2023 esta como Tuberculose e e sindrome nefrotica; a prevalencia de TB (13) inclui essa. Consumir em faixas; corrigir JUNTO da 1a recalibracao.
+- 🔴 **O piso/teto da trilha e conferido na regua do PROPRIO gerador**; a entrada e snapshot de 18/09 (progresso posterior muda status, nunca prioridade). Overrides manuais NAO passam pelo `cap_listas` semanal: S5 ficou com 720q.
+- 🔴 **Duas autoridades que sobraram:** `--mover` fora da Fase 1 e `plano_custom.json` x trilha -- decisao unica, depois de 02/11 (`/ai-eng`).
+- **F113 PARCIAL** (#689), **F110** sem gate, **F78**/**F2** DECLARADOS. Backlog de engenharia (depois de 02/11): F122, F127 (`--corrigir` no registrar), redesenho do `--mover`, terminal da reserva, F111, fatia 6.
 
 ## Pendencias/observacoes ativas
 
 - 📄 Manual de Gestacao de Alto Risco (MS 2022) > 10 MB. 💉 Diretrizes 2026 a conferir: Calendario Vacinal, GINA, ATLS 11 (parcial), SINAN.
-- 🔴 **Ao responder item numerado do `/ai-eng`, casar por CONTEUDO, nunca por numero.** 📡 Canal = `SendMessage` entre sessoes locais (descobrir com `ListAgents`); o endereco muda a cada sessao dele -- responder pelo `from` da mensagem mais recente. Hook grava em `history/exchange-log.jsonl`.
-- 🔴 **Regex sempre em string RAW** (`test_sem_caracter_de_controle`, BLOCK). Script de patch longo: arquivo no scratchpad, nunca heredoc gigante (quebrou na s189).
+- 🔴 **Ao responder item numerado do `/ai-eng`, casar por CONTEUDO, nunca por numero.** 📡 Canal = `SendMessage` entre sessoes locais (`ListAgents`); responder pelo `from` da mensagem mais recente.
+- 🔴 **Brief de subagente com conteudo clinico se escreve COM acentos** (4 de 5 filhos imitaram o brief sem acento, s190) e o insumo se valida ANTES do spawn. Regex sempre em string RAW; script de patch longo = arquivo no scratchpad, nunca heredoc com acento (o Git Bash corrompe).
 
 ---
-*Historico: history/INDEX.md * Macro: ESTADO.md * Sessao: history/session_189.md * Trocas: history/exchange-log.jsonl * Auditoria: docs/MEMORIA-AUDITORIA.md * Selo: `python tools/selo.py`*
+*Historico: history/INDEX.md * Macro: ESTADO.md * Sessao: history/session_190.md * Trocas: history/exchange-log.jsonl * Auditoria: docs/MEMORIA-AUDITORIA.md * Selo: `python tools/selo.py`*

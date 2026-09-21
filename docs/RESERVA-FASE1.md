@@ -1,8 +1,8 @@
 # Reserva da Fase 1 -- linhas pendentes FORA da fila
 
-> Gerado por `python tools/plano.py --reserva` em 2026-09-19. Nao editar: regenerar. Para o operador ler UMA vez (fatia 2 do `/ai-eng`, s189): o gate e o olho, nao o aviso. Terminal datado: 02/11/2026, junto do F111.
+> Gerado por `python tools/plano.py --reserva` em 2026-09-21. Nao editar: regenerar. Para o operador ler UMA vez (fatia 2 do `/ai-eng`, s189): o gate e o olho, nao o aviso. Terminal datado: 02/11/2026, junto do F111.
 
-**174 linha(s) pendente(s) sem semana** -- 46 fora da trilha, 128 reserva do extensivo. **22 em faixa ALTA** da UERJ (tema com >= 4 questoes em 2021-2026), das quais **13 sem NENHUMA linha na fila da Fase 1 cobrindo o tema** (o risco real: as outras tem o tema agendado por outra tarefa, coluna `tema ja na fila por`); 48 sem tema casado na prevalencia.
+**171 linha(s) pendente(s) sem semana** -- 45 fora da trilha, 126 reserva do extensivo. **19 em faixa ALTA** da UERJ (tema com >= 4 questoes em 2021-2026), das quais **8 sem NENHUMA linha na fila da Fase 1 cobrindo o tema** (o risco real: as outras tem o tema agendado por outra tarefa, coluna `tema ja na fila por`); 48 sem tema casado na prevalencia.
 
 Como ler: `UERJ n (peso)` = questoes das provas UERJ 2021-2026 nos temas que a tarefa cobre (2021-2022 valem 0,7 no peso). `fora da trilha` = a trilha da Fase 1 nao a escolheu (`fase1_exclusiva`); `reserva do extensivo` = S1-S20 do extensivo, fora do plano por regra da part-2. `estado (18/09)` = como o gerador da trilha via o tema (ZERO nunca estudado, TOCADO, PARCIAL, FEITO) -- e o porque da exclusao: a prioridade e peso UERJ x lacuna. Para trazer uma linha para a Fase 1: entrada em `core/cronograma/trilha/custom.json` (com `racional`) + `python tools/trilha.py --gravar` + `python tools/plano.py --semear --dry-run`.
 
@@ -10,10 +10,7 @@ Como ler: `UERJ n (peso)` = questoes das provas UERJ 2021-2026 nos temas que a t
 
 | id | grupo | area | tarefa | tipo | q | UERJ n (peso) | faixa | tema(s) UERJ | tema ja na fila por | estado (18/09) |
 |---|---|---|---|---|---|---|---|---|---|---|
-| #325 | reserva do extensivo | Obstetrícia | Pré-Natal \| Distúrbios Hipertensivos da Gestação \| Sífilis na Gestação e Sífilis Congênita \| Sangramento da Primeira Metade | Revisão por Questões | 56 | 14 (13.4) | alta | Distúrbios Hipertensivos da Gestação; Sangramento da Primeira Metade; Pré-Natal; Sífilis na Gestação e Sífilis Congênita | NENHUMA | FEITO/PARCIAL |
-| #354 | reserva do extensivo | Pediatria | Cardiopatias Congênitas \| Cuidados Neonatais \| Asma \| Aleitamento Materno | Revisão por Questões | 43 | 10 (9.4) | alta | Aleitamento Materno; Cuidados Neonatais; Cardiopatias Congênitas | NENHUMA | FEITO |
 | #393 | reserva do extensivo | Cirurgia | Apendicite Aguda \| Colecistite e Colangite Aguda \| Diverticulite Aguda | Revisão por Questões | 52 | 8 (7.4) | alta | Abdome Agudo Inflamatório - Colecistite e Colangite Aguda; Abdome Agudo Inflamatório - Apendicite Aguda | NENHUMA | PARCIAL |
-| #22 | fora da trilha | Obstetrícia | Pré-Natal; Assistência ao Parto; Vitalidade Fetal | Revisão por Questões | 36 | 8 (7.1) | alta | Assistência ao Parto; Pré-Natal; Vitalidade Fetal | NENHUMA | PARCIAL/TOCADO |
 | #349 | reserva do extensivo | Gastro | Doença do Refluxo Gastroesofágico, Esofagites Não-Pépticas e Ingestão de Corpo Estranho | Teoria I | 0 | 6 (5.7) | alta | Doença do Refluxo Gastroesofágico, Esofagites e Corpo Estranho | NENHUMA | PARCIAL |
 | #377 | reserva do extensivo | Gastro | Doença do Refluxo Gastroesofágico, Esofagites Não-Pépticas e Ingestão de Corpo Estranho | Teoria II | 0 | 6 (5.7) | alta | Doença do Refluxo Gastroesofágico, Esofagites e Corpo Estranho | NENHUMA | PARCIAL |
 | #180 | reserva do extensivo | Infecto | Arboviroses | Teoria III | 0 | 5 (5.0) | alta | Arboviroses | NENHUMA | PARCIAL |
@@ -21,8 +18,6 @@ Como ler: `UERJ n (peso)` = questoes das provas UERJ 2021-2026 nos temas que a t
 | #370 | reserva do extensivo | Cirurgia | Abdome Agudo Inflamatório - Colecistite e Colangite Aguda | Teoria II | 0 | 5 (4.4) | alta | Abdome Agudo Inflamatório - Colecistite e Colangite Aguda | NENHUMA | PARCIAL |
 | #293 | reserva do extensivo | Gastro | Pancreatite Aguda e Crônica | Teoria III | 0 | 4 (4.0) | alta | Pancreatite Aguda e Crônica | NENHUMA | PARCIAL |
 | #320 | reserva do extensivo | Gastro | Pancreatite Aguda e Crônica | Revisão | 42 | 4 (4.0) | alta | Pancreatite Aguda e Crônica | NENHUMA | PARCIAL |
-| #345 | reserva do extensivo | Obstetrícia | Assistência ao Parto | Teoria II | 0 | 4 (3.4) | alta | Assistência ao Parto | NENHUMA | PARCIAL |
-| #359 | reserva do extensivo | Obstetrícia | Assistência ao Parto | Teoria III | 0 | 4 (3.4) | alta | Assistência ao Parto | NENHUMA | PARCIAL |
 
 ## ⚠️ Faixa ALTA com o tema ja na fila por outra tarefa
 
@@ -37,6 +32,8 @@ Como ler: `UERJ n (peso)` = questoes das provas UERJ 2021-2026 nos temas que a t
 | #224 | reserva do extensivo | Nefrologia | Doenças Glomerulares | Revisão | 37 | 6 (5.4) | alta | Doenças Glomerulares | #68 (S2), #115 (S4) | ZERO |
 | #211 | reserva do extensivo | Hemato | Anemias Hemolíticas | Teoria II | 0 | 4 (3.7) | alta | Anemias Hemolíticas | #308 (S4) | PARCIAL |
 | #253 | reserva do extensivo | Hemato | Anemias Hemolíticas | Teoria III | 0 | 4 (3.7) | alta | Anemias Hemolíticas | #308 (S4) | PARCIAL |
+| #345 | reserva do extensivo | Obstetrícia | Assistência ao Parto | Teoria II | 0 | 4 (3.4) | alta | Assistência ao Parto | #22 (S4) | PARCIAL |
+| #359 | reserva do extensivo | Obstetrícia | Assistência ao Parto | Teoria III | 0 | 4 (3.4) | alta | Assistência ao Parto | #22 (S4) | PARCIAL |
 
 ## Todas as casadas, por peso UERJ
 
@@ -44,11 +41,8 @@ Como ler: `UERJ n (peso)` = questoes das provas UERJ 2021-2026 nos temas que a t
 |---|---|---|---|---|---|---|---|---|---|---|
 | #380 | reserva do extensivo | Infecto | Arboviroses \| HIV \| Tuberculose \| Meningites e Meningoencefalites | Revisão por Questões | 55 | 28 (26.8) | alta | Tuberculose; Meningites e Meningoencefalites; Arboviroses; HIV | #1797 (S2), #376 (S3) | FEITO/PARCIAL |
 | #92 | fora da trilha | Cirurgia | Cirurgia Vascular Urologia Hérnias da Parede Abdominal Princípios da Anestesiologia | Revisão por Questões | 41 | 14 (13.4) | alta | Hérnias da Parede Abdominal; Urologia; Princípios da Anestesiologia; Cirurgia Vascular | #38 (S1), #49 (S2), #61 (S2), #65 (S2) +3 | PARCIAL/ZERO |
-| #325 | reserva do extensivo | Obstetrícia | Pré-Natal \| Distúrbios Hipertensivos da Gestação \| Sífilis na Gestação e Sífilis Congênita \| Sangramento da Primeira Metade | Revisão por Questões | 56 | 14 (13.4) | alta | Distúrbios Hipertensivos da Gestação; Sangramento da Primeira Metade; Pré-Natal; Sífilis na Gestação e Sífilis Congênita | NENHUMA | FEITO/PARCIAL |
-| #354 | reserva do extensivo | Pediatria | Cardiopatias Congênitas \| Cuidados Neonatais \| Asma \| Aleitamento Materno | Revisão por Questões | 43 | 10 (9.4) | alta | Aleitamento Materno; Cuidados Neonatais; Cardiopatias Congênitas | NENHUMA | FEITO |
 | #217 | reserva do extensivo | Ginecologia | Rastreamento do Câncer de Colo Uterino | Teoria II | 0 | 9 (8.4) | alta | Rastreamento do Câncer de Colo Uterino; Câncer de Colo Uterino | #74 (S5), #84 (S5) | PARCIAL/ZERO |
 | #393 | reserva do extensivo | Cirurgia | Apendicite Aguda \| Colecistite e Colangite Aguda \| Diverticulite Aguda | Revisão por Questões | 52 | 8 (7.4) | alta | Abdome Agudo Inflamatório - Colecistite e Colangite Aguda; Abdome Agudo Inflamatório - Apendicite Aguda | NENHUMA | PARCIAL |
-| #22 | fora da trilha | Obstetrícia | Pré-Natal; Assistência ao Parto; Vitalidade Fetal | Revisão por Questões | 36 | 8 (7.1) | alta | Assistência ao Parto; Pré-Natal; Vitalidade Fetal | NENHUMA | PARCIAL/TOCADO |
 | #34 | fora da trilha | Gastro | Pólipos e Neoplasias Intestinais; Doença Inflamatória Intestinal; Neoplasias de Estômago e Esôfago | Revisão por Questões | 41 | 8 (6.8) | alta | Doença Inflamatória Intestinal; Neoplasias de Estômago e Esôfago | #11 (S5), #30 (S5), #494 (S5) | PARCIAL/ZERO |
 | #241 | reserva do extensivo | Endocrino | Introdução ao Diabetes Mellitus \| Diabetes Mellitus – Insulinoterapia e Cirurgia Metabólica | Teoria | 0 | 7 (6.1) | media | Diabetes Mellitus Tipo 2; Diabetes Mellitus - Complicações Agudas; Introdução ao Diabetes Mellitus Insulinoterapia e Cirurgia Metabólica | NENHUMA | FEITO/PARCIAL |
 | #58 | fora da trilha | Pediatria | Diarreia; Pneumonias na Infância; Choque em Pediatria; Alergia Alimentar | Revisão por Questões | 43 | 6 (6.0) | media | Diarreia; Pneumonias na Infância; Alergia Alimentar | NENHUMA | PARCIAL/TOCADO/ZERO |
@@ -77,8 +71,8 @@ Como ler: `UERJ n (peso)` = questoes das provas UERJ 2021-2026 nos temas que a t
 | #282 | reserva do extensivo | Cardiologia | Hipertensão Arterial Sistêmica Pt. 2 | Teoria II | 0 | 4 (3.4) | media | Hipertensão Arterial Sistêmica Pt. 1; Hipertensão Arterial Sistêmica Pt. 2; Hipertensão Arterial Sistêmica Pt. 3 | NENHUMA | PARCIAL/TOCADO |
 | #305 | reserva do extensivo | Cardiologia | Hipertensão Arterial Sistêmica Pt. 3 | Teoria I | 0 | 4 (3.4) | media | Hipertensão Arterial Sistêmica Pt. 1; Hipertensão Arterial Sistêmica Pt. 2; Hipertensão Arterial Sistêmica Pt. 3 | NENHUMA | PARCIAL/TOCADO |
 | #337 | reserva do extensivo | Cardiologia | Hipertensão Arterial Sistêmica Pt. 3 | Teoria II | 0 | 4 (3.4) | media | Hipertensão Arterial Sistêmica Pt. 1; Hipertensão Arterial Sistêmica Pt. 2; Hipertensão Arterial Sistêmica Pt. 3 | NENHUMA | PARCIAL/TOCADO |
-| #345 | reserva do extensivo | Obstetrícia | Assistência ao Parto | Teoria II | 0 | 4 (3.4) | alta | Assistência ao Parto | NENHUMA | PARCIAL |
-| #359 | reserva do extensivo | Obstetrícia | Assistência ao Parto | Teoria III | 0 | 4 (3.4) | alta | Assistência ao Parto | NENHUMA | PARCIAL |
+| #345 | reserva do extensivo | Obstetrícia | Assistência ao Parto | Teoria II | 0 | 4 (3.4) | alta | Assistência ao Parto | #22 (S4) | PARCIAL |
+| #359 | reserva do extensivo | Obstetrícia | Assistência ao Parto | Teoria III | 0 | 4 (3.4) | alta | Assistência ao Parto | #22 (S4) | PARCIAL |
 | #363 | reserva do extensivo | Cardiologia | Hipertensão Arterial Sistêmica Pt. 1, 2 e 3 | Revisão | 42 | 4 (3.4) | media | Hipertensão Arterial Sistêmica Pt. 1; Hipertensão Arterial Sistêmica Pt. 2; Hipertensão Arterial Sistêmica Pt. 3 | NENHUMA | PARCIAL/TOCADO |
 | #423 | reserva do extensivo | Cardiologia | Hipertensão Arterial Sistêmica Pt. 1 \| Hipertensão Arterial Sistêmica Pt. 2 \| Hipertensão Arterial Sistêmica Pt. 3 \| Avaliação Perioperatória | Revisão por Questões | 43 | 4 (3.4) | media | Hipertensão Arterial Sistêmica Pt. 1; Hipertensão Arterial Sistêmica Pt. 2; Hipertensão Arterial Sistêmica Pt. 3 | NENHUMA | PARCIAL/TOCADO |
 | #5 | fora da trilha | Preventiva | Atenção Primária à Saúde no Brasil | Teoria II | 0 | 3 (3.0) | media | Atenção Primária à Saúde no Brasil | NENHUMA | PARCIAL |
@@ -90,7 +84,7 @@ Como ler: `UERJ n (peso)` = questoes das provas UERJ 2021-2026 nos temas que a t
 | #387 | reserva do extensivo | Cirurgia | Abdome Agudo Inflamatório - Diverticulite Aguda | Revisão | 48 | 3 (3.0) | media | Abdome Agudo Inflamatório - Apendicite Aguda | NENHUMA | PARCIAL |
 | #154 | reserva do extensivo | Cirurgia | Cirurgia Infantil I | Teoria II | 0 | 3 (2.7) | media | Cirurgia Infantil I | NENHUMA | PARCIAL |
 | #162 | reserva do extensivo | Ginecologia | Planejamento Familiar | Revisão | 41 | 3 (2.7) | media | Planejamento Familiar | NENHUMA | PARCIAL |
-| #163 | reserva do extensivo | Obstetrícia | Pré-Natal | Teoria III | 0 | 3 (2.7) | media | Pré-Natal | NENHUMA | PARCIAL |
+| #163 | reserva do extensivo | Obstetrícia | Pré-Natal | Teoria III | 0 | 3 (2.7) | media | Pré-Natal | #22 (S4), #325 (S6) | PARCIAL |
 | #174 | reserva do extensivo | Cirurgia | Cirurgia Infantil II | Teoria II | 0 | 3 (2.7) | media | Cirurgia Infantil I | NENHUMA | PARCIAL |
 | #203 | reserva do extensivo | Cirurgia | Cirurgia Infantil III | Teoria II | 0 | 3 (2.7) | media | Cirurgia Infantil I | NENHUMA | PARCIAL |
 | #361 | reserva do extensivo | Endocrino | Diabetes Mellitus Tipo 2 | Teoria II | 0 | 3 (2.7) | media | Diabetes Mellitus Tipo 2 | NENHUMA | PARCIAL |
@@ -127,9 +121,9 @@ Como ler: `UERJ n (peso)` = questoes das provas UERJ 2021-2026 nos temas que a t
 | #406 | reserva do extensivo | Psiquiatria | Dependência Química | Teoria II | 0 | 2 (1.7) | media | Dependência Química | NENHUMA | PARCIAL |
 | #419 | reserva do extensivo | Psiquiatria | Dependência Química | Revisão | 43 | 2 (1.7) | media | Dependência Química | NENHUMA | PARCIAL |
 | #8 | fora da trilha | Cirurgia | Cirurgia Vascular | Revisão | 43 | 1 (1.0) | baixa | Cirurgia Vascular | NENHUMA | ZERO |
-| #9 | fora da trilha | Obstetrícia | Vitalidade Fetal | Teoria + Exercícios | 25 | 1 (1.0) | baixa | Vitalidade Fetal | NENHUMA | TOCADO |
+| #9 | fora da trilha | Obstetrícia | Vitalidade Fetal | Teoria + Exercícios | 25 | 1 (1.0) | baixa | Vitalidade Fetal | #22 (S4) | TOCADO |
 | #14 | fora da trilha | Ginecologia | Sangramento Uterino Anormal | Revisão | 42 | 1 (1.0) | baixa | Sangramento Uterino Anormal | NENHUMA | PARCIAL |
-| #15 | fora da trilha | Obstetrícia | Vitalidade Fetal | Revisão | 36 | 1 (1.0) | baixa | Vitalidade Fetal | NENHUMA | TOCADO |
+| #15 | fora da trilha | Obstetrícia | Vitalidade Fetal | Revisão | 36 | 1 (1.0) | baixa | Vitalidade Fetal | #22 (S4) | TOCADO |
 | #48 | fora da trilha | Pediatria | Alergia Alimentar | Teoria + Exercícios | 21 | 1 (1.0) | baixa | Alergia Alimentar | NENHUMA | ZERO |
 | #50 | fora da trilha | Ginecologia | Prolapsos de Órgãos Pélvicos | Teoria + Exercícios | 25 | 1 (1.0) | baixa | Prolapsos de Órgãos Pélvicos | NENHUMA | ZERO |
 | #52 | fora da trilha | Pediatria | Alergia Alimentar | Revisão | 38 | 1 (1.0) | baixa | Alergia Alimentar | NENHUMA | ZERO |
@@ -146,12 +140,12 @@ Como ler: `UERJ n (peso)` = questoes das provas UERJ 2021-2026 nos temas que a t
 | #223 | reserva do extensivo | Endocrino | Tireotoxicose | Revisão | 40 | 1 (1.0) | baixa | Tireotoxicose | NENHUMA | PARCIAL |
 | #352 | reserva do extensivo | Hemato | Leucemias Agudas | Teoria I | 0 | 1 (1.0) | baixa | Leucemias Agudas | NENHUMA | ZERO |
 | #378 | reserva do extensivo | Hemato | Leucemias Agudas | Teoria II | 0 | 1 (1.0) | baixa | Leucemias Agudas | NENHUMA | ZERO |
-| #385 | reserva do extensivo | Obstetrícia | Vitalidade Fetal | Teoria I | 0 | 1 (1.0) | baixa | Vitalidade Fetal | NENHUMA | TOCADO |
+| #385 | reserva do extensivo | Obstetrícia | Vitalidade Fetal | Teoria I | 0 | 1 (1.0) | baixa | Vitalidade Fetal | #22 (S4) | TOCADO |
 | #397 | reserva do extensivo | Cirurgia | Cirurgia Vascular | Teoria I | 0 | 1 (1.0) | baixa | Cirurgia Vascular | NENHUMA | ZERO |
-| #399 | reserva do extensivo | Obstetrícia | Vitalidade Fetal | Teoria II | 0 | 1 (1.0) | baixa | Vitalidade Fetal | NENHUMA | TOCADO |
-| #402 | reserva do extensivo | Obstetrícia | Vitalidade Fetal | Teoria III | 0 | 1 (1.0) | baixa | Vitalidade Fetal | NENHUMA | TOCADO |
+| #399 | reserva do extensivo | Obstetrícia | Vitalidade Fetal | Teoria II | 0 | 1 (1.0) | baixa | Vitalidade Fetal | #22 (S4) | TOCADO |
+| #402 | reserva do extensivo | Obstetrícia | Vitalidade Fetal | Teoria III | 0 | 1 (1.0) | baixa | Vitalidade Fetal | #22 (S4) | TOCADO |
 | #411 | reserva do extensivo | Cirurgia | Cirurgia Vascular | Teoria II | 0 | 1 (1.0) | baixa | Cirurgia Vascular | NENHUMA | ZERO |
-| #413 | reserva do extensivo | Obstetrícia | Vitalidade Fetal | Revisão | 43 | 1 (1.0) | baixa | Vitalidade Fetal | NENHUMA | TOCADO |
+| #413 | reserva do extensivo | Obstetrícia | Vitalidade Fetal | Revisão | 43 | 1 (1.0) | baixa | Vitalidade Fetal | #22 (S4) | TOCADO |
 | #414 | reserva do extensivo | Infecto | Sepse | Teoria II | 0 | 1 (1.0) | baixa | Sepse | NENHUMA | PARCIAL |
 | #418 | reserva do extensivo | Hemato | Leucemias Agudas | Revisão | 43 | 1 (1.0) | baixa | Leucemias Agudas | NENHUMA | ZERO |
 | #35 | fora da trilha | Nefrologia | Distúrbios Ácido- Base; Distúrbios do Potássio; Nefrolitíase | Revisão por Questões | 43 | 1 (0.7) | baixa | Distúrbios Ácido-Base | NENHUMA | PARCIAL |

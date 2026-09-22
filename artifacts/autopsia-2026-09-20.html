@@ -89,6 +89,11 @@ header.hero .sub b{color:var(--ink);font-weight:600}
 .filters .fhead .count{margin-left:auto}
 .filters.collapsed .fbody{display:none}
 .filters.collapsed{padding-bottom:8px}
+/* Celular (22/09): expandido, o bloco NAO gruda -- flui com o conteudo; so a barra minimizada fica sticky */
+@media (max-width:700px){
+  .filters{position:static}
+  .filters.collapsed{position:sticky;top:env(safe-area-inset-top,0px);padding-top:8px;margin-bottom:12px}
+}
 
 .list{display:grid;gap:14px}
 .q{background:var(--surface);border:1px solid var(--rule);border-radius:6px;box-shadow:var(--shadow);padding:16px 18px 14px;scroll-margin-top:120px}
@@ -1525,6 +1530,9 @@ ul.enalts li{padding-left:4px}
     try { localStorage.setItem('autopsia.filtros', on ? '1' : '0'); } catch(e){}
   }
   ftoggle.addEventListener('click', function(){ setCollapsed(!filters.classList.contains('collapsed')); });
-  try { if(localStorage.getItem('autopsia.filtros') === '1') setCollapsed(true); } catch(e){}
+  var pref = null;
+  try { pref = localStorage.getItem('autopsia.filtros'); } catch(e){}
+  if(pref === '1') setCollapsed(true);
+  else if(pref === null && window.matchMedia && window.matchMedia('(max-width:700px)').matches) filters.classList.add('collapsed'), ftoggle.setAttribute('aria-expanded','false');
 })();
 </script>

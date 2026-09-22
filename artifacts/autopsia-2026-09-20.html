@@ -81,6 +81,14 @@ header.hero .sub b{color:var(--ink);font-weight:600}
 .fchip.v-crit.on{background:var(--crit);border-color:var(--crit);color:#fff}
 .filters input{font-family:var(--body);font-size:15px;padding:6px 10px;border:1px solid var(--rule-2);border-radius:6px;background:var(--surface);color:var(--ink);min-width:200px;flex:1}
 .filters .count{font-family:var(--mono);font-size:13px;color:var(--muted);margin-left:auto}
+.filters .fhead{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.filters .ftoggle{font-family:var(--display);font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;color:var(--ink-2);background:var(--surface);border:1px solid var(--rule-2);border-radius:999px;padding:4px 12px 4px 9px;cursor:pointer;display:inline-flex;align-items:center;gap:7px;line-height:1.2}
+.filters .ftoggle::before{content:"-";font-family:var(--mono);font-size:14px;width:12px;text-align:center}
+.filters.collapsed .ftoggle::before{content:"+"}
+.filters .ftoggle:hover{color:var(--ink);border-color:var(--ink)}
+.filters .fhead .count{margin-left:auto}
+.filters.collapsed .fbody{display:none}
+.filters.collapsed{padding-bottom:8px}
 
 .list{display:grid;gap:14px}
 .q{background:var(--surface);border:1px solid var(--rule);border-radius:6px;box-shadow:var(--shadow);padding:16px 18px 14px;scroll-margin-top:120px}
@@ -99,7 +107,7 @@ header.hero .sub b{color:var(--ink);font-weight:600}
 .pill.na{background:var(--surface-2);color:var(--muted)}
 .gab{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:64px}
 .gab .k{font-family:var(--display);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600}
-.gab .letter{font-family:var(--display);font-size:34px;font-weight:700;line-height:1;color:var(--accent-ink);border:2px solid var(--accent);border-radius:6px;width:48px;height:48px;display:grid;place-items:center}
+.gab .letter{font-family:var(--display);font-size:28px;font-weight:700;line-height:1;color:var(--accent-ink);border:2px solid var(--accent);border-radius:6px;min-width:48px;height:48px;padding:0 12px;display:inline-flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap}
 .gab .resp{font-size:12px;color:var(--warn);text-align:center;max-width:110px;line-height:1.2}
 @media (max-width:560px){.qh{grid-template-columns:auto 1fr} .gab{grid-column:1 / -1;flex-direction:row;justify-content:flex-start;gap:10px} .gab .k{order:0}}
 
@@ -142,7 +150,7 @@ table.t tr:last-child td{border-bottom:0}
 .layer .k{font-family:var(--display);font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;color:var(--muted)}
 .layer ul{margin-top:4px}
 .gab .letter .lm.bad{color:var(--marcada)}
-.gab .letter .sep{color:var(--muted);font-size:.6em;margin:0 3px;vertical-align:middle}
+.gab .letter .sep{color:var(--muted);font-size:.55em;font-weight:500;margin:0;line-height:1}
 ol.cadeia{margin:0;padding-left:22px}
 ol.cadeia li{margin:3px 0}
 ul.alts,ul.cands,ul.enalts{list-style:none;padding:0;margin:0;display:grid;gap:6px}
@@ -226,6 +234,8 @@ ul.enalts li{padding-left:4px}
 </section>
 
 <div class="filters" id="filters">
+  <div class="fhead"><button class="ftoggle" type="button" id="ftoggle" aria-expanded="true" aria-controls="fbody">Filtros</button><span class="count" id="count">56 de 56</span></div>
+  <div class="fbody" id="fbody">
   <div class="row"><span class="lbl">Bloco</span><button class="fchip" data-f="bloco" data-v="CM">CM <span class="num">8</span></button><button class="fchip" data-f="bloco" data-v="CIR">CIR <span class="num">18</span></button><button class="fchip" data-f="bloco" data-v="GO">GO <span class="num">14</span></button><button class="fchip" data-f="bloco" data-v="PED">PED <span class="num">10</span></button><button class="fchip" data-f="bloco" data-v="MFC">MFC <span class="num">6</span></button></div>
   <div class="row"><span class="lbl">Leitura</span>
     <button class="fchip v-crit" data-f="res" data-v="errou">Errou <span class="num">42</span></button>
@@ -234,7 +244,7 @@ ul.enalts li{padding-left:4px}
     <button class="fchip v-ok" data-f="nat" data-v="raciocinio">Raciocínio / execução <span class="num">12</span></button>
     <button class="fchip v-warn" data-f="ver" data-v="warn">Contestável <span class="num">3</span></button>
     <input id="search" type="search" placeholder="Buscar por tema, palavra ou número (ex.: 41)" aria-label="Buscar questão">
-    <span class="count" id="count">56 de 56</span>
+  </div>
   </div>
 </div>
 
@@ -1507,5 +1517,14 @@ ul.enalts li{padding-left:4px}
   });
   search.addEventListener('input', function(){ state.q = search.value; apply(); });
   apply();
+  // Bloco de filtros minimizavel (pedido de 22/09): estado lembrado por viewer, nunca obrigatorio.
+  var filters = document.getElementById('filters'), ftoggle = document.getElementById('ftoggle');
+  function setCollapsed(on){
+    filters.classList.toggle('collapsed', on);
+    ftoggle.setAttribute('aria-expanded', on ? 'false' : 'true');
+    try { localStorage.setItem('autopsia.filtros', on ? '1' : '0'); } catch(e){}
+  }
+  ftoggle.addEventListener('click', function(){ setCollapsed(!filters.classList.contains('collapsed')); });
+  try { if(localStorage.getItem('autopsia.filtros') === '1') setCollapsed(true); } catch(e){}
 })();
 </script>

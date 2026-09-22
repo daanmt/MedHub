@@ -1,7 +1,7 @@
 # HANDOFF.md -- ESTADO OPERACIONAL CURTO
 *Atualizado: 2026-09-22 (~09h30) -- **s191 (ESTUDO)**: racional das 21 recebido, UERJ 2023 PERSISTIDA (42 erros + 52 cards + 14 incertezas), Autopsia corrigida (elos fechados, URL nova), 4 aulas-base D10 das atrasadas da S1 publicadas, player com os 202 vencidos no ar. A proxima sessao (s192) abre com o que ele traz: as listas feitas com o feedback esmiucado (raciocinio, chute ou nao) + as notas do player.*
 
-> 🔴 **ABRIR A s192 POR AQUI:** (a) `ArtifactData list` na colecao `sessoes/2026-09-22/notas` do player -- se houver notas, gravar ANTES de qualquer outra coisa (item 3 abaixo); (b) receber o feedback das listas bloco a bloco: `registrar_sessao_bulk` (volume) -> `plano.py --concluir` (tarefa) -> `/analisar-questao` por erro, com o racional DELE como fonte do elo.
+> 🔴 **ABRIR A s192 POR AQUI:** (0) **se quem re-boota e o `/ai-eng` (canal aberto em 22/09, msg em `history/exchange-log.jsonl`): a sessao e de ENGENHARIA da reforma MedHub HUB -- ler `docs/HUB-BRIEF-2026-09-22.md` e a resposta dele (5 decisoes + sequencia) antes de qualquer discover/spec; estudo fica para a sessao seguinte.** (a) `ArtifactData list` na colecao `sessoes/2026-09-22/notas` do player -- se houver notas, gravar ANTES de qualquer outra coisa (item 3 abaixo); (b) receber o feedback das listas bloco a bloco: `registrar_sessao_bulk` (volume) -> `plano.py --concluir` (tarefa) -> `/analisar-questao` por erro, com o racional DELE como fonte do elo.
 
 > 🔒 **O SELO:** `python tools/selo.py` -- tabela DERIVADA, nunca digitada. Ledger ate **F128** (F127/F128 DECLARADOS, aguardam triagem do `/ai-eng`); 2 GATE do operador seguem (F87, F111).
 

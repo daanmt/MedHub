@@ -75,7 +75,10 @@ python tools/painel.py --html          # grava artifacts/painel.html
 
 Depois, **publicar na MESMA URL** (passar `url` no publish, nunca republicar sem ela -- sem `url`
 nasce um artifact novo e o link fixado do operador aponta para a versão velha). A URL fixa e
-**https://claude.ai/artifact/QctZqVoJriSviJetF8FYBQ** e vive tambem na linha de Datas & links do `HANDOFF.md`. O operador fixa a página **uma vez**; daí em diante é sempre
-atualização no mesmo endereço.
+**https://claude.ai/artifact/419MeDpjERDhq74aU7CHvn** (⚰️ 22/09/2026: a anterior, `QctZqVoJriSviJetF8FYBQ`,
+foi apagada pelo operador -- ele limpa artifacts da conta; o publish com `url` devolveu `artifact-deleted`
+e nasceu esta) e vive tambem na linha de Datas & links do `HANDOFF.md`. O operador fixa a página **uma vez**; daí em diante é sempre
+atualização no mesmo endereço -- e, se o publish acusar `artifact-deleted`, publicar sem `url`, trocar a URL
+AQUI e no `HANDOFF.md` no mesmo commit, e avisar que o link fixado morreu.
 
 O CLI **não** fala com a API de Artifact -- publicar é ato do agente, não do script.

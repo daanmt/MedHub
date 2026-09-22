@@ -37,6 +37,7 @@ Detalhe em `history/session_191.md`. (1) Boot em panorama (1o uso real do F126).
 - 🔴 **O piso/teto da trilha e conferido na regua do PROPRIO gerador**; a entrada e snapshot de 18/09 (progresso posterior muda status, nunca prioridade). Overrides manuais NAO passam pelo `cap_listas` semanal: S5 ficou com 720q.
 - 🔴 **Duas autoridades que sobraram:** `--mover` fora da Fase 1 e `plano_custom.json` x trilha -- decisao unica, depois de 02/11 (`/ai-eng`).
 - **F113 PARCIAL** (#689), **F110** sem gate, **F78**/**F2** DECLARADOS. Backlog de engenharia (depois de 02/11): F122, F127 (`--corrigir` no registrar), redesenho do `--mover`, terminal da reserva, F111, fatia 6.
+- 🏠 **PEDIDO DELE (22/09, fim da s191) -- MedHub HUB, 1 pagina unica:** player de cards + aulas-base/Revisao Direcionada + dashboard, usavel pelo celular, com o Claude Code aberto como MOTOR (banco, FSRS, autoria) e interacao ao vivo. **Causa raiz declarada: a conta claude.ai e COMPARTILHADA com o time de conteudo** -- artifacts de estudo poluem a galeria, por isso ele apaga (e os links morrem). E PRD (`/vibeflow:discover`) + orquestracao do `/ai-eng`, nao passo de sessao. Proposta v0 registrada na memoria `project_medhub_hub_pagina_unica`: 1 artifact com 3 abas, aulas/painel como `files` do MESMO artifact, `db` para notas, comentario-para-o-Claude como canal ao vivo; FSRS nunca na pagina. Decisao de TIMING e dele (antes ou depois de 01/11).
 
 ## Pendencias/observacoes ativas
 

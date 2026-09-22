@@ -1,0 +1,618 @@
+<title>Tópicos em Pediatria</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,380;9..144,480;9..144,600;9..144,680&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EFF3F0; --card:#FAFCFA; --sunk:#E2E9E4;
+  --ink:#18211C; --ink2:#4C5A52; --ink3:#7C8A82;
+  --line:rgba(24,33,28,.13); --line2:rgba(24,33,28,.26);
+  --teal:#1F6B5E; --teal-ink:#154A41; --teal-wash:#DCEBE5;
+  --carmine:#8E2F41; --carmine-ink:#6B2231; --carmine-wash:#F5E2E6;
+  --amber:#8A5A17; --amber-ink:#6B4610; --amber-wash:#F3E6CC;
+  --on:#FFFFFF;
+  --sh:0 1px 2px rgba(24,33,28,.06),0 12px 30px -18px rgba(24,33,28,.35);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#7E8C84;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  --on:#131A16;
+  --sh:0 1px 2px rgba(0,0,0,.5),0 14px 34px -18px rgba(0,0,0,.8);
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#7E8C84;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  --on:#131A16;
+  --sh:0 1px 2px rgba(0,0,0,.5),0 14px 34px -18px rgba(0,0,0,.8);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);
+  font:16px/1.6 "Source Sans 3",-apple-system,"Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+.mn{font-family:"IBM Plex Mono",ui-monospace,Consolas,monospace;font-variant-numeric:tabular-nums}
+h1,h2,h3,h4{margin:0;font-family:Fraunces,Georgia,serif;font-weight:600;letter-spacing:-.01em;text-wrap:balance;line-height:1.14;color:var(--ink)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px 100px}
+@media(max-width:640px){.wrap{padding:0 16px 80px}}
+:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+a{color:var(--teal-ink)}
+strong{font-weight:600;color:var(--ink)}
+em{font-style:italic}
+
+/* masthead */
+.top{padding:52px 0 30px;border-bottom:1px solid var(--line2)}
+.eye{font:600 11px/1 "Source Sans 3";letter-spacing:.14em;text-transform:uppercase;color:var(--teal-ink);margin:0 0 15px}
+.top h1{font-size:clamp(32px,5vw,50px);font-weight:680;max-width:18ch;margin-bottom:16px}
+.top .sub{font-size:18px;line-height:1.6;color:var(--ink2);max-width:66ch;margin:0 0 22px}
+.stats{display:flex;gap:22px;flex-wrap:wrap}
+.stat{display:flex;flex-direction:column;gap:2px}
+.stat b{font:600 24px/1 "IBM Plex Mono";color:var(--teal-ink);font-variant-numeric:tabular-nums}
+.stat span{font-size:11.5px;color:var(--ink3);letter-spacing:.02em}
+
+/* timeline strip (Degrau 0) */
+.tl{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1px;background:var(--line2);border:1px solid var(--line2);margin:20px 0}
+.tl div{background:var(--card);padding:12px 13px}
+.tl .tk{font:600 11px "IBM Plex Mono";color:var(--teal-ink);display:block;margin-bottom:4px;font-variant-numeric:tabular-nums}
+.tl .tn{font-size:14px;font-weight:600;color:var(--ink);display:block;margin-bottom:3px}
+.tl .tv{font-size:12.8px;line-height:1.45;color:var(--ink2)}
+
+/* layout */
+.body{display:grid;grid-template-columns:220px minmax(0,1fr);gap:52px;padding-top:38px;align-items:start}
+@media(max-width:920px){.body{grid-template-columns:1fr}}
+.rail{position:sticky;top:22px;display:flex;flex-direction:column;gap:1px}
+.rail .rlab{font:600 10.5px/1 "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin:0 0 10px}
+.rail a{display:grid;grid-template-columns:20px 1fr;gap:9px;align-items:baseline;padding:7px 0;
+  font-size:13.3px;color:var(--ink3);text-decoration:none;border-left:2px solid transparent;padding-left:10px}
+.rail a .rn{font:600 11px "IBM Plex Mono";color:var(--ink3)}
+.rail a:hover{color:var(--ink)}
+.rail a.on{color:var(--teal-ink);border-left-color:var(--teal);font-weight:600}
+.rail a.on .rn{color:var(--teal-ink)}
+@media(max-width:920px){
+  .rail{position:static;flex-direction:row;flex-wrap:wrap;gap:6px 4px;top:auto}
+  .rail .rlab{width:100%}
+  .rail a{padding:4px 9px;border-left:0;border:1px solid var(--line2);border-radius:2px;grid-template-columns:auto auto}
+  .rail a.on{background:var(--teal-wash);border-color:var(--teal)}
+}
+main{min-width:0;max-width:700px}
+
+/* degrau */
+.degrau{padding:44px 0;border-bottom:1px solid var(--line)}
+.degrau:first-child{padding-top:0}
+.degrau:last-of-type{border-bottom:0}
+.dhead{display:flex;gap:16px;align-items:flex-start;margin-bottom:18px}
+.dnum{flex-shrink:0;width:44px;height:44px;border:1.5px solid var(--teal);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font:600 17px "IBM Plex Mono";color:var(--teal-ink)}
+.dtitle{padding-top:4px}
+.dtitle .dstage{font:600 11px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);display:block;margin-bottom:3px}
+.dtitle h2{font-size:clamp(21px,2.6vw,27px)}
+.lede{font-size:16.5px;line-height:1.6;color:var(--ink2);margin:0 0 20px;font-style:italic}
+.prose p{font-size:16px;line-height:1.72;color:var(--ink2);margin:0 0 16px}
+.prose p:last-child{margin-bottom:0}
+.prose ul,.prose ol{margin:0 0 16px;padding-left:22px}
+.prose li{font-size:15.6px;line-height:1.6;color:var(--ink2);margin-bottom:6px}
+.prose li:last-child{margin-bottom:0}
+.prose li strong{color:var(--ink)}
+h4.sub{font-size:14px;font-weight:600;font-family:"Source Sans 3";letter-spacing:.01em;color:var(--ink);margin:26px 0 10px}
+h4.sub:first-child{margin-top:0}
+
+/* callouts */
+.aside{margin:20px 0;padding:15px 18px;border-left:3px solid var(--teal);background:var(--teal-wash)}
+.aside .albl{font:700 10.5px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;color:var(--teal-ink);margin-bottom:6px}
+.aside p{font-size:15.3px;line-height:1.6;color:var(--ink);margin:0}
+.aside p+p{margin-top:8px}
+.trap{margin:20px 0;padding:15px 18px;border-left:3px solid var(--carmine);background:var(--carmine-wash)}
+.trap .albl{font:700 10.5px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;color:var(--carmine-ink);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.trap .albl::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--carmine)}
+.trap p{font-size:15.3px;line-height:1.6;color:var(--ink);margin:0}
+.trap p+p{margin-top:8px}
+.banca{margin:20px 0;padding:15px 18px;border-left:3px solid var(--amber);background:var(--amber-wash)}
+.banca .albl{font:700 10.5px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;color:var(--amber-ink);margin-bottom:6px}
+.banca p{font-size:15.3px;line-height:1.6;color:var(--ink);margin:0}
+.banca p+p{margin-top:8px}
+.star{margin:20px 0;padding:14px 18px;border:1px solid var(--line2);background:var(--card)}
+.star .albl{font:700 10.5px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:6px}
+.star p{font-size:15.3px;line-height:1.6;color:var(--ink);margin:0;font-weight:560}
+
+/* comparativos */
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line2);border:1px solid var(--line2);margin:20px 0}
+.vs>div{background:var(--card);padding:14px 16px}
+.vs h5{font:700 11.5px "Source Sans 3";letter-spacing:.04em;text-transform:uppercase;margin:0 0 8px;color:var(--ink3)}
+.vs .a h5{color:var(--carmine-ink)}
+.vs .b h5{color:var(--teal-ink)}
+.vs p,.vs li{font-size:14.5px;line-height:1.55;color:var(--ink2)}
+.vs p{margin:0 0 8px}
+.vs p:last-child{margin:0}
+.vs ul{margin:0;padding-left:18px}
+.vs li{margin-bottom:5px}
+@media(max-width:640px){.vs{grid-template-columns:1fr}}
+
+/* grid de criterios */
+.crit{border:1px solid var(--line2);margin:20px 0}
+.crit .row{display:grid;grid-template-columns:180px 1fr;gap:14px;padding:11px 15px;font-size:14.3px}
+.crit .row+.row{border-top:1px solid var(--line)}
+.crit .row .k{font-weight:600;color:var(--teal-ink)}
+.crit .row .v{color:var(--ink2);line-height:1.5}
+.crit .row .v strong{color:var(--ink)}
+.crit.hd .row:first-child{background:var(--sunk);font-weight:600;color:var(--ink3);font-size:12px;letter-spacing:.04em;text-transform:uppercase}
+.crit.hd .row:first-child .k,.crit.hd .row:first-child .v{color:var(--ink3)}
+.crit.c3 .row{grid-template-columns:150px 1fr 1fr}
+@media(max-width:640px){.crit .row,.crit.c3 .row{grid-template-columns:1fr;gap:3px}}
+
+/* referencia densa */
+details.ref{margin:20px 0;border:1px solid var(--line2);background:var(--card)}
+details.ref>summary{cursor:pointer;list-style:none;padding:12px 16px;font:600 13.5px "Source Sans 3";color:var(--teal-ink);display:flex;align-items:center;gap:9px}
+details.ref>summary::-webkit-details-marker{display:none}
+details.ref>summary::before{content:"+";font:600 15px "IBM Plex Mono";width:16px}
+details.ref[open]>summary::before{content:"-"}
+details.ref .refbody{padding:0 16px 16px}
+details.ref .row{display:grid;grid-template-columns:150px 1fr;gap:12px;padding:8px 0;font-size:13.8px;border-top:1px solid var(--line)}
+details.ref .row:first-child{border-top:0}
+details.ref .k{font-weight:600;color:var(--ink)}
+details.ref .v{color:var(--ink2);line-height:1.5}
+@media(max-width:640px){details.ref .row{grid-template-columns:1fr;gap:2px}}
+
+/* sintese */
+.synth{background:var(--card);border:1px solid var(--line2);padding:32px 30px;margin-top:6px}
+@media(max-width:640px){.synth{padding:22px 18px}}
+.synth h2{font-size:23px;margin-bottom:14px}
+.synth .prose p{font-size:16.5px}
+.trig{margin-top:22px;display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1px;background:var(--line2);border:1px solid var(--line2)}
+.trig div{background:var(--sunk);padding:13px 15px}
+.trig .tk{font:700 11px "IBM Plex Mono";color:var(--teal-ink);display:block;margin-bottom:4px}
+.trig .tv{font-size:13.6px;line-height:1.45;color:var(--ink2)}
+
+/* armadilhas */
+.arms{display:flex;flex-direction:column;gap:1px;background:var(--line2);border:1px solid var(--line2);margin-top:18px}
+.arm{background:var(--card);padding:15px 18px;display:flex;gap:12px}
+.arm .dot{flex-shrink:0;width:9px;height:9px;border-radius:50%;background:var(--carmine);margin-top:7px}
+.arm p{font-size:15px;line-height:1.58;color:var(--ink2);margin:0}
+.arm p strong{color:var(--ink)}
+
+footer{margin-top:60px;padding-top:22px;border-top:1px solid var(--line2)}
+footer p{font-size:12.3px;color:var(--ink3);max-width:80ch;margin:0 0 7px;line-height:1.5}
+code{font-family:"IBM Plex Mono",Consolas,monospace;font-size:11.8px;background:var(--sunk);padding:1px 5px;border-radius:2px}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <p class="eye">MedHub · Aula-base · Pediatria / Tópicos em Pediatria</p>
+  <h1>Tópicos em Pediatria: a régua da idade</h1>
+  <p class="sub">Tema guarda-chuva do EMED: nove assuntos que raramente ganham questão própria e aparecem como alternativa dentro de outros temas. O fio que os une é a idade -- da primeira semana aos 19 anos -- e o que a banca pede em cada ponto é quase sempre um número (uma idade, uma quantidade, um intervalo) e a fonte que o assinou. Aula completa antes da lista #96 (18q); a lista #100 (36q) reaproveita a mesma escada.</p>
+  <div class="stats">
+    <div class="stat"><b>9</b><span>tópicos do EMED</span></div>
+    <div class="stat"><b>11</b><span>degraus</span></div>
+    <div class="stat"><b>15</b><span>armadilhas mapeadas</span></div>
+    <div class="stat"><b>D10</b><span>calibração</span></div>
+  </div>
+</header>
+
+<div class="body">
+<nav class="rail" id="rail" aria-label="Navegação da escada">
+  <p class="rlab">A escada</p>
+  <a href="#d0" data-r="d0"><span class="rn">0</span><span>A régua da idade</span></a>
+  <a href="#d1" data-r="d1"><span class="rn">1</span><span>Puericultura</span></a>
+  <a href="#d2" data-r="d2"><span class="rn">2</span><span>Cólicas do lactente</span></a>
+  <a href="#d3" data-r="d3"><span class="rn">3</span><span>Introdução alimentar</span></a>
+  <a href="#d4" data-r="d4"><span class="rn">4</span><span>Do 1º ano à adolescência</span></a>
+  <a href="#d5" data-r="d5"><span class="rn">5</span><span>Dentição</span></a>
+  <a href="#d6" data-r="d6"><span class="rn">6</span><span>Desfralde</span></a>
+  <a href="#d7" data-r="d7"><span class="rn">7</span><span>Sono</span></a>
+  <a href="#d8" data-r="d8"><span class="rn">8</span><span>Telas</span></a>
+  <a href="#d9" data-r="d9"><span class="rn">9</span><span>Bullying</span></a>
+  <a href="#d10" data-r="d10"><span class="rn">10</span><span>Hebiatria</span></a>
+  <a href="#synth" data-r="synth"><span class="rn">-></span><span>Síntese e gatilhos</span></a>
+  <a href="#arms" data-r="arms"><span class="rn">🔴</span><span>Armadilhas de prova</span></a>
+</nav>
+
+<main>
+
+<section class="degrau" id="d0">
+  <div class="dhead"><span class="dnum">0</span><div class="dtitle"><span class="dstage">Degrau 0</span><h2>A régua da idade -- e quem assina cada número</h2></div></div>
+  <p class="lede">Nada aqui é fisiopatologia difícil. O que derruba o candidato é misturar a faixa etária de um tópico com a de outro, ou o número de uma fonte com o de outra.</p>
+  <div class="prose">
+    <p>Todos os nove tópicos deste livro são recomendações de puericultura amarradas a uma idade: quantas consultas no primeiro ano, quando entra a comida, quanto flúor cabe na escova, quantas horas de tela, quantas de sono, a partir de quando tirar a fralda, até quando o choro é "cólica", quando a consulta passa a ser sigilosa. A prova cobra o número e, com frequência, cobra também <strong>quem o disse</strong>: Sociedade Brasileira de Pediatria (SBP), Ministério da Saúde (MS), Organização Mundial da Saúde (OMS) ou o Estatuto da Criança e do Adolescente (ECA). Quando a questão nomeia a fonte, a resposta é a régua daquela fonte -- não a média das duas.</p>
+    <p>Fixe primeiro as faixas etárias que os degraus vão usar. Elas são a coluna vertebral desta aula e o único "mecanismo" comum a tudo: cada fase tem uma velocidade de crescimento e uma maturação neurológica próprias, e é isso que explica por que o apetite cai aos 2 anos, por que o esfíncter só obedece aos 18 meses e por que o adolescente vive no presente.</p>
+  </div>
+  <div class="tl">
+    <div><span class="tk">0-28 d</span><span class="tn">Recém-nascido</span><span class="tv">1ª consulta na 1ª semana; crescimento mais rápido da vida</span></div>
+    <div><span class="tk">29 d-2 a</span><span class="tn">Lactente</span><span class="tv">cólica até 5 m; comida aos 6 m; 1º dente 6-9 m; fralda sai a partir de 18 m</span></div>
+    <div><span class="tk">2-6 a</span><span class="tn">Pré-escolar</span><span class="tv">crescimento desacelera, apetite cai; telas até 1 h/dia; dentição decídua completa 30-36 m</span></div>
+    <div><span class="tk">7-10 a</span><span class="tn">Escolar</span><span class="tv">apetite volta; telas 1-2 h; escova sozinho aos 10 a; bullying tem palco</span></div>
+    <div><span class="tk">10-19 a</span><span class="tn">Adolescente (SBP/OMS)</span><span class="tv">ECA: 12 a 18 a; consulta sigilosa; telas 2-3 h; sono 8-10 h</span></div>
+  </div>
+  <div class="aside">
+    <div class="albl">Como este livro cai</div>
+    <p>O próprio EMED avisa: tema pouco cobrado isoladamente, mais visto "em alternativas dentro de outros temas". A exceção é a <strong>alimentação da criança</strong>, que concentra a maior parte das questões e por isso recebe dois degraus aqui. Hebiatria vem em segundo lugar, seguida de dentição e consultas de puericultura.</p>
+  </div>
+</section>
+
+<section class="degrau" id="d1">
+  <div class="dhead"><span class="dnum">1</span><div class="dtitle"><span class="dstage">Degrau 1</span><h2>Puericultura: o calendário de consultas</h2></div></div>
+  <p class="lede">A consulta de rotina é o palco de todos os outros tópicos. O que a prova pergunta dela é só uma coisa: a frequência.</p>
+  <div class="prose">
+    <p>Puericultura é o acompanhamento periódico da criança sadia -- crescimento, desenvolvimento neuropsicomotor, vacinas, alimentação, prevenção de acidentes. A densidade das consultas segue a velocidade do crescimento: no primeiro ano a criança triplica o peso e ganha cerca de 25 cm, o calendário vacinal é apertado e cada marco motor tem janela curta; por isso são <strong>sete consultas no primeiro ano</strong>, <strong>duas no segundo</strong> e, dali em diante, <strong>uma por ano</strong>. SBP e MS concordam nesse esqueleto.</p>
+  </div>
+  <div class="crit">
+    <div class="row"><span class="k">1º ano (7)</span><span class="v">1ª semana de vida, 1 mês, 2, 4, 6, 9 e 12 meses</span></div>
+    <div class="row"><span class="k">2º ano (2)</span><span class="v">18 e 24 meses</span></div>
+    <div class="row"><span class="k">A partir dos 2 anos</span><span class="v">Anual</span></div>
+    <div class="row"><span class="k">A 1ª consulta</span><span class="v">MS, Caderno de Atenção Básica nº 33: "na 1ª semana de vida". Protocolo de Atenção Básica MS + Hospital Sírio-Libanês: entre o <strong>3º e o 5º dia</strong> -- a única fonte que dá os dias exatos</span></div>
+  </div>
+  <div class="trap">
+    <div class="albl">Armadilha</div>
+    <p>A questão clássica pergunta o segundo ano e oferece "15 e 22 meses" ou "semestral" como distratores. Segundo ano é <strong>18 e 24 meses</strong>, e depois é anual -- não semestral.</p>
+  </div>
+  <div class="star">
+    <div class="albl">Por que tanto no 1º ano</div>
+    <p>Crescimento mais acelerado da vida, desenvolvimento neuropsicomotor com marcos mensais e calendário vacinal concentrado (2, 3, 4, 5, 6, 9 e 12 meses). As consultas casam com as vacinas de propósito.</p>
+  </div>
+</section>
+
+<section class="degrau" id="d2">
+  <div class="dhead"><span class="dnum">2</span><div class="dtitle"><span class="dstage">Degrau 2 · 0 a 5 meses</span><h2>Cólicas do lactente</h2></div></div>
+  <p class="lede">Choro prolongado, sem causa, em bebê que cresce bem e não tem febre. O diagnóstico é clínico e a conduta é tranquilizar -- desde que você tenha excluído o que não é cólica.</p>
+  <div class="prose">
+    <p>A fisiopatologia não está fechada e é tratada como multifatorial. Do lado intestinal: imaturidade do sistema digestivo, menor absorção da lactose, peristalse aumentada e uma microbiota diferente (menos lactobacilos e bifidobactérias). Do lado extraintestinal: imaturidade do sistema nervoso central, processamento sensorial da dor diferente e tabagismo materno. Nenhum desses mecanismos gera um exame -- por isso o diagnóstico é por critério clínico, os de <strong>Roma IV</strong>.</p>
+  </div>
+  <div class="crit">
+    <div class="row"><span class="k">Roma IV, assistência (os 3)</span><span class="v">(1) Início <strong>e</strong> término dos sintomas antes dos <strong>5 meses</strong>; (2) períodos prolongados e recorrentes de choro, desconforto ou irritabilidade <strong>sem causa evidente</strong>, que os cuidadores não conseguem prevenir nem resolver; (3) <strong>ganho de peso normal</strong>, sem febre e sem outra doença</span></div>
+    <div class="row"><span class="k">Roma IV, pesquisa (+2)</span><span class="v">Relato de choro/irritabilidade por <strong>mais de 3 horas em 3 ou mais dias</strong> nos últimos 7 dias, e registro prospectivo confirmando 3 horas ou mais num diário de 24 horas</span></div>
+    <div class="row"><span class="k">Regra dos 3 (Wessel)</span><span class="v">A régua histórica que os critérios de pesquisa herdaram: mais de 3 h/dia, mais de 3 dias/semana, por mais de 3 semanas</span></div>
+    <div class="row"><span class="k">Conduta</span><span class="v"><strong>Expectante</strong>: explicar a benignidade, acolher os pais, revisar a técnica de amamentação. Simeticona e chás não têm evidência; probióticos (L. reuteri) têm evidência fraca e só em amamentados -- não é a resposta de prova</span></div>
+  </div>
+  <div class="prose">
+    <h4 class="sub">O que não é cólica: os vizinhos de Roma IV</h4>
+    <p>A questão de prova sobre cólica costuma ser uma questão de <strong>reconhecer o critério certo entre cinco distúrbios funcionais</strong> descritos com a mesma sintaxe. Guarde os discriminadores.</p>
+  </div>
+  <div class="crit hd">
+    <div class="row"><span class="k">Distúrbio</span><span class="v">O que o define</span></div>
+    <div class="row"><span class="k">Cólica</span><span class="v">Choro sem causa, &lt; 5 meses, cresce bem, sem febre</span></div>
+    <div class="row"><span class="k">Regurgitação do lactente</span><span class="v">3 semanas a 12 meses; <strong>2 ou mais regurgitações/dia por 3 semanas ou mais</strong>; sem náusea, hematêmese, aspiração, apneia, déficit de crescimento, dificuldade de alimentar/engolir ou postura anormal (o "refluxo fisiológico")</span></div>
+    <div class="row"><span class="k">Disquesia</span><span class="v">&lt; 9 meses; <strong>10 minutos ou mais de esforço e choro</strong> antes de evacuar fezes <strong>moles</strong>, com ou sem sucesso -- incoordenação entre contrair o abdome e relaxar o assoalho pélvico. Não é constipação; não usar supositório nem estimular o ânus</span></div>
+    <div class="row"><span class="k">Constipação funcional (&lt; 4 anos)</span><span class="v"><strong>2 ou mais</strong> por <strong>1 mês ou mais</strong>: 2 ou menos evacuações/semana; retenção; evacuação dolorosa/difícil; fezes calibrosas; massa fecal no reto (e, em desfraldados: incontinência semanal, fezes que entopem o vaso)</span></div>
+    <div class="row"><span class="k">Ruminação</span><span class="v">Início entre 3 e 8 meses; contrações repetitivas de abdome, diafragma e língua com regurgitação <strong>sem esforço</strong>, conteúdo cuspido ou remastigado e engolido; não responde a tratamento de refluxo; não ocorre no sono nem quando o bebê está interagindo</span></div>
+  </div>
+  <div class="trap">
+    <div class="albl">Armadilha</div>
+    <p>Cólica exige <strong>início e término antes dos 5 meses</strong>. Choro que começa aos 6 meses, ou bebê que perde peso ou tem febre, sai do diagnóstico funcional e vira investigação. O choro inconsolável do lactente tem uma lista de causas orgânicas que a banca esconde no enunciado: <strong>hérnia inguinal encarcerada, torção testicular, invaginação</strong> (choro intermitente com fezes em geleia de framboesa), <strong>otite, ITU, abrasão de córnea, torniquete de cabelo</strong> num dedo, fratura ou maus-tratos. Exame físico completo, despido, antes de dizer "cólica".</p>
+  </div>
+</section>
+
+<section class="degrau" id="d3">
+  <div class="dhead"><span class="dnum">3</span><div class="dtitle"><span class="dstage">Degrau 3 · 6 a 12 meses</span><h2>Introdução alimentar</h2></div></div>
+  <p class="lede">O tópico mais cobrado do livro. Quase toda questão é uma lista de afirmações sobre o que entra, quando entra e como se prepara -- e o erro escondido é sempre um mês a mais, um sal a mais ou uma peneira.</p>
+  <div class="prose">
+    <p>SBP, OMS e MS falam a mesma língua: <strong>aleitamento materno exclusivo até os 6 meses</strong> (sem água, sem chá), <strong>alimentação complementar a partir dos 6 meses</strong> e <strong>leite materno mantido até os 2 anos ou mais</strong>. O mecanismo por trás dos 6 meses é duplo: antes disso o intestino e o rim ainda não lidam bem com a carga de solutos e a maturação motora oral não sustenta a colher; depois disso o leite sozinho deixa de cobrir ferro, zinco e energia. Atrasar a introdução <strong>não protege de alergia -- aumenta o risco</strong>, porque a janela de tolerância oral está aberta justamente entre 4 e 6 meses e fecha depois. É por isso que ovo, peixe e amendoim entram sem adiamento.</p>
+  </div>
+  <div class="crit">
+    <div class="row"><span class="k">Até o 6º mês</span><span class="v">Leite materno exclusivo</span></div>
+    <div class="row"><span class="k">6 a 7 meses</span><span class="v">Frutas + <strong>1ª papa de misturas múltiplas</strong> (1x/dia, almoço ou jantar)</span></div>
+    <div class="row"><span class="k">7 a 8 meses</span><span class="v"><strong>2ª papa</strong> (a papa passa a 2x/dia)</span></div>
+    <div class="row"><span class="k">9 a 11 meses</span><span class="v">Aumentar a consistência aos poucos</span></div>
+    <div class="row"><span class="k">12 meses</span><span class="v"><strong>Comida da família</strong></span></div>
+  </div>
+  <div class="prose">
+    <h4 class="sub">As regras de preparo que a banca testa</h4>
+    <ul>
+      <li><strong>Frutas in natura</strong>, raspadas, amassadas ou picadas, <strong>na colher</strong>. Nenhuma fruta é contraindicada. <strong>Sucos, mesmo naturais, ficam fora</strong>: perdem a fibra, concentram caloria e predispõem à obesidade (a SBP não os admite no 1º ano e limita a 120 mL/dia entre 1 e 3 anos).</li>
+      <li><strong>Papa de misturas múltiplas</strong> (o antigo "papa salgada" -- o nome mudou para lembrar que <strong>não leva sal</strong>, só temperos naturais): um cereal ou tubérculo + uma leguminosa + uma proteína animal + uma hortaliça. Nada de excluir grupos "até adaptar".</li>
+      <li><strong>Consistência espessa desde o início</strong>: cozida e amassada com garfo. <strong>Nunca liquidificada nem peneirada</strong> -- a textura é o estímulo da mastigação e da fala.</li>
+      <li><strong>Carne desde a primeira papa</strong>, picada ou desfiada, e nunca retirada depois do cozimento: é a fonte de ferro e zinco que justifica a introdução aos 6 meses.</li>
+      <li><strong>Ovo inteiro desde o início</strong>, bem cozido; não se adia nem se exclui a gema.</li>
+      <li><strong>Mel proibido no 1º ano</strong>: esporos de <em>Clostridium botulinum</em> germinam no intestino ainda imaturo e produzem toxina (botulismo do lactente).</li>
+      <li><strong>Sem rigidez de horário</strong>: oferecer nos horários das refeições da família, em intervalos regulares, respeitando a fome da criança -- ela pode repetir e pode recusar.</li>
+      <li>Água própria para consumo passa a ser oferecida a partir dos 6 meses, no lugar de sucos e bebidas açucaradas.</li>
+    </ul>
+    <p>Doce ou salgado primeiro? <strong>Não existe regra.</strong> Costuma-se começar pela fruta só porque o lactente prefere o doce -- e a alternativa "fruta 2x/dia até adaptar, depois o salgado" é distrator.</p>
+  </div>
+  <div class="vs">
+    <div class="a"><h5>10 passos (MS/OPAS, SBP)</h5><ul>
+      <li>1. Só leite materno até 6 meses, sem água ou chá</li>
+      <li>2. A partir dos 6 meses, outros alimentos, lenta e gradualmente; leite materno até 2 anos ou mais</li>
+      <li>3. Complementares <strong>3x/dia se amamentado, 5x/dia se desmamado</strong></li>
+      <li>4. Sem rigidez de horário, respeitando a vontade da criança</li>
+      <li>5. Espessa desde o início, de colher; pastosa e depois mais consistente</li>
+      <li>6. Alimentos diferentes ao dia ("colorida")</li>
+      <li>7. Frutas, verduras e legumes diariamente</li>
+      <li>8. Evitar açúcar, café, enlatados, frituras, refrigerantes, guloseimas; <strong>sal com moderação</strong></li>
+      <li>9. Higiene no preparo, armazenamento e conservação</li>
+      <li>10. Estimular a criança doente/convalescente a comer</li>
+    </ul></div>
+    <div class="b"><h5>12 passos (Guia Alimentar MS, 2019)</h5><ul>
+      <li>1. Amamentar até 2 anos ou mais, só leite materno até 6 meses</li>
+      <li>2. A partir dos 6 meses, alimentos <strong>in natura ou minimamente processados</strong></li>
+      <li>3. <strong>Água</strong> em vez de sucos, refrigerantes e bebidas açucaradas</li>
+      <li>4. Comida <strong>amassada</strong> desde o início</li>
+      <li>5. <strong>Nenhum açúcar até os 2 anos</strong> (nem produtos que o contenham)</li>
+      <li>6. Nenhum ultraprocessado</li>
+      <li>7. A mesma comida para a criança e para a família</li>
+      <li>8. Refeição como momento de afeto e aprendizado</li>
+      <li>9. Atenção aos sinais de fome e saciedade; conversar durante a refeição</li>
+      <li>10. Higiene em todas as etapas</li>
+      <li>11. Alimentação adequada também fora de casa</li>
+      <li>12. Proteger a criança da <strong>publicidade</strong> de alimentos</li>
+    </ul></div>
+  </div>
+  <div class="banca">
+    <div class="albl">Banca-dependente: sal e açúcar</div>
+    <p><strong>Açúcar é zero até os 2 anos</strong> em qualquer fonte. O <strong>sal</strong> muda de redação: os 10 passos dizem "com moderação", o Guia de 2019 fala em quantidade mínima, e o EMED ensina "de preferência não usar" nos primeiros anos. Já caiu como certa tanto "sem sal nem açúcar nos 2 primeiros anos" (UFRN 2023) quanto "sal em quantidade mínima e sem açúcar até 2 anos" (UFRGS 2023). Regra prática: alternativa que <strong>libera açúcar</strong> está errada; entre "sem sal" e "sal mínimo", escolha a que for coerente com a fonte nomeada e elimine as que colocam sal "em pequena quantidade com temperos industrializados ou caldos".</p>
+  </div>
+  <div class="banca">
+    <div class="albl">Banca-dependente: o lactente que não mama</div>
+    <p>Para a SBP, quem não recebe leite materno usa <strong>fórmula infantil até os 12 meses</strong>; leite de vaca integral só depois de 1 ano. O Guia Alimentar do MS (2019) admite leite de vaca integral quando a fórmula não é possível, diluído até os 4 meses. Se a questão nomear "SBP", leite de vaca antes de 1 ano está errado.</p>
+  </div>
+  <details class="ref">
+    <summary>Suplementações que andam junto (referência; tema do livro 38)</summary>
+    <div class="refbody">
+      <div class="row"><span class="k">Vitamina D</span><span class="v">400 UI/dia da 1ª semana aos 12 meses; 600 UI/dia dos 12 aos 24 meses (SBP), independentemente do tipo de leite</span></div>
+      <div class="row"><span class="k">Ferro profilático</span><span class="v">1 mg/kg/dia no lactente a termo -- SBP dos 3 aos 24 meses; MS dos 6 aos 24 meses. A carne na papa não dispensa a profilaxia</span></div>
+    </div>
+  </details>
+</section>
+
+<section class="degrau" id="d4">
+  <div class="dhead"><span class="dnum">4</span><div class="dtitle"><span class="dstage">Degrau 4 · 1 a 19 anos</span><h2>Alimentação do primeiro ano à adolescência</h2></div></div>
+  <p class="lede">Cada fase tem uma velocidade de crescimento, e o apetite obedece a ela. Quem entende isso não medicaliza o pré-escolar que "não come".</p>
+  <div class="prose">
+    <p>Entre <strong>1 e 2 anos</strong> a criança come a refeição da família e segue mamando. Aos <strong>2 anos</strong> o crescimento desacelera de forma marcada -- ela deixa de ganhar 25 cm/ano para ganhar 5 a 7 -- e o apetite cai junto. Esse é o mecanismo por trás da queixa mais frequente da puericultura pré-escolar: a criança que "parou de comer" e "recusa o que antes aceitava". É fisiologia, não doença, e a conduta é comportamental. No <strong>escolar</strong> o apetite volta a subir; na <strong>adolescência</strong> o estirão puberal cria a maior demanda nutricional da vida, com dois nutrientes críticos: ferro (menarca, massa muscular) e cálcio (o pico de massa óssea se forma aqui -- 1.300 mg/dia).</p>
+  </div>
+  <div class="crit hd">
+    <div class="row"><span class="k">Fase</span><span class="v">O que muda e o que orientar</span></div>
+    <div class="row"><span class="k">1 a 2 anos</span><span class="v">Comida da família + seio materno. Sem açúcar, sem ultraprocessados</span></div>
+    <div class="row"><span class="k">Pré-escolar (2-6 a)</span><span class="v">Crescimento desacelera, <strong>apetite cai</strong>, comportamento alimentar imprevisível. <strong>5 a 6 refeições/dia</strong>, intervalos de <strong>2 a 3 h</strong>; porção conforme a aceitação; <strong>não obrigar a comer</strong>, pode repetir; <strong>sem líquidos durante a refeição</strong>; <strong>sobremesa = fruta, nunca recompensa</strong></span></div>
+    <div class="row"><span class="k">Escolar (7-10 a)</span><span class="v">Apetite aumenta; todos os grupos alimentares, hábitos da família; evitar refrigerante, bala e guloseima</span></div>
+    <div class="row"><span class="k">Adolescente</span><span class="v">Maior necessidade nutricional da vida (puberdade); atenção a ferro e cálcio, e aos transtornos alimentares (o "E" do HEEADSSS, degrau 10)</span></div>
+  </div>
+  <div class="prose">
+    <h4 class="sub">Dois rótulos do pré-escolar</h4>
+    <p><strong>Neofobia</strong> é a recusa do alimento novo ou desconhecido; é esperada e se vence por <strong>exposição repetida</strong> (8 a 15 ofertas do mesmo alimento, sem pressão) -- a exposição frequente é o tratamento. <strong>Picky/fussy eating</strong> é a criança que rejeita grande quantidade de alimentos e come de uma variedade muito pequena, inclusive conhecidos. O sinal de alarme, em qualquer um dos dois, é a curva de crescimento: enquanto ela sobe no canal, a conduta é orientação, não suplemento nem exame.</p>
+  </div>
+  <div class="trap">
+    <div class="albl">Armadilha</div>
+    <p>"Adequar o prato e evitar que a criança repita" está errado -- a fome é da criança, e ela decide a quantidade. Também está errado "oferecer água ou suco durante a refeição": líquido na refeição enche e desloca a comida. A alternativa certa nessa questão é sempre a da <strong>sobremesa como parte da refeição, de preferência fruta, nunca como prêmio</strong>.</p>
+  </div>
+</section>
+
+<section class="degrau" id="d5">
+  <div class="dhead"><span class="dnum">5</span><div class="dtitle"><span class="dstage">Degrau 5</span><h2>Dentição e saúde bucal</h2></div></div>
+  <p class="lede">Vinte dentes que nascem, trinta e dois que ficam, e uma escova que entra no primeiro dia em que há dente.</p>
+  <div class="prose">
+    <p>A <strong>dentição decídua</strong> (primária, "de leite", temporária) começa antes de 1 ano -- o primeiro dente, em geral um <strong>incisivo central inferior, entre 6 e 9 meses</strong> --, está <strong>completa entre 30 e 36 meses</strong> com <strong>20 dentes</strong> (10 em cada arcada) e permanece até cerca dos 6 anos. A partir dos <strong>6 anos</strong> começa a troca: os primeiros permanentes a irromper são o <strong>primeiro molar</strong> ("molar dos 6 anos", que nasce atrás dos decíduos sem substituir nenhum) e os incisivos centrais inferiores. A <strong>dentição permanente</strong> completa tem <strong>32 dentes</strong> e fecha por volta dos <strong>18 anos</strong>, com os terceiros molares.</p>
+    <p>Atraso na erupção do primeiro dente além dos 12 a 13 meses merece um olhar: hipotireoidismo congênito, raquitismo, síndrome de Down e desnutrição são as causas que a prova evoca. Já a ordem invertida, sem atraso, é variação normal.</p>
+  </div>
+  <div class="crit">
+    <div class="row"><span class="k">Início da escovação</span><span class="v"><strong>Na erupção do primeiro dente</strong>, ao menos <strong>2x/dia</strong>, sobretudo <strong>antes de dormir</strong></span></div>
+    <div class="row"><span class="k">Dentifrício</span><span class="v"><strong>Com flúor desde o início</strong> (SBP e odontopediatria: 1.000 a 1.500 ppm); água fluoretada não dispensa a escovação</span></div>
+    <div class="row"><span class="k">Quantidade</span><span class="v">Não sabe cuspir: <strong>grão de arroz (0,1 g)</strong>. Já cospe: <strong>grão de ervilha (0,3 g)</strong></span></div>
+    <div class="row"><span class="k">Quem escova</span><span class="v">Até os <strong>7 anos</strong>, o adulto; dos 7 aos 10, a criança <strong>com supervisão</strong>; a partir dos <strong>10 anos</strong>, sozinha</span></div>
+    <div class="row"><span class="k">Cárie</span><span class="v">Metade dos pré-escolares tem ao menos um decíduo cariado; a prevenção é flúor tópico pela escova + nenhum açúcar até 2 anos + nunca mamadeira adoçada ao dormir</span></div>
+  </div>
+  <div class="banca">
+    <div class="albl">Banca-dependente: "profilaxia com flúor pelo dentista" x "dentifrício com 1.000 ppm"</div>
+    <p>O EMED registra como gabarito da UNAERP 2023 a alternativa "profilaxia com fluoreto tópico pelo dentista a partir do primeiro dente", mas o próprio comentário do livro diz que a recomendação é escovar com <strong>creme fluoretado desde o primeiro dente</strong> -- que é a alternativa dos "1.000 ppm". A recomendação real (SBP, ABO) é o dentifrício fluoretado de 1.000 ppm ou mais, em quantidade de arroz. Se as duas aparecerem juntas, a escovação com dentifrício fluoretado é a resposta de conteúdo; anote a UNAERP como exceção.</p>
+  </div>
+  <div class="trap">
+    <div class="albl">Armadilha</div>
+    <p>O EMED escreve que a troca começa "pelo pré-molar". Não: os pré-molares substituem os molares decíduos por volta dos 10 a 12 anos. O primeiro permanente é o <strong>primeiro molar dos 6 anos</strong>. Em questão de "qual é o primeiro dente permanente", responda molar, não pré-molar.</p>
+  </div>
+</section>
+
+<section class="degrau" id="d6">
+  <div class="dhead"><span class="dnum">6</span><div class="dtitle"><span class="dstage">Degrau 6 · 18 meses a 3 anos</span><h2>Desfralde</h2></div></div>
+  <p class="lede">Não tem questão própria, mas é a chave escondida em questões de enurese e de constipação: a fralda que saiu cedo demais.</p>
+  <div class="prose">
+    <p>O controle esfincteriano depende de mielinização e de a criança perceber a bexiga e o reto cheios, o que só acontece <strong>a partir dos 18 meses</strong>. A partir daí, o desfralde é possível quando ela consegue <strong>comunicar a vontade</strong> de urinar ou evacuar -- e isso, em geral, se completa <strong>até os 3 anos</strong>. Os sinais de prontidão que se procura: fralda seca por 2 horas ou mais, incômodo com a fralda suja, marcha firme, sentar e levantar do penico sozinha, imitar os adultos e avisar antes ou logo depois de fazer.</p>
+    <p><strong>Desfralde precoce</strong> (antes dos 18 meses ou antes da prontidão) causa <strong>escapes</strong> urinários e fecais, retenção voluntária e, por essa via, constipação. <strong>Desfralde tardio</strong> é sinal de alerta para doença de base: constipação crônica, atraso global do desenvolvimento, doença neurológica (mielomeningocele, medula presa). Criança relutante não é forçada; o ganho é zero e o custo é a retenção.</p>
+  </div>
+  <div class="vs">
+    <div class="a"><h5>Enurese (onde o desfralde reaparece)</h5><p>Perda urinária involuntária em criança com <strong>5 anos ou mais</strong> (idade em que o controle noturno é esperado), pelo menos <strong>2x/semana por 3 meses</strong> ou com prejuízo clínico. A perda <strong>diurna</strong> em menina de 3 anos desfraldada "com 1 ano", com urina e cultura normais, tem no desfralde precoce a explicação -- foi assim que a UNESP cobrou.</p></div>
+    <div class="b"><h5>Constipação (o outro vizinho)</h5><p>Desfralde forçado gera <strong>retenção</strong>; a retenção gera fezes duras; a evacuação dolorosa reforça a retenção. Roma IV para menores de 4 anos está no degrau 2. A conduta começa por desfazer a batalha do penico, não por laxante.</p></div>
+  </div>
+</section>
+
+<section class="degrau" id="d7">
+  <div class="dhead"><span class="dnum">7</span><div class="dtitle"><span class="dstage">Degrau 7</span><h2>Medicina do sono e higiene do sono</h2></div></div>
+  <p class="lede">A necessidade de sono cai degrau a degrau com a idade; a higiene do sono é a mesma lista em qualquer idade, e a tela é o vilão de todas as questões.</p>
+  <div class="crit hd c3">
+    <div class="row"><span class="k">Idade</span><span class="v">Sono em 24 h</span><span class="v">Cochilos</span></div>
+    <div class="row"><span class="k">1 mês</span><span class="v">16 a 20 h</span><span class="v">Sim</span></div>
+    <div class="row"><span class="k">4 a 12 meses</span><span class="v">12 a 16 h</span><span class="v">Sim</span></div>
+    <div class="row"><span class="k">1 a 2 anos</span><span class="v">11 a 14 h</span><span class="v">Sim</span></div>
+    <div class="row"><span class="k">3 a 5 anos</span><span class="v">10 a 13 h</span><span class="v">Sim</span></div>
+    <div class="row"><span class="k">6 a 12 anos</span><span class="v">9 a 12 h</span><span class="v">Não</span></div>
+    <div class="row"><span class="k">13 a 18 anos</span><span class="v">8 a 10 h</span><span class="v">Não</span></div>
+  </div>
+  <div class="prose">
+    <p>Repare no padrão em vez de decorar seis linhas: o limite inferior cai de 4 em 4 horas do recém-nascido ao lactente (16, 12) e depois de 1 em 1 hora a cada fase (11, 10, 9, 8); o cochilo diurno some quando a criança entra na escola, aos 6 anos.</p>
+    <h4 class="sub">Higiene do sono (SBP, 2021)</h4>
+    <ul>
+      <li>Rotina no dia inteiro: horários fixos para acordar, dormir e cochilar.</li>
+      <li>Atividades tranquilas que sinalizem a hora de dormir, <strong>30 minutos antes</strong>: banho, massagem, apagar luzes, relaxamento.</li>
+      <li>Ambiente físico adequado: temperatura, pouca luz, silêncio.</li>
+      <li><strong>Sem telas por pelo menos 1 hora antes</strong> do horário habitual de dormir.</li>
+      <li>Adormecer <strong>no próprio berço ou cama e no próprio quarto</strong>.</li>
+      <li>Objetos de transição, se necessário: naninha, boneca, cobertor.</li>
+      <li>Sem bebidas estimulantes perto da hora de dormir.</li>
+    </ul>
+    <p>O adolescente que "não dorme" e tem dor no peito com exame normal, jogando antes de deitar e com 5 horas de tela por dia, não precisa de ansiolítico, de aplicativo nem de psicoterapia como primeiro passo: precisa de <strong>regra para o celular, desligado antes de dormir</strong>. Higiene do sono vem antes de qualquer tratamento.</p>
+  </div>
+  <div class="trap">
+    <div class="albl">Armadilha</div>
+    <p>O livro traz dois números para a tela antes de dormir: <strong>"pelo menos 1 hora"</strong> na higiene do sono e <strong>"1 a 2 horas"</strong> no capítulo de telas. Na UDI-MA 2022 o gabarito foi "desligar duas horas antes". Em alternativa única, aceite qualquer valor de 1 a 2 horas; em conflito, "2 horas" nunca está errado -- "30 minutos" está.</p>
+  </div>
+</section>
+
+<section class="degrau" id="d8">
+  <div class="dhead"><span class="dnum">8</span><div class="dtitle"><span class="dstage">Degrau 8</span><h2>Exposição a telas e redes sociais</h2></div></div>
+  <p class="lede">Quatro faixas, quatro tetos, e uma lista curta de "nuncas". O EMED apostou que isso cresceria em prova -- e cresceu.</p>
+  <div class="crit">
+    <div class="row"><span class="k">&lt; 2 anos</span><span class="v"><strong>Evitar</strong> qualquer exposição</span></div>
+    <div class="row"><span class="k">2 a 5 anos</span><span class="v"><strong>Até 1 hora/dia</strong>, sempre com supervisão</span></div>
+    <div class="row"><span class="k">6 a 10 anos</span><span class="v"><strong>1 a 2 horas/dia</strong></span></div>
+    <div class="row"><span class="k">Adolescentes</span><span class="v"><strong>2 a 3 horas/dia</strong>, telas e videogame somados; <strong>nunca "virar a noite"</strong></span></div>
+  </div>
+  <div class="prose">
+    <p>O mecanismo que justifica os tetos está nos desfechos que a própria banca cita: atraso de linguagem e cognição, prejuízo social, descontrole emocional, agressividade e sono ruim -- e, no lactente, o custo de oportunidade, porque cada hora de tela é uma hora a menos de interação humana, que é o que desenvolve linguagem. Daí as regras que não dependem da idade:</p>
+    <ul>
+      <li>Nunca <strong>isolado no quarto</strong> com computador, tablet, celular ou webcam -- uso em espaço comum.</li>
+      <li>Nenhuma tela <strong>durante as refeições</strong>.</li>
+      <li><strong>Desconectar 1 a 2 horas antes de dormir</strong>.</li>
+      <li>Esporte e atividade ao ar livre no lugar da tela.</li>
+      <li>Jogos com <strong>tiroteio, morte ou desastre</strong> não são apropriados <strong>em nenhuma faixa etária</strong> -- "com supervisão" e "a partir dos 4 anos" são distratores.</li>
+      <li>Tempo total sempre limitado: "não precisa limitar desde que equilibre com ar livre" está errado.</li>
+    </ul>
+  </div>
+  <div class="banca">
+    <div class="albl">Banca-dependente: SBP x Academia Americana de Pediatria</div>
+    <p>A AAP diz: evitar telas antes dos 18 meses (exceto videochamada), entre 18 e 24 meses só conteúdo de qualidade com o adulto junto, e até 1 hora/dia dos 2 aos 5 anos. Prova brasileira usa a SBP -- "evitar até 2 anos" e "1 hora dos 2 aos 5" -- e as duas concordam na faixa de 2 a 5, que é a mais cobrada.</p>
+  </div>
+</section>
+
+<section class="degrau" id="d9">
+  <div class="dhead"><span class="dnum">9</span><div class="dtitle"><span class="dstage">Degrau 9 · escolar e adolescente</span><h2>Bullying</h2></div></div>
+  <p class="lede">A prova não pergunta a definição; ela descreve uma criança com sintomas físicos ou de pânico na hora de ir à escola e espera que você pense em bullying antes de pensar em tireoide.</p>
+  <div class="prose">
+    <p>Bullying (SBP, a partir de Lopes Neto e Saavedra, 2003) é o conjunto de atitudes agressivas <strong>intencionais</strong>, <strong>repetidas</strong>, <strong>sem motivação evidente</strong>, praticadas por um ou mais estudantes contra outro(s), <strong>numa relação desigual de poder</strong>, causando dor e angústia e tornando possível a intimidação da vítima. As quatro marcas -- intenção, repetição, ausência de motivo, assimetria -- são o que separa bullying de uma briga.</p>
+  </div>
+  <div class="crit">
+    <div class="row"><span class="k">Físico</span><span class="v">Agressões físicas</span></div>
+    <div class="row"><span class="k">Verbal</span><span class="v">Xingamentos, apelidos, agressões verbais</span></div>
+    <div class="row"><span class="k">Material</span><span class="v">Violência contra patrimônio: roubos, furtos</span></div>
+    <div class="row"><span class="k">Escrito</span><span class="v">Pichações</span></div>
+    <div class="row"><span class="k">Moral</span><span class="v">Agressão a princípios, como os religiosos</span></div>
+    <div class="row"><span class="k">Social</span><span class="v">Exclusão de grupos</span></div>
+    <div class="row"><span class="k">Psicológico</span><span class="v">Intimidações, chantagens</span></div>
+    <div class="row"><span class="k">Cyberbullying</span><span class="v">O mesmo, no âmbito da internet</span></div>
+  </div>
+  <div class="prose">
+    <p>A vítima mostra dificuldade de relacionamento, sinais depressivos ou ansiosos e afastamento social, e o dado que a banca planta no enunciado é o <strong>horário</strong>: dor pelo corpo, náusea, vômito, diarreia, choro ou crise de pânico <strong>na hora de ir para a escola</strong>, com exame físico e exames normais e melhora quando a ida à escola sai do horizonte. O menino de 13 anos com "sensação de morte e medo de sair na rua", toxicológico normal, que melhora e diz que não quer ir à escola, é bullying -- não esquizofrenia, não droga, não tireotoxicose (doença orgânica não melhora sozinha nem escolhe o horário da aula).</p>
+    <p>Conduta: acolher, nomear o problema, envolver pais e escola de imediato -- a escola tem dever legal de prevenção (Lei 13.185/2015, Programa de Combate à Intimidação Sistemática) e, desde 2024, bullying e cyberbullying são crimes tipificados no Código Penal (Lei 14.811/2024). Rastrear ideação suicida na vítima.</p>
+  </div>
+</section>
+
+<section class="degrau" id="d10">
+  <div class="dhead"><span class="dnum">10</span><div class="dtitle"><span class="dstage">Degrau 10 · 10 a 19 anos</span><h2>Hebiatria: a consulta, o sigilo e a adolescência normal</h2></div></div>
+  <p class="lede">Segundo tópico mais cobrado do livro. Três coisas caem: a idade que define adolescente, a lista fechada do que quebra o sigilo e o vocabulário da "síndrome da adolescência normal".</p>
+  <div class="prose">
+    <h4 class="sub">Quem é adolescente</h4>
+    <p>Para a <strong>SBP e a OMS</strong>, adolescência vai dos <strong>10 aos 19 anos</strong>; para o <strong>ECA</strong>, dos <strong>12 aos 18</strong> (criança é quem tem até 12 anos incompletos). A questão que nomeia a fonte cobra o número daquela fonte. Por dentro, costuma-se dividir em adolescência inicial (cerca de 10 a 13 anos, quando a puberdade começa), <strong>média (14 a 16)</strong>, marcada por experimentação e comportamento de risco, e tardia (17 a 19), em que se consolidam identidade e projeto de vida -- os limites variam entre autores, e a banca (SMA 2023) usou 14 a 16 para a média.</p>
+    <h4 class="sub">A consulta em três tempos</h4>
+    <p>O adolescente pode ser atendido por pediatra, hebiatra ou médico de família; a única regra é que, <strong>em algum momento, ele seja atendido sozinho</strong>. A consulta tem três momentos: (1) adolescente e família juntos; (2) <strong>adolescente a sós</strong>; (3) retorno dos responsáveis. A anamnese segue o roteiro <strong>HEEADSSS</strong>: <strong>H</strong>ome (com quem mora, clima da casa), <strong>E</strong>ducation/Employment, <strong>E</strong>ating (hábitos e imagem corporal), <strong>A</strong>ctivities, <strong>D</strong>rugs, <strong>S</strong>exuality, <strong>S</strong>ecurity (sofreu ou provocou violência) e <strong>S</strong>uicide. A sequência é deliberada: começa pelo neutro e termina no que mais exige confiança.</p>
+    <h4 class="sub">Sigilo: a lista fechada</h4>
+    <p>A consulta é <strong>sigilosa por padrão</strong>. O amparo é o Código de Ética Médica (art. 74: é vedado revelar sigilo de criança ou adolescente com capacidade de discernimento, inclusive aos pais, salvo quando a não revelação possa causar dano) e o ECA. A quebra só acontece quando há <strong>risco para o próprio adolescente ou para terceiros</strong> -- e, mesmo então, se pactua com ele como a família será informada, de preferência no terceiro tempo da consulta.</p>
+  </div>
+  <div class="vs">
+    <div class="a"><h5>Quebra o sigilo (risco a si ou a outros)</h5><ul>
+      <li>Qualquer violência sofrida: emocional, maus-tratos, bullying, física, sexual</li>
+      <li>Drogas, álcool: uso crescente/mais frequente ou <strong>sinais de dependência</strong></li>
+      <li><strong>Autoagressão</strong>, ideação suicida, fuga de casa</li>
+      <li>Violência contra terceiros, tendência homicida</li>
+      <li><strong>Gravidez ou abortamento</strong></li>
+      <li><strong>Sorologia positiva para HIV</strong></li>
+      <li>Não adesão a tratamento que ponha ele ou outros em risco</li>
+      <li>Diagnóstico de doença grave, depressão ou outro transtorno mental</li>
+    </ul></div>
+    <div class="b"><h5>Mantém o sigilo</h5><ul>
+      <li>Namoro e <strong>iniciação sexual</strong></li>
+      <li>Álcool, cigarro ou drogas <strong>sem sinais de dependência</strong></li>
+      <li>Orientação sexual, identidade de gênero</li>
+      <li><strong>Prescrição de contraceptivos</strong>, desde que tenha maturidade para aderir</li>
+      <li><strong>IST</strong>, descartada violência sexual e com boa adesão ao tratamento</li>
+    </ul></div>
+  </div>
+  <div class="trap">
+    <div class="albl">Armadilha</div>
+    <p>IST mantém o sigilo, <strong>mas HIV positivo quebra</strong> -- é a única sorologia que muda de coluna. E "uso de álcool" não quebra por si; quebra a <strong>escalada ou a dependência</strong>. A adolescente que se corta e pede para continuar o anticoncepcional: o contraceptivo é prescrito em sigilo; a <strong>autoagressão</strong> é comunicada à mãe, pactuando com a paciente que ela mesma conte no retorno dos pais.</p>
+  </div>
+  <div class="prose">
+    <h4 class="sub">Síndrome da adolescência normal</h4>
+    <p>É o nome (Aberastury e Knobel) para o conjunto de comportamentos esperados nessa fase, organizado em torno de <strong>três lutos</strong>: pelo <strong>corpo infantil</strong>, pela <strong>identidade e papel infantis</strong> e pelo <strong>tratamento que os pais davam na infância</strong>. Do luto derivam as características que a prova descreve como se fossem sintomas: oscilações de humor, busca de identidade, sensação de invulnerabilidade e onipotência, atitude social reivindicatória, crises religiosas, evolução sexual manifesta e <strong>tendência grupal</strong> -- o adolescente deixa de se identificar com os pais e passa a querer o reconhecimento do grupo, por isso anda "em bando" e é vulnerável a gangues.</p>
+    <p>Dois conceitos têm nome próprio e caem com ele. O <strong>pensamento abstrato</strong> (operações formais) amadurece aqui: a capacidade de pensar no que não é concreto e formular hipóteses -- é o que o torna idealista, "no mundo da lua", querendo mudar o mundo. E a <strong>vivência temporal singular</strong>: ele quer tudo de imediato, prioriza o presente e o futuro próximo e não consegue dar peso ao futuro distante. A menina de 15 anos que ignora a semana de provas e passa horas se arrumando para uma festa que será daqui a quatro meses não tem transtorno de conduta nem é "irresponsável": está vivendo o tempo do jeito que a fase permite. Transtorno de conduta exige desrespeito a regras sociais com agressão, ameaça, destruição de propriedade ou crueldade -- outro capítulo, o de psiquiatria.</p>
+  </div>
+</section>
+
+<section class="synth" id="synth">
+  <h2>A escada inteira numa respirada</h2>
+  <div class="prose">
+    <p>A criança nasce e a puericultura marca sete encontros no primeiro ano, dois no segundo, um por ano depois. Nos primeiros cinco meses ela pode chorar sem causa e crescendo bem -- é cólica, por Roma IV, e a conduta é acolher, depois de excluir o que dói de verdade. Aos seis meses o leite deixa de bastar e entra a comida: fruta na colher e papa amassada com carne e ovo desde o início, sem sal, sem açúcar, sem mel, sem suco, sem peneira; aos doze, a comida da família. Aos dois anos o crescimento freia e o apetite cai, e a resposta é rotina, cinco a seis refeições, fruta de sobremesa e nenhuma chantagem. Com o primeiro dente, entre seis e nove meses, entra a escova com flúor em grão de arroz; a ervilha vem quando ela cospe, a autonomia aos dez anos. Aos dezoito meses o esfíncter começa a obedecer e a fralda sai até os três anos -- cedo demais vira escape, tarde demais vira alerta. O sono cai de dezesseis para oito horas ao longo da infância e a higiene é sempre a mesma lista, com a tela desligada uma a duas horas antes. A tela, aliás, é zero até os dois anos, uma hora até os cinco, duas até os dez, três no adolescente, nunca no quarto nem na mesa. Na escola aparece o bullying, que se denuncia pelo horário dos sintomas. E aos dez anos começa a adolescência, com sua consulta em três tempos, seu sigilo que só o risco quebra e seus três lutos que explicam o humor, o bando e a pressa.</p>
+  </div>
+  <div class="trig">
+    <div><span class="tk">Consultas</span><span class="tv">7 no 1º ano (1ª sem, 1, 2, 4, 6, 9, 12 m) · 18 e 24 m · anual</span></div>
+    <div><span class="tk">Cólica Roma IV</span><span class="tv">Começa e termina &lt; 5 m · sem causa · cresce bem, sem febre · conduta expectante</span></div>
+    <div><span class="tk">Introdução alimentar</span><span class="tv">6 m fruta + 1ª papa · 7-8 m 2ª papa · 12 m comida da família</span></div>
+    <div><span class="tk">Preparo</span><span class="tv">Amassada, nunca liquidificada · carne e ovo desde o início · mel só após 1 ano</span></div>
+    <div><span class="tk">Açúcar</span><span class="tv">Zero até 2 anos · sucos fora do 1º ano</span></div>
+    <div><span class="tk">Pré-escolar</span><span class="tv">Apetite cai · 5-6 refeições, 2-3 h · sem líquido na refeição · sobremesa = fruta</span></div>
+    <div><span class="tk">Dentes</span><span class="tv">1º aos 6-9 m · 20 decíduos até 30-36 m · 32 permanentes desde os 6 a (molar)</span></div>
+    <div><span class="tk">Flúor</span><span class="tv">Desde o 1º dente · arroz 0,1 g se não cospe · ervilha 0,3 g se cospe</span></div>
+    <div><span class="tk">Escovação</span><span class="tv">Adulto até 7 a · supervisão até 10 a · sozinho aos 10</span></div>
+    <div><span class="tk">Desfralde</span><span class="tv">A partir de 18 m · até 3 a · precisa comunicar a vontade</span></div>
+    <div><span class="tk">Sono</span><span class="tv">1 m 16-20 h · 4-12 m 12-16 · 1-2 a 11-14 · 3-5 a 10-13 · 6-12 a 9-12 · 13-18 a 8-10</span></div>
+    <div><span class="tk">Telas</span><span class="tv">&lt; 2 a zero · 2-5 a 1 h · 6-10 a 1-2 h · adolescente 2-3 h · desligar 1-2 h antes de dormir</span></div>
+    <div><span class="tk">Bullying</span><span class="tv">Sintoma no horário da escola + exame normal · intencional, repetido, sem motivo, poder desigual</span></div>
+    <div><span class="tk">Adolescente</span><span class="tv">SBP/OMS 10-19 · ECA 12-18 · consulta em 3 tempos, sempre um a sós</span></div>
+    <div><span class="tk">Sigilo quebra</span><span class="tv">Violência, autoagressão, dependência, gravidez/aborto, HIV+, não adesão com risco, doença grave</span></div>
+    <div><span class="tk">Sigilo mantém</span><span class="tv">Namoro/sexo, drogas sem dependência, orientação/gênero, contraceptivo, IST (não HIV)</span></div>
+  </div>
+</section>
+
+<section id="arms" style="margin-top:52px">
+  <h2 style="font-size:23px;margin-bottom:6px">Armadilhas de prova</h2>
+  <p style="font-size:14px;color:var(--ink3);margin:0 0 4px;max-width:72ch">Quinze pegadinhas, na ordem da escada. Cada uma já foi a diferença entre duas alternativas numa prova real.</p>
+  <div class="arms">
+    <div class="arm"><span class="dot"></span><p><strong>Segundo ano de vida é 18 e 24 meses, depois anual.</strong> "15 e 22 meses" e "semestral" são invenções do examinador.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Primeira consulta: "1ª semana" (MS, Caderno 33) ou "3º ao 5º dia" (Protocolo MS/Sírio-Libanês).</strong> Só a segunda fonte dá dias exatos; se a questão der dias, é ela.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Cólica exige início e término antes dos 5 meses, ganho de peso normal e ausência de febre.</strong> Faltando qualquer um, não é cólica -- é investigação. Os critérios de "mais de 3 horas em 3 dias" são de pesquisa, não de assistência.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Roma IV é uma família de cinco descrições parecidas.</strong> Regurgitações 2x/dia por 3 semanas = refluxo fisiológico; 10 minutos de esforço para fezes moles antes dos 9 meses = disquesia; 2 critérios por 1 mês com fezes retidas = constipação funcional; regurgitação sem esforço remastigada = ruminação.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Introdução alimentar é aos 6 meses -- fruta e primeira papa no mesmo mês.</strong> "Fruta aos 7 e papa aos 8", "sucos aos 4 meses" e "comida da família aos 10" estão todos um degrau fora.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Papa é cozida e amassada desde o início.</strong> Liquidificar, peneirar ou "deixar líquida para não engasgar" está errado; carne entra na primeira papa, não "depois dos dentes".</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Adiar alérgenos aumenta o risco de alergia.</strong> Ovo inteiro, peixe e amendoim entram aos 6 meses. O único alimento proibido no 1º ano é o mel (botulismo).</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Açúcar zero até 2 anos em qualquer fonte; o sal é a palavra que muda.</strong> Alternativa que libera açúcar está errada; entre "sem sal" e "sal mínimo", siga a fonte nomeada e elimine as que aceitam caldos ou temperos industrializados.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>O pré-escolar que "não come" está desacelerando o crescimento.</strong> Conduta é rotina e paciência: não obrigar, deixar repetir, sem líquido na refeição, sobremesa fruta e nunca recompensa. Neofobia se trata com exposição repetida.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Escova com flúor entra no primeiro dente, não aos 2 anos.</strong> Arroz (0,1 g) para quem não cospe, ervilha (0,3 g) para quem cospe; água fluoretada não dispensa escovação; sozinha só aos 10 anos.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>O primeiro dente permanente é o molar dos 6 anos, não o pré-molar</strong> (o EMED escreveu pré-molar; a literatura não).</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Desfralde antes dos 18 meses explica perda urinária diurna com urina normal.</strong> Antes de pensar em bexiga neurogênica, leia a idade do desfralde na história.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Tela: zero abaixo de 2 anos, 1 hora dos 2 aos 5.</strong> "Até 1 hora abaixo de 2 anos" e "1 a 2 horas dos 2 aos 5" são os distratores de sempre; jogo violento não tem idade permitida; nunca no quarto isolado.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Adolescente que não dorme e joga antes de deitar: regra para o celular, não remédio.</strong> Higiene do sono precede ansiolítico, aplicativo e psicoterapia.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>IST mantém sigilo; HIV positivo quebra. Contraceptivo mantém; gravidez quebra. Álcool mantém; dependência quebra.</strong> Autoagressão sempre quebra -- e a forma certa é pactuar com o adolescente que ele conte no retorno dos pais.</p></div>
+  </div>
+</section>
+
+<footer>
+  <p><strong>Fonte:</strong> <code>resumos/Pediatria/44. Tópicos em Pediatria.pdf</code> (EMED, Prof. Helena Schetinger, Extensivo 2024) -- sumário inteiro coberto: hebiatria e síndrome da adolescência normal, puericultura, nutrição (introdução alimentar, 1-2 anos, pré-escolar, escolar, adolescente), dentição, telas, desfralde, bullying, sono e higiene do sono, cólicas. Complementos fora do PDF, marcados no texto: idades das consultas do 1º ano (Caderneta MS), critérios de Roma IV dos distúrbios vizinhos, causas orgânicas de choro, sinais de prontidão para o desfralde e definição de enurese, primeiro molar permanente, ppm do dentifrício, fases da adolescência, art. 74 do CEM, leis do bullying, suplementação de ferro e vitamina D.</p>
+  <p>Calibração D10 (tema sem nota explícita; prevalência média; tema já lido). Aula completa antes da lista #96 (Teoria, 18q); a lista #100 (36q) usa a mesma escada.</p>
+</footer>
+</main>
+</div>
+</div>
+
+<script>
+(function(){
+  var links = Array.prototype.slice.call(document.querySelectorAll('.rail a'));
+  var targets = links.map(function(a){ return document.getElementById(a.getAttribute('data-r')); }).filter(Boolean);
+  if (!('IntersectionObserver' in window) || !targets.length) return;
+  var byId = {};
+  links.forEach(function(a){ byId[a.getAttribute('data-r')] = a; });
+  var obs = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if (en.isIntersecting){
+        links.forEach(function(a){ a.classList.remove('on'); });
+        var a = byId[en.target.id];
+        if (a) a.classList.add('on');
+      }
+    });
+  }, { rootMargin: '-15% 0px -70% 0px', threshold: 0 });
+  targets.forEach(function(t){ obs.observe(t); });
+})();
+</script>

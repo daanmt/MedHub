@@ -1,0 +1,600 @@
+<title>A Escada de Bayes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,380;9..144,480;9..144,600;9..144,680&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EEF2F0; --card:#F9FBFA; --sunk:#E1E8E4;
+  --ink:#17201C; --ink2:#4C5A54; --ink3:#7C8A84;
+  --line:rgba(23,32,28,.13); --line2:rgba(23,32,28,.26);
+  --sea:#1F5F5B; --sea-ink:#164744; --sea-wash:#DCEBE8;
+  --carmine:#8E2F41; --carmine-ink:#6B2231; --carmine-wash:#F5E2E6;
+  --amber:#8A5A17; --amber-ink:#6B4610; --amber-wash:#F3E6CC;
+  --on:#FFFFFF;
+  --sh:0 1px 2px rgba(23,32,28,.06),0 12px 30px -18px rgba(23,32,28,.35);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#121917; --card:#1A2321; --sunk:#24302D;
+  --ink:#E6EEEB; --ink2:#B3C0BB; --ink3:#82918B;
+  --line:rgba(230,238,235,.14); --line2:rgba(230,238,235,.28);
+  --sea:#7FC4BD; --sea-ink:#A6DAD4; --sea-wash:#1E3532;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  --on:#121917;
+  --sh:0 1px 2px rgba(0,0,0,.5),0 14px 34px -18px rgba(0,0,0,.8);
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#121917; --card:#1A2321; --sunk:#24302D;
+  --ink:#E6EEEB; --ink2:#B3C0BB; --ink3:#82918B;
+  --line:rgba(230,238,235,.14); --line2:rgba(230,238,235,.28);
+  --sea:#7FC4BD; --sea-ink:#A6DAD4; --sea-wash:#1E3532;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  --on:#121917;
+  --sh:0 1px 2px rgba(0,0,0,.5),0 14px 34px -18px rgba(0,0,0,.8);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);
+  font:16px/1.6 "Source Sans 3",-apple-system,"Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+.mn{font-family:"IBM Plex Mono",ui-monospace,Consolas,monospace;font-variant-numeric:tabular-nums}
+h1,h2,h3,h4{margin:0;font-family:Fraunces,Georgia,serif;font-weight:600;letter-spacing:-.01em;text-wrap:balance;line-height:1.14;color:var(--ink)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px 100px}
+@media(max-width:640px){.wrap{padding:0 16px 80px}}
+:focus-visible{outline:2px solid var(--sea);outline-offset:2px}
+a{color:var(--sea-ink)}
+strong{font-weight:600;color:var(--ink)}
+em{font-style:italic}
+
+/* masthead */
+.top{padding:52px 0 30px;border-bottom:1px solid var(--line2)}
+.eye{font:600 11px/1 "Source Sans 3";letter-spacing:.14em;text-transform:uppercase;color:var(--sea-ink);margin:0 0 15px}
+.top h1{font-size:clamp(32px,5vw,50px);font-weight:680;max-width:16ch;margin-bottom:16px}
+.top .sub{font-size:18px;line-height:1.6;color:var(--ink2);max-width:66ch;margin:0 0 22px}
+.stats{display:flex;gap:22px;flex-wrap:wrap}
+.stat{display:flex;flex-direction:column;gap:2px}
+.stat b{font:600 24px/1 "IBM Plex Mono";color:var(--sea-ink);font-variant-numeric:tabular-nums}
+.stat span{font-size:11.5px;color:var(--ink3);letter-spacing:.02em}
+
+/* layout: rail + reading column */
+.body{display:grid;grid-template-columns:220px minmax(0,1fr);gap:52px;padding-top:38px;align-items:start}
+@media(max-width:920px){.body{grid-template-columns:1fr}}
+.rail{position:sticky;top:22px;display:flex;flex-direction:column;gap:1px}
+.rail .rlab{font:600 10.5px/1 "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin:0 0 10px}
+.rail a{display:grid;grid-template-columns:20px 1fr;gap:9px;align-items:baseline;padding:7px 0;
+  font-size:13.3px;color:var(--ink3);text-decoration:none;border-left:2px solid transparent;padding-left:10px}
+.rail a .rn{font:600 11px "IBM Plex Mono";color:var(--ink3)}
+.rail a:hover{color:var(--ink)}
+.rail a.on{color:var(--sea-ink);border-left-color:var(--sea);font-weight:600}
+.rail a.on .rn{color:var(--sea-ink)}
+@media(max-width:920px){
+  .rail{position:static;flex-direction:row;flex-wrap:wrap;gap:6px 4px;top:auto}
+  .rail .rlab{width:100%}
+  .rail a{padding:4px 9px;border-left:0;border:1px solid var(--line2);border-radius:2px;grid-template-columns:auto auto}
+  .rail a.on{background:var(--sea-wash);border-color:var(--sea)}
+}
+main{min-width:0;max-width:700px}
+
+/* degrau */
+.degrau{padding:44px 0;border-bottom:1px solid var(--line)}
+.degrau:first-child{padding-top:0}
+.degrau:last-of-type{border-bottom:0}
+.dhead{display:flex;gap:16px;align-items:flex-start;margin-bottom:18px}
+.dnum{flex-shrink:0;width:44px;height:44px;border:1.5px solid var(--sea);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font:600 17px "IBM Plex Mono";color:var(--sea-ink)}
+.dtitle{padding-top:4px}
+.dtitle .dstage{font:600 11px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);display:block;margin-bottom:3px}
+.dtitle h2{font-size:clamp(21px,2.6vw,27px)}
+.lede{font-size:16.5px;line-height:1.6;color:var(--ink2);margin:0 0 20px;font-style:italic}
+.prose p{font-size:16px;line-height:1.72;color:var(--ink2);margin:0 0 16px}
+.prose p:last-child{margin-bottom:0}
+.prose ul,.prose ol{margin:0 0 16px;padding-left:22px}
+.prose li{font-size:15.6px;line-height:1.6;color:var(--ink2);margin-bottom:6px}
+.prose li:last-child{margin-bottom:0}
+.prose li strong{color:var(--ink)}
+h4.sub{font-size:14px;font-weight:600;font-family:"Source Sans 3";letter-spacing:.01em;color:var(--ink);margin:26px 0 10px}
+h4.sub:first-child{margin-top:0}
+
+/* callouts */
+.aside{margin:20px 0;padding:15px 18px;border-left:3px solid var(--sea);background:var(--sea-wash)}
+.aside .albl{font:700 10.5px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;color:var(--sea-ink);margin-bottom:6px}
+.aside p{font-size:15.3px;line-height:1.6;color:var(--ink);margin:0}
+.aside p+p{margin-top:8px}
+.trap{margin:20px 0;padding:15px 18px;border-left:3px solid var(--carmine);background:var(--carmine-wash)}
+.trap .albl{font:700 10.5px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;color:var(--carmine-ink);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.trap .albl::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--carmine)}
+.trap p{font-size:15.3px;line-height:1.6;color:var(--ink);margin:0}
+.trap p+p{margin-top:8px}
+.star{margin:20px 0;padding:14px 18px;border:1px solid var(--line2);background:var(--card)}
+.star .albl{font:700 10.5px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:6px}
+.star p{font-size:15.3px;line-height:1.6;color:var(--ink);margin:0;font-weight:560}
+
+/* comparativos lado a lado */
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line2);border:1px solid var(--line2);margin:20px 0}
+.vs>div{background:var(--card);padding:14px 16px}
+.vs h5{font:700 11.5px "Source Sans 3";letter-spacing:.04em;text-transform:uppercase;margin:0 0 8px;color:var(--ink3)}
+.vs .a h5{color:var(--carmine-ink)}
+.vs .b h5{color:var(--sea-ink)}
+.vs p,.vs li{font-size:14.5px;line-height:1.55;color:var(--ink2)}
+.vs p{margin:0 0 8px}
+.vs p:last-child{margin-bottom:0}
+.vs ul{margin:0;padding-left:18px}
+.vs li{margin-bottom:5px}
+@media(max-width:640px){.vs{grid-template-columns:1fr}}
+
+/* grid de criterios */
+.crit{border:1px solid var(--line2);margin:20px 0}
+.crit .row{display:grid;grid-template-columns:180px 1fr;gap:14px;padding:11px 15px;font-size:14.3px}
+.crit .row+.row{border-top:1px solid var(--line)}
+.crit .row .k{font-weight:600;color:var(--sea-ink)}
+.crit .row .v{color:var(--ink2);line-height:1.5}
+@media(max-width:640px){.crit .row{grid-template-columns:1fr;gap:3px}}
+
+/* tabela 2x2 (grid, nao <table>) */
+.t2-wrap{overflow-x:auto;margin:20px 0}
+.t2{display:grid;grid-template-columns:minmax(110px,1fr) minmax(100px,1fr) minmax(100px,1fr) minmax(150px,1.3fr);gap:1px;background:var(--line2);border:1px solid var(--line2);min-width:480px}
+.t2>div{background:var(--card);padding:12px 13px;font-size:14px;line-height:1.45;color:var(--ink2)}
+.t2 .col small,.t2 .lin small{display:block;font-weight:400;font-size:11.5px;margin-top:3px;opacity:.85}
+.t2 .col,.t2 .lin{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:12.6px}
+.t2 .h{background:var(--sunk);font:600 11.5px "Source Sans 3";letter-spacing:.05em;text-transform:uppercase;color:var(--ink3);display:flex;align-items:flex-end}
+.t2 .rh{background:var(--sunk);font-weight:600;color:var(--ink);font-size:13.5px}
+.t2 .c b{display:block;font:600 15px "IBM Plex Mono";color:var(--ink);font-variant-numeric:tabular-nums;margin-bottom:2px}
+.t2 .c.vp b,.t2 .c.vn b{color:var(--sea-ink)}
+.t2 .c.fp b,.t2 .c.fn b{color:var(--carmine-ink)}
+.t2 .c small{display:block;font-size:12.5px;color:var(--ink3)}
+.t2 .col{background:var(--sea-wash);font-size:12.8px;color:var(--sea-ink);font-weight:600}
+.t2 .lin{background:var(--amber-wash);font-size:12.8px;color:var(--amber-ink);font-weight:600}
+
+/* calculo mostrado */
+.calc{margin:18px 0;padding:14px 18px;border:1px solid var(--line2);background:var(--card);overflow-x:auto}
+.calc .clab{font:700 10.5px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:8px}
+.calc pre{margin:0;font:500 13.6px/1.75 "IBM Plex Mono",ui-monospace,Consolas,monospace;color:var(--ink);font-variant-numeric:tabular-nums;white-space:pre}
+.calc pre b{font-weight:600;color:var(--sea-ink)}
+.calc pre i{font-style:normal;color:var(--ink3)}
+.calc .note{font-size:13.6px;color:var(--ink2);margin:10px 0 0;line-height:1.5}
+
+/* tabela de pre-teste */
+.ptp-wrap{overflow-x:auto;margin:20px 0}
+.ptp{display:grid;grid-template-columns:130px repeat(4,minmax(78px,1fr));gap:1px;background:var(--line2);border:1px solid var(--line2);min-width:460px}
+.ptp>div{background:var(--card);padding:9px 11px;font-size:13.6px;color:var(--ink2);font-variant-numeric:tabular-nums}
+.ptp .h{background:var(--sunk);font:600 11px "Source Sans 3";letter-spacing:.05em;text-transform:uppercase;color:var(--ink3)}
+.ptp .rh{font-weight:600;color:var(--ink)}
+.ptp .n{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:13.2px}
+.ptp .hi{background:var(--sea-wash);color:var(--sea-ink);font-weight:600}
+.ptp .mk{outline:2px solid var(--carmine);outline-offset:-2px;font-weight:700;color:var(--carmine-ink)}
+
+/* figura roc */
+.fig{margin:20px 0;padding:16px 18px;border:1px solid var(--line2);background:var(--card);display:grid;grid-template-columns:220px 1fr;gap:18px;align-items:center}
+.fig svg{width:100%;height:auto;max-width:220px;display:block}
+.fig p{font-size:14px;line-height:1.55;color:var(--ink2);margin:0 0 8px}
+.fig p:last-child{margin-bottom:0}
+@media(max-width:640px){.fig{grid-template-columns:1fr}}
+
+/* toggle de referencia densa */
+details.ref{margin:20px 0;border:1px solid var(--line2);background:var(--card)}
+details.ref>summary{cursor:pointer;list-style:none;padding:12px 16px;font:600 13.5px "Source Sans 3";color:var(--sea-ink);display:flex;align-items:center;gap:9px}
+details.ref>summary::-webkit-details-marker{display:none}
+details.ref>summary::before{content:"+";font:600 15px "IBM Plex Mono";width:16px}
+details.ref[open]>summary::before{content:"-"}
+details.ref .refbody{padding:0 16px 16px}
+details.ref .row{display:grid;grid-template-columns:150px 1fr;gap:12px;padding:8px 0;font-size:13.8px;border-top:1px solid var(--line)}
+details.ref .row:first-child{border-top:0}
+details.ref .k{font-weight:600;color:var(--ink)}
+details.ref .v{color:var(--ink2);line-height:1.5}
+details.ref p{font-size:13.8px;color:var(--ink2);line-height:1.55;margin:8px 0 0}
+@media(max-width:640px){details.ref .row{grid-template-columns:1fr;gap:2px}}
+
+/* sintese */
+.synth{background:var(--card);border:1px solid var(--line2);padding:32px 30px;margin-top:6px}
+.synth h2{font-size:23px;margin-bottom:14px}
+.synth .prose p{font-size:16.5px}
+.trig{max-width:100%;margin-top:22px;display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1px;background:var(--line2);border:1px solid var(--line2)}
+.trig div{background:var(--sunk);padding:13px 15px}
+.trig .tk{font:700 11px "IBM Plex Mono";color:var(--sea-ink);display:block;margin-bottom:4px}
+.trig .tv{font-size:13.6px;line-height:1.45;color:var(--ink2)}
+@media(max-width:640px){.synth{padding:22px 16px}}
+
+/* armadilhas final */
+.arms{display:flex;flex-direction:column;gap:1px;background:var(--line2);border:1px solid var(--line2);margin-top:18px}
+.arm{background:var(--card);padding:15px 18px;display:flex;gap:12px}
+.arm .dot{flex-shrink:0;width:9px;height:9px;border-radius:50%;background:var(--carmine);margin-top:7px}
+.arm p{font-size:15px;line-height:1.58;color:var(--ink2);margin:0}
+.arm p strong{color:var(--ink)}
+
+footer{margin-top:60px;padding-top:22px;border-top:1px solid var(--line2)}
+footer p{font-size:12.3px;color:var(--ink3);max-width:80ch;margin:0 0 7px;line-height:1.5}
+code{font-family:"IBM Plex Mono",Consolas,monospace;font-size:11.8px;background:var(--sunk);padding:1px 5px;border-radius:2px}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <p class="eye">MedHub · Aula-base · MFC / Raciocínio diagnóstico quantitativo</p>
+  <h1>A Escada de Bayes</h1>
+  <p class="sub">A UERJ cobra este tema em todas as seis edições recentes, quase sempre pela mesma porta: um paciente com dor precordial, um teste ergométrico e uma decisão a julgar. Na prova de 2023 a Q97 saiu no chute. Esta escada vai da tabela 2x2 até o limiar de decisão, com as contas feitas à mão -- porque a banca cobra a conta.</p>
+  <div class="stats">
+    <div class="stat"><b>11</b><span>degraus</span></div>
+    <div class="stat"><b>14</b><span>armadilhas mapeadas</span></div>
+    <div class="stat"><b>D10</b><span>calibração (tema-zero)</span></div>
+  </div>
+</header>
+
+<div class="body">
+<nav class="rail" id="rail" aria-label="Navegação da escada">
+  <p class="rlab">A escada</p>
+  <a href="#d0" data-r="d0"><span class="rn">0</span><span>Bayes e a tabela 2x2</span></a>
+  <a href="#d1" data-r="d1"><span class="rn">1</span><span>Sensibilidade e especificidade</span></a>
+  <a href="#d2" data-r="d2"><span class="rn">2</span><span>Valores preditivos e prevalência</span></a>
+  <a href="#d3" data-r="d3"><span class="rn">3</span><span>Razões de verossimilhança</span></a>
+  <a href="#d4" data-r="d4"><span class="rn">4</span><span>Curva ROC e ponto de corte</span></a>
+  <a href="#d5" data-r="d5"><span class="rn">5</span><span>Escolher e combinar testes</span></a>
+  <a href="#d6" data-r="d6"><span class="rn">6</span><span>Probabilidade pré-teste</span></a>
+  <a href="#d7" data-r="d7"><span class="rn">7</span><span>Limiares de decisão</span></a>
+  <a href="#d8" data-r="d8"><span class="rn">8</span><span>Validade da execução e vieses</span></a>
+  <a href="#d9" data-r="d9"><span class="rn">9</span><span>A vinheta da UERJ</span></a>
+  <a href="#d10" data-r="d10"><span class="rn">10</span><span>Rastreamento</span></a>
+  <a href="#synth" data-r="synth"><span class="rn">-></span><span>Síntese e gatilhos</span></a>
+  <a href="#arms" data-r="arms"><span class="rn">🔴</span><span>Armadilhas de prova</span></a>
+</nav>
+
+<main>
+
+<section class="degrau" id="d0">
+  <div class="dhead"><span class="dnum">0</span><div class="dtitle"><span class="dstage">Degrau 0</span><h2>A régua do normal: Bayes e a tabela 2x2</h2></div></div>
+  <p class="lede">Um único conceito sustenta a aula inteira. Tudo o que vem depois é forma de medir quanto um teste consegue movê-lo.</p>
+  <div class="prose">
+    <p>Todo teste diagnóstico é uma máquina de atualizar probabilidade. O paciente entra na consulta com uma probabilidade inicial de ter a doença -- a <strong>probabilidade pré-teste</strong>, que na população geral é a prevalência e, no consultório, é a prevalência corrigida pelo que a anamnese e o exame já revelaram. O teste devolve uma informação nova, e a probabilidade que sai -- a <strong>probabilidade pós-teste</strong> -- é a inicial corrigida por essa informação. Isso é o teorema de Bayes aplicado à clínica: probabilidade inicial, informação nova, probabilidade final. Um resultado positivo deveria aumentar a probabilidade e um negativo deveria diminuí-la; a razão de existir de toda esta aula é que nem sempre é assim, porque existem falso-positivos e falso-negativos, e é preciso saber <em>quanto</em> cada resultado move a probabilidade.</p>
+    <p>Para medir isso, um teste é validado contra um <strong>padrão-ouro</strong> numa amostra em que se sabe quem está doente de verdade. Cruzando o resultado do teste (positivo ou negativo) com o estado real (doente ou saudável) nascem as quatro células da tabela de contingência, e cada medida desta aula é uma razão entre células dessa tabela.</p>
+  </div>
+  <div class="t2-wrap">
+  <div class="t2" role="table" aria-label="Tabela de contingência 2x2">
+    <div class="h"></div>
+    <div class="h">Doentes</div>
+    <div class="h">Saudáveis</div>
+    <div class="h">Lê-se por linha</div>
+    <div class="rh">Teste positivo</div>
+    <div class="c vp"><b>VP</b><small>verdadeiro-positivo</small></div>
+    <div class="c fp"><b>FP</b><small>falso-positivo</small></div>
+    <div class="lin">VPP = VP / (VP + FP)<small>propriedade do teste nesta população</small></div>
+    <div class="rh">Teste negativo</div>
+    <div class="c fn"><b>FN</b><small>falso-negativo</small></div>
+    <div class="c vn"><b>VN</b><small>verdadeiro-negativo</small></div>
+    <div class="lin">VPN = VN / (VN + FN)<small>propriedade do teste nesta população</small></div>
+    <div class="rh">Lê-se por coluna</div>
+    <div class="col">S = VP / (VP + FN)<small>propriedade do teste</small></div>
+    <div class="col">E = VN / (VN + FP)<small>propriedade do teste</small></div>
+    <div class="h"></div>
+  </div>
+  </div>
+  <div class="prose">
+    <p>A imagem que vale a aula inteira é a direção de leitura. <strong>Sensibilidade e especificidade leem a tabela por coluna</strong>: dentro dos doentes, quantos positivaram; dentro dos saudáveis, quantos negativaram. Cada coluna contém só um tipo de pessoa, então o resultado depende apenas do teste e da doença -- é uma propriedade intrínseca do teste, que viaja com ele de um hospital para outro. <strong>Valor preditivo positivo e negativo leem por linha</strong>: dentro dos positivos, quantos são doentes de fato; dentro dos negativos, quantos são saudáveis de fato. Uma linha mistura doentes e saudáveis <em>na proporção em que eles existem naquela população</em>, e por isso os valores preditivos mudam com a prevalência. Coluna é propriedade do teste; linha é propriedade do teste naquela população.</p>
+  </div>
+  <div class="star">
+    <div class="albl">A regra que resolve metade das questões</div>
+    <p>Quem manda no resultado é a pergunta: "dos doentes, quantos..." pede S; "dos saudáveis, quantos..." pede E; "dos positivos, quantos..." pede VPP; "dos negativos, quantos..." pede VPN. Localize o denominador antes de olhar as alternativas.</p>
+  </div>
+</section>
+
+<section class="degrau" id="d1">
+  <div class="dhead"><span class="dnum">1</span><div class="dtitle"><span class="dstage">Degrau 1</span><h2>Sensibilidade, especificidade e acurácia</h2></div></div>
+  <p class="lede">Medidas de validação: 45% das questões do tema, segundo a engenharia reversa do EMED. É aqui que a conta aparece.</p>
+  <div class="prose">
+    <p><strong>Sensibilidade</strong> é a capacidade de reconhecer a doença quando ela está presente: a proporção de doentes que o teste positiva, <span class="mn">S = VP / (VP + FN)</span>. O complemento é a taxa de falso-negativos, <span class="mn">FN = 1 - S</span>: um teste 90% sensível deixa passar 10 em cada 100 doentes. <strong>Especificidade</strong> é a capacidade de perceber a ausência da doença quando ela não está presente: a proporção de saudáveis que o teste negativa, <span class="mn">E = VN / (VN + FP)</span>, com taxa de falso-positivos <span class="mn">FP = 1 - E</span>. <strong>Acurácia</strong> é a proporção de resultados corretos, <span class="mn">(VP + VN) / total</span>.</p>
+  </div>
+  <div class="calc">
+    <div class="clab">Conta feita -- UESPI 2021, triagem visual por professores x oftalmologistas (411 escolares)</div>
+<pre>VP = 56   FN = 48   ->  doentes   = 104
+FP = 5    VN = 302  ->  saudáveis = 307
+
+S = VP / (VP + FN) = 56 / 104   = <b>53,8%</b>
+E = VN / (VN + FP) = 302 / 307  = <b>98,4%</b>
+Acurácia = (56 + 302) / 411     = <b>87,1%</b></pre>
+    <p class="note">A alternativa correta é "S = 56/104; E = 302/307". As erradas trocam o denominador: 56/61 é o VPP (dos positivos, quantos eram doentes), 302/350 seria o VPN. A banca conta com quem decora a fórmula e não sabe qual coluna olhar.</p>
+  </div>
+  <div class="prose">
+    <h4 class="sub">Por que o teste sensível exclui e o específico confirma</h4>
+    <p>Um teste muito sensível tem poucos falso-negativos. Logo, quando ele dá negativo, é muito improvável que haja um doente escondido ali: <strong>teste Sensível, resultado Negativo, doença excluída</strong> -- o mnemônico em inglês é SnNout (<em>rules out</em>). Um teste muito específico tem poucos falso-positivos. Quando ele dá positivo, é muito improvável que seja um saudável mal classificado: <strong>teste esPecífico, resultado Positivo, doença confirmada</strong> -- SpPin (<em>rules in</em>). Guarde o mecanismo, não só a sigla: é a taxa de falso-negativos baixa que faz o negativo valer, e a de falso-positivos baixa que faz o positivo valer.</p>
+    <p>A acurácia parece a medida mais honesta e é a mais enganosa. Numa doença com prevalência de 1%, um "teste" que responde sempre negativo acerta 99% das vezes -- acurácia de 99% com sensibilidade zero. Por isso a acurácia isolada nunca escolhe um teste; ela só resume, e resume mal quando a prevalência é baixa.</p>
+  </div>
+  <div class="trap">
+    <div class="albl">Armadilha</div>
+    <p>Sensibilidade não é VPP. "Dos doentes, quantos o teste pega" é S; "dos positivos, quantos são doentes de fato" é VPP. A banca oferece as duas frases como se fossem sinônimos -- e o mesmo vale para especificidade x VPN.</p>
+  </div>
+</section>
+
+<section class="degrau" id="d2">
+  <div class="dhead"><span class="dnum">2</span><div class="dtitle"><span class="dstage">Degrau 2</span><h2>Valores preditivos: o mesmo teste, respostas diferentes</h2></div></div>
+  <p class="lede">O segundo tópico mais cobrado (28%). Aqui a prevalência entra na conta e o mesmo teste muda de significado conforme a população.</p>
+  <div class="prose">
+    <p>O <strong>valor preditivo positivo</strong> é a probabilidade de um resultado positivo estar correto, <span class="mn">VPP = VP / (VP + FP)</span>; o <strong>valor preditivo negativo</strong> é a probabilidade de um resultado negativo estar correto, <span class="mn">VPN = VN / (VN + FN)</span>. São eles que interessam ao médico na frente do paciente: o laudo chegou positivo, qual a chance de ser verdade? Mas, por lerem a tabela em linha, misturam doentes e saudáveis na proporção da população -- e é isso que a conta a seguir mostra. Mesmo teste, sensibilidade 90% e especificidade 90%, aplicado a 1.000 pessoas em duas cidades.</p>
+  </div>
+  <div class="calc">
+    <div class="clab">Conta feita -- o mesmo teste (S 90% / E 90%) em duas prevalências</div>
+<pre><i>Cidade A, prevalência 5%:</i>   doentes 50   saudáveis 950
+  VP = 0,9 x 50  = 45     FN = 5
+  VN = 0,9 x 950 = 855    FP = 95
+  VPP = 45 / (45 + 95)  = <b>32,1%</b>     VPN = 855 / (855 + 5) = <b>99,4%</b>
+
+<i>Cidade B, prevalência 50%:</i>  doentes 500  saudáveis 500
+  VP = 450   FN = 50   VN = 450   FP = 50
+  VPP = 450 / (450 + 50) = <b>90,0%</b>    VPN = 450 / (450 + 50) = <b>90,0%</b></pre>
+    <p class="note">Na cidade A, dois em cada três positivos são falsos -- não porque o teste piorou, mas porque 950 saudáveis produzem 95 falso-positivos e só 50 doentes produzem 45 verdadeiros. S e E não se mexeram.</p>
+  </div>
+  <div class="prose">
+    <p>Daí saem as três regras que a banca cobra em forma de "o que acontece com...". Quando a <strong>prevalência sobe, o VPP sobe e o VPN desce</strong>; quando ela cai, o inverso; e <strong>sensibilidade e especificidade não se alteram</strong> em nenhum dos casos. Foi exatamente isso que a USP-SP 2021 perguntou ao mover um teste de uma cidade com 10% de prevalência para outra com 20%: VPP aumenta, VPN diminui, especificidade mantida.</p>
+    <p>Há ainda uma relação de parentesco entre as medidas de coluna e as de linha. O VPN é governado pela sensibilidade, porque o único jeito de um negativo estar errado é ser um falso-negativo, e falso-negativo é <span class="mn">1 - S</span>. O VPP é governado pela especificidade, pelo mesmo raciocínio com o falso-positivo. É por isso que "teste sensível serve para excluir" e "teste específico serve para confirmar" são a mesma frase dita duas vezes: sensível dá VPN alto, específico dá VPP alto.</p>
+  </div>
+  <div class="crit">
+    <div class="row"><span class="k">Prevalência sobe</span><span class="v">VPP sobe, VPN desce. S e E iguais.</span></div>
+    <div class="row"><span class="k">Prevalência cai</span><span class="v">VPP desce, VPN sobe. S e E iguais.</span></div>
+    <div class="row"><span class="k">Sensibilidade sobe</span><span class="v">VPN sobe (menos falso-negativos entre os negativos).</span></div>
+    <div class="row"><span class="k">Especificidade sobe</span><span class="v">VPP sobe (menos falso-positivos entre os positivos).</span></div>
+    <div class="row"><span class="k">Independem da prevalência</span><span class="v">Sensibilidade, especificidade e razões de verossimilhança.</span></div>
+  </div>
+  <div class="trap">
+    <div class="albl">Armadilha</div>
+    <p>"A combinação disúria + polaciúria + ausência de corrimento tem VPP de 95%" (CERMAM 2021) significa que a paciente com esses achados tem 95% de probabilidade de cistite -- é a probabilidade pós-teste de um "teste" que é a própria anamnese. Não é a probabilidade pré-teste, nem uma propriedade da urocultura.</p>
+  </div>
+</section>
+
+<section class="degrau" id="d3">
+  <div class="dhead"><span class="dnum">3</span><div class="dtitle"><span class="dstage">Degrau 3</span><h2>Razões de verossimilhança: a régua que move a probabilidade</h2></div></div>
+  <p class="lede">Poucas questões (2,5% no EMED), mas é a ferramenta que a UERJ usa quando pede raciocínio de verdade. É aqui que Bayes vira número.</p>
+  <div class="prose">
+    <p>Uma razão de verossimilhança compara a probabilidade de um mesmo resultado entre doentes e saudáveis. A <strong>RV positiva</strong> pergunta: quantas vezes um resultado positivo é mais frequente em quem tem a doença do que em quem não tem? Positivo no doente é sensibilidade; positivo no saudável é falso-positivo, <span class="mn">1 - E</span>. Logo <span class="mn">RV+ = S / (1 - E)</span>. A <strong>RV negativa</strong> pergunta o mesmo do resultado negativo: negativo no doente é <span class="mn">1 - S</span>, negativo no saudável é E, e <span class="mn">RV- = (1 - S) / E</span>. Como as duas usam só medidas de coluna, <strong>as RV também independem da prevalência</strong> -- e essa é a sua grande vantagem sobre os valores preditivos: elas viajam com o teste e funcionam em qualquer pré-teste.</p>
+    <p>Uma RV maior que 1 aumenta a probabilidade de doença; menor que 1, diminui; igual a 1, não move nada -- o resultado é tão frequente em doentes quanto em saudáveis e o teste foi inútil. A escala de Jaeschke e Sackett dá o tamanho do salto: RV+ acima de 10 (ou RV- abaixo de 0,1) produz mudanças grandes, quase sempre conclusivas; entre 5 e 10 (0,1 a 0,2), moderadas; entre 2 e 5 (0,2 a 0,5), pequenas; entre 1 e 2 (0,5 a 1), quase nada.</p>
+    <h4 class="sub">A conta pós-teste: odds pré x RV = odds pós</h4>
+    <p>Bayes opera em chances (<em>odds</em>), não em porcentagem, e essa é a única troca de moeda que você precisa fazer. Probabilidade de 20% significa 20 doentes para 80 saudáveis, odds de <span class="mn">0,20 / 0,80 = 0,25</span>. A regra geral é <span class="mn">odds = p / (1 - p)</span> e, de volta, <span class="mn">p = odds / (1 + odds)</span>. Com a moeda trocada, a atualização é uma multiplicação: <span class="mn">odds pós = odds pré x RV</span>. O nomograma de Fagan faz essa mesma conta com uma régua: você marca a probabilidade pré-teste na coluna da esquerda, a RV na coluna do meio, traça a reta e lê a probabilidade pós-teste na direita -- ele existe para dispensar a conversão em odds, mas a conta à mão é o que a prova pode cobrar.</p>
+  </div>
+  <div class="calc">
+    <div class="clab">Conta feita -- exemplo do EMED: prevalência de COVID 10%, achados com RV+ = 112</div>
+<pre>odds pré  = 0,10 / 0,90          = 0,111
+odds pós  = 0,111 x 112          = 12,4
+p pós     = 12,4 / (1 + 12,4)    = <b>92,6%  (~93%)</b></pre>
+    <p class="note">Uma RV+ de 112 é enorme: leva 10% a 93% num passo. Uma RV+ de 4,5 (S 90%, E 80%) levaria os mesmos 10% a apenas 33%.</p>
+  </div>
+  <div class="calc">
+    <div class="clab">Conta feita -- a tabela do EMED (180 / 160 / 20 / 640)</div>
+<pre>S = 180 / (180 + 20)  = 0,90     E = 640 / (640 + 160) = 0,80
+RV+ = 0,90 / (1 - 0,80) = 0,90 / 0,20 = <b>4,5</b>
+RV- = (1 - 0,90) / 0,80 = 0,10 / 0,80 = <b>0,125</b>
+VPP = 180 / 340 = 52,9%          VPN = 640 / 660 = 97,0%</pre>
+  </div>
+  <div class="aside">
+    <div class="albl">Atalho de cabeça (McGee)</div>
+    <p>Para probabilidade pré-teste entre 10% e 90%, RV de 2, 5 e 10 somam cerca de 15, 30 e 45 pontos percentuais; RV de 0,5, 0,2 e 0,1 subtraem os mesmos 15, 30 e 45. Fora dessa faixa o atalho perde precisão -- e é justamente nos extremos que o Degrau 7 vai mostrar que o teste deixa de valer a pena.</p>
+  </div>
+  <div class="trap">
+    <div class="albl">Armadilha</div>
+    <p>"RV maior que 1 diminui a probabilidade de doença" é falsa e já foi alternativa de prova (SMS-PR 2020). Maior que 1 aumenta; e quanto maior a RV+, melhor o teste quando positivo; quanto menor a RV-, melhor o teste quando negativo.</p>
+  </div>
+</section>
+
+<section class="degrau" id="d4">
+  <div class="dhead"><span class="dnum">4</span><div class="dtitle"><span class="dstage">Degrau 4</span><h2>Curva ROC e o ponto de corte</h2></div></div>
+  <p class="lede">Todo teste com resultado numérico esconde uma escolha: onde cortar. A curva ROC mostra o preço de cada corte.</p>
+  <div class="prose">
+    <p>Sensibilidade e especificidade não são fixas quando o teste devolve um número contínuo -- glicemia, PSA, troponina. Elas dependem do <strong>ponto de corte</strong>. Se você baixa o corte, mais doentes positivam (a sensibilidade sobe) mas mais saudáveis também (a especificidade cai); se sobe o corte, o inverso. A curva ROC desenha exatamente essa troca: no eixo vertical a sensibilidade, no horizontal a taxa de falso-positivos (<span class="mn">1 - E</span>), e cada ponto da curva é um corte possível.</p>
+  </div>
+  <div class="fig">
+    <svg viewBox="0 0 220 220" role="img" aria-label="Três curvas ROC: a melhor encosta no canto superior esquerdo, a pior fica perto da diagonal">
+      <rect x="0" y="0" width="220" height="220" style="fill:var(--card)"/>
+      <line x1="30" y1="190" x2="205" y2="190" style="stroke:var(--line2);stroke-width:1.2"/>
+      <line x1="30" y1="190" x2="30" y2="15" style="stroke:var(--line2);stroke-width:1.2"/>
+      <line x1="30" y1="190" x2="205" y2="15" style="stroke:var(--ink3);stroke-width:1;stroke-dasharray:4 4"/>
+      <path d="M30 190 C 40 60, 90 22, 205 15" style="fill:none;stroke:var(--sea);stroke-width:2.4"/>
+      <path d="M30 190 C 70 120, 120 60, 205 15" style="fill:none;stroke:var(--amber);stroke-width:2"/>
+      <path d="M30 190 C 90 160, 140 90, 205 15" style="fill:none;stroke:var(--carmine);stroke-width:2"/>
+      <circle cx="48" cy="60" r="3.4" style="fill:var(--sea)"/>
+      <text x="56" y="56" style="font:600 10px 'Source Sans 3',sans-serif;fill:var(--sea-ink)">2</text>
+      <text x="118" y="86" style="font:600 10px 'Source Sans 3',sans-serif;fill:var(--amber-ink)">3</text>
+      <text x="150" y="130" style="font:600 10px 'Source Sans 3',sans-serif;fill:var(--carmine-ink)">1</text>
+      <text x="118" y="206" text-anchor="middle" style="font:500 9.5px 'Source Sans 3',sans-serif;fill:var(--ink3)">falso-positivos (1 - E)</text>
+      <text x="12" y="105" text-anchor="middle" transform="rotate(-90 12 105)" style="font:500 9.5px 'Source Sans 3',sans-serif;fill:var(--ink3)">sensibilidade</text>
+      <text x="36" y="12" style="font:500 9px 'Source Sans 3',sans-serif;fill:var(--ink3)">canto ideal</text>
+    </svg>
+    <div>
+      <p>A <strong>área sob a curva</strong> é a acurácia global do teste, independente do corte. Um teste perfeito faz um ângulo reto colado ao canto superior esquerdo (área 1); um teste aleatório cai sobre a diagonal (área 0,5), porque cada ganho de sensibilidade custa igual em falso-positivos. Entre curvas, <strong>a melhor é a de maior área</strong>, a que passa mais perto do canto: aqui, 2 supera 3, que supera 1.</p>
+      <p>Dentro de uma mesma curva, o corte de maior acurácia é o ponto mais próximo do canto superior esquerdo. Foi o que a UFRJ 2021 cobrou ao comparar um teste com área 0,92 e outro com 0,67: compra-se o de 0,92, porque maior área é maior acurácia -- não porque "a prevalência é menor" nem por qualquer inferência sobre especificidade isolada.</p>
+    </div>
+  </div>
+  <div class="trap">
+    <div class="albl">Armadilha</div>
+    <p>Comparar curvas ROC "despenca na prova" e a pegadinha é o eixo: a curva melhor não é a mais alta em qualquer ponto, é a de maior área. E o eixo horizontal é a taxa de falso-positivos, não a especificidade -- ler ao contrário inverte a resposta.</p>
+  </div>
+</section>
+
+<section class="degrau" id="d5">
+  <div class="dhead"><span class="dnum">5</span><div class="dtitle"><span class="dstage">Degrau 5</span><h2>Escolher o teste e combinar testes</h2></div></div>
+  <p class="lede">O dilema da prova é sempre o mesmo: sensível ou específico? A resposta vem do custo do erro que você mais teme.</p>
+  <div class="vs">
+    <div class="b"><h5>Quero sensibilidade quando...</h5><ul><li>O falso-negativo é o erro caro: doença grave com tratamento eficaz, contagiosa, ou triagem de sangue em hemocentro.</li><li>A pergunta é <em>excluir</em>: primeiro teste de um rastreamento, "peneira" inicial.</li><li>VPN alto é o que preciso.</li></ul></div>
+    <div class="a"><h5>Quero especificidade quando...</h5><ul><li>O falso-positivo é o erro caro: o passo seguinte é invasivo, tóxico, caro ou estigmatizante -- confirmar câncer antes de operar (SES-RJ 2021).</li><li>A pergunta é <em>confirmar</em>: teste de segunda linha, decisão terapêutica.</li><li>VPP alto é o que preciso.</li></ul></div>
+  </div>
+  <div class="prose">
+    <h4 class="sub">Associação de testes: série x paralelo</h4>
+    <p>Quando um teste não basta, dois ou mais são combinados, e o arranjo muda o comportamento do conjunto. Em <strong>série</strong>, os testes são sequenciais e o paciente só faz o segundo se o primeiro foi positivo; o resultado final só é positivo se todos forem. Isso derruba falso-positivos: a especificidade e o VPP do conjunto sobem, ao custo de sensibilidade (basta um negativo para descartar, e alguns doentes escapam). É o desenho do rastreamento -- o primeiro teste mais sensível para não perder ninguém, o segundo mais específico para confirmar -- e do fluxograma da sífilis, em que o teste treponêmico só é feito depois de um não treponêmico positivo (PSU-MG 2021). Em <strong>paralelo</strong>, todos os testes são feitos de uma vez e o conjunto é positivo se qualquer um positivar; isso pega quase todo doente (sensibilidade e VPN sobem) ao custo de mais falso-positivos (especificidade cai). É o arranjo da emergência, quando perder o diagnóstico custa mais que investigar demais.</p>
+  </div>
+  <div class="crit">
+    <div class="row"><span class="k">Série</span><span class="v">2º só se 1º positivo. Sensibilidade cai, especificidade sobe, VPP sobe. Rastreamento, confirmação.</span></div>
+    <div class="row"><span class="k">Paralelo</span><span class="v">Todos ao mesmo tempo, positivo se qualquer um. Sensibilidade sobe, especificidade cai, VPN sobe. Emergência.</span></div>
+  </div>
+  <div class="trap">
+    <div class="albl">Armadilha</div>
+    <p>Associar testes muda as propriedades do <em>conjunto</em>, não de cada teste: a sensibilidade do VDRL continua a mesma depois de acrescentar o treponêmico. A alternativa "a capacidade de identificar quem tem sífilis aumentará" confunde sensibilidade do teste isolado com VPP do arranjo em série. E concordância entre dois testes não diz nada sobre acurácia -- ambos podem concordar no erro.</p>
+  </div>
+</section>
+
+<section class="degrau" id="d6">
+  <div class="dhead"><span class="dnum">6</span><div class="dtitle"><span class="dstage">Degrau 6</span><h2>Probabilidade pré-teste: de onde a conta parte</h2></div></div>
+  <p class="lede">Nenhum teste tem sentido sem o ponto de partida. E o ponto de partida é uma estimativa clínica, não um escore qualquer.</p>
+  <div class="prose">
+    <p>A probabilidade pré-teste começa na prevalência da doença na população de que o paciente veio -- é por isso que a mesma dor torácica pesa diferente na UBS e na emergência cardiológica -- e é refinada por cada dado da anamnese e do exame físico, que funcionam como testes com suas próprias razões de verossimilhança. Sexo, idade, caráter do sintoma: cada um move a probabilidade antes de qualquer exame. Esse é o raciocínio de Gusso e Duncan quando descrevem a consulta como uma cadeia de atualizações bayesianas: o médico chega ao exame complementar já com uma probabilidade, e o exame só faz sentido se puder movê-la para um lado que mude a conduta.</p>
+    <p>Para a doença arterial coronariana, a tradição clínica (Diamond e Forrester, adotada pela diretriz brasileira de doença coronária estável) estima a probabilidade a partir de três dados: idade, sexo e <strong>tipo de dor</strong>. A dor é classificada por três critérios -- desconforto retroesternal ou precordial de caráter típico (aperto, peso), desencadeado por esforço ou estresse emocional, aliviado por repouso ou nitrato em poucos minutos. Três de três é <strong>angina típica</strong>; dois de três, <strong>angina atípica</strong>; um ou nenhum, <strong>dor não anginosa</strong>.</p>
+  </div>
+  <div class="ptp-wrap">
+    <div class="ptp" role="table" aria-label="Probabilidade pré-teste de DAC por idade, sexo e tipo de dor (Diamond-Forrester)">
+      <div class="h">Idade</div><div class="h">Não anginosa H / M</div><div class="h">Atípica H / M</div><div class="h">Típica H / M</div><div class="h">Leitura</div>
+      <div class="rh">30-39</div><div class="n">5 / 1</div><div class="n">22 / 4</div><div class="n hi">70 / 26</div><div>homem jovem com angina típica já é intermediário-alto</div>
+      <div class="rh">40-49</div><div class="n">14 / 3</div><div class="n">46 / 13</div><div class="n hi">87 / 55</div><div>a atípica no homem já passa de 40%</div>
+      <div class="rh">50-59</div><div class="n">22 / 8</div><div class="n">59 / 32</div><div class="n hi">92 / 79</div><div>típica em ambos os sexos = alta</div>
+      <div class="rh">60-69</div><div class="n">28 / 19</div><div class="n">67 / 54</div><div class="n hi mk">94 / 91</div><div>o homem de 66 anos da UERJ está aqui</div>
+    </div>
+  </div>
+  <div class="prose">
+    <p>A leitura de prova é grosseira e suficiente: <strong>homem acima de 50 anos com angina típica tem probabilidade alta</strong>, na casa dos 90%; mulher jovem com dor não anginosa tem probabilidade baixa, abaixo de 10%; a faixa intermediária é onde os testes não invasivos mais rendem. Tabelas mais recentes (ESC 2019) recalibraram os números para baixo -- o mesmo homem de 66 anos cai para cerca de 44% -- mas a lógica cobrada pela banca não muda: angina típica em homem idoso é probabilidade alta demais para ser afastada por um exame não invasivo negativo.</p>
+    <h4 class="sub">O erro de categoria: escore de risco não é probabilidade de doença</h4>
+    <p>O escore de Framingham (e o SCORE, o ASCVD e os demais escores de risco cardiovascular) estima a probabilidade de um <strong>evento cardiovascular em 10 anos numa pessoa assintomática</strong>. Ele responde à pergunta da prevenção primária -- "quanto agressivo devo ser com estatina e pressão neste paciente sem sintoma?" -- e foi derivado em coortes de pessoas sem doença conhecida. Aplicado a quem já tem angina típica, ele responde à pergunta errada: um Framingham de 4% não diz nada sobre a chance de a dor deste paciente ser isquêmica, porque essa chance é dada pela tabela acima, e é alta. Ler o escore baixo como "tranquilizador" é o primeiro dos dois erros da vinheta que vem no Degrau 9.</p>
+  </div>
+  <div class="trap">
+    <div class="albl">Armadilha</div>
+    <p>Escore de risco é instrumento de prevenção primária em assintomático; probabilidade pré-teste é estimativa de doença atual em quem tem sintoma. A banca coloca os dois na mesma vinheta para ver se você usa o instrumento errado para a pergunta.</p>
+  </div>
+</section>
+
+<section class="degrau" id="d7">
+  <div class="dhead"><span class="dnum">7</span><div class="dtitle"><span class="dstage">Degrau 7</span><h2>Limiares de decisão: quando o teste não vale a pena</h2></div></div>
+  <p class="lede">O conceito que separa quem sabe calcular de quem sabe decidir. Um teste só serve se puder cruzar um limiar.</p>
+  <div class="prose">
+    <p>Pauker e Kassirer formalizaram o que a boa clínica sempre fez: a probabilidade de doença se divide em três zonas por dois limiares. Abaixo do <strong>limiar de teste</strong>, a probabilidade é tão baixa que nem testar vale a pena -- o custo, o risco e os falso-positivos do exame superam o que ele poderia render. Acima do <strong>limiar de tratamento</strong>, a probabilidade é tão alta que se trata sem testar, ou se pede o teste apenas se um resultado negativo válido fosse capaz de trazer a probabilidade para baixo do limiar. Entre os dois fica a zona em que o teste é útil: ali um positivo ou um negativo cruzam um limiar e mudam a conduta. Os limiares não são fixos; sobem quando o tratamento é perigoso ou caro e descem quando a doença é grave e o tratamento é seguro.</p>
+    <p>A consequência prática é uma pergunta que deve preceder todo exame: <strong>algum resultado deste teste mudaria o que vou fazer?</strong> Se a resposta é não, o teste é desnecessário -- e pior que desnecessário, porque um falso resultado pode desviar a conduta certa. Nas duas pontas isso acontece com regularidade: em pré-teste muito baixa, um positivo é quase sempre falso e só gera investigação inútil; em pré-teste muito alta, um negativo não afasta e só gera falsa tranquilidade.</p>
+  </div>
+  <div class="calc">
+    <div class="clab">Conta feita -- o que um TE negativo VÁLIDO faria com o homem de 66 anos (pré-teste 94%, RV- do TE ~0,42)</div>
+<pre>RV-  = (1 - S) / E = (1 - 0,68) / 0,77 = 0,32 / 0,77 = <b>0,42</b>
+odds pré = 0,94 / 0,06        = 15,7
+odds pós = 15,7 x 0,42        = 6,6
+p pós    = 6,6 / (1 + 6,6)    = <b>86,8%</b></pre>
+    <p class="note">Mesmo executado corretamente e negativo, o teste ergométrico deixaria o paciente com 87% de probabilidade de doença coronariana -- acima de qualquer limiar de tratamento. O exame não tinha resultado capaz de mudar a conduta; por isso era desnecessário antes mesmo de ser feito.</p>
+  </div>
+  <div class="star">
+    <div class="albl">Em uma frase</div>
+    <p>Teste bom é o que pode cruzar um limiar. Pré-teste muito alta: trate ou vá direto ao exame de maior acurácia. Pré-teste muito baixa: não teste. No meio: teste, e escolha sensível para excluir ou específico para confirmar.</p>
+  </div>
+</section>
+
+<section class="degrau" id="d8">
+  <div class="dhead"><span class="dnum">8</span><div class="dtitle"><span class="dstage">Degrau 8</span><h2>Validade da execução e os vieses do teste</h2></div></div>
+  <p class="lede">Sensibilidade e especificidade publicadas pressupõem um teste executado como foi validado. Fora disso, o resultado não é negativo -- é inválido.</p>
+  <div class="prose">
+    <p>O teste ergométrico é o exemplo perfeito porque a sua validade depende do próprio paciente. A isquemia da angina estável só aparece quando a demanda miocárdica ultrapassa a reserva de fluxo coronariano, e isso exige estresse suficiente: o critério é atingir pelo menos <strong>85% da frequência cardíaca máxima prevista</strong> (220 menos a idade). Um exame interrompido antes disso, sem sintomas e sem infradesnível de ST, não demonstrou nada -- o miocárdio simplesmente não foi levado ao ponto em que a isquemia se manifesta. Esse resultado é <strong>inconclusivo (ineficaz)</strong>, nunca "negativo", e a sensibilidade de cerca de 68% e a especificidade de cerca de 77% atribuídas ao TE só valem para o exame que chegou à meta. Além disso, a "má adaptação ao aparelho" e a "baixa capacidade funcional" que costumam justificar a interrupção são, elas próprias, marcadores de pior prognóstico cardiovascular.</p>
+    <p>O mesmo princípio vale para o ECG de repouso normal e para o ecocardiograma de repouso sem alteração segmentar: na angina estável, entre as crises, o coração em repouso é normal por definição. Eles afastam outras coisas (infarto prévio, disfunção ventricular), não afastam isquemia induzida por esforço. Um achado de "déficit de relaxamento" ao ECO é inespecífico -- disfunção diastólica comum na idade -- e não é argumento nem a favor nem contra.</p>
+    <h4 class="sub">Vieses que inflam ou deflam a acurácia publicada</h4>
+    <ul>
+      <li><strong>Viés de espectro:</strong> S e E medidas em casos graves e controles claramente sadios superestimam o desempenho nos casos leves e nos "quase doentes" da vida real.</li>
+      <li><strong>Viés de verificação (<em>work-up</em>):</strong> só quem teve o teste positivo é levado ao padrão-ouro; os falso-negativos nunca são descobertos, a sensibilidade sai inflada e a especificidade, deflada.</li>
+      <li><strong>Viés de incorporação:</strong> o resultado do teste em estudo faz parte da definição do padrão-ouro, e a concordância fica artificialmente perfeita.</li>
+    </ul>
+    <h4 class="sub">Reprodutibilidade não é validade</h4>
+    <p>Um teste pode dar sempre o mesmo resultado e estar sempre errado. <strong>Reprodutibilidade</strong> (precisão, confiabilidade) é a concordância entre repetições ou entre observadores; <strong>validade</strong> (acurácia) é a concordância com a verdade. A imagem clássica é o alvo: tiros agrupados longe do centro são precisos e inválidos. A concordância entre observadores é medida pelo <strong>kappa</strong>, que desconta a concordância esperada pelo acaso: abaixo de 0,4 é fraca, 0,4 a 0,6 moderada, 0,6 a 0,8 boa e acima de 0,8 quase perfeita.</p>
+  </div>
+  <div class="trap">
+    <div class="albl">Armadilha</div>
+    <p>O enunciado descreve o teste como "sem sintomas ou alteração isquêmica" e esconde a invalidação numa oração subordinada -- "não tendo alcançado a frequência cardíaca submáxima". A banca conta com a leitura de "sem alteração" como "negativo". Antes de aceitar qualquer resultado, pergunte se o teste chegou ao ponto em que poderia ter dado positivo.</p>
+  </div>
+</section>
+
+<section class="degrau" id="d9">
+  <div class="dhead"><span class="dnum">9</span><div class="dtitle"><span class="dstage">Degrau 9</span><h2>A vinheta da UERJ, passo a passo</h2></div></div>
+  <p class="lede">Homem de 66 anos, dor precordial em aperto ao esforço que alivia no repouso, "muito nervoso". Framingham abaixo de 5%. ECG e ECO de repouso normais. Teste ergométrico sem alteração isquêmica -- sem atingir a frequência submáxima. O médico afasta angina e atribui a dor à ansiedade. Julgue.</p>
+  <div class="prose">
+    <p><strong>Passo 1 -- classifique a dor.</strong> Aperto precordial, desencadeado por esforço, aliviado por repouso: os três critérios. É angina típica, e o rótulo "muito nervoso" é um analgésico cognitivo plantado no enunciado -- ansiedade não retira nenhum dos três critérios.</p>
+    <p><strong>Passo 2 -- estime a probabilidade pré-teste com o instrumento certo.</strong> Homem, 66 anos, angina típica: faixa alta da tabela do Degrau 6, na casa dos 90%. O Framingham de menos de 5% estima risco de evento em 10 anos num assintomático e não responde à pergunta "esta dor é isquêmica?" -- é o instrumento errado, e o seu valor baixo não tranquiliza nada.</p>
+    <p><strong>Passo 3 -- audite a validade do que foi feito.</strong> ECG e ECO de repouso normais são o esperado na angina estável fora da crise. O TE não atingiu 85% da FC máxima prevista: é inconclusivo, não negativo. Não existe resultado a interpretar.</p>
+    <p><strong>Passo 4 -- aplique Bayes ao cenário mais favorável.</strong> Mesmo que o TE tivesse sido válido e negativo, a conta do Degrau 7 deixa o paciente em cerca de 87%. Um exame cujo melhor resultado possível não muda a conduta era desnecessário antes de ser pedido.</p>
+    <p><strong>Passo 5 -- conclua a conduta.</strong> Com probabilidade alta e nenhum exame válido contra, o paciente é tratado como portador de angina estável até prova em contrário: investigação por método de maior acurácia (estresse com imagem) ou avaliação anatômica (angiotomografia ou cateterismo, conforme o perfil), com terapia antianginosa e antiagregante iniciada. Rotular ansiedade é o erro final que os quatro passos anteriores tornam indefensável.</p>
+  </div>
+  <div class="aside">
+    <div class="albl">O padrão que a UERJ repete</div>
+    <p>Seis edições seguidas, a mesma estrutura: uma dor a classificar, um instrumento errado oferecido como conforto, um exame não invasivo com um defeito de execução escondido, e uma conclusão precipitada para julgar. A alternativa certa é a única que rejeita os dois erros de uma vez -- o de categoria (escore no lugar de pré-teste) e o de validade (inconclusivo lido como negativo). Alternativas que dizem "exames normais afastam isquemia" estão sempre erradas nessa vinheta.</p>
+  </div>
+</section>
+
+<section class="degrau" id="d10">
+  <div class="dhead"><span class="dnum">10</span><div class="dtitle"><span class="dstage">Degrau 10</span><h2>Rastreamento: a escada aplicada ao assintomático</h2></div></div>
+  <p class="lede">O terceiro tópico mais cobrado (10%) é a aplicação populacional de tudo o que veio antes -- com dois vieses próprios que a prova adora.</p>
+  <div class="prose">
+    <p>Rastreamento é "a realização de testes ou exames diagnósticos em populações ou pessoas <strong>assintomáticas</strong>, com a finalidade de diagnóstico precoce (<strong>prevenção secundária</strong>) ou de identificação e controle de riscos, tendo como objetivo final <strong>reduzir a morbidade e mortalidade</strong>" (Cadernos de Atenção Básica 29, citando Gates 2001). As três marcas -- assintomático, prevenção secundária, redução de morbimortalidade -- são o que a banca pede na definição. Estruturalmente, um rastreamento é uma peneira em série: o primeiro teste é o mais <strong>sensível</strong>, para captar o maior número possível de doentes e excluir com segurança os negativos; o segundo é o mais <strong>específico</strong>, para confirmar quem realmente está doente antes de tratar. Se a questão pergunta qual teste usar num rastreamento, a resposta é o sensível -- porque o erro caro na peneira é o falso-negativo.</p>
+    <p>Nem toda doença merece rastreio. Os critérios de Wilson e Jungner, numa respirada: a doença deve ser importante e ter história natural conhecida, com uma fase pré-clínica detectável; o teste deve ser válido, aceitável e seguro; deve existir tratamento eficaz e disponível, que funcione melhor quando iniciado na fase pré-clínica; e o custo deve ser razoável, com o programa funcionando de forma contínua, não como campanha isolada.</p>
+    <h4 class="sub">Os dois vieses que fazem o rastreio parecer melhor do que é</h4>
+    <p>O <strong>viés de antecipação</strong> (<em>lead time</em>): o rastreio adianta o diagnóstico, e a sobrevida medida a partir do diagnóstico fica maior mesmo que a morte aconteça no mesmo dia em que aconteceria sem rastreio -- o paciente só soube antes. O <strong>viés de duração</strong> (<em>length time</em>): doenças de evolução lenta passam mais tempo na fase pré-clínica e são preferencialmente capturadas pelo rastreio, enquanto as agressivas se manifestam entre um exame e outro; a amostra rastreada fica cheia de casos indolentes de bom prognóstico. O extremo desse viés é o <strong>sobrediagnóstico</strong>: detectar uma doença que nunca causaria sintoma nem morte, e tratá-la com todo o dano do tratamento e nenhum benefício. É aqui que este tema encosta na prevenção quaternária -- assunto da aula seguinte (#875), não desta.</p>
+  </div>
+  <div class="trap">
+    <div class="albl">Armadilha</div>
+    <p>"Alta sensibilidade porque significa poucos falso-positivos" está errada por dentro: sensibilidade alta significa poucos falso-<em>negativos</em>. A banca da FMABC 2021 ofereceu as quatro combinações; só "alta sensibilidade, poucos falso-negativos" fecha a lógica.</p>
+  </div>
+</section>
+
+<section class="synth" id="synth">
+  <h2>A escada inteira numa respirada</h2>
+  <div class="prose">
+    <p>Um paciente chega com uma probabilidade de doença que a prevalência e a clínica já definiram -- a pré-teste. O teste que ele vai fazer tem duas propriedades fixas, lidas por coluna na tabela 2x2 -- sensibilidade e especificidade -- e duas que dependem de onde ele está, lidas por linha -- os valores preditivos, que sobem e descem com a prevalência. A razão de verossimilhança converte as propriedades fixas numa régua que multiplica as odds pré-teste e devolve a pós-teste; a curva ROC mostra o preço de cada ponto de corte e a área sob ela diz qual teste é melhor. Escolhe-se sensível para excluir e específico para confirmar, em série para confirmar e em paralelo para não perder ninguém. Mas nada disso importa se a pré-teste foi estimada com o instrumento errado, se o teste foi executado fora das condições em que vale, ou se nenhum resultado possível cruzaria o limiar que muda a conduta. No assintomático, a mesma escada vira rastreamento -- peneira sensível, confirmação específica -- vigiada pelos vieses de antecipação e de duração.</p>
+  </div>
+  <div class="trig">
+    <div><span class="tk">Coluna x linha</span><span class="tv">S e E = do teste; VPP e VPN = do teste nesta população</span></div>
+    <div><span class="tk">Prevalência sobe</span><span class="tv">VPP sobe, VPN desce, S e E iguais</span></div>
+    <div><span class="tk">SnNout / SpPin</span><span class="tv">Sensível negativo exclui; específico positivo confirma</span></div>
+    <div><span class="tk">RV+ = S/(1-E)</span><span class="tv">RV- = (1-S)/E; acima de 10 ou abaixo de 0,1 = conclusivo</span></div>
+    <div><span class="tk">odds pós = odds pré x RV</span><span class="tv">odds = p/(1-p); p = odds/(1+odds)</span></div>
+    <div><span class="tk">ROC</span><span class="tv">Maior área = melhor teste; eixo x = falso-positivos</span></div>
+    <div><span class="tk">Série x paralelo</span><span class="tv">Série sobe E e VPP; paralelo sobe S e VPN</span></div>
+    <div><span class="tk">Angina típica 3/3</span><span class="tv">Homem idoso = pré-teste alta (~90%)</span></div>
+    <div><span class="tk">Framingham</span><span class="tv">Risco de evento em assintomático -- nunca pré-teste</span></div>
+    <div><span class="tk">TE sem 85% da FC máx.</span><span class="tv">Inconclusivo, nunca negativo</span></div>
+    <div><span class="tk">Limiar</span><span class="tv">Teste só vale se algum resultado muda a conduta</span></div>
+    <div><span class="tk">Rastreio</span><span class="tv">Assintomático, prevenção secundária, teste sensível primeiro</span></div>
+    <div><span class="tk">Lead time / length time</span><span class="tv">Antecipação e duração inflam a sobrevida aparente</span></div>
+  </div>
+</section>
+
+<section id="arms" style="margin-top:52px">
+  <h2 style="font-size:23px;margin-bottom:6px">Armadilhas de prova</h2>
+  <p style="font-size:14px;color:var(--ink3);margin:0 0 4px;max-width:72ch">As catorze armadilhas mapeadas nesta escada, na ordem em que a prova costuma testá-las.</p>
+  <div class="arms">
+    <div class="arm"><span class="dot"></span><p><strong>Sensibilidade não é VPP; especificidade não é VPN.</strong> S e E leem a coluna (dentro dos doentes, dentro dos saudáveis); VPP e VPN leem a linha (dentro dos positivos, dentro dos negativos). Localize o denominador antes de escolher.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Na conta, a alternativa errada troca o denominador.</strong> 56/104 é sensibilidade; 56/61 é VPP. As fórmulas são idênticas no numerador -- é o denominador que decide.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Prevalência muda VPP e VPN, nunca S e E.</strong> Mover o teste para uma população de maior prevalência sobe o VPP, desce o VPN e mantém sensibilidade e especificidade.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Acurácia alta não significa teste bom.</strong> Em prevalência baixa, responder "negativo" para todos dá acurácia altíssima com sensibilidade zero.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>RV maior que 1 aumenta a probabilidade</strong>; menor que 1 diminui; igual a 1 não move. A alternativa que inverte isso já foi gabarito de "EXCETO".</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Bayes multiplica odds, não porcentagem.</strong> Converta p em odds (p/(1-p)), multiplique pela RV, converta de volta (odds/(1+odds)). Somar a RV à porcentagem é erro de conta clássico.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Curva ROC: vence a maior área, e o eixo horizontal é 1 - E.</strong> Não é "a curva mais alta num ponto" nem "a de maior especificidade"; e o teste aleatório é a diagonal (0,5), não zero.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Confirmar câncer pede especificidade; rastrear pede sensibilidade.</strong> O erro caro decide: falso-positivo antes de cirurgia ou quimioterapia x falso-negativo numa peneira.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Alta sensibilidade = poucos falso-negativos</strong>, não poucos falso-positivos. Metade das alternativas de rastreio troca esse complemento.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Associar testes muda o conjunto, não cada teste.</strong> Em série sobem E e VPP e cai S; em paralelo sobem S e VPN e cai E; a sensibilidade de cada teste isolado continua a mesma, e concordância entre testes não é acurácia.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Framingham não é probabilidade pré-teste.</strong> Escore de risco estima evento em 10 anos no assintomático (prevenção primária). A chance de uma dor ser isquêmica vem de idade, sexo e tipo de dor -- e em homem idoso com angina típica é alta.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>TE que não atinge 85% da FC máxima prevista é inconclusivo, nunca negativo.</strong> O enunciado descreve "sem alteração isquêmica" e esconde a invalidação; sem estresse suficiente, o teste não teve chance de positivar.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>ECG e ECO de repouso normais não afastam angina estável.</strong> A isquemia por esforço só aparece sob estresse; déficit de relaxamento ao ECO é achado inespecífico da idade.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Com pré-teste muito alta, um teste não invasivo negativo não afasta -- e por isso era desnecessário.</strong> Antes de pedir, pergunte se algum resultado mudaria a conduta; se não, o teste só pode atrapalhar. Nunca rotule ansiedade por exclusão sem exame válido.</p></div>
+  </div>
+</section>
+
+<footer>
+  <p><strong>Fontes:</strong> <code>resumos/Preventiva/13. Testes Diagnósticos.pdf</code> (EMED, Prof. David Nordon -- engenharia reversa, medidas de validação, valores preditivos, RV, ROC, escolha e associação de testes, rastreamento) e o baralho <code>Flashcards - Testes Diagnósticos</code>. Os degraus 6 a 9 (probabilidade pré-teste de DAC, escores de risco, limiares de Pauker-Kassirer, validade do teste ergométrico, vieses e kappa) vêm de Gusso (Tratado de MFC, seção II), Duncan (Medicina Ambulatorial, seções II e VI), Sackett/Fletcher e da diretriz brasileira de doença coronária estável -- não estão no PDF do EMED. Tabela de pré-teste: Diamond-Forrester (valores clássicos); recalibração ESC 2019 citada no texto.</p>
+  <p>Calibração D10 (tema-zero na trilha; Q97 da UERJ 2023 errada no chute). Aula pré-questões da tarefa #877; a prevenção quaternária e o sobrediagnóstico ficam para a #875.</p>
+</footer>
+</main>
+</div>
+</div>
+
+<script>
+(function(){
+  var links = Array.prototype.slice.call(document.querySelectorAll('.rail a'));
+  var targets = links.map(function(a){ return document.getElementById(a.getAttribute('data-r')); }).filter(Boolean);
+  if (!('IntersectionObserver' in window) || !targets.length) return;
+  var byId = {};
+  links.forEach(function(a){ byId[a.getAttribute('data-r')] = a; });
+  var obs = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if (en.isIntersecting){
+        links.forEach(function(a){ a.classList.remove('on'); });
+        var a = byId[en.target.id];
+        if (a) a.classList.add('on');
+      }
+    });
+  }, { rootMargin: '-15% 0px -70% 0px', threshold: 0 });
+  targets.forEach(function(t){ obs.observe(t); });
+})();
+</script>

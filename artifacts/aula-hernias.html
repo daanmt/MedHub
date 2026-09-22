@@ -1,0 +1,577 @@
+<title>A Escada das Hérnias</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,380;9..144,480;9..144,600;9..144,680&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EEF1F2; --card:#FAFBFC; --sunk:#E1E6E9;
+  --ink:#1A2226; --ink2:#4E5B62; --ink3:#7D8A91;
+  --line:rgba(26,34,38,.13); --line2:rgba(26,34,38,.26);
+  --steel:#2C5E6E; --steel-ink:#1E4553; --steel-wash:#DCE8EC;
+  --carmine:#8E2F41; --carmine-ink:#6B2231; --carmine-wash:#F5E2E6;
+  --amber:#8A5A17; --amber-ink:#6B4610; --amber-wash:#F3E6CC;
+  --on:#FFFFFF;
+  --sh:0 1px 2px rgba(26,34,38,.06),0 12px 30px -18px rgba(26,34,38,.35);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#131A1D; --card:#1B2427; --sunk:#243035;
+  --ink:#E6EDEF; --ink2:#B1BEC3; --ink3:#7E8C92;
+  --line:rgba(230,237,239,.14); --line2:rgba(230,237,239,.28);
+  --steel:#7FB6C6; --steel-ink:#A6D0DC; --steel-wash:#23383F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  --on:#131A1D;
+  --sh:0 1px 2px rgba(0,0,0,.5),0 14px 34px -18px rgba(0,0,0,.8);
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#131A1D; --card:#1B2427; --sunk:#243035;
+  --ink:#E6EDEF; --ink2:#B1BEC3; --ink3:#7E8C92;
+  --line:rgba(230,237,239,.14); --line2:rgba(230,237,239,.28);
+  --steel:#7FB6C6; --steel-ink:#A6D0DC; --steel-wash:#23383F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  --on:#131A1D;
+  --sh:0 1px 2px rgba(0,0,0,.5),0 14px 34px -18px rgba(0,0,0,.8);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);
+  font:16px/1.6 "Source Sans 3",-apple-system,"Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+.mn{font-family:"IBM Plex Mono",ui-monospace,Consolas,monospace;font-variant-numeric:tabular-nums}
+h1,h2,h3,h4{margin:0;font-family:Fraunces,Georgia,serif;font-weight:600;letter-spacing:-.01em;text-wrap:balance;line-height:1.14;color:var(--ink)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px 100px}
+:focus-visible{outline:2px solid var(--steel);outline-offset:2px}
+a{color:var(--steel-ink)}
+strong{font-weight:600;color:var(--ink)}
+em{font-style:italic}
+
+/* masthead */
+.top{padding:52px 0 30px;border-bottom:1px solid var(--line2)}
+.eye{font:600 11px/1 "Source Sans 3";letter-spacing:.14em;text-transform:uppercase;color:var(--steel-ink);margin:0 0 15px}
+.top h1{font-size:clamp(32px,5vw,50px);font-weight:680;max-width:16ch;margin-bottom:16px}
+.top .sub{font-size:18px;line-height:1.6;color:var(--ink2);max-width:66ch;margin:0 0 22px}
+.stats{display:flex;gap:22px;flex-wrap:wrap}
+.stat{display:flex;flex-direction:column;gap:2px}
+.stat b{font:600 24px/1 "IBM Plex Mono";color:var(--steel-ink);font-variant-numeric:tabular-nums}
+.stat span{font-size:11.5px;color:var(--ink3);letter-spacing:.02em}
+
+/* layout: rail + reading column */
+.body{display:grid;grid-template-columns:220px minmax(0,1fr);gap:52px;padding-top:38px;align-items:start}
+@media(max-width:920px){.body{grid-template-columns:1fr}}
+
+.rail{position:sticky;top:22px;display:flex;flex-direction:column;gap:1px}
+.rail .rlab{font:600 10.5px/1 "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin:0 0 10px}
+.rail a{display:grid;grid-template-columns:20px 1fr;gap:9px;align-items:baseline;padding:7px 0;
+  font-size:13.3px;color:var(--ink3);text-decoration:none;border-left:2px solid transparent;padding-left:10px}
+.rail a .rn{font:600 11px "IBM Plex Mono";color:var(--ink3)}
+.rail a:hover{color:var(--ink)}
+.rail a.on{color:var(--steel-ink);border-left-color:var(--steel);font-weight:600}
+.rail a.on .rn{color:var(--steel-ink)}
+@media(max-width:920px){
+  .rail{position:static;flex-direction:row;flex-wrap:wrap;gap:6px 4px;top:auto}
+  .rail .rlab{width:100%}
+  .rail a{padding:4px 9px;border-left:0;border:1px solid var(--line2);border-radius:2px;grid-template-columns:auto auto}
+  .rail a.on{background:var(--steel-wash);border-color:var(--steel)}
+}
+
+main{min-width:0;max-width:700px}
+
+/* degrau */
+.degrau{padding:44px 0;border-bottom:1px solid var(--line)}
+.degrau:first-child{padding-top:0}
+.degrau:last-of-type{border-bottom:0}
+.dhead{display:flex;gap:16px;align-items:flex-start;margin-bottom:18px}
+.dnum{flex-shrink:0;width:44px;height:44px;border:1.5px solid var(--steel);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font:600 17px "IBM Plex Mono";color:var(--steel-ink)}
+.dtitle{padding-top:4px}
+.dtitle .dstage{font:600 11px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);display:block;margin-bottom:3px}
+.dtitle h2{font-size:clamp(21px,2.6vw,27px)}
+.lede{font-size:16.5px;line-height:1.6;color:var(--ink2);margin:0 0 20px;font-style:italic}
+
+.prose p{font-size:16px;line-height:1.72;color:var(--ink2);margin:0 0 16px}
+.prose p:last-child{margin-bottom:0}
+.prose ul,.prose ol{margin:0 0 16px;padding-left:22px}
+.prose li{font-size:15.6px;line-height:1.6;color:var(--ink2);margin-bottom:6px}
+.prose li:last-child{margin-bottom:0}
+.prose li strong{color:var(--ink)}
+h4.sub{font-size:14px;font-weight:600;font-family:"Source Sans 3";letter-spacing:.01em;color:var(--ink);margin:26px 0 10px}
+h4.sub:first-child{margin-top:0}
+
+/* callouts */
+.aside{margin:20px 0;padding:15px 18px;border-left:3px solid var(--steel);background:var(--steel-wash)}
+.aside .albl{font:700 10.5px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;color:var(--steel-ink);margin-bottom:6px}
+.aside p{font-size:15.3px;line-height:1.6;color:var(--ink);margin:0}
+.aside p+p{margin-top:8px}
+
+.trap{margin:20px 0;padding:15px 18px;border-left:3px solid var(--carmine);background:var(--carmine-wash)}
+.trap .albl{font:700 10.5px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;color:var(--carmine-ink);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.trap .albl::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--carmine)}
+.trap p{font-size:15.3px;line-height:1.6;color:var(--ink);margin:0}
+.trap p+p{margin-top:8px}
+
+.star{margin:20px 0;padding:14px 18px;border:1px solid var(--line2);background:var(--card)}
+.star .albl{font:700 10.5px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:6px}
+.star p{font-size:15.3px;line-height:1.6;color:var(--ink);margin:0;font-weight:560}
+
+/* comparativos lado a lado */
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line2);border:1px solid var(--line2);margin:20px 0}
+.vs.three{grid-template-columns:1fr 1fr 1fr}
+.vs>div{background:var(--card);padding:14px 16px}
+.vs h5{font:700 11.5px "Source Sans 3";letter-spacing:.04em;text-transform:uppercase;margin:0 0 8px;color:var(--ink3)}
+.vs .a h5{color:var(--carmine-ink)}
+.vs .b h5{color:var(--steel-ink)}
+.vs .c h5{color:var(--amber-ink)}
+.vs p,.vs li{font-size:14.5px;line-height:1.55;color:var(--ink2)}
+.vs p{margin:0 0 8px}
+.vs p:last-child{margin:0}
+.vs ul{margin:0;padding-left:18px}
+.vs li{margin-bottom:5px}
+@media(max-width:640px){.vs,.vs.three{grid-template-columns:1fr}}
+
+/* tabela-lista de criterios (grid, nao <table>) */
+.crit{border:1px solid var(--line2);margin:20px 0}
+.crit .row{display:grid;grid-template-columns:180px 1fr;gap:14px;padding:11px 15px;font-size:14.3px}
+.crit .row+.row{border-top:1px solid var(--line)}
+.crit .row .k{font-weight:600;color:var(--steel-ink)}
+.crit .row .v{color:var(--ink2);line-height:1.5}
+.crit .row .v em{color:var(--ink3)}
+@media(max-width:640px){.crit .row{grid-template-columns:1fr;gap:3px}}
+
+/* toggle de referencia densa */
+details.ref{margin:20px 0;border:1px solid var(--line2);background:var(--card)}
+details.ref>summary{cursor:pointer;list-style:none;padding:12px 16px;font:600 13.5px "Source Sans 3";color:var(--steel-ink);
+  display:flex;align-items:center;gap:9px}
+details.ref>summary::-webkit-details-marker{display:none}
+details.ref>summary::before{content:"+";font:600 15px "IBM Plex Mono";width:16px}
+details.ref[open]>summary::before{content:"-"}
+details.ref .refbody{padding:0 16px 16px}
+details.ref .row{display:grid;grid-template-columns:150px 1fr;gap:12px;padding:8px 0;font-size:13.8px;border-top:1px solid var(--line)}
+details.ref .row:first-child{border-top:0}
+details.ref .k{font-weight:600;color:var(--ink)}
+details.ref .v{color:var(--ink2);line-height:1.5}
+@media(max-width:640px){details.ref .row{grid-template-columns:1fr;gap:2px}}
+
+/* mapa anatomico */
+.map{margin:22px 0;border:1px solid var(--line2);background:var(--card);overflow-x:auto}
+.map svg{display:block;width:100%;min-width:560px;height:auto}
+.map figcaption{padding:10px 14px 12px;font-size:13.2px;line-height:1.5;color:var(--ink3);border-top:1px solid var(--line)}
+.map .lig{stroke:var(--ink);stroke-width:3;fill:none;stroke-linecap:round}
+.map .ves{stroke:var(--carmine);stroke-width:2.6;fill:none;stroke-linecap:round}
+.map .rect{stroke:var(--ink3);stroke-width:1.6;fill:none;stroke-dasharray:5 4}
+.map .hess{fill:var(--steel-wash);stroke:var(--steel);stroke-width:1.4}
+.map .ring{fill:var(--amber-wash);stroke:var(--amber);stroke-width:1.6}
+.map .fem{fill:var(--carmine-wash);stroke:var(--carmine);stroke-width:1.4}
+.map .vein{fill:var(--sunk);stroke:var(--ink3);stroke-width:1.2}
+.map .lab{font:600 13px "Source Sans 3",sans-serif;fill:var(--ink)}
+.map .lab.s{font-weight:500;font-size:12px;fill:var(--ink3)}
+.map .lab.acc{fill:var(--steel-ink)}
+.map .lab.warn{fill:var(--carmine-ink)}
+.map .lab.amb{fill:var(--amber-ink)}
+.map .axis{font:600 11px "IBM Plex Mono",monospace;fill:var(--ink3);letter-spacing:.08em}
+
+/* sintese */
+.synth{background:var(--card);border:1px solid var(--line2);padding:32px 30px;margin-top:6px}
+.synth h2{font-size:23px;margin-bottom:14px}
+.synth .prose p{font-size:16.5px}
+.trig{max-width:100%;margin-top:22px;display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1px;background:var(--line2);border:1px solid var(--line2)}
+.trig div{background:var(--sunk);padding:13px 15px}
+.trig .tk{font:700 11px "IBM Plex Mono";color:var(--steel-ink);display:block;margin-bottom:4px}
+.trig .tv{font-size:13.6px;line-height:1.45;color:var(--ink2)}
+
+/* armadilhas final */
+.arms{display:flex;flex-direction:column;gap:1px;background:var(--line2);border:1px solid var(--line2);margin-top:18px}
+.arm{background:var(--card);padding:15px 18px;display:flex;gap:12px}
+.arm .dot{flex-shrink:0;width:9px;height:9px;border-radius:50%;background:var(--carmine);margin-top:7px}
+.arm p{font-size:15px;line-height:1.58;color:var(--ink2);margin:0}
+.arm p strong{color:var(--ink)}
+
+footer{margin-top:60px;padding-top:22px;border-top:1px solid var(--line2)}
+footer p{font-size:12.3px;color:var(--ink3);max-width:80ch;margin:0 0 7px;line-height:1.5}
+code{font-family:"IBM Plex Mono",Consolas,monospace;font-size:11.8px;background:var(--sunk);padding:1px 5px;border-radius:2px}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <p class="eye">MedHub · Aula-base · Cirurgia / Hérnias da Parede Abdominal</p>
+  <h1>A Escada das Hérnias</h1>
+  <p class="sub">Tema-zero na trilha e responsável por dois chutes na UERJ 2023 (tela em campo contaminado; a hérnia mais frequente). Dez degraus amarrados, da anatomia da virilha às hérnias de epônimo, antes das 25 questões da lista #38 -- e das duas listas seguintes do mesmo tema.</p>
+  <div class="stats">
+    <div class="stat"><b>10</b><span>degraus</span></div>
+    <div class="stat"><b>16</b><span>armadilhas mapeadas</span></div>
+    <div class="stat"><b>D10</b><span>calibração</span></div>
+  </div>
+</header>
+
+<div class="body">
+<nav class="rail" id="rail" aria-label="Navegação da escada">
+  <p class="rlab">A escada</p>
+  <a href="#d0" data-r="d0"><span class="rn">0</span><span>A régua do normal: a virilha</span></a>
+  <a href="#d1" data-r="d1"><span class="rn">1</span><span>O vocabulário da hérnia</span></a>
+  <a href="#d2" data-r="d2"><span class="rn">2</span><span>Por que cada hérnia nasce onde nasce</span></a>
+  <a href="#d3" data-r="d3"><span class="rn">3</span><span>Diagnóstico e diferenciais</span></a>
+  <a href="#d4" data-r="d4"><span class="rn">4</span><span>Classificação de Nyhus</span></a>
+  <a href="#d5" data-r="d5"><span class="rn">5</span><span>Operar, esperar ou correr</span></a>
+  <a href="#d6" data-r="d6"><span class="rn">6</span><span>As técnicas e quando cada uma</span></a>
+  <a href="#d7" data-r="d7"><span class="rn">7</span><span>Complicações</span></a>
+  <a href="#d8" data-r="d8"><span class="rn">8</span><span>Hérnias ventrais</span></a>
+  <a href="#d9" data-r="d9"><span class="rn">9</span><span>Hérnias de epônimo</span></a>
+  <a href="#synth" data-r="synth"><span class="rn">-&gt;</span><span>Síntese e gatilhos</span></a>
+  <a href="#arms" data-r="arms"><span class="rn">🔴</span><span>Armadilhas de prova</span></a>
+</nav>
+
+<main>
+
+<section class="degrau" id="d0">
+  <div class="dhead"><span class="dnum">0</span><div class="dtitle"><span class="dstage">Degrau 0</span><h2>A régua do normal: a anatomia da virilha</h2></div></div>
+  <p class="lede">Quase toda questão de hérnia é uma questão de anatomia disfarçada. Se este degrau estiver firme, os outros nove são consequência.</p>
+  <div class="prose">
+    <p>A parede abdominal anterior é uma pilha de camadas, e a banca gosta de pedir a ordem em que o bisturi as encontra numa incisão inguinal: pele, tecido subcutâneo com a fáscia de Camper (gordurosa, superficial) e a fáscia de Scarpa (membranosa, profunda), a aponeurose do músculo oblíquo externo, o músculo oblíquo interno, o músculo transverso do abdome, a fáscia transversalis, a gordura pré-peritoneal e, por fim, o peritônio. Guarde a sequência porque ela é o próprio mapa do canal inguinal: cada parede do canal é uma dessas camadas vista de outro ângulo.</p>
+    <p>Os três músculos largos têm cada um uma assinatura que a prova cobra. O <strong>oblíquo externo</strong> tem fibras no sentido de "mãos no bolso" e sua aponeurose forma a parede anterior do canal inguinal, a bainha anterior do reto e, na borda inferior enrolada sobre si mesma, o <strong>ligamento inguinal</strong> (de Poupart), que vai da espinha ilíaca anterossuperior ao tubérculo púbico. O <strong>oblíquo interno</strong> tem fibras perpendiculares às do externo, dá origem ao músculo cremaster e, junto com o transverso, forma o <strong>tendão conjunto</strong>. O <strong>transverso do abdome</strong> tem fibras horizontais; sua fáscia (a transversalis) é o assoalho do canal inguinal e o local de fraqueza que origina a hérnia direta; sua aponeurose com a fáscia formam o <strong>trato iliopúbico</strong>, referência central do reparo laparoscópico.</p>
+
+    <h4 class="sub">O canal inguinal</h4>
+    <p>É um túnel oblíquo, paralelo ao ligamento inguinal, que desce de lateral para medial. Entra-se por ele pelo <strong>anel inguinal profundo</strong> (um orifício na fáscia transversalis, no ponto médio do ligamento inguinal, <em>lateral</em> aos vasos epigástricos inferiores) e sai-se pelo <strong>anel inguinal superficial</strong> (um orifício na aponeurose do oblíquo externo, logo acima e lateral ao tubérculo púbico). No homem o conteúdo principal é o cordão espermático; na mulher, o ligamento redondo do útero.</p>
+  </div>
+  <div class="crit">
+    <div class="row"><span class="k">Parede anterior</span><span class="v">Aponeurose do oblíquo externo</span></div>
+    <div class="row"><span class="k">Parede posterior</span><span class="v">Fáscia transversalis e músculo transverso do abdome (o assoalho)</span></div>
+    <div class="row"><span class="k">Parede superior (teto)</span><span class="v">Músculo oblíquo interno (fibras arqueadas do interno e do transverso)</span></div>
+    <div class="row"><span class="k">Parede lateral</span><span class="v">Músculo oblíquo interno</span></div>
+    <div class="row"><span class="k">Parede inferior (piso)</span><span class="v">Ligamento inguinal</span></div>
+  </div>
+  <div class="prose">
+    <h4 class="sub">O cordão espermático</h4>
+    <p>Pergunta frequente: o que viaja dentro do cordão. Músculo cremaster; artéria testicular e o plexo venoso pampiniforme; artéria cremastérica (ramo da epigástrica inferior) e artéria do ducto deferente (ramo da vesical superior); o próprio ducto deferente; o ramo genital do nervo genitofemoral; o plexo simpático testicular; quatro a oito vasos linfáticos; e o resquício do processo vaginal. O <strong>nervo ilioinguinal</strong> corre <em>fora</em> do cordão, dentro do canal, e sai pelo anel superficial -- mas algumas bancas o listam como constituinte, então leia as alternativas antes de brigar com a questão.</p>
+
+    <h4 class="sub">O triângulo de Hesselbach e a referência que separa tudo</h4>
+    <p>Três limites: medial, a borda lateral da bainha do reto abdominal; superolateral, os <strong>vasos epigástricos inferiores</strong>; inferior, o ligamento inguinal. É dentro desse triângulo que a fáscia transversalis cede e nasce a hérnia <strong>direta</strong>. Os vasos epigástricos inferiores são a régua intraoperatória de todo o tema: hérnia que sai <strong>lateral</strong> a eles, pelo anel profundo, é <strong>indireta</strong>; hérnia que sai <strong>medial</strong> a eles, pelo triângulo, é <strong>direta</strong> ("meDIRETA").</p>
+
+    <h4 class="sub">O canal femoral</h4>
+    <p>Abaixo do ligamento inguinal a anatomia troca de lógica: agora as paredes são ligamentos e uma veia, estruturas que não cedem. O canal femoral é o compartimento mais medial da bainha femoral, vazio a não ser pelo linfonodo de Cloquet, e seus limites são: anterior, o ligamento inguinal (e o trato iliopúbico); posterior, o <strong>ligamento de Cooper</strong> (pectíneo, sobre o pécten do púbis); lateral, a <strong>veia femoral</strong>; medial, o <strong>ligamento lacunar</strong> (de Gimbernat), que é a junção do trato iliopúbico com o ligamento de Cooper. De lateral para medial, a bainha femoral guarda artéria, veia e o canal -- o nervo femoral fica fora dela, lateral à artéria.</p>
+
+    <h4 class="sub">O orifício miopectíneo de Fruchaud</h4>
+    <p>Fruchaud (1956) enxergou o que une inguinal e femoral: uma única área de fraqueza, limitada medialmente pelo reto abdominal, lateralmente pelo iliopsoas, superiormente pelo arco do transverso e do oblíquo interno e inferiormente pelo ligamento de Cooper. O ligamento inguinal a atravessa e a divide num andar superior (onde nascem a direta e a indireta, separadas pelos epigástricos) e num andar inferior (o femoral). É por isso que a hernioplastia laparoscópica funciona com uma única tela: ela recobre o orifício inteiro, os três defeitos possíveis de uma vez.</p>
+  </div>
+
+  <figure class="map">
+    <svg viewBox="0 0 640 330" role="img" aria-label="Esquema da região inguinal direita vista de frente: ligamento inguinal, vasos epigástricos inferiores, triângulo de Hesselbach, anel inguinal profundo e canal femoral">
+      <text class="axis" x="28" y="26">LATERAL</text>
+      <text class="axis" x="556" y="26">MEDIAL</text>
+      <!-- bainha do reto (borda lateral) -->
+      <line class="rect" x1="440" y1="38" x2="440" y2="204"/>
+      <text class="lab s" x="450" y="60">borda lateral da</text>
+      <text class="lab s" x="450" y="76">bainha do reto</text>
+      <!-- triangulo de Hesselbach -->
+      <polygon class="hess" points="440,52 440,204 305,162"/>
+      <text class="lab acc" x="372" y="150">Hesselbach</text>
+      <text class="lab acc" x="380" y="168">DIRETA</text>
+      <!-- vasos epigastricos inferiores -->
+      <line class="ves" x1="305" y1="162" x2="440" y2="52"/>
+      <text class="lab warn" x="300" y="98">vasos epigástricos</text>
+      <text class="lab warn" x="300" y="114">inferiores</text>
+      <!-- anel inguinal profundo -->
+      <ellipse class="ring" cx="272" cy="146" rx="20" ry="13"/>
+      <text class="lab amb" x="122" y="124">anel inguinal profundo</text>
+      <text class="lab amb" x="178" y="141">INDIRETA</text>
+      <!-- ligamento inguinal -->
+      <line class="lig" x1="70" y1="90" x2="540" y2="235"/>
+      <text class="lab" x="84" y="80">EIAS</text>
+      <text class="lab" x="506" y="258">tubérculo</text>
+      <text class="lab" x="506" y="274">púbico</text>
+      <text class="lab s" x="150" y="182">ligamento inguinal (Poupart)</text>
+      <!-- vasos femorais -->
+      <ellipse class="vein" cx="304" cy="222" rx="13" ry="13"/>
+      <text class="lab s" x="266" y="252">artéria</text>
+      <ellipse class="vein" cx="336" cy="228" rx="13" ry="13"/>
+      <text class="lab s" x="320" y="258">veia</text>
+      <!-- canal femoral -->
+      <rect class="fem" x="358" y="206" width="40" height="40"/>
+      <text class="lab warn" x="404" y="222">canal femoral</text>
+      <text class="lab warn" x="404" y="240">FEMORAL</text>
+      <!-- Cooper -->
+      <line class="rect" x1="290" y1="276" x2="520" y2="286"/>
+      <text class="lab s" x="290" y="304">ligamento de Cooper (posterior ao canal femoral)</text>
+      <text class="lab s" x="404" y="196">lacunar (medial)</text>
+    </svg>
+    <figcaption>Virilha direita, vista anterior. Acima do ligamento inguinal, os vasos epigástricos inferiores separam o anel profundo (indireta, lateral) do triângulo de Hesselbach (direta, medial). Abaixo do ligamento, o canal femoral fica medial à veia femoral, encaixado entre ligamentos que não cedem.</figcaption>
+  </figure>
+
+  <div class="prose">
+    <h4 class="sub">A inervação: quatro nervos, todos do plexo lombar</h4>
+    <p>O <strong>ilioinguinal</strong> inerva a coxa proximal e medial, o monte do púbis e os grandes lábios na mulher, a raiz do pênis e a parte superior do escroto no homem. O <strong>ílio-hipogástrico</strong> cobre a pele da região hipogástrica e da região glútea. O <strong>ramo genital do genitofemoral</strong> inerva a pele da bolsa escrotal (e move o cremaster) e, na mulher, monte do púbis e grandes lábios. O <strong>cutâneo femoral lateral</strong> cobre a face anterolateral da coxa. Esses territórios voltam no degrau 7, porque a dor crônica pós-operatória é a dor de um deles.</p>
+  </div>
+  <details class="ref">
+    <summary>Referência densa: os dois triângulos do reparo laparoscópico (fora do PDF)</summary>
+    <div class="refbody">
+      <div class="row"><span class="k">Triângulo da desgraça (doom)</span><span class="v">Entre o ducto deferente (medial) e os vasos gonadais (lateral), com ápice no anel profundo: contém os vasos ilíacos externos. Nunca grampear ali.</span></div>
+      <div class="row"><span class="k">Triângulo da dor</span><span class="v">Lateral aos vasos gonadais e abaixo do trato iliopúbico: contém o cutâneo femoral lateral e o ramo femoral do genitofemoral. Grampo aqui é neuralgia.</span></div>
+      <div class="row"><span class="k">Regra prática</span><span class="v">Abaixo do trato iliopúbico não se fixa tela; acima, no ligamento de Cooper e na parede anterior, sim.</span></div>
+    </div>
+  </details>
+</section>
+
+<section class="degrau" id="d1">
+  <div class="dhead"><span class="dnum">1</span><div class="dtitle"><span class="dstage">Degrau 1</span><h2>O vocabulário da hérnia</h2></div></div>
+  <p class="lede">Cinco palavras que a banca usa como se fossem sinônimos -- e que decidem se a resposta é ambulatório ou centro cirúrgico agora.</p>
+  <div class="prose">
+    <p>Hérnia é a protrusão anormal de um órgão ou tecido através de um defeito nas paredes que o contêm. A definição carrega três peças: um <strong>anel</strong> (o defeito), um <strong>saco</strong> (o peritônio que se insinua por ele) e um <strong>conteúdo</strong> (gordura, alça, bexiga, apêndice). A região inguinofemoral é de longe o local mais comum da parede abdominal.</p>
+    <p>O que muda a conduta é o comportamento do conteúdo. A hérnia é <strong>redutível</strong> quando o conteúdo volta para a cavidade, espontaneamente ou com a mão. É <strong>irredutível</strong> quando não volta -- e aqui a palavra se bifurca. <strong>Encarcerada</strong> é a irredutível cujo conteúdo ainda tem suprimento sanguíneo íntegro; é urgência, mas não isquemia. <strong>Estrangulada</strong> é a irredutível com comprometimento vascular e sofrimento do conteúdo: dor intensa e contínua, hiperemia e edema da pele sobre a hérnia, sinais sistêmicos, e, quando o conteúdo é alça, obstrução e depois peritonite. A diferença entre as duas não é o tamanho nem o tempo: é o vaso.</p>
+  </div>
+  <div class="vs">
+    <div class="b"><h5>Encarcerada</h5><p>Irredutível, sem sofrimento vascular. Dor local, abaulamento fixo, sem sinais inflamatórios de pele. Pode permitir uma tentativa de redução.</p></div>
+    <div class="a"><h5>Estrangulada</h5><p>Irredutível, com isquemia do conteúdo. Dor desproporcional, pele hiperemiada, febre, leucocitose, vômitos, parada de eliminações. Cirurgia de emergência, sem tentar reduzir.</p></div>
+  </div>
+  <div class="prose">
+    <p>Dois termos completam o vocabulário e voltam nas hérnias ventrais. <strong>Perda de domicílio</strong> é a hérnia cujo saco já contém mais de 25% do volume da cavidade abdominal: o conteúdo "mora" fora, e devolvê-lo à cavidade sem preparo produz hipertensão intra-abdominal. E <strong>hérnia interparietal</strong> é a que se insinua entre as camadas da parede sem chegar ao subcutâneo -- por isso não faz abaulamento visível e engana o exame físico (a hérnia de Spiegel, no degrau 9, é o exemplo).</p>
+  </div>
+</section>
+
+<section class="degrau" id="d2">
+  <div class="dhead"><span class="dnum">2</span><div class="dtitle"><span class="dstage">Degrau 2</span><h2>Por que cada hérnia nasce onde nasce</h2></div></div>
+  <p class="lede">Frequência não se decora: ela é consequência do mecanismo. Quem entende a via entende a epidemiologia inteira -- inclusive a pegadinha da mulher.</p>
+  <div class="prose">
+    <p>Durante a vida fetal o testículo desce do retroperitônio ao escroto empurrando à frente um dedo de peritônio, o <strong>conduto peritoneovaginal</strong> (processo vaginal). Depois da descida ele deveria obliterar; quando não oblitera, fica pronto um saco herniário que entra pelo anel profundo, lateral aos vasos epigástricos, e viaja <em>dentro</em> do cordão até o escroto. Essa é a hérnia inguinal <strong>indireta</strong>, e é por isso que ela é considerada <strong>congênita mesmo quando aparece no adulto</strong>: a via já existia; a fraqueza muscular e o esforço apenas a usaram. Como a via é um trajeto anatômico pré-formado, a indireta é a hérnia <strong>mais comum em ambos os sexos e em todas as idades</strong>, mais comum à direita (o testículo direito desce e oblitera por último), e a única possível na criança.</p>
+    <p>A hérnia <strong>direta</strong> não tem via pronta. Ela depende de degeneração adquirida da fáscia transversalis no triângulo de Hesselbach, medial aos epigástricos, e por isso é doença de homem mais velho, com anos de aumento de pressão intra-abdominal (prostatismo, constipação, tosse crônica, tabagismo) ou de colágeno ruim. O saco sai por fora do cordão, raramente chega ao escroto e raramente encarcera, porque o colo é largo.</p>
+    <p>A hérnia <strong>femoral</strong> também é adquirida, por fraqueza do mesmo assoalho posterior, mas o conteúdo escapa pelo andar de baixo do orifício miopectíneo: o canal femoral. A pelve feminina, mais larga, alarga esse canal -- daí a proporção de <strong>10 mulheres para 1 homem</strong>. E aqui está o mecanismo que explica a estatística mais cobrada do tema: o canal femoral é cercado por ligamento inguinal, ligamento de Cooper, ligamento lacunar e a veia femoral, estruturas rígidas e inextensíveis. Um anel que não cede aperta o que passa por ele: <strong>15 a 20%</strong> das hérnias femorais encarceram ou estrangulam, contra <strong>1 a 3%</strong> das inguinais. Como a femoral é rara, porém, quem estrangula mais em números absolutos continua sendo a indireta.</p>
+  </div>
+  <div class="trap">
+    <div class="albl">Armadilha (UERJ 2023, Q33)</div>
+    <p>"A femoral é mais frequente na mulher" é verdade <em>proporcional</em>: entre as femorais, a maioria é de mulheres. Mas a pergunta "qual a hérnia inguinocrural mais comum na mulher?" tem a mesma resposta que no homem: <strong>inguinal indireta</strong>. A via pré-formada vence a pelve larga em todos os sexos.</p>
+  </div>
+  <div class="prose">
+    <h4 class="sub">Fatores de risco que a prova nomeia</h4>
+    <p>Idade avançada, sexo masculino, história familiar, tosse crônica e DPOC, prostatismo e constipação (esforço repetido), tabagismo e doenças do colágeno (Ehlers-Danlos, Marfan), ascite e diálise peritoneal (pressão contínua), e apendicectomia prévia (hérnia direta à direita, por lesão do ílio-hipogástrico e denervação do assoalho). Um dado contraintuitivo que aparece como pegadinha: na hérnia <em>inguinal</em>, a obesidade é fator <strong>protetor</strong> no maior estudo populacional americano (Ruhl e Everhart, 2007, citado pelo próprio EMED) -- a gordura pré-peritoneal tampona o anel. Na hérnia incisional e na umbilical do adulto, ao contrário, a obesidade é um dos principais fatores de risco.</p>
+  </div>
+</section>
+
+<section class="degrau" id="d3">
+  <div class="dhead"><span class="dnum">3</span><div class="dtitle"><span class="dstage">Degrau 3</span><h2>Diagnóstico e diferenciais</h2></div></div>
+  <p class="lede">O diagnóstico é clínico. A imagem só entra quando a mão não decide -- e a banca adora perguntar qual imagem.</p>
+  <div class="prose">
+    <p>A queixa é abaulamento na virilha que aparece ou piora ao esforço e some ao deitar. O exame é feito com a região desnuda, primeiro em decúbito e depois <strong>em pé</strong>, a posição preferida porque a pressão intra-abdominal e a gravidade exteriorizam a hérnia; pede-se tosse ou Valsalva. Na <strong>manobra de Landivar</strong>, o indicador invagina a pele do escroto até ocluir o anel inguinal superficial e o paciente faz esforço: impulso na <strong>ponta</strong> do dedo sugere indireta (o conteúdo desce pelo canal, de lateral); impulso na <strong>polpa</strong> sugere direta (o assoalho empurra de trás para a frente). É o que o EMED cobra, e vale saber que a acurácia do exame para separar direta de indireta é modesta -- a distinção definitiva é a posição do saco em relação aos epigástricos, no intraoperatório.</p>
+    <p>A femoral se apresenta como massa <strong>abaixo do ligamento inguinal</strong>, abaixo e lateral ao tubérculo púbico (a inguinal fica acima e medial a ele), frequentemente pequena, em mulher idosa, e com frequência a primeira manifestação é o encarceramento.</p>
+  </div>
+  <div class="aside">
+    <div class="albl">Quando pedir imagem, e qual</div>
+    <p>Somente na dúvida diagnóstica. O exame de escolha é a <strong>ultrassonografia de parede abdominal</strong>, dinâmica, com Valsalva. A tomografia entra para hérnias ventrais complexas e planejamento (largura maior que 10 cm, perda de domicílio), para a hérnia obturatória e para o abdome agudo em que a hérnia é suspeita e não palpável. A ressonância é o exame para a hérnia oculta do atleta (pubalgia).</p>
+  </div>
+  <div class="prose">
+    <h4 class="sub">O que mais faz volume na virilha</h4>
+    <p>Um abaulamento inguinal nem sempre é hérnia, e o bloco de 25 questões vai testar isso. Acima do ligamento: <strong>lipoma do cordão</strong> (não reduz, não muda com Valsalva), <strong>hidrocele do cordão ou testicular</strong> (transiluminação positiva, limite superior palpável), <strong>varicocele</strong> ("saco de vermes", aumenta em pé, esvazia deitada), <strong>testículo não descido</strong> (escroto vazio do mesmo lado) e linfadenopatia inguinal. Abaixo do ligamento: <strong>linfonodo femoral</strong>, <strong>varize da safena</strong> (frêmito à tosse, desaparece ao deitar, some com a compressão da veia), <strong>aneurisma ou pseudoaneurisma femoral</strong> (pulsátil, sopro, história de punção) e <strong>abscesso do psoas</strong> (dor à extensão do quadril, febre, tuberculose vertebral). A hérnia é o único desses volumes que tem impulso à tosse <em>e</em> reduz.</p>
+  </div>
+</section>
+
+<section class="degrau" id="d4">
+  <div class="dhead"><span class="dnum">4</span><div class="dtitle"><span class="dstage">Degrau 4</span><h2>Classificação de Nyhus</h2></div></div>
+  <p class="lede">Um dos assuntos mais cobrados do tema. Ela parece uma tabela para decorar; na verdade são duas perguntas: o anel profundo está dilatado? A parede posterior está íntegra?</p>
+  <div class="prose">
+    <p>Nyhus organiza as hérnias da virilha pela integridade das duas estruturas que você já conhece do degrau 0. O <strong>tipo I</strong> é a indireta com anel profundo normal (até 1 cm): a hérnia pediátrica, em que só existe o conduto patente. O <strong>tipo II</strong> é a indireta com anel profundo dilatado, mas parede posterior intacta e vasos epigástricos no lugar. O <strong>tipo III</strong> reúne todo defeito da parede posterior e se divide em III A (a direta), III B (a indireta grande, cujo anel dilatado invadiu medialmente ou destruiu a fáscia transversalis de Hesselbach -- a inguinoescrotal, a "em pantalona") e III C (a femoral). O <strong>tipo IV</strong> é a recidivada, com as mesmas letras na mesma ordem: A direta, B indireta, C femoral, D combinada.</p>
+  </div>
+  <div class="crit">
+    <div class="row"><span class="k">Tipo I</span><span class="v">Indireta, anel profundo normal (até 1 cm). <em>A hérnia da criança.</em></span></div>
+    <div class="row"><span class="k">Tipo II</span><span class="v">Indireta, anel profundo dilatado, parede posterior <strong>intacta</strong>, epigástricos não deslocados.</span></div>
+    <div class="row"><span class="k">Tipo III A</span><span class="v">Direta. <em>Sempre III A.</em></span></div>
+    <div class="row"><span class="k">Tipo III B</span><span class="v">Indireta com anel dilatado que <strong>destrói</strong> a parede posterior (inguinoescrotal, pantalona).</span></div>
+    <div class="row"><span class="k">Tipo III C</span><span class="v">Femoral. <em>Sempre III C.</em></span></div>
+    <div class="row"><span class="k">Tipo IV</span><span class="v">Recidivada: A direta, B indireta, C femoral, D combinada.</span></div>
+  </div>
+  <div class="trap">
+    <div class="albl">Armadilha</div>
+    <p>II e III B são as duas indiretas com anel dilatado. O enunciado decide pela parede posterior: "preservada", "intacta" é <strong>II</strong>; "destruída", "fraqueza do assoalho", "invade o triângulo de Hesselbach" é <strong>III B</strong>. E se o texto diz que a herniação ocorre pelo triângulo de Hesselbach com anel profundo preservado, é direta: III A.</p>
+  </div>
+</section>
+
+<section class="degrau" id="d5">
+  <div class="dhead"><span class="dnum">5</span><div class="dtitle"><span class="dstage">Degrau 5</span><h2>Operar, esperar ou correr</h2></div></div>
+  <p class="lede">A decisão de tratar vem antes da escolha da técnica. Três cenários, três velocidades.</p>
+  <div class="prose">
+    <h4 class="sub">Esperar: a espera vigilante</h4>
+    <p>Toda hérnia sintomática tem indicação cirúrgica, porque hérnia não regride e a operação eletiva é segura. Mas o homem <strong>assintomático ou oligossintomático</strong>, ou o paciente com <strong>risco cirúrgico elevado</strong>, pode ser observado: o ensaio de Fitzgibbons (JAMA, 2006), citado pelo EMED, mostrou que a espera vigilante é segura, com risco de encarceramento agudo por volta de 2 por 1.000 pacientes-ano -- ainda que a maioria acabe operada em dez anos por dor. A espera vale para a inguinal do homem. Ela <strong>não</strong> vale para a hérnia femoral (o anel rígido do degrau 2 estrangula demais) nem, pelas diretrizes internacionais (HerniaSurge, 2018), para a mulher com hérnia da virilha, justamente porque uma fração relevante das "inguinais" da mulher é femoral ao exame intraoperatório.</p>
+
+    <h4 class="sub">Operar: a eletiva</h4>
+    <p>É o caminho da hérnia redutível sintomática: reparo eletivo, com tela, pela via que o degrau 6 vai escolher. Sem pressa, mas sem esperar a complicação.</p>
+
+    <h4 class="sub">Correr: a encarcerada e a estrangulada</h4>
+    <p>Hérnia irredutível de início recente, sem sinais de sofrimento do conteúdo, admite <strong>uma</strong> tentativa cuidadosa de redução manual (taxis): analgesia, Trendelenburg, pressão suave e constante no colo do saco. Se reduz, o paciente é observado e operado eletivamente em dias, porque o que encarcerou uma vez encarcera de novo. Se não reduz, é cirurgia. Se há qualquer sinal de estrangulamento -- dor desproporcional, pele hiperemiada ou endurecida, febre, leucocitose, vômitos, sinais de obstrução ou de peritonite -- <strong>não se tenta reduzir</strong>: a manobra pode devolver à cavidade uma alça necrosada ("redução em massa") e transformar um problema local num abdome agudo perfurativo silencioso. Vai-se direto ao centro cirúrgico, e a avaliação da viabilidade da alça acontece com o saco aberto.</p>
+  </div>
+  <div class="star">
+    <div class="albl">A pergunta que decide o campo</div>
+    <p>Na emergência, a viabilidade da alça decide se o campo é limpo ou contaminado -- e isso decide, no degrau 6, se a tela sintética entra ou não.</p>
+  </div>
+</section>
+
+<section class="degrau" id="d6">
+  <div class="dhead"><span class="dnum">6</span><div class="dtitle"><span class="dstage">Degrau 6</span><h2>As técnicas e quando cada uma</h2></div></div>
+  <p class="lede">Há duas famílias: com tela e sem tensão, ou sem tela e com tensão. A prova cobra o epônimo, o que ele sutura em quê, e a situação em que ele é a resposta.</p>
+  <div class="prose">
+    <p>A ideia que mudou o tema foi a de Lichtenstein: em vez de aproximar tecidos que não querem ficar juntos (tensão, isquemia, recidiva), interpor uma <strong>tela</strong> de polipropileno que o organismo incorpora com fibrose. A recidiva despencou, e o reparo com tela virou o padrão. As técnicas sem tela sobrevivem para dois cenários: quando a tela não pode entrar (campo contaminado) e quando o serviço domina uma técnica tecidual de excelência (Shouldice).</p>
+  </div>
+  <div class="crit">
+    <div class="row"><span class="k">Lichtenstein</span><span class="v">Aberta, com tela, sem tensão. <strong>Padrão-ouro</strong> da hérnia inguinal primária unilateral. A tela é fixada ao tubérculo púbico (com sobreposição sobre ele) e ao ligamento inguinal por baixo, ao tendão conjunto por cima; a fenda da tela recria o anel profundo ao redor do cordão. Baixa recidiva, anestesia local possível.</span></div>
+    <div class="row"><span class="k">Stoppa-Rives</span><span class="v">Tela pré-peritoneal gigante, por via aberta posterior, cobrindo o orifício miopectíneo dos dois lados. Indicada nas <strong>bilaterais</strong>, recidivadas e complexas.</span></div>
+    <div class="row"><span class="k">TAPP</span><span class="v">Laparoscópica transabdominal pré-peritoneal: entra na cavidade, abre o peritônio, coloca a tela sobre o orifício miopectíneo e fecha o peritônio. Menos dor, retorno mais rápido; exige anestesia geral.</span></div>
+    <div class="row"><span class="k">TEP</span><span class="v">Laparoscópica totalmente extraperitoneal: mesma tela, sem entrar na cavidade. A tela pode dispensar fixação; exige instrumental próprio e custa mais. Mesmas vantagens da TAPP.</span></div>
+    <div class="row"><span class="k">Mesh-plug femoral</span><span class="v">Plug de polipropileno que oblitera o canal femoral. A técnica mais indicada para a <strong>femoral não complicada</strong> por via aberta.</span></div>
+    <div class="row"><span class="k">Shouldice</span><span class="v">Sem tela, com tensão: imbricamento de múltiplas camadas (quatro linhas de sutura contínua) reforçando a parede posterior. Em centros especializados, recidiva baixa -- a melhor técnica tecidual.</span></div>
+    <div class="row"><span class="k">Bassini</span><span class="v">Sutura do tendão conjunto ao ligamento inguinal. Historicamente a primeira; <strong>alta recidiva</strong>.</span></div>
+    <div class="row"><span class="k">McVay</span><span class="v">Sutura do tendão conjunto ao <strong>ligamento de Cooper</strong>, com incisão relaxadora na bainha do reto. A <strong>única técnica aberta sem tela que corrige a hérnia femoral</strong>, porque fecha o canal femoral por cima.</span></div>
+    <div class="row"><span class="k">Trato iliopúbico</span><span class="v">Aproximação do arco aponeurótico do transverso ao trato iliopúbico com pontos separados (Condon/Nyhus).</span></div>
+    <div class="row"><span class="k">Zimmerman</span><span class="v">Sutura da fáscia transversalis ao ligamento inguinal.</span></div>
+    <div class="row"><span class="k">Andrews I / II</span><span class="v">Três linhas de sutura em camadas. Na I, a primeira linha leva fáscia transversalis, oblíquo interno e transverso ao ligamento inguinal; na II, só a fáscia transversalis.</span></div>
+  </div>
+  <div class="prose">
+    <h4 class="sub">A escolha, cenário por cenário</h4>
+    <p>Primária unilateral: Lichtenstein (ou laparoscopia, se o serviço domina). <strong>Bilateral</strong>: laparoscopia (TAPP/TEP) ou Stoppa, uma tela para os dois lados. <strong>Recidivada</strong>: mudar de plano -- se o primeiro reparo foi anterior aberto, a recidiva vai por via posterior (laparoscópica ou pré-peritoneal), e vice-versa, porque trabalhar em plano virgem poupa nervos e vasos. <strong>Femoral</strong>: plug, tela pré-peritoneal ou laparoscopia; McVay quando a tela não pode entrar. Lichtenstein <em>não</em> corrige a femoral, porque a tela termina no ligamento inguinal e o canal femoral fica abaixo dele. <strong>Mulher</strong>: as diretrizes preferem a via posterior (laparoscópica), que cobre o andar femoral que o exame pode não ter visto. A laparoscopia tem contraindicações relativas: hérnia inguinoescrotal volumosa, cirurgia pélvica ou pré-peritoneal prévia e incapacidade de tolerar anestesia geral.</p>
+  </div>
+  <div class="trap">
+    <div class="albl">Armadilha (UERJ 2023, Q24)</div>
+    <p>A tela é um corpo estranho permanente e avascular. Em campo limpo, o fibroblasto a incorpora. Em <strong>campo contaminado</strong> -- alça necrosada, perfuração, apêndice inflamado numa hérnia de Amyand, secreção purulenta -- a superfície porosa vira nicho de biofilme onde nem antibiótico nem fagócito chegam, e a infecção da tela é crônica até que ela seja retirada. Ali recua-se para reparo tecidual (Shouldice, Bassini, McVay) ou prótese biológica. As situações "difíceis" -- bilateral, recidivada, inguinoescrotal grande -- são o oposto: <strong>indicações reforçadas de tela</strong>. Difícil não é contraindicado.</p>
+  </div>
+</section>
+
+<section class="degrau" id="d7">
+  <div class="dhead"><span class="dnum">7</span><div class="dtitle"><span class="dstage">Degrau 7</span><h2>Complicações: recidiva, dor e testículo</h2></div></div>
+  <p class="lede">Três famílias, e cada uma tem a sua pergunta favorita de prova.</p>
+  <div class="prose">
+    <h4 class="sub">Recidiva</h4>
+    <p>Com as técnicas sem tensão a recidiva caiu para poucos por cento, e o que a prova cobra é <em>onde</em> ela acontece na Lichtenstein: primeiro <strong>junto ao tubérculo púbico</strong> (a tela não sobrepôs o osso o suficiente), depois <strong>junto ao anel profundo</strong> (a fenda ao redor do cordão ficou larga). As técnicas laparoscópicas têm recidiva <em>maior</em> que a Lichtenstein na média dos serviços, e o motivo é a curva de aprendizado mais longa, não a técnica em si. Diante da recidiva, a regra é a do degrau 6: operar pelo plano ainda virgem.</p>
+
+    <h4 class="sub">Dor crônica: a inguinodinia</h4>
+    <p>Dor que persiste por mais de <strong>3 meses</strong> após o reparo. Mistura componente nociceptivo (tela, tensão, periostite do tubérculo púbico) e neuropático, e é difícil de tratar. A <strong>neuralgia pós-herniorrafia</strong> tem uma tríade que fecha o diagnóstico: dor em queimação ou facada no território de um nervo específico da virilha; alteração de sensibilidade nesse trajeto; e alívio com a infiltração anestésica do nervo. Os nervos em risco dependem da via: no reparo <strong>aberto</strong>, ilioinguinal, ílio-hipogástrico e ramo genital do genitofemoral; no <strong>laparoscópico</strong>, cutâneo femoral lateral e genitofemoral (ramo femoral, no triângulo da dor). O tratamento é escalonado: analgesia e bloqueios, depois neurectomia ou retirada da tela em casos refratários.</p>
+
+    <h4 class="sub">Lesão testicular</h4>
+    <p>A <strong>orquite isquêmica</strong> é lesão <strong>venosa</strong>: trombose do plexo pampiniforme por dissecção extensa do cordão, não lesão da artéria testicular. Aparece dentro de uma semana como testículo aumentado, endurecido e doloroso do lado operado, pode evoluir para atrofia, e o tratamento é <strong>analgesia e anti-inflamatório</strong> -- a orquiectomia é rara. O <strong>hematoma de bolsa escrotal</strong>, também após grande dissecção do cordão, deixa escroto e base do pênis arroxeados; tratamento clínico, drenagem só em exceção. Seroma, retenção urinária, infecção de ferida, lesão do deferente e lesão de bexiga (na hérnia por deslizamento) completam a lista.</p>
+  </div>
+</section>
+
+<section class="degrau" id="d8">
+  <div class="dhead"><span class="dnum">8</span><div class="dtitle"><span class="dstage">Degrau 8</span><h2>Hérnias ventrais</h2></div></div>
+  <p class="lede">Incisional, epigástrica e umbilical -- nessa ordem de peso na prova (61%, 22% e 17% das questões de ventrais no levantamento do EMED). E os dois pacientes especiais: o cirrótico e a criança.</p>
+  <div class="prose">
+    <h4 class="sub">Incisional</h4>
+    <p>É a hérnia que a cirurgia criou. O principal fator causal é a <strong>infecção de sítio cirúrgico</strong>: a ferida infectada cicatriza com colágeno ruim e a aponeurose cede. Do lado do paciente, o principal fator é a <strong>obesidade</strong>. A lista completa que a banca recombina: tabagismo, DPOC, idade acima de 70 anos, sexo feminino, diabetes tipo 2, ascite, anemia, desnutrição, corticoide, cirurgia de urgência, fechamento sob tensão, técnica de sutura inadequada, fios rapidamente absorvíveis e incisões longas (acima de 18 cm). Na prevenção, a técnica de fechamento importa mais que o fio: pontos pequenos (<em>small bites</em>, 5 mm de borda e 5 mm de intervalo) com relação fio/ferida de 4:1 reduzem a incidência, e a tela profilática é opção no paciente de alto risco.</p>
+    <p>A tomografia é o exame de planejamento quando a hérnia é volumosa: largura acima de <strong>10 cm</strong> ou <strong>perda de domicílio</strong> (saco com mais de 25% do volume da cavidade). O tratamento é cirúrgico, aberto ou laparoscópico -- nas grandes, ainda aberto. A regra da tela é simples: defeito <strong>até 2 a 3 cm</strong> aceita reparo primário; <strong>acima de 3 cm</strong>, tela. A tela pode ficar em três posições: <strong>onlay</strong> (sobre a aponeurose anterior), <strong>sublay</strong> (por trás dela: retromuscular de Rives-Stoppa, pré-peritoneal ou intraperitoneal) e <strong>inlay</strong> (costurada às bordas do defeito, sem sobreposição -- a pior, com maior recidiva). A retromuscular é a preferida.</p>
+    <p>Duas manobras para a hérnia gigante caem em prova. A <strong>separação de componentes</strong> (Ramirez) secciona a aponeurose do oblíquo externo lateralmente à linha semilunar e libera a bainha posterior do reto, ganhando cerca de 10 cm para aproximar as bainhas na linha média; a variante posterior (TAR, liberação do transverso) faz o mesmo por trás. O <strong>pneumoperitônio progressivo pré-operatório</strong> (Goñi Moreno) insufla volumes crescentes de ar na cavidade durante 1 a 3 semanas para relaxar a parede e reacomodar o conteúdo com perda de domicílio antes do fechamento. A toxina botulínica na musculatura lateral é a alternativa moderna com o mesmo objetivo.</p>
+
+    <h4 class="sub">Epigástrica</h4>
+    <p>Fica na linha alba entre o xifoide e o umbigo. Incidência de 3 a 5%, mais comum no <strong>homem (3:1)</strong>, múltipla em 20% dos casos, na linha média em 80%, diagnosticada entre 20 e 50 anos. O mecanismo é uma fraqueza congênita da linha alba, maior em quem tem <strong>decussação aponeurótica única</strong> (as fibras cruzam uma vez, e não três). O orifício é pequeno, então o que encarcera é a <strong>gordura pré-peritoneal</strong>, produzindo dor desproporcional ao tamanho; alça é raro. Pelo mesmo motivo a maioria dispensa tela.</p>
+
+    <h4 class="sub">Umbilical</h4>
+    <p>No adulto é <strong>adquirida</strong>: pressão intra-abdominal (gestações, obesidade, ascite) sobre a cicatriz umbilical, com a mesma predisposição da decussação única, e mais comum no homem. Sintomática, opera-se; defeito <strong>acima de 3 cm</strong>, com tela. Na <strong>criança</strong> a lógica inverte: a hérnia umbilical é congênita, pelo fechamento incompleto do anel, e a imensa maioria fecha sozinha até os 4 a 5 anos. Opera-se se persistir após essa idade, se o anel for maior que 1,5 a 2 cm, ou na raríssima complicação. A <strong>diástase dos retos</strong> -- abaulamento mediano que aparece à contração, indolor, típico da multípara -- não é hérnia: não há anel, e o tratamento é fisioterapia ou estética.</p>
+  </div>
+  <div class="aside">
+    <div class="albl">O cirrótico com ascite</div>
+    <p>A ascite empurra o umbigo para fora, e a hérnia umbilical do cirrótico é uma emergência esperando para acontecer: a pele afina, ulcera e o saco rompe, drenando ascite e infectando. A conduta é <strong>controlar a ascite primeiro</strong> (diuréticos, paracenteses, TIPS quando indicado) e operar <strong>eletivamente</strong> com a ascite compensada, porque a cirurgia de urgência nesse paciente tem morbimortalidade alta. Ulceração da pele, ruptura ou encarceramento tiram a escolha: opera-se na urgência, e o pós-operatório exige controle rigoroso da ascite para a sutura não ceder.</p>
+  </div>
+  <div class="star">
+    <div class="albl">A gestante</div>
+    <p>Hérnia da parede na gestação é de conduta expectante: opera-se após o parto, salvo encarceramento ou estrangulamento. A tela, quando necessária, espera o abdome voltar ao tamanho.</p>
+  </div>
+</section>
+
+<section class="degrau" id="d9">
+  <div class="dhead"><span class="dnum">9</span><div class="dtitle"><span class="dstage">Degrau 9</span><h2>Hérnias de epônimo e hérnias incomuns</h2></div></div>
+  <p class="lede">A banca adora epônimos porque cabem numa linha. Aqui, cada um vem com o mecanismo que o torna perigoso -- porque é o mecanismo que decide a conduta.</p>
+  <div class="prose">
+    <h4 class="sub">Pelo conteúdo do saco</h4>
+    <p><strong>Littré</strong> contém um divertículo de Meckel. <strong>Amyand</strong> é a hérnia <em>inguinal</em> com o apêndice cecal no saco, inflamado ou não; <strong>Garengeot</strong> é a mesma situação na <em>femoral</em>. A conduta amarra com o degrau 6: apêndice normal, reduz-se e repara-se; apêndice inflamado, apendicectomia e reparo <strong>sem tela</strong>, porque o campo passou a ser contaminado. A hérnia <strong>de Richter</strong> pinça apenas a <strong>borda antimesentérica</strong> da alça: como a luz continua pérvia, não há obstrução -- e a parede pinçada necrosa e perfura em silêncio. É a hérnia que estrangula sem obstruir, típica do canal femoral e dos orifícios de trocarte. Na hérnia <strong>por deslizamento</strong>, a parede do saco é formada por uma víscera -- ceco à direita, sigmoide à esquerda, bexiga em qualquer lado --, e o perigo é o cirurgião abrir "o saco" e entrar na víscera. A hérnia <strong>em pantalona</strong> é a inguinoescrotal grande com componentes direto e indireto, um de cada lado dos epigástricos, como duas pernas de calça.</p>
+
+    <h4 class="sub">Pelo lugar da parede</h4>
+    <p>A hérnia de <strong>Spiegel</strong> sai pela fáscia de Spiegel, a faixa aponeurótica entre a borda lateral do reto e a linha semilunar, quase sempre abaixo da linha arqueada de Douglas, onde a bainha posterior do reto não existe. Ela é <strong>interparietal</strong>: fica sob a aponeurose do oblíquo externo, não faz abaulamento nítido, e por isso o diagnóstico é por ultrassonografia ou tomografia. O colo é pequeno e rígido e o encarceramento é frequente, então sempre se opera. As hérnias <strong>lombares</strong> saem pelos trígonos lombares: a de <strong>Grynfeltt</strong>, no trígono superior (entre a 12a costela, o quadrado lombar e o oblíquo interno), é a lombar mais comum; a de <strong>Petit</strong>, no trígono inferior (crista ilíaca, grande dorsal e oblíquo externo), é a menos comum. A hérnia <strong>obturatória</strong> passa pelo forame obturatório e é a hérnia da mulher idosa, magra e multípara: não faz volume palpável, apresenta-se como obstrução intestinal sem causa aparente, e o sinal que a denuncia é o de <strong>Howship-Romberg</strong> -- dor na face medial da coxa, piorada pela extensão, adução e rotação medial do quadril, por compressão do nervo obturatório. O diagnóstico é tomográfico e a mortalidade é alta pelo atraso.</p>
+  </div>
+  <div class="crit">
+    <div class="row"><span class="k">Littré</span><span class="v">Divertículo de Meckel no saco herniário.</span></div>
+    <div class="row"><span class="k">Amyand</span><span class="v">Hérnia inguinal com o apêndice cecal (inflamado ou não).</span></div>
+    <div class="row"><span class="k">Garengeot</span><span class="v">Hérnia femoral com o apêndice cecal.</span></div>
+    <div class="row"><span class="k">Richter</span><span class="v">Pinçamento só da borda antimesentérica: necrose e perfuração sem obstrução.</span></div>
+    <div class="row"><span class="k">Por deslizamento</span><span class="v">A parede do saco é uma víscera (ceco, sigmoide, bexiga).</span></div>
+    <div class="row"><span class="k">Em pantalona</span><span class="v">Inguinoescrotal grande com componente direto e indireto.</span></div>
+    <div class="row"><span class="k">Spiegel</span><span class="v">Fáscia de Spiegel, entre o reto e a linha semilunar; interparietal; imagem para diagnosticar; sempre operar.</span></div>
+    <div class="row"><span class="k">Grynfeltt</span><span class="v">Trígono lombar superior; a lombar mais comum.</span></div>
+    <div class="row"><span class="k">Petit</span><span class="v">Trígono lombar inferior; a lombar menos comum.</span></div>
+    <div class="row"><span class="k">Obturatória</span><span class="v">Idosa magra, obstrução sem massa, sinal de Howship-Romberg; TC.</span></div>
+  </div>
+</section>
+
+<section class="synth" id="synth">
+  <h2>A escada inteira em uma respirada</h2>
+  <div class="prose">
+    <p>A virilha tem um único ponto fraco, o orifício miopectíneo, cortado ao meio pelo ligamento inguinal e, no andar de cima, pelos vasos epigástricos inferiores. Lateral aos vasos, pelo anel profundo e dentro do cordão, sai a indireta -- congênita pela persistência do conduto peritoneovaginal, a mais comum em todos os sexos e idades. Medial aos vasos, pelo triângulo de Hesselbach, sai a direta -- adquirida, do homem mais velho, de colo largo, que raramente encarcera. Abaixo do ligamento, medial à veia femoral, sai a femoral -- adquirida, da mulher, presa entre ligamentos que não cedem e por isso a que mais encarcera (15 a 20%), embora a indireta ainda seja a mais comum nela. Nyhus só pergunta duas coisas: o anel profundo dilatou e a parede posterior resistiu. O diagnóstico é clínico, em pé, com Landivar; imagem só na dúvida, e a imagem é a ultrassonografia. Sintomática opera; assintomática em homem pode esperar; femoral e mulher não esperam. Encarcerada sem sinais de sofrimento admite uma redução; estrangulada vai para a mesa sem redução. Lichtenstein é o padrão, laparoscopia ou Stoppa para bilaterais, plano virgem para recidivas, McVay quando a femoral não pode receber tela -- e campo contaminado nunca recebe tela sintética. A recidiva da Lichtenstein é no tubérculo púbico, a dor crônica é neuralgia de um nervo nomeado, a orquite isquêmica é venosa. Nas ventrais, a infecção da ferida faz a incisional, a decussação única faz a epigástrica e a umbilical, 3 cm decide a tela, 25% define a perda de domicílio, e o cirrótico opera com a ascite controlada. O resto são epônimos com um mecanismo cada.</p>
+  </div>
+  <div class="trig">
+    <div><span class="tk">lateral aos epigástricos</span><span class="tv">indireta; dentro do cordão; congênita; a mais comum</span></div>
+    <div><span class="tk">medial aos epigástricos</span><span class="tv">direta; Hesselbach; adquirida; Nyhus III A</span></div>
+    <div><span class="tk">abaixo do ligamento inguinal</span><span class="tv">femoral; mulher 10:1; encarcera 15-20%; Nyhus III C</span></div>
+    <div><span class="tk">anel profundo normal</span><span class="tv">Nyhus I, a hérnia da criança</span></div>
+    <div><span class="tk">parede posterior intacta / destruída</span><span class="tv">Nyhus II / III B</span></div>
+    <div><span class="tk">campo contaminado</span><span class="tv">sem tela sintética: Shouldice, Bassini, McVay ou tela biológica</span></div>
+    <div><span class="tk">femoral sem tela</span><span class="tv">McVay (tendão conjunto ao Cooper); Lichtenstein não serve</span></div>
+    <div><span class="tk">bilateral</span><span class="tv">TAPP/TEP ou Stoppa: uma tela para o orifício inteiro</span></div>
+    <div><span class="tk">recidiva</span><span class="tv">trocar o plano: anterior vira posterior e vice-versa</span></div>
+    <div><span class="tk">recidiva da Lichtenstein</span><span class="tv">1o tubérculo púbico, 2o anel profundo</span></div>
+    <div><span class="tk">dor &gt; 3 meses</span><span class="tv">inguinodinia; tríade da neuralgia; nervo conforme a via</span></div>
+    <div><span class="tk">testículo duro e doloroso em 1 semana</span><span class="tv">orquite isquêmica venosa (pampiniforme); AINE, sem cirurgia</span></div>
+    <div><span class="tk">incisional</span><span class="tv">infecção de ferida; &gt; 3 cm tela; &gt; 10 cm ou &gt; 25% da cavidade pede TC</span></div>
+    <div><span class="tk">dor desproporcional na linha alba</span><span class="tv">epigástrica encarcerando gordura pré-peritoneal; sem tela</span></div>
+    <div><span class="tk">umbilical na criança</span><span class="tv">fecha até 4-5 anos; opera se persiste, anel &gt; 1,5-2 cm ou complica</span></div>
+    <div><span class="tk">cirrótico com ascite</span><span class="tv">controlar ascite, operar eletivo; pele ulcerada = urgência</span></div>
+    <div><span class="tk">necrose sem obstrução</span><span class="tv">Richter (borda antimesentérica)</span></div>
+    <div><span class="tk">apêndice em inguinal / femoral</span><span class="tv">Amyand / Garengeot; inflamado = sem tela</span></div>
+    <div><span class="tk">idosa magra, obstrução, dor medial da coxa</span><span class="tv">obturatória, sinal de Howship-Romberg, TC</span></div>
+    <div><span class="tk">linha semilunar, abaixo da arqueada</span><span class="tv">Spiegel: interparietal, imagem, sempre operar</span></div>
+  </div>
+</section>
+
+<section id="arms" style="margin-top:52px">
+  <h2 style="font-size:23px;margin-bottom:6px">Armadilhas de prova</h2>
+  <p class="lede" style="margin-bottom:0">O que separa quem sabe o tema de quem acerta a questão.</p>
+  <div class="arms">
+    <div class="arm"><span class="dot"></span><p><strong>A hérnia mais comum na mulher é a inguinal indireta</strong>, não a femoral. A femoral é apenas proporcionalmente mais frequente nela (10:1). Foi a Q33 da UERJ 2023.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Tela sintética é contraindicada em campo contaminado</strong> (necrose, perfuração, Amyand inflamada). Bilateral, recidivada e inguinoescrotal grande são difíceis, não contraindicadas -- são indicações reforçadas de tela. Foi a Q24.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Lateral aos vasos epigástricos inferiores = indireta; medial = direta.</strong> "Herniação pelo triângulo de Hesselbach" é sinônimo de direta.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Nyhus II x III B</strong> se decide pela parede posterior (intacta x destruída). Femoral é sempre III C, direta é sempre III A, criança é I.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Encarcerada x estrangulada é o vaso</strong>, não o tempo nem o tamanho. Sinal de sofrimento proíbe a redução manual.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Lichtenstein não corrige hérnia femoral</strong>; a tela para no ligamento inguinal. Femoral sem tela é McVay; femoral com tela é plug, pré-peritoneal ou laparoscopia.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Femoral encarcera mais em proporção (15-20%); indireta estrangula mais em números absolutos.</strong> A questão que pede "maior percentual" e a que pede "mais casos" têm respostas diferentes.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Espera vigilante é para o homem assintomático.</strong> Femoral e mulher com hérnia da virilha operam.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Recidiva na Lichtenstein: 1o tubérculo púbico, 2o anel profundo.</strong> Laparoscopia recidiva mais na média por curva de aprendizado. Recidiva se opera pelo plano virgem.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Orquite isquêmica é lesão venosa</strong> (plexo pampiniforme), aparece em 1 semana, trata-se com AINE. Não é lesão arterial nem indicação de orquiectomia.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Nervos em risco dependem da via:</strong> aberto lesa ilioinguinal, ílio-hipogástrico e ramo genital; laparoscópico lesa cutâneo femoral lateral e genitofemoral. Inguinodinia é dor por mais de 3 meses.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>O nervo ilioinguinal corre fora do cordão</strong>, mas algumas bancas o listam como conteúdo. Leia as alternativas antes de eliminar.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Incisional: o principal fator é a infecção de sítio cirúrgico</strong> (do paciente, obesidade). Defeito acima de 3 cm pede tela; largura acima de 10 cm ou perda de domicílio (acima de 25%) pede TC. Inlay é a pior posição.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Epigástrica encarcera gordura, não alça</strong>; homem 3:1, múltipla em 20%, decussação única, maioria sem tela. Diástase de retos não é hérnia.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Umbilical do adulto é adquirida; da criança é congênita e fecha até 4-5 anos.</strong> No cirrótico, controlar a ascite e operar eletivo; pele ulcerada ou ruptura viram urgência.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Richter obstrui sem obstruir:</strong> só a borda antimesentérica está pinçada, a luz segue pérvia, e a perfuração é silenciosa. Obturatória é a obstrução sem massa da idosa magra, com Howship-Romberg.</p></div>
+  </div>
+</section>
+
+<footer>
+  <p><strong>Fonte:</strong> <code>resumos/Cirurgia/29. Hérnia da Parede Abdominal.pdf</code> (EMED 2026, Prof. Tomás Coelho), sumário inteiro coberto, mais <code>Hérnia Femoral Encarcerada.md</code>. Complementos de Sabiston/Schwartz e das diretrizes HerniaSurge (2018) onde o resumo é omisso: triângulos laparoscópicos, diferenciais do abaulamento, taxis, fatores de risco populacionais, mulher e espera vigilante, posições de tela e prevenção da incisional, umbilical na criança, cirrótico, gestante, Spiegel e obturatória.</p>
+  <p>Calibração D10 (tema-zero na trilha, sem nota explícita). Prova de origem: UERJ 2023, Q24 e Q33, ambas chutadas. Próximo passo: lista #38 (25 questões), depois #49 e #61.</p>
+</footer>
+</main>
+</div>
+</div>
+
+<script>
+(function(){
+  var links = Array.prototype.slice.call(document.querySelectorAll('.rail a'));
+  var targets = links.map(function(a){ return document.getElementById(a.getAttribute('data-r')); }).filter(Boolean);
+  if (!('IntersectionObserver' in window) || !targets.length) return;
+  var byId = {};
+  links.forEach(function(a){ byId[a.getAttribute('data-r')] = a; });
+  var obs = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if (en.isIntersecting){
+        links.forEach(function(a){ a.classList.remove('on'); });
+        var a = byId[en.target.id];
+        if (a) a.classList.add('on');
+      }
+    });
+  }, { rootMargin: '-15% 0px -70% 0px', threshold: 0 });
+  targets.forEach(function(t){ obs.observe(t); });
+})();
+</script>

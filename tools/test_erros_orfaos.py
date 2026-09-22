@@ -173,7 +173,12 @@ def test_db_real_nao_ganha_orfao_novo():
     # persistidos na terca 15/09 (ids 1019-1043, data_registro 2026-09-15). Medido na
     # s183. A janela NAO foi alargada (ver test_janela_de_credito_do_contrato_e_1);
     # a instancia e declarada aqui com a causa, como manda AGENTE.md 10.8.
-    CONHECIDOS = {"2026-06-18", "2026-09-13"}
+    # 2026-09-20 (s190/s191): mesma classe do 13/09 -- o simulado UERJ 2023 foi domingo
+    # 20/09 (sessoes_bulk.id=130, 42 erros); a Autopsia ficou LEITURA ate o operador
+    # trazer o racional das 21 perguntas em aberto (contrato: dissecar antes de
+    # persistir), e os 42 erros entraram na terca 22/09 (ids 1044-1085, data_registro
+    # 2026-09-22) com 52 cards ancorados. Falso positivo da janela, nao orfao.
+    CONHECIDOS = {"2026-06-18", "2026-09-13", "2026-09-20"}
     orfaos = check_erros_orfaos() or []
     novos = [o for o in orfaos if o[0] not in CONHECIDOS]
     assert not novos, f"orfao novo detectado: {novos}"

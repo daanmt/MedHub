@@ -1,5 +1,5 @@
 {
- "_doc": "Dados da Autopsia do simulado UERJ 2023 (s190, 20-21/09/2026). Analise tecnica por questao produzida por 5 subagentes Opus (um por bloco) e conferida pelo principal; o elo de cada erro SEM chute fica pendente ate o operador declarar o racional. Pagina: artifacts/autopsia-2026-09-20.html. Cards candidatos NAO foram cunhados; erros NAO foram inseridos em questoes_erros (pendente, HANDOFF).",
+ "_doc": "Dados da Autopsia do simulado UERJ 2023 (s190, 20-21/09/2026). Analise tecnica por questao produzida por 5 subagentes Opus (um por bloco) e conferida pelo principal; o elo de cada erro SEM chute fica pendente ate o operador declarar o racional. Pagina: artifacts/autopsia-2026-09-20.html. Cards candidatos NAO foram cunhados; erros NAO foram inseridos em questoes_erros (pendente, HANDOFF). | ATUALIZACAO 22/09/2026 (s191): racional declarado pelo operador para as 21 perguntas em aberto (campo racional_declarado + elo_final); os 42 erros foram inseridos em questoes_erros com 52 cards (lote tmp/lote_uerj2023.json, triagem de regenerabilidade pelo principal: 81 candidatos -> 52); os 14 chutes certos viraram veredito `incerteza` no ledger de habilidades. Q77 reclassificada como chute declarado tardio: chutes 39 -> 40, solidas erradas 17 -> 16 (solidas 44/60 = 73%).",
  "prova": "UERJ Acesso Direto 2023",
  "data": "2026-09-20",
  "sessao": 190,
@@ -244,6 +244,7 @@
   66,
   67,
   75,
+  77,
   85,
   88,
   97,
@@ -297,7 +298,16 @@
    "bloco": "CM",
    "marcada": "B",
    "gabarito": "C",
-   "chute_declarado": false
+   "chute_declarado": false,
+   "elo_final": "H3: nao calculou o GASA (ferramenta ausente) e decidiu pelo perfil epidemiologico (tabagismo -> carcinomatose); leu amilase 80 como alta",
+   "tipo_erro": "Lacuna de conhecimento",
+   "persistido_em": "2026-09-22",
+   "taxonomia": {
+    "area": "Nefrologia",
+    "tema": "Glomerulopatias"
+   },
+   "racional_declarado": "me pareceu alta [amilase]. nao lembrava do GASA, decidi pelo perfil.",
+   "elo_fechado_em": "2026-09-22"
   },
   {
    "n": 9,
@@ -346,7 +356,16 @@
    "bloco": "CM",
    "marcada": "C",
    "gabarito": "A",
-   "chute_declarado": true
+   "chute_declarado": true,
+   "elo_final": "H2: Janeway e Roth nao reconhecidos como fenomenos de endocardite -- passaram como detalhe; ancorou em valvulopatia + febre = febre reumatica",
+   "tipo_erro": "Lacuna de conhecimento",
+   "persistido_em": "2026-09-22",
+   "taxonomia": {
+    "area": "Cardiologia",
+    "tema": "Endocardite Infecciosa"
+   },
+   "racional_declarado": "a macula na mao me chamou a atencao, mas nao conhecia as manchas de Roth. passaram como detalhe.",
+   "elo_fechado_em": "2026-09-22"
   },
   {
    "n": 11,
@@ -395,7 +414,16 @@
    "bloco": "CM",
    "marcada": "A",
    "gabarito": "D",
-   "chute_declarado": false
+   "chute_declarado": false,
+   "elo_final": "H4: discriminador identificado e nao usado -- glicorraquia normal nao virou exclusao de TB; conceito errado de que TB tambem poupa a glicose",
+   "tipo_erro": "Erro de aplicacao",
+   "persistido_em": "2026-09-22",
+   "taxonomia": {
+    "area": "Infecto",
+    "tema": "Meningites"
+   },
+   "racional_declarado": "pleocitose linfocitica, lembrava que neutrofilo era bacteria. nao usei o discriminador da glicorraquia; pensava que ambas nao deixavam tanto estrago como a bacteriana.",
+   "elo_fechado_em": "2026-09-22"
   },
   {
    "n": 13,
@@ -444,7 +472,14 @@
    "bloco": "CM",
    "marcada": "A",
    "gabarito": "A",
-   "chute_declarado": true
+   "chute_declarado": true,
+   "ledger_habilidades": {
+    "veredito": "incerteza",
+    "registrado_em": "2026-09-22"
+   },
+   "racional_declarado": "nem um nem outro, foi chute no escuro, por desconhecer o achado.",
+   "elo_final": "base ausente confirmada: sinal de Courvoisier desconhecido (tema-zero); acerto = sorteio",
+   "elo_fechado_em": "2026-09-22"
   },
   {
    "n": 14,
@@ -493,7 +528,16 @@
    "bloco": "CM",
    "marcada": "B",
    "gabarito": "D",
-   "chute_declarado": false
+   "chute_declarado": false,
+   "elo_final": "H3-H5: reconheceu a pielonefrite obstrutiva mas nao tinha o manejo -- antibiotico de ITU alta complicada, limiar de tamanho da expulsiva e o par urgente (drenagem) x definitivo (ureterorrenolitotripsia)",
+   "tipo_erro": "Lacuna de conhecimento",
+   "persistido_em": "2026-09-22",
+   "taxonomia": {
+    "area": "Cirurgia",
+    "tema": "Nefrolitíase e Cólica Renal"
+   },
+   "racional_declarado": "reconheci a pielonefrite, mas nao lembrava o manejo exato do calculo, tampouco o esquema correto.",
+   "elo_fechado_em": "2026-09-22"
   },
   {
    "n": 15,
@@ -542,7 +586,14 @@
    "bloco": "CM",
    "marcada": "B",
    "gabarito": "C",
-   "chute_declarado": true
+   "chute_declarado": true,
+   "elo_final": "H1/H2: mapa de paredes x arterias ausente (declarado); criterio de trombolise x ICP tambem ausente",
+   "tipo_erro": "Lacuna de conhecimento",
+   "persistido_em": "2026-09-22",
+   "taxonomia": {
+    "area": "Cardiologia",
+    "tema": "Síndrome Coronariana Aguda"
+   }
   },
   {
    "n": 16,
@@ -590,7 +641,16 @@
    "bloco": "CM",
    "marcada": "B",
    "gabarito": "A",
-   "chute_declarado": false
+   "chute_declarado": false,
+   "elo_final": "H4: sabia da manobra mas achava que Dix-Hallpike so TRATA a VPPB (confundiu com Epley); o nistagmo assustou e empurrou para imagem",
+   "tipo_erro": "Lacuna de conhecimento",
+   "persistido_em": "2026-09-22",
+   "taxonomia": {
+    "area": "Otorrino",
+    "tema": "Vertigem e Síndromes Vestibulares"
+   },
+   "racional_declarado": "o nistagmo me assustou, e eu ate lembrava da manobra, mas nao sabia que ele era exame diagnostico, achava que apenas tratava a VPPB.",
+   "elo_fechado_em": "2026-09-22"
   },
   {
    "n": 17,
@@ -637,7 +697,14 @@
    "bloco": "CM",
    "marcada": "D",
    "gabarito": "A",
-   "chute_declarado": true
+   "chute_declarado": true,
+   "elo_final": "H1/H2: painel AFP / beta-hCG / DHL ausente (declarado); marcou CEA",
+   "tipo_erro": "Lacuna de conhecimento",
+   "persistido_em": "2026-09-22",
+   "taxonomia": {
+    "area": "Cirurgia",
+    "tema": "Marcadores Tumorais"
+   }
   },
   {
    "n": 21,
@@ -680,7 +747,11 @@
    "bloco": "CIR",
    "marcada": "B",
    "gabarito": "B",
-   "chute_declarado": true
+   "chute_declarado": true,
+   "ledger_habilidades": {
+    "veredito": "incerteza",
+    "registrado_em": "2026-09-22"
+   }
   },
   {
    "n": 22,
@@ -722,7 +793,14 @@
    "bloco": "CIR",
    "marcada": "D",
    "gabarito": "C",
-   "chute_declarado": true
+   "chute_declarado": true,
+   "elo_final": "base ausente (chute): ordem de frequencia dos aneurismas viscerais",
+   "tipo_erro": "Lacuna de conhecimento",
+   "persistido_em": "2026-09-22",
+   "taxonomia": {
+    "area": "Cirurgia",
+    "tema": "Cirurgia Vascular"
+   }
   },
   {
    "n": 23,
@@ -764,7 +842,14 @@
    "bloco": "CIR",
    "marcada": "C",
    "gabarito": "A",
-   "chute_declarado": true
+   "chute_declarado": true,
+   "elo_final": "base ausente (chute): topografia da TB intestinal",
+   "tipo_erro": "Lacuna de conhecimento",
+   "persistido_em": "2026-09-22",
+   "taxonomia": {
+    "area": "Cirurgia",
+    "tema": "Tuberculose Intestinal"
+   }
   },
   {
    "n": 24,
@@ -800,7 +885,11 @@
    "bloco": "CIR",
    "marcada": "D",
    "gabarito": "D",
-   "chute_declarado": true
+   "chute_declarado": true,
+   "ledger_habilidades": {
+    "veredito": "incerteza",
+    "registrado_em": "2026-09-22"
+   }
   },
   {
    "n": 25,
@@ -842,7 +931,14 @@
    "bloco": "CIR",
    "marcada": "D",
    "gabarito": "C",
-   "chute_declarado": true
+   "chute_declarado": true,
+   "elo_final": "base ausente (chute): arritmia mais frequente na insuflacao",
+   "tipo_erro": "Lacuna de conhecimento",
+   "persistido_em": "2026-09-22",
+   "taxonomia": {
+    "area": "Cirurgia",
+    "tema": "Videolaparoscopia"
+   }
   },
   {
    "n": 26,
@@ -884,7 +980,14 @@
    "bloco": "CIR",
    "marcada": "D",
    "gabarito": "B",
-   "chute_declarado": true
+   "chute_declarado": true,
+   "elo_final": "base ausente (chute): par de vitaminas da cicatrizacao",
+   "tipo_erro": "Lacuna de conhecimento",
+   "persistido_em": "2026-09-22",
+   "taxonomia": {
+    "area": "Cirurgia",
+    "tema": "Cicatrizacao"
+   }
   },
   {
    "n": 27,
@@ -926,7 +1029,14 @@
    "bloco": "CIR",
    "marcada": "D",
    "gabarito": "B",
-   "chute_declarado": true
+   "chute_declarado": true,
+   "elo_final": "base ausente (chute): indicacao cirurgica na TB intestinal",
+   "tipo_erro": "Lacuna de conhecimento",
+   "persistido_em": "2026-09-22",
+   "taxonomia": {
+    "area": "Cirurgia",
+    "tema": "Tuberculose Intestinal"
+   }
   },
   {
    "n": 28,
@@ -968,7 +1078,14 @@
    "bloco": "CIR",
    "marcada": "A",
    "gabarito": "C",
-   "chute_declarado": true
+   "chute_declarado": true,
+   "elo_final": "base ausente (chute): droga vasoativa da hemorragia varicosa",
+   "tipo_erro": "Lacuna de conhecimento",
+   "persistido_em": "2026-09-22",
+   "taxonomia": {
+    "area": "Gastro",
+    "tema": "Hemorragia Digestiva Alta"
+   }
   },
   {
    "n": 29,
@@ -1010,7 +1127,14 @@
    "bloco": "CIR",
    "marcada": "A",
    "gabarito": "D",
-   "chute_declarado": true
+   "chute_declarado": true,
+   "elo_final": "base ausente (chute): direcao dos efeitos sistemicos do TNF",
+   "tipo_erro": "Lacuna de conhecimento",
+   "persistido_em": "2026-09-22",
+   "taxonomia": {
+    "area": "Cirurgia",
+    "tema": "Resposta Metabólica ao Trauma (REMIT)"
+   }
   },
   {
    "n": 30,
@@ -1059,7 +1183,16 @@
    "bloco": "CIR",
    "marcada": "D",
    "gabarito": "A",
-   "chute_declarado": false
+   "chute_declarado": false,
+   "elo_final": "H1: o discriminador \"nao obstruido\" passou batido -- escolheu o espectro pela topografia (intestino = anaerobios) e nao pela flora presente",
+   "tipo_erro": "Erro de aplicacao",
+   "persistido_em": "2026-09-22",
+   "taxonomia": {
+    "area": "Cirurgia",
+    "tema": "Avaliação e Manejo Pré-Operatório"
+   },
+   "racional_declarado": "nao mudou. eu achei que deveria cobrir anaerobios e gram negativos. associei intestino ao esquema, ignorando o discriminador.",
+   "elo_fechado_em": "2026-09-22"
   },
   {
    "n": 31,
@@ -1106,7 +1239,14 @@
    "bloco": "CIR",
    "marcada": "A",
    "gabarito": "B",
-   "chute_declarado": false
+   "chute_declarado": false,
+   "elo_final": "H1: nao separa cortex de medula adrenal",
+   "tipo_erro": "Lacuna de conhecimento",
+   "persistido_em": "2026-09-22",
+   "taxonomia": {
+    "area": "Cirurgia",
+    "tema": "Resposta Metabólica ao Trauma (REMIT)"
+   }
   },
   {
    "n": 32,
@@ -1149,7 +1289,11 @@
    "bloco": "CIR",
    "marcada": "C",
    "gabarito": "C",
-   "chute_declarado": true
+   "chute_declarado": true,
+   "ledger_habilidades": {
+    "veredito": "incerteza",
+    "registrado_em": "2026-09-22"
+   }
   },
   {
    "n": 33,
@@ -1191,7 +1335,11 @@
    "bloco": "CIR",
    "marcada": "D",
    "gabarito": "D",
-   "chute_declarado": true
+   "chute_declarado": true,
+   "ledger_habilidades": {
+    "veredito": "incerteza",
+    "registrado_em": "2026-09-22"
+   }
   },
   {
    "n": 35,
@@ -1233,7 +1381,11 @@
    "bloco": "CIR",
    "marcada": "B",
    "gabarito": "B",
-   "chute_declarado": true
+   "chute_declarado": true,
+   "ledger_habilidades": {
+    "veredito": "incerteza",
+    "registrado_em": "2026-09-22"
+   }
   },
   {
    "n": 36,
@@ -1269,7 +1421,16 @@
    "bloco": "CIR",
    "marcada": "B",
    "gabarito": "C",
-   "chute_declarado": false
+   "chute_declarado": false,
+   "elo_final": "Pergunta composta: a palavra \"mediador\" venceu \"aguda + primeira recrutada\"; sabia que o neutrofilo chega primeiro mas nao o tinha como mediador/efetor; celula T = \"gerente\" da resposta imune",
+   "tipo_erro": "Armadilha",
+   "persistido_em": "2026-09-22",
+   "taxonomia": {
+    "area": "Cirurgia",
+    "tema": "Cicatrizacao"
+   },
+   "racional_declarado": "a palavra mediador me empurrou para linfocito T, pois tenho ele como o gerente da resposta imune. fiquei entre ele e neutrofilo, e ate sabia que os neutrofilos chegavam primeiro, mas nao que eram mediadores.",
+   "elo_fechado_em": "2026-09-22"
   },
   {
    "n": 38,
@@ -1316,7 +1477,14 @@
    "bloco": "CIR",
    "marcada": "C",
    "gabarito": "D",
-   "chute_declarado": true
+   "chute_declarado": true,
+   "elo_final": "base ausente (chute): mapa de eponimos -- triangulo de Killian",
+   "tipo_erro": "Lacuna de conhecimento",
+   "persistido_em": "2026-09-22",
+   "taxonomia": {
+    "area": "Cirurgia",
+    "tema": "Doenças do Esôfago"
+   }
   },
   {
    "n": 39,
@@ -1358,7 +1526,14 @@
    "bloco": "CIR",
    "marcada": "B",
    "gabarito": "A",
-   "chute_declarado": true
+   "chute_declarado": true,
+   "elo_final": "base ausente (chute): epidemiologia do desmoide",
+   "tipo_erro": "Lacuna de conhecimento",
+   "persistido_em": "2026-09-22",
+   "taxonomia": {
+    "area": "Cirurgia",
+    "tema": "Tumores de Partes Moles"
+   }
   },
   {
    "n": 40,
@@ -1401,7 +1576,11 @@
    "bloco": "CIR",
    "marcada": "D",
    "gabarito": "D",
-   "chute_declarado": true
+   "chute_declarado": true,
+   "ledger_habilidades": {
+    "veredito": "incerteza",
+    "registrado_em": "2026-09-22"
+   }
   },
   {
    "n": 41,
@@ -1444,7 +1623,14 @@
    "bloco": "GO",
    "marcada": "B",
    "gabarito": "A",
-   "chute_declarado": false
+   "chute_declarado": false,
+   "elo_final": "H1: trocou o no do fluxograma (vesiculas) por um discriminador semiologico (dor) -- racional declarado na prova",
+   "tipo_erro": "Erro de aplicacao",
+   "persistido_em": "2026-09-22",
+   "taxonomia": {
+    "area": "Ginecologia",
+    "tema": "Úlceras Genitais (IST)"
+   }
   },
   {
    "n": 43,
@@ -1487,7 +1673,16 @@
    "bloco": "GO",
    "marcada": "C",
    "gabarito": "D",
-   "chute_declarado": false
+   "chute_declarado": false,
+   "elo_final": "H1/H2: nao sabe estadiar pela FIGO nem tem o cutoff de 4 cm (declarado); leu \"limitada ao colo\" como lesao inicial",
+   "tipo_erro": "Lacuna de conhecimento",
+   "persistido_em": "2026-09-22",
+   "taxonomia": {
+    "area": "Ginecologia",
+    "tema": "Câncer de Colo do Útero"
+   },
+   "racional_declarado": "nao sei estadiar segundo a FIGO, tampouco tenho o cutoff de tamanho.",
+   "elo_fechado_em": "2026-09-22"
   },
   {
    "n": 45,
@@ -1530,7 +1725,16 @@
    "bloco": "GO",
    "marcada": "B",
    "gabarito": "A",
-   "chute_declarado": false
+   "chute_declarado": false,
+   "elo_final": "H3: aplicou a excecao do desejo reprodutivo (fugiu da histerectomia) mas achava que a ablacao endometrial PERMITE gestar depois -- conceito errado sobre o que a ablacao destroi",
+   "tipo_erro": "Lacuna de conhecimento",
+   "persistido_em": "2026-09-22",
+   "taxonomia": {
+    "area": "Ginecologia",
+    "tema": "Câncer de Endométrio"
+   },
+   "racional_declarado": "considerei e inclusive achei que a ablacao permitia a gestacao depois. fugi de histerectomia por isso mesmo.",
+   "elo_fechado_em": "2026-09-22"
   },
   {
    "n": 47,
@@ -1573,7 +1777,16 @@
    "bloco": "GO",
    "marcada": "B",
    "gabarito": "A",
-   "chute_declarado": false
+   "chute_declarado": false,
+   "elo_final": "H2: tratou AGC como equivalente a alto grau cervical (= conizar); nao considerou origem endometrial",
+   "tipo_erro": "Lacuna de conhecimento",
+   "persistido_em": "2026-09-22",
+   "taxonomia": {
+    "area": "Ginecologia",
+    "tema": "Rastreamento do Câncer de Colo do Útero"
+   },
+   "racional_declarado": "nao considerei, imaginei que AGC era igual a alto risco e, portanto, deveria conizar.",
+   "elo_fechado_em": "2026-09-22"
   },
   {
    "n": 48,
@@ -1615,7 +1828,11 @@
    "bloco": "GO",
    "marcada": "B",
    "gabarito": "B",
-   "chute_declarado": true
+   "chute_declarado": true,
+   "ledger_habilidades": {
+    "veredito": "incerteza",
+    "registrado_em": "2026-09-22"
+   }
   },
   {
    "n": 49,
@@ -1657,7 +1874,14 @@
    "bloco": "GO",
    "marcada": "B",
    "gabarito": "D",
-   "chute_declarado": true
+   "chute_declarado": true,
+   "elo_final": "base ausente (chute): requisitos legais do aborto por violencia sexual",
+   "tipo_erro": "Lacuna de conhecimento",
+   "persistido_em": "2026-09-22",
+   "taxonomia": {
+    "area": "Ginecologia",
+    "tema": "Violência Sexual e Aborto Legal"
+   }
   },
   {
    "n": 50,
@@ -1699,7 +1923,14 @@
    "bloco": "GO",
    "marcada": "A",
    "gabarito": "A",
-   "chute_declarado": true
+   "chute_declarado": true,
+   "ledger_habilidades": {
+    "veredito": "incerteza",
+    "registrado_em": "2026-09-22"
+   },
+   "racional_declarado": "suponho que a partir dos 30~35 anos, mas fiquei na duvida. a menopausa precoce na mae me fez pensar em causa genetica de falencia ovariana precoce.",
+   "elo_final": "PARCIAL: H2 (herdabilidade da idade da menopausa) estava presente; faltou o cutoff de 35 anos para excluir o distrator \"idade > 30\" -- nao e base ausente, e nuance",
+   "elo_fechado_em": "2026-09-22"
   },
   {
    "n": 51,
@@ -1743,7 +1974,16 @@
    "bloco": "GO",
    "marcada": "A",
    "gabarito": "C",
-   "chute_declarado": false
+   "chute_declarado": false,
+   "elo_final": "H1/H2: nao calculou a cinetica nem confrontou 554 com a zona discriminatoria; exclusoes erradas -- \"sangramento exclui gestacao topica\" e \"beta subindo + sangramento = mola\" (fato no contexto errado: mola tem beta muito alto)",
+   "tipo_erro": "Erro de aplicacao",
+   "persistido_em": "2026-09-22",
+   "taxonomia": {
+    "area": "Obstetrícia",
+    "tema": "Sangramento da Primeira Metade"
+   },
+   "racional_declarado": "o colo fechado excluiu a D, e o sangramento me fez excluir a C. no entanto, nao calculei o beta e supus que o aumento do beta associado ao sangramento apontava para mola.",
+   "elo_fechado_em": "2026-09-22"
   },
   {
    "n": 53,
@@ -1785,7 +2025,14 @@
    "bloco": "GO",
    "marcada": "A",
    "gabarito": "C",
-   "chute_declarado": true
+   "chute_declarado": true,
+   "elo_final": "base ausente (chute): cada trimestre da USG responde a uma pergunta diferente",
+   "tipo_erro": "Lacuna de conhecimento",
+   "persistido_em": "2026-09-22",
+   "taxonomia": {
+    "area": "Obstetrícia",
+    "tema": "Pré-Natal"
+   }
   },
   {
    "n": 55,
@@ -1827,7 +2074,11 @@
    "bloco": "GO",
    "marcada": "A",
    "gabarito": "A",
-   "chute_declarado": true
+   "chute_declarado": true,
+   "ledger_habilidades": {
+    "veredito": "incerteza",
+    "registrado_em": "2026-09-22"
+   }
   },
   {
    "n": 56,
@@ -1876,7 +2127,14 @@
    "bloco": "GO",
    "marcada": "C",
    "gabarito": "C",
-   "chute_declarado": true
+   "chute_declarado": true,
+   "ledger_habilidades": {
+    "veredito": "incerteza",
+    "registrado_em": "2026-09-22"
+   },
+   "racional_declarado": "cheguei sim, pois conhecia essa informacao [eliminou A e B por principio].",
+   "elo_final": "PARCIAL: H1 (vacina inativada liberada) e H2 (TARV nunca se suspende) presentes; chute foi entre C e D -- lacunas reais = RPMO < 34 sem independe da CV (H3) e inibidor de protease x ergot (H4)",
+   "elo_fechado_em": "2026-09-22"
   },
   {
    "n": 57,
@@ -1918,7 +2176,16 @@
    "bloco": "GO",
    "marcada": "D",
    "gabarito": "B",
-   "chute_declarado": true
+   "chute_declarado": true,
+   "elo_final": "H1: triade confusao + ataxia + nistagmo nao reconhecida como Wernicke (chute); sequer conhece miastenia gravis",
+   "tipo_erro": "Lacuna de conhecimento",
+   "persistido_em": "2026-09-22",
+   "taxonomia": {
+    "area": "Obstetrícia",
+    "tema": "Hiperêmese Gravídica"
+   },
+   "racional_declarado": "chutei. sequer conheco a miastenia gravis.",
+   "elo_fechado_em": "2026-09-22"
   },
   {
    "n": 58,
@@ -1962,7 +2229,16 @@
    "bloco": "GO",
    "marcada": "B",
    "gabarito": "D",
-   "chute_declarado": true
+   "chute_declarado": true,
+   "elo_final": "H1: nao sabe ler o tracado da CTG (declarado) -- tinha o pareamento mecanismo x tipo, mas nao o reconhecimento no tracado; nao usou o contexto (RPMO ha 2 h -> variavel)",
+   "tipo_erro": "Lacuna de conhecimento",
+   "persistido_em": "2026-09-22",
+   "taxonomia": {
+    "area": "Obstetrícia",
+    "tema": "Assistência ao Parto"
+   },
+   "racional_declarado": "nao sei ler o tracado da cardiotoco. imaginei que as contracoes vinham junto da desaceleracao e pensei em compressao de polo cefalico.",
+   "elo_fechado_em": "2026-09-22"
   },
   {
    "n": 60,
@@ -2011,7 +2287,14 @@
    "bloco": "GO",
    "marcada": "D",
    "gabarito": "B",
-   "chute_declarado": true
+   "chute_declarado": true,
+   "elo_final": "base ausente (chute): marcou benzodiazepinico antes do sulfato de magnesio na crise eclamptica",
+   "tipo_erro": "Lacuna de conhecimento",
+   "persistido_em": "2026-09-22",
+   "taxonomia": {
+    "area": "Obstetrícia",
+    "tema": "Síndromes Hipertensivas da Gestação"
+   }
   },
   {
    "n": 61,
@@ -2061,7 +2344,11 @@
    "bloco": "PED",
    "marcada": "B",
    "gabarito": "B",
-   "chute_declarado": true
+   "chute_declarado": true,
+   "ledger_habilidades": {
+    "veredito": "incerteza",
+    "registrado_em": "2026-09-22"
+   }
   },
   {
    "n": 62,
@@ -2111,7 +2398,14 @@
    "bloco": "PED",
    "marcada": "C",
    "gabarito": "A",
-   "chute_declarado": true
+   "chute_declarado": true,
+   "elo_final": "Nao usou calprotectina fecal elevada nem sangue vivo; ancorou no sintoma mais antigo (artrite) e nao unificou em DII (chute)",
+   "tipo_erro": "Erro de aplicacao",
+   "persistido_em": "2026-09-22",
+   "taxonomia": {
+    "area": "Gastro",
+    "tema": "Doença Inflamatória Intestinal"
+   }
   },
   {
    "n": 63,
@@ -2158,7 +2452,14 @@
    "bloco": "PED",
    "marcada": "D",
    "gabarito": "B",
-   "chute_declarado": true
+   "chute_declarado": true,
+   "elo_final": "base ausente (chute): morfologia da dermatite de fralda por Candida",
+   "tipo_erro": "Lacuna de conhecimento",
+   "persistido_em": "2026-09-22",
+   "taxonomia": {
+    "area": "Pediatria",
+    "tema": "Dermatoses Comuns da Infância"
+   }
   },
   {
    "n": 65,
@@ -2208,7 +2509,14 @@
    "bloco": "PED",
    "marcada": "D",
    "gabarito": "C",
-   "chute_declarado": true
+   "chute_declarado": true,
+   "elo_final": "Nao usou a PA de 128x86 nem a historia de ITU febril de repeticao sem USG; tratou a anemia como problema isolado (chute)",
+   "tipo_erro": "Erro de aplicacao",
+   "persistido_em": "2026-09-22",
+   "taxonomia": {
+    "area": "Pediatria",
+    "tema": "Infeccao do Trato Urinario na Infancia"
+   }
   },
   {
    "n": 66,
@@ -2255,7 +2563,14 @@
    "bloco": "PED",
    "marcada": "D",
    "gabarito": "A",
-   "chute_declarado": true
+   "chute_declarado": true,
+   "elo_final": "Fato no contexto errado: transferiu para o seio a associacao \"alimentar deitado -> otite media\", que vale so para mamadeira (chute)",
+   "tipo_erro": "Erro de aplicacao",
+   "persistido_em": "2026-09-22",
+   "taxonomia": {
+    "area": "Pediatria",
+    "tema": "Aleitamento Materno e Mastite Lactacional"
+   }
   },
   {
    "n": 67,
@@ -2304,7 +2619,14 @@
    "bloco": "PED",
    "marcada": "D",
    "gabarito": "C",
-   "chute_declarado": true
+   "chute_declarado": true,
+   "elo_final": "base ausente (chute): associacao sindromica trocada (DSAV = Down); nao percorreu as raizes sacrais",
+   "tipo_erro": "Lacuna de conhecimento",
+   "persistido_em": "2026-09-22",
+   "taxonomia": {
+    "area": "Pediatria",
+    "tema": "Defeitos do Tubo Neural (Mielomeningocele)"
+   }
   },
   {
    "n": 73,
@@ -2351,7 +2673,16 @@
    "bloco": "PED",
    "marcada": "B",
    "gabarito": "A",
-   "chute_declarado": false
+   "chute_declarado": false,
+   "elo_final": "H2: diretriz desatualizada -- nao lembrava o esquema do PCDT e achava que ciprofloxacina cobria gonococo",
+   "tipo_erro": "Lacuna de conhecimento",
+   "persistido_em": "2026-09-22",
+   "taxonomia": {
+    "area": "Infecto",
+    "tema": "IST"
+   },
+   "racional_declarado": "nao lembrava do esquema e achei que cipro pegava gonococo.",
+   "elo_fechado_em": "2026-09-22"
   },
   {
    "n": 74,
@@ -2401,7 +2732,16 @@
    "bloco": "PED",
    "marcada": "C",
    "gabarito": "B",
-   "chute_declarado": false
+   "chute_declarado": false,
+   "elo_final": "H4 override: LEU \"nega antibiotico ha 2 meses\" e mesmo assim manteve C. difficile por causa do tempo de internacao; nao usou a topografia cecal nem a exigencia de cobertura sistemica da neutropenia febril",
+   "tipo_erro": "Erro de aplicacao",
+   "persistido_em": "2026-09-22",
+   "taxonomia": {
+    "area": "Pediatria",
+    "tema": "Leucemias na Infância"
+   },
+   "racional_declarado": "li sim, mas o tempo de internacao me fez supor o Clostridium difficile.",
+   "elo_fechado_em": "2026-09-22"
   },
   {
    "n": 75,
@@ -2449,7 +2789,14 @@
    "bloco": "PED",
    "marcada": "D",
    "gabarito": "A",
-   "chute_declarado": true
+   "chute_declarado": true,
+   "elo_final": "Pergunta composta: validou a alternativa pela segunda metade verdadeira (alcalose hipocloremica) sem checar a primeira (chute)",
+   "tipo_erro": "Armadilha",
+   "persistido_em": "2026-09-22",
+   "taxonomia": {
+    "area": "Psiquiatria",
+    "tema": "Transtornos Alimentares"
+   }
   },
   {
    "n": 77,
@@ -2499,7 +2846,18 @@
    "bloco": "PED",
    "marcada": "D",
    "gabarito": "A",
-   "chute_declarado": false
+   "chute_declarado": true,
+   "elo_final": "base ausente: marcou direto sem comparar as alternativas -- chute declarado tardiamente (22/09); nao tinha a regra \"antibiotico aumenta o risco de SHU na STEC\"",
+   "tipo_erro": "Lacuna de conhecimento",
+   "persistido_em": "2026-09-22",
+   "taxonomia": {
+    "area": "Nefrologia",
+    "tema": "Sindrome Hemolitico-Uremica"
+   },
+   "racional_declarado": "marquei direto. foi chute.",
+   "elo_fechado_em": "2026-09-22",
+   "chute_declarado_em": "2026-09-22",
+   "nota_chute": "Declarado como chute em 22/09/2026 (\"marquei direto. foi chute.\"); na prova nao houve marca. Era contado como solida errada."
   },
   {
    "n": 85,
@@ -2542,7 +2900,11 @@
    "bloco": "MFC",
    "marcada": "A",
    "gabarito": "A",
-   "chute_declarado": true
+   "chute_declarado": true,
+   "ledger_habilidades": {
+    "veredito": "incerteza",
+    "registrado_em": "2026-09-22"
+   }
   },
   {
    "n": 88,
@@ -2591,7 +2953,14 @@
    "bloco": "MFC",
    "marcada": "B",
    "gabarito": "C",
-   "chute_declarado": true
+   "chute_declarado": true,
+   "elo_final": "base ausente (chute): matriz nivel x estrategia; \"alto risco\" ainda e prevencao primaria",
+   "tipo_erro": "Lacuna de conhecimento",
+   "persistido_em": "2026-09-22",
+   "taxonomia": {
+    "area": "Preventiva",
+    "tema": "Rastreamento e prevenção"
+   }
   },
   {
    "n": 91,
@@ -2639,7 +3008,16 @@
    "bloco": "MFC",
    "marcada": "D",
    "gabarito": "C",
-   "chute_declarado": false
+   "chute_declarado": false,
+   "elo_final": "H2/H3: leu \"mimetizar\" corretamente como PRODUZIR, mas nao tinha a lista de causas medicas reversiveis de sindrome depressiva no idoso e nao testou o par inteiro",
+   "tipo_erro": "Lacuna de conhecimento",
+   "persistido_em": "2026-09-22",
+   "taxonomia": {
+    "area": "Preventiva",
+    "tema": "Saúde do Idoso"
+   },
+   "racional_declarado": "produzem [leu mimetizar como produzir o quadro].",
+   "elo_fechado_em": "2026-09-22"
   },
   {
    "n": 97,
@@ -2689,7 +3067,14 @@
    "bloco": "MFC",
    "marcada": "C",
    "gabarito": "D",
-   "chute_declarado": true
+   "chute_declarado": true,
+   "elo_final": "H3/H4: leu o TE que nao atingiu a FC submaxima como NEGATIVO (e inconclusivo) e nao acionou Bayes com pre-teste alta (chute)",
+   "tipo_erro": "Erro de aplicacao",
+   "persistido_em": "2026-09-22",
+   "taxonomia": {
+    "area": "Preventiva",
+    "tema": "Testes Diagnósticos"
+   }
   },
   {
    "n": 99,
@@ -2738,7 +3123,16 @@
    "bloco": "MFC",
    "marcada": "C",
    "gabarito": "D",
-   "chute_declarado": false
+   "chute_declarado": false,
+   "elo_final": "H1/H2: ignorou o discriminador -- nao calculou o IMC (118/4 = 29,5 = sobrepeso) e carimbou obesidade pelo peso absoluto; ancoragem no numero",
+   "tipo_erro": "Erro de aplicacao",
+   "persistido_em": "2026-09-22",
+   "taxonomia": {
+    "area": "Preventiva",
+    "tema": "Prevenção Quaternária e Sobrediagnóstico"
+   },
+   "racional_declarado": "nao, ignorei o discriminador.",
+   "elo_fechado_em": "2026-09-22"
   },
   {
    "n": 100,
@@ -2781,7 +3175,11 @@
    "bloco": "MFC",
    "marcada": "D",
    "gabarito": "D",
-   "chute_declarado": true
+   "chute_declarado": true,
+   "ledger_habilidades": {
+    "veredito": "incerteza",
+    "registrado_em": "2026-09-22"
+   }
   }
  ]
 }

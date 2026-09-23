@@ -96,6 +96,18 @@ def test_arquivo_arquivado_nao_ressuscita():
         assert "tools/orfao.py" in _rodar(_repo(td))
 
 
+def test_worktree_de_agente_nao_e_referenciador():
+    """s194: `.claude/worktrees/<agente>/` (gitignored) e a copia do repo de um subagente em
+    paralelo. O glob `.claude/**/*.md` a varria: o orfao ganhava alta pela copia, e a tabela
+    gerada do AGENTE.md §7.4 inflava (+9 -> +29) so porque um agente irmao estava rodando."""
+    with tempfile.TemporaryDirectory() as td:
+        r = _repo(td)
+        copia = r / ".claude" / "worktrees" / "agent-x" / ".claude" / "commands"
+        copia.mkdir(parents=True)
+        (copia / "c.md").write_text("Rodar `tools/orfao.py`.\n", encoding="utf-8")
+        assert "tools/orfao.py" in _rodar(r)
+
+
 def test_init_py_isento():
     """__init__.py nunca e citado pelo nome; e alcancado pelo import do pacote."""
     with tempfile.TemporaryDirectory() as td:

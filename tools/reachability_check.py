@@ -62,7 +62,9 @@ REFERENCIADORES = [
 
 # Nao sao alvos (nem referenciadores): arquivo morto/arquivado nao ressuscita
 # nada, e cache nao e codigo.
-EXCLUSOES = ["**/__pycache__/**", "tools/_archive/**", "**/.git/**"]
+# `.claude/worktrees/**` (s194): copia do repo de um subagente em paralelo (gitignored); varrida,
+# dava alta a orfao pela copia e inflava a tabela do AGENTE.md §7.4 enquanto o irmao rodava.
+EXCLUSOES = ["**/__pycache__/**", "tools/_archive/**", "**/.git/**", ".claude/worktrees/**"]
 
 # Alvos vivos POR CONSTRUCAO, com o motivo. Sao os casos em que "ninguem cita o
 # nome" nao significa "ninguem chega": o mecanismo de alcance nao passa por

@@ -40,6 +40,7 @@ from tools.fsrs_queue import (  # noqa: E402
     CAMPOS_PLAYER,
     MARCA_ABRE,
     MARCA_FECHA,
+    anexar_agenda,
     aplicar_notas,
     aviso_hub,
     injetar_lote,
@@ -622,6 +623,82 @@ def test_cli_com_rejeitada_nao_sai_2_e_grava_os_validos():
             finally:
                 fsrs_queue.PASTA_QUARENTENA, fsrs_queue.MARCADOR_HUB = orig
     _com_db(corpo)
+
+
+# --------------------------------------------------------------------------
+# 6. Agenda embutida no lote (s194, item 5 do feedback do hub)
+# --------------------------------------------------------------------------
+
+HOJE = datetime(2026, 9, 23, 9, 0, 0)
+
+
+def _agendar(tmp, linhas):
+    """linhas = [(card_id, state, due)] de cards FORA do lote, com o FSRS ja rodando."""
+    con = sqlite3.connect(tmp)
+    for cid, state, due in linhas:
+        con.execute("INSERT INTO flashcards (id, tipo, frente_pergunta, verso_resposta, "
+                    "quality_source) VALUES (?, 'conteudo', 'P?', 'R.', 'qualitative')", (cid,))
+        con.execute("INSERT INTO fsrs_cards (card_id, state, due, stability, difficulty, reps) "
+                    "VALUES (?, ?, ?, 5.0, 5.0, 3)", (cid, state, due))
+    con.commit()
+    con.close()
+
+
+def test_export_embute_previsao_por_nota_e_agenda_base(monkeypatch):
+    monkeypatch.setattr(db, "agora", lambda: HOJE)
+
+    def corpo(tmp):
+        _agendar(tmp, [
+            (10, 2, "2026-09-24 08:00:00"),          # amanha
+            (11, 2, "2026-09-24 22:30:00.123456"),   # amanha, com microssegundo
+            (12, 2, "2026-09-30 10:00:00"),          # dia 7 da janela
+            (13, 2, "2026-10-01 10:00:00"),          # fora da janela
+            (14, 2, "2026-09-20 10:00:00"),          # vencido e fora do lote
+            (15, 0, "2026-09-25 10:00:00"),          # novo: nao e agenda de revisao
+        ])
+        con = sqlite3.connect(tmp)                   # card 2 (NO lote) tambem vence na janela
+        con.execute("UPDATE fsrs_cards SET state = 2, due = '2026-09-26 10:00:00' "
+                    "WHERE card_id = 2")
+        con.commit()
+        con.close()
+        lote = montar_lote([{"card_id": 1, "bucket": "novos"}, {"card_id": 2, "bucket": "hoje"}],
+                           sessao="t")
+        return anexar_agenda(lote)
+
+    lote = _com_db(corpo)
+    ab = lote["agenda_base"]
+    assert [d["data"] for d in ab["dias"]] == ["2026-09-%02d" % d for d in range(24, 31)]
+    assert [d["n"] for d in ab["dias"]] == [2, 0, 0, 0, 0, 0, 1], \
+        "card 2 (no lote) nao entra; o novo (state 0) tambem nao"
+    assert ab["vencidos_fora_do_lote"] == 1
+    for card in lote["cards"]:
+        prev = card["previsao"]
+        assert sorted(prev) == ["1", "2", "3", "4"]
+        assert all(len(v) == 10 and v[4] == "-" for v in prev.values()), prev
+        assert prev["1"] <= prev["3"] <= prev["4"]
+
+
+def test_previsao_que_falha_so_tira_o_campo_do_card(monkeypatch):
+    monkeypatch.setattr(db, "agora", lambda: HOJE)
+
+    def explode(cid):
+        raise RuntimeError("fsrs quebrado")
+
+    def corpo(tmp):
+        monkeypatch.setattr(db, "preview_ratings", explode)
+        return anexar_agenda(montar_lote([{"card_id": 1}], sessao="t"))
+
+    lote = _com_db(corpo)
+    assert "previsao" not in lote["cards"][0]
+    assert "agenda_base" in lote
+
+
+def test_lote_com_campos_novos_segue_valido_no_record_lote():
+    cards = [dict(c, previsao={"1": "2026-09-23", "2": "2026-09-24", "3": "2026-09-26",
+                               "4": "2026-10-01"}) for c in _CARDS]
+    notas = {"notas": [{"card_id": 1, "rating_primeira": 3, "ts": _TS}]}
+    registros, rejeitadas, _ = triar_notas(notas, cards)
+    assert len(registros) == 1 and not rejeitadas
 
 
 # --------------------------------------------------------------------------

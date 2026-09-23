@@ -706,6 +706,42 @@ def preview_ratings(flashcard_id):
     return out
 
 
+def agenda_revisoes(dias=7, excluir_ids=()):
+    """s194 (tela de fim do player): a carga de REVISAO dos proximos `dias`, fora de um lote.
+
+    Read-only. Conta os cards ativos com o FSRS ja rodando (`state > 0`; novo nao e agenda de
+    revisao) que vencem em cada dia de amanha ate amanha + dias - 1, no relogio unico (`hoje()`),
+    e os que JA venceram (due antes de amanha) -- estes, se nao estao no lote, continuam na fila
+    e pesam no 1o dia. `excluir_ids` = os cards do lote, cuja data depende da nota que ainda vai
+    ser dada (a pagina soma a previsao de cada um).
+
+    Devolve {"dias": [{"data": "AAAA-MM-DD", "n": int}] * dias, "vencidos_fora_do_lote": int}."""
+    from datetime import timedelta as _td
+    inicio = hoje() + _td(days=1)
+    datas = [(inicio + _td(days=i)).isoformat() for i in range(dias)]
+    fora = {int(x) for x in excluir_ids}
+    conn = get_connection()
+    try:
+        linhas = conn.execute(
+            f"""SELECT fc.card_id, substr(fc.due, 1, 10)
+                FROM fsrs_cards fc JOIN flashcards f ON f.id = fc.card_id
+                WHERE {ativo_where('f.')} AND fc.state > 0 AND fc.due IS NOT NULL
+                  AND substr(fc.due, 1, 10) <= ?""", (datas[-1],)).fetchall()
+    finally:
+        conn.close()
+    contagem = dict.fromkeys(datas, 0)
+    vencidos = 0
+    for cid, dia in linhas:
+        if int(cid) in fora:
+            continue
+        if dia < datas[0]:
+            vencidos += 1
+        elif dia in contagem:
+            contagem[dia] += 1
+    return {"dias": [{"data": d, "n": contagem[d]} for d in datas],
+            "vencidos_fora_do_lote": vencidos}
+
+
 def _ensure_revlog_columns(conn):
     """P3 part-1: colunas de proveniência no revlog — `card_version` (a versão
     que o usuário VIU) e `selection_reason` (por que o card foi servido).

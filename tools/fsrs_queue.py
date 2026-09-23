@@ -176,6 +176,37 @@ def montar_lote(ordered, limit=None, sessao=None, gerado_em=None):
     }
 
 
+#: Dias da agenda embutida no lote (tela de fim do player, s194).
+DIAS_AGENDA = 7
+
+
+def anexar_agenda(lote, dias=DIAS_AGENDA):
+    """Embute no lote o que a tela de fim precisa para desenhar a agenda. Read-only.
+
+    - por card, `previsao` = {"1".."4": "AAAA-MM-DD"}: o vencimento que cada nota daria, pelo
+      MESMO `db.preview_ratings` do `--preview` (a pagina nao roda FSRS; so escolhe a data pela
+      nota recebida). Falha num card = card sem o campo + WARN, nunca derruba o export;
+    - no lote, `agenda_base` = `db.agenda_revisoes`: a carga dos cards FORA do lote em cada um
+      dos proximos `dias` dias + os vencidos que ficaram fora.
+    A previsao vale para o dia do export; lote drenado noutro dia desloca o grafico em 1 dia."""
+    falhas = 0
+    for card in lote.get("cards", []):
+        try:
+            prev = db.preview_ratings(int(card["card_id"]))
+            card["previsao"] = {str(r): str(prev[rot]["due"])[:10]
+                                for r, rot in db.ROTULOS_RATING.items()}
+        except Exception as e:  # noqa: BLE001 -- degrada por card, declarado em stderr
+            card.pop("previsao", None)
+            falhas += 1
+            ultimo = e
+    if falhas:
+        print("[WARN] previsao indisponivel para %d card(s) (ultimo erro: %s): a agenda da "
+              "pagina os deixa de fora" % (falhas, ultimo), file=sys.stderr)
+    lote["agenda_base"] = db.agenda_revisoes(
+        dias=dias, excluir_ids=[c["card_id"] for c in lote.get("cards", [])])
+    return lote
+
+
 def injetar_lote(template, lote):
     """Injeta o lote no `<script id="lote" type="application/json">` do template.
 
@@ -473,8 +504,11 @@ def main():
                       help="P3: consequencia dos 4 ratings p/ um card (JSON), sem gravar nada")
     acao.add_argument("--export-player", dest="export_player", action="store_true",
                       help="Exporta o lote do dia p/ o player (JSON com sessao, "
-                           "gerado_em, cards[]). Mesma ordem/buckets do --list; "
-                           "sem --limit, corta no teto do dia")
+                           "gerado_em, cards[], agenda_base). Mesma ordem/buckets do "
+                           "--list; sem --limit, corta no teto do dia. Cada card leva "
+                           "`previsao` (vencimento por nota 1-4, o mesmo do --preview) "
+                           "e o lote leva a carga dos 7 dias seguintes fora dele -- a "
+                           "agenda da tela de fim")
     acao.add_argument("--build-player", dest="build_player", action="store_true",
                       help="Injeta o lote (--lote) em core/templates/player.html "
                            "e grava a pagina em --out")
@@ -547,7 +581,7 @@ def main():
                                  new_limit=args.new_limit,
                                  prevalencia=args.prevalencia, cluster=args.cluster)
         limite = args.limit if args.limit is not None else teto_do_dia(ordered)
-        lote = montar_lote(ordered, limit=limite, sessao=args.sessao)
+        lote = anexar_agenda(montar_lote(ordered, limit=limite, sessao=args.sessao))
         destino = Path(args.out) if args.out else Path("tmp") / ("player_%s.json" % lote["sessao"])
         destino.parent.mkdir(parents=True, exist_ok=True)
         destino.write_text(json.dumps(lote, ensure_ascii=False, indent=1, default=str),

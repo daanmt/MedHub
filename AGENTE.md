@@ -251,7 +251,7 @@ Qualquer duplicação semântica entre workflow e skill é defeito por contrato.
 | `tools/fsrs_optimize.py` | Otimizador READ-ONLY de parametros do FSRS sobre o revlog proprio (R1, s184) | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.claude/commands/engenharia-cli.md` (+4) |
 | `tools/fsrs_queue.py` | fila de revisão FSRS em JSON para revisão conversacional | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.agents/skills/source-command-revisar/SKILL.md` (+24) |
 | `tools/habilidades.py` | — | `.agents/skills/source-command-analisar-questao/SKILL.md`, `.claude/commands/analisar-questao.md` (+10) |
-| `tools/hub.py` | monta o MedHub HUB: UMA pagina (Cards + Aulas + Painel) e o manifesto do publish | `.agents/skills/source-command-aula-base/SKILL.md`, `.agents/skills/source-command-engenharia-cli/SKILL.md` (+8) |
+| `tools/hub.py` | monta o MedHub HUB: UMA pagina (Cards + Aulas + Painel) e o manifesto do publish | `.agents/skills/source-command-aula-base/SKILL.md`, `.agents/skills/source-command-engenharia-cli/SKILL.md` (+13) |
 | `tools/importar_sessoes.py` | importa volume de sessões em lote a partir de JSON | `.agents/skills/source-command-importar-planilha/SKILL.md`, `.claude/commands/importar-planilha.md` (+8) |
 | `tools/index_resumos.py` | index_resumos — CLI para (re)indexar todos os resumos clínicos no ChromaDB | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.agents/workflows/registrar-sessao.md` (+5) |
 | `tools/init_db.py` | — | `app/utils/db.py`, `tools/check_fk_orphans.py` (+10) |
@@ -268,7 +268,7 @@ Qualquer duplicação semântica entre workflow e skill é defeito por contrato.
 | `tools/preparacao.py` | posicao SSOT da preparacao no cronograma (PRD orquestracao, part-1) | `.agents/skills/source-command-cronograma/SKILL.md`, `.agents/skills/source-command-engenharia-cli/SKILL.md` (+12) |
 | `tools/reachability_check.py` | check de ALCANCABILIDADE v0 (consolidacao part-6) | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.claude/commands/engenharia-cli.md` (+5) |
 | `tools/recurate_cards.py` | o reescritor in-place CANONICO de flashcards | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.agents/workflows/curar-cards.md` (+10) |
-| `tools/reforja.py` | a fila de reforja de flashcards como ESTADO consultavel (B2, s176) | `.agents/skills/source-command-analisar-questao/SKILL.md`, `.agents/skills/source-command-engenharia-cli/SKILL.md` (+37) |
+| `tools/reforja.py` | a fila de reforja de flashcards como ESTADO consultavel (B2, s176) | `.agents/skills/source-command-analisar-questao/SKILL.md`, `.agents/skills/source-command-engenharia-cli/SKILL.md` (+38) |
 | `tools/registrar_sessao_bulk.py` | registrar_sessao_bulk.py | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.agents/skills/source-command-importar-planilha/SKILL.md` (+25) |
 | `tools/review_radar.py` | Radar de dormência por TEMA | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.claude/commands/engenharia-cli.md` (+4) |
 | `tools/selo.py` | a tabela item -> terminal da reforma de engenharia, DERIVADA (s187) | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.claude/commands/engenharia-cli.md` (+5) |

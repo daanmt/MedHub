@@ -108,16 +108,27 @@ class FSRS:
             "due": datetime.now(),
         }
 
-    def evaluate(self, card, rating):
+    def evaluate(self, card, rating, quando=None):
         """Aplica a avaliação (1=Again, 2=Hard, 3=Good, 4=Easy) e retorna o
-        próximo estado no shape consumido por `record_review` (9 chaves)."""
+        próximo estado no shape consumido por `record_review` (9 chaves).
+
+        `quando` (s193, datetime LOCAL naive) = o instante da REVISÃO: o intervalo
+        conta a partir dele, não da hora em que se grava. None = agora. Revisão que
+        não é posterior à última do card -> ValueError: o py-fsrs NÃO recusa um
+        `review_datetime` anterior ao `last_review` -- calcula `days < 1` e trata
+        como revisão de curto prazo, em silêncio. A guarda mora aqui por isso."""
         rating = int(rating)
-        now_utc = datetime.now(timezone.utc)
+        now_utc = (datetime.now(timezone.utc) if quando is None
+                   else quando.astimezone(timezone.utc))
         reps = int(card.get("reps") or 0)
         lapses = int(card.get("lapses") or 0)
         state = card.get("state")
         stability = card.get("stability")
         last_review = _parse_dt(card.get("last_review"))
+        if quando is not None and last_review is not None and now_utc <= last_review:
+            raise ValueError(
+                "revisao em %s nao e posterior a ultima do card (%s) -- o estado "
+                "FSRS so anda para a frente" % (quando, last_review.replace(tzinfo=None)))
 
         is_new = (not state) or int(state) == 0 or not stability
 

@@ -11,6 +11,7 @@ import os
 import sqlite3
 import sys
 import tempfile
+from datetime import datetime, timedelta
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 try:
@@ -150,6 +151,97 @@ def test_last_elapsed_days_populado():
     _com_db(corpo)
 
 
+@contextlib.contextmanager
+def _relogio(instante):
+    """`db.agora` congelado (o relogio unico, F80) -- a recusa de futuro usa ele."""
+    orig = db.agora
+    db.agora = lambda: instante
+    try:
+        yield
+    finally:
+        db.agora = orig
+
+
+def _linha_fsrs(tmp, card_id=1):
+    con = sqlite3.connect(tmp)
+    linha = con.execute("SELECT due, last_review, scheduled_days FROM fsrs_cards "
+                        "WHERE card_id = ?", (card_id,)).fetchone()
+    con.close()
+    return linha
+
+
+def test_record_review_com_quando_grava_no_relogio_da_revisao():
+    """s193 (medhub-hub-v0-part-2): a nota das 07:17 gravada as 20:00 entra no revlog
+    as 07:17 e o intervalo conta de 07:17 -- em 22/09 o relogio da gravacao deslocou o
+    `due` do #92 em 12h."""
+    quando = datetime(2026, 9, 22, 7, 17, 50)
+
+    def corpo(tmp):
+        with _relogio(datetime(2026, 9, 22, 20, 0, 0)), \
+                contextlib.redirect_stdout(io.StringIO()):
+            db.record_review(1, 3, quando=quando)
+        con = sqlite3.connect(tmp)
+        rt = con.execute("SELECT review_time FROM fsrs_revlog").fetchone()[0]
+        con.close()
+        assert rt == "2026-09-22 07:17:50", f"review_time = quando (got {rt})"
+        due, last_review, dias = _linha_fsrs(tmp)
+        assert last_review == "2026-09-22 07:17:50", f"last_review = quando (got {last_review})"
+        assert datetime.fromisoformat(due) == quando + timedelta(days=dias), (
+            f"due calculado a partir de quando: {due} != {quando} + {dias}d")
+    _com_db(corpo)
+
+
+def test_record_review_recusa_quando_no_futuro_sem_gravar():
+    def corpo(tmp):
+        agora = datetime(2026, 9, 22, 20, 0, 0)
+        with _relogio(agora):
+            try:
+                db.record_review(1, 3, quando=agora + timedelta(seconds=1))
+                raise AssertionError("quando no futuro deveria ser recusado")
+            except ValueError as e:
+                assert "futuro" in str(e)
+        assert _revlog(tmp) == [], "revlog intacto"
+        assert _linha_fsrs(tmp)[1] is None, "estado FSRS intacto"
+    _com_db(corpo)
+
+
+def test_record_review_recusa_revisao_que_nao_e_posterior_a_ultima():
+    """O py-fsrs NAO recusa um review_datetime anterior ao last_review: calcula
+    `days < 1` e trata como curto prazo, em silencio. A guarda e do adapter."""
+    def corpo(tmp):
+        with _relogio(datetime(2026, 9, 22, 20, 0, 0)), \
+                contextlib.redirect_stdout(io.StringIO()):
+            db.record_review(1, 3, quando=datetime(2026, 9, 21, 10, 30, 0))
+            for anterior in (datetime(2026, 9, 20, 7, 0, 0), datetime(2026, 9, 21, 10, 30, 0)):
+                try:
+                    db.record_review(1, 2, quando=anterior)
+                    raise AssertionError(f"{anterior} nao e posterior a ultima revisao")
+                except ValueError as e:
+                    assert "posterior" in str(e)
+        assert len(_revlog(tmp)) == 1, "so a 1a revisao gravou"
+    _com_db(corpo)
+
+
+def test_proveniencia_e_a_do_instante_da_revisao():
+    """F76 com o relogio da revisao: card com due 22/09 06:00 respondido as 07:17 era
+    'agendado'; gravado no dia seguinte, recomputar no relogio de parede daria 'vencido'
+    e plantaria uma divergencia falsa no contador de gate-miss (B1)."""
+    def corpo(tmp):
+        con = sqlite3.connect(tmp)
+        con.execute("UPDATE fsrs_cards SET state = 2, stability = 5.0, difficulty = 5.0, "
+                    "due = '2026-09-22 06:00:00', last_review = '2026-09-17 06:00:00', "
+                    "reps = 1 WHERE card_id = 1")
+        con.commit()
+        con.close()
+        with _relogio(datetime(2026, 9, 23, 10, 0, 0)), \
+                contextlib.redirect_stdout(io.StringIO()):
+            m = db.record_review(1, 3, selection_reason="agendado",
+                                 quando=datetime(2026, 9, 22, 7, 17, 50))
+        assert m["reason_servido"] == "agendado", m["reason_servido"]
+        assert m["reason_divergente"] is False
+    _com_db(corpo)
+
+
 def test_proveniencia_card_version_e_reason():
     """P3 part-1: revlog registra a versao VISTA e o motivo de servico; pos-
     reforja (card_version 1->2), a nova revisao registra 2 — 'v2 > v1?' vira
@@ -177,6 +269,10 @@ def test_proveniencia_card_version_e_reason():
 if __name__ == "__main__":
     fns = [test_fluxo_normal_intacto, test_corrida_segunda_aplicacao_falha_sem_log,
            test_card_sem_linha_fsrs_ganha_insert, test_last_elapsed_days_populado,
+           test_record_review_com_quando_grava_no_relogio_da_revisao,
+           test_record_review_recusa_quando_no_futuro_sem_gravar,
+           test_record_review_recusa_revisao_que_nao_e_posterior_a_ultima,
+           test_proveniencia_e_a_do_instante_da_revisao,
            test_proveniencia_card_version_e_reason]
     falhas = 0
     for fn in fns:

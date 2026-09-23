@@ -49,6 +49,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from app.utils import db  # noqa: E402
+from app.utils import notas_player  # noqa: E402
 
 
 def _cluster_key(card):
@@ -200,62 +201,47 @@ def injetar_lote(template, lote):
     return template[:ini] + seguro + template[fim:]
 
 
-def ler_notas(obj, cards):
+def lista_de_notas(obj):
+    """A lista `notas` do JSON (`{"notas": [...]}` ou a lista crua), ou None."""
+    notas = obj.get("notas") if isinstance(obj, dict) else obj
+    return notas if isinstance(notas, list) else None
+
+
+def ler_notas(obj, cards, agora=None, fuso=None):
     """Normaliza o JSON de notas vindo da pagina (input NAO confiavel).
 
-    Aceita `{"notas": [...]}` ou a lista crua. Devolve `(registros, erros,
-    avisos)`; `registros` = [{card_id, rating, defeito, motivo, selection_reason}].
-    Regras: card_id fora do lote e rating fora de 1..4 sao ERRO (recusam o
-    --apply); card_id repetido conta UMA vez -- a primeira nota -- com AVISO
-    (o relearning da pagina nunca gera segunda nota gravavel)."""
-    notas = obj.get("notas") if isinstance(obj, dict) else obj
-    if not isinstance(notas, list):
+    Devolve `(registros, rejeitadas, avisos)`; `registros` = [{card_id, rating,
+    defeito, motivo, selection_reason, quando}], `quando` = o relogio da revisao
+    (`notas_player.relogio`). QUARENTENA (s193): cada doc estranho -- card fora do
+    lote, rating fora de 1..4, defeito sem motivo, sem rating e sem defeito, ts
+    ausente/ilegivel/sem fuso/no futuro -- sai em `rejeitadas` com o motivo, e os
+    validos seguem. card_id repetido conta UMA vez -- a nota de MENOR ts, a 1a de
+    fato -- com AVISO (o relearning da pagina nunca gera segunda nota gravavel)."""
+    notas = lista_de_notas(obj)
+    if notas is None:
         return [], ["JSON de notas sem a lista `notas`"], []
     validos = {}
     for c in cards or []:
         if c.get("card_id") is not None:
             validos[int(c["card_id"])] = c
-    registros, erros, avisos, vistos = [], [], [], set()
+    agora = agora or db.agora()
+    por_card, rejeitadas, avisos = {}, [], []
     for i, n in enumerate(notas):
-        if not isinstance(n, dict):
-            erros.append("nota #%d nao e objeto" % i)
+        registro, motivo = notas_player.validar_nota(n, validos, agora, fuso)
+        if registro is None:
+            rejeitadas.append("nota #%d: %s" % (i, motivo))
             continue
-        try:
-            cid = int(n.get("card_id"))
-        except (TypeError, ValueError):
-            erros.append("nota #%d sem card_id inteiro" % i)
+        cid = registro["card_id"]
+        primeira = por_card.get(cid)
+        if primeira is not None:
+            if registro["quando"] < primeira["quando"]:
+                por_card[cid], registro = registro, primeira
+            avisos.append("card_id %d repetido -- conta a nota de menor ts (%s); a de %s "
+                          "fica fora (relearning nao regrava)"
+                          % (cid, por_card[cid]["quando"], registro["quando"]))
             continue
-        if cid not in validos:
-            erros.append("card_id %d fora do lote exportado" % cid)
-            continue
-        if cid in vistos:
-            avisos.append("card_id %d repetido -- so a 1a nota conta "
-                          "(relearning nao regrava)" % cid)
-            continue
-        vistos.add(cid)
-        cru = n.get("rating_primeira", n.get("rating"))
-        rating = None
-        if cru is not None:
-            try:
-                rating = int(cru)
-            except (TypeError, ValueError):
-                rating = None
-            if rating not in (1, 2, 3, 4):
-                erros.append("card_id %d com rating invalido: %r" % (cid, cru))
-                continue
-        defeito = bool(n.get("defeito"))
-        motivo = (n.get("motivo") or "").strip()
-        if defeito and not motivo:
-            erros.append("card_id %d marcado como defeito SEM motivo "
-                         "(marca sem motivo nao fecha nem audita)" % cid)
-            continue
-        if rating is None and not defeito:
-            erros.append("card_id %d sem rating e sem defeito" % cid)
-            continue
-        registros.append({"card_id": cid, "rating": rating, "defeito": defeito,
-                          "motivo": motivo,
-                          "selection_reason": validos[cid].get("selection_reason")})
-    return registros, erros, avisos
+        por_card[cid] = registro
+    return list(por_card.values()), rejeitadas, avisos
 
 
 def _contar_revlog():
@@ -268,24 +254,63 @@ def _contar_revlog():
 
 
 def aplicar_notas(registros, apply=False, expect=None, out=print,
-                  record_fn=None, reforja_fn=None, count_fn=None):
+                  record_fn=None, reforja_fn=None, count_fn=None, gravado_fn=None):
     """Grava o lote de notas. Dry-run por default (mesmo rito do cards_prune).
 
-    `--apply` exige `--expect` igual ao N medido (COUNT-ASSERT pre) e confere
-    que `fsrs_revlog` cresceu EXATAMENTE N (COUNT-ASSERT pos). Os `defeito`
-    viram marca de reforja (`origem='player'`), que nao conta como revisao.
+    Cada nota com rating e classificada contra o revlog do card
+    (`notas_player.situacao`, s193): JA GRAVADA sai da conta; FORA DE ORDEM e
+    reportada e NAO grava; NOVA grava no relogio da revisao (`quando`), em ordem
+    crescente de ts -- o N do `--expect` conta so as NOVAS. `--apply` exige
+    `--expect` igual a esse N (COUNT-ASSERT pre) e confere que `fsrs_revlog`
+    cresceu EXATAMENTE N (COUNT-ASSERT pos). Os `defeito` viram marca de reforja
+    (`origem='player'`), que nao conta como revisao -- uma vez so por nota.
     Retorna (exit_code, N)."""
     record_fn = record_fn or db.record_review
     reforja_fn = reforja_fn or db.marcar_reforja
     count_fn = count_fn or _contar_revlog
-    com_nota = [r for r in registros if r["rating"] is not None]
-    defeitos = [r for r in registros if r["defeito"]]
-    n = len(com_nota)
-    out("[record-lote] notas=%d defeito(s)=%d" % (n, len(defeitos)))
-    for r in com_nota:
-        out("  %d -> %d (%s)" % (r["card_id"], r["rating"], r["selection_reason"] or "auto"))
+    gravado_fn = gravado_fn or db.estado_gravacao_player
+    sem_relogio = [r for r in registros if r.get("quando") is None]
+    registros = [r for r in registros if r.get("quando") is not None]
+    gravado = gravado_fn([r["card_id"] for r in registros])
+    vazio = {"revisoes": [], "marca_player": None}
+    novas, ja_gravadas, fora_de_ordem = [], [], []
+    for r in (r for r in registros if r["rating"] is not None):
+        g = gravado.get(r["card_id"], vazio)
+        s = notas_player.situacao(r["quando"], g["revisoes"])
+        if s == notas_player.JA_GRAVADA:
+            ja_gravadas.append(r)
+        elif s == notas_player.FORA_DE_ORDEM:
+            fora_de_ordem.append((r, notas_player.ultima_revisao(g["revisoes"])))
+        else:
+            novas.append(r)
+    novas.sort(key=lambda r: (r["quando"], r["card_id"]))
+    defeitos, ja_marcados = [], []
+    for r in (r for r in registros if r["defeito"]):
+        marca = gravado.get(r["card_id"], vazio)["marca_player"]
+        (ja_marcados if notas_player.defeito_ja_marcado(r["quando"], marca)
+         else defeitos).append(r)
+    n = len(novas)
+    out("[record-lote] novas=%d ja_gravadas=%d fora_de_ordem=%d defeito(s)=%d "
+        "(ja marcados %d)" % (n, len(ja_gravadas), len(fora_de_ordem), len(defeitos),
+                              len(ja_marcados)))
+    for r in novas:
+        out("  %d -> %d (%s) @ %s" % (r["card_id"], r["rating"],
+                                      r["selection_reason"] or "auto", r["quando"]))
+    if ja_gravadas:
+        out("  JA GRAVADAS (fora do N): %s"
+            % ", ".join(str(r["card_id"]) for r in ja_gravadas))
+    for r, ultima in fora_de_ordem:
+        out("  FORA DE ORDEM: %d -> %d, nota de %s e o revlog ja tem revisao de %s -- "
+            "NAO gravada (o estado FSRS so anda para a frente)"
+            % (r["card_id"], r["rating"], r["quando"], ultima))
+    for r in sem_relogio:
+        out("  SEM RELOGIO: %d -- registro sem `quando` (nao veio do ler_notas); NAO gravado"
+            % r["card_id"])
     for r in defeitos:
         out("  %d -> DEFEITO: %s" % (r["card_id"], r["motivo"]))
+    if ja_marcados:
+        out("  DEFEITO JA MARCADO (sem 2a marca): %s"
+            % ", ".join(str(r["card_id"]) for r in ja_marcados))
     if not apply:
         out("  DRY-RUN: nada gravado. Para aplicar: --apply --expect %d" % n)
         return 0, n
@@ -294,13 +319,15 @@ def aplicar_notas(registros, apply=False, expect=None, out=print,
         return 2, n
     antes = count_fn()
     gravados = 0
-    for r in com_nota:
+    for r in novas:
         try:
-            record_fn(r["card_id"], r["rating"], selection_reason=r["selection_reason"])
+            record_fn(r["card_id"], r["rating"], selection_reason=r["selection_reason"],
+                      quando=r["quando"])
             gravados += 1
-        except db.ConcurrentReviewError as e:
-            out("  [WARN] card %d NAO gravado (estado mudou desde a leitura): %s"
-                % (r["card_id"], e))
+        except (db.ConcurrentReviewError, ValueError) as e:
+            # corrida ou recusa do writer (futuro / nao posterior a ultima revisao):
+            # o COUNT-ASSERT pos acusa a diferenca e o CLI sai 2
+            out("  [WARN] card %d NAO gravado: %s" % (r["card_id"], e))
     marcas = 0
     for r in defeitos:
         reforja_fn(r["card_id"], r["motivo"], origem="player")
@@ -438,15 +465,20 @@ def main():
                   "a pagina) -- e contra ele que o card_id e validado", file=sys.stderr)
             sys.exit(2)
         lote = json.loads(Path(caminho).read_text(encoding="utf-8"))
-        registros, erros, avisos = ler_notas(notas_obj, lote.get("cards", []))
+        if lista_de_notas(notas_obj) is None:
+            print("[record-lote] RECUSADO: JSON de notas sem a lista `notas`. Nada gravado.",
+                  file=sys.stderr)
+            sys.exit(2)
+        registros, rejeitadas, avisos = ler_notas(notas_obj, lote.get("cards", []))
         for a in avisos:
             print("[WARN] " + a, file=sys.stderr)
-        for e in erros:
-            print("[ERRO] " + e, file=sys.stderr)
-        if erros and args.apply:
-            print("[record-lote] RECUSADO: %d erro(s) no arquivo de notas. Nada gravado."
-                  % len(erros), file=sys.stderr)
-            sys.exit(2)
+        # Quarentena (s193): doc estranho e reportado e fica de fora; os validos
+        # seguem. Nao sai 2 -- um doc torto nao trava as notas boas do operador.
+        for e in rejeitadas:
+            print("[REJEITADA] " + e, file=sys.stderr)
+        if rejeitadas:
+            print("[record-lote] rejeitadas=%d (nada delas e gravado; motivo por doc em "
+                  "stderr)" % len(rejeitadas))
         code, _ = aplicar_notas(registros, apply=args.apply, expect=args.expect)
         if code:
             sys.exit(code)

@@ -776,13 +776,18 @@ def reason_diverge(recebido, servido) -> bool:
     return servido not in REASONS_EQUIVALENTES.get(recebido, set())
 
 
-def record_review(flashcard_id, rating, selection_reason=None):
+def record_review(flashcard_id, rating, selection_reason=None, quando=None):
     """Aplica o algoritmo FSRS e atualiza o banco de dados.
 
     part-2 (flashcards-integridade): lê o estado e delega a `_aplicar_review`
     (lock otimista). Corrida → `ConcurrentReviewError`, nada gravado.
     P3 part-1: `selection_reason` opcional (vencido|fresh_error|agendado|novo|
-    pre_bloco) persiste no revlog; assinatura retro-compatível."""
+    pre_bloco) persiste no revlog; assinatura retro-compatível.
+    s193 (medhub-hub-v0-part-2): `quando` opcional (datetime LOCAL naive) = o
+    instante da REVISÃO -- o FSRS calcula a partir dele, o revlog grava
+    `review_time = quando` e a proveniência é a do card naquele instante. No
+    futuro, ou não posterior à última revisão do card -> ValueError, nada
+    gravado. Sem `quando`, o relógio é o da gravação, como sempre."""
     conn = get_connection()
     try:
         df = pd.read_sql("SELECT * FROM fsrs_cards WHERE card_id = ?", conn, params=(flashcard_id,))
@@ -801,12 +806,13 @@ def record_review(flashcard_id, rating, selection_reason=None):
         row_q = conn.execute("SELECT questao_id FROM flashcards WHERE id = ?",
                              (flashcard_id,)).fetchone()
         questao_id = row_q[0] if row_q else None
-        reason_servido = bucket_de(card_data.get('state'), card_data.get('due'), questao_id)
+        reason_servido = bucket_de(card_data.get('state'), card_data.get('due'), questao_id,
+                                   instante=quando)
         if selection_reason == "auto":
             selection_reason = reason_servido
         metrics = _aplicar_review(conn, card_data, rating, card_novo=card_novo,
                                   selection_reason=selection_reason,
-                                  reason_servido=reason_servido)
+                                  reason_servido=reason_servido, quando=quando)
         metrics["reason_servido"] = reason_servido
         metrics["selection_reason"] = selection_reason
         metrics["reason_divergente"] = reason_diverge(selection_reason, reason_servido)
@@ -816,15 +822,20 @@ def record_review(flashcard_id, rating, selection_reason=None):
 
 
 def _aplicar_review(conn, card_data, rating, card_novo=False, selection_reason=None,
-                    reason_servido=None):
+                    reason_servido=None, quando=None):
     """Núcleo da gravação sobre um estado LIDO (testável em separado).
 
     Lock otimista: o UPDATE é condicionado ao `last_review` lido — duas
     aplicações do MESMO estado → a segunda dá rowcount 0 → rollback +
     `ConcurrentReviewError`, e o revlog NÃO ganha linha. Para card novo o
-    INSERT usa a PK como trava (corrida falha alto com IntegrityError)."""
+    INSERT usa a PK como trava (corrida falha alto com IntegrityError).
+    `quando` (s193): o relógio da revisão; as recusas acontecem ANTES de
+    qualquer escrita."""
     cursor = conn.cursor()
     flashcard_id = card_data['card_id']
+    if quando is not None and quando > agora():
+        raise ValueError(f"card {flashcard_id}: revisao em {quando} esta no futuro "
+                         f"(agora {agora():{FORMATO_CARIMBO}}) -- nada gravado")
 
     # `last_review`/`elapsed_days` do estado lido — normalizados p/ o WHERE
     # (pandas devolve None/NaN para NULL; o banco guarda TEXT).
@@ -839,7 +850,7 @@ def _aplicar_review(conn, card_data, rating, card_novo=False, selection_reason=N
 
     # Calcula próximo estado via FSRS
     fsrs = FSRS()
-    new_metrics = fsrs.evaluate(card_data, rating)
+    new_metrics = fsrs.evaluate(card_data, rating, quando=quando)
 
     # Load balancing do calendário (s128). Dentro da janela de folga do
     # intervalo (+-5%), escolhe o dia de MENOR carga já agendada -- achata
@@ -889,6 +900,9 @@ def _aplicar_review(conn, card_data, rating, card_novo=False, selection_reason=N
                            (flashcard_id,)).fetchone()
     versao_vista = row_v[0] if row_v and row_v[0] is not None else None
     # F80: carimbo explicito pelo relogio unico (LOCAL) -- nunca o DEFAULT do SQLite (UTC).
+    # s193: com `quando`, o carimbo e o da REVISAO -- a igualdade que torna o
+    # `--record-lote` idempotente compara exatamente este valor.
+    review_time = quando.strftime(FORMATO_CARIMBO) if quando is not None else carimbo()
     cursor.execute('''
         INSERT INTO fsrs_revlog (card_id, rating, state, due, stability, difficulty,
                                  elapsed_days, last_elapsed_days, scheduled_days,
@@ -899,7 +913,7 @@ def _aplicar_review(conn, card_data, rating, card_novo=False, selection_reason=N
         flashcard_id, rating, new_metrics['state'], new_metrics['due'],
         new_metrics['stability'], new_metrics['difficulty'],
         new_metrics['elapsed_days'], elapsed_anterior, new_metrics['scheduled_days'],
-        versao_vista, selection_reason, carimbo(), reason_servido,
+        versao_vista, selection_reason, review_time, reason_servido,
         REGUA_ATUAL                       # R2/F112: a nota so e interpretavel com ela
     ))
 
@@ -1423,6 +1437,40 @@ def fila_reforja(incluir_fechadas=False):
         if d["aberta"] or incluir_fechadas:
             saida.append(d)
     saida.sort(key=lambda d: (-d["n_marcacoes"], d["card_id"]))
+    return saida
+
+
+def estado_gravacao_player(card_ids):
+    """O que JA foi gravado para estes cards -- a idempotencia do `--record-lote` (s193).
+
+    Devolve `{card_id: {"revisoes": [review_time, ...], "marca_player": criado_em | None}}`
+    para TODO id pedido. `revisoes` sao TODAS as linhas do card no revlog, nao so o MAX:
+    a igualdade exata precisa do conjunto (uma nota ja gravada pode ter revisao mais nova
+    depois dela). `marca_player` e a marca de reforja mais recente de `origem='player'`.
+    Strings cruas do banco (`YYYY-MM-DD HH:MM:SS`, hora LOCAL -- F80); quem compara e
+    `app.utils.notas_player`. Derivado do SSOT, sem estado novo. Read-only; lista vazia
+    -> {} sem abrir conexao.
+    """
+    ids = sorted({int(c) for c in card_ids or ()})
+    if not ids:
+        return {}
+    saida = {cid: {"revisoes": [], "marca_player": None} for cid in ids}
+    conn = get_connection()
+    try:
+        for i in range(0, len(ids), 500):          # teto de variaveis do SQLite
+            fatia = ids[i:i + 500]
+            marcadores = ",".join("?" * len(fatia))
+            for cid, quando in conn.execute(
+                    f"SELECT card_id, review_time FROM fsrs_revlog "
+                    f"WHERE card_id IN ({marcadores}) ORDER BY card_id, review_time", fatia):
+                saida[int(cid)]["revisoes"].append(None if quando is None else str(quando))
+            for cid, quando in conn.execute(
+                    f"SELECT card_id, MAX(criado_em) FROM reforja_marks "
+                    f"WHERE evento = 'marcada' AND origem = 'player' "
+                    f"AND card_id IN ({marcadores}) GROUP BY card_id", fatia):
+                saida[int(cid)]["marca_player"] = None if quando is None else str(quando)
+    finally:
+        conn.close()
     return saida
 
 

@@ -4,7 +4,7 @@ projeto: MedHub
 feature: medhub-hub-v0
 part: 2
 slug: medhub-hub-v0-part-2
-status: ready
+status: implemented
 relates_to:
   - .vibeflow/prds/medhub-hub-2026-09-22.md
   - tools/fsrs_queue.py
@@ -27,6 +27,13 @@ relates_to:
 > e devolveu `db.py`/`fsrs_queue.py` ao HEAD (24 testes verdes). Ate esta parte entrar vale o GATE do
 > rito (`revisar.md`): notas do hub nao sao gravadas, o lote nao e trocado e nada e podado.
 
+> **Estado na s193 (22/09/2026): IMPLEMENTADA, pelo PRINCIPAL e sem filho** (decisao do operador
+> via `/ai-eng`, que substituiu o plano abaixo). As regras puras moram em `app/utils/notas_player.py`
+> (`relogio`, `validar_nota`, `situacao` -- o `ja_gravada` do plano virou a classe JA_GRAVADA --,
+> `defeito_ja_marcado`), testadas em `tools/test_notas_player.py`; a fiacao em `fsrs.py`/`db.py`/
+> `fsrs_queue.py`. Golden de partida batido: 24 testes verdes, revlog 3.071 -> 3.071, releitura de
+> 22/09 = N 0 (o #92 sai FORA DE ORDEM, como o anti-scope previu) e `--apply --expect 0` exit 0.
+>
 > **Plano da s193 (ALTERA do `/ai-eng`, 22/09):** (i) um filho escreve 3 funcoes PURAS com teste, em
 > arquivo NOVO, sem tocar `db.py`/`fsrs_queue.py`: `ja_gravada(nota, revlog_do_card)`,
 > `validar_nota(nota, lote) -> ok | rejeitada+motivo`, `relogio(nota) -> review_time = ts`; (ii) a fiacao

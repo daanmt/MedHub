@@ -27,6 +27,7 @@ import os
 import sqlite3
 import sys
 import tempfile
+from datetime import datetime, timedelta, timezone
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 try:
@@ -227,21 +228,28 @@ def test_template_real_e_injetavel_e_tem_wrap_unico():
 _CARDS = [{"card_id": 1, "selection_reason": "vencido"},
           {"card_id": 2, "selection_reason": "novo"}]
 
+# s193 (medhub-hub-v0-part-2): toda nota da pagina tem `ts` (ISO UTC); sem ele a nota
+# e REJEITADA. As fixtures antigas ganharam ts no passado; os asserts ficaram intocados.
+_TS = "2026-09-16T10:00:00.144Z"
+_TS_DEPOIS = "2026-09-16T10:05:00.500Z"
+
 
 def test_nota_fora_do_lote_e_erro():
-    regs, erros, _ = ler_notas({"notas": [{"card_id": 99, "rating_primeira": 3}]}, _CARDS)
+    regs, erros, _ = ler_notas({"notas": [{"card_id": 99, "rating_primeira": 3,
+                                           "ts": _TS}]}, _CARDS)
     assert regs == [] and any("fora do lote" in e for e in erros)
 
 
 def test_rating_fora_de_1_a_4_e_erro():
-    regs, erros, _ = ler_notas({"notas": [{"card_id": 1, "rating_primeira": 7}]}, _CARDS)
+    regs, erros, _ = ler_notas({"notas": [{"card_id": 1, "rating_primeira": 7,
+                                           "ts": _TS}]}, _CARDS)
     assert regs == [] and any("rating invalido" in e for e in erros)
 
 
 def test_duplicata_conta_uma_vez_com_aviso():
     regs, erros, avisos = ler_notas({"notas": [
-        {"card_id": 1, "rating_primeira": 2},
-        {"card_id": 1, "rating_primeira": 4},
+        {"card_id": 1, "rating_primeira": 2, "ts": _TS},
+        {"card_id": 1, "rating_primeira": 4, "ts": _TS_DEPOIS},
     ]}, _CARDS)
     assert erros == []
     assert len(regs) == 1 and regs[0]["rating"] == 2, "a PRIMEIRA nota e a gravavel"
@@ -249,13 +257,15 @@ def test_duplicata_conta_uma_vez_com_aviso():
 
 
 def test_defeito_sem_motivo_e_erro():
-    regs, erros, _ = ler_notas({"notas": [{"card_id": 1, "defeito": True}]}, _CARDS)
+    regs, erros, _ = ler_notas({"notas": [{"card_id": 1, "defeito": True,
+                                           "ts": _TS}]}, _CARDS)
     assert regs == [] and any("SEM motivo" in e for e in erros)
 
 
 def test_selection_reason_vem_do_export_nao_da_pagina():
     regs, erros, _ = ler_notas({"notas": [
-        {"card_id": 1, "rating_primeira": 3, "selection_reason": "mentira"}]}, _CARDS)
+        {"card_id": 1, "rating_primeira": 3, "selection_reason": "mentira",
+         "ts": _TS}]}, _CARDS)
     assert erros == [] and regs[0]["selection_reason"] == "vencido"
 
 
@@ -265,7 +275,8 @@ def test_selection_reason_vem_do_export_nao_da_pagina():
 
 def test_dry_run_nao_grava_nada():
     def corpo(tmp):
-        regs, _, _ = ler_notas({"notas": [{"card_id": 1, "rating_primeira": 3}]}, _CARDS)
+        regs, _, _ = ler_notas({"notas": [{"card_id": 1, "rating_primeira": 3,
+                                           "ts": _TS}]}, _CARDS)
         saida = []
         code, n = aplicar_notas(regs, apply=False, out=saida.append)
         assert code == 0 and n == 1
@@ -276,7 +287,8 @@ def test_dry_run_nao_grava_nada():
 
 def test_expect_errado_recusa_sem_gravar():
     def corpo(tmp):
-        regs, _, _ = ler_notas({"notas": [{"card_id": 1, "rating_primeira": 3}]}, _CARDS)
+        regs, _, _ = ler_notas({"notas": [{"card_id": 1, "rating_primeira": 3,
+                                           "ts": _TS}]}, _CARDS)
         saida = []
         code, n = aplicar_notas(regs, apply=True, expect=99, out=saida.append)
         assert code == 2 and n == 1
@@ -291,8 +303,8 @@ def test_expect_errado_recusa_sem_gravar():
 def test_duplicata_gera_uma_unica_revisao():
     def corpo(tmp):
         regs, _, avisos = ler_notas({"notas": [
-            {"card_id": 1, "rating_primeira": 3},
-            {"card_id": 1, "rating_primeira": 1},
+            {"card_id": 1, "rating_primeira": 3, "ts": _TS},
+            {"card_id": 1, "rating_primeira": 1, "ts": _TS_DEPOIS},
         ]}, _CARDS)
         assert avisos, "duplicata avisa (WARN-first), nao bloqueia"
         with contextlib.redirect_stdout(io.StringIO()):
@@ -305,8 +317,8 @@ def test_duplicata_gera_uma_unica_revisao():
 def test_lote_grava_n_revisoes_e_bate_o_count_assert():
     def corpo(tmp):
         regs, erros, _ = ler_notas({"notas": [
-            {"card_id": 1, "rating_primeira": 3},
-            {"card_id": 2, "rating_primeira": 4},
+            {"card_id": 1, "rating_primeira": 3, "ts": _TS},
+            {"card_id": 2, "rating_primeira": 4, "ts": _TS_DEPOIS},
         ]}, _CARDS)
         assert erros == []
         saida = []
@@ -326,8 +338,8 @@ def test_lote_grava_n_revisoes_e_bate_o_count_assert():
 def test_defeito_vira_marca_de_reforja_e_nao_conta_revisao():
     def corpo(tmp):
         regs, erros, _ = ler_notas({"notas": [
-            {"card_id": 1, "defeito": True, "motivo": "pergunta composta"},
-            {"card_id": 2, "rating_primeira": 3},
+            {"card_id": 1, "defeito": True, "motivo": "pergunta composta", "ts": _TS},
+            {"card_id": 2, "rating_primeira": 3, "ts": _TS_DEPOIS},
         ]}, _CARDS)
         assert erros == []
         with contextlib.redirect_stdout(io.StringIO()):
@@ -345,14 +357,191 @@ def test_count_assert_pos_pega_revisao_que_nao_gravou():
     """Se um record falhar no meio do lote, o crescimento do revlog nao bate o N
     e o CLI sai 2 -- fail-loud, nunca 'gravei quase tudo' em silencio."""
     regs = [{"card_id": 1, "rating": 3, "defeito": False, "motivo": "",
-             "selection_reason": "vencido"}]
+             "selection_reason": "vencido", "quando": datetime(2026, 9, 16, 7, 0, 0)}]
     saida = []
     code, n = aplicar_notas(regs, apply=True, expect=1, out=saida.append,
                             record_fn=lambda *a, **k: None,
                             reforja_fn=lambda *a, **k: None,
-                            count_fn=lambda: 0)
+                            count_fn=lambda: 0,
+                            gravado_fn=lambda ids: {})   # s193: sem ler o banco real
     assert code == 2 and n == 1
     assert any("COUNT-ASSERT pos FALHOU" in l for l in saida)
+
+
+# --------------------------------------------------------------------------
+# 4b. s193 (medhub-hub-v0-part-2): relogio da revisao, idempotencia, quarentena
+# --------------------------------------------------------------------------
+
+BRT = timezone(timedelta(hours=-3))
+_AGORA = datetime(2026, 9, 22, 20, 0, 0)       # relogio do banco CONGELADO (LOCAL naive)
+
+
+@contextlib.contextmanager
+def _relogio(instante=_AGORA):
+    """`db.agora` congelado: a recusa de futuro do writer e o `ler_notas` usam o mesmo."""
+    orig = db.agora
+    db.agora = lambda: instante
+    try:
+        yield
+    finally:
+        db.agora = orig
+
+
+def _gravar(notas, expect, cards=_CARDS):
+    """ler -> aplicar com --apply, fuso injetado (-03:00). Devolve (code, n, saida)."""
+    regs, rejeitadas, _ = ler_notas({"notas": notas}, cards, fuso=BRT)
+    assert rejeitadas == [], rejeitadas
+    saida = []
+    with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+        code, n = aplicar_notas(regs, apply=True, expect=expect, out=saida.append)
+    return code, n, saida
+
+
+def _review_times(tmp, card_id=1):
+    con = sqlite3.connect(tmp)
+    linhas = [r[0] for r in con.execute(
+        "SELECT review_time FROM fsrs_revlog WHERE card_id = ? ORDER BY id", (card_id,))]
+    con.close()
+    return linhas
+
+
+def test_releitura_da_mesma_sessao_grava_zero_com_expect_0():
+    """DoD 2 do PRD: ler e gravar a MESMA sessao duas vezes grava ZERO na segunda."""
+    notas = [{"card_id": 1, "rating_primeira": 3, "ts": _TS},
+             {"card_id": 2, "rating_primeira": 1, "ts": _TS_DEPOIS}]
+
+    def corpo(tmp):
+        with _relogio():
+            code, n, _ = _gravar(notas, expect=2)
+            assert code == 0 and n == 2 and _conta(tmp, "fsrs_revlog") == 2
+            code, n, saida = _gravar(notas, expect=0)
+        assert code == 0 and n == 0, "a releitura mede N=0 e o --expect 0 passa"
+        assert _conta(tmp, "fsrs_revlog") == 2, "nada regravado"
+        assert any("JA GRAVADAS" in l and "1, 2" in l for l in saida), saida
+    _com_db(corpo)
+
+
+def test_duas_notas_do_mesmo_card_em_duas_sessoes_gravam_nos_seus_ts():
+    """PROPRIEDADE (`/ai-eng`, 22/09): ts1 < ts2 em sessoes diferentes, gravadas em
+    ordem -> 2 linhas com review_time = ts1, ts2. Com o relogio da gravacao, a 2a
+    sumiria (`review_time >= ts`) ou o intervalo contaria da hora errada."""
+    def corpo(tmp):
+        with _relogio():
+            assert _gravar([{"card_id": 1, "rating_primeira": 3,
+                             "ts": "2026-09-20T10:00:00.500Z"}], expect=1)[0] == 0
+            assert _gravar([{"card_id": 1, "rating_primeira": 2,
+                             "ts": "2026-09-21T13:30:00.900Z"}], expect=1)[0] == 0
+        assert _review_times(tmp) == ["2026-09-20 07:00:00", "2026-09-21 10:30:00"]
+    _com_db(corpo)
+
+
+def test_ordem_inversa_sai_fora_de_ordem_reportada_e_nao_grava():
+    """A mesma propriedade ao contrario: a nota de ts1 chega DEPOIS da de ts2 -> FORA DE
+    ORDEM, reportada com o motivo, nunca gravada por cima (o card so anda para a frente)."""
+    def corpo(tmp):
+        with _relogio():
+            assert _gravar([{"card_id": 1, "rating_primeira": 2,
+                             "ts": "2026-09-21T13:30:00.900Z"}], expect=1)[0] == 0
+            code, n, saida = _gravar([{"card_id": 1, "rating_primeira": 3,
+                                       "ts": "2026-09-20T10:00:00.500Z"}], expect=0)
+        assert code == 0 and n == 0
+        assert _review_times(tmp) == ["2026-09-21 10:30:00"], "1 linha so"
+        fora = [l for l in saida if "FORA DE ORDEM" in l]
+        assert len(fora) == 1 and "2026-09-20 07:00:00" in fora[0] and (
+            "2026-09-21 10:30:00" in fora[0]), saida
+    _com_db(corpo)
+
+
+def test_nota_utc_entra_no_revlog_em_hora_local():
+    """Conversao UTC -> local com fuso INJETADO: a nota real do #92 (10:17:50.144Z)
+    grava review_time 07:17:50 -- o momento em que ele respondeu no celular."""
+    def corpo(tmp):
+        with _relogio():
+            assert _gravar([{"card_id": 1, "rating_primeira": 1,
+                             "ts": "2026-09-22T10:17:50.144Z"}], expect=1)[0] == 0
+        assert _review_times(tmp) == ["2026-09-22 07:17:50"]
+    _com_db(corpo)
+
+
+def test_defeito_relido_nao_remarca():
+    notas = [{"card_id": 1, "defeito": True, "motivo": "pergunta composta", "ts": _TS},
+             {"card_id": 2, "rating_primeira": 3, "ts": _TS_DEPOIS}]
+
+    def corpo(tmp):
+        with _relogio():
+            assert _gravar(notas, expect=1)[0] == 0
+            code, n, saida = _gravar(notas, expect=0)
+        assert code == 0 and n == 0
+        assert _conta(tmp, "reforja_marks") == 1, "a releitura nao abre 2a marca"
+        assert any("DEFEITO JA MARCADO" in l for l in saida), saida
+    _com_db(corpo)
+
+
+def test_quarentena_grava_os_validos_e_reporta_cada_doc_estranho():
+    """Quarentena no writer: 1 doc estranho de cada tipo + 2 validos -> grava 2, cada
+    estranho sai com o seu motivo, e nada dele e gravado."""
+    estranhos = [
+        ({"card_id": 99, "rating_primeira": 3, "ts": _TS}, "fora do lote"),
+        ({"card_id": 1, "rating_primeira": 9, "ts": _TS}, "rating invalido"),
+        ({"card_id": 1, "rating_primeira": 3}, "ts ausente"),
+        ({"card_id": 1, "rating_primeira": 3, "ts": "amanha"}, "ts ilegivel"),
+        ({"card_id": 1, "rating_primeira": 3, "ts": "2026-09-30T10:00:00Z"}, "ts no futuro"),
+        ({"card_id": 2, "defeito": True, "ts": _TS}, "SEM motivo"),
+        ({"card_id": 2, "ts": _TS}, "sem rating e sem defeito"),
+    ]
+    validos = [{"card_id": 1, "rating_primeira": 3, "ts": _TS},
+               {"card_id": 2, "rating_primeira": 4, "ts": _TS_DEPOIS}]
+
+    def corpo(tmp):
+        with _relogio():
+            regs, rejeitadas, _ = ler_notas(
+                {"notas": [n for n, _ in estranhos] + validos}, _CARDS, fuso=BRT)
+            assert len(rejeitadas) == len(estranhos), rejeitadas
+            for (_, motivo), linha in zip(estranhos, rejeitadas):
+                assert motivo in linha, (motivo, linha)
+            with contextlib.redirect_stderr(io.StringIO()):
+                code, n = aplicar_notas(regs, apply=True, expect=2, out=lambda *_: None)
+        assert code == 0 and n == 2
+        assert _conta(tmp, "fsrs_revlog") == 2 and _conta(tmp, "reforja_marks") == 0
+    _com_db(corpo)
+
+
+def _rodar_cli(argv):
+    """`main()` em processo, com stdout/stderr capturados. Devolve o exit code."""
+    from tools import fsrs_queue
+    antigo = sys.argv
+    sys.argv = ["fsrs_queue.py"] + argv
+    try:
+        with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+            fsrs_queue.main()
+        return 0
+    except SystemExit as e:
+        return int(e.code or 0)
+    finally:
+        sys.argv = antigo
+
+
+def test_cli_com_rejeitada_nao_sai_2_e_grava_os_validos():
+    def corpo(tmp):
+        with tempfile.TemporaryDirectory() as pasta:
+            lote = os.path.join(pasta, "lote.json")
+            notas = os.path.join(pasta, "notas.json")
+            with open(lote, "w", encoding="utf-8") as f:
+                json.dump({"sessao": "t", "cards": _CARDS}, f)
+            with open(notas, "w", encoding="utf-8") as f:
+                json.dump({"notas": [{"card_id": 99, "rating_primeira": 3, "ts": _TS},
+                                     {"card_id": 1, "rating_primeira": 3, "ts": _TS},
+                                     {"card_id": 2, "rating_primeira": 2, "ts": _TS_DEPOIS}]}, f)
+            with _relogio():
+                code = _rodar_cli(["--record-lote", notas, "--lote", lote,
+                                   "--apply", "--expect", "2"])
+            assert code == 0, "doc rejeitado nao derruba o lote"
+            assert _conta(tmp, "fsrs_revlog") == 2
+            with open(notas, "w", encoding="utf-8") as f:
+                json.dump({"nada": []}, f)
+            assert _rodar_cli(["--record-lote", notas, "--lote", lote]) == 2, (
+                "arquivo sem a lista `notas` e erro do ARQUIVO, nao de doc: sai 2")
+    _com_db(corpo)
 
 
 # --------------------------------------------------------------------------

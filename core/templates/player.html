@@ -97,7 +97,7 @@ kbd{
 }
 .topo{display:flex;flex-wrap:wrap;gap:12px;align-items:baseline;justify-content:space-between}
 .sub{color:var(--tinta3);font-size:.85em;margin-top:2px}
-.metros{display:flex;gap:14px;align-items:baseline;font-variant-numeric:tabular-nums}
+.metros{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:baseline;font-variant-numeric:tabular-nums}
 .metro{color:var(--tinta2);font-size:.85em}
 .metro b{color:var(--tinta);font-size:1.05em}
 .barra{height:6px;background:var(--afundado);border-radius:99px;margin:14px 0 10px;overflow:hidden}
@@ -164,7 +164,36 @@ pre{
   padding:12px;overflow:auto;font-size:.78em;line-height:1.45;margin:12px 0 0;
   font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
 }
-footer{color:var(--tinta3);font-size:.76em;margin-top:28px;border-top:1px solid var(--linha);padding-top:14px}
+.pausa{padding:5px 10px;font-size:.8em;border-radius:8px}
+.pausa[aria-pressed="true"]{background:var(--acento-fraco);border-color:var(--acento);color:var(--tinta)}
+/* tela de fim (s194): desempenho + agenda dos proximos 7 dias */
+.fim-grade{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,7rem),1fr));gap:10px;margin-top:16px}
+.fim-grade > div{min-width:0;background:var(--afundado);border-radius:10px;padding:12px 14px}
+.fim-num{font-size:1.45em;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.2}
+.fim-rot{color:var(--tinta3);font-size:.78em}
+.fim-secao{margin:22px 0 8px}
+.dist{display:grid;gap:8px}
+.dist-linha{display:grid;grid-template-columns:minmax(0,7.5rem) minmax(0,1fr) 2.2rem;gap:10px;align-items:center;font-size:.86em}
+.dist-rot{min-width:0;color:var(--tinta2)}
+.dist-barra{height:10px;background:var(--afundado);border-radius:99px;overflow:hidden}
+.dist-barra i{display:block;height:100%;background:var(--acento);border-radius:99px}
+.dist-barra i.fraca{background:var(--alerta)}
+.dist-n{text-align:right;font-variant-numeric:tabular-nums;font-weight:650}
+.temas{display:flex;flex-wrap:wrap;gap:6px;list-style:none;margin:0;padding:0}
+.temas li{min-width:0;background:var(--alerta-fraco);border-radius:99px;padding:3px 11px;font-size:.84em}
+.agenda{margin:0}
+.agenda svg{display:block;width:min(100%,34rem);height:auto;overflow:visible}
+.ag-base{fill:var(--tinta3)}
+.ag-lote{fill:var(--acento)}
+.ag-eixo{stroke:var(--linha);stroke-width:1}
+.ag-val{fill:var(--tinta);font-size:14px;font-weight:650;font-variant-numeric:tabular-nums}
+.ag-dia{fill:var(--tinta2);font-size:13px}
+.legenda{display:flex;flex-wrap:wrap;gap:6px 16px;color:var(--tinta2);font-size:.8em;margin-top:8px}
+.legenda i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.legenda .lg-lote{background:var(--acento)}
+.legenda .lg-base{background:var(--tinta3)}
+.bruto{margin-top:22px;border-top:1px solid var(--linha);padding-top:12px}
+.bruto summary{cursor:pointer;color:var(--tinta2);font-size:.86em}
 [hidden]{display:none !important}
 @media (prefers-reduced-motion: reduce){
   *{transition:none !important;animation:none !important}
@@ -175,16 +204,16 @@ footer{color:var(--tinta3);font-size:.76em;margin-top:28px;border-top:1px solid 
 <body>
 <div class="wrap">
 <!-- @player:corpo:inicio -->
-
   <header class="topo">
     <div>
-      <h1>Player de cards</h1>
-      <p class="sub">DRENAR &#183; sessao <span id="sessao">-</span></p>
+      <h1>Cards de hoje</h1>
+      <span id="sessao" hidden></span>
     </div>
     <div class="metros">
       <span class="metro"><b id="feitos">0</b>/<span id="total">0</span> feitos</span>
       <span class="metro">fila <b id="pendentes">0</b></span>
-      <span class="metro"><b id="relogio">00:00</b></span>
+      <span class="metro" title="Tempo ativo: so conta com o card na tela"><b id="relogio">00:00</b></span>
+      <button type="button" id="btn-pausa" class="pausa" aria-pressed="false">Pausar <kbd>P</kbd></button>
     </div>
   </header>
 
@@ -192,12 +221,13 @@ footer{color:var(--tinta3);font-size:.76em;margin-top:28px;border-top:1px solid 
   <p class="tally" id="tally"></p>
 
   <div id="aviso" class="aviso" hidden></div>
+  <div id="aviso-momento" class="aviso" role="status" hidden></div>
 
   <main id="drill">
     <article class="card" id="card" tabindex="0" aria-live="polite">
       <p class="reason" id="reason" hidden></p>
       <p class="contexto" id="contexto" hidden></p>
-      <h2 class="pergunta" id="pergunta">Carregando o lote...</h2>
+      <h2 class="pergunta" id="pergunta">Carregando os cards...</h2>
       <div class="verso" id="verso" hidden>
         <div><p class="rot">Resposta</p><p class="resposta" id="resposta"></p></div>
         <div class="bloco" id="bloco-regra" hidden><p class="rot">Regra-mestre</p><p id="regra"></p></div>
@@ -224,21 +254,38 @@ footer{color:var(--tinta3);font-size:.76em;margin-top:28px;border-top:1px solid 
       <button data-nota="4"><b>4</b><span>sem esforco</span></button>
     </div>
 
-    <p class="dica"><kbd>Espaco</kbd> vira o card &#183; <kbd>1</kbd>-<kbd>4</kbd> da a nota &#183; <kbd>D</kbd> marca defeito. A nota mede o ESFORCO que a lembranca custou, nao o quanto a resposta foi completa &#183; <b>3 e o caso normal</b>, 4 e raro. Nota abaixo de 3 recoloca o card no fim do lote (relearning) e nao gera segunda nota: so a primeira e gravavel.</p>
+    <p class="dica"><kbd>Espaco</kbd> vira o card &#183; <kbd>1</kbd>-<kbd>4</kbd> da a nota &#183; <kbd>D</kbd> marca defeito &#183; <kbd>P</kbd> pausa o tempo. A nota mede o ESFORCO que a lembranca custou, nao o quanto a resposta foi completa &#183; <b>3 e o caso normal</b>, 4 e raro. Nota 1 ou 2 traz o card de volta no fim da fila; so a primeira nota conta.</p>
   </main>
 
   <section class="painel-fim" id="fim" hidden>
-    <h2 id="fim-titulo">Lote drenado</h2>
+    <h2 id="fim-titulo">Lote concluido</h2>
     <p class="sub" id="fim-sub"></p>
     <p class="dica" id="fim-origem"></p>
-    <pre id="json-notas"></pre>
-    <div class="acoes"><button id="btn-copiar">Copiar JSON das notas</button></div>
+    <div id="fim-resumo" hidden>
+      <div class="fim-grade">
+        <div><p class="fim-num" id="fim-pct">-</p><p class="fim-rot">com nota 3 ou 4</p></div>
+        <div><p class="fim-num" id="fim-tempo">-</p><p class="fim-rot">tempo ativo</p></div>
+        <div><p class="fim-num" id="fim-medio">-</p><p class="fim-rot">media por card</p></div>
+      </div>
+      <p class="rot fim-secao">Notas</p>
+      <div class="dist" id="fim-dist"></div>
+      <div id="fim-temas-bloco" hidden>
+        <p class="rot fim-secao">Temas para rever (nota 1 ou 2)</p>
+        <ul class="temas" id="fim-temas"></ul>
+      </div>
+      <figure class="agenda" id="fim-agenda" hidden>
+        <figcaption class="rot fim-secao">Cards previstos nos proximos 7 dias</figcaption>
+        <div id="fim-agenda-grafico"></div>
+        <p class="legenda"><span><i class="lg-lote"></i>deste lote</span><span><i class="lg-base"></i>demais cards</span></p>
+        <p class="dica" id="fim-agenda-nota" hidden></p>
+      </figure>
+    </div>
+    <details class="bruto" id="fim-bruto">
+      <summary>Dados brutos</summary>
+      <pre id="json-notas"></pre>
+      <div class="acoes"><button id="btn-copiar">Copiar os dados</button></div>
+    </details>
   </section>
-
-  <footer>
-    Esta pagina nao escreve no FSRS. As notas ficam na sessao e o agente grava em lote por
-    <code>fsrs_queue.py --record-lote</code>, que chama <code>record_review</code> -- caminho de escrita unico.
-  </footer>
 
 <!-- @player:corpo:fim -->
 </div>
@@ -265,18 +312,121 @@ footer{color:var(--tinta3);font-size:.76em;margin-top:28px;border-top:1px solid 
   var dbOk = false;
   var dbDeclarado = false;    // ja avisamos que o db esta fora?
   var interagiu = false;      // trava o remount tardio depois do 1o gesto
-  var inicio = Date.now();
 
   var ROTULO = {
     vencido:"revisao vencida", fresh_error:"erro recente",
-    agendado:"agendado p/ hoje", novo:"novo", pre_bloco:"pre-bloco"
+    agendado:"agendado p/ hoje", novo:"novo", pre_bloco:"antes do bloco"
   };
+  var NOME_NOTA = {1:"falhei", 2:"com esforco", 3:"lembrei", 4:"sem esforco"};
+
+  // ------------------------------------------------------------ tempo ativo
+  // s194: o relogio era de PAREDE (inicio = menor ts das notas salvas) e marcou
+  // 1071 min num drill feito em duas janelas com uma noite no meio. Agora so
+  // conta tempo ATIVO: card na tela, aba visivel, sem pausa, e no maximo
+  // TETO_OCIOSO_MS depois do ultimo gesto (tecla, toque, card novo). O acumulado
+  // mora no localStorage por sessao; storage indisponivel = recomeca do zero.
+  var TETO_OCIOSO_MS = 3 * 60 * 1000;
+  var CHAVE_TEMPO = "medhub.tempo." + (LOTE.sessao || "-");
+
+  function lerTempo(){
+    try{
+      var v = parseInt(localStorage.getItem(CHAVE_TEMPO), 10);
+      return isFinite(v) && v > 0 ? v : 0;
+    }catch(e){ return 0; }
+  }
+
+  var tempo = {ativoMs: lerTempo(), pausado: false, ultimoGesto: Date.now(),
+               ultimoTique: Date.now(), gravadoMs: -1};
+
+  function gravarTempo(){
+    var ms = Math.round(tempo.ativoMs);
+    if(ms === tempo.gravadoMs){ return; }
+    try{
+      localStorage.setItem(CHAVE_TEMPO, String(ms));
+      tempo.gravadoMs = ms;
+    }catch(e){}
+  }
+
+  function cardNaTela(){
+    return fila.length > 0 && !$("drill").hidden && !document.hidden && abaDoPlayerAtiva();
+  }
+
+  function acumular(){
+    var agora = Date.now();
+    if(!tempo.pausado && cardNaTela()){
+      var fim = Math.min(agora, tempo.ultimoGesto + TETO_OCIOSO_MS);
+      if(fim > tempo.ultimoTique){ tempo.ativoMs += fim - tempo.ultimoTique; }
+    }
+    tempo.ultimoTique = agora;
+  }
+
+  function gesto(){
+    acumular();
+    tempo.ultimoGesto = Date.now();
+  }
+
+  function doisDigitos(n){ return (n < 10 ? "0" : "") + n; }
+
+  function relogioTexto(ms){
+    var seg = Math.floor(ms / 1000);
+    return doisDigitos(Math.floor(seg / 60)) + ":" + doisDigitos(seg % 60);
+  }
+
+  function duracao(ms){
+    var s = Math.round(ms / 1000);
+    var h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60);
+    return h ? h + "h" + doisDigitos(m) : m + ":" + doisDigitos(s % 60);
+  }
+
+  function tique(){
+    acumular();
+    $("relogio").textContent = relogioTexto(tempo.ativoMs);
+    gravarTempo();
+  }
+
+  function alternarPausa(){
+    gesto();
+    tempo.pausado = !tempo.pausado;
+    var b = $("btn-pausa");
+    b.setAttribute("aria-pressed", tempo.pausado ? "true" : "false");
+    b.innerHTML = (tempo.pausado ? "Retomar" : "Pausar") + " <kbd>P</kbd>";
+    tique();
+  }
 
   // ---------------------------------------------------------------- avisos
+  // Dois tipos (s194): o PERSISTENTE (#aviso) diz algo que continua verdade --
+  // as notas nao estao sendo salvas; o MOMENTANEO (#aviso-momento) corrige um
+  // gesto e some ao virar ou ao trocar de card.
   function avisar(texto){
     var el = $("aviso");
     el.textContent = texto;
     el.hidden = false;
+  }
+
+  function avisarMomento(texto){
+    var el = $("aviso-momento");
+    el.textContent = texto;
+    el.hidden = false;
+  }
+
+  function esconderMomento(){
+    $("aviso-momento").hidden = true;
+  }
+
+  function mostrarDadosBrutos(titulo){
+    $("fim").hidden = false;
+    $("fim-titulo").textContent = titulo;
+    $("fim-origem").textContent = "Nada foi salvo fora desta tela: abra os dados brutos abaixo, copie e cole no chat.";
+    $("fim-bruto").open = true;
+    renderFallback();
+  }
+
+  function declararSemArmazenamento(){
+    dbOk = false;
+    if(dbDeclarado){ return; }
+    dbDeclarado = true;
+    avisar("Nao consegui salvar as notas nesta visualizacao. Elas seguem contadas aqui: no fim da pagina, copie os dados brutos e cole no chat.");
+    mostrarDadosBrutos("Notas desta sessao (copiar e colar)");
   }
 
   // ------------------------------------------------------------- persistir
@@ -295,21 +445,13 @@ footer{color:var(--tinta3);font-size:.76em;margin-top:28px;border-top:1px solid 
     atualizarPainel();
     renderFallback();
     if(!dbOk || !colecao){
-      if(!dbDeclarado){
-        dbDeclarado = true;
-        avisar("Armazenamento da sessao indisponivel nesta visualizacao. As notas seguem sendo contadas aqui: copie o JSON do fim da pagina e cole no chat para o agente gravar.");
-        $("fim").hidden = false;
-        $("fim-titulo").textContent = "Notas desta sessao (copiar e colar)";
-        $("fim-origem").textContent = "Fallback declarado: a capability db nao respondeu, entao nada foi gravado remotamente.";
-      }
+      declararSemArmazenamento();
       return Promise.resolve();
     }
     return colecao.doc(String(registro.card_id)).set(registro).catch(function(err){
       dbOk = false;
-      avisar("Falha ao gravar a nota (" + ((err && err.code) || "erro") + "). As notas continuam aqui: copie o JSON do fim da pagina.");
-      $("fim").hidden = false;
-      $("fim-titulo").textContent = "Notas desta sessao (copiar e colar)";
-      renderFallback();
+      avisar("Falha ao salvar a nota (" + ((err && err.code) || "erro") + "). As notas continuam aqui: copie os dados brutos do fim da pagina e cole no chat.");
+      mostrarDadosBrutos("Notas desta sessao (copiar e colar)");
     });
   }
 
@@ -338,12 +480,6 @@ footer{color:var(--tinta3);font-size:.76em;margin-top:28px;border-top:1px solid 
     });
   }
 
-  function tique(){
-    var seg = Math.floor((Date.now() - inicio) / 1000);
-    var m = Math.floor(seg / 60), s = seg % 60;
-    $("relogio").textContent = (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s;
-  }
-
   // ----------------------------------------------------------- apresentacao
   function texto(id, valor, container){
     var alvo = $(id);
@@ -353,8 +489,10 @@ footer{color:var(--tinta3);font-size:.76em;margin-top:28px;border-top:1px solid 
   }
 
   function mostrar(){
+    esconderMomento();
     var c = fila[0];
     if(!c){ return encerrar(); }
+    gesto();                                 // card novo na tela reabre a janela ativa
     virado = false;
     $("verso").hidden = true;
     $("notas-botoes").hidden = true;
@@ -374,29 +512,176 @@ footer{color:var(--tinta3);font-size:.76em;margin-top:28px;border-top:1px solid 
 
   function virar(){
     if(!fila.length || virado){ return; }
+    esconderMomento();
+    gesto();
     virado = true;
     $("verso").hidden = false;
     $("btn-virar").hidden = true;
     $("notas-botoes").hidden = false;
   }
 
+  // ------------------------------------------------------------ tela de fim
+  // A agenda so e verdadeira porque o export embute, por card, o vencimento
+  // previsto para cada nota (`previsao`, o mesmo `db.preview_ratings` do
+  // --preview) e a carga dos demais cards (`agenda_base`). A pagina so SOMA:
+  // nada de FSRS aqui. Lote antigo sem esses campos = so o desempenho.
+  function agendaPrevista(){
+    var ab = LOTE.agenda_base;
+    if(!ab || !Array.isArray(ab.dias) || !ab.dias.length){ return null; }
+    var dias = ab.dias.map(function(d){
+      return {data: String(d.data || ""), base: Math.max(0, Number(d.n) || 0), lote: 0};
+    });
+    var indice = {};
+    dias.forEach(function(d, i){ indice[d.data] = i; });
+    var primeiro = dias[0].data, ultimo = dias[dias.length - 1].data;
+    var herdados = Math.max(0, Number(ab.vencidos_fora_do_lote) || 0);
+    dias[0].base += herdados;                  // vencido que ficou fora do lote cai no 1o dia
+    var pendentes = 0, semPrevisao = 0;
+    CARDS.forEach(function(c){
+      var n = notas.get(c.card_id);
+      var alvo;
+      if(!n || !n.rating_primeira || n.defeito){
+        alvo = primeiro;                       // sem nota gravavel: continua vencido
+        pendentes += 1;
+      }else{
+        var p = c.previsao && c.previsao[String(n.rating_primeira)];
+        if(!p){ semPrevisao += 1; return; }
+        alvo = String(p).slice(0, 10);
+        if(alvo < primeiro){ alvo = primeiro; } // volta ainda hoje = aparece no 1o dia
+      }
+      if(alvo > ultimo || !(alvo in indice)){ return; }
+      dias[indice[alvo]].lote += 1;
+    });
+    return {dias: dias, herdados: herdados, pendentes: pendentes, semPrevisao: semPrevisao};
+  }
+
+  function resumo(){
+    var dist = {1:0, 2:0, 3:0, 4:0}, avaliados = 0, bons = 0, temas = {};
+    var porId = {};
+    CARDS.forEach(function(c){ porId[c.card_id] = c; });
+    notas.forEach(function(n){
+      var r = Number(n.rating_primeira);
+      if(!(r >= 1 && r <= 4)){ return; }
+      dist[r] += 1;
+      avaliados += 1;
+      if(r >= 3){ bons += 1; return; }
+      var c = porId[n.card_id] || {};
+      var t = c.tema || c.area || "sem tema";
+      temas[t] = (temas[t] || 0) + 1;
+    });
+    var lista = Object.keys(temas).map(function(k){ return [k, temas[k]]; });
+    lista.sort(function(a, b){ return (b[1] - a[1]) || (a[0] < b[0] ? -1 : 1); });
+    return {dist: dist, avaliados: avaliados, bons: bons, temas: lista, agenda: agendaPrevista()};
+  }
+
+  function esc(v){
+    return String(v).replace(/&/g, "&amp;").replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+
+  var DIA_SEMANA = ["dom", "seg", "ter", "qua", "qui", "sex", "sab"];
+  function rotuloDia(iso){
+    var p = String(iso).split("-");
+    var d = new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2]));
+    if(p.length !== 3 || isNaN(d.getTime())){ return String(iso).slice(5); }
+    return DIA_SEMANA[d.getDay()] + " " + p[2];
+  }
+
+  function renderAgenda(ag){
+    var fig = $("fim-agenda");
+    if(!ag){ fig.hidden = true; return; }
+    var L = 360, TOPO = 24, BASE = 156, colW = L / ag.dias.length;
+    var barW = Math.min(30, colW * 0.6), alt = BASE - TOPO, maior = 1;
+    ag.dias.forEach(function(d){ maior = Math.max(maior, d.base + d.lote); });
+    var partes = [], falas = [];
+    ag.dias.forEach(function(d, i){
+      var x = i * colW + (colW - barW) / 2, cx = i * colW + colW / 2;
+      var hb = alt * d.base / maior, hl = alt * d.lote / maior;
+      var vao = hb > 0 && hl > 0 ? 2 : 0;
+      var rot = rotuloDia(d.data), total = d.base + d.lote;
+      falas.push(rot + ": " + total);
+      var g = '<g data-dia="' + esc(d.data) + '" data-base="' + d.base + '" data-lote="' + d.lote + '">' +
+              '<title>' + esc(rot) + ": " + d.lote + " deste lote, " + d.base + " demais</title>";
+      if(hb > 0){
+        g += '<rect class="ag-base" x="' + x.toFixed(1) + '" y="' + (BASE - hb).toFixed(1) +
+             '" width="' + barW.toFixed(1) + '" height="' + hb.toFixed(1) + '" rx="2"/>';
+      }
+      if(hl > 0){
+        g += '<rect class="ag-lote" x="' + x.toFixed(1) + '" y="' + (BASE - hb - vao - hl).toFixed(1) +
+             '" width="' + barW.toFixed(1) + '" height="' + hl.toFixed(1) + '" rx="2"/>';
+      }
+      g += '<text class="ag-val" x="' + cx.toFixed(1) + '" y="' + (BASE - hb - vao - hl - 6).toFixed(1) +
+           '" text-anchor="middle">' + total + "</text>" +
+           '<text class="ag-dia" x="' + cx.toFixed(1) + '" y="' + (BASE + 18) +
+           '" text-anchor="middle">' + esc(rot) + "</text></g>";
+      partes.push(g);
+    });
+    $("fim-agenda-grafico").innerHTML =
+      '<svg viewBox="0 0 ' + L + ' 186" role="img" aria-label="' +
+      esc("Cards previstos por dia: " + falas.join("; ")) + '">' +
+      '<line class="ag-eixo" x1="0" x2="' + L + '" y1="' + BASE + '" y2="' + BASE + '"/>' +
+      partes.join("") + "</svg>";
+    var nota = [];
+    if(ag.herdados){ nota.push("O 1o dia inclui " + ag.herdados + " card(s) vencido(s) que ficaram fora deste lote."); }
+    if(ag.pendentes){ nota.push(ag.pendentes + " card(s) deste lote sem nota continuam vencidos e aparecem no 1o dia."); }
+    if(ag.semPrevisao){ nota.push(ag.semPrevisao + " card(s) sem previsao ficaram fora do grafico."); }
+    $("fim-agenda-nota").textContent = nota.join(" ");
+    $("fim-agenda-nota").hidden = !nota.length;
+    fig.hidden = false;
+  }
+
+  function renderResumo(r){
+    $("fim-resumo").hidden = false;
+    $("fim-pct").textContent = r.avaliados ? Math.round(100 * r.bons / r.avaliados) + "%" : "-";
+    $("fim-tempo").textContent = duracao(tempo.ativoMs);
+    var medio = r.avaliados ? tempo.ativoMs / r.avaliados : 0;
+    $("fim-medio").textContent = !r.avaliados ? "-"
+      : (medio < 60000 ? Math.round(medio / 1000) + " s" : duracao(medio));
+    var maior = Math.max(1, r.dist[1], r.dist[2], r.dist[3], r.dist[4]);
+    $("fim-dist").innerHTML = [1, 2, 3, 4].map(function(k){
+      var n = r.dist[k];
+      return '<div class="dist-linha" data-nota="' + k + '" data-n="' + n + '">' +
+             '<span class="dist-rot"><b>' + k + "</b> " + NOME_NOTA[k] + "</span>" +
+             '<span class="dist-barra"><i' + (k < 3 ? ' class="fraca"' : "") +
+             ' style="width:' + Math.round(100 * n / maior) + '%"></i></span>' +
+             '<span class="dist-n">' + n + "</span></div>";
+    }).join("");
+    var ul = $("fim-temas");
+    ul.innerHTML = "";
+    r.temas.forEach(function(par){
+      var li = document.createElement("li");
+      li.textContent = par[0] + (par[1] > 1 ? " (" + par[1] + ")" : "");
+      ul.appendChild(li);
+    });
+    $("fim-temas-bloco").hidden = !r.temas.length;
+    renderAgenda(r.agenda);
+  }
+
   function encerrar(){
+    acumular();
+    esconderMomento();
     $("drill").hidden = true;
     $("fim").hidden = false;
-    $("fim-titulo").textContent = "Lote drenado";
-    var feitos = notas.size;
-    $("fim-sub").textContent = feitos + " card(s) com nota registrada em " + $("relogio").textContent + ".";
-    $("fim-origem").textContent = dbOk
-      ? "Notas gravadas na sessao. O agente le por ArtifactData e grava o FSRS com --record-lote."
-      : "Fallback declarado: copie o JSON abaixo e cole no chat para o agente gravar.";
+    $("fim-titulo").textContent = "Lote concluido";
+    var r = resumo();
+    $("fim-sub").textContent = r.avaliados + " card(s) com nota em " + duracao(tempo.ativoMs) + " de tempo ativo.";
+    if(dbOk){
+      $("fim-origem").textContent = "Notas salvas.";
+    }else{
+      $("fim-origem").textContent = "Nada foi salvo fora desta tela: abra os dados brutos abaixo, copie e cole no chat.";
+      $("fim-bruto").open = true;
+    }
+    renderResumo(r);
     renderFallback();
     atualizarPainel();
+    gravarTempo();
   }
 
   // -------------------------------------------------------------- acoes
   function avaliar(nota){
     if(!fila.length){ return; }
-    if(!virado){ avisar("Vire o card antes de dar a nota (Espaco)."); return; }
+    if(!virado){ avisarMomento("Vire o card antes de dar a nota (Espaco)."); return; }
+    gesto();
     var c = fila[0];
     var id = c.card_id;
     interagiu = true;
@@ -443,15 +728,29 @@ footer{color:var(--tinta3);font-size:.76em;margin-top:28px;border-top:1px solid 
 
   document.addEventListener("keydown", function(ev){
     if(!abaDoPlayerAtiva()){ return; }
+    gesto();
     if(ev.target && (ev.target.tagName === "INPUT" || ev.target.tagName === "TEXTAREA")){
       if(ev.key === "Escape"){ $("form-defeito").hidden = true; $("card").focus(); }
       return;
     }
     if(ev.key === " " || ev.code === "Space"){ ev.preventDefault(); virar(); return; }
     if(ev.key >= "1" && ev.key <= "4"){ ev.preventDefault(); avaliar(parseInt(ev.key, 10)); return; }
+    if(ev.key === "p" || ev.key === "P"){ ev.preventDefault(); alternarPausa(); return; }
     if(ev.key === "d" || ev.key === "D"){ ev.preventDefault(); abrirDefeito(); }
   });
 
+  // Toque/clique em qualquer lugar conta como gesto (reabre a janela ativa).
+  document.addEventListener("pointerdown", gesto);
+  // Aba oculta nao conta; ao voltar, a janela recomeca do agora (nunca soma o
+  // tempo em que a pagina ficou escondida, mesmo com o timer estrangulado).
+  document.addEventListener("visibilitychange", function(){
+    tempo.ultimoTique = Date.now();
+    if(!document.hidden){ tempo.ultimoGesto = Date.now(); }
+    gravarTempo();
+  });
+  window.addEventListener("pagehide", function(){ acumular(); gravarTempo(); });
+
+  $("btn-pausa").addEventListener("click", alternarPausa);
   $("btn-virar").addEventListener("click", virar);
   $("btn-defeito").addEventListener("click", abrirDefeito);
   $("btn-cancelar").addEventListener("click", function(){ $("form-defeito").hidden = true; $("card").focus(); });
@@ -497,10 +796,6 @@ footer{color:var(--tinta3);font-size:.76em;margin-top:28px;border-top:1px solid 
         motivo: dado.motivo
       });
     });
-    var ts = [];
-    notas.forEach(function(n){ if(n.ts){ ts.push(Date.parse(n.ts)); } });
-    ts = ts.filter(function(x){ return !isNaN(x); });
-    if(ts.length){ inicio = Math.min.apply(null, ts); }
   }
 
   function iniciar(){
@@ -510,7 +805,7 @@ footer{color:var(--tinta3);font-size:.76em;margin-top:28px;border-top:1px solid 
     tique();
     setInterval(tique, 1000);
     if(!CARDS.length){
-      $("pergunta").textContent = "Lote vazio -- nada para drenar.";
+      $("pergunta").textContent = "Nenhum card para hoje.";
       $("btn-virar").hidden = true;
       $("btn-defeito").hidden = true;
       return;
@@ -525,13 +820,7 @@ footer{color:var(--tinta3);font-size:.76em;margin-top:28px;border-top:1px solid 
   try{
     window.claude.use("db").then(function(db){
       if(!db){
-        dbOk = false;
-        dbDeclarado = true;
-        avisar("Armazenamento da sessao indisponivel nesta visualizacao. As notas seguem sendo contadas aqui: copie o JSON do fim da pagina e cole no chat para o agente gravar.");
-        $("fim").hidden = false;
-        $("fim-titulo").textContent = "Notas desta sessao (copiar e colar)";
-        $("fim-origem").textContent = "Fallback declarado: a capability db nao respondeu, entao nada foi gravado remotamente.";
-        renderFallback();
+        declararSemArmazenamento();
         return;
       }
       colecao = db.collection("sessoes/" + LOTE.sessao + "/notas");
@@ -547,14 +836,10 @@ footer{color:var(--tinta3);font-size:.76em;margin-top:28px;border-top:1px solid 
         mostrar();
       });
     }).catch(function(){
-      dbOk = false;
-      avisar("Armazenamento da sessao indisponivel. Copie o JSON do fim da pagina e cole no chat.");
-      renderFallback();
+      declararSemArmazenamento();
     });
   }catch(e){
-    dbOk = false;
-    avisar("Armazenamento da sessao indisponivel (pagina fora do runtime do Artifact). Copie o JSON do fim da pagina e cole no chat.");
-    renderFallback();
+    declararSemArmazenamento();
   }
 })();
 </script>

@@ -879,3 +879,4 @@
 {"ts": "2026-09-22T09:57:47+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "9abd45d60d9d", "alvo": "card#1728", "payload": {"padrao": "resposta-multifato/paragrafo", "tema": "Prevenção Quaternária e Sobrediagnóstico"}}
 {"ts": "2026-09-23T01:29:50+00:00", "event": "opened", "check": "consistencia_registros", "fingerprint": "ae675f4ff819", "alvo": "AGENTE.md §7.4", "payload": {"check": "tabela"}}
 {"ts": "2026-09-23T01:38:47+00:00", "event": "resolved", "check": "consistencia_registros", "fingerprint": "ae675f4ff819", "alvo": "AGENTE.md §7.4"}
+{"ts": "2026-09-23T02:30:10+00:00", "event": "opened", "check": "doc_drift", "fingerprint": "95abf94de45a", "alvo": ".claude/commands/revisar.md:tmp/hub/ultima_gravacao_hub.json", "payload": {"tipo": "ref", "msg": "path citado nao existe no repo: tmp/hub/ultima_gravacao_hub.json"}}

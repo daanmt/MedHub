@@ -49,3 +49,10 @@ Re-boot pelo `/ai-eng` (ai-eng-9c) depois do `/clear`, com 4 decisoes do operado
 - **Fato de biblioteca com versao:** contrato `fsrs-management` v1.5 + `test_pyfsrs_aceita_revisao_retroativa_em_silencio` (falha se a lib mudar de 6.3.1).
 - **Datado para a s194:** o sensor de alcancabilidade por AST (ou ignorando string/comentario) -- mexe na tabela inteira do AGENTE 7.4.
 - **Lote vivo como dado:** linha 3 do HANDOFF (`2026-09-22h`), e o rito manda trocar ali junto do lote.
+- Commit `792ae1b` (regras 4 e 5 + fato de biblioteca; 4 testes novos -- a mensagem do commit diz 5, erro meu; suite 1019; `auto_check` PASSED; orfas 127).
+
+## 8. Fechamento (22/09, ~23h50) -- o drill de teste no hub ficou para a abertura seguinte
+- O operador drenou **20 cards no hub** (22/09 23h22-23h27, colecao `sessoes/2026-09-22h/notas`): 11 notas + 9 marcas de defeito. **Dry-run medido:** novas=11, ja gravadas 0, FORA DE ORDEM 0, rejeitadas 0, 9 defeitos -> `--apply --expect 11`. **NAO gravado nesta sessao** (instrucao do `/ai-eng`: o operador encerrou; com a part-2 esperar nao custa -- relogio da nota preservado, idempotente). E o 1o ato da proxima abertura, antes de qualquer `/revisar` (linha 5 do HANDOFF). Notas em `tmp/player_2026-09-22h_notas.json`; reler o `db` antes, pode ter crescido.
+- **Feedback sistemico nos motivos (9/20 = 45% do drill marcados):** portugues 5 (#55, #83, #89, #91, #93), pergunta dupla 2 (#53, #89), comprimento 2 (#93, #96), confuso 1 (#81), mal adaptado ao tipo de questao 1 (#65). #93, nas palavras dele: *"versos estao longos, nao apenas neste card, alem de conterem erros de portugues."* -- vai ao ledger como 1 item agregado (reincidencia em escala do F113, ortografia, e do F115, comprimento, cujo GATE de 30 candidatos segue com ele) + as 9 marcas que o `--apply` abre.
+- **DoD 2 do hub:** a metade "gravado por `--record-lote`" fica provada no `--apply` da proxima abertura; a metade "abriu 1 aula no meio e a nota seguinte caiu" NAO esta medida -- perguntar a ele, nunca inferir.
+- Estudo (listas + RD) vai para uma sessao NOVA, que tambem cumpre a DoD 3 (rito de publish numa sessao que nao criou o artifact) no primeiro fechamento.

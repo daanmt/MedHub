@@ -14,6 +14,11 @@ O que ele monta, em `--out` (default `tmp/hub/`):
   `files` ({path publicado: fonte | null}). Painel e aulas vao DIRETO das fontes em `artifacts/`
   (sem copia). Arquivo OMITIDO num update e MANTIDO pelo runtime; so `null` remove -- por isso o que
   saiu da selecao e consta em `--publicado` (a listagem do artifact) vira `null`.
+- DIFF (v1a, s193, spec `medhub-hub-v1-manifesto-diff`): `files` leva so o que e NOVO ou MUDOU. O
+  que ja esta no ar e intocado fica em `manifesto["mantidos"]` -- nao sobe e nao precisa ser relido
+  antes do publish (a releitura das 6 aulas custou 378k tokens em 22/09). Base: o registro local
+  `registro_publicado.json`, que so o `--confirmar` escreve, DEPOIS do publish aceito, a partir do
+  `estado_pos_publish.json` do build.
 
 Limites como DADO: 255 entradas por versao (contrato do Artifact), 8 reservadas, cap de 120 aulas
 (mais novas primeiro, pela data de criacao no git).
@@ -25,11 +30,13 @@ Uso (assinatura canonica: `.claude/commands/engenharia-cli.md`, secao `tools/hub
     python tools/hub.py --build --lote tmp/player_<sessao>.json [--publicado LISTA] [--out DIR]
                         [--painel artifacts/painel.html]
     python tools/hub.py --check [--out DIR]
+    python tools/hub.py --confirmar [--out DIR]
     python tools/hub.py --extrair-lote PAGINA.html [--out-lote ARQ.json]
 """
 from __future__ import annotations
 
 import argparse
+import hashlib
 import html
 import json
 import re
@@ -55,6 +62,8 @@ from tools.fsrs_queue import (  # noqa: E402
 TEMPLATE_HUB = RAIZ / "core" / "templates" / "hub.html"
 PAGINA = "index.html"
 MANIFESTO = "manifesto.json"
+ESTADO_POS = "estado_pos_publish.json"
+REGISTRO = "registro_publicado.json"
 PUB_PAINEL = "painel.html"
 PREFIXO_AULA = "aulas/"
 PADRAO_AULAS = "aula-*.html"
@@ -85,6 +94,8 @@ LUGARES_HUB = (
 
 _RE_ESQUEMA = re.compile(r"^[A-Za-z][A-Za-z0-9+.-]*:")
 _RE_SLUG_RUIM = re.compile(r"[^a-z0-9._-]+")
+_RE_PATH_PUBLICADO = re.compile(r"^[A-Za-z0-9._/-]+\.[A-Za-z0-9]+$")
+_RE_BYTES = re.compile(r"\b(\d+)\s*bytes\b", re.I)
 
 
 # ----------------------------------------------------------------------------- nucleo puro
@@ -143,31 +154,84 @@ def normalizar_path(p):
     return p.lstrip("/")
 
 
-def ler_publicado(texto):
-    """Paths ja publicados no hub. Aceita JSON (lista de str, lista de {"path"}, ou objeto --
-    as chaves, ex. o `files` de um manifesto anterior) ou texto (1 path por linha; `#` comenta;
-    so o 1o token da linha conta, para tolerar colunas extras da listagem)."""
+def ler_publicado_detalhado(texto):
+    """[(path, bytes | None)] ja publicados no hub.
+
+    Aceita JSON (lista de str, lista de {"path", "bytes"?}, ou objeto -- as chaves, ex. o `files`
+    de um manifesto anterior) ou texto: 1 path por linha (`#` comenta; so o 1o token conta, para
+    tolerar colunas extras), inclusive a listagem do `Artifact list scope=files` colada como sai
+    (`- "aulas/x.html"  text/html  63060 bytes`): o tamanho vem do `N bytes`, e linha cujo 1o
+    token nao e path de arquivo (o cabecalho e o rodape da listagem) e ignorada."""
     texto = (texto or "").strip()
     if not texto:
         return []
     if texto[0] in "[{":
-        obj = json.loads(texto)
-        if isinstance(obj, dict):
-            obj = list((obj.get("files") if isinstance(obj.get("files"), dict) else obj).keys())
-        saida = []
-        for item in obj:
-            if isinstance(item, dict):
-                item = item.get("path")
-            if item:
-                saida.append(normalizar_path(item))
-        return saida
+        try:
+            obj = json.loads(texto)
+        except ValueError:
+            obj = None
+        if obj is not None:
+            if isinstance(obj, dict):
+                obj = list((obj.get("files") if isinstance(obj.get("files"), dict)
+                            else obj).keys())
+            saida = []
+            for item in obj:
+                tamanho = None
+                if isinstance(item, dict):
+                    tamanho = item.get("bytes")
+                    item = item.get("path")
+                if item:
+                    saida.append((normalizar_path(item),
+                                  None if tamanho is None else int(tamanho)))
+            return saida
     saida = []
     for linha in texto.splitlines():
         linha = linha.strip()
         if not linha or linha.startswith("#"):
             continue
-        saida.append(normalizar_path(linha.split()[0]))
+        tokens = linha.split()
+        if tokens[0] == "-" and len(tokens) > 1:
+            tokens = tokens[1:]
+        token = tokens[0].strip("\"'")
+        if not _RE_PATH_PUBLICADO.match(token):
+            continue
+        m = _RE_BYTES.search(linha)
+        saida.append((normalizar_path(token), int(m.group(1)) if m else None))
     return saida
+
+
+def ler_publicado(texto):
+    """Paths ja publicados no hub (formatos em `ler_publicado_detalhado`)."""
+    return [p for p, _ in ler_publicado_detalhado(texto)]
+
+
+def aplicar_diff(files, fontes, registro, vivos):
+    """O DIFF do publish (v1a, s193). PURO.
+
+    `files` = o manifesto COMPLETO ({publicado: fonte | None}, de `montar_manifesto`); `fontes` =
+    {publicado: (sha256, bytes)} das fontes nao-nulas; `registro` = {publicado: {"sha256",
+    "bytes", ...}} do ultimo publish CONFIRMADO; `vivos` = {publicado: bytes | None} da listagem
+    viva. Um path fica MANTIDO (fora de `files` -- o runtime o mantem) so com TRES evidencias:
+    a mesma sha256 no registro, o path na listagem viva e, se ela traz tamanho, o do registro.
+    Omitir errado deixaria conteudo velho no ar em silencio; mandar a mais so custa upload.
+    Devolve (files_enviar, mantidos, estado); `estado` = {publicado: {"sha256", "bytes", "fonte"}}
+    de tudo que fica no ar depois do publish (enviados + mantidos; os nulos saem)."""
+    enviar, mantidos, estado = {}, [], {}
+    for pub, fonte in files.items():
+        if fonte is None:
+            enviar[pub] = None
+            continue
+        sha, n = fontes.get(pub) or (None, None)
+        reg = registro.get(pub) or {}
+        tamanho_vivo = vivos.get(pub)
+        if (sha is not None and pub in vivos and reg.get("sha256") == sha
+                and (tamanho_vivo is None or tamanho_vivo == reg.get("bytes"))):
+            mantidos.append(pub)
+        else:
+            enviar[pub] = fonte
+        if sha is not None:
+            estado[pub] = {"sha256": sha, "bytes": n, "fonte": fonte}
+    return enviar, sorted(mantidos), estado
 
 
 def montar_manifesto(aulas_sel, painel_fonte=None, publicado=()):
@@ -293,19 +357,23 @@ def hrefs_relativos(pagina_html):
     return saida
 
 
-def checar(pagina_html, files, raiz=RAIZ):
-    """Problemas do manifesto: fonte inexistente, link do index fora dele, teto de entradas."""
+def checar(pagina_html, files, raiz=RAIZ, mantidos=()):
+    """Problemas do manifesto: fonte inexistente, link do index fora dele, teto de entradas.
+
+    `mantidos` (DIFF, s193) = o que ja esta no ar e fica fora de `files`: conta como vivo para o
+    link do index e para o teto -- o runtime o mantem."""
     raiz = Path(raiz)
     problemas = []
     vivos = {pub: fonte for pub, fonte in files.items() if fonte is not None}
     for pub, fonte in sorted(vivos.items()):
         if not (raiz / fonte).is_file():
             problemas.append("fonte inexistente: %s <- %s" % (pub, fonte))
+    no_ar = set(vivos) | {normalizar_path(p) for p in mantidos}
     for href in sorted(hrefs_relativos(pagina_html)):
-        if href not in vivos:
+        if href not in no_ar:
             problemas.append("link morto no index: %s (fora do manifesto)" % href)
-    if len(vivos) + 1 > TETO_ENTRADAS:
-        problemas.append("%d arquivos + a pagina > teto de %d entradas" % (len(vivos), TETO_ENTRADAS))
+    if len(no_ar) + 1 > TETO_ENTRADAS:
+        problemas.append("%d arquivos + a pagina > teto de %d entradas" % (len(no_ar), TETO_ENTRADAS))
     return problemas
 
 
@@ -380,9 +448,53 @@ def coletar_aulas(raiz, data_fn=None):
     return aulas, avisos
 
 
+def hash_de(path):
+    """(sha256 hex, bytes) do conteudo -- o que o registro guarda por path publicado."""
+    dados = Path(path).read_bytes()
+    return hashlib.sha256(dados).hexdigest(), len(dados)
+
+
+def _como_vivos(publicado):
+    """{path: bytes | None} a partir de paths, de pares (path, bytes) ou de um dict."""
+    if isinstance(publicado, dict):
+        itens = publicado.items()
+    else:
+        itens = ((p, None) if isinstance(p, str) else tuple(p) for p in publicado or ())
+    return {normalizar_path(p): b for p, b in itens if p}
+
+
+def ler_registro(out):
+    """({publicado: {"sha256", "bytes", "fonte"}}, aviso | None) do ultimo publish CONFIRMADO.
+    Sem registro = {} (tudo vai, o v0); registro ilegivel = {} com aviso -- nunca omite as cegas."""
+    caminho = Path(out) / REGISTRO
+    if not caminho.is_file():
+        return {}, None
+    try:
+        return dict(json.loads(caminho.read_text(encoding="utf-8")).get("arquivos") or {}), None
+    except (ValueError, AttributeError) as e:
+        return {}, "registro ilegivel (%s): tudo vai neste publish" % e
+
+
+def confirmar(out, agora=None):
+    """Depois do publish ACEITO: o estado que o ultimo build deixa no ar vira o registro.
+    Devolve (n arquivos registrados, montado_em do build confirmado)."""
+    out = Path(out)
+    estado = json.loads((out / ESTADO_POS).read_text(encoding="utf-8"))
+    agora = agora or db.agora()
+    registro = {"confirmado_em": agora.strftime("%Y-%m-%d %H:%M:%S"),
+                "montado_em": estado.get("montado_em"),
+                "arquivos": estado.get("arquivos") or {}}
+    (out / REGISTRO).write_text(json.dumps(registro, ensure_ascii=False, indent=1) + "\n",
+                                encoding="utf-8")
+    return len(registro["arquivos"]), registro["montado_em"]
+
+
 def construir(lote, raiz=RAIZ, out=None, painel=None, publicado=(), agora=None, data_fn=None,
-              template_hub=None, template_player=None):
-    """Monta `index.html` + `manifesto.json` em `out`. Devolve (manifesto, problemas, avisos)."""
+              template_hub=None, template_player=None, registro=None):
+    """Monta `index.html` + `manifesto.json` + `estado_pos_publish.json` em `out`.
+
+    `publicado` = a listagem viva: paths, pares (path, bytes) ou {path: bytes}. `registro` =
+    injetavel; None = o `registro_publicado.json` de `out`. Devolve (manifesto, problemas, avisos)."""
     raiz = Path(raiz)
     out = Path(out) if out else raiz / "tmp" / "hub"
     painel_path = Path(painel) if painel else raiz / "artifacts" / "painel.html"
@@ -398,8 +510,16 @@ def construir(lote, raiz=RAIZ, out=None, painel=None, publicado=(), agora=None, 
     if not tem_painel:
         avisos.append("painel ausente (%s): a aba Painel sai com o aviso de 'nao gerado'"
                       % _rel(painel_path, raiz))
-    files = montar_manifesto(selecionadas, _rel(painel_path, raiz) if tem_painel else None,
-                             publicado)
+    vivos = _como_vivos(publicado)
+    completo = montar_manifesto(selecionadas, _rel(painel_path, raiz) if tem_painel else None,
+                                list(vivos))
+    fontes = {pub: hash_de(raiz / fonte) for pub, fonte in completo.items()
+              if fonte is not None and (raiz / fonte).is_file()}
+    if registro is None:
+        registro, aviso = ler_registro(out)
+        if aviso:
+            avisos.append(aviso)
+    files, mantidos, estado = aplicar_diff(completo, fontes, registro, vivos)
 
     th = template_hub if template_hub is not None else TEMPLATE_HUB.read_text(encoding="utf-8")
     tp = (template_player if template_player is not None
@@ -409,17 +529,22 @@ def construir(lote, raiz=RAIZ, out=None, painel=None, publicado=(), agora=None, 
 
     out.mkdir(parents=True, exist_ok=True)
     (out / PAGINA).write_text(pagina, encoding="utf-8")
+    montado_em = agora.strftime("%Y-%m-%d %H:%M:%S")
     manifesto = {
         "file_path": _rel(out / PAGINA, raiz),
         "files": files,
         "sessao": lote.get("sessao"),
         "total_cards": len(lote.get("cards") or []),
         "aulas": len(selecionadas),
-        "montado_em": agora.strftime("%Y-%m-%d %H:%M:%S"),
+        "montado_em": montado_em,
+        "mantidos": mantidos,
     }
     (out / MANIFESTO).write_text(json.dumps(manifesto, ensure_ascii=False, indent=1) + "\n",
                                  encoding="utf-8")
-    return manifesto, checar(pagina, files, raiz), avisos
+    (out / ESTADO_POS).write_text(
+        json.dumps({"montado_em": montado_em, "arquivos": estado}, ensure_ascii=False,
+                   indent=1) + "\n", encoding="utf-8")
+    return manifesto, checar(pagina, files, raiz, mantidos), avisos
 
 
 def _saida_padrao():
@@ -443,12 +568,18 @@ def main(argv=None):
     acao.add_argument("--extrair-lote", dest="extrair_lote", metavar="PAGINA.html",
                       help="recupera o lote injetado numa pagina salva (ex.: a versao viva "
                            "lida por Artifact read)")
+    acao.add_argument("--confirmar", action="store_true",
+                      help="DEPOIS do publish aceito: o estado_pos_publish.json do ultimo "
+                           "--build de --out vira o registro_publicado.json, a base do DIFF. "
+                           "Publish recusado = nao confirmar")
     ap.add_argument("--lote", metavar="ARQ.json",
                     help="--build: o lote de fsrs_queue.py --export-player (ou o extraido "
                          "da pagina viva)")
     ap.add_argument("--publicado", metavar="LISTA",
-                    help="--build: paths ja publicados no hub (transcritos do Artifact list "
-                         "scope=files), 1 por linha ou JSON; o que saiu da selecao vira null")
+                    help="--build: a listagem viva do hub (Artifact list scope=files colada "
+                         "como sai, 1 path por linha, ou JSON com path/bytes); o que saiu da "
+                         "selecao vira null, e so fica fora de files (mantido) o que esta nela "
+                         "com a hash do registro e o mesmo tamanho")
     ap.add_argument("--out", metavar="DIR", help="diretorio de saida (default tmp/hub)")
     ap.add_argument("--painel", metavar="PATH",
                     help="--build: HTML do painel (default artifacts/painel.html)")
@@ -476,32 +607,49 @@ def main(argv=None):
                   % (PAGINA, MANIFESTO, out))
             return 1
         manifesto = json.loads(man_path.read_text(encoding="utf-8"))
-        problemas = checar((out / PAGINA).read_text(encoding="utf-8"), manifesto["files"], RAIZ)
+        problemas = checar((out / PAGINA).read_text(encoding="utf-8"), manifesto["files"], RAIZ,
+                           manifesto.get("mantidos") or ())
         for p in problemas:
             print("[hub] PROBLEMA: %s" % p)
         print("[hub] --check: %s" % ("OK" if not problemas else "%d problema(s)" % len(problemas)))
         return 1 if problemas else 0
 
+    if args.confirmar:
+        if not (out / ESTADO_POS).is_file():
+            print("[hub] --confirmar: %s ausente em %s -- rode --build (e publique) antes"
+                  % (ESTADO_POS, out))
+            return 1
+        n, montado_em = confirmar(out)
+        print("[hub] registro: %d arquivo(s) no ar pelo build de %s -> %s"
+              % (n, montado_em, _rel(out / REGISTRO, RAIZ)))
+        return 0
+
     if not args.lote:
         ap.error("--build exige --lote ARQ.json")
     lote = json.loads(Path(args.lote).read_text(encoding="utf-8"))
-    publicado = ler_publicado(Path(args.publicado).read_text(encoding="utf-8")) \
+    publicado = ler_publicado_detalhado(Path(args.publicado).read_text(encoding="utf-8")) \
         if args.publicado else []
     manifesto, problemas, avisos = construir(lote, out=out, painel=args.painel,
                                              publicado=publicado)
     files = manifesto["files"]
     nulos = sorted(p for p, f in files.items() if f is None)
-    vivos = len(files) - len(nulos)
+    enviados = sorted(p for p, f in files.items() if f is not None)
+    mantidos = manifesto["mantidos"]
+    no_ar = len(enviados) + len(mantidos)
     kb = (out / PAGINA).stat().st_size / 1024.0
     print("[hub] pagina: %s (%.0f KB) -- lote %s, %d cards"
           % (manifesto["file_path"], kb, manifesto["sessao"], manifesto["total_cards"]))
-    print("[hub] arquivos: %d (painel %d, aulas %d; cap %d) + pagina = %d/%d entradas"
-          % (vivos, 1 if PUB_PAINEL in files and files[PUB_PAINEL] else 0, manifesto["aulas"],
-             CAP_AULAS, vivos + 1, TETO_ENTRADAS))
+    print("[hub] no ar depois do publish: %d arquivo(s) (aulas %d; cap %d) + pagina = %d/%d "
+          "entradas" % (no_ar, manifesto["aulas"], CAP_AULAS, no_ar + 1, TETO_ENTRADAS))
+    print("[hub] files (novos ou alterados -- LER INTEIROS antes do publish): %d%s"
+          % (len(enviados), (" -- " + ", ".join(enviados)) if enviados else ""))
+    print("[hub] mantidos (ja no ar, intocados -- fora de files): %d" % len(mantidos))
     print("[hub] null (saem do hub): %d%s" % (len(nulos), (" -- " + ", ".join(nulos)) if nulos else ""))
     for aviso in avisos:
         print("[hub] AVISO: %s" % aviso)
     print("[hub] manifesto: %s -- `file_path` + `files` do Artifact publish" % _rel(out / MANIFESTO, RAIZ))
+    print("[hub] depois do publish ACEITO: python tools/hub.py --confirmar%s"
+          % ("" if out == _saida_padrao() else " --out %s" % out))
     for p in problemas:
         print("[hub] PROBLEMA: %s" % p)
     print("[hub] --check: %s" % ("OK" if not problemas else "%d problema(s)" % len(problemas)))

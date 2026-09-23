@@ -99,6 +99,7 @@ def test_golden_do_manifesto_num_repo_sintetico(tmp_path):
         "total_cards": 2,
         "aulas": 3,
         "montado_em": "2026-09-22 20:30:00",
+        "mantidos": [],          # DIFF (s193): sem registro, nada fica de fora -- o v0
     }
     gravado = json.loads((raiz / "tmp" / "hub" / "manifesto.json").read_text(encoding="utf-8"))
     assert gravado == manifesto, "o arquivo e exatamente o que o agente passa ao publish"
@@ -199,6 +200,108 @@ def test_publicado_aceita_texto_e_json():
     assert hub.ler_publicado('{"files": {"aulas/a.html": "artifacts/aula-a.html"}}') == [
         "aulas/a.html"]
     assert hub.ler_publicado("") == []
+
+
+# --------------------------------------------------------------------------
+# 3b. DIFF (v1a, s193): so o novo ou alterado sobe; o resto o runtime mantem
+# --------------------------------------------------------------------------
+
+_TRES = [("hernias", "Hernias", "2026-09-22"), ("dmg", "DMG", "2026-09-21"),
+         ("s17", "S17", "2026-09-07")]
+
+
+def _publicar(raiz, data_fn, vivos=None):
+    """build -> (publish aceito) -> --confirmar. Devolve o manifesto e a listagem viva que o
+    publish deixaria: {path: bytes} de tudo no ar."""
+    manifesto, problemas, _ = _construir(raiz, data_fn, publicado=vivos or {})
+    assert problemas == []
+    assert hub.main(["--confirmar", "--out", str(raiz / "tmp" / "hub")]) == 0
+    estado = json.loads((raiz / "tmp" / "hub" / hub.ESTADO_POS).read_text(encoding="utf-8"))
+    return manifesto, {p: e["bytes"] for p, e in estado["arquivos"].items()}
+
+
+def test_diff_sem_mudanca_o_segundo_publish_nao_manda_nada(tmp_path):
+    raiz, data_fn = _repo(tmp_path, _TRES)
+    primeiro, vivos = _publicar(raiz, data_fn)
+    assert primeiro["mantidos"] == [] and len(primeiro["files"]) == 4, "1o publish: tudo vai"
+    segundo, problemas, _ = _construir(raiz, data_fn, publicado=vivos)
+    assert segundo["files"] == {}, "nada mudou: files vazio, so a pagina sobe"
+    assert segundo["mantidos"] == ["aulas/dmg.html", "aulas/hernias.html", "aulas/s17.html",
+                                   "painel.html"]
+    assert problemas == [], "aula mantida segue linkada no index sem virar link morto"
+
+
+def test_diff_um_byte_alterado_vai_e_o_resto_fica(tmp_path):
+    raiz, data_fn = _repo(tmp_path, _TRES)
+    _, vivos = _publicar(raiz, data_fn)
+    aula = raiz / "artifacts" / "aula-dmg.html"
+    aula.write_text(aula.read_text(encoding="utf-8").replace("aula", "aulA"), encoding="utf-8")
+    manifesto, problemas, _ = _construir(raiz, data_fn, publicado=vivos)
+    assert manifesto["files"] == {"aulas/dmg.html": "artifacts/aula-dmg.html"}
+    assert "aulas/dmg.html" not in manifesto["mantidos"] and problemas == []
+
+
+def test_diff_nunca_omite_o_que_nao_esta_na_listagem_viva(tmp_path):
+    """Artifact recriado (ou arquivo removido por fora): o registro diz 'publicado', a listagem
+    viva nao. Sem a listagem, nada fica de fora -- omitir e o erro silencioso."""
+    raiz, data_fn = _repo(tmp_path, _TRES)
+    _, vivos = _publicar(raiz, data_fn)
+    sem_dmg = {p: b for p, b in vivos.items() if p != "aulas/dmg.html"}
+    manifesto, _, _ = _construir(raiz, data_fn, publicado=sem_dmg)
+    assert manifesto["files"] == {"aulas/dmg.html": "artifacts/aula-dmg.html"}
+    tudo, _, _ = _construir(raiz, data_fn, publicado=[])
+    assert tudo["mantidos"] == [] and len(tudo["files"]) == 4, "sem --publicado: o v0"
+
+
+def test_diff_tamanho_vivo_divergente_manda_de_novo(tmp_path):
+    """Registro e fonte batem, mas o servidor tem OUTRO tamanho: o registro esta velho
+    (confirmado sem publish, publish por outra via). A listagem viva desempata."""
+    raiz, data_fn = _repo(tmp_path, _TRES)
+    _, vivos = _publicar(raiz, data_fn)
+    vivos["aulas/s17.html"] += 1
+    manifesto, _, _ = _construir(raiz, data_fn, publicado=vivos)
+    assert manifesto["files"] == {"aulas/s17.html": "artifacts/aula-s17.html"}
+
+
+def test_diff_registro_so_muda_pelo_confirmar(tmp_path):
+    raiz, data_fn = _repo(tmp_path, _TRES)
+    registro = raiz / "tmp" / "hub" / hub.REGISTRO
+    _construir(raiz, data_fn)
+    assert not registro.exists(), "build nunca escreve o registro"
+    _, vivos = _publicar(raiz, data_fn)
+    antes = registro.read_text(encoding="utf-8")
+    (raiz / "artifacts" / "aula-hernias.html").write_text("<title>Nova</title>", encoding="utf-8")
+    manifesto, _, _ = _construir(raiz, data_fn, publicado=vivos)
+    assert registro.read_text(encoding="utf-8") == antes, "publish nao confirmado nao contamina"
+    assert manifesto["files"] == {"aulas/hernias.html": "artifacts/aula-hernias.html"}
+
+
+def test_diff_nulo_sai_do_estado_e_a_aula_removida_vira_null(tmp_path):
+    raiz, data_fn = _repo(tmp_path, _TRES)
+    _, vivos = _publicar(raiz, data_fn)
+    (raiz / "artifacts" / "aula-s17.html").unlink()
+    manifesto, problemas, _ = _construir(raiz, data_fn, publicado=vivos)
+    assert manifesto["files"] == {"aulas/s17.html": None}
+    estado = json.loads((raiz / "tmp" / "hub" / hub.ESTADO_POS).read_text(encoding="utf-8"))
+    assert "aulas/s17.html" not in estado["arquivos"] and problemas == []
+
+
+def test_publicado_aceita_a_listagem_do_artifact_como_ela_sai():
+    listagem = (
+        'Published files of https://claude.ai/artifact/X (version 1-a), 3 files by path\n'
+        '- "aulas/dmg.html"  text/html  63060 bytes\n'
+        '- "index.html"  text/html  226443 bytes\n'
+        '- "painel.html"  text/html  10919 bytes\n'
+        '[Stored for the live version, as the artifact service holds it: contract 0.2.54]\n'
+        '<artifact-stored-declaration>\n{"db":{"rules":[]}}\n</artifact-stored-declaration>\n')
+    assert hub.ler_publicado_detalhado(listagem) == [
+        ("aulas/dmg.html", 63060), ("index.html", 226443), ("painel.html", 10919)]
+    assert hub.ler_publicado_detalhado('[{"path": "aulas/a.html", "bytes": 12}]') == [
+        ("aulas/a.html", 12)]
+
+
+def test_confirmar_sem_build_sai_1(tmp_path):
+    assert hub.main(["--confirmar", "--out", str(tmp_path)]) == 1
 
 
 # --------------------------------------------------------------------------

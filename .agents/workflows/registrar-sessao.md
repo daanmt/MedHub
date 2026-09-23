@@ -73,6 +73,8 @@ HUB**: um artifact só, fixado, republicado no lugar, com as abas Cards e Aulas 
 ```powershell
 python tools/painel.py --html          # grava artifacts/painel.html
 python tools/hub.py --build --lote <o lote VIVO> --publicado <lista>
+# publish aceito ->
+python tools/hub.py --confirmar         # registro do que esta no ar: a base do DIFF (s193)
 ```
 
 Depois, **republicar o hub na MESMA URL** -- a das 8 primeiras linhas do `HANDOFF.md` --, pelo rito de

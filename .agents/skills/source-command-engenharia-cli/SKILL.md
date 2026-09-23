@@ -599,8 +599,9 @@ Spec `.vibeflow/specs/plano-ssot-e-cards-v2-part-7.md`.
 | `--build` | Monta `index.html` (abas Cards/Aulas/Painel; o player **inline**, composto das 3 regiões marcadas de `core/templates/player.html`) e `manifesto.json` em `--out`; roda o `--check` no fim e sai **1** se ele acusar. |
 | `--check` | Confere o manifesto de `--out`: fonte inexistente, `<a href>` relativo do index fora do manifesto (link morto na vitrine), teto de entradas. Exit 1 se acusar. |
 | `--extrair-lote PAGINA.html` | O inverso da injeção: recupera o lote do `<script id="lote">` de uma página salva (a versão viva lida por `Artifact read`). Serve ao `--record-lote --lote` e a remontar sem depender de `tmp/`. |
+| `--confirmar` | **Depois do publish ACEITO** (s193): o `estado_pos_publish.json` do último `--build` de `--out` vira o `registro_publicado.json` -- a base do DIFF. Publish recusado = não confirmar; esquecer é seguro (o próximo build manda de novo). Exit 1 sem build. |
 | `--lote ARQ.json` | `--build`: o lote de `fsrs_queue.py --export-player` (ou o extraído da página viva). **Trocar o lote troca a sessão da aba Cards** -- ver o rito "DRENAR no player" em `/revisar`. |
-| `--publicado LISTA` | `--build`: paths já publicados no hub, transcritos do `Artifact list scope=files` (1 por linha, `#` comenta, ou JSON). O que saiu da seleção e consta aqui vira **`null`** no manifesto. |
+| `--publicado LISTA` | `--build`: a listagem viva do hub -- o `Artifact list scope=files` colado **como sai** (`- "aulas/x.html"  text/html  63060 bytes`; cabeçalho ignorado), 1 path por linha (`#` comenta) ou JSON (`[{"path", "bytes"}]`). O que saiu da seleção e consta aqui vira **`null`**; só fica fora de `files` (mantido) o que está aqui com a hash do registro e o mesmo tamanho. |
 | `--out DIR` | Diretório de saída (default `tmp/hub/`, gitignored). |
 | `--painel PATH` | `--build`: HTML do painel (default `artifacts/painel.html`); ausente = aba Painel com aviso. |
 | `--out-lote ARQ.json` | `--extrair-lote`: onde gravar o lote (default: imprime). |
@@ -613,10 +614,18 @@ entradas por versão (contrato do Artifact), 8 reservadas, **cap de 120 aulas** 
 pela data de criação no git). Aulas e painel **abrem dentro da página** (`fetch` relativo + iframe
 `srcdoc` na própria aba): o frame nunca navega, o drill não perde estado.  <!-- CHECK: test_aula_e_painel_abrem_dentro_da_pagina_sem_navegar -->
 
+**DIFF (v1a, s193, spec `medhub-hub-v1-manifesto-diff`):** `files` leva só o que é **novo ou mudou**;
+o que já está no ar e intocado sai em `manifesto["mantidos"]` -- não sobe e **não precisa ser relido**  <!-- CHECK: test_diff_sem_mudanca_o_segundo_publish_nao_manda_nada -->
+antes do publish (a releitura das 6 aulas custou 378k tokens em 22/09). Um path só fica mantido com
+TRÊS evidências: a sha256 do `registro_publicado.json` bate com a fonte, o path está na listagem viva e
+o tamanho vivo é o do registro; qualquer falha manda o arquivo (mandar a mais custa upload; omitir
+errado deixaria conteúdo velho no ar em silêncio). O registro só muda pelo `--confirmar`, e sem ele
+(1a vez, `tmp/` limpo) tudo vai, como no v0. O `--check` conta os mantidos como vivos.  <!-- CHECK: test_diff_sem_mudanca_o_segundo_publish_nao_manda_nada -->
+
 Fronteira: o CLI não fala com a API de Artifact nem com o `ipub.db` (só o relógio único `db.agora()`).
 Ler a versão viva, listar os arquivos, publicar e ler as notas do `db` são atos do agente -- rito em
 `/revisar` ("DRENAR no player") e `.agents/workflows/registrar-sessao.md §6`.
-Spec `.vibeflow/specs/medhub-hub-v0-part-1.md`; testes `tools/test_hub.py`.
+Specs `.vibeflow/specs/medhub-hub-v0-part-1.md` e `medhub-hub-v1-manifesto-diff.md`; testes `tools/test_hub.py`.
 
 ### `tools/fsrs_optimize.py` -- parâmetros pessoais do FSRS (R1, **read-only**)
 

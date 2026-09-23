@@ -74,6 +74,7 @@ python tools/fsrs_queue.py --preview <card_id>
 # DRENAR no player -- aba Cards do MedHub HUB (s183; hub desde a s192): exportar -> montar o hub -> republicar -> gravar
 python tools/fsrs_queue.py --export-player [--limit N] [--sessao ID] [--out tmp/player_<sessao>.json]
 python tools/hub.py --build --lote tmp/player_<sessao>.json [--publicado LISTA]   # assinatura: /engenharia-cli
+python tools/hub.py --confirmar                  # so DEPOIS do publish aceito (base do DIFF, s193)
 python tools/fsrs_queue.py --record-lote tmp/player_<sessao>_notas.json --lote tmp/player_<sessao>.json [--apply --expect N]
 # so para depurar o player isolado (NUNCA publicar como artifact avulso):
 python tools/fsrs_queue.py --build-player --lote tmp/player_<sessao>.json [--out artifacts/player-<sessao>.html]
@@ -158,8 +159,8 @@ vazamento de rótulo (modo de falha #8 do handoff de flashcards) era tribal:
 
 1. **Gravar o que a aba Cards tem agora**, se tiver notas: `ArtifactData list` da coleção `sessoes/<sessao atual>/notas` -> passos 7-8. A sessão atual é o `sessao` do lote vivo (sem o export no `tmp/`: `hub.py --extrair-lote` da versão lida por `Artifact read`).
 2. `--export-player` -> confere o `total` e a sessão. Id NOVO: trocar o lote troca a coleção das notas.
-3. `tools/hub.py --build --lote tmp/player_<sessao>.json --publicado <lista>` -> `tmp/hub/`; o `--check` embutido tem de dar OK.  <!-- CHECK: test_todo_href_relativo_do_index_esta_no_manifesto -->
-4. **Republicar o hub** na URL do HANDOFF: `Artifact publish` com `url`, com o `file_path` e os `files` de `tmp/hub/manifesto.json`, **sem `capabilities`** (omitir mantém a declaração; `{}` limparia o `db`). Numa sessão que não publicou o hub, antes: `Artifact read url` e `Artifact list scope=files url` -- o contrato recusa publish em artifact não lido e `files` sobre path não listado; a listagem é o `--publicado` do passo 3.  <!-- NAO-VERIFICAVEL: publicar e ato do agente na API de Artifact, fora do alcance do harness (revisar: 2027-03-31) -->
+3. `tools/hub.py --build --lote tmp/player_<sessao>.json --publicado <lista>` -> `tmp/hub/`; o `--check` embutido tem de dar OK. A `<lista>` é o `Artifact list scope=files` colado como sai (com os tamanhos): desde a s193 o manifesto é DIFF -- `files` leva só o novo ou alterado (é SÓ isso que se lê inteiro antes do publish) e o resto sai em `mantidos`.  <!-- CHECK: test_todo_href_relativo_do_index_esta_no_manifesto -->
+4. **Republicar o hub** na URL do HANDOFF: `Artifact publish` com `url`, com o `file_path` e os `files` de `tmp/hub/manifesto.json`, **sem `capabilities`** (omitir mantém a declaração; `{}` limparia o `db`). Publish aceito -> `tools/hub.py --confirmar` no mesmo ato (recusado: não confirmar). Numa sessão que não publicou o hub, antes: `Artifact read url` e `Artifact list scope=files url` -- o contrato recusa publish em artifact não lido e `files` sobre path não listado; a listagem é o `--publicado` do passo 3.  <!-- NAO-VERIFICAVEL: publicar e ato do agente na API de Artifact, fora do alcance do harness (revisar: 2027-03-31) -->
 5. **Podar a sessão que saiu da aba** (a do passo 1), porque o `db` do artifact tem teto de 5.000 docs e a página grava 1 doc por card: só depois de uma releitura dela dar `--record-lote` com **0 novas e 0 rejeitadas** (`--expect 0`); `ArtifactData batch` com `delete` (<= 50 por chamada); re-list = 0; contagem podada no session log. **Nunca** a sessão do lote que está na aba -- o reload reapresentaria os cards como novos.  <!-- NAO-VERIFICAVEL: a poda e ato do agente via ArtifactData, fora do alcance do harness (revisar: 2027-03-31) -->
 
 *Drenar:*

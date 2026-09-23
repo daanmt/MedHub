@@ -264,6 +264,23 @@ def test_html_obedece_o_contrato_de_render(db_sintetico):
     assert "background:var(--papel)" in pagina
 
 
+def test_bastidor_do_painel_marcado_para_o_hub_esconder(db_sintetico):
+    """s194: carimbo de geracao, nome do CLI e rodape de fonte sao bastidor. O painel avulso os
+    guarda (governanca: cada numero cita a funcao); no hub, `[data-backoffice]` some."""
+    import re
+    pagina = painel.render_html(painel.coletar(hoje=date(2026, 9, 18)))
+    corpo = pagina.split("<body>", 1)[1]
+    for m in re.finditer(r"<(p|footer)\b([^>]*)>", corpo):
+        tag, attrs = m.group(1), m.group(2)
+        fim = corpo.find("</%s>" % tag, m.end())
+        texto = corpo[m.end():fim]
+        bastidor = ("tools/painel.py" in texto or "gerado em" in texto or 'class="fonte"' in attrs
+                    or tag == "footer")
+        if bastidor:
+            assert "data-backoffice" in attrs, "bastidor sem marca: %s" % m.group(0)
+    assert corpo.count("data-backoffice") >= len(painel.BLOCOS) + 2
+
+
 def test_html_sem_latex_seta_unicode_ou_travessao(db_sintetico):
     """AGENTE.md §4.5 -- governa notacao e pontuacao (nunca ortografia, F113)."""
     pagina = painel.render_html(painel.coletar(hoje=date(2026, 9, 18)))

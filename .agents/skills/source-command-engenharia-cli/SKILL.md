@@ -596,7 +596,7 @@ Spec `.vibeflow/specs/plano-ssot-e-cards-v2-part-7.md`.
 
 | Flag | Função |
 |---|---|
-| `--build` | Monta `index.html` (abas Cards/Aulas/Painel; o player **inline**, composto das 3 regiões marcadas de `core/templates/player.html`) e `manifesto.json` em `--out`; roda o `--check` no fim e sai **1** se ele acusar. |
+| `--build` | Monta `index.html` (abas **Painel/Aulas/Cards**, nessa ordem, Painel como padrão -- hash e aba lembrada vencem; o player **inline**, composto das 3 regiões marcadas de `core/templates/player.html`) e `manifesto.json` em `--out`; roda o `--check` no fim e sai **1** se ele acusar. |
 | `--check` | Confere o manifesto de `--out`: fonte inexistente, `<a href>` relativo do index fora do manifesto (link morto na vitrine), teto de entradas. Exit 1 se acusar. |
 | `--extrair-lote PAGINA.html` | O inverso da injeção: recupera o lote do `<script id="lote">` de uma página salva (a versão viva lida por `Artifact read`). Serve ao `--record-lote --lote` e a remontar sem depender de `tmp/`. |
 | `--confirmar` | **Depois do publish ACEITO** (s193): o `estado_pos_publish.json` do último `--build` de `--out` vira o `registro_publicado.json` -- a base do DIFF. Publish recusado = não confirmar; esquecer é seguro (o próximo build manda de novo). Exit 1 sem build. |
@@ -613,6 +613,12 @@ omitido; só `null` remove -- por isso o `--publicado` existe. Limites como dado
 entradas por versão (contrato do Artifact), 8 reservadas, **cap de 120 aulas** (mais novas primeiro,
 pela data de criação no git). Aulas e painel **abrem dentro da página** (`fetch` relativo + iframe
 `srcdoc` na própria aba): o frame nunca navega, o drill não perde estado.  <!-- CHECK: test_aula_e_painel_abrem_dentro_da_pagina_sem_navegar -->
+
+**Sem bastidor na tela (s194, feedback do operador):** a página não mostra carimbo de montagem, id da
+sessão, nome de CLI nem de capability -- o carimbo vive no `manifesto.json` e o `sessao` fica no DOM,
+escondido. O painel avulso marca o seu bastidor (carimbo, `tools/painel.py --html`, rodapé de fonte de
+cada bloco) com `data-backoffice`, e o quadro do hub o esconde; regerar o `artifacts/painel.html` com o
+`painel.py` atual é o que traz as marcas.  <!-- CHECK: test_index_montado_sem_texto_de_bastidor -->
 
 **DIFF (v1, s193, spec `medhub-hub-v1-manifesto-diff`):** `files` leva só o que é **novo ou mudou**;
 o que já está no ar e intocado sai em `manifesto["mantidos"]` -- não sobe e **não precisa ser relido**  <!-- CHECK: test_diff_sem_mudanca_o_segundo_publish_nao_manda_nada -->

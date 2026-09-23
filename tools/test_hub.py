@@ -415,12 +415,62 @@ def test_celular_sem_sticky_sem_nowrap_e_um_wrap_so():
 def test_abas_curtas_e_com_alvo_de_toque():
     pagina = _pagina_real()
     rotulos = re.findall(r'class="hub-aba"[^>]*>([^<]+)</button>', pagina)
-    assert rotulos == ["Cards", "Aulas", "Painel"]
+    assert rotulos == ["Painel", "Aulas", "Cards"]
     assert all(len(r) <= 15 for r in rotulos)
     regra_aba = re.search(r"\.hub-aba\{([^}]*)\}", pagina).group(1)
     assert "min-height:44px" in regra_aba
     regra_titulo = re.search(r"\.hub-aula-t\{([^}]*)\}", pagina).group(1)
     assert "min-width:0" in regra_titulo
+
+
+def test_abas_na_ordem_painel_aulas_cards_e_painel_e_o_padrao():
+    """Feedback do operador (s194): Painel primeiro, Aulas, Cards; sem hash nem aba lembrada, abre
+    no Painel. Hash e aba lembrada continuam vencendo o padrao."""
+    pagina = _pagina_real()
+    abas = re.findall(r'<button type="button" class="hub-aba"[^>]*data-aba="(\w+)"', pagina)
+    assert abas == ["painel", "aulas", "cards"]
+    primeiro = re.search(r'<button type="button" class="hub-aba"[^>]*>', pagina).group(0)
+    assert 'aria-selected="true"' in primeiro and 'data-aba="painel"' in primeiro
+    botoes = re.findall(r'<button type="button" class="hub-aba"[^>]*>', pagina)
+    assert sum('aria-selected="true"' in bt for bt in botoes) == 1
+    assert 'var ABAS = ["painel", "aulas", "cards"];' in pagina
+    assert 'ir(doHash() || lembrada() || "painel", false);' in pagina
+    assert ':root:not([data-aba]) #aba-painel' in pagina, "sem JS, a aba visivel e o Painel"
+
+
+#: Texto de bastidor que o operador nao quer ver na tela (s194): nomes de CLI, de capability, de
+#: funcao do banco, carimbo de montagem. Casado no index MONTADO, fora de comentarios.
+BASTIDOR = ("ArtifactData", "--record-lote", "record_review", "fsrs_queue", "tools/painel.py",
+            "Progresso, FSRS e proximas tarefas", "capability", "runtime do Artifact",
+            "montado ", "DRENAR", "hub-estado", "Fallback declarado")
+
+
+def _sem_comentarios(pagina):
+    sem_html = re.sub(r"<!--.*?-->", "", pagina, flags=re.S)
+    sem_bloco = re.sub(r"/\*.*?\*/", "", sem_html, flags=re.S)
+    return re.sub(r"(?m)^\s*//.*$|(?<=[;{}])\s*//[^\n]*", "", sem_bloco)
+
+
+def test_index_montado_sem_texto_de_bastidor():
+    pagina = _sem_comentarios(_pagina_real())
+    achados = [t for t in BASTIDOR if t in pagina]
+    assert not achados, "texto de bastidor no index montado: %s" % achados
+    assert "2026-09-22h" not in pagina.split(MARCA_ABRE, 1)[0], \
+        "o id da sessao nao aparece como texto antes do lote"
+    sessao = re.search(r'<[^>]*id="sessao"[^>]*>', pagina).group(0)
+    assert "hidden" in sessao, "o id da sessao fica no DOM, escondido"
+
+
+def test_painel_sem_montagem_nao_cita_o_cli():
+    pagina = _sem_comentarios(hub.montar_index(TEMPLATE_HUB_REAL, TEMPLATE_PLAYER_REAL, _lote(),
+                                               [], False, AGORA))
+    assert "tools/painel.py" not in pagina and "hub.py" not in pagina
+
+
+def test_quadro_do_hub_esconde_o_bastidor_do_painel():
+    """O painel avulso guarda o rodape de fonte (governanca); no hub ele some."""
+    pagina = _pagina_real()
+    assert "[data-backoffice]{display:none!important}" in pagina
 
 
 def test_teclado_do_player_so_age_na_aba_cards():

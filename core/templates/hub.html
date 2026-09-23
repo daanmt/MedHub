@@ -8,8 +8,9 @@
   (contrato de pagina do Artifact). O titulo fica nos primeiros 8 KB.
 
   Lugares preenchidos pelo hub.py (cada um exatamente 1x): o CSS, o corpo e o
-  JS do player (regioes de core/templates/player.html -- a fonte unica), a linha
-  de estado, a lista de aulas e o bloco do painel. O lote entra no script de
+  JS do player (regioes de core/templates/player.html -- a fonte unica), a lista
+  de aulas e o bloco do painel. (A linha de estado "montado ... lote ... cards" saiu
+  na s194: era bastidor na tela do operador.) O lote entra no script de
   id "lote" pelo mesmo injetor do --build-player (marcador unico; nao repetir a
   tag aqui).
 
@@ -27,13 +28,9 @@
 }
 :root[data-theme="dark"]{color-scheme:dark}
 
-.hub-topo{
-  display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;
-  gap:2px 16px;margin-bottom:12px;
-}
+.hub-topo{margin-bottom:12px}
 .hub-marca{margin:0;font-weight:750;font-size:1.05rem;letter-spacing:.01em}
 .hub-marca span{color:var(--acento)}
-.hub-estado{margin:0;color:var(--tinta3);font-size:.78em;font-variant-numeric:tabular-nums}
 
 .hub-abas{
   display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;
@@ -48,7 +45,7 @@
 .hub-aba[aria-selected="true"]{background:var(--card);color:var(--acento);box-shadow:var(--sombra)}
 
 .hub-secao{display:none}
-:root:not([data-aba]) #aba-cards,
+:root:not([data-aba]) #aba-painel,
 :root[data-aba="cards"] #aba-cards,
 :root[data-aba="aulas"] #aba-aulas,
 :root[data-aba="painel"] #aba-painel{display:block}
@@ -88,23 +85,22 @@
 
   <header class="hub-topo">
     <p class="hub-marca">Med<span>Hub</span></p>
-    <p class="hub-estado"><!-- @hub:status --></p>
   </header>
 
   <nav class="hub-abas" role="tablist" aria-label="Secoes do MedHub">
-    <button type="button" class="hub-aba" role="tab" id="hub-tab-cards" aria-controls="aba-cards" aria-selected="true" data-aba="cards">Cards</button>
+    <button type="button" class="hub-aba" role="tab" id="hub-tab-painel" aria-controls="aba-painel" aria-selected="true" data-aba="painel">Painel</button>
     <button type="button" class="hub-aba" role="tab" id="hub-tab-aulas" aria-controls="aba-aulas" aria-selected="false" data-aba="aulas" tabindex="-1">Aulas</button>
-    <button type="button" class="hub-aba" role="tab" id="hub-tab-painel" aria-controls="aba-painel" aria-selected="false" data-aba="painel" tabindex="-1">Painel</button>
+    <button type="button" class="hub-aba" role="tab" id="hub-tab-cards" aria-controls="aba-cards" aria-selected="false" data-aba="cards" tabindex="-1">Cards</button>
   </nav>
 
-  <section class="hub-secao" id="aba-cards" role="tabpanel" aria-labelledby="hub-tab-cards">
-<!-- @hub:player-corpo -->
+  <section class="hub-secao" id="aba-painel" role="tabpanel" aria-labelledby="hub-tab-painel">
+    <!-- @hub:painel -->
   </section>
 
   <section class="hub-secao" id="aba-aulas" role="tabpanel" aria-labelledby="hub-tab-aulas">
     <div id="hub-aulas-lista">
       <h2 class="hub-titulo">Aulas</h2>
-      <p class="hub-sub">Aulas-base deste hub, da mais nova para a mais antiga. A aula abre aqui dentro; o drill da aba Cards continua onde parou.</p>
+      <p class="hub-sub">Da mais nova para a mais antiga. A aula abre aqui dentro; os cards continuam onde voce parou.</p>
       <!-- @hub:aulas -->
     </div>
     <div id="hub-leitor" hidden>
@@ -117,8 +113,8 @@
     </div>
   </section>
 
-  <section class="hub-secao" id="aba-painel" role="tabpanel" aria-labelledby="hub-tab-painel">
-    <!-- @hub:painel -->
+  <section class="hub-secao" id="aba-cards" role="tabpanel" aria-labelledby="hub-tab-cards">
+<!-- @hub:player-corpo -->
   </section>
 
 </div>
@@ -129,7 +125,7 @@
 (function(){
   "use strict";
 
-  var ABAS = ["cards", "aulas", "painel"];
+  var ABAS = ["painel", "aulas", "cards"];
   var raiz = document.documentElement;
   var botoes = Array.prototype.slice.call(document.querySelectorAll(".hub-aba"));
   var $ = function(id){ return document.getElementById(id); };
@@ -205,6 +201,13 @@
     if(!doc){ quadro.classList.add("hub-quadro-rolavel"); return; }
     var tema = raiz.getAttribute("data-theme");
     if(tema){ doc.documentElement.setAttribute("data-theme", tema); }
+    // Bastidor (s194): o painel avulso marca carimbo, nome do CLI e rodape de
+    // fonte com data-backoffice; dentro do hub eles nao aparecem.
+    if(doc.head){
+      var oculto = doc.createElement("style");
+      oculto.textContent = "[data-backoffice]{display:none!important}";
+      doc.head.appendChild(oculto);
+    }
     Array.prototype.forEach.call(doc.querySelectorAll("a[href]"), function(a){
       var href = a.getAttribute("href") || "";
       if(/^https?:/i.test(href)){
@@ -291,6 +294,7 @@
     carregar(quadro, quadro.getAttribute("data-src"), $("hub-painel-aviso"));
   }
 
-  ir(doHash() || lembrada() || "cards", false);
+  // Padrao = Painel (s194); hash e aba lembrada continuam vencendo.
+  ir(doHash() || lembrada() || "painel", false);
 })();
 </script>

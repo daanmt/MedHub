@@ -87,7 +87,6 @@ LUGARES_HUB = (
     ("player-css", "/* @hub:player-css */"),
     ("player-corpo", "<!-- @hub:player-corpo -->"),
     ("player-js", "<!-- @hub:player-js -->"),
-    ("status", "<!-- @hub:status -->"),
     ("aulas", "<!-- @hub:aulas -->"),
     ("painel", "<!-- @hub:painel -->"),
 )
@@ -278,27 +277,24 @@ def html_aulas(aulas_sel):
 
 
 def html_painel(tem_painel):
+    """Bloco da aba Painel. Sem texto de bastidor (s194): nada de CLI, banco ou carimbo -- quem
+    monta sem painel ve o AVISO do `--build` no terminal, nao na tela do operador."""
     if not tem_painel:
         return ('<h2 class="hub-titulo">Painel</h2>\n'
-                '<p class="hub-vazio">Painel nao gerado nesta montagem -- o rito roda '
-                '<code>tools/painel.py --html</code> antes do <code>hub.py --build</code>.</p>')
+                '<p class="hub-vazio">O painel ainda nao esta disponivel.</p>')
     return ('<h2 class="hub-titulo">Painel</h2>\n'
-            '<p class="hub-sub">Progresso, FSRS e proximas tarefas, gerado do banco no ultimo '
-            'fechamento.</p>\n'
             '<p class="hub-aviso" id="hub-painel-aviso" hidden>Nao consegui abrir o painel aqui '
             'dentro. <a href="%s">Abrir o painel em pagina inteira</a>.</p>\n'
             '<iframe class="hub-quadro" id="hub-painel-quadro" data-src="%s" title="Painel" '
             'hidden></iframe>' % (PUB_PAINEL, PUB_PAINEL))
 
 
-def html_status(lote, agora):
-    cards = lote.get("cards") or []
-    return "montado %s &#183; lote %s &#183; %d cards" % (
-        _e(agora.strftime("%d/%m %H:%M")), _e(lote.get("sessao") or "-"), len(cards))
-
-
 def montar_index(template_hub, player_html, lote, aulas_sel, tem_painel, agora):
-    """A pagina: casca do hub + as 3 regioes do player + estado/aulas/painel + o lote."""
+    """A pagina: casca do hub + as 3 regioes do player + aulas/painel + o lote.
+
+    `agora` segue na assinatura (chamadores e testes), mas nao vai mais para a tela: a linha
+    "montado ... lote ... cards" saiu na s194 (bastidor). O carimbo vive no manifesto."""
+    del agora
     regioes = extrair_regioes_player(player_html)
     for _nome, marca in LUGARES_HUB:
         _exatamente_uma(template_hub, marca, "hub.html")
@@ -306,7 +302,6 @@ def montar_index(template_hub, player_html, lote, aulas_sel, tem_painel, agora):
         "player-css": regioes["css"],
         "player-corpo": regioes["corpo"],
         "player-js": regioes["js"],
-        "status": html_status(lote, agora),
         "aulas": html_aulas(aulas_sel),
         "painel": html_painel(tem_painel),
     }

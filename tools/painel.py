@@ -328,7 +328,8 @@ def _reguas_legivel(por_regua):
 
 
 def _rodape(chave):
-    return '<p class="fonte">%s</p>' % _e(FONTES[chave])
+    # data-backoffice (s194): governanca do painel avulso; o hub esconde na aba Painel.
+    return '<p class="fonte" data-backoffice>%s</p>' % _e(FONTES[chave])
 
 
 def _sec(chave, titulo, corpo):
@@ -548,12 +549,12 @@ footer{color:var(--tinta3);font-size:.76em;margin-top:26px;border-top:1px solid 
   <header class="topo">
     <div>
       <h1>%(titulo)s</h1>
-      <p class="sub">gerado em %(gerado)s &middot; semana %(semana)s do plano</p>
+      <p class="sub" data-backoffice>gerado em %(gerado)s &middot; semana %(semana)s do plano</p>
     </div>
-    <p class="sub">pagina gerada por <code>tools/painel.py --html</code> &middot; read-only</p>
+    <p class="sub" data-backoffice>pagina gerada por <code>tools/painel.py --html</code> &middot; read-only</p>
   </header>
 %(corpo)s
-  <footer>
+  <footer data-backoffice>
     Todo numero vem do banco pela funcao citada no rodape de cada bloco. Esta pagina
     nao guarda estado e nao escreve nada: e leitura. Regenerar a cada fechamento de
     sessao e republicar na mesma URL.

@@ -54,7 +54,6 @@
 .hub-sub{color:var(--tinta3);font-size:.85em;margin:0 0 18px;max-width:40rem}
 .hub-vazio{color:var(--tinta3);margin:0}
 
-.hub-aulas{list-style:none;margin:0;padding:0;display:grid;gap:10px}
 .hub-aula{
   display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:baseline;gap:4px 14px;
   min-height:44px;padding:15px 16px;
@@ -66,6 +65,35 @@
 .hub-aula:focus-visible{outline:3px solid var(--acento);outline-offset:3px}
 .hub-aula-t{min-width:0;font-weight:600;line-height:1.35}
 .hub-aula-d{color:var(--tinta3);font-size:.8em;font-variant-numeric:tabular-nums}
+
+/* Quadro de aulas (s194): colunas por tipo, empilhadas no celular; "feito" risca e recolhe */
+.qd-colunas{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,16rem),1fr));gap:22px 18px;align-items:start}
+.qd-col{min-width:0}
+.qd-titulo{display:flex;align-items:baseline;gap:8px;margin:0 0 10px;font-size:.95rem;font-weight:650;color:var(--tinta2)}
+.qd-n{font-size:.78em;font-weight:600;color:var(--tinta3);font-variant-numeric:tabular-nums}
+.qd-lista{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.qd-vazio{color:var(--tinta3);font-size:.88em;margin:0;padding:12px 0}
+.qd-item{min-width:0;display:grid;grid-template-columns:44px minmax(0,1fr);gap:10px;align-items:center}
+.qd-feito{
+  width:44px;height:44px;padding:0;display:grid;place-items:center;
+  border:2px solid var(--linha);border-radius:10px;background:var(--card);cursor:pointer;
+}
+.qd-feito span{width:12px;height:20px;margin-top:-4px;border:solid transparent;border-width:0 3px 3px 0;transform:rotate(45deg)}
+.qd-feito:hover:not([disabled]){border-color:var(--acento)}
+.qd-feito:hover:not([disabled]) span{border-color:var(--acento-fraco)}
+.qd-feito[aria-pressed="true"]{background:var(--acento);border-color:var(--acento)}
+.qd-feito[aria-pressed="true"] span{border-color:var(--papel)}
+.qd-feito[disabled]{cursor:not-allowed;opacity:.5}
+.qd-feito:focus-visible{outline:3px solid var(--acento);outline-offset:3px}
+.qd-item[data-feito] .hub-aula{background:transparent}
+.qd-item[data-feito] .hub-aula-t{text-decoration:line-through;text-decoration-thickness:2px;color:var(--tinta3)}
+.qd-item.qd-chegou .hub-aula{animation:qd-chegou 700ms ease-out}
+@keyframes qd-chegou{from{border-color:var(--acento);background:var(--acento-fraco)}}
+@media (prefers-reduced-motion: reduce){.qd-item.qd-chegou .hub-aula{animation:none}}
+.qd-feitas{margin-top:26px;border-top:1px solid var(--linha);padding-top:6px}
+.qd-feitas summary{cursor:pointer;min-height:44px;padding:11px 0;font-weight:650;color:var(--tinta2)}
+.qd-feitas .qd-lista{margin-top:8px}
+.qd-aviso{color:var(--tinta3);font-size:.86em;margin:0 0 14px}
 
 .hub-leitor-barra{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin-bottom:14px}
 .hub-leitor-titulo{margin:0;min-width:0;font-weight:650}
@@ -100,7 +128,7 @@
   <section class="hub-secao" id="aba-aulas" role="tabpanel" aria-labelledby="hub-tab-aulas">
     <div id="hub-aulas-lista">
       <h2 class="hub-titulo">Aulas</h2>
-      <p class="hub-sub">Da mais nova para a mais antiga. A aula abre aqui dentro; os cards continuam onde voce parou.</p>
+      <p class="hub-sub">Marque o que você já fez: vai riscado para Concluídas. A aula abre aqui dentro e os cards continuam onde você parou.</p>
       <!-- @hub:aulas -->
     </div>
     <div id="hub-leitor" hidden>
@@ -208,6 +236,18 @@
       oculto.textContent = "[data-backoffice]{display:none!important}";
       doc.head.appendChild(oculto);
     }
+    // Atalhos do painel (s194): "Ir para os cards" troca de aba; "abrir aula" abre o leitor.
+    Array.prototype.forEach.call(doc.querySelectorAll("a[data-hub-aba], a[data-hub-aula]"), function(a){
+      a.addEventListener("click", function(ev){
+        ev.preventDefault();
+        var aba = valida(a.getAttribute("data-hub-aba"));
+        var slug = a.getAttribute("data-hub-aula");
+        var alvo = slug ? document.querySelector('a.hub-aula[href="aulas/' + slug + '.html"]') : null;
+        ir(aba || "aulas", true);
+        window.scrollTo(0, 0);
+        if(alvo){ abrirAula(alvo); }
+      });
+    });
     Array.prototype.forEach.call(doc.querySelectorAll("a[href]"), function(a){
       var href = a.getAttribute("href") || "";
       if(/^https?:/i.test(href)){
@@ -284,6 +324,98 @@
     });
   });
   $("hub-leitor-voltar").addEventListener("click", fecharAula);
+
+  // --------------------------------------------------------------- quadro
+  // O estado "feito" mora no db, em quadro/<slug> = {feito, ts} (regra de escrita "quadro" na
+  // declaracao do publish). Sem db, o controle fica desabilitado com uma frase curta.
+  var qd = $("hub-quadro");
+  if(qd){ iniciarQuadro(); }
+
+  function iniciarQuadro(){
+    var itens = Array.prototype.slice.call(qd.querySelectorAll(".qd-item"));
+    var feitas = qd.querySelector("#hub-quadro-feitas .qd-lista");
+    var colecao = null;
+
+    function recontar(){
+      Array.prototype.forEach.call(qd.querySelectorAll(".qd-col"), function(col){
+        var n = col.querySelectorAll(".qd-item").length;
+        col.querySelector(".qd-n").textContent = String(n);
+        col.querySelector(".qd-vazio").hidden = n > 0;
+      });
+      $("hub-quadro-nfeitas").textContent = String(feitas.querySelectorAll(".qd-item").length);
+    }
+
+    function inserirEmOrdem(lista, li){
+      var ordem = Number(li.getAttribute("data-ordem"));
+      var depois = null;
+      Array.prototype.some.call(lista.children, function(outro){
+        if(outro !== li && Number(outro.getAttribute("data-ordem")) > ordem){ depois = outro; return true; }
+        return false;
+      });
+      lista.insertBefore(li, depois);
+    }
+
+    function aplicar(li, feito){
+      var titulo = li.getAttribute("data-titulo") || "";
+      var botao = li.querySelector(".qd-feito");
+      var rotulo = feito ? "Desmarcar " + titulo : "Marcar " + titulo + " como feita";
+      if(feito){ li.setAttribute("data-feito", "1"); } else { li.removeAttribute("data-feito"); }
+      botao.setAttribute("aria-pressed", feito ? "true" : "false");
+      botao.setAttribute("aria-label", rotulo);
+      botao.setAttribute("title", rotulo);
+      var destino = feito ? feitas
+        : qd.querySelector('.qd-col[data-tipo="' + li.getAttribute("data-tipo") + '"] .qd-lista');
+      if(destino && li.parentNode !== destino){
+        inserirEmOrdem(destino, li);
+        li.classList.remove("qd-chegou");
+        void li.offsetWidth;
+        li.classList.add("qd-chegou");
+      }
+      recontar();
+    }
+
+    function semArmazenamento(){
+      colecao = null;
+      $("hub-quadro-aviso").hidden = false;
+      itens.forEach(function(li){ li.querySelector(".qd-feito").disabled = true; });
+    }
+
+    itens.forEach(function(li){
+      li.querySelector(".qd-feito").addEventListener("click", function(){
+        if(!colecao){ return; }
+        var novo = !li.hasAttribute("data-feito");
+        aplicar(li, novo);
+        colecao.doc(li.getAttribute("data-slug"))
+          .set({feito: novo, ts: new Date().toISOString()})
+          .catch(function(){
+            aplicar(li, !novo);
+            $("hub-quadro-aviso").textContent = "Não consegui salvar agora. Tente de novo.";
+            $("hub-quadro-aviso").hidden = false;
+          });
+      });
+    });
+
+    try{
+      window.claude.use("db").then(function(db){
+        if(!db){ semArmazenamento(); return; }
+        colecao = db.collection("quadro");
+        itens.forEach(function(li){ li.querySelector(".qd-feito").disabled = false; });
+        colecao.onSnapshot(function(snap){
+          var feito = {};
+          (snap.docs || []).forEach(function(d){
+            var dado = d.data && d.data();
+            feito[d.id] = !!(dado && dado.feito);
+          });
+          itens.forEach(function(li){
+            var f = !!feito[li.getAttribute("data-slug")];
+            if(f !== li.hasAttribute("data-feito")){ aplicar(li, f); }
+          });
+        }, function(){ /* sem assinatura: vale o estado do build e o que for clicado */ });
+      }).catch(semArmazenamento);
+    }catch(e){
+      semArmazenamento();
+    }
+  }
 
   // ---------------------------------------------------------------- painel
   var painelCarregado = false;

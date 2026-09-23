@@ -69,10 +69,15 @@ def _repo(tmp_path, aulas, painel=True):
     return tmp_path, data_fn
 
 
+#: O registro REAL do quadro (s194): as aulas do golden (hernias, dmg, s17) estao nele.
+QUADRO_REAL = hub.ler_quadro(ROOT / hub.QUADRO_REG)
+
+
 def _construir(raiz, data_fn, publicado=(), lote=None):
     return hub.construir(lote or _lote(), raiz=raiz, out=raiz / "tmp" / "hub",
                          publicado=publicado, agora=AGORA, data_fn=data_fn,
-                         template_hub=TEMPLATE_HUB_REAL, template_player=TEMPLATE_PLAYER_REAL)
+                         template_hub=TEMPLATE_HUB_REAL, template_player=TEMPLATE_PLAYER_REAL,
+                         quadro=QUADRO_REAL)
 
 
 # --------------------------------------------------------------------------

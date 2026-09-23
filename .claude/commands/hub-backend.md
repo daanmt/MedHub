@@ -1,5 +1,5 @@
 ---
-description: "Backend do MedHub HUB: 1 tique = conferir se o lote da aba Cards foi drenado e, se foi, gravar as notas e publicar a próxima fila do dia. Feito para rodar em /loop numa sessão do Claude Code deixada aberta no PC."
+description: "Backend do MedHub HUB: 1 tique = conferir (hub.py --precisa-publicar) se o lote da aba Cards foi drenado -- e aí gravar as notas e publicar a próxima fila do dia -- ou se o painel/quadro mudou, e aí republicar com o mesmo lote. Feito para rodar em /loop numa sessão do Claude Code deixada aberta no PC."
 type: skill
 layer: commands
 status: canonical
@@ -13,15 +13,22 @@ status: canonical
 
 ## O tique
 
-O rito de publicar é o do `/revisar` "DRENAR no player" (passos 1-5 e 7-8); aqui só se decide **quando** rodá-lo. Nada de prosa no chat além da linha final.
+O rito de publicar é o do `/revisar` "DRENAR no player" (passos 1-5 e 7-8); aqui só se decide **quando** rodá-lo -- e quem decide é o CLI, não raciocínio ad hoc. Nada de prosa no chat além da linha final.
 
-1. **Lote vivo:** o `sessao` está na linha 3 do `HANDOFF.md`; o lote é `tmp/player_<sessao>.json` (sem ele: `Artifact read` + `hub.py --extrair-lote`). `total` = nº de cards do lote.
-2. **Estado:** `ArtifactData list` de `sessoes/<sessao>/notas` (limit 1000, `out_dir` em `tmp/player_<sessao>_db`). Drenado = todo `card_id` do lote tem doc (nota OU defeito).
-   - **Não drenado -> no-op.** Linha `hub-backend: lote <sessao> em N/total -- nada a fazer` e fim do tique. 🔴 Nunca publicar com lote em curso: o reload no celular reapresentaria a fila no meio do drill.
-3. **Gravar:** montar `tmp/player_<sessao>_notas.json` -> `fsrs_queue.py --record-lote` dry-run -> `--apply --expect N` com o N medido. Rejeitada ou FORA DE ORDEM vão para `history/quarentena/<sessao>.json` (o `--apply` arquiva) e entram no commit do passo 6.
-4. **Próxima fila:** `fsrs_queue.py --export-player --sessao <AAAA-MM-DD><letra>` -- data de hoje + a próxima letra livre (`2026-09-23a`, `b`...; nunca reusar um `sessao`, é o nome da coleção). Sem `--limit`: o export corta no SALDO do dia (teto menos as revisões já gravadas hoje -- `consumo_hoje` na saída). `total` 0 = saldo zerado: se o lote da aba também está vazio, **no-op** (não publicar vazio sobre vazio; apagar o export); senão publica (a aba mostra "Nenhum card para hoje"). No dia seguinte o saldo volta e o 1o tique publica a fila nova.
-5. **Publicar:** `Artifact list scope=files` do hub -> `hub.py --build --lote <novo> --publicado <listagem>` (`--check` OK) -> ler inteiro SÓ o que está em `files` -> `Artifact publish` na URL do HANDOFF, **sem `capabilities`** -> `hub.py --confirmar`. Publish recusado: não confirmar, relatar e parar o tique.
-6. **Selar:** linha 3 do HANDOFF passa ao `sessao` novo; linha no session log do dia `hub-backend: <sessao velho> gravado (N validas · M quarentena) -> <sessao novo> no ar (K cards)`; commit + push só desses arquivos. A poda da coleção velha fica para o fechamento (`/revisar` passo 5).
+1. **Lote vivo:** o `sessao` está na linha 3 do `HANDOFF.md`; o lote é `tmp/player_<sessao>.json` (sem ele: `Artifact read` + `hub.py --extrair-lote`).
+2. **Estado no `db`:** `ArtifactData list` de `sessoes/<sessao>/notas` (limit 1000, `out_dir` em `tmp/player_<sessao>_db`) e da coleção `quadro` (`out_dir` em `tmp/hub_db`).
+3. **Painel fresco:** `python tools/painel.py --html` (a hora de geração não conta na comparação).
+4. **Decidir:** `python tools/hub.py --precisa-publicar --lote tmp/player_<sessao>.json --notas tmp/player_<sessao>_db --quadro-estado tmp/hub_db` -> `sim|nao`, a `acao` e o motivo:
+   - **`nada`** -> linha `hub-backend: lote <sessao> em N/total, projeção igual -- nada a fazer` e fim do tique.
+   - **`mesmo_lote`** (lote em curso, mas o painel ou o quadro mudou) -> passo 7 com o **MESMO** `tmp/player_<sessao>.json`: mesmo `sessao`, mesmos cards; as notas já dadas voltam do `db` no reload do celular. A linha 3 do HANDOFF **não** muda. 🔴 Nunca trocar lote em curso: o reload reapresentaria a fila no meio do drill.
+   - **`nova_fila`** (lote drenado, ou vazio) -> passos 5-7.
+   - **Aula feita com tarefa pendente** (linha `aula feita no quadro com tarefa pendente: #N`): **não concluir** -- o `plano.py --concluir` exige `--sessao` (volume em `sessoes_bulk`) e aula não tem. Registrar uma vez no session log como pendência de decisão do operador (`hub-backend: aula <slug> feita, tarefa #N segue pendente -- --concluir exige --sessao`) e seguir.
+5. **Gravar:** montar `tmp/player_<sessao>_notas.json` -> `fsrs_queue.py --record-lote` dry-run -> `--apply --expect N` com o N medido. Rejeitada ou FORA DE ORDEM vão para `history/quarentena/<sessao>.json` (o `--apply` arquiva) e entram no commit do passo 8. Lote vazio: nada a gravar. Depois de gravar, **`painel.py --html` de novo** (o saldo de cards mudou).
+6. **Próxima fila:** `fsrs_queue.py --export-player --sessao <AAAA-MM-DD><letra>` -- data de hoje + a próxima letra livre (`2026-09-23a`, `b`...; nunca reusar um `sessao`, é o nome da coleção). Sem `--limit`: o export corta no SALDO do dia (teto menos as revisões já gravadas hoje -- `consumo_hoje` na saída). `total` 0 = saldo zerado: se o lote da aba também está vazio, apagar o export e seguir com o lote **atual** (vazio) -- publicar só se o `--precisa-publicar` tinha apontado painel ou quadro mudado; senão, no-op. No dia seguinte o saldo volta e o 1o tique publica a fila nova.
+7. **Publicar:** `Artifact list scope=files` do hub -> `hub.py --build --lote <lote do passo 4 ou 6> --publicado <listagem> --quadro-estado tmp/hub_db` (`--check` OK) -> ler inteiro SÓ o que está em `files` -> `Artifact publish` na URL do HANDOFF, **sem `capabilities`** -> `hub.py --confirmar` (grava também a projeção publicada: é a base do próximo `--precisa-publicar`). Publish recusado: não confirmar, relatar e parar o tique.
+8. **Selar:** lote novo -> a linha 3 do HANDOFF passa ao `sessao` novo; linha no session log do dia (`hub-backend: <sessao velho> gravado (N validas · M quarentena) -> <sessao novo> no ar (K cards)` ou `hub-backend: republicado com o mesmo lote <sessao> (<motivo>)`); commit + push só desses arquivos. A poda da coleção velha fica para o fechamento (`/revisar` passo 5).
+
+**Declaração de capabilities do hub (s194, com o quadro):** `{db: {rules: [{path: "", read: "view", write: "admin"}, {path: "sessoes", write: "interact"}, {path: "quadro", write: "interact"}]}}`. O tique **nunca** a passa (publica sem `capabilities`, que mantém a declarada); quem a publica é o agente principal, uma vez. Se o publish do tique voltar sem a regra `quadro` (o controle "feito" desabilitado no hub), o tique relata -- não declara.
 
 ## Limites declarados
 

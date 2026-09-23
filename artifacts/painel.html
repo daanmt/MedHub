@@ -10,8 +10,7 @@
   --tinta:#191817; --tinta2:#54504a; --tinta3:#8b857b;
   --linha:#e0dbd2; --acento:#0e6b5c; --acento-fraco:#d9ece7;
   --alerta:#a2412a; --alerta-fraco:#f6e4de;
-  --wrap:64rem; --raio:14px;
-  --sombra:0 1px 2px rgba(0,0,0,.05), 0 10px 30px rgba(0,0,0,.06);
+  --wrap:58rem; --raio:14px;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
@@ -19,7 +18,6 @@
     --tinta:#edeff3; --tinta2:#b4bac4; --tinta3:#7e8794;
     --linha:#2d323b; --acento:#4fd0b3; --acento-fraco:#123630;
     --alerta:#f0917a; --alerta-fraco:#3a221c;
-    --sombra:0 1px 2px rgba(0,0,0,.45), 0 10px 30px rgba(0,0,0,.35);
   }
 }
 :root[data-theme="dark"]{
@@ -27,94 +25,131 @@
   --tinta:#edeff3; --tinta2:#b4bac4; --tinta3:#7e8794;
   --linha:#2d323b; --acento:#4fd0b3; --acento-fraco:#123630;
   --alerta:#f0917a; --alerta-fraco:#3a221c;
-  --sombra:0 1px 2px rgba(0,0,0,.45), 0 10px 30px rgba(0,0,0,.35);
 }
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 body{
   margin:0; background:var(--papel); color:var(--tinta);
   font-family:ui-sans-serif,system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-  font-size:clamp(15px,.95rem + .2vw,17px); line-height:1.55; overflow-wrap:break-word;
+  font-size:clamp(15px,.95rem + .2vw,17px); line-height:1.5; overflow-wrap:break-word;
 }
-.wrap{max-width:var(--wrap);margin:0 auto;padding:24px 16px 72px}
-h1{font-size:clamp(1.2rem,1rem + .8vw,1.6rem);margin:0;letter-spacing:-.01em}
-h2{font-size:1.02rem;margin:0 0 14px;letter-spacing:-.005em}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:4px 2px 40px}
+h2{font-size:1.08rem;margin:0 0 4px;letter-spacing:-.005em;text-wrap:balance}
+h3{font-size:.86rem;font-weight:600;color:var(--tinta2);margin:0 0 6px}
 p{margin:0}
-a{color:var(--acento)}
-code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.86em}
-.topo{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:baseline;justify-content:space-between;margin-bottom:22px}
-.sub{color:var(--tinta3);font-size:.84em}
-.bloco{background:var(--card);border:1px solid var(--linha);border-radius:var(--raio);
-       box-shadow:var(--sombra);padding:20px 18px;margin-bottom:18px}
-.fonte{color:var(--tinta3);font-size:.74em;margin-top:14px;border-top:1px solid var(--linha);padding-top:10px}
-.metro{color:var(--tinta2);font-size:.86em;margin-top:12px}
+a{color:var(--acento);text-underline-offset:2px}
+a:focus-visible{outline:3px solid var(--acento);outline-offset:2px;border-radius:4px}
+.atualizado{color:var(--tinta3);font-size:.76em;margin:0 0 10px;text-align:right}
+.bloco{padding:18px 0 22px;border-top:1px solid var(--linha)}
+.bloco:first-of-type{border-top:0;padding-top:4px}
+.sub{color:var(--tinta2);font-size:.9em;margin:0 0 14px}
+.nota{color:var(--tinta3);font-size:.84em;margin-top:6px}
 .tenue{color:var(--tinta3)}
-.tag{display:inline-block;font-size:.68em;letter-spacing:.06em;text-transform:uppercase;
-     color:var(--alerta);background:var(--alerta-fraco);border-radius:99px;padding:2px 8px;margin-left:6px}
-.metros{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
-.m{background:var(--afundado);border-radius:10px;padding:12px 14px}
-.m b{display:block;font-size:1.35em;font-variant-numeric:tabular-nums;line-height:1.2}
-.m span{font-size:.76em;color:var(--tinta3)}
-table{width:100%;border-collapse:collapse;font-size:.88em;font-variant-numeric:tabular-nums}
-th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--linha)}
-thead th{font-size:.74em;letter-spacing:.06em;text-transform:uppercase;color:var(--tinta3);font-weight:600}
-tbody th{font-weight:650}
-ul{margin:10px 0 0;padding-left:20px}
-li{margin-bottom:6px}
-.barra{height:6px;background:var(--afundado);border-radius:99px;margin-top:8px;overflow:hidden}
+
+/* Hoje: as duas doses do dia, o elemento que o olho acha primeiro */
+.dia h2{font-size:1.25rem;margin-bottom:14px}
+.doses{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,15rem),1fr));gap:12px}
+.dose{min-width:0;background:var(--card);border:1px solid var(--linha);border-radius:var(--raio);
+      padding:14px 16px 16px;border-left:4px solid var(--acento)}
+.fracao{font-size:1.02rem;color:var(--tinta2);font-variant-numeric:tabular-nums}
+.fracao b{font-size:2.3rem;line-height:1.1;color:var(--tinta);font-weight:750;letter-spacing:-.02em;margin-right:4px}
+.barra{height:6px;background:var(--afundado);border-radius:99px;margin:10px 0 4px;overflow:hidden}
 .barra i{display:block;height:100%;background:var(--acento)}
-.aviso{border-left:3px solid var(--alerta);background:var(--alerta-fraco);
-       padding:10px 12px;border-radius:8px;margin-top:14px;font-size:.84em}
-footer{color:var(--tinta3);font-size:.76em;margin-top:26px;border-top:1px solid var(--linha);padding-top:14px}
-@media (max-width:460px){
-  .bloco{padding:16px 13px}
-  th,td{padding:7px 6px}
-  table{font-size:.8em}
+.ir{margin-top:10px;font-weight:600}
+.ir a{display:inline-block;padding:8px 0;min-height:44px}
+.agenda{margin-top:18px}
+.ag-barras{list-style:none;margin:6px 0 0;padding:0;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));
+           gap:6px;height:112px;align-items:end}
+.ag-barras li{min-width:0;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:3px}
+.ag-trilho{flex:1 1 auto;width:100%;display:flex;align-items:flex-end;justify-content:center}
+.ag-barras i{display:block;width:min(100%,34px);background:var(--acento-fraco);border-top:3px solid var(--acento);border-radius:4px 4px 0 0}
+.ag-n{font-size:.8em;font-variant-numeric:tabular-nums;color:var(--tinta2)}
+.ag-d{font-size:.74em;color:var(--tinta3)}
+
+/* Semana */
+.tarefas{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.tarefa{min-width:0;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 14px;align-items:baseline;
+        padding:10px 12px;background:var(--card);border:1px solid var(--linha);border-radius:10px}
+.tarefa.atrasada{border-left:4px solid var(--alerta)}
+.t-tema{min-width:0;font-weight:600;line-height:1.35}
+.t-meta{grid-column:1;min-width:0;color:var(--tinta3);font-size:.82em;display:flex;flex-wrap:wrap;gap:2px 10px}
+.t-rot{color:var(--tinta2);font-weight:600}
+.t-atraso{color:var(--alerta)}
+.t-acao{grid-column:2;grid-row:1 / span 2;align-self:center;font-size:.88em;text-align:right}
+.prox{margin-top:12px}
+.mais{margin-top:8px}
+.mais summary{cursor:pointer;color:var(--acento);font-weight:600;padding:10px 0;min-height:44px}
+.mais .tarefas{margin-top:4px}
+
+/* Ritmo */
+.figs{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,9.5rem),1fr));gap:10px;margin-top:10px}
+.fig{min-width:0;background:var(--afundado);border-radius:10px;padding:10px 12px}
+.fig-n{font-size:1.5rem;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.2}
+.fig-r{font-size:.78em;color:var(--tinta3)}
+.fig.abaixo .fig-n{color:var(--alerta)}
+.fig.alvo{background:var(--acento-fraco)}
+
+/* Blocos */
+table{width:100%;border-collapse:collapse;font-size:.9em;font-variant-numeric:tabular-nums;margin-top:8px}
+th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--linha)}
+thead th{font-size:.78em;color:var(--tinta3);font-weight:600}
+tbody th{font-weight:650}
+tr.sim th,tr.sim td{color:var(--tinta2)}
+
+@media (max-width:520px){
+  .tarefa{grid-template-columns:minmax(0,1fr)}
+  .t-acao{grid-column:1;grid-row:auto;text-align:left}
+  th,td{padding:6px 5px}
+  table{font-size:.84em}
 }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <header class="topo">
-    <div>
-      <h1>Painel MedHub</h1>
-      <p class="sub" data-backoffice>gerado em 2026-09-23T18:07:59 &middot; semana 1 do plano</p>
-    </div>
-    <p class="sub" data-backoffice>pagina gerada por <code>tools/painel.py --html</code> &middot; read-only</p>
-  </header>
-<section class="bloco" data-bloco="plano">
-  <h2>Progresso por bloco</h2>
-<table><thead><tr><th>bloco</th><th>tarefas feitas</th><th>pendentes</th><th>cortadas</th><th>questoes feitas / previstas</th><th>do previsto</th><th>acerto</th></tr></thead><tbody><tr><th scope="row">CIR</th><td>23/102</td><td>78</td><td>1</td><td>881 / 1883</td><td>46.8%</td><td>79.5%</td></tr><tr><th scope="row">CM</th><td>67/419</td><td>292</td><td>60</td><td>2564 / 7847</td><td>32.7%</td><td>77.4%</td></tr><tr><th scope="row">GO</th><td>32/151</td><td>117</td><td>2</td><td>1114 / 2873</td><td>38.8%</td><td>80.3%</td></tr><tr><th scope="row">MFC</th><td>24/113</td><td>78</td><td>11</td><td>904 / 1851</td><td>48.8%</td><td>85.8%</td></tr><tr><th scope="row">PED</th><td>29/118</td><td>88</td><td>1</td><td>872 / 2291</td><td>38.1%</td><td>84.5%</td></tr><tr><th scope="row">Simulado <span class="tenue">fora dos blocos</span></th><td>--</td><td>--</td><td>--</td><td>1031 / --</td><td>--</td><td>69.7%</td></tr></tbody></table>
-<p class="metro">Orcamento Fase 1 (semanas 1-7): <b>125</b> de 2760 questoes <b>vinculadas a tarefa</b> (4.5%)</p><div class="barra"><i style="width:4.5%"></i></div>
-<p class="aviso"><b>Duas camadas, e elas medem coisas diferentes.</b> o volume acima vem de `sessoes_bulk` por AREA (cobre tudo). O elo por TAREFA (`tarefa_id`, part-6) cobre 0 sessao(oes): o backfill casa 1 de 126 de forma inequivoca, entao a coluna `q_feitas_por_elo` e granularidade fina com cobertura parcial -- declarada, nao escondida.</p>
-<p class="metro tenue">Areas sem bloco no plano (ficam fora da tabela, nunca somadas a palpite): GO (85q).</p>
-<p class="fonte" data-backoffice>[plano] tools/listas.py --progresso · [db] plano_tarefas</p>
-</section>
-<section class="bloco" data-bloco="semana">
-  <h2>Listas da semana</h2>
-<p class="metro">Semana <b>1</b> &middot; 3 tarefas &middot; 37 questoes previstas</p><ul><li><b>#26</b> Diabetes na Gestação <span class="tenue">GO &middot; teoria</span> -- 19 q previstas &middot; <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/43dfee73-2eff-45e8-8e39-5c1cd7c7738f/?per_page=20" rel="noopener noreferrer">lista</a></li><li><b>#96</b> Tópicos em Pediatria <span class="tenue">PED &middot; teoria</span> -- 18 q previstas &middot; <a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/8b3e96e1-7997-4da0-8059-e72fe75ac4f8/?per_page=20" rel="noopener noreferrer">lista</a></li><li><b>#877</b> Raciocinio diagnostico quantitativo (S/E, VPP/VPN, RV, probabilidade pre-teste) <span class="tenue">MFC &middot; teoria</span> -- 0 q previstas &middot; <span class="tenue">sem lista</span></li></ul>
-<p class="fonte" data-backoffice>[plano] tools/listas.py --pendentes --semana N</p>
-</section>
-<section class="bloco" data-bloco="fsrs">
-  <h2>Cards (FSRS)</h2>
-<div class="metros"><div class="m"><b>83</b><span>vencidos (49 atrasados + 34 hoje)</span></div><div class="m"><b>90</b><span>teto do dia <span class="tag">REGIME DE DIVIDA</span></span></div><div class="m"><b>730</b><span>pool nunca introduzidos</span></div><div class="m"><b>86.5%</b><span>retencao 7d (260 revisoes, 35 lapsos)</span></div></div><p class="metro">Retencao medida pela regua de cada linha (<code>regua_versao</code>): nota 2 dada sob a regua v1 e LAPSO, sob a v2 e acerto. Revisoes por regua: v1: 86 · v2: 174.</p>
-<p class="fonte" data-backoffice>[db] day_plan._fsrs_counts · db.get_retencao_revlog · app/utils/regua</p>
-</section>
-<section class="bloco" data-bloco="projecao">
-  <h2>Volume, custo e projecao</h2>
-<div class="metros"><div class="m"><b>7451</b><span>questoes acumuladas</span></div><div class="m"><b>78.8%</b><span>acerto acumulado</span></div><div class="m"><b>R$ 0.51/q <span class="tenue">(meta R$ 0.35)</span></b><span>custo por questao</span></div></div><table><thead><tr><th>marco</th><th>data</th><th>faltam</th><th>questoes</th><th>ritmo-alvo</th></tr></thead><tbody><tr><th scope="row">UERJ/MFC (prova 01/11)</th><td>2026-11-01</td><td>39 d</td><td>2949</td><td>75.6 q/dia</td></tr><tr><th scope="row">Ciclo 2026</th><td>2026-12-31</td><td>99 d</td><td>5049</td><td>51.0 q/dia</td></tr></tbody></table><p class="aviso"><b>ENAMED 2027 sem projecao.</b> sem ancora: ENAMED 2027 nao esta em `core/provas.json` nem em `performance.MARCOS`. Cadastre a data para o painel projetar em vez de adivinhar.</p>
-<p class="fonte" data-backoffice>[performance] volume_vs_marco · METAS_MENSAIS · [db] sessoes_bulk</p>
-</section>
-<section class="bloco" data-bloco="proximas">
-  <h2>Proximas 7 tarefas</h2>
-<table><thead><tr><th>id</th><th>sem</th><th>bloco</th><th>tema</th><th>q prev</th><th>lista</th></tr></thead><tbody><tr><td>#26</td><td>S1</td><td>GO</td><td>Diabetes na Gestação</td><td>19</td><td><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/43dfee73-2eff-45e8-8e39-5c1cd7c7738f/?per_page=20" rel="noopener noreferrer">lista</a></td></tr><tr><td>#877</td><td>S1</td><td>MFC</td><td>Raciocinio diagnostico quantitativo (S/E, VPP/VPN, RV, probabilidade pre-teste)</td><td>0</td><td><span class="tenue">--</span></td></tr><tr><td>#96</td><td>S1</td><td>PED</td><td>Tópicos em Pediatria</td><td>18</td><td><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/8b3e96e1-7997-4da0-8059-e72fe75ac4f8/?per_page=20" rel="noopener noreferrer">lista</a></td></tr><tr><td>#49</td><td>S2</td><td>CIR</td><td>Hérnias da Parede Abdominal</td><td>21</td><td><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/34f8cbcc-0e8a-4aff-ab7f-1dca2c9b4a6c/?per_page=20" rel="noopener noreferrer">lista</a></td></tr><tr><td>#40</td><td>S2</td><td>GO</td><td>Diabetes na Gestação</td><td>33</td><td><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/3a478813-439f-4710-926f-41189ef12856/?per_page=20" rel="noopener noreferrer">lista</a></td></tr><tr><td>#875</td><td>S2</td><td>MFC</td><td>Prevencao Quaternaria e sobrediagnostico</td><td>0</td><td><span class="tenue">--</span></td></tr><tr><td>#100</td><td>S2</td><td>PED</td><td>Tópicos em Pediatria</td><td>36</td><td><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/50ac88dd-db3b-4707-814b-54fd7aa5f3ed/?per_page=20" rel="noopener noreferrer">lista</a></td></tr></tbody></table>
-<p class="fonte" data-backoffice>[plano] db.plano_listar(status=&#x27;pendente&#x27;)</p>
-</section>
-  <footer data-backoffice>
-    Todo numero vem do banco pela funcao citada no rodape de cada bloco. Esta pagina
-    nao guarda estado e nao escreve nada: e leitura. Regenerar a cada fechamento de
-    sessao e republicar na mesma URL.
-  </footer>
+<p class="atualizado"><!--gerado--><span data-gerado="2026-09-23T18:49:05" data-fallback="atualizado em 23/09, 18:49">atualizado em 23/09, 18:49</span><!--/gerado--></p>
+<section class="bloco dia" data-bloco="dia">
+<h2>Hoje, quarta 23/09</h2>
+<div class="doses">
+  <div class="dose"><h3>Questões</h3><p class="fracao"><b>25</b> de ~103</p><div class="barra"><i style="width:24.3%"></i></div><p class="nota">cota de ~103 por dia até dom 27/09; inclui 37 de semana atrasada.</p></div>
+  <div class="dose"><h3>Cards</h3><p class="fracao"><b>159</b> de 90</p><div class="barra"><i style="width:100.0%"></i></div><p class="nota">faltam 0: saldo do dia cumprido.</p><p class="nota">83 vencidos agora, 730 novos esperando, retenção de 86,5% em 7 dias.</p><p class="ir"><a href="#cards" data-hub-aba="cards">Ir para os cards</a></p></div>
 </div>
+<div class="agenda"><h3>Revisões nos próximos 7 dias</h3><ol class="ag-barras" aria-label="Revisões por dia"><li><span class="ag-n">21</span><span class="ag-trilho"><i style="height:100%"></i></span><span class="ag-d">qui</span></li><li><span class="ag-n">20</span><span class="ag-trilho"><i style="height:95%"></i></span><span class="ag-d">sex</span></li><li><span class="ag-n">14</span><span class="ag-trilho"><i style="height:67%"></i></span><span class="ag-d">sáb</span></li><li><span class="ag-n">13</span><span class="ag-trilho"><i style="height:62%"></i></span><span class="ag-d">dom</span></li><li><span class="ag-n">13</span><span class="ag-trilho"><i style="height:62%"></i></span><span class="ag-d">seg</span></li><li><span class="ag-n">13</span><span class="ag-trilho"><i style="height:62%"></i></span><span class="ag-d">ter</span></li><li><span class="ag-n">15</span><span class="ag-trilho"><i style="height:71%"></i></span><span class="ag-d">qua</span></li></ol></div>
+</section>
+<section class="bloco semana" data-bloco="semana">
+<h2>Semana 2 do plano</h2>
+<p class="sub">21/09 a 27/09, 5 dia(s) contando hoje. 21 tarefa(s) em aberto, 511 questões. 3 vêm atrasadas de semana anterior.</p>
+<ol class="tarefas"><li class="tarefa atrasada"><p class="t-tema">Diabetes na Gestação</p><p class="t-meta"><span class="t-rot">GO</span> <span>19 questões</span> <span class="t-atraso">da semana 1</span></p><p class="t-acao"><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/43dfee73-2eff-45e8-8e39-5c1cd7c7738f/?per_page=20" rel="noopener noreferrer">abrir lista</a></p></li><li class="tarefa atrasada"><p class="t-tema">Raciocinio diagnostico quantitativo (S/E, VPP/VPN, RV, probabilidade pre-teste)</p><p class="t-meta"><span class="t-rot">MFC</span> <span class="t-atraso">da semana 1</span></p><p class="t-acao"><a href="aulas/raciocinio-diagnostico.html" data-hub-aula="raciocinio-diagnostico">abrir aula</a></p></li><li class="tarefa atrasada"><p class="t-tema">Tópicos em Pediatria</p><p class="t-meta"><span class="t-rot">PED</span> <span>18 questões</span> <span class="t-atraso">da semana 1</span></p><p class="t-acao"><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/8b3e96e1-7997-4da0-8059-e72fe75ac4f8/?per_page=20" rel="noopener noreferrer">abrir lista</a></p></li><li class="tarefa"><p class="t-tema">Hérnias da Parede Abdominal</p><p class="t-meta"><span class="t-rot">CIR</span> <span>21 questões</span></p><p class="t-acao"><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/34f8cbcc-0e8a-4aff-ab7f-1dca2c9b4a6c/?per_page=20" rel="noopener noreferrer">abrir lista</a></p></li><li class="tarefa"><p class="t-tema">Diabetes na Gestação</p><p class="t-meta"><span class="t-rot">GO</span> <span>33 questões</span></p><p class="t-acao"><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/3a478813-439f-4710-926f-41189ef12856/?per_page=20" rel="noopener noreferrer">abrir lista</a></p></li><li class="tarefa"><p class="t-tema">Prevencao Quaternaria e sobrediagnostico</p><p class="t-meta"><span class="t-rot">MFC</span></p><p class="t-acao"><span class="tenue">aula a preparar</span></p></li></ol><details class="mais"><summary>Ver as outras 15</summary><ol class="tarefas" start="7"><li class="tarefa"><p class="t-tema">Tópicos em Pediatria</p><p class="t-meta"><span class="t-rot">PED</span> <span>36 questões</span></p><p class="t-acao"><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/50ac88dd-db3b-4707-814b-54fd7aa5f3ed/?per_page=20" rel="noopener noreferrer">abrir lista</a></p></li><li class="tarefa"><p class="t-tema">Doenças Glomerulares</p><p class="t-meta"><span class="t-rot">CM</span> <span>21 questões</span></p><p class="t-acao"><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/74c07227-b248-4aaf-98f6-980662d77bea/?per_page=20" rel="noopener noreferrer">abrir lista</a></p></li><li class="tarefa"><p class="t-tema">Saúde do Idoso</p><p class="t-meta"><span class="t-rot">MFC</span> <span>32 questões</span></p><p class="t-acao"><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/5e89c2cb-3ac4-4607-aef9-0c7a3d533ec8/?per_page=20" rel="noopener noreferrer">abrir lista</a></p></li><li class="tarefa"><p class="t-tema">Hérnias da Parede Abdominal</p><p class="t-meta"><span class="t-rot">CIR</span> <span>15 questões</span></p><p class="t-acao"><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/a9db430a-a12f-4696-830c-36880d5fab09/?per_page=20" rel="noopener noreferrer">abrir lista</a></p></li><li class="tarefa"><p class="t-tema">Tuberculose 360: adulto, crianca (RIP sem etambutol &lt; 10a), ILTB, contatos, extrapulmonar/intestinal, TB-HIV</p><p class="t-meta"><span class="t-rot">CM</span></p><p class="t-acao"><span class="tenue">aula a preparar</span></p></li><li class="tarefa"><p class="t-tema">Doença de Kawasaki</p><p class="t-meta"><span class="t-rot">PED</span> <span>43 questões</span></p><p class="t-acao"><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/f9fa0982-0040-4ea2-87f7-5a27989333e2/?per_page=20" rel="noopener noreferrer">abrir lista</a></p></li><li class="tarefa"><p class="t-tema">Doenças Neuromusculares</p><p class="t-meta"><span class="t-rot">CM</span> <span>24 questões</span></p><p class="t-acao"><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/b0ac284d-d883-4f90-b811-545fbad82046/?per_page=20" rel="noopener noreferrer">abrir lista</a></p></li><li class="tarefa"><p class="t-tema">Medicina de Família e Comunidade</p><p class="t-meta"><span class="t-rot">MFC</span> <span>50 questões</span></p><p class="t-acao"><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/939313f4-8c62-426d-899b-317270c8f3c4/?per_page=20" rel="noopener noreferrer">abrir lista</a></p></li><li class="tarefa"><p class="t-tema">Hérnias da Parede Abdominal</p><p class="t-meta"><span class="t-rot">CIR</span> <span>37 questões</span></p><p class="t-acao"><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/bfa9a64a-bbd0-49b3-9e66-b8784a807185/?per_page=20" rel="noopener noreferrer">abrir lista</a></p></li><li class="tarefa"><p class="t-tema">Anatomia e Embriologia do Trato Genital Feminino | Doenças de vulva e vagina</p><p class="t-meta"><span class="t-rot">GO</span></p><p class="t-acao"><span class="tenue">sem lista ainda</span></p></li><li class="tarefa"><p class="t-tema">Infecções Congênitas</p><p class="t-meta"><span class="t-rot">PED</span> <span>43 questões</span></p><p class="t-acao"><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/4ff1ff09-47ae-4325-bb44-ee9c9e7354f9/?per_page=20" rel="noopener noreferrer">abrir lista</a></p></li><li class="tarefa"><p class="t-tema">Doenças Neuromusculares</p><p class="t-meta"><span class="t-rot">CM</span> <span>35 questões</span></p><p class="t-acao"><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/282f1491-c38b-4f28-a07a-e41fb4c39def/?per_page=20" rel="noopener noreferrer">abrir lista</a></p></li><li class="tarefa"><p class="t-tema">Resposta Endócrino- | Metabólica-Inflamatória ao Trauma | Cicatrização de Feridas</p><p class="t-meta"><span class="t-rot">CIR</span></p><p class="t-acao"><span class="tenue">sem lista ainda</span></p></li><li class="tarefa"><p class="t-tema">Sangramento da Segunda Metade</p><p class="t-meta"><span class="t-rot">GO</span> <span>24 questões</span></p><p class="t-acao"><a href="https://med.estrategia.com/cadernos-e-simulados/cadernos/e095bde4-9bb4-4343-9fec-0c8aaae11188/?per_page=20" rel="noopener noreferrer">abrir lista</a></p></li><li class="tarefa"><p class="t-tema">UERJ 2021 -- prova INTEIRA (60q), cronometrada, 5 blocos</p><p class="t-meta"><span class="t-rot">Simulado</span> <span>60 questões</span></p><p class="t-acao"><span class="tenue">prova em PDF no computador</span></p></li></ol></details>
+<p class="nota prox">Depois: semana 3 (28/09 a 04/10), 18 tarefa(s), 510 questões.</p>
+</section>
+<section class="bloco ritmo" data-bloco="ritmo">
+<h2>Ritmo de questões</h2>
+<div class="figs"><div class="fig abaixo"><p class="fig-n">17,9</p><p class="fig-r">por dia nos últimos 7 dias</p></div><div class="fig"><p class="fig-n">29,6</p><p class="fig-r">por dia nos últimos 14 dias</p></div><div class="fig alvo"><p class="fig-n">75,6</p><p class="fig-r">por dia até a prova de 01/11 (faltam 2.949 para 10.400)</p></div><div class="fig"><p class="fig-n">78,8%</p><p class="fig-r">de acerto em 7.451 questões</p></div></div>
+<p class="nota">Para fechar as listas da Fase 1 até 01/11: ~82,5 por dia (3.217 questões em aberto).</p>
+</section>
+<section class="bloco blocos" data-bloco="blocos">
+<h2>Por bloco</h2>
+<table><thead><tr><th scope="col">Bloco</th><th scope="col">Tarefas feitas</th><th scope="col">Questões</th><th scope="col">Acerto</th></tr></thead><tbody><tr><th scope="row">CIR</th><td>23 de 101</td><td>881</td><td>79,5%</td></tr><tr><th scope="row">CM</th><td>66 de 348</td><td>2.564</td><td>77,4%</td></tr><tr><th scope="row">GO</th><td>32 de 149</td><td>1.114</td><td>80,3%</td></tr><tr><th scope="row">MFC</th><td>24 de 102</td><td>904</td><td>85,8%</td></tr><tr><th scope="row">PED</th><td>29 de 117</td><td>872</td><td>84,5%</td></tr><tr class="sim"><th scope="row">Simulados</th><td>1 de 11</td><td>1.031</td><td>69,7%</td></tr></tbody></table>
+<p class="nota">Fora da tabela: 85 questões registradas só como &quot;GO&quot;, sem área reconhecida.</p>
+</section>
+</div>
+
+<script>
+(function(){
+  var el = document.querySelector("[data-gerado]");
+  if(!el){ return; }
+  var t = Date.parse(el.getAttribute("data-gerado"));
+  if(isNaN(t)){ return; }
+  function rotulo(){
+    var min = Math.floor((Date.now() - t) / 60000);
+    if(min < 1){ return "atualizado agora"; }
+    if(min < 60){ return "atualizado há " + min + " min"; }
+    var h = Math.floor(min / 60);
+    if(h < 24){ return "atualizado há " + h + " h"; }
+    return el.getAttribute("data-fallback") || el.textContent;
+  }
+  el.textContent = rotulo();
+  setInterval(function(){ el.textContent = rotulo(); }, 60000);
+})();
+</script>
 </body>
 </html>

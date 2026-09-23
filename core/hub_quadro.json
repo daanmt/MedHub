@@ -1,0 +1,12 @@
+{
+ "_doc": "Registro do quadro da aba Aulas do MedHub HUB (s194). Chave = slug da aula (artifacts/aula-<slug>.html). tipo: aula (aula-base) | revisao (revisao direcionada) | analise (analise, relatorio ou plano). titulo: o nome no quadro (vence o <title>). tarefa_id: a tarefa do plano que a aula cumpre, quando houver tarefa custom de aula -- marcar a aula como feita no hub vira pedido de conclusao dessa tarefa no tique do /hub-backend. Aula sem entrada aqui entra como tipo aula, com WARN no build (tools/hub.py).",
+ "itens": {
+  "autopsia-uerj-2023": {"tipo": "analise", "titulo": "Autópsia UERJ 2023"},
+  "s17": {"tipo": "analise", "titulo": "Sprint S17-20"},
+  "raciocinio-diagnostico": {"tipo": "aula", "titulo": "A Escada de Bayes", "tarefa_id": 877},
+  "hernias": {"tipo": "aula", "titulo": "A Escada das Hérnias"},
+  "dmg": {"tipo": "aula", "titulo": "A Escada do DMG"},
+  "topicos-pediatria": {"tipo": "aula", "titulo": "Tópicos em Pediatria"},
+  "cancer-de-mama": {"tipo": "aula", "titulo": "A Escada do Câncer de Mama"}
+ }
+}

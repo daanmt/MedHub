@@ -556,35 +556,41 @@ Escrita só por `app/utils/db.py` (`vincular_sessao_tarefa`, o único writer de 
 
 | Flag | Função |
 |---|---|
-| `--json` | Imprime o dado estruturado dos 5 blocos. **É o contrato** -- é o que `tools/test_painel.py` prova; o HTML é render por cima dele. |
+| `--json` | Imprime o dado estruturado dos 4 blocos. **É o contrato** -- é o que `tools/test_painel.py` prova; o HTML é render por cima dele. |
 | `--html` | Gera a página autocontida. Default: `artifacts/painel.html`. |
 | `--out PATH` | Destino do `--html`. |
 
-Os 5 blocos, cada um com a **função-fonte no rodapé** (`[db]`/`[plano]`/`[performance]`), para que
-nenhum número da página seja órfão: progresso por bloco UERJ · listas da semana corrente · FSRS
-(vencidos, pool, teto do dia, retenção 7d) · volume/custo/projeção · próximas 7 tarefas.
+Os 4 blocos (s194, refeito pela auditoria de fidelidade de 23/09), e **cada número sai de um leitor que
+outra superfície já usa** -- o painel não tem regra própria de semana, teto ou ritmo:
+- **Hoje** (`dia`): questões feitas hoje x cota do dia (`day_plan.cota_do_dia`, calendário da trilha);
+  cards `consumo/teto` e os restantes (`day_plan._fsrs_counts` + `_teto_efetivo` + `realizado_do_dia`:
+  o SALDO, não só os vencidos); agenda de 7 dias pelo `db.agenda_revisoes` -- a MESMA leitura da tela de
+  fim da aba Cards; retenção 7d pela régua de cada linha (`db.get_retencao_revlog`, F112).
+- **Semana**: `plano.panorama` -- a MESMA função do `plano.py --panorama` do boot (semana de CALENDÁRIO +
+  as atrasadas, na ordem do plano, cada uma com o que fazer: lista com link, aula do hub, caderno). As 6
+  primeiras (e todas as atrasadas) à vista, o resto recolhido.  <!-- CHECK: test_concordancia_painel_x_panorama -->
+- **Ritmo**: real em 7 e 14 dias (`db.get_ritmo_real`) ao lado do alvo até a UERJ
+  (`performance.volume_vs_marco`) e do ritmo para fechar a Fase 1 (`day_plan._cronograma_hoje`), e o acerto.
+- **Por bloco**: tarefas feitas/vivas e questões/acerto por bloco (`sessoes_bulk` por área, pelo
+  `db.bloco_de`); **simulado em linha própria** (`areas.AREAS_AGREGADAS`: `bloco_de('Simulado')` = CM por
+  fallback) e área fantasma do F89 nomeada, fora da tabela.  <!-- CHECK: test_simulado_fora_das_tarefas_por_bloco -->
 
-🔴 **Duas camadas de volume, e elas medem coisas diferentes.** As questões feitas por bloco vêm de
-`sessoes_bulk` agregado por **área** (cobre as 7.326), não do elo `sessoes_bulk.tarefa_id` do
-part-6: medido em 18/09/2026, o backfill casa **1 de 126 sessões**, e um painel alimentado só pelo
-elo mostraria ~0 questões feitas em todo bloco. O elo aparece como `q_feitas_por_elo`, camada fina
-de cobertura declarada. **Nenhum mapa novo:** o bloco sai de `db.bloco_de`, `Simulado` sai de
-`areas.AREAS_AGREGADAS` (termômetro, 13% do volume -- dobrado em CM pelo fallback, inflaria um
-oitavo) e área fantasma do F89 sai de `areas.area_valida`, cada uma em linha nomeada.
+⚰️ *Até 23/09/2026 (s194): a semana era a MENOR com pendência (o boot dizia S2, o painel S1), o FSRS saía
+sem o consumo do dia, a coluna "do previsto" dividia volume histórico por um plano com cortadas e
+simulados, e havia o orçamento da Fase 1 com constante e a nota do elo com contagem fixa no código.
+Saíram todos; o rodapé de fonte por bloco e o `data-backoffice` também (sem jargão na tela).*
 
-🔴 **Retenção 7d é lida PELA RÉGUA de cada linha** (`db.get_retencao_revlog` -> `app/utils/regua`):
-nota 2 sob a régua v1 é **lapso**, sob a v2 é acerto. Contar por limiar fixo de `rating` inflaria a
-retenção exatamente como o F112 inflava o agendamento. **ENAMED 2027 não tem projeção** e a página
-diz por quê: a data não está em `core/provas.json` nem em `performance.MARCOS` -- declarar é o certo,
-estimar de data inventada seria o defeito (§10.8).
+Um único "atualizado há X" (JS sobre `data-gerado`), entre `<!--gerado-->` e `<!--/gerado-->`: o
+`hub.py --precisa-publicar` ignora esse trecho ao comparar a projeção -- regenerar a cada tique não pede
+publish sozinho.
 
-**O CLI não publica.** Ele grava arquivo; desde a s192 o `artifacts/painel.html` sobe como
-**arquivo do MedHub HUB** (`painel.html`, aba Painel), montado por `tools/hub.py` e republicado pelo
-agente no fechamento (`.agents/workflows/registrar-sessao.md §6`). Read-only absoluto: não
-abre `sqlite3` próprio e está fora da allowlist de writers (F49).
+**O CLI não publica.** Ele grava arquivo; o `artifacts/painel.html` sobe como **arquivo do MedHub HUB**
+(`painel.html`, aba Painel), montado por `tools/hub.py` e republicado pelo agente no fechamento
+(`.agents/workflows/registrar-sessao.md §6`) ou pelo tique do `/hub-backend` quando o conteúdo mudou.
+Read-only absoluto: não abre `sqlite3` próprio e está fora da allowlist de writers (F49).
 Spec `.vibeflow/specs/plano-ssot-e-cards-v2-part-7.md`.
 
-### `tools/hub.py` -- monta o MedHub HUB e o manifesto do publish (**não publica, não lê banco**)
+### `tools/hub.py` -- monta o MedHub HUB e o manifesto do publish (**não publica, não escreve banco**)
 
 | Flag | Função |
 |---|---|
@@ -592,7 +598,10 @@ Spec `.vibeflow/specs/plano-ssot-e-cards-v2-part-7.md`.
 | `--check` | Confere o manifesto de `--out`: fonte inexistente, `<a href>` relativo do index fora do manifesto (link morto na vitrine), teto de entradas. Exit 1 se acusar. |
 | `--extrair-lote PAGINA.html` | O inverso da injeção: recupera o lote do `<script id="lote">` de uma página salva (a versão viva lida por `Artifact read`). Serve ao `--record-lote --lote` e a remontar sem depender de `tmp/`. |
 | `--confirmar` | **Depois do publish ACEITO** (s193): o `estado_pos_publish.json` do último `--build` de `--out` vira o `registro_publicado.json` -- a base do DIFF. Publish recusado = não confirmar; esquecer é seguro (o próximo build manda de novo). Exit 1 sem build. |
-| `--lote ARQ.json` | `--build`: o lote de `fsrs_queue.py --export-player` (ou o extraído da página viva). **Trocar o lote troca a sessão da aba Cards** -- ver o rito "DRENAR no player" em `/revisar`. |
+| `--precisa-publicar` | **A decisão do tique do `/hub-backend`** (s194): compara o lote (drenado?), o painel em disco e o quadro com a **projeção** do último publish confirmado e imprime `sim|nao -- <acao> (<motivo>)`: `nova_fila` (lote drenado ou vazio), `mesmo_lote` (lote em curso e painel/quadro mudou, ou sem projeção registrada: republicar com o MESMO lote), `nada`. Lista também a aula marcada como feita cuja tarefa do plano segue pendente (só relata: `plano.py --concluir` exige `--sessao`). Exige `--lote`; `--json` para a saída estruturada. Sempre exit 0. |
+| `--notas DIR\|ARQ` | `--precisa-publicar`: as notas do lote no `db` (o `out_dir` do `ArtifactData list` de `sessoes/<sessao>/notas`, 1 arquivo por card, ou o JSON `{notas: [...]}`). |
+| `--quadro-estado DIR\|ARQ` | `--build`/`--precisa-publicar`: o "feito" do quadro no `db` (o `out_dir` do `ArtifactData list` da coleção `quadro`, 1 arquivo `<slug>.json` = `{feito, ts}`, ou JSON). No build, o feito já sai riscado em "Concluídas". |
+| `--lote ARQ.json` | `--build`/`--precisa-publicar`: o lote de `fsrs_queue.py --export-player` (ou o extraído da página viva). **Trocar o lote troca a sessão da aba Cards** -- ver o rito "DRENAR no player" em `/revisar`. |
 | `--publicado LISTA` | `--build`: a listagem viva do hub -- o `Artifact list scope=files` colado **como sai** (`- "aulas/x.html"  text/html  63060 bytes`; cabeçalho ignorado), 1 path por linha (`#` comenta) ou JSON (`[{"path", "bytes"}]`). O que saiu da seleção e consta aqui vira **`null`**; só fica fora de `files` (mantido) o que está aqui com a hash do registro e o mesmo tamanho. |
 | `--out DIR` | Diretório de saída (default `tmp/hub/`, gitignored). |
 | `--painel PATH` | `--build`: HTML do painel (default `artifacts/painel.html`); ausente = aba Painel com aviso. |
@@ -606,11 +615,22 @@ entradas por versão (contrato do Artifact), 8 reservadas, **cap de 120 aulas** 
 pela data de criação no git). Aulas e painel **abrem dentro da página** (`fetch` relativo + iframe
 `srcdoc` na própria aba): o frame nunca navega, o drill não perde estado.  <!-- CHECK: test_aula_e_painel_abrem_dentro_da_pagina_sem_navegar -->
 
+**Aba Aulas = quadro (s194, pedido do operador):** o registro versionado `core/hub_quadro.json`
+(`slug -> {tipo: aula|revisao|analise, titulo, tarefa_id?}`) põe cada aula numa coluna (Aulas-base,
+Revisões, Análises; empilhadas no celular). Slug sem registro entra como `aula` com **WARN no build**;
+tipo inválido falha alto. Cada item tem o controle "feito" (44px): a página grava `quadro/<slug>` =
+`{feito, ts}` no `db` (regra `{path: "quadro", write: "interact"}` na declaração -- texto completo em
+`/revisar`, "Fronteira de escrita") e o item vai riscado para "Concluídas", recolhida; sem `db`, o
+controle fica desabilitado com uma frase curta. O painel conversa com as abas: "Ir para os cards" e
+"abrir aula" (`data-hub-aba`/`data-hub-aula`) trocam de aba dentro do hub.  <!-- CHECK: test_feito_sai_riscado_em_concluidas_no_build -->
+
+**Projeção (s194):** o `estado_pos_publish.json` e o registro do `--confirmar` guardam também
+`projecao = {painel: sha256 sem o carimbo, quadro: sha256 do quadro montado, sessao}`; é contra ela
+que o `--precisa-publicar` compara.  <!-- CHECK: test_lote_mantido_quando_so_o_painel_mudou -->
+
 **Sem bastidor na tela (s194, feedback do operador):** a página não mostra carimbo de montagem, id da
 sessão, nome de CLI nem de capability -- o carimbo vive no `manifesto.json` e o `sessao` fica no DOM,
-escondido. O painel avulso marca o seu bastidor (carimbo, `tools/painel.py --html`, rodapé de fonte de
-cada bloco) com `data-backoffice`, e o quadro do hub o esconde; regerar o `artifacts/painel.html` com o
-`painel.py` atual é o que traz as marcas.  <!-- CHECK: test_index_montado_sem_texto_de_bastidor -->
+escondido. Desde a s194 o próprio painel não tem bastidor (o hub ainda esconde `[data-backoffice]`, inócuo).  <!-- CHECK: test_index_montado_sem_texto_de_bastidor -->
 
 **DIFF (v1, s193, spec `medhub-hub-v1-manifesto-diff`):** `files` leva só o que é **novo ou mudou**;
 o que já está no ar e intocado sai em `manifesto["mantidos"]` -- não sobe e **não precisa ser relido**  <!-- CHECK: test_diff_sem_mudanca_o_segundo_publish_nao_manda_nada -->
@@ -620,10 +640,11 @@ o tamanho vivo é o do registro; qualquer falha manda o arquivo (mandar a mais c
 errado deixaria conteúdo velho no ar em silêncio). O registro só muda pelo `--confirmar`, e sem ele
 (1a vez, `tmp/` limpo) tudo vai, como no v0. O `--check` conta os mantidos como vivos.  <!-- CHECK: test_diff_sem_mudanca_o_segundo_publish_nao_manda_nada -->
 
-Fronteira: o CLI não fala com a API de Artifact nem com o `ipub.db` (só o relógio único `db.agora()`).
+Fronteira: o CLI não fala com a API de Artifact e não escreve o `ipub.db` (lê o relógio único
+`db.agora()` e, no `--precisa-publicar`, o `db.plano_listar`).
 Ler a versão viva, listar os arquivos, publicar e ler as notas do `db` são atos do agente -- rito em
 `/revisar` ("DRENAR no player") e `.agents/workflows/registrar-sessao.md §6`.
-Specs `.vibeflow/specs/medhub-hub-v0-part-1.md` e `medhub-hub-v1-manifesto-diff.md`; testes `tools/test_hub.py`.
+Specs `.vibeflow/specs/medhub-hub-v0-part-1.md` e `medhub-hub-v1-manifesto-diff.md`; testes `tools/test_hub.py` e `tools/test_hub_quadro.py`.
 
 ### `tools/fsrs_optimize.py` -- parâmetros pessoais do FSRS (R1, **read-only**)
 

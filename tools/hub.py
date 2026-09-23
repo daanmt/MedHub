@@ -28,9 +28,11 @@ ler o `db` sao atos do agente (rito em `.claude/commands/revisar.md`, "DRENAR no
 
 Uso (assinatura canonica: `.claude/commands/engenharia-cli.md`, secao `tools/hub.py`):
     python tools/hub.py --build --lote tmp/player_<sessao>.json [--publicado LISTA] [--out DIR]
-                        [--painel artifacts/painel.html]
+                        [--painel artifacts/painel.html] [--quadro-estado DIR]
     python tools/hub.py --check [--out DIR]
     python tools/hub.py --confirmar [--out DIR]
+    python tools/hub.py --precisa-publicar --lote tmp/player_<sessao>.json [--notas DIR]
+                        [--quadro-estado DIR] [--json] [--out DIR]
     python tools/hub.py --extrair-lote PAGINA.html [--out-lote ARQ.json]
 """
 from __future__ import annotations
@@ -51,7 +53,7 @@ RAIZ = Path(__file__).resolve().parents[1]
 if str(RAIZ) not in sys.path:
     sys.path.insert(0, str(RAIZ))
 
-from app.utils import db  # noqa: E402  -- so o relogio unico (F80), nenhuma consulta
+from app.utils import db  # noqa: E402  -- relogio unico (F80) + plano_listar (read-only, s194)
 from tools.fsrs_queue import (  # noqa: E402
     MARCA_ABRE,
     MARCA_FECHA,
@@ -60,6 +62,14 @@ from tools.fsrs_queue import (  # noqa: E402
 )
 
 TEMPLATE_HUB = RAIZ / "core" / "templates" / "hub.html"
+#: Registro do quadro da aba Aulas (s194): slug -> {tipo, titulo, tarefa_id?}.
+QUADRO_REG = "core/hub_quadro.json"
+#: Colunas do quadro, nesta ordem. Rotulos curtos (celular: etiqueta <= 15 chars).
+TIPOS_QUADRO = (("aula", "Aulas-base"), ("revisao", "Revisões"), ("analise", "Análises"))
+TIPO_PADRAO = "aula"
+#: Colecao do db onde a pagina grava {feito, ts} por slug (doc `quadro/<slug>`). Regra de escrita
+#: `{path: "quadro", write: "interact"}` na declaracao de capabilities (revisar.md).
+COLECAO_QUADRO = "quadro"
 PAGINA = "index.html"
 MANIFESTO = "manifesto.json"
 ESTADO_POS = "estado_pos_publish.json"
@@ -264,16 +274,110 @@ def _data_curta(iso):
         return str(iso or "")
 
 
-def html_aulas(aulas_sel):
-    if not aulas_sel:
+def ler_quadro(caminho):
+    """{slug: {"tipo", "titulo"?, "tarefa_id"?}} do registro versionado. Arquivo ausente = {}.
+    Tipo fora de TIPOS_QUADRO falha ALTO: registro errado nao vira coluna inventada."""
+    caminho = Path(caminho)
+    if not caminho.is_file():
+        return {}
+    itens = json.loads(caminho.read_text(encoding="utf-8")).get("itens") or {}
+    validos = {t for t, _ in TIPOS_QUADRO}
+    for slug, item in itens.items():
+        if (item or {}).get("tipo") not in validos:
+            raise ValueError("%s: tipo %r da aula %r fora de %s"
+                             % (caminho.name, (item or {}).get("tipo"), slug, sorted(validos)))
+    return itens
+
+
+def classificar(aulas_sel, quadro):
+    """[(Aula, tipo, titulo, tarefa_id)] na ordem da selecao + avisos. Slug sem registro = tipo
+    `aula` com WARN -- nunca silencioso (a aula nova aparece; o tipo e que fica a conferir)."""
+    saida, avisos = [], []
+    for a in aulas_sel:
+        reg = quadro.get(a.slug)
+        if reg is None:
+            avisos.append("aula %r sem tipo em %s: entra como %r -- registre o tipo"
+                          % (a.slug, QUADRO_REG, TIPO_PADRAO))
+            reg = {}
+        saida.append((a, reg.get("tipo") or TIPO_PADRAO, reg.get("titulo") or a.titulo,
+                      reg.get("tarefa_id")))
+    return saida, avisos
+
+
+def ler_estado_quadro(caminho):
+    """{slug: {"feito": bool, "ts": str|None}} a partir do que o `ArtifactData list` da colecao
+    `quadro` deixa no disco: um DIRETORIO (1 arquivo `<slug>.json` por doc, em qualquer
+    profundidade -- o `out_dir` espelha o path) ou um JSON ({slug: doc} ou [{id|slug, ...}]).
+    None ou caminho inexistente = {} (nada feito)."""
+    if not caminho:
+        return {}
+    caminho = Path(caminho)
+    brutos = {}
+    if caminho.is_dir():
+        for arq in sorted(caminho.rglob("*.json")):
+            try:
+                brutos[arq.stem] = json.loads(arq.read_text(encoding="utf-8"))
+            except ValueError:
+                continue
+    elif caminho.is_file():
+        obj = json.loads(caminho.read_text(encoding="utf-8"))
+        if isinstance(obj, dict):
+            brutos = obj
+        else:
+            for item in obj or []:
+                slug = (item or {}).get("slug") or (item or {}).get("id") or (item or {}).get("doc_id")
+                if slug:
+                    brutos[str(slug)] = item.get("data") if isinstance(item.get("data"), dict) else item
+    return {str(slug): {"feito": bool((doc or {}).get("feito")), "ts": (doc or {}).get("ts")}
+            for slug, doc in brutos.items() if isinstance(doc, dict)}
+
+
+def _item_quadro(aula, tipo, titulo, feito, ordem):
+    rotulo = ("Desmarcar %s" if feito else "Marcar %s como feita") % titulo
+    return ('<li class="qd-item" data-slug="%s" data-tipo="%s" data-ordem="%d" data-titulo="%s"%s>'
+            '<button type="button" class="qd-feito" aria-pressed="%s" aria-label="%s" '
+            'title="%s" disabled><span aria-hidden="true"></span></button>'
+            '<a class="hub-aula" href="%s" data-titulo="%s"><span class="hub-aula-t">%s</span>'
+            '<span class="hub-aula-d">%s</span></a></li>'
+            % (_e(aula.slug), _e(tipo), ordem, _e(titulo), ' data-feito="1"' if feito else "",
+               "true" if feito else "false", _e(rotulo), _e(rotulo), _e(aula.publicado),
+               _e(titulo), _e(titulo), _e(_data_curta(aula.data))))
+
+
+def html_quadro(classificadas, estado=None):
+    """O quadro da aba Aulas: uma coluna por tipo (empilhadas no celular), cada item com o
+    controle "feito"; o que ja esta feito sai riscado para "Concluidas", recolhida. O estado do
+    build e o do `db` no momento do tique; a pagina reconcilia ao vivo quando o `db` abre."""
+    if not classificadas:
         return '<p class="hub-vazio">Nenhuma aula publicada neste hub ainda.</p>'
-    itens = [
-        '<li><a class="hub-aula" href="%s" data-titulo="%s"><span class="hub-aula-t">%s</span>'
-        '<span class="hub-aula-d">%s</span></a></li>'
-        % (_e(a.publicado), _e(a.titulo), _e(a.titulo), _e(_data_curta(a.data)))
-        for a in aulas_sel
-    ]
-    return '<ul class="hub-aulas">\n' + "\n".join(itens) + "\n</ul>"
+    estado = estado or {}
+    feitos = {s for s, v in estado.items() if v.get("feito")}
+    colunas = []
+    for tipo, rotulo in TIPOS_QUADRO:
+        itens = [_item_quadro(a, t, tit, False, i) for i, (a, t, tit, _) in enumerate(classificadas)
+                 if t == tipo and a.slug not in feitos]
+        colunas.append(
+            '<section class="qd-col" data-tipo="%s" aria-label="%s"><h3 class="qd-titulo">%s '
+            '<span class="qd-n">%d</span></h3><ul class="qd-lista">%s</ul>'
+            '<p class="qd-vazio"%s>Nada em aberto.</p></section>'
+            % (tipo, _e(rotulo), _e(rotulo), len(itens), "".join(itens),
+               " hidden" if itens else ""))
+    concluidas = [_item_quadro(a, t, tit, True, i) for i, (a, t, tit, _) in enumerate(classificadas)
+                  if a.slug in feitos]
+    return ('<div class="qd" id="hub-quadro">\n'
+            '<p class="qd-aviso" id="hub-quadro-aviso" hidden>Marcar como feita não funciona '
+            'nesta visualização.</p>\n'
+            '<div class="qd-colunas">%s</div>\n'
+            '<details class="qd-feitas" id="hub-quadro-feitas"><summary>Concluídas '
+            '<span class="qd-n" id="hub-quadro-nfeitas">%d</span></summary>'
+            '<ul class="qd-lista">%s</ul></details>\n</div>'
+            % ("".join(colunas), len(concluidas), "".join(concluidas)))
+
+
+def html_aulas(aulas_sel, quadro=None, estado=None):
+    """Compatibilidade: o quadro sem registro (tudo `aula`) -- chamadores antigos e testes."""
+    classificadas, _ = classificar(aulas_sel, quadro or {})
+    return html_quadro(classificadas, estado)
 
 
 def html_painel(tem_painel):
@@ -289,7 +393,8 @@ def html_painel(tem_painel):
             'hidden></iframe>' % (PUB_PAINEL, PUB_PAINEL))
 
 
-def montar_index(template_hub, player_html, lote, aulas_sel, tem_painel, agora):
+def montar_index(template_hub, player_html, lote, aulas_sel, tem_painel, agora, quadro=None,
+                 estado=None):
     """A pagina: casca do hub + as 3 regioes do player + aulas/painel + o lote.
 
     `agora` segue na assinatura (chamadores e testes), mas nao vai mais para a tela: a linha
@@ -302,7 +407,7 @@ def montar_index(template_hub, player_html, lote, aulas_sel, tem_painel, agora):
         "player-css": regioes["css"],
         "player-corpo": regioes["corpo"],
         "player-js": regioes["js"],
-        "aulas": html_aulas(aulas_sel),
+        "aulas": html_quadro(classificar(aulas_sel, quadro or {})[0], estado),
         "painel": html_painel(tem_painel),
     }
     pagina = template_hub
@@ -370,6 +475,114 @@ def checar(pagina_html, files, raiz=RAIZ, mantidos=()):
     if len(no_ar) + 1 > TETO_ENTRADAS:
         problemas.append("%d arquivos + a pagina > teto de %d entradas" % (len(no_ar), TETO_ENTRADAS))
     return problemas
+
+
+_RE_GERADO = re.compile(r"<!--gerado-->.*?<!--/gerado-->", re.S)
+
+
+def _sha(texto):
+    return hashlib.sha256(texto.encode("utf-8")).hexdigest()
+
+
+def hash_painel(texto):
+    """sha256 do painel SEM o carimbo de geracao (entre `<!--gerado-->` e `<!--/gerado-->`,
+    `tools/painel.py`): regenerar o painel a cada tique nao pode, sozinho, pedir publish."""
+    return _sha(_RE_GERADO.sub("", texto or ""))
+
+
+def projecao(painel_texto, quadro_html, lote):
+    """O que o operador VE e que muda sem lote novo: o painel, o quadro e qual lote esta no ar."""
+    return {"painel": hash_painel(painel_texto) if painel_texto is not None else None,
+            "quadro": _sha(quadro_html),
+            "sessao": (lote or {}).get("sessao")}
+
+
+def ids_com_nota(notas):
+    """card_ids com doc na colecao `sessoes/<sessao>/notas`: DIRETORIO do `ArtifactData list`
+    (1 arquivo `<card_id>.json` por doc), JSON {"notas": [...]} / lista de docs, ou iteravel."""
+    if notas is None:
+        return set()
+    if isinstance(notas, (str, Path)):
+        caminho = Path(notas)
+        if caminho.is_dir():
+            ids = set()
+            for arq in caminho.rglob("*.json"):
+                try:
+                    doc = json.loads(arq.read_text(encoding="utf-8"))
+                except ValueError:
+                    doc = {}
+                cid = (doc or {}).get("card_id", arq.stem)
+                try:
+                    ids.add(int(cid))
+                except (TypeError, ValueError):
+                    continue
+            return ids
+        if not caminho.is_file():
+            return set()
+        obj = json.loads(caminho.read_text(encoding="utf-8"))
+        notas = obj.get("notas") if isinstance(obj, dict) else obj
+    ids = set()
+    for n in notas or []:
+        cid = n.get("card_id") if isinstance(n, dict) else n
+        try:
+            ids.add(int(cid))
+        except (TypeError, ValueError):
+            continue
+    return ids
+
+
+def precisa_publicar(registro_projecao, atual, lote, com_nota):
+    """A decisao do tique do /hub-backend, PURA. Devolve {"publicar", "acao", "motivos",
+    "drenado", "notas", "total"}; `acao`:
+
+    - `nova_fila`: o lote foi DRENADO (todo card tem doc) ou esta vazio -> gravar, exportar e
+      publicar a proxima fila (lote vazio: conferir se o saldo do dia voltou);
+    - `mesmo_lote`: lote em curso, mas o painel ou o quadro mudou (ou nao ha projecao confirmada,
+      ou o lote no ar nao e o do registro) -> republicar com o MESMO lote -- mesmo `sessao`, mesmos
+      cards; as notas ja dadas voltam do `db` no reload;
+    - `nada`: lote em curso e projecao igual a do ultimo publish confirmado."""
+    cards = [int(c["card_id"]) for c in (lote or {}).get("cards") or []]
+    feitos = sum(1 for c in cards if c in com_nota)
+    drenado = not cards or feitos == len(cards)
+    motivos = []
+    reg = registro_projecao or {}
+    if not reg:
+        motivos.append("sem projecao confirmada no registro")
+    else:
+        if reg.get("sessao") != atual.get("sessao"):
+            motivos.append("lote no ar (%s) difere do registro (%s)"
+                           % (atual.get("sessao"), reg.get("sessao")))
+        if reg.get("painel") != atual.get("painel"):
+            motivos.append("painel mudou")
+        if reg.get("quadro") != atual.get("quadro"):
+            motivos.append("quadro de aulas mudou")
+    if drenado:
+        acao = "nova_fila"
+        motivos.insert(0, "lote drenado (%d/%d)" % (feitos, len(cards)) if cards
+                       else "lote vazio: conferir se o saldo do dia voltou")
+    elif motivos:
+        acao = "mesmo_lote"
+    else:
+        acao = "nada"
+        motivos.append("lote em curso (%d/%d) e projecao igual a publicada" % (feitos, len(cards)))
+    return {"publicar": acao != "nada", "acao": acao, "motivos": motivos, "drenado": drenado,
+            "notas": feitos, "total": len(cards)}
+
+
+def tarefas_a_concluir(estado, quadro, plano_linhas):
+    """Itens marcados como feitos no quadro cuja tarefa do plano ainda esta pendente. PURA.
+    [{"slug", "tarefa_id", "tema"}] -- o tique so RELATA: o `plano.py --concluir` exige `--sessao`
+    (volume em `sessoes_bulk`), que uma aula nao tem (pendencia de decisao, s194)."""
+    por_id = {int(l["id"]): l for l in plano_linhas or [] if l.get("id") is not None}
+    saida = []
+    for slug, v in sorted((estado or {}).items()):
+        tid = (quadro.get(slug) or {}).get("tarefa_id")
+        if not v.get("feito") or tid is None:
+            continue
+        linha = por_id.get(int(tid))
+        if linha and linha.get("status") == "pendente":
+            saida.append({"slug": slug, "tarefa_id": int(tid), "tema": linha.get("tema")})
+    return saida
 
 
 # ----------------------------------------------------------------------------- casca
@@ -458,6 +671,18 @@ def _como_vivos(publicado):
     return {normalizar_path(p): b for p, b in itens if p}
 
 
+def ler_projecao_registrada(out):
+    """A projecao (painel, quadro, sessao) do ultimo publish CONFIRMADO; {} sem registro ou
+    registro de antes da s194 (sem o campo) -- o que faz o proximo tique republicar uma vez."""
+    caminho = Path(out) / REGISTRO
+    if not caminho.is_file():
+        return {}
+    try:
+        return dict(json.loads(caminho.read_text(encoding="utf-8")).get("projecao") or {})
+    except (ValueError, AttributeError):
+        return {}
+
+
 def ler_registro(out):
     """({publicado: {"sha256", "bytes", "fonte"}}, aviso | None) do ultimo publish CONFIRMADO.
     Sem registro = {} (tudo vai, o v0); registro ilegivel = {} com aviso -- nunca omite as cegas."""
@@ -478,18 +703,22 @@ def confirmar(out, agora=None):
     agora = agora or db.agora()
     registro = {"confirmado_em": agora.strftime("%Y-%m-%d %H:%M:%S"),
                 "montado_em": estado.get("montado_em"),
-                "arquivos": estado.get("arquivos") or {}}
+                "arquivos": estado.get("arquivos") or {},
+                "projecao": estado.get("projecao") or {}}
     (out / REGISTRO).write_text(json.dumps(registro, ensure_ascii=False, indent=1) + "\n",
                                 encoding="utf-8")
     return len(registro["arquivos"]), registro["montado_em"]
 
 
 def construir(lote, raiz=RAIZ, out=None, painel=None, publicado=(), agora=None, data_fn=None,
-              template_hub=None, template_player=None, registro=None):
+              template_hub=None, template_player=None, registro=None, quadro=None,
+              estado_quadro=None):
     """Monta `index.html` + `manifesto.json` + `estado_pos_publish.json` em `out`.
 
     `publicado` = a listagem viva: paths, pares (path, bytes) ou {path: bytes}. `registro` =
-    injetavel; None = o `registro_publicado.json` de `out`. Devolve (manifesto, problemas, avisos)."""
+    injetavel; None = o `registro_publicado.json` de `out`. `quadro` = o registro do quadro de
+    aulas (None = `core/hub_quadro.json` de `raiz`); `estado_quadro` = {slug: {feito, ts}} do `db`
+    (`ler_estado_quadro`), None = nada feito. Devolve (manifesto, problemas, avisos)."""
     raiz = Path(raiz)
     out = Path(out) if out else raiz / "tmp" / "hub"
     painel_path = Path(painel) if painel else raiz / "artifacts" / "painel.html"
@@ -501,6 +730,13 @@ def construir(lote, raiz=RAIZ, out=None, painel=None, publicado=(), agora=None, 
     if len(aulas) > len(selecionadas):
         avisos.append("%d aula(s) fora do cap de %d (seguem no repo, saem do hub)"
                       % (len(aulas) - len(selecionadas), CAP_AULAS))
+    if quadro is None:
+        quadro = ler_quadro(raiz / QUADRO_REG)
+        if not quadro:
+            avisos.append("registro do quadro ausente (%s): toda aula entra como %r"
+                          % (QUADRO_REG, TIPO_PADRAO))
+    classificadas, avisos_quadro = classificar(selecionadas, quadro)
+    avisos.extend(avisos_quadro)
     tem_painel = painel_path.is_file()
     if not tem_painel:
         avisos.append("painel ausente (%s): a aba Painel sai com o aviso de 'nao gerado'"
@@ -520,7 +756,9 @@ def construir(lote, raiz=RAIZ, out=None, painel=None, publicado=(), agora=None, 
     tp = (template_player if template_player is not None
           else TEMPLATE_PLAYER.read_text(encoding="utf-8"))
     agora = agora or db.agora()
-    pagina = montar_index(th, tp, lote, selecionadas, tem_painel, agora)
+    pagina = montar_index(th, tp, lote, selecionadas, tem_painel, agora, quadro, estado_quadro)
+    proj = projecao(painel_path.read_text(encoding="utf-8") if tem_painel else None,
+                    html_quadro(classificadas, estado_quadro), lote)
 
     out.mkdir(parents=True, exist_ok=True)
     (out / PAGINA).write_text(pagina, encoding="utf-8")
@@ -537,9 +775,34 @@ def construir(lote, raiz=RAIZ, out=None, painel=None, publicado=(), agora=None, 
     (out / MANIFESTO).write_text(json.dumps(manifesto, ensure_ascii=False, indent=1) + "\n",
                                  encoding="utf-8")
     (out / ESTADO_POS).write_text(
-        json.dumps({"montado_em": montado_em, "arquivos": estado}, ensure_ascii=False,
+        json.dumps({"montado_em": montado_em, "arquivos": estado, "projecao": proj},
+                   ensure_ascii=False,
                    indent=1) + "\n", encoding="utf-8")
     return manifesto, checar(pagina, files, raiz, mantidos), avisos
+
+
+def decidir(lote, out, raiz=RAIZ, painel=None, notas=None, estado_quadro=None, quadro=None,
+            data_fn=None, plano_linhas=None):
+    """O `--precisa-publicar`: a projecao ATUAL (painel em disco + quadro que o build montaria)
+    contra a do registro, mais o estado do lote. Le o plano (`db.plano_listar`, read-only) so para
+    as aulas feitas com tarefa. Devolve o dict de `precisa_publicar` + "concluir"."""
+    raiz = Path(raiz)
+    painel_path = Path(painel) if painel else raiz / "artifacts" / "painel.html"
+    if not painel_path.is_absolute():
+        painel_path = raiz / painel_path
+    if quadro is None:
+        quadro = ler_quadro(raiz / QUADRO_REG)
+    estado = (estado_quadro if isinstance(estado_quadro, dict)
+              else ler_estado_quadro(estado_quadro))
+    aulas, _ = coletar_aulas(raiz, data_fn)
+    classificadas, _ = classificar(selecionar_aulas(aulas), quadro)
+    atual = projecao(painel_path.read_text(encoding="utf-8") if painel_path.is_file() else None,
+                     html_quadro(classificadas, estado), lote)
+    decisao = precisa_publicar(ler_projecao_registrada(out), atual, lote, ids_com_nota(notas))
+    if plano_linhas is None:
+        plano_linhas = db.plano_listar()
+    decisao["concluir"] = tarefas_a_concluir(estado, quadro, plano_linhas)
+    return decisao
 
 
 def _saida_padrao():
@@ -563,6 +826,11 @@ def main(argv=None):
     acao.add_argument("--extrair-lote", dest="extrair_lote", metavar="PAGINA.html",
                       help="recupera o lote injetado numa pagina salva (ex.: a versao viva "
                            "lida por Artifact read)")
+    acao.add_argument("--precisa-publicar", dest="precisa_publicar", action="store_true",
+                      help="decisao do tique do /hub-backend: compara o lote (drenado?), o "
+                           "painel e o quadro com a projecao do ultimo publish confirmado e diz "
+                           "sim/nao, a acao (nova_fila | mesmo_lote | nada) e o motivo; lista as "
+                           "aulas marcadas como feitas cuja tarefa do plano segue pendente")
     acao.add_argument("--confirmar", action="store_true",
                       help="DEPOIS do publish aceito: o estado_pos_publish.json do ultimo "
                            "--build de --out vira o registro_publicado.json, a base do DIFF. "
@@ -575,6 +843,13 @@ def main(argv=None):
                          "como sai, 1 path por linha, ou JSON com path/bytes); o que saiu da "
                          "selecao vira null, e so fica fora de files (mantido) o que esta nela "
                          "com a hash do registro e o mesmo tamanho")
+    ap.add_argument("--notas", metavar="DIR|ARQ",
+                    help="--precisa-publicar: as notas do lote no db (o out_dir do ArtifactData "
+                         "list de sessoes/<sessao>/notas, ou o JSON {notas: [...]})")
+    ap.add_argument("--quadro-estado", dest="quadro_estado", metavar="DIR|ARQ",
+                    help="--build/--precisa-publicar: o estado 'feito' do quadro no db (o out_dir "
+                         "do ArtifactData list da colecao quadro, ou JSON {slug: {feito, ts}})")
+    ap.add_argument("--json", action="store_true", help="--precisa-publicar: saida em JSON")
     ap.add_argument("--out", metavar="DIR", help="diretorio de saida (default tmp/hub)")
     ap.add_argument("--painel", metavar="PATH",
                     help="--build: HTML do painel (default artifacts/painel.html)")
@@ -609,6 +884,24 @@ def main(argv=None):
         print("[hub] --check: %s" % ("OK" if not problemas else "%d problema(s)" % len(problemas)))
         return 1 if problemas else 0
 
+    if args.precisa_publicar:
+        if not args.lote:
+            ap.error("--precisa-publicar exige --lote ARQ.json (o lote no ar)")
+        lote = json.loads(Path(args.lote).read_text(encoding="utf-8"))
+        decisao = decidir(lote, out, raiz=RAIZ, painel=args.painel, notas=args.notas,
+                          estado_quadro=args.quadro_estado)
+        if args.json:
+            print(json.dumps(decisao, ensure_ascii=False, indent=1))
+        else:
+            print("[hub] precisa publicar: %s -- %s (%s)"
+                  % ("sim" if decisao["publicar"] else "nao", decisao["acao"],
+                     "; ".join(decisao["motivos"])))
+            for t in decisao["concluir"]:
+                print("[hub] aula feita no quadro com tarefa pendente: #%d (%s, aula %s) -- "
+                      "pendencia de decisao: plano.py --concluir exige --sessao"
+                      % (t["tarefa_id"], t["tema"], t["slug"]))
+        return 0
+
     if args.confirmar:
         if not (out / ESTADO_POS).is_file():
             print("[hub] --confirmar: %s ausente em %s -- rode --build (e publique) antes"
@@ -624,8 +917,9 @@ def main(argv=None):
     lote = json.loads(Path(args.lote).read_text(encoding="utf-8"))
     publicado = ler_publicado_detalhado(Path(args.publicado).read_text(encoding="utf-8")) \
         if args.publicado else []
-    manifesto, problemas, avisos = construir(lote, out=out, painel=args.painel,
-                                             publicado=publicado)
+    manifesto, problemas, avisos = construir(
+        lote, out=out, painel=args.painel, publicado=publicado,
+        estado_quadro=ler_estado_quadro(args.quadro_estado) if args.quadro_estado else None)
     files = manifesto["files"]
     nulos = sorted(p for p, f in files.items() if f is None)
     enviados = sorted(p for p, f in files.items() if f is not None)

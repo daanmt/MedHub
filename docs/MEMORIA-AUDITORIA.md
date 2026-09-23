@@ -288,6 +288,9 @@ nunca convertido em métrica para o painel ficar verde.
 <!-- TERMO-REVOGADO: Realizada? | importar-planilha.md (s186, part-8) -- a coluna do Dashboard do Drive deixou de ser sinal de conclusao; quem conclui e `plano.py --concluir ID --sessao N` -->
 <!-- TERMO-REVOGADO: editar o JSON + `--semear --apply` | engenharia-cli.md + HANDOFF (s189, spec trilha-autoridade-unica) -- plano_trilha.json passou a ser GERADO por tools/trilha.py; a edicao a mao era sobrescrita pelo --gravar em silencio e hoje derruba o golden. Estrategia = trilha/parametros.json; linha = trilha/custom.json -->
 <!-- TERMO-REVOGADO: Editavel a mao: mudar a estrategia = editar este arquivo | _doc do plano_trilha.json (s188), regravado na s189 -- o arquivo e SAIDA do gerador; o _doc novo diz NAO EDITAR A MAO -->
+<!-- TERMO-REVOGADO: Publicar como Artifact com | revisar.md 'DRENAR no player' + revisao-calibrada v1.7 (s192, Clausula 15, MedHub HUB) -- o lote nao vira mais artifact NOVO: a pagina e a aba Cards de UM artifact fixado, republicado no lugar com `url` -->
+<!-- TERMO-REVOGADO: publicar a aula-base como Artifact HTML direto | aula-base.md secao 4 (s192, MedHub HUB) -- a aula e `artifacts/aula-<slug>.html` e sobe como arquivo do hub (`aulas/<slug>.html`), nunca como artifact avulso -->
+<!-- TERMO-REVOGADO: sem prometer permanencia | registrar-sessao.md secao 6 (s192) -- a 'regra viva' da s191 (publicar sem url a cada artifact-deleted) foi REVERTIDA: com o hub fixado, 'mesma URL' volta a ser invariante do rito; artifact-deleted e excecao REPORTADA -->
 
 > **Por que os marcadores são comentários HTML:** eles não aparecem no render do documento (o
 > leitor humano lê a prosa acima, não a lista), mas são triviais de extrair. O registro fica onde a

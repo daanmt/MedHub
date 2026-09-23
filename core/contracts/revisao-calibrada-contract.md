@@ -2,12 +2,12 @@
 type: contract
 layer: core
 status: canonical
-version: 1.6
+version: 1.7
 relates_to: [forgetting-curve-contract, fsrs-management-contract, cronograma-contract, AGENTE]
 ---
 
 # Contrato de Execução de Revisão Calibrada
-**Versão 1.6 | 2026-09-18 (s186, R2/F112: Cláusula 14 -- a régua de notas passa a ser a NATIVA do FSRS e vira propriedade VERSIONADA de cada linha do revlog; a régua v1 é REVOGADA) -- anterior: 1.5, 2026-09-17 (s185, F110: Cláusula 13 -- fricção virtuosa não se automatiza; declarada SEM gate) -- anterior: 1.4, 2026-09-16 (s183: o DRENAR ganha uma SEGUNDA superficie -- o player de cards como pagina, Clausula 12. Nenhuma clausula revogada; A, C e F preservados por construcao) -- anterior: 1.3, 2026-09-08 (s170: o sub-modo PREPARAR e a Camada 1 sao REVOGADOS; todo o ensino migra para a Revisao Direcionada de fechamento -- Clausula 11, Invariante F, lapide do Invariante D); 1.2, 2026-07-06 (s109+, F18c/F21: Invariante E + Clausula 10); 1.1, 2026-07-05 (s108+, F8/F9: Invariantes C e D); 1.0, 2026-06-28 (sessao 096).**  <!-- NAO-NORMATIVA: linha de changelog/versao -->
+**Versão 1.7 | 2026-09-22 (s192, MedHub HUB: Cláusula 15 -- o player mora na aba Cards de UM artifact permanente, republicado no lugar; a publicação de um artifact NOVO por lote é REVOGADA; a gravação no relógio da revisão, idempotente e com quarentena fica ESPECIFICADA -- part-2, pendente -- e, até ela, notas do hub não são gravadas) -- anterior: 1.6, 2026-09-18 (s186, R2/F112: Cláusula 14 -- a régua de notas passa a ser a NATIVA do FSRS e vira propriedade VERSIONADA de cada linha do revlog; a régua v1 é REVOGADA) -- anterior: 1.5, 2026-09-17 (s185, F110: Cláusula 13 -- fricção virtuosa não se automatiza; declarada SEM gate) -- anterior: 1.4, 2026-09-16 (s183: o DRENAR ganha uma SEGUNDA superficie -- o player de cards como pagina, Clausula 12. Nenhuma clausula revogada; A, C e F preservados por construcao) -- anterior: 1.3, 2026-09-08 (s170: o sub-modo PREPARAR e a Camada 1 sao REVOGADOS; todo o ensino migra para a Revisao Direcionada de fechamento -- Clausula 11, Invariante F, lapide do Invariante D); 1.2, 2026-07-06 (s109+, F18c/F21: Invariante E + Clausula 10); 1.1, 2026-07-05 (s108+, F8/F9: Invariantes C e D); 1.0, 2026-06-28 (sessao 096).**  <!-- NAO-NORMATIVA: linha de changelog/versao -->
 
 > Documento normativo. Governa a **competência única `/revisar`** cuja descompressão é calibrada por uma **nota de dificuldade-para-o-usuário (1-10) por tema**, sem cegar a curva de esquecimento. Consome o score de dormência e a retrievability de `forgetting-curve-contract.md` (não os redefine) e o `(tema, tipo)` de `cronograma-contract.md`. Referenciado por: `AGENTE.md` (§1.2, §6, §7.3), `.claude/commands/revisar.md`.
 
@@ -172,7 +172,7 @@ Duas dimensões **ortogonais** no render de qualquer ensino calibrado — **`/au
 **Decisão do usuário (PRD `plano-ssot-e-cards-v2`, P4).** Drenar 60 cards no chat custa turnos demais. O DRENAR passa a ter **duas superfícies**, e só o veículo muda:
 
 - **Conversacional** -- o loop card-a-card desta skill, que continua sendo o default.
-- **Player** -- uma página (Artifact) com teclado: `Espaço` vira, `1-4` dá a nota, `D` marca defeito com motivo curto. Gerada por `tools/fsrs_queue.py --export-player` + `--build-player` sobre `core/templates/player.html`, publicada com `capabilities: {db: {}}`.
+- **Player** -- uma página com teclado e toque: `Espaço` vira, `1-4` dá a nota, `D` marca defeito com motivo curto. O player é `core/templates/player.html` (fonte única); desde a v1.7 ele mora na **aba Cards do MedHub HUB** (Cláusula 15). ⚰️ *Até a v1.6 cada lote era montado por `--build-player` e publicado como um artifact NOVO com `capabilities: {db: {}}` -- revogado na s192: a conta claude.ai é compartilhada, o operador apagava os artifacts por higiene e as notas do `db` iam junto.*  <!-- CHECK: test_hub -->
 
 **As duas são a MESMA fase.** A sessão continua tendo **duas fases e não três** (Cláusula 4): o player substitui o veículo do DRENAR, nunca a Revisão Direcionada, que segue no chat, no fechamento, sobre as notas 1-2.  <!-- NAO-NORMATIVA: reafirma a contagem de fases -->
 
@@ -188,6 +188,18 @@ Duas dimensões **ortogonais** no render de qualquer ensino calibrado — **`/au
 **Degradação declarada.** Se `claude.use("db")` devolver `null` (capability não concedida, visualização sem runtime), a página **declara na tela** que o armazenamento está fora e expõe as notas em JSON para colar no chat -- mesmo formato que o `--record-lote` consome. Nunca perde o lote em silêncio.  <!-- NAO-VERIFICAVEL: degradacao sem capability acontece no navegador do operador, fora do alcance do harness (revisar: 2027-03-31) -->
 
 **Fora de escopo por decisão:** sem botão "aposentar" na página (aposentar é `reforja.py` / `cards_prune.py`) e sem Revisão Direcionada dentro dela.
+
+---
+
+## Cláusula 15 -- o player mora no MedHub HUB, um artifact só (s192, v1.7)
+
+**Decisão do operador (22/09/2026) e do `/ai-eng` (PRD `medhub-hub-2026-09-22`, spec `medhub-hub-v0`).** A causa das notas e links perdidos não era hospedagem: a conta claude.ai é **compartilhada com o time de conteúdo**, cada lote virava um artifact novo na galeria do time, e o operador apagava por higiene. O DRENAR no player passa a acontecer na **aba Cards do MedHub HUB**: UM artifact fixado, com `description` "NÃO apagar", republicado **no lugar** a cada lote (URL nas 8 primeiras linhas do `HANDOFF.md`). O rito é o de `.claude/commands/revisar.md`, "DRENAR no player".  <!-- NAO-NORMATIVA: registra a decisao e aponta o portador do rito -->
+
+- **Mesma fase, mesmo player.** A Cláusula 12 segue inteira: duas fases, não três; a página não ensina (Invariante A); a página não tem caminho de escrita para o FSRS (Invariante C); silêncio no meio (Invariante F). O hub só compõe o MESMO `core/templates/player.html` (`tools/hub.py --build`) ao lado das abas Aulas e Painel.  <!-- CHECK: test_dry_run_nao_grava_nada -->
+- **Relógio da revisão (a entrar com a part-2, `medhub-hub-v0-part-2`, pendente em 22/09).** O `--record-lote` passa a gravar cada nota no momento em que ela foi dada (o `ts` da página, em hora local, truncado ao segundo), não na hora da gravação: é o que o FSRS modela, e é o que torna a gravação idempotente por igualdade. Revisão mais nova sem a igual = FORA DE ORDEM, reportada, nunca gravada por cima. **Até lá, notas do hub não são gravadas** (gate no rito de `revisar.md`).  <!-- NAO-VERIFICAVEL: part-2 pendente em 22/09; vira CHECK quando entrar (revisar: 2026-09-30) -->
+- **Quarentena no writer.** A conta é compartilhada, quem abre é OWNER, e o owner atende todo nível das regras do `db` -- a regra (`sessoes` = `interact`, o resto = `admin`) limita membro da organização, não o owner. Por isso a fronteira real é o CLI: doc estranho é rejeitado e reportado, e os válidos seguem (a entrar com a part-2; hoje o doc estranho ainda recusa o lote inteiro, que é o lado seguro).  <!-- NAO-VERIFICAVEL: part-2 pendente em 22/09; vira CHECK quando entrar (revisar: 2026-09-30) -->
+- **Poda.** O `db` de um artifact guarda no máximo 5.000 documentos (medido no servidor em 22/09: "1 of 5000 documents used") e a página grava 1 por card: a sessão que SAIU da aba é podada depois de uma releitura dar 0 novas e 0 rejeitadas; a do lote corrente, nunca. Depende da idempotência da part-2.  <!-- NAO-VERIFICAVEL: a poda e ato do agente via ArtifactData, fora do alcance do harness (revisar: 2027-03-31) -->
+- **Hub apagado** (`artifact-deleted`): recriado com o 1o publish completo e REPORTADO no HANDOFF e no session log; as notas do `db` foram com ele e isso é dado, nunca silêncio.  <!-- NAO-VERIFICAVEL: recriar e reportar sao atos do agente fora do harness (revisar: 2027-03-31) -->
 
 ---
 

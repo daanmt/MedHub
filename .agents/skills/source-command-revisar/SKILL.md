@@ -71,10 +71,12 @@ python tools/fsrs_queue.py --record <card_id> --rating <1-4> --reason <vencido|f
 # P3: consequência dos 4 ratings para um card (sem gravar nada)
 python tools/fsrs_queue.py --preview <card_id>
 
-# DRENAR no player (s183): exportar o lote -> montar a página -> gravar as notas
-python tools/fsrs_queue.py --export-player [--limit N] [--sessao ID] [--out tmp/player_<data>.json]
-python tools/fsrs_queue.py --build-player --lote tmp/player_<data>.json [--out artifacts/player-<data>.html]
-python tools/fsrs_queue.py --record-lote tmp/player_<data>_notas.json --lote tmp/player_<data>.json [--apply --expect N]
+# DRENAR no player -- aba Cards do MedHub HUB (s183; hub desde a s192): exportar -> montar o hub -> republicar -> gravar
+python tools/fsrs_queue.py --export-player [--limit N] [--sessao ID] [--out tmp/player_<sessao>.json]
+python tools/hub.py --build --lote tmp/player_<sessao>.json [--publicado LISTA]   # assinatura: /engenharia-cli
+python tools/fsrs_queue.py --record-lote tmp/player_<sessao>_notas.json --lote tmp/player_<sessao>.json [--apply --expect N]
+# so para depurar o player isolado (NUNCA publicar como artifact avulso):
+python tools/fsrs_queue.py --build-player --lote tmp/player_<sessao>.json [--out artifacts/player-<sessao>.html]
 ```
 
 ---
@@ -127,19 +129,21 @@ vazamento de rótulo (modo de falha #8 do handoff de flashcards) era tribal:
 
 ---
 
-## DRENAR no player (s183 -- spec `plano-ssot-e-cards-v2-part-9`)
+## DRENAR no player -- a aba Cards do MedHub HUB (s183; hub desde a s192 -- specs `plano-ssot-e-cards-v2-part-9` e `medhub-hub-v0`)
 
-> O DRENAR ganha uma **segunda superfície**: uma página (Artifact) onde o usuário responde no teclado, em vez de o agente apresentar bloco a bloco no chat. **Não é uma terceira fase** -- é o mesmo DRENAR da Cláusula 4 do contrato, com outro veículo. A **Revisão Direcionada continua no chat**, no fechamento, sobre as notas 1-2.  <!-- NAO-NORMATIVA: descreve o que a superficie E, nao prescreve conduta -->
+> O DRENAR ganha uma **segunda superfície**: uma página onde o usuário responde no teclado ou no toque, em vez de o agente apresentar bloco a bloco no chat. **Não é uma terceira fase** -- é o mesmo DRENAR da Cláusula 4 do contrato, com outro veículo. A **Revisão Direcionada continua no chat**, no fechamento, sobre as notas 1-2.  <!-- NAO-NORMATIVA: descreve o que a superficie E, nao prescreve conduta -->
 >
-> 🔴 **A página NUNCA grava FSRS.** Ela guarda a primeira nota de cada card na capability `db`; quem grava é o `--record-lote`, por `record_review` -- o caminho de escrita único (Invariante C). Contrato: `core/contracts/revisao-calibrada-contract.md` v1.4.  <!-- CHECK: test_dry_run_nao_grava_nada -->
+> Desde a s192 a página é a **aba Cards do MedHub HUB**: UM artifact fixado e republicado no lugar (URL nas 8 primeiras linhas do `HANDOFF.md`), com as abas Aulas e Painel ao lado. O player é o mesmo -- `core/templates/player.html` é a fonte única, e `tools/hub.py --build` o compõe inline (assinatura em `/engenharia-cli`).  <!-- NAO-NORMATIVA: descreve onde a superficie mora -->
+>
+> 🔴 **A página NUNCA grava FSRS.** Ela guarda a primeira nota de cada card na capability `db`; quem grava é o `--record-lote`, por `record_review` -- o caminho de escrita único (Invariante C). Contrato: `core/contracts/revisao-calibrada-contract.md` v1.7.  <!-- CHECK: test_dry_run_nao_grava_nada -->
 
 **Assinatura das 3 flags (+ os 5 argumentos que elas consomem):**
 
 | Flag | Semântica |
 |---|---|
 | `--export-player` | Exporta o lote do dia em JSON: `{sessao, gerado_em, total, cards[]}`. **Mesma ordem e mesmos buckets do `--list`** (aceita `--area`, `--tema`, `--cluster`, `--prevalencia`, `--new-limit`). Sem `--limit`, corta no **teto do dia** (`day_plan._teto_efetivo`, F64: `vencidos = atrasados + hoje`). Cada card leva **só o que vai para a tela** -- `needs_qualitative` e `due` ficam de fora de propósito. |
-| `--build-player` | Injeta o lote (`--lote`) no `core/templates/player.html` dentro do `<script id="lote" type="application/json">` e grava a página. `<`, `>` e `&` viajam escapados em `\uXXXX` (card com `</script>` não quebra a página); a página lê com `JSON.parse(textContent)`. |
-| `--record-lote NOTAS.json` | Grava o lote de notas do player. **Dry-run por default** (lista `card_id -> rating` e o N). Exige `--lote` (o export) -- é contra ele que cada `card_id` é validado. `rating` fora de 1..4 ou `card_id` fora do lote = **ERRO** (recusa o `--apply`, exit 2); `card_id` repetido = **1 revisão + WARN** (a primeira nota é a gravável). Os `defeito` viram `db.marcar_reforja(card_id, motivo, origem='player')` e **não contam como revisão**. |
+| `--build-player` | Injeta o lote (`--lote`) no `core/templates/player.html` dentro do `<script id="lote" type="application/json">` e grava a página **standalone**. `<`, `>` e `&` viajam escapados em `\uXXXX` (card com `</script>` não quebra a página); a página lê com `JSON.parse(textContent)`. **Desde a s192 não é o caminho do rito:** o hub compõe o MESMO player e injeta pelo MESMO injetor; o standalone serve para depurar o player isolado e nunca é publicado como artifact avulso. |
+| `--record-lote NOTAS.json` | Grava o lote de notas do player. **Dry-run por default** (lista `card_id -> rating` e o N). Exige `--lote` (o export, ou `hub.py --extrair-lote` da página viva) -- é contra ele que cada `card_id` é validado. `rating` fora de 1..4 ou `card_id` fora do lote = **ERRO** (recusa o `--apply`, exit 2); `card_id` repetido = **1 revisão + WARN** (a primeira nota é a gravável). Os `defeito` viram `db.marcar_reforja(card_id, motivo, origem='player')` e **não contam como revisão**. ⏳ **Hoje ele grava no relógio da GRAVAÇÃO e não reconhece nota já gravada.** A spec `medhub-hub-v0-part-2` (pendente, s192) muda para: cada nota entra no FSRS no momento em que foi dada (o `ts` da página), idempotência exata pelo revlog (JÁ GRAVADA / FORA DE ORDEM, reportadas) e quarentena de doc estranho sem derrubar os válidos. Até ela entrar, vale o gate do rito abaixo. |
 | `--out PATH` | Saída do `--export-player` (default `tmp/player_<sessao>.json`) ou do `--build-player` (default `artifacts/player-<sessao>.html`). |
 | `--lote PATH` | O JSON exportado. Exigido por `--build-player` e por `--record-lote`. |
 | `--sessao ID` | Id da sessão (default: a data de hoje). Vira a coleção `sessoes/<sessao>/notas` na página -- dois lotes no mesmo dia pedem ids diferentes. |
@@ -148,13 +152,31 @@ vazamento de rótulo (modo de falha #8 do handoff de flashcards) era tribal:
 
 **Rito (nunca pular um passo):**  <!-- NAO-NORMATIVA: rotulo do rito; os passos sao as linhas seguintes -->
 
-1. `--export-player` -> confere o `total` e a sessão.
-2. `--build-player` -> a página em `artifacts/player-<data>.html`.
-3. **Publicar como Artifact com `capabilities: {db: {}}`** -- sem a capability a página cai no fallback e as notas só existem na tela.
-4. O usuário drena: `Espaço` vira, `1-4` dá a nota, `D` marca defeito com motivo curto. Nota `< 3` recoloca o card no fim do lote (relearning) e **não gera segunda nota** -- só a primeira é gravável (regra anti-duplo-registro). ⚰️ *Era `< 4` até 17/09/2026: sob a régua v1 o 4 significava "cravou", e exigi-lo era exigir domínio. Sob a **v2** o 4 é "sem esforço" -- um degrau que o FSRS espera raro -- e manter `< 4` faria o 3 ("lembrou", o caso normal) repetir para sempre. O critério fiel é: repete enquanto **falhou ou custou**.*  <!-- CHECK: test_duplicata_gera_uma_unica_revisao -->
-5. O agente lê as notas com `ArtifactData` (coleção `sessoes/<sessao>/notas`, 1 doc por card: `{card_id, rating_primeira, ts, defeito?, motivo?}`) e grava `tmp/player_<data>_notas.json` no formato `{"sessao": ..., "notas": [...]}`. **Fallback:** se a página declarou `db` indisponível, o usuário cola o JSON do fim da página -- é o mesmo formato.
-6. `--record-lote` em **dry-run**, depois `--apply --expect N` com o N que o dry-run mediu.
-7. **Revisão Direcionada no chat**, sobre os temas de nota 1-2 -- exatamente como no DRENAR conversacional (Invariante B: carimbar `review_log`).  <!-- NAO-VERIFICAVEL: conduta do agente na sessao, sem artefato que a registre (revisar: 2027-03-31) -->
+⏳ **Gate até a part-2 entrar (`medhub-hub-v0-part-2`, pendente desde 22/09/2026):** o `--record-lote` de hoje grava no relógio da gravação e regravaria uma nota lida duas vezes. Então, com notas no hub: **não gravar, não trocar o lote e não podar** -- os passos 1, 2, 5, 7 e 8 esperam a part-2; valem hoje a montagem e a republicação com o lote que JÁ está na aba (passos 3-4) e o drill (passo 6). As notas esperam no `db` sem custo: com a part-2 cada uma entra no FSRS no momento em que foi dada.  <!-- NAO-VERIFICAVEL: gate temporario de conduta ate a part-2 entrar; sai junto com ela (revisar: 2026-09-30) -->
+
+*Abrir um lote (início da sessão de cards):*
+
+1. **Gravar o que a aba Cards tem agora**, se tiver notas: `ArtifactData list` da coleção `sessoes/<sessao atual>/notas` -> passos 7-8. A sessão atual é o `sessao` do lote vivo (sem o export no `tmp/`: `hub.py --extrair-lote` da versão lida por `Artifact read`).
+2. `--export-player` -> confere o `total` e a sessão. Id NOVO: trocar o lote troca a coleção das notas.
+3. `tools/hub.py --build --lote tmp/player_<sessao>.json --publicado <lista>` -> `tmp/hub/`; o `--check` embutido tem de dar OK.  <!-- CHECK: test_todo_href_relativo_do_index_esta_no_manifesto -->
+4. **Republicar o hub** na URL do HANDOFF: `Artifact publish` com `url`, com o `file_path` e os `files` de `tmp/hub/manifesto.json`, **sem `capabilities`** (omitir mantém a declaração; `{}` limparia o `db`). Numa sessão que não publicou o hub, antes: `Artifact read url` e `Artifact list scope=files url` -- o contrato recusa publish em artifact não lido e `files` sobre path não listado; a listagem é o `--publicado` do passo 3.  <!-- NAO-VERIFICAVEL: publicar e ato do agente na API de Artifact, fora do alcance do harness (revisar: 2027-03-31) -->
+5. **Podar a sessão que saiu da aba** (a do passo 1), porque o `db` do artifact tem teto de 5.000 docs e a página grava 1 doc por card: só depois de uma releitura dela dar `--record-lote` com **0 novas e 0 rejeitadas** (`--expect 0`); `ArtifactData batch` com `delete` (<= 50 por chamada); re-list = 0; contagem podada no session log. **Nunca** a sessão do lote que está na aba -- o reload reapresentaria os cards como novos.  <!-- NAO-VERIFICAVEL: a poda e ato do agente via ArtifactData, fora do alcance do harness (revisar: 2027-03-31) -->
+
+*Drenar:*
+
+6. O usuário drena, no celular ou no desktop: `Espaço` (ou o botão) vira, `1-4` dá a nota, `D` marca defeito com motivo curto. Nota `< 3` recoloca o card no fim do lote (relearning) e **não gera segunda nota** -- só a primeira é gravável (regra anti-duplo-registro). ⚰️ *Era `< 4` até 17/09/2026: sob a régua v1 o 4 significava "cravou", e exigi-lo era exigir domínio. Sob a **v2** o 4 é "sem esforço" -- um degrau que o FSRS espera raro -- e manter `< 4` faria o 3 ("lembrou", o caso normal) repetir para sempre. O critério fiel é: repete enquanto **falhou ou custou**.*  <!-- CHECK: test_duplicata_gera_uma_unica_revisao -->
+
+*Fechar (fim da sessão de cards):*
+
+7. O agente lê as notas com `ArtifactData` (coleção `sessoes/<sessao>/notas`, 1 doc por card: `{card_id, rating_primeira, ts, defeito?, motivo?}`) e grava `tmp/player_<sessao>_notas.json` no formato `{"sessao": ..., "notas": [...]}`. **Fallback:** se a página declarou `db` indisponível, o usuário cola o JSON do fim da página -- é o mesmo formato.
+8. `--record-lote` em **dry-run** -- é a janela de override: ler as JÁ GRAVADAS, as FORA DE ORDEM e as REJEITADAS com motivo --, depois `--apply --expect N` com o N que o dry-run mediu. Reler depois grava 0.
+9. **Revisão Direcionada no chat**, sobre os temas de nota 1-2 -- exatamente como no DRENAR conversacional (Invariante B: carimbar `review_log`).  <!-- NAO-VERIFICAVEL: conduta do agente na sessao, sem artefato que a registre (revisar: 2027-03-31) -->
+
+**Fronteira de escrita da página** (declarada no 1o publish do hub, `capabilities` explícito): `{db: {rules: [{path: "", read: "view", write: "admin"}, {path: "sessoes", write: "interact"}]}}` -- membro da organização em `interact` só escreve notas. 🔴 **Limite declarado:** a conta é compartilhada e quem abre logado nela é OWNER; o owner atende todo nível, então a regra NÃO o limita. Para o owner, a fronteira é o código da página (um único write path, `sessoes/<sessao>/notas`) + a quarentena do `--record-lote`.
+
+**Hub apagado (`artifact-deleted` no publish):** recriar com o 1o publish completo -- `capabilities` explícito (acima), `description` "MedHub: permanente, republicado no lugar. NÃO apagar.", `pin: true`, `<title>MedHub</title>` --, trocar a URL nas 8 primeiras linhas do HANDOFF no mesmo commit e **REPORTAR** no HANDOFF e no session log. As notas que estavam no `db` foram com ele: registrar a perda como dado, nunca em silêncio.  <!-- NAO-VERIFICAVEL: recriar e reportar sao atos do agente fora do harness (revisar: 2027-03-31) -->
+
+⚰️ *Até 22/09/2026 (s191) o passo de publicação era "Publicar como Artifact com `capabilities: {db: {}}`" a página do `--build-player` (`artifacts/player-<data>.html`) -- um artifact NOVO por lote. Revogado na s192 (MedHub HUB, spec `medhub-hub-v0`): cada lote virava um artifact na galeria da conta compartilhada com o time, o operador apagava por higiene e as notas do `db` iam junto.*
 
 🔴 **O que NÃO muda:** o Invariante F (silêncio no meio) é estrutural aqui -- a página não ensina. O Invariante C também: a janela de override do lote acontece **antes** do `--apply`, olhando o dry-run; depois do `--apply` não há amend. E não existe botão "aposentar" na página -- aposentar é `reforja.py` / `cards_prune.py`.  <!-- NAO-NORMATIVA: reafirma invariantes ja normatizados acima -->
 

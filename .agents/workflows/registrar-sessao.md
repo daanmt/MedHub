@@ -64,20 +64,32 @@ python -m app.memory.manager <NNN>
 ```
 Onde `<NNN>` é o número da sessão recém-registrada (e.g., `048`).
 
-### 6. Regenerar e republicar o painel (part-7)
+### 6. Regenerar o painel e republicar o MedHub HUB (part-7; hub desde a s192)
 
 O painel substitui as 20 tabelas do Dashboard do Drive como visão de progresso -- ele só vale se for
-regenerado no fechamento, senão vira número que envelhece.
+regenerado no fechamento, senão vira número que envelhece. Desde a s192 ele é a **aba Painel do MedHub
+HUB**: um artifact só, fixado, republicado no lugar, com as abas Cards e Aulas ao lado.
 
 ```powershell
 python tools/painel.py --html          # grava artifacts/painel.html
+python tools/hub.py --build --lote <o lote VIVO> --publicado <lista>
 ```
 
-Depois, **publicar como Artifact e colocar a URL na linha de Datas & links do `HANDOFF.md`**.
-⚰️ *22/09/2026 (s191): a clausula "publicar na MESMA URL fixa, que o operador fixa uma vez" morreu de fato --
+Depois, **republicar o hub na MESMA URL** -- a das 8 primeiras linhas do `HANDOFF.md` --, pelo rito de
+`/revisar` ("DRENAR no player", passo 4: numa sessão que não publicou o hub, `Artifact read` e `Artifact
+list scope=files` antes; sem `capabilities`). Assinatura do `hub.py`: `/engenharia-cli`. O `--lote` é o
+lote que JÁ ESTÁ na aba Cards: o fechamento republica o painel, não troca a sessão das notas (trocar o
+lote é ato do DRENAR). Sem o export no `tmp/`, `hub.py --extrair-lote` da versão lida por `Artifact read`.
+
+⚰️ *22/09/2026 (s191): a cláusula "publicar na MESMA URL fixa, que o operador fixa uma vez" morreu de fato --
 o operador apaga artifacts da conta por rotina (a `QctZqVoJriSviJetF8FYBQ` e, minutos depois, a
-`419MeDpjERDhq74aU7CHvn` publicada no mesmo fechamento). URL fixa e desejo, nao invariante.* Regra viva:
-tentar o publish com a `url` do HANDOFF; `artifact-deleted` = publicar sem `url` e trocar a linha do HANDOFF
-no mesmo commit, sem prometer permanencia. O `.html` versionado em `artifacts/painel.html` e o que sobrevive.
+`419MeDpjERDhq74aU7CHvn` publicada no mesmo fechamento). A regra que a substituiu -- publicar sem `url` a
+cada `artifact-deleted` e trocar a linha do HANDOFF "sem prometer permanencia" -- foi REVERTIDA na s192:
+com UM artifact fixado e marcado "NÃO apagar" (o hub), "mesma URL" volta a ser invariante do rito.*
+
+**Exceção, nunca silenciosa:** `artifact-deleted` no publish = recriar o hub com o 1o publish completo
+(`capabilities` explícito + `description` + `pin`, em `/revisar`), trocar a URL no HANDOFF no mesmo commit
+e REPORTAR no HANDOFF e no session log -- as notas do `db` foram com ele, e isso é dado. O `.html`
+versionado em `artifacts/painel.html` é o que sobrevive.
 
 O CLI **não** fala com a API de Artifact -- publicar é ato do agente, não do script.

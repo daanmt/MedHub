@@ -34,10 +34,11 @@ Palavras do usuário: *"vamos adotar este formato de renderizar a mesma via arti
 liberdade maior de design e composição espacial da aula... por ser em html temos mais liberdade
 quanto ao /frontend-design."*
 
-**Why (o que autoriza gastar design):** o usuário **apaga** os artifacts da aba do Claude web
-depois de usá-los, "para não poluírem a conta do time de conteúdo médico". Artifacts são
-**efêmeros por desenho no fluxo dele**; o conteúdo permanente já mora em `resumos/`. Logo o
-artifact pode ser tratado como peça de leitura de alta qualidade, sem medo de acúmulo.
+**Why (o que autoriza gastar design):** o conteúdo permanente já mora em `resumos/`; a aula é
+peça de leitura de alta qualidade. ⚰️ *Até 22/09/2026 o argumento era "artifacts são efêmeros:
+ele apaga os da aba do Claude web para não poluírem a conta do time de conteúdo médico". A
+poluição era a CAUSA dos links mortos -- tratada na s192: a aula deixou de ser artifact avulso e
+virou arquivo do MedHub HUB (seção 3).*
 
 🔴 **Fronteira de SSOT:** o Artifact é **camada de apresentação**. O que precisa sobreviver à
 aula (armadilhas, discriminações, condutas) vai para `resumos/` seguindo `/estilo-resumo` —
@@ -77,6 +78,19 @@ um gerador que recebe a estrutura da aula e emite a página), no lugar de redese
 cada sessão. Isso **continua sendo a direção**, mas é trabalho de engenharia de front-end de
 verdade — **frente aberta, não passo de fim de sessão**.
 
-**Até esse motor existir:** publicar a aula-base como Artifact HTML direto, seguindo a régua
-da seção 2 manualmente. Quando uma **segunda** aula-base pedir o mesmo tratamento, esse é o
-gatilho para construir o motor em vez de repetir o desenho.
+**Até esse motor existir:** compor a aula-base à mão, seguindo a régua da seção 2. Quando uma
+**segunda** aula-base pedir o mesmo tratamento, esse é o gatilho para construir o motor em vez de
+repetir o desenho.
+
+## 4. Onde a aula é publicada: no MedHub HUB, nunca como artifact avulso (s192)
+
+A aula é gravada em `artifacts/aula-<slug>.html` -- o HTML da página, sem
+`<!DOCTYPE>`/`<html>`/`<head>`/`<body>` próprios (o publish embrulha), com `<title>` legível: é
+o nome que aparece na lista. Ela sobe como **arquivo do MedHub HUB**: `tools/hub.py --build` a
+inclui na aba Aulas (`aulas/<slug>.html`, mais novas primeiro, cap de 120) e o agente
+republica o hub na URL do HANDOFF (rito e assinatura em `/revisar` e `/engenharia-cli`). A aba
+abre a aula DENTRO da página, sem sair do drill.  <!-- CHECK: test_hub -->
+
+⚰️ *Até 22/09/2026 a regra era "publicar a aula-base como Artifact HTML direto" -- um artifact NOVO
+por aula na galeria da conta compartilhada. Revogada na s192 (spec `medhub-hub-v0`): o operador
+apagava por higiene e o link da aula morria no mesmo dia (a de Hérnias, em 22/09).*

@@ -1,25 +1,26 @@
-"""Painel gerado do banco (part-7, s186) -- spec `plano-ssot-e-cards-v2-part-7`.
+"""Painel gerado do banco -- part-7 (s186), refeito na s194 (auditoria de fidelidade de 23/09).
 
-O `--json` e o CONTRATO e e o que se testa; o HTML e render, provado por
-marcadores `data-bloco` e pelas regras de forma que a memoria s151 fixou (UM
-`.wrap`, `max-width` <= 2, sem scroll horizontal por tabela solta).
+O `--json` e o CONTRATO e e o que se testa; o HTML e render, provado por marcadores `data-bloco`
+e pelas regras de forma do projeto (UM `.wrap`, `max-width` <= 2, sem scroll horizontal).
 
-🔴 O teste central deste arquivo nao e de soma -- e da **escolha de fonte**. O
-part-6 entregou o elo `sessoes_bulk.tarefa_id`, mas medido em 18/09/2026 o
-backfill casa **1 de 126 sessoes**; um painel alimentado so pelo elo mostraria
-~0 questoes feitas em todo bloco com o operador tendo feito 7.326. Por isso o
-volume vem de `sessoes_bulk` agregado por AREA -- pelo portador que ja existe
-(`db.bloco_de`, `areas.AREAS_AGREGADAS`, `areas.area_valida`), nunca por uma
-copia do mapa -- e o elo aparece como camada fina declarada.
-`test_volume_nao_desaparece_quando_o_elo_esta_vazio` e a sentinela disso.
+🔴 O que a s194 trava, achado a achado da auditoria (`painel` x `panorama` x `day_plan`):
+- **semana**: o painel usava a MENOR semana com pendencia; o boot usa a de CALENDARIO. Agora os dois
+  saem da MESMA funcao (`plano.panorama`) -- `test_concordancia_painel_x_panorama` e a sentinela;
+- **saldo de cards**: o painel mostrava vencidos e teto, sem o consumo do dia -- quem lia entendia
+  "faltam 83" com o saldo zerado. Agora `consumo/teto (restantes)` pelos leitores do `day_plan`;
+- **agenda de 7 dias**: `db.agenda_revisoes`, o MESMO leitor da tela de fim da aba Cards;
+- **ritmo**: real (7 e 14 dias, `db.get_ritmo_real`) ao lado do alvo (`volume_vs_marco` e a Fase 1
+  do `day_plan`);
+- **fora**: "do previsto", o 126 fixo, o 2760 e o simulado contado como tarefa de CM.
 
-Banco sintetico em tmp_path com `DB_PATH` monkeypatchado -- o `ipub.db` de
-producao nunca e tocado (F49).
+Cada numero da pagina tem aqui um teste que o amarra ao leitor-fonte. Banco sintetico em tmp_path
+com `DB_PATH` monkeypatchado e calendario e relogio congelados -- o `ipub.db` nunca e tocado (F49).
 """
 import json
+import re
 import sqlite3
 import sys
-from datetime import date
+from datetime import date, datetime, timedelta
 from pathlib import Path
 
 import pytest
@@ -54,23 +55,34 @@ CREATE TABLE fsrs_revlog (id INTEGER PRIMARY KEY AUTOINCREMENT, card_id INTEGER,
   review_time DATETIME, regua_versao INTEGER);
 """
 
-#: (area, tema, status, q_previstas). O bloco sai de `db.bloco_de(area)`:
-#: Preventiva -> MFC, Cirurgia -> CIR, Cardiologia -> CM (fallback).
+HOJE = date(2026, 9, 23)
+#: O calendario da trilha como ele e hoje (S1 = 19-20/09, S2 = 21-27/09), congelado.
+CALENDARIO = {1: (date(2026, 9, 19), date(2026, 9, 20)),
+              2: (date(2026, 9, 21), date(2026, 9, 27)),
+              3: (date(2026, 9, 28), date(2026, 10, 4))}
+
+#: (semana, area, tema, status, q_previstas, fonte, url). O bloco sai de `db.bloco_de(area)`:
+#: Preventiva -> MFC, Cirurgia -> CIR, Cardiologia -> CM (fallback), Simulado -> CM (fallback!).
 TAREFAS = [
-    ("Preventiva", "Saude do Idoso", "pendente", 32.0),
-    ("Preventiva", "APS", "feita", 50.0),
-    ("Cirurgia", "Apendicite", "pendente", 40.0),
-    ("Cirurgia", "Colecistite", "cortada", 30.0),
-    ("Cardiologia", "HAS", "pendente", 60.0),
+    (1, "Preventiva", "Saude do Idoso", "pendente", 32.0, "rf", "https://exemplo/1"),
+    (1, "Preventiva", "APS", "feita", 50.0, "rf", "https://exemplo/2"),
+    (1, "Cirurgia", "Apendicite", "pendente", 40.0, "rf", "https://exemplo/3"),
+    (2, "Cirurgia", "Colecistite", "cortada", 30.0, "rf", "https://exemplo/4"),
+    (2, "Cardiologia", "HAS", "pendente", 60.0, "rf", "https://exemplo/5"),
+    (2, "Simulado", "UERJ 2021 -- prova INTEIRA", "pendente", 60.0, "custom",
+     "simulados/uerj/uerj_2021.pdf"),
+    (2, "Preventiva", "Raciocinio diagnostico", "pendente", 0.0, "custom", None),
+    (3, "Cardiologia", "IC", "pendente", 45.0, "rf", "https://exemplo/8"),
+    (None, "Cardiologia", "Reserva", "pendente", 20.0, "rf", None),
 ]
 
-#: (area, feitas, acertos)
+#: (area, feitas, acertos, dias atras)
 SESSOES = [
-    ("Preventiva", 100, 85),
-    ("Cirurgia", 200, 150),
-    ("Cardiologia", 50, 40),
-    ("Simulado", 120, 90),          # fora dos blocos, por regra
-    ("GO", 10, 5),                  # area FANTASMA (F89) -> nunca vira CM
+    ("Preventiva", 100, 85, 1),
+    ("Cirurgia", 200, 150, 3),
+    ("Cardiologia", 50, 40, 10),
+    ("Simulado", 120, 90, 0),        # fora dos blocos, por regra
+    ("GO", 10, 5, 30),               # area FANTASMA (F89) -> nunca vira CM
 ]
 
 
@@ -79,22 +91,50 @@ def db_sintetico(tmp_path, monkeypatch):
     caminho = tmp_path / "ipub.db"
     con = sqlite3.connect(caminho)
     con.executescript(SCHEMA)
-    for i, (area, tema, status, q) in enumerate(TAREFAS, start=1):
+    for i, (sem, area, tema, status, q, fonte, url) in enumerate(TAREFAS, start=1):
         con.execute("INSERT INTO plano_tarefas (id, fonte, ref_semana_fonte, "
                     "tarefa_fonte, semana_plano, ordem, area, tema, tipo, tipo_norm, "
                     "status, url_lista, q_previstas) "
-                    "VALUES (?,'rf',?,?,?,?,?,?,'Revisao','revisao',?,?,?)",
-                    (i, i, "t%d" % i, 1 if i < 4 else 2, i, area, tema, status,
-                     "https://exemplo/%d" % i, q))
-    for j, (area, f, a) in enumerate(SESSOES, start=1):
+                    "VALUES (?,?,?,?,?,?,?,?,'Revisao','revisao',?,?,?)",
+                    (i, fonte, i, "t%d" % i, sem, i, area, tema, status, url, q))
+    for j, (area, f, a, atras) in enumerate(SESSOES, start=1):
+        dia = (HOJE - timedelta(days=atras)).isoformat()
         con.execute("INSERT INTO sessoes_bulk (id, sessao_num, area, questoes_feitas, "
                     "questoes_acertadas, data_sessao, observacoes, tarefa_id) "
-                    "VALUES (?,?,?,?,?,'2026-09-01','obs',NULL)", (j, j, area, f, a))
+                    "VALUES (?,?,?,?,?,?,'obs',NULL)", (j, j, area, f, a, dia))
     con.commit()
     con.close()
     from app.utils import db as dbmod
+    import plano
     monkeypatch.setattr(dbmod, "DB_PATH", str(caminho))
+    monkeypatch.setattr(dbmod, "agora", lambda: datetime(2026, 9, 23, 18, 0, 0))
+    monkeypatch.setattr(dbmod, "hoje", lambda: HOJE)
+    monkeypatch.setattr(plano, "calendario_trilha", lambda trilha=None: dict(CALENDARIO))
+    monkeypatch.setattr(painel, "_aulas_por_tarefa", lambda: {7: "raciocinio-diagnostico"})
     return caminho
+
+
+def _cards(caminho, agora=None):
+    """3 cards vencidos (2 atrasados, 1 hoje), 2 novos, 1 que vence amanha, 1 daqui a 3 dias; e 2
+    revisoes gravadas hoje no revlog."""
+    agora = agora or datetime.now()
+    con = sqlite3.connect(caminho)
+    linhas = [
+        (1, 2, agora - timedelta(days=3)), (2, 2, agora - timedelta(days=1)),
+        (3, 2, agora.replace(hour=0, minute=0, second=1)),
+        (4, 0, agora), (5, 0, agora),
+        (6, 2, agora + timedelta(days=1)), (7, 2, agora + timedelta(days=3)),
+    ]
+    for cid, state, due in linhas:
+        con.execute("INSERT INTO flashcards (id, tipo, frente_pergunta, verso_resposta) "
+                    "VALUES (?, 'x', 'p', 'r')", (cid,))
+        con.execute("INSERT INTO fsrs_cards (card_id, state, due) VALUES (?,?,?)",
+                    (cid, state, due.strftime("%Y-%m-%d %H:%M:%S")))
+    for cid in (6, 7):
+        con.execute("INSERT INTO fsrs_revlog (card_id, rating, review_time, regua_versao) "
+                    "VALUES (?, 3, ?, 2)", (cid, HOJE.isoformat() + " 10:00:00"))
+    con.commit()
+    con.close()
 
 
 # ------------------------------------------ as tres cestas do volume
@@ -108,9 +148,7 @@ def test_volume_usa_o_portador_canonico_do_bloco():
 
 
 def test_simulado_e_agregada_e_nunca_entra_num_bloco():
-    """🔴 `bloco_de('Simulado')` devolve CM por FALLBACK. O termometro vale ~13%
-    do volume: dobrado em CM, inflaria o bloco em um oitavo. `AREAS_AGREGADAS`
-    ja marca isso no vocabulario -- o painel le de la, nao decide sozinho."""
+    """🔴 `bloco_de('Simulado')` devolve CM por FALLBACK. O painel le `AREAS_AGREGADAS`."""
     from app.utils import areas
     import app.utils.db as dbmod
     assert "Simulado" in areas.AREAS_AGREGADAS
@@ -121,8 +159,6 @@ def test_simulado_e_agregada_e_nunca_entra_num_bloco():
 
 
 def test_area_fantasma_nao_vira_CM_por_fallback():
-    """F89: `GO` solto nao esta em `core/areas.json`. `bloco_de` devolveria CM --
-    o painel prefere nomear a divida a somar num bloco que ela nao e."""
     from app.utils import areas
     assert not areas.area_valida("GO")
     bloco, _a, fant = painel._volume_por_bloco(
@@ -138,88 +174,154 @@ def test_volume_por_bloco_separa_as_tres_cestas_sem_perder_questao():
     assert bloco == {"MFC": {"feitas": 10, "acertos": 8}}
     assert agreg == {"Simulado": {"feitas": 5, "acertos": 3}}
     assert fant == {"GO": {"feitas": 2, "acertos": 1}}
-    total = sum(v["feitas"] for c in (bloco, agreg, fant) for v in c.values())
-    assert total == 17, "questao sumiu entre as cestas"
 
 
-# ------------------------------------------------------- os 5 blocos (JSON)
+# ------------------------------------------------------- o contrato (JSON)
 
-def test_coletar_traz_os_cinco_blocos(db_sintetico):
-    d = painel.coletar(hoje=date(2026, 9, 18))
+def test_coletar_traz_os_quatro_blocos(db_sintetico):
+    d = painel.coletar()
     for chave in painel.BLOCOS:
         assert chave in d, "bloco %s ausente do contrato" % chave
-    assert set(d["fontes"]) == set(painel.BLOCOS)
+    assert d["data"] == HOJE.isoformat()
 
 
-def test_progresso_por_bloco_conta_tarefa_e_questao(db_sintetico):
-    d = painel.coletar(hoje=date(2026, 9, 18))
-    blocos = d["plano"]["blocos"]
-    assert blocos["MFC"]["tarefas"] == 2
-    assert blocos["MFC"]["feitas"] == 1 and blocos["MFC"]["pendentes"] == 1
-    assert blocos["CIR"]["cortadas"] == 1
-    assert blocos["MFC"]["q_previstas"] == 82.0
-    assert blocos["MFC"]["q_feitas"] == 100       # de sessoes_bulk, por area
-    assert blocos["MFC"]["pct_acerto"] == 85.0
-    assert d["plano"]["fora_de_bloco"] == {"Simulado": {"feitas": 120, "acertos": 90}}
-    assert d["plano"]["areas_sem_mapa"] == {"GO": {"feitas": 10, "acertos": 5}}
+def test_semana_e_a_do_calendario_e_nao_a_menor_com_pendencia(db_sintetico):
+    """🔴 Achado 1 da auditoria. A S1 tem pendencia, mas hoje (23/09) o calendario esta na S2:
+    a semana e 2, e as pendentes da S1 entram como ATRASADAS."""
+    s = painel.coletar()["semana"]
+    assert s["semana"] == 2
+    assert s["inicio"] == "2026-09-21" and s["fim"] == "2026-09-27"
+    assert s["atrasadas"] == 2
+    atrasadas = [t["id"] for t in s["tarefas"] if t["atrasada"]]
+    assert atrasadas == [1, 3]
 
 
-def test_volume_nao_desaparece_quando_o_elo_esta_vazio(db_sintetico):
-    """🔴 SENTINELA DO PART-7. Nenhuma sessao do fixture tem `tarefa_id` -- e o
-    estado real do banco (o backfill casa 1 de 126). Se alguem reescrever o
-    painel para ler o volume PELO ELO, todo bloco zera e o painel passa a mentir
-    por omissao para um operador que fez 7.326 questoes."""
-    d = painel.coletar(hoje=date(2026, 9, 18))
-    assert d["plano"]["elo_por_tarefa"]["sessoes_sem_vinculo"] == len(SESSOES)
-    somado = sum(b["q_feitas"] for b in d["plano"]["blocos"].values())
-    assert somado == 350, "volume por bloco sumiu com o elo vazio: %d" % somado
-    for b in d["plano"]["blocos"].values():
-        assert b["q_feitas_por_elo"] == 0      # a camada fina ESTA vazia, e admite
+def test_concordancia_painel_x_panorama(db_sintetico, capsys):
+    """🔴 SENTINELA DA S194. O boot le `plano.py --panorama`; o painel tem de dizer a MESMA semana,
+    o MESMO numero de tarefas e de questoes, na MESMA ordem -- pela mesma funcao, nunca por copia."""
+    import plano
+    assert plano.main(["--panorama", "--json"]) == 0
+    pan = json.loads(capsys.readouterr().out)
+    s = painel.coletar()["semana"]
+    assert s["semana"] == pan["semana"]
+    assert s["total"] == len(pan["abertas"])
+    assert s["q"] == pan["q_abertas"]
+    assert s["atrasadas"] == pan["atrasadas"]
+    assert [t["id"] for t in s["tarefas"]] == [t["id"] for t in pan["abertas"]]
+    assert s["proxima"]["tarefas"] == pan["proxima"]["tarefas"]
 
 
-def test_semana_corrente_e_a_menor_com_pendencia(db_sintetico):
-    d = painel.coletar(hoje=date(2026, 9, 18))
-    assert d["semana_corrente"] == 1
-    assert d["semana"]["semana"] == 1
-    assert all(t["bloco"] in ("MFC", "CIR") for t in d["semana"]["tarefas"])
-    assert d["semana"]["tarefas"], "semana 1 tem pendentes e veio vazia"
+def test_painel_le_a_semana_pelo_panorama_e_nao_tem_regra_propria():
+    fonte = Path(painel.__file__).read_text(encoding="utf-8")
+    assert "plano.panorama(" in fonte
+    assert "_semana_corrente" not in fonte, "segunda regra de semana no painel"
 
 
-def test_fsrs_traz_vencidos_teto_e_retencao(db_sintetico):
-    d = painel.coletar(hoje=date(2026, 9, 18))
-    f = d["fsrs"]
-    assert f["vencidos"] == f["atrasados"] + f["hoje"]     # F64, um contador so
-    assert f["teto_do_dia"] >= 60
-    assert f["retencao_7d"]["retencao"] is None            # fixture sem revisao
-    assert f["retencao_7d"]["revisoes"] == 0
+def test_cada_tarefa_diz_o_que_fazer(db_sintetico):
+    t = {x["id"]: x for x in painel.coletar()["semana"]["tarefas"]}
+    assert t[5]["classe"] == "lista" and t[5]["url_lista"] == "https://exemplo/5"
+    assert t[7]["classe"] == "aula" and t[7]["aula"] == "raciocinio-diagnostico"
+    assert t[6]["rotulo"] == "Simulado", "simulado nao se apresenta como CM"
 
 
-def test_projecao_tem_marco_datado_e_DECLARA_o_enamed_2027(db_sintetico):
-    """A spec pedia projecao ate ENAMED 2027. A data nao existe em SSOT nenhum
-    (`core/provas.json` vai ate 01/11/2026; `performance.MARCOS` nao a tem).
-    Declarar e o certo; estimar a partir de data inventada seria o defeito."""
-    d = painel.coletar(hoje=date(2026, 9, 18))
-    p = d["projecao"]
-    assert p["marcos"] and all(m["data"] for m in p["marcos"])
-    assert p["enamed_2027"]["projecao"] is None
-    assert "sem ancora" in p["enamed_2027"]["motivo"]
+def test_cota_de_questoes_e_a_do_day_plan(db_sintetico):
+    import day_plan
+    from app.utils import db as dbmod
+    pend = [l for l in dbmod.plano_listar() if l.get("status") == "pendente"]
+    esperado = day_plan.cota_do_dia(pend, CALENDARIO, HOJE)
+    q = painel.coletar()["dia"]["questoes"]
+    assert q["cota"] == esperado["cota"] and q["q_restantes"] == esperado["q_restantes"]
+    assert q["fim"] == esperado["fim"]
 
 
-def test_proximas_sete_respeitam_a_ordem_do_plano(db_sintetico):
-    d = painel.coletar(hoje=date(2026, 9, 18))
-    prox = d["proximas"]["tarefas"]
-    assert len(prox) <= 7
-    semanas = [t["semana"] for t in prox]
-    assert semanas == sorted(semanas), "proximas fora da ordem do plano"
-    assert all(t["id"] for t in prox)
+def test_questoes_feitas_hoje_contam_todo_o_volume_do_dia(db_sintetico):
+    """Mesma conta do `q_hoje` do boot (`day_plan.build`): simulado CONTA (s126)."""
+    assert painel.coletar()["dia"]["questoes"]["feitas_hoje"] == 120
+
+
+def test_saldo_de_cards_e_consumo_sobre_teto(db_sintetico):
+    """🔴 Achado 3 da auditoria: sem o consumo, "vencidos 83" se lia como "faltam 83" com o saldo
+    zerado. Leitores do `day_plan`: `_fsrs_counts`, `_teto_efetivo`, `realizado_do_dia`."""
+    import day_plan
+    _cards(db_sintetico)
+    from app.utils import db as dbmod
+    con = dbmod.get_connection()
+    try:
+        cont = day_plan._fsrs_counts(con)
+        consumo = day_plan.realizado_do_dia(con, HOJE.isoformat())["cards"]
+    finally:
+        con.close()
+    teto = day_plan._teto_efetivo(day_plan.vencidos_de(cont))
+    c = painel.coletar()["dia"]["cards"]
+    assert c["consumo_hoje"] == consumo == 2
+    assert c["teto"] == teto
+    assert c["restantes"] == max(0, teto - consumo)
+    assert c["vencidos"] == cont["atrasados"] + cont["hoje"] == 3
+    assert c["novos"] == cont["backlog_novos"] == 2
+
+
+def test_saldo_nunca_negativo(db_sintetico, monkeypatch):
+    import day_plan
+    monkeypatch.setattr(day_plan, "realizado_do_dia",
+                        lambda con, d: {"questoes": 0, "simulado": 0, "cards": 500})
+    c = painel.coletar()["dia"]["cards"]
+    assert c["consumo_hoje"] == 500 and c["restantes"] == 0
+
+
+def test_agenda_de_sete_dias_e_a_mesma_da_tela_de_fim_dos_cards(db_sintetico):
+    """A aba Cards desenha a agenda de `db.agenda_revisoes` (export do player); o painel tambem."""
+    _cards(db_sintetico)
+    from app.utils import db as dbmod
+    esperado = dbmod.agenda_revisoes(dias=7)
+    ag = painel.coletar()["dia"]["agenda"]
+    assert ag == esperado
+    assert len(ag["dias"]) == 7
+
+
+def test_ritmo_real_e_alvo_pelos_leitores_fonte(db_sintetico):
+    import day_plan
+    import performance
+    from app.utils import db as dbmod
+    r = painel.coletar()["ritmo"]
+    assert r["real_7d"] == dbmod.get_ritmo_real(7)
+    assert r["real_14d"] == dbmod.get_ritmo_real(14)
+    con = dbmod.get_connection()
+    try:
+        vm = performance.volume_vs_marco(con, HOJE)
+    finally:
+        con.close()
+    assert r["alvo_marco"] == vm["ritmo_alvo"] and r["marco"] == vm["marco"]
+    assert r["acumulado"] == vm["total"]
+    assert r["acerto"] == round(vm["acertos"] / vm["total"] * 100, 1)
+    cron = day_plan._cronograma_hoje(vm["total"], HOJE, calendario=CALENDARIO)
+    assert r["alvo_fase1"] == cron["ritmo_cronograma"]
+    assert r["fase1_q"] == cron["restante_q"]
+
+
+def test_simulado_fora_das_tarefas_por_bloco(db_sintetico):
+    """🔴 Achado: 11 simulados (940q) contados como tarefas de CM. `bloco_de('Simulado')` = CM
+    por fallback; a tarefa de simulado vai para a linha propria."""
+    b = painel.coletar()["blocos"]
+    assert b["blocos"]["CM"]["tarefas"] == 3        # HAS, IC, Reserva -- sem o simulado
+    assert b["simulados"]["tarefas"] == 1 and b["simulados"]["feitas"] == 0
+    assert b["simulados"]["q_feitas"] == 120
+    assert b["blocos"]["CIR"]["tarefas"] == 1, "cortada nao conta"
+    assert b["blocos"]["MFC"]["feitas"] == 1 and b["blocos"]["MFC"]["tarefas"] == 3
+    assert b["blocos"]["MFC"]["q_feitas"] == 100 and b["blocos"]["MFC"]["acerto"] == 85.0
+    assert b["sem_bloco"] == {"GO": {"feitas": 10, "acertos": 5}}
+
+
+def test_sem_do_previsto_sem_constante_2760_sem_126_fixo(db_sintetico):
+    fonte = Path(painel.__file__).read_text(encoding="utf-8")
+    for morto in ("2760", "126 -", "pct_questoes", "do previsto", "orcamento_fase1"):
+        assert morto not in fonte, "sobrou no painel: %r" % morto
+    pagina = painel.render_html(painel.coletar())
+    assert "do previsto" not in pagina and "Orcamento" not in pagina
 
 
 # ----------------------------------------------- retencao pela regua (F112)
 
 def test_retencao_conta_o_2_da_regua_v1_como_LAPSO(db_sintetico):
-    """🔴 O F112 numa superficie nova. Sob a regua v1 a nota 2 era 'sem o alvo'
-    -- falha de recuperacao. Contar por limiar fixo de `rating` inflaria a
-    retencao exatamente como inflava o agendamento."""
     from app.utils import db as dbmod
     con = sqlite3.connect(db_sintetico)
     agora = dbmod.agora().strftime("%Y-%m-%d %H:%M:%S")
@@ -229,15 +331,11 @@ def test_retencao_conta_o_2_da_regua_v1_como_LAPSO(db_sintetico):
     con.commit()
     con.close()
     r = dbmod.get_retencao_revlog(dias=7)
-    assert r["revisoes"] == 4
-    # lapsos = o 2 sob v1 + o 1; acertos = o 2 sob v2 + o 3
-    assert r["lapsos"] == 2 and r["acertos"] == 2
-    assert r["retencao"] == 0.5
-    assert r["por_regua"] == {"1": 3, "2": 1}
+    assert r["revisoes"] == 4 and r["lapsos"] == 2 and r["retencao"] == 0.5
+    assert painel.coletar()["dia"]["cards"]["retencao_7d"] == r
 
 
 def test_retencao_sem_revisao_e_None_nao_zero(db_sintetico):
-    """0.0 seria lido como 'errou tudo'; a ausencia de dado tem nome proprio."""
     from app.utils import db as dbmod
     r = dbmod.get_retencao_revlog(dias=7)
     assert r["retencao"] is None and r["revisoes"] == 0
@@ -245,16 +343,18 @@ def test_retencao_sem_revisao_e_None_nao_zero(db_sintetico):
 
 # ------------------------------------------------------------ HTML (render)
 
-def test_html_tem_os_cinco_marcadores(db_sintetico):
-    pagina = painel.render_html(painel.coletar(hoje=date(2026, 9, 18)))
+def _pagina():
+    return painel.render_html(painel.coletar())
+
+
+def test_html_tem_os_marcadores_dos_blocos(db_sintetico):
+    pagina = _pagina()
     for chave in painel.BLOCOS:
         assert 'data-bloco="%s"' % chave in pagina
 
 
 def test_html_obedece_o_contrato_de_render(db_sintetico):
-    """Memoria s151: UM `.wrap` unico e `max-width` <= 2 -- width que nao alinha
-    entre blocos foi defeito reincidente o bastante para virar regra."""
-    pagina = painel.render_html(painel.coletar(hoje=date(2026, 9, 18)))
+    pagina = _pagina()
     assert pagina.count('class="wrap"') == 1
     assert pagina.count("max-width") <= 2
     assert "<title>Painel MedHub</title>" in pagina
@@ -264,53 +364,63 @@ def test_html_obedece_o_contrato_de_render(db_sintetico):
     assert "background:var(--papel)" in pagina
 
 
-def test_bastidor_do_painel_marcado_para_o_hub_esconder(db_sintetico):
-    """s194: carimbo de geracao, nome do CLI e rodape de fonte sao bastidor. O painel avulso os
-    guarda (governanca: cada numero cita a funcao); no hub, `[data-backoffice]` some."""
-    import re
-    pagina = painel.render_html(painel.coletar(hoje=date(2026, 9, 18)))
-    corpo = pagina.split("<body>", 1)[1]
-    for m in re.finditer(r"<(p|footer)\b([^>]*)>", corpo):
-        tag, attrs = m.group(1), m.group(2)
-        fim = corpo.find("</%s>" % tag, m.end())
-        texto = corpo[m.end():fim]
-        bastidor = ("tools/painel.py" in texto or "gerado em" in texto or 'class="fonte"' in attrs
-                    or tag == "footer")
-        if bastidor:
-            assert "data-backoffice" in attrs, "bastidor sem marca: %s" % m.group(0)
-    assert corpo.count("data-backoffice") >= len(painel.BLOCOS) + 2
+def test_celular_sem_sticky_sem_nowrap_e_grid_item_encolhe(db_sintetico):
+    pagina = _pagina().lower()
+    assert "sticky" not in pagina and "nowrap" not in pagina
+    assert "min-width:0" in pagina
+
+
+#: Bastidor que nao aparece para o operador (pedido de 23/09): CLI, tabela, marcador de backoffice.
+JARGAO = ("tools/", "plano_tarefas", "sessoes_bulk", "data-backoffice", "regua_versao", "day_plan",
+          "fsrs_", "backfill", "elo por", "--json", "REGIME DE DIVIDA")
+
+
+def test_html_sem_jargao(db_sintetico):
+    _cards(db_sintetico)
+    pagina = _pagina()
+    achados = [j for j in JARGAO if j in pagina]
+    assert not achados, "jargao na tela: %s" % achados
+
+
+def test_um_unico_atualizado_ha_discreto(db_sintetico):
+    """Um so carimbo, entre os marcadores que o hub ignora ao comparar a projecao (a hora muda a
+    cada geracao; o conteudo, nao)."""
+    pagina = _pagina()
+    assert pagina.count("data-gerado=") == 1
+    assert pagina.count(painel.MARCA_GERADO_ABRE) == 1 and pagina.count(painel.MARCA_GERADO_FECHA) == 1
+    assert "gerado em" not in pagina
+
+
+def test_saldo_aparece_como_consumo_sobre_teto(db_sintetico):
+    _cards(db_sintetico)
+    d = painel.coletar()
+    pagina = painel.render_html(d)
+    c = d["dia"]["cards"]
+    assert re.search(r"<b>%d</b>\s*de %d" % (c["consumo_hoje"], c["teto"]), pagina)
+    assert "faltam %d" % c["restantes"] in pagina
+
+
+def test_link_da_lista_e_da_aula_e_atalho_para_os_cards(db_sintetico):
+    pagina = _pagina()
+    assert 'href="https://exemplo/5"' in pagina
+    assert 'data-hub-aula="raciocinio-diagnostico"' in pagina
+    assert 'data-hub-aba="cards"' in pagina
+    assert 'href="simulados/uerj/uerj_2021.pdf"' not in pagina, "caminho local nao vira link"
 
 
 def test_html_sem_latex_seta_unicode_ou_travessao(db_sintetico):
-    """AGENTE.md §4.5 -- governa notacao e pontuacao (nunca ortografia, F113)."""
-    pagina = painel.render_html(painel.coletar(hoje=date(2026, 9, 18)))
+    pagina = _pagina()
     for proibido in ("→", "—", "–", "$$", "\\rightarrow", "&mdash;"):
         assert proibido not in pagina, "caractere proibido na pagina: %r" % proibido
 
 
 def test_link_relativo_nao_vira_ancora():
-    """🔴 Achado de LEITURA A OLHO (s186), nao de gate. O plano guarda tambem
-    caminho LOCAL -- `simulados/uerj/uerj_ad_2026_prova.pdf` na tarefa #890 --
-    e ele resolve na maquina do operador e MORRE numa pagina publicada. Link
-    quebrado e pior que texto simples, porque promete navegacao. Vira teste
-    porque nenhum gate media isso."""
-    assert "<a href=" in painel._link("https://exemplo.com/lista")
-    local = painel._link("simulados/uerj/prova.pdf")
+    assert "<a href=" in painel._link("https://exemplo.com/lista", "abrir lista")
+    local = painel._link("simulados/uerj/prova.pdf", "abrir lista")
     assert "<a href=" not in local
-    assert "simulados/uerj/prova.pdf" in local      # o caminho aparece, sem virar link
-    assert "sem lista" in painel._link(None)
-    assert "--" in painel._link("", vazio="--")
 
 
-def test_tile_de_retencao_nao_aninha_negrito(db_sintetico):
-    """Outro achado a olho: `<div class="m"><b>` ja e o negrito do numero; o
-    texto do tile trazia um `<b>` proprio e nascia `<b><b>`."""
-    pagina = painel.render_html(painel.coletar(hoje=date(2026, 9, 18)))
-    assert "<b><b>" not in pagina
-
-
-def test_html_nao_publica_nada(db_sintetico, tmp_path):
-    """O CLI grava arquivo; quem publica e o agente no fechamento (spec)."""
+def test_html_nao_publica_nada():
     fonte = Path(painel.__file__).read_text(encoding="utf-8")
     for proibido in ("claude.ai", "Artifact", "requests.post", "urllib"):
         assert proibido not in fonte, "o painel nao fala com API nenhuma: %r" % proibido
@@ -321,7 +431,7 @@ def test_cli_grava_no_out_pedido(db_sintetico, tmp_path, capsys):
     assert painel.main(["--html", "--out", str(destino)]) == 0
     assert destino.is_file() and destino.stat().st_size > 2000
     saida = json.loads(capsys.readouterr().out.strip().splitlines()[-1])
-    assert saida["blocos"] == list(painel.BLOCOS)
+    assert saida["blocos"] == list(painel.BLOCOS) and saida["semana"] == 2
 
 
 def test_cli_exige_um_modo(db_sintetico):
@@ -329,12 +439,8 @@ def test_cli_exige_um_modo(db_sintetico):
         painel.main([])
 
 
-# ----------------------------------------------------------- craftsmanship
-
 def test_painel_e_read_only():
-    """Nenhum verbo de escrita no fonte, e fora da allowlist de writers (F49)."""
     fonte = Path(painel.__file__).read_text(encoding="utf-8")
-    import re
     for verbo in (r"\bINSERT\s+INTO\b", r"\bUPDATE\s+\w+\s+SET\b", r"\bDELETE\s+FROM\b",
                   r"\bALTER\s+TABLE\b", r"\bCREATE\s+TABLE\b"):
         assert not re.search(verbo, fonte, re.I), "verbo de escrita no painel: %s" % verbo

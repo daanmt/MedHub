@@ -1,42 +1,38 @@
 #!/usr/bin/env python3
-"""Painel de progresso do MedHub -- pagina gerada do banco (part-7, s186).
+"""Painel de progresso do MedHub -- pagina gerada do banco (part-7, s186; refeito na s194).
 
-READ-ONLY ABSOLUTO. Nao abre `sqlite3` por conta propria (AGENTE.md secao 6: CLI
-nao faz SQL direto) e nao aparece na allowlist de writers (F49). Toda leitura
-passa por funcao ja existente:
+READ-ONLY ABSOLUTO. Nao abre `sqlite3` por conta propria (AGENTE.md secao 6: CLI nao faz SQL
+direto) e nao aparece na allowlist de writers (F49). Todo numero sai de um leitor que JA existe e
+que outra superficie tambem usa -- o painel nao tem regra propria de semana, de teto nem de ritmo:
 
-    plano/listas  -> `tools/listas.py` (progresso, pendentes)  [plano]
-    volume/custo  -> `tools/performance.py`                    [performance]
-    FSRS          -> `tools/day_plan.py` + `app/utils/db.py`   [db]
+    semana e listas   -> `plano.panorama` (o MESMO do `plano.py --panorama` do boot)
+    cota do dia       -> `day_plan.cota_do_dia` (o MESMO do Plano do Dia)
+    saldo de cards    -> `day_plan._fsrs_counts` + `_teto_efetivo` + `realizado_do_dia`
+    agenda de 7 dias  -> `db.agenda_revisoes` (o MESMO da tela de fim da aba Cards)
+    ritmo             -> `db.get_ritmo_real` + `performance.volume_vs_marco` + `day_plan._cronograma_hoje`
+    retencao          -> `db.get_retencao_revlog` (pela regua de cada linha, F112)
+    volume por bloco  -> `db.sessoes_bulk_listar` + `db.bloco_de` + `areas.AREAS_AGREGADAS`
 
-Por que existe: quando o Drive congelar (part-8) o operador perde as 20 tabelas
-do Dashboard. O dado todo ja vive no banco -- o que faltava era uma superficie.
+s194 (auditoria de fidelidade de 23/09/2026, pedido do operador): a semana era a MENOR com
+pendencia (o boot usa a de calendario: um dizia S1, o outro S2); o saldo de cards nao aparecia (se
+lia "faltam 83" com o saldo zerado); a coluna de percentual sobre o previsto dividia volume
+historico por um plano com cortadas e simulados; o numero de sessoes fixo no codigo e a constante
+do orcamento da Fase 1 envelheceram; e o simulado contava como
+tarefa de CM (`bloco_de('Simulado')` = CM por fallback). Tudo isso saiu ou foi trocado pelo
+leitor-fonte, e cada numero tem teste que o amarra a ele (`tools/test_painel.py`).
 
---json e o CONTRATO (o que os testes provam); --html e o render. O CLI **nao**
-publica: quem publica e o agente no fechamento de sessao, com `url` fixa, para a
-pagina manter o mesmo endereco (`.agents/workflows/registrar-sessao.md`).
+--json e o CONTRATO (o que os testes provam); --html e o render. O CLI **nao** publica: a pagina
+vai no hub (`tools/hub.py --build`), e o tique do /hub-backend a regenera e republica quando o
+conteudo muda (o carimbo de hora fica entre `MARCA_GERADO_*`, fora da comparacao).
 
---------------------------------------------------------------------------
-Fronteiras DECLARADAS (numero que nao existe nao vira numero bonito)
---------------------------------------------------------------------------
-1. **ENAMED 2027 nao tem projecao** porque nao tem ancora: nao esta em
-   `core/provas.json` (que vai ate UERJ/MFC 01/11/2026) nem em
-   `performance.MARCOS`. O painel DIZ isso no bloco, em vez de estimar a partir
-   de uma data inventada. Vira numero no dia em que o operador cadastrar a data.
-2. **Volume sem vinculo e reportado, nao escondido.** Hoje 126 sessoes / 7.326
-   questoes nao estao ligadas a nenhuma tarefa do plano (o backfill do part-6
-   nao rodou). Um painel que mostrasse so o volume vinculado exibiria ~0% de
-   progresso com o operador tendo estudado o ano inteiro -- por isso o bloco
-   carrega o nao-vinculado ao lado, com o nome do que falta rodar.
-3. **Retencao passa pela regua** (`db.get_retencao_revlog`): nota 2 dada sob a
-   regua v1 e LAPSO, sob a v2 e acerto. Contar por limiar fixo de `rating`
-   inflaria a retencao exatamente como o F112 inflava o agendamento.
+Fronteira DECLARADA: area fantasma (F89, ex.: `GO` solto) nao vira CM por fallback; o volume dela
+aparece nomeado, fora dos blocos.
 """
 import argparse
 import html
 import json
 import sys
-from datetime import date, datetime
+from datetime import date
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -49,60 +45,30 @@ from app.utils import db                                          # noqa: E402
 
 TITULO = "Painel MedHub"
 SAIDA_HTML = ROOT / "artifacts" / "painel.html"
+QUADRO = ROOT / "core" / "hub_quadro.json"
 
-#: Ordem dos blocos na pagina. O `id` e o `data-bloco` do HTML e a chave do JSON
-#: -- um nome so para as duas superficies (o teste casa por ele).
-BLOCOS = ("plano", "semana", "fsrs", "projecao", "proximas")
+#: Ordem dos blocos na pagina. O `id` e o `data-bloco` do HTML e a chave do JSON.
+BLOCOS = ("dia", "semana", "ritmo", "blocos")
 
-FONTES = {
-    "plano": "[plano] tools/listas.py --progresso · [db] plano_tarefas",
-    "semana": "[plano] tools/listas.py --pendentes --semana N",
-    "fsrs": "[db] day_plan._fsrs_counts · db.get_retencao_revlog · app/utils/regua",
-    "projecao": "[performance] volume_vs_marco · METAS_MENSAIS · [db] sessoes_bulk",
-    "proximas": "[plano] db.plano_listar(status='pendente')",
-}
+#: O carimbo de geracao mora entre estes marcadores: o hub os ignora ao comparar a projecao
+#: publicada (a hora muda a cada geracao; o conteudo, nao).
+MARCA_GERADO_ABRE = "<!--gerado-->"
+MARCA_GERADO_FECHA = "<!--/gerado-->"
+
+#: Tarefas da semana a vista antes do "ver as outras".
+VISIVEIS_SEMANA = 6
+
+DIAS_SEMANA = ("seg", "ter", "qua", "qui", "sex", "sáb", "dom")
+DIAS_EXTENSO = ("segunda", "terça", "quarta", "quinta", "sexta", "sábado", "domingo")
 
 
 # ------------------------------------------------------------------ coleta
 
-def _semana_corrente():
-    """Semana do plano com alguma tarefa pendente -- a menor. `None` se o plano
-    acabou ou nao foi semeado."""
-    pendentes = [t for t in db.plano_listar(status="pendente")
-                 if t.get("semana_plano") is not None]
-    if not pendentes:
-        return None
-    return min(int(t["semana_plano"]) for t in pendentes)
-
-
-#: Sumidouro mudo: os leitores de `listas.py` imprimem o relatorio de terminal
-#: por default. O painel quer o PAYLOAD, nao o texto -- injeta um sink que
-#: descarta, mesmo padrao de `plano.listar(out=...)`.
-def _mudo(*_a, **_k):
-    return None
-
-
 def _volume_por_bloco(sessoes):
-    """Questoes FEITAS por bloco UERJ, de `sessoes_bulk`, em tres cestas.
-
-    🔴 Por que NAO pelo elo `sessoes_bulk.tarefa_id` (part-6): medido em
-    18/09/2026, o backfill casa **1 de 126 sessoes** de forma inequivoca (37
-    ambiguas, 78 sem match). Um painel alimentado so pelo elo mostraria ~0
-    questoes feitas em todo bloco com o operador tendo feito 7.326 -- verde falso
-    ao contrario. As duas camadas convivem, rotuladas: VOLUME (cobre tudo,
-    granularidade area) e ELO (granularidade tarefa, cobertura hoje parcial).
-
-    Zero vocabulario novo aqui -- as tres cestas saem de portadores que ja
-    existem, e essa e a licao do F89 aplicada a este arquivo:
-      `areas.AREAS_AGREGADAS`  -> `Simulado` e termometro, nao bloco. Vale 931
-                                  das 7.326 questoes (12,7%): dobrado em CM pelo
-                                  fallback do `bloco_de`, inflaria um oitavo.
-      `areas.area_valida`      -> area FANTASMA (F89, ex.: `GO` solto) nao vira
-                                  CM por fallback silencioso; fica nomeada.
-      `db.bloco_de`            -> o mapa area -> bloco, ja canonico. Uma copia
-                                  minha aqui seria um segundo vocabulario, que e
-                                  exatamente o defeito que o F89 registrou.
-    """
+    """Questoes FEITAS por bloco UERJ, de `sessoes_bulk`, em tres cestas (licao do F89):
+    `areas.AREAS_AGREGADAS` (Simulado: termometro, nao bloco), `areas.area_valida` (area fantasma
+    fica nomeada) e `db.bloco_de` (o mapa canonico area -> bloco; copia aqui seria um 2o
+    vocabulario)."""
     from app.utils import areas
     por_bloco, agregadas, fantasmas = {}, {}, {}
     for s in sessoes:
@@ -120,175 +86,158 @@ def _volume_por_bloco(sessoes):
     return por_bloco, agregadas, fantasmas
 
 
-def _bloco_plano():
-    import listas
-    _code, prog = listas.progresso(como_json=True, out=_mudo)
-    todas = db.plano_listar()
-    sessoes = db.sessoes_bulk_listar()
-    vol, fora, sem_mapa = _volume_por_bloco(sessoes)
-
-    por_bloco = {}
-    for t in todas:
-        b = por_bloco.setdefault(t.get("bloco") or "CM", {
-            "tarefas": 0, "feitas": 0, "pendentes": 0, "cortadas": 0,
-            "q_previstas": 0.0})
-        b["tarefas"] += 1
-        status = (t.get("status") or "pendente").lower()
-        if status == "feita":
-            b["feitas"] += 1
-        elif status in ("cortada", "cortado"):
-            b["cortadas"] += 1
-        else:
-            b["pendentes"] += 1
-        b["q_previstas"] += float(t.get("q_previstas") or 0)
-    for nome, b in por_bloco.items():
-        v = vol.get(nome) or {}
-        b["q_feitas"] = int(v.get("feitas") or 0)
-        b["q_acertos"] = int(v.get("acertos") or 0)
-        b["pct_acerto"] = (round(b["q_acertos"] / b["q_feitas"] * 100, 1)
-                           if b["q_feitas"] else None)
-        b["pct_tarefas"] = (round(b["feitas"] / b["tarefas"] * 100, 1)
-                            if b["tarefas"] else None)
-        b["pct_questoes"] = (round(b["q_feitas"] / b["q_previstas"] * 100, 1)
-                             if b["q_previstas"] else None)
-        # camada fina: o que o ELO por tarefa enxerga hoje (part-6)
-        b["q_feitas_por_elo"] = int((prog.get("blocos", {}).get(nome) or {})
-                                    .get("feitas") or 0)
-
-    sv = prog.get("sem_vinculo") or {}
-    return {
-        "blocos": dict(sorted(por_bloco.items())),
-        "fora_de_bloco": fora,
-        "areas_sem_mapa": sem_mapa,
-        "orcamento_fase1": prog.get("orcamento_fase1"),
-        "elo_por_tarefa": {
-            "sessoes_sem_vinculo": sv.get("sessoes"),
-            "questoes_sem_vinculo": sv.get("questoes"),
-            "nota": ("o volume acima vem de `sessoes_bulk` por AREA (cobre tudo). "
-                     "O elo por TAREFA (`tarefa_id`, part-6) cobre %s sessao(oes): "
-                     "o backfill casa 1 de 126 de forma inequivoca, entao a coluna "
-                     "`q_feitas_por_elo` e granularidade fina com cobertura parcial "
-                     "-- declarada, nao escondida."
-                     % max(0, 126 - int(sv.get("sessoes") or 0))),
-        },
-    }
-
-
-def _bloco_semana(semana):
-    import listas
-    if semana is None:
-        return {"semana": None, "tarefas": [], "nota": "plano sem tarefa pendente"}
-    _code, pend = listas.pendentes(semana=semana, como_json=True, out=_mudo)
-    tarefas = [{
-        "id": t["id"], "bloco": t["bloco"], "tema": t["tema"],
-        "tipo": t["tipo_norm"], "q_previstas": t["q_previstas"],
-        "feitas": t["feitas"], "url_lista": t["url_lista"],
-    } for t in pend.get("tarefas", [])]
-    return {
-        "semana": semana,
-        "tarefas": tarefas,
-        "total": len(tarefas),
-        "q_previstas": round(sum(t["q_previstas"] for t in tarefas), 1),
-    }
-
-
-def _bloco_fsrs():
-    import day_plan
-    con = db.get_connection()
+def _aulas_por_tarefa():
+    """{tarefa_id: slug} do registro do quadro de aulas (`core/hub_quadro.json`). Ilegivel ou
+    ausente = {} (a tarefa de aula so perde o atalho; o numero nao muda)."""
     try:
-        contagens = day_plan._fsrs_counts(con)
-    finally:
-        con.close()
-    vencidos = day_plan.vencidos_de(contagens)
-    teto = day_plan._teto_efetivo(vencidos)
-    ret = db.get_retencao_revlog(dias=7)
-    return {
-        "atrasados": contagens["atrasados"],
-        "hoje": contagens["hoje"],
-        "vencidos": vencidos,
-        "pool_novos": contagens["backlog_novos"],
-        "teto_do_dia": teto,
-        "regime_divida": teto > day_plan.TETO_BASE,
-        "retencao_7d": ret,
-    }
+        reg = json.loads(QUADRO.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {}
+    saida = {}
+    for slug, item in (reg.get("itens") or {}).items():
+        tid = (item or {}).get("tarefa_id")
+        if tid is not None:
+            saida[int(tid)] = slug
+    return saida
 
 
-def _bloco_projecao(hoje=None):
-    import performance
-    hoje = hoje or date.today()
-    con = db.get_connection()
-    try:
-        vol = performance.volume_vs_marco(con, hoje)
-        total_q, _ = performance.get_totais(con)
-        mes = hoje.strftime("%Y-%m")
-        q_mes = performance.get_questoes_do_mes(con, mes)
-    finally:
-        con.close()
-    metas = performance.METAS_MENSAIS.get(mes)
-    custo_acum = None
-    if metas and total_q:
-        custo_acum = round(metas["investimento"] / total_q, 3)
-    marcos = []
-    for nome, alvo, data_marco in performance.MARCOS:
-        if not data_marco:
-            continue
-        dias = (data_marco - hoje).days
-        faltam = max(0, alvo - (total_q or 0))
-        marcos.append({
-            "nome": nome, "meta": alvo, "data": data_marco.isoformat(),
-            "dias": dias, "faltam": faltam,
-            "ritmo_alvo": (round(faltam / dias, 1) if dias > 0 else None),
+def _bloco_semana(linhas, hoje):
+    """A semana corrente e as abertas pela MESMA funcao do boot (`plano.panorama`)."""
+    import plano
+    pan = plano.panorama(linhas, plano.calendario_trilha(), hoje)
+    if not pan:
+        return {"semana": None, "tarefas": [], "total": 0, "q": 0, "atrasadas": 0,
+                "inicio": None, "fim": None, "dias": None, "proxima": None}
+    from app.utils import areas
+    aulas = _aulas_por_tarefa()
+    tarefas = []
+    for t in pan["abertas"]:
+        agregada = t.get("area") in areas.AREAS_AGREGADAS
+        tarefas.append({
+            "id": t["id"], "semana": t["semana"], "atrasada": t["atrasada"],
+            "tema": t["tema"], "q": t["q"], "classe": t["classe"],
+            "url_lista": t["url_lista"],
+            # simulado se apresenta como simulado, nunca pelo bloco de fallback (CM)
+            "rotulo": t.get("area") if agregada else (t.get("bloco") or t.get("area")),
+            "aula": aulas.get(t["id"]),
         })
     return {
-        "acumulado": vol["total"],
-        "acertos": vol["acertos"],
-        "pct": (round(vol["acertos"] / vol["total"] * 100, 1) if vol["total"] else None),
-        "marco_corrente": vol,
-        "marcos": marcos,
-        "custo": {
-            "mes": mes,
-            "questoes_no_mes": q_mes,
-            "acumulado_por_questao": custo_acum,
-            "meta_por_questao": performance.META_CUSTO_Q,
-        },
-        # Fronteira 1 -- declarada, nunca estimada.
-        "enamed_2027": {
-            "projecao": None,
-            "motivo": ("sem ancora: ENAMED 2027 nao esta em `core/provas.json` "
-                       "nem em `performance.MARCOS`. Cadastre a data para o "
-                       "painel projetar em vez de adivinhar."),
-        },
+        "semana": pan["semana"], "inicio": pan["inicio"], "fim": pan["fim"],
+        "dias": pan["dias"], "tarefas": tarefas, "total": len(tarefas),
+        "q": pan["q_abertas"], "atrasadas": pan["atrasadas"],
+        "feitas_semana": pan["feitas_semana"], "tarefas_semana": pan["tarefas_semana"],
+        "proxima": pan["proxima"],
     }
 
 
-def _bloco_proximas(n=7):
-    # A ORDEM ja vem de `plano_listar` (`ORDER BY semana_plano, ordem, fonte, ...`).
-    # Re-ordenar aqui seria uma segunda regra de ordenacao do plano -- a mesma
-    # classe de defeito do mapa de bloco duplicado. Pega-se o topo e pronto.
-    pend = db.plano_listar(status="pendente")
-    return {"n": n, "tarefas": [{
-        "id": t["id"], "semana": t.get("semana_plano"), "bloco": t.get("bloco"),
-        "area": t.get("area"), "tema": t.get("tema"), "tipo": t.get("tipo_norm"),
-        "q_previstas": float(t.get("q_previstas") or 0),
-        "url_lista": t.get("url_lista"),
-    } for t in pend[:n]]}
+def _bloco_dia(linhas, hoje):
+    """Hoje: cota de questoes, saldo de cards e a agenda de 7 dias -- leitores do `day_plan` e o
+    `db.agenda_revisoes` do export do player."""
+    import day_plan
+    pendentes = [l for l in linhas if l.get("status") == "pendente"]
+    cota = day_plan.cota_do_dia(pendentes, day_plan._calendario_trilha(), hoje)
+    feitas_hoje = sum(int(s.get("questoes_feitas") or 0) for s in db.sessoes_bulk_listar()
+                      if str(s.get("data_sessao") or "")[:10] == hoje.isoformat())
+    con = db.get_connection()
+    try:
+        cont = day_plan._fsrs_counts(con)
+        try:
+            consumo = int(day_plan.realizado_do_dia(con, hoje.isoformat())["cards"])
+        except Exception:  # noqa: BLE001 -- sem contador: sem saldo, declarado na tela
+            consumo = None
+    finally:
+        con.close()
+    vencidos = day_plan.vencidos_de(cont)
+    teto = int(day_plan._teto_efetivo(vencidos))
+    return {
+        "questoes": {
+            "feitas_hoje": feitas_hoje,
+            "cota": (cota or {}).get("cota"),
+            "q_restantes": (cota or {}).get("q_restantes"),
+            "q_atrasadas": (cota or {}).get("q_atrasadas"),
+            "semana": (cota or {}).get("semana"),
+            "fim": (cota or {}).get("fim"),
+            "dias": (cota or {}).get("dias"),
+        },
+        "cards": {
+            "vencidos": vencidos,
+            "novos": cont["backlog_novos"],
+            "teto": teto,
+            "consumo_hoje": consumo,
+            "restantes": None if consumo is None else max(0, teto - consumo),
+            "retencao_7d": db.get_retencao_revlog(dias=7),
+        },
+        "agenda": db.agenda_revisoes(dias=7),
+    }
+
+
+def _bloco_ritmo(hoje):
+    """Real (7 e 14 dias) ao lado do alvo ate a UERJ (o marco de volume do boot) e da Fase 1."""
+    import day_plan
+    import performance
+    con = db.get_connection()
+    try:
+        vm = performance.volume_vs_marco(con, hoje)
+    finally:
+        con.close()
+    cron = day_plan._cronograma_hoje(vm["total"], hoje) or {}
+    return {
+        "real_7d": db.get_ritmo_real(7),
+        "real_14d": db.get_ritmo_real(14),
+        "marco": vm["marco"],
+        "meta": vm["meta"],
+        "faltam": vm["faltam"],
+        "dias_marco": vm["dias"],
+        "alvo_marco": vm["ritmo_alvo"],
+        "alvo_fase1": cron.get("ritmo_cronograma"),
+        "fase1_q": cron.get("restante_q"),
+        "fim_fase1": cron.get("fim_conteudo_alvo"),
+        "acumulado": vm["total"],
+        "acerto": (round(vm["acertos"] / vm["total"] * 100, 1) if vm["total"] else None),
+    }
+
+
+def _bloco_blocos(linhas):
+    """Tarefas e volume por bloco. Simulado (area agregada) sai para a linha propria; cortada nao
+    conta. Sem percentual sobre o previsto: o volume historico nao depende do plano."""
+    from app.utils import areas
+    vol, agregadas, fantasmas = _volume_por_bloco(db.sessoes_bulk_listar())
+    blocos, sim = {}, {"tarefas": 0, "feitas": 0}
+    for t in linhas:
+        status = (t.get("status") or "pendente").lower()
+        if status in ("cortada", "cortado"):
+            continue
+        if t.get("area") in areas.AREAS_AGREGADAS:
+            alvo = sim
+        else:
+            alvo = blocos.setdefault(t.get("bloco") or db.bloco_de(t.get("area")),
+                                     {"tarefas": 0, "feitas": 0})
+        alvo["tarefas"] += 1
+        alvo["feitas"] += status == "feita"
+    for nome in set(blocos) | set(vol):
+        b = blocos.setdefault(nome, {"tarefas": 0, "feitas": 0})
+        v = vol.get(nome) or {}
+        b["q_feitas"] = int(v.get("feitas") or 0)
+        b["acerto"] = (round(v["acertos"] / v["feitas"] * 100, 1) if v.get("feitas") else None)
+    sv = {"feitas": sum(v["feitas"] for v in agregadas.values()),
+          "acertos": sum(v["acertos"] for v in agregadas.values())}
+    sim["q_feitas"] = sv["feitas"]
+    sim["acerto"] = round(sv["acertos"] / sv["feitas"] * 100, 1) if sv["feitas"] else None
+    return {"blocos": dict(sorted(blocos.items())), "simulados": sim, "sem_bloco": fantasmas}
 
 
 def coletar(hoje=None):
-    """O contrato do painel. Dict com os 5 blocos + metadados. Read-only."""
-    hoje = hoje or date.today()
-    semana = _semana_corrente()
+    """O contrato do painel. Dict com os 4 blocos + metadados. Read-only."""
+    hoje = hoje or db.hoje()
+    linhas = db.plano_listar()
     return {
-        "gerado_em": datetime.now().isoformat(timespec="seconds"),
-        "hoje": hoje.isoformat(),
+        "gerado_em": db.agora().isoformat(timespec="seconds"),
+        "data": hoje.isoformat(),
         "titulo": TITULO,
-        "semana_corrente": semana,
-        "plano": _bloco_plano(),
-        "semana": _bloco_semana(semana),
-        "fsrs": _bloco_fsrs(),
-        "projecao": _bloco_projecao(hoje),
-        "proximas": _bloco_proximas(),
-        "fontes": FONTES,
+        "dia": _bloco_dia(linhas, hoje),
+        "semana": _bloco_semana(linhas, hoje),
+        "ritmo": _bloco_ritmo(hoje),
+        "blocos": _bloco_blocos(linhas),
     }
 
 
@@ -298,191 +247,200 @@ def _e(v):
     return html.escape("" if v is None else str(v), quote=True)
 
 
-def _num(v, casas=0, vazio="--"):
+def _n(v, casas=0, vazio="--"):
+    """Numero em pt-BR: milhar com ponto, decimal com virgula."""
     if v is None:
         return vazio
-    return ("%%.%df" % casas) % v
+    txt = ("{:,.%df}" % casas).format(float(v))
+    return txt.replace(",", "X").replace(".", ",").replace("X", ".")
 
 
-def _barra(pct):
-    p = max(0.0, min(100.0, float(pct or 0)))
-    return '<div class="barra"><i style="width:%.1f%%"></i></div>' % p
+def _dm(iso):
+    return "%s/%s" % (iso[8:10], iso[5:7]) if iso else "?"
 
 
-def _link(url, vazio="sem lista"):
-    """`<a>` so para URL ABSOLUTA. O plano guarda tambem caminho LOCAL (ex.:
-    `simulados/uerj/uerj_ad_2026_prova.pdf`), que resolve na maquina e morre numa
-    pagina publicada -- link quebrado e pior que texto, porque promete."""
-    if not url:
-        return '<span class="tenue">%s</span>' % _e(vazio)
-    if str(url).startswith(("http://", "https://")):
-        return '<a href="%s" rel="noopener noreferrer">lista</a>' % _e(url)
-    return '<span class="tenue" title="caminho local, nao navegavel aqui">%s</span>' % _e(url)
+def _dia_curto(iso):
+    d = date.fromisoformat(iso)
+    return "%s %s" % (DIAS_SEMANA[d.weekday()], d.strftime("%d/%m"))
 
 
-def _reguas_legivel(por_regua):
-    """`{"1": 304}` -> `v1: 304`. Repr de dict na tela e vazamento de estrutura."""
-    if not por_regua:
-        return "nenhuma"
-    return " · ".join("v%s: %d" % (k, v) for k, v in sorted(por_regua.items()))
+def _link(url, texto):
+    """`<a>` so para URL ABSOLUTA. O plano guarda tambem caminho LOCAL (a prova em PDF), que
+    resolve na maquina e morre numa pagina publicada -- link quebrado promete e nao entrega."""
+    if url and str(url).startswith(("http://", "https://")):
+        return '<a href="%s" rel="noopener noreferrer">%s</a>' % (_e(url), _e(texto))
+    return '<span class="tenue">%s</span>' % _e(texto)
 
 
-def _rodape(chave):
-    # data-backoffice (s194): governanca do painel avulso; o hub esconde na aba Painel.
-    return '<p class="fonte" data-backoffice>%s</p>' % _e(FONTES[chave])
+def _pct(parte, todo):
+    if not todo:
+        return 0.0
+    return max(0.0, min(100.0, 100.0 * float(parte or 0) / float(todo)))
 
 
-def _sec(chave, titulo, corpo):
-    return ('<section class="bloco" data-bloco="%s">\n  <h2>%s</h2>\n%s\n%s\n'
-            '</section>' % (_e(chave), _e(titulo), corpo, _rodape(chave)))
+def _acao(t):
+    c = t["classe"]
+    if c == "lista":
+        if t["url_lista"] and str(t["url_lista"]).startswith(("http://", "https://")):
+            return _link(t["url_lista"], "abrir lista")
+        return '<span class="tenue">prova em PDF no computador</span>'
+    if c == "aula":
+        if t.get("aula"):
+            return ('<a href="aulas/%s.html" data-hub-aula="%s">abrir aula</a>'
+                    % (_e(t["aula"]), _e(t["aula"])))
+        return '<span class="tenue">aula a preparar</span>'
+    if c == "caderno":
+        return '<span class="tenue">montar caderno no banco</span>'
+    return '<span class="tenue">sem lista ainda</span>'
 
 
-def _html_plano(d):
-    linhas = []
-    for nome, b in d["blocos"].items():
-        linhas.append(
-            '<tr><th scope="row">%s</th><td>%d/%d</td><td>%d</td><td>%d</td>'
-            '<td>%s / %s</td><td>%s</td><td>%s</td></tr>' % (
-                _e(nome), b["feitas"], b["tarefas"], b["pendentes"], b["cortadas"],
-                _num(b["q_feitas"]), _num(b["q_previstas"]),
-                (_num(b["pct_questoes"], 1) + "%") if b["pct_questoes"] is not None else "--",
-                (_num(b["pct_acerto"], 1) + "%") if b["pct_acerto"] is not None else "--"))
-    for nome, v in sorted((d.get("fora_de_bloco") or {}).items()):
-        pct = ((_num(v["acertos"] / v["feitas"] * 100, 1) + "%") if v["feitas"] else "--")
-        linhas.append('<tr><th scope="row">%s <span class="tenue">fora dos blocos'
-                      '</span></th><td>--</td><td>--</td><td>--</td><td>%s / --</td>'
-                      '<td>--</td><td>%s</td></tr>'
-                      % (_e(nome), _num(v["feitas"]), pct))
-    orc = d.get("orcamento_fase1") or {}
-    corpo = ['<table><thead><tr><th>bloco</th><th>tarefas feitas</th><th>pendentes</th>'
-             '<th>cortadas</th><th>questoes feitas / previstas</th>'
-             '<th>do previsto</th><th>acerto</th>'
-             '</tr></thead><tbody>%s</tbody></table>'
-             % ("".join(linhas) or '<tr><td colspan="7">plano sem tarefas</td></tr>')]
-    if orc:
-        corpo.append('<p class="metro">Orcamento Fase 1 (semanas 1-7): <b>%d</b> de %d '
-                     'questoes <b>vinculadas a tarefa</b> (%s%%)</p>%s'
-                     % (orc.get("feitas", 0), orc.get("orcamento", 0),
-                        _num(orc.get("pct"), 1), _barra(orc.get("pct"))))
-    elo = d.get("elo_por_tarefa") or {}
-    if elo.get("nota"):
-        corpo.append('<p class="aviso"><b>Duas camadas, e elas medem coisas '
-                     'diferentes.</b> %s</p>' % _e(elo["nota"]))
-    sm = d.get("areas_sem_mapa") or {}
-    if sm:
-        corpo.append('<p class="metro tenue">Areas sem bloco no plano (ficam fora da '
-                     'tabela, nunca somadas a palpite): %s.</p>'
-                     % _e(", ".join("%s (%dq)" % (k, v["feitas"])
-                                    for k, v in sorted(sm.items()))))
-    return "\n".join(corpo)
+def _html_dia(d, data_iso):
+    hoje = date.fromisoformat(data_iso)
+    q, c, ag = d["questoes"], d["cards"], d["agenda"]
+
+    if q["cota"] is not None:
+        partes = ["cota de ~%s por dia até %s" % (_n(q["cota"]), _dia_curto(q["fim"]))]
+        if q["q_atrasadas"]:
+            partes.append("inclui %s de semana atrasada" % _n(q["q_atrasadas"]))
+        nota_q = "; ".join(partes) + "."
+        num_q = '<b>%s</b> de ~%s' % (_n(q["feitas_hoje"]), _n(q["cota"]))
+        barra_q = _pct(q["feitas_hoje"], q["cota"])
+    else:
+        nota_q = "sem cota: o calendário do plano acabou."
+        num_q = '<b>%s</b> feitas' % _n(q["feitas_hoje"])
+        barra_q = 0.0
+
+    if c["consumo_hoje"] is None:
+        num_c = '<b>--</b> de %s' % _n(c["teto"])
+        nota_c = "não consegui contar as revisões de hoje."
+        barra_c = 0.0
+    else:
+        num_c = '<b>%s</b> de %s' % (_n(c["consumo_hoje"]), _n(c["teto"]))
+        barra_c = _pct(c["consumo_hoje"], c["teto"])
+        nota_c = ("faltam %d: saldo do dia cumprido." % c["restantes"] if c["restantes"] == 0
+                  else "faltam %d hoje." % c["restantes"])
+    ret = c["retencao_7d"]
+    extra_c = ["%s vencidos agora" % _n(c["vencidos"]), "%s novos esperando" % _n(c["novos"])]
+    if ret.get("retencao") is not None:
+        extra_c.append("retenção de %s%% em 7 dias" % _n(ret["retencao"] * 100, 1))
+
+    maior = max([x["n"] for x in ag["dias"]] + [1])
+    barras = "".join(
+        '<li><span class="ag-n">%d</span><span class="ag-trilho"><i style="height:%.0f%%"></i></span>'
+        '<span class="ag-d">%s</span></li>'
+        % (x["n"], max(4.0, 100.0 * x["n"] / maior), DIAS_SEMANA[date.fromisoformat(x["data"]).weekday()])
+        for x in ag["dias"])
+    return (
+        '<h2>Hoje, %s %s</h2>\n'
+        '<div class="doses">\n'
+        '  <div class="dose"><h3>Questões</h3><p class="fracao">%s</p>'
+        '<div class="barra"><i style="width:%.1f%%"></i></div><p class="nota">%s</p></div>\n'
+        '  <div class="dose"><h3>Cards</h3><p class="fracao">%s</p>'
+        '<div class="barra"><i style="width:%.1f%%"></i></div><p class="nota">%s</p>'
+        '<p class="nota">%s.</p>'
+        '<p class="ir"><a href="#cards" data-hub-aba="cards">Ir para os cards</a></p></div>\n'
+        '</div>\n'
+        '<div class="agenda"><h3>Revisões nos próximos 7 dias</h3>'
+        '<ol class="ag-barras" aria-label="Revisões por dia">%s</ol></div>'
+        % (DIAS_EXTENSO[hoje.weekday()], hoje.strftime("%d/%m"),
+           num_q, barra_q, _e(nota_q),
+           num_c, barra_c, _e(nota_c), _e(", ".join(extra_c)),
+           barras))
 
 
 def _html_semana(d):
-    if not d.get("tarefas"):
-        return '<p class="metro">%s</p>' % _e(d.get("nota") or "nada pendente")
-    itens = []
-    for t in d["tarefas"]:
-        alvo = _link(t.get("url_lista"))
-        itens.append('<li><b>#%d</b> %s <span class="tenue">%s &middot; %s</span> '
-                     '-- %s q previstas &middot; %s</li>'
-                     % (t["id"], _e(t["tema"]), _e(t["bloco"]), _e(t["tipo"]),
-                        _num(t["q_previstas"]), alvo))
-    return ('<p class="metro">Semana <b>%s</b> &middot; %d tarefas &middot; '
-            '%s questoes previstas</p><ul>%s</ul>'
-            % (_e(d["semana"]), d["total"], _num(d["q_previstas"]), "".join(itens)))
-
-
-def _html_fsrs(d):
-    ret = d["retencao_7d"]
-    if ret["retencao"] is None:
-        txt_ret = "--"
-        det_ret = "retencao 7d -- sem revisao nos ultimos %d dias" % ret["dias"]
+    if d["semana"] is None:
+        return '<h2>Semana</h2><p class="nota">Nenhuma tarefa pendente no plano.</p>'
+    if d["inicio"]:
+        janela = "%s a %s, %d dia(s) contando hoje." % (_dm(d["inicio"]), _dm(d["fim"]), d["dias"])
     else:
-        txt_ret = "%s%%" % _num(ret["retencao"] * 100, 1)
-        det_ret = "retencao 7d (%d revisoes, %d lapsos)" % (
-            ret["revisoes"], ret["lapsos"])
-    regime = (' <span class="tag">REGIME DE DIVIDA</span>' if d["regime_divida"] else "")
-    return (
-        '<div class="metros">'
-        '<div class="m"><b>%d</b><span>vencidos (%d atrasados + %d hoje)</span></div>'
-        '<div class="m"><b>%d</b><span>teto do dia%s</span></div>'
-        '<div class="m"><b>%d</b><span>pool nunca introduzidos</span></div>'
-        '<div class="m"><b>%s</b><span>%s</span></div>'
-        '</div>'
-        '<p class="metro">Retencao medida pela regua de cada linha '
-        '(<code>regua_versao</code>): nota 2 dada sob a regua v1 e LAPSO, sob a v2 '
-        'e acerto. Revisoes por regua: %s.</p>'
-        % (d["vencidos"], d["atrasados"], d["hoje"], d["teto_do_dia"], regime,
-           d["pool_novos"], txt_ret, _e(det_ret),
-           _e(_reguas_legivel(ret["por_regua"]))))
-
-
-def _html_projecao(d):
-    linhas = []
-    for m in d["marcos"]:
-        linhas.append('<tr><th scope="row">%s</th><td>%s</td><td>%d d</td>'
-                      '<td>%s</td><td>%s q/dia</td></tr>'
-                      % (_e(m["nome"]), _e(m["data"]), m["dias"],
-                         _num(m["faltam"]), _num(m["ritmo_alvo"], 1)))
-    c = d["custo"]
-    custo = ("R$ %s/q <span class=\"tenue\">(meta R$ %s)</span>"
-             % (_num(c["acumulado_por_questao"], 2), _num(c["meta_por_questao"], 2))
-             if c["acumulado_por_questao"] is not None
-             else '<span class="tenue">sem serie de investimento para %s</span>' % _e(c["mes"]))
-    return (
-        '<div class="metros">'
-        '<div class="m"><b>%s</b><span>questoes acumuladas</span></div>'
-        '<div class="m"><b>%s%%</b><span>acerto acumulado</span></div>'
-        '<div class="m"><b>%s</b><span>custo por questao</span></div>'
-        '</div>'
-        '<table><thead><tr><th>marco</th><th>data</th><th>faltam</th>'
-        '<th>questoes</th><th>ritmo-alvo</th></tr></thead><tbody>%s</tbody></table>'
-        '<p class="aviso"><b>ENAMED 2027 sem projecao.</b> %s</p>'
-        % (_num(d["acumulado"]), _num(d["pct"], 1), custo,
-           "".join(linhas) or '<tr><td colspan="5">sem marco datado</td></tr>',
-           _e(d["enamed_2027"]["motivo"])))
-
-
-def _html_proximas(d):
-    if not d["tarefas"]:
-        return '<p class="metro tenue">nenhuma tarefa pendente</p>'
+        janela = "Fora do calendário do plano: pela ordem das tarefas."
+    resumo = "%d tarefa(s) em aberto, %s questões." % (d["total"], _n(d["q"]))
+    if d["atrasadas"]:
+        resumo += " %d vêm atrasadas de semana anterior." % d["atrasadas"]
     itens = []
     for t in d["tarefas"]:
-        alvo = _link(t.get("url_lista"), vazio="--")
-        itens.append('<tr><td>#%d</td><td>S%s</td><td>%s</td><td>%s</td>'
-                     '<td>%s</td><td>%s</td></tr>'
-                     % (t["id"], _e(t["semana"]), _e(t["bloco"]), _e(t["tema"]),
-                        _num(t["q_previstas"]), alvo))
-    return ('<table><thead><tr><th>id</th><th>sem</th><th>bloco</th><th>tema</th>'
-            '<th>q prev</th><th>lista</th></tr></thead><tbody>%s</tbody></table>'
-            % "".join(itens))
+        meta = ['<span class="t-rot">%s</span>' % _e(t["rotulo"] or "?")]
+        if t["q"]:
+            meta.append("<span>%s questões</span>" % _n(t["q"]))
+        if t["atrasada"]:
+            meta.append('<span class="t-atraso">da semana %s</span>' % _e(t["semana"]))
+        itens.append('<li class="tarefa%s"><p class="t-tema">%s</p><p class="t-meta">%s</p>'
+                     '<p class="t-acao">%s</p></li>'
+                     % (" atrasada" if t["atrasada"] else "", _e(t["tema"] or "(sem tema)"),
+                        " ".join(meta), _acao(t)))
+    prox = d.get("proxima")
+    txt_prox = ""
+    if prox:
+        quando = " (%s a %s)" % (_dm(prox["inicio"]), _dm(prox["fim"])) if prox.get("inicio") else ""
+        txt_prox = ('<p class="nota prox">Depois: semana %s%s, %d tarefa(s), %s questões.</p>'
+                    % (_e(prox["semana"]), quando, prox["tarefas"], _n(prox["q"])))
+    # A semana inteira passa de 20 tarefas: as primeiras (e todas as atrasadas) ficam a vista, o
+    # resto recolhido na MESMA ordem do plano -- nada some, so para de gritar.
+    corte = max(VISIVEIS_SEMANA, sum(1 for t in d["tarefas"] if t["atrasada"]))
+    lista = '<ol class="tarefas">%s</ol>' % "".join(itens[:corte])
+    if len(itens) > corte:
+        lista += ('<details class="mais"><summary>Ver as outras %d</summary>'
+                  '<ol class="tarefas" start="%d">%s</ol></details>'
+                  % (len(itens) - corte, corte + 1, "".join(itens[corte:])))
+    return ('<h2>Semana %s do plano</h2>\n<p class="sub">%s %s</p>\n%s\n%s'
+            % (_e(d["semana"]), _e(janela), _e(resumo), lista, txt_prox))
 
 
-def render_html(d):
-    """Pagina autocontida. Contrato de renderizacao do projeto: UM `.wrap`, tokens
-    em `:root`, dark por `prefers-color-scheme` GUARDADO + `[data-theme]`, `body`
-    com background explicito, 400px sem scroll horizontal (memoria s151)."""
-    corpo = "\n".join([
-        _sec("plano", "Progresso por bloco", _html_plano(d["plano"])),
-        _sec("semana", "Listas da semana", _html_semana(d["semana"])),
-        _sec("fsrs", "Cards (FSRS)", _html_fsrs(d["fsrs"])),
-        _sec("projecao", "Volume, custo e projecao", _html_projecao(d["projecao"])),
-        _sec("proximas", "Proximas 7 tarefas", _html_proximas(d["proximas"])),
-    ])
-    return """<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>%(titulo)s</title>
-<style>
+def _html_ritmo(r):
+    alvo = r["alvo_marco"]
+    atras = alvo is not None and (r["real_7d"] or 0) < alvo
+    fig = []
+    fig.append('<div class="fig%s"><p class="fig-n">%s</p><p class="fig-r">por dia nos '
+               'últimos 7 dias</p></div>' % (" abaixo" if atras else "", _n(r["real_7d"], 1)))
+    fig.append('<div class="fig"><p class="fig-n">%s</p><p class="fig-r">por dia nos '
+               'últimos 14 dias</p></div>' % _n(r["real_14d"], 1))
+    fig.append('<div class="fig alvo"><p class="fig-n">%s</p><p class="fig-r">por dia até a '
+               'prova de 01/11 (faltam %s para %s)</p></div>'
+               % (_n(alvo, 1), _n(r["faltam"]), _n(r["meta"])))
+    fig.append('<div class="fig"><p class="fig-n">%s%%</p><p class="fig-r">de acerto em %s '
+               'questões</p></div>' % (_n(r["acerto"], 1), _n(r["acumulado"])))
+    nota = ""
+    if r["alvo_fase1"] is not None:
+        nota = ('<p class="nota">Para fechar as listas da Fase 1 até %s: ~%s por dia (%s questões '
+                'em aberto).</p>' % (_dm(r["fim_fase1"]), _n(r["alvo_fase1"], 1), _n(r["fase1_q"])))
+    return '<h2>Ritmo de questões</h2>\n<div class="figs">%s</div>\n%s' % ("".join(fig), nota)
+
+
+def _html_blocos(b):
+    linhas = []
+    for nome, v in b["blocos"].items():
+        linhas.append('<tr><th scope="row">%s</th><td>%d de %d</td><td>%s</td><td>%s</td></tr>'
+                      % (_e(nome), v["feitas"], v["tarefas"], _n(v["q_feitas"]),
+                         (_n(v["acerto"], 1) + "%") if v["acerto"] is not None else "--"))
+    s = b["simulados"]
+    linhas.append('<tr class="sim"><th scope="row">Simulados</th><td>%d de %d</td><td>%s</td>'
+                  '<td>%s</td></tr>'
+                  % (s["feitas"], s["tarefas"], _n(s["q_feitas"]),
+                     (_n(s["acerto"], 1) + "%") if s["acerto"] is not None else "--"))
+    nota = ""
+    if b["sem_bloco"]:
+        nota = ('<p class="nota">Fora da tabela: %s, sem área reconhecida.</p>'
+                % _e(", ".join('%s questões registradas só como "%s"' % (_n(v["feitas"]), k)
+                               for k, v in sorted(b["sem_bloco"].items()))))
+    return ('<h2>Por bloco</h2>\n<table><thead><tr><th scope="col">Bloco</th>'
+            '<th scope="col">Tarefas feitas</th><th scope="col">Questões</th>'
+            '<th scope="col">Acerto</th></tr></thead><tbody>%s</tbody></table>\n%s'
+            % ("".join(linhas), nota))
+
+
+def _sec(chave, corpo, extra=""):
+    return ('<section class="bloco %s" data-bloco="%s">\n%s\n</section>'
+            % (_e(extra or chave), _e(chave), corpo))
+
+
+CSS = """
 :root{
   --papel:#f6f4f0; --card:#ffffff; --afundado:#edeae4;
   --tinta:#191817; --tinta2:#54504a; --tinta3:#8b857b;
   --linha:#e0dbd2; --acento:#0e6b5c; --acento-fraco:#d9ece7;
   --alerta:#a2412a; --alerta-fraco:#f6e4de;
-  --wrap:64rem; --raio:14px;
-  --sombra:0 1px 2px rgba(0,0,0,.05), 0 10px 30px rgba(0,0,0,.06);
+  --wrap:58rem; --raio:14px;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
@@ -490,7 +448,6 @@ def render_html(d):
     --tinta:#edeff3; --tinta2:#b4bac4; --tinta3:#7e8794;
     --linha:#2d323b; --acento:#4fd0b3; --acento-fraco:#123630;
     --alerta:#f0917a; --alerta-fraco:#3a221c;
-    --sombra:0 1px 2px rgba(0,0,0,.45), 0 10px 30px rgba(0,0,0,.35);
   }
 }
 :root[data-theme="dark"]{
@@ -498,83 +455,140 @@ def render_html(d):
   --tinta:#edeff3; --tinta2:#b4bac4; --tinta3:#7e8794;
   --linha:#2d323b; --acento:#4fd0b3; --acento-fraco:#123630;
   --alerta:#f0917a; --alerta-fraco:#3a221c;
-  --sombra:0 1px 2px rgba(0,0,0,.45), 0 10px 30px rgba(0,0,0,.35);
 }
 *{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%%}
+html{-webkit-text-size-adjust:100%}
 body{
   margin:0; background:var(--papel); color:var(--tinta);
   font-family:ui-sans-serif,system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-  font-size:clamp(15px,.95rem + .2vw,17px); line-height:1.55; overflow-wrap:break-word;
+  font-size:clamp(15px,.95rem + .2vw,17px); line-height:1.5; overflow-wrap:break-word;
 }
-.wrap{max-width:var(--wrap);margin:0 auto;padding:24px 16px 72px}
-h1{font-size:clamp(1.2rem,1rem + .8vw,1.6rem);margin:0;letter-spacing:-.01em}
-h2{font-size:1.02rem;margin:0 0 14px;letter-spacing:-.005em}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:4px 2px 40px}
+h2{font-size:1.08rem;margin:0 0 4px;letter-spacing:-.005em;text-wrap:balance}
+h3{font-size:.86rem;font-weight:600;color:var(--tinta2);margin:0 0 6px}
 p{margin:0}
-a{color:var(--acento)}
-code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.86em}
-.topo{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:baseline;justify-content:space-between;margin-bottom:22px}
-.sub{color:var(--tinta3);font-size:.84em}
-.bloco{background:var(--card);border:1px solid var(--linha);border-radius:var(--raio);
-       box-shadow:var(--sombra);padding:20px 18px;margin-bottom:18px}
-.fonte{color:var(--tinta3);font-size:.74em;margin-top:14px;border-top:1px solid var(--linha);padding-top:10px}
-.metro{color:var(--tinta2);font-size:.86em;margin-top:12px}
+a{color:var(--acento);text-underline-offset:2px}
+a:focus-visible{outline:3px solid var(--acento);outline-offset:2px;border-radius:4px}
+.atualizado{color:var(--tinta3);font-size:.76em;margin:0 0 10px;text-align:right}
+.bloco{padding:18px 0 22px;border-top:1px solid var(--linha)}
+.bloco:first-of-type{border-top:0;padding-top:4px}
+.sub{color:var(--tinta2);font-size:.9em;margin:0 0 14px}
+.nota{color:var(--tinta3);font-size:.84em;margin-top:6px}
 .tenue{color:var(--tinta3)}
-.tag{display:inline-block;font-size:.68em;letter-spacing:.06em;text-transform:uppercase;
-     color:var(--alerta);background:var(--alerta-fraco);border-radius:99px;padding:2px 8px;margin-left:6px}
-.metros{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
-.m{background:var(--afundado);border-radius:10px;padding:12px 14px}
-.m b{display:block;font-size:1.35em;font-variant-numeric:tabular-nums;line-height:1.2}
-.m span{font-size:.76em;color:var(--tinta3)}
-table{width:100%%;border-collapse:collapse;font-size:.88em;font-variant-numeric:tabular-nums}
-th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--linha)}
-thead th{font-size:.74em;letter-spacing:.06em;text-transform:uppercase;color:var(--tinta3);font-weight:600}
+
+/* Hoje: as duas doses do dia, o elemento que o olho acha primeiro */
+.dia h2{font-size:1.25rem;margin-bottom:14px}
+.doses{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,15rem),1fr));gap:12px}
+.dose{min-width:0;background:var(--card);border:1px solid var(--linha);border-radius:var(--raio);
+      padding:14px 16px 16px;border-left:4px solid var(--acento)}
+.fracao{font-size:1.02rem;color:var(--tinta2);font-variant-numeric:tabular-nums}
+.fracao b{font-size:2.3rem;line-height:1.1;color:var(--tinta);font-weight:750;letter-spacing:-.02em;margin-right:4px}
+.barra{height:6px;background:var(--afundado);border-radius:99px;margin:10px 0 4px;overflow:hidden}
+.barra i{display:block;height:100%;background:var(--acento)}
+.ir{margin-top:10px;font-weight:600}
+.ir a{display:inline-block;padding:8px 0;min-height:44px}
+.agenda{margin-top:18px}
+.ag-barras{list-style:none;margin:6px 0 0;padding:0;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));
+           gap:6px;height:112px;align-items:end}
+.ag-barras li{min-width:0;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:3px}
+.ag-trilho{flex:1 1 auto;width:100%;display:flex;align-items:flex-end;justify-content:center}
+.ag-barras i{display:block;width:min(100%,34px);background:var(--acento-fraco);border-top:3px solid var(--acento);border-radius:4px 4px 0 0}
+.ag-n{font-size:.8em;font-variant-numeric:tabular-nums;color:var(--tinta2)}
+.ag-d{font-size:.74em;color:var(--tinta3)}
+
+/* Semana */
+.tarefas{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.tarefa{min-width:0;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 14px;align-items:baseline;
+        padding:10px 12px;background:var(--card);border:1px solid var(--linha);border-radius:10px}
+.tarefa.atrasada{border-left:4px solid var(--alerta)}
+.t-tema{min-width:0;font-weight:600;line-height:1.35}
+.t-meta{grid-column:1;min-width:0;color:var(--tinta3);font-size:.82em;display:flex;flex-wrap:wrap;gap:2px 10px}
+.t-rot{color:var(--tinta2);font-weight:600}
+.t-atraso{color:var(--alerta)}
+.t-acao{grid-column:2;grid-row:1 / span 2;align-self:center;font-size:.88em;text-align:right}
+.prox{margin-top:12px}
+.mais{margin-top:8px}
+.mais summary{cursor:pointer;color:var(--acento);font-weight:600;padding:10px 0;min-height:44px}
+.mais .tarefas{margin-top:4px}
+
+/* Ritmo */
+.figs{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,9.5rem),1fr));gap:10px;margin-top:10px}
+.fig{min-width:0;background:var(--afundado);border-radius:10px;padding:10px 12px}
+.fig-n{font-size:1.5rem;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.2}
+.fig-r{font-size:.78em;color:var(--tinta3)}
+.fig.abaixo .fig-n{color:var(--alerta)}
+.fig.alvo{background:var(--acento-fraco)}
+
+/* Blocos */
+table{width:100%;border-collapse:collapse;font-size:.9em;font-variant-numeric:tabular-nums;margin-top:8px}
+th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--linha)}
+thead th{font-size:.78em;color:var(--tinta3);font-weight:600}
 tbody th{font-weight:650}
-ul{margin:10px 0 0;padding-left:20px}
-li{margin-bottom:6px}
-.barra{height:6px;background:var(--afundado);border-radius:99px;margin-top:8px;overflow:hidden}
-.barra i{display:block;height:100%%;background:var(--acento)}
-.aviso{border-left:3px solid var(--alerta);background:var(--alerta-fraco);
-       padding:10px 12px;border-radius:8px;margin-top:14px;font-size:.84em}
-footer{color:var(--tinta3);font-size:.76em;margin-top:26px;border-top:1px solid var(--linha);padding-top:14px}
-@media (max-width:460px){
-  .bloco{padding:16px 13px}
-  th,td{padding:7px 6px}
-  table{font-size:.8em}
+tr.sim th,tr.sim td{color:var(--tinta2)}
+
+@media (max-width:520px){
+  .tarefa{grid-template-columns:minmax(0,1fr)}
+  .t-acao{grid-column:1;grid-row:auto;text-align:left}
+  th,td{padding:6px 5px}
+  table{font-size:.84em}
 }
-</style>
-</head>
-<body>
-<div class="wrap">
-  <header class="topo">
-    <div>
-      <h1>%(titulo)s</h1>
-      <p class="sub" data-backoffice>gerado em %(gerado)s &middot; semana %(semana)s do plano</p>
-    </div>
-    <p class="sub" data-backoffice>pagina gerada por <code>tools/painel.py --html</code> &middot; read-only</p>
-  </header>
-%(corpo)s
-  <footer data-backoffice>
-    Todo numero vem do banco pela funcao citada no rodape de cada bloco. Esta pagina
-    nao guarda estado e nao escreve nada: e leitura. Regenerar a cada fechamento de
-    sessao e republicar na mesma URL.
-  </footer>
-</div>
-</body>
-</html>
-""" % {"titulo": _e(TITULO), "gerado": _e(d["gerado_em"]),
-       "semana": _e(d["semana_corrente"] if d["semana_corrente"] is not None else "--"),
-       "corpo": corpo}
+"""
+
+SCRIPT_ATUALIZADO = """
+<script>
+(function(){
+  var el = document.querySelector("[data-gerado]");
+  if(!el){ return; }
+  var t = Date.parse(el.getAttribute("data-gerado"));
+  if(isNaN(t)){ return; }
+  function rotulo(){
+    var min = Math.floor((Date.now() - t) / 60000);
+    if(min < 1){ return "atualizado agora"; }
+    if(min < 60){ return "atualizado há " + min + " min"; }
+    var h = Math.floor(min / 60);
+    if(h < 24){ return "atualizado há " + h + " h"; }
+    return el.getAttribute("data-fallback") || el.textContent;
+  }
+  el.textContent = rotulo();
+  setInterval(function(){ el.textContent = rotulo(); }, 60000);
+})();
+</script>
+"""
+
+
+def render_html(d):
+    """Pagina autocontida. UM `.wrap`, tokens em `:root` (os MESMOS do hub), dark por
+    `prefers-color-scheme` GUARDADO + `[data-theme]`, `body` com background explicito, 360px sem
+    scroll horizontal. Nada de bastidor na tela: sem CLI, tabela ou fonte citada."""
+    gerado = d["gerado_em"]
+    fallback = "atualizado em %s, %s" % (_dm(gerado[:10]), gerado[11:16])
+    corpo = "\n".join([
+        _sec("dia", _html_dia(d["dia"], d["data"])),
+        _sec("semana", _html_semana(d["semana"])),
+        _sec("ritmo", _html_ritmo(d["ritmo"])),
+        _sec("blocos", _html_blocos(d["blocos"])),
+    ])
+    return ("<!DOCTYPE html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset=\"utf-8\">\n"
+            "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n"
+            "<title>%s</title>\n<style>%s</style>\n</head>\n<body>\n<div class=\"wrap\">\n"
+            "<p class=\"atualizado\">%s<span data-gerado=\"%s\" data-fallback=\"%s\">%s</span>%s</p>\n"
+            "%s\n</div>\n%s</body>\n</html>\n"
+            % (_e(TITULO), CSS, MARCA_GERADO_ABRE, _e(gerado), _e(fallback), _e(fallback),
+               MARCA_GERADO_FECHA, corpo, SCRIPT_ATUALIZADO))
 
 
 # -------------------------------------------------------------------- CLI
 
 def main(argv=None):
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+    except Exception:  # noqa: BLE001
+        pass
     ap = argparse.ArgumentParser(
         description="Painel de progresso do MedHub (read-only). Gera o JSON "
                     "(contrato) ou a pagina HTML (render).")
     ap.add_argument("--json", action="store_true",
-                    help="imprime o dado estruturado dos 5 blocos (contrato testavel)")
+                    help="imprime o dado estruturado dos 4 blocos (contrato testavel)")
     ap.add_argument("--html", action="store_true",
                     help="gera a pagina autocontida (default: artifacts/painel.html)")
     ap.add_argument("--out", metavar="PATH",
@@ -592,7 +606,7 @@ def main(argv=None):
         destino.parent.mkdir(parents=True, exist_ok=True)
         destino.write_text(render_html(dados), encoding="utf-8")
         print(json.dumps({"html": str(destino), "blocos": list(BLOCOS),
-                          "semana": dados["semana_corrente"]}, ensure_ascii=False))
+                          "semana": dados["semana"]["semana"]}, ensure_ascii=False))
     return 0
 
 

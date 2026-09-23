@@ -578,10 +578,37 @@ retenção exatamente como o F112 inflava o agendamento. **ENAMED 2027 não tem 
 diz por quê: a data não está em `core/provas.json` nem em `performance.MARCOS` -- declarar é o certo,
 estimar de data inventada seria o defeito (§10.8).
 
-**O CLI não publica.** Ele grava arquivo; quem publica o Artifact (mesma URL, `url` no publish) é o
-agente no fechamento de sessão (`.agents/workflows/registrar-sessao.md §6`). Read-only absoluto: não
+**O CLI não publica.** Ele grava arquivo; desde a s192 o `artifacts/painel.html` sobe como
+**arquivo do MedHub HUB** (`painel.html`, aba Painel), montado por `tools/hub.py` e republicado pelo
+agente no fechamento (`.agents/workflows/registrar-sessao.md §6`). Read-only absoluto: não
 abre `sqlite3` próprio e está fora da allowlist de writers (F49).
 Spec `.vibeflow/specs/plano-ssot-e-cards-v2-part-7.md`.
+
+### `tools/hub.py` -- monta o MedHub HUB e o manifesto do publish (**não publica, não lê banco**)
+
+| Flag | Função |
+|---|---|
+| `--build` | Monta `index.html` (abas Cards/Aulas/Painel; o player **inline**, composto das 3 regiões marcadas de `core/templates/player.html`) e `manifesto.json` em `--out`; roda o `--check` no fim e sai **1** se ele acusar. |
+| `--check` | Confere o manifesto de `--out`: fonte inexistente, `<a href>` relativo do index fora do manifesto (link morto na vitrine), teto de entradas. Exit 1 se acusar. |
+| `--extrair-lote PAGINA.html` | O inverso da injeção: recupera o lote do `<script id="lote">` de uma página salva (a versão viva lida por `Artifact read`). Serve ao `--record-lote --lote` e a remontar sem depender de `tmp/`. |
+| `--lote ARQ.json` | `--build`: o lote de `fsrs_queue.py --export-player` (ou o extraído da página viva). **Trocar o lote troca a sessão da aba Cards** -- ver o rito "DRENAR no player" em `/revisar`. |
+| `--publicado LISTA` | `--build`: paths já publicados no hub, transcritos do `Artifact list scope=files` (1 por linha, `#` comenta, ou JSON). O que saiu da seleção e consta aqui vira **`null`** no manifesto. |
+| `--out DIR` | Diretório de saída (default `tmp/hub/`, gitignored). |
+| `--painel PATH` | `--build`: HTML do painel (default `artifacts/painel.html`); ausente = aba Painel com aviso. |
+| `--out-lote ARQ.json` | `--extrair-lote`: onde gravar o lote (default: imprime). |
+
+O `manifesto.json` **é** o argumento do publish: `file_path` (a página) + `files` (`{path publicado:
+fonte | null}`), com painel e aulas **direto das fontes** em `artifacts/` (`aula-<slug>.html` ->
+`aulas/<slug>.html`), sem cópia. 🔴 **Omitir não remove:** no update o runtime mantém o arquivo
+omitido; só `null` remove -- por isso o `--publicado` existe. Limites como dado no módulo: 255
+entradas por versão (contrato do Artifact), 8 reservadas, **cap de 120 aulas** (mais novas primeiro,
+pela data de criação no git). Aulas e painel **abrem dentro da página** (`fetch` relativo + iframe
+`srcdoc` na própria aba): o frame nunca navega, o drill não perde estado.  <!-- CHECK: test_aula_e_painel_abrem_dentro_da_pagina_sem_navegar -->
+
+Fronteira: o CLI não fala com a API de Artifact nem com o `ipub.db` (só o relógio único `db.agora()`).
+Ler a versão viva, listar os arquivos, publicar e ler as notas do `db` são atos do agente -- rito em
+`/revisar` ("DRENAR no player") e `.agents/workflows/registrar-sessao.md §6`.
+Spec `.vibeflow/specs/medhub-hub-v0-part-1.md`; testes `tools/test_hub.py`.
 
 ### `tools/fsrs_optimize.py` -- parâmetros pessoais do FSRS (R1, **read-only**)
 

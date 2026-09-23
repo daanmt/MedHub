@@ -249,8 +249,9 @@ Qualquer duplicação semântica entre workflow e skill é defeito por contrato.
 | `tools/extract_pdfs.py` | Extrator de texto de PDFs para o projeto MedHub | `.agents/skills/source-command-extrair-pdf/SKILL.md`, `.agents/workflows/criar-resumo.md` (+2) |
 | `tools/fsrs_load.py` | Previsao de carga do calendario FSRS (s128) -- read-only | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.claude/commands/engenharia-cli.md` (+5) |
 | `tools/fsrs_optimize.py` | Otimizador READ-ONLY de parametros do FSRS sobre o revlog proprio (R1, s184) | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.claude/commands/engenharia-cli.md` (+4) |
-| `tools/fsrs_queue.py` | fila de revisão FSRS em JSON para revisão conversacional | `.agents/skills/source-command-revisar/SKILL.md`, `.claude/commands/revisar.md` (+21) |
+| `tools/fsrs_queue.py` | fila de revisão FSRS em JSON para revisão conversacional | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.agents/skills/source-command-revisar/SKILL.md` (+24) |
 | `tools/habilidades.py` | — | `.agents/skills/source-command-analisar-questao/SKILL.md`, `.claude/commands/analisar-questao.md` (+10) |
+| `tools/hub.py` | monta o MedHub HUB: UMA pagina (Cards + Aulas + Painel) e o manifesto do publish | `.agents/skills/source-command-aula-base/SKILL.md`, `.agents/skills/source-command-engenharia-cli/SKILL.md` (+8) |
 | `tools/importar_sessoes.py` | importa volume de sessões em lote a partir de JSON | `.agents/skills/source-command-importar-planilha/SKILL.md`, `.claude/commands/importar-planilha.md` (+8) |
 | `tools/index_resumos.py` | index_resumos — CLI para (re)indexar todos os resumos clínicos no ChromaDB | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.agents/workflows/registrar-sessao.md` (+5) |
 | `tools/init_db.py` | — | `app/utils/db.py`, `tools/check_fk_orphans.py` (+10) |
@@ -261,7 +262,7 @@ Qualquer duplicação semântica entre workflow e skill é defeito por contrato.
 | `tools/ledger_self.py` | Ledger-of-self: memoria estruturada dos WARNs do harness (degrau 2 da auto-evolucao) | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.claude/commands/engenharia-cli.md` (+11) |
 | `tools/listas.py` | ledger de LISTAS de exercicios: quais listas do plano ja foram feitas, | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.agents/skills/source-command-importar-planilha/SKILL.md` (+15) |
 | `tools/normalize_taxonomia.py` | saneia taxonomia_cronograma (Fase 1 da curadoria de cards, s097) | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.agents/workflows/curar-cards.md` (+5) |
-| `tools/painel.py` | Painel de progresso do MedHub -- pagina gerada do banco (part-7, s186) | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.agents/skills/source-command-importar-planilha/SKILL.md` (+27) |
+| `tools/painel.py` | Painel de progresso do MedHub -- pagina gerada do banco (part-7, s186) | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.agents/skills/source-command-importar-planilha/SKILL.md` (+29) |
 | `tools/performance.py` | performance.py | `.agents/skills/source-command-cronograma/SKILL.md`, `.agents/skills/source-command-performance/SKILL.md` (+19) |
 | `tools/plano.py` | o plano de estudo como DADO (`plano_tarefas`): semeadura, listagem e | `.agents/skills/source-command-cronograma/SKILL.md`, `.agents/skills/source-command-engenharia-cli/SKILL.md` (+48) |
 | `tools/preparacao.py` | posicao SSOT da preparacao no cronograma (PRD orquestracao, part-1) | `.agents/skills/source-command-cronograma/SKILL.md`, `.agents/skills/source-command-engenharia-cli/SKILL.md` (+12) |

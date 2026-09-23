@@ -1,0 +1,296 @@
+<title>MedHub</title>
+<!--
+  Template do MedHub HUB (v0) -- spec .vibeflow/specs/medhub-hub-v0-part-1.md.
+  Montado por `python tools/hub.py --build`; publicado SEMPRE no mesmo artifact
+  (rito em .claude/commands/revisar.md, "DRENAR no player").
+
+  Sem DOCTYPE/html/head/body: o publish embrulha este arquivo num esqueleto
+  (contrato de pagina do Artifact). O titulo fica nos primeiros 8 KB.
+
+  Lugares preenchidos pelo hub.py (cada um exatamente 1x): o CSS, o corpo e o
+  JS do player (regioes de core/templates/player.html -- a fonte unica), a linha
+  de estado, a lista de aulas e o bloco do painel. O lote entra no script de
+  id "lote" pelo mesmo injetor do --build-player (marcador unico; nao repetir a
+  tag aqui).
+
+  FRONTEIRA: a pagina so escreve sessoes/<sessao>/notas (regra do db declarada no
+  publish). Nunca FSRS, card ou resumo. Aulas e painel sao arquivos do MESMO
+  artifact, lidos por fetch relativo e mostrados num iframe srcdoc DENTRO da aba
+  -- o frame nunca navega, entao o drill nao perde estado e o db nao e tocado.
+-->
+<style>
+/* @hub:player-css */
+
+/* ------------------------------------------------ casca do HUB (so acrescenta) */
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){color-scheme:dark}
+}
+:root[data-theme="dark"]{color-scheme:dark}
+
+.hub-topo{
+  display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;
+  gap:2px 16px;margin-bottom:12px;
+}
+.hub-marca{margin:0;font-weight:750;font-size:1.05rem;letter-spacing:.01em}
+.hub-marca span{color:var(--acento)}
+.hub-estado{margin:0;color:var(--tinta3);font-size:.78em;font-variant-numeric:tabular-nums}
+
+.hub-abas{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;
+  padding:4px;margin-bottom:24px;
+  background:var(--afundado);border:1px solid var(--linha);border-radius:12px;
+}
+.hub-aba{
+  min-height:44px;padding:8px 6px;border:0;border-radius:9px;
+  background:transparent;color:var(--tinta2);font-weight:600;letter-spacing:.01em;
+}
+.hub-aba:hover{background:var(--card);color:var(--tinta)}
+.hub-aba[aria-selected="true"]{background:var(--card);color:var(--acento);box-shadow:var(--sombra)}
+
+.hub-secao{display:none}
+:root:not([data-aba]) #aba-cards,
+:root[data-aba="cards"] #aba-cards,
+:root[data-aba="aulas"] #aba-aulas,
+:root[data-aba="painel"] #aba-painel{display:block}
+
+.hub-titulo{font-size:clamp(1.15rem,1rem + .7vw,1.5rem);margin:0 0 4px;letter-spacing:-.01em;text-wrap:balance}
+.hub-sub{color:var(--tinta3);font-size:.85em;margin:0 0 18px;max-width:40rem}
+.hub-vazio{color:var(--tinta3);margin:0}
+
+.hub-aulas{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.hub-aula{
+  display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:baseline;gap:4px 14px;
+  min-height:44px;padding:15px 16px;
+  background:var(--card);border:1px solid var(--linha);border-radius:var(--raio);
+  color:var(--tinta);text-decoration:none;
+  transition:border-color var(--transicao);
+}
+.hub-aula:hover{border-color:var(--acento)}
+.hub-aula:focus-visible{outline:3px solid var(--acento);outline-offset:3px}
+.hub-aula-t{min-width:0;font-weight:600;line-height:1.35}
+.hub-aula-d{color:var(--tinta3);font-size:.8em;font-variant-numeric:tabular-nums}
+
+.hub-leitor-barra{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin-bottom:14px}
+.hub-leitor-titulo{margin:0;min-width:0;font-weight:650}
+.hub-quadro{
+  display:block;width:100%;min-height:50vh;border:0;
+  background:var(--papel);border-radius:var(--raio);
+}
+.hub-quadro-rolavel{height:80vh}
+.hub-aviso{
+  border-left:3px solid var(--alerta);background:var(--alerta-fraco);color:var(--tinta);
+  padding:12px 14px;border-radius:8px;margin:0 0 14px;font-size:.9em;
+}
+.hub-aviso a{color:var(--acento)}
+</style>
+
+<div class="wrap">
+
+  <header class="hub-topo">
+    <p class="hub-marca">Med<span>Hub</span></p>
+    <p class="hub-estado"><!-- @hub:status --></p>
+  </header>
+
+  <nav class="hub-abas" role="tablist" aria-label="Secoes do MedHub">
+    <button type="button" class="hub-aba" role="tab" id="hub-tab-cards" aria-controls="aba-cards" aria-selected="true" data-aba="cards">Cards</button>
+    <button type="button" class="hub-aba" role="tab" id="hub-tab-aulas" aria-controls="aba-aulas" aria-selected="false" data-aba="aulas" tabindex="-1">Aulas</button>
+    <button type="button" class="hub-aba" role="tab" id="hub-tab-painel" aria-controls="aba-painel" aria-selected="false" data-aba="painel" tabindex="-1">Painel</button>
+  </nav>
+
+  <section class="hub-secao" id="aba-cards" role="tabpanel" aria-labelledby="hub-tab-cards">
+<!-- @hub:player-corpo -->
+  </section>
+
+  <section class="hub-secao" id="aba-aulas" role="tabpanel" aria-labelledby="hub-tab-aulas">
+    <div id="hub-aulas-lista">
+      <h2 class="hub-titulo">Aulas</h2>
+      <p class="hub-sub">Aulas-base deste hub, da mais nova para a mais antiga. A aula abre aqui dentro; o drill da aba Cards continua onde parou.</p>
+      <!-- @hub:aulas -->
+    </div>
+    <div id="hub-leitor" hidden>
+      <div class="hub-leitor-barra">
+        <button type="button" id="hub-leitor-voltar">&lsaquo; Todas as aulas</button>
+        <p class="hub-leitor-titulo" id="hub-leitor-titulo"></p>
+      </div>
+      <p class="hub-aviso" id="hub-leitor-aviso" hidden>Nao consegui abrir a aula aqui dentro. <a id="hub-leitor-link" href="#">Abrir em pagina inteira</a>.</p>
+      <iframe class="hub-quadro" id="hub-leitor-quadro" title="Aula"></iframe>
+    </div>
+  </section>
+
+  <section class="hub-secao" id="aba-painel" role="tabpanel" aria-labelledby="hub-tab-painel">
+    <!-- @hub:painel -->
+  </section>
+
+</div>
+
+<script id="lote" type="application/json">{"sessao":"exemplo","gerado_em":"","total":0,"cards":[]}</script>
+<!-- @hub:player-js -->
+<script>
+(function(){
+  "use strict";
+
+  var ABAS = ["cards", "aulas", "painel"];
+  var raiz = document.documentElement;
+  var botoes = Array.prototype.slice.call(document.querySelectorAll(".hub-aba"));
+  var $ = function(id){ return document.getElementById(id); };
+
+  // ------------------------------------------------------------------ abas
+  function valida(aba){ return ABAS.indexOf(aba) >= 0 ? aba : null; }
+  function doHash(){ return valida(String(location.hash || "").replace(/^#/, "")); }
+  function lembrada(){
+    try{ return valida(localStorage.getItem("medhub.aba")); }catch(e){ return null; }
+  }
+
+  function ir(aba, gravar){
+    raiz.setAttribute("data-aba", aba);
+    botoes.forEach(function(b){
+      var sel = b.getAttribute("data-aba") === aba;
+      b.setAttribute("aria-selected", sel ? "true" : "false");
+      b.tabIndex = sel ? 0 : -1;
+    });
+    if(gravar){
+      try{ localStorage.setItem("medhub.aba", aba); }catch(e){}
+    }
+    if(aba === "painel"){ carregarPainel(); }
+    // quadro medido com a aba escondida volta com altura 0: remede depois do reflow
+    setTimeout(ajustarVisiveis, 60);
+  }
+
+  botoes.forEach(function(b, i){
+    b.addEventListener("click", function(){ ir(b.getAttribute("data-aba"), true); });
+    b.addEventListener("keydown", function(ev){
+      var passo = ev.key === "ArrowRight" ? 1 : (ev.key === "ArrowLeft" ? -1 : 0);
+      if(!passo){ return; }
+      ev.preventDefault();
+      var alvo = botoes[(i + passo + botoes.length) % botoes.length];
+      alvo.focus();
+      ir(alvo.getAttribute("data-aba"), true);
+    });
+  });
+  window.addEventListener("hashchange", function(){
+    var aba = doHash();
+    if(aba){ ir(aba, false); }
+  });
+
+  // ---------------------------------------------- quadro (aula ou painel)
+  // A aula-base e publicada sem DOCTYPE (o esqueleto do Artifact embrulha); no
+  // srcdoc ela ganha um esqueleto equivalente, senao cairia em quirks mode.
+  function documentoCompleto(html){
+    if(/^\s*<!doctype/i.test(html)){ return html; }
+    return "<!DOCTYPE html>\n<html lang=\"pt-BR\"><head><meta charset=\"utf-8\">" +
+      "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">" +
+      "<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>" +
+      "</head><body>\n" + html + "\n</body></html>";
+  }
+
+  function medir(quadro){
+    if(quadro.hidden || quadro.classList.contains("hub-quadro-rolavel")){ return; }
+    try{
+      var doc = quadro.contentDocument;
+      if(!doc || !doc.body){ throw new Error("sem documento"); }
+      var alto = Math.ceil(Math.max(doc.body.scrollHeight, doc.body.getBoundingClientRect().height));
+      if(alto > 0){ quadro.style.height = (alto + 2) + "px"; }
+    }catch(e){
+      quadro.classList.add("hub-quadro-rolavel");   // sem acesso: altura fixa, rola por dentro
+    }
+  }
+
+  function ajustarVisiveis(){
+    [$("hub-leitor-quadro"), $("hub-painel-quadro")].forEach(function(q){ if(q){ medir(q); } });
+  }
+
+  function preparar(quadro){
+    var doc = null;
+    try{ doc = quadro.contentDocument; }catch(e){ doc = null; }
+    if(!doc){ quadro.classList.add("hub-quadro-rolavel"); return; }
+    var tema = raiz.getAttribute("data-theme");
+    if(tema){ doc.documentElement.setAttribute("data-theme", tema); }
+    Array.prototype.forEach.call(doc.querySelectorAll("a[href]"), function(a){
+      var href = a.getAttribute("href") || "";
+      if(/^https?:/i.test(href)){
+        a.setAttribute("target", "_blank");
+        a.setAttribute("rel", "noopener");
+        return;
+      }
+      if(href.charAt(0) === "#" && href.length > 1){
+        // ancora interna: o quadro nao rola (altura = conteudo); rola a pagina-mae
+        a.addEventListener("click", function(ev){
+          var alvo = doc.getElementById(decodeURIComponent(href.slice(1)));
+          if(!alvo){ return; }
+          ev.preventDefault();
+          var topo = quadro.getBoundingClientRect().top + window.pageYOffset +
+                     alvo.getBoundingClientRect().top;
+          window.scrollTo(0, Math.max(0, topo - 12));
+        });
+      }
+    });
+    medir(quadro);
+    [150, 600, 1500, 3000].forEach(function(ms){ setTimeout(function(){ medir(quadro); }, ms); });
+    if(doc.fonts && doc.fonts.ready){ doc.fonts.ready.then(function(){ medir(quadro); }); }
+  }
+
+  function carregar(quadro, href, aviso){
+    aviso.hidden = true;
+    quadro.hidden = false;
+    quadro.classList.remove("hub-quadro-rolavel");
+    quadro.style.height = "";
+    return fetch(href, {cache: "no-cache"}).then(function(r){
+      if(!r.ok){ throw new Error("HTTP " + r.status); }
+      return r.text();
+    }).then(function(html){
+      quadro.onload = function(){ preparar(quadro); };
+      quadro.srcdoc = documentoCompleto(html);
+    }).catch(function(){
+      quadro.hidden = true;
+      aviso.hidden = false;
+    });
+  }
+
+  var redimensionar = null;
+  window.addEventListener("resize", function(){
+    clearTimeout(redimensionar);
+    redimensionar = setTimeout(ajustarVisiveis, 200);
+  });
+
+  // ----------------------------------------------------------------- aulas
+  var lista = $("hub-aulas-lista");
+  var leitor = $("hub-leitor");
+
+  function abrirAula(link){
+    var href = link.getAttribute("href");
+    $("hub-leitor-titulo").textContent = link.getAttribute("data-titulo") || "";
+    $("hub-leitor-link").setAttribute("href", href);
+    lista.hidden = true;
+    leitor.hidden = false;
+    window.scrollTo(0, 0);
+    carregar($("hub-leitor-quadro"), href, $("hub-leitor-aviso"));
+  }
+
+  function fecharAula(){
+    var quadro = $("hub-leitor-quadro");
+    quadro.onload = null;
+    quadro.removeAttribute("srcdoc");
+    leitor.hidden = true;
+    lista.hidden = false;
+  }
+
+  Array.prototype.forEach.call(document.querySelectorAll("a.hub-aula"), function(a){
+    a.addEventListener("click", function(ev){
+      ev.preventDefault();
+      abrirAula(a);
+    });
+  });
+  $("hub-leitor-voltar").addEventListener("click", fecharAula);
+
+  // ---------------------------------------------------------------- painel
+  var painelCarregado = false;
+  function carregarPainel(){
+    var quadro = $("hub-painel-quadro");
+    if(painelCarregado || !quadro){ return; }
+    painelCarregado = true;
+    carregar(quadro, quadro.getAttribute("data-src"), $("hub-painel-aviso"));
+  }
+
+  ir(doHash() || lembrada() || "cards", false);
+})();
+</script>

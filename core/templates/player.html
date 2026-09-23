@@ -18,8 +18,16 @@
   cada card na capability `db` (colecao sessoes/<sessao>/notas) e o agente
   grava em lote por `--record-lote`, que chama `record_review` -- o caminho de
   escrita unico (Invariante C do revisao-calibrada-contract).
+
+  FONTE UNICA DO PLAYER (s192, spec medhub-hub-v0-part-1): o MedHub HUB
+  (core/templates/hub.html) compoe o player a partir de TRES regioes deste
+  arquivo, delimitadas por marcadores @player:<regiao>:inicio/fim (css, corpo,
+  js), cada um exatamente 1x. Nao copiar o player para o hub: editar aqui.
+  O teclado so age com a aba Cards ativa (atributo data-aba do elemento raiz);
+  sem o atributo -- este standalone -- age sempre, como antes.
 -->
 <style>
+/* @player:css:inicio */
 :root{
   --papel:#f6f4f0;
   --card:#ffffff;
@@ -161,10 +169,12 @@ footer{color:var(--tinta3);font-size:.76em;margin-top:28px;border-top:1px solid 
 @media (prefers-reduced-motion: reduce){
   *{transition:none !important;animation:none !important}
 }
+/* @player:css:fim */
 </style>
 </head>
 <body>
 <div class="wrap">
+<!-- @player:corpo:inicio -->
 
   <header class="topo">
     <div>
@@ -230,9 +240,11 @@ footer{color:var(--tinta3);font-size:.76em;margin-top:28px;border-top:1px solid 
     <code>fsrs_queue.py --record-lote</code>, que chama <code>record_review</code> -- caminho de escrita unico.
   </footer>
 
+<!-- @player:corpo:fim -->
 </div>
 
 <script id="lote" type="application/json">{"sessao":"exemplo","gerado_em":"","total":0,"cards":[]}</script>
+<!-- @player:js:inicio -->
 <script>
 (function(){
   "use strict";
@@ -422,7 +434,15 @@ footer{color:var(--tinta3);font-size:.76em;margin-top:28px;border-top:1px solid 
   }
 
   // -------------------------------------------------------------- teclado
+  // No HUB o player divide a pagina com outras abas: Espaco rolaria a aba
+  // Aulas e viraria um card invisivel. Sem `data-aba` (standalone), age sempre.
+  function abaDoPlayerAtiva(){
+    var aba = document.documentElement.getAttribute("data-aba");
+    return !aba || aba === "cards";
+  }
+
   document.addEventListener("keydown", function(ev){
+    if(!abaDoPlayerAtiva()){ return; }
     if(ev.target && (ev.target.tagName === "INPUT" || ev.target.tagName === "TEXTAREA")){
       if(ev.key === "Escape"){ $("form-defeito").hidden = true; $("card").focus(); }
       return;
@@ -538,5 +558,6 @@ footer{color:var(--tinta3);font-size:.76em;margin-top:28px;border-top:1px solid 
   }
 })();
 </script>
+<!-- @player:js:fim -->
 </body>
 </html>

@@ -14,7 +14,7 @@ O que ele monta, em `--out` (default `tmp/hub/`):
   `files` ({path publicado: fonte | null}). Painel e aulas vao DIRETO das fontes em `artifacts/`
   (sem copia). Arquivo OMITIDO num update e MANTIDO pelo runtime; so `null` remove -- por isso o que
   saiu da selecao e consta em `--publicado` (a listagem do artifact) vira `null`.
-- DIFF (v1a, s193, spec `medhub-hub-v1-manifesto-diff`): `files` leva so o que e NOVO ou MUDOU. O
+- DIFF (v1, s193, spec `medhub-hub-v1-manifesto-diff`): `files` leva so o que e NOVO ou MUDOU. O
   que ja esta no ar e intocado fica em `manifesto["mantidos"]` -- nao sobe e nao precisa ser relido
   antes do publish (a releitura das 6 aulas custou 378k tokens em 22/09). Base: o registro local
   `registro_publicado.json`, que so o `--confirmar` escreve, DEPOIS do publish aceito, a partir do
@@ -206,7 +206,7 @@ def ler_publicado(texto):
 
 
 def aplicar_diff(files, fontes, registro, vivos):
-    """O DIFF do publish (v1a, s193). PURO.
+    """O DIFF do publish (v1, s193). PURO.
 
     `files` = o manifesto COMPLETO ({publicado: fonte | None}, de `montar_manifesto`); `fontes` =
     {publicado: (sha256, bytes)} das fontes nao-nulas; `registro` = {publicado: {"sha256",

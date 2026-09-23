@@ -4,14 +4,14 @@ projeto: MedHub
 feature: medhub-hub-v1
 part: 1
 slug: medhub-hub-v1-manifesto-diff
-status: ready
+status: implemented
 relates_to:
   - .vibeflow/prds/medhub-hub-2026-09-22.md
   - tools/hub.py
   - tools/test_hub.py
 ---
 
-# Spec -- MedHub HUB v1a: o manifesto do publish vira DIFF (so arquivo novo ou alterado sobe)
+# Spec -- MedHub HUB v1 (DIFF, nao confundir com o v1a = RD como arquivo): o manifesto do publish vira DIFF (so arquivo novo ou alterado sobe)
 
 > Sessao s193 (22/09/2026). Decisao do operador via `/ai-eng` (item 3): o DIFF entra logo apos a
 > part-2 -- "registro local de hash por path publicado; so arquivo novo/alterado vai em `files`;

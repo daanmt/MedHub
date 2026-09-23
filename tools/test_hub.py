@@ -203,7 +203,7 @@ def test_publicado_aceita_texto_e_json():
 
 
 # --------------------------------------------------------------------------
-# 3b. DIFF (v1a, s193): so o novo ou alterado sobe; o resto o runtime mantem
+# 3b. DIFF (v1, s193): so o novo ou alterado sobe; o resto o runtime mantem
 # --------------------------------------------------------------------------
 
 _TRES = [("hernias", "Hernias", "2026-09-22"), ("dmg", "DMG", "2026-09-21"),

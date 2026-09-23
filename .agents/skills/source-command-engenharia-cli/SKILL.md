@@ -614,7 +614,7 @@ entradas por versão (contrato do Artifact), 8 reservadas, **cap de 120 aulas** 
 pela data de criação no git). Aulas e painel **abrem dentro da página** (`fetch` relativo + iframe
 `srcdoc` na própria aba): o frame nunca navega, o drill não perde estado.  <!-- CHECK: test_aula_e_painel_abrem_dentro_da_pagina_sem_navegar -->
 
-**DIFF (v1a, s193, spec `medhub-hub-v1-manifesto-diff`):** `files` leva só o que é **novo ou mudou**;
+**DIFF (v1, s193, spec `medhub-hub-v1-manifesto-diff`):** `files` leva só o que é **novo ou mudou**;
 o que já está no ar e intocado sai em `manifesto["mantidos"]` -- não sobe e **não precisa ser relido**  <!-- CHECK: test_diff_sem_mudanca_o_segundo_publish_nao_manda_nada -->
 antes do publish (a releitura das 6 aulas custou 378k tokens em 22/09). Um path só fica mantido com
 TRÊS evidências: a sha256 do `registro_publicado.json` bate com a fonte, o path está na listagem viva e

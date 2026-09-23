@@ -1,0 +1,43 @@
+# Session 193 -- MedHub HUB: parte 2 verde (relogio da revisao, idempotencia, quarentena), manifesto DIFF e Autopsia no hub
+
+**Data:** 2026-09-22 (~22h20 -> ~23h15) - **Ferramenta:** Claude Code (Opus 5.5 1M; 1 subagente Sonnet de leitura) - **Continuidade:** `session_192.md`
+
+## 0. O que foi pedido
+Re-boot pelo `/ai-eng` (ai-eng-9c) depois do `/clear`, com 4 decisoes do operador tomadas por pergunta direta do `/ai-eng`: (1) s193 = parte 2 PRIMEIRO, estudo depois; (2) parte 2 pelo PRINCIPAL, sem filho (substitui o plano de `faed509`, que dava as 3 funcoes puras a um filho); (3) manifesto DIFF logo apos a parte 2, lote no `db` fica no v1; (4) Autopsia UERJ 2023 vira arquivo do hub no primeiro publish depois da parte 2 -- a avulsa o operador apaga depois de conferir.
+
+## 1. O que foi feito
+- **Notas no hub = 0** em `sessoes/2026-09-22h/notas` (lido as ~22h25 e de novo as ~23h05): nada esperava gravacao, N = 0. O `/ai-eng` citou `sessoes/2026-09-22/notas` -- essa e a colecao do player AVULSO de 22/09; a do hub e `2026-09-22h` (as duas vazias no hub).
+- **Golden de partida:** 24 testes verdes, revlog 3.071, releitura das notas de 22/09 com o codigo velho = N 1 (regravaria o #92).
+- **Parte 2 (`95bcc6d`):** `app/utils/notas_player.py` (novo, puro) com `relogio` (ts ISO UTC -> local naive truncado ao segundo; ts sem fuso recusado), `validar_nota` (quarentena), `situacao` (JA_GRAVADA / FORA_DE_ORDEM / NOVA por IGUALDADE), `defeito_ja_marcado` e `ultima_revisao`. Fiacao: `FSRS.evaluate(quando)`, `db.record_review(quando)` e `_aplicar_review(quando)`, leitor `db.estado_gravacao_player`, `fsrs_queue --record-lote` (N = so as novas, aplicadas em ordem de ts; doc estranho sai `[REJEITADA]` sem derrubar o lote). Gate lapidado nos 3 portadores no mesmo commit (`revisar.md`, contrato Clausula 15 -> CHECK, HANDOFF l.5). Golden batido no banco real: revlog 3.071 -> 3.071, releitura de 22/09 = N 0 (o #92 sai FORA DE ORDEM, como o anti-scope previu), `--apply --expect 0` exit 0.
+- **DoD da parte 2, por evidencia:** (1) relogio `tools/test_record_review.py:173` (review_time e due a partir de `quando`) e `:194` (futuro -> ValueError, nada gravado); ordem de ts `tools/test_fsrs_queue_player.py:424`; (2) releitura grava 0 com `--expect 0` `:408`, FORA DE ORDEM reportada `:438`, defeito nao remarca `:466`; (3) quarentena 1 doc de cada tipo + 2 validos `:480`, CLI sai 0 com rejeitada e 2 so com arquivo sem `notas` `:524`; (4) UTC -> local com fuso injetado `tools/test_notas_player.py:55` e `test_fsrs_queue_player.py:455`; (5) leitura so por `db.py` (SELECT), `test_writer_allowlist` sem edicao, `fsrs_queue` sem `sqlite3` `:551`; (6) `auto_check` PASSED, `revisar.md` l.138 e `conventions.md` FSRS, espelho regenerado.
+- **Manifesto DIFF (`4b21dfe`, spec `.vibeflow/specs/medhub-hub-v1-manifesto-diff.md`):** `files` leva so o novo ou alterado; um path so fica MANTIDO com 3 evidencias (hash do registro + path na listagem viva + tamanho vivo igual); `--confirmar` escreve o registro DEPOIS do publish aceito; `--publicado` aceita a listagem do Artifact colada como sai. Testes `tools/test_hub.py:223-303` (8 novos).
+- **Semeadura unica do registro** (script no scratchpad, fora do repo): as 6 aulas + painel publicados na s192 entraram com evidencia por arquivo -- tamanho vivo == local e nenhum commit nem edicao na fonte desde `d42a0af`. Sem ela, o 1o publish com DIFF mandaria as 6 aulas de novo, e cada uma teria de ser relida inteira.
+- **Autopsia no hub:** `git mv artifacts/autopsia-2026-09-20.html artifacts/aula-autopsia-uerj-2023.html` -- entra pela convencao `aula-*` (alargar o glob puxaria 3 autopsias antigas de `artifacts/`); ponteiros vivos corrigidos (`_doc` de `artifacts/autopsia-2026-09-20.json` e a memoria do resultado). Leitura integral por 1 Sonnet: PUBLICAVEL (sem dado pessoal, sem chamada externa, sem link relativo; o unico script e filtro local com `localStorage`).
+- **Publish (Version 2 do hub):** `files` = 2 (Autopsia nova + painel regenerado), 6 aulas MANTIDAS; `--confirmar` -> registro com 8 arquivos; a listagem viva deu 9 entradas com os tamanhos do registro. Antes, o `index.html` novo foi diffado contra a versao viva: 6 linhas diferentes (carimbo, a entrada da Autopsia, 1 comentario do template).
+- Suite **986 -> 1015**; `auto_check --changed` PASSED nos dois commits; orfas do item 1.10 seguem em 127 (a catraca acusou 129 no meio: 1 linha nova sem terminal, anotada com CHECK).
+
+## 2. Decisoes
+- **Guarda de ordem no adapter do FSRS:** o py-fsrs 6.3.1 NAO recusa `review_datetime` anterior ao `last_review` -- calcula `days < 1` e trata como revisao de curto prazo, em silencio. O risco da spec supunha recusa. `FSRS.evaluate(quando)` recusa revisao nao posterior a ultima; `_aplicar_review` recusa `quando` no futuro. As duas antes de qualquer escrita.
+- **Proveniencia (F76) no instante da revisao:** `bucket_de(instante=quando)`. Gravada no dia seguinte, uma nota de card "agendado" seria recomputada como "vencido" e plantaria divergencia falsa no contador de gate-miss (B1). Fora da spec; testado (`test_record_review.py:225`).
+- **Registro sem `quando` nao grava** (`SEM RELOGIO`): fecha o buraco de gravar sem idempotencia por chamada direta ao `aplicar_notas`. A fixture de `test_count_assert_pos_pega_revisao_que_nao_gravou` ganhou `quando` e `gravado_fn` injetado; asserts intocados.
+- **Registro do DIFF em `tmp/hub/`** (local, gitignored): perde-lo custa um publish completo, nunca um publish errado.
+
+## 3. Achados (reportados ao `/ai-eng`)
+1. Colecao do hub = `sessoes/2026-09-22h/notas`, nao `2026-09-22`.
+2. py-fsrs nao recusa revisao anterior ao `last_review` (acima).
+3. O sensor de alcancabilidade conta o stem `hub` em `.py`: citar o slug `medhub-hub-v0-part-2` em docstring deu +5 referenciadores ao `tools/hub.py`, a tabela gerada do AGENTE 7.4 ficou stale e `test_repo_real_consistente` ficou vermelho ate recolar. Limite declarado do sensor; todo slug `medhub-hub-*` em codigo infla o hub.py.
+4. Poda: o gate "releitura com 0 novas e 0 REJEITADAS" trava para sempre numa sessao com um doc permanentemente estranho. Decisao pendente: podar o rejeitado depois de reportado no session log?
+5. FORA DE ORDEM na pratica: se o operador drenar no celular e revisar o MESMO card no `/revisar` do chat antes de as notas do hub serem gravadas, a nota do celular sai FORA DE ORDEM e se perde (reportada, nunca em silencio). Regra de rito candidata: gravar o hub antes de qualquer `/revisar` no chat.
+6. O `git mv` da Autopsia ja estava staged e entrou no commit do DIFF (`4b21dfe`) sem ser descrito nele -- inocuo; licao: `git diff --cached --stat` antes de commitar depois de `git mv`.
+
+## 4. Custo dos subagentes (fonte: `usage` do harness)
+- Leitura integral da Autopsia (399 KB, 1.543 linhas, 17 fatias contiguas), Sonnet: **244.531 tokens / 23 tool uses / 3,8 min**. O que o DIFF evitou neste publish: reler as 6 aulas (378.575 tokens na s192).
+
+## 5. Artefatos
+`app/utils/notas_player.py` (novo), `app/utils/fsrs.py`, `app/utils/db.py`, `tools/fsrs_queue.py`, `tools/hub.py`, `tools/test_notas_player.py` (novo), `tools/test_fsrs_queue_player.py`, `tools/test_record_review.py`, `tools/test_hub.py`, `pytest.ini`, `.claude/commands/{revisar,engenharia-cli}.md` (+ espelhos), `.agents/workflows/registrar-sessao.md`, `core/contracts/revisao-calibrada-contract.md`, `.vibeflow/conventions.md`, `.vibeflow/specs/medhub-hub-v0-part-2.md` (implemented), `.vibeflow/specs/medhub-hub-v1-manifesto-diff.md` (novo), `AGENTE.md` (tabela 7.4 recolada), `artifacts/aula-autopsia-uerj-2023.html` (renomeada), `artifacts/autopsia-2026-09-20.json`, `artifacts/painel.html`, `HANDOFF.md`, `ESTADO.md`, este log. Removido: `tmp/medhub-hub-v0-part-2-wip.patch` (absorvido).
+
+## 6. Proximos passos
+1. Operador: abrir a Autopsia na aba Aulas do hub e SO DEPOIS apagar a avulsa GjpAqF9HVTTDVRUZLkutyf.
+2. Estudo (a 2a metade da s193 ou a s194): notas do hub pelo rito (`--record-lote` dry-run -> `--apply --expect N`); feedback das listas bloco a bloco (`registrar_sessao_bulk` -> `plano.py --concluir` -> `/analisar-questao` com o racional dele).
+3. Hub: parte 4 (medicao: drill >= 20 no celular com 1 aula no meio, 2 fechamentos); `/vibeflow:audit` formal das partes 1-3 + o DIFF junto dela; v1b = lote no `db` e `index.html` so quando o codigo muda.
+4. Decisoes do `/ai-eng`: achados 4 e 5 acima.

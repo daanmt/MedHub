@@ -141,18 +141,38 @@ MARCA_FECHA = "</script>"
 TETO_FALLBACK = 60
 
 
-def teto_do_dia(ordered):
-    """Teto de cards do dia. O SSOT do numero e `day_plan` (F64: UM contador --
-    `vencidos = atrasados + hoje`, nunca `atrasados` sozinho). Import indisponivel
+def teto_do_dia(ordered, consumo_hoje=0):
+    """SALDO de cards do dia: o teto de `day_plan` (F64: UM contador --
+    `vencidos = atrasados + hoje`, nunca `atrasados` sozinho) menos `consumo_hoje`,
+    as revisoes ja gravadas hoje (s194: o teto e do dia, nao do lote -- sem o
+    desconto o /hub-backend publicaria o teto inteiro a cada lote drenado).
+    `consumo_hoje=None` (contador indisponivel) = sem desconto. Import indisponivel
     -> TETO_FALLBACK com WARN em stderr: degrada, mas nunca em silencio (F60)."""
     vencidos = sum(1 for c in ordered if c.get("bucket") in ("atrasados", "hoje"))
     try:
         import day_plan
-        return int(day_plan._teto_efetivo(vencidos))
+        teto = int(day_plan._teto_efetivo(vencidos))
     except Exception as e:
         print("[WARN] teto do dia veio do fallback (%s): day_plan indisponivel (%s)"
               % (TETO_FALLBACK, e), file=sys.stderr)
-        return TETO_FALLBACK
+        teto = TETO_FALLBACK
+    return max(0, teto - int(consumo_hoje or 0))
+
+
+def consumo_do_dia():
+    """Revisoes ja gravadas hoje -- o MESMO contador do "usados hoje" do boot
+    (`day_plan.realizado_do_dia`, leitor read-only). Falha = None + WARN (F60)."""
+    try:
+        import day_plan
+        con = db.get_connection()
+        try:
+            return int(day_plan.realizado_do_dia(con, date.today().isoformat())["cards"])
+        finally:
+            con.close()
+    except Exception as e:
+        print("[WARN] consumo do dia indisponivel (%s): export sem desconto" % e,
+              file=sys.stderr)
+        return None
 
 
 def montar_lote(ordered, limit=None, sessao=None, gerado_em=None):
@@ -505,7 +525,8 @@ def main():
     acao.add_argument("--export-player", dest="export_player", action="store_true",
                       help="Exporta o lote do dia p/ o player (JSON com sessao, "
                            "gerado_em, cards[], agenda_base). Mesma ordem/buckets do "
-                           "--list; sem --limit, corta no teto do dia. Cada card leva "
+                           "--list; sem --limit, corta no SALDO do dia (teto menos as "
+                           "revisoes ja gravadas hoje). Cada card leva "
                            "`previsao` (vencimento por nota 1-4, o mesmo do --preview) "
                            "e o lote leva a carga dos 7 dias seguintes fora dele -- a "
                            "agenda da tela de fim")
@@ -580,14 +601,16 @@ def main():
         ordered = _ordered_queue(area=args.area, tema=args.tema, limit=None,
                                  new_limit=args.new_limit,
                                  prevalencia=args.prevalencia, cluster=args.cluster)
-        limite = args.limit if args.limit is not None else teto_do_dia(ordered)
+        consumo = None if args.limit is not None else consumo_do_dia()
+        limite = args.limit if args.limit is not None else teto_do_dia(ordered, consumo)
         lote = anexar_agenda(montar_lote(ordered, limit=limite, sessao=args.sessao))
         destino = Path(args.out) if args.out else Path("tmp") / ("player_%s.json" % lote["sessao"])
         destino.parent.mkdir(parents=True, exist_ok=True)
         destino.write_text(json.dumps(lote, ensure_ascii=False, indent=1, default=str),
                            encoding="utf-8")
         _emit({"export": str(destino), "sessao": lote["sessao"],
-               "total": lote["total"], "teto": limite, "pool": len(ordered)})
+               "total": lote["total"], "teto": limite, "consumo_hoje": consumo,
+               "pool": len(ordered)})
         return
 
     if args.build_player:

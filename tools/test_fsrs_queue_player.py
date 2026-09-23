@@ -156,6 +156,16 @@ def test_teto_do_dia_vem_do_day_plan_em_regime_de_divida():
     assert teto_do_dia([{"bucket": "novos"}] * 5) == 60
 
 
+def test_teto_do_dia_desconta_o_que_ja_foi_revisado_hoje():
+    """s194: o teto e do DIA, nao do lote. Com o /hub-backend publicando um lote novo
+    a cada lote drenado, sem o desconto cada lote traria o teto inteiro (a s194 tinha
+    159 revisoes gravadas e o export ainda montava 90). Saldo nunca fica negativo."""
+    fila = ([{"bucket": "atrasados"}] * 50) + ([{"bucket": "hoje"}] * 20)
+    assert teto_do_dia(fila, consumo_hoje=30) == 60
+    assert teto_do_dia(fila, consumo_hoje=159) == 0
+    assert teto_do_dia([{"bucket": "novos"}] * 5, consumo_hoje=None) == 60
+
+
 # --------------------------------------------------------------------------
 # 2. Build: injecao + escape de </script>
 # --------------------------------------------------------------------------

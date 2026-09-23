@@ -207,19 +207,32 @@ def lista_de_notas(obj):
     return notas if isinstance(notas, list) else None
 
 
-def ler_notas(obj, cards, agora=None, fuso=None):
-    """Normaliza o JSON de notas vindo da pagina (input NAO confiavel).
+RAIZ = Path(__file__).resolve().parents[1]
+#: Quarentena no SSOT (s193, decisao 4 do `/ai-eng`): doc rejeitado ou nota FORA DE ORDEM
+#: e copiado INTEIRO, com o motivo, para `history/quarentena/<sessao>.json` no `--apply` --
+#: nada sai do `db` da pagina (poda) sem copia commitada no repo.
+PASTA_QUARENTENA = RAIZ / "history" / "quarentena"
+#: Marca da ultima gravacao do hub (s193, decisao 5): a fila do chat avisa se ela e velha.
+MARCADOR_HUB = RAIZ / "tmp" / "hub" / "ultima_gravacao_hub.json"
+JANELA_HUB_H = 6
 
-    Devolve `(registros, rejeitadas, avisos)`; `registros` = [{card_id, rating,
-    defeito, motivo, selection_reason, quando}], `quando` = o relogio da revisao
-    (`notas_player.relogio`). QUARENTENA (s193): cada doc estranho -- card fora do
-    lote, rating fora de 1..4, defeito sem motivo, sem rating e sem defeito, ts
-    ausente/ilegivel/sem fuso/no futuro -- sai em `rejeitadas` com o motivo, e os
-    validos seguem. card_id repetido conta UMA vez -- a nota de MENOR ts, a 1a de
-    fato -- com AVISO (o relearning da pagina nunca gera segunda nota gravavel)."""
+
+def arquivo_quarentena(sessao, pasta=None):
+    """`history/quarentena/<sessao>.json` (sessao saneada para nome de arquivo)."""
+    nome = "".join(ch if ch.isalnum() or ch in "._-" else "-" for ch in str(sessao or "sessao"))
+    return Path(pasta or PASTA_QUARENTENA) / (nome + ".json")
+
+
+def triar_notas(obj, cards, agora=None, fuso=None):
+    """A quarentena com o doc CRU: `(registros, rejeitadas, avisos)`.
+
+    `rejeitadas` = [{"indice", "doc", "motivo"}] -- o que o `--apply` arquiva antes de
+    qualquer poda; cada `registro` leva o doc cru em "doc" (a nota FORA DE ORDEM tambem
+    e arquivada inteira). Regras em `ler_notas`."""
     notas = lista_de_notas(obj)
     if notas is None:
-        return [], ["JSON de notas sem a lista `notas`"], []
+        return [], [{"indice": None, "doc": None,
+                     "motivo": "JSON de notas sem a lista `notas`"}], []
     validos = {}
     for c in cards or []:
         if c.get("card_id") is not None:
@@ -229,8 +242,9 @@ def ler_notas(obj, cards, agora=None, fuso=None):
     for i, n in enumerate(notas):
         registro, motivo = notas_player.validar_nota(n, validos, agora, fuso)
         if registro is None:
-            rejeitadas.append("nota #%d: %s" % (i, motivo))
+            rejeitadas.append({"indice": i, "doc": n, "motivo": motivo})
             continue
+        registro["doc"] = n
         cid = registro["card_id"]
         primeira = por_card.get(cid)
         if primeira is not None:
@@ -244,6 +258,82 @@ def ler_notas(obj, cards, agora=None, fuso=None):
     return list(por_card.values()), rejeitadas, avisos
 
 
+def ler_notas(obj, cards, agora=None, fuso=None):
+    """Normaliza o JSON de notas vindo da pagina (input NAO confiavel).
+
+    Devolve `(registros, rejeitadas, avisos)`; `registros` = [{card_id, rating,
+    defeito, motivo, selection_reason, quando, doc}], `quando` = o relogio da revisao
+    (`notas_player.relogio`). QUARENTENA (s193): cada doc estranho -- card fora do
+    lote, rating fora de 1..4, defeito sem motivo, sem rating e sem defeito, ts
+    ausente/ilegivel/sem fuso/no futuro -- sai em `rejeitadas` com o motivo (texto;
+    o detalhe com o doc cru e o `triar_notas`), e os validos seguem. card_id repetido
+    conta UMA vez -- a nota de MENOR ts, a 1a de fato -- com AVISO (o relearning da
+    pagina nunca gera segunda nota gravavel)."""
+    registros, rejeitadas, avisos = triar_notas(obj, cards, agora, fuso)
+    textos = [r["motivo"] if r["indice"] is None else "nota #%d: %s" % (r["indice"], r["motivo"])
+              for r in rejeitadas]
+    return registros, textos, avisos
+
+
+def arquivar_quarentena(caminho, sessao, itens, agora=None):
+    """Acrescenta `itens` ({"tipo", "motivo", "doc"}) ao arquivo de quarentena da sessao.
+
+    Idempotente: o mesmo (tipo, doc) nao entra duas vezes -- reler e regravar a sessao nao
+    duplica. Devolve (novos, total). Grava so no repo (JSON); nunca no banco."""
+    caminho = Path(caminho)
+    atual = {"sessao": sessao, "itens": []}
+    if caminho.is_file():
+        atual = json.loads(caminho.read_text(encoding="utf-8"))
+    chave = lambda it: (it["tipo"], json.dumps(it["doc"], sort_keys=True, ensure_ascii=False))
+    vistos = {chave(it) for it in atual.get("itens", [])}
+    carimbo = (agora or db.agora()).strftime("%Y-%m-%d %H:%M:%S")
+    novos = 0
+    for it in itens:
+        if chave(it) in vistos:
+            continue
+        vistos.add(chave(it))
+        atual.setdefault("itens", []).append(dict(it, arquivado_em=carimbo))
+        novos += 1
+    if novos:
+        atual["_doc"] = ("Quarentena do fsrs_queue --record-lote (s193): doc rejeitado ou nota "
+                         "FORA DE ORDEM, copiado inteiro com o motivo ANTES de qualquer poda do "
+                         "db da pagina. Recuperacao e manual.")
+        caminho.parent.mkdir(parents=True, exist_ok=True)
+        caminho.write_text(json.dumps(atual, ensure_ascii=False, indent=1) + "\n",
+                           encoding="utf-8")
+    return novos, len(atual.get("itens", []))
+
+
+def aviso_hub(marcador, agora, janela_h=JANELA_HUB_H):
+    """O WARN da fila do chat (s193, decisao 5 do `/ai-eng`), PURO: None se o hub foi
+    gravado ha menos de `janela_h` horas; senao o texto. `marcador` = o dict de
+    `ultima_gravacao_hub.json` ou None."""
+    from datetime import timedelta
+    try:
+        quando = datetime.fromisoformat(str((marcador or {}).get("gravado_em")))
+    except ValueError:
+        quando = None
+    if quando is not None and agora - quando <= timedelta(hours=janela_h):
+        return None
+    ultima = "nunca" if quando is None else quando.strftime("%d/%m %H:%M")
+    return ("[WARN] HUB: ultima gravacao do hub = %s (janela %dh). O /revisar no chat ABRE "
+            "gravando as notas pendentes do hub -- ArtifactData list da colecao viva (linha 3 "
+            "do HANDOFF) -> --record-lote dry-run -> --apply --expect N (N pode ser 0); senao "
+            "a nota do celular sai FORA DE ORDEM (revisar.md)." % (ultima, janela_h))
+
+
+def _avisar_hub(caminho=None):
+    """Le o marcador (ausente/ilegivel = nunca) e imprime o aviso em STDERR -- o stdout da
+    fila e JSON por contrato."""
+    try:
+        marcador = json.loads(Path(caminho or MARCADOR_HUB).read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        marcador = None
+    texto = aviso_hub(marcador, db.agora())
+    if texto:
+        print(texto, file=sys.stderr)
+
+
 def _contar_revlog():
     """COUNT do fsrs_revlog pela conexao canonica (leitura; nao abre sqlite3 proprio)."""
     conn = db.get_connection()
@@ -254,7 +344,8 @@ def _contar_revlog():
 
 
 def aplicar_notas(registros, apply=False, expect=None, out=print,
-                  record_fn=None, reforja_fn=None, count_fn=None, gravado_fn=None):
+                  record_fn=None, reforja_fn=None, count_fn=None, gravado_fn=None,
+                  rejeitadas=(), quarentena=None, marcador=None, sessao=None):
     """Grava o lote de notas. Dry-run por default (mesmo rito do cards_prune).
 
     Cada nota com rating e classificada contra o revlog do card
@@ -264,7 +355,10 @@ def aplicar_notas(registros, apply=False, expect=None, out=print,
     `--expect` igual a esse N (COUNT-ASSERT pre) e confere que `fsrs_revlog`
     cresceu EXATAMENTE N (COUNT-ASSERT pos). Os `defeito` viram marca de reforja
     (`origem='player'`), que nao conta como revisao -- uma vez so por nota.
-    Retorna (exit_code, N)."""
+    `quarentena` (path): no `--apply`, as `rejeitadas` ({"indice", "doc", "motivo"}, de
+    `triar_notas`) e as FORA DE ORDEM sao arquivadas inteiras ali ANTES de gravar.
+    `marcador` (path): com o COUNT-ASSERT batido, registra a gravacao do hub (a fila do
+    chat avisa quando ela esta velha). Retorna (exit_code, N)."""
     record_fn = record_fn or db.record_review
     reforja_fn = reforja_fn or db.marcar_reforja
     count_fn = count_fn or _contar_revlog
@@ -311,12 +405,24 @@ def aplicar_notas(registros, apply=False, expect=None, out=print,
     if ja_marcados:
         out("  DEFEITO JA MARCADO (sem 2a marca): %s"
             % ", ".join(str(r["card_id"]) for r in ja_marcados))
+    arquivar = ([{"tipo": "rejeitada", "motivo": r["motivo"], "doc": r["doc"]}
+                 for r in rejeitadas if r.get("indice") is not None]
+                + [{"tipo": "fora_de_ordem", "doc": r.get("doc"),
+                    "motivo": "nota de %s; o revlog ja tem revisao de %s" % (r["quando"], ultima)}
+                   for r, ultima in fora_de_ordem])
+    if arquivar and quarentena is not None:
+        out("  QUARENTENA: %d doc(s) %s em %s (antes de qualquer poda)"
+            % (len(arquivar), "arquivados" if apply else "a arquivar no --apply", quarentena))
     if not apply:
         out("  DRY-RUN: nada gravado. Para aplicar: --apply --expect %d" % n)
         return 0, n
     if expect is None or expect != n:
         out("  RECUSADO: --expect %s != N medido %d. Nada gravado." % (expect, n))
         return 2, n
+    if arquivar and quarentena is not None:
+        novos, total = arquivar_quarentena(quarentena, sessao, arquivar)
+        out("  quarentena: +%d novo(s), %d no arquivo -- commitar ANTES de podar o db"
+            % (novos, total))
     antes = count_fn()
     gravados = 0
     for r in novas:
@@ -339,6 +445,11 @@ def aplicar_notas(registros, apply=False, expect=None, out=print,
             % (depois - antes, n))
         return 2, n
     out("  OK: %d revisao(oes) gravada(s); COUNT-ASSERT pos batido." % n)
+    if marcador is not None:
+        marca = {"sessao": sessao, "gravado_em": db.agora().isoformat(timespec="seconds"),
+                 "novas": n, "arquivadas": len(arquivar)}
+        Path(marcador).parent.mkdir(parents=True, exist_ok=True)
+        Path(marcador).write_text(json.dumps(marca, ensure_ascii=False) + "\n", encoding="utf-8")
     return 0, n
 
 
@@ -431,6 +542,7 @@ def main():
         return
 
     if args.export_player:
+        _avisar_hub()           # trocar o lote sem gravar a aba Cards perde a sessao das notas
         ordered = _ordered_queue(area=args.area, tema=args.tema, limit=None,
                                  new_limit=args.new_limit,
                                  prevalencia=args.prevalencia, cluster=args.cluster)
@@ -469,17 +581,21 @@ def main():
             print("[record-lote] RECUSADO: JSON de notas sem a lista `notas`. Nada gravado.",
                   file=sys.stderr)
             sys.exit(2)
-        registros, rejeitadas, avisos = ler_notas(notas_obj, lote.get("cards", []))
+        registros, rejeitadas, avisos = triar_notas(notas_obj, lote.get("cards", []))
         for a in avisos:
             print("[WARN] " + a, file=sys.stderr)
         # Quarentena (s193): doc estranho e reportado e fica de fora; os validos
-        # seguem. Nao sai 2 -- um doc torto nao trava as notas boas do operador.
-        for e in rejeitadas:
-            print("[REJEITADA] " + e, file=sys.stderr)
+        # seguem. Nao sai 2 -- um doc torto nao trava as notas boas do operador. No
+        # --apply ele e ARQUIVADO inteiro em history/quarentena/<sessao>.json.
+        for r in rejeitadas:
+            print("[REJEITADA] nota #%s: %s" % (r["indice"], r["motivo"]), file=sys.stderr)
         if rejeitadas:
             print("[record-lote] rejeitadas=%d (nada delas e gravado; motivo por doc em "
                   "stderr)" % len(rejeitadas))
-        code, _ = aplicar_notas(registros, apply=args.apply, expect=args.expect)
+        sessao = lote.get("sessao") or "sessao"
+        code, _ = aplicar_notas(registros, apply=args.apply, expect=args.expect,
+                                rejeitadas=rejeitadas, quarentena=arquivo_quarentena(sessao),
+                                marcador=MARCADOR_HUB, sessao=sessao)
         if code:
             sys.exit(code)
         return
@@ -526,6 +642,8 @@ def main():
         _emit({"card_id": args.preview, "preview": db.preview_ratings(args.preview)})
         return
 
+    # s193 (decisao 5 do /ai-eng): a fila do chat nunca passa na frente do celular.
+    _avisar_hub()
     ordered = _ordered_queue(area=args.area, tema=args.tema,
                              limit=args.limit, new_limit=args.new_limit, prevalencia=args.prevalencia,
                              cluster=args.cluster)

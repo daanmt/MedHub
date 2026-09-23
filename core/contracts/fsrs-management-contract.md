@@ -2,12 +2,12 @@
 type: contract
 layer: core
 status: canonical
-version: 1.4
+version: 1.5
 relates_to: [reconcile-contract, estado-contract, AGENTE]
 ---
 
 # Contrato de Gerenciamento do FSRS
-**Versão 1.4 | 2026-09-17 (s185, F109: a ordem intercalada é o default DELIBERADO; `--cluster` só onboarding de cluster frio / andaime) · v1.3 2026-09-10 (s176, item 1.2 -- F64, o contador do regime) · v1.2 (s176, item 0.7 -- promotes F71 e F80) · v1.1 2026-07-05 (s108+, F3/F4 do ledger AUDITORIA_MEDHUB) · v1.0 2026-06-03 (sessão 075)**
+**Versão 1.5 | 2026-09-22 (s193: relógio da revisão no `record_review` + o fato de biblioteca do py-fsrs 6.3.1, com teste) · v1.4 2026-09-17 (s185, F109: a ordem intercalada é o default DELIBERADO; `--cluster` só onboarding de cluster frio / andaime) · v1.3 2026-09-10 (s176, item 1.2 -- F64, o contador do regime) · v1.2 (s176, item 0.7 -- promotes F71 e F80) · v1.1 2026-07-05 (s108+, F3/F4 do ledger AUDITORIA_MEDHUB) · v1.0 2026-06-03 (sessão 075)**
 
 > Documento normativo. Define como a fila de repetição espaçada é gerenciada, drenada e mantida.
 > Referenciado por: `AGENTE.md`, `reconcile-contract.md` (W3), `.claude/commands/revisar.md`, `.claude/commands/estilo-flashcard.md`.
@@ -126,6 +126,12 @@ Backlog = cards `state = 0` (nunca revisados). Após a bankruptcy, ~307 cards qu
 
 ---
 
+## Relógio da revisão e um fato de biblioteca (v1.5, s193)
+
+`record_review(..., quando=...)` e `FSRS.evaluate(..., quando=...)` gravam e calculam no instante da REVISÃO -- a nota do player (`medhub-hub-v0-part-2`); sem `quando`, no relógio da gravação, como sempre. 🔴 **Fato de biblioteca, com versão:** o **py-fsrs 6.3.1** NÃO recusa `review_datetime` anterior ao `last_review` -- calcula `days < 1`, trata como revisão de curto prazo e segue em silêncio. Por isso a guarda de ordem mora no adapter (`app/utils/fsrs.py`): revisão não posterior à última -> `ValueError`, nada gravado; e `_aplicar_review` recusa `quando` no futuro. Se a lib mudar de versão ou de comportamento, o teste falha e o fato é reconferido aqui.  <!-- CHECK: test_pyfsrs_aceita_revisao_retroativa_em_silencio -->
+
+---
+
 ## Zero-DB no Cloud (invariante)
 
 `ipub.db` é **local-only**. O `/revisar` roda na máquina onde o banco vive (inclusive via remote-control/celular) — é a interface única de revisão desde a pivotagem agent-first. Não há réplica hospedada do FSRS nem sincronização remota: qualquer estado de revisão fora desta máquina está fora de escopo.
@@ -139,6 +145,11 @@ No check de boot (`reconcile-contract.md`), reportar: total de cards qualitativo
 ---
 
 ## Changelog
+
+- **v1.5 (2026-09-22, s193 -- `medhub-hub-v0-part-2`):** nova seção §Relógio da revisão: o
+  `record_review` ganha `quando` (o instante da nota do player) e o contrato registra, com versão,
+  que o py-fsrs 6.3.1 aceita revisão retroativa em silêncio -- a guarda de ordem é do adapter.
+  Pedido do `/ai-eng`: fato de biblioteca vira teste (`test_pyfsrs_aceita_revisao_retroativa_em_silencio`).
 
 - **v1.4 (2026-09-17, s185 -- F109):** a §Política de fila passa a **declarar** que a ordem
   intercalada é escolha, não efeito colateral, com as fontes primárias da prática intercalada

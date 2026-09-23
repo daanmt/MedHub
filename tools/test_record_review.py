@@ -242,6 +242,26 @@ def test_proveniencia_e_a_do_instante_da_revisao():
     _com_db(corpo)
 
 
+def test_pyfsrs_aceita_revisao_retroativa_em_silencio():
+    """FATO DE BIBLIOTECA, com versao (s193; contrato `fsrs-management` v1.5): o py-fsrs
+    6.3.1 NAO recusa `review_datetime` anterior ao `last_review` -- calcula `days < 1`,
+    trata como revisao de curto prazo e segue, sem erro. E por isso que a guarda de ordem
+    mora no adapter (`FSRS.evaluate(quando)`). Se a lib mudar de versao ou de
+    comportamento, este teste avisa: reconferir o fato no contrato e a guarda."""
+    from datetime import timezone
+    from importlib.metadata import version
+    from fsrs import Card, Rating, Scheduler
+    assert version("fsrs") == "6.3.1", (
+        "py-fsrs mudou de versao (%s): reconferir o fato no contrato fsrs-management "
+        "(revisao retroativa aceita em silencio) e a guarda do adapter" % version("fsrs"))
+    s = Scheduler(learning_steps=(), enable_fuzzing=False)
+    depois = datetime(2026, 9, 22, 12, 0, tzinfo=timezone.utc)
+    card, _ = s.review_card(Card(), Rating.Good, depois)
+    antes = depois - timedelta(days=2)
+    retro, _ = s.review_card(card, Rating.Good, antes)          # nao levanta
+    assert retro.last_review == antes, "a lib aceita e grava a revisao no passado"
+
+
 def test_proveniencia_card_version_e_reason():
     """P3 part-1: revlog registra a versao VISTA e o motivo de servico; pos-
     reforja (card_version 1->2), a nova revisao registra 2 — 'v2 > v1?' vira
@@ -273,6 +293,7 @@ if __name__ == "__main__":
            test_record_review_recusa_quando_no_futuro_sem_gravar,
            test_record_review_recusa_revisao_que_nao_e_posterior_a_ultima,
            test_proveniencia_e_a_do_instante_da_revisao,
+           test_pyfsrs_aceita_revisao_retroativa_em_silencio,
            test_proveniencia_card_version_e_reason]
     falhas = 0
     for fn in fns:

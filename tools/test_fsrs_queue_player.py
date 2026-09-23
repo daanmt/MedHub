@@ -41,10 +41,12 @@ from tools.fsrs_queue import (  # noqa: E402
     MARCA_ABRE,
     MARCA_FECHA,
     aplicar_notas,
+    aviso_hub,
     injetar_lote,
     ler_notas,
     montar_lote,
     teto_do_dia,
+    triar_notas,
 )
 from tools.test_writer_allowlist import ALLOWLIST, ROOT, tabelas_escritas  # noqa: E402
 
@@ -506,6 +508,68 @@ def test_quarentena_grava_os_validos_e_reporta_cada_doc_estranho():
     _com_db(corpo)
 
 
+def test_rejeitada_e_fora_de_ordem_vao_inteiras_para_a_quarentena_no_apply():
+    """Decisao 4 do `/ai-eng` (s193): nada sai do `db` da pagina sem copia no SSOT. No
+    `--apply`, doc rejeitado e nota FORA DE ORDEM sao arquivados INTEIROS, com o motivo;
+    reler e regravar nao duplica; dry-run nao escreve."""
+    def corpo(tmp):
+        with tempfile.TemporaryDirectory() as pasta, _relogio():
+            q = os.path.join(pasta, "q.json")
+            assert _gravar([{"card_id": 1, "rating_primeira": 2,
+                             "ts": "2026-09-21T13:30:00Z"}], expect=1)[0] == 0
+            notas = {"notas": [{"card_id": 99, "rating_primeira": 3, "ts": _TS},
+                               {"card_id": 1, "rating_primeira": 3, "ts": "2026-09-20T10:00:00Z"},
+                               {"card_id": 2, "rating_primeira": 4, "ts": _TS_DEPOIS}]}
+            regs, rejeitadas, _ = triar_notas(notas, _CARDS, fuso=BRT)
+            aplicar_notas(regs, apply=False, rejeitadas=rejeitadas, quarentena=q, sessao="t",
+                          out=lambda *_: None)
+            assert not os.path.exists(q), "dry-run nao arquiva"
+            for esperado in (1, 0):                              # 2a vez = releitura
+                with contextlib.redirect_stderr(io.StringIO()):
+                    code, n = aplicar_notas(regs, apply=True, expect=esperado,
+                                            rejeitadas=rejeitadas, quarentena=q, sessao="t",
+                                            out=lambda *_: None)
+                assert code == 0 and n == esperado
+            arq = json.load(open(q, encoding="utf-8"))
+        tipos = sorted((it["tipo"], it["doc"]["card_id"]) for it in arq["itens"])
+        assert tipos == [("fora_de_ordem", 1), ("rejeitada", 99)], "sem duplicata na releitura"
+        assert all(it["motivo"] and it["arquivado_em"] for it in arq["itens"])
+        assert arq["sessao"] == "t"
+    _com_db(corpo)
+
+
+def test_recusa_do_expect_nao_arquiva_nem_marca_o_hub():
+    def corpo(tmp):
+        with tempfile.TemporaryDirectory() as pasta, _relogio():
+            q, m = os.path.join(pasta, "q.json"), os.path.join(pasta, "m.json")
+            regs, rejeitadas, _ = triar_notas({"notas": [
+                {"card_id": 99, "rating_primeira": 3, "ts": _TS},
+                {"card_id": 1, "rating_primeira": 3, "ts": _TS}]}, _CARDS, fuso=BRT)
+            code, _ = aplicar_notas(regs, apply=True, expect=7, rejeitadas=rejeitadas,
+                                    quarentena=q, marcador=m, sessao="t", out=lambda *_: None)
+            assert code == 2 and not os.path.exists(q) and not os.path.exists(m)
+            with contextlib.redirect_stderr(io.StringIO()):
+                code, _ = aplicar_notas(regs, apply=True, expect=1, rejeitadas=rejeitadas,
+                                        quarentena=q, marcador=m, sessao="t", out=lambda *_: None)
+            marca = json.load(open(m, encoding="utf-8"))
+        assert code == 0 and marca["sessao"] == "t" and marca["novas"] == 1
+        assert marca["arquivadas"] == 1 and marca["gravado_em"].startswith("2026-09-22T20:00")
+    _com_db(corpo)
+
+
+def test_fila_do_chat_avisa_quando_o_hub_nao_foi_gravado():
+    """Decisao 5 do `/ai-eng` (s193): o `/revisar` no chat ABRE gravando o hub. A fila
+    (`--next`/`--list`/`--export-player`) avisa em stderr quando a ultima gravacao do hub
+    passou da janela -- e o portador mais perto do ato (licao do F97)."""
+    agora = datetime(2026, 9, 23, 9, 0, 0)
+    assert aviso_hub({"gravado_em": "2026-09-23T08:30:00"}, agora) is None
+    assert aviso_hub({"gravado_em": "2026-09-23T03:00:00"}, agora) is None, "6h cravadas"
+    velho = aviso_hub({"gravado_em": "2026-09-22T20:00:00"}, agora)
+    assert velho and "22/09 20:00" in velho and "--record-lote" in velho
+    assert "nunca" in aviso_hub(None, agora)
+    assert "nunca" in aviso_hub({"gravado_em": "lixo"}, agora)
+
+
 def _rodar_cli(argv):
     """`main()` em processo, com stdout/stderr capturados. Devolve o exit code."""
     from tools import fsrs_queue
@@ -522,25 +586,41 @@ def _rodar_cli(argv):
 
 
 def test_cli_com_rejeitada_nao_sai_2_e_grava_os_validos():
+    from tools import fsrs_queue
+
     def corpo(tmp):
         with tempfile.TemporaryDirectory() as pasta:
-            lote = os.path.join(pasta, "lote.json")
-            notas = os.path.join(pasta, "notas.json")
-            with open(lote, "w", encoding="utf-8") as f:
-                json.dump({"sessao": "t", "cards": _CARDS}, f)
-            with open(notas, "w", encoding="utf-8") as f:
-                json.dump({"notas": [{"card_id": 99, "rating_primeira": 3, "ts": _TS},
-                                     {"card_id": 1, "rating_primeira": 3, "ts": _TS},
-                                     {"card_id": 2, "rating_primeira": 2, "ts": _TS_DEPOIS}]}, f)
-            with _relogio():
-                code = _rodar_cli(["--record-lote", notas, "--lote", lote,
-                                   "--apply", "--expect", "2"])
-            assert code == 0, "doc rejeitado nao derruba o lote"
-            assert _conta(tmp, "fsrs_revlog") == 2
-            with open(notas, "w", encoding="utf-8") as f:
-                json.dump({"nada": []}, f)
-            assert _rodar_cli(["--record-lote", notas, "--lote", lote]) == 2, (
-                "arquivo sem a lista `notas` e erro do ARQUIVO, nao de doc: sai 2")
+            # o --apply da CLI arquiva e marca: nunca no history/ nem no tmp/ reais
+            orig = fsrs_queue.PASTA_QUARENTENA, fsrs_queue.MARCADOR_HUB
+            fsrs_queue.PASTA_QUARENTENA = os.path.join(pasta, "quarentena")
+            fsrs_queue.MARCADOR_HUB = os.path.join(pasta, "marca.json")
+            try:
+                lote = os.path.join(pasta, "lote.json")
+                notas = os.path.join(pasta, "notas.json")
+                with open(lote, "w", encoding="utf-8") as f:
+                    json.dump({"sessao": "t", "cards": _CARDS}, f)
+                with open(notas, "w", encoding="utf-8") as f:
+                    json.dump({"notas": [{"card_id": 99, "rating_primeira": 3, "ts": _TS},
+                                         {"card_id": 1, "rating_primeira": 3, "ts": _TS},
+                                         {"card_id": 2, "rating_primeira": 2,
+                                          "ts": _TS_DEPOIS}]}, f)
+                with _relogio():
+                    code = _rodar_cli(["--record-lote", notas, "--lote", lote,
+                                       "--apply", "--expect", "2"])
+                assert code == 0, "doc rejeitado nao derruba o lote"
+                assert _conta(tmp, "fsrs_revlog") == 2
+                arquivado = json.load(open(os.path.join(pasta, "quarentena", "t.json"),
+                                           encoding="utf-8"))
+                assert [it["doc"]["card_id"] for it in arquivado["itens"]] == [99], (
+                    "a CLI arquiva o rejeitado em history/quarentena/<sessao>.json")
+                assert json.load(open(os.path.join(pasta, "marca.json"),
+                                      encoding="utf-8"))["novas"] == 2
+                with open(notas, "w", encoding="utf-8") as f:
+                    json.dump({"nada": []}, f)
+                assert _rodar_cli(["--record-lote", notas, "--lote", lote]) == 2, (
+                    "arquivo sem a lista `notas` e erro do ARQUIVO, nao de doc: sai 2")
+            finally:
+                fsrs_queue.PASTA_QUARENTENA, fsrs_queue.MARCADOR_HUB = orig
     _com_db(corpo)
 
 

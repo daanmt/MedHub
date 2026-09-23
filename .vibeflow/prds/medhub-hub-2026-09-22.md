@@ -105,6 +105,7 @@ este PRD e o portador do destilado no repo.
   `comandos` e `rd`); o servidor confirmou o teto: "1 of 5000 documents used".
 - **Pendente:** parte 2 (ver o estado no topo da spec) e parte 4 (medicao nas proximas sessoes e no
   celular). Gate no rito ate a parte 2: notas do hub nao sao gravadas.
+- **Custo de leitura por publish, com fonte (s193):** s192 = **378.575 tokens** para reler as 6 aulas antes do publish (Sonnet, `usage` do harness, `history/session_192.md` §4); s193, com o DIFF = **244.531 tokens** para 1 arquivo novo, a Autopsia de 399 KB (`history/session_193.md` §4) -- as 6 ja publicadas ficaram MANTIDAS e nao foram relidas.
 - **Notas do `/ai-eng` no selo (22/09):** (a) o manifesto do `--publicado` vira DIFF contra a listagem (omitido = mantido): so arquivo novo ou alterado entra, e aula ja publicada nunca e relida -- a regra "ler inteiro o que a sessao nao escreveu" custou 378k tokens para 6 aulas e se repetiria a cada fechamento; (b) candidato v1: o lote sai do `<script id="lote">` para o `db` (`lotes/<data>`), e o `index.html` (~226 KB) so e republicado quando o CODIGO muda. (c) DoD 2 ganha "links de fonte dentro da aula abrem": no `srcdoc` link relativo morre -- as 6 aulas de 22/09 so tem URL absoluta e ancora `#` (varredura da s192), entao passam por construcao; aula nova com link relativo quebraria.
 
 ## Success Criteria (DoD v0, binaria)

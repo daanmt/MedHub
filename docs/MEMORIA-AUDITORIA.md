@@ -291,6 +291,7 @@ nunca convertido em métrica para o painel ficar verde.
 <!-- TERMO-REVOGADO: Publicar como Artifact com | revisar.md 'DRENAR no player' + revisao-calibrada v1.7 (s192, Clausula 15, MedHub HUB) -- o lote nao vira mais artifact NOVO: a pagina e a aba Cards de UM artifact fixado, republicado no lugar com `url` -->
 <!-- TERMO-REVOGADO: publicar a aula-base como Artifact HTML direto | aula-base.md secao 4 (s192, MedHub HUB) -- a aula e `artifacts/aula-<slug>.html` e sobe como arquivo do hub (`aulas/<slug>.html`), nunca como artifact avulso -->
 <!-- TERMO-REVOGADO: sem prometer permanencia | registrar-sessao.md secao 6 (s192) -- a 'regra viva' da s191 (publicar sem url a cada artifact-deleted) foi REVERTIDA: com o hub fixado, 'mesma URL' volta a ser invariante do rito; artifact-deleted e excecao REPORTADA -->
+<!-- TERMO-REVOGADO: 0 novas e 0 rejeitadas | revisao-calibrada v1.8 (s193), Clausula 15 -- a poda exige 0 validas nao gravadas + rejeitadas e FORA DE ORDEM ARQUIVADAS em history/quarentena/<sessao>.json (decisao do /ai-eng) -->
 
 > **Por que os marcadores são comentários HTML:** eles não aparecem no render do documento (o
 > leitor humano lê a prosa acima, não a lista), mas são triviais de extrair. O registro fica onde a

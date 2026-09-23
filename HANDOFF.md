@@ -2,7 +2,7 @@
 *Atualizado: 2026-09-22 (~23h) -- **s192 (ENGENHARIA)**: MedHub HUB v0 no ar -- UMA pagina fixada com as abas Cards / Aulas / Painel (linha 3); o rito inteiro republica nela (F90, contrato `revisao-calibrada` v1.7). A parte 2 (gravacao das notas do hub) ficou PENDENTE com gate no rito. A s193 abre pela parte 2 e depois pelo que ele traz (listas + drill no hub).*
 > 🏠 **MedHub HUB (1 artifact, fixado): https://claude.ai/artifact/3RksMfkzNWYSQD7D6JXNEr** -- abas Cards / Aulas / Painel. Republicar SEMPRE nesta URL (rito: `/revisar` "DRENAR no player"; `registrar-sessao` §6); `artifact-deleted` = recriar completo e REPORTAR aqui.
 
-> 🔴 **ABRIR A s193 POR AQUI:** (0) **PARTE 2 do hub ANTES de gravar qualquer nota do hub** -- spec `.vibeflow/specs/medhub-hub-v0-part-2.md` (relogio da revisao = ts da nota, idempotencia exata, quarentena); parcial em `tmp/medhub-hub-v0-part-2-wip.patch`; depois `/vibeflow:audit` das partes 1-3. (a) `ArtifactData list` em `sessoes/2026-09-22h/notas` NO HUB -- notas ficam la ate a parte 2 (gate: nao gravar, nao trocar o lote, nao podar). (b) Feedback das listas bloco a bloco: `registrar_sessao_bulk` -> `plano.py --concluir` -> `/analisar-questao` com o racional DELE.
+> 🔴 **ABRIR A s193 POR AQUI:** (0) **PARTE 2 do hub ANTES de gravar qualquer nota do hub** -- spec `.vibeflow/specs/medhub-hub-v0-part-2.md` (relogio da revisao = ts da nota, idempotencia exata, quarentena); parcial em `tmp/medhub-hub-v0-part-2-wip.patch`; depois `/vibeflow:audit` das partes 1-3. **TERMINAL:** se a s193 fechar sem a p2 verde, o fechamento dela aplica o fallback (`--record-lote` atual + `gravado_em` + troca de lote; sem poda) -- o hub nunca fica congelado por 2 sessoes. (a) `ArtifactData list` em `sessoes/2026-09-22h/notas` NO HUB -- notas ficam la ate a parte 2 (gate: nao gravar, nao trocar o lote, nao podar). (b) Feedback das listas bloco a bloco: `registrar_sessao_bulk` -> `plano.py --concluir` -> `/analisar-questao` com o racional DELE.
 
 > 🔒 **O SELO:** `python tools/selo.py` -- tabela DERIVADA, nunca digitada. Ledger ate **F128** (F127/F128 DECLARADOS, aguardam triagem do `/ai-eng`); 2 GATE do operador seguem (F87, F111).
 
@@ -43,6 +43,7 @@ Detalhe em `history/session_192.md`. (1) 1o ato: a nota do player de 22/09 grava
 ## Pendencias/observacoes ativas
 
 - 📄 Manual de Gestacao de Alto Risco (MS 2022) > 10 MB. 💉 Diretrizes 2026 a conferir: Calendario Vacinal, GINA, ATLS 11 (parcial), SINAN.
+- 🔴 **Instrucao para o OPERADOR fora das 8 primeiras linhas deste arquivo nao e instrucao, e arquivo** (s192: a ordem de apagar as aulas avulsas nao alcancou; ele apagou antes).
 - 🔴 **Ao responder item numerado do `/ai-eng`, casar por CONTEUDO, nunca por numero.** 📡 Canal = `SendMessage` entre sessoes locais (`ListAgents`); responder pelo `from` da mensagem mais recente.
 - 🔴 **Brief de subagente com conteudo clinico se escreve COM acentos** (4 de 5 filhos imitaram o brief sem acento, s190) e o insumo se valida ANTES do spawn. Regex sempre em string RAW; script de patch longo = arquivo no scratchpad, nunca heredoc com acento (o Git Bash corrompe).
 

@@ -27,6 +27,13 @@ relates_to:
 > e devolveu `db.py`/`fsrs_queue.py` ao HEAD (24 testes verdes). Ate esta parte entrar vale o GATE do
 > rito (`revisar.md`): notas do hub nao sao gravadas, o lote nao e trocado e nada e podado.
 
+> **Plano da s193 (ALTERA do `/ai-eng`, 22/09):** (i) um filho escreve 3 funcoes PURAS com teste, em
+> arquivo NOVO, sem tocar `db.py`/`fsrs_queue.py`: `ja_gravada(nota, revlog_do_card)`,
+> `validar_nota(nota, lote) -> ok | rejeitada+motivo`, `relogio(nota) -> review_time = ts`; (ii) a fiacao
+> em `record_review`/`--record-lote` e do PRINCIPAL, 1 commit pequeno, com golden de partida (24 testes
+> verdes + revlog 3.071 + `--expect 0` na releitura das notas de 22/09). O patch WIP e referencia, nao
+> base. **Terminal:** verde na s193; senao, fallback no fechamento dela (ver o gate em `revisar.md`).
+
 ## Objective
 Ler e gravar a mesma sessao de notas duas vezes grava ZERO na segunda; cada revisao entra no FSRS no
 momento em que aconteceu no celular; e doc estranho no `db` da pagina e recusado sem derrubar os validos.

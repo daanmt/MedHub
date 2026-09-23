@@ -28,7 +28,7 @@ Sessao de ENGENHARIA re-bootada pelo `/ai-eng` (ai-eng-9c), com o veredito da re
 
 ## 4. Custo dos subagentes (fonte: `usage` do harness)
 - Leitura integral das 6 aulas antes do publish (regra da ferramenta: nada e distribuido sem leitura INTEIRA), Sonnet: **378.575 tokens / 22 tool uses / 2,6 min** -- 5.338 linhas, 0 achados.
-- Parte 2, Opus: **custo nao reportado** (morto por `TaskStop` depois de ~1h; a notificacao de kill nao traz `usage`).
+- Parte 2, Opus: **NAO MEDIDO** -- nunca zero. Morto por `TaskStop` depois de ~1h, e a notificacao de kill nao traz `usage`: **furo do harness**, anotado como tal (registro do `/ai-eng`, 22/09).
 
 ## 5. Artefatos
 `tools/hub.py`, `tools/test_hub.py`, `core/templates/hub.html`, `core/templates/player.html`, `pytest.ini`, `.claude/commands/{engenharia-cli,revisar,aula-base}.md` (+ espelhos), `.agents/workflows/registrar-sessao.md`, `core/contracts/revisao-calibrada-contract.md`, `docs/MEMORIA-AUDITORIA.md`, `AGENTE.md` (tabela 7.4), `artifacts/painel.html`, PRD + 4 specs, `HANDOFF.md`, `ESTADO.md`, este log.
@@ -38,3 +38,7 @@ Sessao de ENGENHARIA re-bootada pelo `/ai-eng` (ai-eng-9c), com o veredito da re
 2. Operador: abrir o hub no celular, drenar, abrir 1 aula e voltar; SO DEPOIS apagar os artifacts avulsos (player P8qi... e as 4 aulas de 22/09).
 3. Parte 4 nas proximas sessoes; v1a (RD como arquivo) antes de 01/11; v1b (comandos) depois.
 4. Reforja do #92 (conteudo clinico invertido).
+
+## 7. Pos-selo (ALTERA do `/ai-eng`)
+- **Gate da parte 2 ganhou TERMINAL:** verde na s193; senao, fallback no fechamento dela (`--record-lote` atual + `gravado_em` + troca de lote; sem poda). Sem terminal, o hub congelaria o estudo depois de drenados os 220 cards.
+- **Alcance:** a ordem "apagar as aulas avulsas so depois de abrir 1 aula pelo hub" nao estava nas 8 primeiras linhas do HANDOFF e ele as apagou antes (moot). Regra: instrucao para o operador fora das 8 linhas do hook nao e instrucao, e arquivo.

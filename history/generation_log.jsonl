@@ -2143,3 +2143,15 @@
 {"ts": "2026-09-22T06:55:30", "tipo": "generation", "questao_id": 1083, "n_cards": 2, "avisos": 1}
 {"ts": "2026-09-22T06:55:30", "tipo": "generation", "questao_id": 1084, "n_cards": 2, "avisos": 1}
 {"ts": "2026-09-22T06:55:30", "tipo": "generation", "questao_id": 1085, "n_cards": 1, "avisos": 1}
+{"ts": "2026-09-23T17:00:41", "tipo": "reforja", "card_id": 1721, "writer": "recurate_cards", "version_antes": 1, "version_depois": 2, "reason": "reforja", "campos": ["verso_armadilha"], "n_campos": 1, "len_verso_antes": 179, "len_verso_depois": 179, "n_frases_antes": 2, "n_frases_depois": 2}
+{"ts": "2026-09-23T17:00:41", "tipo": "reforja", "card_id": 1722, "writer": "recurate_cards", "version_antes": 1, "version_depois": 2, "reason": "reforja", "campos": ["verso_armadilha"], "n_campos": 1, "len_verso_antes": 195, "len_verso_depois": 195, "n_frases_antes": 2, "n_frases_depois": 2}
+{"ts": "2026-09-23T17:00:41", "tipo": "reforja", "card_id": 1723, "writer": "recurate_cards", "version_antes": 1, "version_depois": 2, "reason": "reforja", "campos": ["verso_armadilha", "verso_regra_mestre"], "n_campos": 2, "len_verso_antes": 235, "len_verso_depois": 235, "n_frases_antes": 2, "n_frases_depois": 2}
+{"ts": "2026-09-23T17:00:41", "tipo": "reforja", "card_id": 1724, "writer": "recurate_cards", "version_antes": 1, "version_depois": 2, "reason": "reforja", "campos": ["verso_armadilha"], "n_campos": 1, "len_verso_antes": 222, "len_verso_depois": 222, "n_frases_antes": 1, "n_frases_depois": 1}
+{"ts": "2026-09-23T17:00:41", "tipo": "reforja", "card_id": 1725, "writer": "recurate_cards", "version_antes": 1, "version_depois": 2, "reason": "reforja", "campos": ["verso_armadilha"], "n_campos": 1, "len_verso_antes": 226, "len_verso_depois": 226, "n_frases_antes": 2, "n_frases_depois": 2}
+{"ts": "2026-09-23T17:00:41", "tipo": "reforja", "card_id": 1726, "writer": "recurate_cards", "version_antes": 1, "version_depois": 2, "reason": "reforja", "campos": ["verso_armadilha"], "n_campos": 1, "len_verso_antes": 196, "len_verso_depois": 196, "n_frases_antes": 2, "n_frases_depois": 2}
+{"ts": "2026-09-23T17:00:41", "tipo": "reforja", "card_id": 1727, "writer": "recurate_cards", "version_antes": 1, "version_depois": 2, "reason": "reforja", "campos": ["verso_armadilha"], "n_campos": 1, "len_verso_antes": 316, "len_verso_depois": 316, "n_frases_antes": 2, "n_frases_depois": 2}
+{"ts": "2026-09-23T17:00:41", "tipo": "reforja", "card_id": 1728, "writer": "recurate_cards", "version_antes": 1, "version_depois": 2, "reason": "reforja", "campos": ["verso_armadilha"], "n_campos": 1, "len_verso_antes": 238, "len_verso_depois": 238, "n_frases_antes": 3, "n_frases_depois": 3}
+{"ts": "2026-09-23T17:42:40", "tipo": "generation", "questao_id": 1086, "n_cards": 2, "avisos": 0}
+{"ts": "2026-09-23T17:42:40", "tipo": "generation", "questao_id": 1087, "n_cards": 1, "avisos": 0}
+{"ts": "2026-09-23T17:42:40", "tipo": "generation", "questao_id": 1088, "n_cards": 1, "avisos": 0}
+{"ts": "2026-09-23T17:46:05", "tipo": "generation", "questao_id": 1089, "n_cards": 1, "avisos": 1}

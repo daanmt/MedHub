@@ -880,3 +880,14 @@
 {"ts": "2026-09-23T01:29:50+00:00", "event": "opened", "check": "consistencia_registros", "fingerprint": "ae675f4ff819", "alvo": "AGENTE.md §7.4", "payload": {"check": "tabela"}}
 {"ts": "2026-09-23T01:38:47+00:00", "event": "resolved", "check": "consistencia_registros", "fingerprint": "ae675f4ff819", "alvo": "AGENTE.md §7.4"}
 {"ts": "2026-09-23T02:30:10+00:00", "event": "opened", "check": "doc_drift", "fingerprint": "95abf94de45a", "alvo": ".claude/commands/revisar.md:tmp/hub/ultima_gravacao_hub.json", "payload": {"tipo": "ref", "msg": "path citado nao existe no repo: tmp/hub/ultima_gravacao_hub.json"}}
+{"ts": "2026-09-23T20:01:40+00:00", "event": "resolved", "check": "doc_drift", "fingerprint": "95abf94de45a", "alvo": ".claude/commands/revisar.md:tmp/hub/ultima_gravacao_hub.json"}
+{"ts": "2026-09-23T20:36:18+00:00", "event": "opened", "check": "suites_orfas", "fingerprint": "f710f1712d66", "alvo": "test_player_js.py", "payload": {}}
+{"ts": "2026-09-23T20:36:33+00:00", "event": "opened", "check": "consistencia_registros", "fingerprint": "ae675f4ff819", "alvo": "AGENTE.md §7.4", "payload": {"check": "tabela"}}
+{"ts": "2026-09-23T20:46:28+00:00", "event": "resolved", "check": "suites_orfas", "fingerprint": "f710f1712d66", "alvo": "test_player_js.py"}
+{"ts": "2026-09-23T20:46:47+00:00", "event": "resolved", "check": "consistencia_registros", "fingerprint": "ae675f4ff819", "alvo": "AGENTE.md §7.4"}
+{"ts": "2026-09-23T21:07:35+00:00", "event": "opened", "check": "consistencia_registros", "fingerprint": "ae675f4ff819", "alvo": "AGENTE.md §7.4", "payload": {"check": "tabela"}}
+{"ts": "2026-09-23T21:17:12+00:00", "event": "resolved", "check": "consistencia_registros", "fingerprint": "ae675f4ff819", "alvo": "AGENTE.md §7.4"}
+{"ts": "2026-09-23T21:37:50+00:00", "event": "opened", "check": "consistencia_registros", "fingerprint": "ae675f4ff819", "alvo": "AGENTE.md §7.4", "payload": {"check": "tabela"}}
+{"ts": "2026-09-23T21:41:22+00:00", "event": "resolved", "check": "consistencia_registros", "fingerprint": "ae675f4ff819", "alvo": "AGENTE.md §7.4"}
+{"ts": "2026-09-23T21:54:03+00:00", "event": "opened", "check": "suites_orfas", "fingerprint": "9da59e5f8b07", "alvo": "test_hub_quadro.py", "payload": {}}
+{"ts": "2026-09-23T21:56:54+00:00", "event": "resolved", "check": "suites_orfas", "fingerprint": "9da59e5f8b07", "alvo": "test_hub_quadro.py"}

@@ -43,3 +43,4 @@
 
 ## hub-backend (tiques)
 - 2026-09-23 23:05 -- hub-backend: republicado com o mesmo lote 2026-09-23a (quadro de aulas mudou: s17 + cancer-de-mama feitos; saldo do dia zerado, consumo 159 -- fila de 24/09 fica para o 1o tique de amanha)
+- 2026-09-23 23:11 -- hub-backend: lote 2026-09-24a no ar (90 cards) exportado de vespera a pedido do operador (`--limit 90`, saldo de 24/09); o 2026-09-23a saiu vazio (nada gravado)

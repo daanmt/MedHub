@@ -1128,6 +1128,34 @@ def concluir(tarefa_id, sessao, data=None, out=print):
     return 0, resultado
 
 
+def concluir_leitura(tarefa_id, data=None, out=print):
+    """`--concluir ID --leitura` (s194, decisao do operador): tarefa de AULA -- sem
+    lista e sem questoes previstas -- fica feita pela leitura confirmada (o "feito" do
+    quadro de aulas do hub), sem bloco em `sessoes_bulk`, porque nao ha volume a
+    vincular. Tarefa com lista ou com questoes previstas e recusada: leitura nao
+    substitui o bloco de questoes."""
+    tarefa = db.plano_obter(tarefa_id)
+    if tarefa is None:
+        out(f"[plano] RECUSADO: tarefa {tarefa_id} nao existe em plano_tarefas.")
+        return 2, None
+    if tarefa.get("url_lista") or (tarefa.get("q_previstas") or 0) > 0:
+        out(f"[plano] RECUSADO: tarefa {tarefa_id} tem lista ou questoes previstas -- "
+            f"--leitura so vale para aula. Registre o bloco e use --concluir "
+            f"{tarefa_id} --sessao <id>.")
+        return 2, None
+    try:
+        quando = data_valida(data) if data else db.hoje().isoformat()
+        resultado = db.plano_set_status(tarefa_id, "feita", data_conclusao=quando,
+                                        origem_conclusao=db.ORIGEM_USUARIO)
+    except ValueError as e:
+        out(f"[plano] RECUSADO: {e}")
+        return 2, None
+    d = resultado["depois"]
+    out(f"[plano] OK: tarefa {d['id']} FEITA em {quando} por leitura "
+        f"({d['area'] or '(sem area)'} | {d['tema']}) -- sem bloco de questoes")
+    return 0, resultado
+
+
 def cortar(tarefa_id, motivo, out=print):
     """`--cortar`: a tarefa sai do plano, e o motivo fica escrito na linha."""
     motivo = (motivo or "").strip()
@@ -1352,7 +1380,10 @@ def main(argv=None):
     ap.add_argument("--json", action="store_true",
                     help="saida do --listar / --pendencia-revisao / --reserva / --panorama em JSON")
     ap.add_argument("--concluir", type=int, metavar="ID",
-                    help="marca a tarefa como feita (exige --sessao)")
+                    help="marca a tarefa como feita (exige --sessao, ou --leitura em tarefa de aula)")
+    ap.add_argument("--leitura", action="store_true",
+                    help="--concluir de tarefa de AULA (sem lista e sem questoes previstas) "
+                         "pela leitura confirmada, sem bloco em sessoes_bulk")
     ap.add_argument("--sessao", type=int, metavar="N",
                     help="id da linha em sessoes_bulk (NAO o sessao_num); precisa existir")
     ap.add_argument("--data", metavar="AAAA-MM-DD",
@@ -1413,8 +1444,14 @@ def main(argv=None):
         code, _, _ = semear(apply=args.apply, expect=args.expect)
         return code
     if modo == "--concluir":
+        if args.leitura:
+            if args.sessao is not None:
+                ap.error("--leitura e --sessao sao mutuamente exclusivos")
+            code, _ = concluir_leitura(args.concluir, data=args.data)
+            return code
         if args.sessao is None:
-            ap.error("--concluir exige --sessao N (o id da linha em sessoes_bulk)")
+            ap.error("--concluir exige --sessao N (o id da linha em sessoes_bulk), ou "
+                     "--leitura para tarefa de aula")
         code, _ = concluir(args.concluir, args.sessao, data=args.data)
         return code
     if modo == "--cortar":

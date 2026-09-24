@@ -569,6 +569,32 @@ def test_concluir_recusa_id_inexistente(tmp_path, monkeypatch):
     assert "nao existe em plano_tarefas" in "\n".join(saida)
 
 
+def test_concluir_leitura_so_para_tarefa_de_aula(tmp_path, monkeypatch):
+    """s194 (decisao do operador): aula riscada no quadro do hub conclui a tarefa de
+    AULA sem bloco de questoes -- nao ha volume para vincular. Tarefa com lista ou com
+    questoes previstas continua exigindo --sessao: leitura nao substitui o bloco."""
+    import sqlite3
+    caminho, idx = _semeado(tmp_path, monkeypatch)
+    aula = idx[("extensivo", 21, 2)]
+    lista = next(l for l in db.plano_listar(status="pendente") if l["id"] != aula["id"])
+    conn = sqlite3.connect(caminho)
+    conn.execute("UPDATE plano_tarefas SET url_lista=NULL, q_previstas=0 WHERE id=?", (aula["id"],))
+    conn.execute("UPDATE plano_tarefas SET url_lista='https://x', q_previstas=20 WHERE id=?",
+                 (lista["id"],))
+    conn.commit(); conn.close()
+
+    code, _res = plano.concluir_leitura(aula["id"], data="2026-09-24", out=_mudo())
+    d = db.plano_obter(aula["id"])
+    assert code == 0 and d["status"] == "feita" and d["sessao_bulk_id"] is None
+    assert d["data_conclusao"] == "2026-09-24" and d["origem_conclusao"] == db.ORIGEM_USUARIO
+
+    saida = []
+    code, res = plano.concluir_leitura(lista["id"], out=saida.append)
+    assert code == 2 and res is None
+    assert "--sessao" in "\n".join(saida)
+    assert db.plano_obter(lista["id"])["status"] == "pendente"
+
+
 def test_concluir_recusa_data_malformada(tmp_path, monkeypatch):
     caminho, idx = _semeado(tmp_path, monkeypatch)
     ids = _criar_sessoes_bulk(caminho)

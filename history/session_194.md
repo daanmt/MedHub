@@ -40,3 +40,6 @@
 - 1o ato da s195: um tique do `/hub-backend` (fila de 24/09) e, se ele quiser, `/loop 20m /hub-backend`.
 - Questoes: DMG #26, Topicos em Pediatria #96; Raciocinio #877 por leitura. Revisao Direcionada Nefro (aula-base D10 antes de re-drillar). 6-8 cards EMED de anatomia inguinal no proximo lote.
 - F129 (acento em ~749 cards) para o `/ai-eng`; handoff-block ainda com semana por posicao.
+
+## hub-backend (tiques)
+- 2026-09-23 23:05 -- hub-backend: republicado com o mesmo lote 2026-09-23a (quadro de aulas mudou: s17 + cancer-de-mama feitos; saldo do dia zerado, consumo 159 -- fila de 24/09 fica para o 1o tique de amanha)

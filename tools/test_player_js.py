@@ -20,6 +20,7 @@ import json
 import shutil
 import subprocess
 import sys
+import tempfile
 from html.parser import HTMLParser
 from pathlib import Path
 
@@ -101,6 +102,19 @@ var ls = OPC.lsQuebrado ? {getItem:function(){ throw new Error("negado"); }, set
 if(OPC.armazem){ armazem = OPC.armazem; }
 global.document = documento;
 global.window = {addEventListener:function(t,f){ (janOuv[t]=janOuv[t]||[]).push(f); }};
+// db falso SINCRONO (OPC.db = {docs:{id:doc}}): `then` chama na hora, para o cenario
+// ler o resultado sem esperar microtask. `OPC.dbFalha` = todo set() falha.
+var DB = {}, escritas = [];
+function ST(v){ return {then:function(f){ var r = f(v); return (r && typeof r.then === "function") ? r : ST(r); }, catch:function(){ return this; }}; }
+function STErr(e){ return {then:function(){ return this; }, catch:function(g){ g(e); return ST(undefined); }}; }
+if(OPC.db){
+  DB = OPC.db.docs || {};
+  var colecaoFalsa = {
+    doc:function(id){ return {set:function(reg){ if(OPC.dbFalha){ return STErr({code:"falhou"}); } DB[id] = reg; escritas.push(String(id)); return ST(undefined); }}; },
+    get:function(){ return ST({docs: Object.keys(DB).map(function(k){ var d = DB[k]; return {data:function(){ return d; }}; })}); }
+  };
+  global.window.claude = {use:function(){ return ST({collection:function(){ return colecaoFalsa; }}); }};
+}
 global.localStorage = ls;
 global.navigator = {};
 global.setInterval = function(f){ intervalos.push(f); return intervalos.length; };
@@ -113,7 +127,7 @@ function segundos(){ var p = el("relogio").textContent.split(":"); return p.leng
 var SAIDA = {};
 __PLAYER__
 __CENARIO__
-console.log(JSON.stringify({saida: SAIDA, armazem: armazem}));
+console.log(JSON.stringify({saida: SAIDA, armazem: armazem, db: DB, escritas: escritas}));
 """
 
 
@@ -143,8 +157,16 @@ def _rodar(lote, cenario, opc=None):
                    .replace("__OPC__", json.dumps(opc or {}))
                    .replace("__PLAYER__", _js_do_player())
                    .replace("__CENARIO__", cenario))
-    r = subprocess.run([NODE, "-e", prog], capture_output=True, text=True, encoding="utf-8",
-                       timeout=60)
+    # s195: o programa passou de 32 KB e `node -e` estourava a linha de comando do Windows
+    # (CreateProcess falha como FileNotFoundError). Vai por arquivo.
+    with tempfile.NamedTemporaryFile("w", suffix=".js", delete=False, encoding="utf-8") as f:
+        f.write(prog)
+        caminho = f.name
+    try:
+        r = subprocess.run([NODE, caminho], capture_output=True, text=True, encoding="utf-8",
+                           timeout=60)
+    finally:
+        Path(caminho).unlink(missing_ok=True)
     assert r.returncode == 0, r.stderr
     return json.loads(r.stdout.strip().splitlines()[-1])
 
@@ -301,6 +323,74 @@ def test_lote_antigo_sem_campos_novos_mostra_so_desempenho():
       SAIDA.agenda = !el("fim-agenda").hidden;
     """)["saida"]
     assert out == {"fim": True, "pct": "100%", "resumo": True, "agenda": False}
+
+
+# --------------------------------------------------------------------------
+# s195: espelho local das notas, reenvio ao db e previsao no dia da nota
+# --------------------------------------------------------------------------
+
+def test_notas_sobrevivem_ao_reload_sem_db():
+    """Sem `window.claude` (db fora), as notas ficam no localStorage e o reload retoma de onde
+    parou -- o incidente de 24/09 (90 notas perdidas num reload) nao se repete no mesmo aparelho."""
+    primeiro = _rodar(LOTE3, """
+      tecla(" "); tecla("3"); tecla(" "); tecla("1");
+      SAIDA.feitos = el("feitos").textContent;
+      SAIDA.aviso = el("aviso").textContent;
+    """)
+    assert primeiro["saida"]["feitos"] == "2"
+    assert "SEM CONEXAO" in primeiro["saida"]["aviso"]
+    guardadas = json.loads(primeiro["armazem"]["medhub.notas.t-js"])
+    assert sorted(n["card_id"] for n in guardadas) == [100, 101]
+    segundo = _rodar(LOTE3, """
+      SAIDA.feitos = el("feitos").textContent;
+      SAIDA.pergunta = el("pergunta").textContent;
+      SAIDA.fila = el("pendentes").textContent;
+    """, {"armazem": primeiro["armazem"]})["saida"]
+    # 100 (nota 3) resolvido; 101 (nota 1) volta em relearning; 102 nunca visto vem primeiro
+    assert segundo == {"feitos": "2", "pergunta": "P2?", "fila": "2"}
+
+
+def test_notas_locais_sao_reenviadas_quando_o_db_abre():
+    primeiro = _rodar(LOTE3, 'tecla(" "); tecla("4"); tecla(" "); tecla("3");')
+    segundo = _rodar(LOTE3, """
+      SAIDA.feitos = el("feitos").textContent;
+      SAIDA.aviso_oculto = el("aviso").hidden;
+      SAIDA.momento = el("aviso-momento").textContent;
+    """, {"armazem": primeiro["armazem"], "db": {"docs": {"100": {"card_id": 100, "rating_primeira": 4, "ts": "x"}}}})
+    assert segundo["saida"]["feitos"] == "2"
+    assert segundo["escritas"] == ["101"], "so o que o db nao tinha e reenviado"
+    assert set(segundo["db"]) == {"100", "101"}
+    assert segundo["saida"]["aviso_oculto"] is True
+    assert "1 nota(s)" in segundo["saida"]["momento"]
+
+
+def test_falha_de_gravacao_no_meio_do_lote_avisa_forte_e_guarda_local():
+    out = _rodar(LOTE3, """
+      tecla(" "); tecla("3");
+      SAIDA.aviso = el("aviso").textContent;
+      SAIDA.visivel = !el("aviso").hidden;
+    """, {"db": {"docs": {}}, "dbFalha": True})
+    assert out["saida"]["visivel"] and "SEM CONEXAO" in out["saida"]["aviso"]
+    assert "falha ao salvar: falhou" in out["saida"]["aviso"]
+    assert [n["card_id"] for n in json.loads(out["armazem"]["medhub.notas.t-js"])] == [100]
+
+
+def test_agenda_desloca_a_previsao_para_o_dia_da_nota():
+    """Export de vespera (gerado_em 23/09) drenado em 24/09: a previsao "24/09" da nota 4 e, na
+    verdade, 25/09 -- o grafico andava 1 dia para tras e mostrava o card 'agendado hoje'."""
+    cards = [_card(0, "IC", _prev("2026-09-23", "2026-09-23", "2026-09-24", "2026-09-24")),
+             _card(1, "Asma", _prev("2026-09-23", "2026-09-25", "2026-09-27", "2026-10-09"))]
+    lote = _lote(cards, agenda_base={"dias": [{"data": d, "n": 0} for d in DIAS],
+                                     "vencidos_fora_do_lote": 0})
+    out = _rodar(lote, """
+      relogio = new Date(2026, 8, 24, 21, 0, 0).getTime();   // nota dada em 24/09, 21h local
+      tecla(" "); tecla("4");                                 // IC: previsao 24/09 -> 25/09
+      tecla(" "); tecla("3");                                 // Asma: 27/09 -> 28/09
+      SAIDA.svg = el("fim-agenda-grafico").innerHTML;
+    """)["saida"]["svg"]
+    assert 'data-dia="2026-09-24" data-base="0" data-lote="0"' in out
+    assert 'data-dia="2026-09-25" data-base="0" data-lote="1"' in out
+    assert 'data-dia="2026-09-28" data-base="0" data-lote="1"' in out
 
 
 # --------------------------------------------------------------------------

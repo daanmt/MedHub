@@ -70,6 +70,49 @@ def hoje():
 # expressão LITERALMENTE, com comentário apontando para cá.
 ATIVO_WHERE = "COALESCE(needs_qualitative, 0) < 2"
 
+# s195: card com marca de reforja ABERTA dada por gente (origem `player`, sessao,
+# ledger) fica FORA da fila ate a marca fechar. O defeito que isto encerra: o
+# operador marcava "pergunta composta" no celular e o mesmo card voltava na fila
+# do dia seguinte (18 dos 90 de 24/09 eram remarcacoes) -- drill de card sabidamente
+# defeituoso e tempo perdido e diagnostico contaminado (F39). Marca de DETECTOR
+# (`origem LIKE 'detector:%'`, 231 cards de `nao_atomico`) NAO retem: e heuristica,
+# nao veredito. "Aberta" = a mesma regra de `fila_reforja` (marcada > fechada +
+# descartada por (card, motivo)). Subquery pronta para `AND f.id NOT IN (...)`.
+RETIDO_REFORJA_SUBQUERY = """
+    SELECT card_id FROM reforja_marks
+    GROUP BY card_id, motivo
+    HAVING SUM(evento = 'marcada') > SUM(evento IN ('fechada', 'descartada'))
+       AND SUM(evento = 'marcada' AND COALESCE(origem, '') NOT LIKE 'detector:%') > 0
+"""
+
+
+def _tem_tabela(conn, nome):
+    return conn.execute("SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ?",
+                        (nome,)).fetchone() is not None
+
+
+def retido_reforja_where(conn, alias="f."):
+    """A clausula de retencao, ou '' quando o banco (fixture minima) nao tem
+    `reforja_marks` -- sem a tabela nao ha marca, logo nada a reter."""
+    if not _tem_tabela(conn, "reforja_marks"):
+        return ""
+    return f" AND {alias}id NOT IN ({RETIDO_REFORJA_SUBQUERY})"
+
+
+def ids_retidos_por_reforja():
+    """Os cards ativos que a fila retem por marca humana aberta (read-only, para o
+    export do player e o painel dizerem QUANTOS e QUAIS ficaram de fora)."""
+    conn = get_connection()
+    try:
+        if not _tem_tabela(conn, "reforja_marks"):
+            return []
+        linhas = conn.execute(
+            f"SELECT f.id FROM flashcards f WHERE {ATIVO_WHERE.replace('needs_qualitative', 'f.needs_qualitative')} "
+            f"AND f.id IN ({RETIDO_REFORJA_SUBQUERY}) ORDER BY f.id").fetchall()
+    finally:
+        conn.close()
+    return [int(r[0]) for r in linhas]
+
 
 def ativo_where(alias=""):
     """Expressão canônica de ativo, com alias opcional (ex.: ativo_where('f.'))."""
@@ -675,12 +718,13 @@ def card_por_id(card_id):
     return card
 
 
-def preview_ratings(flashcard_id):
+def preview_ratings(flashcard_id, quando=None):
     """P3 part-3: a consequência dos 4 ratings ANTES da escolha — rating é
     input do modelo, não intervalo fixo. Read-only: roda o scheduler sobre
     CÓPIAS do estado lido; zero escrita. O intervalo é PRÉ-balanceador — o
     record pode deslocar o due em ±5% quando o intervalo é >= 4d (flag
-    `balanceado_apos_record` avisa)."""
+    `balanceado_apos_record` avisa). `quando` (s195): o instante da revisão
+    prevista -- o export de véspera (`--para`) calcula como se fosse amanhã."""
     conn = get_connection()
     try:
         df = pd.read_sql("SELECT * FROM fsrs_cards WHERE card_id = ?", conn,
@@ -695,7 +739,7 @@ def preview_ratings(flashcard_id):
     fsrs = FSRS()
     out = {}
     for rating in (1, 2, 3, 4):
-        m = fsrs.evaluate(dict(card_data), rating)
+        m = fsrs.evaluate(dict(card_data), rating, quando=quando)
         dias = int(m["scheduled_days"])
         out[ROTULOS_RATING[rating]] = {
             "scheduled_days": dias,
@@ -725,7 +769,8 @@ def agenda_revisoes(dias=7, excluir_ids=()):
         linhas = conn.execute(
             f"""SELECT fc.card_id, substr(fc.due, 1, 10)
                 FROM fsrs_cards fc JOIN flashcards f ON f.id = fc.card_id
-                WHERE {ativo_where('f.')} AND fc.state > 0 AND fc.due IS NOT NULL
+                WHERE {ativo_where('f.')}{retido_reforja_where(conn)}
+                  AND fc.state > 0 AND fc.due IS NOT NULL
                   AND substr(fc.due, 1, 10) <= ?""", (datas[-1],)).fetchall()
     finally:
         conn.close()
@@ -1113,7 +1158,7 @@ def get_cards_by_bucket(area=None, tema=None, new_limit=10) -> dict:
         FROM flashcards f
         JOIN fsrs_cards fc ON f.id = fc.card_id
         LEFT JOIN taxonomia_cronograma t ON f.tema_id = t.id
-        WHERE {ativo_where('f.')}
+        WHERE {ativo_where('f.')}{retido_reforja_where(conn)}
     '''
     extra = ''
     extra_params = []

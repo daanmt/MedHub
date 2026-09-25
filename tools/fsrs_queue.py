@@ -31,7 +31,7 @@ sendo `app/utils/db.py` (Invariante C do revisao-calibrada-contract).
 Assinatura canônica documentada em .claude/commands/revisar.md (contrato §7.2).
 """
 import argparse
-from datetime import date, datetime
+from datetime import date, datetime, time
 import io
 import json
 import os
@@ -166,13 +166,35 @@ def consumo_do_dia():
         import day_plan
         con = db.get_connection()
         try:
-            return int(day_plan.realizado_do_dia(con, date.today().isoformat())["cards"])
+            return int(day_plan.realizado_do_dia(con, db.hoje().isoformat())["cards"])
         finally:
             con.close()
     except Exception as e:
         print("[WARN] consumo do dia indisponivel (%s): export sem desconto" % e,
               file=sys.stderr)
         return None
+
+
+#: Hora de referencia do export de vespera: a fila "de amanha" e a das 06:00 de amanha.
+HORA_PARA = time(6, 0)
+
+
+def relogio_para(dia, parser=None):
+    """--export-player --para AAAA-MM-DD (F131, s195): export de VESPERA honesto. O relogio
+    unico (F80, `db.agora`) anda para as 06:00 do dia pedido, entao buckets, teto, consumo
+    (o daquele dia, nao o de hoje), `agenda_revisoes` e `preview_ratings` saem como se o dia
+    ja fosse aquele. Devolve o instante (ou None sem `dia`); dia que nao esta no futuro e
+    recusado -- para hoje o export normal ja e o certo."""
+    if not dia:
+        return None
+    referencia = datetime.combine(date.fromisoformat(dia), HORA_PARA)
+    if referencia.date() <= db.hoje():
+        msg = "--para exige um dia DEPOIS de hoje (%s): para hoje, exporte sem --para" % db.hoje()
+        if parser is not None:
+            parser.error(msg)
+        raise ValueError(msg)
+    db.agora = lambda: referencia
+    return referencia
 
 
 def montar_lote(ordered, limit=None, sessao=None, gerado_em=None):
@@ -200,7 +222,7 @@ def montar_lote(ordered, limit=None, sessao=None, gerado_em=None):
 DIAS_AGENDA = 7
 
 
-def anexar_agenda(lote, dias=DIAS_AGENDA):
+def anexar_agenda(lote, dias=DIAS_AGENDA, quando=None):
     """Embute no lote o que a tela de fim precisa para desenhar a agenda. Read-only.
 
     - por card, `previsao` = {"1".."4": "AAAA-MM-DD"}: o vencimento que cada nota daria, pelo
@@ -208,11 +230,12 @@ def anexar_agenda(lote, dias=DIAS_AGENDA):
       nota recebida). Falha num card = card sem o campo + WARN, nunca derruba o export;
     - no lote, `agenda_base` = `db.agenda_revisoes`: a carga dos cards FORA do lote em cada um
       dos proximos `dias` dias + os vencidos que ficaram fora.
-    A previsao vale para o dia do export; lote drenado noutro dia desloca o grafico em 1 dia."""
+    A previsao vale para `quando` (None = o instante do export); a pagina desloca pelos dias
+    entre `gerado_em` e a nota (F131), entao `gerado_em` tem de carregar o mesmo `quando`."""
     falhas = 0
     for card in lote.get("cards", []):
         try:
-            prev = db.preview_ratings(int(card["card_id"]))
+            prev = db.preview_ratings(int(card["card_id"]), quando=quando)
             card["previsao"] = {str(r): str(prev[rot]["due"])[:10]
                                 for r, rot in db.ROTULOS_RATING.items()}
         except Exception as e:  # noqa: BLE001 -- degrada por card, declarado em stderr
@@ -571,6 +594,10 @@ def main():
                                       "--build-player (default artifacts/player-<sessao>.html)")
     parser.add_argument("--lote", help="Caminho do JSON exportado pelo --export-player "
                                        "(exigido por --build-player e --record-lote)")
+    parser.add_argument("--para", metavar="AAAA-MM-DD",
+                        help="--export-player: exporta a fila COMO SE fosse esse dia (vespera): "
+                             "buckets, teto, consumo e previsoes no relogio das 06:00 desse dia; "
+                             "gerado_em e o sessao (sem --sessao) recebem esse dia")
     parser.add_argument("--sessao", help="Id da sessao do player (default: data de hoje). "
                                          "Vira a colecao sessoes/<sessao>/notas na pagina")
     parser.add_argument("--apply", action="store_true",
@@ -598,19 +625,28 @@ def main():
 
     if args.export_player:
         _avisar_hub()           # trocar o lote sem gravar a aba Cards perde a sessao das notas
+        referencia = relogio_para(args.para, parser)
         ordered = _ordered_queue(area=args.area, tema=args.tema, limit=None,
                                  new_limit=args.new_limit,
                                  prevalencia=args.prevalencia, cluster=args.cluster)
         consumo = None if args.limit is not None else consumo_do_dia()
         limite = args.limit if args.limit is not None else teto_do_dia(ordered, consumo)
-        lote = anexar_agenda(montar_lote(ordered, limit=limite, sessao=args.sessao))
+        lote = anexar_agenda(
+            montar_lote(ordered, limit=limite,
+                        sessao=args.sessao or (referencia.date().isoformat() if referencia else None),
+                        gerado_em=referencia.isoformat(timespec="seconds") if referencia else None),
+            quando=referencia)
         destino = Path(args.out) if args.out else Path("tmp") / ("player_%s.json" % lote["sessao"])
         destino.parent.mkdir(parents=True, exist_ok=True)
         destino.write_text(json.dumps(lote, ensure_ascii=False, indent=1, default=str),
                            encoding="utf-8")
+        # s195: os cards retidos por marca de reforja aberta (db.RETIDO_REFORJA_SUBQUERY)
+        # nao estao em `ordered`; a saida diz quantos, para o retido nunca ser silencioso.
+        retidos = db.ids_retidos_por_reforja()
         _emit({"export": str(destino), "sessao": lote["sessao"],
                "total": lote["total"], "teto": limite, "consumo_hoje": consumo,
-               "pool": len(ordered)})
+               "pool": len(ordered), "retidos_reforja": len(retidos),
+               "para": referencia.date().isoformat() if referencia else None})
         return
 
     if args.build_player:

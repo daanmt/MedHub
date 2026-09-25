@@ -80,6 +80,52 @@ def _com_db(fn):
         os.remove(tmp)
 
 
+_DDL_REFORJA = """
+CREATE TABLE reforja_marks (id INTEGER PRIMARY KEY, card_id INTEGER, evento TEXT, motivo TEXT,
+    evidencia TEXT, origem TEXT, criado_em TEXT);
+"""
+
+
+def _marcar(con, cid, evento, origem, motivo="pergunta composta"):
+    con.execute("INSERT INTO reforja_marks (card_id, evento, motivo, origem, criado_em) "
+                "VALUES (?, ?, ?, ?, '2026-09-24 20:00:00')", (cid, evento, motivo, origem))
+
+
+def test_retem_card_com_marca_humana_aberta():
+    """s195: o operador marcava "pergunta composta" no celular e o card voltava na fila do dia
+    seguinte (18 dos 90 de 24/09 eram remarcacoes). Marca HUMANA aberta retem; marca de detector
+    nao; marca fechada/descartada libera."""
+    def corpo(tmp):
+        con = sqlite3.connect(tmp)
+        con.executescript(_DDL_REFORJA)
+        agora = datetime.now()
+        _semear(con, 6, 2, agora - timedelta(days=3))     # vencido, marcado pelo player -> retido
+        _semear(con, 7, 2, agora - timedelta(days=3))     # vencido, marca de detector -> fica
+        _semear(con, 8, 2, agora - timedelta(days=3))     # vencido, marca fechada -> fica
+        _semear(con, 9, 0, agora - timedelta(days=9))     # novo, marca da sessao -> retido
+        _marcar(con, 6, "marcada", "player")
+        _marcar(con, 7, "marcada", "detector:nao_atomico")
+        _marcar(con, 8, "marcada", "player")
+        _marcar(con, 8, "fechada", "reforja.py")
+        _marcar(con, 9, "marcada", "s181", motivo="circular")
+        con.commit()
+        con.close()
+        b = db.get_cards_by_bucket(new_limit=10)
+        ids = {k: [c["card_id"] for c in v] for k, v in b.items()}
+        assert sorted(ids["atrasados"]) == [1, 7, 8], ids
+        assert ids["novos"] == [4, 5], ids
+        assert db.ids_retidos_por_reforja() == [6, 9]
+    _com_db(corpo)
+
+
+def test_sem_tabela_de_marcas_nada_e_retido():
+    def corpo(tmp):
+        b = db.get_cards_by_bucket(new_limit=10)
+        assert [c["card_id"] for c in b["atrasados"]] == [1]
+        assert db.ids_retidos_por_reforja() == []
+    _com_db(corpo)
+
+
 def test_buckets_e_reasons():
     def corpo(tmp):
         b = db.get_cards_by_bucket(new_limit=10)

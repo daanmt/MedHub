@@ -14,8 +14,9 @@ O que esta suite trava, em ordem de risco:
 5. **Celular** (feedback registrado do operador): nada `sticky`, nada `nowrap`, um `.wrap` so,
    rotulos de aba curtos, alvo de toque >= 44px, `min-width:0` no item de grid de texto variavel.
 
-Repo sintetico em `tmp_path` para o golden -- o `ipub.db` real NUNCA e tocado (o hub nao consulta
-banco; so usa o relogio unico, aqui congelado por parametro). Os templates sao os REAIS.
+Repo sintetico em `tmp_path` para o golden -- o `ipub.db` real NUNCA e escrito (o hub le o plano
+read-only para o quadro por semanas, aqui injetado vazio; o relogio unico vem congelado por
+parametro). Os templates sao os REAIS. O quadro em si: `test_hub_quadro.py`.
 """
 import json
 import os
@@ -69,7 +70,8 @@ def _repo(tmp_path, aulas, painel=True):
     return tmp_path, data_fn
 
 
-#: O registro REAL do quadro (s194): as aulas do golden (hernias, dmg, s17) estao nele.
+#: O registro REAL do quadro (s194/s195): as aulas do golden (dmg, raciocinio-diagnostico,
+#: topicos-pediatria) estao nele; as demais slugs dos testes entram como `aula` com WARN.
 QUADRO_REAL = hub.ler_quadro(ROOT / hub.QUADRO_REG)
 
 
@@ -77,7 +79,7 @@ def _construir(raiz, data_fn, publicado=(), lote=None):
     return hub.construir(lote or _lote(), raiz=raiz, out=raiz / "tmp" / "hub",
                          publicado=publicado, agora=AGORA, data_fn=data_fn,
                          template_hub=TEMPLATE_HUB_REAL, template_player=TEMPLATE_PLAYER_REAL,
-                         quadro=QUADRO_REAL)
+                         quadro=QUADRO_REAL, plano_linhas=[], calendario={})
 
 
 # --------------------------------------------------------------------------
@@ -85,9 +87,9 @@ def _construir(raiz, data_fn, publicado=(), lote=None):
 # --------------------------------------------------------------------------
 
 def test_golden_do_manifesto_num_repo_sintetico(tmp_path):
-    raiz, data_fn = _repo(tmp_path, [("hernias", "A Escada das Hernias", "2026-09-22"),
-                                     ("dmg", "A Escada do DMG", "2026-09-21"),
-                                     ("s17", "Sprint S17-20", "2026-09-07")])
+    raiz, data_fn = _repo(tmp_path, [("dmg", "A Escada do DMG", "2026-09-22"),
+                                     ("raciocinio-diagnostico", "A Escada de Bayes", "2026-09-21"),
+                                     ("topicos-pediatria", "Topicos em Pediatria", "2026-09-07")])
     manifesto, problemas, avisos = _construir(
         raiz, data_fn, publicado=["index.html", "painel.html", "aulas/velha.html"])
     assert problemas == [] and avisos == []
@@ -95,8 +97,8 @@ def test_golden_do_manifesto_num_repo_sintetico(tmp_path):
         "file_path": "tmp/hub/index.html",
         "files": {
             "aulas/dmg.html": "artifacts/aula-dmg.html",
-            "aulas/hernias.html": "artifacts/aula-hernias.html",
-            "aulas/s17.html": "artifacts/aula-s17.html",
+            "aulas/raciocinio-diagnostico.html": "artifacts/aula-raciocinio-diagnostico.html",
+            "aulas/topicos-pediatria.html": "artifacts/aula-topicos-pediatria.html",
             "aulas/velha.html": None,
             "painel.html": "artifacts/painel.html",
         },
@@ -424,7 +426,7 @@ def test_abas_curtas_e_com_alvo_de_toque():
     assert all(len(r) <= 15 for r in rotulos)
     regra_aba = re.search(r"\.hub-aba\{([^}]*)\}", pagina).group(1)
     assert "min-height:44px" in regra_aba
-    regra_titulo = re.search(r"\.hub-aula-t\{([^}]*)\}", pagina).group(1)
+    regra_titulo = re.search(r"\.qd-tema\{([^}]*)\}", pagina).group(1)
     assert "min-width:0" in regra_titulo
 
 
@@ -507,11 +509,17 @@ def test_extrair_lote_pela_cli(tmp_path):
 
 
 def test_repo_real_monta_sem_problema(tmp_path):
-    """Regressao viva, read-only: as aulas e o painel REAIS de `artifacts/` montam sem link morto.
+    """Regressao viva, read-only: as aulas e o painel REAIS de `artifacts/` e o plano REAL do
+    `ipub.db` montam sem link morto (a prova em PDF e caminho local: texto, nunca link).
     Escreve so em tmp_path."""
-    manifesto, problemas, _ = hub.construir(_lote(), raiz=ROOT, out=tmp_path / "hub", agora=AGORA,
-                                            data_fn=lambda p, r: ("2026-09-22", None))
+    manifesto, problemas, avisos = hub.construir(_lote(), raiz=ROOT, out=tmp_path / "hub",
+                                                 agora=AGORA,
+                                                 data_fn=lambda p, r: ("2026-09-22", None))
     assert problemas == []
+    assert not [a for a in avisos if "sem tipo" in a or "candidata a arquivo" in a], avisos
+    pagina = (tmp_path / "hub" / "index.html").read_text(encoding="utf-8")
+    assert re.search(r'<section class="qd-sem" data-secao="\d+"', pagina), "semanas do plano real"
+    assert "questões" in pagina
     reais = sorted(p.name for p in (ROOT / "artifacts").glob("aula-*.html"))
     esperado = min(len(reais), hub.CAP_AULAS)
     assert manifesto["aulas"] == esperado

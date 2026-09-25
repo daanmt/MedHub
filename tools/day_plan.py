@@ -76,12 +76,27 @@ def _warn_degradacao(componente, erro):
     print(f"[WARN] {componente}: {msg}", file=sys.stderr)
 
 
+#: F132 (s195): replica LITERAL de `app.utils.db.RETIDO_REFORJA_SUBQUERY` (este CLI nao
+#: importa o modulo): card com marca de reforja aberta de origem humana fica fora da fila,
+#: logo fora de `vencidos` -- senao o painel contaria o que a fila nao serve (F64: UM contador).
+_RETIDO_REFORJA = """
+    SELECT card_id FROM reforja_marks
+    GROUP BY card_id, motivo
+    HAVING SUM(evento = 'marcada') > SUM(evento IN ('fechada', 'descartada'))
+       AND SUM(evento = 'marcada' AND COALESCE(origem, '') NOT LIKE 'detector:%') > 0
+"""
+
+
 def _fsrs_counts(con):
     now = datetime.now()
     ts = now.replace(hour=0, minute=0, second=0, microsecond=0).isoformat(" ")
     te = now.replace(hour=23, minute=59, second=59, microsecond=999999).isoformat(" ")
     base = ("FROM fsrs_cards fc JOIN flashcards f ON f.id=fc.card_id "
             "WHERE COALESCE(f.needs_qualitative,0) < 2")
+    tem_marcas = con.execute("SELECT 1 FROM sqlite_master WHERE type='table' "
+                             "AND name='reforja_marks'").fetchone() is not None
+    if tem_marcas:
+        base += " AND f.id NOT IN (%s)" % _RETIDO_REFORJA
     cur = con.cursor()
 
     def c(extra, *p):

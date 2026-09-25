@@ -688,6 +688,40 @@ def test_export_embute_previsao_por_nota_e_agenda_base(monkeypatch):
         assert prev["1"] <= prev["3"] <= prev["4"]
 
 
+def test_export_para_amanha_usa_o_relogio_de_amanha(monkeypatch):
+    """F131 (s195): export de VESPERA. Sem `--para`, o card que vence amanha e futuro e fica
+    fora; com `--para amanha`, o relogio anda para as 06:00 de amanha: ele entra, `gerado_em`
+    e o `sessao` carregam o dia, e a agenda comeca depois de amanha. Dia passado = exit 2."""
+    monkeypatch.setattr(db, "agora", lambda: HOJE)          # hoje = 23/09 09:00
+
+    def corpo(tmp):
+        _agendar(tmp, [(10, 2, "2026-09-24 08:00:00"),      # vence amanha
+                       (11, 2, "2026-09-20 10:00:00")])     # vencido
+        con = sqlite3.connect(tmp)                           # a fila faz LEFT JOIN na taxonomia
+        con.execute("CREATE TABLE taxonomia_cronograma (id INTEGER PRIMARY KEY, area TEXT, tema TEXT)")
+        con.commit()
+        con.close()
+        with tempfile.TemporaryDirectory() as pasta:
+            hoje_json = os.path.join(pasta, "hoje.json")
+            assert _rodar_cli(["--export-player", "--sessao", "h", "--out", hoje_json]) == 0
+            hoje_ids = [c["card_id"] for c in json.load(open(hoje_json, encoding="utf-8"))["cards"]]
+            assert 11 in hoje_ids and 10 not in hoje_ids, "sem --para, amanha e futuro"
+
+            para_json = os.path.join(pasta, "para.json")
+            assert _rodar_cli(["--export-player", "--para", "2026-09-24", "--out", para_json]) == 0
+            lote = json.load(open(para_json, encoding="utf-8"))
+            ids = [c["card_id"] for c in lote["cards"]]
+            assert 10 in ids and 11 in ids
+            assert lote["sessao"] == "2026-09-24" and lote["gerado_em"] == "2026-09-24T06:00:00"
+            assert lote["agenda_base"]["dias"][0]["data"] == "2026-09-25"
+            card11 = next(c for c in lote["cards"] if c["card_id"] == 11)
+            assert card11["previsao"]["1"] >= "2026-09-24", "previsao calculada em amanha"
+
+            assert _rodar_cli(["--export-player", "--para", "2026-09-23",
+                               "--out", os.path.join(pasta, "x.json")]) == 2, "hoje ou passado: recusa"
+    _com_db(corpo)
+
+
 def test_previsao_que_falha_so_tira_o_campo_do_card(monkeypatch):
     monkeypatch.setattr(db, "agora", lambda: HOJE)
 

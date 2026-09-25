@@ -54,26 +54,27 @@
 .hub-sub{color:var(--tinta3);font-size:.85em;margin:0 0 18px;max-width:40rem}
 .hub-vazio{color:var(--tinta3);margin:0}
 
-.hub-aula{
-  display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:baseline;gap:4px 14px;
-  min-height:44px;padding:15px 16px;
-  background:var(--card);border:1px solid var(--linha);border-radius:var(--raio);
-  color:var(--tinta);text-decoration:none;
-  transition:border-color var(--transicao);
-}
-.hub-aula:hover{border-color:var(--acento)}
-.hub-aula:focus-visible{outline:3px solid var(--acento);outline-offset:3px}
-.hub-aula-t{min-width:0;font-weight:600;line-height:1.35}
-.hub-aula-d{color:var(--tinta3);font-size:.8em;font-variant-numeric:tabular-nums}
-
-/* Quadro de aulas (s194): colunas por tipo, empilhadas no celular; "feito" risca e recolhe */
-.qd-colunas{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,16rem),1fr));gap:22px 18px;align-items:start}
-.qd-col{min-width:0}
-.qd-titulo{display:flex;align-items:baseline;gap:8px;margin:0 0 10px;font-size:.95rem;font-weight:650;color:var(--tinta2)}
+/* Quadro por semanas (s195): uma secao por semana, empilhadas; cada tarefa e um bloco com o peso,
+   as questoes e a acao; "feito" (so na aula que cumpre uma tarefa de aula) risca e recolhe */
+.qd-semanas{display:grid;gap:26px}
+.qd-sem{min-width:0}
+.qd-titulo{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;margin:0 0 10px;font-size:.95rem;font-weight:650;color:var(--tinta2)}
 .qd-n{font-size:.78em;font-weight:600;color:var(--tinta3);font-variant-numeric:tabular-nums}
 .qd-lista{list-style:none;margin:0;padding:0;display:grid;gap:10px}
 .qd-vazio{color:var(--tinta3);font-size:.88em;margin:0;padding:12px 0}
-.qd-item{min-width:0;display:grid;grid-template-columns:44px minmax(0,1fr);gap:10px;align-items:center}
+.qd-item{min-width:0;display:grid;grid-template-columns:44px minmax(0,1fr);gap:10px;align-items:start}
+.qd-item.qd-sem-botao{grid-template-columns:minmax(0,1fr)}
+.qd-bloco{min-width:0;padding:12px 14px;background:var(--card);border:1px solid var(--linha);border-radius:12px}
+.qd-item.qd-atrasada .qd-bloco{border-left:4px solid var(--alerta)}
+.qd-tema{min-width:0;margin:0;font-weight:600;line-height:1.35}
+.qd-meta{margin:2px 0 0;color:var(--tinta3);font-size:.82em;display:flex;flex-wrap:wrap;gap:2px 10px}
+.qd-bl{color:var(--tinta2);font-weight:600}
+.qd-atraso{color:var(--alerta)}
+.qd-acao{margin:2px 0 0;font-size:.9em;display:flex;flex-wrap:wrap;gap:0 18px}
+.qd-acao a,.qd-acao .tenue{display:inline-flex;align-items:center;min-height:44px}
+.qd-acao a{color:var(--acento);font-weight:600;text-underline-offset:2px}
+.qd-acao a:focus-visible{outline:3px solid var(--acento);outline-offset:2px;border-radius:4px}
+.qd-acao .tenue{color:var(--tinta3)}
 .qd-feito{
   width:44px;height:44px;padding:0;display:grid;place-items:center;
   border:2px solid var(--linha);border-radius:10px;background:var(--card);cursor:pointer;
@@ -85,11 +86,11 @@
 .qd-feito[aria-pressed="true"] span{border-color:var(--papel)}
 .qd-feito[disabled]{cursor:not-allowed;opacity:.5}
 .qd-feito:focus-visible{outline:3px solid var(--acento);outline-offset:3px}
-.qd-item[data-feito] .hub-aula{background:transparent}
-.qd-item[data-feito] .hub-aula-t{text-decoration:line-through;text-decoration-thickness:2px;color:var(--tinta3)}
-.qd-item.qd-chegou .hub-aula{animation:qd-chegou 700ms ease-out}
+.qd-item[data-feito] .qd-bloco{background:transparent}
+.qd-item[data-feito] .qd-tema{text-decoration:line-through;text-decoration-thickness:2px;color:var(--tinta3)}
+.qd-item.qd-chegou .qd-bloco{animation:qd-chegou 700ms ease-out}
 @keyframes qd-chegou{from{border-color:var(--acento);background:var(--acento-fraco)}}
-@media (prefers-reduced-motion: reduce){.qd-item.qd-chegou .hub-aula{animation:none}}
+@media (prefers-reduced-motion: reduce){.qd-item.qd-chegou .qd-bloco{animation:none}}
 .qd-feitas{margin-top:26px;border-top:1px solid var(--linha);padding-top:6px}
 .qd-feitas summary{cursor:pointer;min-height:44px;padding:11px 0;font-weight:650;color:var(--tinta2)}
 .qd-feitas .qd-lista{margin-top:8px}
@@ -128,7 +129,7 @@
   <section class="hub-secao" id="aba-aulas" role="tabpanel" aria-labelledby="hub-tab-aulas">
     <div id="hub-aulas-lista">
       <h2 class="hub-titulo">Aulas</h2>
-      <p class="hub-sub">Marque o que você já fez: vai riscado para Concluídas. A aula abre aqui dentro e os cards continuam onde você parou.</p>
+      <p class="hub-sub">As tarefas do plano por semana, com as questões de cada uma; a aula abre aqui dentro e, marcada como feita, vai riscada para Concluídas.</p>
       <!-- @hub:aulas -->
     </div>
     <div id="hub-leitor" hidden>
@@ -332,15 +333,22 @@
   if(qd){ iniciarQuadro(); }
 
   function iniciarQuadro(){
-    var itens = Array.prototype.slice.call(qd.querySelectorAll(".qd-item"));
+    // so os itens com controle "feito" (data-slug): tarefa de lista nao tem botao
+    var itens = Array.prototype.slice.call(qd.querySelectorAll(".qd-item[data-slug]"));
     var feitas = qd.querySelector("#hub-quadro-feitas .qd-lista");
     var colecao = null;
 
+    // Cada secao (semana, atrasadas, outras aulas) reconta os seus itens; a de "outras" some
+    // quando esvazia (as fixas ficam, com "Nada em aberto"). As questoes nao mudam: so a aula
+    // que cumpre uma tarefa de aula (0 questoes) e que se move.
     function recontar(){
-      Array.prototype.forEach.call(qd.querySelectorAll(".qd-col"), function(col){
-        var n = col.querySelectorAll(".qd-item").length;
-        col.querySelector(".qd-n").textContent = String(n);
-        col.querySelector(".qd-vazio").hidden = n > 0;
+      Array.prototype.forEach.call(qd.querySelectorAll(".qd-sem"), function(sec){
+        var n = sec.querySelectorAll(".qd-item").length;
+        var rot = sec.getAttribute("data-rotulo") || "item";
+        sec.querySelector("[data-n]").textContent = String(n);
+        sec.querySelector("[data-nrot]").textContent = n === 1 ? rot : rot + "s";
+        sec.querySelector(".qd-vazio").hidden = n > 0;
+        if(!sec.hasAttribute("data-fixa")){ sec.hidden = n === 0; }
       });
       $("hub-quadro-nfeitas").textContent = String(feitas.querySelectorAll(".qd-item").length);
     }
@@ -364,7 +372,7 @@
       botao.setAttribute("aria-label", rotulo);
       botao.setAttribute("title", rotulo);
       var destino = feito ? feitas
-        : qd.querySelector('.qd-col[data-tipo="' + li.getAttribute("data-tipo") + '"] .qd-lista');
+        : qd.querySelector('.qd-sem[data-secao="' + li.getAttribute("data-secao") + '"] .qd-lista');
       if(destino && li.parentNode !== destino){
         inserirEmOrdem(destino, li);
         li.classList.remove("qd-chegou");

@@ -149,6 +149,11 @@ button[disabled]{opacity:.45;cursor:not-allowed}
   border-left:3px solid var(--alerta);background:var(--alerta-fraco);color:var(--tinta);
   padding:12px 14px;border-radius:8px;margin-top:18px;font-size:.88em;
 }
+/* s195: banco fora = aviso que se ve no celular, no primeiro card */
+.aviso.forte{
+  border-left-width:6px;border:2px solid var(--alerta);border-left-width:6px;
+  font-size:1em;font-weight:650;line-height:1.4;
+}
 .linha-defeito{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
 .linha-defeito input{
   flex:1 1 220px;font:inherit;padding:10px 12px;border-radius:10px;
@@ -328,6 +333,31 @@ pre{
   var TETO_OCIOSO_MS = 3 * 60 * 1000;
   var CHAVE_TEMPO = "medhub.tempo." + (LOTE.sessao || "-");
 
+  // ------------------------------------------------------- espelho local
+  // s195: 90 notas dadas no celular sumiram num reload porque o `db` nao subiu
+  // e a pagina so avisou em letra miuda. Agora cada nota vai ANTES ao
+  // localStorage (por sessao) e volta dali no reload; quando o db abre, o que
+  // ele nao tem e reenviado. Storage indisponivel = so o db, como antes.
+  var CHAVE_NOTAS = "medhub.notas." + (LOTE.sessao || "-");
+  var espelhoOk = true;
+
+  function lerNotasLocais(){
+    try{
+      var lista = JSON.parse(localStorage.getItem(CHAVE_NOTAS) || "[]");
+      return Array.isArray(lista) ? lista : [];
+    }catch(e){ return []; }
+  }
+
+  function espelharNotas(){
+    try{
+      var lista = [];
+      notas.forEach(function(n){ lista.push(n); });
+      localStorage.setItem(CHAVE_NOTAS, JSON.stringify(lista));
+      espelhoOk = true;
+    }catch(e){ espelhoOk = false; }
+    return espelhoOk;
+  }
+
   function lerTempo(){
     try{
       var v = parseInt(localStorage.getItem(CHAVE_TEMPO), 10);
@@ -416,17 +446,25 @@ pre{
   function mostrarDadosBrutos(titulo){
     $("fim").hidden = false;
     $("fim-titulo").textContent = titulo;
-    $("fim-origem").textContent = "Nada foi salvo fora desta tela: abra os dados brutos abaixo, copie e cole no chat.";
+    $("fim-origem").textContent = espelhoOk
+      ? "As notas estao guardadas neste aparelho e serao enviadas quando esta pagina abrir com conexao. Os dados brutos abaixo sao a copia de seguranca."
+      : "Nada foi salvo fora desta tela: abra os dados brutos abaixo, copie e cole no chat.";
     $("fim-bruto").open = true;
     renderFallback();
   }
 
+  // O aviso e FORTE de proposito (s195): quem drilla no celular precisa ver, no
+  // primeiro card, que a nota nao esta chegando ao banco.
   function declararSemArmazenamento(){
     dbOk = false;
     if(dbDeclarado){ return; }
     dbDeclarado = true;
-    avisar("Nao consegui salvar as notas nesta visualizacao. Elas seguem contadas aqui: no fim da pagina, copie os dados brutos e cole no chat.");
-    mostrarDadosBrutos("Notas desta sessao (copiar e colar)");
+    espelharNotas();
+    $("aviso").classList.add("forte");
+    avisar(espelhoOk
+      ? "SEM CONEXAO COM O BANCO. As notas ficam guardadas SO neste aparelho ate a pagina abrir com conexao. Pode continuar; nao limpe os dados do navegador e nao troque de aparelho no meio do lote."
+      : "SEM CONEXAO COM O BANCO E SEM ARMAZENAMENTO LOCAL. As notas so existem nesta tela: no fim, copie os dados brutos e cole no chat antes de fechar ou recarregar.");
+    mostrarDadosBrutos("Notas desta sessao");
   }
 
   // ------------------------------------------------------------- persistir
@@ -444,14 +482,15 @@ pre{
   function salvar(registro){
     atualizarPainel();
     renderFallback();
+    espelharNotas();                       // primeiro o aparelho, depois o banco
     if(!dbOk || !colecao){
       declararSemArmazenamento();
       return Promise.resolve();
     }
     return colecao.doc(String(registro.card_id)).set(registro).catch(function(err){
-      dbOk = false;
-      avisar("Falha ao salvar a nota (" + ((err && err.code) || "erro") + "). As notas continuam aqui: copie os dados brutos do fim da pagina e cole no chat.");
-      mostrarDadosBrutos("Notas desta sessao (copiar e colar)");
+      dbDeclarado = false;                 // a falha no meio do lote tambem fala alto
+      declararSemArmazenamento();
+      avisar($("aviso").textContent + " (falha ao salvar: " + ((err && err.code) || "erro") + ")");
     });
   }
 
@@ -525,6 +564,32 @@ pre{
   // previsto para cada nota (`previsao`, o mesmo `db.preview_ratings` do
   // --preview) e a carga dos demais cards (`agenda_base`). A pagina so SOMA:
   // nada de FSRS aqui. Lote antigo sem esses campos = so o desempenho.
+  // s195: a previsao e calculada no dia do EXPORT. Lote exportado de vespera e
+  // drenado no dia seguinte mostrava tudo 1 dia antes ("agendado no mesmo dia da
+  // drenagem"). Cada previsao anda os dias entre o export e a nota (so para a
+  // frente, ate 14 d); lote sem `gerado_em` ou nota do mesmo dia = como antes.
+  function diaLocal(iso){
+    if(!iso){ return ""; }
+    var s = String(iso);
+    var d = new Date(s.length > 10 ? s.replace(" ", "T") : s + "T00:00:00");
+    if(isNaN(d.getTime())){ return s.slice(0, 10); }
+    return d.getFullYear() + "-" + doisDigitos(d.getMonth() + 1) + "-" + doisDigitos(d.getDate());
+  }
+
+  function somarDias(iso, n){
+    var p = String(iso).split("-");
+    var d = new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2]) + n);
+    return d.getFullYear() + "-" + doisDigitos(d.getMonth() + 1) + "-" + doisDigitos(d.getDate());
+  }
+
+  function deslocamento(n){
+    var exp = diaLocal(LOTE.gerado_em), dia = diaLocal(n.ts);
+    if(!exp || !dia){ return 0; }
+    var pe = exp.split("-"), pd = dia.split("-");
+    var d = Math.round((Date.UTC(+pd[0], pd[1] - 1, +pd[2]) - Date.UTC(+pe[0], pe[1] - 1, +pe[2])) / 86400000);
+    return (d > 0 && d <= 14) ? d : 0;
+  }
+
   function agendaPrevista(){
     var ab = LOTE.agenda_base;
     if(!ab || !Array.isArray(ab.dias) || !ab.dias.length){ return null; }
@@ -546,7 +611,7 @@ pre{
       }else{
         var p = c.previsao && c.previsao[String(n.rating_primeira)];
         if(!p){ semPrevisao += 1; return; }
-        alvo = String(p).slice(0, 10);
+        alvo = somarDias(String(p).slice(0, 10), deslocamento(n));
         if(alvo < primeiro){ alvo = primeiro; } // volta ainda hoje = aparece no 1o dia
       }
       if(alvo > ultimo || !(alvo in indice)){ return; }
@@ -686,7 +751,7 @@ pre{
     var id = c.card_id;
     interagiu = true;
     if(!notas.has(id)){
-      var registro = {card_id:id, rating_primeira:nota, ts:new Date().toISOString()};
+      var registro = {card_id:id, rating_primeira:nota, ts:new Date(Date.now()).toISOString()};
       notas.set(id, registro);
       salvar(registro);
     }
@@ -702,7 +767,7 @@ pre{
     if(!fila.length){ return; }
     var c = fila[0], id = c.card_id;
     interagiu = true;
-    var anterior = notas.get(id) || {card_id:id, ts:new Date().toISOString()};
+    var anterior = notas.get(id) || {card_id:id, ts:new Date(Date.now()).toISOString()};
     var registro = {card_id:id, ts:anterior.ts, defeito:true, motivo:motivo};
     if(anterior.rating_primeira){ registro.rating_primeira = anterior.rating_primeira; }
     notas.set(id, registro);
@@ -784,18 +849,44 @@ pre{
     fila = novos.concat(relearning);
   }
 
+  function absorver(dado){
+    if(!dado || typeof dado.card_id === "undefined"){ return; }
+    notas.set(Number(dado.card_id), {
+      card_id: Number(dado.card_id),
+      rating_primeira: dado.rating_primeira,
+      ts: dado.ts,
+      defeito: dado.defeito,
+      motivo: dado.motivo
+    });
+  }
+
   function restaurar(docs){
+    docs.forEach(function(d){ absorver(d.data && d.data()); });
+  }
+
+  function restaurarLocal(){
+    lerNotasLocais().forEach(absorver);
+  }
+
+  // O que este aparelho tem e o banco nao: vai agora, em sequencia. O encadeamento
+  // usa so o `then` do que a colecao devolve (sem Promise nova), para que o teste
+  // com db falso sincrono enxergue o reenvio.
+  function reenviarPendentes(docs){
+    var noDb = {};
     docs.forEach(function(d){
       var dado = d.data && d.data();
-      if(!dado || typeof dado.card_id === "undefined"){ return; }
-      notas.set(Number(dado.card_id), {
-        card_id: Number(dado.card_id),
-        rating_primeira: dado.rating_primeira,
-        ts: dado.ts,
-        defeito: dado.defeito,
-        motivo: dado.motivo
-      });
+      if(dado && typeof dado.card_id !== "undefined"){ noDb[Number(dado.card_id)] = true; }
     });
+    var faltam = [];
+    notas.forEach(function(n){ if(!noDb[n.card_id]){ faltam.push(n); } });
+    var i = 0;
+    function proximo(){
+      if(i >= faltam.length){ return faltam.length; }
+      var n = faltam[i];
+      i += 1;
+      return colecao.doc(String(n.card_id)).set(n).then(proximo);
+    }
+    return proximo();
   }
 
   function iniciar(){
@@ -816,6 +907,7 @@ pre{
   // A capability chega por promessa; a pagina renderiza SEM ela e acende o
   // armazenamento quando (e se) ele resolver. `use("db")` devolve null quando
   // esta visualizacao nao pode rodar o db -- caso tratado, nunca silencioso.
+  restaurarLocal();                        // o reload deste aparelho nao perde nada
   iniciar();
   try{
     window.claude.use("db").then(function(db){
@@ -826,14 +918,20 @@ pre{
       colecao = db.collection("sessoes/" + LOTE.sessao + "/notas");
       dbOk = true;
       return colecao.get().then(function(snap){
-        restaurar(snap.docs || []);
+        var docs = snap.docs || [];
+        restaurar(docs);
+        espelharNotas();
         atualizarPainel();
         renderFallback();
         // Remontar a fila DEPOIS do 1o gesto embaralharia o card na tela; o
         // progresso ja restaurado continua valendo para o painel.
-        if(interagiu){ return; }
-        montarFila();
-        mostrar();
+        if(!interagiu){
+          montarFila();
+          mostrar();
+        }
+        return reenviarPendentes(docs);
+      }).then(function(n){
+        if(n){ avisarMomento(n + " nota(s) guardada(s) neste aparelho foram enviadas ao banco."); }
       });
     }).catch(function(){
       declararSemArmazenamento();

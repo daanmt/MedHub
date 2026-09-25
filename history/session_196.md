@@ -17,3 +17,4 @@
 ## Pendencias
 - `resumos/[GIN] CA de Mama.md` ainda diz "supraclavicular ipsilateral = estadio IV" (errado; AJCC 8 = N3c).
 - 5 duvidas clinicas acima -> `/pesquisar-evidencia` quando houver folga.
+- hub-backend 13:10: republicado com o mesmo lote 2026-09-25b (painel: retencao 7d 89,4 -> 89,3) -> Version 15. Loop passou a 1/1h (job 1bf17f69, :07).

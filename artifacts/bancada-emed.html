@@ -1,0 +1,248 @@
+<title>Bancada EMED</title>
+<style>
+:root{
+  --papel:#f6f4f0; --card:#ffffff; --afundado:#edeae4;
+  --tinta:#191817; --tinta2:#54504a; --tinta3:#8b857b; --linha:#e0dbd2;
+  --acento:#0e6b5c; --acento-fraco:#d9ece7; --sobre-acento:#ffffff;
+  --cic:#8a5a17; --cic-fraco:#f3e6cc; --ok:#1f7a3a; --ok-fraco:#e2f2e6; --ruim:#a2412a; --ruim-fraco:#f6e4de;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --sans:ui-sans-serif,system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  color-scheme:dark;
+  --papel:#131519; --card:#1b1e24; --afundado:#23272f; --tinta:#edeff3; --tinta2:#b4bac4; --tinta3:#7e8794; --linha:#2d323b;
+  --acento:#4fd0b3; --acento-fraco:#123630; --sobre-acento:#0d1614;
+  --cic:#e2a94f; --cic-fraco:#3a2c12; --ok:#6fcf8a; --ok-fraco:#16301f; --ruim:#f0917a; --ruim-fraco:#3a221c;
+}}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --papel:#131519; --card:#1b1e24; --afundado:#23272f; --tinta:#edeff3; --tinta2:#b4bac4; --tinta3:#7e8794; --linha:#2d323b;
+  --acento:#4fd0b3; --acento-fraco:#123630; --sobre-acento:#0d1614;
+  --cic:#e2a94f; --cic-fraco:#3a2c12; --ok:#6fcf8a; --ok-fraco:#16301f; --ruim:#f0917a; --ruim-fraco:#3a221c;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--papel);color:var(--tinta);font-family:var(--sans);font-size:15px;line-height:1.5}
+.wrap{max-width:1180px;margin:0 auto;padding-block:20px 56px;padding-inline:16px;display:grid;gap:16px}
+h1{font-size:1.35rem;margin:0;letter-spacing:-.01em;text-wrap:balance}
+h1 span{color:var(--acento)}
+.sub{margin:2px 0 0;color:var(--tinta2);font-size:.9rem}
+.rot{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--tinta3);font-weight:600;margin:0}
+.banner{padding:10px 14px;border-left:4px solid var(--acento);background:var(--acento-fraco);border-radius:0 8px 8px 0;white-space:pre-wrap}
+.caixa{background:var(--card);border:1px solid var(--linha);border-radius:12px;min-width:0}
+details.como summary{cursor:pointer;padding:10px 14px;font-weight:600}
+details.como ol{margin:0;padding:0 14px 12px 32px;display:grid;gap:4px;font-size:.9rem;color:var(--tinta2)}
+code{font-family:var(--mono);font-size:.82em;background:var(--afundado);padding:1px 5px;border-radius:4px}
+/* canal */
+.chat-cab{display:flex;justify-content:space-between;align-items:baseline;padding:10px 14px 6px}
+.chat-n{font-size:.78rem;color:var(--tinta3);font-variant-numeric:tabular-nums}
+.chat-log{height:340px;overflow-y:auto;padding:8px 12px;background:var(--afundado);display:flex;flex-direction:column;gap:6px;font-size:.85rem}
+.msg{padding:5px 9px;border-left:3px solid var(--linha);border-radius:0 6px 6px 0;background:var(--card);white-space:pre-wrap;overflow-wrap:anywhere}
+.msg .meta{font-weight:650;font-size:.76rem;margin-right:6px}
+.msg.hub{border-left-color:var(--acento)} .msg.hub .meta{color:var(--acento)}
+.msg.cic{border-left-color:var(--cic)} .msg.cic .meta{color:var(--cic)}
+.msg.op .meta{color:var(--tinta2)}
+.msg details summary{cursor:pointer;color:var(--tinta2)}
+.chat-form{display:grid;grid-template-columns:170px minmax(0,1fr) auto;gap:8px;padding:10px 12px 12px;border-top:1px solid var(--linha)}
+@media (max-width:640px){.chat-form{grid-template-columns:1fr}.chat-log{height:280px}}
+/* fila + captura */
+.grade{display:grid;grid-template-columns:300px minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:820px){.grade{grid-template-columns:1fr}}
+aside.caixa{padding:10px;display:grid;gap:8px}
+.contas{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:.7rem;padding:1px 8px;border-radius:99px;font-weight:650;white-space:nowrap;background:var(--afundado);color:var(--tinta2)}
+.chip.capturada{background:var(--ok-fraco);color:var(--ok)}
+.chip.em_curso{background:var(--cic-fraco);color:var(--cic)}
+.chip.bloqueada{background:var(--ruim-fraco);color:var(--ruim)}
+.fila{list-style:none;margin:0;padding:0;display:grid;gap:2px;max-height:520px;overflow-y:auto}
+.fila button{width:100%;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 8px;text-align:left;border:0;background:transparent;padding:7px 8px;border-radius:8px;color:var(--tinta);font:inherit;cursor:pointer}
+.fila button:hover,.fila button:focus-visible{background:var(--afundado);outline:2px solid var(--acento);outline-offset:-2px}
+.fila button.atual{background:var(--acento-fraco)}
+.fila .tema{min-width:0;font-size:.86rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fila .meta{grid-column:1;font-size:.74rem;color:var(--tinta3)}
+.fila .chip{grid-column:2;grid-row:1 / span 2;align-self:center}
+article.caixa{padding:16px;display:grid;gap:14px}
+.lista-cab{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline}
+.lista-cab h2{margin:0;font-size:1.1rem;text-wrap:balance}
+.lista-cab a{color:var(--acento);font-weight:600}
+.num{font-variant-numeric:tabular-nums}
+form.q{display:grid;gap:10px}
+form.q label{display:grid;gap:4px;font-weight:600;font-size:.86rem}
+form.q label small{font-weight:400;color:var(--tinta3)}
+.linha{display:flex;flex-wrap:wrap;gap:10px}
+.linha label{flex:1 1 150px}
+input,textarea,select{font:inherit;font-size:.9rem;padding:8px 10px;border:1px solid var(--linha);border-radius:8px;background:var(--papel);color:var(--tinta);width:100%}
+textarea{min-height:90px;resize:vertical}
+textarea.longo{min-height:150px}
+input:focus-visible,textarea:focus-visible,select:focus-visible,.btn:focus-visible{outline:2px solid var(--acento);outline-offset:1px}
+.btn{font:inherit;font-weight:650;padding:10px 16px;border-radius:8px;border:0;background:var(--acento);color:var(--sobre-acento);cursor:pointer;min-height:44px}
+.btn.fantasma{background:transparent;color:var(--acento);border:1px solid var(--acento)}
+.btn[disabled]{opacity:.5;cursor:default}
+.status{font-size:.84rem;color:var(--tinta2);min-height:1.3em}
+.status.ok{color:var(--ok)} .status.ruim{color:var(--ruim)}
+.vazio{color:var(--tinta3)}
+.capt{display:flex;flex-wrap:wrap;gap:4px}
+.capt span{font-family:var(--mono);font-size:.74rem;padding:1px 6px;border-radius:5px;background:var(--acento-fraco);color:var(--acento)}
+@media (prefers-reduced-motion:no-preference){.fila button,.btn{transition:background 120ms ease}}
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Bancada <span>EMED</span></h1>
+    <p class="sub">Captura das listas do banco Estratégia MED para o banco de questões do MedHub: enunciado, gabarito, comentário da solução e fórum. Página privada de trabalho entre o hub (Claude Code) e o executor (Claude no Chrome).</p>
+  </header>
+
+  <div class="banner" id="hub-banner" hidden></div>
+
+  <details class="caixa como">
+    <summary>Como capturar (para o agente no Chrome)</summary>
+    <ol>
+      <li>Relatórios, dúvidas e bloqueios vão no <b>Canal</b> abaixo, com remetente <code>claude-in-chrome</code>. O quadro verde acima é a instrução vigente do hub e vale sobre esta lista.</li>
+      <li>Escolha a lista na fila (ou siga a primeira pendente), abra o link no EMED e marque a lista como <b>em curso</b>.</li>
+      <li>Para cada questão: nº na lista, banca e ano, enunciado integral, alternativas (uma por linha, <code>A) ...</code>), gabarito, comentário da solução do professor na íntegra e os comentários do fórum relevantes (autor omitido). Texto integral, sem resumir e sem opinar.</li>
+      <li>Registrar grava a questão e limpa o formulário para a próxima. Registrar de novo o mesmo nº sobrescreve.</li>
+      <li>No fim da lista, <b>Marcar lista como capturada</b>. Se a página travar ou pedir login, status <b>bloqueada</b> e descreva no Canal.</li>
+    </ol>
+  </details>
+
+  <section class="caixa" aria-label="Canal hub e executor">
+    <div class="chat-cab"><p class="rot">Canal hub ⇄ executor</p><span class="chat-n" id="chat-n"></span></div>
+    <div class="chat-log" id="chat-log" role="log" aria-live="polite"><div class="msg op"><span class="meta">canal:</span>conectando…</div></div>
+    <form class="chat-form" id="chat-form">
+      <select id="chat-de" aria-label="Quem envia">
+        <option value="claude-in-chrome">claude-in-chrome</option>
+        <option value="operador">operador</option>
+      </select>
+      <textarea id="chat-texto" rows="2" required placeholder="Relatório, dúvida, bloqueio… (Ctrl+Enter envia)"></textarea>
+      <button class="btn" type="submit" id="chat-enviar">Enviar</button>
+      <div class="status" id="chat-status"></div>
+    </form>
+  </section>
+
+  <div class="grade">
+    <aside class="caixa">
+      <p class="rot">Fila de listas</p>
+      <div class="contas" id="contas"></div>
+      <ul class="fila" id="fila"><li class="vazio">Carregando a fila…</li></ul>
+    </aside>
+    <article class="caixa" id="painel">
+      <div class="vazio" id="vazio">Escolha uma lista na fila.</div>
+      <div id="corpo" hidden>
+        <div class="lista-cab">
+          <h2 id="l-tema"></h2>
+          <span class="chip" id="l-status"></span>
+          <span class="sub num" id="l-meta"></span>
+          <a id="l-link" href="#" target="_blank" rel="noopener noreferrer">abrir no EMED</a>
+        </div>
+        <div>
+          <p class="rot">Questões capturadas desta lista</p>
+          <div class="capt" id="l-capt"></div>
+        </div>
+        <div class="linha">
+          <button class="btn fantasma" type="button" id="l-curso">Marcar em curso</button>
+          <button class="btn fantasma" type="button" id="l-feita">Marcar lista como capturada</button>
+          <button class="btn fantasma" type="button" id="l-bloq">Marcar bloqueada</button>
+        </div>
+        <form class="q" id="form-q">
+          <p class="rot">Registrar questão</p>
+          <div class="linha">
+            <label>Nº na lista<input id="q-num" type="number" min="1" required inputmode="numeric"></label>
+            <label>Banca e ano<input id="q-banca" placeholder="UERJ 2024"></label>
+            <label>Gabarito<input id="q-gab" maxlength="2" placeholder="C" required></label>
+            <label>ID no EMED <small>se visível</small><input id="q-id"></label>
+          </div>
+          <label>Enunciado<textarea id="q-enun" class="longo" required></textarea></label>
+          <label>Alternativas <small>uma por linha: A) …</small><textarea id="q-alt" required></textarea></label>
+          <label>Comentário da solução <small>íntegra</small><textarea id="q-sol" class="longo"></textarea></label>
+          <label>Fórum <small>comentários relevantes, um por parágrafo, sem autor</small><textarea id="q-forum"></textarea></label>
+          <label>Tags do EMED <small>área, tema, assunto</small><input id="q-tags"></label>
+          <div class="linha"><button class="btn" type="submit" id="q-salvar">Registrar questão</button><div class="status" id="q-status"></div></div>
+        </form>
+      </div>
+    </article>
+  </div>
+</div>
+
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id)};
+  var S={db:null,listas:[],capt:{},sel:null,control:{}};
+  function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+  var ROT={pendente:"pendente",em_curso:"em curso",capturada:"capturada",bloqueada:"bloqueada"};
+  function atual(){
+    for(var i=0;i<S.listas.length;i++) if(S.listas[i]._id===S.sel) return S.listas[i];
+    for(var j=0;j<S.listas.length;j++) if((S.listas[j].status||"pendente")!=="capturada") return S.listas[j];
+    return null;
+  }
+  function renderFila(){
+    var c={}; S.listas.forEach(function(l){var s=l.status||"pendente";c[s]=(c[s]||0)+1});
+    $("contas").innerHTML=Object.keys(c).map(function(s){return '<span class="chip '+esc(s)+'">'+c[s]+" "+esc(ROT[s]||s)+"</span>"}).join("");
+    var a=atual();
+    $("fila").innerHTML=S.listas.length?S.listas.map(function(l){var s=l.status||"pendente";var n=(S.capt[l._id]||[]).length;
+      return '<li><button type="button" data-id="'+esc(l._id)+'" class="'+(a&&a._id===l._id?"atual":"")+'"><span class="tema" title="'+esc(l.tema)+'">'+esc(l.tema)+'</span><span class="chip '+esc(s)+'">'+esc(ROT[s]||s)+'</span><span class="meta num">'+esc(l.area||"")+(l.semana?" · S"+esc(l.semana):"")+" · "+n+"/"+esc(Math.round(l.q_previstas||0))+"q</span></button></li>"}).join(""):'<li class="vazio">Nenhuma lista na fila ainda.</li>';
+  }
+  function renderPainel(){
+    var l=atual(); $("vazio").hidden=!!l; $("corpo").hidden=!l; if(!l) return;
+    var s=l.status||"pendente";
+    $("l-tema").textContent=l.tema||""; $("l-status").className="chip "+s; $("l-status").textContent=ROT[s]||s;
+    $("l-meta").textContent=(l.area||"")+(l.semana?" · semana "+l.semana:"")+" · "+Math.round(l.q_previstas||0)+" questões previstas";
+    $("l-link").href=l.url||"#";
+    var ns=(S.capt[l._id]||[]).slice().sort(function(a,b){return a-b});
+    $("l-capt").innerHTML=ns.length?ns.map(function(n){return"<span>"+esc(n)+"</span>"}).join(""):'<span class="vazio" style="background:none;color:var(--tinta3)">nenhuma ainda</span>';
+  }
+  function render(){renderFila();renderPainel()}
+  $("fila").addEventListener("click",function(e){var b=e.target.closest("button[data-id]");if(!b)return;S.sel=b.getAttribute("data-id");render()});
+
+  async function marcar(st){var l=atual();if(!l||!S.db)return;try{await S.db.doc("listas/"+l._id).update({status:st,atualizado_em:new Date().toISOString()})}catch(e){$("q-status").className="status ruim";$("q-status").textContent="Não gravou o status ("+(e&&e.code||"erro")+")."}}
+  $("l-curso").addEventListener("click",function(){marcar("em_curso")});
+  $("l-feita").addEventListener("click",function(){marcar("capturada")});
+  $("l-bloq").addEventListener("click",function(){marcar("bloqueada")});
+
+  $("form-q").addEventListener("submit",async function(e){
+    e.preventDefault(); var l=atual(); if(!l||!S.db) return;
+    var n=parseInt($("q-num").value,10); if(!n) return;
+    $("q-salvar").disabled=true; $("q-status").className="status"; $("q-status").textContent="Gravando…";
+    var doc={lista:l._id,tarefa:l.tarefa||null,num:n,banca:$("q-banca").value.trim(),gabarito:$("q-gab").value.trim().toUpperCase(),emed_id:$("q-id").value.trim(),
+      enunciado:$("q-enun").value,alternativas:$("q-alt").value,solucao:$("q-sol").value,forum:$("q-forum").value,tags:$("q-tags").value.trim(),
+      capturado_em:new Date().toISOString(),executor:"claude-in-chrome"};
+    try{
+      await S.db.doc("questoes/"+l._id+"_"+n).set(doc);
+      ["q-banca","q-gab","q-id","q-enun","q-alt","q-sol","q-forum"].forEach(function(id){$(id).value=""});
+      $("q-num").value=n+1; $("q-status").className="status ok"; $("q-status").textContent="Questão "+n+" registrada.";
+    }catch(err){$("q-status").className="status ruim";$("q-status").textContent="Não gravou ("+(err&&err.code||"erro")+"). Tente de novo; se repetir, avise no Canal."}
+    $("q-salvar").disabled=false;
+  });
+
+  function quem(de){return de==="hub"?"hub":(de==="claude-in-chrome"?"cic":"op")}
+  function hora(iso){var d=new Date(iso);return isNaN(d)?"--:--":d.toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit"})+" "+d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"})}
+  function renderChat(ms){
+    var log=$("chat-log"); var fim=log.scrollHeight-log.scrollTop-log.clientHeight<40;
+    log.innerHTML=ms.length?ms.map(function(m){var t=String(m.texto||"");
+      var corpo=t.length>700?"<details><summary>"+esc(t.slice(0,160).replace(/\s+/g," "))+"… ("+t.length+" caracteres, abrir)</summary>"+esc(t)+"</details>":esc(t);
+      return '<div class="msg '+quem(m.de)+'"><span class="meta">'+esc(hora(m.enviado_em))+" "+esc(m.de||"?")+":</span>"+corpo+"</div>"}).join(""):'<div class="msg op"><span class="meta">canal:</span>nenhuma mensagem ainda.</div>';
+    $("chat-n").textContent=ms.length+(ms.length===1?" mensagem":" mensagens");
+    if(fim||ms.length<=3) log.scrollTop=log.scrollHeight;
+  }
+  async function enviar(){
+    if(!S.db){$("chat-status").className="status ruim";$("chat-status").textContent="Banco indisponível nesta visualização.";return}
+    var t=$("chat-texto").value.trim(); if(!t) return;
+    $("chat-enviar").disabled=true; $("chat-status").className="status"; $("chat-status").textContent="Enviando…";
+    var agora=new Date().toISOString();
+    try{await S.db.collection("mensagens").add({de:$("chat-de").value,texto:t,enviado_em:agora,lido:false});$("chat-texto").value="";$("chat-status").className="status ok";$("chat-status").textContent="Enviado às "+hora(agora)+"."}
+    catch(e){$("chat-status").className="status ruim";$("chat-status").textContent="Não enviou ("+(e&&e.code||"erro")+"). Tente de novo."}
+    $("chat-enviar").disabled=false;
+  }
+  $("chat-form").addEventListener("submit",function(e){e.preventDefault();enviar()});
+  $("chat-texto").addEventListener("keydown",function(e){if(e.key==="Enter"&&(e.ctrlKey||e.metaKey)){e.preventDefault();enviar()}});
+
+  async function boot(){
+    var db=null; try{db=window.claude&&window.claude.use?await window.claude.use("db"):null}catch(e){db=null}
+    if(!db){$("fila").innerHTML='<li class="vazio">Banco indisponível nesta visualização. Abra a página logado na conta do MedHub.</li>';$("chat-log").innerHTML='<div class="msg op"><span class="meta">canal:</span>banco indisponível.</div>';return}
+    S.db=db;
+    db.doc("control/hub").onSnapshot(function(s){S.control=s.exists?(s.data()||{}):{};var t=S.control.instrucao||"";$("hub-banner").hidden=!t;$("hub-banner").textContent=t},function(){});
+    db.collection("listas").orderBy("seq").onSnapshot(function(s){S.listas=s.docs.map(function(d){var x=d.data()||{};x._id=d.id;return x});render()},function(){$("fila").innerHTML='<li class="vazio">Não foi possível ler a fila. Recarregue a página.</li>'});
+    db.collection("questoes").onSnapshot(function(s){var m={};s.docs.forEach(function(d){var q=d.data()||{};if(q.lista){(m[q.lista]=m[q.lista]||[]).push(q.num)}});S.capt=m;render()},function(){});
+    db.collection("mensagens").orderBy("enviado_em","asc").limit(400).onSnapshot(function(s){renderChat(s.docs.map(function(d){return d.data()||{}}))},function(){$("chat-log").innerHTML='<div class="msg op"><span class="meta">canal:</span>não foi possível ler as mensagens.</div>'});
+  }
+  render(); boot();
+})();
+</script>

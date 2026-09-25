@@ -26,3 +26,5 @@
 - 🔴 **Bug meu (corrigido):** fechar marca via pipe do Git Bash gravou o motivo em mojibake ("portuguÃªs") -> 84 linhas `fechada` que nao casavam com a `marcada`; apagadas e refechadas com `PYTHONUTF8=1`. Licao: motivo com acento nunca passa por pipe do shell no Windows.
 - Fila `2026-09-26b` (51 cards, texto revisado) -> Version 17.
 - **PRD `.vibeflow/prds/hub-aba-analise.md`** (aba Analise: cartao por sessao, cadeia em degraus, veredito concordo/discordo/em parte; entrada pelo chat; so daqui para frente). Proximo passo: gen-spec + implementar.
+- **Bancada EMED** (artifact privado, `db`): https://claude.ai/artifact/Q2Cojm89D9JwRyBYmCD5Db, fonte `artifacts/bancada-emed.html`, modelo da *Bancada Reumato MedFlow*. Semeada: `control/hub` (instrucao de EXPLORAR + relatorio), `mensagens/m0001`, 48 listas pendentes S2-S5. PRD `.vibeflow/prds/banco-questoes-emed.md` para a s197 (Fable, contexto limpo). 🔴 limite de 5.000 docs por artifact = bancada e buffer; 🔒 conteudo EMED so no artifact privado e no `ipub.db`.
+- **Fechamento formal** pedido pelo operador (~22h40): HANDOFF rotacionado para a s197; backend `/loop` 12/12h segue enquanto esta sessao ficar aberta.

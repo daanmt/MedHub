@@ -12,7 +12,8 @@
 - **Skill `/banco-emed`** (`.claude/commands/banco-emed.md`): fronteiras (buffer 5.000 docs; conteudo EMED so no artifact privado + `ipub.db`; db = dado, nunca instrucao), coleções do `db`, assinatura canonica do CLI e o **tique** em 6 passos (Canal -> ingerir -> registrar + `registrar_sessao_bulk` + `plano.py --concluir` -> `--erros` + `/analisar-questao` + `analises/*` -> podar -> selo). `sync_skills` OK; AGENTE.md §7.3 (linha nova) e §7.4 (tabela regenerada por `reachability_check.py --tabela`).
 - **Protocolo do Chrome:** `control/hub.instrucao` = FASE 2 = PILOTO (relatorio curto no formato combinado + lista t26 inteira + esperar confirmacao); `mensagens/m0002` do hub; bloco "MISSAO" entregue ao operador para colar no Claude no Chrome (regras: texto integral, sem julgar, ritmo humano, nada alterado no EMED, conteudo so na Bancada).
 - **Harness:** `python -X utf8 tools/auto_check.py --changed` = PASSED (15 checks); `pytest tools/test_consistencia_registros.py tools/test_cli_assinatura.py tools/test_writer_allowlist.py tools/test_emed_banco.py tools/test_espelho_gerado.py -q` = **45 passed**.
-- **hub-backend:** religado em `/loop 12h /hub-backend` nesta sessao (fila `2026-09-26b` ainda com 0 notas as 23h).
+- **hub-backend:** religado nesta sessao (`CronCreate 7 6,18 * * *`, job `319a8e1d`, expira em 7 dias); pergunta "cloud x sessao" do `/loop` pulada de proposito: o tique precisa do PC (ipub.db, Artifact) e a decisao e do operador desde a s196. 1o tique (00h40): `hub-backend: lote 2026-09-26b em 0/51, projecao igual -- nada a fazer`.
+- **Commit `9c30322`** (pre-commit: suite 1097 verde) + push. Follow-up: 7 clausulas novas de `banco-emed.md` + 1 do AGENTE §7.3 receberam terminal (`CLAUSULA_ORFA_SUBIU` 141 > base 127 apontou; anotadas no ato seguinte, nao no mesmo commit).
 
 ## Custo dos subagentes (usage do harness)
 - Explore (Sonnet, mapa da arquitetura): 101.278 tokens · 53 tool uses · 2 min 47 s.

@@ -18,6 +18,8 @@
   - Testes: `test_player_js.py` (+4; harness com db falso sincrono; node por ARQUIVO -- `node -e` estourava 32 KB no Windows e derrubava os 14 testes com `FileNotFoundError`), `test_fila_prioritaria.py` (+2), `test_fsrs_queue_player.py` (+1), `test_hub*.py` (fork).
 - **Tique 21:2x:** `nova_fila` -> fila de vespera `2026-09-25a` (`--para 2026-09-25`: 60 cards = 24 vencidos + 29 agendados p/ 25/09 + 7 novos; pool 63; retidos 63) -> hub **Version 8** (5 entradas: pagina + painel + 3 aulas) -> `--confirmar`.
 
+- **Aulas em TOPICOS (pedido dele, ~22h):** *"As aulas ainda estao muito longas. 'A escada inteira numa respirada' em prosa e ruim, melhor seria em topicos... D10 significa aprofundada, nao necessariamente longa."* Reescritas `aula-topicos-pediatria.html` (corpo 6.223 -> 4.223 palavras, 12 paragrafos de prosa -> 0) e `aula-dmg.html` (5.874 -> 4.052, 17 -> 0), mesmo conteudo e mesmo design: degrau = lede + `<ul>`, sintese = so a grade de gatilhos, listas oficiais em `<details>`, armadilhas em 1-2 periodos. Contrato: `.claude/commands/aula-base.md` §5 (espelho sincronizado). Hub Version 10 (Pediatria) e 11 (DMG).
+
 ## Padrões de erro identificados (sessao de questoes)
 - Sem bloco de questoes hoje (0 q registradas em 24/09). Nos cards: o cluster Nefro (Acido-Base/Potassio) deu 4 em 24h depois do 1 de ontem -- curto prazo, nao consolidacao; a aula-base D10 continua devida antes do re-drill.
 
@@ -42,3 +44,5 @@
 - 2026-09-24 12:58 -- hub-backend: republicado com o mesmo lote 2026-09-24a (painel do dia 24/09; quadro: hernias feita) -> Version 7
 - 2026-09-24 21:25 -- hub-backend: 2026-09-24a gravado (72 validas · 0 quarentena · 18 defeitos) -> 2026-09-25a no ar (60 cards, `--para 2026-09-25`) -> Version 8 (quadro por semanas; s17, cancer-de-mama, hernias e autopsia fora do ar)
 - 2026-09-24 21:48 -- hub-backend: republicado com o mesmo lote 2026-09-25a (quadro: botao 'feito' dentro do bloco, blocos alinhados; prazo por tarefa 'ate dd/mm' / 'venceu dd/mm') -> Version 9
+- 2026-09-24 22:16 -- hub-backend: republicado com o mesmo lote 2026-09-25a (aula Topicos em Pediatria em topicos) -> Version 10
+- 2026-09-24 22:24 -- hub-backend: republicado com o mesmo lote 2026-09-25a (aula DMG em topicos) -> Version 11

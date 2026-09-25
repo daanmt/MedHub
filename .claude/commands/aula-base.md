@@ -86,3 +86,26 @@ abre a aula DENTRO da página, sem sair do drill.  <!-- CHECK: test_hub -->
 ⚰️ *Até 22/09/2026 a regra era "publicar a aula-base como Artifact HTML direto" -- um artifact NOVO
 por aula na galeria da conta compartilhada. Revogada na s192 (spec `medhub-hub-v0`): o operador
 apagava por higiene e o link da aula morria no mesmo dia (a de Hérnias, em 22/09).*
+
+## 5. A forma do texto: tópicos, períodos curtos, profundidade sem volume (s195)
+
+Decisão do operador em 24/09/2026, depois de ler as aulas no celular: *"As aulas ainda estão muito
+longas. 'A escada inteira numa respirada' em prosa é ruim, melhor seria em tópicos... Evite parágrafos
+longos, preferindo períodos menores e mais concisos. D10 significa aprofundada, não necessariamente longa
+e laboriosa. Precisamos valorizar cada segundo de estudos."*
+
+- **Cada degrau = lede de 1 frase + tópicos (`<ul>`)**, não parágrafos. Um tópico = uma ideia, 1-2
+  períodos curtos. O mecanismo (o porquê) entra como tópico próprio quando discrimina alternativa.
+- **Cluster de diagnóstico diferencial = tabela/grade** (`.crit`, `.vs`), nunca prosa.
+- **A síntese final é a grade de gatilhos** (1 linha por degrau), não um parágrafo corrido. A "escada
+  inteira numa respirada" em prosa foi revogada.
+- **Armadilhas: 1-2 períodos cada.** Referência densa (listas oficiais de 10/12 passos, suplementações)
+  vai para `<details>` recolhido.
+- **Cada fato uma vez.** Se a grade já traz o número, o tópico não o repete.
+- **D10 = profundidade** (mecanismo, discriminador, banca-dependente), **não comprimento**. Régua:
+  cada seção cabe numa tela de celular. Referência: `artifacts/aula-topicos-pediatria.html` (reescrita
+  na s195: corpo de 6.200 para 4.200 palavras, 12 parágrafos de prosa para 0, mesmo conteúdo).
+
+⚰️ *A memória `feedback_aula_base_prosa_enxuta` (s150: "prosa enxuta, não bullet-pilha") fica
+restringida: prosa só no lede; o corpo é em tópicos. "Descomprimir" (s090/s092) significa explicar o
+mecanismo, nunca escrever mais texto.*

@@ -20,6 +20,8 @@
 
 - **Aulas em TOPICOS (pedido dele, ~22h):** *"As aulas ainda estao muito longas. 'A escada inteira numa respirada' em prosa e ruim, melhor seria em topicos... D10 significa aprofundada, nao necessariamente longa."* Reescritas `aula-topicos-pediatria.html` (corpo 6.223 -> 4.223 palavras, 12 paragrafos de prosa -> 0) e `aula-dmg.html` (5.874 -> 4.052, 17 -> 0), mesmo conteudo e mesmo design: degrau = lede + `<ul>`, sintese = so a grade de gatilhos, listas oficiais em `<details>`, armadilhas em 1-2 periodos. Contrato: `.claude/commands/aula-base.md` §5 (espelho sincronizado). Hub Version 10 (Pediatria) e 11 (DMG).
 
+- **Fechamento (~22h40):** releitura das colecoes `2026-09-22h` (220 docs: novas=0, ja_gravadas=170) e `2026-09-24a` (90: novas=0, ja_gravadas=72) -> PODA das duas (310 deletes em 7 lotes pinados por `if_version`; nada saiu sem copia no revlog/reforja_marks). Painel regenerado e hub republicado com o mesmo lote `2026-09-25a`.
+
 ## Padrões de erro identificados (sessao de questoes)
 - Sem bloco de questoes hoje (0 q registradas em 24/09). Nos cards: o cluster Nefro (Acido-Base/Potassio) deu 4 em 24h depois do 1 de ontem -- curto prazo, nao consolidacao; a aula-base D10 continua devida antes do re-drill.
 
@@ -46,3 +48,4 @@
 - 2026-09-24 21:48 -- hub-backend: republicado com o mesmo lote 2026-09-25a (quadro: botao 'feito' dentro do bloco, blocos alinhados; prazo por tarefa 'ate dd/mm' / 'venceu dd/mm') -> Version 9
 - 2026-09-24 22:16 -- hub-backend: republicado com o mesmo lote 2026-09-25a (aula Topicos em Pediatria em topicos) -> Version 10
 - 2026-09-24 22:24 -- hub-backend: republicado com o mesmo lote 2026-09-25a (aula DMG em topicos) -> Version 11
+- 2026-09-24 22:33 -- hub-backend: republicado com o mesmo lote 2026-09-25a (painel do fechamento) -> Version 12

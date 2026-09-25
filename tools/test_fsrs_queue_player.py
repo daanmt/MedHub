@@ -149,11 +149,11 @@ def test_export_corta_no_limite_preservando_a_ordem():
 
 
 def test_teto_do_dia_vem_do_day_plan_em_regime_de_divida():
-    """F64: `vencidos = atrasados + hoje`. 70 vencidos disparam o regime e o teto
-    sobe para min(60+70, 1.5*60) = 90. O fallback (60) NAO passaria aqui."""
-    fila = ([{"bucket": "atrasados"}] * 50) + ([{"bucket": "hoje"}] * 20)
+    """F64: `vencidos = atrasados + hoje`. s196: teto 90 com CAP 1.0 -- regime de
+    divida nao passa de 90. O fallback (60) NAO passaria aqui."""
+    fila = ([{"bucket": "atrasados"}] * 50) + ([{"bucket": "hoje"}] * 50)
     assert teto_do_dia(fila) == 90
-    assert teto_do_dia([{"bucket": "novos"}] * 5) == 60
+    assert teto_do_dia([{"bucket": "novos"}] * 5) == 90
 
 
 def test_teto_do_dia_desconta_o_que_ja_foi_revisado_hoje():
@@ -163,7 +163,7 @@ def test_teto_do_dia_desconta_o_que_ja_foi_revisado_hoje():
     fila = ([{"bucket": "atrasados"}] * 50) + ([{"bucket": "hoje"}] * 20)
     assert teto_do_dia(fila, consumo_hoje=30) == 60
     assert teto_do_dia(fila, consumo_hoje=159) == 0
-    assert teto_do_dia([{"bucket": "novos"}] * 5, consumo_hoje=None) == 60
+    assert teto_do_dia([{"bucket": "novos"}] * 5, consumo_hoje=None) == 90
 
 
 # --------------------------------------------------------------------------

@@ -36,20 +36,22 @@ def test_vencidos_e_atrasados_mais_hoje():
 
 
 def test_a_divergencia_da_s162_virou_UMA_leitura():
-    """O ponto do achado: os dois numeros existiam e davam veredito oposto."""
-    vencidos = dp.vencidos_de(S162)
-    assert vencidos > dp.TETO_BASE, "67 > 60 -- a leitura do dono"
-    assert S162["atrasados"] <= dp.TETO_BASE, "45 <= 60 -- a leitura antiga do codigo"
-    assert dp._teto_efetivo(vencidos) == 90, "regime de divida dispara e o teto vai ao CAP"
-    assert dp._teto_efetivo(S162["atrasados"]) == dp.TETO_BASE, \
-        "o criterio antigo travaria o teto em 60 com a fila inteira vencida"
+    """O ponto do achado: os dois numeros existiam e davam veredito oposto.
+    (s196: o teto subiu 60 -> 90; o caso da s162 e reescalado ao TETO_BASE vigente.)"""
+    caso = {"atrasados": dp.TETO_BASE - 15, "hoje": 22}
+    vencidos = dp.vencidos_de(caso)
+    assert vencidos > dp.TETO_BASE, "vencidos > teto -- a leitura do dono"
+    assert caso["atrasados"] <= dp.TETO_BASE, "atrasados <= teto -- a leitura antiga do codigo"
+    cap = int(dp.CAP_MULTIPLICADOR * dp.TETO_BASE)
+    assert dp._teto_efetivo(vencidos) == cap, "regime de divida dispara e o teto vai ao CAP"
+    assert dp._teto_efetivo(caso["atrasados"]) == dp.TETO_BASE,         "o criterio antigo travaria o teto com a fila inteira vencida"
 
 
 def test_divida_composta_so_de_HOJE_dispara_o_regime():
     """Efeito perverso do criterio antigo: `atrasados` = 0 e o regime nunca disparava."""
-    fsrs = {"atrasados": 0, "hoje": 80}
-    assert dp.vencidos_de(fsrs) == 80
-    assert dp._teto_efetivo(dp.vencidos_de(fsrs)) == 90
+    fsrs = {"atrasados": 0, "hoje": dp.TETO_BASE + 20}
+    assert dp.vencidos_de(fsrs) == dp.TETO_BASE + 20
+    assert dp._teto_efetivo(dp.vencidos_de(fsrs)) == int(dp.CAP_MULTIPLICADOR * dp.TETO_BASE)
     assert dp._teto_efetivo(fsrs["atrasados"]) == dp.TETO_BASE, "era isto que travava"
 
 

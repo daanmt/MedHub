@@ -149,11 +149,11 @@ def test_export_corta_no_limite_preservando_a_ordem():
 
 
 def test_teto_do_dia_vem_do_day_plan_em_regime_de_divida():
-    """F64: `vencidos = atrasados + hoje`. s196: teto 90 com CAP 1.0 -- regime de
-    divida nao passa de 90. O fallback (60) NAO passaria aqui."""
-    fila = ([{"bucket": "atrasados"}] * 50) + ([{"bucket": "hoje"}] * 50)
-    assert teto_do_dia(fila) == 90
-    assert teto_do_dia([{"bucket": "novos"}] * 5) == 90
+    """F64: `vencidos = atrasados + hoje`. s196: teto 100, CAP 1.5 -- 110 vencidos
+    disparam o regime e o teto vai a min(100+110, 150) = 150. O fallback (60) NAO passaria."""
+    fila = ([{"bucket": "atrasados"}] * 60) + ([{"bucket": "hoje"}] * 50)
+    assert teto_do_dia(fila) == 150
+    assert teto_do_dia([{"bucket": "novos"}] * 5) == 100
 
 
 def test_teto_do_dia_desconta_o_que_ja_foi_revisado_hoje():
@@ -161,9 +161,9 @@ def test_teto_do_dia_desconta_o_que_ja_foi_revisado_hoje():
     a cada lote drenado, sem o desconto cada lote traria o teto inteiro (a s194 tinha
     159 revisoes gravadas e o export ainda montava 90). Saldo nunca fica negativo."""
     fila = ([{"bucket": "atrasados"}] * 50) + ([{"bucket": "hoje"}] * 20)
-    assert teto_do_dia(fila, consumo_hoje=30) == 60
+    assert teto_do_dia(fila, consumo_hoje=30) == 70
     assert teto_do_dia(fila, consumo_hoje=159) == 0
-    assert teto_do_dia([{"bucket": "novos"}] * 5, consumo_hoje=None) == 90
+    assert teto_do_dia([{"bucket": "novos"}] * 5, consumo_hoje=None) == 100
 
 
 # --------------------------------------------------------------------------

@@ -171,10 +171,10 @@ def render_countdown(provas):
 # ("60q/dia + 60 flashcards/dia"). O CAP cai de 2x para 1.5x no mesmo movimento: dobrar o teto
 # em regime de dívida (120/dia) reinstalaria exatamente o pico-e-queda que o usuário rejeitou
 # ("de nada adianta fazer 500 questões em 5 dias e depois passar 2~3 dias sem estudar").
-# s196 (25/09/2026): teto 60 -> 90 por decisão do operador ("pode subir o limite para 90 cards");
-# CAP 1.0 = 90 também em dívida (135/dia reinstalaria o pico-e-queda).
-TETO_BASE = 90            # cards/dia fora do regime de dívida
-CAP_MULTIPLICADOR = 1.0   # teto_efetivo nunca excede CAP_MULTIPLICADOR * TETO_BASE
+# s196 (25/09/2026, noite): teto 100/dia, até 150 em dívida -- decisão do operador ("podemos
+# estipular 100 card/dia, com margem até 150 em dívida"; cards reforjados = drill mais rápido).
+TETO_BASE = 100           # cards/dia fora do regime de dívida
+CAP_MULTIPLICADOR = 1.5   # teto_efetivo nunca excede CAP_MULTIPLICADOR * TETO_BASE
 
 # Recomendador do dia (PRD orquestracao part-2).
 # Norma e significado de cada parâmetro: core/contracts/orquestracao-contract.md

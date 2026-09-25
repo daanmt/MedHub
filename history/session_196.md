@@ -18,3 +18,6 @@
 - `resumos/[GIN] CA de Mama.md` ainda diz "supraclavicular ipsilateral = estadio IV" (errado; AJCC 8 = N3c).
 - 5 duvidas clinicas acima -> `/pesquisar-evidencia` quando houver folga.
 - hub-backend 13:10: republicado com o mesmo lote 2026-09-25b (painel: retencao 7d 89,4 -> 89,3) -> Version 15. Loop passou a 1/1h (job 1bf17f69, :07).
+- hub-backend 18:1x: `2026-09-25b` gravado (78 validas · 0 quarentena · 13 defeitos: 10 "erro de portugues", 3 "card longo"; notas 4=55 3=4 2=2 1=17) -> fila de vespera `2026-09-26a` (56 cards, retidos 13) -> Version 16.
+- **Teto 90 -> 100/dia, CAP 1.5 (150 em divida)** por decisao dele: *"podemos estipular 100 card/dia, com margem ate 150 em divida. esta muito prazeroso fazer os cards e efetivamente mais rapido."*
+- Loop passou a 12/12h (`7 6,18 * * *`, job `f17aac11`): a sessao fica aberta como backend do hub.

@@ -80,9 +80,9 @@ anterior a `37e0859` continua gravado em UTC (backfill é decisão do operador, 
 
 A tensão estrutural observada na s108 (44 agendados > teto de 30 antes de qualquer card novo) é resolvida por **teto dinâmico**, não por teto fixo + mutirão:
 
-- `TETO_BASE = 90` cards/dia (agendados + novos), vigente fora do regime de dívida. *(s196, 25/09/2026: 60 -> 90 por decisão do operador -- "pode subir o limite para 90 cards".)*
+- `TETO_BASE = 100` cards/dia (agendados + novos), vigente fora do regime de dívida. *(s196, 25/09/2026: 60 -> 90 de manhã e 90 -> 100 à noite, por decisão do operador -- "podemos estipular 100 card/dia, com margem até 150 em dívida".)*
   *(histórico: 30 na v1.1 → 40 na s126 → **60 na s159**, ritmo declarado sustentável pelo usuário na virada UERJ/MFC: "60q/dia + 60 flashcards/dia".)*
-- `CAP_MULTIPLICADOR = 1.0` — fator máximo de escala do teto em regime de dívida. *(s196: 1.5 -> 1.0 junto com o teto 90; 135/dia reinstalaria o pico-e-queda. Teto único = 90.)*
+- `CAP_MULTIPLICADOR = 1.5` — fator máximo de escala do teto em regime de dívida: até **150** (s196, decisão do operador).
   *(era 2 até a s159; caiu junto com a subida do TETO_BASE — dobrar 60 daria 120/dia e reinstalaria o pico-e-queda que o usuário rejeitou explicitamente.)*
 - 🔴 **Regime de dívida (v1.3, F64): o contador é `vencidos = atrasados + hoje`.** Nele,
   `teto_efetivo = int(min(TETO_BASE + vencidos, CAP_MULTIPLICADOR * TETO_BASE))` — o teto sobe

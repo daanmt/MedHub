@@ -412,10 +412,14 @@ def secoes_do_quadro(classificadas, plano_linhas=None, calendario=None, hoje=Non
         usadas.update(a.slug for a, _t, _c in aulas)
         classe = classe_da_tarefa(l)
         cumpre = next(((a, tit) for a, tit, c in aulas if c), None) if classe == "aula" else None
+        cal = (calendario or {}).get(int(l["semana_plano"]))
         return {"tipo": "tarefa", "id": tid, "tema": l.get("tema") or "(sem tema)",
                 "bloco": l.get("bloco"), "q": _q_de(l), "classe": classe,
                 "url_lista": l.get("url_lista"), "semana": int(l["semana_plano"]),
                 "atrasada": int(l["semana_plano"]) < atual,
+                # prazo = o fim da semana da tarefa no calendario da trilha (pedido dele, s195:
+                # "o prazo da tarefa, para ajudar na gestao do cronograma"); sem calendario, None
+                "prazo": cal[1] if cal else None,
                 "aulas": [(a, tit) for a, tit, _c in aulas],
                 "slug": cumpre[0].slug if cumpre else None,
                 "tipo_aula": TIPO_PADRAO, "titulo": cumpre[1] if cumpre else None,
@@ -465,8 +469,6 @@ def _html_item(item, feito=False):
     classes = ["qd-item"]
     if item.get("atrasada"):
         classes.append("qd-atrasada")
-    if not slug:
-        classes.append("qd-sem-botao")
     attrs = ' data-secao="%s" data-ordem="%d"' % (_e(item["secao"]), item["ordem"])
     if item["tipo"] == "tarefa":
         attrs += ' data-tarefa="%d" data-classe="%s"' % (item["id"], _e(item["classe"]))
@@ -485,8 +487,12 @@ def _html_item(item, feito=False):
         meta = ['<span class="qd-bl">%s</span>' % _e(item["bloco"])] if item.get("bloco") else []
         meta.append('<span>%s</span>' % ("%d questões" % item["q"] if item["q"]
                                          else _e(ROTULO_CLASSE.get(item["classe"], item["classe"]))))
+        prazo = item.get("prazo")
         if item.get("atrasada"):
-            meta.append('<span class="qd-atraso">semana %d</span>' % item["semana"])
+            meta.append('<span class="qd-atraso">semana %d%s</span>'
+                        % (item["semana"], " · venceu %s" % prazo.strftime("%d/%m") if prazo else ""))
+        elif prazo:
+            meta.append('<span class="qd-prazo">até %s</span>' % prazo.strftime("%d/%m"))
         acoes = []
         url = item.get("url_lista")
         if url and str(url).startswith(("http://", "https://")):
@@ -509,7 +515,9 @@ def _html_item(item, feito=False):
                 '<span>%s</span>' % _e(_data_curta(item["data"]))]
         acoes = ['<a class="hub-aula" href="%s" data-titulo="%s">abrir aula</a>'
                  % (_e(a.publicado), _e(item["titulo"]))]
-    return ('<li class="%s"%s>%s<div class="qd-bloco"><p class="qd-tema">%s</p>'
+    # O botao "feito" mora DENTRO do bloco (canto superior direito): fora dele, o item com botao
+    # ficava 54 px mais estreito e desalinhado dos demais -- "o bloco de aulas esta bugado" (s195).
+    return ('<li class="%s"%s><div class="qd-bloco">%s<p class="qd-tema">%s</p>'
             '<p class="qd-meta">%s</p><p class="qd-acao">%s</p></div></li>'
             % (" ".join(classes), attrs, botao, _e(tema), "".join(meta), "".join(acoes)))
 

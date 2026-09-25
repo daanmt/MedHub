@@ -41,3 +41,4 @@
 ## hub-backend (tiques)
 - 2026-09-24 12:58 -- hub-backend: republicado com o mesmo lote 2026-09-24a (painel do dia 24/09; quadro: hernias feita) -> Version 7
 - 2026-09-24 21:25 -- hub-backend: 2026-09-24a gravado (72 validas · 0 quarentena · 18 defeitos) -> 2026-09-25a no ar (60 cards, `--para 2026-09-25`) -> Version 8 (quadro por semanas; s17, cancer-de-mama, hernias e autopsia fora do ar)
+- 2026-09-24 21:48 -- hub-backend: republicado com o mesmo lote 2026-09-25a (quadro: botao 'feito' dentro do bloco, blocos alinhados; prazo por tarefa 'ate dd/mm' / 'venceu dd/mm') -> Version 9

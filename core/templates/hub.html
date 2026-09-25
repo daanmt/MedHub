@@ -62,9 +62,10 @@
 .qd-n{font-size:.78em;font-weight:600;color:var(--tinta3);font-variant-numeric:tabular-nums}
 .qd-lista{list-style:none;margin:0;padding:0;display:grid;gap:10px}
 .qd-vazio{color:var(--tinta3);font-size:.88em;margin:0;padding:12px 0}
-.qd-item{min-width:0;display:grid;grid-template-columns:44px minmax(0,1fr);gap:10px;align-items:start}
-.qd-item.qd-sem-botao{grid-template-columns:minmax(0,1fr)}
-.qd-bloco{min-width:0;padding:12px 14px;background:var(--card);border:1px solid var(--linha);border-radius:12px}
+.qd-item{min-width:0}
+.qd-bloco{position:relative;min-width:0;padding:12px 14px;background:var(--card);border:1px solid var(--linha);border-radius:12px}
+.qd-item[data-slug] .qd-bloco{padding-right:66px}   /* lugar do botao "feito", dentro do bloco */
+.qd-prazo{color:var(--tinta2)}
 .qd-item.qd-atrasada .qd-bloco{border-left:4px solid var(--alerta)}
 .qd-tema{min-width:0;margin:0;font-weight:600;line-height:1.35}
 .qd-meta{margin:2px 0 0;color:var(--tinta3);font-size:.82em;display:flex;flex-wrap:wrap;gap:2px 10px}
@@ -76,6 +77,7 @@
 .qd-acao a:focus-visible{outline:3px solid var(--acento);outline-offset:2px;border-radius:4px}
 .qd-acao .tenue{color:var(--tinta3)}
 .qd-feito{
+  position:absolute;top:10px;right:10px;   /* dentro do bloco (s195) */
   width:44px;height:44px;padding:0;display:grid;place-items:center;
   border:2px solid var(--linha);border-radius:10px;background:var(--card);cursor:pointer;
 }

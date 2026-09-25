@@ -204,14 +204,18 @@ def test_bloco_da_tarefa_tem_tema_peso_questoes_e_acao(tmp_path):
     pagina = _index(raiz)
     lista = _item(pagina, 'data-tarefa="26"')
     assert '<p class="qd-tema">Diabetes na Gestacao</p>' in lista
-    assert '<span class="qd-bl">GO</span><span>19 questões</span><span class="qd-atraso">semana 1</span>' in lista
+    # prazo (s195, pedido dele): atrasada diz a semana e quando venceu; a corrente diz "ate dd/mm"
+    venceu = "semana 1" + (" · venceu %s" % CAL[1][1].strftime("%d/%m") if 1 in CAL else "")
+    assert ('<span class="qd-bl">GO</span><span>19 questões</span><span class="qd-atraso">%s</span>'
+            % venceu) in lista
     assert 'href="%s" rel="noopener noreferrer">abrir lista</a>' % URL in lista
     assert "qd-atrasada" in lista and "qd-feito" not in lista, "tarefa de lista nao tem botao feito"
-    assert "qd-sem-botao" in lista
+    assert "qd-sem-botao" not in lista, "s195: todo bloco tem a mesma largura; o botao mora dentro"
     hernias = _item(pagina, 'data-tarefa="49"')
     assert '<a class="hub-aula" href="aulas/hernias.html" data-titulo="A Escada das Hernias">abrir aula</a>' \
         in hernias, "aula que PREPARA a tarefa (tarefas: [49]) entra no bloco dela"
     assert "abrir lista" in hernias and "qd-feito" not in hernias
+    assert '<span class="qd-prazo">até %s</span>' % CAL[2][1].strftime("%d/%m") in hernias
     preparar = _item(pagina, 'data-tarefa="875"')
     assert '<span class="tenue">aula a preparar</span>' in preparar and '<span>aula</span>' in preparar
     simulado = _item(pagina, 'data-tarefa="1793"')
@@ -224,7 +228,8 @@ def test_aula_que_cumpre_tarefa_de_aula_tem_o_botao_feito_no_bloco(tmp_path):
     _construir(raiz, data_fn)
     bayes = _item(_index(raiz), 'data-tarefa="877"')
     assert 'data-slug="bayes" data-tipo="aula" data-titulo="A Escada de Bayes"' in bayes
-    assert '<button type="button" class="qd-feito" aria-pressed="false"' in bayes
+    assert '<div class="qd-bloco"><button type="button" class="qd-feito" aria-pressed="false"' in bayes, \
+        "s195: o botao fica DENTRO do bloco (fora, o bloco com botao saia 54 px mais estreito)"
     assert 'aria-label="Marcar A Escada de Bayes como feita"' in bayes
     assert '<a class="hub-aula" href="aulas/bayes.html" data-titulo="A Escada de Bayes">abrir aula</a>' in bayes
     assert '<span class="qd-bl">MFC</span><span>aula</span>' in bayes

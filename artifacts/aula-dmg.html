@@ -182,13 +182,20 @@ details.ref .v{color:var(--ink2);line-height:1.5}
 footer{margin-top:60px;padding-top:22px;border-top:1px solid var(--line2)}
 footer p{font-size:12.3px;color:var(--ink3);max-width:80ch;margin:0 0 7px;line-height:1.5}
 code{font-family:"IBM Plex Mono",Consolas,monospace;font-size:11.8px;background:var(--sunk);padding:1px 5px;border-radius:2px}
+
+/* s196: forma §5 + celular */
+@media(max-width:640px){.wrap{padding:0 16px 80px}.synth{padding:22px 16px}details.ref .row{grid-template-columns:1fr;gap:2px}}
+.crit.hd .row:first-child{background:var(--sunk);font-weight:600;color:var(--ink3);font-size:12px;letter-spacing:.04em;text-transform:uppercase}
+.crit.hd .row:first-child .k,.crit.hd .row:first-child .v{color:var(--ink3)}
+.crit .row>span,.vs>div,.trig>div,.flow>div,details.ref .row>span,.rail a>span{min-width:0;overflow-wrap:anywhere}
+@media (hover:none){.rail{position:static}}
 </style>
 
 <div class="wrap">
 <header class="top">
   <p class="eye">MedHub · Aula-base · Obstetrícia / Diabetes na Gestação</p>
   <h1>A escada do diabetes na gestação</h1>
-  <p class="sub">Onze degraus, da placenta ao TOTG de seis semanas depois do parto, cada cutoff amarrado ao mecanismo. Quase toda questão pergunta a mesma coisa: em que ponto da linha do tempo a gestante está, e qual régua vale ali. Antes das 19 questões da lista #26 (e das 33 da #40).</p>
+  <p class="sub">Da placenta ao TOTG de seis semanas depois do parto, cada cutoff amarrado ao mecanismo. A pergunta de quase toda questão: em que ponto da linha do tempo a gestante está, e qual régua vale ali. Antes da lista #26 (19q); a #40 (33q) usa a mesma escada.</p>
   <div class="stats">
     <div class="stat"><b>11</b><span>degraus</span></div>
     <div class="stat"><b>17</b><span>armadilhas mapeadas</span></div>
@@ -199,140 +206,133 @@ code{font-family:"IBM Plex Mono",Consolas,monospace;font-size:11.8px;background:
 <div class="body">
 <nav class="rail" id="rail" aria-label="Navegação da escada">
   <p class="rlab">A escada</p>
-  <a href="#d0" data-r="d0"><span class="rn">0</span><span>A régua do normal</span></a>
-  <a href="#d1" data-r="d1"><span class="rn">1</span><span>Duas raízes, três rótulos</span></a>
-  <a href="#d2" data-r="d2"><span class="rn">2</span><span>Da mãe ao feto: Pedersen</span></a>
-  <a href="#d3" data-r="d3"><span class="rn">3</span><span>Complicações e seus porquês</span></a>
-  <a href="#d4" data-r="d4"><span class="rn">4</span><span>Diagnóstico: as duas réguas</span></a>
-  <a href="#d5" data-r="d5"><span class="rn">5</span><span>Tratamento não farmacológico</span></a>
-  <a href="#d6" data-r="d6"><span class="rn">6</span><span>Insulina e os orais</span></a>
-  <a href="#d7" data-r="d7"><span class="rn">7</span><span>Pré-concepção e pré-natal</span></a>
-  <a href="#d8" data-r="d8"><span class="rn">8</span><span>Parto: quando, como, glicemia</span></a>
-  <a href="#d9" data-r="d9"><span class="rn">9</span><span>Puerpério e reclassificação</span></a>
-  <a href="#d10" data-r="d10"><span class="rn">10</span><span>Priscilla White</span></a>
+  <a href="#d0" data-r="d0"><span class="rn">0</span><span>Régua do normal</span></a>
+  <a href="#d1" data-r="d1"><span class="rn">1</span><span>Três rótulos</span></a>
+  <a href="#d2" data-r="d2"><span class="rn">2</span><span>Pedersen</span></a>
+  <a href="#d3" data-r="d3"><span class="rn">3</span><span>Complicações</span></a>
+  <a href="#d4" data-r="d4"><span class="rn">4</span><span>Diagnóstico</span></a>
+  <a href="#d5" data-r="d5"><span class="rn">5</span><span>Sem remédio</span></a>
+  <a href="#d6" data-r="d6"><span class="rn">6</span><span>Insulina/orais</span></a>
+  <a href="#d7" data-r="d7"><span class="rn">7</span><span>Pré-natal</span></a>
+  <a href="#d8" data-r="d8"><span class="rn">8</span><span>Parto</span></a>
+  <a href="#d9" data-r="d9"><span class="rn">9</span><span>Puerpério</span></a>
+  <a href="#d10" data-r="d10"><span class="rn">10</span><span>P. White</span></a>
   <a href="#synth" data-r="synth"><span class="rn">-&gt;</span><span>Gatilhos</span></a>
-  <a href="#arms" data-r="arms"><span class="rn">🔴</span><span>Armadilhas de prova</span></a>
+  <a href="#arms" data-r="arms"><span class="rn">🔴</span><span>Armadilhas</span></a>
 </nav>
 
 <main>
 
 <section class="degrau" id="d0">
-  <div class="dhead"><span class="dnum">0</span><div class="dtitle"><span class="dstage">Degrau 0</span><h2>A régua do normal: a gestação é um estado diabetogênico fisiológico</h2></div></div>
-  <p class="lede">O que a placenta faz com a glicemia de toda gestante -- os três números centrais do tema nascem daqui.</p>
+  <div class="dhead"><span class="dnum">0</span><div class="dtitle"><span class="dstage">Degrau 0</span><h2>A régua do normal: toda gestação é diabetogênica</h2></div></div>
+  <p class="lede">A placenta mexe na glicemia de toda gestante; os três números centrais do tema nascem daqui.</p>
   <div class="prose">
     <ul>
-      <li><strong>Fase anabólica (1º e 2º trimestres):</strong> sensibilidade à insulina aumentada; a gestante armazena. O feto consome glicose sem parar e os substratos gliconeogênicos caem: a glicemia de jejum <strong>cai</strong>.</li>
-      <li>Por isso o cutoff de jejum na gestação é <strong>92 mg/dL</strong>, e não os 100 da população geral.</li>
-      <li><strong>Fase catabólica (3º trimestre):</strong> a placenta secreta hormônios diabetogênicos em proporção à sua massa -- <strong>lactogênio placentário</strong> (o principal), GH placentário, CRH, prolactina, progesterona, mais o cortisol materno. Resistência periférica à insulina, lipólise e gliconeogênese sobem; mais glicose cruza para o feto por <strong>difusão facilitada</strong>.</li>
-      <li>O pâncreas saudável responde com hiperplasia de células beta e mantém a euglicemia. "Normal" na gestação = jejum menor, picos pós-prandiais maiores e mais longos, ambos compensados.</li>
-      <li>A resistência está claramente instalada por volta da <strong>24ª-28ª semana</strong>: a janela em que o TOTG sobrecarrega esse pâncreas de propósito.</li>
+      <li><strong>1º e 2º trimestres (anabólica):</strong> sensibilidade à insulina aumentada. O feto consome glicose sem parar e o jejum <strong>cai</strong> -- por isso o cutoff na gestação é <strong>92</strong>, não 100.</li>
+      <li><strong>3º trimestre (catabólica):</strong> a placenta secreta hormônios diabetogênicos proporcionais à sua massa -- <strong>lactogênio placentário</strong> (o principal), GH placentário, CRH, prolactina, progesterona, mais o cortisol materno.</li>
+      <li>Resultado: resistência periférica, lipólise e gliconeogênese sobem; mais glicose cruza para o feto por <strong>difusão facilitada</strong>. O pâncreas saudável compensa com hiperplasia beta: jejum menor, picos pós-prandiais maiores e mais longos, ambos compensados.</li>
+      <li>A resistência está instalada em <strong>24-28 semanas</strong>: a janela em que o TOTG testa o pâncreas limítrofe de propósito.</li>
+      <li><strong>O parto reverte tudo</strong>: sai a placenta, sai o lactogênio, volta a sensibilidade. O puerpério inteiro (degrau 9) está nesta linha.</li>
     </ul>
-  </div>
-  <div class="aside">
-    <div class="albl">O porquê de três números que vão aparecer o tempo todo</div>
-    <p><strong>92</strong>: a gestação abaixa o jejum. <strong>24-28 semanas</strong>: a resistência hormonal está instalada e um pâncreas limítrofe começa a falhar. <strong>O parto reverte tudo de vez</strong>: a fonte da resistência é a placenta -- sai a placenta, sai o lactogênio, volta a sensibilidade. O puerpério inteiro (Degrau 9) está nesta frase.</p>
   </div>
 </section>
 
 <section class="degrau" id="d1">
   <div class="dhead"><span class="dnum">1</span><div class="dtitle"><span class="dstage">Degrau 1</span><h2>Duas raízes, três rótulos: DM prévio, DM franco e DMG</h2></div></div>
-  <p class="lede">A árvore de definições governa toda a conduta: quem trata, quem faz dieta, quem suspende insulina no puerpério.</p>
+  <p class="lede">A árvore de definições governa a conduta: quem faz dieta, quem usa insulina, quem a suspende no puerpério.</p>
   <div class="prose">
     <ul>
       <li><strong>DM diagnosticado antes da gestação</strong> (tipo 1 ou 2): doença de base, existe com ou sem placenta.</li>
-      <li><strong>Hiperglicemia detectada na gravidez</strong>, dois rótulos pelos números:
-        <strong>DM prévio diagnosticado na gestação</strong> (overt, DM franco) quando os valores já preenchem o critério de DM fora da gestação -- ela já era diabética, só não sabia;
-        <strong>DMG</strong> quando não atinge esse critério: intolerância transitória aos carboidratos que começa na gravidez.</li>
-      <li>DMG é o problema metabólico mais comum da gestação: prevalência estimada de <strong>18%</strong> no Brasil.</li>
-      <li>Rastreamento <strong>universal</strong>: toda gestante, com ou sem fator de risco. Os fatores valem para a probabilidade pré-teste, e a banca cobra os cutoffs exatos.</li>
+      <li><strong>DM prévio diagnosticado na gestação</strong> (overt, franco): os valores já preenchem o critério de DM fora da gestação. Ela já era diabética.</li>
+      <li><strong>DMG</strong>: não atinge esse critério. Intolerância transitória que começa na gravidez. É o distúrbio metabólico mais comum da gestação: <strong>18%</strong> no Brasil.</li>
+      <li>Rastreamento <strong>universal</strong>, com ou sem fator de risco. Os fatores pesam na probabilidade pré-teste, e a banca cobra os cutoffs.</li>
     </ul>
   </div>
   <div class="crit">
     <div class="row"><span class="k">Idade</span><span class="v">Risco cresce com a idade materna (sem cutoff único na diretriz conjunta)</span></div>
-    <div class="row"><span class="k">Sobrepeso/obesidade</span><span class="v">IMC <b>&gt;= 25 kg/m2</b> -- não 30</span></div>
+    <div class="row"><span class="k">Sobrepeso</span><span class="v">IMC <b>&gt;= 25 kg/m2</b> -- não 30</span></div>
     <div class="row"><span class="k">Família</span><span class="v">DM em parente de 1º grau</span></div>
-    <div class="row"><span class="k">Metabólicos pessoais</span><span class="v">HbA1c <b>&gt;= 5,7%</b> (risco, não critério de DM), SOP, hipertrigliceridemia, HAS, acantose nigricans, doença aterosclerótica, fármacos hiperglicemiantes</span></div>
-    <div class="row"><span class="k">Obstétricos</span><span class="v"><b>&gt;= 2 perdas</b> gestacionais; DMG prévio; polidrâmnio (bolsão <b>&gt;= 8 cm</b> ou ILA <b>&gt;= 24 cm</b>); macrossomia (RN <b>&gt;= 4.000 g</b> ou <b>&gt; p90</b>); óbito fetal/neonatal sem causa; malformação fetal</span></div>
+    <div class="row"><span class="k">Metabólicos</span><span class="v">HbA1c <b>&gt;= 5,7%</b> (risco, não critério de DM), SOP, hipertrigliceridemia, HAS, acantose nigricans, doença aterosclerótica, fármacos hiperglicemiantes</span></div>
+    <div class="row"><span class="k">Obstétricos</span><span class="v"><b>&gt;= 2 perdas</b>; DMG prévio; polidrâmnio (bolsão <b>&gt;= 8 cm</b> ou ILA <b>&gt;= 24 cm</b>); macrossomia (RN <b>&gt;= 4.000 g</b> ou <b>&gt; p90</b>); óbito fetal/neonatal sem causa; malformação fetal</span></div>
   </div>
   <div class="trap">
     <div class="albl">Armadilha</div>
-    <p>Os cutoffs dos fatores de risco são os da diretriz conjunta: IMC 25 (não 30), HbA1c 5,7 (risco, não diagnóstico), duas perdas (não três, que é abortamento habitual), 4.000 g ou p90.</p>
+    <p>Duas perdas, não três (três é abortamento habitual). IMC 25, não 30.</p>
   </div>
 </section>
 
 <section class="degrau" id="d2">
-  <div class="dhead"><span class="dnum">2</span><div class="dtitle"><span class="dstage">Degrau 2</span><h2>Da mãe ao feto: a hipótese de Pedersen e a janela da organogênese</h2></div></div>
-  <p class="lede">Uma cadeia de quatro elos explica todas as complicações fetais; uma data explica por que malformação é assunto de DM prévio.</p>
+  <div class="dhead"><span class="dnum">2</span><div class="dtitle"><span class="dstage">Degrau 2</span><h2>Da mãe ao feto: Pedersen e a janela da organogênese</h2></div></div>
+  <p class="lede">Uma cadeia de quatro elos explica as complicações fetais; uma data explica por que malformação é do DM prévio.</p>
   <div class="prose">
     <ul>
-      <li>Pâncreas materno não vence a resistência → <strong>hiperglicemia materna</strong>. Glicose cruza a placenta (difusão facilitada); insulina materna <strong>não</strong> cruza.</li>
-      <li>O feto, com pâncreas normal, responde: <strong>hiperglicemia fetal → hiperinsulinemia fetal</strong>. É a hipótese de Pedersen.</li>
-      <li>Insulina é o hormônio anabólico por excelência: crescimento, gordura em tórax e abdome, consumo de oxigênio, e antagoniza o cortisol na maturação pulmonar. Cada complicação do Degrau 3 sai daqui.</li>
+      <li>Hiperglicemia materna → glicose cruza a placenta; a insulina materna <strong>não</strong> cruza.</li>
+      <li>O pâncreas fetal responde: <strong>hiperglicemia fetal → hiperinsulinemia fetal</strong> (hipótese de Pedersen).</li>
+      <li>Insulina é anabólica: cresce, deposita gordura em tórax e abdome, consome O2 e antagoniza o cortisol na maturação pulmonar. Todo o degrau 3 sai daqui.</li>
     </ul>
     <h4 class="sub">Por que malformação pertence ao DM prévio</h4>
     <ul>
-      <li>Organogênese: <strong>5ª à 8ª semana</strong>. O DMG se instala depois, sobretudo na fase catabólica -- fora da janela.</li>
-      <li>No DM prévio o embrião é exposto desde a concepção: risco de malformação <strong>maior no DM prévio que no DMG</strong>.</li>
-      <li>HbA1c das <strong>10 primeiras semanas</strong> correlaciona com malformação: anencefalia, microcefalia, <strong>cardiopatias</strong> (as mais frequentes, sobretudo <strong>septo interventricular</strong>), renais e <strong>regressão caudal</strong> (a mais específica, não a mais comum).</li>
+      <li>Organogênese: <strong>5ª à 8ª semana</strong>. O DMG se instala depois, na fase catabólica.</li>
+      <li>No DM prévio o embrião é exposto desde a concepção: malformação <strong>maior no DM prévio que no DMG</strong>.</li>
+      <li>A HbA1c das <strong>10 primeiras semanas</strong> correlaciona com malformação: anencefalia, microcefalia, renais, <strong>cardiopatias</strong> (as mais frequentes, sobretudo <strong>septo interventricular</strong>) e <strong>regressão caudal</strong> (a mais específica, não a mais comum).</li>
       <li>HbA1c periconcepcional <strong>&lt; 6%</strong>: menos malformação e abortamento. Acima de <strong>10%</strong>: postergar a gravidez.</li>
     </ul>
   </div>
   <div class="trap">
     <div class="albl">Armadilha</div>
-    <p>"DMG causa malformação" é erro de calendário: quando o DMG aparece, a organogênese já terminou. Vinheta de cardiopatia ou regressão caudal aponta para DM prévio mal controlado -- e a pergunta seguinte é a HbA1c das primeiras semanas.</p>
+    <p>"DMG causa malformação" é erro de calendário. Cardiopatia ou regressão caudal na vinheta = DM prévio mal controlado; a pergunta seguinte é a HbA1c inicial.</p>
   </div>
 </section>
 
 <section class="degrau" id="d3">
-  <div class="dhead"><span class="dnum">3</span><div class="dtitle"><span class="dstage">Degrau 3</span><h2>Complicações maternas e fetais, cada uma com o seu porquê</h2></div></div>
-  <p class="lede">A diretriz divide por tempo (curto e longo prazo) e por lado (mãe e feto). A prova pergunta o mecanismo.</p>
+  <div class="dhead"><span class="dnum">3</span><div class="dtitle"><span class="dstage">Degrau 3</span><h2>Complicações, cada uma com o seu porquê</h2></div></div>
+  <p class="lede">A diretriz divide por tempo e por lado; a prova pergunta o mecanismo.</p>
   <div class="prose">
     <ul>
       <li><strong>Mãe, curto prazo:</strong> distúrbios hipertensivos, polidrâmnio, primeira cesárea, atraso do início da amamentação.</li>
-      <li><strong>Mãe, longo prazo:</strong> DMG nas próximas gestações e <strong>DM2</strong> ao longo da vida -- a razão da reclassificação e da vigilância anual (Degrau 9).</li>
-      <li><strong>Feto e neonato:</strong> a tabela abaixo é uma cadeia causal a partir do hiperinsulinismo, não decoreba.</li>
+      <li><strong>Mãe, longo prazo:</strong> DMG nas próximas gestações e <strong>DM2</strong> -- a razão da reclassificação (degrau 9).</li>
     </ul>
   </div>
-  <div class="crit">
-    <div class="row"><span class="k">Macrossomia, distocia de ombro, tocotraumatismo</span><span class="v">Insulina anabólica deposita gordura em tórax e abdome: o tronco cresce mais que a cabeça, o ombro trava. Distocia de ombro é a principal complicação fetal do parto normal nessa população</span></div>
-    <div class="row"><span class="k">Polidrâmnio</span><span class="v">Hiperglicemia fetal → glicosúria fetal → diurese osmótica</span></div>
-    <div class="row"><span class="k">Síndrome do desconforto respiratório</span><span class="v">Prematuridade + atraso do surfactante: a hiperinsulinemia antagoniza a maturação pulmonar pelos glicocorticoides</span></div>
-    <div class="row"><span class="k">Hipoglicemia neonatal</span><span class="v">Clampeado o cordão, a glicose cessa; o pâncreas fetal segue hiperinsulinêmico por horas. Cai nas primeiras horas de vida</span></div>
-    <div class="row"><span class="k">Hipocalcemia e hipomagnesemia</span><span class="v">PTH mais baixo ao nascer; hipomagnesemia, prematuridade e asfixia contribuem</span></div>
-    <div class="row"><span class="k">Policitemia (Ht &gt; 65%) e trombose</span><span class="v">Hipoxemia fetal crônica (o hiperinsulinismo consome O2) eleva a eritropoetina</span></div>
-    <div class="row"><span class="k">Hiperbilirrubinemia</span><span class="v">Policitemia (mais heme) + prematuridade + macrossomia + hiperglicemia materna</span></div>
-    <div class="row"><span class="k">Cardiomiopatia hipertrófica</span><span class="v">Glicogênio e gordura no miocárdio, predomínio septal; transitória, regride em meses</span></div>
-    <div class="row"><span class="k">Longo prazo</span><span class="v">Obesidade, DM2 e doença cardiovascular na vida adulta (programação intrauterina)</span></div>
+  <div class="crit hd">
+    <div class="row"><span class="k">Feto / neonato</span><span class="v">Mecanismo</span></div>
+    <div class="row"><span class="k">Macrossomia, distocia de ombro</span><span class="v">Gordura em tórax e abdome: o tronco cresce mais que a cabeça e o ombro trava. Distocia é a principal complicação fetal do parto normal aqui</span></div>
+    <div class="row"><span class="k">Polidrâmnio</span><span class="v">Glicosúria fetal → diurese osmótica</span></div>
+    <div class="row"><span class="k">Desconforto respiratório</span><span class="v">Prematuridade + atraso do surfactante (insulina antagoniza o glicocorticoide)</span></div>
+    <div class="row"><span class="k">Hipoglicemia neonatal</span><span class="v">Clampeado o cordão, a glicose cessa e o pâncreas segue hiperinsulinêmico. Primeiras horas de vida</span></div>
+    <div class="row"><span class="k">Hipocalcemia, hipomagnesemia</span><span class="v">PTH mais baixo ao nascer; prematuridade e asfixia contribuem</span></div>
+    <div class="row"><span class="k">Policitemia (Ht &gt; 65%), trombose</span><span class="v">Hipoxemia crônica (o hiperinsulinismo consome O2) eleva a eritropoetina</span></div>
+    <div class="row"><span class="k">Hiperbilirrubinemia</span><span class="v">Policitemia + prematuridade + macrossomia + hiperglicemia materna</span></div>
+    <div class="row"><span class="k">Cardiomiopatia hipertrófica</span><span class="v">Glicogênio e gordura no septo; transitória, regride em meses</span></div>
+    <div class="row"><span class="k">Longo prazo</span><span class="v">Obesidade, DM2 e doença cardiovascular (programação intrauterina)</span></div>
   </div>
   <div class="star">
     <div class="albl">O trio que a banca pergunta</div>
-    <p>Distúrbios <strong>metabólicos</strong> mais comuns no neonato de mãe diabética: <strong>hipoglicemia, hipocalcemia, hipomagnesemia</strong>. Policitemia e hiperbilirrubinemia são hematológicas -- a pergunta separa as duas listas.</p>
+    <p>Distúrbios <strong>metabólicos</strong> do neonato de mãe diabética: <strong>hipoglicemia, hipocalcemia, hipomagnesemia</strong>. Policitemia e bilirrubina são hematológicas.</p>
   </div>
   <div class="ext">
-    <div class="albl">Fora do resumo do EMED, mas cobrável</div>
-    <p>DM prévio faz <strong>cetoacidose com glicemia mais baixa</strong> (às vezes &lt; 200): lipólise e cetogênese da fase catabólica já aceleradas. Náusea e vômito em diabética grávida pedem cetonas mesmo com glicemia "modesta". No sentido oposto, o 1º trimestre anabólico é a fase de <strong>hipoglicemia</strong> em quem usa insulina: a necessidade cai antes de subir.</p>
+    <div class="albl">Fora do EMED, mas cobrável</div>
+    <p>DM prévio faz <strong>cetoacidose com glicemia mais baixa</strong> (às vezes &lt; 200): vômito em diabética grávida pede cetonas. No 1º trimestre, quem usa insulina tem mais <strong>hipoglicemia</strong>: a necessidade cai antes de subir.</p>
   </div>
 </section>
 
 <section class="degrau" id="d4">
   <div class="dhead"><span class="dnum">4</span><div class="dtitle"><span class="dstage">Degrau 4</span><h2>Diagnóstico: as duas réguas da diretriz conjunta</h2></div></div>
-  <p class="lede">Viabilidade total e viabilidade parcial são dois fluxogramas. O erro clássico é misturá-los.</p>
+  <p class="lede">Viabilidade total e parcial são dois fluxogramas; o erro clássico é misturá-los.</p>
   <div class="prose">
     <ul>
-      <li>Diretriz conjunta (OPAS, MS, FEBRASGO, SBD, 2017): dois cenários -- <strong>viabilidade total</strong> e <strong>parcial</strong>. O primeiro passo é a mesma glicemia de jejum; o segundo muda.</li>
+      <li>Diretriz conjunta (OPAS, MS, FEBRASGO, SBD, 2017). O 1º passo é igual (jejum); o 2º muda.</li>
     </ul>
     <h4 class="sub">Régua total: jejum até 20 semanas, TOTG entre 24 e 28</h4>
   </div>
   <div class="flow">
-    <div><span class="fv">&gt;= 126</span><span class="fk"><b>DM prévio</b> diagnosticado na gestação. Fecha sozinho, sem TOTG</span></div>
+    <div><span class="fv">&gt;= 126</span><span class="fk"><b>DM prévio</b>. Fecha sozinho, sem TOTG</span></div>
     <div><span class="fv">92-125</span><span class="fk"><b>DMG</b>. Fecha sozinho, sem TOTG</span></div>
-    <div><span class="fv">&lt; 92</span><span class="fk">Normal por ora: <b>TOTG 75 g entre 24 e 28 semanas</b></span></div>
+    <div><span class="fv">&lt; 92</span><span class="fk"><b>TOTG 75 g entre 24 e 28 semanas</b></span></div>
   </div>
   <div class="prose">
     <ul>
-      <li>Rótulo dado pelo jejum (92 ou mais) = <strong>não faz TOTG</strong>. O teste é para quem ficou abaixo de 92.</li>
-      <li>Pré-natal tardio: começou entre 20 e 28 semanas, TOTG entre 24 e 28; depois de 28, TOTG o mais breve possível.</li>
-      <li>TOTG 75 g: três dosagens (jejum, 1ª e 2ª hora), dois conjuntos de cutoffs. <strong>Um único ponto alterado fecha</strong>; normal é ficar abaixo de todos.</li>
+      <li>Pré-natal tardio: começou entre 20 e 28 semanas, TOTG em 24-28; depois de 28, TOTG o mais breve possível.</li>
+      <li>TOTG 75 g: jejum, 1ª e 2ª hora. <strong>Um único ponto alterado fecha</strong>.</li>
     </ul>
   </div>
   <div class="flow">
@@ -343,47 +343,41 @@ code{font-family:"IBM Plex Mono",Consolas,monospace;font-size:11.8px;background:
   <div class="flow warn">
     <div><span class="fv">&gt;= 126</span><span class="fk">jejum = <b>DM prévio</b></span></div>
     <div><span class="fv">&gt;= 200</span><span class="fk">2ª hora = <b>DM prévio</b></span></div>
-    <div><span class="fv">1 valor</span><span class="fk"><b>Basta um ponto</b> alterado</span></div>
+    <div><span class="fv">1 valor</span><span class="fk"><b>Basta um ponto</b></span></div>
   </div>
   <div class="aside">
     <div class="albl">Vinhetas do jeito que a prova monta</div>
-    <p>Jejum 91: normal, TOTG depois. Jejum 92: DMG. Jejum 126: DM prévio, alto risco direto. TOTG 91/181/147: DMG pela 1ª hora. TOTG 84/178/201: DM prévio pela 2ª hora. TOTG 127/174/141: DM prévio pelo jejum -- a 2ª hora "normal" não salva. TOTG 78/177/152: normal.</p>
+    <p>Jejum 91: TOTG depois. 92: DMG. 126: DM prévio. TOTG 91/181/147: DMG (1ª hora). 84/178/201: DM prévio (2ª hora). 127/174/141: DM prévio pelo jejum. 78/177/152: normal.</p>
   </div>
   <div class="prose">
-    <h4 class="sub">Régua parcial: só glicemia de jejum, duas vezes</h4>
+    <h4 class="sub">Régua parcial: só jejum, duas vezes</h4>
     <ul>
-      <li>Sem TOTG: jejum <strong>assim que o pré-natal começa</strong>, mesmos cutoffs (126 e 92).</li>
-      <li>Abaixo de 92: <strong>repetir o jejum entre 24 e 28 semanas</strong>. Não faz TOTG -- ele não existe nesse cenário.</li>
+      <li>Jejum <strong>no início do pré-natal</strong>, mesmos cutoffs (126 e 92).</li>
+      <li>Abaixo de 92: <strong>repetir o jejum em 24-28 semanas</strong>. TOTG não existe nesse cenário.</li>
+      <li>Preço (fora do EMED): o jejum isolado detecta ~<strong>86%</strong> dos DMG; a régua total, 100%.</li>
     </ul>
-  </div>
-  <div class="ext">
-    <div class="albl">Fora do resumo do EMED</div>
-    <p>A glicemia de jejum isolada detecta ~<strong>86%</strong> dos DMG; a régua total, 100%. É o preço do cenário parcial.</p>
-  </div>
-  <div class="prose">
-    <h4 class="sub">HbA1c: não rastreia, mas rotula o DM prévio na 1ª consulta</h4>
+    <h4 class="sub">HbA1c: não rastreia, mas rotula o DM prévio</h4>
     <ul>
-      <li>Turnover eritrocitário aumentado e hemodiluição: a HbA1c <strong>não participa do rastreio nem do seguimento</strong> do DMG.</li>
-      <li>Painel IADPSG (2010): na 1ª consulta, exame com critério de DM fora da gestação -- <strong>HbA1c &gt;= 6,5%</strong>, <strong>jejum &gt;= 126</strong> ou <strong>2ª hora do TOTG &gt;= 200</strong> -- rotula <strong>DM prévio diagnosticado na gestação</strong>.</li>
-      <li>ADA, fora da gestação: assintomática, <strong>2 exames alterados</strong>; sintomática (poliúria, polidipsia, perda de peso), <strong>1 exame</strong>.</li>
+      <li>Turnover eritrocitário e hemodiluição: <strong>fora do rastreio e do seguimento</strong> do DMG.</li>
+      <li>IADPSG (2010), na 1ª consulta: <strong>HbA1c &gt;= 6,5%</strong>, <strong>jejum &gt;= 126</strong> ou <strong>2ª hora &gt;= 200</strong> = DM prévio diagnosticado na gestação.</li>
     </ul>
   </div>
   <div class="trap">
     <div class="albl">Armadilha banca-dependente</div>
-    <p>O fluxograma da diretriz fecha DM prévio com <strong>uma</strong> glicemia de jejum &gt;= 126 até 20 semanas. Quando a questão invoca "critérios diagnósticos de DM" (ADA), vira "2 exames se assintomática, 1 se sintomática". Rastreio de pré-natal cobra o fluxograma; critério geral cobra a ADA.</p>
+    <p>O fluxograma fecha DM prévio com <strong>um</strong> jejum &gt;= 126. Se a questão invoca "critérios de DM" (ADA): <strong>2 exames se assintomática, 1 se sintomática</strong>.</p>
   </div>
 </section>
 
 <section class="degrau" id="d5">
-  <div class="dhead"><span class="dnum">5</span><div class="dtitle"><span class="dstage">Degrau 5</span><h2>Tratamento não farmacológico: o tripé, as metas e o que é "refratário"</h2></div></div>
-  <p class="lede">Até 85% dos DMG se controlam sem remédio. A prova cobra os números da dieta, as metas e, sobretudo, o gatilho para insulina.</p>
+  <div class="dhead"><span class="dnum">5</span><div class="dtitle"><span class="dstage">Degrau 5</span><h2>Não farmacológico: o tripé, as metas e o "refratário"</h2></div></div>
+  <p class="lede">Até 85% dos DMG se controlam sem remédio; a prova cobra o gatilho para insulina.</p>
   <div class="prose">
     <ul>
-      <li>Tripé: <strong>terapia nutricional, atividade física, monitorização</strong>. Toda DMG começa por ele; só a refratária recebe fármaco.</li>
-      <li>Dieta: in natura ou minimamente processados, baixo índice glicêmico. <strong>40-55% carboidratos, 30-40% lipídios, 15-20% proteínas</strong>; <strong>5 a 6 refeições</strong>, intervalos <strong>&lt;= 3 h</strong>.</li>
-      <li>Atividade física: <strong>20-30 min/dia</strong>, na maioria dos dias (diretriz conjunta); ACOG: 30 min de aeróbico moderado em 5 dias ou 150 min/semana.</li>
+      <li>Tripé: <strong>dieta, atividade física, monitorização</strong>. Todo DMG começa aqui.</li>
+      <li>Dieta: in natura, baixo índice glicêmico. <strong>40-55% carboidratos, 30-40% lipídios, 15-20% proteínas</strong>; <strong>5 a 6 refeições</strong>, intervalos <strong>&lt;= 3 h</strong>.</li>
+      <li>Atividade: <strong>20-30 min/dia</strong> na maioria dos dias (diretriz conjunta); ACOG: 30 min moderados em 5 dias ou 150 min/semana.</li>
     </ul>
-    <h4 class="sub">Metas, para qualquer tipo de DM e qualquer idade gestacional</h4>
+    <h4 class="sub">Metas (qualquer DM, qualquer idade gestacional)</h4>
   </div>
   <div class="flow">
     <div><span class="fv">&lt; 95</span><span class="fk"><b>Jejum e pré-prandial</b></span></div>
@@ -392,30 +386,30 @@ code{font-family:"IBM Plex Mono",Consolas,monospace;font-size:11.8px;background:
   </div>
   <div class="prose">
     <ul>
-      <li>A glicemia de <strong>1 hora</strong> reflete o pico pós-prandial e é a que mais se correlaciona com macrossomia: é o horário de preferência.</li>
-      <li>Sem fármaco: perfil de <strong>4 pontos</strong> (jejum + 1 h após as 3 refeições). Com insulina: <strong>6 a 7 pontos</strong> (pré e pós; madrugada se suspeita de hipoglicemia noturna).</li>
-      <li>"Dentro do alvo" = pelo menos <strong>70% das medidas</strong> na meta.</li>
+      <li>A de <strong>1 hora</strong> é o pico e a que mais se correlaciona com macrossomia: horário preferido.</li>
+      <li>Sem fármaco: perfil de <strong>4 pontos</strong> (jejum + 1 h após 3 refeições). Com insulina: <strong>6 a 7</strong> (madrugada se suspeita de hipoglicemia noturna).</li>
+      <li>"No alvo" = <strong>70% ou mais</strong> das medidas na meta.</li>
     </ul>
-    <h4 class="sub">Quando o não farmacológico falhou (SBD 2023 e 2024) -- três portas</h4>
+    <h4 class="sub">Refratário (SBD 2023-2024): três portas</h4>
     <ul>
-      <li><strong>2 ou mais medidas acima da meta</strong> após <strong>7 a 14 dias</strong> de terapia não farmacológica; ou</li>
-      <li><strong>30 a 50% das medidas alteradas</strong> em até uma semana (SBD 2024); ou</li>
-      <li><strong>Circunferência abdominal fetal &gt;= p75</strong> na USG de 3º trimestre (<strong>29 a 33 semanas</strong>), independentemente das glicemias: o feto já está hiperinsulinêmico, e o tratamento mira o feto.</li>
+      <li><strong>2 ou mais medidas fora</strong> após <strong>7 a 14 dias</strong> de terapia; ou</li>
+      <li><strong>30 a 50% alteradas</strong> em até uma semana (SBD 2024); ou</li>
+      <li><strong>CA fetal &gt;= p75</strong> na USG de <strong>29 a 33 semanas</strong>, seja qual for a glicemia: o feto já está hiperinsulinêmico.</li>
     </ul>
   </div>
   <div class="trap">
     <div class="albl">Armadilha</div>
-    <p>Exigir sempre os "7 a 14 dias" é ler um terço da regra: CA &gt;= p75 entre 29 e 33 semanas recebe insulina mesmo com perfil bonito. E as metas de <strong>ambulatório</strong> (95/140/120) não são as de <strong>intraparto</strong> (70-120).</p>
+    <p>Exigir sempre os "7 a 14 dias" é ler um terço da regra. E a meta ambulatorial não é a intraparto (70-120).</p>
   </div>
 </section>
 
 <section class="degrau" id="d6">
-  <div class="dhead"><span class="dnum">6</span><div class="dtitle"><span class="dstage">Degrau 6</span><h2>Farmacológico: a insulina é soberana, e os orais têm porta estreita</h2></div></div>
-  <p class="lede">"A insulina é a terapia farmacológica de primeira escolha na gestante com DM, independentemente do tipo de DM." Frase literal; vai cair.</p>
+  <div class="dhead"><span class="dnum">6</span><div class="dtitle"><span class="dstage">Degrau 6</span><h2>Farmacológico: insulina soberana, orais de porta estreita</h2></div></div>
+  <p class="lede">"A insulina é a terapia farmacológica de primeira escolha na gestante com DM, independentemente do tipo." Frase literal; vai cair.</p>
   <div class="prose">
     <ul>
-      <li>Três situações iniciam fármaco: <strong>DM2 em antidiabético oral</strong> (troca por insulina); <strong>DM prévio diagnosticado na gestação</strong> (já nasce farmacológico); <strong>DMG refratário</strong> ao Degrau 5.</li>
-      <li>Seguras: basais <strong>NPH, detemir, degludeca</strong>; prandiais <strong>regular, asparte, lispro</strong>. <strong>Glargina</strong> é zona cinzenta: sem dano demonstrado, mas não aprovada pela FDA; a bula brasileira diz "se clinicamente necessário".</li>
+      <li>Iniciam fármaco: <strong>DM2 em oral</strong> (troca por insulina); <strong>DM prévio diagnosticado na gestação</strong>; <strong>DMG refratário</strong>.</li>
+      <li>Seguras: basais <strong>NPH, detemir, degludeca</strong>; prandiais <strong>regular, asparte, lispro</strong>. <strong>Glargina</strong> é zona cinzenta: sem dano demonstrado, sem aprovação FDA; bula brasileira: "se clinicamente necessário".</li>
     </ul>
   </div>
   <div class="crit num">
@@ -426,152 +420,130 @@ code{font-family:"IBM Plex Mono",Consolas,monospace;font-size:11.8px;background:
   </div>
   <div class="prose">
     <ul>
-      <li>Montagem: basal controla jejum e pré-prandial; prandial controla a incursão pós-prandial. O perfil diz qual subir.</li>
-      <li>SBD: dose inicial <strong>0,5 UI/kg/dia</strong>; ajustes a cada <strong>15 dias até a 30ª semana</strong>, <strong>semanais</strong> depois. A necessidade <strong>sobe</strong> com a gestação.</li>
-      <li>Sensor gratuito: necessidade que <strong>cai</strong>, ou hipoglicemias repetidas no 3º trimestre em quem estava bem, = placenta produzindo menos hormônio = <strong>insuficiência placentária</strong>. Pede vitalidade fetal, não redução tranquila da dose.</li>
-    </ul>
-    <h4 class="sub">Antidiabéticos orais: metformina e glibenclamida, e só</h4>
-    <ul>
-      <li>Únicos utilizáveis: <strong>metformina</strong> e <strong>glibenclamida</strong>. Os demais, contraindicados por falta de dados.</li>
-      <li>Glibenclamida é carta fora do baralho: mais peso ao nascer, mais macrossomia, mais hipoglicemia neonatal que a insulina. A diretriz conjunta nem a cita.</li>
+      <li>Basal corrige jejum e pré-prandial; prandial corrige o pós-prandial. O perfil diz qual subir.</li>
+      <li>SBD: início <strong>0,5 UI/kg/dia</strong>; ajuste a cada <strong>15 dias até 30 semanas</strong>, depois <strong>semanal</strong>. A necessidade <strong>sobe</strong> com a gestação.</li>
+      <li>Necessidade que <strong>cai</strong> no 3º trimestre, ou hipoglicemias repetidas, = placenta produzindo menos = <strong>insuficiência placentária</strong>. Pede vitalidade fetal.</li>
+      <li>Orais utilizáveis: só <strong>metformina</strong> e <strong>glibenclamida</strong>; os demais, contraindicados por falta de dados. Glibenclamida é inferior (mais peso, macrossomia e hipoglicemia neonatal); a diretriz conjunta nem a cita.</li>
     </ul>
   </div>
   <div class="vs">
-    <div class="b"><h5>Metformina versus insulina: a favor</h5><ul><li>Menor ganho de peso materno</li><li>Menor peso ao nascer, menos macrossomia</li><li>Menos hipoglicemia neonatal</li><li>Menos síndromes hipertensivas</li></ul></div>
-    <div class="a"><h5>Por que a insulina continua soberana</h5><ul><li>Metformina <strong>cruza a placenta</strong>; insulina não</li><li>Longo prazo no feto em estudo -- já se vê <strong>maior IMC da prole</strong></li><li>FDA: categoria B. ANVISA: <strong>não aprovada</strong> para gestantes</li></ul></div>
+    <div class="b"><h5>Metformina × insulina: a favor</h5><ul><li>Menor ganho de peso materno</li><li>Menor peso ao nascer, menos macrossomia</li><li>Menos hipoglicemia neonatal</li><li>Menos síndromes hipertensivas</li></ul></div>
+    <div class="a"><h5>Por que a insulina segue soberana</h5><ul><li>Metformina <strong>cruza a placenta</strong>; insulina não</li><li>Longo prazo em estudo: já se vê <strong>maior IMC da prole</strong></li><li>FDA categoria B; ANVISA <strong>não aprova</strong> na gestação</li></ul></div>
   </div>
   <div class="crit">
-    <div class="row"><span class="k">Como alternativa à insulina</span><span class="v">Falta de adesão; sem acesso; dificuldade de autoadministração; estresse exacerbado; restrição alimentar excessiva para evitar a insulina</span></div>
-    <div class="row"><span class="k">Associada à insulina</span><span class="v">Dose alta (<b>&gt; 2 UI/kg/dia</b>) sem controle; ganho de peso materno ou fetal excessivo</span></div>
-    <div class="row"><span class="k">Contraindicada</span><span class="v">Feto <b>abaixo do p50</b>; restrição de crescimento; doença renal crônica materna</span></div>
+    <div class="row"><span class="k">No lugar da insulina</span><span class="v">Falta de adesão; sem acesso; dificuldade de autoaplicar; estresse exacerbado; restrição alimentar excessiva para evitar insulina</span></div>
+    <div class="row"><span class="k">Com a insulina</span><span class="v">Dose <b>&gt; 2 UI/kg/dia</b> sem controle; ganho de peso materno ou fetal excessivo</span></div>
+    <div class="row"><span class="k">Contraindicada</span><span class="v">Feto <b>abaixo do p50</b>; restrição de crescimento; DRC materna</span></div>
   </div>
   <div class="trap">
     <div class="albl">Armadilha banca-dependente</div>
-    <p>NICE e parte do ACOG aceitam metformina como 1ª linha. A banca brasileira segue a diretriz conjunta e a SBD: "droga de escolha" é <strong>sempre insulina</strong>. E a droga que reduz peso fetal não vai a quem já cresce pouco (feto &lt; p50).</p>
+    <p>NICE e parte do ACOG aceitam metformina de 1ª linha; a banca brasileira segue diretriz conjunta e SBD: <strong>sempre insulina</strong>. A droga que reduz peso fetal não vai a quem cresce pouco.</p>
   </div>
 </section>
 
 <section class="degrau" id="d7">
-  <div class="dhead"><span class="dnum">7</span><div class="dtitle"><span class="dstage">Degrau 7</span><h2>Pré-concepção e pré-natal: o DM prévio exige um calendário próprio</h2></div></div>
-  <p class="lede">Toda diabética faz pré-natal de alto risco. A do DM tipo 1 ou 2 começa antes de engravidar.</p>
+  <div class="dhead"><span class="dnum">7</span><div class="dtitle"><span class="dstage">Degrau 7</span><h2>Pré-concepção e pré-natal do DM prévio</h2></div></div>
+  <p class="lede">Toda diabética é alto risco; a do DM 1 ou 2 começa antes de engravidar.</p>
   <div class="prose">
     <ul>
-      <li>Pré-concepção existe por causa do Degrau 2: a hiperglicemia das primeiras <strong>6 a 8 semanas</strong> é o que malforma.</li>
-      <li>Meta: engravidar com <strong>HbA1c &lt; 6,5%</strong> (ideal &lt; 6%); rastrear vasculopatia antes; ajustar o esquema à segurança da gravidez.</li>
+      <li>Pré-concepção existe pelo degrau 2: quem malforma é a glicemia das primeiras <strong>6 a 8 semanas</strong>.</li>
+      <li>Engravidar com <strong>HbA1c &lt; 6,5%</strong> (ideal &lt; 6%); rastrear vasculopatia antes.</li>
+      <li>Fora do EMED: <strong>ácido fólico 5 mg/dia</strong> (4 mg nos EUA) 1 a 3 meses antes; <strong>suspender IECA/BRA e estatina</strong>; trocar oral por insulina.</li>
     </ul>
   </div>
-  <div class="ext">
-    <div class="albl">Fora do resumo do EMED, mas parte do pacote</div>
-    <p><strong>Ácido fólico em dose alta</strong> (5 mg/dia BR; 4 mg EUA), 1 a 3 meses antes da concepção. <strong>Suspender IECA/BRA e estatinas</strong>; trocar orais por insulina já no planejamento.</p>
-  </div>
-  <div class="prose">
-    <h4 class="sub">O calendário do pré-natal no DM tipo 1 e 2</h4>
-  </div>
   <div class="crit">
-    <div class="row"><span class="k">Início</span><span class="v">Vasculopatia: <b>fundo de olho</b>, <b>microalbuminúria/proteinúria</b>, <b>creatinina</b>; <b>HbA1c</b>; <b>função tireoidiana</b> no 1º trimestre</span></div>
-    <div class="row"><span class="k">AAS em baixa dose</span><span class="v"><b>12 a 36 semanas</b> -- DM1 e DM2 têm risco aumentado de pré-eclâmpsia</span></div>
-    <div class="row"><span class="k">Morfologia</span><span class="v">USG morfológica de 1º e 2º trimestre; <b>ecocardiografia fetal 24-28 semanas</b> (cardiopatia é a malformação mais frequente)</span></div>
-    <div class="row"><span class="k">Crescimento</span><span class="v">USG a cada <b>4 semanas</b> no 2º e 3º trimestres. Vasculopatia empurra para restrição; mau controle, para polidrâmnio e macrossomia</span></div>
-    <div class="row"><span class="k">Vitalidade</span><span class="v"><b>Perfil biofísico a partir de 34 semanas</b>, semanal até o parto</span></div>
+    <div class="row"><span class="k">Início</span><span class="v"><b>Fundo de olho</b>, <b>microalbuminúria/proteinúria</b>, <b>creatinina</b>, <b>HbA1c</b>, <b>função tireoidiana</b></span></div>
+    <div class="row"><span class="k">AAS baixa dose</span><span class="v"><b>12 a 36 semanas</b> (risco de pré-eclâmpsia)</span></div>
+    <div class="row"><span class="k">Morfologia</span><span class="v">USG de 1º e 2º trimestre; <b>eco fetal 24-28 semanas</b></span></div>
+    <div class="row"><span class="k">Crescimento</span><span class="v">USG a cada <b>4 semanas</b> no 2º e 3º trimestres</span></div>
+    <div class="row"><span class="k">Vitalidade</span><span class="v"><b>Perfil biofísico semanal a partir de 34 semanas</b></span></div>
     <div class="row"><span class="k">Consultas</span><span class="v">A cada <b>7 a 21 dias</b></span></div>
-    <div class="row"><span class="k">Repetir no 2º e 3º trimestres</span><span class="v">HbA1c, microalbuminúria/proteinúria de 24 h, creatinina, <b>urocultura</b></span></div>
+    <div class="row"><span class="k">2º e 3º trimestres</span><span class="v">Repetir HbA1c, proteinúria, creatinina e <b>urocultura</b></span></div>
   </div>
   <div class="aside">
-    <div class="albl">Como a vasculopatia muda a leitura da vinheta</div>
-    <p>Nefropatia ou retinopatia = placenta que perfunde mal: feto <strong>pequeno</strong>, não macrossômico. DM de longa data com vasculopatia e feto abaixo da curva = insuficiência placentária -- o cenário em que a necessidade de insulina cai e a metformina é contraindicada.</p>
+    <div class="albl">Vasculopatia inverte a vinheta</div>
+    <p>Nefro ou retinopatia = placenta que perfunde mal: feto <strong>pequeno</strong>, não macrossômico. É o cenário em que a insulina cai e a metformina é contraindicada.</p>
   </div>
 </section>
 
 <section class="degrau" id="d8">
-  <div class="dhead"><span class="dnum">8</span><div class="dtitle"><span class="dstage">Degrau 8</span><h2>Parto: quando interromper, por que via, e a glicemia durante</h2></div></div>
-  <p class="lede">O momento é ditado pelo controle glicêmico; a via, pela obstetrícia. Duas decisões separadas.</p>
+  <div class="dhead"><span class="dnum">8</span><div class="dtitle"><span class="dstage">Degrau 8</span><h2>Parto: quando, por que via, e a glicemia durante</h2></div></div>
+  <p class="lede">O momento é do controle glicêmico; a via, da obstetrícia.</p>
   <div class="prose">
     <ul>
-      <li><strong>Bom controle sem fármaco:</strong> a partir de 39 semanas, expectante versus indução; induz entre <strong>39 e 40 6/7</strong>. Sem macrossomia, morte perinatal ou hipertensão prévias, pode aguardar o espontâneo até o termo.</li>
-      <li><strong>Em tratamento farmacológico</strong>, o controle decide:</li>
+      <li><strong>Sem fármaco, bom controle:</strong> induz entre <strong>39 e 40 6/7</strong>. Sem macrossomia, morte perinatal ou hipertensão prévias, pode aguardar o espontâneo até o termo.</li>
     </ul>
   </div>
   <div class="flow">
-    <div><span class="fv">39-39 6/7</span><span class="fk">farmacológico com <b>controle adequado</b></span></div>
-    <div><span class="fv">37-38 6/7</span><span class="fk">farmacológico com <b>controle inadequado</b></span></div>
-    <div><span class="fv">34-36 6/7</span><span class="fk">só se <b>nem a hospitalização</b> controla, ou <b>vitalidade fetal comprometida</b></span></div>
+    <div><span class="fv">39-39 6/7</span><span class="fk">fármaco, <b>controle adequado</b></span></div>
+    <div><span class="fv">37-38 6/7</span><span class="fk">fármaco, <b>controle inadequado</b></span></div>
+    <div><span class="fv">34-36 6/7</span><span class="fk"><b>nem a internação</b> controla, ou <b>vitalidade comprometida</b></span></div>
   </div>
   <div class="prose">
     <ul>
-      <li><strong>Via de parto é decisão obstétrica</strong>: ser diabética não indica cesárea. Exceção codificada: peso estimado <strong>&gt;= 4.500 g</strong> → cesárea agendada a partir de 39 semanas (distocia de ombro).</li>
+      <li><strong>Diabetes não indica cesárea.</strong> Exceção: peso estimado <strong>&gt;= 4.500 g</strong> → cesárea agendada a partir de 39 semanas (5.000 g na não diabética, ACOG: o tronco concentra o peso).</li>
+      <li>Intraparto: alvo <strong>70 a 120</strong> (ideal 100-120). Abaixo de 70: <strong>SG 5 ou 10% IV</strong>. Acima de 120: <strong>insulina regular SC</strong>.</li>
+      <li>Fora do EMED: corticoide antenatal sobe a glicemia por 2-3 dias. Monitorar e ajustar a insulina; nunca deixar de fazer.</li>
     </ul>
-    <h4 class="sub">Glicemia intraparto</h4>
-    <ul>
-      <li>Alvo <strong>70 a 120 mg/dL</strong> (ideal 100-120).</li>
-      <li>Abaixo de 70: <strong>soro glicosado 5 ou 10% IV</strong>. Acima de 120: <strong>insulina regular SC</strong>.</li>
-    </ul>
-  </div>
-  <div class="ext">
-    <div class="albl">Fora do resumo do EMED</div>
-    <p>Limiar de cesárea por macrossomia: <strong>4.500 g na diabética</strong>, 5.000 g na não diabética (ACOG) -- o feto da diabética concentra peso no tronco. Corticoide antenatal eleva a glicemia por 2-3 dias: intensificar monitorização e ajustar insulina, nunca deixar de fazer quando indicado.</p>
   </div>
 </section>
 
 <section class="degrau" id="d9">
-  <div class="dhead"><span class="dnum">9</span><div class="dtitle"><span class="dstage">Degrau 9</span><h2>Puerpério: sai a placenta, sai a resistência -- e a reclassificação em seis semanas</h2></div></div>
-  <p class="lede">O degrau de maior rendimento do tema. É o Degrau 0 lido de trás para a frente.</p>
+  <div class="dhead"><span class="dnum">9</span><div class="dtitle"><span class="dstage">Degrau 9</span><h2>Puerpério: sai a placenta, sai a resistência</h2></div></div>
+  <p class="lede">O degrau de maior rendimento: é o degrau 0 lido de trás para a frente.</p>
+  <div class="vs">
+    <div class="b"><h5>DMG</h5><ul><li>A causa saiu: <strong>suspender insulina, dieta e monitorização</strong></li><li>Casos selecionados: capilar por <strong>24 a 72 h</strong> para flagrar DM franco</li><li>Reclassificar em 6 semanas</li></ul></div>
+    <div class="a"><h5>DM 1 / DM 2 prévio</h5><ul><li>A doença continua: <strong>reduzir, nunca suspender</strong></li><li><strong>50%</strong> da dose pré-gestacional/1º trimestre, ou <strong>70% de redução</strong> sobre a dose do fim da gravidez</li></ul></div>
+  </div>
   <div class="prose">
     <ul>
-      <li>Com a dequitação a resistência cai <strong>abruptamente</strong>. A conduta depende da raiz (Degrau 1).</li>
-      <li><strong>DMG:</strong> a causa foi embora → <strong>suspender insulina, dieta para DM e monitorização</strong>. Casos selecionados: glicemia capilar por <strong>24 a 72 h</strong> para flagrar hiperglicemia persistente (era DM franco).</li>
-      <li><strong>DM prévio:</strong> a doença continua → <strong>reduzir</strong> a insulina, nunca suspender: <strong>50%</strong> da dose pré-gestacional/1º trimestre, ou <strong>70%</strong> de redução sobre a dose do fim da gravidez.</li>
       <li>Sem dieta hipocalórica durante a amamentação.</li>
     </ul>
   </div>
-  <div class="vs">
-    <div class="b"><h5>DMG</h5><p>Suspender insulina e monitorização. Reclassificar em 6 semanas.</p></div>
-    <div class="a"><h5>DM tipo 1 / tipo 2 prévio</h5><p>Reduzir a insulina (50% da pré-gestacional, ou 70% de redução sobre a dose final). Nunca suspender.</p></div>
-  </div>
+  <details class="ref">
+    <summary>Hipoglicemia fora do intraparto (UpToDate, SBD)</summary>
+    <div class="refbody">
+      <div class="row"><span class="k">Alerta e estável</span><span class="v">15-20 g de carboidrato VO; capilar em 15 min (SBD: 15 g, se consciente e comendo)</span></div>
+      <div class="row"><span class="k">Em jejum, com acesso (SBD)</span><span class="v">30 mL de glicose 50% em 100 mL de SF; reavaliar em 5 min</span></div>
+      <div class="row"><span class="k">Rebaixada, com acesso</span><span class="v">25 mL de glicose 50% (UpToDate)</span></div>
+      <div class="row"><span class="k">Sem acesso</span><span class="v">Glucagon 0,5-1 mg SC/IM ou 3 mg nasal; insistir no acesso</span></div>
+    </div>
+  </details>
   <div class="prose">
-    <h4 class="sub">Hipoglicemia fora do intraparto: os fluxos gerais</h4>
+    <h4 class="sub">Reclassificação: 6 semanas, régua de adulto</h4>
     <ul>
-      <li>UpToDate -- <strong>alerta e estável</strong>: 15-20 g de carboidrato VO, capilar em 15 min. <strong>Rebaixada ou instável</strong> com acesso: 25 mL de glicose 50%; sem acesso: glucagon 0,5-1 mg SC/IM ou 3 mg nasal.</li>
-      <li>SBD (&lt; 70 no hospital) -- consciente e comendo: 15 g de carboidrato rápido, reavaliar em 15 min. Em jejum com acesso: 30 mL de glicose 50% em 100 mL de SF, reavaliar em 5 min. Torporosa sem acesso: glucagon IM/SC e insistir no acesso.</li>
-    </ul>
-    <h4 class="sub">Reclassificação: seis semanas, critérios da população geral</h4>
-    <ul>
-      <li>Toda DMG, com ou sem fator de risco, <strong>6 semanas após o parto</strong>, já sem fármaco.</li>
-      <li>Ideal: <strong>TOTG 75 g</strong> com jejum e 2ª hora (detecta 100%); sem ele, jejum isolado (66%). Cutoffs de adulto, não da gestação:</li>
+      <li>Toda DMG, <strong>6 semanas após o parto</strong>, sem fármaco.</li>
+      <li>Ideal: <strong>TOTG 75 g</strong> (detecta 100%); sem ele, jejum isolado (66%).</li>
     </ul>
   </div>
   <div class="flow">
     <div><span class="fv">&lt; 100 e &lt; 140</span><span class="fk"><b>Normal</b></span></div>
-    <div><span class="fv">100-125 / 140-199</span><span class="fk"><b>Pré-diabetes</b> (jejum alterado / intolerância)</span></div>
-    <div><span class="fv">&gt;= 126 / &gt;= 200</span><span class="fk"><b>Diabetes</b>: jejum e/ou 2ª hora</span></div>
+    <div><span class="fv">100-125 / 140-199</span><span class="fk"><b>Pré-diabetes</b> (jejum / intolerância)</span></div>
+    <div><span class="fv">&gt;= 126 / &gt;= 200</span><span class="fk"><b>Diabetes</b></span></div>
   </div>
   <div class="prose">
     <ul>
-      <li><strong>HbA1c não é solicitada</strong>: não validada no puerpério.</li>
-      <li>Normal não encerra: reavaliação <strong>anual</strong> (aí sim jejum, TOTG ou HbA1c). O risco de DM2 é o legado do DMG.</li>
+      <li><strong>Sem HbA1c</strong>: não validada no puerpério.</li>
+      <li>Normal vira <strong>anual</strong> (aí vale jejum, TOTG ou HbA1c). O risco de DM2 é o legado do DMG.</li>
     </ul>
   </div>
   <details class="ref">
-    <summary>Contracepção depois do diabetes (fora do EMED; critérios de elegibilidade da OMS)</summary>
+    <summary>Contracepção depois do diabetes (fora do EMED; OMS)</summary>
     <div class="refbody">
       <div class="row"><span class="k">DMG prévio</span><span class="v">Categoria 1 para todos os métodos</span></div>
       <div class="row"><span class="k">DM sem vasculopatia</span><span class="v">Combinados 2; progestágeno isolado 2; DIU de cobre 1; DIU-LNG 2</span></div>
-      <div class="row"><span class="k">DM com nefro, retino ou neuropatia, ou &gt; 20 anos</span><span class="v">Combinados 3/4 (contraindicados); progestágeno isolado 2 (injetável trimestral 3); DIU de cobre 1</span></div>
+      <div class="row"><span class="k">Vasculopatia ou &gt; 20 anos de DM</span><span class="v">Combinados 3/4; progestágeno isolado 2 (injetável trimestral 3); DIU de cobre 1</span></div>
     </div>
   </details>
   <div class="trap">
     <div class="albl">Armadilha</div>
-    <p>"Reduzir a insulina pela metade" é conduta de <strong>DM prévio</strong>. No DMG puro, suspende-se. O discriminador é a raiz da doença -- placenta ou pâncreas --, não "estava em insulina".</p>
+    <p>"Reduzir pela metade" é DM prévio; DMG suspende. O discriminador é a raiz (placenta ou pâncreas), não "estava em insulina".</p>
   </div>
 </section>
 
 <section class="degrau" id="d10">
-  <div class="dhead"><span class="dnum">10</span><div class="dtitle"><span class="dstage">Degrau 10</span><h2>Priscilla White: a classificação prognóstica que sobrou</h2></div></div>
-  <p class="lede">Baixo rendimento (última cobrança em 2018), mas custa dois minutos e fecha o tema.</p>
-  <div class="prose">
-    <ul>
-      <li>Eixos: tipo de DM, idade ao diagnóstico, tempo de doença, complicação vascular. Idade/tempo e vascular são independentes e podem coexistir.</li>
-    </ul>
-  </div>
+  <div class="dhead"><span class="dnum">10</span><div class="dtitle"><span class="dstage">Degrau 10</span><h2>Priscilla White</h2></div></div>
+  <p class="lede">Baixo rendimento (última cobrança em 2018); eixos: tipo, idade ao diagnóstico, duração e dano vascular.</p>
   <details class="ref">
     <summary>Classificação modificada de Priscilla White</summary>
     <div class="refbody">
@@ -593,21 +565,21 @@ code{font-family:"IBM Plex Mono",Consolas,monospace;font-size:11.8px;background:
   <h2>A escada em 18 gatilhos</h2>
   <div class="trig">
     <div><span class="tk">5ª-8ª semana</span><span class="tv">Organogênese: malformação é do DM prévio</span></div>
-    <div><span class="tk">Jejum 92-125 (até 20 sem)</span><span class="tv">DMG, sem TOTG</span></div>
-    <div><span class="tk">Jejum &gt;= 126</span><span class="tv">DM prévio, sem TOTG, alto risco direto</span></div>
-    <div><span class="tk">TOTG 92 / 180 / 153</span><span class="tv">DMG com um único valor</span></div>
-    <div><span class="tk">TOTG 126 / 200</span><span class="tv">DM prévio (jejum / 2ª hora)</span></div>
-    <div><span class="tk">Viabilidade parcial</span><span class="tv">Repete o jejum em 24-28; não faz TOTG</span></div>
-    <div><span class="tk">Metas 95 / 140 / 120</span><span class="tv">Ambulatório; a 1 hora é a que vale</span></div>
-    <div><span class="tk">CA fetal &gt;= p75 (29-33 sem)</span><span class="tv">Insulina, seja qual for o perfil</span></div>
+    <div><span class="tk">Jejum 92-125</span><span class="tv">DMG, sem TOTG</span></div>
+    <div><span class="tk">Jejum &gt;= 126</span><span class="tv">DM prévio, sem TOTG</span></div>
+    <div><span class="tk">TOTG 92/180/153</span><span class="tv">DMG com um único valor</span></div>
+    <div><span class="tk">TOTG 126/200</span><span class="tv">DM prévio (jejum / 2ª hora)</span></div>
+    <div><span class="tk">Só jejum</span><span class="tv">Repete o jejum em 24-28; sem TOTG</span></div>
+    <div><span class="tk">95/140/120</span><span class="tv">Metas ambulatoriais; a de 1 hora vale mais</span></div>
+    <div><span class="tk">CA &gt;= p75</span><span class="tv">29-33 sem: insulina, seja qual for o perfil</span></div>
     <div><span class="tk">0,5 UI/kg/dia</span><span class="tv">Ajuste 15/15 dias até 30 sem, depois semanal</span></div>
-    <div><span class="tk">Necessidade de insulina cai</span><span class="tv">Insuficiência placentária: vitalidade fetal</span></div>
-    <div><span class="tk">Feto &lt; p50 ou RCF</span><span class="tv">Metformina contraindicada</span></div>
+    <div><span class="tk">Insulina cai</span><span class="tv">Insuficiência placentária: vitalidade fetal</span></div>
+    <div><span class="tk">Feto &lt; p50</span><span class="tv">Metformina contraindicada (e RCF, DRC)</span></div>
     <div><span class="tk">AAS 12-36 sem</span><span class="tv">DM1 e DM2 (pré-eclâmpsia)</span></div>
-    <div><span class="tk">Eco fetal 24-28 sem</span><span class="tv">Cardiopatia é a malformação mais comum</span></div>
-    <div><span class="tk">39-40 6/7 · 39-39 6/7 · 37-38 6/7</span><span class="tv">Sem fármaco · fármaco ok · fármaco ruim</span></div>
+    <div><span class="tk">Eco 24-28 sem</span><span class="tv">Cardiopatia é a malformação mais comum</span></div>
+    <div><span class="tk">Indução</span><span class="tv">Sem fármaco 39-40 6/7 · fármaco ok 39-39 6/7 · ruim 37-38 6/7</span></div>
     <div><span class="tk">PFE &gt;= 4.500 g</span><span class="tv">Cesárea agendada a partir de 39 sem</span></div>
-    <div><span class="tk">Intraparto 70-120</span><span class="tv">SG 5-10% se &lt; 70; regular SC se &gt; 120</span></div>
+    <div><span class="tk">Intraparto</span><span class="tv">70-120 · SG se &lt; 70 · regular SC se &gt; 120</span></div>
     <div><span class="tk">Puerpério</span><span class="tv">DMG suspende; DM prévio reduz 50%</span></div>
     <div><span class="tk">6 semanas</span><span class="tv">TOTG 100/126 e 140/200; sem HbA1c; depois anual</span></div>
   </div>
@@ -617,29 +589,29 @@ code{font-family:"IBM Plex Mono",Consolas,monospace;font-size:11.8px;background:
   <h2 style="font-size:23px;margin-bottom:6px">Armadilhas de prova</h2>
   <p style="font-size:14px;color:var(--ink3);margin:0 0 4px;max-width:72ch">Dezessete, na ordem em que a prova costuma testá-las.</p>
   <div class="arms">
-    <div class="arm"><span class="dot"></span><p><strong>Reduzir a insulina pela metade no puerpério é DM prévio, não DMG.</strong> No DMG puro, suspende-se: a resistência some com a placenta.</p></div>
-    <div class="arm"><span class="dot"></span><p><strong>Um único valor alterado no TOTG de 75 g fecha DMG</strong> (92 / 180 / 153). Exigir dois pontos é herança do Carpenter-Coustan de 100 g.</p></div>
-    <div class="arm"><span class="dot"></span><p><strong>HbA1c não rastreia, não monitora e não reclassifica.</strong> Único papel: critério IADPSG de DM prévio na 1ª consulta (&gt;= 6,5%).</p></div>
-    <div class="arm"><span class="dot"></span><p><strong>Jejum &gt;= 126 até 20 semanas fecha DM prévio sozinho.</strong> Não se "confirma" com TOTG; vai direto ao alto risco.</p></div>
-    <div class="arm"><span class="dot"></span><p><strong>Viabilidade parcial: jejum &lt; 92 → repetir o jejum em 24-28 semanas</strong>, não TOTG. Misturar os dois fluxogramas é o erro comum.</p></div>
-    <div class="arm"><span class="dot"></span><p><strong>IADPSG na 1ª consulta não é só o jejum:</strong> HbA1c &gt;= 6,5% ou jejum &gt;= 126 ou TOTG &gt;= 200. Pela ADA: 2 exames se assintomática, 1 se sintomática.</p></div>
-    <div class="arm"><span class="dot"></span><p><strong>Malformação é maior no DM prévio.</strong> DMG se instala depois da organogênese (5ª-8ª semana); cardiopatia (septo interventricular) é a mais frequente.</p></div>
-    <div class="arm"><span class="dot"></span><p><strong>Refratariedade tem três portas:</strong> 2+ medidas fora em 7-14 dias; 30-50% das medidas fora em 1 semana; CA fetal &gt;= p75 entre 29 e 33 semanas.</p></div>
-    <div class="arm"><span class="dot"></span><p><strong>Metformina cruza a placenta; insulina não.</strong> Por isso a insulina segue soberana apesar dos desfechos favoráveis; ANVISA não aprova metformina na gestação.</p></div>
-    <div class="arm"><span class="dot"></span><p><strong>Glibenclamida é inferior à insulina e à metformina</strong> (mais peso, macrossomia, hipoglicemia neonatal). Não é alternativa equivalente.</p></div>
-    <div class="arm"><span class="dot"></span><p><strong>Metformina contraindicada em feto &lt; p50, RCF e DRC.</strong> Associada à insulina em dose &gt; 2 UI/kg/dia sem controle ou ganho de peso excessivo.</p></div>
-    <div class="arm"><span class="dot"></span><p><strong>Necessidade de insulina caindo no 3º trimestre = insuficiência placentária.</strong> Avaliar vitalidade fetal, não só reduzir a dose.</p></div>
-    <div class="arm"><span class="dot"></span><p><strong>DM não indica cesárea; a via é obstétrica.</strong> Cesárea agendada só com PFE &gt;= 4.500 g, a partir de 39 semanas.</p></div>
-    <div class="arm"><span class="dot"></span><p><strong>Momento da indução segue o controle:</strong> adequado 39-39 6/7; inadequado 37-38 6/7; 34-36 6/7 só refratária à hospitalização ou vitalidade comprometida. Sem fármaco, 39-40 6/7.</p></div>
-    <div class="arm"><span class="dot"></span><p><strong>Meta intraparto (70-120) ≠ meta ambulatorial (95 / 140 / 120).</strong> Abaixo de 70, SG 5-10% IV; acima de 120, regular SC.</p></div>
-    <div class="arm"><span class="dot"></span><p><strong>Reclassificação usa critérios de adulto</strong> (100/126 e 140/200), não os da gestação. Seis semanas, sem fármaco, sem HbA1c; normal vira anual.</p></div>
-    <div class="arm"><span class="dot"></span><p><strong>Cutoffs dos fatores de risco:</strong> IMC &gt;= 25, HbA1c &gt;= 5,7%, ILA &gt;= 24 ou bolsão &gt;= 8, RN &gt;= 4.000 g ou &gt; p90, &gt;= 2 perdas. O protocolo intraparto não se extrapola para a enfermaria.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Reduzir pela metade no puerpério é DM prévio.</strong> DMG suspende: a resistência sai com a placenta.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Um valor alterado no TOTG 75 g fecha DMG.</strong> Exigir dois é herança do Carpenter-Coustan de 100 g.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>HbA1c não rastreia, não monitora, não reclassifica.</strong> Só rotula DM prévio na 1ª consulta (&gt;= 6,5%).</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Jejum &gt;= 126 até 20 semanas fecha DM prévio sozinho.</strong> Não se "confirma" com TOTG.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Viabilidade parcial: jejum &lt; 92 repete o jejum em 24-28</strong>, não faz TOTG.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>IADPSG não é só jejum:</strong> HbA1c 6,5, jejum 126 ou 2ª hora 200. ADA: 2 exames se assintomática, 1 se sintomática.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Malformação é do DM prévio.</strong> O DMG chega depois da 8ª semana; cardiopatia (septo) é a mais frequente.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Refratário tem três portas:</strong> 2+ fora em 7-14 dias; 30-50% fora em 1 semana; CA &gt;= p75 em 29-33 semanas.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Metformina cruza a placenta; insulina não.</strong> Por isso a insulina segue soberana, apesar dos desfechos favoráveis.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Glibenclamida não equivale à insulina</strong>: mais peso, macrossomia e hipoglicemia neonatal.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Metformina: não em feto &lt; p50, RCF ou DRC.</strong> Associada se &gt; 2 UI/kg/dia sem controle ou ganho excessivo.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Insulina caindo no 3º trimestre = insuficiência placentária.</strong> Avaliar vitalidade, não só reduzir.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>DM não indica cesárea.</strong> Só PFE &gt;= 4.500 g, agendada a partir de 39 semanas.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>A data da indução segue o controle.</strong> 34-36 6/7 só se a internação falhou ou a vitalidade caiu.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Intraparto 70-120 não é a meta ambulatorial 95/140/120.</strong> O protocolo intraparto não vai para a enfermaria.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Reclassificação usa régua de adulto</strong> (100/126 e 140/200), em 6 semanas, sem HbA1c.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Cutoffs de risco:</strong> IMC 25, HbA1c 5,7, ILA 24 ou bolsão 8, RN 4.000 g ou p90, 2 perdas.</p></div>
   </div>
 </section>
 
 <footer>
-  <p><strong>Fonte:</strong> <code>resumos/GO/22. Diabetes Mellitus na Gestação.pdf</code> (EMED 2026, Profs. Maria Tereza Guerra e Natália Carvalho -- diretriz conjunta OPAS/MS/FEBRASGO/SBD 2017 e 2019, SBD 2023-2024, ACOG 190) cruzado com <code>resumos/GO/Diabetes Mellitus na Gestação.md</code>. Blocos âmbar = fora do PDF (cetoacidose euglicêmica, taxa de detecção do jejum, ácido fólico e medicações pré-concepcionais, limiar ACOG de 4.500 g, corticoide antenatal, contracepção).</p>
-  <p>Calibração D10 = profundidade, não volume (reescrita em tópicos na s195). Próximo passo: lista #26 (19 questões) e, na sequência, #40 (33 questões).</p>
+  <p><strong>Fonte:</strong> <code>resumos/GO/22. Diabetes Mellitus na Gestação.pdf</code> (EMED 2026, Profs. Maria Tereza Guerra e Natália Carvalho -- diretriz conjunta OPAS/MS/FEBRASGO/SBD 2017 e 2019, SBD 2023-2024, ACOG 190) cruzado com <code>resumos/GO/Diabetes Mellitus na Gestação.md</code>. Fora do PDF (marcado no texto): cetoacidose com glicemia baixa, taxa de detecção do jejum, ácido fólico e medicações pré-concepcionais, limiar ACOG de 4.500 g, corticoide antenatal, contracepção.</p>
+  <p>Calibração D10 = profundidade, não volume (s196). Próximo passo: lista #26 (19 questões), depois #40 (33 questões).</p>
 </footer>
 </main>
 </div>

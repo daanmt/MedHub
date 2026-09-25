@@ -31,7 +31,10 @@ ALLOWLIST = {
     # sessao -> lista (`tarefa_id`). O volume em si continua sendo escrito so por
     # `tools/registrar_sessao_bulk.py`; `tools/listas.py` tambem NAO aparece aqui --
     # o backfill dele grava por este writer, nunca por SQL proprio.
-    "app/utils/db.py": {"cronograma_progresso", "flashcards", "fsrs_cards", "fsrs_revlog",
+    # emed_questoes/emed_respostas (Bancada EMED, s196): `emed_upsert_*` sao os UNICOS writers;
+    # `tools/emed_banco.py` e camada fina e NAO aparece nesta lista de proposito.
+    "app/utils/db.py": {"cronograma_progresso", "emed_questoes", "emed_respostas",
+                        "flashcards", "fsrs_cards", "fsrs_revlog",
                         "habilidades", "plano_tarefas", "preparacao_estado",
                         "questao_habilidades", "review_log", "reforja_marks",
                         "sessoes_bulk"},

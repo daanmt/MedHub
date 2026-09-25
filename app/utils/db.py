@@ -2437,3 +2437,359 @@ def sessoes_bulk_listar(area=None, vinculadas=None):
     if not tem and vinculadas is True:
         return []
     return saida
+
+
+# --- Banco de questões EMED (Bancada EMED, s196) ------------------------------------
+#
+# A Bancada EMED (artifact privado, capability `db`) é BUFFER: o Claude no Chrome
+# escreve as questões capturadas (`questoes`) e a página grava as respostas do
+# operador (`respostas`). O `ipub.db` é o destino durável -- `tools/emed_banco.py`
+# é a camada fina que ingere, poda o buffer e re-semeia. Chave natural das duas
+# tabelas: `(lista, num)`. `questao_erro_id` é preenchido à mão depois da análise e
+# a ingestão NUNCA o sobrescreve.
+
+#: Campos de CONTEÚDO da questão: o `hash` é deles, e só eles fazem uma questão
+#: já ingerida contar como `atualizada`.
+CAMPOS_HASH_EMED = ("banca", "gabarito", "emed_id", "enunciado", "alternativas",
+                    "solucao", "forum", "tags", "estatistica")
+
+CONFIANCAS_EMED = ("solida", "duvida", "chute")
+
+_COLUNAS_EMED_Q = ("id", "lista", "tarefa_id", "num", "emed_id", "banca", "gabarito",
+                   "enunciado", "alternativas", "solucao", "forum", "tags", "estatistica",
+                   "capturado_em", "executor", "hash", "ingerido_em", "atualizado_em")
+
+_COLUNAS_EMED_R = ("id", "lista", "tarefa_id", "num", "letra", "confianca", "correta",
+                   "gabarito", "racional", "elo", "tempo_s", "flag", "respondido_em",
+                   "registrado_em", "questao_erro_id")
+
+
+def _ensure_emed_tables(conn):
+    """DDL idempotente de `emed_questoes` e `emed_respostas` (só roda sob `aplicar`)."""
+    conn.execute('''
+        CREATE TABLE IF NOT EXISTS emed_questoes (
+            id            INTEGER PRIMARY KEY AUTOINCREMENT,
+            lista         TEXT NOT NULL,
+            tarefa_id     INTEGER,
+            num           INTEGER NOT NULL,
+            emed_id       TEXT,
+            banca         TEXT,
+            gabarito      TEXT,
+            enunciado     TEXT,
+            alternativas  TEXT,
+            solucao       TEXT,
+            forum         TEXT,
+            tags          TEXT,
+            estatistica   TEXT,
+            capturado_em  TEXT,
+            executor      TEXT,
+            hash          TEXT NOT NULL,
+            ingerido_em   TEXT,
+            atualizado_em TEXT,
+            UNIQUE (lista, num)
+        )
+    ''')
+    conn.execute('''
+        CREATE TABLE IF NOT EXISTS emed_respostas (
+            id              INTEGER PRIMARY KEY AUTOINCREMENT,
+            lista           TEXT NOT NULL,
+            tarefa_id       INTEGER,
+            num             INTEGER NOT NULL,
+            letra           TEXT,
+            confianca       TEXT CHECK (confianca IN ('solida','duvida','chute')),
+            correta         INTEGER,
+            gabarito        TEXT,
+            racional        TEXT,
+            elo             TEXT,
+            tempo_s         INTEGER,
+            flag            INTEGER DEFAULT 0,
+            respondido_em   TEXT,
+            registrado_em   TEXT,
+            questao_erro_id INTEGER,
+            UNIQUE (lista, num)
+        )
+    ''')
+
+
+def _txt(valor):
+    """Texto normalizado: ausente/None vira "" (nunca erro), resto vira `str`."""
+    return "" if valor is None else str(valor)
+
+
+def _int_ou_none(valor):
+    """Inteiro tolerante: vazio/None/lixo vira `None`."""
+    if valor is None or valor == "" or isinstance(valor, bool):
+        return None
+    try:
+        return int(valor)
+    except (TypeError, ValueError):
+        return None
+
+
+def _vazio(valor):
+    """Campo obrigatório ausente: None ou string em branco."""
+    return valor is None or (isinstance(valor, str) and not valor.strip())
+
+
+def emed_hash_questao(doc):
+    """sha1 do JSON canônico dos `CAMPOS_HASH_EMED` (sort_keys, ensure_ascii=False)."""
+    import hashlib
+    import json as _json
+    conteudo = {c: _txt(doc.get(c)) for c in CAMPOS_HASH_EMED}
+    conteudo["gabarito"] = conteudo["gabarito"].strip().upper()
+    canon = _json.dumps(conteudo, sort_keys=True, ensure_ascii=False)
+    return hashlib.sha1(canon.encode("utf-8")).hexdigest()
+
+
+def emed_correta(resp, gabarito_banco=None):
+    """0/1 da resposta: `correta` do arquivo se vier; senão `letra == gabarito`
+    (gabarito da resposta, senão o da questão no banco). Sem gabarito -> `None`."""
+    c = resp.get("correta")
+    if c is not None and c != "":
+        return 1 if c is True or str(c).strip().lower() in ("1", "true") else 0
+    gab = _txt(resp.get("gabarito")).strip().upper() or _txt(gabarito_banco).strip().upper()
+    letra = _txt(resp.get("letra")).strip().upper()
+    if not gab or not letra:
+        return None
+    return 1 if letra == gab else 0
+
+
+def _emed_ler(conn, tabela, colunas, lista=None):
+    """Leitura tolerante: tabela ausente devolve [] sem rodar DDL."""
+    sql = f"SELECT {', '.join(colunas)} FROM {tabela}"
+    params = ()
+    if lista:
+        sql += " WHERE lista = ?"
+        params = (str(lista),)
+    sql += " ORDER BY lista, num"
+    try:
+        return [dict(zip(colunas, r)) for r in conn.execute(sql, params).fetchall()]
+    except sqlite3.OperationalError:
+        return []
+
+
+def emed_upsert_questoes(rows, aplicar=True):
+    """Upsert de `emed_questoes` por `(lista, num)`. Devolve
+    `{novas, atualizadas, iguais, invalidas}` (`invalidas` = lista de `_doc_id`).
+
+    Nova se a chave não existe; atualizada se existe e o `hash` difere; iguais se o
+    hash bate. Doc sem `lista`/`num`/`enunciado`/`gabarito` vai para `invalidas` e o
+    resto do lote segue. `aplicar=False` mede pelo mesmo caminho e não roda DDL.
+    """
+    invalidas, preparadas = [], []
+    for doc in rows:
+        num = _int_ou_none(doc.get("num"))
+        if (any(_vazio(doc.get(c)) for c in ("lista", "enunciado", "gabarito"))
+                or num is None):
+            invalidas.append(doc.get("_doc_id"))
+            continue
+        linha = {c: _txt(doc.get(c)) for c in CAMPOS_HASH_EMED}
+        linha["gabarito"] = linha["gabarito"].strip().upper()
+        linha.update(lista=str(doc["lista"]).strip(), num=num,
+                     tarefa_id=_int_ou_none(doc.get("tarefa")),
+                     capturado_em=_txt(doc.get("capturado_em")),
+                     executor=_txt(doc.get("executor")))
+        linha["hash"] = emed_hash_questao(linha)
+        preparadas.append(linha)
+
+    conn = get_connection()
+    try:
+        if aplicar:
+            _ensure_emed_tables(conn)
+        try:
+            banco = {(r[0], r[1]): r[2] for r in conn.execute(
+                "SELECT lista, num, hash FROM emed_questoes")}
+        except sqlite3.OperationalError:
+            banco = {}      # dry-run em banco sem a tabela: não cria
+        cont = {"novas": 0, "atualizadas": 0, "iguais": 0, "invalidas": invalidas}
+        ts = carimbo()
+        for linha in preparadas:
+            chave = (linha["lista"], linha["num"])
+            if chave not in banco:
+                cont["novas"] += 1
+            elif banco[chave] != linha["hash"]:
+                cont["atualizadas"] += 1
+            else:
+                cont["iguais"] += 1
+                continue
+            banco[chave] = linha["hash"]      # duplicata no mesmo lote conta 1x
+            if not aplicar:
+                continue
+            conn.execute('''
+                INSERT INTO emed_questoes
+                    (lista, tarefa_id, num, emed_id, banca, gabarito, enunciado,
+                     alternativas, solucao, forum, tags, estatistica, capturado_em,
+                     executor, hash, ingerido_em, atualizado_em)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ON CONFLICT (lista, num) DO UPDATE SET
+                    tarefa_id     = COALESCE(excluded.tarefa_id, emed_questoes.tarefa_id),
+                    emed_id       = excluded.emed_id,
+                    banca         = excluded.banca,
+                    gabarito      = excluded.gabarito,
+                    enunciado     = excluded.enunciado,
+                    alternativas  = excluded.alternativas,
+                    solucao       = excluded.solucao,
+                    forum         = excluded.forum,
+                    tags          = excluded.tags,
+                    estatistica   = excluded.estatistica,
+                    capturado_em  = excluded.capturado_em,
+                    executor      = excluded.executor,
+                    hash          = excluded.hash,
+                    atualizado_em = excluded.atualizado_em
+            ''', (linha["lista"], linha["tarefa_id"], linha["num"], linha["emed_id"],
+                  linha["banca"], linha["gabarito"], linha["enunciado"],
+                  linha["alternativas"], linha["solucao"], linha["forum"], linha["tags"],
+                  linha["estatistica"], linha["capturado_em"], linha["executor"],
+                  linha["hash"], ts, ts))
+        if aplicar:
+            conn.commit()
+        return cont
+    finally:
+        conn.close()
+
+
+def emed_upsert_respostas(rows, aplicar=True):
+    """Upsert de `emed_respostas` por `(lista, num)`. Devolve
+    `{novas, atualizadas, iguais, invalidas}`.
+
+    Existe e o `respondido_em` do arquivo é mais novo -> atualiza; igual com conteúdo
+    diferente -> atualiza; igual e mesmo conteúdo, ou mais antigo -> `iguais`.
+    `correta` ausente é calculada (`emed_correta`). `questao_erro_id` nunca é tocado.
+    Obrigatórios: `lista`, `num`, `letra`, `respondido_em`; `confianca` fora do
+    vocabulário também invalida o doc (o CHECK derrubaria o lote inteiro).
+    """
+    invalidas, preparadas = [], []
+    for doc in rows:
+        num = _int_ou_none(doc.get("num"))
+        conf = _txt(doc.get("confianca")).strip().lower() or None
+        if (any(_vazio(doc.get(c)) for c in ("lista", "letra", "respondido_em"))
+                or num is None or (conf is not None and conf not in CONFIANCAS_EMED)):
+            invalidas.append(doc.get("_doc_id"))
+            continue
+        flag = doc.get("flag")
+        preparadas.append({
+            "_doc": doc, "lista": str(doc["lista"]).strip(), "num": num,
+            "tarefa_id": _int_ou_none(doc.get("tarefa")),
+            "letra": _txt(doc.get("letra")).strip().upper(), "confianca": conf,
+            "gabarito": _txt(doc.get("gabarito")).strip().upper() or None,
+            "racional": _txt(doc.get("racional")), "elo": _txt(doc.get("elo")),
+            "tempo_s": _int_ou_none(doc.get("tempo_s")),
+            "flag": 1 if flag is True or str(flag).strip().lower() in ("1", "true") else 0,
+            "respondido_em": str(doc["respondido_em"]).strip()})
+
+    conn = get_connection()
+    try:
+        if aplicar:
+            _ensure_emed_tables(conn)
+        existentes = {(r["lista"], r["num"]): r
+                      for r in _emed_ler(conn, "emed_respostas", _COLUNAS_EMED_R)}
+        gabaritos = {(r["lista"], r["num"]): r["gabarito"]
+                     for r in _emed_ler(conn, "emed_questoes", _COLUNAS_EMED_Q)}
+        campos = ("letra", "confianca", "correta", "gabarito", "racional", "elo",
+                  "tempo_s", "flag", "respondido_em")
+        cont = {"novas": 0, "atualizadas": 0, "iguais": 0, "invalidas": invalidas}
+        ts = carimbo()
+        for linha in preparadas:
+            chave = (linha["lista"], linha["num"])
+            linha["correta"] = emed_correta(linha["_doc"], gabaritos.get(chave))
+            atual = existentes.get(chave)
+            if atual is None:
+                cont["novas"] += 1
+            else:
+                antes = _txt(atual.get("respondido_em"))
+                if linha["respondido_em"] < antes or (
+                        linha["respondido_em"] == antes
+                        and all(atual.get(c) == linha[c] for c in campos)):
+                    cont["iguais"] += 1
+                    continue
+                cont["atualizadas"] += 1
+            existentes[chave] = {c: linha[c] for c in campos}
+            if not aplicar:
+                continue
+            conn.execute('''
+                INSERT INTO emed_respostas
+                    (lista, tarefa_id, num, letra, confianca, correta, gabarito, racional,
+                     elo, tempo_s, flag, respondido_em, registrado_em)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ON CONFLICT (lista, num) DO UPDATE SET
+                    tarefa_id     = COALESCE(excluded.tarefa_id, emed_respostas.tarefa_id),
+                    letra         = excluded.letra,
+                    confianca     = excluded.confianca,
+                    correta       = excluded.correta,
+                    gabarito      = excluded.gabarito,
+                    racional      = excluded.racional,
+                    elo           = excluded.elo,
+                    tempo_s       = excluded.tempo_s,
+                    flag          = excluded.flag,
+                    respondido_em = excluded.respondido_em,
+                    registrado_em = excluded.registrado_em
+            ''', (linha["lista"], linha["tarefa_id"], linha["num"], linha["letra"],
+                  linha["confianca"], linha["correta"], linha["gabarito"],
+                  linha["racional"], linha["elo"], linha["tempo_s"], linha["flag"],
+                  linha["respondido_em"], ts))
+        if aplicar:
+            conn.commit()
+        return cont
+    finally:
+        conn.close()
+
+
+def emed_listar_questoes(lista=None):
+    """Linhas de `emed_questoes` (todas as colunas), por `(lista, num)`. Read-only."""
+    conn = get_connection()
+    try:
+        return _emed_ler(conn, "emed_questoes", _COLUNAS_EMED_Q, lista)
+    finally:
+        conn.close()
+
+
+def emed_listar_respostas(lista=None):
+    """Linhas de `emed_respostas` (todas as colunas), por `(lista, num)`. Read-only."""
+    conn = get_connection()
+    try:
+        return _emed_ler(conn, "emed_respostas", _COLUNAS_EMED_R, lista)
+    finally:
+        conn.close()
+
+
+def emed_status():
+    """Resumo por lista (read-only): capturadas, respondidas, acertos, solidas,
+    duvidas, chutes, erradas, tempo_medio_s, e tema/area de `plano_tarefas` por
+    `tarefa_id` (tabela ausente -> None)."""
+    conn = get_connection()
+    try:
+        questoes = _emed_ler(conn, "emed_questoes", _COLUNAS_EMED_Q)
+        respostas = _emed_ler(conn, "emed_respostas", _COLUNAS_EMED_R)
+        try:
+            plano = {r[0]: (r[1], r[2]) for r in conn.execute(
+                "SELECT id, tema, area FROM plano_tarefas")}
+        except sqlite3.OperationalError:
+            plano = {}      # plano ainda não semeado: leitura não cria tabela
+    finally:
+        conn.close()
+    por = {}
+    for fonte, eh_resposta in ((questoes, False), (respostas, True)):
+        for r in fonte:
+            d = por.setdefault(r["lista"], {"lista": r["lista"], "tarefa_id": None,
+                                            "capturadas": 0, "_r": []})
+            d["tarefa_id"] = d["tarefa_id"] or r["tarefa_id"]
+            if eh_resposta:
+                d["_r"].append(r)
+            else:
+                d["capturadas"] += 1
+    saida = []
+    for lista in sorted(por):
+        d = por[lista]
+        rs = d.pop("_r")
+        tempos = [r["tempo_s"] for r in rs if r["tempo_s"] is not None]
+        tema, area = plano.get(d["tarefa_id"], (None, None))
+        d.update(respondidas=len(rs),
+                 acertos=sum(1 for r in rs if r["correta"] == 1),
+                 solidas=sum(1 for r in rs if r["confianca"] == "solida"),
+                 duvidas=sum(1 for r in rs if r["confianca"] == "duvida"),
+                 chutes=sum(1 for r in rs if r["confianca"] == "chute"),
+                 erradas=sum(1 for r in rs if r["correta"] == 0),
+                 tempo_medio_s=round(sum(tempos) / len(tempos), 1) if tempos else None,
+                 tema=tema, area=area)
+        saida.append(d)
+    return saida

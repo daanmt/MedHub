@@ -895,3 +895,46 @@
 {"ts": "2026-09-25T00:30:04+00:00", "event": "resolved", "check": "consistencia_registros", "fingerprint": "ae675f4ff819", "alvo": "AGENTE.md §7.4"}
 {"ts": "2026-09-25T00:47:22+00:00", "event": "opened", "check": "consistencia_registros", "fingerprint": "ae675f4ff819", "alvo": "AGENTE.md §7.4", "payload": {"check": "tabela"}}
 {"ts": "2026-09-25T00:49:48+00:00", "event": "resolved", "check": "consistencia_registros", "fingerprint": "ae675f4ff819", "alvo": "AGENTE.md §7.4"}
+{"ts": "2026-09-25T09:52:26+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "3ab063372c4e", "alvo": "card#40"}
+{"ts": "2026-09-25T09:52:26+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "c0a2a7b94e38", "alvo": "card#120"}
+{"ts": "2026-09-25T09:52:26+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "60f013d672c9", "alvo": "card#412"}
+{"ts": "2026-09-25T09:52:26+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "14949fd96ee2", "alvo": "card#419"}
+{"ts": "2026-09-25T09:52:26+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "9909af67b47a", "alvo": "card#469"}
+{"ts": "2026-09-25T09:52:26+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "f54dc1843442", "alvo": "card#542"}
+{"ts": "2026-09-25T09:52:26+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "e6002a2350ea", "alvo": "card#581"}
+{"ts": "2026-09-25T09:52:26+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "4f621e38a9b9", "alvo": "card#596"}
+{"ts": "2026-09-25T09:52:26+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "9c4f286beec5", "alvo": "card#597"}
+{"ts": "2026-09-25T09:52:26+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "2fa6a9675f0f", "alvo": "card#637"}
+{"ts": "2026-09-25T09:52:26+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "5531c7e30ec3", "alvo": "card#641"}
+{"ts": "2026-09-25T09:52:26+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "33651cde0ed5", "alvo": "card#720"}
+{"ts": "2026-09-25T09:52:26+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "667dfda35cef", "alvo": "card#829"}
+{"ts": "2026-09-25T09:52:26+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "2fca5fc38625", "alvo": "card#1413"}
+{"ts": "2026-09-25T09:52:26+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "56b1cc502dd0", "alvo": "card#1424"}
+{"ts": "2026-09-25T09:52:26+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "bc2b3fa047b6", "alvo": "card#1623"}
+{"ts": "2026-09-25T09:52:26+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "2914b4e61949", "alvo": "card#1624"}
+{"ts": "2026-09-25T09:52:26+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "b82c6f93dc48", "alvo": "card#1625"}
+{"ts": "2026-09-25T09:52:26+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "cb2bebd3f933", "alvo": "card#1627"}
+{"ts": "2026-09-25T09:52:26+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "052b9305a924", "alvo": "card#53"}
+{"ts": "2026-09-25T09:52:26+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "790fcdea7cb3", "alvo": "card#55"}
+{"ts": "2026-09-25T09:52:26+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "03521fadab56", "alvo": "card#65"}
+{"ts": "2026-09-25T09:52:26+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "1c91ab81449e", "alvo": "card#81"}
+{"ts": "2026-09-25T09:52:26+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "5c5294ecd300", "alvo": "card#83"}
+{"ts": "2026-09-25T09:52:26+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "2719a4afe267", "alvo": "card#89"}
+{"ts": "2026-09-25T09:52:26+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "55df7775c3b0", "alvo": "card#91"}
+{"ts": "2026-09-25T09:52:26+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "41cbbf26f00c", "alvo": "card#92"}
+{"ts": "2026-09-25T09:52:26+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "3ef609cfd71a", "alvo": "card#93"}
+{"ts": "2026-09-25T09:52:26+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "7e22b4e4f576", "alvo": "card#96"}
+{"ts": "2026-09-25T09:52:26+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "ee42b14a7e5b", "alvo": "card#105"}
+{"ts": "2026-09-25T09:52:26+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "6058a5896fc1", "alvo": "card#111"}
+{"ts": "2026-09-25T09:52:26+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "9c4e4cc4c3db", "alvo": "card#1723"}
+{"ts": "2026-09-25T22:27:25+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "d96bfce55d00", "alvo": "card#338"}
+{"ts": "2026-09-25T22:27:25+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "717811258962", "alvo": "card#487"}
+{"ts": "2026-09-25T22:27:25+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "6c7ea5f0eb07", "alvo": "card#599"}
+{"ts": "2026-09-25T22:27:25+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "20b386fad21e", "alvo": "card#601"}
+{"ts": "2026-09-25T22:27:25+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "c30ee9951484", "alvo": "card#811"}
+{"ts": "2026-09-25T22:27:25+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "caca2cb33c8b", "alvo": "card#871"}
+{"ts": "2026-09-25T22:27:25+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "05f96200dfb7", "alvo": "card#1060"}
+{"ts": "2026-09-25T22:27:25+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "4d93a36fe806", "alvo": "card#1374"}
+{"ts": "2026-09-25T22:27:25+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "e64cef0e6087", "alvo": "card#1598"}
+{"ts": "2026-09-25T22:34:27+00:00", "event": "opened", "check": "consistencia_registros", "fingerprint": "48dc55e22bde", "alvo": "HANDOFF.md:11", "payload": {"check": "paths"}}
+{"ts": "2026-09-25T23:16:31+00:00", "event": "resolved", "check": "consistencia_registros", "fingerprint": "48dc55e22bde", "alvo": "HANDOFF.md:11"}

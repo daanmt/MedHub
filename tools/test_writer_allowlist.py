@@ -32,7 +32,9 @@ ALLOWLIST = {
     # `tools/registrar_sessao_bulk.py`; `tools/listas.py` tambem NAO aparece aqui --
     # o backfill dele grava por este writer, nunca por SQL proprio.
     # emed_questoes/emed_respostas (Bancada EMED, s196): `emed_upsert_*` sao os UNICOS writers;
-    # `tools/emed_banco.py` e camada fina e NAO aparece nesta lista de proposito.
+    # `tools/emed_banco.py` e camada fina e NAO aparece nesta lista de proposito. A coluna
+    # `emed_respostas.questao_erro_id` (s199) tem writer proprio, `emed_ligar_erro`, tambem aqui:
+    # o `insert_questao.py` o chama com a conexao dele e NAO ganha a tabela na allowlist.
     "app/utils/db.py": {"cronograma_progresso", "emed_questoes", "emed_respostas",
                         "flashcards", "fsrs_cards", "fsrs_revlog",
                         "habilidades", "plano_tarefas", "preparacao_estado",

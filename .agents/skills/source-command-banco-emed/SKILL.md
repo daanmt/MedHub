@@ -97,8 +97,9 @@ Exit: 0 ok · 1 erro de uso/leitura · 2 COUNT-ASSERT. Testes: `tools/test_emed_
    `--apply --expect N`. Para cada lista **resolvida** (status na `listas/`): rodar a linha sugerida de
    `registrar_sessao_bulk.py` (volume = SSOT, `AGENTE.md §6`) e `plano.py --concluir <tarefa> --sessao <id>`.
 4. **Análise:** `--erros <lista>` -> `/analisar-questao` (régua F93: até ~8 erros o principal analisa;
-   racional e elo declarados são o insumo primário) -> `insert_questao.py` por erro (+ `habilidades.py --add`
-   para os chutes) -> `ArtifactData set analises/<lista>_<num>` com a cadeia, o `quebrou` (0-based), a
+   racional e elo declarados são o insumo primário) -> `insert_questao.py --sessao <id da linha do bulk>
+   --emed <lista>_<num>` por erro (s199: o erro nasce ligado ao bloco e à resposta; o `--erros` passa a
+   marcar `JA REGISTRADA` e não deixa registrar 2x) (+ `habilidades.py --add` para os chutes) -> `ArtifactData set analises/<lista>_<num>` com a cadeia, o `quebrou` (0-based), a
    comporta, a armadilha, o veredito e os `#cards`. Autópsia da lista segue o §3.3 do `/analisar-questao`.
 5. **Poda:** `--podar tmp/bancada --colecao respostas` e `--colecao questoes` -> `ArtifactData batch delete`
    dos `ids` (<= 50 por batch) só de listas já registradas. Nunca podar lista em curso na aba Resolver.  <!-- NAO-VERIFICAVEL: ordem de atos no tique; conduta do agente, sem artefato que a registre (revisar: 2027-03-31) -->

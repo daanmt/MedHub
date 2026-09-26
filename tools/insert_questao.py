@@ -11,6 +11,11 @@ Transação de 4 passos em commit único:
    REMOVIDO (part-1, incidente dos 68 em 2026-08-13): sem cards = falha alta.
 4. Init de estado FSRS em `fsrs_cards` para cada card.
 
+Vinculos opcionais (s199, elo questoes -> cards), na MESMA transacao: `--sessao ID`
+grava `questoes_erros.sessao_bulk_id` (id da LINHA de `sessoes_bulk`, nunca o
+`sessao_num`); `--emed LISTA_NUM` (ex.: `t40_7`) grava `emed_respostas.questao_erro_id`
+pelo writer `db.emed_ligar_erro`. Vinculo recusado = nada gravado.
+
 Assinatura canônica (17 args: 8 obrigatórios + 9 opcionais/qualidade) em
 `.claude/commands/analisar-questao.md §9`. Exit 0 em sucesso, 1 em falha.
 """
@@ -100,6 +105,29 @@ def _ensure_status_column(cursor):
     cols = {r[1] for r in cursor.execute("PRAGMA table_info(questoes_erros)")}
     if "status" not in cols:
         cursor.execute("ALTER TABLE questoes_erros ADD COLUMN status TEXT DEFAULT NULL")
+
+
+def _ensure_sessao_column(cursor):
+    """s199: coluna `sessao_bulk_id` em questoes_erros -- de qual bloco (`sessoes_bulk.id`)
+    o erro veio. ALTER idempotente (aditivo, NULL = erro sem bloco, o legado inteiro)."""
+    cols = {r[1] for r in cursor.execute("PRAGMA table_info(questoes_erros)")}
+    if "sessao_bulk_id" not in cols:
+        cursor.execute("ALTER TABLE questoes_erros ADD COLUMN sessao_bulk_id INTEGER")
+
+
+def _erros_vinculo(item):
+    """Forma dos vinculos opcionais de um item de lote (`sessao`, `emed`), sem banco.
+    A existencia de cada um so o writer confere, dentro da transacao."""
+    erros = []
+    sessao = item.get("sessao")
+    if sessao is not None and (isinstance(sessao, bool) or not str(sessao).strip().isdigit()):
+        erros.append(f"sessao invalida {sessao!r}: esperado o id (inteiro) da linha de sessoes_bulk")
+    if item.get("emed") is not None:
+        try:
+            db.emed_chave(item["emed"])
+        except ValueError as e:
+            erros.append(str(e))
+    return erros
 
 
 def _tem_lastro(tema):
@@ -230,6 +258,7 @@ def checar_lote(errors_file):
             areas.validar_area(item.get("area"), origem="checar_lote")
         except Exception as e:
             erros.append(f"area: {e}")
+        erros += _erros_vinculo(item)
         crds = item.get("cards")
         if not st and crds is not None and (not isinstance(crds, list) or not crds):
             erros.append("'cards' deve ser lista nao-vazia (o fallback heuristico foi removido)")
@@ -275,7 +304,7 @@ def insert_questao(area, tema, enunciado, correta, chamada, erro, elo, armadilha
                    complexidade="Media", habilidades="N/A", faltou="N/A", explicacao="N/A", titulo="Erro sem titulo",
                    frente_contexto=None, frente_pergunta=None,
                    verso_resposta=None, verso_regra_mestre=None, verso_armadilha=None,
-                   cards=None, status=None, conn=None):
+                   cards=None, status=None, sessao=None, emed=None, conn=None):
     # print(f"DEBUG: Tentando inserir no banco: {os.path.abspath(DB_PATH)}")
     # F89 (s176): `area` e a precondicao mais BARATA -- vale antes do contrato de
     # cunhagem, para o chamador ver o primeiro problema real e nao o segundo. Foi por
@@ -304,12 +333,24 @@ def insert_questao(area, tema, enunciado, correta, chamada, erro, elo, armadilha
         cards_to_insert = aval["tuplas"]
         for a_ in aval["avisos"]:
             print(f"[AVISO-CARD] {a_}")
+        # s199: forma do vinculo EMED antes de qualquer escrita.
+        emed_lista, emed_num = db.emed_chave(emed) if emed is not None else (None, None)
 
         if own_conn:
             conn = sqlite3.connect(DB_PATH)
             conn.execute("PRAGMA foreign_keys = ON")  # part-1: FKs do schema impostas
         cursor = conn.cursor()
         _ensure_status_column(cursor)
+        _ensure_sessao_column(cursor)
+        if sessao is not None:
+            try:
+                existe = cursor.execute("SELECT 1 FROM sessoes_bulk WHERE id = ?",
+                                        (int(sessao),)).fetchone()
+            except sqlite3.OperationalError:
+                existe = None
+            if not existe:
+                raise ValueError(f"sessao {sessao} nao existe em sessoes_bulk (o id e o da "
+                                 f"LINHA, nunca o sessao_num)")
 
         # Verifica se o Tema já existe (por (area, tema) — evita re-poluir; UNIQUE no schema). Se não existir, cria.
         cursor.execute("SELECT id FROM taxonomia_cronograma WHERE area = ? AND tema = ?", (area, tema))
@@ -329,12 +370,17 @@ def insert_questao(area, tema, enunciado, correta, chamada, erro, elo, armadilha
             INSERT INTO questoes_erros
             (tema_id, titulo, complexidade, enunciado, alternativa_correta, alternativa_marcada,
              tipo_erro, habilidades_sequenciais, o_que_faltou, explicacao_correta, armadilha_prova, status,
-             data_registro)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+             data_registro, sessao_bulk_id)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ''', (tema_id, titulo, complexidade, enunciado, correta, chamada,
               erro, habilidades, faltou, explicacao, armadilha, status,
-              db.carimbo()))   # F80: relogio unico (LOCAL), nunca o DEFAULT UTC
+              db.carimbo(),    # F80: relogio unico (LOCAL), nunca o DEFAULT UTC
+              int(sessao) if sessao is not None else None))
         questao_id = cursor.lastrowid
+        if emed_lista is not None:
+            # s199: a resposta da aba Questoes aponta para o erro; recusa propaga e
+            # derruba o erro junto (mesma transacao).
+            db.emed_ligar_erro(conn, emed_lista, emed_num, questao_id)
 
         # 2. Inserção dos cards (lista construída no topo — caminho qualitativo
         # único; sempre quality_source='qualitative' e needs_qualitative=0).
@@ -481,6 +527,11 @@ def insert_batch(errors_file, dry_run=False):
         if st and st not in ("anulada", "banca-divergente"):
             print(f"[ERRO] item {i}: status invalido '{st}'. NADA inserido.")
             return False
+        ruins = _erros_vinculo(item)
+        if ruins:
+            print(f"[ERRO] item {i} ('{item.get('titulo', '?')}'): {'; '.join(ruins)}. "
+                  f"NADA inserido.")
+            return False
         # Contrato de cunhagem (part-1): sem status de excecao, o item precisa de
         # cards OU do par frente_pergunta+verso_resposta — pego AQUI, pre-transacao.
         if not st:
@@ -530,6 +581,7 @@ def insert_batch(errors_file, dry_run=False):
                 verso_regra_mestre=item.get("verso_regra_mestre"),
                 verso_armadilha=item.get("verso_armadilha"),
                 cards=item.get("cards"), status=item.get("status"),
+                sessao=item.get("sessao"), emed=item.get("emed"),
                 conn=conn,   # transacao do lote: excecao propaga p/ rollback total
             )
             inseridos.append(i)
@@ -590,6 +642,15 @@ if __name__ == "__main__":
                         help="F26: registra o erro SEM cunhar card e marcado p/ gate de "
                              "evidencia (nao conta como lacuna real)")
 
+    # s199 (elo questoes -> cards): vinculos opcionais, na mesma transacao do erro.
+    parser.add_argument("--sessao", type=int, default=None,
+                        help="id da LINHA de sessoes_bulk de onde o erro veio (nunca o "
+                             "sessao_num); grava questoes_erros.sessao_bulk_id")
+    parser.add_argument("--emed", default=None,
+                        help="resposta da aba Questoes (LISTA_NUM, ex. t40_7); grava "
+                             "emed_respostas.questao_erro_id. Resposta inexistente, ja "
+                             "ligada ou certa-e-solida = nada gravado")
+
     args = parser.parse_args()
 
     if args.errors_file:
@@ -630,5 +691,7 @@ if __name__ == "__main__":
         verso_armadilha=args.verso_armadilha,
         cards=cards,
         status=args.status,
+        sessao=args.sessao,
+        emed=args.emed,
     )
     sys.exit(0 if ok else 1)

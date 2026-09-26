@@ -262,6 +262,15 @@ o gate de evidência. Existe porque questão anulada ou de gabarito divergente *
 cunhar card a partir dela ensinaria o erro da banca, e contá-la como buraco de conhecimento
 envenenaria o ranking de fraquezas. O registro fica — o que não acontece é virar card.
 
+**Vínculos do erro (s199, elo questões -> cards).** Opcionais, gravados na **mesma transação** do erro; vínculo recusado = nada gravado. No lote, as chaves `sessao` e `emed` de cada item.
+
+| Flag | Grava | Recusa |
+|---|---|---|
+| `--sessao ID` | `questoes_erros.sessao_bulk_id` — o **id da linha** de `sessoes_bulk` (o que o `registrar_sessao_bulk.py` imprimiu), nunca o `sessao_num` | sessão inexistente |
+| `--emed LISTA_NUM` | `emed_respostas.questao_erro_id` (ex.: `--emed t40_7`, o doc id da aba Questões) | resposta inexistente, já ligada a outro erro, ou certa-e-sólida |
+
+Erro vindo da aba Questões do hub leva os dois: é assim que a análise e o veredito voltam para a questão certa e o `--erros` sabe o que já foi registrado.
+
 **Mapeamento arg → coluna em `questoes_erros` (F28 — evita criar coluna redundante):**
 
 | Argumento | Coluna persistida |

@@ -292,6 +292,7 @@ def erros_da_lista(lista):
             "gabarito": r["gabarito"] or q.get("gabarito"), "correta": r["correta"],
             "confianca": r["confianca"], "tempo_s": r["tempo_s"],
             "racional": r["racional"], "elo": r["elo"],
+            "questao_erro_id": r["questao_erro_id"],
             "enunciado": q.get("enunciado"), "alternativas": q.get("alternativas"),
             "solucao": q.get("solucao"), "forum": q.get("forum")})
     return saida
@@ -310,6 +311,8 @@ def cmd_erros(args):
         print(f"Q{e['num']} · {e['banca'] or '?'} · marcou {e['letra']} x gabarito "
               f"{e['gabarito'] or '?'} · {status} · confianca {e['confianca'] or '?'} · "
               f"tempo {e['tempo_s'] if e['tempo_s'] is not None else '?'}s")
+        if e["questao_erro_id"] is not None:
+            print(f"JA REGISTRADA como erro #{e['questao_erro_id']}")
         print(f"Racional declarado: {e['racional'] or '(vazio)'}")
         print(f"Elo declarado: {e['elo'] or '(vazio)'}")
         for rotulo, campo in (("ENUNCIADO", "enunciado"), ("ALTERNATIVAS", "alternativas"),

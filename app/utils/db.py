@@ -2764,6 +2764,45 @@ def emed_upsert_respostas(rows, aplicar=True):
         conn.close()
 
 
+def emed_chave(texto):
+    """`"t40_7"` -> `("t40", 7)`: o doc id da Bancada/hub (`questoes/<lista>_<num>`).
+
+    `ValueError` para qualquer outra forma -- chave torta ligaria o erro à resposta errada.
+    """
+    lista, sep, num = str(texto or "").strip().rpartition("_")
+    if not sep or not lista or not num.isdigit():
+        raise ValueError(f"chave EMED invalida {texto!r}: esperado LISTA_NUM, ex. t40_7")
+    return lista, int(num)
+
+
+def emed_ligar_erro(conn, lista, num, questao_id):
+    """Grava `emed_respostas.questao_erro_id` (s199). Writer único da coluna.
+
+    Roda na conexão do CHAMADOR (a transação do `insert_questao`): vínculo recusado
+    propaga `ValueError` e o erro inteiro volta atrás. Recusa, sempre fail-loud:
+      - resposta `(lista, num)` inexistente (ou banco sem `emed_respostas`);
+      - resposta já ligada a outro erro (registrar a mesma questão 2x);
+      - resposta certa e não-chute: não é lacuna, não vira erro.
+    """
+    try:
+        row = conn.execute(
+            "SELECT correta, confianca, questao_erro_id FROM emed_respostas "
+            "WHERE lista = ? AND num = ?", (lista, int(num))).fetchone()
+    except sqlite3.OperationalError:
+        row = None
+    if row is None:
+        raise ValueError(f"resposta EMED {lista}_{num} nao existe em emed_respostas "
+                         f"(rodar emed_banco.py --registrar antes)")
+    correta, confianca, ja = row
+    if ja is not None:
+        raise ValueError(f"resposta EMED {lista}_{num} ja ligada ao erro #{ja}")
+    if correta == 1 and confianca != "chute":
+        raise ValueError(f"resposta EMED {lista}_{num} esta certa e nao foi chute: "
+                         f"nao e erro")
+    conn.execute("UPDATE emed_respostas SET questao_erro_id = ? WHERE lista = ? AND num = ?",
+                 (int(questao_id), lista, int(num)))
+
+
 def emed_listar_questoes(lista=None):
     """Linhas de `emed_questoes` (todas as colunas), por `(lista, num)`. Read-only."""
     conn = get_connection()

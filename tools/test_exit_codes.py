@@ -204,3 +204,14 @@ def test_history_antigo_corrompido_nao_e_reaberto(tmp_path):
 def test_history_ausente_e_silencio_honesto(tmp_path):
     """Sensor que nao pode julgar fica calado (convencao WARN-first)."""
     assert check_history_integrity(root=tmp_path) == []
+
+
+def test_backup_db_help_nao_faz_backup(monkeypatch):
+    """F137 (s201): a varredura de CLIs (`test_cli_importavel`) roda `backup_db.py --help`; sem
+    argparse, cada suite fazia um backup REAL e a rotacao keep-5 expulsava os pontos de retorno do
+    dia (o de antes do apagamento (e) e o da reforja). `--help` sai 0 e nao encosta no banco."""
+    chamadas = []
+    monkeypatch.setattr(bkp, "backup", lambda: chamadas.append(1))
+    with pytest.raises(SystemExit) as saida:
+        bkp.main(["--help"])
+    assert saida.value.code == 0 and chamadas == []

@@ -84,3 +84,18 @@ def test_count_assert_barra_teto_negativo(tmp_path):
     with pytest.raises(AssertionError):
         purge(backup_dir=tmp_path, keep=-1, quiet=True)
     assert len(list(tmp_path.glob(f"{PREFIX}*.db"))) == 3, "nada pode ter sido deletado"
+
+
+def test_rotacao_segue_o_carimbo_do_nome_e_nao_o_mtime(tmp_path):
+    """F137 (s201, latente): `shutil.copy2` preserva o mtime do BANCO, entao o backup feito agora de
+    um banco parado ha dias nasce 'mais velho' que os de ontem. A ordem tem de vir do carimbo do
+    nome (`ipub_backup_AAAAMMDD_HHMMSS`). Aqui o mtime esta INVERTIDO em relacao ao nome."""
+    criados = []
+    for i in range(6):
+        p = tmp_path / f"{PREFIX}2026010{i}_120000.db"
+        p.write_bytes(b"fake-sqlite-" + str(i).encode())
+        os.utime(p, (1_700_000_000 - i * 60, 1_700_000_000 - i * 60))    # o mais NOVO tem o mtime mais velho
+        criados.append(p)
+    removidos = purge(backup_dir=tmp_path, keep=5, quiet=True)
+    assert [p.name for p in removidos] == [criados[0].name]
+    assert criados[-1].exists(), "o backup de carimbo mais recente nunca pode ser purgado"

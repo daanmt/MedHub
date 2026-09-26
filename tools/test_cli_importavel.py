@@ -60,6 +60,22 @@ def _clis():
         yield nome
 
 
+#: estado real que um `--help` jamais pode tocar (F137)
+_ESTADO_REAL = ("ipub.db", "medhub_memory.db", os.path.join("artifacts", "backups"))
+
+
+def _foto_estado():
+    foto = {}
+    for alvo in _ESTADO_REAL:
+        p = os.path.join(ROOT, alvo)
+        arqs = [p] if os.path.isfile(p) else (
+            [os.path.join(p, n) for n in os.listdir(p)] if os.path.isdir(p) else [])
+        for a in arqs:
+            st = os.stat(a)
+            foto[os.path.relpath(a, ROOT)] = (st.st_mtime_ns, st.st_size)
+    return foto
+
+
 def _rodar(nome, args):
     return subprocess.run([sys.executable, "-X", "utf8", os.path.join(TOOLS, nome), *args],
                           capture_output=True, text=True, encoding="utf-8",
@@ -70,9 +86,12 @@ def test_nenhum_cli_morre_por_import_ao_ser_invocado():
     """O caso do defeito: `python tools/insert_card_extra.py --help` ->
     ModuleNotFoundError. O CLI tem de ancorar o proprio `sys.path`, porque em uso real
     NAO ha pytest para faze-lo por ele."""
-    quebrados = []
+    quebrados, com_efeito = [], []
     for nome in _clis():
+        antes = _foto_estado()
         r = _rodar(nome, ["--help"])
+        if _foto_estado() != antes:
+            com_efeito.append(nome)
         erro = (r.stderr or "")
         if "ModuleNotFoundError" in erro or "ImportError" in erro:
             linha = next((x for x in erro.splitlines()
@@ -82,6 +101,9 @@ def test_nenhum_cli_morre_por_import_ao_ser_invocado():
         "CLI que nao carrega quando invocado como CLI -- o pytest fornece o sys.path "
         "que o proprio arquivo deveria fornecer, entao a suite passa e o uso real morre: "
         + "; ".join(quebrados))
+    # F137 (s201): `--help` nao pode ter efeito no estado REAL. `backup_db.py` nao tinha argparse:
+    # cada suite fazia um backup de verdade e a rotacao keep-5 apagava os pontos de retorno.
+    assert com_efeito == [], ("`--help` mudou o banco ou os backups REAIS: " + ", ".join(com_efeito))
 
 
 def test_o_gate_pega_uma_ancora_errada_plantada(tmp_path):

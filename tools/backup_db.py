@@ -9,6 +9,7 @@ REGRA MESTRA: a purga e uma operacao destrutiva; ela calcula o conjunto-alvo,
 ASSERTA o tamanho esperado ANTES de deletar e ABORTA (AssertionError) se
 divergir. Suporta `dry_run=True` para inspecao sem escrita.
 """
+import argparse
 import shutil
 import sqlite3
 import sys
@@ -25,16 +26,17 @@ KEEP = 5
 def _listar(backup_dir: Path, prefix: str):
     """Backups do prefixo, do mais recente para o mais antigo.
 
-    Ordena por (mtime, nome): o nome carrega o timestamp, entao serve de
-    desempate estavel quando dois arquivos tem o mesmo mtime. Arquivos que nao
-    casam o prefixo (ex.: `medhub_memory_pre_purge_*.db`) NAO entram no
-    conjunto-alvo -- a purga so mexe no que ela mesma produz.
+    Ordena pelo CARIMBO DO NOME (`<prefixo>AAAAMMDD_HHMMSS`), nunca pelo mtime (F137, s201):
+    `shutil.copy2` preserva o mtime do BANCO de origem, entao o backup feito agora de um banco
+    parado ha dias nascia "mais velho" que os de ontem e era o primeiro a ser apagado. Arquivos
+    que nao casam o prefixo (ex.: `medhub_memory_pre_purge_*.db`) NAO entram no conjunto-alvo --
+    a purga so mexe no que ela mesma produz.
     """
     if not backup_dir.is_dir():
         return []
     itens = [p for p in backup_dir.iterdir()
              if p.is_file() and p.name.startswith(prefix) and p.suffix == '.db']
-    return sorted(itens, key=lambda p: (p.stat().st_mtime, p.name), reverse=True)
+    return sorted(itens, key=lambda p: p.name, reverse=True)
 
 
 def purge(backup_dir=BACKUP_DIR, keep=KEEP, prefix=PREFIX, dry_run=False, quiet=False):
@@ -111,16 +113,24 @@ def backup():
     return dest
 
 
-def main():
+def main(argv=()):
     """F60 (descolar part-6): o exit code reflete o resultado.
+
+    F137 (s201): `--help` sai 0 SEM fazer backup. A varredura de CLIs da suite roda `--help` em
+    todo `tools/*.py`; sem argparse, cada suite fazia um backup real e a rotacao keep-5 apagou os
+    pontos de retorno do dia. `argv` explicito (default vazio): chamado de dentro do pytest, ler
+    `sys.argv` pegaria os argumentos do pytest.
 
     Padrao F27 (`insert_questao.py:474`) generalizado. "BACKUP CORROMPIDO --
     abortando" impresso no stdout com exit 0 era a antitese do headless: o
     chamador seguia para a operacao destrutiva achando que tinha rede.
     Qualquer aborto (banco ausente, copia falha, integridade reprovada) = 1.
     """
+    argparse.ArgumentParser(
+        description="Backup do ipub.db em artifacts/backups/ com integrity_check + rotacao keep-5 "
+                    "(ordem pelo carimbo do nome). Sem opcoes: rodar = fazer o backup.").parse_args(list(argv))
     return 0 if backup() else 1
 
 
 if __name__ == '__main__':
-    sys.exit(main())
+    sys.exit(main(sys.argv[1:]))

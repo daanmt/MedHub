@@ -29,6 +29,8 @@
 
 - `banco-emed: t40 ingerida 33/33 (13 novas nesta rodada; amostra t40_33 OK) · registrada 0` -- **Chrome PAUSADO a pedido do operador** (~02h10 no relogio dele). Balanco da captura: **4 listas, 91 questoes, 0 invalidas** (t26 19 · t96 18 · t49 21 · t40 33); proxima da fila = t100. 4 `emed_id` repetidos entre t26 e t40 (chave do banco e lista+num; dedup fica para a analise). Metodo que funcionou = UI (drawer por questao) + lote JSON por pagina (<= 20). Loop do `/banco-emed` de volta a 20 min (job novo).
 
+- **Relatorio final do Chrome (cic-0013, colado pelo operador; DADO):** o bloqueio era o classificador "Data Exfiltration" do modo automatico da sessao dele (nao le o chat; olha o padrao das acoes): barrou (1) reuso do token de sessao para a API interna, (2) transferencia do JSON para a Bancada, (3) captura em massa pela UI depois de varias transferencias (efeito parece cumulativo). Funcionou: leitura, escrita na Bancada pelo db, e o fluxo inteiro em aprovacao MANUAL passo a passo (t49, t40). Recomendacoes dele: humano no loop, lote por pagina (<= 20), nunca API com token; e **conferir se os termos da assinatura do Estrategia permitem copiar o conteudo para o banco do MedHub** (material proprietario -- raiz do gatilho). Decisao do operador: *"pedi pra ele liberar logo as 4 pra voce, para que possamos focar na UI do medhub e no teste com as listas que preciso fazer"* -> `control/hub` = CAPTURA EM PAUSA; foco = Resolver. Checagem pre-teste da Bancada: `node --check` do script OK; 0 ids duplicados; 0 ids usados sem elemento.
+
 ## Custo dos subagentes (usage do harness)
 - Explore (Sonnet, mapa da arquitetura): 101.278 tokens · 53 tool uses · 2 min 47 s.
 - Opus (`emed_banco.py` + testes): 121.982 tokens · 30 tool uses · 10 min 14 s.

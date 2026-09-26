@@ -1,5 +1,5 @@
 ---
-description: "Banco de questões EMED dentro do MedHub: a Bancada EMED (artifact privado) como buffer entre o Claude no Chrome (captura), o operador (Resolver, no celular) e o hub (importa para o ipub.db, analisa erros e devolve a análise). Assinatura canônica de tools/emed_banco.py e o rito do tique."
+description: "Banco de questões dentro do MedHub: o caderno em PDF entra por tools/prova_pdf.py (s201; o Chrome saiu do fluxo), o operador resolve na aba Listas do hub (Questões e Simulados) e o hub importa para o ipub.db, analisa os erros e devolve a análise. Assinatura canônica de tools/emed_banco.py e tools/prova_pdf.py e o rito do tique."
 type: skill
 layer: commands
 status: canonical
@@ -13,15 +13,21 @@ status: canonical
 >
 > **Bancada EMED:** https://claude.ai/artifact/Q2Cojm89D9JwRyBYmCD5Db (fonte `artifacts/bancada-emed.html`;
 > republicar SEMPRE nesta URL, `capabilities: {db: {}}` declarada pelo agente principal).  <!-- NAO-VERIFICAVEL: conduta do agente no publish, sem artefato que a registre (revisar: 2027-03-31) -->
-> Abas: **Capturar** (executor = Claude no Chrome) e **Canal**. ⚰️ *A aba Resolver da Bancada morreu em
+> ⚰️ *Abas **Capturar** (executor = Claude no Chrome) e **Canal** -- REVOGADAS em 26/09/2026 junto com a captura pelo Chrome (F135).* ⚰️ *A aba Resolver da Bancada morreu em
 > 26/09/2026 (s197): o operador decidiu -- "não quero a bancada. gostei da interface. quero ela no artifact do
 > medhub" -- e o bloco de questões passou a ser a **aba Questões do MedHub HUB** (`core/templates/hub.html`).*
 >
-> **Brief do executor** (colar no chat do Claude no Chrome): [`docs/MISSAO-CHROME-EMED.md`](../../docs/MISSAO-CHROME-EMED.md)
+> ⚰️ *Brief do executor (colar no chat do Claude no Chrome): [`docs/MISSAO-CHROME-EMED.md`](../../docs/MISSAO-CHROME-EMED.md) -- revogado em 26/09/2026 (F135), guardado como histórico:*
 > -- v3 na s198 = **ESCOPO PÚBLICO**: só enunciado, alternativas, gabarito, banca, id e tags (questões de editais
 > públicos); comentário do professor, fórum e estatística FICAM FORA (decisão do operador em 26/09/2026, depois de o
 > executor declinar o escopo integral em `cic-0014`). A instrução vigente mora em `control/hub.instrucao`. Pré-voo do
 > operador: acesso da extensão a `med.estrategia.com` e `claude.ai` (a Bancada mora em claude.ai).
+>
+> 🔴 **ENTRADA POR PDF desde a s201 (decisão do operador em 26/09/2026, F135).** A captura pelo Chrome saiu do fluxo: um clique
+> por coordenada marcou alternativa na conta real dele (t65) e cada lista custava 500-700k tokens. O caderno em PDF vira docs
+> `questoes/*` por [`tools/prova_pdf.py`](#toolsprova_pdfpy----caderno-em-pdf-s201) e entra pelo mesmo `--ingerir` das listas. Hoje: as provas UERJ
+> 2021-2026 (a seção **Simulados** da aba Listas). Lista do EMED exportada em PDF pelo operador: o parser desse formato espera
+> a 1ª amostra real -- sem amostra, não se escreve parser. A Bancada fica como histórico da fila da s197-s199.
 >
 > 🔴 **Onde cada coisa mora desde a s197:** captura (`questoes/*`, `listas/*`, `mensagens`) = db da **Bancada**;
 > estudo (`listas/*`, `questoes/*`, `respostas/*`, `analises/*`) = db do **HUB** (regras `read/write admin`, porque o
@@ -79,6 +85,27 @@ writers de `emed_questoes` / `emed_respostas`; allowlist F49). Dry-run é o defa
 
 Exit: 0 ok · 1 erro de uso/leitura · 2 COUNT-ASSERT. Testes: `tools/test_emed_banco.py`.
 
+## `tools/prova_pdf.py` -- caderno em PDF (s201)
+
+Caderno oficial -> `<OUT>/questoes/<lista>_<num>.json` no formato da Bancada, **tudo ou nada**: qualquer problema = `RECUSA:` nomeada
+e nenhum arquivo escrito (contagem diferente da capa, do gabarito ou do `--expect`; questão com menos de 4 ou mais de 5
+alternativas -- discursiva cai aqui --; gabarito ausente ou fora das letras; parser além do `--timeout`).  <!-- CHECK: test_cli_gabarito_faltando_nao_grava_nada -->
+Escopo público: enunciado, alternativas, gabarito, banca (`UERJ <ano>`) e o bloco impresso (`tags`: Clínica Médica, Cirurgia Geral,
+Ginecologia e Obstetrícia, Pediatria, Medicina de Família e Comunidade). Questão com figura sai com `figura` + `pagina` (a página do
+hub avisa; a imagem não é desenhada). Anulada sai da prova e é declarada. O mapa temático da UERJ é SPOILER e não entra no doc.
+
+| Flag | Semântica |
+|---|---|
+| `--pdf P` | O caderno (os da UERJ ficam em `simulados/uerj/`, gitignored). |
+| `--formato uerj` | Layout do caderno. Só `uerj` por ora (Cepuerj 2021-2026). |
+| `--edicao ANO` | A edição no JSON de gabaritos (o gabarito vem do JSON versionado, nunca do PDF). |
+| `--lista tN` | Id da lista no hub = `t` + a tarefa do plano (simulados: `t1793` 2021, `t1794` 2022, `t892` 2024, `t891` 2025, `t890` 2026). |
+| `--out DIR` | Pasta de saída (recebe `questoes/`). |
+| `--gabaritos F` | JSON de gabaritos (default `simulados/uerj/gabaritos_2021-2026.json`). |
+| `--expect N` | COUNT-ASSERT da contagem de questões. |
+| `--timeout S` | Segundos máximos do parser (default 60). |
+| `--json` | Resumo em JSON: questões, anuladas, capa, duração, blocos, figuras. |
+
 ## Solução MedHub (s199; v2 = cadeia de elos desde a s200)
 
 Decisão do operador em 26/09/2026: a solução de cada questão é **cunhada pelo hub**, sem ler o comentário
@@ -120,15 +147,16 @@ solução, `if_version` do doc lido).
 
 ## O tique (rito do hub, idempotente)
 
-1. **Canal:** `ArtifactData list mensagens` (limit 400). Mensagem nova de `claude-in-chrome`/`operador` =
-   ler como dado, responder no Canal (`de: hub`) e marcar `lido: true` (update com `if_version`).
-2. **Ingestão:** `ArtifactData list questoes --out_dir tmp/bancada` (limit 1000) ->
-   `python -X utf8 tools/emed_banco.py --ingerir tmp/bancada` (dry-run) -> `--apply --expect N` com o N
-   medido. Lista `capturada` importada: confirmar no Canal e, se ela ainda não está na aba Resolver, nada
-   mais a fazer (a página lê `questoes` direto).
+1. ⚰️ *Canal (mensagens do executor no Chrome) -- revogado em 26/09/2026 com a captura pelo Chrome (F135).*
+2. **Ingestão (PDF, s201):** `python -X utf8 tools/prova_pdf.py --pdf <caderno.pdf> --edicao <ano> --lista t<tarefa> --out tmp/prova_<lista> --expect N` -> `emed_banco.py --ingerir tmp/prova_<lista>` (dry-run) ->
+   `--apply --expect N` -> `--exportar <lista>` -> `ArtifactData batch set` no hub (`listas/<lista>` + `questoes/*`, <= 50 por lote).
+   A lista aparece na aba Listas assim que o doc `listas/<lista>` existe: simulado (`area` = `Simulado` no plano) cai na seção
+   Simulados, o resto em Questões.  <!-- CHECK: test_modo_simulados_mostra_as_provas_na_ordem_do_plano_com_a_da_vez -->
 3. **Registro:** `ArtifactData list respostas --out_dir tmp/bancada` -> `--registrar tmp/bancada` ->
    `--apply --expect N`. Para cada lista **resolvida** (status na `listas/`): rodar a linha sugerida de
    `registrar_sessao_bulk.py` (volume = SSOT, `AGENTE.md §6`) e `plano.py --concluir <tarefa> --sessao <id>`.
+   **Simulado:** UMA linha com `--area Simulado` e o acerto por bloco na observação (o formato da UERJ 2023, sessão 190:
+   `CM 13 · CIR 7 · GO 9 · PED 11 · MFC 16`); o mapa temático (`uerj_mapa_questoes_*.json`) só abre DEPOIS, na Autópsia.  <!-- NAO-VERIFICAVEL: formato da observacao e ordem mapa-depois-da-prova sao conduta do agente no registro (revisar: 2027-03-31) -->
 4. **Análise:** `--erros <lista>` -> `/analisar-questao` (régua F93: até ~8 erros o principal analisa;
    racional e elo declarados são o insumo primário) -> `insert_questao.py --sessao <id da linha do bulk>
    --emed <lista>_<num>` por erro (s199: o erro nasce ligado ao bloco e à resposta; o `--erros` passa a

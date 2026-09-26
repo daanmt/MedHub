@@ -206,6 +206,9 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
 .qz-campo{display:grid;gap:4px}
 .qz-campo textarea{font:inherit;font-size:.9em;padding:8px 10px;border:1px solid var(--linha);border-radius:8px;background:var(--papel);color:var(--tinta);width:100%;min-height:60px;resize:vertical}
 .qz-elo{display:flex;flex-wrap:wrap;gap:6px}
+.qz-modo{margin:4px 0 10px}
+.qz-modo button small{font-weight:500;color:var(--tinta3);margin-left:4px}
+.qz-figura{margin:4px 0 10px;padding:8px 12px;border-radius:10px;background:var(--afundado);color:var(--tinta2)}
 .qz-elo button{font-size:.84em;font-weight:600;padding:7px 11px;border:1px solid var(--linha);border-radius:99px;background:var(--card);color:var(--tinta2);min-height:36px}
 .qz-elo button.on{border-color:var(--acento);color:var(--acento);background:var(--acento-fraco)}
 .qz-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,7rem),1fr));gap:8px}
@@ -264,7 +267,8 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
     <!-- @hub:semanas -->
     <div id="qz-escolha">
       <h2 class="hub-titulo">Listas</h2>
-      <p class="hub-sub">As listas do EMED já capturadas, para resolver aqui como numa prova: letra e certeza em cada questão, sem gabarito no meio. No fim, o resultado por objetivo, a Solução MedHub (a cadeia de raciocínio, com o elo em que a sua letra cai) e a análise dos erros. Cada resposta grava na hora e dá para parar e voltar.</p>
+      <div class="qz-elo qz-modo" id="qz-modo" role="tablist" aria-label="Tipo de lista"><button type="button" role="tab" data-m="questoes">Questões</button><button type="button" role="tab" data-m="simulados">Simulados</button></div>
+      <p class="hub-sub" id="qz-sub"></p>
       <p class="qd-aviso" id="qz-aviso" hidden></p>
       <div class="qz-semanas" id="qz-listas"><p class="qd-vazio">Carregando as listas…</p></div>
     </div>
@@ -279,6 +283,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
       <div class="qz-corpo" id="qz-questao" hidden>
         <p class="qz-metaq"><span id="qz-pos"></span><span id="qz-banca"></span><span id="qz-tags"></span></p>
         <p class="qz-enun" id="qz-enun"></p>
+        <p class="qd-aviso qz-figura" id="qz-figura" hidden></p>
         <div class="qz-alts" id="qz-alts"></div>
         <div id="qz-antes">
           <p class="qz-rot">Antes de ver o gabarito: como está a sua certeza?</p>
@@ -682,9 +687,33 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
   var QZ_SEM = (function(){ try{ return JSON.parse(($("hub-semanas") || {}).textContent || "{}") || {}; }catch(e){ return {}; } })();
   function qzItemLista(l, atrasada){ var s = l.status || "capturada";
     return '<li><button type="button" data-qzl="' + qzEsc(l._id) + '"><p class="qz-tema">' + qzEsc(l.tema) + '</p><span class="qz-chip ' + qzEsc(s) + '">' + qzEsc(ROT_QZ[s] || s) + '</span><p class="qz-meta"><span>' + qzEsc(l.area || "") + '</span><span>' + qzEsc(Math.round(l.q || l.q_previstas || 0)) + ' questões</span>' + (atrasada ? '<span class="qd-atraso">semana ' + qzEsc(l.semana) + '</span>' : '') + '</p></button></li>'; }
+  // s201 (pedido do operador): o bloco se divide em Questoes (listas da semana) e Simulados (provas
+  // UERJ inteiras, do PDF oficial). Simulado = tarefa do plano com area "Simulado".
+  var QZ_SUB = {questoes: "As listas da semana, para resolver aqui como numa prova: letra e certeza em cada questão, sem gabarito no meio. No fim, o resultado por objetivo, a Solução MedHub (a cadeia de raciocínio, com o elo em que a sua letra cai) e a análise dos erros. Cada resposta grava na hora e dá para parar e voltar.",
+                simulados: "As provas da UERJ inteiras, na ordem do plano, como no dia: letra e certeza em cada questão, sem gabarito no meio, cerca de 3 minutos por questão. No fim, o resultado por bloco. Cada resposta grava na hora e dá para parar e voltar."};
+  function qzEhSimulado(l){ return l.area === "Simulado"; }
+  function qzNomeSim(l){ return String(l.tema || l._id).split(" -- ")[0]; }
+  QZ.modo = qzLs("medhub.listas.modo") === "simulados" ? "simulados" : "questoes";
+  $("qz-modo").addEventListener("click", function(e){ var b = e.target.closest("button[data-m]"); if(!b){ return; }
+    QZ.modo = b.getAttribute("data-m"); qzLs("medhub.listas.modo", QZ.modo); qzRenderListas(); });
+  function qzItemSim(l, daVez){ var s = l.status || "capturada", q = Math.round(l.q || l.q_previstas || 0);
+    return '<li><button type="button" data-qzl="' + qzEsc(l._id) + '"><p class="qz-tema">' + qzEsc(qzNomeSim(l)) + (daVez ? ' <span class="qd-n">· a da vez</span>' : '') + '</p><span class="qz-chip ' + qzEsc(s) + '">' + qzEsc(ROT_QZ[s] || s) + '</span><p class="qz-meta"><span>' + q + ' questões</span><span>~' + Math.round(q * 3 / 60) + ' h</span>' + (l.semana ? '<span>semana ' + qzEsc(l.semana) + '</span>' : '') + '</p></button></li>'; }
+  function qzRenderSimulados(ls){
+    var abertos = ls.filter(function(l){ return l.status !== "resolvida"; }), feitos = ls.filter(function(l){ return l.status === "resolvida"; });
+    if(!ls.length){ $("qz-listas").innerHTML = '<p class="qd-vazio">Nenhum simulado carregado ainda.</p>'; return; }
+    $("qz-listas").innerHTML = (abertos.length ? '<section><h3 class="qd-titulo">Provas UERJ <span class="qd-n">' + abertos.length + (abertos.length === 1 ? " prova" : " provas") + '</span></h3><ul class="qz-lista">' + abertos.map(function(l, i){ return qzItemSim(l, i === 0); }).join("") + '</ul></section>' : '<p class="qd-vazio">Todos os simulados carregados estão resolvidos.</p>') +
+      (feitos.length ? '<details class="qd-feitas"><summary>Resolvidos <span class="qd-n">' + feitos.length + '</span></summary><ul class="qz-lista">' + feitos.map(function(l){ return qzItemSim(l, false); }).join("") + '</ul></details>' : "");
+  }
   function qzRenderListas(){
-    var ls = QZ.listas.filter(function(l){ var s = l.status || "pendente"; return s !== "pendente" && s !== "bloqueada" && s !== "em_curso"; })
+    var todas = QZ.listas.filter(function(l){ var s = l.status || "pendente"; return s !== "pendente" && s !== "bloqueada" && s !== "em_curso"; })
       .sort(function(a, b){ return (a.semana || 999) - (b.semana || 999) || (a.seq || 0) - (b.seq || 0) || String(a._id).localeCompare(String(b._id)); });
+    var sims = todas.filter(qzEhSimulado), ls = todas.filter(function(l){ return !qzEhSimulado(l); });
+    var nAb = function(xs){ return xs.filter(function(l){ return l.status !== "resolvida"; }).length; };
+    Array.prototype.forEach.call($("qz-modo").querySelectorAll("button"), function(b){ var m = b.getAttribute("data-m"), n = nAb(m === "simulados" ? sims : ls);
+      b.classList.toggle("on", m === QZ.modo); b.setAttribute("aria-selected", m === QZ.modo ? "true" : "false");
+      b.innerHTML = (m === "simulados" ? "Simulados" : "Questões") + (n ? "<small>" + n + "</small>" : ""); });
+    $("qz-sub").textContent = QZ_SUB[QZ.modo];
+    if(QZ.modo === "simulados"){ qzRenderSimulados(sims); return; }
     if(!ls.length){ $("qz-listas").innerHTML = '<p class="qd-vazio">Nenhuma lista capturada ainda.</p>'; return; }
     var atual = QZ_SEM.atual || 0, datas = QZ_SEM.datas || {}, grupos = [], porChave = {};
     ls.filter(function(l){ return l.status !== "resolvida"; }).forEach(function(l){
@@ -762,6 +791,8 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
     $("qz-banca").textContent = qzBanca(q.banca); $("qz-banca").title = q.banca || "";
     $("qz-tags").textContent = qzAssunto(q.tags, lq.tema);
     $("qz-enun").textContent = q.enunciado || "";
+    // s201: o caderno em PDF vira texto; a figura (ECG, imagem) nao vem junto -- a pagina avisa onde ela esta
+    $("qz-figura").hidden = !q.figura; $("qz-figura").textContent = q.figura ? "Esta questão tem uma figura que o texto não traz: caderno da prova, página " + (q.pagina || "?") + "." : "";
     var alts = qzAlts(q.alternativas);
     // cada alternativa = escolher (corpo) + riscar (o X, como a tesoura do EMED); riscada nao e marcada
     function altHtml(l, t){ return '<div class="qz-alt" data-l="' + l + '"><button type="button" class="qz-alt-btn"><b>' + l + '</b><span>' + qzEsc(t) + '</span></button><button type="button" class="qz-risca" aria-label="Riscar ' + l + '" title="Riscar">&#x2715;</button></div>'; }
@@ -887,16 +918,20 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
         // mediana, nao media: questao deixada aberta (pausa de horas) nao contamina o ritmo (s200: t96 Q12 = 35.642s)
         ts = rs.map(function(r){ return r.tempo_s || 0; }).sort(function(a, b){ return a - b; }),
         temp = ts.length ? Math.round(ts.length % 2 ? ts[(ts.length - 1) / 2] : (ts[ts.length / 2 - 1] + ts[ts.length / 2]) / 2) : 0;
-    $("qz-tiles").innerHTML = [["Acertos", ac + "/" + rs.length], ["Sólidas certas", solC + "/" + sol], ["Dúvidas", duv], ["Chutes", chu], ["Tempo por questão", temp + "s"]].map(function(t){ return '<div><div class="fim-num">' + qzEsc(t[1]) + '</div><div class="fim-rot">' + qzEsc(t[0]) + '</div></div>'; }).join("");
+    // s201: simulado mostra tambem o tempo TOTAL da prova (a UERJ da ~3 min por questao)
+    var lf = QZ.listas.filter(function(x){ return x._id === QZ.lista; })[0] || {}, sim = qzEhSimulado(lf);
+    var tot = ts.reduce(function(a, b){ return a + b; }, 0), totTxt = Math.floor(tot / 3600) + "h" + String(Math.round(tot % 3600 / 60)).padStart(2, "0");
+    $("qz-tiles").innerHTML = [["Acertos", ac + "/" + rs.length], ["Sólidas certas", solC + "/" + sol], ["Dúvidas", duv], ["Chutes", chu], ["Tempo por questão", temp + "s"]].concat(sim ? [["Tempo total", totTxt]] : []).map(function(t){ return '<div><div class="fim-num">' + qzEsc(t[1]) + '</div><div class="fim-rot">' + qzEsc(t[0]) + '</div></div>'; }).join("");
     var err = rs.filter(function(r){ return !r.correta; }).map(function(r){ return r.num; }), ch = rs.filter(function(r){ return r.correta && r.confianca === "chute"; }).map(function(r){ return r.num; });
     $("qz-erradas").textContent = (err.length ? "Erradas: " + err.join(", ") + ". " : "Nenhuma errada. ") + (ch.length ? "Chutes certos (contam como incerteza): " + ch.join(", ") + "." : "");
     // s200: o mapa de fragilidade da lista -- firmes (certa e sem chute) por objetivo, o mais fraco primeiro
-    var objs = {}, temObj = false;
-    QZ.qs.forEach(function(q){ var r = QZ.resp[q.num]; if(!r){ return; } if(q.objetivo){ temObj = true; }
-      var g = objs[q.objetivo || "Sem objetivo"] || (objs[q.objetivo || "Sem objetivo"] = {n: 0, f: 0, nao: []});
+    // s201: no simulado o agrupamento e o BLOCO impresso na prova (Clinica Medica, Cirurgia...)
+    var objs = {}, temObj = false, chaveDe = function(q){ return sim ? (q.tags || "Sem bloco") : (q.objetivo || "Sem objetivo"); };
+    QZ.qs.forEach(function(q){ var r = QZ.resp[q.num]; if(!r){ return; } if(sim ? q.tags : q.objetivo){ temObj = true; }
+      var g = objs[chaveDe(q)] || (objs[chaveDe(q)] = {n: 0, f: 0, nao: []});
       g.n++; if(r.correta && r.confianca !== "chute"){ g.f++; } else { g.nao.push("Q" + q.num); } });
     $("qz-porobj").hidden = !temObj;
-    $("qz-porobj").innerHTML = temObj ? '<p class="qz-rot" style="margin:0">Por objetivo <small style="font-weight:400;color:var(--tinta3)">firmes / feitas</small></p><ul>' +
+    $("qz-porobj").innerHTML = temObj ? '<p class="qz-rot" style="margin:0">' + (sim ? "Por bloco" : "Por objetivo") + ' <small style="font-weight:400;color:var(--tinta3)">firmes / feitas</small></p><ul>' +
       Object.keys(objs).sort(function(a, b){ return objs[a].f / objs[a].n - objs[b].f / objs[b].n || a.localeCompare(b); }).map(function(o){ var g = objs[o];
         return '<li class="' + (g.f < g.n ? "fraco" : "") + '"><span>' + qzEsc(o) + '</span><b>' + g.f + '/' + g.n + '</b>' + (g.nao.length ? '<small>não firmes: ' + qzEsc(g.nao.join(", ")) + '</small>' : '') + '</li>'; }).join("") + '</ul>' : "";
     // revisao questao a questao: toque abre gabarito, resolucao, racional/elo e a analise do hub

@@ -5,6 +5,10 @@ status: canonical
 relates_to: [banco-emed]
 ---
 
+> ⚰️ **REVOGADO em 26/09/2026 (F135, decisão do operador).** A captura pelo Chrome saiu do fluxo: um clique por coordenada
+> marcou alternativa na conta real dele (t65, s199) e cada lista custava 500-700k tokens. A entrada agora é o caderno em PDF
+> (`tools/prova_pdf.py`, skill `/banco-emed`). Este brief fica como histórico; não colar em executor nenhum.
+
 # MISSÃO -- executor `claude-in-chrome` x MedHub (v3, s198, 25/09/2026) -- ESCOPO PÚBLICO
 
 > Prompt para colar no chat do Claude no Chrome (sessão nova ou a mesma, depois de `cic-0014`).

@@ -276,3 +276,80 @@ def test_skill_e_autopsia_apontam_o_brief_e_nao_redefinem():
         txt = (ROOT / ".claude" / "commands" / nome).read_text(encoding="utf-8")
         assert "SOLUCAO-MEDHUB-BRIEF.md" in txt and "Estado por elo" in txt, nome
         assert "sabia, não aplicou" not in txt, nome
+
+
+# ------------------------------------------------ s201: aba Listas dividida em Questoes | Simulados
+
+def _declaracao(src, inicio):
+    """O texto de `var NOME = {...};` (objeto literal no topo da declaracao)."""
+    i = src.index(inicio)
+    corpo = extrair_funcao(src[i:].replace(inicio, "function _x(){", 1), "function _x(){")
+    return inicio + corpo[len("function _x(){"):] + ";"
+
+
+LISTAS_JS = "\n".join([_declaracao(TEMPLATE, "var ROT_QZ = {"), _declaracao(TEMPLATE, "var QZ_SUB = {")] +
+                      [extrair_funcao(TEMPLATE, a) for a in (
+                          "function qzEsc(s){", "function qzItemLista(l, atrasada){", "function qzEhSimulado(l){",
+                          "function qzNomeSim(l){", "function qzItemSim(l, daVez){", "function qzRenderSimulados(ls){",
+                          "function qzRenderListas(){")])
+
+HARNESS_LISTAS = r"""
+var els = {};
+function botao(m){ var b = {m: m, innerHTML: "", on: false, attrs: {}};
+  b.getAttribute = function(k){ return k === "data-m" ? b.m : b.attrs[k]; };
+  b.setAttribute = function(k, v){ b.attrs[k] = v; };
+  b.classList = {toggle: function(c, v){ b.on = !!v; }};
+  return b; }
+var BOT = [botao("questoes"), botao("simulados")];
+function $(id){ if(!els[id]){ els[id] = {id: id, innerHTML: "", textContent: "", hidden: false,
+  querySelectorAll: function(){ return id === "qz-modo" ? BOT : []; }}; } return els[id]; }
+var QZ = {listas: __LISTAS__, modo: __MODO__};
+var QZ_SEM = {atual: 2, datas: {"2": ["21/09", "27/09"]}};
+__FUNCS__
+qzRenderListas();
+console.log(JSON.stringify({html: $("qz-listas").innerHTML, sub: $("qz-sub").textContent,
+  botoes: BOT.map(function(b){ return [b.m, b.on, b.innerHTML]; })}));
+"""
+
+LISTAS = [
+    {"_id": "t49", "tema": "Hérnias da Parede Abdominal", "area": "Cirurgia", "semana": 2, "seq": 1, "q": 21, "status": "capturada"},
+    {"_id": "t26", "tema": "Diabetes na Gestação", "area": "Obstetrícia", "semana": 2, "seq": 2, "q": 19, "status": "resolvida"},
+    {"_id": "t1794", "tema": "UERJ 2022 -- prova INTEIRA (60q), cronometrada, 5 blocos", "area": "Simulado", "semana": 3, "seq": 90, "q": 60, "status": "capturada"},
+    {"_id": "t1793", "tema": "UERJ 2021 -- prova INTEIRA (60q), cronometrada, 5 blocos", "area": "Simulado", "semana": 2, "seq": 90, "q": 60, "status": "capturada"},
+    {"_id": "t890", "tema": "UERJ 2026 -- prova INTEIRA (100q), cronometrada, 5 blocos", "area": "Simulado", "semana": 6, "seq": 90, "q": 100, "status": "pendente"},
+]
+
+
+def _listas(modo):
+    if not NODE:
+        pytest.skip("node ausente no PATH: divisao da aba nao verificada (skip declarado)")
+    prog = (HARNESS_LISTAS.replace("__FUNCS__", LISTAS_JS).replace("__LISTAS__", json.dumps(LISTAS))
+            .replace("__MODO__", json.dumps(modo)))
+    with tempfile.NamedTemporaryFile("w", suffix=".js", delete=False, encoding="utf-8") as f:
+        f.write(prog)
+        caminho = f.name
+    try:
+        out = subprocess.run([NODE, caminho], capture_output=True, text=True, encoding="utf-8", timeout=60)
+    finally:
+        Path(caminho).unlink(missing_ok=True)
+    assert out.returncode == 0, out.stderr
+    return json.loads(out.stdout.strip().splitlines()[-1])
+
+
+def test_modo_questoes_mostra_so_as_listas_e_conta_as_abertas():
+    out = _listas("questoes")
+    assert "Hérnias" in out["html"] and "UERJ" not in out["html"]
+    assert "Diabetes na Gestação" in out["html"]                          # resolvida, recolhida no fim
+    assert out["botoes"] == [["questoes", True, "Questões<small>1</small>"],
+                             ["simulados", False, "Simulados<small>2</small>"]]
+    assert out["sub"].startswith("As listas da semana")
+
+
+def test_modo_simulados_mostra_as_provas_na_ordem_do_plano_com_a_da_vez():
+    out = _listas("simulados")
+    html = out["html"]
+    assert "Hérnias" not in html and "UERJ 2026" not in html                # pendente (nao carregada) fica fora
+    assert html.index("UERJ 2021") < html.index("UERJ 2022")                 # ordem do plano (semana)
+    assert "UERJ 2021 <span class=\"qd-n\">· a da vez</span>" in html and html.count("a da vez") == 1
+    assert "60 questões" in html and "~3 h" in html and " -- prova INTEIRA" not in html
+    assert out["botoes"][1][1] is True and out["sub"].startswith("As provas da UERJ")

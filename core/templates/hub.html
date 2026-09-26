@@ -187,6 +187,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
 .qz-cadeia em.ok{color:var(--qz-ok)}
 .qz-cadeia li.naousou{background:var(--qz-duv-fraco);box-shadow:inset 3px 0 0 var(--qz-duv)}
 .qz-cadeia li.naousou .qz-elo-n,.qz-cadeia em.naousou{color:var(--qz-duv)}
+.qz-cadeia em.neutro{color:var(--tinta3);font-weight:500}
 .qz-leitura{font-size:.86em;color:var(--tinta2)}
 .qz-leitura.alerta{color:var(--alerta);font-weight:650}
 .qz-altsol li i.risc{color:var(--tinta3)}
@@ -933,24 +934,30 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
     var riscouCerta = !!(r && r.gabarito && risc.indexOf(r.gabarito) >= 0);
     var daAnalise = !!(a && typeof a.quebrou === "number" && !(a.cadeia && a.cadeia.length));
     var quebrou = daAnalise ? a.quebrou + 1 : (r && !r.correta && alts[r.letra] ? alts[r.letra].elo : null);
-    // s200 (operador: "por que o elo 1 nao esta verde?"): verde e so o que as riscadas provam. O elo
-    // que ele DECLAROU ter e que excluia a letra marcada vira ambar -- "sabia, nao usou" --, estado
-    // que a analise do hub declara em `nao_usou` (0-based na mesma cadeia).
-    var naoUsou = (daAnalise && Array.isArray(a.nao_usou)) ? a.nao_usou.map(function(i){ return i + 1; }) : [];
-    var nota = daAnalise ? "quebrou aqui (análise do hub)" : "a sua letra cai neste elo";
+    // s200 (operador: "os elos nao dependem das alternativas ... as alternativas apontam o raciocinio
+    // que o usuario teve e o que causou a duvida; essa informacao, olhando a cadeia, permite entender
+    // quais elos deram certo"): o ESTADO de cada elo e um diagnostico da cadeia, declarado pela analise
+    // do hub em `estados` (ok | quebrou | nao_usou | nao_avaliado, um por elo). Sem analise, a leitura
+    // pelas letras (riscadas = elo provavelmente ok; letra marcada = elo provavelmente quebrado) e
+    // PROVISORIA e rotulada como tal.
+    var estados = (a && Array.isArray(a.estados) && a.estados.length === cadeia.length) ? a.estados : null;
     box.className = "qz-sol";
     box.innerHTML = (s.pede ? '<p class="qz-pede"><b>Pede:</b> ' + qzEsc(s.pede) + '</p>' : "") +
       (leitura ? '<p class="qz-leitura">Você: ' + qzEsc(leitura) + '</p>' : "") +
       (riscouCerta ? '<p class="qz-leitura alerta">Você riscou a certa (' + qzEsc(r.gabarito) + '): uma crença firme contra a resposta, não descuido.</p>' : "") +
-      '<p class="qz-sec">Cadeia de raciocínio</p><ol class="qz-cadeia">' + cadeia.map(function(e, i){ var qb = (i + 1) === quebrou, ok = !qb && okElo[i + 1];
-        var nu = !qb && naoUsou.indexOf(i + 1) >= 0, exclui = Object.keys(alts).sort().filter(function(l){ return alts[l] && alts[l].elo === i + 1 && risc.indexOf(l) < 0; });
-        return '<li' + (qb ? ' class="quebrou"' : (nu ? ' class="naousou"' : (ok ? ' class="ok"' : ''))) + '><span class="qz-elo-n">Elo ' + (i + 1) + '</span><b>' + qzEsc(e.elo) + '</b><span>' + qzEsc(e.chave) + '</span>' +
-          (qb ? '<em>' + nota + '</em>' : (nu ? '<em class="naousou">você sabia, mas não usou' + (exclui.length ? ': este elo excluía a ' + qzEsc(exclui.join(" e a ")) : '') + '</em>' : (ok ? '<em class="ok">você eliminou ' + qzEsc(ok.join(" e ")) + ' aqui</em>' : ''))) + '</li>'; }).join("") + '</ol>' +
+      '<p class="qz-sec">Cadeia de raciocínio' + (r && !estados && !daAnalise ? ' <small style="text-transform:none;letter-spacing:0;font-weight:500">· leitura provisória pelas suas letras; a análise do hub confirma</small>' : '') + '</p><ol class="qz-cadeia">' + cadeia.map(function(e, i){
+        var ev = okElo[i + 1] ? '<em class="ok">evidência: você riscou ' + qzEsc(okElo[i + 1].join(" e ")) + '</em>' : '';
+        var st = estados ? estados[i] : ((i + 1) === quebrou ? "quebrou" : (okElo[i + 1] ? "ok" : ""));
+        var rot = {ok: estados ? "firme" : "", quebrou: (estados || daAnalise) ? "quebrou aqui (análise do hub)" : "provável quebra: a sua letra cai neste elo",
+                   nao_usou: "você sabia, mas não aplicou na hora de decidir", nao_avaliado: "a questão não chegou a testar este elo"}[st] || "";
+        var cls = {ok: "ok", quebrou: "quebrou", nao_usou: "naousou"}[st] || "";
+        return '<li' + (cls ? ' class="' + cls + '"' : '') + '><span class="qz-elo-n">Elo ' + (i + 1) + '</span><b>' + qzEsc(e.elo) + '</b><span>' + qzEsc(e.chave) + '</span>' +
+          (rot ? '<em class="' + (cls === "quebrou" ? "" : (cls || "neutro")) + '">' + rot + '</em>' : '') + (st === "ok" || !st ? ev : '') + '</li>'; }).join("") + '</ol>' +
       '<p class="qz-sec">Alternativas</p><ul class="qz-altsol">' + Object.keys(alts).sort().map(function(l){ var x = alts[l] || {};
         return '<li class="' + (x.certa ? "certa" : "") + (r && l === r.letra ? " marcou" : "") + '"><b>' + qzEsc(l) + '</b><span>' + (x.certa ? '<i class="ok">certa</i> ' : '<i>falha no elo ' + qzEsc(x.elo) + '</i> ') +
           // s200: a letra MARCADA traz o diagnostico pessoal quando a analise pos a quebra em outro elo
           // (a solucao diz onde a alternativa falha em geral; a analise, onde a cadeia DELE quebrou)
-          (r && l === r.letra && daAnalise && !x.certa && (a.quebrou + 1) !== x.elo ? '<i>· a sua quebrou no elo ' + (a.quebrou + 1) + '</i> ' : '') + (risc.indexOf(l) >= 0 ? '<i class="risc">riscou</i> ' : '') + qzEsc(x.porque) + '</span></li>'; }).join("") + '</ul>' +
+          (r && l === r.letra && daAnalise && !x.certa && (a.quebrou + 1) !== x.elo ? '<i>· a sua cadeia quebrou no elo ' + (a.quebrou + 1) + '</i> ' : '') + (risc.indexOf(l) >= 0 ? '<i class="risc">riscou</i> ' : '') + qzEsc(x.porque) + '</span></li>'; }).join("") + '</ul>' +
       (s.conferir ? '<p class="qz-pede"><b>Conferir:</b> ' + qzEsc(s.conferir) + '</p>' : "") +
       (q.fontes_medhub ? '<p class="qz-fonte">' + qzEsc(q.fontes_medhub) + '</p>' : "");
   }

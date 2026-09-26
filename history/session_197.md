@@ -23,9 +23,16 @@
 
 - **Chrome caiu (travou e deslogou) na t49.** Operador (26/09, ~02h40): *"vamos ficar com o que temos. nao estou conseguindo permitir essa autonomia, para extracao dos dados do emed. como posso prosseguir?"* -> loop do `/banco-emed` reduzido de 5 para 20 min. **Minutos depois:** *"ele voltou. o problema era o acesso apenas para o med.estrategia.com, e nao para todos os sites"* -- o bloqueio era o ESCOPO DE SITES da sessao do Chrome (a Bancada mora em claude.ai), nao a captura em si. Loop de volta a 5 min (job novo); m0006 libera a fila (t49 do zero, lote por pagina <= 20q). Licao: "camada de seguranca barrou a transferencia" no relato do executor = conferir primeiro o escopo de sites da sessao dele.
 
+- `banco-emed: t49 ingerida 21 (novas=21, iguais=37, invalidas=0; amostra t49_20 OK) · registrada 0 · erros analisados 0` -- banco: 58 questoes em 3 listas (t26, t96, t49). Chrome segue a fila.
+
+- `banco-emed: t40 parcial ingerida 20/33 (pagina 1; lista em_curso; novas=20, iguais=58; amostra t40_17 OK) · registrada 0` -- sem confirmacao no Canal ate CAPTURADA.
+
+- `banco-emed: t40 ingerida 33/33 (13 novas nesta rodada; amostra t40_33 OK) · registrada 0` -- **Chrome PAUSADO a pedido do operador** (~02h10 no relogio dele). Balanco da captura: **4 listas, 91 questoes, 0 invalidas** (t26 19 · t96 18 · t49 21 · t40 33); proxima da fila = t100. 4 `emed_id` repetidos entre t26 e t40 (chave do banco e lista+num; dedup fica para a analise). Metodo que funcionou = UI (drawer por questao) + lote JSON por pagina (<= 20). Loop do `/banco-emed` de volta a 20 min (job novo).
+
 ## Custo dos subagentes (usage do harness)
 - Explore (Sonnet, mapa da arquitetura): 101.278 tokens · 53 tool uses · 2 min 47 s.
-- Opus (`emed_banco.py` + testes): 121.982 tokens · 30 tool uses · 10 min 14 s. Rodou um `git stash` por engano e desfez na hora (`git stash list` vazio, re-medido); sem commit, sem `git add`, `ipub.db` intocado.
+- Opus (`emed_banco.py` + testes): 121.982 tokens · 30 tool uses · 10 min 14 s.
+- claude-code-guide (Sonnet, web isolada: modos de aprovacao do Claude no Chrome -- Manual/Auto/Skip, "Always allow actions on this site", triagem automatica do Auto): 49.099 tokens · 6 tool uses · 48 s. Resposta ao operador: voltar para Auto + always-allow nos 2 sites; Skip so se a triagem barrar de novo. Rodou um `git stash` por engano e desfez na hora (`git stash list` vazio, re-medido); sem commit, sem `git add`, `ipub.db` intocado.
 
 ## Decisoes tomadas
 - **O bloco de questoes mora na Bancada (privada), nao no MedHub HUB:** o conteudo do EMED e IP da assinatura (PRD s196) e o hub e link compartilhavel. A Bancada e a 2a superficie fixa, nao "artifact avulso".

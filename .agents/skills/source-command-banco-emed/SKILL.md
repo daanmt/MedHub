@@ -53,7 +53,7 @@ Use this skill when the user asks to run the migrated source command `banco-emed
 | `control/hub` | hub | `instrucao` (quadro verde da aba Capturar), `fase`, `atualizado_em` |
 | `mensagens/<id>` | todos | `de` (`hub` · `claude-in-chrome` · `operador`), `texto`, `enviado_em`, `lido` |
 | `listas/t<tarefa>` | hub semeia; página muda `status` | `tarefa`, `tema`, `area`, `semana`, `seq`, `q_previstas`, `url`, `status` (`pendente` · `em_curso` · `capturada` · `bloqueada` · `resolvida`) |
-| `questoes/<lista>_<num>` | Chrome (formulário ou lote JSON) | `lista`, `tarefa`, `num`, `banca`, `gabarito`, `emed_id`, `estatistica`, `enunciado`, `alternativas`, `solucao`, `forum`, `tags`, `capturado_em`, `executor` |
+| `questoes/<lista>_<num>` | Chrome (formulário ou lote JSON) | `lista`, `tarefa`, `num`, `banca`, `gabarito`, `emed_id`, `estatistica`, `enunciado`, `alternativas`, `solucao`, `forum`, `tags`, `capturado_em`, `executor`. **Escopo público desde a s198:** entram só `banca`, `gabarito`, `emed_id`, `enunciado`, `alternativas`, `tags`; `solucao`, `forum` e `estatistica` ficam vazios (as 4 listas da s197 os têm; não se apagam) |
 | `respostas/<lista>_<num>` | página (aba Resolver) | `lista`, `tarefa`, `num`, `letra`, `confianca` (`solida` · `duvida` · `chute`), `correta`, `gabarito`, `racional`, `elo`, `tempo_s`, `flag`, `respondido_em` |
 | `analises/<lista>_<num>` | hub (após `/analisar-questao`); página grava o veredito | `lista`, `num`, `pedia`, `cadeia[]`, `quebrou` (índice 0-based na cadeia), `comporta`, `armadilha`, `veredito_hub`, `cards[]`, `questao_erro_id`; `veredito_operador` (`concordo` · `em_parte` · `discordo`), `nota_operador`, `veredito_em` |
 

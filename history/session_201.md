@@ -33,6 +33,10 @@
 ## Custo dos subagentes
 Nenhum subagente nesta sessão (tudo no principal).
 
+## Fechamento (~16h40, ordem do /ai-eng)
+- F137 spec GO + 3 ALTERA: parte 1 feita (`backup_db.py --fixar`, `FIXADOS.json` com sha256; 1o fixado `ipub_fixado_20260926_162622_*`, sha256 f03b9450...); F137 volta a PARCIAL. A decisão (e) passou a "apagado SEM ponto de retorno local".
+- Amostra EMED (`idoso pt1/pt2.pdf`, 31 q) SEM gabarito -> nenhum parser escrito; decisões (a)/(b) do /ai-eng viram o item 0 da s202.
+
 ## Pendências
 - **Estudo:** o simulado da vez é a **UERJ 2021** (60q, ~3 h), agora na aba Listas -> Simulados. Listas da semana 2: t49 Hérnias, t40 DMG (v2 no hub).
 - Nota de UX para o operador: a leitura diz "ficou entre A e C e D" com 3 letras.

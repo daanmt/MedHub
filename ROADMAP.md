@@ -142,6 +142,13 @@ A fundação está pronta (agente LLM + workflows portáveis + `ipub.db` como SS
 - Template de delegação a subagente ganha 3 linhas fixas: D(x) = papel+objetivo+evidência-que-fecha; COUNT-ASSERT/`--dry-run` em toda operação mutadora; persistência incremental (grava a cada item, não só no fim).
 - Sessão que declara "feito" sem ato verificável (commit/teste/contagem re-executada) vira "não-demonstração" no rito de fechamento, não precedente.
 
+**Reconciliação lida (s202, 26/09/2026 -- pedido (ii) do `/ai-eng`; 1 linha por ato, conferido no repo, não de memória):**
+- Triplas `is_a`/`alias_de` na taxonomia -> **não entrou**. O que existe é vocabulário plano de área (`core/areas.json`, F89: os writers recusam área fora dele); nenhuma tripla tema->área no gerador de cards.
+- `fonte_sha` nos resumos -> **não entrou nos resumos**; o padrão entrou só no cronograma (`core/cronograma/grade.json` `_meta.fonte_sha256`, conferido por `tools/cronograma.py`).
+- Memória `feedback_*` com `ancora` + `status` e shuffle-test -> **não entrou** (0 memórias com os campos; sem shuffle-test). **Superado em parte** pelo `AGENTE.md §10.5`: regra que carrega peso mora no portador do repo; a memória é ponteiro + porquê, com lápide ⚰️ quando revogada.
+- 3 linhas fixas no brief de subagente -> **entrou** (`/analisar-questao §0` cláusula 8: `D(x)` papel · objetivo · evidência que fecha; count-assert + dry-run em operação mutadora; gravação incremental; régua F93, s175/s176).
+- "Feito" sem ato verificável = não-demonstração -> **entrou com outra forma, sem o nome**: cláusula 7 do `§0` (número do filho só vale com o comando que o produziu), F136 (o número da suíte no HANDOFF é o medido no pre-commit) e o report ao `/ai-eng` em PROVADO/NÃO PROVA com o comando.
+
 ---
 
 ## Anti-goals

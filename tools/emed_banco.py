@@ -415,7 +415,8 @@ def texto_leitura(m, confianca):
     if m["riscadas"]:
         partes.append("riscou " + ", ".join(m["riscadas"]))
     if confianca == "duvida" and 1 < len(m["restantes"]) <= 3:
-        partes.append("ficou entre " + " e ".join(m["restantes"]))
+        rest = m["restantes"]
+        partes.append("ficou entre " + (", ".join(rest[:-1]) + " e " + rest[-1]))
     if m["elos_ok"]:
         partes.append("executou o(s) elo(s) " + ", ".join(str(k) for k in m["elos_ok"]))
     if m["elo_letra"]:

@@ -404,6 +404,8 @@ def test_riscadas_gravam_e_viram_leitura_metacognitiva(tmp_path, monkeypatch, ca
     assert m["riscadas"] == ["A", "D"] and m["restantes"] == ["B", "C"]
     assert m["elos_ok"] == [1, 2] and m["elo_letra"] == 2 and not m["riscou_certa"]
     assert "ficou entre B e C" in emed_banco.texto_leitura(m, "duvida")
+    # s202 (nota de UX da s201): 3 letras = lista em portugues, nao "A e C e D"
+    assert "ficou entre A, C e D" in emed_banco.texto_leitura(dict(m, restantes=["A", "C", "D"]), "duvida")
     m2 = emed_banco.leitura_metacognitiva({"letra": "C", "gabarito": "B", "riscadas": "B"},
                                           db.emed_listar_solucoes("t26")[0]["solucao"])
     assert m2["riscou_certa"] is True

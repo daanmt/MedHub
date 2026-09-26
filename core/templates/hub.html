@@ -972,7 +972,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
     var risc = (r && r.riscadas) || [], okElo = {};
     risc.forEach(function(l){ var x = alts[l]; if(x && !x.certa && x.elo){ (okElo[x.elo] = okElo[x.elo] || []).push(l); } });
     var rest = Object.keys(alts).sort().filter(function(l){ return risc.indexOf(l) < 0; });
-    var leitura = r ? [risc.length ? "riscou " + risc.join(", ") : "", (r.confianca === "duvida" && rest.length > 1 && rest.length <= 3) ? "ficou entre " + rest.join(" e ") : "", "marcou " + r.letra].filter(Boolean).join(" · ") : "";
+    var leitura = r ? [risc.length ? "riscou " + risc.join(", ") : "", (r.confianca === "duvida" && rest.length > 1 && rest.length <= 3) ? "ficou entre " + rest.slice(0, -1).join(", ") + " e " + rest[rest.length - 1] : "", "marcou " + r.letra].filter(Boolean).join(" · ") : "";
     var riscouCerta = !!(r && r.gabarito && risc.indexOf(r.gabarito) >= 0);
     var daAnalise = !!(a && typeof a.quebrou === "number" && !(a.cadeia && a.cadeia.length));
     var quebrou = daAnalise ? a.quebrou + 1 : (r && !r.correta && alts[r.letra] ? alts[r.letra].elo : null);

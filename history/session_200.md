@@ -55,3 +55,22 @@ A v1 das 4 listas (642k) foi superada no mesmo dia pela v2 (440k): o formato dev
 - Herdadas da s199: captura PAUSADA (incidente do clique na t65); gabaritos suspeitos t100 Q8, t68 Q13, t1 Q21, t65 Q18.
 
 banco-emed: t96 registrada 18 (13 acertos) · t26 registrada 19 (17) · erros analisados 7 (+3 incertezas) · Solução v2 em 91 questões
+
+---
+
+## Adendo (~14h -> 15h) -- racional da t96 e o modelo "estado por elo"
+- **Racional declarado da t96 (as 5):** Q8 "não sabia se a criança com 5 anos sabia cuspir" (elo 2); Q12 "as infecções me pareciam normais ... fiquei perdido e chutei" (elo 1); Q14 "achava que suco podia < 1 ano, apenas se não coado" (elo 2); Q15 "elo 1 acertei, quebrei no 3"; Q17 "elo 1 acertei, quebrei no 2" + chip `li_errado`. Análises revistas no hub; cards #1751/#1753/#1755 reforjados para o elo declarado (`recurate_cards --apply`, backup `ipub_backup_20260926_140307.db`) e #1756 novo no elo 1 da Q12 (`insert_card_extra`). Vereditos dele: 6 concordo, 1 em parte (Q17), 1 discordo (Q8 -> revisto).
+- **Letra marcada x análise (`235fde0`):** a linha da letra marcada traz "a sua cadeia quebrou no elo N" quando a análise diverge do elo em que a alternativa falha em geral.
+- **Correção de MODELO do operador (`3a4540a`):** *"os elos não dependem das alternativas. o elo depende da questão e do que é necessário para resolvê-la. as alternativas apenas servem para apontar para o raciocínio que o usuário teve e o que causou a dúvida nele. essa informação, olhando para a cadeia de raciocínio lógico, é que permite entender quais elos deram certo e quais não."* -> a análise declara `estados` (um por elo: `ok` · `quebrou` · `nao_usou` · `nao_avaliado`); letra, riscadas, confiança e racional são EVIDÊNCIA; a página pinta pelo diagnóstico e, sem análise, rotula a leitura pelas letras como PROVISÓRIA. O estado intermediário `nao_usou` (âmbar, `27b41f2`) nasceu da pergunta dele "por que o elo 1 não está verde?" e ficou dentro de `estados`. As 7 análises ganharam `estados`.
+- **Ponto em aberto com o operador:** t96 Q8 elo 1 ficou `nao_usou` contra o "acertei o 1" declarado (a D, que o elo 1 exclui, foi a letra marcada). Dito a ele; o veredito dele decide.
+
+## Autoauditoria (para o /ai-eng)
+1. **Solução v1 superada no mesmo dia (642k tokens):** a s199 desenhou a Solução em 4 linhas sem partir do contrato da autópsia (`/analisar-questao §3.3`), que já exigia a cadeia com o elo marcado. O formato certo existia no repo.
+2. **Gate-miss -- riscadas descartadas:** a página gravava `riscadas` desde a s197 e `emed_upsert_respostas` as jogava fora (sem coluna e sem `extras`); nenhum teste pegou. Corrigido com teste -- escrito JUNTO do fix, não antes.
+3. **Latente -- `_emed_ler` engolia coluna ausente em `[]`:** um SELECT com coluna nova em banco não migrado devolveria zero soluções e o `--exportar` semearia o hub sem solução. Corrigido (`NULL AS col`); SEM teste dedicado ainda.
+4. **Sem writer para corrigir linha de erro:** `questoes_erros.o_que_faltou` do 1092 (t96 Q8) ficou com a inferência pré-racional.
+5. **Objetivo sem gate:** `emed_solucoes.objetivo` aceita qualquer texto; a lista fechada vive em `docs/SOLUCAO-MEDHUB-BRIEF.md`.
+6. **Render da cadeia sem teste automatizado:** `qzSolucao` conferido por harness node ad hoc (scratchpad), não por teste do repo.
+7. **Amostra a olho:** as 81 soluções v2 dos subagentes passaram por checagem de FORMA (script); conteúdo lido a olho só em t26 Q15 e t96 Q8 (as renderizadas) e nas 10 que eu mesmo cunhei.
+8. **`estados` só na skill `/banco-emed`:** a autópsia de simulado (`/analisar-questao §3.3`) ainda descreve "cadeia com o elo que quebrou marcado" -- um elo, sem estado por elo.
+9. **CLAUSULA_ORFA_SUBIU (134 > base 127):** já estava em 135 no 1o `auto_check` da sessão, antes das minhas edições de skill -- herdado.

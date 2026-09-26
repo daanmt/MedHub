@@ -31,7 +31,7 @@
 
 ## Ultima sessao -- s200 (2026-09-26, sabado) -- listas resolvidas no hub, Solucao em cadeia de elos, objetivo e riscadas
 
-Detalhe e custo em `history/session_200.md`. Commits `2e56694` (banca/tema, mediana), `da62e95` (cadeia v2, objetivo, riscadas, aba Listas, semanas), `e1843ab` (Elo N explicito, botao contextual). Operador aprovou a cadeia e os objetivos ("era exatamente isso"; "o refino na cadeia ... fundamental para refinar inclusive os cards"). Custo: 8 subagentes, ~1,15M tokens; a v1 das solucoes (642k) foi superada pela v2 (440k) no mesmo dia.
+Detalhe e custo em `history/session_200.md`. Commits `2e56694` (banca/tema, mediana), `da62e95` (cadeia v2, objetivo, riscadas, aba Listas, semanas), `e1843ab` (Elo N explicito, botao contextual), `3a4540a` (**estado de cada elo = diagnostico**, `analises.estados`: ok/quebrou/nao_usou/nao_avaliado; letras = evidencia -- correcao de modelo DELE). Racional da t96 fechado; report ao /ai-eng enviado no fechamento (autoauditoria em `history/session_200.md`). Operador aprovou a cadeia e os objetivos ("era exatamente isso"; "o refino na cadeia ... fundamental para refinar inclusive os cards"). Custo: 8 subagentes, ~1,15M tokens; a v1 das solucoes (642k) foi superada pela v2 (440k) no mesmo dia.
 
 ## Fronteiras DECLARADAS (nao ler verde de gate como limpeza)
 

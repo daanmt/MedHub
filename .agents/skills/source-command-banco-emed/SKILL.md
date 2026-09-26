@@ -25,11 +25,11 @@ Use this skill when the user asks to run the migrated source command `banco-emed
 > 26/09/2026 (s197): o operador decidiu -- "não quero a bancada. gostei da interface. quero ela no artifact do
 > medhub" -- e o bloco de questões passou a ser a **aba Questões do MedHub HUB** (`core/templates/hub.html`).*
 >
-> **Brief do executor** (sessão nova do Claude no Chrome): o hub gera na abertura da sessão de captura e o operador
-> cola na 1a mensagem dele -- v2 na s198 (método UI + lote por página <= 20, o que o classificador da sessão dele
-> barra e o que passou, formato do relatório). Gravar o brief em arquivo do repo foi negado pelo classificador do
-> modo automático na s198; ele vive no chat e em `control/hub.instrucao`. Pré-voo do operador: escopo de sites da
-> sessão do Chrome = todos (a Bancada mora em claude.ai).
+> **Brief do executor** (colar no chat do Claude no Chrome): [`docs/MISSAO-CHROME-EMED.md`](../../docs/MISSAO-CHROME-EMED.md)
+> -- v3 na s198 = **ESCOPO PÚBLICO**: só enunciado, alternativas, gabarito, banca, id e tags (questões de editais
+> públicos); comentário do professor, fórum e estatística FICAM FORA (decisão do operador em 26/09/2026, depois de o
+> executor declinar o escopo integral em `cic-0014`). A instrução vigente mora em `control/hub.instrucao`. Pré-voo do
+> operador: acesso da extensão a `med.estrategia.com` e `claude.ai` (a Bancada mora em claude.ai).
 >
 > 🔴 **Onde cada coisa mora desde a s197:** captura (`questoes/*`, `listas/*`, `mensagens`) = db da **Bancada**;
 > estudo (`listas/*`, `questoes/*`, `respostas/*`, `analises/*`) = db do **HUB** (regras `read/write admin`, porque o

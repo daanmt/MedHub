@@ -589,6 +589,32 @@ details.qz-bloco .qz-texto.forum{color:var(--tinta2)}
   var ROT_QZ = {pendente:"pendente", em_curso:"em curso", capturada:"pronta", resolvendo:"em curso", resolvida:"resolvida"};
   function qzEsc(s){ return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
   function qzAgora(){ return new Date().toISOString(); }
+  // s200 (pedido do operador): a linha de cima da questao mostra so banca + ano e area > subtema
+  var QZ_SIGLA = [[/unicamp/i, "UNICAMP"], [/medicina do abc/i, "FMABC"], [/santo amaro/i, "HSA Guarujá"]];
+  function qzBanca(s){
+    // "RJ - Universidade do Estado do Rio de Janeiro - UERJ (HUPE) - 2021" -> "UERJ 2021"
+    s = String(s || "").replace(/\u00a0/g, " ").replace(/\s+/g, " ").trim();
+    var anos = s.match(/\b(?:19|20)\d{2}\b/g), ano = anos ? anos[anos.length - 1] : "";
+    var base = ano ? s.slice(0, s.lastIndexOf(ano)) : s, sigla = "";
+    var usp = base.match(/USP\s*-\s*(RP|SP)\b/);
+    if(usp){ sigla = "USP-" + usp[1]; }
+    QZ_SIGLA.some(function(a){ if(!sigla && a[0].test(base)){ sigla = a[1]; } return !!sigla; });
+    if(!sigla){ base.split(/\s+-\s+|[(),\/]/).some(function(c){ c = c.trim();
+      if(c.length >= 3 && c.length <= 10 && /^[A-ZÀ-Ú0-9][A-ZÀ-Ú0-9+\-]*( [A-ZÀ-Ú]{2,})?$/.test(c)){ sigla = c; } return !!sigla; }); }
+    if(!sigla){ sigla = base.replace(/^[A-Z]{2} - /, "").replace(/[\s,\-]+$/, ""); if(sigla.length > 28){ sigla = sigla.slice(0, 27) + "…"; } }
+    return (sigla + " " + ano).trim();
+  }
+  function qzAssunto(tags, temaLista){
+    // "Pediatria ; Pediatria > Puericultura > Geral > Higiene oral" -> "Pediatria › Puericultura"
+    var caminhos = String(tags || "").split(";").map(function(p){ return p.split(">").map(function(x){ return x.trim(); }).filter(Boolean); }).filter(function(p){ return p.length; });
+    var c = caminhos.filter(function(p){ return p.length >= 2; })[0];
+    if(!c){ c = caminhos.map(function(p){ return p[0]; }); } // captura antiga: niveis separados por ";"
+    if(!c.length){ return ""; }
+    var sub = c[1] || "";
+    // subtema igual ao tema da lista nao informa nada: desce um nivel
+    if(sub && c[2] && sub.toLowerCase() === String(temaLista || "").trim().toLowerCase()){ sub = c[2]; }
+    return sub ? c[0] + " › " + sub : c[0];
+  }
   function qzLs(k, v){ try{ if(v === undefined){ return JSON.parse(localStorage.getItem(k) || "null"); } localStorage.setItem(k, JSON.stringify(v)); }catch(e){ return null; } }
   function qzChave(){ return "medhub.respostas." + QZ.lista; }
 
@@ -670,7 +696,9 @@ details.qz-bloco .qz-texto.forum{color:var(--tinta2)}
     QZ.pos = i; QZ.letra = null; QZ.conf = null; var q = QZ.qs[i];
     $("qz-questao").hidden = false; $("qz-fim").hidden = true; $("qz-antes").hidden = false; $("qz-depois").hidden = true;
     $("qz-pos").textContent = "Questão " + q.num + " · " + (i + 1) + " de " + QZ.qs.length;
-    $("qz-banca").textContent = q.banca || ""; $("qz-tags").textContent = q.tags || "";
+    var lq = QZ.listas.filter(function(x){ return x._id === QZ.lista; })[0] || {};
+    $("qz-banca").textContent = qzBanca(q.banca); $("qz-banca").title = q.banca || "";
+    $("qz-tags").textContent = qzAssunto(q.tags, lq.tema);
     $("qz-enun").textContent = q.enunciado || "";
     var alts = qzAlts(q.alternativas);
     // cada alternativa = escolher (corpo) + riscar (o X, como a tesoura do EMED); riscada nao e marcada
@@ -789,8 +817,10 @@ details.qz-bloco .qz-texto.forum{color:var(--tinta2)}
     var ac = rs.filter(function(r){ return r.correta; }).length, sol = rs.filter(function(r){ return r.confianca === "solida"; }).length,
         duv = rs.filter(function(r){ return r.confianca === "duvida"; }).length, chu = rs.filter(function(r){ return r.confianca === "chute"; }).length,
         solC = rs.filter(function(r){ return r.correta && r.confianca === "solida"; }).length,
-        temp = rs.length ? Math.round(rs.reduce(function(a, r){ return a + (r.tempo_s || 0); }, 0) / rs.length) : 0;
-    $("qz-tiles").innerHTML = [["Acertos", ac + "/" + rs.length], ["Sólidas certas", solC + "/" + sol], ["Dúvidas", duv], ["Chutes", chu], ["Tempo médio", temp + "s"]].map(function(t){ return '<div><div class="fim-num">' + qzEsc(t[1]) + '</div><div class="fim-rot">' + qzEsc(t[0]) + '</div></div>'; }).join("");
+        // mediana, nao media: questao deixada aberta (pausa de horas) nao contamina o ritmo (s200: t96 Q12 = 35.642s)
+        ts = rs.map(function(r){ return r.tempo_s || 0; }).sort(function(a, b){ return a - b; }),
+        temp = ts.length ? Math.round(ts.length % 2 ? ts[(ts.length - 1) / 2] : (ts[ts.length / 2 - 1] + ts[ts.length / 2]) / 2) : 0;
+    $("qz-tiles").innerHTML = [["Acertos", ac + "/" + rs.length], ["Sólidas certas", solC + "/" + sol], ["Dúvidas", duv], ["Chutes", chu], ["Tempo por questão", temp + "s"]].map(function(t){ return '<div><div class="fim-num">' + qzEsc(t[1]) + '</div><div class="fim-rot">' + qzEsc(t[0]) + '</div></div>'; }).join("");
     var err = rs.filter(function(r){ return !r.correta; }).map(function(r){ return r.num; }), ch = rs.filter(function(r){ return r.correta && r.confianca === "chute"; }).map(function(r){ return r.num; });
     $("qz-erradas").textContent = (err.length ? "Erradas: " + err.join(", ") + ". " : "Nenhuma errada. ") + (ch.length ? "Chutes certos (contam como incerteza): " + ch.join(", ") + "." : "");
     // revisao questao a questao: toque abre gabarito, resolucao, racional/elo e a analise do hub

@@ -42,6 +42,8 @@ Captura ~16-22k tokens por questao, 10-20 chamadas por questao (o modal de soluc
 ## Incidente (t65)
 - Durante a captura da t65 um clique por coordenada (painel de solucao fechando) marcou uma alternativa na conta do operador 2x; o subagente desmarcou na hora e o "Responder" nunca foi acionado. Captura PAUSADA ate ele decidir (regra dura no brief ou PDF com gabarito). Custo t65: 702.073 tokens · 600 tools · 85,8 min. t1: 523.992 · 396 · 45,3 min (47 q; Q23/24/46 discursivas); solucao t1: 146.682 · 21 · 8,2 min.
 
+- Solucao t65: 151.192 · 10 · 5,8 min (6 divergentes: 4 por figura, Q29 banca, Q18 suspeita de captura). **Hub ao fechar: 12 listas (t26 t96 t40 t49 t68 t100 t3 t61 t651 t141 t1 t65), 504/5000 docs.**
+
 ## Decisoes tomadas
 - **Claude Code dirigindo o Chrome = caminho padrao da captura** (subagente isolado por lista, escopo publico, JSON local). A extensao com painel proprio sai do fluxo.
 - **API interna do EMED: nao** (credencial do navegador + contorno da camada que recusou + risco da conta). Operador concordou.

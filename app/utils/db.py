@@ -2462,7 +2462,7 @@ _CHAVES_DOC_EMED = frozenset(CAMPOS_HASH_EMED) | {"lista", "tarefa", "num", "cap
 #: Chaves que o `--exportar` ACRESCENTA ao doc a partir de `emed_solucoes` (s199). Não são
 #: captura: ficam fora de `extras` e do `hash`, senão o doc re-ingerido contaria como
 #: `atualizada` e a solução do hub viraria conteúdo da questão.
-CHAVES_SOLUCAO_DOC = frozenset({"solucao_medhub", "divergente", "fontes_medhub"})
+CHAVES_SOLUCAO_DOC = frozenset({"solucao_medhub", "divergente", "fontes_medhub", "objetivo"})
 
 CONFIANCAS_EMED = ("solida", "duvida", "chute")
 
@@ -2473,10 +2473,16 @@ _COLUNAS_EMED_Q = ("id", "lista", "tarefa_id", "num", "emed_id", "banca", "gabar
 
 _COLUNAS_EMED_R = ("id", "lista", "tarefa_id", "num", "letra", "confianca", "correta",
                    "gabarito", "racional", "elo", "tempo_s", "flag", "respondido_em",
-                   "registrado_em", "questao_erro_id")
+                   "registrado_em", "questao_erro_id", "riscadas")
 
-_COLUNAS_EMED_S = ("id", "lista", "num", "solucao", "divergente", "fontes", "hash",
+_COLUNAS_EMED_S = ("id", "lista", "num", "solucao", "divergente", "fontes", "objetivo", "hash",
                    "cunhado_em", "atualizado_em")
+
+#: s200 (pedido do operador): a Solução v2 é a CADEIA de elos -- `{versao: 2, pede, cadeia:
+#: [{elo, chave}], alternativas: {LETRA: {certa|elo, porque}}, conferir}` --, gravada como JSON
+#: canônico em `solucao`. Cada alternativa errada aponta o elo (1-based) cuja falha leva a ela:
+#: é o que deixa a página marcar ONDE a cadeia do aluno quebrou. `objetivo` (o que a questão
+#: cobra, lista fechada por tema) tem coluna própria: é a chave do mapa de fragilidade.
 
 
 def _ensure_emed_tables(conn):
@@ -2541,6 +2547,14 @@ def _ensure_emed_tables(conn):
             UNIQUE (lista, num)
         )
     ''')
+    # s200: `objetivo` chegou depois da tabela -- ALTER idempotente (padrão do revlog)
+    if "objetivo" not in {r[1] for r in conn.execute("PRAGMA table_info(emed_solucoes)")}:
+        conn.execute("ALTER TABLE emed_solucoes ADD COLUMN objetivo TEXT")
+    # s200 (pedido do operador): as alternativas RISCADAS antes de marcar são dado
+    # metacognitivo -- a letra riscada é o elo que ele executou; as que sobraram numa
+    # "dúvida" são o par em que hesitou. A página gravava; o registro descartava.
+    if "riscadas" not in {r[1] for r in conn.execute("PRAGMA table_info(emed_respostas)")}:
+        conn.execute("ALTER TABLE emed_respostas ADD COLUMN riscadas TEXT")
 
 
 def _txt(valor):
@@ -2607,8 +2621,16 @@ def emed_correta(resp, gabarito_banco=None):
 
 
 def _emed_ler(conn, tabela, colunas, lista=None):
-    """Leitura tolerante: tabela ausente devolve [] sem rodar DDL."""
-    sql = f"SELECT {', '.join(colunas)} FROM {tabela}"
+    """Leitura tolerante: tabela ausente devolve [] sem rodar DDL. Coluna que o banco ainda
+    não tem (DDL nova, banco não migrado) sai como None -- nunca derruba a leitura inteira,
+    que era o que um SELECT com a coluna nova faria (e o `except` abaixo engoliria em [])."""
+    try:
+        existentes = {r[1] for r in conn.execute(f"PRAGMA table_info({tabela})")}
+    except sqlite3.OperationalError:
+        existentes = set()
+    colunas_sql = ([c if c in existentes else f"NULL AS {c}" for c in colunas]
+                   if existentes else list(colunas))
+    sql = f"SELECT {', '.join(colunas_sql)} FROM {tabela}"
     params = ()
     if lista:
         sql += " WHERE lista = ?"
@@ -2703,6 +2725,15 @@ def emed_upsert_questoes(rows, aplicar=True):
         conn.close()
 
 
+def riscadas_norm(valor):
+    """Riscadas da página (lista de letras) -> texto canônico "A,C" (ordenado, sem repetição,
+    maiúsculas); vazio/ausente -> "". Aceita também o texto já canônico. PURA."""
+    if valor is None:
+        return ""
+    itens = valor.split(",") if isinstance(valor, str) else list(valor)
+    return ",".join(sorted({str(x).strip().upper() for x in itens if str(x).strip()}))
+
+
 def emed_upsert_respostas(rows, aplicar=True):
     """Upsert de `emed_respostas` por `(lista, num)`. Devolve
     `{novas, atualizadas, iguais, invalidas}`.
@@ -2728,6 +2759,7 @@ def emed_upsert_respostas(rows, aplicar=True):
             "letra": _txt(doc.get("letra")).strip().upper(), "confianca": conf,
             "gabarito": _txt(doc.get("gabarito")).strip().upper() or None,
             "racional": _txt(doc.get("racional")), "elo": _txt(doc.get("elo")),
+            "riscadas": riscadas_norm(doc.get("riscadas")),
             "tempo_s": _int_ou_none(doc.get("tempo_s")),
             "flag": 1 if flag is True or str(flag).strip().lower() in ("1", "true") else 0,
             "respondido_em": str(doc["respondido_em"]).strip()})
@@ -2741,7 +2773,7 @@ def emed_upsert_respostas(rows, aplicar=True):
         gabaritos = {(r["lista"], r["num"]): r["gabarito"]
                      for r in _emed_ler(conn, "emed_questoes", _COLUNAS_EMED_Q)}
         campos = ("letra", "confianca", "correta", "gabarito", "racional", "elo",
-                  "tempo_s", "flag", "respondido_em")
+                  "tempo_s", "flag", "respondido_em", "riscadas")
         cont = {"novas": 0, "atualizadas": 0, "iguais": 0, "invalidas": invalidas}
         ts = carimbo()
         for linha in preparadas:
@@ -2764,8 +2796,8 @@ def emed_upsert_respostas(rows, aplicar=True):
             conn.execute('''
                 INSERT INTO emed_respostas
                     (lista, tarefa_id, num, letra, confianca, correta, gabarito, racional,
-                     elo, tempo_s, flag, respondido_em, registrado_em)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                     elo, tempo_s, flag, respondido_em, registrado_em, riscadas)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ON CONFLICT (lista, num) DO UPDATE SET
                     tarefa_id     = COALESCE(excluded.tarefa_id, emed_respostas.tarefa_id),
                     letra         = excluded.letra,
@@ -2777,11 +2809,12 @@ def emed_upsert_respostas(rows, aplicar=True):
                     tempo_s       = excluded.tempo_s,
                     flag          = excluded.flag,
                     respondido_em = excluded.respondido_em,
-                    registrado_em = excluded.registrado_em
+                    registrado_em = excluded.registrado_em,
+                    riscadas      = excluded.riscadas
             ''', (linha["lista"], linha["tarefa_id"], linha["num"], linha["letra"],
                   linha["confianca"], linha["correta"], linha["gabarito"],
                   linha["racional"], linha["elo"], linha["tempo_s"], linha["flag"],
-                  linha["respondido_em"], ts))
+                  linha["respondido_em"], ts, linha["riscadas"]))
         if aplicar:
             conn.commit()
         return cont
@@ -2833,59 +2866,117 @@ def _bool01(valor):
     return 1 if valor is True or str(valor).strip().lower() in ("1", "true", "sim") else 0
 
 
+def solucao_v2_problemas(doc):
+    """Problemas de forma de uma Solução v2 (lista vazia = ok). PURA.
+
+    `cadeia` = 1+ elos `{elo, chave}` com texto; `alternativas` = letra -> `{certa: true}` ou
+    `{elo: k}` com 1 <= k <= len(cadeia), sempre com `porque`; exatamente uma certa; `pede`."""
+    cadeia = doc.get("cadeia")
+    if not isinstance(cadeia, list) or not cadeia:
+        return ["cadeia vazia"]
+    probs = [f"elo {i} sem elo/chave" for i, e in enumerate(cadeia, 1)
+             if not isinstance(e, dict) or _vazio(e.get("elo")) or _vazio(e.get("chave"))]
+    alts = doc.get("alternativas")
+    if not isinstance(alts, dict) or not alts:
+        return probs + ["alternativas vazias"]
+    certas = [k for k, v in alts.items() if isinstance(v, dict) and v.get("certa") is True]
+    if len(certas) != 1:
+        probs.append(f"{len(certas)} alternativas certas (esperado 1)")
+    for letra, v in alts.items():
+        if not isinstance(v, dict) or _vazio(v.get("porque")):
+            probs.append(f"alternativa {letra} sem porque")
+        elif v.get("certa") is not True:
+            k = _int_ou_none(v.get("elo"))
+            if k is None or not 1 <= k <= len(cadeia):
+                probs.append(f"alternativa {letra} aponta elo fora da cadeia")
+    if _vazio(doc.get("pede")):
+        probs.append("pede vazio")
+    return probs
+
+
+def solucao_estruturada(texto):
+    """A Solução v2 como dict (`versao` 2), ou None se o texto é a v1 (prosa). PURA."""
+    import json as _json
+    t = (texto or "").lstrip()
+    if not t.startswith("{"):
+        return None
+    try:
+        d = _json.loads(t)
+    except ValueError:
+        return None
+    return d if isinstance(d, dict) and d.get("versao") == 2 else None
+
+
 def emed_upsert_solucoes(rows, aplicar=True):
     """Upsert de `emed_solucoes` por `(lista, num)` (s199). Writer único da tabela.
 
     Devolve `{novas, atualizadas, iguais, invalidas}`; `hash` = texto + divergente +
-    fontes. Obrigatórios: `lista`, `num`, `solucao` não-vazia. `aplicar=False` mede
-    pelo mesmo caminho e não roda DDL.
+    fontes + objetivo. Obrigatórios: `lista`, `num` e a solução -- `solucao` não-vazia (v1,
+    texto) ou a cadeia v2 (s200: `cadeia` + `alternativas` + `pede`, validadas por
+    `solucao_v2_problemas` e gravadas como JSON canônico em `solucao`). `objetivo` AUSENTE do
+    doc preserva o do banco (re-ingerir um arquivo v1 antigo não apaga o objetivo).
+    `aplicar=False` mede pelo mesmo caminho e não roda DDL.
     """
     import hashlib
     import json as _json
     invalidas, preparadas = [], []
     for doc in rows:
         num = _int_ou_none(doc.get("num"))
-        if _vazio(doc.get("lista")) or _vazio(doc.get("solucao")) or num is None:
+        if doc.get("cadeia") is not None:
+            if solucao_v2_problemas(doc):
+                invalidas.append(doc.get("_doc_id"))
+                continue
+            texto = _json.dumps({"versao": 2, "pede": _txt(doc.get("pede")).strip(),
+                                 "cadeia": doc["cadeia"], "alternativas": doc["alternativas"],
+                                 "conferir": _txt(doc.get("conferir")).strip()},
+                                sort_keys=True, ensure_ascii=False)
+        else:
+            texto = _txt(doc.get("solucao")).strip()
+        if _vazio(doc.get("lista")) or not texto or num is None:
             invalidas.append(doc.get("_doc_id"))
             continue
-        linha = {"lista": str(doc["lista"]).strip(), "num": num,
-                 "solucao": _txt(doc.get("solucao")).strip(),
-                 "divergente": _bool01(doc.get("divergente")),
-                 "fontes": _txt(doc.get("fontes")).strip()}
-        canon = _json.dumps({k: linha[k] for k in ("solucao", "divergente", "fontes")},
-                            sort_keys=True, ensure_ascii=False)
-        linha["hash"] = hashlib.sha1(canon.encode("utf-8")).hexdigest()
-        preparadas.append(linha)
+        preparadas.append({"lista": str(doc["lista"]).strip(), "num": num, "solucao": texto,
+                           "divergente": _bool01(doc.get("divergente")),
+                           "fontes": _txt(doc.get("fontes")).strip(),
+                           "objetivo": (_txt(doc.get("objetivo")).strip()
+                                        if "objetivo" in doc else None)})
 
     conn = get_connection()
     try:
         if aplicar:
             _ensure_emed_tables(conn)
-        banco = {(r["lista"], r["num"]): r["hash"]
+        banco = {(r["lista"], r["num"]): r
                  for r in _emed_ler(conn, "emed_solucoes", _COLUNAS_EMED_S)}
         cont = {"novas": 0, "atualizadas": 0, "iguais": 0, "invalidas": invalidas}
         ts = carimbo()
         for linha in preparadas:
             chave = (linha["lista"], linha["num"])
-            if chave not in banco:
+            atual = banco.get(chave)
+            if linha["objetivo"] is None:
+                linha["objetivo"] = (atual or {}).get("objetivo") or ""
+            canon = _json.dumps({k: linha[k] for k in ("solucao", "divergente", "fontes",
+                                                        "objetivo")},
+                                sort_keys=True, ensure_ascii=False)
+            linha["hash"] = hashlib.sha1(canon.encode("utf-8")).hexdigest()
+            if atual is None:
                 cont["novas"] += 1
-            elif banco[chave] != linha["hash"]:
+            elif atual["hash"] != linha["hash"]:
                 cont["atualizadas"] += 1
             else:
                 cont["iguais"] += 1
                 continue
-            banco[chave] = linha["hash"]
+            banco[chave] = dict(linha)
             if aplicar:
                 conn.execute('''
-                    INSERT INTO emed_solucoes (lista, num, solucao, divergente, fontes, hash,
-                                               cunhado_em, atualizado_em)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                    INSERT INTO emed_solucoes (lista, num, solucao, divergente, fontes, objetivo,
+                                               hash, cunhado_em, atualizado_em)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
                     ON CONFLICT (lista, num) DO UPDATE SET
                         solucao = excluded.solucao, divergente = excluded.divergente,
-                        fontes = excluded.fontes, hash = excluded.hash,
-                        atualizado_em = excluded.atualizado_em
+                        fontes = excluded.fontes, objetivo = excluded.objetivo,
+                        hash = excluded.hash, atualizado_em = excluded.atualizado_em
                 ''', (linha["lista"], linha["num"], linha["solucao"], linha["divergente"],
-                      linha["fontes"], linha["hash"], ts, ts))
+                      linha["fontes"], linha["objetivo"], linha["hash"], ts, ts))
         if aplicar:
             conn.commit()
         return cont

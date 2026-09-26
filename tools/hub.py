@@ -114,6 +114,7 @@ LUGARES_HUB = (
     ("player-js", "<!-- @hub:player-js -->"),
     ("aulas", "<!-- @hub:aulas -->"),
     ("painel", "<!-- @hub:painel -->"),
+    ("semanas", "<!-- @hub:semanas -->"),
 )
 
 _RE_ESQUEMA = re.compile(r"^[A-Za-z][A-Za-z0-9+.-]*:")
@@ -571,6 +572,23 @@ def html_aulas(aulas_sel, quadro=None, estado=None):
     return html_quadro_de(aulas_sel, quadro, estado)[0]
 
 
+def html_semanas(plano_linhas=None, calendario=None, hoje=None, semana_final=SEMANA_FINAL_QUADRO):
+    """O calendario das semanas para a aba Questoes, como JSON num `<script>` (s200). PURA.
+
+    Pedido do operador ao fechar a 1a lista: as listas apareciam "soltas", sem ordem nem semana.
+    A pagina le as listas do `db` em tempo real e agrupa por `semana`; para dizer o que esta
+    atrasado e datar cada semana ela precisa da semana de HOJE -- a mesma regua do quadro
+    (`semana_atual`, os mesmos pendentes), para as duas abas nunca discordarem."""
+    hoje = hoje or date.today()
+    pendentes = [l for l in plano_linhas or [] if l.get("status") == "pendente"
+                 and l.get("semana_plano") is not None and int(l["semana_plano"]) <= semana_final]
+    dados = {"atual": semana_atual(calendario, hoje, pendentes),
+             "datas": {str(s): [ini.strftime("%d/%m"), fim.strftime("%d/%m")]
+                       for s, (ini, fim) in sorted((calendario or {}).items())}}
+    return ('<script type="application/json" id="hub-semanas">%s</script>'
+            % json.dumps(dados, ensure_ascii=False).replace("<", "\\u003c"))
+
+
 def html_painel(tem_painel):
     """Bloco da aba Painel. Sem texto de bastidor (s194): nada de CLI, banco ou carimbo -- quem
     monta sem painel ve o AVISO do `--build` no terminal, nao na tela do operador."""
@@ -608,6 +626,7 @@ def montar_index(template_hub, player_html, lote, aulas_sel, tem_painel, agora, 
         "aulas": html_quadro_de(aulas_sel, quadro, estado, plano_linhas, calendario,
                                 _hoje_de(agora))[0],
         "painel": html_painel(tem_painel),
+        "semanas": html_semanas(plano_linhas, calendario, _hoje_de(agora)),
     }
     pagina = template_hub
     for nome, marca in LUGARES_HUB:

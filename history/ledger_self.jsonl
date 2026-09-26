@@ -944,3 +944,5 @@
 {"ts": "2026-09-26T03:45:48+00:00", "event": "resolved", "check": "consistencia_registros", "fingerprint": "ae675f4ff819", "alvo": "AGENTE.md §7.4"}
 {"ts": "2026-09-26T03:59:18+00:00", "event": "opened", "check": "consistencia_registros", "fingerprint": "ae675f4ff819", "alvo": "AGENTE.md §7.4", "payload": {"check": "tabela"}}
 {"ts": "2026-09-26T04:01:33+00:00", "event": "resolved", "check": "consistencia_registros", "fingerprint": "ae675f4ff819", "alvo": "AGENTE.md §7.4"}
+{"ts": "2026-09-26T15:01:02+00:00", "event": "opened", "check": "erros_orfaos", "fingerprint": "09e2bd04b6d3", "alvo": "2026-09-26", "payload": {"erros_esperados": 5}}
+{"ts": "2026-09-26T16:41:32+00:00", "event": "resolved", "check": "erros_orfaos", "fingerprint": "09e2bd04b6d3", "alvo": "2026-09-26"}

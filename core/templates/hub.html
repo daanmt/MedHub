@@ -120,6 +120,8 @@
 }
 :root[data-theme="dark"]{--qz-ok:#6fcf8a;--qz-ok-fraco:#16301f;--qz-duv:#e2a94f;--qz-duv-fraco:#3a2c12;--qz-chute:#b3a4e6;--qz-chute-fraco:#2a2340}
 .qz-lista{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.qz-semanas{display:grid;gap:22px}
+.qz-semanas .qd-feitas{margin-top:4px}
 .qz-lista button{width:100%;text-align:left;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;align-items:center;padding:12px 14px;border:1px solid var(--linha);border-radius:12px;background:var(--card);color:var(--tinta);min-height:44px}
 .qz-lista button:hover{background:var(--afundado)}
 .qz-lista .qz-tema{min-width:0;margin:0;font-weight:600;line-height:1.35;grid-column:1}
@@ -166,6 +168,36 @@ details.qz-bloco{border:1px solid var(--linha);border-radius:10px;background:var
 details.qz-bloco summary{cursor:pointer;padding:10px 12px;font-weight:650;font-size:.92em;min-height:44px;display:flex;align-items:center}
 details.qz-bloco .qz-texto{padding:0 12px 12px;white-space:pre-wrap;font-size:.94em}
 details.qz-bloco .qz-texto.forum{color:var(--tinta2)}
+details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
+.qz-obj{margin-left:8px;font-size:.78em;font-weight:600;color:var(--acento);background:var(--acento-fraco);padding:2px 8px;border-radius:999px}
+.qz-sol{display:grid;gap:10px;padding:0 12px 12px;font-size:.94em;min-width:0}
+.qz-sol p{margin:0}
+.qz-pede{color:var(--tinta2)}
+.qz-fonte{font-size:.82em;color:var(--tinta3)}
+.qz-cadeia{margin:0;padding:0;list-style:none;display:grid;gap:4px;counter-reset:elo}
+.qz-cadeia li{display:grid;grid-template-columns:1.4em minmax(0,1fr);gap:1px 8px;padding:7px 8px;border-radius:8px;background:var(--afundado)}
+.qz-cadeia li::before{counter-increment:elo;content:counter(elo);grid-row:1 / span 3;font-weight:700;color:var(--tinta3);text-align:right}
+.qz-cadeia b{font-weight:650;line-height:1.35}
+.qz-cadeia span{grid-column:2;color:var(--tinta2);line-height:1.4}
+.qz-cadeia li.quebrou{background:var(--alerta-fraco);box-shadow:inset 3px 0 0 var(--alerta)}
+.qz-cadeia li.quebrou::before{color:var(--alerta)}
+.qz-cadeia em{grid-column:2;font-style:normal;font-size:.8em;font-weight:650;color:var(--alerta)}
+.qz-cadeia li.ok{box-shadow:inset 3px 0 0 var(--qz-ok)}
+.qz-cadeia em.ok{color:var(--qz-ok)}
+.qz-leitura{font-size:.86em;color:var(--tinta2)}
+.qz-leitura.alerta{color:var(--alerta);font-weight:650}
+.qz-altsol li i.risc{color:var(--tinta3)}
+.qz-altsol{margin:0;padding:0;list-style:none;display:grid;gap:4px}
+.qz-altsol li{display:grid;grid-template-columns:1.4em minmax(0,1fr);gap:0 8px;line-height:1.4}
+.qz-altsol li b{text-align:right;color:var(--tinta3)}
+.qz-altsol li i{font-style:normal;font-size:.8em;font-weight:650;color:var(--alerta)}
+.qz-altsol li.certa b{color:var(--qz-ok)}
+.qz-altsol li.marcou span{font-weight:600}
+.qz-porobj ul{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:6px}
+.qz-porobj li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:0 10px;padding:8px 12px;border-radius:10px;background:var(--afundado);min-width:0}
+.qz-porobj li b{font-variant-numeric:tabular-nums}
+.qz-porobj li small{grid-column:1 / -1;color:var(--tinta3)}
+.qz-porobj li.fraco b{color:var(--alerta)}
 .qz-conferir{margin-left:8px;font-size:.78em;font-weight:600;color:var(--alerta);background:var(--alerta-fraco);padding:2px 8px;border-radius:999px}
 .qz-campo{display:grid;gap:4px}
 .qz-campo textarea{font:inherit;font-size:.9em;padding:8px 10px;border:1px solid var(--linha);border-radius:8px;background:var(--papel);color:var(--tinta);width:100%;min-height:60px;resize:vertical}
@@ -197,7 +229,7 @@ details.qz-bloco .qz-texto.forum{color:var(--tinta2)}
     <button type="button" class="hub-aba" role="tab" id="hub-tab-painel" aria-controls="aba-painel" aria-selected="true" data-aba="painel">Painel</button>
     <button type="button" class="hub-aba" role="tab" id="hub-tab-aulas" aria-controls="aba-aulas" aria-selected="false" data-aba="aulas" tabindex="-1">Aulas</button>
     <button type="button" class="hub-aba" role="tab" id="hub-tab-cards" aria-controls="aba-cards" aria-selected="false" data-aba="cards" tabindex="-1">Cards</button>
-    <button type="button" class="hub-aba" role="tab" id="hub-tab-questoes" aria-controls="aba-questoes" aria-selected="false" data-aba="questoes" tabindex="-1">Questões</button>
+    <button type="button" class="hub-aba" role="tab" id="hub-tab-questoes" aria-controls="aba-questoes" aria-selected="false" data-aba="questoes" tabindex="-1">Listas</button>
   </nav>
 
   <section class="hub-secao" id="aba-painel" role="tabpanel" aria-labelledby="hub-tab-painel">
@@ -225,11 +257,12 @@ details.qz-bloco .qz-texto.forum{color:var(--tinta2)}
   </section>
 
   <section class="hub-secao" id="aba-questoes" role="tabpanel" aria-labelledby="hub-tab-questoes">
+    <!-- @hub:semanas -->
     <div id="qz-escolha">
-      <h2 class="hub-titulo">Questões</h2>
-      <p class="hub-sub">As listas do EMED já capturadas, para resolver aqui como numa prova: letra e certeza em cada questão, sem gabarito no meio. No fim, resultado, resolução do professor e a análise dos erros. Cada resposta grava na hora e dá para parar e voltar.</p>
+      <h2 class="hub-titulo">Listas</h2>
+      <p class="hub-sub">As listas do EMED já capturadas, para resolver aqui como numa prova: letra e certeza em cada questão, sem gabarito no meio. No fim, o resultado por objetivo, a Solução MedHub (a cadeia de raciocínio, com o elo em que a sua letra cai) e a análise dos erros. Cada resposta grava na hora e dá para parar e voltar.</p>
       <p class="qd-aviso" id="qz-aviso" hidden></p>
-      <ul class="qz-lista" id="qz-listas"><li class="qd-vazio">Carregando as listas…</li></ul>
+      <div class="qz-semanas" id="qz-listas"><p class="qd-vazio">Carregando as listas…</p></div>
     </div>
     <div id="qz-player" hidden>
       <div class="hub-leitor-barra">
@@ -257,7 +290,7 @@ details.qz-bloco .qz-texto.forum{color:var(--tinta2)}
         </div>
         <div id="qz-depois" hidden style="display:grid;gap:12px">
           <p class="qz-veredito" id="qz-veredito"></p>
-          <details class="qz-bloco" id="qz-medhub-box" hidden><summary>Solução MedHub<span class="qz-conferir" id="qz-conferir" hidden>conferir no professor</span></summary><div class="qz-texto" id="qz-medhub"></div></details>
+          <details class="qz-bloco" id="qz-medhub-box" hidden><summary>Solução MedHub<span class="qz-obj" id="qz-obj" hidden></span><span class="qz-conferir" id="qz-conferir" hidden>conferir no professor</span></summary><div class="qz-texto" id="qz-medhub"></div></details>
           <details class="qz-bloco" id="qz-sol-box"><summary>Comentário do professor</summary><div class="qz-texto" id="qz-sol"></div></details>
           <details class="qz-bloco" id="qz-forum-box"><summary>Fórum</summary><div class="qz-texto forum" id="qz-forum"></div></details>
           <div id="qz-meta-erro" hidden style="display:grid;gap:10px">
@@ -276,14 +309,15 @@ details.qz-bloco .qz-texto.forum{color:var(--tinta2)}
               </div></div>
           </div>
           <div class="qz-analise" id="qz-analise" hidden></div>
-          <div class="qz-pe"><p class="qz-status" id="qz-status"></p><button type="button" class="primario" id="qz-proxima">Próxima</button></div>
+          <div class="qz-pe"><p class="qz-status" id="qz-status"></p><span style="display:flex;flex-wrap:wrap;gap:8px"><button type="button" id="qz-resultado" hidden>&lsaquo; Resultado da lista</button><button type="button" class="primario" id="qz-proxima">Próxima</button></span></div>
         </div>
       </div>
       <div id="qz-fim" hidden style="display:grid;gap:12px">
         <h2 class="hub-titulo">Lista concluída</h2>
         <div class="qz-tiles" id="qz-tiles"></div>
         <p class="hub-sub" id="qz-erradas" style="margin:0"></p>
-        <p class="hub-sub" style="margin:0">Toque numa questão para ver o gabarito, a resolução do professor e o fórum. Nas erradas e nos chutes, registre o que te levou à letra: é isso que o hub disseca. A análise do hub chega em minutos e aparece debaixo da questão.</p>
+        <div class="qz-porobj" id="qz-porobj" hidden></div>
+        <p class="hub-sub" style="margin:0">Toque numa questão para ver o gabarito e a Solução MedHub. Nas erradas e nos chutes, registre o que te levou à letra: é isso que o hub disseca. A análise do hub confirma o elo que quebrou e aparece debaixo da questão.</p>
         <ol class="qz-lista" id="qz-revisao"></ol>
         <div class="qz-pe"><button type="button" class="primario" id="qz-concluir">Marcar lista como resolvida</button><button type="button" id="qz-rever">Rever em sequência</button><p class="qz-status" id="qz-fim-status"></p></div>
       </div>
@@ -610,9 +644,12 @@ details.qz-bloco .qz-texto.forum{color:var(--tinta2)}
     var c = caminhos.filter(function(p){ return p.length >= 2; })[0];
     if(!c){ c = caminhos.map(function(p){ return p[0]; }); } // captura antiga: niveis separados por ";"
     if(!c.length){ return ""; }
-    var sub = c[1] || "";
-    // subtema igual ao tema da lista nao informa nada: desce um nivel
-    if(sub && c[2] && sub.toLowerCase() === String(temaLista || "").trim().toLowerCase()){ sub = c[2]; }
+    // s200: o 3o nivel e o tema de fato ("Diabetes na gestacao (DMG)", "Hernias Inguinocrurais");
+    // o 2o era generico demais ("Doencas associadas a gestacao"). O OBJETIVO da questao (o que ela
+    // cobra) so aparece depois de responder, na solucao: antes, entregaria a pista.
+    var i = Math.min(2, c.length - 1), sub = i > 0 ? c[i] : "";
+    // tema igual ao da lista nao informa nada: desce um nivel
+    if(sub && c[i + 1] && sub.toLowerCase() === String(temaLista || "").trim().toLowerCase()){ sub = c[i + 1]; }
     return sub ? c[0] + " › " + sub : c[0];
   }
   function qzLs(k, v){ try{ if(v === undefined){ return JSON.parse(localStorage.getItem(k) || "null"); } localStorage.setItem(k, JSON.stringify(v)); }catch(e){ return null; } }
@@ -629,21 +666,37 @@ details.qz-bloco .qz-texto.forum{color:var(--tinta2)}
         db.collection("listas").orderBy("seq").onSnapshot(function(s){
           QZ.listas = s.docs.map(function(d){ var x = Object.assign({}, d.data() || {}); x._id = d.id; return x; });
           qzRenderListas();
-        }, function(){ $("qz-listas").innerHTML = '<li class="qd-vazio">Não consegui ler as listas. Recarregue a página.</li>'; });
+        }, function(){ $("qz-listas").innerHTML = '<p class="qd-vazio">Não consegui ler as listas. Recarregue a página.</p>'; });
       }).catch(qzSemDb);
     }catch(e){ qzSemDb(); }
   }
   function qzSemDb(){
-    $("qz-listas").innerHTML = '<li class="qd-vazio">As listas não estão disponíveis nesta visualização.</li>';
+    $("qz-listas").innerHTML = '<p class="qd-vazio">As listas não estão disponíveis nesta visualização.</p>';
   }
+  // s200 (pedido do operador): listas agrupadas por semana do plano, na ordem do plano (seq),
+  // como no quadro de Aulas; semana anterior a de hoje = Atrasadas; resolvidas recolhidas no fim.
+  var QZ_SEM = (function(){ try{ return JSON.parse(($("hub-semanas") || {}).textContent || "{}") || {}; }catch(e){ return {}; } })();
+  function qzItemLista(l, atrasada){ var s = l.status || "capturada";
+    return '<li><button type="button" data-qzl="' + qzEsc(l._id) + '"><p class="qz-tema">' + qzEsc(l.tema) + '</p><span class="qz-chip ' + qzEsc(s) + '">' + qzEsc(ROT_QZ[s] || s) + '</span><p class="qz-meta"><span>' + qzEsc(l.area || "") + '</span><span>' + qzEsc(Math.round(l.q || l.q_previstas || 0)) + ' questões</span>' + (atrasada ? '<span class="qd-atraso">semana ' + qzEsc(l.semana) + '</span>' : '') + '</p></button></li>'; }
   function qzRenderListas(){
-    var ls = QZ.listas.filter(function(l){ var s = l.status || "pendente"; return s !== "pendente" && s !== "bloqueada" && s !== "em_curso"; });
-    $("qz-listas").innerHTML = ls.length ? ls.map(function(l){ var s = l.status || "capturada";
-      return '<li><button type="button" data-qzl="' + qzEsc(l._id) + '"><p class="qz-tema">' + qzEsc(l.tema) + '</p><span class="qz-chip ' + qzEsc(s) + '">' + qzEsc(ROT_QZ[s] || s) + '</span><p class="qz-meta"><span>' + qzEsc(l.area || "") + '</span>' + (l.semana ? '<span>semana ' + qzEsc(l.semana) + '</span>' : '') + '<span>' + qzEsc(Math.round(l.q || l.q_previstas || 0)) + ' questões</span></p></button></li>'; }).join("")
-      : '<li class="qd-vazio">Nenhuma lista capturada ainda.</li>';
+    var ls = QZ.listas.filter(function(l){ var s = l.status || "pendente"; return s !== "pendente" && s !== "bloqueada" && s !== "em_curso"; })
+      .sort(function(a, b){ return (a.semana || 999) - (b.semana || 999) || (a.seq || 0) - (b.seq || 0) || String(a._id).localeCompare(String(b._id)); });
+    if(!ls.length){ $("qz-listas").innerHTML = '<p class="qd-vazio">Nenhuma lista capturada ainda.</p>'; return; }
+    var atual = QZ_SEM.atual || 0, datas = QZ_SEM.datas || {}, grupos = [], porChave = {};
+    ls.filter(function(l){ return l.status !== "resolvida"; }).forEach(function(l){
+      var atr = !!(atual && l.semana && l.semana < atual), k = atr ? "atrasadas" : (l.semana ? "s" + l.semana : "sem");
+      if(!porChave[k]){ var d = datas[String(l.semana)];
+        porChave[k] = {titulo: atr ? "Atrasadas" : (l.semana ? "Semana " + l.semana + (d ? " · " + d[0] + "–" + d[1] : "") + (l.semana === atual ? " (esta)" : "") : "Sem semana"), itens: [], q: 0, atr: atr};
+        grupos.push(porChave[k]); }
+      porChave[k].itens.push(l); porChave[k].q += Math.round(l.q || l.q_previstas || 0); });
+    var feitas = ls.filter(function(l){ return l.status === "resolvida"; });
+    $("qz-listas").innerHTML = grupos.map(function(g){ var n = g.itens.length;
+      return '<section><h3 class="qd-titulo">' + qzEsc(g.titulo) + ' <span class="qd-n">' + n + (n === 1 ? " lista" : " listas") + ' · ' + g.q + ' questões</span></h3><ul class="qz-lista">' + g.itens.map(function(l){ return qzItemLista(l, g.atr); }).join("") + '</ul></section>'; }).join("") +
+      (feitas.length ? '<details class="qd-feitas"><summary>Resolvidas <span class="qd-n">' + feitas.length + '</span></summary><ul class="qz-lista">' + feitas.map(function(l){ return qzItemLista(l, false); }).join("") + '</ul></details>' : "") +
+      (grupos.length ? "" : '<p class="qd-vazio">Todas as listas capturadas estão resolvidas.</p>');
   }
   $("qz-listas").addEventListener("click", function(e){ var b = e.target.closest("button[data-qzl]"); if(b){ qzAbrir(b.getAttribute("data-qzl")); } });
-  $("qz-voltar").addEventListener("click", function(){ qzFecharLista(); });
+  $("qz-voltar").addEventListener("click", function(){ if(!$("qz-depois").hidden){ qzSalvarMeta(); } qzFecharLista(); });
 
   function qzLimpar(){ QZ.unsubs.forEach(function(u){ try{ u(); }catch(e){} }); QZ.unsubs = []; }
   function qzFecharLista(){
@@ -788,7 +841,7 @@ details.qz-bloco .qz-texto.forum{color:var(--tinta2)}
     // s199: solucao propria do hub (sem o comentario do professor); listas em escopo publico
     // nao tem comentario nem forum -> o bloco some em vez de mostrar "(sem ...)".
     var precisa = !r.correta || r.confianca === "chute";
-    $("qz-medhub-box").hidden = !q.solucao_medhub; $("qz-medhub").textContent = q.solucao_medhub || "";
+    $("qz-medhub-box").hidden = !q.solucao_medhub; qzSolucao(q, r);
     $("qz-conferir").hidden = !q.divergente; $("qz-medhub-box").open = precisa || !!q.divergente;
     $("qz-sol-box").hidden = !q.solucao; $("qz-sol").textContent = q.solucao || "";
     $("qz-forum-box").hidden = !q.forum; $("qz-forum").textContent = q.forum || "";
@@ -796,15 +849,22 @@ details.qz-bloco .qz-texto.forum{color:var(--tinta2)}
     $("qz-meta-erro").hidden = !precisa; $("qz-racional").value = r.racional || "";
     Array.prototype.forEach.call($("qz-elo").querySelectorAll("button"), function(b){ b.classList.toggle("on", b.getAttribute("data-e") === r.elo); });
     $("qz-proxima").textContent = (QZ.pos + 1 < QZ.qs.length) ? "Próxima" : "Terminar";
+    $("qz-resultado").hidden = !QZ.revendo;
     qzAnalise();
   }
   $("qz-elo").addEventListener("click", function(e){ var b = e.target.closest("button[data-e]"); if(!b){ return; } var on = b.classList.contains("on");
     Array.prototype.forEach.call($("qz-elo").querySelectorAll("button"), function(x){ x.classList.remove("on"); }); if(!on){ b.classList.add("on"); } });
-  $("qz-proxima").addEventListener("click", function(){
-    var q = QZ.qs[QZ.pos]; var r = QZ.resp[q.num]; if(!r){ return; }
+  function qzSalvarMeta(){
+    // racional, elo e "revisar depois" da questao aberta: gravam ao sair dela, por qualquer saida
+    var q = QZ.qs[QZ.pos]; var r = q && QZ.resp[q.num]; if(!r){ return null; }
     var eloBtn = $("qz-elo").querySelector("button.on"); var elo = eloBtn ? eloBtn.getAttribute("data-e") : "";
     var rac = $("qz-racional").value.trim(); var flag = !!$("qz-flag").checked;
     if(!$("qz-meta-erro").hidden && (rac !== (r.racional || "") || elo !== (r.elo || "") || flag !== !!r.flag)){ r.racional = rac; r.elo = elo; r.flag = flag; qzGravar(r); }
+    return r;
+  }
+  $("qz-resultado").addEventListener("click", function(){ qzSalvarMeta(); qzFim(); });
+  $("qz-proxima").addEventListener("click", function(){
+    var r = qzSalvarMeta(); if(!r){ return; }
     if(QZ.revendo){ var j = QZ.pos + 1; if(j < QZ.qs.length && QZ.resp[QZ.qs[j].num]){ qzRever(j); } else { qzFim(); } return; }
     var i = QZ.pos + 1; while(i < QZ.qs.length && QZ.resp[QZ.qs[i].num]){ i++; }
     if(i >= QZ.qs.length){ qzFim(); } else { qzMostrar(i); }
@@ -823,6 +883,15 @@ details.qz-bloco .qz-texto.forum{color:var(--tinta2)}
     $("qz-tiles").innerHTML = [["Acertos", ac + "/" + rs.length], ["Sólidas certas", solC + "/" + sol], ["Dúvidas", duv], ["Chutes", chu], ["Tempo por questão", temp + "s"]].map(function(t){ return '<div><div class="fim-num">' + qzEsc(t[1]) + '</div><div class="fim-rot">' + qzEsc(t[0]) + '</div></div>'; }).join("");
     var err = rs.filter(function(r){ return !r.correta; }).map(function(r){ return r.num; }), ch = rs.filter(function(r){ return r.correta && r.confianca === "chute"; }).map(function(r){ return r.num; });
     $("qz-erradas").textContent = (err.length ? "Erradas: " + err.join(", ") + ". " : "Nenhuma errada. ") + (ch.length ? "Chutes certos (contam como incerteza): " + ch.join(", ") + "." : "");
+    // s200: o mapa de fragilidade da lista -- firmes (certa e sem chute) por objetivo, o mais fraco primeiro
+    var objs = {}, temObj = false;
+    QZ.qs.forEach(function(q){ var r = QZ.resp[q.num]; if(!r){ return; } if(q.objetivo){ temObj = true; }
+      var g = objs[q.objetivo || "Sem objetivo"] || (objs[q.objetivo || "Sem objetivo"] = {n: 0, f: 0, nao: []});
+      g.n++; if(r.correta && r.confianca !== "chute"){ g.f++; } else { g.nao.push("Q" + q.num); } });
+    $("qz-porobj").hidden = !temObj;
+    $("qz-porobj").innerHTML = temObj ? '<p class="qz-rot" style="margin:0">Por objetivo <small style="font-weight:400;color:var(--tinta3)">firmes / feitas</small></p><ul>' +
+      Object.keys(objs).sort(function(a, b){ return objs[a].f / objs[a].n - objs[b].f / objs[b].n || a.localeCompare(b); }).map(function(o){ var g = objs[o];
+        return '<li class="' + (g.f < g.n ? "fraco" : "") + '"><span>' + qzEsc(o) + '</span><b>' + g.f + '/' + g.n + '</b>' + (g.nao.length ? '<small>não firmes: ' + qzEsc(g.nao.join(", ")) + '</small>' : '') + '</li>'; }).join("") + '</ul>' : "";
     // revisao questao a questao: toque abre gabarito, resolucao, racional/elo e a analise do hub
     $("qz-revisao").innerHTML = QZ.qs.map(function(q, i){ var r = QZ.resp[q.num]; if(!r){ return ""; }
       var cls = r.correta ? (r.confianca === "chute" ? "chute" : "certa") : "errada";
@@ -839,8 +908,41 @@ details.qz-bloco .qz-texto.forum{color:var(--tinta2)}
       .then(function(){ st.className = "qz-status ok"; st.textContent = "Lista marcada como resolvida."; })
       .catch(function(e){ st.className = "qz-status ruim"; st.textContent = "Não gravou (" + ((e && e.code) || "erro") + ")."; });
   });
+  // s200 (pedido do operador: "elencar cada elo da cadeia e apontar onde ele quebrou"): a Solucao
+  // v2 e a cadeia de elos; cada alternativa errada aponta o elo (1-based) em que ela cai. Errou:
+  // a pagina marca na hora o elo da letra marcada; a analise do hub, quando chega, confirma ou
+  // move a marca (`quebrou`, 0-based, na MESMA cadeia). A v1 (texto) segue como texto.
+  function qzSolucao(q, r){
+    var s = q.solucao_medhub, box = $("qz-medhub");
+    $("qz-obj").hidden = !q.objetivo; $("qz-obj").textContent = q.objetivo || "";
+    if(!s || typeof s !== "object"){ box.className = "qz-texto"; box.textContent = s || ""; return; }
+    var alts = s.alternativas || {}, cadeia = s.cadeia || [], a = QZ.ana[q.num];
+    // s200 (pedido do operador): riscar e hesitar sao dado metacognitivo. Letra errada riscada =
+    // elo que ele executou; as nao riscadas numa duvida = o par em que hesitou; riscar a certa =
+    // crenca firme contra a resposta (nao descuido).
+    var risc = (r && r.riscadas) || [], okElo = {};
+    risc.forEach(function(l){ var x = alts[l]; if(x && !x.certa && x.elo){ (okElo[x.elo] = okElo[x.elo] || []).push(l); } });
+    var rest = Object.keys(alts).sort().filter(function(l){ return risc.indexOf(l) < 0; });
+    var leitura = r ? [risc.length ? "riscou " + risc.join(", ") : "", (r.confianca === "duvida" && rest.length > 1 && rest.length <= 3) ? "ficou entre " + rest.join(" e ") : "", "marcou " + r.letra].filter(Boolean).join(" · ") : "";
+    var riscouCerta = !!(r && r.gabarito && risc.indexOf(r.gabarito) >= 0);
+    var daAnalise = !!(a && typeof a.quebrou === "number" && !(a.cadeia && a.cadeia.length));
+    var quebrou = daAnalise ? a.quebrou + 1 : (r && !r.correta && alts[r.letra] ? alts[r.letra].elo : null);
+    var nota = daAnalise ? "quebrou aqui (análise do hub)" : "a sua letra cai neste elo";
+    box.className = "qz-sol";
+    box.innerHTML = (s.pede ? '<p class="qz-pede"><b>Pede:</b> ' + qzEsc(s.pede) + '</p>' : "") +
+      (leitura ? '<p class="qz-leitura">Você: ' + qzEsc(leitura) + '</p>' : "") +
+      (riscouCerta ? '<p class="qz-leitura alerta">Você riscou a certa (' + qzEsc(r.gabarito) + '): uma crença firme contra a resposta, não descuido.</p>' : "") +
+      '<ol class="qz-cadeia">' + cadeia.map(function(e, i){ var qb = (i + 1) === quebrou, ok = !qb && okElo[i + 1];
+        return '<li' + (qb ? ' class="quebrou"' : (ok ? ' class="ok"' : '')) + '><b>' + qzEsc(e.elo) + '</b><span>' + qzEsc(e.chave) + '</span>' +
+          (qb ? '<em>' + nota + '</em>' : (ok ? '<em class="ok">você eliminou ' + qzEsc(ok.join(" e ")) + ' aqui</em>' : '')) + '</li>'; }).join("") + '</ol>' +
+      '<ul class="qz-altsol">' + Object.keys(alts).sort().map(function(l){ var x = alts[l] || {};
+        return '<li class="' + (x.certa ? "certa" : "") + (r && l === r.letra ? " marcou" : "") + '"><b>' + qzEsc(l) + '</b><span>' + (x.certa ? "" : '<i>elo ' + qzEsc(x.elo) + '</i> ') + (risc.indexOf(l) >= 0 ? '<i class="risc">riscou</i> ' : '') + qzEsc(x.porque) + '</span></li>'; }).join("") + '</ul>' +
+      (s.conferir ? '<p class="qz-pede"><b>Conferir:</b> ' + qzEsc(s.conferir) + '</p>' : "") +
+      (q.fontes_medhub ? '<p class="qz-fonte">' + qzEsc(q.fontes_medhub) + '</p>' : "");
+  }
   function qzAnalise(){
     var q = QZ.qs[QZ.pos]; var box = $("qz-analise"); if(!q){ box.hidden = true; return; }
+    if(QZ.resp[q.num]){ qzSolucao(q, QZ.resp[q.num]); }
     var a = QZ.ana[q.num]; if(!a){ box.hidden = true; return; }
     box.hidden = false;
     var cadeia = Array.isArray(a.cadeia) ? a.cadeia : [];

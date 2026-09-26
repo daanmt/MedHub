@@ -54,7 +54,7 @@ Use this skill when the user asks to run the migrated source command `banco-emed
 | `mensagens/<id>` | todos | `de` (`hub` · `claude-in-chrome` · `operador`), `texto`, `enviado_em`, `lido` |
 | `listas/t<tarefa>` | hub semeia; página muda `status` | `tarefa`, `tema`, `area`, `semana`, `seq`, `q_previstas`, `url`, `status` (`pendente` · `em_curso` · `capturada` · `bloqueada` · `resolvida`) |
 | `questoes/<lista>_<num>` | Chrome (formulário ou lote JSON) | `lista`, `tarefa`, `num`, `banca`, `gabarito`, `emed_id`, `estatistica`, `enunciado`, `alternativas`, `solucao`, `forum`, `tags`, `capturado_em`, `executor`. **Escopo público desde a s198:** entram só `banca`, `gabarito`, `emed_id`, `enunciado`, `alternativas`, `tags`; `solucao`, `forum` e `estatistica` ficam vazios (as 4 listas da s197 os têm; não se apagam). No db do **hub**, o doc ganha `solucao_medhub`, `divergente` e `fontes_medhub` quando a lista tem solução própria (s199) |
-| `respostas/<lista>_<num>` | página (aba Resolver) | `lista`, `tarefa`, `num`, `letra`, `confianca` (`solida` · `duvida` · `chute`), `correta`, `gabarito`, `racional`, `elo`, `tempo_s`, `flag`, `respondido_em` |
+| `respostas/<lista>_<num>` | página (aba Resolver) | `lista`, `tarefa`, `num`, `letra`, `confianca` (`solida` · `duvida` · `chute`), `correta`, `gabarito`, `racional`, `elo`, `tempo_s`, `flag`, `respondido_em`, `riscadas` (lista de letras riscadas antes de marcar; no banco, texto `A,C` desde a s200) |
 | `analises/<lista>_<num>` | hub (após `/analisar-questao`); página grava o veredito | `lista`, `num`, `pedia`, `cadeia[]`, `quebrou` (índice 0-based na cadeia), `comporta`, `armadilha`, `veredito_hub`, `cards[]`, `questao_erro_id`; `veredito_operador` (`concordo` · `em_parte` · `discordo`), `nota_operador`, `veredito_em` |
 
 **Elo declarado pelo operador** (chips da aba Resolver): `nao_sabia` · `sabia_nao_usei` · `li_errado` ·
@@ -71,31 +71,52 @@ writers de `emed_questoes` / `emed_respostas`; allowlist F49). Dry-run é o defa
 | Flag | Função |
 |---|---|
 | `--ingerir DIR` | Upsert de `DIR/questoes/*.json` em `emed_questoes` (chave `lista+num`, `hash` de conteúdo). Imprime `novas/atualizadas/iguais/invalidas`; doc sem `lista`/`num`/`enunciado`/`gabarito` cai em `invalidas` sem abortar o lote. |
-| `--solucoes DIR` | (s199) Upsert de `DIR/solucoes/*.json` em `emed_solucoes` (writer `db.emed_upsert_solucoes`; chave `lista+num`). Doc: `lista`, `num`, `solucao` (obrigatórios), `divergente` (bool), `fontes`. O `--exportar` leva a solução para o doc (`solucao_medhub`, `divergente`, `fontes_medhub`), fora do `hash` e de `extras`. |
+| `--solucoes DIR` | (s199) Upsert de `DIR/solucoes/*.json` em `emed_solucoes` (writer `db.emed_upsert_solucoes`; chave `lista+num`). Doc v1: `lista`, `num`, `solucao` (texto), `divergente` (bool), `fontes`. **Doc v2 (s200):** `cadeia` + `alternativas` + `pede` no lugar de `solucao` (forma em §Solução MedHub; validada por `db.solucao_v2_problemas`, forma torta = `invalidas`) e `objetivo` (coluna própria; chave AUSENTE preserva o do banco). O `--exportar` leva a solução para o doc (`solucao_medhub` -- objeto na v2, texto na v1 --, `divergente`, `fontes_medhub`, `objetivo`), fora do `hash` e de `extras`. |
 | `--registrar DIR` | Upsert de `DIR/respostas/*.json` em `emed_respostas` (mais nova vence). Imprime as contagens e, por lista, o resumo `feitas · acertos (solidas, duvidas, chutes) · erradas · tempo medio` **e a linha sugerida de `registrar_sessao_bulk.py`** (`--sessao NNN` a preencher). |
 | `--podar DIR` | Read-only: lista os `doc_id` **seguros** para apagar do artifact (questão: hash igual ao do banco; resposta: `respondido_em` igual). Escreve `DIR/podar_<colecao>.json` (`ids`, `n`, `nao_seguros`). A exclusão em si é `ArtifactData batch delete` (<= 50 por lote), feita pelo agente. |
 | `--colecao {questoes,respostas}` | Coleção alvo do `--podar` (default `questoes`). |
 | `--exportar LISTA` | Escreve `OUT/questoes/<lista>_<num>.json` no formato do doc, para re-semear o buffer (`ArtifactData batch set` com `file_path`). |
 | `--out DIR` | Pasta do `--exportar` (default `tmp/emed_export`). |
-| `--erros LISTA` | Erradas **e chutes** da lista em íntegra: letra x gabarito, confiança, tempo, racional e elo declarados, enunciado, alternativas, solução, fórum. É o insumo do `/analisar-questao`. |
+| `--erros LISTA` | Erradas **e chutes** da lista em íntegra: letra x gabarito, confiança, tempo, racional e elo declarados, **objetivo**, a **leitura metacognitiva** (s200: riscadas, o par da dúvida, os elos executados -- letra errada riscada --, o elo em que a letra marcada cai, `RISCOU A CERTA`), enunciado, alternativas, Solução MedHub (a cadeia numerada), solução e fórum. É o insumo do `/analisar-questao`. |
 | `--status` | Tabela por lista: capturadas, respondidas, acertos, sólidas/dúvidas/chutes, erradas, tempo médio, tema e área (via `plano_tarefas`). |
 | `--lista LISTA` | Filtro do `--status`. |
+| `--por-objetivo` | (s200) Com `--status`: o **mapa de fragilidade** -- firmes/feitas por (tema do plano, objetivo da questão), somando as listas do mesmo tema (t26 + t40 = DMG), o mais fraco primeiro; chute certo não é firme; sem objetivo = `(sem objetivo)`. |
 | `--apply` | Grava (`--ingerir`, `--registrar`). Sem ele: dry-run com as mesmas contagens, sem DDL. |
 | `--expect N` | COUNT-ASSERT: `novas+atualizadas` deve ser N, senão nada é gravado (exit 2). |
 | `--json` | Saída em JSON (`--status`, `--erros`, `--ingerir`, `--registrar`, `--podar`). |
 
 Exit: 0 ok · 1 erro de uso/leitura · 2 COUNT-ASSERT. Testes: `tools/test_emed_banco.py`.
 
-## Solução MedHub (s199)
+## Solução MedHub (s199; v2 = cadeia de elos desde a s200)
 
 Decisão do operador em 26/09/2026: a solução de cada questão é **cunhada pelo hub**, sem ler o comentário
 do professor. Insumo: enunciado, alternativas, gabarito, resumos (`app/engine/get_topic_context`) e, só
 quando a solução depende de afirmação decisiva (dose, ponto de corte, conduta de diretriz), a checagem de
-`/pesquisar-evidencia`. **Forma curta** (3-4 linhas): o que pede · o dado que decide · por que o gabarito
-· por que a mais tentadora cai. **`divergente: true`** quando o raciocínio não chega ao gabarito: é onde o
-operador confere o professor na plataforma, e onde aparece o padrão "diretriz antiga". Cunhagem **por
-lista**, quando ela entra na semana (subagente por lista, régua F93), gravada em
-`tmp/solucoes/solucoes/<lista>_<num>.json` -> `--solucoes tmp/solucoes --apply --expect N` -> `--exportar`.
+`/pesquisar-evidencia`. **`divergente: true`** quando o raciocínio não chega ao gabarito (+ `conferir`,
+1 linha): é onde o operador confere o professor na plataforma, e onde aparece o padrão "diretriz antiga".
+
+🔴 **A forma é a CADEIA (v2, s200).** A v1 (4 linhas Pede/Decide/Gabarito/Cai) foi julgada pelo operador
+*"muito pobre, completamente diferente da análise dos erros que tínhamos nas autópsias ... elencando cada
+elo da cadeia de raciocínio lógico e inclusive apontando onde ele quebrou. Isso não é apenas importante,
+mas fundamental."* Forma v2: `pede` (1 frase) · `cadeia` = 2-5 elos `{elo, chave}` (o `elo` é a habilidade
+reutilizável do `/analisar-questao` §2, a `chave` é a informação que o resolve) · `alternativas` = TODAS as
+letras, a certa `{certa: true, porque}` e cada errada `{elo: k, porque}` com o elo (1-based) **cuja falha
+leva a ela** · `objetivo` = o que a questão cobra, de uma **lista fechada por tema** (DMG: "Critério
+diagnóstico (GJ/TOTG)", "DM prévio x DMG", "Indicação de insulina"...), para o mapa de fragilidade
+(`--status --por-objetivo`; pedido do operador: *"questões de DMG com objetivos diferentes ... aponta
+para áreas com maior fragilidade"*). Contrato completo e exemplo: o brief dos subagentes
+(`tmp/solucoes_v2_BRIEF.md` na s200; versionar junto quando virar rotina).
+
+**Na página (aba Listas):** ao revelar, a cadeia aparece numerada; a letra marcada acende o elo em que ela
+cai ("a sua letra cai neste elo"); cada letra errada **riscada** acende em verde o elo que ele executou;
+na dúvida, as não riscadas são o par em que hesitou; riscar a certa é alarme de crença firme. A análise
+do hub (`analises/*`), quando chega, **move a marca para o elo confirmado** (`quebrou`, 0-based na MESMA
+cadeia -- o doc de análise não repete a cadeia). A tela de fim mostra firmes/feitas por objetivo.
+
+Cunhagem **por lista**, quando ela entra na semana (subagente Opus por lista, régua F93, com a v1 como
+rascunho quando houver), gravada em `tmp/solucoes_v2_<lista>/solucoes/<lista>_<num>.json` ->
+`--solucoes <pasta> --apply --expect N` -> `--exportar` -> `ArtifactData batch update` (só os campos da
+solução, `if_version` do doc lido).
 
 ## O tique (rito do hub, idempotente)
 

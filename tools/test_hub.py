@@ -422,7 +422,7 @@ def test_celular_sem_sticky_sem_nowrap_e_um_wrap_so():
 def test_abas_curtas_e_com_alvo_de_toque():
     pagina = _pagina_real()
     rotulos = re.findall(r'class="hub-aba"[^>]*>([^<]+)</button>', pagina)
-    assert rotulos == ["Painel", "Aulas", "Cards", "Questões"]
+    assert rotulos == ["Painel", "Aulas", "Cards", "Listas"]  # s200: "Questões" quebrava a barra no celular
     assert all(len(r) <= 15 for r in rotulos)
     regra_aba = re.search(r"\.hub-aba\{([^}]*)\}", pagina).group(1)
     assert "min-height:44px" in regra_aba

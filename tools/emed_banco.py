@@ -288,8 +288,13 @@ def cmd_exportar(args):
             pass
         sol = solucoes.get(q["num"])
         if sol:     # s199: a solução do hub viaja no doc; fora do hash e de `extras`
-            doc.update(solucao_medhub=sol["solucao"], divergente=bool(sol["divergente"]),
-                       fontes_medhub=sol["fontes"] or "")
+            # s200: a v2 (cadeia de elos) vai como OBJETO -- a página desenha a cadeia e marca
+            # o elo em que a letra marcada cai; a v1 segue como texto
+            v2 = db.solucao_estruturada(sol["solucao"])
+            doc.update(solucao_medhub=v2 if v2 else sol["solucao"],
+                       divergente=bool(sol["divergente"]), fontes_medhub=sol["fontes"] or "")
+            if sol.get("objetivo"):
+                doc["objetivo"] = sol["objetivo"]
         caminho = os.path.join(pasta, f"{q['lista']}_{q['num']}.json")
         with open(caminho, "w", encoding="utf-8") as fh:
             json.dump(doc, fh, ensure_ascii=False, indent=2)
@@ -297,9 +302,69 @@ def cmd_exportar(args):
     return 0
 
 
+def texto_solucao(texto):
+    """A solução do hub em texto corrido: v1 como está; v2 (cadeia) numerada, com a letra de
+    cada alternativa errada apontando o elo em que ela cai. PURA."""
+    v2 = db.solucao_estruturada(texto)
+    if not v2:
+        return texto or ""
+    linhas = [f"Pede: {v2.get('pede', '')}"]
+    for i, e in enumerate(v2.get("cadeia") or [], 1):
+        linhas.append(f"{i}. {e.get('elo', '')} -- {e.get('chave', '')}")
+    for letra in sorted(v2.get("alternativas") or {}):
+        a = v2["alternativas"][letra]
+        marca = "certa" if a.get("certa") is True else f"cai no elo {a.get('elo')}"
+        linhas.append(f"{letra} ({marca}): {a.get('porque', '')}")
+    if v2.get("conferir"):
+        linhas.append(f"Conferir: {v2['conferir']}")
+    return "\n".join(linhas)
+
+
+def leitura_metacognitiva(resposta, solucao_texto, letras=None):
+    """O rastro metacognitivo de UMA resposta contra a Solução v2 (s200, pedido do operador:
+    "as alternativas riscadas e a dúvida entre duas sem dúvida contribuem para a análise"). PURA.
+
+    - `riscadas`: letras que ele eliminou antes de marcar;
+    - `restantes`: as que sobraram (na dúvida, o par em que hesitou);
+    - `elos_ok`: elos que ele executou -- os de cada letra ERRADA que ele riscou;
+    - `elo_letra`: o elo em que a letra marcada cai (None se acertou);
+    - `riscou_certa`: eliminou o gabarito -- crença firme contra a resposta, não descuido.
+    Sem Solução v2, os elos ficam vazios e o resto segue."""
+    risc = [x for x in db.riscadas_norm(resposta.get("riscadas")).split(",") if x]
+    v2 = db.solucao_estruturada(solucao_texto) or {}
+    alts = v2.get("alternativas") or {}
+    todas = sorted(alts) if alts else sorted(letras or [])
+    gab = (resposta.get("gabarito") or "").upper()
+    letra = (resposta.get("letra") or "").upper()
+    elos_ok = sorted({alts[x]["elo"] for x in risc
+                      if x in alts and not alts[x].get("certa") and alts[x].get("elo")})
+    marcada = alts.get(letra) or {}
+    return {"riscadas": risc, "restantes": [x for x in todas if x not in risc],
+            "elos_ok": elos_ok,
+            "elo_letra": None if marcada.get("certa") or not marcada else marcada.get("elo"),
+            "riscou_certa": bool(gab and gab in risc)}
+
+
+def texto_leitura(m, confianca):
+    """A leitura metacognitiva em 1 linha, para o `--erros` e o log. PURA."""
+    partes = []
+    if m["riscadas"]:
+        partes.append("riscou " + ", ".join(m["riscadas"]))
+    if confianca == "duvida" and 1 < len(m["restantes"]) <= 3:
+        partes.append("ficou entre " + " e ".join(m["restantes"]))
+    if m["elos_ok"]:
+        partes.append("executou o(s) elo(s) " + ", ".join(str(k) for k in m["elos_ok"]))
+    if m["elo_letra"]:
+        partes.append(f"a letra marcada cai no elo {m['elo_letra']}")
+    if m["riscou_certa"]:
+        partes.append("RISCOU A CERTA")
+    return "; ".join(partes) or "(sem riscadas)"
+
+
 def erros_da_lista(lista):
     """Respostas erradas OU chute da lista, cada uma com a questão em íntegra."""
     questoes = {q["num"]: q for q in db.emed_listar_questoes(lista)}
+    solucoes = {s["num"]: s for s in db.emed_listar_solucoes(lista)}
     saida = []
     for r in db.emed_listar_respostas(lista):
         if r["correta"] != 0 and r["confianca"] != "chute":
@@ -312,7 +377,10 @@ def erros_da_lista(lista):
             "racional": r["racional"], "elo": r["elo"],
             "questao_erro_id": r["questao_erro_id"],
             "enunciado": q.get("enunciado"), "alternativas": q.get("alternativas"),
-            "solucao": q.get("solucao"), "forum": q.get("forum")})
+            "solucao": q.get("solucao"), "forum": q.get("forum"),
+            "solucao_medhub": texto_solucao((solucoes.get(r["num"]) or {}).get("solucao")),
+            "objetivo": (solucoes.get(r["num"]) or {}).get("objetivo") or "",
+            "leitura": leitura_metacognitiva(r, (solucoes.get(r["num"]) or {}).get("solucao"))})
     return saida
 
 
@@ -333,14 +401,58 @@ def cmd_erros(args):
             print(f"JA REGISTRADA como erro #{e['questao_erro_id']}")
         print(f"Racional declarado: {e['racional'] or '(vazio)'}")
         print(f"Elo declarado: {e['elo'] or '(vazio)'}")
+        print(f"Objetivo: {e['objetivo'] or '(sem)'}")
+        print(f"Leitura: {texto_leitura(e['leitura'], e['confianca'])}")
         for rotulo, campo in (("ENUNCIADO", "enunciado"), ("ALTERNATIVAS", "alternativas"),
+                              ("SOLUCAO MEDHUB", "solucao_medhub"),
                               ("SOLUCAO", "solucao"), ("FORUM", "forum")):
             print(f"-- {rotulo}\n{e[campo] or '(vazio)'}")
     return 0
 
 
+def por_objetivo(status, respostas, solucoes):
+    """O mapa de fragilidade (s200): respostas agrupadas por (tema do plano, objetivo da
+    questão), somando as listas do MESMO tema (t26 + t40 = DMG). PURA.
+
+    Pedido do operador: "as questões eram de DMG, mas tinham objetivos diferentes -- avaliar
+    tratamento, seguimento, cutoff de critério -- e isso aponta para as áreas com maior
+    fragilidade". Chute certo NÃO conta como firme (é incerteza); questão sem objetivo
+    cunhado cai em "(sem objetivo)", visível, nunca some."""
+    tema_de = {s["lista"]: s["tema"] or s["lista"] for s in status}
+    obj_de = {(s["lista"], s["num"]): s.get("objetivo") or "" for s in solucoes}
+    grupos = {}
+    for r in respostas:
+        chave = (tema_de.get(r["lista"], r["lista"]),
+                 obj_de.get((r["lista"], r["num"])) or "(sem objetivo)")
+        g = grupos.setdefault(chave, {"tema": chave[0], "objetivo": chave[1], "feitas": 0,
+                                      "firmes": 0, "chutes_certos": 0, "erradas": []})
+        g["feitas"] += 1
+        if r["correta"] == 1 and r["confianca"] != "chute":
+            g["firmes"] += 1
+        elif r["correta"] == 1:
+            g["chutes_certos"] += 1
+        else:
+            g["erradas"].append(f"{r['lista']} Q{r['num']}")
+    return sorted(grupos.values(), key=lambda g: (g["tema"], g["firmes"] / g["feitas"],
+                                                  g["objetivo"]))
+
+
 def cmd_status(args):
-    """`--status`: tabela por lista de `emed_status()` (filtro `--lista`)."""
+    """`--status`: tabela por lista de `emed_status()` (filtro `--lista`); com
+    `--por-objetivo`, o mapa de fragilidade por tema e objetivo (`por_objetivo`)."""
+    if args.por_objetivo:
+        st = db.emed_status()
+        listas = {s["lista"] for s in st if not args.lista or s["lista"] == args.lista}
+        grupos = por_objetivo(st, [r for r in db.emed_listar_respostas() if r["lista"] in listas],
+                              db.emed_listar_solucoes())
+        if args.json:
+            _emitir(grupos, True)
+            return 0
+        print("tema | objetivo | firmes/feitas | chutes certos | erradas")
+        for g in grupos:
+            print(f"{g['tema']} | {g['objetivo']} | {g['firmes']}/{g['feitas']} | "
+                  f"{g['chutes_certos']} | {', '.join(g['erradas']) or '-'}")
+        return 0
     linhas = [s for s in db.emed_status() if not args.lista or s["lista"] == args.lista]
     if args.json:
         _emitir(linhas, True)
@@ -378,6 +490,8 @@ def main(argv=None):
                     help="erradas e chutes da lista em integra (insumo do /analisar-questao)")
     ap.add_argument("--status", action="store_true", help="resumo por lista")
     ap.add_argument("--lista", metavar="LISTA", help="filtro do --status")
+    ap.add_argument("--por-objetivo", dest="por_objetivo", action="store_true",
+                    help="com --status: acerto por tema e objetivo da questao (s200)")
     ap.add_argument("--apply", action="store_true", help="grava (default = dry-run)")
     ap.add_argument("--expect", type=int, metavar="N",
                     help="COUNT-ASSERT: novas+atualizadas deve ser N, senao exit 2")

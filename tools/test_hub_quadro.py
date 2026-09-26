@@ -490,3 +490,28 @@ def test_hub_nao_conclui_tarefa_sozinho():
 
 if __name__ == "__main__":
     sys.exit(pytest.main([__file__, "-q"]))
+
+
+# --------------------------------------------------------------------------
+# Aba Questoes por semana (s200): o calendario vai para a pagina com a MESMA regua do quadro
+# --------------------------------------------------------------------------
+
+def test_semanas_da_aba_questoes_usam_a_regua_do_quadro():
+    cal = {1: (date(2026, 9, 14), date(2026, 9, 20)), 2: (date(2026, 9, 21), date(2026, 9, 27)),
+           3: (date(2026, 9, 28), date(2026, 10, 4))}
+    linhas = [{"status": "pendente", "semana_plano": 1}, {"status": "pendente", "semana_plano": 3}]
+    html_ = hub.html_semanas(linhas, cal, date(2026, 9, 26))
+    dados = json.loads(re.search(r'id="hub-semanas">(.*)</script>', html_).group(1))
+    assert dados["atual"] == hub.semana_atual(cal, date(2026, 9, 26), linhas) == 2
+    assert dados["datas"]["2"] == ["21/09", "27/09"]
+    # sem calendario: a menor semana com pendencia, como no quadro; nada inventado
+    assert json.loads(re.search(r'>(.*)</script>', hub.html_semanas(linhas, {}, date(2026, 9, 26)))
+                      .group(1)) == {"atual": 1, "datas": {}}
+
+
+def test_pagina_real_leva_o_calendario_das_semanas_uma_vez():
+    pagina = hub.montar_index(TEMPLATE_HUB_REAL, TEMPLATE_PLAYER_REAL, {"sessao": "x", "cards": []},
+                              [], True, datetime(2026, 9, 26, 12, 0),
+                              calendario={2: (date(2026, 9, 21), date(2026, 9, 27))})
+    assert pagina.count('id="hub-semanas"') == 1
+    assert "@hub:semanas" not in pagina

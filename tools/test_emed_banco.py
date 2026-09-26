@@ -322,3 +322,105 @@ def test_exportar_leva_solucao_medhub_e_round_trip(tmp_path, monkeypatch, capsys
     assert emed_banco.main(["--ingerir", str(out), "--json"]) == 0
     c = _json_saida(capsys)
     assert (c["novas"], c["atualizadas"], c["iguais"]) == (0, 0, 2)
+
+
+# ------------------------------------------------------------ s200: cadeia, objetivo, riscadas
+
+def _v2(num, **extra):
+    """Solução v2 sintética: 2 elos; B certa; A cai no elo 1, C e D no elo 2."""
+    doc = {"lista": "t26", "num": num, "versao": 2, "objetivo": "Indicação de insulina",
+           "pede": "A conduta na gestante com glicemia fora da meta.",
+           "cadeia": [{"elo": "Classificar o controle glicêmico", "chave": "2+ valores acima da meta."},
+                      {"elo": "Escolher o fármaco na gestação", "chave": "Insulina é a 1ª escolha."}],
+           "alternativas": {"A": {"elo": 1, "porque": "Dieta já falhou."},
+                            "B": {"certa": True, "porque": "Insulina."},
+                            "C": {"elo": 2, "porque": "Metformina é 2ª linha."},
+                            "D": {"elo": 2, "porque": "Glibenclamida é contraindicada."}},
+           "divergente": False, "conferir": "", "fontes": "SBD 2026"}
+    doc.update(extra)
+    return doc
+
+
+def test_solucao_v2_valida_grava_cadeia_e_objetivo(tmp_path, monkeypatch, capsys):
+    """v2 válida grava a cadeia como JSON e o objetivo em coluna; forma torta é inválida
+    (elo fora da cadeia, 2 certas) sem derrubar o lote; o export leva a cadeia como OBJETO."""
+    _usar_db(tmp_path, monkeypatch)
+    base = tmp_path / "buf"
+    _escrever(base, "questoes", "t26_1", _questao(1))
+    _escrever(base, "solucoes", "t26_1", _v2(1))
+    torta = _v2(2)
+    torta["alternativas"]["A"]["elo"] = 9
+    _escrever(base, "solucoes", "t26_2", torta)
+    duas = _v2(3)
+    duas["alternativas"]["C"] = {"certa": True, "porque": "x"}
+    _escrever(base, "solucoes", "t26_3", duas)
+    assert emed_banco.main(["--ingerir", str(base), "--apply"]) == 0
+    capsys.readouterr()
+    assert emed_banco.main(["--solucoes", str(base), "--apply", "--json"]) == 0
+    c = _json_saida(capsys)
+    assert c["novas"] == 1 and sorted(c["invalidas"]) == ["t26_2", "t26_3"]
+    (s1,) = db.emed_listar_solucoes("t26")
+    assert s1["objetivo"] == "Indicação de insulina"
+    assert db.solucao_estruturada(s1["solucao"])["cadeia"][1]["elo"] == "Escolher o fármaco na gestação"
+    out = tmp_path / "exp"
+    assert emed_banco.main(["--exportar", "t26", "--out", str(out)]) == 0
+    d = json.loads((out / "questoes" / "t26_1.json").read_text(encoding="utf-8"))
+    assert d["solucao_medhub"]["alternativas"]["C"]["elo"] == 2
+    assert d["objetivo"] == "Indicação de insulina"
+
+
+def test_objetivo_ausente_preserva_o_do_banco(tmp_path, monkeypatch, capsys):
+    """Re-ingerir uma solução SEM a chave `objetivo` (arquivo v1 antigo) não apaga o objetivo."""
+    _usar_db(tmp_path, monkeypatch)
+    base = tmp_path / "sol"
+    _escrever(base, "solucoes", "t26_1", _v2(1))
+    assert emed_banco.main(["--solucoes", str(base), "--apply"]) == 0
+    sem = _v2(1)
+    del sem["objetivo"]
+    _escrever(base, "solucoes", "t26_1", sem)
+    capsys.readouterr()
+    assert emed_banco.main(["--solucoes", str(base), "--apply", "--json"]) == 0
+    assert _json_saida(capsys)["iguais"] == 1
+    assert db.emed_listar_solucoes("t26")[0]["objetivo"] == "Indicação de insulina"
+
+
+def test_riscadas_gravam_e_viram_leitura_metacognitiva(tmp_path, monkeypatch, capsys):
+    """As riscadas da página entram no banco e a leitura cruza com a cadeia: letra errada
+    riscada = elo executado; a marcada aponta o elo que quebrou; riscar a certa é alarme."""
+    _usar_db(tmp_path, monkeypatch)
+    base = tmp_path / "buf"
+    _escrever(base, "questoes", "t26_1", _questao(1))
+    _escrever(base, "solucoes", "t26_1", _v2(1))
+    _escrever(base, "respostas", "t26_1",
+              {"lista": "t26", "num": 1, "letra": "C", "confianca": "duvida", "gabarito": "B",
+               "riscadas": ["d", "A"], "respondido_em": "2026-09-26T10:00:00Z"})
+    for modo in ("--ingerir", "--solucoes", "--registrar"):
+        assert emed_banco.main([modo, str(base), "--apply"]) == 0
+    capsys.readouterr()
+    assert db.emed_listar_respostas("t26")[0]["riscadas"] == "A,D"
+    (e,) = emed_banco.erros_da_lista("t26")
+    m = e["leitura"]
+    assert m["riscadas"] == ["A", "D"] and m["restantes"] == ["B", "C"]
+    assert m["elos_ok"] == [1, 2] and m["elo_letra"] == 2 and not m["riscou_certa"]
+    assert "ficou entre B e C" in emed_banco.texto_leitura(m, "duvida")
+    m2 = emed_banco.leitura_metacognitiva({"letra": "C", "gabarito": "B", "riscadas": "B"},
+                                          db.emed_listar_solucoes("t26")[0]["solucao"])
+    assert m2["riscou_certa"] is True
+
+
+def test_por_objetivo_soma_listas_do_mesmo_tema_e_chute_nao_e_firme():
+    """O mapa de fragilidade soma t26 + t40 (mesmo tema) por objetivo; chute certo não conta
+    como firme; questão sem objetivo aparece como '(sem objetivo)'."""
+    status = [{"lista": "t26", "tema": "DMG"}, {"lista": "t40", "tema": "DMG"}]
+    resp = [{"lista": "t26", "num": 1, "correta": 1, "confianca": "solida"},
+            {"lista": "t40", "num": 7, "correta": 1, "confianca": "chute"},
+            {"lista": "t40", "num": 8, "correta": 0, "confianca": "solida"},
+            {"lista": "t40", "num": 9, "correta": 1, "confianca": "duvida"}]
+    sols = [{"lista": "t26", "num": 1, "objetivo": "Indicação de insulina"},
+            {"lista": "t40", "num": 7, "objetivo": "Indicação de insulina"},
+            {"lista": "t40", "num": 8, "objetivo": "Indicação de insulina"}]
+    g = {x["objetivo"]: x for x in emed_banco.por_objetivo(status, resp, sols)}
+    ins = g["Indicação de insulina"]
+    assert (ins["feitas"], ins["firmes"], ins["chutes_certos"]) == (3, 1, 1)
+    assert ins["erradas"] == ["t40 Q8"]
+    assert g["(sem objetivo)"]["firmes"] == 1

@@ -81,6 +81,9 @@ SEMANA_FINAL_QUADRO = max(SEMANAS_FASE1)
 ROTULO_CLASSE = {"aula": "aula", "caderno": "caderno a criar", "sem_lista": "sem lista"}
 #: Colecao do db onde a pagina grava {feito, ts} por slug (doc `quadro/<slug>`). Regra de escrita
 #: `{path: "quadro", write: "interact"}` na declaracao de capabilities (revisar.md).
+#: Aba Questoes (s197): `listas/*`, `questoes/*`, `respostas/*` e `analises/*` do MESMO db, com
+#: read/write `admin` (conteudo do EMED nunca legivel por link); semeadas por `emed_banco.py
+#: --exportar` + ArtifactData, nunca pelo build -- a pagina nao carrega questao inline.
 COLECAO_QUADRO = "quadro"
 PAGINA = "index.html"
 MANIFESTO = "manifesto.json"

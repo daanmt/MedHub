@@ -33,7 +33,7 @@
 .hub-marca span{color:var(--acento)}
 
 .hub-abas{
-  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;
   padding:4px;margin-bottom:24px;
   background:var(--afundado);border:1px solid var(--linha);border-radius:12px;
 }
@@ -48,6 +48,7 @@
 :root:not([data-aba]) #aba-painel,
 :root[data-aba="cards"] #aba-cards,
 :root[data-aba="aulas"] #aba-aulas,
+:root[data-aba="questoes"] #aba-questoes,
 :root[data-aba="painel"] #aba-painel{display:block}
 
 .hub-titulo{font-size:clamp(1.15rem,1rem + .7vw,1.5rem);margin:0 0 4px;letter-spacing:-.01em;text-wrap:balance}
@@ -110,6 +111,79 @@
   padding:12px 14px;border-radius:8px;margin:0 0 14px;font-size:.9em;
 }
 .hub-aviso a{color:var(--acento)}
+
+/* Aba Questões (s197): listas do EMED resolvidas aqui dentro. Tokens semânticos próprios (certo /
+   dúvida / chute) por cima dos do player; nada fixo na rolagem, texto sempre quebra, toque >= 44px. */
+:root{--qz-ok:#1f7a3a;--qz-ok-fraco:#e2f2e6;--qz-duv:#8a5a17;--qz-duv-fraco:#f3e6cc;--qz-chute:#5b4b8a;--qz-chute-fraco:#e9e3f5}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){--qz-ok:#6fcf8a;--qz-ok-fraco:#16301f;--qz-duv:#e2a94f;--qz-duv-fraco:#3a2c12;--qz-chute:#b3a4e6;--qz-chute-fraco:#2a2340}
+}
+:root[data-theme="dark"]{--qz-ok:#6fcf8a;--qz-ok-fraco:#16301f;--qz-duv:#e2a94f;--qz-duv-fraco:#3a2c12;--qz-chute:#b3a4e6;--qz-chute-fraco:#2a2340}
+.qz-lista{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.qz-lista button{width:100%;text-align:left;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;align-items:center;padding:12px 14px;border:1px solid var(--linha);border-radius:12px;background:var(--card);color:var(--tinta);min-height:44px}
+.qz-lista button:hover{background:var(--afundado)}
+.qz-lista .qz-tema{min-width:0;margin:0;font-weight:600;line-height:1.35;grid-column:1}
+.qz-lista .qz-meta{grid-column:1;margin:0;color:var(--tinta3);font-size:.82em;display:flex;flex-wrap:wrap;gap:2px 10px}
+.qz-chip{grid-column:2;grid-row:1 / span 2;font-size:.72em;font-weight:650;padding:2px 9px;border-radius:99px;background:var(--afundado);color:var(--tinta2)}
+.qz-chip.capturada{background:var(--acento-fraco);color:var(--acento)}
+.qz-chip.resolvendo{background:var(--qz-duv-fraco);color:var(--qz-duv)}
+.qz-chip.resolvida{background:var(--qz-ok-fraco);color:var(--qz-ok)}
+.qz-relogio{margin-left:auto;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.85em;color:var(--tinta3);font-variant-numeric:tabular-nums}
+.qz-trilho{display:flex;flex-wrap:wrap;gap:3px;margin:0 0 14px}
+.qz-trilho i{display:block;width:12px;height:12px;border-radius:3px;background:var(--afundado)}
+.qz-trilho i.c{background:var(--qz-ok)} .qz-trilho i.e{background:var(--alerta)} .qz-trilho i.h{background:var(--qz-chute)} .qz-trilho i.atual{outline:2px solid var(--acento);outline-offset:1px}
+.qz-corpo{display:grid;gap:14px;max-width:44rem}
+.qz-metaq{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:.8em;color:var(--tinta3);margin:0}
+.qz-enun{white-space:pre-wrap;margin:0;line-height:1.55}
+.qz-alts{display:grid;gap:6px}
+.qz-alt{display:grid;grid-template-columns:minmax(0,1fr) 44px;gap:0;border:1px solid var(--linha);border-radius:10px;background:var(--card);min-width:0}
+.qz-alt-btn{display:grid;grid-template-columns:34px minmax(0,1fr);gap:10px;align-items:start;text-align:left;padding:10px 12px;border:0;border-radius:10px 0 0 10px;background:transparent;color:var(--tinta);min-height:44px}
+.qz-alt-btn b{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--tinta2);padding-top:1px}
+.qz-alt-btn span{white-space:pre-wrap;min-width:0}
+.qz-risca{border:0;border-left:1px solid var(--linha);border-radius:0 10px 10px 0;background:transparent;color:var(--tinta3);font-size:1.05em;padding:0;min-height:44px}
+.qz-risca:hover{background:var(--afundado)}
+.qz-alt.riscada .qz-alt-btn span,.qz-alt.riscada .qz-alt-btn b{text-decoration:line-through;text-decoration-thickness:2px;color:var(--tinta3)}
+.qz-alt.riscada .qz-risca{color:var(--alerta)}
+.qz-alt.marcada{border-color:var(--acento);background:var(--acento-fraco)}
+.qz-alt.gab{border-color:var(--qz-ok);background:var(--qz-ok-fraco)}
+.qz-alt.errada{border-color:var(--alerta);background:var(--alerta-fraco)}
+.qz-alt button[disabled]{opacity:1;cursor:default}
+.qz-rot{margin:0 0 6px;color:var(--tinta2);font-weight:600;font-size:.9em}
+.qz-seg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.qz-seg button{display:grid;gap:2px;text-align:center;font-weight:650;font-size:.9em;padding:10px 6px;border:1px solid var(--linha);border-radius:10px;background:var(--card);color:var(--tinta2);min-height:48px}
+.qz-seg button small{font-weight:400;font-size:.78em;color:var(--tinta3)}
+.qz-seg button.on{border-width:2px}
+.qz-seg button[data-c="solida"].on{border-color:var(--acento);color:var(--acento);background:var(--acento-fraco)}
+.qz-seg button[data-c="duvida"].on{border-color:var(--qz-duv);color:var(--qz-duv);background:var(--qz-duv-fraco)}
+.qz-seg button[data-c="chute"].on{border-color:var(--qz-chute);color:var(--qz-chute);background:var(--qz-chute-fraco)}
+.qz-pe{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
+.qz-marca{display:flex;gap:6px;align-items:center;font-size:.86em;color:var(--tinta2)}
+.qz-marca input{width:18px;height:18px;margin:0}
+.qz-veredito{padding:10px 14px;border-radius:10px;font-weight:650;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;margin:0}
+.qz-veredito.certa{background:var(--qz-ok-fraco);color:var(--qz-ok)} .qz-veredito.errada{background:var(--alerta-fraco);color:var(--alerta)}
+.qz-veredito small{font-weight:400;color:var(--tinta2)}
+details.qz-bloco{border:1px solid var(--linha);border-radius:10px;background:var(--card)}
+details.qz-bloco summary{cursor:pointer;padding:10px 12px;font-weight:650;font-size:.92em;min-height:44px;display:flex;align-items:center}
+details.qz-bloco .qz-texto{padding:0 12px 12px;white-space:pre-wrap;font-size:.94em}
+details.qz-bloco .qz-texto.forum{color:var(--tinta2)}
+.qz-campo{display:grid;gap:4px}
+.qz-campo textarea{font:inherit;font-size:.9em;padding:8px 10px;border:1px solid var(--linha);border-radius:8px;background:var(--papel);color:var(--tinta);width:100%;min-height:60px;resize:vertical}
+.qz-elo{display:flex;flex-wrap:wrap;gap:6px}
+.qz-elo button{font-size:.84em;font-weight:600;padding:7px 11px;border:1px solid var(--linha);border-radius:99px;background:var(--card);color:var(--tinta2);min-height:36px}
+.qz-elo button.on{border-color:var(--acento);color:var(--acento);background:var(--acento-fraco)}
+.qz-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,7rem),1fr));gap:8px}
+.qz-tiles > div{min-width:0;background:var(--afundado);border-radius:10px;padding:12px 14px}
+.qz-analise{border:1px solid var(--acento);border-radius:10px;padding:12px;display:grid;gap:8px;background:var(--card)}
+.qz-analise ol{margin:0;padding-left:22px;display:grid;gap:3px;font-size:.92em}
+.qz-analise li.quebrou{color:var(--alerta);font-weight:650}
+.qz-analise .kv{display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 10px;font-size:.9em}
+.qz-analise .kv span{color:var(--tinta3)}
+.qz-rev{width:100%;text-align:left;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:2px 10px;align-items:center;padding:10px 12px;border:1px solid var(--linha);border-left-width:4px;border-radius:10px;background:var(--card);color:var(--tinta);min-height:44px}
+.qz-rev span{color:var(--tinta2);font-size:.86em;min-width:0}
+.qz-rev i{font-style:normal;font-size:.78em;font-weight:650;color:var(--tinta3)}
+.qz-rev.certa{border-left-color:var(--qz-ok)} .qz-rev.errada{border-left-color:var(--alerta)} .qz-rev.errada i{color:var(--alerta)} .qz-rev.chute{border-left-color:var(--qz-chute)} .qz-rev.chute i{color:var(--qz-chute)}
+.qz-status{font-size:.84em;color:var(--tinta2);min-height:1.3em;margin:0}
+.qz-status.ruim{color:var(--alerta)} .qz-status.ok{color:var(--qz-ok)}
 </style>
 
 <div class="wrap">
@@ -122,6 +196,7 @@
     <button type="button" class="hub-aba" role="tab" id="hub-tab-painel" aria-controls="aba-painel" aria-selected="true" data-aba="painel">Painel</button>
     <button type="button" class="hub-aba" role="tab" id="hub-tab-aulas" aria-controls="aba-aulas" aria-selected="false" data-aba="aulas" tabindex="-1">Aulas</button>
     <button type="button" class="hub-aba" role="tab" id="hub-tab-cards" aria-controls="aba-cards" aria-selected="false" data-aba="cards" tabindex="-1">Cards</button>
+    <button type="button" class="hub-aba" role="tab" id="hub-tab-questoes" aria-controls="aba-questoes" aria-selected="false" data-aba="questoes" tabindex="-1">Questões</button>
   </nav>
 
   <section class="hub-secao" id="aba-painel" role="tabpanel" aria-labelledby="hub-tab-painel">
@@ -148,6 +223,71 @@
 <!-- @hub:player-corpo -->
   </section>
 
+  <section class="hub-secao" id="aba-questoes" role="tabpanel" aria-labelledby="hub-tab-questoes">
+    <div id="qz-escolha">
+      <h2 class="hub-titulo">Questões</h2>
+      <p class="hub-sub">As listas do EMED já capturadas, para resolver aqui como numa prova: letra e certeza em cada questão, sem gabarito no meio. No fim, resultado, resolução do professor e a análise dos erros. Cada resposta grava na hora e dá para parar e voltar.</p>
+      <p class="qd-aviso" id="qz-aviso" hidden></p>
+      <ul class="qz-lista" id="qz-listas"><li class="qd-vazio">Carregando as listas…</li></ul>
+    </div>
+    <div id="qz-player" hidden>
+      <div class="hub-leitor-barra">
+        <button type="button" id="qz-voltar">&lsaquo; Todas as listas</button>
+        <p class="hub-leitor-titulo" id="qz-tema"></p>
+        <span class="qz-relogio" id="qz-relogio">00:00</span>
+      </div>
+      <div class="qz-trilho" id="qz-trilho" aria-label="Progresso"></div>
+      <p class="qd-aviso" id="qz-aviso-lista" hidden></p>
+      <div class="qz-corpo" id="qz-questao" hidden>
+        <p class="qz-metaq"><span id="qz-pos"></span><span id="qz-banca"></span><span id="qz-tags"></span></p>
+        <p class="qz-enun" id="qz-enun"></p>
+        <div class="qz-alts" id="qz-alts"></div>
+        <div id="qz-antes">
+          <p class="qz-rot">Antes de ver o gabarito: como está a sua certeza?</p>
+          <div class="qz-seg" id="qz-seg">
+            <button type="button" data-c="solida">Sólida<small>eu sei</small></button>
+            <button type="button" data-c="duvida">Dúvida<small>entre duas</small></button>
+            <button type="button" data-c="chute">Chute<small>não sei</small></button>
+          </div>
+          <div class="qz-pe" style="margin-top:10px">
+            <label class="qz-marca"><input type="checkbox" id="qz-flag"> Revisar depois</label>
+            <button type="button" class="primario" id="qz-responder" disabled>Responder</button>
+          </div>
+        </div>
+        <div id="qz-depois" hidden style="display:grid;gap:12px">
+          <p class="qz-veredito" id="qz-veredito"></p>
+          <details class="qz-bloco" id="qz-sol-box"><summary>Comentário do professor</summary><div class="qz-texto" id="qz-sol"></div></details>
+          <details class="qz-bloco" id="qz-forum-box"><summary>Fórum</summary><div class="qz-texto forum" id="qz-forum"></div></details>
+          <div id="qz-meta-erro" hidden style="display:grid;gap:10px">
+            <div class="qz-campo"><p class="qz-rot">O que te levou à letra marcada? <small style="font-weight:400;color:var(--tinta3)">uma linha</small></p>
+              <textarea id="qz-racional" rows="2" placeholder="Ex.: achei que rastreio era só com fator de risco"></textarea></div>
+            <div class="qz-campo"><p class="qz-rot">Onde quebrou?</p>
+              <div class="qz-elo" id="qz-elo">
+                <button type="button" data-e="nao_sabia">Não sabia</button>
+                <button type="button" data-e="sabia_nao_usei">Sabia, não usei</button>
+                <button type="button" data-e="li_errado">Li errado</button>
+                <button type="button" data-e="dado_que_exclui">Dado que exclui</button>
+                <button type="button" data-e="ancorei_numero">Ancorei no nº</button>
+                <button type="button" data-e="negativa">Negativa/EXCETO</button>
+                <button type="button" data-e="diretriz_antiga">Diretriz antiga</button>
+                <button type="button" data-e="pressa">Pressa</button>
+              </div></div>
+          </div>
+          <div class="qz-analise" id="qz-analise" hidden></div>
+          <div class="qz-pe"><p class="qz-status" id="qz-status"></p><button type="button" class="primario" id="qz-proxima">Próxima</button></div>
+        </div>
+      </div>
+      <div id="qz-fim" hidden style="display:grid;gap:12px">
+        <h2 class="hub-titulo">Lista concluída</h2>
+        <div class="qz-tiles" id="qz-tiles"></div>
+        <p class="hub-sub" id="qz-erradas" style="margin:0"></p>
+        <p class="hub-sub" style="margin:0">Toque numa questão para ver o gabarito, a resolução do professor e o fórum. Nas erradas e nos chutes, registre o que te levou à letra: é isso que o hub disseca. A análise do hub chega em minutos e aparece debaixo da questão.</p>
+        <ol class="qz-lista" id="qz-revisao"></ol>
+        <div class="qz-pe"><button type="button" class="primario" id="qz-concluir">Marcar lista como resolvida</button><button type="button" id="qz-rever">Rever em sequência</button><p class="qz-status" id="qz-fim-status"></p></div>
+      </div>
+    </div>
+  </section>
+
 </div>
 
 <script id="lote" type="application/json">{"sessao":"exemplo","gerado_em":"","total":0,"cards":[]}</script>
@@ -156,7 +296,7 @@
 (function(){
   "use strict";
 
-  var ABAS = ["painel", "aulas", "cards"];
+  var ABAS = ["painel", "aulas", "cards", "questoes"];
   var raiz = document.documentElement;
   var botoes = Array.prototype.slice.call(document.querySelectorAll(".hub-aba"));
   var $ = function(id){ return document.getElementById(id); };
@@ -179,6 +319,7 @@
       try{ localStorage.setItem("medhub.aba", aba); }catch(e){}
     }
     if(aba === "painel"){ carregarPainel(); }
+    if(aba === "questoes"){ iniciarQuestoes(); }
     // quadro medido com a aba escondida volta com altura 0: remede depois do reflow
     setTimeout(ajustarVisiveis, 60);
   }
@@ -435,6 +576,237 @@
     painelCarregado = true;
     carregar(quadro, quadro.getAttribute("data-src"), $("hub-painel-aviso"));
   }
+
+  // -------------------------------------------------------------- questoes
+  // Aba Questões (s197): as listas do EMED capturadas vivem no db do hub em listas/<id> e
+  // questoes/<lista>_<num> (semeadas pelo hub a partir do banco local); a pagina grava so
+  // respostas/<lista>_<num> e o veredito do operador em analises/<lista>_<num>. Regras de
+  // leitura fechadas ao dono: conteudo do EMED nunca fica legivel por link.
+  var QZ = {db:null, listas:[], lista:null, qs:[], resp:{}, ana:{}, pos:-1, letra:null, conf:null,
+            t0:0, timer:null, unsubs:[], revendo:false, iniciado:false};
+  var ROT_QZ = {pendente:"pendente", em_curso:"em curso", capturada:"pronta", resolvendo:"em curso", resolvida:"resolvida"};
+  function qzEsc(s){ return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
+  function qzAgora(){ return new Date().toISOString(); }
+  function qzLs(k, v){ try{ if(v === undefined){ return JSON.parse(localStorage.getItem(k) || "null"); } localStorage.setItem(k, JSON.stringify(v)); }catch(e){ return null; } }
+  function qzChave(){ return "medhub.respostas." + QZ.lista; }
+
+  function iniciarQuestoes(){
+    if(QZ.iniciado){ return; }
+    QZ.iniciado = true;
+    try{
+      window.claude.use("db").then(function(db){
+        if(!db){ qzSemDb(); return; }
+        QZ.db = db;
+        // data() vem congelado: clonar antes de anexar o id (licao da s197)
+        db.collection("listas").orderBy("seq").onSnapshot(function(s){
+          QZ.listas = s.docs.map(function(d){ var x = Object.assign({}, d.data() || {}); x._id = d.id; return x; });
+          qzRenderListas();
+        }, function(){ $("qz-listas").innerHTML = '<li class="qd-vazio">Não consegui ler as listas. Recarregue a página.</li>'; });
+      }).catch(qzSemDb);
+    }catch(e){ qzSemDb(); }
+  }
+  function qzSemDb(){
+    $("qz-listas").innerHTML = '<li class="qd-vazio">As listas não estão disponíveis nesta visualização.</li>';
+  }
+  function qzRenderListas(){
+    var ls = QZ.listas.filter(function(l){ var s = l.status || "pendente"; return s !== "pendente" && s !== "bloqueada" && s !== "em_curso"; });
+    $("qz-listas").innerHTML = ls.length ? ls.map(function(l){ var s = l.status || "capturada";
+      return '<li><button type="button" data-qzl="' + qzEsc(l._id) + '"><p class="qz-tema">' + qzEsc(l.tema) + '</p><span class="qz-chip ' + qzEsc(s) + '">' + qzEsc(ROT_QZ[s] || s) + '</span><p class="qz-meta"><span>' + qzEsc(l.area || "") + '</span>' + (l.semana ? '<span>semana ' + qzEsc(l.semana) + '</span>' : '') + '<span>' + qzEsc(Math.round(l.q || l.q_previstas || 0)) + ' questões</span></p></button></li>'; }).join("")
+      : '<li class="qd-vazio">Nenhuma lista capturada ainda.</li>';
+  }
+  $("qz-listas").addEventListener("click", function(e){ var b = e.target.closest("button[data-qzl]"); if(b){ qzAbrir(b.getAttribute("data-qzl")); } });
+  $("qz-voltar").addEventListener("click", function(){ qzFecharLista(); });
+
+  function qzLimpar(){ QZ.unsubs.forEach(function(u){ try{ u(); }catch(e){} }); QZ.unsubs = []; }
+  function qzFecharLista(){
+    qzLimpar(); qzParar(); QZ.lista = null; QZ.pos = -1;
+    $("qz-player").hidden = true; $("qz-escolha").hidden = false;
+    window.scrollTo(0, 0);
+  }
+  function qzAbrir(id){
+    qzLimpar(); qzParar();
+    QZ.lista = id; QZ.qs = []; QZ.resp = qzLs(qzChave()) || {}; QZ.ana = {}; QZ.pos = -1; QZ.revendo = false;
+    var l = QZ.listas.filter(function(x){ return x._id === id; })[0] || {};
+    $("qz-tema").textContent = (l.tema || id) + (l.area ? " · " + l.area : "");
+    $("qz-escolha").hidden = true; $("qz-player").hidden = false;
+    $("qz-aviso-lista").hidden = true; $("qz-questao").hidden = true; $("qz-fim").hidden = true;
+    window.scrollTo(0, 0);
+    if(!QZ.db){ return; }
+    QZ.unsubs.push(QZ.db.collection("questoes").where("lista", "==", id).onSnapshot(function(s){
+      QZ.qs = s.docs.map(function(d){ return d.data() || {}; }).filter(function(q){ return q.num; }).sort(function(a, b){ return a.num - b.num; });
+      if(QZ.pos < 0){ qzPosicionar(); } else { qzTrilho(); }
+    }, function(){ $("qz-aviso-lista").hidden = false; $("qz-aviso-lista").textContent = "Não consegui ler as questões. Recarregue a página."; }));
+    QZ.unsubs.push(QZ.db.collection("respostas").where("lista", "==", id).onSnapshot(function(s){
+      s.docs.forEach(function(d){ var r = Object.assign({}, d.data() || {}); if(r.num){ var loc = QZ.resp[r.num]; if(!loc || !loc._pendente || (loc.respondido_em || "") <= (r.respondido_em || "")){ QZ.resp[r.num] = r; } } });
+      qzLs(qzChave(), QZ.resp); qzReenviar(); if(QZ.pos < 0){ qzPosicionar(); } else { qzTrilho(); }
+    }, function(){}));
+    QZ.unsubs.push(QZ.db.collection("analises").where("lista", "==", id).onSnapshot(function(s){
+      QZ.ana = {}; s.docs.forEach(function(d){ var a = d.data() || {}; if(a.num){ QZ.ana[a.num] = Object.assign({_id: d.id}, a); } });
+      if(QZ.pos >= 0 && !$("qz-depois").hidden){ qzAnalise(); }
+    }, function(){}));
+  }
+  function qzPosicionar(){
+    if(!QZ.qs.length){ $("qz-aviso-lista").hidden = false; $("qz-aviso-lista").textContent = "Esta lista ainda não tem questões carregadas."; $("qz-questao").hidden = true; return; }
+    $("qz-aviso-lista").hidden = true;
+    var i = 0; while(i < QZ.qs.length && QZ.resp[QZ.qs[i].num]){ i++; }
+    if(i >= QZ.qs.length){ qzFim(); return; }
+    qzMostrar(i);
+  }
+  function qzTrilho(){
+    $("qz-trilho").innerHTML = QZ.qs.map(function(q, i){ var r = QZ.resp[q.num]; var c = r ? (r.correta ? (r.confianca === "chute" ? "h" : "c") : "e") : ""; return '<i class="' + c + (i === QZ.pos ? " atual" : "") + '" title="Q' + qzEsc(q.num) + '"></i>'; }).join("");
+  }
+  function qzAlts(txt){
+    var out = []; String(txt || "").split(/\r?\n/).forEach(function(ln){ var m = ln.match(/^\s*\(?([A-Ea-e])\s*[\)\.\-:\]]\s*(.*)$/); if(m){ out.push({l: m[1].toUpperCase(), t: m[2]}); } else if(out.length && ln.trim()){ out[out.length - 1].t += "\n" + ln.trim(); } });
+    return out;
+  }
+  function qzMostrar(i){
+    QZ.pos = i; QZ.letra = null; QZ.conf = null; var q = QZ.qs[i];
+    $("qz-questao").hidden = false; $("qz-fim").hidden = true; $("qz-antes").hidden = false; $("qz-depois").hidden = true;
+    $("qz-pos").textContent = "Questão " + q.num + " · " + (i + 1) + " de " + QZ.qs.length;
+    $("qz-banca").textContent = q.banca || ""; $("qz-tags").textContent = q.tags || "";
+    $("qz-enun").textContent = q.enunciado || "";
+    var alts = qzAlts(q.alternativas);
+    // cada alternativa = escolher (corpo) + riscar (o X, como a tesoura do EMED); riscada nao e marcada
+    function altHtml(l, t){ return '<div class="qz-alt" data-l="' + l + '"><button type="button" class="qz-alt-btn"><b>' + l + '</b><span>' + qzEsc(t) + '</span></button><button type="button" class="qz-risca" aria-label="Riscar ' + l + '" title="Riscar">&#x2715;</button></div>'; }
+    if(alts.length >= 2){
+      $("qz-alts").innerHTML = alts.map(function(a){ return altHtml(a.l, a.t); }).join("");
+    } else {
+      $("qz-alts").innerHTML = '<p class="qz-enun">' + qzEsc(q.alternativas || "") + '</p>' + ["A","B","C","D","E"].map(function(l){ return altHtml(l, ""); }).join("");
+    }
+    Array.prototype.forEach.call($("qz-seg").querySelectorAll("button"), function(b){ b.classList.remove("on"); });
+    $("qz-flag").checked = false; $("qz-responder").disabled = true;
+    qzTrilho(); qzIniciar();
+    window.scrollTo(0, 0);
+  }
+  $("qz-alts").addEventListener("click", function(e){
+    var b = e.target.closest("button"); if(!b || b.disabled){ return; }
+    var alt = b.closest(".qz-alt"); if(!alt){ return; }
+    if(b.classList.contains("qz-risca")){
+      var riscou = alt.classList.toggle("riscada");
+      if(riscou && alt.classList.contains("marcada")){ alt.classList.remove("marcada"); QZ.letra = null; qzPode(); }
+      return;
+    }
+    QZ.letra = alt.getAttribute("data-l"); alt.classList.remove("riscada");
+    Array.prototype.forEach.call($("qz-alts").querySelectorAll(".qz-alt"), function(x){ x.classList.toggle("marcada", x === alt); }); qzPode(); });
+  $("qz-seg").addEventListener("click", function(e){ var b = e.target.closest("button[data-c]"); if(!b){ return; } QZ.conf = b.getAttribute("data-c");
+    Array.prototype.forEach.call($("qz-seg").querySelectorAll("button"), function(x){ x.classList.toggle("on", x === b); }); qzPode(); });
+  function qzPode(){ $("qz-responder").disabled = !(QZ.letra && QZ.conf); }
+  function qzIniciar(){ qzParar(); QZ.t0 = Date.now(); qzTique(); QZ.timer = setInterval(qzTique, 1000); }
+  function qzParar(){ if(QZ.timer){ clearInterval(QZ.timer); QZ.timer = null; } }
+  function qzTique(){ var s = Math.floor((Date.now() - QZ.t0) / 1000); $("qz-relogio").textContent = String(Math.floor(s / 60)).padStart(2, "0") + ":" + String(s % 60).padStart(2, "0"); }
+
+  function qzGravar(r){
+    QZ.resp[r.num] = r; qzLs(qzChave(), QZ.resp); qzTrilho();
+    if(!QZ.db){ r._pendente = true; qzLs(qzChave(), QZ.resp); return Promise.resolve(false); }
+    var doc = {}; Object.keys(r).forEach(function(k){ if(k[0] !== "_"){ doc[k] = r[k]; } });
+    return QZ.db.doc("respostas/" + QZ.lista + "_" + r.num).set(doc).then(function(){ delete r._pendente; qzLs(qzChave(), QZ.resp); return true; })
+      .catch(function(){ r._pendente = true; qzLs(qzChave(), QZ.resp); return false; });
+  }
+  var qzReenviando = false;
+  function qzReenviar(){
+    if(qzReenviando || !QZ.db){ return; }
+    var pend = Object.keys(QZ.resp).filter(function(n){ return QZ.resp[n] && QZ.resp[n]._pendente; });
+    if(!pend.length){ return; }
+    qzReenviando = true;
+    pend.reduce(function(p, n){ return p.then(function(){ return qzGravar(QZ.resp[n]); }); }, Promise.resolve()).then(function(){ qzReenviando = false; });
+  }
+  $("qz-responder").addEventListener("click", function(){
+    var q = QZ.qs[QZ.pos]; if(!q || !QZ.letra || !QZ.conf){ return; } qzParar();
+    var l = QZ.listas.filter(function(x){ return x._id === QZ.lista; })[0] || {};
+    var gab = String(q.gabarito || "").toUpperCase();
+    var riscadas = Array.prototype.map.call($("qz-alts").querySelectorAll(".qz-alt.riscada"), function(x){ return x.getAttribute("data-l"); });
+    var r = {lista: QZ.lista, tarefa: l.tarefa || q.tarefa || null, num: q.num, letra: QZ.letra, confianca: QZ.conf, correta: QZ.letra === gab, gabarito: gab,
+             riscadas: riscadas, racional: "", elo: "", tempo_s: Math.round((Date.now() - QZ.t0) / 1000), flag: !!$("qz-flag").checked, respondido_em: qzAgora()};
+    qzGravar(r).then(function(ok){ $("qz-status").className = "qz-status" + (ok ? "" : " ruim"); $("qz-status").textContent = ok ? "" : "Guardado neste aparelho; reenvio automático quando o banco voltar."; });
+    // Modo prova (pedido do operador, 26/09): sem gabarito na hora; a resolucao e a analise ficam para o fim.
+    var i = QZ.pos + 1; while(i < QZ.qs.length && QZ.resp[QZ.qs[i].num]){ i++; }
+    if(i >= QZ.qs.length){ qzFim(); } else { qzMostrar(i); }
+  });
+  function qzRevelar(q, r){
+    $("qz-antes").hidden = true; $("qz-depois").hidden = false;
+    Array.prototype.forEach.call($("qz-alts").querySelectorAll(".qz-alt"), function(x){
+      Array.prototype.forEach.call(x.querySelectorAll("button"), function(bt){ bt.disabled = true; });
+      var l = x.getAttribute("data-l"); x.classList.remove("marcada");
+      if(l === r.gabarito){ x.classList.add("gab"); x.classList.remove("riscada"); } else if(l === r.letra){ x.classList.add("errada"); }
+      if(r.riscadas && r.riscadas.indexOf(l) >= 0 && l !== r.gabarito){ x.classList.add("riscada"); } });
+    var v = $("qz-veredito"); v.className = "qz-veredito " + (r.correta ? "certa" : "errada");
+    var est = q.estatistica ? '<small>no EMED, ' + qzEsc(q.estatistica) + ' acertam</small>' : "";
+    var conf = {solida: "sólida", duvida: "dúvida", chute: "chute"}[r.confianca] || r.confianca;
+    v.innerHTML = (r.correta ? "Certa" : "Errada · gabarito " + qzEsc(r.gabarito)) + ' <small>marcou ' + qzEsc(r.letra) + ' · ' + qzEsc(conf) + ' · ' + qzEsc(r.tempo_s) + 's</small>' + est;
+    $("qz-sol").textContent = q.solucao || "(sem comentário capturado)"; $("qz-forum").textContent = q.forum || "(sem fórum capturado)";
+    var precisa = !r.correta || r.confianca === "chute";
+    $("qz-sol-box").open = precisa; $("qz-forum-box").open = false;
+    $("qz-meta-erro").hidden = !precisa; $("qz-racional").value = r.racional || "";
+    Array.prototype.forEach.call($("qz-elo").querySelectorAll("button"), function(b){ b.classList.toggle("on", b.getAttribute("data-e") === r.elo); });
+    $("qz-proxima").textContent = (QZ.pos + 1 < QZ.qs.length) ? "Próxima" : "Terminar";
+    qzAnalise();
+  }
+  $("qz-elo").addEventListener("click", function(e){ var b = e.target.closest("button[data-e]"); if(!b){ return; } var on = b.classList.contains("on");
+    Array.prototype.forEach.call($("qz-elo").querySelectorAll("button"), function(x){ x.classList.remove("on"); }); if(!on){ b.classList.add("on"); } });
+  $("qz-proxima").addEventListener("click", function(){
+    var q = QZ.qs[QZ.pos]; var r = QZ.resp[q.num]; if(!r){ return; }
+    var eloBtn = $("qz-elo").querySelector("button.on"); var elo = eloBtn ? eloBtn.getAttribute("data-e") : "";
+    var rac = $("qz-racional").value.trim(); var flag = !!$("qz-flag").checked;
+    if(!$("qz-meta-erro").hidden && (rac !== (r.racional || "") || elo !== (r.elo || "") || flag !== !!r.flag)){ r.racional = rac; r.elo = elo; r.flag = flag; qzGravar(r); }
+    if(QZ.revendo){ var j = QZ.pos + 1; if(j < QZ.qs.length && QZ.resp[QZ.qs[j].num]){ qzRever(j); } else { qzFim(); } return; }
+    var i = QZ.pos + 1; while(i < QZ.qs.length && QZ.resp[QZ.qs[i].num]){ i++; }
+    if(i >= QZ.qs.length){ qzFim(); } else { qzMostrar(i); }
+  });
+  function qzRever(i){ var q = QZ.qs[i]; var r = QZ.resp[q.num]; qzMostrar(i); qzParar(); if(r){ qzRevelar(q, r); $("qz-flag").checked = !!r.flag; $("qz-relogio").textContent = "--:--"; } }
+  $("qz-rever").addEventListener("click", function(){ QZ.revendo = true; qzRever(0); });
+  function qzFim(){
+    qzParar(); QZ.pos = QZ.qs.length; qzTrilho(); $("qz-questao").hidden = true; $("qz-fim").hidden = false; QZ.revendo = false;
+    var rs = QZ.qs.map(function(q){ return QZ.resp[q.num]; }).filter(Boolean);
+    var ac = rs.filter(function(r){ return r.correta; }).length, sol = rs.filter(function(r){ return r.confianca === "solida"; }).length,
+        duv = rs.filter(function(r){ return r.confianca === "duvida"; }).length, chu = rs.filter(function(r){ return r.confianca === "chute"; }).length,
+        solC = rs.filter(function(r){ return r.correta && r.confianca === "solida"; }).length,
+        temp = rs.length ? Math.round(rs.reduce(function(a, r){ return a + (r.tempo_s || 0); }, 0) / rs.length) : 0;
+    $("qz-tiles").innerHTML = [["Acertos", ac + "/" + rs.length], ["Sólidas certas", solC + "/" + sol], ["Dúvidas", duv], ["Chutes", chu], ["Tempo médio", temp + "s"]].map(function(t){ return '<div><div class="fim-num">' + qzEsc(t[1]) + '</div><div class="fim-rot">' + qzEsc(t[0]) + '</div></div>'; }).join("");
+    var err = rs.filter(function(r){ return !r.correta; }).map(function(r){ return r.num; }), ch = rs.filter(function(r){ return r.correta && r.confianca === "chute"; }).map(function(r){ return r.num; });
+    $("qz-erradas").textContent = (err.length ? "Erradas: " + err.join(", ") + ". " : "Nenhuma errada. ") + (ch.length ? "Chutes certos (contam como incerteza): " + ch.join(", ") + "." : "");
+    // revisao questao a questao: toque abre gabarito, resolucao, racional/elo e a analise do hub
+    $("qz-revisao").innerHTML = QZ.qs.map(function(q, i){ var r = QZ.resp[q.num]; if(!r){ return ""; }
+      var cls = r.correta ? (r.confianca === "chute" ? "chute" : "certa") : "errada";
+      var rot = r.correta ? (r.confianca === "chute" ? "certa no chute" : "certa") : "errada";
+      var conf = {solida: "sólida", duvida: "dúvida", chute: "chute"}[r.confianca] || "";
+      return '<li><button type="button" data-rev="' + i + '" class="qz-rev ' + cls + '"><b>Q' + qzEsc(q.num) + '</b><span>marcou ' + qzEsc(r.letra) + ' · gabarito ' + qzEsc(r.gabarito) + ' · ' + qzEsc(conf) + '</span><i>' + rot + (QZ.ana[q.num] ? " · análise" : "") + '</i></button></li>'; }).join("");
+    $("qz-fim-status").textContent = "";
+    window.scrollTo(0, 0);
+  }
+  $("qz-revisao").addEventListener("click", function(e){ var b = e.target.closest("button[data-rev]"); if(b){ QZ.revendo = true; qzRever(parseInt(b.getAttribute("data-rev"), 10)); } });
+  $("qz-concluir").addEventListener("click", function(){
+    if(!QZ.db || !QZ.lista){ return; } var st = $("qz-fim-status"); st.className = "qz-status"; st.textContent = "Gravando…";
+    QZ.db.doc("listas/" + QZ.lista).update({status: "resolvida", resolvida_em: qzAgora(), atualizado_em: qzAgora()})
+      .then(function(){ st.className = "qz-status ok"; st.textContent = "Lista marcada como resolvida."; })
+      .catch(function(e){ st.className = "qz-status ruim"; st.textContent = "Não gravou (" + ((e && e.code) || "erro") + ")."; });
+  });
+  function qzAnalise(){
+    var q = QZ.qs[QZ.pos]; var box = $("qz-analise"); if(!q){ box.hidden = true; return; }
+    var a = QZ.ana[q.num]; if(!a){ box.hidden = true; return; }
+    box.hidden = false;
+    var cadeia = Array.isArray(a.cadeia) ? a.cadeia : [];
+    var kv = [["Pedia", a.pedia], ["Comporta", a.comporta], ["Armadilha", a.armadilha], ["Veredito do hub", a.veredito_hub], ["Cards", Array.isArray(a.cards) ? a.cards.map(function(c){ return "#" + c; }).join(", ") : a.cards]].filter(function(p){ return p[1]; });
+    box.innerHTML = '<p class="qz-rot" style="margin:0">Análise do hub</p>' + (cadeia.length ? '<ol>' + cadeia.map(function(c, i){ return '<li class="' + (i === a.quebrou ? "quebrou" : "") + '">' + qzEsc(c) + '</li>'; }).join("") + '</ol>' : "") +
+      '<div class="kv">' + kv.map(function(p){ return '<span>' + qzEsc(p[0]) + '</span><div>' + qzEsc(p[1]) + '</div>'; }).join("") + '</div>' +
+      '<div class="qz-elo" id="qz-vered">' + [["concordo", "Concordo"], ["em_parte", "Em parte"], ["discordo", "Discordo"]].map(function(v){ return '<button type="button" data-v="' + v[0] + '" class="' + (a.veredito_operador === v[0] ? "on" : "") + '">' + v[1] + '</button>'; }).join("") + '</div>' +
+      '<div class="qz-campo"><textarea id="qz-vered-nota" rows="2" placeholder="Por quê? (opcional)">' + qzEsc(a.nota_operador || "") + '</textarea></div><p class="qz-status" id="qz-vered-st"></p>';
+    box.querySelector("#qz-vered").addEventListener("click", function(e){ var b = e.target.closest("button[data-v]"); if(!b || !QZ.db){ return; }
+      var st = box.querySelector("#qz-vered-st"); st.className = "qz-status"; st.textContent = "Gravando…";
+      QZ.db.doc("analises/" + a._id).update({veredito_operador: b.getAttribute("data-v"), nota_operador: box.querySelector("#qz-vered-nota").value.trim(), veredito_em: qzAgora()})
+        .then(function(){ st.className = "qz-status ok"; st.textContent = "Veredito gravado."; })
+        .catch(function(err){ st.className = "qz-status ruim"; st.textContent = "Não gravou (" + ((err && err.code) || "erro") + ")."; }); });
+  }
+  document.addEventListener("keydown", function(e){
+    if(raiz.getAttribute("data-aba") !== "questoes" || $("qz-player").hidden || $("qz-questao").hidden){ return; }
+    var tag = (e.target.tagName || "").toLowerCase(); if(tag === "textarea" || tag === "input" || tag === "select"){ return; }
+    var k = e.key.toUpperCase();
+    if(!$("qz-antes").hidden){
+      if("ABCDE".indexOf(k) >= 0 && k.length === 1){ var b = $("qz-alts").querySelector('.qz-alt[data-l="' + k + '"] .qz-alt-btn'); if(b){ b.click(); } }
+      else if("12345".indexOf(k) >= 0 && k.length === 1){ var b2 = $("qz-alts").querySelectorAll(".qz-alt-btn")[parseInt(k, 10) - 1]; if(b2){ b2.click(); } }
+      else if(k === "S" || k === "D" || k === "C"){ var b3 = $("qz-seg").querySelector('button[data-c="' + {S: "solida", D: "duvida", C: "chute"}[k] + '"]'); if(b3){ b3.click(); } }
+      else if(e.key === "Enter" && !$("qz-responder").disabled){ e.preventDefault(); $("qz-responder").click(); }
+    } else if(e.key === "Enter"){ e.preventDefault(); $("qz-proxima").click(); }
+  });
 
   // Padrao = Painel (s194); hash e aba lembrada continuam vencendo.
   ir(doHash() || lembrada() || "painel", false);

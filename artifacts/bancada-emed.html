@@ -173,7 +173,8 @@ details.bloco .corpo.forum{color:var(--tinta2)}
     </div>
     <div class="abas" role="tablist" aria-label="Seções">
       <button type="button" role="tab" id="tab-capturar" aria-controls="aba-capturar" aria-selected="true" data-aba="capturar">Capturar</button>
-      <button type="button" role="tab" id="tab-resolver" aria-controls="aba-resolver" aria-selected="false" data-aba="resolver">Resolver</button>
+      <!-- s197: o operador resolve no MedHub HUB (aba Questões); aqui a aba fica escondida para nao haver 2 lugares de resposta -->
+      <button type="button" role="tab" id="tab-resolver" aria-controls="aba-resolver" aria-selected="false" data-aba="resolver" hidden>Resolver</button>
       <button type="button" role="tab" id="tab-canal" aria-controls="aba-canal" aria-selected="false" data-aba="canal">Canal <span class="n" id="canal-n">0</span></button>
     </div>
   </header>
@@ -355,7 +356,7 @@ details.bloco .corpo.forum{color:var(--tinta2)}
   // ------------------------------------------------------------------ abas
   var ABAS=["capturar","resolver","canal"];
   function ir(aba){
-    if(ABAS.indexOf(aba)<0)aba="capturar";
+    if(ABAS.indexOf(aba)<0||aba==="resolver")aba="capturar";
     ABAS.forEach(function(a){$("aba-"+a).hidden=(a!==aba);var t=$("tab-"+a);t.setAttribute("aria-selected",a===aba?"true":"false");t.tabIndex=a===aba?0:-1});
     ls("bancada.aba",aba);
     if(aba==="capturar")assinarTodasQuestoes();

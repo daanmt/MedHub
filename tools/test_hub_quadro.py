@@ -334,8 +334,13 @@ def test_painel_fala_com_as_abas():
 def test_declaracao_de_capabilities_documentada_nos_portadores():
     """A regra nova `quadro` e a declaracao COMPLETA (non-empty = full set: esquecer `sessoes`
     revogaria a escrita das notas)."""
+    # s197: + as 4 colecoes do EMED da aba Questoes, fechadas ao dono (o hub e compartilhado por link)
     decl = ('{db: {rules: [{path: "", read: "view", write: "admin"}, {path: "sessoes", '
-            'write: "interact"}, {path: "quadro", write: "interact"}]}}')
+            'write: "interact"}, {path: "quadro", write: "interact"}, '
+            '{path: "listas", read: "admin", write: "admin"}, '
+            '{path: "questoes", read: "admin", write: "admin"}, '
+            '{path: "respostas", read: "admin", write: "admin"}, '
+            '{path: "analises", read: "admin", write: "admin"}]}}')
     for portador in (".claude/commands/revisar.md", ".claude/commands/hub-backend.md"):
         assert decl in (ROOT / portador).read_text(encoding="utf-8"), portador
 

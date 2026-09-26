@@ -241,11 +241,30 @@ def cmd_podar(args):
     return 0
 
 
+def doc_lista(lista, n_questoes):
+    """Doc `listas/<lista>` para semear o hub: tema/área/semana/url vêm de `plano_tarefas`."""
+    st = [s for s in db.emed_status() if s["lista"] == lista]
+    tarefa = st[0]["tarefa_id"] if st else db._int_ou_none(lista.lstrip("t"))
+    plano = db.plano_obter(tarefa) if tarefa else None
+    plano = plano or {}
+    return {"tarefa": tarefa, "tema": plano.get("tema") or (st[0]["tema"] if st else None),
+            "area": plano.get("area") or (st[0]["area"] if st else None),
+            "semana": plano.get("semana_plano"), "seq": plano.get("ordem") or 0,
+            "q": n_questoes, "q_previstas": plano.get("q_previstas"),
+            "url": plano.get("url_lista"), "status": "capturada",
+            "semeada_em": db.carimbo()}
+
+
 def cmd_exportar(args):
-    """`--exportar LISTA`: escreve `OUT/questoes/<lista>_<num>.json` no formato do doc."""
+    """`--exportar LISTA`: escreve `OUT/questoes/<lista>_<num>.json` (formato do doc) e
+    `OUT/listas/<lista>.json` (cabeçalho da lista), para semear o buffer/hub por ArtifactData."""
     linhas = db.emed_listar_questoes(args.exportar)
     pasta = os.path.join(args.out, "questoes")
     os.makedirs(pasta, exist_ok=True)
+    pasta_l = os.path.join(args.out, "listas")
+    os.makedirs(pasta_l, exist_ok=True)
+    with open(os.path.join(pasta_l, f"{args.exportar}.json"), "w", encoding="utf-8") as fh:
+        json.dump(doc_lista(args.exportar, len(linhas)), fh, ensure_ascii=False, indent=2)
     for q in linhas:
         doc = {c: q.get("tarefa_id" if c == "tarefa" else c) for c in CAMPOS_DOC_QUESTAO}
         # `extras` volta a ser chaves soltas do doc (formato do artifact); o hash re-deriva igual.
@@ -256,7 +275,7 @@ def cmd_exportar(args):
         caminho = os.path.join(pasta, f"{q['lista']}_{q['num']}.json")
         with open(caminho, "w", encoding="utf-8") as fh:
             json.dump(doc, fh, ensure_ascii=False, indent=2)
-    print(f"{len(linhas)} arquivos em {pasta}")
+    print(f"{len(linhas)} arquivos em {pasta} + listas/{args.exportar}.json")
     return 0
 
 

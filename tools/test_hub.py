@@ -422,7 +422,7 @@ def test_celular_sem_sticky_sem_nowrap_e_um_wrap_so():
 def test_abas_curtas_e_com_alvo_de_toque():
     pagina = _pagina_real()
     rotulos = re.findall(r'class="hub-aba"[^>]*>([^<]+)</button>', pagina)
-    assert rotulos == ["Painel", "Aulas", "Cards"]
+    assert rotulos == ["Painel", "Aulas", "Cards", "Questões"]
     assert all(len(r) <= 15 for r in rotulos)
     regra_aba = re.search(r"\.hub-aba\{([^}]*)\}", pagina).group(1)
     assert "min-height:44px" in regra_aba
@@ -435,12 +435,13 @@ def test_abas_na_ordem_painel_aulas_cards_e_painel_e_o_padrao():
     no Painel. Hash e aba lembrada continuam vencendo o padrao."""
     pagina = _pagina_real()
     abas = re.findall(r'<button type="button" class="hub-aba"[^>]*data-aba="(\w+)"', pagina)
-    assert abas == ["painel", "aulas", "cards"]
+    # s197: 4a aba "Questoes" (decisao do operador em 26/09/2026: o bloco de questoes mora no hub)
+    assert abas == ["painel", "aulas", "cards", "questoes"]
     primeiro = re.search(r'<button type="button" class="hub-aba"[^>]*>', pagina).group(0)
     assert 'aria-selected="true"' in primeiro and 'data-aba="painel"' in primeiro
     botoes = re.findall(r'<button type="button" class="hub-aba"[^>]*>', pagina)
     assert sum('aria-selected="true"' in bt for bt in botoes) == 1
-    assert 'var ABAS = ["painel", "aulas", "cards"];' in pagina
+    assert 'var ABAS = ["painel", "aulas", "cards", "questoes"];' in pagina
     assert 'ir(doHash() || lembrada() || "painel", false);' in pagina
     assert ':root:not([data-aba]) #aba-painel' in pagina, "sem JS, a aba visivel e o Painel"
 

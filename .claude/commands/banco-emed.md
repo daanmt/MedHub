@@ -13,7 +13,14 @@ status: canonical
 >
 > **Bancada EMED:** https://claude.ai/artifact/Q2Cojm89D9JwRyBYmCD5Db (fonte `artifacts/bancada-emed.html`;
 > republicar SEMPRE nesta URL, `capabilities: {db: {}}` declarada pelo agente principal).  <!-- NAO-VERIFICAVEL: conduta do agente no publish, sem artefato que a registre (revisar: 2027-03-31) -->
-> Abas: **Capturar** (executor = Claude no Chrome), **Resolver** (operador) e **Canal**.
+> Abas: **Capturar** (executor = Claude no Chrome) e **Canal**. ⚰️ *A aba Resolver da Bancada morreu em
+> 26/09/2026 (s197): o operador decidiu -- "não quero a bancada. gostei da interface. quero ela no artifact do
+> medhub" -- e o bloco de questões passou a ser a **aba Questões do MedHub HUB** (`core/templates/hub.html`).*
+>
+> 🔴 **Onde cada coisa mora desde a s197:** captura (`questoes/*`, `listas/*`, `mensagens`) = db da **Bancada**;
+> estudo (`listas/*`, `questoes/*`, `respostas/*`, `analises/*`) = db do **HUB** (regras `read/write admin`, porque o
+> hub é compartilhado por link), semeado por `emed_banco.py --exportar` + `ArtifactData batch set` (<= 50 por lote,
+> `questoes/<lista>_<num>` + `listas/<lista>`). O passo 3 do tique (`--registrar`) lê `respostas` do **HUB**.
 
 ## Fronteiras
 

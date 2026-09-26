@@ -139,7 +139,7 @@ aliases: [CA Mama]
 
 **N clínico:**
 - cN0: axila negativa | cN1: axilares móveis | cN2: axilares fixos/mamários internos
-- **cN3: supraclavicular ipsilateral = estádio IV (metástase!)** ⭐
+- **cN3c: supraclavicular ipsilateral = estádio IIIC (localmente avançado, NÃO metástase)** ⭐ | supraclavicular **contralateral** = M1 = estádio IV
 
 **Estádios e conduta:**
 - **I -> IIB (T2N1): Estado inicial -> cirurgia primeiro**
@@ -253,7 +253,7 @@ aliases: [CA Mama]
 - Paget = eczema do mamilo que não cura -> biopsiar
 - **Quadrantectomia = radioterapia obrigatória**
 - Linfonodo sentinela Z0011: ≤2 comprometidos + T1-T2 + cirurgia conservadora -> sem esvaziamento axilar
-- **cN3 (supraclavicular) = estádio IV**
+- **cN3c (supraclavicular ipsilateral) = IIIC -> quimioterapia neoadjuvante primeiro** | contralateral = M1 (IV)
 - Pré-menopausa -> tamoxifeno | Pós-menopausa -> inibidores de aromatase
 - Tamoxifeno: agonista endometrial + evitar inibidores fortes de CYP2D6 (fluoxetina, paroxetina)
 - **Trastuzumabe: cardiotóxico, nunca com antracíclico**
@@ -270,8 +270,8 @@ aliases: [CA Mama]
 - 🔴 **Biópsia excisional é CONTRAINDICADA como método diagnóstico** (impede margens livres na cirurgia definitiva) -- a BAG (core biopsy) é a 1a escolha para nódulo suspeito sólido.
 - 🔴 **CDIS tem risco de evolução para carcinoma invasivo mais de 2x maior** que a população geral -- não é achado acidental nem involui espontaneamente. A mamotomia usada para diagnosticar microcalcificações suspeitas é só biópsia percutânea: pode não retirar a lesão inteira, então NÃO trata (não "considerar tratada e repetir em 6 meses"). O tratamento exige exérese completa com margens livres +- radioterapia adjuvante; **tamoxifeno só entra se o receptor hormonal estiver confirmado positivo** -- se o enunciado não informar esse dado, não assumir hormonioterapia. Armadilha: "tratar com tamoxifeno e observar" soa como conduta ativa e razoável, mas falta exatamente o dado que a sustentaria.
 - 🔴 **Carcinoma inflamatório não tem nódulo palpável** -- edema + eritema + peau d'orange em rápida evolução confundem com mastite; mastectomia é obrigatória mesmo com resposta completa à quimioterapia.
-- 🔴 **cN3 (linfonodo supraclavicular ipsilateral) já é estádio IV** -- metástase, não doença locorregional.
-- 🔴 **Linfonodo supraclavicular comprometido -- ipsilateral ou contralateral -- não é só detalhe de estadiamento, muda a ORDEM do tratamento.** Diante de imagem mostrando tumor tecnicamente ressecável, a tentação é ir direto para cirurgia local (quadrantectomia + linfonodo sentinela) -- mas o comprometimento linfonodal a distância já reclassifica o caso como estádio IV, e a conduta correta é começar pelo tratamento sistêmico (quimioterapia primária/neoadjuvante), reservando a cirurgia para depois. Antes de decidir a conduta por uma imagem "operável", checar se algum achado já fechou estádio IV -- se sim, ele exclui a cirurgia como 1a etapa, não importa quão localizado pareça o tumor primário.
+- 🔴 **Linfonodo supraclavicular ipsilateral NÃO é estádio IV: é cN3c = estádio IIIC** (AJCC 6ª edição em diante, mantido na 8ª) -- doença localmente avançada. Só o supraclavicular **contralateral** é M1 (estádio IV). Até a AJCC 5ª edição (1997) o ipsilateral era M1, e texto antigo ainda repete isso.
+- 🔴 **Linfonodo supraclavicular comprometido -- ipsilateral ou contralateral -- não é só detalhe de estadiamento, muda a ORDEM do tratamento.** Diante de imagem mostrando tumor tecnicamente ressecável, a tentação é ir direto para cirurgia local (quadrantectomia + linfonodo sentinela) -- mas o supraclavicular já reclassifica o caso (ipsilateral = IIIC, localmente avançado; contralateral = IV), e nos dois a conduta correta é começar pelo tratamento sistêmico (quimioterapia primária/neoadjuvante), reservando a cirurgia para depois. Antes de decidir a conduta por uma imagem "operável", checar se algum achado já fechou doença localmente avançada ou metastática -- se sim, ele exclui a cirurgia como 1a etapa, não importa quão localizado pareça o tumor primário.
 - 🔴 **Trastuzumabe nunca é associado a antracíclico** (cardiotoxicidade somada) -- combina-se com taxano.
 - 🔴 **Fator de risco geral não é sinônimo de critério de ALTO RISCO.** Menarca precoce, menopausa tardia e nuliparidade são fatores de risco reais e conhecidos, mas isoladamente NÃO classificam a paciente na categoria de alto risco (que muda o seguimento e pode indicar quimioprofilaxia). Os critérios que de fato definem essa categoria são mais restritos: biópsia prévia com atipia (HDA/HLA), mutação BRCA1/2, história familiar de 1º grau com CA de mama antes da menopausa, ou risco calculado >20% pelo modelo de Tyrer-Cuzick. Em questão que pede o critério de alto risco, menarca precoce e nuliparidade são distratores clássicos -- a resposta correta é o item da lista restrita (ex.: biópsia prévia com atipia).
 - 🔴 **Toda categoria de alto risco (não só BRCA1/2) muda o intervalo de rastreio para ANUAL.** A seção 2 lista o intervalo anual explicitamente só para BRCA1/2 (+ RM, a partir dos 30 anos), mas a mesma lógica vale para qualquer critério de alto risco -- incluindo história familiar de 1º grau com CA de mama antes da menopausa. O intervalo BIENAL (MS, 50-69 anos) e o anual "geral" das sociedades médicas (a partir dos 40) são os dois protocolos de risco HABITUAL; a paciente de alto risco sai desses dois e vai para mamografia anual, independente da idade em que o critério de alto risco surgir. Armadilha clássica: a alternativa "mamografia bienal" parece correta por ser um intervalo real de rastreio -- só que pertence à categoria de risco errada.

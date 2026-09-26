@@ -248,6 +248,11 @@ def cmd_exportar(args):
     os.makedirs(pasta, exist_ok=True)
     for q in linhas:
         doc = {c: q.get("tarefa_id" if c == "tarefa" else c) for c in CAMPOS_DOC_QUESTAO}
+        # `extras` volta a ser chaves soltas do doc (formato do artifact); o hash re-deriva igual.
+        try:
+            doc.update(json.loads(q.get("extras") or "{}"))
+        except ValueError:
+            pass
         caminho = os.path.join(pasta, f"{q['lista']}_{q['num']}.json")
         with open(caminho, "w", encoding="utf-8") as fh:
             json.dump(doc, fh, ensure_ascii=False, indent=2)

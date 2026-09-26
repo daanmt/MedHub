@@ -395,10 +395,15 @@ details.bloco .corpo.forum{color:var(--tinta2)}
   $("l-feita").addEventListener("click",function(){marcar("capturada")});
   $("l-bloq").addEventListener("click",function(){marcar("bloqueada")});
 
+  var CAMPOS_Q=["lista","tarefa","num","banca","gabarito","emed_id","estatistica","enunciado","alternativas","solucao","forum","tags","capturado_em","executor"];
   function docQuestao(l,o){
-    return {lista:l._id,tarefa:l.tarefa||null,num:o.num,banca:String(o.banca||"").trim(),gabarito:String(o.gabarito||"").trim().toUpperCase(),
+    var doc={lista:l._id,tarefa:l.tarefa||null,num:o.num,banca:String(o.banca||"").trim(),gabarito:String(o.gabarito||"").trim().toUpperCase(),
       emed_id:String(o.emed_id||"").trim(),estatistica:String(o.estatistica||"").trim(),enunciado:String(o.enunciado||""),alternativas:String(o.alternativas||""),
       solucao:String(o.solucao||""),forum:String(o.forum||""),tags:String(o.tags||"").trim(),capturado_em:agora(),executor:"claude-in-chrome"};
+    // Campos extras do executor (acerto_pct, video, finalidade, alternativas_pct...) seguem no doc: o hub guarda em `extras`.
+    Object.keys(o||{}).forEach(function(k){if(CAMPOS_Q.indexOf(k)<0&&k[0]!=="_"&&o[k]!==undefined&&o[k]!==null&&o[k]!=="")doc[k]=o[k]});
+    if(!doc.estatistica&&typeof o.acerto_pct==="number")doc.estatistica=Math.round(o.acerto_pct)+"%";
+    return doc;
   }
   $("form-q").addEventListener("submit",async function(e){
     e.preventDefault(); var l=atual(); if(!l||!S.db) return;
@@ -480,7 +485,7 @@ details.bloco .corpo.forum{color:var(--tinta2)}
       if(R.pos<0) posicionar(); else renderTrilho();
     },function(){$("r-aviso").hidden=false;$("r-aviso").textContent="Não foi possível ler as questões. Recarregue a página."}));
     R.unsubs.push(S.db.collection("respostas").where("lista","==",id).onSnapshot(function(s){
-      s.docs.forEach(function(d){var r=d.data()||{};if(r.num){var loc=R.resp[r.num];if(!loc||!loc._pendente||(loc.respondido_em||"")<=(r.respondido_em||""))R.resp[r.num]=r}});
+      s.docs.forEach(function(d){var r=Object.assign({},d.data()||{});if(r.num){var loc=R.resp[r.num];if(!loc||!loc._pendente||(loc.respondido_em||"")<=(r.respondido_em||""))R.resp[r.num]=r}});
       ls(chaveLocal(),R.resp); reenviarPendentes(); if(R.pos<0)posicionar(); else renderTrilho();
     },function(){}));
     R.unsubs.push(S.db.collection("analises").where("lista","==",id).onSnapshot(function(s){
@@ -631,7 +636,8 @@ details.bloco .corpo.forum{color:var(--tinta2)}
     if(!db){$("fila").innerHTML='<li class="vazio">Banco indisponível nesta visualização. Abra a página logado na conta do MedHub.</li>';$("r-fila").innerHTML='<li class="vazio">Banco indisponível.</li>';$("chat-log").innerHTML='<div class="msg op"><span class="meta">canal:</span>banco indisponível.</div>';return}
     S.db=db;
     db.doc("control/hub").onSnapshot(function(s){S.control=s.exists?(s.data()||{}):{};var t=S.control.instrucao||"";$("hub-banner").hidden=!t;$("hub-banner").textContent=t},function(){});
-    db.collection("listas").orderBy("seq").onSnapshot(function(s){S.listas=s.docs.map(function(d){var x=d.data()||{};x._id=d.id;return x});render()},function(){$("fila").innerHTML='<li class="vazio">Não foi possível ler a fila. Recarregue a página.</li>'});
+    // data() vem CONGELADO: clonar antes de anexar _id (senao a atribuicao falha em silencio -- bug do lote 'undefined_N', s197).
+    db.collection("listas").orderBy("seq").onSnapshot(function(s){S.listas=s.docs.map(function(d){var x=Object.assign({},d.data()||{});x._id=d.id;return x});render()},function(){$("fila").innerHTML='<li class="vazio">Não foi possível ler a fila. Recarregue a página.</li>'});
     db.collection("mensagens").orderBy("enviado_em","asc").limit(400).onSnapshot(function(s){renderChat(s.docs.map(function(d){return d.data()||{}}))},function(){$("chat-log").innerHTML='<div class="msg op"><span class="meta">canal:</span>não foi possível ler as mensagens.</div>'});
     if(!$("aba-capturar").hidden)assinarTodasQuestoes();
   }

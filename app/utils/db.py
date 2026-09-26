@@ -2451,13 +2451,20 @@ def sessoes_bulk_listar(area=None, vinculadas=None):
 #: Campos de CONTEÚDO da questão: o `hash` é deles, e só eles fazem uma questão
 #: já ingerida contar como `atualizada`.
 CAMPOS_HASH_EMED = ("banca", "gabarito", "emed_id", "enunciado", "alternativas",
-                    "solucao", "forum", "tags", "estatistica")
+                    "solucao", "forum", "tags", "estatistica", "extras")
+
+#: Chaves do doc que TÊM coluna própria. Qualquer outra chave que o executor gravar
+#: (ex.: `acerto_pct`, `video`, `finalidade`, `alternativas_pct`, s197) vai para a
+#: coluna `extras` como JSON canônico -- nada capturado se perde na poda do buffer.
+_CHAVES_DOC_EMED = frozenset(CAMPOS_HASH_EMED) | {"lista", "tarefa", "num", "capturado_em",
+                                                  "executor"}
 
 CONFIANCAS_EMED = ("solida", "duvida", "chute")
 
 _COLUNAS_EMED_Q = ("id", "lista", "tarefa_id", "num", "emed_id", "banca", "gabarito",
                    "enunciado", "alternativas", "solucao", "forum", "tags", "estatistica",
-                   "capturado_em", "executor", "hash", "ingerido_em", "atualizado_em")
+                   "extras", "capturado_em", "executor", "hash", "ingerido_em",
+                   "atualizado_em")
 
 _COLUNAS_EMED_R = ("id", "lista", "tarefa_id", "num", "letra", "confianca", "correta",
                    "gabarito", "racional", "elo", "tempo_s", "flag", "respondido_em",
@@ -2481,6 +2488,7 @@ def _ensure_emed_tables(conn):
             forum         TEXT,
             tags          TEXT,
             estatistica   TEXT,
+            extras        TEXT,
             capturado_em  TEXT,
             executor      TEXT,
             hash          TEXT NOT NULL,
@@ -2531,11 +2539,30 @@ def _vazio(valor):
     return valor is None or (isinstance(valor, str) and not valor.strip())
 
 
+def emed_extras_json(doc):
+    """JSON canônico das chaves do doc SEM coluna própria (`""` quando não há).
+
+    Determinístico (sort_keys) para que doc do artifact, linha do banco e doc
+    re-exportado produzam o mesmo `hash`. Chaves `_privadas`, `None` e `""` ficam fora.
+    """
+    import json as _json
+    extras = {k: v for k, v in doc.items()
+              if k not in _CHAVES_DOC_EMED and not str(k).startswith("_")
+              and v is not None and v != ""}
+    return _json.dumps(extras, sort_keys=True, ensure_ascii=False) if extras else ""
+
+
 def emed_hash_questao(doc):
-    """sha1 do JSON canônico dos `CAMPOS_HASH_EMED` (sort_keys, ensure_ascii=False)."""
+    """sha1 do JSON canônico dos `CAMPOS_HASH_EMED` (sort_keys, ensure_ascii=False).
+
+    `extras` vem da coluna quando o doc é uma linha do banco; num doc do artifact (ou
+    re-exportado) é derivado das chaves soltas -- os dois caminhos dão o mesmo texto.
+    """
     import hashlib
     import json as _json
     conteudo = {c: _txt(doc.get(c)) for c in CAMPOS_HASH_EMED}
+    conteudo["extras"] = (_txt(doc.get("extras")) if isinstance(doc.get("extras"), str)
+                          else emed_extras_json(doc))
     conteudo["gabarito"] = conteudo["gabarito"].strip().upper()
     canon = _json.dumps(conteudo, sort_keys=True, ensure_ascii=False)
     return hashlib.sha1(canon.encode("utf-8")).hexdigest()
@@ -2584,6 +2611,8 @@ def emed_upsert_questoes(rows, aplicar=True):
             invalidas.append(doc.get("_doc_id"))
             continue
         linha = {c: _txt(doc.get(c)) for c in CAMPOS_HASH_EMED}
+        linha["extras"] = (doc["extras"] if isinstance(doc.get("extras"), str)
+                           else emed_extras_json(doc))
         linha["gabarito"] = linha["gabarito"].strip().upper()
         linha.update(lista=str(doc["lista"]).strip(), num=num,
                      tarefa_id=_int_ou_none(doc.get("tarefa")),
@@ -2618,9 +2647,9 @@ def emed_upsert_questoes(rows, aplicar=True):
             conn.execute('''
                 INSERT INTO emed_questoes
                     (lista, tarefa_id, num, emed_id, banca, gabarito, enunciado,
-                     alternativas, solucao, forum, tags, estatistica, capturado_em,
-                     executor, hash, ingerido_em, atualizado_em)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                     alternativas, solucao, forum, tags, estatistica, extras,
+                     capturado_em, executor, hash, ingerido_em, atualizado_em)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ON CONFLICT (lista, num) DO UPDATE SET
                     tarefa_id     = COALESCE(excluded.tarefa_id, emed_questoes.tarefa_id),
                     emed_id       = excluded.emed_id,
@@ -2632,6 +2661,7 @@ def emed_upsert_questoes(rows, aplicar=True):
                     forum         = excluded.forum,
                     tags          = excluded.tags,
                     estatistica   = excluded.estatistica,
+                    extras        = excluded.extras,
                     capturado_em  = excluded.capturado_em,
                     executor      = excluded.executor,
                     hash          = excluded.hash,
@@ -2639,8 +2669,8 @@ def emed_upsert_questoes(rows, aplicar=True):
             ''', (linha["lista"], linha["tarefa_id"], linha["num"], linha["emed_id"],
                   linha["banca"], linha["gabarito"], linha["enunciado"],
                   linha["alternativas"], linha["solucao"], linha["forum"], linha["tags"],
-                  linha["estatistica"], linha["capturado_em"], linha["executor"],
-                  linha["hash"], ts, ts))
+                  linha["estatistica"], linha["extras"], linha["capturado_em"],
+                  linha["executor"], linha["hash"], ts, ts))
         if aplicar:
             conn.commit()
         return cont

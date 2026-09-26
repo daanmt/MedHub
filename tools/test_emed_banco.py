@@ -64,6 +64,34 @@ def _json_saida(capsys):
 
 # ------------------------------------------------------------------- testes
 
+def test_extras_vao_para_coluna_e_voltam_no_export(tmp_path, monkeypatch, capsys):
+    """Chave sem coluna (acerto_pct, video...) vira JSON em `extras`; o `--exportar`
+    devolve as chaves soltas e a re-ingestão dá `iguais` (hash estável nos 2 caminhos)."""
+    _usar_db(tmp_path, monkeypatch)
+    base = tmp_path / "buf"
+    _escrever(base, "questoes", "t26_1", _questao(1, acerto_pct=93, video=True,
+                                                   alternativas_pct="A 2% B 93% C 5%"))
+    _escrever(base, "questoes", "t26_2", _questao(2))
+    assert emed_banco.main(["--ingerir", str(base), "--apply", "--json"]) == 0
+    assert _json_saida(capsys)["novas"] == 2
+    q1, q2 = db.emed_listar_questoes("t26")
+    assert json.loads(q1["extras"]) == {"acerto_pct": 93, "video": True,
+                                        "alternativas_pct": "A 2% B 93% C 5%"}
+    assert q2["extras"] == ""
+    out = tmp_path / "exp"
+    assert emed_banco.main(["--exportar", "t26", "--out", str(out)]) == 0
+    capsys.readouterr()
+    doc1 = json.loads((out / "questoes" / "t26_1.json").read_text(encoding="utf-8"))
+    assert doc1["acerto_pct"] == 93 and doc1["video"] is True and "extras" not in doc1
+    assert emed_banco.main(["--ingerir", str(out), "--apply", "--json"]) == 0
+    c = _json_saida(capsys)
+    assert (c["novas"], c["atualizadas"], c["iguais"]) == (0, 0, 2)
+    # mudar um extra conta como atualizada (o hash cobre `extras`)
+    _escrever(base, "questoes", "t26_1", _questao(1, acerto_pct=40))
+    assert emed_banco.main(["--ingerir", str(base), "--apply", "--json"]) == 0
+    assert _json_saida(capsys)["atualizadas"] == 1
+
+
 def test_ingerir_idempotente(tmp_path, monkeypatch, capsys):
     """3 novas; 2a rodada 3 iguais; alterar `solucao` de uma -> 1 atualizada."""
     _usar_db(tmp_path, monkeypatch)

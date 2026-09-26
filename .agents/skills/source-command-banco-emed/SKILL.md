@@ -71,7 +71,7 @@ writers de `emed_questoes` / `emed_respostas`; allowlist F49). Dry-run é o defa
 | Flag | Função |
 |---|---|
 | `--ingerir DIR` | Upsert de `DIR/questoes/*.json` em `emed_questoes` (chave `lista+num`, `hash` de conteúdo). Imprime `novas/atualizadas/iguais/invalidas`; doc sem `lista`/`num`/`enunciado`/`gabarito` cai em `invalidas` sem abortar o lote. |
-| `--solucoes DIR` | (s199) Upsert de `DIR/solucoes/*.json` em `emed_solucoes` (writer `db.emed_upsert_solucoes`; chave `lista+num`). Doc v1: `lista`, `num`, `solucao` (texto), `divergente` (bool), `fontes`. **Doc v2 (s200):** `cadeia` + `alternativas` + `pede` no lugar de `solucao` (forma em §Solução MedHub; validada por `db.solucao_v2_problemas`, forma torta = `invalidas`) e `objetivo` (coluna própria; chave AUSENTE preserva o do banco). O `--exportar` leva a solução para o doc (`solucao_medhub` -- objeto na v2, texto na v1 --, `divergente`, `fontes_medhub`, `objetivo`), fora do `hash` e de `extras`. |
+| `--solucoes DIR` | (s199) Upsert de `DIR/solucoes/*.json` em `emed_solucoes` (writer `db.emed_upsert_solucoes`; chave `lista+num`). Doc v1: `lista`, `num`, `solucao` (texto), `divergente` (bool), `fontes`. **Doc v2 (s200):** `cadeia` + `alternativas` + `pede` no lugar de `solucao` (forma em §Solução MedHub; validada por `db.solucao_v2_problemas`, forma torta = `invalidas`) e `objetivo` (coluna própria; chave AUSENTE preserva o do banco; presente, tem de estar na lista fechada do tema em `core/objetivos.json` -- v1 e v2 --, senão `invalidas`). O `--exportar` leva a solução para o doc (`solucao_medhub` -- objeto na v2, texto na v1 --, `divergente`, `fontes_medhub`, `objetivo`), fora do `hash` e de `extras`. |
 | `--registrar DIR` | Upsert de `DIR/respostas/*.json` em `emed_respostas` (mais nova vence). Imprime as contagens e, por lista, o resumo `feitas · acertos (solidas, duvidas, chutes) · erradas · tempo medio` **e a linha sugerida de `registrar_sessao_bulk.py`** (`--sessao NNN` a preencher). |
 | `--podar DIR` | Read-only: lista os `doc_id` **seguros** para apagar do artifact (questão: hash igual ao do banco; resposta: `respondido_em` igual). Escreve `DIR/podar_<colecao>.json` (`ids`, `n`, `nao_seguros`). A exclusão em si é `ArtifactData batch delete` (<= 50 por lote), feita pelo agente. |
 | `--colecao {questoes,respostas}` | Coleção alvo do `--podar` (default `questoes`). |
@@ -104,7 +104,9 @@ letras, a certa `{certa: true, porque}` e cada errada `{elo: k, porque}` com o e
 leva a ela** · `objetivo` = o que a questão cobra, de uma **lista fechada por tema** (DMG: "Critério
 diagnóstico (GJ/TOTG)", "DM prévio x DMG", "Indicação de insulina"...), para o mapa de fragilidade
 (`--status --por-objetivo`; pedido do operador: *"questões de DMG com objetivos diferentes ... aponta
-para áreas com maior fragilidade"*). Contrato completo, exemplo e as listas fechadas de objetivo por tema: o brief dos subagentes,
+para áreas com maior fragilidade"*). **Lista fechada = [`core/objetivos.json`](../../core/objetivos.json)** (s201, portador único: o brief e
+`db.solucao_v2_problemas` leem dele; fora da lista só `outro: <rótulo>`; lista sem entrada no catálogo não grava objetivo --
+tema novo ganha a entrada ANTES do subagente). Contrato completo e exemplo: o brief dos subagentes,
 [`docs/SOLUCAO-MEDHUB-BRIEF.md`](../../docs/SOLUCAO-MEDHUB-BRIEF.md).
 
 **Na página (aba Listas):** ao revelar, a cadeia aparece numerada; a letra marcada acende o elo em que ela

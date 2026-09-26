@@ -528,3 +528,97 @@ def test_toda_chave_que_a_pagina_grava_na_resposta_tem_destino(tmp_path, monkeyp
     _usar_db(tmp_path / "ctl", monkeypatch)
     (tmp_path / "ctl").mkdir()
     assert _chaves_sem_destino(tmp_path / "ctl", chaves | {"chave_nova"}) == ["chave_nova"]
+
+
+# ------------------------------------------------ s201: lista fechada de objetivo (#5 do /ai-eng)
+
+_OBJETIVOS = ROOT / "core" / "objetivos.json"
+_BRIEF = ROOT / "docs" / "SOLUCAO-MEDHUB-BRIEF.md"
+
+
+def test_catalogo_de_objetivos_bem_formado():
+    """`core/objetivos.json`: todo tema com listas e 6-9 objetivos, sem objetivo repetido no
+    tema e sem lista em dois temas (a lista decide o tema na validação)."""
+    cat = json.loads(_OBJETIVOS.read_text(encoding="utf-8"))
+    vistas = {}
+    for t in cat["temas"]:
+        assert t["tema"] and t["listas"], t
+        assert 6 <= len(t["objetivos"]) <= 9, t["tema"]
+        assert len(set(t["objetivos"])) == len(t["objetivos"]), t["tema"]
+        assert not any(o.startswith("outro:") for o in t["objetivos"])
+        for lista in t["listas"]:
+            assert lista not in vistas, f"{lista} em {vistas.get(lista)} e {t['tema']}"
+            vistas[lista] = t["tema"]
+
+
+def test_objetivo_valida_contra_a_lista_fechada_do_tema():
+    """Objetivo do tema passa; fora da lista, 'outro:' sem rótulo e lista sem entrada no
+    catálogo são problema; 'outro: <rótulo>' passa; objetivo AUSENTE não é problema (a chave
+    ausente preserva o do banco)."""
+    cat = {"temas": [{"tema": "DMG", "listas": ["t26"],
+                      "objetivos": ["Indicação de insulina", "DM prévio x DMG"]}]}
+    ok = _v2(1)
+    assert db.solucao_v2_problemas(ok, catalogo=cat) == []
+    assert db.solucao_v2_problemas(_v2(1, objetivo="outro: Prevenção de acidentes"),
+                                   catalogo=cat) == []
+    sem = _v2(1)
+    del sem["objetivo"]
+    assert db.solucao_v2_problemas(sem, catalogo=cat) == []
+    fora = db.solucao_v2_problemas(_v2(1, objetivo="Rastreio universal"), catalogo=cat)
+    assert fora and "fora da lista fechada" in fora[0]
+    assert db.solucao_v2_problemas(_v2(1, objetivo="outro:  "), catalogo=cat)
+    orfa = db.solucao_v2_problemas(_v2(1, lista="t999"), catalogo=cat)
+    assert orfa and "core/objetivos.json" in orfa[0]
+
+
+def test_writer_recusa_objetivo_fora_da_lista_do_catalogo_real(tmp_path, monkeypatch, capsys):
+    """O caminho real (`--solucoes`) lê `core/objetivos.json`: t26 com objetivo inventado vai
+    para `invalidas` e nada é gravado."""
+    _usar_db(tmp_path, monkeypatch)
+    base = tmp_path / "sol"
+    _escrever(base, "solucoes", "t26_1", _v2(1, objetivo="Objetivo inventado"))
+    _escrever(base, "solucoes", "t26_2", _v2(2))
+    assert emed_banco.main(["--solucoes", str(base), "--apply", "--json"]) == 0
+    c = _json_saida(capsys)
+    assert c["invalidas"] == ["t26_1"] and c["novas"] == 1
+
+
+def test_brief_le_o_catalogo_e_nao_carrega_copia():
+    """O brief aponta `core/objetivos.json` e não carrega a lista de nenhum tema (no máximo 1
+    objetivo por tema, o do exemplo): duas cópias divergem, e foi o que o #5 fechou."""
+    brief = _BRIEF.read_text(encoding="utf-8")
+    assert "core/objetivos.json" in brief
+    for t in json.loads(_OBJETIVOS.read_text(encoding="utf-8"))["temas"]:
+        assert sum(o in brief for o in t["objetivos"]) <= 1, t["tema"]
+
+
+def test_objetivos_gravados_no_banco_real_cabem_no_catalogo():
+    """Leitura read-only do `ipub.db` real: todo objetivo gravado está na lista do tema da sua
+    lista ou é 'outro: ...'. Sem banco (CI), pula."""
+    import pytest
+    real = ROOT / "ipub.db"
+    if not real.is_file():
+        pytest.skip("sem ipub.db")
+    con = sqlite3.connect(f"file:{real}?mode=ro", uri=True)
+    try:
+        linhas = con.execute("SELECT lista, num, objetivo FROM emed_solucoes "
+                             "WHERE COALESCE(objetivo, '') <> ''").fetchall()
+    except sqlite3.OperationalError:
+        pytest.skip("banco sem emed_solucoes.objetivo")
+    finally:
+        con.close()
+    ruins = [(l, n, o) for l, n, o in linhas
+             if db.solucao_v2_problemas(_v2(n, lista=l, objetivo=o))]
+    assert ruins == []
+
+
+def test_writer_valida_objetivo_tambem_na_v1(tmp_path, monkeypatch, capsys):
+    """Doc v1 (texto) com objetivo inventado também é recusado: o gate vale para o objetivo
+    GRAVADO, não para a forma da solução."""
+    _usar_db(tmp_path, monkeypatch)
+    base = tmp_path / "sol"
+    _escrever(base, "solucoes", "t26_1", _solucao(1, objetivo="Objetivo inventado"))
+    _escrever(base, "solucoes", "t26_2", _solucao(2, objetivo="DM prévio x DMG"))
+    assert emed_banco.main(["--solucoes", str(base), "--apply", "--json"]) == 0
+    c = _json_saida(capsys)
+    assert c["invalidas"] == ["t26_1"] and c["novas"] == 1

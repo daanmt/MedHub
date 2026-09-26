@@ -1,0 +1,50 @@
+{
+  "_doc": "Lista FECHADA de objetivo por tema -- o que a questao cobra, chave do mapa de fragilidade (`emed_banco.py --status --por-objetivo`). PORTADOR UNICO desde a s201 (veredito do /ai-eng sobre a s200, #5): o brief dos subagentes (docs/SOLUCAO-MEDHUB-BRIEF.md) e db.solucao_v2_problemas LEEM daqui; ninguem copia a lista. Objetivo fora da lista do tema so com o prefixo 'outro: <rotulo curto>'. Tema novo = o agente principal acrescenta a entrada (6-9 objetivos, o que a banca cobra do tema) ANTES de disparar o subagente; lista do mesmo tema = acrescentar o id em `listas`. Lista sem entrada aqui nao grava objetivo.",
+  "temas": [
+    {
+      "tema": "Diabetes na gestação",
+      "listas": ["t26", "t40"],
+      "objetivos": [
+        "Critério diagnóstico (GJ/TOTG)",
+        "DM prévio x DMG",
+        "Metas e monitorização",
+        "Indicação de insulina",
+        "Manejo da insulina",
+        "Dieta e medidas gerais",
+        "Vigilância fetal e parto",
+        "Fisiopatologia e repercussões",
+        "Seguimento pós-parto"
+      ]
+    },
+    {
+      "tema": "Hérnias da parede abdominal",
+      "listas": ["t49", "t61", "t65"],
+      "objetivos": [
+        "Anatomia e nervos",
+        "Classificação",
+        "Técnica de reparo",
+        "Indicação cirúrgica x observação",
+        "Encarceramento e estrangulamento",
+        "Complicações pós-operatórias",
+        "Recidiva",
+        "Hérnia ventral e incisional",
+        "Hérnia na criança"
+      ]
+    },
+    {
+      "tema": "Tópicos em Pediatria / puericultura",
+      "listas": ["t96", "t100"],
+      "objetivos": [
+        "Alimentação e introdução alimentar",
+        "Suplementação (ferro, vitaminas)",
+        "Saúde bucal",
+        "Sinais de alerta e risco",
+        "Comportamento, sono e telas",
+        "Semiologia pediátrica",
+        "Adolescente e ética",
+        "Infecções de repetição e imunodeficiência",
+        "Acolhimento e consulta"
+      ]
+    }
+  ]
+}

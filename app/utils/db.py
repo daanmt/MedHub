@@ -2866,11 +2866,54 @@ def _bool01(valor):
     return 1 if valor is True or str(valor).strip().lower() in ("1", "true", "sim") else 0
 
 
-def solucao_v2_problemas(doc):
-    """Problemas de forma de uma Solução v2 (lista vazia = ok). PURA.
+#: s201 (veredito do /ai-eng sobre a s200, #5): a lista FECHADA de objetivo por tema e dado
+#: versionado, com portador unico -- o brief dos subagentes e `solucao_v2_problemas` leem daqui.
+OBJETIVOS_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(
+    os.path.abspath(__file__)))), "core", "objetivos.json")
+PREFIXO_OBJETIVO_OUTRO = "outro:"
+
+
+def carregar_objetivos(caminho=None):
+    """O catálogo `core/objetivos.json` (`{"temas": [{tema, listas, objetivos}]}`)."""
+    import json as _json
+    with open(caminho or OBJETIVOS_PATH, encoding="utf-8") as fh:
+        return _json.load(fh)
+
+
+def objetivos_da_lista(lista, catalogo):
+    """A lista fechada de objetivo do tema a que `lista` pertence, ou None. PURA."""
+    for tema in (catalogo or {}).get("temas", []):
+        if str(lista or "").strip() in tema.get("listas", []):
+            return list(tema.get("objetivos", []))
+    return None
+
+
+def problema_de_objetivo(lista, objetivo, catalogo):
+    """Problema do `objetivo` contra a lista fechada do tema da `lista` (None = ok). PURA.
+
+    Vazio = ok (a chave ausente preserva o do banco). `outro: <rótulo>` = ok, com rótulo. Lista
+    sem entrada no catálogo = problema: o tema novo ganha a lista ANTES de gravar objetivo."""
+    obj = _txt(objetivo).strip()
+    if not obj:
+        return None
+    if obj.startswith(PREFIXO_OBJETIVO_OUTRO):
+        return (None if obj[len(PREFIXO_OBJETIVO_OUTRO):].strip()
+                else "objetivo 'outro:' sem rótulo")
+    fechada = objetivos_da_lista(lista, catalogo)
+    if fechada is None:
+        return f"lista {lista} sem lista fechada de objetivo em core/objetivos.json"
+    if obj not in fechada:
+        return f"objetivo fora da lista fechada do tema: {obj}"
+    return None
+
+
+def solucao_v2_problemas(doc, catalogo=None):
+    """Problemas de forma de uma Solução v2 (lista vazia = ok). PURA com `catalogo`; sem ele,
+    lê `core/objetivos.json`.
 
     `cadeia` = 1+ elos `{elo, chave}` com texto; `alternativas` = letra -> `{certa: true}` ou
-    `{elo: k}` com 1 <= k <= len(cadeia), sempre com `porque`; exatamente uma certa; `pede`."""
+    `{elo: k}` com 1 <= k <= len(cadeia), sempre com `porque`; exatamente uma certa; `pede`;
+    `objetivo`, quando vem, da lista fechada do tema (`problema_de_objetivo`)."""
     cadeia = doc.get("cadeia")
     if not isinstance(cadeia, list) or not cadeia:
         return ["cadeia vazia"]
@@ -2891,6 +2934,11 @@ def solucao_v2_problemas(doc):
                 probs.append(f"alternativa {letra} aponta elo fora da cadeia")
     if _vazio(doc.get("pede")):
         probs.append("pede vazio")
+    if not _vazio(doc.get("objetivo")):
+        prob = problema_de_objetivo(doc.get("lista"), doc.get("objetivo"),
+                                    catalogo if catalogo is not None else carregar_objetivos())
+        if prob:
+            probs.append(prob)
     return probs
 
 
@@ -2914,22 +2962,27 @@ def emed_upsert_solucoes(rows, aplicar=True):
     fontes + objetivo. Obrigatórios: `lista`, `num` e a solução -- `solucao` não-vazia (v1,
     texto) ou a cadeia v2 (s200: `cadeia` + `alternativas` + `pede`, validadas por
     `solucao_v2_problemas` e gravadas como JSON canônico em `solucao`). `objetivo` AUSENTE do
-    doc preserva o do banco (re-ingerir um arquivo v1 antigo não apaga o objetivo).
+    doc preserva o do banco (re-ingerir um arquivo v1 antigo não apaga o objetivo); presente,
+    tem de estar na lista fechada do tema (`core/objetivos.json`, s201) -- fora dela = `invalidas`.
     `aplicar=False` mede pelo mesmo caminho e não roda DDL.
     """
     import hashlib
     import json as _json
     invalidas, preparadas = [], []
+    catalogo = carregar_objetivos()     # s201: objetivo da lista fechada, na v1 e na v2
     for doc in rows:
         num = _int_ou_none(doc.get("num"))
         if doc.get("cadeia") is not None:
-            if solucao_v2_problemas(doc):
+            if solucao_v2_problemas(doc, catalogo=catalogo):
                 invalidas.append(doc.get("_doc_id"))
                 continue
             texto = _json.dumps({"versao": 2, "pede": _txt(doc.get("pede")).strip(),
                                  "cadeia": doc["cadeia"], "alternativas": doc["alternativas"],
                                  "conferir": _txt(doc.get("conferir")).strip()},
                                 sort_keys=True, ensure_ascii=False)
+        elif problema_de_objetivo(doc.get("lista"), doc.get("objetivo"), catalogo):
+            invalidas.append(doc.get("_doc_id"))
+            continue
         else:
             texto = _txt(doc.get("solucao")).strip()
         if _vazio(doc.get("lista")) or not texto or num is None:

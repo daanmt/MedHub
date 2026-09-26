@@ -74,8 +74,10 @@ Um arquivo por questão em `<BASE>/solucoes/<lista>_<n>.json`, UTF-8, exatamente
   diz em 1 linha o ponto exato em disputa. Não force o gabarito. Se o gabarito segue diretriz
   antiga, mas continua a melhor alternativa, `divergente` = false e diga isso no `porque` da certa
   e em `fontes`.
-- **objetivo** = o que a questão cobra, escolhido da LISTA FECHADA do tema (abaixo). Se nenhum
-  servir mesmo, use "outro: <rótulo curto>".
+- **objetivo** = o que a questão cobra, escolhido da LISTA FECHADA do tema: em
+  `core/objetivos.json`, a entrada cujo `listas` contém esta lista (leia o arquivo; não copie a
+  lista para lugar nenhum). Se nenhum servir mesmo, use "outro: <rótulo curto>". Lista sem
+  entrada no catálogo: pare e avise -- o principal cria a entrada antes.
 - Tamanho: cada linha curta (o operador lê no celular). Sem prosa, sem floreio.
 - Português COM acentos. Pontuação ASCII: "->" (nunca seta unicode), "--" (nunca travessão longo),
   aspas retas, "<" ">" "<=" ">=". Zero LaTeX.
@@ -83,14 +85,17 @@ Um arquivo por questão em `<BASE>/solucoes/<lista>_<n>.json`, UTF-8, exatamente
 ## Ao terminar
 
 Confira por script: N arquivos, json.load ok, todas as letras do enunciado presentes em
-`alternativas`, exatamente uma `certa` e igual ao gabarito do `in`, todo `elo` de errada entre 1 e
-len(cadeia), `objetivo` da lista fechada ou "outro: ...". Devolva no máximo ~1.200 caracteres:
+`alternativas`, a `certa` igual ao gabarito do `in`, e `db.solucao_v2_problemas(doc) == []` em cada
+arquivo (`from app.utils import db`, rodando de C:/Users/daanm/medhub) -- é o MESMO validador do
+writer: forma da cadeia, uma certa, elo de errada dentro da cadeia e objetivo da lista fechada ou
+"outro: ...". Devolva no máximo ~1.200 caracteres:
 quantos gravou, as divergentes (1 linha cada), os "outro:" usados e qualquer questão sem figura/
 tabela na captura.
 
-## Listas fechadas de objetivo (por tema; a mesma lista para todas as listas do tema)
+## Listas fechadas de objetivo
 
-- **Diabetes na gestação (t26, t40):** "Critério diagnóstico (GJ/TOTG)" · "DM prévio x DMG" · "Metas e monitorização" · "Indicação de insulina" · "Manejo da insulina" · "Dieta e medidas gerais" · "Vigilância fetal e parto" · "Fisiopatologia e repercussões" · "Seguimento pós-parto"
-- **Hérnias da parede abdominal (t49, t61, t65):** "Anatomia e nervos" · "Classificação" · "Técnica de reparo" · "Indicação cirúrgica x observação" · "Encarceramento e estrangulamento" · "Complicações pós-operatórias" · "Recidiva" · "Hérnia ventral e incisional" · "Hérnia na criança"
-- **Tópicos em Pediatria / puericultura (t96, t100):** "Alimentação e introdução alimentar" · "Suplementação (ferro, vitaminas)" · "Saúde bucal" · "Sinais de alerta e risco" · "Comportamento, sono e telas" · "Semiologia pediátrica" · "Adolescente e ética" · "Infecções de repetição e imunodeficiência" · "Acolhimento e consulta"
-- Tema novo: o agente principal define a lista (6-9 objetivos, o que a banca cobra do tema) ANTES de disparar o subagente e a acrescenta aqui.
+Moram em [`core/objetivos.json`](../core/objetivos.json) (portador único desde a s201; o
+`db.solucao_v2_problemas` lê o mesmo arquivo). ⚰️ *Até a s200 este brief carregava as três listas
+(DMG, hérnias, puericultura) no corpo; saíram no veredito do /ai-eng (#5): duas cópias da lista
+divergem, e o `objetivo` aceitava qualquer texto.* Tema novo = o agente principal acrescenta a
+entrada no JSON (6-9 objetivos, o que a banca cobra do tema) ANTES de disparar o subagente.

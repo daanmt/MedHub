@@ -149,6 +149,17 @@ A fundação está pronta (agente LLM + workflows portáveis + `ipub.db` como SS
 - 3 linhas fixas no brief de subagente -> **entrou** (`/analisar-questao §0` cláusula 8: `D(x)` papel · objetivo · evidência que fecha; count-assert + dry-run em operação mutadora; gravação incremental; régua F93, s175/s176).
 - "Feito" sem ato verificável = não-demonstração -> **entrou com outra forma, sem o nome**: cláusula 7 do `§0` (número do filho só vale com o comando que o produziu), F136 (o número da suíte no HANDOFF é o medido no pre-commit) e o report ao `/ai-eng` em PROVADO/NÃO PROVA com o comando.
 
+**Lote6 -- advisory D66 do `/ai-eng` (10/09/2026, numeração dele; não é o D66 de `docs/MEMORIA-AUDITORIA.md`), reconciliado lendo o repo na s202:**
+- 1a selo "o que mudou na skill" x "resultado do dia seguinte" (held-out) -> **não entrou**: `tools/selo.py` deriva item -> terminal; nenhum campo de efeito no dia seguinte, e o gate segue sem denominador.
+- 1b rejection memory no §11 -> **entrou (mantido)**: `AGENTE.md §10.9` -- item fechado ganha lápide e nunca sai da tabela; "MORTO por medição" (1.6, F7); o registro `TERMO-REVOGADO` impede a volta da cláusula morta.
+- 1c (ii') e o check do F90 como checks de ALCANCE -> **parcial**: os PORTADORES viraram derivados (`consistencia_check.portadores_derivados`, 29 contra 10 à mão); o predicado segue presença de string literal, limite declarado no `AGENTE.md §10.10`.
+- 1d toda cláusula com CHECK ou "não-verificável" -> **entrou como o 1.10** (`tools/clausulas_check.py`): WARN com catraca `BASE_ORFAS`, não BLOCK; 127 órfãs em 290 medidas em 26/09.
+- 2a "terminou" x "autorizado a publicar" no §11 -> **parcial**: o campo "Completion != Approval" existe em 3 linhas do §11 (0.1, 0.5, 1.2 -- s176); não virou coluna nem gate, e as linhas posteriores não o carregam.
+- 2b permit do operador verbatim + data -> **parcial**, junto do 2a: as mesmas 3 linhas trazem o verbatim e a data; o ledger `AUDITORIA_MEDHUB.md` tem 0 ocorrências do campo.
+- 3a B1/B2 mínimos, crescendo por evidência -> **entrou**: contador de gate-miss do F81 por classe (`audit_flashcard_quality.contar_gate_miss`, `MIN_REVISOES_PARA_LER` antes de ler a classe); `reforja_marks` append-only.
+- 3b config-as-weights -> **entrou**: `AGENTE.md §10.5` (regra que carrega peso mora em arquivo versionado; a memória é ponteiro) e a régua F93 no `/analisar-questao §0`.
+- 3c teste ANTES do fix como juiz externo -> **entrou**: régua do hotfix no `AGENTE.md §10.6`; praticado na s202 (F137 parte 2: 16 vermelhos antes; `emed_api`: 24).
+
 ---
 
 ## Anti-goals

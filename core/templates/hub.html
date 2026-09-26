@@ -174,14 +174,15 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
 .qz-sol p{margin:0}
 .qz-pede{color:var(--tinta2)}
 .qz-fonte{font-size:.82em;color:var(--tinta3)}
-.qz-cadeia{margin:0;padding:0;list-style:none;display:grid;gap:4px;counter-reset:elo}
-.qz-cadeia li{display:grid;grid-template-columns:1.4em minmax(0,1fr);gap:1px 8px;padding:7px 8px;border-radius:8px;background:var(--afundado)}
-.qz-cadeia li::before{counter-increment:elo;content:counter(elo);grid-row:1 / span 3;font-weight:700;color:var(--tinta3);text-align:right}
+.qz-sec{margin:4px 0 -4px;font-size:.78em;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--tinta3)}
+.qz-cadeia{margin:0;padding:0;list-style:none;display:grid;gap:6px}
+.qz-cadeia li{display:grid;gap:2px;padding:8px 10px;border-radius:8px;background:var(--afundado);min-width:0}
+.qz-cadeia .qz-elo-n{font-size:.76em;font-weight:700;color:var(--tinta3)}
 .qz-cadeia b{font-weight:650;line-height:1.35}
-.qz-cadeia span{grid-column:2;color:var(--tinta2);line-height:1.4}
+.qz-cadeia span{color:var(--tinta2);line-height:1.4}
 .qz-cadeia li.quebrou{background:var(--alerta-fraco);box-shadow:inset 3px 0 0 var(--alerta)}
-.qz-cadeia li.quebrou::before{color:var(--alerta)}
-.qz-cadeia em{grid-column:2;font-style:normal;font-size:.8em;font-weight:650;color:var(--alerta)}
+.qz-cadeia li.quebrou .qz-elo-n{color:var(--alerta)}
+.qz-cadeia em{font-style:normal;font-size:.8em;font-weight:650;color:var(--alerta)}
 .qz-cadeia li.ok{box-shadow:inset 3px 0 0 var(--qz-ok)}
 .qz-cadeia em.ok{color:var(--qz-ok)}
 .qz-leitura{font-size:.86em;color:var(--tinta2)}
@@ -191,7 +192,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
 .qz-altsol li{display:grid;grid-template-columns:1.4em minmax(0,1fr);gap:0 8px;line-height:1.4}
 .qz-altsol li b{text-align:right;color:var(--tinta3)}
 .qz-altsol li i{font-style:normal;font-size:.8em;font-weight:650;color:var(--alerta)}
-.qz-altsol li.certa b{color:var(--qz-ok)}
+.qz-altsol li.certa b,.qz-altsol li i.ok{color:var(--qz-ok)}
 .qz-altsol li.marcou span{font-weight:600}
 .qz-porobj ul{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:6px}
 .qz-porobj li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:0 10px;padding:8px 12px;border-radius:10px;background:var(--afundado);min-width:0}
@@ -309,7 +310,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
               </div></div>
           </div>
           <div class="qz-analise" id="qz-analise" hidden></div>
-          <div class="qz-pe"><p class="qz-status" id="qz-status"></p><span style="display:flex;flex-wrap:wrap;gap:8px"><button type="button" id="qz-resultado" hidden>&lsaquo; Resultado da lista</button><button type="button" class="primario" id="qz-proxima">Próxima</button></span></div>
+          <div class="qz-pe"><p class="qz-status" id="qz-status"></p><button type="button" class="primario" id="qz-proxima">Próxima</button></div>
         </div>
       </div>
       <div id="qz-fim" hidden style="display:grid;gap:12px">
@@ -696,7 +697,12 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
       (grupos.length ? "" : '<p class="qd-vazio">Todas as listas capturadas estão resolvidas.</p>');
   }
   $("qz-listas").addEventListener("click", function(e){ var b = e.target.closest("button[data-qzl]"); if(b){ qzAbrir(b.getAttribute("data-qzl")); } });
-  $("qz-voltar").addEventListener("click", function(){ if(!$("qz-depois").hidden){ qzSalvarMeta(); } qzFecharLista(); });
+  function qzCompleta(){ return QZ.qs.length > 0 && QZ.qs.every(function(q){ return !!QZ.resp[q.num]; }); }
+  function qzBarra(){ $("qz-voltar").innerHTML = (!$("qz-questao").hidden && qzCompleta()) ? "&lsaquo; Lista" : "&lsaquo; Todas as listas"; }
+  $("qz-voltar").addEventListener("click", function(){
+    if(!$("qz-depois").hidden){ qzSalvarMeta(); }
+    if(!$("qz-questao").hidden && qzCompleta()){ qzFim(); } else { qzFecharLista(); }
+  });
 
   function qzLimpar(){ QZ.unsubs.forEach(function(u){ try{ u(); }catch(e){} }); QZ.unsubs = []; }
   function qzFecharLista(){
@@ -772,7 +778,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
       $("qz-flag").checked = !!r0.flag; $("qz-responder").textContent = "Alterar resposta"; qzPode();
     }
     $("qz-ant").disabled = i === 0;
-    qzTrilho(); qzIniciar();
+    qzTrilho(); qzIniciar(); qzBarra();
     window.scrollTo(0, 0);
   }
   $("qz-ant").addEventListener("click", function(){ if(QZ.pos > 0){ QZ.revendo = false; qzMostrar(QZ.pos - 1); } });
@@ -849,7 +855,6 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
     $("qz-meta-erro").hidden = !precisa; $("qz-racional").value = r.racional || "";
     Array.prototype.forEach.call($("qz-elo").querySelectorAll("button"), function(b){ b.classList.toggle("on", b.getAttribute("data-e") === r.elo); });
     $("qz-proxima").textContent = (QZ.pos + 1 < QZ.qs.length) ? "Próxima" : "Terminar";
-    $("qz-resultado").hidden = !QZ.revendo;
     qzAnalise();
   }
   $("qz-elo").addEventListener("click", function(e){ var b = e.target.closest("button[data-e]"); if(!b){ return; } var on = b.classList.contains("on");
@@ -862,7 +867,6 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
     if(!$("qz-meta-erro").hidden && (rac !== (r.racional || "") || elo !== (r.elo || "") || flag !== !!r.flag)){ r.racional = rac; r.elo = elo; r.flag = flag; qzGravar(r); }
     return r;
   }
-  $("qz-resultado").addEventListener("click", function(){ qzSalvarMeta(); qzFim(); });
   $("qz-proxima").addEventListener("click", function(){
     var r = qzSalvarMeta(); if(!r){ return; }
     if(QZ.revendo){ var j = QZ.pos + 1; if(j < QZ.qs.length && QZ.resp[QZ.qs[j].num]){ qzRever(j); } else { qzFim(); } return; }
@@ -872,7 +876,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
   function qzRever(i){ var q = QZ.qs[i]; var r = QZ.resp[q.num]; qzMostrar(i); qzParar(); if(r){ qzRevelar(q, r); $("qz-flag").checked = !!r.flag; $("qz-relogio").textContent = "--:--"; } }
   $("qz-rever").addEventListener("click", function(){ QZ.revendo = true; qzRever(0); });
   function qzFim(){
-    qzParar(); QZ.pos = QZ.qs.length; qzTrilho(); $("qz-questao").hidden = true; $("qz-fim").hidden = false; QZ.revendo = false;
+    qzParar(); QZ.pos = QZ.qs.length; qzTrilho(); $("qz-questao").hidden = true; $("qz-fim").hidden = false; QZ.revendo = false; qzBarra();
     var rs = QZ.qs.map(function(q){ return QZ.resp[q.num]; }).filter(Boolean);
     var ac = rs.filter(function(r){ return r.correta; }).length, sol = rs.filter(function(r){ return r.confianca === "solida"; }).length,
         duv = rs.filter(function(r){ return r.confianca === "duvida"; }).length, chu = rs.filter(function(r){ return r.confianca === "chute"; }).length,
@@ -932,11 +936,11 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
     box.innerHTML = (s.pede ? '<p class="qz-pede"><b>Pede:</b> ' + qzEsc(s.pede) + '</p>' : "") +
       (leitura ? '<p class="qz-leitura">Você: ' + qzEsc(leitura) + '</p>' : "") +
       (riscouCerta ? '<p class="qz-leitura alerta">Você riscou a certa (' + qzEsc(r.gabarito) + '): uma crença firme contra a resposta, não descuido.</p>' : "") +
-      '<ol class="qz-cadeia">' + cadeia.map(function(e, i){ var qb = (i + 1) === quebrou, ok = !qb && okElo[i + 1];
-        return '<li' + (qb ? ' class="quebrou"' : (ok ? ' class="ok"' : '')) + '><b>' + qzEsc(e.elo) + '</b><span>' + qzEsc(e.chave) + '</span>' +
+      '<p class="qz-sec">Cadeia de raciocínio</p><ol class="qz-cadeia">' + cadeia.map(function(e, i){ var qb = (i + 1) === quebrou, ok = !qb && okElo[i + 1];
+        return '<li' + (qb ? ' class="quebrou"' : (ok ? ' class="ok"' : '')) + '><span class="qz-elo-n">Elo ' + (i + 1) + '</span><b>' + qzEsc(e.elo) + '</b><span>' + qzEsc(e.chave) + '</span>' +
           (qb ? '<em>' + nota + '</em>' : (ok ? '<em class="ok">você eliminou ' + qzEsc(ok.join(" e ")) + ' aqui</em>' : '')) + '</li>'; }).join("") + '</ol>' +
-      '<ul class="qz-altsol">' + Object.keys(alts).sort().map(function(l){ var x = alts[l] || {};
-        return '<li class="' + (x.certa ? "certa" : "") + (r && l === r.letra ? " marcou" : "") + '"><b>' + qzEsc(l) + '</b><span>' + (x.certa ? "" : '<i>elo ' + qzEsc(x.elo) + '</i> ') + (risc.indexOf(l) >= 0 ? '<i class="risc">riscou</i> ' : '') + qzEsc(x.porque) + '</span></li>'; }).join("") + '</ul>' +
+      '<p class="qz-sec">Alternativas</p><ul class="qz-altsol">' + Object.keys(alts).sort().map(function(l){ var x = alts[l] || {};
+        return '<li class="' + (x.certa ? "certa" : "") + (r && l === r.letra ? " marcou" : "") + '"><b>' + qzEsc(l) + '</b><span>' + (x.certa ? '<i class="ok">certa</i> ' : '<i>falha no elo ' + qzEsc(x.elo) + '</i> ') + (risc.indexOf(l) >= 0 ? '<i class="risc">riscou</i> ' : '') + qzEsc(x.porque) + '</span></li>'; }).join("") + '</ul>' +
       (s.conferir ? '<p class="qz-pede"><b>Conferir:</b> ' + qzEsc(s.conferir) + '</p>' : "") +
       (q.fontes_medhub ? '<p class="qz-fonte">' + qzEsc(q.fontes_medhub) + '</p>' : "");
   }

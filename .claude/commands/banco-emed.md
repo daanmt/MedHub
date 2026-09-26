@@ -96,8 +96,8 @@ letras, a certa `{certa: true, porque}` e cada errada `{elo: k, porque}` com o e
 leva a ela** · `objetivo` = o que a questão cobra, de uma **lista fechada por tema** (DMG: "Critério
 diagnóstico (GJ/TOTG)", "DM prévio x DMG", "Indicação de insulina"...), para o mapa de fragilidade
 (`--status --por-objetivo`; pedido do operador: *"questões de DMG com objetivos diferentes ... aponta
-para áreas com maior fragilidade"*). Contrato completo e exemplo: o brief dos subagentes
-(`tmp/solucoes_v2_BRIEF.md` na s200; versionar junto quando virar rotina).
+para áreas com maior fragilidade"*). Contrato completo, exemplo e as listas fechadas de objetivo por tema: o brief dos subagentes,
+[`docs/SOLUCAO-MEDHUB-BRIEF.md`](../../docs/SOLUCAO-MEDHUB-BRIEF.md).
 
 **Na página (aba Listas):** ao revelar, a cadeia aparece numerada; a letra marcada acende o elo em que ela
 cai ("a sua letra cai neste elo"); cada letra errada **riscada** acende em verde o elo que ele executou;
@@ -109,6 +109,8 @@ Cunhagem **por lista**, quando ela entra na semana (subagente Opus por lista, r�
 rascunho quando houver), gravada em `tmp/solucoes_v2_<lista>/solucoes/<lista>_<num>.json` ->
 `--solucoes <pasta> --apply --expect N` -> `--exportar` -> `ArtifactData batch update` (só os campos da
 solução, `if_version` do doc lido).
+
+**Card nasce do elo (s200, operador: *"o refino na cadeia de raciocínio lógico é fundamental para refinar inclusive os cards"*).** O card de um erro mira o elo que QUEBROU -- o declarado pelo operador vence o inferido pela letra: a frente pede a decisão daquele elo, o verso é a `chave` dele. Racional que move a quebra para outro elo = reforja o card in-place (`recurate_cards.py`), e elo novo iluminado = `insert_card_extra.py`. Na s200: t96 Q8/Q14/Q17 reforjados, Q12 ganhou o card do elo 1.
 
 ## O tique (rito do hub, idempotente)
 

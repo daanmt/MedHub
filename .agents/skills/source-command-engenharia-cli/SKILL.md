@@ -31,6 +31,8 @@ isso é `tools/cli_signature_check.py`, documentado aqui embaixo como qualquer o
 qualquer um deles vale `AGENTE.md §10.7` — **`tools/backup_db.py` antes**, **dry-run é o default**,
 e o COUNT esperado é **declarado antes** de `--apply`.
 
+**`tools/backup_db.py`** -- sem opções: backup com `integrity_check` + rotação keep-5 pelo carimbo do NOME (F137; `--help` não tem efeito). **`--fixar MOTIVO`** (F137, s201): backup FIXADO `ipub_fixado_<ts>_<motivo>.db`, fora da rotação, com arquivo + sha256 + motivo em `artifacts/backups/FIXADOS.json` -- o ponto de retorno de antes de um ato destrutivo.  <!-- CHECK: test_fixado_nunca_sai_na_rotacao_e_carrega_sha256 -->
+
 ---
 
 ## Sensores do harness (read-only, WARN-first)

@@ -21,6 +21,10 @@ DB = ROOT / 'ipub.db'
 BACKUP_DIR = ROOT / 'artifacts' / 'backups'
 PREFIX = 'ipub_backup_'
 KEEP = 5
+#: F137 (s201, GO do /ai-eng): backup FIXADO = ponto de retorno com sentido. Prefixo proprio, entao
+#: a rotacao (que so enxerga PREFIX) nunca o conta nem o apaga; registro com sha256 em FIXADOS.json.
+PREFIX_FIXADO = 'ipub_fixado_'
+MANIFESTO_FIXADOS = 'FIXADOS.json'
 
 
 def _listar(backup_dir: Path, prefix: str):
@@ -113,6 +117,42 @@ def backup():
     return dest
 
 
+def backup_fixado(motivo):
+    """Backup FIXADO (F137): copia + integrity_check, fora da rotacao keep-5, e uma linha em
+    `FIXADOS.json` com arquivo, sha256, motivo e hora. Devolve o caminho, ou None se abortou.
+    Sair daqui e decisao com rastro (spec do /ai-eng: `--desfixar ID --motivo`, ainda nao existe)."""
+    import hashlib
+    import json
+    import re
+    if not DB.exists():
+        print("ipub.db nao encontrado.")
+        return None
+    BACKUP_DIR.mkdir(parents=True, exist_ok=True)
+    ts = datetime.now().strftime('%Y%m%d_%H%M%S')
+    slug = re.sub(r'[^a-z0-9]+', '-', motivo.lower()).strip('-')[:40] or 'sem-motivo'
+    dest = BACKUP_DIR / f'{PREFIX_FIXADO}{ts}_{slug}.db'
+    shutil.copy2(DB, dest)
+    try:
+        conn = sqlite3.connect(dest)
+        try:
+            ok = conn.execute('PRAGMA integrity_check').fetchone()
+        finally:
+            conn.close()
+    except sqlite3.Error as e:
+        ok = (f"sqlite: {e}",)
+    if not ok or ok[0] != 'ok':
+        dest.unlink(missing_ok=True)
+        print("BACKUP FIXADO CORROMPIDO -- abortando.")
+        return None
+    manifesto = BACKUP_DIR / MANIFESTO_FIXADOS
+    reg = json.loads(manifesto.read_text(encoding='utf-8')) if manifesto.is_file() else []
+    reg.append({"arquivo": dest.name, "sha256": hashlib.sha256(dest.read_bytes()).hexdigest(),
+                "motivo": motivo, "criado_em": datetime.now().replace(microsecond=0).isoformat()})
+    manifesto.write_text(json.dumps(reg, ensure_ascii=False, indent=1) + "\n", encoding='utf-8')
+    print(f"Backup FIXADO: {dest} (sha256 {reg[-1]['sha256'][:16]}...)")
+    return dest
+
+
 def main(argv=()):
     """F60 (descolar part-6): o exit code reflete o resultado.
 
@@ -126,9 +166,14 @@ def main(argv=()):
     chamador seguia para a operacao destrutiva achando que tinha rede.
     Qualquer aborto (banco ausente, copia falha, integridade reprovada) = 1.
     """
-    argparse.ArgumentParser(
+    ap = argparse.ArgumentParser(
         description="Backup do ipub.db em artifacts/backups/ com integrity_check + rotacao keep-5 "
-                    "(ordem pelo carimbo do nome). Sem opcoes: rodar = fazer o backup.").parse_args(list(argv))
+                    "(ordem pelo carimbo do nome). Sem opcoes: rodar = fazer o backup.")
+    ap.add_argument("--fixar", metavar="MOTIVO",
+                    help="backup FIXADO (F137): fora da rotacao, sha256 em FIXADOS.json")
+    args = ap.parse_args(list(argv))
+    if args.fixar:
+        return 0 if backup_fixado(args.fixar) else 1
     return 0 if backup() else 1
 
 

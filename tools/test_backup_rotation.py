@@ -99,3 +99,29 @@ def test_rotacao_segue_o_carimbo_do_nome_e_nao_o_mtime(tmp_path):
     removidos = purge(backup_dir=tmp_path, keep=5, quiet=True)
     assert [p.name for p in removidos] == [criados[0].name]
     assert criados[-1].exists(), "o backup de carimbo mais recente nunca pode ser purgado"
+
+
+def test_fixado_nunca_sai_na_rotacao_e_carrega_sha256(tmp_path, monkeypatch):
+    """F137 (GO do /ai-eng, ALTERA 1 e 3): o backup FIXADO nao conta no keep-N -- 20 backups falsos
+    e a purga nunca o remove -- e o manifesto FIXADOS.json guarda path + sha256 + motivo."""
+    import hashlib
+    import json
+    import sqlite3
+    from tools import backup_db as bkp
+    db = tmp_path / "ipub.db"
+    con = sqlite3.connect(db)
+    con.execute("CREATE TABLE t (a INTEGER)")
+    con.commit()
+    con.close()
+    monkeypatch.setattr(bkp, "DB", db)
+    monkeypatch.setattr(bkp, "BACKUP_DIR", tmp_path / "bk")
+    fixado = bkp.backup_fixado("antes do teste")
+    for i in range(20):
+        p = tmp_path / "bk" / f"{PREFIX}202601{i:02d}_120000.db"
+        p.write_bytes(b"fake")
+    purge(backup_dir=tmp_path / "bk", keep=5, quiet=True)
+    assert fixado.exists() and len(list((tmp_path / "bk").glob(f"{PREFIX}*.db"))) == 5
+    reg = json.loads((tmp_path / "bk" / "FIXADOS.json").read_text(encoding="utf-8"))
+    (item,) = reg
+    assert item["arquivo"] == fixado.name and item["motivo"] == "antes do teste"
+    assert item["sha256"] == hashlib.sha256(fixado.read_bytes()).hexdigest()

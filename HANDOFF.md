@@ -8,7 +8,7 @@
 
 ## > Proximo passo imediato
 
-1. 🗄️ **Banco EMED (construido na s197):** aguardando o Chrome (relatorio + t26 capturada) -> tique `/banco-emed`. Primeira lista resolvida na aba Resolver = caso de aceitacao (registrar, bulk, concluir, `--erros`, analise em `analises/*`). PRD `.vibeflow/prds/banco-questoes-emed.md` (DoD 1 e 3 feitos; 2 e 4 dependem do Chrome).
+1. 🗄️ **Banco EMED (construido na s197):** **t26 (19q) e t96 (18q) ingeridas** em `emed_questoes` e vivas na aba Resolver. 🔴 **Claude no Chrome travou/deslogou na t49** (camada de seguranca dele barra "captura em massa"; operador nao consegue liberar) -> decisao do operador em 26/09: *"vamos ficar com o que temos"*. Proximo: operador resolve t26/t96 na Bancada -> tique `/banco-emed` registra (bulk + `plano.py --concluir`) -> `--erros` -> analise em `analises/*`. Captura das demais listas: caminho a decidir (bookmarklet no Chrome dele x formulario manual x fluxo antigo pelo chat). PRD `.vibeflow/prds/banco-questoes-emed.md` (DoD 1 e 3 feitos; 2 parcial; 4 pendente).
 2. 📊 **Aba Analise do hub:** PRD `.vibeflow/prds/hub-aba-analise.md` -- pode se apoiar nas `analises/*` da Bancada (mesma cadeia em degraus + veredito). gen-spec -> implementar.
 3. 📚 **Estudo:** listas DMG #26 (19q) e Pediatria #96 (18q) seguem abertas (ele focou em cards e aulas no 25/09); fim de semana = **UERJ 2021** (60q). Aula #877 pronta no hub.
 4. 🃏 **Cards:** fila `2026-09-26b` (51) no ar. Marcas humanas abertas = 0. Duvidas clinicas da reforja em `tmp/reforja_s196/duvidas_*.json` e na s196 (#1113, #1176, #373, #65, #55) -> `/pesquisar-evidencia` quando houver folga. Resumo `[GIN] CA de Mama.md` ainda diz supraclavicular ipsilateral = estadio IV (errado; AJCC 8 = N3c).

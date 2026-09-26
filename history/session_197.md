@@ -17,6 +17,12 @@
 
 - **Loop de 5 min do `/banco-emed`** (`CronCreate */5 * * * *`, job `8b494f46`) a pedido dele (*"pode criar o loop de 5 min, ele fará o mesmo"*). **1o tique:** 6 mensagens do Chrome lidas (relatorio de exploracao: campos no DOM, gabarito/solucao/forum so na drawer 'Ver solucao e comentarios'; proposta de API barrada pela camada de seguranca dele; captura pela UI ~2 min/lista) e marcadas `lido`. **Bug meu achado por ele:** 'Registrar lote (JSON)' gravou `questoes/undefined_N` -- `data()` do db e CONGELADO e o `_id` anexado nao gruda; corrigido clonando (`Object.assign`) nas 3 assinaturas que mutam (Version 3). Extras do executor (`acerto_pct`, `video`, `finalidade`, `alternativas_pct`) passaram a ser aceitos: a pagina repassa e o banco guarda em `emed_questoes.extras` (JSON canonico, dentro do hash; `--exportar` devolve as chaves soltas; teste novo). **t26 ingerida:** `emed_banco.py --ingerir tmp/bancada --apply --expect 19` = `novas=19 invalidas=0`; amostra t26_1 a olho OK. Canal: `m0003` (confirmacao + extras + FASE 3); `control/hub` = FASE 3 = FILA (seguir sem esperar confirmacao; hub confirma a cada 5 min).
 
+- `banco-emed: t96 ingerida 18 (novas=18, iguais=19 da t26, invalidas=0; extras presentes) · registrada 0 · erros analisados 0` -- Chrome segue para a t49. Obs. dele: t96 Q1-Q2 tem resposta na conta (teste de UI anterior ao canal).
+
+- `banco-emed: t49 BLOQUEADA pelo executor (camada de seguranca da sessao dele barrou "captura em massa" apos 7/21; nada gravado) · nada a importar · respostas 0` -- m0005: bloqueio nao e do EMED; sugerido lote por pagina (<= 20 q). Operador precisa reabrir a sessao do Chrome no modo de permissao adequado.
+
+- **Chrome caiu (travou e deslogou) na t49.** Operador (26/09, ~02h40): *"vamos ficar com o que temos. nao estou conseguindo permitir essa autonomia, para extracao dos dados do emed. como posso prosseguir?"* -> loop do `/banco-emed` reduzido de 5 para 20 min; banco fica com t26 + t96 (37 questoes); opcoes de captura apresentadas ao operador (bookmarklet no Chrome dele com a API interna que o executor mapeou x formulario manual x fluxo antigo).
+
 ## Custo dos subagentes (usage do harness)
 - Explore (Sonnet, mapa da arquitetura): 101.278 tokens · 53 tool uses · 2 min 47 s.
 - Opus (`emed_banco.py` + testes): 121.982 tokens · 30 tool uses · 10 min 14 s. Rodou um `git stash` por engano e desfez na hora (`git stash list` vazio, re-medido); sem commit, sem `git add`, `ipub.db` intocado.

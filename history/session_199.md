@@ -18,7 +18,7 @@
 ## Listas (banco local / hub)
 - t68 21 · t100 36 · t3 30 (+Q24 discursiva fora, `tmp/chrome_discursivas/`) · t61 15 · t651 30 (caderno tem 30, plano previa 43) -- capturadas nesta sessao; todas com Solucao MedHub exceto t651 (em curso). No hub: t26, t96, t40, t49, t68, t100, t3, t61 (362/5000 docs).
 - Divergentes: t68 Q1, Q13 · t100 Q8, Q18, Q29, Q34 · t3 nenhuma · t61 Q11.
-- Em curso ao gravar este log: captura t141, solucao t651.
+- Depois do 1o registro: t651 com solucao (1 divergente, Q20) e t141 capturada (24) + solucao (0 divergentes) semeadas no hub (10 listas, 418/5000 docs). t1 (MFC, 50 previstas) EM CURSO ao fechar o log (38 gravadas). Tique `/banco-emed` DESLIGADO as ~07h (cada disparo injeta ~5k tokens de skill; contexto em 78%). Suspeitos de gabarito requentado: t100 Q8, t68 Q13.
 - `banco-emed: t68 ingerida 21 · t100 36 · t3 30 · t61 15 · t651 30; t96 registrada 11 (lista nao resolvida)`.
 
 ## Custo dos subagentes (usage do harness)
@@ -34,6 +34,9 @@
 | Captura t61 (v3.1) | Sonnet | 282.639 | 212 | 28,9 min |
 | Solucao t61 | Opus | 98.914 | 10 | 4,3 min |
 | Captura t651 (v3.2) | Sonnet | 478.708 | 354 | 51,2 min |
+| Solucao t651 | Opus | 161.152 | 28 | 9,4 min |
+| Captura t141 | Sonnet | 438.491 | 325 | 48,0 min |
+| Solucao t141 | Opus | 108.111 | 10 | 5,3 min |
 Captura ~16-22k tokens por questao, 10-20 chamadas por questao (o modal de solucao e o custo). Solucao ~3-5k por questao. Alternativa de custo ~zero proposta ao operador (sem resposta ainda): PDF do caderno com gabarito, se o EMED oferecer.
 
 ## Decisoes tomadas

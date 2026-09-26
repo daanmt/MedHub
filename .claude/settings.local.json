@@ -145,7 +145,8 @@
       "CronCreate",
       "CronDelete",
       "Edit(history/**)",
-      "Edit(docs/**)"
+      "Edit(docs/**)",
+      "mcp__claude-in-chrome__*"
     ],
     "deny": [
       "Bash(rm -rf:*)",

@@ -5,6 +5,7 @@ monkeypatchado, o `ipub.db` real NUNCA é tocado. Os docs imitam o layout do
 `ArtifactData list ... out_dir`: `<DIR>/<colecao>/<doc_id>.json`.
 """
 import json
+import re
 import sqlite3
 import sys
 from pathlib import Path
@@ -424,3 +425,106 @@ def test_por_objetivo_soma_listas_do_mesmo_tema_e_chute_nao_e_firme():
     assert (ins["feitas"], ins["firmes"], ins["chutes_certos"]) == (3, 1, 1)
     assert ins["erradas"] == ["t40 Q8"]
     assert g["(sem objetivo)"]["firmes"] == 1
+
+
+# ------------------------------------------------ s201: F134 (perturbação) e F133 (propriedade)
+
+def test_exportar_em_banco_nao_migrado_mantem_as_solucoes(tmp_path, monkeypatch, capsys):
+    """F134 -- PERTURBAÇÃO: o banco perde as colunas que a s200 criou (`emed_solucoes.objetivo`,
+    `emed_respostas.riscadas`), como um banco que ainda não rodou o ALTER. O `--exportar` tem de
+    manter as N soluções. O `_emed_ler` de antes do `da62e95` fazia o SELECT com a coluna nova,
+    levava `OperationalError` e o próprio `except` devolvia `[]`: o hub seria semeado sem
+    nenhuma Solução MedHub, em silêncio. Ler também não pode migrar o banco (leitura sem DDL)."""
+    caminho = _usar_db(tmp_path, monkeypatch)
+    base = tmp_path / "buf"
+    n = 3
+    for i in range(1, n + 1):
+        _escrever(base, "questoes", f"t26_{i}", _questao(i))
+        _escrever(base, "solucoes", f"t26_{i}", _v2(i))
+    _escrever(base, "respostas", "t26_1", {
+        "lista": "t26", "tarefa": 26, "num": 1, "letra": "C", "confianca": "duvida",
+        "riscadas": ["A"], "respondido_em": "2026-09-26T10:00:00Z"})
+    for modo in ("--ingerir", "--solucoes", "--registrar"):
+        assert emed_banco.main([modo, str(base), "--apply"]) == 0
+    capsys.readouterr()
+
+    con = sqlite3.connect(caminho)       # a perturbação: o banco "volta" para antes da s200
+    # o banco sintético carrega views do schema geral sem as tabelas delas (flashcards...), e o
+    # DROP COLUMN re-valida o schema inteiro; as views não entram no que este teste mede
+    for (view,) in con.execute("SELECT name FROM sqlite_master WHERE type='view'").fetchall():
+        con.execute(f"DROP VIEW {view}")
+    con.execute("ALTER TABLE emed_solucoes DROP COLUMN objetivo")
+    con.execute("ALTER TABLE emed_respostas DROP COLUMN riscadas")
+    con.commit()
+    con.close()
+
+    out = tmp_path / "exp"
+    assert emed_banco.main(["--exportar", "t26", "--out", str(out)]) == 0
+    docs = [json.loads((out / "questoes" / f"t26_{i}.json").read_text(encoding="utf-8"))
+            for i in range(1, n + 1)]
+    assert sum(1 for d in docs if d.get("solucao_medhub")) == n
+    assert all(d["solucao_medhub"]["cadeia"] for d in docs)   # a v2 viaja como objeto
+    assert all("objetivo" not in d for d in docs)             # coluna ausente = sem objetivo
+    (r,) = db.emed_listar_respostas("t26")
+    assert r["letra"] == "C" and r["riscadas"] is None
+    con = sqlite3.connect(caminho)
+    try:
+        assert "objetivo" not in {c[1] for c in con.execute("PRAGMA table_info(emed_solucoes)")}
+    finally:
+        con.close()
+
+
+_HUB_TEMPLATE = ROOT / "core" / "templates" / "hub.html"
+#: doc da página -> coluna do banco quando o nome muda (o mesmo mapeamento do writer)
+_ALIAS_DOC_COLUNA = {"tarefa": "tarefa_id"}
+
+
+def _chaves_da_resposta_na_pagina():
+    """As chaves que a página grava em `respostas/<lista>_<num>`, LIDAS do template, nunca
+    digitadas: o literal `var r = {...}` do botão Responder + toda atribuição `r.<chave> =`.
+    Chave com `_` inicial é estado local (a página a filtra antes do `set`)."""
+    src = _HUB_TEMPLATE.read_text(encoding="utf-8")
+    i = src.index("var r = {lista:")          # âncora sumiu = o teste quebra alto, não passa
+    j = src.index("};", i)
+    chaves = set(re.findall(r"[{,]\s*([A-Za-z_]\w*)\s*:", src[i + len("var r = "):j + 1]))
+    chaves |= set(re.findall(r"\br\.([A-Za-z_]\w*)\s*=(?!=)", src))
+    return {c for c in chaves if not c.startswith("_")}
+
+
+def _chaves_sem_destino(tmp_path, chaves):
+    """Grava pelo `--registrar` um doc com TODAS as `chaves` e devolve as que não chegaram a
+    uma coluna de `emed_respostas` (nem a `extras`, se um dia a tabela tiver)."""
+    plaus = {"lista": "t26", "tarefa": 26, "num": 1, "letra": "C", "confianca": "duvida",
+             "correta": False, "gabarito": "B", "riscadas": ["A"], "racional": "sentinela",
+             "elo": "li_errado", "tempo_s": 42, "flag": True,
+             "respondido_em": "2026-09-26T10:00:00Z"}
+    doc = {c: plaus.get(c, f"sentinela-{c}") for c in chaves}
+    base = tmp_path / "prop"
+    _escrever(base, "questoes", "t26_1", _questao(1))
+    _escrever(base, "respostas", "t26_1", doc)
+    for modo in ("--ingerir", "--registrar"):
+        assert emed_banco.main([modo, str(base), "--apply"]) == 0
+    con = sqlite3.connect(db.DB_PATH)
+    con.row_factory = sqlite3.Row
+    try:
+        (linha,) = [dict(r) for r in con.execute("SELECT * FROM emed_respostas")]
+    finally:
+        con.close()
+    extras = json.loads(linha.get("extras") or "{}")
+    return sorted(c for c in chaves
+                  if linha.get(_ALIAS_DOC_COLUNA.get(c, c)) in (None, "") and c not in extras)
+
+
+def test_toda_chave_que_a_pagina_grava_na_resposta_tem_destino(tmp_path, monkeypatch, capsys):
+    """F133 -- PROPRIEDADE: toda chave que a página grava num doc `respostas/*` chega ao banco
+    (coluna ou `extras`). A s197 gravava `riscadas` e o writer as descartava por não ter
+    coluna nem `extras`; o teste da s200 cobria `riscadas`, não a PRÓXIMA chave. O controle
+    negativo prova que o predicado acusa uma chave nova sem destino."""
+    _usar_db(tmp_path, monkeypatch)
+    chaves = _chaves_da_resposta_na_pagina()
+    assert {"letra", "confianca", "riscadas", "racional", "elo"} <= chaves   # a leitura pegou
+    assert _chaves_sem_destino(tmp_path, chaves) == []
+    capsys.readouterr()
+    _usar_db(tmp_path / "ctl", monkeypatch)
+    (tmp_path / "ctl").mkdir()
+    assert _chaves_sem_destino(tmp_path / "ctl", chaves | {"chave_nova"}) == ["chave_nova"]

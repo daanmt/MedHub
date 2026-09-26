@@ -35,7 +35,9 @@ ALLOWLIST = {
     # `tools/emed_banco.py` e camada fina e NAO aparece nesta lista de proposito. A coluna
     # `emed_respostas.questao_erro_id` (s199) tem writer proprio, `emed_ligar_erro`, tambem aqui:
     # o `insert_questao.py` o chama com a conexao dele e NAO ganha a tabela na allowlist.
+    # emed_solucoes (s199): a solucao PROPRIA do hub; `emed_upsert_solucoes` e o writer unico.
     "app/utils/db.py": {"cronograma_progresso", "emed_questoes", "emed_respostas",
+                        "emed_solucoes",
                         "flashcards", "fsrs_cards", "fsrs_revlog",
                         "habilidades", "plano_tarefas", "preparacao_estado",
                         "questao_habilidades", "review_log", "reforja_marks",

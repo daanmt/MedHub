@@ -45,7 +45,7 @@ status: canonical
 | `control/hub` | hub | `instrucao` (quadro verde da aba Capturar), `fase`, `atualizado_em` |
 | `mensagens/<id>` | todos | `de` (`hub` · `claude-in-chrome` · `operador`), `texto`, `enviado_em`, `lido` |
 | `listas/t<tarefa>` | hub semeia; página muda `status` | `tarefa`, `tema`, `area`, `semana`, `seq`, `q_previstas`, `url`, `status` (`pendente` · `em_curso` · `capturada` · `bloqueada` · `resolvida`) |
-| `questoes/<lista>_<num>` | Chrome (formulário ou lote JSON) | `lista`, `tarefa`, `num`, `banca`, `gabarito`, `emed_id`, `estatistica`, `enunciado`, `alternativas`, `solucao`, `forum`, `tags`, `capturado_em`, `executor`. **Escopo público desde a s198:** entram só `banca`, `gabarito`, `emed_id`, `enunciado`, `alternativas`, `tags`; `solucao`, `forum` e `estatistica` ficam vazios (as 4 listas da s197 os têm; não se apagam) |
+| `questoes/<lista>_<num>` | Chrome (formulário ou lote JSON) | `lista`, `tarefa`, `num`, `banca`, `gabarito`, `emed_id`, `estatistica`, `enunciado`, `alternativas`, `solucao`, `forum`, `tags`, `capturado_em`, `executor`. **Escopo público desde a s198:** entram só `banca`, `gabarito`, `emed_id`, `enunciado`, `alternativas`, `tags`; `solucao`, `forum` e `estatistica` ficam vazios (as 4 listas da s197 os têm; não se apagam). No db do **hub**, o doc ganha `solucao_medhub`, `divergente` e `fontes_medhub` quando a lista tem solução própria (s199) |
 | `respostas/<lista>_<num>` | página (aba Resolver) | `lista`, `tarefa`, `num`, `letra`, `confianca` (`solida` · `duvida` · `chute`), `correta`, `gabarito`, `racional`, `elo`, `tempo_s`, `flag`, `respondido_em` |
 | `analises/<lista>_<num>` | hub (após `/analisar-questao`); página grava o veredito | `lista`, `num`, `pedia`, `cadeia[]`, `quebrou` (índice 0-based na cadeia), `comporta`, `armadilha`, `veredito_hub`, `cards[]`, `questao_erro_id`; `veredito_operador` (`concordo` · `em_parte` · `discordo`), `nota_operador`, `veredito_em` |
 
@@ -63,6 +63,7 @@ writers de `emed_questoes` / `emed_respostas`; allowlist F49). Dry-run é o defa
 | Flag | Função |
 |---|---|
 | `--ingerir DIR` | Upsert de `DIR/questoes/*.json` em `emed_questoes` (chave `lista+num`, `hash` de conteúdo). Imprime `novas/atualizadas/iguais/invalidas`; doc sem `lista`/`num`/`enunciado`/`gabarito` cai em `invalidas` sem abortar o lote. |
+| `--solucoes DIR` | (s199) Upsert de `DIR/solucoes/*.json` em `emed_solucoes` (writer `db.emed_upsert_solucoes`; chave `lista+num`). Doc: `lista`, `num`, `solucao` (obrigatórios), `divergente` (bool), `fontes`. O `--exportar` leva a solução para o doc (`solucao_medhub`, `divergente`, `fontes_medhub`), fora do `hash` e de `extras`. |
 | `--registrar DIR` | Upsert de `DIR/respostas/*.json` em `emed_respostas` (mais nova vence). Imprime as contagens e, por lista, o resumo `feitas · acertos (solidas, duvidas, chutes) · erradas · tempo medio` **e a linha sugerida de `registrar_sessao_bulk.py`** (`--sessao NNN` a preencher). |
 | `--podar DIR` | Read-only: lista os `doc_id` **seguros** para apagar do artifact (questão: hash igual ao do banco; resposta: `respondido_em` igual). Escreve `DIR/podar_<colecao>.json` (`ids`, `n`, `nao_seguros`). A exclusão em si é `ArtifactData batch delete` (<= 50 por lote), feita pelo agente. |
 | `--colecao {questoes,respostas}` | Coleção alvo do `--podar` (default `questoes`). |
@@ -76,6 +77,17 @@ writers de `emed_questoes` / `emed_respostas`; allowlist F49). Dry-run é o defa
 | `--json` | Saída em JSON (`--status`, `--erros`, `--ingerir`, `--registrar`, `--podar`). |
 
 Exit: 0 ok · 1 erro de uso/leitura · 2 COUNT-ASSERT. Testes: `tools/test_emed_banco.py`.
+
+## Solução MedHub (s199)
+
+Decisão do operador em 26/09/2026: a solução de cada questão é **cunhada pelo hub**, sem ler o comentário
+do professor. Insumo: enunciado, alternativas, gabarito, resumos (`app/engine/get_topic_context`) e, só
+quando a solução depende de afirmação decisiva (dose, ponto de corte, conduta de diretriz), a checagem de
+`/pesquisar-evidencia`. **Forma curta** (3-4 linhas): o que pede · o dado que decide · por que o gabarito
+· por que a mais tentadora cai. **`divergente: true`** quando o raciocínio não chega ao gabarito: é onde o
+operador confere o professor na plataforma, e onde aparece o padrão "diretriz antiga". Cunhagem **por
+lista**, quando ela entra na semana (subagente por lista, régua F93), gravada em
+`tmp/solucoes/solucoes/<lista>_<num>.json` -> `--solucoes tmp/solucoes --apply --expect N` -> `--exportar`.
 
 ## O tique (rito do hub, idempotente)
 

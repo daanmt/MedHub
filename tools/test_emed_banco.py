@@ -257,3 +257,68 @@ def test_uso_invalido_e_pasta_ausente(tmp_path, monkeypatch):
 if __name__ == "__main__":
     import pytest
     sys.exit(pytest.main([__file__, "-q"]))
+
+
+# ------------------------------------------------------- solução MedHub (s199)
+
+def _solucao(num, **extra):
+    """Doc `solucoes/<lista>_<num>` cunhado pelo hub (sem comentário do professor)."""
+    doc = {"lista": "t26", "num": num,
+           "solucao": f"Pede a conduta ({num}). Decide: glicemia de jejum >= 92. Gabarito B.",
+           "divergente": False, "fontes": "SBD 2024"}
+    doc.update(extra)
+    return doc
+
+
+def test_solucoes_idempotente_e_invalida(tmp_path, monkeypatch, capsys):
+    """2 novas + 1 inválida (sem texto); 2a rodada iguais; texto novo = atualizada."""
+    _usar_db(tmp_path, monkeypatch)
+    base = tmp_path / "sol"
+    _escrever(base, "solucoes", "t26_1", _solucao(1))
+    _escrever(base, "solucoes", "t26_2", _solucao(2, divergente=True))
+    _escrever(base, "solucoes", "t26_3", _solucao(3, solucao="  "))
+    assert emed_banco.main(["--solucoes", str(base), "--apply", "--json"]) == 0
+    c = _json_saida(capsys)
+    assert (c["novas"], c["atualizadas"], c["iguais"]) == (2, 0, 0)
+    assert c["invalidas"] == ["t26_3"]
+    assert emed_banco.main(["--solucoes", str(base), "--apply", "--json"]) == 0
+    c = _json_saida(capsys)
+    assert (c["novas"], c["atualizadas"], c["iguais"]) == (0, 0, 2)
+    _escrever(base, "solucoes", "t26_1", _solucao(1, solucao="Outra solução, com acento."))
+    assert emed_banco.main(["--solucoes", str(base), "--apply", "--expect", "1", "--json"]) == 0
+    assert _json_saida(capsys)["atualizadas"] == 1
+    s1, s2 = db.emed_listar_solucoes("t26")
+    assert s1["solucao"] == "Outra solução, com acento." and s1["divergente"] == 0
+    assert s2["divergente"] == 1 and s2["fontes"] == "SBD 2024"
+
+
+def test_solucoes_dry_run_sem_tabela(tmp_path, monkeypatch, capsys):
+    """Dry-run conta e não roda DDL."""
+    caminho = _usar_db(tmp_path, monkeypatch)
+    base = tmp_path / "sol"
+    _escrever(base, "solucoes", "t26_1", _solucao(1))
+    assert emed_banco.main(["--solucoes", str(base), "--json"]) == 0
+    assert _json_saida(capsys)["novas"] == 1
+    assert _tabelas(caminho) == set()
+
+
+def test_exportar_leva_solucao_medhub_e_round_trip(tmp_path, monkeypatch, capsys):
+    """Questão com solução exporta `solucao_medhub`/`divergente`; sem solução, as chaves
+    não aparecem; o doc exportado re-ingerido segue `iguais` (não vira `extras`)."""
+    _usar_db(tmp_path, monkeypatch)
+    base = tmp_path / "buf"
+    for n in (1, 2):
+        _escrever(base, "questoes", f"t26_{n}", _questao(n))
+    _escrever(base, "solucoes", "t26_1", _solucao(1, divergente=True))
+    assert emed_banco.main(["--ingerir", str(base), "--apply"]) == 0
+    assert emed_banco.main(["--solucoes", str(base), "--apply"]) == 0
+    out = tmp_path / "exp"
+    assert emed_banco.main(["--exportar", "t26", "--out", str(out)]) == 0
+    d1 = json.loads((out / "questoes" / "t26_1.json").read_text(encoding="utf-8"))
+    d2 = json.loads((out / "questoes" / "t26_2.json").read_text(encoding="utf-8"))
+    assert d1["solucao_medhub"] == _solucao(1)["solucao"] and d1["divergente"] is True
+    assert "solucao_medhub" not in d2 and "divergente" not in d2
+    capsys.readouterr()
+    assert emed_banco.main(["--ingerir", str(out), "--json"]) == 0
+    c = _json_saida(capsys)
+    assert (c["novas"], c["atualizadas"], c["iguais"]) == (0, 0, 2)

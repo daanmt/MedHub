@@ -194,6 +194,19 @@ def cmd_ingerir(args):
     return code
 
 
+def cmd_solucoes(args):
+    """`--solucoes DIR`: upsert da solução própria do hub em `emed_solucoes` (s199)."""
+    docs = ler_docs(args.solucoes, "solucoes")
+    cont, code = _upsert_com_rito(db.emed_upsert_solucoes, docs, args)
+    if args.json:
+        _emitir(dict(cont, aplicado=bool(args.apply and code == 0)), True)
+    else:
+        if code == 2:
+            print(cont["erro"])
+        print(_linha_contagem(cont, args.apply and code == 0))
+    return code
+
+
 def cmd_registrar(args):
     """`--registrar DIR`: upsert das respostas + resumo por lista + comando sugerido."""
     docs = ler_docs(args.registrar, "respostas")
@@ -259,6 +272,7 @@ def cmd_exportar(args):
     """`--exportar LISTA`: escreve `OUT/questoes/<lista>_<num>.json` (formato do doc) e
     `OUT/listas/<lista>.json` (cabeçalho da lista), para semear o buffer/hub por ArtifactData."""
     linhas = db.emed_listar_questoes(args.exportar)
+    solucoes = {s["num"]: s for s in db.emed_listar_solucoes(args.exportar)}
     pasta = os.path.join(args.out, "questoes")
     os.makedirs(pasta, exist_ok=True)
     pasta_l = os.path.join(args.out, "listas")
@@ -272,6 +286,10 @@ def cmd_exportar(args):
             doc.update(json.loads(q.get("extras") or "{}"))
         except ValueError:
             pass
+        sol = solucoes.get(q["num"])
+        if sol:     # s199: a solução do hub viaja no doc; fora do hash e de `extras`
+            doc.update(solucao_medhub=sol["solucao"], divergente=bool(sol["divergente"]),
+                       fontes_medhub=sol["fontes"] or "")
         caminho = os.path.join(pasta, f"{q['lista']}_{q['num']}.json")
         with open(caminho, "w", encoding="utf-8") as fh:
             json.dump(doc, fh, ensure_ascii=False, indent=2)
@@ -344,9 +362,11 @@ def main(argv=None):
     """Ponto de entrada: exatamente UM modo por chamada."""
     ap = argparse.ArgumentParser(
         description="Banco de questoes EMED no ipub.db (Bancada EMED): ingerir, "
-                    "registrar, podar, exportar, erros, status.")
+                    "registrar, solucoes, podar, exportar, erros, status.")
     ap.add_argument("--ingerir", metavar="DIR", help="upsert de DIR/questoes/*.json")
     ap.add_argument("--registrar", metavar="DIR", help="upsert de DIR/respostas/*.json")
+    ap.add_argument("--solucoes", metavar="DIR",
+                    help="upsert de DIR/solucoes/*.json (solucao propria do hub, s199)")
     ap.add_argument("--podar", metavar="DIR",
                     help="lista os doc_id seguros para apagar do artifact (read-only)")
     ap.add_argument("--colecao", choices=["questoes", "respostas"], default="questoes",
@@ -365,6 +385,7 @@ def main(argv=None):
     args = ap.parse_args(argv)
 
     modos = {"--ingerir": args.ingerir, "--registrar": args.registrar,
+             "--solucoes": args.solucoes,
              "--podar": args.podar, "--exportar": args.exportar,
              "--erros": args.erros, "--status": args.status}
     ligados = [m for m, v in modos.items() if v]
@@ -373,6 +394,7 @@ def main(argv=None):
               file=sys.stderr)
         return 1
     acao = {"--ingerir": cmd_ingerir, "--registrar": cmd_registrar,
+            "--solucoes": cmd_solucoes,
             "--podar": cmd_podar, "--exportar": cmd_exportar,
             "--erros": cmd_erros, "--status": cmd_status}[ligados[0]]
     try:

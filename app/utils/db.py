@@ -2459,6 +2459,11 @@ CAMPOS_HASH_EMED = ("banca", "gabarito", "emed_id", "enunciado", "alternativas",
 _CHAVES_DOC_EMED = frozenset(CAMPOS_HASH_EMED) | {"lista", "tarefa", "num", "capturado_em",
                                                   "executor"}
 
+#: Chaves que o `--exportar` ACRESCENTA ao doc a partir de `emed_solucoes` (s199). Não são
+#: captura: ficam fora de `extras` e do `hash`, senão o doc re-ingerido contaria como
+#: `atualizada` e a solução do hub viraria conteúdo da questão.
+CHAVES_SOLUCAO_DOC = frozenset({"solucao_medhub", "divergente", "fontes_medhub"})
+
 CONFIANCAS_EMED = ("solida", "duvida", "chute")
 
 _COLUNAS_EMED_Q = ("id", "lista", "tarefa_id", "num", "emed_id", "banca", "gabarito",
@@ -2470,9 +2475,12 @@ _COLUNAS_EMED_R = ("id", "lista", "tarefa_id", "num", "letra", "confianca", "cor
                    "gabarito", "racional", "elo", "tempo_s", "flag", "respondido_em",
                    "registrado_em", "questao_erro_id")
 
+_COLUNAS_EMED_S = ("id", "lista", "num", "solucao", "divergente", "fontes", "hash",
+                   "cunhado_em", "atualizado_em")
+
 
 def _ensure_emed_tables(conn):
-    """DDL idempotente de `emed_questoes` e `emed_respostas` (só roda sob `aplicar`)."""
+    """DDL idempotente de `emed_questoes`, `emed_respostas` e `emed_solucoes` (só sob `aplicar`)."""
     conn.execute('''
         CREATE TABLE IF NOT EXISTS emed_questoes (
             id            INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -2517,6 +2525,22 @@ def _ensure_emed_tables(conn):
             UNIQUE (lista, num)
         )
     ''')
+    # s199: a solução PRÓPRIA do hub (enunciado + gabarito + resumos + diretriz; nunca o
+    # comentário do professor). `divergente` = o raciocínio não chegou ao gabarito.
+    conn.execute('''
+        CREATE TABLE IF NOT EXISTS emed_solucoes (
+            id            INTEGER PRIMARY KEY AUTOINCREMENT,
+            lista         TEXT NOT NULL,
+            num           INTEGER NOT NULL,
+            solucao       TEXT NOT NULL,
+            divergente    INTEGER DEFAULT 0,
+            fontes        TEXT,
+            hash          TEXT NOT NULL,
+            cunhado_em    TEXT,
+            atualizado_em TEXT,
+            UNIQUE (lista, num)
+        )
+    ''')
 
 
 def _txt(valor):
@@ -2547,7 +2571,8 @@ def emed_extras_json(doc):
     """
     import json as _json
     extras = {k: v for k, v in doc.items()
-              if k not in _CHAVES_DOC_EMED and not str(k).startswith("_")
+              if k not in _CHAVES_DOC_EMED and k not in CHAVES_SOLUCAO_DOC
+              and not str(k).startswith("_")
               and v is not None and v != ""}
     return _json.dumps(extras, sort_keys=True, ensure_ascii=False) if extras else ""
 
@@ -2801,6 +2826,80 @@ def emed_ligar_erro(conn, lista, num, questao_id):
                          f"nao e erro")
     conn.execute("UPDATE emed_respostas SET questao_erro_id = ? WHERE lista = ? AND num = ?",
                  (int(questao_id), lista, int(num)))
+
+
+def _bool01(valor):
+    """0/1 tolerante (`True`, `"true"`, `"1"`, `1` -> 1; o resto -> 0)."""
+    return 1 if valor is True or str(valor).strip().lower() in ("1", "true", "sim") else 0
+
+
+def emed_upsert_solucoes(rows, aplicar=True):
+    """Upsert de `emed_solucoes` por `(lista, num)` (s199). Writer único da tabela.
+
+    Devolve `{novas, atualizadas, iguais, invalidas}`; `hash` = texto + divergente +
+    fontes. Obrigatórios: `lista`, `num`, `solucao` não-vazia. `aplicar=False` mede
+    pelo mesmo caminho e não roda DDL.
+    """
+    import hashlib
+    import json as _json
+    invalidas, preparadas = [], []
+    for doc in rows:
+        num = _int_ou_none(doc.get("num"))
+        if _vazio(doc.get("lista")) or _vazio(doc.get("solucao")) or num is None:
+            invalidas.append(doc.get("_doc_id"))
+            continue
+        linha = {"lista": str(doc["lista"]).strip(), "num": num,
+                 "solucao": _txt(doc.get("solucao")).strip(),
+                 "divergente": _bool01(doc.get("divergente")),
+                 "fontes": _txt(doc.get("fontes")).strip()}
+        canon = _json.dumps({k: linha[k] for k in ("solucao", "divergente", "fontes")},
+                            sort_keys=True, ensure_ascii=False)
+        linha["hash"] = hashlib.sha1(canon.encode("utf-8")).hexdigest()
+        preparadas.append(linha)
+
+    conn = get_connection()
+    try:
+        if aplicar:
+            _ensure_emed_tables(conn)
+        banco = {(r["lista"], r["num"]): r["hash"]
+                 for r in _emed_ler(conn, "emed_solucoes", _COLUNAS_EMED_S)}
+        cont = {"novas": 0, "atualizadas": 0, "iguais": 0, "invalidas": invalidas}
+        ts = carimbo()
+        for linha in preparadas:
+            chave = (linha["lista"], linha["num"])
+            if chave not in banco:
+                cont["novas"] += 1
+            elif banco[chave] != linha["hash"]:
+                cont["atualizadas"] += 1
+            else:
+                cont["iguais"] += 1
+                continue
+            banco[chave] = linha["hash"]
+            if aplicar:
+                conn.execute('''
+                    INSERT INTO emed_solucoes (lista, num, solucao, divergente, fontes, hash,
+                                               cunhado_em, atualizado_em)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                    ON CONFLICT (lista, num) DO UPDATE SET
+                        solucao = excluded.solucao, divergente = excluded.divergente,
+                        fontes = excluded.fontes, hash = excluded.hash,
+                        atualizado_em = excluded.atualizado_em
+                ''', (linha["lista"], linha["num"], linha["solucao"], linha["divergente"],
+                      linha["fontes"], linha["hash"], ts, ts))
+        if aplicar:
+            conn.commit()
+        return cont
+    finally:
+        conn.close()
+
+
+def emed_listar_solucoes(lista=None):
+    """Linhas de `emed_solucoes` (todas as colunas), por `(lista, num)`. Read-only."""
+    conn = get_connection()
+    try:
+        return _emed_ler(conn, "emed_solucoes", _COLUNAS_EMED_S, lista)
+    finally:
+        conn.close()
 
 
 def emed_listar_questoes(lista=None):

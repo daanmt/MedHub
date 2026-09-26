@@ -92,6 +92,33 @@ writer: forma da cadeia, uma certa, elo de errada dentro da cadeia e objetivo da
 quantos gravou, as divergentes (1 linha cada), os "outro:" usados e qualquer questão sem figura/
 tabela na captura.
 
+## Estado por elo (o diagnóstico da análise) -- portador único
+
+> Desde a s201 (veredito do /ai-eng sobre a s200, #8) a definição mora SÓ aqui; `/banco-emed`, o
+> `/analisar-questao` §3.3 e a memória apontam para esta seção. O subagente que cunha a Solução NÃO
+> preenche estados -- eles são da análise do erro (`analises/<lista>_<num>`), feita pelo principal.
+
+A análise usa a MESMA cadeia da Solução (não a repete) e declara:
+
+- `quebrou` = índice 0-based do elo em que a cadeia do operador quebrou.
+- `estados` = um por elo, na ordem da cadeia. Vocabulário: `ok` · `quebrou` · `nao_usou` · `nao_avaliado`
+  - `ok` = elo executado (firme);
+  - `quebrou` = onde a cadeia rompeu;
+  - `nao_usou` = sabia (declarado ou evidente), mas não aplicou na hora de decidir;
+  - `nao_avaliado` = a questão não chegou a testar o elo -- ou evidência e declarado divergem.
+- `conflitos` = índices 0-based dos elos em que o **declarado** pelo operador e a **evidência** divergem
+  (ex.: "acertei o elo 1", mas a letra marcada é a que o elo 1 exclui). Régua do /ai-eng aceita pelo
+  operador em 26/09: elo em conflito = `nao_avaliado` + índice em `conflitos`, nunca `nao_usou` -- o
+  declarado não é sobrescrito pelo inferido.
+- **Evidência, não diagnóstico:** letra marcada, riscadas, confiança e racional. Os elos dependem da
+  questão, não das alternativas (operador, s200); nunca pintar um elo só porque uma letra ligada a ele
+  foi riscada.
+- **Sem análise**, a página lê as letras (riscada = elo provavelmente ok; letra marcada = provável
+  quebra) e rotula a leitura como PROVISÓRIA. `estados` com tamanho diferente da cadeia é ignorado.
+
+O render de cada estado está preso por `tools/test_hub_render.py` (um golden por estado + PROVISÓRIA), e o
+vocabulário acima tem de ser igual ao que a página rotula (`test_vocabulario_de_estados_do_brief_e_o_da_pagina`).
+
 ## Listas fechadas de objetivo
 
 Moram em [`core/objetivos.json`](../core/objetivos.json) (portador único desde a s201; o

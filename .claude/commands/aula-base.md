@@ -96,7 +96,7 @@ e laboriosa. Precisamos valorizar cada segundo de estudos."*
 
 - **Cada degrau = lede de 1 frase + tópicos (`<ul>`)**, não parágrafos. Um tópico = uma ideia, 1-2
   períodos curtos. O mecanismo (o porquê) entra como tópico próprio quando discrimina alternativa.
-- **Cluster de diagnóstico diferencial = tabela/grade** (`.crit`, `.vs`), nunca prosa.
+- **Cluster de diagnóstico diferencial = tabela/grade** (`.crit`, `.vs`), nunca prosa.  <!-- NAO-VERIFICAVEL: forma do conteudo da aula (grade x prosa) e julgamento de autoria; nenhum gate le o HTML da aula por cluster (revisar: 2027-03-31) -->
 - **A síntese final é a grade de gatilhos** (1 linha por degrau), não um parágrafo corrido. A "escada
   inteira numa respirada" em prosa foi revogada.
 - **Armadilhas: 1-2 períodos cada.** Referência densa (listas oficiais de 10/12 passos, suplementações)
@@ -108,4 +108,4 @@ e laboriosa. Precisamos valorizar cada segundo de estudos."*
 
 ⚰️ *A memória `feedback_aula_base_prosa_enxuta` (s150: "prosa enxuta, não bullet-pilha") fica
 restringida: prosa só no lede; o corpo é em tópicos. "Descomprimir" (s090/s092) significa explicar o
-mecanismo, nunca escrever mais texto.*
+mecanismo, nunca escrever mais texto.*  <!-- NAO-VERIFICAVEL: 'descomprimir = mecanismo, nao comprimento' e julgamento de autoria; nao ha gate de comprimento de aula (revisar: 2027-03-31) -->

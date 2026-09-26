@@ -622,3 +622,29 @@ def test_writer_valida_objetivo_tambem_na_v1(tmp_path, monkeypatch, capsys):
     assert emed_banco.main(["--solucoes", str(base), "--apply", "--json"]) == 0
     c = _json_saida(capsys)
     assert c["invalidas"] == ["t26_1"] and c["novas"] == 1
+
+
+# ------------------------------------------------ s201: amostra de leitura das soluções (#7 do /ai-eng)
+
+def test_amostra_de_leitura_divergentes_mais_duas_aleatorias_estaveis():
+    """Por lista: TODAS as divergentes + 2 aleatórias entre as não divergentes; a mesma entrada
+    dá a mesma amostra (semente = o conjunto de chaves), lista pequena devolve o que existe."""
+    docs = ([_v2(n, lista="t40") for n in range(1, 11)]
+            + [_v2(11, lista="t40", divergente=True), _v2(1, lista="t26")])
+    a = emed_banco.amostra_leitura(docs)
+    assert a["t40"]["divergentes"] == [11]
+    assert len(a["t40"]["aleatorias"]) == 2 and 11 not in a["t40"]["aleatorias"]
+    assert set(a["t40"]["aleatorias"]) <= set(range(1, 11))
+    assert emed_banco.amostra_leitura(list(reversed(docs))) == a        # estável
+    assert a["t26"] == {"divergentes": [], "aleatorias": [1]}
+
+
+def test_solucoes_json_traz_a_amostra_de_leitura(tmp_path, monkeypatch, capsys):
+    _usar_db(tmp_path, monkeypatch)
+    base = tmp_path / "sol"
+    for n in (1, 2, 3, 4):
+        _escrever(base, "solucoes", f"t26_{n}", _v2(n, divergente=(n == 4)))
+    assert emed_banco.main(["--solucoes", str(base), "--json"]) == 0
+    saida = _json_saida(capsys)
+    assert saida["leitura"]["t26"]["divergentes"] == [4]
+    assert len(saida["leitura"]["t26"]["aleatorias"]) == 2

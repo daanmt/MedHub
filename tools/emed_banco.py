@@ -194,16 +194,53 @@ def cmd_ingerir(args):
     return code
 
 
+def amostra_leitura(docs, n=2):
+    """O que o principal LÊ a olho de um lote de soluções (s201, #7 do /ai-eng): por lista,
+    todas as `divergente` + `n` aleatórias entre as outras. A semente é o conjunto de chaves do
+    lote, então a mesma entrada dá a mesma amostra (reproduzível no log). PURA."""
+    import hashlib
+    import random
+    por_lista = {}
+    for d in docs:
+        num = db._int_ou_none(d.get("num"))
+        lista = str(d.get("lista") or "").strip()
+        if not lista or num is None:
+            continue
+        g = por_lista.setdefault(lista, {"divergentes": set(), "outras": set()})
+        g["divergentes" if db._bool01(d.get("divergente")) else "outras"].add(num)
+    saida = {}
+    for lista, g in sorted(por_lista.items()):
+        outras = sorted(g["outras"] - g["divergentes"])
+        semente = hashlib.sha1(f"{lista}:{outras}:{sorted(g['divergentes'])}".encode()).hexdigest()
+        sorteio = random.Random(semente).sample(outras, min(n, len(outras)))
+        saida[lista] = {"divergentes": sorted(g["divergentes"]), "aleatorias": sorted(sorteio)}
+    return saida
+
+
+def texto_amostra(amostra):
+    """`ler a olho: t40 divergentes Q11 · aleatórias Q3, Q7` -- uma linha por lista."""
+    linhas = []
+    for lista, g in amostra.items():
+        partes = [f"divergentes {', '.join(f'Q{x}' for x in g['divergentes'])}" if g["divergentes"] else "",
+                  f"aleatórias {', '.join(f'Q{x}' for x in g['aleatorias'])}" if g["aleatorias"] else ""]
+        linhas.append(f"ler a olho: {lista} " + " · ".join(p for p in partes if p))
+    return linhas
+
+
 def cmd_solucoes(args):
-    """`--solucoes DIR`: upsert da solução própria do hub em `emed_solucoes` (s199)."""
+    """`--solucoes DIR`: upsert da solução própria do hub em `emed_solucoes` (s199). Traz a
+    amostra que o principal lê a olho (`amostra_leitura`, s201)."""
     docs = ler_docs(args.solucoes, "solucoes")
     cont, code = _upsert_com_rito(db.emed_upsert_solucoes, docs, args)
+    amostra = amostra_leitura(docs)
     if args.json:
-        _emitir(dict(cont, aplicado=bool(args.apply and code == 0)), True)
+        _emitir(dict(cont, aplicado=bool(args.apply and code == 0), leitura=amostra), True)
     else:
         if code == 2:
             print(cont["erro"])
         print(_linha_contagem(cont, args.apply and code == 0))
+        for linha in texto_amostra(amostra):
+            print(linha)
     return code
 
 

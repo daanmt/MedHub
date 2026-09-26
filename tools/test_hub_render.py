@@ -244,3 +244,35 @@ def test_v1_em_texto_segue_como_texto():
     out = _rodar(q, _resp("C"), None)
     assert out["className"] == "qz-texto" and out["html"] == ""
     assert out["texto"].startswith("Pede a conduta.") and out["obj_hidden"] is True
+
+
+BRIEF = (ROOT / "docs" / "SOLUCAO-MEDHUB-BRIEF.md").read_text(encoding="utf-8")
+
+
+def _vocabulario_do_brief():
+    import re
+    (linha,) = [l for l in BRIEF.splitlines() if "Vocabulário:" in l and "`quebrou`" in l]
+    return set(re.findall(r"`([a-z_]+)`", linha.split("Vocabulário:", 1)[1]))
+
+
+def _estados_que_a_pagina_rotula():
+    import re
+    ini = FUNCS.index("var rot = {")
+    fim = FUNCS.index("}[st]", ini)
+    return set(re.findall(r"[{,]\s*([a-z_]+)\s*:", FUNCS[ini + len("var rot = "):fim + 1]))
+
+
+def test_vocabulario_de_estados_do_brief_e_o_da_pagina():
+    """#8 do /ai-eng: o estado por elo tem UM portador (o brief). O vocabulário que ele define é
+    exatamente o que a página rotula -- estado novo num lado só quebra aqui."""
+    assert _vocabulario_do_brief() == _estados_que_a_pagina_rotula() == {
+        "ok", "quebrou", "nao_usou", "nao_avaliado"}
+
+
+def test_skill_e_autopsia_apontam_o_brief_e_nao_redefinem():
+    """`/banco-emed` e `/analisar-questao` §3.3 apontam §Estado por elo; nenhum dos dois volta a
+    carregar a definição (o rótulo de `nao_usou` é a assinatura de uma cópia)."""
+    for nome in ("banco-emed.md", "analisar-questao.md"):
+        txt = (ROOT / ".claude" / "commands" / nome).read_text(encoding="utf-8")
+        assert "SOLUCAO-MEDHUB-BRIEF.md" in txt and "Estado por elo" in txt, nome
+        assert "sabia, não aplicou" not in txt, nome

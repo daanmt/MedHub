@@ -305,6 +305,16 @@ def _flush_eventos(pendentes):
         print(f"[WARN] REFORJA_LOG: {len(pendentes)} evento(s) nao registrado(s) ({e}).")
 
 
+def _fixar_antes(ato, db_path):
+    """F137 parte 2: o ponto de retorno FIXADO do proprio inicio do ato (`backup_db`). Levanta
+    `SemPontoDeRetorno` quando nao ha -- quem chama RECUSA e nada e gravado."""
+    _tools = os.path.dirname(os.path.abspath(__file__))
+    if _tools not in sys.path:
+        sys.path.insert(0, _tools)
+    import backup_db
+    return backup_db.fixar_antes_do_ato(ato, db=db_path)
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--from', dest='src', required=True, help='JSON com a lista de edições')
@@ -366,6 +376,12 @@ def main():
                   f"Nada gravado. Use --apply.")
             return 0
 
+        try:
+            rec = _fixar_antes(f"recurate_cards --apply ({n_ref} refeitos, {n_apo} aposentados)", DB_PATH)
+        except Exception as e:  # noqa: BLE001 -- sem ponto de retorno = recusa (F137 parte 2)
+            print(f"[ERRO] sem ponto de retorno FIXADO (F137): {e}. NADA aplicado.")
+            return 1
+        print(f"[FIXADO] {rec['arquivo']} sha256 {rec['sha256']} (vai para o ledger no item do ato)")
         n_refeitos, n_aposentados = aplicar(plano, conn)
         print(f"\n[OK] Commitado: {n_refeitos} refeitos, {n_aposentados} aposentados "
               f"-- FSRS preservado (card_id intacto).")

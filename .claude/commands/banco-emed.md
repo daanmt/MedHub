@@ -120,7 +120,7 @@ risco da conta declarado e assumido; o que mudou: o agente não lê o token do n
   `tarefa`, `capturado_em`, `executor`, `figura`). Comentário do professor, fórum, estatística, vídeo, percentuais e a resposta
   do usuário morrem em memória -- nunca em disco, log, `tmp/`, stdout ou mensagem de recusa.  <!-- CHECK: test_propriedade_nada_alem_da_whitelist_chega_a_disco_ou_saida -->
 - 🔴 **Token:** o operador põe a sessão em `.emed_token` (linha 1 = o `authorization`; linha 2 opcional = `x-requester-id`)
-  ou na env `EMED_TOKEN`. O script **recusa** se o arquivo estiver rastreado pelo git ou fora do `.gitignore`, e nunca o
+  ou na env `EMED_TOKEN`. O script **recusa** se o arquivo estiver rastreado pelo git ou fora do `.gitignore`, e nunca o  <!-- CHECK: test_token_fora_do_gitignore_e_recusa -->
   imprime. HTTP 401 = sessão expirou: ele recopia. HTTP 429 = parar e relatar.  <!-- CHECK: test_token_rastreado_pelo_git_e_recusa -->
 - **Discursiva** (zero alternativas) sai e é **declarada** por número; a contagem fecha em 3: achadas = gravadas +
   declaradas = `--expect` confirmado pelo operador. `num` = a posição na lista do EMED (o buraco da discursiva fica).  <!-- CHECK: test_discursiva_sai_declarada_e_a_contagem_fecha_em_3 -->

@@ -17,7 +17,7 @@ Quando rodar: ao detectar uma safra fraca na revisão card-a-card, periodicament
 
 - Ler `.claude/commands/estilo-flashcard.md` — a régua dos **5 princípios** (o card ancora no erro metacognitivo). É o critério de toda a triagem e cunhagem.
 - Ler `core/contracts/reconcile-contract.md` se a taxonomia estiver suspeita.
-- **Backup obrigatório** antes de qualquer escrita: `python tools/backup_db.py` -- grava em `artifacts/backups/` (nunca na raiz) e já rotaciona keep-5 sozinho. Todo CLI destrutivo roda **`--dry-run` primeiro**.
+- **Ponto de retorno obrigatório** antes de qualquer escrita: o `--apply` dos writers destrutivos (`recurate_cards`, `cards_prune`, `dedup_taxonomia`, `normalize_taxonomia`) já **fixa** o backup do próprio início e recusa sem ele (F137 parte 2, `/engenharia-cli`); arquivo + sha256 impressos vão para o ledger no item do ato. Todo CLI destrutivo roda **`--dry-run` primeiro**.
 
 ## Passos
 

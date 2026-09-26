@@ -1,6 +1,7 @@
 """dedup_taxonomia.py — colapsa linhas duplicadas (area,tema) em taxonomia_cronograma.
 
-[DESTRUTIVO] Rode `tools/backup_db.py` ANTES. `--dry-run` é o default; `--apply` grava.
+[DESTRUTIVO] O `--apply` so roda depois do backup FIXADO do proprio inicio (F137 parte 2; recusa sem ele).
+`--dry-run` é o default; `--apply` grava.
 
 Contexto: a taxonomia acumulou duplicatas legadas do mesmo (area,tema) — snapshots
 de re-imports (não sessões aditivas). `taxonomia.questoes_realizadas` NÃO é o SSOT de
@@ -35,6 +36,16 @@ DB_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'ipub.db')
 def _nchild(cur, tid):
     return (cur.execute("SELECT COUNT(*) FROM questoes_erros WHERE tema_id=?", (tid,)).fetchone()[0]
             + cur.execute("SELECT COUNT(*) FROM flashcards WHERE tema_id=?", (tid,)).fetchone()[0])
+
+
+def _fixar_antes(ato, db_path):
+    """F137 parte 2: o ponto de retorno FIXADO do proprio inicio do ato (`backup_db`). Levanta
+    `SemPontoDeRetorno` quando nao ha -- quem chama RECUSA e nada e gravado."""
+    _tools = os.path.dirname(os.path.abspath(__file__))
+    if _tools not in sys.path:
+        sys.path.insert(0, _tools)
+    import backup_db
+    return backup_db.fixar_antes_do_ato(ato, db=db_path)
 
 
 def main():
@@ -78,6 +89,13 @@ def main():
     total_del = sum(len(p[2]) for p in plano)
 
     if not dry:
+        try:
+            rec = _fixar_antes(f"dedup_taxonomia --apply ({total_del} linhas)", DB_PATH)
+        except Exception as e:  # noqa: BLE001 -- sem ponto de retorno = recusa (F137 parte 2)
+            print(f"\n[ERRO] sem ponto de retorno FIXADO (F137): {e}. Nada gravado.")
+            con.close()
+            sys.exit(1)
+        print(f"FIXADO {rec['arquivo']} sha256 {rec['sha256']} (vai para o ledger no item do ato)")
         try:
             with con:                                  # commit on success / rollback on raise
                 for id_list, surv, losers, qr, qa, pct, ult in plano:

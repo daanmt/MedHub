@@ -20,10 +20,17 @@ no baralho**) e `normalize_taxonomia` (declaradamente **destrutivo**). O sensor 
 isso é `tools/cli_signature_check.py`, documentado aqui embaixo como qualquer outro.
 
 🔴 **Fronteira dura de leitura:** um CLI marcado **[DESTRUTIVO]** grava no `ipub.db`. Para
-qualquer um deles vale `AGENTE.md §10.7` — **`tools/backup_db.py` antes**, **dry-run é o default**,
-e o COUNT esperado é **declarado antes** de `--apply`.
+qualquer um deles vale `AGENTE.md §10.7` — **dry-run é o default** e o COUNT esperado é
+**declarado antes** de `--apply`. 🔴 **F137 parte 2 (s202):** o `--apply` de `cards_prune`,
+`recurate_cards`, `dedup_taxonomia`, `normalize_taxonomia` e o `--apply` do `emed_banco` que
+**sobrescreve** (`atualizadas` > 0) **fixa o próprio ponto de retorno antes do 1º write** e **recusa**
+sem ele -- nada gravado. O arquivo e o sha256 que ele imprime vão para o ledger no item do ato.  <!-- CHECK: test_emed_sem_ponto_de_retorno_nao_sobrescreve -->
+⚰️ *Era "`tools/backup_db.py` antes" (backup da rotação keep-5, feito à mão): um dia de muitos backups
+expulsou os pontos de retorno do dia (F137, s201).*
 
-**`tools/backup_db.py`** -- sem opções: backup com `integrity_check` + rotação keep-5 pelo carimbo do NOME (F137; `--help` não tem efeito). **`--fixar MOTIVO`** (F137, s201): backup FIXADO `ipub_fixado_<ts>_<motivo>.db`, fora da rotação, com arquivo + sha256 + motivo em `artifacts/backups/FIXADOS.json` -- o ponto de retorno de antes de um ato destrutivo.  <!-- CHECK: test_fixado_nunca_sai_na_rotacao_e_carrega_sha256 -->
+**`tools/backup_db.py`** -- sem opções: backup com `integrity_check` + rotação keep-5 pelo carimbo do NOME (F137; `--help` não tem efeito). **`--fixar MOTIVO`** (F137, s201): backup FIXADO `ipub_fixado_<ts>_<motivo>.db`, fora da rotação, com arquivo + sha256 + motivo em `artifacts/backups/FIXADOS.json` -- o ponto de retorno de antes de um ato destrutivo; o sha256 da cópia tem de ser o do banco no mesmo instante, senão aborta.  <!-- CHECK: test_fixado_nunca_sai_na_rotacao_e_carrega_sha256 -->
+**`--desfixar ID --motivo TEXTO`** (F137 parte 2, s202): a única saída de um fixado -- `ID` = nome do arquivo (ou prefixo único) ou 8+ caracteres do sha256; confere o sha256 do manifesto e **devolve o arquivo à rotação** como `ipub_backup_<carimbo>_desfixado.db` (quem apaga é a rotação); a linha do manifesto fica com `desfixado_em` e o motivo. Sem `--motivo`, id ambíguo ou sha256 divergente = recusa, nada mexido. **Não existe flag que apague fixado**, e a rotação recusa o prefixo `ipub_fixado_`.  <!-- CHECK: test_desfixar_exige_motivo_e_devolve_o_arquivo_a_rotacao -->
+Fixar o `ipub.db` REAL de dentro do pytest é recusa (`SemPontoDeRetorno`): banco temporário de teste fixa em `<pasta do banco>/backups`.  <!-- CHECK: test_fixar_o_banco_real_dentro_do_pytest_e_recusa -->
 
 ---
 
@@ -232,7 +239,7 @@ atômica, re-aponta FKs, recria `UNIQUE(area,tema)` no fim — duplicata restant
 | `--expect N` | COUNT-ASSERT pré: N esperado; se diferir do N medido na hora, **recusa (exit 2)** sem rodar nem o backup. |
 | `--db PATH` | Caminho do banco (default: `ipub.db` da raiz). |
 
-Rito do `--apply`, nunca pulado: `backup_db.py` -> export das linhas das 4 tabelas para
+Rito do `--apply`, nunca pulado: backup FIXADO do próprio início (F137 parte 2) -> export das linhas das 4 tabelas para
 `artifacts/backups/pruned_<ts>.json` -> DELETE em UMA transação (`fsrs_revlog` -> `reforja_marks`
 -> `fsrs_cards` -> `flashcards`) -> COUNT-ASSERT pós (caiu exatamente N, nenhum id sobreviveu).
 Não existe flag para pular o backup. Não toca `questoes_erros`, taxonomia, `review_log`, nem

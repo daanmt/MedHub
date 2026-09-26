@@ -96,8 +96,21 @@ def _emitir(obj, como_json):
         print(json.dumps(obj, ensure_ascii=False, indent=2, default=str))
 
 
+def _fixar_antes(ato):
+    """F137 parte 2: o ponto de retorno FIXADO do proprio inicio do ato (`backup_db`). Levanta
+    `SemPontoDeRetorno` quando nao ha -- quem chama RECUSA e nada e gravado."""
+    _tools = os.path.dirname(os.path.abspath(__file__))
+    if _tools not in sys.path:
+        sys.path.insert(0, _tools)
+    import backup_db
+    return backup_db.fixar_antes_do_ato(ato, db=db.DB_PATH, out=lambda *_: None)
+
+
 def _upsert_com_rito(writer, docs, args):
-    """Dry-run -> COUNT-ASSERT -> (se `--apply`) grava. Devolve (contagem, exit)."""
+    """Dry-run -> COUNT-ASSERT -> (se `--apply`) grava. Devolve (contagem, exit).
+
+    F137 parte 2: `--apply` que SOBRESCREVE (`atualizadas` > 0) so roda depois do backup FIXADO do
+    proprio inicio; sem ele, recusa (exit 1) e nada e gravado. So `novas` nao e ato destrutivo."""
     medida = writer(docs, aplicar=False)
     mudam = medida["novas"] + medida["atualizadas"]
     if args.expect is not None and mudam != args.expect:
@@ -105,7 +118,18 @@ def _upsert_com_rito(writer, docs, args):
                           f"--expect {args.expect}. Nada gravado.")
         return medida, 2
     if args.apply:
-        return writer(docs, aplicar=True), 0
+        fixado = None
+        if medida["atualizadas"]:
+            try:
+                fixado = _fixar_antes(f"emed_banco {writer.__name__}: "
+                                      f"{medida['atualizadas']} atualizada(s) sobrescrita(s)")
+            except Exception as e:  # noqa: BLE001 -- qualquer falha do ponto de retorno = recusa
+                medida["erro"] = f"sem ponto de retorno FIXADO (F137): {e}. Nada gravado."
+                return medida, 1
+        cont = writer(docs, aplicar=True)
+        if fixado:
+            cont["fixado"] = {"arquivo": fixado["arquivo"], "sha256": fixado["sha256"]}
+        return cont, 0
     return medida, 0
 
 
@@ -117,6 +141,9 @@ def _linha_contagem(cont, aplicado):
            f"iguais={cont['iguais']} invalidas={len(inv)}")
     if inv:
         txt += "\n  invalidas: " + ", ".join(str(i) for i in inv)
+    if cont.get("fixado"):
+        txt += (f"\n  FIXADO antes do ato (ponto de retorno; arquivo + sha256 vao para o ledger): "
+                f"{cont['fixado']['arquivo']} sha256 {cont['fixado']['sha256']}")
     return txt
 
 
@@ -188,7 +215,7 @@ def cmd_ingerir(args):
     if args.json:
         _emitir(dict(cont, aplicado=bool(args.apply and code == 0)), True)
     else:
-        if code == 2:
+        if cont.get("erro"):
             print(cont["erro"])
         print(_linha_contagem(cont, args.apply and code == 0))
     return code
@@ -236,7 +263,7 @@ def cmd_solucoes(args):
     if args.json:
         _emitir(dict(cont, aplicado=bool(args.apply and code == 0), leitura=amostra), True)
     else:
-        if code == 2:
+        if cont.get("erro"):
             print(cont["erro"])
         print(_linha_contagem(cont, args.apply and code == 0))
         for linha in texto_amostra(amostra):
@@ -252,7 +279,7 @@ def cmd_registrar(args):
     if args.json:
         _emitir(dict(cont, aplicado=bool(args.apply and code == 0), listas=resumos), True)
     else:
-        if code == 2:
+        if cont.get("erro"):
             print(cont["erro"])
         print(_linha_contagem(cont, args.apply and code == 0))
         for r in resumos:

@@ -11,7 +11,7 @@ Uso:
 
 Rito (nunca pulado no --apply):
   1. mede N de novo e RECUSA (exit 2) se N != --expect  (COUNT-ASSERT pre)
-  2. roda tools/backup_db.py (integrity_check + rotacao keep-5)
+  2. FIXA o backup do proprio inicio (backup_db.fixar_antes_do_ato, F137 parte 2: fora da rotacao, sha256)
   3. exporta as linhas dos 4 tabelas para artifacts/backups/pruned_<ts>.json
   4. apaga em UMA transacao: fsrs_revlog -> reforja_marks -> fsrs_cards -> flashcards
   5. COUNT-ASSERT pos: flashcards caiu exatamente N e nenhum id sobreviveu
@@ -23,7 +23,6 @@ import argparse
 import json
 import os
 import sqlite3
-import subprocess
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -106,13 +105,15 @@ def apagar(conn, ids):
     return apagadas
 
 
-def _backup_real():
-    """Roda tools/backup_db.py (integrity_check + keep-5). Falha = aborta a poda."""
-    r = subprocess.run([sys.executable, str(REPO_ROOT / "tools" / "backup_db.py")],
-                       capture_output=True, text=True, encoding="utf-8", errors="replace")
-    if r.returncode != 0:
-        raise RuntimeError(f"backup_db.py falhou (exit {r.returncode}): {r.stderr.strip()}")
-    return r.stdout.strip()
+def _backup_real(db_path=DB_DEFAULT, ato="cards_prune --apply"):
+    """F137 parte 2: o backup FIXADO do proprio inicio da poda (fora da rotacao keep-5, sha256 no
+    manifesto). Era o backup da rotacao -- que um dia de muitos backups expulsava. Falha levanta."""
+    _tools = os.path.dirname(os.path.abspath(__file__))
+    if _tools not in sys.path:
+        sys.path.insert(0, _tools)
+    import backup_db
+    rec = backup_db.fixar_antes_do_ato(ato, db=db_path, out=lambda *_: None)
+    return f"FIXADO {rec['arquivo']} sha256 {rec['sha256']}"
 
 
 def executar(conn, criterio=None, ids=None, apply=False, expect=None,
@@ -131,7 +132,11 @@ def executar(conn, criterio=None, ids=None, apply=False, expect=None,
     if n == 0:
         out("  nada a apagar.")
         return 0, alvo, None
-    out("  backup: " + str(backup_fn()))
+    try:
+        out("  backup: " + str(backup_fn()))
+    except Exception as e:  # noqa: BLE001 -- sem ponto de retorno = recusa (F137 parte 2)
+        out(f"  RECUSADO: sem ponto de retorno FIXADO ({e}). Nada gravado.")
+        return 1, alvo, None
     export_dir = Path(export_dir)
     export_dir.mkdir(parents=True, exist_ok=True)
     caminho = export_dir / f"pruned_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
@@ -161,7 +166,10 @@ def main(argv=None):
         ap.error("--apply exige --expect N")
     conn = sqlite3.connect(args.db)
     try:
-        code, _, _ = executar(conn, args.criterio, ids, args.apply, args.expect)
+        code, _, _ = executar(conn, args.criterio, ids, args.apply, args.expect,
+                              backup_fn=lambda: _backup_real(
+                                  args.db, f"cards_prune --apply --expect {args.expect}"),
+                              export_dir=EXPORT_DIR_DEFAULT)
     finally:
         conn.close()
     return code

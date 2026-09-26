@@ -1,6 +1,7 @@
 """normalize_taxonomia.py — saneia taxonomia_cronograma (Fase 1 da curadoria de cards, s097).
 
-[DESTRUTIVO] Rode `tools/backup_db.py` ANTES. `--dry-run` é o default; `--apply` grava.
+[DESTRUTIVO] O `--apply` so roda depois do backup FIXADO do proprio inicio (F137 parte 2; recusa sem ele).
+`--dry-run` é o default; `--apply` grava.
 
 Resolve o que `dedup_taxonomia.py` NÃO pega (ele agrupa por (area,tema) EXATO):
   - encoding/acento (Sistemas de Informacao vs Informação);
@@ -83,6 +84,16 @@ def simulate(cur):
     return final, [k for k, v in cnt.items() if v > 1]
 
 
+def _fixar_antes(ato, db_path):
+    """F137 parte 2: o ponto de retorno FIXADO do proprio inicio do ato (`backup_db`). Levanta
+    `SemPontoDeRetorno` quando nao ha -- quem chama RECUSA e nada e gravado."""
+    _tools = os.path.dirname(os.path.abspath(__file__))
+    if _tools not in sys.path:
+        sys.path.insert(0, _tools)
+    import backup_db
+    return backup_db.fixar_antes_do_ato(ato, db=db_path)
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -131,10 +142,17 @@ def main():
         sys.exit(1)
 
     if dry:
-        print("\n(dry-run) nada gravado. Rode com --apply após backup.")
+        print("\n(dry-run) nada gravado. O --apply fixa o backup do proprio inicio (F137).")
         con.close()
         return
 
+    try:
+        rec = _fixar_antes("normalize_taxonomia --apply", DB_PATH)
+    except Exception as e:  # noqa: BLE001 -- sem ponto de retorno = recusa (F137 parte 2)
+        print(f"\n[ERRO] sem ponto de retorno FIXADO (F137): {e}. Nada gravado.")
+        con.close()
+        sys.exit(1)
+    print(f"FIXADO {rec['arquivo']} sha256 {rec['sha256']} (vai para o ledger no item do ato)")
     try:
         with con:
             con.execute("DROP INDEX IF EXISTS ux_taxonomia_area_tema")

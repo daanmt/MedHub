@@ -940,7 +940,10 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
         return '<li' + (qb ? ' class="quebrou"' : (ok ? ' class="ok"' : '')) + '><span class="qz-elo-n">Elo ' + (i + 1) + '</span><b>' + qzEsc(e.elo) + '</b><span>' + qzEsc(e.chave) + '</span>' +
           (qb ? '<em>' + nota + '</em>' : (ok ? '<em class="ok">você eliminou ' + qzEsc(ok.join(" e ")) + ' aqui</em>' : '')) + '</li>'; }).join("") + '</ol>' +
       '<p class="qz-sec">Alternativas</p><ul class="qz-altsol">' + Object.keys(alts).sort().map(function(l){ var x = alts[l] || {};
-        return '<li class="' + (x.certa ? "certa" : "") + (r && l === r.letra ? " marcou" : "") + '"><b>' + qzEsc(l) + '</b><span>' + (x.certa ? '<i class="ok">certa</i> ' : '<i>falha no elo ' + qzEsc(x.elo) + '</i> ') + (risc.indexOf(l) >= 0 ? '<i class="risc">riscou</i> ' : '') + qzEsc(x.porque) + '</span></li>'; }).join("") + '</ul>' +
+        return '<li class="' + (x.certa ? "certa" : "") + (r && l === r.letra ? " marcou" : "") + '"><b>' + qzEsc(l) + '</b><span>' + (x.certa ? '<i class="ok">certa</i> ' : '<i>falha no elo ' + qzEsc(x.elo) + '</i> ') +
+          // s200: a letra MARCADA traz o diagnostico pessoal quando a analise pos a quebra em outro elo
+          // (a solucao diz onde a alternativa falha em geral; a analise, onde a cadeia DELE quebrou)
+          (r && l === r.letra && daAnalise && !x.certa && (a.quebrou + 1) !== x.elo ? '<i>· a sua quebrou no elo ' + (a.quebrou + 1) + '</i> ' : '') + (risc.indexOf(l) >= 0 ? '<i class="risc">riscou</i> ' : '') + qzEsc(x.porque) + '</span></li>'; }).join("") + '</ul>' +
       (s.conferir ? '<p class="qz-pede"><b>Conferir:</b> ' + qzEsc(s.conferir) + '</p>' : "") +
       (q.fontes_medhub ? '<p class="qz-fonte">' + qzEsc(q.fontes_medhub) + '</p>' : "");
   }

@@ -648,3 +648,12 @@ def test_solucoes_json_traz_a_amostra_de_leitura(tmp_path, monkeypatch, capsys):
     saida = _json_saida(capsys)
     assert saida["leitura"]["t26"]["divergentes"] == [4]
     assert len(saida["leitura"]["t26"]["aleatorias"]) == 2
+
+
+def test_tarefas_com_questoes_le_o_banco_e_tolera_tabela_ausente(tmp_path, monkeypatch, capsys):
+    _usar_db(tmp_path, monkeypatch)
+    assert db.tarefas_com_questoes() == set()                          # sem tabela: vazio, sem DDL
+    base = tmp_path / "buf"
+    _escrever(base, "questoes", "t26_1", _questao(1))
+    assert emed_banco.main(["--ingerir", str(base), "--apply"]) == 0
+    assert db.tarefas_com_questoes() == {26}

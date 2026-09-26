@@ -420,6 +420,7 @@ def secoes_do_quadro(classificadas, plano_linhas=None, calendario=None, hoje=Non
         return {"tipo": "tarefa", "id": tid, "tema": l.get("tema") or "(sem tema)",
                 "bloco": l.get("bloco"), "q": _q_de(l), "classe": classe,
                 "url_lista": l.get("url_lista"), "semana": int(l["semana_plano"]),
+                "no_hub": bool(l.get("no_hub")),
                 "atrasada": int(l["semana_plano"]) < atual,
                 # prazo = o fim da semana da tarefa no calendario da trilha (pedido dele, s195:
                 # "o prazo da tarefa, para ajudar na gestao do cronograma"); sem calendario, None
@@ -501,6 +502,9 @@ def _html_item(item, feito=False):
         url = item.get("url_lista")
         if url and str(url).startswith(("http://", "https://")):
             acoes.append('<a href="%s" rel="noopener noreferrer">abrir lista</a>' % _e(url))
+        elif url and item.get("no_hub"):
+            # s201: a prova ja esta no banco -> resolve na aba Listas, secao Simulados
+            acoes.append('<a href="#questoes" data-hub-aba="questoes" data-hub-modo="simulados">resolver no hub</a>')
         elif url:
             # caminho LOCAL (a prova em PDF): resolve na maquina e morre na pagina publicada
             # (mesma regra do painel) -- texto, nao link quebrado
@@ -932,9 +936,16 @@ def _ler_plano():
     """(linhas do plano, aviso | None): `db.plano_listar`, read-only. Banco fora = ([], aviso):
     o quadro sai so com as aulas e o build DIZ isso -- nunca uma aba vazia em silencio."""
     try:
-        return db.plano_listar(), None
+        linhas = db.plano_listar()
     except Exception as e:  # noqa: BLE001 -- degrada declarado (F60)
         return [], "plano indisponivel (%s): quadro so com as aulas, sem semanas" % e
+    # s201: tarefa com questoes no banco se resolve na aba Listas -- o quadro troca o "PDF no
+    # computador" do simulado por um atalho. Banco sem a tabela = ninguem marcado.
+    try:
+        no_hub = db.tarefas_com_questoes()
+    except Exception:  # noqa: BLE001
+        no_hub = set()
+    return [dict(l, no_hub=int(l["id"]) in no_hub) for l in linhas], None
 
 
 def _ler_calendario():

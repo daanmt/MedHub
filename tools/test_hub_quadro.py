@@ -449,6 +449,7 @@ def test_ids_com_nota_le_o_dump_por_arquivo(tmp_path):
 def test_cli_precisa_publicar_sim_e_nao(tmp_path, capsys, monkeypatch):
     raiz, data_fn = _repo(tmp_path)
     monkeypatch.setattr(hub.db, "plano_listar", lambda: list(PLANO))
+    monkeypatch.setattr(hub.db, "tarefas_com_questoes", lambda: set())   # s201: hermetico (nao ler o banco real)
     monkeypatch.setattr(hub, "calendario_trilha", lambda: dict(CAL))
     monkeypatch.setattr(hub.db, "agora", lambda: AGORA)
     _publicado(raiz, data_fn)
@@ -515,3 +516,24 @@ def test_pagina_real_leva_o_calendario_das_semanas_uma_vez():
                               calendario={2: (date(2026, 9, 21), date(2026, 9, 27))})
     assert pagina.count('id="hub-semanas"') == 1
     assert "@hub:semanas" not in pagina
+
+
+def test_simulado_ja_no_hub_vira_atalho_para_a_aba_listas(tmp_path):
+    """s201 (pedido do operador: listas divididas em Questoes | Simulados): simulado cujas questoes
+    ja estao no banco (`no_hub`, marcado pelo leitor do plano) sai com 'resolver no hub' -- abre a
+    aba Listas em Simulados; sem questoes no banco, segue 'prova em PDF no computador'."""
+    raiz, data_fn = _repo(tmp_path)
+    plano = [dict(l, no_hub=True) if l["id"] == 1793 else l for l in PLANO]
+    _construir(raiz, data_fn, plano=plano)
+    simulado = _item(_index(raiz), 'data-tarefa="1793"')
+    assert 'href="#questoes" data-hub-aba="questoes" data-hub-modo="simulados">resolver no hub</a>' in simulado
+    assert "prova em PDF no computador" not in simulado and "simulados/uerj" not in simulado
+
+
+def test_leitor_do_plano_marca_as_tarefas_com_questoes_no_banco(monkeypatch):
+    monkeypatch.setattr(hub.db, "plano_listar", lambda: [dict(l) for l in PLANO])
+    monkeypatch.setattr(hub.db, "tarefas_com_questoes", lambda: {1793})
+    linhas, aviso = hub._ler_plano()
+    assert aviso is None
+    assert {l["id"]: l.get("no_hub") for l in linhas}[1793] is True
+    assert not any(l.get("no_hub") for l in linhas if l["id"] != 1793)

@@ -430,6 +430,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
       a.addEventListener("click", function(ev){
         ev.preventDefault();
         var aba = valida(a.getAttribute("data-hub-aba"));
+        qzModoPedido(a.getAttribute("data-hub-modo"));
         var slug = a.getAttribute("data-hub-aula");
         var alvo = slug ? document.querySelector('a.hub-aula[href="aulas/' + slug + '.html"]') : null;
         ir(aba || "aulas", true);
@@ -692,6 +693,12 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
   var QZ_SUB = {questoes: "As listas da semana, para resolver aqui como numa prova: letra e certeza em cada questão, sem gabarito no meio. No fim, o resultado por objetivo, a Solução MedHub (a cadeia de raciocínio, com o elo em que a sua letra cai) e a análise dos erros. Cada resposta grava na hora e dá para parar e voltar.",
                 simulados: "As provas da UERJ inteiras, na ordem do plano, como no dia: letra e certeza em cada questão, sem gabarito no meio, cerca de 3 minutos por questão. No fim, o resultado por bloco. Cada resposta grava na hora e dá para parar e voltar."};
   function qzEhSimulado(l){ return l.area === "Simulado"; }
+  // atalho "resolver no hub" (painel e quadro, s201): abre a aba Listas ja no modo pedido
+  function qzModoPedido(m){ if(m !== "simulados" && m !== "questoes"){ return; }
+    QZ.modo = m; qzLs("medhub.listas.modo", m); if(QZ.listas && QZ.listas.length){ qzRenderListas(); } }
+  document.addEventListener("click", function(e){ var a = e.target.closest && e.target.closest("a[data-hub-aba]"); if(!a){ return; }
+    var aba = valida(a.getAttribute("data-hub-aba")); if(!aba){ return; }
+    e.preventDefault(); qzModoPedido(a.getAttribute("data-hub-modo")); ir(aba, true); window.scrollTo(0, 0); });
   function qzNomeSim(l){ return String(l.tema || l._id).split(" -- ")[0]; }
   QZ.modo = qzLs("medhub.listas.modo") === "simulados" ? "simulados" : "questoes";
   $("qz-modo").addEventListener("click", function(e){ var b = e.target.closest("button[data-m]"); if(!b){ return; }

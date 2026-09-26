@@ -3064,6 +3064,19 @@ def emed_listar_respostas(lista=None):
         conn.close()
 
 
+def tarefas_com_questoes():
+    """Ids das tarefas do plano que JA tem questoes no banco (`emed_questoes`) -- as que se
+    resolvem na aba Listas do hub (s201). Read-only; tabela ausente = conjunto vazio, sem DDL."""
+    conn = get_connection()
+    try:
+        return {int(r[0]) for r in conn.execute(
+            "SELECT DISTINCT tarefa_id FROM emed_questoes WHERE tarefa_id IS NOT NULL")}
+    except sqlite3.OperationalError:
+        return set()
+    finally:
+        conn.close()
+
+
 def emed_status():
     """Resumo por lista (read-only): capturadas, respondidas, acertos, solidas,
     duvidas, chutes, erradas, tempo_medio_s, e tema/area de `plano_tarefas` por

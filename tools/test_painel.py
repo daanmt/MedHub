@@ -451,3 +451,11 @@ def test_painel_e_read_only():
 
 if __name__ == "__main__":
     sys.exit(pytest.main([__file__, "-q"]))
+
+
+def test_acao_do_simulado_no_hub_e_atalho_e_fora_dele_e_texto():
+    """s201: a tarefa de simulado com questoes no banco ganha 'resolver no hub' (aba Listas,
+    modo Simulados); caminho local sem questoes segue texto, nunca link para o disco."""
+    base = {"classe": "lista", "url_lista": "simulados/uerj/uerj_ad_2021_a.pdf"}
+    assert 'data-hub-aba="questoes" data-hub-modo="simulados">resolver no hub</a>' in painel._acao(dict(base, no_hub=True))
+    assert painel._acao(base) == '<span class="tenue">prova em PDF no computador</span>'

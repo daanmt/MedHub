@@ -110,6 +110,10 @@ def _bloco_semana(linhas, hoje):
                 "inicio": None, "fim": None, "dias": None, "proxima": None}
     from app.utils import areas
     aulas = _aulas_por_tarefa()
+    try:  # s201: tarefa com questoes no banco se resolve na aba Listas do hub
+        no_hub = db.tarefas_com_questoes()
+    except Exception:  # noqa: BLE001
+        no_hub = set()
     tarefas = []
     for t in pan["abertas"]:
         agregada = t.get("area") in areas.AREAS_AGREGADAS
@@ -120,6 +124,7 @@ def _bloco_semana(linhas, hoje):
             # simulado se apresenta como simulado, nunca pelo bloco de fallback (CM)
             "rotulo": t.get("area") if agregada else (t.get("bloco") or t.get("area")),
             "aula": aulas.get(t["id"]),
+            "no_hub": t["id"] in no_hub,
         })
     return {
         "semana": pan["semana"], "inicio": pan["inicio"], "fim": pan["fim"],
@@ -283,6 +288,8 @@ def _acao(t):
     if c == "lista":
         if t["url_lista"] and str(t["url_lista"]).startswith(("http://", "https://")):
             return _link(t["url_lista"], "abrir lista")
+        if t.get("no_hub"):
+            return '<a href="#questoes" data-hub-aba="questoes" data-hub-modo="simulados">resolver no hub</a>'
         return '<span class="tenue">prova em PDF no computador</span>'
     if c == "aula":
         if t.get("aula"):

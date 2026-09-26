@@ -138,7 +138,14 @@
       "Bash(echo \"=== CARD 4 \\(Q3 - conteudo na menina\\) ===\")",
       "Bash(echo \"=== DONE ===\")",
       "Bash(echo \"=== ARQUIVOS GERADOS ===\")",
-      "Bash(python *)"
+      "Bash(python *)",
+      "Agent",
+      "Skill(update-config)",
+      "ArtifactData",
+      "CronCreate",
+      "CronDelete",
+      "Edit(history/**)",
+      "Edit(docs/**)"
     ],
     "deny": [
       "Bash(rm -rf:*)",

@@ -1,5 +1,5 @@
 ---
-description: "Banco de questões dentro do MedHub: o caderno em PDF entra por tools/prova_pdf.py (s201; o Chrome saiu do fluxo), o operador resolve na aba Listas do hub (Questões e Simulados) e o hub importa para o ipub.db, analisa os erros e devolve a análise. Assinatura canônica de tools/emed_banco.py e tools/prova_pdf.py e o rito do tique."
+description: "Banco de questões dentro do MedHub: a lista do EMED entra pela API por tools/emed_api.py (s202; script sem LLM, só o escopo público) e a prova de banca em PDF por tools/prova_pdf.py (s201; o Chrome saiu do fluxo); o operador resolve na aba Listas do hub (Questões e Simulados) e o hub importa para o ipub.db, analisa os erros e devolve a análise. Assinatura canônica de tools/emed_banco.py, tools/emed_api.py e tools/prova_pdf.py e o rito do tique."
 type: skill
 layer: commands
 status: canonical
@@ -26,8 +26,9 @@ status: canonical
 > 🔴 **ENTRADA POR PDF desde a s201 (decisão do operador em 26/09/2026, F135).** A captura pelo Chrome saiu do fluxo: um clique
 > por coordenada marcou alternativa na conta real dele (t65) e cada lista custava 500-700k tokens. O caderno em PDF vira docs
 > `questoes/*` por [`tools/prova_pdf.py`](#toolsprova_pdfpy----caderno-em-pdf-s201) e entra pelo mesmo `--ingerir` das listas. Hoje: as provas UERJ
-> 2021-2026 (a seção **Simulados** da aba Listas). Lista do EMED exportada em PDF pelo operador: o parser desse formato espera
-> a 1ª amostra real -- sem amostra, não se escreve parser. A Bancada fica como histórico da fila da s197-s199.
+> 2021-2026 (a seção **Simulados** da aba Listas). ⚰️ *Lista do EMED exportada em PDF: morta na s202 -- o export não traz
+> gabarito, e com "Ver solução" aberta traria o comentário do professor para o disco (objeção do operador, 26/09).* A **lista
+> do EMED** entra pela API, por [`tools/emed_api.py`](#toolsemed_apipy----lista-do-emed-pela-api-sem-llm-s202) (s202). A Bancada fica como histórico da fila da s197-s199.
 >
 > 🔴 **Onde cada coisa mora desde a s197:** captura (`questoes/*`, `listas/*`, `mensagens`) = db da **Bancada**;
 > estudo (`listas/*`, `questoes/*`, `respostas/*`, `analises/*`) = db do **HUB** (regras `read/write admin`, porque o
@@ -106,6 +107,40 @@ hub avisa; a imagem não é desenhada). Anulada sai da prova e é declarada. O m
 | `--timeout S` | Segundos máximos do parser (default 60). |
 | `--json` | Resumo em JSON: questões, anuladas, capa, duração, blocos, figuras. |
 
+## `tools/emed_api.py` -- lista do EMED pela API, sem LLM (s202)
+
+**Decisão do operador (26/09/2026, confirmada por ele no canal do agente de estudo):** as **listas** do EMED entram pela API que
+a plataforma que ele paga já expõe -- *"extrair a questão, alternativas e gabarito, que é dado público"*. ⚰️ *Era: "API interna
+do EMED: não" (s199 -- credencial do navegador, contorno da camada que recusou, risco da conta). Revertida por ele na s202 com o
+risco da conta declarado e assumido; o que mudou: o agente não lê o token do navegador (ele mesmo o põe no arquivo) e o script
+é determinístico, sem LLM.* O PDF (`prova_pdf.py`) segue sendo o caminho das provas de banca (UERJ).
+
+- 🔴 **Whitelist na fronteira:** `extrair()` é a única função que lê o item da resposta; o doc gravado tem **só**
+  `emed_id`, `num`, `banca`, `ano`, `enunciado`, `alternativas`, `gabarito`, `tags` + os metadados do pipeline (`lista`,
+  `tarefa`, `capturado_em`, `executor`, `figura`). Comentário do professor, fórum, estatística, vídeo, percentuais e a resposta
+  do usuário morrem em memória -- nunca em disco, log, `tmp/`, stdout ou mensagem de recusa.  <!-- CHECK: test_propriedade_nada_alem_da_whitelist_chega_a_disco_ou_saida -->
+- 🔴 **Token:** o operador põe a sessão em `.emed_token` (linha 1 = o `authorization`; linha 2 opcional = `x-requester-id`)
+  ou na env `EMED_TOKEN`. O script **recusa** se o arquivo estiver rastreado pelo git ou fora do `.gitignore`, e nunca o
+  imprime. HTTP 401 = sessão expirou: ele recopia. HTTP 429 = parar e relatar.  <!-- CHECK: test_token_rastreado_pelo_git_e_recusa -->
+- **Discursiva** (zero alternativas) sai e é **declarada** por número; a contagem fecha em 3: achadas = gravadas +
+  declaradas = `--expect` confirmado pelo operador. `num` = a posição na lista do EMED (o buraco da discursiva fica).  <!-- CHECK: test_discursiva_sai_declarada_e_a_contagem_fecha_em_3 -->
+- **Tudo ou nada:** `--expect` diferente, 1-3 ou 6+ alternativas, gabarito ausente ou duplo, texto vazio, `emed_id` repetido
+  (API que ignora `page`) = `RECUSA:` nomeada e a pasta nem é criada. Classificador do harness barrou a chamada = parar e
+  relatar ao operador; nunca contornar, fatiar ou trocar de ferramenta.  <!-- CHECK: test_perturbado_e_recusa_nomeada_sem_gravar_nada -->
+
+| Flag | Semântica |
+|---|---|
+| `--lista tN` | Id da lista no hub = `t` + a tarefa do plano; o caderno sai do link da tarefa (`url_lista`). |
+| `--caderno UUID` | UUID ou URL do caderno; só vale igual ao link do plano ou quando a tarefa não tem link. |
+| `--expect N` | Questões **achadas** na lista (discursivas incluídas), confirmado pelo operador. Obrigatório com `--apply`. |
+| `--apply` | Grava os docs em `--out`. Sem ele: dry-run (busca, valida, resume; nada gravado). |
+| `--out DIR` | Pasta de saída (default `tmp/emed_api/<lista>`; recebe `questoes/`). |
+| `--token-arquivo F` | Arquivo gitignored com a sessão (default `.emed_token`). |
+| `--pausa S` | Segundos entre páginas (default 2; `per_page` 20, o máximo da UI). |
+| `--esquema` | Imprime só a árvore de chaves e tipos da 1ª página (nenhum valor) e sai -- para manter o mapa de campos. |
+| `--conferir` | Lente 2: `emed_id` e gabarito por número contra o que o `ipub.db` já tem da lista. |
+| `--json` | Resumo em JSON: achadas, gravadas, discursivas, figuras, páginas, conferência. |
+
 ## Solução MedHub (s199; v2 = cadeia de elos desde a s200)
 
 Decisão do operador em 26/09/2026: a solução de cada questão é **cunhada pelo hub**, sem ler o comentário
@@ -148,7 +183,9 @@ solução, `if_version` do doc lido).
 ## O tique (rito do hub, idempotente)
 
 1. ⚰️ *Canal (mensagens do executor no Chrome) -- revogado em 26/09/2026 com a captura pelo Chrome (F135).*
-2. **Ingestão (PDF, s201):** `python -X utf8 tools/prova_pdf.py --pdf <caderno.pdf> --edicao <ano> --lista t<tarefa> --out tmp/prova_<lista> --expect N` -> `emed_banco.py --ingerir tmp/prova_<lista>` (dry-run) ->
+2. **Ingestão:** lista do EMED (s202) = `python -X utf8 tools/emed_api.py --lista t<tarefa> --expect N` (dry-run) -> `--apply --expect N`
+   -> `emed_banco.py --ingerir tmp/emed_api/<lista>` (dry-run) -> segue igual abaixo. Prova de banca (PDF, s201) =
+   `python -X utf8 tools/prova_pdf.py --pdf <caderno.pdf> --edicao <ano> --lista t<tarefa> --out tmp/prova_<lista> --expect N` -> `emed_banco.py --ingerir tmp/prova_<lista>` (dry-run) ->
    `--apply --expect N` -> `--exportar <lista>` -> `ArtifactData batch set` no hub (`listas/<lista>` + `questoes/*`, <= 50 por lote).
    A lista aparece na aba Listas assim que o doc `listas/<lista>` existe: simulado (`area` = `Simulado` no plano) cai na seção
    Simulados, o resto em Questões.  <!-- CHECK: test_modo_simulados_mostra_as_provas_na_ordem_do_plano_com_a_da_vez -->

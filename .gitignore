@@ -69,3 +69,6 @@ history/memory_errors.log
 # reescrito a cada consolidacao; o numero citavel sai do painel, nao do git.
 history/wa_vocab_pendentes.json
 core/simulados/_s*_questoes.json
+
+# s202: sessao do operador para tools/emed_api.py (credencial; nunca no git)
+.emed_token

@@ -130,8 +130,8 @@
 .qz-chip.resolvida{background:var(--qz-ok-fraco);color:var(--qz-ok)}
 .qz-relogio{margin-left:auto;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.85em;color:var(--tinta3);font-variant-numeric:tabular-nums}
 .qz-trilho{display:flex;flex-wrap:wrap;gap:3px;margin:0 0 14px}
-.qz-trilho i{display:block;width:12px;height:12px;border-radius:3px;background:var(--afundado)}
-.qz-trilho i.c{background:var(--qz-ok)} .qz-trilho i.e{background:var(--alerta)} .qz-trilho i.h{background:var(--qz-chute)} .qz-trilho i.atual{outline:2px solid var(--acento);outline-offset:1px}
+.qz-trilho i{display:block;width:14px;height:14px;border-radius:3px;background:var(--afundado);cursor:pointer}
+.qz-trilho i.f{background:var(--acento)} .qz-trilho i.atual{outline:2px solid var(--acento);outline-offset:1px}
 .qz-corpo{display:grid;gap:14px;max-width:44rem}
 .qz-metaq{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:.8em;color:var(--tinta3);margin:0}
 .qz-enun{white-space:pre-wrap;margin:0;line-height:1.55}
@@ -251,7 +251,7 @@ details.qz-bloco .qz-texto.forum{color:var(--tinta2)}
           </div>
           <div class="qz-pe" style="margin-top:10px">
             <label class="qz-marca"><input type="checkbox" id="qz-flag"> Revisar depois</label>
-            <button type="button" class="primario" id="qz-responder" disabled>Responder</button>
+            <span style="display:flex;flex-wrap:wrap;gap:8px"><button type="button" id="qz-ant">&lsaquo; Anterior</button><button type="button" id="qz-pular">Pular &rsaquo;</button><button type="button" class="primario" id="qz-responder" disabled>Responder</button></span>
           </div>
         </div>
         <div id="qz-depois" hidden style="display:grid;gap:12px">
@@ -637,7 +637,10 @@ details.qz-bloco .qz-texto.forum{color:var(--tinta2)}
       if(QZ.pos < 0){ qzPosicionar(); } else { qzTrilho(); }
     }, function(){ $("qz-aviso-lista").hidden = false; $("qz-aviso-lista").textContent = "Não consegui ler as questões. Recarregue a página."; }));
     QZ.unsubs.push(QZ.db.collection("respostas").where("lista", "==", id).onSnapshot(function(s){
-      s.docs.forEach(function(d){ var r = Object.assign({}, d.data() || {}); if(r.num){ var loc = QZ.resp[r.num]; if(!loc || !loc._pendente || (loc.respondido_em || "") <= (r.respondido_em || "")){ QZ.resp[r.num] = r; } } });
+      var noDb = {};
+      s.docs.forEach(function(d){ var r = Object.assign({}, d.data() || {}); if(r.num){ noDb[r.num] = 1; var loc = QZ.resp[r.num]; if(!loc || !loc._pendente || (loc.respondido_em || "") <= (r.respondido_em || "")){ QZ.resp[r.num] = r; } } });
+      // o banco manda: resposta que sumiu de la (reset pelo hub) sai do espelho local, salvo a pendente de envio
+      if(!s.metadata || !s.metadata.fromCache){ Object.keys(QZ.resp).forEach(function(n){ if(!noDb[n] && QZ.resp[n] && !QZ.resp[n]._pendente){ delete QZ.resp[n]; } }); }
       qzLs(qzChave(), QZ.resp); qzReenviar(); if(QZ.pos < 0){ qzPosicionar(); } else { qzTrilho(); }
     }, function(){}));
     QZ.unsubs.push(QZ.db.collection("analises").where("lista", "==", id).onSnapshot(function(s){
@@ -653,8 +656,10 @@ details.qz-bloco .qz-texto.forum{color:var(--tinta2)}
     qzMostrar(i);
   }
   function qzTrilho(){
-    $("qz-trilho").innerHTML = QZ.qs.map(function(q, i){ var r = QZ.resp[q.num]; var c = r ? (r.correta ? (r.confianca === "chute" ? "h" : "c") : "e") : ""; return '<i class="' + c + (i === QZ.pos ? " atual" : "") + '" title="Q' + qzEsc(q.num) + '"></i>'; }).join("");
+    // modo prova: o trilho mostra so feita/nao feita (sem cor de acerto) e serve de navegacao
+    $("qz-trilho").innerHTML = QZ.qs.map(function(q, i){ var r = QZ.resp[q.num]; return '<i class="' + (r ? "f" : "") + (i === QZ.pos ? " atual" : "") + '" data-i="' + i + '" role="button" title="Q' + qzEsc(q.num) + '"></i>'; }).join("");
   }
+  $("qz-trilho").addEventListener("click", function(e){ var i = e.target.closest("i[data-i]"); if(i && !$("qz-player").hidden){ QZ.revendo = false; qzMostrar(parseInt(i.getAttribute("data-i"), 10)); } });
   function qzAlts(txt){
     var out = []; String(txt || "").split(/\r?\n/).forEach(function(ln){ var m = ln.match(/^\s*\(?([A-Ea-e])\s*[\)\.\-:\]]\s*(.*)$/); if(m){ out.push({l: m[1].toUpperCase(), t: m[2]}); } else if(out.length && ln.trim()){ out[out.length - 1].t += "\n" + ln.trim(); } });
     return out;
@@ -674,9 +679,27 @@ details.qz-bloco .qz-texto.forum{color:var(--tinta2)}
       $("qz-alts").innerHTML = '<p class="qz-enun">' + qzEsc(q.alternativas || "") + '</p>' + ["A","B","C","D","E"].map(function(l){ return altHtml(l, ""); }).join("");
     }
     Array.prototype.forEach.call($("qz-seg").querySelectorAll("button"), function(b){ b.classList.remove("on"); });
-    $("qz-flag").checked = false; $("qz-responder").disabled = true;
+    $("qz-flag").checked = false; $("qz-responder").disabled = true; $("qz-responder").textContent = "Responder";
+    // questao ja respondida (voltou pelo trilho ou pelo Anterior): mostra o que marcou e deixa alterar
+    var r0 = QZ.resp[q.num];
+    if(r0){
+      QZ.letra = r0.letra || null; QZ.conf = r0.confianca || null;
+      Array.prototype.forEach.call($("qz-alts").querySelectorAll(".qz-alt"), function(x){ var l = x.getAttribute("data-l"); x.classList.toggle("marcada", l === r0.letra); x.classList.toggle("riscada", !!(r0.riscadas && r0.riscadas.indexOf(l) >= 0)); });
+      Array.prototype.forEach.call($("qz-seg").querySelectorAll("button"), function(b){ b.classList.toggle("on", b.getAttribute("data-c") === r0.confianca); });
+      $("qz-flag").checked = !!r0.flag; $("qz-responder").textContent = "Alterar resposta"; qzPode();
+    }
+    $("qz-ant").disabled = i === 0;
     qzTrilho(); qzIniciar();
     window.scrollTo(0, 0);
+  }
+  $("qz-ant").addEventListener("click", function(){ if(QZ.pos > 0){ QZ.revendo = false; qzMostrar(QZ.pos - 1); } });
+  $("qz-pular").addEventListener("click", function(){ QZ.revendo = false; if(QZ.pos + 1 < QZ.qs.length){ qzMostrar(QZ.pos + 1); } else { qzDepoisDe(QZ.pos); } });
+  function qzDepoisDe(pos){
+    // proxima nao respondida depois de pos; senao a primeira nao respondida; senao o fim
+    var n = QZ.qs.length, i;
+    for(i = pos + 1; i < n; i++){ if(!QZ.resp[QZ.qs[i].num]){ qzMostrar(i); return; } }
+    for(i = 0; i < n; i++){ if(!QZ.resp[QZ.qs[i].num]){ qzMostrar(i); return; } }
+    qzFim();
   }
   $("qz-alts").addEventListener("click", function(e){
     var b = e.target.closest("button"); if(!b || b.disabled){ return; }
@@ -719,8 +742,7 @@ details.qz-bloco .qz-texto.forum{color:var(--tinta2)}
              riscadas: riscadas, racional: "", elo: "", tempo_s: Math.round((Date.now() - QZ.t0) / 1000), flag: !!$("qz-flag").checked, respondido_em: qzAgora()};
     qzGravar(r).then(function(ok){ $("qz-status").className = "qz-status" + (ok ? "" : " ruim"); $("qz-status").textContent = ok ? "" : "Guardado neste aparelho; reenvio automático quando o banco voltar."; });
     // Modo prova (pedido do operador, 26/09): sem gabarito na hora; a resolucao e a analise ficam para o fim.
-    var i = QZ.pos + 1; while(i < QZ.qs.length && QZ.resp[QZ.qs[i].num]){ i++; }
-    if(i >= QZ.qs.length){ qzFim(); } else { qzMostrar(i); }
+    qzDepoisDe(QZ.pos);
   });
   function qzRevelar(q, r){
     $("qz-antes").hidden = true; $("qz-depois").hidden = false;

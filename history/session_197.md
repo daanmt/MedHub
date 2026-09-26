@@ -38,6 +38,9 @@
 
 - **2o feedback do operador:** *"senti falta da análise do erro ... talvez não dar resposta se acertou ou errou imediatamente e, ao final, trazer a resolução e análise metacognitiva dos erros."* -> **modo prova** (Version 20): Responder grava e avança sem gabarito; no fim, tiles + lista de revisão (toque abre gabarito, resolução, fórum, racional/elo e a análise do hub em `analises/*`). Análise instantânea na página exigiria a capability `sample` (Claude chamado pela página, custo por chamada) -- fica como decisão do operador; o caminho vigente é o tique (loop de volta a 5 min).
 
+- **3o feedback (no meio da t40, 4 respostas):** *"resete por favor a lista pra mim. alem disso, adicione um mecanismo de navegar entre as questoes. tire a cor, mostrando erro/acerto."* -> reset: 4 docs `respostas/t40_*` apagados do db do hub + 3 linhas locais de `emed_respostas` (COUNT-ASSERT 3); pagina passou a tratar o db como autoridade (resposta que sumiu do db sai do espelho local, salvo pendente). Navegacao: `‹ Anterior`, `Pular ›`, trilho clicavel; questao ja respondida reabre com a marcacao e "Alterar resposta". Trilho so feita/nao feita (sem cor de acerto ate o fim). **Version 21.**
+- **Encerramento formal pedido pelo operador** (*"apos, pode encerrar formalmente a sessao, preparando-se para capturar o feedback da experiencia. ademais, o erro nas questoes/simulados alimentara os flashcards e, portanto, os dois blocos devem se comunicar"*): HANDOFF armado para a s198 (feedback da experiencia; elo questoes -> `insert_questao` -> cards; semeadura pendente de t26/t96/t49; religar loops).
+
 ## Custo dos subagentes (usage do harness)
 - Explore (Sonnet, mapa da arquitetura): 101.278 tokens · 53 tool uses · 2 min 47 s.
 - Opus (`emed_banco.py` + testes): 121.982 tokens · 30 tool uses · 10 min 14 s.

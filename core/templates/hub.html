@@ -950,6 +950,9 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
         var st = estados ? estados[i] : ((i + 1) === quebrou ? "quebrou" : (okElo[i + 1] ? "ok" : ""));
         var rot = {ok: estados ? "firme" : "", quebrou: (estados || daAnalise) ? "quebrou aqui (análise do hub)" : "provável quebra: a sua letra cai neste elo",
                    nao_usou: "você sabia, mas não aplicou na hora de decidir", nao_avaliado: "a questão não chegou a testar este elo"}[st] || "";
+        // s200 (regua do /ai-eng aceita pelo operador): declarado x evidencia divergentes -> elo
+        // `nao_avaliado` + `conflitos` (0-based) na analise; o declarado nao e sobrescrito pelo inferido
+        if(st === "nao_avaliado" && a && Array.isArray(a.conflitos) && a.conflitos.indexOf(i) >= 0){ rot = "conflito: você declarou este elo firme, mas a letra marcada é a que ele exclui"; }
         var cls = {ok: "ok", quebrou: "quebrou", nao_usou: "naousou"}[st] || "";
         return '<li' + (cls ? ' class="' + cls + '"' : '') + '><span class="qz-elo-n">Elo ' + (i + 1) + '</span><b>' + qzEsc(e.elo) + '</b><span>' + qzEsc(e.chave) + '</span>' +
           (rot ? '<em class="' + (cls === "quebrou" ? "" : (cls || "neutro")) + '">' + rot + '</em>' : '') + (st === "ok" || !st ? ev : '') + '</li>'; }).join("") + '</ol>' +

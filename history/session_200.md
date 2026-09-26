@@ -74,3 +74,7 @@ banco-emed: t96 registrada 18 (13 acertos) · t26 registrada 19 (17) · erros an
 7. **Amostra a olho:** as 81 soluções v2 dos subagentes passaram por checagem de FORMA (script); conteúdo lido a olho só em t26 Q15 e t96 Q8 (as renderizadas) e nas 10 que eu mesmo cunhei.
 8. **`estados` só na skill `/banco-emed`:** a autópsia de simulado (`/analisar-questao §3.3`) ainda descreve "cadeia com o elo que quebrou marcado" -- um elo, sem estado por elo.
 9. **CLAUSULA_ORFA_SUBIU (134 > base 127):** já estava em 135 no 1o `auto_check` da sessão, antes das minhas edições de skill -- herdado.
+
+## Fechamento com o veredito do /ai-eng (~14h30 -> 14h50)
+- Veredito (texto integral no `history/exchange-log.jsonl`): 2 GO, 6 ALTERA, 1 só-dado + inconsistências (a)-(f); vira o item (0) da s201 (F133-F135 antes de spec).
+- **Decisões do operador:** (e) apagar o conteúdo do professor das 91 do piloto -> feito (backup `ipub_backup_20260926_143813.db`; `solucao`, `forum`, `estatistica` e as chaves EMED de `extras` zeradas no banco e no hub; 91 Soluções MedHub intactas). Régua da Q8 do /ai-eng aceita -> `nao_avaliado` + `conflitos` (t96 Q8 e Q17), rótulo na página (hub Version 32). **Captura passa a ser PDF exportado por ele** (como os simulados); Chrome sai do fluxo.

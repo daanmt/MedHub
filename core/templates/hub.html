@@ -166,6 +166,7 @@ details.qz-bloco{border:1px solid var(--linha);border-radius:10px;background:var
 details.qz-bloco summary{cursor:pointer;padding:10px 12px;font-weight:650;font-size:.92em;min-height:44px;display:flex;align-items:center}
 details.qz-bloco .qz-texto{padding:0 12px 12px;white-space:pre-wrap;font-size:.94em}
 details.qz-bloco .qz-texto.forum{color:var(--tinta2)}
+.qz-conferir{margin-left:8px;font-size:.78em;font-weight:600;color:var(--alerta);background:var(--alerta-fraco);padding:2px 8px;border-radius:999px}
 .qz-campo{display:grid;gap:4px}
 .qz-campo textarea{font:inherit;font-size:.9em;padding:8px 10px;border:1px solid var(--linha);border-radius:8px;background:var(--papel);color:var(--tinta);width:100%;min-height:60px;resize:vertical}
 .qz-elo{display:flex;flex-wrap:wrap;gap:6px}
@@ -256,6 +257,7 @@ details.qz-bloco .qz-texto.forum{color:var(--tinta2)}
         </div>
         <div id="qz-depois" hidden style="display:grid;gap:12px">
           <p class="qz-veredito" id="qz-veredito"></p>
+          <details class="qz-bloco" id="qz-medhub-box" hidden><summary>Solução MedHub<span class="qz-conferir" id="qz-conferir" hidden>conferir no professor</span></summary><div class="qz-texto" id="qz-medhub"></div></details>
           <details class="qz-bloco" id="qz-sol-box"><summary>Comentário do professor</summary><div class="qz-texto" id="qz-sol"></div></details>
           <details class="qz-bloco" id="qz-forum-box"><summary>Fórum</summary><div class="qz-texto forum" id="qz-forum"></div></details>
           <div id="qz-meta-erro" hidden style="display:grid;gap:10px">
@@ -755,9 +757,14 @@ details.qz-bloco .qz-texto.forum{color:var(--tinta2)}
     var est = q.estatistica ? '<small>no EMED, ' + qzEsc(q.estatistica) + ' acertam</small>' : "";
     var conf = {solida: "sólida", duvida: "dúvida", chute: "chute"}[r.confianca] || r.confianca;
     v.innerHTML = (r.correta ? "Certa" : "Errada · gabarito " + qzEsc(r.gabarito)) + ' <small>marcou ' + qzEsc(r.letra) + ' · ' + qzEsc(conf) + ' · ' + qzEsc(r.tempo_s) + 's</small>' + est;
-    $("qz-sol").textContent = q.solucao || "(sem comentário capturado)"; $("qz-forum").textContent = q.forum || "(sem fórum capturado)";
+    // s199: solucao propria do hub (sem o comentario do professor); listas em escopo publico
+    // nao tem comentario nem forum -> o bloco some em vez de mostrar "(sem ...)".
     var precisa = !r.correta || r.confianca === "chute";
-    $("qz-sol-box").open = precisa; $("qz-forum-box").open = false;
+    $("qz-medhub-box").hidden = !q.solucao_medhub; $("qz-medhub").textContent = q.solucao_medhub || "";
+    $("qz-conferir").hidden = !q.divergente; $("qz-medhub-box").open = precisa || !!q.divergente;
+    $("qz-sol-box").hidden = !q.solucao; $("qz-sol").textContent = q.solucao || "";
+    $("qz-forum-box").hidden = !q.forum; $("qz-forum").textContent = q.forum || "";
+    $("qz-sol-box").open = precisa && !q.solucao_medhub; $("qz-forum-box").open = false;
     $("qz-meta-erro").hidden = !precisa; $("qz-racional").value = r.racional || "";
     Array.prototype.forEach.call($("qz-elo").querySelectorAll("button"), function(b){ b.classList.toggle("on", b.getAttribute("data-e") === r.elo); });
     $("qz-proxima").textContent = (QZ.pos + 1 < QZ.qs.length) ? "Próxima" : "Terminar";

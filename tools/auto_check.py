@@ -370,6 +370,48 @@ def check_memory_pointers(mem_dir=None, root=None):
     return sorted(dict.fromkeys(mortos))
 
 
+# F136 (s201, veredito do /ai-eng): o selo reescrevia o HANDOFF depois da ultima suite; commit so
+# de doc nao rodava o pytest e a sessao s200 fechou 1119/1120 com o HANDOFF dizendo "suite **1120**".
+# HANDOFF staged dispara a suite completa, e o numero declarado tem de ser o MEDIDO ali.
+_RX_PYTEST_N = re.compile(r"(\d+) (passed|failed|errors?)\b")
+_RX_SUITE_VERDE = re.compile(r"suite \*\*(\d+)\*\*")
+_RX_SUITE_VERMELHA = re.compile(r"SUITE VERMELHA (\d+)/(\d+)")
+
+
+def dispara_suite_por_selo(arquivos):
+    """HANDOFF no recorte = commit de selo -> suite completa (F136). PURA."""
+    return any(f.replace("\\", "/") == "HANDOFF.md" for f in arquivos)
+
+
+def contagem_pytest(saida):
+    """`(passed, falhas)` da linha-resumo do pytest (falhas = failed + errors), ou None. PURA.
+    Ignora "N subtests passed": so conta o numero que abre a linha."""
+    for linha in reversed((saida or "").splitlines()):
+        achados = [(int(n), k) for n, k in _RX_PYTEST_N.findall(linha.split(" subtests ")[0])]
+        if achados and linha.lstrip()[:1].isdigit():
+            passou = sum(n for n, k in achados if k == "passed")
+            falhou = sum(n for n, k in achados if k != "passed")
+            return passou, falhou
+    return None
+
+
+def divergencia_suite_handoff(texto, medida):
+    """Mensagem de BLOCK se o HANDOFF declara uma suite diferente da medida agora; None = ok. PURA.
+
+    Verde declarado (`suite **N**`) exige 0 falhas e N == passed. Vermelha declarada
+    (`SUITE VERMELHA P/T`) exige P == passed e T == passed + falhas. Sem numero = nada a conferir."""
+    passou, falhou = medida
+    agora = (f"{passou} passed" + (f", {falhou} falha(s)" if falhou else "")
+             + " (python -m pytest tools/ -q, rodado por este hook)")
+    for m in _RX_SUITE_VERMELHA.finditer(texto or ""):
+        if (int(m.group(1)), int(m.group(2))) != (passou, passou + falhou) or not falhou:
+            return f"HANDOFF declara SUITE VERMELHA {m.group(1)}/{m.group(2)}; medida agora: {agora}"
+    for m in _RX_SUITE_VERDE.finditer(texto or ""):
+        if falhou or int(m.group(1)) != passou:
+            return f"HANDOFF declara suite **{m.group(1)}**; medida agora: {agora}"
+    return None
+
+
 def run_command(cmd_list, desc, capture=False):
     # part-1 (P1): tempo por bloco IMPRESSO -- o SLO do harness e informativo e medido,
     # nao um gate flaky por tempo. E o que habilita podar custo com dado (F61 foi achado assim).
@@ -457,6 +499,7 @@ def main():
     card_relevant = (mode == "--all")
     fsrs_relevant = (mode == "--all")
     substrato_relevant = (mode == "--all")
+    selo_relevant = False   # F136: HANDOFF staged -> suite completa + numero conferido
     # F58: session logs tocados no run corrente entram no recorte de "novo"
     # do check de integridade de history/ (proxy de "mtime > ultimo run").
     hist_extras = set()
@@ -475,6 +518,7 @@ def main():
         else:
             origem = "staged para commit" if mode == "--staged" else "modificado(s)/untracked na sessão"
             print(f"🔍 Detectados {len(changed_files)} arquivo(s) {origem}.")
+            selo_relevant = dispara_suite_por_selo(changed_files)
             for f in changed_files:
                 fp = f.replace("\\", "/")
                 if fp.startswith("history/session_") and fp.endswith(".md"):
@@ -597,15 +641,29 @@ def main():
     #     ou fsrs_relevant (F61: cobre a revisao-calibrada via bridge e a
     #     autonomia via coleta nativa — as execuções diretas morreram).
     #     Custo medido: ~17s. Barato demais para continuar sendo opcional.
-    if mode == "--all" or tools_to_check or substrato_relevant or fsrs_relevant:
+    if mode == "--all" or tools_to_check or substrato_relevant or fsrs_relevant or selo_relevant:
         desc_pytest = "Suíte completa (pytest — inclui revisão-calibrada via bridge e autonomia)"
         motivo = "substrato compartilhado" if substrato_relevant and mode != "--all" else None
         if motivo:
             print(f"   ↳ {motivo} tocado -> suíte completa (o consumidor vive noutro arquivo).")
-        success_pt, _ = run_command([sys.executable, "-m", "pytest", "tools/", "-q"],
-                                    desc_pytest)
+        if selo_relevant:
+            print("   ↳ HANDOFF no recorte (selo) -> suíte completa + número conferido (F136).")
+        success_pt, out_pt = run_command([sys.executable, "-m", "pytest", "tools/", "-q"],
+                                         desc_pytest, capture=selo_relevant)
         all_passed = all_passed and success_pt
         results_summary.append((desc_pytest, success_pt, 0))
+        if selo_relevant:
+            desc_selo = "Suíte declarada no HANDOFF = suíte medida (F136)"
+            medida = contagem_pytest(out_pt)
+            handoff_txt = (ROOT_DIR / "HANDOFF.md").read_text(encoding="utf-8", errors="replace") \
+                if (ROOT_DIR / "HANDOFF.md").is_file() else ""
+            msg = ("resumo do pytest ilegível: número do HANDOFF não conferido" if medida is None
+                   else divergencia_suite_handoff(handoff_txt, medida))
+            if msg:
+                print()
+                print(f"[BLOCK] SUITE_HANDOFF (F136): {msg}")
+            all_passed = all_passed and not msg
+            results_summary.append((desc_selo, not msg, 0))
 
     # 2b. Suíte do check de auto-suficiência de card (Part 1). BLOCKING como
     #     todo teste de código: valida os detectores por fixtures (não depende

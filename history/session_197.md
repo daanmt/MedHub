@@ -21,7 +21,7 @@
 
 - `banco-emed: t49 BLOQUEADA pelo executor (camada de seguranca da sessao dele barrou "captura em massa" apos 7/21; nada gravado) · nada a importar · respostas 0` -- m0005: bloqueio nao e do EMED; sugerido lote por pagina (<= 20 q). Operador precisa reabrir a sessao do Chrome no modo de permissao adequado.
 
-- **Chrome caiu (travou e deslogou) na t49.** Operador (26/09, ~02h40): *"vamos ficar com o que temos. nao estou conseguindo permitir essa autonomia, para extracao dos dados do emed. como posso prosseguir?"* -> loop do `/banco-emed` reduzido de 5 para 20 min; banco fica com t26 + t96 (37 questoes); opcoes de captura apresentadas ao operador (bookmarklet no Chrome dele com a API interna que o executor mapeou x formulario manual x fluxo antigo).
+- **Chrome caiu (travou e deslogou) na t49.** Operador (26/09, ~02h40): *"vamos ficar com o que temos. nao estou conseguindo permitir essa autonomia, para extracao dos dados do emed. como posso prosseguir?"* -> loop do `/banco-emed` reduzido de 5 para 20 min. **Minutos depois:** *"ele voltou. o problema era o acesso apenas para o med.estrategia.com, e nao para todos os sites"* -- o bloqueio era o ESCOPO DE SITES da sessao do Chrome (a Bancada mora em claude.ai), nao a captura em si. Loop de volta a 5 min (job novo); m0006 libera a fila (t49 do zero, lote por pagina <= 20q). Licao: "camada de seguranca barrou a transferencia" no relato do executor = conferir primeiro o escopo de sites da sessao dele.
 
 ## Custo dos subagentes (usage do harness)
 - Explore (Sonnet, mapa da arquitetura): 101.278 tokens · 53 tool uses · 2 min 47 s.

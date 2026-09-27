@@ -3,12 +3,12 @@ performance.py
 ==============
 Checagem rápida de performance MedHub.
 
-Imprime em stdout um relatório markdown com 5 blocos:
+Imprime em stdout um relatório markdown com 4 blocos:
 1. Total acumulado de questões, acertos e performance geral.
-2. Meta do mês corrente + ritmo diário necessário.
+2. A META (única, s203): 10.000 questões até a prova da UERJ em 01/11 -- faltam, dias, ritmo
+   necessário e projeções (`MARCOS`, lida também pelo boot e pelo painel via `volume_vs_marco`).
 3. Custo/questão (acumulado + mês corrente) classificado em faixas.
-4. Marcos adiante: ENAMED meta-prova (10.000, 13/09), teto/stretch (12.000) e plano dez/2026 (17.000).
-5. Áreas fracas (< 75%) e gaps absolutos (0 questões).
+4. Áreas fracas (< 75%) e gaps absolutos (0 questões).
 
 Uso:
     python tools/performance.py
@@ -52,15 +52,18 @@ META_CUSTO_Q = 0.35
 # O 12.500 nao e arbitrario: e a soma do proprio plano (5.191 em 25/07 + 4.263 de cronograma
 # + ~300 de simulados ENAMED + ~2.700 de banca UERJ/USP). 15.000 fica como stretch, nao como meta.
 # investimento e ACUMULADO (+R$ 210/mes) -- inalterado, e gasto real, nao alvo.
+# ⚰️ s203 (27/09/2026, decisao do operador: "a unica meta por hora e 01/11"): a coluna
+# `meta_acumulada` (8.300 em set -> ~203q/dia no /performance, um 5o ritmo concorrente) SAIU,
+# junto com o bloco "Meta do mes". O dicionario segue so com o investimento (custo/q).
 METAS_MENSAIS = {
-    "2026-05": {"meta_acumulada": 3000,  "investimento": 2940.00},
-    "2026-06": {"meta_acumulada": 4500,  "investimento": 3150.00},
-    "2026-07": {"meta_acumulada": 5500,  "investimento": 3360.00},
-    "2026-08": {"meta_acumulada": 7000,  "investimento": 3570.00},
-    "2026-09": {"meta_acumulada": 8300,  "investimento": 3780.00},
-    "2026-10": {"meta_acumulada": 9600,  "investimento": 3990.00},
-    "2026-11": {"meta_acumulada": 11000, "investimento": 4200.00},
-    "2026-12": {"meta_acumulada": 12500, "investimento": 4410.00},
+    "2026-05": {"investimento": 2940.00},
+    "2026-06": {"investimento": 3150.00},
+    "2026-07": {"investimento": 3360.00},
+    "2026-08": {"investimento": 3570.00},
+    "2026-09": {"investimento": 3780.00},
+    "2026-10": {"investimento": 3990.00},
+    "2026-11": {"investimento": 4200.00},
+    "2026-12": {"investimento": 4410.00},
 }
 
 # Faixas: (limite_superior_exclusivo, emoji, rotulo)
@@ -102,6 +105,8 @@ AREAS_CLINICAS = list(areas.AREAS_CLINICAS)
 # arbitrario: 6.631 (acumulado em 30/08) + 60q/dia x 63 dias = ~10.400 na vespera da prova.
 # 60q/dia e o ritmo que o usuario declarou sustentavel (media real, nao pico) -- ver
 # feedback_politica_cards_diaria e project_norte_uerj_mfc na memoria.
+# 🔄 s203 (27/09/2026, decisao do operador): o alvo e 10.000, nao 10.400 -- "a unica meta por
+# hora e 01/11 e o alvo e 10k de questoes". ⚰️ *Era 10.400 (a conta 6.631 + 60 x 63 acima).*
 ENAMED_DATA = date(2026, 9, 13)      # termometro (referencia de calendario, nao alvo de volume)
 UERJ_DATA = date(2026, 11, 1)        # 🎯 prova-alvo (Acesso Direto MFC, 15 vagas ampla concorrencia)
 
@@ -120,10 +125,11 @@ UERJ_DATA = date(2026, 11, 1)        # 🎯 prova-alvo (Acesso Direto MFC, 15 va
 # cauda ficar maior. A 60q/dia: alvo 01/11 -> corte de ~917q; 18/10 -> ~1.757q;
 # 11/10 -> ~2.177q. Mudar aqui move o plano inteiro de forma explicita.
 FIM_CONTEUDO_ALVO = date(2026, 11, 1)
+# ⚰️ s203: "Ciclo 2026" (12.500 @ 31/12, ~52,8q/dia no boot) e "Stretch dez/2026" (15.000)
+# SAIRAM -- a meta e UMA (01/11, 10.000) e todo ritmo "por dia" do boot, do painel e do HANDOFF
+# sai dela (`volume_vs_marco`). Outro marco so volta por decisao do operador.
 MARCOS = [
-    ("UERJ/MFC (prova 01/11)", 10400, UERJ_DATA),
-    ("Ciclo 2026", 12500, date(2026, 12, 31)),
-    ("Stretch dez/2026", 15000, None),
+    ("UERJ/MFC (prova 01/11)", 10000, UERJ_DATA),
 ]
 
 # Ritmos diários usados nas projeções dos marcos datados (q/dia).
@@ -237,38 +243,8 @@ def bloco_total(total_q, total_a):
     ]
 
 
-def bloco_meta_mes(mes_atual, total_q, hoje):
-    if mes_atual not in METAS_MENSAIS:
-        return [
-            "## 3. Meta do mês",
-            "",
-            f"⚠️ Mês corrente ({mes_atual}) fora da série `METAS_MENSAIS`.",
-            "Atualize o dicionário no topo de `tools/performance.py` para voltar a operar.",
-        ]
-    meta = METAS_MENSAIS[mes_atual]["meta_acumulada"]
-    deficit = meta - total_q
-    linhas = [
-        "## 3. Meta do mês",
-        "",
-        f"- **Mês corrente:** {mes_atual}",
-        f"- **Meta acumulada:** {meta}",
-        f"- **Acumulado atual:** {total_q}",
-    ]
-    if deficit <= 0:
-        linhas.append(f"- ✅ **Meta atingida** — excedente de {abs(deficit)}q.")
-    else:
-        dias = dias_restantes_no_mes(hoje)
-        ritmo = deficit / dias
-        linhas.extend([
-            f"- **Déficit:** {deficit}q",
-            f"- **Dias restantes (incluindo hoje):** {dias}",
-            f"- **Ritmo necessário:** ~{ritmo:.0f}q/dia",
-        ])
-    return linhas
-
-
 def bloco_custo(mes_atual, total_q, questoes_mes):
-    linhas = ["## 4. Custo por questão", ""]
+    linhas = ["## 3. Custo por questão", ""]
     if mes_atual not in METAS_MENSAIS:
         linhas.append(f"⚠️ Mês corrente ({mes_atual}) fora da série — sem dados de investimento.")
         return linhas
@@ -311,7 +287,7 @@ def bloco_custo(mes_atual, total_q, questoes_mes):
 
 
 def bloco_marcos(total_q, hoje):
-    linhas = ["## 2. Marcos adiante", ""]
+    linhas = ["## 2. Meta (única: prova da UERJ em 01/11)", ""]
     for nome, alvo, data_marco in MARCOS:
         faltam = alvo - total_q
         if faltam <= 0:
@@ -346,7 +322,7 @@ def bloco_marcos(total_q, hoje):
 
 
 def bloco_areas(por_area):
-    linhas = ["## 5. Áreas fracas e gaps", ""]
+    linhas = ["## 4. Áreas fracas e gaps", ""]
 
     fracas = sorted(
         [(a, q, ac, p) for (a, q, ac, p) in por_area if q > 0 and p < 75.0],
@@ -379,8 +355,6 @@ def formatar_relatorio(total_q, total_a, por_area, mes_atual, questoes_mes, hoje
     partes.extend(bloco_total(total_q, total_a))
     partes.append("")
     partes.extend(bloco_marcos(total_q, hoje))
-    partes.append("")
-    partes.extend(bloco_meta_mes(mes_atual, total_q, hoje))
     partes.append("")
     partes.extend(bloco_custo(mes_atual, total_q, questoes_mes))
     partes.append("")

@@ -109,13 +109,9 @@ def _fsrs_counts(con):
     }
 
 
-# s126 -- virada multi-banca: a meta de volume deixa de ser "10k até o ENAMED" e passa a ser
-# o 2o ciclo (UERJ/USP). Nomes e números vêm de performance.MARCOS, fonte única.
-META_CICLO, DATA_CICLO = MARCOS[1][1], MARCOS[1][2]   # 12.500 @ 31/12/2026
-
-
-def DIAS_ATE_CICLO(hoje):
-    return (DATA_CICLO - hoje).days
+# ⚰️ s203 (27/09/2026): `META_CICLO`/`DATA_CICLO`/`DIAS_ATE_CICLO` (o "Ciclo 2026", 12.500 @ 31/12,
+# ~52,8q/dia no boot) SAIRAM com o marco -- a meta e UMA, `performance.MARCOS[0]` (decisao do
+# operador: "a unica meta por hora e 01/11").
 
 
 # ---------------------------------------------------------------------------
@@ -449,57 +445,14 @@ def _plano_pendencia():
         return []
 
 
-def _calendario_trilha():
-    """Calendario da Fase 1 (`plano.calendario_trilha`, s189). Falha -> `{}` + WARN: sem
-    calendario a cota do dia SOME da tela, nunca sai inventada (regra F1/POSICAO/B1)."""
-    try:
-        import plano
-        return plano.calendario_trilha()
-    except Exception as e:
-        _warn_degradacao("calendario_trilha", e)
-        return {}
+# ⚰️ s203: `_calendario_trilha` e `cota_do_dia` (F123b, s189) SAIRAM. A cota dividia o restante da
+# semana de CALENDARIO pelos dias que faltavam nela -- no domingo, a semana inteira num dia so
+# ("~474q/dia ate 27/09"). O operador revogou a meta semanal: o unico "por dia" e o da meta
+# de 01/11 (`performance.volume_vs_marco`). A semana de calendario segue viva no
+# `plano.panorama` (quais tarefas sao da semana), que nunca foi uma cota.
 
 
-def cota_do_dia(pendentes, calendario, hoje):
-    """F123b (s189): cota de questoes do dia = q pendentes das semanas do plano ATE a semana
-    de CALENDARIO corrente / dias que faltam nela, hoje incluso. Divisao, nao scheduler. PURA.
-
-    - semana de calendario = a primeira cujo `fim` >= hoje; na vespera dela os dias contam a
-      partir do `inicio` (`comecou=False`);
-    - atraso entra: pendente de semana ANTERIOR soma e sai declarado em `q_atrasadas`. Pela
-      semana do PLANO (menor com pendencia), um atraso de uma semana daria divisor zero --
-      por isso a POSICAO continua sendo a do plano e a COTA e a do calendario;
-    - semana do plano depois da de calendario (Fase 2) e linha sem semana (reserva) nunca
-      entram;
-    - sem calendario, ou depois do fim dele -> `None`: a linha some, nunca numero inventado.
-    """
-    if not calendario:
-        return None
-    futuras = [s for s in sorted(calendario) if calendario[s][1] >= hoje]
-    if not futuras:
-        return None
-    semana = futuras[0]
-    inicio, fim = calendario[semana]
-    dias = (fim - max(hoje, inicio)).days + 1
-    q_semana = q_atrasadas = 0
-    for linha in pendentes:
-        if linha.get("status", "pendente") != "pendente":
-            continue
-        try:
-            s = int(linha.get("semana_plano"))
-        except (TypeError, ValueError):
-            continue                              # reserva: fora da fila, fora da cota
-        if s == semana:
-            q_semana += _q_prevista(linha)
-        elif s < semana:
-            q_atrasadas += _q_prevista(linha)
-    q = q_semana + q_atrasadas
-    return {"semana": semana, "inicio": inicio.isoformat(), "fim": fim.isoformat(),
-            "dias": dias, "q_restantes": q, "q_atrasadas": q_atrasadas,
-            "cota": math.ceil(q / dias) if q else 0, "comecou": hoje >= inicio}
-
-
-def _cronograma_hoje(total_q, hoje, calendario=None):
+def _cronograma_hoje(total_q, hoje):
     """Bloco de cronograma do Plano do Dia, derivado de `plano_tarefas` (o SSOT).
 
     Read-only. Semana corrente = **menor `semana_plano` com pendencia**, nunca a
@@ -507,10 +460,10 @@ def _cronograma_hoje(total_q, hoje, calendario=None):
     de gestao (mesmo espirito do `cronograma-contract`: plano nao e
     verdade-de-estado, e por isso a POSICAO nao sai do calendario).
 
-    s189 (F123): o ritmo e da FASE 1 -- numerador = pendentes das semanas 1-7, divisor =
-    dias ate o alvo declarado; a Fase 2 e a reserva ficam fora da conta (e declaradas em
-    `fora_da_fase1_q`). A cota do dia e a unica leitura de calendario (`cota_do_dia`).
-    `calendario=None` le o da trilha; os testes injetam o seu.
+    s189 (F123): a Fase 1 = pendentes das semanas 1-7; a Fase 2 e a reserva ficam fora da conta
+    (e declaradas em `fora_da_fase1_q`). s203: a Fase 1 e a COBERTURA da meta -- `fechando_q` =
+    acumulado + pendentes da Fase 1 (simulados declarados em `simulados_q`) --, nunca um 2o
+    ritmo: o unico "por dia" e o da meta (`performance.volume_vs_marco`).
 
     Tabela ausente ou vazia -> `None` (degradacao graciosa: o plano do dia sai sem
     o bloco, jamais com um bloco inventado -- regra dos irmaos F1/POSICAO/B1).
@@ -549,8 +502,8 @@ def _cronograma_hoje(total_q, hoje, calendario=None):
         dias_grade = None
     if dias_grade is not None and dias_grade < 1:
         dias_grade = None     # alvo vencido: sem divisor (era max(dias, 1) -- numero inventado)
-    if calendario is None:
-        calendario = _calendario_trilha()
+    simulados = sum(_q_prevista(l) for l in pendentes
+                    if _fase_do_plano(l.get("semana_plano")) == 1 and l.get("area") == "Simulado")
 
     return {
         "semana": semana,
@@ -567,10 +520,9 @@ def _cronograma_hoje(total_q, hoje, calendario=None):
         "fim_conteudo_alvo": FIM_CONTEUDO_ALVO.isoformat(),
         "restante_q": restante,
         "fora_da_fase1_q": sum(_q_prevista(l) for l in pendentes) - restante,
-        "ritmo_cronograma": round(restante / dias_grade, 1) if dias_grade else None,
-        "cota": cota_do_dia(pendentes, calendario, hoje),
-        "ritmo_meta": round(max(0, META_CICLO - total_q) / DIAS_ATE_CICLO(hoje), 1)
-                      if DIAS_ATE_CICLO(hoje) > 0 else None,
+        "simulados_q": simulados,
+        "fechando_q": (total_q or 0) + restante,
+        "meta": MARCOS[0][1],
     }
 
 
@@ -896,7 +848,7 @@ def recomendar_dia(sinais, tempo_h=None, energia=None):
                                                         max(int(math.ceil(ritmo_nec)), 1))
     if folga_dias is not None and folga_dias < 0:
         alvo_q = capacidade_q
-        just.append("grade atrasada (%dd de déficit projetado): capacidade máxima em questões"
+        just.append("meta atrasada (%dd de déficit projetado): capacidade máxima em questões"
                     % -folga_dias)
     if alvo_q > 0 and restante > 0:
         blocos.append({"tipo": "questoes", "qtd": alvo_q,
@@ -978,8 +930,10 @@ def build(tempo_h=None, energia=None):
         # s189 (F123a): os DOIS sinais sao da Fase 1 -- o 273 q/dia do boot tambem
         # governava o R4 ("grade atrasada, 235d de deficit"). Alvo vencido chega como
         # None e o R4 cai na capacidade, em vez de dividir por um 1 inventado.
-        "dias_grade": cron.get("dias_grade") if cron else 1,
-        "restante_grade_q": (cron or {}).get("restante_q") or 0,
+        # s203: o "necessario" do recomendador e o da META (o mesmo ritmo do boot e do painel),
+        # nao o da Fase 1 -- era a 2a regua (90,9 contra 83,2 no mesmo boot de 27/09).
+        "dias_grade": vm["dias"],
+        "restante_grade_q": vm["faltam"],
         "ritmo_real": ritmo_real,
         "vencidos": vencidos,
         "teto_efetivo": _teto_efetivo(vencidos),
@@ -1123,8 +1077,8 @@ def render_handoff_block(p):
     t = telemetria_fila(f, p["divida"])
     perf = round(v["acertos"] / v["total"] * 100, 1) if v["total"] else 0.0
     linhas = [
-        f"- **Volume & Metas:** {v['total']} / {v['alvo_enamed']} (perf. ~{perf}%). "
-        f"Hoje: {v['hoje']}. Ritmo do marco de volume ~{v['ritmo_alvo']}q/dia "
+        f"- **Volume & Meta:** {v['total']} / {v['alvo_enamed']} (perf. ~{perf}%). "
+        f"Hoje: {v['hoje']}. Meta ~{v['ritmo_alvo']}q/dia "
         f"({v['dias_ate_marco']}d p/ {v.get('marco', 'marco')}).",
         f"- **FSRS:** divida {t['divida']} atrasados + {t['hoje']} p/ hoje "
         f"-- pool {t['pool']} nunca introduzidos (entram <={t['teto']}/dia).",
@@ -1144,14 +1098,10 @@ def render_handoff_block(p):
         pass  # bloco derivado degrada em silencio aqui; o [WARN] do plano cobre a classe
     c = p.get("cronograma")
     if c and c.get("semana"):
-        # s189 (F123): a cota e o ritmo da Fase 1 viajam DERIVADOS -- o "~77 q/dia" que a
-        # s188 digitou a mao no HANDOFF era a terceira regua para a mesma pergunta.
-        extra = ""
-        cota = c.get("cota")
-        if cota:
-            extra += f" · cota ~{cota['cota']}q/dia ate {_dm(cota['fim'])}"
-        if c.get("ritmo_cronograma") is not None:
-            extra += f" · Fase 1 ~{c['ritmo_cronograma']}q/dia"
+        # s203: a Fase 1 viaja como COBERTURA da meta, sem ritmo proprio (o unico "por dia" e o
+        # da linha de Volume & Meta). ⚰️ *Eram a cota da semana e o ritmo da Fase 1 (s189).*
+        extra = (f" · Fase 1: {c.get('restante_q', 0)}q pendentes -> {c.get('fechando_q')} "
+                 f"fechando o plano" if c.get("fechando_q") is not None else "")
         linhas.append(
             f"- **Posicao:** plano semana {c['semana']} (fase {c.get('fase') or '?'}) "
             f"· {c.get('feitas_semana', 0)}/{c.get('tarefas_semana', 0)} tarefas da semana "
@@ -1167,37 +1117,26 @@ def _dm(iso):
         return str(iso or "?")
 
 
-def _linhas_ritmo_do_plano(c):
-    """As reguas do PLANO no bloco de cronograma (s189, F123), cada uma dizendo o que mede:
-    a cota do dia (semana de calendario da trilha) e o ritmo da Fase 1 (alvo declarado). O
-    marco de volume do ciclo vai junto, com o nome e o numero reais (o rotulo antigo,
-    `2o ciclo {META_CICLO // 1000}k`, arredondava 12.500 para 12k)."""
-    linhas = []
-    cota = c.get("cota")
-    if cota:
-        extra = []
-        if cota["q_atrasadas"]:
-            extra.append(f"inclui {cota['q_atrasadas']}q atrasadas de semana anterior")
-        if not cota["comecou"]:
-            extra.append(f"a semana {cota['semana']} comeca em {_dm(cota['inicio'])}")
-        sufixo = ("; " + "; ".join(extra)) if extra else ""
-        linhas.append(f"    • 🎯 **Cota do dia:** ~{cota['cota']}q ({cota['q_restantes']}q "
-                      f"pendentes ate o fim da semana {cota['semana']}, em {cota['dias']} "
-                      f"dia(s): {_dm(cota['inicio'])} -> {_dm(cota['fim'])}{sufixo})")
+def _linha_cobertura(c):
+    """s203: a Fase 1 como COBERTURA da meta -- onde o acumulado chega se o plano fechar --, com
+    os simulados declarados. Sem "por dia": o unico e o da linha Meta (decisao do operador em
+    27/09: "o alvo anda junto com a quantidade de questoes nas listas").
+    ⚰️ *Era `_linhas_ritmo_do_plano` (s189): cota do dia + ritmo da Fase 1 + marco do Ciclo 2026.*"""
     faixa = f"semanas 1-{PRIMEIRA_SEMANA_FASE2 - 1}"
-    alvo = c.get("fim_conteudo_alvo") or "?"
-    if c.get("ritmo_cronograma") is not None:
-        fase = (f"ritmo da Fase 1 ~{c['ritmo_cronograma']}q/dia ({c.get('restante_q', 0)}q "
-                f"pendentes nas {faixa} ate {alvo}; Fase 2 e reserva fora da conta)")
-    else:
-        fase = (f"ritmo da Fase 1: sem divisor -- alvo {alvo} vencido "
-                f"({c.get('restante_q', 0)}q pendentes nas {faixa})")
-    if c.get("ritmo_meta") is not None:
-        fase += (f" · marco de volume {MARCOS[1][0]} ({META_CICLO} ate "
-                 f"{DATA_CICLO.strftime('%d/%m')}) ~{c['ritmo_meta']}q/dia")
-    linhas.append(f"    • {fase}")
-    return linhas
-
+    sim = c.get("simulados_q") or 0
+    sim_txt = f" ({sim}q de simulados)" if sim else ""
+    meta = c.get("meta")
+    fecha = c.get("fechando_q")
+    alvo_dm = _dm(c.get("fim_conteudo_alvo"))
+    comp = ""
+    if fecha is not None and meta:
+        dif = fecha - meta
+        comp = (f" -- {dif} acima da meta de {meta}" if dif > 0 else
+                f" -- {-dif} ABAIXO da meta de {meta}: o plano nao cobre a meta" if dif < 0 else
+                f" -- exatamente a meta de {meta}")
+    return [f"    • 📦 **Plano da Fase 1:** {c.get('restante_q', 0)}q pendentes nas {faixa}"
+            f"{sim_txt} -> fechando o plano, o acumulado chega a {fecha} em {alvo_dm}{comp}; "
+            f"Fase 2 e reserva fora da conta"]
 
 def render(p):
     d, v, f = p["dormant"], p["volume"], p["fsrs"]
@@ -1211,12 +1150,11 @@ def render(p):
     else:
         out.append(f"- 🌡️ **Refrescar (dormente):** {d['tema']} ({d['area']} · "
                    f"{d['dias_sem_revisar']}d sem rever · {d['n_cards']} cards · {d.get('perf') or '—'}%)")
-    # s189: esta regua mede o MARCO DE VOLUME (performance.volume_vs_marco), nao o plano --
-    # a do plano e o "ritmo da Fase 1" do bloco de cronograma. Cada uma diz o que mede.
-    meta = f"de {v['alvo_enamed']} " if v.get("alvo_enamed") else ""
-    out.append(f"- 📊 **Volume:** {v['total']} acum. · hoje {v['hoje']} · faltam {v['faltam']} "
-               f"p/ o marco de volume {meta}({v.get('marco', 'marco')}) "
-               f"em {v['dias_ate_marco']}d "
+    # s203: A META -- a unica (decisao do operador em 27/09: 10.000 questoes em 01/11). Todo "por
+    # dia" do boot, do painel e do HANDOFF e este (`performance.volume_vs_marco`).
+    meta = f"{v['alvo_enamed']} questoes " if v.get("alvo_enamed") else ""
+    out.append(f"- 🎯 **Meta:** {meta}({v.get('marco', 'marco')}) · {v['total']} feitas "
+               f"· hoje {v['hoje']} · faltam {v['faltam']} em {v['dias_ate_marco']}d "
                f"→ ~{v['ritmo_alvo']}q/dia (~{round(v['ritmo_alvo'] * 7 / 6)}q em 6 dias/sem)")
     t = telemetria_fila(f, p["divida"])
     out.append(f"- 🔁 **FSRS:** dívida {t['divida']} atrasados + {t['hoje']} p/ hoje "
@@ -1244,16 +1182,10 @@ def render(p):
         # do PDF nem o snapshot do xlsx. Semana corrente = menor `semana_plano` com
         # pendência -- sem projeção por data (plano não é verdade-de-estado).
         if c.get("semana"):
-            # s189: a cota vai TAMBEM no cabecalho -- o hook de SessionStart corta o plano em
-            # `memory_boot._DAY_PLAN_MAX_LINES` linhas (eram 8; 40 desde a s190), e a linha
-            # detalhada, la embaixo do bloco, pode nao chegar ao boot.
-            cota = c.get("cota")
-            cab_cota = (f" · 🎯 cota ~{cota['cota']}q/dia ate {_dm(cota['fim'])}"
-                        if cota else "")
             out.append(f"- 🧭 **Cronograma:** plano **semana {c['semana']}** "
                        f"(fase {c.get('fase') or '?'}) · "
                        f"{c.get('feitas_semana', 0)}/{c.get('tarefas_semana', 0)} tarefas feitas "
-                       f"· {c.get('previstas', 0)}q previstas na semana{cab_cota}")
+                       f"· {c.get('previstas', 0)}q previstas na semana")
         else:
             out.append(f"- 🧭 **Cronograma:** plano sem semana atribuída — "
                        f"{c.get('pendentes_total', 0)} tarefa(s) pendente(s) fora de semana "
@@ -1268,7 +1200,7 @@ def render(p):
         if c.get("sem_semana"):
             out.append(f"    • {c['sem_semana']} tarefa(s) pendente(s) SEM semana do plano "
                        f"(`python tools/plano.py --listar --status pendente`)")
-        out.extend(_linhas_ritmo_do_plano(c))
+        out.extend(_linha_cobertura(c))
     elif p.get("cronograma_hint"):
         out.append(f"- 🧭 **Cronograma:** {p['cronograma_hint'][:120]}")
     # Pendência da revisão de status por área (Parte 3). UMA linha enquanto houver
@@ -1313,7 +1245,7 @@ def render(p):
             out.append(f"    {i}. {b['tipo']}{qtd}{alvo} · {b['motivo']}")
         pj = r["projecao"]
         if pj["dias_para_fechar"] is not None:
-            out.append(f"    • projeção: ritmo real {pj['ritmo_real']}q/dia → grade fecha em "
+            out.append(f"    • projeção: ritmo real {pj['ritmo_real']}q/dia → a meta fecha em "
                        f"~{pj['dias_para_fechar']}d (folga {pj['folga_dias']}d) · "
                        f"necessário {pj['ritmo_necessario']}q/dia (janela {pj['janela_dias']}d)")
         else:

@@ -28,7 +28,10 @@ sustentavel -- nao maximizar volume num dia isolado.
 ## 2. Sinais (todos derivados do db)
 
 - ritmo real de questoes (q/dia, janela movel de `sessoes_bulk`; Simulado nao conta)
-- grade restante x dias ate a prova -> ritmo necessario e folga projetada
+- o que FALTA PARA A META x dias ate ela -> ritmo necessario e folga projetada (s203: a meta e
+  UMA, `performance.volume_vs_marco` -- 10.000 em 01/11, o mesmo ritmo da linha Meta do boot e do
+  painel). ⚰️ *Era "grade restante x dias ate a prova" (a Fase 1, ~90,9q/dia contra os 83,2 da
+  linha de Volume no mesmo boot de 27/09/2026).*
 - divida FSRS (vencidos) + teto efetivo do dia (F4, fsrs-management-contract v1.1)
 - backlog de cards novos
 - posicao SSOT (part-1): semana de conteudo + atraso vs calendario nominal
@@ -47,8 +50,8 @@ sustentavel -- nao maximizar volume num dia isolado.
 - **R3 simulado:** semana de conteudo multipla de `PERIODO_SIMULADO_SEMANAS` ->
   slot de simulado (area 'Simulado' do registro de volume). Recomendacao de slot,
   nunca geracao de conteudo.  <!-- NAO-VERIFICAVEL: fronteira recomendar x gerar e semantica (revisar: 2027-03-31) -->
-- **R4 questoes da grade:** qtd = min(capacidade do dia, ritmo necessario arredondado
-  para cima). Grade ATRASADA (folga < 0) -> capacidade maxima do dia.
+- **R4 questoes do dia:** qtd = min(capacidade do dia, ritmo necessario DA META arredondado
+  para cima). Meta ATRASADA (folga < 0) -> capacidade maxima do dia.
   capacidade = tempo_h x `QUESTOES_POR_HORA` x fator de energia.
 - **R5 fsrs:** qtd = min(teto efetivo, vencidos + 15). O teto dinamico (F4) segue
   sendo o unico governador da divida -- este contrato nao o altera.

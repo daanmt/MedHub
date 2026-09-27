@@ -271,78 +271,58 @@ def test_calendario_e_snapshot_do_drive_sairam_do_codigo():
 
 
 # --------------------------------------------------------------------------
-# s189 (F123, spec trilha-autoridade-unica) -- ritmo da Fase 1 e cota do dia:
-# numerador e denominador da MESMA fase.
+# s203 (27/09/2026, decisao do operador): UMA meta (10.000 questoes em 01/11) e UM ritmo -- o
+# dela. O plano "anda junto": a Fase 1 aparece como COBERTURA da meta (fechando as listas, onde
+# o acumulado chega), nunca como um 2o "por dia". ⚰️ *Eram 4 reguas no boot (s189, F123):
+# marco de volume, ritmo da Fase 1, cota do dia da semana de calendario e o Ciclo 2026 -- a
+# cota despejava a semana inteira no domingo ("~474q/dia ate 27/09").*
 # --------------------------------------------------------------------------
 
 HOJE_F123 = date(2026, 9, 18)          # 44 dias ate FIM_CONTEUDO_ALVO (01/11)
-CALENDARIO_FAKE = {1: (date(2026, 9, 19), date(2026, 9, 20)),
-                   2: (date(2026, 9, 21), date(2026, 9, 27)),
-                   3: (date(2026, 9, 28), date(2026, 10, 4))}
 
 
-def test_ritmo_da_fase1_nao_conta_fase2_nem_reserva(tmp_db):
-    """F123a: o boot somava TODAS as pendentes (a Fase 2 vai ate set/2027, mais a reserva)
-    e dividia pelos dias da Fase 1 -- 273 q/dia no banco real de 18/09. Com Fase 2 e reserva
-    NO BANCO, so as semanas 1-7 entram no numerador. Alvo vencido -> sem divisor."""
+def test_cobertura_da_fase1_nao_conta_fase2_nem_reserva(tmp_db):
+    """F123a segue: so as semanas 1-7 contam (a Fase 2 vai ate set/2027, mais a reserva). O que
+    mudou e a FORMA: a Fase 1 vira a cobertura da meta -- acumulado + pendentes da Fase 1 --, com
+    os simulados declarados, e nao um ritmo proprio."""
     _semear([
         _tarefa(1, semana_plano=1, status="feita", q_previstas=40),
         _tarefa(2, semana_plano=2, q_previstas=30),
         _tarefa(3, semana_plano=7, q_previstas=70),
+        _tarefa(7, semana_plano=3, area="Simulado", q_previstas=60),
         _tarefa(4, semana_plano=8, q_previstas=500),                 # Fase 2
         _tarefa(5, semana_plano=20, q_previstas=300),                # Fase 2
         _tarefa(6, semana_plano=None, ordem=None, q_previstas=77),   # reserva
     ])
-    c = day_plan._cronograma_hoje(0, HOJE_F123, calendario={})
-    assert c["restante_q"] == 100, "so a Fase 1 no numerador (got %s)" % c["restante_q"]
+    c = day_plan._cronograma_hoje(9000, HOJE_F123)
+    assert c["restante_q"] == 160, "so a Fase 1 (got %s)" % c["restante_q"]
+    assert c["simulados_q"] == 60, "os simulados da Fase 1 sao declarados a parte"
     assert c["fora_da_fase1_q"] == 877, "Fase 2 + reserva ficam FORA, mas declaradas"
-    assert c["dias_grade"] == 44, "o divisor segue sendo FIM_CONTEUDO_ALVO (s159)"
-    assert c["ritmo_cronograma"] == round(100 / 44, 1)
+    assert c["fechando_q"] == 9160, "acumulado + pendentes da Fase 1"
+    assert "ritmo_cronograma" not in c and "cota" not in c and "ritmo_meta" not in c
     render = day_plan.render(_p_render(c))
-    assert "ritmo da Fase 1" in render and "100q pendentes" in render
-    assert "977" not in render and "900q" not in render, "a soma de todas as fases vazou"
-    vencido = day_plan._cronograma_hoje(0, date(2026, 11, 2), calendario={})
-    assert vencido["ritmo_cronograma"] is None and vencido["dias_grade"] is None, \
-        "alvo vencido nao ganha divisor inventado (era max(dias, 1))"
-    assert "sem divisor" in day_plan.render(_p_render(vencido))
+    linha = [l for l in render.splitlines() if "Plano da Fase 1" in l]
+    assert linha and "160q pendentes" in linha[0] and "60q de simulados" in linha[0], render
+    assert "9160" in linha[0], "a cobertura diz onde o acumulado chega fechando o plano"
+    assert "977" not in render and "1037" not in render, "a soma de todas as fases vazou"
+    assert "q/dia" not in linha[0], "a Fase 1 nao carrega um 2o ritmo"
 
 
-def test_cota_do_dia_divide_o_restante_da_semana_pelos_dias():
-    """F123b: cota = q pendentes ate a semana de CALENDARIO corrente / dias que faltam nela.
-    Atraso soma (e e declarado); Fase 2 e reserva nunca entram; sem calendario, ou depois
-    dele, a cota e None -- nunca um numero inventado."""
-    pend = [{"semana_plano": 1, "q_previstas": 162, "status": "pendente"},
-            {"semana_plano": 2, "q_previstas": 500, "status": "pendente"},
-            {"semana_plano": 9, "q_previstas": 999, "status": "pendente"},     # Fase 2
-            {"semana_plano": None, "q_previstas": 77, "status": "pendente"}]   # reserva
-    c = day_plan.cota_do_dia(pend, CALENDARIO_FAKE, date(2026, 9, 18))        # vespera
-    assert (c["semana"], c["dias"], c["q_restantes"], c["cota"], c["comecou"]) == \
-        (1, 2, 162, 81, False), c
-    c = day_plan.cota_do_dia(pend, CALENDARIO_FAKE, date(2026, 9, 20))        # ultimo dia
-    assert (c["dias"], c["cota"], c["comecou"]) == (1, 162, True), c
-    c = day_plan.cota_do_dia(pend, CALENDARIO_FAKE, date(2026, 9, 22))        # semana 2
-    assert (c["semana"], c["dias"], c["q_restantes"], c["q_atrasadas"]) == \
-        (2, 6, 662, 162), "a semana 1 atrasada soma e e declarada (got %s)" % c
-    assert c["cota"] == 111, "ceil(662 / 6)"
-    assert day_plan.cota_do_dia(pend, CALENDARIO_FAKE, date(2026, 10, 5)) is None
-    assert day_plan.cota_do_dia(pend, {}, date(2026, 9, 22)) is None
-
-
-def test_render_declara_o_que_cada_regua_mede(tmp_db):
-    """F123 + pedido do /ai-eng: duas reguas para 'quantas questoes por dia' so convivem se
-    cada uma disser o que mede -- marco de volume, ritmo da Fase 1, cota do dia."""
+def test_uma_meta_um_ritmo_no_boot_e_no_handoff(tmp_db):
+    """O boot e o bloco do HANDOFF dizem UM 'por dia': o da meta. Sem cota de semana, sem ritmo
+    da Fase 1, sem Ciclo 2026."""
     _semear([_tarefa(1, semana_plano=1, q_previstas=162),
              _tarefa(2, semana_plano=9, q_previstas=999)])
-    c = day_plan._cronograma_hoje(0, HOJE_F123, calendario=CALENDARIO_FAKE)
-    render = day_plan.render(_p_render(c))
-    assert "Cota do dia:** ~81q" in render, "cota da semana 1 = 162q / 2 dias"
-    assert "marco de volume" in render, "a linha de Volume declara que mede o marco"
-    assert "2o ciclo 12k" not in render, "o rotulo arredondava 12.500 para 12k"
-    cabecalho = [l for l in render.splitlines() if "**Cronograma:**" in l]
-    assert cabecalho and "cota ~81q/dia" in cabecalho[0], \
-        "a cota vai no cabecalho: o hook de boot so injeta as primeiras linhas"
-    bloco = day_plan.render_handoff_block(_p_render(c))
-    assert "Ritmo do marco de volume" in bloco and "cota ~81q/dia" in bloco
+    c = day_plan._cronograma_hoje(0, HOJE_F123)
+    p = _p_render(c)
+    render = day_plan.render(p)
+    assert render.count("q/dia") == 1, "UM ritmo no boot (got %d): %s" % (render.count("q/dia"), render)
+    for morto in ("Cota do dia", "cota ~", "ritmo da Fase 1", "Ciclo 2026", "12500", "marco de volume"):
+        assert morto not in render, morto
+    meta = [l for l in render.splitlines() if "**Meta:**" in l]
+    assert meta and "~1.0q/dia" in meta[0], "o ritmo e o da meta (volume_vs_marco)"
+    bloco = day_plan.render_handoff_block(p)
+    assert bloco.count("q/dia") == 1 and "cota" not in bloco and "Fase 1 ~" not in bloco, bloco
 
 
 def _hook_de_boot():
@@ -356,22 +336,21 @@ def _hook_de_boot():
     return mod
 
 
-def test_cota_cabe_no_corte_do_boot(tmp_db):
-    """s189 (nota do /ai-eng): a cota tem de CHEGAR ao boot. O teste prende a posicao contra
-    o cap REAL do hook, nunca contra um literal -- baixar o cap sem subir a cota derruba
-    aqui. Pior caso de linhas acima do bloco: com Datas E overflow de blackout (F71)."""
+def test_meta_cabe_no_corte_do_boot(tmp_db):
+    """s189 (nota do /ai-eng), na regua de s203: o ritmo do dia tem de CHEGAR ao boot. A posicao
+    e presa contra o cap REAL do hook, nunca contra um literal. Pior caso de linhas acima: com
+    Datas E overflow de blackout (F71)."""
     mb = _hook_de_boot()
     _semear([_tarefa(1, semana_plano=1, q_previstas=162)])
-    c = day_plan._cronograma_hoje(0, HOJE_F123, calendario=CALENDARIO_FAKE)
+    c = day_plan._cronograma_hoje(0, HOJE_F123)
     p = _p_render(c)
     p["provas"] = day_plan.countdown_provas(HOJE_F123)
     p["fsrs"] = dict(p["fsrs"], overflow_blackout=[{"card_id": 1, "due": "2026-11-01"}])
     texto = day_plan.render(p)
     linhas = [l for l in texto.splitlines() if l.strip()]
-    posicao = next(i for i, l in enumerate(linhas, 1) if "cota ~" in l)
-    assert posicao <= mb._DAY_PLAN_MAX_LINES, \
-        "a cota e a linha %d e o boot injeta %d" % (posicao, mb._DAY_PLAN_MAX_LINES)
-    assert "cota ~81q/dia" in mb._resumir_plano(texto, mb._DAY_PLAN_MAX_LINES)
+    posicao = next(i for i, l in enumerate(linhas, 1) if "**Meta:**" in l)
+    assert posicao <= mb._DAY_PLAN_MAX_LINES,         "a meta e a linha %d e o boot injeta %d" % (posicao, mb._DAY_PLAN_MAX_LINES)
+    assert "**Meta:**" in mb._resumir_plano(texto, mb._DAY_PLAN_MAX_LINES)
 
 
 def test_corte_do_boot_se_declara():

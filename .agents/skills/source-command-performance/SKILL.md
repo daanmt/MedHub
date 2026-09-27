@@ -1,6 +1,6 @@
 ---
 name: "source-command-performance"
-description: "Checagem rápida de performance MedHub — total acumulado, meta do mês, custo/questão e áreas fracas. Read-only."
+description: "Checagem rápida de performance MedHub — total acumulado, a meta única (10.000 em 01/11), custo/questão e áreas fracas. Read-only."
 ---
 
 <!-- 🔴 ARQUIVO GERADO por tools/sync_skills.py -- NAO EDITE AQUI.
@@ -33,16 +33,15 @@ Zero argumentos. Rode direto e leia a saída — ela já é um relatório comple
 
 ## O que o relatório informa
 
-O script imprime 5 blocos em markdown, nesta ordem:
+O script imprime 4 blocos em markdown, nesta ordem:
 
 1. **Total acumulado** — questões feitas, acertos, performance geral (%).
-2. **Marcos adiante** ⭐ *prioridade do relatório (decisão sessão 075)* — distância em questões até cada marco de `MARCOS`. Marcos **com data** (ex.: ENAMED 13/09/2026, alvo 12.000) ganham: dias restantes, ritmo necessário para o alvo e projeções de acumulado para cada ritmo de `RITMOS_PROJECAO` (80/90/100 q/dia), cada uma com % do alvo e custo/q projetado na data da prova.
-3. **Meta do mês** — meta acumulada do mês corrente (de `METAS_MENSAIS` hardcoded no script), déficit, ritmo diário necessário para fechar o mês.
-4. **Custo por questão** — em duas dimensões:
+2. **A meta** ⭐ *prioridade do relatório* — **uma só** (s203, decisão do operador em 27/09/2026: "a única meta por hora é 01/11 e o alvo é 10k"): `MARCOS` tem UMA entrada, 10.000 questões na prova da UERJ em 01/11. Faltam, dias restantes, ritmo necessário (o MESMO da linha Meta do boot e do painel, `volume_vs_marco`) e projeções de acumulado para cada ritmo de `RITMOS_PROJECAO` (45/60/75 q/dia), cada uma com % do alvo e custo/q projetado na data da prova. ⚰️ *Eram "Marcos adiante" (ENAMED 12.000, Ciclo 2026 12.500, Stretch 15.000) e, no bloco 3, a "Meta do mês" (`METAS_MENSAIS.meta_acumulada`, ~203q/dia em set) -- réguas concorrentes que o operador revogou.*
+3. **Custo por questão** — em duas dimensões:
    - *Acumulado*: investimento total ÷ todas as questões.
    - *Mês corrente*: parcela do mês ÷ questões feitas no mês.
-   Cada um classificado em faixa visual (🟢 Meta / 🟡 Ótimo / 🟠 Bom / 🔴 Alto / 🟣 Crítico) com distância da meta final (R$ 0,20/q em dez/2026 — coerente com ESTADO.md: R$ 4.410 / 23.000q).
-5. **Áreas fracas e gaps** — áreas com performance < 75% ordenadas por pior, e áreas de **`AREAS_CLINICAS`** com 0 questões (fonte única `core/areas.json`; `Simulado` fica de fora **por decisão declarada** — é slot de volume agregado, não matéria que se possa deixar de estudar).
+   Cada um classificado em faixa visual (🟢 Meta / 🟡 Ótimo / 🟠 Bom / 🔴 Alto / 🟣 Crítico) com distância da meta de custo (`META_CUSTO_Q`, R$ 0,35/q -- recalibrada na s126).
+4. **Áreas fracas e gaps** — áreas com performance < 75% ordenadas por pior, e áreas de **`AREAS_CLINICAS`** com 0 questões (fonte única `core/areas.json`; `Simulado` fica de fora **por decisão declarada** — é slot de volume agregado, não matéria que se possa deixar de estudar).
 
 ---
 
@@ -51,7 +50,7 @@ O script imprime 5 blocos em markdown, nesta ordem:
 1. **Rodar o script** via Bash: `python tools/performance.py`.
 2. **Relaya o relatório** para o usuário (ele já vem formatado em markdown). Os **marcos datados e suas projeções de ritmo são a informação prioritária** — destacá-los na resposta.
 3. **Complementa com 2–4 linhas de leitura estratégica** ao final, apontando 1–3 ações concretas para os próximos dias/semanas. Exemplos de ângulos úteis:
-   - Se **ritmo necessário > 100q/dia**: recomendar priorizar bloco de revisão por questões em vez de criar resumos novos.
+   - Se **ritmo necessário da meta > capacidade do dia (~51q em 4h)**: recomendar priorizar bloco de revisão por questões em vez de criar resumos novos.
    - Se **custo/Q do mês > 3× a meta**: sinalizar que o mês está subutilizando o investimento — incentivar volume.
    - Se **áreas com 0 questões**: sugerir abrir um bloco inaugural (30–50q) de entrada na área.
    - Se **performance < 70% em área com volume > 50q**: sugerir análise de padrões de erro ou revisão do resumo.
@@ -62,13 +61,13 @@ A leitura estratégica **não** duplica o relatório — aponta ação.
 
 ## Atualização de metas
 
-Quando as metas mensais ou faixas de custo mudarem, editar **apenas** no topo de `tools/performance.py`:
+Quando a meta ou as faixas de custo mudarem, editar **apenas** no topo de `tools/performance.py`:
 
-- `METAS_MENSAIS` — dict `{"YYYY-MM": {"meta_acumulada": int, "investimento": float}}` (investimento é **acumulado**).
-- `MARCOS` — lista de tuplas `(nome, alvo_acumulado, data_da_prova | None)`. Marcos com data ganham projeções de ritmo.
+- `METAS_MENSAIS` — dict `{"YYYY-MM": {"investimento": float}}` (investimento **acumulado**; a coluna `meta_acumulada` saiu na s203).
+- `MARCOS` — lista de tuplas `(nome, alvo_acumulado, data_da_prova | None)`. **Uma entrada** desde a s203: `MARCOS[0]` é A meta, lida por `volume_vs_marco` (boot, painel, HANDOFF, `cronograma.py --gap`). Outra entrada só por decisão do operador.
 - `RITMOS_PROJECAO` — tupla de ritmos diários (q/dia) projetados para marcos datados.
 - `FAIXAS_CUSTO` — lista ordenada de tuplas `(limite_superior, emoji, rotulo)`.
-- `META_CUSTO_Q` — alvo final (default `0.20`).
+- `META_CUSTO_Q` — alvo de custo/q (hoje `0.35`).
 
 Nenhuma outra mudança é necessária.
 

@@ -224,14 +224,32 @@ def test_cada_tarefa_diz_o_que_fazer(db_sintetico):
     assert t[6]["rotulo"] == "Simulado", "simulado nao se apresenta como CM"
 
 
-def test_cota_de_questoes_e_a_do_day_plan(db_sintetico):
-    import day_plan
+def test_questoes_do_dia_sao_o_ritmo_da_meta_e_nao_uma_cota_de_semana(db_sintetico):
+    """s203 (decisao do operador em 27/09): a unica meta e 01/11 (10.000). O "Hoje" das questoes
+    e o ritmo DELA (`performance.volume_vs_marco`, o mesmo do boot). ⚰️ *Era a cota da semana de
+    calendario (`day_plan.cota_do_dia`), que no domingo despejava a semana inteira: ~474q/dia.*"""
+    import performance
     from app.utils import db as dbmod
-    pend = [l for l in dbmod.plano_listar() if l.get("status") == "pendente"]
-    esperado = day_plan.cota_do_dia(pend, CALENDARIO, HOJE)
+    con = dbmod.get_connection()
+    try:
+        vm = performance.volume_vs_marco(con, HOJE)
+    finally:
+        con.close()
     q = painel.coletar()["dia"]["questoes"]
-    assert q["cota"] == esperado["cota"] and q["q_restantes"] == esperado["q_restantes"]
-    assert q["fim"] == esperado["fim"]
+    assert q["alvo_dia"] == vm["ritmo_alvo"] and q["meta"] == vm["meta"] == performance.MARCOS[0][1]
+    assert q["faltam"] == vm["faltam"] and q["dias"] == vm["dias"]
+    assert "cota" not in q
+
+
+def test_painel_diz_um_so_por_dia_e_nenhuma_cota(db_sintetico):
+    """Um alvo por dia na pagina inteira: o da meta. A Fase 1 aparece como cobertura (onde o
+    acumulado chega fechando o plano), sem ritmo proprio; o Ciclo 2026 saiu."""
+    html = painel.render_html(painel.coletar())
+    corpo = re.sub(r"<style>.*?</style>|<script>.*?</script>", "", html, flags=re.S)
+    assert "cota" not in corpo.lower(), "a cota da semana saiu do painel"
+    assert "Para fechar as listas da Fase 1" not in corpo
+    assert "Ciclo 2026" not in corpo and "12.500" not in corpo
+    assert "10.000" in corpo, "a meta aparece com o numero dela"
 
 
 def test_questoes_feitas_hoje_contam_todo_o_volume_do_dia(db_sintetico):
@@ -293,9 +311,10 @@ def test_ritmo_real_e_alvo_pelos_leitores_fonte(db_sintetico):
     assert r["alvo_marco"] == vm["ritmo_alvo"] and r["marco"] == vm["marco"]
     assert r["acumulado"] == vm["total"]
     assert r["acerto"] == round(vm["acertos"] / vm["total"] * 100, 1)
-    cron = day_plan._cronograma_hoje(vm["total"], HOJE, calendario=CALENDARIO)
-    assert r["alvo_fase1"] == cron["ritmo_cronograma"]
-    assert r["fase1_q"] == cron["restante_q"]
+    cron = day_plan._cronograma_hoje(vm["total"], HOJE)
+    assert "alvo_fase1" not in r, "s203: a Fase 1 nao e um 2o ritmo"
+    assert r["fase1_q"] == cron["restante_q"] and r["fase1_simulados_q"] == cron["simulados_q"]
+    assert r["fechando_q"] == cron["fechando_q"] == vm["total"] + cron["restante_q"]
 
 
 def test_simulado_fora_das_tarefas_por_bloco(db_sintetico):

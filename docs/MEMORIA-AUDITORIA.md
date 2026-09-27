@@ -294,6 +294,9 @@ nunca convertido em métrica para o painel ficar verde.
 <!-- TERMO-REVOGADO: 0 novas e 0 rejeitadas | revisao-calibrada v1.8 (s193), Clausula 15 -- a poda exige 0 validas nao gravadas + rejeitadas e FORA DE ORDEM ARQUIVADAS em history/quarentena/<sessao>.json (decisao do /ai-eng) -->
 <!-- TERMO-REVOGADO: executor = Claude no Chrome | banco-emed.md (s201, F135) -- a captura pelo Chrome saiu do fluxo por decisao do operador em 26/09; o caderno entra em PDF (tools/prova_pdf.py) -->
 <!-- TERMO-REVOGADO: os têm; não se apagam | banco-emed.md tabela de docs (s201) -- decisao (e) do operador em 26/09 (veredito do /ai-eng sobre a s200): o conteudo do professor das 91 do piloto foi APAGADO do ipub.db e do hub, com backup -->
+<!-- TERMO-REVOGADO: Cota do dia | cronograma-contract v1.5 (s203) -- decisao do operador em 27/09: a unica meta e 01/11 (10.000); a cota da semana de calendario (day_plan.cota_do_dia) saiu do boot, do painel e do HANDOFF -->
+<!-- TERMO-REVOGADO: ritmo da Fase 1 | cronograma-contract v1.5 (s203) -- a Fase 1 e COBERTURA da meta (fechando_q), nunca um 2o ritmo; o unico por dia e o da meta (volume_vs_marco) -->
+<!-- TERMO-REVOGADO: Ciclo 2026 | performance.py MARCOS (s203) -- o marco 12.500 @ 31/12 saiu: a meta e UMA -->
 
 > **Por que os marcadores são comentários HTML:** eles não aparecem no render do documento (o
 > leitor humano lê a prosa acima, não a lista), mas são triviais de extrair. O registro fica onde a

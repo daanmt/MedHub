@@ -63,7 +63,7 @@ python tools/cronograma.py --radar [--desde N]    # cobertura futura × performa
 > `reconcile-contract.md` v1.4 (W8).
 
 - `--desde N`: semana inicial p/ `--gap`/`--radar`. **Default = semana nominal por data**; passe a semana de **conteúdo** (ex.: `--desde 11`) para o gap/radar refletirem a posição real do estudante (atrás do calendário).
-- `--meta M`: meta de volume p/ `--gap` (default 10000 = meta-prova ENAMED; 12000 = teto).
+- `--meta M`: meta de volume p/ `--gap`. **Default = a meta única** (`performance.volume_vs_marco`: 10.000 em 01/11 desde a s203); passar `M` só para simular outro alvo. ⚰️ *Era "default 10000 = meta-prova ENAMED; 12000 = teto" (pré-F88).*
 
 ## Flags do radar
 

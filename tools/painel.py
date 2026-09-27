@@ -6,10 +6,11 @@ direto) e nao aparece na allowlist de writers (F49). Todo numero sai de um leito
 que outra superficie tambem usa -- o painel nao tem regra propria de semana, de teto nem de ritmo:
 
     semana e listas   -> `plano.panorama` (o MESMO do `plano.py --panorama` do boot)
-    cota do dia       -> `day_plan.cota_do_dia` (o MESMO do Plano do Dia)
+    meta do dia       -> `performance.volume_vs_marco` (a MESMA linha Meta do boot; s203)
     saldo de cards    -> `day_plan._fsrs_counts` + `_teto_efetivo` + `realizado_do_dia`
     agenda de 7 dias  -> `db.agenda_revisoes` (o MESMO da tela de fim da aba Cards)
     ritmo             -> `db.get_ritmo_real` + `performance.volume_vs_marco` + `day_plan._cronograma_hoje`
+                         (a Fase 1 entra como COBERTURA da meta, nunca como 2o ritmo -- s203)
     retencao          -> `db.get_retencao_revlog` (pela regua de cada linha, F112)
     volume por bloco  -> `db.sessoes_bulk_listar` + `db.bloco_de` + `areas.AREAS_AGREGADAS`
 
@@ -31,6 +32,7 @@ aparece nomeado, fora dos blocos.
 import argparse
 import html
 import json
+import math
 import sys
 from datetime import date
 from pathlib import Path
@@ -136,15 +138,20 @@ def _bloco_semana(linhas, hoje):
 
 
 def _bloco_dia(linhas, hoje):
-    """Hoje: cota de questoes, saldo de cards e a agenda de 7 dias -- leitores do `day_plan` e o
-    `db.agenda_revisoes` do export do player."""
+    """Hoje: questoes contra o ritmo da META, saldo de cards e a agenda de 7 dias -- leitores do
+    `performance`, do `day_plan` e o `db.agenda_revisoes` do export do player.
+
+    s203 (decisao do operador em 27/09: "pode remover essa meta de 27/09; a unica meta e 01/11"):
+    o alvo do dia e o ritmo da meta (`volume_vs_marco`), o mesmo da linha Meta do boot. ⚰️ *Era a
+    cota da semana de calendario (`day_plan.cota_do_dia`), que no domingo despejava a semana
+    inteira: "0 de ~474, cota de ~474 por dia ate dom 27/09".*"""
     import day_plan
-    pendentes = [l for l in linhas if l.get("status") == "pendente"]
-    cota = day_plan.cota_do_dia(pendentes, day_plan._calendario_trilha(), hoje)
+    import performance
     feitas_hoje = sum(int(s.get("questoes_feitas") or 0) for s in db.sessoes_bulk_listar()
                       if str(s.get("data_sessao") or "")[:10] == hoje.isoformat())
     con = db.get_connection()
     try:
+        vm = performance.volume_vs_marco(con, hoje)
         cont = day_plan._fsrs_counts(con)
         try:
             consumo = int(day_plan.realizado_do_dia(con, hoje.isoformat())["cards"])
@@ -157,12 +164,11 @@ def _bloco_dia(linhas, hoje):
     return {
         "questoes": {
             "feitas_hoje": feitas_hoje,
-            "cota": (cota or {}).get("cota"),
-            "q_restantes": (cota or {}).get("q_restantes"),
-            "q_atrasadas": (cota or {}).get("q_atrasadas"),
-            "semana": (cota or {}).get("semana"),
-            "fim": (cota or {}).get("fim"),
-            "dias": (cota or {}).get("dias"),
+            "alvo_dia": vm["ritmo_alvo"],
+            "meta": vm["meta"],
+            "faltam": vm["faltam"],
+            "dias": vm["dias"],
+            "data_meta": vm["data_marco"].isoformat() if vm.get("data_marco") else None,
         },
         "cards": {
             "vencidos": vencidos,
@@ -177,7 +183,8 @@ def _bloco_dia(linhas, hoje):
 
 
 def _bloco_ritmo(hoje):
-    """Real (7 e 14 dias) ao lado do alvo ate a UERJ (o marco de volume do boot) e da Fase 1."""
+    """Real (7 e 14 dias) ao lado do ritmo da META (o do boot) e a Fase 1 como COBERTURA dela:
+    onde o acumulado chega se o plano fechar (s203 -- era um 2o ritmo, "~90,9 por dia")."""
     import day_plan
     import performance
     con = db.get_connection()
@@ -194,8 +201,9 @@ def _bloco_ritmo(hoje):
         "faltam": vm["faltam"],
         "dias_marco": vm["dias"],
         "alvo_marco": vm["ritmo_alvo"],
-        "alvo_fase1": cron.get("ritmo_cronograma"),
         "fase1_q": cron.get("restante_q"),
+        "fase1_simulados_q": cron.get("simulados_q"),
+        "fechando_q": cron.get("fechando_q"),
         "fim_fase1": cron.get("fim_conteudo_alvo"),
         "acumulado": vm["total"],
         "acerto": (round(vm["acertos"] / vm["total"] * 100, 1) if vm["total"] else None),
@@ -305,15 +313,18 @@ def _html_dia(d, data_iso):
     hoje = date.fromisoformat(data_iso)
     q, c, ag = d["questoes"], d["cards"], d["agenda"]
 
-    if q["cota"] is not None:
-        partes = ["cota de ~%s por dia até %s" % (_n(q["cota"]), _dia_curto(q["fim"]))]
-        if q["q_atrasadas"]:
-            partes.append("inclui %s de semana atrasada" % _n(q["q_atrasadas"]))
-        nota_q = "; ".join(partes) + "."
-        num_q = '<b>%s</b> de ~%s' % (_n(q["feitas_hoje"]), _n(q["cota"]))
-        barra_q = _pct(q["feitas_hoje"], q["cota"])
+    if q["alvo_dia"] is not None:
+        alvo = math.ceil(q["alvo_dia"])
+        nota_q = ("para %s em %s: faltam %s em %s dias."
+                  % (_n(q["meta"]), _dm(q["data_meta"]), _n(q["faltam"]), _n(q["dias"])))
+        num_q = '<b>%s</b> de ~%s' % (_n(q["feitas_hoje"]), _n(alvo))
+        barra_q = _pct(q["feitas_hoje"], alvo)
+    elif q["faltam"] == 0:
+        nota_q = "meta de %s atingida." % _n(q["meta"])
+        num_q = '<b>%s</b> feitas' % _n(q["feitas_hoje"])
+        barra_q = 100.0
     else:
-        nota_q = "sem cota: o calendário do plano acabou."
+        nota_q = "a data da meta passou."
         num_q = '<b>%s</b> feitas' % _n(q["feitas_hoje"])
         barra_q = 0.0
 
@@ -408,9 +419,15 @@ def _html_ritmo(r):
     fig.append('<div class="fig"><p class="fig-n">%s%%</p><p class="fig-r">de acerto em %s '
                'questões</p></div>' % (_n(r["acerto"], 1), _n(r["acumulado"])))
     nota = ""
-    if r["alvo_fase1"] is not None:
-        nota = ('<p class="nota">Para fechar as listas da Fase 1 até %s: ~%s por dia (%s questões '
-                'em aberto).</p>' % (_dm(r["fim_fase1"]), _n(r["alvo_fase1"], 1), _n(r["fase1_q"])))
+    if r["fechando_q"] is not None:
+        sim = r["fase1_simulados_q"] or 0
+        listas = (r["fase1_q"] or 0) - sim
+        partes = "%s questões nas listas" % _n(listas) + (" e %s nos simulados" % _n(sim) if sim else "")
+        dif = r["fechando_q"] - r["meta"]
+        comp = ("%s acima da meta" % _n(dif) if dif > 0 else
+                "%s abaixo da meta: o plano não cobre a meta" % _n(-dif) if dif < 0 else "exatamente a meta")
+        nota = ('<p class="nota">O plano da Fase 1 tem %s em aberto. Fechando tudo, você chega a %s '
+                'em %s (%s).</p>' % (partes, _n(r["fechando_q"]), _dm(r["fim_fase1"]), comp))
     return '<h2>Ritmo de questões</h2>\n<div class="figs">%s</div>\n%s' % ("".join(fig), nota)
 
 

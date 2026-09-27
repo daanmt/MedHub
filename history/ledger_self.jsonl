@@ -970,3 +970,11 @@
 {"ts": "2026-09-27T20:33:07+00:00", "event": "opened", "check": "contrato_revogado", "fingerprint": "4dd775de4920", "alvo": "core/contracts/cronograma-contract.md:125", "payload": {"tipo": "prescricao"}}
 {"ts": "2026-09-27T20:33:07+00:00", "event": "opened", "check": "contrato_revogado", "fingerprint": "e3bc631515e3", "alvo": "tools/day_plan.py:1124", "payload": {"tipo": "prescricao"}}
 {"ts": "2026-09-27T20:33:30+00:00", "event": "opened", "check": "consistencia_registros", "fingerprint": "ae675f4ff819", "alvo": "AGENTE.md §7.4", "payload": {"check": "tabela"}}
+{"ts": "2026-09-27T20:43:23+00:00", "event": "resolved", "check": "contrato_revogado", "fingerprint": "e744cd7ccc8d", "alvo": "ESTADO.md:28"}
+{"ts": "2026-09-27T20:43:23+00:00", "event": "resolved", "check": "contrato_revogado", "fingerprint": "dbb99ba2da25", "alvo": "ESTADO.md:56"}
+{"ts": "2026-09-27T20:43:23+00:00", "event": "resolved", "check": "contrato_revogado", "fingerprint": "02815850b3c5", "alvo": "core/contracts/cronograma-contract.md:0"}
+{"ts": "2026-09-27T20:43:23+00:00", "event": "resolved", "check": "contrato_revogado", "fingerprint": "7629423eeb10", "alvo": "core/contracts/cronograma-contract.md:110"}
+{"ts": "2026-09-27T20:43:23+00:00", "event": "resolved", "check": "contrato_revogado", "fingerprint": "8cb3591c5efd", "alvo": "core/contracts/cronograma-contract.md:124"}
+{"ts": "2026-09-27T20:43:23+00:00", "event": "resolved", "check": "contrato_revogado", "fingerprint": "4dd775de4920", "alvo": "core/contracts/cronograma-contract.md:125"}
+{"ts": "2026-09-27T20:43:23+00:00", "event": "resolved", "check": "contrato_revogado", "fingerprint": "e3bc631515e3", "alvo": "tools/day_plan.py:1124"}
+{"ts": "2026-09-27T20:43:45+00:00", "event": "resolved", "check": "consistencia_registros", "fingerprint": "ae675f4ff819", "alvo": "AGENTE.md §7.4"}

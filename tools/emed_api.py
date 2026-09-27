@@ -22,16 +22,23 @@ dry-run (busca, valida e resume; nada gravado). `--apply` exige `--expect` confi
 
 TUDO OU NADA (as regras do prova_pdf): contagem != --expect; questao com 1-3 ou 6+ alternativas;
 gabarito ausente ou duplo; enunciado ou alternativa vazia; emed_id repetido (inclusive API que
-ignora `page`) -> recusa nomeada e a pasta nem e criada. DISCURSIVA (zero alternativas) SAI e e
-DECLARADA por numero (decisao (b) do /ai-eng): achadas = gravadas + declaradas = --expect.
+ignora `page`) -> recusa nomeada e a pasta nem e criada. DISCURSIVA (zero alternativas; a real vem
+SEM a chave `alternatives` e com `answer_type` DISCURSIVE) SAI e e DECLARADA por numero (decisao (b)
+do /ai-eng): achadas = gravadas + declaradas = --expect. Alternativa sai em UMA linha (`uma_linha`).
 
 Saida = o formato da Bancada: `<OUT>/questoes/<lista>_<num>.json`, consumido por
 `emed_banco.py --ingerir <OUT> --apply --expect N`. `num` = a posicao na lista do EMED (a mesma
 numeracao "Questao N" da pagina): a discursiva deixa o buraco.
 
-LIMITE DECLARADO: o mapa de campos de `exams[]` e `topics[]` e o do relatorio do executor, nao o de
-um contrato publicado -- a API e interna e pode mudar sem aviso; campo ausente = recusa que manda
-rodar `--esquema`. Figura: `<img>` no enunciado ou alternativa marca `figura`, a imagem nao viaja.
+LIMITE DECLARADO: o mapa de campos nao vem de contrato publicado -- a API e interna e pode mudar sem
+aviso; campo ausente = recusa que manda rodar `--esquema`. O de `exams[]` foi MEDIDO na 1a corrida
+real (27/09/2026, t3): banca = `CATALOGO_INSTITUICAO` + ano (o `institution` do cic-0003 nao existe).
+Contra a captura s199 da t3, o rotulo bate em 24/30 exato e 26/30 ignorando caixa; as 4 restantes
+(R+) tinham na captura um sufixo "(Residencia com pre-requisito - ...)" que nao vem deste catalogo --
+cosmetico: a lente 2 confere emed_id e gabarito, nao a banca. Alternativas: 27/30 identicas a
+captura; as 3 restantes estao assim NA FONTE (sanitized_body == body: 'a.buso', 'Indice', 'gravi-
+dade') -- a captura por LLM no Chrome as tinha limpado; o script e fiel. Figura: `<img>` no
+enunciado ou alternativa marca `figura`, a imagem nao viaja.
 """
 from __future__ import annotations
 
@@ -53,6 +60,10 @@ OUT_PADRAO = os.path.join(ROOT, "tmp", "emed_api")
 API = "https://api.estrategia.com/bff/questions/notebooks/{caderno}/questions"
 PER_PAGE = 20
 MAX_PAGINAS = 30
+#: A instituicao (banca) de `exams[]` e ESTE catalogo -- o mesmo texto do `badges[0]`, cujo `type` e
+#: esta chave. Medido na 1a corrida real (27/09/2026, `--esquema` + sonda contra a captura s199 da t3);
+#: o mapa do cic-0003 pedia `exams[].institution`, que a API nao tem.
+CATALOGO_INSTITUICAO = "63b07b3e-c200-4b3d-b9e6-742a096ae26e"
 
 #: O que um doc gravado pode carregar: o escopo publico (whitelist do operador/`/ai-eng`) ...
 CHAVES_PUBLICAS = ("emed_id", "num", "banca", "ano", "enunciado", "alternativas", "gabarito", "tags")
@@ -103,6 +114,16 @@ def html_para_texto(valor):
     return "\n".join(ln for ln in linhas if ln), p.figura
 
 
+def uma_linha(texto):
+    """Alternativa em UMA linha (o doc e o hub leem 1 linha = 1 alternativa): linha feita so de
+    pontuacao cola na anterior sem espaco (t3 Q9: o ponto final vem num bloco HTML a parte); as
+    demais se juntam com espaco. PURA."""
+    saida = ""
+    for ln in texto.split("\n"):
+        saida += ln if (not saida or re.fullmatch(r"[.,;:!?]+", ln)) else " " + ln
+    return saida
+
+
 # ------------------------------------------------------------------ whitelist na fronteira
 
 def _campo(obj, chave, ref):
@@ -112,12 +133,14 @@ def _campo(obj, chave, ref):
 
 
 def _banca_ano(exames, ref):
-    """'<instituicao>, <ano>' (o formato da captura t3 da s199) e o ano, do 1o exame."""
+    """'<instituicao>, <ano>' (o formato da captura t3 da s199) e o ano, do 1o exame -- nos N exames
+    de uma questao a instituicao se repete (t3: 1 rotulo distinto em todas). O espaco duplo que a
+    API traz em alguns nomes colapsa, como a pagina o mostra."""
     if not isinstance(exames, list) or not exames:
         raise Recusa(f"'exams' vazio (emed_id {ref}) -- questao sem banca fica fora do escopo publico")
     ex = exames[0]
-    inst = _campo(ex, "institution", ref)
-    nome = str(_campo(inst, "name", ref) if isinstance(inst, dict) else inst).strip()
+    inst = _campo(_campo(ex, "catalogs", ref), CATALOGO_INSTITUICAO, ref)
+    nome = re.sub(r"\s+", " ", str(_campo(inst, "name", ref))).strip()
     ano = str(_campo(ex, "year", ref) or "").strip()
     return (f"{nome}, {ano}" if ano else nome), ano
 
@@ -134,10 +157,14 @@ def extrair(item):
     emed_id = str(_campo(item, "id", ref))
     enunciado, figura = html_para_texto(_campo(item, "statement_text", ref))
     alternativas, gabaritos = [], []
-    for i, alt in enumerate(_campo(item, "alternatives", ref) or []):
+    # a discursiva REAL vem SEM a chave, com `answer_type` DISCURSIVE (t3 Q24, 27/09/2026); objetiva
+    # sem a chave segue sendo recusa
+    brutas = [] if item.get("answer_type") == "DISCURSIVE" and "alternatives" not in item \
+        else _campo(item, "alternatives", ref) or []
+    for i, alt in enumerate(brutas):
         texto, fig_alt = html_para_texto(_campo(alt, "sanitized_body", ref))
         letra = "ABCDEFGHIJ"[i] if i < 10 else "?"
-        alternativas.append((letra, texto))
+        alternativas.append((letra, uma_linha(texto)))
         figura = figura or fig_alt
         if _campo(alt, "correct", ref) is True:
             gabaritos.append(letra)

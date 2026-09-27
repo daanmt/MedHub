@@ -8,7 +8,8 @@ recusa; DISCURSIVA sai e e declarada por numero e a contagem fecha em 3 (achadas
 declaradas = --expect); TUDO OU NADA -- recusa nomeada e a pasta nem criada.
 
 A rede nunca e tocada: `_get_json` e trocado por paginas sinteticas no formato do mapa de campos
-do cic-0003 (s198). O GOLDEN (a lista real Saude do Idoso, t3) le a saida local gitignored e PULA
+MEDIDO na 1a corrida real (27/09/2026; era o do cic-0003 da s198, que pedia `exams[].institution`
+e recusou a t3 inteira). O GOLDEN (a lista real Saude do Idoso, t3) le a saida local gitignored e PULA
 sem ela -- nenhum texto EMED no git.
 """
 import json
@@ -32,11 +33,26 @@ TOKEN = "TOKEN_SENTINELA_abc123"
 CADERNO = "5e89c2cb-3ac4-4607-aef9-0c7a3d533ec8"
 
 
+CAT_OUTRO = "4383bd62-e829-491e-8bb5-b40bd649817f"
+
+
+def _exame(nome="SP - Sistema Único de  Saúde - SUS SP", ano=2020):
+    """`exams[]` no formato MEDIDO na 1a corrida real (27/09, `--esquema` da t3): a instituicao e o
+    catalogo `CATALOGO_INSTITUICAO` (o mesmo texto do `badges[0]`); nao existe `institution`."""
+    return {"catalogs": {emed_api.CATALOGO_INSTITUICAO: {"id": "c1", "name": nome},
+                         CAT_OUTRO: {"id": "c2", "name": f"{PROF} catalogo vizinho"}},
+            "badges": [{"type": emed_api.CATALOGO_INSTITUICAO, "text": nome},
+                       {"type": "YEAR", "text": str(ano)}, {"type": CAT_OUTRO, "text": f"{PROF} badge"}],
+            "year": ano, "complement": "", "candidates_number": 999, "remuneration": 1}
+
+
 def _item(emed_id, n_alts=4, correta=1, img=False, corretas=None):
-    """Um item no formato do cic-0003, com TODO o conteudo que a whitelist tem de matar."""
+    """Um item no formato da API real (mapa medido em 27/09), com TODO o conteudo que a whitelist
+    tem de matar."""
     corretas = {correta} if corretas is None else set(corretas)
-    return {
+    item = {
         "id": emed_id,
+        "answer_type": "MULTIPLE_CHOICE",
         "statement_text": (f"<p>Paciente {emed_id} com achado &amp; queixa.</p><p>Qual a conduta?</p>"
                            + ('<img src="figura.png">' if img else "")),
         "alternatives": [{"sanitized_body": f"<p>opção {i}</p>", "correct": i in corretas,
@@ -44,12 +60,15 @@ def _item(emed_id, n_alts=4, correta=1, img=False, corretas=None):
                          for i in range(n_alts)],
         "solution": {"sanitized_complete": f"{PROF} comentário geral", "author": f"{PROF} autor"},
         "topics": [{"name": "Medicina Preventiva"}, {"name": "Saúde do Idoso"}],
-        "exams": [{"institution": {"name": "SP - Sistema Único de Saúde - SUS SP"}, "year": 2020,
-                   "purpose": f"{PROF} finalidade"}],
+        "exams": [_exame()],
         "has_video_solution": True, "forum_id": 77,
         "user_solution": {"answer": "A", "nota": f"{PROF} resposta do usuario"},
         "accuracy_percentage": 41.0,
     }
+    if n_alts == 0:                           # a discursiva REAL (t3 Q24, 27/09): sem a chave, tipo DISCURSIVE
+        del item["alternatives"]
+        item["answer_type"] = "DISCURSIVE"
+    return item
 
 
 def _lista(n, discursivas=(), **kw):
@@ -93,6 +112,51 @@ def test_extrair_devolve_so_o_escopo_publico():
     assert q["alternativas"][0] == ("A", "opção 0") and len(q["alternativas"]) == 4
     assert (q["banca"], q["ano"]) == ("SP - Sistema Único de Saúde - SUS SP, 2020", "2020")
     assert q["tags"] == "Medicina Preventiva > Saúde do Idoso" and q["figura"] is False
+
+
+def test_banca_e_o_catalogo_da_instituicao_com_espacos_colapsados_e_o_1o_exame():
+    """Regressao da 1a corrida real (27/09): o mapa do executor pedia `exams[].institution`, que a
+    API nao tem -- a t3 inteira foi recusada. A instituicao e o catalogo fixo; o espaco duplo que a
+    API traz em alguns nomes colapsa (a pagina o colapsa); questao com N exames usa o 1o."""
+    item = _item("4000000001")
+    item["exams"] = [_exame("SP - Universidade de São Paulo - USP - RP  (HC-FMRP)", 2021),
+                     _exame("outra instituicao", 2019)]
+    q = emed_api.extrair(item)
+    assert (q["banca"], q["ano"]) == ("SP - Universidade de São Paulo - USP - RP (HC-FMRP), 2021", "2021")
+    assert PROF not in json.dumps(q, ensure_ascii=False)
+
+
+def test_exame_sem_o_catalogo_da_instituicao_e_recusa_nomeada_sem_valor():
+    item = _item("4000000001")
+    del item["exams"][0]["catalogs"][emed_api.CATALOGO_INSTITUICAO]
+    with pytest.raises(emed_api.Recusa) as e:
+        emed_api.extrair(item)
+    assert emed_api.CATALOGO_INSTITUICAO in str(e.value) and "--esquema" in str(e.value)
+    assert PROF not in str(e.value)
+
+
+def test_discursiva_real_vem_sem_a_chave_e_objetiva_sem_a_chave_e_recusa():
+    """Regressao da 1a corrida real (27/09): a discursiva da t3 (Q24) vem SEM `alternatives` e com
+    `answer_type` DISCURSIVE -- a lista inteira foi recusada. Sem a chave e sem esse tipo segue recusa."""
+    assert emed_api.extrair(_item("4000000001", n_alts=0))["alternativas"] == []
+    objetiva = _item("4000000002")
+    del objetiva["alternatives"]
+    with pytest.raises(emed_api.Recusa, match="'alternatives' ausente"):
+        emed_api.extrair(objetiva)
+
+
+def test_alternativa_sai_em_uma_linha_e_pontuacao_solta_cola_na_anterior():
+    """Regressao do golden t3 (27/09): na Q9 a API poe o ponto final da alternativa num bloco HTML
+    a parte -> 'A) texto\\n.' quebrava o contrato 1 linha = 1 alternativa (o hub le por linha). A
+    captura da s199 tinha 'A) texto.' -- e a forma que a pagina mostra."""
+    item = _item("4000000001")
+    item["alternatives"][0]["sanitized_body"] = "<p>Hipotireoidismo subclínico</p>."
+    item["alternatives"][1]["sanitized_body"] = "<p>Primeira parte</p><p>segunda parte</p>"
+    q = emed_api.extrair(item)
+    assert q["alternativas"][0] == ("A", "Hipotireoidismo subclínico.")
+    assert q["alternativas"][1] == ("B", "Primeira parte segunda parte")
+    doc = emed_api.montar_docs([q], "t9", 9)[0]
+    assert [ln[:3] for ln in doc["alternativas"].splitlines()] == ["A) ", "B) ", "C) ", "D) "]
 
 
 def test_html_para_texto_quebras_entidades_tabela_e_figura():

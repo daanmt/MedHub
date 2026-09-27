@@ -259,7 +259,6 @@ pre{
       <button data-nota="4"><b>4</b><span>sem esforco</span></button>
     </div>
 
-    <p class="dica"><kbd>Espaco</kbd> vira o card &#183; <kbd>1</kbd>-<kbd>4</kbd> da a nota &#183; <kbd>D</kbd> marca defeito &#183; <kbd>P</kbd> pausa o tempo. A nota mede o ESFORCO que a lembranca custou, nao o quanto a resposta foi completa &#183; <b>3 e o caso normal</b>, 4 e raro. Nota 1 ou 2 traz o card de volta no fim da fila; so a primeira nota conta.</p>
   </main>
 
   <section class="painel-fim" id="fim" hidden>
@@ -443,12 +442,16 @@ pre{
     $("aviso-momento").hidden = true;
   }
 
+  function textoOrigemSemBanco(){
+    return espelhoOk
+      ? "As notas estao guardadas neste aparelho e serao enviadas quando esta pagina abrir com conexao. Os dados brutos abaixo sao a copia de seguranca."
+      : "Nada foi salvo fora desta tela: abra os dados brutos abaixo, copie e cole no chat.";
+  }
+
   function mostrarDadosBrutos(titulo){
     $("fim").hidden = false;
     $("fim-titulo").textContent = titulo;
-    $("fim-origem").textContent = espelhoOk
-      ? "As notas estao guardadas neste aparelho e serao enviadas quando esta pagina abrir com conexao. Os dados brutos abaixo sao a copia de seguranca."
-      : "Nada foi salvo fora desta tela: abra os dados brutos abaixo, copie e cole no chat.";
+    $("fim-origem").textContent = textoOrigemSemBanco();
     $("fim-bruto").open = true;
     renderFallback();
   }
@@ -479,15 +482,33 @@ pre{
     $("json-notas").textContent = JSON.stringify(pacoteNotas(), null, 1);
   }
 
+  // A falha de gravacao e PASSAGEIRA (s203: "unavailable" em 27/09 desligava o banco pelo resto do
+  // lote): com a colecao aberta, toda nota volta a tentar; aceita depois de uma falha, o que so o
+  // aparelho tinha vai junto e o aviso forte sai.
+  function bancoVoltou(){
+    return colecao.get().then(function(snap){
+      return reenviarPendentes(snap.docs || []);
+    }).then(function(n){
+      dbOk = true;
+      dbDeclarado = false;
+      $("aviso").hidden = true;
+      $("aviso").classList.remove("forte");
+      if(!$("drill").hidden){ $("fim").hidden = true; }
+      if(n){ avisarMomento(n + " nota(s) guardada(s) neste aparelho foram enviadas ao banco."); }
+    });
+  }
+
   function salvar(registro){
     atualizarPainel();
     renderFallback();
     espelharNotas();                       // primeiro o aparelho, depois o banco
-    if(!dbOk || !colecao){
+    if(!colecao){
       declararSemArmazenamento();
       return Promise.resolve();
     }
-    return colecao.doc(String(registro.card_id)).set(registro).catch(function(err){
+    return colecao.doc(String(registro.card_id)).set(registro).then(function(){
+      if(!dbOk){ return bancoVoltou(); }
+    }).catch(function(err){
       dbDeclarado = false;                 // a falha no meio do lote tambem fala alto
       declararSemArmazenamento();
       avisar($("aviso").textContent + " (falha ao salvar: " + ((err && err.code) || "erro") + ")");
@@ -733,7 +754,7 @@ pre{
     if(dbOk){
       $("fim-origem").textContent = "Notas salvas.";
     }else{
-      $("fim-origem").textContent = "Nada foi salvo fora desta tela: abra os dados brutos abaixo, copie e cole no chat.";
+      $("fim-origem").textContent = textoOrigemSemBanco();
       $("fim-bruto").open = true;
     }
     renderResumo(r);

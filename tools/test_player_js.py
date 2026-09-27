@@ -103,14 +103,16 @@ if(OPC.armazem){ armazem = OPC.armazem; }
 global.document = documento;
 global.window = {addEventListener:function(t,f){ (janOuv[t]=janOuv[t]||[]).push(f); }};
 // db falso SINCRONO (OPC.db = {docs:{id:doc}}): `then` chama na hora, para o cenario
-// ler o resultado sem esperar microtask. `OPC.dbFalha` = todo set() falha.
+// ler o resultado sem esperar microtask. `OPC.dbFalha` = todo set() falha; `OPC.dbFalhas` = N = os
+// N primeiros set() falham e o resto passa (a falha PASSAGEIRA, "unavailable" de 27/09).
 var DB = {}, escritas = [];
+function falhaAgora(){ if(OPC.dbFalha){ return true; } if(OPC.dbFalhas > 0){ OPC.dbFalhas -= 1; return true; } return false; }
 function ST(v){ return {then:function(f){ var r = f(v); return (r && typeof r.then === "function") ? r : ST(r); }, catch:function(){ return this; }}; }
 function STErr(e){ return {then:function(){ return this; }, catch:function(g){ g(e); return ST(undefined); }}; }
 if(OPC.db){
   DB = OPC.db.docs || {};
   var colecaoFalsa = {
-    doc:function(id){ return {set:function(reg){ if(OPC.dbFalha){ return STErr({code:"falhou"}); } DB[id] = reg; escritas.push(String(id)); return ST(undefined); }}; },
+    doc:function(id){ return {set:function(reg){ if(falhaAgora()){ return STErr({code:"falhou"}); } DB[id] = reg; escritas.push(String(id)); return ST(undefined); }}; },
     get:function(){ return ST({docs: Object.keys(DB).map(function(k){ var d = DB[k]; return {data:function(){ return d; }}; })}); }
   };
   global.window.claude = {use:function(){ return ST({collection:function(){ return colecaoFalsa; }}); }};
@@ -373,6 +375,36 @@ def test_falha_de_gravacao_no_meio_do_lote_avisa_forte_e_guarda_local():
     assert out["saida"]["visivel"] and "SEM CONEXAO" in out["saida"]["aviso"]
     assert "falha ao salvar: falhou" in out["saida"]["aviso"]
     assert [n["card_id"] for n in json.loads(out["armazem"]["medhub.notas.t-js"])] == [100]
+
+
+def test_falha_passageira_volta_a_tentar_na_nota_seguinte_e_reenvia_o_que_ficou_no_aparelho():
+    """Regressao de 27/09 (s203): 1 set() com "unavailable" desligava o banco pelo RESTO do lote --
+    as notas seguintes iam so para o aparelho ate um reload. A nota seguinte tem de tentar de
+    novo; aceita, o que so o aparelho tinha vai junto e o aviso forte sai."""
+    out = _rodar(LOTE3, """
+      tecla(" "); tecla("3");                  // 100: o banco falha (passageiro)
+      SAIDA.aviso_depois_da_falha = !el("aviso").hidden;
+      tecla(" "); tecla("4");                  // 101: o banco voltou
+      SAIDA.aviso_oculto = el("aviso").hidden;
+      SAIDA.momento = el("aviso-momento").textContent;
+    """, {"db": {"docs": {}}, "dbFalhas": 1})
+    assert out["saida"]["aviso_depois_da_falha"] is True
+    assert set(out["db"]) == {"100", "101"}, "a nota que falhou foi reenviada quando o banco voltou"
+    assert out["saida"]["aviso_oculto"] is True
+    assert "1 nota(s)" in out["saida"]["momento"]
+
+
+def test_fim_com_banco_fora_diz_que_as_notas_estao_no_aparelho():
+    """Com o espelho local ok, a tela de fim nao pode dizer 'Nada foi salvo fora desta tela': as
+    notas estao no aparelho e vao ao banco no proximo abrir com conexao."""
+    out = _rodar(LOTE3, """
+      tecla(" "); tecla("3"); tecla(" "); tecla("3"); tecla(" "); tecla("3");
+      SAIDA.origem = el("fim-origem").textContent;
+      SAIDA.titulo = el("fim-titulo").textContent;
+    """, {"db": {"docs": {}}, "dbFalha": True})
+    assert out["saida"]["titulo"] == "Lote concluido"
+    assert "guardadas neste aparelho" in out["saida"]["origem"]
+    assert "Nada foi salvo" not in out["saida"]["origem"]
 
 
 def test_agenda_desloca_a_previsao_para_o_dia_da_nota():

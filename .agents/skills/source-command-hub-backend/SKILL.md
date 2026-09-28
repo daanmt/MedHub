@@ -1,6 +1,6 @@
 ---
 name: "source-command-hub-backend"
-description: "Backend do MedHub HUB: 1 tique = conferir (hub.py --precisa-publicar) se o lote da aba Cards foi drenado -- e aí gravar as notas e publicar a próxima fila do dia -- ou se o painel/quadro mudou, e aí republicar com o mesmo lote. Feito para rodar em /loop numa sessão do Claude Code deixada aberta no PC."
+description: "Backend do MedHub HUB: 1 tique = registrar as listas que ele terminou na aba Listas (s203) e conferir (hub.py --precisa-publicar) se o lote da aba Cards foi drenado -- e aí gravar as notas e publicar a próxima fila do dia -- ou se o painel/quadro mudou, e aí republicar com o mesmo lote. Feito para rodar em /loop numa sessão do Claude Code deixada aberta no PC."
 ---
 
 <!-- 🔴 ARQUIVO GERADO por tools/sync_skills.py -- NAO EDITE AQUI.
@@ -25,6 +25,7 @@ O rito de publicar é o do `/revisar` "DRENAR no player" (passos 1-5 e 7-8); aqu
 
 1. **Lote vivo:** o `sessao` está na linha 3 do `HANDOFF.md`; o lote é `tmp/player_<sessao>.json` (sem ele: `Artifact read` + `hub.py --extrair-lote`).
 2. **Estado no `db`:** `ArtifactData list` de `sessoes/<sessao>/notas` (limit 1000, `out_dir` em `tmp/player_<sessao>_db`) e da coleção `quadro` (`out_dir` em `tmp/hub_db`).
+2b. **Listas resolvidas (s203, decisão do operador em 28/09/2026: *"pode aplicar o A"*):** `ArtifactData list` de `listas` (`out_dir` em `tmp/hub_db`) e de `respostas` (`out_dir` em `tmp/bancada`). Para cada lista com `status` = `resolvida` cuja tarefa ainda está **pendente** no plano (`plano.py --listar --status pendente`), rodar o **passo 3 do tique do `/banco-emed`**: `emed_banco.py --registrar tmp/bancada` dry-run -> `--apply --expect N`; a linha sugerida de `registrar_sessao_bulk.py` com o `--sessao` da sessão aberta (ou a próxima, se a última está selada); simulado = `--area Simulado` com o acerto por bloco na observação; `plano.py --concluir <tarefa> --sessao <id da linha do bulk>`. Linha no session log (`banco-emed: <lista> registrada M · acerto X%`) e aviso ao operador na linha final do tique. 🔴 A **análise dos erros NÃO roda no tique** -- fica para o chat, com o racional declarado dele. Registrar muda o painel: o passo 4 deste mesmo tique já republica (`mesmo_lote`). ⚰️ *Até 28/09 o tique só via cards: lista terminada no hub ficava sem volume no painel até alguém registrar no chat (a `t49_1` de 27/09).*  <!-- NAO-VERIFICAVEL: a ordem registrar -> painel -> decidir e conduta do tique; o registro em si e idempotente e testado no emed_banco (revisar: 2027-03-31) -->
 3. **Painel fresco:** `python tools/painel.py --html` (a hora de geração não conta na comparação).
 4. **Decidir:** `python tools/hub.py --precisa-publicar --lote tmp/player_<sessao>.json --notas tmp/player_<sessao>_db --quadro-estado tmp/hub_db` -> `sim|nao`, a `acao` e o motivo:
    - **`nada`** -> linha `hub-backend: lote <sessao> em N/total, projeção igual -- nada a fazer` e fim do tique.

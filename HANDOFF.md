@@ -11,7 +11,7 @@
 ## > Proximo passo imediato
 
 1. 🗄️ **Banco de questoes:** 12 listas EMED + **5 simulados UERJ** (t1793 2021, t1794 2022, t892 2024, t891 2025, t890 2026) no hub; **resolvidas: t96, t26**; em v2 (cadeia): t26 t40 t49 t96. Lista NOVA do EMED entra pela API (`/banco-emed` §emed_api; `.emed_token` ate 26/10), 1 por vez, com a contagem confirmada por ele. Mapa de fragilidade: `emed_banco.py --status --por-objetivo`. Divergentes a conferir: t49 Q10/Q20 · t68 Q1/Q13 · t100 Q8/Q18/Q29/Q34 · t61 Q11 · t651 Q20. Sem resumo local de Hernias.
-2. 📊 **Aba Analise do hub:** PRD `.vibeflow/prds/hub-aba-analise.md` -- gen-spec -> implementar.
+2. 📊 **Engenharia do hub (fila):** (a) **"Hoje" AO VIVO no painel** (opcao B, aprovada por ele em 28/09 para a proxima sessao de engenharia): a pagina soma na hora os cards com nota e as questoes respondidas hoje que o tique ainda nao gravou -- o registro oficial segue do tique; discover -> spec. (b) Aba Analise: PRD `.vibeflow/prds/hub-aba-analise.md` -- gen-spec -> implementar.
 3. 📚 **Estudo:** a semana 3 (28/09-04/10, 18 tarefas, 510q) abre com as pendentes da S2 atrasadas (#49 Hernias, #40 DMG, #100 Pediatria e cia). Aula #877 pronta no hub. UERJ 2021 em curso no hub desde o fechamento da s203.
 4. 🃏 **Cards:** lote `2026-09-27b` (10, saldo de 27/09) no ar. **11 marcas de reforja de 27/09** (#561 #606 #616 #618 #619 #620 #622 #642 #649 #651 #659 -- "pergunta composta"; #616 tambem "card longo") -> curadoria. Duvidas clinicas da reforja em `tmp/reforja_s196/duvidas_*.json` e na s196 (#1113, #1176, #373, #65, #55) -> `/pesquisar-evidencia` quando houver folga. `questoes_erros` #860 guarda o racional antigo (supraclavicular = IV); sem writer para corrigir.
 5. 📊 **Meta UNICA (s203, decisao dele): 10.000 em 01/11 = ~71,8 q/dia** x ritmo real 18,7 q/dia (14d). ⚰️ *Cota da semana, Ciclo 2026 e meta mensal SAIRAM*; a Fase 1 e a cobertura (10.668 fechando o plano). Cobertura > refinamento.
@@ -31,7 +31,7 @@
 
 ## Ultima sessao -- s203 (2026-09-27) -- golden t3 pela API, cards 99/99, F138 player, F139 meta unica
 
-Detalhe em `history/session_203.md`. Commits `3af3ef3` (emed_api: mapa medido), `ff806a6` (lote 27a), `3b392b4` (F138 player), `69c7a4a` (F139 meta unica). Hub Version 36. 1 subagente Sonnet read-only (mapa das reguas): 136.492 tokens, 53 tool uses, ~9 min. `/loop 1h` do backend (job de sessao `d56e5a2b`, aos :07) segue ligado depois do selo: registra a UERJ 2021 quando fechar.
+Detalhe em `history/session_203.md`. Commits `3af3ef3` (emed_api: mapa medido), `ff806a6` (lote 27a), `3b392b4` (F138 player), `69c7a4a` (F139 meta unica). Hub Version 36. 1 subagente Sonnet read-only (mapa das reguas): 136.492 tokens, 53 tool uses, ~9 min. `/loop 1h` do backend (job de sessao `3f6af4b9`, aos :07, prompt = `/hub-backend`) segue ligado depois do selo; desde 28/09 o tique registra QUALQUER lista resolvida no hub (`/hub-backend` passo 2b -- decisao A do operador), inclusive a UERJ 2021.
 
 ## Fronteiras DECLARADAS (nao ler verde de gate como limpeza)
 

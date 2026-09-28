@@ -44,3 +44,8 @@ banco-emed: t3 pela API (dry-run + `--apply` em `tmp/emed_api/t3`, 30 docs + Q24
 - Releitura da coleção `sessoes/2026-09-26b` no fechamento de cards (trocada com 12/51) e poda das coleções drenadas.
 - Checkpoint ao /ai-eng (item 0, F138, F139) -- ele não estava aberto.
 - Pergunta ao operador: meta fixa x derivada do plano; divergência "semana 1" (boot) x "semana 2" (painel).
+
+## Adendo pós-selo (28/09/2026, manhã)
+- **Pergunta dele:** *"por que quando finalizo os cards ou uma lista o painel não é atualizado automaticamente"*. Resposta: o painel é uma FOTO gerada no PC (`painel.py` lê o `ipub.db`); a página só anota no `db` do hub; quem leva ao `ipub.db`, regenera e republica é o tique (latência = 1h, só com o PC acordado e a sessão aberta); e o tique só via cards -- lista comum terminada no hub ficava sem volume até alguém registrar no chat (a `t49_1` de 27/09). O botão "atualizar agora" foi barrado pelo classificador na s194.
+- **Decisão dele: A agora, B na próxima sessão de engenharia.** (A) `/hub-backend` ganhou o **passo 2b**: registra TODA lista com `status` = `resolvida` e tarefa pendente (passo 3 do tique do `/banco-emed`; a análise dos erros NÃO roda no tique). Skill + espelho sincronizados; job do loop trocado de `d56e5a2b` para `3f6af4b9` com o prompt `/hub-backend` puro. (B) "Hoje" ao vivo no painel (a página soma o feito-e-não-gravado) -> fila de engenharia no HANDOFF. (C) tique mais frequente: descartado por custo.
+- hub-backend (pos-selo, 28/09): lote `2026-09-27c` (1 card) em 0/1; a UERJ 2021 segue `capturada` -- ele vai resolvê-la hoje.

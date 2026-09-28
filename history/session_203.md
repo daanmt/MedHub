@@ -16,6 +16,7 @@ hub-backend: 2026-09-26b gravado (1 válida · 0 quarentena; 12/51, trocado a pe
 hub-backend: republicado com o mesmo lote 2026-09-27a (player: banco volta a tentar; legenda fora) -- Version 35
 hub-backend: 2026-09-27a gravado (89 válidas · 0 quarentena · 10 marcas de reforja) -> 2026-09-27b no ar (10 cards) -- Version 36 (meta única)
 hub-backend (pos-selo): 2026-09-27b gravado (9 validas · 0 quarentena · 1 marca de reforja, #659) -> 2026-09-27c no ar (1 card, saldo final) -- Version 37
+hub-backend (pos-selo, 28/09): republicado com o mesmo lote 2026-09-27c (painel e quadro mudaram com a virada do dia: semana 3, ~74 q/dia) -- Version 38
 banco-emed: t3 pela API (dry-run + `--apply` em `tmp/emed_api/t3`, 30 docs + Q24 declarada) · não reingerida (já no banco e no hub) · t1793 sem respostas
 
 ## Decisões tomadas

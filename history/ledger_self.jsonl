@@ -978,3 +978,5 @@
 {"ts": "2026-09-27T20:43:23+00:00", "event": "resolved", "check": "contrato_revogado", "fingerprint": "4dd775de4920", "alvo": "core/contracts/cronograma-contract.md:125"}
 {"ts": "2026-09-27T20:43:23+00:00", "event": "resolved", "check": "contrato_revogado", "fingerprint": "e3bc631515e3", "alvo": "tools/day_plan.py:1124"}
 {"ts": "2026-09-27T20:43:45+00:00", "event": "resolved", "check": "consistencia_registros", "fingerprint": "ae675f4ff819", "alvo": "AGENTE.md §7.4"}
+{"ts": "2026-09-28T09:49:06+00:00", "event": "opened", "check": "consistencia_registros", "fingerprint": "ae675f4ff819", "alvo": "AGENTE.md §7.4", "payload": {"check": "tabela"}}
+{"ts": "2026-09-28T09:51:33+00:00", "event": "resolved", "check": "consistencia_registros", "fingerprint": "ae675f4ff819", "alvo": "AGENTE.md §7.4"}

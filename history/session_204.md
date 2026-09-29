@@ -1,4 +1,4 @@
-# Session 204 -- F140 auditado e corrigido no mesmo dia: a causa estava errada, o achado não era novo, a nota 1 passa a voltar no dia seguinte
+# Session 204 -- F140 auditado e corrigido no mesmo dia, e o ledger rotacionado: só o que está em aberto fica na frente
 
 **Data:** 2026-09-28 (segunda, noite) - **Ferramenta:** Claude Code (Fable 5.1) - **Continuidade:** `session_203.md` - **/ai-eng:** não estava aberto (report deixado em arquivo no workspace dele)
 
@@ -15,6 +15,8 @@
 8. **Decisão do operador e o fix, pelo loop do vibeflow** (spec em 3 parts -> teste vermelho -> implementação -> auditoria PASS): (a) `relearning_steps=()` no adapter, com `KWARGS_BASE` como fonte única que o otimizador importa; (b) `--export-player` enche o saldo do teto com cards novos (`novos_do_lote`, duas passadas), fila do chat segue em 10; (c) rito dos 3 passos: `revisao-calibrada` v1.9, `fsrs-management` v1.6, `revisar.md`, `hub-backend.md`, 4 termos cadastrados.
 9. **Golden do fix:** Scheduler antigo x novo sobre as mesmas 3.589 entradas -- estabilidade e dificuldade idênticas; só `state`/`due` mudam, nas 362 linhas que caíam no passo. Export contra o banco real: 53 cards (3 + 50).
 10. **Push** autorizado por ele; **`/loop` desligado** por ordem dele (job `3f6af4b9`).
+11. **Rotação do ledger** (decisão dele: *"o que resolvermos, sai da frente"*), pelo mesmo loop (spec em 3 parts -> teste vermelho -> implementação -> auditoria PASS): `tools/selo.py` lê os dois arquivos, ganha `--rotacionar` (dry-run, `--apply --expect N`) e `--onde`, e passa a listar TUDO que está em aberto (GATE e DECLARADO ficavam fora da saída: 12 achados invisíveis); `consistencia_check` ganha o check `frente`, que bloqueia resolvido na frente, aberto no histórico e índice velho.
+12. **Migração de partida com prova de conservação:** 125 blocos com sha256 conservado, 153 segmentos no histórico byte a byte, conta de bytes fechando. Resultado: **19 em aberto na frente (58 KB), 105 resolvidos no histórico (350 KB)**.
 
 ## Achados de engenharia (ledger)
 - **F140 -> GATE na auditoria, RESOLVIDO na mesma noite.** Nota 1 sobre card em `state=2` leva a `state=3` com `due = revisão + 10 min`; o lote seguinte do dia re-serve e GRAVA a 2ª nota. Replay 11/11; revlog inteiro reproduz em 3.579/3.579.
@@ -22,7 +24,7 @@
 - **O comportamento está em contrato** (`revisao-calibrada-contract.md:232`, "o card volta hoje"): mudar é decisão de produto, pelo rito dos 3 passos.
 - **F141 (novo, DECLARADO):** card de 1 dia servido na manhã seguinte com menos de 24 h cai no ramo de curto prazo da biblioteca. 212 revisões, 138 em setembro.
 - **F142 (novo, DECLARADO):** sem trava de 2ª gravação do mesmo card no mesmo dia entre lotes; o teto conta linha do revlog. 83 re-revisões no mesmo dia.
-- Selo derivado depois das edições: todo item com terminal nomeado, 0 discordâncias.
+- Selo derivado no fim da sessão: 124 achados, 19 em aberto, 105 resolvidos; 0 discordâncias, 0 fora do lugar.
 
 ## Erros meus nesta sessão
 - Escrevi no HANDOFF que o `/loop` do backend estava desligado. Estava ligado, nesta mesma sessão (ela continua a da s203 depois do `/clear`). Só vi quando o tique disparou; corrigido no HANDOFF.
@@ -39,7 +41,9 @@
 - `.vibeflow/specs/nota1-volta-no-dia-seguinte-part-{1,2,3}.md` (novos)
 - `app/utils/fsrs.py`, `tools/fsrs_optimize.py`, `tools/fsrs_queue.py` + testes (`test_fsrs.py`, `test_fsrs_optimize.py`, `test_fsrs_queue_player.py`)
 - `core/contracts/revisao-calibrada-contract.md` (v1.9), `core/contracts/fsrs-management-contract.md` (v1.6), `.claude/commands/revisar.md`, `.claude/commands/hub-backend.md` (+ espelhos), `docs/MEMORIA-AUDITORIA.md`, `.vibeflow/index.md`, `.vibeflow/conventions.md`, `AGENTE.md` (linha gerada da tabela 7.4)
-- `AUDITORIA_MEDHUB.md` (F140, F141, F142, ponteiro no F32)
+- `AUDITORIA_MEDHUB.md` (agora só os abertos) e `history/auditoria/resolvidos.md` (novo)
+- `tools/selo.py`, `tools/consistencia_check.py`, `tools/auto_check.py`, `tools/habilidades.py`, `tools/test_selo_rotacao.py` (novo), `tools/test_consistencia_registros.py`, `pytest.ini`, `tools/_archive/migrations/rotacao_ledger_s204.py`
+- `.vibeflow/specs/ledger-rotacao-part-{1,2,3}.md`, `.vibeflow/audits/ledger-rotacao-audit.md`, `.claude/commands/engenharia-cli.md` (+ espelho), `.agents/workflows/registrar-sessao.md`, `README.md`
 - `HANDOFF.md`, `history/INDEX.md`, `history/session_204.md`
 - `tmp/f140_auditoria/` (local, fora do git): 4 relatórios crus + scripts e saídas do O1
 - Fora do repo: `~/ai-eng/HANDOFF-MEDHUB-F140-AUDITORIA-2026-09-28.md`
@@ -50,6 +54,7 @@
 - Total: 978.976 tokens em 5 filhos.
 
 ## Próximos passos
+- **Operador (ledger):** 7 dos 19 abertos esperam decisão dele (F111, F87, F69, F68, F67, F65, F39). Decidir ou descartar é o que impede o backlog de crescer.
 - **Cards:** o lote `2026-09-28b` no ar é de antes do fix (13 cards, 0/13). O próximo export já sai pelo saldo. Com o `/loop` desligado, publicar é ato de sessão.
 - **Operador (observação):** nota 4 = 379 de 522 notas da régua v2 (72,6%); o contrato a descreve como rara.
 - **/ai-eng:** triagem de F141 e F142; checkpoint da s203 segue pendente.

@@ -62,7 +62,7 @@ A obtenção de aprovação integral (status `✅ PASSED` com exit code `0`) é 
 1. **Atualizar `HANDOFF.md`** -- **sempre** (toda sessão significativa). **Suíte (F136, s201):** o `suite **N**` do HANDOFF é o que o pre-commit MEDE no commit do selo (HANDOFF no recorte roda a suíte completa e confere o número; divergência bloqueia); vermelha = `SUITE VERMELHA P/T` + quais, nunca o número antigo. O report ao /ai-eng cita esse número com o comando.  <!-- CHECK: test_numero_velho_no_handoff_bloqueia --> Rotacionar "Última sessão" (substituir, não acumular) + atualizar "Estado por frente" + "Próximo passo imediato". Regras em `core/contracts/handoff-contract.md`. **Números derivados (F6):** o bloco numérico do "Estado por frente" (volume, perf, FSRS, backlog) é gerado por `python tools/day_plan.py --handoff-block` -- nunca digitado à mão; só o texto qualitativo é manual.  <!-- NAO-VERIFICAVEL: o TETO do HANDOFF tem gate (test_handoff_teto); 'atualizar sempre' e conduta do agente, sem artefato que a registre (revisar: 2027-03-31) -->
 2. **Atualizar `ESTADO.md`** -- **só se o macro mudou** (indicador cruzou marco, nova frente, skill/contrato versionado). Não é diário de sessões. Regras em `core/contracts/estado-contract.md`.
 3. **Registrar sessão** -- novo `history/session_NNN.md` seguindo `.agents/workflows/registrar-sessao.md` + entry em `history/INDEX.md`. **Invariante de ponteiro (F1):** o `auto_check` verifica que o ponteiro do HANDOFF não excede `max(history/session_NNN) + 1` (WARN `SESSION_POINTER_DRIFT`) -- selar a sessão aqui é o que mantém o passo 1 legítimo.  <!-- CHECK: test_memory_boot_drift -->
-4. **Auto-higiene** -- **arquivo absorvido/integrado em doc mais estável SAI no mesmo commit do selo**; relatório incorporado por outro mais fresco SAI. Veredito **binário** (fica ou é deletado) -- sem `archive/`, sem "deixa por enquanto": o conteúdo já vive no doc que o absorveu, e a cópia órfã só existe para envelhecer e mentir. Vale para relatórios de sessão, specs cumpridas, scratch de `tmp/` e backups fora da rotação. O que NÃO sai: SSOT (`resumos/`, `history/`, `core/`), dívida ativa declarada no HANDOFF e PDFs-fonte EMED.
+4. **Auto-higiene** -- **achado RESOLVIDO sai da frente do ledger no selo** (s204, decisão do operador em 28/09/2026: *"o que resolvermos, sai da frente"*): `python tools/selo.py --rotacionar` (dry-run) e `--apply --expect N`; o bloco vai inteiro para `history/auditoria/resolvidos.md`.  <!-- CHECK: test_repo_real_consistente --> **Arquivo absorvido/integrado em doc mais estável SAI no mesmo commit do selo**; relatório incorporado por outro mais fresco SAI. Veredito **binário** (fica ou é deletado) -- sem `archive/`, sem "deixa por enquanto": o conteúdo já vive no doc que o absorveu, e a cópia órfã só existe para envelhecer e mentir. Vale para relatórios de sessão, specs cumpridas, scratch de `tmp/` e backups fora da rotação. O que NÃO sai: SSOT (`resumos/`, `history/`, `core/`), dívida ativa declarada no HANDOFF e PDFs-fonte EMED.
 5. **Git** -- `git add` arquivos modificados (nunca `git add .`), commit semântico, push. `ipub.db` e `medhub_memory.db` não vão pro git.  <!-- NAO-VERIFICAVEL: conduta do agente, sem artefato que a registre -- o hook roda no commit, nao escolhe o que foi staged (revisar: 2027-03-31) -->
 
 **Checklist do rito:** HANDOFF -> ESTADO (se o macro mudou) -> `session_NNN` + INDEX -> **auto-higiene (o que foi absorvido saiu?)** -> commit semântico.
@@ -237,7 +237,7 @@ Qualquer duplicação semântica entre workflow e skill é defeito por contrato.
 | `tools/clausulas_check.py` | Inventario de CLAUSULAS NORMATIVAS e sua cobertura por gate (item 1.10, s187) | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.claude/commands/engenharia-cli.md` (+4) |
 | `tools/cli_signature_check.py` | Check de ASSINATURA CANONICA de CLI (D5, s177 -- AGENTE.md secao 7.2) | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.claude/commands/engenharia-cli.md` (+8) |
 | `tools/cobertura_conhecimento.py` | cobertura_conhecimento -- relatorio read-only de cobertura de SSOT clinico (F16a) | `.agents/skills/source-command-cronograma/SKILL.md`, `.agents/skills/source-command-engenharia-cli/SKILL.md` (+10) |
-| `tools/consistencia_check.py` | Varredura unica de CONSISTENCIA entre registros (item 1.8, s177) | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.claude/commands/engenharia-cli.md` (+6) |
+| `tools/consistencia_check.py` | Varredura unica de CONSISTENCIA entre registros (item 1.8, s177) | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.claude/commands/engenharia-cli.md` (+7) |
 | `tools/cronograma.py` | Derivador único do cronograma de Reta Final (read-only) | `.agents/skills/source-command-cronograma/SKILL.md`, `.agents/skills/source-command-engenharia-cli/SKILL.md` (+30) |
 | `tools/day_plan.py` | Plano do Dia para o boot proativo | `.agents/skills/source-command-cronograma/SKILL.md`, `.agents/skills/source-command-engenharia-cli/SKILL.md` (+42) |
 | `tools/dedup_taxonomia.py` | colapsa linhas duplicadas (area,tema) em taxonomia_cronograma | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.agents/workflows/curar-cards.md` (+6) |
@@ -275,7 +275,7 @@ Qualquer duplicação semântica entre workflow e skill é defeito por contrato.
 | `tools/reforja.py` | a fila de reforja de flashcards como ESTADO consultavel (B2, s176) | `.agents/skills/source-command-analisar-questao/SKILL.md`, `.agents/skills/source-command-engenharia-cli/SKILL.md` (+42) |
 | `tools/registrar_sessao_bulk.py` | registrar_sessao_bulk.py | `.agents/skills/source-command-analisar-questao/SKILL.md`, `.agents/skills/source-command-banco-emed/SKILL.md` (+32) |
 | `tools/review_radar.py` | Radar de dormência por TEMA | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.claude/commands/engenharia-cli.md` (+4) |
-| `tools/selo.py` | a tabela item -> terminal da reforma de engenharia, DERIVADA (s187) | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.claude/commands/engenharia-cli.md` (+7) |
+| `tools/selo.py` | a tabela item -> terminal da reforma de engenharia, DERIVADA (s187), | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.agents/workflows/registrar-sessao.md` (+10) |
 | `tools/setup_hooks.py` | — | `tools/cli_signature_check.py`, `tools/test_autonomia_hooks.py` |
 | `tools/sync_skills.py` | gerador determinístico das skills agent-agnostic | `.agents/skills/source-command-analisar-questao/SKILL.md`, `.agents/skills/source-command-auditar-resumos/SKILL.md` (+17) |
 | `tools/trilha.py` | o GERADOR da trilha da Fase 1 (`core/cronograma/plano_trilha.json`), no repo | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.claude/commands/engenharia-cli.md` (+10) |
@@ -327,7 +327,7 @@ engenharia do `/ai-eng`, que abre janela própria e commita. Sem lock e sem guar
 é textual, versionada aqui, e vale para **qualquer harness** (Claude Code, Antigravity, outro).
 
 1. **Reler antes de escrever.** Antes de tocar arquivo compartilhado (`ESTADO.md`,
-   `history/INDEX.md`, `AUDITORIA_MEDHUB.md`, `core/contracts/*`), **reler o arquivo no
+   `history/INDEX.md`, `AUDITORIA_MEDHUB.md`, `history/auditoria/resolvidos.md`, `core/contracts/*`), **reler o arquivo no
    disco** — não escrever sobre o que você leu no boot. O outro agente pode ter commitado no
    meio da sua sessão.
 2. **Preservar bloco alheio.** Bloco de handoff de engenharia, contador de cobertura, linhas de
@@ -372,8 +372,11 @@ engenharia do `/ai-eng`, que abre janela própria e commita. Sem lock e sem guar
    `/ai-eng`, ler [`docs/MEMORIA-AUDITORIA.md`](docs/MEMORIA-AUDITORIA.md) — índice F1->F81 por
    status, timeline dos ciclos, mecanismos com seus gatilhos, decisões D53-D68 e as
    inconsistências G1-G13 medidas. É o **único portador da auditoria que sobrevive ao reinício
-   dos dois agentes**: o ledger `AUDITORIA_MEDHUB.md` é o drill-down e **não é lido pelo boot**
-   (G1). Regra de manutenção herdada: **número sem data é claim que envelhece** — re-afirmar
+   dos dois agentes**: o ledger é o drill-down e **não é lido pelo boot** (G1). Desde a s204 ele são
+   **dois arquivos**: `AUDITORIA_MEDHUB.md` (a frente: só o que está em aberto, com índice gerado) e
+   `history/auditoria/resolvidos.md` (o que já fechou); `python tools/selo.py` mostra o estado e
+   `--onde F<n>` diz onde um achado mora. 🔴 **Antes de escrever achado novo, buscar o mecanismo nos
+   dois** e citar o que já existe (gate-miss da s204: o F140 re-derivou errado o que o F32 já tinha).  <!-- NAO-VERIFICAVEL: nada le a intencao de escrever um achado; conduta do agente, sem artefato que a registre (revisar: 2027-03-31) --> Regra de manutenção herdada: **número sem data é claim que envelhece** — re-afirmar
    exige re-medir. Numeração de 1-8 é estável (citada por `HANDOFF.md`, `history/session_170.md`  <!-- NAO-VERIFICAVEL: conduta do agente, sem artefato que a registre (revisar: 2027-03-31) -->
    e pelo canal do `/ai-eng`): item novo entra no fim, nunca no meio.  <!-- NAO-VERIFICAVEL: conduta do agente, sem artefato que a registre (revisar: 2027-03-31) -->
    **§11 do mesmo arquivo (s174) é o inventário de dívida técnica em 4 tiers** — a fila progressiva

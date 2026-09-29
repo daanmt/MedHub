@@ -44,7 +44,7 @@ WARN-first: este modulo detecta e reporta; quem decide severidade e o
 `auto_check`.
 
 Uso:
-    python tools/consistencia_check.py [--json] [--check {todos,tabela,paths,status}]
+    python tools/consistencia_check.py [--json] [--check {todos,frente,tabela,paths,status,portador,fantasma}]
 """
 import argparse
 import json
@@ -168,6 +168,27 @@ def _lapidados_no_inventario(texto):
     return feitos
 
 
+#: O ledger sao DOIS arquivos desde a rotacao (s204): a frente (so o que esta em
+#: aberto) e o historico (o que ja fechou). Todo leitor de status le os dois --
+#: item movido que sumisse do dicionario deixaria a contradicao passar em silencio.
+REL_FRENTE = "AUDITORIA_MEDHUB.md"
+REL_HISTORICO = "history/auditoria/resolvidos.md"
+RE_CABECALHO_F = re.compile(r"^###\s+(F\d+)\b(.*)$", re.M)
+
+
+def _cabecalhos_dos_dois(base):
+    """{F-id: (resto do cabecalho, arquivo)}. Vale o 1o cabecalho de cada id (a
+    continuacao `### F63 -- atualizacao` nao tem status); a frente vence o historico."""
+    saida = {}
+    for rel in (REL_FRENTE, REL_HISTORICO):
+        f = base / rel
+        if not f.is_file():
+            continue
+        for m in RE_CABECALHO_F.finditer(f.read_text(encoding="utf-8", errors="replace")):
+            saida.setdefault(m.group(1), (m.group(2), rel))
+    return saida
+
+
 def check_status_ledger(root=None):
     """Cabecalho do achado no ledger x lapide do inventario.
 
@@ -176,18 +197,15 @@ def check_status_ledger(root=None):
     no §11) tambem e achado -- os dois registros sao lidos por gente diferente.
     """
     base = Path(root).resolve() if root else ROOT_DIR
-    led = base / "AUDITORIA_MEDHUB.md"
+    led = base / REL_FRENTE
     mem = base / "docs" / "MEMORIA-AUDITORIA.md"
     if not (led.is_file() and mem.is_file()):
         return []
-    cabecalhos = {}
-    for m in re.finditer(r"^###\s+(F\d+)\b(.*)$", led.read_text(encoding="utf-8", errors="replace"),
-                         re.M):
-        cabecalhos[m.group(1)] = m.group(2)
+    cabecalhos = _cabecalhos_dos_dois(base)
     feitos = _lapidados_no_inventario(mem.read_text(encoding="utf-8", errors="replace"))
     achados = []
     for fid in sorted(feitos, key=lambda s: int(s[1:])):
-        linha = cabecalhos.get(fid)
+        linha, onde = cabecalhos.get(fid, (None, None))
         if linha is None:
             continue
         # 🔴 `PARCIAL` NAO e achado. E um estado declarado e legitimo -- "o
@@ -197,7 +215,7 @@ def check_status_ledger(root=None):
         aberto = re.search(r"\*\*ABERTO", linha)
         tem_lapide = "⚰️" in linha or "RESOLVIDO" in linha
         if aberto and not tem_lapide:
-            achados.append({"alvo": f"AUDITORIA_MEDHUB.md §{fid}",
+            achados.append({"alvo": f"{onde} §{fid}",
                             "payload": {"cabecalho": "ABERTO",
                                         "inventario": "FEITO (⚰️ no §11)"}})
     return achados
@@ -318,14 +336,6 @@ def check_pendencia_fantasma(root=None, _registros=None):
     return achados
 
 
-def _cabecalhos_do_ledger(led):
-    saida = {}
-    for m in re.finditer(r"^###\s+(F\d+)\b(.*)$",
-                         led.read_text(encoding="utf-8", errors="replace"), re.M):
-        saida[m.group(1)] = m.group(2)
-    return saida
-
-
 def check_status_portador(root=None):
     """G14b (s187): cabecalho do achado x o PORTADOR real, nao o §11.
 
@@ -347,10 +357,10 @@ def check_status_portador(root=None):
     uma segunda lente, nao a lente completa (10.8, verification-stack).
     """
     base = Path(root).resolve() if root else ROOT_DIR
-    led = base / "AUDITORIA_MEDHUB.md"
+    led = base / REL_FRENTE
     if not led.is_file():
         return []
-    cabecalhos = _cabecalhos_do_ledger(led)
+    cabecalhos = _cabecalhos_dos_dois(base)
     fontes = sorted((base / "core" / "contracts").glob("*.md"))
     fontes += sorted((base / ".claude" / "commands").glob("*.md"))
     reivindicado = {}
@@ -362,17 +372,48 @@ def check_status_portador(root=None):
                 reivindicado.setdefault(fid, set()).add(f.name)
     achados = []
     for fid in sorted(reivindicado, key=lambda s: int(s[1:])):
-        linha = cabecalhos.get(fid)
+        linha, onde = cabecalhos.get(fid, (None, None))
         if linha is None:
             continue
         if re.search(r"\*\*ABERTO", linha) and "⚰️" not in linha and "RESOLVIDO" not in linha:
-            achados.append({"alvo": f"AUDITORIA_MEDHUB.md §{fid}",
+            achados.append({"alvo": f"{onde} §{fid}",
                             "payload": {"cabecalho": "ABERTO",
                                         "portadores": sorted(reivindicado[fid])}})
     return achados
 
 
+def check_frente(root=None):
+    """Rotacao do ledger (s204) -- decisao do operador em 28/09/2026: *"o que
+    resolvermos, sai da frente"*. Tres achados, uma regra:
+
+      - achado RESOLVIDO/SUPERADO/RETRATADO que ainda esta na FRENTE;
+      - achado nao resolvido (ou repetido) que foi parar no HISTORICO;
+      - INDICE do topo da frente diferente do derivado.
+
+    Remedio dos tres: `python tools/selo.py --rotacionar` (dry-run) e depois
+    `--apply --expect N`. Sem o arquivo de historico nao ha "frente": o check cala
+    (repo de antes da rotacao, fixture minima).
+
+    ⚠️ **LIMITE DECLARADO:** le o STATUS DO CABECALHO. Cabecalho que mente leva o
+    bloco para o arquivo errado e este check aprova -- quem pega e o G14/G14b."""
+    base = Path(root).resolve() if root else ROOT_DIR
+    frente, hist = base / REL_FRENTE, base / REL_HISTORICO
+    if not (frente.is_file() and hist.is_file()):
+        return []
+    sys.path.insert(0, str(Path(__file__).parent.resolve()))
+    import selo                           # import tardio: o selo importa este modulo
+    achados = []
+    for fid, motivo in selo.fora_do_lugar(frente, hist):
+        onde = REL_FRENTE if "na frente" in motivo else REL_HISTORICO
+        achados.append({"alvo": f"{onde} §{fid}", "payload": {"motivo": motivo}})
+    if selo.indice_velho(frente, hist):
+        achados.append({"alvo": f"{REL_FRENTE} §indice",
+                        "payload": {"motivo": "indice do topo diferente do derivado"}})
+    return achados
+
+
 CHECKS = {
+    "frente": ("ledger: resolvido sai da frente e o indice bate com o derivado", check_frente),
     "tabela": ("G5  tabela gerada (AGENTE §7.4) stale", check_tabela_gerada),
     "paths": ("G10 ponteiro morto em doc de raiz", check_paths_mortos),
     "status": ("G14 status do ledger x lapide do §11", check_status_ledger),

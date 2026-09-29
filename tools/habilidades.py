@@ -253,7 +253,7 @@ def _avisar_f38(veredito, questao_id):
               "Se este erro veio de uma questao de bloco, ele ainda precisa de "
               "linha propria em questoes_erros -- rode tools/insert_questao.py. "
               "Esta CLI complementa aquela, nunca a substitui "
-              "(AUDITORIA_MEDHUB.md F38).", file=sys.stderr)
+              "(history/auditoria/resolvidos.md F38).", file=sys.stderr)
 
 
 def reincidentes(limit=10, min_temas=1, db_path=None):

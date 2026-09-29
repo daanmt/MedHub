@@ -996,7 +996,7 @@ def main():
               f"`habilidades.py --add` COMPLEMENTA `insert_questao.py`, nunca o "
               f"substitui -- sem a linha de erro os cards nascem sem ancora "
               f"(questao_id=NULL) e a analise so existe em prosa. "
-              f"Norma: AUDITORIA_MEDHUB.md F38.")
+              f"Norma: history/auditoria/resolvidos.md F38.")
     # success=True: WARN nao rebaixa o veredito (nao altera all_passed).
     results_summary.append((desc_f38, True, len(orfaos) if orfaos else 0))
     _ledger_record("erros_orfaos",
@@ -1018,7 +1018,7 @@ def main():
               f"{', ...' if len(fantasmas) > 4 else ''}. "
               f"Os writers ja RECUSAM criar novas (app/utils/areas.validar_area); estas sao o "
               f"passivo que a RODADA 1 dissolveu e voltou. Reclassificar e decisao do operador "
-              f"(RODADA 3, Tier 2.1) -- ha cards e erros pendurados. Norma: AUDITORIA_MEDHUB.md F89.")
+              f"(RODADA 3, Tier 2.1) -- ha cards e erros pendurados. Norma: history/auditoria/resolvidos.md F89.")
     results_summary.append((desc_f89, True, len(fantasmas) if fantasmas else 0))
     _ledger_record("areas_fantasma",
                    [{"alvo": f"{t}:{a}", "payload": {"linhas": n}}

@@ -5,763 +5,274 @@ status: working-draft
 relates_to: [AGENTE, ESTADO, HANDOFF]
 ---
 
-# AUDITORIA_MEDHUB -- Relatorio de Engenharia do Ambiente
+# AUDITORIA_MEDHUB -- o que esta EM ABERTO
 
-> **Proposito.** Documento de trabalho para auditar o MedHub *como sistema de software*
-> (camada de estado, contratos, CLIs, filas, hooks) e alimentar um PRD de melhorias.
-> Escrito em registro de engenharia de sistemas -- o conteudo de dominio (clinico) e
-> tratado como *payload*/dado das estruturas, nunca como o assunto do documento.
-> Aberto para aprofundamento por sessao subsequente (agente de engenharia).
+> **Este arquivo so tem achado em aberto.** O que foi resolvido mora em
+> `history/auditoria/resolvidos.md`, com o texto inteiro e as secoes narrativas de cada sessao.
+> Decisao do operador em 28/09/2026 (s204): *"o que resolvermos, sai da frente"*.
 >
 > **Encoding:** ASCII limpo, Zero LaTeX, sem setas Unicode (AGENTE.md secao 4.5). Usar `->`, `<=`, `--`.
 
-**Data de abertura:** 2026-07-05
-**Metodo:** observacao do ambiente em uso real (boot + sessao de drenagem da fila FSRS) + leitura da arvore de governanca (AGENTE.md, HANDOFF.md, contratos, tools/).
-**Escopo v1 (este doc):** achados de primeira passada (F1-F9) + hipoteses de melhoria + aprendizados de processo + ponto de entrada para o agente de engenharia (Fable). **Nao** e ainda o PRD -- e o insumo para ele. **Status: pronto para pickup do Fable** (secao 8).
-**Origem dos achados:** F1/F2/F4/F5/F6 = leitura da arvore de governanca; **F3/F7/F8/F9 = nascidos direto do uso vivo** (drenagem de 43 cards FSRS na s108). O dogfooding rendeu os achados que a leitura estatica nao pegaria.
+## Como usar
+
+1. **Ver o estado:** `python tools/selo.py` -- aberto x resolvido, e quem decide cada item. **Achar um achado:** `python tools/selo.py --onde F38`.
+2. **Antes de escrever achado novo:** buscar o mecanismo AQUI e no historico (`grep` pelos termos). Se ja existe, a entrada nova cita a antiga. Gate-miss da s204: o F140 re-derivou errado o que o F32 ja tinha certo.  <!-- NAO-VERIFICAVEL: nada le a intencao de escrever um achado; conduta do agente, sem artefato que a registre (revisar: 2027-03-31) -->
+3. **Cabecalho do achado:** id, titulo, severidade e status, nesta ordem, separados por ` -- `. Severidade: ALTA (fere integridade de estado/SSOT), MEDIA (custo recorrente), BAIXA (polimento). Status que FICA na frente: ABERTO, GATE (pergunta ao operador), DECLARADO (remedio proposto ou nao-verificavel datado), PARCIAL, MITIGADO. Status que SAI: RESOLVIDO, SUPERADO, RETRATADO.
+4. **No selo da sessao:** `python tools/selo.py --rotacionar` (dry-run) e depois `--apply --expect N`. O bloco viaja inteiro; nada e reescrito, resumido nem apagado.  <!-- CHECK: test_repo_real_consistente -->
+
+## Indice
+
+<!-- selo:indice:inicio -->
+**Em aberto: 19** · Resolvidos: 105 (em `history/auditoria/resolvidos.md`) · indice gerado por `python tools/selo.py --rotacionar`, nunca editado a mao
+
+| Id | Sev. | Status | Quem decide | Achado |
+|---|---|---|---|---|
+| F142 | MEDIA | DECLARADO | /ai-eng | nao existe trava de 2a GRAVACAO do mesmo card no mesmo dia entre lotes, e o teto do dia conta LINHA do revl... |
+| F141 | MEDIA | DECLARADO | /ai-eng | card de intervalo de 1 dia servido na MANHA seguinte (menos de 24 h) cai no ramo de "mesmo dia" do py-fsrs:... |
+| F129 | MEDIA | PARCIAL | engenharia | 1o drill completo no hub (220 cards, 23/09): o operador marcou 50 defeitos (23%); o residuo do F113 e a que... |
+| F128 | BAIXA | DECLARADO | /ai-eng | o mapa das provas UERJ rotulou a Q8 de 2023 como "Tuberculose (suspeita de TB peritoneal)" e o gabarito e S... |
+| F127 | BAIXA | DECLARADO | /ai-eng | `registrar_sessao_bulk` nao tem caminho de CORRECAO: o operador declarou duas respostas depois do registro... |
+| F122 | BAIXA | DECLARADO | /ai-eng | o `grade_extensivo.json` nao tem 6 blocos de tarefa que o PDF tem (S48 T17-T22, 5 deles com lista), e o tes... |
+| F114 | MEDIA | MITIGADO | engenharia | parametro do modelo que o otimizador NAO ajustou (por ausencia de exemplo) sai do JSON indistinguivel de pa... |
+| F113 | MEDIA | PARCIAL | engenharia | cards cunhados SEM acentuacao (ASCII) sao lidos pelo usuario como "erro de portugues"; a convencao de encod... |
+| F111 | MEDIA | GATE | operador | Fase 2 do plano (extensivo, leitura-first: 465 tarefas de teoria em 735; 39q/dia nativo) nao garante recall... |
+| F87 | MEDIA | GATE | operador | O harness de flashcard verifica FORMA e e cego a RENDIMENTO: os 13 cards que o operador reprovou passam em... |
+| F78 | MEDIA | DECLARADO | engenharia | Extracao de PDF descarta em silencio todo conteudo que vive em FIGURA, e nada no harness mede essa perda |
+| F69 | MEDIA | GATE | operador | resumos com lacuna de diretriz nova = risco banca-dependente (s165) |
+| F68 | MEDIA | GATE | operador | 15 temas de alta/media prevalencia ENAMED sem linha na taxonomia (s165) |
+| F67 | MEDIA | GATE | operador | taxonomia duplicada divide o sinal do FSRS e da dormencia (s165, Claude Code/Fable 5.1, 2026-09-05) |
+| F65 | MEDIA | GATE | operador | o balde `[bulk] <Area>` esconde 72 cards do radar de dormencia |
+| F63 | MEDIA | PARCIAL | engenharia | a prioridade que governa o estudo nao viaja com o repo (o usuario e a camada de transporte) |
+| F39 | ALTA | PARCIAL | operador | 40% do baralho viola o principio atomico; a nota FSRS vira ininterpretavel |
+| F16 | MEDIA | PARCIAL | engenharia | Tema cirurgico de alto rendimento sem SSOT clinico (.md); so o PDF-fonte existe |
+| F2 | MEDIA | DECLARADO | engenharia | Latencia de shell no ambiente Windows |
+<!-- selo:indice:fim -->
+
+## Achados em aberto
+
+### F142 -- nao existe trava de 2a GRAVACAO do mesmo card no mesmo dia entre lotes, e o teto do dia conta LINHA do revlog, nao card: 83 re-revisoes no mesmo dia, todas descontadas do teto -- **MEDIA** -- **DECLARADO (s204) -- remedio proposto, aguarda triagem do /ai-eng**
+
+- **Como apareceu:** auditoria do F140 (s204, 28/09/2026). Ao medir quantas revisoes do mesmo dia vinham do passo de relearning, sobraram 34 que NAO vinham dele.
+- 🔬 **Medido (duas lentes, mesmos numeros: principal e filho Opus, revlog com fuso corrigido):** 83 pares (card, dia) com 2 revisoes gravadas, em 10 de 66 dias com revisao. **49** vieram de card em `state=3` servido pelo bucket `hoje` (o mecanismo do F140); **34** vieram de card em `state=2` com `due` no FUTURO (`reason_servido='futuro'`): 08/08 (19), 25/09 (14) e 05/07 (1). Pior dia: 08/08, 30 de 108 revisoes (27,8%).
+- 🔬 **Causa medida dos 14 de 25/09:** lotes sobrepostos -- `player_2026-09-25a` (06:00, 60 cards) e `25b` (06:53, 90) tem cards em comum; o card revisto de manha foi revisto de novo as 19h pelo lote velho. As 19 de 08/08 NAO foram atribuidas a um caminho.
+- 🔬 **No codigo (leitura do filho Sonnet, conferida a olho):** `core/templates/player.html` so impede a 2a nota DENTRO do mesmo lote (estado escopado por `LOTE.sessao`); `app/utils/notas_player.situacao()` so barra por ORDEM de tempo -- nota com horario posterior a ultima revisao sempre e `NOVA` e grava por `record_review`. O teto sai de `day_plan.realizado_do_dia` (`tools/day_plan.py:1352-1354`, `COUNT(*)` sem `DISTINCT`), lido em `tools/day_plan.py:895` e descontado em `tools/fsrs_queue.py:159`.
+- 🔴 **Classe:** a regra "uma nota por card por sessao" (`revisar.md` §Relearning intra-sessao) e conduta dentro do lote; entre lotes do mesmo dia nao ha mecanismo. Trocar lote em curso (pedido legitimo do operador) e o gatilho.
+- **Remedio proposto (`spec`, nada implementado):** (a) `--record-lote` manda para a quarentena a nota de card ja revisto no mesmo dia-calendario quando o card nao estava vencido; (b) o teto passa a contar `COUNT(DISTINCT card_id)`. Depende da decisao do F140: sob o remedio A deixa de existir 2a revisao legitima no mesmo dia, e a trava fica sem excecao.
+- ⚠️ **Limites declarados:** revisar card antes do `due` e valido para o modelo; o defeito e a 2a nota no MESMO dia, nao a antecipacao. Nenhum teste foi escrito.
+
+### F141 -- card de intervalo de 1 dia servido na MANHA seguinte (menos de 24 h) cai no ramo de "mesmo dia" do py-fsrs: a biblioteca mede por 24 h truncadas, a fila serve por dia-calendario -- **MEDIA** -- **DECLARADO (s204) -- remedio proposto, aguarda triagem do /ai-eng**
+
+- **Como apareceu:** auditoria do F140 (s204). O card `638` foi visto pela 1a vez em 27/09 16:56 (nota 1), servido pelo bucket `hoje` em 28/09 14:24 (21,5 h depois, ANTES do `due` das 16:56) e a estabilidade caiu 0,212 -> 0,083 pela formula de curto prazo.
+- 🔬 **Mecanismo (fonte do py-fsrs 6.3.1 instalado):** `days_since_last_review = (review_datetime - card.last_review).days`; `< 1` -> `_short_term_stability`, que ignora o tempo decorrido. O bucket `hoje` (`app/utils/db.py:1176-1178`) serve desde 00:00 tudo que vence ate 23:59. O otimizador do Anki usa dia-calendario com hora de virada (filho Opus de evidencia externa; a documentacao nao comenta a diferenca).
+- 🔬 **Medido (duas lentes, mesmos numeros):** 295 revisoes no ramo curto (11,2% das 2.625 com historico); **212 em dia-calendario DIFERENTE** -- 144 de card `state=2` servido antes do `due`, 68 de card `state=3` servido como `atrasado` no dia seguinte. Por mes: jun 29, jul 8, ago 37, **set 138** (cresceu com a rotina de lote de manha). 512 de 2.629 revisoes (19,5%) foram servidas antes do `due`.
+- 🔬 **Contrafactual SO DE MODELO (mesma nota aplicada no `due`, 144 casos):** nota 3 -> S 2,58 contra 0,80 gravado; nota 4 -> 4,12 contra 1,09; nota 2 -> 1,94 contra 0,38. Direcao do erro: estabilidade subestimada -> o card volta mais cedo -> consome teto. Conservador para a retencao, caro para a carga.
+- 🔴 **Classe:** dois relogios para "um dia" -- o motor conta 24 h, a fila conta calendario. Mesma familia do F80 (dois relogios na mesma fila).
+- **Remedio proposto (`spec`, nada implementado):** o adapter passa a contar o decorrido por dia-calendario local antes de chamar a biblioteca. Golden de partida ja existe: o replay do revlog reproduz S, D e state em 3.579 de 3.579.
+- ⚠️ **Limites declarados:** o contrafactual nao mede o que o operador responderia no `due`. Nenhum dos remedios A/B/C do F140 mexe neste achado. O py-fsrs 6.3.2 existe (`pip index versions fsrs`) e corrigiria a queda com nota 2 no mesmo dia -- UMA fonte so, changelog nao conferido por 2a lente.
+
+### F129 -- 1o drill completo no hub (220 cards, 23/09): o operador marcou 50 defeitos (23%); o residuo do F113 e a queixa dominante e a Autopsia UERJ 2023 cunhou armadilha de QUESTAO em card -- **MEDIA** -- **PARCIAL (s194: armadilhas da Autopsia refeitas; acento segue aberto; s195: +18 defeitos no lote de 24/09 e o veredito dele sobre COMPRIMENTO -- cards, aulas e reports "muito longos, carga cognitiva")**
+- **Como apareceu:** lote `2026-09-22h` drenado inteiro no hub (170 notas gravadas pelo `--record-lote`, 0 rejeitadas, 0 FORA DE ORDEM). Motivos dos 50 `defeito`: portugues ~33, pergunta composta/dupla ~13, longo ~6, circular 3, verso incompleto 1 (#736 nao cita a classe do ATB), armadilha citando alternativa inexistente 1 (#1723, *"notei outros assim tbm"*). Todos viraram `marcar_reforja` origem `player`.
+- 🔬 **Acento (reincidencia do F113):** os 35 marcados por portugues estao sem acento -- "nao e", "e" no lugar de "é", "arteria", "osseo", "deletereo". Uma lente por palavra que SEMPRE leva acento (`ja sao ha ate unica pos pre sistemico classico especifico` ...) acusa **749/1.600 cards** com >= 1 ocorrencia (ruidosa: `esta`/`so` tem uso legitimo; e piso, nao medida). A s185 ja tinha dito: o residuo nao fecha por regra; pede lexico ou olho. Remedio candidato (`spec`, para o /ai-eng): passada por LLM campo a campo, com o invariante `unidecode(antes) == unidecode(depois)` do s185 + revisao a olho dos pares minimos (`e/é`, `esta/está`, `diferencia`), sob o rito 10.7.
+- ✅ **Armadilha de questao em card -- fechado no ato:** os 8 cards da Autopsia UERJ 2023 (#1721-1728, cunhados por mim na s190/s191) tinham como armadilha a pegadinha da QUESTAO ("A D oferece...", "O enunciado entrega..."), duas delas copiadas em pares (1724=1725, 1726=1727) e a do #1721 sobre outra alternativa. Refeitos via `recurate_cards.py` (8 itens, v1->v2, FSRS preservado): armadilha = o erro tentador da pergunta do card. Varredura por letra de alternativa no baralho inteiro: fora desse lote, so falso positivo (#334 "o C" do ABC, #687 hemoglobina A, #881 hepatite B...). 🔴 **Classe:** a armadilha tem dono -- a pergunta do card --, e cunhar card a partir de questao sem trocar de dono carrega o gabarito para dentro do verso. Candidato a clausula em `estilo-flashcard.md`.
+- **Pendente:** comprimento e pergunta composta ja tem gate (F115, atomicidade); os ~19 marcados dessa classe estao na fila de reforja com o motivo dele.
+
+### F128 -- o mapa das provas UERJ rotulou a Q8 de 2023 como "Tuberculose (suspeita de TB peritoneal)" e o gabarito e SINDROME NEFROTICA; e o insumo que eu montei para a Autopsia sequestrou a Q8 pelo item "8)" da folha de instrucoes da capa -- **BAIXA** -- **DECLARADO (s190) -- remedio proposto, aguarda triagem do /ai-eng**
+
+- **Como apareceu:** Autopsia do simulado UERJ 2023 (s190, 20-21/09/2026). (a) `simulados/uerj/uerj_mapa_questoes_2021-2026.json`, edicao 2023, n=8: `area=Infecto`, `tema=Tuberculose`, `foco="investigacao de ascite com SAAG baixo (suspeita de TB peritoneal)"`, `confianca=media` -- o gabarito oficial e C (proteinuria + biopsia renal): anasarca, albumina 2,0, GASA 0,7 com proteina do liquido 2,3 e 120 celulas = nefrotica. O rotulo do filho (Sonnet, s188) seguiu o distrator. Consequencia medida: a `prevalencia_uerj.json` conta 13 questoes de TB com esta dentro, e a minha primeira tabela de contingencia mandou a Q8 para a aula de TB. (b) O meu extrator de enunciados (`re.split` por `\n8)`) pegou o item 8 das instrucoes da capa; quem achou foi o subagente do bloco, nao eu.
+- 🔴 **Classe:** (a) rotulo de filho consumido como dado sem lente independente por questao -- o `_schema` ja declara ~80-90% de acuracia "consumir em faixas", e este e um caso concreto dentro da margem; (b) insumo de fan-out sem validacao de forma antes do spawn.
+- **Remedio proposto:** `so-dado` para (a) -- corrigir a linha n=8/2023 do mapa (Nefrologia | Doencas Glomerulares, foco sindrome nefrotica) e regerar a prevalencia JUNTO da 1a recalibracao legitima (mesma janela das faixas, decisao do `/ai-eng` na s189; mexer no mapa agora muda a entrada fixada do gerador). A cada prova UERJ resolvida, a Autopsia confere os rotulos do mapa DAQUELA edicao contra o gabarito (lente independente que passa a existir de graca). (b) virou licao de brief na memoria do harness (validar "tem a) b) c) d)" por item antes de spawnar).
+
+### F127 -- `registrar_sessao_bulk` nao tem caminho de CORRECAO: o operador declarou duas respostas depois do registro (56 -> 58 acertos) e a unica saida foi um script pontual com UPDATE direto -- **BAIXA** -- **DECLARADO (s190) -- remedio proposto, aguarda triagem do /ai-eng**
+
+- **Como apareceu:** s190, simulado UERJ 2023. O rito manda registrar o volume ANTES de analisar; o PDF anotado tinha duas questoes sem letra marcada (Q32, Q56) e o operador as declarou minutos depois (ambas C, ambas chute certo). `--acumular --feitas 0 --acertos 2` cai no guard `acertos > feitas`; nao existe `--corrigir`. Corrigido por `scratchpad/corrige_bulk130.py`: backup (`ipub_backup_20260921_000800.db`), dry-run, assert da linha esperada, COUNT-ASSERT 1+1 (`sessoes_bulk.id=130` e o balde `[bulk] Simulado` da taxonomia, espelhando o delta que o writer aplicaria), observacao da linha carimbada com a correcao.
+- 🔴 **Classe:** o AGENTE.md §10.7 manda passar pelos writers e o writer nao cobre o caso -- a regra empurra para fora dela. Registrar-antes-de-analisar (rito certo) torna a correcao posterior um caso NORMAL, nao excepcional.
+- **Remedio proposto:** `spec` pequena -- `registrar_sessao_bulk.py --corrigir ID --acertos N [--feitas M]` (dry-run por default; grava o delta na linha E no balde da taxonomia; anexa `corrigido de X para Y` na observacao; recusa se a linha nao existir). Ate la, o script pontual com backup + COUNT-ASSERT e o precedente.
+
+### F122 -- o `grade_extensivo.json` nao tem 6 blocos de tarefa que o PDF tem (S48 T17-T22, 5 deles com lista), e o teste trava o numero errado como se fosse medido -- **BAIXA** -- **DECLARADO (s188) -- remedio proposto, aguarda triagem do /ai-eng**
+
+- **Como apareceu:** efeito colateral do extrator de links (F119). Lendo a geometria da tabela do `[52 wk] Cronograma Extensivo.pdf` ele achou 741 blocos de tarefa; o JSON derivado tem 735. Os 6 que sobram sao S48 T17-T22. Comando: `python -X utf8 extrair_links.py` (scratch da s188), secao "blocos do PDF sem tarefa no JSON".
+- 🔴 **Por que nenhum gate viu:** `test_fontes_reais_reproduzem_os_numeros_medidos` e `--expect-tasks` (default 735) PRENDEM o 735. O numero foi medido pelo MESMO parser que ele valida -- sensor e remedio do mesmo insumo (`feedback_metrica_auto_confirmante`). A lente independente so apareceu quando outro metodo (geometria + anotacao) leu o mesmo PDF.
+- **Remedio proposto:** `spec` pequena no parser do extensivo + atualizar o `--expect-tasks`. Sem urgencia: S48 e o fim da Fase 2. **Nao re-medido pelo principal** -- o numero e do filho, com o comando acima.
+
+### F114 -- parametro do modelo que o otimizador NAO ajustou (por ausencia de exemplo) sai do JSON indistinguivel de parametro ajustado: `w3` e `w16` da visao `remap` sao o default do py-fsrs, e a regua nova VAI emitir o rotulo que eles governam -- **MEDIA** -- **MITIGADO (s186: gate de `regua_do_fit` no carregador); a causa de fundo fica DECLARADA**
+
+- **Como apareceu:** medindo, para o R2, quanto a adocao dos parametros do R1 mudaria o agendamento real. O numero de nota 4 nao fechava com a intuicao (o "sem esforco" agendando IGUAL ao "lembrou"), e o diff indice a indice explicou:
+
+```
+python -X utf8 -c "<diff: Scheduler().parameters x core/fsrs_params.json::visoes.remap.parametros>"
+  w3   8.295600 == 8.295600   <-- INTOCADO
+  w16  1.872900 == 1.872900   <-- INTOCADO
+  (os outros 19 se moveram; na visao `cru` os dois TAMBEM se movem: w3=8.433273, w16=1.958405)
+```
+
+- 🔬 **Causa medida:** `w3` (stability inicial de Easy) e `w16` (bonus de Easy) sao os dois parametros que governam a nota 4. O mapa do R1 manda `4 -> 3`, entao `visoes.remap.distribuicao_notas_efetivas` e `{"1": 918, "2": 536, "3": 1613}` -- **nao existe chave "4"**. Sem um unico exemplo de Easy o otimizador nao tem gradiente nesses eixos: eles nao convergiram, **nunca foram tocados**. Na visao `cru`, onde ha 1.613 notas 4, os dois se movem -- o que confirma que a causa e ausencia de dado, nao estabilidade do ajuste.
+- 🔴 **Classe (serie §10.8):** *parametro sem dado que o identifique e default com carimbo de medido*. O JSON versionado apresenta os 21 numeros em pe de igualdade; dois deles sao herdados por omissao e nada no arquivo dizia isso. E a mesma familia da **metrica auto-confirmante** do F113 (o medidor que so procurava o que o corretor sabia consertar) e do `cli_signature_check` (presenca != cobertura): *a saida parece medicao porque veio do instrumento de medicao.*
+- ⚠️ **Por que isso e ALTO-RISCO exatamente agora:** a regua v2 reabilita a nota 4 com sentido proprio ("sem esforco"). Adotar `remap` seria pedir ao modelo que agende um rotulo que o fit dele nunca viu. Medido no baralho real (830 cards em Review, replay sob os dois conjuntos): nota 2 cairia de mediana **24d -> 8d** (o ganho do F112) mas nota 4 cairia de **70d -> 50d**, colapsando no 3 -- o "sem esforco" deixaria de valer mais que o "lembrou".
+- 🔧 **Mitigacao (s186):** `app/utils/regua.carregar_parametros` so entrega um conjunto quando o arquivo declara `adotado: true` **e** `regua_do_fit` igual a regua de escrita; ausencia de `regua_do_fit` **nao vira permissao** (recusa). `analisar_visao` passou a gravar `regua_do_fit` + `reguas_no_corpus` em toda visao. 4 testes, um por ramo de recusa (`tools/test_regua_fsrs.py`).
+- ⚠️ **FRONTEIRA DECLARADA, nao resolvida:** o gate barra *adotar sob a regua errada*. Ele **nao** detecta "parametro que o fit nao identificou" no caso geral -- para isso seria preciso medir a cobertura de cada eixo no corpus, e isso nao existe hoje. Quando houver historico sob a regua v2 com nota 4 real, re-rodar o R1 e conferir se `w3`/`w16` saem do default e a verificacao que fecha o eixo. Ate la, a nao-adocao e a unica garantia.
+
+### F113 -- cards cunhados SEM acentuacao (ASCII) sao lidos pelo usuario como "erro de portugues"; a convencao de encoding (AGENTE §4.5) foi aplicada ao TEXTO CLINICO do card, nao so a pontuacao -- **MEDIA** -- **PARCIAL (s185: 1.796 correcoes em 4 lotes + 1 corrupcao revertida; residuo IRREGULAR declarado)**
+- **Como apareceu:** no lote de 90 do player (s184), o usuario marcou defeito em #685 (*"pergunta composta e erros de portugues"*) e #689 (*"outro exemplo de card com erro de portugues. aplicar o feedback a todos os cards da sessao"*). Os dois cards estao escritos sem acentos/cedilha ("Crianca falcemica", "compativel", "Sindrome do Olho Vermelho" no tema) -- o que a regra §4.5 (Zero LaTeX, sem setas Unicode, sem travessao) nunca pediu: ela proibe pontuacao especial, nao a ortografia.
+- 🔬 **Medido (lote de 90):** cards de safras recentes (ids >= ~1500, cunhados por subagente/lotes ASCII) vs. safras antigas com acentos; a proporcao exata no baralho **nao foi medida** (sessao de estudo, permit consumido) -- item da spec: `grep` de vogais acentuadas ausentes por card e uma regua de "ASCII puro em texto clinico".
+- 🔴 **Classe:** regra certa aplicada ao alvo errado (o F90 do encoding): o gate `card_checks` verifica forma e nao ve ortografia; `recurate_cards.py` e o writer certo para a reforja em lote (preserva FSRS; ratchet do verso vale).
+- **Remedio proposto:** `spec` -- (1) medir a proporcao de cards sem acentuacao; (2) reforja em lote via `recurate_cards.py` com dry-run + COUNT-ASSERT (texto identico exceto acentos -> ratchet do verso nao dispara); (3) instrucao explicita em `estilo-flashcard.md`: portugues acentuado no texto clinico; ASCII so na pontuacao. Marcas de reforja de hoje: #419, #685, #688, #689, #373 (origem `player`).
+- 🔬 **MEDIDO (s185, 17/09/2026) -- a premissa "safras recentes" subestimava muito:** **875 de 1.476 cards ativos (59,3%)** tinham acentuacao removida. Por faixa de id: 0-500 = 42,0% · 500-1000 = 55,3% · 1000-1500 = 62,2% · **1500+ = 94,2%**. Top palavras: `nao` 635x, `diagnostico` 122x, `apos` 115x, `doenca` 84x, `crianca` 81x. Regua de deteccao: palavra que OBRIGATORIAMENTE leva acento aparecendo sem ele -- nao "card sem acento nenhum", que teria falso positivo em frase curta legitima.
+- ✅ **APLICADO (s185)** -- lote de **749** cards via `recurate_cards.py --apply`, sob o rito do 10.7: dry-run -> `backup_db.py` (`ipub_backup_20260917_224901.db`) -> apply -> COUNT-ASSERT. FSRS preservado (flashcards 1543 / fsrs_revlog 3067 / fsrs_cards 1543 identicos antes e depois). **Invariante provado item a item antes de gerar o lote:** `unidecode(antes) == unidecode(depois)` em todos os 2.277 campos tocados -- a edicao e SO-ACENTO, e o gerador aborta sem escrever se um unico item violar.
+- 📐 **COUNT-ASSERT reconciliado:** restaram **141**, nao 126. Diferenca explicada e fechada: **125** sao o lote B (travado pelo gate de atomicidade) + **16** disparam so por `media`/`medio`, as duas palavras que o gerador EXCLUI de proposito (ambiguas: "media" tambem e o imperfeito de *medir*, e restaurar acento ali reescreveria sentido clinico).
+- ✅ **ACHADO NOVO FECHADO -- gate sem ESCOPO DE INTENCAO.** `recurate_cards.py:297` (`bloqueia_atom = bool(avisos) and not permitir_atomicidade`) reprovou **125 cards** com "reforja(s) NAO resolveram o defeito", porque roda o detector de atomicidade sobre o conteudo PROPOSTO. A edicao so-acento **nao se propunha** a resolver atomicidade, e provadamente nao a altera. Splitar foi o certo, nao contorno: esses 125 ja estao na fila de reforja e serao reescritos de verdade, quando o acento sai de graca. Mas o gate nao distingue "edicao que falhou em consertar" de "edicao que nunca mirou aquilo" -- classe: gate sem escopo de intencao.
+- 🔧 **Remedio (s185):** `recurate_cards.validar` calcula `_so_acentuacao(campos, atual_do_banco)` por ITEM e, quando o invariante vale, **pula os gates 4 e 6** -- os dois que perguntam *"a reforja resolveu?"*. Os demais (schema, encoding, formulacao, resposta-embutida, ratchet do verso) seguem valendo: nenhum deles pergunta sobre intencao, todos medem o texto proposto. 🔴 A isencao e **verificada por item, nunca declarada por flag** -- flag se usa errado, invariante se prova; campo que nasce (banco NULL) derruba a isencao do item inteiro. Suite `tools/test_recurate_escopo.py` (6 testes, escritos antes do fix): o so-acento passa E entra no plano, a edicao semantica no mesmo card segue cobrada, acento+1 palavra perde a isencao, e a isencao vale por item num lote misto. Entra na serie **§10.8** como *gate sem escopo de intencao*, irma do `cli_signature_check` (presenca != cobertura).
+- ⚠️ **RESIDUO DECLARADO (por isso PARCIAL, nao RESOLVIDO):** (a) os 125 do lote B; (b) 16 por ambiguidade deliberada; (c) **a lista de palavras e curada e conservadora** -- cobre as de alta frequencia, nao garante ortografia completa. Exemplo vivo: **#689** ganhou `diagnóstico` mas segue com "Uveite" (deveria ser "Uveíte"), e **#685** -- um dos dois que o operador marcou -- esta no lote B intocado, porque a outra metade da queixa dele naquele card era "pergunta composta". Afirmar "F113 resolvido" seria claim falso.
+- 🔴 **O "0% restante" que reportei apos o 1o lote era FALSO, e o defeito era de metodo.** Medidor e corretor compartilhavam a mesma lista de ~110 palavras: o medidor so procurava o que o corretor sabia consertar, e por isso reportou verde. **Metrica auto-confirmante** -- a mesma familia do `cli_signature_check` inflando cobertura por presenca de string, e do proprio F106 lendo `grep -l` como cobertura. Um detector independente, **por sufixo**, mediu **897 cards (60,8%)** ainda sem acento: praticamente o numero original. Licao: quando o sensor e o remedio nascem do mesmo insumo, o verde nao e evidencia.
+- ✅ **Lote B, 125 cards (s185)** -- os travados pelo gate. Liberados depois que o gate ganhou **escopo de intencao** (abaixo), sob o mesmo rito 10.7.
+- ✅ **Lote C, 22 cards (s185)** -- os ambiguos `media`/`medio`. Li os 22 um a um: **nenhum era o verbo**; sao `arteria meningea media`, `otite media`, `camada media`, `linha media`, `PA media`, `terco medio`, `vida media`, `em media`. A ambiguidade era teorica; medida neste corpus, zero. Triagem caso a caso, nao heuristica.
+- ✅ **Lote D, 877 cards (s185)** -- acentuacao por **REGRA DE SUFIXO**, nao por lista: `-cao/-coes`, `-sao/-soes`, `-avel/-ivel`, `-encia/-ancia`, `-logico/-logica`, `-orio`. Deliberadamente FORA por terem excecao real: `-oria` (categoria/teoria/maioria nao levam acento), `-cia`, `-logia` (cardiologia), `-ico`.
+- 🔴 **EU INTRODUZI UMA CORRUPCAO E ELA FOI REVERTIDA (lote E, 23 cards).** A regra de sufixo `-encia` transformou **verbo em substantivo**: a pergunta *"Como se diferencia, na pratica, pancreas anular de atresia duodenal?"* (verbo, sem acento) virou *"Como se difer**e**ncia"* com E-CIRCUNFLEXO, palavra que nem existe. **Isso derruba uma premissa que eu havia afirmado nesta mesma sessao:** o invariante `unidecode(antes) == unidecode(depois)` prova **mesmas letras, NAO mesmo sentido**. Portugues tem pares minimos distinguidos por acento (`diferencia`/`diferencia`, `evidencia`/`evidencia`, `influencia`, `potencia`, `distancia`, `substancia`) -- sufixo NOMINAL (`-cao`, `-sao`, `-avel`, `-orio`) e seguro; `-encia`/`-ancia` nao sao, porque coincidem com 3a pessoa de verbos em `-enciar`/`-anciar`. Quem pegou foi **leitura a olho de amostra aleatoria**, nao gate nenhum: o card #285 apareceu com "Como se diferencia" numa amostra de 4. Regra derivada: **"so-acento" nao e sinonimo de "semanticamente nulo" em portugues**, e nenhum invariante mecanico que eu tinha teria pego isso.
+- 📐 **Como foi revertido:** `diferencia` (com circunflexo) **nao existe** em portugues -- o substantivo e `diferenca` -- logo toda ocorrencia era corrupcao, e isso deu um criterio limpo. Os demais lemas ambiguos (`distancia`, `substancia`, `potencia`, `evidencia`) foram lidos um a um nos 62 contextos: **todos substantivos corretos**. Estado final: 0 corrompidos, 72 verbos `diferencia` intactos.
+- ⚠️ **RESIDUO, e por isso segue PARCIAL:** o que sobra e **irregular e nao fecha por regra**. Uma terceira lente (`-aria/-ario/-eria/-ite/-icia`) acusa 514 cards, mas e imprestavel como medida: `apendicite`, `artrite`, `ascite`, `abortaria`, `causaria` estao **corretas** sem acento, enquanto `arteria`, `bacteria`, `calendario`, `etaria` precisam -- e nenhum sufixo distingue. Exemplos vivos: **#685** (`series`, `leucocitaria`, `plaquetaria`, `Leucocitos`, `obrigatoria`) e **#689** (`Uveite`). Fechar isso exige **lexico ou olho humano**, nao a proxima regra; gerar mais um lote por padrao seria repetir o erro do lote D com outro sufixo.
+- 📜 **CAUSA-RAIZ FECHADA:** a frase "usar exclusivamente ASCII/Markdown limpo" (`estilo-flashcard.md:132` e `AGENTE.md §4.5`) era lida por quem cunha card como "tire os acentos". Os dois portadores ganharam clausula explicita: a regra governa **pontuacao e notacao, jamais ortografia**.
 
 ---
 
-## 0. Como usar este documento
-
-1. Cada achado tem: **ID · titulo · severidade · evidencia · verificacao sugerida · hipotese de melhoria.**
-2. A severidade e operacional: **ALTA** (fere integridade de estado/SSOT), **MEDIA** (custo de eficiencia/DX recorrente), **BAIXA** (polimento).
-3. A secao 5 (andaime de prompt) existe para estruturar o pedido ao agente de engenharia de forma que o trabalho seja lido como engenharia de sistemas -- reduzindo a chance de o classificador automatico do modelo marcar o fluxo como sensivel por causa do vocabulario de dominio.
-4. O aprofundamento deve **verificar cada achado** (a coluna "verificacao sugerida") antes de virar item de PRD. Achados aqui sao de primeira passada, nao veredito.
-
----
-
-## 1. Achados de integridade de estado
-
-### F1 -- Drift do ponteiro de sessao no HANDOFF -- **MEDIA** -- **RESOLVIDO** (gate `Ponteiro de sessao -- B2 do reconcile` no `auto_check`; `check_session_pointer` trata as duas direcoes, e a 2a e BLOCK)
-- **Evidencia:** `HANDOFF.md` declara no cabecalho "s108" e "Proximo passo -- s109", mas o log mais recente em `history/` e `session_107.md`. Nao existe `session_108.md`. O hook de boot (`SessionStart`) sinalizou: *"HANDOFF.md cita s108, mas o ultimo log e history/session_107.md -- considerar reconcile"*.
-- **Leitura de sistema:** o Protocolo de Fechamento (AGENTE.md secao 3) tem 4 passos -- (1) atualizar HANDOFF, (2) ESTADO se macro mudou, (3) **registrar `history/session_NNN.md`**, (4) git. O passo 1 avancou o ponteiro sem o passo 3 selar a sessao. A disciplina de fechamento permite essa dessincronia sem barreira automatica.
-- **RESOLVIDO na s108:** o "s108" do HANDOFF era renumeracao antecipada (o s107 escreveu o ponteiro apontando para a proxima sessao antes dela existir). Esta sessao **e** a s108 (drenagem FSRS + auditoria), entao o fechamento correto -- registrar `history/session_108.md` -- **fecha o drift naturalmente** (o ponteiro passa a ter log correspondente). Nao foi preciso sessao retroativa.
-- **Hipotese de melhoria (permanece valida):** invariante verificavel no `auto_check.py` (ou no boot): *o ponteiro de sessao do HANDOFF nunca deve exceder `max(session_NNN)` em `history/` + 1*. Nasce WARN (politica de severidade de s106/107), vira BLOCK quando a base zerar. Fecha a lacuna entre o passo 1 e o passo 3 do fechamento -- o drift so foi possivel porque nada barra o HANDOFF de anunciar uma sessao que ainda nao foi selada.
-
----
-
-## 2. Achados de tooling / DX / confiabilidade de hooks
-
-### F2 -- Latencia de shell no ambiente Windows -- **MEDIA** -- **DECLARADO nao-verificavel** (propriedade do ambiente, nao do repo; nenhum codigo nosso a controla -- revisar: 2027-03-31)
-- **Evidencia:** comandos via Bash (`git log`, `ls resumos/**`) estouraram o timeout de 120s nesta sessao. CLIs Python (`fsrs_queue.py`, etc.) rodam normalmente e rapido.
-- **Leitura de sistema:** qualquer hook ou rotina que faca *shell-out* pesado -- em especial o pre-commit `auto_check --staged` e o `day_plan.py` se dependerem de globbing amplo ou de `git` custoso -- herda essa latencia. Risco: hook lento demais ser abortado ou o operador aprender a fazer bypass.
-- **Verificacao sugerida:** cronometrar `auto_check --staged` e `day_plan.py` isoladamente; identificar se o custo esta no `git`, no profile do shell, ou no glob de `resumos/**`. Testar se o gargalo e o carregamento do profile PowerShell/Bash vs. o comando em si.
-- **Hipotese de melhoria:** (a) garantir que hooks usem caminhos diretos e evitem `ls`/`find` recursivo (preferir Python `pathlib` com escopo staged); (b) cache de indice quando aplicavel; (c) documentar em AGENTE.md que a superficie de tooling e Python-CLI-first, shell-glob-last.
-
-### F3 -- Ordenacao da fila FSRS ignora clusterizacao por tema -- **MEDIA** -- **RESOLVIDO** (`fsrs_queue --cluster` opt-in; e a PREMISSA do achado morreu no F109 -- a ordem intercalada e o default deliberado, `fsrs-management` v1.4)
-- **Evidencia:** `fsrs_queue.py::_ordered_queue` achata os buckets na ordem `atrasados -> hoje -> novos`, intercalando temas. Na fila real observada (59 cards) os temas ja vinham naturalmente agrupados nos dados, mas a ordem de entrega mistura Dermato, Gineco, Cirurgia, etc. O agente teve de **re-agrupar manualmente por tema** para conduzir a revisao em cluster.
-- **Leitura de sistema:** a Camada 0 do contrato de `/revisar` prega "esquentar o tema antes de sondar". Revisar em cluster (todos os cards de um tema juntos) permite **um** refresh que aquece o tema e drena o cluster inteiro -- pedagogicamente superior e alinhado ao contrato. A ordem atual forca ou o re-agrupamento manual (custo de agente) ou refreshes fragmentados.
-- **Verificacao sugerida:** confirmar em `app/utils/db.py::get_cards_by_bucket` se ha campo `tema` disponivel para ordenacao secundaria (ha -- os cards trazem `area`/`tema`).
-- **Hipotese de melhoria:** flag `--cluster` (ou `--by-tema`) em `fsrs_queue.py` que, preservando a prioridade de bucket, ordene secundariamente por `(area, tema)` e mantenha cards do mesmo tema contiguos. Alternativa/adicional: `day_plan.py` emite um "plano de revisao" que ja lista os clusters do dia com contagem. Ganho barato, observado direto do uso.
-- ⚰️ **LAPIDE (2026-09-17, s184, F109) sobre a premissa "pedagogicamente superior".** O mecanismo entregue (`--cluster` opt-in, `--review-plan`) fica; a **justificativa** desta leitura nao se sustenta: a literatura de intercalacao (Kornell & Bjork 2008; Hatala, Brooks & Norman 2003 em ECG, 46% x 30%; Rozenshtein 2016) mostra que misturar categorias confundiveis treina DISCRIMINACAO -- a familia nº 1 de erro deste usuario -- e que o bloqueio so PARECE melhor (mesma ilusao metacognitiva do cramming). A ordem natural intercalada da fila e **default deliberado**; `--cluster` serve a onboarding de cluster frio/andaime, nunca vira default. Fundamentos: `docs/FUNDAMENTOS-APRENDIZAGEM.md` P6. Riders no `fsrs-management-contract` e em `revisar.md` = fila do `PLANEJAMENTO-APRENDIZAGEM-2026-09-17.md` (nao executados: sessao de planejamento).
-
-### F4 -- Backlog FSRS vs. politica de teto diario -- **MEDIA** -- **RESOLVIDO** (teto dinamico, `fsrs-management-contract` v1.1; contador unico `vencidos = atrasados + hoje` no F64/v1.3)
-- **Evidencia:** fila do dia = 40 atrasados + 4 hoje + 15 novos puxados; backlog de novos reportado em ~322-351 (day_plan/HANDOFF divergem: 322 vs 351 -- ver F5). A politica de cards diaria registrada em memoria e "teto 30/dia (agendados + 15 backlog)". Os **44 agendados (atrasados+hoje) ja excedem o teto** antes de qualquer card novo.
-- **Leitura de sistema:** ha tensao estrutural entre a politica de teto e a divida real de cards vencidos. Se o teto e respeitado, o backlog de atrasados nunca drena; se o backlog e drenado, o teto e violado todo dia. Nenhum dos dois esta errado isoladamente -- falta uma **estrategia de drenagem de divida** explicitada.
-- **Verificacao sugerida:** medir a taxa de crescimento do backlog (novos/dia entrando) vs. taxa de drenagem sustentavel; conferir a fonte da divergencia 322 vs 351.
-- **Hipotese de melhoria:** (a) `day_plan.py` expor "divida de atrasados" como metrica de primeira classe (hoje ela fica diluida no bucket FSRS); (b) definir politica de drenagem (ex.: subconjunto priorizado por dormencia/stability quando o backlog estoura N); (c) reconciliar a politica de teto com a realidade de 44 vencidos -- ou o teto sobe em regime de divida, ou ha um "modo mutirao".
-
----
-
-## 3. Achados de protocolo / carga cognitiva do agente
-
-### F5 -- PREPARAR (Camada 0) e reativo, nao proativo -- **BAIXA** -- ⚰️ **ENTREGUE (p5) -> OBJETO REVOGADO**
-- ⚰️ **LAPIDE (2026-09-08, s171).** Mecanismo **ENTREGUE (p5)** -- sinal de frieza por cluster no `--review-plan` + clausula de oferta proativa do PREPARAR (limiar >=25 no contrato) -- e depois **objeto revogado** em `revisao-calibrada-contract.md` Clausula 11 (v1.3, s170): o PREPARAR deixou de existir e o cluster frio passou a **entrar na fila de prioridade da Revisao Direcionada de fechamento**, nao a disparar aquecimento. O achado nao foi invalidado nem esquecido -- o gatilho que ele pedia MIGROU de superficie. **Nao re-derivar:** se alguem reintroduzir aquecimento pre-bloco, o F5 volta junto. O sinal (`review_radar.py` / `--review-plan`) segue vivo: morreu o consumidor, nao o sensor.
-- **Evidencia:** o refresh-antes-de-card-frio so aconteceu porque o operador pediu explicitamente ("quick refresh antes de pegar os cards a frio"). O contrato preve o PREPARAR, mas o gatilho ficou no operador, nao no agente.
-- **Leitura de sistema:** o sinal de "tema frio" e objetivo e ja esta nos dados (stability media + taxa de acerto do cluster + dormencia via `review_radar.py`). O agente poderia **detectar o cluster frio e oferecer o PREPARAR** antes de sondar, em vez de esperar o pedido.
-- **Verificacao sugerida:** conferir se `fsrs_queue`/`day_plan` ja expoem stability por card/cluster; se nao, o sinal vem de `review_radar.py`.
-- **Hipotese de melhoria:** ao abrir um cluster no fluxo DRENAR, o protocolo de `/revisar` checa o sinal de frieza e, se frio, oferece o PREPARAR proativamente ("cluster X esta frio -- aqueco antes?"). Mantem a fronteira dura (PREPARAR nao toca FSRS).
-
-### F6 -- Divergencia de numeros entre HANDOFF e day_plan -- **BAIXA/MEDIA** -- **RESOLVIDO** (o bloco numerico do HANDOFF e GERADO por `day_plan.py --handoff-block`, nunca digitado -- `AGENTE.md §3`)
-- **Evidencia:** volume acumulado -- HANDOFF diz "4.418"; day_plan do boot diz "4454 acum.". Backlog de novos -- HANDOFF "322"; day_plan "351". FSRS atrasados -- HANDOFF "27 atrasados + 13 hoje"; day_plan "40 atrasados + 4 hoje"; fila real puxada agora = 40 atrasados + 4 hoje.
-- **Leitura de sistema:** o `day_plan.py` (derivado, ao vivo do db) e a fila real concordam (40+4). O `HANDOFF.md` (texto, escrito a mao no fechamento) esta defasado. Confirma que **a fonte viva (db/day_plan) e fiel; o HANDOFF textual drifta** -- mesmo padrao de F1.
-- **Verificacao sugerida:** nenhuma -- e consequencia de F1 (fechamento incompleto). Tratar junto.
-- **Hipotese de melhoria:** o bloco "Estado por frente" do HANDOFF que carrega numeros (volume, FSRS, backlog) poderia ser **gerado** por `day_plan.py --handoff-block` em vez de digitado, eliminando a classe inteira de drift numerico. Texto qualitativo continua manual; numeros viram derivados.
-
----
-
-### F7 -- Defeito de autoria de card: discriminacao incompleta (stem nao exclui o competidor real) -- **MEDIA** -- ⚰️ **INSTRUMENTO REVOGADO (s177, 11/09/2026, item 1.5); CLASSE DECLARADA NAO-VERIFICAVEL; os 2 achados reais viraram estado na fila de reforja**
-- **Evidencia:** card `id=95` (tema Cardiopatias Congenitas). Stem: RN 2 dias, choque, cianose, cardiomegalia, RX com hiperfluxo, ECG com desvio a direita + HVD. Resposta esperada = Hipoplasia do VE (HCE). A `verso_armadilha` do card so cita **um** competidor (Tetralogia de Fallot, que e hipofluxo/tardia -- facil de excluir). Mas o stem, como escrito, **nao exclui a Transposicao das Grandes Arterias (TGA)** -- que tambem cursa com apresentacao precoce, hiperfluxo, cardiomegalia e predominio de VD. O operador respondeu TGA aplicando o framework corretamente (cianotica de hiperfluxo); o card marca como erro sem que o stem sustente a discriminacao.
-- **Leitura de sistema:** o card ensina uma discriminacao que seu proprio enunciado nao suporta -- defende-se contra o competidor facil (Fallot) e ignora o competidor verdadeiro (TGA). Alem disso, o mesmo cluster ja tem o card `id=94` como HCE explicito (com eco), tornando o `id=95` um segundo HCE de baixa diferenciacao. Pela politica do projeto, "defeito de card e de autoria -> reforjar ancorado no erro" (memoria `curadoria_e_temas_zero`).
-- **Fator de confusao registrado (honestidade de metodo):** nesta sessao o refresh PREPARAR do agente **pre-induziu TGA** ao descrever o quadro de hiperfluxo cianotico -- contaminando o trial. Isso e um risco intrinseco do PREPARAR: o refresh que aquece pode **vazar a resposta** ou enviesar o recall. Ver F8.
-- **Verificacao sugerida:** revisar o stem do `id=95` -- ou (a) adicionar ao enunciado o discriminador que exclui TGA (ex.: relacao das grandes arterias / eco), ou (b) expandir a `verso_armadilha` para nomear TGA como o competidor e dar o criterio de exclusao. Conferir se ha outros cards do deck com o mesmo padrao (armadilha defende-se do competidor errado).
-- **Segundo caso (mesmo padrao, outra especialidade):** card `id=120` (tema Gravidez Ectopica). Stem: gestacao intrauterina viavel confirmada (embriao + CCN 3mm) + massa anexial **sem fluxo** ao Doppler + beta-hCG subindo, **em gestacao espontanea (sem TRA/FIV)**. Resposta esperada = **heterotopica**. Problema de calibracao: heterotopica espontanea e ~1:30.000; na ausencia de TRA e sem features de ectopica ativa (o "sem fluxo" ate argumenta *contra*), a resposta estatisticamente dominante e **gestacao topica + corpo luteo**. O card forca o diagnostico raro como se fosse o provavel. O operador respondeu "gestacao normal" -- **clinicamente mais defensavel** para o cenario espontaneo -- e o card marca como erro. Candidato a **auditoria de evidencia** (`/pesquisar-evidencia`): quando a banca espera heterotopica e a probabilidade basal diz corpo luteo, e o tipo de conflito banca-dependente que o `evidence-governance` existe para arbitrar.
-- **Hipotese de melhoria:** rodar `/curar-cards` (workflow `curar-cards.md`) com foco em "discriminacao incompleta" e "diagnostico raro forcado"; possivel heuristica para o linter `audit_flashcard_quality.py`: sinalizar cards cuja `verso_armadilha` nomeia um competidor de categoria **diferente** da resposta (ex.: Fallot=hipofluxo vs resposta=hiperfluxo) sem nomear nenhum competidor da **mesma** categoria. Sinal fraco, mas barato. Para o `id=120`, submeter a resposta esperada ao gate de evidencia antes de reforjar.
-
-- ⚰️ **FECHAMENTO (s177, 11/09/2026 -- item 1.5 da fila selada; a "UMA medicao, decisao binaria").** A heuristica sugerida na linha acima foi construida (p5, 05/07/2026) como `check_discriminacao_lexicon` + lexico `tools/data/competidores_categorias.json`, WARN experimental com gate anti-decorativo escrito no proprio codigo (*"3 execucoes sem sinal acionavel -> remover"*). A medicao que o `/ai-eng` pediu, sobre o banco real de 11/09:
-  - **Alcance:** o lexico tocava a RESPOSTA de **15** cards e a ARMADILHA de **12**, dos **1611** do banco; so **8 eram ELEGIVEIS** (casa nos dois lados: ids 91, 92, 94, 95, 96, 97, 913, 983). Campo de visao = **0,5% da base**, todos do **mesmo tema** (cardiopatia congenita cianotica, eixo hiper x hipofluxo) -- o unico eixo que alguem chegou a curar. Curadoria continua era do agente-player e ficou **68 dias** com os 2 termos-semente.
-  - **Precisao:** **2 disparos, 1 verdadeiro.** #95 e o caso-semente e **segue defeituoso** (resposta HCE, armadilha so nomeia Fallot, stem nao exclui TGA -- nunca foi reforjado). #913 e **FALSO POSITIVO**: *"entre as CIANOTICAS, qual a mais comum depois do periodo neonatal?"* -> T4F, armadilha *"responder T4F para o RN -- nessa janela e a TGA"*. A armadilha nomeia a categoria oposta porque o eixo daquele card e **IDADE**, nao fluxo; o competidor citado e exatamente o certo.
-  - **Cobertura de teste:** **nenhum** teste importava o modulo -- o gate rodou 68 dias sem fixture. Reachability-Debt no instrumento (classe do F94).
-  - **Veredito: MATAR, nao promover a BLOCK.** A classe do F7 -- *"a armadilha se defende do competidor ERRADO"* -- e **semantica**: depende de qual eixo o card discrimina, e um lexico so sabe proxia-la por oposicao de categoria. A proxy errou **metade** das vezes; promove-la a BLOCK travaria card correto no writer. Pela *verification-stack* (`AGENTE.md §10.8`) o eixo fica **DECLARADO nao-verificavel por gate**, jamais convertido em metrica para o painel ficar verde.
-  - **O que NAO morre com o instrumento:** os dois achados de conteudo do F7 viraram **estado consultavel** na fila de reforja (B2, item 0.3) -- `#95 discriminacao_incompleta` e `#120 diagnostico_raro_forcado`, ambos `[sem predicado]` por declaracao, fechaveis so por palavra humana (`evidencia='humana'`). Eram as duas obrigacoes vivas que este achado carregava em prosa desde 07/2026; sem a migracao, mata-lo teria sido perda.
-  - **Registro da revogacao (3 passos do §10.10, adaptados a codigo):** (1) declarado aqui e no §11; (2) lapide `⚰️` no proprio sitio (`tools/audit_flashcard_quality.py`, com a medicao inteira e o ponteiro para a fila); (3) registro legivel por maquina = **`tools/test_heuristica_f7_morta.py`** (4 asserts; nasceu vermelho contra o lexico recriado e contra o simbolo reinjetado). Para clausula de TEXTO o registro e o `_TERMOS_REVOGADOS`; para CODIGO morto, uma suite. Suite **578 -> 582**.
-  - **Verificado e descartado, declarado:** `sys.stdout.reconfigure(...)` no import existe em **29 CLIs vivos**, incluindo este -- **nao** e sitio-gemeo do F94. O F94 era **reatribuicao** (`sys.stdout = io.TextIOWrapper(...)`), que quebra a captura do pytest; `reconfigure` muta o encoding do stream existente e ~10 desses modulos ja sao importados por suites com a bateria verde. Convencao da casa, nao defeito -- registrado para nao ser "achado" de novo.
-
-### F8 -- Risco de vazamento de resposta no PREPARAR -- **BAIXA/MEDIA** -- ⚰️ **ENTREGUE (p3) -> OBJETO REVOGADO**
-- ⚰️ **LAPIDE (2026-09-08, s171).** Mecanismo **ENTREGUE (p3)** -- Invariante D (isolamento de conteudo do PREPARAR) no contrato v1.1 -- e depois **objeto revogado** em `revisao-calibrada-contract.md:74` (v1.3, s170), que ja carrega lapide propria: sem aquecimento pre-drill nao ha o que isolar, e toda nota do DRENAR volta a ser recall a frio. **Nao re-derivar:** aquecimento pre-bloco reintroduzido traz de volta o vazamento, e os TRES canais medidos abaixo (vazamento de resposta, card de fato puro, erro de ensino amplificado) seguem validos como descricao do risco. 🔴 **O corpo abaixo e evidencia historica, nao norma ativa.**
-- **Evidencia:** o refresh pre-bloco de Cardiopatias Congenitas nomeou explicitamente "TGA" como o exemplo canonico de cianotica de hiperfluxo, momentos antes de um card cuja resposta era HCE (tambem hiperfluxo). O aquecimento moldou a resposta.
-- **Leitura de sistema:** o PREPARAR (Camada 0) existe para aquecer o tema, mas ha uma fronteira fina entre **aquecer a fundacao** e **entregar a resposta do card que vem a seguir**. Quando o refresh e feito pelo mesmo agente que conhece as respostas dos cards, o vies e estrutural.
-- **Verificacao sugerida:** revisar o contrato de `/revisar` (Camada 0) -- ha alguma clausula que isole o conteudo do refresh das respostas especificas dos cards do bloco? (Aparentemente nao.)
-- **Hipotese de melhoria:** clausula no contrato: o PREPARAR aquece **conceitos e mecanismos**, nunca **o par pergunta-resposta especifico** dos cards do bloco. Operacionalmente: o agente monta o refresh a partir do resumo do tema (substrato via engine/RAG), **antes** de olhar os versos dos cards -- ou explicitamente evita ancorar exemplos nas respostas que sabe que virao. Preserva a validade do trial de recall.
-- **Refinamento observado (3a passada, cluster Arboviroses):** ha uma classe de card para a qual o PREPARAR e **contraindicado**, nao apenas arriscado -- os cards de **fato/definicao puro** (ex.: `id=402` "familia e genoma do virus da febre amarela"; `id=403` "sinal semiologico classico da febre amarela"). Aquecer esses cards no refresh **e** entregar a resposta -- nao ha "conceito de fundo" a warmar que nao seja o proprio fato cobrado. Regra derivada: o PREPARAR distingue **cards de raciocinio/conduta** (refresh do framework e legitimo; nota mede "pegou o framework") de **cards de fato puro** (refresh se limita a orientacao de entorno; a resposta especifica e retida para o recall). Operacionalizavel se os cards carregarem o campo `tipo`/altura (base/mecanismo/nuance/topo) -- fato puro tende a ser `topo`/`nuance`; ver [[project_cards_altura_graduada]].
-- **Refinamento observado (2a passada, cluster Gravidez Ectopica):** o refresh foi montado sem abrir os versos (disciplina F8 aplicada) e ainda assim **contaminou por dois canais distintos**: (1) *cards de conduta* -- ensinar o framework "beta baixo isolado -> faca a curva" pre-resolve os cards `id=116`/`id=114`, cuja resposta E "faca a curva"; aquecer o framework e legitimo, mas invalida o trial de recall desses cards. (2) *erro de acuracia no aquecimento* -- o refresh afirmou de forma **absoluta** "GIU + massa anexial = topica + corpo luteo (NAO heterotopica)", uma simplificacao que empurrou o operador para longe da resposta do card `id=120`. Licao: o vies do PREPARAR nao e so vazamento de resposta; e tambem **erro de ensino amplificado** -- uma imprecisao no refresh vira erro induzido no card seguinte. Mitigacao adicional: regras do refresh formuladas como tendencia ("geralmente corpo luteo, mas considerar heterotopica se TRA/features de ectopica"), nunca como absoluto; e, para clusters de conduta, aceitar que a nota pos-refresh mede "pegou o framework", nao recall a frio (ja previsto na Camada 0, mas reforcar).
-
----
-
-### F9 -- Sem caminho de amend/override para rating FSRS ja gravado -- **MEDIA** -- **RESOLVIDO** (Invariante C: a janela de override acontece ANTES do record; nao existe amend pos-record por desenho -- `revisao-calibrada` v1.1)
-- **Evidencia:** o contrato de `/revisar` (passo 4) diz que "o usuario pode sobrepor a nota". O CLI `fsrs_queue.py --record` e **append-only** (`db.record_review` = INSERT em `fsrs_revlog` + UPDATE em `fsrs_cards`). Quando o override chega **depois** do record, honra-lo grava uma **2a linha** no revlog e recalcula o FSRS a partir do estado **ja mutado** pela 1a nota -- resultado != "nota correta de primeira". Observado nesta sessao: card `id=403` gravado 2 (o operador escreveu "Paget"), depois corrigido para 4 (sabia "Faget"); o re-record moveu o `due` de 2026-07-19 para 2026-07-26, deixando 2 linhas de revlog para o mesmo card na mesma sessao.
-- **Leitura de sistema:** contradicao entre duas clausulas do proprio contrato -- "usuario pode sobrepor" vs. "nunca `--record` duas vezes o mesmo card (regra anti-duplo-registro)". A regra anti-dup protege contra o duplo **acidental**, mas nao previu o override **intencional** pos-record.
-- **Verificacao sugerida:** confirmar que `db.record_review` nao expoe rollback/replace; medir se ha outros pontos que assumem um-record-por-card-por-sessao.
-- **Hipotese de melhoria (preferida):** mudar o **protocolo do loop**, nao o schema -- o agente so chama `--record` **apos** a janela de override (apresenta a nota proposta, espera confirmacao/correcao, entao grava uma vez). Elimina a classe inteira sem tocar o banco. Alternativa pesada: `fsrs_queue.py --amend CARD_ID --rating N` que remove a ultima revlog row da sessao e reverte `fsrs_cards` ao estado pre-review (exige `record_review` retornar o estado anterior para rollback). Preferir a mudanca de protocolo.
-
----
-
-## 3b. Sessao de engenharia (Fable, 2026-07-05) -- verificacao F1-F9, achados F10-F15, entrega das 5 ondas
-
-> Pickup da secao 8 executado: ledger -> PRD (`.vibeflow/prds/engenharia-ledger-f1-f13.md`) -> 5 specs -> implement -> audit (fluxo vibeflow completo). Cada achado foi VERIFICADO contra o codigo antes de virar spec (secao 0.4). Commits: d7ad6ea (PRD+specs), d488cfe (p1), 5e19dab (p2), a669a6f (p3), a47967d (p4), p5 no commit desta edicao. Audits PASS em `.vibeflow/audits/engenharia-ledger-part-*.md`.
-
-**Status F1-F9:**
-- F1 -> **ENTREGUE (p1)**: invariante executavel `check_session_pointer` no auto_check (WARN `SESSION_POINTER_DRIFT`; ponteiro <= max(session)+1); roda em --all e quando HANDOFF/history no diff.
-- F2 -> **NAO REPRODUZIDO (medido, p5)**: mediana de 3 runs via PowerShell, cwd=repo, 2026-07-05 -- `auto_check --staged` 0.15s; `day_plan` 0.89s; `git status` 0.07s. O timeout de 120s da s108 era do ambiente Bash daquela sessao (profile/globbing do harness), nao do tooling do repo. Achado fica ABERTO-DORMENTE: se reproduzir em sessao de uso, medir com este mesmo metodo antes de consertar.
-- F3 -> **ENTREGUE (p2)**: `fsrs_queue --cluster` (opt-in, buckets preservados, temas contiguos; sem a flag = byte-identico) + `day_plan --review-plan` (clusters derivados da fila real).
-- F4 -> **ENTREGUE (p2)**: teto dinamico (decisao do operador 2026-07-05): TETO_BASE=30; atrasados>30 -> teto dobra (cap 60) ate drenar. Norma no fsrs-management-contract v1.1; campo `divida` no day_plan.
-- F5 -> **ENTREGUE (p5)**: sinal de frieza por cluster no `--review-plan` (via review_radar, fallback silencioso) + clausula de oferta proativa do PREPARAR (limiar >=25 no contrato, nao no CLI).
-- F6 -> **ENTREGUE (p1)**: `day_plan --handoff-block` (bloco numerico derivado; AGENTE §3 passo 1 atualizado). Bonus: expos inconsistencia do manual antigo (/10.000 convivendo com ritmo de 12k).
-- F7 -> ⚰️ **RESOLVIDO por REVOGACAO do instrumento (s177, 11/09/2026)**: o gate anti-decorativo escrito na propria entrega foi executado. Medicao unica: alcance 8 cards elegiveis em 1611 (um eixo clinico), precisao 1/2 (#913 = falso positivo por eixo IDADE), zero teste importando o modulo em 68 dias. Heuristica, lexico e secao de report **deletados**; classe declarada nao-verificavel por gate (§10.8); achados #95/#120 migrados para a fila de reforja. Detalhe integral no fechamento da secao F7.
-- F8 -> **ENTREGUE (p3)**: Invariante D no contrato v1.1 (PREPARAR isolado: sem abrir versos; tendencia nunca absoluto; fato puro nao se aquece).
-- F9 -> **ENTREGUE (p3)**: Invariante C (janela de override ANTES do record; 1 record por card; sem amend pos-record). Contradicao v1.0 eliminada.
-
-**Achados novos (scan estatico + friccao de implementacao):**
-
-### F10 -- Dashboard bypassava a camada db -- **MEDIA** -- **RESOLVIDO (p4)**
-- Evidencia: `app/pages/1_dashboard.py` fazia `import sqlite3` + `DB_PATH='ipub.db'` relativo (quebra se cwd != raiz; violava db-access-layer.md). Fix: 3 funcoes novas em db.py (SQL identico, DataFrames validados .equals=True); app/pages/ agora 100% sem sqlite3.
-
-### F11 -- Blob ipub.db no historico git -- **BAIXA** -- **RESOLVIDO (2026-07-06, expurgo executado)**
-- Evidencia: blob versionado ate s058 (`d99ff02`); ~1.6MB de dado local-only em todo clone. Runbook em `docs/runbook-expurgo-ipub-git.md`.
-- **EXECUTADO 2026-07-06 (go nominal do operador):** push previo -> mirror de backup atualizado -> `git filter-repo --invert-paths --path ipub.db --force` -> force push. Validado em clone fresco do GitHub: 0 commits tocando ipub.db; size-pack ~18M -> 2.91 MiB; ipub.db local intacto (untracked). Backups: `C:/Users/daanm/medhub-backup-pre-expurgo.git` (mirror pre-expurgo completo). NB: TODOS os SHAs mudaram na reescrita -- SHAs pre-expurgo citados neste ledger/audits/HANDOFF sao referencias do historico antigo (narrativa preservada; ponteiros obsoletos por design).
-
-### F12 -- Testes sem harness formal -- **MEDIA** -- **RESOLVIDO (p4)**
-- Evidencia: 4 test_*.py scripts avulsos. Fix: pytest.ini + conftest.py + bridge subprocess (exit code assertado; coleta crua daria verde decorativo -- funcoes de check sem assert). `pytest` na raiz: 7 passed. Standalone preservado.
-
-### F13 -- Hooks de boot nao versionados -- **MEDIA** -- **RESOLVIDO (p1)**
-- Evidencia: SessionStart/PostToolUse so em settings.local.json com paths absolutos da maquina -- boot deterministico nao sobrevivia a clone. Fix: `.claude/settings.json` versionado com $CLAUDE_PROJECT_DIR.
-
-### F14 -- test_revisao_calibrada e cwd-sensivel -- **BAIXA** -- **RESOLVIDO (3d)**
-- Evidencia: rodado fora da raiz do repo, falha 4 checks; com cwd=raiz, passa. O auto_check sempre o invoca com cwd correto (mascarava). Mitigado no pytest via bridge (cwd=raiz); o script standalone segue exigindo cwd na raiz.
-- Hipotese de melhoria: resolver paths por `__file__` nos 4 checks afetados (baixo custo, sessao futura). *(Resolucao real: causa era no engine, nao no teste -- ver 3d.)*
-
-### F15 -- test_memory quebra em pipe cp1252 -- **BAIXA** -- **RESOLVIDO (3d)**
-- Evidencia: imprime U+2192 (seta unicode) sem reconfigure de stdout -> UnicodeEncodeError sob pipe; viola o decision de 2026-04-23 (CLIs com nao-ASCII devem reconfigurar) e a convencao de encoding (AGENTE §4.5). Mitigado no bridge via PYTHONIOENCODING=utf-8.
-- Hipotese de melhoria: aplicar o snippet canonico de reconfigure + trocar as setas por `->` (4 linhas).
-
----
-
-## 3c. Sessao de uso s109 (coordenador-observador) -- achados F16-F19
-
-> **Origem:** uso vivo da s109 -- forja da aula-base de apendicite (prova de R+ em gastroenterologia). O papel de coordenador-observador (contrato do operador, 2026-07-05) alimenta o ledger **F16+** enquanto conduz o estudo. Trilha de ENGENHARIA: o conteudo clinico (apendicite, questoes, erros) vai para `history/` + HANDOFF, nao aqui (secao 7.6). Achados de primeira passada -- **verificar** antes de virar spec do ciclo 2.
-
-### F16 -- Tema cirurgico de alto rendimento sem SSOT clinico (.md); so o PDF-fonte existe -- **MEDIA** -- **PARCIAL (mecanismo feito, conteudo aberto)**
-- 🔬 **TRIAGEM Tier 3 (s176, 10/09/2026) -- re-medido contra o codigo, nao lembrado:** a hipotese (a) FOI construida -- `tools/cobertura_conhecimento.py` e o relatorio `pdf-sem-md` que o achado pedia. O conteudo segue aberto e agora tem numero: `python tools/cobertura_conhecimento.py` -> **395 PDFs-fonte, 135 `.md`, 68 cobertos (61 exato + 7 fuzzy), 327 orfaos**. A evidencia original continua literalmente valida: **apendicite segue sem `.md`** (glob por `*apendic*` em `resumos/**/*.md` = vazio). 🔴 **Residuo de ALCANCE, nao de mecanismo:** `reachability_check --tabela` mostra o CLI alcancado so por `/extrair-pdf` -- nem o boot nem o `auto_check` o consultam, entao os 327 orfaos so aparecem para quem ja foi olhar. Mesma familia da frente de alcancabilidade (s144).
-- **Evidencia:** apendicite ("um dos temas mais cobrados na prova de Cirurgia Geral", segundo a propria fonte EMED) tem em `resumos/Cirurgia/` apenas o PDF-fonte gitignored (`8. Abdome Agudo Inflamatorio - Apendicite Aguda.pdf`) e **nenhum `.md`**. Glob por `*Apendic*` retorna so o PDF; grep de termos (Alvarado/apendice/carcinoide) nos `.md` acha so mencoes tangenciais (Cirurgia Infantil, Polipose/CCR), nao resumo dedicado. Para cunhar a aula foi preciso extrair o PDF a mao na sessao.
-- **Leitura de sistema:** `resumos/**/*.md` e o SSOT de conhecimento clinico E o unico corpus que o RAG indexa (`index_resumos.py`; AGENTE secao 6). Tema sem `.md` fica (a) invisivel ao RAG semantico (`obsidian-notes-rag search_notes` volta vazio p/ apendicite), (b) sem fonte consultavel nem armadilhas cumulativas, (c) re-extraido a mao a cada aula. O HANDOFF lista gaps pontuais (TCE.md, Sistemas de Informacao) mas nao ha check sistematico de cobertura.
-- **Verificacao sugerida:** cruzar `resumos/**/*.pdf` (fontes EMED presentes) contra `resumos/**/*.md` (SSOTs existentes); listar temas com PDF sem `.md` par e quantos sao de alto rendimento.
-- **Hipotese de melhoria:** (a) relatorio de cobertura `pdf-sem-md` (CLI ou check WARN no `auto_check`) que torna o gap visivel e priorizavel; (b) rodar o workflow `criar-resumo` p/ apendicite -- fecha o gap de conteudo E realimenta o RAG. A aula-base desta sessao ja e insumo pronto p/ o `.md`.
-
-### F17 -- PDFs-fonte retidos "para o RAG" nao sao indexados; o proposito da decisao s086 esta desconectado do wiring -- **MEDIA** -- ⚰️ **SUPERADO por decisao de arquitetura (gold-only)**
-- 🔬 **TRIAGEM Tier 3 (s176, 10/09/2026) -- re-medido contra o codigo, nao lembrado:** o achado supunha que o wiring estava atrasado em relacao a intencao. Foi o contrario: a **intencao** e que morreu. A consolidacao part-2 tornou o RAG **gold-only** (`AGENTE.md:152`: a collection `pdf_raw` e o `search_two_tier()` foram REMOVIDOS), e `tools/index_resumos.py` indexa `.md` por contrato -- o PDF e insumo de AUTORIA, nao fonte de busca. Escolha (a) da propria hipotese, tomada de fato e nunca escrita. 🔴 **Residuo corrigido nesta sessao:** `AGENTE.md:159` ainda declarava que os PDFs sao mantidos *"pois serao usados para alimentar o RAG"* -- premissa morta contradizendo a linha 152 do MESMO documento, no portador que o boot le. Lapidada (mesma classe do F90: premissa orfa sobrevivendo no carrier).
-- **Evidencia:** a decisao s086 (AGENTE secao 6) reteve os PDFs do EMED dentro de `resumos/` "pois serao usados para alimentar o RAG". Mas `index_resumos.py` indexa `resumos/**/*.md` -- o PDF fica no lugar, **un-indexado**. O texto do PDF so entra no RAG se/quando transcrito a mao para `.md`.
-- **Leitura de sistema:** gap entre a intencao declarada (PDF alimenta o RAG) e o wiring (RAG so le `.md`). O caminho real e implicito: PDF -> extracao manual -> `.md` -> index. Enquanto o `.md` nao e cunhado, o PDF e IP retido sem retorno de busca. F17 e a causa-sistemica de F16 existir silenciosamente.
-- **Verificacao sugerida:** confirmar que `index_resumos.py` nao ingere PDF (aparentemente so glob de `*.md`); contar PDFs em `resumos/**` sem `.md` par.
-- **Hipotese de melhoria (escolha de arquitetura p/ ai-eng):** ou (a) canonizar PDF->md como o unico caminho (entao F16 e "so" execucao de conteudo + o relatorio de cobertura basta), ou (b) `index_resumos` passa a ingerir texto extraido de PDF como fonte secundaria do RAG (com metadado de origem) -- amplia cobertura sem trabalho de autoria, mas indexa material bruto fora do `/estilo-resumo`.
-
-### F18 -- Aula-base e efemera (chat-only); sem artefato de persistencia/reuso nem registro de calibracao -- **BAIXA/MEDIA** -- **SUPERADO na forma; residuo de ALCANCE**
-- 🔬 **TRIAGEM Tier 3 (s176, 10/09/2026) -- re-medido contra o codigo, nao lembrado:** as tres pontas se moveram. (1) A aula deixou de ser chat-only: desde a s149 toda aula-base sai como **Artifact HTML** com URL propria (`.claude/commands/aula-base.md` e o contrato de renderizacao). (2) A forma duravel do CONTEUDO e o `.md` gold -- opcao (a) da propria hipotese, hoje canonica. (3) A calibracao **e** gravada: `taxonomia_cronograma.dificuldade` tem **30 de 288** temas com nota (F18c, `db.set_dificuldade`). 🔴 **Residuo medido:** nao existe `aulas/` nem `*.aula.md`, e **nenhum campo liga tema -> URL da aula**. O artefato agora persiste e continua **inalcancavel a partir do repo** -- a efemeridade virou irrecuperabilidade, que e um defeito diferente e menor.
-- **Evidencia:** a aula-base de apendicite foi construida e entregue so no chat. Nao ha `aulas/` nem campo que vincule aula a tema; a proxima vez o artefato e re-forjado do zero. A nota de dificuldade 1-10 que calibrou a descompressao (D10 pela regra do extensivo) tambem nao foi registrada (`taxonomia_cronograma.dificuldade` intocada nesta sessao).
-- **Leitura de sistema:** a aula-base e artefato pedagogico validado (memoria: "leitura mais prazerosa"; efeito de cobertura 53%->75%) e caro de produzir (extracao + escada). Efemeridade = re-trabalho, zero acumulo, sem reuso cross-sessao -- tensao com o objetivo "melhor app de estudos". Pode ser efemera-por-design SE o `.md` (F16) for a forma duravel e a aula for so a sua renderizacao descomprimida.
-- **Verificacao sugerida:** decidir se a forma duravel do ensino e o `.md` gold (aula = derivada efemera) ou se a aula merece artefato proprio; conferir se `db.set_dificuldade` pode registrar a calibracao mesmo em prova fora do cronograma.
-- **Hipotese de melhoria (p/ ai-eng decidir):** (a) `.md` como forma duravel + aula como render efemero (fecha via F16, custo zero de infra); ou (b) persistir a aula (`{Tema}.aula.md` ou secao); e, minimamente, (c) registrar a nota de dificuldade do tema no ato da aula, alimentando a Revisao Calibrada.
-
-### F19 -- Ambiente e ENAMED/cronograma-centrico; prova paralela (R+ gastro) sem suporte de primeira classe -- **BAIXA** -- ⚰️ **SUPERADO (multi-prova de 1a classe, s159/s174)**
-- 🔬 **TRIAGEM Tier 3 (s176, 10/09/2026) -- re-medido contra o codigo, nao lembrado:** `core/provas.json` e hoje o leitor unico de datas e tem **3 entradas** (ENAMED 13/09, fim-grade-EMED 09/10, UERJ/MFC 01/11). O boot conta regressiva **por prova**, o ritmo-alvo e parametrizado pela prova-alvo (o plano de hoje diz *"faltam 3274 p/ UERJ/MFC (prova 01/11) em 52d"*) e o **blackout do FSRS** (F71) e por prova, lido de la e nunca hardcoded. O single-target morreu na virada da s159. **Residuo declarado, sem data:** nao existe sub-plano de volume/metrica ESCOPADO por prova paralela -- mas a demanda nao voltou desde a s108, e o eixo tema atende.
-- **Evidencia:** a sessao atual e p/ uma "prova de R+ em gastroenterologia", fora do `Cronograma.pdf`/grade ENAMED. Todo o boot (day_plan: volume-vs-meta, ritmo-alvo ~107.8q/dia, "faltam p/ ENAMED em 70d", proximos temas do cronograma) assume o alvo ENAMED. A maquinaria por tema (fraquezas, FSRS, cards, RAG) e agnostica de prova e serve; mas nao ha como escopar/trackear um alvo paralelo.
-- **Leitura de sistema:** o modelo de "para que estou estudando" e single-target (ENAMED). Provas paralelas (R+, especificas de residencia -- UERJ/USP/IPUB ja estao na direcao estrategica) sao atendidas ad-hoc pelo eixo tema, sem metrica/escopo proprio. Nao e defeito -- e limite de modelo de dominio, relevante ao objetivo de produto.
-- **Verificacao sugerida:** mapear superficies ENAMED-hardcoded (day_plan metas/ritmo, cronograma) vs. agnosticas (insert_questao, fsrs, rag); avaliar recorrencia de provas paralelas.
-- **Hipotese de melhoria (p/ ai-eng/produto):** conceito leve de "prova-alvo" (tag/escopo) que reusa o eixo tema e permite um sub-plano; ou decisao explicita de manter single-target e tratar paralelas so pelo eixo tema. Baixa urgencia; registrar p/ nao perder o sinal.
-
----
-
-## 3d. Sessao de engenharia -- ciclo 2, rodada 1 (Fable/ai-eng, 2026-07-05, paralela a s109)
-
-> Rodada de suporte iniciada ANTES da s109 abrir (e concluida em paralelo a ela). Do escopo autorizado do ciclo 2: entregue (a)-parcial e (b), mais F14/F15 (pendencias BAIXA do ciclo 1). (c) reforge + triagem de F16-F19 correm com a leva do operador. Corrida de escrita neste ledger detectada e respeitada: a s109 tomou a secao 3c e F16-F19; esta rodada usa 3d e F20.
-
-**F11 (expurgo ipub.db) -- JANELA PREPARADA na rodada 1; EXECUTADO 2026-07-06 (ver secao 3b/F11):**
-- Pre-condicoes conferidas na janela (2026-07-05, pre-s109): tree limpo, main == origin/main (b9bca29), sem lock; blob confirmado no historico (10+ commits ate d99ff02).
-- Backup mirror CRIADO: `C:/Users/daanm/medhub-backup-pre-expurgo.git` (18M). `git-filter-repo` INSTALADO (pip --user; ferramenta de operador, fora do requirements.txt).
-- O rewrite foi BLOQUEADO pelo gate de permissao do harness da sessao de engenharia (history-rewrite sem pedido nominal na conversa). Decisao: nao contornar -- gate humano no momento da execucao e o espirito do runbook ("aval NESTA janela"). Historico INTACTO. Com a s109 aberta, a janela FECHOU de qualquer forma (sem rewrite com sessao ativa).
-- Proxima janela: pos-s109, tree limpo de novo -> operador da o go nominal na conversa do Fable (rota preferida: runbook completo + validacao em clone fresco) OU roda os passos 2-5 do runbook direto no terminal.
-
-**F4/(b) -- teto dinamico VALIDADO com dados reais:**
-- Vivo (hoje, pre-s109): 1 atrasado -> regime normal, teto 30. Render do day_plan confere ("Teto do dia: 30 cards (base 30)").
-- Retrospectivo (s108 = maior divida real observada): 40 atrasados -> teto = min(30+40, 60) = 60; drenagem real da s108 foi 43+4 = 47 <= 60. O parametro teria coberto o pior caso real.
-- Observacao de design: a formula satura no cap ja na primeira entrada do regime (31 atrasados -> min(61, 60) = 60) -- na pratica e um degrau binario 30/60, nao rampa. Funciona na escala real; NAO mexer salvo divida real >60 aparecer (gate anti-decorativo).
-
-**F14 -> RESOLVIDO:** a verificacao achou a causa no ENGINE, nao no teste -- `app/engine/get_topic_context.py::_build_index` usava `Path("resumos")` relativo ao cwd (streamlit/CLIs rodando da raiz mascaravam). Fix: `_ROOT` resolvido por `__file__`; indice interno absoluto; `resumo_path` do retorno relativizado (contrato documentado preservado). Repro antes (fora da raiz): 4 checks XX; depois: TODOS PASSARAM. pytest 7 passed.
-
-**F15 -> RESOLVIDO:** snippet canonico de reconfigure (precedente: test_revisao_calibrada.py:15-18) + 4 prints com seta U+2192 trocados por `->`. Repro antes (sob pipe): UnicodeEncodeError; depois: 5/5 sob pipe.
-
-### F20 -- .venv dessincronizado do requirements.txt (fsrs ausente) -- **BAIXA** -- ⚰️ **RESOLVIDO (opcao (i): venv sincronizado)**
-- 🔬 **TRIAGEM Tier 3 (s176, 10/09/2026) -- re-medido contra o codigo, nao lembrado:** a reproducao original nao reproduz mais. `./.venv/Scripts/python.exe tools/day_plan.py` **roda e imprime o Plano do Dia** (nao levanta `ModuleNotFoundError: fsrs`), e `./.venv/Scripts/python.exe -m pip check` -> *"No broken requirements found"*. **Residuo declarado:** nenhum doc canonico diz QUAL runtime e o oficial -- os dois funcionam hoje, e a unica mencao ao assunto segue dentro de `test_revisao_calibrada.py`. Nao vale spec; vale saber que a escolha e implicita.
-- **Evidencia:** `./.venv/Scripts/python tools/day_plan.py` -> `ModuleNotFoundError: No module named 'fsrs'` (traceback cru); `requirements.txt` declara `fsrs>=6.3.1`; o python global roda tudo. `test_revisao_calibrada.py:25-30` ja conhece e trata (mensagem clara + exit 2) -- mas so ali.
-- **Leitura de sistema:** o venv existe e engana -- agente/dev que o ative nao roda day_plan nem db.py. O runtime canonico de fato e o python global, mas isso so esta documentado dentro de um teste.
-- **Verificacao sugerida:** conferir quem depende do venv (streamlit? hooks?) antes de escolher a hipotese.
-- **Hipotese de melhoria:** (i) sincronizar o venv (`pip install -r requirements.txt`) e mante-lo canonico, OU (ii) aposentar o venv e documentar o python global como runtime no AGENTE/README, OU (iii) guard com mensagem clara (padrao do test_revisao_calibrada) nos CLIs de `tools/`. Decisao do operador.
-
----
-
-## 3e. Sessao de uso s109 (coordenador-observador) -- analise do 1o lote de questoes -- achado F21
-
-> Corrida de escrita respeitada (convencao da secao 3d): a rodada 1 do ciclo 2 tomou 3d e F20; esta continuacao da s109 usa 3e e F21. Origem: analise do 1o lote de apendicite (18 questoes, 5 erros) -- trilha de ENGENHARIA. O conteudo clinico (os 5 cards ancorados nos erros) foi para o `ipub.db` via `insert_questao.py` (flashcards 727-731), nao aqui (secao 7.6).
-
-### F21 -- Compressao por dificuldade (Revisao Calibrada) eliminou um ponto de decisao de alto rendimento, nao so encurtou profundidade -- **MEDIA** -- **RESOLVIDO** (Invariante E + Clausula 10: cobertura e PISO FIXO, so a profundidade e calibravel -- `revisao-calibrada` v1.2)
-- **Evidencia:** a aula-base de apendicite foi re-renderizada em D7 (pedido do operador, baixando do D10). A compressao D10 -> D7 removeu o galho "isquemia de base apendicular junto ao ceco -> ileotiflectomia/ileocolectomia" (presente no D10; cortado no D7 como "detalhe cirurgico de baixo rendimento"). A Q2 do lote (42% de acerto) caiu exatamente nesse galho -- o operador marcou Ochsner (invaginacao), gabarito ileotiflectomia. Erro em parte atribuivel ao corte da aula.
-- **Leitura de sistema:** a Revisao Calibrada mapeia a nota 1-10 a degraus de descompressao (D10/D8/D5/D2). Mas a regra de cobertura (`feedback_aula_base_cobertura_escopo`, normada em AGENTE secao 1.2) diz que a profundidade calibra, a **cobertura nao** -- nunca cortar tema/ponto de pega de banca. O D7 violou isso: comprimiu ELIMINANDO um ponto de decisao testavel em vez de encurta-lo. O knob de dificuldade nao tem um "piso de cobertura" operacional no ato de render a aula.
-- **Verificacao sugerida:** revisar `core/contracts/revisao-calibrada-contract.md` -- ha clausula que separe "profundidade/descompressao" (calibravel pela nota) de "cobertura de pontos de decisao de alto rendimento" (piso fixo por tema)? A regra existe em memoria/AGENTE mas nao esta operacionalizada por nota.
-- **Hipotese de melhoria:** a nota calibra descompressao/prosa, nunca a lista de pontos de decisao de alto rendimento -- que e um checklist de cobertura fixo por tema, derivado do sumario da fonte (EMED). Operacionalmente, mesmo em D2/D5/D7 o render passa por esse checklist antes de fechar. Conecta com F18 (persistir aula + calibracao) e com o padrao ja validado (s089: extrair o sumario do PDF como checklist de cobertura antes de redigir).
-
----
-
-## 3f. Sessao de uso s109 (coordenador-observador) -- 2o lote de questoes -- achados F22-F26
-
-> Corrida de escrita respeitada (convencao 3d): 3c=F16-F19, 3d=F20, 3e=F21, esta secao=3f/F22-F26. Origem: 2o lote de apendicite (42 questoes, 11 erros) -- trilha de ENGENHARIA (os 5 cards de conteudo foram para `ipub.db`, flashcards 732-736). O operador pediu explicitamente (2026-07-05) alimentar o ledger com erros de processo, tentativas insatisfeitas, bugs, capacidades inexploradas e inconsistencias -- esta safra responde a isso.
-
-### F22 -- `registrar_sessao_bulk` idempotente por (sessao_num, area) impede 2o bloco da mesma area na mesma sessao -- **MEDIA** -- **RESOLVIDO (3g)**
-- **Evidencia:** o 1o bloco de apendicite foi gravado como s109/Cirurgia (18q). Ao registrar o 2o bloco (42q) na mesma sessao/area, a guarda de idempotencia (`registrar_sessao_bulk.py:56-65`, "SELECT ... WHERE sessao_num=? AND area=?") retornaria "[AVISO] ... Nada alterado" -- nem soma nem atualiza. Contornei com `--sessao 110` (+ `--obs` "s109 bloco 2"); senao o volume das 42q seria perdido.
-- **Leitura de sistema:** a guarda protege contra duplo-registro acidental, mas trata "mesma sessao + mesma area" como duplicata sempre. Um dia com 2+ blocos da mesma area (comum: manha e tarde de Cirurgia) nao tem como ser gravado sem falsear o `sessao_num` -- que passa a acumular um valor (110) sem `history/session_110` correspondente. Inconsistencia entre rotulo de volume e ponteiro de sessao.
-- **Verificacao sugerida:** confirmar se `day_plan`/dashboard somam volume por SUM de linhas (110 nao quebraria o total, so o rotulo) ou assumem 1 linha por sessao.
-- **Hipotese de melhoria:** (a) UPSERT acumulativo (mesma sessao+area soma feitas/acertos), OU (b) `--bloco N` como parte da chave, OU (c) desacoplar `sessao_num` do volume (chave por `data`+area+bloco). A idempotencia anti-duplo deveria olhar um hash do lote, nao (sessao, area).
-
-### F23 -- Cards de erro recem-cunhados (state 0) nao sao surfaced antes do proximo bloco do mesmo tema -> reincidencia -- **MEDIA** -- **RESOLVIDO (3g)**
-- **Evidencia:** o link "quadro classico jovem <48h = operar, nao pedir imagem" foi cunhado no bloco 1 desta MESMA sessao (card 730, horas antes). No 2o lote (mesmo dia, mesmo tema) o operador reincidiu no MESMO link **3x** (Q4 pediu US, Q8 pediu TC, Q11 pediu US). O card 730 e state 0 (novo), sem `due` proximo -> nao foi drilado no intervalo entre os blocos. Reincidencia em HORAS, nao dias -- torna o achado mais forte.
-- **Leitura de sistema:** para um tema ATIVO (blocos consecutivos), o FSRS puro (agenda por curva) nao serve o card fresco a tempo -- ele so entra pela fila de novos. Falta um gatilho "voce tem cards de erro frescos do tema X que vai treinar agora -> mini-drill antes do bloco" (PREPARAR DIRECIONADO por tema-alvo). A regra do `analisar-questao` ("nao tolere errar 2x pelo mesmo motivo") existe no papel, mas nada a opera.
-- **Verificacao sugerida:** confirmar que cards state 0 nao entram na fila de vencidos same-day; medir quantos dos 11 erros batem em links ja carded no 1o lote (>= 3: Q4/Q8/Q11 -> 730; Q8 tambem toca 729).
-- **Hipotese de melhoria:** um "pre-bloco por tema-alvo" -- antes de um bloco anunciado de tema X, oferecer drill dos cards de erro frescos (state 0) de X. Estende o PREPARAR (F5) do dormente para o tema-quente-recem-errado. Fecha o buraco entre cunhar o card e ele virar util.
-
-### F24 -- `insert_questao.py` sem modo batch; N erros = N chamadas longas -> exige driver ad-hoc -- **BAIXA/MEDIA** -- **RESOLVIDO (3g)**
-- **Evidencia:** um lote de 11 erros nao tem caminho de insercao em lote. Cada erro e uma chamada com ~17 args longos; encadear via shell quebrou por quoting (`bash -c`, aspas desbalanceadas, exit 2, ZERO inseridos). A solucao foi um driver Python (`run_inserts.py`, depois `run_inserts2.py`) passando args por LISTA (sem shell). `--cards-file` existe, mas so adiciona cards a um erro ja criado -- nao cria N pares questao+card novos.
-- **Leitura de sistema:** o pipeline e otimo para 1 erro por vez, mas lotes de prova (10-40q) sao o caso real. A ausencia de batch empurra o agente para scripts ad-hoc a cada sessao -- custo e superficie de erro recorrentes (a falha de quoting inutilizou a 1a tentativa).
-- **Verificacao sugerida:** confirmar que `--cards-file` nao cria a linha em `questoes_erros` (so cards); medir o atrito de 5-11 inserts sequenciais.
-- **Hipotese de melhoria:** `insert_questao.py --errors-file errors.json` aceitando uma LISTA de erros completos (metadados + 5 campos de card cada), inseridos numa transacao. O agente escreve 1 JSON (sem quoting de shell) e chama 1x. Elimina a classe inteira de driver ad-hoc + falha de quoting.
-
-### F25 -- Sem detector de reincidencia: "errar 2x pelo mesmo motivo" nao e sinalizado automaticamente -- **MEDIA** -- **RESOLVIDO (3g)**
-- **Evidencia:** para descobrir que Q4/Q8/Q11 do 2o lote batiam no card 730 (do 1o lote), o agente cruzou manualmente os erros novos contra os cards existentes. Nada no `insert_questao`/db avisa "este erro reincide sobre um elo ja carded". O `analisar-questao.md` eleva isso a "alerta critico", mas o sinal depende 100% da memoria do agente na sessao.
-- **Leitura de sistema:** o dado existe (`questoes_erros` tem `elo`/`tipo_erro`/`o_que_faltou`; cards tem tema+links). Um matcher (tema + similaridade do `elo`/`o_que_faltou`) marcaria reincidencia no ato do insert -> promoveria o erro a "padrao vivo" no HANDOFF e ao envelope de fraquezas (LangMem, R1 da Autogovernanca). Capacidade inexplorada.
-- **Verificacao sugerida:** avaliar se um match por (tema + tipo_erro + overlap de tokens do elo) tem precisao suficiente; comecar como WARN (politica s106/107).
-- **Hipotese de melhoria:** no `insert_questao`, apos inserir, checar "ha erro/card anterior no mesmo tema com elo semelhante?" e, se sim, emitir flag de REINCIDENCIA (contagem + link). Alimenta a trilha de conteudo (HANDOFF padroes vivos) e a de fraquezas. Conecta com F23 (surfacing) e R1.
-
-### F26 -- Questoes anuladas/banca-dependentes contam como erro "limpo"; sem tag -- **BAIXA/MEDIA** -- **RESOLVIDO (3g)**
-- **Evidencia:** no 2o lote, Q10 tinha "GABARITO OFICIAL: A" x "GABARITO EMED: C" -- o operador marcou C (alinhado ao EMED: "nao existe sinal de McBurney, e PONTO"), "errou" so pelo gabarito oficial. Q5 trazia "nenhuma alternativa esta correta" (banca manteve D com duracao tecnicamente errada). Ambas entram no bruto de 11 erros como se fossem erro limpo de conteudo.
-- **Leitura de sistema:** o volume/erro nao distingue "erro real de conteudo" de "questao anulada/controversa onde o operador acertou com razao" -- mesma familia do F7 (1o ciclo). Sem tag, a taxa de erro e o pipeline de cards ficam poluidos por questoes que nao medem lacuna real. Inconsistencia de sinal.
-- **Verificacao sugerida:** estimar a frequencia de anuladas/divergentes nos lotes reais; decidir se merece um campo.
-- **Hipotese de melhoria:** flag opcional no registro do erro (`--status anulada|banca-divergente`) que (a) nao gera card de "erro" (ou gera card de conteudo neutro), (b) nao conta contra a taxa de acerto real, (c) aciona o gate de evidencia (`/pesquisar-evidencia`) quando banca x diretriz divergem. Estende o mecanismo do F7 do card para a propria questao.
-
----
-
-## 3g. Sessao de engenharia -- ciclo 2, rodada 2 (Fable/ai-eng, 2026-07-06) -- ORQUESTRACAO ENTREGUE
-
-> Fluxo vibeflow completo delegado pelo operador (2026-07-05, pos-s109): discover -> PRD
-> (`.vibeflow/prds/orquestracao-preparacao.md`) -> 4 specs -> implement -> audit **PASS 4/4**
-> (`.vibeflow/audits/orquestracao-preparacao-part-*-audit.md`). Tema do PRD veio da decisao
-> de produto do operador: ORQUESTRACAO DA PREPARACAO (posicao nunca errada; distribuir carga
-> cognitiva pelo follow-up real; descanso/simulado como saidas legitimas). pytest: 13 -> 36 passed.
-
-**Entregas (verificadas contra o codigo antes de spec; regra 0.4):**
-- **op-3 (posicao) -> SISTEMA NOVO (part-1):** semana de conteudo = estado de primeira classe
-  no db (`preparacao_estado`); CLI `tools/preparacao.py` (--set-semana/--show); day_plan
-  db-first (regex `Proxima = SNN` rebaixada a fallback com WARN; nominal virou comparativo);
-  `--handoff-block` EMITE a posicao; invariante `POSICAO_DRIFT` no auto_check (WARN).
-  O smoke expos na hora: conteudo S12 vs nominal S15 -- 3 semanas de atraso que o fallback
-  nominal mascarava.
-- **F22 -> RESOLVIDO (part-1):** `--acumular` soma o 2o bloco na mesma (sessao, area) com
-  delta-only na taxonomia (sem dupla contagem); guarda anti-duplo preservada por default;
-  `--semana N` atualiza a posicao no ato do registro.
-- **Recomendador do dia -> ENTREGUE (part-2):** `recomendar_dia()` pura e deterministica
-  (R1 mini-drill, R2 descanso, R3 simulado, R4 questoes, R5 fsrs) + projecao (ritmo real
-  14d vs necessario, folga em dias) + `--tempo H`/`--energia alta|media|baixa` com defaults
-  declarados e registro da condicao. Norma com parametros nomeados:
-  `core/contracts/orquestracao-contract.md` (paridade contrato<->CLI TESTADA); AGENTE 2
-  passo 4 aponta. Gate anti-decorativo declarado (3 sessoes sem alterar decisao -> revisar).
-  Smoke real: "ritmo real 65.6q/dia -> grade fecha em ~96d (folga -27d); necessario 91q/dia".
-- **F23 -> RESOLVIDO (part-3):** `fsrs_queue --pre-bloco TEMA [--janela-horas]` lista so os
-  cards de erro frescos (state 0) do tema-alvo; rating segue o caminho unico. Smoke real:
-  10 cards frescos de Apendicite (727-736) servidos.
-- **F25 -> RESOLVIDO (part-3):** matcher lexical pos-insert (tokens normalizados,
-  LIMIAR_OVERLAP=0.5) emite `[REINCIDENCIA]` apontando card/erro existente -- WARN
-  informativo, nunca bloqueia. Fixture positiva = caso real s109 (Q4 vs card 730).
-- **F24 -> RESOLVIDO (part-4):** `insert_questao --errors-file lote.json` -- N erros numa
-  transacao unica; validacao pre-transacao aponta item/campo; rollback TOTAL em excecao;
-  dedupe por conteudo em re-execucao. Elimina a classe driver-ad-hoc/quoting.
-- **F26 -> RESOLVIDO (part-4):** `--status anulada|banca-divergente` (coluna nova
-  `questoes_erros.status`, ALTER idempotente): registra o erro SEM cunhar card +
-  `[GATE-EVIDENCIA]`; taxa real limpa por construcao.
-
-**Fora do ciclo (registro honesto):**
-- **F21 -- RECONCILIADO 2026-07-12 (dois planos):** (1) **conduta = RESOLVIDA** -- a clausula
-  "descompressao calibravel x cobertura piso fixo" entrou em `core/contracts/revisao-calibrada-contract.md`
-  v1.2 (Clausula 10 + Invariante E: "compressao encurta, nunca corta"). (2) **enforcement mecanico
-  = PENDENTE** -- o checklist automatico de cobertura (WARN quando o tema da semana nao tem `.md`)
-  esta na spec `mecanismo-conhecimento-consolidacao-part-3`. Ou seja: a barreira de conduta ja vale;
-  o motor mecanico vem com a cobertura (o proprio contrato v1.2 declara isso, L138).
-- **F16-F19 (pipeline de conhecimento)** -- anti-escopo declarado do PRD; ciclo 3
-  (decisao de arquitetura ja registrada: two-tier, .md canon + collection pdf_raw).
-
-### F27 -- Modo single do insert_questao sai com exit 0 mesmo em falha -- **BAIXA** -- ⚰️ **RESOLVIDO (com teste)**
-- 🔬 **TRIAGEM Tier 3 (s176, 10/09/2026) -- re-medido contra o codigo, nao lembrado:** `grep -n sys.exit tools/insert_questao.py` -> **`:481 sys.exit(0 if ok else 1)`** (modo single) e `:516` (batch) -- simetricos, como a hipotese pedia. `pytest tools/test_batch_insert.py -k single` -> **4 passed**. Ja estava documentado em `.claude/commands/analisar-questao.md §9` (*"Exit code (F27): modo single retorna 0 em sucesso e 1 em falha"*); faltava so o marcador aqui.
-- **Evidencia:** a docstring promete "Exit 0 em sucesso, 1 em falha", mas o main nao
-  captura o retorno de `insert_questao()` -- falha imprime erro e sai 0. Pre-existente;
-  descoberto na verificacao da part-4 (que implementou exit 1 no caminho --errors-file).
-- **Hipotese de melhoria:** `sys.exit(0 if ok else 1)` no modo single (1 linha; conferir
-  se algum chamador depende do exit 0 atual antes).
-
-### F28 -- Arg `--elo` (required) nao e persistido em coluna propria -- **BAIXA** -- ⚰️ **RESOLVIDO por decisao (opcao (b): documentar, nao migrar)**
-- 🔬 **TRIAGEM Tier 3 (s176, 10/09/2026) -- re-medido contra o codigo, nao lembrado:** o fato medido nao mudou -- `PRAGMA table_info(questoes_erros)` devolve **14 colunas e nenhuma se chama `elo`**. O que mudou e que isso deixou de ser lacuna e virou **contrato escrito**: `.claude/commands/analisar-questao.md §9` carrega a tabela arg->coluna, declara que o campo canonico do elo e **`o_que_faltou`** (via `--faltou`), explica que o `--elo` e consumido pelo matcher de reincidencia F25 (`insert_questao.py:286`, `checar_reincidencia`) e **proibe** explicitamente que uma sessao futura crie a coluna. Decisao de schema tomada e versionada.
-- **Evidencia:** o INSERT de `questoes_erros` grava habilidades/faltou/armadilha; o `elo`
-  era recebido e IGNORADO ate a part-3 (o matcher F25 virou seu 1o consumidor real).
-  O "elo" semantico vive espalhado em `o_que_faltou`/cards.
-- **Hipotese de melhoria:** ou persistir (coluna `elo`), ou documentar no workflow que o
-  campo canonico e `o_que_faltou` e deprecar o arg. Decisao de schema -- operador.
-
-### F29 -- Drift planilha-db nao pego pelo boot (reconcile B4/W1 pulado) -- **ALTA** -- **RESOLVIDO (s110p2, 2026-07-06)**
-- **Evidencia:** a sessao abriu com `/performance` + `/cronograma` direto do cache do hook
-  (`day_plan`), sem rodar o check de reconcile (AGENTE.md secao 2 passo 3 / reconcile-contract
-  B4/W1) contra a planilha `Dashboard EMED 2026`. Relatei 4584q ao operador; ele corrigiu para
-  4660 (76q de delta) -- residuo ja existente ANTES desta sessao comecar, nao gerado por ela.
-- **Causa raiz (dupla, achada via `download_file_content`+openpyxl nas 20 abas por disciplina
-  da planilha):** (1) **mislabel** -- `'GO'` (id 38) e 3x `'Clinica Medica'` (ids 64/65/66,
-  sessoes 103-105, gap Antigravity sem fechamento) eram rotulos invalidos escondendo
-  Ginecologia/Infecto/Hemato/Oftalmo reais (casamento exato feitas+acertos digito a digito,
-  zero ambiguidade); (2) **volume nunca registrado** -- Ortopedia (29q/24a, Quadril Pediatrico)
-  e um residual de Cirurgia (47q/40a, tarefa especifica nao identificavel) existiam na
-  planilha sob nenhum rotulo no db.
-- **EXECUTADO:** `tools/fix_data_delta_110.py` (relabel dos 4 ids; arquivado em
-  `tools/_archive/migrations/`) + `registrar_sessao_bulk.py --acumular` (Ortopedia/Cirurgia).
-  Backup previo (`ipub_backup_20260706_201837.db`). Validado: `performance.py` bate
-  4660q/3684a/79.1% identico a planilha; as 20 areas conferem 1:1 contra as abas por disciplina.
-- **Hipotese de melhoria (o que falta para nao reincidir):** o boot hoje SO reconcilia se o
-  agente decidir rodar manualmente -- nao ha barreira mecanica. Promover B4/W1 a um passo
-  automatico do `day_plan.py`/hook (mesmo que so um WARN comparando total local vs total via
-  MCP), em vez de depender do agente lembrar de rodar `/importar-planilha` toda sessao.
-
-### F30 -- `material_indicado` do cronograma nao verifica se o resumo realmente existe -- **MEDIA** -- **RESOLVIDO (s115, boot-cronograma-drive-confiavel part-2)**
-- **Evidencia:** a task de Pre-Natal em S12 vem marcada `material_indicado: resumo` (implica
-  "so ler o resumo existente"), mas `resumos/GO/Pré-Natal.md` NUNCA existiu -- so o PDF-fonte
-  (`25. Pré-Natal.pdf`, 90 paginas). Descoberto ao vivo: operador fez cold recall de 18q (sem
-  aula previa) e so na analise pos-questoes percebi que era tema-zero, tendo que construir o
-  resumo do zero a partir do PDF (mesmo padrao do F16 -- Apendicite).
-- **Leitura de sistema:** a heuristica `material_indicado` (mencionada em `AGENTE.md` secao 1.2,
-  refinada 79%->44% na s107) provavelmente infere o rotulo do TIPO de tarefa do PDF do cronograma
-  (`Teoria` vs `Revisão`), nao de uma checagem real contra `resumos/**/*.md`. Isso pode levar a
-  aula/estudo com expectativa de material leve quando na verdade e tema-zero.
-- **Verificacao sugerida:** conferir quantas outras tasks com `material_indicado: resumo` tambem
-  carecem de `.md` correspondente (cruzar `core/cronograma/grade.json` x `resumos/**/*.md` por
-  `_find_resumo`).
-- **Hipotese de melhoria:** `cronograma.py` (ou `day_plan.py --difficulty`) checar em tempo real
-  se o resumo existe via `_find_resumo` e rebaixar `material_indicado` para `extensivo`
-  automaticamente quando nao existir -- fecha o mesmo buraco do F16 de forma preventiva, para
-  qualquer tema futuro, nao so Apendicite.
-
-### F31 -- Cards FSRS podem existir sem NENHUM lastro clinico (nem .md nem PDF-fonte) -- **MEDIA** -- **RESOLVIDO (s115, boot-cronograma-drive-confiavel part-2)**
-- **Evidencia:** card_id 205 (Leishmaniose, area Infecto) foi drenado na s112 e o usuario relatou
-  "muita dificuldade" pedindo refresh amplo -- `find resumos -iname "*leishmaniose*"` retornou
-  vazio E nao ha PDF-fonte tampouco (diferente do F16/F30, onde ao menos o PDF EMED existia). O
-  card nasceu de um erro real via `insert_questao.py` (Siamese Twins: erro->db, licao->resumo),
-  mas o lado "licao->resumo" nunca foi executado -- e nao ha checagem no momento da insercao que
-  force ou ao menos sinalize a ausencia.
-- **Leitura de sistema:** o par Siamese Twins (`AGENTE.md` secao 6) e uma convencao, nao um
-  invariante mecanico -- `insert_questao.py` grava o erro/card mesmo se o resumo do tema
-  (area,tema) nao existir em `resumos/**/*.md` nem como PDF-fonte. Generaliza F16/F30 (tema COM
-  pdf sem .md) para o caso mais severo: tema sem nenhum lastro escrito.
-- **Verificacao sugerida:** cruzar `taxonomia_cronograma` (todas as `(area,tema)` com card ativo)
-  x `resumos/**/*.md` x `resumos/**/*.pdf`; listar temas com card ativo e ZERO lastro escrito.
-- **Hipotese de melhoria:** `insert_questao.py` fazer um check read-only (WARN nao bloqueante)
-  quando `_find_resumo(area,tema)` retorna None -- sinaliza no ato da insercao, nao meses depois
-  num refresh de FSRS.
-
-### F32 -- Re-drill intra-sessao do `/revisar` colide com o relearning nativo do FSRS (state=3) -- **BAIXA** -- **RESOLVIDO (s204: a colisao acabou por remocao de uma das camadas -- o motor nao tem mais passo de reaprendizagem; decisao do operador no F140)**
-- 🔄 **s204 (28/09/2026): REINCIDIU como F140, agora na superficie do hub** -- o lote seguinte do mesmo dia re-serve o card em `state=3` e GRAVA a 2a nota (o residuo deixou de ser so ruido de apresentacao: 49 segundas notas gravadas, todas descontadas do teto). O F140 foi escrito sem citar este item e re-derivou a causa errada. ✅ **Fechado na mesma sessao:** o operador decidiu que a nota 1 volta so no dia seguinte; com `relearning_steps=()` o `state=3` deixa de ser produzido e a reaprendizagem do dia e so o re-drill do player.
-- 🔬 **TRIAGEM Tier 3 (s176, 10/09/2026) -- re-medido contra o codigo, nao lembrado:** a colisao **continua existindo e vai continuar** -- e estrutural: `select state, count(*) from fsrs_cards` -> **8 cards em `state=3`, os 8 com `due <= hoje`**. Duas camadas resolvendo o mesmo problema por vias diferentes nao se fundem sem matar uma. O que a mitiga hoje e contrato, nao codigo: `revisar.md §Relearning intra-sessao` fixa que o re-drill **nao chama `--record`** e que a nota do FSRS e **uma so por card por sessao** (a 1a honesta), e a s173 acrescentou o corte do loop (travou 2x -> sai e vira reonboarding). 🔴 **Residuo nomeado, nao consertado:** o `--list` de fechamento nao distingue *"voltou por relearning nativo e ja foi reforcado no re-drill"* de *"nao visto hoje"* -- o sintoma original (fila que parece nao-vazia) sobrevive como ruido de APRESENTACAO. A mecanizacao da fila de re-drill esta declarada como candidato no painel de DIVIDA do `auto_check`, sem data.
-- **Evidencia:** s112 (drenagem de 28 cards + re-drill de 13). Apos ratings 1 em 3 cards (205,
-  201, 165), o agente fez o re-drill manual (conversacional, sem `--record`) conforme o contrato
-  -- mas o proprio `record_review()` ja tinha agendado esses 3 cards para reaparecer NO MESMO DIA
-  (`state=3`, relearning nativo da lib FSRS). Resultado: ao rodar `--list` no fechamento da sessao
-  pra conferir fila vazia, os 3 reapareceram como "hoje", mesmo ja reforcados com sucesso no
-  re-drill manual minutos antes -- pareceu fila nao-vazia quando na pratica estava.
-- **Leitura de sistema:** duas camadas tentando resolver o mesmo problema (recall fragil precisa
-  de reforco proximo) por vias diferentes -- o contrato da skill (`revisar.md`, "Relearning
-  intra-sessao") reimplementa em prosa algo que a lib FSRS (`app/utils/fsrs.py`) ja faz nativamente
-  via `state=3`. Nao ha bug de dado (nenhum record duplicado), so ambiguidade de leitura.
-- **Verificacao sugerida:** checar se `--list`/`--next` deveriam marcar cards `state=3` com `due`
-  no mesmo dia da sessao atual como distintos de "aguardando 1a resposta".
-- **Hipotese de melhoria:** nenhuma acao imediata necessaria (nao e bug funcional) -- documentar em
-  `revisar.md` que o relearning nativo (state=3, mesmo dia) e ESPERADO apos rating 1/2 e que o
-  re-drill conversacional e complementar, nao substituto.
-
-### F33 -- Boot recomenda temas ja FEITOS porque `day_plan`/`grade.json` sao calendario-driven, nao leem conclusao real da planilha -- **MEDIA** -- **RESOLVIDO (08/07, mesma sessao)**
-- **Evidencia (08/07):** o boot do dia recomendou "proximos temas: MFC (extensivo), Imunizacoes
-  (extensivo), Apendicite Aguda (extensivo)" como S12. O operador contestou -- essas 3 tarefas ja
-  tinham sido feitas. Verificacao ao vivo via `download_file_content`+`openpyxl` na planilha
-  `Cronograma de Reta Final.xlsx` (marcador de conclusao = `cell.font.strike`, conforme
-  `importar-planilha.md`) confirmou: MFC Teoria I/II, Imunizacoes Teoria I/II e Apendicite
-  Teoria+Revisao estao riscados (FEITOS, semanas 11-12). O que de fato falta em S12 (sem strike):
-  DITC II (Teoria), Disturbios do Potassio (Teoria), Cefaleias+Epilepsias (Teoria), HAS Pt.2
-  (Teoria) + 2 blocos de Revisao por Questoes (MFC+Vigilancia+SIS; DM Tipo2 completo).
-- **Causa raiz:** `cronograma-contract.md` ja documentava isso como fora de escopo v1.0 (Clausula
-  1 + secao "Fora de escopo", item R8: "Reconciliar PDF x xlsx do Drive"). `grade.json` deriva
-  do `Cronograma.pdf` estatico (SSOT estrutural) e o `day_plan.py` posiciona "proximos temas" por
-  **posicao sequencial na grade vs data calendario**, nunca lendo o marcador de tachado/cor que o
-  operador usa na planilha do Drive para sinalizar conclusao real. O ponteiro textual
-  `Proxima = Semana N` em `ESTADO.md`/`HANDOFF.md` (unico write permitido pela Clausula 5) tambem
-  estava desatualizado (`Semana 11`, de sessoes anteriores) e nao e atualizado automaticamente --
-  so por edicao manual quando alguem nota o drift.
-- **Verificacao sugerida:** cruzar `grade.json` completo (352 tasks) x planilha inteira (nao so a
-  janela S11-S16 checada nesta sessao) para medir o tamanho real do drift calendario x execucao.
-- **Hipotese de melhoria:** implementar R8 de fato -- `cronograma.py --check-drive` (ou similar)
-  le `cell.font.strike` por task via MCP sob demanda no boot (nao cron, coerente com Clausula 3) e
-  cruza com `area_norm`/`tema` de `grade.json` para computar "proximos temas" pela FRONTEIRA REAL
-  de conclusao, nao pela posicao calendario. Ate isso existir, o ponteiro `Proxima = SNN` deve ser
-  tratado como aproximacao e reconciliado manualmente quando o operador contestar o boot (como
-  aqui). Correcao ao vivo desta sessao: `HANDOFF.md`/`ESTADO.md` atualizados (Semana 11 fechada,
-  Semana 12 parcial, lista real de pendentes).
-- **EXECUTADO:** ciclo completo `/discover` -> `/gen-spec` -> `/implement` -> `/audit` (verdict
-  **PASS**; `.vibeflow/{prds,specs,audits}/cronograma-sync-conclusao-drive.md`). Implementa R8 de
-  fato: `tools/cronograma.py --sync-drive <xlsx>` parseia `cell.font.strike` por task e casa contra
-  `grade.json` por `(semana, tema normalizado via unicodedata, tipo_norm)` -- indice de task nao
-  bate 1:1 entre PDF e xlsx, entao o match e semantico, nao posicional. Grava snapshot em
-  `preparacao_estado.cronograma_conclusao_drive` (reusa o SSOT do PRD orquestracao-preparacao em
-  vez de criar arquivo novo -- achado durante o gen-spec: a `cronograma-contract.md` Clausula 5
-  estava desatualizada, ainda descrevia o ponteiro de texto `Proxima = SNN` como "unico write
-  permitido" quando esse caminho ja estava DEPRECADO desde 2026-07-06). `day_plan.py` agora filtra
-  "proximos temas" pela fronteira real quando o snapshot e do dia-calendario corrente; sem
-  snapshot fresco, degrada pro comportamento calendario antigo + avisa `conclusao_desatualizada`
-  (nunca falha silenciosa). Nova condicao **W8** em `reconcile-contract.md`. Validado contra o
-  xlsx real desta sessao: 352 tasks, 119 concluidas, resultado bate 1:1 com a apuracao manual que
-  originou este achado. 19/19 testes novos+existentes PASS + `auto_check.py --changed` PASSED.
-- **Nao resolvido por este ciclo (fora de escopo, documentado na spec):** alinhamento fino
-  `questoes_por_lista[i] <-> tasks[i]` (permanece rateio igual); reimportacao de volume a partir
-  do xlsx (fluxo separado, W1/F29).
-
----
-
-## 3h. Sessao de engenharia -- s115 (2026-07-09): auditoria do boot -> PRD boot-cronograma-drive-confiavel (3 partes, audits PASS)
-
-> Origem: o operador pediu auditoria do boot + dos PRDs recentes, com o norte "mais autonomo,
-> gerir o cronograma com maxima eficiencia". Fluxo vibeflow completo conduzido por MIM:
-> `/discover` -> `/gen-spec` (3 specs) -> `/implement`+`/audit` x3 (todos PASS). Entrega F34 e
-> resolve F30/F31. Achados/decisoes de processo em `.vibeflow/decisions.md`.
-
-### F34 -- Boot regride em silencio quando o snapshot do Drive nao e sincronizado; ordem manual do xlsx nao e capturada -- **MEDIA** -- **RESOLVIDO (s115)**
-- **Evidencia (viva no boot de 09/07):** (1) `proximos temas: MFC, Imunizacoes, Apendicite` -- todos
-  ja feitos -- porque nenhum snapshot fresco existia no boot headless e o `day_plan` caiu pra
-  ordem-do-PDF, com `conclusao_desatualizada` sinalizado fraco demais (hint no fim da linha). (2)
-  `Refrescar: Leishmaniose` (tema sem lastro, F31). Alem disso, o usuario reordena tarefas a mao no
-  xlsx (ordem/semana) e o `--sync-drive` descartava essa ordem (so lia o tachado) -- `project_cronograma_dual_ssot`.
-- **Leitura de sistema:** costura headless/interativo -- o hook `SessionStart` roda sem MCP e so ve o
-  db local; tudo que depende do Drive (conclusao W8, ordem, reconcile de volume W1) fica refem da
-  disciplina do agente rodar `--sync-drive` e regride em silencio quando ele nao roda. O trabalho
-  anterior (W8/F33) mecanizou o PROCESSAMENTO do sync, nao o DISPARO nem a captura de ordem.
-- **EXECUTADO (3 partes, audits PASS em `.vibeflow/audits/boot-cronograma-drive-confiavel-part-{1,2,3}-audit.md`):**
-  - **part-1 (disparo+ordem):** `--sync-drive` captura `ordem` (linha do xlsx) no snapshot
-    `preparacao_estado`; `day_plan` ordena "proximos temas" pela ordem real quando fresco (fallback
-    PDF); banner `Drive desatualizado (Nd)` no topo; `AGENTE §2.4` + `reconcile W8` tornam o sync
-    ACAO OBRIGATORIA quando STALE, com degradacao graciosa (MCP fora -> calendario-only COM caveat,
-    nunca silencioso, nunca BLOCK -- Clausula 6). Regressao propria detectada e corrigida no loop
-    (contrato de `_conclusao_drive` tupla->dict quebrou 3 testes de `test_orquestrador.py` que o
-    `auto_check --changed` nao roda -- pego pelo `pytest` completo do audit; pitfall registrado).
-  - **part-2 (integridade, F30+F31):** `_material_efetivo` rebaixa `resumo -> extensivo` quando o
-    `.md` nao existe (render + `--difficulty`; compoe com G5 -- nota do usuario ainda vence); WARN
-    `[SEM-LASTRO]` read-only no `insert_questao` (nunca bloqueia).
-  - **part-3 (higiene):** contador de resumos DERIVADO (`--handoff-block`, mesmo glob do linter ->
-    fim do drift `63x61`); linha "Indicador Atual" do ESTADO enxugada (deixou de ser diario);
-    `estado-contract` reforca a regra; este ponteiro de abertos corrigido.
-- **Nao resolvido (fora de escopo, documentado nas specs):** automacao real do fetch do Drive (viola
-  Clausula 1/3 -- fica agent-triggered, so o disparo virou obrigatorio-de-tentativa); mecanizacao
-  completa do reconcile de volume W1/F29; alinhamento fino `questoes_por_lista[i] <-> tasks[i]`.
-
----
-
-## 3i. Sessoes de uso s124-s125 -- achados F35-F36 (registro retroativo)
-
-> Origem: dois achados vinham sendo carregados como ponteiro no `HANDOFF.md` sem entrada propria no
-> ledger (F35 desde a s124, F36 novo na s125). Registrados aqui na reconciliacao de fechamento da
-> s125 para que o ponteiro tenha lastro.
-
-### F35 -- Reconcile de volume (W1) segue manual e o `auto_check --changed` nao cobre a suite impactada -- **MEDIA** -- **RESOLVIDO (s176, item 0.5)**
-- **Origem:** herdado como "nao resolvido" do escopo do F34/s115 (secao 3h) e carregado no HANDOFF
-  desde a s124 sem entrada propria.
-- **Duas faces:**
-  - **Reconcile de volume (W1/F29):** a conferencia planilha-db continua dependendo de o agente
-    lembrar de rodar; o drift de 76q pego ao vivo na s110 foi corrigido a mao, nao mecanizado.
-    Agravado pelo drift recorrente das linhas de "Revisao por Questoes" (`project_drift_revisao_por_questoes`).
-  - **Seletor de suite do `auto_check`:** `auto_check --changed` seleciona a suite pelo arquivo
-    tocado e por isso NAO rodou os 3 testes de `test_orquestrador.py` quebrados na part-1 da s115 --
-    so o `pytest` completo do audit pegou. O seletor da falso verde quando a mudanca e de contrato
-    (tupla->dict) e o consumidor vive noutro arquivo.
-- **Impacto:** falso verde no gate barato; drift de volume so aparece quando alguem olha.
-- ✅ **Face 2 (seletor de suite) fechada na s159** -- ver F44, que e "o F35 na sua forma real":
-  nao era o seletor escolhendo mal, era nao haver o que selecionar (o `auto_check` nao chamava o
-  pytest). Bullet ja existente naquele achado.
-- ✅ **Face 1 (reconcile de volume) fechada em 10/09/2026 (s176, janela 2, item 0.5 do Tier 0).**
-  O W1 passou de `manual` a **REPORTA**: `day_plan.reconcile_planilha` emite **uma linha por boot**,
-  inclusive `NAO MEDIDO` quando nao ha snapshot -- ausencia de medicao virou estado reportado, nunca
-  silencio nem delta zero assumido. O snapshot da planilha (`preparacao_estado.planilha_snapshot`,
-  gravado por `importar_sessoes.py --snapshot`) e tomado no unico instante em que os numeros dela
-  existem: quando o agente a le via MCP.
-  🔬 **Medicao que motivou (10/09, comando na mao):** `grep -rniE "planilha|dashboard" --include=*.py
-  tools/ app/` -> **zero comparacoes** no codigo vivo; os dois unicos reconciles da historia do
-  projeto viraram script one-shot (`tools/_archive/migrations/fix_data_delta_075.py` e
-  `fix_data_delta_110.py`). A docstring do segundo guarda quem deu o alarme: *"Usuario reportou
-  performance desatualizada (4660 real vs 4584 relatado)"*.
-  🔴 **O que a fixture da s110 ensinou ao desenho:** de 4 achados, **3 eram mislabel de area** e o
-  relabeling **nao mudou o total** (4584 antes e depois). Logo `alinhado` **exige** detalhe por aba;
-  sem ele o estado e `sem_detalhe_area`, que declara o que nao foi verificado em vez de dar verde.
-  **Nao bloqueia** (W1 segue WARNING), **nao le o Drive** (F36 intocado) e **nao valida vocabulario
-  de area** -- area fantasma aparece crua no relatorio; consertar na origem e o **F89** (item 0.6).
-  Spec `.vibeflow/specs/reconcile-planilha-reporta.md` · `reconcile-contract` v1.3 · suite 503 -> 523.
-
-### F36 -- Agente nao materializa binario grande baixado via MCP -> `--sync-drive` pulado 5 sessoes seguidas -- **ALTA** (era MEDIA) -- **SUPERADO (s186 part-8; medido na s187)** -- o sujeito do achado deixou de existir: o Drive foi congelado e `--sync-drive` REMOVIDO do codigo sob snapshot reversivel. Nao ha mais binario grande a materializar.
-- **Evidencia (s124, s125, s126, s127 e s128):** o boot sinalizou `Drive desatualizado`
-  (10 dias no boot de 19/07) e o `--sync-drive` **nao rodou** nas duas: o `.xlsx` do Drive volta do
-  MCP como base64 grande e o agente nao tem caminho pratico para materializa-lo em disco "a mao"
-  para passar ao CLI. Consequencia direta na s125: o boot ofereceu Colecistite/Imunizacoes (ordem
-  do PDF) e **o usuario teve que ditar a ordem real da S13**.
-- **Leitura de sistema:** o F34 tornou o disparo do sync OBRIGATORIO-DE-TENTATIVA, mas a tentativa
-  falha num degrau que nenhuma clausula previa -- **transporte**, nao disciplina. Enquanto o
-  download nao vira arquivo, "obrigatorio" vira ritual vazio e o dual-SSOT do cronograma
-  (`project_cronograma_dual_ssot`) regride em silencio para o lado do PDF.
-- **Direcao (nao implementada):** dar ao sync um caminho de materializacao proprio (o CLI baixa/
-  recebe o blob e escreve o arquivo) em vez de exigir que o agente faca a ponte base64->disco.
-- **Adendo s128 (2026-07-25) -- o modo de falha ficou preciso.** O MCP **funcionou**: o
-  `download_file_content` devolveu o `.xlsx` inteiro em base64 (~30 KB). O degrau que quebra e a
-  **transcricao**: para gravar o blob o agente precisa reemiti-lo verbatim por uma tool de escrita,
-  e a ~30 KB ele trunca/elide de forma sistematica (2 tentativas, 2 arquivos corrompidos, ambos
-  descartados). Nao e falta de acesso nem de disciplina -- e um limite de fidelidade de copia longa.
-  Corolario: **nenhuma clausula de processo conserta F36**; so codigo conserta. A elevacao para ALTA
-  reflete que o boot ja regride ha 5 sessoes e que o usuario vem suprindo a lacuna a mao.
-- **Direcao refinada:** `tools/cronograma.py --sync-drive` aceitar `--from-base64 <path>` **ou**,
-  melhor, um `--fetch-drive <fileId>` que use credencial local (service account / OAuth em `.env`)
-  e escreva o `.xlsx` sozinho. O agente passa a **disparar** o sync, nunca a **transportar** o byte.
-- **Adendo 2 (s128) -- o protocolo de chunks FALHOU, e o modo de falha ficou quantificado.**
-  Tentativa dedicada (subagente, ~3M tokens de orcamento) parou em **5.519 de 30.756 chars (18%)**.
-  Achados que valem mais que a tentativa:
-  1. **A fidelidade degrada por COMPRIMENTO DE EMISSAO, nao por posicao.** Ate ~3.000-3.400 chars por
-     chamada a copia e byte-perfect; acima disso desincroniza **em silencio** -- o base64 continua
-     sintaticamente valido e quem quebra e o deflate. Nao ha erro visivel no momento da escrita.
-     ⚠️ Ressalva de honestidade: o pedaco que corrompeu tinha **5.078 chars**, acima do limite de
-     3.000 que a instrucao mandava. O protocolo foi **violado**, nao estritamente falsificado --
-     mas o custo de descobrir isso ja mostra que o caminho e economicamente inviavel.
-  2. **O tamanho-alvo e verificavel a priori:** o EOCD do zip da 12 membros e diretorio central de
-     786 B em offset 22.258 -> arquivo de 23.066 B -> **exatamente 30.756 chars de base64**. Serve
-     de checksum barato em qualquer tentativa futura, antes de decodificar.
-  3. 🔴 **CAPACIDADE NAO REGISTRADA -- `mcp__claude_ai_Google_Drive__read_file_content`** no mesmo
-     `fileId` devolve a planilha **inteira como texto** (28 semanas x 13 linhas de tarefa, verbatim),
-     **sem transcricao nenhuma**. So nao carrega o **tachado** (que e formatacao, nao conteudo).
-     Isso abre um **modo degradado viavel**: ordem e temas vem de graca; so a conclusao depende do
-     xlsx binario. O ledger nao conhecia essa tool.
-  4. **O subagente se recusou a gravar um snapshot sintetico** (reconstruir um .xlsx via openpyxl a
-     partir do texto + tachado derivado) com o argumento correto: um snapshot **fresco porem
-     sintetico e pior que um velho**, porque o velho ao menos grita `Drive desatualizado`. Julgamento
-     certo -- registrar como precedente.
-- **Veredito:** F36 **nao se resolve por protocolo**. So codigo resolve. Enquanto `--fetch-drive` nao
-  existe, o modo degradado (2) + (3) e o melhor disponivel: `read_file_content` da ordem e temas;
-  a conclusao se cruza com `sessoes_bulk`, que e SSOT e independente do Drive.
-- **Adendo 3 (s134, 2026-08-03) -- reincidencia confirma o diagnostico da s128, sem achado tecnico novo.**
-  `download_file_content` + reescrita manual travou 2x no mesmo padrao de truncamento sistematico
-  (nao progrediu alem do que o adendo 2 ja quantificou). `read_file_content` funcionou de primeira,
-  devolvendo a planilha inteira como texto (28 colunas de semana, tarefas por linha), confirmando que
-  o modo degradado (2)+(3) e **reproduzivel**, nao um acerto isolado da s128. `--fetch-drive` segue
-  nao implementado -- 6a sessao seguida com a mesma lacuna de transporte.
-
-- **Adendo 4 (s159, 2026-08-30) -- o "modo degradado viavel" tem teto, e o teto foi medido.**
-  O adendo 2 concluiu que `read_file_content` "abre um modo degradado VIAVEL" porque devolve a
-  planilha inteira como texto. **Reproduzido pela 3a vez (s128, s134, s159): funciona.** Mas a
-  viabilidade nunca tinha sido testada para o uso que importa -- e ela NAO se sustenta:
-  - ✅ **Vale para LEITURA** (agente/humano lendo ordem e temas). Foi assim que a s159 confirmou
-    a divergencia de tamanho da grade (abaixo).
-  - ❌ **NAO vale para SYNC.** No dump, a fronteira de LINHA e um **espaco simples**,
-    indistinguivel do espaco interno da celula. Teste com `csv.reader` sobre uma amostra de
-    3 colunas x 3 linhas devolveu **7 campos em vez de 9**, com `13/04 a 19/04 GO` fundindo o
-    ultimo cabecalho de semana com o primeiro rotulo de material. Um `--from-text` construido
-    sobre isso desalinha colunas **em silencio** -- criaria um defeito classe 3 novo (item some
-    sem sinal) para consertar um classe 2. Nao construir.
-  - ❌ O texto tambem **nao carrega o tachado**, que e de onde `_parse_conclusao_xlsx` tira
-    `concluido` (`cell.font.strike`). Snapshot vindo do texto teria `concluido` falso para tudo --
-    e um snapshot fresco porem sintetico e pior que um velho, que ao menos grita "desatualizado"
-    (precedente registrado no adendo 2, item 4).
-  - **Veredito reforcado:** so `--fetch-drive <fileId>` com credencial local resolve. O agente
-    tem que DISPARAR o sync; nao existe caminho em que ele TRANSPORTE o dado com fidelidade --
-    nem em base64 (quantificado na s128) nem em texto (quantificado agora). **Bloqueado em
-    decisao do usuario:** exige service account ou OAuth em `.env`.
-- 🔍 **Achado colateral de alto valor (s159) -- os dois SSOTs divergem no TAMANHO da grade, nao so na ordem.**
-  A leitura do xlsx mostrou **28 semanas, a ultima "05/10 a 09/10"**. O `grade.json`, derivado do
-  `Cronograma.pdf`, tem **30 semanas ate 25/10**. As semanas 29 e 30 do PDF (que ja tinham 0
-  questoes) **nao existem na planilha do usuario**. Isso confirma na FONTE o que a s159 tinha
-  deduzido por inferencia (fim do conteudo = 09/10, coincidente com o fim do internato) e amplia
-  o `project_cronograma_dual_ssot`: a divergencia entre PDF e xlsx nao e so de ordenacao.
-  Consequencia pratica: `day_plan._cronograma_hoje` calcula `fim_grade` como `max(fim)` das
-  semanas do `grade.json` -> **25/10**, duas semanas alem do cronograma real. O ritmo-alvo da
-  grade sai diluido. Candidato a achado proprio na auditoria (F43+).
-
-### F37 -- `taxonomia_cronograma.questoes_realizadas` inflado (3,7x na s127 -> 5,9x na s159) -- **ALTA** (era MEDIA) -- **RESOLVIDO no CONSUMIDOR (s185); coluna historica segue, e decisao do operador**
-- **Evidencia (s127):** o campo acusa **19.597** questoes contra **5.232** reais em `sessoes_bulk`.
-  Descoberto ao construir o eixo de cobertura de `tools/variancia.py`: a 1a versao lia esse campo e
-  produzia "89,5% da grade coberta / zona DIRECIONAMENTO" -- diagnostico **invertido** em relacao ao
-  real (43,0% / zona COBERTURA). A fonte foi trocada para a grade versionada e um teste estrutural
-  impede a regressao, **mas o campo segue inflado no db**.
-- **Leitura de sistema:** metas e performance leem `sessoes_bulk` e por isso nao foram afetadas -- o
-  campo e uma **superficie de estado orfa**, que ninguem reconcilia e qualquer feature nova pode
-  consumir de boa-fe. Foi exatamente o que aconteceu. O risco nao e o numero errado: e ele estar
-  disponivel e parecer autoritativo.
-- **Verificacao sugerida:** rastrear quem escreve o campo (`insert_questao.py`? migracao legada?) e
-  decidir entre (a) reconciliar contra `sessoes_bulk`, (b) derivar on-the-fly, ou (c) **remover a
-  coluna** -- preferivel, se ninguem legitimo a le. Enquanto existir, adicionar check no reconcile.
-- **Nova evidencia (s155, 25/08/2026, achada via /graphify em resumos/Pediatria+GO):** o campo segue
-  sendo escrito, nao e so residuo antigo. 128 de 269 temas (48%) compartilham `questoes_realizadas`
-  identico com >=2 outros temas de **areas nao relacionadas** (ex.: 105 questoes em 21 temas
-  cruzando Pediatria/Endocrino/Obstetricia). O caso mais flagrante: `Pediatria:PTI` (id 219),
-  `Pediatria:Traumatismo Cranioencefalico na crianca` (id 222) e `Pediatria:Asma na infancia`
-  (id 233) tem `questoes_realizadas=428`, `questoes_acertadas=358` e `percentual_acertos` **identicos
-  ate a casa decimal** (83.6448...%), todos com `ultima_revisao='2026-08-23'` -- 3 dias antes desta
-  sessao. Confirma que o campo continua sendo alimentado por alguma escrita em lote que nao calcula
-  por tema; nao e apenas herdado da migracao original de 2026-07-25.
-
-- 🔬 **CAUSA-RAIZ ENCONTRADA na s159 (2026-08-30) -- nao era import legado.**
-  `tools/registrar_sessao_bulk.py` fazia
-  `UPDATE taxonomia_cronograma SET questoes_realizadas = questoes_realizadas + ? ... WHERE area = ?`
-  -- **sem filtro de tema**. Uma sessao de 51 questoes de Pediatria somava 51 em
-  **todos** os temas de Pediatria. Assinatura confirmada no db: 16 temas de
-  Pediatria com `156/140` identico, 14 de Cirurgia com `56/49`, 9 de Cirurgia com
-  `153/131`, 7 de Obstetricia com `41/33`. Isso fecha a hipotese da s155 ("alguma
-  escrita em lote que nao calcula por tema") -- era esta, e ela rodava a cada
-  registro de bloco. Inflacao atual medida: **39.077 em taxonomia contra 6.631
-  reais em `sessoes_bulk` = 5,9x** (era 3,7x na s127 -- o campo piorou, como
-  previsto por "continua sendo alimentado").
-- 🔴 **O dano nao era cosmetico -- contaminava o RANKING DE FRAQUEZAS DO BOOT.**
-  `app/memory/manager._load_ipub_error_counts` derivava "erros por tema" de
-  `SUM(questoes_realizadas - questoes_acertadas)` desse campo, e
-  `_sync_error_counts` gravava isso em `WeakArea.error_count`, que
-  `_rank_weak_areas(top_n=8)` ordena -- **a lista "Areas de fraqueza persistentes"
-  que abre toda sessao**. Como cada tema carregava o acumulado da sua area, o
-  ranking media **quanto a area foi estudada**, nao quao fraco o tema e.
-  Ironia estrutural: `_sync_error_counts` documenta *"WeakArea sem par
-  correspondente recebe 0 -- NUNCA herda o total da area"*; a defesa existia, mas
-  na camada errada -- a fonte ja tinha assado o total da area dentro de cada tema.
-  - **Caso mais flagrante medido:** `Ginecologia / Gravidez ectopica` figurava
-    como fraqueza persistente **top-5 com "61 erros"** e tem **ZERO** linhas em
-    `questoes_erros`. (Existe sinal real -- 12 erros mencionam "ectopica" no
-    titulo/enunciado --, mas o numero exibido era fan-out, nao contagem.)
-  - Outros deltas exibido -> real: Epilepsias 64 -> 13 · Arboviroses 58 -> 17 ·
-    Lesao Renal Aguda 45 -> 8 · Doencas Exantematicas 51 -> 13 · Cirurgia
-    Infantil 62 -> 30 · Imunizacoes 43 -> 23. As **descricoes** das fraquezas sao
-    autorais e continuam validas; o que era artefato e a **contagem e a ordem**.
-- ✅ **Corrigido na s159 (codigo):**
-  1. `registrar_sessao_bulk` deixa de espalhar: o acumulado vai para a linha
-     `[bulk] <area>`, que e o balde de volume da area. Uma sessao bulk e
-     atribuida a AREA -- nao existe atribuicao por tema para distribuir.
-  2. `_load_ipub_error_counts` passa a contar `questoes_erros` (a unica
-     superficie com `tema_id` resolvido no ato do registro). Contrato de retorno
-     inalterado; so a fonte mudou.
-  - **Suites:** `tools/test_bulk_fanout.py` (8 testes -- temas intocados, outra
-    area intocada, acumulo na linha bulk, e o assert direto de que o delta em
-    taxonomia e EXATAMENTE o volume registrado, nao volume x nº de temas) e 2
-    testes novos em `test_memory_counter.py` (estrutural anti-regressao + tema
-    com volume alto e zero erro atribuido nao entra no ranking). 298 -> 306.
-- ⏸️ **PENDENTE -- decisao do usuario (operacao de dado, nao de codigo):** o
-  campo segue inflado para o historico ja gravado. Tres saidas: (a) zerar
-  `questoes_realizadas/acertadas` dos temas reais e concentrar o acumulado nas
-  linhas `[bulk] <area>`, reconciliando contra `sessoes_bulk`; (b) derivar
-  on-the-fly e parar de persistir; (c) remover a coluna -- **inviavel hoje**, o
-  grafo mostra leitores vivos (`app/utils/db.py` no widget Foco Critico,
-  `.agents/workflows/gerar-reforco.md`). Enquanto nao for decidido, o numero
-  segue errado nas superficies que leem o campo direto -- mas o ranking de
-  fraquezas ja esta correto, que era o consumidor critico.
-- 📝 **Doc drift achado de lambuja:** `.vibeflow/patterns/error-insertion-pipeline.md`
-  afirma que `insert_questao.py` incrementa `questoes_realizadas` ("it tracks
-  questions attempted"). O codigo faz o oposto e documenta o oposto desde a
-  separacao de responsabilidades (so atualiza `ultima_revisao`). Padrao descreve
-  comportamento que nao existe mais.
-
-- 🔬 **RE-MEDIDO em 18/09/2026 (s185):** a inflacao **piorou** -- `questoes_realizadas` soma **39.772** contra **7.326** reais em `sessoes_bulk` = **5,4x** (era 3,7x na s127, 5,9x na s159). 216 linhas com valor > 0.
-- 🔴 **O REMEDIO (a) DO ENUNCIADO NAO E EXECUTAVEL, e isso nunca tinha sido dito.** "Recomputar a partir de `sessoes_bulk`" pressupoe que o SSOT tenha a dimensao da coluna. Nao tem: `sessoes_bulk` e por **(area, sessao)**, sem tema, e `questoes_realizadas` e por **(area, tema)**. Nao ha de onde derivar volume por tema. (⚡ A **Parte 6**, na mesma sessao, criou `sessoes_bulk.tarefa_id` -> `plano_tarefas.tema`, que e a ponte futura; hoje o backfill casa **1 de 126** sessoes, entao nao serve ainda.)
-- 🔴 **O DANO REAL nao era o numero -- era quem ele dirigia.** `db.get_taxonomia_rendimento` derivava `erros = questoes_realizadas - questoes_acertadas`, e o consumidor e `tools/cobertura_conhecimento.py`, que ordena por isso para dizer **qual PDF orfao vira resumo primeiro**. Distorcao medida, nos dois sentidos: `[bulk] Neurologia` acusava **149** erros contra **1** real; `[bulk] Pediatria` 135 x 3; `[bulk] Preventiva` 128 x 2; `Trauma - Avaliacao Inicial` 108 x 1; `[bulk] Simulado` **270 x 0**. Decisao de estudo guiada por numero errado em duas ordens de grandeza.
-- ✅ **RESOLVIDO (s185) trocando a FONTE do leitor, nao o numero** (opcao (b) do enunciado, aplicada ao consumidor): `erros` passa a ser `COUNT(*)` de `questoes_erros` por `tema_id` -- real, per-tema, ja no banco. A coluna **fica**: e dado historico e o que fazer com ele segue sendo decisao do operador; o que muda e que ela **para de dirigir decisao**. `volume` continua vindo dela e continua inflado -- **declarado na docstring**, nao corrigido, porque nao ha de onde derivar.
-- 🔬 **Validacao independente:** o ranking corrigido devolve `Cirurgia Infantil 31 · Imunizacoes 25 · Sindromes Hipertensivas 21 · Polipos e Neoplasias 20`, que sao **exatamente** os numeros das areas de fraqueza da memoria longa (`weak_areas`, injetada no boot). Dois sistemas que deveriam concordar passaram a concordar -- antes, nao concordavam.
-- 🧪 `tools/test_rendimento_fonte.py` (6 testes, escritos antes do fix): super e subnotificacao, a **mudanca de ordem do ranking**, o shape que `cobertura_conhecimento.py:189` consome, e que o leitor **nao escreve** no banco. `test_cobertura.py` ganhou a tabela na fixture -- degradar para 0 erros num banco sem `questoes_erros` seria o honest-negative que o F91 proibe.
-- ⚠️ **Fica declarado:** `db.get_db_metrics` tambem soma o campo inflado e **nao tem chamador vivo** (a UI Streamlit morreu; so ha citacao em doc). Superficie orfa -- candidata a lapide numa varredura de alcancabilidade, nao tocada aqui por escopo.
-
-### F38 -- Erros analisados na conversa nao chegam a `questoes_erros`; a analise evapora -- **ALTA** -- **RESOLVIDO (s159) -- guarda entregue; 1 instancia historica a recuperar**
-- **Evidencia (s127 -> descoberto na s128, 2026-07-25):** o bloco de Pneumologia Intensiva II teve
-  **6 erros analisados em profundidade** (elo quebrado, armadilha, conteudo faltante -- registrados
-  em prosa no `history/session_127.md`). No `ipub.db`: `sessoes_bulk` recebeu o volume (22/16) e o
-  ledger de habilidades recebeu **7 habilidades** (`origem='bloco-s127'`, `veredito='errou'`), mas
-  `questoes_erros` **nao recebeu uma linha sequer** -- zero registros com `data_registro` de 25/07.
-  Consequencia: os cards nasceram sem erro de origem (`insert_card_base`, `questao_id=NULL`), e o
-  substrato canonico (`tipo_erro`, `alternativa_marcada`, `explicacao_correta`) so existe em prosa.
-- **Leitura de sistema:** o pipeline de analise tem **dois finais** -- `insert_questao.py` (erro
-  completo + cards) e `habilidades.py --add` (so a habilidade). A s127 introduziu o segundo e o
-  agente **substituiu** um pelo outro em vez de encadear. Nenhum invariante notou: `auto_check` audita
-  arquivos, nao a coerencia "bloco com N erros narrados -> N linhas em `questoes_erros`". O sinal mais
-  rico do sistema (o erro estruturado, que alimenta cards, areas fracas e armadilhas dos resumos) e
-  o unico sem gate de persistencia.
-- **Agravante:** o defeito e **silencioso e retroativo**. So apareceu porque a sessao seguinte foi
-  cunhar os cards e nao achou a ancora. Blocos anteriores podem ter o mesmo buraco.
-- **Dimensionamento retroativo (rodado na s128, 2026-05-01 a 2026-07-25):** erros esperados
-  (`feitas - acertadas`) = **466**; linhas em `questoes_erros` no mesmo periodo = **335**;
-  **delta = 131 (~28%)**. 17 dias-bloco com gap positivo. Dias com delta negativo (ex.: 29/06,
-  -22) sao **registro tardio** -- o erro entra no dia seguinte ao estudo --, por isso o gap por
-  linha e ruidoso e so o total tem leitura.
-  ⚠️ **O 131 e teto, nao piso de analises perdidas.** Parte vem de volume importado da planilha via
-  `/importar-planilha`, que traz feitas/acertos **sem** os erros terem sido itemizados -- ausencia
-  esperada, nao defeito. O que o F38 nomeia e o subconjunto em que a analise **comprovadamente
-  aconteceu** e nao persistiu; a s127 e a instancia confirmada (6 erros narrados no log, 0 no db).
-  Separar os dois exige cruzar com o log de cada sessao -- trabalho de curadoria, nao de query.
-- **Direcao (nao implementada):** (1) WARN no reconcile de boot -- "bloco de DD/MM registrou N erros
-  em `sessoes_bulk` e 0 em `questoes_erros`"; (2) tornar explicito em `/analisar-questao` que
-  `--add` **complementa** e nunca substitui `insert_questao.py`; (3) avaliar se `habilidades.py --add`
-  com `veredito='errou'` e `questao_id=NULL` deveria simplesmente avisar na saida.
-
-- ✅ **RESOLVIDO na s159 (2026-08-30) -- as 3 direcoes implementadas.**
-  1. **Gate no `auto_check` (check 13, WARN):** `check_erros_orfaos()` em
-     `tools/utils/state_utils.py` cruza `sessoes_bulk` x `questoes_erros` e acusa
-     dia-bloco com >= 3 erros de volume e ZERO linhas de erro estruturado. Roda
-     SEMPRE (nao so no `--all`): o defeito nasce de uma escrita no db, nao de um
-     arquivo tocado, entao nenhuma heuristica de relevancia por path o alcanca.
-  2. **Aviso na origem:** `habilidades.py --add` com `--veredito errou` e sem
-     `--questao-id` imprime `[WARN] F38` em stderr (stdout fica limpo p/ script).
-  3. **Contrato explicito:** `/analisar-questao` secao 10 agora diz, com o caso da
-     s127 nominal, que `--add` **complementa** e nunca substitui `insert_questao.py`.
-  - **Suite:** `tools/test_erros_orfaos.py`, 18 testes (deteccao, as 2 defesas
-    contra falso positivo, parametros, modo defensivo, regressao viva). Registrada
-    na allowlist `python_files` do `pytest.ini` -- sem isso a suite existiria sem
-    ser coletada (mesmo modo de falha do D4/alcancabilidade).
-- 📐 **Calibracao medida, nao arbitrada.** Janela de credito = **d..d+1** e piso = 3
-  erros. Sobre os 52 dias-bloco reais (790 erros esperados): com d+1 o check acusa
-  **1 dia** e ele e **verdadeiro**, com **zero falsos positivos**; com d+2 o unico
-  positivo verdadeiro **desaparece** (os 19 erros de 20/06 sao de Cirurgia/GO/
-  Exantematicas -- tema nenhum em comum com o bloco de 18/06). Alargar a janela
-  compra silencio, nao precisao. Ambas as constantes travadas por teste.
-- 🔴 **Instancia historica confirmada, ainda NAO recuperada -- fica como divida:**
-  **2026-06-18 (s085, Pediatria 38/23 = 15 erros)**, bloco "Ictericia neonatal +
-  Sepse neonatal" (tema dormente ha 63d, radar cravou). O tema
-  `Pediatria / Ictericia e Sepse Neonatal` tem **26 flashcards e ZERO linhas em
-  `questoes_erros`** -- assinatura exata do F38: os cards existem, a analise que
-  os gerou nao. Recuperar exige o log da s085 + curadoria; nao e query.
-  *(Coerente com `ESTADO.md`, que ja listava "ictericia neonatal (so andaime)"
-  entre os gaps de resumo -- o tema esta subatendido em tres superficies.)*
-- ⚠️ **Honestidade sobre o alcance:** o gate e **guarda de REGRESSAO**, nao remedio.
-  Ele nao recupera analise perdida e nao mede qualidade do erro registrado -- so
-  garante que a proxima substituicao de `insert_questao.py` por `--add` fale alto.
-  O gap de ~28% dimensionado na s128 (131 de 466) continua sendo majoritariamente
-  volume importado sem itemizacao, que o filtro de migracao exclui de proposito.
+### F111 -- Fase 2 do plano (extensivo, leitura-first: 465 tarefas de teoria em 735; 39q/dia nativo) nao garante recall no dia da primeira exposicao: tarefa T sem bloco de questoes gera ZERO sonda -- **MEDIA** -- **ABERTO (decisao do operador; prazo 02/11/2026)**
+- **Como apareceu:** o video 1 resolve a primeira exposicao com "3 exposicoes em 24h" (video -> cards do tema na mesma noite -> revisao na manha). No MedHub o card nasce de ERRO (`insert_questao`) ou de andaime (`insert_card_base`); o R1 mini-drill (`orquestracao-contract`) so ve erros frescos de 48h. Na Fase 1 (question-first) isso nao aparece; na Fase 2 aparece por construcao.
+- **Evidencia a favor de agir:** Rawson 2013 (relearning ate criterio: >60% x <20% em 24 dias); Murre & Dros (primeiro intervalo apos uma noite). **Evidencia que limita o remedio:** Deng 2015 (deck pronto nao prediz; cards proprios predizem) e Step 2 CK sem beneficio de Anki -- intake **filtrado e pequeno**, nunca bulk.
+- 📬 **DECISION BRIEF (R8, entregue na s187; devido ao operador ate 02/11) -- 10 linhas:**
+  1. **O problema so existe na Fase 2.** Na Fase 1 (question-first) todo tema chega com bloco de questoes, e o erro gera card. No extensivo, **465 das 735 tarefas sao teoria pura**: o tema e lido e nao deixa sonda nenhuma.
+  2. **O que muda no seu dia:** ao rodar `plano.py --concluir` numa tarefa de TEORIA, eu te mostro 5-8 cards candidatos do corpus EMED daquele tema; voce aprova ou corta um a um (30-60 s); os aprovados entram hoje, dentro do teto de 60.
+  3. **O que NAO muda:** teto diario, regua de nota, fila FSRS, e o fato de que card de ERRO continua nascendo do erro. Isto so cobre a tarefa que hoje nao gera sonda alguma.
+  4. **Custo:** ~1 minuto por tarefa de teoria concluida.
+  5. **Evidencia a favor:** Rawson 2013 (relearning ate criterio: 60% x 20% de retencao em 24 dias) e a queda do primeiro intervalo apos uma noite (Murre & Dros).
+  6. **Evidencia que LIMITA:** Deng 2015 -- deck pronto **nao** prediz desempenho, card proprio prediz; e Step 2 CK sem beneficio de Anki. Por isso o intake e **filtrado e pequeno**, com triagem sua, nunca bulk.
+  7. 🔴 **O risco real nao e tecnico, e de volume:** 465 tarefas x 5 cards = 2.300 cards se a triagem afrouxar. A divida atual ja e 103 vencidos. **A triagem humana e o unico freio**, e ela e sua.
+  8. **Reversivel:** sim, e barato. O intake e opt-in por tarefa; cards entrados ficam marcados pela origem e saem por `cards_prune.py` com criterio nomeado. Nada toca revlog nem cards existentes.
+  9. **Nao-reversivel:** nada.
+  10. ⏰ **Quando decidir: na proxima sessao**, junto com a adocao do cronograma extensivo -- e exatamente ai que o defeito passa a morder. Decidir antes seria decidir no escuro; depois, seria tarde.
+
+- **Remedio proposto (spec, apos GO do operador):** intake por tarefa concluida -- `plano.py --concluir` -> `emed_flashcards.py --query` do tema -> triagem pelo teste de regenerabilidade (humana) -> `insert_card_base` dos sobreviventes no mesmo dia, dentro do teto 60. Muda politica de estudo: precedente F64 (politica e posicao do operador).
+
+### F87 -- O harness de flashcard verifica FORMA e e cego a RENDIMENTO: os 13 cards que o operador reprovou passam em TODOS os predicados -- **MEDIA** -- **ABERTO**
+
+- **Como apareceu:** o 6o principio do `estilo-flashcard` (alternativa errada = no) foi aplicado ao Simulado 8 e rendeu **85 candidatos para 17 erros**. O agente triou para 45; o operador julgou os 85 um a um numa bancada dedicada e **inverteu 25 vereditos (29%)**, fechando em 44. Veredito literal dele: *"ampliou os pontos de conteudo passiveis de expansao, mas cunhou bastante ruido -- o que eu justamente temia. nesse sentido, os cards realmente precisam de juizes de qualidade ate mesmo pedagogica."*
+- 🔴 **A evidencia dura:** os **13 cards que ele cortou passam** no `audit_card_atomicity.py`, no `card_self_sufficiency.py` e nos predicados de `tools/card_checks.py`. Sao atomicos, tem UM criterio de acerto, frente gerativa, verso curto, contexto alinhado. **Nenhum predicado do repo mede se o card vale a pena.** O harness responde "esta bem formado?" e nunca "isto acrescenta recall?".
+- **O sinal, medido:** o que ele RESGATOU (12 cards) era `conteudo` em 8 dos 12 -- fato arbitrario que nao se deduz (janela de 48-72 h; resolucao em 7-10 dias; SIRI em 4-8 semanas; bilirrubina > 0,2 mg/dl/h; diabetes = 25% dos polidramnios; "grao de cafe"; doxiciclina 100 mg 12/12 h por 7 d; reforco faltante da febre amarela). O que ele CORTOU (13 cards) era `discriminador` (5), `mecanismo` (2) e `nuance` (2) -- resposta **regeneravel** a partir do card-nucleo mais o mecanismo, ou o proprio raciocinio da questao reescrito como pergunta.
+- ⚰️ **O caso que derruba a intuicao do agente:** *"por que insuficiencia uteroplacentaria, RCF e pos-datismo cursam com oligoamnio?"* foi celebrado na s171 como o melhor achado do 6o principio (um card resolvendo tres alternativas pelo mesmo mecanismo). **O operador cortou.** Resolver tres alternativas de uma vez e o sintoma, nao a virtude: se um mecanismo unico explica as tres, o aluno as reconstroi e o card nao mede nada.
+- **O nucleo nunca oscilou:** dos 85 candidatos, os **12 `elo_quebrado` sobreviveram sem uma unica inversao**. O criterio "nucleo do erro intocavel" esta validado; o que falhou foi tudo o que orbita.
+- 🔎 **O unico predicado que reagiu -- e reagiu no lugar certo.** Apos aplicar o corte dele, o `insert_questao.py` emitiu `[AVISO-CARD] distrator-perdido` em exatamente **2 dos 17 erros** (Liquido Amniotico e HIV): sao os dois em que os cards cortados eram justamente os que carregavam a alternativa marcada. **Existe UM predicado adjacente a rendimento no repo, ele funciona, e ele nao bloqueia** -- ele marca a tensao real entre o 6o principio (ler as alternativas) e o filtro de regenerabilidade (cortar o que se deduz). Candidato natural a fixture de qualquer predicado futuro de rendimento.
+- **Remedio aplicado agora (documental, nao codigo):** `estilo-flashcard.md` ganhou o §Triagem com o **teste de regenerabilidade** e o corolario que inverte a heuristica (`conteudo` rende mais que `discriminador` derivado da mesma questao). A triagem fica **humana e antes do `insert_questao.py`**, com a lista integral guardada em disco para o operador derrubar o corte.
+- **Classe:** familia CONTEUDO (com F79/F79b/F81 -- `card_checks` cego a defeito de card), mas num eixo novo: os anteriores sao **defeito de forma que o gate nao ve**; F87 e **ausencia de forma defeituosa em card que nao deveria existir**.
+- ⏸️ **s187 -- o eixo IRMAO ganhou sensor; ESTE eixo segue GATE do operador.** Ele pediu "derivar do FSRS", e ao construir ficou claro que **o FSRS nao pode alcancar este achado**: os 13 cards que ele cortou **nunca entraram no baralho** -- nao tem `reps`, `lapses` nem stability. Entregue `tools/cards_rendimento.py`, que mede o eixo vizinho (entre os cards que EXISTEM, quais consomem revisao sem reter): corte DERIVADO do baralho (`lapses >= 2` e `stability < mediana`, re-medida a cada execucao, porque o limiar do Anki de 8 lapsos acharia zero -- o maximo daqui e 4), **48 de 822 revisados (5,8%)**, com `#70` em 11 revisoes e stability 0,67d. 🔴 **O doc do modulo DECLARA que nao fecha o F87**, e o teste `test_o_limite_do_F87_esta_declarado` prende essa frase -- dizer o contrario seria cobertura aparente, a classe que o item 1.10 existe para impedir. Corroboracao do limite: 2 dos 6 piores sao de `Polipos e Neoplasias Intestinais`, area onde a memoria registra "capota completa, 9 de 9 cards" -- nao sao cards defeituosos, e **fundacao ausente**, que pede andaime. Um gate de rendimento, se algum dia existir, nao e um predicado sobre o texto do card -- e sobre a relacao entre o card e o resto do conjunto.
+
+### F78 -- Extracao de PDF descarta em silencio todo conteudo que vive em FIGURA, e nada no harness mede essa perda -- **MEDIA** -- **DECLARADO nao-verificavel (s187)** -- medir a perda exigiria comparar o PDF-fonte com o `.txt` extraido por conteudo SEMANTICO (a figura nao deixa marca no texto: a extracao retorna sucesso e o buraco e invisivel). Sensor nenhum existe hoje e o custo nao se paga sem mais dado. A mitigacao demonstrada segue sendo a leitura humana do resumo contra a fonte -- revisar: 2027-03-31
+- **Evidencia (s169):** 10 resumos do sprint S17-S20 foram cunhados em paralelo a partir dos PDFs do EMED. Dois agentes independentes reportaram a mesma lacuna com origem unica: `tools/extract_pdfs.py` so captura camada de texto; infografico e tabela renderizados como imagem saem VAZIOS do `.txt`.
+  - Caso 1 (Tumores Anexiais): o `.txt` traz literalmente *"a seguir esta o estadiamento da FIGO"* e a pagina seguinte vem so com cabecalho/rodape. O estadiamento inteiro (IA a IVB) evaporou.
+  - Caso 2 (Pneumonias Bacterianas): CURB-65, CRB-65 e os tres algoritmos de antibioticoterapia por nivel de cuidado estavam todos em figura.
+- **Nao e incidente isolado, e a mesma familia ja declarada:** as "lacunas honestas" do artifact da s168 -- estadios FIGO do CA de ovario, 10 grupos de Robson, minimo de servicos do Decreto 7.508 e a tabela SBC 2025 -- tem exatamente esta causa. Quatro ocorrencias registradas antes desta sessao, tratadas cada vez como limitacao pontual, nunca como classe.
+- **O defeito real e o SILENCIO, nao a perda.** A extracao retorna sucesso, o `.txt` existe, o resumo e escrito e passa no `audit_resumos.py` com "AUDITORIA PERFEITA". Nenhum gate compara o que o PDF tem com o que o `.txt` entregou. So um leitor que ja conhece o tema percebe o buraco -- ou seja, exatamente quem nao precisa do resumo. Um resumo com o estadiamento faltando e indistinguivel, para o harness, de um resumo completo.
+- **Mitigacao DEMONSTRADA na propria sessao:** o agente de Pneumonias Bacterianas, ao perceber a lacuna, renderizou as paginas relevantes com **PyMuPDF (fitz)** e leu os infograficos visualmente antes de redigir. Todos os itens e cortes do CURB-65/CRB-65 e os esquemas de antibiotico do resumo vieram dessas imagens do PDF-fonte, nao de memoria. Mesmo problema, resolvido -- por iniciativa ad-hoc de um agente, sem estar em lugar nenhum do contrato.
+- **Remedio (S):** `extract_pdfs.py` emitir WARN por pagina cujo texto extraido seja despropocionalmente curto para a area da pagina (heuristica: pagina com imagem e < N caracteres). Transforma o silencio em sinal, sem prometer resolver a leitura.
+- **Remedio (M):** dar ao `extract_pdfs.py` um modo `--render <paginas>` que gera PNG das paginas indicadas, promovendo a mitigacao acima a passo de primeira classe do workflow `criar-resumo` -- hoje ela depende de um agente ter a ideia sozinho.
+- **Remedio (L):** gate de cobertura que cruze os titulos do sumario do PDF com os headers do `.md` gerado.
+- **Acao tomada na s169:** subagente `evidence-researcher` acionado para preencher o estadiamento FIGO no resumo de Tumores Anexiais a partir de fonte externa auditavel (hierarquia de `evidence-governance.md`), com citacao de fonte e ano -- em vez de deixar a lacuna declarada em blockquote.
+- **Desdobramento (s169, mesma sessao):** o preenchimento do FIGO fechou com fonte canonica (documento oficial FIGO 2014, reconfirmado no update FIGO 2021; espelhado em portugues pela SBP 2019) -- e revelou um agravante que o F78 nao previa: **a figura do EMED nao estava so ausente, estava DESATUALIZADA**. A enumeracao preservada no PDF-fonte lista o estadio **IIC**, extinto na revisao de 2014, e nao tem IC1/IC2/IC3 nem IIIA1/IIIA2. Ou seja: onde a figura extrai, o conteudo pode estar velho; onde nao extrai, ninguem confere. Os dois modos de falha convergem no mesmo ponto cego -- nada no pipeline compara o material do cursinho com a diretriz vigente. Isso aproxima o F78 da lista de "diretrizes novas a conferir" do HANDOFF, que hoje e mantida a mao.
+- **Nota de processo:** o subagente `evidence-researcher` foi acionado com um brief que mandava EDITAR o arquivo -- ele e read-only por contrato e nao tem `Edit`/`Write`. Recusou corretamente e devolveu o bloco pronto; a aplicacao foi feita pelo orquestrador. Brief mal-formado, nao falha do agente: pedir escrita a um agente de leitura desperdica um ciclo inteiro.
+- **Padrao de fundo:** primo direto do achado de alcancabilidade e do F77 -- um dado que **existe na fonte e e perdido no caminho**, sem que nenhum instrumento acuse a perda. A diferenca para o F77 e que la o descarte era deliberado e documentado; aqui e invisivel ate para quem escreveu o pipeline.
+
+### F69 -- resumos com lacuna de diretriz nova = risco banca-dependente (s165) -- **MEDIA** -- **GATE do operador** (quais diretrizes 2026 entram e decisao clinica dele; lista viva no HANDOFF)
+**Evidencia (grep):** `[CIR] Trauma.md` ja tem X-ABCDE, torniquete, hipotensao permissiva, ABC score, pneumotorax oculto/3,5 cm, Beck, tranexamico; **falta** "sangue total > 1:1:1" e "Sellick contraindicada", e a classificacao do choque ainda cita "classe I" (11a ed = leve/moderado/grave). `Prevenção Secundária Pós-IAM (Dislipidemia).md`: 1 mencao a PREVENT/Lp(a)/bempedoico (diretriz 2025 rasa). `Sistemas de Informação em Saúde.md`: conferir SINAN 2026 (esporotricose, anomalias, Oropouche, parotidite). HAS Pt2 (130/80, MAPA) e Epilepsias (levetiracetam EV) ja atualizados. **Fix:** Revisao Direcionada com Regra de Acumulo; os `padroes_banca` do JSON sao a fonte.
+
+### F68 -- 15 temas de alta/media prevalencia ENAMED sem linha na taxonomia (s165) -- **MEDIA** -- **GATE do operador** (criar linha de tema e decisao de escopo de estudo dele)
+**Evidencia:** `core/cronograma/prevalencia_enamed.json` (`tema_id: null`): SCA/dor toracica, DPOC, Derrame pleural, Crise hipertensiva, Parkinsonismo, Dermatoses infecciosas, SUA, Sindrome de Down, Dx nutricional, Choque em pediatria, TB na infancia, Vasculite IgA, SIMP, Saude do trabalhador, Doencas de vulva e vagina. Sem linha nao ha card, erro, dormencia nem nota -- o tema e invisivel ao motor. **Agrava F65:** `[bulk] Cirurgia` guarda **148 erros** sem tema (eram 72 cards na s162), `[bulk] Pneumo` 17. **Fix:** criar as linhas (via cunhagem/`insert_card_base`) e reclassificar os `[bulk]` pelo titulo do erro.
+
+### F67 -- taxonomia duplicada divide o sinal do FSRS e da dormencia (s165, Claude Code/Fable 5.1, 2026-09-05) -- **MEDIA** -- **GATE do operador** (RODADA 3, mesma familia do F65: colapsar par e edicao de DADO com cards e erros pendurados)
+**Evidencia (db, read-only):** o mesmo tema vive em 2-5 linhas de `taxonomia_cronograma`: Rastreamento de colo x2 (`...do Câncer de Colo do Útero` 12 ativos/8 erros e `...do Cancer de Colo Uterino` 2/1), TH x2 (`Climatério e Terapia Hormonal` 6/2 e `Terapia Hormonal do Climaterio` 0/1), Asma x5 (`Asma`, `Asma - Crise Aguda`, `Asma na Infância`, `Asma na infância`, `Asma - Exacerbacao`), `Planejamento Familiar` x `Contracepção`, Ulceras x2, TCE x3 (Neuro, Cirurgia leve, Ped), `Cirurgia Infantil` x `Cirurgia Infantil I`, APS x2. **Efeito:** `review_radar`, `infer_nota` e `--cluster` leem metades; a dedup da s083 (`dedup_taxonomia.py`, merge MAX) nao pegou variantes por acento/caixa/sufixo. **Fix candidato:** normalizacao NFKD + casefold + tabela de alias em `normalize_taxonomia.py`, com `--dry-run`. **Re-medido em 2026-09-09 (s174, dry-run A6):** chave NFKD+casefold (sem sufixo romano/"na infancia") acha **10 grupos / 22 linhas / 193 cards + 104 erros**; 5 dos 10 sao a area fantasma `GO`/`Clinica Medica` de volta (F89). Decisao de fusao por grupo = operador (`docs/DRYRUN-F65-F67-2026-09-09.md` §4).
+
+### F65 -- o balde `[bulk] <Area>` esconde 72 cards do radar de dormencia -- **MEDIA** -- **GATE do operador** (RODADA 3: reclassificar balde e decisao de DADO dele, nao de codigo; `normalize_taxonomia` esta vazio para isto por medicao -- `docs/DRYRUN-F65-F67-2026-09-09.md`)
+
+**Classe:** taxonomia que corrompe sensor (familia F37/dedup de taxonomia).
+
+**Observado.** Drenando 45 cards na s162, cards de temas completamente distintos apareceram sob
+o pseudo-tema `[bulk] Cirurgia`: **pancreatite** (311, 313, 317), **trauma abdominal** (325),
+**demencia/MEEM** (291) e **esclerose multipla** (297). Contagem no banco:
+
+| balde | cards |
+|---|---|
+| `[bulk] Cirurgia` | 55 |
+| `[bulk] Pneumo` | 8 |
+| outros 6 baldes | 9 |
+| **total** | **72** |
+
+**O defeito.** `(area, tema)` e a chave de identidade do tema (invariante anti-poluicao, s083) e
+e o que alimenta `review_radar.py` (dormencia), o cluster de frieza do `day_plan --review-plan`
+e o gatilho de PREPARAR do `/revisar`. Card sem tema real e **invisivel para toda essa camada**:
+sua frieza e diluida num balde que nunca esfria como um tema, e ele nunca dispara aquecimento.
+Sintoma direto medido na sessao: `--review-plan` devolveu **40 clusters para 77 cards** e nenhum
+sinal frio acionavel (maximo 15.4, gatilho 25) -- fragmentacao que faz o sensor calar.
+
+**Efeito colateral confirmado no uso.** Os cards 311 e 313 (ambos "por que nao TC na
+pancreatite", eixos diferentes: etiologia x janela de 72h) cairam no **mesmo bloco** e se
+canibalizaram -- o usuario respondeu 313 com o conteudo de 311 e apagou no 311, 2 notas 1 de
+interferencia. Com tema real, `detect_clones.py` teria visto o par; no balde, nao ha por-tema
+para comparar.
+
+**Direcao (nao implementada).** Reclassificar os 72 por tema real (o texto do card carrega o
+tema; `normalize_taxonomia.py` + `dedup_taxonomia.py` sao os portadores existentes) e adicionar
+check no `auto_check`: card em tema `[bulk] *` nasce como WARN de taxonomia. Rodar
+`detect_clones.py` depois da reclassificacao -- o par 311/313 e o primeiro caso conhecido.
+
+**Severidade:** ALTA (72 cards, 5,7% do banco ativo, cegos ao mecanismo central do projeto).
+
+> **Re-medido em 2026-09-09 (s174, dry-run A6):** **35** cards ativos presos em `[bulk]` (28 em Cirurgia) + **201 erros** em balde -- lista nominal em `docs/DRYRUN-F65-F67-2026-09-09.md` §3. O normalizador nao tem regra para isto (F89, achado-irmao); a reclassificacao e conteudo do operador.
+
+> **Adendo honesto ao F65.** A limpeza dos baldes `[bulk]`/`Geral` **ja estava listada** como
+> pendencia Tier-3 em `ESTADO.md §Proximos passos` item 5 -- este achado nao a descobre, ele a
+> **quantifica** (72 cards, 5,7% do banco) e nomeia o dano concreto (sensor de dormencia cego +
+> colisao de clones medida em 2 notas 1). E o padrao exato da frente de **alcancabilidade**
+> (`project_alcancabilidade_auditoria`): a pendencia estava escrita, correta e inalcancada por
+> tempo indeterminado, porque nada no harness a transformava em trabalho. O check de WARN
+> proposto acima e o que converte a linha de texto em fila.
+
+### F63 -- a prioridade que governa o estudo nao viaja com o repo (o usuario e a camada de transporte) -- **MEDIA** -- **PARCIAL** (o DADO viajou na s165: `core/cronograma/prevalencia_enamed.json`, 89 temas, + `fsrs_queue --prevalencia`; falta ligar ao `infer_nota` -- residuo nomeado)
+
+**Classe:** input do boot nao e verdadeiro (mesma familia de F45/F47) + regra load-bearing fora
+do portador (P7, mas na camada de ESTUDO, nao na de engenharia).
+
+**Observado.** O usuario reordenou o xlsx do Drive a mao por um codigo de cores
+**Roxo > Rosa > Salmao** (prioridade por prevalencia no ENAMED, derivada do guia estatistico do
+EMED). Essa ordem e o que de fato decide o que ele estuda ate 13/09: das 11 tasks da S17, so
+**6 sao roxas** (Diarreia Teoria, SUA Teoria, APS Revisao, Diarreia Revisao, Urologia I,
+Pneumonias Bacterianas I). As outras 5 (Cirurgia Vascular Revisao, Vitalidade Fetal, Neoplasias
+de Estomago e Esofago, Nefrolitiase, APS Teoria III) nao entram na janela.
+
+**O defeito.** `core/cronograma/grade.json` e um parse **fiel** do `Cronograma.pdf` -- verificado
+task a task contra a planilha do usuario nesta sessao: 11/11 batem, mesma ordem. O que ele **nao**
+carrega e a cor. Logo:
+- nenhum consumidor (`day_plan.py`, `cronograma.py --radar`, `preparacao.py`) sabe distinguir
+  roxo de salmao; as 11 tasks pesam igual;
+- `infer_nota()` tem o **eixo 4 desenhado para consumir `prevalencia_enamed`** e roda em peso
+  neutro por falta do campo -- soquete cabeado, sinal existente, ninguem ligou os dois
+  (`core/contracts/revisao-calibrada-contract.md:119`, `docs/plans/s094-revisao-calibrada-PRD.md:265`);
+- o snapshot `--sync-drive` (unica ponte para o xlsx real) esta **38 dias velho**.
+
+**Consequencia medida.** A regra so existe em prosa (`HANDOFF.md:9`, `session_161.md:14`) e na
+cabeca do usuario. Resultado: ele **reenuncia a prioridade a cada sessao e a cada harness** --
+para o Antigravity em 02/09 e para o Claude Code no mesmo dia. O humano virou o transporte de um
+dado que o repo deveria carregar. Registrado como "achado registrado, nao resolvido" desde a
+**s147** (`history/session_147.md:18`) -- 15 dias em aberto.
+
+**Por que importa agora.** E a propria tese do ciclo DESCOLAR (P7: "regra load-bearing vai para o
+portador do repo, nao para a memoria do harness") violada na camada que o projeto existe para
+servir. A des-colagem consertou o motor; a prioridade do estudo continua colada no operador.
+
+**Direcao (nao implementada).** `grade.json` ganha `prioridade` por task (roxo|rosa|salmao) via
+`cronograma.py --sync-drive` lendo o fill/font color da celula do xlsx; `prevalencia_enamed`
+passa a ser derivada dela e o eixo 4 do `infer_nota()` liga sozinho -- **zero mudanca** em
+`infer_nota()` (o contrato ja previu essa porta). Sensor de staleness do snapshot do Drive vira
+WARN no painel de DIVIDA.
+
+**Severidade:** ALTA (governa a alocacao de tempo a 11 dias do ENAMED e 60 da UERJ).
+
+### F63 -- atualizacao (s165)
+O insumo `prevalencia_enamed` agora EXISTE (89 temas, 5 aulas EMED) e ja governa o bucket `novos` via `fsrs_queue --prevalencia`. Falta: `cronograma.py`/`day_plan.py` consumirem o mesmo arquivo para o eixo 4 do `infer_nota()` (contrato §7.7 previa "basta fornecer o campo") e para a prioridade roxa da grade.
 
 ### F39 -- 40% do baralho viola o principio atomico; a nota FSRS vira ininterpretavel -- **ALTA** -- **PARCIAL: mecanismo COMPLETO (s177, item 1.6); 270 cards agora RASTREAVEIS, a reforja em si e do operador**
 - **Origem:** achado do USUARIO durante o dreno da s128, formulado melhor do que o contrato tinha:
@@ -820,1569 +331,15 @@ relates_to: [AGENTE, ESTADO, HANDOFF]
 
 ---
 
-## 3j. Sessao de uso s152 (drenagem de 90 cards, regime de divida) -- achado F40
-
-> Origem: dreno de 90 cards (6 blocos de 15) apos analise de 11 erros (Aleitamento+CA de Mama).
-> O usuario pediu explicitamente (2026-08-23) capturar cada reforja como **data flywheel**: "utilizar
-> as regras para rastrear os mesmos problemas ou problemas parecidos em outros cards, em sessao de
-> auditoria ampla do banco que vira em breve" -- conecta direto com F7 (mesma familia: defeito de
-> autoria de card) e com a auditoria ampla ja pendente desde a s148 (ver HANDOFF.md).
-
-- ⚰️ **METADE DE ENGENHARIA FECHADA (s177, 11/09/2026 -- item 1.6 da fila selada: "269 nao-atomicos -> fila de reforja com lifecycle, sobre o B2 do 0.3; nao WARN solto").**
-  - **O diagnostico do item nao era "o detector nao acha".** Ele acha: **270 cards ativos**, 320 achados (145 `resposta-multifato/paragrafo` · 91 `duplo-ask/conectivo` · 48 `multi-frase` · 27 `segundo-nucleo` · 9 `duas-interrogacoes`). O defeito era que **o numero nao se movia ha 47 dias** -- o `ledger_self` mostra `card_atomicidade :: card#167` com **202 repeticoes**. Nao porque ninguem olhou: porque **olhar nao tinha onde ser gravado**. Um WARN nao distingue *"ainda nao triado"* de *"triado, e e falso-positivo conhecido"* -- e a diferenca entre os dois **e** o trabalho.
-  - **Remedio, em tres pecas.** (i) `card_checks.checar_nao_atomico` entra em `PREDICADOS_VERIFICAVEIS` -- **delegando** aos predicados de `audit_card_atomicity`, nunca copiando a regex (licao do 1.1/F79b; um teste troca a fonte por sentinela e prova a delegacao). (ii) `reforja.py --ingerir MOTIVO [--apply]`, generico sobre o registro: varre os ativos, declara **COUNT-ASSERT** antes de escrever, **recusa** motivo sem predicado (marca que nenhuma maquina sabe fechar e fila que so cresce). (iii) o WARN do `auto_check` deixa de ser solto: passa a citar **`Na fila de reforja: N · FORA dela: M`** -- o **M** e o numero acionavel, e ele cai quando alguem tria; o total, nao.
-  - 🔴 **A parte que exigia desenho: o falso-positivo DECLARADO do detector.** A propria docstring do `audit_card_atomicity` registra que **card discriminador** (*"A x B: qual das duas ...?"*) dispara `duplo-ask` e e **legitimo** pela regra 5 do formato atomico, porque o desempate e contar **CRITERIOS DE ACERTO**, e isso nenhum regex faz. Ingerir sem tratar isso encheria de ruido "a unica cifra citavel do passivo" -- a doenca que a fila cura. O tratamento **nao** foi um regex melhor: foi o **lifecycle**. Para um discriminador o predicado nunca para de disparar, entao `--fechar` **sempre recusa** e o desfecho correto e `--descartar` (palavra humana + justificativa), estado **DIFERENTE** de "resolvi". Os dois lados dessa assimetria tem teste, com fixture verbatim do **#857**.
-  - **Idempotencia, medida no dado real:** 1a passada escreveu **270** (bate com o COUNT declarado); a 2a declara **0 a criar**, com as 270 em `ja ABERTAS`. Par que ja tem marca nao recebe outra -- re-marcar inflaria `n_marcacoes`, cujo significado e *"marcado de novo e ninguem tocou"*: detector re-rodando nao e sinal humano novo. Descartada **nao** e reaberta (apagaria o veredito a cada varredura) e fechada-que-ainda-acusa e **reportada, nao re-marcada** (classe **F82**: re-abrir sozinho esconderia que o fechamento nao valeu).
-  - **Estado apos o item:** `reforja --fila` = **272 abertas** (270 `nao_atomico` + as 2 do F7). O `--fila` ganhou **resumo por motivo** e corte no detalhe (`--limit`, default 25; `--json` nao corta) -- sem isso a cifra citavel voltaria a ser *"role a tela e conte"*. Backup do `ipub.db` tirado antes da escrita em lote (`ipub_backup_20260911_090929.db`).
-  - 🔴 **FRONTEIRA DECLARADA -- o que este item NAO faz:** ele nao reforja **um** card. A reforja e curadoria de conteudo e e do **OPERADOR** (regua de "card bom" = F87, no Tier 2). O que mudou e que agora existe **onde** registrar cada veredito, e o passivo passa a ser um numero que **cai**.
-  - ⚠️ **Divergencia conhecida, declarada, NAO consertada:** o `ledger_self` continua contando **265** `card_atomicidade` abertos enquanto a fila conta **270** -- dois registros da mesma pergunta no mesmo relatorio (classe **G7**). Sao coisas diferentes (o ledger memoriza ocorrencia de WARN; a fila memoriza triagem) e o rotulo nao diz isso. Entra na **varredura unica (1.8)**; declarar aqui e o que impede o numero de ser lido como divergencia nova.
-
-### F40 -- Quatro padroes novos de defeito de formulacao de card (estimulo, nao conteudo) -- **MEDIA** -- **RESOLVIDO (s176, item 0.3 -- a fila de reforja virou ESTADO append-only com fechamento VERIFICADO; commit `315ae01`)**
-- **Evidencia:** 4 cards reforjados ao vivo por queixa do usuario durante a drenagem, nenhum por erro
-  factual -- todos por como a FRENTE estava formulada:
-  1. **Pacote de fatos, nao eixo unico** (`card_id=44`, Damage Control/Trauma Abdominal). Pedia lista
-     de N passos sequenciais (tamponar + ressecar + peritoneostomia + reoperar em 48h) como resposta
-     unica. Usuario: "demanda tempo para responder e cansa". Ja normatizado em principio por
-     `estilo-flashcard.md` (eixo unico x pacote), mas o card sobreviveu ate hoje -- sinal de que a
-     regra existe na norma e nao no linter.
-  2. **Frente ambigua sobre indicacao ja estabelecida** (`card_id=1063`, crise de asma pediatrica).
-     A pergunta ("por que nao e necessario corticoide EV?") deixava aberto SE o corticoide sistemico
-     era indicado, quando o unico ponto de decisao real era a VIA (oral x EV). Usuario pediu "explore
-     melhor a frente e a indicacao do corticoide sistemico".
-  3. **Pergunta circular** (`card_id=484`, TTA/trauma penetrante). A frente ja continha a resposta
-     ("por que a laparoscopia e a conduta especifica"), convidando a repetir a palavra-chave dada em
-     vez de produzir o racional. Usuario: "ela ja e a resposta para o contexto; pergunta circular".
-  4. **Pergunta composta com 2 informacoes** (`card_id=1039`, HPN/Hakim-Adams). Pedia simultaneamente
-     "o achado obrigatorio" E "o que a ausencia dele aponta em vez disso" na mesma frase. Usuario:
-     "da uma volta absurda para chegar no ponto central".
-- **Leitura de sistema:** os 4 sao variantes do mesmo genero (F7 ja cobria "discriminacao incompleta";
-  este achado amplia o catalogo para "estimulo mal-formulado mesmo com discriminacao correta").
-  `audit_card_atomicity.py`/`card_checks.py` ja detectam duplo-ask e resposta-multifato via regex/
-  contagem de interrogacao -- mas nenhum dos 4 casos acima disparou WARN no momento da autoria (3 sao
-  BEM formados sintaticamente: 1 pergunta, 1 "?"), porque o defeito e SEMANTICO (a pergunta e
-  logicamente composta, ou circular, ou pede uma lista, sem violar a sintaxe que o linter checa).
-  Confirma o padrao ja registrado em F7/`project_curadoria_e_temas_zero`: **defeito de formulacao e
-  de autoria, o linter e cego ao semantico** -- só um solucionador competente (o usuario) pega.
-- **Verificacao sugerida:** rodar uma passada de amostragem no baralho ativo (~780 cards) buscando os
-  4 padroes por heuristica leve: (a) verso_resposta com >=3 clausulas ligadas por "," ou ";" fora de
-  uma enumeracao curta -> candidato a pacote-de-fatos; (b) frente_pergunta comecando por "por que
-  nao e necessario/preciso X" sem X estar explicitamente confirmado como indicado no frente_contexto
-  -> candidato a ambiguidade de indicacao; (c) overlap de token entre frente_pergunta e
-  verso_resposta ja parcialmente coberto por `checar_resposta_embutida`, mas o caso "circular" aqui
-  passou porque a palavra-chave repetida era curta/comum (laparoscopia) -- conferir o limiar RUN_MIN/
-  JACCARD_MIN contra esse caso real; (d) frente_pergunta com 2 interrogativos implicitos ligados por
-  "e" mesmo sem 2x "?" (`checar_multi_parte` so pega ">1 interrogacao" ou conectivo composto via regex
-  -- conferir se "X, e o que Y" e "X e por que Y" estao no `RE_MULTI_CONECTIVO`).
-- **Hipotese de melhoria:** (1) curto prazo -- usar os 4 casos como fixtures de regressao para
-  `card_checks.py` (se o padrao se generaliza, os proximos exemplares do banco disparam WARN
-  automatico em vez de esperar o usuario tropecar neles um a um); (2) media prazo -- quando a
-  auditoria ampla do banco (pendente desde s148, ver HANDOFF.md) rodar, usar este achado como um dos
-  eixos de varredura, nao so atomicidade/atomicidade-de-resposta. Precedente de execucao: F39 (mesma
-  familia, `audit_card_atomicity.py` + `apply_reforja.py`/`recurate_cards.py` como gate de aplicacao).
-- **Nao resolvido nesta sessao (escopo):** os 4 cards fixados sao pontuais; a auditoria ampla
-  (rastrear os MESMOS padroes no banco inteiro) e trabalho futuro, registrado aqui como o gatilho.
-
----
-
-### F41 -- Sessao s154 (100 cards, regime de divida): 6 novas instancias de F40 + reincidencia do padrao id=120 em Gravidez Ectopica + subpadrao tautologico em cards `[bulk]` -- **MEDIA** -- **RESOLVIDO (s176, item 0.3 -- idem F40; commit `315ae01`)**
-- **Evidencia (extensao direta de F40, mesma familia -- pacote-de-fatos/pergunta composta/circular):**
-  drenagem de 100 cards em 10 blocos produziu 6 reforjas ao vivo por queixa do usuario, nenhuma por
-  erro factual de conteudo:
-  1. `card_id=1053` (Vulvovaginites/Tricomoniase) -- pergunta composta fundia "qual o farmaco" +
-     "por que nao pode ser topico", sendo que o mecanismo do "por que" nem constava na regra-mestre/
-     armadilha documentada do card (nao era o mesmo eixo do farmaco-por-IST). Trimado para so o
-     farmaco; mecanismo permanece no verso.
-  2. `card_id=553` (HAS/pontos de corte) -- pedia 5 cortes numericos (consultorio/MAPA-vigilia/
-     MAPA-sono/MAPA-24h/MRPA) numa unica frente. Dividido em 4 cards atomicos (553 = so consultorio;
-     3 novos = vigilia+MRPA parelhados pelo mesmo valor numerico, sono, 24h).
-  3. `card_id=155` (Puericultura/APS) -- "crianca baixo risco = so enfermeiro? E alto risco sai da
-     APS?" eram 2 perguntas independentes coladas por "E". Dividido em 2 cards -- cada meia-verdade
-     testada isoladamente, evitando que um acerto mascare o outro erro.
-  4. `card_id=576` (DIU de cobre) -- "exige barreira apos insercao? NIC1 contraindica?" mesma
-     familia de composta. Dividido em 2.
-  5. `card_id=293` (Binswanger x doenca prionica) -- "por que X e mais provavel que Y" respondida
-     com "porque X e mais comum" e quase tautologico uma vez que se sabe a prevalencia relativa.
-     Reformulado para testar o PRINCIPIO generalizavel (prevalencia de base vence causa rara sem
-     achado especifico), nao so esse par de doencas.
-  6. `card_id=325` (Peritonite/trauma) -- mesma familia tautologica: "por que a estabilidade
-     hemodinamica nao deve adiar a laparotomia" respondida com "porque a peritonite ja e indicacao".
-     Reformulado como pergunta direta de conduta (peritonite franca precisa de imagem antes da
-     laparotomia? Nao).
-- **Subpadrao novo dentro de F40: tautologia em cards de tema `[bulk]`.** Os casos 5 e 6 (293, 325)
-  compartilham um tracco que os 4 originais do F40 nao tinham: ambos vem de temas rotulados `[bulk]`
-  (ex.: "Cirurgia / [bulk] Cirurgia", "Neurologia / [bulk] Neurologia") -- import em lote,
-  presumivelmente com menos curadoria individual por card. A assinatura do defeito e especifica:
-  pergunta no formato "por que X (achado/decisao) ocorre/e-preferido", resposta que so reafirma X
-  com outras palavras, sem mecanismo ou principio transferivel por tras. Diferente das
-  composta/circular originais do F40 (que tinham 2 fatos distintos ou auto-referencia lexical), esta
-  e uma composta-por-tautologia -- sintaticamente 1 pergunta e 1 resposta, mas logicamente sem
-  conteudo discriminador novo.
-- **Reincidencia notavel: Gravidez Ectopica tem 2 cards historicamente mal-calibrados quanto a
-  probabilidade pre-teste.** F7 (s108) ja tinha marcado `card_id=120` (mesmo tema, heterotopica-vs-
-  corpo-luteo espontaneo) como "candidato a auditoria de evidencia" -- nunca executado. Hoje,
-  `card_id=114` (beta-hCG subdiscriminatorio, cisto anexial + liquido livre em fundo de saco) foi
-  auditado via `evidence-researcher` (mesmo protocolo do card GINA STEP1 da s153) e o veredito foi
-  PRECISA AJUSTE: nem o card ("gestacao topica normal", certeza que nem FEBRASGO nem ACOG sustentam)
-  nem a contestacao do usuario ("ectopica e a mais provavel") estavam certos -- o quadro real e
-  "pregnancy of unknown location" (PUL), com falha da gestacao (~50%) mais provavel que ectopica
-  (~11%) ou que "normal" confiante. Reformulado pra moldura de PUL + conduta de beta-hCG seriado 48h
-  (fontes: ACOG Practice Bulletin 193, Connolly et al. 2013 Obstet Gynecol, FEBRASGO). `card_id=120`
-  **segue sem auditoria** -- mesmo tema, mesmo padrao de calibracao, proximo candidato natural.
-- **Calibracao aberta: 3 flags do usuario sem defeito identificado pelo agente.** cards `1411`
-  (Ca mama, cirurgia previa x biopsia com atipia), `283` (estenose duodenal parcial em Down) e `319`
-  (secao ductal pancreatica, resposta banca-especifica). Nos 3, o agente nao conseguiu enxergar
-  pacote-de-fatos/composta/circular nem erro de conteudo -- para o `319` especificamente, o card e
-  DELIBERADAMENTE banca-dependente (ja sinalizado como tal na propria armadilha do card, categoria
-  legitima pelo `evidence-governance.md`). Pendente: usuario nao respondeu ainda o que especificamente
-  incomodou nesses 3 -- proxima sessao deve retomar a pergunta antes de decidir se e um 5o subtipo de
-  F40 ou ruido de calibracao do proprio usuario apos 6 reforjas bem-sucedidas seguidas na mesma sessao.
-- **Verificacao sugerida:** quando a auditoria ampla (F40) rodar, adicionar 2 buscas: (a) join
-  `taxonomia_cronograma`/tema contra o prefixo `[bulk]` para escopar os candidatos a
-  tautologia-de-base-rate; (b) revisar TODOS os cards do tema "Gravidez Ectopica" contra criterio de
-  calibracao de probabilidade pre-teste (nao so 114/120).
-- **Hipotese de melhoria:** (1) `card_id=120` vai para `/pesquisar-evidencia` na proxima sessao de
-  auditoria -- ja tem o precedente metodologico (114, GINA STEP1) pronto pra copiar; (2) fixture de
-  regressao pro `card_checks.py` com os 6 casos de hoje, mesma logica do F40; (3) resolver a
-  pendencia de calibracao (1411/283/319) diretamente com o usuario na abertura da proxima sessao,
-  antes de tratar como sinal de novo padrao.
-
----
-
-## 3m. Sessao de engenharia s159 (2026-08-30) -- achado F42
-
-### F42 -- Editar o espelho da skill e silenciosamente revertido pelo `sync_skills` -- **BAIXA/MEDIA** -- **RESOLVIDO (s176, item 1.4)**
-- **Evidencia (s159, ao vivo):** para entregar a direcao 3 do F38 editei
-  `.agents/skills/source-command-analisar-questao/SKILL.md`, rodei
-  `python tools/sync_skills.py` e o texto **desapareceu**. A fonte de verdade e
-  `.claude/commands/<nome>.md`; `.agents/skills/source-command-*/SKILL.md` e
-  ESPELHO GERADO. O sync sobrescreveu a edicao e reportou sucesso
-  (`~ source-command-analisar-questao/SKILL.md · 1 espelho atualizado`) --
-  indistinguivel, na saida, de um sync que preservou trabalho.
-- **Por que passa despercebido:** o espelho e o arquivo que o agente encontra
-  primeiro (e o que os `grep` de skill retornam, e o que a listagem de skills
-  expoe). Nada no cabecalho do SKILL.md diz "GERADO -- NAO EDITAR", e o
-  `git status` depois do sync fica limpo, entao a perda nao deixa rastro.
-  So percebi porque o arquivo nao apareceu na lista de staged do commit.
-- **Custo real:** 1 ciclo perdido e -- pior -- o ledger chegou a registrar a
-  direcao 3 do F38 como entregue quando ela nao existia mais em disco. Um gate
-  que afirma entrega inexistente e pior que gate nenhum.
-- **Direcao (nao implementada):** (a) banner `<!-- GERADO por tools/sync_skills.py
-  -- editar .claude/commands/<nome>.md -->` no topo de todo espelho; (b) o sync
-  avisar quando o espelho que ele vai sobrescrever tem mtime mais novo que a
-  fonte ("voce editou o espelho; a edicao sera perdida"); (c) avaliar tornar os
-  espelhos read-only. (a)+(b) sao baratos e resolvem o caso observado.
-- ✅ **Corrigido em 10/09/2026 (s176, item 1.4) -- (a)+(b), como o proprio achado previu.**
-  **(a)** todo espelho nasce com banner `🔴 ARQUIVO GERADO ... NAO EDITE AQUI`, **nomeando o
-  canonico daquele slug** (nao um generico) -- o espelho e o arquivo que o agente encontra
-  primeiro, e agora ele se declara. **(b)** o `generate()` avisa **ANTES de sobrescrever**, com
-  `[WARN] ESPELHO_EDITADO_A_MAO` em stderr, e devolve **a 1a linha divergente** -- que e o que faz
-  o autor **reconhecer o proprio texto** antes de perde-lo. Depois da escrita nao ha o que
-  reconhecer: o disco volta ao gerado e o `git status` fica limpo.
-- 🔴 **O criterio e CONJUNTO, e isso e o desenho, nao detalhe:** mtime sozinho daria ruido a cada
-  `git checkout` (mexe na data, nao no conteudo) e divergencia sozinha e o **fluxo normal**
-  ("a fonte mudou"). So a conjuncao *espelho mais NOVO que a fonte* **E** *corpo divergente* e a
-  assinatura de "alguem editou aqui depois". Os dois negativos tem teste proprio.
-- A mensagem de `PARITY_DRIFT` (a que o `auto_check` mostra) passou a dizer **onde editar** e que
-  editar o espelho e trabalho perdido -- era a outra metade da direcao.
-- ⚰️ **(c) espelho read-only: NAO feito, e deliberado.** Os espelhos sao **commitados** (o Codex os
-  consome) e tornar arquivo versionado read-only briga com `git checkout`/`sync` em toda maquina --
-  o custo recai sobre o fluxo correto para punir o incorreto. (a)+(b) cobrem o caso observado e
-  **falam a lingua do autor no momento do erro**; (c) fica registrado como avaliado e descartado.
-
----
-
-## 3n. Sessao de engenharia s159 (2026-08-30) -- achados F43-F44 (gates que nao gateavam)
-
-### F43 -- "Quais testes rodam" tem TRES registros manuais e nenhum sabe do outro -- **MEDIA** -- **RESOLVIDO (s159)**
-- **Evidencia:** uma suite em `tools/test_*.py` so executa se estiver citada em (1) `pytest.ini`
-  -> `python_files` (allowlist explicita), (2) `tools/auto_check.py` (suites invocadas por nome)
-  ou (3) `tools/test_pytest_bridge.py` (script-style por subprocess). Sao **tres registros
-  mantidos a mao, nenhum ciente do outro**. Uma suite fora dos tres existe, passa no code review
-  e nunca roda -- e ninguem percebe, porque nao ha erro: ha ausencia.
-- **Medicao (s159):** 37 suites em disco, **37 cobertas** -- 31 no `pytest.ini`, 4 so no
-  `auto_check`, 3 so no bridge (1 em dois registros). **Zero orfas hoje.** O achado nao e um
-  defeito ativo: e a **ausencia de garantia**. `tools/test_erros_orfaos.py`, escrita nesta mesma
-  sessao, so e coletada porque o autor lembrou de inscrever a mao.
-- ✅ **Corrigido:** `check_suites_orfas()` em `tools/utils/state_utils.py` + check 14 do
-  `auto_check` (WARN). Suite `tools/test_suites_orfas.py` (10 testes), auto-referente de
-  proposito -- ela tambem precisou ser inscrita.
-
-### F44 -- O harness NUNCA invocava o pytest; a suite completa era manual-only -- **ALTA** -- **RESOLVIDO (s159)**
-- 🔴 **Evidencia:** `tools/auto_check.py` -- que roda no git hook de pre-commit e e a definicao
-  de "trabalho validado" neste projeto -- **nao continha uma unica chamada ao pytest**. Ele
-  rodava ~6 suites script-style nomeadas a mao e 8 checks estaticos. Os **306 testes** coletados
-  pelo `pytest.ini` so executavam se um humano digitasse `pytest`. Nem o `--all` os rodava.
-- **Consequencia medida:** commit com suite vermelha passava no hook com o relatorio dizendo
-  "🎉 Todos os checks passaram". Foi exatamente assim que a quebra de coleta de
-  `test_handoff_teto.py` (introduzida em `c4d4532`, s156) sobreviveu **3 sessoes** -- a s157
-  registrou no proprio log "auto_check.py PASSED (0 BLOCKs)" com a suite quebrada.
-- **Este e o F35 na sua forma real.** O F35 descrevia "o seletor da falso verde quando o
-  consumidor vive noutro arquivo"; o diagnostico estava certo e subdimensionado -- nao era o
-  seletor escolhendo mal, era **nao haver o que selecionar**.
-- ✅ **Corrigido (2 partes):**
-  1. **Check 2d, BLOCKING:** `auto_check` passa a rodar `pytest tools/ -q` quando o modo e
-     `--all`, quando ha `.py` de `tools/`/`core/` tocado, ou quando substrato compartilhado
-     mudou. Custo medido: ~17s.
-  2. **Escalonamento por substrato:** mudanca em `tools/utils/`, `core/contracts/`, `pytest.ini`
-     ou `conftest.py` forca a suite COMPLETA. Justificativa: substrato compartilhado **nao tem
-     consumidor local** -- por definicao quem depende dele vive noutro arquivo, entao qualquer
-     seletor por path erra. Em vez de adivinhar o consumidor, escala.
-- ⚠️ **Honestidade:** isto conserta o gate, nao a cobertura. A suite testa CODIGO; nada testa a
-  qualidade do output de estudo (aula-base, card, feedback) -- ver §9j do
-  `docs/HANDOFF-AUDITORIA-MEDHUB.md`.
-
----
-
-## 3o. Sessao de auditoria de engenharia s160 (Fable, 2026-08-30) -- achados F45-F60 + matriz de portadores + swap test
-
-> Execucao do `docs/HANDOFF-AUDITORIA-MEDHUB.md` (goal, instrumentos, formato §10, salvaguardas).
-> Metodo: graphify re-rodado no HEAD (16:32, pos-s159) como mapa; 4 varreduras por dominio
-> (tools/, app/ RAG+memoria, contratos<->codigo, harness/governanca) + verificacao ao vivo
-> (suite 317 PASSED em ~65s; `auto_check --all` PASSED com 342 WARNs; queries read-only no
-> `ipub.db`/`medhub_memory.db`/indice Chroma). Read-only sobre o motor: zero patch nesta sessao.
-> Toda afirmacao de invariante foi tratada como hipotese (regra do handoff) -- e varias cairam.
-
-### Entregavel 1 -- tabela de achados (F45+)
-
-| id | onde | classe | evidencia | mitigacao atual | proposta | prio |
-|---|---|---|---|---|---|---|
-| F45 | memoria de fraquezas (boot) | 3 | `app/memory/manager.py:173` casa par exato, mas o vocabulario que o Haiku inventa nao bate com a taxonomia: so 60/349 WeakAreas (17%) tem `error_count>0`; 109 duplicatas (31%, pior par 7x); 6x par (area,especialidade) invertido; `inspect.py:158` desempata por `last_updated` -> **o ranking que abre toda sessao mostra o mais RECENTE, nao o mais fraco** | nenhuma (F37 consertou a outra camada) | schema: `WeakArea.area` restrito ao vocabulario real (Literal/validador) + vocabulario no prompt + upsert por par (nao UUID novo) + teste | ALTA |
-| F46 | consolidacao de memoria (paths) | 3 | `manager.py:29` `_IPUB_PATH = Path("ipub.db")` relativo ao cwd; 2 bancos-fantasma de 0 bytes (`tools/ipub.db` 06/07, `data/ipub.db`) provam runs com cwd errado; `history/memory_errors.log` tem 7 falhas HOJE (`no such table: questoes_erros`) e **nenhum check le esse arquivo** | guard `path.exists()` (derrotado pelo decoy 0-byte) | codigo: path por `__file__` + connect `mode=ro` no leitor; gate: auto_check exibe tail do memory_errors.log | ALTA |
-| F47 | calibragem de dificuldade | 1 | `day_plan.py:576-579`: variavel `nota_usuario` recebe QUALQUER nota persistida -- `dificuldade_fonte` nunca decide, `dificuldade_at` nunca e lido (Clausulas 2 e 7 do revisao-calibrada-contract sem implementacao). 12 de 21 temas calibrados hoje tem fonte `agente_inferida`/`aula` tratada como soberana; a msg §4.4 ("Voce marcou 3...") atribui ao usuario nota que ele nao deu | nenhuma | codigo: fonte entra na decisao + frescor 7d reinfere; teste de precedencia input>pergunta>inferencia | ALTA |
-| F48 | RAG (app/engine) | 2/3 | indice stale SEM sensor: reconstruido 26/08, 3 resumos editados depois, 6 chunks servindo texto desatualizado (medido); upsert nao deleta cauda quando resumo encolhe (`rag.py:229`); HyDE sem timeout (`rag.py:167`, pior caso ~30min pendurado) e sem `temperature=0` -- eval ja documentou swing de 17pp run-a-run; eval manual (ultimo run 15/08), fora do auto_check; `_chunk_by_headers` (76L, pura) sem NENHUM teste | eval honesto porem manual | gate: check de staleness (mtime resumos vs chroma) no auto_check; codigo: timeout+temperature no cliente, delete de cauda; teste: chunking | ALTA |
-| F49 | writer gates | 2 | `AGENTE.md:170` ("so insert_questao escreve taxonomia, excecao set_dificuldade") e violado por 5 arquivos: `insert_card_base.py:65`, `registrar_sessao_bulk.py:115,132` (muta as colunas que set_dificuldade jura nunca tocar), `normalize_taxonomia.py`, `dedup_taxonomia.py`; `test_writer_gates.py` testa qualidade de card, NAO gates de escrita (docstring admite); o gate `import sqlite3` so varre `app/**` | convencao + nome de teste que sugere cobertura inexistente | teste estatico: allowlist tabela->writers (grep INSERT/UPDATE/DELETE), padrao ja provado em `test_revisao_calibrada.py:127` | ALTA |
-| F50 | tools/autopsia_simulados.py | 3 | 852 linhas QUEBRADAS desde a s156: `:838` importa `tools.autopsia_template`, deletado no `dc8f460`; mascarado por `.pyc` orfao no `__pycache__`; PKs hardcoded (`range(622,668)`); 0 referenciadores vivos | reachability WARN (so em `--all`, pegou 5 dias depois) | decisao fica-ou-morre; gate: `compileall`/import-check dos CLIs no auto_check (pega import dangling na hora) | MEDIA |
-| F51 | tools/auto_recurate_duplo_ask.py | 2 | writer de `flashcards`+`fsrs_cards` que BYPASSA card_checks (unico writer sem gate de qualidade), flipa `needs_qualitative=0` por texto de LLM; dependencia fantasma `google.generativeai` fora do requirements (3a superficie LLM nao declarada); BOM U+FEFF quebra `ast.parse`; orfao (0 refs) -- nasceu na s156 | inerte por falta da dependencia (mitigacao acidental) | aposentar OU reescrever sob card_checks + requirements; o teste allowlist do F49 o pegaria | MEDIA |
-| F52 | contrato FSRS x codigo | 2 | (a) load balancer inteiro (`app/utils/fsrs_balance.py`, muta `due` em TODA gravacao state==2) fora do contrato que se declara governante do FSRS -- a norma efetiva vive em `revisar.md:68`; (b) invariante `needs_qualitative=1 nao deve existir` VIOLADO em dado: 6 cards, dentro da fila ativa (`<2`), sem sensor; (c) `state=3` (relearning) existe em 3 cards e nao esta no vocabulario do contrato | nenhuma p/ (b); (a) so doc de comando | contrato absorve o balanceador (params ja estaveis) + check `needs_qualitative=1` no auto_check + vocabulario state atualizado | MEDIA |
-| F53 | HANDOFF/ESTADO derivacao | 2 | so o cap de 60 linhas fisicas segura (BLOCK real); TODOS os caps estruturais violados no HANDOFF atual (10 bullets onde cabem 3; 6 itens numa linha fisica p/ evadir o cap de 5; frente `Erros & Cards` ausente; vocabulario fora do canone); causa mecanica: `render_handoff_block` nao deriva `Erros & Cards`; `ESTADO.md:36` rotula "derivados" contadores digitados a mao (so resumos e derivado) | teste de linhas fisicas (evadivel por construcao) | codigo: estender render_handoff_block (vocabulario completo); gate: check estrutural de frentes | MEDIA |
-| F54 | ledger-of-self (degrau 2) | 2 | 462 fingerprints, 279 abertos (263 `card_atomicidade`), mesmo WARN visto **102x em 36 dias**; nenhum codigo chama `ledger_self.abertos()`; auto_check nunca imprime o topo da divida; nao ha criterio de promocao WARN->BLOCK ("warning-first virou warning-only", D3 confirmado com numeros) | escrita fiel, leitura zero | codigo: auto_check imprime top-N de abertos + idade; regra de promocao (ex.: aberto ha >30d com >50 ocorrencias escala severidade) | ALTA |
-| F55 | pre-commit --staged | 2 | `git_utils.py:47` colhe so NOMES staged; `auto_check.py:225` roda pytest contra o FILESYSTEM -- commit parcial (`git add -p`) e validado pelo codigo errado nas duas direcoes | nenhuma | codigo: validar o indice (stash -k -u ou worktree temporaria) | MEDIA |
-| F56 | reconcile-contract | 2 | B2 declarada BLOCKING, implementada como WARN com `success=True` fixo (`auto_check.py:267`) -- e checa condicao aparentada (ponteiro>max+1), nao a escrita; B3/B4/W1/W3/W4 sem implementacao nenhuma (coluna "como checar" e prosa); mesma falha que o changelog v1.1 declarou consertada (consertou so B1) | B1 exemplar; resto convencao | promover B2 a BLOCK real OU re-ratificar contrato com o rebaixamento explicito; matriz condicao->instrumento | MEDIA |
-| F57 | camada de memoria do harness | 2 | **o achado-tese, com caso provado**: 51 `feedback_*` fora do git/invisiveis p/ outros harness; a s156 (Antigravity) deletou `tools/autopsia_template.py` que a memoria-CONTRATO de s149 (`feedback_aula_base_artifact_design_contract`) aponta como modelo canonico -- a sessao nao via a memoria, a memoria nao detecta a delecao (3 arquivos de memoria apontam p/ o morto); 2 memorias fora do indice MEMORY.md (1 regra ATIVA invisivel: `feedback_fsrs_override_autoconfirm`; 1 morta de s044: `project_semantic_architecture`); ~2/3 das 51 duplicam portador versionado sem reconciliador (assinatura TETO_BASE aplicada a memoria) | AGENTS.md avisa (prosa) | migrar regra load-bearing p/ portador versionado (skill/contrato; vereditos por familia abaixo); check barato: grep de paths `tools/*.py` citados em `memory/*.md` contra o disco | ALTA |
-| F58 | integridade de history/ | 3 | `session_156.md` corrompido NO SSOT: BOM + escapes comidos na escrita (`\t`ools -> tab literal, `pp/pages`, `uto_check`, `esumos/`, `srs-management`) -- nenhum gate olha history/; tabela do INDEX.md para na s144 (entradas novas so em prosa) | nenhuma | gate: check de encoding/estrutura minima de `session_NNN.md` novo no auto_check | BAIXA |
-| F59 | permissoes do harness | 2 | `settings.local.json`: 166 entradas allow, ZERO deny/ask; `Bash(python:*)` = execucao arbitraria pre-aprovada; `pip install:*`; ~40% e lixo one-shot de sessoes antigas (seds de arquivo que nem existe) -- lista ilegivel = entrada perigosa futura passa despercebida | julgamento do agente | config: bloco deny minimo (rm -rf, git reset --hard, git clean, push --force) + poda das entradas mortas | MEDIA |
-| F60 | robustez de exit code | 3 | `backup_db.py:104` imprime "BACKUP CORROMPIDO -- abortando" e sai **0**; `importar_sessoes.py` sai 0 com 100% das linhas rejeitadas; 18/45 CLIs nunca retornam !=0; 11 excepts silenciosos so no day_plan (plano pode sair sem zona/frieza/prescricao sem 1 aviso) | padrao certo ja existe (`insert_questao.py:474`, F27) e nao foi generalizado | codigo: exit simetrico nos writers + `[WARN]` impresso nas degradacoes do day_plan | MEDIA |
-
-**Anexo -- menores (nao-F, para varreduras futuras):** `DB_PATH` redefinido 22x em 8 grafias (env `MEDHUB_DB` resolveria); `AREAS_VALIDAS` duplicada com divergencia (performance.py sem "Simulado"); 4a definicao de "card ativo" sobrevivente (`detect_clones.py:38` sem COALESCE); `resolve_tema_id` reimplementado 5x sem o desempate deterministico; PRAGMA foreign_keys em so 6/12 caminhos de escrita (dedup/normalize deletam taxonomia SEM FK ativa); 4 CLIs "read-only por docstring" abrem conexao gravavel (variancia, performance, review_radar, detect_clones -- `mode=ro` custa 1 linha); funcoes-monstro `auto_check.main` 488L e `insert_questao` 198L; `sync_skills --check` cego a drift de `description` e a espelho orfao; reachability conta mencao textual como alcance (lapide passa) e so roda em `--all`; `suites_orfas` valida por substring (mencionada != inscrita); README.md errado em 5 pontos verificaveis (BM25, generate_flashcards.py, two-tier, summarize_performance, metricas velhas); AGENTS.md diz "13 checks/2 BLOCK" vs medicao 19 unidades/8 BLOCK; frontmatter version != titulo em 4/9 contratos; `resumo_read` e kind fantasma; model id `claude-haiku-4-5-20251001` pinado e duplicado em 2 modulos; DeprecationWarning do datetime adapter (95 no run da suite); `pubmedmcp` caiu NESTA sessao e nenhum sensor distingue declarado de conectavel; graphify reporta "Import Cycles: None" mas rag.py<->get_topic_context tem ciclo real gerenciado por import lazy (limite do extrator); AUDITORIA_MEDHUB.md so cresce (99->115KB em 5 dias, 29 RESOLVIDOS no corpo) violando a auto-higiene binaria do AGENTE.md:63 -- e higiene de scratch/tmp nao tem sensor.
-
-### Entregavel 2 -- matriz de portadores de regra (§10b, validada)
-
-| # | portador | onde vive | enforcement real | se ninguem carregar | versionado? |
-|---|---|---|---|---|---|
-| 1 | CLAUDE.md -> AGENTE.md | repo | nenhum (prosa de boot) | swap test provou: parte ignorada por agente externo | sim |
-| 2 | AGENTS.md | repo | nenhum | enquadramento p/ agente externo (entregue s159; ja com 1 drift de contagem) | sim |
-| 3 | core/contracts/ (9) | repo | parcial -- so onde ha teste-espelho (LIMITE_HANDOFF sim; balanceador/precedencia nao) | drift silencioso (TETO_BASE 30x40 5 semanas; F47/F52 vivos) | sim |
-| 4 | .claude/commands/ (11 skills) | repo | nenhum -- passo acontece se o agente ler | F42, override reprovado 3x | sim |
-| 5 | .agents/skills/ (espelhos) | repo | sync_skills --check (WARN; cego a description/orfao) | espelho mente p/ Codex/Antigravity | sim (gerado) |
-| 6 | .agents/workflows/ | repo | nenhum | orquestracao improvisada | sim |
-| 7 | hooks (SessionStart, PostToolUse(Write), pre-commit) | .claude/ + .git | **REAL** | -- | parcial (.git/hooks reinstalavel) |
-| 8 | tools/auto_check.py | repo | **8 BLOCK + 11 WARN** (medido; melhorou de 2 BLOCK na s159) | falso verde onde e WARN (F54) | sim |
-| 9 | suite pytest (317) | repo | REAL **quando coletada** (allowlist manual; 6/38 suites so em branches condicionais) | suite fantasma (test_handoff_teto, 3 sessoes) | sim |
-| 10 | schema/constraints ipub.db | db | REAL (UNIQUE, FK -- mas FK OFF em 6/12 caminhos de escrita) | orfaos p/ o check_fk_orphans achar depois | schema em init_db.py sim |
-| 11 | memorias ~/.claude (77; 51 feedback_*) | FORA do repo | **nenhum + invisivel p/ outros harness** | F57 (caso provado autopsia_template) | **NAO** |
-| 12 | medhub_memory.db (weak_areas) | fora do git | nenhum -- e 83% com error_count=0 (F45) | ranking do boot vira "mais recente" | NAO |
-
-**Leitura confirmada com ajuste:** vinculantes de verdade = 7, 9-quando-coletada, 10, e o 8 subiu de 2/13 p/ 8/19 BLOCK na s159. As 51 memorias que mais governam o comportamento seguem 100% decorativas e nao-versionadas. Vereditos por familia (§8 do handoff): **conduta do /revisar (8)** -> passo/template da skill versionada (+ relearning intra-sessao vira codigo na fila); **aula-base (10)** -> contrato versionado + gate barato p/ ancorar-PDF + lint p/ width; **padroes de erro do usuario (10)** -> dado/schema (ja e o dominio do weak_areas/habilidades -- hoje ha DOIS SSOTs do mesmo fato); **numeros (2)** -> constante+teste (feito p/ TETO_BASE; memoria encolhe p/ o porque); **flashcards/curadoria (8)** -> regua ja vive em estilo-flashcard.md, memorias-duplicata encolhem p/ ponteiro; **processo (13)** -> prosa legitima MAS com portador repo (AGENTE.md/workflows), nao memoria de harness. "Permanece prosa" so se declarado onde e por que.
-
-### Swap test retroativo (§11) -- s156-s158 (Antigravity/Gemini)
-
-| check mecanico | s156 (3.1 Pro) | s157 (3.7 Flash) | s158 (3.7 Flash) |
-|---|---|---|---|
-| HANDOFF atualizado | sim | sim | sim |
-| log criado + indexado | log sim; INDEX so no commit seguinte | sim | sim |
-| auto_check | "PASSED" **falso verde** (coleta quebrada por ele mesmo -- F44) | "PASSED" falso verde herdado | idem |
-| integridade do log | **corrompido** (F58: BOM + escapes comidos) | ok | ok |
-| ipub.db coerente c/ narrativa | plausivel | coerente (F38 nao acusa) | coerente |
-| contratos respeitados | **NAO**: TETO_BASE 30x40 mantido em commit "resolver ambiguidade"; quebrou coleta de suite (3 sessoes); criou CLI orfao com dep fantasma (F51); **deletou o alvo de memoria-CONTRATO invisivel (F57) e deixou o importador dangling (F50)** | ok mecanicamente | ok mecanicamente |
-
-**Placar por classe:** s156 = 5 divergencias estruturais, TODAS classe 2/3, NENHUMA travou; s157/s158 = 0 divergencias mecanicas proprias (mas herdaram o falso verde). **Hipotese do handoff CONFIRMADA:** a divida e classe 2 (contrato implicito sem gate), nao classe 4 (capacidade) -- nenhum dos defeitos exigiria modelo mais forte para ser evitado, todos exigiam um gate que nao existia. Maturidade (criterio §11.4): != 0, e nada travou ruidosamente.
-
-### O que esta solido (adicoes da s160 -- nao mexer sem motivo)
-
-- **Suite 317 PASSED em ~65s** e, desde a s159, o auto_check RODA o pytest (check 2d BLOCK + escalonamento por substrato compartilhado -- correcao de causa-raiz, nao remendo).
-- **Lock otimista no caminho FSRS** (`app/utils/db.py:420-481`): rowcount-check + rollback + revlog na mesma transacao. Concorrencia correta onde quase ninguem faria.
-- **Watermark de dado** (auto_check cobre o ipub.db, nao so o git): tripla (MAX id, COUNT, MAX card_version), mode=ro, fail-open, selo pos-checks. As 3 decisoes dificeis certas.
-- **`backup_db.py`**: copia -> integrity_check NA COPIA -> aborta sem tocar nada -> so entao rotaciona + COUNT-ASSERT. Ordem correta de operacao destrutiva (so falta o exit code, F60).
-- **Eval do RAG com honestidade epistemica rara**: "misses sao dados", CI declarado, ruido run-a-run isolado e quantificado, folclore superseded explicitamente.
-- **Meta-tooling de segunda ordem**: reachability + suites_orfas (auto-referente de proposito) atacam a classe "construido-e-nunca-conectado" que quase nenhum repo instrumenta.
-- **Densidade de rationale nos comentarios** (incidente + sessao + porque): foi o que permitiu a auditoria distinguir decisao de acidente.
-- **Zero SQL injection, zero bare except, zero path absoluto hardcoded, zero segredo vazado** (chave so via os.environ; .env/.db/.pdf fora do git -- verificado).
-
----
-
-## 4. O que esta solido (nao mexer sem motivo)
-
-Registrado para o PRD nao "consertar" o que funciona:
-- **Camada de estado contract-driven** (HANDOFF operacional + ESTADO macro + contratos em `core/contracts/`). Arquitetura madura, portada do agente irmao.
-- **Caminho de escrita unico do FSRS:** todo rating passa por `db.record_review()` via `fsrs_queue.py`; audit trail em `fsrs_revlog`. `import sqlite3` confinado a `app/utils/db.py`. Disciplina de SSOT respeitada.
-- **Dados ja carregam `area`/`tema`** por card -- a clusterizacao de F3 e barata porque o campo existe.
-- **Politica de severidade WARN->BLOCK** (s106/107): regra nova nasce advertindo, so bloqueia quando a base zera. Bom padrao anti-atrito para os invariantes propostos aqui (F1).
-- **Harness autonomo staged-only + quotepath-safe** (`auto_check.py`) -- ja resolve o problema de caminhos acentuados no pre-commit.
-
----
-
-## 5. Andaime de prompt para o agente de engenharia (anti-atrito)
-
-Para o aprofundamento subsequente, estruturar o pedido assim (reduz a chance de o vocabulario de dominio disparar o classificador automatico, mantendo o foco em engenharia):
-
-- **Enquadrar como engenharia de sistemas, nao clinica.** O sujeito do pedido e "camada de estado / fila / contrato / CLI / hook", nao a materia de estudo. O conteudo de dominio entra como *dado que as estruturas transportam*.
-- **Verbos de engenharia:** auditar, reconciliar, derivar, versionar, invariante, idempotencia, ordenacao, cache, drift. Evitar centrar o pedido em termos de dominio quando o alvo real e a estrutura.
-- **Referenciar este doc + os contratos** (`core/contracts/*.md`, `AGENTE.md`) como fonte, e pedir verificacao antes de mudanca.
-- **Um achado por vez -> spec -> patch.** Priorizar por severidade (ALTA primeiro; aqui todas sao MEDIA/BAIXA, entao ordenar por custo/beneficio: F3 e F1 sao os melhores primeiros passos -- baratos e de alto retorno).
-
-**Ordem sugerida de ataque para o PRD:**
-1. **F1 + F6** (juntos) -- fechar o drift de estado e derivar os numeros do HANDOFF. Restaura confianca na camada de governanca antes de construir em cima dela.
-2. **F3** -- ordenacao por cluster na fila. Barato, alto retorno pedagogico, observado direto do uso.
-3. **F4** -- estrategia de drenagem de divida FSRS + metrica de divida no day_plan.
-4. **F2** -- perfilar e enxugar a latencia de tooling/hooks.
-5. **F5** -- PREPARAR proativo no fluxo DRENAR.
-
----
-
-## 6. Log de observacao (sessao viva -- s108)
-
-Materia-prima dos achados. Drenagem completa da fila de atrasados: **43 cards** em 9 clusters, ordem = cluster-a-cluster com PREPARAR calibrado.
-- Boot correu limpo; hook de fraquezas + plano do dia + proximo ato funcionaram (Parte 1 do PRD de Autogovernanca confirmada em uso). Latencia de Bash (`git`/`ls`) estourou 120s -> F2.
-- A fila veio clusterizavel, mas a ordem do CLI e por bucket, nao por tema; a conducao por cluster foi **manual** -> F3.
-- **Contagem manual errou 3x** (Cardiopatias "7"->6, Ectopica "5"->4, Pancreatite idem): sintoma de F6 (numero digitado x derivado). Reforca a hipotese de `day_plan --review-plan` emitir os clusters do dia com contagem.
-- PREPARAR so disparou por pedido do operador na 1a vez -> F5; depois passou a ser oferecido proativamente (dogfooding do proprio F5).
-- **Dois cards mal-calibrados** (`id=95` HCE-vs-TGA; `id=120` heterotopica-vs-corpo-luteo) -> F7, com o `id=120` marcado para gate de evidencia.
-- **Vies do PREPARAR** confirmado em 3 canais (vazamento direto, pre-resolucao de card de conduta, amplificacao de erro de ensino) -> F8; e a classe "card de fato puro" onde o refresh e contraindicado.
-- **Override pos-record** (card `id=403`, Paget->Faget) expos a contradicao append-only x contrato -> F9.
-- Distribuicao de notas final (43 cards): **22x nota 4 · 9x nota 3 · 9x nota 2 · 2x nota 1** (213 pneumotorax e 205 pentamidina; ambos re-drillados). Dominio de mecanismo forte; gaps pontuais de fato/discriminacao.
-
----
-
-## 7. Aprendizados de processo (meta -- como esta etapa de iteracao funcionou)
-
-O objetivo da sessao nao era so drenar cards: era **usar o MedHub para descobrir como melhorar o MedHub**. O que essa etapa ensinou sobre o *metodo* de iteracao:
-
-1. **Dogfooding > leitura estatica para achar defeito real.** 4 dos 9 achados (F3, F7, F8, F9) so apareceram porque o ambiente foi *usado*, nao lido. Leitura de codigo pega arquitetura; uso pega friccao. Regra de processo: **toda sessao de uso e tambem uma sessao de auditoria** -- o agente-player e simultaneamente auditor, e cada atrito no fluxo e um achado candidato.
-2. **Defeito de card so aparece quando um solucionador competente discorda do card.** F7 (`id=95`, `id=120`) exigiu que o operador desse a resposta *clinicamente melhor* e o card marcasse erro. Um linter sintatico nunca pegaria isso -- e um sinal semantico que emerge do desacordo humano-vs-gabarito. Implicacao: capturar sistematicamente os cards onde o operador "erra com razao" (candidatos a reforge/gate de evidencia).
-3. **O agente que aquece e o mesmo que sabe a resposta -> vies estrutural.** F8 nao e descuido, e uma propriedade do arranjo. Qualquer mecanismo de "preparar antes de sondar" conduzido pelo mesmo agente precisa de uma clausula explicita de isolamento, senao contamina a metrica.
-4. **Contradicoes de contrato so disparam sob uso especifico.** F9 (override x append-only) estava latente no contrato desde s075; so apareceu quando um operador *de fato* corrigiu uma nota ja gravada. Contratos precisam ser exercitados, nao so lidos, para revelar suas arestas.
-5. **Enquadramento anti-atrito e parte do metodo, nao cosmetica.** O classificador automatico do modelo marca vocabulario clinico como sensivel. Conduzir o trabalho de engenharia com o dominio tratado como *payload* (e nao como assunto) foi o que manteve o fluxo produtivo. Este doc e escrito nesse registro **de proposito**, para que o Fable o consuma sem atrito (ver secao 8).
-6. **Separar as duas trilhas de fechamento.** Achado de *conteudo* (ex.: o operador confundiu eponimo Faget/Paget; o padrao vivo do pneumotorax reincidiu) vai para o `history/session_NNN.md` e para os "padroes de erro vivos" do HANDOFF. Achado de *engenharia* vai para este doc. Nao misturar -- sao SSOTs diferentes.
-
-**Como continuar a iteracao (para o proximo coordenador de sessao):** manter este doc como o **ledger vivo de engenharia** do MedHub. Cada nova sessao de uso adiciona achados numerados (F10, F11, ...) com o mesmo template. Quando o operador quiser, o Fable consome o ledger e emite o PRD. O ledger nunca "fecha" -- ele acumula ate virar backlog priorizado.
-
----
-
-## 8. Para o Fable -- ponto de entrada (briefing pronto, registro de engenharia)
-
-> Cole/adapte o bloco abaixo para iniciar a sessao de PRD com o Fable. Ele ja vem no registro que evita o atrito do classificador.
-
-**Contexto:** O MedHub e um sistema de software de gestao de estudo (camada de estado contract-driven, filas de repeticao espacada, CLIs em `tools/`, hooks de validacao). Este arquivo (`AUDITORIA_MEDHUB.md`) e o ledger de engenharia: 9 achados verificaveis (F1-F9), cada um com evidencia, verificacao sugerida e hipotese de melhoria. O conteudo de dominio nos exemplos e apenas o *dado* que as estruturas transportam -- o alvo do trabalho e a estrutura (fila, contrato, CLI, hook, invariante de estado).
-
-**Tarefa:** transformar este ledger em um PRD de melhorias, no fluxo `/vibeflow:discover` -> `/vibeflow:gen-spec`. Antes de especificar, **verificar cada achado** contra o codigo (coluna "verificacao sugerida"). Priorizar por custo/beneficio.
-
-**Ordem de ataque recomendada (secao 5, reafirmada):**
-1. **F1 + F6** -- invariante de ponteiro de sessao no `auto_check` + bloco numerico do HANDOFF derivado por `day_plan.py --handoff-block`. Fecha a classe inteira de drift de estado.
-2. **F3** -- flag `--cluster`/`--by-tema` em `fsrs_queue.py` (+ eventual `day_plan --review-plan`). Barato, alto retorno, observado direto do uso.
-3. **F9** -- mudar o protocolo do loop de `/revisar` para gravar `--record` so apos a janela de override (nao tocar schema).
-4. **F8** -- clausula no contrato de `/revisar` isolando o conteudo do PREPARAR das respostas dos cards; distinguir card de raciocinio (refresh ok) de card de fato puro (refresh contraindicado).
-5. **F7** -- rodar `/curar-cards` nos `id=95` e `id=120` (este ultimo pelo gate de evidencia); avaliar a heuristica de linter proposta.
-6. **F4** -- estrategia de drenagem de divida FSRS + metrica de divida no `day_plan`.
-7. **F2** -- perfilar e enxugar a latencia de tooling/hooks.
-8. **F5** -- PREPARAR proativo no fluxo DRENAR (depende de F3 para o sinal de cluster frio).
-
-**Restricoes de projeto a respeitar (nao violar):** `import sqlite3` so em `app/utils/db.py`; agentes nao fazem SQL direto (engine/CLI); FSRS escreve so via `record_review`; resumos seguem `/estilo-resumo`; encoding ASCII limpo (secao 4.5 do AGENTE.md); `ipub.db` local-only; armadilhas de resumo sao cumulativas.
-
----
-
-*Este doc e o ledger vivo de engenharia. Nao "fecha" -- acumula achados a cada sessao de uso. O 1o ciclo Fable (PRD -> 5 ondas) foi ENTREGUE em 2026-07-05 (secao 3b). A s109 (coordenador-observador) adicionou **F16-F19** do uso vivo (forja da aula-base de apendicite; secao 3c) -- insumo do ciclo 2. A rodada 1 do ciclo 2 (Fable/ai-eng, paralela a s109; secao 3d) entregou F14/F15, validou o teto (F4/b), preparou a janela do expurgo (F11) e registrou F20. A s109 (1o lote de questoes; secao 3e) adicionou F21, e (2o lote; secao 3f) **F22-F26**. O **ciclo 2 rodada 2** (Fable/ai-eng, 2026-07-06; secao 3g) entregou o PRD ORQUESTRACAO completo (vibeflow 4/4 PASS): posicao SSOT (op-3), recomendador do dia, F22-F26 RESOLVIDOS; F21 segue aberto (contrato de aula); F27/F28 registrados pelos audits. A **s110 parte 2** (2026-07-06) verificou performance+cronograma a pedido do operador, achou e RESOLVEU **F29** (drift planilha-db de 76q, ao vivo, mesma sessao); no ciclo de Pre-Natal I (cold recall, tema-zero) registrou **F30** (material_indicado nao verifica existencia real do resumo), aberto. A **s113** (08/07, verificacao de cronograma a pedido do operador) achou e RESOLVEU **F33** (boot recomendava temas ja feitos, calendario-driven sem ler conclusao real da planilha) na mesma sessao via ciclo completo `/discover`->`/gen-spec`->`/implement`->`/audit` (PASS); F31/F32 registrados por uso vivo (s112). A **s115** (2026-07-09) auditou o boot e entregou o PRD **boot-cronograma-drive-confiavel** em 3 partes (vibeflow discover->gen-spec->implement->audit, audits PASS): achado novo **F34** (disparo+ordem do Drive) + **F30/F31 RESOLVIDOS**; **F21 segue aberto**. A reconciliacao de fechamento da **s125** (2026-07-19; secao 3i) registrou
-retroativamente **F35** (reconcile de volume manual + seletor de suite do `auto_check` dando falso
-verde) e **F36** (binario grande do Drive via MCP nao materializa em disco -> `--sync-drive` pulado
-na s124 e na s125), ambos ABERTOS. A **s128** (2026-07-25) registrou **F37** (campo `questoes_realizadas` inflado, achado
-na s127) e **F38** (erros analisados nao chegam a `questoes_erros` -- pipeline com dois finais), e
-elevou **F36 para ALTA** com o modo de falha precisado (limite de transcricao, nao de acesso).
-Ainda na **s128**, o dreno de 40 cards produziu **F39** (40% do baralho viola o principio atomico --
-detector entregue, 8 cards atomizados, ~350 na worklist), achado **do usuario**, nao do agente.
-A **s152** (2026-08-23, drenagem de 90 cards em regime de divida) registrou **F40** (4 padroes novos
-de defeito de FORMULACAO de card -- pacote-de-fatos, frente ambigua, pergunta circular, pergunta
-composta -- mesma familia do F7, gatilho para a auditoria ampla do banco ja pendente desde a s148),
-**PARCIAL** (4 cards reforjados ao vivo; rastreio no banco inteiro fica para a auditoria ampla).
-A **s154** (2026-08-24, drenagem de 100 cards em 10 blocos, regime de divida) registrou **F41**:
-6 novas instancias de F40 (cards 1053/553/155/576/293/325, 2 delas -- 293/325 -- um subpadrao
-tautologico novo em cards de tema `[bulk]`), a reincidencia do padrao de calibracao de probabilidade
-do F7 na tema Gravidez Ectopica (`card_id=114` auditado via `evidence-researcher`, veredito PRECISA
-AJUSTE -- moldura de PUL; `card_id=120` do F7 original segue sem auditoria) e 3 flags do usuario
-(1411/283/319) sem defeito identificado pelo agente, calibracao em aberto pra proxima sessao.
-~~**Proximos achados comecam em F42**~~ -> **proximos comecam em F87** (F82-F86 numerados na s171). Ultima atualizacao: s154 (2026-08-24). **Ciclo DESCOLAR
-(Fable/ai-eng, 2026-09-01 — retorno do handoff `~/ai-eng/HANDOFF-MEDHUB-COLA.md`):** PRD
-`descolar-motor-determinismo` (P1-P7 respondidas) + 7 specs + implementacao. RESOLVIDOS:
-**F45** (vocabulario+upsert por par via `reconciliar_weak_areas`), **F46** (paths por __file__,
-leitor ro, 2 decoys deletados), **F47** (precedencia de fonte implementada), **F48** (timeout+
-temp0+cauda+RAG_STALE+testes do chunker), **F49** (allowlist tabela->writers TESTADA,
-`test_writer_allowlist`), **F50** (deletado; check IMPORT_DANGLING mata a classe), **F51**
-(aposentado sem substituto), **F52** (contrato FSRS v1.1 absorve balanceador + state=3 + sensor
-needs_qualitative), **F53** (Erros&Cards derivado; matriz de verdade no reconcile v1.2 — o
-derivado ja expos drift real: 922 erros vs 903 digitados), **F54** (painel de DIVIDA = leitor
-obrigatorio em todo run), **F56** (B2 BLOCK real + matriz condicao->instrumento), **F61** (novo,
-do discovery: duplas execucoes de suite mortas; tempo por bloco impresso). **F57** RESOLVIDO-parcial
-(5 memorias nomeadas resolvidas + check `memory_pointers` vigiando; 2 ponteiros mortos restantes
-= WARN no painel, migracao das demais 72 nas proximas sessoes), **F58** RESOLVIDO (check
-`history_integrity`: session novo nasce integro ou e acusado; s156 fica como lapide), **F59**
-RESOLVIDO (deny 0->4, allow 163->138 por poda mecanica), **F60** RESOLVIDO (exit simetrico em
-backup_db/importar_sessoes + day_plan degrada audivel; ~15 CLIs restantes = candidatos no
-painel). Suite 317->**358**. Ciclo verificado: audits em
-`.vibeflow/audits/descolar-motor-cycle-audit.md` (PASS 7/7).
-Anti-scope preservado: promocao automatica WARN->BLOCK (P2), golden de aula (P6, pos-ENAMED),
-F55, rotacao deste doc (**F62** candidata — politica do dono), ipub.db/conteudo clinico. **Adendo 2026-07-12 (Fable/ai-eng, ciclo mecanismo-de-conhecimento):** F21 RECONCILIADO em dois planos (conduta RESOLVIDA no contrato v1.2; enforcement mecanico na spec `mecanismo-conhecimento-consolidacao-part-3`) -- ver secao 3e. Ciclo de consolidacao do mecanismo de RAG/conhecimento em andamento (part-1 audit PASS: MCP obsidian aposentado, scaffold LangGraph/BM25 removido; part-2: reconciliacao de drift documental).*
-
----
-
-## 4o. Achado de uso vivo -- s162 (Claude Code/Opus 5, 2026-09-02)
-
-### F63 -- a prioridade que governa o estudo nao viaja com o repo (o usuario e a camada de transporte) -- **MEDIA** -- **PARCIAL** (o DADO viajou na s165: `core/cronograma/prevalencia_enamed.json`, 89 temas, + `fsrs_queue --prevalencia`; falta ligar ao `infer_nota` -- residuo nomeado)
-
-**Classe:** input do boot nao e verdadeiro (mesma familia de F45/F47) + regra load-bearing fora
-do portador (P7, mas na camada de ESTUDO, nao na de engenharia).
-
-**Observado.** O usuario reordenou o xlsx do Drive a mao por um codigo de cores
-**Roxo > Rosa > Salmao** (prioridade por prevalencia no ENAMED, derivada do guia estatistico do
-EMED). Essa ordem e o que de fato decide o que ele estuda ate 13/09: das 11 tasks da S17, so
-**6 sao roxas** (Diarreia Teoria, SUA Teoria, APS Revisao, Diarreia Revisao, Urologia I,
-Pneumonias Bacterianas I). As outras 5 (Cirurgia Vascular Revisao, Vitalidade Fetal, Neoplasias
-de Estomago e Esofago, Nefrolitiase, APS Teoria III) nao entram na janela.
-
-**O defeito.** `core/cronograma/grade.json` e um parse **fiel** do `Cronograma.pdf` -- verificado
-task a task contra a planilha do usuario nesta sessao: 11/11 batem, mesma ordem. O que ele **nao**
-carrega e a cor. Logo:
-- nenhum consumidor (`day_plan.py`, `cronograma.py --radar`, `preparacao.py`) sabe distinguir
-  roxo de salmao; as 11 tasks pesam igual;
-- `infer_nota()` tem o **eixo 4 desenhado para consumir `prevalencia_enamed`** e roda em peso
-  neutro por falta do campo -- soquete cabeado, sinal existente, ninguem ligou os dois
-  (`core/contracts/revisao-calibrada-contract.md:119`, `docs/plans/s094-revisao-calibrada-PRD.md:265`);
-- o snapshot `--sync-drive` (unica ponte para o xlsx real) esta **38 dias velho**.
-
-**Consequencia medida.** A regra so existe em prosa (`HANDOFF.md:9`, `session_161.md:14`) e na
-cabeca do usuario. Resultado: ele **reenuncia a prioridade a cada sessao e a cada harness** --
-para o Antigravity em 02/09 e para o Claude Code no mesmo dia. O humano virou o transporte de um
-dado que o repo deveria carregar. Registrado como "achado registrado, nao resolvido" desde a
-**s147** (`history/session_147.md:18`) -- 15 dias em aberto.
-
-**Por que importa agora.** E a propria tese do ciclo DESCOLAR (P7: "regra load-bearing vai para o
-portador do repo, nao para a memoria do harness") violada na camada que o projeto existe para
-servir. A des-colagem consertou o motor; a prioridade do estudo continua colada no operador.
-
-**Direcao (nao implementada).** `grade.json` ganha `prioridade` por task (roxo|rosa|salmao) via
-`cronograma.py --sync-drive` lendo o fill/font color da celula do xlsx; `prevalencia_enamed`
-passa a ser derivada dela e o eixo 4 do `infer_nota()` liga sozinho -- **zero mudanca** em
-`infer_nota()` (o contrato ja previu essa porta). Sensor de staleness do snapshot do Drive vira
-WARN no painel de DIVIDA.
-
-**Severidade:** ALTA (governa a alocacao de tempo a 11 dias do ENAMED e 60 da UERJ).
-
-### F64 -- o gatilho do regime de divida le `atrasados`, o dono le `vencidos` -- **MEDIA** -- **RESOLVIDO (s176, item 1.2)**
-
-**Classe:** gap de spec entre a formula e o modelo mental do operador.
-
-**Observado.** `tools/day_plan.py::_teto_efetivo(atrasados)` sobe o teto do dia so quando
-`atrasados > TETO_BASE` (60). Na s162 havia **45 atrasados + 22 p/ hoje = 67 vencidos**: o
-operador leu "vencidos > teto, logo regime de divida" e o codigo leu "45 < 60, teto base".
-O agente reportou o teto do codigo como se fosse fato pacifico e recomendou parar o estudo com
-base nele. O operador contestou -- e a leitura dele e a mais defensavel: card vencido hoje e
-divida igual a card vencido ontem.
-
-**O defeito.** A politica declarada (memoria `feedback_politica_cards_diaria`, s159: "teto 60/dia,
-CAP de divida 1,5x = 90") nao diz **qual contador** dispara o regime. `_teto_efetivo` decidiu por
-`atrasados` sem que a escolha esteja escrita em nenhum portador. Consequencia pratica: numa
-divida composta majoritariamente por cards de HOJE, o regime nunca dispara e o teto trava em 60
-com a fila inteira vencida.
-
-**Agravante medido na mesma sessao.** A sessao cruzou a meia-noite (02/09 -> 03/09). O teto e
-por dia de calendario, e nenhum aviso existe quando a fronteira e cruzada no meio de uma
-drenagem: o agente seguiu argumentando com o orcamento do dia anterior por 2 turnos. 02/09
-fechou em 75 (sob o CAP 90) e 03/09 abriu limpo -- mas isso foi descoberto por `date`, nao por
-sensor.
-
-**Direcao (nao implementada).** (a) Decidir e **escrever** o contador do gatilho em
-`fsrs-management-contract.md` (recomendacao: `vencidos = atrasados + hoje`, que e a leitura do
-dono); (b) `_teto_efetivo` passa a receber o contador decidido, com teste; (c) `day_plan`
-imprime o **consumo do dia** (`gravados_hoje / teto`) no bloco de FSRS -- hoje o teto aparece
-sem o saldo, o que obriga o agente a derivar a conta a mao e errar.
-
-**Severidade:** MEDIA (nao corrompe dado; distorce a prescricao de volume e ja produziu uma
-recomendacao errada de parar).
-
-✅ **Corrigido em 10/09/2026 (s176, item 1.2).** O contador tem **um nome e uma definicao**:
-`vencidos = atrasados + hoje`, implementado em `day_plan.vencidos_de(fsrs)` e usado pelo
-**gatilho**, pelo campo `divida.vencidos` do `--json`, pelo texto do render **e** pela ordenacao
-dos clusters (mesmo conceito, outra granularidade -- soma manual ali recriaria a divergencia num
-lugar onde ninguem iria procura-la). Um teste de varredura recusa qualquer `atrasados + hoje`
-calculado a mao fora da funcao.
-- **A escolha agora esta ESCRITA**, que era o defeito: `fsrs-management-contract` **v1.2 -> v1.3**,
-  com a redacao antiga (`atrasados > TETO_BASE`) sob **lapide** -- nao apagada, porque os numeros
-  da s162 so se explicam com ela a vista. Ritual de revogacao em 3 passos cumprido
-  (`AGENTE.md §10 item 10`): declarar -> lapidar -> **cadastrar** o termo em `_TERMOS_REVOGADOS`.
-- **Direcao (c) tambem entregue:** o render passa a imprimir o **saldo do dia** junto do teto
-  (`usados/teto`, de `fsrs_revlog` via `realizado_do_dia`). Teto sem saldo obrigava quem le a
-  derivar a conta a mao -- foi como a s162 errou duas vezes no mesmo turno. Degrada com WARN se a
-  leitura falhar; o plano do dia nunca cai por causa disso.
-- 🔬 **Efeito medido hoje:** com `atrasados=0` e `hoje=4`, os dois criterios dao o mesmo veredito
-  (sem regime) -- a mudanca e **inerte no estado atual** e so passa a importar quando a divida
-  acumula. Isso e dado, nao atenuante: o criterio antigo falhava exatamente no caso em que a
-  divida e composta de cards de HOJE, que e quando o regime mais precisaria disparar.
-- **Fora de escopo, declarado:** o *agravante* registrado no achado -- a sessao que cruza a
-  meia-noite sem aviso -- **nao foi resolvido**. O teto segue por dia de calendario e nenhum
-  sensor avisa a virada; o saldo impresso agora torna a virada VISIVEL (o numero zera), mas isso
-  e sintoma legivel, nao sensor.
-
-### F65 -- o balde `[bulk] <Area>` esconde 72 cards do radar de dormencia -- **MEDIA** -- **GATE do operador** (RODADA 3: reclassificar balde e decisao de DADO dele, nao de codigo; `normalize_taxonomia` esta vazio para isto por medicao -- `docs/DRYRUN-F65-F67-2026-09-09.md`)
-
-**Classe:** taxonomia que corrompe sensor (familia F37/dedup de taxonomia).
-
-**Observado.** Drenando 45 cards na s162, cards de temas completamente distintos apareceram sob
-o pseudo-tema `[bulk] Cirurgia`: **pancreatite** (311, 313, 317), **trauma abdominal** (325),
-**demencia/MEEM** (291) e **esclerose multipla** (297). Contagem no banco:
-
-| balde | cards |
-|---|---|
-| `[bulk] Cirurgia` | 55 |
-| `[bulk] Pneumo` | 8 |
-| outros 6 baldes | 9 |
-| **total** | **72** |
-
-**O defeito.** `(area, tema)` e a chave de identidade do tema (invariante anti-poluicao, s083) e
-e o que alimenta `review_radar.py` (dormencia), o cluster de frieza do `day_plan --review-plan`
-e o gatilho de PREPARAR do `/revisar`. Card sem tema real e **invisivel para toda essa camada**:
-sua frieza e diluida num balde que nunca esfria como um tema, e ele nunca dispara aquecimento.
-Sintoma direto medido na sessao: `--review-plan` devolveu **40 clusters para 77 cards** e nenhum
-sinal frio acionavel (maximo 15.4, gatilho 25) -- fragmentacao que faz o sensor calar.
-
-**Efeito colateral confirmado no uso.** Os cards 311 e 313 (ambos "por que nao TC na
-pancreatite", eixos diferentes: etiologia x janela de 72h) cairam no **mesmo bloco** e se
-canibalizaram -- o usuario respondeu 313 com o conteudo de 311 e apagou no 311, 2 notas 1 de
-interferencia. Com tema real, `detect_clones.py` teria visto o par; no balde, nao ha por-tema
-para comparar.
-
-**Direcao (nao implementada).** Reclassificar os 72 por tema real (o texto do card carrega o
-tema; `normalize_taxonomia.py` + `dedup_taxonomia.py` sao os portadores existentes) e adicionar
-check no `auto_check`: card em tema `[bulk] *` nasce como WARN de taxonomia. Rodar
-`detect_clones.py` depois da reclassificacao -- o par 311/313 e o primeiro caso conhecido.
-
-**Severidade:** ALTA (72 cards, 5,7% do banco ativo, cegos ao mecanismo central do projeto).
-
-> **Re-medido em 2026-09-09 (s174, dry-run A6):** **35** cards ativos presos em `[bulk]` (28 em Cirurgia) + **201 erros** em balde -- lista nominal em `docs/DRYRUN-F65-F67-2026-09-09.md` §3. O normalizador nao tem regra para isto (F89, achado-irmao); a reclassificacao e conteudo do operador.
-
-> **Adendo honesto ao F65.** A limpeza dos baldes `[bulk]`/`Geral` **ja estava listada** como
-> pendencia Tier-3 em `ESTADO.md §Proximos passos` item 5 -- este achado nao a descobre, ele a
-> **quantifica** (72 cards, 5,7% do banco) e nomeia o dano concreto (sensor de dormencia cego +
-> colisao de clones medida em 2 notas 1). E o padrao exato da frente de **alcancabilidade**
-> (`project_alcancabilidade_auditoria`): a pendencia estava escrita, correta e inalcancada por
-> tempo indeterminado, porque nada no harness a transformava em trabalho. O check de WARN
-> proposto acima e o que converte a linha de texto em fila.
-
-### F66 -- 45% da memoria de fraquezas e orfa por ABREVIACAO, e o log cresce sem teto -- **ALTA** -- **RESOLVIDO (s176, item 1.3)**
-
-**Classe:** F45 nao terminou o servico (o input do boot ainda nao e verdadeiro) + sensor que
-cresce sem limite. **Descoberto ao vivo:** o painel de DIVIDA saltou de 7 para **146 linhas**
-durante o proprio fechamento da s162, disparado pelo hook que consolida o session log novo.
-
-**Medido.** `reconciliar_weak_areas` (F45) roda em toda consolidacao e classifica cada WeakArea
-contra o vocabulario de `taxonomia_cronograma`:
-
-| | |
-|---|---|
-| WeakAreas no store | **244** |
-| areas canonicas no vocabulario | **23** |
-| **fora do vocabulario** | **111 (45%)** |
-| linhas `wa_vocab/fora` geradas numa consolidacao | **139** |
-
-**A causa NAO e alucinacao do modelo -- e abreviacao.** O vocabulario canonico usa forma curta
-(`Infecto`, `Gastro`, `Hepato`, `Dermato`, `Pneumo`, `Endocrino`, `Hemato`, `Reumato`,
-`Otorrino`) e o Haiku escreve a forma longa. As 8 areas invalidas mais frequentes sao todas
-especialidades **legitimas** em forma nao-abreviada:
-
-```
-10x Infectologia     4x Oncologia        3x Gastroenterologia   3x Emergencias Pediatricas
- 7x Dermatologia     4x Hepatologia      3x Atencao Primaria    3x Clinica Geral
-```
-
-`_norm` faz casefold + remocao de acento e declara na propria docstring: *"NAO faz substring:
-dois rotulos so casam se forem o MESMO rotulo."* Logo `Infectologia` nunca casa `Infecto`. O
-mismatch e de **forma lexical**, nao de conteudo -- o dado esta certo e e descartado.
-
-**Duas consequencias, ambas na linha de mira do P3.**
-
-1. **O ranking de fraquezas do boot sai enviesado.** O bloco "Areas de fraqueza persistentes
-   (top 8)" -- o sinal mais importante que o agente le no primeiro turno -- e ordenado por
-   `error_count`, que vem de um match **exato** do par `(area, tema)` contra `ipub.db`. Area orfa
-   nunca casa, entao `error_count` fica 0 e a entrada **nunca sobe no ranking**, por real que
-   seja a fraqueza. O top 8 e disputado por 55% do store; os outros 45% sao invisiveis por erro
-   de grafia.
-2. **O log cresce 111-139 linhas por consolidacao, para sempre.** O gate e *recall-safe* por
-   desenho (nunca dropa: normaliza o que mapeia, loga o resto) -- correto como politica, mas
-   ninguem fecha o ciclo, entao os mesmos 111 itens sao re-logados a cada sessao. Isso torna a
-   linha `memory_errors.log: N linha(s)` do painel de DIVIDA **estritamente sem significado**:
-   ela mede quantas vezes o sensor rodou, nao quanta divida existe. Confirma a falha (b) do
-   veredito da s162 (painel conta linha, nao item aberto) com um caso de crescimento ilimitado.
-
-**Sujeira no proprio vocabulario canonico.** As 23 areas incluem `Clinica Medica/Cardiologia`,
-`Clínica Médica` **e** `Cardiologia` como entradas distintas -- a taxonomia tem drift proprio, e
-qualquer mapa de alias tem de ser construido **depois** de sanear isso (`normalize_taxonomia.py`
-e o portador).
-
-**Direcao (nao implementada).** (a) Tabela de alias explicita area-longa -> area-curta em UM
-portador versionado (candidato: `core/` ao lado da taxonomia, nao hardcoded no manager), com
-teste que falhe quando uma area canonica nova entra sem alias; (b) `reconciliar_weak_areas`
-consulta o alias antes de declarar `fora_vocab`; (c) o que sobrar fora do vocabulario apos o
-alias e **divida real** -- vai para um sink idempotente (chave por `item.key`, nao append), para
-o painel poder contar item aberto; (d) sanear as 3 entradas duplicadas do vocabulario primeiro.
-
-**Severidade:** ALTA (degrada o sinal do primeiro turno de toda sessao e polui o unico painel de
-divida que o harness tem).
-
-✅ **Corrigido em 10/09/2026 (s176, item 1.3).** As quatro direcoes, e a (d) **deixou de existir**:
-- **(a) Alias num portador versionado:** `core/areas.json` ganhou o mapa `aliases`
-  (**34 entradas, todas MEDIDAS no store**, nenhuma inventada) e `app/utils/areas.resolver_area()`
-  resolve em **tres camadas declaradas** -- (1) canonico por chave normalizada, (2) alias
-  explicito, (3) **prefixo de composto** (`"Pediatria - Sepse Neonatal"` no campo `area` era 8
-  ocorrencias medidas).
-- **(b) O reconciliador consulta o alias** antes de declarar `fora_vocab`.
-- **(c) O que sobra vai para um SINK IDEMPOTENTE** (`history/wa_vocab_pendentes.json`, chave =
-  `item.key`, arquivo reescrito a cada passe) e o painel cita **esse** numero. O contador de
-  linhas do `memory_errors.log` continua visivel, mas agora **rotulado pelo que ele realmente
-  mede** (*"log de FALHA, nao de divida"*): ele contava quantas vezes o sensor rodou.
-- ⚰️ **(d) sanear as 3 entradas duplicadas do vocabulario: NAO FOI PRECISO.** A direcao pressupunha
-  que o vocabulario vinha de `SELECT DISTINCT area FROM taxonomia_cronograma` -- e a taxonomia tem
-  drift proprio (`GO`, `Clinica Medica`, `Clínica Médica`, `Clinica Medica/Cardiologia`). Com o
-  **vocabulario unico do F89** (item 0.6, tres horas antes), a fonte passou a ser `core/areas.json`
-  e **nao ha o que sanear: a lista canonica nao tem fantasma por construcao**. Um item do Tier 0
-  apagou uma direcao do Tier 1.
-- 🔬 **Medicao (store real, antes -> depois):** **299 WeakAreas / 140 fora (47%) / 91 rotulos
-  distintos** -> **290 (9 duplicatas colapsadas) / 100 fora (34%) / 59 rotulos**, com **75
-  normalizadas**. Segunda passagem devolve `normalizadas: 0` -- a reconciliacao e **idempotente**.
-- 🔴 **Os 100 restantes NAO sao falha do alias -- sao tres classes diferentes, e o sink as torna
-  contaveis:** (i) **ambiguo** (`Clínica Médica`, `Ginecologia-Obstetrícia - *`) -- resolver seria
-  repetir o erro da s110; (ii) **nao e area** (`Conhecimento Desatualizado`, `Interpretacao de
-  Exames`, `Todas`) -- e habilidade ou tema no campo errado; (iii) 🔴 **especialidade legitima que
-  a lista canonica NAO TEM** (`Oncologia`, `Urologia`, `Radiologia`, `Medicina de Emergencia`) --
-  **isto e pergunta para o OPERADOR**, nao conserto de engenharia, e agora ele tem o numero.
-- ⚠️ **Defeito que eu mesmo introduzi e peguei medindo:** o sink gravava no caminho de PRODUCAO e
-  `test_boot_verdadeiro` chama o reconciliador com store SINTETICO -- os 100 itens reais viraram
-  **1 `wa_dummy`** ao rodar a suite. Consertado no padrao que o repo ja tinha para o `event_log`:
-  `conftest` redireciona `PENDENTES_VOCAB_PATH` para `tmp_path` em todo teste. **Escrita nova em
-  caminho global precisa entrar la** -- a lacuna era do isolamento, nao do sink.
-
-> **Nota de processo.** A s162 declarou a des-colagem APROVADA e este achado nasceu **no
-> fechamento da mesma sessao**, do painel que a reforma criou, disparado por um hook que a
-> reforma consertou. Nao contradiz o veredito -- ilustra-o: o P1 entregou o orgao sensorial que
-> viu isto, e o F66 e a prova de que o P3 ("o input do boot fica verdadeiro") ficou a meio
-> caminho. F45 consertou o **mecanismo** de reconciliacao; faltou o **dicionario**.
-
-### F67 -- taxonomia duplicada divide o sinal do FSRS e da dormencia (s165, Claude Code/Fable 5.1, 2026-09-05) -- **MEDIA** -- **GATE do operador** (RODADA 3, mesma familia do F65: colapsar par e edicao de DADO com cards e erros pendurados)
-**Evidencia (db, read-only):** o mesmo tema vive em 2-5 linhas de `taxonomia_cronograma`: Rastreamento de colo x2 (`...do Câncer de Colo do Útero` 12 ativos/8 erros e `...do Cancer de Colo Uterino` 2/1), TH x2 (`Climatério e Terapia Hormonal` 6/2 e `Terapia Hormonal do Climaterio` 0/1), Asma x5 (`Asma`, `Asma - Crise Aguda`, `Asma na Infância`, `Asma na infância`, `Asma - Exacerbacao`), `Planejamento Familiar` x `Contracepção`, Ulceras x2, TCE x3 (Neuro, Cirurgia leve, Ped), `Cirurgia Infantil` x `Cirurgia Infantil I`, APS x2. **Efeito:** `review_radar`, `infer_nota` e `--cluster` leem metades; a dedup da s083 (`dedup_taxonomia.py`, merge MAX) nao pegou variantes por acento/caixa/sufixo. **Fix candidato:** normalizacao NFKD + casefold + tabela de alias em `normalize_taxonomia.py`, com `--dry-run`. **Re-medido em 2026-09-09 (s174, dry-run A6):** chave NFKD+casefold (sem sufixo romano/"na infancia") acha **10 grupos / 22 linhas / 193 cards + 104 erros**; 5 dos 10 sao a area fantasma `GO`/`Clinica Medica` de volta (F89). Decisao de fusao por grupo = operador (`docs/DRYRUN-F65-F67-2026-09-09.md` §4).
-
-### F68 -- 15 temas de alta/media prevalencia ENAMED sem linha na taxonomia (s165) -- **MEDIA** -- **GATE do operador** (criar linha de tema e decisao de escopo de estudo dele)
-**Evidencia:** `core/cronograma/prevalencia_enamed.json` (`tema_id: null`): SCA/dor toracica, DPOC, Derrame pleural, Crise hipertensiva, Parkinsonismo, Dermatoses infecciosas, SUA, Sindrome de Down, Dx nutricional, Choque em pediatria, TB na infancia, Vasculite IgA, SIMP, Saude do trabalhador, Doencas de vulva e vagina. Sem linha nao ha card, erro, dormencia nem nota -- o tema e invisivel ao motor. **Agrava F65:** `[bulk] Cirurgia` guarda **148 erros** sem tema (eram 72 cards na s162), `[bulk] Pneumo` 17. **Fix:** criar as linhas (via cunhagem/`insert_card_base`) e reclassificar os `[bulk]` pelo titulo do erro.
-
-### F69 -- resumos com lacuna de diretriz nova = risco banca-dependente (s165) -- **MEDIA** -- **GATE do operador** (quais diretrizes 2026 entram e decisao clinica dele; lista viva no HANDOFF)
-**Evidencia (grep):** `[CIR] Trauma.md` ja tem X-ABCDE, torniquete, hipotensao permissiva, ABC score, pneumotorax oculto/3,5 cm, Beck, tranexamico; **falta** "sangue total > 1:1:1" e "Sellick contraindicada", e a classificacao do choque ainda cita "classe I" (11a ed = leve/moderado/grave). `Prevenção Secundária Pós-IAM (Dislipidemia).md`: 1 mencao a PREVENT/Lp(a)/bempedoico (diretriz 2025 rasa). `Sistemas de Informação em Saúde.md`: conferir SINAN 2026 (esporotricose, anomalias, Oropouche, parotidite). HAS Pt2 (130/80, MAPA) e Epilepsias (levetiracetam EV) ja atualizados. **Fix:** Revisao Direcionada com Regra de Acumulo; os `padroes_banca` do JSON sao a fonte.
-
-### F63 -- atualizacao (s165)
-O insumo `prevalencia_enamed` agora EXISTE (89 temas, 5 aulas EMED) e ja governa o bucket `novos` via `fsrs_queue --prevalencia`. Falta: `cronograma.py`/`day_plan.py` consumirem o mesmo arquivo para o eixo 4 do `infer_nota()` (contrato §7.7 previa "basta fornecer o campo") e para a prioridade roxa da grade.
-
-## 4p. Sessao de uso s166 (Claude Code/Fable 5.1, 2026-09-05/06) -- achados F70-F72 + evidencias F40/F65/F67
-
-Contexto: drenagem do bloco 1 (62 cards, 4 sub-blocos, 40x4 / 8x3 / 3x2 / 11x1), 5 reforjas in-place, 3 carimbos `review_log`, seguida de sessao de engenharia curta (README, drift doc-vs-codigo, hotfix).
-
-### F70 -- informe do balanceador FSRS ia para stdout e quebrava o contrato JSON do `fsrs_queue --record` -- **MEDIA** -- **RESOLVIDO (hotfix s166)**
-**Evidencia:** em 3 de 14 records do sub-bloco 1.1 (cards 788, 1187, 244) o `json.load` do consumidor falhou (`Expecting value: line 1 column 2`); a gravacao tinha persistido. No stdout cru dos sub-blocos seguintes: `[FSRS_BALANCE] due 2026-09-13 -> 2026-09-14 (+1d; carga 21 -> 8)` impresso ANTES do `{"recorded": true, ...}` em 12 cards (381, 823, 1101, 485, 122, 1404, 1475, 1476, 1354, 459, 1472, 1480). Sitios: `app/utils/db.py::_balancear_due` (informe) e o `except` de `_aplicar_review` (WARN). Os testes existentes ja embrulhavam `record_review` em `redirect_stdout` -- o ruido era conhecido e tolerado, nunca tratado como defeito de contrato.
-**Fix (aplicado):** os dois `print()` -> `file=sys.stderr`; regressao `tools/test_fsrs_balance_stdout.py` (vermelho antes, verde depois; registrada no `pytest.ini`); trace em `.vibeflow/hotfixes/2026-09-06-fsrs-balance-stdout.md`. Verificado read-only sobre o `ipub.db` real (alvo 13/09, carga 22 -> 11): stdout vazio.
-
-### F71 -- o balanceador de carga nao conhece o calendario de provas: empurrou cards para o dia SEGUINTE ao ENAMED -- **MEDIA** -- **RESOLVIDO (hotfix s174, `.vibeflow/hotfixes/2026-09-09-fsrs-balance-blackout-prova.md`)**
-**Evidencia (records de hoje):** #381 e #823 tinham `due` 2026-09-13 (dia da prova, pico de 22 cards) e foram movidos para 2026-09-14 (+1d). Na janela de +-5% o balanceador escolhe o dia de menor carga sem saber que 13/09 e a prova e que 14/09 e o primeiro dia em que a revisao ja nao serve ao objetivo daquela semana. `app/utils/fsrs_balance.escolher_dia` recebe `(alvo, intervalo, carga, hoje, state)` -- nenhum sinal de `core/provas.json`, que ja existe e alimenta o `day_plan` (countdown).
-**Fix candidato (S/M):** `escolher_dia` ganha um parametro opcional `dias_evitar: set[date]` (prova e o dia seguinte, derivados de `core/provas.json` pelo caller em `db._balancear_due`); dentro da folga, um candidato em `dias_evitar` so vence se for o unico. Regra continua pura e testavel (`tools/test_fsrs_balance.py`, BLOCKING). Ate la, na semana de prova o efeito e pequeno (deslocamento max +-1d), mas e um pico movido para o lugar errado.
-- **Fechamento (s174, 2026-09-09, veredito A3 do `/ai-eng` com 3 ALTERAs):** (i) blackout lido de `core/provas.json` por `db.blackout_provas` (G4: teste prova que nenhuma data real esta no codigo); (ii) alvo em blackout vai para ANTES da prova, nunca depois -- sem vaga na folga = OVERFLOW em stderr, due mantido; (iii) re-rodada sobre a fila via `fsrs_load.py --blackout [--apply]` (dry-run + COUNT-ASSERT §10.7): **34 movidos** (23 de 13/09 -> 12/09), **17 overflow** em 14/09 (inclui #381/#823: o alvo original nao e recuperavel, folga +-1d nao alcanca antes da prova). 15 testes em `tools/test_fsrs_blackout_provas.py`, 11 nasceram vermelhos. Deferido: leitor de `provas.json` duplicado entre `db` e `day_plan`.
-
-### F72 -- `day_plan` recomenda tema de um snapshot que ele mesmo declara nao confiavel (Drive 42d) -- **MEDIA** -- **SUPERADO (s186 part-8; medido na s187)** (familia F34/F36/F63, W8 do reconcile) -- `day_plan` nao le mais snapshot do Drive: as 3 leituras viraram lapide e o plano passou a sair de `plano_tarefas`.
-**Evidencia (`python tools/day_plan.py`, 2026-09-06):** o cabecalho avisa `Drive desatualizado (42d atras) -- rodar --sync-drive antes de confiar na lista abaixo`, e no mesmo relatorio a "Recomendacao do dia" abre com `1. questoes 51 -- Atencao Primaria a Saude no Brasil` e lista `proximos temas: APS (extensivo), Diarreia, Cirurgia Vascular`. A ordem real (roxos da S17: Diarreia Teoria -> SUA -> APS Revisao -> Diarreia Revisao -> Urologia I -> Pneumonias I) vive so no HANDOFF, decidida pelo usuario (F63). O WARN existe, mas a recomendacao nao degrada: o agente que le so o plano recomenda o tema errado. O usuario percebeu a contradicao na propria sessao ("inconsistencias no seu motor").
-**Fix candidato (S):** quando `cron.conclusao_desatualizada` (W8), o passo 1 da recomendacao deixa de nomear um tema do snapshot e passa a apontar o ponteiro textual do HANDOFF ("Grade S17 roxos", ou o campo equivalente em `preparacao_estado`), e a lista `proximos temas` sai rotulada `(snapshot de N dias, ordem manual do usuario nao capturada)`. Nao cria dado novo: reaproveita o WARN que ja e calculado.
-
-### Evidencias novas para achados abertos
-- **F40/F41 (defeito de formulacao de card): 9 defeitos em 62 cards (14,5%) nesta drenagem.** Reforjados in-place (id e FSRS preservados, `recurate_cards --apply`): #245 (frente circular "por que a SBP considera..." -> janela do Kasai), #667 (cor de vaginose na vinheta de tricomoniase + regra citando pH ausente da frente), #741 (contexto meta "o enunciado ja entrega..." -> vinheta real, par contrastante com #667), #577 (regra com erro de conteudo "primaria = anovulacao" + contexto vazio; banca-dependente registrado), #311/#313 (clones: o usuario deu a mesma resposta aos dois). Na fila de reforja: #792 (frente aberta, aceita varias respostas certas), #4 (pergunta composta farmaco + concentracao), #1117 (contexto "dor e sangramento" contradiz a pergunta "assintomatica").
-- **F65 (`[bulk]` cego):** #297 (Esclerose Multipla, declinio cognitivo) vive em `[bulk] Cirurgia` -- conteudo de Neurologia arquivado na area errada; o radar de dormencia de Neuro nao o ve.
-- **F67 (taxonomia duplicada):** os pares `Cirurgia Infantil` x `Cirurgia Infantil I` e `Rastreamento do Cancer de Colo Uterino` x `Rastreamento do Câncer de Colo do Útero` apareceram como clusters separados no `--list --cluster` de hoje.
-- **Candidato de DIVIDA "mecanizar o redrill" (ja no painel):** os 10 cards que receberam nota 1-2 hoje voltaram ao `--list` como `vencido` (relearning, `state 3`, due no mesmo dia). O CLI nao distingue "ja gravado nesta sessao"; a unica guarda contra o duplo-record e o conjunto de ids mantido pelo agente. Evidencia de que a fila de redrill precisa viver no CLI.
-
-### F73 -- `cronograma.py --check` (instrumento W5 do reconcile) morria em traceback: PDF-fonte vive em `data/`, codigo procurava na raiz -- **ALTA** -- **RESOLVIDO (hotfix s166)**
-**Evidencia:** `python tools/cronograma.py --check` -> `FileNotFoundError: ...\medhub\Cronograma.pdf`; o arquivo esta em `data/Cronograma.pdf` (mtime 2026-03-24) ao lado dos outros PDFs de dados. `PDF_PATH` fixo em `ROOT/Cronograma.pdf` (`tools/cronograma.py:44`), `check()` sem teste de existencia. Como W5 e "manual, WARNING", ninguem rodava e o instrumento ficou morto por tempo indeterminado -- mesma classe de F56 (contrato declara instrumento que nao instrumenta).
-**Fix (aplicado):** `resolve_pdf_path(root)` (raiz canonica -> fallback `data/` -> caminho canonico p/ a mensagem), `check()` degrada para `status: missing_pdf`; regressao `tools/test_cronograma_pdf_path.py`; skill `/cronograma` + espelho; trace em `.vibeflow/hotfixes/2026-09-06-cronograma-pdf-path.md`. `--check` real: `fresh` (sha256 do PDF == `_meta.fonte_sha256`). Nao investigado: quando/por que o PDF saiu da raiz.
-
-### F74 -- README.md descrevia uma arquitetura que nao existe mais (Streamlit, RAG two-tier, "zero testes") -- **MEDIA** -- **RESOLVIDO (s166)**
-**Evidencia:** README citava app Streamlit de 3 paginas + `streamlit run`, `summarize_performance`, RAG `gold/pdf_raw` + BM25 dormente + cadeia HyDE Anthropic->llama3, FSRS "simplificado ~75 LOC", "delete-after-extract", "test coverage effectively zero, no pytest.ini", "~18 CLIs", baseline 0.778/0.657 (que nem existe no REPORT.md). 30 afirmacoes obsoletas removidas (lista em `README.verification.md` da sessao, nao versionada). O usuario leu isso como "instabilidade arquitetural" -- o codigo esta estavel; o documento publico e que envelheceu em silencio (mesma familia de D2/F42: doc que ninguem gera nem checa).
-**Fix (aplicado):** README reescrito por subagente com verificacao afirmacao-a-afirmacao contra o codigo (py-fsrs `fsrs>=6.3.1`, 365 testes coletados, 43 modulos em `tools/`, 9 contratos, 12 skills, hooks reais, eval 0.889/0.685 e sua nota de nao-determinismo). **Sem sensor:** nada acusa README stale; candidato a `drift-check` anotado nas afirmacoes numericas do README (contagens de suites/CLIs/contratos), como o ROADMAP ja faz.
-
-### F75 -- Varredura de drift doc-vs-codigo (subagente, s166): 12 achados D1-D12, 6 ALTA -- **MEDIA (agregado)** -- ⚰️ **12/12 RESOLVIDOS (contado na tabela abaixo em 11/09/2026, s177): 9 na s166, D4/D3 depois, D5 no item 1.7 e D11 no item 1.8.** ⚰️ *Dizia "9 RESOLVIDOS na sessao, 3 ABERTOS" -- cabecalho congelado na s166 enquanto a tabela andava (G3). A correcao nao e escrever outro numero fixo: e que o cabecalho agora declara a DATA da contagem, e o CHECK `status` do `consistencia_check` vigia a familia.*
-Sensores existentes (`doc_drift.py`, `sync_skills --check`) reportavam 0 achados: escopo estreito (refs mortas + 12 anotacoes manuais + paridade de espelho), nao cobertura de alegacoes (D11). Metodo: `--help` de 16 CLIs x skills; grep de termos removidos; contradicoes entre docs.
-
-| ID | Sev | Achado | Status s166 |
-|---|---|---|---|
-| D1 | ALTA | `fsrs-management-contract` diz que 120/dia foi REJEITADO; HANDOFF autoriza sprint de 120 ate 13/09 sem ponteiro no contrato | RESOLVIDO: excecao datada gravada no contrato (expira 14/09) |
-| D2 | ALTA | AGENTE §7.4 "tabela GERADA" divergia do gerador em 5+ linhas (docstring de `backup_db`, contagens) | RESOLVIDO: tabela regenerada com `reachability_check --tabela` (41 linhas). Sem teste de paridade colada-vs-gerada (candidato) |
-| D3 | ALTA | enum `veredito` citado de 2 formas em `analisar-questao.md`, nenhuma = `VEREDITOS` (5 valores) | RESOLVIDO: unificado (5 valores; `indefinido` = backfill) + espelho |
-| D4 | MEDIA | 5 de 12 skills numeram passos, contra a letra do §7.2 | RESOLVIDO por clausula: §7.2 agora distingue orquestracao de CLI (workflow) de protocolo cognitivo numerado (permitido) |
-| D5 | ALTA | CLIs sem assinatura canonica em skill: `day_plan.py` (4 de 10 flags em lugar nenhum: `--no-persist --plano-de --aderencia --semanas`), `recurate_cards`/`detect_clones`/`audit_flashcard_quality`/`normalize_taxonomia`/`backup_db`/`insert_card_extra` (so no workflow `curar-cards`), `registrar_sessao_bulk --acumular/--semana` | ⚰️ **RESOLVIDO (s177, 11/09/2026, item 1.7).** A amostra do D4 subestimava: a varredura mediu **65 flags orfas em 24 CLIs** e **17 CLIs sem skill dona**. Remedio em tres partes: (1) sensor `tools/cli_signature_check.py` (AST, nao regex -- a 1a versao leu a propria docstring e se acusou); (2) `.claude/commands/engenharia-cli.md`, a casa dos CLIs que nao pertencem a skill de estudo, + assinatura dos 7 restantes nas skills donas; (3) o check nasce **BLOCK** porque a base zerou no mesmo commit (mesma mecanica do F79b). Ratchet em `tools/test_cli_assinatura.py`. Suite 594 -> 605 |
-| D6 | MEDIA | `cronograma.md` sem `--sync-drive`; `revisar.md` sem `--pre-bloco`/`--janela-horas` | RESOLVIDO + espelhos |
-| D7 | ALTA | AGENTS.md: "13 checks, apenas 2 bloqueiam" vs ~20 checks e 7 pontos de bloqueio dinamicos | RESOLVIDO: frase fiel + ponteiro p/ matriz do reconcile |
-| D8 | ALTA | workflow `registrar-sessao` manda escrever "Ultimas sessoes" no ESTADO -- padrao proibido pelo `estado-contract` (secao nem existe) | RESOLVIDO: passo 3 reescrito |
-| D9 | BAIXA | ROADMAP cita R@5=0.778/MRR 0.657; REPORT.md diz 0.889/0.685 (0.778 e o R@3) | RESOLVIDO |
-| D10 | BAIXA | `.vibeflow/index.md` Known Issues com 2 itens ja resolvidos | RESOLVIDO (tachados com data) |
-| D11 | MEDIA | sensores de drift "verdes" nao cobrem D1-D9 por desenho; "0 achados" le como "sem drift" | ⚰️ **RESOLVIDO (s177, item 1.8).** O `--help` do `doc_drift.py` passou a declarar o ESCOPO: cobre anotacao vencida e path quebrado, **nao** le semantica -- 'verde' quer dizer 'nenhuma anotacao vencida e nenhum path morto', nunca 'os docs estao corretos'. O epilogo tambem nomeia **quem cobre o resto** hoje (D5 -> `cli_signature_check`, BLOCK; G5/G10/G14 -> `consistencia_check`; clausula revogada -> `check_contrato_revogado`) e o que segue **sem sensor**, declarado: prosa que descreve mecanismo extinto sem citar path nem termo cadastrado. A metade (L) do remedio -- paridade skill x `--help` -- foi entregue no item **1.7** |
-| D12 | MEDIA | ROADMAP Linha 8 tratava remocao do player Streamlit como decisao em aberto | RESOLVIDO (tachado + FEITO) |
-
-**Aberto tambem (desta sessao, fora da varredura):** F71 (balanceador x calendario de provas), F72 (`day_plan` recomenda tema de snapshot stale). **Padrao dos 12:** nenhum era bug de codigo; todos eram documento que envelheceu sem gerador nem sensor -- a mesma classe que motivou a tabela gerada do §7.4 e o `doc_drift`. O remedio estrutural e ampliar o que e GERADO (assinaturas de CLI a partir do argparse, contagens a partir do disco) em vez de digitado.
-
-## 4q. Sessao de uso s167 (Claude Code/Fable 5.1, 2026-09-06 noite) -- drenagem de 90 + Simulado 7: evidencias F40/F41/F67 + achado F76
-
-### Evidencias novas para achados abertos
-- **F40/F41 (defeito de formulacao de card):** 12 defeitos em 90 servidos (13%; s166: 14,5%). Composta (5, todos flagrados pelo usuario no ato): #175 (indicador de gravidade + por que amilase nao), #1041 (por que nao avidez + conduta), #1424 (vacina + vigilancia), #572 (competencia da DO + papel do SVO), #581 (por que nao DIU + qual prescrever). Frente binaria sim/nao sem exigir o discriminador (2): #151 (transito x frota), #837 (progesterona). Contexto = pergunta reescrita (1): #526. Contexto contradiz a pergunta (1, padrao #1117): #1112 (DMG 28 sem x swab EGB). Tema arquivado errado (1): #258 (ileo pos-op sob "Pancreatite"). Frente aberta com multiplas respostas validas (1): #910 (condiloma: usuario deu podofilotoxina, valida no PCDT, verso so tem ATA). Frente truncada (1): #527 ("USG na"). Frente pede lista sem vinheta (1, usuario: "esse card precisa de fork"): #513. **Reforja pendente de todos os 12.** O lote da S7 nasceu com 1 composta (corrigida antes do insert) e 2 WARNs do lint (#1488 multi-parte, #1490 negativo-orfao) -- o lint pega parte, o usuario pega o resto.
-- **F67 (taxonomia duplicada):** #1095 (GO/Endometriose) e #1446 (Ginecologia/Endometriose) sao o mesmo card (USGTV com preparo p/ endometriose profunda) em dois temas; o `--cluster` serviu os dois no mesmo bloco. Dedup de (GO, Endometriose) -> (Ginecologia, Endometriose) e o candidato imediato.
-- **Leech candidato:** #245 (Kasai < 60 dias) caiu 4x em 2 sessoes antes de fechar; #1112 (swab EGB 35-37) oscilou 37/34/34-36 na mesma sessao; #567 (cefalohematoma) teve a coleção dita 3x e a conduta nunca. Os tres sao dado numerico/composto -- F40 e curva de esquecimento se tocam aqui.
-
-### F76 -- `fsrs_queue --record --reason` aceita proveniencia divergente do card servido sem aviso -- **BAIXA** -- **RESOLVIDO (hotfix s174, `.vibeflow/hotfixes/2026-09-09-reason-divergente-gravado.md`)**
-- **Evidencia (s167):** o bloco 7 misturava 1 card `vencido` (#559) com 8 `agendado`; o agente gravou os 9 com `--reason agendado`. O CLI aceitou e o revlog de #559 carrega proveniencia falsa. O contrato de apresentacao (`revisar.md` §4) diz "gravar SEMPRE com --reason igual ao selection_reason servido", mas nada verifica: o `selection_reason` e derivado (bucket) e o CLI poderia recomputa-lo no `--record` e avisar (ou corrigir) quando o argumento diverge.
-- **Remedio (S):** em `--record`, recomputar o bucket do card na hora e emitir `[WARN] reason divergente: servido=vencido, recebido=agendado` em stderr (nao bloquear). Opcional: `--reason auto`.
-- **Fechamento (s174, 2026-09-09; A4 do `/ai-eng`: WARN nao BLOCK + ALTERA "gravado, nao so impresso"):** `db.bucket_de` (puro) recomputa o bucket antes de aplicar; coluna nova `fsrs_revlog.reason_servido` (historico NULL); `reason_divergente` no retorno e no JSON do `--record`; `[WARN] reason divergente` em stderr; `--reason auto`. `pre_bloco` cobre `fresh_error`/`novo` (modo, nao bucket). Query do contador B1 fixada em `tools/test_reason_divergente.py` (9 testes, 9 vermelhos antes). `revisar.md` §4 atualizado + espelho regenerado.
-
-## 4r. Sessao de uso s168 (Claude Code/Opus 5, 2026-09-07) -- precificacao da grade: achado F77
-
-### F77 -- `grade.json` nao guarda questoes por tarefa, e o rateio igual que o contrato manda erra por ate 3x -- **MEDIA** -- **RESOLVIDO (s176, item 0.4 -- `questoes_fonte` por tarefa, 27/30 semanas reconciliam; commit `1948457`)**
-- **Evidencia (s168):** o usuario pediu "quantas questoes somam estes temas?". `core/cronograma/grade.json` so tem `total_questoes` no nivel da SEMANA; o comentario do `parse_grade` (`tools/cronograma.py`, bloco do `wq`) instrui explicitamente: *"NAO atribuimos count por task: o PDF nao amarra link[i]<->task[i] de forma garantida (ultraplan §c.5) -> o consumidor rateia igual (total_questoes / n_tasks)"*. Na S17 o rateio daria **26,6q para toda tarefa**, quando as tarefas reais valem de **16q (Pneumonias Bacterianas) a 50q (APS Revisao)** -- erro de ate 3x, justamente na dimensao que o usuario usa para planejar o dia.
-- **O dado ja existe e nao e gravado:** `_parse_detail()` **ja calcula** `questoes` por tarefa (soma dos `Link - NN questoes` dentro do bloco da tarefa). O valor e computado e descartado -- `parse_grade` monta o dict de task sem ele.
-- **A desconfianca do contrato e testavel, e passou:** re-parseei S17-S20 e a **soma das tarefas bate exatamente com o total da semana nas quatro** (293/380/449/301). Nenhum link ficou orfao. Sobrou uma anomalia -- APS (Teoria III) da S17 com 0q -- que tinha a forma de atribuicao trocada e **foi resolvida por evidencia externa**: no xlsx do usuario essa linha esta **riscada**. Dois sinais independentes concordando.
-- **Remedio (S):** gravar `questoes` por task no `grade.json` **com marca de confianca** (`questoes_fonte: "link_no_bloco"`) e um invariante no `rebuild`: se `sum(task.questoes) != total_questoes` da semana, emitir WARN e cair para o rateio igual naquela semana. Assim o dado bom viaja e o caso duvidoso degrada para o comportamento atual, em vez de o dado bom ser jogado fora preventivamente em 100% das semanas.
-- **Remedio (M):** `cronograma.py --semana N` passar a imprimir a coluna de questoes por tarefa -- hoje o usuario nao tem CLI que responda "quanto vale esta tarefa?" sem re-parsear o PDF a mao.
-- **Padrao de fundo:** e um primo do achado de alcancabilidade -- um dado **construido e deliberadamente descartado** por uma desconfianca que nunca foi medida. A desconfianca era razoavel em 2026-07; custou 3 sessoes de planejamento cego e nao tinha teste.
-
-### F77b -- `_parse_detail` so reconhece `Livro Digital:` e perde o tema dos blocos "Revisao por Questoes" -- **BAIXA** -- **RESOLVIDO (s176, item 0.4 -- tarefas sem tema 35 -> 15; commit `1948457`)**
-- **Evidencia (s168):** ao montar o bloco de links do artifact, as 5 tarefas do tipo "Revisao por Questoes" (S18 t12/t13, S19 t11/t12/t13) sairam com `tema_detail` vazio. Causa: o regex de `_parse_detail` (`tools/cronograma.py`) exige o literal `Livro Digital:`, mas essas tarefas usam `Assunto:` -- ex.: *"Obstetricia Assunto: Pre-Natal; Assistencia ao Parto; Vitalidade Fetal (Revisao por Questoes)"*. Resultado: o `grade.json` grava essas 5 tarefas por ciclo com `tema` vazio.
-- **Impacto:** e exatamente a familia do drift "Revisao por Questoes" ja registrado (tarefa multi-tema que cai em campo emprestado e fica subnotificada). O tema esta escrito no PDF e o parser o joga fora -- mesmo padrao do F77, um degrau abaixo.
-- **Remedio (S):** trocar o literal por `(?:Livro Digital|Assunto):` no regex de `_parse_detail`. Uma linha; 5 tarefas por ciclo deixam de nascer sem nome.
-
-> 🔴 **Terceira forma de cabecalho-mentiroso, medida na s187 e SEM sensor.** F36 e F72 nao envelheceram porque um remedio pousou (F109/F110, que o **G14b** pega pela linha de versao do portador) nem porque o §11 ganhou lapide (o **G14** pega). Eles morreram porque **o SUJEITO do achado foi removido** -- o `--sync-drive` e a leitura do snapshot do Drive deixaram de existir na part-8. Nenhum dos dois gates ve isso: nao ha portador reivindicando o F-id nem lapide no §11. O sinal seria *"o achado cita um simbolo que nao existe mais no codigo"*, parente do `G10` (ponteiro morto) aplicado ao ledger. **Declarado, nao construido** -- a base hoje e 2 e o custo de um terceiro gate nao se paga sem mais dado.
-
-### F78 -- Extracao de PDF descarta em silencio todo conteudo que vive em FIGURA, e nada no harness mede essa perda -- **MEDIA** -- **DECLARADO nao-verificavel (s187)** -- medir a perda exigiria comparar o PDF-fonte com o `.txt` extraido por conteudo SEMANTICO (a figura nao deixa marca no texto: a extracao retorna sucesso e o buraco e invisivel). Sensor nenhum existe hoje e o custo nao se paga sem mais dado. A mitigacao demonstrada segue sendo a leitura humana do resumo contra a fonte -- revisar: 2027-03-31
-- **Evidencia (s169):** 10 resumos do sprint S17-S20 foram cunhados em paralelo a partir dos PDFs do EMED. Dois agentes independentes reportaram a mesma lacuna com origem unica: `tools/extract_pdfs.py` so captura camada de texto; infografico e tabela renderizados como imagem saem VAZIOS do `.txt`.
-  - Caso 1 (Tumores Anexiais): o `.txt` traz literalmente *"a seguir esta o estadiamento da FIGO"* e a pagina seguinte vem so com cabecalho/rodape. O estadiamento inteiro (IA a IVB) evaporou.
-  - Caso 2 (Pneumonias Bacterianas): CURB-65, CRB-65 e os tres algoritmos de antibioticoterapia por nivel de cuidado estavam todos em figura.
-- **Nao e incidente isolado, e a mesma familia ja declarada:** as "lacunas honestas" do artifact da s168 -- estadios FIGO do CA de ovario, 10 grupos de Robson, minimo de servicos do Decreto 7.508 e a tabela SBC 2025 -- tem exatamente esta causa. Quatro ocorrencias registradas antes desta sessao, tratadas cada vez como limitacao pontual, nunca como classe.
-- **O defeito real e o SILENCIO, nao a perda.** A extracao retorna sucesso, o `.txt` existe, o resumo e escrito e passa no `audit_resumos.py` com "AUDITORIA PERFEITA". Nenhum gate compara o que o PDF tem com o que o `.txt` entregou. So um leitor que ja conhece o tema percebe o buraco -- ou seja, exatamente quem nao precisa do resumo. Um resumo com o estadiamento faltando e indistinguivel, para o harness, de um resumo completo.
-- **Mitigacao DEMONSTRADA na propria sessao:** o agente de Pneumonias Bacterianas, ao perceber a lacuna, renderizou as paginas relevantes com **PyMuPDF (fitz)** e leu os infograficos visualmente antes de redigir. Todos os itens e cortes do CURB-65/CRB-65 e os esquemas de antibiotico do resumo vieram dessas imagens do PDF-fonte, nao de memoria. Mesmo problema, resolvido -- por iniciativa ad-hoc de um agente, sem estar em lugar nenhum do contrato.
-- **Remedio (S):** `extract_pdfs.py` emitir WARN por pagina cujo texto extraido seja despropocionalmente curto para a area da pagina (heuristica: pagina com imagem e < N caracteres). Transforma o silencio em sinal, sem prometer resolver a leitura.
-- **Remedio (M):** dar ao `extract_pdfs.py` um modo `--render <paginas>` que gera PNG das paginas indicadas, promovendo a mitigacao acima a passo de primeira classe do workflow `criar-resumo` -- hoje ela depende de um agente ter a ideia sozinho.
-- **Remedio (L):** gate de cobertura que cruze os titulos do sumario do PDF com os headers do `.md` gerado.
-- **Acao tomada na s169:** subagente `evidence-researcher` acionado para preencher o estadiamento FIGO no resumo de Tumores Anexiais a partir de fonte externa auditavel (hierarquia de `evidence-governance.md`), com citacao de fonte e ano -- em vez de deixar a lacuna declarada em blockquote.
-- **Desdobramento (s169, mesma sessao):** o preenchimento do FIGO fechou com fonte canonica (documento oficial FIGO 2014, reconfirmado no update FIGO 2021; espelhado em portugues pela SBP 2019) -- e revelou um agravante que o F78 nao previa: **a figura do EMED nao estava so ausente, estava DESATUALIZADA**. A enumeracao preservada no PDF-fonte lista o estadio **IIC**, extinto na revisao de 2014, e nao tem IC1/IC2/IC3 nem IIIA1/IIIA2. Ou seja: onde a figura extrai, o conteudo pode estar velho; onde nao extrai, ninguem confere. Os dois modos de falha convergem no mesmo ponto cego -- nada no pipeline compara o material do cursinho com a diretriz vigente. Isso aproxima o F78 da lista de "diretrizes novas a conferir" do HANDOFF, que hoje e mantida a mao.
-- **Nota de processo:** o subagente `evidence-researcher` foi acionado com um brief que mandava EDITAR o arquivo -- ele e read-only por contrato e nao tem `Edit`/`Write`. Recusou corretamente e devolveu o bloco pronto; a aplicacao foi feita pelo orquestrador. Brief mal-formado, nao falha do agente: pedir escrita a um agente de leitura desperdica um ciclo inteiro.
-- **Padrao de fundo:** primo direto do achado de alcancabilidade e do F77 -- um dado que **existe na fonte e e perdido no caminho**, sem que nenhum instrumento acuse a perda. A diferenca para o F77 e que la o descarte era deliberado e documentado; aqui e invisivel ate para quem escreveu o pipeline.
-
-### F79 -- `audit_resumos.py` era cego a 5 das proibicoes DURAS da spec; a conformidade vinha da disciplina manual, nao do gate -- **MEDIA** -- **RESOLVIDO (s169)**
-- **Evidencia (s169):** ao auditar por fora o resumo de SUA depois de aplicar as licoes do bloco, meu lint ad-hoc acusou **emoji em header** e **bloco de codigo** -- as duas coisas proibidas em letra maiuscula no `estilo-resumo.md` -- num arquivo que o `audit_resumos.py` declarava "AUDITORIA PERFEITA". Inspecao do linter: ele checa seccao Armadilhas (BLOCK), tabela ASCII (BLOCK), marcadores (WARN), frontmatter §5.2 (WARN) e encoding proibido (WARN). **Nao checa**: emoji em header H1/H2/H3, bloco de codigo/fluxograma ASCII, bullet `✅`/`❌`, campo `estilo:` no frontmatter, rodape editorial em italico. Cinco proibicoes que a spec chama de duras e nenhum gate observava.
-- **Por que so apareceu agora:** os 10 resumos do sprint sairam limpos, mas **nao por causa do gate** -- sairam limpos porque cada regra foi repetida a mao no brief de 10 subagentes e conferida por fora, num script meu. Disciplina de orquestrador nao escala e nao sobrevive a sessao. Medida do passivo real no acervo: **22 arquivos** violando (18 emoji em header, 4 bloco de codigo, 2 bullet proibido); zero com `estilo:` ou rodape editorial (esses ja tinham sido limpos a mao em sessoes anteriores -- e a limpeza manual nao deixou gate atras de si).
-- **Remedio aplicado:** check 6 `[SPEC]` em `audit_resumos.py`, nascendo **WARN** conforme a politica warning-first (`regra nova nasce WARN, so vira BLOCK quando a base zerar`). Suite `tools/test_audit_resumos.py`, inscrita em `pytest.ini` (`python_files`) -- o F43 pegou a suite orfa na primeira tentativa, o que e o check funcionando.
-- 🔴 **O bug dentro do conserto (vale mais que o conserto):** na primeira escrita do check, um caractere de **backspace literal (0x08)** entrou no regex do rodape editorial no lugar de ``. O linter continuava verde, a suite nao existia ainda, e o sub-check estava **MORTO** -- so casaria com um backspace, que nenhum resumo contem. Um teste do tipo "roda sem explodir" nao pegaria. Por isso a suite prova **cada sub-check disparando sobre um caso positivo sintetico**, e o caso do rodape esta anotado como regressao do 0x08. Padrao: *gate escrito, gate nunca disparado* -- primo do F78 (perda que ninguem mede) e do achado de alcancabilidade.
-- **Dividas que ficam abertas:** os 22 arquivos com WARN. Nao foram corrigidos em massa nesta sessao (fora do escopo do que o usuario pediu); ficam visiveis no agregado do linter ate serem tratados, que e exatamente o que o modo WARN existe para fazer.
-
-### F80 -- Writers do `ipub.db` discordam de FUSO: `fsrs_revlog`/`questoes_erros` gravam em UTC, `sessoes_bulk` grava em local -- **MEDIA** -- **RESOLVIDO (hotfix s174, `.vibeflow/hotfixes/2026-09-09-fuso-unico-writers.md`)**
-- **Evidencia (s169):** as 21:30 do dia 07/09 (hora local), o `fsrs_revlog` carimbou `review_time = 2026-09-08 00:29` e o `questoes_erros` carimbou `data_registro = 2026-09-08 00:20`, enquanto as 3 linhas de `sessoes_bulk` da mesma sessao ficaram em `2026-09-07`. Confirmado com `select datetime('now')` (UTC 2026-09-08 00:30) x `datetime('now','localtime')` (2026-09-07 21:30). Nao e drift de relogio: sao writers diferentes escolhendo referenciais diferentes no MESMO banco, na MESMA sessao.
-- **Custo ja pago nesta sessao:** o subagente que analisou os erros de APS concluiu, com toda razao aparente, que *"a sessao cruzou a meia-noite"* e reportou isso como observacao. A sessao nao cruzou nada -- eram 21:30. Ou seja, o defeito **produz uma conclusao factualmente errada em quem le o banco**, que e o pior tipo de defeito de dado: nao quebra, mente.
-- **Onde isso morde de verdade:** (a) qualquer join erro<->volume por data ve um deslocamento fantasma de 1 dia entre 21h e 00h locais; (b) o check **F38 (ERROS_ORFAOS)** usa janela `d..d+1` e hoje **so nao acusa falso-positivo porque a janela e frouxa** -- a frouxidao esta encobrindo o bug, nao o resolvendo; (c) a regra do HANDOFF "os cards de relearning so regravam em sessao-calendario nova" depende de qual coluna se olha para decidir o que e "novo dia".
-- **Remedio (S):** eleger UM referencial (proposta: **local**, porque e o que o usuario enxerga e o que `sessoes_bulk` -- a SSOT volumetrica -- ja usa) e passar todos os writers por um unico helper de timestamp em `app/utils/db.py`, em vez de cada um chamar seu proprio `now`.
-- **Remedio (M):** teste de invariante que grave nas 3 tabelas na mesma chamada e asserte que as datas concordam. Sem isso a correcao volta a divergir no proximo writer novo.
-- 🔴 **Nao corrigir retroativamente sem decisao explicita do usuario:** reescrever timestamps historicos e operacao destrutiva sobre SSOT (AGENTE §1.1) e distorceria o revlog que o FSRS usa para calibrar. O remedio e go-forward.
-- **Fechamento (s174, 2026-09-09; GO do `/ai-eng` com zona canonica = LOCAL, revertendo a ALTERA "UTC no db" diante da evidencia de que o nucleo FSRS grava local por construcao):** relogio unico `db.agora()/carimbo()/hoje()`; 4 writers (nao 3: `review_log.reviewed_at` tinha o mesmo defeito) passam o carimbo explicito; `tools/test_fuso_unico.py` congela o instante nos 4, prova o leitor `realizado_do_dia` e varre `tools/`+`app/` -- writer novo que caia no DEFAULT falha nomeando o arquivo. **Commit-fronteira:** o commit deste hotfix (s174, `git log --grep F80`); linhas anteriores das 3 colunas seguem em UTC (shift constante -3h, Brasil sem horario de verao desde 2019). **Backfill = item separado**, dry-run + COUNT-ASSERT contando linhas que mudam de DIA, gatilho do operador. **Sub-achado aberto (F80b):** `get_cards_by_bucket` compara `fc.due` (local) com `datetime('now', '-48 hours')` (UTC) na janela de erro fresco -- 3h de erro em 48h; nao tocado (uma chamada, um bug).
-
-### F79b -- `card_self_sufficiency.py` nao pega pergunta com DEIXIS sobre contexto vazio -- **MEDIA** -- **RESOLVIDO (s176, item 1.1 -- abertura do Tier 1)**
-- **Evidencia (s169):** o card **#367** tem `frente_contexto = ''` e pergunta *"Que elementos **do caso** (historico do paciente e circunstancia do achado) classificam **essa** morte como suspeita...?"*. O caso nao existe no card -- a pergunta e literalmente inrespondivel como posta, e o usuario a sinalizou no drill ("reforja"). Rodei `card_self_sufficiency.py --json`: 10 achados no banco inteiro, e **367 nao esta entre eles**.
-- **O buraco:** o check procura auto-suficiencia por outros criterios, mas nao cruza **dexis** (`do caso`, `essa`, `esse paciente`, `nesse cenario`, `descrito acima`) com **contexto vazio ou minimo**. E justamente a combinacao que produz card impossivel: a pergunta faz referencia anaforica a um antecedente que foi descartado na cunhagem.
-- **Familia:** e o mesmo padrao do **F79** -- gate existe, gate nao cobre o caso que ele foi criado para cobrir. Dois checkers cegos descobertos na mesma sessao, os dois por leitura humana e nao por gate.
-- **Remedio (S):** predicado novo em `tools/card_checks.py` (a biblioteca UNICA de predicados de qualidade) -- `frente_pergunta` casa regex de dexis **E** `frente_contexto` vazio/< N caracteres -> achado. Nasce WARN, como o check 6 do F79.
-- **Remedio (M):** varredura do banco com o predicado novo para dimensionar o passivo antes de decidir promocao a BLOCK.
-- ✅ **Corrigido em 10/09/2026 (s176, item 1.1).** `checar_deixis_sem_contexto` em
-  `tools/card_checks.py` (a biblioteca UNICA), disparando **so na CONJUNCAO**: pergunta com
-  referencia a antecedente **E** `frente_contexto` abaixo de `CORTE_CONTEXTO_MINIMO` (15). O
-  `card_self_sufficiency.py` **importa o mesmo predicado** em vez de copiar a regex -- copiar
-  criaria a 2a fonte, que e o defeito que o F89 acabou de matar.
-- 🔬 **A varredura (remedio M) foi feita, e ela REVERTEU o remedio S.** O achado dizia "nasce
-  WARN"; a medicao diz **BLOCK**, e a politica warning-first concorda: *"vira BLOCK quando a base
-  zerar"* -- a base **esta** zerada. Tres candidatos sobre os **1419 cards ativos**:
-  **amplo** (`d[oa]|n[oa]` + substantivo clinico) -> **26 achados, TODOS falsos** (*"do paciente
-  asmatico"*, *"na crianca"*, *"no lactente"* sao CLASSE clinica, nao referencia a vinheta);
-  **estreito** (demonstrativo + substantivo de caso, ou anafora explicita) -> **1**, ainda falso
-  (**#620**, *"confirmacao do caso"* = caso-INDICE epidemiologico); **final** (estreito + guarda
-  epidemiologica) -> **passivo 0, falso-positivo 0**, com **95 cards de controle** que usam a
-  mesma deixis E tem vinheta, corretamente fora. Os falsos-positivos medidos viraram **fixture
-  negativa** -- se o predicado alargar, a suite acusa antes do usuario.
-- 🔴 **O fixture da s169 NAO reproduz mais, e isso e dado.** O **#367** foi **reforjado**: hoje tem
-  vinheta completa (*"Medico de familia com vinculo longitudinal e chamado para atestar o obito..."*)
-  e outra pergunta. O achado descrevia um card que ja nao existe nessa forma -- o texto original
-  virou **fixture sintetico**, com a proveniencia escrita. Fixture que cicatriza nao revoga a
-  CLASSE: o gate e **prospectivo**, e impedir a reentrada pela porta do writer e exatamente o que
-  faltou no F89.
-- **Ponto cego DECLARADO:** o predicado mede **ausencia de vinheta**, nao **suficiencia** dela --
-  vinheta de 20 chars que nao carrega o dado pedido passa no corte. E o corte de 15 e **convencao
-  declarada**: a distribuicao e bimodal e medida (vazio **468** · 1-14 chars **0** · 15-29 **5** ·
-  >=30 **946**), entao qualquer numero entre 1 e 15 daria o mesmo resultado hoje -- o valor exato
-  **nunca foi testado contra dado real**.
-  Spec `.vibeflow/specs/deixis-sem-contexto.md` · suite 540 -> 550.
-
-### F81 -- `frente_contexto` DESALINHADO da `frente_pergunta`: 3 eixos de defeito que nenhum predicado de `card_checks.py` mede -- **MEDIA** -- **RESOLVIDO (s176, item 0.2 -- 3 predicados WARN nomeados, eixo C declarado nao-verificavel; commit `84e75ad`)**
-- **Origem (s170):** achado do USUARIO durante o DRENAR, nao do harness. Depois de sinalizar "reforja" em 3 cards do mesmo bloco (#243, #792, #321), ele nomeou o padrao: *"note que todas as perguntas aparentam o padrao da de crise convulsiva do bloco anterior: parece que contexto e pergunta 'falam de coisas diferentes'"*. E o 3o caso consecutivo de defeito de card descoberto por leitura humana e nao por gate (familia F79 / F79b).
-- **O buraco estrutural:** `checar_resposta_embutida` compara **frente x verso**. Nenhum predicado compara **contexto x pergunta**. O eixo inteiro do alinhamento interno da FRENTE esta fora de cobertura.
-- **Varredura (read-only, 904 cards ativos com contexto+pergunta preenchidos), 3 eixos:**
-  - **A -- contexto redundante** (`containment >= 0.70`: a pergunta reengole o contexto inteiro): **26 cards (2,9%)**. Casos extremos: **#673** (`contexto` == a pergunta, palavra por palavra), **#525** (idem, so muda "achado" -> "achado radiologico"), **#664** (`contexto` = "Gestante convulsionando por eclampsia; **pergunta a PRIMEIRA medida**" -- artefato de pipeline vazado para dentro do campo). O contexto nao faz trabalho nenhum: nao adiciona dado, so ocupa a tela antes da pergunta repetir tudo.
-  - **B -- conclusao asserida no enunciado** (`^Por que ...` + proposicao NEGADA: "por que X **nao pode/nao deve/nao entra**"): **10 cards** de 67 perguntas "Por que" com contexto. O aluno nunca precisa **produzir** a conclusao -- ela ja esta afirmada -- so justifica-la. Vira reconhecimento, nao recall. Exemplares: **#321** (`Por que um FAST com figado conservado nao deve afastar a indicacao cirurgica quando a TC mostra ar retroperitoneal?`), **#365** (`Por que uma etapa causal condensada nao pode ser recuperada colocando-a na Parte II?`), **#1537** (na fila de hoje). 🔴 **Nao e defeito automatico:** quando o alvo cobrado E o mecanismo, "por que X nao deve" e card legitimo (**#1375**, daptomicina no VRE, e bom). O defeito e quando a proposicao asserida e ela propria a coisa testada. Exige triagem humana -> nasce WARN.
-  - **C -- contexto CONTRAFACTUAL** (vinheta descreve o cenario A, pergunta cobra o achado que apontaria para nao-A): **#792** -- vinheta de crise inequivocamente epileptica, pergunta cobra "qual achado apontaria para crise NAO epileptica". O contexto trabalha **contra** a pergunta. Nao e capturado por nenhuma das duas metricas (containment 0.0, run 0) -- e semantico. Eixo nomeado e **nao medido**; dimensiona-lo exige leitura, nao regex.
-- **Por que os eixos A/B nao pegam o que o usuario viu:** os 4 cards que ele flagrou dao `containment` 0.467 / 0.095 / 0.2 / 0.0. Ou seja, a metrica de sobreposicao encontrou uma **classe real e diferente** (A) e a de proposicao asserida encontrou **parte** do que ele viu (B, pega #321 e #365 mas nao #243 nem #792). A intuicao humana agregou 3 defeitos distintos sob um mesmo sintoma percebido ("falam de coisas diferentes"). Registrar os 3 separados evita corrigir o passivo errado.
-- **Remedio (S):** predicado `checar_contexto_desalinhado` em `tools/card_checks.py` cobrindo A (containment sobre `_norm_tokens`, reusando `_maior_run_comum` que ja existe) -- WARN, com o corte a calibrar sobre os 26. Eixo B entra como predicado separado, tambem WARN, porque tem falso-positivo legitimo.
-- **Remedio (M):** os 26 do eixo A sao passivo de **reforja de FRENTE** (memoria `feedback_reforja_mira_frente`): ou o contexto vira vinheta com dado concreto, ou vira vazio de verdade. Fila via `cards_regen_queue.py`.
-- **Nao fazer:** promover a BLOCK antes de zerar o passivo (convencao warning-first, AGENTE §6). E nao tentar medir o eixo C com regex -- e leitura.
-
-## 6o. Achados da s170 numerados na s171 (2026-09-08, Claude Code/Opus 5 + audit do `/ai-eng`)
-
-> Os quatro nasceram na s170 e foram entregues/deferidos SEM F-id -- o `§10.6` cumprido pela metade
-> (achado tratado, achado nao registrado). Numerados aqui a pedido do `/ai-eng` (G2 da colheita de 09-08).
-> **F82-F84 ja estavam RESOLVIDOS quando ganharam numero**; o registro existe para que o ledger tenha
-> a evidencia da CLASSE, nao para reabrir trabalho.
-
-### F82 -- Reforja executada nao deixava rastro: `event_log` so existia no caminho de CRIACAO -- **ALTA** -- **RESOLVIDO (hotfix s170, `c4ce1db`)**
-- **Evidencia:** unico chamador de `event_log.registrar` no repo era `tools/insert_questao.py:39-41` e `:296-301`, e so para card NOVO (tipos `generation`/`reincidencia`). `app/utils/db.py::update_flashcard_fields` reescrevia o card, incrementava `card_version` e commitava **sem emitir evento**. Como `flashcards` nao tem timestamp de update, a reforja era a **unica operacao do pipeline que muda o SSOT sem deixar registro**.
-- **A prova que forcou o hotfix:** o card **#321** estava em `card_version=2` com o texto do defeito **INTACTO** -- a versao subiu sem fix e nada registrava isso. Corolario duro: **`card_version` nao e evidencia de reforja feita**, e por isso o fechamento de marca nunca pode ser inferido dele (vira fixture do spec da fila de reforja).
-- **Fix:** evento `reforja` emitido **so pos-commit** nos 2 writers, com `card_id`, writer, version antes/depois, reason e nomes de campo -- **zero texto clinico** (contrato do `event_log`). No `recurate_cards.aplicar` os eventos acumulam em `pendentes` DENTRO da transacao e so saem em `_flush_eventos` apos o commit: emitir no laco daria evento-fantasma no rollback, e o lote e all-or-nothing.
-- **Regressao:** `tools/test_reforja_event_log.py`, 6 testes, **vermelho antes do fix**. Os 2 caminhos que commitam -> exatamente 1 evento; os 3 que NAO commitam (card inexistente, gate levantando, rollback do lote) -> ZERO; falha de log nao derruba a escrita do card.
-- **Classe:** *Reachability-Debt variante 1* -- a auditoria de reincidencia lia uma populacao que o pipeline nunca populou.
-
-### F83 -- Nada media CRESCIMENTO do verso, e o 2o writer nao tinha gate de atomicidade nenhum -- **MEDIA** -- **RESOLVIDO (s170, `d2026a1`)** + 1 sub-achado **DEFERIDO**
-- **Evidencia:** cards em `card_version=4` acusam **46,8%** de defeito, **20/47** por verso estourado. Cada rodada de reforja adiciona frase ao verso -- **a reforja mira a frente e engorda o verso** (memoria `feedback_reforja_mira_frente`), sem ninguem medir. 🔴 **Claim causal fica [MEDIUM]**, confundidor de selecao declarado: card com 3 rodadas E o card dificil que continua falhando. A evidencia DIRETA e o estouro de `LIMITE_CHARS`.
-- **O gate que faltava nao era "verso longo"** -- esse ja existia, **ABSOLUTO**, em `audit_card_atomicity.checar_verso`. Era **CRESCIMENTO**: um verso de 100 -> 219 chars passa limpo pelo absoluto e mesmo assim inchou 2x.
-- **Fix:** `medir_verso()` + `checar_ratchet_verso()` puros, ao lado da fonte unica `LIMITE_CHARS` (nao duplica a constante). Teto = `max(LIMITE_CHARS, len(antes))` -- card que ja nascia longo pode ser reescrito no mesmo tamanho: o gate mede crescimento, **nao pune heranca**. Gate 5 em `recurate_cards.validar` entra em `erros` (BLOCK), nao em `avisos`. Telemetria `len`/`n_frases` antes e depois no evento `reforja`: **o mesmo caminho que mede para bloquear grava para medir**, e e o que converte o [MEDIUM] em medicao.
-- 🔴 **O achado tem TRES partes, nao uma** (correcao do `/ai-eng` no audit): **(a)** parametro morto `permitir_atomicidade` em `validar()` -- **DEFERIDO**, segue aberto; **(b)** nada media crescimento -- resolvido; **(c)** `db.update_flashcard_fields` **nao rodava gate de atomicidade nenhum** -- resolvido. Sem (c) a guarda do recurate seria contornavel pelo outro writer: seria o F79/F79b/F81 (gate que nao cobre o caminho real) se repetindo pela quarta vez.
-- **Regressao:** `tools/test_ratchet_verso.py`.
-
-### F84 -- O gate novo era fail-open: `ImportError` virava WARN e a escrita passava SEM ratchet -- **MEDIA** -- **RESOLVIDO (s170, `06634b6`)**
-- **Origem:** achado do **audit do `/ai-eng`** sobre o `d2026a1` -- nao do harness, nao da sessao que escreveu o fix.
-- **Evidencia:** em `db.update_flashcard_fields`, `ImportError` de `audit_card_atomicity` virava `[WARN]` e a escrita seguia sem ratchet. 🔴 **E a regra de ouro do repo ("aviso que nao bloqueia nao existe -- vira gate") sendo violada DENTRO do proprio fix que existe para aplica-la.**
-- **Fix:** gate que nao pode rodar => **escrita RECUSADA** (`RuntimeError`). A recusa vale so quando a escrita **toca o verso** -- bloquear edicao de frente por causa do ratchet do verso seria gratuito; nesse caso so a telemetria degrada, com WARN. Ressalva aceita pelo `/ai-eng` no mesmo turno.
-- **Regressao:** 2 testes com `sys.modules` monkeypatchado para forcar o `ImportError`: escrita de verso recusada com `card_version` intacto; edicao de frente segue passando. O caminho do `recurate` ja era fail-closed -- confirmado no audit, o fix nao herdou o bug.
-- **Licao transferivel:** *o fix que introduz a classe que ele conserta*. Custo de deteccao: um audit externo entre parts. Sem ele o repo teria um gate BLOCK com porta dos fundos.
-
-### F85 -- Justificativa ORFA governando um `except`: a premissa morreu, o `except` continua -- **MEDIA** -- **RESOLVIDO (hotfix s174, `.vibeflow/hotfixes/2026-09-09-justificativa-orfa-card-gate.md`)**
-- **Evidencia:** `app/utils/db.py:760-765` (comentario) e `:773-775` (o `except`). O 2o gate fail-open da MESMA funcao -- o import de `card_checks` -- carrega a justificativa escrita: *"indisponivel -> WARN e segue (a camada CLI ja valida; **o app nao pode quebrar sem tools/** -- degradacao anunciada)"*. Esse "app" era a **UI Streamlit, REMOVIDA** (AGENTE.md secao 6). **A justificativa sobreviveu ao seu proprio motivo** e segue autorizando escrita sem gate de qualidade.
-- **Por que nao foi corrigido junto:** observado durante o `06634b6` e deixado no ledger de proposito -- mudar blast radius alheio no mesmo commit de um fix de audit e o anti-padrao. *Uma chamada, um bug.*
-- **Varredura da assinatura (s170):** 4 ocorrencias brutas, triadas pelo discriminador **"a premissa esta no caminho de decisao?"** -- **Classe 1** (premissa governando codigo) **N=1**: este. **Classe 2** (claim envelhecido em docstring, nao governa): `db.py:9` ("Callers acima: `app/pages/*.py`") e `fsrs_queue.py:9` ("o player Streamlit local") -- correcao de **documentacao**, sem teste. `get_topic_context.py:19` = lapide em preterito, **NAO tocar**.
-- **Remedio (S) -- hotfix, item (7) da fila s171:** teste com `sys.modules` **ANTES** do fix (escrita recusada quando `card_checks` nao importa) -> fail-loud -> remover o comentario. Mesma forma do F84, que e o irmao gemeo desta funcao.
-- **Classe:** *Reachability-Debt variante 3* -- **le uma razao que ja nao existe**. Fecha a taxonomia das tres: (1) le o nada [F82] · (2) ninguem le [G1, graphify] · (3) le razao morta [F85].
-- **Fechamento (s174, 2026-09-09; GO do `/ai-eng` nos termos do ledger):** `except` vira `RuntimeError(... RECUSADA)`, `if _cc is not None` e o `print` em stdout morrem, comentario orfao substituido por lapide. Classe 2: `fsrs_queue.py:9` reescrito; `db.py:9` ja reescrito pelo F80 na mesma sessao. `get_topic_context.py:19` intocado. 4 testes em `tools/test_card_gate_fail_loud.py` (3 vermelhos antes). Smell que fica: `app/utils/db.py` importa `tools/card_checks.py` por `__file__` (mover = spec).
-
-### F86 -- O gate do F43 validava por SUBSTRING: mencao contava como inscricao -- **ALTA** -- **RESOLVIDO (hotfix s171, `.vibeflow/hotfixes/2026-09-08-suite-mencionada-nao-inscrita.md`)**
-- **Origem:** achado DENTRO do hotfix `clausula-revogada-em-vigor`, na mesma sessao. Nao veio de varredura -- veio de um numero que nao subiu.
-- **Evidencia:** `tools/test_contrato_revogado.py` nasceu com 12 testes e **fora do `python_files` do `pytest.ini`** (que e allowlist explicita, nao glob). **12 testes escritos, ZERO executados** -- a suite ficou em `395 passed` antes e depois de acrescentar 12 testes. E o `SUITES_ORFAS` **passou verde o tempo todo**: `check_suites_orfas` fazia `blob = "".join(corpus)` e testava `nome not in blob`, entao o nome bastava aparecer em QUALQUER lugar dos 3 registros -- e ele aparecia numa **mensagem de WARN** dentro do proprio `auto_check.py`, escrita no mesmo commit pelo autor do gate novo.
-- 🔴 **A falha e auto-infligivel por construcao:** quem escreve um gate novo naturalmente cita o nome da suite na mensagem de erro desse gate. A mencao que satisfez o verificador foi produzida pelo proprio ato de verificar. Um gate inteiro (`CONTRATO_REVOGADO`) esteve a um `git commit` de entrar sem nunca ter rodado, com o harness dizendo PASSED.
-- **O erro tinha DOIS sentidos.** Falso-negativo (mencao = inscricao) e falso-positivo simetrico: `python_files` sao **padroes** casados por fnmatch, e com `python_files = test_*.py` uma suite realmente coletada seria acusada de orfa, porque o nome nao e substring do padrao. Mesma causa unica: ignorar a estrutura.
-- **Ja estava registrado, sem caso e sem fixture:** anexo dos menores da s160 -- *"`suites_orfas` valida por substring (mencionada != inscrita)"*. Ficou como observacao por 9 dias. 🔴 **Observacao sem fixture nao e cobertura** -- e a mesma licao do D3 ("warning-first virou warning-only") aplicada ao ledger em vez do painel.
-- **Fix:** cada registro lido pela sua ESTRUTURA. `pytest.ini` -> campo `python_files` casado por **fnmatch** (como o pytest decide). `auto_check.py` e `test_pytest_bridge.py` -> `ast.parse` recolhendo nomes `test_*.py` passados a um **verbo de execucao**, inclusive via lista montada em variavel antes da chamada (formato real do `auto_check`). Registro ilegivel = nao cobre, nunca levanta.
-- **Contrafactual verificado:** `_suites_executadas(auto_check.py)` = `['test_card_self_sufficiency.py', 'test_day_plan_telemetria.py', 'test_fsrs_balance.py']` -- o nome do caso real NAO esta la, embora exista no arquivo como texto. Sem a inscricao no `pytest.ini`, o predicado novo o acusa.
-- **Serie gate-miss (§10.8), classe TOOLING** -- distinta da classe CONTEUDO (F79/F79b/F81, que e `card_checks` cego a defeito de card). Decisao do `/ai-eng` na s171: o contador de gate-miss carrega o campo `classe` e conta **por classe**; misturar as duas mata o numero. F86 e a **1a fixture da classe tooling**; o filtro `quality_source='heuristic'` da fila de reforja e o predicado que so vivia em `avisos` sao os casos historicos sem fixture.
-- **Classe:** *"le o nada" aplicado ao proprio verificador* -- um gate que valida por presenca TEXTUAL em vez de por EXECUCAO vigia uma populacao que ele mesmo pode fabricar.
-
----
-
----
-
-## 6p. Sessao de uso s172 (Claude Code/Opus 5, 2026-09-09) -- 1o teste em producao do 6o principio: achado F87
-
-> A fila de engenharia segue CONGELADA por decisao do operador. F87 e **registro**, nao agendamento --
-> existe para que a classe tenha evidencia quando a fila descongelar.
-
-### F87 -- O harness de flashcard verifica FORMA e e cego a RENDIMENTO: os 13 cards que o operador reprovou passam em TODOS os predicados -- **MEDIA** -- **ABERTO**
-
-- **Como apareceu:** o 6o principio do `estilo-flashcard` (alternativa errada = no) foi aplicado ao Simulado 8 e rendeu **85 candidatos para 17 erros**. O agente triou para 45; o operador julgou os 85 um a um numa bancada dedicada e **inverteu 25 vereditos (29%)**, fechando em 44. Veredito literal dele: *"ampliou os pontos de conteudo passiveis de expansao, mas cunhou bastante ruido -- o que eu justamente temia. nesse sentido, os cards realmente precisam de juizes de qualidade ate mesmo pedagogica."*
-- 🔴 **A evidencia dura:** os **13 cards que ele cortou passam** no `audit_card_atomicity.py`, no `card_self_sufficiency.py` e nos predicados de `tools/card_checks.py`. Sao atomicos, tem UM criterio de acerto, frente gerativa, verso curto, contexto alinhado. **Nenhum predicado do repo mede se o card vale a pena.** O harness responde "esta bem formado?" e nunca "isto acrescenta recall?".
-- **O sinal, medido:** o que ele RESGATOU (12 cards) era `conteudo` em 8 dos 12 -- fato arbitrario que nao se deduz (janela de 48-72 h; resolucao em 7-10 dias; SIRI em 4-8 semanas; bilirrubina > 0,2 mg/dl/h; diabetes = 25% dos polidramnios; "grao de cafe"; doxiciclina 100 mg 12/12 h por 7 d; reforco faltante da febre amarela). O que ele CORTOU (13 cards) era `discriminador` (5), `mecanismo` (2) e `nuance` (2) -- resposta **regeneravel** a partir do card-nucleo mais o mecanismo, ou o proprio raciocinio da questao reescrito como pergunta.
-- ⚰️ **O caso que derruba a intuicao do agente:** *"por que insuficiencia uteroplacentaria, RCF e pos-datismo cursam com oligoamnio?"* foi celebrado na s171 como o melhor achado do 6o principio (um card resolvendo tres alternativas pelo mesmo mecanismo). **O operador cortou.** Resolver tres alternativas de uma vez e o sintoma, nao a virtude: se um mecanismo unico explica as tres, o aluno as reconstroi e o card nao mede nada.
-- **O nucleo nunca oscilou:** dos 85 candidatos, os **12 `elo_quebrado` sobreviveram sem uma unica inversao**. O criterio "nucleo do erro intocavel" esta validado; o que falhou foi tudo o que orbita.
-- 🔎 **O unico predicado que reagiu -- e reagiu no lugar certo.** Apos aplicar o corte dele, o `insert_questao.py` emitiu `[AVISO-CARD] distrator-perdido` em exatamente **2 dos 17 erros** (Liquido Amniotico e HIV): sao os dois em que os cards cortados eram justamente os que carregavam a alternativa marcada. **Existe UM predicado adjacente a rendimento no repo, ele funciona, e ele nao bloqueia** -- ele marca a tensao real entre o 6o principio (ler as alternativas) e o filtro de regenerabilidade (cortar o que se deduz). Candidato natural a fixture de qualquer predicado futuro de rendimento.
-- **Remedio aplicado agora (documental, nao codigo):** `estilo-flashcard.md` ganhou o §Triagem com o **teste de regenerabilidade** e o corolario que inverte a heuristica (`conteudo` rende mais que `discriminador` derivado da mesma questao). A triagem fica **humana e antes do `insert_questao.py`**, com a lista integral guardada em disco para o operador derrubar o corte.
-- **Classe:** familia CONTEUDO (com F79/F79b/F81 -- `card_checks` cego a defeito de card), mas num eixo novo: os anteriores sao **defeito de forma que o gate nao ve**; F87 e **ausencia de forma defeituosa em card que nao deveria existir**.
-- ⏸️ **s187 -- o eixo IRMAO ganhou sensor; ESTE eixo segue GATE do operador.** Ele pediu "derivar do FSRS", e ao construir ficou claro que **o FSRS nao pode alcancar este achado**: os 13 cards que ele cortou **nunca entraram no baralho** -- nao tem `reps`, `lapses` nem stability. Entregue `tools/cards_rendimento.py`, que mede o eixo vizinho (entre os cards que EXISTEM, quais consomem revisao sem reter): corte DERIVADO do baralho (`lapses >= 2` e `stability < mediana`, re-medida a cada execucao, porque o limiar do Anki de 8 lapsos acharia zero -- o maximo daqui e 4), **48 de 822 revisados (5,8%)**, com `#70` em 11 revisoes e stability 0,67d. 🔴 **O doc do modulo DECLARA que nao fecha o F87**, e o teste `test_o_limite_do_F87_esta_declarado` prende essa frase -- dizer o contrario seria cobertura aparente, a classe que o item 1.10 existe para impedir. Corroboracao do limite: 2 dos 6 piores sao de `Polipos e Neoplasias Intestinais`, area onde a memoria registra "capota completa, 9 de 9 cards" -- nao sao cards defeituosos, e **fundacao ausente**, que pede andaime. Um gate de rendimento, se algum dia existir, nao e um predicado sobre o texto do card -- e sobre a relacao entre o card e o resto do conjunto.
-
-## 6q. Sessao de engenharia s174 (Claude Code/Fable 5.1 + `/ai-eng` orquestrando, 2026-09-09) -- ciclo A do destilado: F71 · F88 (novo) · F80 · F85 · F76
-
-Protocolo `AGENTE.md §10.6` (D71): implement E audit aqui, vereditos do `/ai-eng` por item (GO com ALTERAs: ordem F71 -> F80 -> A5 -> F85 -> F76; A6 so dry-run). Traces em `.vibeflow/hotfixes/2026-09-09-*.md`.
-
-### F88 -- `cronograma --gap` e o boot reportavam pares DIFERENTES de acumulado/meta lidos do mesmo banco (duas contas, G4) -- **MEDIA** -- **RESOLVIDO (hotfix s174, `.vibeflow/hotfixes/2026-09-09-gap-volume-fonte-unica.md`)**
-- **Evidencia (s173, numerado aqui -- regra G2):** `--gap` = `meta 10000 / acumulado 6305`; `day_plan` do mesmo instante = `10400 / 7036`; db = 7.036. Causa: `--meta default=10000` literal de argparse (marco ENAMED revogado na s126, nunca re-medido -- D67) + `escopo="cronograma"` excluindo o Simulado (contra a decisao s126). So o `day_plan` lia `MARCOS`.
-- **Remedio (ALTERA do `/ai-eng`):** UMA funcao `performance.volume_vs_marco(conn, hoje)` chamada por `day_plan.build` e por `cronograma.gap_payload`; `--meta` vira what-if (`default=None`). Teste: mesma fixture, dois comandos, mesmo par + AST sem default literal >= 1000. **Absorveu os 2 riders do F71:** (a) overflow do blackout no painel do boot via `db.overflow_blackout` (estado do banco, nao log); (b) leitor UNICO de `core/provas.json` em `app/utils/provas.py` (`day_plan` re-exporta, `db` delega).
-- **Classe:** Claim-Aging (D67) em literal de CLI -- numero em canonico que nenhum leitor re-mede. 5 testes em `tools/test_volume_fonte_unica.py`, 5 vermelhos antes.
-
-### F89 -- Areas fantasma `GO` e `Clinica Medica` VOLTARAM apos a dissolucao da s097: nenhum writer de taxonomia valida `area` -- **MEDIA** -- **RESOLVIDO (s176, item 0.6)**
-- **Evidencia (dry-run A6, 2026-09-09, `docs/DRYRUN-F65-F67-2026-09-09.md`):** a RODADA 1 do `normalize_taxonomia.py` (s097) dissolveu as areas `GO` e `Clinica Medica`; hoje existem de novo, com ids novos: `GO` 299, 301, 347, 348, 417 · `Clinica Medica` 285, 286 -- 7 linhas, 39 cards + 33 erros. `AREAS_VALIDAS` vive so em `registrar_sessao_bulk.py`; `insert_questao.py` e `insert_card_base.py` criam a linha `(area, tema)` que receberem.
-- **Por que e gate-miss (§10.8, tooling):** a normalizacao foi operacao unica sem gate de retorno; o defeito reentrou pela porta dos writers. Mesma familia do F65/F67 (taxonomia que corrompe sensor): o `review_radar`/`infer_nota` leem metades.
-- **Remedio (spec, nao hotfix):** `AREAS_VALIDAS` vira fonte unica (em `app/utils/` ou `core/`), validada nos 3 writers de `taxonomia_cronograma` (F49 allowlist) com fail-loud; WARN no `auto_check` para linha com area fora da lista (nasce WARN, vira BLOCK quando a base zerar). Entra na RODADA 3 do normalizador (decisao do operador).
-- ✅ **Corrigido em 10/09/2026 (s176, janela 2, item 0.6 do Tier 0).** O vocabulario virou
-  **dado unico** (`core/areas.json`) com **leitor unico** (`app/utils/areas.py`), no molde do
-  `core/provas.json` + `app/utils/provas.py` (F88) -- entao a RODADA 3 do operador passou a ser
-  **edicao de dado, nao de codigo**, que e o que "a lista e dele, o mecanismo e nosso" exige
-  estruturalmente. Os **3 writers** (`registrar_sessao_bulk`, `insert_questao`, `insert_card_base`)
-  chamam `validar_area()` e **recusam** area fora da lista com `AreaInvalida` -- inclusive o
-  **acumulo em linha fantasma ja existente**: o fantasma para de crescer, nao so de nascer.
-  🔬 **Re-medicao (10/09, `SELECT area, COUNT(*) ... GROUP BY area` nas 2 tabelas):** o passivo e
-  **maior** do que as 7 linhas de 09-09 -- **18 linhas em 5 pares (tabela, area)**:
-  `GO` 9 + `Clinica Medica` 3 + `Clínica Médica` 3 (variante acentuada, nova) +
-  `Clinica Medica/Cardiologia` 1 em `taxonomia_cronograma`, mais `GO` 2 em `sessoes_bulk`.
-  Numero novo com o comando que o produziu, nao re-afirmacao do antigo (secao 10.9).
-- **Duas copias da lista MORRERAM, e elas ja divergiam.** `registrar_sessao_bulk.py:31` (21 itens)
-  x `performance.py:73` (20, **sem "Simulado"**) -- o Risk #8 do proprio spec de `performance`
-  (*"basta editar nos dois locais"*) materializado. Hoje ambos importam da fonte; a ausencia de
-  `Simulado` na lista de **gaps** virou **decisao declarada** (`AREAS_CLINICAS`), nao copia velha.
-  Um teste de varredura acusa copia literal nova em `tools/` ou `app/`.
-- 🔴 **O leitor NAO e tolerante, ao contrario do `provas.py` -- de proposito.** Vocabulario ausente,
-  ilegivel ou vazio **levanta** (`VocabularioIndisponivel`); nunca degrada para lista vazia.
-  Countdown ausente e cosmetico; vocabulario ausente e load-bearing -- sem ele, reprovar tudo e
-  aprovar tudo sao **ambos falsos** (licao do F91, aplicada antes de o defeito existir).
-- **O passivo virou WARN nomeado, nao BLOCK:** `AREAS_FANTASMA` no `auto_check`
-  (`state_utils.check_areas_fora_vocabulario`, read-only, as 2 tabelas) -- nasce WARN pela politica
-  warning-first (s106/107) porque limpar as linhas e **conteudo do operador** (RODADA 3, Tier 2.1):
-  ha cards e erros pendurados nelas. Vira BLOCK quando a base zerar.
-- 🔴 **Ponto cego DECLARADO:** o gate e de **vocabulario**, nao de **verdade**. Ele garante que a
-  area existe na lista, nunca que e a area **certa** para aquele tema -- registrar Apendicite sob
-  `Pediatria` passa por todos os checks. Essa camada e a RODADA 3 e segue **sem instrumento**
-  (secao 10.8). Tambem **nao normaliza**: `GO` e `Clinica Medica` sao ambiguos por natureza, e
-  chutar uma area repetiria o erro da s110 (3 linhas de `Clinica Medica` eram Infecto, Hemato e
-  Oftalmo) -- a mensagem entrega a **ambiguidade**, nao um palpite.
-  Spec `.vibeflow/specs/vocabulario-de-area-unico.md` · suite 523 -> 540.
-- **Achado-irmao (A6):** o `normalize_taxonomia.py` esta VAZIO para o problema -- suas operacoes declaradas ja foram aplicadas (perdedores 230/225 inexistentes) e simula 286 -> 286. Reachability-Debt variante 1 (le o nada). Medicao completa: F67 = 10 grupos / 22 linhas / 193 cards + 104 erros; F65 = 35 cards ativos presos em `[bulk]` (eram 72 na s162) + **201 erros** em balde (nao medido antes).
-
-## 6r. Sessao de ESTUDO s175 (Claude Code/Opus 5, 2026-09-10) -- F90
-
-### F90 -- `revisar.md` carrega DUAS linhas revogadas que contradizem o Invariante F e a regua de lote; o agente as obedeceu -- **MEDIA** -- **RESOLVIDO (s176, 10/09/2026 -- (i)+(ii) no mesmo commit)**
-
-- **Como apareceu:** correcao direta do usuario no 3o turno da s175, apos o 1o bloco do DRENAR: *"Voce saiu completamente do padrao. Esta dando feedback de card nota 3 e 4, dividindo os blocos em 'menores' e ainda colocando esse trem no cli: `<sub>...</sub>`. Voce deu o boot direito, mestre?"*
-- **Evidencia (as duas linhas, no canonico `.claude/commands/revisar.md`):**
-  1. **§Protocolo do loop conversacional, passo 4:** *"**Informar a nota proposta** ('-> 3') + justificativa em 1 linha."* -- contradiz o **Invariante F** (mesma skill, secao superior): *"Durante o DRENAR o agente entrega verso + nota + tally, e nada mais. Zero prosa explicativa entre blocos, inclusive para nota 1 e 2."*
-  2. **§Modo conversacional padrao:** *"Apresentar N frentes de uma vez (default ajustavel -- o usuario pediu 3, depois 5, depois 6)."* -- a regua real e **10-15**: s130 pediu blocos de 10 (memoria `feedback-revisar-apresentacao-cards`, que corrige explicitamente "isso NAO e pedido para reduzir o tamanho do bloco") e a s152 rodou 90 cards em blocos de 15 (`feedback_revisar_pipeline_blocos`).
-- 🔴 **Por que e gate-miss DE VERDADE (§10.8), e nao so drift documental:** o gate que deveria ter pego **existe, esta aceso e mira este arquivo**. `auto_check.py:100-119` implementa o **`CONTRATO_REVOGADO` (G12/G11, s171)**, que varre `_PORTADORES_NORMA` -- lista que inclui **`.claude/commands/revisar.md` nominalmente** -- procurando prescricao ativa de mecanismo revogado fora de lapide. Ele rodou nesta sessao e reportou **PASSED, zero achados**.
-  - **Por que passou:** o registro `_TERMOS_REVOGADOS` (`:104-108`) tem **exatamente 3 entradas** -- `PREPARAR`, `Camada 0`, `Camada 1` -- todas da mesma revogacao (Clausula 11, s170). O gate so ve o que alguem lembrou de cadastrar.
-  - 🔴 **E o proprio comentario do codigo declara a premissa que falhou** (`:102-103`): *"Extensivel: revogacao nova entra aqui e o gate passa a vigiar o termo em TODOS os portadores. O registro e a fonte unica -- ninguem enumera a mao."* O registro **e** enumerado a mao, e ninguem enumerou as revogacoes do **Invariante F** (prosa no meio do DRENAR) nem a regua de lote **10-15** (s130/s152). O mecanismo esta certo; a alimentacao dele nao tem gatilho.
-  - **Classe real:** *gate cujo alcance depende de um registro manual sem ritual de alimentacao* -- irma do F89 (`AREAS_VALIDAS` que so existe num writer) e do D4/G5 (tabela gerada mantida a mao). O defeito nao e a ausencia do gate; e a **ausencia do passo "cadastrar o termo" no rito de revogacao**.
-- **Custo medido:** 1 bloco inteiro entregue no formato reprovado + 1 turno do usuario gasto em correcao, numa janela de estudo de ~1h antes do ENAMED. O 3o furo (`<sub>` HTML) e adjacente: o contrato P3 part-3 manda mostrar o preview "junto das opcoes", mas sob override passivo (s123) **nao existem opcoes** -- o usuario nao escolhe a nota. A clausula ficou orfa da sua premissa.
-- **Remedio -- NAO executado nesta janela (era de estudo). Duas metades, e a segunda e a que importa:**
-  - **(i) o conserto pontual (barato):** (a) lapide (`⚰️` + data + motivo) nas duas linhas, no formato ja usado para o PREPARAR e a Camada 0/1 na mesma skill; (b) default de lote **10-15** com a proveniencia (s130/s152); (c) requalificar o preview -- exibir so quando notavel, no tally, como ja permite o passo 5 ("reportar o proximo `due` so quando notavel"); (d) `sync_skills.py` no mesmo commit (§10.3).
-  - **(ii) o conserto do GATE (o que impede a proxima):** cadastrar em `_TERMOS_REVOGADOS` os termos que o Invariante F e a regua de lote revogaram (`justificativa em 1 linha`, `lote de 3`/`5`/`6`, `preview junto das opcoes`) **e** dar ao registro um ritual de alimentacao -- toda revogacao futura entra la no mesmo commit que a declara. Sem (ii), (i) conserta uma instancia e o gate continua cego para a proxima.
-- ✅ **Remedio APLICADO (s176, 10/09/2026, item 0.0 da ordem do `/ai-eng` N=78 -- as duas metades no mesmo commit, como ele decidiu na bifurcacao 6.3):**
-  - **(i)** tres lapides `⚰️` em `.claude/commands/revisar.md`: passo 4 do loop (a "justificativa em 1 linha" morta pelo Invariante F), Modo conversacional (o lote de 3/5/6 -> **default 10-15** com a proveniencia s130/s152 escrita na linha, e o fallback "sem lote explicito, usar 1 por vez" corrigido para o mesmo default) e o **preview P3** requalificado para "so quando notavel, no tally" com a premissa orfa nomeada. `sync_skills.py` no mesmo commit (secao 10.3).
-  - **(ii)** os quatro termos cadastrados em `_TERMOS_REVOGADOS` (`tools/auto_check.py`) -- `justificativa em 1 linha`, `justificativa de 1 linha`, `depois 5, depois 6`, `junto das opcoes` -- e o **ritual de alimentacao** escrito em dois lugares: o comentario do proprio registro (que passou a dizer a verdade sobre si) e **`AGENTE.md` secao 10, item 10** (revogar = declarar + lapidar + cadastrar, tres passos no mesmo commit).
-  - 🔴 **Alcance declarado, nao maquiado:** o gate casa **substring literal**. Ele pega a reintroducao verbatim de uma redacao morta; **nao** pega a mesma regra reescrita com outras palavras nem o eixo semantico "bloco menor que 10". Esse eixo fica declarado **nao-verificavel por este check** (secao 10.8, *verification-stack*) -- a derivacao do registro a partir do ledger, que mataria a enumeracao manual, e o item **1.8 (ii')** do `11` de `docs/MEMORIA-AUDITORIA.md`.
-- **Corolario de processo (o que este achado ensina):** revogar uma clausula tem **tres** passos, nao um. (1) declarar a revogacao; (2) **lapidar a clausula revogada** no portador que o agente le; (3) **cadastrar o termo no gate que vigia lapides**. O `revisar.md` fez os tres para PREPARAR/Camada 0/Camada 1 e **nenhum** para estes dois -- a mesma skill carrega o padrao certo e o errado lado a lado, e o gate so protege a metade cadastrada.
-- **Como foi descoberto (vale como metodo):** nao por varredura -- por **uso real**. O usuario bateu no comportamento, e a autopsia da causa (nao do sintoma) chegou no registro do gate. Reforca D67: *ler o mecanismo atual > ler o ledger*. O `auto_check` desta mesma sessao imprimiu `✅ PASSED - Clausula revogada em vigor (CONTRATO_REVOGADO)` **enquanto o defeito estava em curso**.
-- **Classe:** gate-miss de **alcance** (registro manual sem ritual de alimentacao) -- familia do F89 e do G5. Distinto do F79/F79b/F81, que sao gates cegos por **poder expressivo**; este e cego por **inventario**.
-
-## 6s. Sessao de ESTUDO s175, 2o bloco (autopsias de Diarreia e Urologia) -- F91 e F92
-
-### F91 -- `rag.search()` devolve `[]` com o motor OFFLINE e o consumidor le isso como "nao existe conteudo": honest-negative violado na camada `local` -- **ALTA** -- **RESOLVIDO (s176, item 0.1b -- 3 estados distintos + `RagIndisponivel`; commit `b9058c9`)**
-
-- **Como apareceu:** durante a autopsia de Urologia (s175), o subagente `evidence-researcher` concluiu e escreveu num relatorio de evidencia que *"nao ha resumo indexado sobre HPB/LUTS"* e registrou o item como lacuna de cobertura do corpus. **A afirmacao e falsa:** `resumos/Cirurgia/Urologia.md` tem **39 chunks** indexados no ChromaDB (colecao com 2.353 chunks).
-- **Reproducao (medida por mim, 10/09/2026, nao herdada do subagente):**
-  ```
-  from app.engine.rag import search
-  search('hiperplasia prostatica benigna indicacao cirurgica', n_results=3)  ->  []
-  ```
-  Zero resultados, **zero excecao, zero WARN**. Ollama fora do ar (`WinError 10061` em `localhost:11434`).
-- 🔴 **Por que e pior do que "faltou um fallback":** o fallback **existe e foi bem desenhado**. `_textual_fallback()` (`app/engine/rag.py`) tem docstring explicita -- *"Fallback lexico quando o RAG semantico esta indisponivel (Chroma/Ollama offline)"* -- e marca a proveniencia em `metadata['source'] == 'fallback_textual'` justamente para o consumidor distinguir o degradado do curado. **A salvaguarda esta certa; ela e que falha em silencio.** O `except Exception: return []` no fim do proprio fallback (`:333-334`) colapsa "o motor caiu E o fallback tambem nao achou" no MESMO valor de retorno de "o indice nao tem isso": `[]`.
-- **O invariante violado:** `evidence-governance.md §7` (honest-negative) exige que ausencia de evidencia seja **declarada como ausencia de busca** quando a busca nao aconteceu. Aqui a busca **nao aconteceu** (motor offline) e o retorno e indistinguivel de **busca feita sem achados**. Um agente leu o `[]` como fato e o escreveu num relatorio.
-- **Classe:** falha silenciosa de degradacao em superficie de EVIDENCIA -- pior que a familia F79/F81 (gate cego), porque nao e um gate que deixa passar: e um **leitor que produz um fato falso**. Irma do F80 (relogio que mente sem avisar), mas com raio maior: o consumidor e um agente que escreve conclusao.
-- **Remedio (spec):** `search()` distingue tres estados e o **tipo de retorno carrega a distincao** -- (a) `hits` (semantico), (b) `hits` degradados (`source='fallback_textual'`, ja implementado), (c) **`engine-indisponivel`**: levantar, ou devolver um sentinela que o chamador nao consiga confundir com lista vazia. O `except Exception: return []` do fallback vira `except` que **registra e propaga o motivo**. Teste: Ollama derrubado + query on-topic **nao pode** retornar `[]` silencioso.
-- **Corolario de processo (vale alem do bug):** um subagente afirmou "nao existe X no corpus" a partir de um retorno vazio. A regra que faltou e simetrica a de nao fabricar fonte: **nao afirmar ausencia a partir de um retorno vazio sem confirmar que a busca rodou.** Candidato a clausula em `evidence-governance.md`.
-
-### F92 -- resumo com duas afirmacoes OPOSTAS sobre a mesma conduta, sem rotular fonte, PRODUZIU um erro de prova -- **MEDIA** -- **RESOLVIDO (s175, conteudo)**
-
-- **Evidencia:** `resumos/Cirurgia/Urologia.md` listava, na §1.6, "Alteracoes vesicais: calculos vesicais ou divertículos" entre as indicacoes cirurgicas da HPB (linha 107) e, **5 linhas abaixo** (linha 112) + na secao Armadilhas (linha 460), afirmava que *"calculo vesical deixou de ser indicacao absoluta isolada (mudanca AAU 2019); hoje a cirurgia e reservada a calculos de repeticao; um calculo unico pode ser tratado com extracao associada a terapia clinica."*
-- 🔴 **A segunda redacao E a alternativa C da questao que ele errou** (Urologia T I, Q3, 09/09). O aluno marcou o que o proprio material dele ensina -- e o material ensina na **secao Armadilhas**, que e a feita para ser memorizada.
-- **Causa:** as duas afirmacoes nao sao erro de conteudo -- sao **duas sociedades**. EAU 2026 lista "bladder stones or diverticula" sem qualificador; AUA 2023 (statement 26) escreve "**recurrent** bladder stones". O defeito e nao rotular a fonte de nenhuma das duas, deixando o leitor escolher a errada para a banca brasileira.
-- **Agravante de claim-aging (D67):** a datacao "mudanca AAU 2019" **nunca foi verificada** e nao foi possivel confirmar; foi removida com lapide.
-- **Remedio aplicado (10/09/2026):** as duas passagens reescritas com atribuicao explicita por sociedade + o principio que organiza as 7 indicacoes (nenhuma e complicacao a consertar isoladamente; todas sao prova de que bexiga ou rim ja pagaram o preco da obstrucao) + IPP > 10 mm como desempate (PMID 34561198) + lapide na redacao antiga.
-- **Classe:** familia CONTEUDO, eixo novo -- **material que produz o erro que depois e diagnosticado como lacuna do aluno**. Se a autopsia tivesse parado no "ele nao sabia o criterio n. 4", o remedio teria sido reforcar um card contra um resumo que ensina o contrario. Corolario: **ao diagnosticar erro em tema com resumo, ler o que o resumo diz sobre a alternativa MARCADA, nao so sobre a correta.**
-
----
-
-## 6t. Reforma remota pos-s175 (item 0.0, ordem do `/ai-eng` N=78, 2026-09-10) -- F93
-
-### F93 -- a regua de proporcionalidade de subagents vivia SO na memoria do harness: regra load-bearing sem portador versionado -- **MEDIA** -- **RESOLVIDO (s176, 10/09/2026)**
-
-- **Como apareceu:** feedback duro do operador no fechamento da s175, verbatim: *"achei, no entanto, que voce deu uma volta muito grande para entregar algo simples. sumonou subagents que sumonaram outros subagents, para checar uma informacao. como os blocos eram curtos, voce mesmo poderia ter checado, que seja via websearch. absorva este feedback e atualize a preferencia por mais eficiencia no uso de subagents."*
-- **Custo medido (s175, com o comando na mao -- D72):** 3 spawns para **15 erros de questao**; **~673k tokens de subagente** e **~66 min** de wall-clock. O pior deles cobriu **3 erros** e gastou ~24,7 min numa cadeia de **2 niveis** (`evidence-researcher` invocado por subagente, 2x via SendMessage).
-- 🔴 **O que torna o caso um achado de MECANISMO e nao so um deslize de conduta:** a delegacao **nao poupou a verificacao**. O principal re-mediu a mao toda afirmacao load-bearing antes de repassar ao operador e **rejeitou duas**: (a) "772 cards nunca vistos" -> o numero honesto e **647** (125 sao aposentados por contrato, `needs_qualitative >= 2`, bancarrota FSRS s075) -- reportar 772 teria inflado a frente de alcancabilidade em ~19%; (b) *"nao ha resumo indexado sobre HPB/LUTS"* -> **falso**, 39 chunks no ChromaDB -- essa virou o **F91**. Ou seja: pagou-se o overhead da cadeia **e** fez-se a checagem de qualquer jeito, com retorno **integral** (relatorios de 15-20k chars) em vez de destilado.
-- **Por que e F (classe PORTADOR, secao 10.5):** a regua de 5 clausulas foi gravada na s175 **so na memoria do harness** -- que nao e versionada, e decorativa para qualquer outra IDE e nao viaja com o repo. A propria secao 10.5 do `AGENTE.md` diz: *"regra load-bearing nao mora na memoria do harness"*. Uma regra que so existe la nao tem gate, nao tem lapide e nao sobrevive a troca de harness -- e a mesma familia de alcance do F90 (mecanismo certo, alimentacao sem gatilho) e do Reachability-Debt.
-- **Decisao (`/ai-eng` N=78, bifurcacao 6.1, 10/09/2026):** opcao **(a)** -- o portador e a **skill que o agente le no ato da tarefa**, nao o `AGENTE.md`. NAO espera janela de engenharia: e edicao de skill/docs e e o que impede a recorrencia na proxima sessao de ESTUDO.
-- **Remedio aplicado (s176, 10/09/2026):** `.claude/commands/analisar-questao.md` ganhou a secao **`0. Orquestracao`** -- as **10 clausulas canonicas** (1-5 medidas no MedHub/s175; 6-10 do `/ai-eng`: retorno destilado <= 3k + arquivo, numero do filho so com o comando que o produziu, `D(x)` em brief >3 itens, `model` explicito no spawn, custo em tokens+minutos no selo), com a origem e o custo medido escritos na propria secao. `sync_skills.py` no mesmo commit.
-- **O que ainda NAO tem gate (declarado, secao 10.8):** nada verifica que a secao existe nem que ela foi obedecida. O CHECK proposto pelo `/ai-eng` -- *grep que falha se a skill perder a secao `Orquestracao`* -- **mede em vez de lembrar** e e o fechamento natural deste achado; entra na varredura 1.8 junto com os demais checks de portador. Ate la, a clausula 10 (custo por spawn no selo) e a unica coisa que torna a regua **falsificavel**.
-- 🔴 **Limite de alcance conhecido:** a regua e mais ampla que a analise de questao (vale para varredura de engenharia, auditoria de docs, curadoria de cards), mas o portador escolhido so e lido em tarefa de questao. As outras superficies continuam sem portador versionado -- registrado aqui, nao resolvido.
-- **Classe:** **portador ausente** (regra load-bearing so na memoria do harness, secao 10.5), com um eixo de **proporcionalidade de delegacao** que ate agora nao tinha nome no ledger.
-
----
-
-## 6u. Reforma remota, janela 2 (itens 0.5-0.6, ordem do `/ai-eng` N=78, 2026-09-10) -- F94
-
-### F94 -- Dois CLIs ainda SEQUESTRAVAM o stdout global de quem apenas os IMPORTA -- **MEDIA** -- **RESOLVIDO (s176, no ato)**
-- **Como apareceu:** escrevendo o teste do F89, `import insert_card_base` quebrou a captura do
-  pytest com `ValueError: I/O operation on closed file` em 9 testes que nem tocavam o modulo.
-- **Evidencia:** `tools/insert_card_base.py:51` e `tools/cards_regen_queue.py:29` faziam
-  `sys.stdout = io.TextIOWrapper(sys.stdout.buffer, ...)` **no topo do modulo, incondicional** --
-  trocando o stdout do PROCESSO inteiro no mero import. `tools/fsrs_queue.py:33` ja tinha a guarda
-  certa (`if __name__ == "__main__" and hasattr(sys.stdout, "buffer")`) e o `importar_sessoes.py`
-  ja tinha **corrigido o proprio sitio**, com o motivo escrito na docstring: *"SEQUESTRAVA o stdout
-  global de quem apenas IMPORTA o modulo (quebrava qualquer harness que o coletasse)"*.
-- 🔴 **Classe: sitio gemeo de defeito ja consertado** -- a mesma forma do F80b (leitores fora do
-  relogio unico) e do 2o silenciador do F91. O conserto foi aplicado onde doeu e os irmaos ficaram.
-  O que os manteve invisiveis: **nenhum deles era importado por teste nenhum** -- o defeito so
-  existe para quem IMPORTA, e ninguem importava. Reachability-Debt no instrumento, nao no alvo.
-- ✅ **Corrigido:** os 2 sitios receberam a guarda do `fsrs_queue`. Varredura fechada no ato:
-  `grep -rn "sys.stdout = io.TextIOWrapper" --include=*.py tools/ app/` -> restam apenas 3 usos em
-  **arquivos de teste**, todos sobre `io.BytesIO()` proprio (nao sobre `sys.stdout.buffer`), que e
-  uso legitimo de fixture.
-- **Rider honesto:** este achado nasceu **de graca**, como efeito colateral de escrever o teste do
-  F89 antes do codigo. E a terceira vez na s176 que o teste-antes-do-fix entrega um defeito que a
-  leitura do codigo nao entregaria.
-
-### F95 -- O registro de PORTADORES do gate `CONTRATO_REVOGADO` era enumerado a mao, e tinha buraco -- **MEDIA** -- **RESOLVIDO (s176, item 1.2)**
-- **Como apareceu:** ao cadastrar o termo do F64, conferi se o contrato FSRS estava na varredura.
-  Nao estava -- e **carregava um `PREPARAR` vivo e PRESCRITIVO**: *"um PREPARAR aquece o tema e
-  drena o cluster inteiro"* (`fsrs-management-contract.md:72`), clausula revogada na **s170**
-  (`revisao-calibrada` v1.3, Clausula 11) e em vigor ha 3 dias num contrato canonico.
-- 🔴 **Classe: o F90 um nivel acima.** O F90 consertou o registro de **TERMOS** (que era manual e
-  sem ritual) e deu a ele os 3 passos. O registro de **PORTADORES** (`_PORTADORES_NORMA`) continuou
-  **manual e sem ritual nenhum** -- termo cadastrado corretamente nao alcanca arquivo que ninguem
-  mandou varrer. Familia **Reachability-Debt**, forma *sem perimetro* (a mesma do F80b).
-- 🔬 **Medicao do buraco (10/09):** varredura dos 7 termos revogados sobre `core/contracts/`,
-  `.claude/commands/` e `.agents/` fora da lista atual -> **1 portador real** com termo vivo
-  (`fsrs-management-contract.md`). Os demais hits sao os **espelhos** `.agents/skills/
-  source-command-*/SKILL.md`, que sao artefato de build gerado dos canonicos ja vigiados --
-  incluir os espelhos duplicaria todo achado sem acrescentar alcance, e por isso **nao** entraram.
-- ✅ **Corrigido:** lapide na linha do `PREPARAR` (a redacao morta preservada, o mecanismo atual
-  nomeado) + `core/contracts/fsrs-management-contract.md` na lista de portadores, com o porque no
-  proprio codigo. `tools/test_contador_divida.py` trava a entrada na lista.
-- 🔴 **O que NAO foi feito (declarado):** a lista de portadores continua **enumerada a mao**. Dar a
-  ela um ritual de alimentacao -- ou deriva-la (todo `core/contracts/*.md` + `.claude/commands/*.md`)
-  -- e da mesma familia do **(ii') do F90** e pertence a **varredura unica (1.8)**, nao a este item.
-  Ate la, o alcance depende de alguem lembrar, que e exatamente o defeito que este achado descreve.
-- ⚰️ **FECHADO em 11/09/2026 (s177, item 1.8), junto com o (ii') do F90.** As duas listas deixaram de ser digitadas: `consistencia_check.portadores_derivados()` devolve todo `core/contracts/*.md`, toda skill de `.claude/commands/`, os 5 docs de raiz e os 2 portadores de CODIGO do F97; `consistencia_check.termos_revogados_do_ledger()` le marcadores `<!-- TERMO-REVOGADO: termo | onde -->` da **secao 12** do inventario, onde o cadastro passa a morar **junto da decisao que revoga**. Os dicts antigos viraram **SEMENTE/fallback declarado** -- derivacao que falha degrada para a semente em vez de deixar o gate sem vocabulario, porque *gate vazio passa por estar vazio*, que e pior que enumerar a mao. 🔬 **Medido antes de trocar:** lista manual = 10 portadores, 0 achados; lista derivada = 29 portadores, **3 achados reais** -- um `PREPARAR` vivo e prescritivo no `README.md` (portador que ninguem tinha cadastrado, exatamente o F95 de novo) e as duas divergencias de versao do **G11**, que o predicado P2 ja sabia medir e nunca alcancava. Um teste trava a regressao pelos dois lados: todo termo da semente tem de ter marcador no inventario, e a derivacao nunca pode esvaziar o gate.
-
-### F96 -- o isolamento do sink cobriu o SUCESSO e deixou a FALHA escrevendo no log de producao -- **BAIXA/MEDIA** -- **RESOLVIDO (s177, no ato, rider do item 1.5)**
-- **Como apareceu:** de graca, lendo o stderr do `auto_check --changed` no fechamento do 1.5. Entre as linhas do painel: `memory_errors.log: 1458 linha(s) [log de FALHA, nao de divida; ultima: 2026-09-11T08:50:01 wa_vocab/sink FileNotFoundError: 'Z:']` -- com timestamp de **dois minutos antes**, dentro desta sessao, sem nenhuma consolidacao de memoria ter rodado.
-- **Evidencia:** `tools/test_vocab_memoria.py::test_sink_nunca_derruba_a_consolidacao` forca a falha **de proposito** (`path=Z:/caminho/que/nao/existe/p.json`) para provar que o sink nunca propaga excecao. O sink cai no `except` e chama `log_error`, que escreve em `app/memory/manager._ERROR_LOG` -- um **SEGUNDO** global derivado de `_ROOT`, que a fixture autouse do `conftest.py` **nao** isolava. Medido: **14 linhas** no `history/memory_errors.log` real entre 2026-09-10T23:26 (quando a suite nasceu) e 2026-09-11T08:50; crescimento de **126 bytes por rodada da suite**, confirmado com o teste vermelho (`212823 -> 212949`).
-- 🔴 **Classe: metade do seam.** O item **1.3 (F66, s176)** consertou exatamente este modo de falha na direcao oposta -- o sink de PRODUCAO sendo sobrescrito por fixture (100 itens reais -> 1 `wa_dummy`) -- isolando `_HISTORY_DIR`. O caminho de **sucesso** ficou isolado; o de **falha** saiu por outra porta, 20 linhas acima no mesmo modulo. O comentario da propria fixture ja convidava (*"Escrita nova em caminho global entra aqui"*) e o global novo nao entrou. Irma do F94/F80b (sitio-gemeo de defeito ja consertado), agravada por ser **o mesmo item, um dia depois**.
-- **Por que importa mais que 14 linhas:** o painel do `ledger_self` imprime `memory_errors.log: N linha(s)` como sinal de saude, e o F66 acabou de **rotular** esse contador (*"log de FALHA, nao de divida"*). Um contador que a propria suite incrementa mede o harness, nao o sistema -- e a mesma doenca que o F66 diagnosticou no numero anterior.
-- ✅ **Corrigido (teste antes do fix):** regressao `test_falha_do_sink_nao_suja_o_log_de_PRODUCAO` (nasceu vermelha, com o delta em bytes na mensagem) + `monkeypatch.setattr(_mgr, "_ERROR_LOG", tmp_path / "memory_errors.log")` na MESMA fixture do `_HISTORY_DIR` -- um seam so, como o 1.3 decidiu. Verificado no repo real: suite completa com o log de producao em **delta 0 bytes**.
-- ⚠️ **Efeito colateral tratado:** o invariante **F46** (`test_boot_verdadeiro::test_paths_ancorados_no_repo`) lia `mgr._ERROR_LOG` **ao vivo** e passou a ver o `tmp_path`. O oraculo mudou para `_ERROR_LOG_NO_IMPORT`, capturado no topo do modulo de teste (importacao acontece antes de qualquer fixture) -- o invariante segue medindo a mesma coisa (path nascido de `__file__`, nao do cwd), so muda de onde le. Suite **582 -> 583**.
-- **Declarado, nao limpo:** as **16 linhas** `'Z:'` que a suite ja escreveu ficam no log. Elas registram falhas que de fato aconteceram; apaga-las destruiria a evidencia do proprio achado. O numero do painel (1458) carrega 16 linhas de artefato de teste -- registrado aqui para nao voltar a ser "achado".
-
-### F97 -- prescricao REVOGADA viva no CODIGO: o gate so varria markdown -- **MEDIA** -- **RESOLVIDO (s177, no ato, rider do item 1.7)**
-- **Como apareceu:** de graca, lendo `--help` dos CLIs para escrever as assinaturas do D5. O help do `dormant_refresh.py --kind` dizia, literalmente, *"Gatilho do PREPARAR"* -- sub-modo **revogado na s170**.
-- **Evidencia, e a pior linha primeiro:** `tools/day_plan.py:756` montava o passo do dia como *"Revisar {tema} como dif-{n} ({degrau}) [Material: {mat}], **PREPARAR** {descomprimido}+mecanismo, {largura}; depois DRENAR."* -- ou seja, **a string que o agente le no 1o turno de toda sessao** prescrevia o mecanismo morto **e na ordem que a s170 inverteu** (o contrato v1.3 e DRENAR primeiro, ensino so na Revisao Direcionada de fechamento). Mais tres sitios de docstring/help: `day_plan.py:586`, `dormant_refresh.py:136-140` e o `--help` do `--kind`.
-- 🔴 **Classe: o FORMATO do portador.** O gate `CONTRATO_REVOGADO` existe desde a s171 e cobria **so markdown** -- `_PORTADORES_NORMA` tinha contratos, commands e os 3 docs de raiz. O **F90** mirou o registro de **TERMOS** (enumerado a mao, sem ritual); o **F95** mirou o registro de **PORTADORES** (enumerado a mao, com buraco); este mira a premissa por baixo dos dois: *norma mora em documento*. Nao mora. As strings de `day_plan` e do `--help` sao **o portador mais proximo da execucao que existe** -- o agente le a primeira antes de qualquer arquivo e a segunda no ato de usar o CLI.
-- **Por que importa mais que 4 linhas:** o proprio `/ai-eng` ordenou o Tier 1 por *"primeiro o que mente ao operador durante o estudo"*. Uma prescricao revogada no Plano do Dia e exatamente isso -- e sobreviveu **6 dias** a uma revogacao que teve lapide, contrato v1.3 e cadastro de termo.
-- ✅ **Corrigido:** as 4 ocorrencias (a prescritiva reescrita conforme v1.3; as 3 de docstring/help lapidadas com `⚰️` e motivo) + **`tools/day_plan.py` e `tools/dormant_refresh.py` entram em `_PORTADORES_NORMA`**. **Provado, nao presumido:** com `# O agente oferece o PREPARAR antes do drill.` plantado numa linha ativa, o gate acusou `('tools/dormant_refresh.py', 189, 'prescricao', ...)`; removida a linha, volta a `[]`.
-- ⚠️ **Limite declarado:** a isencao por SECAO do gate e baseada em heading markdown, que nao existe em `.py` -- em codigo a isencao cai para a heuristica de **linha** (`⚰️` ou vocabulario de revogacao). Comentario de lapide passa; lapide espalhada por varias linhas sem marcador em cada uma, nao. Declarado em vez de maquiado; ampliar a isencao para bloco de comentario e trabalho da **1.8**.
-- **Falso positivo medido e descartado:** `app/memory/__init__.py:5` contem `Camada 1` -- termo revogado, mas ali significa a **camada de memoria canonica**, nao a Camada 1 da Revisao Calibrada. E o limite de substring literal que o F90 ja declarou: o arquivo NAO entra na lista de portadores por causa disso.
-
----
-
-## 6v. Sessao de ESTUDO s179 (Claude Code/Opus 5 1M, 2026-09-11, tarde) -- F98 · F99 · F100
-
-> Drenagem de 90 cards (teto do dia) + re-drill de 26 frentes + Revisao Direcionada de 8 eixos. Os tres achados sairam **do uso**, nao de varredura: dois sao gate-miss (§10.8), o terceiro e contra-evidencia de um remedio que a propria s175 aplicou.
-
-### F98 -- a guarda de blackout do F71 nao cobre intervalo CURTO, que e exatamente o que a sessao produz -- **MEDIA** -- **RESOLVIDO (spec s185, 18/09/2026) -- a causa era OUTRA**
-- **Como apareceu:** o operador pediu, no 1o turno da drenagem, *"Favor agendar os cards que caírem no dia 13/14 para 15/09 em diante"*. Ao gravar o bloco 1, dois cards (#1270, #1605) cairam em **2026-09-13 -- o dia do ENAMED** -- sem que o balanceador reclamasse.
-- **Evidencia:** medido no fechamento desta sessao, **9 cards** gravados hoje caem em 13-14/09: #1270, #1605, #586, #724, #1568, #583, #1536, #1543, #1574. Todos com intervalo de 2-3 dias. `tools/fsrs_load.py --blackout` continua reportando **0 movidos / 19 overflow** -- os 9 novos nao aparecem no painel de overflow porque nunca foram **candidatos**.
-- 🔴 **Classe: gate-miss por escopo, nao por logica.** A clausula (c) do load balancing (`AGENTE.md §6`, s128) restringe o balanceador a **card de revisao (`state == 2`) com intervalo >= 4 dias** -- e a justificativa e boa: mover 1 dia num card de 2 dias e erro de 50%, nao folga. Mas o F71 (s174) pendurou a guarda de **blackout de prova** dentro desse mesmo caminho. Resultado: a guarda so protege os cards que **menos** precisam dela. Card de nota 1-2 gera intervalo de 1-3 dias por construcao, entao **a populacao que mais cai em vespera de prova e a unica que a guarda nao ve**.
-- **Por que importa:** hoje sairam 16 notas 1 e 7 notas 2. O pico de **64 cards em 12/09** -- sabado do Simulado 10 -- e obra dessa mesma mecanica um dia antes do blackout. A guarda existe para que o calendario da prova seja respeitado, e ela nao e consultada justamente no caso denso.
-- ⚠️ **Nao corrigido nesta sessao, por escopo:** o permit de engenharia de 10/09 esta CONSUMIDO e esta e sessao de estudo. Registrado como achado, com o remedio **nao** prescrito aqui (mover a checagem de blackout para fora da clausula (c), ou dar-lhe caminho proprio, e decisao de spec -- toca `record_review`, o caminho unico de escrita do FSRS).
-- **Mitigacao aceita pelo operador, declarada:** cards parados em 13-14/09 reaparecem em 15/09 como **atrasados** sem nenhuma escrita -- e o efeito pratico que ele pediu. O que muda e o **rotulo** (atrasado x hoje) e a contagem de divida que dispara o regime de teto 90.
-- 🔬 **MEDIDO em 18/09/2026 -- a causa NAO era a que este achado supos.** O enunciado acima atribui o defeito a clausula (c) do load balancing (intervalo >= 4). Verificado no codigo: `rebalancear_blackout` **ja tratava** intervalo curto corretamente -- `if not folga_de(intervalo)` manda o card para `overflow` com motivo `"intervalo Nd sem folga"`. O que excluia os 9 cards era o **filtro `f.state = 2` da consulta**: nota 1 joga o card em **relearning (state 3)** e ele sumia da varredura inteira. Medido no banco em 18/09: **28 cards em state 3**. A nota 2 mantem state 2 e ja aparecia.
-- 🔴 **A 1a TENTATIVA DE REMEDIO ESTAVA ERRADA E FOI REVERTIDA.** Comecei tirando a guarda de blackout de dentro da clausula de folga, para recuar o card de intervalo curto para antes da prova. Isso **quebrou 4 testes do F71, e eles estavam certos**: o `AGENTE.md §6` diz literalmente *"sem vaga na folga, fica onde esta e vira OVERFLOW declarado"*, e a mitigacao que o **operador aceitou** na s183 foi exatamente essa -- card parado em dia de prova reaparece depois como atrasado, sem escrita nenhuma. O que faltava nunca foi o movimento; era o card **aparecer no painel**. Mover teria trocado um gate-miss por uma violacao de contrato, e quem impediu foi a suite existente.
-- ✅ **RESOLVIDO (s185) -- por VISIBILIDADE:** `db.rebalancear_blackout` varre `state IN (1,2,3)` e reporta em `overflow` todo card que nao pode se mover, com motivo que **nomeia o estado** (`state 3 (relearning) -- fora do balanceador (clausula (c))`). Zero mudanca no agendamento: nenhuma escrita nova, nenhuma fronteira do s128 tocada, `escolher_dia` intacto.
-- 🔴 **CLASSE (serie §10.8): gate-miss por ESCOPO DE CONSULTA** -- a varredura nao cobria a populacao que o defeito habita. Irma do "gate sem escopo de intencao" (F113, mesma sessao) e do `cli_signature_check` (presenca != cobertura). As tres sao a mesma pergunta: *o sensor alcanca o caso real, ou so o caso que ele sabe ver?*
-- 🧪 `tools/test_fsrs_blackout_curto.py` (10 testes, escritos antes do fix; 4 falhavam): relearning e learning no dia da prova, populacao mista do caso da s183, o motivo nomeando o estado, **os invariantes do F71 que nao podem mudar** (card nao-movivel FICA; card com folga segue sendo movido; fora do blackout ninguem e tocado) e a **BASELINE DO R2** -- o intervalo que cada nota produz hoje, congelado para que a mudanca de regua do R2 seja medida contra numero escrito e nao contra memoria.
-
-### F99 -- nao existe CLI que sirva um card por ID: o "proximo passo" do HANDOFF nao era executavel -- **BAIXA/MEDIA** -- **RESOLVIDO (s187)**
-- **Como apareceu:** o passo 1 do `HANDOFF.md` da s178 mandava *"Re-drill dos 12 cards nota 1-2 da s175 (so as frentes; nao gravar FSRS)"*. Para executa-lo e preciso **ler a frente de um card arbitrario** -- e nenhuma superficie faz isso.
-- **Evidencia:** `fsrs_queue.py` serve **so o que esta vencido** (`--next`/`--list`/`--pre-bloco`); `--preview CARD_ID` aceita id arbitrario mas devolve **so o calendario das 4 notas**, sem `frente_*`/`verso_*`. `reforja.py`, `cards_regen_queue.py` e `audit_flashcard_quality.py` operam por predicado/fila, nao por id. Confirmado por `--help` dos quatro. Dos 12 cards do re-drill, **6 estavam na fila de hoje por coincidencia** (relearning da s175) e **3 ficaram inalcancaveis** (#311, #453, #1539) -- reconstrui as frentes a partir de `history/session_175.md`, que **nao e a fonte** (o card pode ter sido reforjado desde entao).
-- 🔴 **Classe: Reachability-Debt, forma "sem consulta".** Irma declarada do F39 e do F91: o dado existe, esta correto, e nao ha porta. Agravante especifico -- **a instrucao que exige a porta e a primeira linha do HANDOFF**, lida no boot de toda sessao. Regra certa que nao alcanca, um nivel acima do F90.
-- **Por que importa:** o re-drill inter-sessao e o mecanismo que o contrato usa para fechar a fila de relearning que nao esvaziou (`revisar.md` §Relearning, s161/s173). Sem leitor por id, ele so funciona por acaso.
-- ⚠️ **Nao corrigido:** mesma razao de escopo do F98. Candidato natural: `fsrs_queue.py --card CARD_ID` devolvendo o mesmo objeto de `--next` sem tocar a fila nem o FSRS (read-only puro).
-- ✅ **RESOLVIDO (s187).** Foi exatamente o candidato natural: `db.card_por_id` + `fsrs_queue.py --card CARD_ID`, read-only puro. Serve card **fora da fila** (`due` no futuro) e **aposentado** com `ativo: false` -- sumir seria a negativa ambigua que o F91 matou, e quem depura card defeituoso precisa justamente do aposentado. `selection_reason` vem `por_id`: o objeto tem a forma da fila e **nao mente a origem** (classe F76). 8 testes (`tools/test_card_por_id.py`), entre eles o invariante de que LER nao altera nada e a prova de que o leitor fica **fora da allowlist de writers** (F49) -- guarda contra alguem "melhorar" o leitor carimbando `last_review` ao servir.
-
-### F100 -- re-ensinar a materia NAO fechou o gap: 3 pontos ensinados na s175 falharam 2x na s179 -- **ALTA** -- **RESOLVIDO (s187, decisao do operador: testar no mesmo ato)**
-- **Como apareceu:** no re-drill de fechamento desta sessao, tres pontos de Cirurgia Infantil falharam **duas vezes cada** (no card e na re-sonda) -- e os tres foram ensinados **na Revisao Direcionada da s175, 24 horas antes**.
-- **Evidencia, por carta:** (a) **#719** AVB/biopsia hepatica: card -> "tc com contraste", re-drill -> "ecoendoscopia?"; (b) **#721** apendice > 6 mm: card -> "5mm?", re-drill -> "3 mm?" (**andou para longe**, nao para perto); (c) **#720** GECA em 40%: card -> "padrao distinto de dor + adenite mesenterica", re-drill -> "pela adenite mesenterica, nao?" (mesma resposta). Os tres constam de `history/session_175.md` §5 como eixos 5 e 6 da Revisao Direcionada, com carimbos `review_log` ids 143-150.
-- 🔴 **Contra-evidencia direta de um remedio aplicado.** A s175 diagnosticou `resumos/Cirurgia/Cirurgia Infantil.md` contra o gap e concluiu, textualmente: *"cobre todos os 6 pontos que cairam... Nenhuma edicao de resumo foi necessaria -- o gap era recall / 1a exposicao"*. **Re-verificado hoje: o resumo cobre mesmo** -- linhas 378, 379 e 380, cada uma com marcador 🔴, e o conteudo repetido no corpo (244-245, 146, 151). Logo: resumo correto + aula dada + carimbo gravado = **zero retencao em 24h**. O ramo "resumo cobre -> re-ensino direcionado condensado" do `revisar.md` §Fechamento foi executado corretamente e **nao produziu o efeito que promete**.
-- **Leitura:** os quatro sao **fato arbitrario** (6 mm, 40%, biopsia x colangioRM, o nome HAEC) -- nao regeneram de mecanismo nenhum. O teste de regenerabilidade de `estilo-flashcard.md` diz que fato arbitrario **fica como card dedicado**, e eles ja sao cards dedicados. Entao o gargalo nao e autoria nem materia: e **numero de exposicoes**. Prosa densa entregue 1x nao substitui repeticao espacada em fato sem ancora -- e a Revisao Direcionada foi tratada como se substituisse.
-- **Corolario para o contrato:** o ramo de diagnostico do `revisar.md` tem hoje tres saidas (resumo cobre / e raso / esta inchado) e **nenhuma delas cobre "o resumo cobre E o re-ensino ja foi tentado"**. Reincidencia do mesmo ponto apos re-ensino deveria ser um **quarto ramo**, com remedio diferente (exposicao, nao prosa). Registrado como candidato; nao implementado -- e mudanca de contrato de skill, e o operador nao foi consultado.
-- ⚠️ **Limite do achado:** n=3, uma janela de 24h, um unico tema. Nao generaliza sozinho para "Revisao Direcionada nao funciona" -- o mesmo fechamento da s175 produziu **14 fechamentos** no re-drill de hoje (Faget, PTH baixo, via oral na gestante, os dois bracos do AGC). O que esta medido e mais estreito e mais util: **ela funciona onde ha mecanismo e falha onde o fato e arbitrario.**
-
-## 6w. Sessao de ESTUDO s181 (Claude Code/Fable 5.1, 2026-09-12, sabado, vespera do ENAMED) -- F101 · F102 · F103 · F104 · F105 (+ F100 3a medicao)
-
-> Sessao de cards (113 gravados) sem engenharia (permit consumido). Cinco achados de LEITURA; nenhum corrigido em codigo. **F100, 3a medicao:** os 4 fatos arbitrarios de Cirurgia Infantil (#719 biopsia na AVB, #721 > 6 mm, #722 HAEC, #633 renograma) cairam de novo no DRENAR (3a sessao seguida) e **fecharam 4/4 no re-drill imediato** apos ensino por mecanismo -- dado a favor de "mecanismo + sonda no mesmo turno", contra "prosa sem sonda". n=1 sessao; o teste e o retorno de 15/09 (F98 devolve os 29 nota 1 como atrasados).
-
-### F101 -- pendencia FANTASMA no HANDOFF: item copiado por 2 sessoes sem ninguem medir o que ele afirmava -- **MEDIA** -- **RESOLVIDO (spec s185, 17/09/2026)**
-- **Como apareceu:** o HANDOFF (s179 e s180) cobrava "`registrar_sessao_bulk` da lista de Diarreia de 09/09 -- 3a sessao seguida sem feitas/acertos". O usuario mandou 41/34 nesta sessao.
-- **Evidencia:** `db.get_trend_sessoes()` -> `175 | Pediatria | 41 | 34 | 2026-09-09`. `history/session_175.md` §115-119 registra as 4 listas de 09/09 no **2o ato**; a s179 (§89) herdou o texto do **1o ato** (§105, escrito antes do registro) e a s180 (§74) copiou "o volume nunca entrou".
-- 🔴 **Classe:** claim que envelhece sem re-medicao (AGENTE §10.9: "numero sem data e claim que envelhece"). Custo evitado: **+41 questoes duplicadas** no SSOT volumetrico.
-- **Remedio proposto:** `so-dado` agora (HANDOFF corrigido). Candidato `spec` (lacuna de gate): pendencia do HANDOFF que cita registro verificavel (area/data/feitas) e checavel pelo `consistencia_check` contra `sessoes_bulk`; limite declarado: so pega pendencias com forma reconhecivel.
-- ✅ **RESOLVIDO (s185)** -- `consistencia_check.check_pendencia_fantasma`, quarto sub-check do modulo (`CHECKS["fantasma"]`), entra no `auto_check` pelo `run_checks` ja existente; o rotulo do harness passou a `G5/G10/G14/F101`. Regra: linha do HANDOFF que **cobra registro** (`registrar_sessao_bulk`, "sem feitas", "nunca entrou", "falta registrar"/"falta lancar", "nao registrado", "pendente de registro") **e** cita uma data -> se `sessoes_bulk` tem volume naquela data, e fantasma. Leitura por `db.get_trend_sessoes()`, que ja filtra `questoes_feitas > 0` -- exatamente o que a pendencia afirma nao existir (AGENTE §6: CLI nao faz SQL direto).
-- ⚠️ **LIMITE DECLARADO, e ele e grande (§10.8):** so alcanca pendencia com **forma reconhecivel** -- palavra de cobranca MAIS data. *"Falta lancar o bloco de ontem"* e **invisivel** para o check, e ha fixture provando que e invisivel (`test_linha_sem_data_nao_e_alcancavel`). Data sem palavra de cobranca tambem nao dispara, senao o check viraria ruido em toda linha que cite a prova de 01/11. Nasce **WARN** (AGENTE §6: regra nova nasce warn-first).
-- 🔬 **Rodado contra o HANDOFF real de 17/09: 0 achados** -- correto, a instancia foi corrigida na s181. O gate existe para a proxima, nao para esta.
-- 🧪 `tools/test_pendencia_fantasma.py` (8 testes, escritos antes do fix): caso literal da s179/s180, data curta `dd/mm`, pendencia VERDADEIRA ficando quieta, data sem cobranca, HANDOFF ausente, leitor sem dado degradando para silencio, e o registro no `CHECKS`.
-
-### F102 -- o hook de boot acusa "drift de estado" por REGEX case-sensitive: falso positivo em toda sessao cujo texto cite uma sessao anterior antes do cabecalho -- **BAIXA** -- **RESOLVIDO (hotfix s185, 17/09/2026)**
-- **Como apareceu:** boot da s181: "Drift de estado: HANDOFF.md cita s179, mas o ultimo log e session_180.md". O `auto_check` (B2, `state_utils.check_session_pointer`) passou.
-- **Evidencia:** `tools/hooks/memory_boot.py:66` -- `_handoff_session` usa `re.search(r"\bs(\d{2,3})\b", handoff)` e devolve a **1a ocorrencia**; o cabecalho escreve "S180" (maiuscula, nao casa) e a 1a minuscula era "regra da s179" no alerta. Dois sensores para a mesma condicao, com regras diferentes (F95 um nivel abaixo).
-- **Remedio proposto:** `hotfix` -- reusar `state_utils.check_session_pointer` (ou, no minimo, `re.I` + ancorar na linha "Ultima sessao -- sNNN"), com teste de regressao sobre o HANDOFF desta sessao. Nao aplicado: permit consumido. Paliativo textual: o HANDOFF da s181 escreve "s181" em minuscula antes de qualquer outra sessao.
-- ✅ **RESOLVIDO (s185, 17/09/2026)** -- `_drift_flag` agora **delega** para `state_utils.check_session_pointer`; `_handoff_session` e `_latest_session` foram **removidos** (nao eram citados fora do proprio hook). O remedio e reuso, nao um segundo parser corrigido -- era esse o defeito de classe.
-- 🔎 **Terceiro defeito achado no fix, ausente do enunciado original:** `_drift_flag` acusava sempre que `cited != latest`, mas `cited == latest + 1` e o caso **legitimo** da sessao em curso (o log nasce no fechamento) -- a condicao B2 do `reconcile-contract` ja tratava isso. O hook nao so lia errado: ele tambem comparava errado.
-- 🧪 `tools/test_memory_boot_drift.py` (7 testes + 3 subtests), escrito ANTES do fix (10.6): 9 falharam contra o codigo vigente, todos passam depois. Cobre o caso literal da s181, mencao incidental, `max+1`, drift real, arquivo ausente, concordancia hook<->auto_check e degradacao silenciosa (hook nunca derruba o boot).
-
-### F103 -- `[SEM-LASTRO]` FALSO por nome de tema: "Polipos e Neoplasias Intestinais" tem resumo sob outro titulo -- **MEDIA** -- **RESOLVIDO (spec s185, 17/09/2026)**
-- **Como apareceu:** s180 (§57, §74) e HANDOFF item 5 afirmaram "nao tem resumo nem PDF-fonte... conteudo, nao card". Ao ancorar a Revisao Direcionada do card #1621 (MSH2), o grep achou `resumos/Clinica Medica/Gastroenterologia/Polipose Intestinal e Cancer Colorretal.md` (146 linhas, 16 armadilhas, cobre Lynch/MSH2, Haggitt, Cowden, rastreio familiar).
-- 🔴 **Classe:** cobertura medida por **igualdade de nome** entre `taxonomia_cronograma.tema` e o arquivo -- o mesmo defeito do F66 (orfandade por abreviacao) do lado do conteudo. A pendencia "criar resumo" teria produzido um **duplicado**.
-- **Remedio proposto:** `so-dado` (HANDOFF corrigido; RD carimbou o tema 167). Candidato `spec`: tabela de alias tema <-> resumo consumida por `cobertura_conhecimento.py` (declarar o limite: alias e manual).
-- ✅ **RESOLVIDO (s185)** -- regra unica em `tools/utils/lastro.py`, 5 camadas com **motivo nomeado** (`arquivo` · `pdf` · `secao` · `alias` · `mapa`); `insert_questao._tem_lastro` **delega** em vez de reimplementar (anti-F95). Este tema especifico cai na camada 5 (`core/lastro_alias.json`): o resumo se chama *Polipose Intestinal e Cancer Colorretal* e nenhum heading dele diz "neoplasias intestinais" -- e divergencia entre o vocabulario EMED e o nome do arquivo, que e exatamente para o que o mapa manual existe.
-- 🔬 **Duas reguas foram medidas e a primeira foi descartada:** "um token forte (>=7) casando qualquer heading" produzia **58 flips** com erros grosseiros (`Cancer de Pulmao - Estadiamento` -> `Urologia.md`; `Controle de Hemorragia Exsanguinante (ATLS)` -> `Assistencia ao Parto.md`) -- palavras como hemorragia/neoplasias/trauma estao em heading de meio corpus. A regua final exige **todos** os tokens do tema no mesmo heading: **16 flips**, 15 inequivocos. A assimetria de custo mandou em precisao -- falso "tem lastro" **esconde** resumo faltante e e invisivel; falso "nao tem" so gera uma conferencia.
-- 🔴 **Mencao solta no corpo ficou DELIBERADAMENTE fora da regra.** Contar ocorrencia em corpo inflaria a cobertura do mesmo jeito que o `cli_signature_check` inflava ao casar flag por presenca de string -- "string presente != coberto". Fixture: `test_mencao_solta_no_corpo_NAO_e_lastro`.
-
-### F104 -- resumo em linguagem COLOQUIAL/dramatica (`Neurologia/TCE.md`) + stub generico duplicado (`[CIR] TCE.md`, 17 linhas) -- **BAIXA/MEDIA** -- **RESOLVIDO na metade que e minha (s187); stub = GATE do operador**
-- **Evidencia:** `TCE.md:60` "Pressao Arterial Sistolica atirada as nuvens (corpo tentando socar sangue na marra...)", `:69-71` "A Arte da Hiperventilacao Iatrogenica", "Triade de cushing no prato!". Viola AGENTE §4.2 (linguagem academica). `[CIR] TCE.md` tem 3 armadilhas genericas que servem a qualquer tema.
-- ⚠️ **Nao verificavel por gate:** coloquialismo e semantico; `audit_resumos.py` ve estrutura. Declarado, nao maquiado (§10.8).
-- **Remedio proposto:** conteudo -- reescrever `TCE.md` conforme `/estilo-resumo` e fundir/apagar o stub `[CIR]` (grep antes: §10.4).
-- ✅ **`TCE.md` REESCRITO (s187).** 🔴 **O achado subestimava o defeito: nao era so registro coloquial, eram MECANISMOS CLINICOS INVERTIDOS.** Medido lendo o arquivo inteiro, nao so as 3 linhas citadas:
-  - `:67` dizia que o manitol "hiperglicemico perfura a barreira encefalica" -- **exatamente o contrario do mecanismo**. O manitol funciona *porque* NAO atravessa a BHE integra: fica no intravascular e cria o gradiente osmotico. A frase ensinava a alternativa errada de uma pegadinha classica.
-  - `:69` punha a hiperventilacao agindo em "macro arterias subaracnoides" (e arteriolar) e `:70` prescrevia "35 incursoes" como se fosse frequencia, confundindo alvo de PaCO2 com FR.
-  - `:60` "Triade **Branca** de Cushing" (nao existe); `:50` LAD "que nao recupera a 9"; `:74` PECARN reduzido a "cancele os raios-x" com prosa incoerente.
-  - Somados a ~25 erros de digitacao (`encefaloca`, `Dura-Matre`, `Ruputra`, `hiperventliacao`, `cirrugia`, `deselvolvimento`, `graverrimo`).
-- 🔬 **Por que isso importa mais que estilo:** `audit_resumos` roda sobre este arquivo e da **PASSED** -- ele ve estrutura (secao Armadilhas, tabela, marcadores), nao semantica. Um resumo pode estar **clinicamente invertido** e verde. E o **verification-stack** (§10.8) na superficie de CONTEUDO, e o operador estuda por ele.
-- Reescrito conforme `/estilo-resumo`: 8 secoes, linguagem academica, alvos numericos (PIC > 20-22, PPC 60-70, PaCO2 30-35, manitol 0,25-1 g/kg), discriminadores de imagem (sutura x foice), PECARN por estrato etario, CRASH. Armadilhas **acumuladas** (a original preservada verbatim + 11 novas). `auto_check --changed`: PASSED, 0 WARN.
-- ⏸️ **GATE do operador -- a outra metade:** apagar `resumos/Cirurgia/[CIR] TCE.md` (17 linhas, `status: stub`, 3 armadilhas genericas que servem a qualquer tema). Grep §10.4 **ja feito**: nenhum citador vivo fora do proprio ledger, do HANDOFF e do cache do graphify. **Nao apaguei** porque `AGENTE.md §1.1(b)` manda pausar em operacao destrutiva sobre `resumos/`, e essa clausula e do operador -- delegacao de gate de engenharia nao a cobre. Pergunta de 1 linha: *apago o stub `[CIR] TCE.md`?*
-
-### F105 -- 6 perguntas COMPOSTAS em cards antigos (#570, #682, #685, #686, #691, #599) chegaram ao drill sem passar pela reforja, apesar do WARN de atomicidade -- **MEDIA** -- **RESOLVIDO (s187, ordem do operador)**
-- **Como apareceu:** o usuario flagrou 6 "pergunta dupla" em 2 blocos (3 recusou responder). Mais #784 (frente "qual afirmativa esta correta" sem alternativas), #720 (frente pergunta "por que confunde", verso ensina "diarreia nao exclui" -- desconversam), #379 (frente ambigua), #1444 (pacote de fatos), #412 (card de HAS arquivado em DM Agudas).
-- 🔴 **Classe:** Reachability-Debt, forma "sem escopo": o WARN existe ha 47 dias com 270 abertos e ninguem tria; o card so foi triado quando o aluno tropecou nele. 3 cards **nao gravados** (sem tentativa) para nao poluir o FSRS com "nota 1 por defeito".
-- **Remedio proposto:** `so-dado` -- 11 marcas em `reforja.py --marcar ... --origem s181` (fila 272 -> 283). A triagem e do operador (decisao (a) da pilha).
-
-## 6x. Sessao de ESTUDO s182 (Claude Code/Fable 5.1, 2026-09-15, analise do ENAMED 2026 real) -- F106 · F107
-
-Sessao de estudo: ENAMED 2026 (Caderno 02) 75/100; gabarito comentado das 100 questoes via 5 subagentes; 25 erros persistidos em lote (`core/simulados/_enamed26_erros_batch.json`, ids 1019-1043, 44 cards 1630-1673). Detalhe em `history/session_182.md`.
-
-### F106 -- `[SEM-LASTRO]` falso por NOME de tema, 2a ocorrencia (`Infecto/Esquistossomose` -> conteudo em `resumos/Clínica Médica/Infectologia/Parasitoses.md`) -- **BAIXA** -- **RESOLVIDO (s185): ACHADO FALSO, retratado**
-
-- **Sintoma:** o writer `insert_questao.py` imprimiu `[SEM-LASTRO] 'Infecto / Esquistossomose' nao tem resumo (.md) nem PDF-fonte par` ao inserir o erro da Q61, e o tema TEM lastro: a esquistossomose vive em `Parasitoses.md` (que recebeu 3 armadilhas na mesma sessao). Mesma classe do F103 (Polipos -> `Polipose Intestinal e Cancer Colorretal.md`): o match e por nome literal do tema, cego a resumo-guarda-chuva.
-- **Medido:** 2 ocorrencias em 2 sessoes de estudo (s180, s182). `Preventiva/Rede de Atenção Psicossocial (RAPS)` acusado na mesma rodada e REAL (zero lastro).
-- **Remedio proposto:** `so-dado` ate a 3a ocorrencia; entao `spec` pequena -- o check de lastro consulta o RAG (`get_topic_context`) ou um mapa tema -> resumo em `core/`, nao o nome do arquivo.
-- ❌ **RETRATADO (s185, 17/09/2026) -- este achado esta ERRADO, e o `[SEM-LASTRO]` original estava CERTO.** A afirmacao "a esquistossomose vive em `Parasitoses.md`" foi verificada: ha **uma unica linha**, `Parasitoses.md:43`, uma armadilha sobre a forma hepatoesplenica **dentro de um diferencial de cirrose**. Uma mencao num diferencial de outra doenca nao e cobertura do tema. Quem inflou foi o achado, nao o writer.
-- 🔴 **E o controle do achado estava invertido.** O F106 registrou `Preventiva/Rede de Atencao Psicossocial (RAPS)` como o verdadeiro-positivo da rodada ("REAL, zero lastro"). Medido: `Psiquiatria Social e Reforma Psiquiatrica.md` tem `## 4. Rede de Atencao Psicossocial (RAPS)`, as modalidades CAPS, a Resolucao 32/2017 e a mudanca de paradigma -- e `RAPS` esta nos `aliases` do frontmatter. **O RAPS era o falso positivo**, e estava na fila como tarefa de criar resumo: teria produzido o duplicado que o F103 alerta. Os dois casos do ledger estavam trocados.
-- 📜 **Licao (serie gate-miss, §10.8):** achado de leitura humana tambem envelhece e tambem precisa de re-medicao. "Vive em X.md" foi escrito a partir de um `grep -l`, que responde "o arquivo contem a palavra", nao "o arquivo cobre o tema" -- a mesma confusao entre presenca e cobertura que o achado pretendia denunciar. O remedio implementado (F103) nasce com fixture para os dois lados.
-
-### F107 -- gate `resposta-embutida` (run >= 6 com o titulo do erro) so acusa dentro do writer; lote de 25 sofreu **2 rollbacks totais** antes do pre-check -- **MEDIA** -- **RESOLVIDO (hotfix s185, 17/09/2026)**
-
-- **Sintoma:** `insert_questao.py --errors-file` com 25 itens abortou 2x (`card 0: resposta-embutida (titulo do erro, run>=6)`, Q77) com ROLLBACK TOTAL -- comportamento correto do gate, mas o autor do lote (subagente) nao tinha como rodar o predicado antes, e o principal so o descobriu lendo `tools/card_checks.py` (assinatura `checar_resposta_embutida(card, contexto={"titulo": ...})`, nao documentada em skill).
-- **Medido:** 2 execucoes perdidas (~2 min cada) + 1 tentativa com pre-check errado (assinatura). Banco intacto nas 3 (verificado 1016/1432 antes e depois; COUNT-ASSERT batido na 3a: 1041/1476).
-- **Remedio proposto:** `hotfix` -- `insert_questao.py --errors-file X --dry-run` que roda TODOS os predicados de `card_checks` sobre o lote e imprime os achados sem abrir transacao; assinatura na skill `/analisar-questao §9`. Teste de regressao: lote com 1 card `resposta-embutida` -> dry-run acusa e exit 1, banco inalterado.
-- ✅ **RESOLVIDO (s185, 17/09/2026)** -- `insert_questao.py --errors-file X --dry-run`. O gate foi **extraido** para a funcao pura `avaliar_cunhagem()`, chamada pelos DOIS caminhos (writer e pre-check `checar_lote`). Escrever um segundo sensor para o pre-check reproduziria o defeito de classe do F95/F102 -- por isso a paridade e testada, nao assumida.
-- 🔎 **O refactor quebrou o writer e o teste pegou:** uma referencia orfa a `gate_avisos` sobreviveu no log de evento (`insert_questao.py:392`) e derrubava **todo insert bem-sucedido** com `name 'gate_avisos' is not defined`. Quem acusou foi `test_dry_run_e_writer_dao_o_mesmo_veredito` -- o teste anti-F95, escrito antes do fix. Sem ele o defeito iria ao commit verde.
-- 🔴 **Gate-miss medido de brinde (§10.8):** o `cli_signature_check` considerou `--dry-run` de `insert_questao` JA COBERTO porque a string `--dry-run` existia em `analisar-questao.md:290` -- mas pertencendo a **outro CLI** (`reforja.py --backfill [--dry-run]`). E a inflacao de cobertura que a docstring do proprio check declara como limite ("flag generica pode colar em skill vizinha"). A flag foi documentada de verdade na secao `--errors-file` da skill; o **limite do sensor segue de pe** e agora tem fixture.
-- ⚠️ **Limite declarado do remedio:** sem banco, o `--dry-run` nao modela o dedupe por conteudo `(area, tema, enunciado)` que o writer aplica ANTES do gate -- item que o writer pularia ainda e avaliado. Falso positivo conservador, nunca falso negativo; declarado na docstring de `checar_lote` e na skill.
-- 🧪 `tools/test_insert_dry_run.py` (7 testes + 2 subtests): nao abre transacao (DB_PATH inexistente nao nasce), relata todos os itens ruins de uma vez, campo obrigatorio ausente, lote valido nao grava, **paridade dry-run x writer**, e rollback total preservado. Suites do writer: 79 passed (baseline 68 + 11).
-
-## 6y. Sessao de PLANEJAMENTO s184 (Claude Code/Fable 5.1, 2026-09-17) -- F108 (registro pendente da s183) · F109 · F110 · F111 · F112
-
-Sessao de ABSORCAO + PLANEJAMENTO, sem reforma executada (decisao do usuario: *"esta e uma sessao de planejamento"*). Insumos: 2 transcricoes (J.R. Smith) + 4 varreduras de web aberta por subagentes ISOLADOS (Opus x1, Sonnet x3; ~617k tokens; relatorios em `docs/research/2026-09-17-*.md`) + `graphify --update` escopado. Portadores: `docs/FUNDAMENTOS-APRENDIZAGEM.md` (principio x mecanismo + ledger de friccoes) e `PLANEJAMENTO-APRENDIZAGEM-2026-09-17.md` (raiz; sintese + fila). Detalhe em `history/session_184.md`.
-
-### F108 -- extrator de HTML por regex engolia comparadores numericos (`<190`): 123 de 12.974 cards do corpus Medcards perderam o cutoff em silencio -- **MEDIA** -- **RESOLVIDO no scratch (s183); regra a herdar pelo CLI Medcards (E2)**
-- **Como apareceu (s183, 16/09):** subagente auditor mediu 4.638 cards (35,75%) com comparador; re-medicao com `html.parser` + pre-escape mudou 883 cards e **recuperou texto em 123** (numero identico ao do auditor).
-- 🔴 **Classe:** ferramenta de extracao que falha em silencio (irma do F78: PDF que perde figura). Regra: HTML de card se extrai com PARSER, nunca regex; diff v1/v2 antes de aceitar o corpus. Memoria `project_anki_html_extraction_lesson`.
-- **Declarado:** o corpus v2 corrigido vive no scratch da s183 (efemero); o CLI Medcards (E2, spec com GO do `/ai-eng`) e onde a regra tem de nascer em codigo + teste. Registrado aqui em 17/09 para fechar a lacuna de numeracao (o id foi reservado no `HANDOFF.md` e em `history/session_183.md §5`).
-
-### F109 -- premissa "revisao em cluster e pedagogicamente superior" (F3, s108; PRD `engenharia-ledger-f1-f13`) contradita pela literatura de intercalacao e pelo perfil de erro do usuario -- **BAIXA/MEDIA** -- **RESOLVIDO (os 2 riders pousaram na s185; cabecalho corrigido na s187)**
-- **Como apareceu:** ao mapear os principios das transcricoes aos mecanismos (`FUNDAMENTOS` P6). O comportamento vivo esta certo (`fsrs_queue._ordered_queue` intercala por default; `--cluster` opt-in); a **justificativa escrita** esta errada e e convite para alguem "corrigir" o default.
-- **Evidencia (verificada pela varredura 1, fontes primarias):** Kornell & Bjork 2008 (0,61 x 0,35; 78% acertam mais no intercalado, 78% acham o bloqueado melhor); Hatala, Brooks & Norman 2003 (ECG por pratica mista 46% x 30%, PMID 12652166); Rozenshtein 2016 (radiografia 57% x 43%, PMID 27236286); Birnbaum et al. 2013 (o ganho e discriminacao). Perfil do usuario: padrao-mestre "discriminador que EXCLUI" (s125), PLECT (s142), Wilms x neuroblastoma (s182).
-- 🔴 **Classe:** doc-vs-evidencia -- justificativa morta num portador que segue vivo. Mesma familia do F17/F19 (premissa morre, remedio fica).
-- ✅ **Aplicado nesta sessao (ledger e portador explicativo):** lapide no F3 (acima); P6 do `FUNDAMENTOS`.
-- ✅ **Os dois riders POUSARAM na s185** e o cabecalho seguiu dizendo ABERTO por 1 dia: `fsrs-management-contract` v1.4 §Politica de fila (linhas 72-73, com a lapide da premissa morta) e `revisar.md` passo 1 (linha 157). Medido na s187 lendo os portadores, nao o ledger. 🔴 **Classe G14 fora do alcance do gate:** o check de status falso compara o cabecalho contra a lapide do §11 do `MEMORIA-AUDITORIA`; achado que nunca entrou no §11 nao e visto por ninguem.
-- ⚰️ **Fila (redacao morta, preservada):** rider no `fsrs-management-contract.md` §Politica de fila ("ordem natural intercalada = default deliberado; `--cluster` = onboarding de cluster frio/andaime") + 1 linha em `revisar.md` passo 1; ambos `doc`, mesmo commit, `sync_skills` obrigatorio.
-
-### F110 -- as friccoes VIRTUOSAS do estudo (recall antes do verso, recall a frio, nota honesta, relearning ate criterio, racional declarado, ritual de prova, triagem humana) nao tinham portador que as declarasse como protegidas -- **MEDIA** -- **RESOLVIDO (os 2 riders pousaram na s185; gate impossivel, DECLARADO; cabecalho corrigido na s187)**
-- **Como apareceu:** o video 2 ("friccao viciosa x virtuosa") aplicado as reformas recentes: player (s183), `--errors-file`, subagentes -- todas julgadas por CUSTO, nenhuma por "o que de processamento do aluno sai junto".
-- **Evidencia:** Bastani et al. 2025 (PNAS, N ~ 1.000): IA que entrega a resposta pronta = +48% na pratica e **-17% na prova sem IA**; guardrail socratico zera a queda. Bisra 2018 (g = 0,55 para autoexplicacao antes do gabarito). O MedHub ja protege essas friccoes por contrato (Invariantes C/F, Clausula 11, §3.2 do `analisar-questao`), mas de forma **dispersa e sem nome** -- o F90 um nivel acima: regra certa que nao alcanca quem escreve a proxima spec.
-- 🔴 **Classe:** verification-stack (`AGENTE.md §10.8`) -- eixo semantico, **nao verificavel por gate**; declarado, nao maquiado.
-- ✅ **Aplicado:** `docs/FUNDAMENTOS-APRENDIZAGEM.md §3` (V1-V11 protegidas, X1-X8 automatizadas, regra de decisao).
-- **Fila:** clausula-ponteiro no `revisao-calibrada-contract` (v1.5) + pergunta obrigatoria no template de spec do vibeflow ("qual friccao virtuosa esta spec remove? qual viciosa?").
-
-### F111 -- Fase 2 do plano (extensivo, leitura-first: 465 tarefas de teoria em 735; 39q/dia nativo) nao garante recall no dia da primeira exposicao: tarefa T sem bloco de questoes gera ZERO sonda -- **MEDIA** -- **ABERTO (decisao do operador; prazo 02/11/2026)**
-- **Como apareceu:** o video 1 resolve a primeira exposicao com "3 exposicoes em 24h" (video -> cards do tema na mesma noite -> revisao na manha). No MedHub o card nasce de ERRO (`insert_questao`) ou de andaime (`insert_card_base`); o R1 mini-drill (`orquestracao-contract`) so ve erros frescos de 48h. Na Fase 1 (question-first) isso nao aparece; na Fase 2 aparece por construcao.
-- **Evidencia a favor de agir:** Rawson 2013 (relearning ate criterio: >60% x <20% em 24 dias); Murre & Dros (primeiro intervalo apos uma noite). **Evidencia que limita o remedio:** Deng 2015 (deck pronto nao prediz; cards proprios predizem) e Step 2 CK sem beneficio de Anki -- intake **filtrado e pequeno**, nunca bulk.
-- 📬 **DECISION BRIEF (R8, entregue na s187; devido ao operador ate 02/11) -- 10 linhas:**
-  1. **O problema so existe na Fase 2.** Na Fase 1 (question-first) todo tema chega com bloco de questoes, e o erro gera card. No extensivo, **465 das 735 tarefas sao teoria pura**: o tema e lido e nao deixa sonda nenhuma.
-  2. **O que muda no seu dia:** ao rodar `plano.py --concluir` numa tarefa de TEORIA, eu te mostro 5-8 cards candidatos do corpus EMED daquele tema; voce aprova ou corta um a um (30-60 s); os aprovados entram hoje, dentro do teto de 60.
-  3. **O que NAO muda:** teto diario, regua de nota, fila FSRS, e o fato de que card de ERRO continua nascendo do erro. Isto so cobre a tarefa que hoje nao gera sonda alguma.
-  4. **Custo:** ~1 minuto por tarefa de teoria concluida.
-  5. **Evidencia a favor:** Rawson 2013 (relearning ate criterio: 60% x 20% de retencao em 24 dias) e a queda do primeiro intervalo apos uma noite (Murre & Dros).
-  6. **Evidencia que LIMITA:** Deng 2015 -- deck pronto **nao** prediz desempenho, card proprio prediz; e Step 2 CK sem beneficio de Anki. Por isso o intake e **filtrado e pequeno**, com triagem sua, nunca bulk.
-  7. 🔴 **O risco real nao e tecnico, e de volume:** 465 tarefas x 5 cards = 2.300 cards se a triagem afrouxar. A divida atual ja e 103 vencidos. **A triagem humana e o unico freio**, e ela e sua.
-  8. **Reversivel:** sim, e barato. O intake e opt-in por tarefa; cards entrados ficam marcados pela origem e saem por `cards_prune.py` com criterio nomeado. Nada toca revlog nem cards existentes.
-  9. **Nao-reversivel:** nada.
-  10. ⏰ **Quando decidir: na proxima sessao**, junto com a adocao do cronograma extensivo -- e exatamente ai que o defeito passa a morder. Decidir antes seria decidir no escuro; depois, seria tarde.
-
-- **Remedio proposto (spec, apos GO do operador):** intake por tarefa concluida -- `plano.py --concluir` -> `emed_flashcards.py --query` do tema -> triagem pelo teste de regenerabilidade (humana) -> `insert_card_base` dos sobreviventes no mesmo dia, dentro do teto 60. Muda politica de estudo: precedente F64 (politica e posicao do operador).
-
-### F112 -- a regua de notas 1-4 do agente esta deslocada um degrau em relacao a semantica do py-fsrs: nota 2 ("recall parcial sem o alvo") e agendada como ACERTO (Hard) e nota 4 (acerto normal) recebe o bonus de Easy -- **ALTA** -- **RESOLVIDO (s186, R2: mecanismo + gate do operador cumprido em 18/09)**
-- **Como apareceu:** a varredura 4 (open-spaced-repetition) trouxe a regra oficial do tutorial FSRS: Again e o unico lapso; "Hard" e *recuperou com esforco*, **nunca** erro parcial; "Easy" e *sem esforco*. Conferido no codigo instalado (`fsrs` 6.3.2, `Scheduler.review_card`, ramo `State.Review`: `case Rating.Hard | Rating.Good | Rating.Easy` = caminho de acerto) e no adaptador `app/utils/fsrs.py` (`Rating(rating)` direto; `lapses` so em 1).
-- 🔬 **Medido em 17/09/2026 (read-only, `file:ipub.db?mode=ro`; `fsrs_revlog` com `state=2`, 2.981 revisoes no total):** rating 1 -> 280 revisoes, intervalo medio **1,0 dia**; rating 2 -> **312 revisoes, 14,2 dias**; rating 3 -> 525, 16,7 dias; rating 4 -> **1.551 revisoes (52% do revlog), 34,3 dias**. Distribuicao total por nota: 1 = 563 · 2 = 338 · 3 = 528 · 4 = 1.552.
-- 🔴 **Classe:** contrato-verdade (vocabulario do portador != semantica do motor). `revisar.md` passo 4 define 2 como nao-acerto por conteudo; o motor le 2 como acerto com esforco. Consequencia: o card que o aluno nao lembrou volta em ~2 semanas em vez de amanha -- causa plausivel de "consolidado 85% / erros frescos 25%" (s169) e das reincidencias de fato arbitrario (F100: #719/#721/#722, #787 pela 3a vez).
-- **Remedio proposto (spec, nao hotfix -- `record_review` e o caminho unico de escrita do FSRS):** (1) `tools/fsrs_optimize.py` read-only: `Optimizer(review_logs).compute_optimal_parameters()` sobre o revlog proprio (2.981 >= minimo oficial 400-1.000) com dry-run + parametros em `core/fsrs_params.json` versionado + `compute_optimal_retention()` (CMRR); (2) **decisao do operador** sobre a regua: remapear 2 -> Again no adaptador, ou redefinir 3 = acerto padrao / 4 = so sem esforco / 2 = lembrou com esforco (muda o `revisar.md` e o player); (3) leech proprio: limiar de lapsos + Difficulty alta -> fila de reforja (o Anki suspende em 8 lapsos; o SQLite proprio nao herda nada). Ordem: (1) antes de (2) -- o otimizador absorve parte do deslocamento e da o numero para decidir.
-- ⚠️ **Limite declarado:** a medicao e de intervalos agendados, nao de retencao por nota; provar que a nota 2 "reincide mais" exige cruzar `scheduled_days` com o resultado da revisao seguinte por card -- item da spec, nao desta sessao.
-
-- ✅ **DECIDIDO PELO OPERADOR (17/09/2026, s185): opcao (b).** A regua passa a ser a semantica nativa do FSRS -- `1 falhou · 2 lembrou com esforco · 3 lembrou · 4 sem esforco`. Escolhida com os numeros do R1 na mao (ganho de otimizacao -0,0129 sob remap x +0,0019 = ruido sobre notas cruas; 26 leeches invisiveis; Easy vazio sob a regua corrigida). Implementacao = R2, onda 3: remap historico versionado so na ENTRADA do Optimizer, adaptador lendo `core/fsrs_params.json` com fallback default + versao da regua, `record_review` gravando a versao da regua, F9 (override de nota gravada) no mesmo caminho, paridade como gate. Dois riders ainda abertos: gravar `review_duration_ms` quando o player medir, e manter a meta de retencao em 0,90 ate haver duracao real (0,70/0,80 e a saida mais fraca por construcao).
-### F113 -- cards cunhados SEM acentuacao (ASCII) sao lidos pelo usuario como "erro de portugues"; a convencao de encoding (AGENTE §4.5) foi aplicada ao TEXTO CLINICO do card, nao so a pontuacao -- **MEDIA** -- **PARCIAL (s185: 1.796 correcoes em 4 lotes + 1 corrupcao revertida; residuo IRREGULAR declarado)**
-- **Como apareceu:** no lote de 90 do player (s184), o usuario marcou defeito em #685 (*"pergunta composta e erros de portugues"*) e #689 (*"outro exemplo de card com erro de portugues. aplicar o feedback a todos os cards da sessao"*). Os dois cards estao escritos sem acentos/cedilha ("Crianca falcemica", "compativel", "Sindrome do Olho Vermelho" no tema) -- o que a regra §4.5 (Zero LaTeX, sem setas Unicode, sem travessao) nunca pediu: ela proibe pontuacao especial, nao a ortografia.
-- 🔬 **Medido (lote de 90):** cards de safras recentes (ids >= ~1500, cunhados por subagente/lotes ASCII) vs. safras antigas com acentos; a proporcao exata no baralho **nao foi medida** (sessao de estudo, permit consumido) -- item da spec: `grep` de vogais acentuadas ausentes por card e uma regua de "ASCII puro em texto clinico".
-- 🔴 **Classe:** regra certa aplicada ao alvo errado (o F90 do encoding): o gate `card_checks` verifica forma e nao ve ortografia; `recurate_cards.py` e o writer certo para a reforja em lote (preserva FSRS; ratchet do verso vale).
-- **Remedio proposto:** `spec` -- (1) medir a proporcao de cards sem acentuacao; (2) reforja em lote via `recurate_cards.py` com dry-run + COUNT-ASSERT (texto identico exceto acentos -> ratchet do verso nao dispara); (3) instrucao explicita em `estilo-flashcard.md`: portugues acentuado no texto clinico; ASCII so na pontuacao. Marcas de reforja de hoje: #419, #685, #688, #689, #373 (origem `player`).
-- 🔬 **MEDIDO (s185, 17/09/2026) -- a premissa "safras recentes" subestimava muito:** **875 de 1.476 cards ativos (59,3%)** tinham acentuacao removida. Por faixa de id: 0-500 = 42,0% · 500-1000 = 55,3% · 1000-1500 = 62,2% · **1500+ = 94,2%**. Top palavras: `nao` 635x, `diagnostico` 122x, `apos` 115x, `doenca` 84x, `crianca` 81x. Regua de deteccao: palavra que OBRIGATORIAMENTE leva acento aparecendo sem ele -- nao "card sem acento nenhum", que teria falso positivo em frase curta legitima.
-- ✅ **APLICADO (s185)** -- lote de **749** cards via `recurate_cards.py --apply`, sob o rito do 10.7: dry-run -> `backup_db.py` (`ipub_backup_20260917_224901.db`) -> apply -> COUNT-ASSERT. FSRS preservado (flashcards 1543 / fsrs_revlog 3067 / fsrs_cards 1543 identicos antes e depois). **Invariante provado item a item antes de gerar o lote:** `unidecode(antes) == unidecode(depois)` em todos os 2.277 campos tocados -- a edicao e SO-ACENTO, e o gerador aborta sem escrever se um unico item violar.
-- 📐 **COUNT-ASSERT reconciliado:** restaram **141**, nao 126. Diferenca explicada e fechada: **125** sao o lote B (travado pelo gate de atomicidade) + **16** disparam so por `media`/`medio`, as duas palavras que o gerador EXCLUI de proposito (ambiguas: "media" tambem e o imperfeito de *medir*, e restaurar acento ali reescreveria sentido clinico).
-- ✅ **ACHADO NOVO FECHADO -- gate sem ESCOPO DE INTENCAO.** `recurate_cards.py:297` (`bloqueia_atom = bool(avisos) and not permitir_atomicidade`) reprovou **125 cards** com "reforja(s) NAO resolveram o defeito", porque roda o detector de atomicidade sobre o conteudo PROPOSTO. A edicao so-acento **nao se propunha** a resolver atomicidade, e provadamente nao a altera. Splitar foi o certo, nao contorno: esses 125 ja estao na fila de reforja e serao reescritos de verdade, quando o acento sai de graca. Mas o gate nao distingue "edicao que falhou em consertar" de "edicao que nunca mirou aquilo" -- classe: gate sem escopo de intencao.
-- 🔧 **Remedio (s185):** `recurate_cards.validar` calcula `_so_acentuacao(campos, atual_do_banco)` por ITEM e, quando o invariante vale, **pula os gates 4 e 6** -- os dois que perguntam *"a reforja resolveu?"*. Os demais (schema, encoding, formulacao, resposta-embutida, ratchet do verso) seguem valendo: nenhum deles pergunta sobre intencao, todos medem o texto proposto. 🔴 A isencao e **verificada por item, nunca declarada por flag** -- flag se usa errado, invariante se prova; campo que nasce (banco NULL) derruba a isencao do item inteiro. Suite `tools/test_recurate_escopo.py` (6 testes, escritos antes do fix): o so-acento passa E entra no plano, a edicao semantica no mesmo card segue cobrada, acento+1 palavra perde a isencao, e a isencao vale por item num lote misto. Entra na serie **§10.8** como *gate sem escopo de intencao*, irma do `cli_signature_check` (presenca != cobertura).
-- ⚠️ **RESIDUO DECLARADO (por isso PARCIAL, nao RESOLVIDO):** (a) os 125 do lote B; (b) 16 por ambiguidade deliberada; (c) **a lista de palavras e curada e conservadora** -- cobre as de alta frequencia, nao garante ortografia completa. Exemplo vivo: **#689** ganhou `diagnóstico` mas segue com "Uveite" (deveria ser "Uveíte"), e **#685** -- um dos dois que o operador marcou -- esta no lote B intocado, porque a outra metade da queixa dele naquele card era "pergunta composta". Afirmar "F113 resolvido" seria claim falso.
-- 🔴 **O "0% restante" que reportei apos o 1o lote era FALSO, e o defeito era de metodo.** Medidor e corretor compartilhavam a mesma lista de ~110 palavras: o medidor so procurava o que o corretor sabia consertar, e por isso reportou verde. **Metrica auto-confirmante** -- a mesma familia do `cli_signature_check` inflando cobertura por presenca de string, e do proprio F106 lendo `grep -l` como cobertura. Um detector independente, **por sufixo**, mediu **897 cards (60,8%)** ainda sem acento: praticamente o numero original. Licao: quando o sensor e o remedio nascem do mesmo insumo, o verde nao e evidencia.
-- ✅ **Lote B, 125 cards (s185)** -- os travados pelo gate. Liberados depois que o gate ganhou **escopo de intencao** (abaixo), sob o mesmo rito 10.7.
-- ✅ **Lote C, 22 cards (s185)** -- os ambiguos `media`/`medio`. Li os 22 um a um: **nenhum era o verbo**; sao `arteria meningea media`, `otite media`, `camada media`, `linha media`, `PA media`, `terco medio`, `vida media`, `em media`. A ambiguidade era teorica; medida neste corpus, zero. Triagem caso a caso, nao heuristica.
-- ✅ **Lote D, 877 cards (s185)** -- acentuacao por **REGRA DE SUFIXO**, nao por lista: `-cao/-coes`, `-sao/-soes`, `-avel/-ivel`, `-encia/-ancia`, `-logico/-logica`, `-orio`. Deliberadamente FORA por terem excecao real: `-oria` (categoria/teoria/maioria nao levam acento), `-cia`, `-logia` (cardiologia), `-ico`.
-- 🔴 **EU INTRODUZI UMA CORRUPCAO E ELA FOI REVERTIDA (lote E, 23 cards).** A regra de sufixo `-encia` transformou **verbo em substantivo**: a pergunta *"Como se diferencia, na pratica, pancreas anular de atresia duodenal?"* (verbo, sem acento) virou *"Como se difer**e**ncia"* com E-CIRCUNFLEXO, palavra que nem existe. **Isso derruba uma premissa que eu havia afirmado nesta mesma sessao:** o invariante `unidecode(antes) == unidecode(depois)` prova **mesmas letras, NAO mesmo sentido**. Portugues tem pares minimos distinguidos por acento (`diferencia`/`diferencia`, `evidencia`/`evidencia`, `influencia`, `potencia`, `distancia`, `substancia`) -- sufixo NOMINAL (`-cao`, `-sao`, `-avel`, `-orio`) e seguro; `-encia`/`-ancia` nao sao, porque coincidem com 3a pessoa de verbos em `-enciar`/`-anciar`. Quem pegou foi **leitura a olho de amostra aleatoria**, nao gate nenhum: o card #285 apareceu com "Como se diferencia" numa amostra de 4. Regra derivada: **"so-acento" nao e sinonimo de "semanticamente nulo" em portugues**, e nenhum invariante mecanico que eu tinha teria pego isso.
-- 📐 **Como foi revertido:** `diferencia` (com circunflexo) **nao existe** em portugues -- o substantivo e `diferenca` -- logo toda ocorrencia era corrupcao, e isso deu um criterio limpo. Os demais lemas ambiguos (`distancia`, `substancia`, `potencia`, `evidencia`) foram lidos um a um nos 62 contextos: **todos substantivos corretos**. Estado final: 0 corrompidos, 72 verbos `diferencia` intactos.
-- ⚠️ **RESIDUO, e por isso segue PARCIAL:** o que sobra e **irregular e nao fecha por regra**. Uma terceira lente (`-aria/-ario/-eria/-ite/-icia`) acusa 514 cards, mas e imprestavel como medida: `apendicite`, `artrite`, `ascite`, `abortaria`, `causaria` estao **corretas** sem acento, enquanto `arteria`, `bacteria`, `calendario`, `etaria` precisam -- e nenhum sufixo distingue. Exemplos vivos: **#685** (`series`, `leucocitaria`, `plaquetaria`, `Leucocitos`, `obrigatoria`) e **#689** (`Uveite`). Fechar isso exige **lexico ou olho humano**, nao a proxima regra; gerar mais um lote por padrao seria repetir o erro do lote D com outro sufixo.
-- 📜 **CAUSA-RAIZ FECHADA:** a frase "usar exclusivamente ASCII/Markdown limpo" (`estilo-flashcard.md:132` e `AGENTE.md §4.5`) era lida por quem cunha card como "tire os acentos". Os dois portadores ganharam clausula explicita: a regra governa **pontuacao e notacao, jamais ortografia**.
-
----
-
-## 6z. Sessao de ENGENHARIA s186 (Claude Code/Opus 5, 2026-09-18) -- R2 (fecha o F112) · F114 · F115 · part-7
-
-### F114 -- parametro do modelo que o otimizador NAO ajustou (por ausencia de exemplo) sai do JSON indistinguivel de parametro ajustado: `w3` e `w16` da visao `remap` sao o default do py-fsrs, e a regua nova VAI emitir o rotulo que eles governam -- **MEDIA** -- **MITIGADO (s186: gate de `regua_do_fit` no carregador); a causa de fundo fica DECLARADA**
-
-- **Como apareceu:** medindo, para o R2, quanto a adocao dos parametros do R1 mudaria o agendamento real. O numero de nota 4 nao fechava com a intuicao (o "sem esforco" agendando IGUAL ao "lembrou"), e o diff indice a indice explicou:
-
-```
-python -X utf8 -c "<diff: Scheduler().parameters x core/fsrs_params.json::visoes.remap.parametros>"
-  w3   8.295600 == 8.295600   <-- INTOCADO
-  w16  1.872900 == 1.872900   <-- INTOCADO
-  (os outros 19 se moveram; na visao `cru` os dois TAMBEM se movem: w3=8.433273, w16=1.958405)
-```
-
-- 🔬 **Causa medida:** `w3` (stability inicial de Easy) e `w16` (bonus de Easy) sao os dois parametros que governam a nota 4. O mapa do R1 manda `4 -> 3`, entao `visoes.remap.distribuicao_notas_efetivas` e `{"1": 918, "2": 536, "3": 1613}` -- **nao existe chave "4"**. Sem um unico exemplo de Easy o otimizador nao tem gradiente nesses eixos: eles nao convergiram, **nunca foram tocados**. Na visao `cru`, onde ha 1.613 notas 4, os dois se movem -- o que confirma que a causa e ausencia de dado, nao estabilidade do ajuste.
-- 🔴 **Classe (serie §10.8):** *parametro sem dado que o identifique e default com carimbo de medido*. O JSON versionado apresenta os 21 numeros em pe de igualdade; dois deles sao herdados por omissao e nada no arquivo dizia isso. E a mesma familia da **metrica auto-confirmante** do F113 (o medidor que so procurava o que o corretor sabia consertar) e do `cli_signature_check` (presenca != cobertura): *a saida parece medicao porque veio do instrumento de medicao.*
-- ⚠️ **Por que isso e ALTO-RISCO exatamente agora:** a regua v2 reabilita a nota 4 com sentido proprio ("sem esforco"). Adotar `remap` seria pedir ao modelo que agende um rotulo que o fit dele nunca viu. Medido no baralho real (830 cards em Review, replay sob os dois conjuntos): nota 2 cairia de mediana **24d -> 8d** (o ganho do F112) mas nota 4 cairia de **70d -> 50d**, colapsando no 3 -- o "sem esforco" deixaria de valer mais que o "lembrou".
-- 🔧 **Mitigacao (s186):** `app/utils/regua.carregar_parametros` so entrega um conjunto quando o arquivo declara `adotado: true` **e** `regua_do_fit` igual a regua de escrita; ausencia de `regua_do_fit` **nao vira permissao** (recusa). `analisar_visao` passou a gravar `regua_do_fit` + `reguas_no_corpus` em toda visao. 4 testes, um por ramo de recusa (`tools/test_regua_fsrs.py`).
-- ⚠️ **FRONTEIRA DECLARADA, nao resolvida:** o gate barra *adotar sob a regua errada*. Ele **nao** detecta "parametro que o fit nao identificou" no caso geral -- para isso seria preciso medir a cobertura de cada eixo no corpus, e isso nao existe hoje. Quando houver historico sob a regua v2 com nota 4 real, re-rodar o R1 e conferir se `w3`/`w16` saem do default e a verificacao que fecha o eixo. Ate la, a nao-adocao e a unica garantia.
-
-### R2 -- a regua vira NATIVA e VERSIONADA (fecha o mecanismo do F112)
-
-- ✅ **Entregue (s186, commits `bf7f7e9` + este):** portador unico `app/utils/regua.py`; `fsrs_revlog.regua_versao` carimbada por `record_review` (ALTER idempotente, rito §10.7, backup `ipub_backup_20260918_114258.db`, COUNT-ASSERT 14->15 colunas e 3067 linhas intocadas); remap **por linha** na entrada do Optimizer; regua v1 revogada pelos 3 passos do F90 (declaracao aqui + lapide em `revisar.md` e na Clausula 14 do `revisao-calibrada-contract` v1.6 + 3 marcadores `TERMO-REVOGADO` em `docs/MEMORIA-AUDITORIA.md`); player com rotulos v2 e limiar de relearning `< 3`.
-- 🔒 **GATE DE PARIDADE, por sensor independente do remedio:** a distribuicao de notas efetivas sob o caminho novo bate exatamente com o `core/fsrs_params.json` que o R1 escreveu em 17/09, **antes deste codigo existir** -- `cru {1:578, 2:340, 3:536, 4:1613}` e `remap {1:918, 2:536, 3:1613}` sobre as 3.067 linhas reais. Escolha deliberada de metodo, depois do F113: o sensor nao podia nascer do mesmo insumo que o remedio.
-- ✅ **GATE DO OPERADOR CUMPRIDO (18/09/2026, ~15h25 UTC).** Ele nao so viu a tela -- **drenou** os 6 cards da previa e devolveu 3 notas + 3 marcas de defeito. Perguntado explicitamente sob QUAL regua tinha dado as notas (as tres foram 4, e sob a v2 o 4 e o degrau raro), respondeu: *"a regua foi minha memoria mesmo. achei cards faceis."* -- ou seja, 4 = **sem esforco** de fato, nao habito da regua velha. A regua trocou na mao dele, nao so no portador. Fork (a) do limiar de relearning (`< 3`) confirmado no mesmo ato.
-- 🔬 **A PROVA no dado real, nao em fixture.** As 3 notas viraram as **3 primeiras linhas v2** do `fsrs_revlog` (3067 -> 3070, gravadas por `--record-lote --apply --expect 3` com COUNT-ASSERT). O revlog ficou **misto**, que e o caso que o R2 existe para tratar, e a traducao respeitou a linha:
-
-```
-visao nativa sobre o revlog real misto (3067 v1 + 3 v2):
-  nota 4 -> 3 linhas      (so as v2 -- "sem esforco" de verdade)
-  nota 3 -> 1613 linhas   (as notas 4 da v1, que significavam "cravou")
-```
-
-  Sem o versionamento, as 1.613 notas 4 antigas teriam sido relidas HOJE como "sem esforco". O defeito que o F112 nomeia teria voltado, inserido por nos, na mesma sessao que o consertou.
-
-### F142 -- nao existe trava de 2a GRAVACAO do mesmo card no mesmo dia entre lotes, e o teto do dia conta LINHA do revlog, nao card: 83 re-revisoes no mesmo dia, todas descontadas do teto -- **MEDIA** -- **DECLARADO (s204) -- remedio proposto, aguarda triagem do /ai-eng**
-
-- **Como apareceu:** auditoria do F140 (s204, 28/09/2026). Ao medir quantas revisoes do mesmo dia vinham do passo de relearning, sobraram 34 que NAO vinham dele.
-- 🔬 **Medido (duas lentes, mesmos numeros: principal e filho Opus, revlog com fuso corrigido):** 83 pares (card, dia) com 2 revisoes gravadas, em 10 de 66 dias com revisao. **49** vieram de card em `state=3` servido pelo bucket `hoje` (o mecanismo do F140); **34** vieram de card em `state=2` com `due` no FUTURO (`reason_servido='futuro'`): 08/08 (19), 25/09 (14) e 05/07 (1). Pior dia: 08/08, 30 de 108 revisoes (27,8%).
-- 🔬 **Causa medida dos 14 de 25/09:** lotes sobrepostos -- `player_2026-09-25a` (06:00, 60 cards) e `25b` (06:53, 90) tem cards em comum; o card revisto de manha foi revisto de novo as 19h pelo lote velho. As 19 de 08/08 NAO foram atribuidas a um caminho.
-- 🔬 **No codigo (leitura do filho Sonnet, conferida a olho):** `core/templates/player.html` so impede a 2a nota DENTRO do mesmo lote (estado escopado por `LOTE.sessao`); `app/utils/notas_player.situacao()` so barra por ORDEM de tempo -- nota com horario posterior a ultima revisao sempre e `NOVA` e grava por `record_review`. O teto sai de `day_plan.realizado_do_dia` (`tools/day_plan.py:1352-1354`, `COUNT(*)` sem `DISTINCT`), lido em `tools/day_plan.py:895` e descontado em `tools/fsrs_queue.py:159`.
-- 🔴 **Classe:** a regra "uma nota por card por sessao" (`revisar.md` §Relearning intra-sessao) e conduta dentro do lote; entre lotes do mesmo dia nao ha mecanismo. Trocar lote em curso (pedido legitimo do operador) e o gatilho.
-- **Remedio proposto (`spec`, nada implementado):** (a) `--record-lote` manda para a quarentena a nota de card ja revisto no mesmo dia-calendario quando o card nao estava vencido; (b) o teto passa a contar `COUNT(DISTINCT card_id)`. Depende da decisao do F140: sob o remedio A deixa de existir 2a revisao legitima no mesmo dia, e a trava fica sem excecao.
-- ⚠️ **Limites declarados:** revisar card antes do `due` e valido para o modelo; o defeito e a 2a nota no MESMO dia, nao a antecipacao. Nenhum teste foi escrito.
-
-### F141 -- card de intervalo de 1 dia servido na MANHA seguinte (menos de 24 h) cai no ramo de "mesmo dia" do py-fsrs: a biblioteca mede por 24 h truncadas, a fila serve por dia-calendario -- **MEDIA** -- **DECLARADO (s204) -- remedio proposto, aguarda triagem do /ai-eng**
-
-- **Como apareceu:** auditoria do F140 (s204). O card `638` foi visto pela 1a vez em 27/09 16:56 (nota 1), servido pelo bucket `hoje` em 28/09 14:24 (21,5 h depois, ANTES do `due` das 16:56) e a estabilidade caiu 0,212 -> 0,083 pela formula de curto prazo.
-- 🔬 **Mecanismo (fonte do py-fsrs 6.3.1 instalado):** `days_since_last_review = (review_datetime - card.last_review).days`; `< 1` -> `_short_term_stability`, que ignora o tempo decorrido. O bucket `hoje` (`app/utils/db.py:1176-1178`) serve desde 00:00 tudo que vence ate 23:59. O otimizador do Anki usa dia-calendario com hora de virada (filho Opus de evidencia externa; a documentacao nao comenta a diferenca).
-- 🔬 **Medido (duas lentes, mesmos numeros):** 295 revisoes no ramo curto (11,2% das 2.625 com historico); **212 em dia-calendario DIFERENTE** -- 144 de card `state=2` servido antes do `due`, 68 de card `state=3` servido como `atrasado` no dia seguinte. Por mes: jun 29, jul 8, ago 37, **set 138** (cresceu com a rotina de lote de manha). 512 de 2.629 revisoes (19,5%) foram servidas antes do `due`.
-- 🔬 **Contrafactual SO DE MODELO (mesma nota aplicada no `due`, 144 casos):** nota 3 -> S 2,58 contra 0,80 gravado; nota 4 -> 4,12 contra 1,09; nota 2 -> 1,94 contra 0,38. Direcao do erro: estabilidade subestimada -> o card volta mais cedo -> consome teto. Conservador para a retencao, caro para a carga.
-- 🔴 **Classe:** dois relogios para "um dia" -- o motor conta 24 h, a fila conta calendario. Mesma familia do F80 (dois relogios na mesma fila).
-- **Remedio proposto (`spec`, nada implementado):** o adapter passa a contar o decorrido por dia-calendario local antes de chamar a biblioteca. Golden de partida ja existe: o replay do revlog reproduz S, D e state em 3.579 de 3.579.
-- ⚠️ **Limites declarados:** o contrafactual nao mede o que o operador responderia no `due`. Nenhum dos remedios A/B/C do F140 mexe neste achado. O py-fsrs 6.3.2 existe (`pip index versions fsrs`) e corrigiria a queda com nota 2 no mesmo dia -- UMA fonte so, changelog nao conferido por 2a lente.
-
-### F140 -- fila pos-bloco intercala cards rebaixados NO MESMO DIA a frente de cards nunca vistos: pedir "mais cards" devolve re-drill disfarcado de novidade -- **MEDIA** -- **RESOLVIDO (s204: decisao do operador em 28/09 -- nota 1 volta so no dia seguinte, `relearning_steps=()`; novos do lote = saldo do teto; spec `nota1-volta-no-dia-seguinte` parts 1-3)**
-
-- ✅ **DECISAO DO OPERADOR (28/09/2026, noite):** *"1. volta apenas no dia seguinte. 'hoje' e apenas no redrill, ja contemplado. 2. saldo por teto, que deve passar a 100 cards/dia."* O teto ja era 100/dia (`day_plan.TETO_BASE`, s196); nada mudou nele.
-- ✅ **Fix (s204), testes escritos ANTES e vistos vermelhos pelo motivo:** (1) `app/utils/fsrs.py` -- `KWARGS_BASE` com `relearning_steps=()`, fonte unica que `tools/fsrs_optimize.py` passou a importar; `tools/test_fsrs.py` checks 4 e 7 (vermelho mostrava os 10 min e os 15 min do loop) e `test_scheduler_do_otimizador_usa_os_kwargs_de_producao`. (2) `tools/fsrs_queue.py` -- `novos_do_lote` + duas passadas no `--export-player`; `--list`/`--next` seguem em 10 (`NOVOS_CHAT`); 6 testes em `tools/test_fsrs_queue_player.py` (vermelho reproduzia o episodio: `13 == 53`). (3) Rito dos 3 passos: `revisao-calibrada` v1.9 (Clausula 14), `fsrs-management` v1.6, `revisar.md`, `hub-backend.md`, 4 termos cadastrados.
-- 🔬 **Golden (Scheduler antigo x novo sobre as MESMAS entradas, copia do banco, 3.589 linhas):** estabilidade e dificuldade identicas em todas; `state`/`due` diferem em 362, todas de nota 1 ou 2 sobre `state` 2 ou 3 (279 + 57 + 26) -- exatamente as 362 que a auditoria tinha medido. Conferencia read-only contra o banco real: o export sai com 53 cards (3 + 50), igual ao saldo; a previsao da nota 1 do `1444` passou a 29/09.
-- ⚠️ **Limites declarados:** (a) os 4 cards ativos que JA estavam em `state=3` com `due` em 28/09 (`1444`, `638`, `1589`, `1481`) nao foram migrados: seguem no bucket `hoje` ate a meia-noite e amanhecem `atrasados`; saem do estado 3 na proxima nota. (b) `AGENTE.md` 6 (balanceador) ainda chama os passos de relearning de "intra-sessao" -- fora do orcamento desta spec. (c) F141 e F142 seguem abertos: a nota 1 de hoje vence amanha no mesmo horario e, servida de manha, cai no ramo de curto prazo.
-
-- 🔬 **AUDITORIA s204 (28/09/2026, noite) -- este documento foi conferido contra o codigo, a biblioteca e o banco.** Relatorio: `.vibeflow/audits/f140-fila-pos-bloco-audit.md`; cru e scripts em `tmp/f140_auditoria/`. 4 subagentes (2 Opus, 2 Sonnet) + medicao do principal; numero so entrou com duas lentes. **Veredito por afirmacao:** lote `28b` = 3 + 10, bucket `hoje`, ordem fixa e `--new-limit 10` CONFIRMADOS; contagem de notas IMPRECISA; assimetria EXPLICADA; **causa REFUTADA**; pergunta 1 mal formulada.
-- 🔴 **A causa real:** `app/utils/fsrs.py:50-58` cria o `Scheduler` com `learning_steps=()` e deixa `relearning_steps` no DEFAULT da biblioteca (1 passo de 600 s). Nota 1 sobre card em `state=2` -> `state=3` com `due = revisao + 10 min`. Medido: `1444` 14:15:20 -> 14:25:20; `638` 14:24:44 -> 14:34:44; `1589` 14:54:46 -> 15:04:46. Nota 2 sobre `state=2` e qualquer nota sobre card novo caem em `_next_interval`, que tem piso de 1 dia. Replay no py-fsrs: 11 de 11 batem; o revlog inteiro reproduz em 3.579 de 3.579.
-- 🔴 **Reincidencia do F32, nao achado novo.** O F32 (linha 390 deste ledger) ja descrevia o mesmo mecanismo com a causa certa (s112, re-triado na s176). Escrevi o F140 sem consultar o ledger e re-derivei a causa errada. A recomendacao do F32 (documentar no `revisar.md`) nunca foi cumprida. Gate-miss de LEITURA (serie 10.8): o ledger nao e lido no boot (G1) e nada obriga a busca antes de escrever entrada nova.
-- 🔴 **O comportamento esta em contrato:** `core/contracts/revisao-calibrada-contract.md:232` (Clausula 14) -- nota 1 = "unico lapso; o card volta hoje"; `revisar.md:91-92` trata "relearning que volta hoje" como esperado. Nao e bug de codigo: mudar e decisao de produto, com o rito dos 3 passos (AGENTE 10.10).
-- 🔬 **Manter o passo nunca foi decisao pedagogica:** commit `46df800` (03/06/2026), justificativa "preserva o estado Relearning (3)". Contradiz `PLANEJAMENTO-APRENDIZAGEM-2026-09-17.md:93` ("relearning intra-sessao ser do agente/player, nao do motor") e o P10 de `docs/FUNDAMENTOS-APRENDIZAGEM.md:121` ("a 1a nota e a unica que grava no FSRS -- o redrill consolida, nao agenda").
-- 🔬 **Relearning DUPLO e loop:** o player ja re-drilla nota < 3 dentro do lote sem gravar; o passo de 10 min re-serve os mesmos cards no lote seguinte e GRAVA a 2a nota. Em `state=3`, nota 1 da +10 min e nota 2 da +15 min; so 3 ou 4 saem (83 transicoes desse tipo no revlog). Mesmo padrao em 27/09: lote `27b` com 4 de 10.
-- 🔬 **Escala:** 362 revisoes terminaram em `state=3` desde 04/06; 49 receberam 2a nota gravada no mesmo dia; 306 amanheceram `atrasado` (306 de 306 servidas por esse bucket).
-- 🔬 **Remedios simulados sobre o estado real (baseline reproduz o lote `28b` exato):** **A** `relearning_steps=()` -> lote de 10 novos; tira o re-servico E o "vira atrasado"; S e D identicos (4 de 4); sem migracao; derruba `tools/test_fsrs.py:73`; `tools/fsrs_optimize.py:318` monta Scheduler proprio e tem de mudar junto; 4 portadores de norma. **B** `hoje` exclui revisto no dia -> lote de 10 novos; tira o re-servico, NAO o "vira atrasado"; a fixture de `tools/test_fila_prioritaria.py` nao tem `last_review` (7 testes); espelhar em `db.bucket_de`. **C** so ordem e volume -> `new_limit` = saldo da 53 novos; nao tira nada do FSRS; projecao de +17 revisoes no dia seguinte.
-- 🔬 **Evidencia externa (filho Opus isolado, fontes primarias):** a favor de A com forca moderada (manual do Anki: repetir o card varias vezes no mesmo dia pouco contribui para a memoria de longo prazo; campo vazio e chamado de "experimental"); contra B com forca moderada (vira passo de 1 dia ou mais, desaconselhado); nao decide C.
-- ⚠️ **GATE -- as perguntas ao operador, reescritas:** (1) a nota 1 volta no MESMO dia, com 2a nota gravada (hoje), ou so no dia seguinte (remedio A)? **Recomendacao: A.** (2) com A a pergunta da ordem se dissolve -- nao sobra re-servico para ordenar. (3) novos por lote: 10 fixos (contrato, "drenar em ondas") ou o saldo do teto? Decisao separada; o teto de 100/dia seguiria como freio unico.
-- ⚠️ **Limites declarados:** valor pedagogico do passo de 10 min contra o re-drill do player NAO medido (as tentativas do re-drill nao existem no banco); nenhum teste rodado sob os remedios; a nota gravada em card marcado como defeito (`1481`, abaixo) e pergunta aberta da familia F39.
-- ⚰️ *Texto original da s203 preservado abaixo; as lapides marcam o que a auditoria derrubou.*
-- **Como apareceu:** o operador (28/09, do hospital, sessao aberta so com o `/hub-backend` em loop) relatou: drenou o lote `2026-09-28a` (50 cards) sozinho; algumas notas nao sairam 4 e foram corretamente para reforja no fim da lista (comportamento esperado); ao pedir mais cards em seguida, o proximo export (`2026-09-28b`, 13 cards) trouxe de volta parte dos MESMOS cards que ele tinha acabado de errar/achar dificil minutos antes, nao so conteudo novo. Pediu para NAO corrigir agora -- so documentar o mecanismo (fila, notas, agendamento) para a proxima sessao decidir a direcao.
-- 🔬 **Medido no dado real da tarde.** Do lote `2026-09-28a` (50 cards), 11 notas vieram < 4: `1444->1`, `638->1`, `640->2`, `644->2`, `1589->1` (todos cards `agendado`, ja tinham historico de review) e os 6 cards `novo` (1a exposicao) `662/663/664/668/669/670 -> 1`; mais 5 marcados defeito ("Card longo": #367 #677 #678 #679 #1481, saem do FSRS para a fila de reforja e nao entram nesta conta). O export seguinte (`fsrs_queue.py --export-player`, chamado pelo `/hub-backend`) devolveu 13 cards: **3 sao re-servico do MESMO dia** (`1444`, `638`, `1589` -- bucket `hoje`) e 10 sao `novos` (teto do `--new-limit` default). 3 de 13 (23%) do 2o bloco era conteudo visto ha minutos. ⚰️ *s204: contagem IMPRECISA -- notas < 4 sao 15 (tres notas 3 ficaram fora: `382`, `591`, `674`); pelo limiar da regua v2 (< 3) sao 12. O `1481` tem defeito E nota 1 GRAVADA (revlog 3582, `state=3`, `due` 15:05): nao "saiu do FSRS", so ficou fora do lote `28b` porque a marca de reforja o retem -- sem ela seriam 4 re-servicos em 14.*
-- ⚠️ **Assimetria observada, NAO plenamente explicada:** dos 5 cards `agendado` com nota < 4, so os 3 com nota `1` (Again) voltaram no mesmo dia -- os 2 com nota `2` (Hard, `640` e `644`) nao. Os 6 cards `novo` com nota `1` (1a exposicao, sem historico) tambem NAO voltaram no mesmo dia. Ou seja, o padrao medido e mais estreito que "qualquer nota baixa volta hoje": parece ser especificamente **Again sobre card que ja tinha estabilidade/historico previo** -- hipotese, nao fechada; exigiria olhar `stability`/`difficulty` pre-review dos 5 casos para confirmar. ⚰️ *s204: EXPLICADA, e a hipotese estava errada -- estabilidade nao decide nada (`1444` tinha S=15,9 e voltou; `640`/`644` ficaram com S=0,143 e foram para 1 dia). Decide o par `state=2` x nota 1, que leva ao passo de relearning de 10 min.*
-- 🔬 **Mecanismo, rastreado no codigo (sem alterar nada):**
-  1. `app/utils/fsrs.py` usa `learning_steps=()` -- comentario do proprio arquivo: "sem fase de passos curtos (minutos), cada review opera direto no modelo DSR, fiel ao FSRS". Ou seja: mesmo uma nota `Again` NAO tem piso de "no minimo N dias"; o proximo `due` sai puro do calculo de estabilidade/retencao-alvo (0,90). Para um card de estabilidade baixa, esse calculo pode devolver um intervalo menor que 1 dia. ⚰️ *s204: REFUTADO -- `_next_interval` arredonda e aplica piso de 1 dia ("must be at least 1 day long"); `learning_steps=()` e justamente o motivo de os 6 cards novos NAO terem voltado. A causa e o `relearning_steps` default, descrito tres linhas abaixo do trecho que eu citei (`app/utils/fsrs.py:50-52`).*
-  2. `app/utils/db.get_cards_by_bucket` (linha ~1176) classifica como `hoje` qualquer card com `due` entre `today_start` e `today_end` (00:00-23:59 do dia corrente), **sem distinguir** "venceria hoje de qualquer jeito" de "acabou de ser rebaixado ha 10 minutos, na MESMA sessao de estudo".
-  3. `tools/fsrs_queue.py` (doc nas linhas 20-21, logica ~91-114) fixa a ordem de bucket `atrasados -> erros_frescos -> hoje -> novos` **sempre**, tanto no `--list` quanto no `--export-player` (o que o `/hub-backend` chama). Nao existe hoje um jeito de pedir "priorize novos desta vez", nem uma marca de recencia dentro do bucket `hoje` que separe "vencido de ontem" de "vencido ha 10 minutos". *s204: confirmado, com nota -- a docstring do modulo (linha 20), `fsrs-management-contract.md:71` e `revisar.md:121` listam 3 buckets; a funcao (linha 108) usa 4.*
-  4. `--new-limit` (default 10, `tools/fsrs_queue.py` linha ~584) capa quantos `novos` entram por export, **independente do teto do dia** -- no caso medido o teto do dia (`53`) tinha folga de sobra, mas so 10 `novos` saem por chamada. *s204: confirmado -- o lote cortou pelo POOL (13), nao pelo saldo (53); nenhum teste prende o default 10.*
-- 🔴 **Classe:** nao sao dois bugs -- e UMA causa gerando os dois sintomas que o operador citou: (a) "erro sempre volta pro mesmo dia, vira atrasado se nao tirar 4" = efeito direto do `learning_steps=()` + DSR sobre estabilidade baixa (comportamento FIDELIDADE-AO-FSRS, citado como escolha deliberada no comentario do proprio adapter); (b) "bloco novo devia ser so card novo" = efeito da ordem FIXA de bucket, que nao distingue origem do `hoje`. Os dois nascem de nao existir, na fila, o conceito "revisado nesta mesma sessao" -- so existe `atrasados` (< hoje), `hoje` (== hoje, sem marca de idade) e `novos` (state 0). ⚰️ *s204: REFUTADO na causa -- o gatilho comum e o passo de 10 min + `hoje` por `due`, nao `learning_steps=()` + DSR. "Se nao tirar 4" e linguagem da regua v1: sair de `state=3` exige nota >= 3.*
-- ⚠️ **Perguntas em aberto, NAO decididas aqui (fica para a proxima sessao/operador antes de qualquer codigo):** (1) `learning_steps=()` e citado como fidelidade DELIBERADA ao modelo FSRS -- reagendar um `Again` para mais longe do que o calculo manda quebraria essa fidelidade; e isso que se quer quando o pedido e "mais cards" no mesmo dia, ou a fidelidade ao modelo de memoria pesa mais que a sensacao de "andar pra frente"? (2) mesmo sem tocar no agendamento, a ORDEM da fila em `--export-player` poderia, so quando o pedido e uma continuacao no mesmo dia (2o bloco em diante), inverter/intercalar `novos` na frente de `hoje` -- decisao de produto sobre a fila, nao so de codigo. (3) o `--new-limit` default (10) e menor que a folga do teto do dia (53 medido hoje) -- vale subir o default quando ha bloco anterior recem-drenado e teto com folga? Nenhuma das tres foi implementada. ⚰️ *s204: a pergunta (1) estava MAL FORMULADA -- os 10 min sao parametro de agendamento do Scheduler, nao o modelo de memoria; a biblioteca tem ramo proprio para `relearning_steps=()` e S/D saem identicos. As perguntas valem na redacao do bloco GATE acima.*
-
-### F139 -- CINCO reguas de "questoes por dia" vivas ao mesmo tempo, sem hierarquia: 83,2 (marco 10.400), 90,9 (Fase 1), 52,8 (Ciclo 2026), ~474 (cota da semana, a sobra inteira no domingo) e ~203 (meta mensal do `/performance`) -- **MEDIA** -- **RESOLVIDO (s203: meta unica 10.000 @ 01/11 por decisao do operador; `cronograma-contract` v1.5; 3 termos revogados cadastrados)**
-
-- **Como apareceu:** o operador, 27/09 ~17h, com o painel na mao: *"pode remover essa meta de 27/09. a unica meta por hora e 01/11 e o alvo e 10k de questoes, nao 10.400 ... o alvo tambem anda junto com a quantidade de questoes nas listas"*. O mapa (subagente Sonnet read-only) achou as 5 reguas com file:line e os testes que as prendiam; a cota do dia era comportamento DOCUMENTADO (F123b), nao bug -- o defeito era de DESENHO: a divisao do restante da semana pelos dias que faltavam nela despeja a semana inteira no ultimo dia.
-- 🔴 **Classe:** cada regua "dizia o que media" (a boa pratica do F123), e mesmo assim o operador lia cinco numeros para UMA pergunta. Declarar o que cada numero mede nao substitui escolher QUAL numero manda.
-- ✅ **Fix (s203, `69c7a4a`), testes antes:** `performance.MARCOS` com UMA entrada (10.000 @ 01/11); `day_plan` com a linha **Meta** como unico "por dia" e a Fase 1 como COBERTURA (`_cronograma_hoje`: `fechando_q`, `simulados_q`); `cota_do_dia`, `_calendario_trilha`, `ritmo_cronograma`, `ritmo_meta`, `META_CICLO` sairam; o recomendador (R4) mede a folga contra a meta (`orquestracao-contract` §2/R4); painel "Hoje" = questoes x ritmo da meta, bloco Ritmo com a cobertura do plano (listas x simulados); `/performance` sem a "Meta do mes" (fica o investimento). F90 nos 3 passos: declarado (contrato v1.5), lapidado (AGENTE §2.4, `memory_boot._CONTRATO`, ESTADO, skills `/performance` `/cronograma` `/engenharia-cli`), cadastrado (`TERMO-REVOGADO`: "Cota do dia", "ritmo da Fase 1", "Ciclo 2026") -- o gate achou 7 linhas ainda em vigor, 1 delas escrita por mim no HANDOFF da mesma sessao.
-- ⚠️ **Limites declarados:** a meta e FIXA (10.000) e o plano aparece como cobertura (10.668 fechando a Fase 1); se o operador quiser a meta DERIVADA do plano, e 1 linha -- pergunta aberta a ele. A "semana 1" do boot (posicao no plano) x "semana 2" do painel (calendario) segue divergente -- mesma familia, fora deste recorte. `CONTRATO_REVOGADO` casa substring literal: a mesma regra reescrita com outras palavras escapa (limite do F90).
-
-### F138 -- o player DESLIGAVA o banco pelo resto do lote depois de UMA falha de gravacao passageira (`unavailable`): as notas seguintes iam so para o aparelho ate um reload -- **MEDIA** -- **RESOLVIDO (s203: a nota seguinte volta a tentar; aceita, reenvia o que so o aparelho tinha)**
-
-- **Como apareceu:** 27/09, 17h01, lote `2026-09-27a` em 96/99, print do celular do operador: *"SEM CONEXAO COM O BANCO ... (falha ao salvar: unavailable)"*. O `db` respondia deste lado (as 96 notas liam normalmente) -- foi 1 `set()` passageiro do servico.
-- 🔬 **Causa medida:** `salvar()` chamava `declararSemArmazenamento()` no `catch`, que zera `dbOk`; toda nota seguinte caia no ramo `if(!dbOk || !colecao)` e nunca mais tentava o banco. O espelho local (F130) segurou tudo -- nada se perdeu; as 3 notas presas chegaram ao banco pelo `reenviarPendentes` da abertura. De carona: a tela de fim com o banco fora dizia "Nada foi salvo fora desta tela" mesmo com o espelho ok.
-- ✅ **Fix (s203, `3b392b4`), testes escritos ANTES (2 vermelhos pelo motivo -> verdes, db falso com `dbFalhas` = N falhas e depois ok):** com a colecao aberta, toda nota tenta; aceita depois de falha -> `bancoVoltou()` (reenvia pendentes, tira o aviso forte, fecha o painel de dados brutos); a tela de fim usa o mesmo texto do aviso (`textoOrigemSemBanco`). Hub Version 35 com o MESMO lote.
-- ⚠️ **Limites declarados:** retentativa so no proximo GESTO (sem timer): se a falha for a ultima nota do lote, ela fica no aparelho ate a pagina reabrir. O comportamento real do servico ("unavailable" transitorio x persistente) nao e observavel deste lado.
-
-### F137 -- a SUITE fazia backup REAL do `ipub.db` a cada rodada (`backup_db.py --help` sem argparse, chamado pela varredura de CLIs) e a rotacao keep-5 APAGOU os pontos de retorno do dia -- **ALTA** -- **RESOLVIDO (s202: spec do /ai-eng inteira -- parte 1 `--fixar` + sha256 na s201; parte 2 na s202 -- o writer destrutivo recusa sem o fixado do proprio inicio, `--desfixar ID --motivo`, rotacao recusa o prefixo; o dano da s201 segue irreversivel)**
-
-- **Como apareceu:** s201, 26/09 ~15h55, no backup ANTES de ingerir os simulados: `Rotacao keep-5: 1 backup(s) purgado(s)`. A pasta tinha 4 backups de 15:34-15:53 que ninguem pediu, nos horarios das rodadas completas da suite. Prova: rodar so `test_cli_importavel -k nenhum_cli` criou `ipub_backup_20260926_155607.db` e expulsou o mais antigo.
-- 🔬 **Causa medida:** `test_nenhum_cli_morre_por_import_ao_ser_invocado` (F118) roda `python tools/<cli>.py --help` em TODO `tools/*.py`. `backup_db.py` nao tinha argparse -- ignorava o `--help` e fazia o backup, e o backup roda a purga keep-5. Varredura dos 10 outros CLIs sem argparse, medindo o estado antes/depois do `--help`: nenhum toca banco nem backups (`calibrate_card_checks` e `check_fk_orphans` so regravam `history/ledger_self_state.json`).
-- 🔴 **DANO (irreversivel):** com mais de 10 suites no dia (as minhas e as do pre-commit), a rotacao expulsou `ipub_backup_20260926_143813.db` -- o backup de ANTES do apagamento (e) do conteudo do professor das 91 do piloto, a unica copia local restante depois que o residual de `tmp/` foi apagado com OK do operador -- e `ipub_backup_20260926_140307.db` (antes da reforja #1751/#1753/#1755 da s200). O apagamento (e) era decisao dele e ficou feito; o que se perdeu foi a REDE de desfazer.
-- 🔴 **Classe:** o gate que protege o repo agia sobre o estado REAL -- teste que invoca CLI de verdade precisa garantir que a invocacao nao tem efeito, e nada garantia. Soma-se um LATENTE na propria rotacao: ordenava por `(mtime, nome)`, e `shutil.copy2` preserva o mtime do BANCO -- backup novo de banco parado ha dias nasceria "mais velho" que os de ontem e seria o primeiro apagado (hoje nao mordeu: todos tinham o mesmo mtime e o nome desempatou).
-- ✅ **Fix (s201), testes escritos ANTES (3 vermelhos -> verdes):** `backup_db.main(argv)` com argparse (`--help` sai 0 sem backup; `argv` explicito para nao ler o `sys.argv` do pytest) -- `test_backup_db_help_nao_faz_backup`; rotacao pelo carimbo do nome -- `test_rotacao_segue_o_carimbo_do_nome_e_nao_o_mtime` (mtime invertido em relacao ao nome); PROPRIEDADE na varredura: nenhum `--help` muda `ipub.db`, `medhub_memory.db` nem `artifacts/backups` (foto antes/depois por CLI, nomeia o culpado) -- dentro de `test_nenhum_cli_morre_por_import_ao_ser_invocado`. Depois do fix, a suite roda sem criar backup.
-- 🔴 **Consequencia para a decisao (e) do operador (redacao do /ai-eng, 26/09):** passou de "apagado com backup" para **"apagado SEM ponto de retorno local"** -- o conteudo do professor das 91 do piloto so existe no EMED, e recaptura fere o escopo publico. O /ai-eng leva isso ao operador com essas palavras.
-- ✅ **Veredito do /ai-eng (26/09): spec GO com 3 ALTERA.** Feito na s201: `backup_db.py --fixar MOTIVO` (prefixo proprio `ipub_fixado_`, a rotacao nunca o conta; `FIXADOS.json` com arquivo + sha256 + motivo) + propriedade `test_fixado_nunca_sai_na_rotacao_e_carrega_sha256` (20 backups falsos, o fixado fica). **1o uso:** `ipub_fixado_20260926_162622_estado-s201-pos-e-e-pos-417-q-dos-simula.db`, sha256 `f03b9450bc56684cf477f56c15d90134476e51327a492dc0694c9974050e1112` (estado pos-(e) e pos-417 q). **ABERTO (spec):** (1) o writer destrutivo (purga, reforja in-place, `--ingerir --apply` que sobrescreve, poda) RECUSA rodar sem o fixado do proprio inicio -- o rotulo nasce dentro do ato; (2) `--desfixar ID --motivo` com rastro no ledger, sem CLI de apagar fixado; (3) o F-item de cada ato destrutivo carrega path + sha256 do fixado (hoje "backup antes" e uma frase).
-- ⚠️ **Limites declarados / remedio proposto ao /ai-eng (`spec`):** keep-5 por CONTAGEM segue fragil num dia de muitos backups legitimos -- o backup de antes de um ato destrutivo deveria ser FIXADO (rotulo que a rotacao nao toca) e so sair por decisao. A propriedade da varredura vigia 3 alvos; efeito em outro lugar (ex.: `history/ledger_self_state.json`) passa.
-- ✅ **Fechado (s202), testes escritos ANTES (16 vermelhos -> verdes, `tools/test_fixado_ato.py`):** (1) `backup_db.fixar_antes_do_ato(ato, db)` -- copia + sha256 da copia == sha256 do banco no mesmo instante (prova de que e o estado de antes) + integrity_check + linha no manifesto com `ato`; qualquer falha = `SemPontoDeRetorno`, sem copia meia-feita nem linha orfa. Ligado ao 1o write de `cards_prune --apply`, `recurate_cards --apply`, `dedup_taxonomia --apply`, `normalize_taxonomia --apply` e do `--apply` do `emed_banco` que SOBRESCREVE (`atualizadas` > 0; so `novas` nao e ato destrutivo) -- sem o fixado, recusa e nada gravado; o arquivo + sha256 sai impresso para o ledger no item do ato. O fixado de banco temporario mora em `<pasta do banco>/backups`; fixar o `ipub.db` REAL de dentro do pytest e recusa (a suite nunca mais faz backup real). (2) `--desfixar ID --motivo` e a unica saida: confere o sha256 e DEVOLVE o arquivo a rotacao (`ipub_backup_<carimbo>_desfixado.db`), a linha do manifesto fica com `desfixado_em` + motivo; nenhuma flag apaga fixado. (3) Propriedade: 3 fixados + 20 backups falsos -> a rotacao so mexe nos 20; `purge(prefix=ipub_fixado_)` e AssertionError. Mutacao provada: desligar o fixado no `emed_banco` (2 vermelhos) e no `dedup_taxonomia` (2).
-- ⚠️ **Limites declarados (s202):** a lista de writers destrutivos e EXPLICITA (5) -- writer novo precisa chamar o fixado, nada varre isso; `fsrs_load --blackout --apply` (move datas) fica fora; `normalize_taxonomia` e provado por lente ESTATICA (fixado antes do `with con:`), porque reproduzir o banco dela seria copiar o banco real; fixados acumulam (~6,7 MB cada em 26/09) ate alguem desfixar; "path + sha256 no item do ato no ledger" segue conduta -- o writer imprime, quem escreve o ledger e o agente.
-
-### F136 -- o selo da s200 declarou "suite 1120 verde" e a suite estava VERMELHA no selo (1119/1120): o numero no HANDOFF e no report ao /ai-eng era DIGITADO, de uma rodada anterior ao ultimo commit -- **MEDIA** -- **RESOLVIDO (s201: HANDOFF no commit dispara a suite no pre-commit e o numero declarado tem de ser o medido)**
-
-- **Como apareceu:** 1a suite da s201 (26/09, logo apos o boot): `1 failed, 1119 passed` -- `tools/test_consistencia_registros.py::test_repo_real_consistente`, com G5 (tabela do AGENTE 7.4 stale), G10 (`HANDOFF.md:9` apontava `tools/test_hub_render.py`, ainda inexistente) e F101 (`HANDOFF.md:9` com `registrar_sessao_bulk` + `26/09`, dia com volume registrado). Os tres nasceram dos commits de selo da s200 (HANDOFF reescrito com a ordem da s201 depois da ultima suite). O HANDOFF dizia "suite **1120** (s200)" e o report ao /ai-eng repetiu o numero.
-- 🔴 **Classe (veredito do /ai-eng, 26/09):** numero DIGITADO onde devia ser DERIVADO -- a mesma da inconsistencia (b) do veredito da s200 (Version do hub copiada do resultado da tool, nao de memoria). Nao e so o NAO-VERIFICAVEL do §1.3: aqui o numero existe como artefato e o selo nao o consulta.
-- ✅ **O vermelho (s201, `3217bff`):** tabela re-gerada por `reachability_check --tabela`; linha 9 do HANDOFF reescrita como "s201 em curso". Suite 1122 verde medida pelo hook de pre-commit do proprio `3217bff`.
-- **Remedio ordenado pelo /ai-eng (mecanismo, nao disciplina):** o selo (`tools/selo.py` ou o rito de `registrar-sessao` §6) so sela com resultado de suite POSTERIOR ao ultimo commit (junit/cache com timestamp > HEAD, ou re-roda); vermelho = recusa selar OU escreve "SUITE VERMELHA N/M + quais" no HANDOFF, nunca o numero antigo. O numero do HANDOFF e do report ao /ai-eng passa a vir desse resultado, com o comando. **F136 fica ABERTO ate isso existir.**
-- 🔴 **Gate (s201):** `tools/auto_check.py` -- `dispara_suite_por_selo` (HANDOFF no recorte do `--staged`/`--changed` = suite completa, mesmo em commit so de doc), `contagem_pytest` (le a linha-resumo; `N subtests passed` nao conta) e `divergencia_suite_handoff` (`suite **N**` exige 0 falhas e N = passed; `SUITE VERMELHA P/T` exige P = passed e T = passed + falhas). Divergencia = `[BLOCK] SUITE_HANDOFF (F136)` com o numero medido e o comando. Testes: `tools/test_selo_suite.py` (5, escritos antes: 5 vermelhos -> verdes). O 1o commit do HANDOFF depois do gate trocou `suite **1120** (s200)` por `suite **1147**`, o medido.
-- ⚠️ **Limites declarados:** (a) so confere as duas redacoes (`suite **N**`, `SUITE VERMELHA P/T`) -- numero de suite escrito de outro jeito escapa; (b) o report ao /ai-eng e conduta: nada confere o numero dentro do SendMessage; (c) o hook mede a ARVORE no momento do commit, nao o que foi staged, e `--no-verify` pula tudo (proibido pelas regras, nao por mecanismo); (d) custo: +75-110 s por commit de selo.
-
-### F135 -- captura pelo Claude Code dirigindo o Chrome MARCOU uma alternativa na conta real do operador no EMED (t65, s199): clique por coordenada para fechar o painel de solucao, 2x -- **ALTA** -- **RESOLVIDO (s201: Chrome revogado pelos 3 passos do F90; caminho PDF PROVADO so para provas UERJ -- lista EMED em PDF NAO feita ate 1 amostra real dele virar golden com --expect)**
-
-- **Como apareceu:** s199, ~05h (26/09). O filho Sonnet que capturava a t65 lia a lista pela UI com a sessao logada do operador. O painel de "Ver solucao" parece iframe e perde o `ref`; o brief v3.2 mandava fechar pelo X **por coordenada** quando o ref sumisse. O clique caiu numa alternativa da questao de baixo, duas vezes. O filho desmarcou na hora; o "Responder" nunca foi acionado (declarado pelo filho e registrado em `history/session_199.md §Incidente`; **nao verificado na conta** -- ninguem abriu o historico de respostas do EMED para conferir).
-- 🔴 **Classe:** executor de LEITURA com poder de ESCRITA na mesma superficie. A captura precisava de cliques (abrir o modal da solucao, fechar o painel), e o mesmo gesto que le tambem responde. O brief tinha regra de conduta ("nunca clicar em Responder"), nao barreira: clique por coordenada nao sabe em que elemento cai. Soma-se o custo: 500-700k tokens e 45-115 min por lista (t65: 702k, 600 tools, 85,8 min), 10-20 chamadas por questao -- o modal de solucao e o custo, e o conteudo do modal (comentario do professor) saiu do escopo na s198.
-- ✅ **Remedio (s199-s200):** captura PAUSADA no ato (s199). **Decisao do operador (26/09, ~14h40):** ele exporta as listas do EMED em **PDF**, como ja faz com os simulados, e o hub alimenta a aba Listas; o Chrome sai do fluxo. Sem clique na conta dele, o incidente nao tem onde se repetir.
-- ⚠️ **O que falta (PARCIAL):** (a) a skill `/banco-emed` e `docs/MISSAO-CHROME-EMED.md` ainda descrevem o Chrome como executor da captura -- revogar pelos 3 passos do F90 quando o caminho PDF existir, nao antes (sem caminho novo, a lapide deixaria a skill sem captura nenhuma); (b) o caminho `PDF -> questoes/*.json -> --ingerir` (escopo publico: enunciado, alternativas, gabarito, banca; EMED so id/tags) e o item 6 da ordem da s201.
-- ✅ **Fechado (s201):** (a) revogacao pelos 3 passos no mesmo commit -- declarada aqui; lapides em `/banco-emed` (descricao, abas, brief, passos 1-2 do tique), `docs/MISSAO-CHROME-EMED.md` e `AGENTE.md` 7.3; `TERMO-REVOGADO: executor = Claude no Chrome` em `docs/MEMORIA-AUDITORIA.md` 12. (b) `tools/prova_pdf.py`: caderno UERJ -> `questoes/*`, TUDO OU NADA. Gates (`tools/test_prova_pdf.py`, 18): golden das 6 provas reais (60/60/100/100/97+3 anuladas/100, 5 blocos canonicos), propriedade (4-5 alternativas A-E, gabarito dentro delas, numero unico, escopo publico), perturbado (gabarito faltando, discursiva, capa diferente, `--expect` errado -> `RECUSA` e pasta nem criada), timeout do parser, round-trip `--ingerir`/`--exportar`; figuras 3/3 iguais ao mapa tematico (lente independente: outros agentes lendo texto). Mutacao provada: desligar o pulo da capa (12 vermelhos), o descarte do rodape (3) e a folha-sem-questao (2).
-- ⚠️ **Limites declarados:** o formato de lista EMED em PDF NAO existe -- sem amostra real, sem parser; tabela impressa vira texto corrido; figura e sinalizada (pagina do caderno), nao desenhada -- afeta 2025 Q52 e 2026 Q58 (2023 Q58 ja feita no papel); gabaritos 2021 e 2025 vem do espelho do Estrategia (conferidos 5/5 a olho na s188), 2021 'preliminar x definitivo NAO VERIFICADO'.
-- 🔄 **s202 (26/09, decisao do operador confirmada no canal do agente de estudo):** a LISTA do EMED NAO entra em PDF -- o export nao traz gabarito, e com "Ver solucao" aberta traria o comentario do professor para o disco (objecao dele). Entra pela **API do EMED por script sem LLM** (`tools/emed_api.py`), revertendo a recusa da s199 com o risco da conta declarado e assumido por ele; o agente nunca le o token do navegador (ele o poe em `.emed_token`, gitignored). Whitelist na fronteira: `extrair()` e a unica leitura do item; o doc gravado tem so `emed_id num banca ano enunciado alternativas gabarito tags` + metadados do pipeline. Gates (`tools/test_emed_api.py`, 24 + golden): PROPRIEDADE (nenhum byte de solucao/forum/estatistica/percentual nem do token em disco, stdout ou stderr), token rastreado ou fora do .gitignore = recusa, discursiva declarada e contagem em 3, perturbados (0/2 corretas, 3/6 alternativas, emed_id repetido, `--expect` errado) = recusa sem pasta, paginacao com pausa, 401 sem vazar o token, round-trip `--ingerir`. Mutacao provada: solucao vazando por `tags` (2 vermelhos); chave extra com a 2a trava desligada (1). Golden da t3 (31 = 30 + Q24 declarada; lente 2 = emed_id e gabarito contra a captura da s199) ESPERA o token dele. Sem TERMO-REVOGADO: a unica proibicao escrita ("Nunca: API do EMED ou token") mora em `docs/MISSAO-CHROME-EMED.md`, brief do executor ja revogado inteiro no s201 e fora dos portadores.
-
-### F134 -- LATENTE: `db._emed_ler` transformava coluna ausente em `[]` silencioso; um banco nao migrado faria o `--exportar` semear o hub SEM nenhuma Solucao MedHub -- **MEDIA** -- **RESOLVIDO (s201: teste de PERTURBACAO, provado vermelho contra o codigo de antes do fix)**
-
-- **Como apareceu:** s200, ao acrescentar `emed_solucoes.objetivo` (ALTER idempotente). `_COLUNAS_EMED_S` ganhou `objetivo`; o `SELECT` com a coluna nova num banco que ainda nao rodou o ALTER levanta `OperationalError`, e o `except sqlite3.OperationalError: return []` do proprio `_emed_ler` -- escrito para o caso "tabela ausente" -- engolia o erro. `emed_listar_solucoes` devolveria 0 linhas e o `cmd_exportar` (`tools/emed_banco.py`) escreveria os docs `questoes/*` sem `solucao_medhub`, sem aviso. Nao chegou a acontecer: o ALTER roda sob `aplicar` antes de qualquer leitura no banco real.
-- 🔴 **Classe:** o `except` largo que cobre dois casos com a mesma saida -- "nao ha dado" e "nao consegui ler" viram o mesmo `[]`. Mesma familia do F72/F130: a falha existe e nao alcanca ninguem.
-- ✅ **Fix (s200, `da62e95`):** `PRAGMA table_info` antes do SELECT; coluna ausente sai como `NULL AS col`. **Sem teste dedicado** -- o fix entrou sem regressao que prove que ele segura.
-- **Remedio ordenado pelo /ai-eng (veredito s200, #3 ALTERA):** `hotfix` com teste de PERTURBACAO -- banco sem a coluna -> `--exportar` mantem as N solucoes. O teste tem de ficar VERMELHO contra o `_emed_ler` anterior ao `da62e95`.
-- 🔴 **Gate (s201):** `test_exportar_em_banco_nao_migrado_mantem_as_solucoes` (`tools/test_emed_banco.py`): grava 3 questoes + 3 solucoes v2 + 1 resposta pelos writers, **derruba** `emed_solucoes.objetivo` e `emed_respostas.riscadas` (`DROP COLUMN`), exporta e exige 3/3 `solucao_medhub` com a cadeia, `riscadas` = None na leitura e o banco NAO migrado pela leitura. **Prova de vermelho:** o mesmo teste com o `_emed_ler` de `da62e95^` injetado (plugin pytest de uma vez, fora do repo) -> `assert 0 == 3`; com o atual, verde.
-- ⚠️ **Limite declarado:** o `except sqlite3.OperationalError: return []` segue no fim do `_emed_ler` para o caso legitimo "tabela ausente"; qualquer OUTRO `OperationalError` (banco travado, SQL torto) ainda vira `[]` mudo. O teste cobre coluna ausente, nao a classe inteira do `except` largo.
-
-### F133 -- GATE-MISS: a pagina gravava `riscadas` nos docs `respostas/*` desde a s197 e `db.emed_upsert_respostas` as DESCARTAVA (sem coluna e sem `extras`); nenhum teste pegou -- **MEDIA** -- **RESOLVIDO (s201: teste de PROPRIEDADE sobre as chaves lidas do template, provado vermelho contra o writer de antes do fix)**
-
-- **Como apareceu:** pergunta do operador na s200 sobre as riscadas e a duvida entre duas (*"nao sei se estamos aproveitando"*). A aba Resolver gravava a lista de letras riscadas antes de marcar; o writer montava a linha campo a campo e so conhecia os campos que tinham coluna. `emed_upsert_questoes` tem `extras` para chave desconhecida; `emed_upsert_respostas` nao tinha.
-- 🔬 **Dano medido (26/09, s201):** nenhum dado perdido. Os docs `respostas/*` seguem no db do hub e o re-registro da s200 trouxe as riscadas: `emed_respostas` com riscadas nao vazias = **t26 13/19, t96 12/18**. So as 11 respostas da t96 registradas na s199 passaram pelo writer cego, e foram sobrescritas pelo registro da s200.
-- 🔴 **Classe (serie 10.8):** writer que enumera os campos que conhece nao tem como perceber o campo que nao conhece -- o contrato da pagina (tabela de docs em `/banco-emed`) e o schema do banco sao dois portadores sem ponte. O teste da s200 (`test_riscadas_gravam_e_viram_leitura_metacognitiva`) entrou JUNTO do fix e cobre `riscadas`, nao a proxima chave.
-- ✅ **Fix (s200, `da62e95`):** `emed_respostas.riscadas` por ALTER idempotente, `riscadas_norm`, `leitura_metacognitiva` no `--erros` e na pagina.
-- **Remedio ordenado pelo /ai-eng (veredito s200, #2 ALTERA):** teste de PROPRIEDADE -- toda chave que a pagina grava tem coluna ou `extras` no writer. E o que fecha a classe, nao so a instancia.
-- 🔴 **Gate (s201):** `test_toda_chave_que_a_pagina_grava_na_resposta_tem_destino` (`tools/test_emed_banco.py`). As chaves sao LIDAS de `core/templates/hub.html` (o literal `var r = {...}` do botao Responder + toda atribuicao `r.<chave> =`; `_` inicial e estado local), nunca digitadas; um doc com todas elas passa pelo `--registrar` real e cada uma tem de aparecer numa coluna (`SELECT *`, alias `tarefa -> tarefa_id`) ou em `extras`. Controle negativo no mesmo teste: `chave_nova` sem destino e acusada. **Prova de vermelho:** com o `db.py` de `da62e95^` carregado no modulo vivo -> `assert ['riscadas'] == []`.
-- ⚠️ **Limites declarados:** (a) a leitura do template pega chave por literal e por `r.x =`; chave entrando por `r["x"]`, `Object.assign` ou spread e invisivel -- a ancora quebra alto se o literal sumir, mas nao se a forma mudar; (b) so o doc `respostas/*` do hub: `listas/*` e `analises/*` (so `update` de status/veredito) nao tem writer no `ipub.db`, e a Bancada nao grava mais respostas desde a s197.
-
-### F132 -- card que o operador marcou como DEFEITUOSO no celular voltava na fila do dia seguinte: 18 dos 90 cards de 24/09 eram remarcacoes, e 63 cards com marca humana aberta seguiam ativos na fila -- **ALTA** -- **RESOLVIDO (s195)**
-
-- **Como apareceu:** lote `2026-09-24a` (90 cards, 24/09): 18 `defeito` -- #65, #81, #83, #89, #91 ja tinham sido marcados no `2026-09-22h` com o mesmo motivo. `reforja_marks` tinha 320 cards com marca aberta (231 de `detector:nao_atomico`, 27 de comprimento, 56 do `player`, 6 de sessao/ledger); a fila (`db.get_cards_by_bucket`) nao olhava a tabela: aposentado sai (`needs_qualitative >= 2`), marcado nao. Palavras dele no mesmo dia: *"existem reforjas em aberto... muitas perguntas compostas, perguntas circulares, etc. fora os erros de portugues."*
-- 🔴 **Classe:** F39 (card defeituoso contamina o diagnostico) na forma *operacional*: o veredito humano era gravado e nao tinha efeito no instrumento que serve o card. Drill de card sabidamente defeituoso = tempo perdido + nota que nao mede memoria.
-- ✅ **Resolvido (s195):** `db.RETIDO_REFORJA_SUBQUERY` -- marca ABERTA (mesma regra de `fila_reforja`: marcada > fechada + descartada por (card, motivo)) com pelo menos uma `marcada` de origem HUMANA (`origem NOT LIKE 'detector:%'`) retem o card em todos os buckets; marca de detector segue so como fila de reforja (heuristica, nao veredito). `db.ids_retidos_por_reforja()` diz quais; o `--export-player` emite `retidos_reforja`. Efeito medido em 24/09: 104 -> 43 vencidos no painel; 63 cards retidos ate a reforja fechar a marca.
-- 🔴 **Gates:** `test_retem_card_com_marca_humana_aberta`, `test_sem_tabela_de_marcas_nada_e_retido` (`tools/test_fila_prioritaria.py`).
-- ⚠️ **Limites declarados:** o card retido nao vence nem e revisado enquanto a marca estiver aberta -- a fila de reforja passa a ser DIVIDA de cobertura visivel (o `--export-player` conta). Fechar a marca sem reforjar (`reforja.py --fechar`) devolve o card como esta.
-
-### F131 -- a agenda da tela de fim mostrava cards "agendados no mesmo dia da drenagem": a previsao e calculada no dia do EXPORT, e o lote de vespera (23/09 23h) foi drenado em 24/09 -- **MEDIA** -- **RESOLVIDO (s195)**
-
-- **Como apareceu:** print do operador em 24/09 (*"achei estranho que alguns cards estao sendo agendados no mesmo dia da drenagem... 'entope' a fila"*): coluna "qui 24" com 56. Decomposto: 18 defeitos sem nota (vencidos de verdade), 8 notas 1 (relearning, volta amanha = legitimo) e 6 notas 4 com previsao "24/09" -- que, gravadas em 24/09, viraram due 25/09. O `anexar_agenda` ja declarava o limite ("lote drenado noutro dia desloca o grafico em 1 dia"); o export de vespera, pedido por ele na noite de 23/09, e exatamente esse caso.
-- 🔬 **O que NAO e defeito:** as 6 notas 4 com intervalo de 1 dia sao cards de dificuldade ~9,5-9,9 com 2-5 lapsos (#70, #595, #685, #709, #724, #783 -- o cluster Nefro), rated 4 menos de 24 h depois de um 1: o py-fsrs usa a formula de curto prazo (S x 2,2) sobre uma estabilidade pos-lapso de ~0,5 d. E o modelo dizendo "voce esqueceu 5 vezes; amanha de novo, depois 3 d, 6 d...". Nao mexer nos parametros por causa disso.
-- ✅ **Resolvido (s195):** (a) a pagina desloca cada previsao pelos dias entre `gerado_em` e o `ts` da nota (so para a frente, ate 14 d; lote sem `gerado_em` = como antes); (b) `fsrs_queue.py --export-player --para AAAA-MM-DD`: export de vespera HONESTO -- o relogio unico (F80) anda para as 06:00 do dia pedido (buckets, teto, consumo daquele dia, `agenda_revisoes` e `preview_ratings(quando=)`), e `gerado_em` carrega esse instante para a pagina nao deslocar duas vezes.
-- 🔴 **Gates:** `test_agenda_desloca_a_previsao_para_o_dia_da_nota` (`tools/test_player_js.py`); `test_export_para_amanha_usa_o_relogio_de_amanha` (`tools/test_fsrs_queue_player.py`).
-
-### F130 -- 90 notas dadas no celular (hospital, 24/09) sumiram num reload: o `db` do hub nao subiu no aparelho, a pagina degradou para memoria com um aviso em letra miuda e nada ficou no aparelho -- **ALTA** -- **RESOLVIDO (s195)**
-
-- **Como apareceu:** *"fiz os 90 cards no celular no hospital, mas quando atualizei a pagina perdi o 'progresso'. o backend nao estava on e imagino que possa estar no rol de culpados."* O backend nao tem relacao (o tique so LE o db). A colecao `sessoes/2026-09-24a/notas` nao tinha nenhum documento com carimbo do hospital -- so as 26 refeitas a noite (19:58-20:07); `set` substitui o doc, entao os 64 restantes existiriam se a gravacao tivesse acontecido. Logo: `window.claude.use("db")` nao resolveu (ou a 1a gravacao falhou) e `declararSemArmazenamento` mostrou um `.aviso` de 0,88 em cinza no rodape do card.
-- 🔴 **Classe:** o mesmo desenho do F72/F108 -- o sensor (aviso) existia e nao alcancava o olho; e um unico armazenamento (db) para um dado que so existe no aparelho enquanto e produzido. 64 revisoes perdidas = ~15 min de drill e o sinal FSRS de 64 cards.
-- ✅ **Resolvido (s195):** o player espelha as notas no `localStorage` por sessao ANTES de tentar o db, restaura dali no reload, e reenvia ao db o que ele nao tem quando abre (`reenviarPendentes`); db fora = aviso FORTE (`.aviso.forte`, 2 px de borda, texto que diz o que fazer) no primeiro card, e a falha no MEIO do lote tambem fala alto. Storage indisponivel (privado/bloqueado) cai no caminho antigo (copiar os dados brutos) -- declarado no texto.
-- 🔴 **Gates:** `test_notas_sobrevivem_ao_reload_sem_db`, `test_notas_locais_sao_reenviadas_quando_o_db_abre`, `test_falha_de_gravacao_no_meio_do_lote_avisa_forte_e_guarda_local` (`tools/test_player_js.py`; o harness ganhou um db falso sincrono e passou a rodar o node por arquivo -- o programa passou de 32 KB e `node -e` estourava a linha de comando do Windows, o que derrubava os 14 testes com `FileNotFoundError`).
-- ⚠️ **Limites declarados:** o espelho e POR APARELHO: trocar de aparelho com o db fora perde do mesmo jeito (o aviso diz isso). Nota que o db recusar por regra (`interact` sem login) reenvia a cada abertura ate passar -- sem fila de retry alem disso.
-
-### F129 -- 1o drill completo no hub (220 cards, 23/09): o operador marcou 50 defeitos (23%); o residuo do F113 e a queixa dominante e a Autopsia UERJ 2023 cunhou armadilha de QUESTAO em card -- **MEDIA** -- **PARCIAL (s194: armadilhas da Autopsia refeitas; acento segue aberto; s195: +18 defeitos no lote de 24/09 e o veredito dele sobre COMPRIMENTO -- cards, aulas e reports "muito longos, carga cognitiva")**
-- **Como apareceu:** lote `2026-09-22h` drenado inteiro no hub (170 notas gravadas pelo `--record-lote`, 0 rejeitadas, 0 FORA DE ORDEM). Motivos dos 50 `defeito`: portugues ~33, pergunta composta/dupla ~13, longo ~6, circular 3, verso incompleto 1 (#736 nao cita a classe do ATB), armadilha citando alternativa inexistente 1 (#1723, *"notei outros assim tbm"*). Todos viraram `marcar_reforja` origem `player`.
-- 🔬 **Acento (reincidencia do F113):** os 35 marcados por portugues estao sem acento -- "nao e", "e" no lugar de "é", "arteria", "osseo", "deletereo". Uma lente por palavra que SEMPRE leva acento (`ja sao ha ate unica pos pre sistemico classico especifico` ...) acusa **749/1.600 cards** com >= 1 ocorrencia (ruidosa: `esta`/`so` tem uso legitimo; e piso, nao medida). A s185 ja tinha dito: o residuo nao fecha por regra; pede lexico ou olho. Remedio candidato (`spec`, para o /ai-eng): passada por LLM campo a campo, com o invariante `unidecode(antes) == unidecode(depois)` do s185 + revisao a olho dos pares minimos (`e/é`, `esta/está`, `diferencia`), sob o rito 10.7.
-- ✅ **Armadilha de questao em card -- fechado no ato:** os 8 cards da Autopsia UERJ 2023 (#1721-1728, cunhados por mim na s190/s191) tinham como armadilha a pegadinha da QUESTAO ("A D oferece...", "O enunciado entrega..."), duas delas copiadas em pares (1724=1725, 1726=1727) e a do #1721 sobre outra alternativa. Refeitos via `recurate_cards.py` (8 itens, v1->v2, FSRS preservado): armadilha = o erro tentador da pergunta do card. Varredura por letra de alternativa no baralho inteiro: fora desse lote, so falso positivo (#334 "o C" do ABC, #687 hemoglobina A, #881 hepatite B...). 🔴 **Classe:** a armadilha tem dono -- a pergunta do card --, e cunhar card a partir de questao sem trocar de dono carrega o gabarito para dentro do verso. Candidato a clausula em `estilo-flashcard.md`.
-- **Pendente:** comprimento e pergunta composta ja tem gate (F115, atomicidade); os ~19 marcados dessa classe estao na fila de reforja com o motivo dele.
-
-### F128 -- o mapa das provas UERJ rotulou a Q8 de 2023 como "Tuberculose (suspeita de TB peritoneal)" e o gabarito e SINDROME NEFROTICA; e o insumo que eu montei para a Autopsia sequestrou a Q8 pelo item "8)" da folha de instrucoes da capa -- **BAIXA** -- **DECLARADO (s190) -- remedio proposto, aguarda triagem do /ai-eng**
-
-- **Como apareceu:** Autopsia do simulado UERJ 2023 (s190, 20-21/09/2026). (a) `simulados/uerj/uerj_mapa_questoes_2021-2026.json`, edicao 2023, n=8: `area=Infecto`, `tema=Tuberculose`, `foco="investigacao de ascite com SAAG baixo (suspeita de TB peritoneal)"`, `confianca=media` -- o gabarito oficial e C (proteinuria + biopsia renal): anasarca, albumina 2,0, GASA 0,7 com proteina do liquido 2,3 e 120 celulas = nefrotica. O rotulo do filho (Sonnet, s188) seguiu o distrator. Consequencia medida: a `prevalencia_uerj.json` conta 13 questoes de TB com esta dentro, e a minha primeira tabela de contingencia mandou a Q8 para a aula de TB. (b) O meu extrator de enunciados (`re.split` por `\n8)`) pegou o item 8 das instrucoes da capa; quem achou foi o subagente do bloco, nao eu.
-- 🔴 **Classe:** (a) rotulo de filho consumido como dado sem lente independente por questao -- o `_schema` ja declara ~80-90% de acuracia "consumir em faixas", e este e um caso concreto dentro da margem; (b) insumo de fan-out sem validacao de forma antes do spawn.
-- **Remedio proposto:** `so-dado` para (a) -- corrigir a linha n=8/2023 do mapa (Nefrologia | Doencas Glomerulares, foco sindrome nefrotica) e regerar a prevalencia JUNTO da 1a recalibracao legitima (mesma janela das faixas, decisao do `/ai-eng` na s189; mexer no mapa agora muda a entrada fixada do gerador). A cada prova UERJ resolvida, a Autopsia confere os rotulos do mapa DAQUELA edicao contra o gabarito (lente independente que passa a existir de graca). (b) virou licao de brief na memoria do harness (validar "tem a) b) c) d)" por item antes de spawnar).
-
-### F127 -- `registrar_sessao_bulk` nao tem caminho de CORRECAO: o operador declarou duas respostas depois do registro (56 -> 58 acertos) e a unica saida foi um script pontual com UPDATE direto -- **BAIXA** -- **DECLARADO (s190) -- remedio proposto, aguarda triagem do /ai-eng**
-
-- **Como apareceu:** s190, simulado UERJ 2023. O rito manda registrar o volume ANTES de analisar; o PDF anotado tinha duas questoes sem letra marcada (Q32, Q56) e o operador as declarou minutos depois (ambas C, ambas chute certo). `--acumular --feitas 0 --acertos 2` cai no guard `acertos > feitas`; nao existe `--corrigir`. Corrigido por `scratchpad/corrige_bulk130.py`: backup (`ipub_backup_20260921_000800.db`), dry-run, assert da linha esperada, COUNT-ASSERT 1+1 (`sessoes_bulk.id=130` e o balde `[bulk] Simulado` da taxonomia, espelhando o delta que o writer aplicaria), observacao da linha carimbada com a correcao.
-- 🔴 **Classe:** o AGENTE.md §10.7 manda passar pelos writers e o writer nao cobre o caso -- a regra empurra para fora dela. Registrar-antes-de-analisar (rito certo) torna a correcao posterior um caso NORMAL, nao excepcional.
-- **Remedio proposto:** `spec` pequena -- `registrar_sessao_bulk.py --corrigir ID --acertos N [--feitas M]` (dry-run por default; grava o delta na linha E no balde da taxonomia; anexa `corrigido de X para Y` na observacao; recusa se a linha nao existir). Ate la, o script pontual com backup + COUNT-ASSERT e o precedente.
-
-### F126 -- o operador abriu os artifacts da UERJ e nao soube o que fazer: tarefa sem lista sem explicacao, ordem dos simulados fora de tela, e as metricas do Plano do Dia cortadas do boot na 8a linha -- **MEDIA** -- **RESOLVIDO (s190)**
-
-- **Como apareceu:** abertura da s190 (20/09/2026), sessao de ESTUDO, nas palavras dele: *"revi os artifacts relacionados a UERJ e nao entendi muito bem o cronograma dos proximos dias. Parece que varias tarefas nao tem lista, e isso mesmo?"* e *"qual ano voce tinha sugerido fazer mesmo? Tinha uma ordem"*. A resposta existia inteira no banco (27 das 109 pendentes da Fase 1 sem link, por 4 motivos distintos; sequencia 2023 -> 2021 -> 2022 -> 2024 -> 2025 -> 2026 em `plano_tarefas`), mas saiu de um script de scratch + leitura do `parametros.json`. Depois do overview ele ordenou: *"Esse overview das tarefas em aberto passa a fazer parte do boot do medhub."*
-- 🔴 **Classe:** *alcance* (a mesma do corte mudo do hook, s189) -- dado certo que nenhuma tela entrega junto. Tres eixos: (1) linha sem `url_lista` nao dizia o que FAZER (aula do agente x caderno a criar no banco x sem lista no EMED); (2) a sequencia de simulados so existia como 8 linhas espalhadas em 7 semanas; (3) ritmo real x necessario, diagnostico e recomendacao sao as linhas ~20-27 do `day_plan` e o hook injetava 8 -- o agente abria a sessao sem as metricas que o operador pediu.
-- ✅ **Resolvido (s190):** `plano.py --panorama` (PURA `panorama` + `render_panorama`): semana de CALENDARIO da trilha (a regua da cota), abertas + atrasadas na ordem do leitor, classe por tarefa derivada de CAMPOS (`url_lista`/`q_previstas`/`fonte` -- nunca substring da `nota`), sequencia de simulados com status e "da vez", proxima semana e Fase 1 contadas por classe. `memory_boot.py` injeta o panorama como secao propria (cap 30, declarado), o cap do Plano do Dia foi de 8 para 40, e o texto-contrato do boot passou a mandar ENTREGAR o panorama em 5 secoes (meta, onde estamos, tarefas em aberto, passos de hoje, metricas) antes de oferecer o proximo ato. Conferencia por 2a lente: os numeros do `--panorama` (82 com lista, 6 caderno, 10 aula, 11 sem lista) batem com a contagem manual feita ANTES de o codigo existir.
-- 🔴 **Gates:** `test_classe_da_tarefa_sai_de_campos_nunca_da_nota`, `test_panorama_semana_de_calendario_atraso_simulados_e_proxima`, `test_panorama_sem_calendario_cai_para_a_posicao_do_plano`, `test_panorama_corta_a_lista_e_declara_o_resto`, `test_cli_panorama_pelo_main` (`tools/test_plano.py`); `test_boot_entrega_o_panorama` (`tools/test_plano_dia.py`).
-- ⚠️ **Limites declarados:** o gate prende o TEXTO do contrato e a presenca da secao, nao a CONDUTA -- se o agente abre mesmo com o panorama continua nao-verificavel (AGENTE.md §2 passo 4). A classe `sem_lista` na Fase 2 significa "PDF do extensivo sem link", nao "EMED sem lista" -- o rotulo e neutro de proposito. Boot ~5 s (dois subprocessos, timeout 8 s cada). Os artifacts (Raio-X, Painel) seguem fotos datadas: a fonte viva do "o que faco hoje" e o boot.
-
-### F125 -- o agendamento da trilha (gerador da s188) entrava em LOOP INFINITO com parametros diferentes dos gravados: o contador de tentativas zerava antes do teste de capacidade -- **ALTA** -- **RESOLVIDO (s189)**
-
-- **Como apareceu:** no porte do gerador para o repo (s189), o teste que pede ao `--gravar` um teto de 20% travou por mais de 3 minutos. Reproduzido isolado: dois blocos com a proxima linha maior que a folga da semana -> o laco antigo gira para sempre; o corrigido termina.
-- 🔴 **Por que importa agora:** a recalibracao depois de cada prova UERJ (6 ate 01/11) muda exatamente os parametros que disparam o laco (piso, teto, capacidade por semana). Com os valores da s188 ele terminava por sorte: sempre sobrava linha pequena que cabia.
-- 🔴 **Por que nenhum gate viu:** o gerador vivia fora do git e sem teste -- o unico caminho ja exercitado era a execucao que tinha dado certo. Serie *"o sensor alcanca o caso real, ou so o caso que ele sabe ver?"*.
-- ✅ **Resolvido (s189):** `trilha.agendar_series` extraido e corrigido (`vazio` so zera depois de linha AGENDADA: uma volta inteira do rodizio sem agendar = parar); a intercalacao semanal ganhou a mesma blindagem para bloco fora do rodizio; parametro invalido (bloco fora do rodizio, piso > teto, capacidade sem calendario) e RECUSADO na carga. Regressao `test_agendamento_termina_quando_nada_mais_cabe` roda em thread com prazo -- falha em 10 s, nunca trava a suite. Golden intacto: onde o laco antigo terminava, a saida e identica.
-
-### F124 -- a UNICA autoridade da Fase 1 era gerada por ~1.450 linhas FORA do git, e o arquivo gerado prometia "editavel a mao" enquanto o `--gravar` o sobrescrevia -- **ALTA** -- **RESOLVIDO (s189)**
-
-- **Como apareceu:** errata do proprio `/ai-eng` no kickoff da s189 ao veredito da s188: ele tinha julgado o gerador "de uso unico" (registro com lapide), mas o HANDOFF mandava re-roda-lo a cada prova UERJ. `scratch/` e gitignored (`.gitignore:53`); `gera_trilha` importava `reconcilia`/`agrega_uerj`/`trilha_custom` e lia `plano_all.json` (472 KB).
-- 🔴 **Classe:** duas autoridades para o mesmo dado, a manual perdendo em silencio -- o defeito do `--mover` (F120) uma camada acima. E alcance: nenhum teste chegava na derivacao.
-- ✅ **Resolvido (s189), spec `trilha-autoridade-unica`, fatia 3:** `tools/trilha.py` + `core/cronograma/trilha/` -- `parametros.json` (a estrategia), `custom.json` (a UNICA camada manual: `racional` obrigatorio, vence o gerado por chave), `entrada/` (snapshot fixado do plano e da cobertura em 18/09 + catalogo; o mapa UERJ ja versionado e lido direto -- identico ao que o scratch lia: 520 linhas, mesma ordem, 0 divergencia). O `plano_trilha.json` passou a carregar `gerado_por` e `_doc` "NAO EDITAR A MAO".
-- 🔬 **Prova de que a mudanca de casa nao mexeu na trilha na vespera da prova, por duas lentes:** (1) golden de PARTIDA medido antes de mover -- o scratch, re-rodado numa copia fora do repo, reproduziu os 115 overrides; o gerador do repo reproduz os mesmos 115, na mesma ordem (diff do git no arquivo: so `_doc`/`gerado_por`/`versao`). (2) Banco: `plano.py --semear --dry-run` = 0 linha nova e **0 linha que mudaria** nos campos semeados (contagem nova do dry-run, `diferenca_semeada`) -- sem `--apply`, sem escrita no banco.
-- 🔴 **Gates:** `tools/test_trilha.py` -- GOLDEN (arquivo gravado == saida do gerador), PROPRIEDADE (a mesma `verificar_propriedades` que o `--gravar` roda antes de escrever: piso/teto por bloco, calendario, uma prova UERJ inteira por semana declarada, marca de gerado), camada manual, recusa do `--gravar`. Termos revogados cadastrados no §12 de `docs/MEMORIA-AUDITORIA.md`.
-- ⚠️ **Limites declarados:** o piso/teto e conferido na regua do PROPRIO gerador (bloco em que a UERJ cobra o tema) -- auto-consistencia; a lente independente (area do EMED) da CM 27,1% e CIR 18,7% e sai no relatorio com as 7 linhas divergentes NOMINAIS, sem gate (GO do `/ai-eng`). Tema cobrado em varios blocos cai inteiro no majoritario (regra declarada no modulo). A entrada fixada nao ve progresso posterior (re-snapshot sem exportador). Campos da reconciliacao sem consumidor (cor do Drive, extensivo por tema) ficaram fora.
-
-### F123 -- o ritmo "cobrir o plano" do boot divide TODO o plano pendente (Fase 2 inclusa) pelos dias ate a UERJ, e o motor nao tem cota diaria: o dia-a-dia da trilha teve de ser calculado FORA dele -- **MEDIA** -- **RESOLVIDO (s189)**
-
-- **Como apareceu:** sessao de ESTUDO (s188), conferindo o `day_plan` depois de gravar a trilha. A linha imprime `cobrir o plano ~273.3/dia (12027q pendentes ate 2026-11-01)`: soma as 12.027 questoes de TODAS as pendentes (a Fase 2 vai ate set/2027) e divide pelos 44 dias da Fase 1. O numero certo para a decisao do dia e o da Fase 1 (~3.300q / 43 dias ~ 77/dia).
-- 🔴 **Classe:** *unidade de medida errada* (a mesma do item 2 do HANDOFF da s187) -- o instrumento mede, e o que mede nao e o que a decisao precisa. Evidencia: `python tools/day_plan.py` em 18/09/2026, bloco `🧭 Cronograma`.
-- **Segundo eixo, mesmo achado:** `_cronograma_hoje` mostra as 5 proximas pendentes, sem cota diaria nem dia da semana (`tools/day_plan.py:435-494`, `PROXIMAS_TAREFAS = 5`). O pedido do operador foi literal -- *"tarefas para bater a meta do dia"* -- e a distribuicao por dia (60q no internato, 95q depois de 12/10, simulado no sabado) saiu de um script de scratch que alimenta o artifact. Se o artifact envelhecer, o motor nao sabe refazer.
-- **Remedio proposto:** `spec` -- (1) ritmo do plano restrito a fase corrente (`semana_plano` em `SEMANAS_FASE1` enquanto houver pendente nela); (2) cota diaria derivada de `core/provas.json` + capacidade declarada por dia da semana em dado versionado, nunca constante enterrada; (3) o bloco do boot passa a dizer "hoje: tarefas A e B (N questoes)".
-- 🔎 **Triagem do `/ai-eng` (18/09):** ALTA urgencia para (a) -- "numero errado governa pior que numero ausente" -- e (b) SIMPLIFICADO: cota = questoes restantes da semana / dias restantes (divisao, nao scheduler; sem capacidade por dia da semana, sem `core/provas.json`).
-- ✅ **Resolvido (s189), spec `trilha-autoridade-unica`, fatia 1:** (a) `_cronograma_hoje` soma so as pendentes das semanas 1-7 -- no banco de 18/09, **273,3 -> 74,8 q/dia** (3.293q / 44d); a Fase 2 e a reserva saem da conta e ficam DECLARADAS (`fora_da_fase1_q`); alvo vencido deixa de ganhar divisor 1 inventado. (b) `cota_do_dia` (PURA) sobre o `calendario` do `plano_trilha.json`: **~81q/dia** na semana 1 (162q / 2 dias, 19-20/09); atraso de semana anterior soma e e declarado. (c) Cada regua diz o que mede: "marco de volume" (Volume), "ritmo da Fase 1" e "cota do dia" (plano); o rotulo `2o ciclo 12k` (era `12500 // 1000`) passou a dizer `Ciclo 2026 (12500 ate 31/12)`. `cronograma-contract` v1.4. 3 testes novos (antes do codigo), um com Fase 2 e reserva NO BANCO.
-- 🔴 **Achado que o remedio nao previa (s189):** o numero errado **governava** o recomendador (`restante_grade_q`): "grade atrasada (235d de deficit projetado)" -> agora 33d, com a mesma recomendacao de 51q. E o boot NUNCA o mostrou: o hook de SessionStart injeta so as **8 primeiras linhas** do plano (`memory_boot._DAY_PLAN_MAX_LINES`) -- a linha do ritmo era a 14a nao-vazia, e as do recomendador vinham depois da 20a. Quem lia o 273 era o agente rodando o `day_plan` inteiro. Por isso a cota vai TAMBEM no cabecalho do bloco (linha 7), e o teste trava isso.
-- 🔎 **Dois riders do `/ai-eng` sobre os achados (18/09, noite):** (i) **corte que trunca passa a se DECLARAR** -- `memory_boot._resumir_plano` acrescenta `(+N linha(s) do plano cortadas no boot; completo: ...)`; o teste da cota prende a posicao contra `_DAY_PLAN_MAX_LINES`, nunca contra o literal 7 (baixar o cap sem subir a cota derruba o teste). (ii) **"Entrada que nao move a saida":** com a entrada do R4 3,7x menor (273 -> 74,8) a recomendacao ficou em 51q -- na faixa atual a capacidade satura e o R4 e INSENSIVEL a `restante_grade_q`. Candidata a teste de sensibilidade (ou remocao) quando a capacidade deixar de saturar; sem acao hoje. Instancia do lado dele, registrada por ele: veredito sobre ALCANCE ("o operador le todo dia") sem medir alcance.
-- ⚠️ **Nao feito, de proposito:** (3) do remedio ("hoje: tarefas A e B") -- a cota e numero, nao escalonamento; o recomendador nao passa a usar a cota (anti-scope da noite: ele so recebe os numeros corrigidos).
-
-### F122 -- o `grade_extensivo.json` nao tem 6 blocos de tarefa que o PDF tem (S48 T17-T22, 5 deles com lista), e o teste trava o numero errado como se fosse medido -- **BAIXA** -- **DECLARADO (s188) -- remedio proposto, aguarda triagem do /ai-eng**
-
-- **Como apareceu:** efeito colateral do extrator de links (F119). Lendo a geometria da tabela do `[52 wk] Cronograma Extensivo.pdf` ele achou 741 blocos de tarefa; o JSON derivado tem 735. Os 6 que sobram sao S48 T17-T22. Comando: `python -X utf8 extrair_links.py` (scratch da s188), secao "blocos do PDF sem tarefa no JSON".
-- 🔴 **Por que nenhum gate viu:** `test_fontes_reais_reproduzem_os_numeros_medidos` e `--expect-tasks` (default 735) PRENDEM o 735. O numero foi medido pelo MESMO parser que ele valida -- sensor e remedio do mesmo insumo (`feedback_metrica_auto_confirmante`). A lente independente so apareceu quando outro metodo (geometria + anotacao) leu o mesmo PDF.
-- **Remedio proposto:** `spec` pequena no parser do extensivo + atualizar o `--expect-tasks`. Sem urgencia: S48 e o fim da Fase 2. **Nao re-medido pelo principal** -- o numero e do filho, com o comando acima.
-
-### F121 -- a alocacao de estudo ate a UERJ era dirigida por um instrumento que mede OUTRA prova: o roxo do Drive mede ENAMED, o guia estatistico mede 2017-2023 por tema, e 416 das 520 questoes das provas reais nunca tinham sido mapeadas -- **ALTA** -- **RESOLVIDO (s188)**
-
-- **Como apareceu:** o operador, em 18/09: *"sinto que voce deu uma enfase muito grande em MFC"*; pediu o mapeamento das provas da UERJ "tal qual o do ENAMED". E o item 2 do HANDOFF da s187 (premissa derrubada por ele) ganhando instrumento.
-- 🔬 **Medido (s188):** 520 questoes (6 edicoes, 2021-2026) classificadas por tema do catalogo EMED por 5 subagentes Sonnet sobre o texto dos cadernos oficiais. **Lentes independentes:** amostra a olho do principal 15/15; concordancia com o mapeamento manual de MFC da s183 = 81/104 (78%) por crosswalk estrito, ~90% lidas as 23 divergencias (maioria sinonimo; 1 erro real, corrigido em `CORRECOES`); gabarito de 2025 (web, subagente isolado) conferido a olho em 5/5.
-- 🔴 **O que os dados dizem, nos dois sentidos:** (a) o plano antigo estava desbalanceado -- semanas 1-2 com ~40% de MFC, 7 resumos a escrever antes de qualquer lista, e a Clinica Medica CORTADA fora de 10 temas; (b) mas MFC NAO era superestimada por tema: 8 temas cobrem metade do bloco de MFC contra 20 na CM -- tema a tema, MFC e o maior retorno da prova. O defeito era de SEQUENCIA e de corte, nao de valor. (c) 53% das questoes caem em tema sem nenhum registro de estudo; 36 temas cobrados >= 2x pela UERJ (113 questoes) nao existem na Reta Final de 30 semanas -- so no extensivo.
-- ✅ **Portadores novos:** `core/cronograma/prevalencia_uerj.json` (incidencia por tema), `simulados/uerj/uerj_mapa_questoes_2021-2026.json` (🔴 spoiler: o operador vai resolver as provas), `simulados/uerj/gabaritos_2021-2026.json`, `core/cronograma/prioridade_cor_rf.json` (**fecha o DADO do F63**: a cor do Drive finalmente viaja com o repo -- 51 roxas / 52 rosas / 45 salmao pendentes; leitura unica a pedido do operador, o Drive segue congelado). Relatorio: `artifacts/uerj-raio-x.html`.
-- ⚠️ **Limite declarado:** tema unico por questao; com 1-2 questoes por tema em 6 anos a ordem fina dentro do bloco e ruido -- solido e o grupo que volta em >= 3 edicoes. "Sem registro de estudo" = sem tarefa no Dashboard (ate 10/09), sem resumo, < 3 erros e < 5 cards: sinal aproximado, nao prova de ignorancia.
-
-### F120 -- a ESTRATEGIA de estudo estava cravada em codigo (`ordenar_fase1`: MFC abre o plano, CM cortada), e o unico outro caminho, `--mover`, e desfeito pelo proximo re-seed -- **ALTA** -- **RESOLVIDO (s188)**
-
-- **Como apareceu:** para entregar a trilha reconciliada pelo motor que o operador usa todo dia (`day_plan`, painel) seria preciso ~115 `--mover` -- e `semana_plano`/`ordem` estao em `CAMPOS_SEMEADOS` (`app/utils/db.py:1735`): o proximo `--semear --apply` regravaria tudo de volta para a regra antiga, em silencio. Nenhum teste cobria essa interacao (`test_reseed_nao_pisa_em_progresso` cobre `status`, nao posicao).
-- ✅ **Resolvido (s188), spec `trilha-uerj-plano-como-dado`:** `core/cronograma/plano_trilha.json` + `plano.aplicar_trilha` (PURA), camada de DADO por cima das regras puras -- ausente = a politica antiga continua valendo; `fase1_exclusiva` da UMA autoridade a Fase 1; override orfao derruba o `--apply`; `status` so `pendente|cortada` (conclusao nasce de `--concluir`). 9 testes novos (teste antes do codigo), suite 924 -> 933. Banco: backup `ipub_backup_20260918_224430.db`, `--semear --apply --expect 7` (7 custom novas, 896 atualizadas), 115 overrides, 46 linhas tiradas da Fase 1, **16 `--reabrir` declarados e 16 conferidos**.
-- ⚠️ **Residuo declarado:** o `--mover` CONTINUA sendo desfeito pelo re-seed -- agora esta escrito na skill (`engenharia-cli.md`), e o que e para durar mora na trilha. A QUALIDADE da trilha nao tem gate: e julgamento, revisado a cada simulado semanal.
-- ✅ **Rider s189 (fatia 4 do `/ai-eng`, GATE SIM) -- o `--mover` deixa de mentir na Fase 1:** com a trilha ativa, `plano.mover` RECUSA (exit 2) linha que ESTA na Fase 1 ou iria PARA ela, no ponto da mutacao, e imprime a entrada exata de `core/cronograma/trilha/custom.json` -- a camada manual que a fatia 3 criou e que da ao guard um lugar para onde mandar. Conferido no banco real (tarefa 38, semana 1 -> 3: recusada; re-seed segue com 0 mudanca). 2 testes (um pelo `main`, lendo a trilha real do disco). ⚠️ **Residuo que CONTINUA declarado:** fora da Fase 1 o `--mover` grava e o re-seed desfaz -- redesenho (`--mover` vira escritor da camada manual, ou sai; D63) depois de 02/11.
-- 🔎 **Rider s189 (fatia 2 do `/ai-eng`) -- a reserva deixa de ser "sem consulta":** `plano.py --reserva` lista as 174 pendentes fora da fila (46 que a `fase1_exclusiva` tirou + 128 da reserva do extensivo S1-S20) por peso UERJ, com duas colunas que decidem -- `tema ja na fila por` (outra linha agendada cobre o mesmo tema) e `estado (18/09)` (o porque da exclusao, pela reconciliacao do gerador). O aviso ficou PRECISO no caminho: das **22 linhas de faixa ALTA, 13 nao tem NENHUMA linha na fila cobrindo o tema** (quase todas PARCIAL no Dashboard: a lacuna 0,55 as deixou abaixo do corte) -- as outras 9 tem o tema agendado por outra tarefa. 48 linhas nao casam tema da prevalencia e saem como NAO MEDIDAS. Arquivo para o olho do operador, uma vez: `docs/RESERVA-FASE1.md`; terminal datado 02/11, junto do F111.
-
-### F119 -- o link da lista de exercicios foi extraido na s147 e NUNCA conectado: a Reta Final nascia com `url_lista=None` cravado e o painel imprimia "sem lista" em 11 das 14 tarefas da semana -- **ALTA** -- **RESOLVIDO (s188)**
-
-- **Como apareceu:** o operador pediu *"o cronograma com tarefas e listas de exercicios (constam nos cronogramas)"*. Medido antes: **0 de 139** linhas `rf` e **66 de 735** `extensivo` com link (`plano.py --listar --json`); `grep -rn links_exercicios --include=*.py` = vazio. **Classe: construido-e-nunca-conectado (D4)** -- 170 URLs com zero consumidor por 31 dias.
-- 🔬 **Causa dupla:** (1) `tools/plano.py` semeava a RF com `"url_lista": None` literal; (2) o parser do extensivo procura a URL no TEXTO, onde ela vem quebrada em linhas -- nos PDFs o link e ANOTACAO de hiperlink (1.430 no extensivo, 2.349 na RF).
-- ✅ **Resolvido (s188):** extracao por anotacao + geometria da tabela (1 subagente Opus, scratch) -> `core/cronograma/links_listas.json` (334 RF + 243 extensivo); `montar_linhas` preenche `url_lista`, nunca inventa. No banco: **66 -> 381 linhas com link**. **Tres lentes, zero conflito real:** vs `links_exercicios.json` 166/187 (as 6 "deslocadas" sao defeito do arquivo ANTIGO: S15 T06 nao tem lista e o metodo por ordem de aparicao empurrou T06-T11 em uma posicao); vs `url_lista` do extensivo 66/66 (4 estavam TRUNCADAS na fonte); `Link - N questoes` x `questoes` 318 coerentes, 0 divergentes; URL da anotacao x URL do texto 607 iguais, 0 conflito.
-- 🔎 **Auto-higiene pendente, registrada:** `core/cronograma/links_exercicios.json` esta superado e tem o deslocamento acima; sair exige `grep` nos portadores (PRD/specs o citam como historia) -- `so-dado`, nao feito nesta sessao.
-
-- ✅ **Riders s189:** (a) ⚰️ `core/cronograma/links_exercicios.json` REMOVIDO (0 consumidores em `.py`, raio medido por grep em codigo, skill e command; D63: obsoleto sai). (b) **A pergunta do `/ai-eng` -- "linha sem link distingue 'nao existe lista' de 'link faltando'?"** -- nao distinguia: o estado medido na extracao (`match: sem_link`/`multi`) ficou no scratch. Agora toda tarefa das duas grades tem UMA entrada no `links_listas.json`: 577 com `url`, 482 `sem_link_no_pdf`, 28 `varios_links_no_pdf`; **faltando = 0**, travado por `test_links_listas_da_estado_explicito_a_toda_tarefa`. Dos 482 sem link, **17 tem tipo que pede lista** (3 'Teoria + Exercicios' na RF, 14 'Revisao' no extensivo) -- marcados `tipo_pede_lista: true`: a lista provavelmente existe na plataforma e o PDF nao a linka. O teto de 381 linhas com link no plano deixa de ser invisivel: o que falta tem nome.
-### F118 -- o 1.9(a) deixou DOIS CLIs incapazes de rodar como CLI, e a suite era cega por construcao: o pytest fornece o `sys.path` que o proprio arquivo deveria fornecer -- **ALTA** -- **RESOLVIDO (s187)**
-
-- **Como apareceu:** indo usar `insert_card_extra.py` para dividir os cards do F105. `python tools/insert_card_extra.py --help` morria com `ModuleNotFoundError: No module named 'app'`.
-- 🔬 **Causa, e ela e minha:** a refatoracao **1.9(a)** (s186) moveu `card_checks` de `tools/` para `app/utils/`. Dois CLIs ancoravam o path no **proprio diretorio**:
-
-```
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))   # -> tools/
-from app.utils import card_checks                                 # precisa da RAIZ
-```
-
-  Antes do 1.9a funcionava, porque `card_checks` morava em `tools/`. Medido: **2 de 53 CLIs** quebrados -- `insert_card_extra.py` (**writer canonico de card adicional**, i.e. um caminho de escrita do baralho) e `calibrate_card_checks.py`.
-- 🔴 **Por que a suite inteira era CEGA:** o pytest insere a raiz do repo no `sys.path` antes de importar os modulos de teste. Entao `test_writer_gates.py` importa `insert_card_extra` **com o path que o proprio CLI deveria ter fornecido**, e passa. **O gate alcanca o MODULO; nao alcanca o PONTO DE ENTRADA.** Nenhum check existente olhava para isso: o `IMPORT_DANGLING` resolve imports estaticamente, o D5 le assinatura de flag, o `reachability_check` conta referenciadores -- todos os tres veem o arquivo, nenhum o executa.
-- 🔴 **Classe:** a familia da janela numa superficie nova -- *o sensor alcanca o modulo e nao o executavel*. Irma do F116 pelo avesso: la o escopo do gate era MAIOR que o declarado; aqui e **menor que o uso real**, e a diferenca e exatamente o que o harness fornece de graca e o usuario nao.
-- ✅ **Resolvido (s187):** ancora corrigida para a RAIZ nos dois + `tools/test_cli_importavel.py`, que roda `--help` por **subprocess** em todos os 53 CLIs. Nasce BLOCK (base 2 -> 0). Limite declarado: prova que o CLI **carrega**, nao que funciona.
-- 🔎 **Achado lateral, nao perseguido:** `calibrate_card_checks.py` roda e reporta `veredito: FAIL, recall 0/68` contra o incidente de 13/08. Provavelmente **fixture cicatrizada** (aqueles 68 cards foram regenerados desde entao) -- a regra da s177 diz que fixture que cicatriza e DADO, nao motivo de parada. Nao re-medido nesta sessao; fica registrado.
-
-### F117 -- a regua v2 mudou o limiar de relearning para `< 3`, mas a prescricao do DRENAR **conversacional** continuou mandando re-drillar **ate sair 4**: o `CONTRATO_REVOGADO` nao viu porque casa substring literal e a s186 cadastrou a redacao do PLAYER -- **ALTA** -- **RESOLVIDO (s187)**
-
-- **Como apareceu:** anotando as clausulas de `revisar.md` para o item 1.10. A linha 187 prescrevia *"Todo card avaliado **< 4** (1, 2 ou 3) entra numa fila de re-drill ... **ate sair 4**"*, enquanto a linha 146 do mesmo arquivo -- e `core/templates/player.html:397` e `:463` -- usam **`nota < 3`**. Dois limiares contraditorios no mesmo portador.
-- 🔬 **Por que e ALTA e nao cosmetico:** sob a regua v2 (nativa do FSRS, adotada na s186) `3 = lembrou` e o **caso normal e o alvo**; `4 = sem esforco` e o degrau **raro** -- o proprio F114 mediu que a visao remap tem **zero exemplo de Easy**. A prescricao morta manda re-drillar **todo acerto comum ate ele virar sem-esforco**, o que na pratica e um loop que nao fecha. E ela governa o caminho **conversacional**, que e o que roda quando o operador drena pelo chat (celular/remote-control) em vez do player.
-- 🔴 **Por que o gate nao pegou, e o limite estava DECLARADO:** o `CONTRATO_REVOGADO` casa **substring literal** -- `AGENTE.md §10.10` ja diz, verbatim, que ele *"pega a reintroducao verbatim, nao a mesma regra reescrita com outras palavras"*. A s186 cadastrou o termo com a redacao da **pagina** ("Nota `< 4` recoloca", §12 linha 282); a redacao do **chat** (`avaliado **< 4** (1, 2 ou 3)` / `ate sair 4`) e outra string e passou intacta. *O limite declarado do gate mordendo de verdade, um dia depois de ser declarado.*
-- 🔴 **Classe:** e o **F90 na terceira volta** -- revogar tem tres passos e o passo (3) so alcanca o que alguem lembrou de cadastrar, **na redacao que alguem lembrou**. Familia da janela s187: *o sensor alcanca exatamente o que diz alcancar?* -- aqui o escopo e literal-textual, e o alcance para na primeira parafrase.
-- ✅ **Resolvido (s187) pelos tres passos do §10.10, no mesmo commit:** (1) declaracao aqui; (2) lapide + correcao em `revisar.md` (limiar `< 3`, alvo `>= 3`, e a linha irma *"priorizar 1 e 2 sobre 3"*, que sob a v2 nao faz sentido porque o 3 nunca entra na fila); (3) **tres** termos cadastrados no §12 do `MEMORIA-AUDITORIA`, agora na redacao do chat.
-- ⚠️ **Fronteira que continua aberta, declarada:** o gate segue literal. Uma quarta parafrase da mesma regra morta passaria de novo. O remedio real seria um gate semantico, que nao existe -- entao a garantia hoje e o rito de cadastrar **todas as redacoes** de um termo revogado, nao so a que estava na frente. Registrado, nao maquiado.
-
-### F116 -- o linter de resumos no modo `--staged` auditava o CORPUS INTEIRO enquanto se rotulava "(N arquivos)": o modo do pre-commit hook estava de fora da condicao que anexa a lista -- **MEDIA** -- **RESOLVIDO (s187)**
-
-- **Como apareceu:** no proprio commit do F104. Eu tinha acabado de reescrever UM resumo e o harness imprimiu `✅ PASSED - Linter de Qualidade de Resumos (1 arquivos)  ⚠️ 35 WARN`. Rodado direto sobre o arquivo, `audit_resumos.py` devolvia `WARN_TOTAL=0`. **Eu ia registrar os 35 no ledger como propriedade do `TCE.md`** -- foi a divergencia entre os dois numeros que abriu o achado, nao leitura de codigo.
-- 🔬 **Causa medida, uma linha:**
-
-```
-cmd = [sys.executable, "tools/audit_resumos.py"]
-if mode == "--changed" and resumos_to_check:     # <- `--staged` de fora
-    cmd.extend(resumos_to_check)
-```
-
-  `resumos_to_check` e preenchido nos DOIS modos incrementais, mas a lista so era anexada no `--changed`. No `--staged` o CLI rodava **sem argumento**, e sem argumento ele varre os 136. `python tools/audit_resumos.py` devolve exatamente `WARN_TOTAL=35` -- o mesmo numero, confirmado por execucao independente.
-- 🔴 **Duas consequencias, e a segunda e a grave:** (i) **o rotulo mente** -- "(1 arquivos) 35 WARN" faz quem le atribuir 35 defeitos ao arquivo recem-escrito; (ii) **o escopo do GATE e outro** -- um BLOCK preexistente em resumo alheio derrubaria um commit que nao o toca, apontando para o arquivo errado. Nao mordeu ate hoje porque o `BLOCK_TOTAL` global esta em 0: **sorte, nao desenho**.
-- 🔴 **Contradizia o contrato escrito.** `AGENTE.md §6` diz verbatim *"o git pre-commit hook roda `--staged` (audita so o que sera selado)"*. Codigo e prosa divergiam, e nenhum gate comparava os dois -- a mesma forma do 1.10 uma camada abaixo.
-- 🔴 **Classe: escopo MAIOR que o declarado** -- a imagem espelhada do F115 (escopo menor que o necessario) e do Invariante A (sensor mirando a coisa vizinha). Os quatro achados da janela s187 sao a mesma pergunta: *o sensor alcanca exatamente o que diz alcancar?*
-- ✅ **Resolvido (s187):** `cmd_linter_resumos` e `label_linter_resumos` viram funcoes PURAS e testadas; modo incremental com lista vazia devolve `None` (nao rodar) em vez de varrer tudo -- era por ali que o defeito entrava. 6 testes, um deles prendendo a frase do contrato no `AGENTE.md` para prosa e codigo nao voltarem a divergir em silencio.
-
-### F115 -- o COMPRIMENTO TOTAL do card nao tem gate: `LIMITE_CHARS` mede so o verso e so durante a reforja, e o operador achou a olho os dois cards do topo 2% do baralho -- **MEDIA** -- **RESOLVIDO (s187)**
-
-- **Como apareceu:** drenando os 6 cards da previa do R2 (18/09/2026), o operador marcou defeito em **#92** (*"card muito longo"*) e **#96** (*"mesmo feedback da outra, card longo"*). Nao viu numero nenhum -- leu os cards.
-- 🔬 **Medido na hora, sobre os 1.507 cards ativos** (soma de `frente_contexto + frente_pergunta + verso_resposta + verso_regra_mestre + verso_armadilha`): mediana **562** chars, p90 **880**.
-
-```
-  card#96   1130 chars  percentil 99,2%   <-- marcado a olho
-  card#92   1059 chars  percentil 98,0%   <-- marcado a olho
-  card#53    597 chars  percentil 57,1%   (marcado, mas por OUTRO defeito:
-                                           "pergunta composta" -- nao e comprimento)
-  card#474   735 / #286  685 / #69  617   (nao marcados)
-```
-
-  Ele marcou **exatamente os dois extremos do lote, ambos no topo 2% do baralho**, e nao marcou o de percentil 57 por comprimento. A precisao do olho dele e o achado: o eixo e real e e mensuravel.
-- 🔴 **Classe (serie §10.8): gate-miss por ESCOPO DE ALVO.** Existe um limite -- `audit_card_atomicity.LIMITE_CHARS = 220` -- mas ele mede **o verso**, nao o card, e so roda **na reforja** (`ratchet_verso`), nao como sensor de pe sobre o baralho. Entao um card pode nascer com 1.130 chars distribuidos entre contexto, pergunta e verso sem estourar nada. Irma do `cli_signature_check` (presenca != cobertura) e do "gate sem escopo de intencao" do F113: *o sensor existe, mede a coisa vizinha, e o painel fica verde.*
-- **Remedio proposto:** `spec` -- (1) medir a distribuicao de comprimento TOTAL e decidir o corte com o operador (p95 = ~950 seria ~75 cards; p98 = ~1.050 seria ~30); (2) predicado WARN em `card_checks` sobre a soma dos campos, com o corte como parametro nomeado, nunca constante enterrada; (3) nascer WARN pelo `warn-first-check` -- o passivo nao e zero, entao promover a BLOCK agora desligaria o gate na segunda sessao.
-- ⚠️ **Limite declarado:** comprimento e proxy, nao o defeito. Card longo pode ser longo com razao (vinheta clinica que a pergunta precisa -- o #284 do F81 e o precedente). O predicado sinaliza CANDIDATO a reforja; quem decide segue sendo leitura humana. Nao converter em BLOCK sem triagem.
-- ✅ **RESOLVIDO (s187).** `card_checks.comprimento_total` (soma dos 5 campos) + `checar_comprimento_total`, corte em `CORTE_COMPRIMENTO_TOTAL`; entra no `validar_card` como AVISO (nascimento) e em `PREDICADOS_VERIFICAVEIS` (sensor de pe + lifecycle da fila). 13 testes em `tools/test_comprimento_total.py`; suite 858 -> 871.
-- 🔬 **O corte nao foi escolhido -- a derivacao entrega uma BANDA, e isso e o resultado.** As 6 marcas dele bound-eiam `[736, 1059]`, e **dentro da banda todo corte tem precisao identica no lote** (2/2 positivos, 4/4 negativos): n=6 nao discrimina por dentro, por construcao. A banda e cara -- 736 -> 334 cards (22,2%) x 1059 -> 30 (2,0%), fator 11 sobre a mesma evidencia. **1059** e o unico ponto com regra declarada: *nenhum card sinalizado e mais curto que o mais curto que ele mesmo chamou de longo*. `test_o_corte_esta_dentro_da_banda` derruba a suite se alguem mover o numero sem mover a evidencia. 🔴 A banda e uma **QUERY sobre as marcas**, nao um sensor novo: re-derivar `[maior nao-marcado, menor marcado]` no fechamento de cada janela, com as marcas novas do player.
-- 🔴 **O `>=` foi achado pela propria suite, nao por leitura.** A 1a versao usava `>`, e o **#92 tem exatamente 1059 chars** -- o gate perderia um dos DOIS cards que o originaram. *Gate reprovado na propria evidencia fundadora* e uma forma nova da serie: nao e escopo errado, e **fronteira fora por um**, e so aparece quando o caso-fonte vira fixture com o numero real.
-- ⏸️ **GATE do operador (a unica parte que sobra):** os **30 candidatos** estao medidos e o dry-run de `reforja.py --ingerir comprimento_total` esta rodado (COUNT-ASSERT 30), mas **nao foram escritos** -- triagem de auditoria e dado, nao acao (secao 10.6), e a fila de reforja e workload de estudo dele. Pergunta de 1 linha: *ingerir os 30 na fila de reforja?*
-- ⚠️ **O que segue aberto e o Fork (b):** os parametros NAO foram adotados (ver F114). Gatilho do re-fit acordado com o `/ai-eng`: quando a visao v2 tiver nota 4 real em volume que mova `w3`/`w16` para fora do default -- o teste e o mesmo diff indice a indice que achou o F114, e o sensor ja existe. Hoje sao 3 linhas.
+### F16 -- Tema cirurgico de alto rendimento sem SSOT clinico (.md); so o PDF-fonte existe -- **MEDIA** -- **PARCIAL (mecanismo feito, conteudo aberto)**
+- 🔬 **TRIAGEM Tier 3 (s176, 10/09/2026) -- re-medido contra o codigo, nao lembrado:** a hipotese (a) FOI construida -- `tools/cobertura_conhecimento.py` e o relatorio `pdf-sem-md` que o achado pedia. O conteudo segue aberto e agora tem numero: `python tools/cobertura_conhecimento.py` -> **395 PDFs-fonte, 135 `.md`, 68 cobertos (61 exato + 7 fuzzy), 327 orfaos**. A evidencia original continua literalmente valida: **apendicite segue sem `.md`** (glob por `*apendic*` em `resumos/**/*.md` = vazio). 🔴 **Residuo de ALCANCE, nao de mecanismo:** `reachability_check --tabela` mostra o CLI alcancado so por `/extrair-pdf` -- nem o boot nem o `auto_check` o consultam, entao os 327 orfaos so aparecem para quem ja foi olhar. Mesma familia da frente de alcancabilidade (s144).
+- **Evidencia:** apendicite ("um dos temas mais cobrados na prova de Cirurgia Geral", segundo a propria fonte EMED) tem em `resumos/Cirurgia/` apenas o PDF-fonte gitignored (`8. Abdome Agudo Inflamatorio - Apendicite Aguda.pdf`) e **nenhum `.md`**. Glob por `*Apendic*` retorna so o PDF; grep de termos (Alvarado/apendice/carcinoide) nos `.md` acha so mencoes tangenciais (Cirurgia Infantil, Polipose/CCR), nao resumo dedicado. Para cunhar a aula foi preciso extrair o PDF a mao na sessao.
+- **Leitura de sistema:** `resumos/**/*.md` e o SSOT de conhecimento clinico E o unico corpus que o RAG indexa (`index_resumos.py`; AGENTE secao 6). Tema sem `.md` fica (a) invisivel ao RAG semantico (`obsidian-notes-rag search_notes` volta vazio p/ apendicite), (b) sem fonte consultavel nem armadilhas cumulativas, (c) re-extraido a mao a cada aula. O HANDOFF lista gaps pontuais (TCE.md, Sistemas de Informacao) mas nao ha check sistematico de cobertura.
+- **Verificacao sugerida:** cruzar `resumos/**/*.pdf` (fontes EMED presentes) contra `resumos/**/*.md` (SSOTs existentes); listar temas com PDF sem `.md` par e quantos sao de alto rendimento.
+- **Hipotese de melhoria:** (a) relatorio de cobertura `pdf-sem-md` (CLI ou check WARN no `auto_check`) que torna o gap visivel e priorizavel; (b) rodar o workflow `criar-resumo` p/ apendicite -- fecha o gap de conteudo E realimenta o RAG. A aula-base desta sessao ja e insumo pronto p/ o `.md`.
+
+### F2 -- Latencia de shell no ambiente Windows -- **MEDIA** -- **DECLARADO nao-verificavel** (propriedade do ambiente, nao do repo; nenhum codigo nosso a controla -- revisar: 2027-03-31)
+- **Evidencia:** comandos via Bash (`git log`, `ls resumos/**`) estouraram o timeout de 120s nesta sessao. CLIs Python (`fsrs_queue.py`, etc.) rodam normalmente e rapido.
+- **Leitura de sistema:** qualquer hook ou rotina que faca *shell-out* pesado -- em especial o pre-commit `auto_check --staged` e o `day_plan.py` se dependerem de globbing amplo ou de `git` custoso -- herda essa latencia. Risco: hook lento demais ser abortado ou o operador aprender a fazer bypass.
+- **Verificacao sugerida:** cronometrar `auto_check --staged` e `day_plan.py` isoladamente; identificar se o custo esta no `git`, no profile do shell, ou no glob de `resumos/**`. Testar se o gargalo e o carregamento do profile PowerShell/Bash vs. o comando em si.
+- **Hipotese de melhoria:** (a) garantir que hooks usem caminhos diretos e evitem `ls`/`find` recursivo (preferir Python `pathlib` com escopo staged); (b) cache de indice quando aplicavel; (c) documentar em AGENTE.md que a superficie de tooling e Python-CLI-first, shell-glob-last.

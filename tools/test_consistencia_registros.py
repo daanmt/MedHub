@@ -151,6 +151,76 @@ def test_gate_nunca_fica_sem_vocabulario():
     assert len(_PORTADORES_NORMA) >= 10
 
 
+# --- frente x historico (rotacao do ledger, s204) ------------------------------
+
+_HIST = "history/auditoria/resolvidos.md"
+_INDICE = "<!-- selo:indice:inicio -->\n<!-- selo:indice:fim -->\n"
+
+
+def test_resolvido_na_frente_e_achado(tmp_path):
+    """Decisao do operador (28/09/2026): o que resolvermos, sai da frente. Item com
+    cabecalho RESOLVIDO no arquivo da frente e rotacao que nao foi feita."""
+    r = _repo(tmp_path, {
+        "AUDITORIA_MEDHUB.md": ("### F7 -- fechado -- **MEDIA** -- **RESOLVIDO (s200)**\n"
+                                "### F8 -- aberto -- **MEDIA** -- **GATE (operador)**\n"),
+        _HIST: "### F1 -- velho -- **BAIXA** -- **RESOLVIDO (s100)**\n"})
+    a = cc.check_frente(root=r)
+    assert [x["alvo"] for x in a] == ["AUDITORIA_MEDHUB.md §F7"], a
+
+
+def test_aberto_no_historico_e_achado(tmp_path):
+    r = _repo(tmp_path, {
+        "AUDITORIA_MEDHUB.md": "### F8 -- aberto -- **MEDIA** -- **GATE (operador)**\n",
+        _HIST: "### F2 -- foi parar no lugar errado -- **ALTA** -- **PARCIAL (falta metade)**\n"})
+    a = cc.check_frente(root=r)
+    assert [x["alvo"] for x in a] == [_HIST + " §F2"], a
+
+
+def test_mitigado_e_parcial_na_frente_nao_sao_achado(tmp_path):
+    r = _repo(tmp_path, {
+        "AUDITORIA_MEDHUB.md": ("### F5 -- meio -- **MEDIA** -- **PARCIAL (mecanismo feito)**\n"
+                                "### F6 -- meio -- **BAIXA** -- **MITIGADO (s186); causa DECLARADA**\n"),
+        _HIST: "### F1 -- velho -- **BAIXA** -- **SUPERADO (s100)**\n"})
+    assert cc.check_frente(root=r) == []
+
+
+def test_indice_velho_e_achado(tmp_path):
+    frente = ("# ledger\n\n<!-- selo:indice:inicio -->\n**Em aberto: 99**\n"
+              "<!-- selo:indice:fim -->\n\n"
+              "### F8 -- aberto -- **MEDIA** -- **GATE (operador)**\n")
+    r = _repo(tmp_path, {"AUDITORIA_MEDHUB.md": frente,
+                         _HIST: "### F1 -- velho -- **BAIXA** -- **RESOLVIDO (s100)**\n"})
+    a = cc.check_frente(root=r)
+    assert [x["alvo"] for x in a] == ["AUDITORIA_MEDHUB.md §indice"], a
+
+
+def test_sem_historico_o_check_cala(tmp_path):
+    """Repo de antes da rotacao (ou fixture minima): sem o arquivo de historico nao ha
+    'frente' -- o check nao inventa achado."""
+    r = _repo(tmp_path, {
+        "AUDITORIA_MEDHUB.md": "### F7 -- fechado -- **MEDIA** -- **RESOLVIDO (s200)**\n"})
+    assert cc.check_frente(root=r) == []
+
+
+def test_status_le_os_dois_arquivos(tmp_path):
+    """G14 e G14b: achado que mora no HISTORICO continua sendo conferido. Sem isto o
+    item movido sumia do dicionario e a contradicao passava em silencio."""
+    inv = "| ~~0.5~~ | ⚰️ **FEITO em 10/09** -- **F35** fechado. | x | y |\n"
+    r = _repo(tmp_path, {
+        "AUDITORIA_MEDHUB.md": "### F8 -- aberto -- **MEDIA** -- **GATE (operador)**\n",
+        _HIST: "### F35 -- defeito -- **ALTA** -- **ABERTO**\n",
+        "docs/MEMORIA-AUDITORIA.md": inv})
+    a = cc.check_status_ledger(root=r)
+    assert len(a) == 1 and "F35" in a[0]["alvo"], a
+    contrato = "**Versão 1.4 | 2026-09-17 (s185, F35: absorvido)**\n"
+    r2 = _repo(tmp_path / "b", {
+        "AUDITORIA_MEDHUB.md": "### F8 -- aberto -- **MEDIA** -- **GATE (operador)**\n",
+        _HIST: "### F35 -- defeito -- **ALTA** -- **ABERTO**\n",
+        "core/contracts/x-contract.md": contrato})
+    b = cc.check_status_portador(root=r2)
+    assert len(b) == 1 and "F35" in b[0]["alvo"], b
+
+
 # --- ratchet sobre o repo real ------------------------------------------------
 
 def test_repo_real_consistente():

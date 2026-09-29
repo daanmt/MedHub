@@ -64,6 +64,9 @@ python -m app.memory.manager <NNN>
 ```
 Onde `<NNN>` é o número da sessão recém-registrada (e.g., `048`).
 
+### 5b. Rotacionar o ledger (s204)
+Achado resolvido na sessão **sai da frente no selo**: `python tools/selo.py --rotacionar` (dry-run) e, com o N medido, `--apply --expect N`. Assinatura em `.claude/commands/engenharia-cli.md`, seção `tools/selo.py`. Os dois arquivos do ledger entram no commit do selo.
+
 ### 6. Regenerar o painel e republicar o MedHub HUB (part-7; hub desde a s192)
 
 O painel substitui as 20 tabelas do Dashboard do Drive como visão de progresso -- ele só vale se for

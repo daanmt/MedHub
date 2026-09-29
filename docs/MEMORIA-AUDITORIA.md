@@ -7,7 +7,7 @@
 > engenharia; snapshot datado em `ai-eng: brain/observed-systems/medhub-dossier-2026-09-08.md`.
 > **Regras de manutenção**: (1) toda linha com número traz a data da medição; número sem data é claim que
 > envelhece. (2) Fechamento de ciclo/hotfix atualiza a §3 (status) e a §2 (timeline) NA MESMA sessão, ou o
-> dossiê vira o próprio F62. (3) O ledger detalhado continua sendo `AUDITORIA_MEDHUB.md` (drill-down);
+> dossiê vira o próprio F62. (3) O ledger detalhado (drill-down) são dois arquivos desde a s204 -- `AUDITORIA_MEDHUB.md` (só o que está em aberto) e `history/auditoria/resolvidos.md` (o que fechou); o status VIVO sai de `python tools/selo.py`, e as tabelas de status das §3 e §3b são retrato datado (17/09/2026, até o F113);
 > este arquivo é o índice que cabe numa leitura (<250 linhas). (4) Lápide (⚰️ data motivo) em vez de apagar.
 > **Autoria**: Stanford AI Architect (Fable 5.1, sessão N=75) a partir de 2 colheitas Opus 5 (read-only) +
 > 17 trocas do canal direto com a sessão medhub-18 (ledger `ai-eng: brain/observed-systems/exchange-log.jsonl`).

@@ -88,7 +88,7 @@ medhub/
 |-- HANDOFF.md                 -- short operational state, next step
 |-- ESTADO.md                  -- macro snapshot (goals, indicator, milestones)
 |-- ROADMAP.md                 -- evolutionary direction, no dates
-|-- AUDITORIA_MEDHUB.md        -- engineering findings ledger (F-numbered)
+|-- AUDITORIA_MEDHUB.md        -- engineering findings ledger (F-numbered): OPEN items only
 |-- app/
 |   |-- engine/
 |   |   |-- rag.py                  -- ChromaDB + Ollama + optional HyDE
@@ -195,7 +195,7 @@ Main CLIs (canonical signatures live in the matching skill under `.claude/comman
 - **Single user, local only.** `ipub.db` and `medhub_memory.db` are gitignored, so cloning this repo gives you the code, the contracts and the clinical summaries -- not the study state.
 - **The retrieval eval is small and stale.** `tools/eval/` measures file-level retrieval on 18 (query, expected resumo) pairs; the committed `REPORT.md` (2026-08-14) reads Recall@5 = 0.889 / MRR@10 = 0.685 with HyDE on and 0.444 / 0.409 without. At n = 18 the 95% CI is roughly 22pp. The report also documents up to 17pp run-to-run swing caused by a non-deterministic HyDE call; `temperature=0` was added to that call afterwards, so the baseline predates the fix and should be re-run. The runner still matches the current `rag.py` API (`search`, `_CHROMA_AVAILABLE`).
 - **Schedule truth is split across sources.** `grade.json` is derived from the PDF, but completion and ordering live in spreadsheets the owner edits by hand, so the derived grade can disagree with reality. By contract that divergence is management information, never corruption -- the reconcile checks for it are non-blocking.
-- **Open engineering debt is tracked, not fixed.** `AUDITORIA_MEDHUB.md` carries F-numbered findings; `ESTADO.md` and `HANDOFF.md` name the currently open ones (duplicated taxonomy rows splitting FSRS and dormancy, prevalent themes with no taxonomy row, bulk buckets invisible to the dormancy radar, summaries lagging new guidelines).
+- **Open engineering debt is tracked, not fixed.** `AUDITORIA_MEDHUB.md` carries the OPEN F-numbered findings (closed ones move to `history/auditoria/resolvidos.md`; `python tools/selo.py` shows open vs. closed); `ESTADO.md` and `HANDOFF.md` name the currently open ones (duplicated taxonomy rows splitting FSRS and dormancy, prevalent themes with no taxonomy row, bulk buckets invisible to the dormancy radar, summaries lagging new guidelines).
 - **Two CLIs in `tools/` are not reachable from any live reference** (`audit_fsrs.py`, `calibrate_card_checks.py`), per the generated table in `AGENTE.md` section 7.4. Some modules still have no docstring, which that table reports as a gap.
 - **History:** `ipub.db` was tracked early and removed with `git rm --cached`; the blob remains in git history. Historical commits also contain a transcribed study schedule and the author's own performance spreadsheet, both removed from the current tree.
 

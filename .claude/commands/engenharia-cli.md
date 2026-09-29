@@ -61,7 +61,7 @@ presença, não semântica; flag genérica pode colar em skill vizinha e **infla
 Três registros que envelheciam em silêncio porque nada perguntava se ainda diziam a verdade:
 **`tabela`** (a §7.4 do `AGENTE.md` é gerada e colada — cada CLI novo a deixa stale) ·
 **`paths`** (`tools/*.py` inexistente citado num doc de raiz; o `MEMORY_POINTERS` só alcançava
-`memory/`) · **`status`** (achado `**ABERTO**` no `AUDITORIA_MEDHUB.md` com lápide de `FEITO` no
+`memory/`) · **`frente`** (s204: achado resolvido ainda na frente do ledger, achado aberto no histórico, ou índice do topo diferente do derivado) · **`status`** (achado `**ABERTO**` no ledger -- frente ou histórico -- com lápide de `FEITO` no
 `§11`) · **`portador`** (G14b, s187 — o mesmo cabeçalho contra a **linha de versão do
 portador**, porque o `status` só enxerga achado que alguém lembrou de pôr no `§11`, e
 **F109/F110 nunca entraram lá**: tiveram os riders entregues na s185 e ficaram `ABERTO` até
@@ -161,9 +161,15 @@ para as discordâncias (G14 + G14b) · a docstring de cada suíte para o escopo 
 |---|---|
 | `--markdown` | Tabela item · terminal · evidência, para colar no selo. |
 | `--sensores` | Só o escopo que cada sensor novo DECLARA não alcançar, lido da docstring da suíte. |
+| `--rotacionar` | **(s204)** Move da frente (`AUDITORIA_MEDHUB.md`) para o fim do histórico (`history/auditoria/resolvidos.md`) todo achado cujo cabeçalho diz RESOLVIDO, SUPERADO ou RETRATADO, e regrava o índice do topo. MITIGADO e PARCIAL ficam. O bloco viaja inteiro. **Dry-run por default.** |
+| `--apply` | Com `--rotacionar`: escreve os dois arquivos. Exige `--expect`. |
+| `--expect N` | Com `--rotacionar --apply`: COUNT-ASSERT, o número de achados a mover; diferente do medido = recusa, nada escrito. |
+| `--onde FID` | Diz em que arquivo o achado mora, com o terminal e o título (ex.: `--onde F38`). |
 
-Sem flag: resumo com contagem por terminal, abertos com o GATE nomeado, cobertura do item
-1.10 e discordâncias. **Exit 1 se não fecha.**
+Sem flag: aberto x resolvido, contagem por terminal, **a lista de TUDO que está em aberto**
+(id, severidade, status, quem decide), cobertura do item 1.10, discordâncias de status e itens
+fora do lugar. **Exit 1 se não fecha.** ⚰️ *Até 28/09/2026 a saída não imprimia as classes GATE
+e DECLARADO: 12 achados ficavam invisíveis.*
 
 ⚠️ **Limite declarado:** a coluna `terminal` sai do **cabeçalho** do achado — se um
 cabeçalho mentir, o selo herda a mentira (foi o que houve com F109/F110 e F36/F72). Por
@@ -330,7 +336,7 @@ entre cards ativos do mesmo tema. **Não grava nada** — a fusão é curadoria.
 | `--only-needs-qual` | Exporta **todos** os `needs_qualitative=1`, ignorando o filtro de sinais. |
 
 ⚰️ A heurística F7 (léxico de competidor) **foi revogada em 11/09/2026** — medição em
-`AUDITORIA_MEDHUB.md §F7`. Não reintroduzir sem nova medição.
+`history/auditoria/resolvidos.md`, achado F7. Não reintroduzir sem nova medição.
 
 ---
 

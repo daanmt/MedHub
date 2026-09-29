@@ -27,6 +27,8 @@ hub-backend: 2026-09-29a em 8/100 (8 gravadas, 1 marca de reforja #671 "contexto
 
 hub-backend: aula-raciocinio-diagnostico arquivada em artifacts/arquivo/ (tarefa #877 concluida, hub.py sinalizava "candidata a arquivo"; test_repo_real_monta_sem_problema estava quebrado por isso) -- Version 44. Arquivar tambem exigiu tirar a entrada de core/hub_quadro.json e atualizar 2 testes acoplados ao registro real (test_hub_quadro.py, test_hub.py) -- suite de volta a 1245/1245.
 
+hub-backend: 2026-09-29a DRENADO (100/100) -> gravado 67 validas (8 as 10h27 + 59 as 13h), 0 rejeitadas/fora de ordem, **33 marcadas para reforja** (#671, #318, #326, #342, #607, #608, #617, #621, #670, #712, #713, #714, #718, #729, #737, #738, #739, #748, #756, #762, #763, #764, #765, #766, #767, #768, #769, #770, #771, #772, #773, #775, #776 -- defeitos predominantes: card longo, pergunta composta, pergunta circular) -> 2026-09-29b no ar (33 cards, saldo do dia; retidos_reforja=49) -- Version 45. Volume de reforja bem acima do usual (33 num unico lote de 100) -- vale mencionar a ele.
+
 ## Achados de engenharia (ledger)
 - **F140 -> GATE na auditoria, RESOLVIDO na mesma noite.** Nota 1 sobre card em `state=2` leva a `state=3` com `due = revisão + 10 min`; o lote seguinte do dia re-serve e GRAVA a 2ª nota. Replay 11/11; revlog inteiro reproduz em 3.579/3.579.
 - **F140 é reincidência do F32** (s112, re-triado na s176). Escrevi o F140 sem consultar o ledger. **F32 RESOLVIDO** junto: a colisão acabou por remoção de uma das camadas.

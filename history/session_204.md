@@ -23,6 +23,10 @@ hub-backend: 2026-09-28b sem notas (0/13, nada a gravar) -> 2026-09-29a no ar (1
 
 hub-backend: republicado com o mesmo lote 2026-09-29a (painel mudou) -- Version 42 -- /loop 1h religado a pedido dele (job 98a4cfaf)
 
+hub-backend: 2026-09-29a em 8/100 (8 gravadas, 1 marca de reforja #671 "contexto cortado; card longo") -> mesmo lote republicado -- Version 43; quadro: aula #877 (Raciocinio diagnostico quantitativo) concluida por leitura no plano
+
+hub-backend: aula-raciocinio-diagnostico arquivada em artifacts/arquivo/ (tarefa #877 concluida, hub.py sinalizava "candidata a arquivo"; test_repo_real_monta_sem_problema estava quebrado por isso) -- Version 44. Arquivar tambem exigiu tirar a entrada de core/hub_quadro.json e atualizar 2 testes acoplados ao registro real (test_hub_quadro.py, test_hub.py) -- suite de volta a 1245/1245.
+
 ## Achados de engenharia (ledger)
 - **F140 -> GATE na auditoria, RESOLVIDO na mesma noite.** Nota 1 sobre card em `state=2` leva a `state=3` com `due = revisão + 10 min`; o lote seguinte do dia re-serve e GRAVA a 2ª nota. Replay 11/11; revlog inteiro reproduz em 3.579/3.579.
 - **F140 é reincidência do F32** (s112, re-triado na s176). Escrevi o F140 sem consultar o ledger. **F32 RESOLVIDO** junto: a colisão acabou por remoção de uma das camadas.

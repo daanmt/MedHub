@@ -70,8 +70,9 @@ def _repo(tmp_path, aulas, painel=True):
     return tmp_path, data_fn
 
 
-#: O registro REAL do quadro (s194/s195): as aulas do golden (dmg, raciocinio-diagnostico,
-#: topicos-pediatria) estao nele; as demais slugs dos testes entram como `aula` com WARN.
+#: O registro REAL do quadro (s194/s195; s204: raciocinio-diagnostico arquivada, saiu do
+#: registro): as aulas do golden (dmg, topicos-pediatria) estao nele; as demais slugs dos
+#: testes entram como `aula` com WARN.
 QUADRO_REAL = hub.ler_quadro(ROOT / hub.QUADRO_REG)
 
 
@@ -88,7 +89,6 @@ def _construir(raiz, data_fn, publicado=(), lote=None):
 
 def test_golden_do_manifesto_num_repo_sintetico(tmp_path):
     raiz, data_fn = _repo(tmp_path, [("dmg", "A Escada do DMG", "2026-09-22"),
-                                     ("raciocinio-diagnostico", "A Escada de Bayes", "2026-09-21"),
                                      ("topicos-pediatria", "Topicos em Pediatria", "2026-09-07")])
     manifesto, problemas, avisos = _construir(
         raiz, data_fn, publicado=["index.html", "painel.html", "aulas/velha.html"])
@@ -97,14 +97,13 @@ def test_golden_do_manifesto_num_repo_sintetico(tmp_path):
         "file_path": "tmp/hub/index.html",
         "files": {
             "aulas/dmg.html": "artifacts/aula-dmg.html",
-            "aulas/raciocinio-diagnostico.html": "artifacts/aula-raciocinio-diagnostico.html",
             "aulas/topicos-pediatria.html": "artifacts/aula-topicos-pediatria.html",
             "aulas/velha.html": None,
             "painel.html": "artifacts/painel.html",
         },
         "sessao": "2026-09-22h",
         "total_cards": 2,
-        "aulas": 3,
+        "aulas": 2,
         "montado_em": "2026-09-22 20:30:00",
         "mantidos": [],          # DIFF (s193): sem registro, nada fica de fora -- o v0
     }

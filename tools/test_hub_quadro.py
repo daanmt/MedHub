@@ -129,14 +129,15 @@ def _item(pagina, seletor):
 
 def test_registro_real_so_com_as_aulas_em_aberto_e_ligadas_ao_plano():
     """s195: s17, cancer-de-mama, hernias e autopsia foram para artifacts/arquivo/ e sairam do
-    registro; as tres em aberto (ped, dmg, mfc) ligam-se as tarefas do plano."""
+    registro; s204: raciocinio-diagnostico (tarefa #877 concluida por leitura) tambem. Restam
+    dmg e topicos-pediatria em aberto, ligadas as tarefas do plano."""
     reg = hub.ler_quadro(ROOT / hub.QUADRO_REG)
-    assert set(reg) == {"dmg", "raciocinio-diagnostico", "topicos-pediatria"}
-    assert reg["raciocinio-diagnostico"]["tarefa_id"] == 877
+    assert set(reg) == {"dmg", "topicos-pediatria"}
     assert reg["dmg"]["tarefas"] == [26, 40] and reg["topicos-pediatria"]["tarefas"] == [96, 100]
     reais = {hub.slug_de(p.name) for p in (ROOT / "artifacts").glob("aula-*.html")}
     assert reais == set(reg), "aula real sem tipo no registro (ou registro de aula arquivada)"
-    for nome in ("aula-s17", "aula-cancer-de-mama", "aula-hernias", "aula-autopsia-uerj-2023"):
+    for nome in ("aula-s17", "aula-cancer-de-mama", "aula-hernias", "aula-autopsia-uerj-2023",
+                 "aula-raciocinio-diagnostico"):
         assert (ROOT / "artifacts" / "arquivo" / (nome + ".html")).is_file(), nome
 
 

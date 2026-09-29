@@ -13,14 +13,17 @@ Uso:
     python tools/fsrs_queue.py --next [--area X] [--tema Y]
     python tools/fsrs_queue.py --list [--area X] [--tema Y] [--limit N] [--new-limit M] [--cluster]
     python tools/fsrs_queue.py --record <card_id> --rating <1-4>
-    python tools/fsrs_queue.py --export-player [--limit N] [--sessao ID] [--out ARQ.json]
+    python tools/fsrs_queue.py --export-player [--limit N] [--new-limit M] [--sessao ID] [--out ARQ.json]
     python tools/fsrs_queue.py --build-player --lote ARQ.json [--out PAGINA.html]
     python tools/fsrs_queue.py --record-lote NOTAS.json --lote ARQ.json [--apply --expect N]
 
-Ordem da fila: atrasados -> hoje -> novos. Com --cluster (F3), a prioridade de
-bucket é preservada e, dentro de cada bucket, os cards são agrupados por
-(area, tema) — revisão em cluster sem re-agrupamento manual. Cards aposentados
+Ordem da fila: atrasados -> erros_frescos -> hoje -> novos. Com --cluster (F3), a
+prioridade de bucket é preservada e, dentro de cada bucket, os cards são agrupados
+por (area, tema) — revisão em cluster sem re-agrupamento manual. Cards aposentados
 (needs_qualitative >= 2) são excluídos pela própria query do db.
+
+Novos por chamada (F140, s204): sem `--new-limit`, a fila do chat (--list/--next)
+pede 10 e o lote do player (--export-player) enche o SALDO do teto do dia.
 
 Player (spec plano-ssot-e-cards-v2-part-9): o trio --export-player /
 --build-player / --record-lote leva o DRENAR para uma pagina (Artifact) e
@@ -86,7 +89,22 @@ def rank_novos_por_prevalencia(cards, prev_map, new_limit):
     return ordered[:new_limit] if new_limit is not None else ordered
 
 
-def _ordered_queue(area=None, tema=None, limit=None, new_limit=10, cluster=False,
+#: Novos por chamada na fila do CHAT (`--list`/`--next`) quando `--new-limit` nao vem:
+#: o `/revisar` conversacional e fallback e drena em blocos de 10-15.
+NOVOS_CHAT = 10
+
+
+def novos_do_lote(new_limit, saldo):
+    """Quantos cards novos o LOTE do player pede (F140, s204 -- decisao do operador em
+    28/09/2026: "saldo por teto"). `--new-limit` explicito vence; sem ele, os novos
+    enchem o saldo do dia -- o corte do lote no saldo tira o excedente, porque os
+    vencidos vem antes na ordem dos buckets. Puro."""
+    if new_limit is not None:
+        return max(0, int(new_limit))
+    return max(0, int(saldo or 0))
+
+
+def _ordered_queue(area=None, tema=None, limit=None, new_limit=NOVOS_CHAT, cluster=False,
                    prevalencia=False):
     """Achata os buckets na ordem de prioridade, anotando o bucket de origem.
 
@@ -580,12 +598,14 @@ def main():
                              "(core/cronograma/prevalencia_enamed.json: alta -> media -> "
                              "baixa -> sem sinal; desempate FIFO). Opt-in; so muda a "
                              "ordem de introducao, nunca o FSRS (s165)")
-    parser.add_argument("--new-limit", type=int, default=10, dest="new_limit",
-                        help="Máximo de cards novos (state 0). Default: 10")
+    parser.add_argument("--new-limit", type=int, default=None, dest="new_limit",
+                        help="Máximo de cards novos (state 0). Sem a flag: 10 na fila do chat "
+                             "(--list/--next); no --export-player, o SALDO do teto do dia "
+                             "(F140, s204)")
     parser.add_argument("--cluster", action="store_true",
                         help="Agrupa por (area, tema) dentro de cada bucket, preservando "
-                             "a prioridade atrasados -> hoje -> novos (F3). Opt-in: sem a "
-                             "flag, a ordem é a atual")
+                             "a prioridade atrasados -> erros_frescos -> hoje -> novos (F3). "
+                             "Opt-in: sem a flag, a ordem é a atual")
     parser.add_argument("--janela-horas", type=int, default=48, dest="janela_horas",
                         help="Janela de frescor do --pre-bloco em horas (default 48; "
                              "norma: core/contracts/orquestracao-contract.md)")
@@ -626,11 +646,16 @@ def main():
     if args.export_player:
         _avisar_hub()           # trocar o lote sem gravar a aba Cards perde a sessao das notas
         referencia = relogio_para(args.para, parser)
-        ordered = _ordered_queue(area=args.area, tema=args.tema, limit=None,
-                                 new_limit=args.new_limit,
-                                 prevalencia=args.prevalencia, cluster=args.cluster)
         consumo = None if args.limit is not None else consumo_do_dia()
-        limite = args.limit if args.limit is not None else teto_do_dia(ordered, consumo)
+        # F140 (s204): duas passadas. O saldo depende so dos VENCIDOS (F64), que nao
+        # dependem de `new_limit` -- mede-se com 0 novos e pede-se a fila de novo com
+        # os novos que enchem o lote.
+        vencidos = _ordered_queue(area=args.area, tema=args.tema, limit=None, new_limit=0,
+                                  prevalencia=args.prevalencia, cluster=args.cluster)
+        limite = args.limit if args.limit is not None else teto_do_dia(vencidos, consumo)
+        ordered = _ordered_queue(area=args.area, tema=args.tema, limit=None,
+                                 new_limit=novos_do_lote(args.new_limit, limite),
+                                 prevalencia=args.prevalencia, cluster=args.cluster)
         lote = anexar_agenda(
             montar_lote(ordered, limit=limite,
                         sessao=args.sessao or (referencia.date().isoformat() if referencia else None),
@@ -737,9 +762,9 @@ def main():
 
     # s193 (decisao 5 do /ai-eng): a fila do chat nunca passa na frente do celular.
     _avisar_hub()
-    ordered = _ordered_queue(area=args.area, tema=args.tema,
-                             limit=args.limit, new_limit=args.new_limit, prevalencia=args.prevalencia,
-                             cluster=args.cluster)
+    ordered = _ordered_queue(area=args.area, tema=args.tema, limit=args.limit,
+                             new_limit=NOVOS_CHAT if args.new_limit is None else args.new_limit,
+                             prevalencia=args.prevalencia, cluster=args.cluster)
 
     if args.next:
         if not ordered:

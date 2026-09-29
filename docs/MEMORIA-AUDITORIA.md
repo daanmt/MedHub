@@ -297,6 +297,10 @@ nunca convertido em métrica para o painel ficar verde.
 <!-- TERMO-REVOGADO: Cota do dia | cronograma-contract v1.5 (s203) -- decisao do operador em 27/09: a unica meta e 01/11 (10.000); a cota da semana de calendario (day_plan.cota_do_dia) saiu do boot, do painel e do HANDOFF -->
 <!-- TERMO-REVOGADO: ritmo da Fase 1 | cronograma-contract v1.5 (s203) -- a Fase 1 e COBERTURA da meta (fechando_q), nunca um 2o ritmo; o unico por dia e o da meta (volume_vs_marco) -->
 <!-- TERMO-REVOGADO: Ciclo 2026 | performance.py MARCOS (s203) -- o marco 12.500 @ 31/12 saiu: a meta e UMA -->
+<!-- TERMO-REVOGADO: o card volta hoje | revisao-calibrada v1.9 (s204), Clausula 14 -- F140/F32: decisao do operador em 28/09 ('volta apenas no dia seguinte'); o passo de reaprendizagem de 10 min do py-fsrs saiu (`relearning_steps=()`), a reaprendizagem do dia e so o re-drill do player -->
+<!-- TERMO-REVOGADO: relearning que volta hoje | revisar.md passos 3 e 5 (s204) -- F140: nenhuma nota devolve o card a fila no mesmo dia -->
+<!-- TERMO-REVOGADO: default `--new-limit 10` | fsrs-management v1.6 (s204) -- F140: decisao do operador em 28/09 ('saldo por teto'); no lote do player os novos enchem o saldo do teto, o 10 vale so na fila do chat -->
+<!-- TERMO-REVOGADO: atrasados → hoje → novos | fsrs-management v1.6 + revisar.md (s204) -- a fila usa 4 buckets desde o P3 part-2 (atrasados, erros_frescos, hoje, novos); a redacao de 3 sobreviveu em 3 portadores -->
 
 > **Por que os marcadores são comentários HTML:** eles não aparecem no render do documento (o
 > leitor humano lê a prosa acima, não a lista), mas são triviais de extrair. O registro fica onde a

@@ -58,7 +58,9 @@ All persistent data lives in `ipub.db` (SQLite, local-only). Clinical knowledge 
   bumps it only on a real field change, preserving FSRS state.
 - **FSRS is the reference implementation** (`py-fsrs>=6.3.1`), not a hand-rolled v4.
   `app/utils/fsrs.py` is an adapter (`Scheduler(desired_retention=0.9, learning_steps=(),
-  enable_fuzzing=False)`); scheduling spread lives in `fsrs_balance.py`.
+  relearning_steps=(), enable_fuzzing=False)` — `KWARGS_BASE`, shared with
+  `tools/fsrs_optimize.py`); every rating schedules in whole days, and `state` 3 is legacy
+  only (F140, s204). Scheduling spread lives in `fsrs_balance.py`.
 
 ## RAG (gold-only)
 

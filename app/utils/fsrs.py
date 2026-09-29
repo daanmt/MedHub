@@ -9,10 +9,10 @@ e o schema `fsrs_cards`/`fsrs_revlog` (nenhuma coluna nova).
 Mapeamento de estado: MedHub usa `state` 0=New, 1=Learning, 2=Review,
 3=Relearning. py-fsrs usa 1=Learning, 2=Review, 3=Relearning (sem "New").
 Um card MedHub com `state==0` ou `stability` ausente é tratado como card
-novo (nunca revisado) do py-fsrs. O `step` (fase de learning) do py-fsrs
-não é persistido no schema atual — é reconstruído como 0; isso é fiel no
-estado Review (que ignora `step`) e apenas reinicia os passos curtos de
-learning, sem impacto no agendamento de longo prazo.
+novo (nunca revisado) do py-fsrs. O `step` do py-fsrs não é persistido no
+schema atual — é reconstruído como 0; sem passos de aprendizagem nem de
+reaprendizagem (abaixo), nenhum ramo da biblioteca o consulta. Desde 28/09/2026
+o adapter NÃO produz mais `state` 3: ele só existe como legado no banco.
 
 Datas: py-fsrs opera em UTC tz-aware; o MedHub armazena datetimes naive
 locais (compatível com os dados existentes). O adapter converte nas bordas.
@@ -47,12 +47,21 @@ PARAMETROS, MOTIVO_PARAMETROS = carregar_parametros(regua=REGUA_ATUAL)
 #   direto no modelo DSR, com intervalos em dias desde a 1ª revisão. Isso é fiel
 #   ao FSRS (modelo de memória) e evita depender do `step` (que o schema não
 #   persiste); cards graduam para Review imediatamente.
-# - relearning_steps default (1 passo): preserva o estado Relearning (3) quando
-#   um card de Review recebe Again; o reset de step é inócuo (passo único gradua
-#   de volta a Review num Good).
+# - relearning_steps=() (F140, s204 -- decisão do operador em 28/09/2026: "volta
+#   apenas no dia seguinte; 'hoje' é apenas no redrill"): nota 1 sobre card de
+#   Review FICA em Review, com intervalo em dias (piso de 1). A reaprendizagem do
+#   dia é do re-drill do player, que não grava; o motor não a duplica.
+#   ⚰️ Até 28/09/2026 o passo ficava no default da biblioteca (600 s): o card ia
+#   a Relearning (3) com `due` em 10 min, o lote seguinte do mesmo dia o
+#   re-servia e uma 2ª nota era gravada (F32, F140). O state 3 segue existindo
+#   só como LEGADO: card nele volta a Review na próxima nota, qualquer que seja.
 # - enable_fuzzing=False: intervalos determinísticos/reproduzíveis.
-_KWARGS_SCHEDULER = dict(desired_retention=REQUEST_RETENTION,
-                         learning_steps=(), enable_fuzzing=False)
+#: Argumentos-base do Scheduler: a FONTE ÚNICA. `tools/fsrs_optimize.py` parte
+#: daqui para o replay da métrica -- digitados em dois lugares, divergiriam em
+#: silêncio (`test_scheduler_do_otimizador_usa_os_kwargs_de_producao`).
+KWARGS_BASE = dict(desired_retention=REQUEST_RETENTION, learning_steps=(),
+                   relearning_steps=(), enable_fuzzing=False)
+_KWARGS_SCHEDULER = dict(KWARGS_BASE)
 if PARAMETROS is not None:
     _KWARGS_SCHEDULER["parameters"] = PARAMETROS
 _SCHEDULER = Scheduler(**_KWARGS_SCHEDULER)

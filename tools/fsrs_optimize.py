@@ -92,11 +92,12 @@ valida e default x otimizado DENTRO de cada visao.
     SQLite (UTC); depois passou a ser LOCAL explicito (`db.carimbo()`). Aqui
     todos sao lidos como UTC, convencao unica. O erro maximo e 3h e so muda o
     resultado quando cruza a virada do dia -- nao foi quantificado.
-(d) **Assimetria de `learning_steps`.** O replay da metrica usa o Scheduler de
-    PRODUCAO (`learning_steps=()`, igual a `app/utils/fsrs.py`); o Optimizer,
-    por dentro, ajusta com `Scheduler(parameters=...)`, que carrega os
-    learning_steps default. A diferenca so alcanca card em Learning com
-    revisao no mesmo dia -- que a metrica ja descarta -- mas fica declarada.
+(d) **Assimetria de passos.** O replay da metrica usa o Scheduler de PRODUCAO
+    (`learning_steps=()` e, desde o F140/s204, `relearning_steps=()` -- os
+    argumentos vem de `app.utils.fsrs.KWARGS_BASE`, fonte unica); o Optimizer,
+    por dentro, ajusta com `Scheduler(parameters=...)`, que carrega os passos
+    default. A diferenca so alcanca card em (re)aprendizagem com revisao no
+    mesmo dia -- que a metrica ja descarta -- mas fica declarada.
 (e) **O JSON e fit na serie inteira; a metrica e fit so no treino.** Sao dois
     ajustes por visao: `parametros` (revlog completo, o que o operador
     adotaria) e `parametros_holdout_fit` (so os ~80% iniciais), usado
@@ -143,6 +144,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from app.utils import regua as _regua  # noqa: E402
+from app.utils.fsrs import KWARGS_BASE  # noqa: E402  (fonte unica dos kwargs do Scheduler)
 
 if hasattr(sys.stdout, 'reconfigure'):
     try:
@@ -313,9 +315,10 @@ def particionar(linhas, corte):
 
 
 def _scheduler(parametros):
-    """Scheduler de PRODUCAO com os parametros dados -- ver limite (d)."""
+    """Scheduler de PRODUCAO com os parametros dados -- ver limite (d). Os argumentos
+    saem de `app.utils.fsrs.KWARGS_BASE` (F140, s204): fonte unica com o adapter."""
     from fsrs import Scheduler
-    kwargs = dict(desired_retention=0.9, learning_steps=(), enable_fuzzing=False)
+    kwargs = dict(KWARGS_BASE)
     if parametros is not None:
         kwargs['parameters'] = tuple(float(x) for x in parametros)
     return Scheduler(**kwargs)

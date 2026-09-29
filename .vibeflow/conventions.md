@@ -56,7 +56,8 @@
 
 ## FSRS
 - The scheduler is the reference library `py-fsrs` (`fsrs>=6.3.1`) — **not** a hand-rolled v4
-- `app/utils/fsrs.py` is a thin adapter (`Scheduler(desired_retention=0.9, learning_steps=(), enable_fuzzing=False)`)
+- `app/utils/fsrs.py` is a thin adapter (`Scheduler(desired_retention=0.9, learning_steps=(), relearning_steps=(), enable_fuzzing=False)`); the kwargs live in ONE place, `app.utils.fsrs.KWARGS_BASE`, and `tools/fsrs_optimize.py` builds its replay Scheduler from it
+- No rating brings a card back on the same day (F140, s204): same-day relearning belongs to the player's re-drill, which never records. `state` 3 is legacy data, not something the adapter produces
 - Never write `fsrs_revlog` twice for the same card in one session (anti-duplo-registro). In the chat `/revisar` the dedup lives in the agent; in the player/hub path it lives in the writer (s193): `fsrs_queue --record-lote` is idempotent by revlog EQUALITY (`app/utils/notas_player.situacao`: same `review_time` = already recorded; a newer review without the equal one = out of order, reported, never written)
 - Player notes are recorded on the REVIEW clock, not the recording clock: `record_review(..., quando=...)` / `FSRS.evaluate(..., quando=...)` take the note's `ts` converted by the single helper `notas_player.relogio` (ISO UTC -> local naive, truncated to the second); `quando` in the future or not after the card's last review -> `ValueError`, nothing written (py-fsrs does NOT refuse a `review_datetime` before `last_review` -- it silently treats it as short-term)
 - The page's `db` is untrusted input and the shared account makes every viewer OWNER: the writer quarantines strange docs (`notas_player.validar_nota`), reports each with its reason and records the valid ones

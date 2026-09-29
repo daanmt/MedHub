@@ -1,4 +1,4 @@
-# Session 204 -- auditoria do F140: a causa estava errada, o achado não era novo, e dois achados novos saíram da medição
+# Session 204 -- F140 auditado e corrigido no mesmo dia: a causa estava errada, o achado não era novo, a nota 1 passa a voltar no dia seguinte
 
 **Data:** 2026-09-28 (segunda, noite) - **Ferramenta:** Claude Code (Fable 5.1) - **Continuidade:** `session_203.md` - **/ai-eng:** não estava aberto (report deixado em arquivo no workspace dele)
 
@@ -11,34 +11,46 @@
 4. **Veredito do F140: PARTIAL.** 4 afirmações confirmadas, 2 imprecisas, 3 refutadas. A causa real é o `relearning_steps` no default do py-fsrs (1 passo de 10 min), não `learning_steps=()` com estabilidade baixa.
 5. **Ledger:** F140 reescrito com lápides (texto original preservado) e promovido a GATE; ponteiro de reincidência no F32; F141 e F142 abertos como DECLARADOS.
 6. **Report ao /ai-eng** em `~/ai-eng/HANDOFF-MEDHUB-F140-AUDITORIA-2026-09-28.md` (não há sessão dele viva; o precedente é handoff por arquivo na raiz do workspace dele).
+7. **Tique do `/hub-backend`** (disparado pelo `/loop` que seguia ligado nesta mesma sessão): lote `2026-09-28b` em 0/13, nada a fazer.
+8. **Decisão do operador e o fix, pelo loop do vibeflow** (spec em 3 parts -> teste vermelho -> implementação -> auditoria PASS): (a) `relearning_steps=()` no adapter, com `KWARGS_BASE` como fonte única que o otimizador importa; (b) `--export-player` enche o saldo do teto com cards novos (`novos_do_lote`, duas passadas), fila do chat segue em 10; (c) rito dos 3 passos: `revisao-calibrada` v1.9, `fsrs-management` v1.6, `revisar.md`, `hub-backend.md`, 4 termos cadastrados.
+9. **Golden do fix:** Scheduler antigo x novo sobre as mesmas 3.589 entradas -- estabilidade e dificuldade idênticas; só `state`/`due` mudam, nas 362 linhas que caíam no passo. Export contra o banco real: 53 cards (3 + 50).
+10. **Push** autorizado por ele; **`/loop` desligado** por ordem dele (job `3f6af4b9`).
 
 ## Achados de engenharia (ledger)
-- **F140 -> GATE.** Nota 1 sobre card em `state=2` leva a `state=3` com `due = revisão + 10 min`; o lote seguinte do dia re-serve e GRAVA a 2ª nota. Replay 11/11; revlog inteiro reproduz em 3.579/3.579.
-- **F140 é reincidência do F32** (s112, re-triado na s176). Escrevi o F140 sem consultar o ledger.
+- **F140 -> GATE na auditoria, RESOLVIDO na mesma noite.** Nota 1 sobre card em `state=2` leva a `state=3` com `due = revisão + 10 min`; o lote seguinte do dia re-serve e GRAVA a 2ª nota. Replay 11/11; revlog inteiro reproduz em 3.579/3.579.
+- **F140 é reincidência do F32** (s112, re-triado na s176). Escrevi o F140 sem consultar o ledger. **F32 RESOLVIDO** junto: a colisão acabou por remoção de uma das camadas.
 - **O comportamento está em contrato** (`revisao-calibrada-contract.md:232`, "o card volta hoje"): mudar é decisão de produto, pelo rito dos 3 passos.
 - **F141 (novo, DECLARADO):** card de 1 dia servido na manhã seguinte com menos de 24 h cai no ramo de curto prazo da biblioteca. 212 revisões, 138 em setembro.
 - **F142 (novo, DECLARADO):** sem trava de 2ª gravação do mesmo card no mesmo dia entre lotes; o teto conta linha do revlog. 83 re-revisões no mesmo dia.
 - Selo derivado depois das edições: todo item com terminal nomeado, 0 discordâncias.
 
 ## Erros meus nesta sessão
+- Escrevi no HANDOFF que o `/loop` do backend estava desligado. Estava ligado, nesta mesma sessão (ela continua a da s203 depois do `/clear`). Só vi quando o tique disparou; corrigido no HANDOFF.
 - Reportei ao operador números parciais de escala **antes** de corrigir o fuso do revlog antigo (65, 145, 150, 412). Os corretos, com duas lentes: 49, 83, 212, 512. Correção declarada no relatório e no chat.
 
 ## Decisões tomadas
-- Nenhuma do operador nesta sessão. Minha: anti-escopo total de código (nada em `app/`, `tools/`, `core/`), inclusive a deriva de documentação de esforço S, que fica junto do remédio.
+- **Operador (28/09, noite):** *"1. volta apenas no dia seguinte. 'hoje' é apenas no redrill, já contemplado. 2. saldo por teto, que deve passar a 100 cards/dia."* O teto já era 100/dia desde a s196; nada mudou nele.
+- **Operador:** o ledger tem de deixar claro o que está aberto e o que foi resolvido; resolvido sai da frente; sem backlog infinito. Push autorizado; loops desligados.
+- Minha, na fase de auditoria: anti-escopo total de código até a decisão dele.
 - Hub **não** republicado: nenhum dado de estudo mudou.
 
 ## Artefatos criados/modificados
-- `.vibeflow/audits/f140-fila-pos-bloco-audit.md` (novo)
+- `.vibeflow/audits/f140-fila-pos-bloco-audit.md` e `.vibeflow/audits/nota1-volta-no-dia-seguinte-audit.md` (novos)
+- `.vibeflow/specs/nota1-volta-no-dia-seguinte-part-{1,2,3}.md` (novos)
+- `app/utils/fsrs.py`, `tools/fsrs_optimize.py`, `tools/fsrs_queue.py` + testes (`test_fsrs.py`, `test_fsrs_optimize.py`, `test_fsrs_queue_player.py`)
+- `core/contracts/revisao-calibrada-contract.md` (v1.9), `core/contracts/fsrs-management-contract.md` (v1.6), `.claude/commands/revisar.md`, `.claude/commands/hub-backend.md` (+ espelhos), `docs/MEMORIA-AUDITORIA.md`, `.vibeflow/index.md`, `.vibeflow/conventions.md`, `AGENTE.md` (linha gerada da tabela 7.4)
 - `AUDITORIA_MEDHUB.md` (F140, F141, F142, ponteiro no F32)
 - `HANDOFF.md`, `history/INDEX.md`, `history/session_204.md`
 - `tmp/f140_auditoria/` (local, fora do git): 4 relatórios crus + scripts e saídas do O1
 - Fora do repo: `~/ai-eng/HANDOFF-MEDHUB-F140-AUDITORIA-2026-09-28.md`
 
 ## Custo dos subagentes (lido do `usage` do harness)
-- O1 Opus 233.437 tokens, 54 chamadas, 15,4 min · S2 Sonnet 220.508, 74, 9,9 min · S1 Sonnet 169.222, 55, 8,5 min · O2 Opus 124.610, 40, 7,0 min. Total 747.777 tokens; 15,4 min de parede.
+- Auditoria: O1 Opus 233.437 tokens, 54 chamadas, 15,4 min · S2 Sonnet 220.508, 74, 9,9 min · S1 Sonnet 169.222, 55, 8,5 min · O2 Opus 124.610, 40, 7,0 min.
+- Varredura do ledger: S3 Sonnet 231.199 tokens, 61 chamadas, 15,9 min.
+- Total: 978.976 tokens em 5 filhos.
 
 ## Próximos passos
-- **Operador (GATE do F140):** a nota 1 volta no mesmo dia (hoje) ou só no seguinte (remédio A, recomendado)? Novos por lote: 10 fixos ou o saldo do teto?
+- **Cards:** o lote `2026-09-28b` no ar é de antes do fix (13 cards, 0/13). O próximo export já sai pelo saldo. Com o `/loop` desligado, publicar é ato de sessão.
 - **Operador (observação):** nota 4 = 379 de 522 notas da régua v2 (72,6%); o contrato a descreve como rara.
 - **/ai-eng:** triagem de F141 e F142; checkpoint da s203 segue pendente.
 - **Estudo:** UERJ 2021 (t1793) e a Autópsia dos erros, como estava no HANDOFF.

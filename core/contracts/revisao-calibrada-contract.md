@@ -2,12 +2,12 @@
 type: contract
 layer: core
 status: canonical
-version: 1.8
+version: 1.9
 relates_to: [forgetting-curve-contract, fsrs-management-contract, cronograma-contract, AGENTE]
 ---
 
 # Contrato de Execução de Revisão Calibrada
-**Versão 1.8 | 2026-09-22 (s193, Cláusula 15: a part-2 entra em vigor; a poda passa a exigir 0 válidas não gravadas + rejeitadas e FORA DE ORDEM ARQUIVADAS no repo -- a condição de releitura com 0 rejeitadas é REVOGADA; o `/revisar` no chat ABRE gravando o hub) -- anterior: 1.7, 2026-09-22 (s192, MedHub HUB: Cláusula 15 -- o player mora na aba Cards de UM artifact permanente, republicado no lugar; a publicação de um artifact NOVO por lote é REVOGADA; a gravação no relógio da revisão, idempotente e com quarentena fica ESPECIFICADA -- part-2, pendente -- e, até ela, notas do hub não são gravadas) -- anterior: 1.6, 2026-09-18 (s186, R2/F112: Cláusula 14 -- a régua de notas passa a ser a NATIVA do FSRS e vira propriedade VERSIONADA de cada linha do revlog; a régua v1 é REVOGADA) -- anterior: 1.5, 2026-09-17 (s185, F110: Cláusula 13 -- fricção virtuosa não se automatiza; declarada SEM gate) -- anterior: 1.4, 2026-09-16 (s183: o DRENAR ganha uma SEGUNDA superficie -- o player de cards como pagina, Clausula 12. Nenhuma clausula revogada; A, C e F preservados por construcao) -- anterior: 1.3, 2026-09-08 (s170: o sub-modo PREPARAR e a Camada 1 sao REVOGADOS; todo o ensino migra para a Revisao Direcionada de fechamento -- Clausula 11, Invariante F, lapide do Invariante D); 1.2, 2026-07-06 (s109+, F18c/F21: Invariante E + Clausula 10); 1.1, 2026-07-05 (s108+, F8/F9: Invariantes C e D); 1.0, 2026-06-28 (sessao 096).**  <!-- NAO-NORMATIVA: linha de changelog/versao -->
+**Versão 1.9 | 2026-09-28 (s204, F140/F32, Cláusula 14: a nota 1 volta no DIA SEGUINTE -- o passo de reaprendizagem de 10 min do motor é REVOGADO por decisão do operador; a reaprendizagem do dia é só o re-drill do player, que não grava) -- anterior: 1.8, 2026-09-22 (s193, Cláusula 15: a part-2 entra em vigor; a poda passa a exigir 0 válidas não gravadas + rejeitadas e FORA DE ORDEM ARQUIVADAS no repo -- a condição de releitura com 0 rejeitadas é REVOGADA; o `/revisar` no chat ABRE gravando o hub) -- anterior: 1.7, 2026-09-22 (s192, MedHub HUB: Cláusula 15 -- o player mora na aba Cards de UM artifact permanente, republicado no lugar; a publicação de um artifact NOVO por lote é REVOGADA; a gravação no relógio da revisão, idempotente e com quarentena fica ESPECIFICADA -- part-2, pendente -- e, até ela, notas do hub não são gravadas) -- anterior: 1.6, 2026-09-18 (s186, R2/F112: Cláusula 14 -- a régua de notas passa a ser a NATIVA do FSRS e vira propriedade VERSIONADA de cada linha do revlog; a régua v1 é REVOGADA) -- anterior: 1.5, 2026-09-17 (s185, F110: Cláusula 13 -- fricção virtuosa não se automatiza; declarada SEM gate) -- anterior: 1.4, 2026-09-16 (s183: o DRENAR ganha uma SEGUNDA superficie -- o player de cards como pagina, Clausula 12. Nenhuma clausula revogada; A, C e F preservados por construcao) -- anterior: 1.3, 2026-09-08 (s170: o sub-modo PREPARAR e a Camada 1 sao REVOGADOS; todo o ensino migra para a Revisao Direcionada de fechamento -- Clausula 11, Invariante F, lapide do Invariante D); 1.2, 2026-07-06 (s109+, F18c/F21: Invariante E + Clausula 10); 1.1, 2026-07-05 (s108+, F8/F9: Invariantes C e D); 1.0, 2026-06-28 (sessao 096).**  <!-- NAO-NORMATIVA: linha de changelog/versao -->
 
 > Documento normativo. Governa a **competência única `/revisar`** cuja descompressão é calibrada por uma **nota de dificuldade-para-o-usuário (1-10) por tema**, sem cegar a curva de esquecimento. Consome o score de dormência e a retrievability de `forgetting-curve-contract.md` (não os redefine) e o `(tema, tipo)` de `cronograma-contract.md`. Referenciado por: `AGENTE.md` (§1.2, §6, §7.3), `.claude/commands/revisar.md`.
 
@@ -229,10 +229,14 @@ Duas dimensões **ortogonais** no render de qualquer ensino calibrado — **`/au
 
 | nota | significado | como o motor a trata |
 |---|---|---|
-| **1** | falhou -- não recuperou, ou "não sei" | único lapso; o card volta hoje |
+| **1** | falhou -- não recuperou, ou "não sei" | único lapso; volta à fila no **dia seguinte** |
 | **2** | lembrou **com esforço** -- chegou lá, mas custou | acerto difícil; intervalo curto |
 | **3** | lembrou -- recuperação normal | **o caso padrão** |
 | **4** | lembrou **sem esforço** -- imediato | raro por construção |
+
+🔴 **Nenhuma nota devolve o card à fila no mesmo dia (v1.9, F140 -- decisão do operador em 28/09/2026: *"volta apenas no dia seguinte. 'hoje' é apenas no redrill, já contemplado"*).** O motor agenda sempre em dias inteiros (`relearning_steps=()` em `app/utils/fsrs.py`, piso de 1 dia). A reaprendizagem do dia é **uma só**: o re-drill do player (Cláusula 12), que repete a frente até sair `>= 3` e **não grava**.  <!-- CHECK: test_fsrs -->
+
+⚰️ *REVOGADO em 28/09/2026 (F140/F32): até essa data a linha da nota 1 dizia "o card volta hoje". Era o passo de reaprendizagem de 10 min do py-fsrs, deixado no default desde o commit `46df800` sem decisão pedagógica: o card ia a `state` 3, o lote seguinte do MESMO dia o re-servia -- depois de o player já tê-lo re-drillado -- e uma 2ª nota era gravada e descontada do teto. Medido: 362 revisões terminaram em `state` 3, 49 com 2ª nota no mesmo dia. O `state` 3 segue existindo só como legado no banco.*  <!-- NAO-NORMATIVA: lapide da redacao revogada -->
 
 **Portador único:** [`app/utils/regua.py`](../../app/utils/regua.py). O `revisar.md`, o player e o
 otimizador **leem** de lá; nenhum deles redefine a tabela.

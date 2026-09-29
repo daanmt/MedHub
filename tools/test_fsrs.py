@@ -65,12 +65,18 @@ def main():
     check("3. stability cresce em Good no vencimento", stabs[-1] > stabs[0])
     check("3. scheduled_days cresce", c["scheduled_days"] > r_good["scheduled_days"])
 
-    # 4. Again em card graduado (Review) -> Relearning + lapse
+    # 4. Again em card graduado (Review) -> FICA em Review, volta em dias, conta lapse.
+    #    F140 (s204), decisao do operador em 28/09/2026: nota 1 volta so no dia
+    #    seguinte; o "hoje" e o re-drill do player. Ate essa data o check exigia
+    #    Relearning (3): era o passo de 10 min do py-fsrs, que re-servia o card no
+    #    lote seguinte do mesmo dia e gravava uma 2a nota.
     c = fsrs.evaluate(fsrs.init_card(), GOOD)   # -> Review (2)
     state_antes, lapses_antes = c["state"], c["lapses"]
     c = fsrs.evaluate(_aged(c), AGAIN)
     check("4. graduou para Review antes do Again", state_antes == 2)
-    check("4. Again em Review -> Relearning (3)", c["state"] == 3)
+    check("4. Again em Review -> fica em Review (2)", c["state"] == 2)
+    check("4. Again em Review -> due >= 1 dia",
+          c["due"] - c["last_review"] >= timedelta(days=1))
     check("4. lapse incrementado", c["lapses"] == lapses_antes + 1)
 
     # 5. Again em card NOVO nao conta como lapse
@@ -82,6 +88,29 @@ def main():
     ours = fsrs.evaluate(fsrs.init_card(), GOOD)
     check("6. stability bate com py-fsrs de referencia",
           abs(ours["stability"] - ref_card.stability) < 1e-9)
+
+    # 7. PROPRIEDADE (F140): nenhuma combinacao estado x nota devolve o card no
+    #    mesmo dia nem produz Relearning. O state 3 so existe como LEGADO (cards
+    #    rebaixados antes de 28/09/2026) e sai para Review na proxima nota.
+    def _card(state, horas_desde):
+        card = fsrs.init_card()
+        if state == 0:
+            return card
+        visto = datetime.now() - timedelta(hours=horas_desde)
+        card.update({"card_id": 1, "state": state, "stability": 0.76,
+                     "difficulty": 9.0, "reps": 4, "lapses": 2,
+                     "last_review": visto, "due": visto + timedelta(minutes=10)})
+        return card
+
+    curtos = []
+    for state, horas in ((0, 0), (2, 30), (2, 2), (3, 2), (3, 30)):
+        for nota in (1, 2, 3, 4):
+            r = fsrs.evaluate(_card(state, horas), nota)
+            if r["state"] == 3 or r["due"] - r["last_review"] < timedelta(days=1):
+                curtos.append((state, horas, nota, r["state"],
+                               str(r["due"] - r["last_review"])))
+    check("7. nenhuma nota devolve o card no mesmo dia nem produz state 3 %s"
+          % (curtos or ""), not curtos)
 
     print("\nRESULTADO:", "OK - todos passaram" if not _fails else f"FALHAS: {_fails}")
     return 1 if _fails else 0

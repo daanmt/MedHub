@@ -124,6 +124,23 @@ def mock_optimizer(monkeypatch):
     return vistos
 
 
+# ------------------------------------------- 0. o Scheduler e o da producao
+
+def test_scheduler_do_otimizador_usa_os_kwargs_de_producao():
+    """F140 (s204): o otimizador digitava a mao os mesmos argumentos do adapter; se um
+    mudasse, o replay da metrica divergiria da producao em silencio. Os dois leem a
+    mesma constante, e nenhum dos dois tem passo de (re)aprendizagem."""
+    from app.utils import fsrs as adapter
+    producao = adapter._SCHEDULER
+    otimizador = fsrs_optimize._scheduler(None)
+    for campo in ("desired_retention", "learning_steps", "relearning_steps",
+                  "enable_fuzzing"):
+        assert getattr(otimizador, campo) == getattr(producao, campo), campo
+    assert tuple(otimizador.learning_steps) == ()
+    assert tuple(otimizador.relearning_steps) == ()
+    assert fsrs_optimize.KWARGS_BASE is adapter.KWARGS_BASE
+
+
 # --------------------------------------------------------------- 1. o remap
 
 def test_remap_transforma_as_notas_certas():

@@ -2,12 +2,12 @@
 type: contract
 layer: core
 status: canonical
-version: 1.5
+version: 1.6
 relates_to: [reconcile-contract, estado-contract, AGENTE]
 ---
 
 # Contrato de Gerenciamento do FSRS
-**Versão 1.5 | 2026-09-22 (s193: relógio da revisão no `record_review` + o fato de biblioteca do py-fsrs 6.3.1, com teste) · v1.4 2026-09-17 (s185, F109: a ordem intercalada é o default DELIBERADO; `--cluster` só onboarding de cluster frio / andaime) · v1.3 2026-09-10 (s176, item 1.2 -- F64, o contador do regime) · v1.2 (s176, item 0.7 -- promotes F71 e F80) · v1.1 2026-07-05 (s108+, F3/F4 do ledger AUDITORIA_MEDHUB) · v1.0 2026-06-03 (sessão 075)**
+**Versão 1.6 | 2026-09-28 (s204, F140: o motor não tem mais passo de reaprendizagem -- `state` 3 vira legado; os novos do LOTE enchem o saldo do teto; a ordem da fila é escrita com os 4 buckets) · v1.5 2026-09-22 (s193: relógio da revisão no `record_review` + o fato de biblioteca do py-fsrs 6.3.1, com teste) · v1.4 2026-09-17 (s185, F109: a ordem intercalada é o default DELIBERADO; `--cluster` só onboarding de cluster frio / andaime) · v1.3 2026-09-10 (s176, item 1.2 -- F64, o contador do regime) · v1.2 (s176, item 0.7 -- promotes F71 e F80) · v1.1 2026-07-05 (s108+, F3/F4 do ledger AUDITORIA_MEDHUB) · v1.0 2026-06-03 (sessão 075)**
 
 > Documento normativo. Define como a fila de repetição espaçada é gerenciada, drenada e mantida.
 > Referenciado por: `AGENTE.md`, `reconcile-contract.md` (W3), `.claude/commands/revisar.md`, `.claude/commands/estilo-flashcard.md`.
@@ -25,7 +25,7 @@ O FSRS é o motor de retenção do MedHub. Este contrato evita os dois modos de 
 - **Cards qualitativos** (`needs_qualitative = 0`): cunhados pelo agente pela régua `estilo-flashcard.md`. **São a fila ativa.**
 - **Cards aposentados** (`needs_qualitative = 2`): excluídos da fila pelo `fsrs_queue`. Inclui os 70 heurísticos legados após a **bankruptcy da sessão 075**.
 - **`needs_qualitative = 1`** (heurístico ativo): **não deve mais existir** após a bankruptcy. Se reaparecer (geração legada), é defeito.
-- **State FSRS** (`fsrs_cards.state`): 0 = novo (nunca revisado), 1 = aprendendo, 2 = revisão, **3 = relearning** (card de revisão que caiu — passo intra-sessão do py-fsrs; existia no dado sem constar aqui, F52c/v1.1).
+- **State FSRS** (`fsrs_cards.state`): 0 = novo (nunca revisado), 1 = aprendendo, 2 = revisão, **3 = relearning, só LEGADO** (v1.6, F140): o adapter **não produz mais** `state` 3 -- nota 1 sobre card de revisão fica em `state` 2, com intervalo em dias. Card que já estava em 3 volta a 2 na próxima nota, qualquer que seja. ⚰️ *Até 28/09/2026 o 3 era o passo intra-dia de 10 min do py-fsrs (existia no dado sem constar aqui, F52c/v1.1); revogado por decisão do operador.*  <!-- CHECK: test_fsrs -->
 - **Invariante `needs_qualitative`**: card com `needs_qualitative = 1` **não deve existir na fila ativa** (`state < 2`) — sensor `NEEDS_QUALITATIVE_ATIVO` (WARN) no `auto_check` (v1.1; antes o invariante era prosa sem sensor, violado em 6 cards).
 
 ## Balanceador de carga do agendamento (v1.1 — absorve `app/utils/fsrs_balance.py`, F52a)
@@ -66,9 +66,9 @@ anterior a `37e0859` continua gravado em UTC (backfill é decisão do operador, 
 
 ## Política de fila (`/revisar`)
 
-- **Cap de novos por sessão:** default `--new-limit 10`. Não despejar o backlog inteiro — drenar em ondas.
+- **Novos por chamada (v1.6, F140 -- decisão do operador em 28/09/2026: *"saldo por teto"*):** no **lote do player** (`--export-player`) os cards novos **enchem o saldo do teto do dia**; o freio é um só, o teto (§Teto dinâmico). Na **fila do chat** (`--list`/`--next`) o default segue **10**. `--new-limit N` explícito vence nos dois. ⚰️ *Até 28/09/2026 o cap era de 10 novos por chamada também no lote: com saldo de 53, o lote saía com 13 cards, e o operador pedia `--new-limit` à mão a cada export (F140).*
 - **Priorização por área fraca:** ao drenar, filtrar por `--area`/`--tema` das áreas com pior performance (cruzar com `/performance`). Cards de Cardiologia/Hepato/Dermato/FA antes de áreas fortes.
-- **Ordem natural da fila:** atrasados → hoje → novos (definida no `fsrs_queue`).
+- **Ordem natural da fila:** atrasados → erros_frescos → hoje → novos (`fsrs_queue._ordered_queue`). ⚰️ *Até 28/09/2026 esta linha listava 3 buckets, redação antiga de antes da banda `erros_frescos` (P3 part-2); o código sempre usou os 4.*  <!-- CHECK: test_ordem_servida_na_fila -->
 - 🔴 **A ordem natural é INTERCALADA, e isso é deliberado (F109, v1.4 -- s185).** A fila mistura temas dentro de cada bucket, e **é assim que deve ser**: a literatura de prática intercalada mede ganho justamente em **discriminação** -- Kornell & Bjork 2008 (0,61 x 0,35; 78% acertam mais no intercalado e 78% *acham* o bloqueado melhor), Hatala/Brooks/Norman 2003 (ECG 46% x 30%, PMID 12652166), Rozenshtein 2016 (radiografia 57% x 43%, PMID 27236286). É exatamente o eixo do padrão-mestre do operador, "o discriminador que EXCLUI". ⚰️ *A justificativa escrita até a v1.3 dizia que a revisão em cluster era pedagogicamente superior; a premissa está **morta** (F109) e sobrevivia só como convite para alguém "corrigir" o default. O comportamento do código sempre esteve certo.* **Não re-derivar:** intercalar não é efeito colateral do `_ordered_queue`, é a escolha.
 - **Quando `--cluster` é legítimo:** **onboarding de cluster frio** e **andaime de pré-requisito** -- casos em que ainda não há o que discriminar, porque a base não existe. Fora disso, opt-in sem razão nomeada é trocar ganho de discriminação por sensação de fluência (é esse o "78% acham melhor").
 - **Revisão em cluster (F3, v1.1):** `fsrs_queue.py --cluster` preserva a prioridade de bucket e agrupa por (area, tema) dentro de cada bucket -- ⚰️ *a redação original dizia "um PREPARAR aquece o tema e drena o cluster inteiro"; o **PREPARAR foi revogado na s170** (`revisao-calibrada` v1.3, Cláusula 11) e o aquecimento pré-drill deixou de existir* — hoje o cluster drena e o re-ensino acontece na **Revisão Direcionada de fechamento**. `day_plan.py --review-plan` emite os clusters do dia com contagem derivada da fila real (contagem manual foi fonte de erro 3x na s108). A flag é opt-in: sem ela, a ordem é a natural.
@@ -86,7 +86,8 @@ A tensão estrutural observada na s108 (44 agendados > teto de 30 antes de qualq
   *(era 2 até a s159; caiu junto com a subida do TETO_BASE — dobrar 60 daria 120/dia e reinstalaria o pico-e-queda que o usuário rejeitou explicitamente.)*
 - 🔴 **Regime de dívida (v1.3, F64): o contador é `vencidos = atrasados + hoje`.** Nele,
   `teto_efetivo = int(min(TETO_BASE + vencidos, CAP_MULTIPLICADOR * TETO_BASE))` — o teto sobe
-  **até 90 até a dívida drenar** e volta a 60 quando `vencidos <= 60`. **O que define dívida é a
+  **até 150 até a dívida drenar** e volta a 100 quando `vencidos <= 100` (números da s196; a
+  redação de 60/90 era a antiga). **O que define dívida é a
   fila não drenada, não a data em que ela venceu:** card vencido hoje é dívida igual a card
   vencido ontem.
   ⚰️ **Revogado nesta versão:** *"Regime de dívida: `atrasados > TETO_BASE`"* — a redação anterior
@@ -145,6 +146,12 @@ No check de boot (`reconcile-contract.md`), reportar: total de cards qualitativo
 ---
 
 ## Changelog
+
+- **v1.6 (2026-09-28, s204 -- F140/F32, spec `nota1-volta-no-dia-seguinte` parts 1-3):** decisões do
+  operador em 28/09 -- (1) nota 1 volta só no dia seguinte: `relearning_steps=()` no adapter e no
+  otimizador (fonte única `app.utils.fsrs.KWARGS_BASE`), `state` 3 vira legado; (2) os novos do lote
+  do player enchem o saldo do teto, a fila do chat segue em 10. De carona: a ordem da fila passa a
+  ser escrita com os 4 buckets e o regime de dívida com os números vigentes (100/150).
 
 - **v1.5 (2026-09-22, s193 -- `medhub-hub-v0-part-2`):** nova seção §Relógio da revisão: o
   `record_review` ganha `quando` (o instante da nota do player) e o contrato registra, com versão,

@@ -746,6 +746,108 @@ def test_lote_com_campos_novos_segue_valido_no_record_lote():
 
 
 # --------------------------------------------------------------------------
+# 7. Novos do lote = saldo do teto (F140, s204 -- decisao do operador, 28/09/2026)
+# --------------------------------------------------------------------------
+
+def _banco_do_saldo(tmp, vencidos=3, novos=80, revisados_hoje=47):
+    """O episodio de 28/09 em miniatura: `vencidos` cards de revisao que vencem hoje,
+    `novos` cards state 0 e `revisados_hoje` linhas no revlog de hoje (o consumo do teto)."""
+    con = sqlite3.connect(tmp)
+    con.execute("CREATE TABLE taxonomia_cronograma (id INTEGER PRIMARY KEY, area TEXT, tema TEXT)")
+    con.execute("CREATE TABLE sessoes_bulk (id INTEGER PRIMARY KEY, area TEXT, "
+                "questoes_feitas INTEGER, data_sessao TEXT)")
+    for i in range(revisados_hoje):
+        con.execute("INSERT INTO fsrs_revlog (card_id, rating, state, review_time) "
+                    "VALUES (?, 3, 2, '2026-09-23 08:00:00')", (5000 + i,))
+    con.commit()
+    con.close()
+    _agendar(tmp, [(100 + i, 2, "2026-09-23 07:00:00") for i in range(vencidos)])
+    _agendar(tmp, [(1000 + i, 0, "2026-09-01 10:00:00") for i in range(novos)])
+
+
+def _exportar(argv):
+    """`--export-player` em processo; devolve {bucket: n} e o total do lote gravado."""
+    with tempfile.TemporaryDirectory() as pasta:
+        saida = os.path.join(pasta, "lote.json")
+        assert _rodar_cli(["--export-player", "--sessao", "s", "--out", saida] + argv) == 0
+        lote = json.load(open(saida, encoding="utf-8"))
+    por_bucket = {}
+    for c in lote["cards"]:
+        por_bucket[c["bucket"]] = por_bucket.get(c["bucket"], 0) + 1
+    return por_bucket, lote["total"]
+
+
+def test_novos_do_lote_e_pura_e_o_explicito_vence():
+    from tools import fsrs_queue
+    assert fsrs_queue.novos_do_lote(None, 53) == 53, "sem a flag, os novos enchem o saldo"
+    assert fsrs_queue.novos_do_lote(5, 53) == 5, "--new-limit explicito vence"
+    assert fsrs_queue.novos_do_lote(None, 0) == 0, "saldo zerado = nenhum novo"
+    assert fsrs_queue.novos_do_lote(0, 53) == 0, "0 explicito e 0, nao 'ausente'"
+
+
+def test_export_sem_new_limit_enche_o_saldo_com_novos(monkeypatch):
+    """Teto 100, 47 revisoes ja gravadas hoje -> saldo 53. Com 3 vencidos e 80 novos no
+    pool, o lote sai com 53 (3 + 50). Antes do F140 saia com 13: o gargalo era o
+    `--new-limit 10` fixo, nao o teto."""
+    monkeypatch.setattr(db, "agora", lambda: HOJE)
+
+    def corpo(tmp):
+        _banco_do_saldo(tmp)
+        por_bucket, total = _exportar([])
+        assert total == 53, por_bucket
+        assert por_bucket == {"hoje": 3, "novos": 50}, por_bucket
+    _com_db(corpo, ids=())
+
+
+def test_new_limit_explicito_vence_o_saldo(monkeypatch):
+    monkeypatch.setattr(db, "agora", lambda: HOJE)
+
+    def corpo(tmp):
+        _banco_do_saldo(tmp)
+        por_bucket, total = _exportar(["--new-limit", "5"])
+        assert por_bucket == {"hoje": 3, "novos": 5} and total == 8, por_bucket
+    _com_db(corpo, ids=())
+
+
+def test_limit_explicito_manda_no_lote_e_os_novos_o_enchem(monkeypatch):
+    monkeypatch.setattr(db, "agora", lambda: HOJE)
+
+    def corpo(tmp):
+        _banco_do_saldo(tmp)
+        por_bucket, total = _exportar(["--limit", "20"])
+        assert por_bucket == {"hoje": 3, "novos": 17} and total == 20, por_bucket
+    _com_db(corpo, ids=())
+
+
+def test_fila_do_chat_segue_com_10_novos(monkeypatch):
+    """A decisao foi sobre o LOTE. O `/revisar` conversacional e fallback e drena em
+    blocos de 10-15: sem `--new-limit`, `--list` e `--next` seguem pedindo 10."""
+    from tools import fsrs_queue
+    monkeypatch.setattr(db, "agora", lambda: HOJE)
+    vistos = []
+    real = fsrs_queue._ordered_queue
+
+    def espiao(**kw):
+        vistos.append(kw.get("new_limit"))
+        return real(**kw)
+
+    monkeypatch.setattr(fsrs_queue, "_ordered_queue", espiao)
+
+    def corpo(tmp):
+        _banco_do_saldo(tmp)
+        assert _rodar_cli(["--list"]) == 0
+        assert _rodar_cli(["--next"]) == 0
+    _com_db(corpo, ids=())
+    assert vistos == [10, 10], vistos
+    assert fsrs_queue.NOVOS_CHAT == 10
+
+
+def test_docstring_do_modulo_lista_os_quatro_buckets_na_ordem_da_funcao():
+    from tools import fsrs_queue
+    assert "atrasados -> erros_frescos -> hoje -> novos" in fsrs_queue.__doc__
+
+
+# --------------------------------------------------------------------------
 # 5. O caminho de escrita nao mudou
 # --------------------------------------------------------------------------
 

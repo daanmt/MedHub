@@ -40,6 +40,20 @@
 
 - Fork "Reforjar os 33 cards marcados hoje": **malfunction** -- 439.103 tokens, 1 tool_use, 9,4s, **0 trabalho real entregue** (resumo fabricado). Reportado via `SendFeedback`. A reforja de fato foi feita pelo principal, sem subagente.
 
+## Pos-selo -- UX do "Marcar defeito do card" (pedido dele apos o fechamento)
+
+Ele pediu (com print): trocar o input de texto livre (que so tinha autocomplete nativo do navegador,
+nao uma UI de verdade) por uma cascata de motivos PADRAO -- e so abrir campo de texto livre se for algo
+novo. Implementado em `core/templates/player.html`: botao "Marcar defeito" abre uma grade de chips
+(Card longo / Pergunta composta / Pergunta circular / Contexto cortado / Erro de portugues -- os 5
+motivos mais frequentes medidos na reforja de hoje, + "Erro de portugues" novo, que o session log de
+cima ja apontava como sem medida sistematica ainda) + "Outro..." (abre o input livre de antes) + Cancelar.
+Clique num chip grava e pula direto (mesmo fluxo de `marcarDefeito`), sem passar pelo formulario.
+`tools/test_player_js.py`/`tools/test_hub.py` continuam verdes (56 testes, os ids que os testes tocam
+nao mudaram). Efeito colateral bom para a varredura da s206: motivo padronizado por chip melhora o
+agrupamento em `reforja.py --fila` (hoje o texto livre variava demais para o mesmo defeito). Hub
+republicado (Version 48).
+
 ## Próximos passos
 
 - **Próxima sessão (s206): varredura completa do banco de cards.** Escopo combinado com o operador: reforjar os 284 restantes na fila + auditoria de padrões dominantes (erro de português, pergunta composta, pergunta circular, card longo). Ponto de partida: `.agents/workflows/curar-cards.md` (passos 1-5), régua em `.claude/commands/estilo-flashcard.md`, baseline numérico medido acima. Decidir primeiro **como medir erro de português sistematicamente** (nada mede isso hoje) antes de triar em lote.

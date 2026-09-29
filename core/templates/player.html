@@ -159,6 +159,8 @@ button[disabled]{opacity:.45;cursor:not-allowed}
   flex:1 1 220px;font:inherit;padding:10px 12px;border-radius:10px;
   border:1px solid var(--linha);background:var(--card);color:var(--tinta);
 }
+.defeito-opcoes{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-top:14px}
+.defeito-opcoes button{min-height:44px;font-size:.88em;text-align:left}
 .painel-fim{
   margin-top:26px;background:var(--card);border:1px solid var(--linha);
   border-radius:var(--raio);padding:20px 18px;
@@ -246,10 +248,20 @@ pre{
       <button id="btn-defeito" class="fantasma">Marcar defeito do card <kbd>D</kbd></button>
     </div>
 
-    <form class="linha-defeito" id="form-defeito" hidden>
-      <input id="motivo" type="text" maxlength="120" placeholder="Motivo curto do defeito (ex.: pergunta composta)" aria-label="Motivo do defeito">
-      <button type="submit">Marcar e pular</button>
+    <div class="defeito-opcoes" id="defeito-opcoes" hidden>
+      <button type="button" class="fantasma" data-motivo="Card longo">Card longo</button>
+      <button type="button" class="fantasma" data-motivo="Pergunta composta">Pergunta composta</button>
+      <button type="button" class="fantasma" data-motivo="Pergunta circular">Pergunta circular</button>
+      <button type="button" class="fantasma" data-motivo="Contexto cortado">Contexto cortado</button>
+      <button type="button" class="fantasma" data-motivo="Erro de portugues">Erro de portugues</button>
+      <button type="button" class="fantasma" id="btn-defeito-outro">Outro...</button>
       <button type="button" id="btn-cancelar">Cancelar</button>
+    </div>
+
+    <form class="linha-defeito" id="form-defeito" hidden>
+      <input id="motivo" type="text" maxlength="120" placeholder="Motivo curto do defeito" aria-label="Motivo do defeito">
+      <button type="submit">Marcar e pular</button>
+      <button type="button" id="btn-cancelar-outro">Cancelar</button>
     </form>
 
     <div class="notas" id="notas-botoes" hidden>
@@ -558,6 +570,7 @@ pre{
     $("notas-botoes").hidden = true;
     $("btn-virar").hidden = false;
     $("form-defeito").hidden = true;
+    $("defeito-opcoes").hidden = true;
     // Contrato de apresentacao: area/tema NUNCA aparecem antes da revelacao.
     texto("reason", ROTULO[c.selection_reason] || c.selection_reason || "");
     texto("contexto", c.frente_contexto);
@@ -799,9 +812,21 @@ pre{
 
   function abrirDefeito(){
     if(!fila.length){ return; }
+    $("form-defeito").hidden = true;
+    $("defeito-opcoes").hidden = false;
+  }
+
+  function abrirDefeitoOutro(){
+    $("defeito-opcoes").hidden = true;
     $("form-defeito").hidden = false;
     $("motivo").value = "";
     $("motivo").focus();
+  }
+
+  function fecharDefeito(){
+    $("defeito-opcoes").hidden = true;
+    $("form-defeito").hidden = true;
+    $("card").focus();
   }
 
   // -------------------------------------------------------------- teclado
@@ -815,8 +840,8 @@ pre{
   document.addEventListener("keydown", function(ev){
     if(!abaDoPlayerAtiva()){ return; }
     gesto();
+    if(ev.key === "Escape"){ fecharDefeito(); return; }
     if(ev.target && (ev.target.tagName === "INPUT" || ev.target.tagName === "TEXTAREA")){
-      if(ev.key === "Escape"){ $("form-defeito").hidden = true; $("card").focus(); }
       return;
     }
     if(ev.key === " " || ev.code === "Space"){ ev.preventDefault(); virar(); return; }
@@ -839,7 +864,15 @@ pre{
   $("btn-pausa").addEventListener("click", alternarPausa);
   $("btn-virar").addEventListener("click", virar);
   $("btn-defeito").addEventListener("click", abrirDefeito);
-  $("btn-cancelar").addEventListener("click", function(){ $("form-defeito").hidden = true; $("card").focus(); });
+  $("btn-cancelar").addEventListener("click", fecharDefeito);
+  $("btn-cancelar-outro").addEventListener("click", fecharDefeito);
+  $("btn-defeito-outro").addEventListener("click", abrirDefeitoOutro);
+  $("defeito-opcoes").addEventListener("click", function(ev){
+    var m = ev.target && ev.target.getAttribute && ev.target.getAttribute("data-motivo");
+    if(!m){ return; }
+    $("defeito-opcoes").hidden = true;
+    marcarDefeito(m);
+  });
   $("form-defeito").addEventListener("submit", function(ev){
     ev.preventDefault();
     var m = ($("motivo").value || "").trim();

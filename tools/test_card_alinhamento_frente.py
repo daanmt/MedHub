@@ -246,6 +246,9 @@ def test_populacao_medida_e_a_que_a_spec_declara():
     # sobreposicao que o predicado mede cruzou o corte 0.8 num card que ja era
     # redundante -- a divergencia de acentuacao entre os campos e que escondia
     # dele. Medicao mais verdadeira, nao regressao; o predicado nao foi tocado.
-    assert medido == {"P1": 13, "P2": 4, "P3": 1}, (
+    # P1 13 -> 11 em 29/09/2026 (s206): a varredura do banco apagou vinhetas redundantes na
+    # reforja pela regua de comprimento -- 2 cards sairam do passivo. Passivo que caiu por
+    # reforja; o predicado nao foi tocado.
+    assert medido == {"P1": 11, "P2": 4, "P3": 1}, (
         "populacao divergiu da spec (.vibeflow/specs/alinhamento-frente-do-card.md): "
         f"{medido}. Re-medir e ATUALIZAR a spec -- nunca afrouxar o predicado.")

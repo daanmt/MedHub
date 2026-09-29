@@ -1,0 +1,395 @@
+<title>Prevenção Quaternária</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,380;9..144,480;9..144,600;9..144,680&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EFF3F0; --card:#FAFCFA; --sunk:#E2E9E4;
+  --ink:#18211C; --ink2:#4C5A52; --ink3:#7C8A82;
+  --line:rgba(24,33,28,.13); --line2:rgba(24,33,28,.26);
+  --teal:#1F6B5E; --teal-ink:#154A41; --teal-wash:#DCEBE5;
+  --carmine:#8E2F41; --carmine-ink:#6B2231; --carmine-wash:#F5E2E6;
+  --amber:#8A5A17; --amber-ink:#6B4610; --amber-wash:#F3E6CC;
+  --on:#FFFFFF;
+  --sh:0 1px 2px rgba(24,33,28,.06),0 12px 30px -18px rgba(24,33,28,.35);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#7E8C84;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  --on:#131A16;
+  --sh:0 1px 2px rgba(0,0,0,.5),0 14px 34px -18px rgba(0,0,0,.8);
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#7E8C84;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  --on:#131A16;
+  --sh:0 1px 2px rgba(0,0,0,.5),0 14px 34px -18px rgba(0,0,0,.8);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);
+  font:16px/1.6 "Source Sans 3",-apple-system,"Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+.mn{font-family:"IBM Plex Mono",ui-monospace,Consolas,monospace;font-variant-numeric:tabular-nums}
+h1,h2,h3,h4{margin:0;font-family:Fraunces,Georgia,serif;font-weight:600;letter-spacing:-.01em;text-wrap:balance;line-height:1.14;color:var(--ink)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px 100px}
+@media(max-width:640px){.wrap{padding:0 16px 80px}}
+:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+a{color:var(--teal-ink)}
+strong{font-weight:600;color:var(--ink)}
+em{font-style:italic}
+
+/* masthead */
+.top{padding:52px 0 30px;border-bottom:1px solid var(--line2)}
+.eye{font:600 11px/1 "Source Sans 3";letter-spacing:.14em;text-transform:uppercase;color:var(--teal-ink);margin:0 0 15px}
+.top h1{font-size:clamp(32px,5vw,50px);font-weight:680;max-width:18ch;margin-bottom:16px}
+.top .sub{font-size:18px;line-height:1.6;color:var(--ink2);max-width:66ch;margin:0 0 22px}
+.stats{display:flex;gap:22px;flex-wrap:wrap}
+.stat{display:flex;flex-direction:column;gap:2px}
+.stat b{font:600 24px/1 "IBM Plex Mono";color:var(--teal-ink);font-variant-numeric:tabular-nums}
+.stat span{font-size:11.5px;color:var(--ink3);letter-spacing:.02em}
+
+/* timeline strip (Degrau 0) */
+.tl{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1px;background:var(--line2);border:1px solid var(--line2);margin:20px 0}
+.tl div{background:var(--card);padding:12px 13px}
+.tl .tk{font:600 11px "IBM Plex Mono";color:var(--teal-ink);display:block;margin-bottom:4px;font-variant-numeric:tabular-nums}
+.tl .tn{font-size:14px;font-weight:600;color:var(--ink);display:block;margin-bottom:3px}
+.tl .tv{font-size:12.8px;line-height:1.45;color:var(--ink2)}
+
+/* layout */
+.body{display:grid;grid-template-columns:220px minmax(0,1fr);gap:52px;padding-top:38px;align-items:start}
+@media(max-width:920px){.body{grid-template-columns:1fr}}
+.rail{position:sticky;top:22px;display:flex;flex-direction:column;gap:1px}
+.rail .rlab{font:600 10.5px/1 "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin:0 0 10px}
+.rail a{display:grid;grid-template-columns:20px 1fr;gap:9px;align-items:baseline;padding:7px 0;
+  font-size:13.3px;color:var(--ink3);text-decoration:none;border-left:2px solid transparent;padding-left:10px}
+.rail a .rn{font:600 11px "IBM Plex Mono";color:var(--ink3)}
+.rail a:hover{color:var(--ink)}
+.rail a.on{color:var(--teal-ink);border-left-color:var(--teal);font-weight:600}
+.rail a.on .rn{color:var(--teal-ink)}
+@media(max-width:920px){
+  .rail{position:static;flex-direction:row;flex-wrap:wrap;gap:6px 4px;top:auto}
+  .rail .rlab{width:100%}
+  .rail a{padding:4px 9px;border-left:0;border:1px solid var(--line2);border-radius:2px;grid-template-columns:auto auto}
+  .rail a.on{background:var(--teal-wash);border-color:var(--teal)}
+}
+main{min-width:0;max-width:700px}
+
+/* degrau */
+.degrau{padding:44px 0;border-bottom:1px solid var(--line)}
+.degrau:first-child{padding-top:0}
+.degrau:last-of-type{border-bottom:0}
+.dhead{display:flex;gap:16px;align-items:flex-start;margin-bottom:18px}
+.dnum{flex-shrink:0;width:44px;height:44px;border:1.5px solid var(--teal);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font:600 17px "IBM Plex Mono";color:var(--teal-ink)}
+.dtitle{padding-top:4px}
+.dtitle .dstage{font:600 11px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);display:block;margin-bottom:3px}
+.dtitle h2{font-size:clamp(21px,2.6vw,27px)}
+.lede{font-size:16.5px;line-height:1.6;color:var(--ink2);margin:0 0 20px;font-style:italic}
+.prose p{font-size:16px;line-height:1.72;color:var(--ink2);margin:0 0 16px}
+.prose p:last-child{margin-bottom:0}
+.prose ul,.prose ol{margin:0 0 16px;padding-left:22px}
+.prose li{font-size:15.6px;line-height:1.6;color:var(--ink2);margin-bottom:6px}
+.prose li:last-child{margin-bottom:0}
+.prose li strong{color:var(--ink)}
+h4.sub{font-size:14px;font-weight:600;font-family:"Source Sans 3";letter-spacing:.01em;color:var(--ink);margin:26px 0 10px}
+h4.sub:first-child{margin-top:0}
+
+/* callouts */
+.aside{margin:20px 0;padding:15px 18px;border-left:3px solid var(--teal);background:var(--teal-wash)}
+.aside .albl{font:700 10.5px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;color:var(--teal-ink);margin-bottom:6px}
+.aside p{font-size:15.3px;line-height:1.6;color:var(--ink);margin:0}
+.aside p+p{margin-top:8px}
+.trap{margin:20px 0;padding:15px 18px;border-left:3px solid var(--carmine);background:var(--carmine-wash)}
+.trap .albl{font:700 10.5px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;color:var(--carmine-ink);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.trap .albl::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--carmine)}
+.trap p{font-size:15.3px;line-height:1.6;color:var(--ink);margin:0}
+.trap p+p{margin-top:8px}
+.banca{margin:20px 0;padding:15px 18px;border-left:3px solid var(--amber);background:var(--amber-wash)}
+.banca .albl{font:700 10.5px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;color:var(--amber-ink);margin-bottom:6px}
+.banca p{font-size:15.3px;line-height:1.6;color:var(--ink);margin:0}
+.banca p+p{margin-top:8px}
+.star{margin:20px 0;padding:14px 18px;border:1px solid var(--line2);background:var(--card)}
+.star .albl{font:700 10.5px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:6px}
+.star p{font-size:15.3px;line-height:1.6;color:var(--ink);margin:0;font-weight:560}
+
+/* comparativos */
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line2);border:1px solid var(--line2);margin:20px 0}
+.vs>div{background:var(--card);padding:14px 16px}
+.vs h5{font:700 11.5px "Source Sans 3";letter-spacing:.04em;text-transform:uppercase;margin:0 0 8px;color:var(--ink3)}
+.vs .a h5{color:var(--carmine-ink)}
+.vs .b h5{color:var(--teal-ink)}
+.vs p,.vs li{font-size:14.5px;line-height:1.55;color:var(--ink2)}
+.vs p{margin:0 0 8px}
+.vs p:last-child{margin:0}
+.vs ul{margin:0;padding-left:18px}
+.vs li{margin-bottom:5px}
+@media(max-width:640px){.vs{grid-template-columns:1fr}}
+
+/* grid de criterios */
+.crit{border:1px solid var(--line2);margin:20px 0}
+.crit .row{display:grid;grid-template-columns:180px 1fr;gap:14px;padding:11px 15px;font-size:14.3px}
+.crit .row+.row{border-top:1px solid var(--line)}
+.crit .row .k{font-weight:600;color:var(--teal-ink)}
+.crit .row .v{color:var(--ink2);line-height:1.5}
+.crit .row .v strong{color:var(--ink)}
+.crit.hd .row:first-child{background:var(--sunk);font-weight:600;color:var(--ink3);font-size:12px;letter-spacing:.04em;text-transform:uppercase}
+.crit.hd .row:first-child .k,.crit.hd .row:first-child .v{color:var(--ink3)}
+.crit.c3 .row{grid-template-columns:150px 1fr 1fr}
+@media(max-width:640px){.crit .row,.crit.c3 .row{grid-template-columns:1fr;gap:3px}}
+
+/* referencia densa */
+details.ref{margin:20px 0;border:1px solid var(--line2);background:var(--card)}
+details.ref>summary{cursor:pointer;list-style:none;padding:12px 16px;font:600 13.5px "Source Sans 3";color:var(--teal-ink);display:flex;align-items:center;gap:9px}
+details.ref>summary::-webkit-details-marker{display:none}
+details.ref>summary::before{content:"+";font:600 15px "IBM Plex Mono";width:16px}
+details.ref[open]>summary::before{content:"-"}
+details.ref .refbody{padding:0 16px 16px}
+details.ref .row{display:grid;grid-template-columns:150px 1fr;gap:12px;padding:8px 0;font-size:13.8px;border-top:1px solid var(--line)}
+details.ref .row:first-child{border-top:0}
+details.ref .k{font-weight:600;color:var(--ink)}
+details.ref .v{color:var(--ink2);line-height:1.5}
+@media(max-width:640px){details.ref .row{grid-template-columns:1fr;gap:2px}}
+
+/* sintese */
+.synth{background:var(--card);border:1px solid var(--line2);padding:32px 30px;margin-top:6px}
+@media(max-width:640px){.synth{padding:22px 18px}}
+.synth h2{font-size:23px;margin-bottom:14px}
+.synth .prose p{font-size:16.5px}
+.trig{margin-top:22px;display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1px;background:var(--line2);border:1px solid var(--line2)}
+.trig div{background:var(--sunk);padding:13px 15px}
+.trig .tk{font:700 11px "IBM Plex Mono";color:var(--teal-ink);display:block;margin-bottom:4px}
+.trig .tv{font-size:13.6px;line-height:1.45;color:var(--ink2)}
+
+/* armadilhas */
+.arms{display:flex;flex-direction:column;gap:1px;background:var(--line2);border:1px solid var(--line2);margin-top:18px}
+.arm{background:var(--card);padding:15px 18px;display:flex;gap:12px}
+.arm .dot{flex-shrink:0;width:9px;height:9px;border-radius:50%;background:var(--carmine);margin-top:7px}
+.arm p{font-size:15px;line-height:1.58;color:var(--ink2);margin:0}
+.arm p strong{color:var(--ink)}
+
+footer{margin-top:60px;padding-top:22px;border-top:1px solid var(--line2)}
+footer p{font-size:12.3px;color:var(--ink3);max-width:80ch;margin:0 0 7px;line-height:1.5}
+code{font-family:"IBM Plex Mono",Consolas,monospace;font-size:11.8px;background:var(--sunk);padding:1px 5px;border-radius:2px}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <p class="eye">MedHub · Aula-base · Preventiva / MFC · tarefa #875</p>
+  <h1>Prevenção quaternária: quando fazer menos é o cuidado</h1>
+  <p class="sub">O nível de prevenção que mais cai. A questão quase sempre traz um paciente pedindo um exame, um remédio ou um rótulo que não vai ajudá-lo. Reconhecer o excesso e dizer "não" com ética é a resposta.</p>
+  <div class="stats">
+    <div class="stat"><b>6</b><span>níveis de prevenção</span></div>
+    <div class="stat"><b>5</b><span>palavras do excesso</span></div>
+    <div class="stat"><b>9</b><span>casos de prova</span></div>
+    <div class="stat"><b>10</b><span>armadilhas mapeadas</span></div>
+  </div>
+</header>
+
+<div class="body">
+<nav class="rail" id="rail" aria-label="Navegação da escada">
+  <p class="rlab">A escada</p>
+  <a href="#d0" data-r="d0"><span class="rn">0</span><span>História natural</span></a>
+  <a href="#d1" data-r="d1"><span class="rn">1</span><span>Leavell e Clark</span></a>
+  <a href="#d2" data-r="d2"><span class="rn">2</span><span>O ponto de vista</span></a>
+  <a href="#d3" data-r="d3"><span class="rn">3</span><span>Quaternária</span></a>
+  <a href="#d4" data-r="d4"><span class="rn">4</span><span>As palavras do excesso</span></a>
+  <a href="#d5" data-r="d5"><span class="rn">5</span><span>Casos de prova</span></a>
+  <a href="#d6" data-r="d6"><span class="rn">6</span><span>Primordial e quinquenária</span></a>
+  <a href="#synth" data-r="synth"><span class="rn">-></span><span>Gatilhos</span></a>
+  <a href="#arms" data-r="arms"><span class="rn">🔴</span><span>Armadilhas de prova</span></a>
+</nav>
+
+<main>
+
+<section class="degrau" id="d0">
+  <div class="dhead"><span class="dnum">0</span><div class="dtitle"><span class="dstage">Degrau 0</span><h2>A régua: a história natural da doença</h2></div></div>
+  <p class="lede">Todo nível de prevenção é um ponto nesta linha do tempo. Localize o paciente na linha e o nível sai sozinho.</p>
+  <div class="prose">
+    <ul>
+      <li><strong>Pré-patogênico:</strong> ainda não há doença, só fatores de risco.</li>
+      <li><strong>Patogênese precoce (fase pré-clínica):</strong> a doença já existe, mas sem sintomas. Fica abaixo do <strong>horizonte clínico</strong>.</li>
+      <li><strong>Fase clínica:</strong> cruzou o horizonte clínico. Começa na doença precoce discernível e vai à doença avançada.</li>
+      <li><strong>Desfecho:</strong> cura, cura com sequela, cronificação ou morte.</li>
+    </ul>
+  </div>
+  <div class="tl">
+    <div><span class="tk">sem doença</span><span class="tn">Pré-patogênico</span><span class="tv">fatores de risco · prevenção primária</span></div>
+    <div><span class="tk">assintomático</span><span class="tn">Pré-clínico</span><span class="tv">abaixo do horizonte clínico · rastreamento (secundária)</span></div>
+    <div><span class="tk">sintomático</span><span class="tn">Doença</span><span class="tv">tratar e limitar incapacidade (secundária)</span></div>
+    <div><span class="tk">sequela</span><span class="tn">Estável</span><span class="tv">reabilitação (terciária)</span></div>
+    <div><span class="tk">em qualquer ponto</span><span class="tn">Excesso</span><span class="tv">proteger do intervencionismo (quaternária)</span></div>
+  </div>
+</section>
+
+<section class="degrau" id="d1">
+  <div class="dhead"><span class="dnum">1</span><div class="dtitle"><span class="dstage">Degrau 1</span><h2>Os três níveis de Leavell e Clark</h2></div></div>
+  <p class="lede">Se o enunciado disser "Leavell e Clark", só valem primária, secundária e terciária. Os demais níveis são de outros autores.</p>
+  <div class="crit hd">
+    <div class="row"><span class="k">Nível</span><span class="v">O que faz · exemplos</span></div>
+    <div class="row"><span class="k">Primária: promoção da saúde</span><span class="v">Melhora geral das condições de vida, previne muitos agravos de uma vez · habitação, saneamento, educação, lazer, atividade física, alimentação</span></div>
+    <div class="row"><span class="k">Primária: proteção específica</span><span class="v">Evita um agravo ou grupo de agravos · vacina, controle do Aedes, camisinha, quimioprofilaxia, cinto de segurança, aconselhamento genético</span></div>
+    <div class="row"><span class="k">Secundária: diagnóstico precoce e tratamento imediato</span><span class="v">Detecta e trata cedo, inclusive o assintomático · rastreamento (<em>screening</em>), teste rápido de HIV, mamografia, busca ativa de hanseníase</span></div>
+    <div class="row"><span class="k">Secundária: limitação da incapacidade</span><span class="v">Doença já instalada: tratar para curar ou reduzir complicações · tratar diabetes, tratar esquizofrenia</span></div>
+    <div class="row"><span class="k">Terciária</span><span class="v">Doença estável, com sequela: reduzir o impacto no cotidiano · reabilitação física e profissional, adaptação de ambiente, suporte psicossocial</span></div>
+  </div>
+  <div class="trap">
+    <div class="albl">Armadilha</div>
+    <p><strong>Rastreamento é secundária, não primária.</strong> A doença já existe (abaixo do horizonte clínico); o rastreio só a encontra antes.</p>
+  </div>
+</section>
+
+<section class="degrau" id="d2">
+  <div class="dhead"><span class="dnum">2</span><div class="dtitle"><span class="dstage">Degrau 2</span><h2>"Todo ponto de vista é a vista de um ponto"</h2></div></div>
+  <p class="lede">A mesma ação muda de nível conforme o agravo que a pergunta tem em mente. Pergunte sempre: prevenir o quê?</p>
+  <div class="vs">
+    <div class="a"><h5>Anti-hipertensivo em relação à HAS</h5><p><strong>Secundária.</strong> A doença hipertensiva já existe: é tratamento.</p></div>
+    <div class="b"><h5>O mesmo remédio em relação ao IAM e ao AVC</h5><p><strong>Primária.</strong> O infarto e o AVC ainda não aconteceram: é evitar o evento.</p></div>
+  </div>
+  <div class="prose">
+    <h4 class="sub">Tabagismo e álcool: fator de risco e doença ao mesmo tempo</h4>
+    <ul>
+      <li><strong>Primária:</strong> população geral, evitar que comece · palestra na escola.</li>
+      <li><strong>Secundária:</strong> quem já experimentou, evitar o uso continuado · acompanhar o jovem que fuma "só na balada".</li>
+      <li><strong>Terciária:</strong> quem já é dependente, evitar as consequências · seguimento do dependente químico.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="degrau" id="d3">
+  <div class="dhead"><span class="dnum">3</span><div class="dtitle"><span class="dstage">Degrau 3 · Jamoulle e Roland</span><h2>Prevenção quaternária</h2></div></div>
+  <p class="lede">Toda intervenção tem risco. A quaternária protege o paciente do excesso de medicina, em qualquer ponto da linha do tempo.</p>
+  <div class="prose">
+    <ul>
+      <li>Autores: <strong>Marc Jamoulle e Michel Roland</strong>. Não é de Leavell e Clark.</li>
+      <li>O mecanismo: remédio tem efeito colateral, retossigmoidoscopia perfura o cólon, radiografia irradia. <strong>Intervenção sem benefício só deixa o risco.</strong></li>
+      <li><strong>Definição da WONCA:</strong> identificar o paciente em risco de supermedicalização, protegê-lo de nova invasão médica e sugerir intervenções eticamente aceitáveis.</li>
+      <li>Princípio bioético: <strong>não maleficência</strong> (<em>primum non nocere</em>, "acima de tudo, não causar dano").</li>
+      <li><strong>Demora permitida:</strong> em quadro autolimitado ou de evolução lenta, esperar é a conduta. Dor muscular depois do exercício some em dias: sem remédio, sem exame.</li>
+      <li>Ganho duplo: evita iatrogenia e poupa recurso do sistema.</li>
+    </ul>
+  </div>
+  <div class="star">
+    <div class="albl">Palavras-chave do enunciado</div>
+    <p>Evitar ou atenuar o intervencionismo excessivo · procedimento desnecessário ou injustificado · risco de sobrediagnóstico, sobrerrastreamento ou sobretratamento · intervenção eticamente aceitável.</p>
+  </div>
+</section>
+
+<section class="degrau" id="d4">
+  <div class="dhead"><span class="dnum">4</span><div class="dtitle"><span class="dstage">Degrau 4</span><h2>As cinco palavras do excesso</h2></div></div>
+  <p class="lede">São o que a quaternária combate. Os prefixos "sobre", "super" e "hiper" denunciam: além do necessário.</p>
+  <div class="crit hd">
+    <div class="row"><span class="k">Termo</span><span class="v">Definição · exemplo</span></div>
+    <div class="row"><span class="k">Iatrogenia</span><span class="v">Dano causado pela própria intervenção · perfuração intestinal na colonoscopia</span></div>
+    <div class="row"><span class="k">Sobrediagnóstico</span><span class="v">Diagnosticar doença que nunca daria sintoma nem mataria: transforma pessoa em paciente · lesão na mamografia que não evoluiria</span></div>
+    <div class="row"><span class="k">Sobrerrastreamento</span><span class="v">Rastrear quem não preenche os critérios de rastreio · USG de mama aos 20 anos</span></div>
+    <div class="row"><span class="k">Sobretratamento</span><span class="v">Tratar o que não evoluiria <strong>ou</strong> tratar por mais tempo ou de forma mais complexa que o necessário · prorrogar radioterapia já desnecessária</span></div>
+    <div class="row"><span class="k">Medicalização</span><span class="v">Tornar objeto médico uma situação normal da vida · antidepressivo para o luto (também "super" ou "hipermedicalização")</span></div>
+  </div>
+  <div class="trap">
+    <div class="albl">Armadilha</div>
+    <p><strong>Sobrediagnóstico não é erro diagnóstico.</strong> A doença existe de verdade; o problema é que ela nunca faria mal, e o rótulo arrasta tratamento sem benefício.</p>
+  </div>
+</section>
+
+<section class="degrau" id="d5">
+  <div class="dhead"><span class="dnum">5</span><div class="dtitle"><span class="dstage">Degrau 5</span><h2>Os casos que a prova traz</h2></div></div>
+  <p class="lede">O ponto comum: o médico deixa de recomendar uma intervenção inapropriada para aquele paciente, e explica por quê.</p>
+  <div class="crit">
+    <div class="row"><span class="k">Check-up sem queixa</span><span class="v">Maria pede exames gerais; o médico avalia e orienta que não há necessidade</span></div>
+    <div class="row"><span class="k">ECG antes da academia</span><span class="v">João, sem indicação pelo perfil de risco: o médico explica e não pede</span></div>
+    <div class="row"><span class="k">Mamografia aos 22 anos</span><span class="v">Adriene, porque a tia morreu de câncer de mama: não preenche critério de rastreio</span></div>
+    <div class="row"><span class="k">RM em metástase avançada</span><span class="v">A filha de Adolfo quer investigar; o indicado são cuidados paliativos</span></div>
+  </div>
+  <div class="prose">
+    <h4 class="sub">Peças fixas de MFC (complemento, fora do PDF)</h4>
+    <ul>
+      <li><strong>Bacteriúria assintomática:</strong> não rastrear nem tratar. Exceções: gestante e antes de procedimento urológico com sangramento de mucosa.</li>
+      <li><strong>Hipotireoidismo subclínico</strong> (TSH alto, T4 livre normal): repetir o TSH antes de rotular; com TSH abaixo de 10 e fora da gestação, acompanhar, não tratar por rotina.</li>
+      <li><strong>PSA em homem assintomático:</strong> não é rastreamento populacional; pedir sem decisão compartilhada é sobrerrastreamento, e o câncer indolente vira sobretratamento.</li>
+      <li><strong>Teste ergométrico em assintomático de baixo risco:</strong> não está indicado; o falso-positivo leva a cateterismo desnecessário.</li>
+      <li><strong>Rotular HAS ou DM numa consulta só:</strong> o diagnóstico exige confirmação (nova medida, MAPA/MRPA, 2º exame de glicemia). Rotular sem confirmar arrisca rótulo e remédio desnecessários, o que a quaternária evita.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="degrau" id="d6">
+  <div class="dhead"><span class="dnum">6</span><div class="dtitle"><span class="dstage">Degrau 6 · caem pouco</span><h2>Primordial e quinquenária</h2></div></div>
+  <p class="lede">Aparecem como alternativa-isca. Basta saber o alvo de cada uma.</p>
+  <div class="vs">
+    <div class="a"><h5>Primordial</h5><p>Evita que o <strong>fator de risco se instale</strong> na população (a primária extingue o que já existe, segundo Duncan).</p><p>Espaços verdes, lei antifumo em ambiente fechado, segurança alimentar, controle da poluição.</p></div>
+    <div class="b"><h5>Quinquenária</h5><p>Cuida do <strong>médico</strong> para proteger o paciente: evitar a disfunção do profissional, como o burnout.</p><p>O paciente é o beneficiário; o alvo da ação é o profissional.</p></div>
+  </div>
+</section>
+
+<section class="synth" id="synth">
+  <h2>A escada em 10 gatilhos</h2>
+  <div class="trig">
+    <div><span class="tk">Leavell e Clark</span><span class="tv">Só primária, secundária e terciária</span></div>
+    <div><span class="tk">Primária</span><span class="tv">Sem doença · promoção (geral) ou proteção específica (um agravo)</span></div>
+    <div><span class="tk">Secundária</span><span class="tv">Doença existe · rastreio, diagnóstico precoce, tratamento, limitar incapacidade</span></div>
+    <div><span class="tk">Terciária</span><span class="tv">Sequela estável · reabilitação e readaptação</span></div>
+    <div><span class="tk">Ponto de vista</span><span class="tv">Anti-hipertensivo: secundária para HAS, primária para IAM/AVC</span></div>
+    <div><span class="tk">Quaternária</span><span class="tv">Jamoulle e Roland · proteger do excesso · não maleficência</span></div>
+    <div><span class="tk">Demora permitida</span><span class="tv">Autolimitado ou lento: esperar é a conduta</span></div>
+    <div><span class="tk">Cinco palavras</span><span class="tv">Iatrogenia · sobrediagnóstico · sobrerrastreamento · sobretratamento · medicalização</span></div>
+    <div><span class="tk">Caso típico</span><span class="tv">Paciente pede exame sem indicação: orientar e não pedir</span></div>
+    <div><span class="tk">Primordial x quinquenária</span><span class="tv">Impedir o fator de risco se instalar x cuidar do médico</span></div>
+  </div>
+</section>
+
+<section id="arms" style="margin-top:52px">
+  <h2 style="font-size:23px;margin-bottom:6px">Armadilhas de prova</h2>
+  <p style="font-size:14px;color:var(--ink3);margin:0 0 4px;max-width:72ch">Dez pegadinhas, na ordem da escada.</p>
+  <div class="arms">
+    <div class="arm"><span class="dot"></span><p><strong>"Segundo Leavell e Clark" elimina quaternária, quinquenária e primordial.</strong> Esses são de outros autores.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Rastreamento é prevenção secundária.</strong> A doença já está lá, só não cruzou o horizonte clínico.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Vacina e quimioprofilaxia são proteção específica</strong>, não promoção da saúde. Promoção é ação geral, sem agravo-alvo.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Tratar HAS é secundária para a HAS e primária para o IAM.</strong> Leia de qual agravo a pergunta fala.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Tabagismo tem os três níveis.</strong> Palestra na escola = primária; jovem que fuma na balada = secundária; dependente = terciária.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Quaternária é de Jamoulle e Roland</strong>, e está ligada à não maleficência, não à beneficência.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Sobrediagnóstico: a doença é real, mas nunca faria mal.</strong> Não confunda com erro diagnóstico nem com falso-positivo.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Sobretratamento tem duas formas:</strong> tratar o que não evoluiria, ou tratar além do tempo e da complexidade necessários.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Luto não é depressão:</strong> antidepressivo para a tristeza da perda é medicalização.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Negar o exame não encerra a conduta.</strong> A resposta certa explica por que não há indicação e oferece o cuidado adequado (orientação, seguimento, paliativos).</p></div>
+  </div>
+</section>
+
+<footer>
+  <p><strong>Fonte:</strong> <code>resumos/Preventiva/10. Processo Saúde-Doença.pdf</code> (EMED, Prof. Fernanda Lima), seções 2.1.1 a 2.1.5 (níveis de prevenção). Complemento fora do PDF, marcado no texto: as peças fixas de MFC da nota da tarefa #875 (bacteriúria assintomática, hipotireoidismo subclínico, PSA, teste ergométrico, rotular HAS/DM numa consulta). A bibliografia da UERJ para o bloco MFC é Gusso (vol. VII, cap. 32-33) e Duncan.</p>
+  <p>Cumpre a tarefa #875 do plano (semana 2). Marque "feito" no quadro depois de ler.</p>
+</footer>
+</main>
+</div>
+</div>
+
+<script>
+(function(){
+  var links = Array.prototype.slice.call(document.querySelectorAll('.rail a'));
+  var targets = links.map(function(a){ return document.getElementById(a.getAttribute('data-r')); }).filter(Boolean);
+  if (!('IntersectionObserver' in window) || !targets.length) return;
+  var byId = {};
+  links.forEach(function(a){ byId[a.getAttribute('data-r')] = a; });
+  var obs = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if (en.isIntersecting){
+        links.forEach(function(a){ a.classList.remove('on'); });
+        var a = byId[en.target.id];
+        if (a) a.classList.add('on');
+      }
+    });
+  }, { rootMargin: '-15% 0px -70% 0px', threshold: 0 });
+  targets.forEach(function(t){ obs.observe(t); });
+})();
+</script>

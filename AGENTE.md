@@ -272,7 +272,7 @@ Qualquer duplicação semântica entre workflow e skill é defeito por contrato.
 | `tools/prova_pdf.py` | caderno de prova em PDF -> docs `questoes/*` do hub (caminho PDF, s201) | `.agents/skills/source-command-banco-emed/SKILL.md`, `.claude/commands/banco-emed.md` (+3) |
 | `tools/reachability_check.py` | check de ALCANCABILIDADE v0 (consolidacao part-6) | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.claude/commands/engenharia-cli.md` (+5) |
 | `tools/recurate_cards.py` | o reescritor in-place CANONICO de flashcards | `.agents/skills/source-command-banco-emed/SKILL.md`, `.agents/skills/source-command-engenharia-cli/SKILL.md` (+13) |
-| `tools/reforja.py` | a fila de reforja de flashcards como ESTADO consultavel (B2, s176) | `.agents/skills/source-command-analisar-questao/SKILL.md`, `.agents/skills/source-command-engenharia-cli/SKILL.md` (+42) |
+| `tools/reforja.py` | a fila de reforja de flashcards como ESTADO consultavel (B2, s176) | `.agents/skills/source-command-analisar-questao/SKILL.md`, `.agents/skills/source-command-engenharia-cli/SKILL.md` (+43) |
 | `tools/registrar_sessao_bulk.py` | registrar_sessao_bulk.py | `.agents/skills/source-command-analisar-questao/SKILL.md`, `.agents/skills/source-command-banco-emed/SKILL.md` (+32) |
 | `tools/review_radar.py` | Radar de dormência por TEMA | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.claude/commands/engenharia-cli.md` (+4) |
 | `tools/selo.py` | a tabela item -> terminal da reforma de engenharia, DERIVADA (s187), | `.agents/skills/source-command-engenharia-cli/SKILL.md`, `.agents/workflows/registrar-sessao.md` (+10) |

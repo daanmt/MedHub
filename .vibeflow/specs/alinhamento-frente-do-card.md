@@ -122,6 +122,7 @@ maquia.
   contrafactual semântico -- **#792**, vinheta de crise inequivocamente epiléptica pedindo o
   achado de crise NÃO epiléptica -- continua **declarado não-verificável**. Ver §Ponto cego.
 - ⚠️ **Populacao re-medida em 17/09/2026 (s185): P1 = 13, era 12.** O card que entrou nao e novo nem piorou: a restauracao de acentuacao do **F113** (1.796 correcoes) fez `frente_contexto` e `frente_pergunta` passarem a grafar as MESMAS palavras, e a sobreposicao que o predicado mede cruzou o corte 0.8. A redundancia sempre esteve la -- a divergencia de acentuacao entre os dois campos e que escondia dele. Medicao mais verdadeira, nao regressao. P2 e P3 inalterados.
+- ⚠️ **Populacao re-medida em 29/09/2026 (s206): P1 = 11, era 13.** A varredura do banco de cards (reforja de ~330 cards pela regua de comprimento do operador) apagou vinhetas redundantes -- 2 dos 13 cards que o P1 acusava sairam do passivo porque a frente passou a trazer so o dado que muda a resposta. Passivo que caiu por reforja, nao predicado afrouxado. P2 e P3 inalterados.
 - Não reforjar os cards do passivo: os 13 do P1 são fila de reforja de FRENTE (remédio M do F81,
   `cards_regen_queue.py`), e a reforja é do operador.
 - Não tocar FSRS, agendamento, estabilidade ou o texto clínico de card algum.

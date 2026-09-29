@@ -981,3 +981,29 @@
 {"ts": "2026-09-28T09:49:06+00:00", "event": "opened", "check": "consistencia_registros", "fingerprint": "ae675f4ff819", "alvo": "AGENTE.md §7.4", "payload": {"check": "tabela"}}
 {"ts": "2026-09-28T09:51:33+00:00", "event": "resolved", "check": "consistencia_registros", "fingerprint": "ae675f4ff819", "alvo": "AGENTE.md §7.4"}
 {"ts": "2026-09-29T13:29:35+00:00", "event": "opened", "check": "posicao_ssot", "fingerprint": "01755b5ba8cb", "alvo": "HANDOFF.md", "payload": {"semana_handoff": 1, "semana_db": 2}}
+{"ts": "2026-09-29T15:59:02+00:00", "event": "resolved", "check": "posicao_ssot", "fingerprint": "01755b5ba8cb", "alvo": "HANDOFF.md"}
+{"ts": "2026-09-29T15:59:04+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "5159ebdc38db", "alvo": "card#1758", "payload": {"padrao": "duplo-ask/segundo-nucleo", "tema": "Síndromes Hipertensivas da Gestação"}}
+{"ts": "2026-09-29T15:59:04+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "16e25f39d266", "alvo": "card#607"}
+{"ts": "2026-09-29T15:59:04+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "da6b8e731e24", "alvo": "card#608"}
+{"ts": "2026-09-29T15:59:04+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "0fe693275e4a", "alvo": "card#617"}
+{"ts": "2026-09-29T15:59:04+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "eb5ae6efd1ab", "alvo": "card#621"}
+{"ts": "2026-09-29T15:59:04+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "e4a34f4d62e0", "alvo": "card#670"}
+{"ts": "2026-09-29T15:59:04+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "1572bf10d1eb", "alvo": "card#713"}
+{"ts": "2026-09-29T15:59:04+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "9791a3e1efe5", "alvo": "card#714"}
+{"ts": "2026-09-29T15:59:04+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "e55b0e3a9496", "alvo": "card#718"}
+{"ts": "2026-09-29T15:59:04+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "46b5b54617dc", "alvo": "card#737"}
+{"ts": "2026-09-29T15:59:04+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "ae9db0a80f57", "alvo": "card#738"}
+{"ts": "2026-09-29T15:59:04+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "99865cc33fbc", "alvo": "card#739"}
+{"ts": "2026-09-29T15:59:04+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "1723e8dfddbf", "alvo": "card#748"}
+{"ts": "2026-09-29T15:59:04+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "5732e240ae66", "alvo": "card#762"}
+{"ts": "2026-09-29T15:59:04+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "78a564befe2b", "alvo": "card#763"}
+{"ts": "2026-09-29T15:59:04+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "7a61444afad9", "alvo": "card#764"}
+{"ts": "2026-09-29T15:59:04+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "9381dc90a0f9", "alvo": "card#766"}
+{"ts": "2026-09-29T15:59:04+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "dca04af85ef3", "alvo": "card#767"}
+{"ts": "2026-09-29T15:59:04+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "36a007f5c4a0", "alvo": "card#768"}
+{"ts": "2026-09-29T15:59:04+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "052cc87396c7", "alvo": "card#769"}
+{"ts": "2026-09-29T15:59:04+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "70c999e46e1e", "alvo": "card#770"}
+{"ts": "2026-09-29T15:59:04+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "262a508c95ab", "alvo": "card#771"}
+{"ts": "2026-09-29T15:59:04+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "b16c60e3967c", "alvo": "card#772"}
+{"ts": "2026-09-29T15:59:04+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "60a5b55e7df7", "alvo": "card#775"}
+{"ts": "2026-09-29T15:59:04+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "555299614c12", "alvo": "card#776"}

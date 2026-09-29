@@ -216,3 +216,51 @@ def test_backfill_so_migra_marcas_com_proveniencia():
         "toda linha do backfill carrega a proveniencia de onde a marca vivia"
     assert sum(1 for c, _, _ in reforja.BACKFILL if c == 792) == 3, \
         "#792 entra 3x -- e o dado que prova que marcar nao move o card"
+
+
+# ---------------------------------------------------------------------------
+# 6. Desfecho ORFAO e recusado (s206: 25 linhas 'X\r' + 33 'reforjado s205')
+# ---------------------------------------------------------------------------
+def _n_linhas():
+    conn = db.get_connection()
+    try:
+        return conn.execute("SELECT COUNT(*) FROM reforja_marks").fetchone()[0]
+    finally:
+        conn.close()
+
+
+def test_fechar_par_sem_marca_aberta_e_recusado_e_nao_grava(banco):
+    """O caso s205: marca 'Card longo', fechamento com motivo 'reforjado s205'."""
+    db.marcar_reforja(243, "Card longo")
+    antes = _n_linhas()
+    with pytest.raises(db.SemMarcaAberta):
+        db.fechar_reforja(243, "reforjado s205")
+    assert _n_linhas() == antes, "a recusa gravou linha -- o orfao voltaria"
+    assert db.fila_reforja()[0]["aberta"] is True
+
+
+def test_fechar_duas_vezes_o_mesmo_par_recusa_a_segunda(banco):
+    db.marcar_reforja(243, "pacote_de_fatos")
+    db.fechar_reforja(243, "pacote_de_fatos")
+    with pytest.raises(db.SemMarcaAberta):
+        db.fechar_reforja(243, "pacote_de_fatos")
+
+
+def test_descartar_par_sem_marca_aberta_e_recusado(banco):
+    with pytest.raises(db.SemMarcaAberta):
+        db.descartar_reforja(792, "contrafactual_mal_formado", "nunca foi marcado")
+
+
+def test_motivo_com_crlf_e_normalizado_e_fecha_a_marca_certa(banco):
+    """O caso s206: ids lidos de arquivo CRLF -> motivo 'pacote_de_fatos\r'. O motivo
+    GRAVADO tem de ser o normalizado, senao a linha nao casa com a marca."""
+    db.marcar_reforja(243, "pacote_de_fatos")
+    db.fechar_reforja(243, "pacote_de_fatos\r")
+    fila = db.fila_reforja(incluir_fechadas=True)
+    assert len(fila) == 1 and fila[0]["aberta"] is False
+    conn = db.get_connection()
+    try:
+        motivos = [r[0] for r in conn.execute("SELECT motivo FROM reforja_marks")]
+    finally:
+        conn.close()
+    assert "\r" not in "".join(motivos)

@@ -190,6 +190,7 @@ def test_discriminador_nao_fecha_por_fechar_e_fecha_por_descartar(banco):
 
 
 def test_fechar_de_verdade_exige_o_card_consertado(banco):
+    _rodar(reforja.cmd_ingerir, _args(ingerir="nao_atomico", apply=True))
     with pytest.raises(db.ReforjaAindaDefeituosa):
         db.fechar_reforja(1, "nao_atomico")
     conn = db.get_connection()

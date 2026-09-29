@@ -1383,6 +1383,34 @@ class ReforjaAindaDefeituosa(ValueError):
     """
 
 
+class SemMarcaAberta(ValueError):
+    """Fechamento/descarte RECUSADO: o par (card_id, motivo) nao tem marca aberta.
+
+    Existe porque a s205 e a s206 gravaram linhas de desfecho que nao fechavam nada
+    (motivo 'reforjado s205' contra marca 'Card longo'; motivo 'X\\r' lido de arquivo
+    com CRLF): a linha entrava, a fila seguia igual e ninguem via. Desfecho sem marca
+    e evento orfao -- recusa em vez de gravar."""
+
+
+def _normalizar_motivo(motivo):
+    return (motivo or "").strip()
+
+
+def _exigir_marca_aberta(card_id, motivo):
+    conn = get_connection()
+    try:
+        m, d = conn.execute(
+            "SELECT COALESCE(SUM(evento = 'marcada'), 0), COALESCE(SUM(evento != 'marcada'), 0) "
+            "FROM reforja_marks WHERE card_id = ? AND motivo = ?",
+            (int(card_id), motivo)).fetchone()
+    finally:
+        conn.close()
+    if m <= d:
+        raise SemMarcaAberta(
+            f"card #{card_id} nao tem marca ABERTA com motivo '{motivo}' "
+            f"({m} marcada(s), {d} desfecho(s)) -- o desfecho seria orfao")
+
+
 def _card_para_predicado(conn, card_id):
     row = conn.execute(
         "SELECT frente_contexto, frente_pergunta, verso_resposta, verso_regra_mestre, "
@@ -1451,7 +1479,9 @@ def fechar_reforja(card_id, motivo, forcar=False, justificativa=None, origem=Non
     """
     # `_cc` vem do topo do modulo (1.9a) -- este import local era o terceiro
     # sitio que alcancava `tools/` por vizinhanca de `sys.path`.
-    predicado = _cc.PREDICADOS_VERIFICAVEIS.get((motivo or "").strip())
+    # O motivo GRAVADO e o normalizado (s206: o cru com '\r' gravou 25 orfas).
+    motivo = _normalizar_motivo(motivo)
+    predicado = _cc.PREDICADOS_VERIFICAVEIS.get(motivo)
     conn = get_connection()
     try:
         card = _card_para_predicado(conn, card_id)
@@ -1459,6 +1489,7 @@ def fechar_reforja(card_id, motivo, forcar=False, justificativa=None, origem=Non
         conn.close()
     if card is None:
         raise ValueError(f"card #{card_id} nao existe")
+    _exigir_marca_aberta(card_id, motivo)
 
     if predicado is None:
         if forcar and not (justificativa or "").strip():
@@ -1487,6 +1518,8 @@ def descartar_reforja(card_id, motivo, justificativa, origem=None) -> int:
     mentiria para cima."""
     if not (justificativa or "").strip():
         raise ValueError("descartar exige justificativa escrita")
+    motivo = _normalizar_motivo(motivo)
+    _exigir_marca_aberta(card_id, motivo)
     return _registrar_marca(card_id, "descartada", motivo,
                             evidencia=f"descartada: {justificativa.strip()}", origem=origem)
 

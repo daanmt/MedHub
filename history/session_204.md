@@ -21,6 +21,8 @@
 
 hub-backend: 2026-09-28b sem notas (0/13, nada a gravar) -> 2026-09-29a no ar (100 cards) -- Version 41
 
+hub-backend: republicado com o mesmo lote 2026-09-29a (painel mudou) -- Version 42 -- /loop 1h religado a pedido dele (job 98a4cfaf)
+
 ## Achados de engenharia (ledger)
 - **F140 -> GATE na auditoria, RESOLVIDO na mesma noite.** Nota 1 sobre card em `state=2` leva a `state=3` com `due = revisão + 10 min`; o lote seguinte do dia re-serve e GRAVA a 2ª nota. Replay 11/11; revlog inteiro reproduz em 3.579/3.579.
 - **F140 é reincidência do F32** (s112, re-triado na s176). Escrevi o F140 sem consultar o ledger. **F32 RESOLVIDO** junto: a colisão acabou por remoção de uma das camadas.

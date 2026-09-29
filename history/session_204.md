@@ -17,6 +17,9 @@
 10. **Push** autorizado por ele; **`/loop` desligado** por ordem dele (job `3f6af4b9`).
 11. **Rotação do ledger** (decisão dele: *"o que resolvermos, sai da frente"*), pelo mesmo loop (spec em 3 parts -> teste vermelho -> implementação -> auditoria PASS): `tools/selo.py` lê os dois arquivos, ganha `--rotacionar` (dry-run, `--apply --expect N`) e `--onde`, e passa a listar TUDO que está em aberto (GATE e DECLARADO ficavam fora da saída: 12 achados invisíveis); `consistencia_check` ganha o check `frente`, que bloqueia resolvido na frente, aberto no histórico e índice velho.
 12. **Migração de partida com prova de conservação:** 125 blocos com sha256 conservado, 153 segmentos no histórico byte a byte, conta de bytes fechando. Resultado: **19 em aberto na frente (58 KB), 105 resolvidos no histórico (350 KB)**.
+13. **Lote novo publicado a pedido dele** (*"pode publicar o lote novo, incluir os que já estão na fila/atrasados"*): export de véspera para 29/09, 100 cards (3 atrasados + 44 do dia + 53 novos). Antes do publish: a página nova conferida contra a publicada (idêntica fora do bloco do lote) e os 100 cards lidos inteiros.
+
+hub-backend: 2026-09-28b sem notas (0/13, nada a gravar) -> 2026-09-29a no ar (100 cards) -- Version 41
 
 ## Achados de engenharia (ledger)
 - **F140 -> GATE na auditoria, RESOLVIDO na mesma noite.** Nota 1 sobre card em `state=2` leva a `state=3` com `due = revisão + 10 min`; o lote seguinte do dia re-serve e GRAVA a 2ª nota. Replay 11/11; revlog inteiro reproduz em 3.579/3.579.
@@ -34,7 +37,7 @@
 - **Operador (28/09, noite):** *"1. volta apenas no dia seguinte. 'hoje' é apenas no redrill, já contemplado. 2. saldo por teto, que deve passar a 100 cards/dia."* O teto já era 100/dia desde a s196; nada mudou nele.
 - **Operador:** o ledger tem de deixar claro o que está aberto e o que foi resolvido; resolvido sai da frente; sem backlog infinito. Push autorizado; loops desligados.
 - Minha, na fase de auditoria: anti-escopo total de código até a decisão dele.
-- Hub **não** republicado: nenhum dado de estudo mudou.
+- Operador: publicar o lote novo e encerrar formalmente.
 
 ## Artefatos criados/modificados
 - `.vibeflow/audits/f140-fila-pos-bloco-audit.md` e `.vibeflow/audits/nota1-volta-no-dia-seguinte-audit.md` (novos)
@@ -55,7 +58,7 @@
 
 ## Próximos passos
 - **Operador (ledger):** 7 dos 19 abertos esperam decisão dele (F111, F87, F69, F68, F67, F65, F39). Decidir ou descartar é o que impede o backlog de crescer.
-- **Cards:** o lote `2026-09-28b` no ar é de antes do fix (13 cards, 0/13). O próximo export já sai pelo saldo. Com o `/loop` desligado, publicar é ato de sessão.
+- **Cards:** lote `2026-09-29a` (100) no ar. 7 cards com o contexto cortado no meio da frase (#671 #762 #764 #765 #766 #767 #768) -> curadoria.
 - **Operador (observação):** nota 4 = 379 de 522 notas da régua v2 (72,6%); o contrato a descreve como rara.
 - **/ai-eng:** triagem de F141 e F142; checkpoint da s203 segue pendente.
 - **Estudo:** UERJ 2021 (t1793) e a Autópsia dos erros, como estava no HANDOFF.

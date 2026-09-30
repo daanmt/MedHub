@@ -45,6 +45,9 @@ O operador deu /clear e pediu ao /ai-eng (ai-eng-40) que ajudasse a quitar TUDO 
 
 **Selo:** frente **10 -> 3** (F39, F69, F111, todos do operador); 5 limites conhecidos; 118 resolvidos. Suíte 1286.
 
+7. **F39 aplicado por decisão dele** (*"reescreve os 50 por lote"*): 47 reescritos + 14 extras (`3914613`); atomicidade 74 -> 28, e os 28 são só o lote vivo + 3 descartes justificados.
+8. hub-backend: republicado com o mesmo lote 2026-09-30a (painel mudou) -- Version 52.
+
 ## Tropeços
 
 - 🔴 **Afirmei que `index_resumos.py` saía com exit 0 quando o Ollama estava fora.** O 0 era do `| tail -5` do meu comando em background. Sem pipe, exit=1. O /ai-eng chegou a dar GO num hotfix que não era necessário. Retratado no ledger (lápide no fecho do F16) e no canal. **Lição:** código de saída se mede sem pipe.

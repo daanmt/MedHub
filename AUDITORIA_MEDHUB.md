@@ -24,7 +24,7 @@ relates_to: [AGENTE, ESTADO, HANDOFF]
 ## Indice
 
 <!-- selo:indice:inicio -->
-**Em aberto: 11** · Resolvidos: 111 (em `history/auditoria/resolvidos.md`) · Limites conhecidos: 4 (em `history/auditoria/limites_conhecidos.md`) · indice gerado por `python tools/selo.py --rotacionar`, nunca editado a mao
+**Em aberto: 10** · Resolvidos: 112 (em `history/auditoria/resolvidos.md`) · Limites conhecidos: 4 (em `history/auditoria/limites_conhecidos.md`) · indice gerado por `python tools/selo.py --rotacionar`, nunca editado a mao
 
 | Id | Sev. | Status | Quem decide | Achado |
 |---|---|---|---|---|
@@ -34,7 +34,6 @@ relates_to: [AGENTE, ESTADO, HANDOFF]
 | F111 | MEDIA | GATE | operador | Fase 2 do plano (extensivo, leitura-first: 465 tarefas de teoria em 735; 39q/dia nativo) nao garante recall... |
 | F78 | MEDIA | DECLARADO | engenharia | Extracao de PDF descarta em silencio todo conteudo que vive em FIGURA, e nada no harness mede essa perda |
 | F69 | MEDIA | GATE | operador | resumos com lacuna de diretriz nova = risco banca-dependente (s165) |
-| F65 | MEDIA | PARCIAL | operador | o balde `[bulk] <Area>` esconde 72 cards do radar de dormencia |
 | F63 | MEDIA | PARCIAL | engenharia | a prioridade que governa o estudo nao viaja com o repo (o usuario e a camada de transporte) |
 | F39 | ALTA | PARCIAL | operador | 40% do baralho viola o principio atomico; a nota FSRS vira ininterpretavel |
 | F16 | MEDIA | PARCIAL | engenharia | Tema cirurgico de alto rendimento sem SSOT clinico (.md); so o PDF-fonte existe |
@@ -122,52 +121,6 @@ python -X utf8 -c "<diff: Scheduler().parameters x core/fsrs_params.json::visoes
 
 ### F69 -- resumos com lacuna de diretriz nova = risco banca-dependente (s165) -- **MEDIA** -- **GATE do operador** (quais diretrizes 2026 entram e decisao clinica dele; lista viva no HANDOFF)
 **Evidencia (grep):** `[CIR] Trauma.md` ja tem X-ABCDE, torniquete, hipotensao permissiva, ABC score, pneumotorax oculto/3,5 cm, Beck, tranexamico; **falta** "sangue total > 1:1:1" e "Sellick contraindicada", e a classificacao do choque ainda cita "classe I" (11a ed = leve/moderado/grave). `Prevenção Secundária Pós-IAM (Dislipidemia).md`: 1 mencao a PREVENT/Lp(a)/bempedoico (diretriz 2025 rasa). `Sistemas de Informação em Saúde.md`: conferir SINAN 2026 (esporotricose, anomalias, Oropouche, parotidite). HAS Pt2 (130/80, MAPA) e Epilepsias (levetiracetam EV) ja atualizados. **Fix:** Revisao Direcionada com Regra de Acumulo; os `padroes_banca` do JSON sao a fonte.
-
-### F65 -- o balde `[bulk] <Area>` esconde 72 cards do radar de dormencia -- **MEDIA** -- **PARCIAL (s207: os 35 cards sairam do [bulk] -- M4 do operador; os erros presos em [bulk] seguem com o operador)**
-
-**Classe:** taxonomia que corrompe sensor (familia F37/dedup de taxonomia).
-
-**Observado.** Drenando 45 cards na s162, cards de temas completamente distintos apareceram sob
-o pseudo-tema `[bulk] Cirurgia`: **pancreatite** (311, 313, 317), **trauma abdominal** (325),
-**demencia/MEEM** (291) e **esclerose multipla** (297). Contagem no banco:
-
-| balde | cards |
-|---|---|
-| `[bulk] Cirurgia` | 55 |
-| `[bulk] Pneumo` | 8 |
-| outros 6 baldes | 9 |
-| **total** | **72** |
-
-**O defeito.** `(area, tema)` e a chave de identidade do tema (invariante anti-poluicao, s083) e
-e o que alimenta `review_radar.py` (dormencia), o cluster de frieza do `day_plan --review-plan`
-e o gatilho de PREPARAR do `/revisar`. Card sem tema real e **invisivel para toda essa camada**:
-sua frieza e diluida num balde que nunca esfria como um tema, e ele nunca dispara aquecimento.
-Sintoma direto medido na sessao: `--review-plan` devolveu **40 clusters para 77 cards** e nenhum
-sinal frio acionavel (maximo 15.4, gatilho 25) -- fragmentacao que faz o sensor calar.
-
-**Efeito colateral confirmado no uso.** Os cards 311 e 313 (ambos "por que nao TC na
-pancreatite", eixos diferentes: etiologia x janela de 72h) cairam no **mesmo bloco** e se
-canibalizaram -- o usuario respondeu 313 com o conteudo de 311 e apagou no 311, 2 notas 1 de
-interferencia. Com tema real, `detect_clones.py` teria visto o par; no balde, nao ha por-tema
-para comparar.
-
-**Direcao (nao implementada).** Reclassificar os 72 por tema real (o texto do card carrega o
-tema; `normalize_taxonomia.py` + `dedup_taxonomia.py` sao os portadores existentes) e adicionar
-check no `auto_check`: card em tema `[bulk] *` nasce como WARN de taxonomia. Rodar
-`detect_clones.py` depois da reclassificacao -- o par 311/313 e o primeiro caso conhecido.
-
-**Severidade:** ALTA (72 cards, 5,7% do banco ativo, cegos ao mecanismo central do projeto).
-
-> **Re-medido em 2026-09-09 (s174, dry-run A6):** **35** cards ativos presos em `[bulk]` (28 em Cirurgia) + **201 erros** em balde -- lista nominal em `docs/DRYRUN-F65-F67-2026-09-09.md` §3. O normalizador nao tem regra para isto (F89, achado-irmao); a reclassificacao e conteudo do operador.
-
-> **Adendo honesto ao F65.** A limpeza dos baldes `[bulk]`/`Geral` **ja estava listada** como
-> pendencia Tier-3 em `ESTADO.md §Proximos passos` item 5 -- este achado nao a descobre, ele a
-> **quantifica** (72 cards, 5,7% do banco) e nomeia o dano concreto (sensor de dormencia cego +
-> colisao de clones medida em 2 notas 1). E o padrao exato da frente de **alcancabilidade**
-> (`project_alcancabilidade_auditoria`): a pendencia estava escrita, correta e inalcancada por
-> tempo indeterminado, porque nada no harness a transformava em trabalho. O check de WARN
-> proposto acima e o que converte a linha de texto em fila.
-- ✅ **Cards (s207, 29/09/2026):** o agente propos o tema real de cada um dos 35 cards presos em `[bulk]` e o operador aprovou os 35 no chat da s207 ("Aprovo todos"). Gravado por `normalize_taxonomia.py` (lista declarativa `MOVE_CARD`, guarda: origem `[bulk]`, destino real), 35/35, backup fixado `ipub_fixado_20260929_233801` (sha256 df07299c...). Cards ativos em `[bulk]`: **0**. #297 (declinio cognitivo na esclerose multipla) foi para Demencias: nao ha tema de EM. - **Resta (GATE do operador):** os erros de `questoes_erros` presos em `[bulk]` -- reapontar ou deixar? Reapontar muda o `weak_areas` por tema (decisao 3 do `docs/DRYRUN-F65-F67-2026-09-09.md` §4, nao perguntada ainda).
 
 ### F63 -- a prioridade que governa o estudo nao viaja com o repo (o usuario e a camada de transporte) -- **MEDIA** -- **PARCIAL** (o DADO viajou na s165: `core/cronograma/prevalencia_enamed.json`, 89 temas, + `fsrs_queue --prevalencia`; falta ligar ao `infer_nota` -- residuo nomeado)
 

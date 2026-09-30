@@ -2149,3 +2149,52 @@ if mode == "--changed" and resumos_to_check:     # <- `--staged` de fora
 ### F67 -- taxonomia duplicada divide o sinal do FSRS e da dormencia (s165, Claude Code/Fable 5.1, 2026-09-05) -- **MEDIA** -- **RESOLVIDO (s207, M3 do operador: "Aprovar em bloco" + "As 11" no chat da s207)**
 **Evidencia (db, read-only):** o mesmo tema vive em 2-5 linhas de `taxonomia_cronograma`: Rastreamento de colo x2 (`...do Câncer de Colo do Útero` 12 ativos/8 erros e `...do Cancer de Colo Uterino` 2/1), TH x2 (`Climatério e Terapia Hormonal` 6/2 e `Terapia Hormonal do Climaterio` 0/1), Asma x5 (`Asma`, `Asma - Crise Aguda`, `Asma na Infância`, `Asma na infância`, `Asma - Exacerbacao`), `Planejamento Familiar` x `Contracepção`, Ulceras x2, TCE x3 (Neuro, Cirurgia leve, Ped), `Cirurgia Infantil` x `Cirurgia Infantil I`, APS x2. **Efeito:** `review_radar`, `infer_nota` e `--cluster` leem metades; a dedup da s083 (`dedup_taxonomia.py`, merge MAX) nao pegou variantes por acento/caixa/sufixo. **Fix candidato:** normalizacao NFKD + casefold + tabela de alias em `normalize_taxonomia.py`, com `--dry-run`. **Re-medido em 2026-09-09 (s174, dry-run A6):** chave NFKD+casefold (sem sufixo romano/"na infancia") acha **10 grupos / 22 linhas / 193 cards + 104 erros**; 5 dos 10 sao a area fantasma `GO`/`Clinica Medica` de volta (F89). Decisao de fusao por grupo = operador (`docs/DRYRUN-F65-F67-2026-09-09.md` §4).
 - ✅ **Fechamento (s207, 29/09/2026):** RODADA 3 do `normalize_taxonomia.py` -- 11 fusoes (as 8 da §4 do `docs/DRYRUN-F65-F67-2026-09-09.md` + 3 novas do mesmo tipo que o dry-run de hoje mostrou: Vulva e Vagina, Pre-Natal, Tumores Anexiais; mostradas a ele antes, que escolheu "As 11"). Sobrevive a linha da area CANONICA; GO e Clinica Medica (F89) saem. Separados por decisao: Asma Pediatria x Pneumo, TCE Neuro x Pediatria, Medidas Pt. I/II. 320 -> 309 temas, 0 duplicata, backup fixado `ipub_fixado_20260929_220057_antes-de-normalize-taxonomia-apply.db` (sha256 facb3b13...). 🔴 **Achado no caminho (evidencia deste item, nao id novo):** a fusao so re-apontava `questoes_erros` e `flashcards`; `review_log` (9) e `questao_habilidades` (151) apontavam para os perdedores e ficariam orfaos. Corrigido: `TABELAS_COM_TEMA` re-aponta as quatro e o VERIF confere as quatro. Os 4 orfaos que o VERIF mostra no `review_log` sao PRE-EXISTENTES (ids 24/31 -> temas 230/225 da RODADA 2; 33/52 -> tema 191), medidos no backup: nenhum criado agora. ⚠️ Nao re-apontados (dado antigo, sem decisao).
+
+## Rotacionados em 2026-09-29
+
+### F65 -- o balde `[bulk] <Area>` esconde 72 cards do radar de dormencia -- **MEDIA** -- **RESOLVIDO (s207: 35 cards pelo M4 + 201 erros por ordem do operador no chat)**
+
+**Classe:** taxonomia que corrompe sensor (familia F37/dedup de taxonomia).
+
+**Observado.** Drenando 45 cards na s162, cards de temas completamente distintos apareceram sob
+o pseudo-tema `[bulk] Cirurgia`: **pancreatite** (311, 313, 317), **trauma abdominal** (325),
+**demencia/MEEM** (291) e **esclerose multipla** (297). Contagem no banco:
+
+| balde | cards |
+|---|---|
+| `[bulk] Cirurgia` | 55 |
+| `[bulk] Pneumo` | 8 |
+| outros 6 baldes | 9 |
+| **total** | **72** |
+
+**O defeito.** `(area, tema)` e a chave de identidade do tema (invariante anti-poluicao, s083) e
+e o que alimenta `review_radar.py` (dormencia), o cluster de frieza do `day_plan --review-plan`
+e o gatilho de PREPARAR do `/revisar`. Card sem tema real e **invisivel para toda essa camada**:
+sua frieza e diluida num balde que nunca esfria como um tema, e ele nunca dispara aquecimento.
+Sintoma direto medido na sessao: `--review-plan` devolveu **40 clusters para 77 cards** e nenhum
+sinal frio acionavel (maximo 15.4, gatilho 25) -- fragmentacao que faz o sensor calar.
+
+**Efeito colateral confirmado no uso.** Os cards 311 e 313 (ambos "por que nao TC na
+pancreatite", eixos diferentes: etiologia x janela de 72h) cairam no **mesmo bloco** e se
+canibalizaram -- o usuario respondeu 313 com o conteudo de 311 e apagou no 311, 2 notas 1 de
+interferencia. Com tema real, `detect_clones.py` teria visto o par; no balde, nao ha por-tema
+para comparar.
+
+**Direcao (nao implementada).** Reclassificar os 72 por tema real (o texto do card carrega o
+tema; `normalize_taxonomia.py` + `dedup_taxonomia.py` sao os portadores existentes) e adicionar
+check no `auto_check`: card em tema `[bulk] *` nasce como WARN de taxonomia. Rodar
+`detect_clones.py` depois da reclassificacao -- o par 311/313 e o primeiro caso conhecido.
+
+**Severidade:** ALTA (72 cards, 5,7% do banco ativo, cegos ao mecanismo central do projeto).
+
+> **Re-medido em 2026-09-09 (s174, dry-run A6):** **35** cards ativos presos em `[bulk]` (28 em Cirurgia) + **201 erros** em balde -- lista nominal em `docs/DRYRUN-F65-F67-2026-09-09.md` §3. O normalizador nao tem regra para isto (F89, achado-irmao); a reclassificacao e conteudo do operador.
+
+> **Adendo honesto ao F65.** A limpeza dos baldes `[bulk]`/`Geral` **ja estava listada** como
+> pendencia Tier-3 em `ESTADO.md §Proximos passos` item 5 -- este achado nao a descobre, ele a
+> **quantifica** (72 cards, 5,7% do banco) e nomeia o dano concreto (sensor de dormencia cego +
+> colisao de clones medida em 2 notas 1). E o padrao exato da frente de **alcancabilidade**
+> (`project_alcancabilidade_auditoria`): a pendencia estava escrita, correta e inalcancada por
+> tempo indeterminado, porque nada no harness a transformava em trabalho. O check de WARN
+> proposto acima e o que converte a linha de texto em fila.
+- ✅ **Cards (s207, 29/09/2026):** o agente propos o tema real de cada um dos 35 cards presos em `[bulk]` e o operador aprovou os 35 no chat da s207 ("Aprovo todos"). Gravado por `normalize_taxonomia.py` (lista declarativa `MOVE_CARD`, guarda: origem `[bulk]`, destino real), 35/35, backup fixado `ipub_fixado_20260929_233801` (sha256 df07299c...). Cards ativos em `[bulk]`: **0**. #297 (declinio cognitivo na esclerose multipla) foi para Demencias: nao ha tema de EM. - **Resta (GATE do operador):** os erros de `questoes_erros` presos em `[bulk]` -- reapontar ou deixar? Reapontar muda o `weak_areas` por tema (decisao 3 do `docs/DRYRUN-F65-F67-2026-09-09.md` §4, nao perguntada ainda).
+- ✅ **Erros (s207, 29/09/2026, 23h46):** o operador decidiu no chat: *"reaponta os 201 erros do bulk pro tema real"*. Tema de cada erro = o dos cards nascidos dele (178, amostra de 8 conferida a olho); 3 empates e 20 sem card classificados pelo titulo/enunciado (IC Pt.1/Pt.2, PCR, asma, sifilis congenita, trauma, cirurgia infantil). `normalize_taxonomia.py` `MOVE_ERRO` (guarda: origem `[bulk]`, destino real), 201/201 + 397 linhas de `questao_habilidades` acompanhando, backup fixado `ipub_fixado_20260929_234644` (sha256 4fda4d5a...). Erros em `[bulk]`: **0**; cards: **0**. Os baldes seguem existindo como balde de VOLUME (F37).

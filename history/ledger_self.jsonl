@@ -1210,3 +1210,13 @@
 {"ts": "2026-09-29T22:00:36+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "4595ec3e6bf8", "alvo": "card#1709"}
 {"ts": "2026-09-29T22:04:09+00:00", "event": "opened", "check": "consistencia_registros", "fingerprint": "ae675f4ff819", "alvo": "AGENTE.md §7.4", "payload": {"check": "tabela"}}
 {"ts": "2026-09-29T22:09:18+00:00", "event": "resolved", "check": "consistencia_registros", "fingerprint": "ae675f4ff819", "alvo": "AGENTE.md §7.4"}
+{"ts": "2026-09-30T03:29:13+00:00", "event": "opened", "check": "consistencia_registros", "fingerprint": "e260700270e2", "alvo": "AUDITORIA_MEDHUB.md §F129", "payload": {"check": "frente"}}
+{"ts": "2026-09-30T03:29:13+00:00", "event": "opened", "check": "consistencia_registros", "fingerprint": "11ca0770d11f", "alvo": "AUDITORIA_MEDHUB.md §F114", "payload": {"check": "frente"}}
+{"ts": "2026-09-30T03:29:13+00:00", "event": "opened", "check": "consistencia_registros", "fingerprint": "c9da71abb28f", "alvo": "AUDITORIA_MEDHUB.md §F113", "payload": {"check": "frente"}}
+{"ts": "2026-09-30T03:29:13+00:00", "event": "opened", "check": "consistencia_registros", "fingerprint": "b1984718a33a", "alvo": "AUDITORIA_MEDHUB.md §indice", "payload": {"check": "frente"}}
+{"ts": "2026-09-30T03:33:17+00:00", "event": "resolved", "check": "consistencia_registros", "fingerprint": "e260700270e2", "alvo": "AUDITORIA_MEDHUB.md §F129"}
+{"ts": "2026-09-30T03:33:17+00:00", "event": "resolved", "check": "consistencia_registros", "fingerprint": "11ca0770d11f", "alvo": "AUDITORIA_MEDHUB.md §F114"}
+{"ts": "2026-09-30T03:33:17+00:00", "event": "resolved", "check": "consistencia_registros", "fingerprint": "c9da71abb28f", "alvo": "AUDITORIA_MEDHUB.md §F113"}
+{"ts": "2026-09-30T03:33:17+00:00", "event": "resolved", "check": "consistencia_registros", "fingerprint": "b1984718a33a", "alvo": "AUDITORIA_MEDHUB.md §indice"}
+{"ts": "2026-09-30T03:41:22+00:00", "event": "opened", "check": "consistencia_registros", "fingerprint": "ae675f4ff819", "alvo": "AGENTE.md §7.4", "payload": {"check": "tabela"}}
+{"ts": "2026-09-30T03:46:06+00:00", "event": "resolved", "check": "consistencia_registros", "fingerprint": "ae675f4ff819", "alvo": "AGENTE.md §7.4"}

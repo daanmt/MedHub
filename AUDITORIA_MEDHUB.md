@@ -24,7 +24,7 @@ relates_to: [AGENTE, ESTADO, HANDOFF]
 ## Indice
 
 <!-- selo:indice:inicio -->
-**Em aberto: 11** · Resolvidos: 111 (em `history/auditoria/resolvidos.md`) · Limites conhecidos: 2 (em `history/auditoria/limites_conhecidos.md`) · indice gerado por `python tools/selo.py --rotacionar`, nunca editado a mao
+**Em aberto: 11** · Resolvidos: 111 (em `history/auditoria/resolvidos.md`) · Limites conhecidos: 4 (em `history/auditoria/limites_conhecidos.md`) · indice gerado por `python tools/selo.py --rotacionar`, nunca editado a mao
 
 | Id | Sev. | Status | Quem decide | Achado |
 |---|---|---|---|---|

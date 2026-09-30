@@ -1,6 +1,6 @@
 {
  "_doc": "Tarefas CUSTOM do plano (fonte=custom), editavel a mao. Semeadas em plano_tarefas pela spec part-2. semana_plano 1-7 = Fase 1 (16/09 -> 01/11/2026, por peso UERJ); 8+ = Fase 2 (extensivo S21-S48). Areas SEMPRE de core/areas.json. q_previstas = orcamento de questoes da tarefa (0 para resumo/aula). || s188 (2026-09-18): as 4 listas \"UERJ bloco MFC (Q81-100)\" viraram PROVAS INTEIRAS (16-19) e entraram 2021/2022 (23-24): o operador vai resolver as provas como simulado, e recortar o bloco MFC antes estragaria o instrumento. Semana/ordem da Fase 1 agora sao ditadas por plano_trilha.json (a trilha vence este arquivo).",
- "atualizado_em": "2026-09-18",
+ "atualizado_em": "2026-09-30",
  "tarefas": [
   {
    "tarefa_fonte": 1,
@@ -91,12 +91,12 @@
    "semana_plano": 1,
    "ordem": 2,
    "area": "Preventiva",
-   "tema": "RAPS (Rede de Atencao Psicossocial) e saude mental na APS",
+   "tema": "Saúde mental na APS: depressão, luto e insônia no idoso; abstinência alcoólica; RAPS em 1 tela",
    "tipo": "resumo",
    "tipo_norm": "teoria",
    "url_lista": null,
    "q_previstas": 20,
-   "nota": "ENAMED 2026 sem resumo."
+   "nota": "ENAMED 2026 sem resumo. || s209: escopo refeito por 2a lente das provas UERJ 2022-2026 (6 questões em 2022-2026: depressão/luto no idoso (3), abstinência alcoólica, sobrediagnóstico; a rede (RAPS) em si não foi cobrada); era 'RAPS (Rede de Atencao Psicossocial) e saude mental na APS'."
   },
   {
    "tarefa_fonte": 9,
@@ -151,12 +151,12 @@
    "semana_plano": 4,
    "ordem": 2,
    "area": "Pediatria",
-   "tema": "Oncologia pediatrica: Wilms x neuroblastoma (aula comparativa em tabela, cluster de Cirurgia Infantil)",
+   "tema": "Oncologia pediátrica pelos sinais de alarme (leucemia, linfoma, neuroblastoma, tumor ósseo, tiflite) + Wilms x neuroblastoma",
    "tipo": "resumo",
    "tipo_norm": "teoria",
    "url_lista": null,
    "q_previstas": 20,
-   "nota": "ENAMED 2026 sem resumo."
+   "nota": "ENAMED 2026 sem resumo. || s209: escopo refeito por 2a lente das provas UERJ 2022-2026 (a banca pergunta o sinal que obriga a pensar no tumor, não o tratamento); era 'Oncologia pediatrica: Wilms x neuroblastoma (aula comparativa em tabela, cluster de Cirurgia Infantil)'."
   },
   {
    "tarefa_fonte": 14,
@@ -175,12 +175,12 @@
    "semana_plano": 5,
    "ordem": 2,
    "area": "Psiquiatria",
-   "tema": "Transtorno do espectro autista (TEA)",
+   "tema": "Saúde mental do adolescente: anorexia nervosa, depressão e risco de suicídio (TEA em 1 tela)",
    "tipo": "resumo",
    "tipo_norm": "teoria",
    "url_lista": null,
    "q_previstas": 20,
-   "nota": "ENAMED 2026 sem resumo."
+   "nota": "ENAMED 2026 sem resumo. || s209: escopo refeito por 2a lente das provas UERJ 2022-2026 (as 3 questões de Psiquiatria Infantil das provas 2022-2026 são anorexia nervosa, depressão na adolescência e risco de suicídio; TEA não caiu); era 'Transtorno do espectro autista (TEA)'."
   },
   {
    "tarefa_fonte": 16,
@@ -349,6 +349,42 @@
    "url_lista": null,
    "q_previstas": 60,
    "nota": "idem parte 1."
+  },
+  {
+   "tarefa_fonte": 30,
+   "semana_plano": 4,
+   "ordem": 20,
+   "area": "Obstetrícia",
+   "tema": "Imagem obstétrica: cardiotocografia, partograma e estática fetal",
+   "tipo": "resumo",
+   "tipo_norm": "teoria",
+   "url_lista": null,
+   "q_previstas": 0,
+   "nota": "As 3 figuras das provas UERJ 2022-2026 estão todas neste cluster (mais 2 quadros de dados no bloco de GO). Aula COM as figuras: descrever antes de interpretar. Estática fetal só existia na Fase 2."
+  },
+  {
+   "tarefa_fonte": 31,
+   "semana_plano": 5,
+   "ordem": 13,
+   "area": "Preventiva",
+   "tema": "Rodapés de retorno alto: lombalgia na APS, violência e negligência (notificação), dengue e prova do laço, SHU x PTT, derrame pleural (Light), síndrome de Down, pele na criança",
+   "tipo": "resumo",
+   "tipo_norm": "teoria",
+   "url_lista": null,
+   "q_previstas": 0,
+   "nota": "Temas curtos, recorrentes nas provas 2022-2026 e sem tarefa na Fase 1: 1 tela por tópico + cards arbitrários. Dengue grupo C x D é fraqueza persistente do operador."
+  },
+  {
+   "tarefa_fonte": 32,
+   "semana_plano": 7,
+   "ordem": 1,
+   "area": "Preventiva",
+   "tema": "Revisão final por banca (LEITURA): caderno de reta final, capítulos 1 a 10",
+   "tipo": "resumo",
+   "tipo_norm": "teoria",
+   "url_lista": null,
+   "q_previstas": 0,
+   "nota": "PDF local (gitignored), páginas 439-561 do caderno. SÓ depois do simulado UERJ 2026: o material cita questões das provas 2022-2026 (spoiler)."
   }
  ]
 }

@@ -86,6 +86,14 @@
    "nota": "trilha UERJ: n=5 em 4 ed. | ZERO | tema-zero: aula-base antes da lista"
   },
   {
+   "fonte": "extensivo",
+   "ref_semana_fonte": 27,
+   "tarefa_fonte": 15,
+   "semana_plano": 2,
+   "ordem": 9,
+   "status": "pendente"
+  },
+  {
    "fonte": "rf",
    "ref_semana_fonte": 21,
    "tarefa_fonte": 3,
@@ -113,15 +121,6 @@
   },
   {
    "fonte": "rf",
-   "ref_semana_fonte": 25,
-   "tarefa_fonte": 6,
-   "semana_plano": 2,
-   "ordem": 12,
-   "status": "pendente",
-   "nota": "trilha UERJ: n=5 em 4 ed. | ZERO | tema-zero: aula-base antes da lista"
-  },
-  {
-   "fonte": "rf",
    "ref_semana_fonte": 22,
    "tarefa_fonte": 10,
    "semana_plano": 2,
@@ -137,15 +136,6 @@
    "ordem": 14,
    "status": "pendente",
    "nota": "trilha UERJ: n=2 em 2 ed. | ZERO | tema-zero: aula-base antes da lista"
-  },
-  {
-   "fonte": "rf",
-   "ref_semana_fonte": 22,
-   "tarefa_fonte": 3,
-   "semana_plano": 2,
-   "ordem": 15,
-   "status": "pendente",
-   "nota": "trilha UERJ: n=7 em 4 ed. | ZERO | tema-zero: aula-base antes da lista"
   },
   {
    "fonte": "custom",
@@ -183,15 +173,6 @@
    "nota": "trilha UERJ: n=2 em 2 ed. | PARCIAL"
   },
   {
-   "fonte": "rf",
-   "ref_semana_fonte": 22,
-   "tarefa_fonte": 7,
-   "semana_plano": 2,
-   "ordem": 20,
-   "status": "pendente",
-   "nota": "trilha UERJ: n=7 em 4 ed. | ZERO | tema-zero: aula-base antes da lista"
-  },
-  {
    "fonte": "extensivo",
    "ref_semana_fonte": 31,
    "tarefa_fonte": 14,
@@ -208,24 +189,6 @@
    "ordem": 22,
    "status": "pendente",
    "nota": "trilha UERJ: n=4 em 4 ed. | ZERO | tema-zero: aula-base antes da lista"
-  },
-  {
-   "fonte": "rf",
-   "ref_semana_fonte": 28,
-   "tarefa_fonte": 12,
-   "semana_plano": 2,
-   "ordem": 23,
-   "status": "pendente",
-   "nota": "trilha UERJ: n=4 em 4 ed. | ZERO | tema-zero: aula-base antes da lista"
-  },
-  {
-   "fonte": "extensivo",
-   "ref_semana_fonte": 27,
-   "tarefa_fonte": 15,
-   "semana_plano": 2,
-   "ordem": 24,
-   "status": "pendente",
-   "nota": "trilha UERJ: n=6 em 3 ed. | ZERO | sem lista no EMED: aula-base + 10-15 questoes do banco pelo filtro do tema"
   },
   {
    "fonte": "rf",
@@ -272,15 +235,6 @@
   },
   {
    "fonte": "extensivo",
-   "ref_semana_fonte": 40,
-   "tarefa_fonte": 1,
-   "semana_plano": 3,
-   "ordem": 12,
-   "status": "pendente",
-   "nota": "trilha UERJ: n=3 em 3 ed. | ZERO | tema-zero: aula-base antes da lista"
-  },
-  {
-   "fonte": "extensivo",
    "ref_semana_fonte": 43,
    "tarefa_fonte": 12,
    "semana_plano": 3,
@@ -305,15 +259,6 @@
    "ordem": 15,
    "status": "pendente",
    "nota": "trilha UERJ: n=5 em 3 ed. | ZERO | tema-zero: aula-base antes da lista"
-  },
-  {
-   "fonte": "rf",
-   "ref_semana_fonte": 23,
-   "tarefa_fonte": 5,
-   "semana_plano": 3,
-   "ordem": 16,
-   "status": "pendente",
-   "nota": "trilha UERJ: n=4 em 4 ed. | ZERO | tema-zero: aula-base antes da lista"
   },
   {
    "fonte": "custom",
@@ -350,15 +295,6 @@
    "status": "pendente"
   },
   {
-   "fonte": "extensivo",
-   "ref_semana_fonte": 42,
-   "tarefa_fonte": 2,
-   "semana_plano": 3,
-   "ordem": 19,
-   "status": "pendente",
-   "nota": "trilha UERJ: n=4 em 3 ed. | ZERO | tema-zero: aula-base antes da lista"
-  },
-  {
    "fonte": "rf",
    "ref_semana_fonte": 27,
    "tarefa_fonte": 3,
@@ -366,15 +302,6 @@
    "ordem": 20,
    "status": "pendente",
    "nota": "trilha UERJ: n=5 em 4 ed. | ZERO | tema-zero: aula-base antes da lista"
-  },
-  {
-   "fonte": "rf",
-   "ref_semana_fonte": 27,
-   "tarefa_fonte": 5,
-   "semana_plano": 3,
-   "ordem": 21,
-   "status": "pendente",
-   "nota": "trilha UERJ: n=4 em 4 ed. | ZERO | tema-zero: aula-base antes da lista"
   },
   {
    "fonte": "rf",
@@ -395,21 +322,28 @@
    "nota": "trilha UERJ: n=4 em 3 ed. | ZERO | sem lista no EMED: aula-base + 10-15 questoes do banco pelo filtro do tema"
   },
   {
+   "fonte": "extensivo",
+   "ref_semana_fonte": 18,
+   "tarefa_fonte": 15,
+   "semana_plano": 3,
+   "ordem": 24,
+   "status": "pendente"
+  },
+  {
+   "fonte": "extensivo",
+   "ref_semana_fonte": 17,
+   "tarefa_fonte": 14,
+   "semana_plano": 3,
+   "ordem": 25,
+   "status": "pendente"
+  },
+  {
    "fonte": "custom",
    "ref_semana_fonte": 0,
    "tarefa_fonte": 24,
    "semana_plano": 3,
    "ordem": 90,
    "status": "pendente"
-  },
-  {
-   "fonte": "rf",
-   "ref_semana_fonte": 27,
-   "tarefa_fonte": 7,
-   "semana_plano": 4,
-   "ordem": 10,
-   "status": "pendente",
-   "nota": "trilha UERJ: n=5 em 4 ed. | ZERO | tema-zero: aula-base antes da lista"
   },
   {
    "fonte": "rf",
@@ -445,24 +379,6 @@
    "ordem": 13,
    "status": "pendente",
    "nota": "trilha UERJ: n=3 em 2 ed. | ZERO | sem lista no EMED: aula-base + 10-15 questoes do banco pelo filtro do tema"
-  },
-  {
-   "fonte": "rf",
-   "ref_semana_fonte": 28,
-   "tarefa_fonte": 3,
-   "semana_plano": 4,
-   "ordem": 14,
-   "status": "pendente",
-   "nota": "trilha UERJ: n=5 em 4 ed. | ZERO | tema-zero: aula-base antes da lista"
-  },
-  {
-   "fonte": "rf",
-   "ref_semana_fonte": 26,
-   "tarefa_fonte": 4,
-   "semana_plano": 4,
-   "ordem": 15,
-   "status": "pendente",
-   "nota": "trilha UERJ: n=3 em 2 ed. | ZERO | tema-zero: aula-base antes da lista"
   },
   {
    "fonte": "rf",
@@ -517,6 +433,14 @@
    "status": "pendente"
   },
   {
+   "fonte": "custom",
+   "ref_semana_fonte": 0,
+   "tarefa_fonte": 30,
+   "semana_plano": 4,
+   "ordem": 20,
+   "status": "pendente"
+  },
+  {
    "fonte": "extensivo",
    "ref_semana_fonte": 12,
    "tarefa_fonte": 12,
@@ -562,6 +486,22 @@
    "nota": "trilha UERJ: n=6 em 4 ed. | TOCADO/ZERO | tema-zero: aula-base antes da lista"
   },
   {
+   "fonte": "rf",
+   "ref_semana_fonte": 18,
+   "tarefa_fonte": 9,
+   "semana_plano": 4,
+   "ordem": 25,
+   "status": "pendente"
+  },
+  {
+   "fonte": "rf",
+   "ref_semana_fonte": 21,
+   "tarefa_fonte": 12,
+   "semana_plano": 4,
+   "ordem": 26,
+   "status": "pendente"
+  },
+  {
    "fonte": "custom",
    "ref_semana_fonte": 0,
    "tarefa_fonte": 18,
@@ -596,13 +536,12 @@
    "status": "pendente"
   },
   {
-   "fonte": "extensivo",
-   "ref_semana_fonte": 27,
-   "tarefa_fonte": 14,
+   "fonte": "custom",
+   "ref_semana_fonte": 0,
+   "tarefa_fonte": 31,
    "semana_plano": 5,
-   "ordem": 12,
-   "status": "pendente",
-   "nota": "trilha UERJ: n=3 em 3 ed. | ZERO | sem lista no EMED: aula-base + 10-15 questoes do banco pelo filtro do tema"
+   "ordem": 13,
+   "status": "pendente"
   },
   {
    "fonte": "rf",
@@ -615,15 +554,6 @@
   },
   {
    "fonte": "rf",
-   "ref_semana_fonte": 19,
-   "tarefa_fonte": 8,
-   "semana_plano": 5,
-   "ordem": 14,
-   "status": "pendente",
-   "nota": "trilha UERJ: n=4 em 2 ed. | ZERO | tema-zero: aula-base antes da lista"
-  },
-  {
-   "fonte": "rf",
    "ref_semana_fonte": 24,
    "tarefa_fonte": 4,
    "semana_plano": 5,
@@ -632,30 +562,12 @@
    "nota": "trilha UERJ: n=9 em 6 ed. | PARCIAL/ZERO"
   },
   {
-   "fonte": "extensivo",
-   "ref_semana_fonte": 36,
-   "tarefa_fonte": 16,
-   "semana_plano": 5,
-   "ordem": 16,
-   "status": "pendente",
-   "nota": "trilha UERJ: n=3 em 3 ed. | ZERO | sem lista no EMED: aula-base + 10-15 questoes do banco pelo filtro do tema"
-  },
-  {
    "fonte": "custom",
    "ref_semana_fonte": 0,
    "tarefa_fonte": 26,
    "semana_plano": 5,
    "ordem": 17,
    "status": "pendente"
-  },
-  {
-   "fonte": "rf",
-   "ref_semana_fonte": 24,
-   "tarefa_fonte": 9,
-   "semana_plano": 5,
-   "ordem": 17,
-   "status": "pendente",
-   "nota": "trilha UERJ: n=5 em 3 ed. | ZERO | tema-zero: aula-base antes da lista"
   },
   {
    "fonte": "rf",
@@ -711,15 +623,6 @@
    "status": "pendente"
   },
   {
-   "fonte": "rf",
-   "ref_semana_fonte": 28,
-   "tarefa_fonte": 4,
-   "semana_plano": 5,
-   "ordem": 23,
-   "status": "pendente",
-   "nota": "trilha UERJ: n=3 em 3 ed. | ZERO | tema-zero: aula-base antes da lista"
-  },
-  {
    "fonte": "extensivo",
    "ref_semana_fonte": 34,
    "tarefa_fonte": 1,
@@ -764,22 +667,20 @@
    "nota": "trilha UERJ: n=2 em 2 ed. | ZERO | tema-zero: aula-base antes da lista"
   },
   {
-   "fonte": "rf",
-   "ref_semana_fonte": 27,
-   "tarefa_fonte": 9,
+   "fonte": "extensivo",
+   "ref_semana_fonte": 13,
+   "tarefa_fonte": 10,
    "semana_plano": 5,
-   "ordem": 28,
-   "status": "pendente",
-   "nota": "trilha UERJ: n=2 em 2 ed. | ZERO | tema-zero: aula-base antes da lista"
+   "ordem": 30,
+   "status": "pendente"
   },
   {
-   "fonte": "rf",
-   "ref_semana_fonte": 28,
-   "tarefa_fonte": 2,
+   "fonte": "extensivo",
+   "ref_semana_fonte": 29,
+   "tarefa_fonte": 12,
    "semana_plano": 5,
-   "ordem": 29,
-   "status": "pendente",
-   "nota": "trilha UERJ: n=2 em 2 ed. | ZERO | tema-zero: aula-base antes da lista"
+   "ordem": 31,
+   "status": "pendente"
   },
   {
    "fonte": "custom",
@@ -834,15 +735,6 @@
    "nota": "trilha UERJ: n=3 em 3 ed. | ZERO | sem lista no EMED: aula-base + 10-15 questoes do banco pelo filtro do tema"
   },
   {
-   "fonte": "rf",
-   "ref_semana_fonte": 23,
-   "tarefa_fonte": 3,
-   "semana_plano": 6,
-   "ordem": 14,
-   "status": "pendente",
-   "nota": "trilha UERJ: n=3 em 3 ed. | ZERO | tema-zero: aula-base antes da lista"
-  },
-  {
    "fonte": "extensivo",
    "ref_semana_fonte": 41,
    "tarefa_fonte": 9,
@@ -869,15 +761,6 @@
    "status": "pendente"
   },
   {
-   "fonte": "rf",
-   "ref_semana_fonte": 24,
-   "tarefa_fonte": 3,
-   "semana_plano": 6,
-   "ordem": 17,
-   "status": "pendente",
-   "nota": "trilha UERJ: n=3 em 3 ed. | ZERO | tema-zero: aula-base antes da lista"
-  },
-  {
    "fonte": "extensivo",
    "ref_semana_fonte": 13,
    "tarefa_fonte": 15,
@@ -893,23 +776,6 @@
    "ordem": 19,
    "status": "pendente",
    "nota": "trilha UERJ: n=2 em 2 ed. | ZERO | tema-zero: aula-base antes da lista"
-  },
-  {
-   "fonte": "rf",
-   "ref_semana_fonte": 24,
-   "tarefa_fonte": 7,
-   "semana_plano": 6,
-   "ordem": 20,
-   "status": "pendente",
-   "nota": "trilha UERJ: n=3 em 3 ed. | ZERO | tema-zero: aula-base antes da lista"
-  },
-  {
-   "fonte": "custom",
-   "ref_semana_fonte": 0,
-   "tarefa_fonte": 9,
-   "semana_plano": 6,
-   "ordem": 21,
-   "status": "pendente"
   },
   {
    "fonte": "rf",
@@ -930,15 +796,6 @@
    "nota": "trilha UERJ: n=2 em 2 ed. | ZERO | sem lista no EMED: aula-base + 10-15 questoes do banco pelo filtro do tema"
   },
   {
-   "fonte": "rf",
-   "ref_semana_fonte": 28,
-   "tarefa_fonte": 6,
-   "semana_plano": 6,
-   "ordem": 23,
-   "status": "pendente",
-   "nota": "trilha UERJ: n=2 em 2 ed. | ZERO | tema-zero: aula-base antes da lista"
-  },
-  {
    "fonte": "extensivo",
    "ref_semana_fonte": 47,
    "tarefa_fonte": 12,
@@ -956,11 +813,27 @@
    "status": "pendente"
   },
   {
+   "fonte": "rf",
+   "ref_semana_fonte": 25,
+   "tarefa_fonte": 6,
+   "semana_plano": 6,
+   "ordem": 30,
+   "status": "pendente"
+  },
+  {
    "fonte": "custom",
    "ref_semana_fonte": 0,
    "tarefa_fonte": 16,
    "semana_plano": 6,
    "ordem": 90,
+   "status": "pendente"
+  },
+  {
+   "fonte": "custom",
+   "ref_semana_fonte": 0,
+   "tarefa_fonte": 32,
+   "semana_plano": 7,
+   "ordem": 1,
    "status": "pendente"
   },
   {
@@ -1048,6 +921,46 @@
    "status": "pendente"
   },
   {
+   "fonte": "custom",
+   "ref_semana_fonte": 0,
+   "tarefa_fonte": 9,
+   "semana_plano": 9,
+   "ordem": 3,
+   "status": "pendente"
+  },
+  {
+   "fonte": "extensivo",
+   "ref_semana_fonte": 27,
+   "tarefa_fonte": 14,
+   "semana_plano": 9,
+   "ordem": 3,
+   "status": "pendente"
+  },
+  {
+   "fonte": "extensivo",
+   "ref_semana_fonte": 36,
+   "tarefa_fonte": 16,
+   "semana_plano": 9,
+   "ordem": 3,
+   "status": "pendente"
+  },
+  {
+   "fonte": "extensivo",
+   "ref_semana_fonte": 40,
+   "tarefa_fonte": 1,
+   "semana_plano": 9,
+   "ordem": 3,
+   "status": "pendente"
+  },
+  {
+   "fonte": "extensivo",
+   "ref_semana_fonte": 42,
+   "tarefa_fonte": 2,
+   "semana_plano": 9,
+   "ordem": 3,
+   "status": "pendente"
+  },
+  {
    "fonte": "extensivo",
    "ref_semana_fonte": 42,
    "tarefa_fonte": 8,
@@ -1057,8 +970,144 @@
   },
   {
    "fonte": "rf",
+   "ref_semana_fonte": 19,
+   "tarefa_fonte": 8,
+   "semana_plano": 9,
+   "ordem": 3,
+   "status": "pendente"
+  },
+  {
+   "fonte": "rf",
    "ref_semana_fonte": 21,
    "tarefa_fonte": 5,
+   "semana_plano": 9,
+   "ordem": 3,
+   "status": "pendente"
+  },
+  {
+   "fonte": "rf",
+   "ref_semana_fonte": 22,
+   "tarefa_fonte": 3,
+   "semana_plano": 9,
+   "ordem": 3,
+   "status": "pendente"
+  },
+  {
+   "fonte": "rf",
+   "ref_semana_fonte": 22,
+   "tarefa_fonte": 7,
+   "semana_plano": 9,
+   "ordem": 3,
+   "status": "pendente"
+  },
+  {
+   "fonte": "rf",
+   "ref_semana_fonte": 23,
+   "tarefa_fonte": 3,
+   "semana_plano": 9,
+   "ordem": 3,
+   "status": "pendente"
+  },
+  {
+   "fonte": "rf",
+   "ref_semana_fonte": 23,
+   "tarefa_fonte": 5,
+   "semana_plano": 9,
+   "ordem": 3,
+   "status": "pendente"
+  },
+  {
+   "fonte": "rf",
+   "ref_semana_fonte": 24,
+   "tarefa_fonte": 3,
+   "semana_plano": 9,
+   "ordem": 3,
+   "status": "pendente"
+  },
+  {
+   "fonte": "rf",
+   "ref_semana_fonte": 24,
+   "tarefa_fonte": 7,
+   "semana_plano": 9,
+   "ordem": 3,
+   "status": "pendente"
+  },
+  {
+   "fonte": "rf",
+   "ref_semana_fonte": 24,
+   "tarefa_fonte": 9,
+   "semana_plano": 9,
+   "ordem": 3,
+   "status": "pendente"
+  },
+  {
+   "fonte": "rf",
+   "ref_semana_fonte": 26,
+   "tarefa_fonte": 4,
+   "semana_plano": 9,
+   "ordem": 3,
+   "status": "pendente"
+  },
+  {
+   "fonte": "rf",
+   "ref_semana_fonte": 27,
+   "tarefa_fonte": 5,
+   "semana_plano": 9,
+   "ordem": 3,
+   "status": "pendente"
+  },
+  {
+   "fonte": "rf",
+   "ref_semana_fonte": 27,
+   "tarefa_fonte": 7,
+   "semana_plano": 9,
+   "ordem": 3,
+   "status": "pendente"
+  },
+  {
+   "fonte": "rf",
+   "ref_semana_fonte": 27,
+   "tarefa_fonte": 9,
+   "semana_plano": 9,
+   "ordem": 3,
+   "status": "pendente"
+  },
+  {
+   "fonte": "rf",
+   "ref_semana_fonte": 28,
+   "tarefa_fonte": 2,
+   "semana_plano": 9,
+   "ordem": 3,
+   "status": "pendente"
+  },
+  {
+   "fonte": "rf",
+   "ref_semana_fonte": 28,
+   "tarefa_fonte": 3,
+   "semana_plano": 9,
+   "ordem": 3,
+   "status": "pendente"
+  },
+  {
+   "fonte": "rf",
+   "ref_semana_fonte": 28,
+   "tarefa_fonte": 4,
+   "semana_plano": 9,
+   "ordem": 3,
+   "status": "pendente"
+  },
+  {
+   "fonte": "rf",
+   "ref_semana_fonte": 28,
+   "tarefa_fonte": 6,
+   "semana_plano": 9,
+   "ordem": 3,
+   "status": "pendente"
+  },
+  {
+   "fonte": "rf",
+   "ref_semana_fonte": 28,
+   "tarefa_fonte": 12,
    "semana_plano": 9,
    "ordem": 3,
    "status": "pendente"

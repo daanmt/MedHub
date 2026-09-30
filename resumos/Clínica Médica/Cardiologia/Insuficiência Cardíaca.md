@@ -23,6 +23,7 @@ O Ecocardiograma (método de Simpson) divide a IC em três caminhos de tratament
 - **ICFEp (Preservada) -- FEVE ≥ 50%:**
   - O defeito é no **relaxamento** (diástole). O ventrículo é duro/espesso.
   - **Física:** Remodelamento Concêntrico. O VE não cresce para fora -> **Coração de tamanho normal no RX**.
+- 🔴 **Armadilha banca-dependente -- Segunda Definição Universal de IC (AHA/ACC/ESC/WHF, *Circulation*, 29/06/2026):** afasta-se dos cortes rígidos de FE e agrupa a IC em FE **reduzida, preservada e melhorada**; a faixa intermediária (levemente reduzida) deixa de ser categoria própria, e as causas passam a ter classificação universal, independente da FE. Provas e diretrizes de tratamento ainda usam os cortes acima: responder por eles, salvo enunciado que cite a definição de 2026. **Não conferido:** se o documento mantém algum número de corte e como ficam os estágios A-D. Fonte: PMID 42366997, DOI 10.1161/CIR.0000000000001455.
 
 ## 3. Pistas Clínicas Clássicas
 - **Miocardite:** Jovem + quadro gripal há 1-2 semanas + IC aguda nova.

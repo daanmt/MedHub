@@ -10,10 +10,10 @@ aliases: [Trauma Cirúrgico, ATLS]
 
 ### 1. Avaliação Inicial e Princípios Biomecânicos
 
-**Protocolo ABCDE (ATLS 10ª Edição)**
+**Protocolo xABCDE (ATLS 11ª Edição -- American College of Surgeons, lançada em 16/09/2025)**
 - **Segurança da Cena:** A avaliação deve ser iniciada apenas após o isolamento de riscos ambientais e garantia da integridade física da equipe e do paciente.
 - **Hierarquia de Prioridades (X)ABCDE:**
-  - **X (Exanguinação):** O controle de hemorragias externas maciças (extremiades) precede a via aérea. Utilizar torniquetes e compressão direta.
+  - **X (Exsanguinação):** a 11ª edição trocou o ABCDE por **xABCDE** -- o x é a **hemorragia externa exsanguinante** (extremidades), controlada **antes da via aérea** em pacientes selecionados. Utilizar torniquetes e compressão direta. ⚰️ *ABCDE sem o x era o ATLS 10ª edição -- questão antiga ainda o usa.*
   - **A (Airway):** Manutenção da perviedade aérea com proteção cervical simultânea.
   - **B (Breathing):** Avaliação da ventilação e oxigenação adequada.
   - **C (Circulation):** Controle de hemorragias internas e reposição volêmica.
@@ -21,6 +21,7 @@ aliases: [Trauma Cirúrgico, ATLS]
   - **E (Exposure):** Exposição total do paciente com prevenção rigorosa da hipotermia.
 - **Regra de Ouro:** A progressão no protocolo exige a estabilização da etapa anterior; uma falha no "A" impossibilita a progressão segura para o "B".
 - **Medidas Auxiliares (Avaliação Primária):** FAST, Lavado Peritoneal Diagnóstico (LPD) e Radiografias (Tórax e Pelve) são integrados durante a etapa "C".
+- ⚠️ **Pendência de conferência (ATLS 11ª):** choque em três categorias e hemotórax maciço definido por hipotensão foram atribuídos à 11ª edição sem confirmação em fonte primária -- este resumo mantém as classes I-IV e o corte > 1.500 mL do ATLS 10 até a conferência.
 
 **Avaliação Secundária**
 - **Mnemônico SAMPLE:** Sinais/Sintomas, Alergias, Medicações em uso, Passado médico/Gestação, Líquidos/Última refeição, Eventos relacionados ao trauma.

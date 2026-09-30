@@ -1,8 +1,8 @@
 # Reserva da Fase 1 -- linhas pendentes FORA da fila
 
-> Gerado por `python tools/plano.py --reserva` em 2026-09-21. Nao editar: regenerar. Para o operador ler UMA vez (fatia 2 do `/ai-eng`, s189): o gate e o olho, nao o aviso. Terminal datado: 02/11/2026, junto do F111.
+> Gerado por `python tools/plano.py --reserva` em 2026-09-30. Nao editar: regenerar. Para o operador ler UMA vez (fatia 2 do `/ai-eng`, s189): o gate e o olho, nao o aviso. Terminal datado: 02/11/2026, junto do F111.
 
-**171 linha(s) pendente(s) sem semana** -- 45 fora da trilha, 126 reserva do extensivo. **19 em faixa ALTA** da UERJ (tema com >= 4 questoes em 2021-2026), das quais **8 sem NENHUMA linha na fila da Fase 1 cobrindo o tema** (o risco real: as outras tem o tema agendado por outra tarefa, coluna `tema ja na fila por`); 48 sem tema casado na prevalencia.
+**166 linha(s) pendente(s) sem semana** -- 43 fora da trilha, 123 reserva do extensivo. **16 em faixa ALTA** da UERJ (tema com >= 4 questoes em 2021-2026), das quais **3 sem NENHUMA linha na fila da Fase 1 cobrindo o tema** (o risco real: as outras tem o tema agendado por outra tarefa, coluna `tema ja na fila por`); 48 sem tema casado na prevalencia.
 
 Como ler: `UERJ n (peso)` = questoes das provas UERJ 2021-2026 nos temas que a tarefa cobre (2021-2022 valem 0,7 no peso). `fora da trilha` = a trilha da Fase 1 nao a escolheu (`fase1_exclusiva`); `reserva do extensivo` = S1-S20 do extensivo, fora do plano por regra da part-2. `estado (18/09)` = como o gerador da trilha via o tema (ZERO nunca estudado, TOCADO, PARCIAL, FEITO) -- e o porque da exclusao: a prioridade e peso UERJ x lacuna. Para trazer uma linha para a Fase 1: entrada em `core/cronograma/trilha/custom.json` (com `racional`) + `python tools/trilha.py --gravar` + `python tools/plano.py --semear --dry-run`.
 
@@ -10,26 +10,23 @@ Como ler: `UERJ n (peso)` = questoes das provas UERJ 2021-2026 nos temas que a t
 
 | id | grupo | area | tarefa | tipo | q | UERJ n (peso) | faixa | tema(s) UERJ | tema ja na fila por | estado (18/09) |
 |---|---|---|---|---|---|---|---|---|---|---|
-| #393 | reserva do extensivo | Cirurgia | Apendicite Aguda \| Colecistite e Colangite Aguda \| Diverticulite Aguda | Revisão por Questões | 52 | 8 (7.4) | alta | Abdome Agudo Inflamatório - Colecistite e Colangite Aguda; Abdome Agudo Inflamatório - Apendicite Aguda | NENHUMA | PARCIAL |
 | #349 | reserva do extensivo | Gastro | Doença do Refluxo Gastroesofágico, Esofagites Não-Pépticas e Ingestão de Corpo Estranho | Teoria I | 0 | 6 (5.7) | alta | Doença do Refluxo Gastroesofágico, Esofagites e Corpo Estranho | NENHUMA | PARCIAL |
 | #377 | reserva do extensivo | Gastro | Doença do Refluxo Gastroesofágico, Esofagites Não-Pépticas e Ingestão de Corpo Estranho | Teoria II | 0 | 6 (5.7) | alta | Doença do Refluxo Gastroesofágico, Esofagites e Corpo Estranho | NENHUMA | PARCIAL |
-| #180 | reserva do extensivo | Infecto | Arboviroses | Teoria III | 0 | 5 (5.0) | alta | Arboviroses | NENHUMA | PARCIAL |
 | #358 | reserva do extensivo | Ginecologia | Endometriose | Teoria II | 0 | 5 (4.4) | alta | Endometriose | NENHUMA | PARCIAL |
-| #370 | reserva do extensivo | Cirurgia | Abdome Agudo Inflamatório - Colecistite e Colangite Aguda | Teoria II | 0 | 5 (4.4) | alta | Abdome Agudo Inflamatório - Colecistite e Colangite Aguda | NENHUMA | PARCIAL |
-| #293 | reserva do extensivo | Gastro | Pancreatite Aguda e Crônica | Teoria III | 0 | 4 (4.0) | alta | Pancreatite Aguda e Crônica | NENHUMA | PARCIAL |
-| #320 | reserva do extensivo | Gastro | Pancreatite Aguda e Crônica | Revisão | 42 | 4 (4.0) | alta | Pancreatite Aguda e Crônica | NENHUMA | PARCIAL |
 
 ## ⚠️ Faixa ALTA com o tema ja na fila por outra tarefa
 
 | id | grupo | area | tarefa | tipo | q | UERJ n (peso) | faixa | tema(s) UERJ | tema ja na fila por | estado (18/09) |
 |---|---|---|---|---|---|---|---|---|---|---|
-| #380 | reserva do extensivo | Infecto | Arboviroses \| HIV \| Tuberculose \| Meningites e Meningoencefalites | Revisão por Questões | 55 | 28 (26.8) | alta | Tuberculose; Meningites e Meningoencefalites; Arboviroses; HIV | #1797 (S2), #376 (S3) | FEITO/PARCIAL |
-| #92 | fora da trilha | Cirurgia | Cirurgia Vascular Urologia Hérnias da Parede Abdominal Princípios da Anestesiologia | Revisão por Questões | 41 | 14 (13.4) | alta | Hérnias da Parede Abdominal; Urologia; Princípios da Anestesiologia; Cirurgia Vascular | #38 (S1), #49 (S2), #61 (S2), #65 (S2) +3 | PARCIAL/ZERO |
+| #92 | fora da trilha | Cirurgia | Cirurgia Vascular Urologia Hérnias da Parede Abdominal Princípios da Anestesiologia | Revisão por Questões | 41 | 14 (13.4) | alta | Hérnias da Parede Abdominal; Urologia; Princípios da Anestesiologia; Cirurgia Vascular | #38 (S1), #49 (S2) | PARCIAL/ZERO |
 | #217 | reserva do extensivo | Ginecologia | Rastreamento do Câncer de Colo Uterino | Teoria II | 0 | 9 (8.4) | alta | Rastreamento do Câncer de Colo Uterino; Câncer de Colo Uterino | #74 (S5), #84 (S5) | PARCIAL/ZERO |
-| #34 | fora da trilha | Gastro | Pólipos e Neoplasias Intestinais; Doença Inflamatória Intestinal; Neoplasias de Estômago e Esôfago | Revisão por Questões | 41 | 8 (6.8) | alta | Doença Inflamatória Intestinal; Neoplasias de Estômago e Esôfago | #11 (S5), #30 (S5), #494 (S5) | PARCIAL/ZERO |
+| #34 | fora da trilha | Gastro | Pólipos e Neoplasias Intestinais; Doença Inflamatória Intestinal; Neoplasias de Estômago e Esôfago | Revisão por Questões | 41 | 8 (6.8) | alta | Doença Inflamatória Intestinal; Neoplasias de Estômago e Esôfago | #11 (S5), #494 (S5) | PARCIAL/ZERO |
 | #170 | reserva do extensivo | Nefrologia | Doenças Glomerulares | Teoria I | 0 | 6 (5.4) | alta | Doenças Glomerulares | #68 (S2), #115 (S4) | ZERO |
 | #195 | reserva do extensivo | Nefrologia | Doenças Glomerulares | Teoria II | 0 | 6 (5.4) | alta | Doenças Glomerulares | #68 (S2), #115 (S4) | ZERO |
 | #224 | reserva do extensivo | Nefrologia | Doenças Glomerulares | Revisão | 37 | 6 (5.4) | alta | Doenças Glomerulares | #68 (S2), #115 (S4) | ZERO |
+| #180 | reserva do extensivo | Infecto | Arboviroses | Teoria III | 0 | 5 (5.0) | alta | Arboviroses | #380 (S3) | PARCIAL |
+| #370 | reserva do extensivo | Cirurgia | Abdome Agudo Inflamatório - Colecistite e Colangite Aguda | Teoria II | 0 | 5 (4.4) | alta | Abdome Agudo Inflamatório - Colecistite e Colangite Aguda | #393 (S3) | PARCIAL |
+| #293 | reserva do extensivo | Gastro | Pancreatite Aguda e Crônica | Teoria III | 0 | 4 (4.0) | alta | Pancreatite Aguda e Crônica | #320 (S5) | PARCIAL |
 | #211 | reserva do extensivo | Hemato | Anemias Hemolíticas | Teoria II | 0 | 4 (3.7) | alta | Anemias Hemolíticas | #308 (S4) | PARCIAL |
 | #253 | reserva do extensivo | Hemato | Anemias Hemolíticas | Teoria III | 0 | 4 (3.7) | alta | Anemias Hemolíticas | #308 (S4) | PARCIAL |
 | #345 | reserva do extensivo | Obstetrícia | Assistência ao Parto | Teoria II | 0 | 4 (3.4) | alta | Assistência ao Parto | #22 (S4) | PARCIAL |
@@ -39,13 +36,10 @@ Como ler: `UERJ n (peso)` = questoes das provas UERJ 2021-2026 nos temas que a t
 
 | id | grupo | area | tarefa | tipo | q | UERJ n (peso) | faixa | tema(s) UERJ | tema ja na fila por | estado (18/09) |
 |---|---|---|---|---|---|---|---|---|---|---|
-| #380 | reserva do extensivo | Infecto | Arboviroses \| HIV \| Tuberculose \| Meningites e Meningoencefalites | Revisão por Questões | 55 | 28 (26.8) | alta | Tuberculose; Meningites e Meningoencefalites; Arboviroses; HIV | #1797 (S2), #376 (S3) | FEITO/PARCIAL |
-| #92 | fora da trilha | Cirurgia | Cirurgia Vascular Urologia Hérnias da Parede Abdominal Princípios da Anestesiologia | Revisão por Questões | 41 | 14 (13.4) | alta | Hérnias da Parede Abdominal; Urologia; Princípios da Anestesiologia; Cirurgia Vascular | #38 (S1), #49 (S2), #61 (S2), #65 (S2) +3 | PARCIAL/ZERO |
+| #92 | fora da trilha | Cirurgia | Cirurgia Vascular Urologia Hérnias da Parede Abdominal Princípios da Anestesiologia | Revisão por Questões | 41 | 14 (13.4) | alta | Hérnias da Parede Abdominal; Urologia; Princípios da Anestesiologia; Cirurgia Vascular | #38 (S1), #49 (S2) | PARCIAL/ZERO |
 | #217 | reserva do extensivo | Ginecologia | Rastreamento do Câncer de Colo Uterino | Teoria II | 0 | 9 (8.4) | alta | Rastreamento do Câncer de Colo Uterino; Câncer de Colo Uterino | #74 (S5), #84 (S5) | PARCIAL/ZERO |
-| #393 | reserva do extensivo | Cirurgia | Apendicite Aguda \| Colecistite e Colangite Aguda \| Diverticulite Aguda | Revisão por Questões | 52 | 8 (7.4) | alta | Abdome Agudo Inflamatório - Colecistite e Colangite Aguda; Abdome Agudo Inflamatório - Apendicite Aguda | NENHUMA | PARCIAL |
-| #34 | fora da trilha | Gastro | Pólipos e Neoplasias Intestinais; Doença Inflamatória Intestinal; Neoplasias de Estômago e Esôfago | Revisão por Questões | 41 | 8 (6.8) | alta | Doença Inflamatória Intestinal; Neoplasias de Estômago e Esôfago | #11 (S5), #30 (S5), #494 (S5) | PARCIAL/ZERO |
+| #34 | fora da trilha | Gastro | Pólipos e Neoplasias Intestinais; Doença Inflamatória Intestinal; Neoplasias de Estômago e Esôfago | Revisão por Questões | 41 | 8 (6.8) | alta | Doença Inflamatória Intestinal; Neoplasias de Estômago e Esôfago | #11 (S5), #494 (S5) | PARCIAL/ZERO |
 | #241 | reserva do extensivo | Endocrino | Introdução ao Diabetes Mellitus \| Diabetes Mellitus – Insulinoterapia e Cirurgia Metabólica | Teoria | 0 | 7 (6.1) | media | Diabetes Mellitus Tipo 2; Diabetes Mellitus - Complicações Agudas; Introdução ao Diabetes Mellitus Insulinoterapia e Cirurgia Metabólica | NENHUMA | FEITO/PARCIAL |
-| #58 | fora da trilha | Pediatria | Diarreia; Pneumonias na Infância; Choque em Pediatria; Alergia Alimentar | Revisão por Questões | 43 | 6 (6.0) | media | Diarreia; Pneumonias na Infância; Alergia Alimentar | NENHUMA | PARCIAL/TOCADO/ZERO |
 | #93 | fora da trilha | Ginecologia | Sangramento Uterino Anormal Tumores Anexiais e Câncer de Ovário Prolapsos de Órgãos Pélvicos Câncer de Colo Uterino | Revisão por Questões | 35 | 6 (6.0) | media | Câncer de Colo Uterino; Tumores Anexiais e Câncer de Ovário; Prolapsos de Órgãos Pélvicos; Sangramento Uterino Anormal | #74 (S5), #84 (S5) | PARCIAL/TOCADO/ZERO |
 | #349 | reserva do extensivo | Gastro | Doença do Refluxo Gastroesofágico, Esofagites Não-Pépticas e Ingestão de Corpo Estranho | Teoria I | 0 | 6 (5.7) | alta | Doença do Refluxo Gastroesofágico, Esofagites e Corpo Estranho | NENHUMA | PARCIAL |
 | #377 | reserva do extensivo | Gastro | Doença do Refluxo Gastroesofágico, Esofagites Não-Pépticas e Ingestão de Corpo Estranho | Teoria II | 0 | 6 (5.7) | alta | Doença do Refluxo Gastroesofágico, Esofagites e Corpo Estranho | NENHUMA | PARCIAL |
@@ -53,35 +47,33 @@ Como ler: `UERJ n (peso)` = questoes das provas UERJ 2021-2026 nos temas que a t
 | #195 | reserva do extensivo | Nefrologia | Doenças Glomerulares | Teoria II | 0 | 6 (5.4) | alta | Doenças Glomerulares | #68 (S2), #115 (S4) | ZERO |
 | #224 | reserva do extensivo | Nefrologia | Doenças Glomerulares | Revisão | 37 | 6 (5.4) | alta | Doenças Glomerulares | #68 (S2), #115 (S4) | ZERO |
 | #422 | reserva do extensivo | Endocrino | Tireotoxicose \| Diabetes Mellitus - Complicações Agudas \| Diabetes Mellitus Tipo 2 | Revisão por Questões | 43 | 6 (5.4) | media | Diabetes Mellitus Tipo 2; Diabetes Mellitus - Complicações Agudas; Tireotoxicose | NENHUMA | FEITO/PARCIAL |
-| #180 | reserva do extensivo | Infecto | Arboviroses | Teoria III | 0 | 5 (5.0) | alta | Arboviroses | NENHUMA | PARCIAL |
-| #23 | fora da trilha | Cardiologia | Insuficiência Cardíaca e Hipertensão Arterial Sistêmica | Revisão por Questões | 43 | 5 (4.4) | media | Hipertensão Arterial Sistêmica Pt. 1; Hipertensão Arterial Sistêmica Pt. 2; Insuficiência Cardíaca Pt.2; Hipertensão Arterial Sistêmica Pt. 3 | NENHUMA | PARCIAL/TOCADO |
+| #180 | reserva do extensivo | Infecto | Arboviroses | Teoria III | 0 | 5 (5.0) | alta | Arboviroses | #380 (S3) | PARCIAL |
+| #23 | fora da trilha | Cardiologia | Insuficiência Cardíaca e Hipertensão Arterial Sistêmica | Revisão por Questões | 43 | 5 (4.4) | media | Hipertensão Arterial Sistêmica Pt. 1; Hipertensão Arterial Sistêmica Pt. 2; Insuficiência Cardíaca Pt.2; Hipertensão Arterial Sistêmica Pt. 3 | #19 (S4) | PARCIAL/TOCADO |
 | #358 | reserva do extensivo | Ginecologia | Endometriose | Teoria II | 0 | 5 (4.4) | alta | Endometriose | NENHUMA | PARCIAL |
-| #370 | reserva do extensivo | Cirurgia | Abdome Agudo Inflamatório - Colecistite e Colangite Aguda | Teoria II | 0 | 5 (4.4) | alta | Abdome Agudo Inflamatório - Colecistite e Colangite Aguda | NENHUMA | PARCIAL |
+| #370 | reserva do extensivo | Cirurgia | Abdome Agudo Inflamatório - Colecistite e Colangite Aguda | Teoria II | 0 | 5 (4.4) | alta | Abdome Agudo Inflamatório - Colecistite e Colangite Aguda | #393 (S3) | PARCIAL |
 | #384 | reserva do extensivo | Ginecologia | Câncer de Mama | Teoria II | 0 | 5 (4.4) | media | Câncer de Mama; Rastreamento do Câncer de Mama | NENHUMA | PARCIAL/TOCADO |
 | #398 | reserva do extensivo | Ginecologia | Câncer de Mama | Teoria III | 0 | 5 (4.4) | media | Câncer de Mama; Rastreamento do Câncer de Mama | NENHUMA | PARCIAL/TOCADO |
 | #7 | fora da trilha | Preventiva | Princípios e Diretrizes do SUS \| Atenção Primária à Saúde no Brasil \| Ética Médica \| Financiamento em Saúde | Revisão por Questões | 43 | 4 (4.0) | media | Atenção Primária à Saúde no Brasil; Princípios e Diretrizes do SUS | NENHUMA | FEITO/PARCIAL |
 | #33 | fora da trilha | Preventiva | Princípios e Diretrizes do SUS; Atenção Primária à Saúde no Brasil; Ética Médica | Revisão por Questões | 59 | 4 (4.0) | media | Atenção Primária à Saúde no Brasil; Princípios e Diretrizes do SUS | NENHUMA | FEITO/PARCIAL |
-| #293 | reserva do extensivo | Gastro | Pancreatite Aguda e Crônica | Teoria III | 0 | 4 (4.0) | alta | Pancreatite Aguda e Crônica | NENHUMA | PARCIAL |
-| #320 | reserva do extensivo | Gastro | Pancreatite Aguda e Crônica | Revisão | 42 | 4 (4.0) | alta | Pancreatite Aguda e Crônica | NENHUMA | PARCIAL |
+| #293 | reserva do extensivo | Gastro | Pancreatite Aguda e Crônica | Teoria III | 0 | 4 (4.0) | alta | Pancreatite Aguda e Crônica | #320 (S5) | PARCIAL |
 | #211 | reserva do extensivo | Hemato | Anemias Hemolíticas | Teoria II | 0 | 4 (3.7) | alta | Anemias Hemolíticas | #308 (S4) | PARCIAL |
 | #253 | reserva do extensivo | Hemato | Anemias Hemolíticas | Teoria III | 0 | 4 (3.7) | alta | Anemias Hemolíticas | #308 (S4) | PARCIAL |
-| #19 | fora da trilha | Cardiologia | Hipertensão Arterial Sistêmica | Revisão | 42 | 4 (3.4) | media | Hipertensão Arterial Sistêmica Pt. 1; Hipertensão Arterial Sistêmica Pt. 2; Hipertensão Arterial Sistêmica Pt. 3 | NENHUMA | PARCIAL/TOCADO |
-| #196 | reserva do extensivo | Cardiologia | Hipertensão Arterial Sistêmica Pt. 1 | Teoria II | 0 | 4 (3.4) | media | Hipertensão Arterial Sistêmica Pt. 1; Hipertensão Arterial Sistêmica Pt. 2; Hipertensão Arterial Sistêmica Pt. 3 | NENHUMA | PARCIAL/TOCADO |
-| #252 | reserva do extensivo | Cardiologia | Hipertensão Arterial Sistêmica Pt. 1 \| Hipertensão Arterial Sistêmica Pt. 2 | Revisão I | 37 | 4 (3.4) | media | Hipertensão Arterial Sistêmica Pt. 1; Hipertensão Arterial Sistêmica Pt. 2; Hipertensão Arterial Sistêmica Pt. 3 | NENHUMA | PARCIAL/TOCADO |
-| #282 | reserva do extensivo | Cardiologia | Hipertensão Arterial Sistêmica Pt. 2 | Teoria II | 0 | 4 (3.4) | media | Hipertensão Arterial Sistêmica Pt. 1; Hipertensão Arterial Sistêmica Pt. 2; Hipertensão Arterial Sistêmica Pt. 3 | NENHUMA | PARCIAL/TOCADO |
-| #305 | reserva do extensivo | Cardiologia | Hipertensão Arterial Sistêmica Pt. 3 | Teoria I | 0 | 4 (3.4) | media | Hipertensão Arterial Sistêmica Pt. 1; Hipertensão Arterial Sistêmica Pt. 2; Hipertensão Arterial Sistêmica Pt. 3 | NENHUMA | PARCIAL/TOCADO |
-| #337 | reserva do extensivo | Cardiologia | Hipertensão Arterial Sistêmica Pt. 3 | Teoria II | 0 | 4 (3.4) | media | Hipertensão Arterial Sistêmica Pt. 1; Hipertensão Arterial Sistêmica Pt. 2; Hipertensão Arterial Sistêmica Pt. 3 | NENHUMA | PARCIAL/TOCADO |
+| #196 | reserva do extensivo | Cardiologia | Hipertensão Arterial Sistêmica Pt. 1 | Teoria II | 0 | 4 (3.4) | media | Hipertensão Arterial Sistêmica Pt. 1; Hipertensão Arterial Sistêmica Pt. 2; Hipertensão Arterial Sistêmica Pt. 3 | #19 (S4) | PARCIAL/TOCADO |
+| #252 | reserva do extensivo | Cardiologia | Hipertensão Arterial Sistêmica Pt. 1 \| Hipertensão Arterial Sistêmica Pt. 2 | Revisão I | 37 | 4 (3.4) | media | Hipertensão Arterial Sistêmica Pt. 1; Hipertensão Arterial Sistêmica Pt. 2; Hipertensão Arterial Sistêmica Pt. 3 | #19 (S4) | PARCIAL/TOCADO |
+| #282 | reserva do extensivo | Cardiologia | Hipertensão Arterial Sistêmica Pt. 2 | Teoria II | 0 | 4 (3.4) | media | Hipertensão Arterial Sistêmica Pt. 1; Hipertensão Arterial Sistêmica Pt. 2; Hipertensão Arterial Sistêmica Pt. 3 | #19 (S4) | PARCIAL/TOCADO |
+| #305 | reserva do extensivo | Cardiologia | Hipertensão Arterial Sistêmica Pt. 3 | Teoria I | 0 | 4 (3.4) | media | Hipertensão Arterial Sistêmica Pt. 1; Hipertensão Arterial Sistêmica Pt. 2; Hipertensão Arterial Sistêmica Pt. 3 | #19 (S4) | PARCIAL/TOCADO |
+| #337 | reserva do extensivo | Cardiologia | Hipertensão Arterial Sistêmica Pt. 3 | Teoria II | 0 | 4 (3.4) | media | Hipertensão Arterial Sistêmica Pt. 1; Hipertensão Arterial Sistêmica Pt. 2; Hipertensão Arterial Sistêmica Pt. 3 | #19 (S4) | PARCIAL/TOCADO |
 | #345 | reserva do extensivo | Obstetrícia | Assistência ao Parto | Teoria II | 0 | 4 (3.4) | alta | Assistência ao Parto | #22 (S4) | PARCIAL |
 | #359 | reserva do extensivo | Obstetrícia | Assistência ao Parto | Teoria III | 0 | 4 (3.4) | alta | Assistência ao Parto | #22 (S4) | PARCIAL |
-| #363 | reserva do extensivo | Cardiologia | Hipertensão Arterial Sistêmica Pt. 1, 2 e 3 | Revisão | 42 | 4 (3.4) | media | Hipertensão Arterial Sistêmica Pt. 1; Hipertensão Arterial Sistêmica Pt. 2; Hipertensão Arterial Sistêmica Pt. 3 | NENHUMA | PARCIAL/TOCADO |
-| #423 | reserva do extensivo | Cardiologia | Hipertensão Arterial Sistêmica Pt. 1 \| Hipertensão Arterial Sistêmica Pt. 2 \| Hipertensão Arterial Sistêmica Pt. 3 \| Avaliação Perioperatória | Revisão por Questões | 43 | 4 (3.4) | media | Hipertensão Arterial Sistêmica Pt. 1; Hipertensão Arterial Sistêmica Pt. 2; Hipertensão Arterial Sistêmica Pt. 3 | NENHUMA | PARCIAL/TOCADO |
+| #363 | reserva do extensivo | Cardiologia | Hipertensão Arterial Sistêmica Pt. 1, 2 e 3 | Revisão | 42 | 4 (3.4) | media | Hipertensão Arterial Sistêmica Pt. 1; Hipertensão Arterial Sistêmica Pt. 2; Hipertensão Arterial Sistêmica Pt. 3 | #19 (S4) | PARCIAL/TOCADO |
+| #423 | reserva do extensivo | Cardiologia | Hipertensão Arterial Sistêmica Pt. 1 \| Hipertensão Arterial Sistêmica Pt. 2 \| Hipertensão Arterial Sistêmica Pt. 3 \| Avaliação Perioperatória | Revisão por Questões | 43 | 4 (3.4) | media | Hipertensão Arterial Sistêmica Pt. 1; Hipertensão Arterial Sistêmica Pt. 2; Hipertensão Arterial Sistêmica Pt. 3 | #19 (S4) | PARCIAL/TOCADO |
 | #5 | fora da trilha | Preventiva | Atenção Primária à Saúde no Brasil | Teoria II | 0 | 3 (3.0) | media | Atenção Primária à Saúde no Brasil | NENHUMA | PARCIAL |
 | #6 | fora da trilha | Preventiva | Atenção Primária à Saúde no Brasil | Teoria III | 0 | 3 (3.0) | media | Atenção Primária à Saúde no Brasil | NENHUMA | PARCIAL |
 | #29 | fora da trilha | Cirurgia | Urologia | Revisão | 38 | 3 (3.0) | media | Urologia | NENHUMA | PARCIAL |
-| #249 | reserva do extensivo | Infecto | HIV | Teoria III | 0 | 3 (3.0) | media | HIV | #1797 (S2) | PARCIAL |
-| #343 | reserva do extensivo | Cirurgia | Abdome Agudo Inflamatório - Apendicite Aguda | Teoria II | 0 | 3 (3.0) | media | Abdome Agudo Inflamatório - Apendicite Aguda | NENHUMA | PARCIAL |
-| #368 | reserva do extensivo | Pediatria | Diarreia | Teoria II | 0 | 3 (3.0) | media | Diarreia | NENHUMA | PARCIAL |
-| #387 | reserva do extensivo | Cirurgia | Abdome Agudo Inflamatório - Diverticulite Aguda | Revisão | 48 | 3 (3.0) | media | Abdome Agudo Inflamatório - Apendicite Aguda | NENHUMA | PARCIAL |
+| #249 | reserva do extensivo | Infecto | HIV | Teoria III | 0 | 3 (3.0) | media | HIV | #1797 (S2), #380 (S3) | PARCIAL |
+| #343 | reserva do extensivo | Cirurgia | Abdome Agudo Inflamatório - Apendicite Aguda | Teoria II | 0 | 3 (3.0) | media | Abdome Agudo Inflamatório - Apendicite Aguda | #393 (S3) | PARCIAL |
+| #368 | reserva do extensivo | Pediatria | Diarreia | Teoria II | 0 | 3 (3.0) | media | Diarreia | #58 (S4) | PARCIAL |
+| #387 | reserva do extensivo | Cirurgia | Abdome Agudo Inflamatório - Diverticulite Aguda | Revisão | 48 | 3 (3.0) | media | Abdome Agudo Inflamatório - Apendicite Aguda | #393 (S3) | PARCIAL |
 | #154 | reserva do extensivo | Cirurgia | Cirurgia Infantil I | Teoria II | 0 | 3 (2.7) | media | Cirurgia Infantil I | NENHUMA | PARCIAL |
 | #162 | reserva do extensivo | Ginecologia | Planejamento Familiar | Revisão | 41 | 3 (2.7) | media | Planejamento Familiar | NENHUMA | PARCIAL |
 | #163 | reserva do extensivo | Obstetrícia | Pré-Natal | Teoria III | 0 | 3 (2.7) | media | Pré-Natal | #22 (S4), #325 (S6) | PARCIAL |
@@ -89,19 +81,19 @@ Como ler: `UERJ n (peso)` = questoes das provas UERJ 2021-2026 nos temas que a t
 | #203 | reserva do extensivo | Cirurgia | Cirurgia Infantil III | Teoria II | 0 | 3 (2.7) | media | Cirurgia Infantil I | NENHUMA | PARCIAL |
 | #361 | reserva do extensivo | Endocrino | Diabetes Mellitus Tipo 2 | Teoria II | 0 | 3 (2.7) | media | Diabetes Mellitus Tipo 2 | NENHUMA | PARCIAL |
 | #415 | reserva do extensivo | Endocrino | Diabetes Mellitus Tipo 2 \| Perioperatório - Controle Glicêmico e Manejo dos Glicocorticóides | Revisão | 43 | 3 (2.7) | media | Diabetes Mellitus Tipo 2 | NENHUMA | PARCIAL |
-| #2 | fora da trilha | Preventiva | Saúde do Idoso | Teoria | 0 | 2 (2.0) | media | Saúde do Idoso | #3 (S2), #4 (S7) | ZERO |
-| #13 | fora da trilha | Pediatria | Pneumonias na Infância | Teoria + Exercícios | 24 | 2 (2.0) | media | Pneumonias na Infância | NENHUMA | TOCADO |
+| #2 | fora da trilha | Preventiva | Saúde do Idoso | Teoria | 0 | 2 (2.0) | media | Saúde do Idoso | #3 (S2), #882 (S4), #4 (S7) | ZERO |
+| #13 | fora da trilha | Pediatria | Pneumonias na Infância | Teoria + Exercícios | 24 | 2 (2.0) | media | Pneumonias na Infância | #58 (S4) | TOCADO |
 | #21 | fora da trilha | Reumato | Doenças Inflamatórias do Tecido Conjuntivo | Revisão | 34 | 2 (2.0) | baixa | Doenças Inflamatória do Tecido Conjuntivo I; Doenças Inflamatória do Tecido Conjuntivo II | NENHUMA | PARCIAL |
-| #24 | fora da trilha | Pediatria | Pneumonias na Infância | Revisão | 47 | 2 (2.0) | media | Pneumonias na Infância | NENHUMA | TOCADO |
+| #24 | fora da trilha | Pediatria | Pneumonias na Infância | Revisão | 47 | 2 (2.0) | media | Pneumonias na Infância | #58 (S4) | TOCADO |
 | #25 | fora da trilha | Ginecologia | Tumores Anexiais e Câncer de Ovário | Teoria + Exercícios | 21 | 2 (2.0) | media | Tumores Anexiais e Câncer de Ovário | NENHUMA | TOCADO |
 | #39 | fora da trilha | Ginecologia | Tumores Anexiais e Câncer de Ovário | Revisão | 40 | 2 (2.0) | media | Tumores Anexiais e Câncer de Ovário | NENHUMA | TOCADO |
 | #296 | reserva do extensivo | Reumato | Doenças Inflamatórias do Tecido Conjuntivo I | Teoria III | 0 | 2 (2.0) | baixa | Doenças Inflamatória do Tecido Conjuntivo I; Doenças Inflamatória do Tecido Conjuntivo II | NENHUMA | PARCIAL |
 | #314 | reserva do extensivo | Ginecologia | Vulvovaginites | Teoria II | 0 | 2 (2.0) | media | Vulvovaginites | NENHUMA | PARCIAL |
 | #339 | reserva do extensivo | Reumato | Doenças Inflamatória do Tecido Conjuntivo I | Revisão | 34 | 2 (2.0) | baixa | Doenças Inflamatória do Tecido Conjuntivo I; Doenças Inflamatória do Tecido Conjuntivo II | NENHUMA | PARCIAL |
-| #382 | reserva do extensivo | Pediatria | Pneumonias na Infância | Teoria I | 0 | 2 (2.0) | media | Pneumonias na Infância | NENHUMA | TOCADO |
-| #386 | reserva do extensivo | Pediatria | Pneumonias na Infância | Teoria II | 0 | 2 (2.0) | media | Pneumonias na Infância | NENHUMA | TOCADO |
+| #382 | reserva do extensivo | Pediatria | Pneumonias na Infância | Teoria I | 0 | 2 (2.0) | media | Pneumonias na Infância | #58 (S4) | TOCADO |
+| #386 | reserva do extensivo | Pediatria | Pneumonias na Infância | Teoria II | 0 | 2 (2.0) | media | Pneumonias na Infância | #58 (S4) | TOCADO |
 | #392 | reserva do extensivo | Reumato | Doenças Inflamatória do Tecido Conjuntivo II | Teoria II | 0 | 2 (2.0) | baixa | Doenças Inflamatória do Tecido Conjuntivo I; Doenças Inflamatória do Tecido Conjuntivo II | NENHUMA | PARCIAL |
-| #395 | reserva do extensivo | Pediatria | Pneumonias na Infância | Revisão | 43 | 2 (2.0) | media | Pneumonias na Infância | NENHUMA | TOCADO |
+| #395 | reserva do extensivo | Pediatria | Pneumonias na Infância | Revisão | 43 | 2 (2.0) | media | Pneumonias na Infância | #58 (S4) | TOCADO |
 | #44 | fora da trilha | Hemato | Anemias Microcíticas e Leucemias Agudas | Teoria + Exercícios | 27 | 2 (1.7) | baixa | Leucemias Agudas; Anemias Microcíticas | NENHUMA | ZERO |
 | #104 | fora da trilha | Hemato | Anemias Microcíticas Leucemias Agudas | Revisão | 27 | 2 (1.7) | baixa | Leucemias Agudas; Anemias Microcíticas | NENHUMA | ZERO |
 | #186 | reserva do extensivo | Pneumo | Introdução à Pneumologia | Teoria | 0 | 2 (1.7) | media | Introdução a Pneumologia | NENHUMA | TOCADO |
@@ -124,9 +116,9 @@ Como ler: `UERJ n (peso)` = questoes das provas UERJ 2021-2026 nos temas que a t
 | #9 | fora da trilha | Obstetrícia | Vitalidade Fetal | Teoria + Exercícios | 25 | 1 (1.0) | baixa | Vitalidade Fetal | #22 (S4) | TOCADO |
 | #14 | fora da trilha | Ginecologia | Sangramento Uterino Anormal | Revisão | 42 | 1 (1.0) | baixa | Sangramento Uterino Anormal | NENHUMA | PARCIAL |
 | #15 | fora da trilha | Obstetrícia | Vitalidade Fetal | Revisão | 36 | 1 (1.0) | baixa | Vitalidade Fetal | #22 (S4) | TOCADO |
-| #48 | fora da trilha | Pediatria | Alergia Alimentar | Teoria + Exercícios | 21 | 1 (1.0) | baixa | Alergia Alimentar | NENHUMA | ZERO |
+| #48 | fora da trilha | Pediatria | Alergia Alimentar | Teoria + Exercícios | 21 | 1 (1.0) | baixa | Alergia Alimentar | #58 (S4) | ZERO |
 | #50 | fora da trilha | Ginecologia | Prolapsos de Órgãos Pélvicos | Teoria + Exercícios | 25 | 1 (1.0) | baixa | Prolapsos de Órgãos Pélvicos | NENHUMA | ZERO |
-| #52 | fora da trilha | Pediatria | Alergia Alimentar | Revisão | 38 | 1 (1.0) | baixa | Alergia Alimentar | NENHUMA | ZERO |
+| #52 | fora da trilha | Pediatria | Alergia Alimentar | Revisão | 38 | 1 (1.0) | baixa | Alergia Alimentar | #58 (S4) | ZERO |
 | #62 | fora da trilha | Ginecologia | Prolapsos de Órgãos Pélvicos | Revisão | 41 | 1 (1.0) | baixa | Prolapsos de Órgãos Pélvicos | NENHUMA | ZERO |
 | #76 | fora da trilha | Pediatria | Crescimento | Teoria | 18 | 1 (1.0) | baixa | Crescimento | #119 (S6), #498 (S7) | TOCADO |
 | #82 | fora da trilha | Pediatria | Crescimento | Revisão | 31 | 1 (1.0) | baixa | Crescimento | #119 (S6), #498 (S7) | TOCADO |

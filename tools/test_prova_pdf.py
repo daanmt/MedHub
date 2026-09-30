@@ -166,11 +166,11 @@ def test_docs_passam_pelo_ingerir_e_o_export_devolve_pagina_e_figura(tmp_path, m
 UERJ = ROOT / "simulados" / "uerj"
 GOLDEN = {  # edicao: (pdf, questoes gravadas, anuladas, tamanhos dos 5 blocos)
     "2021": ("uerj_ad_2021_a.pdf", 60, [], [12, 12, 12, 12, 12]),
-    "2022": ("uerj_ad_2022_a.pdf", 60, [], [12, 12, 12, 12, 12]),
-    "2023": ("uerj_ad_2023_a.pdf", 100, [], [20, 20, 20, 20, 20]),
-    "2024": ("uerj_ad_2024_a.pdf", 100, [], [20, 20, 20, 20, 20]),
+    "2022": ("uerj_ad_2022_a.pdf", 59, [50], [12, 12, 12, 12, 11]),
+    "2023": ("uerj_ad_2023_a.pdf", 96, [43, 72, 73, 84], [20, 20, 19, 18, 19]),
+    "2024": ("uerj_ad_2024_a.pdf", 98, [46, 84], [20, 20, 19, 20, 19]),
     "2025": ("uerj_ad_2025_prova.pdf", 97, [36, 66, 96], [20, 19, 20, 19, 19]),
-    "2026": ("uerj_ad_2026_a.pdf", 100, [], [20, 20, 20, 20, 20]),
+    "2026": ("uerj_ad_2026_a.pdf", 93, [21, 33, 36, 43, 69, 82, 92], [20, 17, 19, 19, 18]),
 }
 
 

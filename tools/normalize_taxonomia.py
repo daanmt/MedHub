@@ -36,18 +36,37 @@ DB_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'ipub.db')
 # áreas fantasma Clinica Medica e GO; merges Sist.Informação / Planej.Familiar /
 # DRC x3 / Hipertensivas da Gestação; 10 [bulk]/Geral vazios. (115 -> 100 temas)
 #
-# RODADA 2 (esporotricose + trofoblástica) — operações ativas abaixo:
+# RODADA 2 (aplicada; esporotricose 229<-230 + trofoblástica 224<-225).
+#
+# RODADA 3 (s207, F67 -- M3 do operador em 29/09/2026: "Aprovar em bloco", lista do
+# docs/DRYRUN-F65-F67-2026-09-09.md §4 + as 3 novas do mesmo tipo mostradas a ele no chat
+# da s207, que escolheu "As 11"): sobrevive a linha da area CANONICA; a area fantasma
+# (GO, Clinica Medica -- F89) sai. Ficam SEPARADOS por decisao: Asma Pediatria x Pneumo,
+# TCE Neuro x Pediatria, Medidas de Saude Coletiva Pt. I/II. Operações ativas abaixo:
 RENAME_AREA = []
 MOVE_TEMA = []
 RENAME_TEMA = []
 
 # Fusões: (sobrevivente_id, [perdedores], nome_final, area_final)
 MERGE = [
-    (229, [230], "Esporotricose", "Dermato"),                        # une dx + zoonose (232 paracoco fica à parte)
-    (224, [225], "Doença trofoblástica gestacional", "Obstetrícia"),  # DTG x2 -> 1
+    (253, [139], 'Cirurgia Infantil', 'Cirurgia'),  # <- 139 [Cirurgia] Cirurgia Infantil I
+    (282, [233], 'Asma na Infância', 'Pediatria'),  # <- 233 [Pediatria] Asma na infância
+    (344, [301], 'Endometriose', 'Ginecologia'),  # <- 301 [GO] Endometriose
+    (337, [417], 'Câncer de Mama - Fatores de Risco', 'Ginecologia'),  # <- 417 [GO] Câncer de Mama - Fatores de Risco
+    (199, [348], 'Assistência ao Parto', 'Obstetrícia'),  # <- 348 [GO] Assistência ao Parto
+    (272, [286], 'Anemias Hemolíticas', 'Hemato'),  # <- 286 [Clínica Médica] Anemias Hemolíticas
+    (223, [347], 'Gravidez ectópica', 'Ginecologia'),  # <- 347 [GO] Gravidez ectópica
+    (266, [285], 'Sepse', 'Infecto'),  # <- 285 [Clínica Médica] Sepse
+    (465, [431], 'Doenças de Vulva e Vagina', 'Ginecologia'),  # <- 431 [GO] Doenças de Vulva e Vagina
+    (484, [300], 'Pré-Natal', 'Obstetrícia'),  # <- 300 [GO] Pré-Natal
+    (464, [419], 'Tumores Anexiais e Câncer de Ovário', 'Ginecologia'),  # <- 419 [GO] Tumores Anexiais e Câncer de Ovário
 ]
 
 DELETE_TEMA = []
+
+#: Toda tabela com `tema_id -> taxonomia_cronograma(id)` (s207). Fusao que esquece uma deixa
+#: linha orfa; o VERIF do fim confere as quatro.
+TABELAS_COM_TEMA = ("questoes_erros", "flashcards", "review_log", "questao_habilidades")
 
 
 def nchild(cur, tid):
@@ -165,8 +184,10 @@ def main():
             for surv, losers, nome, area in MERGE:
                 ph = ",".join("?" * len(losers))
                 for L in losers:
-                    con.execute("UPDATE questoes_erros SET tema_id=? WHERE tema_id=?", (surv, L))
-                    con.execute("UPDATE flashcards   SET tema_id=? WHERE tema_id=?", (surv, L))
+                    # s207: TODA tabela com FK para o tema -- review_log e questao_habilidades
+                    # ficavam orfas (medido: 9 e 151 linhas nos perdedores da RODADA 3).
+                    for tabela in TABELAS_COM_TEMA:
+                        con.execute(f"UPDATE {tabela} SET tema_id=? WHERE tema_id=?", (surv, L))
                 ids = [surv] + losers
                 qr, qa, ult = con.execute(
                     f"SELECT MAX(questoes_realizadas), MAX(questoes_acertadas), MAX(ultima_revisao) "
@@ -188,12 +209,11 @@ def main():
 
     dup = cur.execute("SELECT COUNT(*) FROM (SELECT 1 FROM taxonomia_cronograma "
                       "GROUP BY area, tema HAVING COUNT(*)>1)").fetchone()[0]
-    orf_q = cur.execute("SELECT COUNT(*) FROM questoes_erros q LEFT JOIN taxonomia_cronograma t "
-                        "ON q.tema_id=t.id WHERE t.id IS NULL").fetchone()[0]
-    orf_f = cur.execute("SELECT COUNT(*) FROM flashcards f LEFT JOIN taxonomia_cronograma t "
-                        "ON f.tema_id=t.id WHERE t.id IS NULL").fetchone()[0]
+    orfaos = {t: cur.execute(f"SELECT COUNT(*) FROM {t} x LEFT JOIN taxonomia_cronograma t "
+                             f"ON x.tema_id=t.id WHERE x.tema_id IS NOT NULL AND t.id IS NULL").fetchone()[0]
+              for t in TABELAS_COM_TEMA}
     depois = cur.execute("SELECT COUNT(*) FROM taxonomia_cronograma").fetchone()[0]
-    print(f"VERIF -> linhas {antes} -> {depois} | dup={dup} | órfãos(q={orf_q}, cards={orf_f})")
+    print(f"VERIF -> linhas {antes} -> {depois} | dup={dup} | órfãos {orfaos}")
     con.close()
 
 

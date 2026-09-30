@@ -53,7 +53,9 @@ ALLOWLIST = {
     "tools/insert_card_extra.py": {"flashcards", "fsrs_cards"},
     "tools/insert_questao.py": {"cronograma_progresso", "flashcards", "fsrs_cards",
                                 "questoes_erros", "taxonomia_cronograma"},
-    "tools/normalize_taxonomia.py": {"flashcards", "questoes_erros", "taxonomia_cronograma"},
+    # s207: a fusao re-aponta TODA FK do tema (review_log e questao_habilidades ficavam orfas).
+    "tools/normalize_taxonomia.py": {"flashcards", "questao_habilidades", "questoes_erros",
+                                     "review_log", "taxonomia_cronograma"},
     "tools/recurate_cards.py": {"flashcards"},
     "tools/registrar_sessao_bulk.py": {"preparacao_estado", "sessoes_bulk",
                                        "taxonomia_cronograma"},

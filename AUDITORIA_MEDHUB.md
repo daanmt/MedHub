@@ -24,7 +24,7 @@ relates_to: [AGENTE, ESTADO, HANDOFF]
 ## Indice
 
 <!-- selo:indice:inicio -->
-**Em aberto: 12** · Resolvidos: 110 (em `history/auditoria/resolvidos.md`) · Limites conhecidos: 2 (em `history/auditoria/limites_conhecidos.md`) · indice gerado por `python tools/selo.py --rotacionar`, nunca editado a mao
+**Em aberto: 11** · Resolvidos: 111 (em `history/auditoria/resolvidos.md`) · Limites conhecidos: 2 (em `history/auditoria/limites_conhecidos.md`) · indice gerado por `python tools/selo.py --rotacionar`, nunca editado a mao
 
 | Id | Sev. | Status | Quem decide | Achado |
 |---|---|---|---|---|
@@ -34,7 +34,6 @@ relates_to: [AGENTE, ESTADO, HANDOFF]
 | F111 | MEDIA | GATE | operador | Fase 2 do plano (extensivo, leitura-first: 465 tarefas de teoria em 735; 39q/dia nativo) nao garante recall... |
 | F78 | MEDIA | DECLARADO | engenharia | Extracao de PDF descarta em silencio todo conteudo que vive em FIGURA, e nada no harness mede essa perda |
 | F69 | MEDIA | GATE | operador | resumos com lacuna de diretriz nova = risco banca-dependente (s165) |
-| F67 | MEDIA | GATE | operador | taxonomia duplicada divide o sinal do FSRS e da dormencia (s165, Claude Code/Fable 5.1, 2026-09-05) |
 | F65 | MEDIA | GATE | operador | o balde `[bulk] <Area>` esconde 72 cards do radar de dormencia |
 | F63 | MEDIA | PARCIAL | engenharia | a prioridade que governa o estudo nao viaja com o repo (o usuario e a camada de transporte) |
 | F39 | ALTA | PARCIAL | operador | 40% do baralho viola o principio atomico; a nota FSRS vira ininterpretavel |
@@ -123,9 +122,6 @@ python -X utf8 -c "<diff: Scheduler().parameters x core/fsrs_params.json::visoes
 
 ### F69 -- resumos com lacuna de diretriz nova = risco banca-dependente (s165) -- **MEDIA** -- **GATE do operador** (quais diretrizes 2026 entram e decisao clinica dele; lista viva no HANDOFF)
 **Evidencia (grep):** `[CIR] Trauma.md` ja tem X-ABCDE, torniquete, hipotensao permissiva, ABC score, pneumotorax oculto/3,5 cm, Beck, tranexamico; **falta** "sangue total > 1:1:1" e "Sellick contraindicada", e a classificacao do choque ainda cita "classe I" (11a ed = leve/moderado/grave). `Prevenção Secundária Pós-IAM (Dislipidemia).md`: 1 mencao a PREVENT/Lp(a)/bempedoico (diretriz 2025 rasa). `Sistemas de Informação em Saúde.md`: conferir SINAN 2026 (esporotricose, anomalias, Oropouche, parotidite). HAS Pt2 (130/80, MAPA) e Epilepsias (levetiracetam EV) ja atualizados. **Fix:** Revisao Direcionada com Regra de Acumulo; os `padroes_banca` do JSON sao a fonte.
-
-### F67 -- taxonomia duplicada divide o sinal do FSRS e da dormencia (s165, Claude Code/Fable 5.1, 2026-09-05) -- **MEDIA** -- **GATE do operador** (RODADA 3, mesma familia do F65: colapsar par e edicao de DADO com cards e erros pendurados)
-**Evidencia (db, read-only):** o mesmo tema vive em 2-5 linhas de `taxonomia_cronograma`: Rastreamento de colo x2 (`...do Câncer de Colo do Útero` 12 ativos/8 erros e `...do Cancer de Colo Uterino` 2/1), TH x2 (`Climatério e Terapia Hormonal` 6/2 e `Terapia Hormonal do Climaterio` 0/1), Asma x5 (`Asma`, `Asma - Crise Aguda`, `Asma na Infância`, `Asma na infância`, `Asma - Exacerbacao`), `Planejamento Familiar` x `Contracepção`, Ulceras x2, TCE x3 (Neuro, Cirurgia leve, Ped), `Cirurgia Infantil` x `Cirurgia Infantil I`, APS x2. **Efeito:** `review_radar`, `infer_nota` e `--cluster` leem metades; a dedup da s083 (`dedup_taxonomia.py`, merge MAX) nao pegou variantes por acento/caixa/sufixo. **Fix candidato:** normalizacao NFKD + casefold + tabela de alias em `normalize_taxonomia.py`, com `--dry-run`. **Re-medido em 2026-09-09 (s174, dry-run A6):** chave NFKD+casefold (sem sufixo romano/"na infancia") acha **10 grupos / 22 linhas / 193 cards + 104 erros**; 5 dos 10 sao a area fantasma `GO`/`Clinica Medica` de volta (F89). Decisao de fusao por grupo = operador (`docs/DRYRUN-F65-F67-2026-09-09.md` §4).
 
 ### F65 -- o balde `[bulk] <Area>` esconde 72 cards do radar de dormencia -- **MEDIA** -- **GATE do operador** (RODADA 3: reclassificar balde e decisao de DADO dele, nao de codigo; `normalize_taxonomia` esta vazio para isto por medicao -- `docs/DRYRUN-F65-F67-2026-09-09.md`)
 

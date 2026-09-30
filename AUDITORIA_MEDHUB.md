@@ -24,14 +24,13 @@ relates_to: [AGENTE, ESTADO, HANDOFF]
 ## Indice
 
 <!-- selo:indice:inicio -->
-**Em aberto: 7** · Resolvidos: 115 (em `history/auditoria/resolvidos.md`) · Limites conhecidos: 4 (em `history/auditoria/limites_conhecidos.md`) · indice gerado por `python tools/selo.py --rotacionar`, nunca editado a mao
+**Em aberto: 6** · Resolvidos: 116 (em `history/auditoria/resolvidos.md`) · Limites conhecidos: 4 (em `history/auditoria/limites_conhecidos.md`) · indice gerado por `python tools/selo.py --rotacionar`, nunca editado a mao
 
 | Id | Sev. | Status | Quem decide | Achado |
 |---|---|---|---|---|
 | F111 | MEDIA | GATE | operador | Fase 2 do plano (extensivo, leitura-first: 465 tarefas de teoria em 735; 39q/dia nativo) nao garante recall... |
 | F78 | MEDIA | DECLARADO | engenharia | Extracao de PDF descarta em silencio todo conteudo que vive em FIGURA, e nada no harness mede essa perda |
 | F69 | MEDIA | GATE | operador | resumos com lacuna de diretriz nova = risco banca-dependente (s165) |
-| F63 | MEDIA | PARCIAL | engenharia | a prioridade que governa o estudo nao viaja com o repo (o usuario e a camada de transporte) |
 | F39 | ALTA | PARCIAL | operador | 40% do baralho viola o principio atomico; a nota FSRS vira ininterpretavel |
 | F16 | MEDIA | PARCIAL | engenharia | Tema cirurgico de alto rendimento sem SSOT clinico (.md); so o PDF-fonte existe |
 | F2 | MEDIA | DECLARADO | engenharia | Latencia de shell no ambiente Windows |
@@ -73,49 +72,6 @@ relates_to: [AGENTE, ESTADO, HANDOFF]
 
 ### F69 -- resumos com lacuna de diretriz nova = risco banca-dependente (s165) -- **MEDIA** -- **GATE do operador** (quais diretrizes 2026 entram e decisao clinica dele; lista viva no HANDOFF)
 **Evidencia (grep):** `[CIR] Trauma.md` ja tem X-ABCDE, torniquete, hipotensao permissiva, ABC score, pneumotorax oculto/3,5 cm, Beck, tranexamico; **falta** "sangue total > 1:1:1" e "Sellick contraindicada", e a classificacao do choque ainda cita "classe I" (11a ed = leve/moderado/grave). `Prevenção Secundária Pós-IAM (Dislipidemia).md`: 1 mencao a PREVENT/Lp(a)/bempedoico (diretriz 2025 rasa). `Sistemas de Informação em Saúde.md`: conferir SINAN 2026 (esporotricose, anomalias, Oropouche, parotidite). HAS Pt2 (130/80, MAPA) e Epilepsias (levetiracetam EV) ja atualizados. **Fix:** Revisao Direcionada com Regra de Acumulo; os `padroes_banca` do JSON sao a fonte.
-
-### F63 -- a prioridade que governa o estudo nao viaja com o repo (o usuario e a camada de transporte) -- **MEDIA** -- **PARCIAL** (o DADO viajou na s165: `core/cronograma/prevalencia_enamed.json`, 89 temas, + `fsrs_queue --prevalencia`; falta ligar ao `infer_nota` -- residuo nomeado)
-
-**Classe:** input do boot nao e verdadeiro (mesma familia de F45/F47) + regra load-bearing fora
-do portador (P7, mas na camada de ESTUDO, nao na de engenharia).
-
-**Observado.** O usuario reordenou o xlsx do Drive a mao por um codigo de cores
-**Roxo > Rosa > Salmao** (prioridade por prevalencia no ENAMED, derivada do guia estatistico do
-EMED). Essa ordem e o que de fato decide o que ele estuda ate 13/09: das 11 tasks da S17, so
-**6 sao roxas** (Diarreia Teoria, SUA Teoria, APS Revisao, Diarreia Revisao, Urologia I,
-Pneumonias Bacterianas I). As outras 5 (Cirurgia Vascular Revisao, Vitalidade Fetal, Neoplasias
-de Estomago e Esofago, Nefrolitiase, APS Teoria III) nao entram na janela.
-
-**O defeito.** `core/cronograma/grade.json` e um parse **fiel** do `Cronograma.pdf` -- verificado
-task a task contra a planilha do usuario nesta sessao: 11/11 batem, mesma ordem. O que ele **nao**
-carrega e a cor. Logo:
-- nenhum consumidor (`day_plan.py`, `cronograma.py --radar`, `preparacao.py`) sabe distinguir
-  roxo de salmao; as 11 tasks pesam igual;
-- `infer_nota()` tem o **eixo 4 desenhado para consumir `prevalencia_enamed`** e roda em peso
-  neutro por falta do campo -- soquete cabeado, sinal existente, ninguem ligou os dois
-  (`core/contracts/revisao-calibrada-contract.md:119`, `docs/plans/s094-revisao-calibrada-PRD.md:265`);
-- o snapshot `--sync-drive` (unica ponte para o xlsx real) esta **38 dias velho**.
-
-**Consequencia medida.** A regra so existe em prosa (`HANDOFF.md:9`, `session_161.md:14`) e na
-cabeca do usuario. Resultado: ele **reenuncia a prioridade a cada sessao e a cada harness** --
-para o Antigravity em 02/09 e para o Claude Code no mesmo dia. O humano virou o transporte de um
-dado que o repo deveria carregar. Registrado como "achado registrado, nao resolvido" desde a
-**s147** (`history/session_147.md:18`) -- 15 dias em aberto.
-
-**Por que importa agora.** E a propria tese do ciclo DESCOLAR (P7: "regra load-bearing vai para o
-portador do repo, nao para a memoria do harness") violada na camada que o projeto existe para
-servir. A des-colagem consertou o motor; a prioridade do estudo continua colada no operador.
-
-**Direcao (nao implementada).** `grade.json` ganha `prioridade` por task (roxo|rosa|salmao) via
-`cronograma.py --sync-drive` lendo o fill/font color da celula do xlsx; `prevalencia_enamed`
-passa a ser derivada dela e o eixo 4 do `infer_nota()` liga sozinho -- **zero mudanca** em
-`infer_nota()` (o contrato ja previu essa porta). Sensor de staleness do snapshot do Drive vira
-WARN no painel de DIVIDA.
-
-**Severidade:** ALTA (governa a alocacao de tempo a 11 dias do ENAMED e 60 da UERJ).
-
-### F63 -- atualizacao (s165)
-O insumo `prevalencia_enamed` agora EXISTE (89 temas, 5 aulas EMED) e ja governa o bucket `novos` via `fsrs_queue --prevalencia`. Falta: `cronograma.py`/`day_plan.py` consumirem o mesmo arquivo para o eixo 4 do `infer_nota()` (contrato §7.7 previa "basta fornecer o campo") e para a prioridade roxa da grade.
 
 ### F39 -- 40% do baralho viola o principio atomico; a nota FSRS vira ininterpretavel -- **ALTA** -- **PARCIAL: mecanismo COMPLETO (s177, item 1.6); 270 cards agora RASTREAVEIS, a reforja em si e do operador**
 - **Origem:** achado do USUARIO durante o dreno da s128, formulado melhor do que o contrato tinha:

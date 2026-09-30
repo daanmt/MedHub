@@ -2225,7 +2225,7 @@ python -X utf8 -c "<diff: Scheduler().parameters x core/fsrs_params.json::visoes
 - 🔧 **Mitigacao (s186):** `app/utils/regua.carregar_parametros` so entrega um conjunto quando o arquivo declara `adotado: true` **e** `regua_do_fit` igual a regua de escrita; ausencia de `regua_do_fit` **nao vira permissao** (recusa). `analisar_visao` passou a gravar `regua_do_fit` + `reguas_no_corpus` em toda visao. 4 testes, um por ramo de recusa (`tools/test_regua_fsrs.py`).
 - ⚠️ **FRONTEIRA DECLARADA, nao resolvida:** o gate barra *adotar sob a regua errada*. Ele **nao** detecta "parametro que o fit nao identificou" no caso geral -- para isso seria preciso medir a cobertura de cada eixo no corpus, e isso nao existe hoje. Quando houver historico sob a regua v2 com nota 4 real, re-rodar o R1 e conferir se `w3`/`w16` saem do default e a verificacao que fecha o eixo. Ate la, a nao-adocao e a unica garantia.
 - ✅ **FECHO (s208, 30/09/2026) -- o sensor que faltava.** `app/utils/regua.proveniencia(parametros)` classifica cada um dos 21 como `ajustado` | `default` **pelo valor** (igual ao default do py-fsrs a 1e-6, a precisao que o JSON grava). `fsrs_optimize.analisar_visao` grava `proveniencia` em toda visao, e `carregar_parametros` recusa o conjunto quando o campo esta ausente (ausencia nao vira permissao) ou quando qualquer parametro e `default` -- declarado OU medido: o rotulo `ajustado` sobre um valor default e recusado nominalmente (`w3`). Testes escritos antes do fix (5 vermelhos -> verdes): `tools/test_regua_fsrs.py::test_default_ROTULADO_como_ajustado_e_RECUSADO` e mais 4. **Prova no arquivo real:** `R.proveniencia(core/fsrs_params.json visoes.remap.parametros)` -> `['w3', 'w16']`; na visao `cru` -> `[]`. E o diff do achado, reproduzido pelo sensor.
-- ⚠️ **O que a prova NAO prova:** (a) um eixo que o fit moveu e trouxe de volta ao default a 1e-6 seria lido como `default`; o erro e para o lado da recusa, nunca da adocao. (b) "Ajustado" nao quer dizer "bem identificado": um parametro com poucos exemplos se move e sai `ajustado`. A cobertura por eixo segue sem medida; `adotado: false` continua sendo a garantia de producao. (c) O `core/fsrs_params.json` versionado e anterior ao campo e nao foi regerado; o carregador o recusaria mesmo que alguem o virasse para `adotado`.
+- ⚠️ **O que a prova NAO prova:** (a) um eixo que o fit moveu e trouxe de volta ao default a 1e-6 seria lido como `default`; o erro e para o lado da recusa, nunca da adocao. A recusa NAO para o estudo: o scheduler cai no default do py-fsrs (o estado de hoje). A mensagem de recusa nomeia o remedio (re-rodar o otimizador e conferir a `proveniencia` gravada); se o caso ocorrer, a saida desenhada e a proveniencia gravada pelo otimizador valer sobre a medida por valor (nota de borda do /ai-eng, s208). (b) "Ajustado" nao quer dizer "bem identificado": um parametro com poucos exemplos se move e sai `ajustado`. A cobertura por eixo segue sem medida; `adotado: false` continua sendo a garantia de producao. (c) O `core/fsrs_params.json` versionado e anterior ao campo e nao foi regerado; o carregador o recusaria mesmo que alguem o virasse para `adotado`.
 
 ### F113 -- cards cunhados SEM acentuacao (ASCII) sao lidos pelo usuario como "erro de portugues"; a convencao de encoding (AGENTE §4.5) foi aplicada ao TEXTO CLINICO do card, nao so a pontuacao -- **MEDIA** -- **RESOLVIDO (s208: residuo re-medido por detector lexico independente + lente contextual de e/é; 18 cards corrigidos so-acento; o que o sensor NAO ve esta declarado)**
 - **Como apareceu:** no lote de 90 do player (s184), o usuario marcou defeito em #685 (*"pergunta composta e erros de portugues"*) e #689 (*"outro exemplo de card com erro de portugues. aplicar o feedback a todos os cards da sessao"*). Os dois cards estao escritos sem acentos/cedilha ("Crianca falcemica", "compativel", "Sindrome do Olho Vermelho" no tema) -- o que a regra §4.5 (Zero LaTeX, sem setas Unicode, sem travessao) nunca pediu: ela proibe pontuacao especial, nao a ortografia.
@@ -2250,3 +2250,50 @@ python -X utf8 -c "<diff: Scheduler().parameters x core/fsrs_params.json::visoes
 - ⚠️ **O que o sensor NAO ve (declarado):** o par e/é fora do vocabulario da lente 2, e demais pares minimos (`pratica/prática`, `esta/está` fora dos contextos listados, `publico/público`). Fechar isso exigiria parser de lingua; o canario a olho e a queixa do operador no player sao a vigilancia. Os 4 cards do lote vivo fecham quando ele drenar.
 
 ---
+
+## Rotacionados em 2026-09-30
+
+### F63 -- a prioridade que governa o estudo nao viaja com o repo (o usuario e a camada de transporte) -- **MEDIA** -- **RESOLVIDO (s208: a faixa UERJ por tarefa sai do arquivo versionado no panorama do boot; eixo 4 do `infer_nota` ligado)**
+
+**Classe:** input do boot nao e verdadeiro (mesma familia de F45/F47) + regra load-bearing fora
+do portador (P7, mas na camada de ESTUDO, nao na de engenharia).
+
+**Observado.** O usuario reordenou o xlsx do Drive a mao por um codigo de cores
+**Roxo > Rosa > Salmao** (prioridade por prevalencia no ENAMED, derivada do guia estatistico do
+EMED). Essa ordem e o que de fato decide o que ele estuda ate 13/09: das 11 tasks da S17, so
+**6 sao roxas** (Diarreia Teoria, SUA Teoria, APS Revisao, Diarreia Revisao, Urologia I,
+Pneumonias Bacterianas I). As outras 5 (Cirurgia Vascular Revisao, Vitalidade Fetal, Neoplasias
+de Estomago e Esofago, Nefrolitiase, APS Teoria III) nao entram na janela.
+
+**O defeito.** `core/cronograma/grade.json` e um parse **fiel** do `Cronograma.pdf` -- verificado
+task a task contra a planilha do usuario nesta sessao: 11/11 batem, mesma ordem. O que ele **nao**
+carrega e a cor. Logo:
+- nenhum consumidor (`day_plan.py`, `cronograma.py --radar`, `preparacao.py`) sabe distinguir
+  roxo de salmao; as 11 tasks pesam igual;
+- `infer_nota()` tem o **eixo 4 desenhado para consumir `prevalencia_enamed`** e roda em peso
+  neutro por falta do campo -- soquete cabeado, sinal existente, ninguem ligou os dois
+  (`core/contracts/revisao-calibrada-contract.md:119`, `docs/plans/s094-revisao-calibrada-PRD.md:265`);
+- o snapshot `--sync-drive` (unica ponte para o xlsx real) esta **38 dias velho**.
+
+**Consequencia medida.** A regra so existe em prosa (`HANDOFF.md:9`, `session_161.md:14`) e na
+cabeca do usuario. Resultado: ele **reenuncia a prioridade a cada sessao e a cada harness** --
+para o Antigravity em 02/09 e para o Claude Code no mesmo dia. O humano virou o transporte de um
+dado que o repo deveria carregar. Registrado como "achado registrado, nao resolvido" desde a
+**s147** (`history/session_147.md:18`) -- 15 dias em aberto.
+
+**Por que importa agora.** E a propria tese do ciclo DESCOLAR (P7: "regra load-bearing vai para o
+portador do repo, nao para a memoria do harness") violada na camada que o projeto existe para
+servir. A des-colagem consertou o motor; a prioridade do estudo continua colada no operador.
+
+**Direcao (nao implementada).** `grade.json` ganha `prioridade` por task (roxo|rosa|salmao) via
+`cronograma.py --sync-drive` lendo o fill/font color da celula do xlsx; `prevalencia_enamed`
+passa a ser derivada dela e o eixo 4 do `infer_nota()` liga sozinho -- **zero mudanca** em
+`infer_nota()` (o contrato ja previu essa porta). Sensor de staleness do snapshot do Drive vira
+WARN no painel de DIVIDA.
+
+**Severidade:** ALTA (governa a alocacao de tempo a 11 dias do ENAMED e 60 da UERJ).
+- ✅ **FECHO (s208, 30/09/2026) -- o humano deixou de ser o transporte.** O que ele reenunciava a cada sessao (a ORDEM por prevalencia, e o porque dela) ja e dado versionado desde a s188/s189. A ordem e a trilha gerada (`tools/trilha.py`, entrada = `prevalencia_uerj.json`). A camada que ELE edita e `core/cronograma/trilha/custom.json` (com `racional`, autoridade = arquivo, F120), que passa por `trilha.py --gravar` e depois por `plano.py --semear --dry-run` -> `--apply --expect N`. O que faltava e foi entregue: (1) `plano.faixa_uerj()` + `panorama(..., prevalencia=)` -- cada tarefa aberta do boot sai com `UERJ alta|media|baixa`, pelo mesmo casamento `trilha.casa` da reserva; (2) o eixo 4 do `infer_nota`, cravado em 'media' desde a s096, le a mesma faixa (`day_plan.prevalencia_do_tema`), com degradacao graciosa preservada (`revisao-calibrada-contract` Clausula 8 lapidada). 4 testes em `tools/test_plano.py`, escritos antes do fix. Um deles troca o arquivo e a faixa muda (autoridade = arquivo, nada vem da conversa).
+- 🔬 **Prova de sobrevivencia ao /clear:** o hook de boot (`memory_boot._panorama_summary`) roda `python tools/plano.py --panorama` em SUBPROCESSO, sem estado de conversa. O mesmo comando, num processo novo, mostra as 12 tarefas abertas com a faixa (10 `UERJ alta`, 2 `media`). Os 5 casamentos que pareciam inflados foram conferidos um a um: todos sao igualdade exata de tema.
+- ⚠️ **O que a prova NAO prova:** (a) a faixa e da UERJ (a prova de 01/11); o `prevalencia_enamed.json` (norte 2027) segue alimentando so o `fsrs_queue --prevalencia`, e a troca de prova-alvo depois de 01/11 e decisao dele; (b) o casamento por tokens herda o limite (d) do gerador: tarefa que nao casa sai SEM faixa, nunca `baixa`; (c) o `painel.py` chama `panorama()` sem a prevalencia -- a pagina do hub nao mostra a faixa (fora do DoD; o boot mostra); (d) a confirmacao numa sessao REAL depois de um /clear e o proximo boot, que nao e observavel de dentro desta sessao.
+
+- **Atualizacao (s165):** o insumo `prevalencia_enamed` agora EXISTE (89 temas, 5 aulas EMED) e ja governa o bucket `novos` via `fsrs_queue --prevalencia`. Falta: `cronograma.py`/`day_plan.py` consumirem o mesmo arquivo para o eixo 4 do `infer_nota()` (contrato §7.7 previa "basta fornecer o campo") e para a prioridade roxa da grade.

@@ -1172,6 +1172,66 @@ def test_panorama_corta_a_lista_e_declara_o_resto():
     assert "+3 tarefa(s) em aberto" in md and "--listar --semana 1" in md
 
 
+PREV_PAN = {"temas": [
+    {"area": "Cirurgia", "tema": "Hérnias da Parede Abdominal", "n": 7, "peso": 6.7,
+     "prevalencia": "alta"},
+    {"area": "Cirurgia", "tema": "Apendicite Aguda", "n": 2, "peso": 1.9, "prevalencia": "media"},
+    {"area": "Pediatria", "tema": "Doença de Kawasaki", "n": 9, "peso": 9.0, "prevalencia": "alta"},
+]}
+
+
+def test_panorama_carrega_a_faixa_uerj_do_ARQUIVO():
+    """F63 (s208): a prioridade viaja com o repo -- a faixa de cada tarefa sai do
+    `prevalencia_uerj.json` (autoridade = arquivo), pelo MESMO casamento da trilha, e aparece
+    no texto do boot. Area diferente nao casa; tarefa sem tema casado sai sem faixa (nao-medida,
+    nunca 'baixa' silenciosa)."""
+    linhas = [_linha_pan(2, 2, tema="Hérnias da Parede Abdominal"),
+              _linha_pan(3, 2, tema="Apendicite Aguda"),
+              _linha_pan(5, 2, tema="Doença de Kawasaki"),       # area Cirurgia: nao casa
+              _linha_pan(9, 2, tema="Colelitíase")]
+    p = plano.panorama(linhas, CAL_PANORAMA, date(2026, 9, 22), prevalencia=PREV_PAN)
+    assert {t["id"]: t["faixa_uerj"] for t in p["abertas"]} == {
+        2: "alta", 3: "media", 5: None, 9: None}
+    md = plano.render_panorama(p)
+    assert "Hérnias da Parede Abdominal · 20q · UERJ alta · " in md
+    assert "Colelitíase · 20q · lista" in md
+    # autoridade = arquivo: outro arquivo, outra faixa -- nada vem da conversa
+    outro = {"temas": [dict(PREV_PAN["temas"][0], prevalencia="baixa")]}
+    p2 = plano.panorama(linhas, CAL_PANORAMA, date(2026, 9, 22), prevalencia=outro)
+    assert p2["abertas"][0]["faixa_uerj"] == "baixa"
+    # sem arquivo, o panorama segue igual ao de antes (compat)
+    p0 = plano.panorama(linhas, CAL_PANORAMA, date(2026, 9, 22))
+    assert all(t["faixa_uerj"] is None for t in p0["abertas"])
+
+
+def test_faixa_uerj_de_tema_multiplo_fica_com_a_mais_alta():
+    prev = {"temas": [{"area": "Cirurgia", "tema": "Apendicite", "prevalencia": "media"},
+                      {"area": "Cirurgia", "tema": "Colecistite", "prevalencia": "alta"}]}
+    assert plano.faixa_uerj("Cirurgia", "Apendicite + Colecistite", prev) == "alta"
+    assert plano.faixa_uerj("Pediatria", "Apendicite", prev) is None
+
+
+def test_eixo4_do_infer_nota_le_a_faixa_do_arquivo(tmp_path, monkeypatch):
+    """F63 (s208): o soquete do eixo 4 (`revisao-calibrada-contract` §7.7) estava cabeado e
+    neutro -- `montar_sinais` cravava 'media'. Agora a faixa vem do mesmo arquivo do panorama;
+    tema sem faixa segue 'media' (neutro, o comportamento de antes)."""
+    import day_plan as dp
+    p = tmp_path / "prev.json"
+    p.write_text(json.dumps(PREV_PAN), encoding="utf-8")
+    monkeypatch.setattr(plano, "P_PREVALENCIA", str(p))
+    assert dp.prevalencia_do_tema("Cirurgia", "Hérnias da Parede Abdominal") == "alta"
+    assert dp.prevalencia_do_tema("Cirurgia", "Nao Existe") == "media"
+    base = {"acerto_hist": 90, "leu_tema": True, "score_dorm": 3}
+    assert dp.infer_nota(dict(base, prevalencia="alta")) == 4, "piso de banca"
+    assert dp.infer_nota(dict(base, prevalencia="media")) == 2
+
+
+def test_cli_panorama_le_a_prevalencia_versionada(tmp_path, monkeypatch, capsys):
+    _semeado(tmp_path, monkeypatch)
+    assert plano.main(["--panorama", "--json"]) == 0
+    assert '"faixa_uerj"' in capsys.readouterr().out
+
+
 def test_cli_panorama_pelo_main(tmp_path, monkeypatch, capsys):
     _semeado(tmp_path, monkeypatch)
     assert plano.main(["--panorama"]) == 0

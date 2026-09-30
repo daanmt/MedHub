@@ -720,6 +720,28 @@ def _grupo_reserva(nota):
     return "sem semana"
 
 
+def faixa_uerj(area, tema, prevalencia):
+    """Faixa UERJ (`alta|media|baixa`) de uma tarefa, ou `None` se nenhum tema casa. PURA.
+
+    F63 (s208): a prioridade que o operador carregava de sessao em sessao e DADO versionado
+    (`prevalencia_uerj.json`, o mesmo insumo da trilha); aqui ela vira rotulo por tarefa.
+    Casamento = o do gerador (`trilha.casa`, limite (d) dele) e o da `reserva`: tarefa
+    multi-tema fica com a faixa mais alta entre as casadas. `None` = nao-medida, nunca
+    'baixa' silenciosa."""
+    import trilha
+    partes = ([trilha.toks(x) for x in trilha.partes_da_tarefa(tema)]
+              or [trilha.toks(tema)])
+    faixas = [t["prevalencia"] for t in (prevalencia or {}).get("temas") or []
+              if t.get("area") == area
+              and any(trilha.casa(trilha.toks(t["tema"]), p) for p in partes)]
+    return min(faixas, key=lambda f: ORDEM_FAIXA.get(f, 9)) if faixas else None
+
+
+def ler_prevalencia():
+    """O `prevalencia_uerj.json` versionado, ou vazio se faltar (panorama segue sem faixa)."""
+    return _ler(P_PREVALENCIA) if os.path.exists(P_PREVALENCIA) else {"temas": []}
+
+
 def reserva(linhas, prevalencia, estados=None):
     """Linhas PENDENTES fora da fila (`semana_plano` NULL) x peso UERJ. PURA.
 
@@ -901,7 +923,7 @@ def _por_classe(linhas):
     return contagem
 
 
-def panorama(linhas, calendario, hoje):
+def panorama(linhas, calendario, hoje, prevalencia=None):
     """O plano EM ABERTO como o operador precisa ler no boot. PURA.
 
     s190 (pedido do operador, 20/09/2026): ele abriu os artifacts, viu tarefa sem lista e nao
@@ -918,7 +940,10 @@ def panorama(linhas, calendario, hoje):
     - `fase1`: a fila inteira da Fase 1, contada por classe.
 
     Reserva (semana NULL) e Fase 2 alem da proxima semana ficam de fora: e panorama de
-    execucao, nao inventario (`--reserva` e `--listar` sao os inventarios)."""
+    execucao, nao inventario (`--reserva` e `--listar` sao os inventarios).
+
+    `prevalencia` (F63, s208): o `prevalencia_uerj.json`; cada tarefa aberta ganha
+    `faixa_uerj` (`faixa_uerj()`), e o boot mostra POR QUE a ordem e essa. Omitido = sem faixa."""
     vivas = [l for l in linhas if l.get("semana_plano") is not None
              and l.get("status") != "cortada"]
     pendentes = [l for l in vivas if l.get("status") == "pendente"]
@@ -948,7 +973,9 @@ def panorama(linhas, calendario, hoje):
                 "atrasada": l["semana_plano"] < semana, "bloco": l.get("bloco"),
                 "area": l.get("area"), "tema": l.get("tema"), "q": _q(l),
                 "classe": classe_da_tarefa(l), "url_lista": l.get("url_lista"),
-                "nota": l.get("nota")}
+                "nota": l.get("nota"),
+                "faixa_uerj": (faixa_uerj(l.get("area"), l.get("tema"), prevalencia)
+                               if prevalencia else None)}
 
     cal_seg = (calendario or {}).get(semana + 1)
     return {
@@ -1013,6 +1040,8 @@ def render_panorama(p):
     for i, t in enumerate(p["abertas"][:PANORAMA_TAREFAS], 1):
         marca = f" [S{t['semana']} atrasada]" if t["atrasada"] else ""
         q = f" · {t['q']}q" if t["q"] else ""
+        if t.get("faixa_uerj"):
+            q += f" · UERJ {t['faixa_uerj']}"
         if t["classe"] == "lista":
             acao = f"lista: {t['url_lista']}"
         else:
@@ -1479,7 +1508,7 @@ def main(argv=None):
         code, _ = pendencia_revisao(como_json=args.json)
         return code
     if modo == "--reserva":
-        prev = _ler(P_PREVALENCIA) if os.path.exists(P_PREVALENCIA) else {"temas": []}
+        prev = ler_prevalencia()
         itens = reserva(db.plano_listar(), prev, estados=_estados_da_trilha())
         if args.json:
             print(json.dumps(itens, ensure_ascii=False, indent=1))
@@ -1492,7 +1521,8 @@ def main(argv=None):
                   file=sys.stderr)
         return 0
     if modo == "--panorama":
-        pan = panorama(db.plano_listar(), calendario_trilha(), db.hoje())
+        pan = panorama(db.plano_listar(), calendario_trilha(), db.hoje(),
+                       prevalencia=ler_prevalencia())
         print(json.dumps(pan, ensure_ascii=False, indent=1) if args.json
               else render_panorama(pan))
         return 0

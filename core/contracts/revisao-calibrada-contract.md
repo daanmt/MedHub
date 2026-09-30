@@ -119,14 +119,14 @@ Estado **de tema** em `taxonomia_cronograma` (local-only): `dificuldade INTEGER`
 
 ## Cláusula 8 — Degradação graciosa (prevalência ENAMED)
 
-`core/cronograma/grade.json` ainda **não** carrega `prevalencia_enamed`. Enquanto não carregar: `prevalencia = 'media'` (peso neutro; eixo 4 não atua, sem piso de banca). Quando a grade ganhar o campo, basta `cronograma.py` fornecê-lo — **nenhuma** mudança em `infer_nota()`.
+**Ligado na s208 (F63, 30/09/2026):** `day_plan.montar_sinais` fornece a faixa por `prevalencia_do_tema(area, tema)`, lida de `core/cronograma/prevalencia_uerj.json` pelo mesmo casamento da trilha e do panorama (`plano.faixa_uerj`). A prova que governa a Fase 1 é a UERJ de 01/11. **Degradação graciosa preservada:** tema sem faixa casada, ou arquivo ausente, = `'media'` (peso neutro). **Nenhuma** mudança em `infer_nota()`, como a cláusula previa. ⚰️ *Era: "`grade.json` ainda não carrega `prevalencia_enamed`; enquanto não carregar, `prevalencia = 'media'`" (30/09/2026: o soquete ficou cabeado e neutro de s096 a s207).*
 
 ## Cláusula 9 — Decisões das questões abertas (PRD §10, propostas-semente ratificadas em uso)
 
 1. **Nota por TEMA** (não por tema×tipo); o tipo de bloco modula a **largura** (amplo/direcionado), não a nota.
 2. **Frescor = 7 dias** para reinferir nota `agente_inferida`.
 3. **Histerese:** baixar a nota exige 2 sinais frios consistentes (blocos ≥ 80% + stability↑).  <!-- NAO-VERIFICAVEL: histerese e regra de decisao do agente sobre sinais; conduta do agente, sem artefato que a registre (revisar: 2027-03-31) -->
-4. **Prevalência:** peso neutro até a grade carregar o campo (Cláusula 8).  <!-- NAO-NORMATIVA: declara peso neutro ate a grade carregar o campo -->
+4. **Prevalência:** faixa UERJ do `prevalencia_uerj.json`; neutro só para tema sem faixa (Cláusula 8, ligada na s208).  <!-- NAO-NORMATIVA: descreve de onde vem o eixo 4 -->
 5. ⚰️ **Revogado na v1.3** — o item mandava o aquecimento pré-drill oferecer o DRENAR em seguida. Sem aquecimento, **o DRENAR é a entrada da sessão de cards**, não a segunda etapa de nada.
 5b. **Cluster frio entra na fila da Revisão Direcionada (F5; reescrito na v1.3).** ⚰️ O item mandava o DRENAR **oferecer aquecimento** ao abrir um cluster frio — revogado pela Cláusula 11, que realoca o sinal em vez de descartá-lo. **Regra atual:** cluster com score de dormência `>= 25` (via `day_plan --review-plan`/`review_radar`) **entra na fila de prioridade da Revisão Direcionada de fechamento**, junto dos temas de nota 1-2. Não dispara nada antes do drill. O limiar vive AQUI (contrato), não no CLI — o CLI só expõe o score cru. 🔴 **O sensor não morreu, morreu o consumidor** (lápide do F5 em `history/auditoria/resolvidos.md` (achado F5)).  <!-- NAO-VERIFICAVEL: conduta do agente, sem artefato que a registre (revisar: 2027-03-31) -->
 6. **Soberania do usuário prevalece** mesmo com dormência alta — o agente sinaliza a divergência, não sobrescreve.

@@ -655,8 +655,21 @@ def montar_sinais(area, tema):
         "acerto_bloco": acerto_bloco,
         "score_dorm": score_dorm,
         "leu_tema": leu,
-        "prevalencia": "media",       # §7.7: grade.json ainda não tem prevalencia_enamed
+        "prevalencia": prevalencia_do_tema(area, tema),
     }
+
+
+def prevalencia_do_tema(area, tema):
+    """Eixo 4 do `infer_nota` (§7.7) -- F63, s208. A faixa vem do `prevalencia_uerj.json`
+    (o mesmo arquivo e o mesmo casamento do panorama e da trilha: `plano.faixa_uerj`).
+    Tema sem faixa, ou arquivo ausente, = 'media' (neutro, o comportamento de antes).
+    ⚰️ Era 'media' cravado: "grade.json ainda não tem prevalencia_enamed". A prova que
+    governa a Fase 1 e a UERJ de 01/11, e a trilha ja le a prevalencia UERJ."""
+    try:
+        import plano
+        return plano.faixa_uerj(area, tema, plano.ler_prevalencia()) or "media"
+    except Exception:
+        return "media"
 
 
 def _proposito(area, tema):

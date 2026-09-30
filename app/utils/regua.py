@@ -211,7 +211,10 @@ def carregar_parametros(path=None, regua=None):
                  if d != "ajustado" or m != "ajustado"]
     if intocados:
         return None, ("parametro(s) %s = default do py-fsrs (o fit nao os "
-                      "identificou) -- RECUSADOS (F114), default do py-fsrs"
+                      "identificou) -- RECUSADOS (F114), default do py-fsrs. "
+                      "Remedio: re-rodar `tools/fsrs_optimize.py` e conferir a "
+                      "`proveniencia` da visao; se o ajuste caiu a < 1e-6 do "
+                      "default por acaso, e o limite (a) de `proveniencia`"
                       % ", ".join(intocados))
     return params, ("adotados de %s (visao %s, regua v%s)"
                     % (os.path.basename(alvo), dados.get("visao_adotada", "?"), esperada))

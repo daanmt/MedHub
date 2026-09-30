@@ -34,7 +34,7 @@ relates_to: [AGENTE, ESTADO, HANDOFF]
 | F111 | MEDIA | GATE | operador | Fase 2 do plano (extensivo, leitura-first: 465 tarefas de teoria em 735; 39q/dia nativo) nao garante recall... |
 | F78 | MEDIA | DECLARADO | engenharia | Extracao de PDF descarta em silencio todo conteudo que vive em FIGURA, e nada no harness mede essa perda |
 | F69 | MEDIA | GATE | operador | resumos com lacuna de diretriz nova = risco banca-dependente (s165) |
-| F65 | MEDIA | GATE | operador | o balde `[bulk] <Area>` esconde 72 cards do radar de dormencia |
+| F65 | MEDIA | PARCIAL | operador | o balde `[bulk] <Area>` esconde 72 cards do radar de dormencia |
 | F63 | MEDIA | PARCIAL | engenharia | a prioridade que governa o estudo nao viaja com o repo (o usuario e a camada de transporte) |
 | F39 | ALTA | PARCIAL | operador | 40% do baralho viola o principio atomico; a nota FSRS vira ininterpretavel |
 | F16 | MEDIA | PARCIAL | engenharia | Tema cirurgico de alto rendimento sem SSOT clinico (.md); so o PDF-fonte existe |
@@ -123,7 +123,7 @@ python -X utf8 -c "<diff: Scheduler().parameters x core/fsrs_params.json::visoes
 ### F69 -- resumos com lacuna de diretriz nova = risco banca-dependente (s165) -- **MEDIA** -- **GATE do operador** (quais diretrizes 2026 entram e decisao clinica dele; lista viva no HANDOFF)
 **Evidencia (grep):** `[CIR] Trauma.md` ja tem X-ABCDE, torniquete, hipotensao permissiva, ABC score, pneumotorax oculto/3,5 cm, Beck, tranexamico; **falta** "sangue total > 1:1:1" e "Sellick contraindicada", e a classificacao do choque ainda cita "classe I" (11a ed = leve/moderado/grave). `Prevenção Secundária Pós-IAM (Dislipidemia).md`: 1 mencao a PREVENT/Lp(a)/bempedoico (diretriz 2025 rasa). `Sistemas de Informação em Saúde.md`: conferir SINAN 2026 (esporotricose, anomalias, Oropouche, parotidite). HAS Pt2 (130/80, MAPA) e Epilepsias (levetiracetam EV) ja atualizados. **Fix:** Revisao Direcionada com Regra de Acumulo; os `padroes_banca` do JSON sao a fonte.
 
-### F65 -- o balde `[bulk] <Area>` esconde 72 cards do radar de dormencia -- **MEDIA** -- **GATE do operador** (RODADA 3: reclassificar balde e decisao de DADO dele, nao de codigo; `normalize_taxonomia` esta vazio para isto por medicao -- `docs/DRYRUN-F65-F67-2026-09-09.md`)
+### F65 -- o balde `[bulk] <Area>` esconde 72 cards do radar de dormencia -- **MEDIA** -- **PARCIAL (s207: os 35 cards sairam do [bulk] -- M4 do operador; os erros presos em [bulk] seguem com o operador)**
 
 **Classe:** taxonomia que corrompe sensor (familia F37/dedup de taxonomia).
 
@@ -167,6 +167,7 @@ check no `auto_check`: card em tema `[bulk] *` nasce como WARN de taxonomia. Rod
 > (`project_alcancabilidade_auditoria`): a pendencia estava escrita, correta e inalcancada por
 > tempo indeterminado, porque nada no harness a transformava em trabalho. O check de WARN
 > proposto acima e o que converte a linha de texto em fila.
+- ✅ **Cards (s207, 29/09/2026):** o agente propos o tema real de cada um dos 35 cards presos em `[bulk]` e o operador aprovou os 35 no chat da s207 ("Aprovo todos"). Gravado por `normalize_taxonomia.py` (lista declarativa `MOVE_CARD`, guarda: origem `[bulk]`, destino real), 35/35, backup fixado `ipub_fixado_20260929_233801` (sha256 df07299c...). Cards ativos em `[bulk]`: **0**. #297 (declinio cognitivo na esclerose multipla) foi para Demencias: nao ha tema de EM. - **Resta (GATE do operador):** os erros de `questoes_erros` presos em `[bulk]` -- reapontar ou deixar? Reapontar muda o `weak_areas` por tema (decisao 3 do `docs/DRYRUN-F65-F67-2026-09-09.md` §4, nao perguntada ainda).
 
 ### F63 -- a prioridade que governa o estudo nao viaja com o repo (o usuario e a camada de transporte) -- **MEDIA** -- **PARCIAL** (o DADO viajou na s165: `core/cronograma/prevalencia_enamed.json`, 89 temas, + `fsrs_queue --prevalencia`; falta ligar ao `infer_nota` -- residuo nomeado)
 

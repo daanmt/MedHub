@@ -48,7 +48,8 @@ MOVE_TEMA = []
 RENAME_TEMA = []
 
 # Fusões: (sobrevivente_id, [perdedores], nome_final, area_final)
-MERGE = [
+#: RODADA 3 APLICADA em 29/09/2026 (s207, backup ipub_fixado_20260929_220057) -- fica como registro.
+MERGE_RODADA3_APLICADA = [
     (253, [139], 'Cirurgia Infantil', 'Cirurgia'),  # <- 139 [Cirurgia] Cirurgia Infantil I
     (282, [233], 'Asma na Infância', 'Pediatria'),  # <- 233 [Pediatria] Asma na infância
     (344, [301], 'Endometriose', 'Ginecologia'),  # <- 301 [GO] Endometriose
@@ -61,8 +62,50 @@ MERGE = [
     (484, [300], 'Pré-Natal', 'Obstetrícia'),  # <- 300 [GO] Pré-Natal
     (464, [419], 'Tumores Anexiais e Câncer de Ovário', 'Ginecologia'),  # <- 419 [GO] Tumores Anexiais e Câncer de Ovário
 ]
+MERGE = []
 
 DELETE_TEMA = []
+
+# F65 (s207; M4 do operador: "agente propoe, eu aprovo" -> aprovou os 35 no chat da s207):
+# card preso em balde `[bulk] <Area>` (balde de VOLUME, F37) vai para o tema real.
+# (card_id, tema_id destino). So o tema muda: conteudo e FSRS intactos.
+MOVE_CARD = [
+    (279, 253),
+    (281, 253),
+    (283, 253),
+    (285, 253),
+    (287, 253),
+    (291, 179),
+    (293, 179),
+    (295, 179),
+    (297, 179),
+    (299, 165),
+    (301, 165),
+    (303, 165),
+    (305, 163),
+    (307, 165),
+    (309, 163),
+    (311, 163),
+    (313, 163),
+    (315, 339),
+    (317, 163),
+    (321, 146),
+    (325, 146),
+    (327, 140),
+    (329, 481),
+    (333, 143),
+    (335, 140),
+    (337, 336),
+    (339, 140),
+    (341, 140),
+    (343, 115),
+    (345, 115),
+    (347, 115),
+    (349, 251),
+    (351, 251),
+    (357, 251),
+    (359, 251)
+]
 
 #: Toda tabela com `tema_id -> taxonomia_cronograma(id)` (s207). Fusao que esquece uma deixa
 #: linha orfa; o VERIF do fim confere as quatro.
@@ -141,6 +184,22 @@ def main():
         print(f"    surv {surv} {name(cur, surv)} (filhos={nchild(cur, surv)})  =>  [{area}] {nome!r}")
         for L in losers:
             print(f"         <= loser {L} {name(cur, L)} (filhos={nchild(cur, L)})")
+    print("\n[6] MOVE CARD (F65: card preso em [bulk] -> tema real)")
+    ruins = []
+    for cid, tid in MOVE_CARD:
+        r = cur.execute("SELECT t.tema FROM flashcards f JOIN taxonomia_cronograma t ON t.id = f.tema_id "
+                        "WHERE f.id=?", (cid,)).fetchone()
+        destino = cur.execute("SELECT tema FROM taxonomia_cronograma WHERE id=?", (tid,)).fetchone()
+        ja = r is not None and destino is not None and r[0] == destino[0]
+        if not ja and (r is None or not r[0].startswith("[bulk]") or destino is None
+                       or destino[0].startswith("[bulk]")):
+            ruins.append((cid, tid, r and r[0], destino and destino[0]))
+        print(f"    card {cid}: {r[0] if r else '(INEXISTENTE)'} -> {name(cur, tid)}"
+              + ("  (ja la)" if ja else ""))
+    if ruins:
+        print(f"\n[ABORT] MOVE_CARD fora da regra (origem tem de ser [bulk], destino real): {ruins}")
+        con.close()
+        sys.exit(1)
     print("\n[5] DELETE vazios (0 cards E 0 questões)")
     for tid in DELETE_TEMA:
         print(f"    {tid} {name(cur, tid)} (filhos={nchild(cur, tid)})")
@@ -199,6 +258,9 @@ def main():
                 con.execute(f"DELETE FROM taxonomia_cronograma WHERE id IN ({ph})", losers)
             for tid in DELETE_TEMA:
                 con.execute("DELETE FROM taxonomia_cronograma WHERE id=?", (tid,))
+            movidos = sum(con.execute("UPDATE flashcards SET tema_id=? WHERE id=? AND tema_id<>?",
+                                      (tid, cid, tid)).rowcount for cid, tid in MOVE_CARD)
+            print(f"    MOVE_CARD: {movidos} card(s) re-apontado(s) de {len(MOVE_CARD)} declarados")
             con.execute("CREATE UNIQUE INDEX ux_taxonomia_area_tema "
                         "ON taxonomia_cronograma(area, tema)")
         print("\nAPLICADO com sucesso.")

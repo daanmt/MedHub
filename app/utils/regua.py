@@ -139,6 +139,23 @@ def nota_efetiva(rating, regua, visao="nativo"):
 
 # ----------------------------------------------------- parametros adotados
 
+#: Tolerancia para "igual ao default": o JSON grava com 6 casas (`round(x, 6)`).
+TOL_DEFAULT = 1e-6
+
+
+def proveniencia(parametros):
+    """F114 (s208): `ajustado` | `default` por parametro, MEDIDO pelo valor.
+
+    Parametro sem dado que o identifique sai do otimizador identico ao default
+    do py-fsrs (o `w3`/`w16` da visao `remap` do R1). Rotulo declarado no JSON
+    nao prova nada -- quem le compara com o default. Limite declarado: um eixo
+    que o fit moveu e trouxe de volta ao default a 1e-6 seria lido como
+    `default` (recusa a mais, nunca adocao a mais)."""
+    from fsrs.scheduler import DEFAULT_PARAMETERS
+    return ["default" if abs(float(p) - float(d)) <= TOL_DEFAULT else "ajustado"
+            for p, d in zip(parametros, DEFAULT_PARAMETERS)]
+
+
 def carregar_parametros(path=None, regua=None):
     """`(parametros | None, motivo)`. `None` = usar o default do py-fsrs.
 
@@ -183,5 +200,18 @@ def carregar_parametros(path=None, regua=None):
         params = [float(p) for p in params]
     except (TypeError, ValueError):
         return None, "`parametros` com valor nao-numerico -- default do py-fsrs"
+    # F114 (s208): proveniencia por parametro. Ausencia nao vira permissao, e o
+    # rotulo declarado e conferido contra o VALOR (default lido como ajustado).
+    declarada = dados.get("proveniencia")
+    if not isinstance(declarada, (list, tuple)) or len(declarada) != N_PARAMETROS:
+        return None, ("parametros sem `proveniencia` por parametro (ajustado | "
+                      "default) -- RECUSADOS (F114), default do py-fsrs")
+    medida = proveniencia(params)
+    intocados = ["w%d" % i for i, (d, m) in enumerate(zip(declarada, medida))
+                 if d != "ajustado" or m != "ajustado"]
+    if intocados:
+        return None, ("parametro(s) %s = default do py-fsrs (o fit nao os "
+                      "identificou) -- RECUSADOS (F114), default do py-fsrs"
+                      % ", ".join(intocados))
     return params, ("adotados de %s (visao %s, regua v%s)"
                     % (os.path.basename(alvo), dados.get("visao_adotada", "?"), esperada))

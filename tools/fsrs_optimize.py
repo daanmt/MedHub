@@ -521,6 +521,9 @@ def analisar_visao(linhas, visao, nome, fracao, duracao_ms):
         "reguas_no_corpus": reguas,
         "distribuicao_notas_efetivas": distribuicao(linhas, visao),
         "parametros": [round(x, 6) for x in parametros],
+        # F114 (s208): o parametro sem gradiente sai igual ao default e, sem este
+        # campo, indistinguivel de um ajustado. Medido pelo valor, nao declarado.
+        "proveniencia": _regua.proveniencia([round(x, 6) for x in parametros]),
         "parametros_holdout_fit": [round(x, 6) for x in params_treino],
         "retencao_otima": retencao,
         "metrica": {

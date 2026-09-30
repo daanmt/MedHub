@@ -260,10 +260,73 @@ def test_adotado_e_casando_a_regua_carrega(tmp_path):
     esperado = _params_validos()
     p = tmp_path / "fsrs_params.json"
     p.write_text(json.dumps({"adotado": True, "regua_do_fit": 2,
-                             "parametros": esperado}), encoding="utf-8")
+                             "parametros": esperado,
+                             "proveniencia": ["ajustado"] * R.N_PARAMETROS}),
+                 encoding="utf-8")
     params, motivo = R.carregar_parametros(p, regua=2)
     assert params == esperado
     assert "adotad" in motivo.lower()
+
+
+# ------------------ F114 (s208): proveniencia por parametro -- ajustado | default
+
+def test_proveniencia_marca_o_parametro_intocado_como_default():
+    """O caso do R1: `w3` e `w16` da visao `remap` sairam iguais ao default."""
+    from fsrs.scheduler import DEFAULT_PARAMETERS
+    params = [p * 1.01 for p in DEFAULT_PARAMETERS]
+    params[3] = float(DEFAULT_PARAMETERS[3])
+    params[16] = round(float(DEFAULT_PARAMETERS[16]), 6)     # como o JSON grava
+    prov = R.proveniencia(params)
+    assert [i for i, x in enumerate(prov) if x == "default"] == [3, 16]
+    assert prov.count("ajustado") == R.N_PARAMETROS - 2
+
+
+def test_default_ROTULADO_como_ajustado_e_RECUSADO(tmp_path):
+    """🔴 O teste que o DoD do F114 pede: o arquivo DIZ 'ajustado' em tudo, mas
+    `w3` e o default. O carregador mede pelo valor, nunca confia no rotulo."""
+    from fsrs.scheduler import DEFAULT_PARAMETERS
+    params = _params_validos()
+    params[3] = float(DEFAULT_PARAMETERS[3])
+    p = tmp_path / "fsrs_params.json"
+    p.write_text(json.dumps({"adotado": True, "regua_do_fit": 2,
+                             "parametros": params,
+                             "proveniencia": ["ajustado"] * R.N_PARAMETROS}),
+                 encoding="utf-8")
+    got, motivo = R.carregar_parametros(p, regua=2)
+    assert got is None
+    assert "w3" in motivo and "default" in motivo.lower()
+
+
+def test_proveniencia_com_default_declarado_e_RECUSADA(tmp_path):
+    params = _params_validos()
+    prov = ["ajustado"] * R.N_PARAMETROS
+    prov[16] = "default"
+    p = tmp_path / "fsrs_params.json"
+    p.write_text(json.dumps({"adotado": True, "regua_do_fit": 2,
+                             "parametros": params, "proveniencia": prov}),
+                 encoding="utf-8")
+    got, motivo = R.carregar_parametros(p, regua=2)
+    assert got is None
+    assert "w16" in motivo
+
+
+def test_proveniencia_ausente_e_RECUSADA(tmp_path):
+    """Ausencia nao vira permissao (mesma regra do `regua_do_fit`)."""
+    p = tmp_path / "fsrs_params.json"
+    p.write_text(json.dumps({"adotado": True, "regua_do_fit": 2,
+                             "parametros": _params_validos()}), encoding="utf-8")
+    got, motivo = R.carregar_parametros(p, regua=2)
+    assert got is None
+    assert "proveniencia" in motivo.lower()
+
+
+def test_otimizador_grava_proveniencia_na_visao():
+    """O artefato do otimizador carrega o campo -- nao so o carregador o exige."""
+    import inspect
+    sys.path.insert(0, str(ROOT / "tools"))
+    import fsrs_optimize
+    fonte = inspect.getsource(fsrs_optimize.analisar_visao)
+    assert '"proveniencia"' in fonte
 
 
 def test_params_com_tamanho_errado_sao_RECUSADOS(tmp_path):

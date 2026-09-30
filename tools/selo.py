@@ -8,6 +8,14 @@ item de engenharia chegou a um terminal nomeado:
   DECLARADO  -- marca literal "nao-verificavel" + data de revisao
   GATE       -- pergunta de 1 linha ao operador, nomeada
   SUPERADO   -- o sujeito do achado deixou de existir
+  LIMITE     -- decisao de NAO fazer, com `revisar: AAAA-MM-DD` que o selo acusa ao vencer
+
+REGIME DE SALDO MINIMO (s207; aprovado pelo operador em 29/09/2026: "Aprovo para os
+dois"). Tres destinos: FRENTE (alguem vai fazer ou decidir), HISTORICO (fechou com
+prova) e LIMITES CONHECIDOS (`history/auditoria/limites_conhecidos.md`: nao sera
+resolvido; a data de revisao vencida volta a acusar). Achado NOVO na frente (id acima
+de F142) traz o campo `vizinhos:` -- o que a busca no ledger achou antes de escrever;
+sem ele o check `frente` recusa.
 
 🔴 **A tabela e DERIVADA, nunca digitada.** Uma tabela de selo mantida a mao e a
 mesma classe do G5 (tabela gerada que envelhece) e do F95 (registro manual com
@@ -51,9 +59,17 @@ LEDGER = os.path.join(ROOT, "AUDITORIA_MEDHUB.md")
 #: MOVIDO para ca, nunca copiado (a regra "sem archive/" e contra copia orfa).
 LEDGER_RESOLVIDOS = os.path.join(ROOT, "history", "auditoria", "resolvidos.md")
 REL_RESOLVIDOS = "history/auditoria/resolvidos.md"
+#: O 3o destino (s207): o que NAO sera resolvido, com data de revisao.
+LEDGER_LIMITES = os.path.join(ROOT, "history", "auditoria", "limites_conhecidos.md")
+REL_LIMITES = "history/auditoria/limites_conhecidos.md"
+#: Achado com id ACIMA deste nasce sob o regime e precisa de `vizinhos:` (s207).
+ULTIMO_ID_SEM_VIZINHOS = 142
+_RE_REVISAR = re.compile(r"revisar:\s*(\d{4}-\d{2}-\d{2})", re.I)
+_RE_VIZINHOS = re.compile(r"^\s*-?\s*\**\s*vizinhos\s*:", re.I | re.M)
 
 # Terminal derivado do cabecalho, por CONTEUDO. Ordem importa: o 1o que casar vence.
 REGRAS_TERMINAL = [
+    (re.compile(r"\*\*LIMITE", re.I), "LIMITE"),
     (re.compile(r"\*\*SUPERAD", re.I), "SUPERADO"),
     # `RESOLVIDO` e `RESOLVIDOS` (agregado, ex. F75 "12/12 RESOLVIDOS"), `ENTREGUE`,
     # `FECHADO`, `CONCLUIDO` -- vocabulario real do ledger, medido, nao suposto.
@@ -69,6 +85,8 @@ REGRAS_TERMINAL = [
 #: O que SAI da frente na rotacao. `FEITO (parcial)` (= MITIGADO) e `PARCIAL` ficam:
 #: os dois declaram residuo, e residuo e trabalho em aberto.
 TERMINAIS_RESOLVIDOS = ("FEITO", "SUPERADO", "RETRATADO")
+#: O que sai da frente: os resolvidos (-> historico) e o LIMITE (-> limites conhecidos).
+TERMINAIS_FORA_DA_FRENTE = TERMINAIS_RESOLVIDOS + ("LIMITE",)
 
 # Itens ABERTO que sao de DADO/POLITICA do operador -> terminal GATE, com a
 # pergunta de 1 linha. Nao sao engenharia e nao entram no codigo sem ordem dele.
@@ -157,7 +175,10 @@ def achados_de(texto, onde):
         vistos.add(fid)
         sev = _RE_SEVERIDADE.search(resto)
         status = _RE_STATUS.search(resto)
+        rev = _RE_REVISAR.search(resto)
         saida.append({"id": fid,
+                      "revisar": rev.group(1) if rev else None,
+                      "vizinhos": bool(_RE_VIZINHOS.search(b["texto"])),
                       "titulo": re.split(r"\s+--\s+\*\*", resto)[0].strip(),
                       "terminal": terminal_de(resto),
                       "severidade": (sev.group(1).replace("É", "E") if sev else "-"),
@@ -173,31 +194,62 @@ def _ler(caminho):
         return fh.read()
 
 
-def achados_do_ledger(frente=None, historico=None):
-    """Frente + historico. Achado que aparece nos DOIS conta uma vez, pela frente
-    -- e a duplicidade e acusada por `fora_do_lugar`."""
+def achados_do_ledger(frente=None, historico=None, limites=None):
+    """Frente + historico + limites. Achado que aparece em dois conta uma vez, na ordem
+    frente > historico > limites -- e a duplicidade e acusada por `fora_do_lugar`."""
     da_frente = achados_de(_ler(frente or LEDGER), "frente")
     ids = {a["id"] for a in da_frente}
     do_hist = [a for a in achados_de(_ler(historico or LEDGER_RESOLVIDOS), "historico")
                if a["id"] not in ids]
-    return da_frente + do_hist
+    ids |= {a["id"] for a in do_hist}
+    dos_lim = [a for a in achados_de(_ler(limites or LEDGER_LIMITES), "limites")
+               if a["id"] not in ids]
+    return da_frente + do_hist + dos_lim
 
 
-def fora_do_lugar(frente=None, historico=None):
-    """[(id, motivo)]: resolvido que ainda esta na frente, aberto que foi parar no
-    historico, achado nos dois arquivos."""
+def fora_do_lugar(frente=None, historico=None, limites=None):
+    """[(id, motivo)]: resolvido ou LIMITE que ainda esta na frente, aberto que foi parar
+    no historico, nao-LIMITE nos limites conhecidos, achado em dois arquivos. Achado NOVO
+    (id > F142) na frente sem `vizinhos:` tambem entra -- o regime da s207 recusa."""
     da_frente = achados_de(_ler(frente or LEDGER), "frente")
     do_hist = achados_de(_ler(historico or LEDGER_RESOLVIDOS), "historico")
+    dos_lim = achados_de(_ler(limites or LEDGER_LIMITES), "limites")
     saida = []
     for a in da_frente:
-        if a["terminal"] in TERMINAIS_RESOLVIDOS:
-            saida.append((a["id"], "resolvido (%s) ainda na frente -- rotacionar" % a["terminal"]))
+        if a["terminal"] in TERMINAIS_FORA_DA_FRENTE:
+            saida.append((a["id"], "%s ainda na frente -- rotacionar"
+                          % ("limite conhecido" if a["terminal"] == "LIMITE"
+                             else "resolvido (%s)" % a["terminal"])))
+        elif int(a["id"][1:]) > ULTIMO_ID_SEM_VIZINHOS and not a["vizinhos"]:
+            saida.append((a["id"], "achado novo na frente sem `vizinhos:` (regime s207) -- "
+                                   "buscar no ledger antes de escrever e declarar o que achou"))
     for a in do_hist:
         if a["terminal"] not in TERMINAIS_RESOLVIDOS:
             saida.append((a["id"], "%s no historico -- so resolvido mora la" % a["terminal"]))
-    repetidos = {a["id"] for a in da_frente} & {a["id"] for a in do_hist}
-    for fid in sorted(repetidos, key=lambda s: int(s[1:])):
-        saida.append((fid, "aparece na frente E no historico"))
+    for a in dos_lim:
+        if a["terminal"] != "LIMITE":
+            saida.append((a["id"], "%s nos limites conhecidos -- so LIMITE mora la" % a["terminal"]))
+    vistos = {}
+    for onde, lista in (("frente", da_frente), ("historico", do_hist), ("limites", dos_lim)):
+        for a in lista:
+            vistos.setdefault(a["id"], []).append(onde)
+    for fid in sorted((f for f, o in vistos.items() if len(o) > 1), key=lambda x: int(x[1:])):
+        saida.append((fid, "aparece em %s" % " E ".join(vistos[fid])))
+    return saida
+
+
+def limites_vencidos(achados, hoje=None):
+    """[(id, motivo)] dos LIMITE sem `revisar: AAAA-MM-DD` ou com a data vencida. A data
+    vencida e o instrumento acusando: o limite volta a pedir decisao (regime s207)."""
+    hoje = hoje or datetime.date.today().isoformat()
+    saida = []
+    for a in achados:
+        if a["terminal"] != "LIMITE":
+            continue
+        if not a["revisar"]:
+            saida.append((a["id"], "LIMITE sem `revisar: AAAA-MM-DD` no cabecalho"))
+        elif a["revisar"] < hoje:
+            saida.append((a["id"], "revisao vencida em %s -- decidir de novo" % a["revisar"]))
     return saida
 
 
@@ -227,7 +279,7 @@ def _ordem(achado):
 
 
 def em_aberto(achados):
-    return sorted((a for a in achados if a["terminal"] not in TERMINAIS_RESOLVIDOS),
+    return sorted((a for a in achados if a["terminal"] not in TERMINAIS_FORA_DA_FRENTE),
                   key=_ordem)
 
 
@@ -248,10 +300,11 @@ def indice(achados):
     """O indice do topo da frente. Sem data de proposito: data faria o arquivo
     envelhecer sozinho, e o que importa e ele bater com o derivado."""
     abertos = em_aberto(achados)
-    resolvidos = len(achados) - len(abertos)
-    linhas = ["**Em aberto: %d** · Resolvidos: %d (em `%s`) · indice gerado por "
-              "`python tools/selo.py --rotacionar`, nunca editado a mao"
-              % (len(abertos), resolvidos, REL_RESOLVIDOS),
+    limites = sum(1 for a in achados if a["terminal"] == "LIMITE")
+    resolvidos = len(achados) - len(abertos) - limites
+    linhas = ["**Em aberto: %d** · Resolvidos: %d (em `%s`) · Limites conhecidos: %d (em `%s`) "
+              "· indice gerado por `python tools/selo.py --rotacionar`, nunca editado a mao"
+              % (len(abertos), resolvidos, REL_RESOLVIDOS, limites, REL_LIMITES),
               "",
               "| Id | Sev. | Status | Quem decide | Achado |",
               "|---|---|---|---|---|"]
@@ -274,8 +327,17 @@ def aplicar_indice(frente, achados):
             + frente[f:])
 
 
-def rotacionar(frente, historico, hoje=None):
-    """(nova_frente, novo_historico, ids_movidos). Puro: recebe e devolve TEXTO.
+def _anexar(destino, sai, hoje):
+    if not sai:
+        return destino
+    corpo = "".join(b["texto"] if b["texto"].endswith("\n") else b["texto"] + "\n" for b in sai)
+    return (destino.rstrip("\n") + "\n\n## Rotacionados em %s\n\n" % hoje
+            + corpo.rstrip("\n") + "\n")
+
+
+def rotacionar(frente, historico, hoje=None, limites=None):
+    """(nova_frente, novo_historico, ids_movidos[, novos_limites]). Puro: recebe e devolve TEXTO.
+    Com `limites` (texto do 3o destino, s207) o LIMITE vai para la e a tupla ganha o 4o item.
 
     Sai da frente todo bloco F cujo achado tem terminal resolvido -- inclusive os
     blocos de continuacao, que seguem o status do pai. O bloco vai INTEIRO para o
@@ -284,31 +346,35 @@ def rotacionar(frente, historico, hoje=None):
     hoje = hoje or datetime.date.today().isoformat()
     partes = blocos(frente)
     terminal = {a["id"]: a["terminal"] for a in achados_de(frente, "frente")}
-    fica, sai, movidos = [], [], []
+    saem = TERMINAIS_FORA_DA_FRENTE if limites is not None else TERMINAIS_RESOLVIDOS
+    fica, sai, sai_lim, movidos = [], [], [], []
     for b in partes:
-        if b["tipo"] == "F" and terminal.get(b["id"]) in TERMINAIS_RESOLVIDOS:
-            sai.append(b)
+        t = terminal.get(b["id"]) if b["tipo"] == "F" else None
+        if t in saem:
+            (sai_lim if t == "LIMITE" else sai).append(b)
             if b["id"] not in movidos:
                 movidos.append(b["id"])
         else:
             fica.append(b)
     nova_frente = "".join(b["texto"] for b in fica)
-    novo_hist = historico
-    if sai:
-        corpo = "".join(b["texto"] if b["texto"].endswith("\n") else b["texto"] + "\n"
-                        for b in sai)
-        novo_hist = (historico.rstrip("\n") + "\n\n## Rotacionados em %s\n\n" % hoje
-                     + corpo.rstrip("\n") + "\n")
+    novo_hist = _anexar(historico, sai, hoje)
     achados = achados_de(nova_frente, "frente") + achados_de(novo_hist, "historico")
-    return aplicar_indice(nova_frente, achados), novo_hist, movidos
+    if limites is None:
+        return aplicar_indice(nova_frente, achados), novo_hist, movidos
+    novos_lim = _anexar(limites, sai_lim, hoje)
+    achados += achados_de(novos_lim, "limites")
+    return aplicar_indice(nova_frente, achados), novo_hist, movidos, novos_lim
 
 
-def rotacionar_arquivos(frente, historico, apply=False, expect=None, hoje=None):
+def rotacionar_arquivos(frente, historico, apply=False, expect=None, hoje=None, limites=None):
     """O `--rotacionar` sobre arquivos. Dry-run por default. `--apply` exige
     `--expect N` igual ao numero MEDIDO de achados a mover (COUNT-ASSERT): o N e
     declarado antes, o dry-run confirma, e so entao se escreve. Exit 0 ok, 2 recusa."""
     texto_f, texto_h = _ler(frente), _ler(historico)
-    nova_f, novo_h, movidos = rotacionar(texto_f, texto_h, hoje=hoje)
+    texto_l = _ler(limites) if limites else None
+    r = rotacionar(texto_f, texto_h, hoje=hoje, limites=texto_l)
+    nova_f, novo_h, movidos = r[:3]
+    novo_l = r[3] if limites else None
     print("[rotacao] %d achado(s) resolvido(s) na frente: %s"
           % (len(movidos), ", ".join(movidos) or "nenhum"))
     indice_mudou = nova_f != texto_f and not movidos
@@ -325,10 +391,15 @@ def rotacionar_arquivos(frente, historico, apply=False, expect=None, hoje=None):
         os.makedirs(os.path.dirname(str(historico)), exist_ok=True)
         with open(str(historico), "w", encoding="utf-8", newline="\n") as fh:
             fh.write(novo_h)
+    if limites and novo_l != texto_l:
+        os.makedirs(os.path.dirname(str(limites)), exist_ok=True)
+        with open(str(limites), "w", encoding="utf-8", newline="\n") as fh:
+            fh.write(novo_l)
     if nova_f != texto_f:
         with open(str(frente), "w", encoding="utf-8", newline="\n") as fh:
             fh.write(nova_f)
-    print("[rotacao] escrito: %d movido(s) para %s" % (len(movidos), REL_RESOLVIDOS))
+    print("[rotacao] escrito: %d movido(s) para %s%s" % (
+        len(movidos), REL_RESOLVIDOS, (" / " + REL_LIMITES) if limites else ""))
     return 0
 
 
@@ -407,7 +478,7 @@ def main():
 
     if args.rotacionar:
         return rotacionar_arquivos(LEDGER, LEDGER_RESOLVIDOS, apply=args.apply,
-                                   expect=args.expect)
+                                   expect=args.expect, limites=LEDGER_LIMITES)
 
     achados = achados_do_ledger()
 
@@ -417,7 +488,8 @@ def main():
         if a is None:
             print("%s: nao existe no ledger" % fid)
             return 1
-        arquivo = "AUDITORIA_MEDHUB.md" if a["onde"] == "frente" else REL_RESOLVIDOS
+        arquivo = {"frente": "AUDITORIA_MEDHUB.md", "historico": REL_RESOLVIDOS,
+                   "limites": REL_LIMITES}[a["onde"]]
         print("%s: %s -- %s -- %s" % (fid, arquivo, a["terminal"], a["titulo"][:90]))
         return 0
 
@@ -435,6 +507,7 @@ def main():
     sem_term = [a for a in achados if a["terminal"] == "SEM TERMINAL"]
     lugar = fora_do_lugar()
     velho = indice_velho()
+    vencidos = limites_vencidos(achados)
 
     if args.markdown:
         print("| Item | Terminal | Evidencia |")
@@ -454,9 +527,11 @@ def main():
     print()
     print(f"  Achados no ledger              : {len(achados)}")
     print(f"    em aberto  (frente)          : {len(nao_resolvidos)}")
-    print(f"    resolvidos (historico)       : {len(achados) - len(nao_resolvidos)}")
+    n_lim = sum(1 for a in achados if a["terminal"] == "LIMITE")
+    print(f"    resolvidos (historico)       : {len(achados) - len(nao_resolvidos) - n_lim}")
+    print(f"    limites conhecidos           : {n_lim}")
     print()
-    for t in ("FEITO", "SUPERADO", "RETRATADO", "FEITO (parcial)", "PARCIAL", "GATE",
+    for t in ("FEITO", "SUPERADO", "RETRATADO", "LIMITE", "FEITO (parcial)", "PARCIAL", "GATE",
               "DECLARADO", "ABERTO", "SEM TERMINAL"):
         n = sum(1 for a in achados if a["terminal"] == t)
         if n:
@@ -479,8 +554,11 @@ def main():
         print(f"    🔴 {fid}: {motivo}")
     if velho:
         print("    🔴 indice do topo da frente diferente do derivado -- `--rotacionar --apply --expect 0`")
+    print(f"  Limites conhecidos a revisar      : {len(vencidos)}")
+    for fid, motivo in vencidos:
+        print(f"    🔴 {fid}: {motivo}")
     print()
-    completa = (not sem_term) and (not disc) and (not lugar) and (not velho) and all(
+    completa = (not sem_term) and (not disc) and (not lugar) and (not velho) and (not vencidos) and all(
         a["id"] in GATES_DO_OPERADOR for a in abertos)
     print("  " + ("✅ Todo item tem terminal nomeado, nenhum status diverge e nada esta fora do lugar."
                   if completa else

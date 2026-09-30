@@ -214,3 +214,78 @@ def test_onde_mora_cada_achado():
 if __name__ == "__main__":
     import pytest
     sys.exit(pytest.main([__file__, "-q"]))
+
+
+# ---------------------------------------------------------------------------
+# Regime de saldo minimo (s207): 3o destino LIMITE + `vizinhos:` obrigatorio
+# ---------------------------------------------------------------------------
+FRENTE_REGIME = """# Ledger de teste
+
+<!-- selo:indice:inicio -->
+<!-- selo:indice:fim -->
+
+### F150 -- achado novo com busca -- **MEDIA** -- **DECLARADO (s207)**
+
+- vizinhos: F32, F140 (mesmo mecanismo de fila)
+
+### F149 -- decidido nao fazer -- **BAIXA** -- **LIMITE CONHECIDO (revisar: 2026-11-02; decisao do operador)**
+
+- corpo do F149
+
+### F148 -- resolvido -- **BAIXA** -- **RESOLVIDO (s207)**
+
+- corpo do F148
+"""
+
+
+def test_limite_sai_da_frente_para_o_terceiro_destino():
+    f, h, movidos, lim = selo.rotacionar(FRENTE_REGIME, "# Historico\n", hoje="2026-09-29",
+                                         limites="# Limites\n")
+    assert movidos == ["F149", "F148"]
+    assert "### F149" in lim and "### F149" not in h and "### F149" not in f
+    assert "### F148" in h and "### F148" not in lim
+    assert "Limites conhecidos: 1" in f
+
+
+def test_rotacao_sem_arquivo_de_limites_mantem_o_limite_na_frente():
+    """Chamada antiga (3 argumentos) nao perde o LIMITE: ele fica na frente e o
+    `fora_do_lugar` acusa -- nunca vai parar no historico de resolvidos."""
+    f, h, movidos = selo.rotacionar(FRENTE_REGIME, "# Historico\n", hoje="2026-09-29")
+    assert movidos == ["F148"] and "### F149" in f
+
+
+def test_limite_vencido_ou_sem_data_e_acusado():
+    achados = selo.achados_de(FRENTE_REGIME + "\n### F147 -- sem data -- **BAIXA** -- **LIMITE CONHECIDO (decisao)**\n", "limites")
+    venc = dict(selo.limites_vencidos(achados, hoje="2026-11-03"))
+    assert "vencida" in venc["F149"]
+    assert "sem `revisar" in venc["F147"]
+    assert "F149" not in dict(selo.limites_vencidos(achados, hoje="2026-10-01"))
+
+
+def test_achado_novo_sem_vizinhos_e_recusado_na_frente(tmp_path):
+    frente = tmp_path / "frente.md"
+    frente.write_text(FRENTE_REGIME.replace("- vizinhos: F32, F140 (mesmo mecanismo de fila)",
+                                            "- corpo sem busca"), encoding="utf-8")
+    (tmp_path / "hist.md").write_text("# Historico\n", encoding="utf-8")
+    (tmp_path / "lim.md").write_text("# Limites\n", encoding="utf-8")
+    motivos = dict(selo.fora_do_lugar(frente, tmp_path / "hist.md", tmp_path / "lim.md"))
+    assert "vizinhos" in motivos["F150"]
+
+
+def test_achado_antigo_nao_precisa_de_vizinhos(tmp_path):
+    frente = tmp_path / "frente.md"
+    frente.write_text("### F100 -- antigo -- **MEDIA** -- **DECLARADO (s180)**\n\n- corpo\n",
+                      encoding="utf-8")
+    (tmp_path / "hist.md").write_text("", encoding="utf-8")
+    (tmp_path / "lim.md").write_text("", encoding="utf-8")
+    assert selo.fora_do_lugar(frente, tmp_path / "hist.md", tmp_path / "lim.md") == []
+
+
+def test_nao_limite_nos_limites_e_fora_do_lugar(tmp_path):
+    (tmp_path / "frente.md").write_text("", encoding="utf-8")
+    (tmp_path / "hist.md").write_text("", encoding="utf-8")
+    (tmp_path / "lim.md").write_text("### F140 -- x -- **MEDIA** -- **DECLARADO (s204)**\n",
+                                     encoding="utf-8")
+    motivos = dict(selo.fora_do_lugar(tmp_path / "frente.md", tmp_path / "hist.md",
+                                      tmp_path / "lim.md"))
+    assert "nos limites conhecidos" in motivos["F140"]

@@ -1349,8 +1349,10 @@ def realizado_do_dia(con, data_iso):
     sim = con.execute(
         "SELECT COUNT(*) FROM sessoes_bulk "
         "WHERE area = 'Simulado' AND data_sessao = ?", (data_iso,)).fetchone()[0]
+    # F142 (s207): o teto conta CARD, nao linha -- sem DISTINCT, a 2a revisao do mesmo
+    # card no dia descontava o teto duas vezes (83 pares medidos na s204).
     cards = con.execute(
-        "SELECT COUNT(*) FROM fsrs_revlog WHERE date(review_time) = ?",
+        "SELECT COUNT(DISTINCT card_id) FROM fsrs_revlog WHERE date(review_time) = ?",
         (data_iso,)).fetchone()[0]
     return {"questoes": q or 0, "simulado": sim or 0, "cards": cards or 0}
 

@@ -2,12 +2,12 @@
   "_meta": {
     "fonte": "[52 wk] Cronograma Extensivo.pdf",
     "sha256": "5f61da795836b7b9423d6f097a81e6ad82cfc2f608b99c728e67e5a8b7e256e1",
-    "gerado_em": "2026-09-16T16:20:48",
+    "gerado_em": "2026-09-29T21:18:11",
     "n_semanas": 52,
-    "n_tasks": 735,
-    "n_teoria": 465,
+    "n_tasks": 741,
+    "n_teoria": 466,
     "n_revisao": 218,
-    "n_rpq": 52
+    "n_rpq": 57
   },
   "semanas": [
     {
@@ -14071,6 +14071,118 @@
           "n_paginas": 0,
           "n_questoes": null,
           "n_links_questoes": 1,
+          "url_lista": null
+        },
+        {
+          "tarefa": 17,
+          "disciplina": "Cirurgia",
+          "area_norm": "Cirurgia",
+          "assunto": "Queimaduras e Trauma Elétrico | Abdome Agudo Perfurativo | Proctologia | Nutrição em cirurgia | Temas Gerais em Cirurgia",
+          "subtemas": [
+            "Queimaduras e Trauma Elétrico",
+            "Abdome Agudo Perfurativo",
+            "Proctologia",
+            "Nutrição em cirurgia",
+            "Temas Gerais em Cirurgia"
+          ],
+          "tipo": "Revisão por Questões",
+          "tipo_norm": "revisao_questoes",
+          "paginas_livro": [],
+          "n_paginas": 0,
+          "n_questoes": null,
+          "n_links_questoes": 1,
+          "url_lista": null
+        },
+        {
+          "tarefa": 18,
+          "disciplina": "Ginecologia",
+          "area_norm": "Ginecologia",
+          "assunto": "Miomatose | Rastreamento do Câncer de Mama | Síndrome dos Ovários Policísticos | Assistência à Vítima de Violência Sexual",
+          "subtemas": [
+            "Miomatose",
+            "Rastreamento do Câncer de Mama",
+            "Síndrome dos Ovários Policísticos",
+            "Assistência à Vítima de Violência Sexual"
+          ],
+          "tipo": "Revisão por Questões",
+          "tipo_norm": "revisao_questoes",
+          "paginas_livro": [],
+          "n_paginas": 0,
+          "n_questoes": null,
+          "n_links_questoes": 1,
+          "url_lista": null
+        },
+        {
+          "tarefa": 19,
+          "disciplina": "Obstetrícia",
+          "area_norm": "Obstetrícia",
+          "assunto": "TPP - Prematuridade e Trabalho de Parto Prematuro | Rotura Prematura de Membranas | Restrição de Crescimento Fetal e Óbito Fetal | Modificações Fisiológicas da Gestação",
+          "subtemas": [
+            "TPP - Prematuridade e Trabalho de Parto Prematuro",
+            "Rotura Prematura de Membranas",
+            "Restrição de Crescimento Fetal e Óbito Fetal",
+            "Modificações Fisiológicas da Gestação"
+          ],
+          "tipo": "Revisão por Questões",
+          "tipo_norm": "revisao_questoes",
+          "paginas_livro": [],
+          "n_paginas": 0,
+          "n_questoes": null,
+          "n_links_questoes": 1,
+          "url_lista": null
+        },
+        {
+          "tarefa": 20,
+          "disciplina": "Endocrinologia",
+          "area_norm": "Endocrino",
+          "assunto": "Obesidade e Síndrome Metabólica | Cirurgia Bariátrica e Metabólica (Tratamento Cir. Obesidade) | Osteoporose e Doença óssea de Paget",
+          "subtemas": [
+            "Obesidade e Síndrome Metabólica",
+            "Cirurgia Bariátrica e Metabólica (Tratamento Cir. Obesidade)",
+            "Osteoporose e Doença óssea de Paget"
+          ],
+          "tipo": "Revisão por Questões",
+          "tipo_norm": "revisao_questoes",
+          "paginas_livro": [],
+          "n_paginas": 0,
+          "n_questoes": null,
+          "n_links_questoes": 1,
+          "url_lista": null
+        },
+        {
+          "tarefa": 21,
+          "disciplina": "Cardiologia",
+          "area_norm": "Cardiologia",
+          "assunto": "Insuficiência Cardíaca Pt.1 | Insuficiência Cardíaca Pt.2 | Insuficiência Cardíaca Aguda | Valvopatias | IAMCSSST (Infarto Agudo do Miocardio)",
+          "subtemas": [
+            "Insuficiência Cardíaca Pt.1",
+            "Insuficiência Cardíaca Pt.2",
+            "Insuficiência Cardíaca Aguda",
+            "Valvopatias",
+            "IAMCSSST (Infarto Agudo do Miocardio)"
+          ],
+          "tipo": "Revisão por Questões",
+          "tipo_norm": "revisao_questoes",
+          "paginas_livro": [],
+          "n_paginas": 0,
+          "n_questoes": null,
+          "n_links_questoes": 1,
+          "url_lista": null
+        },
+        {
+          "tarefa": 22,
+          "disciplina": "Radiologia",
+          "area_norm": "Multi",
+          "assunto": "Exames Contrastados",
+          "subtemas": [
+            "Exames Contrastados"
+          ],
+          "tipo": "Teoria",
+          "tipo_norm": "teoria",
+          "paginas_livro": [],
+          "n_paginas": 0,
+          "n_questoes": null,
+          "n_links_questoes": 0,
           "url_lista": null
         }
       ]

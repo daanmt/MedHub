@@ -139,12 +139,13 @@ import json
 import math
 import sqlite3
 import sys
-from datetime import datetime, timezone
+from datetime import datetime, time, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from app.utils import regua as _regua  # noqa: E402
 from app.utils.fsrs import KWARGS_BASE  # noqa: E402  (fonte unica dos kwargs do Scheduler)
+from app.utils.relogio import dia_logico  # noqa: E402  (F141: o dia unico do motor)
 
 if hasattr(sys.stdout, 'reconfigure'):
     try:
@@ -238,10 +239,21 @@ def ler_revlog(db_path=None):
     for card_id, rating, rt, regua in cru:
         quando = _parse_utc(rt)
         if quando is not None:
-            linhas.append((int(card_id), int(rating), quando,
+            linhas.append((int(card_id), int(rating), no_dia_logico(quando),
                            _regua.regua_da_linha(regua)))
-    linhas.sort(key=lambda x: x[2])
+    linhas.sort(key=lambda x: x[2])   # estavel: dentro do dia, a ordem do SQL (review_time, id)
     return linhas
+
+
+def no_dia_logico(quando):
+    """F141 (s207): a revisao entra no Optimizer no 00:00 do seu DIA LOGICO.
+
+    O Optimizer e o replay medem o decorrido por `(t2 - t1).days` -- 24 h truncadas. Com
+    os dois instantes ancorados no 00:00 do dia, essa conta passa a dar dias logicos, o
+    mesmo relogio do adapter (`app.utils.relogio`). O `fsrs_revlog` segue IMUTAVEL: so a
+    entrada muda. O dia sai do carimbo GRAVADO (o `quando` aqui e o carimbo rotulado UTC
+    pela convencao do limite (c)), nunca de uma conversao de fuso."""
+    return datetime.combine(dia_logico(quando.replace(tzinfo=None)), time(0), tzinfo=timezone.utc)
 
 
 def ler_cards(db_path=None):

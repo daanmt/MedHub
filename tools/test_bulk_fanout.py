@@ -126,3 +126,43 @@ def test_sessoes_bulk_continua_sendo_o_ssot_de_volume(db):
 
 if __name__ == "__main__":
     raise SystemExit(pytest.main([__file__, "-q"]))
+
+
+# --- F127 (s207): `--corrigir` -- correcao pelo writer, nunca por UPDATE pontual ---------
+
+def _linha(db_path, sid):
+    con = sqlite3.connect(db_path)
+    try:
+        return con.execute("SELECT questoes_feitas, questoes_acertadas, observacoes "
+                           "FROM sessoes_bulk WHERE id=?", (sid,)).fetchone()
+    finally:
+        con.close()
+
+
+def test_corrigir_aplica_delta_na_linha_e_no_balde(db):
+    rsb.registrar(190, "Simulado", 100, 56, data="2026-09-20")
+    rsb.corrigir(1, acertos=58, apply=True)
+    assert _linha(db, 1)[:2] == (100, 58)
+    assert "corrigido de 100/56 para 100/58" in _linha(db, 1)[2]
+    assert _taxon(db)[("Simulado", "[bulk] Simulado")] == (100, 58)
+    assert _taxon(db)[("Pediatria", "Imunizacoes")] == (10, 8), "tema real nao pode mudar (F37)"
+
+
+def test_corrigir_e_dry_run_por_default(db):
+    rsb.registrar(190, "Simulado", 100, 56, data="2026-09-20")
+    assert rsb.corrigir(1, acertos=58) is True
+    assert _linha(db, 1)[:2] == (100, 56)
+    assert _taxon(db)[("Simulado", "[bulk] Simulado")] == (100, 56)
+
+
+def test_corrigir_recusa_linha_inexistente_e_acertos_maior_que_feitas(db):
+    rsb.registrar(190, "Simulado", 100, 56, data="2026-09-20")
+    assert rsb.corrigir(99, acertos=1, apply=True) is False
+    assert rsb.corrigir(1, acertos=101, apply=True) is False
+    assert _linha(db, 1)[:2] == (100, 56)
+
+
+def test_corrigir_feitas_tambem_move_o_balde(db):
+    rsb.registrar(190, "Simulado", 97, 56, data="2026-09-20")
+    rsb.corrigir(1, acertos=57, feitas=100, apply=True)
+    assert _taxon(db)[("Simulado", "[bulk] Simulado")] == (100, 57)

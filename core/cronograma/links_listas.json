@@ -21,11 +21,11 @@
    "url_fora_do_padrao": 0
   },
   "extensivo": {
-   "tarefas": 735,
-   "blocos_do_pdf_fora_do_json": 6,
-   "com_link": 243,
+   "tarefas": 741,
+   "blocos_do_pdf_fora_do_json": 0,
+   "com_link": 248,
    "multi": 14,
-   "sem_link": 479,
+   "sem_link": 480,
    "url_fora_do_padrao": 0
   }
  },
@@ -6402,6 +6402,42 @@
    "tarefa": 16,
    "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/641d28a8-90e5-430c-a7db-1423b2224575/?per_page=20",
    "n_questoes_link": null
+  },
+  {
+   "semana": 48,
+   "tarefa": 17,
+   "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/d7bf1604-d871-41d2-b882-db6b02f1ccce/?per_page=20",
+   "n_questoes_link": null
+  },
+  {
+   "semana": 48,
+   "tarefa": 18,
+   "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/19518cce-92d8-4858-abd4-d6d662d86df2/?per_page=20",
+   "n_questoes_link": null
+  },
+  {
+   "semana": 48,
+   "tarefa": 19,
+   "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/4e67a520-1478-4b69-9532-3806db4c3ff4/?per_page=20",
+   "n_questoes_link": null
+  },
+  {
+   "semana": 48,
+   "tarefa": 20,
+   "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/a06c35d9-a68f-4bca-bf62-62c96c8498b2/?per_page=20",
+   "n_questoes_link": null
+  },
+  {
+   "semana": 48,
+   "tarefa": 21,
+   "url": "https://med.estrategia.com/cadernos-e-simulados/cadernos/1178caa8-4b12-4138-96f9-b251062df4af/?per_page=20",
+   "n_questoes_link": null
+  },
+  {
+   "semana": 48,
+   "tarefa": 22,
+   "url": null,
+   "estado": "sem_link_no_pdf"
   },
   {
    "semana": 49,

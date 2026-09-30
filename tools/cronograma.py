@@ -550,11 +550,11 @@ def validate(grade):
 # validado na s183 (scratchpad/parse_extensivo.py, 52 semanas / 735 tarefas).
 #
 # 🔴 Falha dura (Technical Decision da spec): a contagem parseada tem que bater
-# 735 tarefas / 52 semanas. Divergencia aborta o `--rebuild-extensivo` (nunca
+# 741 tarefas / 52 semanas (735 ate o F122, s207). Divergencia aborta o `--rebuild-extensivo` (nunca
 # versiona um catalogo com buraco silencioso) -- a excecao declarada e
 # `--expect-tasks N`, quando o PDF do EMED mudou de verdade.
 
-EXTENSIVO_TASKS_ESPERADAS = 735
+EXTENSIVO_TASKS_ESPERADAS = 741  # F122 (s207): era 735 -- o Resumo da S48 atravessa a pagina
 EXTENSIVO_SEMANAS_ESPERADAS = 52
 
 # Disciplinas do Extensivo, forma canonica-acentuada (a mesma que aparece no PDF
@@ -635,7 +635,7 @@ _URL_CHARSET_EXT_RE = re.compile(r"^https?://[A-Za-z0-9\-._~:/?#\[\]@!$&'()*+,;=
 
 
 class ExtensivoContagemDivergente(RuntimeError):
-    """A contagem parseada do Extensivo não bate 735/52 (nem `--expect-tasks`)."""
+    """A contagem parseada do Extensivo não bate 741/52 (nem `--expect-tasks`)."""
 
 
 def _casa_disciplina(resto):
@@ -746,6 +746,43 @@ def _juntar_paginas_extensivo(paginas):
 _WATERMARK_EXT = "Medicina livre, venda proibida, twitter @Livremedicina"
 
 
+#: F122 (s207): cabecalho da pagina seguinte colado na 1a tarefa que CONTINUA o Resumo.
+_CONTINUA_RESUMO_RE = re.compile(r"Cronograma Extensivo\s*(Tarefa\s*\d{1,2}\b.*)$")
+#: ...e o rodape do Resumo colado na ultima tarefa ("TeoriaResumoSemana 48").
+_RODAPE_RESUMO_RE = re.compile(r"Resumo\s*Semana\s*\d+\s*$")
+
+
+def _continuacao_resumo(linhas, j):
+    """F122 (s207): o Resumo da S48 (22 tarefas) atravessa a pagina -- as tarefas 17-22
+    estao no topo da pagina seguinte. A premissa "o Resumo nao atravessa a pagina"
+    (medida na s183) valia para 51 das 52 semanas; o `--expect-tasks 735` travava o erro
+    como se fosse medido. Continuacao = a pagina seguinte ABRE (logo apos o cabecalho) com
+    "Tarefa N"; qualquer outra abertura (Passo a Passo, outra semana) nao e continuacao.
+    Devolve as linhas da continuacao ([] quando nao ha)."""
+    if j >= len(linhas) or not linhas[j].startswith("===== PAGE"):
+        return []
+    k = j + 1
+    while k < len(linhas) and not linhas[k].startswith("===== PAGE"):
+        m = _CONTINUA_RESUMO_RE.search(linhas[k])
+        if m:
+            break
+        if "Cronograma Extensivo" in linhas[k]:
+            return []          # o cabecalho veio e nao abriu com "Tarefa N"
+        k += 1
+    else:
+        return []
+    cont = [m.group(1)]
+    k += 1
+    while k < len(linhas) and not linhas[k].startswith("===== PAGE"):
+        cont.append(linhas[k])
+        k += 1
+    while cont and not cont[-1].strip():
+        cont.pop()
+    if cont:
+        cont[-1] = _RODAPE_RESUMO_RE.sub("", cont[-1])
+    return cont
+
+
 def parse_extensivo_text(texto):
     """Função pura: texto já com marcadores de página (`_juntar_paginas_extensivo`)
     -> `semanas[].tasks[]` no schema da spec (sem `_meta` -- quem monta o `_meta`
@@ -770,6 +807,7 @@ def parse_extensivo_text(texto):
         while j < len(linhas) and not linhas[j].startswith("===== PAGE"):
             buf.append(linhas[j])
             j += 1
+        buf += _continuacao_resumo(linhas, j)
         semanas.append({"semana": w, "tasks": _parse_resumo_semana(buf)})
 
     bounds = []

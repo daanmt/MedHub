@@ -95,6 +95,8 @@ python tools/importar_sessoes.py --abandonada "<motivo>"
 | `--semana N` | Atualiza no mesmo ato a **posição SSOT** (semana de conteúdo) — ver `preparacao.py` em `engenharia-cli.md`. |
 | `--tarefa ID` | **P6:** grava o **vínculo** com a lista do plano (`plano_tarefas.id`) no ato da inserção. Opcional; **só adiciona o elo** — idempotência, validação de área e o fan-out de taxonomia continuam idênticos. |
 | `--vincular SESSAO_ID` | **P6:** vincula uma sessão **já registrada** (o `id` da LINHA em `sessoes_bulk`, nunca o `sessao_num`) à `--tarefa ID`. Não registra volume nenhum — é o conserto de um registro antigo ou de uma ambígua do backfill. |
+| `--corrigir SESSAO_ID` | **F127 (s207):** corrige uma sessão **já registrada** (o `id` da LINHA) para `--acertos N` (e `--feitas M`, opcional). Dry-run por default; `--apply` grava o delta na linha **e** no balde `[bulk] <area>` e anexa `corrigido de F/A para F'/A'` na observação. Recusa linha inexistente e `acertos > feitas`. É o caminho da resposta declarada depois do registro (s190: 56 -> 58). |
+| `--apply` | Com `--corrigir`: grava (sem ele, só mostra o delta). |
 
 🔴 **Gate do vínculo (P6):** `plano_tarefas.area` tem de ser **igual** a `sessoes_bulk.area`, e tarefa
 com `area` NULL (o `Multi` declarado da part-2) é **recusada** — sem área não há o que conferir. No

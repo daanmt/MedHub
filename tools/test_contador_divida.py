@@ -102,12 +102,13 @@ def test_consumo_hoje_conta_o_revlog_do_dia():
     fd, tmp = tempfile.mkstemp(suffix=".db")
     os.close(fd)
     con = sqlite3.connect(tmp)
-    con.execute("CREATE TABLE fsrs_revlog (id INTEGER PRIMARY KEY, review_time TIMESTAMP)")
+    con.execute("CREATE TABLE fsrs_revlog (id INTEGER PRIMARY KEY, card_id INTEGER, "
+                "review_time TIMESTAMP)")
     con.execute("CREATE TABLE sessoes_bulk (id INTEGER PRIMARY KEY, area TEXT, "
                 "questoes_feitas INTEGER, data_sessao DATE)")
-    con.executemany("INSERT INTO fsrs_revlog (review_time) VALUES (?)",
-                    [("2026-09-10 08:00:00",), ("2026-09-10 22:30:00",),
-                     ("2026-09-09 23:59:59",)])
+    con.executemany("INSERT INTO fsrs_revlog (card_id, review_time) VALUES (?, ?)",
+                    [(1, "2026-09-10 08:00:00"), (2, "2026-09-10 22:30:00"),
+                     (3, "2026-09-09 23:59:59")])
     con.commit()
     try:
         assert dp.realizado_do_dia(con, "2026-09-10")["cards"] == 2, \
@@ -157,3 +158,23 @@ if __name__ == "__main__":
                 print(f"  FALHA {nome}: {e}")
     print(f"\n{'FALHOU' if falhas else 'PASSOU'} -- {falhas} falha(s)")
     sys.exit(1 if falhas else 0)
+
+
+def test_teto_conta_card_distinto_nao_linha():
+    """F142 (s207): 2a revisao do mesmo card no dia nao desconta o teto duas vezes."""
+    fd, tmp = tempfile.mkstemp(suffix=".db")
+    os.close(fd)
+    con = sqlite3.connect(tmp)
+    con.execute("CREATE TABLE fsrs_revlog (id INTEGER PRIMARY KEY, card_id INTEGER, "
+                "review_time TIMESTAMP)")
+    con.execute("CREATE TABLE sessoes_bulk (id INTEGER PRIMARY KEY, area TEXT, "
+                "questoes_feitas INTEGER, data_sessao DATE)")
+    con.executemany("INSERT INTO fsrs_revlog (card_id, review_time) VALUES (?, ?)",
+                    [(7, "2026-09-25 06:10:00"), (7, "2026-09-25 19:00:00"),
+                     (8, "2026-09-25 19:05:00")])
+    con.commit()
+    try:
+        assert dp.realizado_do_dia(con, "2026-09-25")["cards"] == 2
+    finally:
+        con.close()
+        os.unlink(tmp)

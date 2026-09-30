@@ -432,12 +432,14 @@ def test_fontes_reais_reproduzem_os_numeros_medidos():
     versionados. Divergencia aqui e sinal de que a fonte mudou -- investigar, nunca
     ajustar a constante. Le so JSON: nenhum banco e aberto."""
     linhas, rel = plano.montar_linhas()
-    assert rel["extensivo_total"] == 735
-    assert rel["extensivo_s21_s48"] == 425
+    # F122 (s207): 735 -> 741 e 425 -> 431. O Resumo da S48 atravessa a pagina e o parser
+    # perdia as tarefas 17-22; re-medido por lente independente (texto do PDF, pags 381-382).
+    assert rel["extensivo_total"] == 741
+    assert rel["extensivo_s21_s48"] == 431
     assert rel["rf_total_s17_s28"] == 149
     assert rel["rf_pendentes"] == 139, (
         "139 pendentes da Reta Final S17-S28 -- referencia da s183")
-    assert len(linhas) == 735 + 139 + rel["custom"]
+    assert len(linhas) == 741 + 139 + rel["custom"]
     q_rf = sum(l["q_previstas"] for l in linhas if l["fonte"] == "rf")
     assert round(q_rf, 1) == 4035.5, "as ~4.036q pendentes da Reta Final"
 
@@ -448,8 +450,9 @@ def test_fontes_reais_nao_inventam_area():
     linhas, rel = plano.montar_linhas()
     fora = {l["area"] for l in linhas if l["area"] and l["area"] not in AREAS_VALIDAS}
     assert not fora, f"areas fora de core/areas.json: {sorted(fora)}"
-    assert rel["extensivo_sem_area"] == 26, (
-        "6 tarefas de Radiologia (S41-S47) + 20 de 'Todas as Disciplinas' (S50-S52)")
+    assert rel["extensivo_sem_area"] == 27, (
+        "7 tarefas de Radiologia (S41-S48; a S48 T22 entrou com o F122, s207) "
+        "+ 20 de 'Todas as Disciplinas' (S50-S52)")
 
 
 # =====================================================================================

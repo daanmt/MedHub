@@ -244,14 +244,14 @@ def test_proveniencia_e_a_do_instante_da_revisao():
 
 def test_pyfsrs_aceita_revisao_retroativa_em_silencio():
     """FATO DE BIBLIOTECA, com versao (s193; contrato `fsrs-management` v1.5): o py-fsrs
-    6.3.1 NAO recusa `review_datetime` anterior ao `last_review` -- calcula `days < 1`,
+    6.3.1 NAO recusa `review_datetime` anterior ao `last_review` (reconferido no 6.3.2, s207) -- calcula `days < 1`,
     trata como revisao de curto prazo e segue, sem erro. E por isso que a guarda de ordem
     mora no adapter (`FSRS.evaluate(quando)`). Se a lib mudar de versao ou de
     comportamento, este teste avisa: reconferir o fato no contrato e a guarda."""
     from datetime import timezone
     from importlib.metadata import version
     from fsrs import Card, Rating, Scheduler
-    assert version("fsrs") == "6.3.1", (
+    assert version("fsrs") == "6.3.2", (
         "py-fsrs mudou de versao (%s): reconferir o fato no contrato fsrs-management "
         "(revisao retroativa aceita em silencio) e a guarda do adapter" % version("fsrs"))
     s = Scheduler(learning_steps=(), enable_fuzzing=False)

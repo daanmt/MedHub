@@ -284,7 +284,8 @@ def test_rebuild_extensivo_expect_tasks_destrava_a_divergencia(tmp_path, monkeyp
 # ---------------------------------------------------------------------------
 # Asseração 735/52 sobre o JSON VERSIONADO (core/cronograma/grade_extensivo.json)
 # ---------------------------------------------------------------------------
-def test_grade_extensivo_json_versionado_tem_735_tarefas_52_semanas():
+def test_grade_extensivo_json_versionado_tem_741_tarefas_52_semanas():
+    """F122 (s207): era 735 -- o parser perdia S48 T17-T22 (Resumo atravessando a pagina)."""
     path = cr.GRADE_EXTENSIVO_PATH
     if not os.path.exists(path):
         import pytest
@@ -292,7 +293,38 @@ def test_grade_extensivo_json_versionado_tem_735_tarefas_52_semanas():
     g = cr.load_grade(path)
     m = g["_meta"]
     assert m["n_semanas"] == 52
-    assert m["n_tasks"] == 735
-    assert m["n_teoria"] + m["n_revisao"] + m["n_rpq"] == 735
-    assert sum(len(s["tasks"]) for s in g["semanas"]) == 735
+    assert m["n_tasks"] == 741
+    assert m["n_teoria"] + m["n_revisao"] + m["n_rpq"] == 741
+    assert sum(len(s["tasks"]) for s in g["semanas"]) == 741
     assert len(g["semanas"]) == 52
+
+
+# ---------------------------------------------------------------------------
+# F122 (s207): o Resumo que atravessa a pagina
+# ---------------------------------------------------------------------------
+_PAG_A = """===== PAGE 1 =====
+Estratégia MED | Residência Médica | Cronograma ExtensivoSemana 48
+Resumo
+Tarefa 1 Pediatria Fibrose Cística Teoria
+Tarefa 2 Cirurgia Temas Gerais em Cirurgia Revisão
+===== PAGE 2 =====
+Estratégia
+MEDCURSO EXTENSIVO2
+Estratégia MED | Residência Médica | Cronograma ExtensivoTarefa 3 Radiologia Exames Contrastados TeoriaResumoSemana 48
+===== PAGE 3 =====
+Estratégia MED | Residência Médica | Cronograma ExtensivoSemana 48
+Passo a PassoLinks Materiais"""
+
+
+def test_resumo_que_atravessa_a_pagina_traz_a_continuacao():
+    sem = cr.parse_extensivo_text(_PAG_A)
+    tarefas = [t["tarefa"] for t in sem[0]["tasks"]]
+    assert tarefas == [1, 2, 3]
+    assert sem[0]["tasks"][2]["tipo"] == "Teoria", "o rodape 'ResumoSemana 48' nao pode colar no tipo"
+
+
+def test_pagina_seguinte_que_nao_abre_com_tarefa_nao_e_continuacao():
+    texto = _PAG_A.replace("Cronograma ExtensivoTarefa 3 Radiologia Exames Contrastados TeoriaResumoSemana 48",
+                           "Cronograma ExtensivoSemana 48\nPasso a Passo")
+    sem = cr.parse_extensivo_text(texto)
+    assert [t["tarefa"] for t in sem[0]["tasks"]] == [1, 2]

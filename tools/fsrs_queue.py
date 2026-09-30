@@ -442,7 +442,8 @@ def aplicar_notas(registros, apply=False, expect=None, out=print,
 
     Cada nota com rating e classificada contra o revlog do card
     (`notas_player.situacao`, s193): JA GRAVADA sai da conta; FORA DE ORDEM e
-    reportada e NAO grava; NOVA grava no relogio da revisao (`quando`), em ordem
+    reportada e NAO grava; MESMO DIA (F142: o card ja tem revisao no dia) idem, e vai
+    para a quarentena; NOVA grava no relogio da revisao (`quando`), em ordem
     crescente de ts -- o N do `--expect` conta so as NOVAS. `--apply` exige
     `--expect` igual a esse N (COUNT-ASSERT pre) e confere que `fsrs_revlog`
     cresceu EXATAMENTE N (COUNT-ASSERT pos). Os `defeito` viram marca de reforja
@@ -459,7 +460,7 @@ def aplicar_notas(registros, apply=False, expect=None, out=print,
     registros = [r for r in registros if r.get("quando") is not None]
     gravado = gravado_fn([r["card_id"] for r in registros])
     vazio = {"revisoes": [], "marca_player": None}
-    novas, ja_gravadas, fora_de_ordem = [], [], []
+    novas, ja_gravadas, fora_de_ordem, mesmo_dia = [], [], [], []
     for r in (r for r in registros if r["rating"] is not None):
         g = gravado.get(r["card_id"], vazio)
         s = notas_player.situacao(r["quando"], g["revisoes"])
@@ -467,6 +468,8 @@ def aplicar_notas(registros, apply=False, expect=None, out=print,
             ja_gravadas.append(r)
         elif s == notas_player.FORA_DE_ORDEM:
             fora_de_ordem.append((r, notas_player.ultima_revisao(g["revisoes"])))
+        elif s == notas_player.MESMO_DIA:
+            mesmo_dia.append((r, notas_player.ultima_revisao(g["revisoes"])))
         else:
             novas.append(r)
     novas.sort(key=lambda r: (r["quando"], r["card_id"]))
@@ -476,9 +479,9 @@ def aplicar_notas(registros, apply=False, expect=None, out=print,
         (ja_marcados if notas_player.defeito_ja_marcado(r["quando"], marca)
          else defeitos).append(r)
     n = len(novas)
-    out("[record-lote] novas=%d ja_gravadas=%d fora_de_ordem=%d defeito(s)=%d "
-        "(ja marcados %d)" % (n, len(ja_gravadas), len(fora_de_ordem), len(defeitos),
-                              len(ja_marcados)))
+    out("[record-lote] novas=%d ja_gravadas=%d fora_de_ordem=%d mesmo_dia=%d defeito(s)=%d "
+        "(ja marcados %d)" % (n, len(ja_gravadas), len(fora_de_ordem), len(mesmo_dia),
+                              len(defeitos), len(ja_marcados)))
     for r in novas:
         out("  %d -> %d (%s) @ %s" % (r["card_id"], r["rating"],
                                       r["selection_reason"] or "auto", r["quando"]))
@@ -489,6 +492,9 @@ def aplicar_notas(registros, apply=False, expect=None, out=print,
         out("  FORA DE ORDEM: %d -> %d, nota de %s e o revlog ja tem revisao de %s -- "
             "NAO gravada (o estado FSRS so anda para a frente)"
             % (r["card_id"], r["rating"], r["quando"], ultima))
+    for r, ultima in mesmo_dia:
+        out("  MESMO DIA: %d -> %d, nota de %s e o card ja foi revisto em %s -- NAO gravada "
+            "(uma nota por card por dia, F142)" % (r["card_id"], r["rating"], r["quando"], ultima))
     for r in sem_relogio:
         out("  SEM RELOGIO: %d -- registro sem `quando` (nao veio do ler_notas); NAO gravado"
             % r["card_id"])
@@ -501,7 +507,11 @@ def aplicar_notas(registros, apply=False, expect=None, out=print,
                  for r in rejeitadas if r.get("indice") is not None]
                 + [{"tipo": "fora_de_ordem", "doc": r.get("doc"),
                     "motivo": "nota de %s; o revlog ja tem revisao de %s" % (r["quando"], ultima)}
-                   for r, ultima in fora_de_ordem])
+                   for r, ultima in fora_de_ordem]
+                + [{"tipo": "mesmo_dia", "doc": r.get("doc"),
+                    "motivo": "nota de %s; o card ja foi revisto em %s no mesmo dia (F142)"
+                              % (r["quando"], ultima)}
+                   for r, ultima in mesmo_dia])
     if arquivar and quarentena is not None:
         out("  QUARENTENA: %d doc(s) %s em %s (antes de qualquer poda)"
             % (len(arquivar), "arquivados" if apply else "a arquivar no --apply", quarentena))

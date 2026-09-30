@@ -81,7 +81,7 @@ def tmp_db(tmp_path, monkeypatch):
     con.execute(PLANO_DIA_DDL)
     con.execute("CREATE TABLE sessoes_bulk (id INTEGER PRIMARY KEY, area TEXT, "
                 "questoes_feitas INTEGER, data_sessao DATE)")
-    con.execute("CREATE TABLE fsrs_revlog (id INTEGER PRIMARY KEY, "
+    con.execute("CREATE TABLE fsrs_revlog (id INTEGER PRIMARY KEY, card_id INTEGER, "
                 "review_time DATETIME)")
     con.commit()
     con.close()
@@ -113,9 +113,9 @@ def test_relatorio_deriva_so_do_db(tmp_db):
     con = sqlite3.connect(tmp_db)
     con.execute("INSERT INTO sessoes_bulk (area, questoes_feitas, data_sessao) "
                 "VALUES ('Area F', 24, '2026-07-10')")
-    for _ in range(4):
-        con.execute("INSERT INTO fsrs_revlog (review_time) "
-                    "VALUES ('2026-07-10 15:00:00')")
+    for cid in range(4):
+        con.execute("INSERT INTO fsrs_revlog (card_id, review_time) "
+                    "VALUES (?, '2026-07-10 15:00:00')", (cid,))
     con.commit()
     con.close()
     dias = aderencia(fim=date(2026, 7, 10), semanas=1)

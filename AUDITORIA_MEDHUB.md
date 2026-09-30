@@ -23,16 +23,12 @@ relates_to: [AGENTE, ESTADO, HANDOFF]
 ## Indice
 
 <!-- selo:indice:inicio -->
-**Em aberto: 19** · Resolvidos: 105 (em `history/auditoria/resolvidos.md`) · indice gerado por `python tools/selo.py --rotacionar`, nunca editado a mao
+**Em aberto: 15** · Resolvidos: 109 (em `history/auditoria/resolvidos.md`) · indice gerado por `python tools/selo.py --rotacionar`, nunca editado a mao
 
 | Id | Sev. | Status | Quem decide | Achado |
 |---|---|---|---|---|
-| F142 | MEDIA | DECLARADO | /ai-eng | nao existe trava de 2a GRAVACAO do mesmo card no mesmo dia entre lotes, e o teto do dia conta LINHA do revl... |
-| F141 | MEDIA | DECLARADO | /ai-eng | card de intervalo de 1 dia servido na MANHA seguinte (menos de 24 h) cai no ramo de "mesmo dia" do py-fsrs:... |
 | F129 | MEDIA | PARCIAL | engenharia | 1o drill completo no hub (220 cards, 23/09): o operador marcou 50 defeitos (23%); o residuo do F113 e a que... |
 | F128 | BAIXA | DECLARADO | /ai-eng | o mapa das provas UERJ rotulou a Q8 de 2023 como "Tuberculose (suspeita de TB peritoneal)" e o gabarito e S... |
-| F127 | BAIXA | DECLARADO | /ai-eng | `registrar_sessao_bulk` nao tem caminho de CORRECAO: o operador declarou duas respostas depois do registro... |
-| F122 | BAIXA | DECLARADO | /ai-eng | o `grade_extensivo.json` nao tem 6 blocos de tarefa que o PDF tem (S48 T17-T22, 5 deles com lista), e o tes... |
 | F114 | MEDIA | MITIGADO | engenharia | parametro do modelo que o otimizador NAO ajustou (por ausencia de exemplo) sai do JSON indistinguivel de pa... |
 | F113 | MEDIA | PARCIAL | engenharia | cards cunhados SEM acentuacao (ASCII) sao lidos pelo usuario como "erro de portugues"; a convencao de encod... |
 | F111 | MEDIA | GATE | operador | Fase 2 do plano (extensivo, leitura-first: 465 tarefas de teoria em 735; 39q/dia nativo) nao garante recall... |
@@ -50,26 +46,6 @@ relates_to: [AGENTE, ESTADO, HANDOFF]
 
 ## Achados em aberto
 
-### F142 -- nao existe trava de 2a GRAVACAO do mesmo card no mesmo dia entre lotes, e o teto do dia conta LINHA do revlog, nao card: 83 re-revisoes no mesmo dia, todas descontadas do teto -- **MEDIA** -- **DECLARADO (s204) -- remedio proposto, aguarda triagem do /ai-eng**
-
-- **Como apareceu:** auditoria do F140 (s204, 28/09/2026). Ao medir quantas revisoes do mesmo dia vinham do passo de relearning, sobraram 34 que NAO vinham dele.
-- 🔬 **Medido (duas lentes, mesmos numeros: principal e filho Opus, revlog com fuso corrigido):** 83 pares (card, dia) com 2 revisoes gravadas, em 10 de 66 dias com revisao. **49** vieram de card em `state=3` servido pelo bucket `hoje` (o mecanismo do F140); **34** vieram de card em `state=2` com `due` no FUTURO (`reason_servido='futuro'`): 08/08 (19), 25/09 (14) e 05/07 (1). Pior dia: 08/08, 30 de 108 revisoes (27,8%).
-- 🔬 **Causa medida dos 14 de 25/09:** lotes sobrepostos -- `player_2026-09-25a` (06:00, 60 cards) e `25b` (06:53, 90) tem cards em comum; o card revisto de manha foi revisto de novo as 19h pelo lote velho. As 19 de 08/08 NAO foram atribuidas a um caminho.
-- 🔬 **No codigo (leitura do filho Sonnet, conferida a olho):** `core/templates/player.html` so impede a 2a nota DENTRO do mesmo lote (estado escopado por `LOTE.sessao`); `app/utils/notas_player.situacao()` so barra por ORDEM de tempo -- nota com horario posterior a ultima revisao sempre e `NOVA` e grava por `record_review`. O teto sai de `day_plan.realizado_do_dia` (`tools/day_plan.py:1352-1354`, `COUNT(*)` sem `DISTINCT`), lido em `tools/day_plan.py:895` e descontado em `tools/fsrs_queue.py:159`.
-- 🔴 **Classe:** a regra "uma nota por card por sessao" (`revisar.md` §Relearning intra-sessao) e conduta dentro do lote; entre lotes do mesmo dia nao ha mecanismo. Trocar lote em curso (pedido legitimo do operador) e o gatilho.
-- **Remedio proposto (`spec`, nada implementado):** (a) `--record-lote` manda para a quarentena a nota de card ja revisto no mesmo dia-calendario quando o card nao estava vencido; (b) o teto passa a contar `COUNT(DISTINCT card_id)`. Depende da decisao do F140: sob o remedio A deixa de existir 2a revisao legitima no mesmo dia, e a trava fica sem excecao.
-- ⚠️ **Limites declarados:** revisar card antes do `due` e valido para o modelo; o defeito e a 2a nota no MESMO dia, nao a antecipacao. Nenhum teste foi escrito.
-
-### F141 -- card de intervalo de 1 dia servido na MANHA seguinte (menos de 24 h) cai no ramo de "mesmo dia" do py-fsrs: a biblioteca mede por 24 h truncadas, a fila serve por dia-calendario -- **MEDIA** -- **DECLARADO (s204) -- remedio proposto, aguarda triagem do /ai-eng**
-
-- **Como apareceu:** auditoria do F140 (s204). O card `638` foi visto pela 1a vez em 27/09 16:56 (nota 1), servido pelo bucket `hoje` em 28/09 14:24 (21,5 h depois, ANTES do `due` das 16:56) e a estabilidade caiu 0,212 -> 0,083 pela formula de curto prazo.
-- 🔬 **Mecanismo (fonte do py-fsrs 6.3.1 instalado):** `days_since_last_review = (review_datetime - card.last_review).days`; `< 1` -> `_short_term_stability`, que ignora o tempo decorrido. O bucket `hoje` (`app/utils/db.py:1176-1178`) serve desde 00:00 tudo que vence ate 23:59. O otimizador do Anki usa dia-calendario com hora de virada (filho Opus de evidencia externa; a documentacao nao comenta a diferenca).
-- 🔬 **Medido (duas lentes, mesmos numeros):** 295 revisoes no ramo curto (11,2% das 2.625 com historico); **212 em dia-calendario DIFERENTE** -- 144 de card `state=2` servido antes do `due`, 68 de card `state=3` servido como `atrasado` no dia seguinte. Por mes: jun 29, jul 8, ago 37, **set 138** (cresceu com a rotina de lote de manha). 512 de 2.629 revisoes (19,5%) foram servidas antes do `due`.
-- 🔬 **Contrafactual SO DE MODELO (mesma nota aplicada no `due`, 144 casos):** nota 3 -> S 2,58 contra 0,80 gravado; nota 4 -> 4,12 contra 1,09; nota 2 -> 1,94 contra 0,38. Direcao do erro: estabilidade subestimada -> o card volta mais cedo -> consome teto. Conservador para a retencao, caro para a carga.
-- 🔴 **Classe:** dois relogios para "um dia" -- o motor conta 24 h, a fila conta calendario. Mesma familia do F80 (dois relogios na mesma fila).
-- **Remedio proposto (`spec`, nada implementado):** o adapter passa a contar o decorrido por dia-calendario local antes de chamar a biblioteca. Golden de partida ja existe: o replay do revlog reproduz S, D e state em 3.579 de 3.579.
-- ⚠️ **Limites declarados:** o contrafactual nao mede o que o operador responderia no `due`. Nenhum dos remedios A/B/C do F140 mexe neste achado. O py-fsrs 6.3.2 existe (`pip index versions fsrs`) e corrigiria a queda com nota 2 no mesmo dia -- UMA fonte so, changelog nao conferido por 2a lente.
-
 ### F129 -- 1o drill completo no hub (220 cards, 23/09): o operador marcou 50 defeitos (23%); o residuo do F113 e a queixa dominante e a Autopsia UERJ 2023 cunhou armadilha de QUESTAO em card -- **MEDIA** -- **PARCIAL (s194: armadilhas da Autopsia refeitas; acento segue aberto; s195: +18 defeitos no lote de 24/09 e o veredito dele sobre COMPRIMENTO -- cards, aulas e reports "muito longos, carga cognitiva")**
 - **Como apareceu:** lote `2026-09-22h` drenado inteiro no hub (170 notas gravadas pelo `--record-lote`, 0 rejeitadas, 0 FORA DE ORDEM). Motivos dos 50 `defeito`: portugues ~33, pergunta composta/dupla ~13, longo ~6, circular 3, verso incompleto 1 (#736 nao cita a classe do ATB), armadilha citando alternativa inexistente 1 (#1723, *"notei outros assim tbm"*). Todos viraram `marcar_reforja` origem `player`.
 - 🔬 **Acento (reincidencia do F113):** os 35 marcados por portugues estao sem acento -- "nao e", "e" no lugar de "é", "arteria", "osseo", "deletereo". Uma lente por palavra que SEMPRE leva acento (`ja sao ha ate unica pos pre sistemico classico especifico` ...) acusa **749/1.600 cards** com >= 1 ocorrencia (ruidosa: `esta`/`so` tem uso legitimo; e piso, nao medida). A s185 ja tinha dito: o residuo nao fecha por regra; pede lexico ou olho. Remedio candidato (`spec`, para o /ai-eng): passada por LLM campo a campo, com o invariante `unidecode(antes) == unidecode(depois)` do s185 + revisao a olho dos pares minimos (`e/é`, `esta/está`, `diferencia`), sob o rito 10.7.
@@ -82,18 +58,7 @@ relates_to: [AGENTE, ESTADO, HANDOFF]
 - 🔴 **Classe:** (a) rotulo de filho consumido como dado sem lente independente por questao -- o `_schema` ja declara ~80-90% de acuracia "consumir em faixas", e este e um caso concreto dentro da margem; (b) insumo de fan-out sem validacao de forma antes do spawn.
 - **Remedio proposto:** `so-dado` para (a) -- corrigir a linha n=8/2023 do mapa (Nefrologia | Doencas Glomerulares, foco sindrome nefrotica) e regerar a prevalencia JUNTO da 1a recalibracao legitima (mesma janela das faixas, decisao do `/ai-eng` na s189; mexer no mapa agora muda a entrada fixada do gerador). A cada prova UERJ resolvida, a Autopsia confere os rotulos do mapa DAQUELA edicao contra o gabarito (lente independente que passa a existir de graca). (b) virou licao de brief na memoria do harness (validar "tem a) b) c) d)" por item antes de spawnar).
 
-### F127 -- `registrar_sessao_bulk` nao tem caminho de CORRECAO: o operador declarou duas respostas depois do registro (56 -> 58 acertos) e a unica saida foi um script pontual com UPDATE direto -- **BAIXA** -- **DECLARADO (s190) -- remedio proposto, aguarda triagem do /ai-eng**
-
-- **Como apareceu:** s190, simulado UERJ 2023. O rito manda registrar o volume ANTES de analisar; o PDF anotado tinha duas questoes sem letra marcada (Q32, Q56) e o operador as declarou minutos depois (ambas C, ambas chute certo). `--acumular --feitas 0 --acertos 2` cai no guard `acertos > feitas`; nao existe `--corrigir`. Corrigido por `scratchpad/corrige_bulk130.py`: backup (`ipub_backup_20260921_000800.db`), dry-run, assert da linha esperada, COUNT-ASSERT 1+1 (`sessoes_bulk.id=130` e o balde `[bulk] Simulado` da taxonomia, espelhando o delta que o writer aplicaria), observacao da linha carimbada com a correcao.
-- 🔴 **Classe:** o AGENTE.md §10.7 manda passar pelos writers e o writer nao cobre o caso -- a regra empurra para fora dela. Registrar-antes-de-analisar (rito certo) torna a correcao posterior um caso NORMAL, nao excepcional.
-- **Remedio proposto:** `spec` pequena -- `registrar_sessao_bulk.py --corrigir ID --acertos N [--feitas M]` (dry-run por default; grava o delta na linha E no balde da taxonomia; anexa `corrigido de X para Y` na observacao; recusa se a linha nao existir). Ate la, o script pontual com backup + COUNT-ASSERT e o precedente.
-
-### F122 -- o `grade_extensivo.json` nao tem 6 blocos de tarefa que o PDF tem (S48 T17-T22, 5 deles com lista), e o teste trava o numero errado como se fosse medido -- **BAIXA** -- **DECLARADO (s188) -- remedio proposto, aguarda triagem do /ai-eng**
-
-- **Como apareceu:** efeito colateral do extrator de links (F119). Lendo a geometria da tabela do `[52 wk] Cronograma Extensivo.pdf` ele achou 741 blocos de tarefa; o JSON derivado tem 735. Os 6 que sobram sao S48 T17-T22. Comando: `python -X utf8 extrair_links.py` (scratch da s188), secao "blocos do PDF sem tarefa no JSON".
-- 🔴 **Por que nenhum gate viu:** `test_fontes_reais_reproduzem_os_numeros_medidos` e `--expect-tasks` (default 735) PRENDEM o 735. O numero foi medido pelo MESMO parser que ele valida -- sensor e remedio do mesmo insumo (`feedback_metrica_auto_confirmante`). A lente independente so apareceu quando outro metodo (geometria + anotacao) leu o mesmo PDF.
-- **Remedio proposto:** `spec` pequena no parser do extensivo + atualizar o `--expect-tasks`. Sem urgencia: S48 e o fim da Fase 2. **Nao re-medido pelo principal** -- o numero e do filho, com o comando acima.
-
+- 🔎 **Triagem aplicada (s207): condicao do /ai-eng DIVIDIDA.** Dry-run com a Q8/2023 corrigida em memoria (Nefrologia | Doencas Glomerulares): as FAIXAS da `prevalencia_uerj` nao mudam (TB 13 -> 12, segue alta; Glomerulares 6 -> 7, segue alta) -- mas o `tools/trilha.py` le o MAPA direto e a trilha DIFERE (0 overrides novos, 0 removidos, **5 mudados**: rf 21/22/24...). Nao aplicado: mexer no mapa muda a entrada fixada do gerador, e o remedio original manda esperar a 1a recalibracao legitima (acerto acumulado, a partir da 3a prova UERJ). Bifurcacao devolvida ao /ai-eng.
 ### F114 -- parametro do modelo que o otimizador NAO ajustou (por ausencia de exemplo) sai do JSON indistinguivel de parametro ajustado: `w3` e `w16` da visao `remap` sao o default do py-fsrs, e a regua nova VAI emitir o rotulo que eles governam -- **MEDIA** -- **MITIGADO (s186: gate de `regua_do_fit` no carregador); a causa de fundo fica DECLARADA**
 
 - **Como apareceu:** medindo, para o R2, quanto a adocao dos parametros do R1 mudaria o agendamento real. O numero de nota 4 nao fechava com a intuicao (o "sem esforco" agendando IGUAL ao "lembrou"), e o diff indice a indice explicou:

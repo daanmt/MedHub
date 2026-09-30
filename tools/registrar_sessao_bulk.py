@@ -13,6 +13,7 @@ Uso (pelo agente ou manualmente):
         [--obs "Bloco ATLS"] [--tarefa 412]
 
     python tools/registrar_sessao_bulk.py --vincular 126 --tarefa 412
+    python tools/registrar_sessao_bulk.py --corrigir 130 --acertos 58 [--feitas 60] [--apply]
 
 O agente deve chamar este script assim que o usuário informar:
     "Fiz X questões, acertei Y, abaixo vão Z erros."
@@ -216,6 +217,66 @@ def registrar(sessao_num: int, area: str, feitas: int, acertos: int,
         conn.close()
 
 
+def corrigir(sessao_bulk_id: int, acertos: int, feitas: int | None = None,
+             apply: bool = False):
+    """Modo `--corrigir` (F127, s207): corrige uma linha JA registrada.
+
+    Registrar-antes-de-analisar (o rito) torna a correcao posterior um caso NORMAL: o
+    operador declara depois a letra de uma questao em branco (s190: 56 -> 58). Antes
+    daqui a unica saida era um UPDATE pontual fora do writer. O delta vai para a linha E
+    para o balde `[bulk] <area>` da taxonomia (o mesmo destino do registro, F37), e a
+    observacao ganha `corrigido de F/A para F'/A'`. Dry-run por default."""
+    conn = sqlite3.connect(DB_PATH)
+    try:
+        row = conn.execute(
+            "SELECT area, questoes_feitas, questoes_acertadas FROM sessoes_bulk WHERE id = ?",
+            (sessao_bulk_id,)).fetchone()
+        if row is None:
+            print("[ERRO] sessoes_bulk.id=%d nao existe. Nada gravado." % sessao_bulk_id)
+            return False
+        area, f0, a0 = row[0], row[1] or 0, row[2] or 0
+        f1 = f0 if feitas is None else feitas
+        if f1 < 0 or acertos < 0 or acertos > f1:
+            print("[ERRO] Correcao invalida: feitas=%d acertos=%d. Nada gravado." % (f1, acertos))
+            return False
+        df, da = f1 - f0, acertos - a0
+        if df == 0 and da == 0:
+            print("[AVISO] sessoes_bulk.id=%d ja esta em %d/%d. Nada alterado." % (
+                sessao_bulk_id, f0, a0))
+            return False
+        nota = "corrigido de %d/%d para %d/%d" % (f0, a0, f1, acertos)
+        print("%s sessoes_bulk.id=%d | %s | %s (delta feitas %+d, acertos %+d; balde [bulk] %s)" % (
+            "[APLICANDO]" if apply else "[DRY-RUN]", sessao_bulk_id, area, nota, df, da, area))
+        if not apply:
+            print("     Nada gravado. Use --apply.")
+            return True
+        conn.execute("""
+            UPDATE sessoes_bulk
+            SET questoes_feitas = ?, questoes_acertadas = ?,
+                observacoes = CASE WHEN observacoes IS NULL OR observacoes = '' THEN ?
+                                   ELSE observacoes || ' | ' || ? END
+            WHERE id = ?
+        """, (f1, acertos, nota, nota, sessao_bulk_id))
+        n = conn.execute("""
+            UPDATE taxonomia_cronograma
+            SET questoes_realizadas = questoes_realizadas + ?,
+                questoes_acertadas  = questoes_acertadas  + ?,
+                percentual_acertos  = CASE WHEN (questoes_realizadas + ?) > 0
+                    THEN CAST(questoes_acertadas + ? AS REAL) / (questoes_realizadas + ?) * 100
+                    ELSE 0 END
+            WHERE area = ? AND tema = ?
+        """, (df, da, df, da, df, area, "[bulk] %s" % area)).rowcount
+        if n != 1:
+            conn.rollback()
+            print("[ERRO] balde '[bulk] %s' nao encontrado (%d linha(s)). Nada gravado." % (area, n))
+            return False
+        conn.commit()
+        print("[OK] %s" % nota)
+        return True
+    finally:
+        conn.close()
+
+
 def vincular(sessao_bulk_id: int, tarefa: int):
     """Modo `--vincular`: liga uma sessao JA registrada a uma tarefa do plano (P6).
 
@@ -263,7 +324,18 @@ if __name__ == "__main__":
                         help="P6: vincula uma sessao JA registrada (o id da LINHA em "
                              "sessoes_bulk) a --tarefa ID. Nao registra volume")
 
+    parser.add_argument("--corrigir", default=None, type=int, metavar="SESSAO_ID",
+                        help="F127: corrige uma sessao JA registrada (id da LINHA em "
+                             "sessoes_bulk) para --acertos N [--feitas M]; dry-run sem --apply")
+    parser.add_argument("--apply", action="store_true",
+                        help="Com --corrigir: grava (sem ele, so mostra o delta)")
+
     args = parser.parse_args()
+
+    if args.corrigir is not None:
+        if args.acertos is None:
+            parser.error("--corrigir SESSAO_ID exige --acertos N")
+        sys.exit(0 if corrigir(args.corrigir, args.acertos, args.feitas, args.apply) else 2)
 
     if args.vincular is not None:
         if args.tarefa is None:

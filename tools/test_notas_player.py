@@ -26,6 +26,7 @@ except Exception:
 from app.utils.notas_player import (  # noqa: E402
     FORA_DE_ORDEM,
     JA_GRAVADA,
+    MESMO_DIA,
     NOVA,
     defeito_ja_marcado,
     relogio,
@@ -97,8 +98,24 @@ def test_situacao_classifica_pela_igualdade_e_pela_ordem():
 
 def test_situacao_nunca_usa_maior_ou_igual():
     """Objecao do `/ai-eng` (22/09): com `review_time >= ts`, a 2a nota do mesmo card
-    gravada na mesma janela sumiria em silencio. Um segundo de diferenca e NOVA."""
-    assert situacao(datetime(2026, 9, 22, 7, 17, 51), ["2026-09-22 07:17:50"]) == NOVA
+    gravada na mesma janela sumiria em silencio como JA GRAVADA. Um segundo de diferenca
+    NAO e a mesma nota -- desde o F142 ela e MESMO_DIA (quarentena, visivel), nunca some."""
+    assert situacao(datetime(2026, 9, 22, 7, 17, 51), ["2026-09-22 07:17:50"]) == MESMO_DIA
+    assert situacao(datetime(2026, 9, 23, 7, 17, 51), ["2026-09-22 07:17:50"]) == NOVA
+
+
+def test_segunda_nota_do_mesmo_dia_logico_e_mesmo_dia():
+    """F142 (s207): lotes sobrepostos de 25/09 -- revisto de manha, de novo as 19h."""
+    assert situacao(datetime(2026, 9, 25, 19, 0, 0), ["2026-09-25 06:10:00"]) == MESMO_DIA
+
+
+def test_virada_da_meia_noite_separa_os_dias():
+    assert situacao(datetime(2026, 9, 26, 0, 0, 1), ["2026-09-25 23:59:59"]) == NOVA
+
+
+def test_revisao_de_outro_dia_nao_trava():
+    assert situacao(datetime(2026, 9, 25, 19, 0, 0),
+                    ["2026-09-20 10:00:00", "2026-09-24 21:00:00"]) == NOVA
 
 
 def test_linha_ilegivel_no_revlog_falha_alto():

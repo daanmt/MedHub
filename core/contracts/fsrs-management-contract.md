@@ -2,12 +2,12 @@
 type: contract
 layer: core
 status: canonical
-version: 1.6
+version: 1.7
 relates_to: [reconcile-contract, estado-contract, AGENTE]
 ---
 
 # Contrato de Gerenciamento do FSRS
-**Versão 1.6 | 2026-09-28 (s204, F140: o motor não tem mais passo de reaprendizagem -- `state` 3 vira legado; os novos do LOTE enchem o saldo do teto; a ordem da fila é escrita com os 4 buckets) · v1.5 2026-09-22 (s193: relógio da revisão no `record_review` + o fato de biblioteca do py-fsrs 6.3.1, com teste) · v1.4 2026-09-17 (s185, F109: a ordem intercalada é o default DELIBERADO; `--cluster` só onboarding de cluster frio / andaime) · v1.3 2026-09-10 (s176, item 1.2 -- F64, o contador do regime) · v1.2 (s176, item 0.7 -- promotes F71 e F80) · v1.1 2026-07-05 (s108+, F3/F4 do ledger AUDITORIA_MEDHUB) · v1.0 2026-06-03 (sessão 075)**
+**Versão 1.7 | 2026-09-29 (s207, F141: "um dia" é o DIA LÓGICO -- `app/utils/relogio.dia_logico`, data local -- no adapter e na entrada do Optimizer; F142: uma nota por card por dia lógico no `--record-lote`, teto por card distinto; py-fsrs 6.3.2) · v1.6 2026-09-28 (s204, F140: o motor não tem mais passo de reaprendizagem -- `state` 3 vira legado; os novos do LOTE enchem o saldo do teto; a ordem da fila é escrita com os 4 buckets) · v1.5 2026-09-22 (s193: relógio da revisão no `record_review` + o fato de biblioteca do py-fsrs 6.3.1, com teste) · v1.4 2026-09-17 (s185, F109: a ordem intercalada é o default DELIBERADO; `--cluster` só onboarding de cluster frio / andaime) · v1.3 2026-09-10 (s176, item 1.2 -- F64, o contador do regime) · v1.2 (s176, item 0.7 -- promotes F71 e F80) · v1.1 2026-07-05 (s108+, F3/F4 do ledger AUDITORIA_MEDHUB) · v1.0 2026-06-03 (sessão 075)**
 
 > Documento normativo. Define como a fila de repetição espaçada é gerenciada, drenada e mantida.
 > Referenciado por: `AGENTE.md`, `reconcile-contract.md` (W3), `.claude/commands/revisar.md`, `.claude/commands/estilo-flashcard.md`.
@@ -129,7 +129,9 @@ Backlog = cards `state = 0` (nunca revisados). Após a bankruptcy, ~307 cards qu
 
 ## Relógio da revisão e um fato de biblioteca (v1.5, s193)
 
-`record_review(..., quando=...)` e `FSRS.evaluate(..., quando=...)` gravam e calculam no instante da REVISÃO -- a nota do player (`medhub-hub-v0-part-2`); sem `quando`, no relógio da gravação, como sempre. 🔴 **Fato de biblioteca, com versão:** o **py-fsrs 6.3.1** NÃO recusa `review_datetime` anterior ao `last_review` -- calcula `days < 1`, trata como revisão de curto prazo e segue em silêncio. Por isso a guarda de ordem mora no adapter (`app/utils/fsrs.py`): revisão não posterior à última -> `ValueError`, nada gravado; e `_aplicar_review` recusa `quando` no futuro. Se a lib mudar de versão ou de comportamento, o teste falha e o fato é reconferido aqui.  <!-- CHECK: test_pyfsrs_aceita_revisao_retroativa_em_silencio -->
+🔴 **Dia lógico (F141, s207):** "quantos dias se passaram" é a diferença entre dois `dia_logico` (data LOCAL, virada à 00:00 -- o mesmo relógio da fila, do teto e do `sessoes_bulk`), nunca 24 h truncadas. O adapter entrega à biblioteca um `last_review` a exatos N dias da revisão (N = dias lógicos); o `last_review` real segue gravado. O Optimizer recebe cada revisão no 00:00 do seu dia lógico. Uma nota por card por dia lógico (F142): a 2ª vai para a quarentena do `--record-lote`.  <!-- CHECK: test_card_de_1_dia_servido_na_manha_seguinte_nao_cai_no_ramo_curto -->
+
+`record_review(..., quando=...)` e `FSRS.evaluate(..., quando=...)` gravam e calculam no instante da REVISÃO -- a nota do player (`medhub-hub-v0-part-2`); sem `quando`, no relógio da gravação, como sempre. 🔴 **Fato de biblioteca, com versão:** o **py-fsrs 6.3.1** (reconferido no **6.3.2**, s207) NÃO recusa `review_datetime` anterior ao `last_review` -- calcula `days < 1`, trata como revisão de curto prazo e segue em silêncio. Por isso a guarda de ordem mora no adapter (`app/utils/fsrs.py`): revisão não posterior à última -> `ValueError`, nada gravado; e `_aplicar_review` recusa `quando` no futuro. Se a lib mudar de versão ou de comportamento, o teste falha e o fato é reconferido aqui.  <!-- CHECK: test_pyfsrs_aceita_revisao_retroativa_em_silencio -->
 
 ---
 
@@ -155,7 +157,7 @@ No check de boot (`reconcile-contract.md`), reportar: total de cards qualitativo
 
 - **v1.5 (2026-09-22, s193 -- `medhub-hub-v0-part-2`):** nova seção §Relógio da revisão: o
   `record_review` ganha `quando` (o instante da nota do player) e o contrato registra, com versão,
-  que o py-fsrs 6.3.1 aceita revisão retroativa em silêncio -- a guarda de ordem é do adapter.
+  que o py-fsrs 6.3.1/6.3.2 aceita revisão retroativa em silêncio -- a guarda de ordem é do adapter.
   Pedido do `/ai-eng`: fato de biblioteca vira teste (`test_pyfsrs_aceita_revisao_retroativa_em_silencio`).
 
 - **v1.4 (2026-09-17, s185 -- F109):** a §Política de fila passa a **declarar** que a ordem

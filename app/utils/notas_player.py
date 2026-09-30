@@ -29,8 +29,11 @@ do revlog vive em `app.utils.db.estado_gravacao_player`.
 """
 from datetime import datetime
 
+from app.utils.relogio import dia_logico
+
 JA_GRAVADA = "ja_gravada"
 FORA_DE_ORDEM = "fora_de_ordem"
+MESMO_DIA = "mesmo_dia"
 NOVA = "nova"
 
 
@@ -115,17 +118,23 @@ def _instante(valor):
 
 
 def situacao(quando, revisoes):
-    """JA_GRAVADA | FORA_DE_ORDEM | NOVA de uma nota contra o revlog do card.
+    """JA_GRAVADA | FORA_DE_ORDEM | MESMO_DIA | NOVA de uma nota contra o revlog do card.
 
     `quando` = `relogio(ts)`; `revisoes` = os `review_time` do card, em qualquer ordem.
     Igualdade no SEGUNDO -- nunca `>=`: com `>=`, a 2a nota do mesmo card sumiria em
     silencio (objecao do `/ai-eng`, 22/09).
+    MESMO_DIA (F142, s207): o card ja tem revisao gravada no MESMO dia logico, antes
+    desta nota. Uma nota por card por dia, sem excecao (o re-drill do player nao grava;
+    desde o F140 o motor nao pede 2a revisao no dia): a 2a vai para a quarentena. Era o
+    caso de lotes sobrepostos (25/09: 14 cards revistos de manha e de novo as 19h).
     """
     tempos = [_instante(r) for r in revisoes or ()]
     if quando in tempos:
         return JA_GRAVADA
     if any(t > quando for t in tempos):
         return FORA_DE_ORDEM
+    if any(dia_logico(t) == dia_logico(quando) for t in tempos):
+        return MESMO_DIA
     return NOVA
 
 

@@ -16,6 +16,8 @@ o adapter NÃO produz mais `state` 3: ele só existe como legado no banco.
 
 Datas: py-fsrs opera em UTC tz-aware; o MedHub armazena datetimes naive
 locais (compatível com os dados existentes). O adapter converte nas bordas.
+Dias decorridos (F141, s207): contados por DIA LÓGICO (`app.utils.relogio`), não por
+24 h -- a biblioteca recebe um `last_review` a exatos N dias da revisão.
 
 Retenção-alvo: `REQUEST_RETENTION = 0.9`.
 
@@ -28,11 +30,12 @@ haver `review_duration_ms` medido pelo player (rider declarado do R2: sem duraç
 real, 0,70/0,80 é a saída mais fraca por construção).
 """
 
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 from fsrs import Scheduler, Card, Rating
 
 from app.utils.regua import REGUA_ATUAL, carregar_parametros
+from app.utils.relogio import dias_entre
 
 REQUEST_RETENTION = 0.9
 
@@ -141,6 +144,14 @@ class FSRS:
 
         is_new = (not state) or int(state) == 0 or not stability
 
+        # F141 (s207): "quantos dias" e por DIA LOGICO (data local), o mesmo relogio da
+        # fila. A biblioteca mede `(review_datetime - last_review).days` -- 24 h truncadas
+        # --, entao ela recebe um `last_review` a EXATOS N dias do instante da revisao,
+        # com N = dias logicos decorridos. O `last_review` real segue gravado (revlog e
+        # fsrs_cards intactos); so a entrada da biblioteca muda.
+        dias = dias_entre(last_review, now_utc) if last_review is not None else 0
+        last_review_lib = now_utc - timedelta(days=dias) if last_review is not None else None
+
         if is_new:
             fcard = Card()  # card fresco do py-fsrs (nunca revisado)
         else:
@@ -152,14 +163,14 @@ class FSRS:
                 "stability": float(stability),
                 "difficulty": float(card.get("difficulty") or 5.0),
                 "due": due_aware.isoformat(),
-                "last_review": last_review.isoformat() if last_review else None,
+                "last_review": last_review_lib.isoformat() if last_review_lib else None,
             })
 
         new_card, _log = self.scheduler.review_card(fcard, Rating(rating), now_utc)
 
         due_local = new_card.due.astimezone().replace(tzinfo=None)
         last_review_local = now_utc.astimezone().replace(tzinfo=None)
-        elapsed_days = (now_utc - last_review).days if last_review else 0
+        elapsed_days = dias
         scheduled_days = max(0, (new_card.due - now_utc).days)
         reps += 1
         if rating == 1 and not is_new:

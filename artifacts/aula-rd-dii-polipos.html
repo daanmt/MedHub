@@ -1,0 +1,232 @@
+<title>Revisão direcionada · DII e pólipos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,380;9..144,480;9..144,600;9..144,680&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EFF3F0; --card:#FAFCFA; --sunk:#E2E9E4;
+  --ink:#18211C; --ink2:#4C5A52; --ink3:#7C8A82;
+  --line:rgba(24,33,28,.13); --line2:rgba(24,33,28,.26);
+  --teal:#1F6B5E; --teal-ink:#154A41; --teal-wash:#DCEBE5;
+  --carmine:#8E2F41; --carmine-ink:#6B2231; --carmine-wash:#F5E2E6;
+  --amber:#8A5A17; --amber-ink:#6B4610; --amber-wash:#F3E6CC;
+  --on:#FFFFFF;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#7E8C84;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  --on:#131A16;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#7E8C84;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  --on:#131A16;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);
+  font:16px/1.6 "Source Sans 3",-apple-system,"Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+.mn{font-family:"IBM Plex Mono",ui-monospace,Consolas,monospace;font-variant-numeric:tabular-nums}
+h1,h2,h3,h4{margin:0;font-family:Fraunces,Georgia,serif;font-weight:600;letter-spacing:-.01em;text-wrap:balance;line-height:1.14;color:var(--ink)}
+.wrap{max-width:760px;margin:0 auto;padding:0 24px 90px}
+@media(max-width:640px){.wrap{padding:0 16px 70px}}
+:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+strong{font-weight:600;color:var(--ink)}
+
+/* masthead */
+.top{padding:44px 0 26px;border-bottom:1px solid var(--line2)}
+.eye{font:600 11px/1.3 "Source Sans 3";letter-spacing:.14em;text-transform:uppercase;color:var(--teal-ink);margin:0 0 14px}
+.top h1{font-size:clamp(28px,5vw,44px);font-weight:680;max-width:20ch;margin-bottom:14px}
+.top .sub{font-size:clamp(16px,2.2vw,18px);line-height:1.55;color:var(--ink2);margin:0}
+
+/* seções */
+.degrau{padding:36px 0;border-bottom:1px solid var(--line);min-width:0}
+.degrau:last-of-type{border-bottom:0}
+.dhead{display:flex;gap:14px;align-items:flex-start;margin-bottom:14px}
+.dnum{flex-shrink:0;width:40px;height:40px;border:1.5px solid var(--teal);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font:600 15px "IBM Plex Mono";color:var(--teal-ink)}
+.dtitle{padding-top:3px;min-width:0}
+.dtitle .dstage{font:600 11px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);display:block;margin-bottom:3px}
+.dtitle h2{font-size:clamp(20px,2.6vw,25px)}
+.lede{font-size:16.5px;line-height:1.55;color:var(--ink2);margin:0 0 16px;font-style:italic}
+.prose ul{margin:0 0 14px;padding-left:22px}
+.prose li{font-size:15.6px;line-height:1.55;color:var(--ink2);margin-bottom:6px}
+.prose li:last-child{margin-bottom:0}
+
+/* elos (onde tropeçou) */
+.elos{list-style:none;margin:0;padding:0;border:1px solid var(--line2)}
+.elos li{display:grid;grid-template-columns:28px minmax(0,1fr);gap:10px;padding:11px 14px;font-size:15.3px;line-height:1.5;color:var(--ink2)}
+.elos li+li{border-top:1px solid var(--line)}
+.elos .n{font:600 12px "IBM Plex Mono";color:var(--carmine-ink);padding-top:2px}
+
+/* callouts */
+.trap{margin:18px 0;padding:14px 17px;border-left:3px solid var(--carmine);background:var(--carmine-wash)}
+.trap .albl,.aside .albl{font:700 10.5px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
+.trap .albl{color:var(--carmine-ink)}
+.trap p,.aside p{font-size:15.2px;line-height:1.55;color:var(--ink);margin:0}
+.aside{margin:18px 0;padding:14px 17px;border-left:3px solid var(--teal);background:var(--teal-wash)}
+.aside .albl{color:var(--teal-ink)}
+
+/* comparativos */
+.vs{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:1px;background:var(--line2);border:1px solid var(--line2);margin:18px 0}
+.vs>div{background:var(--card);padding:13px 15px;min-width:0}
+.vs h5{font:700 11.5px "Source Sans 3";letter-spacing:.04em;text-transform:uppercase;margin:0 0 8px;color:var(--ink3)}
+.vs .a h5{color:var(--carmine-ink)}
+.vs .b h5{color:var(--teal-ink)}
+.vs ul{margin:0;padding-left:18px}
+.vs li{font-size:14.5px;line-height:1.5;color:var(--ink2);margin-bottom:5px}
+@media(max-width:640px){.vs{grid-template-columns:minmax(0,1fr)}}
+
+/* grade */
+.tw{overflow-x:auto;margin:18px 0}
+.crit{border:1px solid var(--line2)}
+.crit .row{display:grid;grid-template-columns:150px minmax(0,1fr);gap:14px;padding:10px 14px;font-size:14.4px}
+.crit .row+.row{border-top:1px solid var(--line)}
+.crit .row .k{font-weight:600;color:var(--teal-ink);min-width:0}
+.crit .row .v{color:var(--ink2);line-height:1.5;min-width:0}
+@media(max-width:640px){.crit .row{grid-template-columns:minmax(0,1fr);gap:2px}}
+
+/* armadilhas */
+.arms{display:flex;flex-direction:column;gap:1px;background:var(--line2);border:1px solid var(--line2)}
+.arm{background:var(--card);padding:13px 16px;display:flex;gap:12px}
+.arm .dot{flex-shrink:0;width:9px;height:9px;border-radius:50%;background:var(--carmine);margin-top:7px}
+.arm p{font-size:15px;line-height:1.55;color:var(--ink2);margin:0}
+
+/* teste agora */
+.tgrp{margin:0 0 22px}
+.tgrp h3{font:700 11.5px "Source Sans 3";letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);margin:0 0 8px}
+.qa{border:1px solid var(--line2);background:var(--card);padding:12px 15px}
+.qa+.qa{border-top:0}
+.qa .qq{font-size:15.4px;line-height:1.5;color:var(--ink);margin:0 0 6px;font-weight:500}
+.qa details>summary{cursor:pointer;font:600 13px "Source Sans 3";color:var(--teal-ink);list-style:none}
+.qa details>summary::-webkit-details-marker{display:none}
+.qa details>summary::before{content:"+ "}
+.qa details[open]>summary::before{content:"- "}
+.qa details p{font-size:15px;line-height:1.5;color:var(--ink2);margin:8px 0 0;padding-left:10px;border-left:2px solid var(--teal)}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <p class="eye">MedHub · Revisão direcionada · Gastroenterologia</p>
+  <h1>DII e pólipos: a pergunta é "qual eixo?"</h1>
+  <p class="sub">Atividade ou diagnóstico, axial ou periférica, preservar ou ressecar, infectar ou escalar. Cada elo de hoje é um par.</p>
+</header>
+
+<main>
+<section class="degrau" id="elos">
+  <div class="dhead"><span class="dnum">!</span><div class="dtitle"><span class="dstage">Ponto de partida</span><h2>Onde você tropeçou hoje</h2></div></div>
+  <ul class="elos">
+    <li><span class="n">1</span><span>Exame que mede <strong>atividade</strong> × exame que ajuda a <strong>diagnosticar</strong>.</span></li>
+    <li><span class="n">2</span><span>Artrite da DII: axial e periférica têm tratamentos diferentes.</span></li>
+    <li><span class="n">3</span><span>Cirurgia no Crohn: estenose curta se alarga, não se resseca.</span></li>
+    <li><span class="n">4</span><span>Colite grave: o que afastar antes de escalar a imunossupressão.</span></li>
+    <li><span class="n">5</span><span>Lynch não é só intestino: o tumor extracolônico mais comum.</span></li>
+  </ul>
+</section>
+
+<section class="degrau" id="d1">
+  <div class="dhead"><span class="dnum">1</span><div class="dtitle"><span class="dstage">Elo 1</span><h2>Atividade × diagnóstico</h2></div></div>
+  <p class="lede">Só o que vem da luz intestinal mede inflamação da mucosa agora.</p>
+  <div class="vs">
+    <div class="b"><h5>Fecal = atividade</h5><ul><li>Calprotectina e lactoferrina.</li><li>Proteínas do neutrófilo que migra para a mucosa inflamada e sai nas fezes.</li><li>Normais tornam DII improvável.</li></ul></div>
+    <div class="a"><h5>Séricos = dx</h5><ul><li>p-ANCA (RCU) e ASCA (Crohn).</li><li>Ajudam a separar as duas doenças.</li><li>Não acompanham a atividade: até 30-40% das RCU ativas têm p-ANCA negativo.</li></ul></div>
+  </div>
+</section>
+
+<section class="degrau" id="d2">
+  <div class="dhead"><span class="dnum">2</span><div class="dtitle"><span class="dstage">Elo 2</span><h2>Artrite periférica × axial</h2></div></div>
+  <p class="lede">A periférica segue o intestino; a axial anda sozinha.</p>
+  <div class="vs">
+    <div class="a"><h5>Periférica</h5><ul><li>Acompanha a atividade intestinal.</li><li>Pode responder à sulfassalazina.</li></ul></div>
+    <div class="b"><h5>Axial</h5><ul><li>Sacroileíte, espondilite; lombalgia inflamatória, HLA-B27.</li><li><strong>Anti-TNF</strong> (ex.: infliximabe) + imunomodulador (azatioprina).</li><li>Não responde à sulfa nem a corticoide crônico.</li></ul></div>
+  </div>
+</section>
+
+<section class="degrau" id="d3">
+  <div class="dhead"><span class="dnum">3</span><div class="dtitle"><span class="dstage">Elo 3</span><h2>Crohn: cirurgia que poupa intestino</h2></div></div>
+  <p class="lede">A cirurgia no Crohn nunca cura; cada ressecção aproxima o intestino curto.</p>
+  <div class="prose"><ul>
+    <li>Estenoses curtas (&lt; 10 cm), sobretudo com ressecções prévias: <strong>estenoplastia</strong> (Heineke-Mikulicz).</li>
+    <li>Quando resseca, dispensa margem livre: é doença benigna, não câncer.</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="d4">
+  <div class="dhead"><span class="dnum">4</span><div class="dtitle"><span class="dstage">Elo 4</span><h2>Colite grave: afastar antes de escalar</h2></div></div>
+  <p class="lede">Imunossuprimir uma infecção não tratada piora o quadro.</p>
+  <div class="prose"><ul>
+    <li><strong>Clostridioides difficile</strong> e <strong>citomegalovírus</strong> podem coexistir e agudizar a DII.</li>
+    <li>CMV se confirma no anatomopatológico.</li>
+    <li>Só depois de excluídos se intensifica a imunossupressão.</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="d5">
+  <div class="dhead"><span class="dnum">5</span><div class="dtitle"><span class="dstage">Elo 5</span><h2>Lynch: o endométrio</h2></div></div>
+  <p class="lede">Na mulher com Lynch, o risco de câncer de endométrio se aproxima do de câncer colorretal.</p>
+  <div class="prose"><ul>
+    <li>Mecanismo: mutação nos genes de reparo (MMR: <strong>MSH2</strong>, MLH1, MSH6, PMS2) gera instabilidade de microssatélites.</li>
+    <li>Extracolônicos: endométrio (o mais comum), ovário, estômago, delgado, vias biliares, pelve renal e ureter.</li>
+    <li>Tireoide <strong>não</strong> é de Lynch (é de Cowden e PAF/Gardner).</li>
+    <li>Por isso o aconselhamento inclui rastreio ginecológico e discussão de histerectomia profilática.</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="viz">
+  <div class="dhead"><span class="dnum">+</span><div class="dtitle"><span class="dstage">Blast radius</span><h2>Vizinhos de prova</h2></div></div>
+  <div class="tw"><div class="crit">
+    <div class="row"><span class="k">B12 baixa</span><span class="v">Absorção só no íleo terminal: aponta Crohn ileal e afasta celíaca (proximal). Investigar com ileocolonoscopia intubando o íleo.</span></div>
+    <div class="row"><span class="k">Amsterdã</span><span class="v">3 familiares, 2 gerações, 1 antes dos 50 anos.</span></div>
+    <div class="row"><span class="k">PAF</span><span class="v">Gene APC, CCR em 100%: colectomia profilática.</span></div>
+    <div class="row"><span class="k">Cólon × reto</span><span class="v">Cólon: TC de tórax, abdome e pelve + CEA, cirurgia primeiro. Reto: RM de pelve; neoadjuvância se T3/T4 ou N+.</span></div>
+    <div class="row"><span class="k">Reto obstruído</span><span class="v">Reto médio/baixo na urgência: colostomia em alça, nunca ressecção radical.</span></div>
+    <div class="row"><span class="k">Rastreio</span><span class="v">Risco habitual aos 45 anos. Parente de 1º grau &lt; 60: aos 40 ou 10 anos antes, a cada 5 anos.</span></div>
+  </div></div>
+</section>
+
+<section class="degrau" id="arms">
+  <div class="dhead"><span class="dnum">🔴</span><div class="dtitle"><span class="dstage">Leitura</span><h2>Armadilhas</h2></div></div>
+  <div class="arms">
+    <div class="arm"><span class="dot"></span><p><strong>p-ANCA em alto título</strong> confirma o perfil RCU, mas não diz se a doença está ativa.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Sulfassalazina + prednisona</strong> cobre artrite periférica leve; na axial, falha. E corticoide não é manutenção.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>"Ressecar com margem livre"</strong> é reflexo oncológico aplicado a doença benigna.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Ir direto ao biológico</strong> na colite grave sem excluir C. difficile e CMV: imunossuprime a infecção.</p></div>
+  </div>
+</section>
+
+<section class="degrau" id="teste">
+  <div class="dhead"><span class="dnum">?</span><div class="dtitle"><span class="dstage">Recuperação</span><h2>Teste agora</h2></div></div>
+  <div class="tgrp"><h3>Elo 1 · Atividade</h3>
+    <div class="qa"><p class="qq">Qual exame mede atividade inflamatória na DII?</p><details><summary>ver resposta</summary><p>Calprotectina (ou lactoferrina) fecal.</p></details></div>
+    <div class="qa"><p class="qq">Para que servem p-ANCA e ASCA?</p><details><summary>ver resposta</summary><p>Diagnóstico diferencial RCU × Crohn; não medem atividade.</p></details></div>
+  </div>
+  <div class="tgrp"><h3>Elo 2 · Artrite</h3>
+    <div class="qa"><p class="qq">DII com sacroileíte e HLA-B27: qual classe?</p><details><summary>ver resposta</summary><p>Anti-TNF, associado a imunomodulador.</p></details></div>
+    <div class="qa"><p class="qq">Qual das duas artrites acompanha a atividade intestinal?</p><details><summary>ver resposta</summary><p>A periférica.</p></details></div>
+  </div>
+  <div class="tgrp"><h3>Elo 3 · Cirurgia no Crohn</h3>
+    <div class="qa"><p class="qq">Múltiplas estenoses curtas de delgado e duas enterectomias prévias: qual técnica?</p><details><summary>ver resposta</summary><p>Estenoplastia, poupando intestino.</p></details></div>
+    <div class="qa"><p class="qq">Ressecção no Crohn exige margem livre?</p><details><summary>ver resposta</summary><p>Não.</p></details></div>
+  </div>
+  <div class="tgrp"><h3>Elo 4 · Colite grave</h3>
+    <div class="qa"><p class="qq">Quais duas infecções afastar antes de escalar o tratamento?</p><details><summary>ver resposta</summary><p>C. difficile e CMV (este por anatomopatológico).</p></details></div>
+  </div>
+  <div class="tgrp"><h3>Elo 5 · Lynch</h3>
+    <div class="qa"><p class="qq">Tumor extracolônico mais comum na Síndrome de Lynch?</p><details><summary>ver resposta</summary><p>Endométrio.</p></details></div>
+    <div class="qa"><p class="qq">MSH2 pertence a qual sistema, e o que a mutação gera?</p><details><summary>ver resposta</summary><p>Reparo de pareamento (MMR); instabilidade de microssatélites.</p></details></div>
+  </div>
+</section>
+</main>
+</div>

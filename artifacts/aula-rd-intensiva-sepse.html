@@ -1,0 +1,251 @@
+<title>Revisão direcionada · UTI e sepse</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,380;9..144,480;9..144,600;9..144,680&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EFF3F0; --card:#FAFCFA; --sunk:#E2E9E4;
+  --ink:#18211C; --ink2:#4C5A52; --ink3:#7C8A82;
+  --line:rgba(24,33,28,.13); --line2:rgba(24,33,28,.26);
+  --teal:#1F6B5E; --teal-ink:#154A41; --teal-wash:#DCEBE5;
+  --carmine:#8E2F41; --carmine-ink:#6B2231; --carmine-wash:#F5E2E6;
+  --amber:#8A5A17; --amber-ink:#6B4610; --amber-wash:#F3E6CC;
+  --on:#FFFFFF;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#7E8C84;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  --on:#131A16;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#7E8C84;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  --on:#131A16;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);
+  font:16px/1.6 "Source Sans 3",-apple-system,"Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+.mn{font-family:"IBM Plex Mono",ui-monospace,Consolas,monospace;font-variant-numeric:tabular-nums}
+h1,h2,h3,h4{margin:0;font-family:Fraunces,Georgia,serif;font-weight:600;letter-spacing:-.01em;text-wrap:balance;line-height:1.14;color:var(--ink)}
+.wrap{max-width:760px;margin:0 auto;padding:0 24px 90px}
+@media(max-width:640px){.wrap{padding:0 16px 70px}}
+:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+strong{font-weight:600;color:var(--ink)}
+
+/* masthead */
+.top{padding:44px 0 26px;border-bottom:1px solid var(--line2)}
+.eye{font:600 11px/1.3 "Source Sans 3";letter-spacing:.14em;text-transform:uppercase;color:var(--teal-ink);margin:0 0 14px}
+.top h1{font-size:clamp(28px,5vw,44px);font-weight:680;max-width:20ch;margin-bottom:14px}
+.top .sub{font-size:clamp(16px,2.2vw,18px);line-height:1.55;color:var(--ink2);margin:0}
+
+/* seções */
+.degrau{padding:36px 0;border-bottom:1px solid var(--line);min-width:0}
+.degrau:last-of-type{border-bottom:0}
+.dhead{display:flex;gap:14px;align-items:flex-start;margin-bottom:14px}
+.dnum{flex-shrink:0;width:40px;height:40px;border:1.5px solid var(--teal);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font:600 15px "IBM Plex Mono";color:var(--teal-ink)}
+.dtitle{padding-top:3px;min-width:0}
+.dtitle .dstage{font:600 11px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);display:block;margin-bottom:3px}
+.dtitle h2{font-size:clamp(20px,2.6vw,25px)}
+.lede{font-size:16.5px;line-height:1.55;color:var(--ink2);margin:0 0 16px;font-style:italic}
+.prose ul{margin:0 0 14px;padding-left:22px}
+.prose li{font-size:15.6px;line-height:1.55;color:var(--ink2);margin-bottom:6px}
+.prose li:last-child{margin-bottom:0}
+
+/* elos (onde tropeçou) */
+.elos{list-style:none;margin:0;padding:0;border:1px solid var(--line2)}
+.elos li{display:grid;grid-template-columns:28px minmax(0,1fr);gap:10px;padding:11px 14px;font-size:15.3px;line-height:1.5;color:var(--ink2)}
+.elos li+li{border-top:1px solid var(--line)}
+.elos .n{font:600 12px "IBM Plex Mono";color:var(--carmine-ink);padding-top:2px}
+
+/* callouts */
+.trap{margin:18px 0;padding:14px 17px;border-left:3px solid var(--carmine);background:var(--carmine-wash)}
+.trap .albl,.aside .albl{font:700 10.5px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
+.trap .albl{color:var(--carmine-ink)}
+.trap p,.aside p{font-size:15.2px;line-height:1.55;color:var(--ink);margin:0}
+.aside{margin:18px 0;padding:14px 17px;border-left:3px solid var(--teal);background:var(--teal-wash)}
+.aside .albl{color:var(--teal-ink)}
+
+/* comparativos */
+.vs{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:1px;background:var(--line2);border:1px solid var(--line2);margin:18px 0}
+.vs>div{background:var(--card);padding:13px 15px;min-width:0}
+.vs h5{font:700 11.5px "Source Sans 3";letter-spacing:.04em;text-transform:uppercase;margin:0 0 8px;color:var(--ink3)}
+.vs .a h5{color:var(--carmine-ink)}
+.vs .b h5{color:var(--teal-ink)}
+.vs ul{margin:0;padding-left:18px}
+.vs li{font-size:14.5px;line-height:1.5;color:var(--ink2);margin-bottom:5px}
+@media(max-width:640px){.vs{grid-template-columns:minmax(0,1fr)}}
+
+/* grade */
+.tw{overflow-x:auto;margin:18px 0}
+.crit{border:1px solid var(--line2)}
+.crit .row{display:grid;grid-template-columns:150px minmax(0,1fr);gap:14px;padding:10px 14px;font-size:14.4px}
+.crit .row+.row{border-top:1px solid var(--line)}
+.crit .row .k{font-weight:600;color:var(--teal-ink);min-width:0}
+.crit .row .v{color:var(--ink2);line-height:1.5;min-width:0}
+@media(max-width:640px){.crit .row{grid-template-columns:minmax(0,1fr);gap:2px}}
+
+/* armadilhas */
+.arms{display:flex;flex-direction:column;gap:1px;background:var(--line2);border:1px solid var(--line2)}
+.arm{background:var(--card);padding:13px 16px;display:flex;gap:12px}
+.arm .dot{flex-shrink:0;width:9px;height:9px;border-radius:50%;background:var(--carmine);margin-top:7px}
+.arm p{font-size:15px;line-height:1.55;color:var(--ink2);margin:0}
+
+/* teste agora */
+.tgrp{margin:0 0 22px}
+.tgrp h3{font:700 11.5px "Source Sans 3";letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);margin:0 0 8px}
+.qa{border:1px solid var(--line2);background:var(--card);padding:12px 15px}
+.qa+.qa{border-top:0}
+.qa .qq{font-size:15.4px;line-height:1.5;color:var(--ink);margin:0 0 6px;font-weight:500}
+.qa details>summary{cursor:pointer;font:600 13px "Source Sans 3";color:var(--teal-ink);list-style:none}
+.qa details>summary::-webkit-details-marker{display:none}
+.qa details>summary::before{content:"+ "}
+.qa details[open]>summary::before{content:"- "}
+.qa details p{font-size:15px;line-height:1.5;color:var(--ink2);margin:8px 0 0;padding-left:10px;border-left:2px solid var(--teal)}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <p class="eye">MedHub · Revisão direcionada · Pneumologia intensiva e sepse</p>
+  <h1>UTI: o número cru não decide</h1>
+  <p class="sub">Divida antes de classificar, dê tempo antes de pressurizar, olhe o hematócrito antes de escolher a droga.</p>
+</header>
+
+<main>
+<section class="degrau" id="elos">
+  <div class="dhead"><span class="dnum">!</span><div class="dtitle"><span class="dstage">Ponto de partida</span><h2>Onde você tropeçou hoje</h2></div></div>
+  <ul class="elos">
+    <li><span class="n">1</span><span>AutoPEEP: corrige-se com tempo expiratório, não com PEEP.</span></li>
+    <li><span class="n">2</span><span>Berlim: a gravidade é a razão PaO₂/FiO₂, com PEEP ≥ 5.</span></li>
+    <li><span class="n">3</span><span>VMNI: qual indicação tem evidência forte.</span></li>
+    <li><span class="n">4</span><span>SvcO₂ baixa com PAM e hematócrito na meta: qual droga.</span></li>
+    <li><span class="n">5</span><span>Antibiótico: quanto custa cada hora de atraso.</span></li>
+  </ul>
+</section>
+
+<section class="degrau" id="d1">
+  <div class="dhead"><span class="dnum">1</span><div class="dtitle"><span class="dstage">Elo 1</span><h2>AutoPEEP: dar tempo para esvaziar</h2></div></div>
+  <p class="lede">O ar se empilha porque o próximo ciclo chega antes de o pulmão esvaziar.</p>
+  <div class="prose"><ul>
+    <li>Diagnóstico: o fluxo expiratório não toca a linha de base antes do novo ciclo.</li>
+    <li>Medida: <strong>pausa expiratória</strong> (platô é pausa inspiratória).</li>
+    <li>1º passo: reduzir <strong>FR e volume corrente</strong>; o volume-minuto cai e o tempo expiratório cresce.</li>
+    <li>2º passo: reduzir o tempo inspiratório.</li>
+    <li>Risco: comprime o coração (pulso paradoxal, choque obstrutivo).</li>
+  </ul></div>
+  <div class="vs">
+    <div class="a"><h5>PEEP alta: sim</h5><ul><li>Para recrutar alvéolo colapsado: SDRA, congestão.</li></ul></div>
+    <div class="b"><h5>PEEP alta: não</h5><ul><li>Para aprisionamento: no obstrutivo agrava assincronia e retenção de CO₂.</li></ul></div>
+  </div>
+</section>
+
+<section class="degrau" id="d2">
+  <div class="dhead"><span class="dnum">2</span><div class="dtitle"><span class="dstage">Elo 2</span><h2>Berlim: dividir antes de classificar</h2></div></div>
+  <p class="lede">PaO₂ 60 em FiO₂ 0,4 dá 150: moderada, não grave.</p>
+  <div class="tw"><div class="crit">
+    <div class="row"><span class="k">Leve</span><span class="v">201-300</span></div>
+    <div class="row"><span class="k">Moderada</span><span class="v">101-200</span></div>
+    <div class="row"><span class="k">Grave</span><span class="v">≤ 100</span></div>
+    <div class="row"><span class="k">Condição</span><span class="v">Sempre com <strong>PEEP ≥ 5 cmH₂O</strong>.</span></div>
+  </div></div>
+  <div class="prose"><ul>
+    <li>Berlim (2012) incluiu a PEEP e removeu o termo "lesão pulmonar aguda" e a POAP.</li>
+    <li>Os outros critérios: até 1 semana do insulto, opacidades bilaterais, edema não explicado só por coração ou volume.</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="d3">
+  <div class="dhead"><span class="dnum">3</span><div class="dtitle"><span class="dstage">Elo 3</span><h2>VMNI: a gradação da evidência</h2></div></div>
+  <p class="lede">A VMNI exige drive respiratório próprio: ajuda, não respira pelo paciente.</p>
+  <div class="tw"><div class="crit">
+    <div class="row"><span class="k">Forte</span><span class="v"><strong>DPOC exacerbado hipercápnico</strong>: reduz intubação, internação e mortalidade. BiPAP, para varrer o CO₂.</span></div>
+    <div class="row"><span class="k">Moderada</span><span class="v">Edema agudo cardiogênico (CPAP ou BiPAP); imunossuprimido com IRpA.</span></div>
+    <div class="row"><span class="k">Sem evidência</span><span class="v">Asma e SDRA leve: permitida pela diretriz brasileira, sem retardar a IOT.</span></div>
+  </div></div>
+  <div class="prose"><ul>
+    <li>Rebaixamento de consciência contraindica, <strong>exceto</strong> na acidose hipercápnica do DPOC.</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="d4">
+  <div class="dhead"><span class="dnum">4</span><div class="dtitle"><span class="dstage">Elo 4</span><h2>SvcO₂ baixa: anemia ou bomba</h2></div></div>
+  <p class="lede">Com PAM e volume na meta, SvcO₂ &lt; 70% é oferta de O₂ insuficiente, e só há duas causas.</p>
+  <div class="vs">
+    <div class="a"><h5>Ht &lt; 30%</h5><ul><li>Falta carreador.</li><li>Transfundir.</li></ul></div>
+    <div class="b"><h5>Ht ≥ 30%</h5><ul><li>Falta débito: bomba ineficiente.</li><li><strong>Dobutamina</strong>.</li></ul></div>
+  </div>
+  <div class="prose"><ul>
+    <li>A árvore vem das metas antigas (EGDT): a SSC atual não persegue SvcO₂, mas a banca cobra.</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="d5">
+  <div class="dhead"><span class="dnum">5</span><div class="dtitle"><span class="dstage">Elo 5</span><h2>Antibiótico: cada hora pesa</h2></div></div>
+  <p class="lede">Cerca de <strong>7% a mais de mortalidade por hora</strong> de atraso do antibiótico adequado.</p>
+  <div class="prose"><ul>
+    <li>Na 1ª hora, amplo espectro, IV.</li>
+    <li>Hemoculturas (2 pares) antes, mas sem atrasar o antibiótico além de 45 minutos.</li>
+    <li>Piorou sob antibiótico: <strong>escalonar</strong> o espectro (ex.: ciprofloxacino → carbapenêmico ± vancomicina), não lateralizar para ceftriaxona.</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="viz">
+  <div class="dhead"><span class="dnum">+</span><div class="dtitle"><span class="dstage">Blast radius</span><h2>Vizinhos de prova</h2></div></div>
+  <div class="tw"><div class="crit">
+    <div class="row"><span class="k">Choque séptico</span><span class="v">Vasopressor para PAM ≥ 65 <strong>e</strong> lactato &gt; 2 após volume.</span></div>
+    <div class="row"><span class="k">Volume</span><span class="v">30 mL/kg de cristaloide em 3 h se hipotensão ou lactato ≥ 4.</span></div>
+    <div class="row"><span class="k">Corticoide</span><span class="v">Não reduz mortalidade; só no choque refratário.</span></div>
+    <div class="row"><span class="k">qSOFA</span><span class="v">Triagem, não define sepse. Sepse = SOFA ≥ 2.</span></div>
+    <div class="row"><span class="k">Protetora</span><span class="v">VC 6 mL/kg do peso <strong>predito</strong>, platô &lt; 30, driving pressure &lt; 15.</span></div>
+    <div class="row"><span class="k">Resgate SDRA</span><span class="v">Prona se P/F &lt; 150. Recrutamento agressivo aumenta mortalidade (ART).</span></div>
+  </div></div>
+</section>
+
+<section class="degrau" id="arms">
+  <div class="dhead"><span class="dnum">🔴</span><div class="dtitle"><span class="dstage">Leitura</span><h2>Armadilhas</h2></div></div>
+  <div class="arms">
+    <div class="arm"><span class="dot"></span><p><strong>PaO₂ 60 lida como "grave"</strong> sem dividir pela FiO₂. A razão classifica, o número cru não.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Subir PEEP no aprisionamento</strong> confunde as duas indicações da PEEP.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Controle glicêmico</strong> é distrator quando a SvcO₂ está baixa: a falha hemodinâmica vem primeiro.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Protocolo citado</strong>: se a questão ancora no SSC 2016, responda pela régua dele, que não especifica qSOFA.</p></div>
+  </div>
+</section>
+
+<section class="degrau" id="teste">
+  <div class="dhead"><span class="dnum">?</span><div class="dtitle"><span class="dstage">Recuperação</span><h2>Teste agora</h2></div></div>
+  <div class="tgrp"><h3>Elo 1 · AutoPEEP</h3>
+    <div class="qa"><p class="qq">Primeira medida para corrigir autoPEEP no obstrutivo?</p><details><summary>ver resposta</summary><p>Reduzir FR e volume corrente para alongar a expiração.</p></details></div>
+    <div class="qa"><p class="qq">Qual pausa mede autoPEEP? E qual mede o platô?</p><details><summary>ver resposta</summary><p>AutoPEEP: expiratória. Platô: inspiratória.</p></details></div>
+  </div>
+  <div class="tgrp"><h3>Elo 2 · Berlim</h3>
+    <div class="qa"><p class="qq">PaO₂ 90 em FiO₂ 0,6 com PEEP 10: qual gravidade?</p><details><summary>ver resposta</summary><p>90 / 0,6 = 150: moderada.</p></details></div>
+    <div class="qa"><p class="qq">Qual PEEP mínima a classificação exige?</p><details><summary>ver resposta</summary><p>PEEP ≥ 5 cmH₂O.</p></details></div>
+  </div>
+  <div class="tgrp"><h3>Elo 3 · VMNI</h3>
+    <div class="qa"><p class="qq">Indicação de VMNI com evidência forte de reduzir mortalidade?</p><details><summary>ver resposta</summary><p>Exacerbação hipercápnica de DPOC, com BiPAP.</p></details></div>
+    <div class="qa"><p class="qq">Rebaixamento de consciência contraindica VMNI em qual cenário não?</p><details><summary>ver resposta</summary><p>Na acidose hipercápnica do DPOC.</p></details></div>
+  </div>
+  <div class="tgrp"><h3>Elo 4 · SvcO₂</h3>
+    <div class="qa"><p class="qq">PAM 70, hematócrito 32%, SvcO₂ 64%. Próximo passo?</p><details><summary>ver resposta</summary><p>Dobutamina: hematócrito já na meta, falta débito.</p></details></div>
+    <div class="qa"><p class="qq">E se o hematócrito fosse 26%?</p><details><summary>ver resposta</summary><p>Transfundir.</p></details></div>
+  </div>
+  <div class="tgrp"><h3>Elo 5 · Antibiótico</h3>
+    <div class="qa"><p class="qq">Quanto sobe a mortalidade por hora de atraso do antibiótico?</p><details><summary>ver resposta</summary><p>Cerca de 7% por hora.</p></details></div>
+    <div class="qa"><p class="qq">Piorou com ciprofloxacino: trocar por ceftriaxona escalona?</p><details><summary>ver resposta</summary><p>Não, o espectro é semelhante. Escalonar para carbapenêmico ± vancomicina.</p></details></div>
+  </div>
+</section>
+</main>
+</div>

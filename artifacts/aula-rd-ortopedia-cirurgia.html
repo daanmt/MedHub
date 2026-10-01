@@ -1,0 +1,283 @@
+<title>Revisão direcionada · Ortopedia e cirurgia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,380;9..144,480;9..144,600;9..144,680&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EFF3F0; --card:#FAFCFA; --sunk:#E2E9E4;
+  --ink:#18211C; --ink2:#4C5A52; --ink3:#7C8A82;
+  --line:rgba(24,33,28,.13); --line2:rgba(24,33,28,.26);
+  --teal:#1F6B5E; --teal-ink:#154A41; --teal-wash:#DCEBE5;
+  --carmine:#8E2F41; --carmine-ink:#6B2231; --carmine-wash:#F5E2E6;
+  --amber:#8A5A17; --amber-ink:#6B4610; --amber-wash:#F3E6CC;
+  --on:#FFFFFF;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#7E8C84;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  --on:#131A16;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#7E8C84;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  --on:#131A16;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);
+  font:16px/1.6 "Source Sans 3",-apple-system,"Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+h1,h2,h3{margin:0;font-family:Fraunces,Georgia,serif;font-weight:600;letter-spacing:-.01em;text-wrap:balance;line-height:1.16;color:var(--ink)}
+.wrap{max-width:760px;margin:0 auto;padding:0 24px 90px}
+@media(max-width:640px){.wrap{padding:0 16px 72px}}
+:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+strong{font-weight:600;color:var(--ink)}
+.mn{font-family:"IBM Plex Mono",ui-monospace,Consolas,monospace;font-variant-numeric:tabular-nums}
+
+/* masthead */
+.top{padding:44px 0 26px;border-bottom:1px solid var(--line2)}
+.eye{font:600 11px/1.3 "Source Sans 3";letter-spacing:.14em;text-transform:uppercase;color:var(--teal-ink);margin:0 0 13px}
+.top h1{font-size:clamp(28px,5vw,42px);font-weight:680;margin-bottom:14px}
+.top .sub{font-size:clamp(16px,2.2vw,17.5px);line-height:1.6;color:var(--ink2);margin:0}
+
+/* secoes */
+.sec{padding:34px 0;border-bottom:1px solid var(--line)}
+.sec:last-of-type{border-bottom:0}
+.kick{font:600 11px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);display:block;margin-bottom:5px}
+.sec h2{font-size:clamp(21px,3.2vw,26px);margin-bottom:12px}
+.lede{font-size:16.3px;line-height:1.6;color:var(--ink2);margin:0 0 14px;font-style:italic}
+ul.pt{margin:0 0 14px;padding-left:20px}
+ul.pt li{font-size:15.6px;line-height:1.58;color:var(--ink2);margin-bottom:7px}
+ul.pt li:last-child{margin-bottom:0}
+
+/* onde tropecou */
+.miss{list-style:none;margin:0;padding:0;border:1px solid var(--line2);background:var(--card)}
+.miss li{display:grid;grid-template-columns:28px minmax(0,1fr);gap:10px;padding:11px 14px;font-size:15.3px;line-height:1.5;color:var(--ink2)}
+.miss li+li{border-top:1px solid var(--line)}
+.miss .n{font:600 12px "IBM Plex Mono";color:var(--carmine-ink);padding-top:2px}
+
+/* tabela */
+.tw{overflow-x:auto;margin:16px 0;border:1px solid var(--line2);background:var(--card)}
+table{border-collapse:collapse;width:100%;font-size:14.4px}
+th,td{text-align:left;vertical-align:top;padding:9px 12px;line-height:1.45}
+th{background:var(--sunk);font:600 11.5px "Source Sans 3";letter-spacing:.05em;text-transform:uppercase;color:var(--ink3)}
+td{color:var(--ink2);border-top:1px solid var(--line)}
+td:first-child{font-weight:600;color:var(--ink)}
+td.hi{color:var(--teal-ink);font-weight:600}
+
+/* comparativo */
+.vs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line2);border:1px solid var(--line2);margin:16px 0}
+.vs>div{background:var(--card);padding:13px 15px;min-width:0}
+.vs h3{font:700 11.5px "Source Sans 3";letter-spacing:.05em;text-transform:uppercase;margin:0 0 7px;color:var(--ink3)}
+.vs .a h3{color:var(--carmine-ink)}
+.vs .b h3{color:var(--teal-ink)}
+.vs ul{margin:0;padding-left:17px}
+.vs li{font-size:14.5px;line-height:1.5;color:var(--ink2);margin-bottom:4px}
+@media(max-width:640px){.vs{grid-template-columns:minmax(0,1fr)}}
+
+/* chave */
+.key{margin:16px 0;padding:12px 16px;border-left:3px solid var(--teal);background:var(--teal-wash);font-size:15.2px;line-height:1.55;color:var(--ink)}
+
+/* armadilhas */
+.arms{display:flex;flex-direction:column;gap:1px;background:var(--line2);border:1px solid var(--line2)}
+.arm{background:var(--card);padding:13px 16px;display:flex;gap:11px}
+.arm .dot{flex-shrink:0;width:8px;height:8px;border-radius:50%;background:var(--carmine);margin-top:8px}
+.arm p{font-size:15px;line-height:1.55;color:var(--ink2);margin:0}
+
+/* teste agora */
+.qs{display:flex;flex-direction:column;gap:10px}
+.q{background:var(--card);border:1px solid var(--line2);padding:13px 15px}
+.q p{margin:0 0 8px;font-size:15.4px;line-height:1.5;color:var(--ink);font-weight:500}
+.q .tag{font:600 10.5px "IBM Plex Mono";color:var(--teal-ink);letter-spacing:.04em;display:block;margin-bottom:4px}
+.q details summary{cursor:pointer;font:600 13px "Source Sans 3";color:var(--teal-ink);list-style:none}
+.q details summary::-webkit-details-marker{display:none}
+.q details summary::before{content:"+ "}
+.q details[open] summary::before{content:"- "}
+.q details div{margin-top:7px;padding-top:7px;border-top:1px dashed var(--line2);font-size:14.8px;line-height:1.5;color:var(--ink2)}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <p class="eye">Revisão direcionada · Ortopedia e cirurgia</p>
+  <h1>Idade, tempo e coleção: o número que decide a conduta</h1>
+  <p class="sub">Cicatrização, quadril infantil, trauma raquimedular e dois reflexos de cirurgia que hoje falharam pelo mesmo motivo: a história distraiu do dado duro.</p>
+</header>
+
+<section class="sec">
+  <span class="kick">1 · Diagnóstico</span>
+  <h2>Onde você tropeçou hoje</h2>
+  <ul class="miss">
+    <li><span class="n">01</span><span>Cicatrização: a célula fundamental e o momento da força tênsil máxima.</span></li>
+    <li><span class="n">02</span><span>Quadril do adolescente: idade + linha de Klein separam epifisiólise de Perthes.</span></li>
+    <li><span class="n">03</span><span>Febre alta + bloqueio do quadril: artrite séptica, mesmo com IVAS recente.</span></li>
+    <li><span class="n">04</span><span>TRM: a disreflexia autonômica e a janela do NASCIS III.</span></li>
+    <li><span class="n">05</span><span>Diarreia no Hirschsprung e coleção perianal: o reflexo benigno atrasa o grave.</span></li>
+  </ul>
+</section>
+
+<section class="sec">
+  <span class="kick">Elo 01</span>
+  <h2>Cicatrização: três fases, uma célula por momento</h2>
+  <p class="lede">A prova cobra a ordem das fases e qual célula manda em cada uma.</p>
+  <div class="tw"><table>
+    <tr><th>Fase</th><th>O que acontece</th></tr>
+    <tr><td>1. Inflamatória</td><td>Hemostasia e quimiotaxia; o neutrófilo chega primeiro (pico em 24-48 h)</td></tr>
+    <tr><td>2. Proliferativa</td><td>Regeneração do tecido conjuntivo</td></tr>
+    <tr><td>3. Maturação</td><td>Contração e remodelamento; <strong>força tênsil máxima em ~1 ano</strong></td></tr>
+  </table></div>
+  <div class="vs">
+    <div class="a"><h3>Neutrófilo</h3><ul>
+      <li>Primeira célula a chegar</li>
+      <li>Efetor da inflamação aguda</li>
+    </ul></div>
+    <div class="b"><h3>Macrófago</h3><ul>
+      <li>Chega depois</li>
+      <li>Célula <strong>fundamental</strong> da cicatrização</li>
+    </ul></div>
+  </div>
+  <ul class="pt">
+    <li>Maturação e remodelamento são a mesma fase, a terceira.</li>
+    <li>Vitamina C hidroxila o colágeno. Vitamina A ajuda a epitelização e reverte o efeito do corticoide.</li>
+  </ul>
+</section>
+
+<section class="sec">
+  <span class="kick">Elo 02</span>
+  <h2>Quadril infantil: a idade escolhe a doença</h2>
+  <p class="lede">Antes de olhar o RX, pergunte a idade. O RX confirma.</p>
+  <div class="tw"><table>
+    <tr><th>Doença</th><th>Idade</th><th>Chave</th></tr>
+    <tr><td>Sinovite transitória</td><td>3-8 a</td><td>Afebril ou febre baixa; laboratório e RX normais</td></tr>
+    <tr><td>Perthes</td><td>4-8 a</td><td>Necrose avascular: cabeça achatada, esclerose, fragmentação</td></tr>
+    <tr><td>Epifisiólise</td><td>10-16 a</td><td>Klein não cruza a epífise (Trethowan); obeso</td></tr>
+  </table></div>
+  <ul class="pt">
+    <li>A dor da epifisiólise pode ser só no joelho (até 15%). Radiografe o quadril.</li>
+    <li>Drehmann: ao fletir o quadril, a coxa foge para abdução e rotação externa.</li>
+    <li>O escorregamento é posterior e inferior; a incidência de Lauenstein (rã) é mais sensível que a AP.</li>
+    <li>Conduta: suspender a carga e fixar <em>in situ</em> com parafuso canulado, com urgência.</li>
+    <li>Redução e gesso são proscritos: rompem os vasos retinaculares e causam necrose avascular.</li>
+  </ul>
+</section>
+
+<section class="sec">
+  <span class="kick">Elo 03</span>
+  <h2>Artrite séptica x sinovite transitória</h2>
+  <p class="lede">Febre alta + bloqueio articular é artrite séptica até prova em contrário. A cartilagem é destruída em 24-48 h.</p>
+  <div class="tw"><table>
+    <tr><th>Kocher</th><th>Corte</th></tr>
+    <tr><td>Carga</td><td>Incapacidade de apoiar ou andar</td></tr>
+    <tr><td>Febre</td><td>&gt; 38,5 °C</td></tr>
+    <tr><td>Leucócitos</td><td>&gt; 12.000/mm³</td></tr>
+    <tr><td>VHS</td><td>&gt; 40 mm/h (PCR &gt; 2 mg/dL no modificado)</td></tr>
+  </table></div>
+  <ul class="pt">
+    <li>Probabilidade de artrite séptica: 0 critério &lt; 0,2%; 2 critérios 40%; 3 critérios 93%; 4 critérios 99%.</li>
+    <li>Conduta: internar, puncionar (USG guia) e, se purulento, artrotomia de urgência.</li>
+    <li>Antibiótico de 3 meses a 5 anos: oxacilina + ceftriaxona.</li>
+    <li>IVAS recente não exclui: a bacteremia transitória é justamente o que semeia a sinóvia.</li>
+  </ul>
+</section>
+
+<section class="sec">
+  <span class="kick">Elo 04</span>
+  <h2>TRM acima de T6: duas síndromes opostas</h2>
+  <p class="lede">A mesma lesão alta pode dar queda ou explosão de pressão. O quadro diz qual.</p>
+  <div class="vs">
+    <div class="b"><h3>Choque neurogênico</h3><ul>
+      <li>Hipotensão</li>
+      <li>Bradicardia, sem taquicardia reflexa</li>
+      <li>Extremidades quentes e secas</li>
+    </ul></div>
+    <div class="a"><h3>Disreflexia autonômica</h3><ul>
+      <li>HAS súbita e grave</li>
+      <li>Cefaleia, rubor e sudorese acima da lesão</li>
+      <li>Gatilho abaixo da lesão: bexiga, sonda, fezes</li>
+    </ul></div>
+  </div>
+  <ul class="pt">
+    <li>Mecanismo da disreflexia: descarga simpática sem a inibição que vinha de cima.</li>
+    <li>Primeiro passo: desobstruir a sonda ou esvaziar a bexiga, antes do anti-hipertensivo.</li>
+  </ul>
+  <div class="tw"><table>
+    <tr><th>Bolus (NASCIS III)</th><th>Manutenção</th></tr>
+    <tr><td>&lt; 3 h</td><td class="hi">24 h</td></tr>
+    <tr><td>3-8 h</td><td class="hi">48 h</td></tr>
+    <tr><td>&gt; 8 h</td><td>Proscrito</td></tr>
+  </table></div>
+  <ul class="pt">
+    <li>Bolus de 30 mg/kg e manutenção de 5,4 mg/kg/h.</li>
+    <li>As diretrizes atuais não usam como rotina: mais sepse, pneumonia e sangramento, sem ganho funcional.</li>
+  </ul>
+</section>
+
+<section class="sec">
+  <span class="kick">Elo 05</span>
+  <h2>Quando o reflexo benigno atrasa o grave</h2>
+  <p class="lede">Nos dois casos o enunciado oferece uma explicação inocente para um quadro que mata.</p>
+  <ul class="pt">
+    <li><strong>Hirschsprung com diarreia explosiva, fétida, febre e distensão</strong> é enterocolite (HAEC), a principal causa de óbito na doença. Não é reação às lavagens nem virose.</li>
+    <li>Na crise, a primeira medida são as lavagens seriadas com SF morno. Laparotomia imediata não.</li>
+    <li><strong>Abscesso anorretal:</strong> drenagem cirúrgica no diagnóstico, mesmo sem flutuação. Antibiótico isolado não esteriliza uma coleção.</li>
+    <li>Antibiótico é adjuvante em celulite ou fasciíte, imunossupressão, sinais sistêmicos, diabetes ou valvopatia.</li>
+    <li>Banho de assento é medida de fissura. Na coleção, atrasa a drenagem e arrisca Fournier.</li>
+  </ul>
+</section>
+
+<section class="sec">
+  <span class="kick">Blast radius</span>
+  <h2>Vizinhos de prova</h2>
+  <div class="tw"><table>
+    <tr><th>Canal inguinal</th><th>Conduta</th></tr>
+    <tr><td>Hérnia inguinal</td><td>Cirurgia eletiva ao diagnóstico, qualquer peso; não regride</td></tr>
+    <tr><td>Hidrocele comunicante</td><td>Expectante até ~1 ano; transiluminação positiva</td></tr>
+    <tr><td>Hérnia umbilical</td><td>Expectante até ~5 anos; fecha em 80%</td></tr>
+    <tr><td>Criptorquidia</td><td>Expectante até 6-12 meses; depois orquidopexia</td></tr>
+  </table></div>
+  <ul class="pt">
+    <li><strong>Hérnia encarcerada sem peritonite:</strong> redução manual e cirurgia em 24-48 h.</li>
+    <li><strong>Apendicite na criança:</strong> USG com &gt; 6 mm, não compressível. Diarreia reativa é comum abaixo de 5 anos e não exclui.</li>
+    <li><strong>Colestase neonatal (atresia de vias biliares):</strong> biópsia hepática percutânea define antes do Kasai. A colangiorressonância tem baixa acurácia no neonato.</li>
+  </ul>
+</section>
+
+<section class="sec">
+  <span class="kick">Atenção</span>
+  <h2>Armadilhas</h2>
+  <div class="arms">
+    <div class="arm"><span class="dot"></span><p>"Primeira a chegar" é o neutrófilo; "fundamental" é o macrófago. Leia o verbo da pergunta.</p></div>
+    <div class="arm"><span class="dot"></span><p>A IVAS recente parece explicar o quadril, mas febre de 39,5 °C com bloqueio manda internar.</p></div>
+    <div class="arm"><span class="dot"></span><p>Reduzir e gessar, como numa fratura infantil, é erro grave na epifisiólise.</p></div>
+    <div class="arm"><span class="dot"></span><p>No NASCIS, o "&lt; 3 h" puxa para a infusão longa. É o contrário: quem chega cedo faz 24 h.</p></div>
+  </div>
+</section>
+
+<section class="sec">
+  <span class="kick">Recuperação</span>
+  <h2>Teste agora</h2>
+  <div class="qs">
+    <div class="q"><span class="tag">Elo 01</span><p>Quais as três fases, em ordem, e em qual delas estão hemostasia e quimiotaxia?</p><details><summary>ver resposta</summary><div>Inflamatória, proliferativa e maturação. Hemostasia e quimiotaxia estão na inflamatória.</div></details></div>
+    <div class="q"><span class="tag">Elo 01</span><p>Qual célula chega primeiro e qual é a fundamental?</p><details><summary>ver resposta</summary><div>Chega primeiro o neutrófilo; a fundamental é o macrófago.</div></details></div>
+    <div class="q"><span class="tag">Elo 01</span><p>Quando a cicatriz atinge a força tênsil máxima?</p><details><summary>ver resposta</summary><div>Em cerca de 1 ano, na fase de maturação.</div></details></div>
+    <div class="q"><span class="tag">Elo 02</span><p>Menino de 12 anos, dor no joelho, Klein sem cruzar a epífise. Diagnóstico e conduta?</p><details><summary>ver resposta</summary><div>Epifisiólise; sem carga e fixação <em>in situ</em> com parafuso canulado.</div></details></div>
+    <div class="q"><span class="tag">Elo 02</span><p>Por que não reduzir a epifisiólise?</p><details><summary>ver resposta</summary><div>A redução lesa os vasos retinaculares e causa necrose avascular.</div></details></div>
+    <div class="q"><span class="tag">Elo 03</span><p>Quais os quatro critérios de Kocher?</p><details><summary>ver resposta</summary><div>Recusa de carga, febre &gt; 38,5 °C, leucócitos &gt; 12.000 e VHS &gt; 40.</div></details></div>
+    <div class="q"><span class="tag">Elo 03</span><p>IVAS há 2 semanas, febre de 39,5 °C e bloqueio do quadril. O que fazer?</p><details><summary>ver resposta</summary><div>Internar, puncionar e iniciar oxacilina + ceftriaxona EV. A IVAS não exclui artrite séptica.</div></details></div>
+    <div class="q"><span class="tag">Elo 04</span><p>Lesão em T4, cefaleia, rubor e PA 200/110. Primeiro passo?</p><details><summary>ver resposta</summary><div>Checar e desobstruir a sonda vesical (disreflexia autonômica).</div></details></div>
+    <div class="q"><span class="tag">Elo 04</span><p>Bolus do NASCIS III feito 5 h após o trauma. Quanto tempo de manutenção?</p><details><summary>ver resposta</summary><div>48 horas.</div></details></div>
+    <div class="q"><span class="tag">Elo 05</span><p>Hirschsprung não operado com diarreia explosiva e febre. O que é?</p><details><summary>ver resposta</summary><div>Enterocolite associada ao Hirschsprung, a principal causa de morte na doença.</div></details></div>
+    <div class="q"><span class="tag">Elo 05</span><p>Abscesso perianal sem flutuação. Conduta?</p><details><summary>ver resposta</summary><div>Drenagem cirúrgica imediata; antibiótico só como adjuvante.</div></details></div>
+  </div>
+</section>
+</div>

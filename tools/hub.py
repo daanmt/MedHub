@@ -451,7 +451,9 @@ def secoes_do_quadro(classificadas, plano_linhas=None, calendario=None, hoje=Non
                                                        cal[1].strftime("%d/%m")) if cal else "")
             secao(str(s), titulo, linhas)
 
-    outras = []
+    # s210 (pedido do operador, 01/10): a revisao direcionada avulsa (tipo `revisao`, sem tarefa
+    # pendente) ganha bloco PROPRIO no topo da aba -- em "Outras aulas" ela sumia no fim da lista.
+    outras, revisoes = [], []
     for a, tipo, titulo, tid in classificadas:
         if a.slug in usadas:
             continue
@@ -459,9 +461,13 @@ def secoes_do_quadro(classificadas, plano_linhas=None, calendario=None, hoje=Non
         if ligada and plano_linhas:      # so com o plano lido: sem plano, o aviso seria ruido
             avisos.append("aula %r ligada so a tarefa nao pendente: candidata a arquivo (sai do "
                           "hub ao mover de artifacts/)" % a.slug)
+        chave = "revisoes" if tipo == "revisao" else "outras"
         item = {"tipo": "aula", "slug": a.slug, "aula": a, "titulo": titulo, "tipo_aula": tipo,
-                "data": a.data, "secao": "outras", "ordem": ordem()}
-        (concluidas if a.slug in feitos else outras).append(item)
+                "data": a.data, "secao": chave, "ordem": ordem()}
+        (concluidas if a.slug in feitos else (revisoes if chave == "revisoes" else outras)).append(item)
+    if any(i["tipo_aula"] == "revisao" for i in revisoes + concluidas):
+        secoes.insert(0, {"chave": "revisoes", "titulo": "Revisões direcionadas", "rotulo": "aula",
+                          "fixa": False, "q": None, "itens": revisoes})
     secoes.append({"chave": "outras", "titulo": "Outras aulas", "rotulo": "aula", "fixa": False,
                    "q": None, "itens": outras})
     return secoes, concluidas, avisos

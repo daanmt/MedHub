@@ -1,0 +1,325 @@
+<title>Revisão direcionada · Vias biliares e apendicite</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,380;9..144,480;9..144,600;9..144,680&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EFF3F0; --card:#FAFCFA; --sunk:#E2E9E4;
+  --ink:#18211C; --ink2:#4C5A52; --ink3:#7C8A82;
+  --line:rgba(24,33,28,.13); --line2:rgba(24,33,28,.26);
+  --teal:#1F6B5E; --teal-ink:#154A41; --teal-wash:#DCEBE5;
+  --carmine:#8E2F41; --carmine-ink:#6B2231; --carmine-wash:#F5E2E6;
+  --amber:#8A5A17; --amber-ink:#6B4610; --amber-wash:#F3E6CC;
+  --on:#FFFFFF;
+  --sh:0 1px 2px rgba(24,33,28,.06),0 12px 30px -18px rgba(24,33,28,.35);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#7E8C84;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  --on:#131A16;
+  --sh:0 1px 2px rgba(0,0,0,.5),0 14px 34px -18px rgba(0,0,0,.8);
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#7E8C84;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  --on:#131A16;
+  --sh:0 1px 2px rgba(0,0,0,.5),0 14px 34px -18px rgba(0,0,0,.8);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);
+  font:16px/1.6 "Source Sans 3",-apple-system,"Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+.mn{font-family:"IBM Plex Mono",ui-monospace,Consolas,monospace;font-variant-numeric:tabular-nums}
+h1,h2,h3,h4{margin:0;font-family:Fraunces,Georgia,serif;font-weight:600;letter-spacing:-.01em;text-wrap:balance;line-height:1.14;color:var(--ink)}
+.wrap{max-width:760px;margin:0 auto;padding:0 24px 100px}
+@media(max-width:640px){.wrap{padding:0 16px 80px}}
+:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+a{color:var(--teal-ink)}
+strong{font-weight:600;color:var(--ink)}
+em{font-style:italic}
+
+/* masthead */
+.top{padding:52px 0 30px;border-bottom:1px solid var(--line2)}
+.eye{font:600 11px/1 "Source Sans 3";letter-spacing:.14em;text-transform:uppercase;color:var(--teal-ink);margin:0 0 15px}
+.top h1{font-size:clamp(32px,5vw,50px);font-weight:680;max-width:18ch;margin-bottom:16px}
+.top .sub{font-size:18px;line-height:1.6;color:var(--ink2);max-width:66ch;margin:0 0 22px}
+.stats{display:flex;gap:22px;flex-wrap:wrap}
+.stat{display:flex;flex-direction:column;gap:2px}
+.stat b{font:600 24px/1 "IBM Plex Mono";color:var(--teal-ink);font-variant-numeric:tabular-nums}
+.stat span{font-size:11.5px;color:var(--ink3);letter-spacing:.02em}
+
+/* timeline strip (Degrau 0) */
+.tl{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1px;background:var(--line2);border:1px solid var(--line2);margin:20px 0}
+.tl div{background:var(--card);padding:12px 13px}
+.tl .tk{font:600 11px "IBM Plex Mono";color:var(--teal-ink);display:block;margin-bottom:4px;font-variant-numeric:tabular-nums}
+.tl .tn{font-size:14px;font-weight:600;color:var(--ink);display:block;margin-bottom:3px}
+.tl .tv{font-size:12.8px;line-height:1.45;color:var(--ink2)}
+
+main{min-width:0}
+
+
+/* degrau */
+.degrau{padding:44px 0;border-bottom:1px solid var(--line)}
+.degrau:first-child{padding-top:0}
+.degrau:last-of-type{border-bottom:0}
+.dhead{display:flex;gap:16px;align-items:flex-start;margin-bottom:18px}
+.dnum{flex-shrink:0;width:44px;height:44px;border:1.5px solid var(--teal);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font:600 17px "IBM Plex Mono";color:var(--teal-ink)}
+.dtitle{padding-top:4px}
+.dtitle .dstage{font:600 11px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);display:block;margin-bottom:3px}
+.dtitle h2{font-size:clamp(21px,2.6vw,27px)}
+.lede{font-size:16.5px;line-height:1.6;color:var(--ink2);margin:0 0 20px;font-style:italic}
+.prose p{font-size:16px;line-height:1.72;color:var(--ink2);margin:0 0 16px}
+.prose p:last-child{margin-bottom:0}
+.prose ul,.prose ol{margin:0 0 16px;padding-left:22px}
+.prose li{font-size:15.6px;line-height:1.6;color:var(--ink2);margin-bottom:6px}
+.prose li:last-child{margin-bottom:0}
+.prose li strong{color:var(--ink)}
+h4.sub{font-size:14px;font-weight:600;font-family:"Source Sans 3";letter-spacing:.01em;color:var(--ink);margin:26px 0 10px}
+h4.sub:first-child{margin-top:0}
+
+/* callouts */
+.aside{margin:20px 0;padding:15px 18px;border-left:3px solid var(--teal);background:var(--teal-wash)}
+.aside .albl{font:700 10.5px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;color:var(--teal-ink);margin-bottom:6px}
+.aside p{font-size:15.3px;line-height:1.6;color:var(--ink);margin:0}
+.aside p+p{margin-top:8px}
+.trap{margin:20px 0;padding:15px 18px;border-left:3px solid var(--carmine);background:var(--carmine-wash)}
+.trap .albl{font:700 10.5px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;color:var(--carmine-ink);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.trap .albl::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--carmine)}
+.trap p{font-size:15.3px;line-height:1.6;color:var(--ink);margin:0}
+.trap p+p{margin-top:8px}
+.banca{margin:20px 0;padding:15px 18px;border-left:3px solid var(--amber);background:var(--amber-wash)}
+.banca .albl{font:700 10.5px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;color:var(--amber-ink);margin-bottom:6px}
+.banca p{font-size:15.3px;line-height:1.6;color:var(--ink);margin:0}
+.banca p+p{margin-top:8px}
+.star{margin:20px 0;padding:14px 18px;border:1px solid var(--line2);background:var(--card)}
+.star .albl{font:700 10.5px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:6px}
+.star p{font-size:15.3px;line-height:1.6;color:var(--ink);margin:0;font-weight:560}
+
+/* comparativos */
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line2);border:1px solid var(--line2);margin:20px 0}
+.vs>div{background:var(--card);padding:14px 16px}
+.vs h5{font:700 11.5px "Source Sans 3";letter-spacing:.04em;text-transform:uppercase;margin:0 0 8px;color:var(--ink3)}
+.vs .a h5{color:var(--carmine-ink)}
+.vs .b h5{color:var(--teal-ink)}
+.vs p,.vs li{font-size:14.5px;line-height:1.55;color:var(--ink2)}
+.vs p{margin:0 0 8px}
+.vs p:last-child{margin:0}
+.vs ul{margin:0;padding-left:18px}
+.vs li{margin-bottom:5px}
+@media(max-width:640px){.vs{grid-template-columns:1fr}}
+
+/* grid de criterios */
+.crit{border:1px solid var(--line2);margin:20px 0}
+.crit .row{display:grid;grid-template-columns:180px 1fr;gap:14px;padding:11px 15px;font-size:14.3px}
+.crit .row+.row{border-top:1px solid var(--line)}
+.crit .row .k{font-weight:600;color:var(--teal-ink)}
+.crit .row .v{color:var(--ink2);line-height:1.5}
+.crit .row .v strong{color:var(--ink)}
+.crit.hd .row:first-child{background:var(--sunk);font-weight:600;color:var(--ink3);font-size:12px;letter-spacing:.04em;text-transform:uppercase}
+.crit.hd .row:first-child .k,.crit.hd .row:first-child .v{color:var(--ink3)}
+.crit.c3 .row{grid-template-columns:150px 1fr 1fr}
+@media(max-width:640px){.crit .row,.crit.c3 .row{grid-template-columns:1fr;gap:3px}}
+
+/* referencia densa */
+details.ref{margin:20px 0;border:1px solid var(--line2);background:var(--card)}
+details.ref>summary{cursor:pointer;list-style:none;padding:12px 16px;font:600 13.5px "Source Sans 3";color:var(--teal-ink);display:flex;align-items:center;gap:9px}
+details.ref>summary::-webkit-details-marker{display:none}
+details.ref>summary::before{content:"+";font:600 15px "IBM Plex Mono";width:16px}
+details.ref[open]>summary::before{content:"-"}
+details.ref .refbody{padding:0 16px 16px}
+details.ref .row{display:grid;grid-template-columns:150px 1fr;gap:12px;padding:8px 0;font-size:13.8px;border-top:1px solid var(--line)}
+details.ref .row:first-child{border-top:0}
+details.ref .k{font-weight:600;color:var(--ink)}
+details.ref .v{color:var(--ink2);line-height:1.5}
+@media(max-width:640px){details.ref .row{grid-template-columns:1fr;gap:2px}}
+
+/* sintese */
+.synth{background:var(--card);border:1px solid var(--line2);padding:32px 30px;margin-top:6px}
+@media(max-width:640px){.synth{padding:22px 18px}}
+.synth h2{font-size:23px;margin-bottom:14px}
+.synth .prose p{font-size:16.5px}
+.trig{margin-top:22px;display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1px;background:var(--line2);border:1px solid var(--line2)}
+.trig div{background:var(--sunk);padding:13px 15px}
+.trig .tk{font:700 11px "IBM Plex Mono";color:var(--teal-ink);display:block;margin-bottom:4px}
+.trig .tv{font-size:13.6px;line-height:1.45;color:var(--ink2)}
+
+/* armadilhas */
+.arms{display:flex;flex-direction:column;gap:1px;background:var(--line2);border:1px solid var(--line2);margin-top:18px}
+.arm{background:var(--card);padding:15px 18px;display:flex;gap:12px}
+.arm .dot{flex-shrink:0;width:9px;height:9px;border-radius:50%;background:var(--carmine);margin-top:7px}
+.arm p{font-size:15px;line-height:1.58;color:var(--ink2);margin:0}
+.arm p strong{color:var(--ink)}
+
+footer{margin-top:60px;padding-top:22px;border-top:1px solid var(--line2)}
+footer p{font-size:12.3px;color:var(--ink3);max-width:80ch;margin:0 0 7px;line-height:1.5}
+code{font-family:"IBM Plex Mono",Consolas,monospace;font-size:11.8px;background:var(--sunk);padding:1px 5px;border-radius:2px}
+
+/* RD: tabela, teste */
+.tblw{overflow-x:auto;margin:20px 0;border:1px solid var(--line2)}
+table.t{border-collapse:collapse;width:100%;min-width:520px;font-size:14.2px}
+table.t th,table.t td{padding:10px 12px;text-align:left;vertical-align:top;border-top:1px solid var(--line);color:var(--ink2);line-height:1.45}
+table.t th{background:var(--sunk);font:600 12px "Source Sans 3";letter-spacing:.04em;text-transform:uppercase;color:var(--ink3);border-top:0}
+table.t td:first-child{font-weight:600;color:var(--teal-ink)}
+.qs{display:flex;flex-direction:column;gap:1px;background:var(--line2);border:1px solid var(--line2);margin-top:18px}
+.q{background:var(--card);padding:14px 16px}
+.q p{margin:0;font-size:15.3px;line-height:1.55;color:var(--ink)}
+.q .ql{font:600 11px "IBM Plex Mono";color:var(--teal-ink);display:block;margin-bottom:4px}
+.q details{margin-top:8px}
+.q summary{cursor:pointer;font:600 13px "Source Sans 3";color:var(--teal-ink)}
+.vs>div,.crit .row>span{min-width:0}
+.q details p{margin-top:6px;font-size:14.8px;color:var(--ink2)}
+</style>
+<div class="wrap">
+<header class="top">
+  <p class="eye">MedHub · Revisão direcionada · Cirurgia</p>
+  <h1>Vias biliares e apendicite</h1>
+  <p class="sub">O que caiu hoje não foi o nome da doença: foi o próximo passo, o tempo da complicação e o corte que muda a conduta.</p>
+  <div class="stats">
+    <div class="stat"><b>4</b><span>elos que falharam</span></div>
+    <div class="stat"><b>4</b><span>vizinhos de prova</span></div>
+    <div class="stat"><b>11</b><span>perguntas de teste</span></div>
+  </div>
+</header>
+
+<main>
+
+<section class="degrau" id="d0">
+  <div class="dhead"><span class="dnum">0</span><div class="dtitle"><span class="dstage">Mapa</span><h2>Onde você tropeçou hoje</h2></div></div>
+  <div class="crit">
+    <div class="row"><span class="k">Coledocolitíase</span><span class="v">USG não viu o cálculo: qual exame vem antes da CPRE</span></div>
+    <div class="row"><span class="k">Pós-colecistectomia</span><span class="v">o tempo e a pancreatite separam lesão, cálculo residual e estenose; e quando o reparo é Kehr ou biliodigestiva</span></div>
+    <div class="row"><span class="k">Tokyo colecistite</span><span class="v">o que sobe para II e o que sobe para III; como o risco cirúrgico muda a técnica</span></div>
+    <div class="row"><span class="k">Cortes de conduta</span><span class="v">cálculo assintomático de 2,5-3 cm opera; abscesso apendicular de 4 cm drena</span></div>
+  </div>
+</section>
+
+<section class="degrau" id="d1">
+  <div class="dhead"><span class="dnum">1</span><div class="dtitle"><span class="dstage">Elo 1</span><h2>Coledocolitíase: confirmar antes de tratar</h2></div></div>
+  <p class="lede">A pergunta é sempre a mesma: o USG mostrou o cálculo no colédoco ou só a dilatação?</p>
+  <div class="prose">
+    <ul>
+      <li>USG tem <strong>baixa sensibilidade e alta especificidade</strong> para cálculo no colédoco. Se viu, acredite; se não viu, não exclui.</li>
+      <li>CPRE é terapêutica e tem risco (pancreatite, sangramento, perfuração). Por isso só entra com o cálculo confirmado.</li>
+      <li>TC vê bem dilatação e estenose, mal o cálculo: o de <strong>colesterol é isodenso à bile</strong>.</li>
+      <li>Afebril e sem leucocitose = colestase <strong>sem</strong> colangite. Não muda o exame; muda a urgência.</li>
+    </ul>
+  </div>
+  <div class="tblw"><table class="t">
+    <tr><th>USG mostra</th><th>Próximo passo</th></tr>
+    <tr><td>Cálculo no colédoco</td><td>CPRE direta, mesmo sem febre ou leucocitose</td></tr>
+    <tr><td>Só dilatação + colelitíase</td><td>Colangiorressonância ou ecoendoscopia (esta é melhor para cálculo &lt; 6 mm)</td></tr>
+    <tr><td>Confirmado e tratado</td><td>Colecistectomia na mesma internação (sem ela, ~50% recidivam)</td></tr>
+  </table></div>
+</section>
+
+<section class="degrau" id="d2">
+  <div class="dhead"><span class="dnum">2</span><div class="dtitle"><span class="dstage">Elo 2</span><h2>Depois da colecistectomia: o relógio decide</h2></div></div>
+  <p class="lede">A palavra "colecistectomia" no enunciado ancora em lesão iatrogênica. Quem decide é o tempo e a presença de pancreatite.</p>
+  <div class="tblw"><table class="t">
+    <tr><th>Quadro</th><th>Quando</th><th>Marca</th></tr>
+    <tr><td>Lesão de via biliar</td><td>Dias a semanas</td><td>Dor, febre, coleperitônio, fístula biliar</td></tr>
+    <tr><td>Cálculo residual</td><td>Semanas, após alta sem queixa</td><td>Icterícia obstrutiva <strong>com pancreatite</strong>: cálculo na papila. Coledocolitíase secundária (até 2 anos da cirurgia)</td></tr>
+    <tr><td>Estenose pós-operatória</td><td>Meses</td><td>Icterícia colestática progressiva, <strong>sem pancreatite</strong></td></tr>
+  </table></div>
+  <h4 class="sub">Na mesa: bile no Calot sem origem visível</h4>
+  <div class="prose">
+    <ul>
+      <li>Passo 1 é <strong>colangiografia intraoperatória</strong>: confirma, localiza e tipa a lesão. Nunca rafia às cegas.</li>
+      <li>Passo 2 depende do tipo de lesão:</li>
+    </ul>
+  </div>
+  <div class="vs">
+    <div class="b"><h5>Dreno de Kehr</h5><ul><li>Lesão <strong>não térmica</strong></li><li>Ducto maior</li><li>&lt; 50% da circunferência</li></ul></div>
+    <div class="a"><h5>Biliodigestiva</h5><ul><li>Lesão <strong>térmica</strong> (eletrocautério)</li><li>&gt; 50% da circunferência</li><li>Alta (perto da bifurcação) ou &gt; 1 cm</li></ul></div>
+  </div>
+</section>
+
+<section class="degrau" id="d3">
+  <div class="dhead"><span class="dnum">3</span><div class="dtitle"><span class="dstage">Elo 3</span><h2>Tokyo na colecistite: o que sobe de grau</h2></div></div>
+  <p class="lede">Grau III exige disfunção de órgão. Leucocitose alta, por maior que seja, para no II.</p>
+  <div class="crit">
+    <div class="row"><span class="k">Grau III</span><span class="v">Disfunção de órgão: noradrenalina ou dopamina ≥ 5; rebaixamento; PaO2/FiO2 &lt; 300; creatinina &gt; 2 ou oligúria; INR &gt; 1,5; plaquetas &lt; 100.000</span></div>
+    <div class="row"><span class="k">Grau II (basta 1)</span><span class="v">Leucócitos &gt; 18.000; massa dolorosa em QSD; sintomas &gt; 72 h; inflamação local marcada (gangrena, abscesso, enfisematosa, peritonite biliar)</span></div>
+    <div class="row"><span class="k">Grau I</span><span class="v">Nenhum dos acima</span></div>
+  </div>
+  <div class="prose">
+    <ul>
+      <li>Baixo risco (ASA ≤ 2 ou Charlson ≤ 5): I e II vão para <strong>colecistectomia laparoscópica precoce</strong>.</li>
+      <li>Grau III de baixo risco, sem disfunção neurológica ou respiratória e com BT &lt; 2: colecistectomia precoce após reanimação, em centro avançado.</li>
+      <li>Grau III de alto risco, ou com disfunção neurológica, respiratória ou BT ≥ 2: <strong>colecistostomia</strong>; operar depois que o risco melhorar.</li>
+      <li>Quem indica colecistostomia é a <strong>instabilidade atual</strong>, não a comorbidade de base.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="degrau" id="d4">
+  <div class="dhead"><span class="dnum">4</span><div class="dtitle"><span class="dstage">Elo 4</span><h2>Os cortes que viram conduta</h2></div></div>
+  <p class="lede">"Assintomático" e "bloqueado" puxam para esperar. O número no enunciado é que manda.</p>
+  <div class="crit">
+    <div class="row"><span class="k">Colelitíase sem sintoma: opera se</span><span class="v">Cálculo &gt; 2,5-3 cm; vesícula em porcelana; pólipo &gt; 1 cm associado; anomalia da junção pancreatobiliar; anemia hemolítica crônica; candidato a bariátrica ou transplante</span></div>
+    <div class="row"><span class="k">Por quê</span><span class="v">Risco aumentado de carcinoma de vesícula</span></div>
+    <div class="row"><span class="k">Apendicite bloqueada, estável</span><span class="v">Abscesso <strong>≥ 4 cm</strong>: drenagem percutânea + antibiótico 4-7 dias. Fleimão ou abscesso menor: só antibiótico</span></div>
+    <div class="row"><span class="k">Depois do bloqueio</span><span class="v">Adulto: colonoscopia em 6-8 semanas, depois apendicectomia de intervalo</span></div>
+  </div>
+</section>
+
+<section class="degrau" id="viz">
+  <div class="dhead"><span class="dnum">+</span><div class="dtitle"><span class="dstage">Blast radius</span><h2>Vizinhos de prova</h2></div></div>
+  <div class="tblw"><table class="t">
+    <tr><th>Eixo</th><th>Colecistite</th><th>Colangite</th></tr>
+    <tr><td>Grau II</td><td>1 critério (leuco &gt; 18.000, &gt; 72 h...)</td><td><strong>2 de 5</strong>: leuco &gt; 12.000 ou &lt; 4.000; febre ≥ 39 °C; idade ≥ 75; BT ≥ 5; hipoalbuminemia</td></tr>
+    <tr><td>O que é urgente</td><td>Colecistectomia precoce (&lt; 72 h)</td><td>A drenagem. Grau I: antibiótico e reavaliar em 24 h; II: precoce; III: em até 24 h</td></tr>
+  </table></div>
+  <div class="prose">
+    <ul>
+      <li><strong>Drenagem da colangite:</strong> CPRE primeiro. Y de Roux ou Whipple: drenagem trans-hepática percutânea. Cirúrgica com Kehr só na falha.</li>
+      <li><strong>Apendicite na gestante:</strong> o apêndice sobe com o útero (dor em flanco ou hipocôndrio direito). Leucocitose é fisiológica e não ajuda. USG primeiro, RM sem gadolínio se dúvida.</li>
+      <li><strong>Antibiótico na apendicite:</strong> não complicada = profilaxia em dose única, até 60 min antes da incisão. Curso de 4-7 dias só na complicada.</li>
+      <li><strong>Irrigação:</strong> artéria apendicular, ramo da ileocólica, que vem da mesentérica <strong>superior</strong>.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="degrau" id="arms">
+  <div class="dhead"><span class="dnum">!</span><div class="dtitle"><span class="dstage">Armadilhas</span><h2>Onde a banca arma</h2></div></div>
+  <div class="arms">
+    <div class="arm"><span class="dot"></span><p><strong>TC após o USG</strong> parece o passo natural na icterícia obstrutiva. Não vê cálculo de colesterol.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Quase-cortes na colangite:</strong> 38 °C, BT 4,6 e 45 anos não pontuam. Lidos como limiar, excluem o Grau II.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Leucocitose com desvio</strong> não é disfunção de órgão. Sem ela, não é Tokyo III nem colecistostomia.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>TC já mostrou apendicite</strong> (estrutura tubular espessada + fecalito): o próximo passo é laparoscopia, não outra imagem.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Valor de referência plantado</strong> no enunciado da gestante não vale para ela. 11.500 leucócitos não provam inflamação.</p></div>
+  </div>
+</section>
+
+<section class="degrau" id="teste">
+  <div class="dhead"><span class="dnum">?</span><div class="dtitle"><span class="dstage">Recuperação</span><h2>Teste agora</h2></div></div>
+  <div class="qs">
+    <div class="q"><span class="ql">Elo 1</span><p>USG com colelitíase e colédoco dilatado, sem cálculo visto. Próximo exame?</p><details><summary>ver resposta</summary><p>Colangiorressonância (ou ecoendoscopia). CPRE só depois de confirmar.</p></details></div>
+    <div class="q"><span class="ql">Elo 1</span><p>Que achado do USG autoriza ir direto à CPRE?</p><details><summary>ver resposta</summary><p>O cálculo visto no colédoco. A especificidade do USG é alta.</p></details></div>
+    <div class="q"><span class="ql">Elo 1</span><p>Por que a TC falha na coledocolitíase?</p><details><summary>ver resposta</summary><p>Cálculo de colesterol é isodenso à bile.</p></details></div>
+    <div class="q"><span class="ql">Elo 2</span><p>Icterícia + pancreatite 45 dias após colecistectomia com alta sem queixa. Hipótese?</p><details><summary>ver resposta</summary><p>Coledocolitíase secundária (cálculo residual). Pancreatite exige cálculo na papila.</p></details></div>
+    <div class="q"><span class="ql">Elo 2</span><p>Icterícia colestática progressiva meses depois, sem pancreatite?</p><details><summary>ver resposta</summary><p>Estenose pós-operatória da via biliar.</p></details></div>
+    <div class="q"><span class="ql">Elo 2</span><p>Quais quatro achados tiram a lesão biliar do Kehr e levam à biliodigestiva?</p><details><summary>ver resposta</summary><p>Lesão térmica, &gt; 50% da circunferência, alta (perto da bifurcação), &gt; 1 cm.</p></details></div>
+    <div class="q"><span class="ql">Elo 3</span><p>70 anos, 4 dias de dor, leucócitos 18.600, sem disfunção de órgão. Grau e conduta (baixo risco)?</p><details><summary>ver resposta</summary><p>Tokyo II (&gt; 18.000 e &gt; 72 h). Colecistectomia laparoscópica precoce.</p></details></div>
+    <div class="q"><span class="ql">Elo 3</span><p>O que faz uma colecistite ser Grau III?</p><details><summary>ver resposta</summary><p>Disfunção de pelo menos um órgão ou sistema. Nada além disso.</p></details></div>
+    <div class="q"><span class="ql">Elo 3</span><p>Tokyo III de alto risco: qual técnica controla o foco?</p><details><summary>ver resposta</summary><p>Colecistostomia percutânea; colecistectomia quando o risco melhorar.</p></details></div>
+    <div class="q"><span class="ql">Elo 4</span><p>Colelitíase assintomática, cálculo único de 2,8 cm. Conduta?</p><details><summary>ver resposta</summary><p>Colecistectomia eletiva: cálculo &gt; 2,5-3 cm é exceção à regra de não operar.</p></details></div>
+    <div class="q"><span class="ql">Elo 4</span><p>Plastrão apendicular estável: a partir de que tamanho o abscesso é drenado?</p><details><summary>ver resposta</summary><p>4 cm ou mais: drenagem percutânea guiada + antibiótico.</p></details></div>
+  </div>
+</section>
+
+</main>
+</div>

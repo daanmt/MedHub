@@ -1,0 +1,310 @@
+<title>Revisão direcionada · Lúpus, SAF e vasculites</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,380;9..144,480;9..144,600;9..144,680&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EFF3F0; --card:#FAFCFA; --sunk:#E2E9E4;
+  --ink:#18211C; --ink2:#4C5A52; --ink3:#7C8A82;
+  --line:rgba(24,33,28,.13); --line2:rgba(24,33,28,.26);
+  --teal:#1F6B5E; --teal-ink:#154A41; --teal-wash:#DCEBE5;
+  --carmine:#8E2F41; --carmine-ink:#6B2231; --carmine-wash:#F5E2E6;
+  --amber:#8A5A17; --amber-ink:#6B4610; --amber-wash:#F3E6CC;
+  --on:#FFFFFF;
+  --sh:0 1px 2px rgba(24,33,28,.06),0 12px 30px -18px rgba(24,33,28,.35);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#7E8C84;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  --on:#131A16;
+  --sh:0 1px 2px rgba(0,0,0,.5),0 14px 34px -18px rgba(0,0,0,.8);
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#7E8C84;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  --on:#131A16;
+  --sh:0 1px 2px rgba(0,0,0,.5),0 14px 34px -18px rgba(0,0,0,.8);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);
+  font:16px/1.6 "Source Sans 3",-apple-system,"Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+.mn{font-family:"IBM Plex Mono",ui-monospace,Consolas,monospace;font-variant-numeric:tabular-nums}
+h1,h2,h3,h4{margin:0;font-family:Fraunces,Georgia,serif;font-weight:600;letter-spacing:-.01em;text-wrap:balance;line-height:1.14;color:var(--ink)}
+.wrap{max-width:760px;margin:0 auto;padding:0 24px 100px}
+@media(max-width:640px){.wrap{padding:0 16px 80px}}
+:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+a{color:var(--teal-ink)}
+strong{font-weight:600;color:var(--ink)}
+em{font-style:italic}
+
+/* masthead */
+.top{padding:52px 0 30px;border-bottom:1px solid var(--line2)}
+.eye{font:600 11px/1 "Source Sans 3";letter-spacing:.14em;text-transform:uppercase;color:var(--teal-ink);margin:0 0 15px}
+.top h1{font-size:clamp(32px,5vw,50px);font-weight:680;max-width:18ch;margin-bottom:16px}
+.top .sub{font-size:18px;line-height:1.6;color:var(--ink2);max-width:66ch;margin:0 0 22px}
+.stats{display:flex;gap:22px;flex-wrap:wrap}
+.stat{display:flex;flex-direction:column;gap:2px}
+.stat b{font:600 24px/1 "IBM Plex Mono";color:var(--teal-ink);font-variant-numeric:tabular-nums}
+.stat span{font-size:11.5px;color:var(--ink3);letter-spacing:.02em}
+
+/* timeline strip (Degrau 0) */
+.tl{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1px;background:var(--line2);border:1px solid var(--line2);margin:20px 0}
+.tl div{background:var(--card);padding:12px 13px}
+.tl .tk{font:600 11px "IBM Plex Mono";color:var(--teal-ink);display:block;margin-bottom:4px;font-variant-numeric:tabular-nums}
+.tl .tn{font-size:14px;font-weight:600;color:var(--ink);display:block;margin-bottom:3px}
+.tl .tv{font-size:12.8px;line-height:1.45;color:var(--ink2)}
+
+main{min-width:0}
+
+
+/* degrau */
+.degrau{padding:44px 0;border-bottom:1px solid var(--line)}
+.degrau:first-child{padding-top:0}
+.degrau:last-of-type{border-bottom:0}
+.dhead{display:flex;gap:16px;align-items:flex-start;margin-bottom:18px}
+.dnum{flex-shrink:0;width:44px;height:44px;border:1.5px solid var(--teal);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font:600 17px "IBM Plex Mono";color:var(--teal-ink)}
+.dtitle{padding-top:4px}
+.dtitle .dstage{font:600 11px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);display:block;margin-bottom:3px}
+.dtitle h2{font-size:clamp(21px,2.6vw,27px)}
+.lede{font-size:16.5px;line-height:1.6;color:var(--ink2);margin:0 0 20px;font-style:italic}
+.prose p{font-size:16px;line-height:1.72;color:var(--ink2);margin:0 0 16px}
+.prose p:last-child{margin-bottom:0}
+.prose ul,.prose ol{margin:0 0 16px;padding-left:22px}
+.prose li{font-size:15.6px;line-height:1.6;color:var(--ink2);margin-bottom:6px}
+.prose li:last-child{margin-bottom:0}
+.prose li strong{color:var(--ink)}
+h4.sub{font-size:14px;font-weight:600;font-family:"Source Sans 3";letter-spacing:.01em;color:var(--ink);margin:26px 0 10px}
+h4.sub:first-child{margin-top:0}
+
+/* callouts */
+.aside{margin:20px 0;padding:15px 18px;border-left:3px solid var(--teal);background:var(--teal-wash)}
+.aside .albl{font:700 10.5px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;color:var(--teal-ink);margin-bottom:6px}
+.aside p{font-size:15.3px;line-height:1.6;color:var(--ink);margin:0}
+.aside p+p{margin-top:8px}
+.trap{margin:20px 0;padding:15px 18px;border-left:3px solid var(--carmine);background:var(--carmine-wash)}
+.trap .albl{font:700 10.5px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;color:var(--carmine-ink);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.trap .albl::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--carmine)}
+.trap p{font-size:15.3px;line-height:1.6;color:var(--ink);margin:0}
+.trap p+p{margin-top:8px}
+.banca{margin:20px 0;padding:15px 18px;border-left:3px solid var(--amber);background:var(--amber-wash)}
+.banca .albl{font:700 10.5px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;color:var(--amber-ink);margin-bottom:6px}
+.banca p{font-size:15.3px;line-height:1.6;color:var(--ink);margin:0}
+.banca p+p{margin-top:8px}
+.star{margin:20px 0;padding:14px 18px;border:1px solid var(--line2);background:var(--card)}
+.star .albl{font:700 10.5px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:6px}
+.star p{font-size:15.3px;line-height:1.6;color:var(--ink);margin:0;font-weight:560}
+
+/* comparativos */
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line2);border:1px solid var(--line2);margin:20px 0}
+.vs>div{background:var(--card);padding:14px 16px}
+.vs h5{font:700 11.5px "Source Sans 3";letter-spacing:.04em;text-transform:uppercase;margin:0 0 8px;color:var(--ink3)}
+.vs .a h5{color:var(--carmine-ink)}
+.vs .b h5{color:var(--teal-ink)}
+.vs p,.vs li{font-size:14.5px;line-height:1.55;color:var(--ink2)}
+.vs p{margin:0 0 8px}
+.vs p:last-child{margin:0}
+.vs ul{margin:0;padding-left:18px}
+.vs li{margin-bottom:5px}
+@media(max-width:640px){.vs{grid-template-columns:1fr}}
+
+/* grid de criterios */
+.crit{border:1px solid var(--line2);margin:20px 0}
+.crit .row{display:grid;grid-template-columns:180px 1fr;gap:14px;padding:11px 15px;font-size:14.3px}
+.crit .row+.row{border-top:1px solid var(--line)}
+.crit .row .k{font-weight:600;color:var(--teal-ink)}
+.crit .row .v{color:var(--ink2);line-height:1.5}
+.crit .row .v strong{color:var(--ink)}
+.crit.hd .row:first-child{background:var(--sunk);font-weight:600;color:var(--ink3);font-size:12px;letter-spacing:.04em;text-transform:uppercase}
+.crit.hd .row:first-child .k,.crit.hd .row:first-child .v{color:var(--ink3)}
+.crit.c3 .row{grid-template-columns:150px 1fr 1fr}
+@media(max-width:640px){.crit .row,.crit.c3 .row{grid-template-columns:1fr;gap:3px}}
+
+/* referencia densa */
+details.ref{margin:20px 0;border:1px solid var(--line2);background:var(--card)}
+details.ref>summary{cursor:pointer;list-style:none;padding:12px 16px;font:600 13.5px "Source Sans 3";color:var(--teal-ink);display:flex;align-items:center;gap:9px}
+details.ref>summary::-webkit-details-marker{display:none}
+details.ref>summary::before{content:"+";font:600 15px "IBM Plex Mono";width:16px}
+details.ref[open]>summary::before{content:"-"}
+details.ref .refbody{padding:0 16px 16px}
+details.ref .row{display:grid;grid-template-columns:150px 1fr;gap:12px;padding:8px 0;font-size:13.8px;border-top:1px solid var(--line)}
+details.ref .row:first-child{border-top:0}
+details.ref .k{font-weight:600;color:var(--ink)}
+details.ref .v{color:var(--ink2);line-height:1.5}
+@media(max-width:640px){details.ref .row{grid-template-columns:1fr;gap:2px}}
+
+/* sintese */
+.synth{background:var(--card);border:1px solid var(--line2);padding:32px 30px;margin-top:6px}
+@media(max-width:640px){.synth{padding:22px 18px}}
+.synth h2{font-size:23px;margin-bottom:14px}
+.synth .prose p{font-size:16.5px}
+.trig{margin-top:22px;display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1px;background:var(--line2);border:1px solid var(--line2)}
+.trig div{background:var(--sunk);padding:13px 15px}
+.trig .tk{font:700 11px "IBM Plex Mono";color:var(--teal-ink);display:block;margin-bottom:4px}
+.trig .tv{font-size:13.6px;line-height:1.45;color:var(--ink2)}
+
+/* armadilhas */
+.arms{display:flex;flex-direction:column;gap:1px;background:var(--line2);border:1px solid var(--line2);margin-top:18px}
+.arm{background:var(--card);padding:15px 18px;display:flex;gap:12px}
+.arm .dot{flex-shrink:0;width:9px;height:9px;border-radius:50%;background:var(--carmine);margin-top:7px}
+.arm p{font-size:15px;line-height:1.58;color:var(--ink2);margin:0}
+.arm p strong{color:var(--ink)}
+
+footer{margin-top:60px;padding-top:22px;border-top:1px solid var(--line2)}
+footer p{font-size:12.3px;color:var(--ink3);max-width:80ch;margin:0 0 7px;line-height:1.5}
+code{font-family:"IBM Plex Mono",Consolas,monospace;font-size:11.8px;background:var(--sunk);padding:1px 5px;border-radius:2px}
+
+/* RD: tabela, teste */
+.tblw{overflow-x:auto;margin:20px 0;border:1px solid var(--line2)}
+table.t{border-collapse:collapse;width:100%;min-width:520px;font-size:14.2px}
+table.t th,table.t td{padding:10px 12px;text-align:left;vertical-align:top;border-top:1px solid var(--line);color:var(--ink2);line-height:1.45}
+table.t th{background:var(--sunk);font:600 12px "Source Sans 3";letter-spacing:.04em;text-transform:uppercase;color:var(--ink3);border-top:0}
+table.t td:first-child{font-weight:600;color:var(--teal-ink)}
+.qs{display:flex;flex-direction:column;gap:1px;background:var(--line2);border:1px solid var(--line2);margin-top:18px}
+.q{background:var(--card);padding:14px 16px}
+.q p{margin:0;font-size:15.3px;line-height:1.55;color:var(--ink)}
+.q .ql{font:600 11px "IBM Plex Mono";color:var(--teal-ink);display:block;margin-bottom:4px}
+.q details{margin-top:8px}
+.q summary{cursor:pointer;font:600 13px "Source Sans 3";color:var(--teal-ink)}
+.vs>div,.crit .row>span{min-width:0}
+.q details p{margin-top:6px;font-size:14.8px;color:var(--ink2)}
+</style>
+<div class="wrap">
+<header class="top">
+  <p class="eye">MedHub · Revisão direcionada · Reumatologia</p>
+  <h1>Lúpus, SAF e vasculites: o dado que separa</h1>
+  <p class="sub">Hoje o erro foi sempre o mesmo: um dado chamativo (proteinúria de 7 g, tender points, hematúria) venceu o dado que discrimina.</p>
+  <div class="stats">
+    <div class="stat"><b>3</b><span>elos que falharam</span></div>
+    <div class="stat"><b>4</b><span>vizinhos de prova</span></div>
+    <div class="stat"><b>10</b><span>perguntas de teste</span></div>
+  </div>
+</header>
+
+<main>
+
+<section class="degrau" id="d0">
+  <div class="dhead"><span class="dnum">0</span><div class="dtitle"><span class="dstage">Mapa</span><h2>Onde você tropeçou hoje</h2></div></div>
+  <div class="crit">
+    <div class="row"><span class="k">Sangue</span><span class="v">o que define Evans; hemólise autoimune x microangiopática</span></div>
+    <div class="row"><span class="k">Rim</span><span class="v">classe IV x V; nefrite lúpica x nefropatia da SAF</span></div>
+    <div class="row"><span class="k">Diferencial e prognóstico</span><span class="v">LES x fibromialgia; vasculite por IgA x Goodpasture; o que piora o prognóstico</span></div>
+  </div>
+</section>
+
+<section class="degrau" id="d1">
+  <div class="dhead"><span class="dnum">1</span><div class="dtitle"><span class="dstage">Elo 1</span><h2>Citopenias do LES: o Coombs decide</h2></div></div>
+  <p class="lede">O LES destrói células por anticorpo. A hemólise dele é Coombs positivo.</p>
+  <div class="prose">
+    <ul>
+      <li><strong>Síndrome de Evans</strong> = anemia hemolítica autoimune (Coombs+) + plaquetopenia imune, com ou sem neutropenia. O LES é a principal causa.</li>
+      <li>Hepatoesplenomegalia, febre e linfopenia soam lúpicas, mas não definem Evans.</li>
+      <li>Anemia mais comum no LES é a de doença crônica; a hemolítica autoimune é ~10%.</li>
+    </ul>
+  </div>
+  <div class="vs">
+    <div class="b"><h5>Autoimune (AHAI)</h5><ul><li>Coombs direto <strong>positivo</strong></li><li>É a do LES</li><li>Corticoide + transfusão em alíquotas</li></ul></div>
+    <div class="a"><h5>Microangiopática (PTT/SHU)</h5><ul><li>Coombs <strong>negativo</strong> + esquizócitos</li><li>ADAMTS13</li><li>Plasmaférese</li></ul></div>
+  </div>
+</section>
+
+<section class="degrau" id="d2">
+  <div class="dhead"><span class="dnum">2</span><div class="dtitle"><span class="dstage">Elo 2</span><h2>Rim: sedimento e complemento antes da proteinúria</h2></div></div>
+  <p class="lede">Proteinúria nefrótica não basta para chamar de membranosa. Cilindro hemático e complemento consumido apontam para proliferativa.</p>
+  <div class="tblw"><table class="t">
+    <tr><th>Achado</th><th>Classe IV (proliferativa difusa)</th><th>Classe V (membranosa)</th></tr>
+    <tr><td>Síndrome</td><td>Nefrítica; pode ter proteinúria nefrótica</td><td>Nefrótica pura, função preservada</td></tr>
+    <tr><td>Sedimento</td><td>Cilindros hemáticos, hemácias dismórficas</td><td>Sem cilindro hemático</td></tr>
+    <tr><td>C3/C4</td><td><strong>Baixos</strong></td><td>Normais</td></tr>
+    <tr><td>Anti-DNA</td><td>Alto</td><td>Sem elevação</td></tr>
+  </table></div>
+  <div class="prose">
+    <ul>
+      <li>A classe IV é a mais comum e a mais grave.</li>
+      <li>Mecanismo: o imunocomplexo (anti-DNA) ativa a via clássica e consome complemento.</li>
+    </ul>
+  </div>
+  <h4 class="sub">Quando o rim é da SAF</h4>
+  <div class="prose">
+    <ul>
+      <li>SAF mal anticoagulada + HAS + proteinúria + hematúria, sem dado de LES: <strong>nefropatia da SAF</strong>, uma microangiopatia trombótica.</li>
+      <li>Biópsia: hiperplasia fibrosa da íntima e atrofia tubular com <strong>pseudotireoidização</strong>.</li>
+      <li>SAF primária evolui para LES em ~10%, não 20-40%.</li>
+      <li>Biópsia renal não é proscrita no anticoagulado: faz-se ponte com heparina.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="degrau" id="d3">
+  <div class="dhead"><span class="dnum">3</span><div class="dtitle"><span class="dstage">Elo 3</span><h2>Diferenciais: o achado que o outro não faz</h2></div></div>
+  <p class="lede">Cada par se resolve por um achado que só um dos lados produz.</p>
+  <div class="tblw"><table class="t">
+    <tr><th>Par</th><th>O discriminador</th></tr>
+    <tr><td>LES x fibromialgia</td><td>Sinovite objetiva e febre. Fibromialgia é dor não inflamatória; tender points podem coexistir, mas não explicam artrite nem febre</td></tr>
+    <tr><td>IgA x Goodpasture</td><td><strong>Púrpura palpável</strong> (MMII, nádegas) + artrite + dor abdominal + hematúria, complemento normal = vasculite por IgA. Goodpasture é pulmão-rim, sem púrpura nem abdome</td></tr>
+  </table></div>
+  <div class="crit">
+    <div class="row"><span class="k">Pior prognóstico</span><span class="v">Raça negra, baixo nível socioeconômico, sexo masculino, nefrite, SNC</span></div>
+    <div class="row"><span class="k">Não estratifica</span><span class="v">Articular (é branda); FAN (é quase universal)</span></div>
+  </div>
+</section>
+
+<section class="degrau" id="viz">
+  <div class="dhead"><span class="dnum">+</span><div class="dtitle"><span class="dstage">Blast radius</span><h2>Vizinhos de prova</h2></div></div>
+  <div class="tblw"><table class="t">
+    <tr><th>Imunofluorescência</th><th>Doença</th><th>Pedir</th></tr>
+    <tr><td>Granular</td><td>LES (imunocomplexo)</td><td>Complemento</td></tr>
+    <tr><td>Linear</td><td>Goodpasture (anti-membrana basal)</td><td>—</td></tr>
+    <tr><td>Pauci-imune</td><td>Vasculite ANCA</td><td>ANCA</td></tr>
+  </table></div>
+  <div class="prose">
+    <ul>
+      <li><strong>Atividade:</strong> anti-DNA sobe e C3/C4 caem. FAN e anti-Sm não acompanham atividade.</li>
+      <li><strong>Anticoagulante lúpico:</strong> alarga o TTPa in vitro e trombosa in vivo. Na SAF, plaquetopenia leve é típica.</li>
+      <li><strong>Dor abdominal no lúpico</strong> com diarreia sanguinolenta, sem antibiótico prévio e achado mesentérico na TC: vasculite mesentérica, não colite pseudomembranosa.</li>
+      <li><strong>Hidroxicloroquina:</strong> para todos, inclusive na gestação. Retinopatia = suspensão <strong>definitiva</strong>.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="degrau" id="arms">
+  <div class="dhead"><span class="dnum">!</span><div class="dtitle"><span class="dstage">Armadilhas</span><h2>Onde a banca arma</h2></div></div>
+  <div class="arms">
+    <div class="arm"><span class="dot"></span><p><strong>Proteinúria de 7 g</strong> ancora em membranosa. Cilindro hemático e complemento baixo fecham classe IV.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Acertar AHAI e pedir ADAMTS13</strong>: essa é a conduta da hemólise Coombs negativa.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>"SAF evolui para LES em 20-40%"</strong> serve para empurrar nefrite lúpica sem nenhum dado de LES.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>"Renal + articular"</strong> como pior prognóstico: renal piora, articular não.</p></div>
+  </div>
+</section>
+
+<section class="degrau" id="teste">
+  <div class="dhead"><span class="dnum">?</span><div class="dtitle"><span class="dstage">Recuperação</span><h2>Teste agora</h2></div></div>
+  <div class="qs">
+    <div class="q"><span class="ql">Elo 1</span><p>O que define a síndrome de Evans?</p><details><summary>ver resposta</summary><p>Anemia hemolítica autoimune + plaquetopenia imune, com ou sem neutropenia.</p></details></div>
+    <div class="q"><span class="ql">Elo 1</span><p>Hemólise no LES: qual exame separa autoimune de microangiopática?</p><details><summary>ver resposta</summary><p>Coombs direto: positivo na AHAI, negativo na MAT (com esquizócitos).</p></details></div>
+    <div class="q"><span class="ql">Elo 1</span><p>Conduta imediata na AHAI do LES?</p><details><summary>ver resposta</summary><p>Corticoide + transfusão em alíquotas.</p></details></div>
+    <div class="q"><span class="ql">Elo 2</span><p>Proteinúria de 7 g + cilindros hemáticos + C3/C4 baixos. Classe?</p><details><summary>ver resposta</summary><p>IV, proliferativa difusa.</p></details></div>
+    <div class="q"><span class="ql">Elo 2</span><p>Que dois achados de laboratório afastam a classe V?</p><details><summary>ver resposta</summary><p>Complemento consumido e cilindro hemático (anti-DNA alto reforça).</p></details></div>
+    <div class="q"><span class="ql">Elo 2</span><p>SAF mal anticoagulada com HAS e hematúria, sem dado de LES. Qual a lesão renal?</p><details><summary>ver resposta</summary><p>Nefropatia da SAF: microangiopatia trombótica, com pseudotireoidização tubular na biópsia.</p></details></div>
+    <div class="q"><span class="ql">Elo 2</span><p>Quanto da SAF primária evolui para LES?</p><details><summary>ver resposta</summary><p>Cerca de 10%.</p></details></div>
+    <div class="q"><span class="ql">Elo 3</span><p>Poliartrite com sinovite, febre e 14/18 tender points. O que exclui fibromialgia?</p><details><summary>ver resposta</summary><p>Sinovite objetiva e febre: fibromialgia não as produz.</p></details></div>
+    <div class="q"><span class="ql">Elo 3</span><p>Púrpura palpável, artrite, dor abdominal e hematúria, complemento normal. Por que não Goodpasture?</p><details><summary>ver resposta</summary><p>Goodpasture não dá púrpura nem dor abdominal. É vasculite por IgA.</p></details></div>
+    <div class="q"><span class="ql">Elo 3</span><p>Cite três fatores de pior prognóstico no LES e um que não conta.</p><details><summary>ver resposta</summary><p>Negro, baixo nível socioeconômico, homem, nefrite, SNC. Articular não piora.</p></details></div>
+  </div>
+</section>
+
+</main>
+</div>

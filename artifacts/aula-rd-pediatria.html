@@ -1,0 +1,262 @@
+<title>Revisão direcionada · Pediatria</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,380;9..144,480;9..144,600;9..144,680&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EFF3F0; --card:#FAFCFA; --sunk:#E2E9E4;
+  --ink:#18211C; --ink2:#4C5A52; --ink3:#7C8A82;
+  --line:rgba(24,33,28,.13); --line2:rgba(24,33,28,.26);
+  --teal:#1F6B5E; --teal-ink:#154A41; --teal-wash:#DCEBE5;
+  --carmine:#8E2F41; --carmine-ink:#6B2231; --carmine-wash:#F5E2E6;
+  --amber:#8A5A17; --amber-ink:#6B4610; --amber-wash:#F3E6CC;
+  --on:#FFFFFF;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#7E8C84;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  --on:#131A16;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#7E8C84;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  --on:#131A16;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);
+  font:16px/1.6 "Source Sans 3",-apple-system,"Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+h1,h2,h3{margin:0;font-family:Fraunces,Georgia,serif;font-weight:600;letter-spacing:-.01em;text-wrap:balance;line-height:1.16;color:var(--ink)}
+.wrap{max-width:760px;margin:0 auto;padding:0 24px 90px}
+@media(max-width:640px){.wrap{padding:0 16px 72px}}
+:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+strong{font-weight:600;color:var(--ink)}
+.mn{font-family:"IBM Plex Mono",ui-monospace,Consolas,monospace;font-variant-numeric:tabular-nums}
+
+/* masthead */
+.top{padding:44px 0 26px;border-bottom:1px solid var(--line2)}
+.eye{font:600 11px/1.3 "Source Sans 3";letter-spacing:.14em;text-transform:uppercase;color:var(--teal-ink);margin:0 0 13px}
+.top h1{font-size:clamp(28px,5vw,42px);font-weight:680;margin-bottom:14px}
+.top .sub{font-size:clamp(16px,2.2vw,17.5px);line-height:1.6;color:var(--ink2);margin:0}
+
+/* secoes */
+.sec{padding:34px 0;border-bottom:1px solid var(--line)}
+.sec:last-of-type{border-bottom:0}
+.kick{font:600 11px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);display:block;margin-bottom:5px}
+.sec h2{font-size:clamp(21px,3.2vw,26px);margin-bottom:12px}
+.lede{font-size:16.3px;line-height:1.6;color:var(--ink2);margin:0 0 14px;font-style:italic}
+ul.pt{margin:0 0 14px;padding-left:20px}
+ul.pt li{font-size:15.6px;line-height:1.58;color:var(--ink2);margin-bottom:7px}
+ul.pt li:last-child{margin-bottom:0}
+
+/* onde tropecou */
+.miss{list-style:none;margin:0;padding:0;border:1px solid var(--line2);background:var(--card)}
+.miss li{display:grid;grid-template-columns:28px minmax(0,1fr);gap:10px;padding:11px 14px;font-size:15.3px;line-height:1.5;color:var(--ink2)}
+.miss li+li{border-top:1px solid var(--line)}
+.miss .n{font:600 12px "IBM Plex Mono";color:var(--carmine-ink);padding-top:2px}
+
+/* tabela */
+.tw{overflow-x:auto;margin:16px 0;border:1px solid var(--line2);background:var(--card)}
+table{border-collapse:collapse;width:100%;font-size:14.4px}
+th,td{text-align:left;vertical-align:top;padding:9px 12px;line-height:1.45}
+th{background:var(--sunk);font:600 11.5px "Source Sans 3";letter-spacing:.05em;text-transform:uppercase;color:var(--ink3)}
+td{color:var(--ink2);border-top:1px solid var(--line)}
+td:first-child{font-weight:600;color:var(--ink)}
+td.hi{color:var(--teal-ink);font-weight:600}
+
+/* comparativo */
+.vs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line2);border:1px solid var(--line2);margin:16px 0}
+.vs>div{background:var(--card);padding:13px 15px;min-width:0}
+.vs h3{font:700 11.5px "Source Sans 3";letter-spacing:.05em;text-transform:uppercase;margin:0 0 7px;color:var(--ink3)}
+.vs .a h3{color:var(--carmine-ink)}
+.vs .b h3{color:var(--teal-ink)}
+.vs ul{margin:0;padding-left:17px}
+.vs li{font-size:14.5px;line-height:1.5;color:var(--ink2);margin-bottom:4px}
+@media(max-width:640px){.vs{grid-template-columns:minmax(0,1fr)}}
+
+/* chave */
+.key{margin:16px 0;padding:12px 16px;border-left:3px solid var(--teal);background:var(--teal-wash);font-size:15.2px;line-height:1.55;color:var(--ink)}
+
+/* armadilhas */
+.arms{display:flex;flex-direction:column;gap:1px;background:var(--line2);border:1px solid var(--line2)}
+.arm{background:var(--card);padding:13px 16px;display:flex;gap:11px}
+.arm .dot{flex-shrink:0;width:8px;height:8px;border-radius:50%;background:var(--carmine);margin-top:8px}
+.arm p{font-size:15px;line-height:1.55;color:var(--ink2);margin:0}
+
+/* teste agora */
+.qs{display:flex;flex-direction:column;gap:10px}
+.q{background:var(--card);border:1px solid var(--line2);padding:13px 15px}
+.q p{margin:0 0 8px;font-size:15.4px;line-height:1.5;color:var(--ink);font-weight:500}
+.q .tag{font:600 10.5px "IBM Plex Mono";color:var(--teal-ink);letter-spacing:.04em;display:block;margin-bottom:4px}
+.q details summary{cursor:pointer;font:600 13px "Source Sans 3";color:var(--teal-ink);list-style:none}
+.q details summary::-webkit-details-marker{display:none}
+.q details summary::before{content:"+ "}
+.q details[open] summary::before{content:"- "}
+.q details div{margin-top:7px;padding-top:7px;border-top:1px dashed var(--line2);font-size:14.8px;line-height:1.5;color:var(--ink2)}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <p class="eye">Revisão direcionada · Pediatria</p>
+  <h1>Cardiopatias, emergência e vacinas: o qualificador decide</h1>
+  <p class="sub">Em quase todos os tropeços de hoje, o dado que decidia estava no enunciado e o reflexo passou por cima dele.</p>
+</header>
+
+<section class="sec">
+  <span class="kick">1 · Diagnóstico</span>
+  <h2>Onde você tropeçou hoje</h2>
+  <ul class="miss">
+    <li><span class="n">01</span><span>"Mais comum" sem o qualificador: a CIV no lugar da TGA.</span></li>
+    <li><span class="n">02</span><span>O sopro da CIA atribuído ao defeito, e não ao hiperfluxo.</span></li>
+    <li><span class="n">03</span><span>Hiperóxia: o que significa a PO₂ que não sobe.</span></li>
+    <li><span class="n">04</span><span>FC 200 com febre: sinusal x TSV, decidido pela onda P.</span></li>
+    <li><span class="n">05</span><span>Hemoderivado x vacina viva: os "3 meses" genéricos onde cabiam 5.</span></li>
+  </ul>
+</section>
+
+<section class="sec">
+  <span class="kick">Elo 01</span>
+  <h2>"Mais comum" de quê?</h2>
+  <p class="lede">O adjetivo "cianótica" é um filtro: elimina metade das alternativas antes de qualquer raciocínio.</p>
+  <div class="tw"><table>
+    <tr><th>Grupo</th><th>Mais comum</th></tr>
+    <tr><td>Todas</td><td class="hi">CIV (acianogênica)</td></tr>
+    <tr><td>Ordem geral</td><td>CIV &gt; CIA &gt; PCA</td></tr>
+    <tr><td>Cianótica no RN</td><td class="hi">TGA</td></tr>
+    <tr><td>Cianótica depois</td><td class="hi">T4F (após o período neonatal)</td></tr>
+    <tr><td>3ª cianótica</td><td>Dupla via de saída do VD</td></tr>
+  </table></div>
+  <ul class="pt">
+    <li>CIV, CIA, PCA e DSAVT são shunt E→D, ou seja, acianogênicas. Com "cianótica" no enunciado, saem da conta.</li>
+    <li>TGA: circulações em paralelo. A criança nasce bem e piora entre o 1º e o 4º dia, quando o canal fecha.</li>
+  </ul>
+</section>
+
+<section class="sec">
+  <span class="kick">Elo 02</span>
+  <h2>CIA: o defeito não sopra</h2>
+  <p class="lede">Tudo o que se ausculta na CIA é consequência do hiperfluxo.</p>
+  <ul class="pt">
+    <li>O gradiente entre os átrios é baixo demais para gerar sopro.</li>
+    <li>O sopro sistólico suave em BEE alta é <strong>estenose pulmonar relativa</strong>: fluxo aumentado numa valva pulmonar de tamanho normal.</li>
+    <li>Num shunt grande aparece também o ruflar diastólico tricúspide, pelo mesmo mecanismo.</li>
+    <li>Quem discrimina é o <strong>desdobramento FIXO de B2</strong>, que não varia com a respiração.</li>
+  </ul>
+  <div class="vs">
+    <div class="b"><h3>CIA</h3><ul>
+      <li>Sopro sistólico suave, BEE alta</li>
+      <li>B2 com desdobramento fixo</li>
+      <li>Assintomática por anos; ECG com BRD</li>
+    </ul></div>
+    <div class="a"><h3>CIV</h3><ul>
+      <li>Holossistólico rude, BEE baixa (3º-4º EIC)</li>
+      <li>Hiperfonese de B2</li>
+      <li>Se moderada ou grande: IC aos 2-3 meses</li>
+    </ul></div>
+  </div>
+</section>
+
+<section class="sec">
+  <span class="kick">Elo 03</span>
+  <h2>Hiperóxia: o O₂ não chega a quem não passa pelo pulmão</h2>
+  <p class="lede">Subir a FiO₂ não oxigena o sangue que o shunt desvia do alvéolo.</p>
+  <ul class="pt">
+    <li>Técnica: O₂ a 100% por 10 min e gasometria na radial direita (pré-ductal).</li>
+    <li><strong>PO₂ &lt; 100 mmHg = cardiopatia cianogênica</strong>, por shunt D→E.</li>
+    <li>Na causa pulmonar a PO₂ sobe bem, porque o O₂ chega ao alvéolo por onde o sangue passa.</li>
+    <li>Ausculta pulmonar limpa e RX normal com PO₂ que não sobe: não é pulmão.</li>
+    <li>Se cardíaca: prostaglandina para manter o canal e não insistir no O₂.</li>
+  </ul>
+</section>
+
+<section class="sec">
+  <span class="kick">Elo 04</span>
+  <h2>Sinusal x TSV</h2>
+  <p class="lede">A frequência sozinha não decide. Decidem a onda P e o contexto.</p>
+  <div class="tw"><table>
+    <tr><th>Achado</th><th>Sinusal</th><th>TSV</th></tr>
+    <tr><td>Início</td><td>Gradual</td><td>Súbito</td></tr>
+    <tr><td>FC</td><td>Varia com febre e choro; &lt; 220 no lactente, &lt; 180 na criança</td><td>Fixa; ≥ 220 no lactente, ≥ 180 na criança</td></tr>
+    <tr><td>Onda P</td><td class="hi">Presente e normal</td><td>Ausente ou retrógrada; QRS estreito</td></tr>
+    <tr><td>Conduta</td><td>Tratar a causa (antitérmico)</td><td>Vagal → adenosina; instável: cardioversão</td></tr>
+  </table></div>
+  <ul class="pt">
+    <li>Lactente febril, FC 200 e P visível é sinusal. Manobra vagal e adenosina não têm papel.</li>
+  </ul>
+</section>
+
+<section class="sec">
+  <span class="kick">Elo 05</span>
+  <h2>Hemoderivado antes de vacina viva</h2>
+  <p class="lede">Anticorpo de fora neutraliza o vírus vacinal antes que ele replique e imunize.</p>
+  <ul class="pt">
+    <li>Vale para vacina viva sistêmica: tríplice viral e varicela.</li>
+    <li>O intervalo cresce com a carga de anticorpo do produto.</li>
+  </ul>
+  <div class="tw"><table>
+    <tr><th>Produto</th><th>Intervalo</th></tr>
+    <tr><td>Ig antitetânica, anti-HB</td><td>3 meses</td></tr>
+    <tr><td>Ig antirrábica</td><td>4 meses</td></tr>
+    <tr><td>Ig antivaricela</td><td class="hi">5 meses</td></tr>
+    <tr><td>Hemácias</td><td class="hi">5 meses</td></tr>
+    <tr><td>Plasma, plaquetas</td><td>7 meses</td></tr>
+    <tr><td>Ig 1 g/kg</td><td>10 meses</td></tr>
+    <tr><td>Ig 1,6-2 g/kg</td><td>11 meses</td></tr>
+  </table></div>
+  <ul class="pt">
+    <li>Palivizumabe é monoclonal e não interfere: vacina sem atraso.</li>
+  </ul>
+</section>
+
+<section class="sec">
+  <span class="kick">Blast radius</span>
+  <h2>Vizinhos de prova</h2>
+  <ul class="pt">
+    <li><strong>Cianose ao choro e à mamada:</strong> é crise de hipóxia. Quem a gera é a estenose pulmonar infundibular (obstrução dinâmica); a CIV é só o shunt.</li>
+    <li><strong>A idade separa as cianóticas:</strong> canal-dependente (TGA) abre nos primeiros dias; T4F, aos 2-6 meses, com crises ao choro.</li>
+    <li><strong>PCR pediátrica:</strong> é hipóxica, por falência respiratória ou choque. Os ritmos mais comuns são os não chocáveis (assistolia, AESP). Bradicardia &lt; 60 após via aérea e O₂: adrenalina, não atropina.</li>
+    <li><strong>SCID no teste do pezinho:</strong> suspende todas as vacinas vivas, inclusive BCG e rotavírus, mesmo com a criança assintomática. As inativadas seguem.</li>
+    <li><strong>Componente tetânico soma:</strong> DTP, dT e dTpa contam juntas; 3 doses fecham o esquema e o reforço vira dT a cada 10 anos. DTP só até 7 anos.</li>
+  </ul>
+</section>
+
+<section class="sec">
+  <span class="kick">Atenção</span>
+  <h2>Armadilhas</h2>
+  <div class="arms">
+    <div class="arm"><span class="dot"></span><p>A CIV entra nas alternativas justamente para pegar quem sabe que ela é "a mais comum" e não leu o adjetivo.</p></div>
+    <div class="arm"><span class="dot"></span><p>O sopro sistólico puxa para CIV. Na CIA ele existe por hiperfluxo; quem decide é o B2 fixo.</p></div>
+    <div class="arm"><span class="dot"></span><p>Criança com FC alta não é TSV por reflexo. Antes de pensar em adenosina, procure a onda P e a febre.</p></div>
+    <div class="arm"><span class="dot"></span><p>Os "3 meses" valem para Ig antitetânica e anti-HB. Hemácias e Ig antivaricela são 5.</p></div>
+  </div>
+</section>
+
+<section class="sec">
+  <span class="kick">Recuperação</span>
+  <h2>Teste agora</h2>
+  <div class="qs">
+    <div class="q"><span class="tag">Elo 01</span><p>O enunciado pede a cardiopatia "cianótica mais comum no RN". Quais alternativas saem antes de pensar?</p><details><summary>ver resposta</summary><div>CIV, CIA, PCA e DSAVT: todas acianogênicas. A resposta é TGA.</div></details></div>
+    <div class="q"><span class="tag">Elo 01</span><p>E se a pergunta for sobre a criança de 4 meses?</p><details><summary>ver resposta</summary><div>Após o período neonatal, a cianótica mais comum é a T4F.</div></details></div>
+    <div class="q"><span class="tag">Elo 02</span><p>Se a CIA não sopra, de onde vem o sopro sistólico?</p><details><summary>ver resposta</summary><div>Da estenose pulmonar relativa: hiperfluxo numa valva pulmonar normal.</div></details></div>
+    <div class="q"><span class="tag">Elo 02</span><p>Qual achado da ausculta exclui CIV e crava CIA?</p><details><summary>ver resposta</summary><div>Desdobramento fixo de B2, com sopro em BEE alta. A CIV sopra holossistólico em BEE baixa.</div></details></div>
+    <div class="q"><span class="tag">Elo 03</span><p>Hiperóxia com PO₂ de 96 mmHg. Qual a causa e por quê?</p><details><summary>ver resposta</summary><div>Cardíaca: o shunt D→E desvia o sangue do alvéolo, e mais O₂ não o alcança.</div></details></div>
+    <div class="q"><span class="tag">Elo 03</span><p>Onde se colhe a gasometria do teste?</p><details><summary>ver resposta</summary><div>Na radial direita, pré-ductal, após 10 min de O₂ a 100%.</div></details></div>
+    <div class="q"><span class="tag">Elo 04</span><p>Lactente febril, FC 200, onda P visível. Diagnóstico e conduta?</p><details><summary>ver resposta</summary><div>Taquicardia sinusal; antitérmico.</div></details></div>
+    <div class="q"><span class="tag">Elo 04</span><p>Que dois achados do ECG apontariam TSV?</p><details><summary>ver resposta</summary><div>Onda P ausente ou retrógrada e FC fixa ≥ 220 no lactente, com QRS estreito.</div></details></div>
+    <div class="q"><span class="tag">Elo 05</span><p>Transfusão de hemácias há 2 meses. Pode a tríplice viral hoje?</p><details><summary>ver resposta</summary><div>Não. O intervalo para concentrado de hemácias é de 5 meses.</div></details></div>
+    <div class="q"><span class="tag">Elo 05</span><p>Quais produtos têm o intervalo de 3 meses?</p><details><summary>ver resposta</summary><div>Imunoglobulina antitetânica e anti-hepatite B.</div></details></div>
+  </div>
+</section>
+</div>

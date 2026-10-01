@@ -1,0 +1,265 @@
+<title>Revisão direcionada · Hepatologia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,380;9..144,480;9..144,600;9..144,680&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EFF3F0; --card:#FAFCFA; --sunk:#E2E9E4;
+  --ink:#18211C; --ink2:#4C5A52; --ink3:#7C8A82;
+  --line:rgba(24,33,28,.13); --line2:rgba(24,33,28,.26);
+  --teal:#1F6B5E; --teal-ink:#154A41; --teal-wash:#DCEBE5;
+  --carmine:#8E2F41; --carmine-ink:#6B2231; --carmine-wash:#F5E2E6;
+  --amber:#8A5A17; --amber-ink:#6B4610; --amber-wash:#F3E6CC;
+  --on:#FFFFFF;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#7E8C84;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  --on:#131A16;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#7E8C84;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  --on:#131A16;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);
+  font:16px/1.6 "Source Sans 3",-apple-system,"Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+.mn{font-family:"IBM Plex Mono",ui-monospace,Consolas,monospace;font-variant-numeric:tabular-nums}
+h1,h2,h3,h4{margin:0;font-family:Fraunces,Georgia,serif;font-weight:600;letter-spacing:-.01em;text-wrap:balance;line-height:1.14;color:var(--ink)}
+.wrap{max-width:760px;margin:0 auto;padding:0 24px 90px}
+@media(max-width:640px){.wrap{padding:0 16px 70px}}
+:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+strong{font-weight:600;color:var(--ink)}
+
+/* masthead */
+.top{padding:44px 0 26px;border-bottom:1px solid var(--line2)}
+.eye{font:600 11px/1.3 "Source Sans 3";letter-spacing:.14em;text-transform:uppercase;color:var(--teal-ink);margin:0 0 14px}
+.top h1{font-size:clamp(28px,5vw,44px);font-weight:680;max-width:20ch;margin-bottom:14px}
+.top .sub{font-size:clamp(16px,2.2vw,18px);line-height:1.55;color:var(--ink2);margin:0}
+
+/* seções */
+.degrau{padding:36px 0;border-bottom:1px solid var(--line);min-width:0}
+.degrau:last-of-type{border-bottom:0}
+.dhead{display:flex;gap:14px;align-items:flex-start;margin-bottom:14px}
+.dnum{flex-shrink:0;width:40px;height:40px;border:1.5px solid var(--teal);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font:600 15px "IBM Plex Mono";color:var(--teal-ink)}
+.dtitle{padding-top:3px;min-width:0}
+.dtitle .dstage{font:600 11px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);display:block;margin-bottom:3px}
+.dtitle h2{font-size:clamp(20px,2.6vw,25px)}
+.lede{font-size:16.5px;line-height:1.55;color:var(--ink2);margin:0 0 16px;font-style:italic}
+.prose ul{margin:0 0 14px;padding-left:22px}
+.prose li{font-size:15.6px;line-height:1.55;color:var(--ink2);margin-bottom:6px}
+.prose li:last-child{margin-bottom:0}
+
+/* elos (onde tropeçou) */
+.elos{list-style:none;margin:0;padding:0;border:1px solid var(--line2)}
+.elos li{display:grid;grid-template-columns:28px minmax(0,1fr);gap:10px;padding:11px 14px;font-size:15.3px;line-height:1.5;color:var(--ink2)}
+.elos li+li{border-top:1px solid var(--line)}
+.elos .n{font:600 12px "IBM Plex Mono";color:var(--carmine-ink);padding-top:2px}
+
+/* callouts */
+.trap{margin:18px 0;padding:14px 17px;border-left:3px solid var(--carmine);background:var(--carmine-wash)}
+.trap .albl,.aside .albl{font:700 10.5px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
+.trap .albl{color:var(--carmine-ink)}
+.trap p,.aside p{font-size:15.2px;line-height:1.55;color:var(--ink);margin:0}
+.aside{margin:18px 0;padding:14px 17px;border-left:3px solid var(--teal);background:var(--teal-wash)}
+.aside .albl{color:var(--teal-ink)}
+
+/* comparativos */
+.vs{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:1px;background:var(--line2);border:1px solid var(--line2);margin:18px 0}
+.vs>div{background:var(--card);padding:13px 15px;min-width:0}
+.vs h5{font:700 11.5px "Source Sans 3";letter-spacing:.04em;text-transform:uppercase;margin:0 0 8px;color:var(--ink3)}
+.vs .a h5{color:var(--carmine-ink)}
+.vs .b h5{color:var(--teal-ink)}
+.vs ul{margin:0;padding-left:18px}
+.vs li{font-size:14.5px;line-height:1.5;color:var(--ink2);margin-bottom:5px}
+@media(max-width:640px){.vs{grid-template-columns:minmax(0,1fr)}}
+
+/* grade */
+.tw{overflow-x:auto;margin:18px 0}
+.crit{border:1px solid var(--line2)}
+.crit .row{display:grid;grid-template-columns:150px minmax(0,1fr);gap:14px;padding:10px 14px;font-size:14.4px}
+.crit .row+.row{border-top:1px solid var(--line)}
+.crit .row .k{font-weight:600;color:var(--teal-ink);min-width:0}
+.crit .row .v{color:var(--ink2);line-height:1.5;min-width:0}
+@media(max-width:640px){.crit .row{grid-template-columns:minmax(0,1fr);gap:2px}}
+
+/* armadilhas */
+.arms{display:flex;flex-direction:column;gap:1px;background:var(--line2);border:1px solid var(--line2)}
+.arm{background:var(--card);padding:13px 16px;display:flex;gap:12px}
+.arm .dot{flex-shrink:0;width:9px;height:9px;border-radius:50%;background:var(--carmine);margin-top:7px}
+.arm p{font-size:15px;line-height:1.55;color:var(--ink2);margin:0}
+
+/* teste agora */
+.tgrp{margin:0 0 22px}
+.tgrp h3{font:700 11.5px "Source Sans 3";letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);margin:0 0 8px}
+.qa{border:1px solid var(--line2);background:var(--card);padding:12px 15px}
+.qa+.qa{border-top:0}
+.qa .qq{font-size:15.4px;line-height:1.5;color:var(--ink);margin:0 0 6px;font-weight:500}
+.qa details>summary{cursor:pointer;font:600 13px "Source Sans 3";color:var(--teal-ink);list-style:none}
+.qa details>summary::-webkit-details-marker{display:none}
+.qa details>summary::before{content:"+ "}
+.qa details[open]>summary::before{content:"- "}
+.qa details p{font-size:15px;line-height:1.5;color:var(--ink2);margin:8px 0 0;padding-left:10px;border-left:2px solid var(--teal)}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <p class="eye">MedHub · Revisão direcionada · Hepatologia</p>
+  <h1>Fígado: o exame normal que exclui</h1>
+  <p class="sub">Em quase todo elo de hoje, o discriminador era um exame normal ou um marcador lido na direção errada.</p>
+</header>
+
+<main>
+<section class="degrau" id="elos">
+  <div class="dhead"><span class="dnum">!</span><div class="dtitle"><span class="dstage">Ponto de partida</span><h2>Onde você tropeçou hoje</h2></div></div>
+  <ul class="elos">
+    <li><span class="n">1</span><span>Bilirrubina indireta isolada: o que separa hemólise de Gilbert.</span></li>
+    <li><span class="n">2</span><span>Hepatite B crônica: replicação alta <strong>sem</strong> lesão tem nome.</span></li>
+    <li><span class="n">3</span><span>Carcinoma hepatocelular: B dispensa cirrose, C não; quem rastreia.</span></li>
+    <li><span class="n">4</span><span>Anti-HBc+ com HBsAg− antes de rituximabe: profilaxia sem esperar carga viral.</span></li>
+    <li><span class="n">5</span><span>Gestante com fígado alterado: lesão (HELLP) × falência (esteatose aguda).</span></li>
+    <li><span class="n">6</span><span>Os cortes: INR da insuficiência hepática aguda e a RVS da hepatite C.</span></li>
+  </ul>
+</section>
+
+<section class="degrau" id="d1">
+  <div class="dhead"><span class="dnum">1</span><div class="dtitle"><span class="dstage">Elo 1</span><h2>Bilirrubina indireta: produzir demais × conjugar de menos</h2></div></div>
+  <p class="lede">Os dois caminhos dão o mesmo padrão de bilirrubina; quem separa é outro exame.</p>
+  <div class="vs">
+    <div class="a"><h5>Hemólise</h5><ul><li>Produz bilirrubina demais.</li><li>Anemia, DHL elevado, reticulocitose.</li><li>Hemograma alterado.</li></ul></div>
+    <div class="b"><h5>Gilbert</h5><ul><li>Conjuga de menos: glicuronil-transferase com deficiência leve.</li><li>Hemograma, DHL e transaminases <strong>normais</strong>.</li><li>Icterícia leve no jejum, infecção, estresse. Benigno, não trata.</li></ul></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Nenhum dos dois tem colúria: a indireta não é filtrada pelo rim.</li>
+    <li>Crigler-Najjar é a forma grave do "conjugar de menos": tipo I (deficiência total, kernicterus) e tipo II (parcial, responde ao fenobarbital).</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="d2">
+  <div class="dhead"><span class="dnum">2</span><div class="dtitle"><span class="dstage">Elo 2</span><h2>As fases da hepatite B crônica</h2></div></div>
+  <p class="lede">Leia a fase pelo par replicação × lesão, não pela carga viral sozinha.</p>
+  <div class="tw"><div class="crit">
+    <div class="row"><span class="k">Imunotolerância</span><span class="v">HBsAg+ e HBeAg+, DNA altíssimo, <strong>transaminases normais</strong>, histologia preservada.</span></div>
+    <div class="row"><span class="k">Imunoeliminação</span><span class="v">DNA cai, HBeAg + ou −, transaminases flutuam, a lesão progride.</span></div>
+    <div class="row"><span class="k">Inativo</span><span class="v">HBeAg vira anti-HBe, DNA baixo ou indetectável, sem progressão.</span></div>
+    <div class="row"><span class="k">Reativação</span><span class="v">A replicação volta: imunossupressão ou mutação pré-core.</span></div>
+  </div></div>
+  <div class="prose"><ul>
+    <li>Mecanismo: o sistema imune ainda não ataca o hepatócito infectado. Sem ataque, não há lesão.</li>
+    <li>Típica da transmissão vertical; pode durar até cerca de 30 anos.</li>
+    <li>O critério de tratamento por lesão (TGP &gt; 2× LSN) não está preenchido nessa fase.</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="d3">
+  <div class="dhead"><span class="dnum">3</span><div class="dtitle"><span class="dstage">Elo 3</span><h2>Carcinoma hepatocelular: risco direto × mediado</h2></div></div>
+  <p class="lede">O vírus B é oncogênico por si; o C só através da cirrose.</p>
+  <div class="vs">
+    <div class="a"><h5>Hepatite B</h5><ul><li>DNA integra o genoma do hepatócito.</li><li>CHC <strong>mesmo sem cirrose</strong>.</li><li>Risco sobe com tempo de doença: perinatal cronifica em 90-95%.</li></ul></div>
+    <div class="b"><h5>Hepatite C</h5><ul><li>CHC só com fibrose avançada ou cirrose (1-5% ao ano).</li><li>A cura não zera o risco de quem já é cirrótico: mantém rastreio.</li></ul></div>
+  </div>
+  <div class="prose"><ul>
+    <li><strong>Todo cirrótico rastreia</strong>, em qualquer Child, inclusive A.</li>
+    <li>Rastreio: USG ± alfafetoproteína a cada 6 meses.</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="d4">
+  <div class="dhead"><span class="dnum">4</span><div class="dtitle"><span class="dstage">Elo 4</span><h2>Reativação sob imunossupressão</h2></div></div>
+  <p class="lede">A "cura" da hepatite B deixa DNA viral integrado no hepatócito.</p>
+  <div class="prose"><ul>
+    <li>Alto risco: anti-CD20 (rituximabe), anti-CD52, quimioterapia hematológica, transplante de medula.</li>
+    <li>Anti-HBc+ recebe profilaxia <strong>antes</strong> de começar, mesmo com HBsAg− e qualquer HBV-DNA.</li>
+    <li>Entecavir (ou tenofovir), mantido 6 a 12 meses após o fim do tratamento.</li>
+    <li>Sem profilaxia: HBV-DNA e ALT a cada 2 meses.</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="d5">
+  <div class="dhead"><span class="dnum">5</span><div class="dtitle"><span class="dstage">Elo 5</span><h2>HELLP lesa; esteatose aguda faz o fígado falir</h2></div></div>
+  <p class="lede">Glicose, coagulação e excreção são funções: caem juntas quando o fígado falha.</p>
+  <div class="vs">
+    <div class="a"><h5>HELLP</h5><ul><li>Hemólise: DHL ≥ 600, bilirrubina às custas da <strong>indireta</strong>.</li><li>Transaminases ≥ 70; plaquetas &lt; 100 mil.</li><li>Função preservada: INR e glicemia normais.</li></ul></div>
+    <div class="b"><h5>Esteatose aguda</h5><ul><li>30-38 semanas; pródromo de náuseas e vômitos.</li><li><strong>INR alargado, hipoglicemia, bilirrubina direta</strong>.</li><li>Pode somar IRA e CIVD.</li><li>Tratamento: parto imediato.</li></ul></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Pré-eclâmpsia coexiste em 20-40% das esteatoses agudas: é isso que puxa o reflexo "HELLP".</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="d6">
+  <div class="dhead"><span class="dnum">6</span><div class="dtitle"><span class="dstage">Elo 6</span><h2>Os cortes que caem</h2></div></div>
+  <div class="tw"><div class="crit">
+    <div class="row"><span class="k">IH aguda</span><span class="v">Encefalopatia + <strong>INR ≥ 1,5</strong> sem cirrose prévia.</span></div>
+    <div class="row"><span class="k">Por que o INR</span><span class="v">Fator VII tem meia-vida de ~6 h e cai primeiro. Albumina (18-20 dias) não serve na fase aguda.</span></div>
+    <div class="row"><span class="k">Vitamina K</span><span class="v">TP que não corrige com vitamina K = insuficiência estabelecida.</span></div>
+    <div class="row"><span class="k">Conduta</span><span class="v">Preencheu critério: centro de transplante precoce, seja qual for a etiologia.</span></div>
+    <div class="row"><span class="k">RVS (HCV)</span><span class="v">HCV-RNA indetectável <strong>12 semanas</strong> após o fim do antiviral de ação direta = cura.</span></div>
+  </div></div>
+</section>
+
+<section class="degrau" id="viz">
+  <div class="dhead"><span class="dnum">+</span><div class="dtitle"><span class="dstage">Blast radius</span><h2>Vizinhos de prova</h2></div></div>
+  <div class="tw"><div class="crit">
+    <div class="row"><span class="k">HBsAg+</span><span class="v">Infecção atual, sempre. Resolvida exige HBsAg− com anti-HBs+.</span></div>
+    <div class="row"><span class="k">Vacinado</span><span class="v">Anti-HBs isolado. Anti-HBc+ marca contato com vírus selvagem.</span></div>
+    <div class="row"><span class="k">Anti-HAV</span><span class="v">IgM− com IgG+ = imune (cura ou vacina).</span></div>
+    <div class="row"><span class="k">Isquêmica</span><span class="v">Transaminases &gt; 1.000, 1-3 dias após hipotensão; FA &lt; 2×, bilirrubina &lt; 4×.</span></div>
+    <div class="row"><span class="k">Urina</span><span class="v">Bilirrubinúria + urobilinogênio ausente = obstrução completa → USG.</span></div>
+    <div class="row"><span class="k">Gestante HBsAg+</span><span class="v">RN: vacina + HBIg em 12 h. Tenofovir se HBeAg+ ou DNA &gt; 200.000.</span></div>
+  </div></div>
+</section>
+
+<section class="degrau" id="arms">
+  <div class="dhead"><span class="dnum">🔴</span><div class="dtitle"><span class="dstage">Leitura</span><h2>Armadilhas</h2></div></div>
+  <div class="arms">
+    <div class="arm"><span class="dot"></span><p><strong>"Hemograma normal, DHL normal"</strong> é o dado que exclui hemólise, não ausência de informação.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Plaquetopenia + transaminases em gestante</strong> não fecha HELLP: procure INR, glicemia e a fração da bilirrubina.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>"Só cirrose avançada rastreia CHC"</strong> é falso: Child A rastreia, e HBV de risco rastreia sem cirrose.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Hepatite A "benigna"</strong>: menos de 1% fulmina, e a banca esconde esse caso atrás da etiologia. Quem decide é a função.</p></div>
+  </div>
+</section>
+
+<section class="degrau" id="teste">
+  <div class="dhead"><span class="dnum">?</span><div class="dtitle"><span class="dstage">Recuperação</span><h2>Teste agora</h2></div></div>
+  <div class="tgrp"><h3>Elo 1 · Bilirrubina indireta</h3>
+    <div class="qa"><p class="qq">Bilirrubina indireta 3,2, hemograma e DHL normais. Qual dado exclui hemólise?</p><details><summary>ver resposta</summary><p>Hemograma e DHL normais. Sobra Gilbert.</p></details></div>
+    <div class="qa"><p class="qq">Por que nenhum dos dois tem colúria?</p><details><summary>ver resposta</summary><p>A bilirrubina indireta não é filtrada pelo rim; só a direta aparece na urina.</p></details></div>
+  </div>
+  <div class="tgrp"><h3>Elo 2 · Fases da B</h3>
+    <div class="qa"><p class="qq">HBeAg+, DNA altíssimo, transaminases normais. Qual a fase?</p><details><summary>ver resposta</summary><p>Imunotolerância: replicação alta sem lesão.</p></details></div>
+    <div class="qa"><p class="qq">O que separa portador inativo de mutante pré-core?</p><details><summary>ver resposta</summary><p>O HBV-DNA: baixo no inativo, &gt; 2.000 UI/mL no pré-core, apesar de ambos HBeAg−.</p></details></div>
+  </div>
+  <div class="tgrp"><h3>Elo 3 · CHC</h3>
+    <div class="qa"><p class="qq">Qual hepatite viral causa CHC sem cirrose, e por quê?</p><details><summary>ver resposta</summary><p>A B: o DNA viral integra o genoma do hepatócito.</p></details></div>
+    <div class="qa"><p class="qq">Cirrótico Child A: rastreia? Como?</p><details><summary>ver resposta</summary><p>Sim. USG ± alfafetoproteína a cada 6 meses.</p></details></div>
+  </div>
+  <div class="tgrp"><h3>Elo 4 · Reativação</h3>
+    <div class="qa"><p class="qq">Anti-HBc+, HBsAg−, HBV-DNA indetectável, vai receber rituximabe. Profilaxia?</p><details><summary>ver resposta</summary><p>Sim, antes de começar, com entecavir (ou tenofovir), até 6-12 meses após o fim. A carga viral não muda a indicação.</p></details></div>
+  </div>
+  <div class="tgrp"><h3>Elo 5 · HELLP × esteatose aguda</h3>
+    <div class="qa"><p class="qq">Quais três dados excluem HELLP e apontam esteatose aguda?</p><details><summary>ver resposta</summary><p>INR alargado, hipoglicemia e bilirrubina direta alta.</p></details></div>
+    <div class="qa"><p class="qq">Na HELLP, a bilirrubina sobe em qual fração?</p><details><summary>ver resposta</summary><p>Indireta: vem da hemólise.</p></details></div>
+  </div>
+  <div class="tgrp"><h3>Elo 6 · Cortes</h3>
+    <div class="qa"><p class="qq">Qual INR define a coagulopatia da insuficiência hepática aguda?</p><details><summary>ver resposta</summary><p>INR ≥ 1,5, que não corrige com vitamina K.</p></details></div>
+    <div class="qa"><p class="qq">RVS na hepatite C tratada com antiviral de ação direta?</p><details><summary>ver resposta</summary><p>HCV-RNA indetectável 12 semanas após o fim do tratamento.</p></details></div>
+  </div>
+</section>
+</main>
+</div>

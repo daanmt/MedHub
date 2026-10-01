@@ -1,0 +1,308 @@
+<title>Revisão direcionada · Hemostasia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,380;9..144,480;9..144,600;9..144,680&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EFF3F0; --card:#FAFCFA; --sunk:#E2E9E4;
+  --ink:#18211C; --ink2:#4C5A52; --ink3:#7C8A82;
+  --line:rgba(24,33,28,.13); --line2:rgba(24,33,28,.26);
+  --teal:#1F6B5E; --teal-ink:#154A41; --teal-wash:#DCEBE5;
+  --carmine:#8E2F41; --carmine-ink:#6B2231; --carmine-wash:#F5E2E6;
+  --amber:#8A5A17; --amber-ink:#6B4610; --amber-wash:#F3E6CC;
+  --on:#FFFFFF;
+  --sh:0 1px 2px rgba(24,33,28,.06),0 12px 30px -18px rgba(24,33,28,.35);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#7E8C84;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  --on:#131A16;
+  --sh:0 1px 2px rgba(0,0,0,.5),0 14px 34px -18px rgba(0,0,0,.8);
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#7E8C84;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  --on:#131A16;
+  --sh:0 1px 2px rgba(0,0,0,.5),0 14px 34px -18px rgba(0,0,0,.8);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);
+  font:16px/1.6 "Source Sans 3",-apple-system,"Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+.mn{font-family:"IBM Plex Mono",ui-monospace,Consolas,monospace;font-variant-numeric:tabular-nums}
+h1,h2,h3,h4{margin:0;font-family:Fraunces,Georgia,serif;font-weight:600;letter-spacing:-.01em;text-wrap:balance;line-height:1.14;color:var(--ink)}
+.wrap{max-width:760px;margin:0 auto;padding:0 24px 100px}
+@media(max-width:640px){.wrap{padding:0 16px 80px}}
+:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+a{color:var(--teal-ink)}
+strong{font-weight:600;color:var(--ink)}
+em{font-style:italic}
+
+/* masthead */
+.top{padding:52px 0 30px;border-bottom:1px solid var(--line2)}
+.eye{font:600 11px/1 "Source Sans 3";letter-spacing:.14em;text-transform:uppercase;color:var(--teal-ink);margin:0 0 15px}
+.top h1{font-size:clamp(32px,5vw,50px);font-weight:680;max-width:18ch;margin-bottom:16px}
+.top .sub{font-size:18px;line-height:1.6;color:var(--ink2);max-width:66ch;margin:0 0 22px}
+.stats{display:flex;gap:22px;flex-wrap:wrap}
+.stat{display:flex;flex-direction:column;gap:2px}
+.stat b{font:600 24px/1 "IBM Plex Mono";color:var(--teal-ink);font-variant-numeric:tabular-nums}
+.stat span{font-size:11.5px;color:var(--ink3);letter-spacing:.02em}
+
+/* timeline strip (Degrau 0) */
+.tl{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1px;background:var(--line2);border:1px solid var(--line2);margin:20px 0}
+.tl div{background:var(--card);padding:12px 13px}
+.tl .tk{font:600 11px "IBM Plex Mono";color:var(--teal-ink);display:block;margin-bottom:4px;font-variant-numeric:tabular-nums}
+.tl .tn{font-size:14px;font-weight:600;color:var(--ink);display:block;margin-bottom:3px}
+.tl .tv{font-size:12.8px;line-height:1.45;color:var(--ink2)}
+
+main{min-width:0}
+
+
+/* degrau */
+.degrau{padding:44px 0;border-bottom:1px solid var(--line)}
+.degrau:first-child{padding-top:0}
+.degrau:last-of-type{border-bottom:0}
+.dhead{display:flex;gap:16px;align-items:flex-start;margin-bottom:18px}
+.dnum{flex-shrink:0;width:44px;height:44px;border:1.5px solid var(--teal);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font:600 17px "IBM Plex Mono";color:var(--teal-ink)}
+.dtitle{padding-top:4px}
+.dtitle .dstage{font:600 11px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);display:block;margin-bottom:3px}
+.dtitle h2{font-size:clamp(21px,2.6vw,27px)}
+.lede{font-size:16.5px;line-height:1.6;color:var(--ink2);margin:0 0 20px;font-style:italic}
+.prose p{font-size:16px;line-height:1.72;color:var(--ink2);margin:0 0 16px}
+.prose p:last-child{margin-bottom:0}
+.prose ul,.prose ol{margin:0 0 16px;padding-left:22px}
+.prose li{font-size:15.6px;line-height:1.6;color:var(--ink2);margin-bottom:6px}
+.prose li:last-child{margin-bottom:0}
+.prose li strong{color:var(--ink)}
+h4.sub{font-size:14px;font-weight:600;font-family:"Source Sans 3";letter-spacing:.01em;color:var(--ink);margin:26px 0 10px}
+h4.sub:first-child{margin-top:0}
+
+/* callouts */
+.aside{margin:20px 0;padding:15px 18px;border-left:3px solid var(--teal);background:var(--teal-wash)}
+.aside .albl{font:700 10.5px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;color:var(--teal-ink);margin-bottom:6px}
+.aside p{font-size:15.3px;line-height:1.6;color:var(--ink);margin:0}
+.aside p+p{margin-top:8px}
+.trap{margin:20px 0;padding:15px 18px;border-left:3px solid var(--carmine);background:var(--carmine-wash)}
+.trap .albl{font:700 10.5px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;color:var(--carmine-ink);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.trap .albl::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--carmine)}
+.trap p{font-size:15.3px;line-height:1.6;color:var(--ink);margin:0}
+.trap p+p{margin-top:8px}
+.banca{margin:20px 0;padding:15px 18px;border-left:3px solid var(--amber);background:var(--amber-wash)}
+.banca .albl{font:700 10.5px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;color:var(--amber-ink);margin-bottom:6px}
+.banca p{font-size:15.3px;line-height:1.6;color:var(--ink);margin:0}
+.banca p+p{margin-top:8px}
+.star{margin:20px 0;padding:14px 18px;border:1px solid var(--line2);background:var(--card)}
+.star .albl{font:700 10.5px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:6px}
+.star p{font-size:15.3px;line-height:1.6;color:var(--ink);margin:0;font-weight:560}
+
+/* comparativos */
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line2);border:1px solid var(--line2);margin:20px 0}
+.vs>div{background:var(--card);padding:14px 16px}
+.vs h5{font:700 11.5px "Source Sans 3";letter-spacing:.04em;text-transform:uppercase;margin:0 0 8px;color:var(--ink3)}
+.vs .a h5{color:var(--carmine-ink)}
+.vs .b h5{color:var(--teal-ink)}
+.vs p,.vs li{font-size:14.5px;line-height:1.55;color:var(--ink2)}
+.vs p{margin:0 0 8px}
+.vs p:last-child{margin:0}
+.vs ul{margin:0;padding-left:18px}
+.vs li{margin-bottom:5px}
+@media(max-width:640px){.vs{grid-template-columns:1fr}}
+
+/* grid de criterios */
+.crit{border:1px solid var(--line2);margin:20px 0}
+.crit .row{display:grid;grid-template-columns:180px 1fr;gap:14px;padding:11px 15px;font-size:14.3px}
+.crit .row+.row{border-top:1px solid var(--line)}
+.crit .row .k{font-weight:600;color:var(--teal-ink)}
+.crit .row .v{color:var(--ink2);line-height:1.5}
+.crit .row .v strong{color:var(--ink)}
+.crit.hd .row:first-child{background:var(--sunk);font-weight:600;color:var(--ink3);font-size:12px;letter-spacing:.04em;text-transform:uppercase}
+.crit.hd .row:first-child .k,.crit.hd .row:first-child .v{color:var(--ink3)}
+.crit.c3 .row{grid-template-columns:150px 1fr 1fr}
+@media(max-width:640px){.crit .row,.crit.c3 .row{grid-template-columns:1fr;gap:3px}}
+
+/* referencia densa */
+details.ref{margin:20px 0;border:1px solid var(--line2);background:var(--card)}
+details.ref>summary{cursor:pointer;list-style:none;padding:12px 16px;font:600 13.5px "Source Sans 3";color:var(--teal-ink);display:flex;align-items:center;gap:9px}
+details.ref>summary::-webkit-details-marker{display:none}
+details.ref>summary::before{content:"+";font:600 15px "IBM Plex Mono";width:16px}
+details.ref[open]>summary::before{content:"-"}
+details.ref .refbody{padding:0 16px 16px}
+details.ref .row{display:grid;grid-template-columns:150px 1fr;gap:12px;padding:8px 0;font-size:13.8px;border-top:1px solid var(--line)}
+details.ref .row:first-child{border-top:0}
+details.ref .k{font-weight:600;color:var(--ink)}
+details.ref .v{color:var(--ink2);line-height:1.5}
+@media(max-width:640px){details.ref .row{grid-template-columns:1fr;gap:2px}}
+
+/* sintese */
+.synth{background:var(--card);border:1px solid var(--line2);padding:32px 30px;margin-top:6px}
+@media(max-width:640px){.synth{padding:22px 18px}}
+.synth h2{font-size:23px;margin-bottom:14px}
+.synth .prose p{font-size:16.5px}
+.trig{margin-top:22px;display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1px;background:var(--line2);border:1px solid var(--line2)}
+.trig div{background:var(--sunk);padding:13px 15px}
+.trig .tk{font:700 11px "IBM Plex Mono";color:var(--teal-ink);display:block;margin-bottom:4px}
+.trig .tv{font-size:13.6px;line-height:1.45;color:var(--ink2)}
+
+/* armadilhas */
+.arms{display:flex;flex-direction:column;gap:1px;background:var(--line2);border:1px solid var(--line2);margin-top:18px}
+.arm{background:var(--card);padding:15px 18px;display:flex;gap:12px}
+.arm .dot{flex-shrink:0;width:9px;height:9px;border-radius:50%;background:var(--carmine);margin-top:7px}
+.arm p{font-size:15px;line-height:1.58;color:var(--ink2);margin:0}
+.arm p strong{color:var(--ink)}
+
+footer{margin-top:60px;padding-top:22px;border-top:1px solid var(--line2)}
+footer p{font-size:12.3px;color:var(--ink3);max-width:80ch;margin:0 0 7px;line-height:1.5}
+code{font-family:"IBM Plex Mono",Consolas,monospace;font-size:11.8px;background:var(--sunk);padding:1px 5px;border-radius:2px}
+
+/* RD: tabela, teste */
+.tblw{overflow-x:auto;margin:20px 0;border:1px solid var(--line2)}
+table.t{border-collapse:collapse;width:100%;min-width:520px;font-size:14.2px}
+table.t th,table.t td{padding:10px 12px;text-align:left;vertical-align:top;border-top:1px solid var(--line);color:var(--ink2);line-height:1.45}
+table.t th{background:var(--sunk);font:600 12px "Source Sans 3";letter-spacing:.04em;text-transform:uppercase;color:var(--ink3);border-top:0}
+table.t td:first-child{font-weight:600;color:var(--teal-ink)}
+.qs{display:flex;flex-direction:column;gap:1px;background:var(--line2);border:1px solid var(--line2);margin-top:18px}
+.q{background:var(--card);padding:14px 16px}
+.q p{margin:0;font-size:15.3px;line-height:1.55;color:var(--ink)}
+.q .ql{font:600 11px "IBM Plex Mono";color:var(--teal-ink);display:block;margin-bottom:4px}
+.q details{margin-top:8px}
+.q summary{cursor:pointer;font:600 13px "Source Sans 3";color:var(--teal-ink)}
+.vs>div,.crit .row>span{min-width:0}
+.q details p{margin-top:6px;font-size:14.8px;color:var(--ink2)}
+</style>
+<div class="wrap">
+<header class="top">
+  <p class="eye">MedHub · Revisão direcionada · Hematologia</p>
+  <h1>Hemostasia: cada defeito tem seu remédio</h1>
+  <p class="sub">Os erros de hoje têm o mesmo formato: uma conduta certa aplicada ao defeito errado. Primeiro localizar o defeito, depois escolher o que o corrige.</p>
+  <div class="stats">
+    <div class="stat"><b>3</b><span>elos que falharam</span></div>
+    <div class="stat"><b>4</b><span>vizinhos de prova</span></div>
+    <div class="stat"><b>9</b><span>perguntas de teste</span></div>
+  </div>
+</header>
+
+<main>
+
+<section class="degrau" id="d0">
+  <div class="dhead"><span class="dnum">0</span><div class="dtitle"><span class="dstage">Mapa</span><h2>Onde você tropeçou hoje</h2></div></div>
+  <div class="crit">
+    <div class="row"><span class="k">Plaquetopenia</span><span class="v">o que tira o caso da PTI; o que é obrigatório para plasmaférese</span></div>
+    <div class="row"><span class="k">Fatores</span><span class="v">quem depende de vitamina K; por que repor FVIII não serve com inibidor</span></div>
+    <div class="row"><span class="k">Drogas e hemocomponentes</span><span class="v">o que a meia-vida curta da HNF impõe; qual o alvo do crioprecipitado</span></div>
+  </div>
+</section>
+
+<section class="degrau" id="d1">
+  <div class="dhead"><span class="dnum">1</span><div class="dtitle"><span class="dstage">Elo 1</span><h2>Plaquetopenia: isolada ou acompanhada?</h2></div></div>
+  <p class="lede">PTI é diagnóstico de exclusão e só existe com plaquetopenia isolada.</p>
+  <div class="prose">
+    <ul>
+      <li>Hemograma da PTI: plaquetopenia e <strong>mais nada</strong>. Sem anemia, sem leucopenia.</li>
+      <li>Mielograma não entra na investigação inicial. Entra se houver outra citopenia, macrocitose, esplenomegalia ou linfonodomegalia.</li>
+      <li>Idoso com plaquetopenia + anemia macrocítica: é <strong>medula</strong> (síndrome mielodisplásica, leucemia, aplasia) até prova em contrário.</li>
+    </ul>
+  </div>
+  <div class="vs">
+    <div class="a"><h5>Microangiopatia (PTT/SHU)</h5><ul><li>Plaquetopenia de consumo</li><li><strong>Esquizócitos</strong> + reticulocitose</li><li>Coombs direto negativo</li><li>PTT: plasmaférese urgente</li></ul></div>
+    <div class="b"><h5>Sem hemólise</h5><ul><li>Equimoses + plaquetas baixas em paciente grave</li><li>Sem esquizócitos</li><li>Não é microangiopatia</li><li>Plasmaférese é distrator</li></ul></div>
+  </div>
+  <div class="trap"><div class="albl">Regra</div><p>Sem anemia hemolítica microangiopática não há MAT. Sem MAT não há plasmaférese.</p></div>
+</section>
+
+<section class="degrau" id="d2">
+  <div class="dhead"><span class="dnum">2</span><div class="dtitle"><span class="dstage">Elo 2</span><h2>Fatores: o padrão do coagulograma localiza</h2></div></div>
+  <p class="lede">Vitamina K e inibidor de fator alargam testes diferentes e pedem condutas opostas.</p>
+  <h4 class="sub">Vitamina K</h4>
+  <div class="prose">
+    <ul>
+      <li>Cofator de <strong>II, VII, IX e X</strong>, e dos anticoagulantes naturais <strong>proteína C e S</strong>.</li>
+      <li>O grupo cobre a extrínseca (VII) e a intrínseca/comum. Na carência, <strong>TP alarga primeiro</strong> (FVII tem meia-vida mais curta), depois TP e TTPa.</li>
+      <li>Vitamina lipossolúvel: esteatorreia, colestase e celíaca causam carência. Conduta: repor vitamina K.</li>
+      <li>Proteína C cai rápido no início da varfarina: efeito pró-trombótico nas primeiras 48 h. Por isso a ponte com heparina.</li>
+    </ul>
+  </div>
+  <h4 class="sub">Inibidor anti-FVIII (hemofilia adquirida)</h4>
+  <div class="prose">
+    <ul>
+      <li>TTPa alargado que <strong>não corrige no teste da mistura</strong> = inibidor, não deficiência.</li>
+      <li>O anticorpo neutraliza o FVIII reposto. A saída é contornar a via: <strong>agente de bypass</strong> (FVIIa recombinante ou CCP ativado).</li>
+      <li>Junto: <strong>imunossupressão</strong> para erradicar o inibidor.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="degrau" id="d3">
+  <div class="dhead"><span class="dnum">3</span><div class="dtitle"><span class="dstage">Elo 3</span><h2>Drogas e hemocomponentes: um alvo cada</h2></div></div>
+  <p class="lede">Meia-vida curta não é droga fraca; crioprecipitado não é "reposição" genérica.</p>
+  <div class="vs">
+    <div class="a"><h5>HNF</h5><ul><li>Inibe IIa e Xa (~1:1) via antitrombina</li><li>Meia-vida curta, biodisponibilidade variável</li><li>Infusão contínua ou doses repetidas, guiada pelo <strong>TTPa</strong></li><li>Vantagem: efeito cessa rápido; reverte com <strong>protamina</strong></li></ul></div>
+    <div class="b"><h5>HBPM</h5><ul><li>Inibe preferencialmente Xa</li><li>Meia-vida e biodisponibilidade maiores</li><li>1 a 2 doses ao dia, sem monitorização de rotina</li><li>Anti-Xa só em selecionados (obeso, renal)</li></ul></div>
+  </div>
+  <div class="tblw"><table class="t">
+    <tr><th>Componente</th><th>Corrige</th></tr>
+    <tr><td>Crioprecipitado</td><td><strong>Fibrinogênio</strong> baixo (&lt; 150-200 mg/dL). Não mexe na fibrinólise</td></tr>
+    <tr><td>Plasma</td><td>Fatores</td></tr>
+    <tr><td>Plaquetas</td><td>Contagem de plaquetas</td></tr>
+    <tr><td>Ácido tranexâmico</td><td>Fibrinólise (hiperfibrinólise do trauma, precoce, &lt; 3 h)</td></tr>
+  </table></div>
+</section>
+
+<section class="degrau" id="viz">
+  <div class="dhead"><span class="dnum">+</span><div class="dtitle"><span class="dstage">Blast radius</span><h2>Vizinhos de prova</h2></div></div>
+  <div class="tblw"><table class="t">
+    <tr><th>TP</th><th>TTPa</th><th>Pensar em</th></tr>
+    <tr><td>Alargado</td><td>Normal</td><td>FVII; varfarina; hepatopatia; CIVD precoce</td></tr>
+    <tr><td>Normal</td><td>Alargado</td><td>Hemofilia A/B, DvW, anticoagulante lúpico, heparina, inibidor de FVIII</td></tr>
+    <tr><td>Alargado</td><td>Alargado</td><td>X, V, II, I; CIVD; hepatopatia grave; vitamina K tardia</td></tr>
+    <tr><td>Normal</td><td>Normal</td><td>DvW leve, FXIII, PTI</td></tr>
+  </table></div>
+  <div class="prose">
+    <ul>
+      <li><strong>Sangramento urêmico:</strong> DvW adquirida/disfunção plaquetária. No agudo, <strong>DDAVP</strong>; plasma não corrige e sobrecarrega volume.</li>
+      <li><strong>Trombofilia hereditária:</strong> proteína C, S e antitrombina são freios; trombofilia é a <strong>deficiência</strong>. Fator V de Leiden é a única descrita como presença (a mais comum).</li>
+      <li><strong>Hipotermia no politransfundido:</strong> sangra com TP/TTPa quase normais e fibrinogênio normal. Reaquecer e corrigir cálcio e acidose.</li>
+      <li><strong>HIT:</strong> queda &gt; 50% das plaquetas em 5-10 dias, quadro trombótico. Suspender toda heparina; fondaparinux ou argatrobana.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="degrau" id="arms">
+  <div class="dhead"><span class="dnum">!</span><div class="dtitle"><span class="dstage">Armadilhas</span><h2>Onde a banca arma</h2></div></div>
+  <div class="arms">
+    <div class="arm"><span class="dot"></span><p><strong>Manchas roxas + paciente doente</strong> puxam para PTT. Sem esquizócitos, olhe o TP/TTPa: pode ser vitamina K.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Concentrado de FVIII</strong> na hemofilia adquirida trata como hereditária. O inibidor anula a reposição.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Sangramento mucoso</strong> seduz para DvW, mas DvW alarga TTPa. TP isolado alargado é FVII.</p></div>
+    <div class="arm"><span class="dot"></span><p><strong>Crioprecipitado</strong> como resposta a todo trauma que sangra. Ele repõe fibrinogênio; a lise pede tranexâmico.</p></div>
+  </div>
+</section>
+
+<section class="degrau" id="teste">
+  <div class="dhead"><span class="dnum">?</span><div class="dtitle"><span class="dstage">Recuperação</span><h2>Teste agora</h2></div></div>
+  <div class="qs">
+    <div class="q"><span class="ql">Elo 1</span><p>Que achado do hemograma exclui PTI e manda investigar a medula?</p><details><summary>ver resposta</summary><p>Qualquer outra citopenia ou macrocitose. PTI é plaquetopenia isolada.</p></details></div>
+    <div class="q"><span class="ql">Elo 1</span><p>Qual achado é obrigatório para indicar plasmaférese por MAT?</p><details><summary>ver resposta</summary><p>Anemia hemolítica microangiopática com esquizócitos, somada à plaquetopenia.</p></details></div>
+    <div class="q"><span class="ql">Elo 1</span><p>Coombs direto na MAT: positivo ou negativo?</p><details><summary>ver resposta</summary><p>Negativo. A hemólise é mecânica.</p></details></div>
+    <div class="q"><span class="ql">Elo 2</span><p>Quais fatores dependem de vitamina K, e que dupla costuma ser esquecida?</p><details><summary>ver resposta</summary><p>II, VII, IX e X; mais proteína C e proteína S.</p></details></div>
+    <div class="q"><span class="ql">Elo 2</span><p>Na carência de vitamina K, qual teste alarga primeiro e por quê?</p><details><summary>ver resposta</summary><p>TP: o FVII tem a meia-vida mais curta.</p></details></div>
+    <div class="q"><span class="ql">Elo 2</span><p>Sangramento agudo com inibidor anti-FVIII: conduta hemostática?</p><details><summary>ver resposta</summary><p>Agente de bypass (FVIIa recombinante ou CCP ativado) + imunossupressão.</p></details></div>
+    <div class="q"><span class="ql">Elo 2</span><p>Qual teste separa inibidor de deficiência de fator?</p><details><summary>ver resposta</summary><p>Teste da mistura: o inibidor não corrige o TTPa.</p></details></div>
+    <div class="q"><span class="ql">Elo 3</span><p>O que a meia-vida curta da HNF impõe, e qual a vantagem dela?</p><details><summary>ver resposta</summary><p>Infusão contínua ou doses repetidas guiadas pelo TTPa. Vantagem: efeito cessa rápido e reverte com protamina.</p></details></div>
+    <div class="q"><span class="ql">Elo 3</span><p>Qual o alvo do crioprecipitado no trauma, e o que ele não faz?</p><details><summary>ver resposta</summary><p>Repor fibrinogênio (&lt; 150-200 mg/dL). Não freia a fibrinólise.</p></details></div>
+  </div>
+</section>
+
+</main>
+</div>

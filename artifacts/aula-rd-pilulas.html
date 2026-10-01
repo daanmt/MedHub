@@ -1,0 +1,311 @@
+<title>Revisão direcionada · Pílulas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,380;9..144,480;9..144,600;9..144,680&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EFF3F0; --card:#FAFCFA; --sunk:#E2E9E4;
+  --ink:#18211C; --ink2:#4C5A52; --ink3:#7C8A82;
+  --line:rgba(24,33,28,.13); --line2:rgba(24,33,28,.26);
+  --teal:#1F6B5E; --teal-ink:#154A41; --teal-wash:#DCEBE5;
+  --carmine:#8E2F41; --carmine-ink:#6B2231; --carmine-wash:#F5E2E6;
+  --amber:#8A5A17; --amber-ink:#6B4610; --amber-wash:#F3E6CC;
+  --on:#FFFFFF;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#7E8C84;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  --on:#131A16;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#7E8C84;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  --on:#131A16;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);
+  font:16px/1.6 "Source Sans 3",-apple-system,"Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+h1,h2,h3{margin:0;font-family:Fraunces,Georgia,serif;font-weight:600;letter-spacing:-.01em;text-wrap:balance;line-height:1.16;color:var(--ink)}
+.wrap{max-width:760px;margin:0 auto;padding:0 24px 90px}
+@media(max-width:640px){.wrap{padding:0 16px 72px}}
+:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+strong{font-weight:600;color:var(--ink)}
+.mn{font-family:"IBM Plex Mono",ui-monospace,Consolas,monospace;font-variant-numeric:tabular-nums}
+
+/* masthead */
+.top{padding:44px 0 26px;border-bottom:1px solid var(--line2)}
+.eye{font:600 11px/1.3 "Source Sans 3";letter-spacing:.14em;text-transform:uppercase;color:var(--teal-ink);margin:0 0 13px}
+.top h1{font-size:clamp(28px,5vw,42px);font-weight:680;margin-bottom:14px}
+.top .sub{font-size:clamp(16px,2.2vw,17.5px);line-height:1.6;color:var(--ink2);margin:0}
+
+/* secoes */
+.sec{padding:34px 0;border-bottom:1px solid var(--line)}
+.sec:last-of-type{border-bottom:0}
+.kick{font:600 11px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);display:block;margin-bottom:5px}
+.sec h2{font-size:clamp(21px,3.2vw,26px);margin-bottom:12px}
+.lede{font-size:16.3px;line-height:1.6;color:var(--ink2);margin:0 0 14px;font-style:italic}
+ul.pt{margin:0 0 14px;padding-left:20px}
+ul.pt li{font-size:15.6px;line-height:1.58;color:var(--ink2);margin-bottom:7px}
+ul.pt li:last-child{margin-bottom:0}
+
+/* onde tropecou */
+.miss{list-style:none;margin:0;padding:0;border:1px solid var(--line2);background:var(--card)}
+.miss li{display:grid;grid-template-columns:28px minmax(0,1fr);gap:10px;padding:11px 14px;font-size:15.3px;line-height:1.5;color:var(--ink2)}
+.miss li+li{border-top:1px solid var(--line)}
+.miss .n{font:600 12px "IBM Plex Mono";color:var(--carmine-ink);padding-top:2px}
+
+/* tabela */
+.tw{overflow-x:auto;margin:16px 0;border:1px solid var(--line2);background:var(--card)}
+table{border-collapse:collapse;width:100%;font-size:14.4px}
+th,td{text-align:left;vertical-align:top;padding:9px 12px;line-height:1.45}
+th{background:var(--sunk);font:600 11.5px "Source Sans 3";letter-spacing:.05em;text-transform:uppercase;color:var(--ink3)}
+td{color:var(--ink2);border-top:1px solid var(--line)}
+td:first-child{font-weight:600;color:var(--ink)}
+td.hi{color:var(--teal-ink);font-weight:600}
+
+/* comparativo */
+.vs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line2);border:1px solid var(--line2);margin:16px 0}
+.vs>div{background:var(--card);padding:13px 15px;min-width:0}
+.vs h3{font:700 11.5px "Source Sans 3";letter-spacing:.05em;text-transform:uppercase;margin:0 0 7px;color:var(--ink3)}
+.vs .a h3{color:var(--carmine-ink)}
+.vs .b h3{color:var(--teal-ink)}
+.vs ul{margin:0;padding-left:17px}
+.vs li{font-size:14.5px;line-height:1.5;color:var(--ink2);margin-bottom:4px}
+@media(max-width:640px){.vs{grid-template-columns:minmax(0,1fr)}}
+
+/* chave */
+.key{margin:16px 0;padding:12px 16px;border-left:3px solid var(--teal);background:var(--teal-wash);font-size:15.2px;line-height:1.55;color:var(--ink)}
+
+/* armadilhas */
+.arms{display:flex;flex-direction:column;gap:1px;background:var(--line2);border:1px solid var(--line2)}
+.arm{background:var(--card);padding:13px 16px;display:flex;gap:11px}
+.arm .dot{flex-shrink:0;width:8px;height:8px;border-radius:50%;background:var(--carmine);margin-top:8px}
+.arm p{font-size:15px;line-height:1.55;color:var(--ink2);margin:0}
+
+/* teste agora */
+.qs{display:flex;flex-direction:column;gap:10px}
+.q{background:var(--card);border:1px solid var(--line2);padding:13px 15px}
+.q p{margin:0 0 8px;font-size:15.4px;line-height:1.5;color:var(--ink);font-weight:500}
+.q .tag{font:600 10.5px "IBM Plex Mono";color:var(--teal-ink);letter-spacing:.04em;display:block;margin-bottom:4px}
+.q details summary{cursor:pointer;font:600 13px "Source Sans 3";color:var(--teal-ink);list-style:none}
+.q details summary::-webkit-details-marker{display:none}
+.q details summary::before{content:"+ "}
+.q details[open] summary::before{content:"- "}
+.q details div{margin-top:7px;padding-top:7px;border-top:1px dashed var(--line2);font-size:14.8px;line-height:1.5;color:var(--ink2)}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <p class="eye">Revisão direcionada · Pílulas</p>
+  <h1>Oito pontos soltos, oito discriminadores</h1>
+  <p class="sub">Temas diferentes, um defeito comum: a resposta veio pela familiaridade, sem conferir o critério que separa.</p>
+</header>
+
+<section class="sec">
+  <span class="kick">1 · Diagnóstico</span>
+  <h2>Onde você tropeçou hoje</h2>
+  <ul class="miss">
+    <li><span class="n">01</span><span>Pré-eclâmpsia: as 4 peças do rastreio FIGO.</span></li>
+    <li><span class="n">02</span><span>Lennox-Gastaut: por que o bloqueador de sódio piora.</span></li>
+    <li><span class="n">03</span><span>Enxaqueca: profilático casado com a comorbidade.</span></li>
+    <li><span class="n">04</span><span>IST: Chlamydia muda de síndrome conforme o sorotipo.</span></li>
+    <li><span class="n">05</span><span>HAS jovem + hipocalemia: investigar antes de escalar.</span></li>
+    <li><span class="n">06</span><span>Criança com DM1: o cluster que separa CAD de hipoglicemia.</span></li>
+    <li><span class="n">07</span><span>STEC: o mecanismo real da proibição do antibiótico.</span></li>
+    <li><span class="n">08</span><span>Família extensa: composição, não funcionamento.</span></li>
+  </ul>
+</section>
+
+<section class="sec">
+  <span class="kick">Elo 01 · GO</span>
+  <h2>Pré-eclâmpsia: rastreio e comporta de gravidade</h2>
+  <p class="lede">O rastreio FIGO do 1º trimestre é um escore: as quatro peças entram juntas.</p>
+  <ul class="pt">
+    <li><strong>Fatores maternos + PA média + IP das artérias uterinas + PlGF.</strong></li>
+    <li>Por que o PlGF: a queda dos angiogênicos (PlGF, VEGF) e a alta do sFlt-1 precedem a clínica em semanas.</li>
+    <li>Gravidade = PA ≥ 160/110 <strong>ou</strong> qualquer sinal de órgão-alvo. Um critério basta.</li>
+    <li>Sem gravidade: anti-hipertensivo oral (metildopa ou anlodipino), ambulatorial, reavaliar em 1 semana. Hidralazina EV só ao cruzar 160/110.</li>
+    <li>Sem gravidade e com ≥ 37 semanas: resolver. O Bishop só escolhe o método de indução.</li>
+  </ul>
+</section>
+
+<section class="sec">
+  <span class="kick">Elo 02 · Neuro</span>
+  <h2>Lennox-Gastaut: sódio piora</h2>
+  <p class="lede">Bloqueador de canal de sódio é droga de crise focal. Nas generalizadas não convulsivas, agrava.</p>
+  <ul class="pt">
+    <li>Carbamazepina, oxcarbazepina e fenitoína pioram ausência, mioclonia e crise atônica.</li>
+    <li>Na Lennox-Gastaut a carbamazepina precipita crises atônicas e mioclônicas: é proscrita.</li>
+    <li>Regra: amplo espectro (valproato, topiramato, lamotrigina, canabidiol). EEG com ponta-onda lenta de 2-2,5 Hz.</li>
+  </ul>
+  <div class="vs">
+    <div class="b"><h3>Ausência</h3><ul>
+      <li>Perde a consciência, 5-30 s</li>
+      <li>Ponta-onda 3 Hz; hiperventilação</li>
+    </ul></div>
+    <div class="a"><h3>Mioclonia</h3><ul>
+      <li>Consciência preservada</li>
+      <li>Abalo rápido, arrítmico</li>
+    </ul></div>
+  </div>
+</section>
+
+<section class="sec">
+  <span class="kick">Elo 03 · Neuro</span>
+  <h2>Profilaxia da enxaqueca</h2>
+  <p class="lede">A frequência decide se há profilaxia; a comorbidade escolhe a droga.</p>
+  <ul class="pt">
+    <li>Indicação: &gt; 3 crises/mês, &gt; 8 dias/mês de dor ou crise infrequente porém limitante. Cinco crises por ano é só sintomático.</li>
+    <li>Profilático não é abortivo: di-hidroergotamina e naproxeno tratam a crise.</li>
+  </ul>
+  <div class="tw"><table>
+    <tr><th>Comorbidade</th><th>Efeito na escolha</th></tr>
+    <tr><td>Asma, DPOC</td><td>Sem betabloqueador</td></tr>
+    <tr><td>HAS</td><td class="hi">Candesartana (ou IECA)</td></tr>
+    <tr><td>Litíase renal</td><td>Sem topiramato</td></tr>
+    <tr><td>Mulher fértil</td><td>Sem valproato (segue profilático válido fora disso)</td></tr>
+    <tr><td>Epilepsia</td><td>Topiramato ou valproato</td></tr>
+  </table></div>
+</section>
+
+<section class="sec">
+  <span class="kick">Elo 04 · GO</span>
+  <h2>IST: cada agente na sua síndrome</h2>
+  <p class="lede">Em questão de lista, o intruso é a regra. Confira item a item.</p>
+  <div class="vs">
+    <div class="b"><h3>Corrimento</h3><ul>
+      <li><em>Trichomonas</em></li><li>Gonococo</li><li><em>Chlamydia</em> D-K</li><li><em>Gardnerella</em>, <em>Candida</em></li>
+    </ul></div>
+    <div class="a"><h3>Úlcera</h3><ul>
+      <li><em>T. pallidum</em>, HSV</li><li><em>H. ducreyi</em></li><li><em>K. granulomatis</em></li><li><em>Chlamydia</em> L1-L3 (LGV)</li>
+    </ul></div>
+  </div>
+  <div class="tw"><table>
+    <tr><th>Úlcera</th><th>Dor</th><th>Chave</th></tr>
+    <tr><td>Cancro mole</td><td class="hi">Dói muito</td><td>Múltiplas; bubão fistuliza por orifício único; Gram em "cardume de peixe"; azitromicina 1 g</td></tr>
+    <tr><td>LGV</td><td>Indolor</td><td>Úlcera fugaz, some antes do bubão; múltiplos orifícios; doxiciclina 21 dias</td></tr>
+    <tr><td>Donovanose</td><td>Indolor</td><td>Crônica, borda hipertrófica, sangra fácil</td></tr>
+    <tr><td>Sífilis</td><td>Indolor</td><td>Única, fundo limpo, borda endurecida</td></tr>
+  </table></div>
+  <ul class="pt">
+    <li>Sindrômico: vesícula → herpes; &lt; 4 semanas → sífilis + cancro mole; &gt; 4 semanas → acrescentar doxiciclina e biopsiar.</li>
+  </ul>
+</section>
+
+<section class="sec">
+  <span class="kick">Elo 05 · Nefro</span>
+  <h2>HAS jovem com hipocalemia</h2>
+  <p class="lede">É hiperaldosteronismo até prova em contrário. Escalar a losartana é o erro.</p>
+  <ul class="pt">
+    <li>Mecanismo: aldosterona estimula o ENaC e o rim perde K e H. Resultado: hipocalemia, alcalose e HAS.</li>
+    <li>Suspender BRA, IECA e poupador de K, que falseiam a dosagem. Trocar por anlodipino.</li>
+    <li>Dosar aldosterona e atividade de renina: aldosterona alta com renina suprimida.</li>
+  </ul>
+</section>
+
+<section class="sec">
+  <span class="kick">Elo 06 · Endócrino</span>
+  <h2>DM1 doente: CAD ou hipoglicemia?</h2>
+  <p class="lede">Confira o cluster antes de fechar no diagnóstico mais temido.</p>
+  <div class="vs">
+    <div class="b"><h3>Hipoglicemia</h3><ul>
+      <li>Palidez, tremor, sudorese, taquicardia</li>
+      <li>Recusa alimentar com insulina mantida</li>
+    </ul></div>
+    <div class="a"><h3>CAD</h3><ul>
+      <li>Poliúria, vômitos, Kussmaul, desidratação</li>
+      <li>Exige déficit de insulina</li>
+    </ul></div>
+  </div>
+  <ul class="pt">
+    <li>Na CAD a ordem é fluido → potássio → insulina. Com K &lt; 3,3, a insulina espera.</li>
+    <li>Cetonúria não guia o desmame: a fita não lê o β-hidroxibutirato. O alvo é a acidose resolver.</li>
+  </ul>
+</section>
+
+<section class="sec">
+  <span class="kick">Elo 07 · Nefro</span>
+  <h2>STEC: o antibiótico acorda o fago</h2>
+  <p class="lede">A proibição é mecanística, não "mascarar o quadro" nem "selecionar resistência".</p>
+  <ul class="pt">
+    <li>O gene da toxina Shiga mora num bacteriófago lisogênico.</li>
+    <li>Quinolona e SMX-TMP lesam o DNA, ativam a resposta SOS e o ciclo lítico: sai mais toxina e o risco de SHU sobe.</li>
+    <li>Tratamento da colite por STEC: suporte.</li>
+    <li>Na SHU a lesão renal é microangiopatia trombótica (anemia hemolítica + plaquetopenia + LRA), não NTA.</li>
+  </ul>
+</section>
+
+<section class="sec">
+  <span class="kick">Elo 08 · MFC</span>
+  <h2>Estrutura familiar</h2>
+  <p class="lede">Composição e funcionalidade são eixos separados.</p>
+  <div class="tw"><table>
+    <tr><th>Tipo</th><th>Critério</th></tr>
+    <tr><td>Nuclear</td><td>Casal + filhos, classicamente biológicos</td></tr>
+    <tr><td>Extensa</td><td class="hi">Parentes além do núcleo morando junto</td></tr>
+    <tr><td>Composta</td><td>Filhos com consanguinidade com só um dos pais</td></tr>
+    <tr><td>Monoparental</td><td>Um genitor com os filhos</td></tr>
+  </table></div>
+  <ul class="pt">
+    <li>Se nenhum critério de composição fecha, a banca cobra o outro eixo: funcional x disfuncional (APGAR familiar).</li>
+  </ul>
+</section>
+
+<section class="sec">
+  <span class="kick">Blast radius</span>
+  <h2>Vizinhos de prova</h2>
+  <ul class="pt">
+    <li><strong>Hipercalemia:</strong> gluconato de cálcio estabiliza a membrana e não baixa o K. A onda T apiculada vem antes do QRS largo.</li>
+    <li><strong>RN com hipoNa + hiperK + hipoglicemia:</strong> insuficiência adrenal (hiperplasia adrenal congênita). A acidose tubular daria hipocalemia.</li>
+    <li><strong>Cefaleia que piora com esforço ou desperta à noite:</strong> não é tensional. É sinal de alarme e pede imagem.</li>
+    <li><strong>Crise de salvas:</strong> O₂ a 100%, 10-12 L/min. A salvas é unilateral, em crises; dor bilateral e contínua não é salvas.</li>
+  </ul>
+</section>
+
+<section class="sec">
+  <span class="kick">Atenção</span>
+  <h2>Armadilhas</h2>
+  <div class="arms">
+    <div class="arm"><span class="dot"></span><p>PA 150/94 na pré-eclâmpsia não é crise. Hidralazina EV abaixo de 160/110 é over-tratamento.</p></div>
+    <div class="arm"><span class="dot"></span><p>Carbamazepina por analogia com a epilepsia focal: na Lennox-Gastaut ela agrava.</p></div>
+    <div class="arm"><span class="dot"></span><p>Bubão inflamatório puxa para LGV. Úlcera dolorosa contemporânea ao bubão aponta cancro mole.</p></div>
+    <div class="arm"><span class="dot"></span><p>"DM1 + criança doente" evoca CAD. Cluster adrenérgico puro, sem poliúria nem Kussmaul, é hipoglicemia.</p></div>
+  </div>
+</section>
+
+<section class="sec">
+  <span class="kick">Recuperação</span>
+  <h2>Teste agora</h2>
+  <div class="qs">
+    <div class="q"><span class="tag">Elo 01</span><p>Quais as 4 peças do rastreio FIGO?</p><details><summary>ver resposta</summary><div>Fatores maternos, PA média, IP das artérias uterinas e PlGF.</div></details></div>
+    <div class="q"><span class="tag">Elo 01</span><p>PE com PA 150/94, sem sintomas. Conduta?</p><details><summary>ver resposta</summary><div>Anti-hipertensivo oral, ambulatorial, reavaliar em 1 semana.</div></details></div>
+    <div class="q"><span class="tag">Elo 02</span><p>Por que a carbamazepina é proscrita na Lennox-Gastaut?</p><details><summary>ver resposta</summary><div>Bloqueia sódio e precipita crises atônicas e mioclônicas. Usa-se amplo espectro.</div></details></div>
+    <div class="q"><span class="tag">Elo 02</span><p>Criança deixa cair objetos e não responde ao chamado. Ausência ou mioclonia?</p><details><summary>ver resposta</summary><div>Ausência: houve perda de consciência. Na mioclonia ela é preservada.</div></details></div>
+    <div class="q"><span class="tag">Elo 03</span><p>Enxaqueca frequente, asma e HAS. Qual profilático?</p><details><summary>ver resposta</summary><div>Candesartana. A asma veta o propranolol.</div></details></div>
+    <div class="q"><span class="tag">Elo 03</span><p>Qual o limiar de frequência para profilaxia?</p><details><summary>ver resposta</summary><div>&gt; 3 crises/mês ou &gt; 8 dias/mês de dor.</div></details></div>
+    <div class="q"><span class="tag">Elo 04</span><p>Qual sorotipo de <em>Chlamydia</em> dá corrimento e qual dá úlcera?</p><details><summary>ver resposta</summary><div>D-K: corrimento/cervicite. L1-L3: úlcera (LGV).</div></details></div>
+    <div class="q"><span class="tag">Elo 04</span><p>Úlcera dolorosa + bubão que fistuliza por orifício único?</p><details><summary>ver resposta</summary><div>Cancro mole; azitromicina 1 g em dose única.</div></details></div>
+    <div class="q"><span class="tag">Elo 05</span><p>HAS de 35 anos, hipoK, em uso de losartana. O que fazer?</p><details><summary>ver resposta</summary><div>Trocar por anlodipino e dosar aldosterona e atividade de renina.</div></details></div>
+    <div class="q"><span class="tag">Elo 05</span><p>Por que suspender a losartana antes da dosagem?</p><details><summary>ver resposta</summary><div>O bloqueador do SRAA interfere no eixo e pode mascarar o diagnóstico.</div></details></div>
+    <div class="q"><span class="tag">Elo 06</span><p>Que achados apontariam CAD em vez de hipoglicemia?</p><details><summary>ver resposta</summary><div>Poliúria, vômitos, Kussmaul e desidratação.</div></details></div>
+    <div class="q"><span class="tag">Elo 06</span><p>Na CAD, o que vem logo depois do volume?</p><details><summary>ver resposta</summary><div>O potássio. Insulina só com K ≥ 3,3.</div></details></div>
+    <div class="q"><span class="tag">Elo 07</span><p>Por que não dar antibiótico na colite por O157:H7?</p><details><summary>ver resposta</summary><div>Ativa o ciclo lítico do fago que carrega o gene da toxina Shiga: mais toxina, mais SHU.</div></details></div>
+    <div class="q"><span class="tag">Elo 07</span><p>Qual o mecanismo da lesão renal na SHU?</p><details><summary>ver resposta</summary><div>Microangiopatia trombótica, não NTA.</div></details></div>
+    <div class="q"><span class="tag">Elo 08</span><p>O que define a família extensa?</p><details><summary>ver resposta</summary><div>Parentes além do núcleo (avós, tios, primos) morando no mesmo domicílio.</div></details></div>
+    <div class="q"><span class="tag">Elo 08</span><p>Nenhum critério de composição fecha. O que a banca está cobrando?</p><details><summary>ver resposta</summary><div>O eixo da funcionalidade: funcional x disfuncional.</div></details></div>
+  </div>
+</section>
+</div>

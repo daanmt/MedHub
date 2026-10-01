@@ -1,8 +1,62 @@
 {
  "_doc": "Registro do quadro da aba Aulas do MedHub HUB (s194; por semanas desde a s195). Chave = slug da aula (artifacts/aula-<slug>.html). tipo: aula (aula-base) | revisao (revisao direcionada) | analise (analise, relatorio ou plano). titulo: o nome no quadro (vence o <title>). tarefas: ids de plano_tarefas que a aula PREPARA (lista ou aula) -- a aula aparece dentro do bloco de cada tarefa. tarefa_id: a tarefa custom de aula que a aula CUMPRE -- so ela ganha o controle 'feito', e marcar no hub vira `plano.py --concluir ID --leitura` no tique do /hub-backend. Aula sem tarefa pendente cai em 'Outras aulas'; aula concluida sai do hub ao mover o arquivo para artifacts/arquivo/ (e a entrada daqui). Aula sem entrada aqui entra como tipo aula, com WARN no build (tools/hub.py).",
  "itens": {
-  "dmg": {"tipo": "aula", "titulo": "A Escada do DMG", "tarefas": [26, 40]},
-  "topicos-pediatria": {"tipo": "aula", "titulo": "Tópicos em Pediatria", "tarefas": [96, 100]},
-  "prevencao-quaternaria": {"tipo": "aula", "titulo": "Prevenção Quaternária", "tarefa_id": 875}
+  "dmg": {
+   "tipo": "aula",
+   "titulo": "A Escada do DMG",
+   "tarefas": [
+    26,
+    40
+   ]
+  },
+  "topicos-pediatria": {
+   "tipo": "aula",
+   "titulo": "Tópicos em Pediatria",
+   "tarefas": [
+    96,
+    100
+   ]
+  },
+  "prevencao-quaternaria": {
+   "tipo": "aula",
+   "titulo": "Prevenção Quaternária",
+   "tarefa_id": 875
+  },
+  "rd-vias-biliares": {
+   "tipo": "revisao",
+   "titulo": "Vias biliares e apendicite"
+  },
+  "rd-hemostasia": {
+   "tipo": "revisao",
+   "titulo": "Hemostasia"
+  },
+  "rd-lupus-saf": {
+   "tipo": "revisao",
+   "titulo": "Lúpus, SAF e vasculites"
+  },
+  "rd-hepato": {
+   "tipo": "revisao",
+   "titulo": "Hepatites, icterícia e cirrose"
+  },
+  "rd-dii-polipos": {
+   "tipo": "revisao",
+   "titulo": "DII e pólipos"
+  },
+  "rd-intensiva-sepse": {
+   "tipo": "revisao",
+   "titulo": "Ventilação, SDRA e sepse"
+  },
+  "rd-pediatria": {
+   "tipo": "revisao",
+   "titulo": "Cardiopatias, emergência e vacinas"
+  },
+  "rd-ortopedia-cirurgia": {
+   "tipo": "revisao",
+   "titulo": "Ortopedia, cicatrização e cir. infantil"
+  },
+  "rd-pilulas": {
+   "tipo": "revisao",
+   "titulo": "Pílulas: pontos soltos"
+  }
  }
 }

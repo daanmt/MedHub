@@ -133,7 +133,9 @@ def test_registro_real_so_com_as_aulas_em_aberto_e_ligadas_ao_plano():
     dmg e topicos-pediatria em aberto, ligadas as tarefas do plano; s206: entra
     prevencao-quaternaria, que CUMPRE a tarefa custom #875 (tarefa_id)."""
     reg = hub.ler_quadro(ROOT / hub.QUADRO_REG)
-    assert set(reg) == {"dmg", "topicos-pediatria", "prevencao-quaternaria"}
+    rds = {k for k, v in reg.items() if v["tipo"] == "revisao"}
+    assert set(reg) - rds == {"dmg", "topicos-pediatria", "prevencao-quaternaria"}
+    assert all(k.startswith("rd-") for k in rds), "s210: revisao direcionada = slug rd-*"
     assert reg["dmg"]["tarefas"] == [26, 40] and reg["topicos-pediatria"]["tarefas"] == [96, 100]
     assert reg["prevencao-quaternaria"]["tarefa_id"] == 875
     reais = {hub.slug_de(p.name) for p in (ROOT / "artifacts").glob("aula-*.html")}
@@ -178,15 +180,31 @@ def test_secoes_atrasadas_primeiro_depois_semanas_ate_a_prova_e_outras_por_ultim
     raiz, data_fn = _repo(tmp_path)
     _construir(raiz, data_fn)
     secoes = _secoes(_index(raiz))
-    assert [s[0] for s in secoes] == ["atrasadas", "2", "3", "outras"]
-    assert [s[1] for s in secoes] == ["Atrasadas", "Semana 2 · 21/09–27/09", "Semana 3 · 28/09–04/10",
-                                      "Outras aulas"]
-    assert secoes[0][2] == ["26", "877"], "semana 1 < atual = atrasada, na ordem do plano"
-    assert secoes[1][2] == ["49", "875", "1793"] and secoes[2][2] == ["68"]
-    assert secoes[3][2] == ["rd-renal", "autopsia"], "aula sem tarefa vai para Outras aulas"
+    assert [s[0] for s in secoes] == ["revisoes", "atrasadas", "2", "3", "outras"]
+    assert [s[1] for s in secoes] == ["Revisões direcionadas", "Atrasadas", "Semana 2 · 21/09–27/09",
+                                      "Semana 3 · 28/09–04/10", "Outras aulas"]
+    assert secoes[0][2] == ["rd-renal"], "revisao direcionada abre a aba, no bloco proprio (s210)"
+    assert secoes[1][2] == ["26", "877"], "semana 1 < atual = atrasada, na ordem do plano"
+    assert secoes[2][2] == ["49", "875", "1793"] and secoes[3][2] == ["68"]
+    assert secoes[4][2] == ["autopsia"], "aula sem tarefa vai para Outras aulas"
     pagina = _index(raiz)
     for tid in (900, 901, 902, 903):
         assert 'data-tarefa="%d"' % tid not in pagina, "fase 2, reserva, cortada e feita ficam fora"
+
+
+def test_revisao_direcionada_tem_bloco_proprio_com_feito_e_some_quando_feita(tmp_path):
+    """Pedido do operador (s210, 01/10): "sentindo falta das revisoes direcionadas em 'Aulas'...
+    publicar como aula, dentro de um bloco especifico". A revisao avulsa abre a aba, com o
+    controle 'feito'; feita, vai para Concluidas e o bloco some (nao e secao fixa)."""
+    raiz, data_fn = _repo(tmp_path)
+    _construir(raiz, data_fn)
+    item = _item(_index(raiz), 'data-slug="rd-renal"')
+    assert 'class="qd-feito"' in item and 'data-secao="revisoes"' in item
+    _construir(raiz, data_fn, estado={"rd-renal": {"feito": True, "ts": "x"}})
+    pagina = _index(raiz)
+    assert re.search(r'<section class="qd-sem" data-secao="revisoes"[^>]*hidden>', pagina),         "secao vazia fica escondida (o item volta para ela se for desmarcado)"
+    feitas = pagina.split('id="hub-quadro-feitas"')[1]
+    assert 'data-slug="rd-renal"' in feitas
 
 
 def test_cabecalho_da_semana_conta_tarefas_e_questoes(tmp_path):
@@ -198,7 +216,8 @@ def test_cabecalho_da_semana_conta_tarefas_e_questoes(tmp_path):
     assert contagem["Atrasadas"] == "2 tarefas · 19 questões"
     assert contagem["Semana 2 · 21/09–27/09"] == "3 tarefas · 81 questões"
     assert contagem["Semana 3 · 28/09–04/10"] == "1 tarefa · 21 questões"
-    assert contagem["Outras aulas"] == "2 aulas"
+    assert contagem["Outras aulas"] == "1 aula"
+    assert contagem["Revisões direcionadas"] == "1 aula"
 
 
 def test_bloco_da_tarefa_tem_tema_peso_questoes_e_acao(tmp_path):
@@ -251,15 +270,16 @@ def test_feito_sai_riscado_em_concluidas_no_build(tmp_path):
     assert 'data-slug="rd-renal"' in feitas and 'id="hub-quadro-nfeitas">2<' in feitas
     assert 'data-slug="autopsia"' in secoes, "desmarcado fica na secao"
     assert ".qd-item[data-feito] .qd-tema{text-decoration:line-through" in pagina
-    assert _secoes(pagina)[0][2] == ["26"], "Atrasadas perde o Bayes feito"
+    assert dict((k, v) for k, _t, v in _secoes(pagina))["atrasadas"] == ["26"],         "Atrasadas perde o Bayes feito"
 
 
 def test_sem_plano_tudo_vai_para_outras_aulas_e_sem_aula_nem_plano_diz(tmp_path):
     raiz, data_fn = _repo(tmp_path)
     _construir(raiz, data_fn, plano=[], cal={})
     secoes = _secoes(_index(raiz))
-    assert [s[0] for s in secoes] == ["outras"]
-    assert secoes[0][2] == ["rd-renal", "hernias", "bayes", "autopsia"], "mais nova primeiro"
+    assert [s[0] for s in secoes] == ["revisoes", "outras"]
+    assert secoes[0][2] == ["rd-renal"]
+    assert secoes[1][2] == ["hernias", "bayes", "autopsia"], "mais nova primeiro"
     assert hub.html_aulas([]) == '<p class="hub-vazio">Nada no quadro ainda: nem tarefa pendente, nem aula.</p>'
 
 

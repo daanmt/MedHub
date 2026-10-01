@@ -451,6 +451,27 @@ def test_voltar_a_aba_ressincroniza_com_o_db():
     assert out["saida"]["pergunta"] == "P2?"
 
 
+def test_redrill_feito_nao_volta_a_fila_ao_remontar():
+    """Regressao de 01/10 (s210): os 61 cards de nota < 3 ja redrilados voltavam a fila a cada
+    remontagem (reload, volta da aba): o resultado do redrill nao era persistido. O redrill
+    resolvido grava `redrill_ok` no registro (aparelho e db), sem tocar a 1a nota."""
+    out = _rodar(LOTE3, """
+      tecla(" "); tecla("1");                  // 100: nota 1 -> relearning
+      tecla(" "); tecla("3");                  // 101
+      tecla(" "); tecla("4");                  // 102
+      tecla(" "); tecla("3");                  // redrill do 100 resolvido
+      ocultar(true); ocultar(false);           // volta da aba remonta a fila
+      SAIDA.fila = el("pendentes").textContent;
+      SAIDA.fim = !el("fim").hidden;
+    """, {"db": {"docs": {}}})
+    assert out["saida"] == {"fila": "0", "fim": True}
+    assert out["db"]["100"]["rating_primeira"] == 1, "a 1a nota segue a unica gravavel"
+    assert out["db"]["100"].get("redrill_ok") is True
+    recarga = _rodar(LOTE3, 'SAIDA.fila = el("pendentes").textContent;',
+                     {"armazem": out["armazem"]})["saida"]
+    assert recarga["fila"] == "0", "o reload tambem nao reapresenta o redrill feito"
+
+
 def test_fim_com_banco_fora_diz_que_as_notas_estao_no_aparelho():
     """Com o espelho local ok, a tela de fim nao pode dizer 'Nada foi salvo fora desta tela': as
     notas estao no aparelho e vao ao banco no proximo abrir com conexao."""

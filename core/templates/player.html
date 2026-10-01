@@ -788,6 +788,15 @@ pre{
       var registro = {card_id:id, rating_primeira:nota, ts:new Date(Date.now()).toISOString()};
       notas.set(id, registro);
       salvar(registro);
+    } else if(nota >= 3){
+      // s210: redrill resolvido fica REGISTRADO (aparelho e db) para nao voltar a fila numa
+      // remontagem; a 1a nota segue a unica que o FSRS grava (`rating_primeira` intocado).
+      var ant = notas.get(id);
+      if(ant.rating_primeira && ant.rating_primeira < 3 && !ant.redrill_ok && !ant.defeito){
+        var feito = mesclar(ant, {card_id:id, ts:ant.ts, redrill_ok:true});
+        notas.set(id, feito);
+        salvar(feito);
+      }
     }
     fila.shift();
     if(nota < 3){ fila.push(c); }   // relearning: volta ao FIM, sem segunda nota gravavel
@@ -900,6 +909,7 @@ pre{
       if(!n){ novos.push(c); return; }
       if(n.defeito){ return; }                        // defeito sai do lote
       if(n.rating_primeira >= 3){ return; }           // resolvido (R2: era >= 4 sob a regua v1)
+      if(n.redrill_ok){ return; }                     // redrill ja resolvido (s210)
       relearning.push(c);                             // nota < 3 volta ao fim (R2)
     });
     fila = novos.concat(relearning);
@@ -917,6 +927,7 @@ pre{
     if(fonte.rating_primeira){ r.rating_primeira = fonte.rating_primeira; }
     r.ts = fonte.ts || a.ts || b.ts;
     if(a.defeito || b.defeito){ r.defeito = true; r.motivo = a.defeito ? a.motivo : b.motivo; }
+    if(a.redrill_ok || b.redrill_ok){ r.redrill_ok = true; }
     return r;
   }
 
@@ -926,6 +937,7 @@ pre{
     var novo = {card_id: id, ts: dado.ts};
     if(dado.rating_primeira){ novo.rating_primeira = dado.rating_primeira; }
     if(dado.defeito){ novo.defeito = true; novo.motivo = dado.motivo; }
+    if(dado.redrill_ok){ novo.redrill_ok = true; }
     notas.set(id, mesclar(notas.get(id), novo));
   }
 
@@ -950,7 +962,8 @@ pre{
     var faltam = [];
     notas.forEach(function(n){
       var d = noDb[n.card_id];
-      if(!d || (n.defeito && !d.defeito) || (n.rating_primeira && !d.rating_primeira)){ faltam.push(n); }
+      if(!d || (n.defeito && !d.defeito) || (n.rating_primeira && !d.rating_primeira) ||
+         (n.redrill_ok && !d.redrill_ok)){ faltam.push(n); }
     });
     var i = 0;
     function proximo(){

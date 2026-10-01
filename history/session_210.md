@@ -21,3 +21,4 @@
    - **Resumos omissos:** sem resumo de Cirrose, DII, Cicatrizacao; criterios Kehr x biliodigestiva; PBE/albumina.
 8. hub-backend 17h18: rd-dii-polipos marcada FEITA no quadro -> republicado com o mesmo lote 2026-09-30a (quadro mudou) -- Version 59. review_log carimbado (directed_review) nos temas 302 (DII) e 167 (Polipos).
 9. hub-backend 19h09: fila de VESPERA 2026-10-02a no ar (100 cards, teto 100, 13 retidos p/ reforja) -- Version 60. Linha 3 do HANDOFF atualizada.
+10. hub-backend 20h09: republicado com o mesmo lote 2026-10-02a (painel mudou: vencidos-agora subiu) -- Version 61.

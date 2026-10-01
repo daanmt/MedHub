@@ -115,7 +115,20 @@ if(OPC.db){
     doc:function(id){ return {set:function(reg){ if(falhaAgora()){ return STErr({code:"falhou"}); } DB[id] = reg; escritas.push(String(id)); return ST(undefined); }}; },
     get:function(){ return ST({docs: Object.keys(DB).map(function(k){ var d = DB[k]; return {data:function(){ return d; }}; })}); }
   };
-  global.window.claude = {use:function(){ return ST({collection:function(){ return colecaoFalsa; }}); }};
+  var dbFalso = {collection:function(){ return colecaoFalsa; }};
+  global.window.claude = {use:function(){ return ST(dbFalso); }};
+  // s210: `OPC.dbAdiado` = o db so responde quando o cenario chama abrirDb() -- a corrida do
+  // reload em que o operador ja deu nota antes de `colecao.get()` voltar (01/10, "volta no tempo").
+  if(OPC.dbAdiado){
+    var aoAbrir = null, depois = [];
+    var cadeia = {then:function(g){ depois.push(g); return cadeia; }, catch:function(){ return cadeia; }};
+    global.window.claude = {use:function(){ return {then:function(f){ aoAbrir = f; return cadeia; }, catch:function(){ return this; }}; }};
+    global.abrirDb = function(){
+      var r = aoAbrir(dbFalso);
+      if(!r || typeof r.then !== "function"){ r = ST(r); }
+      depois.forEach(function(g){ r = r.then(g); });
+    };
+  }
 }
 global.localStorage = ls;
 global.navigator = {};
@@ -392,6 +405,50 @@ def test_falha_passageira_volta_a_tentar_na_nota_seguinte_e_reenvia_o_que_ficou_
     assert set(out["db"]) == {"100", "101"}, "a nota que falhou foi reenviada quando o banco voltou"
     assert out["saida"]["aviso_oculto"] is True
     assert "1 nota(s)" in out["saida"]["momento"]
+
+
+def test_db_que_chega_depois_da_1a_nota_poda_a_fila_e_nao_volta_no_tempo():
+    """Regressao de 01/10 (s210, lote 2026-09-30a): o operador saiu do artifact e voltou; o
+    aparelho voltou sem espelho e a fila recomecou do 1o card. Ele deu nota ANTES de o db
+    responder (`interagiu`) e o remontar pos-db era pulado: os cards ja feitos voltavam."""
+    out = _rodar(LOTE3, """
+      tecla(" "); tecla("4");                  // 100 de novo (o db ainda nao respondeu)
+      abrirDb();                               // db: 100 e 101 ja feitos noutra abertura
+      SAIDA.pergunta = el("pergunta").textContent;
+      SAIDA.fila = el("pendentes").textContent;
+    """, {"dbAdiado": True, "db": {"docs": {
+        "100": {"card_id": 100, "rating_primeira": 4, "ts": "2026-10-01T12:00:00Z"},
+        "101": {"card_id": 101, "rating_primeira": 3, "ts": "2026-10-01T12:01:00Z"}}}})
+    assert out["saida"] == {"pergunta": "P2?", "fila": "1"}
+    assert out["db"]["100"]["ts"] == "2026-10-01T12:00:00Z", "a 1a nota gravada nao e sobrescrita"
+
+
+def test_defeito_que_so_o_aparelho_tem_sobrevive_ao_db_e_e_reenviado():
+    """Regressao de 01/10 (card 714): o aparelho tinha nota 1 + defeito; o db so a nota 1. O
+    restaurar do db sobrescrevia o registro local e o defeito sumia do aparelho e do banco."""
+    local = [{"card_id": 101, "rating_primeira": 1, "ts": "2026-10-01T13:02:33Z",
+              "defeito": True, "motivo": "Siglas"}]
+    out = _rodar(LOTE3, "SAIDA.fila = el(\"pendentes\").textContent;", {
+        "armazem": {"medhub.notas.t-js": json.dumps(local)},
+        "db": {"docs": {"101": {"card_id": 101, "rating_primeira": 1,
+                                "ts": "2026-10-01T13:02:33Z"}}}})
+    espelho = {n["card_id"]: n for n in json.loads(out["armazem"]["medhub.notas.t-js"])}
+    assert espelho[101].get("defeito") is True and espelho[101].get("motivo") == "Siglas"
+    assert out["db"]["101"].get("defeito") is True, "o que o db tem a menos e reenviado"
+    assert out["saida"]["fila"] == "2", "card com defeito sai da fila"
+
+
+def test_voltar_a_aba_ressincroniza_com_o_db():
+    """Notas que chegaram ao db por outra abertura (outro aparelho, outra aba) enquanto esta
+    estava oculta saem da fila quando ela volta a ficar visivel."""
+    out = _rodar(LOTE3, """
+      tecla(" "); tecla("3");                  // 100 feito aqui; na tela: P1
+      ocultar(true);
+      DB["101"] = {card_id:101, rating_primeira:4, ts:"2026-10-01T12:05:00Z"};
+      ocultar(false);
+      SAIDA.pergunta = el("pergunta").textContent;
+    """, {"db": {"docs": {}}})
+    assert out["saida"]["pergunta"] == "P2?"
 
 
 def test_fim_com_banco_fora_diz_que_as_notas_estao_no_aparelho():

@@ -858,8 +858,10 @@ pre{
     tempo.ultimoTique = Date.now();
     if(!document.hidden){ tempo.ultimoGesto = Date.now(); }
     gravarTempo();
+    if(!document.hidden){ ressincronizar(); }
   });
-  window.addEventListener("pagehide", function(){ acumular(); gravarTempo(); });
+  window.addEventListener("pagehide", function(){ acumular(); gravarTempo(); espelharNotas(); });
+  window.addEventListener("pageshow", function(ev){ if(ev && ev.persisted){ ressincronizar(); } });
 
   $("btn-pausa").addEventListener("click", alternarPausa);
   $("btn-virar").addEventListener("click", virar);
@@ -903,15 +905,28 @@ pre{
     fila = novos.concat(relearning);
   }
 
+  // s210 (01/10, card 714): o registro do db SOBRESCREVIA o do aparelho e um defeito que so o
+  // aparelho tinha sumia dos dois. Agora as duas fontes se MESCLAM: a 1a nota (ts mais antigo)
+  // fica, e o defeito de qualquer lado vale.
+  function mesclar(a, b){
+    if(!a){ return b; }
+    if(!b){ return a; }
+    var r = {card_id: a.card_id};
+    var fonte = a.rating_primeira ? a : b;
+    if(a.rating_primeira && b.rating_primeira && String(b.ts || "") < String(a.ts || "")){ fonte = b; }
+    if(fonte.rating_primeira){ r.rating_primeira = fonte.rating_primeira; }
+    r.ts = fonte.ts || a.ts || b.ts;
+    if(a.defeito || b.defeito){ r.defeito = true; r.motivo = a.defeito ? a.motivo : b.motivo; }
+    return r;
+  }
+
   function absorver(dado){
     if(!dado || typeof dado.card_id === "undefined"){ return; }
-    notas.set(Number(dado.card_id), {
-      card_id: Number(dado.card_id),
-      rating_primeira: dado.rating_primeira,
-      ts: dado.ts,
-      defeito: dado.defeito,
-      motivo: dado.motivo
-    });
+    var id = Number(dado.card_id);
+    var novo = {card_id: id, ts: dado.ts};
+    if(dado.rating_primeira){ novo.rating_primeira = dado.rating_primeira; }
+    if(dado.defeito){ novo.defeito = true; novo.motivo = dado.motivo; }
+    notas.set(id, mesclar(notas.get(id), novo));
   }
 
   function restaurar(docs){
@@ -924,15 +939,19 @@ pre{
 
   // O que este aparelho tem e o banco nao: vai agora, em sequencia. O encadeamento
   // usa so o `then` do que a colecao devolve (sem Promise nova), para que o teste
-  // com db falso sincrono enxergue o reenvio.
+  // com db falso sincrono enxergue o reenvio. s210: vai tambem o que o db tem A MENOS
+  // (defeito ou nota que so o aparelho tem), nao so o card ausente.
   function reenviarPendentes(docs){
     var noDb = {};
     docs.forEach(function(d){
       var dado = d.data && d.data();
-      if(dado && typeof dado.card_id !== "undefined"){ noDb[Number(dado.card_id)] = true; }
+      if(dado && typeof dado.card_id !== "undefined"){ noDb[Number(dado.card_id)] = dado; }
     });
     var faltam = [];
-    notas.forEach(function(n){ if(!noDb[n.card_id]){ faltam.push(n); } });
+    notas.forEach(function(n){
+      var d = noDb[n.card_id];
+      if(!d || (n.defeito && !d.defeito) || (n.rating_primeira && !d.rating_primeira)){ faltam.push(n); }
+    });
     var i = 0;
     function proximo(){
       if(i >= faltam.length){ return faltam.length; }
@@ -941,6 +960,44 @@ pre{
       return colecao.doc(String(n.card_id)).set(n).then(proximo);
     }
     return proximo();
+  }
+
+  // s210 (01/10, "volta no tempo"): o db que chegava DEPOIS da 1a nota nao remontava a fila
+  // (`interagiu`) e os cards ja feitos voltavam. Agora a fila e remontada sempre que o estado
+  // muda; o card que esta na tela fica na frente se ainda estiver pendente (nada embaralha
+  // no meio da resposta), e so e trocado se ja foi resolvido.
+  function remontar(){
+    var atual = fila[0];
+    montarFila();
+    var i = atual ? fila.indexOf(atual) : -1;
+    if(i >= 0){
+      if(i > 0){ fila.splice(i, 1); fila.unshift(atual); }
+      atualizarPainel();
+      return;
+    }
+    mostrar();
+  }
+
+  function sincronizarComDb(){
+    return colecao.get().then(function(snap){
+      var docs = snap.docs || [];
+      restaurar(docs);
+      espelharNotas();
+      atualizarPainel();
+      renderFallback();
+      remontar();
+      return reenviarPendentes(docs);
+    }).then(function(n){
+      if(n){ avisarMomento(n + " nota(s) guardada(s) neste aparelho foram enviadas ao banco."); }
+    });
+  }
+
+  // Voltar a aba (ou a pagina restaurada do cache do navegador) relê o aparelho e o banco:
+  // o que outra abertura gravou enquanto esta estava escondida sai da fila.
+  function ressincronizar(){
+    restaurarLocal();
+    if(!colecao){ remontar(); return; }
+    try{ sincronizarComDb().catch(function(){}); }catch(e){}
   }
 
   function iniciar(){
@@ -971,22 +1028,7 @@ pre{
       }
       colecao = db.collection("sessoes/" + LOTE.sessao + "/notas");
       dbOk = true;
-      return colecao.get().then(function(snap){
-        var docs = snap.docs || [];
-        restaurar(docs);
-        espelharNotas();
-        atualizarPainel();
-        renderFallback();
-        // Remontar a fila DEPOIS do 1o gesto embaralharia o card na tela; o
-        // progresso ja restaurado continua valendo para o painel.
-        if(!interagiu){
-          montarFila();
-          mostrar();
-        }
-        return reenviarPendentes(docs);
-      }).then(function(n){
-        if(n){ avisarMomento(n + " nota(s) guardada(s) neste aparelho foram enviadas ao banco."); }
-      });
+      return sincronizarComDb();
     }).catch(function(){
       declararSemArmazenamento();
     });

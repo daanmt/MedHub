@@ -178,7 +178,11 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
 .qz-porque{grid-column:1 / -1;margin:0;padding:8px 12px 10px 56px;border-top:1px solid var(--linha);color:var(--tinta2);font-size:.9em;line-height:1.45;min-width:0}
 .qz-alt.tem-pq:not(.aberta) .qz-alt-txt::after{content:" · por quê";color:var(--tinta3);font-size:.82em}
 /* s211 (part-4): marca-texto -- uma cor so, do token; tocar no grifo o remove */
-.qz-grifo{background:var(--qz-duv-fraco);color:var(--tinta);border-radius:3px;cursor:pointer}
+/* s211 (conferido no navegador): o tom "fraco" sumia no tema escuro; o grifo e um marca-texto ambar com tinta escura nos dois temas */
+:root{--qz-grifo:#f1d27c;--qz-grifo-tinta:#191817}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){--qz-grifo:#e2a94f;--qz-grifo-tinta:#191817} }
+:root[data-theme="dark"]{--qz-grifo:#e2a94f;--qz-grifo-tinta:#191817}
+.qz-grifo{background:var(--qz-grifo);color:var(--qz-grifo-tinta);border-radius:3px;cursor:pointer}
 .qz-alt.tem-pq .qz-alt-btn{cursor:pointer}
 .qz-cad{display:grid;gap:10px;min-width:0}
 .qz-cad-tit{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0;font-weight:650;color:var(--tinta2)}
@@ -187,6 +191,8 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
 .qz-sol p{margin:0}
 .qz-pede{color:var(--tinta2);font-size:.92em;line-height:1.45}
 .qz-decl-nota{font-size:.84em;color:var(--tinta3)}
+.qz-pres summary{cursor:pointer;min-height:44px;display:flex;align-items:center;font-size:.84em;color:var(--tinta3)}
+.qz-pres[open] summary{margin-bottom:8px}
 .qz-cadeia{margin:0;padding:0;list-style:none;display:grid;gap:8px}
 .qz-cadeia li{display:grid;gap:8px;justify-items:center;text-align:center;padding:12px;border-radius:12px;background:var(--afundado);min-width:0}
 .qz-cadeia .qz-elo-n{font-size:.74em;font-weight:650;color:var(--tinta3)}
@@ -219,6 +225,9 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
 .qz-elos-cont{display:flex;flex-wrap:wrap;gap:4px 14px;margin:0;font-size:.88em;color:var(--tinta2)}
 .qz-elos-cont b{font-variant-numeric:tabular-nums}
 .qz-elos-cont .nao b{color:var(--alerta)} .qz-elos-cont .incerteza b{color:var(--qz-duv)} .qz-elos-cont .desatencao b{color:var(--qz-chute)} .qz-elos-cont .sim b{color:var(--qz-ok)}
+.qz-rev.elo{grid-template-columns:auto minmax(0,1fr);gap:4px 10px}
+.qz-rev.elo i{justify-self:start}
+.qz-rev.elo span{grid-column:1 / -1;line-height:1.4}
 .qz-rev.nao{border-left-color:var(--alerta)} .qz-rev.nao i{color:var(--alerta)}
 .qz-rev.incerteza{border-left-color:var(--qz-duv)} .qz-rev.incerteza i{color:var(--qz-duv)}
 .qz-rev.desatencao{border-left-color:var(--qz-chute)} .qz-rev.desatencao i{color:var(--qz-chute)}
@@ -1141,7 +1150,9 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
     return '<p class="qz-rot" style="margin:0">Elos <small style="font-weight:400;color:var(--tinta3)">o que revisar, nesta ordem</small></p>' +
       '<p class="qz-elos-cont">' + Object.keys(QZ_DECL).map(function(k){ return '<span class="' + k + '">' + QZ_DECL[k] + ' <b>' + s.cont[k] + '</b></span>'; }).join("") + '</p>' +
       (s.itens.length ? '<ol class="qz-lista">' + s.itens.map(function(x){
-        return '<li><button type="button" class="qz-rev ' + x.estado + '" data-rev="' + x.pos + '"><b>Q' + qzEsc(x.num) + '</b><span>' + qzEsc(x.elo) + '</span><i>' + QZ_DECL[x.estado] + '</i></button></li>'; }).join("") + '</ol>' : '');
+        // s211 (conferido no navegador): o elo e texto longo e vai sozinho na 2a linha; a regra `.qz-lista button`
+        // (2 colunas, a 1a elastica) espremia "Q1" e o estado letra por letra quando o span ficava na coluna auto.
+        return '<li><button type="button" class="qz-rev elo ' + x.estado + '" data-rev="' + x.pos + '"><b>Q' + qzEsc(x.num) + '</b><i>' + QZ_DECL[x.estado] + '</i><span>' + qzEsc(x.elo) + '</span></button></li>'; }).join("") + '</ol>' : '');
   }
   function qzConcluirUi(pendentes){
     var b = $("qz-concluir"), st = $("qz-fim-status"); b.disabled = pendentes > 0; st.className = "qz-status";
@@ -1192,17 +1203,21 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
     $("qz-sol-pe").innerHTML = (s && typeof s === "object" && s.conferir ? '<p>Conferir: ' + qzEsc(s.conferir) + '</p>' : "") + (q.fontes_medhub ? '<p>' + qzEsc(q.fontes_medhub) + '</p>' : "");
     if(!s || typeof s !== "object"){ box.className = "qz-texto"; box.textContent = s || ""; return; }
     var cadeia = qzCadeia(q), e = qzElosDe(q, r, QZ.ana[q.num]), conf = qzConflitos(q, r);
-    var nota = {presumido: "Certa e sólida: Sim presumido em cada elo. Toque para ajustar.",
+    var nota = {presumido: "Certa e sólida: Sim presumido nos " + cadeia.length + " elos. Toque para ajustar.",
                 legado: "Estados da análise" + (e.data ? " de " + e.data : " do hub") + ". Toque para declarar."}[e.fonte] || (qzDeclPendente(q, r) ? "Como foi cada elo?" : "");
     box.className = "qz-sol";
-    box.innerHTML = (s.pede ? '<p class="qz-pede">' + qzEsc(s.pede) + '</p>' : "") + (nota ? '<p class="qz-decl-nota">' + qzEsc(nota) + '</p>' : "") +
+    // s211 (conferido no navegador): certa e solida e a maioria das questoes; a cadeia presumida fica
+    // RECOLHIDA numa linha (details) em vez de ocupar a tela com 3 blocos de 4 botoes.
+    var pres = e.fonte === "presumido";
+    box.innerHTML = (s.pede ? '<p class="qz-pede">' + qzEsc(s.pede) + '</p>' : "") + (nota && !pres ? '<p class="qz-decl-nota">' + qzEsc(nota) + '</p>' : "") +
+      (pres ? '<details class="qz-pres"><summary>' + qzEsc(nota) + '</summary>' : '') +
       '<ol class="qz-cadeia">' + cadeia.map(function(el, i){
         var st = e.estados[i] || "", dec = !!st && e.fonte !== "presumido", cf = conf.indexOf(i) >= 0;
         return '<li' + (dec ? ' class="' + st + (cf ? " conflito" : "") + '"' : '') + '><span class="qz-elo-n">Elo ' + (i + 1) + ' de ' + cadeia.length + '</span><b>' + qzEsc(el && el.elo) + '</b>' +
           '<div class="qz-decl" role="group" aria-label="Elo ' + (i + 1) + '">' + Object.keys(QZ_DECL).map(function(k){ var on = st === k, pres = on && e.fonte === "presumido";
             return '<button type="button" data-k="' + i + '" data-st="' + k + '" class="' + k + (on ? " on" : "") + (pres ? " presumido" : "") + '" aria-pressed="' + on + '"' + (pres ? ' title="Sim (presumido)"' : '') + '>' + QZ_DECL[k] + '</button>'; }).join("") + '</div>' +
           (dec && el && el.chave ? '<span class="qz-chave">' + qzEsc(el.chave) + '</span>' : '') +
-          (cf ? '<em>conflito: você marcou a alternativa que este elo descarta</em>' : '') + '</li>'; }).join("") + '</ol>';
+          (cf ? '<em>conflito: você marcou a alternativa que este elo descarta</em>' : '') + '</li>'; }).join("") + '</ol>' + (pres ? '</details>' : '');
   }
   // s211 (part-2): a analise do agente vira UMA linha sob a cadeia -- veredito curto, armadilha e cards.
   // Pedia e Comporta sairam da tela; concordo/em parte/discordo so quando a analise aponta conflito.

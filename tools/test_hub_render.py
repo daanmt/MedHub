@@ -686,7 +686,7 @@ def test_fim_elos_golden():
     html = out["html"]
     assert out["vazio"] == ""
     assert re.findall(r'data-rev="(\d+)"', html) == ["0", "0", "2"]                  # tocável: abre a questão
-    assert html.index("Q8</b><span>Recordou") < html.index("Q8</b><span>Descartou") < html.index("Q10</b>")
+    assert html.index("Q8</b><i>Não</i><span>Recordou") < html.index("Q8</b><i>Incerteza</i><span>Descartou") < html.index("Q10</b>")
     _golden("fim_elos", html)
 
 
@@ -764,10 +764,10 @@ SAIDA = {antes: antes, docs: docs, volta: volta, alts: qzAltsHtml(q, QZ.resp[q.n
 
 
 def test_grifo_uma_cor_de_token_e_limite_declarado():
-    """Uma cor so, do token (`--qz-duv-fraco` com texto `--tinta`); sem barra flutuante, menu ou
+    """Uma cor so, por token proprio (`--qz-grifo`, ambar nos dois temas -- o tom fraco sumia no escuro, s211); sem barra flutuante, menu ou
     seletor de cor; o limite (selecao por toque no celular nao testada) declarado no template e no brief."""
     (regra,) = [l for l in TEMPLATE.splitlines() if l.startswith(".qz-grifo{")]
-    assert "background:var(--qz-duv-fraco)" in regra and "color:var(--tinta)" in regra and "#" not in regra
+    assert "background:var(--qz-grifo)" in regra and "color:var(--qz-grifo-tinta)" in regra and "#" not in regra
     assert TEMPLATE.count('class="qz-grifo"') == 1                        # um so tipo de grifo
     for proibido in ("qz-grifo-cor", "qz-grifo-menu", "qz-grifo-barra"):
         assert proibido not in TEMPLATE

@@ -96,32 +96,44 @@ e objetivo da lista fechada ou "outro: ...". Devolva no máximo ~1.200 caractere
 quantos gravou, as divergentes (1 linha cada), os "outro:" usados e qualquer questão sem figura/
 tabela na captura.
 
-## Estado por elo (o diagnóstico da análise) -- portador único
+## Estado por elo (a declaração do aluno) -- portador único
 
 > Desde a s201 (veredito do /ai-eng sobre a s200, #8) a definição mora SÓ aqui; `/banco-emed`, o
 > `/analisar-questao` §3.3 e a memória apontam para esta seção. O subagente que cunha a Solução NÃO
-> preenche estados -- eles são da análise do erro (`analises/<lista>_<num>`), feita pelo principal.
+> preenche estados. Desde 02/10/2026 (s211, `feedback-cadeia-declarada`) quem declara o estado de
+> cada elo é o ALUNO, na página, depois de revelar a questão; a página não infere nada.
 
-A análise usa a MESMA cadeia da Solução (não a repete) e declara:
+- `elos` (no doc `respostas/<lista>_<num>`) = um estado por elo, na ordem da cadeia (v2 ou v3).
+  Vocabulário declarado: `sim` · `incerteza` · `desatencao` · `nao` (e `""` = não declarado)
+  - `sim` = executei com segurança;
+  - `incerteza` = cheguei sem firmeza;
+  - `desatencao` = sabia e não apliquei, ou li errado;
+  - `nao` = não sabia.
+- **Obrigatória** em errada, dúvida e chute. Certa e sólida: a página mostra `Sim` presumido e NADA
+  grava até ele tocar (ausente = presumido, regra só de leitura); no 1º toque o `Sim` que ele via vira
+  declarado. `elos` com tamanho diferente da cadeia é ignorado.
+- **Conflito determinístico** (a página mostra, sem análise): elo `descartar` cuja `letra` é a letra
+  marcada e declarado `sim` -> "conflito: você marcou a alternativa que este elo descarta".
+- **Legado** (t26/t96): resposta sem `elos` e análise com `estados` -> a página mostra os estados
+  convertidos (`ok` -> `sim`, `quebrou` -> `nao`, `nao_usou` -> `desatencao`, `nao_avaliado` -> sem
+  marca), rotulados "da análise de <data>", sem gravar; o 1º toque começa uma declaração nova.
+- `cadeia_defeito` = `{motivo, ts}`: o aluno sinaliza que a cadeia daquela questão está mal construída
+  (fila de correção do agente).
 
-- `quebrou` = índice 0-based do elo em que a cadeia do operador quebrou.
-- `estados` = um por elo, na ordem da cadeia. Vocabulário: `ok` · `quebrou` · `nao_usou` · `nao_avaliado`
-  - `ok` = elo executado (firme);
-  - `quebrou` = onde a cadeia rompeu;
-  - `nao_usou` = sabia (declarado ou evidente), mas não aplicou na hora de decidir;
-  - `nao_avaliado` = a questão não chegou a testar o elo -- ou evidência e declarado divergem.
-- `conflitos` = índices 0-based dos elos em que o **declarado** pelo operador e a **evidência** divergem
-  (ex.: "acertei o elo 1", mas a letra marcada é a que o elo 1 exclui). Régua do /ai-eng aceita pelo
-  operador em 26/09: elo em conflito = `nao_avaliado` + índice em `conflitos`, nunca `nao_usou` -- o
-  declarado não é sobrescrito pelo inferido.
-- **Evidência, não diagnóstico:** letra marcada, riscadas, confiança e racional. Os elos dependem da
-  questão, não das alternativas (operador, s200); nunca pintar um elo só porque uma letra ligada a ele
-  foi riscada.
-- **Sem análise**, a página lê as letras (riscada = elo provavelmente ok; letra marcada = provável
-  quebra) e rotula a leitura como PROVISÓRIA. `estados` com tamanho diferente da cadeia é ignorado.
+**A análise do agente** (`analises/<lista>_<num>`) usa a MESMA cadeia da Solução (não a repete). A
+página mostra dela só uma linha: `veredito_hub`, `armadilha` e os `cards`; concordo/em parte/discordo
+só quando ela traz `conflitos` (índices 0-based dos elos em que o declarado e a evidência divergem).
+Evidência, não diagnóstico: letra marcada x elo `descartar`, riscadas, certeza e racional. `quebrou` e
+`estados` (vocabulário antigo `ok` · `quebrou` · `nao_usou` · `nao_avaliado`) só são lidos como legado.
 
-O render de cada estado está preso por `tools/test_hub_render.py` (um golden por estado + PROVISÓRIA), e o
-vocabulário acima tem de ser igual ao que a página rotula (`test_vocabulario_de_estados_do_brief_e_o_da_pagina`).
+⚰️ *02/10/2026 (s211): revogada a leitura provisória pelas letras -- "sem análise, a página lê as letras
+(riscada = elo provavelmente ok; letra marcada = provável quebra) e rotula a leitura como PROVISÓRIA" --
+e a pintura de cada elo pelo `estados` da análise. A letra errou o elo em 5 das 7 análises (t26, t96);
+o dado primário é a declaração do aluno.*
+
+O render está preso por `tools/test_hub_render.py` (um golden por cenário: declarada, presumida,
+conflito, legado), e o vocabulário declarado acima tem de ser igual ao que a página oferece
+(`test_vocabulario_de_estados_do_brief_e_o_da_pagina`).
 
 ## Listas fechadas de objetivo
 

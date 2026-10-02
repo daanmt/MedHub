@@ -301,6 +301,9 @@ nunca convertido em métrica para o painel ficar verde.
 <!-- TERMO-REVOGADO: relearning que volta hoje | revisar.md passos 3 e 5 (s204) -- F140: nenhuma nota devolve o card a fila no mesmo dia -->
 <!-- TERMO-REVOGADO: default `--new-limit 10` | fsrs-management v1.6 (s204) -- F140: decisao do operador em 28/09 ('saldo por teto'); no lote do player os novos enchem o saldo do teto, o 10 vale so na fila do chat -->
 <!-- TERMO-REVOGADO: atrasados → hoje → novos | fsrs-management v1.6 + revisar.md (s204) -- a fila usa 4 buckets desde o P3 part-2 (atrasados, erros_frescos, hoje, novos); a redacao de 3 sobreviveu em 3 portadores -->
+<!-- TERMO-REVOGADO: a sua letra cai neste elo | docs/SOLUCAO-MEDHUB-BRIEF.md secao Estado por elo + banco-emed.md 'Na pagina' (s211, feedback-cadeia-declarada part-2) -- a pagina deixou de inferir a quebra pela letra marcada: o aluno declara cada elo -->
+<!-- TERMO-REVOGADO: leitura provisória pelas letras | docs/SOLUCAO-MEDHUB-BRIEF.md secao Estado por elo + banco-emed.md 'Na pagina' (s211, part-2) -- a leitura PROVISORIA (riscada = elo ok, marcada = provavel quebra) errou em 5 das 7 analises -->
+<!-- TERMO-REVOGADO: chips da aba Resolver | banco-emed.md 'Elo declarado pelo operador' (s211, part-2) -- os 8 chips de causa sairam da pagina; o declarado e o estado de cada elo (`elos`) -->
 <!-- TERMO-REVOGADO: cuja falha leva a ela | docs/SOLUCAO-MEDHUB-BRIEF.md v3 + banco-emed.md secao Solucao MedHub (s211, feedback-cadeia-declarada part-1) -- a alternativa errada deixou de apontar o elo: a pagina adivinhava a quebra pela letra e errou em 5 das 7 analises; quem declara o elo e o aluno -->
 
 > **Por que os marcadores são comentários HTML:** eles não aparecem no render do documento (o

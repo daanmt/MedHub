@@ -53,13 +53,14 @@ status: canonical
 | `mensagens/<id>` | todos | `de` (`hub` · `claude-in-chrome` · `operador`), `texto`, `enviado_em`, `lido` |
 | `listas/t<tarefa>` | hub semeia; página muda `status` | `tarefa`, `tema`, `area`, `semana`, `seq`, `q_previstas`, `url`, `status` (`pendente` · `em_curso` · `capturada` · `bloqueada` · `resolvida`) |
 | `questoes/<lista>_<num>` | Chrome (formulário ou lote JSON) | `lista`, `tarefa`, `num`, `banca`, `gabarito`, `emed_id`, `estatistica`, `enunciado`, `alternativas`, `solucao`, `forum`, `tags`, `capturado_em`, `executor`. **Escopo público desde a s198:** entram só `banca`, `gabarito`, `emed_id`, `enunciado`, `alternativas`, `tags`; `solucao`, `forum` e `estatistica` ficam vazios. ⚰️ *As 4 listas da s197 (t26 t40 t49 t96, 91 questões) guardavam esse conteúdo como exceção; apagado em 26/09/2026 por decisão do operador (item (e) do veredito do /ai-eng sobre a s200): backup `ipub_backup_20260926_143813.db` -> `--ingerir --apply --expect 91` com os três campos vazios e as chaves EMED fora de `extras`, e os mesmos campos apagados nos 91 docs do hub.* No db do **hub**, o doc ganha `solucao_medhub`, `divergente` e `fontes_medhub` quando a lista tem solução própria (s199) |
-| `respostas/<lista>_<num>` | página (aba Resolver) | `lista`, `tarefa`, `num`, `letra`, `confianca` (`solida` · `duvida` · `chute`), `correta`, `gabarito`, `racional`, `elo`, `tempo_s`, `flag`, `respondido_em`, `riscadas` (lista de letras riscadas antes de marcar; no banco, texto `A,C` desde a s200) |
-| `analises/<lista>_<num>` | hub (após `/analisar-questao`); página grava o veredito | `lista`, `num`, `pedia`, `cadeia[]` (vazia desde a s200: usa a cadeia da Solução v2), `quebrou` (índice 0-based na cadeia), `estados` + `conflitos` (s200: o DIAGNÓSTICO de cada elo da cadeia; vocabulário, régua declarado x evidência e o rótulo PROVISÓRIA definidos SÓ no brief, [§Estado por elo](../../docs/SOLUCAO-MEDHUB-BRIEF.md) -- portador único desde a s201), `comporta`, `armadilha`, `veredito_hub`, `cards[]`, `questao_erro_id`; `veredito_operador` (`concordo` · `em_parte` · `discordo`), `nota_operador`, `veredito_em` |
+| `respostas/<lista>_<num>` | página (aba Resolver) | `lista`, `tarefa`, `num`, `letra`, `confianca` (`solida` · `duvida` · `chute`), `correta`, `gabarito`, `racional` (1 linha opcional desde a s211), `tempo_s`, `flag`, `respondido_em`, `riscadas` (lista de letras riscadas antes de marcar; no banco, texto `A,C` desde a s200), `elos` (s211: o estado DECLARADO de cada elo, alinhado à cadeia -- vocabulário no brief §Estado por elo), `cadeia_defeito` (s211: `{motivo, ts}`). ⚰️ *`elo` (o chip de causa) deixou de ser escrito em 02/10/2026.* |
+| `analises/<lista>_<num>` | hub (após `/analisar-questao`); página grava o veredito | `lista`, `num`, `pedia`, `cadeia[]` (vazia desde a s200: usa a cadeia da Solução v2), `quebrou` (índice 0-based na cadeia), `estados` + `conflitos` (s200; desde 02/10/2026 a página lê `estados` só como LEGADO e pede veredito só com `conflitos`; vocabulário e régua declarado x evidência definidos SÓ no brief, [§Estado por elo](../../docs/SOLUCAO-MEDHUB-BRIEF.md) -- portador único desde a s201), `comporta`, `armadilha`, `veredito_hub`, `cards[]`, `questao_erro_id`; `veredito_operador` (`concordo` · `em_parte` · `discordo`), `nota_operador`, `veredito_em` |
 
-**Elo declarado pelo operador** (chips da aba Resolver): `nao_sabia` · `sabia_nao_usei` · `li_errado` ·
-`dado_que_exclui` · `ancorei_numero` · `negativa` · `diretriz_antiga` · `pressa`. É o **racional declarado**
-(`feedback_usuario_declara_racional_erro`): vence o inferido; quando vier vazio, a pergunta do §3.2 do
-`/analisar-questao` continua obrigatória. **Chute certo conta no volume e é `incerteza`, nunca acerto.**  <!-- CHECK: test_emed_banco -->
+**Elo declarado pelo operador** (s211): depois de revelar, ele declara cada elo da cadeia -- `elos`, vocabulário
+no brief [§Estado por elo](../../docs/SOLUCAO-MEDHUB-BRIEF.md). É o **racional declarado**
+(`feedback_usuario_declara_racional_erro`): vence o inferido; quando faltar, a pergunta do §3.2 do
+`/analisar-questao` continua obrigatória. ⚰️ *Os 8 chips de causa ("Onde quebrou?") saíram em 02/10/2026: pediam
+a causa, não o elo, e em 3 das 7 respostas com chip ele usou o campo livre para declarar elo a elo.* **Chute certo conta no volume e é `incerteza`, nunca acerto.**  <!-- CHECK: test_emed_banco -->
 
 ## `tools/emed_banco.py` -- assinatura canônica
 
@@ -165,11 +166,12 @@ tema novo ganha a entrada ANTES do subagente). Contrato completo e exemplo: o br
 [`docs/SOLUCAO-MEDHUB-BRIEF.md`](../../docs/SOLUCAO-MEDHUB-BRIEF.md).
 ⚰️ *02/10/2026 (s211): revogada a regra v2 "cada errada `{elo: k}` com o elo cuja falha leva a ela" -- a página adivinhava a quebra pela letra marcada e errou em 5 das 7 análises (t26, t96); na v3 a alternativa só explica a si mesma.*
 
-**Na página (aba Listas):** ao revelar, a cadeia aparece numerada; a letra marcada acende o elo em que ela
-cai ("a sua letra cai neste elo"); cada letra errada **riscada** acende em verde o elo que ele executou;
-na dúvida, as não riscadas são o par em que hesitou; riscar a certa é alarme de crença firme. A análise
-do hub (`analises/*`), quando chega, **move a marca para o elo confirmado** (`quebrou`, 0-based na MESMA
-cadeia -- o doc de análise não repete a cadeia) e pinta cada elo pelo `estados` que a análise declara. A tela de fim mostra firmes/feitas por objetivo.
+**Na página (aba Listas, s211):** ao revelar, o porquê de cada alternativa aparece embaixo dela (o do gabarito e o
+da marcada abertos, os demais no toque); a cadeia mostra cada elo com 4 botões (Sim / Incerteza / Desatenção / Não)
+que ELE toca -- a página não infere quebra; a análise do hub vira uma linha sob a cadeia (veredito, armadilha,
+`#cards`); "Erro na cadeia" grava `cadeia_defeito`. Regras de presumido, conflito e legado: brief §Estado por elo.
+A tela de fim mostra firmes/feitas por objetivo.
+⚰️ *02/10/2026 (s211): revogada a leitura provisória pelas letras -- a letra marcada acendia o elo em que ela cai ("a sua letra cai neste elo") e a riscada acendia o elo "executado"; a análise movia a marca. Errou o elo em 5 das 7 análises (t26, t96).*
 
 Cunhagem **por lista**, quando ela entra na semana (subagente Opus por lista, régua F93, com a v1 como
 rascunho quando houver), gravada em `tmp/solucoes_v3_<lista>/solucoes/<lista>_<num>.json` ->

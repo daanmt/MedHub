@@ -1,25 +1,25 @@
-"""test_hub_render.py -- o render da Solucao MedHub em cadeia (qzSolucao, aba Listas do hub) em node.
+"""test_hub_render.py -- a tela de revelacao da aba Listas do hub (qzSolucao & cia.) em node.
 
-Spec: veredito do /ai-eng sobre a s200, #6 ALTERA (26/09/2026). Na s200 o desenho da cadeia foi
-conferido por um harness node AD HOC, no scratchpad -- fora do repo, nada impedia a regressao.
-Aqui a funcao REAL e extraida de `core/templates/hub.html` (casamento de chaves, nunca copiada) e
-roda em node com um DOM falso minimo (`$` devolve objetos com hidden/className/innerHTML).
+Spec: veredito do /ai-eng sobre a s200, #6 ALTERA (26/09/2026) -- o render da cadeia sai de um harness
+AD HOC para este arquivo; desde 02/10/2026 (s211, `feedback-cadeia-declarada-part-2`) ele prende a
+tela em que o ALUNO declara cada elo (Sim / Incerteza / Desatencao / Nao) e a pagina NAO infere quebra.
+As funcoes REAIS sao extraidas de `core/templates/hub.html` (casamento de chaves, nunca copiadas) e
+rodam em node com um DOM falso minimo (`$` devolve objetos com hidden/className/innerHTML/value).
 
-Um cenario por ESTADO de elo que a analise declara (`ok` · `quebrou` · `nao_usou` ·
-`nao_avaliado` · conflito = `nao_avaliado` + `conflitos`), mais a leitura PROVISORIA (sem analise:
-a pagina le as letras e rotula) e a v1 em texto. Cada cenario tem:
-- assercoes SEMANTICAS por elo (classe do <li> e rotulo do <em>) -- o significado que nao pode mudar;
-- um GOLDEN do HTML inteiro em `tools/goldens/hub_render/<cenario>.html` -- qualquer mudanca de
-  render acusa. Mudou de proposito: `MEDHUB_ATUALIZAR_GOLDEN=1 pytest tools/test_hub_render.py`,
-  e o diff do golden vai no commit (e a declaracao). Golden ausente = falha, nunca verde vazio.
+Cenarios com GOLDEN do HTML inteiro em `tools/goldens/hub_render/<cenario>.html` (declarada,
+presumida, conflito, legado) -- qualquer mudanca de render acusa. Mudou de proposito:
+`MEDHUB_ATUALIZAR_GOLDEN=1 pytest tools/test_hub_render.py`, e o diff do golden vai no commit (e a
+declaracao). Golden ausente = falha, nunca verde vazio. ⚰️ *Os goldens por estado da analise
+(ok/quebrou/nao_usou/nao_avaliado/provisoria) morreram em 02/10/2026 com a leitura pelas letras.*
 
-Sem `node` no PATH os cenarios sao PULADOS (skip declarado); o teste de extracao roda sempre.
-LIMITE DECLARADO: mede o HTML que a funcao produz, nao o CSS nem o que o celular desenha.
+Sem `node` no PATH os cenarios sao PULADOS (skip declarado); os testes estaticos rodam sempre.
+LIMITE DECLARADO: mede o HTML que as funcoes produzem, nao o CSS nem o que o celular desenha.
 """
 from __future__ import annotations
 
 import json
 import os
+import re
 import shutil
 import subprocess
 import tempfile
@@ -82,104 +82,85 @@ def extrair_funcao(src, assinatura):
     raise ValueError(f"chaves desbalanceadas em {assinatura}")
 
 
-FUNCS = "\n".join(extrair_funcao(TEMPLATE, a) for a in
-                  ("function qzEsc(s){", "function qzSolucao(q, r){"))
+def _declaracao(src, inicio):
+    """O texto de `var NOME = {...};` (objeto literal no topo da declaracao)."""
+    i = src.index(inicio)
+    corpo = extrair_funcao(src[i:].replace(inicio, "function _x(){", 1), "function _x(){")
+    return inicio + corpo[len("function _x(){"):] + ";"
+
+
+FUNCS = "\n".join([_declaracao(TEMPLATE, "var QZ_DECL = {"), _declaracao(TEMPLATE, "var QZ_LEGADO = {")] +
+                  [extrair_funcao(TEMPLATE, a) for a in (
+                      "function qzEsc(s){", "function qzAlts(txt){", "function qzAltsHtml(q, r, revelada){",
+                      "function qzCadeia(q){", "function qzPrecisaDeclarar(q, r){", "function qzDeclPendente(q, r){",
+                      "function qzConflitos(q, r){", "function qzElosDe(q, r, a){", "function qzSolucao(q, r){",
+                      "function qzAgenteHtml(a){", "function qzDeclarar(i, st){", "function qzDefeito(motivo){",
+                      "function qzDefeitoUi(r){")])
 
 HARNESS = r"""
 var els = {};
-function $(id){ return els[id] || (els[id] = {id: id, hidden: false, textContent: "", className: "", innerHTML: ""}); }
-var QZ = {ana: __ANA__};
+function $(id){ return els[id] || (els[id] = {id: id, hidden: false, textContent: "", className: "", innerHTML: "", value: "",
+  attrs: {}, setAttribute: function(k, v){ this.attrs[k] = v; }}); }
+var QZ = {ana: __ANA__, qs: [__Q__], pos: 0, resp: {}};
+var GRAVADOS = [];
+function qzGravar(r){ GRAVADOS.push(JSON.parse(JSON.stringify(r))); return Promise.resolve(true); }
+function qzAgora(){ return "2026-10-02T12:00:00.000Z"; }
 __FUNCS__
-qzSolucao(__Q__, __R__);
-var b = $("qz-medhub");
-console.log(JSON.stringify({className: b.className, html: b.innerHTML, texto: b.textContent,
-                            obj_hidden: $("qz-obj").hidden, obj: $("qz-obj").textContent}));
+var q = QZ.qs[0], r = __R__;
+if(r){ QZ.resp[q.num] = r; }
+var SAIDA = {};
+__ACAO__
+console.log(JSON.stringify(SAIDA));
 """
 
-SOL = {"versao": 2, "pede": "A conduta na gestante com HbA1c 6,8%.",
-       "cadeia": [{"elo": "Classificar a glicemia de jejum", "chave": "GJ 92-125 = DMG."},
-                  {"elo": "Aplicar o critério de DM prévio", "chave": "HbA1c >= 6,5% = DM prévio."},
-                  {"elo": "Definir a conduta", "chave": "Tratar já."}],
-       "alternativas": {"A": {"certa": True, "porque": "HbA1c fecha DM prévio."},
-                        "B": {"elo": 1, "porque": "Lê a GJ como normal."},
-                        "C": {"elo": 2, "porque": "Ignora a HbA1c."},
-                        "D": {"elo": 3, "porque": "Adia o tratamento."}},
-       "conferir": ""}
-Q = {"num": 8, "solucao_medhub": SOL, "objetivo": "DM prévio x DMG", "fontes_medhub": "SBD 2026"}
+RENDER = """qzSolucao(q, r); var b = $("qz-medhub");
+SAIDA = {className: b.className, html: b.innerHTML, texto: b.textContent, obj_hidden: $("qz-obj").hidden,
+         obj: $("qz-obj").textContent, pe: $("qz-sol-pe").innerHTML, gravados: GRAVADOS};"""
+
+# v3: identificar -> recordar -> descartar B; A certa
+SOL3 = {"versao": 3, "pede": "A conduta na gestante com HbA1c 6,8%.",
+        "cadeia": [{"tipo": "identificar", "elo": "Identificou que as GJ estão na faixa de DMG.",
+                    "chave": "GJ 92-125 = DMG.", "habilidade": "Classificar a GJ do 1º trimestre"},
+                   {"tipo": "recordar", "elo": "Recordou que HbA1c >= 6,5% fecha DM prévio.",
+                    "chave": "HbA1c >= 6,5% = DM prévio.", "habilidade": "Aplicar o critério pela HbA1c"},
+                   {"tipo": "descartar", "letra": "B", "elo": "Descartou o DMG (B) pela HbA1c.",
+                    "chave": "A HbA1c decide.", "habilidade": "Usar o achado que exclui"}],
+        "alternativas": {"A": {"certa": True, "porque": "HbA1c fecha DM prévio."},
+                         "B": {"porque": "Ignora a HbA1c."},
+                         "C": {"porque": "TOTG com GJ alterada."},
+                         "D": {"porque": "Adia o tratamento."}},
+        "conferir": "Banca usa o critério antigo."}
+# v2 (t26/t96): cada errada ainda carrega `elo` -- a pagina NAO pode mais usa-lo
+SOL2 = {"versao": 2, "pede": "A conduta na gestante com HbA1c 6,8%.",
+        "cadeia": [{"elo": "Classificar a glicemia de jejum", "chave": "GJ 92-125 = DMG."},
+                   {"elo": "Aplicar o critério de DM prévio", "chave": "HbA1c >= 6,5% = DM prévio."},
+                   {"elo": "Definir a conduta", "chave": "Tratar já."}],
+        "alternativas": {"A": {"certa": True, "porque": "HbA1c fecha DM prévio."},
+                         "B": {"elo": 1, "porque": "Lê a GJ como normal."},
+                         "C": {"elo": 2, "porque": "Ignora a HbA1c."},
+                         "D": {"elo": 3, "porque": "Adia o tratamento."}},
+        "conferir": ""}
+ALTS = "A) DM prévio; tratar já\nB) DMG\nC) TOTG com 24 semanas\nD) Repetir a GJ"
 
 
-def _resp(letra, confianca="duvida", riscadas=()):
-    return {"letra": letra, "gabarito": "A", "correta": letra == "A", "confianca": confianca,
-            "riscadas": list(riscadas)}
+def _q(sol=SOL3, **extra):
+    q = {"num": 8, "solucao_medhub": sol, "objetivo": "DM prévio x DMG", "fontes_medhub": "SBD 2026",
+         "alternativas": ALTS, "gabarito": "A"}
+    q.update(extra)
+    return q
 
 
-#: cenario -> (resposta, analise da questao 8 ou None, [(classe, rotulo) esperados por elo], provisoria?)
-CENARIOS = {
-    "provisoria": (_resp("C", riscadas=["B"]), None,
-                   [("ok", None), ("quebrou", "provável quebra: a sua letra cai neste elo"), ("", None)],
-                   True),
-    "ok": (_resp("A", "solida", ["B", "C", "D"]), {"estados": ["ok", "ok", "ok"]},
-           [("ok", "firme"), ("ok", "firme"), ("ok", "firme")], False),
-    "quebrou": (_resp("D"), {"estados": ["ok", "quebrou", "ok"], "quebrou": 1},
-                [("ok", "firme"), ("quebrou", "quebrou aqui (análise do hub)"), ("ok", "firme")],
-                False),
-    "nao_usou": (_resp("C"), {"estados": ["nao_usou", "quebrou", "ok"], "quebrou": 1},
-                 [("naousou", "você sabia, mas não aplicou na hora de decidir"),
-                  ("quebrou", "quebrou aqui (análise do hub)"), ("ok", "firme")], False),
-    "nao_avaliado": (_resp("C"), {"estados": ["ok", "quebrou", "nao_avaliado"], "quebrou": 1},
-                     [("ok", "firme"), ("quebrou", "quebrou aqui (análise do hub)"),
-                      ("", "a questão não chegou a testar este elo")], False),
-    "conflito": (_resp("B"), {"estados": ["nao_avaliado", "quebrou", "ok"], "quebrou": 1,
-                              "conflitos": [0]},
-                 [("", "conflito: você declarou este elo firme, mas a letra marcada é a que ele exclui"),
-                  ("quebrou", "quebrou aqui (análise do hub)"), ("ok", "firme")], False),
-}
+def _resp(letra, confianca="duvida", riscadas=(), **extra):
+    r = {"num": 8, "letra": letra, "gabarito": "A", "correta": letra == "A", "confianca": confianca,
+         "riscadas": list(riscadas)}
+    r.update(extra)
+    return r
 
 
-class _Cadeia(HTMLParser):
-    """Os <li> de `ol.qz-cadeia`: (classe, texto do <em> de rotulo ou None), e o texto todo."""
-
-    def __init__(self):
-        super().__init__(convert_charrefs=True)
-        self.elos, self._na_ol, self._li, self._em, self.texto = [], False, None, None, []
-
-    def handle_starttag(self, tag, attrs):
-        a = dict(attrs)
-        if tag == "ol" and "qz-cadeia" in (a.get("class") or ""):
-            self._na_ol = True
-        elif tag == "li" and self._na_ol:
-            self._li = [a.get("class") or "", None]
-        elif tag == "em" and self._li is not None:
-            self._em = {"classe": a.get("class") or "", "txt": ""}
-
-    def handle_endtag(self, tag):
-        if tag == "em" and self._em is not None:
-            if not self._em["txt"].startswith("evidência"):
-                self._li[1] = self._em["txt"]
-            self._em = None
-        elif tag == "li" and self._li is not None:
-            self.elos.append(tuple(self._li))
-            self._li = None
-        elif tag == "ol":
-            self._na_ol = False
-
-    def handle_data(self, data):
-        self.texto.append(data)
-        if self._em is not None:
-            self._em["txt"] += data
-
-
-def _cadeia(html):
-    p = _Cadeia()
-    p.feed(html)
-    p.close()
-    return p.elos, "".join(p.texto)
-
-
-def _rodar(q, r, ana):
+def _rodar(q, r, ana=None, acao=RENDER):
     if not NODE:
-        pytest.skip("node ausente no PATH: render da cadeia nao verificado (skip declarado)")
-    prog = (HARNESS.replace("__FUNCS__", FUNCS)
+        pytest.skip("node ausente no PATH: tela de revelacao nao verificada (skip declarado)")
+    prog = (HARNESS.replace("__FUNCS__", FUNCS).replace("__ACAO__", acao)
                    .replace("__ANA__", json.dumps({str(q["num"]): ana} if ana else {}))
                    .replace("__Q__", json.dumps(q)).replace("__R__", json.dumps(r)))
     with tempfile.NamedTemporaryFile("w", suffix=".js", delete=False, encoding="utf-8") as f:
@@ -194,6 +175,54 @@ def _rodar(q, r, ana):
     return json.loads(out.stdout.strip().splitlines()[-1])
 
 
+class _Cadeia(HTMLParser):
+    """Cada <li> de `ol.qz-cadeia` -> {classe, on: [estados marcados], presumido, chave, em}."""
+
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.elos, self._na_ol, self._li, self._em, self._chave, self.texto = [], False, None, False, False, []
+
+    def handle_starttag(self, tag, attrs):
+        a = dict(attrs)
+        cls = a.get("class") or ""
+        if tag == "ol" and "qz-cadeia" in cls:
+            self._na_ol = True
+        elif tag == "li" and self._na_ol:
+            self._li = {"classe": cls, "on": [], "presumido": False, "chave": None, "em": None}
+        elif self._li is not None and tag == "button" and "on" in cls.split():
+            self._li["on"].append(a.get("data-st"))
+            self._li["presumido"] = self._li["presumido"] or "presumido" in cls.split()
+        elif self._li is not None and tag == "span" and "qz-chave" in cls:
+            self._chave, self._li["chave"] = True, ""
+        elif self._li is not None and tag == "em":
+            self._em, self._li["em"] = True, ""
+
+    def handle_endtag(self, tag):
+        if tag == "span":
+            self._chave = False
+        elif tag == "em":
+            self._em = False
+        elif tag == "li" and self._li is not None:
+            self.elos.append(self._li)
+            self._li = None
+        elif tag == "ol":
+            self._na_ol = False
+
+    def handle_data(self, data):
+        self.texto.append(data)
+        if self._chave:
+            self._li["chave"] += data
+        if self._em:
+            self._li["em"] += data
+
+
+def _cadeia(html):
+    p = _Cadeia()
+    p.feed(html)
+    p.close()
+    return p.elos, "".join(p.texto)
+
+
 def _golden(nome, html):
     arq = GOLDEN_DIR / f"{nome}.html"
     if ATUALIZAR:
@@ -204,69 +233,251 @@ def _golden(nome, html):
         f"render de '{nome}' mudou -- se foi de proposito, regenere o golden e comite o diff")
 
 
+#: frases da leitura pelas letras, revogada em 02/10/2026 -- nenhuma pode voltar ao HTML
+INFERENCIA = ("provável quebra", "a sua letra cai", "evidência: você riscou", "leitura provisória",
+              "falha no elo", "Você: riscou")
+
+
 def test_funcoes_extraidas_do_template():
-    """A extracao acha as duas funcoes inteiras (ancora sumiu = falha alta, nunca skip)."""
-    assert FUNCS.count("function ") >= 2 and FUNCS.rstrip().endswith("}")
-    assert "qz-cadeia" in FUNCS and "conflitos" in FUNCS
+    """A extracao acha as funcoes inteiras (ancora sumiu = falha alta, nunca skip)."""
+    assert FUNCS.count("function ") >= 13 and FUNCS.rstrip().endswith("}")
+    assert "qz-cadeia" in FUNCS and "data-st" in FUNCS
+
+
+# ------------------------------------------------ DoD 1: declaracao por elo (+ goldens)
+
+#: cenario -> (q, resposta, analise ou None, [(classe do li, estados on, presumido, tem chave, em)])
+CENARIOS = {
+    "declarada": (_q(), _resp("C", elos=["sim", "incerteza", "nao"]), None,
+                  [("sim", ["sim"], False, True, None), ("incerteza", ["incerteza"], False, True, None),
+                   ("nao", ["nao"], False, True, None)]),
+    "presumida": (_q(), _resp("A", "solida", ["B", "C"]), None,
+                  [("", ["sim"], True, False, None)] * 3),
+    "conflito": (_q(), _resp("B", elos=["sim", "nao", "sim"]), None,
+                 [("sim", ["sim"], False, True, None), ("nao", ["nao"], False, True, None),
+                  ("sim conflito", ["sim"], False, True,
+                   "conflito: você marcou a alternativa que este elo descarta")]),
+    "legado": (_q(SOL2), _resp("C", riscadas=["B"]),
+               {"estados": ["ok", "quebrou", "nao_usou"], "quebrou": 1, "veredito_em": "2026-09-26T21:10:00Z"},
+               [("sim", ["sim"], False, True, None), ("nao", ["nao"], False, True, None),
+                ("desatencao", ["desatencao"], False, True, None)]),
+}
 
 
 @pytest.mark.parametrize("nome", sorted(CENARIOS))
-def test_render_por_estado_do_elo(nome):
-    resp, ana, esperado, provisoria = CENARIOS[nome]
-    out = _rodar(Q, resp, ana)
+def test_render_da_declaracao(nome):
+    q, resp, ana, esperado = CENARIOS[nome]
+    out = _rodar(q, resp, ana)
     assert out["className"] == "qz-sol"
     elos, texto = _cadeia(out["html"])
-    assert elos == esperado
-    assert ("leitura provisória" in texto) is provisoria
+    assert [(e["classe"], e["on"], e["presumido"], e["chave"] is not None, e["em"]) for e in elos] == esperado
+    assert out["html"].count('data-st="') == 4 * len(esperado)               # 4 botoes por elo
+    assert not any(f in texto for f in INFERENCIA)
+    assert out["gravados"] == []                                              # render nunca grava
     assert out["obj_hidden"] is False and out["obj"] == "DM prévio x DMG"
     _golden(nome, out["html"])
 
 
-def test_letra_marcada_mostra_a_quebra_da_analise_quando_diverge():
-    """Cenario `quebrou`: a letra D cai no elo 3, a analise quebrou no elo 2 -> a linha da D diz
-    onde a cadeia DELE quebrou (a solucao diz onde a letra falha em geral)."""
-    resp, ana, _, _ = CENARIOS["quebrou"]
-    _, texto = _cadeia(_rodar(Q, resp, ana)["html"])
-    assert "a sua cadeia quebrou no elo 2" in texto
+def test_presumida_rotula_e_nao_grava_e_legado_rotula_a_data():
+    _, texto = _cadeia(_rodar(*CENARIOS["presumida"][:3])["html"])
+    assert "Sim presumido" in texto
+    _, texto = _cadeia(_rodar(*CENARIOS["legado"][:3])["html"])
+    assert "da análise de 26/09" in texto
 
 
-def test_estados_de_tamanho_errado_nao_pintam_e_nao_viram_provisoria():
-    """`estados` com tamanho diferente da cadeia e ignorado (nao pinta elo errado), mas a analise
-    com `quebrou` segue valendo: rotulo da analise, sem o rotulo de PROVISORIA."""
-    out = _rodar(Q, _resp("C"), {"estados": ["ok", "quebrou"], "quebrou": 1})
+def test_declaracao_grava_o_array_alinhado_a_cadeia():
+    """O toque grava `elos` (um por elo, vocabulario declarado) pelo qzGravar: errada comeca vazia;
+    tocar de novo desmarca; presumido materializa o Sim que ele via; legado NAO vira declaracao."""
+    acao = """qzDeclarar(1, "nao"); qzDeclarar(0, "sim"); qzDeclarar(0, "sim"); qzDeclarar(2, "xx"); qzDeclarar(9, "sim");
+SAIDA = {gravados: GRAVADOS.map(function(g){ return g.elos; })};"""
+    out = _rodar(_q(), _resp("C"), None, acao)
+    assert out["gravados"] == [["", "nao", ""], ["sim", "nao", ""], ["", "nao", ""]]
+    pres = _rodar(_q(), _resp("A", "solida"), None, 'qzDeclarar(1, "incerteza"); SAIDA = {g: GRAVADOS};')
+    assert [g["elos"] for g in pres["g"]] == [["sim", "incerteza", "sim"]]
+    leg = _rodar(*CENARIOS["legado"][:3], 'qzDeclarar(0, "sim"); SAIDA = {g: GRAVADOS};')
+    assert [g["elos"] for g in leg["g"]] == [["sim", "", ""]]
+    assert set(leg["g"][0]) >= {"letra", "confianca", "riscadas", "elos"}    # o doc inteiro, nao so o campo
+
+
+def test_precisa_e_pendente():
+    acao = """var c = function(rr){ return [qzPrecisaDeclarar(q, rr), qzDeclPendente(q, rr)]; };
+SAIDA = {errada: c(r), solida: c({correta: true, confianca: "solida"}), duvida: c({correta: true, confianca: "duvida"}),
+  parcial: c({correta: false, elos: ["sim", "", "nao"]}), cheia: c({correta: false, elos: ["sim", "nao", "nao"]}),
+  torta: c({correta: false, elos: ["sim", "nao"]}), sem_cadeia: [qzPrecisaDeclarar({num: 8, solucao_medhub: "texto"}, r), qzDeclPendente({num: 8}, r)]};"""
+    out = _rodar(_q(), _resp("C"), None, acao)
+    assert out == {"errada": [True, True], "solida": [False, False], "duvida": [True, True],
+                   "parcial": [True, True], "cheia": [True, False], "torta": [True, True],
+                   "sem_cadeia": [False, False]}
+
+
+# ------------------------------------------------ DoD 2: zero inferencia
+
+@pytest.mark.parametrize("sol", [SOL2, SOL3], ids=["v2", "v3"])
+def test_pagina_nao_infere_quebra_pela_letra(sol):
+    """Errada, riscou uma letra, sem declaracao e sem analise: todos os elos neutros (sem classe,
+    nenhum botao marcado), nenhuma frase da leitura pelas letras -- nem na v2, que ainda tem `elo`
+    nas alternativas."""
+    out = _rodar(_q(sol), _resp("C", riscadas=["B"]))
     elos, texto = _cadeia(out["html"])
-    assert elos == [("", None), ("quebrou", "quebrou aqui (análise do hub)"), ("", None)]
-    assert "leitura provisória" not in texto
+    assert [(e["classe"], e["on"], e["chave"], e["em"]) for e in elos] == [("", [], None, None)] * 3
+    assert not any(f in texto for f in INFERENCIA)
+    assert "Como foi cada elo?" in texto
+
+
+def test_template_nao_carrega_a_inferencia():
+    """Nem no HTML montado nem no JS: as frases da leitura pelas letras sairam do template."""
+    for frase in INFERENCIA:
+        assert frase not in TEMPLATE, frase
+
+
+# ------------------------------------------------ DoD 3: porque sob a alternativa
+
+class _Alts(HTMLParser):
+    """`.qz-alt` -> {classe, porque (texto) e se esta escondido}."""
+
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.alts, self._pq = {}, None
+
+    def handle_starttag(self, tag, attrs):
+        a = dict(attrs)
+        if tag == "div" and "qz-alt" in (a.get("class") or "").split():
+            self._l = a.get("data-l")
+            self.alts[self._l] = {"classe": a.get("class"), "porque": None, "escondido": None}
+        elif tag == "p" and "qz-porque" in (a.get("class") or ""):
+            self._pq = self.alts[self._l]
+            self._pq.update(porque="", escondido="hidden" in a)
+
+    def handle_endtag(self, tag):
+        if tag == "p":
+            self._pq = None
+
+    def handle_data(self, data):
+        if self._pq is not None:
+            self._pq["porque"] += data
+
+
+def _alts(html):
+    p = _Alts()
+    p.feed(html)
+    p.close()
+    return p.alts
+
+
+def test_porque_aparece_sob_o_gabarito_e_a_marcada():
+    acao = """SAIDA = {antes: qzAltsHtml(q, null, false), depois: qzAltsHtml(q, r, true)};"""
+    out = _rodar(_q(), _resp("C", riscadas=["D"]), None, acao)
+    antes = _alts(out["antes"])
+    assert all(a["porque"] is None for a in antes.values())                   # antes de revelar: nada
+    d = _alts(out["depois"])
+    assert (d["A"]["porque"], d["A"]["escondido"]) == ("HbA1c fecha DM prévio.", False)   # gabarito
+    assert (d["C"]["porque"], d["C"]["escondido"]) == ("TOTG com GJ alterada.", False)    # marcada
+    assert d["B"]["escondido"] is True and d["D"]["escondido"] is True                    # no toque
+    assert "gab" in d["A"]["classe"] and "errada" in d["C"]["classe"] and "riscada" in d["D"]["classe"]
+    assert "Alternativas" not in out["depois"] and "elo" not in out["depois"]
+
+
+def test_secao_alternativas_e_linha_voce_sairam_da_solucao():
+    out = _rodar(_q(), _resp("C", riscadas=["B"], elos=["sim", "nao", "nao"]))
+    assert "qz-altsol" not in out["html"] and "Alternativas" not in out["html"]
+    assert "Você:" not in out["html"] and "porque" not in out["html"]
+    assert "Conferir: Banca usa o critério antigo." in out["pe"] and "SBD 2026" in out["pe"]
+
+
+# ------------------------------------------------ DoD 4: linha do agente
+
+ANALISE = {"veredito_hub": "Você declarou o elo 2 como Não: é o critério da HbA1c.", "armadilha": "GJ normal engana.",
+           "cards": [812, 813], "pedia": "Pedia X", "comporta": "Comporta Y", "conflitos": []}
+
+
+def test_linha_do_agente_sem_conflito_nao_pede_veredito():
+    out = _rodar(_q(), _resp("C"), None, "SAIDA = {h: qzAgenteHtml(%s)};" % json.dumps(ANALISE))
+    h = out["h"]
+    assert "Você declarou o elo 2" in h and "Armadilha: GJ normal engana." in h and "#812 #813" in h
+    assert "data-v=" not in h and "qz-vered-nota" not in h
+    assert "Pedia" not in h and "Comporta" not in h
+
+
+def test_linha_do_agente_com_conflito_pede_veredito():
+    a = dict(ANALISE, conflitos=[1], veredito_operador="em_parte")
+    out = _rodar(_q(), _resp("C"), None, "SAIDA = {h: qzAgenteHtml(%s), vazio: qzAgenteHtml(null)};" % json.dumps(a))
+    assert re.findall(r'data-v="(\w+)"', out["h"]) == ["concordo", "em_parte", "discordo"]
+    assert 'data-v="em_parte" class="on"' in out["h"] and "qz-vered-nota" in out["h"]
+    assert out["vazio"] == ""
+
+
+# ------------------------------------------------ DoD 5: conflito deterministico
+
+def test_conflitos_so_no_descartar_da_letra_marcada_declarado_sim():
+    acao = """SAIDA = {
+  sim: qzConflitos(q, {letra: "b", elos: ["sim", "sim", "sim"]}),
+  nao: qzConflitos(q, {letra: "B", elos: ["sim", "sim", "nao"]}),
+  outra: qzConflitos(q, {letra: "C", elos: ["sim", "sim", "sim"]}),
+  sem: qzConflitos(q, {letra: "B"}), torta: qzConflitos(q, {letra: "B", elos: ["sim"]}),
+  v2: qzConflitos({solucao_medhub: %s}, {letra: "B", elos: ["sim", "sim", "sim"]})};""" % json.dumps(SOL2)
+    out = _rodar(_q(), _resp("B"), None, acao)
+    assert out == {"sim": [2], "nao": [], "outra": [], "sem": [], "torta": [], "v2": []}
+
+
+# ------------------------------------------------ DoD 6: defeito de cadeia + limpeza
+
+def test_defeito_de_cadeia_grava_motivo():
+    acao = """var vazio = qzDefeito("   "); var ok = qzDefeito("  o elo 2 repete o gabarito ");
+SAIDA = {vazio: vazio, ok: ok, gravados: GRAVADOS, st: $("qz-defeito-st").textContent, form: $("qz-defeito-form").hidden};"""
+    out = _rodar(_q(), _resp("C"), None, acao)
+    assert out["vazio"] is False and out["ok"] is True and len(out["gravados"]) == 1
+    assert out["gravados"][0]["cadeia_defeito"] == {"motivo": "o elo 2 repete o gabarito",
+                                                    "ts": "2026-10-02T12:00:00.000Z"}
+    assert out["st"] == "Enviado: o elo 2 repete o gabarito" and out["form"] is True
+
+
+def test_chips_de_causa_sairam():
+    """Os 8 chips de "Onde quebrou?" e a caixa de 5 campos sairam; sobra UMA linha opcional de
+    racional; o campo `elo` (chip) deixou de ser escrito."""
+    for morto in ('data-e="nao_sabia"', "Onde quebrou?", 'id="qz-elo"', 'id="qz-meta-erro"', '"Pedia"',
+                  '"Comporta"', "O que te levou à letra marcada?"):
+        assert morto not in TEMPLATE, morto
+    assert TEMPLATE.count('placeholder="Algo a acrescentar? (opcional)"') == 1
+    i = TEMPLATE.index("var r = {lista:")
+    assert " elo:" not in TEMPLATE[i:TEMPLATE.index("};", i)]
+    assert not re.search(r"\br\.elo\s*=", TEMPLATE)
+
+
+def test_resposta_antiga_sem_campos_novos_abre_sem_erro():
+    """Lista em curso (respostas sem `elos`, `cadeia_defeito`, `racional`): a tela abre e a linha do
+    defeito fica limpa."""
+    r = {"num": 8, "letra": "C", "gabarito": "A", "correta": False, "confianca": "chute"}
+    out = _rodar(_q(), r, None, RENDER + ' qzDefeitoUi(r); SAIDA.st = $("qz-defeito-st").textContent;')
+    assert out["className"] == "qz-sol" and out["st"] == "" and out["gravados"] == []
 
 
 def test_v1_em_texto_segue_como_texto():
-    q = dict(Q, solucao_medhub="Pede a conduta. Decide: HbA1c >= 6,5%. Gabarito A.", objetivo="")
-    out = _rodar(q, _resp("C"), None)
+    q = _q("Pede a conduta. Decide: HbA1c >= 6,5%. Gabarito A.", objetivo="")
+    out = _rodar(q, _resp("C"))
     assert out["className"] == "qz-texto" and out["html"] == ""
     assert out["texto"].startswith("Pede a conduta.") and out["obj_hidden"] is True
 
+
+# ------------------------------------------------ DoD 7: vocabulario, forma
 
 BRIEF = (ROOT / "docs" / "SOLUCAO-MEDHUB-BRIEF.md").read_text(encoding="utf-8")
 
 
 def _vocabulario_do_brief():
-    import re
-    (linha,) = [l for l in BRIEF.splitlines() if "Vocabulário:" in l and "`quebrou`" in l]
-    return set(re.findall(r"`([a-z_]+)`", linha.split("Vocabulário:", 1)[1]))
+    (linha,) = [l for l in BRIEF.splitlines() if "Vocabulário declarado:" in l]
+    return set(re.findall(r"`([a-z_]+)`", linha.split("Vocabulário declarado:", 1)[1]))
 
 
-def _estados_que_a_pagina_rotula():
-    import re
-    ini = FUNCS.index("var rot = {")
-    fim = FUNCS.index("}[st]", ini)
-    return set(re.findall(r"[{,]\s*([a-z_]+)\s*:", FUNCS[ini + len("var rot = "):fim + 1]))
+def _estados_que_a_pagina_declara():
+    decl = _declaracao(TEMPLATE, "var QZ_DECL = {")
+    return set(re.findall(r"[{,]\s*([a-z_]+)\s*:", decl))
 
 
 def test_vocabulario_de_estados_do_brief_e_o_da_pagina():
-    """#8 do /ai-eng: o estado por elo tem UM portador (o brief). O vocabulário que ele define é
-    exatamente o que a página rotula -- estado novo num lado só quebra aqui."""
-    assert _vocabulario_do_brief() == _estados_que_a_pagina_rotula() == {
-        "ok", "quebrou", "nao_usou", "nao_avaliado"}
+    """#8 do /ai-eng: o estado por elo tem UM portador (o brief). O vocabulário DECLARADO que ele
+    define é exatamente o que a página oferece -- estado novo num lado só quebra aqui."""
+    assert _vocabulario_do_brief() == _estados_que_a_pagina_declara() == {
+        "sim", "incerteza", "desatencao", "nao"}
 
 
 def test_skill_e_autopsia_apontam_o_brief_e_nao_redefinem():
@@ -278,14 +489,30 @@ def test_skill_e_autopsia_apontam_o_brief_e_nao_redefinem():
         assert "sabia, não aplicou" not in txt, nome
 
 
+def _css_da_tela_revelada():
+    css = TEMPLATE[TEMPLATE.index("<style>"):TEMPLATE.index("</style>")]
+    return [l for l in css.splitlines() if re.match(r"\s*\.(qz-porque|qz-alt\.tem-pq|qz-cad|qz-sol|qz-pede|qz-decl|qz-cadeia|"
+                                                     r"qz-chave|qz-rodape|qz-linha|qz-link|qz-defeito|qz-analise|qz-ag-)", l)
+            or "qz-decl" in l]
+
+
+def test_forma_da_tela_revelada():
+    """Craftsmanship do DoD 7: cor so por token, toque >= 44 px nos botoes novos, rotulo de botao
+    <= 15 caracteres, nada fixo na rolagem, grid item com min-width:0."""
+    css = _css_da_tela_revelada()
+    assert css, "CSS da tela revelada nao encontrado"
+    assert not [l for l in css if re.search(r"#[0-9a-fA-F]{3,8}\b|rgba?\(", l)]
+    assert not re.search(r"position\s*:\s*(sticky|fixed)", TEMPLATE)
+    for sel in (".qz-decl button{", ".qz-link{", ".qz-defeito-form button{", ".qz-linha{"):
+        (regra,) = [l for l in css if sel in l]
+        assert "min-height:44px" in regra, sel
+    assert "min-width:0" in [l for l in css if l.startswith(".qz-cadeia li{")][0]
+    rotulos = list(re.findall(r':\s*"([^"]+)"', _declaracao(TEMPLATE, "var QZ_DECL = {")))
+    rotulos += ["Erro na cadeia", "Enviar", "Concordo", "Em parte", "Discordo"]
+    assert all(r in TEMPLATE for r in rotulos) and max(len(r) for r in rotulos) <= 15
+
+
 # ------------------------------------------------ s201: aba Listas dividida em Questoes | Simulados
-
-def _declaracao(src, inicio):
-    """O texto de `var NOME = {...};` (objeto literal no topo da declaracao)."""
-    i = src.index(inicio)
-    corpo = extrair_funcao(src[i:].replace(inicio, "function _x(){", 1), "function _x(){")
-    return inicio + corpo[len("function _x(){"):] + ";"
-
 
 LISTAS_JS = "\n".join([_declaracao(TEMPLATE, "var ROT_QZ = {"), _declaracao(TEMPLATE, "var QZ_SUB = {")] +
                       [extrair_funcao(TEMPLATE, a) for a in (

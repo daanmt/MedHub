@@ -170,54 +170,60 @@ details.qz-bloco .qz-texto{padding:0 12px 12px;white-space:pre-wrap;font-size:.9
 details.qz-bloco .qz-texto.forum{color:var(--tinta2)}
 details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
 .qz-obj{margin-left:8px;font-size:.78em;font-weight:600;color:var(--acento);background:var(--acento-fraco);padding:2px 8px;border-radius:999px}
-.qz-sol{display:grid;gap:10px;padding:0 12px 12px;font-size:.94em;min-width:0}
+/* s211 (feedback-cadeia-declarada part-2): o porquê mora DENTRO da alternativa (seção do mesmo cartão,
+   não caixa aninhada); a cadeia é uma frase por elo + 4 pílulas que o aluno declara; nada é inferido. */
+.qz-porque{grid-column:1 / -1;margin:0;padding:8px 12px 10px 56px;border-top:1px solid var(--linha);color:var(--tinta2);font-size:.9em;line-height:1.45;min-width:0}
+.qz-alt.tem-pq:not(.aberta) .qz-alt-btn span::after{content:" · por quê";color:var(--tinta3);font-size:.82em}
+.qz-alt.tem-pq .qz-alt-btn{cursor:pointer}
+.qz-cad{display:grid;gap:10px;min-width:0}
+.qz-cad-tit{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0;font-weight:650;color:var(--tinta2)}
+.qz-cad-tit .qz-obj,.qz-cad-tit .qz-conferir{margin-left:0}
+.qz-sol{display:grid;gap:10px;min-width:0}
 .qz-sol p{margin:0}
-.qz-pede{color:var(--tinta2)}
-.qz-fonte{font-size:.82em;color:var(--tinta3)}
-.qz-sec{margin:4px 0 -4px;font-size:.78em;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--tinta3)}
-.qz-cadeia{margin:0;padding:0;list-style:none;display:grid;gap:6px}
-.qz-cadeia li{display:grid;gap:2px;padding:8px 10px;border-radius:8px;background:var(--afundado);min-width:0}
-.qz-cadeia .qz-elo-n{font-size:.76em;font-weight:700;color:var(--tinta3)}
-.qz-cadeia b{font-weight:650;line-height:1.35}
-.qz-cadeia span{color:var(--tinta2);line-height:1.4}
-.qz-cadeia li.quebrou{background:var(--alerta-fraco);box-shadow:inset 3px 0 0 var(--alerta)}
-.qz-cadeia li.quebrou .qz-elo-n{color:var(--alerta)}
+.qz-pede{color:var(--tinta2);font-size:.92em;line-height:1.45}
+.qz-decl-nota{font-size:.84em;color:var(--tinta3)}
+.qz-cadeia{margin:0;padding:0;list-style:none;display:grid;gap:8px}
+.qz-cadeia li{display:grid;gap:8px;justify-items:center;text-align:center;padding:12px;border-radius:12px;background:var(--afundado);min-width:0}
+.qz-cadeia .qz-elo-n{font-size:.74em;font-weight:650;color:var(--tinta3)}
+.qz-cadeia b{font-weight:600;line-height:1.4;max-width:34rem;min-width:0}
+.qz-chave{color:var(--tinta2);font-size:.88em;line-height:1.4;max-width:34rem}
 .qz-cadeia em{font-style:normal;font-size:.8em;font-weight:650;color:var(--alerta)}
-.qz-cadeia li.ok{box-shadow:inset 3px 0 0 var(--qz-ok)}
-.qz-cadeia em.ok{color:var(--qz-ok)}
-.qz-cadeia li.naousou{background:var(--qz-duv-fraco);box-shadow:inset 3px 0 0 var(--qz-duv)}
-.qz-cadeia li.naousou .qz-elo-n,.qz-cadeia em.naousou{color:var(--qz-duv)}
-.qz-cadeia em.neutro{color:var(--tinta3);font-weight:500}
-.qz-leitura{font-size:.86em;color:var(--tinta2)}
-.qz-leitura.alerta{color:var(--alerta);font-weight:650}
-.qz-altsol li i.risc{color:var(--tinta3)}
-.qz-altsol{margin:0;padding:0;list-style:none;display:grid;gap:4px}
-.qz-altsol li{display:grid;grid-template-columns:1.4em minmax(0,1fr);gap:0 8px;line-height:1.4}
-.qz-altsol li b{text-align:right;color:var(--tinta3)}
-.qz-altsol li i{font-style:normal;font-size:.8em;font-weight:650;color:var(--alerta)}
-.qz-altsol li.certa b,.qz-altsol li i.ok{color:var(--qz-ok)}
-.qz-altsol li.marcou span{font-weight:600}
+.qz-cadeia li.conflito{box-shadow:inset 0 0 0 1px var(--alerta)}
+.qz-decl{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;width:100%;max-width:30rem;min-width:0}
+.qz-decl button{min-height:44px;min-width:0;padding:6px 4px;border-radius:999px;font-size:.8em;font-weight:600;color:var(--tinta2);background:var(--card)}
+.qz-decl button.on{color:var(--papel)}
+.qz-decl button.sim.on{background:var(--qz-ok);border-color:var(--qz-ok)}
+.qz-decl button.incerteza.on{background:var(--qz-duv);border-color:var(--qz-duv)}
+.qz-decl button.desatencao.on{background:var(--qz-chute);border-color:var(--qz-chute)}
+.qz-decl button.nao.on{background:var(--alerta);border-color:var(--alerta)}
+.qz-decl button.sim.on.presumido{background:var(--qz-ok-fraco);color:var(--qz-ok);border-style:dashed}
+@media (max-width:400px){.qz-decl{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.qz-rodape{display:grid;gap:8px;font-size:.88em;color:var(--tinta3);min-width:0}
+.qz-rodape p{margin:0}
+.qz-linha{font:inherit;font-size:1em;padding:8px 10px;border:1px solid var(--linha);border-radius:8px;background:var(--papel);color:var(--tinta);width:100%;min-width:0;min-height:44px}
+.qz-link{justify-self:start;background:transparent;border:0;padding:0 2px;min-height:44px;color:var(--tinta3);text-decoration:underline;text-underline-offset:3px;font-size:1em}
+.qz-defeito{display:grid;gap:6px;min-width:0}
+.qz-defeito-form{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;min-width:0}
+.qz-defeito-form button{min-height:44px}
 .qz-porobj ul{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:6px}
 .qz-porobj li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:0 10px;padding:8px 12px;border-radius:10px;background:var(--afundado);min-width:0}
 .qz-porobj li b{font-variant-numeric:tabular-nums}
 .qz-porobj li small{grid-column:1 / -1;color:var(--tinta3)}
 .qz-porobj li.fraco b{color:var(--alerta)}
 .qz-conferir{margin-left:8px;font-size:.78em;font-weight:600;color:var(--alerta);background:var(--alerta-fraco);padding:2px 8px;border-radius:999px}
-.qz-campo{display:grid;gap:4px}
-.qz-campo textarea{font:inherit;font-size:.9em;padding:8px 10px;border:1px solid var(--linha);border-radius:8px;background:var(--papel);color:var(--tinta);width:100%;min-height:60px;resize:vertical}
 .qz-elo{display:flex;flex-wrap:wrap;gap:6px}
 .qz-modo{margin:4px 0 10px}
 .qz-modo button small{font-weight:500;color:var(--tinta3);margin-left:4px}
 .qz-figura{margin:4px 0 10px;padding:8px 12px;border-radius:10px;background:var(--afundado);color:var(--tinta2)}
-.qz-elo button{font-size:.84em;font-weight:600;padding:7px 11px;border:1px solid var(--linha);border-radius:99px;background:var(--card);color:var(--tinta2);min-height:36px}
+.qz-elo button{font-size:.84em;font-weight:600;padding:7px 11px;border:1px solid var(--linha);border-radius:99px;background:var(--card);color:var(--tinta2);min-height:44px}
 .qz-elo button.on{border-color:var(--acento);color:var(--acento);background:var(--acento-fraco)}
 .qz-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,7rem),1fr));gap:8px}
 .qz-tiles > div{min-width:0;background:var(--afundado);border-radius:10px;padding:12px 14px}
-.qz-analise{border:1px solid var(--acento);border-radius:10px;padding:12px;display:grid;gap:8px;background:var(--card)}
-.qz-analise ol{margin:0;padding-left:22px;display:grid;gap:3px;font-size:.92em}
-.qz-analise li.quebrou{color:var(--alerta);font-weight:650}
-.qz-analise .kv{display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 10px;font-size:.9em}
-.qz-analise .kv span{color:var(--tinta3)}
+.qz-analise{display:grid;gap:6px;padding-top:12px;border-top:1px solid var(--linha);min-width:0}
+.qz-analise p{margin:0;line-height:1.45}
+.qz-ag-rot{font-size:.8em;font-weight:650;color:var(--acento)}
+.qz-ag-arm{font-size:.9em;color:var(--tinta2)}
+.qz-ag-cards{font-size:.84em;color:var(--tinta3)}
 .qz-rev{width:100%;text-align:left;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:2px 10px;align-items:center;padding:10px 12px;border:1px solid var(--linha);border-left-width:4px;border-radius:10px;background:var(--card);color:var(--tinta);min-height:44px}
 .qz-rev span{color:var(--tinta2);font-size:.86em;min-width:0}
 .qz-rev i{font-style:normal;font-size:.78em;font-weight:650;color:var(--tinta3)}
@@ -297,27 +303,22 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
             <span style="display:flex;flex-wrap:wrap;gap:8px"><button type="button" id="qz-ant">&lsaquo; Anterior</button><button type="button" id="qz-pular">Pular &rsaquo;</button><button type="button" class="primario" id="qz-responder" disabled>Responder</button></span>
           </div>
         </div>
-        <div id="qz-depois" hidden style="display:grid;gap:12px">
+        <div id="qz-depois" hidden style="display:grid;gap:16px">
           <p class="qz-veredito" id="qz-veredito"></p>
-          <details class="qz-bloco" id="qz-medhub-box" hidden><summary>Solução MedHub<span class="qz-obj" id="qz-obj" hidden></span><span class="qz-conferir" id="qz-conferir" hidden>conferir no professor</span></summary><div class="qz-texto" id="qz-medhub"></div></details>
-          <details class="qz-bloco" id="qz-sol-box"><summary>Comentário do professor</summary><div class="qz-texto" id="qz-sol"></div></details>
-          <details class="qz-bloco" id="qz-forum-box"><summary>Fórum</summary><div class="qz-texto forum" id="qz-forum"></div></details>
-          <div id="qz-meta-erro" hidden style="display:grid;gap:10px">
-            <div class="qz-campo"><p class="qz-rot">O que te levou à letra marcada? <small style="font-weight:400;color:var(--tinta3)">uma linha</small></p>
-              <textarea id="qz-racional" rows="2" placeholder="Ex.: achei que rastreio era só com fator de risco"></textarea></div>
-            <div class="qz-campo"><p class="qz-rot">Onde quebrou?</p>
-              <div class="qz-elo" id="qz-elo">
-                <button type="button" data-e="nao_sabia">Não sabia</button>
-                <button type="button" data-e="sabia_nao_usei">Sabia, não usei</button>
-                <button type="button" data-e="li_errado">Li errado</button>
-                <button type="button" data-e="dado_que_exclui">Dado que exclui</button>
-                <button type="button" data-e="ancorei_numero">Ancorei no nº</button>
-                <button type="button" data-e="negativa">Negativa/EXCETO</button>
-                <button type="button" data-e="diretriz_antiga">Diretriz antiga</button>
-                <button type="button" data-e="pressa">Pressa</button>
-              </div></div>
-          </div>
+          <section class="qz-cad" id="qz-medhub-box" hidden aria-labelledby="qz-cad-tit">
+            <p class="qz-cad-tit" id="qz-cad-tit">Cadeia<span class="qz-obj" id="qz-obj" hidden></span><span class="qz-conferir" id="qz-conferir" hidden>conferir no professor</span></p>
+            <div class="qz-texto" id="qz-medhub"></div>
+          </section>
           <div class="qz-analise" id="qz-analise" hidden></div>
+          <div class="qz-rodape">
+            <input type="text" class="qz-linha" id="qz-racional" maxlength="300" placeholder="Algo a acrescentar? (opcional)" aria-label="Algo a acrescentar? (opcional)">
+            <div class="qz-defeito" id="qz-defeito" hidden><button type="button" class="qz-link" id="qz-defeito-abrir" aria-expanded="false" aria-controls="qz-defeito-form">Erro na cadeia</button>
+              <form class="qz-defeito-form" id="qz-defeito-form" hidden><input type="text" class="qz-linha" id="qz-defeito-motivo" maxlength="160" placeholder="O que está errado nela?" aria-label="Motivo do erro na cadeia"><button type="submit">Enviar</button></form>
+              <p id="qz-defeito-st"></p></div>
+            <div id="qz-sol-pe"></div>
+            <details class="qz-bloco" id="qz-sol-box"><summary>Comentário do professor</summary><div class="qz-texto" id="qz-sol"></div></details>
+            <details class="qz-bloco" id="qz-forum-box"><summary>Fórum</summary><div class="qz-texto forum" id="qz-forum"></div></details>
+          </div>
           <div class="qz-pe"><p class="qz-status" id="qz-status"></p><button type="button" class="primario" id="qz-proxima">Próxima</button></div>
         </div>
       </div>
@@ -690,7 +691,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
     return '<li><button type="button" data-qzl="' + qzEsc(l._id) + '"><p class="qz-tema">' + qzEsc(l.tema) + '</p><span class="qz-chip ' + qzEsc(s) + '">' + qzEsc(ROT_QZ[s] || s) + '</span><p class="qz-meta"><span>' + qzEsc(l.area || "") + '</span><span>' + qzEsc(Math.round(l.q || l.q_previstas || 0)) + ' questões</span>' + (atrasada ? '<span class="qd-atraso">semana ' + qzEsc(l.semana) + '</span>' : '') + '</p></button></li>'; }
   // s201 (pedido do operador): o bloco se divide em Questoes (listas da semana) e Simulados (provas
   // UERJ inteiras, do PDF oficial). Simulado = tarefa do plano com area "Simulado".
-  var QZ_SUB = {questoes: "As listas da semana, para resolver aqui como numa prova: letra e certeza em cada questão, sem gabarito no meio. No fim, o resultado por objetivo, a Solução MedHub (a cadeia de raciocínio, com o elo em que a sua letra cai) e a análise dos erros. Cada resposta grava na hora e dá para parar e voltar.",
+  var QZ_SUB = {questoes: "As listas da semana, para resolver aqui como numa prova: letra e certeza em cada questão, sem gabarito no meio. No fim, o resultado por objetivo, a Solução MedHub (a cadeia de raciocínio, para você declarar elo a elo) e a análise dos erros. Cada resposta grava na hora e dá para parar e voltar.",
                 simulados: "As provas da UERJ inteiras, na ordem do plano, como no dia: letra e certeza em cada questão, sem gabarito no meio, cerca de 3 minutos por questão. No fim, o resultado por bloco. Cada resposta grava na hora e dá para parar e voltar."};
   function qzEhSimulado(l){ return l.area === "Simulado"; }
   // atalho "resolver no hub" (painel e quadro, s201): abre a aba Listas ja no modo pedido
@@ -790,6 +791,22 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
     var out = []; String(txt || "").split(/\r?\n/).forEach(function(ln){ var m = ln.match(/^\s*\(?([A-Ea-e])\s*[\)\.\-:\]]\s*(.*)$/); if(m){ out.push({l: m[1].toUpperCase(), t: m[2]}); } else if(out.length && ln.trim()){ out[out.length - 1].t += "\n" + ln.trim(); } });
     return out;
   }
+  // cada alternativa = escolher (corpo) + riscar (o X, como a tesoura do EMED); riscada nao e marcada.
+  // s211 (part-2): revelada, o `porque` da Solucao mora DENTRO da alternativa -- o do gabarito e o da
+  // marcada abertos, os demais no toque. A alternativa so explica a si mesma: nao aponta elo.
+  function qzAltsHtml(q, r, revelada){
+    var s = q.solucao_medhub, sa = (s && typeof s === "object" && s.alternativas) || {}, risc = (r && r.riscadas) || [];
+    function um(l, t){ var x = sa[l] || {}, pq = revelada ? x.porque : "", cls = "qz-alt", aberta = false;
+      if(revelada && r){ if(l === r.gabarito){ cls += " gab"; aberta = true; } else if(l === r.letra){ cls += " errada"; aberta = true; }
+        if(risc.indexOf(l) >= 0 && l !== r.gabarito){ cls += " riscada"; } }
+      if(pq){ cls += " tem-pq" + (aberta ? " aberta" : ""); }
+      return '<div class="' + cls + '" data-l="' + l + '"><button type="button" class="qz-alt-btn"' + (revelada ? (pq ? ' aria-expanded="' + aberta + '"' : ' disabled') : '') + '><b>' + l + '</b><span>' + qzEsc(t) + '</span></button>' +
+        '<button type="button" class="qz-risca" aria-label="Riscar ' + l + '" title="Riscar"' + (revelada ? ' disabled' : '') + '>&#x2715;</button>' +
+        (pq ? '<p class="qz-porque"' + (aberta ? '' : ' hidden') + '>' + qzEsc(pq) + '</p>' : '') + '</div>'; }
+    var alts = qzAlts(q.alternativas);
+    if(alts.length >= 2){ return alts.map(function(a){ return um(a.l, a.t); }).join(""); }
+    return '<p class="qz-enun">' + qzEsc(q.alternativas || "") + '</p>' + ["A","B","C","D","E"].map(function(l){ return um(l, ""); }).join("");
+  }
   function qzMostrar(i){
     QZ.pos = i; QZ.letra = null; QZ.conf = null; var q = QZ.qs[i];
     $("qz-questao").hidden = false; $("qz-fim").hidden = true; $("qz-antes").hidden = false; $("qz-depois").hidden = true;
@@ -800,14 +817,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
     $("qz-enun").textContent = q.enunciado || "";
     // s201: o caderno em PDF vira texto; a figura (ECG, imagem) nao vem junto -- a pagina avisa onde ela esta
     $("qz-figura").hidden = !q.figura; $("qz-figura").textContent = q.figura ? "Esta questão tem uma figura que o texto não traz: caderno da prova, página " + (q.pagina || "?") + "." : "";
-    var alts = qzAlts(q.alternativas);
-    // cada alternativa = escolher (corpo) + riscar (o X, como a tesoura do EMED); riscada nao e marcada
-    function altHtml(l, t){ return '<div class="qz-alt" data-l="' + l + '"><button type="button" class="qz-alt-btn"><b>' + l + '</b><span>' + qzEsc(t) + '</span></button><button type="button" class="qz-risca" aria-label="Riscar ' + l + '" title="Riscar">&#x2715;</button></div>'; }
-    if(alts.length >= 2){
-      $("qz-alts").innerHTML = alts.map(function(a){ return altHtml(a.l, a.t); }).join("");
-    } else {
-      $("qz-alts").innerHTML = '<p class="qz-enun">' + qzEsc(q.alternativas || "") + '</p>' + ["A","B","C","D","E"].map(function(l){ return altHtml(l, ""); }).join("");
-    }
+    $("qz-alts").innerHTML = qzAltsHtml(q, null, false);
     Array.prototype.forEach.call($("qz-seg").querySelectorAll("button"), function(b){ b.classList.remove("on"); });
     $("qz-flag").checked = false; $("qz-responder").disabled = true; $("qz-responder").textContent = "Responder";
     // questao ja respondida (voltou pelo trilho ou pelo Anterior): mostra o que marcou e deixa alterar
@@ -834,6 +844,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
   $("qz-alts").addEventListener("click", function(e){
     var b = e.target.closest("button"); if(!b || b.disabled){ return; }
     var alt = b.closest(".qz-alt"); if(!alt){ return; }
+    if(!$("qz-depois").hidden){ var pq = alt.querySelector(".qz-porque"); if(pq){ pq.hidden = !pq.hidden; alt.classList.toggle("aberta", !pq.hidden); b.setAttribute("aria-expanded", String(!pq.hidden)); } return; }
     if(b.classList.contains("qz-risca")){
       var riscou = alt.classList.toggle("riscada");
       if(riscou && alt.classList.contains("marcada")){ alt.classList.remove("marcada"); QZ.letra = null; qzPode(); }
@@ -869,45 +880,62 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
     var gab = String(q.gabarito || "").toUpperCase();
     var riscadas = Array.prototype.map.call($("qz-alts").querySelectorAll(".qz-alt.riscada"), function(x){ return x.getAttribute("data-l"); });
     var r = {lista: QZ.lista, tarefa: l.tarefa || q.tarefa || null, num: q.num, letra: QZ.letra, confianca: QZ.conf, correta: QZ.letra === gab, gabarito: gab,
-             riscadas: riscadas, racional: "", elo: "", tempo_s: Math.round((Date.now() - QZ.t0) / 1000), flag: !!$("qz-flag").checked, respondido_em: qzAgora()};
+             riscadas: riscadas, racional: "", tempo_s: Math.round((Date.now() - QZ.t0) / 1000), flag: !!$("qz-flag").checked, respondido_em: qzAgora()};
     qzGravar(r).then(function(ok){ $("qz-status").className = "qz-status" + (ok ? "" : " ruim"); $("qz-status").textContent = ok ? "" : "Guardado neste aparelho; reenvio automático quando o banco voltar."; });
     // Modo prova (pedido do operador, 26/09): sem gabarito na hora; a resolucao e a analise ficam para o fim.
     qzDepoisDe(QZ.pos);
   });
   function qzRevelar(q, r){
     $("qz-antes").hidden = true; $("qz-depois").hidden = false;
-    Array.prototype.forEach.call($("qz-alts").querySelectorAll(".qz-alt"), function(x){
-      Array.prototype.forEach.call(x.querySelectorAll("button"), function(bt){ bt.disabled = true; });
-      var l = x.getAttribute("data-l"); x.classList.remove("marcada");
-      if(l === r.gabarito){ x.classList.add("gab"); x.classList.remove("riscada"); } else if(l === r.letra){ x.classList.add("errada"); }
-      if(r.riscadas && r.riscadas.indexOf(l) >= 0 && l !== r.gabarito){ x.classList.add("riscada"); } });
+    $("qz-alts").innerHTML = qzAltsHtml(q, r, true);
     var v = $("qz-veredito"); v.className = "qz-veredito " + (r.correta ? "certa" : "errada");
     var est = q.estatistica ? '<small>no EMED, ' + qzEsc(q.estatistica) + ' acertam</small>' : "";
     var conf = {solida: "sólida", duvida: "dúvida", chute: "chute"}[r.confianca] || r.confianca;
     v.innerHTML = (r.correta ? "Certa" : "Errada · gabarito " + qzEsc(r.gabarito)) + ' <small>marcou ' + qzEsc(r.letra) + ' · ' + qzEsc(conf) + ' · ' + qzEsc(r.tempo_s) + 's</small>' + est;
     // s199: solucao propria do hub (sem o comentario do professor); listas em escopo publico
     // nao tem comentario nem forum -> o bloco some em vez de mostrar "(sem ...)".
-    var precisa = !r.correta || r.confianca === "chute";
     $("qz-medhub-box").hidden = !q.solucao_medhub; qzSolucao(q, r);
-    $("qz-conferir").hidden = !q.divergente; $("qz-medhub-box").open = precisa || !!q.divergente;
+    $("qz-conferir").hidden = !q.divergente;
     $("qz-sol-box").hidden = !q.solucao; $("qz-sol").textContent = q.solucao || "";
     $("qz-forum-box").hidden = !q.forum; $("qz-forum").textContent = q.forum || "";
-    $("qz-sol-box").open = precisa && !q.solucao_medhub; $("qz-forum-box").open = false;
-    $("qz-meta-erro").hidden = !precisa; $("qz-racional").value = r.racional || "";
-    Array.prototype.forEach.call($("qz-elo").querySelectorAll("button"), function(b){ b.classList.toggle("on", b.getAttribute("data-e") === r.elo); });
+    $("qz-sol-box").open = false; $("qz-forum-box").open = false;
+    // s211: o racional virou UMA linha opcional (a declaracao por elo e o dado primario); os 8 chips de causa sairam
+    $("qz-racional").value = r.racional || "";
+    $("qz-defeito").hidden = !(q.solucao_medhub && typeof q.solucao_medhub === "object"); qzDefeitoUi(r);
     $("qz-proxima").textContent = (QZ.pos + 1 < QZ.qs.length) ? "Próxima" : "Terminar";
     qzAnalise();
   }
-  $("qz-elo").addEventListener("click", function(e){ var b = e.target.closest("button[data-e]"); if(!b){ return; } var on = b.classList.contains("on");
-    Array.prototype.forEach.call($("qz-elo").querySelectorAll("button"), function(x){ x.classList.remove("on"); }); if(!on){ b.classList.add("on"); } });
   function qzSalvarMeta(){
-    // racional, elo e "revisar depois" da questao aberta: gravam ao sair dela, por qualquer saida
+    // racional e "revisar depois" da questao aberta: gravam ao sair dela, por qualquer saida
     var q = QZ.qs[QZ.pos]; var r = q && QZ.resp[q.num]; if(!r){ return null; }
-    var eloBtn = $("qz-elo").querySelector("button.on"); var elo = eloBtn ? eloBtn.getAttribute("data-e") : "";
     var rac = $("qz-racional").value.trim(); var flag = !!$("qz-flag").checked;
-    if(!$("qz-meta-erro").hidden && (rac !== (r.racional || "") || elo !== (r.elo || "") || flag !== !!r.flag)){ r.racional = rac; r.elo = elo; r.flag = flag; qzGravar(r); }
+    if(rac !== (r.racional || "") || flag !== !!r.flag){ r.racional = rac; r.flag = flag; qzGravar(r); }
     return r;
   }
+  // s211 (part-2): "cadeia com defeito" = um toque + motivo curto (o padrao do defeito de card no
+  // player) -> `cadeia_defeito` na resposta: a fila de correcao de cadeia do agente.
+  function qzDefeito(motivo){
+    var q = QZ.qs[QZ.pos], r = q && QZ.resp[q.num]; motivo = String(motivo || "").trim(); if(!r || !motivo){ return false; }
+    r.cadeia_defeito = {motivo: motivo, ts: qzAgora()}; qzGravar(r); qzDefeitoUi(r); return true;
+  }
+  function qzDefeitoUi(r){
+    var d = r && r.cadeia_defeito; $("qz-defeito-form").hidden = true; $("qz-defeito-abrir").setAttribute("aria-expanded", "false");
+    $("qz-defeito-motivo").value = d ? d.motivo || "" : ""; $("qz-defeito-st").textContent = d ? "Enviado: " + (d.motivo || "") : "";
+  }
+  $("qz-defeito-abrir").addEventListener("click", function(){ var f = $("qz-defeito-form"); f.hidden = !f.hidden;
+    $("qz-defeito-abrir").setAttribute("aria-expanded", String(!f.hidden)); if(!f.hidden){ $("qz-defeito-motivo").focus(); } });
+  $("qz-defeito-form").addEventListener("submit", function(e){ e.preventDefault(); qzDefeito($("qz-defeito-motivo").value); });
+  // s211 (part-2): o aluno declara cada elo (Sim / Incerteza / Desatencao / Nao); a pagina grava
+  // `elos` (alinhado a cadeia) pelo mesmo qzGravar. Presumido (certa e solida) nao grava ate o toque;
+  // no 1o toque o "Sim" que ele estava vendo vira declarado. Tocar de novo no mesmo estado desmarca.
+  function qzDeclarar(i, st){
+    var q = QZ.qs[QZ.pos], r = q && QZ.resp[q.num]; if(!r || !QZ_DECL.hasOwnProperty(st)){ return; }
+    var e = qzElosDe(q, r, QZ.ana[q.num]); if(!(i >= 0 && i < e.estados.length)){ return; }
+    var elos = (e.fonte === "declarado" || e.fonte === "presumido") ? e.estados.slice() : e.estados.map(function(){ return ""; });
+    elos[i] = (e.fonte === "declarado" && elos[i] === st) ? "" : st;
+    r.elos = elos; qzGravar(r); qzSolucao(q, r);
+  }
+  $("qz-medhub").addEventListener("click", function(e){ var b = e.target.closest("button[data-st]"); if(b){ qzDeclarar(parseInt(b.getAttribute("data-k"), 10), b.getAttribute("data-st")); } });
   $("qz-proxima").addEventListener("click", function(){
     var r = qzSalvarMeta(); if(!r){ return; }
     if(QZ.revendo){ var j = QZ.pos + 1; if(j < QZ.qs.length && QZ.resp[QZ.qs[j].num]){ qzRever(j); } else { qzFim(); } return; }
@@ -957,67 +985,74 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
       .then(function(){ st.className = "qz-status ok"; st.textContent = "Lista marcada como resolvida."; })
       .catch(function(e){ st.className = "qz-status ruim"; st.textContent = "Não gravou (" + ((e && e.code) || "erro") + ")."; });
   });
-  // s200 (pedido do operador: "elencar cada elo da cadeia e apontar onde ele quebrou"): a Solucao
-  // v2 e a cadeia de elos; cada alternativa errada aponta o elo (1-based) em que ela cai. Errou:
-  // a pagina marca na hora o elo da letra marcada; a analise do hub, quando chega, confirma ou
-  // move a marca (`quebrou`, 0-based, na MESMA cadeia). A v1 (texto) segue como texto.
+  // s211 (feedback-cadeia-declarada part-2): o ALUNO declara o estado de cada elo; a pagina nao infere
+  // nada (a leitura pelas letras -- riscada = elo ok, letra marcada = provavel quebra -- foi revogada:
+  // errou em 5 das 7 analises de t26/t96). Vocabulario declarado: docs/SOLUCAO-MEDHUB-BRIEF.md
+  // §Estado por elo (portador unico). Excecoes que pintam sem toque: o conflito deterministico
+  // (qzConflitos) e o legado -- resposta sem `elos` + analise antiga com `estados`, convertida so na tela.
+  var QZ_DECL = {sim: "Sim", incerteza: "Incerteza", desatencao: "Desatenção", nao: "Não"};
+  var QZ_LEGADO = {ok: "sim", quebrou: "nao", nao_usou: "desatencao", nao_avaliado: ""};
+  function qzCadeia(q){ var s = q && q.solucao_medhub; return (s && typeof s === "object" && Array.isArray(s.cadeia)) ? s.cadeia : []; }
+  function qzPrecisaDeclarar(q, r){ return !!(r && qzCadeia(q).length && (!r.correta || r.confianca !== "solida")); }
+  function qzDeclPendente(q, r){
+    if(!qzPrecisaDeclarar(q, r)){ return false; }
+    var n = qzCadeia(q).length;
+    if(Array.isArray(r.elos) && r.elos.length === n){ return !r.elos.every(function(x){ return QZ_DECL.hasOwnProperty(x); }); }
+    return true;
+  }
+  function qzConflitos(q, r){
+    var cad = qzCadeia(q), out = [];
+    if(!r || !Array.isArray(r.elos) || r.elos.length !== cad.length){ return out; }
+    cad.forEach(function(e, i){ if(e && e.tipo === "descartar" && String(e.letra || "").toUpperCase() === String(r.letra || "").toUpperCase() && r.elos[i] === "sim"){ out.push(i); } });
+    return out;
+  }
+  function qzElosDe(q, r, a){
+    var cad = qzCadeia(q), n = cad.length;
+    if(!n || !r){ return {estados: [], fonte: ""}; }
+    if(Array.isArray(r.elos) && r.elos.length === n){ return {estados: r.elos.map(function(x){ return QZ_DECL.hasOwnProperty(x) ? x : ""; }), fonte: "declarado"}; }
+    if(a && Array.isArray(a.estados) && a.estados.length === n){
+      var d = String(a.analisado_em || a.atualizado_em || a.veredito_em || "").match(/^(\d{4})-(\d{2})-(\d{2})/);
+      return {estados: a.estados.map(function(x){ return QZ_LEGADO[x] || ""; }), fonte: "legado", data: d ? d[3] + "/" + d[2] : ""}; }
+    if(!qzPrecisaDeclarar(q, r)){ return {estados: cad.map(function(){ return "sim"; }), fonte: "presumido"}; }
+    return {estados: cad.map(function(){ return ""; }), fonte: ""};
+  }
   function qzSolucao(q, r){
     var s = q.solucao_medhub, box = $("qz-medhub");
     $("qz-obj").hidden = !q.objetivo; $("qz-obj").textContent = q.objetivo || "";
+    $("qz-sol-pe").innerHTML = (s && typeof s === "object" && s.conferir ? '<p>Conferir: ' + qzEsc(s.conferir) + '</p>' : "") + (q.fontes_medhub ? '<p>' + qzEsc(q.fontes_medhub) + '</p>' : "");
     if(!s || typeof s !== "object"){ box.className = "qz-texto"; box.textContent = s || ""; return; }
-    var alts = s.alternativas || {}, cadeia = s.cadeia || [], a = QZ.ana[q.num];
-    // s200 (pedido do operador): riscar e hesitar sao dado metacognitivo. Letra errada riscada =
-    // elo que ele executou; as nao riscadas numa duvida = o par em que hesitou; riscar a certa =
-    // crenca firme contra a resposta (nao descuido).
-    var risc = (r && r.riscadas) || [], okElo = {};
-    risc.forEach(function(l){ var x = alts[l]; if(x && !x.certa && x.elo){ (okElo[x.elo] = okElo[x.elo] || []).push(l); } });
-    var rest = Object.keys(alts).sort().filter(function(l){ return risc.indexOf(l) < 0; });
-    var leitura = r ? [risc.length ? "riscou " + risc.join(", ") : "", (r.confianca === "duvida" && rest.length > 1 && rest.length <= 3) ? "ficou entre " + rest.slice(0, -1).join(", ") + " e " + rest[rest.length - 1] : "", "marcou " + r.letra].filter(Boolean).join(" · ") : "";
-    var riscouCerta = !!(r && r.gabarito && risc.indexOf(r.gabarito) >= 0);
-    var daAnalise = !!(a && typeof a.quebrou === "number" && !(a.cadeia && a.cadeia.length));
-    var quebrou = daAnalise ? a.quebrou + 1 : (r && !r.correta && alts[r.letra] ? alts[r.letra].elo : null);
-    // s200 (operador: "os elos nao dependem das alternativas ... as alternativas apontam o raciocinio
-    // que o usuario teve e o que causou a duvida; essa informacao, olhando a cadeia, permite entender
-    // quais elos deram certo"): o ESTADO de cada elo e um diagnostico da cadeia, declarado pela analise
-    // do hub em `estados` (ok | quebrou | nao_usou | nao_avaliado, um por elo). Sem analise, a leitura
-    // pelas letras (riscadas = elo provavelmente ok; letra marcada = elo provavelmente quebrado) e
-    // PROVISORIA e rotulada como tal.
-    var estados = (a && Array.isArray(a.estados) && a.estados.length === cadeia.length) ? a.estados : null;
+    var cadeia = qzCadeia(q), e = qzElosDe(q, r, QZ.ana[q.num]), conf = qzConflitos(q, r);
+    var nota = {presumido: "Certa e sólida: Sim presumido em cada elo. Toque para ajustar.",
+                legado: "Estados da análise" + (e.data ? " de " + e.data : " do hub") + ". Toque para declarar."}[e.fonte] || (qzDeclPendente(q, r) ? "Como foi cada elo?" : "");
     box.className = "qz-sol";
-    box.innerHTML = (s.pede ? '<p class="qz-pede"><b>Pede:</b> ' + qzEsc(s.pede) + '</p>' : "") +
-      (leitura ? '<p class="qz-leitura">Você: ' + qzEsc(leitura) + '</p>' : "") +
-      (riscouCerta ? '<p class="qz-leitura alerta">Você riscou a certa (' + qzEsc(r.gabarito) + '): uma crença firme contra a resposta, não descuido.</p>' : "") +
-      '<p class="qz-sec">Cadeia de raciocínio' + (r && !estados && !daAnalise ? ' <small style="text-transform:none;letter-spacing:0;font-weight:500">· leitura provisória pelas suas letras; a análise do hub confirma</small>' : '') + '</p><ol class="qz-cadeia">' + cadeia.map(function(e, i){
-        var ev = okElo[i + 1] ? '<em class="ok">evidência: você riscou ' + qzEsc(okElo[i + 1].join(" e ")) + '</em>' : '';
-        var st = estados ? estados[i] : ((i + 1) === quebrou ? "quebrou" : (okElo[i + 1] ? "ok" : ""));
-        var rot = {ok: estados ? "firme" : "", quebrou: (estados || daAnalise) ? "quebrou aqui (análise do hub)" : "provável quebra: a sua letra cai neste elo",
-                   nao_usou: "você sabia, mas não aplicou na hora de decidir", nao_avaliado: "a questão não chegou a testar este elo"}[st] || "";
-        // s200 (regua do /ai-eng aceita pelo operador): declarado x evidencia divergentes -> elo
-        // `nao_avaliado` + `conflitos` (0-based) na analise; o declarado nao e sobrescrito pelo inferido
-        if(st === "nao_avaliado" && a && Array.isArray(a.conflitos) && a.conflitos.indexOf(i) >= 0){ rot = "conflito: você declarou este elo firme, mas a letra marcada é a que ele exclui"; }
-        var cls = {ok: "ok", quebrou: "quebrou", nao_usou: "naousou"}[st] || "";
-        return '<li' + (cls ? ' class="' + cls + '"' : '') + '><span class="qz-elo-n">Elo ' + (i + 1) + '</span><b>' + qzEsc(e.elo) + '</b><span>' + qzEsc(e.chave) + '</span>' +
-          (rot ? '<em class="' + (cls === "quebrou" ? "" : (cls || "neutro")) + '">' + rot + '</em>' : '') + (st === "ok" || !st ? ev : '') + '</li>'; }).join("") + '</ol>' +
-      '<p class="qz-sec">Alternativas</p><ul class="qz-altsol">' + Object.keys(alts).sort().map(function(l){ var x = alts[l] || {};
-        return '<li class="' + (x.certa ? "certa" : "") + (r && l === r.letra ? " marcou" : "") + '"><b>' + qzEsc(l) + '</b><span>' + (x.certa ? '<i class="ok">certa</i> ' : '<i>falha no elo ' + qzEsc(x.elo) + '</i> ') +
-          // s200: a letra MARCADA traz o diagnostico pessoal quando a analise pos a quebra em outro elo
-          // (a solucao diz onde a alternativa falha em geral; a analise, onde a cadeia DELE quebrou)
-          (r && l === r.letra && daAnalise && !x.certa && (a.quebrou + 1) !== x.elo ? '<i>· a sua cadeia quebrou no elo ' + (a.quebrou + 1) + '</i> ' : '') + (risc.indexOf(l) >= 0 ? '<i class="risc">riscou</i> ' : '') + qzEsc(x.porque) + '</span></li>'; }).join("") + '</ul>' +
-      (s.conferir ? '<p class="qz-pede"><b>Conferir:</b> ' + qzEsc(s.conferir) + '</p>' : "") +
-      (q.fontes_medhub ? '<p class="qz-fonte">' + qzEsc(q.fontes_medhub) + '</p>' : "");
+    box.innerHTML = (s.pede ? '<p class="qz-pede">' + qzEsc(s.pede) + '</p>' : "") + (nota ? '<p class="qz-decl-nota">' + qzEsc(nota) + '</p>' : "") +
+      '<ol class="qz-cadeia">' + cadeia.map(function(el, i){
+        var st = e.estados[i] || "", dec = !!st && e.fonte !== "presumido", cf = conf.indexOf(i) >= 0;
+        return '<li' + (dec ? ' class="' + st + (cf ? " conflito" : "") + '"' : '') + '><span class="qz-elo-n">Elo ' + (i + 1) + ' de ' + cadeia.length + '</span><b>' + qzEsc(el && el.elo) + '</b>' +
+          '<div class="qz-decl" role="group" aria-label="Elo ' + (i + 1) + '">' + Object.keys(QZ_DECL).map(function(k){ var on = st === k, pres = on && e.fonte === "presumido";
+            return '<button type="button" data-k="' + i + '" data-st="' + k + '" class="' + k + (on ? " on" : "") + (pres ? " presumido" : "") + '" aria-pressed="' + on + '"' + (pres ? ' title="Sim (presumido)"' : '') + '>' + QZ_DECL[k] + '</button>'; }).join("") + '</div>' +
+          (dec && el && el.chave ? '<span class="qz-chave">' + qzEsc(el.chave) + '</span>' : '') +
+          (cf ? '<em>conflito: você marcou a alternativa que este elo descarta</em>' : '') + '</li>'; }).join("") + '</ol>';
+  }
+  // s211 (part-2): a analise do agente vira UMA linha sob a cadeia -- veredito curto, armadilha e cards.
+  // Pedia e Comporta sairam da tela; concordo/em parte/discordo so quando a analise aponta conflito.
+  function qzAgenteHtml(a){
+    if(!a){ return ""; }
+    var cards = Array.isArray(a.cards) ? a.cards.map(function(c){ return "#" + c; }).join(" ") : String(a.cards || "");
+    var conf = Array.isArray(a.conflitos) && a.conflitos.length > 0;
+    var corpo = (a.veredito_hub ? '<p>' + qzEsc(a.veredito_hub) + '</p>' : '') + (a.armadilha ? '<p class="qz-ag-arm">Armadilha: ' + qzEsc(a.armadilha) + '</p>' : '') +
+      (cards ? '<p class="qz-ag-cards">Cards ' + qzEsc(cards) + '</p>' : '');
+    if(!corpo && !conf){ return ""; }
+    return '<p class="qz-ag-rot">Análise do hub</p>' + corpo + (conf ?
+      '<div class="qz-elo" id="qz-vered">' + [["concordo", "Concordo"], ["em_parte", "Em parte"], ["discordo", "Discordo"]].map(function(v){ return '<button type="button" data-v="' + v[0] + '" class="' + (a.veredito_operador === v[0] ? "on" : "") + '">' + v[1] + '</button>'; }).join("") + '</div>' +
+      '<input type="text" class="qz-linha" id="qz-vered-nota" maxlength="300" placeholder="Por quê? (opcional)" aria-label="Por quê? (opcional)" value="' + qzEsc(a.nota_operador || "") + '"><p class="qz-status" id="qz-vered-st"></p>' : '');
   }
   function qzAnalise(){
     var q = QZ.qs[QZ.pos]; var box = $("qz-analise"); if(!q){ box.hidden = true; return; }
     if(QZ.resp[q.num]){ qzSolucao(q, QZ.resp[q.num]); }
-    var a = QZ.ana[q.num]; if(!a){ box.hidden = true; return; }
-    box.hidden = false;
-    var cadeia = Array.isArray(a.cadeia) ? a.cadeia : [];
-    var kv = [["Pedia", a.pedia], ["Comporta", a.comporta], ["Armadilha", a.armadilha], ["Veredito do hub", a.veredito_hub], ["Cards", Array.isArray(a.cards) ? a.cards.map(function(c){ return "#" + c; }).join(", ") : a.cards]].filter(function(p){ return p[1]; });
-    box.innerHTML = '<p class="qz-rot" style="margin:0">Análise do hub</p>' + (cadeia.length ? '<ol>' + cadeia.map(function(c, i){ return '<li class="' + (i === a.quebrou ? "quebrou" : "") + '">' + qzEsc(c) + '</li>'; }).join("") + '</ol>' : "") +
-      '<div class="kv">' + kv.map(function(p){ return '<span>' + qzEsc(p[0]) + '</span><div>' + qzEsc(p[1]) + '</div>'; }).join("") + '</div>' +
-      '<div class="qz-elo" id="qz-vered">' + [["concordo", "Concordo"], ["em_parte", "Em parte"], ["discordo", "Discordo"]].map(function(v){ return '<button type="button" data-v="' + v[0] + '" class="' + (a.veredito_operador === v[0] ? "on" : "") + '">' + v[1] + '</button>'; }).join("") + '</div>' +
-      '<div class="qz-campo"><textarea id="qz-vered-nota" rows="2" placeholder="Por quê? (opcional)">' + qzEsc(a.nota_operador || "") + '</textarea></div><p class="qz-status" id="qz-vered-st"></p>';
-    box.querySelector("#qz-vered").addEventListener("click", function(e){ var b = e.target.closest("button[data-v]"); if(!b || !QZ.db){ return; }
+    var a = QZ.ana[q.num]; box.innerHTML = qzAgenteHtml(a); box.hidden = !box.innerHTML;
+    var vered = box.querySelector("#qz-vered"); if(!vered){ return; }
+    vered.addEventListener("click", function(e){ var b = e.target.closest("button[data-v]"); if(!b || !QZ.db){ return; }
       var st = box.querySelector("#qz-vered-st"); st.className = "qz-status"; st.textContent = "Gravando…";
       QZ.db.doc("analises/" + a._id).update({veredito_operador: b.getAttribute("data-v"), nota_operador: box.querySelector("#qz-vered-nota").value.trim(), veredito_em: qzAgora()})
         .then(function(){ st.className = "qz-status ok"; st.textContent = "Veredito gravado."; })
@@ -1032,7 +1067,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
       else if("12345".indexOf(k) >= 0 && k.length === 1){ var b2 = $("qz-alts").querySelectorAll(".qz-alt-btn")[parseInt(k, 10) - 1]; if(b2){ b2.click(); } }
       else if(k === "S" || k === "D" || k === "C"){ var b3 = $("qz-seg").querySelector('button[data-c="' + {S: "solida", D: "duvida", C: "chute"}[k] + '"]'); if(b3){ b3.click(); } }
       else if(e.key === "Enter" && !$("qz-responder").disabled){ e.preventDefault(); $("qz-responder").click(); }
-    } else if(e.key === "Enter"){ e.preventDefault(); $("qz-proxima").click(); }
+    } else if(e.key === "Enter" && tag !== "button"){ e.preventDefault(); $("qz-proxima").click(); }
   });
 
   // Padrao = Painel (s194); hash e aba lembrada continuam vencendo.

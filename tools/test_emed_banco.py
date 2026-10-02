@@ -479,6 +479,10 @@ def test_exportar_em_banco_nao_migrado_mantem_as_solucoes(tmp_path, monkeypatch,
 
 
 _HUB_TEMPLATE = ROOT / "core" / "templates" / "hub.html"
+#: s211 (feedback-cadeia-declarada): chaves que a página JÁ grava e cujo destino no banco é a part-5
+#: (`emed_respostas` ganha as colunas). A lista é EXATA: chave nova sem destino fora dela segue acusando,
+#: e a part-5 esvazia o conjunto -- o mesmo predicado volta a exigir `[]`.
+_SEM_DESTINO_ATE_A_PART_5 = {"cadeia_defeito", "elos"}
 #: doc da página -> coluna do banco quando o nome muda (o mesmo mapeamento do writer)
 _ALIAS_DOC_COLUNA = {"tarefa": "tarefa_id"}
 
@@ -526,12 +530,13 @@ def test_toda_chave_que_a_pagina_grava_na_resposta_tem_destino(tmp_path, monkeyp
     negativo prova que o predicado acusa uma chave nova sem destino."""
     _usar_db(tmp_path, monkeypatch)
     chaves = _chaves_da_resposta_na_pagina()
-    assert {"letra", "confianca", "riscadas", "racional", "elo"} <= chaves   # a leitura pegou
-    assert _chaves_sem_destino(tmp_path, chaves) == []
+    assert {"letra", "confianca", "riscadas", "racional", "elos"} <= chaves   # a leitura pegou
+    assert _chaves_sem_destino(tmp_path, chaves) == sorted(_SEM_DESTINO_ATE_A_PART_5)
     capsys.readouterr()
     _usar_db(tmp_path / "ctl", monkeypatch)
     (tmp_path / "ctl").mkdir()
-    assert _chaves_sem_destino(tmp_path / "ctl", chaves | {"chave_nova"}) == ["chave_nova"]
+    assert _chaves_sem_destino(tmp_path / "ctl", chaves | {"chave_nova"}) == sorted(
+        _SEM_DESTINO_ATE_A_PART_5 | {"chave_nova"})
 
 
 # ------------------------------------------------ s201: lista fechada de objetivo (#5 do /ai-eng)

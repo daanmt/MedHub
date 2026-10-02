@@ -262,6 +262,27 @@ def test_report_honesto():
         os.remove(path)
 
 
+def test_veredito_desatencao_e_aceito_e_contado():
+    """s211 (feedback-cadeia-declarada part-6): o elo declarado `desatencao` nao gera card -- vai ao
+    ledger. O CLI aceita o veredito, grava, e o --report e o --reincidentes o contam. Asserts nativos
+    (as funcoes `check` deste arquivo nao derrubam o pytest)."""
+    path = _db_temp()
+    antigo = H.DB_PATH
+    try:
+        H.DB_PATH = path
+        assert H.main(['--add', 'Usar o achado que exclui o diagnostico concorrente', '--area', 'Nefro',
+                       '--tema', 'LRA', '--veredito', 'desatencao']) == 0
+        r = H.report(db_path=path)
+        assert r['por_veredito']['desatencao'] == 1 and r['por_veredito']['errou'] == 0
+        assert '- desatencao: 1' in H._render_report(r)
+        (alvo,) = [x for x in H.reincidentes(limit=20, db_path=path)
+                   if 'achado que exclui' in H.normalizar(x['texto'])]
+        assert alvo['n_desatencao'] == 1 and alvo['n_errou'] == 0
+    finally:
+        H.DB_PATH = antigo
+        os.remove(path)
+
+
 def main():
     print('[ledger de habilidades] suite')
     for fn in (test_parser_setas, test_parser_numerada, test_parser_sentinela_e_generico,
@@ -269,7 +290,8 @@ def main():
                test_dod1_schema_idempotente, test_dod2_backfill_nao_destrutivo,
                test_dod2b_backfill_idempotente, test_dod3_reincidentes_e_flag,
                test_dod4_enum_fechado, test_dod5_add_nao_toca_erros_nem_volume,
-               test_dod5b_incerteza_e_estado_proprio, test_report_honesto):
+               test_dod5b_incerteza_e_estado_proprio, test_report_honesto,
+               test_veredito_desatencao_e_aceito_e_contado):
         fn()
     print()
     if FALHAS:

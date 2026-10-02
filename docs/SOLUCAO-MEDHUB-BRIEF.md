@@ -123,11 +123,19 @@ tabela na captura.
   (offsets de caractere sobre o texto puro), gravados com a resposta -- é o registro do dado que ele VIU.
   Não verificado por teste: a seleção por toque no navegador do celular (só o operador valida no aparelho).
 
-**A análise do agente** (`analises/<lista>_<num>`) usa a MESMA cadeia da Solução (não a repete). A
-página mostra dela só uma linha: `veredito_hub`, `armadilha` e os `cards`; concordo/em parte/discordo
-só quando ela traz `conflitos` (índices 0-based dos elos em que o declarado e a evidência divergem).
-Evidência, não diagnóstico: letra marcada x elo `descartar`, riscadas, certeza e racional. `quebrou` e
-`estados` (vocabulário antigo `ok` · `quebrou` · `nao_usou` · `nao_avaliado`) só são lidos como legado.
+**A análise do agente CONFIRMA, não diagnostica** (forma desde 02/10/2026). O doc `analises/<lista>_<num>`
+usa a MESMA cadeia da Solução (não a repete) e tem só: `lista`, `num`, `veredito_hub` (1-2 frases),
+`conflitos` (índices 0-based dos elos em que o declarado e a evidência divergem; vazio = sem conflito),
+`armadilha` (opcional, 1 linha), `cards[]` e `questao_erro_id`. Evidência admitida para conflito: letra
+marcada x elo `descartar`, riscadas, certeza, grifos e racional -- nunca "a letra cai no elo". A página
+mostra a análise numa linha e só pede concordo/em parte/discordo quando há `conflitos`. Insumo:
+`emed_banco.py --erros <lista>` (a declaração elo a elo) + `--elos <lista>`; o destino de cada estado
+declarado (card, ledger ou nada) mora no tique do `/banco-emed`.
+
+⚰️ *02/10/2026 (s211): o agente deixou de escrever `quebrou`, `estados`, `pedia` e `comporta` -- quem declara
+o estado de cada elo é o aluno, e o diagnóstico do agente gerava o ciclo "análise -> discordo -> análise
+refeita" (5 das 7 de t26/t96). Análises antigas com esses campos (vocabulário `ok` · `quebrou` · `nao_usou` ·
+`nao_avaliado`) seguem lidas pela página como legado.*
 
 ⚰️ *02/10/2026 (s211): revogada a leitura provisória pelas letras -- "sem análise, a página lê as letras
 (riscada = elo provavelmente ok; letra marcada = provável quebra) e rotula a leitura como PROVISÓRIA" --

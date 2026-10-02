@@ -16,7 +16,10 @@ Uso:
     python tools/habilidades.py --report
     python tools/habilidades.py --reincidentes [--limit N] [--min-temas N]
     python tools/habilidades.py --add "texto" --area AREA --tema TEMA \
-                                [--veredito errou|acertou|incerteza|indefinido]
+                                [--veredito errou|acertou|incerteza|desatencao|indefinido]
+
+`desatencao` (s211): destino do elo declarado "Desatenção" na aba Listas do hub -- sem card; o ledger
+acumula a reincidência de execução.
 
 `import sqlite3` aqui e autorizado: CLI standalone em tools/ (ver
 `.vibeflow/patterns/db-access-layer.md` e conventions.md).

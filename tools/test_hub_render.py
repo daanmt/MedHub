@@ -95,12 +95,19 @@ FUNCS = "\n".join([_declaracao(TEMPLATE, "var QZ_DECL = {"), _declaracao(TEMPLAT
                       "function qzCadeia(q){", "function qzPrecisaDeclarar(q, r){", "function qzDeclPendente(q, r){",
                       "function qzConflitos(q, r){", "function qzElosDe(q, r, a){", "function qzSolucao(q, r){",
                       "function qzAgenteHtml(a){", "function qzDeclarar(i, st){", "function qzDefeito(motivo){",
-                      "function qzDefeitoUi(r){")])
+                      "function qzDefeitoUi(r){", "function qzEhSimulado(l){", "function qzModoDaLista(l, espelho){",
+                      "function qzEscolheModo(l, espelho, temResposta){", "function qzModoUi(l){",
+                      "function qzResponder(){", "function qzRevelaAoAbrir(r){", "function qzTrava(q, r){",
+                      "function qzResumoElos(qs, resp){", "function qzElosFimHtml(qs, resp){",
+                      "function qzConcluirUi(pendentes){")] +
+                  [re.search(r"\n  (var QZ_DICA_TRAVA = [^\n]+;)", TEMPLATE).group(1),
+                   re.search(r"\n  (var QZ_ORDEM_REVER = [^\n]+;)", TEMPLATE).group(1)])
 
 HARNESS = r"""
 var els = {};
 function $(id){ return els[id] || (els[id] = {id: id, hidden: false, textContent: "", className: "", innerHTML: "", value: "",
-  attrs: {}, setAttribute: function(k, v){ this.attrs[k] = v; }}); }
+  disabled: false, checked: false, attrs: {}, setAttribute: function(k, v){ this.attrs[k] = v; },
+  querySelectorAll: function(){ return []; }}); }
 var QZ = {ana: __ANA__, qs: [__Q__], pos: 0, resp: {}};
 var GRAVADOS = [];
 function qzGravar(r){ GRAVADOS.push(JSON.parse(JSON.stringify(r))); return Promise.resolve(true); }
@@ -240,7 +247,7 @@ INFERENCIA = ("provável quebra", "a sua letra cai", "evidência: você riscou",
 
 def test_funcoes_extraidas_do_template():
     """A extracao acha as funcoes inteiras (ancora sumiu = falha alta, nunca skip)."""
-    assert FUNCS.count("function ") >= 13 and FUNCS.rstrip().endswith("}")
+    assert FUNCS.count("function ") >= 13 and FUNCS.rstrip().endswith(("}", ";"))
     assert "qz-cadeia" in FUNCS and "data-st" in FUNCS
 
 
@@ -492,7 +499,8 @@ def test_skill_e_autopsia_apontam_o_brief_e_nao_redefinem():
 def _css_da_tela_revelada():
     css = TEMPLATE[TEMPLATE.index("<style>"):TEMPLATE.index("</style>")]
     return [l for l in css.splitlines() if re.match(r"\s*\.(qz-porque|qz-alt\.tem-pq|qz-cad|qz-sol|qz-pede|qz-decl|qz-cadeia|"
-                                                     r"qz-chave|qz-rodape|qz-linha|qz-link|qz-defeito|qz-analise|qz-ag-)", l)
+                                                     r"qz-chave|qz-rodape|qz-linha|qz-link|qz-defeito|qz-analise|qz-ag-|"
+                                                     r"qz-modo-lista|qz-modo-escolha|qz-seg\.qz-seg2|qz-elos|qz-rev\.(nao|incerteza|desatencao))", l)
             or "qz-decl" in l]
 
 
@@ -503,13 +511,16 @@ def test_forma_da_tela_revelada():
     assert css, "CSS da tela revelada nao encontrado"
     assert not [l for l in css if re.search(r"#[0-9a-fA-F]{3,8}\b|rgba?\(", l)]
     assert not re.search(r"position\s*:\s*(sticky|fixed)", TEMPLATE)
-    for sel in (".qz-decl button{", ".qz-link{", ".qz-defeito-form button{", ".qz-linha{"):
+    for sel in (".qz-decl button{", ".qz-link{", ".qz-defeito-form button{", ".qz-linha{", ".qz-modo-lista{"):
         (regra,) = [l for l in css if sel in l]
         assert "min-height:44px" in regra, sel
     assert "min-width:0" in [l for l in css if l.startswith(".qz-cadeia li{")][0]
     rotulos = list(re.findall(r':\s*"([^"]+)"', _declaracao(TEMPLATE, "var QZ_DECL = {")))
-    rotulos += ["Erro na cadeia", "Enviar", "Concordo", "Em parte", "Discordo"]
+    rotulos += ["Erro na cadeia", "Enviar", "Concordo", "Em parte", "Discordo", "Modo estudo", "Modo prova",
+                "Estudo", "Prova", "Concluir lista", "Rever uma a uma", "Mudar resposta"]
     assert all(r in TEMPLATE for r in rotulos) and max(len(r) for r in rotulos) <= 15
+    for morto in ("Marcar lista como resolvida", "Rever em sequência", "Alterar resposta"):   # > 15 (celular)
+        assert morto not in TEMPLATE, morto
 
 
 # ------------------------------------------------ s201: aba Listas dividida em Questoes | Simulados
@@ -580,3 +591,108 @@ def test_modo_simulados_mostra_as_provas_na_ordem_do_plano_com_a_da_vez():
     assert "UERJ 2021 <span class=\"qd-n\">· a da vez</span>" in html and html.count("a da vez") == 1
     assert "60 questões" in html and "~3 h" in html and " -- prova INTEIRA" not in html
     assert out["botoes"][1][1] is True and out["sub"].startswith("As provas da UERJ")
+
+
+# ------------------------------------------------ s211 part-3: modo Estudo/Prova + tela de fim com os elos
+
+def test_simulado_e_sempre_prova():
+    acao = """var sim = {area: "Simulado", modo: "estudo"}; QZ.modoLista = "prova"; qzModoUi(sim);
+var esc = $("qz-modo-lista").hidden; QZ.modoLista = "estudo"; qzModoUi({area: "Obstetrícia"});
+SAIDA = {modo: qzModoDaLista(sim, "estudo"), escolhe: qzEscolheModo(sim, null, false), controle_sim: esc,
+         controle_lista: $("qz-modo-lista").hidden, rotulo: $("qz-modo-lista").textContent};"""
+    out = _rodar(_q(), None, None, acao)
+    assert out == {"modo": "prova", "escolhe": False, "controle_sim": True, "controle_lista": False,
+                   "rotulo": "Modo estudo"}
+
+
+def test_modo_da_lista_vem_do_doc_e_do_espelho():
+    """O doc da lista manda (vale entre aparelhos); o espelho local cobre o db fora do ar; lista
+    antiga sem modo e com respostas nao pergunta (segue Prova)."""
+    acao = """SAIDA = {doc: qzModoDaLista({modo: "estudo"}, "prova"), espelho: qzModoDaLista({}, "estudo"),
+  nada: qzModoDaLista({}, null), lixo: qzModoDaLista({modo: "x"}, "y"),
+  pergunta: qzEscolheModo({}, null, false), com_resp: qzEscolheModo({}, null, true),
+  com_modo: qzEscolheModo({modo: "prova"}, null, false), com_espelho: qzEscolheModo({}, "estudo", false)};"""
+    out = _rodar(_q(), None, None, acao)
+    assert out == {"doc": "estudo", "espelho": "estudo", "nada": "", "lixo": "", "pergunta": True,
+                   "com_resp": False, "com_modo": False, "com_espelho": False}
+
+
+def test_estudo_revela_apos_responder_e_prova_nao():
+    acao = """function qzParar(){} function qzRevelar(qq, rr){ SAIDA.revelou = rr.modo; } function qzDepoisDe(p){ SAIDA.depois = p; }
+QZ.listas = [{_id: "t26", tarefa: 26}]; QZ.lista = "t26"; QZ.letra = "C"; QZ.conf = "duvida"; QZ.t0 = Date.now();
+SAIDA.revelou = null; SAIDA.depois = null; QZ.modoLista = "estudo"; qzResponder(); SAIDA.estudo = {revelou: SAIDA.revelou, depois: SAIDA.depois, gravou: GRAVADOS[0].modo};
+SAIDA.revelou = null; SAIDA.depois = null; QZ.modoLista = "prova"; qzResponder();
+SAIDA.prova = {revelou: SAIDA.revelou, depois: SAIDA.depois, gravou: GRAVADOS[1].modo};
+SAIDA.reabre = [qzRevelaAoAbrir({modo: "estudo"}), qzRevelaAoAbrir({modo: "prova"}), qzRevelaAoAbrir(null)];"""
+    out = _rodar(_q(), None, None, acao)
+    assert out["estudo"] == {"revelou": "estudo", "depois": None, "gravou": "estudo"}
+    assert out["prova"] == {"revelou": None, "depois": 0, "gravou": "prova"}
+    assert out["reabre"] == [True, False, False]        # respondida em Estudo reabre revelada mesmo em Prova
+
+
+def test_pendencia_trava_proxima_e_concluir():
+    acao = """QZ.modoLista = "estudo"; var r1 = {correta: false, confianca: "duvida"};
+var a = [qzTrava(q, r1), $("qz-proxima").disabled, $("qz-status").textContent];
+r1.elos = ["sim", "nao", "sim"]; var b = [qzTrava(q, r1), $("qz-proxima").disabled, $("qz-status").textContent];
+QZ.modoLista = "prova"; var c = [qzTrava(q, {correta: false}), $("qz-proxima").disabled];
+var fim = [2, 1, 0].map(function(n){ qzConcluirUi(n); return [$("qz-concluir").disabled, $("qz-fim-status").textContent]; });
+SAIDA = {a: a, b: b, c: c, fim: fim};"""
+    out = _rodar(_q(), None, None, acao)
+    assert out["a"][:2] == [True, True] and out["a"][2].lower() == "declare os elos para seguir."
+    assert out["b"] == [False, False, ""]
+    assert out["c"] == [False, False]
+    assert out["fim"] == [[True, "Faltam 2 declarações."], [True, "Falta 1 declaração."], [False, ""]]
+    # Enter nao fura a trava: o atalho e o proprio botao conferem `disabled`
+    assert 'if(!$("qz-proxima").disabled){ $("qz-proxima").click(); }' in TEMPLATE
+    assert 'if($("qz-proxima").disabled){ return; }' in TEMPLATE
+    assert '$("qz-concluir").disabled){ return; }' in TEMPLATE
+
+
+def test_questao_sem_cadeia_nao_trava():
+    """Sem cadeia (v1 em texto ou sem solução) nunca há pendência; "Erro na cadeia" conta como
+    declaração (a trava não prende lista de cadeia defeituosa)."""
+    acao = """QZ.modoLista = "estudo"; var errada = {correta: false, confianca: "chute"};
+var defeito = {correta: false, confianca: "chute", cadeia_defeito: {motivo: "elo 2 repete o gabarito"}};
+SAIDA = {v1: qzTrava({num: 1, solucao_medhub: "texto"}, errada), sem: qzTrava({num: 2}, errada), defeito: qzTrava(q, defeito),
+  resumo: qzResumoElos([{num: 1, solucao_medhub: "texto"}, {num: 2}, q], {"1": errada, "2": errada, "8": defeito}).pendentes};"""
+    out = _rodar(_q(), None, None, acao)
+    assert out == {"v1": False, "sem": False, "defeito": False, "resumo": 0}
+
+
+QS_FIM = [_q(num=8), _q(num=9), _q(num=10), _q(num=11), _q("texto v1", num=12)]
+RESP_FIM = {"8": _resp("C", elos=["sim", "nao", "incerteza"], num=8), "9": _resp("A", "solida", num=9),
+            "10": _resp("A", "duvida", elos=["desatencao", "sim", "sim"], num=10), "11": _resp("D", num=11),
+            "12": _resp("B", num=12)}
+
+
+def test_resumo_dos_elos_na_ordem_de_revisao():
+    acao = "SAIDA = qzResumoElos(%s, %s);" % (json.dumps(QS_FIM), json.dumps(RESP_FIM))
+    out = _rodar(_q(), None, None, acao)
+    assert out["cont"] == {"sim": 6, "incerteza": 1, "desatencao": 1, "nao": 1}   # presumido conta como Sim
+    assert [(x["num"], x["i"], x["estado"]) for x in out["itens"]] == [(8, 1, "nao"), (8, 2, "incerteza"),
+                                                                      (10, 0, "desatencao")]
+    assert out["pendentes"] == 1                                                      # Q11 sem declaração
+
+
+def test_fim_elos_golden():
+    acao = "SAIDA = {html: qzElosFimHtml(%s, %s), vazio: qzElosFimHtml([], {})};" % (
+        json.dumps(QS_FIM), json.dumps(RESP_FIM))
+    out = _rodar(_q(), None, None, acao)
+    html = out["html"]
+    assert out["vazio"] == ""
+    assert re.findall(r'data-rev="(\d+)"', html) == ["0", "0", "2"]                  # tocável: abre a questão
+    assert html.index("Q8</b><span>Recordou") < html.index("Q8</b><span>Descartou") < html.index("Q10</b>")
+    _golden("fim_elos", html)
+
+
+def test_textos_da_aba_curtos_e_sem_o_elo_que_quebrou():
+    """QZ_SUB e o parágrafo do fim: no máximo 2 frases cada, sem a promessa da análise que confirma
+    o elo que quebrou (quem declara é o aluno)."""
+    sub = _declaracao(TEMPLATE, "var QZ_SUB = {")
+    textos = re.findall(r':\s*"([^"]+)"', sub)
+    i = TEMPLATE.index('<div class="qz-elos-fim"')
+    textos.append(re.search(r'<p class="hub-sub" style="margin:0">([^<]+)</p>', TEMPLATE[i:]).group(1))
+    assert len(textos) == 3
+    for t in textos:
+        assert len(re.findall(r"[.!?](?:\s|$)", t)) <= 2, t
+    assert "confirma o elo que quebrou" not in TEMPLATE

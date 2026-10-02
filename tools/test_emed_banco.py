@@ -482,7 +482,7 @@ _HUB_TEMPLATE = ROOT / "core" / "templates" / "hub.html"
 #: s211 (feedback-cadeia-declarada): chaves que a página JÁ grava e cujo destino no banco é a part-5
 #: (`emed_respostas` ganha as colunas). A lista é EXATA: chave nova sem destino fora dela segue acusando,
 #: e a part-5 esvazia o conjunto -- o mesmo predicado volta a exigir `[]`.
-_SEM_DESTINO_ATE_A_PART_5 = {"cadeia_defeito", "elos"}
+_SEM_DESTINO_ATE_A_PART_5 = {"cadeia_defeito", "elos", "modo"}
 #: doc da página -> coluna do banco quando o nome muda (o mesmo mapeamento do writer)
 _ALIAS_DOC_COLUNA = {"tarefa": "tarefa_id"}
 

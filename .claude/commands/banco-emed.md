@@ -51,7 +51,7 @@ status: canonical
 |---|---|---|
 | `control/hub` | hub | `instrucao` (quadro verde da aba Capturar), `fase`, `atualizado_em` |
 | `mensagens/<id>` | todos | `de` (`hub` · `claude-in-chrome` · `operador`), `texto`, `enviado_em`, `lido` |
-| `listas/t<tarefa>` | hub semeia; página muda `status` | `tarefa`, `tema`, `area`, `semana`, `seq`, `q_previstas`, `url`, `status` (`pendente` · `em_curso` · `capturada` · `bloqueada` · `resolvida`) |
+| `listas/t<tarefa>` | hub semeia; página muda `status` e `modo` | `tarefa`, `tema`, `area`, `semana`, `seq`, `q_previstas`, `url`, `status` (`pendente` · `em_curso` · `capturada` · `bloqueada` · `resolvida`), `modo` (s211: `estudo` · `prova`, escolhido ao abrir a lista no hub) |
 | `questoes/<lista>_<num>` | Chrome (formulário ou lote JSON) | `lista`, `tarefa`, `num`, `banca`, `gabarito`, `emed_id`, `estatistica`, `enunciado`, `alternativas`, `solucao`, `forum`, `tags`, `capturado_em`, `executor`. **Escopo público desde a s198:** entram só `banca`, `gabarito`, `emed_id`, `enunciado`, `alternativas`, `tags`; `solucao`, `forum` e `estatistica` ficam vazios. ⚰️ *As 4 listas da s197 (t26 t40 t49 t96, 91 questões) guardavam esse conteúdo como exceção; apagado em 26/09/2026 por decisão do operador (item (e) do veredito do /ai-eng sobre a s200): backup `ipub_backup_20260926_143813.db` -> `--ingerir --apply --expect 91` com os três campos vazios e as chaves EMED fora de `extras`, e os mesmos campos apagados nos 91 docs do hub.* No db do **hub**, o doc ganha `solucao_medhub`, `divergente` e `fontes_medhub` quando a lista tem solução própria (s199) |
 | `respostas/<lista>_<num>` | página (aba Resolver) | `lista`, `tarefa`, `num`, `letra`, `confianca` (`solida` · `duvida` · `chute`), `correta`, `gabarito`, `racional` (1 linha opcional desde a s211), `tempo_s`, `flag`, `respondido_em`, `riscadas` (lista de letras riscadas antes de marcar; no banco, texto `A,C` desde a s200), `elos` (s211: o estado DECLARADO de cada elo, alinhado à cadeia -- vocabulário no brief §Estado por elo), `cadeia_defeito` (s211: `{motivo, ts}`). ⚰️ *`elo` (o chip de causa) deixou de ser escrito em 02/10/2026.* |
 | `analises/<lista>_<num>` | hub (após `/analisar-questao`); página grava o veredito | `lista`, `num`, `pedia`, `cadeia[]` (vazia desde a s200: usa a cadeia da Solução v2), `quebrou` (índice 0-based na cadeia), `estados` + `conflitos` (s200; desde 02/10/2026 a página lê `estados` só como LEGADO e pede veredito só com `conflitos`; vocabulário e régua declarado x evidência definidos SÓ no brief, [§Estado por elo](../../docs/SOLUCAO-MEDHUB-BRIEF.md) -- portador único desde a s201), `comporta`, `armadilha`, `veredito_hub`, `cards[]`, `questao_erro_id`; `veredito_operador` (`concordo` · `em_parte` · `discordo`), `nota_operador`, `veredito_em` |
@@ -170,7 +170,10 @@ tema novo ganha a entrada ANTES do subagente). Contrato completo e exemplo: o br
 da marcada abertos, os demais no toque); a cadeia mostra cada elo com 4 botões (Sim / Incerteza / Desatenção / Não)
 que ELE toca -- a página não infere quebra; a análise do hub vira uma linha sob a cadeia (veredito, armadilha,
 `#cards`); "Erro na cadeia" grava `cadeia_defeito`. Regras de presumido, conflito e legado: brief §Estado por elo.
-A tela de fim mostra firmes/feitas por objetivo.
+Ao abrir uma lista nova ele escolhe **Estudo** (revela depois de cada questão; `Próxima` só com os elos declarados) ou
+**Prova** (tudo no fim); `modo` grava no doc `listas/<lista>` e em cada resposta; simulado é sempre Prova e lista antiga
+já com respostas segue Prova. A tela de fim mostra firmes/feitas por objetivo e o bloco **Elos** (contagem por estado e os
+`Não`, `Incerteza` e `Desatenção`, nessa ordem); "Concluir lista" (marca `resolvida`) só com as declarações feitas.
 ⚰️ *02/10/2026 (s211): revogada a leitura provisória pelas letras -- a letra marcada acendia o elo em que ela cai ("a sua letra cai neste elo") e a riscada acendia o elo "executado"; a análise movia a marca. Errou o elo em 5 das 7 análises (t26, t96).*
 
 Cunhagem **por lista**, quando ela entra na semana (subagente Opus por lista, régua F93, com a v1 como

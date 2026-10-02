@@ -205,6 +205,18 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
 .qz-defeito{display:grid;gap:6px;min-width:0}
 .qz-defeito-form{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;min-width:0}
 .qz-defeito-form button{min-height:44px}
+/* s211 (part-3): modo Estudo/Prova por lista + o bloco Elos da tela de fim */
+.qz-modo-lista{min-height:44px;padding:4px 12px;border-radius:999px;font-size:.8em;font-weight:600;color:var(--tinta2);background:var(--afundado)}
+.qz-modo-escolha{display:grid;gap:10px;max-width:34rem}
+.qz-seg.qz-seg2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.qz-seg.qz-seg2 button{min-height:72px;font-size:1em}
+.qz-elos-fim{display:grid;gap:8px;min-width:0}
+.qz-elos-cont{display:flex;flex-wrap:wrap;gap:4px 14px;margin:0;font-size:.88em;color:var(--tinta2)}
+.qz-elos-cont b{font-variant-numeric:tabular-nums}
+.qz-elos-cont .nao b{color:var(--alerta)} .qz-elos-cont .incerteza b{color:var(--qz-duv)} .qz-elos-cont .desatencao b{color:var(--qz-chute)} .qz-elos-cont .sim b{color:var(--qz-ok)}
+.qz-rev.nao{border-left-color:var(--alerta)} .qz-rev.nao i{color:var(--alerta)}
+.qz-rev.incerteza{border-left-color:var(--qz-duv)} .qz-rev.incerteza i{color:var(--qz-duv)}
+.qz-rev.desatencao{border-left-color:var(--qz-chute)} .qz-rev.desatencao i{color:var(--qz-chute)}
 .qz-porobj ul{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:6px}
 .qz-porobj li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:0 10px;padding:8px 12px;border-radius:10px;background:var(--afundado);min-width:0}
 .qz-porobj li b{font-variant-numeric:tabular-nums}
@@ -282,10 +294,15 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
       <div class="hub-leitor-barra">
         <button type="button" id="qz-voltar">&lsaquo; Todas as listas</button>
         <p class="hub-leitor-titulo" id="qz-tema"></p>
+        <button type="button" class="qz-modo-lista" id="qz-modo-lista" hidden></button>
         <span class="qz-relogio" id="qz-relogio">00:00</span>
       </div>
       <div class="qz-trilho" id="qz-trilho" aria-label="Progresso"></div>
       <p class="qd-aviso" id="qz-aviso-lista" hidden></p>
+      <div class="qz-modo-escolha" id="qz-modo-escolha" hidden>
+        <p class="qz-rot">Como resolver esta lista?</p>
+        <div class="qz-seg qz-seg2"><button type="button" data-modo="estudo">Estudo<small>gabarito e cadeia a cada questão</small></button><button type="button" data-modo="prova">Prova<small>tudo no fim, como no dia</small></button></div>
+      </div>
       <div class="qz-corpo" id="qz-questao" hidden>
         <p class="qz-metaq"><span id="qz-pos"></span><span id="qz-banca"></span><span id="qz-tags"></span></p>
         <p class="qz-enun" id="qz-enun"></p>
@@ -327,9 +344,10 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
         <div class="qz-tiles" id="qz-tiles"></div>
         <p class="hub-sub" id="qz-erradas" style="margin:0"></p>
         <div class="qz-porobj" id="qz-porobj" hidden></div>
-        <p class="hub-sub" style="margin:0">Toque numa questão para ver o gabarito e a Solução MedHub. Nas erradas e nos chutes, registre o que te levou à letra: é isso que o hub disseca. A análise do hub confirma o elo que quebrou e aparece debaixo da questão.</p>
+        <div class="qz-elos-fim" id="qz-elos-fim" hidden></div>
+        <p class="hub-sub" style="margin:0">Toque numa questão para ver o gabarito e a cadeia. Nas erradas, dúvidas e chutes, declare cada elo: é o que entra na revisão.</p>
         <ol class="qz-lista" id="qz-revisao"></ol>
-        <div class="qz-pe"><button type="button" class="primario" id="qz-concluir">Marcar lista como resolvida</button><button type="button" id="qz-rever">Rever em sequência</button><p class="qz-status" id="qz-fim-status"></p></div>
+        <div class="qz-pe"><button type="button" class="primario" id="qz-concluir">Concluir lista</button><button type="button" id="qz-rever">Rever uma a uma</button><p class="qz-status" id="qz-fim-status"></p></div>
       </div>
     </div>
   </section>
@@ -691,8 +709,10 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
     return '<li><button type="button" data-qzl="' + qzEsc(l._id) + '"><p class="qz-tema">' + qzEsc(l.tema) + '</p><span class="qz-chip ' + qzEsc(s) + '">' + qzEsc(ROT_QZ[s] || s) + '</span><p class="qz-meta"><span>' + qzEsc(l.area || "") + '</span><span>' + qzEsc(Math.round(l.q || l.q_previstas || 0)) + ' questões</span>' + (atrasada ? '<span class="qd-atraso">semana ' + qzEsc(l.semana) + '</span>' : '') + '</p></button></li>'; }
   // s201 (pedido do operador): o bloco se divide em Questoes (listas da semana) e Simulados (provas
   // UERJ inteiras, do PDF oficial). Simulado = tarefa do plano com area "Simulado".
-  var QZ_SUB = {questoes: "As listas da semana, para resolver aqui como numa prova: letra e certeza em cada questão, sem gabarito no meio. No fim, o resultado por objetivo, a Solução MedHub (a cadeia de raciocínio, para você declarar elo a elo) e a análise dos erros. Cada resposta grava na hora e dá para parar e voltar.",
-                simulados: "As provas da UERJ inteiras, na ordem do plano, como no dia: letra e certeza em cada questão, sem gabarito no meio, cerca de 3 minutos por questão. No fim, o resultado por bloco. Cada resposta grava na hora e dá para parar e voltar."};
+  // s211 (part-3): cada lista escolhe Estudo (gabarito e cadeia depois de cada questao) ou Prova (tudo
+  // no fim); simulado e sempre Prova. Textos de no maximo 2 frases.
+  var QZ_SUB = {questoes: "As listas da semana: em Estudo o gabarito e a cadeia aparecem depois de cada questão, em Prova só no fim. Nas erradas, dúvidas e chutes você declara cada elo, e cada resposta grava na hora.",
+                simulados: "As provas da UERJ inteiras, na ordem do plano e como no dia: gabarito só no fim, cerca de 3 minutos por questão. No fim, o resultado por bloco; cada resposta grava na hora."};
   function qzEhSimulado(l){ return l.area === "Simulado"; }
   // atalho "resolver no hub" (painel e quadro, s201): abre a aba Listas ja no modo pedido
   function qzModoPedido(m){ if(m !== "simulados" && m !== "questoes"){ return; }
@@ -752,11 +772,12 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
   }
   function qzAbrir(id){
     qzLimpar(); qzParar();
-    QZ.lista = id; QZ.qs = []; QZ.resp = qzLs(qzChave()) || {}; QZ.ana = {}; QZ.pos = -1; QZ.revendo = false;
+    QZ.lista = id; QZ.qs = []; QZ.resp = qzLs(qzChave()) || {}; QZ.ana = {}; QZ.pos = -1; QZ.revendo = false; QZ.modoLista = "";
     var l = QZ.listas.filter(function(x){ return x._id === id; })[0] || {};
     $("qz-tema").textContent = (l.tema || id) + (l.area ? " · " + l.area : "");
     $("qz-escolha").hidden = true; $("qz-player").hidden = false;
     $("qz-aviso-lista").hidden = true; $("qz-questao").hidden = true; $("qz-fim").hidden = true;
+    $("qz-modo-escolha").hidden = true; $("qz-modo-lista").hidden = true; $("qz-trilho").innerHTML = "";
     window.scrollTo(0, 0);
     if(!QZ.db){ return; }
     QZ.unsubs.push(QZ.db.collection("questoes").where("lista", "==", id).onSnapshot(function(s){
@@ -778,10 +799,41 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
   function qzPosicionar(){
     if(!QZ.qs.length){ $("qz-aviso-lista").hidden = false; $("qz-aviso-lista").textContent = "Esta lista ainda não tem questões carregadas."; $("qz-questao").hidden = true; return; }
     $("qz-aviso-lista").hidden = true;
+    // s211 (part-3): lista sem modo e sem resposta pergunta Estudo ou Prova antes da 1a questao;
+    // lista antiga ja com respostas e simulado seguem Prova sem perguntar
+    var l = qzListaAtual(), esp = qzLs("medhub.listas.modo." + QZ.lista);
+    if(qzEscolheModo(l, esp, Object.keys(QZ.resp).length > 0)){
+      $("qz-modo-escolha").hidden = false; $("qz-questao").hidden = true; $("qz-fim").hidden = true; qzModoUi(l); return; }
+    $("qz-modo-escolha").hidden = true; QZ.modoLista = qzModoDaLista(l, esp) || "prova"; qzModoUi(l);
     var i = 0; while(i < QZ.qs.length && QZ.resp[QZ.qs[i].num]){ i++; }
     if(i >= QZ.qs.length){ qzFim(); return; }
     qzMostrar(i);
   }
+  function qzListaAtual(){ return QZ.listas.filter(function(x){ return x._id === QZ.lista; })[0] || {}; }
+  // modo da lista: o doc manda (vale entre aparelhos); o espelho local cobre o db fora do ar. PURA.
+  function qzModoDaLista(l, espelho){
+    if(qzEhSimulado(l || {})){ return "prova"; }
+    var m = (l || {}).modo; if(m === "estudo" || m === "prova"){ return m; }
+    return (espelho === "estudo" || espelho === "prova") ? espelho : "";
+  }
+  function qzEscolheModo(l, espelho, temResposta){ return !qzEhSimulado(l || {}) && !qzModoDaLista(l, espelho) && !temResposta; }
+  function qzModoUi(l){
+    var b = $("qz-modo-lista"), est = QZ.modoLista === "estudo";
+    b.hidden = qzEhSimulado(l || {}) || !QZ.modoLista;
+    b.textContent = est ? "Modo estudo" : "Modo prova"; b.setAttribute("aria-label", "Modo " + (est ? "estudo" : "prova") + ": trocar para " + (est ? "prova" : "estudo"));
+  }
+  function qzEscolher(m){
+    var l = qzListaAtual(); if(m !== "estudo" && m !== "prova"){ return; } if(qzEhSimulado(l)){ m = "prova"; }
+    QZ.modoLista = m; l.modo = m; qzLs("medhub.listas.modo." + QZ.lista, m);
+    if(QZ.db && QZ.lista){ QZ.db.doc("listas/" + QZ.lista).update({modo: m, atualizado_em: qzAgora()}).catch(function(){ /* o espelho local segura */ }); }
+    qzModoUi(l);
+  }
+  $("qz-modo-escolha").addEventListener("click", function(e){ var b = e.target.closest("button[data-modo]"); if(!b){ return; }
+    qzEscolher(b.getAttribute("data-modo")); QZ.pos = -1; qzPosicionar(); });
+  $("qz-modo-lista").addEventListener("click", function(){
+    if(!QZ.modoLista){ return; } if(!$("qz-depois").hidden){ qzSalvarMeta(); }
+    qzEscolher(QZ.modoLista === "estudo" ? "prova" : "estudo");
+    var q = QZ.qs[QZ.pos]; if(q && !$("qz-questao").hidden && QZ.resp[q.num]){ qzMostrar(QZ.pos); } });
   function qzTrilho(){
     // modo prova: o trilho mostra so feita/nao feita (sem cor de acerto) e serve de navegacao
     $("qz-trilho").innerHTML = QZ.qs.map(function(q, i){ var r = QZ.resp[q.num]; return '<i class="' + (r ? "f" : "") + (i === QZ.pos ? " atual" : "") + '" data-i="' + i + '" role="button" title="Q' + qzEsc(q.num) + '"></i>'; }).join("");
@@ -826,10 +878,13 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
       QZ.letra = r0.letra || null; QZ.conf = r0.confianca || null;
       Array.prototype.forEach.call($("qz-alts").querySelectorAll(".qz-alt"), function(x){ var l = x.getAttribute("data-l"); x.classList.toggle("marcada", l === r0.letra); x.classList.toggle("riscada", !!(r0.riscadas && r0.riscadas.indexOf(l) >= 0)); });
       Array.prototype.forEach.call($("qz-seg").querySelectorAll("button"), function(b){ b.classList.toggle("on", b.getAttribute("data-c") === r0.confianca); });
-      $("qz-flag").checked = !!r0.flag; $("qz-responder").textContent = "Alterar resposta"; qzPode();
+      $("qz-flag").checked = !!r0.flag; $("qz-responder").textContent = "Mudar resposta"; qzPode();
     }
     $("qz-ant").disabled = i === 0;
     qzTrilho(); qzIniciar(); qzBarra();
+    // s211 (part-3): respondida em Estudo (ou lista em Estudo) reabre revelada e nao editavel --
+    // trocar a letra depois de ver o gabarito falsificaria o acerto registrado
+    if(r0 && qzRevelaAoAbrir(r0)){ qzParar(); $("qz-relogio").textContent = "--:--"; qzRevelar(q, r0); }
     window.scrollTo(0, 0);
   }
   $("qz-ant").addEventListener("click", function(){ if(QZ.pos > 0){ QZ.revendo = false; qzMostrar(QZ.pos - 1); } });
@@ -874,17 +929,30 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
     qzReenviando = true;
     pend.reduce(function(p, n){ return p.then(function(){ return qzGravar(QZ.resp[n]); }); }, Promise.resolve()).then(function(){ qzReenviando = false; });
   }
-  $("qz-responder").addEventListener("click", function(){
+  function qzResponder(){
     var q = QZ.qs[QZ.pos]; if(!q || !QZ.letra || !QZ.conf){ return; } qzParar();
     var l = QZ.listas.filter(function(x){ return x._id === QZ.lista; })[0] || {};
-    var gab = String(q.gabarito || "").toUpperCase();
+    var gab = String(q.gabarito || "").toUpperCase(), estudo = QZ.modoLista === "estudo";
     var riscadas = Array.prototype.map.call($("qz-alts").querySelectorAll(".qz-alt.riscada"), function(x){ return x.getAttribute("data-l"); });
     var r = {lista: QZ.lista, tarefa: l.tarefa || q.tarefa || null, num: q.num, letra: QZ.letra, confianca: QZ.conf, correta: QZ.letra === gab, gabarito: gab,
-             riscadas: riscadas, racional: "", tempo_s: Math.round((Date.now() - QZ.t0) / 1000), flag: !!$("qz-flag").checked, respondido_em: qzAgora()};
-    qzGravar(r).then(function(ok){ $("qz-status").className = "qz-status" + (ok ? "" : " ruim"); $("qz-status").textContent = ok ? "" : "Guardado neste aparelho; reenvio automático quando o banco voltar."; });
-    // Modo prova (pedido do operador, 26/09): sem gabarito na hora; a resolucao e a analise ficam para o fim.
-    qzDepoisDe(QZ.pos);
-  });
+             riscadas: riscadas, racional: "", tempo_s: Math.round((Date.now() - QZ.t0) / 1000), flag: !!$("qz-flag").checked, respondido_em: qzAgora(),
+             modo: estudo ? "estudo" : "prova"};
+    qzGravar(r).then(function(ok){ var st = $("qz-status");
+      if(ok){ if(st.className.indexOf("ruim") >= 0){ st.className = "qz-status"; st.textContent = ""; } return; }
+      st.className = "qz-status ruim"; st.textContent = "Guardado neste aparelho; reenvio automático quando o banco voltar."; });
+    // Prova (pedido do operador, 26/09): sem gabarito na hora, tudo no fim. Estudo (s211): revela no lugar.
+    if(estudo){ qzRevelar(q, r); } else { qzDepoisDe(QZ.pos); }
+  }
+  $("qz-responder").addEventListener("click", qzResponder);
+  function qzRevelaAoAbrir(r){ return !!r && (r.modo === "estudo" || QZ.modoLista === "estudo"); }
+  // s211 (part-3): em Estudo, Proxima (e Enter) so com a declaracao feita; "Erro na cadeia" conta como feita
+  var QZ_DICA_TRAVA = "Declare os elos para seguir.";
+  function qzTrava(q, r){
+    var t = QZ.modoLista === "estudo" && qzDeclPendente(q, r), st = $("qz-status");
+    $("qz-proxima").disabled = t;
+    if(t){ st.className = "qz-status"; st.textContent = QZ_DICA_TRAVA; } else if(st.textContent === QZ_DICA_TRAVA){ st.textContent = ""; }
+    return t;
+  }
   function qzRevelar(q, r){
     $("qz-antes").hidden = true; $("qz-depois").hidden = false;
     $("qz-alts").innerHTML = qzAltsHtml(q, r, true);
@@ -903,7 +971,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
     $("qz-racional").value = r.racional || "";
     $("qz-defeito").hidden = !(q.solucao_medhub && typeof q.solucao_medhub === "object"); qzDefeitoUi(r);
     $("qz-proxima").textContent = (QZ.pos + 1 < QZ.qs.length) ? "Próxima" : "Terminar";
-    qzAnalise();
+    qzAnalise(); qzTrava(q, r);
   }
   function qzSalvarMeta(){
     // racional e "revisar depois" da questao aberta: gravam ao sair dela, por qualquer saida
@@ -916,7 +984,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
   // player) -> `cadeia_defeito` na resposta: a fila de correcao de cadeia do agente.
   function qzDefeito(motivo){
     var q = QZ.qs[QZ.pos], r = q && QZ.resp[q.num]; motivo = String(motivo || "").trim(); if(!r || !motivo){ return false; }
-    r.cadeia_defeito = {motivo: motivo, ts: qzAgora()}; qzGravar(r); qzDefeitoUi(r); return true;
+    r.cadeia_defeito = {motivo: motivo, ts: qzAgora()}; qzGravar(r); qzDefeitoUi(r); qzTrava(q, r); return true;
   }
   function qzDefeitoUi(r){
     var d = r && r.cadeia_defeito; $("qz-defeito-form").hidden = true; $("qz-defeito-abrir").setAttribute("aria-expanded", "false");
@@ -933,14 +1001,15 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
     var e = qzElosDe(q, r, QZ.ana[q.num]); if(!(i >= 0 && i < e.estados.length)){ return; }
     var elos = (e.fonte === "declarado" || e.fonte === "presumido") ? e.estados.slice() : e.estados.map(function(){ return ""; });
     elos[i] = (e.fonte === "declarado" && elos[i] === st) ? "" : st;
-    r.elos = elos; qzGravar(r); qzSolucao(q, r);
+    r.elos = elos; qzGravar(r); qzSolucao(q, r); qzTrava(q, r);
   }
   $("qz-medhub").addEventListener("click", function(e){ var b = e.target.closest("button[data-st]"); if(b){ qzDeclarar(parseInt(b.getAttribute("data-k"), 10), b.getAttribute("data-st")); } });
   $("qz-proxima").addEventListener("click", function(){
+    if($("qz-proxima").disabled){ return; }
     var r = qzSalvarMeta(); if(!r){ return; }
     if(QZ.revendo){ var j = QZ.pos + 1; if(j < QZ.qs.length && QZ.resp[QZ.qs[j].num]){ qzRever(j); } else { qzFim(); } return; }
-    var i = QZ.pos + 1; while(i < QZ.qs.length && QZ.resp[QZ.qs[i].num]){ i++; }
-    if(i >= QZ.qs.length){ qzFim(); } else { qzMostrar(i); }
+    // Estudo (s211): a proxima nao respondida, depois desta ou antes dela (as puladas); sem nenhuma, o fim
+    qzDepoisDe(QZ.pos);
   });
   function qzRever(i){ var q = QZ.qs[i]; var r = QZ.resp[q.num]; qzMostrar(i); qzParar(); if(r){ qzRevelar(q, r); $("qz-flag").checked = !!r.flag; $("qz-relogio").textContent = "--:--"; } }
   $("qz-rever").addEventListener("click", function(){ QZ.revendo = true; qzRever(0); });
@@ -974,13 +1043,39 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
       var cls = r.correta ? (r.confianca === "chute" ? "chute" : "certa") : "errada";
       var rot = r.correta ? (r.confianca === "chute" ? "certa no chute" : "certa") : "errada";
       var conf = {solida: "sólida", duvida: "dúvida", chute: "chute"}[r.confianca] || "";
-      return '<li><button type="button" data-rev="' + i + '" class="qz-rev ' + cls + '"><b>Q' + qzEsc(q.num) + '</b><span>marcou ' + qzEsc(r.letra) + ' · gabarito ' + qzEsc(r.gabarito) + ' · ' + qzEsc(conf) + '</span><i>' + rot + (QZ.ana[q.num] ? " · análise" : "") + '</i></button></li>'; }).join("");
-    $("qz-fim-status").textContent = "";
+      return '<li><button type="button" data-rev="' + i + '" class="qz-rev ' + cls + '"><b>Q' + qzEsc(q.num) + '</b><span>marcou ' + qzEsc(r.letra) + ' · gabarito ' + qzEsc(r.gabarito) + ' · ' + qzEsc(conf) + '</span><i>' + rot + (QZ.ana[q.num] ? " · análise" : "") + (qzDeclPendente(q, r) ? " · declarar" : "") + '</i></button></li>'; }).join("");
+    // s211 (part-3): o bloco Elos -- o que revisar, elo por elo -- e a trava do concluir
+    $("qz-elos-fim").innerHTML = sim ? "" : qzElosFimHtml(QZ.qs, QZ.resp); $("qz-elos-fim").hidden = !$("qz-elos-fim").innerHTML;
+    qzConcluirUi(qzResumoElos(QZ.qs, QZ.resp).pendentes);
     window.scrollTo(0, 0);
   }
+  var QZ_ORDEM_REVER = ["nao", "incerteza", "desatencao"];
+  // o resumo da lista pela DECLARACAO (presumido conta como Sim; analise antiga nao entra). PURA.
+  function qzResumoElos(qs, resp){
+    var cont = {sim: 0, incerteza: 0, desatencao: 0, nao: 0}, itens = [], pend = 0;
+    qs.forEach(function(q, pos){ var r = resp[q.num], cad = qzCadeia(q); if(!r || !cad.length){ return; }
+      if(qzDeclPendente(q, r)){ pend++; }
+      qzElosDe(q, r, null).estados.forEach(function(st, i){ if(!st){ return; } cont[st]++;
+        if(QZ_ORDEM_REVER.indexOf(st) >= 0){ itens.push({pos: pos, num: q.num, i: i, estado: st, elo: (cad[i] && cad[i].elo) || ""}); } }); });
+    itens.sort(function(a, b){ return QZ_ORDEM_REVER.indexOf(a.estado) - QZ_ORDEM_REVER.indexOf(b.estado) || a.pos - b.pos || a.i - b.i; });
+    return {cont: cont, itens: itens, pendentes: pend};
+  }
+  function qzElosFimHtml(qs, resp){
+    var s = qzResumoElos(qs, resp), tot = s.cont.sim + s.cont.incerteza + s.cont.desatencao + s.cont.nao;
+    if(!tot){ return ""; }
+    return '<p class="qz-rot" style="margin:0">Elos <small style="font-weight:400;color:var(--tinta3)">o que revisar, nesta ordem</small></p>' +
+      '<p class="qz-elos-cont">' + Object.keys(QZ_DECL).map(function(k){ return '<span class="' + k + '">' + QZ_DECL[k] + ' <b>' + s.cont[k] + '</b></span>'; }).join("") + '</p>' +
+      (s.itens.length ? '<ol class="qz-lista">' + s.itens.map(function(x){
+        return '<li><button type="button" class="qz-rev ' + x.estado + '" data-rev="' + x.pos + '"><b>Q' + qzEsc(x.num) + '</b><span>' + qzEsc(x.elo) + '</span><i>' + QZ_DECL[x.estado] + '</i></button></li>'; }).join("") + '</ol>' : '');
+  }
+  function qzConcluirUi(pendentes){
+    var b = $("qz-concluir"), st = $("qz-fim-status"); b.disabled = pendentes > 0; st.className = "qz-status";
+    st.textContent = pendentes > 0 ? (pendentes === 1 ? "Falta 1 declaração." : "Faltam " + pendentes + " declarações.") : "";
+  }
   $("qz-revisao").addEventListener("click", function(e){ var b = e.target.closest("button[data-rev]"); if(b){ QZ.revendo = true; qzRever(parseInt(b.getAttribute("data-rev"), 10)); } });
+  $("qz-elos-fim").addEventListener("click", function(e){ var b = e.target.closest("button[data-rev]"); if(b){ QZ.revendo = true; qzRever(parseInt(b.getAttribute("data-rev"), 10)); } });
   $("qz-concluir").addEventListener("click", function(){
-    if(!QZ.db || !QZ.lista){ return; } var st = $("qz-fim-status"); st.className = "qz-status"; st.textContent = "Gravando…";
+    if(!QZ.db || !QZ.lista || $("qz-concluir").disabled){ return; } var st = $("qz-fim-status"); st.className = "qz-status"; st.textContent = "Gravando…";
     QZ.db.doc("listas/" + QZ.lista).update({status: "resolvida", resolvida_em: qzAgora(), atualizado_em: qzAgora()})
       .then(function(){ st.className = "qz-status ok"; st.textContent = "Lista marcada como resolvida."; })
       .catch(function(e){ st.className = "qz-status ruim"; st.textContent = "Não gravou (" + ((e && e.code) || "erro") + ")."; });
@@ -995,7 +1090,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
   function qzCadeia(q){ var s = q && q.solucao_medhub; return (s && typeof s === "object" && Array.isArray(s.cadeia)) ? s.cadeia : []; }
   function qzPrecisaDeclarar(q, r){ return !!(r && qzCadeia(q).length && (!r.correta || r.confianca !== "solida")); }
   function qzDeclPendente(q, r){
-    if(!qzPrecisaDeclarar(q, r)){ return false; }
+    if(!qzPrecisaDeclarar(q, r) || (r.cadeia_defeito && r.cadeia_defeito.motivo)){ return false; }
     var n = qzCadeia(q).length;
     if(Array.isArray(r.elos) && r.elos.length === n){ return !r.elos.every(function(x){ return QZ_DECL.hasOwnProperty(x); }); }
     return true;
@@ -1067,7 +1162,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
       else if("12345".indexOf(k) >= 0 && k.length === 1){ var b2 = $("qz-alts").querySelectorAll(".qz-alt-btn")[parseInt(k, 10) - 1]; if(b2){ b2.click(); } }
       else if(k === "S" || k === "D" || k === "C"){ var b3 = $("qz-seg").querySelector('button[data-c="' + {S: "solida", D: "duvida", C: "chute"}[k] + '"]'); if(b3){ b3.click(); } }
       else if(e.key === "Enter" && !$("qz-responder").disabled){ e.preventDefault(); $("qz-responder").click(); }
-    } else if(e.key === "Enter" && tag !== "button"){ e.preventDefault(); $("qz-proxima").click(); }
+    } else if(e.key === "Enter" && tag !== "button"){ e.preventDefault(); if(!$("qz-proxima").disabled){ $("qz-proxima").click(); } }
   });
 
   // Padrao = Painel (s194); hash e aba lembrada continuam vencendo.

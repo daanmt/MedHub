@@ -62,6 +62,16 @@ Em ordem de entrega (cada item cabe em uma spec):
 - Cadeia prévia para as 417 questões dos simulados.
 - Comentário do professor e fórum: ficam como estão.
 
+## Pós-v0 (amarrado por decisão do operador, 02/10/2026)
+
+Não entra nas specs deste PRD; é a fila que vem depois dele, na ordem:
+
+1. **Sair do artifact para um ambiente próprio** -- frontend/UI + backend/banco de dados do MedHub. Primeiro alvo: gestão adequada do conhecimento produzido (questões, cadeias, declarações, cards, aulas, resumos) num banco que não seja o `db` de uma página nem um SQLite preso a um PC. Foco de médio prazo: multi-sessão, autenticação e usuários distintos. Discovery em `docs/DISCOVERY-AMBIENTE-AGENTICO-2026-10-02.md`.
+2. **Reagendar questões pela habilidade quebrada** (o "em 3-4 dias cai uma questão do que você marcou" do Prisma).
+3. **Conceitos por questão com aceitar/rejeitar** (triagem de card na origem, F87) e **caderno de erros**.
+4. **Faixa de padrões entre sessões** (resto do PRD `hub-aba-analise`).
+5. **Cadeia prévia nos simulados** e migração das análises antigas, se o custo se pagar.
+
 ## Technical Context
 
 - **Tela:** `core/templates/hub.html` -- `qzRevelar`, `qzSolucao`, `qzAnalise`, `qzSalvarMeta`, `qzFim`, bloco `#qz-meta-erro` e os estilos `.qz-*`. Montagem e checagem por `tools/hub.py --build`; publish sempre na URL do HANDOFF, sem `capabilities` (os campos novos viajam no doc `respostas/<lista>_<num>`, que a página já escreve).

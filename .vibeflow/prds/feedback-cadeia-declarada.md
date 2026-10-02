@@ -8,7 +8,7 @@ O feedback pós-questão da aba Listas erra o diagnóstico e polui a tela. O ope
 
 - **A página adivinha a quebra pela letra marcada.** Cada alternativa errada carrega um `elo` e a letra marcada pinta esse elo como "provável quebra". Das 7 análises gravadas (t26, t96), 5 foram refeitas "com o racional declarado" e na t96 Q8 o veredito dele foi "discordo". O modelo confunde "por que esta alternativa está errada" com "onde a cadeia do aluno quebrou": na t96 Q17 ele marcou A (que cai no elo 1), tinha o elo 1 firme e a lacuna real era o elo 2, para o qual nenhuma alternativa aponta.
 - **A cadeia nem sempre é uma cadeia.** Na t96 Q8 os 4 elos são 4 julgamentos paralelos, um por alternativa, em ordem arbitrária. Na t96 Q14 um único elo ("aplicar os vetos do 1o ano") engole três alternativas e não localiza a crença errada (suco). Os elos são escritos como habilidade abstrata ("Situar o corte do açúcar"), difícil de autoavaliar.
-- **A pergunta de coleta é a errada.** Os 8 chips de "Onde quebrou?" pedem a causa, não o elo. Em 6 dos 8 erros com chip ele marcou "Não sabia" e usou o campo livre para declarar elo a elo ("elo 1 acertei, quebrei no 2, o 3 acertei também").
+- **A pergunta de coleta é a errada.** Os 8 chips de "Onde quebrou?" pedem a causa, não o elo. Das 7 respostas com chip, 5 ficaram em "Não sabia", e em 3 ele usou o campo livre para declarar elo a elo ("elo 1 acertei, quebrei no 2, o 3 acertei também"). ⚰️ *A 1a redação dizia "6 dos 8": contagem errada, corrigida no mesmo dia contra `tmp/bancada/respostas`.*
 - **A tela empilha blocos.** Solução (pede, leitura das letras, cadeia, alternativas), campo de racional, 8 chips e a caixa de Análise (5 campos, veredito de 3 botões, nota).
 
 Além disso, o feedback só existe no fim da lista (modo prova, decisão de 26/09) e não há como grifar o enunciado, que é onde moram os discriminadores, comportas e cutoffs que os elos cobram.
@@ -86,6 +86,6 @@ Não entra nas specs deste PRD; é a fila que vem depois dele, na ordem:
 ## Open Questions
 
 - **Seleção por toque dentro do artifact:** o grifo depende de a seleção de texto funcionar no celular dele dentro da página publicada. Validar com um protótipo antes de fechar a spec do item 3; se falhar, o plano B é grifar por toque em frase.
-- **Mecânica da conferência pela API:** proposta é leitura sob demanda, só da questão em dúvida, para `tmp/` (nunca em lote, nunca gravada em `questoes/*`), com o token dele (`.emed_token`, válido até 26/10). Fechar na spec do item 1, com a lápide da REGRA DURA do brief no mesmo commit.
+- **Conferência do comentário pela API: BLOQUEADA em 02/10/2026.** O classificador de permissões do harness negou a edição que criava o flag em `tools/emed_api.py`. Virou a spec `feedback-cadeia-declarada-part-1b`, que espera o operador configurar o classificador (settings de usuário, com o contexto da decisão dele). Até lá a REGRA DURA do brief segue em vigor e a conferência com o professor continua sendo dele, na plataforma, nas divergentes.
 - **Análises antigas (t26, t96):** render legado ou conversão de exibição (`ok` -> Sim, `quebrou` -> Não, `nao_usou` -> Desatenção, `nao_avaliado` -> sem declaração). Decidir na spec do item 2.
 - **Veredito de 3 botões:** proposta é mostrá-lo só quando o agente apontar conflito com a declaração. Confirmar com o operador na primeira lista de aceitação.

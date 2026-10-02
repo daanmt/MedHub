@@ -2,6 +2,8 @@
 
 > Escrita em 2026-10-02 (s211). PRD: `.vibeflow/prds/feedback-cadeia-declarada.md` (Scope v0, item 1).
 > Ordem de execução do PRD: part-1 -> part-2 -> part-3 -> part-4 -> part-5 -> part-6.
+>
+> 🔴 **Emenda de 02/10/2026 (mesma sessão, decisão do autor da spec):** a conferência do comentário pela API SAIU desta part e virou a `part-1b` (BLOQUEADA). O classificador de permissões do harness negou a edição que acrescentava `--comentario` em `tools/emed_api.py` (motivos declarados: `[PII Data Handling]` e `[Instruction Poisoning]`). Ninguém contornou: o subagente reverteu o que tinha entrado no arquivo e parou. O que segue abaixo marcado com ⚰️ foi movido; o resto do contrato v3 não depende da API. A REGRA DURA "sem ler o comentário do professor" do brief **continua em vigor** até a part-1b ser destravada pelo operador.
 
 ## Objetivo
 
@@ -24,9 +26,9 @@ O operador nomeou os defeitos (02/10): "cadeia mal construída" e "alternativa n
 1. **Validador v3.** `db.solucao_v3_problemas(doc, catalogo=None)` devolve `[]` para o exemplo do brief e nomeia cada defeito abaixo, um teste por defeito em `tools/test_emed_banco.py` (`test_solucao_v3_*`):
    cadeia com menos de 2 ou mais de 4 elos; elo sem `elo`, `chave`, `habilidade` ou `tipo`; `tipo` fora de `identificar | recordar | descartar`; 1o elo que não é `identificar`; nenhuma `recordar`; ordem violada (identificar antes de recordar antes de descartar); `descartar` sem `letra`, com letra inexistente ou com a letra certa; alternativa sem `porque`; número de certas diferente de 1; `pede` vazio; `objetivo` fora da lista fechada.
 2. **Convivência v2/v3.** `db.solucao_problemas(doc)` despacha por `versao` (3 -> v3; senão v2); `solucao_estruturada` devolve o dict para `versao` 2 e 3; `emed_upsert_solucoes` grava doc v3 válido e continua gravando doc v2 (os testes v2 existentes passam SEM alteração).
-3. **Conferência pela API.** `python -X utf8 tools/emed_api.py --lista tN --comentario NUM` imprime em stdout SÓ o comentário do professor da questão NUM (texto, via `html_para_texto`), e nada chega a disco. Testes em `tools/test_emed_api.py`: `test_comentario_sai_so_em_stdout_e_nada_em_disco`, `test_comentario_recusa_com_apply_ou_out` (erro de uso, exit 1, sem rede), `test_comentario_sem_o_campo_e_recusa_nomeada`. O teste de propriedade existente (`test_propriedade_nada_alem_da_whitelist_chega_a_disco_ou_saida`) segue verde para todos os outros caminhos.
-4. **Brief reescrito para a v3**, com o exemplo JSON validado por teste (`test_exemplo_do_brief_passa_no_validador`: extrai o bloco do brief e roda o validador), e as duas cláusulas revogadas com o rito de 3 passos do `AGENTE.md §10.10` no mesmo commit: "sem ler o comentário do professor" e "cada errada aponta o elo cuja falha leva a ela". Lápide (`⚰️` + data + motivo) no brief, em `.claude/commands/banco-emed.md` §Solução MedHub e §`emed_api.py`, e na docstring de `tools/emed_api.py`. Gate `CONTRATO_REVOGADO` verde.
-5. **Harness:** `python tools/sync_skills.py --check` exit 0; `python -X utf8 tools/auto_check.py --changed` PASSED; `python -m pytest tools/ -q` verde (a flag `--comentario` aparece na skill -- gate D5).
+3. ⚰️ *Conferência pela API (`emed_api.py --comentario NUM`): movida para a `part-1b` em 02/10/2026 -- edição barrada pelo classificador.* Nesta part: `tools/emed_api.py` e `tools/test_emed_api.py` ficam INTOCADOS e `test_propriedade_nada_alem_da_whitelist_chega_a_disco_ou_saida` segue verde.
+4. **Brief reescrito para a v3**, com o exemplo JSON validado por teste (`test_exemplo_do_brief_passa_no_validador`: extrai o bloco do brief e roda o validador), e a cláusula "cada errada aponta o elo cuja falha leva a ela" revogada com o rito de 3 passos do `AGENTE.md §10.10` no mesmo commit: lápide (`⚰️` + data + motivo) no brief e em `.claude/commands/banco-emed.md` §Solução MedHub, e o termo no registro do gate (`docs/MEMORIA-AUDITORIA.md` §12). Gate `CONTRATO_REVOGADO` verde. ⚰️ *A revogação de "sem ler o comentário do professor" foi para a part-1b.*
+5. **Harness:** `python tools/sync_skills.py --check` exit 0; `python -X utf8 tools/auto_check.py --changed` PASSED; `python -m pytest tools/ -q` verde.
 6. **Craftsmanship:** nenhum `import sqlite3` fora de `app/utils/db.py`; nenhum valor do comentário em mensagem de recusa, log ou arquivo; português com acentos e pontuação ASCII (`->`, `--`) em brief, skill e docstrings.
 
 ## Scope
@@ -63,11 +65,9 @@ Regras que o brief passa a carregar:
 - **`habilidade` = rótulo reutilizável** entre questões (infinitivo, sem detalhe do caso) -- é a entrada do ledger de habilidades.
 - **`alternativas`:** toda letra com `porque` (1 frase); exatamente uma `certa`. Alternativa errada NÃO carrega mais `elo` (presente = ignorado).
 - Enunciado negativo (EXCETO/INCORRETA): o 1o elo `identificar` é a leitura do comando.
-- **Fontes, nesta ordem:** resumos (`get_topic_context`) -> apostila do EMED em PDF dentro de `resumos/` -> `/pesquisar-evidencia` para afirmação decisiva. O subagente NÃO chama a API: devolve a lista "dúvidas de habilidade" (questão + o que duvida), e o PRINCIPAL confere uma a uma com `emed_api.py --comentario`. O comentário é lente de verificação: nunca é copiado nem parafraseado para a cadeia, e não entra em arquivo, hub ou git.
+- **Fontes, nesta ordem:** resumos (`get_topic_context`) -> apostila do EMED em PDF dentro de `resumos/` -> `/pesquisar-evidencia` para afirmação decisiva. ⚰️ *A conferência do comentário pela API (subagente devolve "dúvidas de habilidade", o principal confere com `emed_api.py --comentario`) foi para a part-1b.* Enquanto isso, dúvida que resumos e apostilas não fecham vira `divergente` + `conferir`, como já era.
 
-**`emed_api.py --comentario NUM`:** exige `--lista`; busca as páginas até a posição NUM; lê `solution.sanitized_complete` do item (campo ausente = `RECUSA:` que cita o NOME da chave e manda rodar `--esquema`); imprime só o texto. Incompatível com `--apply` e `--out`. Uma questão por corrida. Token e pausas como hoje.
-
-**Arquivos (6):** `docs/SOLUCAO-MEDHUB-BRIEF.md` · `app/utils/db.py` · `tools/emed_api.py` · `tools/test_emed_banco.py` · `tools/test_emed_api.py` · `.claude/commands/banco-emed.md` (+ espelho gerado por `sync_skills`).
+**Arquivos (5):** `docs/SOLUCAO-MEDHUB-BRIEF.md` · `app/utils/db.py` · `tools/test_emed_banco.py` · `.claude/commands/banco-emed.md` (+ espelho gerado por `sync_skills`) · `docs/MEMORIA-AUDITORIA.md` (o registro do termo revogado).
 
 ## Anti-scope
 

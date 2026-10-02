@@ -2513,9 +2513,13 @@ _COLUNAS_EMED_S = ("id", "lista", "num", "solucao", "divergente", "fontes", "obj
 
 #: s200 (pedido do operador): a Solução v2 é a CADEIA de elos -- `{versao: 2, pede, cadeia:
 #: [{elo, chave}], alternativas: {LETRA: {certa|elo, porque}}, conferir}` --, gravada como JSON
-#: canônico em `solucao`. Cada alternativa errada aponta o elo (1-based) cuja falha leva a ela:
-#: é o que deixa a página marcar ONDE a cadeia do aluno quebrou. `objetivo` (o que a questão
-#: cobra, lista fechada por tema) tem coluna própria: é a chave do mapa de fragilidade.
+#: canônico em `solucao`. `objetivo` (o que a questão cobra, lista fechada por tema) tem coluna
+#: própria: é a chave do mapa de fragilidade.
+#: ⚰️ 02/10/2026 (s211, feedback-cadeia-declarada part-1): a v2 ligava cada alternativa errada a
+#: um elo para a página adivinhar a quebra pela letra -- errou em 5 das 7 análises. A v3
+#: (`solucao_v3_problemas`) é a sequência identificar -> recordar -> descartar que o ALUNO
+#: declara elo a elo; a alternativa só explica a si mesma. A v2 segue lida e gravada (t26/t96).
+TIPOS_ELO_V3 = ("identificar", "recordar", "descartar")
 
 
 def _ensure_emed_tables(conn):
@@ -2975,8 +2979,79 @@ def solucao_v2_problemas(doc, catalogo=None):
     return probs
 
 
+def solucao_v3_problemas(doc, catalogo=None):
+    """Problemas de forma de uma Solução v3 (lista vazia = ok). PURA com `catalogo`; sem ele,
+    lê `core/objetivos.json`. Contrato: `docs/SOLUCAO-MEDHUB-BRIEF.md` (s211).
+
+    `cadeia` = 2 a 4 elos `{tipo, elo, chave, habilidade}` em sequência: o 1º `identificar`,
+    ao menos um `recordar`, a ordem identificar -> recordar -> descartar sem voltar; cada
+    `descartar` com `letra` de uma alternativa ERRADA. `alternativas` = letra -> `{porque}`,
+    exatamente uma com `certa: true` (o `elo` de uma errada, herança da v2, é ignorado);
+    `pede`; `objetivo`, quando vem, da lista fechada do tema (`problema_de_objetivo`)."""
+    probs = []
+    cadeia = doc.get("cadeia")
+    if not isinstance(cadeia, list) or not cadeia:
+        return ["cadeia vazia"]
+    if not 2 <= len(cadeia) <= 4:
+        probs.append(f"cadeia com {len(cadeia)} elo(s) (esperado 2 a 4)")
+    alts = doc.get("alternativas")
+    alts = alts if isinstance(alts, dict) else {}
+    certas = [k for k, v in alts.items() if isinstance(v, dict) and v.get("certa") is True]
+    tipos = []
+    for i, e in enumerate(cadeia, 1):
+        if not isinstance(e, dict):
+            probs.append(f"elo {i} não é objeto")
+            tipos.append(None)
+            continue
+        probs += [f"elo {i} sem {c}" for c in ("elo", "chave", "habilidade", "tipo")
+                  if _vazio(e.get(c))]
+        tipo = _txt(e.get("tipo")).strip()
+        if tipo and tipo not in TIPOS_ELO_V3:
+            probs.append(f"elo {i} com tipo fora de {' | '.join(TIPOS_ELO_V3)}: {tipo}")
+        tipos.append(tipo if tipo in TIPOS_ELO_V3 else None)
+        if tipo == "descartar":
+            letra = _txt(e.get("letra")).strip().upper()
+            if not letra:
+                probs.append(f"elo {i} descartar sem letra")
+            elif letra not in alts:
+                probs.append(f"elo {i} descarta a letra {letra}, inexistente nas alternativas")
+            elif letra in certas:
+                probs.append(f"elo {i} descarta a letra certa ({letra})")
+    if tipos and tipos[0] is not None and tipos[0] != "identificar":
+        probs.append("1º elo não é identificar")
+    if "recordar" not in tipos:
+        probs.append("nenhum elo recordar")
+    validos = [(i, t) for i, t in enumerate(tipos, 1) if t]
+    for (_, antes), (i, t) in zip(validos, validos[1:]):
+        if TIPOS_ELO_V3.index(t) < TIPOS_ELO_V3.index(antes):
+            probs.append(f"ordem violada no elo {i}: {t} depois de {antes} "
+                         "(identificar -> recordar -> descartar)")
+    if not alts:
+        probs.append("alternativas vazias")
+    if alts and len(certas) != 1:
+        probs.append(f"{len(certas)} alternativas certas (esperado 1)")
+    probs += [f"alternativa {letra} sem porque" for letra, v in alts.items()
+              if not isinstance(v, dict) or _vazio(v.get("porque"))]
+    if _vazio(doc.get("pede")):
+        probs.append("pede vazio")
+    if not _vazio(doc.get("objetivo")):
+        prob = problema_de_objetivo(doc.get("lista"), doc.get("objetivo"),
+                                    catalogo if catalogo is not None else carregar_objetivos())
+        if prob:
+            probs.append(prob)
+    return probs
+
+
+def solucao_problemas(doc, catalogo=None):
+    """Validador da Solução estruturada pela `versao` do doc: 3 -> v3; o resto -> v2. PURA com
+    `catalogo`. É o que o writer (`emed_upsert_solucoes`) e o brief chamam."""
+    if _int_ou_none(doc.get("versao")) == 3:
+        return solucao_v3_problemas(doc, catalogo=catalogo)
+    return solucao_v2_problemas(doc, catalogo=catalogo)
+
+
 def solucao_estruturada(texto):
-    """A Solução v2 como dict (`versao` 2), ou None se o texto é a v1 (prosa). PURA."""
+    """A Solução estruturada como dict (`versao` 2 ou 3), ou None se o texto é a v1 (prosa). PURA."""
     import json as _json
     t = (texto or "").lstrip()
     if not t.startswith("{"):
@@ -2985,7 +3060,7 @@ def solucao_estruturada(texto):
         d = _json.loads(t)
     except ValueError:
         return None
-    return d if isinstance(d, dict) and d.get("versao") == 2 else None
+    return d if isinstance(d, dict) and d.get("versao") in (2, 3) else None
 
 
 def emed_upsert_solucoes(rows, aplicar=True):
@@ -2993,8 +3068,8 @@ def emed_upsert_solucoes(rows, aplicar=True):
 
     Devolve `{novas, atualizadas, iguais, invalidas}`; `hash` = texto + divergente +
     fontes + objetivo. Obrigatórios: `lista`, `num` e a solução -- `solucao` não-vazia (v1,
-    texto) ou a cadeia v2 (s200: `cadeia` + `alternativas` + `pede`, validadas por
-    `solucao_v2_problemas` e gravadas como JSON canônico em `solucao`). `objetivo` AUSENTE do
+    texto) ou a cadeia v2/v3 (s200/s211: `cadeia` + `alternativas` + `pede`, validadas por
+    `solucao_problemas` pela `versao` e gravadas como JSON canônico em `solucao`). `objetivo` AUSENTE do
     doc preserva o do banco (re-ingerir um arquivo v1 antigo não apaga o objetivo); presente,
     tem de estar na lista fechada do tema (`core/objetivos.json`, s201) -- fora dela = `invalidas`.
     `aplicar=False` mede pelo mesmo caminho e não roda DDL.
@@ -3006,11 +3081,15 @@ def emed_upsert_solucoes(rows, aplicar=True):
     for doc in rows:
         num = _int_ou_none(doc.get("num"))
         if doc.get("cadeia") is not None:
-            if solucao_v2_problemas(doc, catalogo=catalogo):
+            if solucao_problemas(doc, catalogo=catalogo):
                 invalidas.append(doc.get("_doc_id"))
                 continue
-            texto = _json.dumps({"versao": 2, "pede": _txt(doc.get("pede")).strip(),
-                                 "cadeia": doc["cadeia"], "alternativas": doc["alternativas"],
+            v3 = _int_ou_none(doc.get("versao")) == 3
+            alts = doc["alternativas"]
+            if v3:      # s211: na v3 a alternativa não aponta elo -- a herança da v2 não grava
+                alts = {k: {c: x for c, x in v.items() if c != "elo"} for k, v in alts.items()}
+            texto = _json.dumps({"versao": 3 if v3 else 2, "pede": _txt(doc.get("pede")).strip(),
+                                 "cadeia": doc["cadeia"], "alternativas": alts,
                                  "conferir": _txt(doc.get("conferir")).strip()},
                                 sort_keys=True, ensure_ascii=False)
         elif problema_de_objetivo(doc.get("lista"), doc.get("objetivo"), catalogo):

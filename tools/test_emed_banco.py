@@ -10,6 +10,8 @@ import sqlite3
 import sys
 from pathlib import Path
 
+import pytest
+
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "tools"))
@@ -659,3 +661,173 @@ def test_tarefas_com_questoes_le_o_banco_e_tolera_tabela_ausente(tmp_path, monke
     _escrever(base, "questoes", "t26_1", _questao(1))
     assert emed_banco.main(["--ingerir", str(base), "--apply"]) == 0
     assert db.tarefas_com_questoes() == {26}
+
+
+# ------------------------------------------------ s211: Solução v3 (feedback-cadeia-declarada part-1)
+
+_CAT = {"temas": [{"tema": "DMG", "listas": ["t26"],
+                   "objetivos": ["Indicação de insulina", "DM prévio x DMG"]}]}
+
+
+def _v3(num, **extra):
+    """Solução v3 sintética: identificar -> recordar -> descartar C; B certa."""
+    doc = {"lista": "t26", "num": num, "versao": 3, "objetivo": "Indicação de insulina",
+           "pede": "A conduta na gestante com glicemia fora da meta.",
+           "cadeia": [
+               {"tipo": "identificar", "elo": "Identificou que 2+ valores estão acima da meta.",
+                "chave": "2+ valores acima da meta = controle inadequado.",
+                "habilidade": "Classificar o controle glicêmico na gestação"},
+               {"tipo": "recordar", "elo": "Recordou que a insulina é a 1ª escolha na gestação.",
+                "chave": "Insulina é a 1ª escolha.", "habilidade": "Escolher o fármaco na gestação"},
+               {"tipo": "descartar", "letra": "C", "elo": "Descartou a metformina (C) como 2ª linha.",
+                "chave": "Metformina só se a insulina não for viável.",
+                "habilidade": "Usar o achado que exclui o tratamento concorrente"}],
+           "alternativas": {"A": {"porque": "Dieta já falhou."},
+                            "B": {"certa": True, "porque": "Insulina."},
+                            "C": {"porque": "Metformina é 2ª linha."},
+                            "D": {"porque": "Glibenclamida é contraindicada."}},
+           "divergente": False, "conferir": "", "fontes": "SBD 2026"}
+    doc.update(extra)
+    return doc
+
+
+def _v3_probs(doc):
+    return db.solucao_v3_problemas(doc, catalogo=_CAT)
+
+
+def test_solucao_v3_valida_nao_tem_problema():
+    assert _v3_probs(_v3(1)) == []
+    sem_descartar = _v3(1)
+    sem_descartar["cadeia"] = sem_descartar["cadeia"][:2]          # 2 elos, 0 descartar: ok
+    assert _v3_probs(sem_descartar) == []
+    com_elo_herdado = _v3(1)
+    com_elo_herdado["alternativas"]["A"]["elo"] = 9                 # elo da v2 numa errada: ignorado
+    assert _v3_probs(com_elo_herdado) == []
+
+
+def test_solucao_v3_cadeia_com_menos_de_2_ou_mais_de_4_elos():
+    curta = _v3(1)
+    curta["cadeia"] = curta["cadeia"][:1]
+    assert any("cadeia com 1 elo(s)" in p for p in _v3_probs(curta))
+    longa = _v3(1)
+    longa["cadeia"] = longa["cadeia"][:2] + [dict(longa["cadeia"][2], letra=x) for x in "ACD"]
+    assert any("cadeia com 5 elo(s)" in p for p in _v3_probs(longa))
+    assert _v3_probs(_v3(1, cadeia=[])) == ["cadeia vazia"]
+
+
+@pytest.mark.parametrize("campo", ["elo", "chave", "habilidade", "tipo"])
+def test_solucao_v3_elo_sem_campo_obrigatorio(campo):
+    doc = _v3(1)
+    del doc["cadeia"][1][campo]
+    assert f"elo 2 sem {campo}" in _v3_probs(doc)
+
+
+def test_solucao_v3_tipo_fora_do_vocabulario():
+    doc = _v3(1)
+    doc["cadeia"][1]["tipo"] = "aplicar"
+    assert any(p.startswith("elo 2 com tipo fora de identificar | recordar | descartar")
+               for p in _v3_probs(doc))
+
+
+def test_solucao_v3_primeiro_elo_nao_e_identificar():
+    doc = _v3(1)
+    doc["cadeia"][0]["tipo"] = "recordar"
+    assert "1º elo não é identificar" in _v3_probs(doc)
+
+
+def test_solucao_v3_sem_nenhum_recordar():
+    doc = _v3(1)
+    doc["cadeia"][1]["tipo"] = "identificar"
+    assert "nenhum elo recordar" in _v3_probs(doc)
+
+
+def test_solucao_v3_ordem_violada():
+    doc = _v3(1)
+    doc["cadeia"] = [doc["cadeia"][0], doc["cadeia"][2], doc["cadeia"][1]]  # descartar antes de recordar
+    assert any(p.startswith("ordem violada no elo 3: recordar depois de descartar")
+               for p in _v3_probs(doc))
+
+
+def test_solucao_v3_descartar_sem_letra():
+    doc = _v3(1)
+    del doc["cadeia"][2]["letra"]
+    assert "elo 3 descartar sem letra" in _v3_probs(doc)
+
+
+def test_solucao_v3_descartar_letra_inexistente():
+    doc = _v3(1)
+    doc["cadeia"][2]["letra"] = "E"
+    assert any("descarta a letra E, inexistente" in p for p in _v3_probs(doc))
+
+
+def test_solucao_v3_descartar_a_letra_certa():
+    doc = _v3(1)
+    doc["cadeia"][2]["letra"] = "b"
+    assert "elo 3 descarta a letra certa (B)" in _v3_probs(doc)
+
+
+def test_solucao_v3_alternativa_sem_porque():
+    doc = _v3(1)
+    doc["alternativas"]["D"] = {"porque": "  "}
+    assert "alternativa D sem porque" in _v3_probs(doc)
+
+
+def test_solucao_v3_numero_de_certas_diferente_de_1():
+    duas = _v3(1)
+    duas["alternativas"]["A"]["certa"] = True
+    assert "2 alternativas certas (esperado 1)" in _v3_probs(duas)
+    nenhuma = _v3(1)
+    nenhuma["alternativas"]["B"].pop("certa")
+    assert "0 alternativas certas (esperado 1)" in _v3_probs(nenhuma)
+
+
+def test_solucao_v3_pede_vazio():
+    assert "pede vazio" in _v3_probs(_v3(1, pede=""))
+
+
+def test_solucao_v3_objetivo_fora_da_lista_fechada():
+    probs = _v3_probs(_v3(1, objetivo="Rastreio universal"))
+    assert any("fora da lista fechada" in p for p in probs)
+    assert _v3_probs(_v3(1, objetivo="outro: Prevenção de acidentes")) == []
+
+
+def test_solucao_problemas_despacha_pela_versao():
+    """`versao` 3 -> v3; 2 (ou ausente) -> v2: o mesmo doc v2 continua válido pela v2 e é
+    recusado pela v3 (sem `tipo`/`habilidade`)."""
+    assert db.solucao_problemas(_v3(1), catalogo=_CAT) == []
+    assert db.solucao_problemas(_v2(1), catalogo=_CAT) == []
+    assert db.solucao_problemas(dict(_v2(1), versao=3), catalogo=_CAT)
+    assert db.solucao_problemas(_v3(1, versao="3"), catalogo=_CAT) == []
+
+
+def test_solucao_v3_grava_e_v2_continua_gravando(tmp_path, monkeypatch, capsys):
+    """Convivência: v3 válida grava (`versao` 3, sem o `elo` herdado nas alternativas), v3 torta
+    vai para `invalidas`, a v2 do mesmo lote grava, e `solucao_estruturada` devolve as duas."""
+    _usar_db(tmp_path, monkeypatch)
+    base = tmp_path / "sol"
+    herdado = _v3(1)
+    herdado["alternativas"]["A"]["elo"] = 2
+    _escrever(base, "solucoes", "t26_1", herdado)
+    _escrever(base, "solucoes", "t26_2", _v2(2))
+    torta = _v3(3)
+    torta["cadeia"][0]["tipo"] = "descartar"
+    _escrever(base, "solucoes", "t26_3", torta)
+    assert emed_banco.main(["--solucoes", str(base), "--apply", "--json"]) == 0
+    c = _json_saida(capsys)
+    assert c["novas"] == 2 and c["invalidas"] == ["t26_3"]
+    s = {r["num"]: db.solucao_estruturada(r["solucao"]) for r in db.emed_listar_solucoes("t26")}
+    assert s[1]["versao"] == 3 and s[1]["cadeia"][2]["letra"] == "C"
+    assert "elo" not in s[1]["alternativas"]["A"]
+    assert s[2]["versao"] == 2 and s[2]["alternativas"]["C"]["elo"] == 2
+    assert db.solucao_estruturada('{"versao": 4, "cadeia": []}') is None
+
+
+def test_exemplo_do_brief_passa_no_validador():
+    """O exemplo JSON do brief É o contrato: extraído do bloco ```json e validado pelo mesmo
+    validador do writer, contra o catálogo real de objetivos."""
+    brief = _BRIEF.read_text(encoding="utf-8")
+    blocos = re.findall(r"```json\n(.*?)\n```", brief, re.S)
+    assert blocos, "o brief perdeu o bloco ```json do exemplo"
+    exemplo = json.loads(blocos[0])
+    assert exemplo["versao"] == 3
+    assert db.solucao_problemas(exemplo) == []

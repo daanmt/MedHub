@@ -301,6 +301,7 @@ nunca convertido em métrica para o painel ficar verde.
 <!-- TERMO-REVOGADO: relearning que volta hoje | revisar.md passos 3 e 5 (s204) -- F140: nenhuma nota devolve o card a fila no mesmo dia -->
 <!-- TERMO-REVOGADO: default `--new-limit 10` | fsrs-management v1.6 (s204) -- F140: decisao do operador em 28/09 ('saldo por teto'); no lote do player os novos enchem o saldo do teto, o 10 vale so na fila do chat -->
 <!-- TERMO-REVOGADO: atrasados → hoje → novos | fsrs-management v1.6 + revisar.md (s204) -- a fila usa 4 buckets desde o P3 part-2 (atrasados, erros_frescos, hoje, novos); a redacao de 3 sobreviveu em 3 portadores -->
+<!-- TERMO-REVOGADO: cuja falha leva a ela | docs/SOLUCAO-MEDHUB-BRIEF.md v3 + banco-emed.md secao Solucao MedHub (s211, feedback-cadeia-declarada part-1) -- a alternativa errada deixou de apontar o elo: a pagina adivinhava a quebra pela letra e errou em 5 das 7 analises; quem declara o elo e o aluno -->
 
 > **Por que os marcadores são comentários HTML:** eles não aparecem no render do documento (o
 > leitor humano lê a prosa acima, não a lista), mas são triviais de extrair. O registro fica onde a

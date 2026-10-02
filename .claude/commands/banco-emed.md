@@ -70,7 +70,7 @@ writers de `emed_questoes` / `emed_respostas`; allowlist F49). Dry-run é o defa
 | Flag | Função |
 |---|---|
 | `--ingerir DIR` | Upsert de `DIR/questoes/*.json` em `emed_questoes` (chave `lista+num`, `hash` de conteúdo). Imprime `novas/atualizadas/iguais/invalidas`; doc sem `lista`/`num`/`enunciado`/`gabarito` cai em `invalidas` sem abortar o lote. |
-| `--solucoes DIR` | (s199) Upsert de `DIR/solucoes/*.json` em `emed_solucoes` (writer `db.emed_upsert_solucoes`; chave `lista+num`). Doc v1: `lista`, `num`, `solucao` (texto), `divergente` (bool), `fontes`. **Doc v2 (s200):** `cadeia` + `alternativas` + `pede` no lugar de `solucao` (forma em §Solução MedHub; validada por `db.solucao_v2_problemas`, forma torta = `invalidas`) e `objetivo` (coluna própria; chave AUSENTE preserva o do banco; presente, tem de estar na lista fechada do tema em `core/objetivos.json` -- v1 e v2 --, senão `invalidas`). O `--exportar` leva a solução para o doc (`solucao_medhub` -- objeto na v2, texto na v1 --, `divergente`, `fontes_medhub`, `objetivo`), fora do `hash` e de `extras`. |
+| `--solucoes DIR` | (s199) Upsert de `DIR/solucoes/*.json` em `emed_solucoes` (writer `db.emed_upsert_solucoes`; chave `lista+num`). Doc v1: `lista`, `num`, `solucao` (texto), `divergente` (bool), `fontes`. **Doc v2 (s200) e v3 (s211):** `cadeia` + `alternativas` + `pede` no lugar de `solucao` (forma em §Solução MedHub; validada por `db.solucao_problemas` pela `versao`, forma torta = `invalidas`) e `objetivo` (coluna própria; chave AUSENTE preserva o do banco; presente, tem de estar na lista fechada do tema em `core/objetivos.json` -- v1 e v2 --, senão `invalidas`). O `--exportar` leva a solução para o doc (`solucao_medhub` -- objeto na v2, texto na v1 --, `divergente`, `fontes_medhub`, `objetivo`), fora do `hash` e de `extras`. |
 | `--registrar DIR` | Upsert de `DIR/respostas/*.json` em `emed_respostas` (mais nova vence). Imprime as contagens e, por lista, o resumo `feitas · acertos (solidas, duvidas, chutes) · erradas · tempo medio` **e a linha sugerida de `registrar_sessao_bulk.py`** (`--sessao NNN` a preencher). |
 | `--podar DIR` | Read-only: lista os `doc_id` **seguros** para apagar do artifact (questão: hash igual ao do banco; resposta: `respondido_em` igual). Escreve `DIR/podar_<colecao>.json` (`ids`, `n`, `nao_seguros`). A exclusão em si é `ArtifactData batch delete` (<= 50 por lote), feita pelo agente. |
 | `--colecao {questoes,respostas}` | Coleção alvo do `--podar` (default `questoes`). |
@@ -149,19 +149,21 @@ quando a solução depende de afirmação decisiva (dose, ponto de corte, condut
 `/pesquisar-evidencia`. **`divergente: true`** quando o raciocínio não chega ao gabarito (+ `conferir`,
 1 linha): é onde o operador confere o professor na plataforma, e onde aparece o padrão "diretriz antiga".
 
-🔴 **A forma é a CADEIA (v2, s200).** A v1 (4 linhas Pede/Decide/Gabarito/Cai) foi julgada pelo operador
+🔴 **A forma é a CADEIA (v2 na s200; v3 desde 02/10/2026, s211).** A v1 (4 linhas Pede/Decide/Gabarito/Cai) foi julgada pelo operador
 *"muito pobre, completamente diferente da análise dos erros que tínhamos nas autópsias ... elencando cada
 elo da cadeia de raciocínio lógico e inclusive apontando onde ele quebrou. Isso não é apenas importante,
-mas fundamental."* Forma v2: `pede` (1 frase) · `cadeia` = 2-5 elos `{elo, chave}` (o `elo` é a habilidade
-reutilizável do `/analisar-questao` §2, a `chave` é a informação que o resolve) · `alternativas` = TODAS as
-letras, a certa `{certa: true, porque}` e cada errada `{elo: k, porque}` com o elo (1-based) **cuja falha
-leva a ela** · `objetivo` = o que a questão cobra, de uma **lista fechada por tema** (DMG: "Critério
-diagnóstico (GJ/TOTG)", "DM prévio x DMG", "Indicação de insulina"...), para o mapa de fragilidade
-(`--status --por-objetivo`; pedido do operador: *"questões de DMG com objetivos diferentes ... aponta
-para áreas com maior fragilidade"*). **Lista fechada = [`core/objetivos.json`](../../core/objetivos.json)** (s201, portador único: o brief e
-`db.solucao_v2_problemas` leem dele; fora da lista só `outro: <rótulo>`; lista sem entrada no catálogo não grava objetivo --
+mas fundamental."* **Forma v3** (`versao: 3`): `pede` (1 frase) · `cadeia` = 2-4 elos em sequência
+`identificar` -> `recordar` -> `descartar` (0-2, com `letra` de distrator forte), cada um `{tipo, elo, chave,
+habilidade}` -- `elo` = frase sobre ESTA questão que o aluno declara (Sim / Incerteza / Desatenção / Não),
+`chave` = a informação que o resolve, `habilidade` = o rótulo reutilizável do ledger · `alternativas` = TODAS
+as letras com `porque`, exatamente uma `certa: true` · `objetivo` = o que a questão cobra, de uma **lista
+fechada por tema**, para o mapa de fragilidade (`--status --por-objetivo`; pedido do operador: *"questões de
+DMG com objetivos diferentes ... aponta para áreas com maior fragilidade"*). Validador: `db.solucao_problemas`
+(despacha pela `versao`; a v2 segue válida para t26/t96). **Lista fechada = [`core/objetivos.json`](../../core/objetivos.json)** (s201, portador único: o brief e
+o validador leem dele; fora da lista só `outro: <rótulo>`; lista sem entrada no catálogo não grava objetivo --
 tema novo ganha a entrada ANTES do subagente). Contrato completo e exemplo: o brief dos subagentes,
 [`docs/SOLUCAO-MEDHUB-BRIEF.md`](../../docs/SOLUCAO-MEDHUB-BRIEF.md).
+⚰️ *02/10/2026 (s211): revogada a regra v2 "cada errada `{elo: k}` com o elo cuja falha leva a ela" -- a página adivinhava a quebra pela letra marcada e errou em 5 das 7 análises (t26, t96); na v3 a alternativa só explica a si mesma.*
 
 **Na página (aba Listas):** ao revelar, a cadeia aparece numerada; a letra marcada acende o elo em que ela
 cai ("a sua letra cai neste elo"); cada letra errada **riscada** acende em verde o elo que ele executou;
@@ -170,7 +172,7 @@ do hub (`analises/*`), quando chega, **move a marca para o elo confirmado** (`qu
 cadeia -- o doc de análise não repete a cadeia) e pinta cada elo pelo `estados` que a análise declara. A tela de fim mostra firmes/feitas por objetivo.
 
 Cunhagem **por lista**, quando ela entra na semana (subagente Opus por lista, régua F93, com a v1 como
-rascunho quando houver), gravada em `tmp/solucoes_v2_<lista>/solucoes/<lista>_<num>.json` ->
+rascunho quando houver), gravada em `tmp/solucoes_v3_<lista>/solucoes/<lista>_<num>.json` ->
 `--solucoes <pasta> --apply --expect N` -> `--exportar` -> `ArtifactData batch update` (só os campos da
 solução, `if_version` do doc lido).
 

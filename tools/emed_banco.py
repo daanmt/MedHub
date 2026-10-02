@@ -17,6 +17,8 @@ Uso:
     python tools/emed_banco.py --podar tmp/bancada --colecao respostas
     python tools/emed_banco.py --exportar t26 --out tmp/emed_export
     python tools/emed_banco.py --erros t26
+    python tools/emed_banco.py --elos t26 --json
+    python tools/emed_banco.py --defeitos
     python tools/emed_banco.py --status --lista t26 --json
 
 Camada fina sobre `app.utils.db` -- não abre `sqlite3` próprio; toda escrita passa por
@@ -26,6 +28,7 @@ Exit: 0 ok; 1 erro de uso/leitura; 2 COUNT-ASSERT falhou.
 import argparse
 import json
 import os
+import re
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -367,24 +370,113 @@ def cmd_exportar(args):
 
 
 def texto_solucao(texto):
-    """A solução do hub em texto corrido: v1 como está; v2 (cadeia) numerada, com a letra de
-    cada alternativa errada apontando o elo em que ela cai. PURA."""
-    v2 = db.solucao_estruturada(texto)
-    if not v2:
+    """A solução do hub em texto corrido: v1 como está; v2/v3 (cadeia) numerada. PURA.
+
+    v3 (s211): cada elo com o `tipo` (e a letra do `descartar`) e a `habilidade`; a alternativa só traz
+    o próprio porquê. v2 (legado t26/t96): a letra errada ainda mostra o elo em que cai, rotulado legado.
+    Nunca "cai no elo None": alternativa sem `elo` não aponta elo nenhum."""
+    sol = db.solucao_estruturada(texto)
+    if not sol:
         return texto or ""
-    linhas = [f"Pede: {v2.get('pede', '')}"]
-    for i, e in enumerate(v2.get("cadeia") or [], 1):
-        linhas.append(f"{i}. {e.get('elo', '')} -- {e.get('chave', '')}")
-    for letra in sorted(v2.get("alternativas") or {}):
-        a = v2["alternativas"][letra]
-        marca = "certa" if a.get("certa") is True else f"cai no elo {a.get('elo')}"
-        linhas.append(f"{letra} ({marca}): {a.get('porque', '')}")
-    if v2.get("conferir"):
-        linhas.append(f"Conferir: {v2['conferir']}")
+    v3 = sol.get("versao") == 3
+    linhas = [f"Pede: {sol.get('pede', '')}"]
+    for i, e in enumerate(sol.get("cadeia") or [], 1):
+        if v3:
+            tipo = e.get("tipo", "") + (f" {e.get('letra')}" if e.get("tipo") == "descartar" else "")
+            linhas.append(f"{i}. [{tipo}] {e.get('elo', '')} -- {e.get('chave', '')}"
+                          + (f" (habilidade: {e['habilidade']})" if e.get("habilidade") else ""))
+        else:
+            linhas.append(f"{i}. {e.get('elo', '')} -- {e.get('chave', '')}")
+    for letra in sorted(sol.get("alternativas") or {}):
+        a = sol["alternativas"][letra]
+        if a.get("certa") is True:
+            marca = " (certa)"
+        elif not v3 and a.get("elo"):
+            marca = f" (legado: cai no elo {a.get('elo')})"
+        else:
+            marca = ""
+        linhas.append(f"{letra}{marca}: {a.get('porque', '')}")
+    if sol.get("conferir"):
+        linhas.append(f"Conferir: {sol['conferir']}")
     return "\n".join(linhas)
 
 
-def leitura_metacognitiva(resposta, solucao_texto, letras=None):
+#: s211 (feedback-cadeia-declarada part-5): o rótulo de cada estado declarado (vocabulário no brief
+#: §Estado por elo; `db.ESTADOS_ELO_EMED` é o mesmo conjunto).
+ROTULO_ESTADO = {"sim": "Sim", "incerteza": "Incerteza", "desatencao": "Desatenção", "nao": "Não"}
+ORDEM_REVISAO = ("nao", "incerteza", "desatencao")
+
+
+def _json_ou(valor, padrao):
+    """Coluna JSON do banco (ou o próprio objeto) -> objeto; vazio/torto -> `padrao`. PURA."""
+    if isinstance(valor, (list, dict)):
+        return valor
+    try:
+        return json.loads(valor) if valor else padrao
+    except (TypeError, ValueError):
+        return padrao
+
+
+def declaracao(resposta, solucao_texto):
+    """Os elos da cadeia com o estado DECLARADO pelo aluno (s211). PURA.
+
+    `elos` alinhado à cadeia = declarado; sem `elos`, certa e sólida = "presumido Sim" (regra só de
+    leitura); o resto = "sem declaração". Conflito determinístico: elo `descartar` cuja `letra` é a
+    marcada e declarado `sim` (só v3: a v2 não tem `tipo`)."""
+    sol = db.solucao_estruturada(solucao_texto) or {}
+    cad = sol.get("cadeia") or []
+    elos = _json_ou(resposta.get("elos"), None)
+    declarado = isinstance(elos, list) and len(elos) == len(cad) and bool(cad)
+    presumido = (not declarado and resposta.get("correta") == 1
+                 and resposta.get("confianca") == "solida")
+    letra = (resposta.get("letra") or "").upper()
+    itens, conflitos = [], []
+    for i, e in enumerate(cad, 1):
+        st = elos[i - 1] if declarado else ("sim" if presumido else "")
+        rot = "presumido Sim" if presumido else (ROTULO_ESTADO.get(st) or "sem declaração")
+        itens.append({"i": i, "estado": st, "rotulo": rot, "elo": e.get("elo", ""),
+                      "habilidade": e.get("habilidade", ""), "tipo": e.get("tipo", "")})
+        if (declarado and e.get("tipo") == "descartar" and st == "sim"
+                and str(e.get("letra") or "").upper() == letra):
+            conflitos.append(i)
+    return {"versao": sol.get("versao"), "declarado": declarado, "presumido": presumido,
+            "elos": itens, "conflitos": conflitos}
+
+
+def alternativas_por_letra(texto):
+    """"A) ..." por linha -> {letra: texto} (linha de continuação cola na anterior), o mesmo parser
+    da página (`qzAlts`), para os offsets dos grifos baterem com o texto que ela mostrou. PURA."""
+    out, ultima = {}, None
+    for ln in str(texto or "").splitlines():
+        m = re.match(r"^\s*\(?([A-Ea-e])\s*[\)\.\-:\]]\s*(.*)$", ln)
+        if m:
+            ultima = m.group(1).upper()
+            out[ultima] = m.group(2)
+        elif ultima and ln.strip():
+            out[ultima] += "\n" + ln.strip()
+    return out
+
+
+def trechos_grifados(grifos, enunciado, alternativas):
+    """Os trechos que ele grifou, em TEXTO (nunca offsets). Intervalo inválido ou texto ausente
+    (questão podada) = cala. PURA."""
+    g = _json_ou(grifos, {})
+    if not isinstance(g, dict):
+        return []
+    textos = {"enun": enunciado or ""}
+    textos.update(alternativas_por_letra(alternativas))
+    saida = []
+    for chave in ["enun"] + sorted(k for k in g if k != "enun"):
+        texto = textos.get(chave) or ""
+        for v in g.get(chave) or []:
+            if (isinstance(v, list) and len(v) == 2 and all(isinstance(x, int) for x in v)
+                    and 0 <= v[0] < v[1] <= len(texto)):
+                saida.append({"onde": "enunciado" if chave == "enun" else chave,
+                              "trecho": texto[v[0]:v[1]]})
+    return saida
+
+
+def leitura_metacognitiva(resposta, solucao_texto, letras=None, legado=True):
     """O rastro metacognitivo de UMA resposta contra a Solução v2 (s200, pedido do operador:
     "as alternativas riscadas e a dúvida entre duas sem dúvida contribuem para a análise"). PURA.
 
@@ -393,9 +485,13 @@ def leitura_metacognitiva(resposta, solucao_texto, letras=None):
     - `elos_ok`: elos que ele executou -- os de cada letra ERRADA que ele riscou;
     - `elo_letra`: o elo em que a letra marcada cai (None se acertou);
     - `riscou_certa`: eliminou o gabarito -- crença firme contra a resposta, não descuido.
-    Sem Solução v2, os elos ficam vazios e o resto segue."""
+    Sem Solução v2, os elos ficam vazios e o resto segue.
+    ⚰️ s211: `elos_ok` e `elo_letra` são a leitura PELAS LETRAS, revogada em 02/10/2026 -- só saem com
+    `legado=True` (solução v2 SEM declaração do aluno); fora disso ficam vazios."""
     risc = [x for x in db.riscadas_norm(resposta.get("riscadas")).split(",") if x]
     v2 = db.solucao_estruturada(solucao_texto) or {}
+    if v2.get("versao") != 2:
+        legado = False
     alts = v2.get("alternativas") or {}
     todas = sorted(alts) if alts else sorted(letras or [])
     gab = (resposta.get("gabarito") or "").upper()
@@ -404,8 +500,8 @@ def leitura_metacognitiva(resposta, solucao_texto, letras=None):
                       if x in alts and not alts[x].get("certa") and alts[x].get("elo")})
     marcada = alts.get(letra) or {}
     return {"riscadas": risc, "restantes": [x for x in todas if x not in risc],
-            "elos_ok": elos_ok,
-            "elo_letra": None if marcada.get("certa") or not marcada else marcada.get("elo"),
+            "elos_ok": elos_ok if legado else [],
+            "elo_letra": None if (not legado or marcada.get("certa") or not marcada) else marcada.get("elo"),
             "riscou_certa": bool(gab and gab in risc)}
 
 
@@ -418,23 +514,26 @@ def texto_leitura(m, confianca):
         rest = m["restantes"]
         partes.append("ficou entre " + (", ".join(rest[:-1]) + " e " + rest[-1]))
     if m["elos_ok"]:
-        partes.append("executou o(s) elo(s) " + ", ".join(str(k) for k in m["elos_ok"]))
+        partes.append("legado: executou o(s) elo(s) " + ", ".join(str(k) for k in m["elos_ok"]))
     if m["elo_letra"]:
-        partes.append(f"a letra marcada cai no elo {m['elo_letra']}")
+        partes.append(f"legado: a letra marcada cai no elo {m['elo_letra']}")
     if m["riscou_certa"]:
         partes.append("RISCOU A CERTA")
     return "; ".join(partes) or "(sem riscadas)"
 
 
 def erros_da_lista(lista):
-    """Respostas erradas OU chute da lista, cada uma com a questão em íntegra."""
+    """Respostas erradas OU não-sólidas da lista (s211: a dúvida certa entra -- a declaração é
+    obrigatória nela), cada uma com a questão em íntegra e o que o aluno DECLAROU."""
     questoes = {q["num"]: q for q in db.emed_listar_questoes(lista)}
     solucoes = {s["num"]: s for s in db.emed_listar_solucoes(lista)}
     saida = []
     for r in db.emed_listar_respostas(lista):
-        if r["correta"] != 0 and r["confianca"] != "chute":
+        if r["correta"] != 0 and r["confianca"] == "solida":
             continue
         q = questoes.get(r["num"], {})
+        sol_texto = (solucoes.get(r["num"]) or {}).get("solucao")
+        decl = declaracao(r, sol_texto)
         saida.append({
             "num": r["num"], "banca": q.get("banca"), "letra": r["letra"],
             "gabarito": r["gabarito"] or q.get("gabarito"), "correta": r["correta"],
@@ -445,19 +544,23 @@ def erros_da_lista(lista):
             "solucao": q.get("solucao"), "forum": q.get("forum"),
             "solucao_medhub": texto_solucao((solucoes.get(r["num"]) or {}).get("solucao")),
             "objetivo": (solucoes.get(r["num"]) or {}).get("objetivo") or "",
-            "leitura": leitura_metacognitiva(r, (solucoes.get(r["num"]) or {}).get("solucao"))})
+            "modo": r.get("modo") or "",
+            "declaracao": decl, "cadeia_defeito": r.get("cadeia_defeito") or "",
+            "grifados": trechos_grifados(r.get("grifos"), q.get("enunciado"), q.get("alternativas")),
+            "leitura": leitura_metacognitiva(r, sol_texto, legado=not decl["declarado"])})
     return saida
 
 
 def cmd_erros(args):
-    """`--erros LISTA`: insumo do /analisar-questao (erradas e chutes, em íntegra)."""
+    """`--erros LISTA`: insumo do /analisar-questao (erradas e não-sólidas, em íntegra, com a
+    declaração do aluno por elo)."""
     itens = erros_da_lista(args.erros)
     if args.json:
         _emitir(itens, True)
         return 0
-    print(f"{args.erros}: {len(itens)} questoes (erradas ou chute)")
+    print(f"{args.erros}: {len(itens)} questoes (erradas ou nao-solidas)")
     for e in itens:
-        status = "CERTA (chute)" if e["correta"] == 1 else "ERRADA"
+        status = f"CERTA ({e['confianca']})" if e["correta"] == 1 else "ERRADA"
         print("=" * 72)
         print(f"Q{e['num']} · {e['banca'] or '?'} · marcou {e['letra']} x gabarito "
               f"{e['gabarito'] or '?'} · {status} · confianca {e['confianca'] or '?'} · "
@@ -465,13 +568,79 @@ def cmd_erros(args):
         if e["questao_erro_id"] is not None:
             print(f"JA REGISTRADA como erro #{e['questao_erro_id']}")
         print(f"Racional declarado: {e['racional'] or '(vazio)'}")
-        print(f"Elo declarado: {e['elo'] or '(vazio)'}")
-        print(f"Objetivo: {e['objetivo'] or '(sem)'}")
+        if e["elo"]:
+            print(f"Chip de causa (legado, antes de 02/10): {e['elo']}")
+        print(f"Objetivo: {e['objetivo'] or '(sem)'} · modo {e['modo'] or '?'}")
+        d = e["declaracao"]
+        if d["elos"]:
+            print("Elos (o DECLARADO pelo aluno):")
+            for x in d["elos"]:
+                print(f"  {x['i']}. [{x['rotulo']}] {x['elo']}")
+        for k in d["conflitos"]:
+            print(f"CONFLITO no elo {k}: declarou Sim no descarte da letra que marcou")
+        if e["cadeia_defeito"]:
+            print(f"Cadeia com defeito: {e['cadeia_defeito']}")
+        if e["grifados"]:
+            print("Grifou: " + " · ".join(f"{g['onde']} \"{g['trecho']}\"" for g in e["grifados"]))
         print(f"Leitura: {texto_leitura(e['leitura'], e['confianca'])}")
         for rotulo, campo in (("ENUNCIADO", "enunciado"), ("ALTERNATIVAS", "alternativas"),
                               ("SOLUCAO MEDHUB", "solucao_medhub"),
                               ("SOLUCAO", "solucao"), ("FORUM", "forum")):
             print(f"-- {rotulo}\n{e[campo] or '(vazio)'}")
+    return 0
+
+
+def elos_nao_sim(lista=None):
+    """Um item por elo DECLARADO diferente de `sim` (s211): lista, questão, índice, estado, a
+    `habilidade` (v3) ou o texto do elo (v2) e o objetivo; ordem `nao` -> `incerteza` -> `desatencao`.
+    Read-only. Presumido não entra (é Sim por definição)."""
+    sols = {(s["lista"], s["num"]): s for s in db.emed_listar_solucoes(lista)}
+    saida = []
+    for r in db.emed_listar_respostas(lista):
+        s = sols.get((r["lista"], r["num"])) or {}
+        d = declaracao(r, s.get("solucao"))
+        if not d["declarado"]:
+            continue
+        for x in d["elos"]:
+            if x["estado"] in ORDEM_REVISAO:
+                saida.append({"lista": r["lista"], "num": r["num"], "i": x["i"], "estado": x["estado"],
+                              "habilidade": x["habilidade"] or x["elo"], "objetivo": s.get("objetivo") or ""})
+    return sorted(saida, key=lambda x: (ORDEM_REVISAO.index(x["estado"]), x["lista"], x["num"], x["i"]))
+
+
+def cmd_elos(args):
+    """`--elos [LISTA]`: os elos declarados Não / Incerteza / Desatenção (sem LISTA, todas)."""
+    itens = elos_nao_sim(None if args.elos == "*" else args.elos)
+    if args.json:
+        _emitir(itens, True)
+        return 0
+    if not itens:
+        print("nenhum elo declarado diferente de Sim")
+        return 0
+    print("lista | questao | elo | estado | habilidade | objetivo")
+    for x in itens:
+        print(f"{x['lista']} | Q{x['num']} | {x['i']} | {ROTULO_ESTADO[x['estado']]} | "
+              f"{x['habilidade']} | {x['objetivo'] or '-'}")
+    return 0
+
+
+def defeitos_de_cadeia(lista=None):
+    """As questões que o aluno sinalizou com "Erro na cadeia" (s211): a fila de correção. Read-only."""
+    return [{"lista": r["lista"], "num": r["num"], "motivo": r["cadeia_defeito"]}
+            for r in db.emed_listar_respostas(lista) if r.get("cadeia_defeito")]
+
+
+def cmd_defeitos(args):
+    """`--defeitos`: a fila de correção de cadeia (filtro `--lista`)."""
+    itens = defeitos_de_cadeia(args.lista)
+    if args.json:
+        _emitir(itens, True)
+        return 0
+    if not itens:
+        print("nenhuma cadeia sinalizada com defeito")
+        return 0
+    for x in itens:
+        print(f"{x['lista']} Q{x['num']}: {x['motivo']}")
     return 0
 
 
@@ -539,7 +708,7 @@ def main(argv=None):
     """Ponto de entrada: exatamente UM modo por chamada."""
     ap = argparse.ArgumentParser(
         description="Banco de questoes EMED no ipub.db (Bancada EMED): ingerir, "
-                    "registrar, solucoes, podar, exportar, erros, status.")
+                    "registrar, solucoes, podar, exportar, erros, elos, defeitos, status.")
     ap.add_argument("--ingerir", metavar="DIR", help="upsert de DIR/questoes/*.json")
     ap.add_argument("--registrar", metavar="DIR", help="upsert de DIR/respostas/*.json")
     ap.add_argument("--solucoes", metavar="DIR",
@@ -552,9 +721,14 @@ def main(argv=None):
     ap.add_argument("--out", metavar="DIR", default=OUT_PADRAO,
                     help="pasta de saida do --exportar (default tmp/emed_export)")
     ap.add_argument("--erros", metavar="LISTA",
-                    help="erradas e chutes da lista em integra (insumo do /analisar-questao)")
+                    help="erradas e nao-solidas da lista em integra, com a declaracao por elo "
+                         "(insumo do /analisar-questao)")
+    ap.add_argument("--elos", nargs="?", const="*", metavar="LISTA",
+                    help="elos declarados Nao/Incerteza/Desatencao (sem LISTA: todas) (s211)")
+    ap.add_argument("--defeitos", action="store_true",
+                    help="questoes com cadeia_defeito: a fila de correcao de cadeia (s211)")
     ap.add_argument("--status", action="store_true", help="resumo por lista")
-    ap.add_argument("--lista", metavar="LISTA", help="filtro do --status")
+    ap.add_argument("--lista", metavar="LISTA", help="filtro do --status e do --defeitos")
     ap.add_argument("--por-objetivo", dest="por_objetivo", action="store_true",
                     help="com --status: acerto por tema e objetivo da questao (s200)")
     ap.add_argument("--apply", action="store_true", help="grava (default = dry-run)")
@@ -566,7 +740,8 @@ def main(argv=None):
     modos = {"--ingerir": args.ingerir, "--registrar": args.registrar,
              "--solucoes": args.solucoes,
              "--podar": args.podar, "--exportar": args.exportar,
-             "--erros": args.erros, "--status": args.status}
+             "--erros": args.erros, "--elos": args.elos, "--defeitos": args.defeitos,
+             "--status": args.status}
     ligados = [m for m, v in modos.items() if v]
     if len(ligados) != 1:
         print("erro: informe exatamente UM modo (" + " | ".join(modos) + ")",
@@ -575,7 +750,8 @@ def main(argv=None):
     acao = {"--ingerir": cmd_ingerir, "--registrar": cmd_registrar,
             "--solucoes": cmd_solucoes,
             "--podar": cmd_podar, "--exportar": cmd_exportar,
-            "--erros": cmd_erros, "--status": cmd_status}[ligados[0]]
+            "--erros": cmd_erros, "--elos": cmd_elos, "--defeitos": cmd_defeitos,
+            "--status": cmd_status}[ligados[0]]
     try:
         return acao(args)
     except ErroLeitura as e:

@@ -2506,7 +2506,16 @@ _COLUNAS_EMED_Q = ("id", "lista", "tarefa_id", "num", "emed_id", "banca", "gabar
 
 _COLUNAS_EMED_R = ("id", "lista", "tarefa_id", "num", "letra", "confianca", "correta",
                    "gabarito", "racional", "elo", "tempo_s", "flag", "respondido_em",
-                   "registrado_em", "questao_erro_id", "riscadas")
+                   "registrado_em", "questao_erro_id", "riscadas", "elos", "grifos", "modo",
+                   "cadeia_defeito")
+
+#: s211 (feedback-cadeia-declarada part-5): o que o aluno DECLARA na pagina por elo (vocabulario no
+#: brief §Estado por elo, portador unico) e o modo da lista. "" = elo nao declarado.
+ESTADOS_ELO_EMED = ("sim", "incerteza", "desatencao", "nao")
+MODOS_EMED = ("estudo", "prova")
+#: colunas que chegaram depois das respostas: ausente no doc = "" no banco, e NULL (linha anterior a
+#: migracao) conta igual a "" -- re-registrar doc antigo nao vira `atualizada`
+_CAMPOS_DECLARADOS = ("elos", "grifos", "modo", "cadeia_defeito")
 
 _COLUNAS_EMED_S = ("id", "lista", "num", "solucao", "divergente", "fontes", "objetivo", "hash",
                    "cunhado_em", "atualizado_em")
@@ -2592,6 +2601,12 @@ def _ensure_emed_tables(conn):
     # "dúvida" são o par em que hesitou. A página gravava; o registro descartava.
     if "riscadas" not in {r[1] for r in conn.execute("PRAGMA table_info(emed_respostas)")}:
         conn.execute("ALTER TABLE emed_respostas ADD COLUMN riscadas TEXT")
+    # s211 (part-5): a declaracao por elo, os grifos, o modo e a cadeia com defeito -- a pagina grava
+    # desde as parts 2-4; sem coluna o registro os descartaria em silencio (o defeito das riscadas)
+    existentes = {r[1] for r in conn.execute("PRAGMA table_info(emed_respostas)")}
+    for coluna in _CAMPOS_DECLARADOS:
+        if coluna not in existentes:
+            conn.execute(f"ALTER TABLE emed_respostas ADD COLUMN {coluna} TEXT")
 
 
 def _txt(valor):
@@ -2771,6 +2786,30 @@ def riscadas_norm(valor):
     return ",".join(sorted({str(x).strip().upper() for x in itens if str(x).strip()}))
 
 
+def declaracao_norm(doc):
+    """Os campos DECLARADOS de um doc de resposta, prontos para a linha (s211). PURA.
+
+    Devolve `{elos, grifos, modo, cadeia_defeito}` (texto; "" = ausente) ou None quando o doc traz
+    valor fora do vocabulario: `elos` que nao e lista ou com estado fora de `ESTADOS_ELO_EMED` + "",
+    `grifos` que nao e objeto, `modo` fora de `MODOS_EMED` + "". O db da pagina e entrada nao confiavel
+    (mesma regua da `confianca`). `elos` e `grifos` viram JSON canonico; `cadeia_defeito` vira o motivo."""
+    import json as _json
+    elos, grifos = doc.get("elos"), doc.get("grifos")
+    modo = _txt(doc.get("modo")).strip().lower()
+    if elos is not None and (not isinstance(elos, list)
+                             or any(x not in ESTADOS_ELO_EMED + ("",) for x in elos)):
+        return None
+    if grifos is not None and not isinstance(grifos, dict):
+        return None
+    if modo and modo not in MODOS_EMED:
+        return None
+    defeito = doc.get("cadeia_defeito")
+    motivo = defeito.get("motivo") if isinstance(defeito, dict) else defeito
+    return {"elos": _json.dumps(elos, ensure_ascii=False) if elos else "",
+            "grifos": _json.dumps(grifos, sort_keys=True, ensure_ascii=False) if grifos else "",
+            "modo": modo, "cadeia_defeito": _txt(motivo).strip() if isinstance(motivo, str) else ""}
+
+
 def emed_upsert_respostas(rows, aplicar=True):
     """Upsert de `emed_respostas` por `(lista, num)`. Devolve
     `{novas, atualizadas, iguais, invalidas}`.
@@ -2779,18 +2818,21 @@ def emed_upsert_respostas(rows, aplicar=True):
     diferente -> atualiza; igual e mesmo conteúdo, ou mais antigo -> `iguais`.
     `correta` ausente é calculada (`emed_correta`). `questao_erro_id` nunca é tocado.
     Obrigatórios: `lista`, `num`, `letra`, `respondido_em`; `confianca` fora do
-    vocabulário também invalida o doc (o CHECK derrubaria o lote inteiro).
+    vocabulário também invalida o doc (o CHECK derrubaria o lote inteiro), e o mesmo vale para
+    `elos`/`grifos`/`modo` fora do vocabulário (s211, `declaracao_norm`).
     """
     invalidas, preparadas = [], []
     for doc in rows:
         num = _int_ou_none(doc.get("num"))
         conf = _txt(doc.get("confianca")).strip().lower() or None
+        decl = declaracao_norm(doc)
         if (any(_vazio(doc.get(c)) for c in ("lista", "letra", "respondido_em"))
-                or num is None or (conf is not None and conf not in CONFIANCAS_EMED)):
+                or num is None or (conf is not None and conf not in CONFIANCAS_EMED)
+                or decl is None):
             invalidas.append(doc.get("_doc_id"))
             continue
         flag = doc.get("flag")
-        preparadas.append({
+        preparadas.append({**decl,
             "_doc": doc, "lista": str(doc["lista"]).strip(), "num": num,
             "tarefa_id": _int_ou_none(doc.get("tarefa")),
             "letra": _txt(doc.get("letra")).strip().upper(), "confianca": conf,
@@ -2810,7 +2852,7 @@ def emed_upsert_respostas(rows, aplicar=True):
         gabaritos = {(r["lista"], r["num"]): r["gabarito"]
                      for r in _emed_ler(conn, "emed_questoes", _COLUNAS_EMED_Q)}
         campos = ("letra", "confianca", "correta", "gabarito", "racional", "elo",
-                  "tempo_s", "flag", "respondido_em", "riscadas")
+                  "tempo_s", "flag", "respondido_em", "riscadas") + _CAMPOS_DECLARADOS
         cont = {"novas": 0, "atualizadas": 0, "iguais": 0, "invalidas": invalidas}
         ts = carimbo()
         for linha in preparadas:
@@ -2823,7 +2865,8 @@ def emed_upsert_respostas(rows, aplicar=True):
                 antes = _txt(atual.get("respondido_em"))
                 if linha["respondido_em"] < antes or (
                         linha["respondido_em"] == antes
-                        and all(atual.get(c) == linha[c] for c in campos)):
+                        and all((atual.get(c) or "") == (linha[c] or "") if c in _CAMPOS_DECLARADOS
+                                else atual.get(c) == linha[c] for c in campos)):
                     cont["iguais"] += 1
                     continue
                 cont["atualizadas"] += 1
@@ -2833,8 +2876,9 @@ def emed_upsert_respostas(rows, aplicar=True):
             conn.execute('''
                 INSERT INTO emed_respostas
                     (lista, tarefa_id, num, letra, confianca, correta, gabarito, racional,
-                     elo, tempo_s, flag, respondido_em, registrado_em, riscadas)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                     elo, tempo_s, flag, respondido_em, registrado_em, riscadas,
+                     elos, grifos, modo, cadeia_defeito)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ON CONFLICT (lista, num) DO UPDATE SET
                     tarefa_id     = COALESCE(excluded.tarefa_id, emed_respostas.tarefa_id),
                     letra         = excluded.letra,
@@ -2847,11 +2891,16 @@ def emed_upsert_respostas(rows, aplicar=True):
                     flag          = excluded.flag,
                     respondido_em = excluded.respondido_em,
                     registrado_em = excluded.registrado_em,
-                    riscadas      = excluded.riscadas
+                    riscadas      = excluded.riscadas,
+                    elos          = excluded.elos,
+                    grifos        = excluded.grifos,
+                    modo          = excluded.modo,
+                    cadeia_defeito = excluded.cadeia_defeito
             ''', (linha["lista"], linha["tarefa_id"], linha["num"], linha["letra"],
                   linha["confianca"], linha["correta"], linha["gabarito"],
                   linha["racional"], linha["elo"], linha["tempo_s"], linha["flag"],
-                  linha["respondido_em"], ts, linha["riscadas"]))
+                  linha["respondido_em"], ts, linha["riscadas"], linha["elos"],
+                  linha["grifos"], linha["modo"], linha["cadeia_defeito"]))
         if aplicar:
             conn.commit()
         return cont

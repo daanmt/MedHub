@@ -479,10 +479,10 @@ def test_exportar_em_banco_nao_migrado_mantem_as_solucoes(tmp_path, monkeypatch,
 
 
 _HUB_TEMPLATE = ROOT / "core" / "templates" / "hub.html"
-#: s211 (feedback-cadeia-declarada): chaves que a página JÁ grava e cujo destino no banco é a part-5
-#: (`emed_respostas` ganha as colunas). A lista é EXATA: chave nova sem destino fora dela segue acusando,
-#: e a part-5 esvazia o conjunto -- o mesmo predicado volta a exigir `[]`.
-_SEM_DESTINO_ATE_A_PART_5 = {"cadeia_defeito", "elos", "grifos", "modo"}
+#: ⚰️ s211: as chaves que a página passou a gravar nas parts 2-4 (`elos`, `cadeia_defeito`, `modo`,
+#: `grifos`) ficaram neste conjunto até a part-5 dar coluna a elas; vazio de novo, o predicado volta a
+#: exigir `[]` -- toda chave da página tem destino.
+_SEM_DESTINO_ATE_A_PART_5 = set()
 #: doc da página -> coluna do banco quando o nome muda (o mesmo mapeamento do writer)
 _ALIAS_DOC_COLUNA = {"tarefa": "tarefa_id"}
 
@@ -505,7 +505,10 @@ def _chaves_sem_destino(tmp_path, chaves):
     plaus = {"lista": "t26", "tarefa": 26, "num": 1, "letra": "C", "confianca": "duvida",
              "correta": False, "gabarito": "B", "riscadas": ["A"], "racional": "sentinela",
              "elo": "li_errado", "tempo_s": 42, "flag": True,
-             "respondido_em": "2026-09-26T10:00:00Z"}
+             "respondido_em": "2026-09-26T10:00:00Z",
+             # s211: valores do vocabulário (sentinela solta seria doc inválido, nada gravado)
+             "elos": ["sim", "nao"], "grifos": {"enun": [[0, 3]]}, "modo": "estudo",
+             "cadeia_defeito": {"motivo": "sentinela", "ts": "2026-10-02T12:00:00Z"}}
     doc = {c: plaus.get(c, f"sentinela-{c}") for c in chaves}
     base = tmp_path / "prop"
     _escrever(base, "questoes", "t26_1", _questao(1))
@@ -836,3 +839,150 @@ def test_exemplo_do_brief_passa_no_validador():
     exemplo = json.loads(blocos[0])
     assert exemplo["versao"] == 3
     assert db.solucao_problemas(exemplo) == []
+
+
+
+# ------------------------------------------------ s211 part-5: a declaração chega ao ipub.db
+
+def _resp_doc(num, letra, confianca="duvida", **extra):
+    doc = {"lista": "t26", "tarefa": 26, "num": num, "letra": letra, "confianca": confianca,
+           "gabarito": "B", "respondido_em": f"2026-10-02T10:0{num}:00Z"}
+    doc.update(extra)
+    return doc
+
+
+def _linha(caminho, num):
+    con = sqlite3.connect(caminho)
+    con.row_factory = sqlite3.Row
+    try:
+        return dict(con.execute("SELECT * FROM emed_respostas WHERE num = ?", (num,)).fetchone())
+    finally:
+        con.close()
+
+
+def test_registro_grava_elos_grifos_modo_e_defeito(tmp_path, monkeypatch, capsys):
+    caminho = _usar_db(tmp_path, monkeypatch)
+    base = tmp_path / "buf"
+    _escrever(base, "respostas", "t26_1", _resp_doc(
+        1, "C", elos=["sim", "nao", ""], grifos={"enun": [[0, 8]], "A": [[0, 3]]}, modo="estudo",
+        cadeia_defeito={"motivo": " elo 2 repete o gabarito ", "ts": "2026-10-02T12:00:00Z"}))
+    _escrever(base, "respostas", "t26_2", _resp_doc(2, "B", "solida"))           # antiga: sem os campos
+    assert emed_banco.main(["--registrar", str(base), "--apply", "--json"]) == 0
+    assert _json_saida(capsys)["novas"] == 2
+    r1, r2 = _linha(caminho, 1), _linha(caminho, 2)
+    assert json.loads(r1["elos"]) == ["sim", "nao", ""]
+    assert json.loads(r1["grifos"]) == {"A": [[0, 3]], "enun": [[0, 8]]}
+    assert (r1["modo"], r1["cadeia_defeito"]) == ("estudo", "elo 2 repete o gabarito")
+    assert (r2["elos"], r2["grifos"], r2["modo"], r2["cadeia_defeito"]) == ("", "", "", "")
+
+
+@pytest.mark.parametrize("campo, valor", [
+    ("elos", ["sim", "ok"]), ("elos", "sim"), ("modo", "simulado"), ("grifos", [[0, 3]])])
+def test_elo_fora_do_vocabulario_invalida_o_doc(tmp_path, monkeypatch, capsys, campo, valor):
+    """O db da página é entrada não confiável: valor fora do vocabulário vai para `invalidas` e o
+    resto do lote grava (mesma régua da `confianca`)."""
+    _usar_db(tmp_path, monkeypatch)
+    base = tmp_path / "buf"
+    _escrever(base, "respostas", "t26_1", _resp_doc(1, "C", **{campo: valor}))
+    _escrever(base, "respostas", "t26_2", _resp_doc(2, "C", elos=["incerteza", "desatencao"]))
+    assert emed_banco.main(["--registrar", str(base), "--apply", "--json"]) == 0
+    c = _json_saida(capsys)
+    assert c["invalidas"] == ["t26_1"] and c["novas"] == 1
+
+
+def test_registro_e_idempotente_com_os_campos_novos(tmp_path, monkeypatch, capsys):
+    """Re-registrar = `iguais`; mudar SÓ a declaração com o mesmo `respondido_em` = `atualizadas`;
+    linha anterior à migração (colunas NULL) re-registrada com o doc antigo segue `iguais`."""
+    caminho = _usar_db(tmp_path, monkeypatch)
+    base = tmp_path / "buf"
+    _escrever(base, "respostas", "t26_1", _resp_doc(1, "C", elos=["sim", ""], modo="prova"))
+    _escrever(base, "respostas", "t26_2", _resp_doc(2, "B", "solida"))
+    assert emed_banco.main(["--registrar", str(base), "--apply"]) == 0
+    capsys.readouterr()
+    assert emed_banco.main(["--registrar", str(base), "--apply", "--json"]) == 0
+    assert _json_saida(capsys)["iguais"] == 2
+    _escrever(base, "respostas", "t26_1", _resp_doc(1, "C", elos=["sim", "nao"], modo="prova"))
+    assert emed_banco.main(["--registrar", str(base), "--apply", "--json"]) == 0
+    c = _json_saida(capsys)
+    assert (c["atualizadas"], c["iguais"]) == (1, 1)
+    assert json.loads(_linha(caminho, 1)["elos"]) == ["sim", "nao"]
+    con = sqlite3.connect(caminho)
+    con.execute("UPDATE emed_respostas SET elos = NULL, grifos = NULL, modo = NULL, "
+                "cadeia_defeito = NULL WHERE num = 2")
+    con.commit()
+    con.close()
+    assert emed_banco.main(["--registrar", str(base), "--apply", "--json"]) == 0
+    assert _json_saida(capsys)["iguais"] == 2
+
+
+def _lista_com_declaracoes(tmp_path):
+    """t26: Q1 v3 errada (C) com conflito, defeito e grifo; Q2 v3 errada sem declaração; Q3 v3 certa na
+    dúvida; Q4 v2 errada sem declaração (legado); Q5 v3 certa sólida (fica de fora)."""
+    base = tmp_path / "buf"
+    for n in (1, 2, 3, 4, 5):
+        _escrever(base, "questoes", f"t26_{n}", _questao(n))
+        _escrever(base, "solucoes", f"t26_{n}", _v2(n) if n == 4 else _v3(n))
+    _escrever(base, "respostas", "t26_1", _resp_doc(
+        1, "C", elos=["sim", "nao", "sim"], grifos={"enun": [[0, 8]], "C": [[0, 10]], "D": [[0, 999]]},
+        cadeia_defeito={"motivo": "o elo 1 não decide nada"}, modo="estudo"))
+    _escrever(base, "respostas", "t26_2", _resp_doc(2, "A", "chute"))
+    _escrever(base, "respostas", "t26_3", _resp_doc(3, "B", "duvida", elos=["sim", "incerteza", "desatencao"]))
+    _escrever(base, "respostas", "t26_4", _resp_doc(4, "C"))
+    _escrever(base, "respostas", "t26_5", _resp_doc(5, "B", "solida"))
+    for modo in ("--ingerir", "--solucoes", "--registrar"):
+        assert emed_banco.main([modo, str(base), "--apply"]) == 0
+    return base
+
+
+def test_erros_imprime_declarado_e_conflito(tmp_path, monkeypatch, capsys):
+    _usar_db(tmp_path, monkeypatch)
+    _lista_com_declaracoes(tmp_path)
+    capsys.readouterr()
+    assert emed_banco.main(["--erros", "t26"]) == 0
+    out = capsys.readouterr().out
+    blocos = {int(b.split(" ·")[0]): b for b in out.split("=" * 72 + "\nQ")[1:]}
+    assert sorted(blocos) == [1, 2, 3, 4]                       # erradas + não-sólidas; a sólida certa sai
+    b1 = blocos[1]
+    assert "1. [Sim] Identificou que 2+ valores" in b1 and "2. [Não] Recordou" in b1 and "3. [Sim] Descartou" in b1
+    assert "CONFLITO no elo 3" in b1 and "Cadeia com defeito: o elo 1 não decide nada" in b1
+    assert 'Grifou: enunciado "Gestante" · C "Metformina"' in b1   # trecho, não offset; o inválido cala
+    assert "modo estudo" in b1
+    assert "[sem declaração]" in blocos[2] and "CERTA (duvida)" in blocos[3] and "[Incerteza]" in blocos[3]
+    assert "cai no elo None" not in out                        # v3 nunca aponta elo pela alternativa
+    assert "cai no elo" not in b1 and "cai no elo" not in blocos[2]
+    assert "legado: a letra marcada cai no elo 2" in blocos[4]   # v2 sem declaração: rotulada legado
+    # presumido: certa e sólida sem `elos` é leitura, não dado
+    d = emed_banco.declaracao({"correta": 1, "confianca": "solida", "letra": "B"},
+                              json.dumps(dict(_v3(5), versao=3)))
+    assert [x["rotulo"] for x in d["elos"]] == ["presumido Sim"] * 3 and not d["declarado"]
+
+
+def test_elos_lista_os_nao_sim_na_ordem(tmp_path, monkeypatch, capsys):
+    _usar_db(tmp_path, monkeypatch)
+    base = _lista_com_declaracoes(tmp_path)
+    _escrever(base, "respostas", "t40_1", dict(_resp_doc(1, "C", elos=["nao", "sim", "sim"]), lista="t40", tarefa=40))
+    _escrever(base, "solucoes", "t40_1", _v3(1, lista="t40"))
+    for modo in ("--solucoes", "--registrar"):
+        assert emed_banco.main([modo, str(base), "--apply"]) == 0
+    capsys.readouterr()
+    assert emed_banco.main(["--elos", "t26", "--json"]) == 0
+    itens = _json_saida(capsys)
+    assert [(x["num"], x["i"], x["estado"]) for x in itens] == [(1, 2, "nao"), (3, 2, "incerteza"),
+                                                               (3, 3, "desatencao")]
+    assert itens[0]["habilidade"] == "Escolher o fármaco na gestação"
+    assert itens[0]["objetivo"] == "Indicação de insulina"
+    assert emed_banco.main(["--elos", "--json"]) == 0             # sem LISTA: todas
+    todos = _json_saida(capsys)
+    assert [(x["lista"], x["num"], x["estado"]) for x in todos][:2] == [("t26", 1, "nao"), ("t40", 1, "nao")]
+    assert emed_banco.main(["--elos", "t26"]) == 0
+    assert "t26 | Q1 | 2 | Não | Escolher o fármaco na gestação" in capsys.readouterr().out
+
+
+def test_defeitos_lista_cadeias_sinalizadas(tmp_path, monkeypatch, capsys):
+    _usar_db(tmp_path, monkeypatch)
+    _lista_com_declaracoes(tmp_path)
+    capsys.readouterr()
+    assert emed_banco.main(["--defeitos", "--json"]) == 0
+    assert _json_saida(capsys) == [{"lista": "t26", "num": 1, "motivo": "o elo 1 não decide nada"}]
+    assert emed_banco.main(["--defeitos", "--lista", "t40"]) == 0
+    assert "nenhuma cadeia sinalizada" in capsys.readouterr().out

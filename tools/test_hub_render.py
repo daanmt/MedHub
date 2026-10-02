@@ -91,7 +91,7 @@ def _declaracao(src, inicio):
 
 FUNCS = "\n".join([_declaracao(TEMPLATE, "var QZ_DECL = {"), _declaracao(TEMPLATE, "var QZ_LEGADO = {")] +
                   [extrair_funcao(TEMPLATE, a) for a in (
-                      "function qzEsc(s){", "function qzAlts(txt){", "function qzAltsHtml(q, r, revelada){",
+                      "function qzEsc(s){", "function qzAlts(txt){", "function qzAltsHtml(q, r, revelada, g){",
                       "function qzCadeia(q){", "function qzPrecisaDeclarar(q, r){", "function qzDeclPendente(q, r){",
                       "function qzConflitos(q, r){", "function qzElosDe(q, r, a){", "function qzSolucao(q, r){",
                       "function qzAgenteHtml(a){", "function qzDeclarar(i, st){", "function qzDefeito(motivo){",
@@ -99,7 +99,10 @@ FUNCS = "\n".join([_declaracao(TEMPLATE, "var QZ_DECL = {"), _declaracao(TEMPLAT
                       "function qzEscolheModo(l, espelho, temResposta){", "function qzModoUi(l){",
                       "function qzResponder(){", "function qzRevelaAoAbrir(r){", "function qzTrava(q, r){",
                       "function qzResumoElos(qs, resp){", "function qzElosFimHtml(qs, resp){",
-                      "function qzConcluirUi(pendentes){")] +
+                      "function qzConcluirUi(pendentes){", "function qzGrifoMesclar(intervalos, novo){",
+                      "function qzGrifoValido(v, n){", "function qzGrifoHtml(texto, intervalos){",
+                      "function qzGrifoRemover(intervalos, pos){", "function qzGrifosDe(q){",
+                      "function qzGrifosSalvar(q, g){")] +
                   [re.search(r"\n  (var QZ_DICA_TRAVA = [^\n]+;)", TEMPLATE).group(1),
                    re.search(r"\n  (var QZ_ORDEM_REVER = [^\n]+;)", TEMPLATE).group(1)])
 
@@ -108,9 +111,11 @@ var els = {};
 function $(id){ return els[id] || (els[id] = {id: id, hidden: false, textContent: "", className: "", innerHTML: "", value: "",
   disabled: false, checked: false, attrs: {}, setAttribute: function(k, v){ this.attrs[k] = v; },
   querySelectorAll: function(){ return []; }}); }
-var QZ = {ana: __ANA__, qs: [__Q__], pos: 0, resp: {}};
+var QZ = {ana: __ANA__, qs: [__Q__], pos: 0, resp: {}, grifos: {}, lista: "t26"};
+var LS = {};
+function qzLs(k, v){ if(v === undefined){ return LS[k] === undefined ? null : JSON.parse(JSON.stringify(LS[k])); } LS[k] = JSON.parse(JSON.stringify(v)); }
 var GRAVADOS = [];
-function qzGravar(r){ GRAVADOS.push(JSON.parse(JSON.stringify(r))); return Promise.resolve(true); }
+function qzGravar(r){ QZ.resp[r.num] = r; GRAVADOS.push(JSON.parse(JSON.stringify(r))); return Promise.resolve(true); }
 function qzAgora(){ return "2026-10-02T12:00:00.000Z"; }
 __FUNCS__
 var q = QZ.qs[0], r = __R__;
@@ -696,3 +701,75 @@ def test_textos_da_aba_curtos_e_sem_o_elo_que_quebrou():
     for t in textos:
         assert len(re.findall(r"[.!?](?:\s|$)", t)) <= 2, t
     assert "confirma o elo que quebrou" not in TEMPLATE
+
+
+# ------------------------------------------------ s211 part-4: marca-texto no enunciado e nas alternativas
+
+def test_grifo_mescla_sobrepostos_e_adjacentes():
+    acao = """SAIDA = {sobrepostos: qzGrifoMesclar([[5, 10], [0, 3]], [2, 6]), adjacentes: qzGrifoMesclar([[0, 3]], [3, 5]),
+  separados: qzGrifoMesclar([[8, 9]], [0, 2]), sem_novo: qzGrifoMesclar([[4, 6], [1, 2]], null), vazio: qzGrifoMesclar(null, [1, 3])};"""
+    out = _rodar(_q(), None, None, acao)
+    assert out == {"sobrepostos": [[0, 10]], "adjacentes": [[0, 5]], "separados": [[0, 2], [8, 9]],
+                   "sem_novo": [[1, 2], [4, 6]], "vazio": [[1, 3]]}
+
+
+def test_grifo_html_escapa_e_ignora_intervalo_invalido():
+    acao = """SAIDA = {h: qzGrifoHtml("a<b & c\\nfim", [[0, 3], [5, 99], [-1, 2], [4, 4], ["x", 2], [2, 2.5], [1, 3]]),
+  nada: qzGrifoHtml("x > y", null), lixo: qzGrifoHtml("abc", "nao e lista")};"""
+    out = _rodar(_q(), None, None, acao)
+    assert out["h"] == '<mark class="qz-grifo" data-i="0">a&lt;b</mark> &amp; c\nfim'
+    assert out["nada"] == "x &gt; y" and out["lixo"] == "abc"
+
+
+def test_grifo_remover_intervalo():
+    acao = """var g = [[0, 3], [5, 9]];
+SAIDA = {meio: qzGrifoRemover(g, 6), inicio: qzGrifoRemover(g, 0), fim_exclusivo: qzGrifoRemover(g, 3), fora: qzGrifoRemover(g, 20)};"""
+    out = _rodar(_q(), None, None, acao)
+    assert out == {"meio": [[0, 3]], "inicio": [[5, 9]], "fim_exclusivo": [[0, 3], [5, 9]],
+                   "fora": [[0, 3], [5, 9]]}
+
+
+def test_alternativa_tem_role_radio_e_nao_e_button():
+    """O corpo da alternativa deixou de ser <button> (texto selecionavel); `role="radio"` + `tabindex`
+    antes de revelar, o X de riscar segue botao; teclado: Enter/Espaco na alternativa e A-E/1-5."""
+    out = _rodar(_q(), None, None, 'SAIDA = {h: qzAltsHtml(q, null, false, {A: [[0, 2]], C: [[100, 200]]})};')
+    h = out["h"]
+    assert '<button type="button" class="qz-alt-btn"' not in h
+    assert h.count('role="radio" tabindex="0" aria-checked="false"') == 4
+    assert h.count('<button type="button" class="qz-risca"') == 4
+    assert '<span class="qz-alt-txt"><mark class="qz-grifo" data-i="0">DM</mark> prévio; tratar já</span>' in h
+    _golden("alternativa", h)
+    assert 'e.target.classList.contains("qz-alt-btn") && (e.key === "Enter" || e.key === " ")' in TEMPLATE
+    assert "querySelector('.qz-alt[data-l=\"' + k + '\"] .qz-alt-btn')" in TEMPLATE
+    assert 'querySelectorAll(".qz-alt-btn")[parseInt(k, 10) - 1]' in TEMPLATE
+
+
+def test_grifos_viajam_no_doc_da_resposta_e_voltam_na_revisao():
+    acao = """function qzParar(){} function qzRevelar(){} function qzDepoisDe(){}
+QZ.listas = [{_id: "t26", tarefa: 26}]; QZ.letra = "C"; QZ.conf = "duvida"; QZ.t0 = Date.now(); QZ.modoLista = "prova";
+qzGrifosSalvar(q, {enun: [[0, 8]]});                       // antes de responder: so rascunho local
+var antes = {gravados: GRAVADOS.length, rascunho: LS["medhub.grifos.t26"]};
+qzResponder();                                             // ao responder: entram no doc
+var g = qzGrifosDe(q); g.A = [[0, 2]]; qzGrifosSalvar(q, g);   // depois: cada mudanca regrava
+var docs = GRAVADOS.map(function(d){ return d.grifos; });
+QZ.grifos = {}; LS = {}; QZ.resp = {}; QZ.resp[q.num] = JSON.parse(JSON.stringify(GRAVADOS[GRAVADOS.length - 1]));   // outra sessao, so o db
+var volta = qzGrifosDe(q);
+SAIDA = {antes: antes, docs: docs, volta: volta, alts: qzAltsHtml(q, QZ.resp[q.num], true, volta), enun: qzGrifoHtml("Gestante de 7 semanas", volta.enun)};"""
+    out = _rodar(_q(), None, None, acao)
+    assert out["antes"] == {"gravados": 0, "rascunho": {"8": {"enun": [[0, 8]]}}}
+    assert out["docs"] == [{"enun": [[0, 8]]}, {"enun": [[0, 8]], "A": [[0, 2]]}]
+    assert out["volta"] == {"enun": [[0, 8]], "A": [[0, 2]]}
+    assert '<mark class="qz-grifo" data-i="0">DM</mark>' in out["alts"]
+    assert out["enun"] == '<mark class="qz-grifo" data-i="0">Gestante</mark> de 7 semanas'
+
+
+def test_grifo_uma_cor_de_token_e_limite_declarado():
+    """Uma cor so, do token (`--qz-duv-fraco` com texto `--tinta`); sem barra flutuante, menu ou
+    seletor de cor; o limite (selecao por toque no celular nao testada) declarado no template e no brief."""
+    (regra,) = [l for l in TEMPLATE.splitlines() if l.startswith(".qz-grifo{")]
+    assert "background:var(--qz-duv-fraco)" in regra and "color:var(--tinta)" in regra and "#" not in regra
+    assert TEMPLATE.count('class="qz-grifo"') == 1                        # um so tipo de grifo
+    for proibido in ("qz-grifo-cor", "qz-grifo-menu", "qz-grifo-barra"):
+        assert proibido not in TEMPLATE
+    assert "NAO e verificado por teste" in TEMPLATE and "TOQUE no navegador do celular" in TEMPLATE
+    assert "`grifos`" in BRIEF and "Não verificado por teste: a seleção por toque no navegador do celular" in BRIEF

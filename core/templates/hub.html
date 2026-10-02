@@ -140,6 +140,9 @@
 .qz-alts{display:grid;gap:6px}
 .qz-alt{display:grid;grid-template-columns:minmax(0,1fr) 44px;gap:0;border:1px solid var(--linha);border-radius:10px;background:var(--card);min-width:0}
 .qz-alt-btn{display:grid;grid-template-columns:34px minmax(0,1fr);gap:10px;align-items:start;text-align:left;padding:10px 12px;border:0;border-radius:10px 0 0 10px;background:transparent;color:var(--tinta);min-height:44px}
+.qz-alt-btn{cursor:pointer}
+.qz-alt-btn:focus-visible{outline:3px solid var(--acento);outline-offset:-3px}
+.qz-alt-btn[aria-disabled="true"]{cursor:default}
 .qz-alt-btn b{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--tinta2);padding-top:1px}
 .qz-alt-btn span{white-space:pre-wrap;min-width:0}
 .qz-risca{border:0;border-left:1px solid var(--linha);border-radius:0 10px 10px 0;background:transparent;color:var(--tinta3);font-size:1.05em;padding:0;min-height:44px}
@@ -173,7 +176,9 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
 /* s211 (feedback-cadeia-declarada part-2): o porquê mora DENTRO da alternativa (seção do mesmo cartão,
    não caixa aninhada); a cadeia é uma frase por elo + 4 pílulas que o aluno declara; nada é inferido. */
 .qz-porque{grid-column:1 / -1;margin:0;padding:8px 12px 10px 56px;border-top:1px solid var(--linha);color:var(--tinta2);font-size:.9em;line-height:1.45;min-width:0}
-.qz-alt.tem-pq:not(.aberta) .qz-alt-btn span::after{content:" · por quê";color:var(--tinta3);font-size:.82em}
+.qz-alt.tem-pq:not(.aberta) .qz-alt-txt::after{content:" · por quê";color:var(--tinta3);font-size:.82em}
+/* s211 (part-4): marca-texto -- uma cor so, do token; tocar no grifo o remove */
+.qz-grifo{background:var(--qz-duv-fraco);color:var(--tinta);border-radius:3px;cursor:pointer}
 .qz-alt.tem-pq .qz-alt-btn{cursor:pointer}
 .qz-cad{display:grid;gap:10px;min-width:0}
 .qz-cad-tit{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0;font-weight:650;color:var(--tinta2)}
@@ -307,7 +312,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
         <p class="qz-metaq"><span id="qz-pos"></span><span id="qz-banca"></span><span id="qz-tags"></span></p>
         <p class="qz-enun" id="qz-enun"></p>
         <p class="qd-aviso qz-figura" id="qz-figura" hidden></p>
-        <div class="qz-alts" id="qz-alts"></div>
+        <div class="qz-alts" id="qz-alts" role="radiogroup" aria-label="Alternativas"></div>
         <div id="qz-antes">
           <p class="qz-rot">Antes de ver o gabarito: como está a sua certeza?</p>
           <div class="qz-seg" id="qz-seg">
@@ -647,7 +652,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
   // questoes/<lista>_<num> (semeadas pelo hub a partir do banco local); a pagina grava so
   // respostas/<lista>_<num> e o veredito do operador em analises/<lista>_<num>. Regras de
   // leitura fechadas ao dono: conteudo do EMED nunca fica legivel por link.
-  var QZ = {db:null, listas:[], lista:null, qs:[], resp:{}, ana:{}, pos:-1, letra:null, conf:null,
+  var QZ = {db:null, listas:[], lista:null, qs:[], resp:{}, ana:{}, grifos:{}, pos:-1, letra:null, conf:null,
             t0:0, timer:null, unsubs:[], revendo:false, iniciado:false};
   var ROT_QZ = {pendente:"pendente", em_curso:"em curso", capturada:"pronta", resolvendo:"em curso", resolvida:"resolvida"};
   function qzEsc(s){ return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
@@ -773,6 +778,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
   function qzAbrir(id){
     qzLimpar(); qzParar();
     QZ.lista = id; QZ.qs = []; QZ.resp = qzLs(qzChave()) || {}; QZ.ana = {}; QZ.pos = -1; QZ.revendo = false; QZ.modoLista = "";
+    QZ.grifos = qzLs("medhub.grifos." + id) || {};
     var l = QZ.listas.filter(function(x){ return x._id === id; })[0] || {};
     $("qz-tema").textContent = (l.tema || id) + (l.area ? " · " + l.area : "");
     $("qz-escolha").hidden = true; $("qz-player").hidden = false;
@@ -846,13 +852,15 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
   // cada alternativa = escolher (corpo) + riscar (o X, como a tesoura do EMED); riscada nao e marcada.
   // s211 (part-2): revelada, o `porque` da Solucao mora DENTRO da alternativa -- o do gabarito e o da
   // marcada abertos, os demais no toque. A alternativa so explica a si mesma: nao aponta elo.
-  function qzAltsHtml(q, r, revelada){
+  function qzAltsHtml(q, r, revelada, g){
     var s = q.solucao_medhub, sa = (s && typeof s === "object" && s.alternativas) || {}, risc = (r && r.riscadas) || [];
     function um(l, t){ var x = sa[l] || {}, pq = revelada ? x.porque : "", cls = "qz-alt", aberta = false;
       if(revelada && r){ if(l === r.gabarito){ cls += " gab"; aberta = true; } else if(l === r.letra){ cls += " errada"; aberta = true; }
         if(risc.indexOf(l) >= 0 && l !== r.gabarito){ cls += " riscada"; } }
       if(pq){ cls += " tem-pq" + (aberta ? " aberta" : ""); }
-      return '<div class="' + cls + '" data-l="' + l + '"><button type="button" class="qz-alt-btn"' + (revelada ? (pq ? ' aria-expanded="' + aberta + '"' : ' disabled') : '') + '><b>' + l + '</b><span>' + qzEsc(t) + '</span></button>' +
+      // s211 (part-4): o corpo deixou de ser <button> -- texto dentro de botao nao se seleciona para grifar
+      return '<div class="' + cls + '" data-l="' + l + '"><div class="qz-alt-btn" ' + (revelada ? (pq ? 'role="button" tabindex="0" aria-expanded="' + aberta + '"' : 'aria-disabled="true"') : 'role="radio" tabindex="0" aria-checked="false"') +
+        '><b>' + l + '</b><span class="qz-alt-txt">' + qzGrifoHtml(t, g && g[l]) + '</span></div>' +
         '<button type="button" class="qz-risca" aria-label="Riscar ' + l + '" title="Riscar"' + (revelada ? ' disabled' : '') + '>&#x2715;</button>' +
         (pq ? '<p class="qz-porque"' + (aberta ? '' : ' hidden') + '>' + qzEsc(pq) + '</p>' : '') + '</div>'; }
     var alts = qzAlts(q.alternativas);
@@ -866,10 +874,10 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
     var lq = QZ.listas.filter(function(x){ return x._id === QZ.lista; })[0] || {};
     $("qz-banca").textContent = qzBanca(q.banca); $("qz-banca").title = q.banca || "";
     $("qz-tags").textContent = qzAssunto(q.tags, lq.tema);
-    $("qz-enun").textContent = q.enunciado || "";
+    $("qz-enun").innerHTML = qzGrifoHtml(q.enunciado || "", qzGrifosDe(q).enun);
     // s201: o caderno em PDF vira texto; a figura (ECG, imagem) nao vem junto -- a pagina avisa onde ela esta
     $("qz-figura").hidden = !q.figura; $("qz-figura").textContent = q.figura ? "Esta questão tem uma figura que o texto não traz: caderno da prova, página " + (q.pagina || "?") + "." : "";
-    $("qz-alts").innerHTML = qzAltsHtml(q, null, false);
+    $("qz-alts").innerHTML = qzAltsHtml(q, null, false, qzGrifosDe(q));
     Array.prototype.forEach.call($("qz-seg").querySelectorAll("button"), function(b){ b.classList.remove("on"); });
     $("qz-flag").checked = false; $("qz-responder").disabled = true; $("qz-responder").textContent = "Responder";
     // questao ja respondida (voltou pelo trilho ou pelo Anterior): mostra o que marcou e deixa alterar
@@ -877,6 +885,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
     if(r0){
       QZ.letra = r0.letra || null; QZ.conf = r0.confianca || null;
       Array.prototype.forEach.call($("qz-alts").querySelectorAll(".qz-alt"), function(x){ var l = x.getAttribute("data-l"); x.classList.toggle("marcada", l === r0.letra); x.classList.toggle("riscada", !!(r0.riscadas && r0.riscadas.indexOf(l) >= 0)); });
+      qzMarcarAria();
       Array.prototype.forEach.call($("qz-seg").querySelectorAll("button"), function(b){ b.classList.toggle("on", b.getAttribute("data-c") === r0.confianca); });
       $("qz-flag").checked = !!r0.flag; $("qz-responder").textContent = "Mudar resposta"; qzPode();
     }
@@ -897,7 +906,9 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
     qzFim();
   }
   $("qz-alts").addEventListener("click", function(e){
-    var b = e.target.closest("button"); if(!b || b.disabled){ return; }
+    var mk = e.target.closest("mark.qz-grifo"); if(mk){ qzGrifoTocar(mk); return; }
+    if(qzAcabouDeGrifar()){ return; }     // soltar COM selecao so grifa: nao marca a letra
+    var b = e.target.closest(".qz-alt-btn, .qz-risca"); if(!b || b.disabled || b.getAttribute("aria-disabled") === "true"){ return; }
     var alt = b.closest(".qz-alt"); if(!alt){ return; }
     if(!$("qz-depois").hidden){ var pq = alt.querySelector(".qz-porque"); if(pq){ pq.hidden = !pq.hidden; alt.classList.toggle("aberta", !pq.hidden); b.setAttribute("aria-expanded", String(!pq.hidden)); } return; }
     if(b.classList.contains("qz-risca")){
@@ -906,7 +917,70 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
       return;
     }
     QZ.letra = alt.getAttribute("data-l"); alt.classList.remove("riscada");
-    Array.prototype.forEach.call($("qz-alts").querySelectorAll(".qz-alt"), function(x){ x.classList.toggle("marcada", x === alt); }); qzPode(); });
+    Array.prototype.forEach.call($("qz-alts").querySelectorAll(".qz-alt"), function(x){ x.classList.toggle("marcada", x === alt); }); qzMarcarAria(); qzPode(); });
+  function qzMarcarAria(){ Array.prototype.forEach.call($("qz-alts").querySelectorAll(".qz-alt"), function(x){ var c = x.querySelector('.qz-alt-btn[role="radio"]');
+    if(c){ c.setAttribute("aria-checked", x.classList.contains("marcada") ? "true" : "false"); } }); }
+  $("qz-enun").addEventListener("click", function(e){ var mk = e.target.closest("mark.qz-grifo"); if(mk){ qzGrifoTocar(mk); } });
+  // s211 (feedback-cadeia-declarada part-4): MARCA-TEXTO. Selecionar um trecho do enunciado ou de uma
+  // alternativa grifa (uma cor so); tocar no grifo remove. Os grifos sao offsets de caractere sobre o
+  // texto puro, por questao: `QZ.grifos[num] = {enun: [[ini, fim]], A: [...]}` -- rascunho local antes de
+  // responder, `grifos` no doc da resposta depois. Selecao por mouse grifa ao soltar; por toque, quando
+  // estabiliza (selectionchange com espera + pointerup).
+  // LIMITE DECLARADO: o comportamento da selecao por TOQUE no navegador do celular (dentro do artifact)
+  // NAO e verificado por teste -- so o operador valida no aparelho.
+  function qzGrifoMesclar(intervalos, novo){
+    var xs = (intervalos || []).concat(novo ? [novo] : []).map(function(v){ return [v[0], v[1]]; }).sort(function(a, b){ return a[0] - b[0] || a[1] - b[1]; }), out = [];
+    xs.forEach(function(v){ var u = out[out.length - 1]; if(u && v[0] <= u[1]){ u[1] = Math.max(u[1], v[1]); } else { out.push(v); } });
+    return out;
+  }
+  function qzGrifoValido(v, n){ return Array.isArray(v) && v.length === 2 && v.every(function(x){ return typeof x === "number" && x === Math.floor(x); }) && v[0] >= 0 && v[0] < v[1] && v[1] <= n; }
+  function qzGrifoHtml(texto, intervalos){
+    texto = String(texto == null ? "" : texto); var out = "", pos = 0;
+    qzGrifoMesclar((Array.isArray(intervalos) ? intervalos : []).filter(function(v){ return qzGrifoValido(v, texto.length); }), null).forEach(function(v){
+      out += qzEsc(texto.slice(pos, v[0])) + '<mark class="qz-grifo" data-i="' + v[0] + '">' + qzEsc(texto.slice(v[0], v[1])) + '</mark>'; pos = v[1]; });
+    return out + qzEsc(texto.slice(pos));
+  }
+  function qzGrifoRemover(intervalos, pos){ return (intervalos || []).filter(function(v){ return !(v[0] <= pos && pos < v[1]); }); }
+  function qzGrifosDe(q){
+    var r = QZ.resp[q.num]; if(r && r.grifos && typeof r.grifos === "object"){ return r.grifos; }
+    return QZ.grifos[q.num] || (QZ.grifos[q.num] = {});
+  }
+  function qzGrifosSalvar(q, g){
+    QZ.grifos[q.num] = g; qzLs("medhub.grifos." + QZ.lista, QZ.grifos);
+    var r = QZ.resp[q.num]; if(r){ r.grifos = g; qzGravar(r); }
+  }
+  function qzGrifosDesenhar(q){
+    var g = qzGrifosDe(q), alts = {}; qzAlts(q.alternativas).forEach(function(a){ alts[a.l] = a.t; });
+    $("qz-enun").innerHTML = qzGrifoHtml(q.enunciado || "", g.enun);
+    Array.prototype.forEach.call($("qz-alts").querySelectorAll(".qz-alt"), function(x){ var l = x.getAttribute("data-l"), s = x.querySelector(".qz-alt-txt");
+      if(s && alts[l] != null){ s.innerHTML = qzGrifoHtml(alts[l], g[l]); } });
+  }
+  function qzAcabouDeGrifar(){ return !!QZ.grifouEm && Date.now() - QZ.grifouEm < 500; }
+  function qzGrifoAlvo(no){ var el = no && (no.nodeType === 1 ? no : no.parentNode); return (el && el.closest) ? el.closest("#qz-enun, .qz-alt-txt") : null; }
+  function qzGrifoChave(cont){ return cont.id === "qz-enun" ? "enun" : cont.closest(".qz-alt").getAttribute("data-l"); }
+  function qzGrifoCapturar(){
+    var sel = window.getSelection ? window.getSelection() : null, q = QZ.qs[QZ.pos];
+    if(!q || !sel || sel.isCollapsed || !sel.rangeCount || $("qz-questao").hidden){ return false; }
+    var rg = sel.getRangeAt(0), cont = qzGrifoAlvo(rg.startContainer);
+    if(!cont || cont !== qzGrifoAlvo(rg.endContainer)){ return false; }
+    var pre = document.createRange(); pre.selectNodeContents(cont); pre.setEnd(rg.startContainer, rg.startOffset);
+    var ini = pre.toString().length, fim = ini + rg.toString().length;
+    if(fim - ini < 2){ return false; }     // arrasto curto nao vira grifo
+    var g = qzGrifosDe(q), k = qzGrifoChave(cont); g[k] = qzGrifoMesclar(g[k], [ini, fim]);
+    sel.removeAllRanges(); QZ.grifouEm = Date.now(); qzGrifosSalvar(q, g); qzGrifosDesenhar(q); return true;
+  }
+  function qzGrifoTocar(mk){
+    var q = QZ.qs[QZ.pos], cont = qzGrifoAlvo(mk); if(!q || !cont || qzAcabouDeGrifar()){ return; }
+    var g = qzGrifosDe(q), k = qzGrifoChave(cont); g[k] = qzGrifoRemover(g[k], parseInt(mk.getAttribute("data-i"), 10));
+    qzGrifosSalvar(q, g); qzGrifosDesenhar(q);
+  }
+  var qzGrifoTimer = null;
+  function qzGrifoAgendar(ms){ clearTimeout(qzGrifoTimer); qzGrifoTimer = setTimeout(function(){ if(!QZ.apertado){ qzGrifoCapturar(); } }, ms); }
+  document.addEventListener("pointerdown", function(){ QZ.apertado = true; }, true);
+  document.addEventListener("pointercancel", function(){ QZ.apertado = false; }, true);
+  document.addEventListener("pointerup", function(e){ QZ.apertado = false; if($("qz-player").hidden){ return; }
+    if(e.pointerType === "mouse"){ qzGrifoCapturar(); } else { qzGrifoAgendar(400); } }, true);
+  document.addEventListener("selectionchange", function(){ if(!$("qz-player").hidden && !$("qz-questao").hidden && !QZ.apertado){ qzGrifoAgendar(700); } });
   $("qz-seg").addEventListener("click", function(e){ var b = e.target.closest("button[data-c]"); if(!b){ return; } QZ.conf = b.getAttribute("data-c");
     Array.prototype.forEach.call($("qz-seg").querySelectorAll("button"), function(x){ x.classList.toggle("on", x === b); }); qzPode(); });
   function qzPode(){ $("qz-responder").disabled = !(QZ.letra && QZ.conf); }
@@ -937,6 +1011,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
     var r = {lista: QZ.lista, tarefa: l.tarefa || q.tarefa || null, num: q.num, letra: QZ.letra, confianca: QZ.conf, correta: QZ.letra === gab, gabarito: gab,
              riscadas: riscadas, racional: "", tempo_s: Math.round((Date.now() - QZ.t0) / 1000), flag: !!$("qz-flag").checked, respondido_em: qzAgora(),
              modo: estudo ? "estudo" : "prova"};
+    var g = QZ.grifos[q.num]; if(g && Object.keys(g).some(function(k){ return g[k] && g[k].length; })){ r.grifos = g; }
     qzGravar(r).then(function(ok){ var st = $("qz-status");
       if(ok){ if(st.className.indexOf("ruim") >= 0){ st.className = "qz-status"; st.textContent = ""; } return; }
       st.className = "qz-status ruim"; st.textContent = "Guardado neste aparelho; reenvio automático quando o banco voltar."; });
@@ -955,7 +1030,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
   }
   function qzRevelar(q, r){
     $("qz-antes").hidden = true; $("qz-depois").hidden = false;
-    $("qz-alts").innerHTML = qzAltsHtml(q, r, true);
+    $("qz-alts").innerHTML = qzAltsHtml(q, r, true, qzGrifosDe(q));
     var v = $("qz-veredito"); v.className = "qz-veredito " + (r.correta ? "certa" : "errada");
     var est = q.estatistica ? '<small>no EMED, ' + qzEsc(q.estatistica) + ' acertam</small>' : "";
     var conf = {solida: "sólida", duvida: "dúvida", chute: "chute"}[r.confianca] || r.confianca;
@@ -1156,6 +1231,8 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
   document.addEventListener("keydown", function(e){
     if(raiz.getAttribute("data-aba") !== "questoes" || $("qz-player").hidden || $("qz-questao").hidden){ return; }
     var tag = (e.target.tagName || "").toLowerCase(); if(tag === "textarea" || tag === "input" || tag === "select"){ return; }
+    // s211 (part-4): a alternativa e role=radio (nao <button>): Enter e Espaco nela a acionam
+    if(e.target.classList && e.target.classList.contains("qz-alt-btn") && (e.key === "Enter" || e.key === " ")){ e.preventDefault(); e.target.click(); return; }
     var k = e.key.toUpperCase();
     if(!$("qz-antes").hidden){
       if("ABCDE".indexOf(k) >= 0 && k.length === 1){ var b = $("qz-alts").querySelector('.qz-alt[data-l="' + k + '"] .qz-alt-btn'); if(b){ b.click(); } }

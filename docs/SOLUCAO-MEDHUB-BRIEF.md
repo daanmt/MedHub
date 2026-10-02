@@ -119,6 +119,9 @@ tabela na captura.
   marca), rotulados "da análise de <data>", sem gravar; o 1º toque começa uma declaração nova.
 - `cadeia_defeito` = `{motivo, ts}`: o aluno sinaliza que a cadeia daquela questão está mal construída
   (fila de correção do agente).
+- `grifos` = `{enun: [[ini, fim]], A: [...]}`: os trechos que ele grifou no enunciado e nas alternativas
+  (offsets de caractere sobre o texto puro), gravados com a resposta -- é o registro do dado que ele VIU.
+  Não verificado por teste: a seleção por toque no navegador do celular (só o operador valida no aparelho).
 
 **A análise do agente** (`analises/<lista>_<num>`) usa a MESMA cadeia da Solução (não a repete). A
 página mostra dela só uma linha: `veredito_hub`, `armadilha` e os `cards`; concordo/em parte/discordo

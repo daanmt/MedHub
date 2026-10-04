@@ -258,6 +258,17 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
 .qz-rev.certa{border-left-color:var(--qz-ok)} .qz-rev.errada{border-left-color:var(--alerta)} .qz-rev.errada i{color:var(--alerta)} .qz-rev.chute{border-left-color:var(--qz-chute)} .qz-rev.chute i{color:var(--qz-chute)}
 .qz-status{font-size:.84em;color:var(--tinta2);min-height:1.3em;margin:0}
 .qz-status.ruim{color:var(--alerta)} .qz-status.ok{color:var(--qz-ok)}
+/* s213 (alca fechada v0): assinatura de leitura no rodape do leitor -- um bloco so, no hub, para
+   aula e analise; o comentario e opcional e o texto nunca se perde (rascunho no aparelho) */
+.hub-assina{display:grid;gap:8px;margin-top:18px;padding:14px;border:1px solid var(--linha);border-radius:12px;background:var(--card);min-width:0}
+.hub-assina-tit{margin:0;font-weight:650;color:var(--tinta2)}
+.hub-assina textarea{min-height:72px;resize:vertical;line-height:1.45}
+.hub-assina-pe{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
+.hub-assina-pe .qz-status{flex:1;min-width:0}
+.hub-assina button{min-height:44px;padding:0 16px}
+.hub-assina-retorno{margin:0;padding:8px 12px;border-left:3px solid var(--acento);background:var(--acento-fraco);border-radius:6px;font-size:.9em;color:var(--tinta)}
+.hub-assina[data-st="erro"] .qz-status,.hub-assina[data-st="leitura"] .qz-status{color:var(--alerta);cursor:pointer}
+.hub-assina[data-st="assinado"] .qz-status,.hub-assina[data-st="absorvida"] .qz-status{color:var(--qz-ok)}
 </style>
 
 <div class="wrap">
@@ -290,6 +301,12 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
       </div>
       <p class="hub-aviso" id="hub-leitor-aviso" hidden>Nao consegui abrir a aula aqui dentro. <a id="hub-leitor-link" href="#">Abrir em pagina inteira</a>.</p>
       <iframe class="hub-quadro" id="hub-leitor-quadro" title="Aula"></iframe>
+      <div class="hub-assina" id="hub-assina" role="group" aria-labelledby="hub-assina-tit" data-st="sem" hidden>
+        <p class="hub-assina-tit" id="hub-assina-tit">Leu? Assine a leitura.</p>
+        <textarea class="qz-linha" id="hub-assina-coment" rows="2" maxlength="600" placeholder="Comentário para o agente (opcional)" aria-label="Comentário para o agente (opcional)"></textarea>
+        <p class="hub-assina-retorno" id="hub-assina-retorno" hidden></p>
+        <div class="hub-assina-pe"><p class="qz-status" id="hub-assina-st" role="status"></p><button type="button" class="primario" id="hub-assina-btn">Assinar leitura</button></div>
+      </div>
     </div>
   </section>
 
@@ -438,6 +455,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
       if(!doc || !doc.body){ throw new Error("sem documento"); }
       var alto = Math.ceil(Math.max(doc.body.scrollHeight, doc.body.getBoundingClientRect().height));
       if(alto > 0){ quadro.style.height = (alto + 2) + "px"; }
+      try{ assinaAlinhar(quadro); }catch(e2){}
     }catch(e){
       quadro.classList.add("hub-quadro-rolavel");   // sem acesso: altura fixa, rola por dentro
     }
@@ -495,6 +513,8 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
     // s213: abrir/fechar um <details> (semana da rota, "Ver as outras") muda a altura; o toggle
     // nao borbulha, por isso o ouvinte e de captura no documento do quadro.
     doc.addEventListener("toggle", function(){ medir(quadro); }, true);
+    // s213: perguntas e comentarios do documento (alca fechada); falha aqui nunca derruba o leitor (R2)
+    try{ pendLigar(doc, quadro); }catch(e){}
     medir(quadro);
     [150, 600, 1500, 3000].forEach(function(ms){ setTimeout(function(){ medir(quadro); }, ms); });
     if(doc.fonts && doc.fonts.ready){ doc.fonts.ready.then(function(){ medir(quadro); }); }
@@ -534,11 +554,15 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
     lista.hidden = true;
     leitor.hidden = false;
     window.scrollTo(0, 0);
+    pendSoltar($("hub-leitor-quadro"));
+    assinaAbrir(pendSlug(href));
     carregar($("hub-leitor-quadro"), href, $("hub-leitor-aviso"));
   }
 
   function fecharAula(){
     var quadro = $("hub-leitor-quadro");
+    pendSoltar(quadro);
+    assinaAbrir("");
     quadro.onload = null;
     quadro.removeAttribute("srcdoc");
     leitor.hidden = true;
@@ -552,6 +576,348 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
     });
   });
   $("hub-leitor-voltar").addEventListener("click", fecharAula);
+
+  // ------------------------------------------------ pendencias (alca fechada v0, s213)
+  // Pedido do operador em 04/10/2026: pergunta do agente ganha lugar de resposta dentro do hub, e todo
+  // documento do leitor pode ser assinado. Tudo mora em analises/pendencias/itens: herda a regra
+  // "analises" (leitura e escrita so do dono), sem regra nova na declaracao do publish. O documento
+  // marca <form class="pend" data-pend data-origem data-ref data-tipo> com textarea, botao e
+  // [data-pend-estado]; o hub liga, le o estado e grava. O texto vai ao aparelho ANTES do banco e so
+  // sai depois da gravacao confirmada (24/09: 64 de 90 notas perdidas com o banco fora no celular).
+  var PEND_COLECAO = "analises/pendencias/itens";
+  var PEND_ERRO = "Não salvou. O rascunho ficou guardado neste aparelho. Toque para reenviar.";
+  var PEND_LEITURA = "Não consegui ler as respostas salvas. Toque para tentar de novo.";
+  var PEND_ABSORVIDO = "Este item já foi absorvido.";
+  var PEND = {pronto: null, subs: {}, ctx: {}};
+  // id = 1 segmento do caminho e sufixo da chave do aparelho: so letras, digitos, _ e -
+  function pendIdValido(id){ return /^[A-Za-z0-9_-]{1,120}$/.test(String(id == null ? "" : id)); }
+  function pendDataCurta(iso){
+    var d = new Date(iso || "");
+    if(!iso || isNaN(d.getTime())){ return ""; }
+    return String(d.getDate()).padStart(2, "0") + "/" + String(d.getMonth() + 1).padStart(2, "0");
+  }
+  function pendEstado(item){
+    var st = item && item.status, resp = String((item && item.resposta) || "");
+    if(st === "absorvida"){ var em = pendDataCurta(item.absorvida_em);
+      return {chave: "absorvida", rotulo: "Absorvida" + (em ? " em " + em : ""), travado: true, texto: resp, retorno: String(item.retorno_agente || "")}; }
+    if(st === "respondida" && resp.trim()){ var em2 = pendDataCurta(item.respondida_em);
+      return {chave: "respondida", rotulo: "Respondida" + (em2 ? " em " + em2 : ""), travado: false, texto: resp, retorno: ""}; }
+    return {chave: "pendente", rotulo: "Pendente", travado: false, texto: "", retorno: ""};
+  }
+  function pendEstadoDoc(item){
+    if(!item || !item.status){ return {chave: "sem", rotulo: "", travado: false, texto: "", retorno: ""}; }
+    var em = pendDataCurta(item.assinado_em), com = String(item.comentario || "");
+    if(item.status === "absorvida"){
+      return {chave: "absorvida", rotulo: "Assinado" + (em ? " em " + em : "") + " · lido pelo agente", travado: true, texto: com, retorno: String(item.retorno_agente || "")}; }
+    return {chave: "assinado", rotulo: "Assinado" + (em ? " em " + em : ""), travado: false, texto: com, retorno: ""};
+  }
+  function pendContagem(chaves){
+    var m = chaves.length, n = chaves.filter(function(c){ return c === "respondida" || c === "absorvida"; }).length;
+    return m ? n + " de " + m + (m === 1 ? " respondida" : " respondidas") : "";
+  }
+  function pendRegistro(meta, texto, agora){
+    return {origem: meta.origem, ref: meta.ref, tipo: meta.tipo, pergunta: meta.pergunta,
+            resposta: String(texto || "").trim(), status: "respondida", respondida_em: agora};
+  }
+  function pendAssinatura(slug, comentario, agora){
+    return {origem: slug, tipo: "documento", status: "assinado", assinado_em: agora, comentario: String(comentario || "").trim()};
+  }
+  function pendSlug(href){ var m = /([^\/]+)\.html$/.exec(String(href || "")); return m && pendIdValido("doc_" + m[1]) ? m[1] : ""; }
+  function pendTextoInicial(estado, rascunho){
+    if(estado.travado){ return {texto: estado.texto, rascunho: false}; }
+    if(rascunho != null && rascunho !== estado.texto){ return {texto: rascunho, rascunho: true}; }
+    return {texto: estado.texto, rascunho: false};
+  }
+  function pendRascunho(id, texto){
+    try{
+      var k = "medhub.pend." + id;
+      if(texto === undefined){ return localStorage.getItem(k); }
+      if(texto === null || texto === ""){ localStorage.removeItem(k); } else { localStorage.setItem(k, texto); }
+    }catch(e){ return null; }
+    return null;
+  }
+  // R10: banco que nao veio nao fica memorizado; a proxima tentativa (reenvio, toque) pede de novo
+  function pendDb(){
+    if(!PEND.pronto){
+      PEND.pronto = new Promise(function(ok){
+        try{
+          window.claude.use("db").then(function(db){ ok(db ? db.collection(PEND_COLECAO) : null); }, function(){ ok(null); });
+        }catch(e){ ok(null); }
+      }).then(function(col){ if(!col){ PEND.pronto = null; } return col; });
+    }
+    return PEND.pronto;
+  }
+  // merge: o set do banco troca o documento inteiro e o update exige que ele exista; ler antes
+  // preserva o que o agente semeou (titulo, obrigatoria, criada_em). C1: item ja absorvido no banco
+  // nunca e regravado, mesmo que a pagina nao saiba (banco fora ao abrir, leitura falha): a promessa
+  // rejeita com e.travado e e.item = o documento lido, para o formulario se repintar travado.
+  function pendGravar(id, dados){
+    return pendDb().then(function(col){
+      if(!col){ throw new Error("sem banco"); }
+      if(!pendIdValido(id)){ throw new Error("id invalido"); }
+      var ref = col.doc(id);
+      return ref.get().then(function(s){
+        var atual = (s && s.exists) ? ((s.data && s.data()) || {}) : null;
+        if(atual && atual.status === "absorvida"){
+          var e = new Error("absorvida"); e.travado = true; e.item = atual; throw e;
+        }
+        return atual ? ref.update(dados) : ref.set(dados);
+      });
+    });
+  }
+  function pendSoltar(quadro){
+    var k = quadro && quadro.id;
+    (PEND.subs[k] || []).forEach(function(u){ try{ u(); }catch(e){} });
+    PEND.subs[k] = [];
+  }
+  function pendEstilo(doc){
+    if(!doc.head || doc.getElementById("pend-hub-estilo")){ return; }
+    var s = doc.createElement("style");
+    s.id = "pend-hub-estilo";
+    // :where() = especificidade zero: o CSS do proprio documento sempre vence
+    s.textContent = ":where(form.pend){display:grid;gap:8px;min-width:0}" +
+      ":where(form.pend textarea){font:inherit;width:100%;min-width:0;min-height:88px;padding:10px 12px;border:1px solid currentColor;border-radius:8px;background:transparent;color:inherit;resize:vertical;box-sizing:border-box}" +
+      ":where(form.pend button){min-height:44px;padding:0 16px;font:inherit;font-weight:600;border-radius:8px;cursor:pointer}" +
+      ":where(form.pend [data-pend-estado]){font-size:.86em}" +
+      ":where(form.pend[data-pend-st=\"erro\"] [data-pend-estado],form.pend[data-pend-st=\"leitura\"] [data-pend-estado],form.pend[data-pend-st=\"invalido\"] [data-pend-estado]){color:#b3261e}" +
+      ":where(form.pend[data-pend-st=\"erro\"] [data-pend-estado],form.pend[data-pend-st=\"leitura\"] [data-pend-estado]){cursor:pointer}" +
+      ":where(form.pend [data-pend-retorno]){margin:0;font-size:.92em}";
+    doc.head.appendChild(s);
+  }
+  function pendPintar(f, item){
+    var e = pendEstado(item), ini = pendTextoInicial(e, pendRascunho(f.id));
+    var pergunta = f.meta.tipo === "pergunta";
+    // R1: leitura falhou e o banco ainda nao disse nada deste item: nao fingir "Pendente"
+    var leitura = !f.erro && !e.travado && !!f.ctx.falha[f.meta.origem] && !(f.id in f.ctx.itens);
+    f.estado = e;
+    if(e.travado || f.el.ownerDocument.activeElement !== f.ta){ f.ta.value = ini.texto; }
+    f.ta.readOnly = e.travado;
+    f.bt.hidden = e.travado;
+    f.bt.disabled = false;
+    f.bt.textContent = f.erro ? "Reenviar" : (e.chave === "respondida" ? "Atualizar" : "Enviar");
+    f.el.setAttribute("data-pend-st", f.erro ? "erro" : (leitura ? "leitura" : e.chave));
+    if(e.retorno){
+      if(!f.ret){ f.ret = f.el.ownerDocument.createElement("p"); f.ret.setAttribute("data-pend-retorno", ""); f.el.appendChild(f.ret); }
+      f.ret.textContent = "Retorno do agente: " + e.retorno;
+      f.ret.hidden = false;
+    } else if(f.ret){ f.ret.hidden = true; }
+    if(f.erro){ f.st.textContent = PEND_ERRO; return; }
+    var rot = e.rotulo;
+    if(!pergunta){ rot = e.chave === "pendente" ? "" : rot.replace("Respondida", "Enviado").replace("Absorvida", "Lido pelo agente"); }
+    if(leitura){ rot = PEND_LEITURA; }
+    if(ini.rascunho){ rot = (rot ? rot + " · " : "") + "rascunho guardado neste aparelho, não enviado"; }
+    if(f.aviso){ rot = f.aviso + (rot ? " " + rot : ""); }
+    f.st.textContent = rot;
+  }
+  // contador dentro de [data-pend-grupo] (as opcionais recolhidas) conta so o grupo dele
+  function pendContar(ctx){
+    Array.prototype.forEach.call(ctx.doc.querySelectorAll("[data-pend-contador]"), function(c){
+      var o = c.getAttribute("data-pend-contador"), g = c.closest ? c.closest("[data-pend-grupo]") : null;
+      c.textContent = pendContagem(ctx.forms.filter(function(f){
+          return f.meta.tipo === "pergunta" && f.meta.origem === o && (!g || g.contains(f.el)); })
+        .map(function(f){ return f.estado ? f.estado.chave : "pendente"; }));
+    });
+  }
+  function pendEnviar(f){
+    if(f.estado && f.estado.travado){ return; }
+    var texto = String(f.ta.value || "").trim();
+    if(!texto){ f.st.textContent = f.meta.tipo === "pergunta" ? "Escreva a resposta antes de enviar." : "Escreva o comentário antes de enviar."; return; }
+    pendRascunho(f.id, texto);
+    var dados = pendRegistro(f.meta, texto, new Date().toISOString());
+    f.bt.disabled = true;
+    f.st.textContent = "Salvando…";
+    return pendGravar(f.id, dados).then(function(){
+      // R7: texto editado durante o "Salvando…" e outro rascunho: fica no aparelho
+      if(String(f.ta.value || "").trim() === texto){ pendRascunho(f.id, null); }
+      f.erro = false;
+      f.ctx.itens[f.id] = Object.assign({}, f.ctx.itens[f.id] || {}, dados);
+      pendPintar(f, f.ctx.itens[f.id]);
+      pendContar(f.ctx);
+      medir(f.ctx.quadro);
+      if(f.ctx.falha[f.meta.origem]){ pendLer(f.ctx); }   // R10: o banco respondeu; tenta ler de novo
+    }).catch(function(err){
+      if(err && err.travado){   // C1: o banco ja tinha absorvido; nada foi gravado
+        f.erro = false;
+        f.aviso = PEND_ABSORVIDO;
+        f.ctx.itens[f.id] = err.item;
+        pendRascunho(f.id, null);
+        pendPintar(f, err.item);
+        pendContar(f.ctx);
+        medir(f.ctx.quadro);
+        return;
+      }
+      f.erro = true;
+      pendPintar(f, f.ctx.itens[f.id] || null);
+      medir(f.ctx.quadro);
+    });
+  }
+  function pendFalhaLeitura(ctx, origens){
+    if(PEND.ctx[ctx.quadro.id] !== ctx){ return; }
+    origens.forEach(function(o){ ctx.falha[o] = true; });
+    ctx.forms.forEach(function(f){ if(origens.indexOf(f.meta.origem) >= 0){ pendPintar(f, ctx.itens[f.id] || null); } });
+    medir(ctx.quadro);
+  }
+  // le (ou rele, no toque depois de uma falha) o estado de cada origem do documento aberto
+  function pendLer(ctx){
+    var k = ctx.quadro.id;
+    if(PEND.ctx[k] !== ctx){ return; }
+    pendSoltar(ctx.quadro);
+    ctx.origens.forEach(function(o){ ctx.falha[o] = false; });
+    pendDb().then(function(col){
+      if(PEND.ctx[k] !== ctx){ return; }
+      if(!col){ pendFalhaLeitura(ctx, ctx.origens); return; }
+      ctx.origens.forEach(function(o){
+        try{
+          PEND.subs[k].push(col.where("origem", "==", o).onSnapshot(function(s){
+            if(PEND.ctx[k] !== ctx){ return; }
+            ctx.falha[o] = false;
+            (s.docs || []).forEach(function(d){ ctx.itens[d.id] = d.data ? d.data() : null; });
+            ctx.forms.forEach(function(f){ if(f.meta.origem === o){ pendPintar(f, ctx.itens[f.id] || null); } });
+            pendContar(ctx);
+            medir(ctx.quadro);
+          }, function(){ pendFalhaLeitura(ctx, [o]); }));
+        }catch(e){ pendFalhaLeitura(ctx, [o]); }
+      });
+    });
+  }
+  function pendLigar(doc, quadro){
+    pendSoltar(quadro);
+    PEND.ctx[quadro.id] = null;
+    var els = Array.prototype.slice.call(doc.querySelectorAll("form.pend[data-pend]"));
+    if(!els.length){ return; }
+    pendEstilo(doc);
+    var ctx = {doc: doc, quadro: quadro, forms: [], itens: {}, falha: {}, origens: []};
+    els.forEach(function(el){
+      var ta = el.querySelector("textarea"), bt = el.querySelector("button");
+      if(!ta || !bt){ return; }
+      var st = el.querySelector("[data-pend-estado]");
+      if(!st){ st = doc.createElement("span"); st.setAttribute("data-pend-estado", ""); el.appendChild(st); }
+      var id = el.getAttribute("data-pend") || "";
+      if(!pendIdValido(id)){   // R3: id fora do formato nao vira caminho nem chave do aparelho
+        ta.disabled = true; bt.disabled = true;
+        el.setAttribute("data-pend-st", "invalido");
+        st.textContent = "Este campo está com defeito e não grava. Avise o agente.";
+        return;
+      }
+      var perg = el.querySelector("[data-pend-pergunta]");
+      var f = {el: el, ta: ta, bt: bt, st: st, ret: el.querySelector("[data-pend-retorno]"), erro: false, aviso: "", estado: null, ctx: ctx,
+               id: id,
+               meta: {origem: el.getAttribute("data-origem") || "", ref: el.getAttribute("data-ref") || "",
+                      tipo: el.getAttribute("data-tipo") || "pergunta",
+                      pergunta: el.getAttribute("data-pergunta") || (perg ? perg.textContent.trim() : "")}};
+      ta.disabled = false;
+      el.setAttribute("data-pend-ligado", "1");
+      ta.addEventListener("input", function(){ pendRascunho(f.id, ta.value); });
+      el.addEventListener("submit", function(ev){ ev.preventDefault(); pendEnviar(f); });
+      st.addEventListener("click", function(){
+        if(f.erro){ pendEnviar(f); } else if(ctx.falha[f.meta.origem]){ pendLer(ctx); }
+      });
+      ctx.forms.push(f);
+      pendPintar(f, null);
+    });
+    pendContar(ctx);
+    ctx.origens = ctx.forms.map(function(f){ return f.meta.origem; })
+      .filter(function(o, i, xs){ return o && xs.indexOf(o) === i; });
+    PEND.ctx[quadro.id] = ctx;
+    pendLer(ctx);
+  }
+
+  // assinatura de leitura: analises/pendencias/itens/doc_<slug>, no rodape do leitor
+  var ASSINA = {slug: "", item: null, erro: false, leitura: false, aviso: "", unsub: null};
+  function assinaAbrir(slug){
+    ASSINA.slug = slug; ASSINA.item = null; ASSINA.erro = false; ASSINA.leitura = false; ASSINA.aviso = "";
+    $("hub-assina").hidden = !slug;
+    $("hub-assina").style.marginLeft = $("hub-assina").style.marginRight = "";
+    if(!slug){ if(ASSINA.unsub){ try{ ASSINA.unsub(); }catch(e){} ASSINA.unsub = null; } return; }
+    assinaPintar();
+    assinaLer(slug);
+  }
+  function assinaFalha(slug){
+    if(ASSINA.slug !== slug){ return; }
+    ASSINA.leitura = true;
+    assinaPintar();
+  }
+  function assinaLer(slug){
+    if(ASSINA.unsub){ try{ ASSINA.unsub(); }catch(e){} ASSINA.unsub = null; }
+    ASSINA.leitura = false;
+    pendDb().then(function(col){
+      if(ASSINA.slug !== slug){ return; }
+      if(!col){ assinaFalha(slug); return; }
+      try{
+        ASSINA.unsub = col.doc("doc_" + slug).onSnapshot(function(s){
+          if(ASSINA.slug !== slug){ return; }
+          ASSINA.leitura = false;
+          ASSINA.item = (s && s.exists && s.data) ? s.data() : null;
+          assinaPintar();
+        }, function(){ assinaFalha(slug); });
+      }catch(e){ assinaFalha(slug); }
+    });
+  }
+  function assinaPintar(){
+    var e = pendEstadoDoc(ASSINA.item), ini = pendTextoInicial(e, pendRascunho("doc_" + ASSINA.slug));
+    var ta = $("hub-assina-coment"), bt = $("hub-assina-btn"), ret = $("hub-assina-retorno");
+    var leitura = !ASSINA.erro && !e.travado && ASSINA.leitura;
+    if(e.travado || document.activeElement !== ta){ ta.value = ini.texto; }
+    ta.readOnly = e.travado;
+    bt.hidden = e.travado;
+    bt.disabled = false;
+    bt.textContent = ASSINA.erro ? "Reenviar" : (e.chave === "sem" ? "Assinar leitura" : "Atualizar comentário");
+    ret.hidden = !e.retorno;
+    ret.textContent = e.retorno ? "Retorno do agente: " + e.retorno : "";
+    $("hub-assina").setAttribute("data-st", ASSINA.erro ? "erro" : (leitura ? "leitura" : e.chave));
+    var rot = leitura ? PEND_LEITURA : (e.rotulo || "");
+    if(ini.rascunho){ rot = (rot ? rot + " · " : "") + "rascunho guardado neste aparelho, não enviado"; }
+    if(ASSINA.aviso){ rot = ASSINA.aviso + (rot ? " " + rot : ""); }
+    $("hub-assina-st").textContent = ASSINA.erro ? PEND_ERRO : rot;
+  }
+  function assinaEnviar(){
+    var slug = ASSINA.slug, id = "doc_" + slug, com = $("hub-assina-coment").value;
+    if(!slug || pendEstadoDoc(ASSINA.item).travado){ return; }
+    pendRascunho(id, com);
+    var dados = pendAssinatura(slug, com, new Date().toISOString());
+    $("hub-assina-btn").disabled = true;
+    $("hub-assina-st").textContent = "Salvando…";
+    pendGravar(id, dados).then(function(){
+      // R7: comentario editado durante o "Salvando…" fica no aparelho
+      if(ASSINA.slug !== slug || $("hub-assina-coment").value === com){ pendRascunho(id, null); }
+      if(ASSINA.slug !== slug){ return; }
+      ASSINA.erro = false;
+      ASSINA.item = Object.assign({}, ASSINA.item || {}, dados);
+      if(ASSINA.leitura){ assinaLer(slug); }   // R10: o banco respondeu; tenta ler de novo
+      assinaPintar();
+    }).catch(function(err){
+      if(err && err.travado){   // C1: ja absorvida no banco; nada foi gravado
+        pendRascunho(id, null);
+        if(ASSINA.slug !== slug){ return; }
+        ASSINA.erro = false; ASSINA.leitura = false; ASSINA.item = err.item; ASSINA.aviso = PEND_ABSORVIDO;
+        assinaPintar();
+        return;
+      }
+      if(ASSINA.slug !== slug){ return; }
+      ASSINA.erro = true;
+      assinaPintar();
+    });
+  }
+  // R9: o rodape segue a coluna do documento aberto (margem interna do .wrap/main/article dele)
+  function assinaAlinhar(quadro){
+    var box = $("hub-assina");
+    if(!box || box.hidden || !quadro || quadro.id !== "hub-leitor-quadro"){ return; }
+    var esq = 0, dir = 0;
+    try{
+      var doc = quadro.contentDocument, el = doc.querySelector(".wrap, main, article") || doc.body;
+      var cs = doc.defaultView.getComputedStyle(el), r = el.getBoundingClientRect(), qw = quadro.clientWidth;
+      esq = r.left + (parseFloat(cs.paddingLeft) || 0);
+      dir = qw - r.right + (parseFloat(cs.paddingRight) || 0);
+      if(!(qw > 0 && esq >= 0 && dir >= 0 && esq + dir < qw / 2)){ esq = 0; dir = 0; }
+    }catch(e){ esq = 0; dir = 0; }
+    box.style.marginLeft = Math.round(esq) + "px";
+    box.style.marginRight = Math.round(dir) + "px";
+  }
+  $("hub-assina-btn").addEventListener("click", assinaEnviar);
+  $("hub-assina-st").addEventListener("click", function(){
+    if(ASSINA.erro){ assinaEnviar(); } else if(ASSINA.leitura){ assinaLer(ASSINA.slug); }
+  });
+  $("hub-assina-coment").addEventListener("input", function(){ pendRascunho("doc_" + ASSINA.slug, $("hub-assina-coment").value); });
 
   // --------------------------------------------------------------- quadro
   // O estado "feito" mora no db, em quadro/<slug> = {feito, ts} (regra de escrita "quadro" na

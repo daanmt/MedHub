@@ -41,11 +41,21 @@ Ele terminou o simulado UERJ 2021 no hub: *"desconfio que o gabarito está incor
 
 Total aproximado: 3,8 milhões de tokens em 26 subagentes. Re-medido por mim antes de usar: o PDF do pós-recurso (coordenada e cor), o diff cega x gabarito, a contagem `contagens.py`, o `--dry-run` do lote, a suíte e o diff da página viva.
 
+## Adendo -- alça fechada v0 (pedido dele no fecho, 04/10)
+
+Depois do relatório, ele disse: *"No 'Perguntas para você', seria interessante ter um local para inserir a resposta - e, com isso, toda pendência é resolvida, tal como num kanban [...] Sempre que o agente entregar uma demanda, documento/relatório/insight, ou mesmo lista, card, etc; tudo que é visto precisa ser 'assinado', como uma comunicação em alça fechada. O ambiente deve ser o grande gestor dessas tarefas e da curva de aprendizagem."* E a visão: transformar o MedHub em produto, com backend, frontend, APIs e automações fora de artifacts, como processo mais longo. Pediu os ajustes de tela para receber os feedbacks e o encerramento formal.
+
+9. **Alça fechada v0** (spec `.vibeflow/specs/alca-fechada-v0.md`): no leitor do hub, todo `<form class="pend" data-pend=...>` de um documento é ligado ao banco do artifact em `analises/pendencias/itens` (herda a regra `analises`: só o dono lê e escreve; `capabilities` intocada). Estados Pendente -> Respondida -> Absorvida (com `retorno_agente`); rascunho espelhado em `localStorage`, nunca perdido quando a gravação falha; "Assinar leitura" com comentário no rodapé do leitor para qualquer aula ou análise (`doc_<slug>`). Na Autópsia: 22 perguntas respondíveis (Q30, Q44, Q47 abertas; 19 opcionais recolhidas) e 44 campos de comentário, um por questão. Rito novo no `/hub-backend` (passo 2c). Semeei os 22 itens no banco real (`ArtifactData batch set`) e conferi: nível `interact` lê zero documentos; consulta com `where` devolve as 3 obrigatórias.
+10. **Loop implement -> audit:** a auditoria deu **PARTIAL** -- C1 (alta): o envio sobrescrevia item `absorvida` quando a página abria sem o estado do banco (reproduzido em node com a função real; risco de o backend absorver duas vezes). Corrigido por um terceiro subagente junto com R1-R10 (leitura que falha avisa e relê ao toque; "Reenviar" sem recarregar; id validado; rascunho preservado durante a gravação; rodapé alinhado; rito com `update` + `if_version` e dono dos seeds). Re-medido por mim: a reprodução passa a imprimir `RECUSOU`, suíte 1380, `auto_check` verde. Limite declarado: testado com banco FALSO no navegador; a 1a gravação real pelo celular dele ainda não aconteceu. Uma checagem por mutação do subagente foi negada pelo classificador e não foi contornada.
+11. **Hub Version 66** (id 1791095869-7c80): 2 arquivos alterados (Autópsia e painel), 14 mantidos, `--check: OK`, `hub.py --confirmar` rodado.
+
+Subagentes do adendo (`usage` do harness): implementação Opus 270.978 tokens, 122 chamadas, 28,0 min · auditoria Opus 105.971, 34, 9,6 min · correção Opus 203.570, 92, 13,0 min. Total da sessão: cerca de 4,4 milhões de tokens em 29 subagentes.
+
 ## Selos
 
 - `banco-emed: t1793 ingerida 2 (correção de gabarito) · registrada 60 · erros analisados 44 (21 gravados, 3 pendentes de racional)`
-- Suíte: **1361** (`python -X utf8 -m pytest tools/ -q`; era 1349).
-- Hub: Version 65 (id 1791085334-5a25).
+- Suíte: **1380** (`python -X utf8 -m pytest tools/ -q`; era 1349; 1361 no 1o selo da sessão).
+- Hub: Version 65 (id 1791085334-5a25) e, no adendo, Version 66 (id 1791095869-7c80).
 
 ## Fricções (candidatas a achado; triagem pelo rito do ledger na próxima sessão de engenharia)
 
@@ -57,8 +67,9 @@ Total aproximado: 3,8 milhões de tokens em 26 subagentes. Re-medido por mim ant
 
 ## Pendências
 
-- **Dele:** responder em 1 linha Q30, Q44 e Q47 (fecham os 3 erros restantes) e, se quiser, as 19 perguntas das certas não-sólidas (bloco "Perguntas para você" da Autópsia).
+- **Dele (agora dentro do hub, com campo de resposta):** responder em 1 linha Q30, Q44 e Q47 (fecham os 3 erros restantes) e, se quiser, as 19 perguntas das certas não-sólidas (bloco "Perguntas para você" da Autópsia).
 - **Resumos:** as armadilhas das 24 erradas ainda NÃO foram somadas aos resumos (Siamese Twins); `[SEM-LASTRO]` em Glomerulopatias e nos temas novos.
+- **Hub (tema dele para a s214):** absorver as respostas e assinaturas de `analises/pendencias/itens`; quadro de pendências no Painel; promover o montador da Autópsia de `tmp/` para `tools/`.
 - **Painel:** D4-4 (placar das listas e das provas UERJ no bloco de performance, esforço M) e os achados baixos R3-R5 do audit.
 - **Aulas da S4 que faltam:** #1797 Tuberculose 360, #5424 imagem obstétrica, #881 rastreamento, #882 saúde mental na APS, #5425 rodapés; sessões sem lista #768, #590, #367.
 - Recalibrar peso por bloco depois da UERJ 2022 (3a prova), na S4.

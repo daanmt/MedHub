@@ -41,6 +41,14 @@ Subagente Sonnet rodou o tique (191.940 tokens, 30 chamadas, 1,7 min): `--precis
 - `environment`: "EMED professor comment (MedHub): the user, a paying EMED subscriber, authorizes the MedHub agent to read the professor comment of ONE question at a time through the EMED API (tools/emed_api.py --comentario), printed to stdout only and never written to disk, git or any artifact, to check the skill chain of his own study analysis."
 - `allow`: "In C:/Users/daanm/medhub: editing tools/emed_api.py and tools/test_emed_api.py to add the --comentario flag described in .vibeflow/specs/feedback-cadeia-declarada-part-1b.md, and running it for a single question, is authorized by the user."
 
+## Fecho (pedido dele, 03/10 à noite)
+
+"Essa recalculada de rota que você cunhou merece também entrar no 'Painel', já aproveitando a formatação/layout para direcionar com os links para as aulas/listas. Por fim, estou finalizando o simulado da UERJ. Próxima sessão tem revisão do bloco 'Painel', aperfeiçoando-o para gerir o cronograma, performance e documentação; ampliando o dossiê e trazendo insights sobre os padrões de erros do usuário; autópsia da uerj (sem artifact, tudo direto no artifact do medhub no bloco de documentação. Ajuste o handoff e encerre formalmente."
+
+- A rota no Painel NÃO foi construída nesta sessão: o contexto estava no fim e publicar exige ler a página gerada inteira. Entrou como 1o item da pauta da s213 (HANDOFF, linha "ABRIR A s213").
+- A UERJ 2021 não foi registrada: ele ainda estava terminando a prova no fecho.
+- Sessão encerrada formalmente: HANDOFF ajustado, log e índice escritos, `auto_check` e suíte verdes, commit e push.
+
 ## Pendências
 
 - Do operador: destravar a `part-1b` (texto do `autoMode` no HANDOFF) e criar no EMED os cadernos das provas UERJ para casar o comentário.

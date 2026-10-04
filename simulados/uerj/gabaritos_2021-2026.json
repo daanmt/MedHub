@@ -21,7 +21,7 @@
     "15": "C",
     "16": "A",
     "17": "A",
-    "18": "C",
+    "18": "ANULADA",
     "19": "B",
     "20": "B",
     "21": "D",
@@ -58,16 +58,18 @@
     "52": "B",
     "53": "B",
     "54": "C",
-    "55": "D",
-    "56": "C",
+    "55": "C",
+    "56": "B",
     "57": "A",
     "58": "A",
     "59": "B",
     "60": "D"
    },
-   "fonte": "https://cdn.medblog.estrategiaeducacional.com.br/wp-content/uploads/2021/02/Gabaritos.zip -> arquivo interno 'AC.pdf' (mirror do Estrategia MED, pagina 'UERJ 2021: Provas e Editais' https://med.estrategia.com/portal/residencia-medica/provas/uerj-provas-e-editais/). Documento original: 'UNIVERSIDADE DO ESTADO DO RIO DE JANEIRO - RESIDENCIA MEDICA UERJ 2021 - PROVA OBJETIVA - PROGRAMAS DO ACESSO DIRETO - GABARITO', organizador CEPUERJ.",
-   "anuladas": [],
-   "observacao": "rotulo generico \"GABARITO\": preliminar x definitivo NAO VERIFICADO"
+   "fonte": "https://cdn.medblog.estrategiaeducacional.com.br/wp-content/uploads/2021/02/Gabaritos.zip -> arquivo interno 'AC.pdf' (mirror do Estrategia MED, pagina 'UERJ 2021: Provas e Editais' https://med.estrategia.com/portal/residencia-medica/provas/uerj-provas-e-editais/). Documento original: 'UNIVERSIDADE DO ESTADO DO RIO DE JANEIRO - RESIDENCIA MEDICA UERJ 2021 - PROVA OBJETIVA - PROGRAMAS DO ACESSO DIRETO - GABARITO', organizador CEPUERJ (preliminar; byte a byte igual ao do Cepuerj, https://www.cepuerj.uerj.br/uploads/concursos/160728122795808714d0b8391f5e5029ba80cbee78e7ee39a/543984052.pdf) + gabarito POS-RECURSO do Cepuerj: https://www.cepuerj.uerj.br/uploads/concursos/161124967099972534d0b8391f5e5029ba80cbee78e7ee39a/1078201016.pdf",
+   "anuladas": [
+    18
+   ],
+   "observacao": "gabarito POS-RECURSO conferido em 2026-10-03 (s213; subagente isolado + releitura do principal por coordenada e cor): Q18 ANULADA; Q55 D -> C e Q56 C -> B (letra em vermelho = gabarito final); as outras 57 iguais ao preliminar"
   },
   "2022": {
    "respostas": {

@@ -61,6 +61,15 @@
   "dossie-uerj": {
    "tipo": "analise",
    "titulo": "Dossiê UERJ: anatomia e maldades da prova"
+  },
+  "autopsia-uerj-2021": {
+   "tipo": "analise",
+   "titulo": "Autópsia UERJ 2021"
+  },
+  "remit-cicatrizacao": {
+   "tipo": "aula",
+   "titulo": "REMIT e Cicatrização",
+   "tarefa_id": 530
   }
  }
 }

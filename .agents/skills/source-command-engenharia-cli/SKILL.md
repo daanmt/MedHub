@@ -429,7 +429,7 @@ da trilha (`core/cronograma/trilha/custom.json` + `python tools/trilha.py --grav
 | `--pendentes "2,3"` | Ids do `--confirmar-area` que estão **pendentes** (limpa o vínculo de conclusão de cada um). |
 | `--pendencia-revisao` | Quantas linhas ainda têm `origem_conclusao=dashboard_2026-09-10`, **por área** (read-only), ordenado por peso de bloco UERJ. Zero = passada completa. |
 | `--reserva` | **(s189)** As linhas PENDENTES **fora da fila** (`semana_plano` NULL: as que a `fase1_exclusiva` tirou + a reserva do extensivo S1-S20), por **peso UERJ** desc (`prevalencia_uerj.json`, casamento pelo mesmo `casa` do gerador da trilha), em **Markdown no stdout** (read-only; `--json` para a lista crua). Colunas que decidem: `tema ja na fila por` (outra linha agendada já cobre o tema) e `estado (18/09)` (ZERO/TOCADO/PARCIAL/FEITO, o porquê da exclusão). **WARN no stderr** só para faixa ALTA sem NENHUMA linha na fila -- o risco real; linha sem tema casado sai como *não medida*, nunca peso zero. Uso: `python tools/plano.py --reserva > docs/RESERVA-FASE1.md`; o gate é o olho do operador, uma vez. |
-| `--panorama` | **(s190, pedido do operador)** O plano **EM ABERTO** como o boot o entrega, em **Markdown no stdout** (read-only; `--json` para o dict cru): semana de **calendário** da trilha (fora do calendário cai para a posição do plano, sem data), as pendentes dela e as **atrasadas** de semana anterior na ordem do plano, a **sequência de simulados** da Fase 1 com status e o "da vez", a próxima semana e a Fase 1 inteira **contadas por classe**. A classe diz o que FAZER com a tarefa e sai de **campos** (`url_lista`, `q_previstas`, `fonte`), não de substring da `nota`: `lista` (link pronto) · `caderno` (sem link, com questões previstas: montar no banco do EMED pelo filtro) · `aula` (custom sem lista: aula-base do agente) · `sem_lista` (aula-base + 10-15 questões pelo filtro do tema). Lista por extenso as 12 primeiras abertas e **declara** o resto. Consumidor: `tools/hooks/memory_boot.py` (seção "Panorama do plano" do boot). Reserva e Fase 2 além da próxima semana ficam de fora -- os inventários são `--reserva` e `--listar`. |
+| `--panorama` | **(s190, pedido do operador)** O plano **EM ABERTO** como o boot o entrega, em **Markdown no stdout** (read-only; `--json` para o dict cru): semana de **calendário** da trilha (fora do calendário cai para a posição do plano, sem data), as pendentes dela e as **atrasadas** de semana anterior na ordem do plano, a **sequência de simulados** da Fase 1 com status e o "da vez", a próxima semana e a Fase 1 inteira **contadas por classe**; no `--json`, a chave `rota` (s213) traz as semanas seguintes até a última da Fase 1 com as pendentes por extenso (é dela que o Painel desenha a rota; o Markdown do boot não muda). A classe diz o que FAZER com a tarefa e sai de **campos** (`url_lista`, `q_previstas`, `fonte`), não de substring da `nota`: `lista` (link pronto) · `caderno` (sem link, com questões previstas: montar no banco do EMED pelo filtro) · `aula` (custom sem lista: aula-base do agente) · `sem_lista` (aula-base + 10-15 questões pelo filtro do tema). Lista por extenso as 12 primeiras abertas e **declara** o resto. Consumidor: `tools/hooks/memory_boot.py` (seção "Panorama do plano" do boot). Reserva e Fase 2 além da próxima semana ficam de fora -- os inventários são `--reserva` e `--listar`. |
 
 As três fontes, todas versionadas em `core/cronograma/`: `grade_extensivo.json` (735 tarefas /
 52 semanas, part-1) · `grade.json` (Reta Final -- entram só as **pendentes** de S17-S28) ·
@@ -580,12 +580,13 @@ Escrita só por `app/utils/db.py` (`vincular_sessao_tarefa`, o único writer de 
 
 | Flag | Função |
 |---|---|
-| `--json` | Imprime o dado estruturado dos 4 blocos. **É o contrato** -- é o que `tools/test_painel.py` prova; o HTML é render por cima dele. |
+| `--json` | Imprime o dado estruturado dos 5 blocos (os 4 fixos + Documentação). **É o contrato** -- é o que `tools/test_painel.py` prova; o HTML é render por cima dele. |
 | `--html` | Gera a página autocontida. Default: `artifacts/painel.html`. |
 | `--out PATH` | Destino do `--html`. |
 
-Os 4 blocos (s194, refeito pela auditoria de fidelidade de 23/09), e **cada número sai de um leitor que
-outra superfície já usa** -- o painel não tem regra própria de semana, teto ou ritmo:
+Os 4 blocos fixos (`BLOCOS`; s194, refeito pela auditoria de fidelidade de 23/09) + o de Documentação
+(`BLOCO_DOCS`, s212), e **cada número sai de um leitor que outra superfície já usa** -- o painel não tem
+regra própria de semana, teto ou ritmo:
 - **Hoje** (`dia`): questões feitas hoje x o ritmo da META (`performance.volume_vs_marco`, a mesma linha Meta do
   boot -- s203; ⚰️ *era a cota da semana de calendário, revogada pelo operador em 27/09*);
   cards `consumo/teto` e os restantes (`day_plan._fsrs_counts` + `_teto_efetivo` + `realizado_do_dia`:
@@ -594,11 +595,21 @@ outra superfície já usa** -- o painel não tem regra própria de semana, teto 
 - **Semana**: `plano.panorama` -- a MESMA função do `plano.py --panorama` do boot (semana de CALENDÁRIO +
   as atrasadas, na ordem do plano, cada uma com o que fazer: lista com link, aula do hub, caderno). As 6
   primeiras (e todas as atrasadas) à vista, o resto recolhido.  <!-- CHECK: test_concordancia_painel_x_panorama -->
+  **Rota até a prova (s213):** abaixo da corrente, cada semana seguinte até a última da Fase 1 (a chave
+  `rota` do mesmo `plano.panorama`), recolhida em `<details>` e com as tarefas no MESMO `<li class="tarefa">`
+  e os mesmos links; a linha "Depois" só sobra sem rota. As semanas e os ids batem com a aba Aulas
+  (`hub.secoes_do_quadro`).  <!-- CHECK: test_rota_concorda_com_a_aba_aulas -->
+  **Ação da tarefa (s213):** lista com questões no banco do hub abre a aba Listas (modo Questões; Simulados
+  para simulado) e o link do EMED some -- decisão do operador em 25/09, a mesma precedência do quadro da
+  aba Aulas; a aula que CUMPRE ou PREPARA a tarefa (`tarefa_id` e `tarefas` do registro) vem embaixo.  <!-- CHECK: test_lista_no_banco_do_hub_abre_a_aba_listas_e_nao_o_emed -->
 - **Ritmo**: real em 7 e 14 dias (`db.get_ritmo_real`) ao lado do alvo até a UERJ
   (`performance.volume_vs_marco`) e do ritmo para fechar a Fase 1 (`day_plan._cronograma_hoje`), e o acerto.
 - **Por bloco**: tarefas feitas/vivas e questões/acerto por bloco (`sessoes_bulk` por área, pelo
   `db.bloco_de`); **simulado em linha própria** (`areas.AREAS_AGREGADAS`: `bloco_de('Simulado')` = CM por
   fallback) e área fantasma do F89 nomeada, fora da tabela.  <!-- CHECK: test_simulado_fora_das_tarefas_por_bloco -->
+- **Documentação** (`docs`, s212): os itens `tipo: analise` do `core/hub_quadro.json` com arquivo em
+  `artifacts/`, cada um com o atalho que o abre no leitor do hub; sem documento, o bloco não aparece na
+  página (no JSON, lista vazia).  <!-- CHECK: test_documentacao_lista_as_analises_do_quadro_com_atalho -->
 
 ⚰️ *Até 23/09/2026 (s194): a semana era a MENOR com pendência (o boot dizia S2, o painel S1), o FSRS saía
 sem o consumo do dia, a coluna "do previsto" dividia volume histórico por um plano com cortadas e

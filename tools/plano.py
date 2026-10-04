@@ -937,7 +937,9 @@ def panorama(linhas, calendario, hoje, prevalencia=None):
       cada uma com a `classe` (o que fazer com ela);
     - `simulados`: a sequencia de provas da Fase 1 com o status de cada uma;
     - `proxima`: a semana seguinte, contada por classe;
-    - `fase1`: a fila inteira da Fase 1, contada por classe.
+    - `fase1`: a fila inteira da Fase 1, contada por classe;
+    - `rota` (s213): as semanas seguintes ate a ultima da Fase 1, cada uma com as pendentes por
+      extenso (o Painel as desenha; o texto do boot nao muda).
 
     Reserva (semana NULL) e Fase 2 alem da proxima semana ficam de fora: e panorama de
     execucao, nao inventario (`--reserva` e `--listar` sao os inventarios).
@@ -968,14 +970,24 @@ def panorama(linhas, calendario, hoje, prevalencia=None):
     sims = sorted((l for l in vivas if l.get("area") == AREA_SIMULADO
                    and l["semana_plano"] in SEMANAS_FASE1), key=chave)
 
-    def item(l):
-        return {"id": l.get("id"), "semana": l["semana_plano"],
-                "atrasada": l["semana_plano"] < semana, "bloco": l.get("bloco"),
-                "area": l.get("area"), "tema": l.get("tema"), "q": _q(l),
-                "classe": classe_da_tarefa(l), "url_lista": l.get("url_lista"),
-                "nota": l.get("nota"),
-                "faixa_uerj": (faixa_uerj(l.get("area"), l.get("tema"), prevalencia)
-                               if prevalencia else None)}
+    item = lambda l: _item_panorama(l, semana, prevalencia)
+
+    # s213 (pedido do operador: a rota inteira no Painel): as semanas DEPOIS da corrente ate a
+    # ultima da Fase 1, so as que tem pendente (a mesma regra do quadro da aba Aulas). A regua de
+    # semana e esta; a tela do Painel le daqui, nunca recalcula.
+    rota = []
+    for s in range(semana + 1, max(SEMANAS_FASE1) + 1):
+        pend_s = [l for l in pendentes if l["semana_plano"] == s]
+        if not pend_s:
+            continue
+        cal_s = (calendario or {}).get(s)
+        vivas_s = [l for l in vivas if l["semana_plano"] == s]
+        rota.append({"semana": s,
+                     "inicio": cal_s[0].isoformat() if cal_s else None,
+                     "fim": cal_s[1].isoformat() if cal_s else None,
+                     "tarefas": [item(l) for l in pend_s], "q": sum(_q(l) for l in pend_s),
+                     "feitas": sum(1 for l in vivas_s if l.get("status") == "feita"),
+                     "total": len(vivas_s)})
 
     cal_seg = (calendario or {}).get(semana + 1)
     return {
@@ -998,7 +1010,19 @@ def panorama(linhas, calendario, hoje, prevalencia=None):
                     "classes": _por_classe(seguinte)} if seguinte else None,
         "fase1": {"tarefas": len(fase1), "q": sum(_q(l) for l in fase1),
                   "classes": _por_classe(fase1)},
+        "rota": rota,
     }
+
+
+def _item_panorama(l, semana, prevalencia=None):
+    """Uma tarefa pendente como o panorama a entrega (abertas e rota). PURA."""
+    return {"id": l.get("id"), "semana": l["semana_plano"],
+            "atrasada": l["semana_plano"] < semana, "bloco": l.get("bloco"),
+            "area": l.get("area"), "tema": l.get("tema"), "q": _q(l),
+            "classe": classe_da_tarefa(l), "url_lista": l.get("url_lista"),
+            "nota": l.get("nota"),
+            "faixa_uerj": (faixa_uerj(l.get("area"), l.get("tema"), prevalencia)
+                           if prevalencia else None)}
 
 
 def _dm(iso):

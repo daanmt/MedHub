@@ -50,8 +50,12 @@ SAIDA_HTML = ROOT / "artifacts" / "painel.html"
 QUADRO = ROOT / "core" / "hub_quadro.json"
 ARTIFATOS = ROOT / "artifacts"
 
-#: Ordem dos blocos na pagina. O `id` e o `data-bloco` do HTML e a chave do JSON.
+#: Ordem dos blocos na pagina. O `id` e o `data-bloco` do HTML e a chave do JSON. Os 4 que a
+#: pagina SEMPRE desenha.
 BLOCOS = ("dia", "semana", "ritmo", "blocos")
+#: O 5o bloco, Documentacao (s212): sempre no JSON (lista, vazia sem documento), na pagina so com
+#: documento -- por isso fora de `BLOCOS`.
+BLOCO_DOCS = "docs"
 
 #: O carimbo de geracao mora entre estes marcadores: o hub os ignora ao comparar a projecao
 #: publicada (a hora muda a cada geracao; o conteudo, nao).
@@ -90,51 +94,70 @@ def _volume_por_bloco(sessoes):
 
 
 def _aulas_por_tarefa():
-    """{tarefa_id: slug} do registro do quadro de aulas (`core/hub_quadro.json`). Ilegivel ou
-    ausente = {} (a tarefa de aula so perde o atalho; o numero nao muda)."""
+    """{tarefa_id: [{slug, titulo}]} do registro do quadro de aulas (`core/hub_quadro.json`), com a
+    semantica de `hub.ligacoes_do_quadro`: `tarefa_id` = a aula CUMPRE a tarefa; `tarefas` = a
+    aula a PREPARA (s213: antes so o `tarefa_id`, e a aula que prepara uma lista nao aparecia).
+    So aula com arquivo em `artifacts/` (a mesma regra do hub: sem arquivo, o atalho abriria
+    nada). Ilegivel ou ausente = {} (a tarefa so perde o atalho; o numero nao muda)."""
     try:
         reg = json.loads(QUADRO.read_text(encoding="utf-8"))
     except (OSError, ValueError):
         return {}
     saida = {}
     for slug, item in (reg.get("itens") or {}).items():
-        tid = (item or {}).get("tarefa_id")
-        if tid is not None:
-            saida[int(tid)] = slug
+        item = item or {}
+        if not (ARTIFATOS / ("aula-%s.html" % slug)).is_file():
+            continue
+        ids = {int(x) for x in (item.get("tarefas") or [])}
+        if item.get("tarefa_id") is not None:
+            ids.add(int(item["tarefa_id"]))
+        for tid in sorted(ids):
+            saida.setdefault(tid, []).append({"slug": slug, "titulo": item.get("titulo") or slug})
     return saida
 
 
+def _tarefa(t, aulas, no_hub):
+    """Uma tarefa do panorama como o painel a desenha -- o MESMO construtor para a semana
+    corrente e para a rota."""
+    from app.utils import areas
+    agregada = t.get("area") in areas.AREAS_AGREGADAS
+    ligadas = aulas.get(t["id"]) or []
+    return {
+        "id": t["id"], "semana": t["semana"], "atrasada": t["atrasada"],
+        "tema": t["tema"], "q": t["q"], "classe": t["classe"],
+        "url_lista": t["url_lista"], "area": t.get("area"),
+        # simulado se apresenta como simulado, nunca pelo bloco de fallback (CM)
+        "rotulo": t.get("area") if agregada else (t.get("bloco") or t.get("area")),
+        "aula": ligadas[0]["slug"] if ligadas else None,
+        "aulas": ligadas,
+        "no_hub": t["id"] in no_hub,
+    }
+
+
 def _bloco_semana(linhas, hoje):
-    """A semana corrente e as abertas pela MESMA funcao do boot (`plano.panorama`)."""
+    """A semana corrente e as abertas pela MESMA funcao do boot (`plano.panorama`); a `rota`
+    (s213) = as semanas seguintes ate a ultima da Fase 1, da mesma funcao."""
     import plano
     pan = plano.panorama(linhas, plano.calendario_trilha(), hoje)
     if not pan:
         return {"semana": None, "tarefas": [], "total": 0, "q": 0, "atrasadas": 0,
-                "inicio": None, "fim": None, "dias": None, "proxima": None}
-    from app.utils import areas
+                "inicio": None, "fim": None, "dias": None, "proxima": None, "rota": []}
     aulas = _aulas_por_tarefa()
     try:  # s201: tarefa com questoes no banco se resolve na aba Listas do hub
         no_hub = db.tarefas_com_questoes()
     except Exception:  # noqa: BLE001
         no_hub = set()
-    tarefas = []
-    for t in pan["abertas"]:
-        agregada = t.get("area") in areas.AREAS_AGREGADAS
-        tarefas.append({
-            "id": t["id"], "semana": t["semana"], "atrasada": t["atrasada"],
-            "tema": t["tema"], "q": t["q"], "classe": t["classe"],
-            "url_lista": t["url_lista"],
-            # simulado se apresenta como simulado, nunca pelo bloco de fallback (CM)
-            "rotulo": t.get("area") if agregada else (t.get("bloco") or t.get("area")),
-            "aula": aulas.get(t["id"]),
-            "no_hub": t["id"] in no_hub,
-        })
+    tarefas = [_tarefa(t, aulas, no_hub) for t in pan["abertas"]]
+    rota = [{"semana": r["semana"], "inicio": r["inicio"], "fim": r["fim"], "q": r["q"],
+             "feitas": r["feitas"], "total": r["total"],
+             "tarefas": [_tarefa(t, aulas, no_hub) for t in r["tarefas"]]}
+            for r in pan.get("rota") or []]
     return {
         "semana": pan["semana"], "inicio": pan["inicio"], "fim": pan["fim"],
         "dias": pan["dias"], "tarefas": tarefas, "total": len(tarefas),
         "q": pan["q_abertas"], "atrasadas": pan["atrasadas"],
         "feitas_semana": pan["feitas_semana"], "tarefas_semana": pan["tarefas_semana"],
-        "proxima": pan["proxima"],
+        "proxima": pan["proxima"], "rota": rota,
     }
 
 
@@ -241,7 +264,8 @@ def _bloco_blocos(linhas):
 
 
 def coletar(hoje=None):
-    """O contrato do painel. Dict com os 4 blocos + metadados. Read-only."""
+    """O contrato do painel. Dict com os 4 blocos de `BLOCOS` + o de Documentacao (`BLOCO_DOCS`)
+    + metadados. Read-only."""
     hoje = hoje or db.hoje()
     linhas = db.plano_listar()
     return {
@@ -252,7 +276,7 @@ def coletar(hoje=None):
         "semana": _bloco_semana(linhas, hoje),
         "ritmo": _bloco_ritmo(hoje),
         "blocos": _bloco_blocos(linhas),
-        "docs": _bloco_docs(),
+        BLOCO_DOCS: _bloco_docs(),
     }
 
 
@@ -318,21 +342,38 @@ def _html_docs(docs):
 
 
 def _acao(t):
+    """O que fazer com a tarefa: a lista (ou o texto da classe) e, embaixo, cada aula ligada.
+
+    s213 (D4-1, decisao do operador em 25/09: "nao sair do medhub"): lista com questoes no banco do
+    hub (`no_hub`) abre a aba Listas -- modo Simulados para simulado, Questoes para o resto -- e o
+    link do EMED some; so fora do banco o "abrir lista" externo aparece. ⚰️ *Era o EMED primeiro:
+    14 listas ja importadas abriam o site.*"""
+    from app.utils import areas
     c = t["classe"]
+    partes = []
     if c == "lista":
-        if t["url_lista"] and str(t["url_lista"]).startswith(("http://", "https://")):
-            return _link(t["url_lista"], "abrir lista")
         if t.get("no_hub"):
-            return '<a href="#questoes" data-hub-aba="questoes" data-hub-modo="simulados">resolver no hub</a>'
-        return '<span class="tenue">prova em PDF no computador</span>'
-    if c == "aula":
-        if t.get("aula"):
-            return ('<a href="aulas/%s.html" data-hub-aula="%s">abrir aula</a>'
-                    % (_e(t["aula"]), _e(t["aula"])))
-        return '<span class="tenue">aula a preparar</span>'
-    if c == "caderno":
-        return '<span class="tenue">montar caderno no banco</span>'
-    return '<span class="tenue">sem lista ainda</span>'
+            modo = "simulados" if t.get("area") in areas.AREAS_AGREGADAS else "questoes"
+            partes.append('<a href="#questoes" data-hub-aba="questoes" data-hub-modo="%s">'
+                          'resolver no hub</a>' % modo)
+        elif t["url_lista"] and str(t["url_lista"]).startswith(("http://", "https://")):
+            partes.append(_link(t["url_lista"], "abrir lista"))
+        else:
+            partes.append('<span class="tenue">prova em PDF no computador</span>')
+    elif c == "caderno":
+        partes.append('<span class="tenue">montar caderno no banco</span>')
+    elif c == "sem_lista":
+        partes.append('<span class="tenue">sem lista ainda</span>')
+    # aula que CUMPRE (tarefa de aula) ou PREPARA (lista) -- o que a aba Aulas ja mostrava
+    aulas = t.get("aulas") or ([{"slug": t["aula"], "titulo": None}] if t.get("aula") else [])
+    varias = len(aulas) > 1
+    for a in aulas:
+        partes.append('<a href="aulas/%s.html" data-hub-aula="%s">%s</a>'
+                      % (_e(a["slug"]), _e(a["slug"]),
+                         _e(a.get("titulo") or a["slug"]) if varias else "abrir aula"))
+    if c == "aula" and not aulas:
+        partes.append('<span class="tenue">aula a preparar</span>')
+    return "<br>".join(partes)
 
 
 def _html_dia(d, data_iso):
@@ -392,6 +433,40 @@ def _html_dia(d, data_iso):
            barras))
 
 
+def _html_tarefa(t):
+    """Um `<li class="tarefa">`: tema, rotulo, questoes, atraso e acao -- o MESMO na semana
+    corrente e na rota."""
+    meta = ['<span class="t-rot">%s</span>' % _e(t["rotulo"] or "?")]
+    if t["q"]:
+        meta.append("<span>%s questões</span>" % _n(t["q"]))
+    if t["atrasada"]:
+        meta.append('<span class="t-atraso">da semana %s</span>' % _e(t["semana"]))
+    return ('<li class="tarefa%s"><p class="t-tema">%s</p><p class="t-meta">%s</p>'
+            '<p class="t-acao">%s</p></li>'
+            % (" atrasada" if t["atrasada"] else "", _e(t["tema"] or "(sem tema)"),
+               " ".join(meta), _acao(t)))
+
+
+def _html_rota(rota):
+    """s213 (pedido do operador: "a rota inteira no Painel"): cada semana seguinte ate a prova,
+    RECOLHIDA (`<details>` fechado; a corrente segue aberta acima), com as tarefas no mesmo
+    `<li>` e os mesmos links. Datas com " a " (o travessao e proibido na pagina)."""
+    semanas = []
+    for r in rota:
+        tit = "Semana %s" % _e(r["semana"])
+        if r.get("inicio"):
+            tit += " · %s a %s" % (_dm(r["inicio"]), _dm(r["fim"]))
+        n = len(r["tarefas"])
+        # espaco duro entre numero e palavra: o resumo quebra entre os pares, nunca "789 / questoes"
+        conta = "%d&nbsp;tarefa%s" % (n, "" if n == 1 else "s")
+        if r["q"]:
+            conta += " · %s&nbsp;questões" % _n(r["q"])
+        semanas.append('<details class="rota-sem"><summary><span class="rota-tit">%s</span> '
+                       '<span class="rota-n">%s</span></summary><ol class="tarefas">%s</ol></details>'
+                       % (tit, conta, "".join(_html_tarefa(t) for t in r["tarefas"])))
+    return '<div class="rota"><h3>Até a prova</h3>%s</div>' % "".join(semanas)
+
+
 def _html_semana(d):
     if d["semana"] is None:
         return '<h2>Semana</h2><p class="nota">Nenhuma tarefa pendente no plano.</p>'
@@ -399,30 +474,27 @@ def _html_semana(d):
         janela = "%s a %s, %d dia(s) contando hoje." % (_dm(d["inicio"]), _dm(d["fim"]), d["dias"])
     else:
         janela = "Fora do calendário do plano: pela ordem das tarefas."
-    resumo = "%d tarefa(s) em aberto, %s questões." % (d["total"], _n(d["q"]))
+    if d["total"]:
+        resumo = "%d tarefa(s) em aberto, %s questões." % (d["total"], _n(d["q"]))
+    else:
+        # s213 (audit R2): semana corrente sem pendencia nao desenha "0 tarefa(s)" nem lista vazia
+        resumo = "Sem tarefa em aberto nesta semana."
     if d["atrasadas"]:
         resumo += " %d vêm atrasadas de semana anterior." % d["atrasadas"]
-    itens = []
-    for t in d["tarefas"]:
-        meta = ['<span class="t-rot">%s</span>' % _e(t["rotulo"] or "?")]
-        if t["q"]:
-            meta.append("<span>%s questões</span>" % _n(t["q"]))
-        if t["atrasada"]:
-            meta.append('<span class="t-atraso">da semana %s</span>' % _e(t["semana"]))
-        itens.append('<li class="tarefa%s"><p class="t-tema">%s</p><p class="t-meta">%s</p>'
-                     '<p class="t-acao">%s</p></li>'
-                     % (" atrasada" if t["atrasada"] else "", _e(t["tema"] or "(sem tema)"),
-                        " ".join(meta), _acao(t)))
+    itens = [_html_tarefa(t) for t in d["tarefas"]]
     prox = d.get("proxima")
     txt_prox = ""
-    if prox:
+    if d.get("rota"):
+        # s213: a rota inteira ate a prova substitui a linha "Depois" (que so contava a S+1)
+        txt_prox = _html_rota(d["rota"])
+    elif prox:
         quando = " (%s a %s)" % (_dm(prox["inicio"]), _dm(prox["fim"])) if prox.get("inicio") else ""
         txt_prox = ('<p class="nota prox">Depois: semana %s%s, %d tarefa(s), %s questões.</p>'
                     % (_e(prox["semana"]), quando, prox["tarefas"], _n(prox["q"])))
     # A semana inteira passa de 20 tarefas: as primeiras (e todas as atrasadas) ficam a vista, o
     # resto recolhido na MESMA ordem do plano -- nada some, so para de gritar.
     corte = max(VISIVEIS_SEMANA, sum(1 for t in d["tarefas"] if t["atrasada"]))
-    lista = '<ol class="tarefas">%s</ol>' % "".join(itens[:corte])
+    lista = '<ol class="tarefas">%s</ol>' % "".join(itens[:corte]) if itens else ""
     if len(itens) > corte:
         lista += ('<details class="mais"><summary>Ver as outras %d</summary>'
                   '<ol class="tarefas" start="%d">%s</ol></details>'
@@ -560,6 +632,15 @@ a:focus-visible{outline:3px solid var(--acento);outline-offset:2px;border-radius
 .mais{margin-top:8px}
 .mais summary{cursor:pointer;color:var(--acento);font-weight:600;padding:10px 0;min-height:44px}
 .mais .tarefas{margin-top:4px}
+/* A rota ate a prova (s213): cada semana futura recolhida; o resumo quebra linha, nunca alarga */
+.rota{margin-top:16px}
+.rota h3{margin-bottom:2px}
+.rota-sem{border-top:1px solid var(--linha)}
+.rota-sem:last-child{border-bottom:1px solid var(--linha)}
+.rota-sem>summary{cursor:pointer;padding:11px 0;min-height:44px}
+.rota-tit{font-weight:650}
+.rota-n{color:var(--tinta3);font-size:.84em;margin-left:4px}
+.rota-sem .tarefas{margin:4px 0 14px}
 
 /* Ritmo */
 .figs{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,9.5rem),1fr));gap:10px;margin-top:10px}
@@ -617,7 +698,7 @@ def render_html(d):
         _sec("semana", _html_semana(d["semana"])),
         _sec("ritmo", _html_ritmo(d["ritmo"])),
         _sec("blocos", _html_blocos(d["blocos"])),
-    ] + ([_sec("docs", _html_docs(d["docs"]))] if d.get("docs") else []))
+    ] + ([_sec(BLOCO_DOCS, _html_docs(d[BLOCO_DOCS]))] if d.get(BLOCO_DOCS) else []))
     return ("<!DOCTYPE html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset=\"utf-8\">\n"
             "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n"
             "<title>%s</title>\n<style>%s</style>\n</head>\n<body>\n<div class=\"wrap\">\n"
@@ -638,7 +719,8 @@ def main(argv=None):
         description="Painel de progresso do MedHub (read-only). Gera o JSON "
                     "(contrato) ou a pagina HTML (render).")
     ap.add_argument("--json", action="store_true",
-                    help="imprime o dado estruturado dos 4 blocos (contrato testavel)")
+                    help="imprime o dado estruturado dos blocos: os 4 fixos + Documentacao "
+                         "(contrato testavel)")
     ap.add_argument("--html", action="store_true",
                     help="gera a pagina autocontida (default: artifacts/painel.html)")
     ap.add_argument("--out", metavar="PATH",

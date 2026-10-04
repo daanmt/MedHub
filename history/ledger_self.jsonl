@@ -1273,3 +1273,7 @@
 {"ts": "2026-09-30T09:45:38+00:00", "event": "resolved", "check": "card_atomicidade", "fingerprint": "5159ebdc38db", "alvo": "card#1758"}
 {"ts": "2026-10-02T17:24:28+00:00", "event": "opened", "check": "consistencia_registros", "fingerprint": "ae675f4ff819", "alvo": "AGENTE.md §7.4", "payload": {"check": "tabela"}}
 {"ts": "2026-10-02T21:43:49+00:00", "event": "resolved", "check": "consistencia_registros", "fingerprint": "ae675f4ff819", "alvo": "AGENTE.md §7.4"}
+{"ts": "2026-10-04T03:17:32+00:00", "event": "opened", "check": "posicao_ssot", "fingerprint": "01755b5ba8cb", "alvo": "HANDOFF.md", "payload": {"semana_handoff": 2, "semana_db": 4}}
+{"ts": "2026-10-04T03:17:32+00:00", "event": "opened", "check": "erros_orfaos", "fingerprint": "790ebc7986dd", "alvo": "2026-10-03", "payload": {"erros_esperados": 24}}
+{"ts": "2026-10-04T03:25:46+00:00", "event": "resolved", "check": "erros_orfaos", "fingerprint": "790ebc7986dd", "alvo": "2026-10-03"}
+{"ts": "2026-10-04T03:48:22+00:00", "event": "resolved", "check": "posicao_ssot", "fingerprint": "01755b5ba8cb", "alvo": "HANDOFF.md"}

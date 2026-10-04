@@ -66,7 +66,8 @@ from tools.fsrs_queue import (  # noqa: E402
 )
 # So leitores PUROS do plano (s195): a semana da prova, o calendario da trilha e a classe da
 # tarefa -- a mesma regua do `plano.py --panorama`. O hub nunca grava o plano.
-from tools.plano import SEMANAS_FASE1, calendario_trilha, classe_da_tarefa  # noqa: E402
+from tools.plano import (  # noqa: E402
+    AREA_SIMULADO, SEMANAS_FASE1, calendario_trilha, classe_da_tarefa)
 
 TEMPLATE_HUB = RAIZ / "core" / "templates" / "hub.html"
 #: Registro do quadro da aba Aulas (s194): slug -> {tipo, titulo, tarefa_id?}.
@@ -420,7 +421,7 @@ def secoes_do_quadro(classificadas, plano_linhas=None, calendario=None, hoje=Non
         return {"tipo": "tarefa", "id": tid, "tema": l.get("tema") or "(sem tema)",
                 "bloco": l.get("bloco"), "q": _q_de(l), "classe": classe,
                 "url_lista": l.get("url_lista"), "semana": int(l["semana_plano"]),
-                "no_hub": bool(l.get("no_hub")),
+                "no_hub": bool(l.get("no_hub")), "area": l.get("area"),
                 "atrasada": int(l["semana_plano"]) < atual,
                 # prazo = o fim da semana da tarefa no calendario da trilha (pedido dele, s195:
                 # "o prazo da tarefa, para ajudar na gestao do cronograma"); sem calendario, None
@@ -506,11 +507,15 @@ def _html_item(item, feito=False):
             meta.append('<span class="qd-prazo">até %s</span>' % prazo.strftime("%d/%m"))
         acoes = []
         url = item.get("url_lista")
-        if url and str(url).startswith(("http://", "https://")):
+        if url and item.get("no_hub"):
+            # s201: as questoes ja estao no banco -> resolve na aba Listas. s213 (D4-1, decisao do
+            # operador em 25/09: "nao sair do medhub"): vence o link do EMED, que some; o modo sai
+            # da area (simulado -> Simulados; lista -> Questoes), a mesma regra do painel.
+            modo = "simulados" if item.get("area") == AREA_SIMULADO else "questoes"
+            acoes.append('<a href="#questoes" data-hub-aba="questoes" data-hub-modo="%s">'
+                         'resolver no hub</a>' % modo)
+        elif url and str(url).startswith(("http://", "https://")):
             acoes.append('<a href="%s" rel="noopener noreferrer">abrir lista</a>' % _e(url))
-        elif url and item.get("no_hub"):
-            # s201: a prova ja esta no banco -> resolve na aba Listas, secao Simulados
-            acoes.append('<a href="#questoes" data-hub-aba="questoes" data-hub-modo="simulados">resolver no hub</a>')
         elif url:
             # caminho LOCAL (a prova em PDF): resolve na maquina e morre na pagina publicada
             # (mesma regra do painel) -- texto, nao link quebrado

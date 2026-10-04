@@ -59,7 +59,8 @@ HOJE = date(2026, 9, 23)
 #: O calendario da trilha como ele e hoje (S1 = 19-20/09, S2 = 21-27/09), congelado.
 CALENDARIO = {1: (date(2026, 9, 19), date(2026, 9, 20)),
               2: (date(2026, 9, 21), date(2026, 9, 27)),
-              3: (date(2026, 9, 28), date(2026, 10, 4))}
+              3: (date(2026, 9, 28), date(2026, 10, 4)),
+              4: (date(2026, 10, 5), date(2026, 10, 11))}
 
 #: (semana, area, tema, status, q_previstas, fonte, url). O bloco sai de `db.bloco_de(area)`:
 #: Preventiva -> MFC, Cirurgia -> CIR, Cardiologia -> CM (fallback), Simulado -> CM (fallback!).
@@ -74,6 +75,10 @@ TAREFAS = [
     (2, "Preventiva", "Raciocinio diagnostico", "pendente", 0.0, "custom", None),
     (3, "Cardiologia", "IC", "pendente", 45.0, "rf", "https://exemplo/8"),
     (None, "Cardiologia", "Reserva", "pendente", 20.0, "rf", None),
+    # s213: a S4 com duas pendentes e uma feita -- a rota passa a ter 2 semanas (S3 e S4)
+    (4, "Pediatria", "Bronquiolite", "pendente", 25.0, "rf", "https://exemplo/10"),
+    (4, "Pediatria", "Puericultura", "pendente", 0.0, "custom", None),
+    (4, "Pediatria", "Imunizacoes", "feita", 30.0, "rf", "https://exemplo/12"),
 ]
 
 #: (area, feitas, acertos, dias atras)
@@ -110,7 +115,10 @@ def db_sintetico(tmp_path, monkeypatch):
     monkeypatch.setattr(dbmod, "agora", lambda: datetime(2026, 9, 23, 18, 0, 0))
     monkeypatch.setattr(dbmod, "hoje", lambda: HOJE)
     monkeypatch.setattr(plano, "calendario_trilha", lambda trilha=None: dict(CALENDARIO))
-    monkeypatch.setattr(painel, "_aulas_por_tarefa", lambda: {7: "raciocinio-diagnostico"})
+    # s213: {tarefa: [aulas]} -- a #7 tem a aula que a CUMPRE; a #10 (lista), uma que a PREPARA
+    monkeypatch.setattr(painel, "_aulas_por_tarefa", lambda: {
+        7: [{"slug": "raciocinio-diagnostico", "titulo": "Raciocinio"}],
+        10: [{"slug": "bronquiolite", "titulo": "A Escada da Bronquiolite"}]})
     return caminho
 
 
@@ -178,10 +186,16 @@ def test_volume_por_bloco_separa_as_tres_cestas_sem_perder_questao():
 
 # ------------------------------------------------------- o contrato (JSON)
 
-def test_coletar_traz_os_quatro_blocos(db_sintetico):
+def test_coletar_traz_os_quatro_blocos_fixos_e_o_de_documentacao(db_sintetico):
+    """Era `test_coletar_traz_os_quatro_blocos`. s213 (D4-5): a s212 trouxe o 5o bloco,
+    Documentacao (`docs`), que so aparece na pagina com documento -- por isso ele mora em
+    `BLOCO_DOCS`, fora de `BLOCOS` (os 4 que a pagina sempre desenha), e o contrato o traz sempre,
+    lista vazia quando nao ha nenhum."""
     d = painel.coletar()
     for chave in painel.BLOCOS:
         assert chave in d, "bloco %s ausente do contrato" % chave
+    assert painel.BLOCO_DOCS not in painel.BLOCOS
+    assert isinstance(d[painel.BLOCO_DOCS], list)
     assert d["data"] == HOJE.isoformat()
 
 
@@ -222,6 +236,122 @@ def test_cada_tarefa_diz_o_que_fazer(db_sintetico):
     assert t[5]["classe"] == "lista" and t[5]["url_lista"] == "https://exemplo/5"
     assert t[7]["classe"] == "aula" and t[7]["aula"] == "raciocinio-diagnostico"
     assert t[6]["rotulo"] == "Simulado", "simulado nao se apresenta como CM"
+
+
+# ------------------------------------------ s213: a rota inteira da Fase 1
+
+def test_rota_concorda_com_o_panorama(db_sintetico, capsys):
+    """A rota (semanas seguintes ate a S7) sai do `plano.panorama`, a MESMA regua do boot: mesmas
+    semanas, mesmos ids na mesma ordem, mesmas questoes."""
+    import plano
+    assert plano.main(["--panorama", "--json"]) == 0
+    pan = json.loads(capsys.readouterr().out)
+    rota = painel.coletar()["semana"]["rota"]
+    assert [r["semana"] for r in rota] == [r["semana"] for r in pan["rota"]] == [3, 4]
+    for meu, dele in zip(rota, pan["rota"]):
+        assert [t["id"] for t in meu["tarefas"]] == [t["id"] for t in dele["tarefas"]]
+        assert (meu["q"], meu["feitas"], meu["total"]) == (dele["q"], dele["feitas"], dele["total"])
+    assert [t["id"] for t in rota[1]["tarefas"]] == [10, 11], "feita fica fora"
+    assert (rota[1]["inicio"], rota[1]["fim"]) == ("2026-10-05", "2026-10-11")
+
+
+def test_rota_concorda_com_a_aba_aulas(db_sintetico):
+    """🔴 Sentinela contra DUAS reguas de semana: a aba Aulas (`hub.secoes_do_quadro`, com a copia
+    `hub.semana_atual`) e o Painel tem de pôr as MESMAS tarefas nas MESMAS semanas futuras."""
+    from tools import hub
+    from app.utils import db as dbmod
+    secoes, _c, _a = hub.secoes_do_quadro([], plano_linhas=dbmod.plano_listar(),
+                                          calendario=dict(CALENDARIO), hoje=HOJE)
+    s = painel.coletar()["semana"]
+    futuras = {int(x["chave"]): [i["id"] for i in x["itens"]] for x in secoes
+               if x["chave"].isdigit() and int(x["chave"]) > s["semana"]}
+    assert futuras == {r["semana"]: [t["id"] for t in r["tarefas"]] for r in s["rota"]}
+    # audit R1 (s213): o filtro acima so trava o ALCANCE da rota; a semana corrente das duas
+    # reguas tambem tem de ser a mesma, senao a copia do hub diverge sem ninguem ver.
+    pendentes = [l for l in dbmod.plano_listar() if l.get("status") == "pendente"]
+    assert hub.semana_atual(dict(CALENDARIO), HOJE, pendentes) == s["semana"]
+
+
+def test_semana_corrente_sem_pendencia_nao_desenha_lista_vazia():
+    """s213 (audit R2): semana corrente sem tarefa em aberto (a S3 em 04/10/2026) dizia
+    "0 tarefa(s) em aberto" sobre um <ol> vazio, acima da rota."""
+    d = {"semana": 3, "inicio": "2026-09-28", "fim": "2026-10-04", "dias": 1, "tarefas": [],
+         "total": 0, "q": 0, "atrasadas": 0, "proxima": None, "rota": []}
+    pagina = painel._html_semana(d)
+    assert "Sem tarefa em aberto nesta semana." in pagina
+    assert "0 tarefa(s)" not in pagina and '<ol class="tarefas"></ol>' not in pagina
+
+
+def test_rota_semana_futura_recolhida_e_corrente_aberta(db_sintetico):
+    pagina = _pagina()
+    sems = re.findall(r'<details class="rota-sem"[^>]*>', pagina)
+    assert len(sems) == 2 and not any("open" in x for x in sems), "semana futura nasce fechada"
+    corrente = pagina.split('class="rota"')[0]
+    assert "<details" not in corrente.split('data-bloco="semana"')[1].split("Ver as outras")[0], \
+        "a semana corrente fica aberta, fora de details"
+    assert "Semana 4 · 05/10 a 11/10" in pagina and "2&nbsp;tarefas · 25&nbsp;questões" in pagina
+    assert '<p class="nota prox">Depois:' not in pagina, "com rota, a linha Depois sai"
+
+
+def test_rota_usa_o_mesmo_li_da_semana(db_sintetico):
+    pagina = _pagina()
+    sem4 = re.search(r'<details class="rota-sem"[^>]*><summary>[^<]*<span class="rota-tit">Semana 4'
+                     r'.*?</details>', pagina, re.S).group(0)
+    lis = re.findall(r'<li class="tarefa"><p class="t-tema">([^<]+)</p><p class="t-meta">.*?'
+                     r'</p><p class="t-acao">.*?</p></li>', sem4, re.S)
+    assert lis == ["Bronquiolite", "Puericultura"]
+    assert 'href="https://exemplo/10"' in sem4
+
+
+def test_tarefa_de_lista_com_aula_que_prepara_tem_os_dois_links(db_sintetico):
+    """D4-2: a aula que PREPARA a tarefa (`tarefas: [...]` no registro) aparece no Painel como na
+    aba Aulas: a lista E a aula."""
+    pagina = _pagina()
+    li = re.search(r'<li class="tarefa"><p class="t-tema">Bronquiolite</p>.*?</li>', pagina, re.S).group(0)
+    assert ">abrir lista</a>" in li
+    assert 'href="aulas/bronquiolite.html" data-hub-aula="bronquiolite">abrir aula</a>' in li
+
+
+def test_aulas_por_tarefa_le_quem_cumpre_e_quem_prepara(tmp_path, monkeypatch):
+    """Mesma semantica de `hub.ligacoes_do_quadro`: `tarefa_id` (cumpre) E `tarefas` (prepara); so
+    aula com arquivo no disco (sem arquivo, o atalho abriria nada)."""
+    import json as _json
+    for slug in ("dmg", "pq"):
+        (tmp_path / ("aula-%s.html" % slug)).write_text("<title>x</title>", encoding="utf-8")
+    reg = tmp_path / "quadro.json"
+    reg.write_text(_json.dumps({"itens": {
+        "dmg": {"tipo": "aula", "titulo": "A Escada do DMG", "tarefas": [26, 40]},
+        "pq": {"tipo": "aula", "titulo": "PQ", "tarefa_id": 875},
+        "sumiu": {"tipo": "aula", "titulo": "Sumiu", "tarefas": [40]}}}), encoding="utf-8")
+    monkeypatch.setattr(painel, "QUADRO", reg)
+    monkeypatch.setattr(painel, "ARTIFATOS", tmp_path)
+    assert painel._aulas_por_tarefa() == {
+        26: [{"slug": "dmg", "titulo": "A Escada do DMG"}],
+        40: [{"slug": "dmg", "titulo": "A Escada do DMG"}],
+        875: [{"slug": "pq", "titulo": "PQ"}]}
+
+
+def test_sem_rota_mantem_a_linha_depois():
+    """Sem rota (ex.: fora do calendario, ou a S7 corrente), a linha "Depois" segue como era."""
+    d = {"semana": 7, "inicio": None, "fim": None, "dias": None, "tarefas": [], "total": 0,
+         "q": 0, "atrasadas": 0, "rota": [],
+         "proxima": {"semana": 8, "inicio": None, "fim": None, "tarefas": 3, "q": 90}}
+    html_ = painel._html_semana(d)
+    assert '<p class="nota prox">Depois: semana 8, 3 tarefa(s), 90 questões.</p>' in html_
+    assert "rota-sem" not in html_
+
+
+def test_lista_no_banco_do_hub_abre_a_aba_listas_e_nao_o_emed():
+    """D4-1 (decisao do operador, 25/09: "nao sair do medhub"): tarefa com questoes no banco do hub
+    abre a aba Listas -- modo Questoes para lista, Simulados para simulado -- e o link do EMED some.
+    Fora do banco, "abrir lista" externo segue como era."""
+    base = {"classe": "lista", "url_lista": "https://exemplo/40", "area": "Endocrinologia"}
+    no_hub = painel._acao(dict(base, no_hub=True))
+    assert 'href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a>' in no_hub
+    assert "exemplo/40" not in no_hub and "abrir lista" not in no_hub
+    sim = painel._acao(dict(base, area="Simulado", no_hub=True))
+    assert 'data-hub-modo="simulados"' in sim
+    assert painel._acao(base) == '<a href="https://exemplo/40" rel="noopener noreferrer">abrir lista</a>'
 
 
 def test_questoes_do_dia_sao_o_ritmo_da_meta_e_nao_uma_cota_de_semana(db_sintetico):
@@ -474,8 +604,9 @@ if __name__ == "__main__":
 
 def test_acao_do_simulado_no_hub_e_atalho_e_fora_dele_e_texto():
     """s201: a tarefa de simulado com questoes no banco ganha 'resolver no hub' (aba Listas,
-    modo Simulados); caminho local sem questoes segue texto, nunca link para o disco."""
-    base = {"classe": "lista", "url_lista": "simulados/uerj/uerj_ad_2021_a.pdf"}
+    modo Simulados); caminho local sem questoes segue texto, nunca link para o disco.
+    s213: o modo sai da AREA (Simulado -> simulados; o resto -> questoes), por isso a `area`."""
+    base = {"classe": "lista", "url_lista": "simulados/uerj/uerj_ad_2021_a.pdf", "area": "Simulado"}
     assert 'data-hub-aba="questoes" data-hub-modo="simulados">resolver no hub</a>' in painel._acao(dict(base, no_hub=True))
     assert painel._acao(base) == '<span class="tenue">prova em PDF no computador</span>'
 

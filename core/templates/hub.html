@@ -492,6 +492,9 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
         });
       }
     });
+    // s213: abrir/fechar um <details> (semana da rota, "Ver as outras") muda a altura; o toggle
+    // nao borbulha, por isso o ouvinte e de captura no documento do quadro.
+    doc.addEventListener("toggle", function(){ medir(quadro); }, true);
     medir(quadro);
     [150, 600, 1500, 3000].forEach(function(ms){ setTimeout(function(){ medir(quadro); }, ms); });
     if(doc.fonts && doc.fonts.ready){ doc.fonts.ready.then(function(){ medir(quadro); }); }

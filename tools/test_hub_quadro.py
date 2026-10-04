@@ -46,16 +46,18 @@ CAL = {1: (date(2026, 9, 14), date(2026, 9, 20)), 2: (date(2026, 9, 21), date(20
 URL = "https://med.estrategia.com/cadernos/x/?per_page=20"
 
 
-def _t(id_, semana, tema, q=0, url=None, fonte="rf", status="pendente", bloco="GO"):
+def _t(id_, semana, tema, q=0, url=None, fonte="rf", status="pendente", bloco="GO", area=None):
     return {"id": id_, "semana_plano": semana, "tema": tema, "q_previstas": float(q),
-            "url_lista": url, "fonte": fonte, "status": status, "bloco": bloco, "ordem": id_}
+            "url_lista": url, "fonte": fonte, "status": status, "bloco": bloco, "ordem": id_,
+            "area": area}
 
 
 PLANO = [_t(26, 1, "Diabetes na Gestacao", 19, URL),
          _t(877, 1, "Raciocinio diagnostico", 0, None, fonte="custom", bloco="MFC"),
          _t(49, 2, "Hernias da Parede Abdominal", 21, URL, bloco="CIR"),
          _t(875, 2, "Prevencao Quaternaria", 0, None, fonte="custom", bloco="MFC"),
-         _t(1793, 2, "UERJ 2021 -- prova inteira", 60, "simulados/uerj/2021.pdf", bloco="Simulado"),
+         _t(1793, 2, "UERJ 2021 -- prova inteira", 60, "simulados/uerj/2021.pdf", bloco="Simulado",
+            area="Simulado"),
          _t(68, 3, "Doencas Glomerulares", 21, URL, bloco="CM"),
          _t(900, 9, "Fase 2 -- fora do quadro", 40, URL),
          _t(901, None, "Reserva -- sem semana", 40, URL),
@@ -132,15 +134,18 @@ def test_registro_real_so_com_as_aulas_em_aberto_e_ligadas_ao_plano():
     registro; s204: raciocinio-diagnostico (tarefa #877 concluida por leitura) tambem. Restam
     dmg e topicos-pediatria em aberto, ligadas as tarefas do plano; s206: entra
     prevencao-quaternaria, que CUMPRE a tarefa custom #875 (tarefa_id); s212: entra dossie-uerj
-    (tipo analise), o documento do bloco Documentacao do painel."""
+    (tipo analise), o documento do bloco Documentacao do painel; s213: entram autopsia-uerj-2021
+    (analise, a Autopsia mora no hub) e remit-cicatrizacao, que CUMPRE a tarefa #530."""
     reg = hub.ler_quadro(ROOT / hub.QUADRO_REG)
     rds = {k for k, v in reg.items() if v["tipo"] == "revisao"}
     docs = {k for k, v in reg.items() if v["tipo"] == "analise"}
-    assert docs == {"dossie-uerj"}
-    assert set(reg) - rds - docs == {"dmg", "topicos-pediatria", "prevencao-quaternaria"}
+    assert docs == {"dossie-uerj", "autopsia-uerj-2021"}
+    assert set(reg) - rds - docs == {"dmg", "topicos-pediatria", "prevencao-quaternaria",
+                                     "remit-cicatrizacao"}
     assert all(k.startswith("rd-") for k in rds), "s210: revisao direcionada = slug rd-*"
     assert reg["dmg"]["tarefas"] == [26, 40] and reg["topicos-pediatria"]["tarefas"] == [96, 100]
     assert reg["prevencao-quaternaria"]["tarefa_id"] == 875
+    assert reg["remit-cicatrizacao"]["tarefa_id"] == 530
     reais = {hub.slug_de(p.name) for p in (ROOT / "artifacts").glob("aula-*.html")}
     assert reais == set(reg), "aula real sem tipo no registro (ou registro de aula arquivada)"
     for nome in ("aula-s17", "aula-cancer-de-mama", "aula-hernias", "aula-autopsia-uerj-2023",
@@ -554,6 +559,28 @@ def test_simulado_ja_no_hub_vira_atalho_para_a_aba_listas(tmp_path):
     simulado = _item(_index(raiz), 'data-tarefa="1793"')
     assert 'href="#questoes" data-hub-aba="questoes" data-hub-modo="simulados">resolver no hub</a>' in simulado
     assert "prova em PDF no computador" not in simulado and "simulados/uerj" not in simulado
+
+
+def test_lista_ja_no_hub_abre_a_aba_listas_e_nao_o_emed(tmp_path):
+    """s213 (D4-1, decisao do operador em 25/09: "nao sair do medhub"): lista do EMED cujas
+    questoes ja estao no banco do hub abre a aba Listas no modo Questoes, e o link externo some --
+    a mesma precedencia do painel. Fora do banco, "abrir lista" segue como era."""
+    raiz, data_fn = _repo(tmp_path)
+    plano = [dict(l, no_hub=True) if l["id"] == 49 else l for l in PLANO]
+    _construir(raiz, data_fn, plano=plano)
+    pagina = _index(raiz)
+    hernias = _item(pagina, 'data-tarefa="49"')
+    assert 'href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a>' in hernias
+    assert "abrir lista" not in hernias and URL not in hernias
+    assert "abrir aula" in hernias, "a aula que prepara segue no bloco"
+    assert "abrir lista" in _item(pagina, 'data-tarefa="68"')
+
+
+def test_painel_remede_ao_abrir_semana():
+    """s213 (D4-3): abrir um `<details>` dentro do iframe do Painel (semana da rota, "Ver as
+    outras") re-mede a altura; sem isso a semana aberta vira rolagem aninhada no celular. O
+    `toggle` nao borbulha: o ouvinte e de CAPTURA no documento do iframe."""
+    assert 'doc.addEventListener("toggle", function(){ medir(quadro); }, true);' in TEMPLATE_HUB_REAL
 
 
 def test_leitor_do_plano_marca_as_tarefas_com_questoes_no_banco(monkeypatch):

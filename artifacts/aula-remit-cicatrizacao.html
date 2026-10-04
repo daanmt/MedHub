@@ -1,0 +1,499 @@
+<title>REMIT e Cicatrização</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,480;9..144,600;9..144,680&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EFF3F0; --card:#FAFCFA; --sunk:#E2E9E4;
+  --ink:#18211C; --ink2:#4C5A52; --ink3:#7C8A82;
+  --line:rgba(24,33,28,.13); --line2:rgba(24,33,28,.26);
+  --teal:#1F6B5E; --teal-ink:#154A41; --teal-wash:#DCEBE5;
+  --carmine:#8E2F41; --carmine-ink:#6B2231; --carmine-wash:#F5E2E6;
+  --amber:#8A5A17; --amber-ink:#6B4610; --amber-wash:#F3E6CC;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#7E8C84;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#7E8C84;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font:16px/1.6 "Source Sans 3",-apple-system,"Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+h1,h2,h3{margin:0;font-family:Fraunces,Georgia,serif;font-weight:600;letter-spacing:-.01em;text-wrap:balance;line-height:1.15;color:var(--ink)}
+.wrap{max-width:780px;margin:0 auto;padding:0 24px 90px}
+@media(max-width:640px){.wrap{padding:0 16px 70px}}
+:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+a{color:var(--teal-ink)}
+strong{font-weight:600;color:var(--ink)}
+
+.top{padding:46px 0 26px;border-bottom:1px solid var(--line2)}
+.eye{font:600 11px/1.3 "Source Sans 3";letter-spacing:.12em;text-transform:uppercase;color:var(--teal-ink);margin:0 0 14px}
+.top h1{font-size:clamp(30px,6vw,46px);font-weight:680;margin-bottom:14px}
+.top .sub{font-size:17px;line-height:1.55;color:var(--ink2);margin:0 0 20px}
+.stats{display:flex;gap:20px;flex-wrap:wrap}
+.stat{display:flex;flex-direction:column;gap:2px;min-width:0}
+.stat b{font:600 22px/1 "IBM Plex Mono";color:var(--teal-ink);font-variant-numeric:tabular-nums}
+.stat span{font-size:11.5px;color:var(--ink3)}
+
+.nav{display:flex;flex-wrap:wrap;gap:6px;padding:20px 0 4px}
+.nav a{font-size:13px;text-decoration:none;color:var(--ink2);border:1px solid var(--line2);border-radius:2px;padding:4px 9px;min-width:0}
+.nav a:hover{color:var(--ink);border-color:var(--teal)}
+
+.ato{margin:44px 0 0;padding:14px 16px;background:var(--teal-wash);border-left:3px solid var(--teal)}
+.ato span{font:700 10.5px "Source Sans 3";letter-spacing:.12em;text-transform:uppercase;color:var(--teal-ink);display:block;margin-bottom:3px}
+.ato h2{font-size:clamp(22px,4vw,28px)}
+
+.degrau{padding:34px 0;border-bottom:1px solid var(--line)}
+.dhead{display:flex;gap:14px;align-items:flex-start;margin-bottom:12px}
+.dnum{flex-shrink:0;width:40px;height:40px;border:1.5px solid var(--teal);border-radius:50%;display:flex;align-items:center;justify-content:center;font:600 15px "IBM Plex Mono";color:var(--teal-ink)}
+.dtitle{min-width:0;padding-top:3px}
+.dtitle h3{font-size:clamp(19px,3.4vw,24px)}
+.lede{font-size:16px;line-height:1.55;color:var(--ink2);margin:0 0 14px;font-style:italic}
+.prose ul{margin:0 0 12px;padding-left:20px}
+.prose li{font-size:15.4px;line-height:1.55;color:var(--ink2);margin-bottom:6px}
+.prose li:last-child{margin-bottom:0}
+h4{font:600 14px "Source Sans 3";color:var(--ink);margin:20px 0 8px}
+
+.trap,.banca{margin:16px 0;padding:13px 16px}
+.trap{border-left:3px solid var(--carmine);background:var(--carmine-wash)}
+.banca{border-left:3px solid var(--amber);background:var(--amber-wash)}
+.albl{font:700 10.5px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px}
+.trap .albl{color:var(--carmine-ink)}
+.banca .albl{color:var(--amber-ink)}
+.trap p,.banca p{font-size:15px;line-height:1.55;color:var(--ink);margin:0}
+.trap p+p,.banca p+p{margin-top:6px}
+
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line2);border:1px solid var(--line2);margin:16px 0}
+.vs>div{background:var(--card);padding:12px 14px;min-width:0}
+.vs h5{font:700 11.5px "Source Sans 3";letter-spacing:.04em;text-transform:uppercase;margin:0 0 6px}
+.vs .a h5{color:var(--carmine-ink)}
+.vs .b h5{color:var(--teal-ink)}
+.vs ul{margin:0;padding-left:17px}
+.vs li{font-size:14.4px;line-height:1.5;color:var(--ink2);margin-bottom:4px}
+@media(max-width:560px){.vs{grid-template-columns:1fr}}
+
+.crit{border:1px solid var(--line2);margin:16px 0;background:var(--card)}
+.crit .row{display:grid;grid-template-columns:150px minmax(0,1fr);gap:12px;padding:9px 13px;font-size:14.2px}
+.crit .row+.row{border-top:1px solid var(--line)}
+.crit .row>*{min-width:0}
+.crit .k{font-weight:600;color:var(--teal-ink)}
+.crit .v{color:var(--ink2);line-height:1.48}
+.crit.hd .row:first-child{background:var(--sunk)}
+.crit.hd .row:first-child>*{font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink3);font-weight:600}
+.crit.c3 .row{grid-template-columns:120px minmax(0,1fr) minmax(0,1fr)}
+.crit.c3.dir .row{grid-template-columns:150px 70px minmax(0,1fr)}
+.up{color:var(--teal-ink);font-weight:700}
+.dn{color:var(--carmine-ink);font-weight:700}
+@media(max-width:560px){
+  .crit .row{grid-template-columns:1fr;gap:2px}
+  .crit.c3 .row{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:4px 12px}
+  .crit.c3.dir .row{grid-template-columns:minmax(0,1fr) 64px minmax(0,1.6fr)}
+  .crit.c3 .row .k{grid-column:1 / -1}
+  .crit.c3.dir .row .k{grid-column:auto}
+  .crit.c3.dir.hd .row:first-child .k{display:block}
+  .crit.c3.hd .row:first-child .k{display:none}
+}
+
+details.ref{margin:16px 0;border:1px solid var(--line2);background:var(--card)}
+details.ref>summary{cursor:pointer;list-style:none;padding:11px 14px;font:600 13.5px "Source Sans 3";color:var(--teal-ink);display:flex;gap:8px}
+details.ref>summary::-webkit-details-marker{display:none}
+details.ref>summary::before{content:"+";font:600 15px "IBM Plex Mono";width:14px;flex-shrink:0}
+details.ref[open]>summary::before{content:"-"}
+details.ref .refbody{padding:0 14px 12px}
+details.ref .refbody ul{margin:0;padding-left:18px}
+details.ref .refbody li{font-size:14px;line-height:1.5;color:var(--ink2);margin-bottom:4px}
+
+.synth{background:var(--card);border:1px solid var(--line2);padding:26px 22px;margin-top:44px}
+@media(max-width:640px){.synth{padding:20px 16px}}
+.synth h2{font-size:23px;margin-bottom:6px}
+.synth .note{font-size:14px;color:var(--ink3);margin:0 0 14px}
+.trig{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1px;background:var(--line2);border:1px solid var(--line2)}
+.trig div{background:var(--sunk);padding:11px 13px;min-width:0}
+.trig .tk{font:700 11px "IBM Plex Mono";color:var(--teal-ink);display:block;margin-bottom:3px}
+.trig .tv{font-size:13.8px;line-height:1.45;color:var(--ink2)}
+.trig .tv b{color:var(--carmine-ink)}
+
+ol.chain{margin:0;padding-left:22px}
+ol.chain li{font-size:15.2px;line-height:1.5;color:var(--ink2);margin-bottom:7px}
+ol.chain li::marker{font:600 13px "IBM Plex Mono";color:var(--teal-ink)}
+
+footer{margin-top:50px;padding-top:18px;border-top:1px solid var(--line2)}
+footer p{font-size:12.3px;color:var(--ink3);margin:0 0 7px;line-height:1.5}
+code{font-family:"IBM Plex Mono",Consolas,monospace;font-size:11.5px;background:var(--sunk);padding:1px 4px;border-radius:2px;word-break:break-all}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <p class="eye">MedHub · Aula-base · Cirurgia · tarefa #530</p>
+  <h1>REMIT e cicatrização</h1>
+  <p class="sub">Ciência básica de livro-texto: a banca pergunta a direção (o que sobe, o que desce) e a célula de cada fase. Deduza pela função; a tabela confirma.</p>
+  <div class="stats">
+    <div class="stat"><b>3</b><span>fases do estresse</span></div>
+    <div class="stat"><b>12</b><span>hormônios com direção</span></div>
+    <div class="stat"><b>4</b><span>fases da ferida</span></div>
+    <div class="stat"><b>17</b><span>degraus</span></div>
+  </div>
+</header>
+
+<nav class="nav" aria-label="Atalhos">
+  <a href="#r0">REMIT</a><a href="#r3">Sobe x desce</a><a href="#r6">Metabolismo</a><a href="#r7">Citocinas</a>
+  <a href="#c0">Cicatrização</a><a href="#c1">Fases x células</a><a href="#c5">Fatores</a><a href="#c7">Queloide</a>
+  <a href="#gat">Gatilhos</a><a href="#esc">Respirada</a>
+</nav>
+
+<div class="ato"><span>Ato I</span><h2>Resposta endócrino-metabólica-inflamatória ao trauma</h2></div>
+
+<section class="degrau" id="r0">
+  <div class="dhead"><span class="dnum">0</span><div class="dtitle"><h3>A régua: o corpo como presa em fuga</h3></div></div>
+  <p class="lede">REMIT é a resposta de luta ou fuga a qualquer agressão. Tudo o que vem depois serve a três metas: manter volume, gerar glicose, perfundir órgão nobre.</p>
+  <div class="prose"><ul>
+    <li><strong>"Trauma" em sentido amplo:</strong> cirurgia eletiva ou de urgência, sepse, queimadura, pancreatite, trauma físico. Daí o nome mais aceito: <strong>resposta ao estresse cirúrgico</strong>.</li>
+    <li><strong>Magnitude proporcional à agressão.</strong> Corte pequeno, resposta pequena; gastrectomia, resposta grande e longa.</li>
+    <li>Disparam a resposta: abrir cavidade, grande ruptura de tecido, perda de sangue acima de 500 mL (7 mL/kg), instabilidade hemodinâmica, sepse.</li>
+    <li><strong>Catabolismo</strong> = quebrar para gerar energia. <strong>Anabolismo</strong> = sintetizar, gastando energia para guardar. A REMIT é catabólica.</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="r1">
+  <div class="dhead"><span class="dnum">1</span><div class="dtitle"><h3>O gatilho e as duas vias do hipotálamo</h3></div></div>
+  <p class="lede">A dor da ferida sobe por fibras nociceptivas até o hipotálamo, que responde por uma via rápida e uma lenta.</p>
+  <div class="vs">
+    <div class="b"><h5>Via rápida: simpático</h5><ul>
+      <li>Simpático + <strong>medula</strong> adrenal: adrenalina, noradrenalina.</li>
+      <li>Ativa o sistema renina-angiotensina-aldosterona.</li>
+      <li>Meta: sangue para os órgãos vitais.</li></ul></div>
+    <div class="a"><h5>Via lenta: hipotálamo-hipófise</h5><ul>
+      <li>Adeno-hipófise: ACTH (-&gt; cortisol pelo <strong>córtex</strong>), GH.</li>
+      <li>Neuro-hipófise: ADH.</li>
+      <li>Efeito final: menos insulina e mais resistência a ela.</li></ul></div>
+  </div>
+  <div class="banca"><div class="albl">Ângulo da banca</div>
+    <p>A UERJ já trocou <strong>medula por córtex</strong>: pede o produto da medula (catecolaminas) e oferece os do córtex (cortisol, aldosterona, androgênios) como distrator.</p></div>
+</section>
+
+<section class="degrau" id="r2">
+  <div class="dhead"><span class="dnum">2</span><div class="dtitle"><h3>As três fases de Cuthbertson</h3></div></div>
+  <p class="lede">Primeiro o corpo segura o sangue (EBB), depois queima combustível para reparar (FLOW), por fim reconstrói (anabólica).</p>
+  <div class="crit c3 hd">
+    <div class="row"><span class="k">Fase</span><span class="v">EBB (refluxo, choque)</span><span class="v">FLOW (fluxo)</span></div>
+    <div class="row"><span class="k">Duração</span><span class="v">24-72 h</span><span class="v">até 8 semanas ou mais</span></div>
+    <div class="row"><span class="k">Metabolismo</span><span class="v"><span class="dn">Cai</span> taxa metabólica e consumo de O2</span><span class="v"><span class="up">Sobe</span>: hipermetabólica, febre mesmo sem infecção</span></div>
+    <div class="row"><span class="k">Circulação</span><span class="v">Vasoconstrição, RVP alta, débito <span class="dn">baixo</span>; FC e contratilidade altas</span><span class="v">Hiperdinâmica, débito <span class="up">alto</span></span></div>
+    <div class="row"><span class="k">Combustível</span><span class="v">Produz: glicogenólise hepática, lipólise; lactato e acidose</span><span class="v">Consome: proteólise, balanço nitrogenado negativo</span></div>
+    <div class="row"><span class="k">Comum às duas</span><span class="v">Hiperglicemia, resistência insulínica</span><span class="v">Cortisol, glucagon e catecolaminas altos</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li><strong>Fase anabólica:</strong> inverte o metabolismo. Primeiro proteína (2-5 semanas), depois gordura (até 6 meses).</li>
+    <li>Na anabólica, o sódio e a água retidos na FLOW saem: <strong>diurese</strong>, menos edema, potássio normaliza.</li>
+  </ul></div>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p><strong>EBB tem taxa metabólica e consumo de O2 DIMINUÍDOS</strong> para a prova. Estudos novos sugerem o contrário; a banca segue o clássico.</p>
+    <p>A insulina na FLOW: o curso diz "baixa"; parte da literatura diz normal ou alta, com resistência. Âncora segura: <strong>hiperglicemia com resistência</strong> nas duas fases.</p></div>
+</section>
+
+<section class="degrau" id="r3">
+  <div class="dhead"><span class="dnum">3</span><div class="dtitle"><h3>Quem sobe e quem desce</h3></div></div>
+  <p class="lede">Regra de dedução: sobe quem gera glicose ou poupa água e sal; desce quem guarda energia ou gasta à toa.</p>
+  <div class="crit c3 dir hd">
+    <div class="row"><span class="k">Hormônio</span><span class="v">Direção</span><span class="v">Por quê</span></div>
+    <div class="row"><span class="k">Catecolaminas</span><span class="v"><span class="up">Sobe</span></span><span class="v">Luta ou fuga; principais com o cortisol</span></div>
+    <div class="row"><span class="k">ACTH / cortisol</span><span class="v"><span class="up">Sobe</span></span><span class="v">Catabolismo; até 2 semanas</span></div>
+    <div class="row"><span class="k">Renina / aldosterona</span><span class="v"><span class="up">Sobe</span></span><span class="v">Retém sódio e água</span></div>
+    <div class="row"><span class="k">ADH (vasopressina)</span><span class="v"><span class="up">Sobe</span></span><span class="v">Retém água livre; 2-3 dias</span></div>
+    <div class="row"><span class="k">GH</span><span class="v"><span class="up">Sobe</span></span><span class="v">Hiperglicemiante; poupa proteína</span></div>
+    <div class="row"><span class="k">Glucagon</span><span class="v"><span class="up">Sobe</span></span><span class="v">A partir de 12 h; normaliza em 3 dias</span></div>
+    <div class="row"><span class="k">Insulina</span><span class="v"><span class="dn">Desce</span></span><span class="v">O principal que cai; anabólico</span></div>
+    <div class="row"><span class="k">T3</span><span class="v"><span class="dn">Desce</span></span><span class="v">Menos conversão periférica de T4</span></div>
+    <div class="row"><span class="k">Testosterona, estrogênio</span><span class="v"><span class="dn">Desce</span></span><span class="v">Resistência ao LH (LH normal)</span></div>
+  </div>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p><strong>Insulina é o hormônio que DESCE.</strong> Questão "todos aumentam, exceto" quase sempre mira nela.</p>
+    <p>T3 cai sem TSH compensar (feedback falha) e o T3 reverso acumula. Tiroxina não sobe.</p></div>
+</section>
+
+<section class="degrau" id="r4">
+  <div class="dhead"><span class="dnum">4</span><div class="dtitle"><h3>Cada ator em uma linha de mecanismo</h3></div></div>
+  <p class="lede">O efeito estranho de cada hormônio é exatamente o que vira alternativa "exceto".</p>
+  <div class="crit">
+    <div class="row"><span class="k">Catecolaminas</span><span class="v">Inibem insulina pela via <strong>α2</strong> na célula β. <strong>Broncodilatam</strong>. Relaxam musculatura lisa do TGI e esfíncteres (íleo pós-operatório). Hipercoagulabilidade. Estimulam renina, ADH e ACTH.</span></div>
+    <div class="row"><span class="k">Cortisol</span><span class="v">Lipólise, proteólise, gliconeogênese, resistência insulínica. <strong>Inibe síntese proteica</strong> e lipogênese. Anti-inflamatório. Permite a resposta vascular às catecolaminas. Feedback negativo inoperante no estresse.</span></div>
+    <div class="row"><span class="k">Aldosterona</span><span class="v">Reabsorve Na+ e HCO3-; excreta K+ e H+. Estímulo é mais hemodinâmico que doloroso.</span></div>
+    <div class="row"><span class="k">ADH</span><span class="v">Água livre no túbulo distal e coletor; vasoconstrição esplâncnica; gliconeogênese. Estímulo principal: dor.</span></div>
+    <div class="row"><span class="k">GH</span><span class="v">Glicogenólise, lipólise, bloqueia captação de glicose. Via IGF-1, <strong>protege a proteína</strong>.</span></div>
+    <div class="row"><span class="k">Glucagon</span><span class="v">Age no fígado (via porta): glicogenólise, gliconeogênese, lipólise; inibe glicogênese.</span></div>
+    <div class="row"><span class="k">Insulina</span><span class="v">Cai por α2, resistência (receptor e sinalização, até 50%) e excreção urinária. Grau proporcional ao estresse.</span></div>
+  </div>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p>Catecolamina <strong>não broncoconstringe</strong> e cortisol <strong>não estimula síntese proteica</strong>. As duas frases aparecem como corretas falsas.</p></div>
+</section>
+
+<section class="degrau" id="r5">
+  <div class="dhead"><span class="dnum">5</span><div class="dtitle"><h3>A urina do trauma, deduzida</h3></div></div>
+  <p class="lede">Junte ADH e aldosterona e a urina se escreve sozinha.</p>
+  <div class="prose"><ul>
+    <li>ADH retém água: <strong>volume baixo, densidade alta</strong>.</li>
+    <li>Aldosterona troca Na+ por K+ e H+: <strong>sódio baixo, potássio alto, urina ácida</strong>.</li>
+    <li>No sangue: retenção de sódio e água, <strong>hipocalemia</strong>.</li>
+    <li>A conta só fecha na fase anabólica, com a diurese.</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="r6">
+  <div class="dhead"><span class="dnum">6</span><div class="dtitle"><h3>Metabolismo: tudo vira glicose</h3></div></div>
+  <p class="lede">Hiperglicemia é o marco. O corpo raspa três estoques: glicogênio, gordura, músculo.</p>
+  <div class="prose"><ul>
+    <li><strong>Glicogenólise</strong> do fígado (o estoque principal, esgota em horas). O glicogênio muscular não é usado de forma aguda.</li>
+    <li><strong>Gliconeogênese</strong> (fígado, menos o rim) com substrato não carboidrato: aminoácido, glicerol, lactato.</li>
+    <li><strong>Lipólise</strong>: triglicerídeo -&gt; glicerol (vira glicose) + ácido graxo (vira cetona ou é reesterificado). Inibidor fisiológico: insulina.</li>
+    <li><strong>Proteólise</strong> do músculo esquelético, puxada pelo cortisol. Libera <strong>alanina e glutamina</strong>.</li>
+    <li>Aminoácidos vão à glicose e às proteínas de fase aguda (PCR, fibrinogênio, ferritina, haptoglobina, complemento). <strong>Caem</strong> albumina, transferrina e pré-albumina.</li>
+  </ul></div>
+  <div class="crit c3 hd">
+    <div class="row"><span class="k">Ciclo</span><span class="v">Substrato</span><span class="v">Detalhe</span></div>
+    <div class="row"><span class="k">Cori</span><span class="v">Lactato -&gt; glicose</span><span class="v"><strong>Gasta</strong> energia (vem da oxidação de gordura)</span></div>
+    <div class="row"><span class="k">Felig</span><span class="v">Alanina -&gt; glicose</span><span class="v">Estímulo do glucagon</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Glutamina: o enterócito a converte em alanina; o rim a usa para excretar amônia e H+ (urina ácida).</li>
+  </ul></div>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p><strong>Cori é Lactato, Felig é alanina</strong> (troca clássica). E o ciclo de Cori não poupa ATP: consome.</p></div>
+  <details class="ref"><summary>Perda de massa magra e mortalidade</summary><div class="refbody"><ul>
+    <li>10%: imunidade cai, mais infecção (mortalidade ~10%).</li>
+    <li>20%: cicatrização pior, fraqueza (~30%).</li>
+    <li>30%: acamado, escaras, pneumonia (~50%).</li>
+    <li>40%: morte, em geral por pneumonia (~100%).</li></ul></div></details>
+</section>
+
+<section class="degrau" id="r7">
+  <div class="dhead"><span class="dnum">7</span><div class="dtitle"><h3>Inflamação: um cabo de guerra de citocinas</h3></div></div>
+  <p class="lede">Citocinas nascem da lesão local e agem perto (parácrino) e longe (endócrino). Um lado acende, o outro freia.</p>
+  <div class="vs">
+    <div class="a"><h5>Pró-inflamatórias</h5><ul><li>TNF-α, IL-1, IL-6, IL-8, IFN-γ, linfotoxina-α</li></ul></div>
+    <div class="b"><h5>Anti-inflamatórias</h5><ul><li><strong>IL-10</strong> (a principal), IL-4, IL-11, IL-13, TGF-β</li></ul></div>
+  </div>
+  <div class="crit">
+    <div class="row"><span class="k">TNF-α</span><span class="v">Uma das primeiras; monócito e macrófago. Proteólise e <strong>caquexia</strong>, estado de choque (vasodilatação, permeabilidade), pirógeno, hipercoagulável.</span></div>
+    <div class="row"><span class="k">IL-1</span><span class="v">Pirógeno; recruta leucócitos; ativa eixo hipotálamo-hipófise-adrenal (mais cortisol); proteólise.</span></div>
+    <div class="row"><span class="k">IL-6</span><span class="v">Nível <strong>correlaciona com a gravidade</strong>; induz fase aguda (PCR, ferritina, fibrinogênio).</span></div>
+    <div class="row"><span class="k">IL-10</span><span class="v">Desliga TNF, IL-1, IL-6, IL-8, IL-12; controla duração e magnitude.</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Anestesia geral <strong>não bloqueia</strong> citocinas: elas vêm do tecido lesado.</li>
+    <li>Efeitos sistêmicos de TNF e IL-1: febre, anorexia, hipotensão, neutrofilia, linfopenia transitória, mais ACTH e cortisol.</li>
+    <li><strong>SIRS</strong> = 2 ou mais de: temperatura acima de 38 ou abaixo de 36 °C; FC acima de 90; FR acima de 20 (ou PaCO2 abaixo de 32); leucócitos acima de 12.000, abaixo de 4.000 ou mais de 10% de bastões. Inespecífica: cirurgia também causa.</li>
+  </ul></div>
+  <div class="banca"><div class="albl">Ângulo da banca</div>
+    <p>A UERJ cobra citocina pela <strong>função</strong> (qual é anti-inflamatória). Febre e taquicardia no pós-operatório sem foco = SIRS, não sepse; o critério SIRS saiu da definição de sepse, mas segue caindo.</p></div>
+</section>
+
+<div class="ato" id="c0"><span>Ato II</span><h2>Cicatrização de feridas</h2></div>
+
+<section class="degrau">
+  <div class="dhead"><span class="dnum">0</span><div class="dtitle"><h3>A régua: reparo rápido, nunca perfeito</h3></div></div>
+  <p class="lede">Ferida é ruptura da estrutura e da função da pele. O corpo prioriza fechar rápido; por isso o resultado é cicatriz, não pele nova.</p>
+  <div class="prose"><ul>
+    <li><strong>Aguda:</strong> mecanismo claro, reparo ordenado.</li>
+    <li><strong>Crônica:</strong> perdeu a sequência ordenada; na prática, não fechou em 3 meses.</li>
+    <li>O que mais cai: <strong>fases</strong> (metade das questões do tema) e <strong>fatores que atrapalham</strong>.</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="c1">
+  <div class="dhead"><span class="dnum">1</span><div class="dtitle"><h3>As fases e a célula que manda em cada uma</h3></div></div>
+  <p class="lede">Ordem lógica: parar o sangue, limpar, reconstruir, apertar. Cada tarefa tem sua célula; as fases se sobrepõem.</p>
+  <div class="crit c3 hd">
+    <div class="row"><span class="k">Fase</span><span class="v">Célula dominante</span><span class="v">Marca e tempo</span></div>
+    <div class="row"><span class="k">Hemostasia</span><span class="v">Plaqueta</span><span class="v">Vasoconstrição, trombo; minutos</span></div>
+    <div class="row"><span class="k">Inflamatória</span><span class="v">Neutrófilo, depois <strong>macrófago</strong>, depois linfócito</span><span class="v">Exsudato fibrinoso; dias 1 a ~5</span></div>
+    <div class="row"><span class="k">Proliferativa</span><span class="v"><strong>Fibroblasto</strong>; endotelial; queratinócito</span><span class="v">Tecido de granulação; pico de colágeno em 2-3 semanas</span></div>
+    <div class="row"><span class="k">Maturação</span><span class="v"><strong>Miofibroblasto</strong></span><span class="v">Contração centrípeta; meses a 1 ano ou mais</span></div>
+  </div>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p>Sinônimos que a banca usa: <strong>exsudativa = inflamatória</strong>, <strong>fibroblástica ou fibroplasia = proliferativa</strong>, <strong>remodelação = maturação</strong>.</p>
+    <p>Hemostasia vem antes da inflamação. "Primeiro evento" = formação do trombo, não migração de fagócitos.</p></div>
+  <div class="banca"><div class="albl">Ângulo da banca</div><p>Pergunta a fase pelo tipo celular, ou a célula pela fase. Decore a coluna do meio.</p></div>
+</section>
+
+<section class="degrau" id="c2">
+  <div class="dhead"><span class="dnum">2</span><div class="dtitle"><h3>Inflamação: fechar a torneira, depois limpar</h3></div></div>
+  <p class="lede">Vasoconstrição primeiro, vasodilatação depois. O coágulo de fibrina é o andaime por onde as células entram.</p>
+  <div class="prose"><ul>
+    <li><strong>Plaqueta</strong> libera PDGF, TGF-β, serotonina, fibronectina.</li>
+    <li>Depois: <strong>vasodilatação + permeabilidade</strong> (histamina, serotonina) e quimiotaxia (prostaglandinas, complemento, IL-1).</li>
+    <li><strong>Neutrófilo:</strong> 1ª célula, pico em 24-48 h. Fagocita bactéria e debris, libera proteases (colagenase).</li>
+    <li><strong>Macrófago:</strong> 2ª célula, vem do monócito, pico em 48-96 h, fica até o fim. É a <strong>célula fundamental</strong>: recruta e ativa as outras por citocinas (IL-1, TNF-α) e fatores de crescimento.</li>
+    <li><strong>Linfócito T:</strong> chega no dia 5, pico no dia 7. Ponte para a proliferação: ativa o fibroblasto (IL-2). O linfócito B desacelera o processo no fim.</li>
+  </ul></div>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p>Primeira célula = neutrófilo. <strong>Mais importante = macrófago</strong>. A função principal do macrófago é <strong>ativar e recrutar células</strong>, não matar bactéria nem produzir colágeno.</p></div>
+</section>
+
+<section class="degrau" id="c3">
+  <div class="dhead"><span class="dnum">3</span><div class="dtitle"><h3>Proliferação: colágeno, vaso, pele</h3></div></div>
+  <p class="lede">Ordem: fibroplasia, angiogênese, epitelização. O produto é o tecido de granulação: capilares, fibroblastos, macrófagos e um arranjo frouxo de colágeno, fibronectina e ácido hialurônico.</p>
+  <div class="prose"><ul>
+    <li><strong>Fibroblasto</strong> (ativado sobretudo pelo PDGF) faz colágeno, glicosaminoglicanos e proteoglicanos.</li>
+    <li>Colágeno da pele: <strong>tipo I ~80%, tipo III ~20%</strong>. Aminoácidos: glicina, lisina, prolina.</li>
+    <li><strong>Hidroxilação</strong> de lisina e prolina dá a força tênsil. Exige <strong>vitamina C, O2 e ferro</strong>. Este é o elo que liga os fatores do degrau 5.</li>
+    <li>Colágeno acumula até <strong>2-3 semanas</strong>; após 4 semanas a colagenase equilibra a síntese (passagem para maturação).</li>
+    <li><strong>Angiogênese:</strong> célula endotelial, estimulada por hipóxia, lise celular, VEGF, TNF-α, TGF-β (do macrófago).</li>
+    <li><strong>Epitelização:</strong> queratinócito da camada basal e dos anexos. Em ferida suturada começa em <strong>24 h</strong> e sela em <strong>48 h</strong>; por isso o curativo pode sair após 48 h.</li>
+  </ul></div>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p>Aminoácidos marcadores do colágeno: <strong>hidroxiprolina e hidroxilisina</strong>. "Hidroxileucina" e "hidroxivalina" são inventadas.</p></div>
+</section>
+
+<section class="degrau" id="c4">
+  <div class="dhead"><span class="dnum">4</span><div class="dtitle"><h3>Maturação: apertar e reorganizar</h3></div></div>
+  <p class="lede">Com o vão preenchido, a ferida encolhe e o colágeno se reorganiza. A cicatriz ganha força por meses.</p>
+  <div class="prose"><ul>
+    <li><strong>Miofibroblasto</strong> = fibroblasto com actina (como músculo liso). Puxa a pele em movimento centrípeto. Metaloproteinases abrem caminho.</li>
+    <li>Capilares regridem; proteoglicanos voltam a nível próximo da pele normal.</li>
+    <li>Colágeno III é trocado por I (o mais resistente).</li>
+    <li>Força tênsil sobe rápido de 1 a 6 semanas e chega ao platô em ~1 ano, <strong>sem voltar a 100%</strong> (cerca de 80% da pele íntegra).</li>
+  </ul></div>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p>Se a alternativa só oferece "fibroblastos" para a maturação, é ela: o miofibroblasto é um fibroblasto especializado.</p></div>
+</section>
+
+<section class="degrau" id="c5">
+  <div class="dhead"><span class="dnum">5</span><div class="dtitle"><h3>O que trava a cicatrização</h3></div></div>
+  <p class="lede">Quase tudo passa por três elos: bactéria, oxigênio e matéria-prima do colágeno.</p>
+  <div class="crit">
+    <div class="row"><span class="k">Infecção</span><span class="v"><strong>Principal causa de falha.</strong> Prende a ferida na inflamação, bloqueia epitelização, contração e colágeno. Necrose e colonização = desbridar.</span></div>
+    <div class="row"><span class="k">Oxigênio</span><span class="v">Hipóxia moderada estimula angiogênese; tensão baixa trava a hidroxilação. Anemia, IC, insuficiência arterial, vasoconstrição, sutura sob tensão. <strong>Oxigenação é o fator mais importante contra infecção.</strong></span></div>
+    <div class="row"><span class="k">Tabagismo</span><span class="v">Fluxo cai 30-40%; CO; nicotina oclui microvaso; inibe fibroblasto e VEGF. Parar 4-6 semanas antes.</span></div>
+    <div class="row"><span class="k">Diabetes</span><span class="v">Vasculopatia, neuropatia, hiperglicemia (menos quimiotaxia, fagocitose e colágeno).</span></div>
+    <div class="row"><span class="k">Desnutrição</span><span class="v">Albumina abaixo de 3 g/dL prediz complicação. Obesidade: seroma, hematoma, infecção, deiscência.</span></div>
+    <div class="row"><span class="k">Corticoide</span><span class="v">Afeta sobretudo a <strong>inflamação</strong>; estabiliza lisossomo; menos fibroblasto, colágeno, granulação, epitelização. <strong>Vitamina A reverte.</strong></span></div>
+    <div class="row"><span class="k">Quimioterapia</span><span class="v"><strong>Bevacizumabe</strong> (anti-VEGF, atinge a angiogênese): suspender 28 dias antes, ideal 6-8 semanas. Doxorrubicina, ciclofosfamida, metotrexato, tamoxifeno.</span></div>
+    <div class="row"><span class="k">Radiação, idade</span><span class="v">Radiação atinge célula que divide (queratinócito, fibroblasto). Idoso: menos célula, vaso e colágeno.</span></div>
+  </div>
+  <div class="vs">
+    <div class="b"><h5>Micronutrientes que importam</h5><ul>
+      <li><strong>Vitamina C</strong>: a hipovitaminose que mais falha (escorbuto; sem hidroxilação).</li>
+      <li><strong>Vitamina A</strong>: aumenta inflamação e colágeno.</li>
+      <li><strong>Zinco</strong>: cofator de polimerases; fibroblasto, colágeno, epitelização.</li>
+      <li><strong>Vitamina B2</strong>: colágeno e força tênsil.</li></ul></div>
+    <div class="a"><h5>Iscas que NÃO atrapalham</h5><ul>
+      <li>Vasodilatação (quem atrapalha é a vasoconstrição).</li>
+      <li>Alcalose (quem atrapalha é a acidose).</li>
+      <li>Diabetes compensado; sutura sob tensão adequada.</li>
+      <li>Hipotireoidismo: efeito mínimo.</li></ul></div>
+  </div>
+  <div class="banca"><div class="albl">Ângulo da banca</div>
+    <p>A UERJ pede vitaminas <strong>em par</strong>: julgue cada metade sozinha. Também já pediu o nome de <strong>biofilme</strong> a partir da definição: comunidade de bactérias aderida, numa matriz que ela mesma produz, tolerante a antibiótico, que mantém a ferida crônica inflamada (complemento, fora do PDF).</p></div>
+</section>
+
+<section class="degrau" id="c6">
+  <div class="dhead"><span class="dnum">6</span><div class="dtitle"><h3>Primeira, segunda e terceira intenção</h3></div></div>
+  <p class="lede">A pergunta que decide: as bordas foram aproximadas, e quando?</p>
+  <div class="crit c3 hd">
+    <div class="row"><span class="k">Tipo</span><span class="v">Bordas</span><span class="v">Marca</span></div>
+    <div class="row"><span class="k">1ª (primária)</span><span class="v">Aproximadas já; inclui <strong>enxerto e retalho</strong></span><span class="v">Ferida limpa; sela em 48 h; granulação não visível</span></div>
+    <div class="row"><span class="k">2ª (espontânea)</span><span class="v">Ficam abertas</span><span class="v">Granulação + <strong>contração</strong> (miofibroblasto) fecham</span></div>
+    <div class="row"><span class="k">3ª (primária retardada)</span><span class="v">Abertas, depois aproximadas</span><span class="v">Espera a infecção ceder e a granulação começar</span></div>
+  </div>
+  <div class="trap"><div class="albl">Armadilha</div><p>Contração cicatricial é a marca da <strong>2ª intenção</strong>. Enxerto e retalho são 1ª intenção, não 2ª.</p></div>
+</section>
+
+<section class="degrau" id="c7">
+  <div class="dhead"><span class="dnum">7</span><div class="dtitle"><h3>Cicatriz hipertrófica x queloide</h3></div></div>
+  <p class="lede">As duas são excesso de colágeno na fibroplasia, após uma lesão, e coçam. O que separa é a borda, o tempo e a genética.</p>
+  <div class="crit c3 hd">
+    <div class="row"><span class="k">Atributo</span><span class="v">Hipertrófica</span><span class="v">Queloide</span></div>
+    <div class="row"><span class="k">Borda</span><span class="v"><strong>Respeita</strong> a incisão</span><span class="v"><strong>Ultrapassa</strong> a incisão</span></div>
+    <div class="row"><span class="k">Regressão</span><span class="v">Frequente, espontânea</span><span class="v">Rara</span></div>
+    <div class="row"><span class="k">Início</span><span class="v">4-6 semanas</span><span class="v">Meses a anos; trauma mínimo basta</span></div>
+    <div class="row"><span class="k">Causa</span><span class="v">Tensão; epitelização acima de 21 dias</span><span class="v">Genética (AD, penetrância incompleta); TGF-β alto</span></div>
+    <div class="row"><span class="k">Quem e onde</span><span class="v">Sem predileção; áreas de tensão, face flexora</span><span class="v">Pele escura (15-20%); pré-esternal, ombro, lobo da orelha, face</span></div>
+    <div class="row"><span class="k">Histologia</span><span class="v">Colágeno III, fibras paralelas, nódulos com fibroblasto e vaso</span><span class="v">Hipocelular, feixes grossos ao acaso; colágeno ~20x</span></div>
+    <div class="row"><span class="k">Prevenção</span><span class="v">Sim: evitar tensão</span><span class="v">Não (segundo o curso)</span></div>
+    <div class="row"><span class="k">Tratamento</span><span class="v">Pressão com silicone; triancinolona; ressecção + zetaplastia se mais de 1 ano</span><span class="v">Silicone + triancinolona intralesional; excisão só com adjuvante</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Queloide raro em pálpebra, genitália, palma, planta e articulação.</li>
+    <li>Excisão isolada de queloide recidiva e pode aumentá-lo. Adjuvantes: crioterapia, laser, radioterapia, imiquimode.</li>
+  </ul></div>
+  <div class="banca"><div class="albl">Ângulo da banca</div>
+    <p>Os distratores são <strong>atributos comuns às duas</strong> (lesão prévia, prurido, excesso de colágeno). Procure só o discriminador: borda, regressão, genética.</p></div>
+</section>
+
+<section class="degrau" id="c8">
+  <div class="dhead"><span class="dnum">8</span><div class="dtitle"><h3>Curativos e terapias adjuvantes</h3></div></div>
+  <p class="lede">Ambiente ideal: úmido, limpo e quente. O resto é escolher entre ocluir e absorver.</p>
+  <div class="prose"><ul>
+    <li><strong>Oclusivo:</strong> meio levemente ácido e com pouco O2; favorece fibroblasto e granulação.</li>
+    <li><strong>Absortivo:</strong> muito exsudato ou bactéria; tira o excesso, em geral bactericida.</li>
+    <li>Curativo ideal: úmido, remove exsudato, permite troca gasosa, impermeável a micro-organismo, isolante térmico, atraumático.</li>
+  </ul></div>
+  <details class="ref"><summary>Oxigênio hiperbárico e pressão negativa</summary><div class="refbody"><ul>
+    <li>Hiperbárica: O2 tecidual ~10x; angiogênese, fibroblasto, leucócito. Riscos: barotrauma de ouvido, pneumotórax.</li>
+    <li>Contraindicação absoluta: <strong>pneumotórax não tratado</strong>, bleomicina ou doxorrubicina atual ou recente, dissulfiram. Intoxicação por CO é indicação.</li>
+    <li>Pressão negativa (Argenta e Morykwas, 1997): menos edema, mais fluxo e granulação, angiogênese, remove proteases, ferida menor, enxerto pega melhor.</li></ul></div></details>
+</section>
+
+<section class="synth" id="gat">
+  <h2>Gatilhos de prova</h2>
+  <p class="note">Uma linha por degrau. Vermelho = armadilha de banca.</p>
+  <div class="trig">
+    <div><span class="tk">Magnitude</span><span class="tv">Resposta proporcional à agressão</span></div>
+    <div><span class="tk">Medula x córtex</span><span class="tv"><b>Medula = catecolaminas</b>; córtex = cortisol, aldosterona</span></div>
+    <div><span class="tk">EBB</span><span class="tv">24-72 h; <b>metabolismo e VO2 caem</b>; lactato, acidose</span></div>
+    <div><span class="tk">FLOW</span><span class="tv">Hipermetabólica; nitrogênio negativo; hiperglicemia</span></div>
+    <div><span class="tk">Desce</span><span class="tv"><b>Insulina</b>, T3, testosterona, estrogênio</span></div>
+    <div><span class="tk">Sobe</span><span class="tv">Catecolaminas, cortisol, aldosterona, ADH, GH, glucagon</span></div>
+    <div><span class="tk">Exceto</span><span class="tv"><b>Catecolamina broncodilata</b>; cortisol inibe síntese proteica</span></div>
+    <div><span class="tk">Urina</span><span class="tv">Pouca, densa, Na baixo, K alto, ácida</span></div>
+    <div><span class="tk">Ciclos</span><span class="tv"><b>Cori = lactato</b>; Felig = alanina</span></div>
+    <div><span class="tk">Citocinas</span><span class="tv">IL-6 mede gravidade; <b>IL-10 anti-inflamatória</b></span></div>
+    <div><span class="tk">Fases</span><span class="tv">Hemostasia, inflamação, proliferação, maturação</span></div>
+    <div><span class="tk">Células</span><span class="tv">Neutrófilo 1º; <b>macrófago fundamental</b>; fibroblasto; miofibroblasto</span></div>
+    <div><span class="tk">Colágeno</span><span class="tv">I 80% / III 20%; pico 2-3 semanas; vit C + O2 + ferro</span></div>
+    <div><span class="tk">Epitelização</span><span class="tv">Começa em 24 h, sela em 48 h</span></div>
+    <div><span class="tk">Falha</span><span class="tv"><b>Infecção</b> é a principal; vitamina C a hipovitaminose</span></div>
+    <div><span class="tk">Corticoide</span><span class="tv">Trava a inflamação; <b>vitamina A reverte</b></span></div>
+    <div><span class="tk">Intenção</span><span class="tv">Enxerto = 1ª; <b>contração = 2ª</b>; retardada = 3ª</span></div>
+    <div><span class="tk">Queloide</span><span class="tv"><b>Passa da borda</b>, não regride, genético</span></div>
+  </div>
+</section>
+
+<section class="synth" id="esc">
+  <h2>A escada inteira em uma respirada</h2>
+  <ol class="chain">
+    <li>Agressão -&gt; dor -&gt; hipotálamo.</li>
+    <li>Via rápida (simpático, medula, SRAA) e lenta (ACTH, GH, ADH).</li>
+    <li>EBB segura o sangue; FLOW queima combustível; anabólica reconstrói.</li>
+    <li>Sobem os geradores de glicose e os poupadores de água; desce a insulina.</li>
+    <li>ADH + aldosterona -&gt; urina pouca, ácida, com K alto e Na baixo.</li>
+    <li>Glicogênio, gordura e músculo viram glicose (Cori, Felig).</li>
+    <li>TNF, IL-1, IL-6 acendem; IL-10 apaga.</li>
+    <li>Na ferida: plaqueta fecha, neutrófilo e macrófago limpam e comandam.</li>
+    <li>Fibroblasto faz colágeno (vit C, O2, ferro), endotélio faz vaso, queratinócito sela.</li>
+    <li>Miofibroblasto contrai; colágeno III vira I; força nunca chega a 100%.</li>
+    <li>Infecção, hipóxia e falta de matéria-prima travam.</li>
+    <li>Excesso de colágeno: dentro da borda = hipertrófica; além = queloide.</li>
+  </ol>
+</section>
+
+<footer>
+  <p><strong>Fonte:</strong> <code>resumos/Cirurgia/25. Resposta Endócrino-Metabólica ao Trauma.pdf</code> e <code>resumos/Cirurgia/31. Cicatrização de Feridas.pdf</code> (EMED, Prof. Tomás Coelho). Complementos fora do PDF, marcados: biofilme, troca de colágeno III por I, teto de ~80% de força tênsil, critérios de SIRS por extenso, nuance da insulina na FLOW. Lente da banca: dossiê UERJ, Cirurgia.</p>
+  <p>Cumpre a tarefa #530 do plano. Marque "feito" no quadro depois de ler.</p>
+</footer>
+</div>

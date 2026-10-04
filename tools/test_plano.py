@@ -1155,6 +1155,40 @@ def test_panorama_semana_de_calendario_atraso_simulados_e_proxima():
     assert "`aula` = " in md and "`caderno` = " not in md, "legenda so das classes em uso"
 
 
+def test_panorama_rota_vai_da_semana_seguinte_ate_a_ultima_da_fase1():
+    """s213 (pedido do operador: a rota inteira no Painel): `rota` = as semanas DEPOIS da corrente
+    ate a ultima da Fase 1, so com pendente -- sem reserva, cortada, feita, semana vazia nem
+    Fase 2. A regua e a do proprio panorama (uma so); `feitas`/`total` contam as vivas da semana."""
+    ultima = max(plano.SEMANAS_FASE1)
+    cal = {**CAL_PANORAMA, 3: (date(2026, 9, 28), date(2026, 10, 4))}
+    linhas = [
+        _linha_pan(1, 2),                                               # corrente: fora da rota
+        _linha_pan(2, 3, q_previstas=30),
+        _linha_pan(3, 3, status="feita"),
+        _linha_pan(4, 3, status="cortada"),
+        _linha_pan(5, 3, url_lista=None, q_previstas=0, fonte="custom"),
+        _linha_pan(6, 4, status="feita"),                               # S4 sem pendente: pula
+        _linha_pan(7, ultima, q_previstas=10),
+        _linha_pan(8, ultima + 1),                                      # Fase 2
+        _linha_pan(9, None),                                            # reserva
+    ]
+    p = plano.panorama(linhas, cal, date(2026, 9, 22))
+    assert p["semana"] == 2
+    rota = p["rota"]
+    assert [r["semana"] for r in rota] == [3, ultima]
+    s3 = rota[0]
+    assert [t["id"] for t in s3["tarefas"]] == [2, 5]
+    assert (s3["q"], s3["feitas"], s3["total"]) == (30, 1, 3), "cortada nao conta no total"
+    assert (s3["inicio"], s3["fim"]) == ("2026-09-28", "2026-10-04")
+    assert s3["tarefas"][1]["classe"] == "aula" and not s3["tarefas"][0]["atrasada"]
+    assert rota[1]["inicio"] is None, "semana fora do calendario: sem data inventada"
+    assert [t["id"] for t in rota[1]["tarefas"]] == [7]
+    # a rota e a mesma fila que o resto do panorama conta: Fase 1 = abertas + rota
+    assert (len(p["abertas"]) + sum(len(r["tarefas"]) for r in rota)) == p["fase1"]["tarefas"]
+    # o texto do boot nao muda
+    assert "rota" not in plano.render_panorama(p).lower()
+
+
 def test_panorama_sem_calendario_cai_para_a_posicao_do_plano():
     """Depois do fim do calendario da trilha (ou sem ele) a semana e a POSICAO do plano --
     menor semana com pendencia -- e as datas somem: nunca janela inventada."""

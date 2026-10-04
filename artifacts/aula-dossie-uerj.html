@@ -104,14 +104,31 @@ details.blk h3{font:700 11.5px "Source Sans 3";letter-spacing:.05em;text-transfo
 details.blk h3:first-child{margin-top:0}
 details.mais{margin-top:10px}
 details.mais summary{cursor:pointer;min-height:44px;display:flex;align-items:center;font:600 14px "Source Sans 3";color:var(--teal-ink)}
+
+/* v2: lista numerada, secao com subtitulo, detalhe aninhado no bloco, etiqueta de banca */
+ol.pt{margin:0 0 14px;padding-left:22px}
+ol.pt li{font-size:15.6px;line-height:1.58;color:var(--ink2);margin-bottom:7px}
+ol.pt li:last-child{margin-bottom:0}
+.sec>h3{font:700 11.5px "Source Sans 3";letter-spacing:.05em;text-transform:uppercase;color:var(--ink3);margin:22px 0 8px}
+details.mais summary{list-style:none;gap:8px}
+details.mais summary::-webkit-details-marker{display:none}
+details.mais summary::before{content:"+";font:600 15px "IBM Plex Mono",ui-monospace,Consolas,monospace;width:14px;flex:none}
+details.mais[open] summary::before{content:"-"}
+details.mais>*:not(summary){min-width:0}
+details.blk details.mais{margin-top:6px;border-top:1px solid var(--line)}
+details.blk .mal p + p{margin-top:3px}
+.mal p + p{margin-top:3px}
+.bd{display:inline-block;font:600 10.5px/1.5 "Source Sans 3";letter-spacing:.06em;text-transform:uppercase;color:var(--amber-ink);background:var(--amber-wash);padding:0 6px;border-radius:3px;vertical-align:1px}
+.ar{white-space:nowrap}
+.blks-lede{margin-bottom:14px}
 </style>
 
 <div class="wrap">
 <header class="top">
   <p class="eye">Documentação · Banca</p>
   <h1>Dossiê UERJ: anatomia e maldades da prova</h1>
-  <p class="sub">Como a banca monta a questão e de que material ela fabrica a alternativa errada.</p>
-  <p class="fonte">Duas lentes: a nossa dissecação das 6 provas de 2021 a 2026 (503 questões válidas, uma etiqueta por questão) e uma segunda análise independente de 2022 a 2026. Sem ano nem número de questão: as provas que faltam continuam valendo como simulado.</p>
+  <p class="sub">Como a banca monta a questão, de que material fabrica a alternativa errada e onde você perde ponto nela.</p>
+  <p class="fonte">Base: as 6 provas (2021-2026), 502 questões válidas pelo gabarito oficial pós-recurso, uma etiqueta por questão; segunda lente: uma análise independente (2022-2026). Sem ano nem número de questão das provas que você ainda não fez: elas continuam valendo como simulado. Onde a banca e a diretriz atual divergem, o texto diz as duas.</p>
 </header>
 
 <section class="sec">
@@ -122,7 +139,7 @@ details.mais summary{cursor:pointer;min-height:44px;display:flex;align-items:cen
     <thead><tr><th scope="col">Bloco</th><th scope="col">Com paciente</th><th scope="col">Palavras</th><th scope="col">O que mais pede</th></tr></thead>
     <tbody>
       <tr><td class="nw">1 · CM</td><td class="num">98%</td><td class="num">79</td><td>diagnóstico, exame, tratamento</td></tr>
-      <tr><td class="nw">2 · CIR</td><td class="num">49%</td><td class="num">37</td><td>conceito, mecanismo, conduta</td></tr>
+      <tr><td class="nw">2 · CIR</td><td class="num">48%</td><td class="num">37</td><td>conceito, mecanismo, conduta</td></tr>
       <tr><td class="nw">3 · GO</td><td class="num">75%</td><td class="num">49</td><td>conceito, conduta</td></tr>
       <tr><td class="nw">4 · PED</td><td class="num">81%</td><td class="num">78</td><td>diagnóstico, conceito</td></tr>
       <tr><td class="nw">5 · MFC</td><td class="num">59%</td><td class="num">60</td><td>conceito, conduta, prevenção</td></tr>
@@ -131,193 +148,1278 @@ details.mais summary{cursor:pointer;min-height:44px;display:flex;align-items:cen
   <ul class="pt">
     <li><strong>Peso:</strong> 20% por bloco em todas as provas. Muda a subárea, nunca o peso.</li>
     <li><strong>Relógio:</strong> 5 horas, 3 minutos por questão. CM abre e é o bloco mais lento; CIR é o curto e devolve tempo.</li>
-    <li><strong>Leitura crescendo:</strong> a mediana do enunciado subiu de 55 para 67 palavras entre 2022 e 2026.</li>
-    <li><strong>Letra:</strong> sem viés (A 124, B 126, C 134, D 119). A certa é a mais longa em 27% das vezes: a forma não entrega.</li>
+    <li><strong>Letra:</strong> sem viés (A 124, B 126, C 133, D 119). A certa é a única mais longa em 23% das vezes, perto do acaso: a forma não entrega.</li>
     <li><strong>Imagem:</strong> rara e só em GO (cardiotocografia, partograma, estática fetal). ECG e radiografia não apareceram.</li>
-    <li><strong>Anuladas:</strong> 17 em cinco provas, 7 delas na última. MFC lidera (6); CM não teve nenhuma.</li>
-    <li><strong>EXCETO e INCORRETA:</strong> 9 em 503. O risco é o automatismo, não a frequência.</li>
   </ul>
+  <p class="key">Palavras = mediana do enunciado, sem alternativas. Base de toda conta: as 502 válidas; as 18 anuladas ficam fora.</p>
 </section>
 
-<section class="sec">
-  <span class="kick">2 · O que decide</span>
-  <h2>Repertório exato pesa mais que raciocínio longo</h2>
-  <p class="lede">Fato, número de corte e norma decidem mais da metade da prova.</p>
+<section class="sec" id="padroes-dele">
+  <span class="kick">2 · Você nesta prova</span>
+  <h2>Onde você perde ponto nesta prova</h2>
+  <p class="lede">Base: 155 questões válidas das duas provas que você fez como simulado (59 de 2021, 96 de 2023). Amostra pequena: leia como "nestas duas provas", não como lei.</p>
+  <ul class="pt">
+    <li><strong>Cobertura:</strong> 42 de 64 erros (66%) foram conteúdo sem base; 26 deles em CIR e GO.</li>
+    <li><strong>Sólida que não é:</strong> 22 erros vieram marcados como sólidos; a sólida acertou 67% e 75%.</li>
+    <li><strong>Número com convicção:</strong> sólida em corte numérico acertou 6 de 11; nos outros tipos, 80-82%.</li>
+    <li><strong>Leitura não é o gargalo:</strong> em 11 das 24 erradas de 2021 o discriminador estava grifado.</li>
+  </ul>
+  <p class="key">O ponto a ganhar é cobertura de CIR e GO; o ponto a não perder é o número decorado com convicção.</p>
+
+  <details class="mais"><summary>Por bloco: cobertura x conversão</summary>
   <div class="tw"><table>
-    <thead><tr><th scope="col">O que decide a questão</th><th scope="col">Peso</th><th scope="col">Onde pesa</th></tr></thead>
+    <thead><tr><th scope="col">Bloco</th><th scope="col">2021</th><th scope="col">2023</th></tr></thead>
     <tbody>
-      <tr><td>Fato isolado (sabe ou não sabe)</td><td class="num">30%</td><td>CIR, MFC, GO</td></tr>
-      <tr><td>Quadro clássico reconhecido</td><td class="num">16%</td><td>PED, CM</td></tr>
-      <tr><td>Número de corte</td><td class="num">14%</td><td>todos os blocos</td></tr>
-      <tr><td>Um dado que exclui a vizinha</td><td class="num">12%</td><td>CM, PED</td></tr>
-      <tr><td>Mecanismo deduzido</td><td class="num">10%</td><td>todos os blocos</td></tr>
-      <tr><td>Norma ou diretriz</td><td class="num">9%</td><td>GO, MFC</td></tr>
+      <tr><td>CM</td><td class="num">7/12</td><td class="num">13/20</td></tr>
+      <tr><td>CIR</td><td class="num">6/11</td><td class="num">8/20</td></tr>
+      <tr><td>GO</td><td class="num">6/12</td><td class="num">10/19</td></tr>
+      <tr><td>PED</td><td class="num">4/12</td><td class="num">10/18</td></tr>
+      <tr><td>MFC</td><td class="num">12/12</td><td class="num">15/19</td></tr>
+    </tbody>
+  </table></div>
+  <div class="tw"><table>
+    <thead><tr><th scope="col">Bloco (2 provas)</th><th scope="col">Erro sem base</th><th scope="col">Erro com base</th></tr></thead>
+    <tbody>
+      <tr><td>CM</td><td class="num">6</td><td class="num">6</td></tr>
+      <tr><td>CIR</td><td class="num">15</td><td class="num">2</td></tr>
+      <tr><td>GO</td><td class="num">11</td><td class="num">4</td></tr>
+      <tr><td>PED</td><td class="num">7</td><td class="num">9</td></tr>
+      <tr><td>MFC</td><td class="num">3</td><td class="num">1</td></tr>
     </tbody>
   </table></div>
   <ul class="pt">
-    <li>Bate com a sua UERJ 2023: o que faltou foi cobertura, não refinamento.</li>
-    <li>Norma vale na versão do edital. Prova antiga treinada com regra antiga ensina a resposta errada.</li>
+    <li><strong>CIR e GO:</strong> perda por repertório; em CIR de 2023, 15 de 20 foram chute.</li>
+    <li><strong>PED e CM:</strong> metade ou mais dos erros com base; ali a perda é de conversão.</li>
+    <li><strong>MFC:</strong> 12/12 e 15/19; o bloco que menos custa.</li>
+    <li><strong>Autópsia 2023:</strong> lacuna 28, erro de aplicação 10, armadilha 2 (40 erros válidos).</li>
+  </ul>
+  </details>
+
+  <details class="mais"><summary>Que tipo de questão custa ponto</summary>
+  <div class="tw"><table>
+    <thead><tr><th scope="col">O que decide</th><th scope="col">Acerto</th><th scope="col">Chutes</th></tr></thead>
+    <tbody>
+      <tr><td>Fato isolado</td><td class="num">27/53 (51%)</td><td class="num">27</td></tr>
+      <tr><td>Corte numérico</td><td class="num">13/22 (59%)</td><td class="num">5</td></tr>
+      <tr><td>Achado que exclui</td><td class="num">16/20 (80%)</td><td class="num">2</td></tr>
+      <tr><td>Conjunto típico</td><td class="num">11/19 (58%)</td><td class="num">7</td></tr>
+      <tr><td>Mecanismo deduzido</td><td class="num">8/16 (50%)</td><td class="num">7</td></tr>
+      <tr><td>Diretriz atual</td><td class="num">8/14 (57%)</td><td class="num">3</td></tr>
+    </tbody>
+  </table></div>
+  <div class="tw"><table>
+    <thead><tr><th scope="col">Distrator</th><th scope="col">Acerto</th><th scope="col">Sólidas erradas</th></tr></thead>
+    <tbody>
+      <tr><td>Doença vizinha</td><td class="num">18/32 (56%)</td><td class="num">7</td></tr>
+      <tr><td>Metade certa</td><td class="num">19/30 (63%)</td><td class="num">3</td></tr>
+      <tr><td>Verdade fora do contexto</td><td class="num">14/25 (56%)</td><td class="num">3</td></tr>
+      <tr><td>Conceito trocado</td><td class="num">9/17 (53%)</td><td class="num">3</td></tr>
+      <tr><td>Classe adjacente</td><td class="num">8/16 (50%)</td><td class="num">1</td></tr>
+      <tr><td>Plausível genérico</td><td class="num">8/11 (73%)</td><td class="num">1</td></tr>
+      <tr><td>Conduta certa, hora errada</td><td class="num">5/8 (62%)</td><td class="num">1</td></tr>
+    </tbody>
+  </table></div>
+  <ul class="pt">
+    <li><strong>Média:</strong> 91/155 (59%). Só células com n &gt;= 8.</li>
+    <li><strong>Fato isolado:</strong> 30% da prova nas 6 edições; você acerta metade e chuta metade.</li>
+    <li><strong>Achado que exclui:</strong> seu melhor tipo (80%); quando o caso dá a pista, você usa.</li>
+    <li><strong>Distratores:</strong> diferenças de 5-10 pontos com n de 16-32 são ruído; nenhum se destaca no acerto.</li>
+  </ul>
+  </details>
+
+  <details class="mais"><summary>Calibração: o que vale a sua "sólida"</summary>
+  <ul class="pt">
+    <li><strong>2021:</strong> sólida 16/24 (67%), dúvida 17/22 (77%), chute 2/13 (15%).</li>
+    <li><strong>2023:</strong> sólida 42/56 (75%), chute 14/40 (35%); dúvida não foi registrada.</li>
+    <li><strong>Chute somado:</strong> 16/53 (30%), perto do acaso (25%).</li>
+    <li><strong>Sólidas erradas:</strong> 22 (8 + 14); GO 6, CM 5, PED 5, CIR 4, MFC 2.</li>
+    <li><strong>Convicção sem base:</strong> 6 das 22 eram conteúdo que você não tinha.</li>
+    <li><strong>Onde a sólida falha:</strong> corte numérico 6/11; fato isolado 16/20; achado que exclui 14/17.</li>
+    <li><strong>Doença vizinha:</strong> 21% das questões, mas 7 das 22 sólidas erradas.</li>
+    <li><strong>Ex. já feito:</strong> laudo de baixo grau conduzido com os prazos da atipia indeterminada (diretriz de 2016).</li>
+    <li><strong>Ressalva:</strong> 1 sólida errada de 2021 é contestável; 2 de 2023 caíram em questão anulada.</li>
+  </ul>
+  </details>
+
+  <details class="mais"><summary>Leitura x conversão (só 2021 tem grifo)</summary>
+  <ul class="pt">
+    <li><strong>O grifo entrou tarde:</strong> questões grifadas CM 1/12, CIR 3/11, GO 9/12, PED 12/12, MFC 12/12.</li>
+    <li><strong>24 erradas:</strong> discriminador grifado 11, outro dado grifado 4, sem grifo 9.</li>
+    <li><strong>Das 11:</strong> 6 sem base (viu o dado, faltava o fato); 5 com base, todas marcadas sólidas.</li>
+    <li><strong>Onde:</strong> 7 das 11 em PED. Ex. já feito: os critérios todos grifados e a vizinha marcada.</li>
+    <li><strong>2023:</strong> sem grifo digital; em 2 de 40 erros você declarou ter lido o dado e não usado.</li>
+  </ul>
+  </details>
+
+  <details class="mais"><summary>Tempo (2021)</summary>
+  <div class="tw"><table>
+    <thead><tr><th scope="col">Bloco</th><th scope="col">Mediana</th><th scope="col">Faixa</th></tr></thead>
+    <tbody>
+      <tr><td>CM</td><td class="num">123 s</td><td class="num">45-2515 s</td></tr>
+      <tr><td>CIR</td><td class="num">64 s</td><td class="num">6-175 s</td></tr>
+      <tr><td>GO</td><td class="num">75 s</td><td class="num">28-191 s</td></tr>
+      <tr><td>PED</td><td class="num">110 s</td><td class="num">55-285 s</td></tr>
+      <tr><td>MFC</td><td class="num">127 s</td><td class="num">16-400 s</td></tr>
+    </tbody>
+  </table></div>
+  <ul class="pt">
+    <li><strong>Errar não custou tempo:</strong> mediana 76,5 s no erro x 126 s no acerto.</li>
+    <li><strong>Dúvida é lenta:</strong> 131,5 s; sólida 76,5 s; chute 82 s.</li>
+    <li><strong>Um ralo:</strong> uma questão sem base levou 2515 s (27% da prova) e terminou em chute.</li>
+    <li><strong>Pressa em CIR:</strong> 3 erradas abaixo de 20 s, as três em CIR.</li>
+    <li><strong>Folga:</strong> 154 min nas 60; o ritmo da prova dá 180 s por questão.</li>
+  </ul>
+  </details>
+
+  <details class="mais"><summary>Hipóteses do seu histórico x dado</summary>
+  <div class="tw"><table>
+    <thead><tr><th scope="col">Hipótese</th><th scope="col">Dado</th><th scope="col">Veredito</th></tr></thead>
+    <tbody>
+      <tr><td>Problema é cobertura</td><td>42/64 erros sem base</td><td>Sustenta</td></tr>
+      <tr><td>Sólida em resposta errada</td><td>22/64 erros; sólida 67-75%</td><td>Sustenta</td></tr>
+      <tr><td>Vê o discriminador e não usa</td><td>5 de 24 erradas, 2021</td><td>Em parte, PED</td></tr>
+      <tr><td>Troca tabela vizinha</td><td>4 erros; vizinha 56%</td><td>Fraco</td></tr>
+      <tr><td>Aplica diretriz antiga</td><td>1 erro válido; atual 8/14</td><td>Não sustenta</td></tr>
+    </tbody>
+  </table></div>
+  <ul class="pt">
+    <li><strong>Ledger, nº 1 (diretriz antiga):</strong> não reaparece aqui; diretriz atual acerta na média.</li>
+    <li><strong>Exame normal que exclui:</strong> 2 erros, um em cada prova (PaCO2 normal; glicose do liquor).</li>
+    <li><strong>Cluster de vizinhas:</strong> 4 erros por tabela trocada; confirma, com n pequeno.</li>
+    <li><strong>Achado que exclui:</strong> no ledger reincide, aqui acerta 16/20; não é ponto fraco nesta prova.</li>
+    <li><strong>Régua de adulto na criança:</strong> 1 erro (escore de sepse adulto no lactente).</li>
+  </ul>
+  </details>
+
+  <h3>O que fazer com isso</h3>
+  <ul class="pt">
+    <li><strong>Cobertura antes de técnica:</strong> 26 dos 42 erros sem base estão em CIR e GO.</li>
+    <li><strong>Fato isolado em card:</strong> 30% da prova; você chutou 27 de 53 nele.</li>
+    <li><strong>Número pede conferência:</strong> sólida em corte acertou 6/11; cheque unidade, sinal e público.</li>
+    <li><strong>Vizinha antes de "sólida":</strong> diga o dado que exclui a vizinha; 7 das 22 sólidas erradas.</li>
+    <li><strong>Grifou, converta:</strong> escreva "este dado exclui X"; 5 erradas tinham o dado grifado e base.</li>
+    <li><strong>Sem base, 2 min e chute:</strong> chute acerta 30%; uma questão levou 42 min e errou igual.</li>
   </ul>
 </section>
 
-<section class="sec">
-  <span class="kick">3 · As maldades</span>
-  <h2>De que é feita a alternativa errada</h2>
-  <p class="lede">O distrator da UERJ é conceitual: uma afirmação técnica deslocada, não pegadinha de redação.</p>
+<section class="sec" id="t-numeros">
+  <span class="kick">3 · Números</span>
+  <h2>A prova em números</h2>
+  <ul class="pt">
+    <li><strong>Base:</strong> 502 questões válidas em 6 provas; as 18 anuladas ficam fora de toda conta.</li>
+    <li><strong>O que decide:</strong> fato isolado 30%, quadro clássico 16%, corte 14%, achado que exclui 12%, mecanismo 10%, diretriz 9%.</li>
+    <li><strong>Dois dialetos:</strong> em CM e PED a leitura do caso decide; em CIR, GO e MFC, o repertório.</li>
+    <li><strong>O que mudou:</strong> pedido de conceito foi de 14% para 26%; o caso clínico ficou estável (60% <span class="ar">-&gt;</span> 58%).</li>
+    <li><strong>Repertório exato pesa:</strong> fato, corte e norma decidem mais da metade. Bate com a sua UERJ 2023: faltou cobertura, não refinamento.</li>
+  </ul>
+
+  <details class="mais"><summary>Evolução 2021-2022 x 2023-2026</summary>
+  <div class="tw"><table>
+    <thead><tr><th scope="col">Indicador</th><th scope="col">2021-2022</th><th scope="col">2023-2026</th></tr></thead>
+    <tbody>
+      <tr><td>Questões válidas</td><td class="num">118</td><td class="num">384</td></tr>
+      <tr><td>Pergunta direta</td><td class="num">23%</td><td class="num">29%</td></tr>
+      <tr><td>Pede conceito</td><td class="num">14%</td><td class="num">26%</td></tr>
+      <tr><td>Pede diagnóstico</td><td class="num">14%</td><td class="num">17%</td></tr>
+      <tr><td>Fato isolado decide</td><td class="num">26%</td><td class="num">32%</td></tr>
+      <tr><td>Alternativa em par</td><td class="num">31%</td><td class="num">27%</td></tr>
+      <tr><td>Distrator: vizinha</td><td class="num">16%</td><td class="num">22%</td></tr>
+      <tr><td>Distrator: metade certa</td><td class="num">25%</td><td class="num">19%</td></tr>
+      <tr><td>Distrator: conceito trocado</td><td class="num">7%</td><td class="num">12%</td></tr>
+      <tr><td>Mediana de palavras</td><td class="num">60</td><td class="num">62</td></tr>
+    </tbody>
+  </table></div>
+  <ul class="pt">
+    <li>Percentual sobre as válidas de cada período (118 e 384). Etiqueta por questão, 5 blocos somados.</li>
+    <li>Leitura: a prova trocou parte do "par com metade certa" por "doença vizinha" e "atributo trocado".</li>
+    <li>Enunciado: estável por período, mas nas duas provas mais recentes a mediana subiu de 57 para perto de 70.</li>
+    <li>A segunda análise independente também vê o enunciado crescer no fim: treine o relógio nas recentes.</li>
+  </ul>
+  </details>
+
+  <details class="mais"><summary>Leitura cruzada dos blocos</summary>
+  <div class="tw"><table>
+    <thead><tr><th scope="col">Bloco</th><th scope="col">Repertório decide</th><th scope="col">Leitura do caso decide</th></tr></thead>
+    <tbody>
+      <tr><td>CM</td><td class="num">35/104 (34%)</td><td class="num">53/104 (51%)</td></tr>
+      <tr><td>CIR</td><td class="num">66/99 (67%)</td><td class="num">12/99 (12%)</td></tr>
+      <tr><td>GO</td><td class="num">69/101 (68%)</td><td class="num">16/101 (16%)</td></tr>
+      <tr><td>PED</td><td class="num">35/100 (35%)</td><td class="num">44/100 (44%)</td></tr>
+      <tr><td>MFC</td><td class="num">63/98 (64%)</td><td class="num">15/98 (15%)</td></tr>
+    </tbody>
+  </table></div>
+  <ul class="pt">
+    <li>Repertório = fato isolado + corte numérico + diretriz. Leitura = quadro típico + achado que exclui.</li>
+  </ul>
+  <div class="tw"><table>
+    <thead><tr><th scope="col">Bloco</th><th scope="col">Forma e pedido líderes</th><th scope="col">Distrator líder</th></tr></thead>
+    <tbody>
+      <tr><td>CM</td><td>caso 102/104; diagnóstico 28</td><td>doença vizinha 41/104</td></tr>
+      <tr><td>CIR</td><td>direta 51/99; conceito 33</td><td>classe vizinha 18/99</td></tr>
+      <tr><td>GO</td><td>curta ou direta 54/101; conceito 22</td><td>verdade fora do contexto 22/101</td></tr>
+      <tr><td>PED</td><td>caso 81/100; diagnóstico 27</td><td>doença vizinha 34/100</td></tr>
+      <tr><td>MFC</td><td>direta 40/98; conceito 29</td><td>metade certa 38/98</td></tr>
+    </tbody>
+  </table></div>
+  <div class="tw"><table>
+    <thead><tr><th scope="col">Bloco</th><th scope="col">Palavras 2021-2022</th><th scope="col">Palavras 2023-2026</th></tr></thead>
+    <tbody>
+      <tr><td>CM</td><td class="num">74</td><td class="num">80</td></tr>
+      <tr><td>CIR</td><td class="num">43</td><td class="num">30</td></tr>
+      <tr><td>GO</td><td class="num">52</td><td class="num">46</td></tr>
+      <tr><td>PED</td><td class="num">96</td><td class="num">72</td></tr>
+      <tr><td>MFC</td><td class="num">54</td><td class="num">62</td></tr>
+    </tbody>
+  </table></div>
+  <ul class="pt">
+    <li>Mediana de palavras do enunciado, sem alternativas. CM e PED são os blocos longos; CIR, o respiro.</li>
+    <li>A segunda análise concorda na ordem: CM é o bloco mais clínico e CIR o mais conceitual.</li>
+    <li>Comando negativo (EXCETO, NÃO): 9 de 502, espalhado pelos 5 blocos. Raro; o risco é o automatismo.</li>
+  </ul>
+  </details>
+</section>
+
+<section class="sec" id="t-obsessoes">
+  <span class="kick">4 · Presença estável</span>
+  <h2>Obsessões e fios entre blocos</h2>
+  <ul class="pt">
+    <li><strong>15 fios</strong> aparecem em 5 ou 6 das 6 provas; 10 deles cruzam 3 ou 4 blocos.</li>
+    <li><strong>Mesmo tema, outra pergunta:</strong> cada bloco cobra o fio por um ângulo. Estude por tema, treine por bloco.</li>
+    <li><strong>Clone:</strong> a banca repete a vinheta e troca uma variável (a idade, a presença do útero, "mais sensível" por "mais específico"). Quem decorou a resposta erra.</li>
+    <li><strong>Fios de um bloco só</strong> (trauma, pré-teste, polifarmácia, colo) estão nos ângulos de cada bloco.</li>
+  </ul>
+  <p class="key">A segunda análise elege quase os mesmos fios (TB, HIV, asma, nefrótica, vias biliares). Ela cobre 5 provas, nós 6.</p>
+
+  <details class="mais"><summary>Os fios, o que perguntam e a regra</summary>
   <div class="mals">
-    <div class="mal"><div class="mal-h"><strong>Doença vizinha</strong><span class="mn">21%</span><span class="onde">CM, PED</span></div>
-      <p>A entidade que divide quase todo o quadro e perde por um dado.</p>
-      <p class="gesto">Qual dado da vinheta a vizinha não explica?</p></div>
-    <div class="mal"><div class="mal-h"><strong>Metade certa</strong><span class="mn">20%</span><span class="onde">MFC, CM</span></div>
-      <p>Em par ou lista, um item certo carrega um errado. 28% das questões têm alternativa em par.</p>
-      <p class="gesto">Julgue cada item em separado. Em par, comece pelo segundo.</p></div>
-    <div class="mal"><div class="mal-h"><strong>Verdade fora do contexto</strong><span class="mn">15%</span><span class="onde">GO, CM, CIR</span></div>
-      <p>Conduta correta para a mesma doença em outra idade, outra idade gestacional, outro momento.</p>
-      <p class="gesto">Vale para este paciente, agora?</p></div>
-    <div class="mal"><div class="mal-h"><strong>Conceito trocado</strong><span class="mn">11%</span><span class="onde">MFC, CIR, PED</span></div>
-      <p>Atributos permutados entre duas entidades; direção invertida (hipo por hiper, sensível por específico).</p>
-      <p class="gesto">Escreva o par de definições antes de ler as opções.</p></div>
-    <div class="mal"><div class="mal-h"><strong>Fora de hora ou de outra gravidade</strong><span class="mn">10%</span><span class="onde">GO, CIR, PED</span></div>
-      <p>O passo de antes ou de depois no protocolo; a conduta do paciente mais grave ou mais leve.</p>
-      <p class="gesto">Situe o paciente na sequência e na gravidade antes das condutas.</p></div>
-    <div class="mal"><div class="mal-h"><strong>Classe vizinha</strong><span class="mn">8%</span><span class="onde">CIR, MFC</span></div>
-      <p>Grau, tipo ou nível ao lado na mesma régua; o número 2 do ranking no lugar do número 1.</p>
-      <p class="gesto">Ache o dado que separa as duas classes, não o que confirma a família.</p></div>
-    <div class="mal"><div class="mal-h"><strong>Plausível genérico</strong><span class="mn">6%</span><span class="onde">GO</span></div>
-      <p>Soa prudente e não está na regra.</p>
-      <p class="gesto">Em pergunta de norma, só o literal da norma.</p></div>
-    <div class="mal"><div class="mal-h"><strong>Número vizinho</strong><span class="mn">5%</span><span class="onde">MFC e todos</span></div>
-      <p>Prazo, dose, idade ou corte logo ao lado do certo.</p>
-      <p class="gesto">Número se decora exato, com unidade e público.</p></div>
+    <div class="mal"><div class="mal-h"><strong>Diabetes</strong><span class="mn">18 de 502</span><span class="onde">4 blocos, 6/6</span></div>
+      <p>Pergunta: critério e corte por público, ordem da CAD, exame sensível x específico, classe de droga.</p>
+      <p>Não caiu: complicação microvascular (retina, nervo, pé).</p>
+      <p class="gesto">Ache o público antes do número: o corte da gestante não é o do adulto.</p></div>
+    <div class="mal"><div class="mal-h"><strong>Hipertensão</strong><span class="mn">13 de 502</span><span class="onde">4 blocos, 5/6</span></div>
+      <p>Pergunta: CM a droga pelo paciente; GO classificar a pré-eclâmpsia e prevenir; MFC se há diagnóstico.</p>
+      <p>Não caiu: mecanismo do anti-hipertensivo.</p>
+      <p class="gesto">Há diagnóstico (medidas repetidas)? Há órgão-alvo? Na gestante, passou de 20 semanas?</p></div>
+    <div class="mal"><div class="mal-h"><strong>Tuberculose</strong><span class="mn">11 de 502</span><span class="onde">4 blocos, 5/6</span></div>
+      <p>Pergunta: PED forma grave, linfonodo, contato, droga x idade; CM a TB da pessoa com HIV; MFC contatos.</p>
+      <p>Ex. (2023): a TB caiu duas vezes no bloco de CIR, pelo segmento intestinal e pela indicação cirúrgica.</p>
+      <p class="gesto">Nomeie quem é o paciente (criança, HIV, contato, abdome): cada um tem a sua regra.</p></div>
+    <div class="mal"><div class="mal-h"><strong>HIV</strong><span class="mn">9 de 502</span><span class="onde">4 blocos, 5/6</span></div>
+      <p>Pergunta: a próxima ação (profilaxia, hora da TARV, droga), o recém-nascido exposto, a gestante.</p>
+      <p>Não caiu: o diagnóstico sorológico do adulto.</p>
+      <p class="gesto">No recém-nascido exposto, vale o exame do vírus, não a sorologia.</p></div>
+    <div class="mal"><div class="mal-h"><strong>Glomérulo</strong><span class="mn">9 de 502</span><span class="onde">CM, PED, GO; 5/6</span></div>
+      <p>Pergunta: marcador no adulto, edema com PA normal na criança, complicação, rim x pré-eclâmpsia.</p>
+      <p>Ex. (2021): nefrótica na criança complicada por peritonite primária.</p>
+      <p class="gesto">PA alta e hematúria puxam para nefrítica; edema com PA normal, para nefrótica.</p></div>
+    <div class="mal"><div class="mal-h"><strong>Meningite e líquor</strong><span class="mn">9 de 502</span><span class="onde">CM, PED; 5/6</span></div>
+      <p>Pergunta: o agente pelo líquor, o esquema pelo perfil, a encefalite.</p>
+      <p class="gesto">Glicose baixa: bactéria, TB ou fungo; vírus em geral mantém a glicose. Suspeitou de herpes: aciclovir sem esperar PCR.</p></div>
+    <div class="mal"><div class="mal-h"><strong>Asma</strong><span class="mn">7 de 502</span><span class="onde">4 blocos, 5/6</span></div>
+      <p>Pergunta: etapa do adulto, degrau por faixa etária na criança, a gestante.</p>
+      <p>Ex. (2023): asma na mesma prova em CM (etapa) e em GO (gestante).</p>
+      <p class="gesto">Degrau pela faixa etária; a gestante não suspende o corticoide inalatório.</p></div>
+    <div class="mal"><div class="mal-h"><strong>Vias biliares</strong><span class="mn">11 de 502</span><span class="onde">CIR 6, CM 4, PED 1</span></div>
+      <p>Pergunta: a síndrome clássica, o exame inicial, o sinal epônimo, como drenar.</p>
+      <p>Ex. (2023): o sinal de Courvoisier caiu em CM e em CIR no mesmo caderno.</p>
+      <p class="gesto">Febre + icterícia + dor = colangite: antibiótico e drenagem da via, não colecistectomia.</p></div>
+    <div class="mal"><div class="mal-h"><strong>Saúde mental</strong><span class="mn">14 de 502</span><span class="onde">4 blocos, 6/6</span></div>
+      <p>Pergunta: adolescente (risco, transtorno alimentar), álcool, idoso; nunca vem com o rótulo "psiquiatria".</p>
+      <p class="gesto">No idoso com queixa cognitiva, rastreie depressão e causa reversível antes de rotular demência.</p></div>
   </div>
+  <ul class="pt">
+    <li>Também cruzam blocos: anemia (CM e PED, 8), adrenal (CIR, CM, PED, 7), obesidade (CIR, PED, MFC, 8).</li>
+    <li>Aleitamento (GO e PED, 6), violência (GO e MFC, 7), mama e colo (GO e MFC, 6/6 provas cada).</li>
+    <li>n = questões válidas cujo tema casa com o fio; provas = em quantas das 6 o fio apareceu.</li>
+  </ul>
+  </details>
+</section>
+
+<section class="sec" id="t-armadilhas">
+  <span class="kick">5 · Distratores</span>
+  <h2>Catálogo de armadilhas por família</h2>
+  <ul class="pt">
+    <li><strong>4 famílias</strong> fazem 333 de 502 distratores (66%): vizinha, metade certa, fora do contexto, conceito.</li>
+    <li><strong>Cada família tem dono:</strong> vizinha é CM+PED (75 de 105); metade certa é MFC+CM (64 de 101).</li>
+    <li><strong>Classe vizinha</strong> mora em CIR (18 de 38); <strong>plausível genérico</strong>, em GO (16 de 32).</li>
+    <li>A segunda análise concorda: o distrator é afirmação técnica trocada, não pegadinha de redação.</li>
+  </ul>
   <p class="key">Palavra absoluta ("todos", "somente", "independentemente") quase sempre está na errada. Confira o conteúdo mesmo assim: já foi gabarito.</p>
+
+  <details class="mais"><summary>As famílias e a pergunta que desmonta</summary>
+  <div class="tw"><table>
+    <thead><tr><th scope="col">Família</th><th scope="col">n/502</th><th scope="col">Pergunta de checagem</th></tr></thead>
+    <tbody>
+      <tr><td>Doença vizinha</td><td class="num">105</td><td>Qual dado do caso a vizinha não explica?</td></tr>
+      <tr><td>Metade certa</td><td class="num">101</td><td>Cada metade se sustenta sozinha?</td></tr>
+      <tr><td>Fora do contexto</td><td class="num">73</td><td>Vale para este paciente, nesta fase?</td></tr>
+      <tr><td>Conceito trocado</td><td class="num">54</td><td>O atributo é desta entidade? Para que lado vai?</td></tr>
+      <tr><td>Classe vizinha</td><td class="num">38</td><td>Qual corte separa esta classe da do lado?</td></tr>
+      <tr><td>Plausível genérico</td><td class="num">32</td><td>Está na norma ou só soa prudente?</td></tr>
+      <tr><td>Hora errada</td><td class="num">30</td><td>Pede o que fazer ou o que fazer primeiro?</td></tr>
+      <tr><td>Valor vizinho</td><td class="num">24</td><td>Número exato, com unidade e público?</td></tr>
+      <tr><td>Outra gravidade</td><td class="num">21</td><td>O estado do paciente autoriza escalar?</td></tr>
+      <tr><td>Regra antiga</td><td class="num">9</td><td>É a régua vigente ou a de anos atrás?</td></tr>
+      <tr><td>Absoluto</td><td class="num">6</td><td>"Sempre", "todos" resistem ao caso?</td></tr>
+    </tbody>
+  </table></div>
+  <ul class="pt">
+    <li>n = o distrator mais forte de cada questão. Sem distrator forte: 9 (negativas, erradas verdadeiras).</li>
+    <li>Absoluto é raro como distrator principal (6), mas em MFC está em alguma errada em 16 de 98.</li>
+    <li>A segunda análise isola uma família que nossas etiquetas espalham: o exame que não decide aqui.</li>
+    <li><span class="ar">-&gt;</span> Esse exame muda a conduta e lê a propriedade certa (atividade x diagnóstico, latência x doença)?</li>
+  </ul>
+  </details>
+
+  <details class="mais"><summary>Checklist de 30 segundos</summary>
+  <p class="lede">Só para a alternativa que pareceu certa cedo demais.</p>
+  <ol class="pt">
+    <li>O comando pede a exceção (EXCETO, NÃO, INCORRETA)?</li>
+    <li>Pede o que fazer ou o que fazer primeiro?</li>
+    <li>Qual achado separa esta da doença vizinha?</li>
+    <li>Cada metade do par se sustenta sozinha?</li>
+    <li>Número, prazo, via e idade batem com o público do caso?</li>
+    <li>O exame proposto muda a conduta deste paciente?</li>
+    <li>A regra vale para este paciente, nesta fase e nesta gravidade?</li>
+    <li>A régua é a vigente, ou a de uma prova antiga?</li>
+  </ol>
+  </details>
+</section>
+
+<section class="sec" id="t-ancoras">
+  <span class="kick">6 · Âncoras</span>
+  <h2>Pares, fármacos e cortes</h2>
+  <ul class="pt">
+    <li><strong>Critério de entrada:</strong> o par, a droga ou o corte voltou em 2+ provas ou em 2+ blocos.</li>
+    <li><strong>Pares:</strong> decore o único traço que separa, não a descrição inteira das duas.</li>
+    <li><strong>Fármacos:</strong> duas famílias dominam -- a ordem da droga e a droga certa no cenário errado.</li>
+    <li><strong>Cortes:</strong> com unidade e público; a errada traz o valor vizinho.</li>
+  </ul>
+
+  <details class="mais"><summary>Pares A x B</summary>
+  <div class="tw"><table>
+    <thead><tr><th scope="col">Par</th><th scope="col">O traço que separa</th></tr></thead>
+    <tbody>
+      <tr><td>Tamponamento x pneumotórax hipertensivo</td><td>Bulhas abafadas, murmúrio presente x murmúrio abolido</td></tr>
+      <tr><td>Tamponamento x pericardite constritiva</td><td>Pulso paradoxal x Kussmaul e knock pericárdico</td></tr>
+      <tr><td>Tríades com epônimo</td><td>Charcot = colangite; Beck = tamponamento; Virchow = trombose (tríade de mecanismos)</td></tr>
+      <tr><td>SHU x PTT</td><td>Diarreia com sangue antes x ADAMTS13 muito baixa</td></tr>
+      <tr><td>Crohn x RCU</td><td>Transmural, salteada x contínua, mucosa, a partir do reto</td></tr>
+      <tr><td>Hérnia indireta x direta</td><td>Lateral x medial aos vasos epigástricos inferiores</td></tr>
+      <tr><td>Placenta prévia x DPP</td><td>Indolor, sangue vivo, útero mole x dor e hipertonia</td></tr>
+      <tr><td>CMV x toxoplasmose congênita</td><td>Periventricular e surdez x difusa e coriorretinite</td></tr>
+      <tr><td>Hiperpara primário x renal</td><td>Cálcio alto x cálcio baixo ou normal com fósforo alto</td></tr>
+      <tr><td>TOTG x HbA1c</td><td>HbA1c &gt;= 6,5%: pouco sensível, muito específica; o TOTG é a referência</td></tr>
+    </tbody>
+  </table></div>
+  </details>
+
+  <details class="mais"><summary>Fármaco <span class="ar">-&gt;</span> indicação</summary>
+  <ul class="pt">
+    <li><strong>Ordem:</strong> tiamina e glicose quando há risco de Wernicke (álcool, hiperêmese). <span class="bd">banca-dependente</span><br>Banca: tiamina antes da glicose.<br>Hoje: na hipoglicemia não se atrasa a glicose; as duas juntas.</li>
+    <li>Ex. (2023): tiamina caiu em GO (hiperêmese) e em MFC (abstinência) no mesmo caderno.</li>
+    <li><strong>Ordem:</strong> HDA varicosa <span class="ar">-&gt;</span> vasoativo e antibiótico antes da endoscopia.</li>
+    <li><strong>Cenário:</strong> magnésio previne e trata a convulsão da eclâmpsia; não baixa a PA.</li>
+    <li><strong>Cenário:</strong> AAS em baixa dose previne pré-eclâmpsia no alto risco; idealmente começar entre 12 e 16 semanas.</li>
+    <li><strong>Ordem:</strong> anafilaxia <span class="ar">-&gt;</span> adrenalina IM primeiro; corticoide e anti-histamínico são adjuvantes.</li>
+    <li><strong>Cenário:</strong> meningite com risco de Listeria (neonato, gestante, idoso, imunossuprimido) <span class="ar">-&gt;</span> somar ampicilina.</li>
+    <li><strong>Cenário:</strong> profilaxia cirúrgica com cefazolina; ceftriaxona também é betalactâmico. <span class="bd">banca-dependente</span><br>Banca: alérgico grave a betalactâmico <span class="ar">-&gt;</span> clindamicina ou vancomicina.<br>Hoje: a diretriz americana de alergia libera a cefazolina mesmo após anafilaxia à penicilina.</li>
+    <li><strong>Cenário:</strong> cardiopatia canal-dependente no recém-nascido <span class="ar">-&gt;</span> prostaglandina para manter o canal.</li>
+  </ul>
+  </details>
+
+  <details class="mais"><summary>Números e cortes</summary>
+  <div class="tw"><table>
+    <thead><tr><th scope="col">Régua</th><th scope="col">O corte que decide</th></tr></thead>
+    <tbody>
+      <tr><td>Critérios de Light</td><td>Um critério positivo basta para exsudato</td></tr>
+      <tr><td>GASA</td><td>&gt;= 1,1 g/dL: hipertensão portal; &lt; 1,1: outra causa</td></tr>
+      <tr><td>TOTG 75 g na gestante</td><td>Jejum 92, 1 h 180, 2 h 153 mg/dL; um valor basta</td></tr>
+      <tr><td>DM fora da gestação</td><td>Jejum &gt;= 126; HbA1c &gt;= 6,5%; pré-DM 100-125</td></tr>
+      <tr><td>BI-RADS</td><td>3 = controle por imagem; 4 e 5 = biópsia, não cirurgia</td></tr>
+      <tr><td>Sangramento pós-menopausa</td><td>Endométrio espesso <span class="ar">-&gt;</span> biópsia antes de qualquer cirurgia</td></tr>
+      <tr><td>Cardiotocografia</td><td>Precoce = cabeça; tardia = placenta; variável = cordão</td></tr>
+      <tr><td>Hemorragia pós-parto</td><td>4 T; o tônus (atonia) é a causa principal</td></tr>
+    </tbody>
+  </table></div>
+  <ul class="pt">
+    <li>Ex. (2023): a desaceleração na cardiotocografia e a causa principal de HPP decidiram questões de GO.</li>
+  </ul>
+  </details>
+</section>
+
+<section class="sec" id="t-atualizacoes">
+  <span class="kick">7 · Diretrizes</span>
+  <h2>Atualizações que decidem</h2>
+  <ul class="pt">
+    <li><strong>Diretriz vigente decide</strong> 45 de 502: GO 19, MFC 10, CIR 6, CM 5, PED 5. Regra antiga como distrator: 9.</li>
+    <li><strong>Segunda análise:</strong> estima 1 questão em 6 sensível a atualização; conta o que mudaria, nós o que decidiu.</li>
+    <li><strong>Simulado de prova antiga:</strong> corrija pela régua vigente, não só pelo gabarito da época.</li>
+  </ul>
+
+  <details class="mais"><summary>O que mudou e muda a resposta</summary>
+  <p class="lede">A prova antiga foi corrigida pela régua da época; a coluna da direita é o que ela cobrava.</p>
+  <div class="tw"><table>
+    <thead><tr><th scope="col">Tema</th><th scope="col">Vigente hoje</th><th scope="col">Prova antiga cobrava</th></tr></thead>
+    <tbody>
+      <tr><td>Colo do útero</td><td>DNA-HPV de 25 a 64 anos, a cada 5 (teste no SUS desde 2024; diretriz INCA/MS aprovada em 08/2025). HPV 16/18 <span class="ar">-&gt;</span> colposcopia; outros tipos <span class="ar">-&gt;</span> citologia reflexa na mesma amostra (alterada <span class="ar">-&gt;</span> colposcopia; normal <span class="ar">-&gt;</span> novo teste em 1 ano). Onde o teste não chegou, segue a citologia.</td><td>Citologia de 25 a 64 anos, trienal após 2 anuais negativas; manejo de atipia, baixo grau e glandular pela diretriz de 2016.</td></tr>
+      <tr><td>Mama</td><td>MS desde 09/2025: rastreio ativo bienal de 50 a 74 anos; de 40 a 49, por decisão compartilhada.</td><td>Bienal de 50 a 69; antes dos 50, sem rastreio.</td></tr>
+      <tr><td>HAS: classes</td><td>Normal &lt; 120/80; pré-hipertensão 120-139/80-89; a "PA ótima" saiu.</td><td>Ótima &lt; 120/80; normal 120-129/80-84; pré-hipertensão 130-139/85-89.</td></tr>
+      <tr><td>HAS: início</td><td>Dois fármacos, de preferência em comprimido único, para a maioria. De 140/90 em diante, fármaco ao diagnóstico; no estágio 1 de baixo risco, monoterapia é aceita.</td><td>Estágio 1 de baixo risco: 3 meses de mudança de estilo de vida antes do fármaco.</td></tr>
+      <tr><td>H. pylori</td><td>V Consenso Brasileiro: quádrupla com bismuto, 14 dias, em 1a linha.</td><td>IV Consenso: IBP + amoxicilina + claritromicina, 14 dias.</td></tr>
+      <tr><td>Asma</td><td>Ninguém trata só com SABA: todo esquema leva corticoide inalatório. Alívio preferido: CI-formoterol; SABA de alívio só junto com CI de manutenção.</td><td>De 6 a 11 anos, a recomendação muda com a versão do GINA: confira a que a banca cita.</td></tr>
+      <tr><td>Trauma</td><td>ATLS 11a edição: xABCDE; X = hemorragia externa exsanguinante.</td><td>ABCDE.</td></tr>
+    </tbody>
+  </table></div>
+  <ul class="pt">
+    <li><strong>Mama, sociedades:</strong> FEBRASGO, SBM e CBR mantêm o anual de 40 a 74; enunciado de SUS segue o MS.</li>
+    <li><strong>Cálcio na gestação:</strong> o MS recomenda a todas as gestantes a partir de 12 semanas; FEBRASGO e RBEHG deixaram de recomendá-lo para prevenir pré-eclâmpsia.</li>
+    <li><strong>Pneumocócica:</strong> a VPC20 entrou no SUS para condições especiais (asplenia, entre outras); a VPP23 sai por transição.</li>
+    <li><strong>DM2:</strong> sem doença cardiorrenal, metformina é a base. Com doença CV ou renal, ou alto risco CV: iSGLT2 ou aGLP1 desde o início, independentemente da HbA1c, com ou sem metformina.</li>
+    <li><strong>Apendicite:</strong> escore clínico (AIR ou AAS, mais que Alvarado) estratifica o risco e a imagem confirma no risco intermediário; um não substitui o outro. Prova de livro clássico ainda cobra Alvarado.</li>
+    <li><strong>IAM:</strong> troponina com subida ou queda, acima do percentil 99 (hoje por sexo), + evidência clínica, de ECG ou de imagem.</li>
+  </ul>
+  <p class="key">Onde as fontes divergem (mama antes dos 50, cálcio, asma na criança), procure no enunciado qual régua ele cita.</p>
+  </details>
+</section>
+
+<section class="sec" id="t-custo">
+  <span class="kick">8 · Retorno por hora</span>
+  <h2>Ponto barato x ponto caro</h2>
+  <ul class="pt">
+    <li><strong>Barato:</strong> enunciado curto e resposta de repertório. Uma hora de leitura vira ponto direto.</li>
+    <li><strong>Caro:</strong> vinheta longa e resposta pela leitura do caso. Só cai com treino de questão.</li>
+    <li><strong>No seu 2023:</strong> o CIR da seção 2 é exatamente o ponto barato que faltou.</li>
+  </ul>
+
+  <details class="mais"><summary>Custo por subárea</summary>
+  <div class="tw"><table>
+    <thead><tr><th scope="col">Subárea</th><th scope="col">n (provas)</th><th scope="col">Palavras; repertório</th></tr></thead>
+    <tbody>
+      <tr><td>CIR periop. e ciência básica</td><td class="num">22 (6/6)</td><td class="num">35; 16/22</td></tr>
+      <tr><td>GO colo, vulva, endométrio</td><td class="num">12 (6/6)</td><td class="num">40; 8/12</td></tr>
+      <tr><td>GO parto e puerpério</td><td class="num">14 (6/6)</td><td class="num">47; 11/14</td></tr>
+      <tr><td>CIR trauma</td><td class="num">13 (5/6)</td><td class="num">46; 5/13</td></tr>
+      <tr><td>CIR esôfago a vias biliares</td><td class="num">25 (6/6)</td><td class="num">50; 15/25</td></tr>
+      <tr><td>MFC epidemiologia e testes</td><td class="num">16 (6/6)</td><td class="num">56; 7/16</td></tr>
+      <tr><td>MFC idoso, paliativo, MCCP</td><td class="num">28 (6/6)</td><td class="num">73; 16/28</td></tr>
+      <tr><td>CM cardiologia</td><td class="num">19 (6/6)</td><td class="num">78; 4/19</td></tr>
+      <tr><td>CM infectologia</td><td class="num">20 (6/6)</td><td class="num">79; 8/20</td></tr>
+      <tr><td>PED nefrologia</td><td class="num">12 (6/6)</td><td class="num">85; 3/12</td></tr>
+      <tr><td>PED infectologia</td><td class="num">19 (5/6)</td><td class="num">87; 6/19</td></tr>
+    </tbody>
+  </table></div>
+  <ul class="pt">
+    <li>Do mais barato ao mais caro. Palavras = mediana do enunciado; repertório = fato, corte ou norma decide.</li>
+    <li>Subárea = agrupamento dos temas por palavra-chave (script); um tema pode ficar de fora do grupo.</li>
+    <li>Trauma é curto, mas 6 de 13 decidem por mecanismo ou ordem: barato só com a fisiologia e o ABCDE fixados.</li>
+  </ul>
+  </details>
+
+  <details class="mais"><summary>Ordem de retorno por hora</summary>
+  <ol class="pt">
+    <li>CIR perioperatório, ciência básica e trauma: frase curta, vocabulário fechado, presente em todas as provas.</li>
+    <li>GO colo e parto; MFC epidemiologia e testes: régua fixa que se aprende uma vez.</li>
+    <li>As famílias de armadilha (transversal 3), uma por dia, reconhecendo a forma.</li>
+    <li>CM cardiologia e infectologia: por critério e conduta de 1a linha, em questão, não em leitura.</li>
+    <li>PED infectologia e nefrologia: nomear o quadro antes das alternativas.</li>
+  </ol>
+  <p class="key">A segunda análise chega à mesma ordem por outro caminho (frequência x tamanho do enunciado). As duas lentes concordam.</p>
+  </details>
+</section>
+
+<section class="sec" id="t-geografia">
+  <span class="kick">9 · Geografia</span>
+  <h2>Onde cada coisa cai no caderno</h2>
+  <ul class="pt">
+    <li><strong>CIR abre rápido:</strong> as primeiras 10 de CIR têm mediana de 19 palavras; as 10 finais, 46.</li>
+    <li><strong>MFC tem dois lados:</strong> idoso e MCCP na 1a metade; rastreio, prevenção e testes no fim.</li>
+    <li><strong>O tema se repete no caderno:</strong> ter visto o assunto 20 questões antes não o torna improvável.</li>
+    <li><strong>Anuladas:</strong> 18 de 520 (3,5%); CM nunca teve uma, MFC tem mais.</li>
+  </ul>
+
+  <details class="mais"><summary>Posição dentro do bloco (2023-2026)</summary>
+  <ul class="pt">
+    <li><strong>CIR:</strong> 25 das 42 diretas estão nas posições 1-10. Bom lugar para recuperar relógio.</li>
+    <li><strong>MFC:</strong> idoso, paliativo e MCCP: 13 de 21 na 1a metade.</li>
+    <li><strong>MFC:</strong> rastreio, prevenção, pré-teste e epidemiologia: 16 de 24 na 2a metade; 10 nas posições 16-20.</li>
+    <li>A segunda análise concorda: atenção primária no começo, rastreamento perto do fim.</li>
+    <li><strong>CM e PED:</strong> sem assento; a leitura é longa do início ao fim (medianas 82 x 75 e 72 x 72).</li>
+    <li><strong>GO:</strong> a divisão Gineco <span class="ar">-&gt;</span> Obstetrícia está no bloco de GO.</li>
+  </ul>
+  </details>
+
+  <details class="mais"><summary>Mesmo tema no mesmo caderno</summary>
+  <ul class="pt">
+    <li>Nas provas de 100 questões, 12 a 16 fios aparecem 2 ou mais vezes no mesmo caderno.</li>
+    <li>Ex. (2023): Courvoisier em CM e em CIR; tiamina em GO e em MFC; HIV, asma e endocardite em CM e em GO.</li>
+    <li>Ex. (2021): diabetes em 4 blocos (CAD em CM, TOTG em GO, lactente em PED, meta glicêmica na diabética com lesão de órgão-alvo em MFC).</li>
+    <li>Uso: a 1a questão do tema pode lembrar a régua para a 2a. Não pule por "já caiu".</li>
+  </ul>
+  </details>
+
+  <details class="mais"><summary>Anuladas por bloco e por tema</summary>
+  <div class="tw"><table>
+    <thead><tr><th scope="col">Bloco</th><th scope="col">Anuladas</th><th scope="col">Onde moram</th></tr></thead>
+    <tbody>
+      <tr><td>CM</td><td class="num">0</td><td>Gabarito fechado por critério ou 1a linha</td></tr>
+      <tr><td>CIR</td><td class="num">5</td><td>Ciência básica e detalhe perioperatório</td></tr>
+      <tr><td>GO</td><td class="num">3</td><td>2 em regra que mudou (lei, rastreio do colo)</td></tr>
+      <tr><td>PED</td><td class="num">4</td><td>Conduta com mais de uma escola</td></tr>
+      <tr><td>MFC</td><td class="num">6</td><td>Conceito de APS aberto a mais de uma leitura</td></tr>
+    </tbody>
+  </table></div>
+  <ul class="pt">
+    <li>Por prova, na ordem: 1, 1, 4, 2, 3 e 7. A mais recente anulou mais que as três anteriores somadas.</li>
+    <li>A segunda análise conta 3 em 2023; o gabarito oficial pós-recurso, que usamos, tem 4.</li>
+    <li>Tática: duas defensáveis <span class="ar">-&gt;</span> marque a menos errada, sinalize e siga. Recurso pede diretriz nomeada.</li>
+  </ul>
+  </details>
+</section>
+
+<section class="sec" id="t-raro">
+  <span class="kick">10 · Periferia</span>
+  <h2>O que quase não cai</h2>
+  <ul class="pt">
+    <li><strong>Zero em 502:</strong> saúde do trabalhador, saúde bucal, melanoma. Leitura de véspera, no máximo.</li>
+    <li><strong>Quase nada:</strong> oftalmologia 2, vascular e torácica 3, imunização 2 válidas.</li>
+    <li><strong>Cai pouco pelo nome, entra por outra porta:</strong> não despriorize ortopedia, urologia, dermato, SUS.</li>
+  </ul>
+
+  <details class="mais"><summary>A outra porta</summary>
+  <div class="tw"><table>
+    <thead><tr><th scope="col">Assunto</th><th scope="col">n (provas)</th><th scope="col">Por onde entra</th></tr></thead>
+    <tbody>
+      <tr><td>Saúde mental</td><td class="num">14 (6/6)</td><td>Adolescente, álcool, idoso; nunca "psiquiatria"</td></tr>
+      <tr><td>Ortopedia</td><td class="num">8 (2/6)</td><td>Osso, coluna, fratura; 4 blocos, provas recentes</td></tr>
+      <tr><td>Legislação e SUS</td><td class="num">6 (5/6)</td><td>Direito da paciente em GO; diretriz em MFC</td></tr>
+      <tr><td>Urologia</td><td class="num">6 (3/6)</td><td>Cálculo, testículo, incontinência; 4 blocos</td></tr>
+      <tr><td>Dermatologia</td><td class="num">5 (4/6)</td><td>Pele da criança, hanseníase, cicatriz</td></tr>
+      <tr><td>Via aérea alta</td><td class="num">5 (4/6)</td><td>Crupe, rinossinusite, IVAS em PED e MFC</td></tr>
+    </tbody>
+  </table></div>
+  <ul class="pt">
+    <li>Contagem por palavra-chave no tema da questão (script); n = válidas.</li>
+    <li>Divergência: a segunda análise dá oftalmologia zero; a nossa base inclui 2021, que trouxe uma.</li>
+    <li>A segunda análise também lista subáreas em queda (oncologia clínica, infecção em cirurgia): estimativa dela.</li>
+    <li>Como despriorizar: zero <span class="ar">-&gt;</span> véspera; outra porta <span class="ar">-&gt;</span> só a 1a linha e o que separa da vizinha.</li>
+  </ul>
+  </details>
 </section>
 
 <section class="sec">
-  <span class="kick">4 · Leitura</span>
-  <h2>O que é isca e o que decide</h2>
-  <p class="lede">O dado que decide costuma ser o discreto. O chamativo costuma ser a isca.</p>
+  <span class="kick">11 · Bloco a bloco</span>
+  <h2>Como cada bloco pergunta</h2>
+  <p class="lede blks-lede">Um toque abre o bloco: retrato, o que mudou, moldes, distratores, iscas, ângulos e as 10 regras de leitura.</p>
+  <div class="blks">
+<details class="blk"><summary><span class="sg">CM</span><span class="rt">Paciente sempre; a vizinha só perde por um dado da vinheta.</span></summary><div class="in">
+
+  <h3>Retrato</h3>
+  <ul class="pt">
+    <li><strong>Paciente:</strong> 102 de 104 têm caso (91 longos, 11 curtos); só 2 diretas.</li>
+    <li><strong>Comando:</strong> superlativo em 79 de 104 ("mais provável", "inicial"); par em 28; negativo em 2.</li>
+    <li><strong>Pede:</strong> diagnóstico 28, exame 16, tratamento 14, conduta 13, conceito 13, mecanismo 11 (de 104).</li>
+    <li><strong>Decide:</strong> quadro clássico ou achado que exclui em 53 de 104; corte 16; fato isolado 14.</li>
+  </ul>
+
+  <h3>O que mudou de 2021-2022 para 2023-2026</h3>
+  <ul class="pt">
+    <li>Doença vizinha como distrator: 5 de 24 <span class="ar">-&gt;</span> 36 de 80. Virou a fábrica principal.</li>
+    <li>Metade certa ou verdade fora do contexto: 17 de 24 <span class="ar">-&gt;</span> 27 de 80. Par: 12 de 24 <span class="ar">-&gt;</span> 28 de 80.</li>
+    <li>Conceito (caso <span class="ar">-&gt;</span> característica): 0 de 24 <span class="ar">-&gt;</span> 13 de 80. Exame: 3 de 24 <span class="ar">-&gt;</span> 13 de 80.</li>
+  </ul>
+
+  <details class="mais"><summary>Moldes de questão</summary>
+  <div class="tw"><table>
+    <thead><tr><th scope="col">Molde</th><th scope="col">Vezes</th><th scope="col">Como reconhecer</th></tr></thead>
+    <tbody>
+      <tr><td>Diagnóstico por achado que exclui</td><td class="num">13</td><td>Quatro doenças da mesma família; um dado mata a óbvia.</td></tr>
+      <tr><td>Diagnóstico por quadro clássico</td><td class="num">10</td><td>Vinheta de livro; vizinhas de síndrome nas opções.</td></tr>
+      <tr><td>Par diagnóstico / conduta</td><td class="num">40</td><td>O 1º item corta duas; 20 trazem a metade certa.</td></tr>
+      <tr><td>Diagnóstico oculto <span class="ar">-&gt;</span> exame</td><td class="num">16</td><td>A doença não é nomeada; pede o exame que confirma.</td></tr>
+      <tr><td>Laboratório com corte</td><td class="num">16</td><td>Líquido, eletrólito, glicemia, CD4: aplicar o corte.</td></tr>
+      <tr><td>Caso <span class="ar">-&gt;</span> característica</td><td class="num">13</td><td>Diagnóstico implícito; perfis com um atributo trocado.</td></tr>
+      <tr><td>Conduta vetada por um dado</td><td class="num">8</td><td>A opção de rotina está lá; comorbidade ou tempo veta.</td></tr>
+    </tbody>
+  </table></div>
+  <ul class="pt">
+    <li>Vezes = de 104, pela etiqueta da questão. Os moldes se sobrepõem: o par pode conter os outros.</li>
+    <li>Muitas vezes o comando diz "considerando o diagnóstico mais provável" e pede o passo seguinte.</li>
+  </ul>
+  </details>
+
+  <details class="mais"><summary>Como a certa se comporta</summary>
+  <ul class="pt">
+    <li><strong>No par, a certa mora no 2º item.</strong> O 1º é o fácil; o 2º traz prazo, droga ou via.</li>
+    <li><strong>Respeita o veto da vinheta.</strong> A conduta-padrão do tema aparece como distrator.</li>
+    <li>Ex. (2023): IAM com PA de 190/100; a certa é o cateterismo e a trombólise, o distrator. PA acima de 180/110 é contraindicação relativa à fibrinólise: a reperfusão segue.</li>
+    <li><strong>Tendência da banca, não regra clínica:</strong> sem alarme nem gravidade, a certa costuma ser a conservadora (seguimento, MEV, empírico sem exame).</li>
+    <li>O inverso também cai. Ex. (2023): hipertenso com sinal de órgão-alvo no ECG; "aguardar" sai.</li>
+    <li><strong>É o achado discreto, não o chamativo:</strong> o normal no meio dos alterados.</li>
+    <li>Ex. (2021): crise grave de asma; a certa é o gás que está normal, não os alterados.</li>
+    <li><strong>Em termo, a forma não entrega:</strong> 24 de 35 têm uma doença vizinha como distrator.</li>
+  </ul>
+  </details>
+
+  <details class="mais"><summary>Fábrica de distratores</summary>
+  <div class="mals">
+    <div class="mal"><div class="mal-h"><strong>Doença vizinha</strong><span class="mn">41 de 104</span><span class="onde">5/24 <span class="ar">-&gt;</span> 36/80</span></div>
+      <p>Divide quase todo o quadro e perde por um dado.</p>
+      <p class="gesto">Qual dado da vinheta a vizinha NÃO explica?</p></div>
+    <div class="mal"><div class="mal-h"><strong>Metade certa</strong><span class="mn">26 de 104</span><span class="onde">20 em par</span></div>
+      <p>1º item certo com 2º errado, ou lista de quatro com uma intrusa.</p>
+      <p class="gesto">Julgue cada item sozinho; um falso derruba a alternativa.</p></div>
+    <div class="mal"><div class="mal-h"><strong>Fora do contexto</strong><span class="mn">18 de 104</span><span class="onde">8/24 <span class="ar">-&gt;</span> 10/80</span></div>
+      <p>Correto para outro paciente: latente x ativa, controle x resgate, já usava x iniciou.</p>
+      <p>Ex. (2023): gota com alopurinol iniciado há dias. <span class="bd">banca-dependente</span></p>
+      <p>Banca: suspender o recém-iniciado; "manter" vale para quem já usava.</p>
+      <p>Hoje: o ACR aceita iniciar o hipouricemiante durante a crise; quem já usava mantém pelas duas réguas.</p>
+      <p class="gesto">A regra vale para ESTE paciente, neste momento?</p></div>
+    <div class="mal"><div class="mal-h"><strong>Hora errada</strong><span class="mn">6 de 104</span><span class="onde">1/24 <span class="ar">-&gt;</span> 5/80</span></div>
+      <p>O passo de antes ou de depois: aguardar cultura, exame antes do empírico.</p>
+      <p class="gesto">Numere o protocolo e ache o degrau do paciente.</p></div>
+    <div class="mal"><div class="mal-h"><strong>Atributo trocado</strong><span class="mn">6 de 104</span><span class="onde">0/24 <span class="ar">-&gt;</span> 6/80</span></div>
+      <p>Características de duas entidades permutadas, ou a classe ao lado.</p>
+      <p>Ex. (2023): sinais de insuficiência e de estenose aórtica trocados entre si.</p>
+      <p class="gesto">Ancore cada atributo na entidade pelo mecanismo.</p></div>
+    <div class="mal"><div class="mal-h"><strong>Valor vizinho</strong><span class="mn">3 de 104</span><span class="onde">sem dedução</span></div>
+      <p>Prazo, alvo ou corte logo ao lado do certo.</p>
+      <p class="gesto">Número se decora exato, com unidade.</p></div>
+  </div>
+  </details>
+
+  <details class="mais"><summary>Isca x detalhe que decide</summary>
   <div class="vs">
     <div class="a"><h3>Isca</h3><ul>
-      <li>Comorbidade antiga (IC, etilismo, tabagismo).</li>
-      <li>O número mais alterado da vinheta.</li>
-      <li>Exame alterado fora do eixo da queixa.</li>
-      <li>O pedido do paciente ou da família.</li>
-      <li>A conduta já feita por outro médico.</li>
+      <li>Comorbidade que sugere a vizinha: IC, etilismo, tabagismo, uso de hormônio.</li>
+      <li>Ex. (2023): IC prévia numa reação transfusional puxa para sobrecarga.</li>
+      <li>O número mais alterado, que aponta outra doença da mesma família.</li>
+      <li>Ex. (2023): LDH e bilirrubina altos numa anemia puxam para hemólise autoimune.</li>
+      <li>Dado que tranquiliza ou distrai: sintoma que passou, viagem sem relação.</li>
+      <li>Achado de imagem ou de exame físico típico da entidade vizinha.</li>
     </ul></div>
     <div class="b"><h3>Decide</h3><ul>
-      <li>Uma negação ou um "normal".</li>
-      <li>O valor logo abaixo ou acima do corte.</li>
-      <li>Tempo: dias de sintoma, de pós-operatório, idade gestacional.</li>
-      <li>Número pequeno: cm, mm, %, horas.</li>
-      <li>Palavra do comando: "inicial", "nesse momento".</li>
+      <li>Tempo: dias de sintoma, dias de pós-operatório, latência após infecção.</li>
+      <li>Uma negação ou um "normal". Ex. (2023): glicose do líquor normal no HIV favorece criptococo e torna TB menos provável, sem afastá-la.</li>
+      <li>O valor logo acima ou abaixo do corte.</li>
+      <li>Palavra do comando: "nesse momento", "mais recentemente".</li>
+      <li>Ex. (2021): "nesse momento" troca a gasometria basal pela atual.</li>
     </ul></div>
   </div>
-  <p class="key">Grife os cinco tipos da coluna da direita. É contra eles que a análise dos seus grifos confere cada erro.</p>
-</section>
+  </details>
 
-<section class="sec">
-  <span class="kick">5 · Bloco a bloco</span>
-  <h2>Como cada bloco pergunta</h2>
-  <div class="blks">
-    <details class="blk"><summary><span class="sg">CM</span><span class="rt">Vinheta longa; diagnóstico e conduta na mesma alternativa.</span></summary><div class="in">
-      <h3>Como é</h3><ul class="pt">
-        <li>Quase toda questão tem paciente; 40 das 104 trazem alternativa em par.</li>
-        <li>Doença vizinha é o distrator de 41 das 104.</li>
-        <li>Sem sinal de alarme, a certa é a conservadora.</li></ul>
-      <h3>Regras de leitura</h3><ul class="pt">
-        <li>Escreva o diagnóstico antes de ler as alternativas.</li>
-        <li>Todo número de laboratório tem um corte: aplique antes de interpretar.</li>
-        <li>Desconfie do número mais alterado; o normal ou o limítrofe decide.</li>
-        <li>Comorbidade antiga é isca até explicar o quadro atual.</li></ul></div></details>
-    <details class="blk"><summary><span class="sg">CIR</span><span class="rt">Metade é pergunta direta de duas linhas; muita ciência básica.</span></summary><div class="in">
-      <h3>Como é</h3><ul class="pt">
-        <li>Fato isolado decide 45 das 100; alternativa de uma ou duas palavras.</li>
-        <li>Cicatrização, resposta ao trauma, nutrição, pneumoperitônio, sódio: sem caso.</li>
-        <li>Em "mais frequente", a certa é o número 1 do livro; o distrator é o número 2.</li></ul>
-      <h3>Regras de leitura</h3><ul class="pt">
-        <li>Em régua (grau, tipo, estadiamento), ache o dado que separa da classe ao lado.</li>
-        <li>Escreva a direção do mecanismo (sobe ou desce) antes das opções.</li>
-        <li>"Inicial" e "primeiro passo" pedem o degrau de antes; o definitivo é o distrator.</li>
-        <li>Estável pede o passo menos invasivo; sinal de gravidade pede o mais agressivo.</li></ul></div></details>
-    <details class="blk"><summary><span class="sg">GO</span><span class="rt">Norma, número de corte e o próximo degrau.</span></summary><div class="in">
-      <h3>Como é</h3><ul class="pt">
-        <li>Fato, diretriz e corte decidem 69 das 101.</li>
-        <li>O distrator mais comum é a conduta certa da paciente vizinha.</li>
-        <li>Único bloco com figura.</li></ul>
-      <h3>Regras de leitura</h3><ul class="pt">
-        <li>Calcule a idade gestacional sempre que houver duas datas.</li>
-        <li>Procure "desejo de gestar", "laqueadura", "sexualmente ativa": esse dado escolhe a conduta.</li>
-        <li>Em Ginecologia, a certa investiga ou estadia; a errada já opera.</li>
-        <li>Pré-natal e rastreamento se respondem pela norma do Ministério da Saúde.</li></ul></div></details>
-    <details class="blk"><summary><span class="sg">PED</span><span class="rt">Quadro clássico e três vizinhas que quase encaixam.</span></summary><div class="in">
-      <h3>Como é</h3><ul class="pt">
-        <li>Bloco longo, o quarto da prova: chega com cansaço.</li>
-        <li>Doença ou agente vizinho em 34 das 100; as negativas da vinheta decidem.</li>
-        <li>Regra verdadeira transplantada para a idade errada.</li></ul>
-      <h3>Regras de leitura</h3><ul class="pt">
-        <li>Liste o diferencial e ache o dado que mata cada vizinha.</li>
-        <li>Confira toda conduta contra a idade exata.</li>
-        <li>Sem sinal de alarme, a conduta certa é a proporcional, quase sempre a conservadora.</li>
-        <li>Tratamento anterior que falhou é pista contra o diagnóstico que ele supunha.</li></ul></div></details>
-    <details class="blk"><summary><span class="sg">MFC</span><span class="rt">Clínica de consultório; premia quem intervém menos.</span></summary><div class="in">
-      <h3>Como é</h3><ul class="pt">
-        <li>Diabetes, hipertensão, idoso, rastreamento, comunicação. Lei e SUS são minoria.</li>
-        <li>A certa muitas vezes não pede o exame, não trata, não rotula.</li>
-        <li>Metade certa é o distrator de 38 das 98.</li></ul>
-      <h3>Regras de leitura</h3><ul class="pt">
-        <li>Antes das opções: há critério para rotular ou tratar?</li>
-        <li>Calcule a probabilidade pré-teste antes de olhar o resultado do exame.</li>
-        <li>A conduta narrada na vinheta é para julgar, não pista do caminho.</li>
-        <li>Em taxonomia (níveis de prevenção, violência, atributos), nomeie o critério que separa as caixas.</li></ul></div></details>
+  <details class="mais"><summary>Ângulos que voltam</summary>
+  <div class="tw"><table>
+    <thead><tr><th scope="col">Tema</th><th scope="col">Pergunta</th><th scope="col">Não pediu</th></tr></thead>
+    <tbody>
+      <tr><td>HIV (5 de 6)</td><td>A próxima ação: profilaxia, hora da TARV, droga.</td><td>O diagnóstico</td></tr>
+      <tr><td>Ca, P, PTH (5 de 6)</td><td>Ler o trio para dar a causa ou a conduta.</td><td>Exame a pedir</td></tr>
+      <tr><td>Anemia (4 de 6)</td><td>Reticulócito, VCM e hemólise; nome ou perfil.</td><td>Tratamento</td></tr>
+      <tr><td>HAS (4 de 6)</td><td>Droga por paciente: causa, órgão-alvo, veto, alvo.</td><td>Mecanismo</td></tr>
+      <tr><td>Neuromuscular (4 de 6)</td><td>Topografia: reflexo, nível, NMS x NMI.</td><td>Tratamento</td></tr>
+      <tr><td>Vias biliares (3 de 6)</td><td>Síndrome clássica <span class="ar">-&gt;</span> diagnóstico e como drenar.</td><td>Exame isolado</td></tr>
+      <tr><td>Líquor (3 de 6)</td><td>Células e glicose separam o agente; perfil muda o esquema.</td><td>Sem padrão</td></tr>
+      <tr><td>Ascite e pleura (3 de 6)</td><td>Calcular GASA ou Light; o exame seguinte.</td><td>Nome da doença</td></tr>
+      <tr><td>Glomérulo (3 de 6)</td><td>Marcador; vizinhas por latência e complemento.</td><td>Tratamento</td></tr>
+      <tr><td>Pneumonia (3 de 6)</td><td>A droga pelo contexto: comorbidade, agente.</td><td>Diagnóstico</td></tr>
+      <tr><td>Asma (3 de 6)</td><td>Gravidade pelo gás; etapa; contexto do sintoma.</td><td>Diagnóstico</td></tr>
+      <tr><td>Artrite (3 de 6)</td><td>Líquido sinovial e distribuição das juntas.</td><td>Mecanismo</td></tr>
+    </tbody>
+  </table></div>
+  <ul class="pt">
+    <li>"Não pediu" = categoria ausente nas 6 provas daquele tema. Ascite e pleura: corte decide 5 de 5.</li>
+    <li>A banca clona o caso e troca uma variável (um exame a mais, um eletrólito); o 2º item muda.</li>
+  </ul>
+  </details>
+
+  <h3>As 10 regras de leitura</h3>
+  <ol class="pt">
+    <li>Escreva o diagnóstico antes das alternativas, mesmo quando ele não é perguntado.</li>
+    <li>Em par, julgue o 2º item primeiro: o 1º costuma cortar só duas opções.</li>
+    <li>Nomeie a doença vizinha e procure o dado que ela não explica.</li>
+    <li>Todo número de laboratório tem um corte (GASA, Light, CD4, reticulócito): aplique antes de interpretar.</li>
+    <li>Desconfie do número mais alterado; o normal ou o limítrofe decide.</li>
+    <li>Leia tempos ("há 3 dias", "nesse momento") como critério, não como narrativa.</li>
+    <li>Viu a conduta-padrão do tema? Procure a comorbidade ou o tempo que a veta.</li>
+    <li>Comorbidade antiga é isca até explicar o quadro atual.</li>
+    <li>Em conceito, cada alternativa é um pacote: um atributo trocado derruba o pacote.</li>
+    <li>Heurística de prova: sem alarme e sem gravidade, a banca costuma premiar a conservadora; com órgão-alvo ou instabilidade, a que age já.</li>
+  </ol>
+</div></details>
+<details class="blk"><summary><span class="sg">CIR</span><span class="rt">Pergunta curta de livro-texto: fato, régua e direção do mecanismo.</span></summary><div class="in">
+
+  <h3>Retrato</h3>
+  <ul class="pt">
+    <li><strong>Sem paciente:</strong> 51 de 99 são diretas; 18 são casos curtos e só 30 trazem vinheta.</li>
+    <li><strong>Alternativa curta:</strong> 61 de 99 são um termo de 1-4 palavras ou um número.</li>
+    <li><strong>Saber decide:</strong> fato isolado em 45 de 99, número de corte em 15, mecanismo em 11.</li>
+    <li><strong>O que pede:</strong> conceito 33, mecanismo 17, conduta 16, classificação 11; diagnóstico só 8 de 99.</li>
+    <li><strong>Comando:</strong> superlativo em 33 de 99; "respectivamente" em 9; negativo em 3.</li>
+  </ul>
+
+  <h3>O que mudou de 2021-2022 para 2023-2026</h3>
+  <ul class="pt">
+    <li><strong>Mais direta:</strong> de 9 de 23 para 42 de 76 sem paciente; fato isolado de 7 de 23 para 38 de 76.</li>
+    <li><strong>Menos régua:</strong> número de corte decidia 6 de 23; agora decide 9 de 76. Superlativo foi de 6 de 23 a 27 de 76.</li>
+    <li><strong>Distrator mudou:</strong> conceito trocado de 1 de 23 para 13 de 76; conduta fora de hora, de 2 para 11.</li>
+  </ul>
+
+  <details class="mais"><summary>Moldes de questão</summary>
+  <div class="tw"><table>
+    <thead><tr><th scope="col">Molde</th><th scope="col">Em 99</th><th scope="col">Como reconhecer</th></tr></thead>
+    <tbody>
+      <tr><td>Fato direto</td><td class="num">34</td><td>Uma linha, sem paciente; pede definição, epônimo, atributo</td></tr>
+      <tr><td>Ranking</td><td class="num">14</td><td>"Mais frequente", "principal": causa, local, tipo</td></tr>
+      <tr><td>Mecanismo</td><td class="num">11</td><td>O que sobe ou desce; onde fica o bloqueio; por que ocorre</td></tr>
+      <tr><td>Régua em vinheta</td><td class="num">7</td><td>Choque, IMC, Glasgow, TNM, Los Angeles, Strasberg, Alvarado</td></tr>
+      <tr><td>Conduta por medida</td><td class="num">9</td><td>Calibre, altura, camada invadida, campo contaminado</td></tr>
+      <tr><td>Conduta por ordem</td><td class="num">8</td><td>"Inicial", ABCDE, estabilizar antes de investigar</td></tr>
+      <tr><td>Par</td><td class="num">9</td><td>"Respectivamente": diagnóstico + conduta, classe + volume</td></tr>
+      <tr><td>Diretriz</td><td class="num">6</td><td>Profilaxia por cirurgia ou alergia, antissepsia, vasoativo</td></tr>
+    </tbody>
+  </table></div>
+  <ul class="pt">
+    <li>Moldes se sobrepõem: ranking é subtipo de fato; par pode ser régua.</li>
+  </ul>
+  </details>
+
+  <details class="mais"><summary>Como a certa se comporta</summary>
+  <ul class="pt">
+    <li><strong>Conduta:</strong> a certa é o passo mais precoce e menos invasivo que o estado do paciente permite.</li>
+    <li><strong>Inversão:</strong> com sinal de gravidade (instabilidade, via aérea, camada invadida), a certa é a mais agressiva.</li>
+    <li>Ex. (2023): hemotórax maciço com "tratamento inicial" <span class="ar">-&gt;</span> dreno; débito alto no dreno e hipotensão <span class="ar">-&gt;</span> toracotomia.</li>
+    <li><strong>Ranking:</strong> a certa é o número 1 clássico do livro-texto, sem pegadinha; o distrator forte é o número 2.</li>
+    <li>Ex. (2023): hérnia mais frequente da região inguinocrural <span class="ar">-&gt;</span> inguinal indireta; direta e femoral ao lado.</li>
+    <li><strong>Nome pedido:</strong> o enunciado entrega a definição ou o diagnóstico e pede só o nome.</li>
+    <li>Ex. (2023): a definição de biofilme (na redação da banca) vem no texto; o Zenker vem pronto e a pergunta é o triângulo.</li>
+    <li><strong>Direção:</strong> a certa segue a fisiologia; os distratores trocam hipo por hiper, aumento por redução.</li>
+    <li><strong>Par:</strong> a certa é o único par em que as duas metades conversam entre si.</li>
+  </ul>
+  </details>
+
+  <details class="mais"><summary>Fábrica de distratores</summary>
+  <div class="mals">
+    <div class="mal"><div class="mal-h"><strong>Classe vizinha</strong><span class="mn">18 de 99</span></div>
+      <p>Grau, tipo ou segmento ao lado na mesma régua; técnica da mesma família; o número 2 do ranking.</p>
+      <p class="gesto">Que dado separa a certa da classe ao lado?</p></div>
+    <div class="mal"><div class="mal-h"><strong>Verdade fora do contexto</strong><span class="mn">16 de 99</span></div>
+      <p>Complicação real de outra cirurgia; fator de risco real, mas menor; profilaxia de outra operação.</p>
+      <p class="gesto">É verdade, mas é isto que o comando pede, neste paciente?</p></div>
+    <div class="mal"><div class="mal-h"><strong>Doença vizinha</strong><span class="mn">16 de 99</span></div>
+      <p>O diferencial clássico que divide quase todo o quadro.</p>
+      <p class="gesto">Que dado do enunciado torna a vizinha impossível?</p></div>
+    <div class="mal"><div class="mal-h"><strong>Conceito trocado</strong><span class="mn">14 de 99</span></div>
+      <p>Epônimos permutados entre sinais, tríades e triângulos; atributo de uma estrutura dado a outra.</p>
+      <p>Ex. (2023): produtos da medula adrenal pedidos; distratores são produtos do córtex.</p>
+      <p class="gesto">A quem pertence o epônimo, e para que lado empurra o mecanismo?</p></div>
+    <div class="mal"><div class="mal-h"><strong>Fora de hora ou gravidade</strong><span class="mn">13 de 99</span></div>
+      <p>O procedimento certo no momento errado; a conduta do paciente mais grave ou mais leve.</p>
+      <p class="gesto">Onde está o paciente na sequência e no degrau de gravidade?</p></div>
+    <div class="mal"><div class="mal-h"><strong>Metade certa</strong><span class="mn">9 de 99</span></div>
+      <p>Em par, um item correto carrega um errado.</p>
+      <p class="gesto">Julgue cada metade sozinha; uma falsa derruba a alternativa.</p></div>
+    <div class="mal"><div class="mal-h"><strong>Número vizinho</strong><span class="mn">4 de 99</span></div>
+      <p>Grau, escore ou prazo logo ao lado do certo.</p>
+      <p class="gesto">Refaça a conta com cada descritor da vinheta.</p></div>
+  </div>
+  <ul class="pt">
+    <li>Plausível genérico em 4 de 99; sem distrator forte em 5 (as negativas, cujas erradas são verdadeiras).</li>
+    <li>Palavra absoluta ("sempre", "nunca") não apareceu como distrator neste bloco.</li>
+  </ul>
+  </details>
+
+  <details class="mais"><summary>Isca x detalhe que decide</summary>
+  <div class="vs">
+    <div class="a"><h3>Isca</h3><ul>
+      <li>Comorbidade exótica que sugere causa rara; a resposta é a banal.</li>
+      <li>Sintoma que chama exame sofisticado quando o comando pede o inicial.</li>
+      <li>História oncológica que puxa punção ou cirurgia maior.</li>
+      <li>Sinais vitais e achados que não entram no cálculo da régua.</li>
+      <li>Rótulo histológico (anel de sinete) que puxa gastrectomia total; com margem proximal de 5 cm ou mais, a localização decide.</li>
+      <li>Preâmbulo longo antes de uma pergunta de fato.</li>
+    </ul></div>
+    <div class="b"><h3>Decide</h3><ul>
+      <li>Uma medida: cm da margem, mm do ducto, % da circunferência.</li>
+      <li>Ex. (2023): ducto pancreático dilatado (12 mm) <span class="ar">-&gt;</span> derivação, não ressecção.</li>
+      <li>A camada invadida ou o estado do campo (necrose = contaminado).</li>
+      <li>Uma negação: ausculta normal, sem febre, sem sinal de alarme.</li>
+      <li>A resposta ao que já foi feito: volume, dreno.</li>
+      <li>Horas ou dias desde a cirurgia.</li>
+      <li>"Inicial", "imediata", "primeiro passo" no comando.</li>
+    </ul></div>
+  </div>
+  </details>
+
+  <details class="mais"><summary>Ângulos que voltam</summary>
+  <div class="tw"><table>
+    <thead><tr><th scope="col">Tema (provas)</th><th scope="col">A banca pergunta</th><th scope="col">Não caiu</th></tr></thead>
+    <tbody>
+      <tr><td>Trauma e choque <span class="mn">5/6</span></td><td>Classe do choque, ordem ABCDE, Beck, fonte do sangramento</td><td>Escolha de exame de imagem</td></tr>
+      <tr><td>Hérnia inguinal <span class="mn">4/6</span></td><td>Tela sim ou não, epônimo da técnica, tipo mais comum</td><td>Exame de imagem da hérnia</td></tr>
+      <tr><td>Hiato e DRGE <span class="mn">4/6</span></td><td>Tipo de hérnia, Los Angeles, fundoplicatura, preditor</td><td>Tratamento clínico da DRGE</td></tr>
+      <tr><td>Via biliar <span class="mn">4/6</span></td><td>Exame e passo iniciais, Courvoisier, Strasberg, incidental</td><td>Técnica da colecistectomia</td></tr>
+      <tr><td>Pâncreas <span class="mn">4/6</span></td><td>Conduta pelo ducto, necrose infectada, risco, imagem</td><td>Escore de gravidade da aguda</td></tr>
+      <tr><td>Tireoide <span class="mn">4/6</span></td><td>Prognóstico, quando puncionar, hematoma, cálcio no pós</td><td>Tratamento do hipertireoidismo</td></tr>
+      <tr><td>Ciência básica <span class="mn">4/6</span></td><td>Cicatrização, citocinas, inflamação, nutrição</td><td>Cálculo de necessidade calórica</td></tr>
+      <tr><td>Laparoscopia <span class="mn">4/6</span></td><td>Gás e pressão, arritmia, repercussão hemodinâmica, benefício</td><td>Contraindicações do acesso</td></tr>
+      <tr><td>Bariátrica <span class="mn">4/6</span></td><td>Grau de IMC, tabagismo, neoplasias, mecanismo endócrino</td><td>Escolha entre técnicas</td></tr>
+      <tr><td>Sódio e eletrólitos <span class="mn">3/6</span></td><td>Hiponatremia em três formas, Conn, citrato da transfusão</td><td>Fórmula de reposição</td></tr>
+      <tr><td>Hipertensão portal <span class="mn">3/6</span></td><td>Complicação do TIPS, vasoativo, MELD, nível do bloqueio</td><td>Técnica endoscópica</td></tr>
+      <tr><td>Profilaxia <span class="mn">3/6</span></td><td>Droga por cirurgia, por alergia, alvo; par de antissépticos</td><td>Duração da profilaxia</td></tr>
+    </tbody>
+  </table></div>
+  <ul class="pt">
+    <li><strong>Variável trocada:</strong> hérnia e hiato voltam com a mesma régua e um dado trocado (campo, tipo).</li>
+    <li><strong>Clone:</strong> "causa mais comum de obstrução intestinal" já voltou quase idêntica, distratores renomeados.</li>
+    <li>"Não caiu" = ausente nas 99 válidas; não é garantia de que não cai.</li>
+  </ul>
+  </details>
+
+  <h3>As 10 regras de leitura</h3>
+  <ol class="pt">
+    <li>Em "mais frequente" ou "principal", marque o número 1 do livro-texto; desconfie do número 2 ao lado.</li>
+    <li>Em régua (classe, grau, tipo, TNM), ache o dado que separa da vizinha, não o que confirma a família.</li>
+    <li>Antes das opções de mecanismo, escreva a direção (sobe ou desce, hipo ou hiper).</li>
+    <li>Em "respectivamente", julgue cada metade sozinha e escolha o par em que as duas conversam.</li>
+    <li>Situe o paciente: estável pede o passo menos invasivo; sinal de gravidade pede o mais agressivo.</li>
+    <li>"Inicial", "imediata", "primeiro passo" pedem o degrau de antes; o definitivo é o distrator.</li>
+    <li>Trate comorbidade chamativa como isca até prova em contrário; busque a causa ou o prazo padrão.</li>
+    <li>Sublinhe todo número pequeno da vinheta (cm, mm, %, horas) antes de ler as opções.</li>
+    <li>Diante de opção verdadeira, pergunte se responde ao comando neste cenário (outra cirurgia, outra fase).</li>
+    <li>Em hérnia, pergunte primeiro se o campo está contaminado; depois, se é femoral ou inguinal. <span class="bd">banca-dependente</span><br>Banca: com ressecção de alça, tela proibida.<br>Hoje: o WSES aceita tela sintética se a ressecção foi sem extravasamento; em campo sujo, reparo primário ou tela biológica.</li>
+  </ol>
+
+</div></details>
+<details class="blk"><summary><span class="sg">GO</span><span class="rt">Norma, número de corte e o próximo degrau da conduta.</span></summary><div class="in">
+  <h3>Retrato</h3><ul class="pt">
+    <li><strong>Base:</strong> 101 questões válidas; 50 de Ginecologia e 51 de Obstetrícia.</li>
+    <li><strong>Repertório decide:</strong> fato isolado 32, norma 19, número de corte 18 <span class="ar">-&gt;</span> 69 de 101.</li>
+    <li><strong>Dedução fina é minoria:</strong> achado que exclui, mecanismo ou gravidade decidem 18 de 101.</li>
+    <li><strong>Forma:</strong> caso 47, caso curto 29, direta 25. Alternativa de 1-4 palavras em 46 de 101.</li>
+    <li><strong>Comando limpo:</strong> 77 de 101 sem marcador; "mais/principal" em 16, negativo em 2.</li>
+  </ul>
+  <h3>O que mudou de 2021-2022 para 2023-2026</h3><ul class="pt">
+    <li><strong>Tamanho e ordem:</strong> de 12 para 20 questões; desde 2023, 10 de Gineco e depois 10 de Obstetrícia.</li>
+    <li><strong>Pergunta:</strong> conduta/tratamento caem de 10 de 24 para 18 de 77; conceito sobe de 3 de 24 para 19 de 77.</li>
+    <li><strong>Distrator:</strong> grade em par cai de 7 de 24 para 10 de 77; doença vizinha sobe de 1 de 24 para 11 de 77.</li>
+  </ul>
+  <ul class="pt">
+    <li><strong>Gineco:</strong> caso curto com uma pergunta prática; só 4 das 25 diretas são de Gineco.</li>
+    <li><strong>Obstetrícia:</strong> 21 das 25 diretas e as vinhetas longas com laboratório e diagnóstico implícito.</li>
+  </ul>
+
+  <details class="mais"><summary>Moldes de questão</summary>
+    <div class="tw"><table>
+      <thead><tr><th scope="col">Molde</th><th scope="col">n</th><th scope="col">Como reconhecer</th></tr></thead>
+      <tbody>
+        <tr><td>Norma aplicada</td><td class="num">19</td><td>MS, INCA, OMS ou lei; não há dedução, há a letra da regra</td></tr>
+        <tr><td>O número decide</td><td class="num">18</td><td>valor (hormônio, mm, glicemia, IG) contra um corte</td></tr>
+        <tr><td>Grade em par</td><td class="num">17</td><td>2 eixos combinados; 11 das 17 com a errada "meio certa"</td></tr>
+        <tr><td>Conceito seco</td><td class="num">17</td><td>direta, "é correto afirmar"; 14 de Obstetrícia</td></tr>
+        <tr><td>Diagnóstico pelo quadro</td><td class="num">11</td><td>decide número 5, achado que exclui 3, quadro clássico 3</td></tr>
+        <tr><td>Conduta em degrau</td><td class="num">10</td><td>a certa é o próximo passo; a errada já trata</td></tr>
+        <tr><td>Diagnóstico oculto</td><td class="num">6</td><td>quadro sem nome; pede exame ou complicação</td></tr>
+        <tr><td>Alternativa = dado</td><td class="num">6</td><td>cada opção é um achado; pede o critério</td></tr>
+      </tbody>
+    </table></div>
+    <ul class="pt">
+      <li>Moldes se sobrepõem: uma questão pode ser norma e par ao mesmo tempo. Base: 101.</li>
+      <li>Exemplo (2023): hiperêmese antiga + confusão e ataxia <span class="ar">-&gt;</span> o quadro clássico pede o nome, não a conduta.</li>
+    </ul>
+  </details>
+
+  <details class="mais"><summary>Como a certa se comporta</summary><ul class="pt">
+    <li><strong>É o próximo degrau:</strong> investiga ou estadia; a errada mais forte já opera ou já trata definitivo.</li>
+    <li>Exemplo (2023): citologia glandular atípica com colposcopia normal <span class="ar">-&gt;</span> segue investigando, não conifica.</li>
+    <li><strong>O desejo de gestar decide nos dois sentidos:</strong> afasta a cirurgia definitiva ou indica a conservadora.</li>
+    <li>Exemplo (2023): hiperplasia com atipia em quem quer gestar <span class="ar">-&gt;</span> as três opções cirúrgicas caem juntas.</li>
+    <li><strong>Na grade, só a certa acerta as duas metades;</strong> a errada repete a metade fácil (11 de 17 pares).</li>
+    <li>Exemplo (2021): curva glicêmica <span class="ar">-&gt;</span> grade valores x quantos pontos bastam; cada eixo se resolve à parte.</li>
+    <li><strong>É a única compatível com um dado de contexto:</strong> IG, vida sexual, câncer prévio, exames já feitos.</li>
+    <li><strong>No "é correto afirmar":</strong> as erradas invertem a direção ou trocam o atributo entre entidades.</li>
+    <li>Exemplo (2023): HIV na gestação <span class="ar">-&gt;</span> a errada troca o uterotônico permitido pelo contraindicado.</li>
+    <li>A certa tende à redação técnica e sem absoluto; confira o conteúdo mesmo assim.</li>
+  </ul></details>
+
+  <details class="mais"><summary>Fábrica de distratores</summary>
+    <div class="mals">
+      <div class="mal"><div class="mal-h"><strong>Verdade fora do contexto</strong><span class="mn">22 de 101</span></div>
+        <p>Conduta certa da mesma doença em outra IG, outro receptor, outro subtipo, outra paciente.</p>
+        <p class="gesto">Isto vale para ESTA paciente, nesta IG, com este dado?</p></div>
+      <div class="mal"><div class="mal-h"><strong>Plausível genérico</strong><span class="mn">16 de 101</span></div>
+        <p>Soa prudente e não está na norma; aparece onde a pergunta é de fluxograma ou lei.</p>
+        <p class="gesto">Está escrito na norma? Se só "parece razoável", cai.</p></div>
+      <div class="mal"><div class="mal-h"><strong>Doença vizinha</strong><span class="mn">12 de 101</span></div>
+        <p>O par clássico do diferencial; a banca já espelhou o mesmo par trocando qual é a certa.</p>
+        <p class="gesto">Nomeie o dado que separa as duas antes de ler as opções.</p></div>
+      <div class="mal"><div class="mal-h"><strong>Metade certa</strong><span class="mn">11 de 101</span></div>
+        <p>Só em grade de par ou tripla: um eixo certo carrega o outro errado.</p>
+        <p class="gesto">Resolva cada eixo separado e cruze no fim.</p></div>
+      <div class="mal"><div class="mal-h"><strong>Conduta na hora errada</strong><span class="mn">10 de 101</span></div>
+        <p>Passo adiantado (trata antes de biopsiar) ou de outro trimestre; 7 das 10 pedem conduta.</p>
+        <p class="gesto">Onde esta paciente está na linha do protocolo?</p></div>
+      <div class="mal"><div class="mal-h"><strong>Conceito trocado</strong><span class="mn">9 de 101</span></div>
+        <p>Definição de uma entidade colada em outra; direção invertida (aumenta x diminui).</p>
+        <p class="gesto">Recite o par de definições antes das opções.</p></div>
+      <div class="mal"><div class="mal-h"><strong>Classe vizinha</strong><span class="mn">7 de 101</span></div>
+        <p>Grau ou tipo ao lado na mesma régua; todas em 2023-2026.</p>
+        <p class="gesto">Qual é o corte que separa esta classe da do lado?</p></div>
+      <div class="mal"><div class="mal-h"><strong>Menores</strong><span class="mn">12 de 101</span></div>
+        <p>Valor vizinho 5, outra gravidade 4, regra antiga 3 (prática ou causa já abandonada).</p>
+        <p class="gesto">Número exato com unidade; norma na versão vigente.</p></div>
+    </div>
+  </details>
+
+  <details class="mais"><summary>Isca x detalhe que decide</summary>
+    <div class="vs">
+      <div class="a"><h3>Isca</h3><ul>
+        <li>Comorbidade sem nexo com a pergunta (metabólica, hipertensão controlada).</li>
+        <li>Achado incidental no laudo de citologia ou de USG.</li>
+        <li>Dado chamativo fora do critério (mecônio, doppler, laboratório no limite).</li>
+        <li>Palavra ou sigla que imita a categoria de outra classificação.</li>
+        <li>Preâmbulo epidemiológico sem função na pergunta.</li>
+      </ul></div>
+      <div class="b"><h3>Decide</h3><ul>
+        <li>IG escondida em datas: DUM + data da consulta.</li>
+        <li>Quando a hipertensão começou em relação às 20 semanas.</li>
+        <li>Espessura endometrial em mm na pós-menopausa.</li>
+        <li>Paridade, cesáreas prévias, vida sexual, desejo de gestar.</li>
+        <li>Glicemia que diagnostica sem a palavra "diabetes".</li>
+        <li>Sinal de infecção na ruptura de membranas.</li>
+        <li>Exame já feito na vinheta que elimina opções.</li>
+      </ul></div>
+    </div>
+    <ul class="pt">
+      <li>Exemplo (2023): cardiotocografia com hipertensão crônica e mecônio <span class="ar">-&gt;</span> ambos fora do critério.</li>
+      <li>Doppler alterado e restrição de crescimento não são critério de gravidade da pré-eclâmpsia; diástole zero ou reversa muda o momento do parto.</li>
+      <li>Exemplo (2021): ruptura de membranas com duas datas no texto <span class="ar">-&gt;</span> a IG calculada escolhe a conduta.</li>
+    </ul>
+  </details>
+
+  <details class="mais"><summary>Ângulos que voltam</summary><ul class="pt">
+    <li><strong>Mama</strong> (6 provas): BI-RADS, faixa de rastreio, terapia pelo receptor (molde repetido trocando o receptor).</li>
+    <li><strong>Pré-eclâmpsia</strong> (5): classificar com laboratório (com x sem gravidade, sobreposta), profilaxia, doppler.</li>
+    <li><span class="ar">-&gt;</span> A banca já reaproveitou vinheta inteira, trocando um dado e a pergunta.</li>
+    <li><strong>Endometriose</strong> (5): clínico x cirurgia, por desejo de gestar e complicação; o que o clínico não faz.</li>
+    <li><strong>Diabetes gestacional</strong> (5): critério do TOTG, metas, rastreio pós-parto, complicação curto x longo prazo.</li>
+    <li><strong>Citologia</strong> (4): lesão de baixo grau e glandular; repetir x colposcopia por idade e persistência.</li>
+    <li><span class="ar">-&gt;</span> <span class="bd">datada</span> As provas analisadas cobravam a diretriz de 2016 (citologia). Vigente: DNA-HPV de 25 a 64 anos, a cada 5; 16/18 <span class="ar">-&gt;</span> colposcopia, outros tipos <span class="ar">-&gt;</span> citologia reflexa (seção 7).</li>
+    <li><strong>Reserva ovariana</strong> (4): marcador e fator de risco; as alternativas são os dados da vinheta.</li>
+    <li><strong>Sangramento da 2a metade</strong> (4): DPP x prévia e a complicação de cada uma; não pede conduta cirúrgica.</li>
+    <li><strong>Amenorreia sem útero</strong> (4): diferenciação sexual; gônada, genitália interna e externa em tripla.</li>
+    <li><strong>Úlcera genital</strong> (3): quando o fluxograma do MS manda biopsiar; pergunta repetida quase literal.</li>
+    <li><strong>Mioma</strong> (3): classificação FIGO/ESH, às vezes em grade com a via cirúrgica.</li>
+    <li><strong>Pós-menopausa</strong> (3): sangramento + espessura endometrial <span class="ar">-&gt;</span> qual o próximo exame.</li>
+    <li><strong>Gemelar</strong> (3): corionicidade e a complicação própria de cada tipo; não pede conduta de parto.</li>
+    <li><strong>Violência sexual</strong> (3): o que o serviço não pode exigir da paciente: BO, IML ou autorização judicial. A portaria que mandava notificar a polícia foi revogada em 2023.</li>
+    <li><strong>Ruptura de membranas</strong> (3): a conduta muda por IG e por infecção. Com 34 semanas ou mais, a banca quer resolução com profilaxia para EGB; o ACOG também aceita expectante até 36+6.</li>
+  </ul></details>
+
+  <h3>As 10 regras de leitura</h3><ol class="pt">
+    <li>Calcule a IG sempre que houver duas datas; o número escolhe a conduta.</li>
+    <li>Grife "desejo de gestar", "laqueadura" e "sexualmente ativa"; em Gineco esse dado decide.</li>
+    <li>Em conduta, escolha o próximo degrau (biópsia, colposcopia, histeroscopia, estadiar) antes do tratamento.</li>
+    <li>Se a vinheta monta um quadro sem nomeá-lo, dê o nome antes das opções; a pergunta é a consequência.</li>
+    <li>Em grade de par, resolva cada eixo separado; não marque pela metade que reconheceu.</li>
+    <li>Se as alternativas são os dados da vinheta, procure o que é critério nominal ou tem nexo causal.</li>
+    <li>Em pergunta de norma (MS, INCA, OMS, lei), aceite só o literal da norma, na versão vigente.</li>
+    <li>Conduta que você reconhece como certa: confira IG, receptor e subtipo antes de marcar.</li>
+    <li>Em "é correto afirmar", cheque a direção (aumenta ou diminui) e a entidade de cada frase.</li>
+    <li>Compare o laboratório com o corte da classe; achado chamativo fora do critério não sobe a gravidade.</li>
+  </ol>
+</div></details>
+<details class="blk"><summary><span class="sg">PED</span><span class="rt">Quadro clássico, três vizinhas e a negativa que decide.</span></summary><div class="in">
+  <h3>Retrato</h3><ul class="pt">
+    <li><strong>Vinheta:</strong> 81 de 100 têm paciente (76 caso, 5 caso curto); 19 são diretas.</li>
+    <li><strong>Pede nome:</strong> diagnóstico 27 + agente ou mecanismo 9 = 36 de 100. Depois conceito 20, tratamento 15, conduta 15.</li>
+    <li><strong>Decide:</strong> quadro típico 32, fato isolado 20, dado que exclui 12, número de corte 10 (de 100).</li>
+    <li><strong>Erra-se por:</strong> doença vizinha 34 de 100; metade certa 17; conceito trocado 12; regra fora do contexto 11.</li>
+  </ul>
+  <h3>O que mudou de 2021-2022 para 2023-2026</h3><ul class="pt">
+    <li><strong>Forma estável:</strong> diretas 5 de 24 antes, 14 de 76 depois. A vinheta continua dona do bloco.</li>
+    <li><strong>Regra e diretriz subiram:</strong> corte, degrau ou diretriz decidem 2 de 24 antes e 16 de 76 depois.</li>
+    <li><strong>Distrator:</strong> conceito trocado 1 de 24 <span class="ar">-&gt;</span> 11 de 76; número vizinho ou regra antiga 1 <span class="ar">-&gt;</span> 7.</li>
+    <li><strong>"Respectivamente" recua:</strong> 5 de 24 <span class="ar">-&gt;</span> 12 de 76; 0 de 19 na prova mais recente, que usa lista.</li>
+  </ul>
+
+  <details class="mais"><summary>Moldes de questão</summary>
+  <p class="lede">Cada questão em um só molde, por regra fixa sobre as etiquetas (100 válidas).</p>
+  <div class="tw"><table>
+    <thead><tr><th scope="col">Molde</th><th scope="col">Vezes</th><th scope="col">Como reconhecer</th></tr></thead>
+    <tbody>
+      <tr><td>Par "dx / conduta"</td><td class="num">30</td><td>Duas metades por alternativa; a 1ª se repete.</td></tr>
+      <tr><td>Quadro <span class="ar">-&gt;</span> nome</td><td class="num">16</td><td>Alternativas de 1-4 palavras, mesmo território.</td></tr>
+      <tr><td>Regra com número</td><td class="num">12</td><td>Idade, IG, mm, %, degrau: o número escolhe.</td></tr>
+      <tr><td>Direta "é correto"</td><td class="num">9</td><td>Sem caso; três frases com um atributo trocado.</td></tr>
+      <tr><td>Nome por 1 dado</td><td class="num">7</td><td>O quadro serve a duas; um achado mata uma.</td></tr>
+      <tr><td>Vinheta-pretexto</td><td class="num">6</td><td>O caso fixa a doença; a pergunta é um atributo.</td></tr>
+      <tr><td>Conduta pelo estado</td><td class="num">5</td><td>Mesmo dx, conduta leve ou pesada pelo estado.</td></tr>
+      <tr><td>Outros</td><td class="num">15</td><td>Fato isolado sem molde fixo.</td></tr>
+    </tbody>
+  </table></div>
+  <ul class="pt">
+    <li>Regra com número: 0 de 24 em 2021-2022, 12 de 76 em 2023-2026. É o molde que nasceu.</li>
+    <li>Vinheta-pretexto: às vezes o enunciado nem nomeia a doença; quem não a nomeia lê a pergunta no escuro.</li>
+  </ul>
+  </details>
+
+  <details class="mais"><summary>Como a certa se comporta</summary>
+  <ul class="pt">
+    <li><strong>Única coerente com a negativa.</strong> Dado que exclui decide 12 de 100; as erradas explicam todo o resto.</li>
+    <li><strong>Em par, fecha as duas metades.</strong> 30 de 100 em par; em 15 delas a mais forte repete a metade certa.</li>
+    <li><strong>Proporcional ao estado.</strong> Sem alarme, a certa é a menos invasiva: oral, ambulatorial, observar.</li>
+    <li><strong>Ativa só com gatilho escrito.</strong> Choque, limiar de idade ou escore alto na vinheta autorizam agir.</li>
+    <li><strong>Atributo específico.</strong> A certa traz o traço próprio da doença; a errada, um genérico ou de outro órgão.</li>
+    <li><strong>Sem absoluto.</strong> "Maioria", "dispensa", "somente", "obrigatoriamente" moram quase sempre na errada.</li>
+  </ul>
+  <p class="key">Ex. (2021): prematuro sem apneia, crescendo bem, com Hb baixa. A certa é ferro oral; transfundir e eritropoetina são distratores.</p>
+  </details>
+
+  <details class="mais"><summary>Fábrica de distratores</summary>
+  <div class="mals">
+    <div class="mal"><div class="mal-h"><strong>Doença vizinha</strong><span class="mn">34/100</span></div>
+      <p>As 3 erradas cobrem o diferencial do território: exantemáticas, massas cervicais, edemas, agentes.</p>
+      <p class="gesto">Nomeie o diferencial antes das letras: que dado mata cada um?</p></div>
+    <div class="mal"><div class="mal-h"><strong>Metade certa</strong><span class="mn">17/100</span></div>
+      <p>Diagnóstico certo com conduta ou exame errado. Ex. (2021): autismo certo + "acompanhar até 36 meses".</p>
+      <p class="gesto">V ou F em cada metade; só aceite V+V.</p></div>
+    <div class="mal"><div class="mal-h"><strong>Conceito trocado</strong><span class="mn">12/100</span></div>
+      <p>Atributo verdadeiro da vizinha posto na doença da questão; "hiper" no lugar de "hipo".</p>
+      <p class="gesto">Isto é desta doença ou da vizinha?</p></div>
+    <div class="mal"><div class="mal-h"><strong>Regra fora do contexto</strong><span class="mn">11/100</span></div>
+      <p>Regra correta transplantada para outra idade, outro cenário ou outra doença.</p>
+      <p class="gesto">Vale para esta idade e este cenário?</p></div>
+    <div class="mal"><div class="mal-h"><strong>Gravidade ou hora errada</strong><span class="mn">12/100</span></div>
+      <p>Internar, IV, transfundir quando o estado pede o leve (7); passo certo fora da sequência (5).</p>
+      <p class="gesto">Classifique gravidade e ponto da sequência antes das condutas.</p></div>
+    <div class="mal"><div class="mal-h"><strong>Número ou regra antiga</strong><span class="mn">8/100</span></div>
+      <p>Faixa, intervalo ou idade ao lado do certo (4); conduta superada, "mais tradicional" (4).</p>
+      <p class="gesto">Número de diretriz se decora exato, com unidade e público.</p></div>
+  </div>
+  <p class="key">Ex. (2023): recém-nascido com transposição; as erradas incluem o manejo da crise hipoxêmica da tetralogia.</p>
+  </details>
+
+  <details class="mais"><summary>Isca x detalhe que decide</summary>
+  <div class="vs">
+    <div class="a"><h3>Isca</h3><ul>
+      <li>Exame alterado fora do eixo: VCM baixo na criança que é renal; o essencial é a função renal, ferro só depois (ex. 2023).</li>
+      <li>Tratar o laboratório: albumina venosa no Kawasaki. A albumina baixa apoia o diagnóstico; a conduta é imunoglobulina (ex. 2021).</li>
+      <li>Sintoma ou história de fundo sem relação com a queixa.</li>
+      <li>Exposição ou hábito que aponta a vizinha.</li>
+      <li>Tratamento prévio que falhou: pista CONTRA o dx que ele supunha.</li>
+      <li>Dado da vinheta que volta como alternativa errada.</li>
+    </ul></div>
+    <div class="b"><h3>Decide</h3><ul>
+      <li>Negativa que torna a vizinha improvável, não impossível: "nega antibióticos", "sem contato com animais ou terra" (ex. 2023).</li>
+      <li>Achado que exclui: massa que não se move à deglutição (ex. 2023).</li>
+      <li>Exame normal: audiometria normal afasta surdez (ex. 2021).</li>
+      <li>Idade exata ou IG: muda o degrau e o limiar.</li>
+      <li>Vacina ou tratamento em curso na criança.</li>
+      <li>Tempo e evolução: duração do quadro, resposta ao que já foi feito.</li>
+    </ul></div>
+  </div>
+  </details>
+
+  <details class="mais"><summary>Ângulos que voltam</summary>
+  <p class="lede">Provas com o tema, de 6. "Não cobrou" = ausente das questões válidas até aqui.</p>
+  <div class="tw"><table>
+    <thead><tr><th scope="col">Tema</th><th scope="col">O que pergunta</th><th scope="col">Não cobrou</th></tr></thead>
+    <tbody>
+      <tr><td>Nefrótica · 4</td><td>Edema com PA normal; exames; infecção; vacina no tratamento.</td><td>Biópsia, histologia.</td></tr>
+      <tr><td>Tuberculose · 4</td><td>LCR e miliar no lactente; linfonodo; contato; droga x idade.</td><td>Dose do esquema.</td></tr>
+      <tr><td>Congênitas · 4</td><td>Achado <span class="ar">-&gt;</span> agente, com achados permutados; sífilis e HIV: PCDT.</td><td>Tratamento fora sífilis/HIV.</td></tr>
+      <tr><td>ITU · 3</td><td>Porta para outra pergunta: Gram, rim, bexiga, imagem.</td><td>Escolha do antibiótico.</td></tr>
+      <tr><td>Kawasaki · 3</td><td>Tratamento + complicação coronariana; separar de SIM-P.</td><td>Não determinado.</td></tr>
+      <tr><td>Obesidade · 3</td><td>Obesidade com baixa estatura = causa endócrina (inclusive corticoide), não nutricional.</td><td>Remédio como certa.</td></tr>
+      <tr><td>DII · 3</td><td>Sangue + extraintestinal <span class="ar">-&gt;</span> DII; Crohn x RCU pelos sítios.</td><td>Tratamento.</td></tr>
+      <tr><td>LCR · 3</td><td>Ler o líquor para dar o agente; manejo no lactente.</td><td>Não determinado.</td></tr>
+      <tr><td>Fala e TEA · 3</td><td>Interação separa TEA de atraso de fala; nunca esperar.</td><td>Fármaco.</td></tr>
+      <tr><td>Sala de parto · 3</td><td>Passo e meta de cada etapa; causa da lesão hipóxica.</td><td>Não determinado.</td></tr>
+      <tr><td>Aleitamento · 3</td><td>"É correto" sobre orientação prática ou contraindicação.</td><td>Não determinado.</td></tr>
+      <tr><td>Asma · 2</td><td>Criança em corticoide inalatório falha: próximo degrau.</td><td>Crise na emergência.</td></tr>
+    </tbody>
+  </table></div>
+  <ul class="pt">
+    <li>Clone com variável trocada: a vinheta volta quase igual; muda a isca ou a faixa etária.</li>
+    <li>Asma: a faixa etária (até 5, 6-11, 12 ou mais) é a variável que muda a resposta.</li>
+    <li>Obesidade: Cushing por corticoide num ano, causa endócrina completa no outro.</li>
+  </ul>
+  </details>
+
+  <h3>As 10 regras de leitura</h3><ol class="pt">
+    <li>Escreva o diagnóstico antes das alternativas, mesmo quando a pergunta não o pede.</li>
+    <li>Liste o diferencial do território e ache o dado que mata cada vizinha.</li>
+    <li>Grife as negativas ("nega", "sem", "normal"): aqui decidem mais que os achados.</li>
+    <li>Em par ou lista, marque V ou F em cada item; a mais forte repete a metade certa.</li>
+    <li>Classifique a gravidade antes das condutas; sem alarme escrito, fique com a proporcional.</li>
+    <li>Confira toda conduta "sabida" contra a idade e o cenário da vinheta.</li>
+    <li>Exame alterado que não explica a queixa principal é isca até prova em contrário.</li>
+    <li>Tratamento anterior que falhou é pista contra o diagnóstico que ele pressupunha.</li>
+    <li>"Maioria", "dispensa", "somente", "obrigatoriamente": falsa até prova em contrário.</li>
+    <li>Número de diretriz se decora exato; a errada traz o vizinho de faixa ou de prazo.</li>
+  </ol>
+</div></details>
+<details class="blk"><summary><span class="sg">MFC</span><span class="rt">Consultório da APS; a certa costuma ser a que intervém menos.</span></summary><div class="in">
+
+  <h3>Retrato</h3><ul class="pt">
+    <li><strong>Com paciente:</strong> 58 de 98 (49 casos, 9 casos curtos); 40 de 98 são perguntas diretas.</li>
+    <li><strong>O que pede:</strong> conceito 29, conduta 19, prevenção 11, gestão 10 de 98. Diagnóstico puro: 7 de 98.</li>
+    <li><strong>O que decide:</strong> fato isolado em 41 de 98; somado a corte numérico e diretriz, 63 de 98.</li>
+    <li><strong>Alternativa em par:</strong> 39 de 98; em 28 desses 39, o distrator é a metade certa.</li>
+  </ul>
+  <p class="key">Em 14 de 98 a certa é não pedir, não rotular ou não tratar; apareceu nas 6 provas.</p>
+
+  <h3>O que mudou de 2021-2022 para 2023-2026</h3><ul class="pt">
+    <li><strong>Mais pergunta direta:</strong> 7 de 23 <span class="ar">-&gt;</span> 33 de 75. O caso continua, mas divide espaço com o conceito.</li>
+    <li><strong>Mais par:</strong> alternativa em par 7 de 23 <span class="ar">-&gt;</span> 32 de 75; "respectivamente" 2 de 23 <span class="ar">-&gt;</span> 11 de 75.</li>
+    <li><strong>Mais gestão e número:</strong> gestão 1 de 23 <span class="ar">-&gt;</span> 9 de 75; distrator de valor vizinho 1 de 23 <span class="ar">-&gt;</span> 7 de 75.</li>
+  </ul>
+  <p class="key">Já houve caso compartilhado por 2-3 questões: leia a vinheta uma vez, com o grupo todo.</p>
+
+  <details class="mais"><summary>Moldes de questão</summary>
+  <div class="mals">
+    <div class="mal"><div class="mal-h"><strong>Conceito direto</strong><span class="mn">22 de 98</span></div>
+      <p>Frase do livro de MFC ou geriatria; as outras 3 têm uma palavra adulterada.</p>
+      <p class="gesto">Reconheça: sem paciente, "é correto afirmar".</p></div>
+    <div class="mal"><div class="mal-h"><strong>Sobrediagnóstico</strong><span class="mn">14 de 98</span><span class="onde">6 provas</span></div>
+      <p>A vinheta empilha fator de risco, ansiedade e pedido; a certa diz que não há critério ou indicação.</p>
+      <p class="gesto">Reconheça: assintomático, exame pedido "para tranquilizar", família que insiste.</p></div>
+    <div class="mal"><div class="mal-h"><strong>Pré-teste e exame</strong><span class="mn">5 de 98</span><span class="onde">5 provas</span></div>
+      <p>O perfil fixa a probabilidade pré-teste; a pergunta é se o exame cabe e se o resultado engana.</p>
+      <p>Ex. já feito: homem com angina típica, exame pedido para tranquilizar; o negativo não afasta a doença.</p>
+      <p class="gesto">Reconheça: dor torácica, teste de esforço, idade, sexo e tipo de dor.</p></div>
+    <div class="mal"><div class="mal-h"><strong>Epidemiologia clínica</strong><span class="mn">9 de 98</span><span class="onde">4 provas</span></div>
+      <p>Sensibilidade, valor preditivo, série x paralelo, desenho de estudo, eficácia, NNT.</p>
+      <p class="gesto">Reconheça: definição em par; o distrator é a troca dos lados.</p></div>
+    <div class="mal"><div class="mal-h"><strong>Par "respectivamente"</strong><span class="mn">13 de 98</span></div>
+      <p>Dois eixos (diagnóstico e conduta, avaliação e conduta) combinados em 4 alternativas.</p>
+      <p class="gesto">9 dos 13 usam metade certa: julgue cada lado em separado.</p></div>
+    <div class="mal"><div class="mal-h"><strong>Vinheta biopsicossocial</strong><span class="mn">8 de 98</span><span class="onde">5 provas</span></div>
+      <p>Luto, idoso só, paliativo, sofrimento; a certa é escutar, explorar, decidir junto.</p>
+      <p class="gesto">Reconheça: vinheta longa que não muda a resposta.</p></div>
+    <div class="mal"><div class="mal-h"><strong>Rastreamento</strong><span class="mn">8 de 98</span><span class="onde">5 provas</span></div>
+      <p>Quem entra ou não pela idade, risco familiar ou tempo de cessação; prazos e metas de programa.</p>
+      <p class="gesto">Reconheça: idade exata ou "parou há X anos" no enunciado.</p></div>
+    <div class="mal"><div class="mal-h"><strong>Classificar com termo</strong><span class="mn">8 de 98</span><span class="onde">5 provas</span></div>
+      <p>Tipo de família, de violência, atributo da APS, diretriz do SUS, modalidade de cuidado.</p>
+      <p>Ex. já feito: dinheiro da aposentadoria do idoso sumindo em casa <span class="ar">-&gt;</span> violência econômica.</p>
+      <p class="gesto">Reconheça: alternativa de 1-4 palavras; as erradas são as caixas vizinhas.</p></div>
+    <div class="mal"><div class="mal-h"><strong>Polifarmácia no idoso</strong><span class="mn">7 de 98</span><span class="onde">5 provas</span></div>
+      <p>Condição e classe de risco para reação adversa, desprescrição, definições.</p>
+      <p class="gesto">Reconheça: idoso com lista de fármacos e um evento novo.</p></div>
+  </div>
+  </details>
+
+  <details class="mais"><summary>Como a certa se comporta</summary>
+  <ul class="pt">
+    <li><strong>Intervém menos:</strong> não pede, não trata, não rotula (14 de 98).</li>
+    <li><strong>Exceção:</strong> pré-teste alto ou sinal de gravidade; aí a certa trata, remove ou encaminha.</li>
+    <li><strong>Centrada na pessoa:</strong> escuta, explorar o entendimento, decisão compartilhada, bem-estar.</li>
+    <li><strong>Pelo comando:</strong> "centrada", "integral" ou "multidimensional" <span class="ar">-&gt;</span> a opção centrada na pessoa vence.</li>
+    <li><strong>Raramente absoluta:</strong> palavra absoluta na certa em 3 de 98; em alguma errada, em 16 de 98.</li>
+    <li><strong>Contraria o pedido:</strong> paciente, família ou outro médico quer o exame ou o remédio; a certa nega.</li>
+    <li><strong>Contraintuitiva:</strong> em lista ou frequência. Ex. já feito: no guia alimentar, o passo certo era um hábito.</li>
+    <li><strong>Em par, coerente:</strong> os dois lados seguem o mesmo princípio; "sem critério" não vem com "internar".</li>
+    <li><strong>Tamanho não entrega:</strong> a certa é a mais longa em 27 de 98.</li>
+  </ul>
+  </details>
+
+  <details class="mais"><summary>Fábrica de distratores</summary>
+  <div class="mals">
+    <div class="mal"><div class="mal-h"><strong>Metade certa</strong><span class="mn">38 de 98</span></div>
+      <p>Um item certo arrasta um errado. Ex. já feito: lista de condições sensíveis à APS com um câncer infiltrado.</p>
+      <p class="gesto">Julgue cada metade; elimine no primeiro item falso.</p></div>
+    <div class="mal"><div class="mal-h"><strong>Conceito trocado</strong><span class="mn">15 de 98</span></div>
+      <p>Atributos permutados: sensível x específico, série x paralelo, seccional x coorte, protetor x risco.</p>
+      <p>Ex. já feito: efeito de uma classe de antidiabético atribuído a outra.</p>
+      <p class="gesto">Escreva o par de definições antes de ler as opções.</p></div>
+    <div class="mal"><div class="mal-h"><strong>Classe adjacente</strong><span class="mn">11 de 98</span></div>
+      <p>A caixa ao lado: nível de prevenção, zona de escore, tipo de violência, tipo de puberdade.</p>
+      <p class="gesto">Nomeie o critério que separa as caixas e ache esse dado.</p></div>
+    <div class="mal"><div class="mal-h"><strong>Valor vizinho</strong><span class="mn">8 de 98</span></div>
+      <p>Número ao lado do certo. Ex. já feito: o corte de diabetes franco no lugar da faixa da gestante.</p>
+      <p class="gesto">Número exato, com unidade e público (adulto x criança, gestante).</p></div>
+    <div class="mal"><div class="mal-h"><strong>Plausível genérico</strong><span class="mn">8 de 98</span></div>
+      <p>Soa responsável: perguntas objetivas, prescrever o mais eficaz, encaminhar ao especialista.</p>
+      <p class="gesto">Cabe no método clínico centrado na pessoa? Se não, sai.</p></div>
+    <div class="mal"><div class="mal-h"><strong>Verdade fora do contexto</strong><span class="mn">6 de 98</span></div>
+      <p>Conduta real para quem não preenche o critério. Ex. já feito: sedativo para dispneia ansiosa na DPOC.</p>
+      <p class="gesto">Este paciente está dentro da indicação?</p></div>
+    <div class="mal"><div class="mal-h"><strong>Outra gravidade</strong><span class="mn">4 de 98</span></div>
+      <p>Internar, sedar ou escalar quem é paliativo ou estável.</p>
+      <p class="gesto">Situe a fase (estável, paliativo, alarme) antes das condutas.</p></div>
+    <div class="mal"><div class="mal-h"><strong>Raros</strong><span class="mn">8 de 98</span></div>
+      <p>Absoluto 4, doença vizinha 2, regra antiga 1, conduta certa na hora errada 1.</p>
+      <p class="gesto">Regra antiga: confira a versão vigente da diretriz.</p></div>
+  </div>
+  </details>
+
+  <details class="mais"><summary>Isca x detalhe que decide</summary>
+  <div class="vs">
+    <div class="a"><h3>Isca</h3><ul>
+      <li>História familiar tardia: pai ou mãe adoecidos depois dos 70.</li>
+      <li>Nervosismo do paciente; parente ou vizinho que infartou.</li>
+      <li>Conduta já feita na vinheta, para ser julgada.</li>
+      <li>Comorbidade que parece obrigar a tratar.</li>
+      <li>Dado identitário que não muda a regra.</li>
+    </ul></div>
+    <div class="b"><h3>Decide</h3><ul>
+      <li>Idade exata ou tempo desde a cessação, contra o corte vigente.</li>
+      <li>A negativa no fim: "nega...", "assintomática".</li>
+      <li>Medida única, na mesma consulta ou em crise emocional.</li>
+      <li>Sinal de gravidade num canto: PA baixa, FR alta, torpor.</li>
+      <li>Cirurgia prévia que troca a escolha do tratamento.</li>
+      <li>Palavra do comando: "mais frequente", "mais sensível".</li>
+    </ul></div>
+  </div>
+  <p class="key">Ex. já feito: duas aferições de PA na mesma consulta, em paciente ansioso, não fecharam hipertensão.</p>
+  </details>
+
+  <details class="mais"><summary>Ângulos que voltam</summary>
+  <div class="tw"><table>
+    <thead><tr><th scope="col">Tema (provas)</th><th scope="col">O que pergunta</th><th scope="col">Não pergunta / armadilha</th></tr></thead>
+    <tbody>
+      <tr><td>Pré-teste (5)</td><td>O exame cabe? O resultado é falso?</td><td>Mesmo cenário trocando sexo, idade, sintoma</td></tr>
+      <tr><td>Rastreio (5)</td><td>Quem não entra; prazos e metas do programa</td><td>História familiar tardia não vira grupo de risco</td></tr>
+      <tr><td>Polifarmácia (5)</td><td>Quem tem risco; desprescrever sem perda</td><td>Contar fármacos não basta: é risco-benefício</td></tr>
+      <tr><td>Paliativo (5)</td><td>Controle de sintoma, delirium, comunicação</td><td>Internar, sedar ou operar é o distrator</td></tr>
+      <tr><td>MCCP (5)</td><td>Componentes, explorar entendimento, decidir junto</td><td>Diagnóstico: a vinheta costuma ser decorativa</td></tr>
+      <tr><td>Violência (4)</td><td>Tipificar pelo dado; fator de risco</td><td>Fator protetor posto como risco</td></tr>
+      <tr><td>Sem critério (4)</td><td>Medida única ou em crise não diagnostica</td><td>Rotular pelo valor isolado</td></tr>
+      <tr><td>IVAS (4)</td><td>Viral, sintomáticos, notificação, isolamento</td><td>Antibiótico na metade errada do par</td></tr>
+      <tr><td>Epidemio (4)</td><td>Sensível, específico, série, desenho, NNT</td><td>"Mais sensível" volta como "mais específico"</td></tr>
+      <tr><td>Níveis prev. (3)</td><td>Classificar o exemplo</td><td>Mesmo enunciado pedindo outro nível</td></tr>
+      <tr><td>APS x SUS (3)</td><td>Reconhecer o atributo na vinheta</td><td>Princípio do SUS no lugar do atributo; integralidade é as duas coisas</td></tr>
+    </tbody>
+  </table></div>
+  <p class="key">Vinheta clonada entre anos troca uma variável: leitura vira conduta, muda a anatomia, o par inverte.</p>
+  </details>
+
+  <h3>As 10 regras de leitura</h3><ol class="pt">
+    <li>Antes das opções, pergunte: há critério para rotular, pedir ou tratar? Na dúvida, a banca premia o não.</li>
+    <li>Calcule o pré-teste antes do exame: baixo risco <span class="ar">-&gt;</span> o positivo engana; quadro típico <span class="ar">-&gt;</span> o negativo engana.</li>
+    <li>Em par ou lista, mate a alternativa no primeiro item falso; nunca escolha pela metade que reconhece.</li>
+    <li>Leia a conduta narrada na vinheta como algo a julgar, não como pista do caminho.</li>
+    <li>Grife "nega", "assintomático", a idade exata e o tempo desde a cessação: costumam decidir.</li>
+    <li>Comando "centrada", "integral" ou "multidimensional": escolha escuta ou decisão compartilhada.</li>
+    <li>Desconfie de "todos", "independentemente", "mesmo que"; confira o conteúdo, já esteve na certa.</li>
+    <li>Em taxonomia, nomeie o critério que separa as caixas antes de ler o exemplo.</li>
+    <li>Em par de conceitos (sensível/específico, série/paralelo, coorte/seccional), escreva as definições antes.</li>
+    <li>Decore os números do bloco com unidade, público e versão da diretriz: escores, critérios, faixas, prazos.</li>
+  </ol>
+</div></details>
   </div>
 </section>
 
 <section class="sec">
-  <span class="kick">6 · Repetição</span>
-  <h2>Temas que voltam e o ângulo cobrado</h2>
-  <p class="lede">A banca repete o tema e também o ângulo. Estudar o tema sem o ângulo rende metade.</p>
-  <div class="tw"><table>
-    <thead><tr><th scope="col">Tema</th><th scope="col">O ângulo</th></tr></thead>
-    <tbody>
-      <tr><td>Tuberculose (4 blocos)</td><td>Ativa x latente x contato; no HIV; na criança.</td></tr>
-      <tr><td>HIV e oportunistas</td><td>A próxima ação: profilaxia pelo CD4, momento da terapia.</td></tr>
-      <tr><td>Teste ergométrico e pré-teste</td><td>O exame era adequado? O resultado é falso?</td></tr>
-      <tr><td>Polifarmácia no idoso</td><td>Desprescrever; risco-benefício, não número de fármacos.</td></tr>
-      <tr><td>Citologia de colo</td><td>O próximo degrau pelo laudo, pela norma brasileira.</td></tr>
-      <tr><td>Vias biliares (CM e CIR)</td><td>Colangite: antibiótico e drenagem da via; exame inicial.</td></tr>
-    </tbody>
-  </table></div>
-  <details class="mais"><summary>Ver mais 12 temas</summary>
-  <div class="tw"><table>
-    <thead><tr><th scope="col">Tema</th><th scope="col">O ângulo</th></tr></thead>
-    <tbody>
-      <tr><td>Rastreamento</td><td>Quem não entra; números do programa.</td></tr>
-      <tr><td>Níveis de prevenção</td><td>Classificar o exemplo; a quaternária.</td></tr>
-      <tr><td>Sangramento pós-menopausa</td><td>Biópsia antes de qualquer tratamento.</td></tr>
-      <tr><td>Diabetes na gestação</td><td>Critérios do teste de tolerância, metas, complicações.</td></tr>
-      <tr><td>Sangramento da 2ª metade</td><td>Descolamento x placenta prévia e a complicação de cada um.</td></tr>
-      <tr><td>Pré-eclâmpsia</td><td>Classificar a gravidade; AAS no alto risco.</td></tr>
-      <tr><td>Choque e trauma</td><td>Classe do choque; ordem do atendimento; tamponamento x pneumotórax.</td></tr>
-      <tr><td>Ciência básica cirúrgica</td><td>Cicatrização, nutrição, pneumoperitônio, sódio.</td></tr>
-      <tr><td>Nefrótica e ITU na criança</td><td>Edema com pressão normal; a ITU como porta para outra pergunta.</td></tr>
-      <tr><td>Asma</td><td>O próximo degrau, que muda pela faixa etária.</td></tr>
-      <tr><td>Líquor</td><td>Glicose e celularidade separam o agente.</td></tr>
-      <tr><td>Cálcio, fósforo e PTH</td><td>Ler o trio para dar a causa ou a conduta.</td></tr>
-    </tbody>
-  </table></div></details>
-  <p class="key">A banca clona a vinheta de um ano para o outro e troca uma variável: a idade, a presença do útero, "mais sensível" por "mais específico". Quem decorou a resposta do ano anterior erra.</p>
-</section>
-
-<section class="sec">
-  <span class="kick">7 · Treino</span>
+  <span class="kick">12 · Treino</span>
   <h2>O que muda daqui até a prova</h2>
   <ul class="pt">
-    <li><strong>Cobertura primeiro.</strong> Fato, corte e norma decidem metade: avançar a trilha rende mais que refinar tema já visto.</li>
-    <li><strong>Vizinha e dado que exclui.</strong> Antes de marcar, nomeie a vizinha e o dado que a derruba.</li>
-    <li><strong>Par item a item.</strong> Verdadeiro ou falso em cada metade; comece pela segunda.</li>
-    <li><strong>Grifo com critério.</strong> Negação, corte, tempo, número pequeno, palavra do comando.</li>
-    <li><strong>Relógio por bloco.</strong> Nos simulados de 100, anote no primeiro minuto o horário de saída de cada bloco.</li>
+    <li><strong>Ordem de estudo:</strong> a da seção 8. CIR perioperatório e trauma, GO colo e parto, MFC epidemiologia antes do caso longo.</li>
+    <li><strong>Régua vigente:</strong> prova antiga corrigida pelo gabarito e pela seção 7; onde divergem, aprenda as duas.</li>
+    <li><strong>As provas que faltam:</strong> simulado de 100, cronometrado, na ordem do caderno. No primeiro minuto, anote o horário de saída de cada bloco.</li>
+    <li><strong>Checklist de 30 segundos</strong> (seção 5) só na alternativa que pareceu certa cedo demais.</li>
+    <li><strong>Grifo com critério:</strong> negação, corte, tempo, número pequeno, palavra do comando. É contra eles que a análise dos grifos confere cada erro.</li>
   </ul>
 </section>
 </div>

@@ -205,3 +205,60 @@ def test_figuras_batem_com_o_mapa_independente():
             if q["figura"]:
                 achado.add((int(edicao), q["num"]))
     assert achado == esperado
+
+
+# ---------------------------------------------------------------- caso compartilhado (hotfix 03/10/2026)
+
+def _paginas_caso():
+    """Caderno sintetico de 4 questoes: as Q2-3 dividem um caso impresso ANTES do numero da Q2, a 55 pt
+    da ultima alternativa da Q1; o cabecalho do caso chega FORA DE ORDEM (depois das alternativas da
+    Q3, com y menor -- e assim que o PyMuPDF devolve a caixa de texto dele); a Q4 tem um caso so dela,
+    sem a frase "questoes de numeros"; a alternativa C da Q1 continua na linha de baixo (15 pt)."""
+    capa = [(10, "ORGANIZADOR"), (100, "Além deste caderno de 4 questões, você recebeu:"),
+            (120, "Duração máxima da prova: 1 hora")]
+    p2 = [(80, "CIRURGIA GERAL"),
+          (100, "1) A lesão descrita é do tipo:"),
+          (120, "a) E2"), (135, "b) E3"), (150, "c) E4 com extensão"), (165, "ao ducto direito"), (180, "d) E5"),
+          (235, "Mulher de 42 anos com lesão ulcerada"), (250, "pré-pilórica."),
+          (280, "2) A classificação dessa lesão é:"),
+          (300, "a) I"), (315, "b) II"), (330, "c) III"), (345, "d) IV"),
+          (375, "3) O tratamento, nesse caso, é:"),
+          (395, "a) A"), (410, "b) B"), (425, "c) C"), (440, "d) D"),
+          (205, "De acordo com o caso a seguir, responda às questões de números 2 e 3:"),
+          (500, "Homem de 30 anos, vítima de queda."),
+          (530, "4) A conduta é:"),
+          (550, "a) W"), (565, "b) X"), (580, "c) Y"), (595, "d) Z")]
+    return [(1, capa, [LOGO]), (2, p2, [LOGO])]
+
+
+def test_caso_compartilhado_vai_para_as_questoes_dele():
+    p = prova_pdf.parse_uerj(_paginas_caso())
+    q1, q2, q3, q4 = p["questoes"]
+    caso = ("De acordo com o caso a seguir, responda às questões de números 2 e 3: "
+            "Mulher de 42 anos com lesão ulcerada pré-pilórica.")
+    assert q1["alternativas"] == [("A", "E2"), ("B", "E3"), ("C", "E4 com extensão ao ducto direito"),
+                                  ("D", "E5")]                      # o caso nao gruda; a continuacao fica
+    assert q2["enunciado"] == caso + "\n\nA classificação dessa lesão é:"
+    assert q3["enunciado"] == caso + "\n\nO tratamento, nesse caso, é:"   # a faixa "2 e 3" leva o caso as duas
+    assert q3["alternativas"][-1] == ("D", "D")                     # cabecalho fora de ordem nao gruda
+    assert q4["enunciado"] == "Homem de 30 anos, vítima de queda.\n\nA conduta é:"   # sem faixa: so a seguinte
+    assert prova_pdf.problemas(p, {"1": "A", "2": "B", "3": "C", "4": "D"}, esperado=4) == []
+
+
+def test_caso_compartilhado_nas_provas_reais():
+    """As 7 alternativas que engoliam o caso da questao seguinte (medidas em 03/10/2026) saem limpas e
+    as 10 questoes do caso passam a traze-lo. So estrutura: nenhum conteudo de prova no teste."""
+    casos = {"2021": ([22, 24], [23, 24]), "2022": ([16, 19], [17, 18]),
+             "2024": ([36], [37, 38]), "2026": ([94, 98], [95, 96, 97, 99, 100])}
+    if not all((UERJ / g[0]).is_file() for g in GOLDEN.values()):
+        pytest.skip("PDFs ausentes (gitignored)")
+    for edicao, (pdf, *_rest) in GOLDEN.items():
+        qs = {q["num"]: q for q in prova_pdf.parse_uerj(prova_pdf.ler_pdf(str(UERJ / pdf)))["questoes"]}
+        limpas, com_caso = casos.get(edicao, ([], []))
+        for q in qs.values():
+            assert not any("questões de números" in t for _, t in q["alternativas"]), (edicao, q["num"])
+            assert ("\n\n" in q["enunciado"]) == (q["num"] in com_caso), (edicao, q["num"])
+        for n in limpas:
+            assert len(qs[n]["alternativas"][-1][1]) <= 100, (edicao, n)
+        for n in com_caso:
+            assert "questões de números" in qs[n]["enunciado"], (edicao, n)

@@ -45,6 +45,13 @@ RX_ALT = re.compile(r"^\s*([a-eA-E])\)\s+(.*)$")
 RX_DESCARTE = re.compile(
     r"RESID[ÊE]NCIA M[ÉE]DICA UERJ|P[ÁA]GINA \d+ DE \d+|^ORGANIZADOR$|^ACESSO DIRETO|"
     r"PROIBIDO DESTACAR|OUTRA FOLHA DOS CADERNOS|^RASCUNHO$", re.I)
+#: caso compartilhado ("... responda as questoes de numeros 23 e 24"): impresso ANTES do numero da
+#: questao, vale para todas as da faixa
+RX_CASO_FAIXA = re.compile(r"quest(?:ão|ões) de números? (\d{1,3}) (?:e|a) (\d{1,3})", re.I)
+#: salto vertical (pt) entre a ultima linha de alternativa e uma linha que NAO e alternativa: a
+#: continuacao da alternativa fica a 13,9-16,5 pt e o caso da questao seguinte a >= 24 pt (medido
+#: nas 6 provas UERJ 2021-2026 em 03/10/2026, n = 316 e 8, sem sobreposicao)
+SALTO_CASO = 20.0
 RX_CAPA_N = re.compile(r"caderno de (\d+) quest", re.I)
 RX_CAPA_H = re.compile(r"Dura[çc][ãa]o m[áa]xima da prova:\s*(\d+)\s*hora", re.I)
 
@@ -116,21 +123,30 @@ def _juntar(pedacos):
 
 def parse_uerj(paginas):
     """Caderno UERJ -> `{capa_n, duracao_h, questoes: [{num, bloco, pagina, enunciado, alternativas,
-    figura}]}`. PURA sobre a saida de `ler_pdf`."""
+    figura}]}`. PURA sobre a saida de `ler_pdf`.
+
+    As linhas de cada pagina sao lidas de cima para baixo (o PyMuPDF devolve caixa de texto fora de
+    ordem). O caso impresso ANTES do numero da questao -- depois de um salto maior que `SALTO_CASO`
+    das alternativas da anterior, depois de um cabecalho de bloco, ou aberto pela frase "questoes de
+    numeros X e Y" -- nao e da questao aberta: entra, como 1o paragrafo do enunciado, em todas as
+    questoes da faixa (sem faixa, so na seguinte)."""
     capa = "\n".join(t for _, t in paginas[0][1]) if paginas else ""
     m_n, m_h = RX_CAPA_N.search(capa), RX_CAPA_H.search(capa)
     figuras = _caixas_de_figura(paginas)
     qs, atual, bloco = [], None, None
+    pre, casos = [], []                 # linhas do caso em aberto; [(1a questao, ultima, texto)]
+    ultima = None                       # (pagina, y) da ultima linha da questao aberta
+    fechada = False                     # cabecalho de bloco depois da questao aberta
     inicio_na_pagina = {}               # pagina -> [(y, num)] das questoes que comecam nela
     conteudo_na_pagina = {}             # pagina -> linhas de questao lidas nela (0 = folha sem prova)
     for pagina, linhas, _ in paginas:
-        for y, linha in linhas:
+        for y, linha in sorted(linhas, key=lambda par: par[0]):
             s = linha.strip()
             if not s or RX_DESCARTE.search(s):
                 continue
             cab = BLOCOS_UERJ.get(_norm_cabecalho(s))
             if cab:
-                bloco = cab
+                bloco, fechada = cab, True
                 continue
             if bloco is None:                 # capa e instrucoes: nada conta antes do 1o bloco
                 continue
@@ -140,15 +156,30 @@ def parse_uerj(paginas):
             if mq and int(mq.group(1)) == (qs[-1]["num"] + 1 if qs else 1):
                 atual = {"num": int(mq.group(1)), "bloco": bloco, "pagina": pagina,
                          "_enun": [mq.group(2)], "_alts": [], "figura": False}
+                if pre:
+                    texto = _juntar(pre)
+                    mf = RX_CASO_FAIXA.search(texto)
+                    ini, fim = (int(mf.group(1)), int(mf.group(2))) if mf else (atual["num"],) * 2
+                    casos.append((ini, fim, texto) if ini <= atual["num"] <= fim
+                                 else (atual["num"], atual["num"], texto))
+                    pre = []
                 qs.append(atual)
                 inicio_na_pagina.setdefault(pagina, []).append((y, atual["num"]))
+                ultima, fechada = (pagina, y), False
                 continue
             ma = RX_ALT.match(s)
-            if ma and atual is not None:
+            if ma and atual is not None and not pre:
                 atual["_alts"].append([ma.group(1).upper(), ma.group(2)])
+                ultima = (pagina, y)
                 continue
-            if atual is not None:
-                (atual["_alts"][-1] if atual["_alts"] else atual["_enun"]).append(s)
+            salto = (atual is not None and bool(atual["_alts"]) and ultima[0] == pagina
+                     and y - ultima[1] > SALTO_CASO)
+            if pre or atual is None or fechada or salto or (
+                    atual["_alts"] and RX_CASO_FAIXA.search(s)):
+                pre.append(s)
+                continue
+            (atual["_alts"][-1] if atual["_alts"] else atual["_enun"]).append(s)
+            ultima = (pagina, y)
     # a figura e da ultima questao que comeca ACIMA dela na pagina; sem nenhuma acima, e da que
     # vem continuando da pagina anterior (numeracao sequencial: a de numero anterior)
     por_num = {q["num"]: q for q in qs}
@@ -163,7 +194,8 @@ def parse_uerj(paginas):
             if dona in por_num:
                 por_num[dona]["figura"] = True
     for q in qs:
-        q["enunciado"] = _juntar(q.pop("_enun"))
+        caso = [t for ini, fim, t in casos if ini <= q["num"] <= fim]
+        q["enunciado"] = "\n\n".join(caso + [_juntar(q.pop("_enun"))])
         q["alternativas"] = [(a[0], _juntar(a[1:])) for a in q.pop("_alts")]
     return {"capa_n": int(m_n.group(1)) if m_n else None,
             "duracao_h": int(m_h.group(1)) if m_h else None, "questoes": qs}

@@ -57,6 +57,10 @@
   "rd-pilulas": {
    "tipo": "revisao",
    "titulo": "Pílulas: pontos soltos"
+  },
+  "dossie-uerj": {
+   "tipo": "analise",
+   "titulo": "Dossiê UERJ: anatomia e maldades da prova"
   }
  }
 }

@@ -48,6 +48,7 @@ from app.utils import db                                          # noqa: E402
 TITULO = "Painel MedHub"
 SAIDA_HTML = ROOT / "artifacts" / "painel.html"
 QUADRO = ROOT / "core" / "hub_quadro.json"
+ARTIFATOS = ROOT / "artifacts"
 
 #: Ordem dos blocos na pagina. O `id` e o `data-bloco` do HTML e a chave do JSON.
 BLOCOS = ("dia", "semana", "ritmo", "blocos")
@@ -251,6 +252,7 @@ def coletar(hoje=None):
         "semana": _bloco_semana(linhas, hoje),
         "ritmo": _bloco_ritmo(hoje),
         "blocos": _bloco_blocos(linhas),
+        "docs": _bloco_docs(),
     }
 
 
@@ -289,6 +291,30 @@ def _pct(parte, todo):
     if not todo:
         return 0.0
     return max(0.0, min(100.0, 100.0 * float(parte or 0) / float(todo)))
+
+
+def _bloco_docs():
+    """Documentos de referencia do hub (s212, pedido do operador em 03/10/2026: "um bloco de
+    documentacao no Painel"): os itens `tipo: analise` do registro do quadro cujo arquivo existe em
+    `artifacts/aula-<slug>.html`. Registro ilegivel ou ausente = [] (o bloco some; nada quebra)."""
+    try:
+        reg = json.loads(QUADRO.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return []
+    docs = []
+    for slug, item in (reg.get("itens") or {}).items():
+        item = item or {}
+        if item.get("tipo") == "analise" and (ARTIFATOS / ("aula-%s.html" % slug)).is_file():
+            docs.append({"slug": slug, "titulo": item.get("titulo") or slug})
+    return docs
+
+
+def _html_docs(docs):
+    itens = "".join(
+        '<li class="tarefa"><p class="t-tema">%s</p><p class="t-acao">'
+        '<a href="aulas/%s.html" data-hub-aula="%s">abrir documento</a></p></li>'
+        % (_e(d["titulo"]), _e(d["slug"]), _e(d["slug"])) for d in docs)
+    return '<h2>Documentação</h2>\n<ol class="tarefas">%s</ol>' % itens
 
 
 def _acao(t):
@@ -591,7 +617,7 @@ def render_html(d):
         _sec("semana", _html_semana(d["semana"])),
         _sec("ritmo", _html_ritmo(d["ritmo"])),
         _sec("blocos", _html_blocos(d["blocos"])),
-    ])
+    ] + ([_sec("docs", _html_docs(d["docs"]))] if d.get("docs") else []))
     return ("<!DOCTYPE html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset=\"utf-8\">\n"
             "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n"
             "<title>%s</title>\n<style>%s</style>\n</head>\n<body>\n<div class=\"wrap\">\n"

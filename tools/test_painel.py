@@ -478,3 +478,24 @@ def test_acao_do_simulado_no_hub_e_atalho_e_fora_dele_e_texto():
     base = {"classe": "lista", "url_lista": "simulados/uerj/uerj_ad_2021_a.pdf"}
     assert 'data-hub-aba="questoes" data-hub-modo="simulados">resolver no hub</a>' in painel._acao(dict(base, no_hub=True))
     assert painel._acao(base) == '<span class="tenue">prova em PDF no computador</span>'
+
+
+def test_documentacao_lista_as_analises_do_quadro_com_atalho(db_sintetico, tmp_path, monkeypatch):
+    """s212 (pedido do operador em 03/10/2026): o bloco Documentacao do painel sai do registro do
+    quadro -- item `tipo: analise` com arquivo no disco -- e cada linha abre o documento no hub."""
+    import json as _json
+    (tmp_path / "aula-dossie.html").write_text("<title>x</title>", encoding="utf-8")
+    reg = tmp_path / "quadro.json"
+    reg.write_text(_json.dumps({"itens": {
+        "dossie": {"tipo": "analise", "titulo": "Dossiê da banca"},
+        "sem-arquivo": {"tipo": "analise", "titulo": "Fantasma"},
+        "aula-comum": {"tipo": "aula", "titulo": "Aula"}}}), encoding="utf-8")
+    monkeypatch.setattr(painel, "QUADRO", reg)
+    monkeypatch.setattr(painel, "ARTIFATOS", tmp_path)
+    assert painel.coletar()["docs"] == [{"slug": "dossie", "titulo": "Dossiê da banca"}]
+    pagina = painel.render_html(painel.coletar())
+    assert 'data-bloco="docs"' in pagina and "<h2>Documentação</h2>" in pagina
+    assert 'href="aulas/dossie.html" data-hub-aula="dossie"' in pagina
+    assert "Fantasma" not in pagina and ">Aula<" not in pagina
+    monkeypatch.setattr(painel, "QUADRO", tmp_path / "nao-existe.json")
+    assert 'data-bloco="docs"' not in painel.render_html(painel.coletar())    # sem registro, o bloco some

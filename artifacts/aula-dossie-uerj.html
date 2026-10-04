@@ -1,0 +1,323 @@
+<title>Dossiê UERJ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,380;9..144,480;9..144,600;9..144,680&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+/* layout: uma coluna de leitura (um so .wrap); cada secao = lede de 1 frase + topicos ou tabela; detalhe por bloco recolhido */
+:root{
+  --paper:#EFF3F0; --card:#FAFCFA; --sunk:#E2E9E4;
+  --ink:#18211C; --ink2:#4C5A52; --ink3:#7C8A82;
+  --line:rgba(24,33,28,.13); --line2:rgba(24,33,28,.26);
+  --teal:#1F6B5E; --teal-ink:#154A41; --teal-wash:#DCEBE5;
+  --carmine:#8E2F41; --carmine-ink:#6B2231; --carmine-wash:#F5E2E6;
+  --amber:#8A5A17; --amber-ink:#6B4610; --amber-wash:#F3E6CC;
+  --on:#FFFFFF;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#7E8C84;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  --on:#131A16;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#7E8C84;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  --on:#131A16;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);
+  font:16px/1.6 "Source Sans 3",-apple-system,"Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+h1,h2,h3{margin:0;font-family:Fraunces,Georgia,serif;font-weight:600;letter-spacing:-.01em;text-wrap:balance;line-height:1.16;color:var(--ink)}
+.wrap{max-width:760px;margin:0 auto;padding:0 24px 90px}
+@media(max-width:640px){.wrap{padding:0 16px 72px}}
+:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+strong{font-weight:600;color:var(--ink)}
+.mn{font-family:"IBM Plex Mono",ui-monospace,Consolas,monospace;font-variant-numeric:tabular-nums}
+
+.top{padding:44px 0 26px;border-bottom:1px solid var(--line2)}
+.eye{font:600 11px/1.3 "Source Sans 3";letter-spacing:.14em;text-transform:uppercase;color:var(--teal-ink);margin:0 0 13px}
+.top h1{font-size:clamp(28px,5vw,42px);font-weight:680;margin-bottom:14px}
+.top .sub{font-size:clamp(16px,2.2vw,17.5px);line-height:1.6;color:var(--ink2);margin:0}
+.fonte{margin:14px 0 0;font-size:13.6px;line-height:1.5;color:var(--ink3)}
+
+.sec{padding:34px 0;border-bottom:1px solid var(--line)}
+.sec:last-of-type{border-bottom:0}
+.kick{font:600 11px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);display:block;margin-bottom:5px}
+.sec h2{font-size:clamp(21px,3.2vw,26px);margin-bottom:12px}
+.lede{font-size:16.3px;line-height:1.6;color:var(--ink2);margin:0 0 14px;font-style:italic}
+ul.pt{margin:0 0 14px;padding-left:20px}
+ul.pt li{font-size:15.6px;line-height:1.58;color:var(--ink2);margin-bottom:7px}
+ul.pt li:last-child{margin-bottom:0}
+
+.tw{overflow-x:auto;margin:16px 0;border:1px solid var(--line2);background:var(--card)}
+table{border-collapse:collapse;width:100%;font-size:14.4px}
+th,td{text-align:left;vertical-align:top;padding:9px 12px;line-height:1.45}
+th{background:var(--sunk);font:600 11.5px "Source Sans 3";letter-spacing:.05em;text-transform:uppercase;color:var(--ink3)}
+td{color:var(--ink2);border-top:1px solid var(--line)}
+td:first-child{font-weight:600;color:var(--ink)}
+td.nw{white-space:nowrap}
+td.num{font-family:"IBM Plex Mono",ui-monospace,Consolas,monospace;font-variant-numeric:tabular-nums;white-space:nowrap}
+
+.vs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line2);border:1px solid var(--line2);margin:16px 0}
+.vs>div{background:var(--card);padding:13px 15px;min-width:0}
+.vs h3{font:700 11.5px "Source Sans 3";letter-spacing:.05em;text-transform:uppercase;margin:0 0 7px;color:var(--ink3)}
+.vs .a h3{color:var(--carmine-ink)}
+.vs .b h3{color:var(--teal-ink)}
+.vs ul{margin:0;padding-left:17px}
+.vs li{font-size:14.5px;line-height:1.5;color:var(--ink2);margin-bottom:4px}
+@media(max-width:640px){.vs{grid-template-columns:minmax(0,1fr)}}
+
+.key{margin:16px 0 0;padding:12px 16px;border-left:3px solid var(--teal);background:var(--teal-wash);font-size:15.2px;line-height:1.55;color:var(--ink)}
+
+/* as maldades: nome + peso na 1a linha, de onde vem e o gesto que desarma embaixo */
+.mals{display:flex;flex-direction:column;gap:1px;background:var(--line2);border:1px solid var(--line2)}
+.mal{background:var(--card);padding:13px 16px;min-width:0}
+.mal-h{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px;margin-bottom:4px}
+.mal-h strong{font-size:15.8px}
+.mal-h .mn{font-size:12.5px;font-weight:600;color:var(--carmine-ink)}
+.mal-h .onde{font-size:12.8px;color:var(--ink3)}
+.mal p{margin:0;font-size:15px;line-height:1.52;color:var(--ink2)}
+.mal .gesto{margin-top:5px;color:var(--teal-ink);font-weight:500}
+
+/* bloco a bloco: recolhido, um toque abre */
+.blks{display:flex;flex-direction:column;gap:8px}
+details.blk{border:1px solid var(--line2);background:var(--card)}
+details.blk summary{cursor:pointer;list-style:none;padding:12px 15px;min-height:44px;display:grid;grid-template-columns:44px minmax(0,1fr);gap:4px 10px;align-items:baseline}
+details.blk summary::-webkit-details-marker{display:none}
+details.blk summary .sg{font:600 12.5px "IBM Plex Mono",ui-monospace,Consolas,monospace;color:var(--teal-ink)}
+details.blk summary .rt{font-size:15.4px;font-weight:600;color:var(--ink);line-height:1.4}
+details.blk[open] summary{border-bottom:1px solid var(--line)}
+details.blk .in{padding:12px 15px 14px}
+details.blk h3{font:700 11.5px "Source Sans 3";letter-spacing:.05em;text-transform:uppercase;color:var(--ink3);margin:10px 0 6px}
+details.blk h3:first-child{margin-top:0}
+details.mais{margin-top:10px}
+details.mais summary{cursor:pointer;min-height:44px;display:flex;align-items:center;font:600 14px "Source Sans 3";color:var(--teal-ink)}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <p class="eye">Documentação · Banca</p>
+  <h1>Dossiê UERJ: anatomia e maldades da prova</h1>
+  <p class="sub">Como a banca monta a questão e de que material ela fabrica a alternativa errada.</p>
+  <p class="fonte">Duas lentes: a nossa dissecação das 6 provas de 2021 a 2026 (503 questões válidas, uma etiqueta por questão) e uma segunda análise independente de 2022 a 2026. Sem ano nem número de questão: as provas que faltam continuam valendo como simulado.</p>
+</header>
+
+<section class="sec">
+  <span class="kick">1 · Anatomia</span>
+  <h2>A prova em uma tela</h2>
+  <p class="lede">Cem questões, quatro alternativas, cinco blocos de vinte, sempre na mesma ordem.</p>
+  <div class="tw"><table>
+    <thead><tr><th scope="col">Bloco</th><th scope="col">Com paciente</th><th scope="col">Palavras</th><th scope="col">O que mais pede</th></tr></thead>
+    <tbody>
+      <tr><td class="nw">1 · CM</td><td class="num">98%</td><td class="num">79</td><td>diagnóstico, exame, tratamento</td></tr>
+      <tr><td class="nw">2 · CIR</td><td class="num">49%</td><td class="num">37</td><td>conceito, mecanismo, conduta</td></tr>
+      <tr><td class="nw">3 · GO</td><td class="num">75%</td><td class="num">49</td><td>conceito, conduta</td></tr>
+      <tr><td class="nw">4 · PED</td><td class="num">81%</td><td class="num">78</td><td>diagnóstico, conceito</td></tr>
+      <tr><td class="nw">5 · MFC</td><td class="num">59%</td><td class="num">60</td><td>conceito, conduta, prevenção</td></tr>
+    </tbody>
+  </table></div>
+  <ul class="pt">
+    <li><strong>Peso:</strong> 20% por bloco em todas as provas. Muda a subárea, nunca o peso.</li>
+    <li><strong>Relógio:</strong> 5 horas, 3 minutos por questão. CM abre e é o bloco mais lento; CIR é o curto e devolve tempo.</li>
+    <li><strong>Leitura crescendo:</strong> a mediana do enunciado subiu de 55 para 67 palavras entre 2022 e 2026.</li>
+    <li><strong>Letra:</strong> sem viés (A 124, B 126, C 134, D 119). A certa é a mais longa em 27% das vezes: a forma não entrega.</li>
+    <li><strong>Imagem:</strong> rara e só em GO (cardiotocografia, partograma, estática fetal). ECG e radiografia não apareceram.</li>
+    <li><strong>Anuladas:</strong> 17 em cinco provas, 7 delas na última. MFC lidera (6); CM não teve nenhuma.</li>
+    <li><strong>EXCETO e INCORRETA:</strong> 9 em 503. O risco é o automatismo, não a frequência.</li>
+  </ul>
+</section>
+
+<section class="sec">
+  <span class="kick">2 · O que decide</span>
+  <h2>Repertório exato pesa mais que raciocínio longo</h2>
+  <p class="lede">Fato, número de corte e norma decidem mais da metade da prova.</p>
+  <div class="tw"><table>
+    <thead><tr><th scope="col">O que decide a questão</th><th scope="col">Peso</th><th scope="col">Onde pesa</th></tr></thead>
+    <tbody>
+      <tr><td>Fato isolado (sabe ou não sabe)</td><td class="num">30%</td><td>CIR, MFC, GO</td></tr>
+      <tr><td>Quadro clássico reconhecido</td><td class="num">16%</td><td>PED, CM</td></tr>
+      <tr><td>Número de corte</td><td class="num">14%</td><td>todos os blocos</td></tr>
+      <tr><td>Um dado que exclui a vizinha</td><td class="num">12%</td><td>CM, PED</td></tr>
+      <tr><td>Mecanismo deduzido</td><td class="num">10%</td><td>todos os blocos</td></tr>
+      <tr><td>Norma ou diretriz</td><td class="num">9%</td><td>GO, MFC</td></tr>
+    </tbody>
+  </table></div>
+  <ul class="pt">
+    <li>Bate com a sua UERJ 2023: o que faltou foi cobertura, não refinamento.</li>
+    <li>Norma vale na versão do edital. Prova antiga treinada com regra antiga ensina a resposta errada.</li>
+  </ul>
+</section>
+
+<section class="sec">
+  <span class="kick">3 · As maldades</span>
+  <h2>De que é feita a alternativa errada</h2>
+  <p class="lede">O distrator da UERJ é conceitual: uma afirmação técnica deslocada, não pegadinha de redação.</p>
+  <div class="mals">
+    <div class="mal"><div class="mal-h"><strong>Doença vizinha</strong><span class="mn">21%</span><span class="onde">CM, PED</span></div>
+      <p>A entidade que divide quase todo o quadro e perde por um dado.</p>
+      <p class="gesto">Qual dado da vinheta a vizinha não explica?</p></div>
+    <div class="mal"><div class="mal-h"><strong>Metade certa</strong><span class="mn">20%</span><span class="onde">MFC, CM</span></div>
+      <p>Em par ou lista, um item certo carrega um errado. 28% das questões têm alternativa em par.</p>
+      <p class="gesto">Julgue cada item em separado. Em par, comece pelo segundo.</p></div>
+    <div class="mal"><div class="mal-h"><strong>Verdade fora do contexto</strong><span class="mn">15%</span><span class="onde">GO, CM, CIR</span></div>
+      <p>Conduta correta para a mesma doença em outra idade, outra idade gestacional, outro momento.</p>
+      <p class="gesto">Vale para este paciente, agora?</p></div>
+    <div class="mal"><div class="mal-h"><strong>Conceito trocado</strong><span class="mn">11%</span><span class="onde">MFC, CIR, PED</span></div>
+      <p>Atributos permutados entre duas entidades; direção invertida (hipo por hiper, sensível por específico).</p>
+      <p class="gesto">Escreva o par de definições antes de ler as opções.</p></div>
+    <div class="mal"><div class="mal-h"><strong>Fora de hora ou de outra gravidade</strong><span class="mn">10%</span><span class="onde">GO, CIR, PED</span></div>
+      <p>O passo de antes ou de depois no protocolo; a conduta do paciente mais grave ou mais leve.</p>
+      <p class="gesto">Situe o paciente na sequência e na gravidade antes das condutas.</p></div>
+    <div class="mal"><div class="mal-h"><strong>Classe vizinha</strong><span class="mn">8%</span><span class="onde">CIR, MFC</span></div>
+      <p>Grau, tipo ou nível ao lado na mesma régua; o número 2 do ranking no lugar do número 1.</p>
+      <p class="gesto">Ache o dado que separa as duas classes, não o que confirma a família.</p></div>
+    <div class="mal"><div class="mal-h"><strong>Plausível genérico</strong><span class="mn">6%</span><span class="onde">GO</span></div>
+      <p>Soa prudente e não está na regra.</p>
+      <p class="gesto">Em pergunta de norma, só o literal da norma.</p></div>
+    <div class="mal"><div class="mal-h"><strong>Número vizinho</strong><span class="mn">5%</span><span class="onde">MFC e todos</span></div>
+      <p>Prazo, dose, idade ou corte logo ao lado do certo.</p>
+      <p class="gesto">Número se decora exato, com unidade e público.</p></div>
+  </div>
+  <p class="key">Palavra absoluta ("todos", "somente", "independentemente") quase sempre está na errada. Confira o conteúdo mesmo assim: já foi gabarito.</p>
+</section>
+
+<section class="sec">
+  <span class="kick">4 · Leitura</span>
+  <h2>O que é isca e o que decide</h2>
+  <p class="lede">O dado que decide costuma ser o discreto. O chamativo costuma ser a isca.</p>
+  <div class="vs">
+    <div class="a"><h3>Isca</h3><ul>
+      <li>Comorbidade antiga (IC, etilismo, tabagismo).</li>
+      <li>O número mais alterado da vinheta.</li>
+      <li>Exame alterado fora do eixo da queixa.</li>
+      <li>O pedido do paciente ou da família.</li>
+      <li>A conduta já feita por outro médico.</li>
+    </ul></div>
+    <div class="b"><h3>Decide</h3><ul>
+      <li>Uma negação ou um "normal".</li>
+      <li>O valor logo abaixo ou acima do corte.</li>
+      <li>Tempo: dias de sintoma, de pós-operatório, idade gestacional.</li>
+      <li>Número pequeno: cm, mm, %, horas.</li>
+      <li>Palavra do comando: "inicial", "nesse momento".</li>
+    </ul></div>
+  </div>
+  <p class="key">Grife os cinco tipos da coluna da direita. É contra eles que a análise dos seus grifos confere cada erro.</p>
+</section>
+
+<section class="sec">
+  <span class="kick">5 · Bloco a bloco</span>
+  <h2>Como cada bloco pergunta</h2>
+  <div class="blks">
+    <details class="blk"><summary><span class="sg">CM</span><span class="rt">Vinheta longa; diagnóstico e conduta na mesma alternativa.</span></summary><div class="in">
+      <h3>Como é</h3><ul class="pt">
+        <li>Quase toda questão tem paciente; 40 das 104 trazem alternativa em par.</li>
+        <li>Doença vizinha é o distrator de 41 das 104.</li>
+        <li>Sem sinal de alarme, a certa é a conservadora.</li></ul>
+      <h3>Regras de leitura</h3><ul class="pt">
+        <li>Escreva o diagnóstico antes de ler as alternativas.</li>
+        <li>Todo número de laboratório tem um corte: aplique antes de interpretar.</li>
+        <li>Desconfie do número mais alterado; o normal ou o limítrofe decide.</li>
+        <li>Comorbidade antiga é isca até explicar o quadro atual.</li></ul></div></details>
+    <details class="blk"><summary><span class="sg">CIR</span><span class="rt">Metade é pergunta direta de duas linhas; muita ciência básica.</span></summary><div class="in">
+      <h3>Como é</h3><ul class="pt">
+        <li>Fato isolado decide 45 das 100; alternativa de uma ou duas palavras.</li>
+        <li>Cicatrização, resposta ao trauma, nutrição, pneumoperitônio, sódio: sem caso.</li>
+        <li>Em "mais frequente", a certa é o número 1 do livro; o distrator é o número 2.</li></ul>
+      <h3>Regras de leitura</h3><ul class="pt">
+        <li>Em régua (grau, tipo, estadiamento), ache o dado que separa da classe ao lado.</li>
+        <li>Escreva a direção do mecanismo (sobe ou desce) antes das opções.</li>
+        <li>"Inicial" e "primeiro passo" pedem o degrau de antes; o definitivo é o distrator.</li>
+        <li>Estável pede o passo menos invasivo; sinal de gravidade pede o mais agressivo.</li></ul></div></details>
+    <details class="blk"><summary><span class="sg">GO</span><span class="rt">Norma, número de corte e o próximo degrau.</span></summary><div class="in">
+      <h3>Como é</h3><ul class="pt">
+        <li>Fato, diretriz e corte decidem 69 das 101.</li>
+        <li>O distrator mais comum é a conduta certa da paciente vizinha.</li>
+        <li>Único bloco com figura.</li></ul>
+      <h3>Regras de leitura</h3><ul class="pt">
+        <li>Calcule a idade gestacional sempre que houver duas datas.</li>
+        <li>Procure "desejo de gestar", "laqueadura", "sexualmente ativa": esse dado escolhe a conduta.</li>
+        <li>Em Ginecologia, a certa investiga ou estadia; a errada já opera.</li>
+        <li>Pré-natal e rastreamento se respondem pela norma do Ministério da Saúde.</li></ul></div></details>
+    <details class="blk"><summary><span class="sg">PED</span><span class="rt">Quadro clássico e três vizinhas que quase encaixam.</span></summary><div class="in">
+      <h3>Como é</h3><ul class="pt">
+        <li>Bloco longo, o quarto da prova: chega com cansaço.</li>
+        <li>Doença ou agente vizinho em 34 das 100; as negativas da vinheta decidem.</li>
+        <li>Regra verdadeira transplantada para a idade errada.</li></ul>
+      <h3>Regras de leitura</h3><ul class="pt">
+        <li>Liste o diferencial e ache o dado que mata cada vizinha.</li>
+        <li>Confira toda conduta contra a idade exata.</li>
+        <li>Sem sinal de alarme, a conduta certa é a proporcional, quase sempre a conservadora.</li>
+        <li>Tratamento anterior que falhou é pista contra o diagnóstico que ele supunha.</li></ul></div></details>
+    <details class="blk"><summary><span class="sg">MFC</span><span class="rt">Clínica de consultório; premia quem intervém menos.</span></summary><div class="in">
+      <h3>Como é</h3><ul class="pt">
+        <li>Diabetes, hipertensão, idoso, rastreamento, comunicação. Lei e SUS são minoria.</li>
+        <li>A certa muitas vezes não pede o exame, não trata, não rotula.</li>
+        <li>Metade certa é o distrator de 38 das 98.</li></ul>
+      <h3>Regras de leitura</h3><ul class="pt">
+        <li>Antes das opções: há critério para rotular ou tratar?</li>
+        <li>Calcule a probabilidade pré-teste antes de olhar o resultado do exame.</li>
+        <li>A conduta narrada na vinheta é para julgar, não pista do caminho.</li>
+        <li>Em taxonomia (níveis de prevenção, violência, atributos), nomeie o critério que separa as caixas.</li></ul></div></details>
+  </div>
+</section>
+
+<section class="sec">
+  <span class="kick">6 · Repetição</span>
+  <h2>Temas que voltam e o ângulo cobrado</h2>
+  <p class="lede">A banca repete o tema e também o ângulo. Estudar o tema sem o ângulo rende metade.</p>
+  <div class="tw"><table>
+    <thead><tr><th scope="col">Tema</th><th scope="col">O ângulo</th></tr></thead>
+    <tbody>
+      <tr><td>Tuberculose (4 blocos)</td><td>Ativa x latente x contato; no HIV; na criança.</td></tr>
+      <tr><td>HIV e oportunistas</td><td>A próxima ação: profilaxia pelo CD4, momento da terapia.</td></tr>
+      <tr><td>Teste ergométrico e pré-teste</td><td>O exame era adequado? O resultado é falso?</td></tr>
+      <tr><td>Polifarmácia no idoso</td><td>Desprescrever; risco-benefício, não número de fármacos.</td></tr>
+      <tr><td>Citologia de colo</td><td>O próximo degrau pelo laudo, pela norma brasileira.</td></tr>
+      <tr><td>Vias biliares (CM e CIR)</td><td>Colangite: antibiótico e drenagem da via; exame inicial.</td></tr>
+    </tbody>
+  </table></div>
+  <details class="mais"><summary>Ver mais 12 temas</summary>
+  <div class="tw"><table>
+    <thead><tr><th scope="col">Tema</th><th scope="col">O ângulo</th></tr></thead>
+    <tbody>
+      <tr><td>Rastreamento</td><td>Quem não entra; números do programa.</td></tr>
+      <tr><td>Níveis de prevenção</td><td>Classificar o exemplo; a quaternária.</td></tr>
+      <tr><td>Sangramento pós-menopausa</td><td>Biópsia antes de qualquer tratamento.</td></tr>
+      <tr><td>Diabetes na gestação</td><td>Critérios do teste de tolerância, metas, complicações.</td></tr>
+      <tr><td>Sangramento da 2ª metade</td><td>Descolamento x placenta prévia e a complicação de cada um.</td></tr>
+      <tr><td>Pré-eclâmpsia</td><td>Classificar a gravidade; AAS no alto risco.</td></tr>
+      <tr><td>Choque e trauma</td><td>Classe do choque; ordem do atendimento; tamponamento x pneumotórax.</td></tr>
+      <tr><td>Ciência básica cirúrgica</td><td>Cicatrização, nutrição, pneumoperitônio, sódio.</td></tr>
+      <tr><td>Nefrótica e ITU na criança</td><td>Edema com pressão normal; a ITU como porta para outra pergunta.</td></tr>
+      <tr><td>Asma</td><td>O próximo degrau, que muda pela faixa etária.</td></tr>
+      <tr><td>Líquor</td><td>Glicose e celularidade separam o agente.</td></tr>
+      <tr><td>Cálcio, fósforo e PTH</td><td>Ler o trio para dar a causa ou a conduta.</td></tr>
+    </tbody>
+  </table></div></details>
+  <p class="key">A banca clona a vinheta de um ano para o outro e troca uma variável: a idade, a presença do útero, "mais sensível" por "mais específico". Quem decorou a resposta do ano anterior erra.</p>
+</section>
+
+<section class="sec">
+  <span class="kick">7 · Treino</span>
+  <h2>O que muda daqui até a prova</h2>
+  <ul class="pt">
+    <li><strong>Cobertura primeiro.</strong> Fato, corte e norma decidem metade: avançar a trilha rende mais que refinar tema já visto.</li>
+    <li><strong>Vizinha e dado que exclui.</strong> Antes de marcar, nomeie a vizinha e o dado que a derruba.</li>
+    <li><strong>Par item a item.</strong> Verdadeiro ou falso em cada metade; comece pela segunda.</li>
+    <li><strong>Grifo com critério.</strong> Negação, corte, tempo, número pequeno, palavra do comando.</li>
+    <li><strong>Relógio por bloco.</strong> Nos simulados de 100, anote no primeiro minuto o horário de saída de cada bloco.</li>
+  </ul>
+</section>
+</div>

@@ -137,6 +137,19 @@ Formulação do usuário em 16/09/2026: *"Quero que a análise das questões pas
 - **Régua F93 inalterada (§0):** até ~8 erros o principal analisa e renderiza; acima disso, **um** subagente por bloco com `model` explícito, retorno <= 3k + arquivo, e todo número/fonte load-bearing re-medido pelo principal antes de entrar na página.
 - **Gestão de qualidade dos cards é parte do rito:** cada card novo passa pelo teste de regenerabilidade antes de `insert`; card que surgir defeituoso no DRENAR vai para a fila de reforja com motivo (`reforja.py`), nunca é "consertado de cabeça" no chat.  <!-- NAO-VERIFICAVEL: o teste de regenerabilidade e semantico; o writer gateia FORMA (validar_card), nao merito (revisar: 2027-03-31) -->
 
+### 3.4 Grifos: o registro da atenção (pedido do usuário, s212)
+
+Formulação do usuário em 03/10/2026: *"precisamos aproveitar os blocos destacados pelo aluno durante a resolução de questões, para compor a análise metacognitiva do erro/questão."* O grifo é o único registro do que ele leu como relevante ANTES de marcar -- evidência de atenção, anterior ao gabarito. Insumo: os `grifados` do `emed_banco.py --erros` (texto, por enunciado e por letra).
+
+- **Toda questão errada ou não-sólida é lida contra o discriminador** -- a `chave` do elo `identificar`; em simulado sem cadeia cunhada, a comporta (§3.3):  <!-- NAO-VERIFICAVEL: leitura do agente na sessao, sem rastro estrutural (revisar: 2027-03-31) -->
+  - **grifou o discriminador e errou** = viu e não converteu: a quebra está no elo seguinte (`recordar` / `descartar`) ou na execução; nunca card de identificação (`feedback_discriminador_identificado_nao_usado`).
+  - **grifou outro dado e não o discriminador** = atenção capturada: o trecho grifado é a isca (número, fármaco, achado modal) e entra nomeado na armadilha.
+  - **grifou trecho de alternativa** = onde ele pesou a decisão; com as `riscadas`, fecha o par da dúvida.
+  - **não grifou nada** = sem evidência de atenção: nada se infere da ausência.
+- **O grifo confirma, não diagnostica** (régua da s211): a declaração por elo segue sendo o dado primário. Grifo que contradiz a declaração (elo `identificar` declarado `Não` com o discriminador grifado; declarado `Sim` sem grifo nenhum perto dele) vai para `conflitos` e vira pergunta de 1 linha -- nunca correção silenciosa.  <!-- NAO-VERIFICAVEL: ato do agente na sessao, sem rastro estrutural (revisar: 2027-03-31) -->
+- **Na Autópsia (§3.3)** cada questão carrega a linha "Grifou:" (os trechos, na ordem do texto) logo depois do enunciado, e a página fecha com o acumulado do bloco: erradas com o discriminador grifado x não grifado -- a medida de leitura x conversão.
+- **Limite declarado:** o cruzamento grifo x discriminador é leitura do agente; a medida determinística (trecho-âncora por elo na Solução v3, conferido por sobreposição de offsets) não existe ainda.
+
 ---
 
 ## 4. O que Extrair para o Resumo

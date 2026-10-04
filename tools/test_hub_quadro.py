@@ -131,10 +131,13 @@ def test_registro_real_so_com_as_aulas_em_aberto_e_ligadas_ao_plano():
     """s195: s17, cancer-de-mama, hernias e autopsia foram para artifacts/arquivo/ e sairam do
     registro; s204: raciocinio-diagnostico (tarefa #877 concluida por leitura) tambem. Restam
     dmg e topicos-pediatria em aberto, ligadas as tarefas do plano; s206: entra
-    prevencao-quaternaria, que CUMPRE a tarefa custom #875 (tarefa_id)."""
+    prevencao-quaternaria, que CUMPRE a tarefa custom #875 (tarefa_id); s212: entra dossie-uerj
+    (tipo analise), o documento do bloco Documentacao do painel."""
     reg = hub.ler_quadro(ROOT / hub.QUADRO_REG)
     rds = {k for k, v in reg.items() if v["tipo"] == "revisao"}
-    assert set(reg) - rds == {"dmg", "topicos-pediatria", "prevencao-quaternaria"}
+    docs = {k for k, v in reg.items() if v["tipo"] == "analise"}
+    assert docs == {"dossie-uerj"}
+    assert set(reg) - rds - docs == {"dmg", "topicos-pediatria", "prevencao-quaternaria"}
     assert all(k.startswith("rd-") for k in rds), "s210: revisao direcionada = slug rd-*"
     assert reg["dmg"]["tarefas"] == [26, 40] and reg["topicos-pediatria"]["tarefas"] == [96, 100]
     assert reg["prevencao-quaternaria"]["tarefa_id"] == 875

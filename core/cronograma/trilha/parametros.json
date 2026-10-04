@@ -1,6 +1,6 @@
 {
  "_doc": "PARAMETROS do gerador da trilha da Fase 1 (tools/trilha.py) -- a ESTRATEGIA como dado (s189, spec trilha-autoridade-unica; valores da s188). Mudar a estrategia = editar AQUI (ou a camada manual custom.json) + `python tools/trilha.py --gravar` + `python tools/plano.py --semear --dry-run` -> `--apply --expect N`. NUNCA editar o plano_trilha.json: ele e SAIDA. piso/teto = fracao do orcamento de listas (soma de cap_listas) por bloco CM/CIR/GO/PED; bloco = o bloco em que a UERJ cobra o tema. peso_edicao: 2021-2022 valem 0,7 (formato 60q, mais antigo). mfc_para_emed: tema MFC-clinica (fora do catalogo EMED) -> tema EMED cuja LISTA cobre o conteudo. teto_sessoes: aulas-base de tema SEM lista no EMED por semana. `entrada` = os arquivos FIXADOS que o gerador le (entrada + parametros + custom + codigo = saida).",
- "versao": "2026-09-18 (s188; gerador trazido para o repo na s189)",
+ "versao": "2026-10-03 (s212: rota recalculada -- S2 e S3 sem capacidade de listas, a fila inteira redistribuida por valor em S4-S6 e as provas UERJ uma semana adiante; orcamento de listas igual, 2545; valores da s188, gerador no repo desde a s189)",
  "fase1_exclusiva": true,
  "calendario": {
   "1": {
@@ -34,20 +34,20 @@
  },
  "cap_listas": {
   "1": 45,
-  "2": 440,
-  "3": 440,
-  "4": 400,
-  "5": 540,
-  "6": 540,
-  "7": 140
+  "2": 0,
+  "3": 0,
+  "4": 790,
+  "5": 640,
+  "6": 870,
+  "7": 200
  },
  "simulados_uerj": {
   "1": 2023,
   "2": 2021,
-  "3": 2022,
-  "4": 2024,
-  "5": 2025,
-  "6": 2026
+  "4": 2022,
+  "5": 2024,
+  "6": 2025,
+  "7": 2026
  },
  "bloco_de_area": {
   "Preventiva": "MFC",
@@ -77,10 +77,8 @@
   "Rastreamento (criterios e programas)": "Medicina de Família e Comunidade"
  },
  "teto_sessoes": {
-  "2": 2,
-  "3": 2,
-  "4": 2,
-  "5": 3,
+  "4": 4,
+  "5": 4,
   "6": 3
  },
  "entrada": {

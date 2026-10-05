@@ -63,3 +63,8 @@ Total ~3,24 M tokens em 12 filhos (todos Opus).
 - O publish de arquivo gerado exige ler o arquivo inteiro: `index.html` = 313 KB (~90 mil tokens) a cada publish que muda o lote ou o quadro. É o gargalo real do protótipo (ele perguntou o limite do artifact).
 - `cobertura_conhecimento.py` ainda chama de "semana corrente" a S17 da grade antiga, não a S4 do plano.
 - `banco-emed.md` §Fronteiras e a memória do hub citam teto de 5.000 docs; a ferramenta informa 25.000.
+
+## Pós-fecho (05/10, madrugada)
+
+- **Cards:** lote `2026-10-04a` drenado (150/150) e gravado: `--record-lote` dry-run -> `--apply --expect 128` (104x4, 7x3, 11x2, 6x1) + 22 marcas de reforja ("Card longo" na maioria); revlog 3886 -> 4014. Ele pediu: *"fiz os 150 cards de hoje, mas contabilize como 04.10, pois comecei ontem"*. 70 notas caíram depois de 00h; o FSRS guarda o horário real (não reescrevemos timestamp); a contagem do dia segue a decisão dele no export de 05/10 (`--limit 150`). Observação para a próxima RD: 104 de 128 com nota 4 ("sem esforço"), quando a régua v2 espera o 3 como normal -- conferir com ele se o 4 está sendo usado como "lembrei".
+- **Produto:** *"precisamos manter a rastreabilidade sobre todos eles, para não perdermos do roadmap [...] precisamos fortalecer e muito a gestão de produto e para isso o ai-eng será fundamental"*. Criado `docs/BACKLOG-PRODUTO.md` (P01-P12 pedidos dele, E01-E07 dívida) e o handoff `~/ai-eng/HANDOFF-MEDHUB-produto-2026-10-05.md` (P08 desconexão dashboard x banco x hub, P09 dia de estudo x relógio, E01 gargalo do publish). HANDOFF aponta o backlog no ABRIR A s215.

@@ -1,0 +1,496 @@
+<title>Embriologia, Vulva e Vagina</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,480;9..144,600;9..144,680&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F2F1F2; --card:#FCFBFC; --sunk:#E7E4E8;
+  --ink:#1D1A1F; --ink2:#524C56; --ink3:#837C87;
+  --line:rgba(29,26,31,.13); --line2:rgba(29,26,31,.26);
+  --teal:#1F6B5E; --teal-ink:#154A41; --teal-wash:#DCEBE5;
+  --plum:#6A3D73; --plum-ink:#4F2B57; --plum-wash:#ECE0EF;
+  --carmine:#8E2F41; --carmine-ink:#6B2231; --carmine-wash:#F5E2E6;
+  --amber:#8A5A17; --amber-ink:#6B4610; --amber-wash:#F3E6CC;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#161418; --card:#1F1C21; --sunk:#29252C;
+  --ink:#EEEAF0; --ink2:#B9B1BD; --ink3:#888090;
+  --line:rgba(238,234,240,.14); --line2:rgba(238,234,240,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --plum:#C9A2D2; --plum-ink:#DCC0E3; --plum-wash:#33263A;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#161418; --card:#1F1C21; --sunk:#29252C;
+  --ink:#EEEAF0; --ink2:#B9B1BD; --ink3:#888090;
+  --line:rgba(238,234,240,.14); --line2:rgba(238,234,240,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --plum:#C9A2D2; --plum-ink:#DCC0E3; --plum-wash:#33263A;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font:16px/1.6 "Source Sans 3",-apple-system,"Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+h1,h2,h3{margin:0;font-family:Fraunces,Georgia,serif;font-weight:600;letter-spacing:-.01em;text-wrap:balance;line-height:1.15;color:var(--ink)}
+.wrap{max-width:780px;margin:0 auto;padding:0 24px 90px}
+@media(max-width:640px){.wrap{padding:0 16px 70px}}
+:focus-visible{outline:2px solid var(--plum);outline-offset:2px}
+a{color:var(--plum-ink)}
+strong{font-weight:600;color:var(--ink)}
+
+.top{padding:46px 0 26px;border-bottom:1px solid var(--line2)}
+.eye{font:600 11px/1.3 "Source Sans 3";letter-spacing:.12em;text-transform:uppercase;color:var(--plum-ink);margin:0 0 14px}
+.top h1{font-size:clamp(30px,6vw,46px);font-weight:680;margin-bottom:14px}
+.top .sub{font-size:17px;line-height:1.55;color:var(--ink2);margin:0 0 20px}
+.stats{display:flex;gap:20px;flex-wrap:wrap}
+.stat{display:flex;flex-direction:column;gap:2px;min-width:0}
+.stat b{font:600 22px/1 "IBM Plex Mono";color:var(--plum-ink);font-variant-numeric:tabular-nums}
+.stat span{font-size:11.5px;color:var(--ink3)}
+
+.nav{display:flex;flex-wrap:wrap;gap:6px;padding:20px 0 4px}
+.nav a{font-size:13px;text-decoration:none;color:var(--ink2);border:1px solid var(--line2);border-radius:2px;padding:4px 9px;min-width:0}
+.nav a:hover{color:var(--ink);border-color:var(--plum)}
+
+.ato{margin:44px 0 0;padding:14px 16px;background:var(--plum-wash);border-left:3px solid var(--plum)}
+.ato span{font:700 10.5px "Source Sans 3";letter-spacing:.12em;text-transform:uppercase;color:var(--plum-ink);display:block;margin-bottom:3px}
+.ato h2{font-size:clamp(22px,4vw,28px)}
+
+.degrau{padding:34px 0;border-bottom:1px solid var(--line)}
+.dhead{display:flex;gap:14px;align-items:flex-start;margin-bottom:12px}
+.dnum{flex-shrink:0;width:40px;height:40px;border:1.5px solid var(--plum);border-radius:50%;display:flex;align-items:center;justify-content:center;font:600 15px "IBM Plex Mono";color:var(--plum-ink)}
+.dtitle{min-width:0;padding-top:3px}
+.dtitle h3{font-size:clamp(19px,3.4vw,24px)}
+.lede{font-size:16px;line-height:1.55;color:var(--ink2);margin:0 0 14px;font-style:italic}
+.prose ul{margin:0 0 12px;padding-left:20px}
+.prose li{font-size:15.4px;line-height:1.55;color:var(--ink2);margin-bottom:6px}
+.prose li:last-child{margin-bottom:0}
+
+.banca,.fonte{margin:16px 0;padding:13px 16px}
+.banca{border-left:3px solid var(--amber);background:var(--amber-wash)}
+.fonte{border-left:3px solid var(--teal);background:var(--teal-wash)}
+.albl{font:700 10.5px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px}
+.banca .albl{color:var(--amber-ink)}
+.fonte .albl{color:var(--teal-ink)}
+.banca p,.fonte p{font-size:15px;line-height:1.55;color:var(--ink);margin:0}
+
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line2);border:1px solid var(--line2);margin:16px 0}
+.vs>div{background:var(--card);padding:12px 14px;min-width:0}
+.vs h5{font:700 11.5px "Source Sans 3";letter-spacing:.04em;text-transform:uppercase;margin:0 0 6px}
+.vs .a h5{color:var(--carmine-ink)}
+.vs .b h5{color:var(--teal-ink)}
+.vs ul{margin:0;padding-left:17px}
+.vs li{font-size:14.4px;line-height:1.5;color:var(--ink2);margin-bottom:4px}
+@media(max-width:560px){.vs{grid-template-columns:1fr}}
+
+.crit{border:1px solid var(--line2);margin:16px 0;background:var(--card)}
+.crit .row{display:grid;grid-template-columns:150px minmax(0,1fr);gap:12px;padding:9px 13px;font-size:14.2px}
+.crit .row+.row{border-top:1px solid var(--line)}
+.crit .row>*{min-width:0}
+.crit .k{font-weight:600;color:var(--plum-ink)}
+.crit .v{color:var(--ink2);line-height:1.48}
+.crit.hd .row:first-child{background:var(--sunk)}
+.crit.hd .row:first-child>*{font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink3);font-weight:600}
+.crit.c3 .row{grid-template-columns:118px minmax(0,1fr) minmax(0,1fr)}
+.crit.c4 .row{grid-template-columns:104px repeat(3,minmax(0,1fr))}
+@media(max-width:560px){
+  .crit .row{grid-template-columns:1fr;gap:2px}
+  .crit.c3 .row{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:4px 12px}
+  .crit.c3 .row .k{grid-column:1 / -1}
+  .crit.c3.hd .row:first-child .k{display:none}
+  .crit.c4 .row{grid-template-columns:1fr;gap:3px}
+  .crit.c4.hd .row:first-child{display:none}
+  .crit.c4 .v[data-l]::before{content:attr(data-l) ": ";font-weight:700;color:var(--ink)}
+}
+
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:16px 0}
+.flow span{background:var(--card);border:1px solid var(--line2);padding:6px 10px;font-size:14px;line-height:1.3;color:var(--ink);min-width:0}
+.flow span small{display:block;font-size:12px;color:var(--ink3)}
+.flow i{font:600 13px "IBM Plex Mono";font-style:normal;color:var(--plum-ink)}
+
+details.ref{margin:16px 0;border:1px solid var(--line2);background:var(--card)}
+details.ref>summary{cursor:pointer;list-style:none;padding:11px 14px;font:600 13.5px "Source Sans 3";color:var(--plum-ink);display:flex;gap:8px}
+details.ref>summary::-webkit-details-marker{display:none}
+details.ref>summary::before{content:"+";font:600 15px "IBM Plex Mono";width:14px;flex-shrink:0}
+details.ref[open]>summary::before{content:"-"}
+details.ref .refbody{padding:0 14px 12px}
+details.ref .refbody ul{margin:0;padding-left:18px}
+details.ref .refbody li{font-size:14px;line-height:1.5;color:var(--ink2);margin-bottom:4px}
+details.ref .crit{margin:4px 0 6px}
+
+.synth{background:var(--card);border:1px solid var(--line2);padding:26px 22px;margin-top:44px}
+@media(max-width:640px){.synth{padding:20px 16px}}
+.synth h2{font-size:23px;margin-bottom:6px}
+.synth .note{font-size:14px;color:var(--ink3);margin:0 0 14px}
+.trig{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1px;background:var(--line2);border:1px solid var(--line2)}
+.trig div{background:var(--sunk);padding:11px 13px;min-width:0}
+.trig .tk{font:700 11px "IBM Plex Mono";color:var(--plum-ink);display:block;margin-bottom:3px}
+.trig .tv{font-size:13.8px;line-height:1.45;color:var(--ink2)}
+
+.synth.arm{border-color:var(--carmine);border-left:3px solid var(--carmine)}
+.synth.arm h2{color:var(--carmine-ink)}
+.synth.arm h2::before{content:"";display:inline-block;width:12px;height:12px;border-radius:50%;background:var(--carmine);margin-right:10px;vertical-align:2px}
+ol.arml{margin:0;padding-left:24px}
+ol.arml li{font-size:15px;line-height:1.52;color:var(--ink2);margin-bottom:9px}
+ol.arml li::marker{font:600 13px "IBM Plex Mono";color:var(--carmine-ink)}
+ol.arml a{font:600 11.5px "IBM Plex Mono";text-decoration:none;color:var(--ink3);margin-left:4px}
+
+footer{margin-top:50px;padding-top:18px;border-top:1px solid var(--line2)}
+footer p{font-size:12.3px;color:var(--ink3);margin:0 0 7px;line-height:1.5}
+code{font-family:"IBM Plex Mono",Consolas,monospace;font-size:11.5px;background:var(--sunk);padding:1px 4px;border-radius:2px;word-break:break-all}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <p class="eye">MedHub · Aula-base · GO · tarefa #590</p>
+  <h1>Embriologia, vulva e vagina</h1>
+  <p class="sub">Do embrião ao câncer em uma escada só. Tema de pouca frequência na prova, mas que poucos acertam: meia dúzia de regras resolve quase todas as questões.</p>
+  <div class="stats">
+    <div class="stat"><b>2</b><span>ductos no embrião</span></div>
+    <div class="stat"><b>3</b><span>líquens vulvares</span></div>
+    <div class="stat"><b>2</b><span>vias do câncer</span></div>
+    <div class="stat"><b>13</b><span>degraus</span></div>
+  </div>
+</header>
+
+<nav class="nav" aria-label="Atalhos">
+  <a href="#d0">Embriologia</a><a href="#d1">Derivados</a><a href="#d2">Malformações</a><a href="#d3">Anatomia</a>
+  <a href="#d5">Vulva normal</a><a href="#d6">Líquens</a><a href="#d8">Bartholin</a><a href="#d9">Condiloma</a>
+  <a href="#d10">NIV</a><a href="#d11">Câncer vulva</a><a href="#d12">Vagina</a><a href="#gat">Gatilhos</a><a href="#arm">Armadilhas</a>
+</nav>
+
+<div class="ato"><span>Ato I</span><h2>O normal: embrião e anatomia</h2></div>
+
+<section class="degrau" id="d0">
+  <div class="dhead"><span class="dnum">0</span><div class="dtitle"><h3>Dois ductos e um interruptor</h3></div></div>
+  <p class="lede">Todo embrião tem os dois pares de ductos. O testículo decide quem fica; sem testículo, o caminho feminino acontece sozinho.</p>
+  <div class="prose"><ul>
+    <li>Sexo genético na fertilização: XX ou XY. No Y, o <strong>gene SRY</strong> faz a proteína TDF (fator determinante do testículo), que transforma a gônada em testículo.</li>
+    <li>Os dois sexos têm ductos de <strong>Wolff</strong> (mesonéfricos) e de <strong>Müller</strong> (paramesonéfricos). Mnemônico do curso: Müller lembra mulher.</li>
+    <li>XX: sem hormônio antimülleriano (HAM), Müller se desenvolve. Sem testosterona, Wolff regride e sobra só como túbulos vestigiais.</li>
+    <li>A diferenciação feminina <strong>não depende dos hormônios do ovário</strong>. A masculina depende do testículo.</li>
+  </ul></div>
+  <div class="vs">
+    <div class="b"><h5>Sertoli -&gt; HAM (6ª semana)</h5><ul>
+      <li>Faz Müller regredir no menino.</li>
+      <li>Ajuda o testículo a descer para a bolsa escrotal.</li></ul></div>
+    <div class="a"><h5>Leydig -&gt; testosterona (8ª semana)</h5><ul>
+      <li>Mantém Wolff: epidídimo, canal deferente, vesícula seminal, ducto ejaculatório.</li>
+      <li>Masculiniza a genitália externa.</li></ul></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Mnemônico da apostila: Sertol<strong>i</strong> termina em vogal, <strong>A</strong>ntimülleriano começa com vogal. Leydi<strong>g</strong> termina em consoante, <strong>T</strong>estosterona começa com consoante.</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="d1">
+  <div class="dhead"><span class="dnum">1</span><div class="dtitle"><h3>O que vira o quê</h3></div></div>
+  <p class="lede">Três fontes montam o trato feminino: Müller faz a parte alta, o seio urogenital a parte baixa, o tubérculo e as pregas fazem a vulva.</p>
+  <div class="crit hd">
+    <div class="row"><span class="k">Origem</span><span class="v">Derivado na mulher</span></div>
+    <div class="row"><span class="k">Müller, porção cranial</span><span class="v">Tubas uterinas</span></div>
+    <div class="row"><span class="k">Müller, porção caudal</span><span class="v">Os dois fundem na linha média: <strong>útero e vagina superior</strong>. O septo da fusão é reabsorvido por volta de 20 semanas</span></div>
+    <div class="row"><span class="k">Seio urogenital</span><span class="v"><strong>Vagina inferior</strong>, uretra, bexiga (porção cefálica), <strong>glândulas de Bartholin e de Skene</strong></span></div>
+    <div class="row"><span class="k">Tubérculo genital</span><span class="v">Clitóris (forma-se na 5ª semana)</span></div>
+    <div class="row"><span class="k">Pregas urogenitais</span><span class="v">Pequenos lábios (as pregas não se fundem)</span></div>
+    <div class="row"><span class="k">Eminências labiais</span><span class="v">Grandes lábios</span></div>
+  </div>
+  <div class="fonte"><div class="albl">Divergência entre apostilas do EMED</div>
+    <p>Esta apostila diz que Müller forma o <strong>terço superior</strong> da vagina; a de Amenorreia, do mesmo curso, diz <strong>2/3 superiores</strong>. Âncora segura: parte de cima = Müller; parte de baixo = seio urogenital.</p></div>
+</section>
+
+<section class="degrau" id="d2">
+  <div class="dhead"><span class="dnum">2</span><div class="dtitle"><h3>Malformações müllerianas</h3></div></div>
+  <p class="lede">Cada malformação é uma etapa que falhou: formar o ducto, fundir os dois, reabsorver o septo ou canalizar até o seio urogenital.</p>
+  <div class="prose"><ul>
+    <li>Três grupos: agenesia, defeitos de <strong>fusão lateral</strong> (o grupo mais comum) e defeitos de fusão vertical.</li>
+  </ul></div>
+  <div class="crit c3 hd">
+    <div class="row"><span class="k">Malformação</span><span class="v">Etapa que falhou</span><span class="v">Marca</span></div>
+    <div class="row"><span class="k">Agenesia</span><span class="v">Formação dos ductos</span><span class="v">Cornos rudimentares ou nenhum útero. Com agenesia da vagina superior = <strong>Mayer-Rokitansky-Küster-Hauser (MRKH)</strong></span></div>
+    <div class="row"><span class="k">Septado</span><span class="v">Fundiu, mas o septo <strong>não foi reabsorvido</strong></span><span class="v"><strong>A malformação uterina mais comum</strong>; parcial ou completo</span></div>
+    <div class="row"><span class="k">Arqueado</span><span class="v">Reabsorção quase completa</span><span class="v">Fundo normal com leve convexidade ou pequeno septo</span></div>
+    <div class="row"><span class="k">Unicorno</span><span class="v">Um dos ductos não se desenvolve</span><span class="v">Com ou sem corno rudimentar</span></div>
+    <div class="row"><span class="k">Bicorno</span><span class="v">Fusão <strong>incompleta</strong></span><span class="v">Duas cavidades que se comunicam, <strong>um colo</strong></span></div>
+    <div class="row"><span class="k">Didelfo</span><span class="v">Fusão <strong>ausente</strong></span><span class="v">Dois cornos separados, cada um com cavidade e <strong>colo próprio</strong></span></div>
+    <div class="row"><span class="k">Septo vaginal</span><span class="v">Fusão vertical: com o seio urogenital ou recanalização</span><span class="v">O septo <strong>transverso</strong> é o que causa amenorreia</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>A figura da apostila traz ainda a malformação ligada ao dietilestilbestrol (DES), a mesma droga que reaparece no degrau 12.</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="d3">
+  <div class="dhead"><span class="dnum">3</span><div class="dtitle"><h3>Ovário, tuba e útero</h3></div></div>
+  <p class="lede">A anatomia que cai é a que foge da regra: o sangue do ovário, as partes da tuba, a posição do útero.</p>
+  <div class="prose"><ul>
+    <li><strong>Ovário</strong> vem de três folhetos (ectoderma, endoderma, mesoderma): por isso faz gameta e hormônio. É intraperitoneal; o peritônio vizinho é o mesovário.</li>
+    <li>Preso ao útero pelo <strong>ligamento útero-ovárico</strong> (próprio do ovário) e à parede pélvica pelo <strong>infundíbulo-pélvico</strong>, que leva vasos e nervos ovarianos.</li>
+    <li>Artéria do ovário: <strong>ovariana, ramo direto da aorta</strong>, mais o ramo ovariano da uterina.</li>
+    <li>Veias do ovário: a <strong>direita drena na veia cava inferior</strong>; a <strong>esquerda, na veia renal esquerda</strong>.</li>
+    <li><strong>Tuba</strong>, na borda superior do ligamento largo. De dentro para fora: intramural (intersticial), istmo, ampola, infundíbulo com as fímbrias que captam o oócito.</li>
+    <li><strong>Útero</strong>: colo, istmo, corpo e fundo. Só o colo se palpa no toque. Fora da gestação, cerca de 7 cm x 5 cm.</li>
+    <li>Posição habitual: <strong>anteversoflexão</strong>. Versão = corpo inclinado para a bexiga; flexão = ângulo entre corpo e colo.</li>
+  </ul></div>
+  <div class="banca"><div class="albl">Ângulo da banca</div>
+    <p>A apostila destaca a vascularização do ovário como cobrada justamente por ser diferente do resto da pelve.</p></div>
+</section>
+
+<section class="degrau" id="d4">
+  <div class="dhead"><span class="dnum">4</span><div class="dtitle"><h3>Do vaso pélvico ao endométrio</h3></div></div>
+  <p class="lede">A pelve vive da ilíaca interna; o ovário é a exceção que vem da aorta. Dentro do útero, os ramos descem em cascata até o endométrio.</p>
+  <div class="flow" aria-label="Cascata arterial do útero">
+    <span>A. uterina<small>ramo da ilíaca interna</small></span><i>-&gt;</i>
+    <span>Arqueadas<small>miométrio</small></span><i>-&gt;</i>
+    <span>Radiais<small>em ângulo reto</small></span><i>-&gt;</i>
+    <span>Basais<small>camada basal</small></span><i>e</i>
+    <span>Espiraladas<small>camada funcional</small></span>
+  </div>
+  <div class="prose"><ul>
+    <li>O útero também recebe a artéria ovariana (aorta).</li>
+    <li>Ilíaca interna: nasce na bifurcação da ilíaca comum e corre perto do ureter. Dá um ramo anterior e um posterior.</li>
+    <li>Ramos <strong>viscerais</strong> nutrem bexiga, útero, vagina e reto. Ramos <strong>parietais</strong> nutrem músculo, fáscia, pele e subcutâneo.</li>
+  </ul></div>
+  <details class="ref"><summary>A figura da pelve (p8, sem texto)</summary><div class="refbody"><ul>
+    <li>Destaca a <strong>a. ovariana</strong> e a <strong>a. uterina (ramo ascendente)</strong>.</li>
+    <li>Mostra também: vesicais superiores, vesical inferior, vaginal, retal média, pudenda interna, glúteas superior e inferior, obturatória, iliolombar, sacral lateral.</li></ul></div></details>
+</section>
+
+<section class="degrau" id="d5">
+  <div class="dhead"><span class="dnum">5</span><div class="dtitle"><h3>Vulva normal e vulvoscopia</h3></div></div>
+  <p class="lede">Antes de chamar de doença, saiba o que é normal: duas variantes benignas aparecem como pegadinha.</p>
+  <div class="prose"><ul>
+    <li>Estruturas: monte pubiano, grandes e pequenos lábios, clitóris, vestíbulo, óstios da uretra e da vagina, carúncula himenal, fossa navicular, glândulas de Skene (parauretrais) e de Bartholin (vestibulares maiores, no vestíbulo posterior).</li>
+    <li>Revestimento: escamoso estratificado <strong>queratinizado</strong> nos grandes e pequenos lábios; não queratinizado no restante.</li>
+    <li>Artérias pudendas externas e internas. Veias: dorsal do clitóris (tecido erétil) e pudendas.</li>
+    <li>Linfa: linfonodos sacrais, ilíacos internos, inguinais e ilíacos externos.</li>
+    <li>Variantes normais: <strong>micropapilomatose vestibular</strong> (diferencial do condiloma) e <strong>grânulos de Fordyce</strong> (pequenas glândulas sebáceas).</li>
+    <li><strong>Vulvoscopia</strong> = colposcópio e reagentes na vulva. Indicada só na suspeita de lesão induzida pelo papilomavírus humano (HPV).</li>
+    <li>Teste de Collins (azul de toluidina a 1%) não é mais preconizado: falso-positivo demais.</li>
+  </ul></div>
+</section>
+
+<div class="ato"><span>Ato II</span><h2>A vulva doente</h2></div>
+
+<section class="degrau" id="d6">
+  <div class="dhead"><span class="dnum">6</span><div class="dtitle"><h3>Os três líquens</h3></div></div>
+  <p class="lede">Dermatose vulvar na prova é líquen, sobretudo o escleroso. Os outros dois entram como diferencial: separe pela cor, pela erosão e pelo ato de coçar.</p>
+  <div class="crit c4 hd">
+    <div class="row"><span class="k">Atributo</span><span class="v">Escleroso</span><span class="v">Plano</span><span class="v">Simples crônico</span></div>
+    <div class="row"><span class="k">Quem</span>
+      <span class="v" data-l="Escleroso">Meninas pré-púberes e pós-menopausa. <strong>Doença vulvar crônica mais frequente</strong></span>
+      <span class="v" data-l="Plano">Mucocutâneo: boca, vagina, couro cabeludo, pele, unhas</span>
+      <span class="v" data-l="Simples">Quem coça há muito tempo: inflamação, infecção, transtorno mental, higiene excessiva</span></div>
+    <div class="row"><span class="k">Lesão</span>
+      <span class="v" data-l="Escleroso">Prurido crônico + mancha <strong>hipocrômica em 8 ou ampulheta</strong></span>
+      <span class="v" data-l="Plano">Forma <strong>erosiva</strong> no intróito: erosão violácea, eritema, atrofia, exsudato vaginal abundante</span>
+      <span class="v" data-l="Simples"><strong>Liquenificação</strong> (sulcos acentuados), uni ou bilateral, <strong>sem mudar a cor</strong></span></div>
+    <div class="row"><span class="k">Marca</span>
+      <span class="v" data-l="Escleroso">Distorce a arquitetura: sinéquia, clitóris encapuzado, perda dos pequenos lábios, estenose do intróito</span>
+      <span class="v" data-l="Plano"><strong>Estrias de Wickham</strong>; tríade vulva-vagina-gengiva (síndrome vulvovaginal-gengival); cicatriz irreversível</span>
+      <span class="v" data-l="Simples">Ciclo prurido-coçadura</span></div>
+    <div class="row"><span class="k">Diagnóstico</span>
+      <span class="v" data-l="Escleroso">Clínico, mas para a prova <strong>biópsia em todos</strong></span>
+      <span class="v" data-l="Plano">Clínico ou histopatológico</span>
+      <span class="v" data-l="Simples">Clínico</span></div>
+    <div class="row"><span class="k">Tratamento</span>
+      <span class="v" data-l="Escleroso">Corticoide tópico de alta potência (clobetasol, mometasona)</span>
+      <span class="v" data-l="Plano">Analgésico + corticoide de alta potência</span>
+      <span class="v" data-l="Simples"><strong>Anti-histamínico sedativo</strong> + corticoide de alta potência</span></div>
+    <div class="row"><span class="k">Câncer</span>
+      <span class="v" data-l="Escleroso"><strong>4% a 6%</strong> sem tratamento; leva à NIV diferenciada</span>
+      <span class="v" data-l="Plano">Apostila omissa</span>
+      <span class="v" data-l="Simples">Apostila omissa</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Meta do tratamento no escleroso: tirar o prurido, frear a progressão e evitar a transformação maligna.</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="d7">
+  <div class="dhead"><span class="dnum">7</span><div class="dtitle"><h3>Sinéquia de pequenos lábios</h3></div></div>
+  <p class="lede">Costuma vir no bloco de Pediatria: menina pequena com os lábios menores colados.</p>
+  <div class="prose"><ul>
+    <li>Aglutinação dos pequenos lábios, mais comum na primeira infância.</li>
+    <li>Mecanismo: <strong>falta natural de estrogênio antes da puberdade</strong> + inflamação local.</li>
+    <li>Diagnóstico clínico. Pode dar dificuldade para urinar, corrimento e infecção urinária de repetição.</li>
+    <li>Pequena e sem sintoma: não tratar. Com sintoma: <strong>estrogênio tópico</strong> (o mais usado), betametasona tópica e/ou separação manual ou cirúrgica (obstrução grave, infecção de repetição).</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="d8">
+  <div class="dhead"><span class="dnum">8</span><div class="dtitle"><h3>Bartholin: cisto x abscesso</h3></div></div>
+  <p class="lede">O ducto entope. Se só acumula muco, é cisto; se infecta, é abscesso. A conduta segue o tamanho e a infecção.</p>
+  <div class="vs">
+    <div class="b"><h5>Cisto</h5><ul>
+      <li>Obstrução do ducto -&gt; muco acumulado.</li>
+      <li>Menor que 3 cm sem sintoma: <strong>só observar</strong>.</li>
+      <li>Menor que 3 cm com sintoma: banho de assento, compressa morna.</li>
+      <li>Maior que 3 cm: <strong>incisão e drenagem + cateter de Word ou marsupialização</strong>.</li></ul></div>
+    <div class="a"><h5>Abscesso</h5><ul>
+      <li>Obstrução + infecção. Germe mais comum: <strong>Escherichia coli</strong>; também bacteroides, anaeróbios, clamídia, gonococo.</li>
+      <li>Nódulo doloroso com sinais flogísticos; febre é menos comum.</li>
+      <li>Incisão e drenagem + Word ou marsupialização + <strong>antibiótico de amplo espectro</strong>.</li>
+      <li>Bartholinectomia: só no abscesso recorrente.</li></ul></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Cateter de Word: balão inflado dentro da glândula, que impede nova obstrução.</li>
+    <li>Marsupialização: abre a glândula e everte as bordas, criando um ducto novo.</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="d9">
+  <div class="dhead"><span class="dnum">9</span><div class="dtitle"><h3>Condiloma: HPV de baixo risco</h3></div></div>
+  <p class="lede">Condiloma é infecção sexualmente transmissível (IST). A questão mostra a lesão e pede duas coisas: reconhecer e escolher o tratamento certo para aquela paciente.</p>
+  <div class="prose"><ul>
+    <li>90% por HPV de baixo risco oncogênico, sobretudo <strong>6 e 11</strong>. Em 31%, coinfecção por tipo de alto risco.</li>
+    <li>Lesão vegetante, vascularizada, séssil, com projeções papilares ("crista de galo"). Múltiplas e coalescentes; cor da pele ou avermelhadas, às vezes pigmentadas ou queratinizadas.</li>
+    <li><strong>Sempre tratar</strong>, mesmo podendo regredir: corta a cadeia de transmissão. Pesquisar as outras IST.</li>
+  </ul></div>
+  <div class="crit c3 hd">
+    <div class="row"><span class="k">Grupo</span><span class="v">Opções</span><span class="v">Na gestação</span></div>
+    <div class="row"><span class="k">Químicos</span><span class="v">Ácido tricloroacético (ATA), imiquimode, podofilina, 5-fluorouracil</span><span class="v">Só o <strong>ATA</strong> é liberado</span></div>
+    <div class="row"><span class="k">Físicos</span><span class="v">Crioterapia, eletrocauterização, laser de CO2</span><span class="v">Todos liberados</span></div>
+    <div class="row"><span class="k">Excisional</span><span class="v">Excisão com bisturi</span><span class="v">Liberada</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>ATA <strong>não pode ser autoaplicado</strong>: quem aplica é o profissional.</li>
+    <li>Condiloma que <strong>obstrui o canal de parto = contraindicação absoluta ao parto vaginal</strong>.</li>
+  </ul></div>
+  <div class="banca"><div class="albl">Ângulo da banca</div>
+    <p>Foco declarado da apostila: o que pode na gestação e o que a própria paciente pode aplicar.</p></div>
+</section>
+
+<section class="degrau" id="d10">
+  <div class="dhead"><span class="dnum">10</span><div class="dtitle"><h3>NIV: duas estradas para o câncer</h3></div></div>
+  <p class="lede">Como a neoplasia intraepitelial cervical (NIC) no colo, a neoplasia intraepitelial vulvar (NIV) é célula escamosa anormal sem invasão. Aqui há duas estradas: HPV na jovem, líquen na idosa.</p>
+  <div class="prose"><ul>
+    <li>A NIV se divide em lesão de baixo grau (LSIL vulvar), lesão de alto grau (HSIL vulvar, ligada ao HPV) e NIV diferenciada (ligada ao líquen escleroso). As duas que levam ao câncer: HSIL e diferenciada.</li>
+  </ul></div>
+  <div class="crit c3 hd">
+    <div class="row"><span class="k">Atributo</span><span class="v">HSIL (NIV usual)</span><span class="v">NIV diferenciada</span></div>
+    <div class="row"><span class="k">Frequência</span><span class="v">A maioria</span><span class="v">Menos de 5%</span></div>
+    <div class="row"><span class="k">Idade</span><span class="v">30 a 40 anos</span><span class="v">75 a 79 anos</span></div>
+    <div class="row"><span class="k">Distribuição</span><span class="v">Multicêntrica</span><span class="v">Unifocal</span></div>
+    <div class="row"><span class="k">HPV</span><span class="v">Positivo (90%: 16, 18, 31)</span><span class="v"><strong>Negativo</strong></span></div>
+    <div class="row"><span class="k">Associação</span><span class="v">Tabagismo, anticoncepcional, imunossupressão</span><span class="v">Líquen escleroso, hiperplasia escamosa</span></div>
+    <div class="row"><span class="k">Vira câncer</span><span class="v">5,7%, em 41,4 meses</span><span class="v"><strong>32,8%, em 22,8 meses</strong></span></div>
+    <div class="row"><span class="k">Tratamento</span><span class="v">Conservador</span><span class="v"><strong>Exérese com margens</strong></span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Por quê: a usual é de mulher jovem e recidiva muito, então se poupa tecido; a diferenciada progride mais e mais rápido, então se retira.</li>
+    <li>Usual, 1ª escolha = medicamento: ATA, imiquimode, 5-fluorouracil. Se cirurgia: laser de CO2, eletrocauterização, excisão com margens, vulvectomia simples.</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="d11">
+  <div class="dhead"><span class="dnum">11</span><div class="dtitle"><h3>Câncer de vulva</h3></div></div>
+  <p class="lede">Raro: 4% a 7% dos tumores malignos ginecológicos. A prova cobra quatro coisas: via de origem, disseminação, estadiamento e tratamento.</p>
+  <div class="prose"><ul>
+    <li>Duas vias: inflamação crônica pelo <strong>líquen escleroso (a mais comum)</strong> e via do HPV.</li>
+    <li>Clínica: placa ou úlcera <strong>unifocal</strong>, com ou sem prurido.</li>
+    <li><strong>Biópsia em toda paciente com prurido vulvar crônico (sobretudo idosa) + lesão vulvar.</strong></li>
+    <li>Histologia: <strong>carcinoma escamoso</strong> (espinocelular), variante queratinizante ou diferenciada, ligada ao líquen. Segundo tipo: <strong>melanoma</strong>.</li>
+    <li><strong>Doença de Paget vulvar</strong>: a vulva é o sítio mais comum do Paget extramamário. Neoplasia de glândula apócrina e écrina, em branca de 60 a 70 anos. Prurido + lesão <strong>eczematoide, bem demarcada, de fundo vermelho</strong>.</li>
+    <li>Disseminação: contiguidade (vagina, uretra, clitóris, ânus); linfática, <strong>primeiro para os linfonodos inguinais superficiais</strong>; hematogênica, tardia.</li>
+  </ul></div>
+  <div class="banca"><div class="albl">Ângulo da banca</div>
+    <p>A apostila diz que o inguinal superficial como primeiro linfonodo "já foi cobrado repetidas vezes".</p></div>
+  <details class="ref"><summary>Estadiamento de 2021 (clínico, de imagem e cirúrgico)</summary><div class="refbody">
+    <div class="crit">
+      <div class="row"><span class="k">IA</span><span class="v">Na vulva; menor que 2 cm e invasão estromal menor que 1 mm</span></div>
+      <div class="row"><span class="k">IB</span><span class="v">Na vulva; maior que 2 cm ou invasão maior que 1 mm</span></div>
+      <div class="row"><span class="k">II</span><span class="v">Terço inferior de uretra, vagina ou ânus; linfonodos negativos</span></div>
+      <div class="row"><span class="k">IIIA</span><span class="v">2/3 superiores de uretra ou vagina, mucosa de bexiga ou reto, ou linfonodo regional de até 5 mm</span></div>
+      <div class="row"><span class="k">IIIB</span><span class="v">Linfonodo regional maior que 5 mm</span></div>
+      <div class="row"><span class="k">IIIC</span><span class="v">Linfonodo com extensão extracapsular</span></div>
+      <div class="row"><span class="k">IVA</span><span class="v">Fixo ao osso pélvico, ou linfonodo fixo ou ulcerado</span></div>
+      <div class="row"><span class="k">IVB</span><span class="v">Metástase a distância</span></div>
+    </div>
+    <ul><li>Linfonodo regional = inguinal e femoral.</li></ul></div></details>
+  <details class="ref"><summary>Tratamento do carcinoma escamoso por estádio</summary><div class="refbody">
+    <div class="crit">
+      <div class="row"><span class="k">IA</span><span class="v">Excisão local ampla. Margem positiva ou exígua: reexcisão ou radioterapia (RT)</span></div>
+      <div class="row"><span class="k">IB</span><span class="v">Excisão local ampla (vulvectomia radical se maior que 4 cm) + biópsia de linfonodo sentinela (BLNS) ou linfadenectomia inguinofemoral; bilateral se maior que 4 cm ou na linha média</span></div>
+      <div class="row"><span class="k">II</span><span class="v">Excisão local ampla + BLNS ou linfadenectomia inguinofemoral. Vulvectomia radical se maior que 4 cm ou multifocal</span></div>
+      <div class="row"><span class="k">III</span><span class="v">Vulvectomia radical + linfadenectomia inguinofemoral bilateral + RT, ou quimiorradiação e avaliar cirurgia depois</span></div>
+      <div class="row"><span class="k">IV</span><span class="v">Quimiorradiação</span></div>
+    </div></div></details>
+</section>
+
+<div class="ato"><span>Ato III</span><h2>A vagina</h2></div>
+
+<section class="degrau" id="d12">
+  <div class="dhead"><span class="dnum">12</span><div class="dtitle"><h3>NIVA e câncer de vagina</h3></div></div>
+  <p class="lede">Patologia vaginal é muito rara na prova. O que cai: quem tem risco, e o que fazer com citologia alterada e colo sem lesão.</p>
+  <div class="prose"><ul>
+    <li>Mucosa: epitélio pavimentoso estratificado <strong>não queratinizado</strong>, pregueado. A vaginoscopia vai junto com a colposcopia, com o mesmo laudo do colo.</li>
+    <li>A citologia colhe células do colo, da vagina e até da vulva. Citologia suspeita (ex.: alto grau) sem lesão no colo -&gt; <strong>procurar lesão na vagina</strong>.</li>
+    <li>Fatores de risco, iguais para neoplasia intraepitelial vaginal (NIVA) e câncer: HPV de alto risco, <strong>histerectomia prévia por NIC</strong>, baixo nível socioeconômico, radioterapia prévia, imunossupressão, <strong>exposição intrauterina ao DES</strong>.</li>
+    <li>DES -&gt; <strong>adenose vaginal</strong> (epitélio glandular na vagina), mais suscetível ao HPV de alto risco.</li>
+    <li>NIVA: suspeita na colposcopia, diagnóstico anatomopatológico. NIVA 1 = terço inferior do epitélio; 2 = até 2/3; 3 = mais de 2/3 (espessura toda = carcinoma in situ).</li>
+    <li>Quem trata: NIVA 2 e 3. NIVA 1 só em imunossuprimida ou se persistir por mais de 2 anos.</li>
+    <li>Câncer de vagina: <strong>80% são metástases</strong> de outros tumores. O primário é menos de 2% dos malignos do trato genital; tipo mais comum: carcinoma epidermoide.</li>
+  </ul></div>
+  <details class="ref"><summary>Estadiamento e tratamento (consulta; a apostila diz que não cai)</summary><div class="refbody">
+    <div class="crit">
+      <div class="row"><span class="k">0</span><span class="v">Carcinoma in situ</span></div>
+      <div class="row"><span class="k">I</span><span class="v">Limitado à parede vaginal. Menor que 2 cm: cirurgia (terço superior: colpectomia + Wertheim-Meigs + linfadenectomia retroperitoneal; distal: vulvocolpectomia + linfadenectomia inguinal bilateral). Maior que 2 cm: radioterapia</span></div>
+      <div class="row"><span class="k">II</span><span class="v">Tecido subvaginal, sem chegar à parede pélvica</span></div>
+      <div class="row"><span class="k">III</span><span class="v">Chega à parede pélvica</span></div>
+      <div class="row"><span class="k">IVA / IVB</span><span class="v">Mucosa de bexiga ou reto, ou além da pelve verdadeira / metástase a distância</span></div>
+    </div>
+    <ul><li>II a IV: quimiorradiação (preferível) ou radioterapia isolada.</li>
+    <li>Estadiamento: exame clínico + cistoscopia, retossigmoidoscopia e radiografias.</li></ul></div></details>
+</section>
+
+<section class="synth" id="gat">
+  <h2>Gatilhos de prova</h2>
+  <p class="note">Uma linha por degrau: a pista do enunciado e o que ela pede.</p>
+  <div class="trig">
+    <div><span class="tk">D0 Embrião XX</span><span class="tv">Sem HAM e sem testosterona: Müller fica, Wolff some</span></div>
+    <div><span class="tk">D1 Derivados</span><span class="tv">Útero, tubas, vagina alta = Müller; Bartholin, Skene, vagina baixa = seio urogenital</span></div>
+    <div><span class="tk">D2 Malformação</span><span class="tv">Útero e vagina alta ausentes = MRKH; septo transverso = amenorreia</span></div>
+    <div><span class="tk">D3 Útero, tuba</span><span class="tv">Anteversoflexão; só o colo se palpa; tuba termina no infundíbulo</span></div>
+    <div><span class="tk">D4 Endométrio</span><span class="tv">Espiraladas nutrem a camada funcional; basais, a basal</span></div>
+    <div><span class="tk">D5 Vulvoscopia</span><span class="tv">Só se suspeita de lesão por HPV</span></div>
+    <div><span class="tk">D6 Mancha em 8</span><span class="tv">Prurido + branco em ampulheta = escleroso: biópsia + clobetasol</span></div>
+    <div><span class="tk">D6 Gengiva</span><span class="tv">Erosão violácea + Wickham + gengivite = líquen plano</span></div>
+    <div><span class="tk">D7 Menina</span><span class="tv">Lábios menores colados com sintoma = estrogênio tópico</span></div>
+    <div><span class="tk">D8 Bartholin</span><span class="tv">Cisto abaixo de 3 cm sem sintoma = observar</span></div>
+    <div><span class="tk">D9 Crista galo</span><span class="tv">HPV 6 e 11: tratar sempre e pesquisar outras IST</span></div>
+    <div><span class="tk">D10 Idosa</span><span class="tv">Unifocal, HPV negativo, líquen = NIV diferenciada: exérese</span></div>
+    <div><span class="tk">D11 Eczema</span><span class="tv">Lesão eczematoide, demarcada, vermelha = Paget vulvar</span></div>
+    <div><span class="tk">D12 Colo limpo</span><span class="tv">Citologia de alto grau sem lesão no colo = procurar NIVA</span></div>
+  </div>
+</section>
+
+<section class="synth arm" id="arm">
+  <h2>Armadilhas de banca</h2>
+  <p class="note">A isca e a verdade, em 1-2 frases. O link leva ao degrau.</p>
+  <ol class="arml">
+    <li>"Malformação mais comum" é o <strong>útero septado</strong>; "grupo mais comum" é o de fusão lateral. Não responda o grupo quando pedem a malformação.<a href="#d2">D2</a></li>
+    <li>Septado fundiu e não reabsorveu o septo; bicorno nem terminou de fundir. Dois colos = didelfo.<a href="#d2">D2</a></li>
+    <li>A veia ovariana esquerda vai para a <strong>renal esquerda</strong>, não para a cava. E a artéria ovariana sai da <strong>aorta</strong>, não da ilíaca interna.<a href="#d3">D3</a></li>
+    <li>O fenótipo feminino <strong>não precisa de hormônio ovariano</strong> no embrião. Alternativa que atribui o útero ao estrogênio fetal está errada.<a href="#d0">D0</a></li>
+    <li>Líquen simples crônico <strong>não muda a cor</strong> da pele. Mancha branca aponta para o escleroso.<a href="#d6">D6</a></li>
+    <li>O germe mais comum do abscesso de Bartholin é a <strong>E. coli</strong>, não o gonococo.<a href="#d8">D8</a></li>
+    <li>Incisão e drenagem sozinha é resposta incompleta: precisa de <strong>cateter de Word ou marsupialização</strong>. Retirar a glândula só no abscesso recorrente.<a href="#d8">D8</a></li>
+    <li>Gestante com condiloma: imiquimode, podofilina e 5-fluorouracil ficam fora; ATA pode, mas <strong>não é autoaplicado</strong>. Cesárea só se o condiloma obstruir o canal.<a href="#d9">D9</a></li>
+    <li>O câncer de vulva mais comum vem do <strong>líquen escleroso</strong>, não do HPV.<a href="#d11">D11</a></li>
+    <li>A HSIL vulvar trata conservador, com medicamento primeiro. Quem pede exérese com margens é a <strong>diferenciada</strong>.<a href="#d10">D10</a></li>
+    <li>Teste de Collins (azul de toluidina) <strong>não se usa mais</strong>: falso-positivo demais.<a href="#d5">D5</a></li>
+    <li>Câncer na vagina é, na maioria, <strong>metástase</strong> (80%); o primário é raro.<a href="#d12">D12</a></li>
+  </ol>
+</section>
+
+<footer>
+  <p><strong>Fonte:</strong> <code>resumos/GO/26. Anatomia e Embriologia do Trato Genital Feminino.pdf</code> (EMED, Prof. Carlos Eduardo, 2024) e <code>resumos/GO/14. Doenças de Vulva e Vagina.pdf</code> (EMED, Profs. Monalisa Carvalho e Alexandre Melitto, 2024). Figuras lidas: SRY e ductos (p9), malformações (p11), vasos da pelve (p8), tratamentos do condiloma (p11). Divergência marcada no degrau 1: a vagina superior vem de Müller em 1/3 (GO/26) ou 2/3 (GO/3, Amenorreia).</p>
+  <p>Sobreposição: <code>resumos/GO/[GIN] Amenorreia.md</code> (Müller, MRKH, septo transverso) e <code>resumos/GO/[GIN] Rastreamento Colo.md</code> (condiloma na gestante). Prepara a tarefa #590 do plano.</p>
+</footer>
+</div>

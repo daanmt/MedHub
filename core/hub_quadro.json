@@ -70,6 +70,25 @@
    "tipo": "aula",
    "titulo": "REMIT e Cicatrização",
    "tarefa_id": 530
+  },
+  "aorta-cardiomiopatias-pericardio": {
+   "tipo": "aula",
+   "titulo": "Aorta, Miocárdio e Pericárdio",
+   "tarefa_id": 768
+  },
+  "tireoide-nodulo-cancer": {
+   "tipo": "aula",
+   "titulo": "Nódulo e Câncer de Tireoide",
+   "tarefa_id": 367
+  },
+  "vulva-vagina-anatomia": {
+   "tipo": "aula",
+   "titulo": "Embriologia, Vulva e Vagina",
+   "tarefa_id": 590
+  },
+  "rd-ventilacao-degrau-0": {
+   "tipo": "revisao",
+   "titulo": "Ventilação: degrau 0"
   }
  }
 }

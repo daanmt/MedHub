@@ -33,7 +33,7 @@ Trissomia do cromossomo 21, a alteração cromossômica mais frequente em nascid
   - Audição: déficit auditivo em até 78% dos casos -- a manifestação sensorial mais prevalente da síndrome.
   - Oftalmológico: erros de refração, estrabismo, nistagmo, catarata e glaucoma.
   - Endócrino: hipotireoidismo e diabetes mellitus tipo 1 são as principais associações.
-  - Hematológico: risco elevado de leucemia linfoide aguda (associada a mutações do gene GATA1); também macrocitose, leucopenia e trombocitose.
+  - Hematológico: risco aumentado de **LLA** e de **LMA**; a mutação somática do **GATA1** marca a **mielopoese anormal transitória** do RN e a **LMA megacarioblástica (M7)** que pode sucedê-la -- não a LLA (PMID 31769932; PMID 15390312). Também macrocitose, leucopenia e trombocitose.
   - Ortopédico: instabilidade atlantoaxial é a manifestação mais comum (cerca de 13% dos casos), por frouxidão ligamentar occipito-C1-C2 predispondo à subluxação; luxação de coxofemoral e artrite idiopática juvenil são menos frequentes.
   - Imunológico: defeitos de quimiotaxia e opsonização, redução de IgG4, anormalidades de linfócitos B e T -- substrato de infecções de repetição.
   - Reprodutivo: mulheres podem ser férteis (risco de 50% de a prole apresentar a síndrome); homens são tipicamente inférteis.

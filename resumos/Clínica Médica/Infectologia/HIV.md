@@ -115,9 +115,10 @@ aliases: [HIV, AIDS]
 **Coinfectados HIV-TB:**
 - Manter RIPE + esquema básico; **dobrar dose do DTG** (50 mg 2×/dia -- interação com rifampicina)
 - Rifampicina + qualquer IP = contraindicado (trocar o IP ou rifampicina por rifabutina)
-- Início da TARV em virgem de tratamento:
-    - CD4 < 50: iniciar em até **2 semanas** do RIPE
-    - CD4 ≥ 50: iniciar no **início da fase de manutenção (8ª semana)**
+- Início da TARV em virgem de tratamento -- PCDT HIV Adultos, Módulo 2 (MS, 2023):
+    - Iniciar em até **7 dias** após o início do RIPE, **independentemente do CD4**
+    - **Meningite tuberculosa:** iniciar preferencialmente entre a **4ª e a 6ª semana** do RIPE
+    - **Nunca iniciar RIPE e TARV no mesmo dia**
 
 ---
 
@@ -161,7 +162,7 @@ aliases: [HIV, AIDS]
     - Indução: anfotericina B + 5-flucitosina (ou fluconazol) × **2 semanas**
     - Consolidação: fluconazol em doses altas × **8 semanas**
     - Manutenção: fluconazol em dose menor × **12 meses**
-- ⚠️ Pacientes virgens de TARV -> aguardar **2-10 semanas** antes de iniciar TARV (evitar IRIS)
+- ⚠️ Pacientes virgens de TARV -> iniciar a TARV entre **4 e 6 semanas** após o início do antifúngico (evitar IRIS) -- PCDT HIV Adultos, Módulo 2 (MS, 2023)
 
 ### 5.4 Candidíase Oral e Esofágica
 
@@ -187,8 +188,9 @@ aliases: [HIV, AIDS]
 
 ## 6. Profilaxia das Doenças Oportunistas
 
-- **CD4 ≤ 350** (independente do PPD): TB -> isoniazida
-- **CD4 > 350 com PPD ≥ 5mm**: TB -> isoniazida
+- **CD4 <= 350** (independente do PPD): TB -> tratar ILTB
+- **CD4 > 350 com PPD >= 5 mm**: TB -> tratar ILTB
+    - Esquema preferencial na PVHIV adulta: **3HP** (sem ajuste com TDF, EFV, DTG e RAL); contraindicado com IP, nevirapina e TAF -> isoniazida isolada (PCDT HIV Adultos, Módulo 2, MS 2023)
 - **CD4 ≤ 200**: Pneumocistose -> SMX-TMP
 - **CD4 ≤ 100**: Toxoplasmose -> SMX-TMP (mesma dose e droga da PCP -- cobre as duas)
 - **CD4 ≤ 50**: MAC (*Mycobacterium avium complex*) -> azitromicina
@@ -247,9 +249,11 @@ aliases: [HIV, AIDS]
 - ⭐ CV na 34ª semana = decisão da via de parto; ≥ 1.000 -> cesárea obrigatória
 - ⚠️ DTG contraindicado no 1º trimestre (< 12 semanas) -> usar EFV ou ATV/RTV
 - ⚠️ Rifampicina + IP = contraindicado; trocar IP por DTG/EFV, ou rifampicina por rifabutina
-- ⚠️ TARV em HIV-TB: CD4 < 50 -> iniciar em 2 semanas; CD4 ≥ 50 -> iniciar na 8ª semana (manutenção)
-- ⚠️ Neurocriptococose: aguardar 2-10 semanas para iniciar TARV em virgens -> evitar IRIS
+- ⚠️ TARV em HIV-TB: iniciar em até 7 dias do RIPE, qualquer que seja o CD4; na meningite tuberculosa, entre a 4ª e a 6ª semana; nunca no mesmo dia do RIPE (PCDT HIV Adultos, Módulo 2, MS 2023)
+- ⚠️ Neurocriptococose: iniciar a TARV entre 4 e 6 semanas após o início do antifúngico em virgens -> evitar IRIS (PCDT HIV Adultos, Módulo 2, MS 2023)
 - ⚠️ Testes rápidos: janela 1-3 meses -- não indicados para diagnóstico de infecção aguda
 - 🔴 IgM positivo no HIV **não** indica infecção aguda (pode reaparecer de forma intermitente ao longo da infecção)
 - 🔴 Não fazer punção lombar de rotina na neurotoxoplasmose (risco de herniação -- desvio de linha média)
-- 🔴 **A IRIS tem DUAS janelas temporais, e o resumo só carregava uma delas.** A seção 5.3 diz "aguardar 2-10 semanas antes de iniciar TARV" -- essa é a janela de **espera** em quem tem infecção oportunista com massa/pressão (neurocriptococose, tuberculose do SNC), para não reconstituir a imunidade em cima de um foco que vai inflamar. Ela **não** é a janela em que a síndrome aparece. A **IRIS instala-se 4 a 8 semanas APÓS o início da TARV**, quase sempre dentro dos 3 primeiros meses -- e o risco é tanto maior quanto mais baixo o CD4 de partida (sobretudo < 100 células/mm3) e mais rápida a queda da carga viral. Guardar as duas separadas: **2-10 semanas = quanto esperar antes; 4-8 semanas = quando ela aparece depois.** ⚠️ Armadilha de conduta: paciente que piora nas primeiras semanas de TARV é lido como **falha do esquema** e o antirretroviral é trocado, quando foi justamente a melhora imunológica que produziu o quadro -- a conduta é manter a TARV, tratar a oportunista e considerar corticoide nas formas graves.
+- 🔴 **A IRIS tem DUAS janelas temporais, e o resumo só carregava uma delas.** A seção 5.3 diz "iniciar a TARV entre 4 e 6 semanas após o início do antifúngico" (PCDT HIV Adultos, Módulo 2, MS 2023; a janela antiga era 2-10 semanas) -- essa é a janela de **espera** em quem tem infecção oportunista do SNC (neurocriptococose; na meningite tuberculosa, também entre a 4ª e a 6ª semana do RIPE), para não reconstituir a imunidade em cima de um foco que vai inflamar. Ela **não** é a janela em que a síndrome aparece. A **IRIS instala-se 4 a 8 semanas APÓS o início da TARV**, quase sempre dentro dos 3 primeiros meses -- e o risco é tanto maior quanto mais baixo o CD4 de partida (sobretudo < 100 células/mm3) e mais rápida a queda da carga viral. Guardar as duas separadas: **4-6 semanas após o início do tratamento da oportunista do SNC = quanto esperar antes; 4-8 semanas após o início da TARV = quando ela aparece depois.** ⚠️ Armadilha de conduta: paciente que piora nas primeiras semanas de TARV é lido como **falha do esquema** e o antirretroviral é trocado, quando foi justamente a melhora imunológica que produziu o quadro -- a conduta é manter a TARV, tratar a oportunista e considerar corticoide nas formas graves.
+- 🔴 **Banca-dependente (TARV na TB-HIV):** o gabarito antigo cobrava CD4 < 50 -> TARV em 2 semanas e CD4 >= 50 -> TARV na 8ª semana; o vigente é TARV em até 7 dias do RIPE para qualquer CD4, e entre a 4ª e a 6ª semana na meningite tuberculosa (PCDT HIV Adultos, Módulo 2, MS 2023). Em questão anterior a 2023, conferir o ano.
+- 🔴 **Banca-dependente (TARV na neurocriptococose):** o gabarito antigo cobrava "aguardar 2-10 semanas"; o vigente é iniciar a TARV entre 4 e 6 semanas após o início do antifúngico (PCDT HIV Adultos, Módulo 2, MS 2023).

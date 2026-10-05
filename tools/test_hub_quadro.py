@@ -16,13 +16,21 @@ e fora do hub. O que esta suite trava:
    do painel nao conta.
 4. **Tarefa de aula**: aula feita com `tarefa_id` pendente vira pendencia RELATADA (o
    `plano.py --concluir --leitura` e do tique; o hub nao grava o plano).
+5. **O quadro conclui sozinho** (s214, hotfix `2026-10-04-assinar-nao-conclui`): assinar a leitura no
+   rodape do leitor marca `quadro/<slug>` feito pelo mesmo caminho do botao (nunca desmarca, nao
+   regrava); tarefa de lista com `listas/t<N>.status == "resolvida"` vai para Concluidas com a marca
+   "resolvida · registro pendente", sem gravar nada; sem leitura de `listas`, fica o build.
 
 Repo sintetico em tmp_path; o `ipub.db` nunca e tocado (o plano e o calendario entram injetados).
 """
 import json
+import os
 import re
+import subprocess
 import sys
+import tempfile
 from datetime import date, datetime
+from html.parser import HTMLParser
 from pathlib import Path
 
 import pytest
@@ -32,6 +40,7 @@ sys.path.insert(0, str(ROOT))
 
 from tools import hub  # noqa: E402
 from tools.fsrs_queue import TEMPLATE_PLAYER  # noqa: E402
+from tools.test_hub_render import NODE, extrair_funcao  # noqa: E402
 
 AGORA = datetime(2026, 9, 23, 20, 0, 0)
 TEMPLATE_HUB_REAL = hub.TEMPLATE_HUB.read_text(encoding="utf-8")
@@ -135,17 +144,22 @@ def test_registro_real_so_com_as_aulas_em_aberto_e_ligadas_ao_plano():
     dmg e topicos-pediatria em aberto, ligadas as tarefas do plano; s206: entra
     prevencao-quaternaria, que CUMPRE a tarefa custom #875 (tarefa_id); s212: entra dossie-uerj
     (tipo analise), o documento do bloco Documentacao do painel; s213: entram autopsia-uerj-2021
-    (analise, a Autopsia mora no hub) e remit-cicatrizacao, que CUMPRE a tarefa #530."""
+    (analise, a Autopsia mora no hub) e remit-cicatrizacao, que CUMPRE a tarefa #530; s214: entram
+    as aulas-base da S4 que CUMPREM as tarefas sem lista #768, #367 e #590 (como a REMIT) e a RD
+    rd-ventilacao-degrau-0, prometida ao operador na assinatura da rd-intensiva-sepse."""
     reg = hub.ler_quadro(ROOT / hub.QUADRO_REG)
     rds = {k for k, v in reg.items() if v["tipo"] == "revisao"}
     docs = {k for k, v in reg.items() if v["tipo"] == "analise"}
     assert docs == {"dossie-uerj", "autopsia-uerj-2021"}
     assert set(reg) - rds - docs == {"dmg", "topicos-pediatria", "prevencao-quaternaria",
-                                     "remit-cicatrizacao"}
+                                     "remit-cicatrizacao", "aorta-cardiomiopatias-pericardio",
+                                     "tireoide-nodulo-cancer", "vulva-vagina-anatomia"}
     assert all(k.startswith("rd-") for k in rds), "s210: revisao direcionada = slug rd-*"
     assert reg["dmg"]["tarefas"] == [26, 40] and reg["topicos-pediatria"]["tarefas"] == [96, 100]
     assert reg["prevencao-quaternaria"]["tarefa_id"] == 875
     assert reg["remit-cicatrizacao"]["tarefa_id"] == 530
+    assert [reg[s]["tarefa_id"] for s in ("aorta-cardiomiopatias-pericardio",
+                                          "tireoide-nodulo-cancer", "vulva-vagina-anatomia")] == [768, 367, 590]
     reais = {hub.slug_de(p.name) for p in (ROOT / "artifacts").glob("aula-*.html")}
     assert reais == set(reg), "aula real sem tipo no registro (ou registro de aula arquivada)"
     for nome in ("aula-s17", "aula-cancer-de-mama", "aula-hernias", "aula-autopsia-uerj-2023",
@@ -590,3 +604,252 @@ def test_leitor_do_plano_marca_as_tarefas_com_questoes_no_banco(monkeypatch):
     assert aviso is None
     assert {l["id"]: l.get("no_hub") for l in linhas}[1793] is True
     assert not any(l.get("no_hub") for l in linhas if l["id"] != 1793)
+
+
+# ------------------------------------------------ 5. o quadro conclui sozinho (s214)
+# Hotfix `.vibeflow/hotfixes/2026-10-04-assinar-nao-conclui.md`. Pedido do operador em 04/10/2026:
+# "mesmo assinando as listas, elas nao sao 'resolvidas', tendo que clicar no concluir do lado de fora".
+# No banco: assinou `doc_rd-hepato` as 20:45:07 e tocou "feito" em `quadro/rd-hepato` as 20:45:13 (o
+# mesmo em rd-hemostasia e rd-vias-biliares). As funcoes REAIS (`iniciarQuadro`, `assinaEnviar`,
+# `assinaPintar`...) rodam em node sobre o quadro REAL de `hub.html_quadro_de`, num DOM falso minimo
+# com seletor proprio, e um banco falso em memoria.
+
+HOJE = date(2026, 10, 4)
+# o estado de 04/10 minimizado: 3 RD avulsas (revisoes) e 4 tarefas de lista (t26 e t1793 resolvidas
+# no banco, t49 e t68 capturadas); hoje = semana 3, logo 1 e 2 sao Atrasadas
+PLANO_QD = [_t(26, 1, "Diabetes na Gestação", 19, URL),
+            _t(49, 2, "Hérnias da Parede Abdominal", 21, URL, bloco="CIR"),
+            _t(1793, 2, "UERJ 2021 -- prova inteira", 60, "simulados/uerj/2021.pdf", bloco="Simulado",
+               area="Simulado"),
+            _t(68, 3, "Doenças Glomerulares", 21, URL, bloco="CM")]
+AULAS = [hub.Aula(s, s, "2026-10-0%d" % (i + 1), "artifacts/aula-%s.html" % s)
+         for i, s in enumerate(("rd-hemostasia", "rd-hepato", "rd-vias-biliares"))]
+REGISTRO = {s: {"tipo": "revisao", "titulo": "Revisão direcionada " + s[3:]} for s in
+            ("rd-hemostasia", "rd-hepato", "rd-vias-biliares")}
+QUADRO_HTML = hub.html_quadro_de(AULAS, REGISTRO, {}, PLANO_QD, CAL, HOJE)[0]
+LEITOR_HTML = TEMPLATE_HUB_REAL.split('<div id="hub-leitor" hidden>', 1)[1].split("</section>", 1)[0]
+LISTAS = {"t26": {"status": "resolvida", "tarefa": 26}, "t49": {"status": "capturada", "tarefa": 49},
+          "t1793": {"status": "resolvida", "tarefa": 1793}, "t68": {"status": "capturada", "tarefa": 68}}
+FEITA = {"feito": True, "ts": "2026-10-04T18:02:33.000Z"}
+VOID = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "source", "track", "wbr"}
+
+
+class _Arvore(HTMLParser):
+    """HTML -> {t, a, c, x} (tag, atributos, filhos, texto) para o DOM falso montar."""
+
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.raiz = {"t": "body", "a": {}, "c": [], "x": ""}
+        self.pilha = [self.raiz]
+
+    def handle_starttag(self, tag, attrs):
+        no = {"t": tag, "a": {k: "" if v is None else v for k, v in attrs}, "c": [], "x": ""}
+        self.pilha[-1]["c"].append(no)
+        if tag not in VOID:
+            self.pilha.append(no)
+
+    def handle_endtag(self, tag):
+        for i in range(len(self.pilha) - 1, 0, -1):
+            if self.pilha[i]["t"] == tag:
+                del self.pilha[i:]
+                break
+
+    def handle_data(self, data):
+        self.pilha[-1]["x"] += data
+
+
+def _arvore(html):
+    p = _Arvore()
+    p.feed(html)
+    return p.raiz
+
+
+def _opcional(padrao):
+    m = re.search(padrao, TEMPLATE_HUB_REAL)
+    return m.group(1) if m else ""
+
+
+FUNCS_QD = "\n".join(
+    [re.search(r"\n  (var %s = [^\n]+;)" % n, TEMPLATE_HUB_REAL).group(1)
+     for n in ("ASSINA", "PEND_ERRO", "PEND_LEITURA", "PEND_ABSORVIDO")] +
+    [_opcional(r"\n  (var quadroMarcarFeito = [^\n]+;)")] +
+    [extrair_funcao(TEMPLATE_HUB_REAL, a) for a in (
+        "function pendDataCurta(iso){", "function pendEstadoDoc(item){",
+        "function pendTextoInicial(estado, rascunho){", "function pendAssinatura(slug, comentario, agora){",
+        "function assinaPintar(){", "function assinaEnviar(){", "function iniciarQuadro(){")])
+
+# DOM falso: arvore de El com seletor de compostos (tag, #id, .classe, [attr], [attr="v"],
+# :not([attr])) e combinador descendente -- o que o quadro e o rodape usam, nada alem
+DOM_QD = r"""
+function El(tag, attrs){ this.tagName = String(tag).toUpperCase(); this.attrs = {}; for(var k in attrs){ this.attrs[k] = attrs[k]; }
+  this.children = []; this.parentNode = null; this._ouv = {}; this._texto = ""; this.offsetWidth = 1; this.style = {}; var el = this;
+  this.classList = {add: function(c){ var cs = el._cls(); if(cs.indexOf(c) < 0){ cs.push(c); el.attrs["class"] = cs.join(" "); } },
+    remove: function(c){ el.attrs["class"] = el._cls().filter(function(x){ return x !== c; }).join(" "); },
+    contains: function(c){ return el._cls().indexOf(c) >= 0; }}; }
+El.prototype._cls = function(){ return String(this.attrs["class"] || "").split(/\s+/).filter(Boolean); };
+El.prototype.getAttribute = function(k){ return Object.prototype.hasOwnProperty.call(this.attrs, k) ? String(this.attrs[k]) : null; };
+El.prototype.setAttribute = function(k, v){ this.attrs[k] = String(v); };
+El.prototype.removeAttribute = function(k){ delete this.attrs[k]; };
+El.prototype.hasAttribute = function(k){ return Object.prototype.hasOwnProperty.call(this.attrs, k); };
+["hidden", "disabled"].forEach(function(p){ Object.defineProperty(El.prototype, p, {
+  get: function(){ return this.hasAttribute(p); }, set: function(v){ if(v){ this.attrs[p] = ""; } else { delete this.attrs[p]; } }}); });
+Object.defineProperty(El.prototype, "className", {get: function(){ return this.getAttribute("class") || ""; }, set: function(v){ this.attrs["class"] = String(v); }});
+Object.defineProperty(El.prototype, "textContent", {
+  get: function(){ return this._texto + this.children.map(function(c){ return c.textContent; }).join(""); },
+  set: function(v){ this.children.forEach(function(c){ c.parentNode = null; }); this.children = []; this._texto = String(v); }});
+El.prototype.appendChild = function(n){ if(n.parentNode){ n.parentNode.removeChild(n); } n.parentNode = this; this.children.push(n); return n; };
+El.prototype.insertBefore = function(n, ref){ if(ref == null){ return this.appendChild(n); } if(n.parentNode){ n.parentNode.removeChild(n); }
+  this.children.splice(this.children.indexOf(ref), 0, n); n.parentNode = this; return n; };
+El.prototype.removeChild = function(n){ var i = this.children.indexOf(n); if(i >= 0){ this.children.splice(i, 1); } n.parentNode = null; return n; };
+El.prototype.addEventListener = function(t, f){ (this._ouv[t] = this._ouv[t] || []).push(f); };
+El.prototype.click = function(){ (this._ouv.click || []).forEach(function(f){ f({}); }); };
+function parseSel(s){ var c = {tag: null, cls: [], tem: [], igual: [], nao: []}, t = /^[a-zA-Z][a-zA-Z0-9]*/.exec(s);
+  if(t){ c.tag = t[0].toUpperCase(); s = s.slice(t[0].length); }
+  var resto = s.replace(/#([\w-]+)|\.([\w-]+)|:not\(\[([\w-]+)\]\)|\[([\w-]+)(?:="([^"]*)")?\]/g, function(_, id, cl, nao, at, val){
+    if(id){ c.igual.push(["id", id]); } else if(cl){ c.cls.push(cl); } else if(nao){ c.nao.push(nao); }
+    else if(val !== undefined){ c.igual.push([at, val]); } else { c.tem.push(at); } return ""; });
+  if(resto){ throw new Error("seletor fora do DOM falso: " + resto); } return c; }
+function casaUm(e, c){ return (!c.tag || e.tagName === c.tag) && c.cls.every(function(x){ return e._cls().indexOf(x) >= 0; }) &&
+  c.tem.every(function(a){ return e.hasAttribute(a); }) && c.nao.every(function(a){ return !e.hasAttribute(a); }) &&
+  c.igual.every(function(p){ return e.getAttribute(p[0]) === p[1]; }); }
+function casa(e, partes){ if(!casaUm(e, partes[partes.length - 1])){ return false; }
+  var i = partes.length - 2, p = e.parentNode; while(i >= 0 && p){ if(casaUm(p, partes[i])){ i--; } p = p.parentNode; } return i < 0; }
+function desc(n, f){ n.children.forEach(function(c){ f(c); desc(c, f); }); }
+El.prototype.querySelectorAll = function(sel){ var partes = sel.trim().split(/\s+/).map(parseSel), out = [];
+  desc(this, function(e){ if(casa(e, partes)){ out.push(e); } }); return out; };
+El.prototype.querySelector = function(sel){ return this.querySelectorAll(sel)[0] || null; };
+function montar(no){ var e = new El(no.t, no.a); e._texto = no.x; no.c.forEach(function(f){ e.appendChild(montar(f)); }); return e; }
+var DOC = montar(__ARVORE__);
+var document = {activeElement: null, createElement: function(t){ return new El(t, {}); }};
+function $(id){ var r = null; desc(DOC, function(e){ if(!r && e.getAttribute("id") === id){ r = e; } }); return r; }
+"""
+
+# banco falso: quadro e listas em memoria; onSnapshot avisa de novo a cada escrita; `negar` simula a
+# regra de leitura (callback de erro); escritas registradas
+BANCO_QD = r"""
+var CFG = __CFG__, BANCO = {quadro: CFG.quadro || {}, listas: CFG.listas || {}}, ESCRITAS = [], OUV = {}, GRAVADAS = [];
+function foto(nome){ return {docs: Object.keys(BANCO[nome] || {}).map(function(id){ return {id: id, data: function(){ return BANCO[nome][id]; }}; })}; }
+var DB = {collection: function(nome){ return {
+  onSnapshot: function(ok, erro){
+    if((CFG.negar || []).indexOf(nome) >= 0){ Promise.resolve().then(function(){ erro(new Error("sem permissao")); }); return function(){}; }
+    (OUV[nome] = OUV[nome] || []).push(ok); Promise.resolve().then(function(){ ok(foto(nome)); }); return function(){}; },
+  doc: function(id){ return {set: function(d){
+    if(CFG.falhaQuadro){ return Promise.reject(new Error("fora")); }
+    ESCRITAS.push([nome, id, d]); (BANCO[nome] = BANCO[nome] || {})[id] = d;
+    Promise.resolve().then(function(){ (OUV[nome] || []).forEach(function(f){ f(foto(nome)); }); });
+    return Promise.resolve(); }}; }}; }};
+var window = {claude: {use: function(){ return Promise.resolve(CFG.semDb ? null : DB); }}};
+function pendGravar(id, dados){ if(CFG.falhaAssina){ return Promise.reject(new Error("fora")); } GRAVADAS.push(id); return Promise.resolve(); }
+function pendRascunho(){ return null; }
+function assinaLer(){}
+"""
+
+ACAO_QD = r"""
+function espera(){ return new Promise(function(ok){ setTimeout(ok, 0); }); }
+function estado(){
+  var itens = {};
+  DOC.querySelectorAll(".qd-item").forEach(function(li){
+    var onde = null, p = li.parentNode;
+    while(p){ if(p.getAttribute("id") === "hub-quadro-feitas"){ onde = "feitas"; break; }
+      if(p.tagName === "SECTION" && p.hasAttribute("data-secao")){ onde = p.getAttribute("data-secao"); break; } p = p.parentNode; }
+    var marca = li.querySelector(".qd-registro");
+    itens[li.getAttribute("data-slug") || "t" + li.getAttribute("data-tarefa")] =
+      {onde: onde, feito: li.hasAttribute("data-feito"), marca: marca ? marca.textContent : null};
+  });
+  var secoes = {}; DOC.querySelectorAll(".qd-sem").forEach(function(s){ secoes[s.getAttribute("data-secao")] = s.querySelector("[data-n]").textContent; });
+  return {itens: itens, secoes: secoes, escritas: ESCRITAS, gravadas: GRAVADAS, st: $("hub-assina-st").textContent,
+          nfeitas: $("hub-quadro-nfeitas").textContent, aviso_oculto: $("hub-quadro-aviso").hidden};
+}
+var qd = $("hub-quadro");
+iniciarQuadro();
+espera().then(function(){
+  if(CFG.assinar){ ASSINA.slug = CFG.assinar; ASSINA.item = CFG.assinado || null; $("hub-assina-coment").value = ""; assinaEnviar(); }
+  return espera();
+}).then(espera).then(function(){ console.log(JSON.stringify(estado())); });
+"""
+
+
+def _rodar_qd(**cfg):
+    if not NODE:
+        pytest.skip("node ausente no PATH: conclusao automatica do quadro nao verificada (skip declarado)")
+    arvore = _arvore(LEITOR_HTML + QUADRO_HTML)
+    prog = (DOM_QD.replace("__ARVORE__", json.dumps(arvore, ensure_ascii=False)) +
+            BANCO_QD.replace("__CFG__", json.dumps(cfg, ensure_ascii=False)) + FUNCS_QD + "\n" + ACAO_QD)
+    with tempfile.NamedTemporaryFile("w", suffix=".js", delete=False, encoding="utf-8") as f:
+        f.write(prog)
+        caminho = f.name
+    try:
+        out = subprocess.run([NODE, caminho], capture_output=True, text=True, encoding="utf-8",
+                             timeout=60, env=dict(os.environ, TZ="America/Sao_Paulo"))
+    finally:
+        Path(caminho).unlink(missing_ok=True)
+    assert out.returncode == 0, out.stderr
+    return json.loads(out.stdout.strip().splitlines()[-1])
+
+
+def test_o_quadro_de_partida_e_o_do_dia():
+    """Sanidade do cenario: as 3 RD na secao propria, as listas em Atrasadas/Semana 3, nada feito."""
+    out = _rodar_qd()
+    assert {k: v["onde"] for k, v in out["itens"].items()} == {
+        "rd-hemostasia": "revisoes", "rd-hepato": "revisoes", "rd-vias-biliares": "revisoes",
+        "t26": "atrasadas", "t49": "atrasadas", "t1793": "atrasadas", "t68": "3"}
+    assert out["escritas"] == [] and out["nfeitas"] == "0"
+
+
+# ------------------------------------------------ 5a. assinar = concluir
+
+def test_assinar_a_leitura_conclui_o_item_do_quadro():
+    """O 04/10 dele: rd-hemostasia ja feita; assina rd-hepato -> quadro/rd-hepato feito, sem 2o toque."""
+    out = _rodar_qd(quadro={"rd-hemostasia": FEITA}, assinar="rd-hepato")
+    assert out["gravadas"] == ["doc_rd-hepato"]
+    assert [e[:2] for e in out["escritas"]] == [["quadro", "rd-hepato"]], "uma escrita, no doc do quadro"
+    assert out["escritas"][0][2]["feito"] is True and out["escritas"][0][2]["ts"].startswith("20")
+    assert out["itens"]["rd-hepato"] == {"onde": "feitas", "feito": True, "marca": None}
+    assert out["itens"]["rd-vias-biliares"]["onde"] == "revisoes"
+    assert out["nfeitas"] == "2" and out["secoes"]["revisoes"] == "1"
+    assert out["st"] == "Assinado e concluído", out["st"]
+
+
+@pytest.mark.parametrize("cfg", [
+    {"quadro": {"rd-hemostasia": FEITA}, "assinar": "rd-hemostasia"},   # ja feito: nao regrava
+    {"assinar": "dossie-uerj"},                                           # documento fora do quadro
+    {"assinar": "rd-hepato", "semDb": True},                              # quadro sem banco
+    {"assinar": "rd-hepato", "falhaAssina": True},                        # a assinatura nao gravou
+], ids=["ja-feito", "fora-do-quadro", "sem-banco", "assinatura-falhou"])
+def test_assinar_nao_regrava_nem_inventa(cfg):
+    out = _rodar_qd(**cfg)
+    assert out["escritas"] == []
+    assert "concluído" not in out["st"]
+    if cfg["assinar"] == "rd-hemostasia":
+        assert out["itens"]["rd-hemostasia"]["onde"] == "feitas", "assinar nunca desmarca"
+    else:
+        assert out["itens"]["rd-hepato"] == {"onde": "revisoes", "feito": False, "marca": None}
+
+
+def test_quadro_que_nao_salva_desfaz_a_tela_e_avisa():
+    """A assinatura gravou, o quadro nao: o item volta para a secao, o aviso aparece, o rodape nao mente."""
+    out = _rodar_qd(assinar="rd-hepato", falhaQuadro=True)
+    assert out["gravadas"] == ["doc_rd-hepato"] and out["escritas"] == []
+    assert out["itens"]["rd-hepato"] == {"onde": "revisoes", "feito": False, "marca": None}
+    assert out["aviso_oculto"] is False
+    assert out["st"].startswith("Assinado em "), out["st"]
+
+
+# ------------------------------------------------ 5b. lista resolvida sai da semana
+
+def test_lista_resolvida_vai_para_concluidas_com_selo_sem_gravar():
+    out = _rodar_qd(listas=LISTAS)
+    for t in ("t26", "t1793"):
+        assert out["itens"][t] == {"onde": "feitas", "feito": True, "marca": "resolvida · registro pendente"}
+    assert out["itens"]["t49"] == {"onde": "atrasadas", "feito": False, "marca": None}
+    assert out["itens"]["t68"]["onde"] == "3"
+    assert out["escritas"] == [], "a lista resolvida so muda a tela; o plano e do backend"
+    assert out["secoes"]["atrasadas"] == "1" and out["nfeitas"] == "2"
+
+
+def test_sem_leitura_de_listas_o_quadro_fica_como_o_build():
+    """Hub aberto por link (regra `listas` = leitura do dono): nada se move, o resto do quadro segue."""
+    out = _rodar_qd(listas=LISTAS, negar=["listas"], quadro={"rd-hemostasia": FEITA})
+    assert out["itens"]["t26"] == {"onde": "atrasadas", "feito": False, "marca": None}
+    assert out["itens"]["rd-hemostasia"]["onde"] == "feitas"
+    assert out["escritas"] == []

@@ -1,0 +1,547 @@
+<title>Nódulo e Câncer de Tireoide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,480;9..144,600;9..144,680&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EFF3F0; --card:#FAFCFA; --sunk:#E2E9E4;
+  --ink:#18211C; --ink2:#4C5A52; --ink3:#6F7D75;
+  --line:rgba(24,33,28,.13); --line2:rgba(24,33,28,.26);
+  --teal:#1F6B5E; --teal-ink:#154A41; --teal-wash:#DCEBE5;
+  --carmine:#8E2F41; --carmine-ink:#6B2231; --carmine-wash:#F5E2E6;
+  --amber:#8A5A17; --amber-ink:#6B4610; --amber-wash:#F3E6CC;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#8A988F;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#8A988F;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font:16px/1.6 "Source Sans 3",-apple-system,"Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+h1,h2,h3{margin:0;font-family:Fraunces,Georgia,serif;font-weight:600;letter-spacing:-.01em;text-wrap:balance;line-height:1.15;color:var(--ink)}
+.wrap{max-width:780px;margin:0 auto;padding:0 16px 70px}
+:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+a{color:var(--teal-ink)}
+strong{font-weight:600;color:var(--ink)}
+
+/* topo */
+.top{padding:36px 0 22px;border-bottom:1px solid var(--line2)}
+.eye{font:600 11px/1.3 "Source Sans 3";letter-spacing:.12em;text-transform:uppercase;color:var(--teal-ink);margin:0 0 14px}
+.top h1{font-size:clamp(28px,6vw,44px);font-weight:680;margin-bottom:14px}
+.top .sub{font-size:16.5px;line-height:1.55;color:var(--ink2);margin:0 0 20px}
+.stats{display:flex;gap:18px;flex-wrap:wrap}
+.stat{display:flex;flex-direction:column;gap:2px;min-width:0}
+.stat b{font:600 21px/1 "IBM Plex Mono";color:var(--teal-ink);font-variant-numeric:tabular-nums}
+.stat span{font-size:11.5px;color:var(--ink3)}
+
+.nav{display:flex;flex-wrap:wrap;gap:6px;padding:20px 0 4px}
+.nav a{font-size:13px;text-decoration:none;color:var(--ink2);border:1px solid var(--line2);border-radius:2px;padding:4px 9px;min-width:0}
+.nav a:hover{color:var(--ink);border-color:var(--teal)}
+
+/* atos */
+.ato{margin:40px 0 0;padding:14px 16px;background:var(--teal-wash);border-left:3px solid var(--teal)}
+.ato span{font:700 10.5px "Source Sans 3";letter-spacing:.12em;text-transform:uppercase;color:var(--teal-ink);display:block;margin-bottom:3px}
+.ato h2{font-size:clamp(21px,4vw,28px)}
+
+/* o trilho do nódulo: a sequência real de exames */
+.trilho-box{margin:18px 0 0;padding:16px 14px 10px;background:var(--card);border:1px solid var(--line2)}
+.trilho-box p{margin:0 0 6px;font-size:14px;color:var(--ink3)}
+.trilho{list-style:none;margin:0;padding:0;display:grid}
+.trilho li{position:relative;min-width:0}
+.trilho a{display:grid;grid-template-columns:30px minmax(0,1fr);gap:11px;align-items:start;padding:6px 0;text-decoration:none}
+.trilho .n{width:30px;height:30px;border-radius:50%;border:1.5px solid var(--teal);background:var(--card);display:flex;align-items:center;justify-content:center;font:600 13px "IBM Plex Mono";color:var(--teal-ink);position:relative;z-index:1}
+.trilho li:last-child .n{border-color:var(--carmine);color:var(--carmine-ink)}
+.trilho li:not(:last-child)::before{content:"";position:absolute;left:14px;top:36px;bottom:-6px;width:1.5px;background:var(--teal);opacity:.5}
+.trilho .t{min-width:0;padding-top:3px}
+.trilho b{display:block;font-weight:600;font-size:15px;line-height:1.3;color:var(--ink)}
+.trilho small{display:block;font-size:13px;line-height:1.4;color:var(--ink3)}
+.trilho a:hover b{color:var(--teal-ink)}
+
+/* degraus */
+.degrau{padding:30px 0;border-bottom:1px solid var(--line)}
+.dhead{display:flex;gap:13px;align-items:flex-start;margin-bottom:12px}
+.dnum{flex-shrink:0;width:38px;height:38px;border:1.5px solid var(--teal);border-radius:50%;display:flex;align-items:center;justify-content:center;font:600 14px "IBM Plex Mono";color:var(--teal-ink)}
+.dtitle{min-width:0;padding-top:3px}
+.dtitle h3{font-size:clamp(19px,3.4vw,24px)}
+.src{display:block;margin-top:5px;font:500 11.5px/1.4 "IBM Plex Mono";color:var(--ink3)}
+.lede{font-size:16px;line-height:1.55;color:var(--ink2);margin:0 0 14px;font-style:italic}
+.prose ul{margin:0 0 12px;padding-left:20px}
+.prose li{font-size:15.4px;line-height:1.55;color:var(--ink2);margin-bottom:6px}
+.prose li:last-child{margin-bottom:0}
+h4{font:600 14px "Source Sans 3";color:var(--ink);margin:20px 0 8px}
+
+.banca{margin:16px 0;padding:13px 16px;border-left:3px solid var(--amber);background:var(--amber-wash)}
+.albl{font:700 10.5px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px;color:var(--amber-ink)}
+.banca p{font-size:15px;line-height:1.55;color:var(--ink);margin:0}
+
+/* lado a lado */
+.vs{display:grid;grid-template-columns:minmax(0,1fr);gap:1px;background:var(--line2);border:1px solid var(--line2);margin:16px 0}
+.vs>div{background:var(--card);padding:12px 14px;min-width:0}
+.vs h5{font:700 12px "Source Sans 3";letter-spacing:.04em;text-transform:uppercase;margin:0 0 6px}
+.vs .a h5{color:var(--carmine-ink)}
+.vs .b h5{color:var(--teal-ink)}
+.vs ul{margin:0;padding-left:17px}
+.vs li{font-size:14.4px;line-height:1.5;color:var(--ink2);margin-bottom:4px}
+
+/* tabelas de critério */
+.crit{border:1px solid var(--line2);margin:16px 0;background:var(--card)}
+.crit .row{display:grid;grid-template-columns:minmax(0,1fr);gap:2px;padding:9px 13px;font-size:14.2px}
+.crit .row+.row{border-top:1px solid var(--line)}
+.crit .row>*{min-width:0}
+.crit .k{font-weight:600;color:var(--teal-ink)}
+.crit .v{color:var(--ink2);line-height:1.48}
+.crit.hd .row:first-child{background:var(--sunk)}
+.crit.hd .row:first-child>*{font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink3);font-weight:600}
+.crit.c3 .row{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:4px 12px}
+.crit.c3 .row .k{grid-column:1 / -1}
+.crit.c3.hd .row:first-child .k{display:none}
+.mal{color:var(--carmine-ink);font-weight:600}
+
+/* Bethesda */
+.beth{border:1px solid var(--line2);margin:16px 0;background:var(--card)}
+.beth .row{display:grid;grid-template-columns:40px minmax(0,1fr);gap:3px 12px;padding:10px 13px;align-items:start}
+.beth .row+.row{border-top:1px solid var(--line)}
+.beth .row>*{min-width:0}
+.beth .bn{grid-row:span 2;font:600 17px/1.2 "IBM Plex Mono";color:var(--teal-ink)}
+.beth .r2 .bn{color:var(--amber-ink)}
+.beth .r3 .bn{color:var(--carmine-ink)}
+.beth .nm{font-weight:600;font-size:14.6px;line-height:1.35;color:var(--ink)}
+.beth .rk{display:block;font:500 12.5px "IBM Plex Mono";color:var(--ink3);margin-top:2px;font-variant-numeric:tabular-nums}
+.beth .cd{font-size:14.2px;line-height:1.45;color:var(--ink2)}
+.beth .cd strong{color:var(--ink)}
+
+/* extensão cirúrgica */
+.ext{display:grid;grid-template-columns:minmax(0,1fr);gap:1px;background:var(--line2);border:1px solid var(--line2);margin:16px 0}
+.ext>div{background:var(--card);padding:13px 14px;min-width:0}
+.ext .fv{display:block;font:600 17px/1.25 Fraunces,Georgia,serif;color:var(--teal-ink);margin-bottom:5px}
+.ext .tot .fv{color:var(--carmine-ink)}
+.ext .fk{font-size:14px;line-height:1.48;color:var(--ink2)}
+
+details.ref{margin:16px 0;border:1px solid var(--line2);background:var(--card)}
+details.ref>summary{cursor:pointer;list-style:none;padding:11px 14px;font:600 13.5px "Source Sans 3";color:var(--teal-ink);display:flex;gap:8px}
+details.ref>summary::-webkit-details-marker{display:none}
+details.ref>summary::before{content:"+";font:600 15px "IBM Plex Mono";width:14px;flex-shrink:0}
+details.ref[open]>summary::before{content:"-"}
+details.ref .refbody{padding:0 14px 12px}
+details.ref .refbody ul{margin:0;padding-left:18px}
+details.ref .refbody li{font-size:14px;line-height:1.5;color:var(--ink2);margin-bottom:4px}
+
+/* síntese */
+.synth{background:var(--card);border:1px solid var(--line2);padding:20px 16px;margin-top:40px}
+.synth h2{font-size:23px;margin-bottom:6px}
+.synth .note{font-size:14px;color:var(--ink3);margin:0 0 14px}
+.trig{display:grid;grid-template-columns:minmax(0,1fr);gap:1px;background:var(--line2);border:1px solid var(--line2)}
+.trig div{background:var(--sunk);padding:10px 13px;min-width:0}
+.trig .tk{font:700 11px "IBM Plex Mono";color:var(--teal-ink);display:block;margin-bottom:3px}
+.trig .tv{font-size:13.8px;line-height:1.45;color:var(--ink2)}
+.trig .tv b{color:var(--carmine-ink)}
+.synth.arm{border-left:3px solid var(--carmine)}
+.synth.arm h2::before{content:"";display:inline-block;width:11px;height:11px;border-radius:50%;background:var(--carmine);margin-right:9px;vertical-align:2px}
+ol.armas{margin:0;padding-left:22px}
+ol.armas li{font-size:15px;line-height:1.5;color:var(--ink2);margin-bottom:8px}
+ol.armas li::marker{font:600 13px "IBM Plex Mono";color:var(--carmine-ink)}
+ol.armas .d{font:500 11.5px "IBM Plex Mono";color:var(--ink3)}
+
+footer{margin-top:46px;padding-top:18px;border-top:1px solid var(--line2)}
+footer p{font-size:12.3px;color:var(--ink3);margin:0 0 7px;line-height:1.5}
+code{font-family:"IBM Plex Mono",Consolas,monospace;font-size:11.5px;background:var(--sunk);padding:1px 4px;border-radius:2px;word-break:break-all}
+
+/* telas maiores: o mesmo conteúdo ganha colunas */
+@media (min-width:560px){
+  .vs{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .crit .row{grid-template-columns:150px minmax(0,1fr);gap:12px}
+  .crit.c3 .row{grid-template-columns:130px minmax(0,1fr) minmax(0,1fr);gap:12px}
+  .crit.c3 .row .k{grid-column:auto}
+  .crit.c3.hd .row:first-child .k{display:block}
+  .beth .row{grid-template-columns:44px minmax(0,1fr) minmax(0,1.15fr);gap:12px}
+  .beth .bn{grid-row:auto}
+  .trig{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (min-width:640px){
+  .wrap{padding:0 24px 90px}
+  .top{padding:46px 0 26px}
+  .degrau{padding:34px 0}
+  .ext{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .synth{padding:26px 22px}
+  .trilho{grid-template-columns:repeat(5,minmax(0,1fr))}
+  .trilho a{grid-template-columns:minmax(0,1fr);gap:8px;padding:0 10px 4px 0}
+  .trilho li:not(:last-child)::before{left:36px;right:4px;top:15px;bottom:auto;width:auto;height:1.5px}
+  .trilho .t{padding-top:0}
+}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <p class="eye">MedHub · Aula-base · Cirurgia de Cabeça e Pescoço · tarefa #367</p>
+  <h1>Nódulo, câncer de tireoide e tireoidectomia</h1>
+  <p class="sub">A prova encadeia três blocos. O nódulo segue um trilho fixo de exames; o câncer se decide pela célula de origem; as complicações da cirurgia saem da anatomia dos nervos e das paratireoides.</p>
+  <div class="stats">
+    <div class="stat"><b>83%</b><span>são papilíferos</span></div>
+    <div class="stat"><b>6</b><span>categorias de Bethesda</span></div>
+    <div class="stat"><b>2</b><span>nervos em risco</span></div>
+    <div class="stat"><b>14</b><span>degraus</span></div>
+  </div>
+</header>
+
+<nav class="nav" aria-label="Atalhos">
+  <a href="#d0">Duas células</a><a href="#d2">TSH e US</a><a href="#d4">Quem punciona</a><a href="#d5">Bethesda</a><a href="#d6">Extensão</a>
+  <a href="#d7">Tipos</a><a href="#d9">Medular</a><a href="#d11">Anatomia</a><a href="#d13">Complicações</a>
+  <a href="#gat">Gatilhos</a><a href="#arm">Armadilhas</a>
+</nav>
+
+<div class="ato"><span>Ato I</span><h2>O nódulo tireoidiano</h2></div>
+
+<div class="trilho-box">
+  <p>O trilho que toda questão de nódulo percorre, na ordem:</p>
+  <ol class="trilho">
+    <li><a href="#d2"><span class="n">1</span><span class="t"><b>TSH + US</b><small>os dois, sempre</small></span></a></li>
+    <li><a href="#d3"><span class="n">2</span><span class="t"><b>Risco ao US</b><small>o que puxa para maligno</small></span></a></li>
+    <li><a href="#d4"><span class="n">3</span><span class="t"><b>PAAF?</b><small>TI-RADS decide</small></span></a></li>
+    <li><a href="#d5"><span class="n">4</span><span class="t"><b>Bethesda</b><small>a citologia decide</small></span></a></li>
+    <li><a href="#d6"><span class="n">5</span><span class="t"><b>Cirurgia</b><small>quanto tirar</small></span></a></li>
+  </ol>
+</div>
+
+<section class="degrau" id="d0">
+  <div class="dhead"><span class="dnum">0</span><div class="dtitle"><h3>A régua: duas células, dois marcadores</h3><span class="src">Endo/6 p7; Cir/6 p18, 22, 27</span></div></div>
+  <p class="lede">A tireoide tem duas linhagens. Saber de qual veio o tumor responde marcador, tratamento e seguimento.</p>
+  <div class="vs">
+    <div class="b"><h5>Célula folicular (tireócito)</h5><ul>
+      <li>Forma o folículo, a unidade funcional, em volta do coloide.</li>
+      <li>Produz a <strong>tireoglobulina (Tg)</strong>, que só ela fabrica.</li>
+      <li>Origem do papilífero e do folicular. O anaplásico pode nascer de um papilífero.</li></ul></div>
+    <div class="a"><h5>Célula C (parafolicular)</h5><ul>
+      <li>Vem da crista neural: outra embriologia.</li>
+      <li>Produz <strong>calcitonina</strong>.</li>
+      <li>Origem do carcinoma medular.</li></ul></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Como só o tireócito faz Tg, ela vira marcador de persistência ou recidiva <strong>depois</strong> que a tireoide sai.</li>
+    <li>Linfa: drena primeiro para o <strong>nível VI</strong> (pré-traqueal e paratraqueal, sobre os recorrentes), depois níveis II a V. O nível I é poupado.</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="d1">
+  <div class="dhead"><span class="dnum">1</span><div class="dtitle"><h3>O nódulo: comum e quase sempre benigno</h3><span class="src">Cir/6 p5-6, 17-18; Endo/6 p16</span></div></div>
+  <p class="lede">Nódulo é uma área do parênquima que cresceu e mudou de estrutura ou de função. O trabalho é achar os poucos malignos.</p>
+  <div class="prose"><ul>
+    <li>Cerca de <strong>30% das mulheres</strong> têm nódulo; só <strong>3-5%</strong> dos nódulos são malignos.</li>
+    <li>A mulher tem mais nódulo e 3 vezes mais carcinoma. <strong>O homem tem menos nódulo, mas o dele é maligno com mais frequência.</strong></li>
+    <li>A maioria não tem sintoma; pode vir com hipo ou hipertireoidismo.</li>
+    <li>Ter vários nódulos não muda o risco de cada um.</li>
+    <li>Exame que sugere câncer no enunciado: nódulo <strong>duro e irregular, fixo, que não sobe na deglutição</strong>, com rouquidão ou linfonodo.</li>
+    <li>A ultrassonografia (US) só entra com nódulo ou bócio no exame físico, ou com nódulo achado em outra imagem (US de carótida, tomografia, ressonância, PET).</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="d2">
+  <div class="dhead"><span class="dnum">2</span><div class="dtitle"><h3>Primeiro passo: TSH e US, juntos</h3><span class="src">Cir/6 p6, 32; Endo/6 p17, 20</span></div></div>
+  <p class="lede">Hormônio tireoestimulante (TSH) e US são os dois exames iniciais. O TSH escolhe o caminho.</p>
+  <div class="vs">
+    <div class="a"><h5>TSH suprimido -&gt; cintilografia</h5><ul>
+      <li>É a <strong>única</strong> indicação de cintilografia no nódulo.</li>
+      <li>Nódulo quente (hipercaptante) = autônomo, como o adenoma de Plummer: <strong>baixo risco</strong> de malignidade.</li>
+      <li>Nódulo frio (hipocaptante) não tem essa proteção.</li></ul></div>
+    <div class="b"><h5>TSH normal ou alto -&gt; US decide</h5><ul>
+      <li>As características do US definem se há punção aspirativa por agulha fina (PAAF).</li>
+      <li>Daqui em diante, o trilho é o US (degraus 3 e 4).</li></ul></div>
+  </div>
+  <div class="prose"><ul>
+    <li>TSH é o exame mais sensível e específico para disfunção tireoidiana. Referência: 0,5 a 4,5-5 mU/L.</li>
+    <li><strong>Não</strong> se dosa Tg nem calcitonina de rotina nesse primeiro momento.</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="d3">
+  <div class="dhead"><span class="dnum">3</span><div class="dtitle"><h3>O US: o que puxa para maligno</h3><span class="src">Cir/6 p7-8, 10, 19</span></div></div>
+  <p class="lede">O US é o exame de escolha para estimar o risco. Estima, mas não substitui a PAAF.</p>
+  <div class="crit c3 hd">
+    <div class="row"><span class="k">Achado</span><span class="v">Benigno</span><span class="v">Maligno</span></div>
+    <div class="row"><span class="k">Composição</span><span class="v">Cístico ou misto</span><span class="v mal">Sólido</span></div>
+    <div class="row"><span class="k">Ecogenicidade</span><span class="v">Iso ou hiperecoico</span><span class="v mal">Hipoecoico</span></div>
+    <div class="row"><span class="k">Margem</span><span class="v">Regular, bem definida</span><span class="v mal">Irregular, mal definida</span></div>
+    <div class="row"><span class="k">Formato</span><span class="v">Mais largo que alto</span><span class="v mal">Mais alto que largo</span></div>
+    <div class="row"><span class="k">Halo hipoecoico</span><span class="v">Presente, completo</span><span class="v mal">Ausente, incompleto</span></div>
+    <div class="row"><span class="k">Calcificação</span><span class="v">Grosseira ou ausente</span><span class="v mal">Microcalcificação</span></div>
+    <div class="row"><span class="k">Doppler</span><span class="v">Periférico maior que central</span><span class="v mal">Central maior que periférico</span></div>
+    <div class="row"><span class="k">Tamanho</span><span class="v">Abaixo de 1 cm</span><span class="v mal">Acima de 1 cm</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Microcalcificação é o <strong>corpo psamomatoso</strong> do papilífero visto pelo US (degrau 8).</li>
+    <li>Doppler pela classificação de Chammas: I a III = baixo risco; IV e V = alto risco (V = vascularização só central).</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="d4">
+  <div class="dhead"><span class="dnum">4</span><div class="dtitle"><h3>Quem vai à PAAF: TI-RADS, e a ATA nas questões antigas</h3><span class="src">Cir/6 p8-10, 12</span></div></div>
+  <p class="lede">Nem todo nódulo é puncionado. A pontuação do US define o tamanho mínimo para a PAAF.</p>
+  <div class="prose"><ul>
+    <li>TI-RADS (Thyroid Imaging Reporting and Data System, do American College of Radiology) soma pontos do US, como o BI-RADS da mama.</li>
+  </ul></div>
+  <div class="crit c3 hd">
+    <div class="row"><span class="k">Categoria</span><span class="v">Pontos</span><span class="v">Conduta</span></div>
+    <div class="row"><span class="k">TR1 benigno</span><span class="v">0</span><span class="v">Sem PAAF</span></div>
+    <div class="row"><span class="k">TR2 não suspeito</span><span class="v">2</span><span class="v">Sem PAAF</span></div>
+    <div class="row"><span class="k">TR3 levemente suspeito</span><span class="v">3</span><span class="v">PAAF acima de 2,5 cm; seguir acima de 1,5 cm</span></div>
+    <div class="row"><span class="k">TR4 moderadamente</span><span class="v">4 a 6</span><span class="v">PAAF acima de 1,5 cm; seguir acima de 1 cm</span></div>
+    <div class="row"><span class="k">TR5 altamente</span><span class="v">7 ou mais</span><span class="v mal">PAAF acima de 1 cm; seguir acima de 0,5 cm</span></div>
+  </div>
+  <details class="ref"><summary>Como se somam os pontos (5 eixos)</summary><div class="refbody"><ul>
+    <li><strong>Composição:</strong> cístico ou espongiforme 0; misto 1; sólido ou quase todo sólido 2.</li>
+    <li><strong>Ecogenicidade:</strong> anecoico 0; iso ou hiperecoico 1; hipoecoico 2; muito hipoecoico 3.</li>
+    <li><strong>Formato:</strong> mais largo que alto 0; mais alto que largo 3.</li>
+    <li><strong>Margens:</strong> regulares 0; lobuladas ou irregulares 2; extensão extratireoidiana 3.</li>
+    <li><strong>Focos ecogênicos:</strong> nenhum ou cauda de cometa 0; macrocalcificação 1; calcificação periférica 2; microcalcificação 3.</li></ul></div></details>
+  <h4>ATA 2015 (American Thyroid Association): o que faz puncionar</h4>
+  <div class="crit">
+    <div class="row"><span class="k">Qualquer tamanho</span><span class="v">Extensão extratireoidiana; linfonodo cervical atípico ao US</span></div>
+    <div class="row"><span class="k">Abaixo de 1 cm</span><span class="v">História familiar forte; idade muito jovem; síndrome ligada a câncer de tireoide; radiação prévia em cabeça e pescoço; microcalcificação</span></div>
+    <div class="row"><span class="k">Acima de 1 cm</span><span class="v">Hipoecoico com margem irregular</span></div>
+    <div class="row"><span class="k">Acima de 1,5 cm</span><span class="v">Iso ou hiperecoico</span></div>
+    <div class="row"><span class="k">Acima de 2 cm</span><span class="v">Espongiforme</span></div>
+    <div class="row"><span class="k">Nunca</span><span class="v">Cisto puro</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li><strong>Onde divergem:</strong> na ATA, nódulo acima de 2 cm vai à PAAF mesmo sem achado suspeito; no TI-RADS, TR1 e TR2 não vão em tamanho nenhum.</li>
+    <li>Nódulo muito pequeno dá mais punção não diagnóstica (Bethesda I).</li>
+  </ul></div>
+  <div class="banca"><div class="albl">Ângulo da banca</div>
+    <p>A apostila manda usar o <strong>TI-RADS</strong>; a ATA vale em questão antiga ou examinador que não adota o TI-RADS. Os dois concordam quase sempre, e a questão mora justamente na divergência.</p></div>
+</section>
+
+<section class="degrau" id="d5">
+  <div class="dhead"><span class="dnum">5</span><div class="dtitle"><h3>Bethesda: a citologia decide o futuro</h3><span class="src">Cir/6 p11-13, 32</span></div></div>
+  <p class="lede">A PAAF é o método mais preciso para separar benigno de maligno. O laudo cai em seis categorias, de risco crescente.</p>
+  <div class="beth">
+    <div class="row"><span class="bn">I</span><span class="nm">Não diagnóstico (insatisfatório)<span class="rk">risco 5-10%</span></span><span class="cd">Repetir a PAAF em cerca de 4 a 6 semanas, <strong>guiada por US</strong></span></div>
+    <div class="row"><span class="bn">II</span><span class="nm">Benigno<span class="rk">risco 0-3%</span></span><span class="cd">Seguimento, em geral sem cirurgia</span></div>
+    <div class="row r2"><span class="bn">III</span><span class="nm">Atipia (AUS) ou lesão folicular (FLUS) de significado indeterminado<span class="rk">risco 10-30%</span></span><span class="cd"><strong>Repetir a PAAF</strong> em 6 a 12 semanas. Deu III de novo: cirurgia</span></div>
+    <div class="row r2"><span class="bn">IV</span><span class="nm">Neoplasia folicular, ou suspeita de<span class="rk">risco 25-40%</span></span><span class="cd"><strong>Cirurgia, sempre</strong></span></div>
+    <div class="row r3"><span class="bn">V</span><span class="nm">Suspeito de malignidade<span class="rk">risco 50-75%</span></span><span class="cd"><strong>Cirurgia, sempre</strong></span></div>
+    <div class="row r3"><span class="bn">VI</span><span class="nm">Maligno<span class="rk">risco 97-99%</span></span><span class="cd"><strong>Cirurgia</strong> (degrau 6)</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Bethesda I = poucas células foliculares no aspirado. <strong>Não achar célula maligna não é resultado negativo.</strong></li>
+    <li>III e IV são os <strong>indeterminados</strong>: a citologia não separa benigno de maligno, e o mais provável ainda é benigno.</li>
+  </ul></div>
+  <h4>Quanto operar no III que persistiu e no IV</h4>
+  <div class="vs">
+    <div class="b"><h5>Lobectomia + istmectomia</h5><ul>
+      <li>Nódulo único, abaixo de 4 cm.</li>
+      <li>Sem fator de risco, sem história familiar, sem US suspeito.</li></ul></div>
+    <div class="a"><h5>Tireoidectomia total</h5><ul>
+      <li>Acima de 4 cm ou nódulos bilaterais.</li>
+      <li>US suspeito, história familiar ou radiação prévia.</li></ul></div>
+  </div>
+  <details class="ref"><summary>Seguimento do Bethesda II pelo risco ao US (mapa mental)</summary><div class="refbody"><ul>
+    <li><strong>Alto risco:</strong> novo US e nova PAAF em 12 meses.</li>
+    <li><strong>Intermediário:</strong> US em 12 a 24 meses; nova PAAF se o nódulo crescer ou mudar.</li>
+    <li><strong>Baixo risco:</strong> US em 24 meses.</li></ul></div></details>
+  <div class="banca"><div class="albl">Ângulo da banca</div>
+    <p>III e IV caem mais que I e II. Na prova de R1, <strong>IV e V vão sempre à cirurgia</strong>.</p></div>
+</section>
+
+<section class="degrau" id="d6">
+  <div class="dhead"><span class="dnum">6</span><div class="dtitle"><h3>Carcinoma diferenciado: quanto da tireoide tirar</h3><span class="src">Cir/6 p13-15, 18, 20</span></div></div>
+  <p class="lede">A base do tratamento é a cirurgia. Radioiodo, radioterapia e quimioterapia não a substituem.</p>
+  <div class="ext">
+    <div><span class="fv">Lobectomia</span><span class="fk">Abaixo de 1 cm (microcarcinoma), único, sem extensão extratireoidiana, sem história familiar, sem radiação prévia, sem linfonodo clínico.</span></div>
+    <div><span class="fv">Parcial ou total</span><span class="fk">1 a 4 cm, sem linfonodo clínico (cN0) e sem extensão extratireoidiana. Total se a equipe quer radioiodo ou o paciente prefere.</span></div>
+    <div class="tot"><span class="fv">Total (ou subtotal)</span><span class="fk">Acima de 4 cm, <strong>ou</strong> extensão extratireoidiana grosseira (T4), <strong>ou</strong> metástase a distância.</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Fez lobectomia e o anatomopatológico (AP) trouxe critério de total: <strong>totalização</strong>, completar a cirurgia. Se o AP cabe na parcial, o paciente já está tratado.</li>
+    <li>Tireoide já doente antes (hipotireoidismo, tireoidite): total.</li>
+    <li><strong>Radioiodo</strong> é adjuvante, depois da cirurgia, e só no risco intermediário ou alto de persistência ou recidiva.</li>
+    <li>Seguimento: <strong>Tg junto com anti-Tg</strong>. O anticorpo pode inativar a Tg e esconder doença.</li>
+  </ul></div>
+</section>
+
+<div class="ato"><span>Ato II</span><h2>Câncer de tireoide</h2></div>
+
+<section class="degrau" id="d7">
+  <div class="dhead"><span class="dnum">7</span><div class="dtitle"><h3>Os quatro tipos, pela frequência</h3><span class="src">Cir/6 p3, 16-17</span></div></div>
+  <p class="lede">Câncer é metade das questões do tema, e a prevalência de cada tipo é o que mais cai. A célula de origem e o grau de diferenciação organizam o resto.</p>
+  <div class="crit c3 hd">
+    <div class="row"><span class="k">Tipo</span><span class="v">Frequência</span><span class="v">Célula e grau</span></div>
+    <div class="row"><span class="k">Papilífero</span><span class="v"><strong>83%</strong></span><span class="v">Folicular; bem diferenciado</span></div>
+    <div class="row"><span class="k">Folicular</span><span class="v">12%</span><span class="v">Folicular; bem diferenciado</span></div>
+    <div class="row"><span class="k">Medular</span><span class="v">1-2%</span><span class="v">Célula C; moderadamente diferenciado</span></div>
+    <div class="row"><span class="k">Anaplásico</span><span class="v">Menos de 1%</span><span class="v">Pouco diferenciado (indiferenciado)</span></div>
+    <div class="row"><span class="k">Linfoma</span><span class="v">Menos de 1%</span><span class="v">Pouco diferenciado</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>A incidência subiu nos últimos anos <strong>sem</strong> subir a mortalidade.</li>
+    <li>Nos bem diferenciados, a idade é fator prognóstico e entra no estadiamento. Na apostila: abaixo de 45 anos e sem metástase a distância, qualquer tamanho e qualquer linfonodo = estádio I.</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="d8">
+  <div class="dhead"><span class="dnum">8</span><div class="dtitle"><h3>Papilífero x folicular: os bem diferenciados</h3><span class="src">Cir/6 p19-21</span></div></div>
+  <p class="lede">Mesma célula, mesma cirurgia, mesmo seguimento. O que separa é a via de disseminação e o que a PAAF consegue ver.</p>
+  <div class="vs">
+    <div class="b"><h5>Papilífero</h5><ul>
+      <li>O mais comum, inclusive na infância; o mais ligado a <strong>radiação</strong>.</li>
+      <li>Via <strong>linfática</strong>: linfonodo cervical.</li>
+      <li><strong>A PAAF diagnostica:</strong> núcleo grande, nucléolo proeminente, citoplasma em vidro fosco, fendas e inclusões intranucleares.</li>
+      <li>Corpos psamomatosos: calcificação na ponta das papilas.</li>
+      <li>Prognóstico excelente, sobretudo em mulher abaixo de 45 anos.</li></ul></div>
+    <div class="a"><h5>Folicular</h5><ul>
+      <li>O mais comum em área com <strong>deficiência de iodo</strong>; idade mais avançada.</li>
+      <li>Via <strong>hematogênica</strong>: metástase a distância antes do linfonodo; mais estádio III e IV ao diagnóstico.</li>
+      <li><strong>A PAAF não diagnostica:</strong> adenoma e carcinoma têm a mesma citologia.</li>
+      <li>Carcinoma = <strong>invasão da cápsula ou de vaso</strong>, vista só no AP.</li></ul></div>
+  </div>
+  <div class="prose"><ul>
+    <li><strong>Células de Hürthle:</strong> subtipo do folicular, também sem diagnóstico pela citologia. Mas dissemina mais pela linfa, e linfonodo positivo piora o prognóstico.</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="d9">
+  <div class="dhead"><span class="dnum">9</span><div class="dtitle"><h3>Medular: a célula C muda tudo</h3><span class="src">Cir/6 p22-23; Endo/23 p17</span></div></div>
+  <p class="lede">Outra célula, outro marcador, outra cirurgia. Radioiodo e supressão do TSH, que servem ao diferenciado, não têm benefício aqui.</p>
+  <div class="prose"><ul>
+    <li>Marcador: <strong>calcitonina</strong> (confirma, guia o tratamento, segue a recidiva). Também antígeno carcinoembrionário (CEA).</li>
+    <li>Esporádico em 75-95%. Familiar: mutação do proto-oncogene <strong>RET</strong>, autossômica dominante. Pesquisar RET em <strong>todo</strong> paciente com medular.</li>
+    <li>Portador de RET sem nódulo: tireoidectomia total <strong>profilática</strong>.</li>
+  </ul></div>
+  <div class="vs">
+    <div class="b"><h5>NEM 2A</h5><ul>
+      <li>Neoplasia endócrina múltipla: medular + feocromocitoma.</li>
+      <li><strong>Com</strong> hiperparatireoidismo (hiperplasia de paratireoide).</li></ul></div>
+    <div class="a"><h5>NEM 2B</h5><ul>
+      <li>Medular + feocromocitoma, <strong>sem</strong> hiperparatireoidismo.</li>
+      <li>Neuromas de mucosa, ganglioneuromatose intestinal, hábito marfanoide.</li></ul></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Cirurgia: <strong>sempre total</strong>, nunca parcial.</li>
+    <li>Sempre com <strong>esvaziamento cervical</strong>: só o nível VI se não há metástase clínica e a calcitonina está abaixo de 200; fora isso, entram também os níveis II a V.</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="d10">
+  <div class="dhead"><span class="dnum">10</span><div class="dtitle"><h3>Anaplásico: o mais agressivo</h3><span class="src">Cir/6 p23-24</span></div></div>
+  <p class="lede">Raro e um dos tumores mais agressivos do corpo. Paradoxo: pode nascer do papilífero, o mais indolente.</p>
+  <div class="prose"><ul>
+    <li><strong>Idoso</strong> com massa cervical indolor de <strong>crescimento rápido</strong>.</li>
+    <li>Disfonia e dispneia cedo (invade o recorrente e a traqueia); disfagia vem depois.</li>
+    <li>Sobrevida média de 6 meses, mesmo nos poucos operados.</li>
+    <li>A cirurgia raramente resolve. Conduta: <strong>traqueostomia</strong> para adiar a asfixia; ela não piora o tumor.</li>
+  </ul></div>
+</section>
+
+<div class="ato"><span>Ato III</span><h2>Tireoidectomia</h2></div>
+
+<section class="degrau" id="d11">
+  <div class="dhead"><span class="dnum">11</span><div class="dtitle"><h3>A anatomia que explica as complicações</h3><span class="src">Cir/6 p25-29</span></div></div>
+  <p class="lede">Duas paratireoides e dois nervos de cada lado, colados aos pedículos que o cirurgião liga.</p>
+  <div class="crit">
+    <div class="row"><span class="k">Artéria superior</span><span class="v">1º ramo da carótida externa</span></div>
+    <div class="row"><span class="k">Artéria inferior</span><span class="v">Do tronco tireocervical, ramo da subclávia</span></div>
+    <div class="row"><span class="k">Artéria ima</span><span class="v">Do tronco braquiocefálico (inominada), embaixo da glândula: atenção na traqueostomia</span></div>
+    <div class="row"><span class="k">Veias</span><span class="v">Três pares: superior, média e inferior</span></div>
+    <div class="row"><span class="k">Paratireoides</span><span class="v">Quatro, duas de cada lado, junto aos pedículos superior e inferior. Servem de referência para achar o recorrente</span></div>
+  </div>
+  <div class="vs">
+    <div class="b"><h5>Laríngeo superior (do vago)</h5><ul>
+      <li>Ramo interno: sensitivo, sensibilidade da laringe.</li>
+      <li>Ramo externo: motor de um músculo só, o <strong>cricotireóideo</strong>, que estica as pregas vocais e faz a <strong>voz aguda</strong>.</li>
+      <li>Em risco na ligadura do <strong>pedículo superior</strong>.</li></ul></div>
+    <div class="a"><h5>Laríngeo recorrente (do vago)</h5><ul>
+      <li>Contorna a subclávia à direita e o arco aórtico à esquerda; sobe no sulco traqueoesofágico.</li>
+      <li>Inerva <strong>toda a musculatura intrínseca</strong> da laringe, menos o cricotireóideo.</li>
+      <li>Passa lateral à paratireoide inferior e medial à superior.</li></ul></div>
+  </div>
+</section>
+
+<section class="degrau" id="d12">
+  <div class="dhead"><span class="dnum">12</span><div class="dtitle"><h3>Quando operar sem câncer</h3><span class="src">Cir/6 p29</span></div></div>
+  <p class="lede">A tireoidectomia também trata doença benigna.</p>
+  <div class="prose"><ul>
+    <li><strong>Absoluta:</strong> compressão (dispneia, disfagia), alguns casos de hipertireoidismo, bócio muito volumoso.</li>
+    <li><strong>Relativa:</strong> bócio pequeno com alteração estética importante, ou desejo do paciente.</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="d13">
+  <div class="dhead"><span class="dnum">13</span><div class="dtitle"><h3>Complicações: nervo, sangue, paratireoide</h3><span class="src">Cir/6 p29-31; Endo/11 p8, 10, 13-14, 27, 29-30</span></div></div>
+  <p class="lede">Cada complicação tem um quadro típico de enunciado e uma conduta única.</p>
+  <div class="crit c3 hd">
+    <div class="row"><span class="k">Lesão</span><span class="v">Quadro</span><span class="v">Conduta ou detalhe</span></div>
+    <div class="row"><span class="k">Recorrente, um lado</span><span class="v">Disfonia: voz soprosa e curta; pode ter dispneia. Prega do mesmo lado parada</span><span class="v">Confirmar por <strong>laringoscopia</strong></span></div>
+    <div class="row"><span class="k">Recorrente, dois lados</span><span class="v">Pregas paradas na linha média: dispneia intensa, cornagem, <strong>estridor logo após a extubação</strong></span><span class="v mal">Reintubar, se possível, e traqueostomia</span></div>
+    <div class="row"><span class="k">Laríngeo superior, ramo externo</span><span class="v">Perde os agudos: "falha na voz ao cantar"</span><span class="v">Ramo interno lesado: só perda sensitiva, fala normal</span></div>
+    <div class="row"><span class="k">Hematoma</span><span class="v">Pescoço crescendo, cornagem, agitação; depois cianose e rebaixamento</span><span class="v mal">Abrir a ferida já, à beira do leito: sem imagem, sem esperar intubação, traqueostomia ou centro cirúrgico</span></div>
+    <div class="row"><span class="k">Paratireoides</span><span class="v">Hipocalcemia: parestesia, câimbra, tetania, laringoespasmo, convulsão, QT longo</span><span class="v">Ver abaixo</span></div>
+  </div>
+  <h4>Hipoparatireoidismo pós-operatório</h4>
+  <div class="prose"><ul>
+    <li>Mecanismo: lesão direta ou isquemia das paratireoides -&gt; paratormônio (PTH) cai -&gt; cálcio cai e fósforo sobe.</li>
+    <li>Risco maior com glândula grande (bócio mergulhante, Graves) e cirurgia extensa (câncer). Persistente se passa de 6 meses.</li>
+    <li><strong>Chvostek:</strong> percutir a face (masseter) contrai a hemiface. <strong>Trousseau:</strong> manguito acima da sistólica por 3 minutos dá espasmo carpopedal.</li>
+    <li>Tratar já se há sintoma, QT longo ou cálcio corrigido até 7,5 mg/dL: <strong>gluconato de cálcio 10% endovenoso, lento</strong>. Se persistir: infusão contínua + calcitriol + cálcio oral.</li>
+  </ul></div>
+</section>
+
+<section class="synth" id="gat">
+  <h2>Gatilhos de prova</h2>
+  <p class="note">Uma linha por degrau. Vermelho = onde a banca derruba.</p>
+  <div class="trig">
+    <div><span class="tk">Duas células</span><span class="tv">Folicular = Tg; <b>célula C = calcitonina</b></span></div>
+    <div><span class="tk">Nódulo</span><span class="tv">30% das mulheres; 3-5% malignos; no homem, mais risco</span></div>
+    <div><span class="tk">Cintilografia</span><span class="tv"><b>Só com TSH suprimido</b>; quente = baixo risco</span></div>
+    <div><span class="tk">US suspeito</span><span class="tv">Sólido, hipoecoico, microcalcificação, mais alto que largo</span></div>
+    <div><span class="tk">TI-RADS</span><span class="tv">TR1-2 nunca punciona; TR5 punciona acima de 1 cm</span></div>
+    <div><span class="tk">Bethesda</span><span class="tv"><b>I repete (não é negativo)</b>; III repete; IV, V, VI operam</span></div>
+    <div><span class="tk">Extensão</span><span class="tv">Abaixo de 1 cm lobectomia; acima de 4 cm total; AP pede total = totalizar</span></div>
+    <div><span class="tk">Prevalência</span><span class="tv">Papilífero 83%, folicular 12%, medular 1-2%</span></div>
+    <div><span class="tk">Bem diferenc.</span><span class="tv">Papilífero = linfa, psamoma; <b>folicular = sangue, PAAF não vê</b></span></div>
+    <div><span class="tk">Medular</span><span class="tv">Calcitonina, RET, NEM 2; <b>total + esvaziamento, sem radioiodo</b></span></div>
+    <div><span class="tk">Anaplásico</span><span class="tv">Idoso, massa que cresce rápido; traqueostomia</span></div>
+    <div><span class="tk">Anatomia</span><span class="tv">Ramo externo = cricotireóideo; recorrente = o resto</span></div>
+    <div><span class="tk">Sem câncer</span><span class="tv">Compressão, bócio volumoso, hipertireoidismo</span></div>
+    <div><span class="tk">Complicações</span><span class="tv"><b>Hematoma = abrir à beira do leito</b>; PTH baixo, cálcio baixo</span></div>
+  </div>
+</section>
+
+<section class="synth arm" id="arm">
+  <h2>Armadilhas de banca</h2>
+  <p class="note">Cada uma aponta o degrau onde o fato mora.</p>
+  <ol class="armas">
+    <li>Cintilografia para todo nódulo: errado. Só com TSH suprimido. <span class="d">D2</span></li>
+    <li>Tg ou calcitonina na primeira avaliação do nódulo: não se pedem de rotina. A Tg é marcador de seguimento depois da tireoidectomia. <span class="d">D2, D6</span></li>
+    <li>Nódulo de 3 cm sem achado suspeito: na ATA vai à PAAF; no TI-RADS 1 ou 2, não vai. Veja qual sistema a questão usa. <span class="d">D4</span></li>
+    <li>Bethesda I lido como "negativo para câncer": errado. Repetir a PAAF, guiada por US. <span class="d">D5</span></li>
+    <li>Bethesda IV tratado como o III: o III repete a PAAF; o IV vai à cirurgia. <span class="d">D5</span></li>
+    <li>Fugir da totalização com radioiodo, supressão ou observação: errado. Se o AP pede total, completa-se a cirurgia. <span class="d">D6</span></li>
+    <li>"Carcinoma folicular diagnosticado pela PAAF": impossível. Só a invasão de cápsula ou vaso, no AP, separa do adenoma. <span class="d">D8</span></li>
+    <li>Trocar as vias: papilífero vai à linfa (linfonodo); folicular vai ao sangue (metástase a distância). Hürthle, embora folicular, prefere a linfa. <span class="d">D8</span></li>
+    <li>Radioiodo ou supressão do TSH no medular: sem benefício. Medular = total + esvaziamento, sempre. <span class="d">D9</span></li>
+    <li>Voz que falha nos agudos ao cantar é o ramo externo do laríngeo superior, não o recorrente. <span class="d">D11, D13</span></li>
+    <li>Estridor logo após extubar = recorrente bilateral: reintubar e traqueostomia. Rouquidão isolada = unilateral. <span class="d">D13</span></li>
+    <li>Hematoma cervical com cornagem: pedir imagem ou levar ao centro cirúrgico é errado. A ferida se abre na hora, à beira do leito. <span class="d">D13</span></li>
+  </ol>
+</section>
+
+<footer>
+  <p><strong>Fonte:</strong> <code>resumos/Cirurgia/6. Manejo do Nódulos Tireoidianos, Câncer de Tireoide e Tireoidectomia.pdf</code> (EMED, Prof. Diógenes Paiva, 2026), citada como Cir/6. Degraus de base e de complicação: <code>resumos/Clínica Médica/Endocrinologia/6. Tireoide - Fisiologia e Avaliação Diagnóstica.pdf</code> (Endo/6), <code>11. Metabolismo Ósseo e Mineral - Hipocalcemia.pdf</code> (Endo/11) e <code>23. Neoplasias Endócrinas Múltiplas.pdf</code> (Endo/23).</p>
+  <p>A apostila se ancora na ATA 2015 e no Bethesda da edição anterior. Limiares de cirurgia, indicação de radioiodo, nomes e riscos do Bethesda e o corte de idade do estadiamento ficam para conferir com a diretriz vigente.</p>
+  <p>Prepara a tarefa #367 do plano (aula-base + 10 a 15 questões do banco).</p>
+</footer>
+</div>

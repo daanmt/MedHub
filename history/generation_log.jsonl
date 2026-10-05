@@ -3976,3 +3976,7 @@
 {"ts": "2026-10-04T00:19:45", "tipo": "generation", "questao_id": 1115, "n_cards": 1, "avisos": 1}
 {"ts": "2026-10-04T00:19:45", "tipo": "generation", "questao_id": 1116, "n_cards": 2, "avisos": 1}
 {"ts": "2026-10-04T00:19:45", "tipo": "generation", "questao_id": 1117, "n_cards": 1, "avisos": 1}
+{"ts": "2026-10-04T22:55:10", "tipo": "reforja", "card_id": 1150, "writer": "recurate_cards", "version_antes": 4, "version_depois": 5, "reason": "reforja", "campos": ["frente_contexto", "verso_regra_mestre"], "n_campos": 2, "len_verso_antes": 34, "len_verso_depois": 34, "n_frases_antes": 1, "n_frases_depois": 1}
+{"ts": "2026-10-04T22:55:10", "tipo": "reforja", "card_id": 13, "writer": "recurate_cards", "version_antes": 6, "version_depois": 7, "reason": "reforja", "campos": ["verso_armadilha", "verso_resposta"], "n_campos": 2, "len_verso_antes": 160, "len_verso_depois": 158, "n_frases_antes": 2, "n_frases_depois": 2}
+{"ts": "2026-10-04T22:55:10", "tipo": "reforja", "card_id": 66, "writer": "recurate_cards", "version_antes": 4, "version_depois": 5, "reason": "reforja", "campos": ["verso_regra_mestre"], "n_campos": 1, "len_verso_antes": 46, "len_verso_depois": 46, "n_frases_antes": 1, "n_frases_depois": 1}
+{"ts": "2026-10-04T22:55:10", "tipo": "reforja", "card_id": 1311, "writer": "recurate_cards", "version_antes": 6, "version_depois": 7, "reason": "reforja", "campos": ["verso_regra_mestre"], "n_campos": 1, "len_verso_antes": 87, "len_verso_depois": 87, "n_frases_antes": 1, "n_frases_depois": 1}

@@ -156,7 +156,7 @@ aliases: [DM2, DM]
 
 **Com DCV e/ou DRC:**
 - DCV estabelecida -> metformina + **iSGLT-2** ou **arGLP-1**
-- DRC (TFG 30-60 + albumin > 200 mg/g) -> metformina + **iSGLT-2**
+- DRC (TFG >= 20, com ou sem albuminúria -- SBD 2026) -> **iSGLT-2** (+ metformina se TFG >= 30)
 
 ⭐ **Indicações de insulina como tratamento inicial:**
 - Sinais de catabolismo (perda de peso, cetose)
@@ -259,9 +259,13 @@ aliases: [DM2, DM]
   - ↓ progressão DRC (mesmo sem DM -- DAPA-CKD): TFG 25-75 + albumin. 200-5.000 mg/g
 - EA: infecções urogenitais (candidíase vulvovaginal mais comum), hipotensão em idosos, ↑ amputação (canagliflozina)
 - ⚠️ **Cetoacidose euglicêmica** (glicemia < 250): dor abdominal + náuseas com glicemia "normal" -> suspeitar! **iSGLT-2 AUMENTA** risco de cetoacidose (não reduz)
-- **Contraindicações**: DM1, TFG < 30, cetoacidose prévia, pé em risco / **amputação prévia** (canagliflozina), ITU de repetição
-- Indicação renal: TFG > 30 + albumin. > **300 mg/g** (microalbuminúria leve de 20-25 mg/g não basta)
-- ⭐ **Os 2 perfis de maior benefício, em questão de múltipla escolha:** alto risco CV (IAM/AVC prévio, angina instável, DAC, DAP -- EMPA-REG) OU nefropata com **macroalbuminúria > 300 mg/g explicitamente informada** (CREDENCE). Uma alternativa que descreve "nefropatia diabética + TFG X" **sem** informar o grau de albuminúria fica incompleta/ambígua -- prefira a alternativa que bate sem ambiguidade num dos 2 perfis.
+- **Contraindicações**: DM1, cetoacidose prévia, pé em risco / **amputação prévia** (canagliflozina), ITU de repetição, diálise
+    - ⚠️ **TFG < 30 NÃO contraindica o iSGLT-2** -- o limite é para **iniciar** (TFG < 20), não para manter
+- ⭐ **Indicação renal (nefroproteção) -- SBD 2026 (doença renal do diabetes); EMPA-KIDNEY, DAPA-CKD:**
+    - Iniciar com **TFG >= 20** (empagliflozina >= 20; dapagliflozina >= 25), **com ou sem albuminúria**
+    - Se a TFG cair abaixo de 20 depois de iniciado -> **manter até a diálise**
+    - O efeito glicêmico cai com a TFG -> na DRC avançada o iSGLT-2 é para **rim e coração**, não para a HbA1c
+- ⭐ **Os 2 perfis de maior benefício, em questão de múltipla escolha:** alto risco CV (IAM/AVC prévio, angina instável, DAC, DAP -- EMPA-REG) OU nefropata com **macroalbuminúria > 300 mg/g explicitamente informada** (CREDENCE). Uma alternativa que descreve "nefropatia diabética + TFG X" **sem** informar o grau de albuminúria fica incompleta/ambígua -- prefira a alternativa que bate sem ambiguidade num dos 2 perfis. ⚠️ Esse desempate por albuminúria é de gabarito antigo: pela regra vigente (SBD 2026), TFG >= 20 já indica o iSGLT-2, com ou sem albuminúria.
 
 > ⚠️ **Padrão de prova:** SGLT-2 fica no **túbulo proximal** (não glomérulo). O efeito renal é **reduzir** a hiperfiltração (não aumentar). Candidíase vaginal recorrente -> pensar em iSGLT-2 ou DM descompensado.
 
@@ -293,8 +297,8 @@ arGLP-1 -> iSGLT-2 -> iDPP-4 -> Pioglitazona -> Glinidas -> Sulfonilureias
 ### 10.4 Situações Especiais
 
 **IC (NYHA III/IV):** usar **iSGLT-2** | CI: Pioglitazona, Metformina se descompensada
-**DRC (TFG 30-60 + albuminúria):** usar **iSGLT-2**
-**TFG < 30:** usar **iDPP-4** (Linagliptina sem ajuste) ou **Insulina** | CI: Metformina, iSGLT-2, Sulfonilureias, Acarbose
+**DRC (TFG >= 20, com ou sem albuminúria):** usar **iSGLT-2** (SBD 2026)
+**TFG < 30:** usar **iDPP-4** (Linagliptina sem ajuste) ou **Insulina** para a glicemia | CI: Metformina, Sulfonilureias, Acarbose | **iSGLT-2 segue indicado para rim e coração** (iniciar com TFG >= 20; manter abaixo de 20 até a diálise -- SBD 2026)
 **DCV Aterosclerótica:** usar **arGLP-1** ou **iSGLT-2**
 **Obesidade:** usar **arGLP-1**, **iSGLT-2** | Evitar: Insulina, Sulfonilureias, Pioglitazona
 **Risco de hipoglicemia (idosos):** usar **iDPP-4**, **arGLP-1**, **iSGLT-2** | Evitar: Sulfonilureias, Glinidas
@@ -348,7 +352,7 @@ ETAPA 4: Insulinização plena (basal + prandial)
 - 🔴 **Hipoglicemia** -> sulfonilureias > glinidas (duração longa, independente da glicemia)
 - 🔴 **Linagliptina** = único iDPP-4 sem ajuste de dose em qualquer TFG
 - 🔴 **Pioglitazona** CI em IC NYHA III e IV (retém Na e água -> descompensa IC)
-- 🔴 **iSGLT-2** CI em TFG < 30, DM1, cetoacidose prévia
+- 🔴 **iSGLT-2** CI em DM1 e cetoacidose prévia; **TFG < 30 não é CI** -- inicia com TFG >= 20 e, uma vez iniciado, mantém até a diálise (SBD 2026)
 - 🔴 **Cetoacidose euglicêmica** = usuário de iSGLT-2 com dor abdominal e glicemia "normal" -> dosar cetonas
 - 🔴 **arGLP-1** CI em pancreatite prévia, gastroparesia, CA medular de tireoide / NEM2
 - 🔴 **Candidíase vaginal recorrente** = pensar tanto em DM2 descompensado quanto em EA de iSGLT-2 (glicosúria)
@@ -366,11 +370,12 @@ ETAPA 4: Insulinização plena (basal + prandial)
 
 - 🔴 **iSGLT-2 AUMENTA** risco de cetoacidose euglicêmica (não reduz!) -- glicemia pode ser normal
 - 🔴 **Amputação prévia / pé em risco** = CI para iSGLT-2 (canagliflozina dobrou amputações no CANVAS)
-- 🔴 **Albuminúria > 300 mg/g** + TFG > 30 = indicação renal de iSGLT-2; microalbuminúria leve (20-25) não basta
+- 🔴 **Indicação renal de iSGLT-2 = TFG >= 20, com ou sem albuminúria** (SBD 2026; EMPA-KIDNEY, DAPA-CKD) -- albuminúria > 300 mg/g + TFG > 30 era o critério de entrada do CREDENCE, não o limite da indicação; microalbuminúria leve não tira a indicação
 - 🔴 **Dapagliflozina** ↓ mortalidade IC e progressão DRC **mesmo sem DM** (DAPA-HF, DAPA-CKD)
 - 🔴 **Meta HbA1c**: < 7% em adultos | **7-8% em 60-75a** | 7,5-8,5% em > 75a/frágeis
 - 🔴 **Hiperuricemia**: AU > **8,0 mg/dL** (não 5,8!)
 - 🔴 **Sulfonilureias + warfarina/salicilatos**: ↑ hipoglicemia por deslocamento proteico (SUF 1ª geração)
 - 🔴 **Metformina + sulfonilureia**: NÃO aumenta hipoglicemia
+- 🔴 **Banca-dependente (iSGLT-2 e TFG):** o gabarito antigo cobrava "iSGLT-2 contraindicado com TFG < 30" e indicação renal só com TFG > 30 + albuminúria > 300 mg/g; o vigente inicia com TFG >= 20, com ou sem albuminúria, e mantém abaixo de 20 até a diálise (SBD 2026; EMPA-KIDNEY, DAPA-CKD). Em questão antiga, conferir o ano.
 - 🔴 **ICFEi**: FE 40-49% (não confundir com ICFEr < 40% nem ICFEp ≥ 50%)
 - 🔴 **Rastreio negativo (HbA1c/glicemia de jejum normais) + ≥ 3 fatores de risco (ou FINDRISC alto/muito alto)**: SBD 2024 manda **TTGO-1h**, não apenas reavaliar em 1-3 anos -- HbA1c e glicemia de jejum isoladas têm sensibilidade limitada e podem ser falso-negativas nesse cenário de alto risco

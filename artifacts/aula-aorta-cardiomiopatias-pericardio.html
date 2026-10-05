@@ -1,0 +1,670 @@
+<title>Aorta, Miocárdio e Pericárdio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,480;9..144,600;9..144,680&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EFF3F0; --card:#FAFCFA; --sunk:#E2E9E4;
+  --ink:#18211C; --ink2:#4C5A52; --ink3:#7C8A82;
+  --line:rgba(24,33,28,.13); --line2:rgba(24,33,28,.26);
+  --teal:#1F6B5E; --teal-ink:#154A41; --teal-wash:#DCEBE5;
+  --carmine:#8E2F41; --carmine-ink:#6B2231; --carmine-wash:#F5E2E6;
+  --amber:#8A5A17; --amber-ink:#6B4610; --amber-wash:#F3E6CC;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#7E8C84;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#7E8C84;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font:16px/1.6 "Source Sans 3",-apple-system,"Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+h1,h2,h3{margin:0;font-family:Fraunces,Georgia,serif;font-weight:600;letter-spacing:-.01em;text-wrap:balance;line-height:1.15;color:var(--ink)}
+.wrap{max-width:780px;margin:0 auto;padding:0 24px 90px}
+@media(max-width:640px){.wrap{padding:0 16px 70px}}
+:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+a{color:var(--teal-ink)}
+strong{font-weight:600;color:var(--ink)}
+
+.top{padding:46px 0 26px;border-bottom:1px solid var(--line2)}
+.eye{font:600 11px/1.3 "Source Sans 3";letter-spacing:.12em;text-transform:uppercase;color:var(--teal-ink);margin:0 0 14px}
+.top h1{font-size:clamp(30px,6vw,46px);font-weight:680;margin-bottom:14px}
+.top .sub{font-size:17px;line-height:1.55;color:var(--ink2);margin:0 0 20px}
+.stats{display:flex;gap:20px;flex-wrap:wrap}
+.stat{display:flex;flex-direction:column;gap:2px;min-width:0}
+.stat b{font:600 22px/1 "IBM Plex Mono";color:var(--teal-ink);font-variant-numeric:tabular-nums}
+.stat span{font-size:11.5px;color:var(--ink3)}
+
+.nav{display:flex;flex-wrap:wrap;gap:6px;padding:20px 0 4px}
+.nav a{font-size:13px;text-decoration:none;color:var(--ink2);border:1px solid var(--line2);border-radius:2px;padding:4px 9px;min-width:0}
+.nav a:hover{color:var(--ink);border-color:var(--teal)}
+
+.ato{margin:44px 0 0;padding:14px 16px;background:var(--teal-wash);border-left:3px solid var(--teal)}
+.ato span{font:700 10.5px "Source Sans 3";letter-spacing:.12em;text-transform:uppercase;color:var(--teal-ink);display:block;margin-bottom:3px}
+.ato h2{font-size:clamp(22px,4vw,28px)}
+
+.degrau{padding:34px 0;border-bottom:1px solid var(--line)}
+.dhead{display:flex;gap:14px;align-items:flex-start;margin-bottom:12px}
+.dnum{flex-shrink:0;width:40px;height:40px;border:1.5px solid var(--teal);border-radius:50%;display:flex;align-items:center;justify-content:center;font:600 15px "IBM Plex Mono";color:var(--teal-ink)}
+.dtitle{min-width:0;padding-top:3px}
+.dtitle h3{font-size:clamp(19px,3.4vw,24px)}
+.lede{font-size:16px;line-height:1.55;color:var(--ink2);margin:0 0 14px;font-style:italic}
+.prose ul{margin:0 0 12px;padding-left:20px}
+.prose li{font-size:15.4px;line-height:1.55;color:var(--ink2);margin-bottom:6px}
+.prose li:last-child{margin-bottom:0}
+
+.trap,.banca{margin:16px 0;padding:13px 16px}
+.trap{border-left:3px solid var(--carmine);background:var(--carmine-wash)}
+.banca{border-left:3px solid var(--amber);background:var(--amber-wash)}
+.albl{font:700 10.5px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px}
+.trap .albl{color:var(--carmine-ink)}
+.banca .albl{color:var(--amber-ink)}
+.trap p,.banca p{font-size:15px;line-height:1.55;color:var(--ink);margin:0}
+.trap p+p,.banca p+p{margin-top:6px}
+
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line2);border:1px solid var(--line2);margin:16px 0}
+.vs>div{background:var(--card);padding:12px 14px;min-width:0}
+.vs h5{font:700 11.5px "Source Sans 3";letter-spacing:.04em;text-transform:uppercase;margin:0 0 6px}
+.vs .a h5{color:var(--carmine-ink)}
+.vs .b h5{color:var(--teal-ink)}
+.vs ul{margin:0;padding-left:17px}
+.vs li{font-size:14.4px;line-height:1.5;color:var(--ink2);margin-bottom:4px;hyphens:auto;overflow-wrap:break-word}
+@media(max-width:560px){.vs{grid-template-columns:1fr}}
+
+.crit{border:1px solid var(--line2);margin:16px 0;background:var(--card)}
+.crit .row{display:grid;grid-template-columns:150px minmax(0,1fr);gap:12px;padding:9px 13px;font-size:14.2px}
+.crit .row+.row{border-top:1px solid var(--line)}
+.crit .row>*{min-width:0}
+.crit .k{font-weight:600;color:var(--teal-ink)}
+.crit .v{color:var(--ink2);line-height:1.48;hyphens:auto;overflow-wrap:break-word}
+.crit.hd .row:first-child{background:var(--sunk)}
+.crit.hd .row:first-child>*{font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink3);font-weight:600}
+.crit.c3 .row{grid-template-columns:110px minmax(0,1fr) minmax(0,1fr)}
+.crit.c4 .row{grid-template-columns:104px repeat(3,minmax(0,1fr))}
+@media(max-width:560px){
+  .crit .row{grid-template-columns:1fr;gap:2px}
+  .crit.c3 .row{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:4px 12px}
+  .crit.c3 .row .k{grid-column:1 / -1}
+  .crit.c3.hd .row:first-child .k{display:none}
+  .crit.c4 .row{grid-template-columns:1fr;gap:3px}
+  .crit.c4.hd .row:first-child{display:none}
+  .crit.c4 .v::before{content:attr(data-l);display:block;font:700 10.5px "Source Sans 3";letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);margin-top:5px}
+}
+
+details.ref{margin:16px 0;border:1px solid var(--line2);background:var(--card)}
+details.ref>summary{cursor:pointer;list-style:none;padding:11px 14px;font:600 13.5px "Source Sans 3";color:var(--teal-ink);display:flex;gap:8px}
+details.ref>summary::-webkit-details-marker{display:none}
+details.ref>summary::before{content:"+";font:600 15px "IBM Plex Mono";width:14px;flex-shrink:0}
+details.ref[open]>summary::before{content:"-"}
+details.ref .refbody{padding:0 14px 12px}
+details.ref .refbody ul{margin:0;padding-left:18px}
+details.ref .refbody li{font-size:14px;line-height:1.5;color:var(--ink2);margin-bottom:4px}
+
+.synth{background:var(--card);border:1px solid var(--line2);padding:26px 22px;margin-top:44px}
+@media(max-width:640px){.synth{padding:20px 16px}}
+.synth h2{font-size:23px;margin-bottom:6px}
+.synth .note{font-size:14px;color:var(--ink3);margin:0 0 14px}
+.trig{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1px;background:var(--line2);border:1px solid var(--line2)}
+.trig div{background:var(--sunk);padding:11px 13px;min-width:0}
+.trig .tk{font:700 11px "IBM Plex Mono";color:var(--teal-ink);display:block;margin-bottom:3px}
+.trig .tv{font-size:13.8px;line-height:1.45;color:var(--ink2)}
+.trig .tv b{color:var(--carmine-ink)}
+
+ol.chain{margin:0 0 12px;padding-left:22px}
+ol.chain li{font-size:15.2px;line-height:1.5;color:var(--ink2);margin-bottom:7px}
+ol.chain li::marker{font:600 13px "IBM Plex Mono";color:var(--teal-ink)}
+
+footer{margin-top:50px;padding-top:18px;border-top:1px solid var(--line2)}
+footer p{font-size:12.3px;color:var(--ink3);margin:0 0 7px;line-height:1.5}
+code{font-family:"IBM Plex Mono",Consolas,monospace;font-size:11.5px;background:var(--sunk);padding:1px 4px;border-radius:2px;word-break:break-all}
+</style>
+
+<div class="wrap" lang="pt-BR">
+<header class="top">
+  <p class="eye">MedHub · Aula-base · Cardiologia · tarefa #768</p>
+  <h1>Aorta, miocárdio e pericárdio</h1>
+  <p class="sub">Três estruturas, três falhas: a parede da aorta rasga, o músculo adoece, o saco pericárdico aperta. Em cada uma a banca pede o discriminador e a conduta que não se pode errar.</p>
+  <div class="stats">
+    <div class="stat"><b>3</b><span>síndromes aórticas</span></div>
+    <div class="stat"><b>3</b><span>grupos de cardiomiopatia</span></div>
+    <div class="stat"><b>3</b><span>pericardiopatias</span></div>
+    <div class="stat"><b>26</b><span>degraus</span></div>
+  </div>
+</header>
+
+<nav class="nav" aria-label="Atalhos">
+  <a href="#a0">Aorta</a><a href="#a5">Tratar SAA</a><a href="#m0">Miocárdio</a><a href="#m2">Chagas</a><a href="#m7">CMH</a>
+  <a href="#p1">Pericardite</a><a href="#p4">Tamponamento</a><a href="#p5">Constritiva</a><a href="#x0">Dor torácica</a><a href="#gat">Gatilhos</a>
+</nav>
+
+<!-- ============ ATO I ============ -->
+<div class="ato"><span>Ato I</span><h2>Síndromes aórticas agudas</h2></div>
+
+<section class="degrau" id="a0">
+  <div class="dhead"><span class="dnum">0</span><div class="dtitle"><h3>A régua: sangue dentro da parede</h3></div></div>
+  <p class="lede">Toda síndrome aórtica aguda (SAA) é sangue dentro da camada média da aorta. O que muda é a porta de entrada.</p>
+  <div class="prose"><ul>
+    <li><strong>Dissecção:</strong> a íntima rasga, o sangue separa íntima de média e cria uma <strong>falsa luz</strong>. É 85-95% das SAA.</li>
+    <li><strong>Hematoma intramural (HIM):</strong> rompem os vasa vasorum (os vasos que nutrem a parede) e a média sangra por dentro.</li>
+    <li><strong>Úlcera aterosclerótica penetrante (UAP):</strong> a placa de ateroma ulcera e invade a média.</li>
+    <li>As três dão dor parecida e seguem a mesma régua de conduta: a aorta ascendente está envolvida?</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="a1">
+  <div class="dhead"><span class="dnum">1</span><div class="dtitle"><h3>Classificação: a ascendente decide</h3></div></div>
+  <p class="lede">Stanford é a que mais cai e a que guia a conduta. DeBakey detalha a origem e a extensão.</p>
+  <div class="crit c3 hd">
+    <div class="row"><span class="k">Sistema</span><span class="v">Proximal (pega a ascendente)</span><span class="v">Distal (só a descendente)</span></div>
+    <div class="row"><span class="k">Stanford</span><span class="v"><strong>Tipo A</strong></span><span class="v"><strong>Tipo B</strong>: após a subclávia esquerda</span></div>
+    <div class="row"><span class="k">DeBakey</span><span class="v">I: nasce na ascendente e chega à descendente. II: confinada à ascendente</span><span class="v">III: nasce na descendente. IIIa só torácica; IIIb passa o diafragma</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li><strong>Fatores de risco:</strong> idade avançada e hipertensão (até 80% dos casos) são os mais frequentes. Também aterosclerose, cirurgia cardíaca prévia (sobretudo reparo aórtico) e dissecção prévia.</li>
+  </ul></div>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p>DeBakey III pode estender-se de forma retrógrada até a ascendente (raro). Se tocou a ascendente, é <strong>Stanford A</strong>: Stanford olha o acometimento, não a origem.</p></div>
+</section>
+
+<section class="degrau" id="a2">
+  <div class="dhead"><span class="dnum">2</span><div class="dtitle"><h3>A dor que já nasce no máximo</h3></div></div>
+  <p class="lede">Dor torácica em 90%. O discriminador é o tempo: intensa desde o primeiro segundo, enquanto a da síndrome coronariana aguda (SCA) cresce aos poucos.</p>
+  <div class="prose"><ul>
+    <li>Descrita como "rasgando", "rompendo", "facada", "apunhalando".</li>
+  </ul></div>
+  <div class="vs">
+    <div class="a"><h5>Tipo A (ascendente)</h5><ul>
+      <li>Dor anterior; irradia para dorso, pescoço e braços.</li>
+      <li>Ramos do arco: síncope, déficit focal de acidente vascular encefálico (AVE).</li>
+      <li>Assimetria de pulso e de pressão arterial (PA) <strong>entre os braços</strong>.</li>
+      <li>Valva aórtica: insuficiência aórtica aguda (sopro diastólico) e insuficiência cardíaca (IC) aguda.</li>
+      <li>Coronária (3%): quadro de infarto agudo do miocárdio (IAM), até com supra de ST.</li></ul></div>
+    <div class="b"><h5>Tipo B (descendente)</h5><ul>
+      <li>Dor interescapular; irradia para baixo (abdome, pernas).</li>
+      <li>Assimetria <strong>entre braços e pernas</strong>.</li>
+      <li>Isquemia de órgãos (baço, rim, intestino) e de membros inferiores.</li>
+      <li>Paraplegia em 2-5%: a medula perde irrigação.</li></ul></div>
+  </div>
+  <div class="banca"><div class="albl">Ângulo da banca</div>
+    <p>IAM + AVE isquêmico + insuficiência aórtica aguda <strong>ao mesmo tempo</strong> = dissecção. É a combinação que a apostila marca como palavra-chave.</p></div>
+</section>
+
+<section class="degrau" id="a3">
+  <div class="dhead"><span class="dnum">3</span><div class="dtitle"><h3>Exames: confirmar e classificar, rápido</h3></div></div>
+  <p class="lede">O diagnóstico é clínico. O exame serve para confirmar depressa e dizer se é A ou B.</p>
+  <div class="prose"><ul>
+    <li><strong>Eletrocardiograma (ECG):</strong> normal ou inespecífico na maioria (sobrecarga do ventrículo esquerdo, VE). Isquemia em 15%; padrão de IAM em 5%, em geral de <strong>coronária direita</strong> (parede inferior).</li>
+    <li><strong>Radiografia:</strong> alargamento do mediastino em 81-90%, mais no tipo A. Não confirma nem descarta.</li>
+  </ul></div>
+  <div class="crit">
+    <div class="row"><span class="k">Angiotomografia (angioTC)</span><span class="v">Preferível na dissecção aguda: rápida e disponível na emergência.</span></div>
+    <div class="row"><span class="k">Eco transesofágico (ETE)</span><span class="v">Preferível no paciente <strong>instável</strong>; melhor na ascendente.</span></div>
+    <div class="row"><span class="k">Angiorressonância</span><span class="v">Estável, dor crônica, seguimento de dissecção crônica.</span></div>
+    <div class="row"><span class="k">Arteriografia</span><span class="v">Invasiva; só se as outras faltarem ou forem inconclusivas.</span></div>
+  </div>
+  <details class="ref"><summary>Acurácia dos métodos (sensibilidade / especificidade)</summary><div class="refbody"><ul>
+    <li>Eco transtorácico: 63-96% / 59-85% (o pior não invasivo).</li>
+    <li>ETE: 98-99% / 95%.</li>
+    <li>AngioTC: 98-100% / 90-100%.</li>
+    <li>Ressonância: 98-100% / 98-100%.</li>
+    <li>Arteriografia: 80-90% / 88-95%.</li></ul></div></details>
+</section>
+
+<section class="degrau" id="a4">
+  <div class="dhead"><span class="dnum">4</span><div class="dtitle"><h3>Escore ADD-RS: quando o D-dímero descarta</h3></div></div>
+  <p class="lede">O escore de risco para detecção de dissecção de aorta (ADD-RS) dá 1 ponto por coluna, não por item: vai de 0 a 3.</p>
+  <div class="crit">
+    <div class="row"><span class="k">Antecedentes</span><span class="v">Marfan; história familiar de doença aórtica; cirurgia ou manipulação aórtica; aneurisma torácico conhecido; doença valvar aórtica.</span></div>
+    <div class="row"><span class="k">Dor</span><span class="v">Abrupta; intensa; lancinante ou rasgante (torácica, dorsal ou abdominal).</span></div>
+    <div class="row"><span class="k">Exame</span><span class="v">Déficit de pulso ou diferença de pressão sistólica; déficit neurológico com dor; hipotensão ou choque.</span></div>
+  </div>
+  <div class="vs">
+    <div class="b"><h5>ADD-RS 0-1</h5><ul>
+      <li>Pedir D-dímero.</li>
+      <li>Abaixo de 500 ng/mL FEU (unidades equivalentes de fibrinogênio): <strong>descarta</strong>.</li>
+      <li>500 ou mais: angioTC de aorta torácica.</li></ul></div>
+    <div class="a"><h5>ADD-RS 2-3</h5><ul>
+      <li>AngioTC direto, sem D-dímero.</li>
+      <li>ETE e angiorressonância também valem.</li></ul></div>
+  </div>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p>Três antecedentes na mesma coluna ainda valem <strong>1 ponto</strong>. E o D-dímero só descarta com ADD-RS 0-1.</p></div>
+</section>
+
+<section class="degrau" id="a5">
+  <div class="dhead"><span class="dnum">5</span><div class="dtitle"><h3>Tratamento inicial: dor, depois FC, depois PA</h3></div></div>
+  <p class="lede">Vale para A e para B. A meta é baixar o duplo produto, frequência cardíaca (FC) x PA, sem provocar taquicardia reflexa.</p>
+  <ol class="chain">
+    <li><strong>MOV:</strong> monitorização, oxigênio, veia.</li>
+    <li><strong>Morfina endovenosa:</strong> a dor sobe FC e PA e agrava a dissecção.</li>
+    <li><strong>Betabloqueador endovenoso:</strong> esmolol é o preferido (meia-vida curta); também propranolol, metoprolol, labetalol. Alvo: <strong>FC abaixo de 60 bpm</strong>.</li>
+    <li><strong>Só então nitroprussiato de sódio.</strong> Alvo: pressão arterial sistólica (PAS) de <strong>100-120 mmHg</strong> na 1ª hora.</li>
+  </ol>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p>Nitroprussiato antes do betabloqueador gera <strong>taquicardia reflexa</strong>, que piora a dissecção. A ordem é a questão.</p>
+    <p><strong>Suspeita de dissecção é contraindicação absoluta ao fibrinolítico</strong> (apostila de IAM). O ECG de IAM inferior na dissecção A é a isca.</p></div>
+</section>
+
+<section class="degrau" id="a6">
+  <div class="dhead"><span class="dnum">6</span><div class="dtitle"><h3>Conduta definitiva: A opera, B depende</h3></div></div>
+  <p class="lede">O segmento decide. Ascendente vai à cirurgia; descendente fica no tratamento clínico até complicar.</p>
+  <div class="vs">
+    <div class="a"><h5>Stanford A</h5><ul>
+      <li><strong>Cirurgia de emergência, sempre.</strong></li>
+      <li>Resseca o segmento e põe tubo protético; troca a valva aórtica se acometida.</li></ul></div>
+    <div class="b"><h5>Stanford B</h5><ul>
+      <li>Não complicada: clínico, com FC e PA rigorosas.</li>
+      <li>Complicada (isquemia de órgão, ruptura ou ruptura iminente, progressão, dor persistente): <strong>reparo endovascular da aorta torácica (TEVAR)</strong>, 1ª linha por ter menos morbimortalidade que a cirurgia aberta.</li></ul></div>
+  </div>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p>"Tipo A estável e sem complicação pode ficar no clínico" é falso. A divisão complicada x não complicada só existe no <strong>B</strong>.</p></div>
+</section>
+
+<section class="degrau" id="a7">
+  <div class="dhead"><span class="dnum">7</span><div class="dtitle"><h3>Hematoma intramural e úlcera penetrante</h3></div></div>
+  <p class="lede">Mesma clínica, mesmos exames (ETE, tomografia, ressonância), mesma régua do segmento. Muda a lesão na imagem.</p>
+  <div class="crit c4 hd">
+    <div class="row"><span class="k">Atributo</span><span class="v">Dissecção</span><span class="v">HIM</span><span class="v">UAP</span></div>
+    <div class="row"><span class="k">Lesão</span><span class="v" data-l="Dissecção">Rotura da íntima, falsa luz</span><span class="v" data-l="HIM">Sangue na média, circunferencial, <strong>sem comunicação</strong> com o lúmen</span><span class="v" data-l="UAP">Placa que invade a lâmina elástica da média</span></div>
+    <div class="row"><span class="k">Peso</span><span class="v" data-l="Dissecção">85-95% das SAA</span><span class="v" data-l="HIM">Precursor da dissecção</span><span class="v" data-l="UAP">Muitas vezes achado de imagem</span></div>
+    <div class="row"><span class="k">Ascendente</span><span class="v" data-l="Dissecção">Cirurgia de emergência</span><span class="v" data-l="HIM">Cirurgia</span><span class="v" data-l="UAP">Cirurgia aberta (padrão-ouro)</span></div>
+    <div class="row"><span class="k">Descendente</span><span class="v" data-l="Dissecção">Clínico; TEVAR se complicada</span><span class="v" data-l="HIM">Conservador; TEVAR se complicado</span><span class="v" data-l="UAP">Pequena e assintomática: vigiar. Sintomática ou alto risco (HIM associado, risco de ruptura): TEVAR</span></div>
+  </div>
+</section>
+
+<!-- ============ ATO II ============ -->
+<div class="ato" id="m0"><span>Ato II</span><h2>Cardiomiopatias</h2></div>
+
+<section class="degrau">
+  <div class="dhead"><span class="dnum">0</span><div class="dtitle"><h3>A régua: a forma da câmara diz o que falha</h3></div></div>
+  <p class="lede">Cardiomiopatia é doença do cardiomiócito, por agressão externa, genética ou ambas. São três grupos.</p>
+  <div class="crit">
+    <div class="row"><span class="k">Dilatada</span><span class="v">Câmaras grandes; falha a <strong>sístole</strong>. A mais comum na prática.</span></div>
+    <div class="row"><span class="k">Restritiva</span><span class="v">Coração "duro"; falha a <strong>diástole</strong>. O ventrículo não dilata; os átrios sim.</span></div>
+    <div class="row"><span class="k">Hipertrófica</span><span class="v">Parede grossa, sobretudo o septo; falha a <strong>diástole</strong> e pode obstruir a saída do VE.</span></div>
+    <div class="row"><span class="k">Fora da tríade</span><span class="v">Cardiomiopatia arritmogênica do ventrículo direito (VD) e miocárdio não compactado (degrau 9).</span></div>
+  </div>
+</section>
+
+<section class="degrau" id="m1">
+  <div class="dhead"><span class="dnum">1</span><div class="dtitle"><h3>Dilatada: o ventrículo cresce e não ejeta</h3></div></div>
+  <p class="lede">Marca: aumento de um ou dos dois ventrículos, com disfunção sistólica.</p>
+  <div class="prose"><ul>
+    <li>Homens jovens e de meia-idade. Grande causa de IC e a <strong>principal indicação de transplante cardíaco</strong> no mundo.</li>
+    <li>Causa mais comum: <strong>idiopática</strong> (quase 50% ficam sem etiologia).</li>
+    <li>Tratamento: o da IC com fração de ejeção reduzida (ICFEr), igual às outras etiologias.</li>
+  </ul></div>
+  <details class="ref"><summary>Etiologias: mnemônico DILATADA</summary><div class="refbody"><ul>
+    <li><strong>D</strong>rogas: álcool, cocaína, antraciclinas, trastuzumabe.</li>
+    <li><strong>I</strong>nfecções: miocardite viral, HIV, Chagas.</li>
+    <li><strong>L</strong>úpus e outras autoimunes.</li>
+    <li><strong>A</strong>drenalina: descarga de catecolaminas (takotsubo).</li>
+    <li><strong>T</strong>ireoidopatias. <strong>A</strong>rritmias (taquicardiomiopatia). <strong>D</strong>esnutrição grave.</li>
+    <li><strong>A</strong> gravidez: periparto.</li></ul></div></details>
+</section>
+
+<section class="degrau" id="m2">
+  <div class="dhead"><span class="dnum">2</span><div class="dtitle"><h3>Chagas: fibrose que corta a condução</h3></div></div>
+  <p class="lede">Na fase crônica, o <em>Trypanosoma cruzi</em> deixa um miocárdio fibrosado: arritmia, bloqueio, IC, tromboembolismo e morte súbita.</p>
+  <div class="prose"><ul>
+    <li>Enunciado típico: paciente do Triângulo Mineiro, norte de Minas, sul da Bahia, Distrito Federal ou Goiás.</li>
+    <li>Morte súbita cardíaca: morte inesperada, de causa cardíaca, em cerca de 1 hora do início dos sintomas.</li>
+    <li>Diagnóstico da fase crônica: <strong>duas sorologias de métodos diferentes</strong> (ELISA, hemaglutinação indireta, imunofluorescência indireta).</li>
+    <li><strong>ECG mais característico (~50%):</strong> bloqueio de ramo direito (BRD) + bloqueio divisional anterossuperior esquerdo (BDAS).</li>
+    <li>BRD: rSR' em V1 ("orelha de coelho") e QRS acima de 120 ms. BDAS: QRS negativo em DII, DIII e aVF, eixo desviado para a esquerda (-30° a -45°).</li>
+    <li>Também: ondas Q (áreas inativas), alteração de ST, extrassístoles ventriculares, bloqueios atrioventriculares (AV).</li>
+    <li>Eco e ressonância: déficit segmentar, o VD costuma ser o primeiro atingido; tarde, as 4 câmaras dilatam. Achado mais específico: <strong>aneurisma de ápice em "dedo de luva"</strong>.</li>
+    <li>Tratamento: o da ICFEr. Anticoagular se houver trombo ou fibrilação atrial (FA); marcapasso nos bloqueios AV.</li>
+  </ul></div>
+  <div class="banca"><div class="albl">Ângulo da banca</div>
+    <p><strong>BRD + BDAS</strong> é o achado de Chagas mais cobrado, segundo a apostila.</p></div>
+</section>
+
+<section class="degrau" id="m3">
+  <div class="dhead"><span class="dnum">3</span><div class="dtitle"><h3>Takotsubo: o infarto sem coronária</h3></div></div>
+  <p class="lede">Chega como SCA (dor, troponina, até supra de ST), mas o cateterismo mostra coronárias sem obstrução.</p>
+  <div class="prose"><ul>
+    <li>Mecanismo: descarga de catecolaminas, tóxica para o miocárdio.</li>
+    <li>Disfunção sistólica <strong>transitória</strong> dos segmentos médio-apicais, com base hipercontrátil: o ápice infla como balão (takotsubo = pote japonês de pegar polvo).</li>
+    <li>Perfil: <strong>mulher (80%)</strong>, meia-idade ou pós-menopausa, após estresse físico ou emocional. Também: etnia asiática ou caucasiana, doença neurológica ou psiquiátrica.</li>
+    <li>Conduta inicial = protocolo de SCA. Pode abrir com choque cardiogênico, edema agudo de pulmão ou morte súbita.</li>
+    <li>Prognóstico bom: recuperação total em até 2 semanas na maioria; poucos ficam com IC e padrão dilatado.</li>
+  </ul></div>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p>Sem obstrução coronariana não há trombo para lisar: <strong>trombólise não se faz</strong>.</p></div>
+</section>
+
+<section class="degrau" id="m4">
+  <div class="dhead"><span class="dnum">4</span><div class="dtitle"><h3>Miocardite: o jovem gripado com IC nova</h3></div></div>
+  <p class="lede">Infiltrado inflamatório que necrosa o miocárdio sem isquemia; quase sempre resposta imune exagerada a um vírus.</p>
+  <div class="prose"><ul>
+    <li>Vírus: adenovírus, enterovírus, parvovírus B19, herpes simples, hepatite C, citomegalovírus, Epstein-Barr. Outras causas: autoimunes, fármacos (antraciclinas; clozapina por hipersensibilidade), venenos.</li>
+    <li>Mais em homens adultos jovens. Uma das principais causas de morte súbita abaixo de 40 anos e em crianças.</li>
+    <li>Clínica: febre, quadro gripal, arritmia ou bloqueio súbito, IC. Pista: <strong>taquicardia desproporcional à febre</strong>.</li>
+    <li>ECG e radiografia inespecíficos; o eco mostra disfunção. Mais acurados: <strong>ressonância cardíaca</strong> e cintilografia com gálio-67.</li>
+    <li>Biópsia endomiocárdica: se fulminante, se houver dúvida ou se o resultado mudar a conduta.</li>
+    <li>Investigar de rotina lúpus, artrite reumatoide, sarcoidose, Churg-Strauss (granulomatose eosinofílica com poliangiíte) e doença celíaca: mudam o tratamento.</li>
+    <li>Tratamento: o da IC + sódio 2-3 g/dia, controle de peso, vacina fora da atividade. <strong>Sem exercício por 6 meses</strong> após a fase aguda.</li>
+  </ul></div>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p>Anti-inflamatório não esteroide (AINE) é contraindicado na miocardite (cardiotóxico, retém sal e água). Por isso, segundo a apostila, a <strong>miopericardite não se trata com AINE</strong>, ao contrário da pericardite isolada.</p>
+    <p>IC aguda + quadro gripal + <strong>poliartrite migratória</strong> = febre reumática, não miocardite viral.</p></div>
+</section>
+
+<section class="degrau" id="m5">
+  <div class="dhead"><span class="dnum">5</span><div class="dtitle"><h3>Periparto: IC nova em volta do parto</h3></div></div>
+  <p class="lede">Cardiomiopatia nova entre o último mês de gestação e 5 meses após o parto. Mecanismo pouco conhecido.</p>
+  <div class="prose"><ul>
+    <li>Fatores de risco, <strong>GANHE</strong>: Gemelar, Age (idade acima de 30), etnia Negra, Hipertensão, pré-Eclâmpsia ou eclâmpsia.</li>
+    <li>Clínica de IC (dispneia, ortopneia, dispneia paroxística noturna, edema); pode abrir com choque, edema agudo, arritmia ventricular, tromboembolismo ou morte súbita.</li>
+    <li>Diagnóstico: ecocardiograma, com disfunção e fração de ejeção (FE) <strong>abaixo de 45%</strong>.</li>
+    <li>Na gestação: succinato de metoprolol, hidralazina + nitrato, digital, furosemida. Na amamentação: soma-se o inibidor da enzima conversora de angiotensina (IECA). Depois, ICFEr padrão.</li>
+    <li>Nova gestação: desaconselhar a todas (recidiva). Má ideia de vez se a FE ficou abaixo de 50% ou caiu abaixo de 25% no episódio.</li>
+  </ul></div>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p>IECA fica fora na gestação (risco fetal) e entra na amamentação. A troca de fase é a questão.</p></div>
+</section>
+
+<section class="degrau" id="m6">
+  <div class="dhead"><span class="dnum">6</span><div class="dtitle"><h3>Restritivas e amiloidose: o coração duro</h3></div></div>
+  <p class="lede">Perda de complacência = disfunção diastólica. No início não há dilatação ventricular nem disfunção sistólica.</p>
+  <div class="prose"><ul>
+    <li>Mais da metade fica sem causa. Na prova, restritiva é praticamente só <strong>amiloidose</strong>.</li>
+    <li>Amiloidose: depósito de fibrilas amiloides; o rim é o órgão mais atingido, depois o coração.</li>
+  </ul></div>
+  <div class="vs">
+    <div class="a"><h5>Cadeias leves (AL, "primária")</h5><ul>
+      <li>Pico monoclonal na eletroforese de proteínas do sangue ou da urina.</li>
+      <li>Mieloma múltiplo em 15%; coração atingido em 50-75%.</li>
+      <li>Trata a gamopatia: quimioterapia, anticorpo monoclonal, transplante de medula.</li></ul></div>
+    <div class="b"><h5>Transtirretina (ATTR)</h5><ul>
+      <li>Proteína feita no fígado. Selvagem (senil) ou hereditária (mutação).</li>
+      <li>Hereditária: coração + nervo periférico (neuropatia, disautonomia); média de 60 anos.</li>
+      <li><strong>Tafamidis</strong> (estabiliza a transtirretina): classe funcional da New York Heart Association (NYHA) I-III, benefício questionado na III; e neuropatia grave.</li></ul></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Clínica: IC, distúrbio de condução, hipotensão ortostática, tromboembolismo; pode somar rim e túnel do carpo.</li>
+    <li>Eco: hipertrofia, disfunção diastólica, FE normal ou pouco reduzida, <strong>átrios muito dilatados</strong>, derrame pericárdico; miocárdio hiperrefringente (característico, não patognomônico).</li>
+    <li>Ressonância: realce tardio subendocárdico difuso ou transmural.</li>
+    <li><strong>Cintilografia:</strong> padrão-ouro não invasivo da ATTR; valor preditivo positivo de até 100% dispensa a biópsia.</li>
+    <li>Se precisar de tecido: glândula salivar labial com vermelho do Congo, em vez do coração.</li>
+    <li>ECG (o que mais cai): <strong>baixa voltagem difusa</strong> (sobretudo na AL), bloqueios AV, FA.</li>
+  </ul></div>
+  <div class="banca"><div class="albl">Ângulo da banca</div>
+    <p><strong>Hipertrofia no eco + baixa voltagem no ECG</strong>: a dissociação obriga a pensar em amiloidose. Hipertrofia de verdade daria sobrecarga do VE no ECG.</p></div>
+  <details class="ref"><summary>Causas de cardiomiopatia restritiva</summary><div class="refbody"><ul>
+    <li>Endomiocárdica: endomiocardiofibrose, carcinoide, hipereosinofílica, fibrose por drogas, radioterapia.</li>
+    <li>Infiltrativa: amiloidose, sarcoidose, infiltração gordurosa.</li>
+    <li>Não infiltrativa: esclerodermia, familiar, diabética.</li>
+    <li>Depósito: hemocromatose, Fabry, glicogenoses.</li></ul></div></details>
+</section>
+
+<section class="degrau" id="m7">
+  <div class="dhead"><span class="dnum">7</span><div class="dtitle"><h3>Hipertrófica (CMH): o músculo que obstrui a saída</h3></div></div>
+  <p class="lede">A cardiomiopatia hipertrófica (CMH) é autossômica dominante, de penetrância variável: fibras desarranjadas, septo grosso e assimétrico, sístole normal, diástole rígida. É a cardiomiopatia mais cobrada.</p>
+  <div class="prose"><ul>
+    <li>Sintomas: dispneia, precordialgia, síncope ou pré-síncope, palpitação, morte súbita. Vêm da diástole rígida, do excesso de músculo e da obstrução.</li>
+    <li><strong>Principal causa de morte súbita em jovens e atletas</strong> no mundo.</li>
+    <li>Sopro: sistólico ejetivo, rude, em diamante (crescendo-decrescendo), na borda esternal esquerda.</li>
+    <li>Mecanismo: menos sangue na cavidade = septo mais perto da saída = mais obstrução e mais sopro.</li>
+  </ul></div>
+  <div class="vs">
+    <div class="a"><h5>Aumenta o sopro (cavidade vazia)</h5><ul>
+      <li>Manobra de Valsalva.</li>
+      <li>Hipovolemia.</li>
+      <li>Diurético; vasodilatador, sobretudo nitrato.</li></ul></div>
+    <div class="b"><h5>Diminui o sopro (cavidade cheia)</h5><ul>
+      <li>Ficar de cócoras.</li>
+      <li>Tudo que aumenta o retorno venoso e o enchimento.</li></ul></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Outros achados: pulso bisferiens, ictus propulsivo, B4, sopro regurgitativo mitral, desdobramento paradoxal de B2.</li>
+    <li>ECG: inversão de T (90%), sobrecarga do VE (50%), <strong>ondas Q patológicas</strong> (30%, a "queridinha"), FA.</li>
+    <li>Eco: principal método; mostra hipertrofia, obstrução, movimento sistólico anterior da mitral, átrio esquerdo grande.</li>
+    <li><strong>Ressonância: padrão-ouro.</strong> Pega a forma apical (Yamaguchi), que o eco perde.</li>
+    <li>Genética em todos; mutação achada -&gt; rastrear parentes de 1º grau e aconselhar.</li>
+  </ul></div>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p>Valsalva separa CMH de estenose aórtica (EA): o sopro da <strong>EA diminui</strong>; o da <strong>CMH aumenta</strong>.</p></div>
+</section>
+
+<section class="degrau" id="m8">
+  <div class="dhead"><span class="dnum">8</span><div class="dtitle"><h3>CMH: quem ganha CDI e o que tratar</h3></div></div>
+  <p class="lede">A maioria é assintomática; 5-10% evolui mal. A decisão central é o cardiodesfibrilador implantável (CDI) contra a taquicardia ventricular (TV).</p>
+  <div class="vs">
+    <div class="a"><h5>Fatores de risco estabelecidos</h5><ul>
+      <li>História familiar de morte súbita abaixo de 50 anos.</li>
+      <li>Síncope inexplicada e de repetição.</li>
+      <li>Parede de 30 mm ou mais.</li>
+      <li>TV não sustentada: 3 batimentos ou mais acima de 120 bpm.</li>
+      <li>Queda da PAS de 20 mmHg ou mais no esforço, junto de outro fator.</li></ul></div>
+    <div class="b"><h5>Fatores possíveis</h5><ul>
+      <li>Gradiente de via de saída de 30 mmHg ou mais.</li>
+      <li>Mutação de alto risco.</li>
+      <li>Fibrose acima de 15% da massa do VE.</li>
+      <li>Aneurisma apical do VE.</li></ul></div>
+  </div>
+  <div class="prose"><ul>
+    <li><strong>Reduzir a obstrução:</strong> betabloqueador e verapamil (bloqueador de canal de cálcio não di-hidropiridínico).</li>
+    <li><strong>Evitar:</strong> digoxina (inotrópico aperta a saída); nitrato, diurético e vasodilatador (esvaziam a cavidade), salvo indicação mais urgente.</li>
+    <li>Refratário: miectomia septal, ablação septal alcoólica (infarto dirigido que afina o septo) ou estimulação cardíaca artificial (dessincroniza o septo).</li>
+  </ul></div>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p>Na CMH a lógica da IC comum se inverte: <strong>inotrópico e redutor de pré-carga pioram</strong>.</p></div>
+</section>
+
+<section class="degrau" id="m9">
+  <div class="dhead"><span class="dnum">9</span><div class="dtitle"><h3>As três lado a lado, e as raras</h3></div></div>
+  <p class="lede">A tabela-resumo da apostila, para o "qual é qual".</p>
+  <div class="crit c4 hd">
+    <div class="row"><span class="k">Achado</span><span class="v">Dilatada</span><span class="v">Restritiva</span><span class="v">Hipertrófica</span></div>
+    <div class="row"><span class="k">Sintomas</span><span class="v" data-l="Dilatada">IC, fadiga, astenia</span><span class="v" data-l="Restritiva">IC + sintomas da causa</span><span class="v" data-l="Hipertrófica">Dispneia, angina, síncope, palpitação</span></div>
+    <div class="row"><span class="k">Exame</span><span class="v" data-l="Dilatada">Ictus aumentado, B3, B4, sopro mitral</span><span class="v" data-l="Restritiva">B4; Kussmaul (jugular sobe na inspiração)</span><span class="v" data-l="Hipertrófica">Ictus propulsivo, bisferiens, B4, sopro com Valsalva</span></div>
+    <div class="row"><span class="k">ECG</span><span class="v" data-l="Dilatada">Taquicardia, FA, TV, ST-T, bloqueio de ramo</span><span class="v" data-l="Restritiva">Baixa voltagem, bloqueios de ramo e AV</span><span class="v" data-l="Hipertrófica">Sobrecarga do VE, ST-T, Q patológica, FA, TV</span></div>
+    <div class="row"><span class="k">Eco</span><span class="v" data-l="Dilatada">VE dilatado e hipocontrátil</span><span class="v" data-l="Restritiva">Parede espessa, biatrial, FE normal, derrame</span><span class="v" data-l="Hipertrófica">Septo assimétrico, obstrução, movimento anterior da mitral</span></div>
+  </div>
+  <details class="ref"><summary>Raras que já caíram</summary><div class="refbody"><ul>
+    <li><strong>Arritmogênica do VD:</strong> genética; gordura e fibrose no VD; morte súbita em jovens. ECG: T invertida e onda épsilon em V1-V3; TV de via de saída do VD (morfologia de bloqueio de ramo esquerdo, positiva na parede inferior).</li>
+    <li><strong>Endomiocardiofibrose</strong> (restritiva): fibrose dos ápices; IC de FE preservada e tromboembolismo.</li>
+    <li><strong>Miocárdio não compactado:</strong> familiar; trabeculações no ápice do VE; IC de FE reduzida e tromboembolismo.</li></ul></div></details>
+  <details class="ref"><summary>Tumores cardíacos (baixa prioridade)</summary><div class="refbody"><ul>
+    <li>Metástases atingem o coração 20-40x mais que os tumores primários; 75% dos primários são benignos.</li>
+    <li><strong>Mixoma:</strong> o primário mais comum; 80% no átrio esquerdo, com pedículo no septo interatrial; mulheres em 60-70%.</li>
+    <li>Tríade: sintomas constitucionais (febre, perda de peso, sudorese); obstrução mitral que muda com a posição; embolia, sobretudo cerebral.</li>
+    <li>Sopro diastólico em ruflar com reforço pré-sistólico e "plop" tumoral. Sem estalido de abertura nem B1 hiperfonética: isso o separa da estenose mitral reumática.</li></ul></div></details>
+</section>
+
+<!-- ============ ATO III ============ -->
+<div class="ato" id="p0"><span>Ato III</span><h2>Pericardiopatias</h2></div>
+
+<section class="degrau">
+  <div class="dhead"><span class="dnum">0</span><div class="dtitle"><h3>A régua: um saco com 50 mL</h3></div></div>
+  <p class="lede">Pericárdio visceral (sobre o epicárdio) e parietal, com um espaço virtual de ~50 mL de líquido seroso que só lubrifica.</p>
+  <div class="prose"><ul>
+    <li>Três jeitos de dar errado: <strong>inflamar</strong> (pericardite aguda), <strong>encher</strong> (tamponamento), <strong>endurecer</strong> (constritiva).</li>
+    <li>Causas que caem: viral (a principal), tuberculosa, urêmica, pós-infarto, autoimune (lúpus), radioterapia.</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="p1">
+  <div class="dhead"><span class="dnum">1</span><div class="dtitle"><h3>Pericardite aguda: a dor que muda com a posição</h3></div></div>
+  <p class="lede">Aguda = até 4-6 semanas. Em geral viral, com pródromo (febre, mialgia, coriza, tosse, diarreia).</p>
+  <div class="prose"><ul>
+    <li>Dor pleurítica e forte: piora na inspiração e deitado de costas; irradia para pescoço e trapézio.</li>
+    <li>Melhora sentado e inclinado para frente, ou em prece maometana (genupeitoral): o pericárdio "descansa" no esterno.</li>
+    <li>A efusiva dói menos que a seca; a da artrite reumatoide é quase assintomática.</li>
+    <li>Exame: <strong>atrito pericárdico</strong> (rude, "couro novo", borda esternal esquerda, intermitente), quase patognomônico. O resto é febre e taquicardia.</li>
+    <li>ECG: <strong>supra de ST difuso</strong> (pode poupar V1 e aVR), sem território coronariano, com <strong>infra de PR</strong>.</li>
+    <li>Laboratório: leucócitos, velocidade de hemossedimentação (VHS) e proteína C reativa (PCR) altos. Troponina ou CK-MB alta = <strong>miopericardite</strong>. Sorologia viral não ajuda; fator antinuclear (FAN) e fator reumatoide só se suspeita autoimune.</li>
+    <li>Imagem: eco vê derrame, tamponamento e contratilidade; ressonância é a melhor (realce tardio do pericárdio = inflamação).</li>
+  </ul></div>
+  <div class="crit hd">
+    <div class="row"><span class="k">DEDA</span><span class="v">Diagnóstico com 2 dos 4 critérios</span></div>
+    <div class="row"><span class="k">Dor</span><span class="v">Ventilatório-dependente e posicional</span></div>
+    <div class="row"><span class="k">ECG</span><span class="v">Supra de ST difuso + infra de PR</span></div>
+    <div class="row"><span class="k">Derrame</span><span class="v">Pericárdico novo ou piora de um prévio</span></div>
+    <div class="row"><span class="k">Atrito</span><span class="v">Pericárdico</span></div>
+  </div>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p>Supra de ST em todas as paredes não é IAM: "ninguém infarta o coração inteiro". Supra que respeita território = coronária.</p></div>
+</section>
+
+<section class="degrau" id="p2">
+  <div class="dhead"><span class="dnum">2</span><div class="dtitle"><h3>Tratamento: AINE + colchicina</h3></div></div>
+  <p class="lede">A maioria é autolimitada. Trata-se o sintoma e previne-se a recidiva, em escada.</p>
+  <ol class="chain">
+    <li><strong>AINE (1ª linha)</strong> por 1-2 semanas, ou até sumir a dor e normalizar a PCR: ibuprofeno, ácido acetilsalicílico (AAS, 650-1000 mg de 8/8 h), naproxeno, indometacina. <strong>AAS se infarto recente.</strong></li>
+    <li><strong>Colchicina junto</strong>, por até 3-6 meses conforme a resposta: poupa AINE.</li>
+    <li><strong>Corticoide</strong> só no refratário, junto da colchicina (prednisona 0,2-0,5 mg/kg).</li>
+    <li>Incessante ou recorrente: imunoglobulina, azatioprina, ciclosporina, antagonista de interleucina-1.</li>
+  </ol>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p>Corticoide como 1ª opção na pericardite viral <strong>aumenta a recidiva</strong>. Tem lugar nas causas tuberculosa, autoimune, urêmica e na gestação.</p>
+    <p>Miopericardite: sem AINE (degrau 4 do Ato II).</p></div>
+</section>
+
+<section class="degrau" id="p3">
+  <div class="dhead"><span class="dnum">3</span><div class="dtitle"><h3>Casos especiais e pós-infarto</h3></div></div>
+  <p class="lede">Cada etiologia tem uma pista e uma conduta própria.</p>
+  <div class="crit">
+    <div class="row"><span class="k">Tuberculosa</span><span class="v">Principal causa de derrame pericárdico crônico; grande causa de constritiva no Brasil. <strong>Adenosina deaminase (ADA) acima de 40 U/L</strong> no líquido fecha.</span></div>
+    <div class="row"><span class="k">Urêmica</span><span class="v">Ureia muito alta; clínica pobre, ECG típico raro. <strong>Diálise de urgência.</strong></span></div>
+    <div class="row"><span class="k">Purulenta</span><span class="v">Febre alta, leucocitose, toxemia; após cirurgia cardíaca ou torácica, ou pneumonia. Drenagem aberta (janela pericárdica).</span></div>
+    <div class="row"><span class="k">HIV</span><span class="v">Derrame por serosite, IC, neoplasia ou tuberculose.</span></div>
+    <div class="row"><span class="k">Actínica</span><span class="v">Aguda (dor, febre) ou tardia, anos após a radioterapia; confunde com derrame maligno.</span></div>
+  </div>
+  <div class="vs">
+    <div class="a"><h5>Epistenocárdica</h5><ul>
+      <li>1º ao 10º dia após IAM extenso.</li>
+      <li>AAS em dose anti-inflamatória.</li></ul></div>
+    <div class="b"><h5>Síndrome de Dressler</h5><ul>
+      <li>Tardia: 1 semana a meses após o IAM.</li>
+      <li>Autoimune; costuma vir com derrame pleural.</li></ul></div>
+  </div>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p>Pericardite pós-IAM se separa pelo <strong>tempo</strong>: dias = epistenocárdica; semanas a meses = Dressler.</p></div>
+</section>
+
+<section class="degrau" id="p4">
+  <div class="dhead"><span class="dnum">4</span><div class="dtitle"><h3>Tamponamento: o coração espremido</h3></div></div>
+  <p class="lede">Líquido sob pressão no saco impede o enchimento e derruba o débito. O que pesa é a causa e a velocidade de instalação.</p>
+  <div class="prose"><ul>
+    <li><strong>Tríade de Beck:</strong> turgência jugular, hipotensão, bulhas abafadas. Somam-se taquicardia, hipoperfusão e dispneia.</li>
+    <li><strong>Pulso paradoxal (~80%):</strong> PAS cai mais de 10 mmHg na inspiração profunda. A inspiração enche o VD, que sem espaço comprime as câmaras esquerdas.</li>
+    <li>Eco, se houver tempo: tamanho do derrame, <strong>colapso sistólico do átrio direito e diastólico do VD</strong>, variação do fluxo nas valvas AV, veia cava inferior dilatada, coração oscilante (swinging heart).</li>
+    <li>Radiografia pode ser normal; acima de 200 mL a área cardíaca cresce.</li>
+    <li>ECG: baixa voltagem (QRS abaixo de 5 mm no plano frontal e de 10 mm nas precordiais) e <strong>alternância elétrica</strong> (QRS que muda de amplitude e polaridade a cada batimento): o achado mais cobrado.</li>
+    <li><strong>Tratamento de emergência: drenar.</strong> Pericardiocentese percutânea (punção de Marfan, agulha rumo ao ombro esquerdo) pela agilidade; a janela pericárdica cirúrgica é a via preferível quando possível.</li>
+  </ul></div>
+  <details class="ref"><summary>Causas de pulso paradoxal</summary><div class="refbody"><ul>
+    <li>VD pouco complacente: tamponamento, constritiva, tromboembolismo pulmonar (TEP), infarto de VD.</li>
+    <li>Inspiração muito profunda: asma, doença pulmonar obstrutiva crônica (DPOC), obesidade.</li>
+    <li>Disfunção sistólica grave do VE.</li></ul></div></details>
+  <div class="banca"><div class="albl">Ângulo da banca</div>
+    <p>Beck, pulso paradoxal e alternância elétrica: a apostila diz que o tamponamento cai de forma repetitiva e previsível nesses três pontos.</p></div>
+</section>
+
+<section class="degrau" id="p5">
+  <div class="dhead"><span class="dnum">5</span><div class="dtitle"><h3>Constritiva: a carapaça</h3></div></div>
+  <p class="lede">Inflamação crônica que espessa e calcifica o pericárdio: o enchimento diastólico para cedo e o volume sistólico cai.</p>
+  <div class="prose"><ul>
+    <li>Causas: idiopática ou viral, <strong>tuberculose (a principal no Brasil)</strong>, pós-cirurgia cardíaca, pós-radioterapia, colagenoses, neoplasia, uremia, trauma.</li>
+    <li>Clínica de IC direita: dispneia aos esforços, ascite, hepatomegalia, edema de membros inferiores, anasarca.</li>
+    <li>Jugular túrgida com <strong>descenso Y profundo</strong>: quando a tricúspide abre, o átrio esvazia de uma vez no VD vazio. O X também acentua.</li>
+    <li><strong>Kussmaul</strong> (jugular sobe na inspiração): a constritiva é a principal causa.</li>
+    <li><strong>Knock pericárdico:</strong> protodiastólico, igual a uma B3, praticamente patognomônico. <strong>Broadbent:</strong> o ápice retrai na sístole. Pulso paradoxal em ~30%.</li>
+    <li>ECG: baixa voltagem (a "queridinha"); também ST-T, Q, bloqueios AV, FA, sobrecarga atrial.</li>
+    <li>Imagem: a radiografia mostra o pericárdio <strong>calcificado</strong>; tomografia e ressonância medem o espessamento (o eco vê mal); o eco mostra a repercussão.</li>
+    <li><strong>IC descompensada com peptídeo natriurético tipo B (BNP) normal:</strong> câmaras presas não distendem, e é a distensão que libera BNP.</li>
+    <li>Tratamento: <strong>pericardiectomia</strong>. Enquanto espera: diurético; se a ressonância mostra inflamação, AINE, colchicina e corticoide. NYHA II-IV: não adiar.</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="p6">
+  <div class="dhead"><span class="dnum">6</span><div class="dtitle"><h3>Tamponamento x constritiva x restritiva</h3></div></div>
+  <p class="lede">As três enchem mal o coração. A pergunta que separa: o problema é líquido, casca ou músculo?</p>
+  <div class="crit c4 hd">
+    <div class="row"><span class="k">Achado</span><span class="v">Tamponamento</span><span class="v">Constritiva</span><span class="v">Restritiva</span></div>
+    <div class="row"><span class="k">Lesão</span><span class="v" data-l="Tamponamento">Líquido sob pressão</span><span class="v" data-l="Constritiva">Pericárdio espesso e calcificado</span><span class="v" data-l="Restritiva">Miocárdio rígido (amiloidose)</span></div>
+    <div class="row"><span class="k">Ritmo</span><span class="v" data-l="Tamponamento">Agudo, emergência</span><span class="v" data-l="Constritiva">Crônico, IC direita</span><span class="v" data-l="Restritiva">Crônico, IC</span></div>
+    <div class="row"><span class="k">Sinal-chave</span><span class="v" data-l="Tamponamento">Beck; paradoxal em ~80%</span><span class="v" data-l="Constritiva">Kussmaul, knock, Y profundo; paradoxal em ~30%</span><span class="v" data-l="Restritiva">B4; Kussmaul possível</span></div>
+    <div class="row"><span class="k">ECG</span><span class="v" data-l="Tamponamento">Baixa voltagem + <strong>alternância elétrica</strong></span><span class="v" data-l="Constritiva">Baixa voltagem</span><span class="v" data-l="Restritiva">Baixa voltagem, bloqueios</span></div>
+    <div class="row"><span class="k">Imagem</span><span class="v" data-l="Tamponamento">Derrame; colapso de átrio direito e VD</span><span class="v" data-l="Constritiva">Calcificação na radiografia; espessamento na tomografia</span><span class="v" data-l="Restritiva">Parede espessa e brilhante; átrios grandes</span></div>
+    <div class="row"><span class="k">Conduta</span><span class="v" data-l="Tamponamento">Drenar já</span><span class="v" data-l="Constritiva">Pericardiectomia</span><span class="v" data-l="Restritiva">Tratar a causa (gamopatia; tafamidis)</span></div>
+  </div>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p><strong>Baixa voltagem não separa</strong>: líquido, casca e depósito são todos anteparos. Separe pelo resto: alternância elétrica = tamponamento; knock e calcificação = constritiva; parede grossa no eco = restritiva.</p>
+    <p>Kussmaul aponta constritiva. A apostila admite o sinal no tamponamento, mas ali o que domina é o pulso paradoxal.</p></div>
+</section>
+
+<!-- ============ ATO IV ============ -->
+<div class="ato" id="x0"><span>Ato IV</span><h2>Cruzamento: a dor torácica que não é IAM</h2></div>
+
+<section class="degrau">
+  <div class="dhead"><span class="dnum">0</span><div class="dtitle"><h3>Dissecção x IAM x TEP x pericardite x takotsubo</h3></div></div>
+  <p class="lede">Cinco quadros que chegam com dor e podem alterar o ECG. O erro grave é tratar todos como IAM.</p>
+  <div class="crit c4 hd">
+    <div class="row"><span class="k">Quadro</span><span class="v">Dor</span><span class="v">Pista decisiva</span><span class="v">Conduta que decide</span></div>
+    <div class="row"><span class="k">Dissecção</span><span class="v" data-l="Dor">Máxima desde o início, rasgando, para o dorso</span><span class="v" data-l="Pista decisiva">Assimetria de pulso ou PA; sopro diastólico; mediastino largo</span><span class="v" data-l="Conduta">Sem fibrinolítico; betabloqueador antes do nitroprussiato</span></div>
+    <div class="row"><span class="k">IAM com supra</span><span class="v" data-l="Dor">Cresce aos poucos</span><span class="v" data-l="Pista decisiva">Supra de ST que respeita território coronariano</span><span class="v" data-l="Conduta">Reperfusão: angioplastia ou fibrinolítico</span></div>
+    <div class="row"><span class="k">TEP</span><span class="v" data-l="Dor">Pleurítica, com dispneia súbita</span><span class="v" data-l="Pista decisiva">Taquipneia; ECG com taquicardia sinusal (o mais comum) ou S1Q3T3 (o mais característico, raro)</span><span class="v" data-l="Conduta">D-dímero só exclui com probabilidade clínica baixa</span></div>
+    <div class="row"><span class="k">Pericardite</span><span class="v" data-l="Dor">Pleurítica, posicional, alivia inclinado</span><span class="v" data-l="Pista decisiva">Supra difuso + infra de PR; atrito</span><span class="v" data-l="Conduta">AINE + colchicina</span></div>
+    <div class="row"><span class="k">Takotsubo</span><span class="v" data-l="Dor">Igual à da SCA</span><span class="v" data-l="Pista decisiva">Mulher, estresse, coronárias limpas, balonamento apical</span><span class="v" data-l="Conduta">Protocolo de SCA; sem trombólise</span></div>
+  </div>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p>ECG de IAM inferior + dor que já começou máxima + assimetria de pulso = <strong>dissecção A invadindo a coronária direita</strong>. Fibrinolítico é contraindicação absoluta.</p></div>
+</section>
+
+<section class="synth" id="gat">
+  <h2>Gatilhos de prova</h2>
+  <p class="note">Uma linha por degrau. Vermelho = armadilha de banca.</p>
+  <div class="trig">
+    <div><span class="tk">SAA</span><span class="tv">Sangue na média: dissecção (85-95%), HIM, UAP</span></div>
+    <div><span class="tk">Stanford</span><span class="tv"><b>A = tocou a ascendente</b>, qualquer que seja a origem</span></div>
+    <div><span class="tk">Dor aórtica</span><span class="tv">Máxima desde o início; A anterior, B interescapular</span></div>
+    <div><span class="tk">Tipo A</span><span class="tv">Assimetria entre braços, insuficiência aórtica, AVE, IAM inferior</span></div>
+    <div><span class="tk">Tipo B</span><span class="tv">Assimetria braço x perna, isquemia visceral, paraplegia</span></div>
+    <div><span class="tk">Imagem</span><span class="tv">Agudo: angioTC; <b>instável: ETE</b>; radiografia não descarta</span></div>
+    <div><span class="tk">ADD-RS</span><span class="tv">0-1 + D-dímero abaixo de 500 descarta; 2-3 angioTC direto</span></div>
+    <div><span class="tk">Ordem</span><span class="tv">Morfina, <b>betabloqueador (FC &lt; 60) antes do nitroprussiato</b> (PAS 100-120)</span></div>
+    <div><span class="tk">Definitivo</span><span class="tv">A = cirurgia sempre; B complicada = TEVAR</span></div>
+    <div><span class="tk">Dilatada</span><span class="tv">Idiopática; principal indicação de transplante</span></div>
+    <div><span class="tk">Chagas</span><span class="tv">BRD + BDAS; aneurisma apical em dedo de luva</span></div>
+    <div><span class="tk">Takotsubo</span><span class="tv">SCA + coronária limpa + estresse + balão apical; <b>sem trombólise</b></span></div>
+    <div><span class="tk">Miocardite</span><span class="tv">Jovem gripado com IC; <b>sem AINE</b>, sem exercício por 6 meses</span></div>
+    <div><span class="tk">Periparto</span><span class="tv">Último mês até 5 meses; GANHE; IECA só na amamentação</span></div>
+    <div><span class="tk">Amiloidose</span><span class="tv"><b>Hipertrofia no eco + baixa voltagem no ECG</b></span></div>
+    <div><span class="tk">ATTR</span><span class="tv">Cintilografia dispensa biópsia; tafamidis</span></div>
+    <div><span class="tk">CMH</span><span class="tv">Sopro <b>sobe com Valsalva</b> (a EA desce), cai de cócoras</span></div>
+    <div><span class="tk">CMH conduta</span><span class="tv">Betabloqueador ou verapamil; <b>evita digoxina, nitrato, diurético</b></span></div>
+    <div><span class="tk">CDI</span><span class="tv">Morte súbita familiar, síncope, parede de 30 mm, TV não sustentada</span></div>
+    <div><span class="tk">Pericardite</span><span class="tv">2 de 4: dor, ECG, derrame, atrito</span></div>
+    <div><span class="tk">ECG pericárdico</span><span class="tv">Supra difuso + infra de PR</span></div>
+    <div><span class="tk">Tratar</span><span class="tv">AINE + colchicina; <b>corticoide como 1ª opção aumenta recidiva</b></span></div>
+    <div><span class="tk">Pós-IAM</span><span class="tv">Dias = epistenocárdica (AAS); semanas = Dressler</span></div>
+    <div><span class="tk">Tuberculose</span><span class="tv">ADA acima de 40; principal constritiva no Brasil</span></div>
+    <div><span class="tk">Tamponamento</span><span class="tv">Beck + pulso paradoxal + alternância elétrica; drenar</span></div>
+    <div><span class="tk">Constritiva</span><span class="tv">Kussmaul, knock, calcificação, <b>BNP normal</b></span></div>
+  </div>
+</section>
+
+<footer>
+  <p><strong>Fonte:</strong> <code>resumos/Clínica Médica/Cardiologia/7. Síndromes Aórticas Agudas.pdf</code> (EMED 2026, Prof. Paulo Dalto, p. 4-15), <code>20. Cardiomiopatias.pdf</code> (EMED 2026, Prof. Juan Demolinari, p. 4-26) e <code>15. Pericardiopatias.pdf</code> (EMED 2024, Prof. Juan Demolinari, p. 4-20). Fora das três, marcados: contraindicação do fibrinolítico na dissecção (<code>Cardiologia/10. IAMCSSST.pdf</code>, p. 10) e a linha do TEP no Ato IV (<code>Pneumologia/3. Tromboembolismo Pulmonar (TEP).pdf</code>, p. 24, 34 e 37).</p>
+  <p>A apostila de pericardiopatias se ancora na diretriz brasileira de 2013. Prepara a tarefa #768 (teoria), antes das 10-15 questões do banco pelo filtro do tema.</p>
+</footer>
+</div>

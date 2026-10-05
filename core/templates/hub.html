@@ -72,6 +72,7 @@
 .qd-meta{margin:2px 0 0;color:var(--tinta3);font-size:.82em;display:flex;flex-wrap:wrap;gap:2px 10px}
 .qd-bl{color:var(--tinta2);font-weight:600}
 .qd-atraso{color:var(--alerta)}
+.qd-registro{color:var(--qz-ok);font-weight:600}   /* s214: lista resolvida, plano ainda nao registrou */
 .qd-acao{margin:2px 0 0;font-size:.9em;display:flex;flex-wrap:wrap;gap:0 18px}
 .qd-acao a,.qd-acao .tenue{display:inline-flex;align-items:center;min-height:44px}
 .qd-acao a{color:var(--acento);font-weight:600;text-underline-offset:2px}
@@ -98,6 +99,19 @@
 .qd-feitas summary{cursor:pointer;min-height:44px;padding:11px 0;font-weight:650;color:var(--tinta2)}
 .qd-feitas .qd-lista{margin-top:8px}
 .qd-aviso{color:var(--tinta3);font-size:.86em;margin:0 0 14px}
+/* s214 (pedido do operador, 04/10): secao recolhivel nas abas Aulas e Listas -- o titulo e o controle
+   (alvo de 44 px), a seta gira; recolhida, fica so o titulo com a contagem */
+.qd-titulo[data-sec]{cursor:pointer;min-height:44px;align-content:center;margin-bottom:6px;border-radius:8px;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+.qd-titulo[data-sec]:hover{color:var(--tinta)}
+.qd-titulo[data-sec]:focus-visible{outline:3px solid var(--acento);outline-offset:2px}
+.qd-seta{display:inline-block;width:.9em;text-align:center;color:var(--tinta3);transition:transform 150ms ease}
+.qd-seta::before{content:"\25B8"}
+.qd-titulo[aria-expanded="true"] .qd-seta{transform:rotate(90deg)}
+@media (prefers-reduced-motion: reduce){.qd-seta{transition:none}}
+[data-recolhida] > .qd-lista,[data-recolhida] > .qz-lista,[data-recolhida] > .qd-vazio{display:none}
+[data-recolhida] > .qd-titulo{margin-bottom:0}
+.qd-semanas > [data-recolhida] + [data-recolhida]{margin-top:-18px}   /* recolhidas em sequencia = uma lista de titulos */
+.qz-semanas > [data-recolhida] + [data-recolhida]{margin-top:-14px}
 
 .hub-leitor-barra{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin-bottom:14px}
 .hub-leitor-titulo{margin:0;min-width:0;font-weight:650}
@@ -515,6 +529,8 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
     doc.addEventListener("toggle", function(){ medir(quadro); }, true);
     // s213: perguntas e comentarios do documento (alca fechada); falha aqui nunca derruba o leitor (R2)
     try{ pendLigar(doc, quadro); }catch(e){}
+    // s214: o marca-texto da aula aberta no leitor (o mesmo R2: falha aqui nunca derruba o leitor)
+    if(quadro.id === "hub-leitor-quadro"){ try{ grifoLigar(doc, quadro, GRIFO.slug); }catch(e){} }
     medir(quadro);
     [150, 600, 1500, 3000].forEach(function(ms){ setTimeout(function(){ medir(quadro); }, ms); });
     if(doc.fonts && doc.fonts.ready){ doc.fonts.ready.then(function(){ medir(quadro); }); }
@@ -556,6 +572,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
     window.scrollTo(0, 0);
     pendSoltar($("hub-leitor-quadro"));
     assinaAbrir(pendSlug(href));
+    GRIFO.slug = pendSlug(href); GRIFO.ctx = null;
     carregar($("hub-leitor-quadro"), href, $("hub-leitor-aviso"));
   }
 
@@ -563,6 +580,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
     var quadro = $("hub-leitor-quadro");
     pendSoltar(quadro);
     assinaAbrir("");
+    GRIFO.slug = ""; GRIFO.ctx = null;
     quadro.onload = null;
     quadro.removeAttribute("srcdoc");
     leitor.hidden = true;
@@ -823,9 +841,9 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
   }
 
   // assinatura de leitura: analises/pendencias/itens/doc_<slug>, no rodape do leitor
-  var ASSINA = {slug: "", item: null, erro: false, leitura: false, aviso: "", unsub: null};
+  var ASSINA = {slug: "", item: null, erro: false, leitura: false, aviso: "", concluiu: false, unsub: null};
   function assinaAbrir(slug){
-    ASSINA.slug = slug; ASSINA.item = null; ASSINA.erro = false; ASSINA.leitura = false; ASSINA.aviso = "";
+    ASSINA.slug = slug; ASSINA.item = null; ASSINA.erro = false; ASSINA.leitura = false; ASSINA.aviso = ""; ASSINA.concluiu = false;
     $("hub-assina").hidden = !slug;
     $("hub-assina").style.marginLeft = $("hub-assina").style.marginRight = "";
     if(!slug){ if(ASSINA.unsub){ try{ ASSINA.unsub(); }catch(e){} ASSINA.unsub = null; } return; }
@@ -866,6 +884,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
     ret.textContent = e.retorno ? "Retorno do agente: " + e.retorno : "";
     $("hub-assina").setAttribute("data-st", ASSINA.erro ? "erro" : (leitura ? "leitura" : e.chave));
     var rot = leitura ? PEND_LEITURA : (e.rotulo || "");
+    if(!leitura && ASSINA.concluiu && e.chave === "assinado"){ rot = "Assinado e concluído"; }   // sempre hoje: sem data
     if(ini.rascunho){ rot = (rot ? rot + " · " : "") + "rascunho guardado neste aparelho, não enviado"; }
     if(ASSINA.aviso){ rot = ASSINA.aviso + (rot ? " " + rot : ""); }
     $("hub-assina-st").textContent = ASSINA.erro ? PEND_ERRO : rot;
@@ -880,6 +899,10 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
     pendGravar(id, dados).then(function(){
       // R7: comentario editado durante o "Salvando…" fica no aparelho
       if(ASSINA.slug !== slug || $("hub-assina-coment").value === com){ pendRascunho(id, null); }
+      // s214 (pedido do operador, 04/10): assinar = concluir; o quadro marca o item do documento
+      quadroMarcarFeito(slug).then(function(ok){
+        if(ok && ASSINA.slug === slug){ ASSINA.concluiu = true; assinaPintar(); }
+      });
       if(ASSINA.slug !== slug){ return; }
       ASSINA.erro = false;
       ASSINA.item = Object.assign({}, ASSINA.item || {}, dados);
@@ -919,15 +942,328 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
   });
   $("hub-assina-coment").addEventListener("input", function(){ pendRascunho("doc_" + ASSINA.slug, $("hub-assina-coment").value); });
 
+  // ------------------------------------------------ grifo nas aulas (s214, pedido do operador em 04/10/2026)
+  // "os blocos das aulas tambem poderiam ter o mecanismo de selecionar e destacar". O marca-texto das
+  // questoes (s211 part-4: selecao por mouse grifa ao soltar, por toque quando estabiliza; tocar no
+  // grifo o remove; uma cor so, a do token --qz-grifo) dentro do documento aberto no leitor. A aula e
+  // HTML aninhado, entao a ancora e BLOCO + offset + trecho: bloco = o n-esimo elemento de GRIFO_BLOCO
+  // que nao contem outro (folha), contado no documento, fora de form.pend (a alca fechada); offsets
+  // sobre o textContent dele; `txt` re-ancora quando o documento muda (o mesmo bloco, depois o
+  // documento; nao achou = descarta sem erro). `div` entra na lista porque as aulas reais poem o texto
+  // em div.row > span (as siglas da RD de ventilacao). Selecao que atravessa blocos grifa so a parte do
+  // 1o bloco que ela toca. Texto em link, botao, campo e rotulo nao recebe <mark>; texto solto direto
+  // num container flex/grid ganha antes uma caixa inline (o mesmo item do layout, nada se desloca).
+  // Persistencia: analises/grifos/itens/<slug> = {origem, grifos, atualizado_em} -- herda a regra
+  // "analises" (so o dono le e escreve), nada novo na declaracao do publish. O aparelho guarda ANTES do
+  // banco (24/09: 64 de 90 notas perdidas com o banco fora) e reenvia quando o banco volta. O grifo e
+  // sinal para o agente (o que travou o aluno), nao vitrine: nada de painel de grifos.
+  // LIMITE DECLARADO: a selecao por TOQUE no celular nao e verificada por teste -- so no aparelho.
+  var GRIFO_COLECAO = "analises/grifos/itens";
+  var GRIFO_PREFIXO = "medhub.grifos.aula.";
+  var GRIFO_BLOCO = "p, li, td, th, dt, dd, blockquote, h1, h2, h3, h4, h5, h6, summary, figcaption, div";
+  var GRIFO_FORA = "a[href], button, textarea, input, select, option, label, script, style, svg, form.pend, [contenteditable]";
+  var GRIFO = {slug: "", ctx: null, pronto: null, fila: Promise.resolve()};
+  function grifoValido(g){
+    return !!g && typeof g === "object" && [g.b, g.ini, g.fim].every(function(x){ return typeof x === "number" && x === Math.floor(x) && x >= 0; }) &&
+      g.ini < g.fim && typeof g.txt === "string" && g.txt.length === g.fim - g.ini && /\S/.test(g.txt);
+  }
+  // re-ancora um grifo salvo nos textos dos blocos de agora: o offset que bate > o trecho no mesmo bloco
+  // (a ocorrencia mais perto do offset) > o trecho no bloco mais perto do documento; nao achou = null. PURA.
+  function grifoResolver(textos, g){
+    if(!grifoValido(g)){ return null; }
+    var t = textos[g.b];
+    if(typeof t === "string" && t.slice(g.ini, g.fim) === g.txt){ return {b: g.b, ini: g.ini, fim: g.fim, txt: g.txt}; }
+    if(typeof t === "string"){
+      var melhor = -1, i = t.indexOf(g.txt);
+      while(i >= 0){ if(melhor < 0 || Math.abs(i - g.ini) < Math.abs(melhor - g.ini)){ melhor = i; } i = t.indexOf(g.txt, i + 1); }
+      if(melhor >= 0){ return {b: g.b, ini: melhor, fim: melhor + g.txt.length, txt: g.txt}; }
+    }
+    var achou = null;
+    textos.forEach(function(s, b){ var j = (b === g.b || typeof s !== "string") ? -1 : s.indexOf(g.txt);
+      if(j >= 0 && (!achou || Math.abs(b - g.b) < Math.abs(achou.b - g.b))){ achou = {b: b, ini: j, fim: j + g.txt.length, txt: g.txt}; } });
+    return achou;
+  }
+  // a lista salva -> a lista de agora: re-ancorada, mesclada por bloco (o mesclar das questoes), `txt`
+  // refeito do texto e em ordem de documento. PURA.
+  function grifoNormalizar(textos, lista){
+    var porBloco = {}, out = [];
+    (Array.isArray(lista) ? lista : []).forEach(function(g){ var r = grifoResolver(textos, g); if(r){ (porBloco[r.b] = porBloco[r.b] || []).push([r.ini, r.fim]); } });
+    Object.keys(porBloco).map(Number).sort(function(a, b){ return a - b; }).forEach(function(b){
+      qzGrifoMesclar(porBloco[b], null).forEach(function(v){ out.push({b: b, ini: v[0], fim: v[1], txt: textos[b].slice(v[0], v[1])}); }); });
+    return out;
+  }
+  // tira o branco das pontas da selecao; [ini, fim] ou null se sobra menos de 2 caracteres. PURA.
+  function grifoAparar(texto, ini, fim){
+    while(ini < fim && /\s/.test(texto.charAt(ini))){ ini++; }
+    while(fim > ini && /\s/.test(texto.charAt(fim - 1))){ fim--; }
+    return fim - ini >= 2 ? [ini, fim] : null;
+  }
+  // [ini, fim) sobre os nos de texto do bloco (tamanhos, em ordem) -> [[no, de, ate]] relativos a cada no. PURA.
+  function grifoFatias(tamanhos, ini, fim){
+    var out = [], pos = 0;
+    tamanhos.forEach(function(n, i){ var a = Math.max(ini, pos), b = Math.min(fim, pos + n); if(a < b){ out.push([i, a - pos, b - pos]); } pos += n; });
+    return out;
+  }
+  // aparelho x banco ao abrir: o pendente do aparelho gravado depois do que esta no banco vence e
+  // reenvia; senao o banco manda -- inclusive o vazio (o agente limpou). PURA.
+  function grifoReconciliar(local, banco){
+    var gl = (local && Array.isArray(local.grifos)) ? local.grifos : null;
+    if(gl && local.pendente && (!banco || String(local.atualizado_em || "") >= String(banco.atualizado_em || ""))){
+      return {grifos: gl, fonte: "aparelho", reenviar: true, atualizado_em: String(local.atualizado_em || "")};
+    }
+    return {grifos: (banco && Array.isArray(banco.grifos)) ? banco.grifos : [], fonte: "banco", reenviar: false,
+            atualizado_em: String((banco && banco.atualizado_em) || "")};
+  }
+  function grifoLocal(slug, v){
+    try{
+      var k = GRIFO_PREFIXO + slug;
+      if(v === undefined){ var x = JSON.parse(localStorage.getItem(k) || "null"); return (x && Array.isArray(x.grifos)) ? x : null; }
+      if(v === null){ localStorage.removeItem(k); } else { localStorage.setItem(k, JSON.stringify(v)); }
+    }catch(e){}
+    return null;
+  }
+  // R10 (o mesmo do pendDb): banco que nao veio nao fica memorizado; o proximo grifo pede de novo
+  function grifoDb(){
+    if(!GRIFO.pronto){
+      GRIFO.pronto = new Promise(function(ok){
+        try{ window.claude.use("db").then(function(db){ ok(db ? db.collection(GRIFO_COLECAO) : null); }, function(){ ok(null); }); }catch(e){ ok(null); }
+      }).then(function(col){ if(!col){ GRIFO.pronto = null; } return col; });
+    }
+    return GRIFO.pronto;
+  }
+  // envia o que o aparelho guarda como pendente, um envio por vez e na ordem; a promessa diz se gravou.
+  // Ler antes preserva o que o agente acrescentar ao documento (o set troca o documento inteiro).
+  function grifoEnviar(slug){
+    GRIFO.fila = GRIFO.fila.then(function(){
+      var loc = grifoLocal(slug);
+      if(!loc || !loc.pendente){ return true; }
+      if(!pendIdValido(slug)){ return false; }
+      return grifoDb().then(function(col){
+        if(!col){ return false; }
+        var ref = col.doc(slug), reg = {origem: slug, grifos: loc.grifos, atualizado_em: loc.atualizado_em};
+        return ref.get().then(function(s){ return (s && s.exists) ? ref.update(reg) : ref.set(reg); }).then(function(){
+          var agora = grifoLocal(slug);   // grifo feito durante o envio segue pendente
+          if(agora && agora.atualizado_em === reg.atualizado_em){ agora.pendente = false; grifoLocal(slug, agora); }
+          return true;
+        });
+      }).catch(function(){ return false; });
+    });
+    return GRIFO.fila;
+  }
+  function grifoSalvar(slug, grifos){
+    var lista = grifos.map(function(g){ return {b: g.b, ini: g.ini, fim: g.fim, txt: g.txt}; });
+    grifoLocal(slug, {grifos: lista, atualizado_em: new Date().toISOString(), pendente: true});   // o aparelho ANTES do banco
+    return grifoEnviar(slug);
+  }
+  // o que ficou pendente em outras aulas (banco fora quando ele grifou) sobe quando o banco responde
+  function grifoReenviarTodos(exceto){
+    var slugs = [];
+    try{ for(var i = 0; i < localStorage.length; i++){ var k = localStorage.key(i); if(k && k.indexOf(GRIFO_PREFIXO) === 0){ slugs.push(k.slice(GRIFO_PREFIXO.length)); } } }catch(e){ return; }
+    slugs.forEach(function(s){ var l = s !== exceto ? grifoLocal(s) : null; if(l && l.pendente){ grifoEnviar(s); } });
+  }
+  function grifoBlocos(doc){
+    if(!doc.body){ return []; }
+    return Array.prototype.filter.call(doc.body.querySelectorAll(GRIFO_BLOCO), function(el){
+      return !el.querySelector(GRIFO_BLOCO) && !el.closest("form.pend") && !el.querySelector("form.pend");
+    });
+  }
+  function grifoTextos(bloco){
+    var out = [];
+    (function andar(no){ for(var c = no.firstChild; c; c = c.nextSibling){ if(c.nodeType === 3){ out.push(c); } else if(c.nodeType === 1){ andar(c); } } })(bloco);
+    return out;
+  }
+  function grifoLimpar(doc){
+    Array.prototype.forEach.call(doc.querySelectorAll("mark.hub-grifo, span.hub-grifo-caixa"), function(el){
+      var pai = el.parentNode; if(!pai){ return; }
+      while(el.firstChild){ pai.insertBefore(el.firstChild, el); }
+      pai.removeChild(el); pai.normalize();
+    });
+  }
+  function grifoPintar(ctx){
+    var doc = ctx.doc, win = doc.defaultView;
+    grifoLimpar(doc);
+    ctx.grifos.forEach(function(g, k){
+      var bloco = ctx.blocos[g.b]; if(!bloco){ return; }
+      var nos = grifoTextos(bloco);
+      grifoFatias(nos.map(function(t){ return t.data.length; }), g.ini, g.fim).forEach(function(f){
+        var t = nos[f[0]], pai = t.parentNode;
+        if(!/\S/.test(t.data.slice(f[1], f[2])) || pai.closest(GRIFO_FORA)){ return; }
+        if(/flex|grid/.test(win.getComputedStyle(pai).display)){   // texto solto = 1 item do layout: a caixa ocupa o lugar dele
+          var cx = doc.createElement("span"); cx.className = "hub-grifo-caixa"; pai.insertBefore(cx, t); cx.appendChild(t);
+        }
+        var alvo = f[1] > 0 ? t.splitText(f[1]) : t;
+        if(f[2] - f[1] < alvo.data.length){ alvo.splitText(f[2] - f[1]); }
+        var mk = doc.createElement("mark"); mk.className = "hub-grifo"; mk.setAttribute("data-g", String(k));
+        alvo.parentNode.insertBefore(mk, alvo); mk.appendChild(alvo);
+      });
+    });
+  }
+  // offset de um ponto da selecao no texto do bloco: antes dele = 0, depois = o tamanho
+  function grifoPos(doc, bloco, no, off){
+    var r = doc.createRange(); r.selectNodeContents(bloco);
+    var c = r.comparePoint(no, off);
+    if(c < 0){ return 0; }
+    if(c > 0){ return r.toString().length; }
+    r.setEnd(no, off); return r.toString().length;
+  }
+  function grifoMudar(ctx, lista){
+    ctx.textos = ctx.blocos.map(function(b){ return b.textContent; });
+    ctx.grifos = grifoNormalizar(ctx.textos, lista);
+    grifoPintar(ctx);
+    grifoSalvar(ctx.slug, ctx.grifos);
+    medir(ctx.quadro);
+  }
+  function grifoCapturar(ctx){
+    var doc = ctx.doc, sel = doc.getSelection ? doc.getSelection() : null, novo = null;
+    if(GRIFO.ctx !== ctx || !sel || sel.isCollapsed || !sel.rangeCount){ return false; }
+    var ativo = doc.activeElement;
+    if(ativo && /^(TEXTAREA|INPUT|SELECT)$/.test(ativo.tagName)){ return false; }
+    var rg = sel.getRangeAt(0);
+    ctx.blocos.some(function(bl, b){
+      if(!rg.intersectsNode(bl)){ return false; }
+      var texto = bl.textContent, v = grifoAparar(texto, grifoPos(doc, bl, rg.startContainer, rg.startOffset), grifoPos(doc, bl, rg.endContainer, rg.endOffset));
+      if(v){ novo = {b: b, ini: v[0], fim: v[1], txt: texto.slice(v[0], v[1])}; }
+      return !!novo;
+    });
+    if(!novo){ return false; }
+    sel.removeAllRanges(); ctx.grifouEm = Date.now();
+    grifoMudar(ctx, ctx.grifos.concat([novo]));
+    return true;
+  }
+  function grifoTocar(ctx, mk){
+    var k = parseInt(mk.getAttribute("data-g"), 10);
+    if(GRIFO.ctx !== ctx || (ctx.grifouEm && Date.now() - ctx.grifouEm < 500) || !(k >= 0 && k < ctx.grifos.length)){ return; }
+    grifoMudar(ctx, ctx.grifos.filter(function(g, i){ return i !== k; }));
+  }
+  function grifoEstilo(doc){
+    if(!doc.head || doc.getElementById("hub-grifo-estilo")){ return; }
+    var cs = window.getComputedStyle(raiz), s = doc.createElement("style");
+    s.id = "hub-grifo-estilo";
+    s.textContent = "mark.hub-grifo{background:" + (cs.getPropertyValue("--qz-grifo").trim() || "Mark") + ";color:" +
+      (cs.getPropertyValue("--qz-grifo-tinta").trim() || "MarkText") + ";border-radius:3px;padding:0;cursor:pointer;" +
+      "-webkit-box-decoration-break:clone;box-decoration-break:clone}span.hub-grifo-caixa{display:inline}";
+    doc.head.appendChild(s);
+  }
+  // o banco ao abrir: reconcilia com o aparelho e repinta so se mudou
+  function grifoLer(ctx){
+    grifoDb().then(function(col){
+      if(GRIFO.ctx !== ctx || !col){ return; }   // sem banco: vale o que o aparelho guarda
+      grifoReenviarTodos(ctx.slug);
+      return col.doc(ctx.slug).get().then(function(s){
+        if(GRIFO.ctx !== ctx){ return; }
+        var banco = (s && s.exists && s.data) ? s.data() : null, r = grifoReconciliar(grifoLocal(ctx.slug), banco);
+        if(r.fonte === "banco"){ grifoLocal(ctx.slug, banco ? {grifos: r.grifos, atualizado_em: r.atualizado_em, pendente: false} : null); }
+        var novos = grifoNormalizar(ctx.textos, r.grifos);
+        if(JSON.stringify(novos) !== JSON.stringify(ctx.grifos)){ ctx.grifos = novos; grifoPintar(ctx); medir(ctx.quadro); }
+        if(r.reenviar){ grifoEnviar(ctx.slug); }
+      });
+    }).catch(function(){ /* leitura falhou: vale o que o aparelho guarda */ });
+  }
+  function grifoLigar(doc, quadro, slug){
+    GRIFO.ctx = null;
+    if(!slug || !doc.body){ return; }
+    grifoEstilo(doc);
+    var blocos = grifoBlocos(doc);
+    var ctx = {doc: doc, quadro: quadro, slug: slug, blocos: blocos, textos: blocos.map(function(b){ return b.textContent; }),
+               grifos: [], grifouEm: 0, apertado: false, timer: null};
+    GRIFO.ctx = ctx;
+    var loc = grifoLocal(slug);
+    if(loc){ ctx.grifos = grifoNormalizar(ctx.textos, loc.grifos); grifoPintar(ctx); }
+    function agendar(ms){ clearTimeout(ctx.timer); ctx.timer = setTimeout(function(){ if(!ctx.apertado){ grifoCapturar(ctx); } }, ms); }
+    doc.addEventListener("pointerdown", function(){ ctx.apertado = true; }, true);
+    doc.addEventListener("pointercancel", function(){ ctx.apertado = false; }, true);
+    doc.addEventListener("pointerup", function(e){ ctx.apertado = false; if(e.pointerType === "mouse"){ grifoCapturar(ctx); } else { agendar(400); } }, true);
+    doc.addEventListener("selectionchange", function(){ if(!ctx.apertado){ agendar(700); } });
+    // soltar COM selecao so grifa (nao abre o details nem segue o link); tocar no grifo so o remove
+    doc.addEventListener("click", function(e){
+      var mk = (e.target && e.target.closest) ? e.target.closest("mark.hub-grifo") : null;
+      if(mk || (ctx.grifouEm && Date.now() - ctx.grifouEm < 500)){ e.preventDefault(); e.stopPropagation(); }
+      if(mk){ grifoTocar(ctx, mk); }
+    }, true);
+    grifoLer(ctx);
+  }
+
+  // ------------------------------------------------ secoes recolhiveis (s214, pedido do operador em 04/10/2026)
+  // "Seria bacana poder recolher as semanas, deixando apenas a que eu quisesse (ate os proprios blocos,
+  // como revisoes direcionadas)". O titulo de cada secao das abas Aulas e Listas vira o controle. A
+  // escolha fica POR APARELHO em localStorage["medhub.secoes"] = {"aulas:4": false, "listas:s5": true}
+  // e vale so para a secao tocada; a que ele nunca tocou segue o padrao: abertas as revisoes, as
+  // atrasadas e a semana da vez (a 1a >= atual que tem itens); recolhidas as semanas seguintes e "Outras
+  // aulas". Sem storage, a escolha vive na memoria da pagina (sobrevive ao re-render das Listas, nao ao
+  // recarregar). "Concluidas" segue <details>, como era.
+  var SECOES_CHAVE = "medhub.secoes", SECOES_MEM = {};
+  function secoesLer(){
+    try{ var v = JSON.parse(localStorage.getItem(SECOES_CHAVE) || "null"); return (v && typeof v === "object" && !Array.isArray(v)) ? v : {}; }catch(e){ return {}; }
+  }
+  function secAberta(id, padrao){
+    if(typeof SECOES_MEM[id] === "boolean"){ return SECOES_MEM[id]; }
+    var v = secoesLer()[id];
+    return typeof v === "boolean" ? v : !!padrao;
+  }
+  function secGuardar(id, aberta){
+    SECOES_MEM[id] = !!aberta;
+    try{ var v = secoesLer(); v[id] = !!aberta; localStorage.setItem(SECOES_CHAVE, JSON.stringify(v)); }catch(e){}
+  }
+  // a semana da vez: a 1a semana >= atual que tem itens; sem nenhuma, a propria atual. PURA.
+  function secSemanaAtual(atual, comItens){
+    var xs = (comItens || []).filter(function(n){ return !atual || n >= atual; }).sort(function(a, b){ return a - b; });
+    return xs.length ? xs[0] : (atual || 0);
+  }
+  // aberta sem escolha salva? "4" (Aulas) e "s4" (Listas) sao semanas: abre ate a da vez; "outras"
+  // recolhe; o resto (revisoes, atrasadas, sem semana) abre. PURA.
+  function secPadraoAberta(chave, corrente){
+    if(chave === "outras"){ return false; }
+    var m = /^s?(\d+)$/.exec(String(chave));
+    return m ? parseInt(m[1], 10) <= corrente : true;
+  }
+  function secPintar(sec, aberta){
+    if(aberta){ sec.removeAttribute("data-recolhida"); } else { sec.setAttribute("data-recolhida", ""); }
+    var t = sec.querySelector(".qd-titulo");
+    if(t){ t.setAttribute("aria-expanded", aberta ? "true" : "false"); }
+  }
+  function secAlternar(sec, id){
+    var abrir = sec.hasAttribute("data-recolhida");
+    secGuardar(id, abrir); secPintar(sec, abrir);
+  }
+  function secTecla(ev, acao){ if(ev.key === "Enter" || ev.key === " " || ev.key === "Spacebar"){ ev.preventDefault(); acao(); } }
+  function hubSemanas(){ try{ return JSON.parse(($("hub-semanas") || {}).textContent || "{}") || {}; }catch(e){ return {}; } }
+  // aba Aulas: o HTML vem pronto do build; o titulo ganha aqui o papel de botao (o hub.py nao muda)
+  function secoesQuadro(raizQd){
+    var secs = Array.prototype.slice.call(raizQd.querySelectorAll(".qd-sem"));
+    var comItens = secs.filter(function(s){ return /^\d+$/.test(s.getAttribute("data-secao") || "") && !!s.querySelector(".qd-item"); })
+      .map(function(s){ return parseInt(s.getAttribute("data-secao"), 10); });
+    var corrente = secSemanaAtual(hubSemanas().atual, comItens);
+    secs.forEach(function(sec){
+      var chave = sec.getAttribute("data-secao") || "", t = sec.querySelector(".qd-titulo"), lista = sec.querySelector(".qd-lista");
+      if(!chave || !t){ return; }
+      var id = "aulas:" + chave, seta = document.createElement("span");
+      seta.className = "qd-seta"; seta.setAttribute("aria-hidden", "true");
+      t.insertBefore(seta, t.firstChild);
+      t.setAttribute("role", "button"); t.setAttribute("tabindex", "0"); t.setAttribute("data-sec", id);
+      if(lista){ lista.setAttribute("id", "qd-lista-" + chave); t.setAttribute("aria-controls", "qd-lista-" + chave); }
+      secPintar(sec, secAberta(id, secPadraoAberta(chave, corrente)));
+      t.addEventListener("click", function(){ secAlternar(sec, id); });
+      t.addEventListener("keydown", function(ev){ secTecla(ev, function(){ secAlternar(sec, id); }); });
+    });
+  }
+  // aba Listas: o HTML e refeito a cada snapshot; o titulo ja nasce controle e o estado e lido na renderizacao
+  function secTituloHtml(id, alvo, aberta, miolo){
+    return '<h3 class="qd-titulo" role="button" tabindex="0" data-sec="' + qzEsc(id) + '" aria-controls="' + qzEsc(alvo) +
+      '" aria-expanded="' + (aberta ? "true" : "false") + '"><span class="qd-seta" aria-hidden="true"></span>' + miolo + '</h3>';
+  }
+
   // --------------------------------------------------------------- quadro
   // O estado "feito" mora no db, em quadro/<slug> = {feito, ts} (regra de escrita "quadro" na
   // declaracao do publish). Sem db, o controle fica desabilitado com uma frase curta.
   var qd = $("hub-quadro");
-  if(qd){ iniciarQuadro(); }
+  // s214: a assinatura do leitor conclui o item do quadro; sem quadro (ou sem banco), nao faz nada
+  var quadroMarcarFeito = function(){ return Promise.resolve(false); };
+  if(qd){ iniciarQuadro(); try{ secoesQuadro(qd); }catch(e){} }
 
   function iniciarQuadro(){
     // so os itens com controle "feito" (data-slug): tarefa de lista nao tem botao
     var itens = Array.prototype.slice.call(qd.querySelectorAll(".qd-item[data-slug]"));
+    var tarefas = Array.prototype.slice.call(qd.querySelectorAll(".qd-item[data-tarefa]:not([data-slug])"));
     var feitas = qd.querySelector("#hub-quadro-feitas .qd-lista");
     var colecao = null;
 
@@ -961,9 +1297,11 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
       var botao = li.querySelector(".qd-feito");
       var rotulo = feito ? "Desmarcar " + titulo : "Marcar " + titulo + " como feita";
       if(feito){ li.setAttribute("data-feito", "1"); } else { li.removeAttribute("data-feito"); }
-      botao.setAttribute("aria-pressed", feito ? "true" : "false");
-      botao.setAttribute("aria-label", rotulo);
-      botao.setAttribute("title", rotulo);
+      if(botao){   // tarefa de lista (s214) se move sem botao
+        botao.setAttribute("aria-pressed", feito ? "true" : "false");
+        botao.setAttribute("aria-label", rotulo);
+        botao.setAttribute("title", rotulo);
+      }
       var destino = feito ? feitas
         : qd.querySelector('.qd-sem[data-secao="' + li.getAttribute("data-secao") + '"] .qd-lista');
       if(destino && li.parentNode !== destino){
@@ -981,24 +1319,58 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
       itens.forEach(function(li){ li.querySelector(".qd-feito").disabled = true; });
     }
 
+    // grava quadro/<slug> e desfaz a tela se falhar; a promessa diz se gravou
+    function gravar(li, novo){
+      aplicar(li, novo);
+      return colecao.doc(li.getAttribute("data-slug"))
+        .set({feito: novo, ts: new Date().toISOString()})
+        .then(function(){ return true; }, function(){
+          aplicar(li, !novo);
+          $("hub-quadro-aviso").textContent = "Não consegui salvar agora. Tente de novo.";
+          $("hub-quadro-aviso").hidden = false;
+          return false;
+        });
+    }
+
     itens.forEach(function(li){
       li.querySelector(".qd-feito").addEventListener("click", function(){
-        if(!colecao){ return; }
-        var novo = !li.hasAttribute("data-feito");
-        aplicar(li, novo);
-        colecao.doc(li.getAttribute("data-slug"))
-          .set({feito: novo, ts: new Date().toISOString()})
-          .catch(function(){
-            aplicar(li, !novo);
-            $("hub-quadro-aviso").textContent = "Não consegui salvar agora. Tente de novo.";
-            $("hub-quadro-aviso").hidden = false;
-          });
+        if(colecao){ gravar(li, !li.hasAttribute("data-feito")); }
       });
     });
+
+    // s214: so marca (assinar nunca desmarca) e item ja feito nao e regravado
+    quadroMarcarFeito = function(slug){
+      var li = itens.filter(function(x){ return x.getAttribute("data-slug") === slug; })[0];
+      if(!colecao || !li || li.hasAttribute("data-feito")){ return Promise.resolve(false); }
+      return gravar(li, true);
+    };
+
+    // s214 (pedido do operador, 04/10): lista resolvida na aba Listas sai da semana na hora, com selo;
+    // o plano so registra quando o backend rodar. So LE listas/t<tarefa>; sem leitura, fica o build.
+    function marcarListas(db){
+      if(!tarefas.length){ return; }
+      db.collection("listas").onSnapshot(function(snap){
+        var resolvida = {};
+        (snap.docs || []).forEach(function(d){ var x = d.data && d.data(); resolvida[d.id] = !!(x && x.status === "resolvida"); });
+        tarefas.forEach(function(li){
+          var r = !!resolvida["t" + li.getAttribute("data-tarefa")], selo = li.querySelector(".qd-registro");
+          if(r === li.hasAttribute("data-feito")){ return; }
+          if(r && !selo){
+            selo = document.createElement("span");
+            selo.className = "qd-registro";
+            selo.textContent = "resolvida · registro pendente";
+            li.querySelector(".qd-meta").appendChild(selo);
+          }
+          if(!r && selo){ selo.parentNode.removeChild(selo); }
+          aplicar(li, r);
+        });
+      }, function(){ /* sem leitura de listas (link compartilhado): o quadro fica como o build */ });
+    }
 
     try{
       window.claude.use("db").then(function(db){
         if(!db){ semArmazenamento(); return; }
+        try{ marcarListas(db); }catch(e){}
         colecao = db.collection("quadro");
         itens.forEach(function(li){ li.querySelector(".qd-feito").disabled = false; });
         colecao.onSnapshot(function(snap){
@@ -1132,16 +1504,29 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
     ls.filter(function(l){ return l.status !== "resolvida"; }).forEach(function(l){
       var atr = !!(atual && l.semana && l.semana < atual), k = atr ? "atrasadas" : (l.semana ? "s" + l.semana : "sem");
       if(!porChave[k]){ var d = datas[String(l.semana)];
-        porChave[k] = {titulo: atr ? "Atrasadas" : (l.semana ? "Semana " + l.semana + (d ? " · " + d[0] + "–" + d[1] : "") + (l.semana === atual ? " (esta)" : "") : "Sem semana"), itens: [], q: 0, atr: atr};
+        porChave[k] = {chave: k, semana: atr ? 0 : (l.semana || 0), titulo: atr ? "Atrasadas" : (l.semana ? "Semana " + l.semana + (d ? " · " + d[0] + "–" + d[1] : "") + (l.semana === atual ? " (esta)" : "") : "Sem semana"), itens: [], q: 0, atr: atr};
         grupos.push(porChave[k]); }
       porChave[k].itens.push(l); porChave[k].q += Math.round(l.q || l.q_previstas || 0); });
     var feitas = ls.filter(function(l){ return l.status === "resolvida"; });
-    $("qz-listas").innerHTML = grupos.map(function(g){ var n = g.itens.length;
-      return '<section><h3 class="qd-titulo">' + qzEsc(g.titulo) + ' <span class="qd-n">' + n + (n === 1 ? " lista" : " listas") + ' · ' + g.q + ' questões</span></h3><ul class="qz-lista">' + g.itens.map(function(l){ return qzItemLista(l, g.atr); }).join("") + '</ul></section>'; }).join("") +
+    // s214: cada semana recolhe (o titulo e o controle); o estado vem de secAberta a cada renderizacao
+    var corrente = secSemanaAtual(atual, grupos.map(function(g){ return g.semana; }).filter(Boolean));
+    $("qz-listas").innerHTML = grupos.map(function(g){ var n = g.itens.length, id = "listas:" + g.chave, alvo = "qz-sec-" + g.chave, ab = secAberta(id, secPadraoAberta(g.chave, corrente));
+      return '<section' + (ab ? '' : ' data-recolhida') + '>' + secTituloHtml(id, alvo, ab, qzEsc(g.titulo) + ' <span class="qd-n">' + n + (n === 1 ? " lista" : " listas") + ' · ' + g.q + ' questões</span>') + '<ul class="qz-lista" id="' + qzEsc(alvo) + '">' + g.itens.map(function(l){ return qzItemLista(l, g.atr); }).join("") + '</ul></section>'; }).join("") +
       (feitas.length ? '<details class="qd-feitas"><summary>Resolvidas <span class="qd-n">' + feitas.length + '</span></summary><ul class="qz-lista">' + feitas.map(function(l){ return qzItemLista(l, false); }).join("") + '</ul></details>' : "") +
       (grupos.length ? "" : '<p class="qd-vazio">Todas as listas capturadas estão resolvidas.</p>');
   }
-  $("qz-listas").addEventListener("click", function(e){ var b = e.target.closest("button[data-qzl]"); if(b){ qzAbrir(b.getAttribute("data-qzl")); } });
+  // delegacao: o HTML das Listas e refeito a cada snapshot, o ouvinte fica no conteiner
+  function qzListasClique(e){
+    var t = e.target.closest("[data-sec]");
+    if(t){ secAlternar(t.parentNode, t.getAttribute("data-sec")); return; }
+    var b = e.target.closest("button[data-qzl]"); if(b){ qzAbrir(b.getAttribute("data-qzl")); }
+  }
+  function qzListasTecla(e){
+    var t = e.target.closest ? e.target.closest("[data-sec]") : null;
+    if(t){ secTecla(e, function(){ secAlternar(t.parentNode, t.getAttribute("data-sec")); }); }
+  }
+  $("qz-listas").addEventListener("click", qzListasClique);
+  $("qz-listas").addEventListener("keydown", qzListasTecla);
   function qzCompleta(){ return QZ.qs.length > 0 && QZ.qs.every(function(q){ return !!QZ.resp[q.num]; }); }
   function qzBarra(){ $("qz-voltar").innerHTML = (!$("qz-questao").hidden && qzCompleta()) ? "&lsaquo; Lista" : "&lsaquo; Todas as listas"; }
   $("qz-voltar").addEventListener("click", function(){

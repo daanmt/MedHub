@@ -1,0 +1,334 @@
+<title>Ventilação mecânica · degrau 0</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,480;9..144,600;9..144,680&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EFF3F0; --card:#FAFCFA; --sunk:#E2E9E4;
+  --ink:#18211C; --ink2:#4C5A52; --ink3:#7C8A82;
+  --line:rgba(24,33,28,.13); --line2:rgba(24,33,28,.26);
+  --teal:#1F6B5E; --teal-ink:#154A41; --teal-wash:#DCEBE5;
+  --carmine:#8E2F41; --carmine-ink:#6B2231; --carmine-wash:#F5E2E6;
+  --amber:#8A5A17; --amber-ink:#6B4610; --amber-wash:#F3E6CC;
+  --on:#FFFFFF;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#7E8C84;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  --on:#131A16;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#7E8C84;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  --on:#131A16;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);
+  font:16px/1.6 "Source Sans 3",-apple-system,"Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+h1,h2,h3,h4{margin:0;font-family:Fraunces,Georgia,serif;font-weight:600;letter-spacing:-.01em;text-wrap:balance;line-height:1.14;color:var(--ink)}
+.wrap{max-width:760px;margin:0 auto;padding:0 24px 90px}
+@media(max-width:640px){.wrap{padding:0 16px 70px}}
+:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+a{color:var(--teal-ink)}
+strong{font-weight:600;color:var(--ink)}
+
+/* masthead */
+.top{padding:44px 0 24px;border-bottom:1px solid var(--line2)}
+.eye{font:600 11px/1.3 "Source Sans 3";letter-spacing:.14em;text-transform:uppercase;color:var(--teal-ink);margin:0 0 14px}
+.top h1{font-size:clamp(27px,5vw,42px);font-weight:680;margin-bottom:14px}
+.top .sub{font-size:clamp(16px,2.2vw,18px);line-height:1.55;color:var(--ink2);margin:0}
+.nav{display:flex;flex-wrap:wrap;gap:6px;padding:18px 0 0}
+.nav a{font-size:13px;text-decoration:none;color:var(--ink2);border:1px solid var(--line2);border-radius:2px;padding:4px 9px;min-width:0}
+.nav a:hover{color:var(--ink);border-color:var(--teal)}
+
+/* seções */
+.degrau{padding:34px 0;border-bottom:1px solid var(--line);min-width:0}
+.degrau:last-of-type{border-bottom:0}
+.dhead{display:flex;gap:14px;align-items:flex-start;margin-bottom:14px}
+.dnum{flex-shrink:0;width:40px;height:40px;border:1.5px solid var(--teal);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font:600 15px "IBM Plex Mono";color:var(--teal-ink)}
+.dtitle{padding-top:3px;min-width:0}
+.dtitle .dstage{font:600 11px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);display:block;margin-bottom:3px}
+.dtitle h2{font-size:clamp(20px,2.6vw,25px)}
+.lede{font-size:16.5px;line-height:1.55;color:var(--ink2);margin:0 0 16px;font-style:italic}
+.prose ul{margin:0 0 14px;padding-left:22px}
+.prose li{font-size:15.6px;line-height:1.55;color:var(--ink2);margin-bottom:6px}
+.prose li:last-child{margin-bottom:0}
+h3.grp{font:700 11.5px "Source Sans 3";letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);margin:22px 0 8px}
+h3.grp:first-of-type{margin-top:4px}
+
+/* callouts */
+.trap,.aside{margin:18px 0;padding:14px 17px}
+.trap{border-left:3px solid var(--carmine);background:var(--carmine-wash)}
+.aside{border-left:3px solid var(--teal);background:var(--teal-wash)}
+.albl{font:700 10.5px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
+.trap .albl{color:var(--carmine-ink)}
+.aside .albl{color:var(--teal-ink)}
+.trap p,.aside p{font-size:15.2px;line-height:1.55;color:var(--ink);margin:0}
+.trap p+p,.aside p+p{margin-top:6px}
+
+/* comparativos */
+.vs{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:1px;background:var(--line2);border:1px solid var(--line2);margin:18px 0}
+.vs>div{background:var(--card);padding:13px 15px;min-width:0}
+.vs h5{font:700 11.5px "Source Sans 3";letter-spacing:.04em;text-transform:uppercase;margin:0 0 8px;color:var(--ink3)}
+.vs .a h5{color:var(--carmine-ink)}
+.vs .b h5{color:var(--teal-ink)}
+.vs ul{margin:0;padding-left:18px}
+.vs li{font-size:14.5px;line-height:1.5;color:var(--ink2);margin-bottom:5px}
+.vs li:last-child{margin-bottom:0}
+@media(max-width:640px){.vs{grid-template-columns:minmax(0,1fr)}}
+
+/* grades */
+.crit{border:1px solid var(--line2);background:var(--card);margin:0 0 4px}
+.crit .row{display:grid;grid-template-columns:150px minmax(0,1fr);gap:14px;padding:9px 14px;font-size:14.6px}
+.crit .row+.row{border-top:1px solid var(--line)}
+.crit .row>*{min-width:0}
+.crit .k{font-weight:600;color:var(--teal-ink)}
+.crit .v{color:var(--ink2);line-height:1.5}
+.crit.hd .row:first-child{background:var(--sunk)}
+.crit.hd .row:first-child>*{font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink3);font-weight:600}
+.crit.c3 .row{grid-template-columns:110px minmax(0,1fr) minmax(0,1fr)}
+@media(max-width:640px){
+  .crit .row{grid-template-columns:minmax(0,1fr);gap:2px}
+  .crit.c3 .row{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:3px 12px}
+  .crit.c3 .row .k{grid-column:1 / -1}
+  .crit.c3.hd .row:first-child .k{display:none}
+}
+
+/* a equação e a pilha de pressões */
+.eq{margin:4px 0 18px;padding:13px 16px;background:var(--card);border:1px solid var(--line2);
+  font:600 15px/1.55 "IBM Plex Mono",ui-monospace,Consolas,monospace;color:var(--ink)}
+.eq .t1{color:var(--ink2)}
+.eq .t2{color:var(--teal-ink)}
+.eq .t3{color:var(--amber-ink)}
+.stack{margin:0 0 18px}
+.stack .cap{font-size:13px;color:var(--ink3);margin:0 0 6px}
+.bar{display:flex;height:46px;border:1px solid var(--line2)}
+.seg{display:flex;align-items:center;justify-content:center;text-align:center;min-width:0;padding:0 4px;
+  font:600 12.5px/1.15 "Source Sans 3"}
+.s-peep{flex:5;background:var(--sunk);color:var(--ink2)}
+.s-ela{flex:13;background:var(--teal);color:var(--on)}
+.s-res{flex:7;background:var(--amber);color:var(--on)}
+.brow{margin-top:7px}
+.brk{height:9px;border:1.5px solid var(--ink3);border-top:0}
+.brow p{margin:3px 0 0;font-size:13px;line-height:1.3;color:var(--ink2);text-align:center}
+.brow strong{font-family:"IBM Plex Mono",ui-monospace,Consolas,monospace;font-variant-numeric:tabular-nums}
+.b-dp{margin-left:20%;width:52%}
+.b-dp .brk{border-color:var(--teal)}
+.b-pl{width:72%}
+.b-pk{width:100%}
+.b-pk .brk{border-color:var(--amber)}
+
+/* ponte */
+.elos{list-style:none;margin:0;padding:0;border:1px solid var(--line2);background:var(--card)}
+.elos li{display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;padding:11px 14px;font-size:15.2px;line-height:1.5;color:var(--ink2)}
+.elos li+li{border-top:1px solid var(--line)}
+.elos .n{font:600 12px "IBM Plex Mono";color:var(--teal-ink);padding-top:2px}
+
+/* teste */
+.qa{border:1px solid var(--line2);background:var(--card);padding:12px 15px}
+.qa+.qa{border-top:0}
+.qa .qq{font-size:15.4px;line-height:1.5;color:var(--ink);margin:0 0 6px;font-weight:500}
+.qa details>summary{cursor:pointer;font:600 13px "Source Sans 3";color:var(--teal-ink);list-style:none}
+.qa details>summary::-webkit-details-marker{display:none}
+.qa details>summary::before{content:"+ "}
+.qa details[open]>summary::before{content:"- "}
+.qa details p{font-size:15px;line-height:1.5;color:var(--ink2);margin:8px 0 0;padding-left:10px;border-left:2px solid var(--teal)}
+
+/* referência recolhida */
+details.ref{margin:18px 0 0;border:1px solid var(--line2);background:var(--card)}
+details.ref>summary{cursor:pointer;list-style:none;padding:11px 14px;font:600 13.5px "Source Sans 3";color:var(--teal-ink);display:flex;gap:8px}
+details.ref>summary::-webkit-details-marker{display:none}
+details.ref>summary::before{content:"+";font:600 15px "IBM Plex Mono";width:14px;flex-shrink:0}
+details.ref[open]>summary::before{content:"-"}
+details.ref .crit{border-left:0;border-right:0;border-bottom:0;margin:0}
+
+footer{margin-top:44px;padding-top:18px;border-top:1px solid var(--line2)}
+footer p{font-size:12.3px;color:var(--ink3);margin:0 0 7px;line-height:1.5}
+code{font-family:"IBM Plex Mono",Consolas,monospace;font-size:11.5px;background:var(--sunk);padding:1px 4px;border-radius:2px;word-break:break-all}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <p class="eye">MedHub · Revisão direcionada · Degrau 0 da RD de UTI e sepse</p>
+  <h1>O ventilador empurra fluxo; o pulmão responde com pressão</h1>
+  <p class="sub">O alicerce que faltou antes da RD: as quatro grandezas, as siglas, por que o pico e o platô se separam, e quando a PEEP ajuda ou atrapalha.</p>
+  <nav class="nav" aria-label="Atalhos">
+    <a href="#d1">Grandezas</a><a href="#d2">Siglas</a><a href="#d3">Equação</a><a href="#d4">Pico x platô</a><a href="#d5">PEEP</a><a href="#ponte">Ponte</a><a href="#teste">Teste</a>
+  </nav>
+</header>
+
+<main>
+<section class="degrau" id="d1">
+  <div class="dhead"><span class="dnum">1</span><div class="dtitle"><span class="dstage">Degrau 1</span><h2>Quatro grandezas, dois comandos</h2></div></div>
+  <p class="lede">O ventilador é um gerador de fluxo. A pressão no painel é a resposta do pulmão a esse fluxo.</p>
+  <div class="crit">
+    <div class="row"><span class="k">Pressão (cmH₂O)</span><span class="v">A força que empurra o gás; medida na via aérea.</span></div>
+    <div class="row"><span class="k">Volume (mL)</span><span class="v">Quanto gás entra num ciclo: o volume corrente.</span></div>
+    <div class="row"><span class="k">Fluxo (L/min)</span><span class="v">A velocidade do gás: volume por tempo.</span></div>
+    <div class="row"><span class="k">Tempo (s)</span><span class="v">Inspiração, expiração e a FR, que diz quantos ciclos cabem num minuto.</span></div>
+  </div>
+  <div class="prose"><ul style="margin-top:16px">
+    <li>O ar só anda se houver <strong>diferença de pressão</strong> entre dois pontos. Pressão igual dos dois lados = fluxo zero.</li>
+    <li>A expiração é <strong>passiva</strong>: o pulmão murcha sozinho. O único botão que age nela é a PEEP.</li>
+  </ul></div>
+  <div class="vs">
+    <div class="b"><h5>Para subir o O₂</h5><ul><li><strong>FiO₂ e PEEP.</strong></li><li>Mais O₂ no gás e mais alvéolo aberto para a troca.</li></ul></div>
+    <div class="b"><h5>Para tirar CO₂</h5><ul><li><strong>Volume-minuto = VC × FR.</strong></li><li>Relação inversa: mais volume-minuto, menos PaCO₂.</li></ul></div>
+  </div>
+</section>
+
+<section class="degrau" id="d2">
+  <div class="dhead"><span class="dnum">2</span><div class="dtitle"><span class="dstage">Degrau 2</span><h2>As siglas, uma linha cada</h2></div></div>
+  <p class="lede">Separe o que você programa do que o ventilador devolve medido.</p>
+  <h3 class="grp">Você programa</h3>
+  <div class="crit">
+    <div class="row"><span class="k">VC</span><span class="v">Volume corrente: o gás de um ciclo. Alvo 6 mL/kg do peso predito.</span></div>
+    <div class="row"><span class="k">FR</span><span class="v">Frequência respiratória, ciclos por minuto. O botão principal do CO₂.</span></div>
+    <div class="row"><span class="k">FiO₂</span><span class="v">Fração inspirada de O₂: 0,21 no ar ambiente, até 1,0. Na conta, sempre em decimal.</span></div>
+    <div class="row"><span class="k">PEEP</span><span class="v">Pressão positiva ao fim da expiração. Mantém o alvéolo aberto. Inicial 5 cmH₂O.</span></div>
+    <div class="row"><span class="k">I:E</span><span class="v">Tempo inspiratório : expiratório. Em geral 1:2 a 1:3.</span></div>
+  </div>
+  <h3 class="grp">O ventilador mede</h3>
+  <div class="crit">
+    <div class="row"><span class="k">Ppico</span><span class="v">Pressão de pico, a maior da inspiração. Inclui o atrito da via aérea. Limite &lt; 40.</span></div>
+    <div class="row"><span class="k">Pplatô</span><span class="v">Pressão de platô, lida na <strong>pausa inspiratória</strong> (fluxo zero). Retrata o alvéolo. Limite &lt; 30.</span></div>
+    <div class="row"><span class="k">Driving pressure</span><span class="v">Pplatô − PEEP: quanto o alvéolo estica a cada ciclo. Meta &lt; 15.</span></div>
+    <div class="row"><span class="k">AutoPEEP</span><span class="v">PEEP que ninguém programou: ar preso que não saiu antes do próximo ciclo. Lida na <strong>pausa expiratória</strong>.</span></div>
+    <div class="row"><span class="k">Volume-minuto</span><span class="v">VC × FR: o gás movido em um minuto. Comanda a PaCO₂.</span></div>
+    <div class="row"><span class="k">Assincronia</span><span class="v">Paciente e máquina fora de compasso (ex.: esforço que não dispara ciclo).</span></div>
+  </div>
+  <h3 class="grp">Modos e suporte</h3>
+  <div class="crit">
+    <div class="row"><span class="k">VCV</span><span class="v">Volume controlado: você fixa o volume; a pressão é a resposta.</span></div>
+    <div class="row"><span class="k">PCV</span><span class="v">Pressão controlada: você fixa pressão e tempo; o volume é a resposta.</span></div>
+    <div class="row"><span class="k">IOT</span><span class="v">Intubação orotraqueal: a porta da ventilação invasiva.</span></div>
+    <div class="row"><span class="k">VMNI</span><span class="v">Ventilação não invasiva, por máscara. Exige <strong>drive</strong> próprio (o comando do cérebro para respirar).</span></div>
+    <div class="row"><span class="k">CPAP</span><span class="v">Uma pressão só, constante. Escora o alvéolo, mas sozinho não ventila.</span></div>
+    <div class="row"><span class="k">BiPAP</span><span class="v">Duas pressões: IPAP na inspiração, EPAP na expiração (= PEEP). A diferença é a <strong>pressão de suporte</strong>, que empurra o ar.</span></div>
+  </div>
+  <h3 class="grp">Gasometria, SDRA e resgate</h3>
+  <div class="crit">
+    <div class="row"><span class="k">PaO₂, PaCO₂</span><span class="v">Pressão parcial de O₂ e de CO₂ no sangue arterial, pela gasometria.</span></div>
+    <div class="row"><span class="k">P/F</span><span class="v">PaO₂ ÷ FiO₂. Quanto menor, pior o pulmão: você oferta muito e ganha pouco.</span></div>
+    <div class="row"><span class="k">SDRA</span><span class="v">Síndrome do desconforto respiratório agudo: alvéolo inundado por inflamação, pulmão duro.</span></div>
+    <div class="row"><span class="k">Berlim</span><span class="v">Definição de SDRA (2012): gravidade pela P/F com PEEP ≥ 5. Tirou a "lesão pulmonar aguda" e a POAP.</span></div>
+    <div class="row"><span class="k">POAP</span><span class="v">Pressão de oclusão da artéria pulmonar. Não entra mais no critério.</span></div>
+    <div class="row"><span class="k">IRpA, DPOC</span><span class="v">Insuficiência respiratória aguda; doença pulmonar obstrutiva crônica.</span></div>
+    <div class="row"><span class="k">Peso predito</span><span class="v">Calculado por altura e sexo, nunca pelo peso real: o pulmão não engorda.</span></div>
+    <div class="row"><span class="k">Prona</span><span class="v">De bruços: melhora o casamento ventilação-perfusão. Na SDRA com P/F &lt; 150.</span></div>
+    <div class="row"><span class="k">Recrutamento</span><span class="v">Subir a pressão por um tempo para abrir alvéolo colapsado. A forma agressiva aumentou a mortalidade (ART).</span></div>
+  </div>
+</section>
+
+<section class="degrau" id="d3">
+  <div class="dhead"><span class="dnum">3</span><div class="dtitle"><span class="dstage">Degrau 3</span><h2>A equação do movimento, em palavras</h2></div></div>
+  <p class="lede">Toda pressão no painel é a soma de três parcelas.</p>
+  <div class="eq"><span class="t1">Pressão = PEEP</span> + <span class="t2">VC ÷ complacência</span> + <span class="t3">fluxo × resistência</span></div>
+  <div class="stack" role="img" aria-label="Exemplo: PEEP 5, parcela elástica 13 e parcela resistiva 7. Driving pressure 13, platô 18, pico 25.">
+    <p class="cap">Exemplo, em cmH₂O:</p>
+    <div class="bar"><span class="seg s-peep">PEEP 5</span><span class="seg s-ela">elástica 13</span><span class="seg s-res">resistiva 7</span></div>
+    <div class="brow b-dp"><div class="brk"></div><p>Driving pressure <strong>13</strong></p></div>
+    <div class="brow b-pl"><div class="brk"></div><p>Pplatô <strong>18</strong></p></div>
+    <div class="brow b-pk"><div class="brk"></div><p>Ppico <strong>25</strong></p></div>
+  </div>
+  <div class="prose"><ul>
+    <li><strong>Parcela elástica:</strong> o preço de esticar o pulmão. Pulmão duro (complacência baixa), parcela grande.</li>
+    <li><strong>Parcela resistiva:</strong> o preço do atrito no tubo e nos brônquios. Só existe com o ar em movimento.</li>
+    <li><strong>Pausa inspiratória</strong> (2 s): o fluxo zera, a resistiva some, sobra o platô. Por isso o platô retrata o alvéolo.</li>
+  </ul></div>
+  <div class="crit">
+    <div class="row"><span class="k">Complacência</span><span class="v">VC ÷ (Pplatô − PEEP): volume ganho por pressão de distensão.</span></div>
+    <div class="row"><span class="k">Resistência</span><span class="v">(Ppico − Pplatô) ÷ fluxo: o pedaço do pico que é atrito.</span></div>
+  </div>
+  <div class="vs">
+    <div class="b"><h5>VCV: fixa o volume</h5><ul><li>O fluxo é fixo; a pressão varia.</li><li>Pulmão piora: pico e platô sobem.</li></ul></div>
+    <div class="a"><h5>PCV: fixa a pressão</h5><ul><li>Pressão e tempo fixos; o volume varia.</li><li>Pulmão piora: o VC cai e o paciente hipoventila.</li></ul></div>
+  </div>
+</section>
+
+<section class="degrau" id="d4">
+  <div class="dhead"><span class="dnum">4</span><div class="dtitle"><span class="dstage">Degrau 4</span><h2>Pico alto: atrito ou pulmão duro?</h2></div></div>
+  <p class="lede">No VCV, compare o pico com o platô. A distância entre os dois é o atrito.</p>
+  <div class="crit c3 hd">
+    <div class="row"><span class="k">Achado</span><span class="v">Resistência alta</span><span class="v">Complacência baixa</span></div>
+    <div class="row"><span class="k">Ppico</span><span class="v">Sobe</span><span class="v">Sobe</span></div>
+    <div class="row"><span class="k">Pplatô</span><span class="v">Normal</span><span class="v"><strong>Sobe junto</strong></span></div>
+    <div class="row"><span class="k">Pico − platô</span><span class="v"><strong>Alarga</strong></span><span class="v">Normal</span></div>
+    <div class="row"><span class="k">O problema</span><span class="v">O ar não passa</span><span class="v">O alvéolo não estica</span></div>
+    <div class="row"><span class="k">Exemplos</span><span class="v">Broncoespasmo, secreção, tubo dobrado</span><span class="v">SDRA, hiperdistensão</span></div>
+  </div>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p><strong>DPOC não é pulmão duro:</strong> a complacência dele é alta. O problema é resistência e esvaziamento lento, que geram autoPEEP.</p></div>
+</section>
+
+<section class="degrau" id="d5">
+  <div class="dhead"><span class="dnum">5</span><div class="dtitle"><span class="dstage">Degrau 5</span><h2>PEEP: escora ou armadilha</h2></div></div>
+  <p class="lede">A PEEP segura aberto, no fim da expiração, o alvéolo que fecharia.</p>
+  <div class="vs">
+    <div class="b"><h5>Ajuda: recrutar</h5><ul><li>Alvéolo colapsado ou inundado: SDRA, congestão.</li><li>Mais área de troca, melhor oxigenação.</li><li>Evita o abre-e-fecha a cada ciclo (atelectrauma).</li></ul></div>
+    <div class="a"><h5>Atrapalha: aprisionar</h5><ul><li>Obstrutivo (asma, DPOC): o problema é o ar que não sai.</li><li>PEEP alta agrava a assincronia e a retenção de CO₂.</li></ul></div>
+  </div>
+  <div class="prose"><ul>
+    <li><strong>Custo em qualquer pulmão:</strong> sobe o platô, hiperdistende e aperta coração e veias do tórax. O retorno venoso cai, a pressão cai, até o choque obstrutivo.</li>
+    <li><strong>AutoPEEP:</strong> o próximo ciclo chega antes de o pulmão esvaziar, e o ar empilha. Cenários: asma, DPOC, SDRA. Aperta o coração como a PEEP alta (pulso paradoxal).</li>
+    <li>Na tela: o fluxo expiratório <strong>não volta a zero</strong> antes do novo ciclo.</li>
+    <li>Correção = dar tempo: 1º menos FR e VC; depois, menos tempo inspiratório.</li>
+  </ul></div>
+  <div class="aside"><div class="albl">A conta do tempo</div>
+    <p>FR 20: cada ciclo dura 60 ÷ 20 = 3 s. Com 1 s de inspiração, sobram <strong>2 s</strong> para expirar.</p>
+    <p>FR 12: ciclo de 5 s. A mesma inspiração deixa <strong>4 s</strong>. Cortar a FR compra tempo expiratório.</p></div>
+</section>
+
+<section class="degrau" id="ponte">
+  <div class="dhead"><span class="dnum">-&gt;</span><div class="dtitle"><span class="dstage">Ponte</span><h2>Agora releia a RD com isto</h2></div></div>
+  <ul class="elos">
+    <li><span class="n">1</span><span><strong>AutoPEEP</strong> (degraus 1 e 5): cortar FR e VC baixa o volume-minuto e compra tempo para expirar. PEEP programada não tira ar preso.</span></li>
+    <li><span class="n">2</span><span><strong>Berlim</strong> (degrau 2): P/F = PaO₂ ÷ FiO₂ em decimal. A gravidade só vale com PEEP ≥ 5.</span></li>
+    <li><span class="n">3</span><span><strong>VMNI</strong> (degraus 1 e 2): sem diferença de pressão não há fluxo. CPAP escora; BiPAP ventila e varre o CO₂ do DPOC.</span></li>
+    <li><span class="n">+</span><span><strong>Protetora e resgate</strong> (degraus 3 e 5): platô &lt; 30 e driving pressure &lt; 15 limitam a parcela elástica. Recrutar é papel da PEEP, não de manobra agressiva.</span></li>
+  </ul>
+</section>
+
+<section class="degrau" id="teste">
+  <div class="dhead"><span class="dnum">?</span><div class="dtitle"><span class="dstage">Recuperação</span><h2>Teste rápido</h2></div></div>
+  <div class="qa"><p class="qq">PEEP 8, Pplatô 24. Qual a driving pressure? Está na meta?</p><details><summary>ver resposta</summary><p>24 − 8 = 16. Fora da meta (&lt; 15).</p></details></div>
+  <div class="qa"><p class="qq">VCV: o pico sobe de 25 para 40 e o platô fica em 18. Atrito ou pulmão duro?</p><details><summary>ver resposta</summary><p>Atrito: a distância pico-platô alargou. Broncoespasmo, secreção, tubo dobrado. Se os dois subissem juntos, seria complacência.</p></details></div>
+  <div class="qa"><p class="qq">PaCO₂ alta: qual botão? PaO₂ baixa: quais?</p><details><summary>ver resposta</summary><p>CO₂: volume-minuto (FR, depois VC). O₂: FiO₂ e PEEP.</p></details></div>
+  <div class="qa"><p class="qq">CPAP de 10 cmH₂O varre o CO₂ do DPOC exacerbado?</p><details><summary>ver resposta</summary><p>Não. Mesma pressão na inspiração e na expiração: sem diferença, sem empurrão. Quem ventila é o BiPAP, pela pressão de suporte (IPAP − EPAP).</p></details></div>
+  <div class="qa"><p class="qq">FR 20 com 1 s de inspiração: quanto sobra para expirar? E com FR 12?</p><details><summary>ver resposta</summary><p>2 s; com FR 12, 4 s. Por isso cortar a FR trata autoPEEP.</p></details></div>
+  <div class="qa"><p class="qq">Por que a pausa inspiratória revela o platô?</p><details><summary>ver resposta</summary><p>Com fluxo zero, a parcela resistiva some. Sobra a pressão que estica o alvéolo.</p></details></div>
+
+  <details class="ref"><summary>Siglas da metade sepse da RD</summary>
+    <div class="crit">
+      <div class="row"><span class="k">SvcO₂</span><span class="v">Saturação venosa central de O₂. Abaixo de 70%: oferta de O₂ insuficiente.</span></div>
+      <div class="row"><span class="k">PAM</span><span class="v">Pressão arterial média. Meta ≥ 65 mmHg.</span></div>
+      <div class="row"><span class="k">Ht</span><span class="v">Hematócrito. Corte de 30% na árvore da SvcO₂.</span></div>
+      <div class="row"><span class="k">EGDT</span><span class="v">Terapia precoce guiada por metas (Rivers, 2001). Protocolo antigo, ainda cobrado.</span></div>
+      <div class="row"><span class="k">SSC</span><span class="v">Surviving Sepsis Campaign: a diretriz internacional de sepse.</span></div>
+      <div class="row"><span class="k">SOFA</span><span class="v">Escore de disfunção orgânica. Sepse = alta de 2 pontos ou mais.</span></div>
+      <div class="row"><span class="k">qSOFA</span><span class="v">SOFA rápido: só triagem, não define sepse.</span></div>
+    </div>
+  </details>
+</section>
+</main>
+
+<footer>
+  <p><strong>Fonte:</strong> <code>resumos/Clínica Médica/Pneumologia/5. Pneumologia Intensiva.pdf</code> (EMED, Prof. Ricardo Siufi, 2026): p. 59-60 (CPAP, BiPAP, IPAP, EPAP), 65-72 (gerador de fluxo, ciclo, terminologia, complacência, resistência), 76-78 (VCV, PCV), 80-81 (ajustes iniciais, autoPEEP), 84-85 (Berlim, POAP) e 89-90 (protetora, prona, ART). Resumo <code>Pneumologia Intensiva.md</code>, seções 1, 7-12, 14-15 e 18; siglas de sepse em <code>Infectologia/Sepse.md</code>.</p>
+  <p>Derivado, fora do texto da apostila: o nome "equação do movimento" (é a soma das fórmulas de complacência e resistência da p. 72) e os números dos exemplos.</p>
+  <p>Degrau 0 da revisão direcionada de UTI e sepse. Leia antes de reler a RD.</p>
+</footer>
+</div>

@@ -124,9 +124,10 @@ Após inalação do bacilo, três destinos possíveis:
 **Coinfecção HIV-TB:**
 - Esquema básico RIPE mantido -- **DTG deve ser dobrado** (50 mg 2×/dia pela interação com rifampicina)
 - ⚠️ Rifampicina **não associar com IP** (atazanavir, darunavir, lopinavir, ritonavir) -- se não puder trocar o IP: substituir rifampicina por **rifabutina**
-- Início da TARV (virgem de tratamento):
-    - CD4 < 50: iniciar TARV em até **2 semanas** do inicio do RIPE
-    - CD4 ≥ 50: iniciar TARV no **início da fase de manutenção (8ª semana)**
+- Início da TARV (virgem de tratamento) -- PCDT HIV Adultos, Módulo 2 (MS, 2023):
+    - Iniciar a TARV em até **7 dias** após o início do RIPE, **independentemente do CD4**
+    - **Meningite tuberculosa:** iniciar a TARV preferencialmente entre a **4ª e a 6ª semana** do RIPE (risco de IRIS no SNC)
+    - **Nunca iniciar RIPE e TARV no mesmo dia** -- o RIPE vem primeiro
 
 ### 5.3 TB Drogarresistente
 
@@ -214,18 +215,30 @@ Por ordem de preferência:
 1. **3HP** -- Rifapentina 900 mg + Isoniazida 900 mg, 1×/semana × 12 semanas (3 meses)
     - Preferencial -- maior adesão
     - Pode ser usado em >2 anos, idosos, PVHIV
+    - ⭐ **PVHIV adulta: 3HP é o esquema preferencial** (PCDT HIV Adultos, Módulo 2, MS 2023)
+        - Pode ser associado a **TDF, EFV, DTG e RAL sem ajuste de dose**
+        - **Contraindicado com IP, nevirapina e TAF** (interação da rifapentina) -> nesses casos, isoniazida isolada (6H ou 9H)
     - **Não usar em gestantes** (falta de estudos)
 2. **4R** -- Rifampicina 600 mg/dia × 4 meses (120 doses)
-    - Preferir em hepatopatas, <10 anos, >50 anos
+    - Preferir em hepatopatas, >50 anos
 3. **6H ou 9H** -- Isoniazida 300 mg/dia × 6 (180 doses) ou 9 meses (270 doses)
     - Evitar em hepatopatas, <10 anos, >50 anos
 
+**Menores de 10 anos (Notas Informativas nº 6/2024 e nº 15/2024, MS):**
+- **3RH** (rifampicina + isoniazida, formulação dispersível, de 4 a 25 kg) **ou 3HP** (acima de 2 anos, criança HIV-negativa)
+- **6H ou 9H** só se os esquemas acima não forem possíveis
+- Criança com HIV em uso de **IP, INI ou nevirapina** -> **9H**
+
 ### 6.4 Quimioprofilaxia Primária (RN exposto a caso bacilífero)
 
-- Não aplicar BCG -> iniciar isoniazida ou rifampicina por 3 meses
-- Após 3 meses -> realizar PPD:
-    - PPD ≥ 5mm: manter isoniazida por mais 3 meses (ou rifampicina por mais 1 mês)
-    - PPD < 5mm: suspender medicações e **aplicar BCG**
+Nota Informativa nº 6/2024 (MS):
+- RN coabitante de caso bacilífero: **não vacinar com BCG** -> **rifampicina por 4 meses (4R)**, esquema preferencial, **sem PPD**
+- Ao final do 4R -> **aplicar BCG**
+- Alternativas ao 4R:
+    - **Isoniazida por 3 meses** -> PPD ao final:
+        - PPD >= 5 mm: manter isoniazida por mais 3 meses e **não vacinar**
+        - PPD < 5 mm: suspender a isoniazida e **aplicar BCG**
+    - **RH (rifampicina + isoniazida) por 3 meses**
 - Amamentação **não é contraindicada** (MTB não encontrado no leite materno) -- mãe deve usar máscara cirúrgica enquanto baciloscopia positiva
 
 ---
@@ -260,8 +273,10 @@ Por ordem de preferência:
 - ⚠️ Rifampicina **não** associar com IP; DTG dobrar dose em coinfectado HIV-TB
 - ⚠️ Transaminases ≥ 3× VN **com sintomas** = suspender RIPE; ≥ 5× VN **sem sintomas** = suspender RIPE
 - 🔴 Neurite óptica = etambutol (suspender); neuropatia periférica = isoniazida (tratar com piridoxina sem suspender)
-- 🔴 CD4 < 50 em HIV+: iniciar TARV em 2 semanas do RIPE (não esperar a manutenção)
-- 🔴 PVHIV contactante de caso bacilífero tem indicação de tratar ILTB independentemente do resultado do PPD -- a imunossupressão pode gerar PPD falso-negativo, então a regra de "repetir PPD em 8 semanas se < 5mm" (válida para contactante sem HIV) não se aplica aqui; esquema preferencial é isoniazida isolada por 9 meses, evitando a rifapentina do 3HP pelo risco de interação com antirretrovirais
+- 🔴 TARV em HIV+ com TB: iniciar em até 7 dias do RIPE, qualquer que seja o CD4 (não esperar a manutenção); na meningite tuberculosa, entre a 4ª e a 6ª semana; nunca no mesmo dia do RIPE (PCDT HIV Adultos, Módulo 2, MS 2023)
+- 🔴 PVHIV contactante de caso bacilífero tem indicação de tratar ILTB independentemente do resultado do PPD -- a imunossupressão pode gerar PPD falso-negativo, então a regra de "repetir PPD em 8 semanas se < 5mm" (válida para contactante sem HIV) não se aplica aqui; o esquema preferencial no adulto é o **3HP** (compatível com TDF, EFV, DTG e RAL sem ajuste) -- a interação da rifapentina só o contraindica com IP, nevirapina e TAF, e aí a escolha é a isoniazida isolada (PCDT HIV Adultos, Módulo 2, MS 2023)
 - 🔴 Interrupcao do tratamento por 30 dias consecutivos ou mais define abandono e reclassifica o caso como retratamento: o reinicio exige nova avaliacao diagnostica com TRM-TB ou baciloscopia, somada a cultura com teste de sensibilidade, pelo risco de resistencia selecionada.
 - 🔴 Em pessoa em situacao de rua, o tratamento se reinicia no servico onde ela esta no momento do contato: ausencia de documento ou de adscricao territorial nao condiciona o atendimento, e nao existe exigencia de retorno a unidade que iniciou o esquema.
 - ⚠️ A equipe de Consultorio na Rua e ponto de APOIO que compartilha o cuidado com a UBS, nao servico-destino de encaminhamento; transferir o caso para ela reproduz a barreira de acesso que costuma ter causado o abandono.
+- 🔴 **Banca-dependente (TARV na TB-HIV):** o gabarito antigo cobrava CD4 < 50 -> TARV em 2 semanas e CD4 >= 50 -> TARV na 8ª semana; o vigente é TARV em até 7 dias do RIPE para qualquer CD4, e entre a 4ª e a 6ª semana na meningite tuberculosa (PCDT HIV Adultos, Módulo 2, MS 2023). Em questão anterior a 2023, conferir o ano.
+- 🔴 **Banca-dependente (ILTB):** o gabarito antigo cobrava RN coabitante = isoniazida ou rifampicina por 3 meses + PPD, 4R preferencial em menores de 10 anos e 9H na PVHIV; o vigente é 4R sem PPD no RN (BCG ao final), 3RH ou 3HP em menores de 10 anos e 3HP preferencial na PVHIV adulta (Notas Informativas nº 6/2024 e nº 15/2024, MS; PCDT HIV Módulo 2, 2023). Em questão anterior a 2024, conferir o ano.

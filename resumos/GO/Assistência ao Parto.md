@@ -47,7 +47,9 @@ Da fase ativa (≥ 5 cm) até a dilatação total (10 cm).
 - **Controle cervical:**
     - Toque vaginal em **intervalos de 2-4 horas** (o mínimo necessário para avaliação da progressão, evitando aumento do risco de infecção intra-amniótica).
     - ⚠️ Padrão de prova: o intervalo de 2-4h é mais preciso que "a cada 4h" -- a frequência pode ser menor se houver mudança clínica ou desejo da paciente.
-    - **Partograma:** abrir obrigatoriamente na fase ativa. Linha de Alerta e Linha de Ação (4h após) orientam decisões.
+    - **Partograma:** abrir obrigatoriamente na fase ativa, com **linha de ação 4 h após a linha de alerta** (Diretriz Nacional de Assistência ao Parto Normal, MS 2017, vigente).
+        - Cruzar a linha de ação = **distocia**: avaliar a causa e intervir (amniotomia, ocitocina, reavaliar a via de parto) -- **não é cesárea automática**.
+        - A OMS 2018 não recomenda o limite de 1 cm/h nem a linha de alerta como critério isolado de intervenção.
 - **Taquissistolia (polissistolia):**
     - Definição: **> 5 contrações em 10 minutos** (= 6 ou mais), com intervalo **< 1 minuto** entre elas.
     - Mecanismo: dificulta o relaxamento uterino -> hipertonia -> prejudica oxigenação fetal.
@@ -309,7 +311,7 @@ Viável se: feto < 3.500 g, pelve adequada, cabeça fletida, obstetra experiente
 - 🔴 **Critério 1 cm/hora abandonado:** não indicar ocitocina nem cesárea apenas por não atingir 1 cm/h -- evolução do parto eutócico é heterogênea.
 - 🔴 **Toque vaginal:** intervalo correto é **2-4 horas**, não "a cada 4h" fixamente. Pode ser reduzido por mudança clínica ou desejo da paciente.
 - 🔴 **Amnioscopia:** DPP NÃO é complicação possível. Complicações reais: sangramento do colo, rotura de membranas, trauma fetal.
-- 🔴 **Partograma:** linha de Alerta e linha de Ação (4h depois). Cruzar a ação -> intervir.
+- 🔴 **Partograma:** linha de ação 4 h após a de alerta (MS 2017, vigente). Cruzar a ação = distocia -> avaliar a causa e intervir (amniotomia, ocitocina, reavaliar a via); não é cesárea automática. A OMS 2018 não recomenda o limite de 1 cm/h nem a linha de alerta como critério isolado.
 - 🔴 **Analgesia:** indicação por limiar de dor, não por dilatação. A gestante pode pedir farmacológica sem esgotar métodos não farmacológicos. Em cardiopatias e distocias, pode haver **indicação obstétrica** de analgesia.
 - 🔴 **Métodos não farmacológicos:** invasivos (acupuntura, TENS, injeção de água estéril) **têm** efeitos colaterais. Não invasivos (imersão, aromaterapia, massagem, musicoterapia) são os que se oferecem sem ressalvas.
 - 🔴 **Taquissistolia:** > 5 contrações/10 min (**≥ 6**), intervalo < 1 min. Suspeitar de ocitocina excessiva.
@@ -339,3 +341,4 @@ Viável se: feto < 3.500 g, pelve adequada, cabeça fletida, obstetra experiente
 - 🔴 **Fase ativa x 3º período -- não confundir:** fase ativa/trabalho de parto estabelecido é definida por dilatação cervical (4-6 cm) associada a dinâmica uterina regular. O 3º período é definido por eventos (da saída do feto à dequitação), não por um teto de tempo -- os 30-60 minutos citados são limiares de conduta, não a definição do período.
 - 🔴 **Puerpério -- involução e retorno da ovulação:** útero involui ~1 cm/dia (não 3 cm/dia). Mulheres que não amamentam podem ovular já a partir de 25 dias (3-5 semanas pós-parto); amamentação exclusiva atrasa o retorno via prolactina.
 - 🔴 **Fixo x insinuado:** apresentação fixa significa apenas que o polo cefálico não é mais mobilizável, podendo estar em qualquer plano NEGATIVO de DeLee. Insinuada é conceito mais específico -- exige estar exatamente no plano 0. Um polo em -2 é fixo, mas ainda não insinuado; não inferir bom prognóstico de parto vaginal apenas pela apresentação estar fixa.
+- 🔴 **Banca-dependente (partograma):** o gabarito antigo tratava o cruzamento da linha de ação como indicação direta de intervenção/cesárea; o vigente mantém o partograma com linha de ação 4 h após a de alerta (MS 2017), mas cruzá-la pede avaliar a causa da distocia e corrigir antes de decidir a via, e a OMS 2018 não usa 1 cm/h nem a linha de alerta como critério isolado.

@@ -25,6 +25,7 @@ Uma linha por pedido ou feedback do operador, com origem e estado. Nada sai daqu
 | P10 | Quadro de pendências (abertas -> respondidas -> absorvidas) no Painel; o ambiente como gestor tipo kanban/GPS | s213 | aberto | spec `alca-fechada-v0` §próximo; memória `feedback_alca_fechada_ambiente_gestor` |
 | P11 | Produto próprio: backend, frontend, APIs, automações | s213-s214 | pós-01/11 | `docs/DISCOVERY-AMBIENTE-AGENTICO-2026-10-02.md` (fases 0-4); gargalos medidos na s214 viram requisitos |
 | P12 | Gestão de produto forte, com o /ai-eng como dono do backlog | s214, 05/10 | aberto | este arquivo + handoff ao /ai-eng |
+| P13 | **Reorganizar o hub em 3 blocos sem redundância:** *"painel = performance + cronograma + ritmo, bloco teoria = revisões + aulas do cronograma/tarefas pré-lista e bloco cards/questões de mão-na-massa"*; "Aulas" vira Teoria/Biblioteca e a gestão do cronograma passa ao Painel; motivo: *"evitar a redundância que ocorre hoje, de informação solta em tudo que é lugar"* | s215, 05/10 | aberto, ENGENHARIA (/ai-eng) | medido: `docs/MEDICAO-HUB-3-BLOCOS-2026-10-05.md` (v0 = 4 fatias, ~145 linhas, ~25 testes, 1 sessão; sem dado novo); 3 decisões dele pendentes (4 x 3 abas; Documentação; Biblioteca retroativa); absorve P04 e o v0-2 do P03, toca P08 |
 
 ## Dívida de engenharia que apareceu (s214)
 

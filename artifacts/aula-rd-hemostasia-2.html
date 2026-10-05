@@ -1,0 +1,206 @@
+<title>Revisão direcionada · Hemostasia 2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,380;9..144,480;9..144,600;9..144,680&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EFF3F0; --card:#FAFCFA; --sunk:#E2E9E4;
+  --ink:#18211C; --ink2:#4C5A52; --ink3:#7C8A82;
+  --line:rgba(24,33,28,.13); --line2:rgba(24,33,28,.26);
+  --teal:#1F6B5E; --teal-ink:#154A41; --teal-wash:#DCEBE5;
+  --carmine:#8E2F41; --carmine-ink:#6B2231; --carmine-wash:#F5E2E6;
+  --amber:#8A5A17; --amber-ink:#6B4610; --amber-wash:#F3E6CC;
+  --on:#FFFFFF;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#7E8C84;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  --on:#131A16;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#7E8C84;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  --on:#131A16;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);
+  font:16px/1.6 "Source Sans 3",-apple-system,"Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+h1,h2,h3{margin:0;font-family:Fraunces,Georgia,serif;font-weight:600;letter-spacing:-.01em;text-wrap:balance;line-height:1.16;color:var(--ink)}
+.wrap{max-width:760px;margin:0 auto;padding:0 24px 90px}
+@media(max-width:640px){.wrap{padding:0 16px 72px}}
+:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+strong{font-weight:600;color:var(--ink)}
+.mn{font-family:"IBM Plex Mono",ui-monospace,Consolas,monospace;font-variant-numeric:tabular-nums}
+
+/* masthead */
+.top{padding:44px 0 26px;border-bottom:1px solid var(--line2)}
+.eye{font:600 11px/1.3 "Source Sans 3";letter-spacing:.14em;text-transform:uppercase;color:var(--teal-ink);margin:0 0 13px}
+.top h1{font-size:clamp(28px,5vw,42px);font-weight:680;margin-bottom:14px}
+.top .sub{font-size:clamp(16px,2.2vw,17.5px);line-height:1.6;color:var(--ink2);margin:0}
+
+/* secoes */
+.sec{padding:34px 0;border-bottom:1px solid var(--line)}
+.sec:last-of-type{border-bottom:0}
+.kick{font:600 11px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);display:block;margin-bottom:5px}
+.sec h2{font-size:clamp(21px,3.2vw,26px);margin-bottom:12px}
+.lede{font-size:16.3px;line-height:1.6;color:var(--ink2);margin:0 0 14px;font-style:italic}
+ul.pt{margin:0 0 14px;padding-left:20px}
+ul.pt li{font-size:15.6px;line-height:1.58;color:var(--ink2);margin-bottom:7px}
+ul.pt li:last-child{margin-bottom:0}
+
+/* bloco curto (pilulas) */
+.blk{padding:18px 0 4px;border-top:1px dashed var(--line2)}
+.blk:first-of-type{border-top:0;padding-top:4px}
+.blk h3{font-size:clamp(17px,2.6vw,19px);margin:0 0 8px}
+
+/* onde tropecou */
+.miss{list-style:none;margin:0;padding:0;border:1px solid var(--line2);background:var(--card)}
+.miss li{display:grid;grid-template-columns:28px minmax(0,1fr);gap:10px;padding:11px 14px;font-size:15.3px;line-height:1.5;color:var(--ink2)}
+.miss li+li{border-top:1px solid var(--line)}
+.miss .n{font:600 12px "IBM Plex Mono";color:var(--carmine-ink);padding-top:2px}
+
+/* tabela */
+.tw{overflow-x:auto;margin:16px 0;border:1px solid var(--line2);background:var(--card)}
+table{border-collapse:collapse;width:100%;font-size:14.4px}
+th,td{text-align:left;vertical-align:top;padding:9px 12px;line-height:1.45}
+th{background:var(--sunk);font:600 11.5px "Source Sans 3";letter-spacing:.05em;text-transform:uppercase;color:var(--ink3)}
+td{color:var(--ink2);border-top:1px solid var(--line)}
+td:first-child{font-weight:600;color:var(--ink)}
+td.hi{color:var(--teal-ink);font-weight:600}
+
+/* grade de criterios */
+.crit{border:1px solid var(--line2);background:var(--card);margin:16px 0}
+.crit .row{display:grid;grid-template-columns:150px minmax(0,1fr);gap:12px;padding:10px 14px;font-size:14.6px;line-height:1.5}
+.crit .row+.row{border-top:1px solid var(--line)}
+.crit .k{font-weight:600;color:var(--teal-ink);min-width:0}
+.crit .v{color:var(--ink2);min-width:0}
+@media(max-width:640px){.crit .row{grid-template-columns:minmax(0,1fr);gap:2px}}
+
+/* comparativo */
+.vs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line2);border:1px solid var(--line2);margin:16px 0}
+.vs>div{background:var(--card);padding:13px 15px;min-width:0}
+.vs h3{font:700 11.5px "Source Sans 3";letter-spacing:.05em;text-transform:uppercase;margin:0 0 7px;color:var(--ink3)}
+.vs .a h3{color:var(--carmine-ink)}
+.vs .b h3{color:var(--teal-ink)}
+.vs ul{margin:0;padding-left:17px}
+.vs li{font-size:14.5px;line-height:1.5;color:var(--ink2);margin-bottom:4px}
+@media(max-width:640px){.vs{grid-template-columns:minmax(0,1fr)}}
+
+/* callouts */
+.key{margin:16px 0;padding:12px 16px;border-left:3px solid var(--teal);background:var(--teal-wash);font-size:15.2px;line-height:1.55;color:var(--ink)}
+.trap{margin:16px 0;padding:12px 16px;border-left:3px solid var(--carmine);background:var(--carmine-wash);font-size:15.2px;line-height:1.55;color:var(--ink)}
+.note{margin:16px 0;padding:12px 16px;border-left:3px solid var(--amber);background:var(--amber-wash);font-size:14.8px;line-height:1.55;color:var(--ink)}
+
+/* fonte */
+.src{margin:12px 0 0;font-size:12.6px;line-height:1.45;color:var(--ink3)}
+.src code{font-family:"IBM Plex Mono",Consolas,monospace;font-size:11.6px;background:var(--sunk);padding:1px 5px;border-radius:2px;overflow-wrap:anywhere}
+
+/* teste agora */
+.qs{display:flex;flex-direction:column;gap:10px}
+.q{background:var(--card);border:1px solid var(--line2);padding:13px 15px}
+.q p{margin:0 0 8px;font-size:15.4px;line-height:1.5;color:var(--ink);font-weight:500}
+.q .tag{font:600 10.5px "IBM Plex Mono";color:var(--teal-ink);letter-spacing:.04em;display:block;margin-bottom:4px}
+.q details summary{cursor:pointer;font:600 13px "Source Sans 3";color:var(--teal-ink);list-style:none}
+.q details summary::-webkit-details-marker{display:none}
+.q details summary::before{content:"+ "}
+.q details[open] summary::before{content:"- "}
+.q details div{margin-top:7px;padding-top:7px;border-top:1px dashed var(--line2);font-size:14.8px;line-height:1.5;color:var(--ink2)}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <p class="eye">Revisão direcionada · Hematologia · 2ª passada · 05/10</p>
+  <h1>HIT e o Coombs da PTT</h1>
+  <p class="sub">A 1ª passada (01/10) mapeou o coagulograma. Aqui só os três pontos que falharam hoje: dois sobre o que fazer na HIT, um sobre o que o Coombs enxerga.</p>
+</header>
+
+<section class="sec">
+  <span class="kick">Mapa</span>
+  <h2>Onde você tropeçou hoje</h2>
+  <ul class="miss">
+    <li><span class="n">01</span><span>HIT: trocar enoxaparina por HNF não é mudar de conduta.</span></li>
+    <li><span class="n">02</span><span>HIT: por que a varfarina não entra na fase aguda.</span></li>
+    <li><span class="n">03</span><span>PTT: Coombs direto negativo, mesmo com autoanticorpo.</span></li>
+  </ul>
+</section>
+
+<section class="sec">
+  <span class="kick">Elo 01 · HIT</span>
+  <h2>Sair da classe, não trocar dentro dela</h2>
+  <p class="lede">O anticorpo reconhece o complexo heparina-PF4. Qualquer heparina refaz o complexo.</p>
+  <ul class="pt">
+    <li>O anti-PF4 ativa plaquetas: consumo e trombose. A HIT é pró-trombótica.</li>
+    <li>Enoxaparina e HNF são a mesma classe. Trocar uma pela outra mantém a ativação.</li>
+    <li>Conduta: suspender <strong>toda</strong> heparina e entrar com anticoagulante não heparínico: <strong>fondaparinux ou argatrobana</strong>.</li>
+  </ul>
+  <div class="trap">"Substituir a enoxaparina por heparina não fracionada" parece mudança de conduta. É a mesma droga para o anticorpo.</div>
+  <p class="src">Fonte: <code>resumos/Clínica Médica/Hematologia/Hemostasia.md</code> (§3 Drogas Antitrombóticas + armadilha acrescentada hoje)</p>
+</section>
+
+<section class="sec">
+  <span class="kick">Elo 02 · HIT</span>
+  <h2>Varfarina entra por último</h2>
+  <p class="lede">A proteína C cai antes dos fatores. Na HIT isso encontra um estado já trombótico.</p>
+  <div class="crit">
+    <div class="row"><span class="k">Fase aguda</span><span class="v">Só o não heparínico (fondaparinux ou argatrobana)</span></div>
+    <div class="row"><span class="k">Plaquetas &gt; 150.000</span><span class="v">Varfarina entra, <strong>sobreposta</strong> ao não heparínico</span></div>
+  </div>
+  <ul class="pt">
+    <li>Mecanismo: a proteína C tem meia-vida curta e cai primeiro. Varfarina isolada no início é pró-trombótica.</li>
+    <li>Na HIT aguda esse efeito soma-se à trombose em curso: risco de <strong>gangrena venosa</strong>.</li>
+    <li>O que muda em relação à regra geral: a ponte não é com heparina, é com o não heparínico.</li>
+  </ul>
+  <div class="trap">"Iniciar varfarina já, pensando no longo prazo": na fase aguda é a alternativa errada.</div>
+  <p class="src">Fonte: <code>resumos/Clínica Médica/Hematologia/Hemostasia.md</code> (§3 e §10; corte de 150.000 acrescentado hoje)</p>
+</section>
+
+<section class="sec">
+  <span class="kick">Elo 03 · Hemólise</span>
+  <h2>Coombs procura anticorpo na hemácia</h2>
+  <p class="lede">Na PTT a hemácia é cortada, não atacada.</p>
+  <ul class="pt">
+    <li>Hemólise da PTT é <strong>mecânica</strong>: a hemácia se fragmenta ao passar pelos microtrombos. Sai esquizócito.</li>
+    <li>A PTT adquirida tem autoanticorpo, mas contra a <strong>ADAMTS13</strong>. Não há anticorpo na superfície da hemácia: Coombs direto negativo.</li>
+  </ul>
+  <div class="vs">
+    <div class="b"><h3>Mecânica (PTT, SHU)</h3><ul>
+      <li>Esquizócitos</li>
+      <li>Coombs direto negativo</li>
+      <li>Reticulocitose, plaquetopenia de consumo</li>
+    </ul></div>
+    <div class="a"><h3>Autoimune (AHAI, Evans)</h3><ul>
+      <li>Esferócitos</li>
+      <li>Coombs direto positivo (IgG; só C3 no frio)</li>
+      <li>Evans = PTI + AHAI</li>
+    </ul></div>
+  </div>
+  <div class="trap">Ler "anemia hemolítica" ou "doença autoimune" e marcar Coombs positivo por reflexo. Pergunte onde está o anticorpo.</div>
+  <p class="src">Fonte: <code>resumos/Clínica Médica/Hematologia/Hemostasia.md</code> (§8.3) + <code>resumos/Clínica Médica/Hematologia/Anemias Hemolíticas.md</code> (Coombs)</p>
+</section>
+
+<section class="sec">
+  <span class="kick">Recuperação</span>
+  <h2>Teste agora</h2>
+  <div class="qs">
+    <div class="q"><span class="tag">Elo 01</span><p>HIT em uso de enoxaparina. Por que a HNF não resolve?</p><details><summary>ver resposta</summary><div>O anti-PF4 reage com as duas heparinas; a ativação plaquetária continua.</div></details></div>
+    <div class="q"><span class="tag">Elo 01</span><p>Quais anticoagulantes entram na HIT?</p><details><summary>ver resposta</summary><div>Não heparínicos: fondaparinux ou argatrobana.</div></details></div>
+    <div class="q"><span class="tag">Elo 02</span><p>Qual a condição para começar a varfarina na HIT?</p><details><summary>ver resposta</summary><div>Plaquetas acima de 150.000, sobreposta ao não heparínico.</div></details></div>
+    <div class="q"><span class="tag">Elo 02</span><p>O que a varfarina precoce provoca, e por quê?</p><details><summary>ver resposta</summary><div>Piora da trombose e gangrena venosa: a proteína C, de meia-vida curta, cai antes dos fatores.</div></details></div>
+    <div class="q"><span class="tag">Elo 03</span><p>A PTT adquirida tem autoanticorpo. Por que o Coombs direto é negativo?</p><details><summary>ver resposta</summary><div>O anticorpo é contra a ADAMTS13, não contra a hemácia. A hemólise é mecânica.</div></details></div>
+    <div class="q"><span class="tag">Elo 03</span><p>Esquizócito ou esferócito: qual aponta hemólise autoimune?</p><details><summary>ver resposta</summary><div>Esferócito. Esquizócito é fragmentação mecânica.</div></details></div>
+  </div>
+</section>
+</div>

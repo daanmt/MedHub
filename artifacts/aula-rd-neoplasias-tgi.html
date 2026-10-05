@@ -1,0 +1,258 @@
+<title>Revisão direcionada · Neoplasias do TGI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,380;9..144,480;9..144,600;9..144,680&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EFF3F0; --card:#FAFCFA; --sunk:#E2E9E4;
+  --ink:#18211C; --ink2:#4C5A52; --ink3:#7C8A82;
+  --line:rgba(24,33,28,.13); --line2:rgba(24,33,28,.26);
+  --teal:#1F6B5E; --teal-ink:#154A41; --teal-wash:#DCEBE5;
+  --carmine:#8E2F41; --carmine-ink:#6B2231; --carmine-wash:#F5E2E6;
+  --amber:#8A5A17; --amber-ink:#6B4610; --amber-wash:#F3E6CC;
+  --on:#FFFFFF;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#7E8C84;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  --on:#131A16;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#7E8C84;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  --on:#131A16;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);
+  font:16px/1.6 "Source Sans 3",-apple-system,"Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+h1,h2,h3{margin:0;font-family:Fraunces,Georgia,serif;font-weight:600;letter-spacing:-.01em;text-wrap:balance;line-height:1.16;color:var(--ink)}
+.wrap{max-width:760px;margin:0 auto;padding:0 24px 90px}
+@media(max-width:640px){.wrap{padding:0 16px 72px}}
+:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+strong{font-weight:600;color:var(--ink)}
+.mn{font-family:"IBM Plex Mono",ui-monospace,Consolas,monospace;font-variant-numeric:tabular-nums}
+
+/* masthead */
+.top{padding:44px 0 26px;border-bottom:1px solid var(--line2)}
+.eye{font:600 11px/1.3 "Source Sans 3";letter-spacing:.14em;text-transform:uppercase;color:var(--teal-ink);margin:0 0 13px}
+.top h1{font-size:clamp(28px,5vw,42px);font-weight:680;margin-bottom:14px}
+.top .sub{font-size:clamp(16px,2.2vw,17.5px);line-height:1.6;color:var(--ink2);margin:0}
+
+/* secoes */
+.sec{padding:34px 0;border-bottom:1px solid var(--line)}
+.sec:last-of-type{border-bottom:0}
+.kick{font:600 11px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);display:block;margin-bottom:5px}
+.sec h2{font-size:clamp(21px,3.2vw,26px);margin-bottom:12px}
+.lede{font-size:16.3px;line-height:1.6;color:var(--ink2);margin:0 0 14px;font-style:italic}
+ul.pt{margin:0 0 14px;padding-left:20px}
+ul.pt li{font-size:15.6px;line-height:1.58;color:var(--ink2);margin-bottom:7px}
+ul.pt li:last-child{margin-bottom:0}
+
+/* bloco curto (pilulas) */
+.blk{padding:18px 0 4px;border-top:1px dashed var(--line2)}
+.blk:first-of-type{border-top:0;padding-top:4px}
+.blk h3{font-size:clamp(17px,2.6vw,19px);margin:0 0 8px}
+
+/* onde tropecou */
+.miss{list-style:none;margin:0;padding:0;border:1px solid var(--line2);background:var(--card)}
+.miss li{display:grid;grid-template-columns:28px minmax(0,1fr);gap:10px;padding:11px 14px;font-size:15.3px;line-height:1.5;color:var(--ink2)}
+.miss li+li{border-top:1px solid var(--line)}
+.miss .n{font:600 12px "IBM Plex Mono";color:var(--carmine-ink);padding-top:2px}
+
+/* tabela */
+.tw{overflow-x:auto;margin:16px 0;border:1px solid var(--line2);background:var(--card)}
+table{border-collapse:collapse;width:100%;font-size:14.4px}
+th,td{text-align:left;vertical-align:top;padding:9px 12px;line-height:1.45}
+th{background:var(--sunk);font:600 11.5px "Source Sans 3";letter-spacing:.05em;text-transform:uppercase;color:var(--ink3)}
+td{color:var(--ink2);border-top:1px solid var(--line)}
+td:first-child{font-weight:600;color:var(--ink)}
+td.hi{color:var(--teal-ink);font-weight:600}
+
+/* grade de criterios */
+.crit{border:1px solid var(--line2);background:var(--card);margin:16px 0}
+.crit .row{display:grid;grid-template-columns:150px minmax(0,1fr);gap:12px;padding:10px 14px;font-size:14.6px;line-height:1.5}
+.crit .row+.row{border-top:1px solid var(--line)}
+.crit .k{font-weight:600;color:var(--teal-ink);min-width:0}
+.crit .v{color:var(--ink2);min-width:0}
+@media(max-width:640px){.crit .row{grid-template-columns:minmax(0,1fr);gap:2px}}
+
+/* comparativo */
+.vs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line2);border:1px solid var(--line2);margin:16px 0}
+.vs>div{background:var(--card);padding:13px 15px;min-width:0}
+.vs h3{font:700 11.5px "Source Sans 3";letter-spacing:.05em;text-transform:uppercase;margin:0 0 7px;color:var(--ink3)}
+.vs .a h3{color:var(--carmine-ink)}
+.vs .b h3{color:var(--teal-ink)}
+.vs ul{margin:0;padding-left:17px}
+.vs li{font-size:14.5px;line-height:1.5;color:var(--ink2);margin-bottom:4px}
+@media(max-width:640px){.vs{grid-template-columns:minmax(0,1fr)}}
+
+/* callouts */
+.key{margin:16px 0;padding:12px 16px;border-left:3px solid var(--teal);background:var(--teal-wash);font-size:15.2px;line-height:1.55;color:var(--ink)}
+.trap{margin:16px 0;padding:12px 16px;border-left:3px solid var(--carmine);background:var(--carmine-wash);font-size:15.2px;line-height:1.55;color:var(--ink)}
+.note{margin:16px 0;padding:12px 16px;border-left:3px solid var(--amber);background:var(--amber-wash);font-size:14.8px;line-height:1.55;color:var(--ink)}
+
+/* fonte */
+.src{margin:12px 0 0;font-size:12.6px;line-height:1.45;color:var(--ink3)}
+.src code{font-family:"IBM Plex Mono",Consolas,monospace;font-size:11.6px;background:var(--sunk);padding:1px 5px;border-radius:2px;overflow-wrap:anywhere}
+
+/* teste agora */
+.qs{display:flex;flex-direction:column;gap:10px}
+.q{background:var(--card);border:1px solid var(--line2);padding:13px 15px}
+.q p{margin:0 0 8px;font-size:15.4px;line-height:1.5;color:var(--ink);font-weight:500}
+.q .tag{font:600 10.5px "IBM Plex Mono";color:var(--teal-ink);letter-spacing:.04em;display:block;margin-bottom:4px}
+.q details summary{cursor:pointer;font:600 13px "Source Sans 3";color:var(--teal-ink);list-style:none}
+.q details summary::-webkit-details-marker{display:none}
+.q details summary::before{content:"+ "}
+.q details[open] summary::before{content:"- "}
+.q details div{margin-top:7px;padding-top:7px;border-top:1px dashed var(--line2);font-size:14.8px;line-height:1.5;color:var(--ink2)}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <p class="eye">Revisão direcionada · Gastro e Cirurgia · 05/10</p>
+  <h1>Neoplasias do TGI: o corte que troca a cirurgia</h1>
+  <p class="sub">Nove cards, um padrão: cada conduta oncológica pendura num corte (camada, tamanho, margem, intervalo, gene). Errar o corte troca a operação.</p>
+</header>
+
+<section class="sec">
+  <span class="kick">Mapa</span>
+  <h2>Onde você tropeçou hoje</h2>
+  <ul class="miss">
+    <li><span class="n">01</span><span>Tis x T1: a camada que separa, e as três condições da polipectomia curativa.</span></li>
+    <li><span class="n">02</span><span>Carcinoide de apêndice: o tamanho que pede hemicolectomia.</span></li>
+    <li><span class="n">03</span><span>Ecoendoscopia e RM de pelve: estadiam só o reto.</span></li>
+    <li><span class="n">04</span><span>Parente de 1º grau com CCR antes dos 60: intervalo de 5 anos.</span></li>
+    <li><span class="n">05</span><span>Poliposes: PTEN é Cowden; tireoide não é Lynch.</span></li>
+    <li><span class="n">06</span><span>Câncer gástrico distal: subtotal D2 e a margem proximal.</span></li>
+  </ul>
+</section>
+
+<section class="sec">
+  <span class="kick">Elo 01 · Pólipo malignizado</span>
+  <h2>Tis x T1, e quando a alça basta</h2>
+  <p class="lede">A muscular da mucosa é a fronteira: abaixo dela já há linfáticos.</p>
+  <ul class="pt">
+    <li><strong>Tis:</strong> intraepitelial ou restrito à lâmina própria. Sem linfáticos, risco de metástase nulo. Polipectomia com margem livre cura.</li>
+    <li><strong>T1:</strong> passou a muscular da mucosa e chegou à submucosa. Agora há linfáticos: entra Haggitt e entram os critérios de cura.</li>
+    <li>"Adenocarcinoma invasivo" restrito à lâmina própria ainda é Tis. Não presumir T1 pela palavra.</li>
+  </ul>
+  <div class="crit">
+    <div class="row"><span class="k">Margem</span><span class="v">Livre, maior que 2 mm</span></div>
+    <div class="row"><span class="k">Grau</span><span class="v">Bem ou moderadamente diferenciado</span></div>
+    <div class="row"><span class="k">Vasos</span><span class="v">Sem invasão angiolinfática</span></div>
+  </div>
+  <div class="trap">No T1 a polipectomia só cura com as três. Faltou uma -&gt; colectomia com linfadenectomia. Margem livre sozinha não dá alta.</div>
+  <p class="src">Fonte: <code>resumos/Clínica Médica/Gastroenterologia/Polipose Intestinal e Câncer Colorretal.md</code> (Haggitt + armadilhas)</p>
+</section>
+
+<section class="sec">
+  <span class="kick">Elo 02 · Apêndice</span>
+  <h2>Carcinoide: o tamanho decide</h2>
+  <p class="lede">No neuroendócrino o tamanho muda a cirurgia. No adenocarcinoma, não.</p>
+  <div class="tw"><table>
+    <tr><th>TNE de apêndice</th><th>Conduta</th></tr>
+    <tr><td>&lt; 1 cm</td><td>Apendicectomia basta</td></tr>
+    <tr><td>1-2 cm</td><td>Decide por invasão do mesoapêndice, margem, grau e invasão linfovascular</td></tr>
+    <tr><td>&gt; 2 cm, base ou mesoapêndice</td><td class="hi">Hemicolectomia direita + linfadenectomia</td></tr>
+  </table></div>
+  <ul class="pt">
+    <li>Adenocarcinoma de apêndice achado na peça: hemicolectomia direita sempre, em qualquer tamanho.</li>
+  </ul>
+  <p class="src">Fonte: <code>resumos/Cirurgia/Abdome Agudo Inflamatório - Apendicite Aguda.md</code> (§10 Neoplasias apendiculares)</p>
+</section>
+
+<section class="sec">
+  <span class="kick">Elo 03 · Estadiamento</span>
+  <h2>Cólon x reto</h2>
+  <p class="lede">Ecoendoscopia e RM de pelve medem profundidade local. Só o reto precisa disso.</p>
+  <div class="vs">
+    <div class="b"><h3>Cólon (sigmoide incluso)</h3><ul>
+      <li>TC de tórax, abdome e pelve + CEA</li>
+      <li>Cirurgia primeiro; QT adjuvante</li>
+    </ul></div>
+    <div class="a"><h3>Reto</h3><ul>
+      <li>Soma RM de pelve ou ecoendoscopia (T e N locais)</li>
+      <li>T3/T4 ou N+ -&gt; neoadjuvância</li>
+    </ul></div>
+  </div>
+  <div class="trap">"TC de tórax + ecoendoscopia da lesão" num tumor de sigmoide é distrator. A ecoendoscopia é do reto.</div>
+  <p class="src">Fonte: <code>resumos/Clínica Médica/Gastroenterologia/Polipose Intestinal e Câncer Colorretal.md</code> (§3.4)</p>
+</section>
+
+<section class="sec">
+  <span class="kick">Elo 04 · Rastreio</span>
+  <h2>História familiar: antecipa e encurta</h2>
+  <p class="lede">O risco familiar mexe nos dois números: idade de início e intervalo.</p>
+  <div class="crit">
+    <div class="row"><span class="k">Risco habitual</span><span class="v">Início aos 45 anos; colonoscopia a cada <strong>10 anos</strong></span></div>
+    <div class="row"><span class="k">1º grau &lt; 60 anos (ou 2 parentes de 1º grau)</span><span class="v">Início aos 40 anos ou 10 anos antes do caso índice; só colonoscopia, a cada <strong>5 anos</strong></span></div>
+  </div>
+  <ul class="pt">
+    <li>Colonoscopia inicial normal não devolve ao intervalo de 10 anos. O risco é da família, não do exame.</li>
+  </ul>
+  <p class="src">Fonte: <code>resumos/Clínica Médica/Gastroenterologia/Polipose Intestinal e Câncer Colorretal.md</code> (§3.3)</p>
+</section>
+
+<section class="sec">
+  <span class="kick">Elo 05 · Genética</span>
+  <h2>Cada polipose com seu gene</h2>
+  <p class="lede">Dois hamartomatosos se confundem; o gene e a pele separam.</p>
+  <div class="tw"><table>
+    <tr><th>Síndrome</th><th>Gene</th><th>Pista</th></tr>
+    <tr><td>Cowden</td><td class="hi">PTEN</td><td>Hamartoma; papilomas orais, ceratose palmoplantar; mama, tireoide, endométrio</td></tr>
+    <tr><td>Peutz-Jeghers</td><td>STK11/LKB1</td><td>Hamartoma; máculas melanóticas planas nos lábios</td></tr>
+    <tr><td>FAP/Gardner</td><td>APC</td><td>Centenas de adenomas; osteoma, desmoide</td></tr>
+    <tr><td>Lynch</td><td>MLH1, MSH2, MSH6, PMS2</td><td>Endométrio, ovário, estômago, urotélio alto</td></tr>
+  </table></div>
+  <div class="trap">Tireoide aparece em Cowden e na FAP/Gardner, nunca no Lynch. Pelve renal e ureter, sim, são Lynch.</div>
+  <p class="src">Fonte: <code>resumos/Clínica Médica/Gastroenterologia/Polipose Intestinal e Câncer Colorretal.md</code> (§2 e §3.1)</p>
+</section>
+
+<section class="sec">
+  <span class="kick">Elo 06 · Estômago</span>
+  <h2>Câncer gástrico distal</h2>
+  <p class="lede">A localização escolhe a gastrectomia; a margem proximal é a régua.</p>
+  <ul class="pt">
+    <li>Pré-pilórico ou antral, avançado, sem metástase: <strong>gastrectomia subtotal (distal) + linfadenectomia D2</strong>.</li>
+    <li>Gastrectomia total só quando a margem proximal não cabe no estômago que sobra.</li>
+    <li>Tipo difuso de Lauren, sozinho, não obriga a total.</li>
+  </ul>
+  <div class="crit">
+    <div class="row"><span class="k">Borrmann III/IV</span><span class="v">Infiltrativo: margem proximal de <strong>5 cm</strong></span></div>
+    <div class="row"><span class="k">Borrmann I/II</span><span class="v">Expansivo: margem proximal de <strong>3 cm</strong></span></div>
+  </div>
+  <p class="src">Fonte: verso do card (sem resumo local)</p>
+</section>
+
+<section class="sec">
+  <span class="kick">Recuperação</span>
+  <h2>Teste agora</h2>
+  <div class="qs">
+    <div class="q"><span class="tag">Elo 01</span><p>Que camada o tumor precisa atravessar para deixar de ser Tis?</p><details><summary>ver resposta</summary><div>A muscular da mucosa. Na submucosa já é T1.</div></details></div>
+    <div class="q"><span class="tag">Elo 01</span><p>Pólipo T1 ressecado com margem de 3 mm, mas pouco diferenciado. Conduta?</p><details><summary>ver resposta</summary><div>Colectomia com linfadenectomia. A cura exige margem &gt; 2 mm, grau bem/moderado e ausência de invasão angiolinfática.</div></details></div>
+    <div class="q"><span class="tag">Elo 02</span><p>Carcinoide de 2,5 cm na ponta do apêndice. Conduta?</p><details><summary>ver resposta</summary><div>Hemicolectomia direita com linfadenectomia.</div></details></div>
+    <div class="q"><span class="tag">Elo 02</span><p>Adenocarcinoma de apêndice de 0,8 cm. O tamanho poupa a hemicolectomia?</p><details><summary>ver resposta</summary><div>Não. No adenocarcinoma é hemicolectomia direita em qualquer tamanho.</div></details></div>
+    <div class="q"><span class="tag">Elo 03</span><p>Adenocarcinoma de sigmoide: quais exames estadiam?</p><details><summary>ver resposta</summary><div>TC de tórax, abdome e pelve + CEA. Ecoendoscopia e RM de pelve são do reto.</div></details></div>
+    <div class="q"><span class="tag">Elo 03</span><p>O que a RM de pelve decide no câncer de reto?</p><details><summary>ver resposta</summary><div>A profundidade local (T e N): T3/T4 ou N+ vão para neoadjuvância.</div></details></div>
+    <div class="q"><span class="tag">Elo 04</span><p>Pai com CCR aos 52, colonoscopia do filho normal. Quando repetir?</p><details><summary>ver resposta</summary><div>Em 5 anos.</div></details></div>
+    <div class="q"><span class="tag">Elo 04</span><p>Nesse risco familiar, quando começa o rastreio?</p><details><summary>ver resposta</summary><div>Aos 40 anos ou 10 anos antes do caso índice, o que vier primeiro.</div></details></div>
+    <div class="q"><span class="tag">Elo 05</span><p>Hamartomas no TGI + papilomas orais + ceratose palmar. Qual gene?</p><details><summary>ver resposta</summary><div>PTEN (Cowden). STK11 seria Peutz-Jeghers, com máculas planas nos lábios.</div></details></div>
+    <div class="q"><span class="tag">Elo 05</span><p>Qual órgão é a exceção cobrada fora do espectro do Lynch?</p><details><summary>ver resposta</summary><div>A tireoide.</div></details></div>
+    <div class="q"><span class="tag">Elo 06</span><p>Adenocarcinoma pré-pilórico avançado, sem metástase. Qual cirurgia?</p><details><summary>ver resposta</summary><div>Gastrectomia subtotal (distal) com linfadenectomia D2.</div></details></div>
+    <div class="q"><span class="tag">Elo 06</span><p>Margem proximal no Borrmann IV? E no Borrmann II?</p><details><summary>ver resposta</summary><div>5 cm no infiltrativo (III/IV); 3 cm no expansivo (I/II).</div></details></div>
+  </div>
+</section>
+</div>

@@ -89,6 +89,26 @@
   "rd-ventilacao-degrau-0": {
    "tipo": "revisao",
    "titulo": "Ventilação: degrau 0"
+  },
+  "rd-neoplasias-tgi": {
+   "tipo": "revisao",
+   "titulo": "Pólipos, CCR e câncer gástrico"
+  },
+  "rd-meningites": {
+   "tipo": "revisao",
+   "titulo": "Meningites"
+  },
+  "rd-dm-cronicas": {
+   "tipo": "revisao",
+   "titulo": "DM: complicações crônicas"
+  },
+  "rd-hemostasia-2": {
+   "tipo": "revisao",
+   "titulo": "Hemostasia II: HIT e PTT"
+  },
+  "rd-pilulas-0510": {
+   "tipo": "revisao",
+   "titulo": "Pílulas de 05/10"
   }
  }
 }

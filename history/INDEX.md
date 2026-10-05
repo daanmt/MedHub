@@ -4,7 +4,7 @@ Chronological index of every work session on this project. The session log files
 
 **Reading order:** newest-first below. Active sessions live in `history/`; pre-modernization sessions (≤028, when the project still relied on `caderno_erros.md`, `HANDOFF.md`, and `progresso.md`) have been archived to [`legacy/`](legacy/) -- see [`legacy/README.md`](legacy/README.md) for the deprecation context.
 
-**session_215.md (2026-10-05, segunda):** 🃏📐 **Fila de 05/10 (150) drenada e gravada; P13 (hub em 3 blocos sem redundância) medido -- v0 = 4 fatias, ~145 linhas, 1 sessão; 5 Revisões Direcionadas do lote no hub (Version 72) com resumo-fonte declarado; 22 temas carimbados.** Backend em loop de 2 h das 06h às 12h45. Pendente com ele: rifampicina e ceftriaxona em `Meningites.md`.
+**session_215.md (2026-10-05, segunda):** 🃏📐 **Fila de 05/10 (150) drenada e gravada; P13 (hub em 3 blocos sem redundância) medido -- v0 = 4 fatias, ~145 linhas, 1 sessão; 5 Revisões Direcionadas do lote no hub (Version 72) com resumo-fonte declarado; 22 temas carimbados.** Backend em loop de 2 h das 06h às 12h45. Correções aprovadas por ele em `Meningites.md` (posologia da rifampicina; ceftriaxona como alternativa válida); card #639 para reforja.
 
 **session_214.md (2026-10-04/05, domingo -> segunda):** 🏠✅ **Feedbacks do hub absorvidos: assinar conclui, lista resolvida sai da semana, seções recolhíveis e grifo no leitor (Version 68); 25 listas S4/S5 pela API (741 q); 4 aulas da S4; 6 correções clínicas aprovadas por ele nos resumos.** Diagnóstico do "sync" (Painel = foto do publish, backend manual, gesto duplicado); levantamento Teoria (limite real = leitura antes do publish; 46 stubs, 33 temas S4-S7 sem resumo); plano da S4 dia a dia. 12 subagentes Opus.
 

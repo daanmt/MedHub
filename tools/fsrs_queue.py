@@ -178,13 +178,14 @@ def teto_do_dia(ordered, consumo_hoje=0):
 
 
 def consumo_do_dia():
-    """Revisoes ja gravadas hoje -- o MESMO contador do "usados hoje" do boot
-    (`day_plan.realizado_do_dia`, leitor read-only). Falha = None + WARN (F60)."""
+    """Revisoes ja gravadas hoje pela regra P09 (s216, hub-integracao part-5): o lote conta no dia
+    da 1a nota (`day_plan.consumo_logico`, leitor read-only; o MESMO do "Hoje" do Painel). O boot
+    segue no relogio (`realizado_do_dia`). Falha = None + WARN (F60)."""
     try:
         import day_plan
         con = db.get_connection()
         try:
-            return int(day_plan.realizado_do_dia(con, db.hoje().isoformat())["cards"])
+            return int(day_plan.consumo_logico(con, db.hoje()))
         finally:
             con.close()
     except Exception as e:

@@ -1370,6 +1370,103 @@ def realizado_do_dia(con, data_iso):
     return {"questoes": q or 0, "simulado": sim or 0, "cards": cards or 0}
 
 
+# ------------------------------------------------ s216 (hub-integracao part-5): regra P09
+#: Onde o rito do tique deixa os lotes do player: o marcador do `--record-lote` e as notas de cada
+#: lote (o out_dir do `ArtifactData list` ou o JSON `{notas: [...]}`). Injetaveis nos testes.
+RAIZ_LOTES = ROOT
+FUSO_LOTES = None              # None = o fuso do sistema, o mesmo de `db.agora()` (F80)
+MARCADOR_LOTE = os.path.join("tmp", "hub", "ultima_gravacao_hub.json")
+#: Lotes candidatos: o do marcador e os exportados ate 2 dias antes de hoje (pelo prefixo da sessao).
+JANELA_LOTES_DIAS = 2
+_RE_SESSAO_LOTE = re.compile(r"^player_(.+?)(?:_notas\.json|_db)$")
+_RE_DATA_SESSAO = re.compile(r"^(\d{4}-\d{2}-\d{2})")
+
+
+def _notas_do_lote(raiz, sessao):
+    """[(card_id, ts)] de um lote, dos dois formatos que o tique deixa em `tmp/`; ilegivel = pula."""
+    tmp = os.path.join(raiz, "tmp")
+    saida = []
+    pasta = os.path.join(tmp, "player_%s_db" % sessao)
+    for arq in glob.glob(os.path.join(pasta, "**", "*.json"), recursive=True):
+        try:
+            with open(arq, encoding="utf-8") as f:
+                doc = json.load(f)
+        except (OSError, ValueError):
+            continue
+        if isinstance(doc, dict):
+            saida.append((doc.get("card_id"), doc.get("ts")))
+    try:
+        with open(os.path.join(tmp, "player_%s_notas.json" % sessao), encoding="utf-8") as f:
+            obj = json.load(f)
+        notas = obj.get("notas") if isinstance(obj, dict) else obj
+        saida.extend((n.get("card_id"), n.get("ts")) for n in notas or [] if isinstance(n, dict))
+    except (OSError, ValueError, AttributeError):
+        pass
+    return saida
+
+
+def revisoes_de_lotes_anteriores(hoje, raiz=None, fuso=None):
+    """{(card_id, review_time)} das notas de lotes cuja PRIMEIRA nota caiu ANTES de `hoje` -- o que o
+    teto e o Painel de hoje nao contam (regra P09). PURA sobre o disco (le `tmp/`, nunca o banco).
+
+    `review_time` e o do writer (`notas_player.relogio`: o `ts` da pagina em hora local, ao segundo),
+    entao casa linha a linha com o revlog: a 2a revisao de HOJE de um card que tambem estava no lote de
+    ontem conta. Sem o marcador do tique (tmp/ limpo) ou sem notas = vazio (vale o relogio).
+
+    Desvio declarado da spec (s216 part-5, "so o ULTIMO lote gravado"): o marcador e a porta, mas os
+    candidatos sao o lote dele E os exportados ate `JANELA_LOTES_DIAS` dias antes -- no rito real o
+    lote da virada (04a, gravado de madrugada) e seguido de um lote do dia (05a) que move o marcador, e
+    so com o ultimo as 70 notas da virada voltariam ao consumo de 05/10 no meio do dia."""
+    from app.utils.notas_player import relogio
+    from app.utils.relogio import dia_logico
+    raiz = str(raiz if raiz is not None else RAIZ_LOTES)
+    try:
+        with open(os.path.join(raiz, MARCADOR_LOTE), encoding="utf-8") as f:
+            marcada = str(json.load(f).get("sessao") or "")
+    except (OSError, ValueError, AttributeError):
+        return set()
+    hoje = dia_logico(hoje)
+    sessoes = {marcada} if marcada else set()
+    for caminho in glob.glob(os.path.join(raiz, "tmp", "player_*")):
+        m = _RE_SESSAO_LOTE.match(os.path.basename(caminho))
+        d = _RE_DATA_SESSAO.match(m.group(1)) if m else None
+        if d:
+            try:
+                dias = (hoje - date.fromisoformat(d.group(1))).days
+            except ValueError:
+                continue
+            if 0 <= dias <= JANELA_LOTES_DIAS:
+                sessoes.add(m.group(1))
+    saida = set()
+    for sessao in sorted(sessoes):
+        revisoes = []
+        for cid, ts in _notas_do_lote(raiz, sessao):
+            try:
+                revisoes.append((int(cid), relogio(ts, fuso)))
+            except (TypeError, ValueError):
+                continue                   # nota sem card ou sem ts legivel nao data o lote
+        if revisoes and dia_logico(min(q for _c, q in revisoes)) < hoje:
+            saida.update((c, q.strftime("%Y-%m-%d %H:%M:%S")) for c, q in revisoes)
+    return saida
+
+
+def consumo_logico(con, hoje, raiz=None, fuso=None):
+    """Cards consumidos HOJE pela regra P09 (decisao do operador em 05/10/2026: "pelo dia em que o
+    lote comecou"): um lote de cards conta inteiro no dia da 1a nota, mesmo que termine depois da
+    meia-noite; o FSRS guarda o horario real. = `realizado_do_dia` menos as revisoes de hoje que sao
+    de lote comecado antes (`revisoes_de_lotes_anteriores`). So o teto do export e o Painel usam;
+    o boot e a aderencia seguem pelo relogio (`realizado_do_dia`, intacto). Read-only."""
+    data_iso = hoje.isoformat() if hasattr(hoje, "isoformat") else str(hoje)[:10]
+    base = int(realizado_do_dia(con, data_iso)["cards"])
+    de_antes = revisoes_de_lotes_anteriores(hoje, raiz, fuso if fuso is not None else FUSO_LOTES)
+    if not de_antes:
+        return base
+    linhas = con.execute("SELECT card_id, review_time FROM fsrs_revlog WHERE date(review_time) = ?",
+                         (data_iso,)).fetchall()
+    return len({int(c) for c, rt in linhas
+                if (int(c), str(rt)[:19].replace("T", " ")) not in de_antes})
+
+
 def classificar_dia(plano_rows, realizado):
     """Classificação PURA planejado×real de um dia (testável por fixtures).
 

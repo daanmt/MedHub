@@ -542,7 +542,8 @@ LISTAS_JS = "\n".join([_declaracao(TEMPLATE, "var ROT_QZ = {"), _declaracao(TEMP
                        # s214: as semanas das Listas recolhem; o estado (secAberta) e lido na renderizacao
                        re.search(r"\n  (var SECOES_CHAVE = [^\n]+;)", TEMPLATE).group(1)] +
                       [extrair_funcao(TEMPLATE, a) for a in (
-                          "function qzEsc(s){", "function qzItemLista(l, atrasada){", "function qzEhSimulado(l){",
+                          "function qzEsc(s){", "function qzItemLista(l, atrasada){", "function qzAulasHtml(l){",
+                          "function qzEhSimulado(l){",
                           "function qzNomeSim(l){", "function qzItemSim(l, daVez){", "function qzRenderSimulados(ls){",
                           "function secoesLer(){", "function secAberta(id, padrao){", "function secSemanaAtual(atual, comItens){",
                           "function secPadraoAberta(chave, corrente){", "function secTituloHtml(id, alvo, aberta, miolo){",
@@ -560,6 +561,7 @@ function $(id){ if(!els[id]){ els[id] = {id: id, innerHTML: "", textContent: "",
   querySelectorAll: function(){ return id === "qz-modo" ? BOT : []; }}; } return els[id]; }
 var QZ = {listas: __LISTAS__, modo: __MODO__};
 var QZ_SEM = {atual: 2, datas: {"2": ["21/09", "27/09"]}};
+var HUB_LIGACOES = {};
 __FUNCS__
 qzRenderListas();
 console.log(JSON.stringify({html: $("qz-listas").innerHTML, sub: $("qz-sub").textContent,
@@ -863,17 +865,20 @@ def _aparelho(ls=None, quebrado=False):
 # ======================================================================== 1. secoes da aba Aulas
 
 # hoje = semana 3; a semana 1 e Atrasadas; 4 e 5 vem depois. Uma RD avulsa (bloco proprio), uma
-# analise sem tarefa ("Outras aulas") e uma aula que CUMPRE a tarefa 70 da semana 4 (tem o "feito").
+# aula avulsa sem tarefa ("Outras aulas") e uma aula que CUMPRE a tarefa 70 da semana 4 (tem o
+# "feito"). s216 (part-1): lista so mora na Teoria com aula ligada -- `prep-x` prepara as 4 listas,
+# para as secoes seguirem as mesmas; a analise saiu da Teoria (vive na Documentacao do Painel).
 PLANO_SEC = [_tarefa(26, 1, "Diabetes na Gestação", 19, URL_SEC),
              _tarefa(49, 3, "Hérnias da Parede Abdominal", 21, URL_SEC, bloco="CIR"),
              _tarefa(70, 4, "Aorta e pericárdio", 0, None, fonte="custom", bloco="CM"),
              _tarefa(68, 4, "Doenças Glomerulares", 21, URL_SEC, bloco="CM"),
              _tarefa(71, 5, "Tireoide", 18, URL_SEC, bloco="CM")]
 AULAS_SEC = [hub.Aula(s, s, "2026-10-0%d" % (i + 1), "artifacts/aula-%s.html" % s)
-             for i, s in enumerate(("rd-hepato", "dossie-x", "aorta"))]
+             for i, s in enumerate(("rd-hepato", "avulsa-x", "aorta", "prep-x"))]
 REGISTRO_SEC = {"rd-hepato": {"tipo": "revisao", "titulo": "Revisão direcionada hepato"},
-                "dossie-x": {"tipo": "analise", "titulo": "Dossiê"},
-                "aorta": {"tipo": "aula", "titulo": "A aorta", "tarefa_id": 70}}
+                "avulsa-x": {"tipo": "aula", "titulo": "Aula avulsa"},
+                "aorta": {"tipo": "aula", "titulo": "A aorta", "tarefa_id": 70},
+                "prep-x": {"tipo": "aula", "titulo": "Aula que prepara", "tarefas": [26, 49, 68, 71]}}
 
 
 def _pagina_quadro(plano=PLANO_SEC):
@@ -889,7 +894,9 @@ SECOES_JS = "\n".join([_var("SECOES_CHAVE"), _funcs(
 
 ACAO_SECOES = r"""
 function espera(){ return new Promise(function(ok){ setTimeout(ok, 0); }); }
-var qd = $("hub-quadro"), TECLAS = 0;
+var qd = $("hub-quadro"), TECLAS = 0, AVISOS = [];
+console.warn = function(m){ AVISOS.push(String(m)); };
+function feitoEm(slug){ return qd.querySelector('.qd-item[data-slug="' + slug + '"]').hasAttribute("data-feito"); }
 function titulo(chave){ return qd.querySelector('.qd-sem[data-secao="' + chave + '"] .qd-titulo'); }
 function tocar(chave){ titulo(chave).click(); }
 function tecla(chave, k){ (titulo(chave)._ouv.keydown || []).forEach(function(f){ f({key: k, preventDefault: function(){ TECLAS++; }}); }); }
@@ -908,7 +915,8 @@ iniciarQuadro();
 secoesQuadro(qd);
 var SAIDA = {inicio: secoes()};
 espera().then(function(){ __ACAO__ return espera(); }).then(espera).then(function(){
-  SAIDA.fim = secoes(); SAIDA.ls = LS; SAIDA.teclas = TECLAS;
+  SAIDA.fim = secoes(); SAIDA.ls = LS; SAIDA.teclas = TECLAS; SAIDA.avisos = AVISOS;
+  SAIDA.biblioteca_aberta = $("hub-quadro-feitas").hasAttribute("open");
   console.log(JSON.stringify(SAIDA)); });
 """
 
@@ -928,8 +936,9 @@ def _abertas(estado):
 
 def test_padrao_abre_revisoes_atrasadas_e_a_semana_da_vez():
     out = _rodar_secoes()
+    # s216 (part-3): "Outras aulas" virou a Biblioteca (<details> recolhida), fora das secoes de semana
     assert _abertas(out["inicio"]) == {"revisoes": True, "atrasadas": True, "3": True, "4": False,
-                                       "5": False, "outras": False}
+                                       "5": False}
     for chave, s in out["inicio"].items():
         assert (s["role"], s["tab"], s["seta"]) == ("button", "0", True), chave
         assert s["expanded"] == ("true" if s["aberta"] else "false"), chave
@@ -942,22 +951,22 @@ def test_semana_atual_vazia_abre_a_proxima_com_itens():
     plano = [l for l in PLANO_SEC if l["semana_plano"] != 3]
     out = _rodar_secoes(plano=plano)
     assert _abertas(out["inicio"]) == {"revisoes": True, "atrasadas": True, "3": True, "4": True,
-                                       "5": False, "outras": False}
+                                       "5": False}
     puras = _node(SECOES_JS + "\nconsole.log(JSON.stringify({a: secSemanaAtual(3, [5, 4]), b: secSemanaAtual(3, []),"
-                  " c: secSemanaAtual(0, [6, 2]), d: [\"revisoes\", \"atrasadas\", \"outras\", \"sem\", \"4\", \"s4\", \"5\", \"s5\"]"
+                  " c: secSemanaAtual(0, [6, 2]), d: [\"revisoes\", \"atrasadas\", \"biblioteca\", \"sem\", \"4\", \"s4\", \"5\", \"s5\"]"
                   ".map(function(k){ return secPadraoAberta(k, 4); })}));")
     assert puras == {"a": 4, "b": 3, "c": 2, "d": [True, True, False, True, True, True, False, False]}
 
 
 def test_toque_e_teclado_alternam_e_o_aparelho_lembra():
     out = _rodar_secoes('tocar("revisoes"); tocar("5"); tecla("atrasadas", "Enter"); tecla("atrasadas", " ");'
-                        ' tecla("outras", " "); tecla("3", "a");')
+                        ' tecla("4", " "); tecla("3", "a");')
     fim = _abertas(out["fim"])
-    assert fim == {"revisoes": False, "atrasadas": True, "3": True, "4": False, "5": True, "outras": True}
+    assert fim == {"revisoes": False, "atrasadas": True, "3": True, "4": True, "5": True}
     assert out["fim"]["5"]["expanded"] == "true" and out["fim"]["revisoes"]["expanded"] == "false"
     assert out["teclas"] == 3, "Enter e Espaco viram toque (preventDefault: a pagina nao rola); 'a' nao"
     assert json.loads(out["ls"]["medhub.secoes"]) == {"aulas:revisoes": False, "aulas:5": True,
-                                                      "aulas:atrasadas": True, "aulas:outras": True}
+                                                      "aulas:atrasadas": True, "aulas:4": True}
     # recarregar: o mesmo aparelho, uma pagina nova -- vale o que ele escolheu; o resto segue o padrao
     de_novo = _rodar_secoes(ls=out["ls"])
     assert _abertas(de_novo["inicio"]) == fim
@@ -970,9 +979,10 @@ def test_sem_storage_tudo_funciona_e_so_nao_lembra():
     assert _abertas(de_novo["inicio"])["revisoes"] is True and _abertas(de_novo["inicio"])["4"] is False
 
 
-def test_recontar_e_concluidas_nao_desfazem_a_secao_recolhida():
-    """A aula que cumpre a tarefa 70 mora na semana 4 (recolhida): feito -> Concluidas, a semana conta 1
-    (a lista 68 fica), segue recolhida; desfeito -> volta para a semana 4, ainda recolhida."""
+def test_recontar_e_biblioteca_nao_desfazem_a_secao_recolhida():
+    """A aula que cumpre a tarefa 70 mora na semana 4 (recolhida): feito -> Biblioteca (s216, part-3; era
+    "Concluidas"), a semana conta 1 (a lista 68 fica), segue recolhida; desfeito -> volta para a semana 4
+    (a origem gravada no `data-secao` do item), ainda recolhida."""
     out = _rodar_secoes('feito("aorta"); SAIDA.meio = {onde: onde("aorta"), sec: secoes()["4"]};'
                         ' return espera().then(function(){ feito("aorta"); });')
     meio = out["meio"]
@@ -982,11 +992,28 @@ def test_recontar_e_concluidas_nao_desfazem_a_secao_recolhida():
     assert out["fim"]["4"]["vazio_oculto"] is True
 
 
-def test_outras_aulas_some_vazia_e_volta_recolhida():
-    out = _rodar_secoes('feito("dossie-x"); SAIDA.meio = secoes()["outras"];'
-                        ' return espera().then(function(){ feito("dossie-x"); });')
-    assert out["meio"]["oculta"] is True and out["meio"]["n"] == "0", "recontar esconde a nao fixa vazia"
-    assert out["fim"]["outras"]["oculta"] is False and out["fim"]["outras"]["aberta"] is False
+def test_aula_avulsa_mora_na_biblioteca_recolhida():
+    """s216 (part-3): "Outras aulas" e "Concluidas" viraram UMA secao, a Biblioteca (o mesmo
+    `<details id="hub-quadro-feitas">`, recolhida): a aula sem tarefa pendente mora la desde o build e,
+    marcada como feita, fica la riscada -- nao existe mais secao "outras"."""
+    out = _rodar_secoes('SAIDA.antes = {onde: onde("avulsa-x"), feito: feitoEm("avulsa-x"), n: $("hub-quadro-nfeitas").textContent};'
+                        ' feito("avulsa-x"); SAIDA.meio = {onde: onde("avulsa-x"), feito: feitoEm("avulsa-x"),'
+                        ' n: $("hub-quadro-nfeitas").textContent};')
+    assert out["antes"] == {"onde": "feitas", "feito": False, "n": "1"}
+    assert out["meio"] == {"onde": "feitas", "feito": True, "n": "1"}, "feita, fica na Biblioteca, riscada"
+    assert "outras" not in out["inicio"] and "outras" not in out["fim"]
+    assert not _rodar_secoes()["biblioteca_aberta"], "a Biblioteca nasce recolhida"
+
+
+def test_desmarcar_sem_secao_de_origem_fica_na_biblioteca():
+    """s216 (part-3, A7): desmarcar devolve o item a secao de origem gravada no `data-secao` DELE; a aula
+    da Biblioteca nunca teve secao -- fica la, sem riscar, e AVISA no console (nunca erro silencioso)."""
+    out = _rodar_secoes('feito("avulsa-x"); return espera().then(function(){ feito("avulsa-x");'
+                        ' SAIDA.depois = {onde: onde("avulsa-x"), feito: feitoEm("avulsa-x")}; });')
+    assert out["depois"] == {"onde": "feitas", "feito": False}
+    assert len(out["avisos"]) == 1 and "avulsa-x" in out["avisos"][0] and "Biblioteca" in out["avisos"][0]
+    volta = _rodar_secoes('feito("aorta"); return espera().then(function(){ feito("aorta"); });')
+    assert volta["avisos"] == [], "com origem (a semana 4), volta sem aviso"
 
 
 # ======================================================================== 2. secoes da aba Listas
@@ -1013,8 +1040,10 @@ var BOT = [botao("questoes"), botao("simulados")];
 function $(id){ if(!els[id]){ els[id] = {id: id, innerHTML: "", textContent: "", hidden: false,
   querySelectorAll: function(){ return id === "qz-modo" ? BOT : []; }}; } return els[id]; }
 function qzAbrir(id){ ABRIU.push(id); }
+var ABRIU_AULA = []; function abrirNaTeoria(href, titulo){ ABRIU_AULA.push([href, titulo]); }
 var QZ = {listas: __LISTAS__, modo: "questoes"};
 var QZ_SEM = {atual: __ATUAL__, datas: {}};
+var HUB_LIGACOES = __LIG__;
 __FUNCS__
 // a secao renderizada, como o navegador a teria: atributos + o titulo dentro dela
 function secaoDe(chave){
@@ -1037,10 +1066,10 @@ console.log(JSON.stringify(SAIDA));
 """
 
 
-def _rodar_listas(acao="", atual=3, ls=None, quebrado=False, listas=LISTAS_SEC):
+def _rodar_listas(acao="", atual=3, ls=None, quebrado=False, listas=LISTAS_SEC, lig=None):
     prog = (_aparelho(ls, quebrado) + HARNESS_LISTAS_SEC.replace("__FUNCS__", LISTAS_FUNCS)
             .replace("__LISTAS__", json.dumps(listas, ensure_ascii=False)).replace("__ATUAL__", str(atual))
-            .replace("__ACAO__", acao))
+            .replace("__LIG__", json.dumps(lig or {}, ensure_ascii=False)).replace("__ACAO__", acao))
     return _node(prog)
 
 
@@ -1093,7 +1122,7 @@ def test_secao_recolhivel_no_celular():
     assert "prefers-reduced-motion: reduce){.qd-seta{transition:none}}" in css
     assert not re.search(r"position\s*:\s*(sticky|fixed)", TEMPLATE) and "nowrap" not in TEMPLATE.lower()
     assert "try{ secoesQuadro(qd); }catch(e){}" in TEMPLATE, "falha nas secoes nunca derruba o quadro"
-    # "Concluidas" segue <details>; nenhuma secao nova depende do hub.py
+    # a Biblioteca (s216; era "Concluidas") segue <details>; nenhuma secao nova depende do hub.py
     assert '<details class="qd-feitas" id="hub-quadro-feitas">' in hub.html_quadro_de(AULAS_SEC, REGISTRO_SEC, {}, PLANO_SEC, CAL_SEC, HOJE_SEC)[0]
 
 
@@ -1243,7 +1272,7 @@ def test_leitor_liga_o_grifo_sem_poder_derrubar_e_mede_depois():
     corpo = extrair_funcao(TEMPLATE, "function preparar(quadro){")
     liga = 'if(quadro.id === "hub-leitor-quadro"){ try{ grifoLigar(doc, quadro, GRIFO.slug); }catch(e){} }'
     assert liga in corpo and corpo.index(liga) < corpo.index("    medir(quadro);")
-    assert "GRIFO.slug = pendSlug(href); GRIFO.ctx = null;" in extrair_funcao(TEMPLATE, "function abrirAula(link){")
+    assert "GRIFO.slug = pendSlug(href); GRIFO.ctx = null;" in extrair_funcao(TEMPLATE, "function abrirAula(")
     assert 'GRIFO.slug = ""; GRIFO.ctx = null;' in extrair_funcao(TEMPLATE, "function fecharAula(){")
     mudar = extrair_funcao(TEMPLATE, "function grifoMudar(ctx, lista){")
     assert mudar.index("grifoPintar(ctx)") < mudar.index("medir(ctx.quadro)"), "a altura e medida de novo"
@@ -1262,3 +1291,308 @@ def test_grifo_mora_em_analises_e_nao_toca_a_alca_nem_os_controles():
     assert salvar.index("grifoLocal(slug,") < salvar.index("grifoEnviar(slug)"), "aparelho ANTES do banco"
     estilo = extrair_funcao(TEMPLATE, "function grifoEstilo(doc){")
     assert '"--qz-grifo"' in estilo and '"--qz-grifo-tinta"' in estilo, "a cor e o token das questoes"
+
+
+# ======================================================================== 6. s216: hub-integracao
+# PRD `.vibeflow/prds/hub-integracao-cortar-passos.md` (pedido do operador em 05/10/2026: "os ganhos
+# agora sao de integracao, remocao de redundancias, cortar passos desnecessarios"). As funcoes REAIS
+# do template rodam em node com stubs minimos do que elas chamam.
+
+#: o que `abrirAula` toca, falso: o DOM do leitor, a alca, o grifo e o carregamento do quadro
+LEITOR_FALSO = r"""
+var els = {}, CHAMADAS = [];
+function $(id){ return els[id] || (els[id] = {id: id, hidden: false, textContent: "", attrs: {},
+  setAttribute: function(k, v){ this.attrs[k] = v; }, getAttribute: function(k){ return this.attrs[k]; }}); }
+var lista = $("hub-aulas-lista"), leitor = $("hub-leitor"); leitor.hidden = true;
+var window = {scrollTo: function(x, y){ CHAMADAS.push(["scrollTo", y]); }, pageYOffset: 0};
+var GRIFO = {slug: "", ctx: null};
+function pendSoltar(){ CHAMADAS.push(["pendSoltar"]); }
+function assinaAbrir(slug){ CHAMADAS.push(["assinaAbrir", slug]); }
+function carregar(q, href, aviso){ CHAMADAS.push(["carregar", q.id, href]); }
+"""
+
+#: o que `painelAtalho` toca, falso: a troca de aba, o modo das Listas e o leitor
+ATALHO_FALSO = r"""
+var CHAMADAS = [];
+var window = {scrollTo: function(x, y){ CHAMADAS.push(["scrollTo", y]); }, pageYOffset: 0};
+function ir(aba, gravar){ CHAMADAS.push(["ir", aba, gravar]); }
+function qzModoPedido(m){ CHAMADAS.push(["modo", m]); }
+function abrirAula(href, titulo){ CHAMADAS.push(["abrirAula", href, titulo]); }
+function leitorOrigem(){ return {aba: "painel", y: 0}; }
+var document = {querySelector: function(){ throw new Error("o Painel nao procura o link na Teoria (A1)"); }};
+function link(attrs, tema){
+  var li = tema == null ? null : {querySelector: function(s){ return s === ".t-tema" ? {textContent: tema} : null; }};
+  return {getAttribute: function(k){ return Object.prototype.hasOwnProperty.call(attrs, k) ? attrs[k] : null; },
+          closest: function(s){ return s === "li" ? li : null; }};
+}
+"""
+
+
+#: s216 (part-4): a origem do leitor (a aba e a rolagem de ANTES de abrir) e o que abrirAula le dela
+ORIGEM_FALSA = r"""
+var raiz = {attrs: {"data-aba": "aulas"}, getAttribute: function(k){ return this.attrs[k] || null; }};
+window.requestAnimationFrame = function(f){ f(); }; window.innerHeight = 800;
+function ir(aba, gravar){ raiz.attrs["data-aba"] = aba; CHAMADAS.push(["ir", aba, gravar]); }
+function fecharAula(){ CHAMADAS.push(["fecharAula"]); }
+function marcarRecente(aba, slug){ CHAMADAS.push(["recente", aba, slug]); return null; }
+"""
+
+LEITOR_FUNCS = "\n".join([_var("ABAS"), _var("LEITOR"), _var("ROTULO_ABA"), _funcs(
+    "function valida(aba){", "function pendIdValido(id){", "function pendSlug(href){", "function leitorOrigem(){",
+    "function abrirAula(")])
+
+
+def test_painel_abre_o_documento_pelo_href_sem_procurar_na_teoria():
+    """Part-1 (A1): o Dossie e a Autopsia sairam da Teoria; o "abrir documento" do Painel abria a
+    aba e nao abria nada (procurava `a.hub-aula[href]` no DOM dela). O atalho passa o href e o
+    titulo do PROPRIO link (`data-titulo`; sem ele, o tema do item) ao `abrirAula`."""
+    prog = (ATALHO_FALSO + _var("ABAS") + "\n" + _funcs("function valida(aba){", "function painelAtalho(a", "function abrirNaTeoria(") +
+            r"""
+var SAIDA = {};
+CHAMADAS = []; painelAtalho(link({"href": "aulas/dossie-uerj.html", "data-hub-aula": "dossie-uerj"}, "Dossiê UERJ"));
+SAIDA.doc = CHAMADAS;
+CHAMADAS = []; painelAtalho(link({"href": "aulas/dmg.html", "data-hub-aula": "dmg", "data-titulo": "A Escada do DMG"}, "Diabetes"));
+SAIDA.aula = CHAMADAS;
+CHAMADAS = []; painelAtalho(link({"href": "#cards", "data-hub-aba": "cards"}));
+SAIDA.cards = CHAMADAS;
+CHAMADAS = []; painelAtalho(link({"href": "#questoes", "data-hub-aba": "questoes", "data-hub-modo": "simulados"}));
+SAIDA.listas = CHAMADAS;
+console.log(JSON.stringify(SAIDA));""")
+    out = _node(prog)
+    assert out["doc"][-1] == ["abrirAula", "aulas/dossie-uerj.html", "Dossiê UERJ"]
+    assert ["ir", "aulas", True] in out["doc"]
+    assert out["aula"][-1] == ["abrirAula", "aulas/dmg.html", "A Escada do DMG"], "data-titulo vence o tema"
+    assert ["ir", "cards", True] in out["cards"] and not [c for c in out["cards"] if c[0] == "abrirAula"]
+    assert ["modo", "simulados"] in out["listas"] and ["ir", "questoes", True] in out["listas"]
+
+
+def test_abrir_aula_aceita_o_link_ou_o_par_href_titulo():
+    """Part-1: `abrirAula(link)` (a Teoria) e `abrirAula(href, titulo)` (o Painel) abrem o MESMO
+    leitor: titulo, link de pagina inteira, alca e grifo pelo slug do href, quadro carregado."""
+    prog = (LEITOR_FALSO + ORIGEM_FALSA + LEITOR_FUNCS +
+            r"""
+var SAIDA = {};
+abrirAula("aulas/dossie-uerj.html", "Dossiê UERJ");
+SAIDA.par = {titulo: $("hub-leitor-titulo").textContent, link: $("hub-leitor-link").attrs.href, grifo: GRIFO.slug,
+  lista: lista.hidden, leitor: leitor.hidden, chamadas: CHAMADAS};
+CHAMADAS = [];
+abrirAula({getAttribute: function(k){ return {href: "aulas/dmg.html", "data-titulo": "A Escada do DMG"}[k] || null; }});
+SAIDA.el = {titulo: $("hub-leitor-titulo").textContent, link: $("hub-leitor-link").attrs.href, grifo: GRIFO.slug, chamadas: CHAMADAS};
+console.log(JSON.stringify(SAIDA));""")
+    out = _node(prog)
+    assert out["par"]["titulo"] == "Dossiê UERJ" and out["par"]["link"] == "aulas/dossie-uerj.html"
+    assert out["par"]["grifo"] == "dossie-uerj" and out["par"]["lista"] is True and out["par"]["leitor"] is False
+    assert ["assinaAbrir", "dossie-uerj"] in out["par"]["chamadas"]
+    assert ["carregar", "hub-leitor-quadro", "aulas/dossie-uerj.html"] in out["par"]["chamadas"]
+    assert out["el"]["titulo"] == "A Escada do DMG" and out["el"]["link"] == "aulas/dmg.html"
+    assert ["carregar", "hub-leitor-quadro", "aulas/dmg.html"] in out["el"]["chamadas"]
+
+
+LIG_LISTAS = {"49": [{"href": "aulas/hernias.html", "titulo": "A Escada das Hérnias"}],
+              "68": [{"href": "aulas/glom-a.html", "titulo": "Glomerulopatias I"},
+                     {"href": "aulas/glom-b.html", "titulo": "Glomerulopatias <II>"}]}
+
+
+def test_lista_tem_atalho_para_a_aula_que_a_prepara():
+    """Part-2 (F4): a lista da aba Listas leva a aula que a prepara (antes, so pela Teoria). O link e
+    IRMAO do botao da lista (`<a>` dentro de `<button>` e HTML invalido e roubaria o toque), sai do
+    `#hub-ligacoes` pelo id da tarefa (campo `tarefa`; sem ele, o `t<N>` do id) e sobrevive ao
+    re-render do snapshot (delegacao no conteiner). O toque abre a Teoria e o leitor."""
+    acao = r"""
+SAIDA.html = $("qz-listas").innerHTML;
+var a = {getAttribute: function(k){ return {href: "aulas/hernias.html", "data-titulo": "A Escada das Hérnias"}[k] || null; }};
+var ev = evento(function(s){ return s === "a.qz-aula" ? a : null; });
+qzListasClique(ev); SAIDA.aula = ABRIU_AULA; SAIDA.lista = ABRIU.slice(); SAIDA.prevenido = ev.prevenido;
+QZ.listas[1].status = "resolvendo"; qzRenderListas(); SAIDA.depois = $("qz-listas").innerHTML;"""
+    out = _rodar_listas(acao, lig=LIG_LISTAS)
+    html = out["html"]
+    assert ('</button><a class="qz-aula" data-hub-aula href="aulas/hernias.html" '
+            'data-titulo="A Escada das Hérnias">abrir aula</a></li>') in html
+    assert all("<a " not in b for b in re.findall(r"<button.*?</button>", html, re.S)), "nunca dentro do botao"
+    assert ">Glomerulopatias I</a>" in html and ">Glomerulopatias &lt;II&gt;</a>" in html, "varias: o titulo de cada"
+    assert html.count('class="qz-aula"') == 3, "so as listas com aula ligada"
+    assert out["aula"] == [["aulas/hernias.html", "A Escada das Hérnias"]] and out["lista"] == []
+    assert out["prevenido"] is True
+    assert 'href="aulas/hernias.html"' in out["depois"], "o atalho sobrevive ao re-render"
+    css = TEMPLATE[TEMPLATE.index("<style>"):TEMPLATE.index("</style>")]
+    regra = re.search(r"\.qz-aula\{([^}]*)\}", css).group(1)
+    assert "min-height:44px" in regra
+    assert "min-width:0" in re.search(r"\.qz-lista li\{([^}]*)\}", css).group(1)
+
+
+
+def test_voltar_origem_fecha_volta_para_a_aba_e_restaura_o_scroll():
+    """Part-4 (P14, DoD 1): a origem (aba + rolagem) e gravada ANTES de qualquer `ir` -- o Painel grava
+    `medhub.aba = aulas` ao abrir, e sem isso a origem seria sempre a Teoria. `voltarOrigem` fecha o
+    leitor, volta a aba de origem, marca o item e restaura a rolagem; sem origem, volta a Teoria. O
+    botao de voltar do leitor diz para onde vai."""
+    prog = (LEITOR_FALSO + ORIGEM_FALSA + LEITOR_FUNCS + "\n" +
+            _funcs("function abrirNaTeoria(", "function voltarOrigem(") + r"""
+var SAIDA = {};
+raiz.attrs["data-aba"] = "painel"; window.pageYOffset = 640;
+abrirNaTeoria("aulas/dossie-uerj.html", "Dossiê UERJ");
+SAIDA.aberto = {aba: raiz.attrs["data-aba"], origem: LEITOR.origem, voltar: $("hub-leitor-voltar").textContent};
+CHAMADAS = []; window.pageYOffset = 0;
+voltarOrigem("dossie-uerj");
+setTimeout(function(){
+  SAIDA.volta = CHAMADAS; SAIDA.aba = raiz.attrs["data-aba"]; SAIDA.origem = LEITOR.origem;
+  raiz.attrs["data-aba"] = "aulas"; window.pageYOffset = 300;
+  abrirAula({getAttribute: function(k){ return {href: "aulas/dmg.html", "data-titulo": "DMG"}[k] || null; }});
+  SAIDA.teoria = {origem: LEITOR.origem, voltar: $("hub-leitor-voltar").textContent};
+  LEITOR.origem = null; CHAMADAS = [];
+  voltarOrigem();
+  setTimeout(function(){ SAIDA.sem = CHAMADAS; console.log(JSON.stringify(SAIDA)); }, 200);
+}, 200);""")
+    out = _node(prog)
+    assert out["aberto"]["aba"] == "aulas"
+    assert out["aberto"]["origem"] == {"aba": "painel", "y": 640}, "capturada ANTES do ir"
+    assert out["aberto"]["voltar"] == "‹ Painel"
+    assert out["volta"][:3] == [["fecharAula"], ["ir", "painel", True], ["recente", "painel", "dossie-uerj"]]
+    assert ["scrollTo", 640] in out["volta"] and out["origem"] is None
+    assert out["teoria"] == {"origem": {"aba": "aulas", "y": 300}, "voltar": "‹ Teoria"}
+    assert out["sem"][:2] == [["fecharAula"], ["ir", "aulas", True]] and ["scrollTo", 0] in out["sem"]
+    corpo = extrair_funcao(TEMPLATE, "function abrirNaTeoria(")
+    assert corpo.index("leitorOrigem()") < corpo.index('ir("aulas"'), "a origem antes da troca de aba"
+    assert '$("hub-leitor-voltar").addEventListener("click", function(){ voltarOrigem(); });' in TEMPLATE
+
+
+CONCLUIR_FALSO = r"""
+var UPD = [], FECHOU = 0, FALHA = __FALHA__;
+QZ.lista = "t49";
+QZ.db = {doc: function(p){ return {update: function(d){ UPD.push([p, d.status]);
+  return FALHA ? Promise.reject({code: "permission-denied"}) : Promise.resolve(); }}; }};
+function qzFecharLista(){ FECHOU++; }
+function qzAgora(){ return "2026-10-05T12:00:00.000Z"; }
+"""
+
+
+def test_concluir_lista_fecha_e_marca_a_recente():
+    """Part-4 (P14, DoD 3): "Concluir lista" grava `status: resolvida` e, no `.then`, fecha a lista: a aba
+    Listas volta com a lista recem-resolvida marcada (`qz-recente`, por ESTADO -- o snapshot refaz o HTML,
+    marcar no DOM se perderia, A12): primeiro na semana, depois em Resolvidas (aberta) e, no rerender
+    seguinte, sem marca. Falha: fica na tela de fim, com o erro."""
+    extra = _funcs("function qzConcluir(){", "function qzConcluiu(lista){", "function qzRolarRecente(){")
+    acao = r"""
+qzConcluir();
+setTimeout(function(){
+  SAIDA.antes = $("qz-listas").innerHTML; SAIDA.fechou = FECHOU; SAIDA.upd = UPD; SAIDA.st = $("qz-fim-status").textContent;
+  QZ.listas[1].status = "resolvida"; qzRenderListas(); SAIDA.snap = $("qz-listas").innerHTML; SAIDA.recente = QZ.recente || null;
+  qzRenderListas(); SAIDA.depois = $("qz-listas").innerHTML;
+  console.log(JSON.stringify(SAIDA)); }, 50);"""
+    out = _rodar_listas(CONCLUIR_FALSO.replace("__FALHA__", "false") + extra + acao)
+    assert out["upd"] == [["listas/t49", "resolvida"]] and out["fechou"] == 1
+    assert '<li class="qz-recente"><button type="button" data-qzl="t49">' in out["antes"]
+    assert '<details class="qd-feitas" open><summary>Resolvidas' in out["snap"]
+    assert '<li class="qz-recente"><button type="button" data-qzl="t49">' in out["snap"].split("Resolvidas", 1)[1]
+    assert out["recente"] is None, "a marca vale por 1 rerender na lista ja resolvida"
+    assert "qz-recente" not in out["depois"] and "<details class=\"qd-feitas\" open>" not in out["depois"]
+    falhou = _rodar_listas(CONCLUIR_FALSO.replace("__FALHA__", "true") + extra + acao)
+    assert falhou["fechou"] == 0 and "qz-recente" not in falhou["antes"]
+    assert falhou["st"] == "Não gravou (permission-denied)."
+    css = TEMPLATE[TEMPLATE.index("<style>"):TEMPLATE.index("</style>")]
+    assert re.search(r"\.qz-lista li\.qz-recente > button\{[^}]*\}", css)
+    assert '$("qz-concluir").addEventListener("click", qzConcluir);' in TEMPLATE
+
+
+
+# ------------------------------------------------ s216 (hub-integracao part-6, P08 v0): "Hoje ao vivo"
+# O Painel publicado e foto; a pagina ja grava as notas do lote e as respostas. Ao abrir, ela SOMA ao
+# lado do numero publicado o que gravou depois ("+K", `title="desde o publish"`), nunca o substitui, nunca
+# mexe no teto nem no saldo. Dupla contagem (A16): o lote no ar ja gravado (sessao == a gravada) soma 0;
+# questao de lista ja registrada no plano (a tarefa saiu do Painel) nao soma. Dia por `Date.parse` (A17).
+
+VIVO_PURAS = _funcs("function vivoDia(t){", "function vivoCards(notas, lote, sessaoGravada){",
+                    "function vivoQuestoes(respostas, listasPendentesDeRegistro, hojeLogico){")
+
+
+def test_lote_ja_gravado_nao_conta_duas_vezes():
+    notas = [{"card_id": 1, "rating_primeira": 3}, {"card_id": 2, "rating_primeira": 1},
+             {"card_id": 2, "rating_primeira": 4}, {"card_id": 3, "defeito": True, "motivo": "x"}]
+    out = _node(VIVO_PURAS + "\nconsole.log(JSON.stringify({no_ar: vivoCards(%s, {sessao: '05b'}, '05a'),"
+                " gravado: vivoCards(%s, {sessao: '05a'}, '05a'), sem_lote: vivoCards(%s, null, '05a'),"
+                " sem_marcador: vivoCards(%s, {sessao: '05b'}, '')}));" % ((json.dumps(notas),) * 4))
+    assert out == {"no_ar": 2, "gravado": 0, "sem_lote": 0, "sem_marcador": 2}, \
+        "card distinto com nota; defeito nao e revisao; lote ja gravado ja esta no numero publicado"
+
+
+def test_lista_registrada_no_plano_nao_conta_as_respostas():
+    resp = [{"lista": "t49", "num": 1, "respondido_em": "2026-10-05T13:00:00.000Z"},       # 10h de 05/10
+            {"lista": "t49", "num": 1, "respondido_em": "2026-10-05T13:05:00.000Z"},       # a mesma questao
+            {"lista": "t49", "num": 2, "respondido_em": "2026-10-06T02:00:00.000Z"},       # 23h de 05/10 (A17)
+            {"lista": "t49", "num": 3, "respondido_em": "2026-10-04T15:00:00.000Z"},       # ontem
+            {"lista": "t49_1", "num": 1, "respondido_em": "2026-10-05T14:00:00.000Z"},
+            {"lista": "t26", "num": 1, "respondido_em": "2026-10-05T14:00:00.000Z"},       # registrada: fora
+            {"lista": "t49", "num": 4, "respondido_em": "lixo"}]
+    out = _node(VIVO_PURAS + "\nconsole.log(JSON.stringify({k: vivoQuestoes(%s, ['t49', 't49_1'], '2026-10-05'),"
+                " nada: vivoQuestoes(%s, [], '2026-10-05')}));" % (json.dumps(resp), json.dumps(resp)))
+    assert out == {"k": 3, "nada": 0}
+
+
+ACAO_VIVO = r"""
+Object.keys(CFG.colecoes || {}).forEach(function(k){ BANCO[k] = CFG.colecoes[k]; });
+(BANCO.respostas ? Object.keys(BANCO.respostas) : []).forEach(function(k){ var r = BANCO.respostas[k];
+  if(r.respondido_em === "HOJE"){ r.respondido_em = new Date().toISOString(); }
+  if(r.respondido_em === "ONTEM"){ r.respondido_em = new Date(Date.now() - 36 * 3600 * 1000).toISOString(); } });
+function espera(){ return new Promise(function(ok){ setTimeout(ok, 0); }); }
+function fracao(chave){ var b = $("pa").querySelector('b[data-vivo="' + chave + '"]'), s = $("pa").querySelector('span.vivo[data-vivo-de="' + chave + '"]');
+  return {b: b.textContent, base: b.getAttribute("data-base"), mais: s ? s.textContent : null, title: s ? s.getAttribute("title") : null}; }
+painelVivo($("pa"), CFG.semDb ? null : DB);
+espera().then(espera).then(espera).then(espera).then(function(){
+  console.log(JSON.stringify({cards: fracao("cards"), questoes: fracao("questoes"), escritas: ESCRITAS})); });
+"""
+
+
+def _painel_vivo_html(sessao_gravada):
+    from tools import painel
+    d = {"questoes": {"feitas_hoje": 30, "alvo_dia": 120.0, "meta": 10000, "faltam": 1000, "dias": 27,
+                      "data_meta": "2026-11-01"},
+         "cards": {"vencidos": 10, "novos": 50, "teto": 100, "consumo_hoje": 62, "restantes": 38,
+                   "retencao_7d": {"retencao": None}},
+         "agenda": {"dias": [{"data": "2026-10-06", "n": 3}]}, "sessao_gravada": sessao_gravada}
+
+    def t(id_):
+        return {"id": id_, "semana": 4, "atrasada": False, "tema": "T%d" % id_, "q": 21, "classe": "lista",
+                "url_lista": "https://x", "area": None, "rotulo": "CM", "aula": None, "aulas": [], "no_hub": True}
+    return ('<div id="pa">%s<ol class="tarefas">%s</ol></div>'
+            % (painel._html_dia(d, "2026-10-05"), "".join(painel._html_tarefa(t(i)) for i in (49, 68))))
+
+
+def _rodar_vivo(sessao_no_ar="2026-10-05b", sessao_gravada="2026-10-05a", **cfg):
+    from tools.test_hub_quadro import BANCO_QD, DOM_QD, _arvore
+    lote = '<script id="lote" type="application/json">%s</script>' % json.dumps({"sessao": sessao_no_ar, "cards": []})
+    arvore = _arvore(_painel_vivo_html(sessao_gravada) + lote)
+    funcs = "\n".join([VIVO_PURAS, _funcs("function vivoPintar(doc, chave, k){", "function loteNoAr(){",
+                                          "function painelVivo(doc, db){")])
+    prog = (DOM_QD.replace("__ARVORE__", json.dumps(arvore, ensure_ascii=False)) +
+            BANCO_QD.replace("__CFG__", json.dumps(cfg, ensure_ascii=False)) + funcs + "\n" + ACAO_VIVO)
+    return _node(prog)
+
+
+COLECOES_VIVO = {
+    "sessoes/2026-10-05b/notas": {"1": {"card_id": 1, "rating_primeira": 3}, "2": {"card_id": 2, "rating_primeira": 4},
+                                  "3": {"card_id": 3, "defeito": True, "motivo": "x"}},
+    "listas": {"t49": {"tarefa": 49, "status": "resolvendo"}, "t49_1": {"tarefa": 49, "status": "capturada"},
+               "t68": {"tarefa": 68, "status": "resolvida"}, "t26": {"tarefa": 26, "status": "resolvida"},
+               "t90": {"tarefa": 90, "status": "pendente"}},
+    "respostas": {"t49_1": {"lista": "t49", "num": 1, "respondido_em": "HOJE"},
+                  "t49_2": {"lista": "t49", "num": 2, "respondido_em": "ONTEM"},
+                  "t49_1_1": {"lista": "t49_1", "num": 1, "respondido_em": "HOJE"},
+                  "t68_1": {"lista": "t68", "num": 1, "respondido_em": "HOJE"},
+                  "t26_1": {"lista": "t26", "num": 1, "respondido_em": "HOJE"}},
+}
+
+
+def test_ao_vivo_so_soma_e_nunca_altera_o_publicado():
+    out = _rodar_vivo(colecoes=COLECOES_VIVO)
+    assert out["cards"] == {"b": "62", "base": "62", "mais": "+2", "title": "desde o publish"}
+    assert out["questoes"] == {"b": "30", "base": "30", "mais": "+3", "title": "desde o publish"}, \
+        "t49 (1 de hoje), t49_1 e t68 (resolvida, registro pendente); t26 ja registrada (fora do Painel) nao"
+    assert out["escritas"] == [], "o Painel nunca grava"
+    gravado = _rodar_vivo(sessao_no_ar="2026-10-05a", colecoes=COLECOES_VIVO)
+    assert gravado["cards"]["mais"] is None and gravado["cards"]["b"] == "62", "lote no ar ja gravado: +0, sem span"
+    sem_db = _rodar_vivo(semDb=True, colecoes=COLECOES_VIVO)
+    assert sem_db["cards"] == {"b": "62", "base": "62", "mais": None, "title": None}
+    assert sem_db["questoes"]["mais"] is None, "sem db (nao-dono, offline): o Painel fica como o publicado"
+    assert "painelVivo(doc, db)" in _funcs("function painelListas(doc, quadro){")
+    estilo = re.search(r'"\.vivo\{([^}]*)\}', _funcs("function painelListas(doc, quadro){")).group(1)
+    assert "white-space:pre" in estilo, "o +K nao quebra a linha do numero (span curto)"

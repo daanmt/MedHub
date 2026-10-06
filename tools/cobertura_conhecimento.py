@@ -7,6 +7,13 @@ por stem normalizado (+ fuzzy leve como desempate), e emite a fila de PDFs-orfao
 (sem .md) ordenada por sinal de rendimento: temas da SEMANA CORRENTE primeiro,
 depois presenca na grade do cronograma, depois volume/erros na taxonomia.
 
+E06 (s216): a SEMANA CORRENTE e a do PLANO (`plano_tarefas`), pela regua do
+`plano.panorama` (a mesma do boot e do Painel), e os temas dela saem das tarefas
+dessa semana. ⚰️ *Ate a s216 vinha de `preparacao_estado.semana_conteudo` (fallback:
+calendario do `grade.json` da Reta Final) e cruzava com os temas da grade antiga: em
+05/10/2026 o relatorio chamava de corrente a S17 da grade, com o plano na S4.* A grade
+antiga segue so como sinal de prioridade (`[grade]`) da fila restante.
+
 Read-only estrito: NAO cria, move ou deleta nenhum arquivo; apenas relata.
 
 Uso:
@@ -133,42 +140,52 @@ def priorizar(orfaos, semana_norms, grade_norms, taxonomia):
 
 
 def carregar_grade():
-    """Carrega grade + numero da semana ALVO. Degrada gracioso -> (None, None).
-
-    A semana alvo e a posicao SSOT de conteudo (ciclo 2) -- onde o operador
-    realmente esta -- com fallback para o calendario do cronograma se a posicao
-    nao estiver registrada. A grade em si vem sempre do cronograma.
-    """
+    """Grade antiga da Reta Final (`grade.json`), so para o sinal `[grade]`. Degrada -> None."""
     try:
         import cronograma
-        grade = cronograma.load_grade()
+        return cronograma.load_grade()
     except Exception:
-        return None, None
-    n = None
+        return None
+
+
+def temas_norm_tarefas(linhas, semana):
+    """Stems normalizados dos temas das tarefas VIVAS (nao cortadas) de UMA semana do plano.
+
+    O tema do plano junta temas com `|`/`;`/`,` -- e o `|` tambem e quebra de linha do PDF
+    no meio de um nome ("Endocrino- | Metabolica"). Entram o tema inteiro E cada parte."""
+    out = set()
+    for l in linhas:
+        if l.get("semana_plano") != semana or l.get("status") == "cortada":
+            continue
+        tema = str(l.get("tema") or "")
+        for parte in [tema] + [p for p in re.split(r"[|;,]", tema) if p.strip()]:
+            norm = normaliza_stem(parte)
+            if norm:
+                out.add(norm)
+    return out
+
+
+def semana_do_plano(linhas, calendario, hoje):
+    """(semana, temas_norm) da semana corrente do PLANO. PURA sobre os argumentos.
+
+    A semana e a do `plano.panorama` -- reuso, nao copia: calendario da trilha (primeira
+    semana cujo fim >= hoje), com fallback na menor semana com pendencia. Sem semana ->
+    (None, set())."""
+    import plano
+    pan = plano.panorama(linhas, calendario, hoje)
+    if not pan or not pan.get("semana"):
+        return None, set()
+    return pan["semana"], temas_norm_tarefas(linhas, pan["semana"])
+
+
+def carregar_semana():
+    """`semana_do_plano` sobre o `plano_tarefas` real. Degrada gracioso -> (None, set())."""
     try:
+        import plano
         from app.utils import db
-        n = db.get_semana_conteudo()
+        return semana_do_plano(db.plano_listar(), plano.calendario_trilha(), db.hoje())
     except Exception:
-        n = None
-    if not n:
-        try:
-            n = cronograma.semana_corrente(grade)
-        except Exception:
-            n = None
-    return grade, n
-
-
-def temas_norm_semana(grade, n):
-    if not grade or not n:
-        return set()
-    try:
-        import cronograma
-        s = cronograma.get_semana(grade, n)
-    except Exception:
-        s = None
-    if not s:
-        return set()
-    return {normaliza_stem(t.get("tema", "")) for t in s.get("tasks", []) if t.get("tema")}
+        return None, set()
 
 
 def temas_norm_grade(grade):
@@ -219,14 +236,14 @@ def render(pareado, semana_orfaos, restantes, n_pdfs, n_mds, semana_n):
     linhas.append("")
 
     if semana_n:
-        linhas.append(f"-- Temas da SEMANA CORRENTE (S{semana_n}) sem .md --")
+        linhas.append(f"-- Temas da SEMANA CORRENTE do plano (S{semana_n}) sem .md --")
         if semana_orfaos:
             for x in semana_orfaos:
                 linhas.append(_fmt_linha(x))
         else:
             linhas.append("  (nenhum orfao na semana corrente)")
     else:
-        linhas.append("-- Semana corrente: grade indisponivel (rode cronograma --rebuild) --")
+        linhas.append("-- Semana corrente: plano indisponivel (`python tools/plano.py --panorama`) --")
     linhas.append("")
 
     linhas.append("-- Fila de autoria priorizada (orfaos restantes) --")
@@ -240,23 +257,22 @@ def render(pareado, semana_orfaos, restantes, n_pdfs, n_mds, semana_n):
 
 
 def semana_orfaos_correntes(dir_resumos: str = "resumos"):
-    """Temas da semana corrente do cronograma SEM .md canonico, + numero da semana.
+    """Temas da semana corrente do PLANO SEM .md canonico, + numero da semana.
 
-    Reusa o pipeline de cobertura (coletar -> parear -> grade -> priorizar) sem
+    Reusa o pipeline de cobertura (coletar -> parear -> semana -> priorizar) sem
     imprimir -- consumido pelo WARN de tools/auto_check.py (spec mecanismo-conhecimento
     part-3). Retorna (list[dict] orfaos_da_semana, int semana_n).
 
-    Degrada para ([], 0) quando a grade esta indisponivel ou qualquer etapa falha:
+    Degrada para ([], 0) quando o plano esta indisponivel ou qualquer etapa falha:
     silencio, nunca falso-positivo (mesma disciplina do relatorio).
     """
     try:
         pdfs, mds = coletar(dir_resumos)
         pareado = parear(pdfs, mds)
-        grade, semana_n = carregar_grade()
+        semana_n, semana_norms = carregar_semana()
         if not semana_n:
             return [], 0
-        semana_norms = temas_norm_semana(grade, semana_n)
-        grade_norms = temas_norm_grade(grade)
+        grade_norms = temas_norm_grade(carregar_grade())
         taxonomia = taxonomia_por_norm()
         orfaos = [{"stem": p["stem"], "norm": p["norm"],
                    "area": _area_do_path(p["path"], dir_resumos),
@@ -283,9 +299,8 @@ def main():
     pdfs, mds = coletar(args.dir)
     pareado = parear(pdfs, mds)
 
-    grade, semana_n = carregar_grade()
-    semana_norms = temas_norm_semana(grade, semana_n)
-    grade_norms = temas_norm_grade(grade)
+    semana_n, semana_norms = carregar_semana()
+    grade_norms = temas_norm_grade(carregar_grade())
     taxonomia = taxonomia_por_norm()
 
     orfaos = [{"stem": p["stem"], "norm": p["norm"],

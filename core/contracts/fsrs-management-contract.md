@@ -2,12 +2,12 @@
 type: contract
 layer: core
 status: canonical
-version: 1.7
+version: 1.8
 relates_to: [reconcile-contract, estado-contract, AGENTE]
 ---
 
 # Contrato de Gerenciamento do FSRS
-**Versão 1.7 | 2026-09-29 (s207, F141: "um dia" é o DIA LÓGICO -- `app/utils/relogio.dia_logico`, data local -- no adapter e na entrada do Optimizer; F142: uma nota por card por dia lógico no `--record-lote`, teto por card distinto; py-fsrs 6.3.2) · v1.6 2026-09-28 (s204, F140: o motor não tem mais passo de reaprendizagem -- `state` 3 vira legado; os novos do LOTE enchem o saldo do teto; a ordem da fila é escrita com os 4 buckets) · v1.5 2026-09-22 (s193: relógio da revisão no `record_review` + o fato de biblioteca do py-fsrs 6.3.1, com teste) · v1.4 2026-09-17 (s185, F109: a ordem intercalada é o default DELIBERADO; `--cluster` só onboarding de cluster frio / andaime) · v1.3 2026-09-10 (s176, item 1.2 -- F64, o contador do regime) · v1.2 (s176, item 0.7 -- promotes F71 e F80) · v1.1 2026-07-05 (s108+, F3/F4 do ledger AUDITORIA_MEDHUB) · v1.0 2026-06-03 (sessão 075)**
+**Versão 1.8 | 2026-10-05 (s216, P09: o lote do player conta no dia da 1ª nota -- `day_plan.consumo_logico` no teto do export e no Painel; o boot segue no relógio) · v1.7 2026-09-29 (s207, F141: "um dia" é o DIA LÓGICO -- `app/utils/relogio.dia_logico`, data local -- no adapter e na entrada do Optimizer; F142: uma nota por card por dia lógico no `--record-lote`, teto por card distinto; py-fsrs 6.3.2) · v1.6 2026-09-28 (s204, F140: o motor não tem mais passo de reaprendizagem -- `state` 3 vira legado; os novos do LOTE enchem o saldo do teto; a ordem da fila é escrita com os 4 buckets) · v1.5 2026-09-22 (s193: relógio da revisão no `record_review` + o fato de biblioteca do py-fsrs 6.3.1, com teste) · v1.4 2026-09-17 (s185, F109: a ordem intercalada é o default DELIBERADO; `--cluster` só onboarding de cluster frio / andaime) · v1.3 2026-09-10 (s176, item 1.2 -- F64, o contador do regime) · v1.2 (s176, item 0.7 -- promotes F71 e F80) · v1.1 2026-07-05 (s108+, F3/F4 do ledger AUDITORIA_MEDHUB) · v1.0 2026-06-03 (sessão 075)**
 
 > Documento normativo. Define como a fila de repetição espaçada é gerenciada, drenada e mantida.
 > Referenciado por: `AGENTE.md`, `reconcile-contract.md` (W3), `.claude/commands/revisar.md`, `.claude/commands/estilo-flashcard.md`.
@@ -105,6 +105,7 @@ A tensão estrutural observada na s108 (44 agendados > teto de 30 antes de qualq
   errou duas vezes no mesmo turno.
 - A fonte dos números é `day_plan.py` (campo `divida` no `--json`; linha "Teto do dia" no render). Constantes nomeadas em `tools/day_plan.py` (`TETO_BASE`, `CAP_MULTIPLICADOR`) — ajuste é edição de 1 linha + este contrato.
 - O teto **informa** a sessão de revisão; quem drena é o `/revisar`. Nenhuma drenagem automática.
+- 🔴 **Dia do lote = dia da 1ª nota (P09, decisão do operador em 05/10/2026: *"pelo dia em que o lote começou"*).** Um lote do player conta inteiro no dia em que recebeu a 1ª nota, mesmo que termine depois da meia-noite: o consumo do teto do export (`fsrs_queue.consumo_do_dia`) e o "Hoje" do Painel (`painel._bloco_dia`) saem de `day_plan.consumo_logico` -- o `realizado_do_dia` menos as revisões de hoje que são de lote começado antes (as notas do lote em `tmp/`, casadas linha a linha com o revlog pelo `review_time` do writer). O FSRS guarda o horário REAL (o intervalo não mente); o boot e a aderência seguem pelo relógio (`realizado_do_dia`, intacto). Sem o marcador do tique (`tmp/hub/ultima_gravacao_hub.json`) ou sem as notas, vale o relógio. Caso que originou: o lote `2026-10-04a`, 70 de 150 notas depois de 00h, e o Painel de 05/10 dizendo "212 de 100" (s215).  <!-- CHECK: test_lote_que_virou_a_meia_noite_conta_no_dia_da_primeira_nota -->
 - ⚰️ **Exceção datada (s165, 2026-09-05 -> 13/09/2026) -- ENCERRADA ANTES DO PRAZO em 2026-09-07 (s168).** O usuário autorizou um *sprint* de **120 cards/dia** (2 blocos de 60) até o ENAMED, como decisão pontual e não como novo teto. **Revogada pelo próprio usuário na s168**, ao decidir o sprint de questões S17-S20: *"Manteremos o teto de 60 cards e, se necessário subimos se o teto estourar."* Efeito: o regime canônico (**60/dia, máx. 90 em dívida**) volta a valer de 07/09 em diante, sem esperar 14/09 -- o "subimos se estourar" é exatamente o `CAP_MULTIPLICADOR` já vigente, não uma segunda exceção. `TETO_BASE`/`CAP_MULTIPLICADOR` nunca mudaram. Lápide mantida (e não deletada) porque a s165/s166/s167 rodaram sob ela e os números daquelas sessões só se explicam com ela à vista.
 - Alternativa descartada: "modo mutirão" (teto fixo + sessão dedicada quando estourar) -- decisão registrada no PRD engenharia-ledger-f1-f13.
 
@@ -148,6 +149,10 @@ No check de boot (`reconcile-contract.md`), reportar: total de cards qualitativo
 ---
 
 ## Changelog
+
+- **v1.8 (2026-10-05, s216 -- `hub-integracao` part-5):** regra P09 no §Teto dinâmico -- o dia do
+  lote é o dia da 1ª nota (`day_plan.consumo_logico`) no teto do export e no Painel; o relógio segue
+  no boot e na aderência.
 
 - **v1.6 (2026-09-28, s204 -- F140/F32, spec `nota1-volta-no-dia-seguinte` parts 1-3):** decisões do
   operador em 28/09 -- (1) nota 1 volta só no dia seguinte: `relearning_steps=()` no adapter e no

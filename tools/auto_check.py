@@ -737,7 +737,8 @@ def main():
 
     # 6. Cobertura de conhecimento -- tema da semana corrente (spec mecanismo-conhecimento
     #    part-3). WARN, não bloqueia: torna visível o tema da semana sem .md canônico.
-    #    Silencioso quando coberto ou grade indisponível (degrada, nunca falso-positivo).
+    #    Silencioso quando coberto ou plano indisponível (degrada, nunca falso-positivo).
+    #    E06 (s216): a semana e a do PLANO (`plano.panorama`), nao mais a S17 da grade antiga.
     if mode == "--all":
         desc_cob = "Cobertura de conhecimento (tema da semana)"
         try:

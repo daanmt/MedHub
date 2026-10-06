@@ -87,9 +87,11 @@ python tools/cronograma.py --radar [--desde N]    # cobertura futura × performa
 > pendência em `plano_tarefas`), impressa por `python tools/day_plan.py --handoff-block` e
 > vigiada pelo `POSICAO_DRIFT` do `auto_check`. E o write deixou de ser único — `plano_tarefas`
 > é a tabela da feature (`cronograma-contract` v1.3, Cláusula 5). A chave
-> `preparacao_estado.semana_conteudo` sobrevive com **um** leitor
-> (`tools/cobertura_conhecimento.py`); `preparacao.py --set-semana` alimenta só esse leitor e
-> **não move mais o boot**.
+> `preparacao_estado.semana_conteudo` ficou **sem leitor** na s216 (E06, 05/10/2026): o
+> `tools/cobertura_conhecimento.py` passou a ler a semana do plano (`plano.panorama`).
+> ⚰️ *Até a s216: "sobrevive com **um** leitor (`tools/cobertura_conhecimento.py`)".* O
+> `preparacao.py --set-semana` (e o write do `registrar_sessao_bulk.py`) seguem gravando a chave,
+> que hoje não alimenta nada e **não move o boot**.
 
 ## Extensivo (52 semanas) -- segundo derivador
 

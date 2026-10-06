@@ -115,6 +115,9 @@ def db_sintetico(tmp_path, monkeypatch):
     monkeypatch.setattr(dbmod, "agora", lambda: datetime(2026, 9, 23, 18, 0, 0))
     monkeypatch.setattr(dbmod, "hoje", lambda: HOJE)
     monkeypatch.setattr(plano, "calendario_trilha", lambda trilha=None: dict(CALENDARIO))
+    # s216 (part-5): os lotes do player (regra P09) saem de tmp/ -- aqui um tmp/ vazio, nunca o real
+    import day_plan
+    monkeypatch.setattr(day_plan, "RAIZ_LOTES", tmp_path / "sem-lotes")
     # s213: {tarefa: [aulas]} -- a #7 tem a aula que a CUMPRE; a #10 (lista), uma que a PREPARA
     monkeypatch.setattr(painel, "_aulas_por_tarefa", lambda: {
         7: [{"slug": "raciocinio-diagnostico", "titulo": "Raciocinio"}],
@@ -256,8 +259,11 @@ def test_rota_concorda_com_o_panorama(db_sintetico, capsys):
 
 
 def test_rota_concorda_com_a_aba_aulas(db_sintetico):
-    """🔴 Sentinela contra DUAS reguas de semana: a aba Aulas (`hub.secoes_do_quadro`, com a copia
-    `hub.semana_atual`) e o Painel tem de pôr as MESMAS tarefas nas MESMAS semanas futuras."""
+    """🔴 Sentinela contra DUAS reguas de semana: a aba Teoria (`hub.secoes_do_quadro`, com a copia
+    `hub.semana_atual`) e o Painel tem de pôr as tarefas nas MESMAS semanas futuras. s216 (part-1):
+    a Teoria mostra so tarefa de aula (e tarefa com aula ligada), entao a igualdade vira INCLUSAO --
+    toda tarefa de aula da rota existe na Teoria, na secao da mesma semana, e nada na Teoria fica
+    fora da rota."""
     from tools import hub
     from app.utils import db as dbmod
     secoes, _c, _a = hub.secoes_do_quadro([], plano_linhas=dbmod.plano_listar(),
@@ -265,7 +271,14 @@ def test_rota_concorda_com_a_aba_aulas(db_sintetico):
     s = painel.coletar()["semana"]
     futuras = {int(x["chave"]): [i["id"] for i in x["itens"]] for x in secoes
                if x["chave"].isdigit() and int(x["chave"]) > s["semana"]}
-    assert futuras == {r["semana"]: [t["id"] for t in r["tarefas"]] for r in s["rota"]}
+    rota = {r["semana"]: [t["id"] for t in r["tarefas"]] for r in s["rota"]}
+    de_aula = {sem: [t["id"] for t in r["tarefas"] if t["classe"] == "aula"]
+               for sem, r in ((r["semana"], r) for r in s["rota"])}
+    assert any(de_aula.values()), "o cenario tem de ter tarefa de aula na rota (a Puericultura, S4)"
+    for sem, ids in de_aula.items():
+        assert [i for i in futuras.get(sem, []) if i in ids] == ids, (sem, ids, futuras)
+    for sem, ids in futuras.items():
+        assert set(ids) <= set(rota.get(sem, [])), "a Teoria nao inventa tarefa fora da rota"
     # audit R1 (s213): o filtro acima so trava o ALCANCE da rota; a semana corrente das duas
     # reguas tambem tem de ser a mesma, senao a copia do hub diverge sem ninguem ver.
     pendentes = [l for l in dbmod.plano_listar() if l.get("status") == "pendente"]
@@ -297,7 +310,8 @@ def test_rota_usa_o_mesmo_li_da_semana(db_sintetico):
     pagina = _pagina()
     sem4 = re.search(r'<details class="rota-sem"[^>]*><summary>[^<]*<span class="rota-tit">Semana 4'
                      r'.*?</details>', pagina, re.S).group(0)
-    lis = re.findall(r'<li class="tarefa"><p class="t-tema">([^<]+)</p><p class="t-meta">.*?'
+    # s216 (part-2): o `li` carrega o id do plano (`data-tarefa`), o mesmo na semana e na rota
+    lis = re.findall(r'<li class="tarefa" data-tarefa="\d+"><p class="t-tema">([^<]+)</p><p class="t-meta">.*?'
                      r'</p><p class="t-acao">.*?</p></li>', sem4, re.S)
     assert lis == ["Bronquiolite", "Puericultura"]
     assert 'href="https://exemplo/10"' in sem4
@@ -305,11 +319,29 @@ def test_rota_usa_o_mesmo_li_da_semana(db_sintetico):
 
 def test_tarefa_de_lista_com_aula_que_prepara_tem_os_dois_links(db_sintetico):
     """D4-2: a aula que PREPARA a tarefa (`tarefas: [...]` no registro) aparece no Painel como na
-    aba Aulas: a lista E a aula."""
+    aba Aulas: a lista E a aula. s216 (part-2): o link leva o titulo da aula (`data-titulo`), que o
+    hub mostra no leitor sem procurar o link na Teoria."""
     pagina = _pagina()
-    li = re.search(r'<li class="tarefa"><p class="t-tema">Bronquiolite</p>.*?</li>', pagina, re.S).group(0)
+    li = re.search(r'<li class="tarefa" data-tarefa="10"><p class="t-tema">Bronquiolite</p>.*?</li>',
+                   pagina, re.S).group(0)
     assert ">abrir lista</a>" in li
-    assert 'href="aulas/bronquiolite.html" data-hub-aula="bronquiolite">abrir aula</a>' in li
+    assert ('href="aulas/bronquiolite.html" data-hub-aula="bronquiolite" '
+            'data-titulo="A Escada da Bronquiolite">abrir aula</a>') in li
+
+
+def test_tarefa_do_painel_carrega_o_id_do_plano(db_sintetico):
+    """s216 (hub-integracao part-2): o `li.tarefa` do Painel carrega `data-tarefa` (o id do plano) --
+    e por ele que a pagina pinta, sem publish, a lista resolvida na aba Listas. A Documentacao nao e
+    tarefa do plano: fica sem `data-tarefa` (o seletor da pagina e `li.tarefa[data-tarefa]`)."""
+    pagina = _pagina()
+    s = painel.coletar()["semana"]
+    esperado = [t["id"] for t in s["tarefas"]] + [t["id"] for r in s["rota"] for t in r["tarefas"]]
+    plano = pagina.split('data-bloco="docs"')[0]
+    ids = [int(i) for i in re.findall(r'<li class="tarefa[^"]*" data-tarefa="(\d+)">', plano)]
+    assert ids == esperado and len(ids) == plano.count('<li class="tarefa')
+    docs = painel._html_docs([{"slug": "dossie", "titulo": "Dossiê da banca"}])
+    assert "data-tarefa" not in docs
+    assert 'href="aulas/dossie.html" data-hub-aula="dossie" data-titulo="Dossiê da banca">' in docs
 
 
 def test_aulas_por_tarefa_le_quem_cumpre_e_quem_prepara(tmp_path, monkeypatch):
@@ -406,6 +438,38 @@ def test_saldo_de_cards_e_consumo_sobre_teto(db_sintetico):
     assert c["restantes"] == max(0, teto - consumo)
     assert c["vencidos"] == cont["atrasados"] + cont["hoje"] == 3
     assert c["novos"] == cont["backlog_novos"] == 2
+
+
+def test_painel_nao_conta_o_lote_de_ontem_no_saldo_de_hoje(db_sintetico, tmp_path, monkeypatch):
+    """s216 (hub-integracao part-5, regra P09): um lote comecado ONTEM (1a nota as 23h40 de 22/09) e
+    gravado depois da meia-noite nao come o teto de hoje -- o Painel mostra o consumo LOGICO sobre o
+    teto; o cabecalho "Hoje, <data>" segue pelo relogio."""
+    import day_plan
+    from datetime import timezone
+    brt = timezone(timedelta(hours=-3))
+    _cards(db_sintetico)                                  # 2 revisoes de hoje (cards 6 e 7, 10h)
+    con = sqlite3.connect(db_sintetico)
+    for cid in (1, 2):                                    # o lote de ontem: 2 notas depois da meia-noite
+        con.execute("INSERT INTO fsrs_revlog (card_id, rating, review_time, regua_versao) VALUES (?, 3, ?, 2)",
+                    (cid, "2026-09-23 00:2%d:00" % cid))
+    con.commit()
+    con.close()
+    sessao = "2026-09-22a"
+    (tmp_path / "tmp" / "hub").mkdir(parents=True)
+    (tmp_path / "tmp" / "hub" / "ultima_gravacao_hub.json").write_text(json.dumps({"sessao": sessao}), encoding="utf-8")
+    notas = tmp_path / "tmp" / ("player_%s_db" % sessao) / "sessoes" / sessao / "notas"
+    notas.mkdir(parents=True)
+    for cid, ts in ((3, "2026-09-23T02:40:00.000Z"), (1, "2026-09-23T03:21:00.000Z"), (2, "2026-09-23T03:22:00.000Z")):
+        (notas / ("%d.json" % cid)).write_text(json.dumps({"card_id": cid, "rating_primeira": 3, "ts": ts}),
+                                               encoding="utf-8")
+    monkeypatch.setattr(day_plan, "RAIZ_LOTES", tmp_path)
+    monkeypatch.setattr(day_plan, "FUSO_LOTES", brt)
+    d = painel.coletar()
+    c = d["dia"]["cards"]
+    assert c["consumo_hoje"] == 2, "so as 2 revisoes do dia; as 2 do lote de ontem ficam com ontem"
+    assert c["restantes"] == max(0, c["teto"] - 2)
+    pagina = painel.render_html(d)
+    assert "Hoje, quarta 23/09" in pagina, "o cabecalho segue o relogio"
 
 
 def test_saldo_nunca_negativo(db_sintetico, monkeypatch):
@@ -545,7 +609,8 @@ def test_saldo_aparece_como_consumo_sobre_teto(db_sintetico):
     d = painel.coletar()
     pagina = painel.render_html(d)
     c = d["dia"]["cards"]
-    assert re.search(r"<b>%d</b>\s*de %d" % (c["consumo_hoje"], c["teto"]), pagina)
+    # s216 (part-6): o numero publicado leva a ancora do "Hoje ao vivo" (`data-vivo`/`data-base`)
+    assert re.search(r"<b[^>]*>%d</b>\s*de %d" % (c["consumo_hoje"], c["teto"]), pagina)
     assert "faltam %d" % c["restantes"] in pagina
 
 
@@ -630,3 +695,37 @@ def test_documentacao_lista_as_analises_do_quadro_com_atalho(db_sintetico, tmp_p
     assert "Fantasma" not in pagina and ">Aula<" not in pagina
     monkeypatch.setattr(painel, "QUADRO", tmp_path / "nao-existe.json")
     assert 'data-bloco="docs"' not in painel.render_html(painel.coletar())    # sem registro, o bloco some
+
+
+
+# ------------------------------------------ s216 (hub-integracao part-6, P08 v0): ancoras do "Hoje ao vivo"
+
+def test_hoje_tem_ancoras_para_o_ao_vivo(db_sintetico, tmp_path, monkeypatch):
+    """O Painel e foto do publish; a pagina soma ao lado dele o que gravou depois ("+K"). Para isso o
+    numero publicado ganha ancora (`data-vivo` + `data-base`), o bloco Hoje diz QUAL lote ja esta no
+    numero (`data-sessao-gravada`, do marcador do tique; vazio sem ele) e o carimbo ISO vai DENTRO do
+    trecho que o hub ignora ao comparar a projecao (A14)."""
+    _cards(db_sintetico)
+    marcador = tmp_path / "ultima_gravacao_hub.json"
+    marcador.write_text(json.dumps({"sessao": "2026-09-23a", "gravado_em": "x"}), encoding="utf-8")
+    monkeypatch.setattr(painel, "MARCADOR_GRAVACAO", marcador)
+    d = painel.coletar()
+    pagina = painel.render_html(d)
+    c, q = d["dia"]["cards"], d["dia"]["questoes"]
+    assert '<b data-vivo="cards" data-base="%d">%d</b>' % (c["consumo_hoje"], c["consumo_hoje"]) in pagina
+    assert '<b data-vivo="questoes" data-base="%d">%d</b>' % (q["feitas_hoje"], q["feitas_hoje"]) in pagina
+    assert pagina.count('data-sessao-gravada="2026-09-23a"') == 1
+    gerado = pagina.split(painel.MARCA_GERADO_ABRE, 1)[1].split(painel.MARCA_GERADO_FECHA, 1)[0]
+    assert 'data-gerado-iso="%s"' % d["gerado_em"] in gerado, "o carimbo ISO mora no trecho ignorado"
+    assert pagina.count("data-gerado-iso=") == 1
+    monkeypatch.setattr(painel, "MARCADOR_GRAVACAO", tmp_path / "nao-existe.json")
+    assert 'data-sessao-gravada=""' in painel.render_html(painel.coletar()), "sem marcador: vazio"
+
+
+def test_hash_do_painel_ignora_o_carimbo_iso(db_sintetico):
+    """A14: regenerar o painel a cada tique so com o carimbo novo NAO pode virar `mesmo_lote`."""
+    from tools import hub
+    d = painel.coletar()
+    a = painel.render_html(d)
+    b = painel.render_html(dict(d, gerado_em="2026-09-23T18:47:00"))
+    assert a != b and hub.hash_painel(a) == hub.hash_painel(b)

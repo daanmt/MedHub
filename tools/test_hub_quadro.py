@@ -130,6 +130,13 @@ def _secoes(pagina):
     return saida
 
 
+def _biblioteca(pagina):
+    """[ids de tarefa | slugs] da Biblioteca (s216, part-3: o `<details id="hub-quadro-feitas">`), em ordem."""
+    feitas = pagina.split('id="hub-quadro-feitas"', 1)[1].split("</details>", 1)[0]
+    return [a or b for a, b in re.findall(
+        r'<li class="qd-item[^"]*"[^>]*?(?:data-tarefa="(\d+)"|data-slug="([\w-]+)")', feitas)]
+
+
 def _item(pagina, seletor):
     return re.search(r'<li class="qd-item[^"]*"[^>]*%s[^>]*>.*?</li>' % seletor, pagina, re.S).group(0)
 
@@ -162,9 +169,8 @@ def test_registro_real_so_com_as_aulas_em_aberto_e_ligadas_ao_plano():
                                           "tireoide-nodulo-cancer", "vulva-vagina-anatomia")] == [768, 367, 590]
     reais = {hub.slug_de(p.name) for p in (ROOT / "artifacts").glob("aula-*.html")}
     assert reais == set(reg), "aula real sem tipo no registro (ou registro de aula arquivada)"
-    for nome in ("aula-s17", "aula-cancer-de-mama", "aula-hernias", "aula-autopsia-uerj-2023",
-                 "aula-raciocinio-diagnostico"):
-        assert (ROOT / "artifacts" / "arquivo" / (nome + ".html")).is_file(), nome
+    # s216 (part-3, decisao do operador em 05/10): daqui em diante nada vai para artifacts/arquivo/ -- a
+    # aula concluida fica na Biblioteca da Teoria; as 5 ja arquivadas voltam sob pedido, uma a uma
 
 
 def test_slug_desconhecido_entra_como_aula_e_avisa(tmp_path):
@@ -198,26 +204,56 @@ def test_tipo_invalido_ou_tarefas_malformadas_falham_alto(tmp_path):
 # 2. O quadro por semanas no index
 # --------------------------------------------------------------------------
 
-def test_secoes_atrasadas_primeiro_depois_semanas_ate_a_prova_e_outras_por_ultimo(tmp_path):
+def test_secoes_atrasadas_primeiro_depois_semanas_ate_a_prova_e_biblioteca_por_ultimo(tmp_path):
+    """s216 (part-1): a Teoria so mostra tarefa de aula e tarefa com aula ligada -- a lista sem aula
+    (26, 1793, 68) mora no Painel; semana sem nada a mostrar (a 3) sai, a corrente fica. s216
+    (part-3): "Outras aulas" virou a Biblioteca, no fim (e vazia aqui: a analise mora no Painel)."""
     raiz, data_fn = _repo(tmp_path)
     _construir(raiz, data_fn)
-    secoes = _secoes(_index(raiz))
-    assert [s[0] for s in secoes] == ["revisoes", "atrasadas", "2", "3", "outras"]
-    assert [s[1] for s in secoes] == ["Revisões direcionadas", "Atrasadas", "Semana 2 · 21/09–27/09",
-                                      "Semana 3 · 28/09–04/10", "Outras aulas"]
+    pagina = _index(raiz)
+    secoes = _secoes(pagina)
+    assert [s[0] for s in secoes] == ["revisoes", "atrasadas", "2"]
+    assert [s[1] for s in secoes] == ["Revisões direcionadas", "Atrasadas", "Semana 2 · 21/09 a 27/09"]
     assert secoes[0][2] == ["rd-renal"], "revisao direcionada abre a aba, no bloco proprio (s210)"
-    assert secoes[1][2] == ["26", "877"], "semana 1 < atual = atrasada, na ordem do plano"
-    assert secoes[2][2] == ["49", "875", "1793"] and secoes[3][2] == ["68"]
-    assert secoes[4][2] == ["autopsia"], "aula sem tarefa vai para Outras aulas"
+    assert secoes[1][2] == ["877"], "semana 1 < atual = atrasada, na ordem do plano"
+    assert secoes[2][2] == ["49", "875"]
+    assert _biblioteca(pagina) == [], "a analise (autopsia) nao mora na Teoria: so na Documentacao do Painel"
+    assert pagina.index('id="hub-quadro-feitas"') > pagina.index('data-secao="2"'), "a Biblioteca vem por ultimo"
     pagina = _index(raiz)
     for tid in (900, 901, 902, 903):
         assert 'data-tarefa="%d"' % tid not in pagina, "fase 2, reserva, cortada e feita ficam fora"
 
 
+def test_teoria_so_com_tarefas_de_aula_ou_com_aula_ligada(tmp_path):
+    """s216 (hub-integracao part-1, pedido do operador em 05/10): o plano inteiro aparecia
+    duas vezes (92 tarefas no Painel e as mesmas 92 em Aulas; so 12 de aula). A Teoria fica com a
+    tarefa de aula (`classe == "aula"`) e a tarefa de QUALQUER classe com aula ligada (prepara ou
+    cumpre); a analise sai de toda secao, inclusive de Concluidas. O filtro e de EXIBICAO: a semana
+    de hoje continua saindo de TODOS os pendentes (A2)."""
+    raiz, data_fn = _repo(tmp_path)
+    _construir(raiz, data_fn, estado={"autopsia": {"feito": True, "ts": "x"}})
+    pagina = _index(raiz)
+    quadro = pagina.split('id="hub-quadro"', 1)[1]
+    ids = set(re.findall(r'data-tarefa="(\d+)"', quadro))
+    assert ids == {"877", "49", "875"}, ids
+    assert {"26", "1793", "68"}.isdisjoint(ids), "lista sem aula ligada nao aparece na Teoria"
+    assert 'data-slug="autopsia"' not in quadro, "analise nem em secao nem em Concluidas"
+    # A2: com o filtro antes da regua, a semana de hoje viraria a 2 (a 1a com tarefa de aula)
+    plano = [_t(26, 1, "Lista sem aula", 19, URL), _t(877, 2, "Raciocinio", 0, None, fonte="custom")]
+    secoes, _c, _a = hub.secoes_do_quadro([], plano_linhas=plano, calendario={}, hoje=date(2026, 9, 1))
+    assert [(s["chave"], [i["id"] for i in s["itens"]]) for s in secoes if s["chave"].isdigit()] == \
+        [("1", []), ("2", [877])], \
+        "semana corrente = a 1, de TODOS os pendentes; fica fixa e vazia"
+    assert not [i for s in secoes for i in s["itens"] if i.get("atrasada")]
+    for proibido in ("–", "—", "→", "$$", "\\rightarrow"):
+        assert proibido not in quadro, "caractere proibido na Teoria: %r" % proibido
+
+
 def test_revisao_direcionada_tem_bloco_proprio_com_feito_e_some_quando_feita(tmp_path):
     """Pedido do operador (s210, 01/10): "sentindo falta das revisoes direcionadas em 'Aulas'...
     publicar como aula, dentro de um bloco especifico". A revisao avulsa abre a aba, com o
-    controle 'feito'; feita, vai para Concluidas e o bloco some (nao e secao fixa)."""
+    controle 'feito'; feita, vai para a Biblioteca (s216; era "Concluidas") e o bloco some (nao e
+    secao fixa)."""
     raiz, data_fn = _repo(tmp_path)
     _construir(raiz, data_fn)
     item = _item(_index(raiz), 'data-slug="rd-renal"')
@@ -235,16 +271,19 @@ def test_cabecalho_da_semana_conta_tarefas_e_questoes(tmp_path):
     pagina = _index(raiz)
     cab = re.findall(r'<h3 class="qd-titulo">([^<]+) <span class="qd-n">(.*?)</span></h3>', pagina)
     contagem = {t: re.sub(r"<[^>]+>", "", c) for t, c in cab}
-    assert contagem["Atrasadas"] == "2 tarefas · 19 questões"
-    assert contagem["Semana 2 · 21/09–27/09"] == "3 tarefas · 81 questões"
-    assert contagem["Semana 3 · 28/09–04/10"] == "1 tarefa · 21 questões"
-    assert contagem["Outras aulas"] == "1 aula"
+    # s216 (part-1): conta so o que a Teoria mostra (a lista sem aula mora no Painel)
+    assert contagem["Atrasadas"] == "1 tarefa · 0 questões"
+    assert contagem["Semana 2 · 21/09 a 27/09"] == "2 tarefas · 21 questões"
+    assert "Semana 3 · 28/09 a 04/10" not in contagem, "semana futura sem tarefa de aula nao aparece"
+    assert "Outras aulas" not in contagem, "s216 (part-3): virou a Biblioteca"
     assert contagem["Revisões direcionadas"] == "1 aula"
+    assert '<summary>Biblioteca <span class="qd-n" id="hub-quadro-nfeitas">0</span></summary>' in pagina
 
 
 def test_bloco_da_tarefa_tem_tema_peso_questoes_e_acao(tmp_path):
+    # s216 (part-1): lista so aparece na Teoria com aula ligada -- a aula das hernias prepara 26 e 1793
     raiz, data_fn = _repo(tmp_path)
-    _construir(raiz, data_fn)
+    _construir(raiz, data_fn, quadro=dict(QUADRO, hernias=dict(QUADRO["hernias"], tarefas=[26, 49, 1793])))
     pagina = _index(raiz)
     lista = _item(pagina, 'data-tarefa="26"')
     assert '<p class="qd-tema">Diabetes na Gestacao</p>' in lista
@@ -279,38 +318,54 @@ def test_aula_que_cumpre_tarefa_de_aula_tem_o_botao_feito_no_bloco(tmp_path):
     assert '<span class="qd-bl">MFC</span><span>aula</span>' in bayes
 
 
-def test_feito_sai_riscado_em_concluidas_no_build(tmp_path):
+def test_feito_sai_riscado_na_biblioteca_no_build(tmp_path):
+    # s216 (part-1): a autopsia vira aula avulsa aqui (analise nao mora na Teoria) e a aula das
+    # hernias prepara a 26, para Atrasadas seguir com uma tarefa depois do Bayes feito. s216 (part-3):
+    # "Concluidas" virou a Biblioteca -- o feito vai riscado para la, e a aula avulsa (sem tarefa
+    # pendente) mora la desde o build, sem riscar; ordem = data de criacao, mais nova primeiro.
     raiz, data_fn = _repo(tmp_path)
-    _construir(raiz, data_fn, estado={"bayes": {"feito": True, "ts": "x"},
-                                      "rd-renal": {"feito": True, "ts": "y"},
-                                      "autopsia": {"feito": False, "ts": "z"}})
+    quadro = dict(QUADRO, autopsia=dict(QUADRO["autopsia"], tipo="aula"),
+                  hernias=dict(QUADRO["hernias"], tarefas=[26, 49]))
+    _construir(raiz, data_fn, quadro=quadro, estado={"bayes": {"feito": True, "ts": "x"},
+                                                     "rd-renal": {"feito": True, "ts": "y"},
+                                                     "autopsia": {"feito": False, "ts": "z"}})
     pagina = _index(raiz)
     secoes, feitas = pagina.split('id="hub-quadro-feitas"', 1)
     assert 'data-tarefa="877"' not in secoes and 'data-slug="rd-renal"' not in secoes
     bayes = _item(feitas, 'data-tarefa="877"')
     assert 'data-feito="1"' in bayes and 'aria-pressed="true"' in bayes and 'data-secao="atrasadas"' in bayes
-    assert 'data-slug="rd-renal"' in feitas and 'id="hub-quadro-nfeitas">2<' in feitas
-    assert 'data-slug="autopsia"' in secoes, "desmarcado fica na secao"
+    assert 'data-slug="rd-renal"' in feitas and 'id="hub-quadro-nfeitas">3<' in feitas
+    autopsia = _item(feitas, 'data-slug="autopsia"')
+    assert "data-feito" not in autopsia and 'data-secao="biblioteca"' in autopsia, "desmarcado nao risca"
+    assert _biblioteca(pagina) == ["rd-renal", "877", "autopsia"], "rd-renal 13/09, bayes 11/09, autopsia 10/09"
+    assert re.search(r'<details class="qd-feitas" id="hub-quadro-feitas"><summary>Biblioteca ', pagina), \
+        "recolhida por padrao (sem open)"
     assert ".qd-item[data-feito] .qd-tema{text-decoration:line-through" in pagina
     assert dict((k, v) for k, _t, v in _secoes(pagina))["atrasadas"] == ["26"],         "Atrasadas perde o Bayes feito"
 
 
-def test_sem_plano_tudo_vai_para_outras_aulas_e_sem_aula_nem_plano_diz(tmp_path):
+def test_sem_plano_tudo_vai_para_a_biblioteca_e_sem_aula_nem_plano_diz(tmp_path):
     raiz, data_fn = _repo(tmp_path)
     _construir(raiz, data_fn, plano=[], cal={})
     secoes = _secoes(_index(raiz))
-    assert [s[0] for s in secoes] == ["revisoes", "outras"]
+    assert [s[0] for s in secoes] == ["revisoes"]
     assert secoes[0][2] == ["rd-renal"]
-    assert secoes[1][2] == ["hernias", "bayes", "autopsia"], "mais nova primeiro"
+    assert _biblioteca(_index(raiz)) == ["hernias", "bayes"], \
+        "mais nova primeiro; a analise (autopsia) nao entra"
     assert hub.html_aulas([]) == '<p class="hub-vazio">Nada no quadro ainda: nem tarefa pendente, nem aula.</p>'
 
 
-def test_aula_ligada_so_a_tarefa_concluida_avisa_candidata_a_arquivo(tmp_path):
+def test_aula_ligada_so_a_tarefa_concluida_fica_na_biblioteca(tmp_path):
+    """s216 (part-3, decisao do operador em 05/10: "so daqui em diante"): a aula cuja tarefa ja foi
+    concluida nao e mais "candidata a arquivo" (o `git mv` para artifacts/arquivo/ acabou): fica na
+    Biblioteca da Teoria, a um toque, sem aviso no build."""
     raiz, data_fn = _repo(tmp_path, slugs=("hernias",))
     plano = [_t(49, 2, "Hernias", 21, URL, status="feita")]
     _m, _p, avisos = _construir(raiz, data_fn, plano=plano)
-    assert any("hernias" in a and "candidata a arquivo" in a for a in avisos), avisos
-    assert _secoes(_index(raiz))[-1][2] == ["hernias"]
+    assert not [a for a in avisos if "arquivo" in a], avisos
+    assert _biblioteca(_index(raiz)) == ["hernias"]
+    assert "artifacts/arquivo" not in Path(hub.__file__).read_text(encoding="utf-8").split('"""', 2)[2], \
+        "o hub nao manda mais mover aula para artifacts/arquivo/"
 
 
 def test_plano_indisponivel_degrada_declarado(tmp_path, monkeypatch):
@@ -324,7 +379,7 @@ def test_plano_indisponivel_degrada_declarado(tmp_path, monkeypatch):
         calendario={})
     assert problemas == []
     assert any("plano indisponivel" in a and "banco trancado" in a for a in avisos), avisos
-    assert [s[0] for s in _secoes(_index(raiz))] == ["outras"]
+    assert [s[0] for s in _secoes(_index(raiz))] == [] and _biblioteca(_index(raiz)) == ["hernias"]
 
 
 def test_sem_db_controle_nasce_desabilitado_com_frase_curta(tmp_path):
@@ -332,7 +387,7 @@ def test_sem_db_controle_nasce_desabilitado_com_frase_curta(tmp_path):
     _construir(raiz, data_fn)
     pagina = _index(raiz)
     botoes = re.findall(r'<button type="button" class="qd-feito"[^>]*>', pagina)
-    assert len(botoes) == 3 and all(" disabled" in b for b in botoes), "bayes + 2 aulas avulsas"
+    assert len(botoes) == 2 and all(" disabled" in b for b in botoes), "bayes + a RD avulsa (s216: a analise saiu)"
     aviso = re.search(r'<p class="qd-aviso" id="hub-quadro-aviso" hidden>([^<]+)</p>', pagina)
     assert aviso and len(aviso.group(1)) <= 80
     js = pagina.split("function iniciarQuadro()", 1)[1]
@@ -371,9 +426,15 @@ def test_ler_estado_do_dump_do_artifactdata(tmp_path):
 
 
 def test_painel_fala_com_as_abas():
-    """O "Ir para os cards" e o "abrir aula" do painel sao interceptados pelo hub."""
-    assert 'querySelectorAll("a[data-hub-aba], a[data-hub-aula]")' in TEMPLATE_HUB_REAL
-    assert "abrirAula(alvo)" in TEMPLATE_HUB_REAL
+    """O "Ir para os cards" e o "abrir aula" do painel sao interceptados pelo hub. s216 (part-1, A1):
+    o documento abre DIRETO pelo href do link clicado -- procurar o `a.hub-aula` na Teoria deixava o
+    Dossie e a Autopsia (que sairam de la) sem abrir."""
+    corpo = extrair_funcao(TEMPLATE_HUB_REAL, "function preparar(quadro){")
+    assert 'querySelectorAll("a[data-hub-aba], a[data-hub-aula]")' in corpo
+    assert "painelAtalho(a" in corpo
+    atalho = extrair_funcao(TEMPLATE_HUB_REAL, "function painelAtalho(a")
+    assert "abrirNaTeoria(" in atalho and "a.hub-aula" not in atalho and "abrirAula(alvo)" not in TEMPLATE_HUB_REAL
+    assert "abrirAula(href, titulo, origem)" in extrair_funcao(TEMPLATE_HUB_REAL, "function abrirNaTeoria(")
 
 
 def test_declaracao_de_capabilities_documentada_nos_portadores():
@@ -434,18 +495,23 @@ def test_painel_mudou_com_lote_em_curso_republica_o_mesmo_lote(tmp_path):
 def test_quadro_mudou_republica_o_mesmo_lote(tmp_path):
     raiz, data_fn = _repo(tmp_path)
     _publicado(raiz, data_fn)
-    d = _decidir(raiz, estado={"autopsia": {"feito": True}})
+    d = _decidir(raiz, estado={"rd-renal": {"feito": True}})   # s216: a analise nao mora na Teoria
     assert d["acao"] == "mesmo_lote" and d["motivos"] == ["quadro de aulas mudou"]
 
 
 def test_plano_mudou_republica_o_mesmo_lote(tmp_path):
-    """s195: tarefa concluida (ou nova) muda o quadro, logo a projecao -- sem lote novo."""
+    """s195: tarefa concluida (ou nova) muda o quadro, logo a projecao -- sem lote novo. s216
+    (part-1): a tarefa da TEORIA (de aula ou com aula ligada); lista sem aula concluida muda so o
+    Painel (o E01: o `mesmo_lote` sobe so o `painel.html`)."""
     raiz, data_fn = _repo(tmp_path)
     _publicado(raiz, data_fn)
     plano = [dict(l) for l in PLANO]
-    plano[0]["status"] = "feita"
+    plano[1]["status"] = "feita"                        # a 877, tarefa de aula
     d = _decidir(raiz, plano=plano)
     assert d["acao"] == "mesmo_lote" and d["motivos"] == ["quadro de aulas mudou"]
+    plano = [dict(l) for l in PLANO]
+    plano[0]["status"] = "feita"                        # a 26, lista sem aula: fora da Teoria
+    assert _decidir(raiz, plano=plano)["acao"] == "nada"
 
 
 def test_lote_drenado_pede_nova_fila(tmp_path):
@@ -569,7 +635,8 @@ def test_simulado_ja_no_hub_vira_atalho_para_a_aba_listas(tmp_path):
     aba Listas em Simulados; sem questoes no banco, segue 'prova em PDF no computador'."""
     raiz, data_fn = _repo(tmp_path)
     plano = [dict(l, no_hub=True) if l["id"] == 1793 else l for l in PLANO]
-    _construir(raiz, data_fn, plano=plano)
+    # s216 (part-1): so com aula ligada o simulado aparece na Teoria
+    _construir(raiz, data_fn, plano=plano, quadro=dict(QUADRO, hernias=dict(QUADRO["hernias"], tarefas=[49, 1793])))
     simulado = _item(_index(raiz), 'data-tarefa="1793"')
     assert 'href="#questoes" data-hub-aba="questoes" data-hub-modo="simulados">resolver no hub</a>' in simulado
     assert "prova em PDF no computador" not in simulado and "simulados/uerj" not in simulado
@@ -581,7 +648,8 @@ def test_lista_ja_no_hub_abre_a_aba_listas_e_nao_o_emed(tmp_path):
     a mesma precedencia do painel. Fora do banco, "abrir lista" segue como era."""
     raiz, data_fn = _repo(tmp_path)
     plano = [dict(l, no_hub=True) if l["id"] == 49 else l for l in PLANO]
-    _construir(raiz, data_fn, plano=plano)
+    # s216 (part-1): a 68 so aparece na Teoria com aula ligada
+    _construir(raiz, data_fn, plano=plano, quadro=dict(QUADRO, hernias=dict(QUADRO["hernias"], tarefas=[49, 68])))
     pagina = _index(raiz)
     hernias = _item(pagina, 'data-tarefa="49"')
     assert 'href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a>' in hernias
@@ -623,9 +691,11 @@ PLANO_QD = [_t(26, 1, "Diabetes na Gestação", 19, URL),
                area="Simulado"),
             _t(68, 3, "Doenças Glomerulares", 21, URL, bloco="CM")]
 AULAS = [hub.Aula(s, s, "2026-10-0%d" % (i + 1), "artifacts/aula-%s.html" % s)
-         for i, s in enumerate(("rd-hemostasia", "rd-hepato", "rd-vias-biliares"))]
+         for i, s in enumerate(("rd-hemostasia", "rd-hepato", "rd-vias-biliares", "prep"))]
 REGISTRO = {s: {"tipo": "revisao", "titulo": "Revisão direcionada " + s[3:]} for s in
             ("rd-hemostasia", "rd-hepato", "rd-vias-biliares")}
+# s216 (part-1): lista so mora na Teoria com aula ligada -- uma aula que prepara as 4 mantem o cenario
+REGISTRO["prep"] = {"tipo": "aula", "titulo": "Aula que prepara", "tarefas": [26, 49, 68, 1793]}
 QUADRO_HTML = hub.html_quadro_de(AULAS, REGISTRO, {}, PLANO_QD, CAL, HOJE)[0]
 LEITOR_HTML = TEMPLATE_HUB_REAL.split('<div id="hub-leitor" hidden>', 1)[1].split("</section>", 1)[0]
 LISTAS = {"t26": {"status": "resolvida", "tarefa": 26}, "t49": {"status": "capturada", "tarefa": 49},
@@ -669,6 +739,13 @@ def _opcional(padrao):
     return m.group(1) if m else ""
 
 
+#: s216 (part-2): a marca de listas/* mora em funcoes de TOPO (a Teoria e o Painel as chamam)
+FUNCS_LISTAS = "\n".join(
+    [re.search(r"\n  (var LISTAS_VIVAS = [^\n]+;)", TEMPLATE_HUB_REAL).group(1)] +
+    [extrair_funcao(TEMPLATE_HUB_REAL, a) for a in (
+        "function listasResolvidas(docs){", "function listasPintar(alvo){",
+        "function marcarListasEm(raiz, db, aplicar, depois){")])
+
 FUNCS_QD = "\n".join(
     [re.search(r"\n  (var %s = [^\n]+;)" % n, TEMPLATE_HUB_REAL).group(1)
      for n in ("ASSINA", "PEND_ERRO", "PEND_LEITURA", "PEND_ABSORVIDO")] +
@@ -676,7 +753,9 @@ FUNCS_QD = "\n".join(
     [extrair_funcao(TEMPLATE_HUB_REAL, a) for a in (
         "function pendDataCurta(iso){", "function pendEstadoDoc(item){",
         "function pendTextoInicial(estado, rascunho){", "function pendAssinatura(slug, comentario, agora){",
-        "function assinaPintar(){", "function assinaEnviar(){", "function iniciarQuadro(){")])
+        "function assinaPintar(){", "function assinaEnviar(){", "function assinaVoltar(slug, ok){",
+        "function iniciarQuadro(){")] +
+    [FUNCS_LISTAS])
 
 # DOM falso: arvore de El com seletor de compostos (tag, #id, .classe, [attr], [attr="v"],
 # :not([attr])) e combinador descendente -- o que o quadro e o rodape usam, nada alem
@@ -727,9 +806,11 @@ function $(id){ var r = null; desc(DOC, function(e){ if(!r && e.getAttribute("id
 # banco falso: quadro e listas em memoria; onSnapshot avisa de novo a cada escrita; `negar` simula a
 # regra de leitura (callback de erro); escritas registradas
 BANCO_QD = r"""
-var CFG = __CFG__, BANCO = {quadro: CFG.quadro || {}, listas: CFG.listas || {}}, ESCRITAS = [], OUV = {}, GRAVADAS = [];
+var CFG = __CFG__, BANCO = {quadro: CFG.quadro || {}, listas: CFG.listas || {}, "analises/pendencias/itens": CFG.pend || {}},
+    ESCRITAS = [], OUV = {}, GRAVADAS = [], VOLTOU = [];
 function foto(nome){ return {docs: Object.keys(BANCO[nome] || {}).map(function(id){ return {id: id, data: function(){ return BANCO[nome][id]; }}; })}; }
 var DB = {collection: function(nome){ return {
+  where: function(){ return this; },   // s216: o filtro nao importa no banco falso (os docs ja sao os do teste)
   onSnapshot: function(ok, erro){
     if((CFG.negar || []).indexOf(nome) >= 0){ Promise.resolve().then(function(){ erro(new Error("sem permissao")); }); return function(){}; }
     (OUV[nome] = OUV[nome] || []).push(ok); Promise.resolve().then(function(){ ok(foto(nome)); }); return function(){}; },
@@ -742,6 +823,8 @@ var window = {claude: {use: function(){ return Promise.resolve(CFG.semDb ? null 
 function pendGravar(id, dados){ if(CFG.falhaAssina){ return Promise.reject(new Error("fora")); } GRAVADAS.push(id); return Promise.resolve(); }
 function pendRascunho(){ return null; }
 function assinaLer(){}
+// s216 (part-4, A11): o voltar a origem e do leitor; aqui so registra QUANDO foi chamado e o que estava na tela
+function voltarOrigem(slug){ VOLTOU.push([slug, $("hub-assina-st").textContent]); }
 """
 
 ACAO_QD = r"""
@@ -757,7 +840,7 @@ function estado(){
       {onde: onde, feito: li.hasAttribute("data-feito"), marca: marca ? marca.textContent : null};
   });
   var secoes = {}; DOC.querySelectorAll(".qd-sem").forEach(function(s){ secoes[s.getAttribute("data-secao")] = s.querySelector("[data-n]").textContent; });
-  return {itens: itens, secoes: secoes, escritas: ESCRITAS, gravadas: GRAVADAS, st: $("hub-assina-st").textContent,
+  return {itens: itens, secoes: secoes, escritas: ESCRITAS, gravadas: GRAVADAS, st: $("hub-assina-st").textContent, voltou: VOLTOU,
           nfeitas: $("hub-quadro-nfeitas").textContent, aviso_oculto: $("hub-quadro-aviso").hidden};
 }
 var qd = $("hub-quadro");
@@ -765,7 +848,8 @@ iniciarQuadro();
 espera().then(function(){
   if(CFG.assinar){ ASSINA.slug = CFG.assinar; ASSINA.item = CFG.assinado || null; $("hub-assina-coment").value = ""; assinaEnviar(); }
   return espera();
-}).then(espera).then(function(){ console.log(JSON.stringify(estado())); });
+}).then(espera).then(function(){ return new Promise(function(ok){ setTimeout(ok, CFG.esperaMs || 0); }); })
+  .then(function(){ console.log(JSON.stringify(estado())); });
 """
 
 
@@ -853,3 +937,138 @@ def test_sem_leitura_de_listas_o_quadro_fica_como_o_build():
     assert out["itens"]["t26"] == {"onde": "atrasadas", "feito": False, "marca": None}
     assert out["itens"]["rd-hemostasia"]["onde"] == "feitas"
     assert out["escritas"] == []
+
+
+# ------------------------------------------------ 6. s216 (hub-integracao part-2): o Painel le listas/*
+# Pedido do operador em 05/10/2026 ("integracao, remocao de redundancias"): uma lista resolvida na aba
+# Listas aparecia resolvida na Teoria e ABERTA no Painel, ate o proximo tique. As MESMAS funcoes de topo
+# (`marcarListasEm` & cia.) pintam os dois, de uma assinatura so de listas/*; casam pelo campo `tarefa`
+# do doc, nao pelo id (A4: `t49_1` conta para a 49). O Painel so LE.
+
+def _painel_html():
+    from tools import painel
+
+    def t(id_, tema, classe="lista", url=URL, q=21):
+        return {"id": id_, "semana": 3, "atrasada": False, "tema": tema, "q": q, "classe": classe,
+                "url_lista": url, "area": None, "rotulo": "CM", "aula": None, "aulas": [], "no_hub": False}
+    return ('<ol class="tarefas">%s</ol>' % "".join(painel._html_tarefa(x) for x in (
+        t(26, "Diabetes na Gestação"), t(49, "Hérnias"), t(68, "Glomerulares"),
+        t(877, "Raciocínio", classe="aula", url=None, q=0))) +
+        painel._html_docs([{"slug": "dossie-uerj", "titulo": "Dossiê UERJ"}]))
+
+
+ACAO_PAINEL = r"""
+function espera(){ return new Promise(function(ok){ setTimeout(ok, 0); }); }
+var MEDIU = 0;
+function estado(raiz){ var o = {};
+  raiz.querySelectorAll("li.tarefa").forEach(function(li){ var s = li.querySelector(".qd-registro");
+    o[li.getAttribute("data-tarefa") || "doc"] = {resolvida: li.classList.contains("t-resolvida"), marca: s ? s.textContent : null}; });
+  return o; }
+var SAIDA = {};
+marcarListasEm($("pa"), CFG.semDb ? null : DB, null, function(){ MEDIU++; });
+espera().then(espera).then(function(){
+  SAIDA.a = estado($("pa")); SAIDA.mediu = MEDIU;
+  // o Painel que carrega DEPOIS do snapshot (a aba abriu agora): pinta na hora, sem esperar evento
+  marcarListasEm($("pb"), null, null, null); SAIDA.b_na_hora = estado($("pb"));
+  if(!CFG.negar){ DB.collection("listas").doc("t26").set({status: "capturada", tarefa: 26});
+                  DB.collection("listas").doc("t68").set({status: "resolvida", tarefa: 68}); }
+  return espera();
+}).then(espera).then(function(){ SAIDA.depois = estado($("pa")); SAIDA.escritas_painel = ESCRITAS.length;
+  console.log(JSON.stringify(SAIDA)); });
+"""
+
+
+def _rodar_painel(**cfg):
+    if not NODE:
+        pytest.skip("node ausente no PATH: marca do Painel nao verificada (skip declarado)")
+    arvore = _arvore('<div id="pa">%s</div><div id="pb">%s</div>' % (_painel_html(), _painel_html()))
+    prog = (DOM_QD.replace("__ARVORE__", json.dumps(arvore, ensure_ascii=False)) +
+            BANCO_QD.replace("__CFG__", json.dumps(cfg, ensure_ascii=False)) + FUNCS_LISTAS + "\n" + ACAO_PAINEL)
+    with tempfile.NamedTemporaryFile("w", suffix=".js", delete=False, encoding="utf-8") as f:
+        f.write(prog)
+        caminho = f.name
+    try:
+        out = subprocess.run([NODE, caminho], capture_output=True, text=True, encoding="utf-8",
+                             timeout=60, env=dict(os.environ, TZ="America/Sao_Paulo"))
+    finally:
+        Path(caminho).unlink(missing_ok=True)
+    assert out.returncode == 0, out.stderr
+    return json.loads(out.stdout.strip().splitlines()[-1])
+
+
+LISTAS_PAINEL = {"t26": {"status": "resolvida", "tarefa": 26}, "t49_1": {"status": "resolvida", "tarefa": 49},
+                 "t68": {"status": "capturada", "tarefa": 68}}
+SELO = "resolvida · registro pendente"
+
+
+def test_lista_resolvida_pinta_o_painel_sem_publish():
+    out = _rodar_painel(listas=LISTAS_PAINEL)
+    assert out["a"]["26"] == {"resolvida": True, "marca": SELO}
+    assert out["a"]["49"] == {"resolvida": True, "marca": SELO}, "A4: t49_1 conta para a tarefa 49"
+    assert out["a"]["68"] == {"resolvida": False, "marca": None}
+    assert out["a"]["877"] == {"resolvida": False, "marca": None}
+    assert out["a"]["doc"] == {"resolvida": False, "marca": None}, "a Documentacao nao e tarefa do plano"
+    assert out["mediu"] >= 1, "o Painel cresce ao pintar: o hub mede o iframe de novo"
+    assert out["b_na_hora"]["26"]["resolvida"] is True, "quem chega depois do snapshot pinta na hora"
+    assert out["depois"]["26"] == {"resolvida": False, "marca": None}, "voltou a capturada: a marca sai"
+    assert out["depois"]["68"] == {"resolvida": True, "marca": SELO}
+    assert out["escritas_painel"] == 2, "so as 2 escritas do proprio teste: o Painel nunca grava"
+
+
+def test_sem_leitura_de_listas_o_painel_fica_como_o_build():
+    out = _rodar_painel(listas=LISTAS_PAINEL, negar=["listas"])
+    assert all(v == {"resolvida": False, "marca": None} for v in out["a"].values())
+    assert all(v == {"resolvida": False, "marca": None} for v in out["b_na_hora"].values())
+
+
+def test_painel_liga_o_selo_ao_carregar():
+    corpo = extrair_funcao(TEMPLATE_HUB_REAL, "function preparar(quadro){")
+    assert 'quadro.id === "hub-painel-quadro"' in corpo and "painelListas(doc, quadro)" in corpo
+    liga = extrair_funcao(TEMPLATE_HUB_REAL, "function painelListas(doc, quadro){")
+    assert "marcarListasEm(doc," in liga and "medir(quadro)" in liga and ".qd-registro" in liga
+    ini = extrair_funcao(TEMPLATE_HUB_REAL, "function iniciarQuadro(){")
+    assert "marcarListasEm(qd, db," in ini and "function marcarListas(db)" not in ini, "uma regra so, de topo"
+
+
+def test_ligacoes_tarefa_aula_vao_num_json_proprio_e_entram_na_projecao(tmp_path):
+    """Part-2 (F4): a aba Listas leva a aula que prepara a lista. As ligacoes tarefa -> aula vao num
+    `<script id="hub-ligacoes">` PROPRIO (o `#hub-semanas` tem semantica e teste de igualdade proprios,
+    A9) e o hash dele entra na projecao: aula nova ligada a tarefa fora da Teoria tambem republica."""
+    raiz, data_fn = _repo(tmp_path)
+    _construir(raiz, data_fn)
+    pagina = _index(raiz)
+    m = re.search(r'<script type="application/json" id="hub-ligacoes">(.*?)</script>', pagina)
+    assert json.loads(m.group(1)) == {"49": [{"href": "aulas/hernias.html", "titulo": "A Escada das Hernias"}],
+                                      "877": [{"href": "aulas/bayes.html", "titulo": "A Escada de Bayes"}]}
+    assert pagina.count('id="hub-ligacoes"') == 1 and "@hub:ligacoes" not in pagina
+    assert ("ligacoes", "<!-- @hub:ligacoes -->") in hub.LUGARES_HUB
+    hub.confirmar(raiz / "tmp" / "hub", agora=AGORA)
+    assert _decidir(raiz)["acao"] == "nada"
+    quadro = dict(QUADRO, hernias=dict(QUADRO["hernias"], tarefas=[49, 903]))   # 903 ja feita: fora da Teoria
+    d = hub.decidir(_lote(), raiz / "tmp" / "hub", raiz=raiz, notas=[], estado_quadro={}, quadro=quadro,
+                    data_fn=_repo_datas(raiz), plano_linhas=list(PLANO), calendario=CAL, agora=AGORA)
+    assert d["acao"] == "mesmo_lote" and d["motivos"] == ["ligacoes tarefa -> aula mudaram"]
+
+
+
+# ------------------------------------------------ 7. s216 (hub-integracao part-4, P14): assinar fecha e volta
+# Pedido do operador em 05/10/2026: "ao marcar/assinar ... automaticamente aquela pagina fosse fechada e
+# voltassemos para a pagina anterior". O `voltarOrigem` e stub aqui (A11): o que se prende e QUANDO o
+# leitor fecha -- so depois do quadro responder (A10) -- e que falha mantem a pagina aberta.
+
+@pytest.mark.parametrize("cfg,voltou", [
+    ({"assinar": "rd-hepato"}, [["rd-hepato", "Assinado e concluído"]]),
+    ({"assinar": "dossie-uerj", "esperaMs": 700}, [["dossie-uerj", "Assinado em "]]),
+    ({"assinar": "dossie-uerj"}, []),
+    ({"assinar": "rd-hemostasia", "quadro": {"rd-hemostasia": FEITA}, "esperaMs": 700}, [["rd-hemostasia", "Assinado em "]]),
+    ({"assinar": "rd-hepato", "falhaQuadro": True, "esperaMs": 700}, []),
+    ({"assinar": "rd-hepato", "falhaAssina": True, "esperaMs": 700}, []),
+    ({"assinar": "rd-hepato", "semDb": True, "esperaMs": 700}, []),
+], ids=["concluiu-volta-na-hora", "fora-do-quadro-volta-em-600ms", "fora-do-quadro-antes-dos-600ms",
+        "ja-feito-volta-em-600ms", "quadro-falhou-fica-aberta", "assinatura-falhou-fica-aberta",
+        "quadro-sem-banco-fica-aberta"])
+def test_assinar_fecha_e_volta_para_a_aba_de_origem(cfg, voltou):
+    out = _rodar_qd(**cfg)
+    assert [v[0] for v in out["voltou"]] == [v[0] for v in voltou]
+    for v, esperado in zip(out["voltou"], voltou):
+        assert v[1].startswith(esperado[1]), v

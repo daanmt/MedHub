@@ -7,9 +7,10 @@ taxonomia) e invariante POSICAO_DRIFT.
 (plano-ssot-e-cards-v2 Parte 4): `day_plan._resolver_semana_conteudo` e
 `_semana_conteudo` foram REMOVIDOS junto do ramo calendario -- o boot nao le mais
 a posicao nem do `preparacao_estado` nem do texto do HANDOFF/ESTADO. A chave
-`semana_conteudo` sobrevive com UM leitor vivo (`tools/cobertura_conhecimento.py`),
-e por isso o roundtrip do db continua testado aqui. O POSICAO_DRIFT passou a
-comparar o HANDOFF com `plano_tarefas`.
+`semana_conteudo` sobreviveu com UM leitor vivo (`tools/cobertura_conhecimento.py`)
+ate a s216, quando ele passou a ler a semana do plano (E06): hoje a chave nao tem
+leitor, e o roundtrip do db segue testado aqui enquanto `preparacao.py --set-semana`
+a gravar. O POSICAO_DRIFT passou a comparar o HANDOFF com `plano_tarefas`.
 
 Pytest-nativo (coletado direto pela raiz, precedente test_autonomia_hooks);
 standalone: python tools/test_preparacao.py. Todos os writes em db/arquivos

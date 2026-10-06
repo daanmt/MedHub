@@ -13,7 +13,10 @@ O que ele monta, em `--out` (default `tmp/hub/`):
 - a aba Aulas como QUADRO POR SEMANAS (s195): as tarefas pendentes de `plano_tarefas` (read-only,
   `db.plano_listar`) em "Atrasadas" e "Semana N" ate a semana da prova, cada bloco com o peso, as
   questoes previstas e a acao; a aula ligada pelo registro `core/hub_quadro.json` (`tarefas` /
-  `tarefa_id`) entra no bloco da tarefa; aula concluida sai do hub ao mover para `artifacts/arquivo/`;
+  `tarefa_id`) entra no bloco da tarefa. s216 (hub-integracao part-1): a aba se chama TEORIA (id
+  `aulas` intacto) e mostra so a tarefa de aula e a tarefa com aula ligada -- o cronograma inteiro
+  mora no Painel. s216 (part-3): nada concluido sai mais do hub -- a aula feita e a aula sem tarefa
+  pendente moram na BIBLIOTECA da Teoria (o `git mv` para a pasta de arquivo acabou);
 - `manifesto.json` = exatamente os argumentos do `Artifact publish`: `file_path` (a pagina) e
   `files` ({path publicado: fonte | null}). Painel e aulas vao DIRETO das fontes em `artifacts/`
   (sem copia). Arquivo OMITIDO num update e MANTIDO pelo runtime; so `null` remove -- por isso o que
@@ -24,8 +27,9 @@ O que ele monta, em `--out` (default `tmp/hub/`):
   `registro_publicado.json`, que so o `--confirmar` escreve, DEPOIS do publish aceito, a partir do
   `estado_pos_publish.json` do build.
 
-Limites como DADO: 255 entradas por versao (contrato do Artifact), 8 reservadas, cap de 120 aulas
-(mais novas primeiro, pela data de criacao no git).
+Limites como DADO: 255 entradas por versao (contrato do Artifact), 8 reservadas, cap de 200 aulas
+(mais novas primeiro, pela data de criacao no git; era 120 ate a s216, quando a Biblioteca passou a
+guardar tudo o que foi concluido).
 
 O CLI NAO fala com a API de Artifact: ler a versao viva, listar os arquivos publicados, publicar e
 ler o `db` sao atos do agente (rito em `.claude/commands/revisar.md`, "DRENAR no player").
@@ -99,8 +103,10 @@ PADRAO_AULAS = "aula-*.html"
 LIMITE_ENTRADAS = 255
 RESERVADAS = 8
 TETO_ENTRADAS = LIMITE_ENTRADAS - RESERVADAS
-#: Decisao do /ai-eng (22/09): cap como DADO; folga 2x sobre o que cabe ate 01/11.
-CAP_AULAS = 120
+#: Decisao do /ai-eng (22/09): cap como DADO; folga 2x sobre o que cabe ate 01/11. s216 (part-3): 120
+#: -> 200 -- nada concluido sai mais do hub (Biblioteca); 24 aulas hoje, ~5 por semana, e cada aula e
+#: um arquivo lido no publish (E01): 200 cobre ate 01/11 com folga, dentro do teto de 247 entradas.
+CAP_AULAS = 200
 
 #: Regioes do player (fonte unica em core/templates/player.html), cada marcador exatamente 1x.
 REGIOES_PLAYER = (
@@ -116,6 +122,8 @@ LUGARES_HUB = (
     ("aulas", "<!-- @hub:aulas -->"),
     ("painel", "<!-- @hub:painel -->"),
     ("semanas", "<!-- @hub:semanas -->"),
+    # s216 (hub-integracao part-2): tarefa -> aulas ligadas, para a aba Listas levar a aula que prepara
+    ("ligacoes", "<!-- @hub:ligacoes -->"),
 )
 
 _RE_ESQUEMA = re.compile(r"^[A-Za-z][A-Za-z0-9+.-]*:")
@@ -389,21 +397,36 @@ def ligacoes_do_quadro(classificadas, quadro):
 
 def secoes_do_quadro(classificadas, plano_linhas=None, calendario=None, hoje=None, estado=None,
                      quadro=None, semana_final=SEMANA_FINAL_QUADRO):
-    """O quadro por SEMANAS (pedido do operador, s195): (secoes, concluidas, avisos). PURA.
+    """O quadro por SEMANAS (pedido do operador, s195): (secoes, biblioteca, avisos). PURA.
 
     O defeito que encerra: a aba listava aulas por tipo, sem dizer de que tarefa eram nem quantas
     questoes esperavam -- ele nao via o que vinha depois. A unidade passa a ser a TAREFA pendente
     do plano, em "Atrasadas" e "Semana N" ate `semana_final` (a da prova), cada bloco com o peso,
     as questoes previstas e a acao (lista, aula, ou 'aula a preparar'). Aula ligada
-    (`ligacoes_do_quadro`) vai DENTRO do bloco; sem tarefa pendente, em "Outras aulas" (aviso se
-    era ligada a tarefa ja concluida: candidata a arquivo). `estado` (db) manda o item feito para
-    `concluidas`, riscado. Cada item guarda `secao` e `ordem` para a pagina devolve-lo ao lugar."""
+    (`ligacoes_do_quadro`) vai DENTRO do bloco. `estado` (db) manda o item feito para a
+    Biblioteca, riscado. Cada item guarda `secao` e `ordem` para a pagina devolve-lo ao lugar.
+
+    s216 (hub-integracao part-1, pedido do operador em 05/10): a aba vira TEORIA -- o cronograma
+    inteiro (92 tarefas) aparecia aqui e no Painel; so 12 eram de aula. Ficam a tarefa de aula
+    (`classe_da_tarefa == "aula"`) e a tarefa de qualquer classe com aula ligada (prepara ou
+    cumpre); a lista sem aula mora so no Painel. A analise (`tipo: analise`) sai de toda secao:
+    mora na Documentacao do Painel. O filtro e de EXIBICAO: `semana_atual` ve TODOS os pendentes
+    (uma regua so de semana, armadilha A2); semana futura sem nada a mostrar nao vira secao.
+
+    s216 (part-3, decisao do operador em 05/10: "so daqui em diante"): "Outras aulas" e
+    "Concluidas" viram UMA secao, a BIBLIOTECA -- os itens feitos (riscados) e as aulas sem tarefa
+    pendente, por data de criacao (mais nova primeiro). Nada vai mais para a pasta de arquivo: a aula
+    concluida fica a um toque. A aula da Biblioteca tem `secao = "biblioteca"` (sem secao de origem:
+    desmarcada, fica la). Devolve (secoes, biblioteca, avisos)."""
     feitos = {s for s, v in (estado or {}).items() if v.get("feito")}
     hoje = hoje or date.today()
     pendentes = [l for l in plano_linhas or [] if l.get("status") == "pendente"
                  and l.get("semana_plano") is not None and int(l["semana_plano"]) <= semana_final]
     atual = semana_atual(calendario, hoje, pendentes)
     por_tarefa = ligacoes_do_quadro(classificadas, quadro)
+
+    def na_teoria(l):
+        return classe_da_tarefa(l) == "aula" or int(l["id"]) in por_tarefa
     usadas, avisos, secoes, concluidas = set(), [], [], []
     contador = [0]
 
@@ -429,49 +452,48 @@ def secoes_do_quadro(classificadas, plano_linhas=None, calendario=None, hoje=Non
                 "aulas": [(a, tit) for a, tit, _c in aulas],
                 "slug": cumpre[0].slug if cumpre else None,
                 "tipo_aula": TIPO_PADRAO, "titulo": cumpre[1] if cumpre else None,
+                "data": cumpre[0].data if cumpre else None,
                 "secao": secao, "ordem": ordem()}
 
     def secao(chave, titulo, linhas, rotulo="tarefa", fixa=True):
         itens = [item_tarefa(l, chave) for l in linhas]
         vivos = [i for i in itens if not (i["slug"] and i["slug"] in feitos)]
-        concluidas.extend(i for i in itens if i["slug"] and i["slug"] in feitos)
+        concluidas.extend(dict(i, feito=True) for i in itens if i["slug"] and i["slug"] in feitos)
         secoes.append({"chave": chave, "titulo": titulo, "rotulo": rotulo, "fixa": fixa,
                        "q": sum(i["q"] for i in itens), "itens": vivos})
 
     if atual is not None:
-        atrasadas = [l for l in pendentes if int(l["semana_plano"]) < atual]
+        atrasadas = [l for l in pendentes if int(l["semana_plano"]) < atual and na_teoria(l)]
         if atrasadas:
             secao("atrasadas", "Atrasadas", atrasadas)
         ultima = max([int(l["semana_plano"]) for l in pendentes] + [atual])
         for s in range(atual, ultima + 1):
-            linhas = [l for l in pendentes if int(l["semana_plano"]) == s]
+            linhas = [l for l in pendentes if int(l["semana_plano"]) == s and na_teoria(l)]
             if not linhas and s != atual:
                 continue
             cal = (calendario or {}).get(s)
-            titulo = "Semana %d" % s + (" · %s–%s" % (cal[0].strftime("%d/%m"),
-                                                       cal[1].strftime("%d/%m")) if cal else "")
+            # s216: " a " entre as datas, como no Painel (o travessao e proibido na pagina)
+            titulo = "Semana %d" % s + (" · %s a %s" % (cal[0].strftime("%d/%m"),
+                                                         cal[1].strftime("%d/%m")) if cal else "")
             secao(str(s), titulo, linhas)
 
     # s210 (pedido do operador, 01/10): a revisao direcionada avulsa (tipo `revisao`, sem tarefa
     # pendente) ganha bloco PROPRIO no topo da aba -- em "Outras aulas" ela sumia no fim da lista.
-    outras, revisoes = [], []
+    # s216 (part-3): a aula avulsa (sem tarefa pendente, inclusive a de tarefa ja concluida) mora na
+    # Biblioteca; o aviso "candidata a arquivo" saiu junto com o `git mv`.
+    avulsas, revisoes = [], []
     for a, tipo, titulo, tid in classificadas:
-        if a.slug in usadas:
+        if a.slug in usadas or tipo == "analise":   # s216: a analise mora no Painel (Documentacao)
             continue
-        ligada = any(a.slug == x.slug for lst in por_tarefa.values() for x, _t, _c in lst)
-        if ligada and plano_linhas:      # so com o plano lido: sem plano, o aviso seria ruido
-            avisos.append("aula %r ligada so a tarefa nao pendente: candidata a arquivo (sai do "
-                          "hub ao mover de artifacts/)" % a.slug)
-        chave = "revisoes" if tipo == "revisao" else "outras"
+        chave = "revisoes" if tipo == "revisao" else "biblioteca"
         item = {"tipo": "aula", "slug": a.slug, "aula": a, "titulo": titulo, "tipo_aula": tipo,
-                "data": a.data, "secao": chave, "ordem": ordem()}
-        (concluidas if a.slug in feitos else (revisoes if chave == "revisoes" else outras)).append(item)
-    if any(i["tipo_aula"] == "revisao" for i in revisoes + concluidas):
+                "data": a.data, "secao": chave, "ordem": ordem(), "feito": a.slug in feitos}
+        (avulsas if (a.slug in feitos or chave == "biblioteca") else revisoes).append(item)
+    biblioteca = sorted(concluidas + avulsas, key=lambda i: i.get("data") or "", reverse=True)
+    if any(i["tipo_aula"] == "revisao" for i in revisoes + biblioteca):
         secoes.insert(0, {"chave": "revisoes", "titulo": "Revisões direcionadas", "rotulo": "aula",
                           "fixa": False, "q": None, "itens": revisoes})
-    secoes.append({"chave": "outras", "titulo": "Outras aulas", "rotulo": "aula", "fixa": False,
-                   "q": None, "itens": outras})
-    return secoes, concluidas, avisos
+    return secoes, biblioteca, avisos
 
 
 def _html_item(item, feito=False):
@@ -482,6 +504,8 @@ def _html_item(item, feito=False):
     if item.get("atrasada"):
         classes.append("qd-atrasada")
     attrs = ' data-secao="%s" data-ordem="%d"' % (_e(item["secao"]), item["ordem"])
+    if item.get("data"):   # s216 (part-3): a Biblioteca ordena por data de criacao, tambem ao vivo
+        attrs += ' data-data="%s"' % _e(item["data"])
     if item["tipo"] == "tarefa":
         attrs += ' data-tarefa="%d" data-classe="%s"' % (item["id"], _e(item["classe"]))
     botao = ""
@@ -541,11 +565,12 @@ def _html_item(item, feito=False):
             % (" ".join(classes), attrs, botao, _e(tema), "".join(meta), "".join(acoes)))
 
 
-def html_quadro(secoes, concluidas=()):
-    """A aba Aulas: secoes por semana (empilhadas), cada tarefa um bloco; "Outras aulas" so
-    aparece com item; "Concluidas" recolhida guarda o que esta feito no `db`. O estado do build
-    e o do `db` no momento do tique; a pagina reconcilia ao vivo quando o `db` abre."""
-    if not any(s["itens"] for s in secoes) and not concluidas:
+def html_quadro(secoes, biblioteca=()):
+    """A aba Teoria: secoes por semana (empilhadas), cada tarefa um bloco; a BIBLIOTECA (s216,
+    part-3; era "Outras aulas" + "Concluidas"), recolhida, guarda o que esta feito no `db` (riscado)
+    e as aulas sem tarefa pendente. O estado do build e o do `db` no momento do tique; a pagina
+    reconcilia ao vivo quando o `db` abre."""
+    if not any(s["itens"] for s in secoes) and not biblioteca:
         return '<p class="hub-vazio">Nada no quadro ainda: nem tarefa pendente, nem aula.</p>'
     partes = []
     for s in secoes:
@@ -561,15 +586,15 @@ def html_quadro(secoes, concluidas=()):
             % (_e(s["chave"]), _e(s["rotulo"]), _e(s["titulo"]), ' data-fixa="1"' if s["fixa"] else "",
                "" if (s["itens"] or s["fixa"]) else " hidden", _e(s["titulo"]), contagem,
                "".join(_html_item(i) for i in s["itens"]), " hidden" if s["itens"] else ""))
-    feitas = "".join(_html_item(i, True) for i in concluidas)
+    feitas = "".join(_html_item(i, i.get("feito", True)) for i in biblioteca)
     return ('<div class="qd" id="hub-quadro">\n'
             '<p class="qd-aviso" id="hub-quadro-aviso" hidden>Marcar como feita não funciona '
             'nesta visualização.</p>\n'
             '<div class="qd-semanas">%s</div>\n'
-            '<details class="qd-feitas" id="hub-quadro-feitas"><summary>Concluídas '
+            '<details class="qd-feitas" id="hub-quadro-feitas"><summary>Biblioteca '
             '<span class="qd-n" id="hub-quadro-nfeitas">%d</span></summary>'
             '<ul class="qd-lista">%s</ul></details>\n</div>'
-            % ("".join(partes), len(concluidas), feitas))
+            % ("".join(partes), len(biblioteca), feitas))
 
 
 def html_quadro_de(aulas_sel, quadro=None, estado=None, plano_linhas=None, calendario=None,
@@ -577,13 +602,13 @@ def html_quadro_de(aulas_sel, quadro=None, estado=None, plano_linhas=None, calen
     """(html do quadro, avisos) a partir das aulas selecionadas -- o MESMO caminho para a pagina
     (`montar_index`) e para a projecao (`construir`/`decidir`): um so quadro, nunca dois."""
     classificadas, avisos = classificar(aulas_sel, quadro or {})
-    secoes, concluidas, avisos_secoes = secoes_do_quadro(classificadas, plano_linhas, calendario,
+    secoes, biblioteca, avisos_secoes = secoes_do_quadro(classificadas, plano_linhas, calendario,
                                                          hoje, estado, quadro)
-    return html_quadro(secoes, concluidas), avisos + avisos_secoes
+    return html_quadro(secoes, biblioteca), avisos + avisos_secoes
 
 
 def html_aulas(aulas_sel, quadro=None, estado=None):
-    """Compatibilidade: o quadro sem plano (tudo em "Outras aulas") -- chamadores antigos e testes."""
+    """Compatibilidade: o quadro sem plano (tudo na Biblioteca) -- chamadores antigos e testes."""
     return html_quadro_de(aulas_sel, quadro, estado)[0]
 
 
@@ -602,6 +627,25 @@ def html_semanas(plano_linhas=None, calendario=None, hoje=None, semana_final=SEM
                        for s, (ini, fim) in sorted((calendario or {}).items())}}
     return ('<script type="application/json" id="hub-semanas">%s</script>'
             % json.dumps(dados, ensure_ascii=False).replace("<", "\\u003c"))
+
+
+def dados_ligacoes(aulas_sel, quadro=None):
+    """{str(tarefa_id): [{"href", "titulo"}]} das aulas ligadas a cada tarefa (prepara ou cumpre),
+    pela MESMA regra do quadro (`ligacoes_do_quadro`). PURA. So aula selecionada (o href esta no
+    manifesto). s216 (hub-integracao part-2)."""
+    classificadas, _avisos = classificar(aulas_sel, quadro or {})
+    return {str(tid): [{"href": a.publicado, "titulo": tit} for a, tit, _c in lst]
+            for tid, lst in sorted(ligacoes_do_quadro(classificadas, quadro).items())}
+
+
+def html_ligacoes(aulas_sel, quadro=None):
+    """As ligacoes tarefa -> aula como JSON num `<script id="hub-ligacoes">` PROPRIO (s216, part-2).
+
+    Pedido do operador (05/10): a lista da aba Listas leva a aula que a prepara -- antes so a Teoria
+    sabia. JSON proprio, nao o `#hub-semanas`: aquele e a regua de semana, com teste de igualdade
+    e semantica propria (armadilha A9). O hash entra na projecao: aula nova ligada republica."""
+    return ('<script type="application/json" id="hub-ligacoes">%s</script>'
+            % json.dumps(dados_ligacoes(aulas_sel, quadro), ensure_ascii=False).replace("<", "\\u003c"))
 
 
 def html_painel(tem_painel):
@@ -642,6 +686,7 @@ def montar_index(template_hub, player_html, lote, aulas_sel, tem_painel, agora, 
                                 _hoje_de(agora))[0],
         "painel": html_painel(tem_painel),
         "semanas": html_semanas(plano_linhas, calendario, _hoje_de(agora)),
+        "ligacoes": html_ligacoes(aulas_sel, quadro),
     }
     pagina = template_hub
     for nome, marca in LUGARES_HUB:
@@ -723,10 +768,12 @@ def hash_painel(texto):
     return _sha(_RE_GERADO.sub("", texto or ""))
 
 
-def projecao(painel_texto, quadro_html, lote):
-    """O que o operador VE e que muda sem lote novo: o painel, o quadro e qual lote esta no ar."""
+def projecao(painel_texto, quadro_html, lote, ligacoes_html=None):
+    """O que o operador VE e que muda sem lote novo: o painel, o quadro, as ligacoes tarefa -> aula
+    da aba Listas (s216, part-2) e qual lote esta no ar."""
     return {"painel": hash_painel(painel_texto) if painel_texto is not None else None,
             "quadro": _sha(quadro_html),
+            "ligacoes": _sha(ligacoes_html) if ligacoes_html is not None else None,
             "sessao": (lote or {}).get("sessao")}
 
 
@@ -789,6 +836,8 @@ def precisa_publicar(registro_projecao, atual, lote, com_nota):
             motivos.append("painel mudou")
         if reg.get("quadro") != atual.get("quadro"):
             motivos.append("quadro de aulas mudou")
+        if reg.get("ligacoes") != atual.get("ligacoes"):
+            motivos.append("ligacoes tarefa -> aula mudaram")
     if drenado:
         acao = "nova_fila"
         motivos.insert(0, "lote drenado (%d/%d)" % (feitos, len(cards)) if cards
@@ -1028,7 +1077,7 @@ def construir(lote, raiz=RAIZ, out=None, painel=None, publicado=(), agora=None, 
     pagina = montar_index(th, tp, lote, selecionadas, tem_painel, agora, quadro, estado_quadro,
                           plano_linhas, calendario)
     proj = projecao(painel_path.read_text(encoding="utf-8") if tem_painel else None,
-                    quadro_html, lote)
+                    quadro_html, lote, html_ligacoes(selecionadas, quadro))
 
     out.mkdir(parents=True, exist_ok=True)
     (out / PAGINA).write_text(pagina, encoding="utf-8")
@@ -1070,10 +1119,11 @@ def decidir(lote, out, raiz=RAIZ, painel=None, notas=None, estado_quadro=None, q
     if calendario is None:
         calendario, _ = _ler_calendario()
     aulas, _ = coletar_aulas(raiz, data_fn)
-    quadro_html, _ = html_quadro_de(selecionar_aulas(aulas), quadro, estado, plano_linhas,
+    selecionadas = selecionar_aulas(aulas)
+    quadro_html, _ = html_quadro_de(selecionadas, quadro, estado, plano_linhas,
                                     calendario, _hoje_de(agora or db.agora()))
     atual = projecao(painel_path.read_text(encoding="utf-8") if painel_path.is_file() else None,
-                     quadro_html, lote)
+                     quadro_html, lote, html_ligacoes(selecionadas, quadro))
     decisao = precisa_publicar(ler_projecao_registrada(out), atual, lote, ids_com_nota(notas))
     decisao["concluir"] = tarefas_a_concluir(estado, quadro, plano_linhas)
     return decisao

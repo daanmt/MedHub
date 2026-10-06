@@ -68,7 +68,7 @@ O laço que já fecha: **questão -> erro -> cadeia de elos -> card -> revisão 
 
 | Limite | Evidência |
 |---|---|
-| **A tela é um artifact.** Sem login (conta compartilhada: todo visitante é dono), teto de 5.000 documentos, uma página única republicada inteira. | Perda de 64 de 90 notas em 24/09 quando o `db` da página não subiu; poda manual de coleções a cada fechamento. |
+| **A tela é um artifact.** Sem login (conta compartilhada: todo visitante é dono), teto de 25.000 documentos (s214; ⚰️ *dizia 5.000 até a s216*), uma página única republicada inteira. | Perda de 64 de 90 notas em 24/09 quando o `db` da página não subiu; poda manual de coleções a cada fechamento. |
 | **O backend é uma sessão aberta num PC.** Sem PC acordado não há gravação de nota, fila nova nem painel atualizado. | `/hub-backend` roda em `/loop`; latência = intervalo do loop. |
 | **A página não pode acionar o agente.** | O botão "pedir mais cards" foi barrado em 23/09 (agente sem supervisão acionado por página). |
 | **O conhecimento vive em cinco lugares:** `ipub.db`, o `db` do hub, `resumos/*.md`, a memória do harness e `history/`. | A análise de um erro mora no `db` do hub; a cópia no SQLite envelhece (erro 1092). |

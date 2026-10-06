@@ -137,13 +137,15 @@ def test_todo_href_relativo_do_index_esta_no_manifesto(tmp_path):
 
 
 def test_teto_de_entradas_com_cap(tmp_path):
+    # s216 (part-3): o cap sobe de 120 para 200 -- nada concluido sai mais do hub (Biblioteca); 24 aulas
+    # hoje, ~5 por semana: 200 cobre ate 01/11 com folga e cabe no teto de 247 entradas
     aulas = [("a%03d" % i, "Aula %d" % i, "2026-%02d-%02d" % (1 + i // 28, 1 + i % 28))
-             for i in range(130)]
+             for i in range(210)]
     raiz, data_fn = _repo(tmp_path, aulas)
     manifesto, problemas, avisos = _construir(raiz, data_fn)
     vivos = [p for p, f in manifesto["files"].items() if f is not None]
     assert len(vivos) + 1 <= hub.LIMITE_ENTRADAS - hub.RESERVADAS
-    assert manifesto["aulas"] == hub.CAP_AULAS == 120
+    assert manifesto["aulas"] == hub.CAP_AULAS == 200
     assert any("fora do cap" in a for a in avisos)
     assert problemas == []
 
@@ -180,15 +182,15 @@ def test_perturbacao_aula_removida_vira_null(tmp_path):
     assert problemas == []
 
 
-def test_cap_130_aulas_as_que_caem_e_estavam_publicadas_viram_null(tmp_path):
+def test_cap_210_aulas_as_que_caem_e_estavam_publicadas_viram_null(tmp_path):
     aulas = [("a%03d" % i, "Aula %d" % i, "2026-%02d-%02d" % (1 + i // 28, 1 + i % 28))
-             for i in range(130)]
+             for i in range(210)]
     raiz, data_fn = _repo(tmp_path, aulas)
-    publicado = ["aulas/a%03d.html" % i for i in range(130)]
+    publicado = ["aulas/a%03d.html" % i for i in range(210)]
     manifesto, _, _ = _construir(raiz, data_fn, publicado=publicado)
     nulos = sorted(p for p, f in manifesto["files"].items() if f is None)
     assert nulos == ["aulas/a%03d.html" % i for i in range(10)], "as 10 mais antigas saem"
-    assert manifesto["files"]["aulas/a129.html"] == "artifacts/aula-a129.html"
+    assert manifesto["files"]["aulas/a209.html"] == "artifacts/aula-a209.html"
 
 
 def test_index_nunca_entra_em_files_nem_vira_null():
@@ -421,7 +423,8 @@ def test_celular_sem_sticky_sem_nowrap_e_um_wrap_so():
 def test_abas_curtas_e_com_alvo_de_toque():
     pagina = _pagina_real()
     rotulos = re.findall(r'class="hub-aba"[^>]*>([^<]+)</button>', pagina)
-    assert rotulos == ["Painel", "Aulas", "Cards", "Listas"]  # s200: "Questões" quebrava a barra no celular
+    # s200: "Questões" quebrava a barra no celular; s216 (part-1): "Aulas" vira "Teoria"
+    assert rotulos == ["Painel", "Teoria", "Listas", "Cards"]
     assert all(len(r) <= 15 for r in rotulos)
     regra_aba = re.search(r"\.hub-aba\{([^}]*)\}", pagina).group(1)
     assert "min-height:44px" in regra_aba
@@ -429,18 +432,26 @@ def test_abas_curtas_e_com_alvo_de_toque():
     assert "min-width:0" in regra_titulo
 
 
-def test_abas_na_ordem_painel_aulas_cards_e_painel_e_o_padrao():
-    """Feedback do operador (s194): Painel primeiro, Aulas, Cards; sem hash nem aba lembrada, abre
-    no Painel. Hash e aba lembrada continuam vencendo o padrao."""
+def test_abas_na_ordem_painel_teoria_listas_cards_e_painel_e_o_padrao():
+    """Feedback do operador (s194): Painel primeiro; sem hash nem aba lembrada, abre no Painel. Hash
+    e aba lembrada continuam vencendo o padrao. s216 (part-1, decisao dele em 05/10: "questoes geram
+    os cards"): Painel | Teoria | Listas | Cards -- so a ordem dos BOTOES muda; ids, `data-aba`,
+    hashes e o `medhub.aba` do aparelho ficam (a aba Teoria segue com id `aulas`)."""
     pagina = _pagina_real()
     abas = re.findall(r'<button type="button" class="hub-aba"[^>]*data-aba="(\w+)"', pagina)
     # s197: 4a aba "Questoes" (decisao do operador em 26/09/2026: o bloco de questoes mora no hub)
-    assert abas == ["painel", "aulas", "cards", "questoes"]
+    assert abas == ["painel", "aulas", "questoes", "cards"]
+    ids = re.findall(r'<button type="button" class="hub-aba"[^>]*id="(hub-tab-\w+)"', pagina)
+    assert ids == ["hub-tab-painel", "hub-tab-aulas", "hub-tab-questoes", "hub-tab-cards"]
     primeiro = re.search(r'<button type="button" class="hub-aba"[^>]*>', pagina).group(0)
     assert 'aria-selected="true"' in primeiro and 'data-aba="painel"' in primeiro
     botoes = re.findall(r'<button type="button" class="hub-aba"[^>]*>', pagina)
     assert sum('aria-selected="true"' in bt for bt in botoes) == 1
-    assert 'var ABAS = ["painel", "aulas", "cards", "questoes"];' in pagina
+    # ABAS so valida (indexOf): o conjunto e o mesmo; a ordem que o operador ve e a dos botoes
+    abas_js = re.search(r"var ABAS = \[([^\]]*)\];", pagina).group(1)
+    assert sorted(re.findall(r'"(\w+)"', abas_js)) == sorted(abas)
+    assert "botoes[(i + passo + botoes.length) % botoes.length]" in pagina, "setas seguem a ordem do DOM"
+    assert '<h2 class="hub-titulo">Teoria</h2>' in pagina and "&lsaquo; Teoria</button>" in pagina
     assert 'ir(doHash() || lembrada() || "painel", false);' in pagina
     assert ':root:not([data-aba]) #aba-painel' in pagina, "sem JS, a aba visivel e o Painel"
 

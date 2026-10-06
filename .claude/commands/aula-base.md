@@ -79,7 +79,8 @@ repetir o desenho.
 A aula é gravada em `artifacts/aula-<slug>.html` -- o HTML da página, sem
 `<!DOCTYPE>`/`<html>`/`<head>`/`<body>` próprios (o publish embrulha), com `<title>` legível: é
 o nome que aparece na lista. Ela sobe como **arquivo do MedHub HUB**: `tools/hub.py --build` a
-inclui na aba Aulas (`aulas/<slug>.html`, mais novas primeiro, cap de 120) e o agente
+inclui na aba Teoria (`aulas/<slug>.html`, mais novas primeiro, cap de 200; concluída, fica na
+Biblioteca da Teoria -- nada vai para `artifacts/arquivo/`, s216) e o agente
 republica o hub na URL do HANDOFF (rito e assinatura em `/revisar` e `/engenharia-cli`). A aba
 abre a aula DENTRO da página, sem sair do drill.  <!-- CHECK: test_hub -->
 

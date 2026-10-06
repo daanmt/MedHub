@@ -357,3 +357,83 @@ def test_autopsia_tem_as_22_perguntas_com_as_que_travam_erro_primeiro():
     assert abertas.count('data-tipo="pergunta"') == 3
     assert grupo.count('data-tipo="pergunta"') == 19 and "<span>19 perguntas opcionais</span>" in grupo.split("</summary>", 1)[0]
     assert 'data-pend-contador="autopsia-uerj-2021"' in grupo.split("</summary>", 1)[0]
+
+
+
+# ------------------------------------------------ s216 (hub-integracao part-4): o Painel ve a assinatura
+# Documento assinado no leitor aparece assinado no Painel: pelo `quadro/<slug>` quando ele existe (a aula do
+# quadro) e por `analises/pendencias/itens/doc_<slug>` quando nao (o documento fora do quadro, como o
+# Dossie). So o dono le `analises/`: para quem nao le, falha calada e o Painel fica como o build (A13).
+
+def _painel_docs_html():
+    from tools import painel
+
+    def t(id_, tema, aulas):
+        return {"id": id_, "semana": 4, "atrasada": False, "tema": tema, "q": 0, "classe": "aula",
+                "url_lista": None, "area": None, "rotulo": "CM", "aula": None, "aulas": aulas, "no_hub": False}
+    return ('<ol class="tarefas">%s</ol>' % "".join(painel._html_tarefa(x) for x in (
+        t(768, "Aorta", [{"slug": "aorta", "titulo": "A aorta"}]),
+        t(367, "Tireoide", [{"slug": "tireoide", "titulo": "A tireoide"}]))) +
+        painel._html_docs([{"slug": "dossie-uerj", "titulo": "Dossiê UERJ"},
+                           {"slug": "autopsia-uerj-2021", "titulo": "Autópsia UERJ 2021"},
+                           {"slug": "outro-doc", "titulo": "Outro"}]))
+
+
+ACAO_ASSINADOS = r"""
+function espera(){ return new Promise(function(ok){ setTimeout(ok, 0); }); }
+var MEDIU = 0;
+painelAssinados($("pa"), DB, function(){ MEDIU++; });
+espera().then(espera).then(function(){ var o = {};
+  $("pa").querySelectorAll("li.tarefa").forEach(function(li){ var a = li.querySelector("a[data-hub-aula]"), m = li.querySelector(".t-assinado");
+    o[a.getAttribute("data-hub-aula")] = [li.classList.contains("qd-assinado"), m ? m.textContent : null]; });
+  console.log(JSON.stringify({li: o, mediu: MEDIU, escritas: ESCRITAS})); });
+"""
+
+
+def _rodar_assinados(**cfg):
+    from tools.test_hub_quadro import BANCO_QD, DOM_QD, _arvore
+    if not NODE:
+        pytest.skip("node ausente no PATH: assinatura no Painel nao verificada (skip declarado)")
+    funcs = "\n".join([re.search(r"\n  (var PEND_COLECAO = [^\n]+;)", TEMPLATE).group(1),
+                       extrair_funcao(TEMPLATE, "function painelMarcarAssinado(li, sim){"),
+                       extrair_funcao(TEMPLATE, "function painelAssinados(doc, db, depois){")])
+    corpo = (DOM_QD.replace("__ARVORE__", json.dumps(_arvore('<div id="pa">%s</div>' % _painel_docs_html()),
+                                                    ensure_ascii=False)) +
+             BANCO_QD.replace("__CFG__", json.dumps(cfg, ensure_ascii=False)) + funcs + "\n" + ACAO_ASSINADOS)
+    with tempfile.NamedTemporaryFile("w", suffix=".js", delete=False, encoding="utf-8") as f:
+        f.write(corpo)
+        caminho = f.name
+    try:
+        out = subprocess.run([NODE, caminho], capture_output=True, text=True, encoding="utf-8", timeout=60,
+                             env=dict(os.environ, TZ="America/Sao_Paulo"))
+    finally:
+        Path(caminho).unlink(missing_ok=True)
+    assert out.returncode == 0, out.stderr
+    return json.loads(out.stdout.strip().splitlines()[-1])
+
+
+PEND_ASSINADOS = {"doc_dossie-uerj": {"tipo": "documento", "status": "assinado"},
+                  "doc_autopsia-uerj-2021": {"tipo": "documento", "status": "absorvida"},
+                  "doc_tireoide": {"tipo": "documento", "status": "assinado"},
+                  "doc_aorta": {"tipo": "documento", "status": "assinado"}}
+
+
+def test_documento_assinado_pinta_o_painel():
+    out = _rodar_assinados(quadro={"aorta": {"feito": False}}, pend=PEND_ASSINADOS)
+    li = out["li"]
+    assert li["dossie-uerj"] == [True, " · assinado"], "fora do quadro: vale a assinatura"
+    assert li["autopsia-uerj-2021"][0] is True, "absorvida pelo agente tambem foi assinada"
+    assert li["tireoide"][0] is True, "sem doc no quadro: vale a assinatura"
+    assert li["aorta"] == [False, None], "com doc no quadro, vale o quadro (desmarcado = nao)"
+    assert li["outro-doc"] == [False, None]
+    assert out["mediu"] >= 1 and out["escritas"] == [], "o Painel so le"
+    feito = _rodar_assinados(quadro={"aorta": {"feito": True}}, pend={})
+    assert feito["li"]["aorta"][0] is True and feito["li"]["dossie-uerj"][0] is False
+
+
+def test_sem_leitura_de_analises_o_painel_fica_como_o_build():
+    out = _rodar_assinados(quadro={"aorta": {"feito": True}}, pend=PEND_ASSINADOS,
+                           negar=["analises/pendencias/itens"])
+    assert out["li"]["dossie-uerj"] == [False, None] and out["li"]["aorta"][0] is True
+    corpo = extrair_funcao(TEMPLATE, "function painelListas(doc, quadro){")
+    assert "painelAssinados(doc, db" in corpo

@@ -7,7 +7,7 @@ que outra superficie tambem usa -- o painel nao tem regra propria de semana, de 
 
     semana e listas   -> `plano.panorama` (o MESMO do `plano.py --panorama` do boot)
     meta do dia       -> `performance.volume_vs_marco` (a MESMA linha Meta do boot; s203)
-    saldo de cards    -> `day_plan._fsrs_counts` + `_teto_efetivo` + `realizado_do_dia`
+    saldo de cards    -> `day_plan._fsrs_counts` + `_teto_efetivo` + `consumo_logico` (P09, s216)
     agenda de 7 dias  -> `db.agenda_revisoes` (o MESMO da tela de fim da aba Cards)
     ritmo             -> `db.get_ritmo_real` + `performance.volume_vs_marco` + `day_plan._cronograma_hoje`
                          (a Fase 1 entra como COBERTURA da meta, nunca como 2o ritmo -- s203)
@@ -49,6 +49,9 @@ TITULO = "Painel MedHub"
 SAIDA_HTML = ROOT / "artifacts" / "painel.html"
 QUADRO = ROOT / "core" / "hub_quadro.json"
 ARTIFATOS = ROOT / "artifacts"
+#: s216 (hub-integracao part-6): o marcador do `--record-lote` -- QUAL lote ja esta no numero publicado
+#: (o "Hoje ao vivo" da pagina so soma as notas de lote que ainda nao foi gravado). Ausente = "".
+MARCADOR_GRAVACAO = ROOT / "tmp" / "hub" / "ultima_gravacao_hub.json"
 
 #: Ordem dos blocos na pagina. O `id` e o `data-bloco` do HTML e a chave do JSON. Os 4 que a
 #: pagina SEMPRE desenha.
@@ -161,6 +164,15 @@ def _bloco_semana(linhas, hoje):
     }
 
 
+def _sessao_gravada():
+    """A `sessao` do ultimo lote gravado (marcador do tique); ilegivel ou ausente = "" (a pagina
+    soma o lote no ar inteiro: no pior caso, a mais por um tique -- limite aceito na spec)."""
+    try:
+        return str(json.loads(Path(MARCADOR_GRAVACAO).read_text(encoding="utf-8")).get("sessao") or "")
+    except (OSError, ValueError, AttributeError):
+        return ""
+
+
 def _bloco_dia(linhas, hoje):
     """Hoje: questoes contra o ritmo da META, saldo de cards e a agenda de 7 dias -- leitores do
     `performance`, do `day_plan` e o `db.agenda_revisoes` do export do player.
@@ -178,7 +190,9 @@ def _bloco_dia(linhas, hoje):
         vm = performance.volume_vs_marco(con, hoje)
         cont = day_plan._fsrs_counts(con)
         try:
-            consumo = int(day_plan.realizado_do_dia(con, hoje.isoformat())["cards"])
+            # s216 (part-5, regra P09): o lote conta no dia da 1a nota -- o MESMO consumo do teto do
+            # export de cards (`consumo_do_dia`); o cabecalho "Hoje, <data>" segue o relogio
+            consumo = int(day_plan.consumo_logico(con, hoje))
         except Exception:  # noqa: BLE001 -- sem contador: sem saldo, declarado na tela
             consumo = None
     finally:
@@ -203,6 +217,7 @@ def _bloco_dia(linhas, hoje):
             "retencao_7d": db.get_retencao_revlog(dias=7),
         },
         "agenda": db.agenda_revisoes(dias=7),
+        "sessao_gravada": _sessao_gravada(),
     }
 
 
@@ -334,10 +349,12 @@ def _bloco_docs():
 
 
 def _html_docs(docs):
+    """Sem `data-tarefa` (nao e tarefa do plano); o link leva o titulo (`data-titulo`) que o hub
+    mostra no leitor (s216)."""
     itens = "".join(
         '<li class="tarefa"><p class="t-tema">%s</p><p class="t-acao">'
-        '<a href="aulas/%s.html" data-hub-aula="%s">abrir documento</a></p></li>'
-        % (_e(d["titulo"]), _e(d["slug"]), _e(d["slug"])) for d in docs)
+        '<a href="aulas/%s.html" data-hub-aula="%s" data-titulo="%s">abrir documento</a></p></li>'
+        % (_e(d["titulo"]), _e(d["slug"]), _e(d["slug"]), _e(d["titulo"])) for d in docs)
     return '<h2>Documentação</h2>\n<ol class="tarefas">%s</ol>' % itens
 
 
@@ -368,8 +385,9 @@ def _acao(t):
     aulas = t.get("aulas") or ([{"slug": t["aula"], "titulo": None}] if t.get("aula") else [])
     varias = len(aulas) > 1
     for a in aulas:
-        partes.append('<a href="aulas/%s.html" data-hub-aula="%s">%s</a>'
-                      % (_e(a["slug"]), _e(a["slug"]),
+        # s216 (part-2): o titulo vai no link -- o hub abre o leitor direto, sem achar o link na Teoria
+        partes.append('<a href="aulas/%s.html" data-hub-aula="%s" data-titulo="%s">%s</a>'
+                      % (_e(a["slug"]), _e(a["slug"]), _e(a.get("titulo") or a["slug"]),
                          _e(a.get("titulo") or a["slug"]) if varias else "abrir aula"))
     if c == "aula" and not aulas:
         partes.append('<span class="tenue">aula a preparar</span>')
@@ -380,19 +398,22 @@ def _html_dia(d, data_iso):
     hoje = date.fromisoformat(data_iso)
     q, c, ag = d["questoes"], d["cards"], d["agenda"]
 
+    # s216 (part-6, P08 v0): o numero publicado leva a ancora do "Hoje ao vivo" -- a pagina soma "+K"
+    # AO LADO (o que ela gravou depois do publish), nunca o substitui
+    b_q = '<b data-vivo="questoes" data-base="%s">%s</b>' % (_e(q["feitas_hoje"]), _n(q["feitas_hoje"]))
     if q["alvo_dia"] is not None:
         alvo = math.ceil(q["alvo_dia"])
         nota_q = ("para %s em %s: faltam %s em %s dias."
                   % (_n(q["meta"]), _dm(q["data_meta"]), _n(q["faltam"]), _n(q["dias"])))
-        num_q = '<b>%s</b> de ~%s' % (_n(q["feitas_hoje"]), _n(alvo))
+        num_q = '%s de ~%s' % (b_q, _n(alvo))
         barra_q = _pct(q["feitas_hoje"], alvo)
     elif q["faltam"] == 0:
         nota_q = "meta de %s atingida." % _n(q["meta"])
-        num_q = '<b>%s</b> feitas' % _n(q["feitas_hoje"])
+        num_q = '%s feitas' % b_q
         barra_q = 100.0
     else:
         nota_q = "a data da meta passou."
-        num_q = '<b>%s</b> feitas' % _n(q["feitas_hoje"])
+        num_q = '%s feitas' % b_q
         barra_q = 0.0
 
     if c["consumo_hoje"] is None:
@@ -400,7 +421,8 @@ def _html_dia(d, data_iso):
         nota_c = "não consegui contar as revisões de hoje."
         barra_c = 0.0
     else:
-        num_c = '<b>%s</b> de %s' % (_n(c["consumo_hoje"]), _n(c["teto"]))
+        num_c = '<b data-vivo="cards" data-base="%s">%s</b> de %s' % (
+            _e(c["consumo_hoje"]), _n(c["consumo_hoje"]), _n(c["teto"]))
         barra_c = _pct(c["consumo_hoje"], c["teto"])
         nota_c = ("faltam %d: saldo do dia cumprido." % c["restantes"] if c["restantes"] == 0
                   else "faltam %d hoje." % c["restantes"])
@@ -417,7 +439,7 @@ def _html_dia(d, data_iso):
         for x in ag["dias"])
     return (
         '<h2>Hoje, %s %s</h2>\n'
-        '<div class="doses">\n'
+        '<div class="doses" data-sessao-gravada="%s">\n'
         '  <div class="dose"><h3>Questões</h3><p class="fracao">%s</p>'
         '<div class="barra"><i style="width:%.1f%%"></i></div><p class="nota">%s</p></div>\n'
         '  <div class="dose"><h3>Cards</h3><p class="fracao">%s</p>'
@@ -427,7 +449,7 @@ def _html_dia(d, data_iso):
         '</div>\n'
         '<div class="agenda"><h3>Revisões nos próximos 7 dias</h3>'
         '<ol class="ag-barras" aria-label="Revisões por dia">%s</ol></div>'
-        % (DIAS_EXTENSO[hoje.weekday()], hoje.strftime("%d/%m"),
+        % (DIAS_EXTENSO[hoje.weekday()], hoje.strftime("%d/%m"), _e(d.get("sessao_gravada") or ""),
            num_q, barra_q, _e(nota_q),
            num_c, barra_c, _e(nota_c), _e(", ".join(extra_c)),
            barras))
@@ -435,15 +457,16 @@ def _html_dia(d, data_iso):
 
 def _html_tarefa(t):
     """Um `<li class="tarefa">`: tema, rotulo, questoes, atraso e acao -- o MESMO na semana
-    corrente e na rota."""
+    corrente e na rota. s216 (hub-integracao part-2): carrega `data-tarefa` (o id do plano) -- e
+    por ele que o hub pinta, sem publish, a lista resolvida na aba Listas."""
     meta = ['<span class="t-rot">%s</span>' % _e(t["rotulo"] or "?")]
     if t["q"]:
         meta.append("<span>%s questões</span>" % _n(t["q"]))
     if t["atrasada"]:
         meta.append('<span class="t-atraso">da semana %s</span>' % _e(t["semana"]))
-    return ('<li class="tarefa%s"><p class="t-tema">%s</p><p class="t-meta">%s</p>'
+    return ('<li class="tarefa%s" data-tarefa="%s"><p class="t-tema">%s</p><p class="t-meta">%s</p>'
             '<p class="t-acao">%s</p></li>'
-            % (" atrasada" if t["atrasada"] else "", _e(t["tema"] or "(sem tema)"),
+            % (" atrasada" if t["atrasada"] else "", _e(t["id"]), _e(t["tema"] or "(sem tema)"),
                " ".join(meta), _acao(t)))
 
 
@@ -702,9 +725,9 @@ def render_html(d):
     return ("<!DOCTYPE html>\n<html lang=\"pt-BR\">\n<head>\n<meta charset=\"utf-8\">\n"
             "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n"
             "<title>%s</title>\n<style>%s</style>\n</head>\n<body>\n<div class=\"wrap\">\n"
-            "<p class=\"atualizado\">%s<span data-gerado=\"%s\" data-fallback=\"%s\">%s</span>%s</p>\n"
+            "<p class=\"atualizado\">%s<span data-gerado=\"%s\" data-gerado-iso=\"%s\" data-fallback=\"%s\">%s</span>%s</p>\n"
             "%s\n</div>\n%s</body>\n</html>\n"
-            % (_e(TITULO), CSS, MARCA_GERADO_ABRE, _e(gerado), _e(fallback), _e(fallback),
+            % (_e(TITULO), CSS, MARCA_GERADO_ABRE, _e(gerado), _e(gerado), _e(fallback), _e(fallback),
                MARCA_GERADO_FECHA, corpo, SCRIPT_ATUALIZADO))
 
 

@@ -99,11 +99,15 @@ def _com_db(fn, ids=(1, 2)):
     tmp = _db_temp(ids)
     orig = db.DB_PATH
     db.DB_PATH = tmp
+    # s216 (part-5): o consumo do teto (regra P09) le os lotes de tmp/ -- aqui, um tmp/ vazio
+    import day_plan
+    raiz_orig, day_plan.RAIZ_LOTES = day_plan.RAIZ_LOTES, tempfile.mkdtemp()
     try:
         return fn(tmp)
     finally:
         db.DB_PATH = orig
         os.remove(tmp)
+        day_plan.RAIZ_LOTES = raiz_orig
 
 
 def _conta(tmp, tabela):
@@ -866,3 +870,122 @@ def test_fsrs_queue_nao_ganhou_tabela_nova():
 if __name__ == "__main__":
     import pytest
     sys.exit(pytest.main([__file__, "-q"]))
+
+
+
+# --------------------------------------------------------------------------
+# 6. s216 (hub-integracao part-5): regra P09 -- o lote conta no dia em que comecou
+# --------------------------------------------------------------------------
+# Decisao do operador em 05/10/2026: "pelo dia em que o lote comecou". Caso real: o lote 2026-10-04a
+# teve 70 de 150 notas depois da meia-noite, e o Painel de 05/10 mostrou "212 de 100" (s215). O FSRS
+# guarda o horario REAL (o intervalo nao mente); so o consumo do teto e o "Hoje" do Painel passam a
+# contar pelo dia da 1a nota. Fonte: o marcador do tique + as notas do lote em tmp/ (sem coluna nova).
+
+def _lote_gravado(raiz, sessao, notas, marcar=True, formato="db"):
+    """O que o rito do tique deixa em `tmp/`: o marcador do `--record-lote` e as notas do lote (o
+    out_dir do `ArtifactData list`, 1 arquivo por card, ou o JSON `{notas: [...]}`)."""
+    from pathlib import Path as _P
+    raiz = _P(raiz)
+    if marcar:
+        (raiz / "tmp" / "hub").mkdir(parents=True, exist_ok=True)
+        (raiz / "tmp" / "hub" / "ultima_gravacao_hub.json").write_text(
+            json.dumps({"sessao": sessao, "gravado_em": "x", "novas": len(notas), "arquivadas": 0}), encoding="utf-8")
+    if formato == "db":
+        pasta = raiz / "tmp" / ("player_%s_db" % sessao) / "sessoes" / sessao / "notas"
+        pasta.mkdir(parents=True, exist_ok=True)
+        for n in notas:
+            (pasta / ("%d.json" % n["card_id"])).write_text(json.dumps(n), encoding="utf-8")
+    else:
+        (raiz / "tmp").mkdir(parents=True, exist_ok=True)
+        (raiz / "tmp" / ("player_%s_notas.json" % sessao)).write_text(
+            json.dumps({"sessao": sessao, "notas": notas}), encoding="utf-8")
+
+
+def _utc(dia, hora, minuto, segundo=0):
+    """O `ts` da pagina (`toISOString()`, UTC com Z) de um instante LOCAL de Brasilia."""
+    local = datetime(2026, 10, dia, hora, minuto, segundo, tzinfo=BRT)
+    return local.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.000Z")
+
+
+def _revlog_local(tmp, linhas):
+    """[(card_id, 'YYYY-MM-DD HH:MM:SS' local)] no revlog, como o `--record-lote` grava."""
+    con = sqlite3.connect(tmp)
+    con.execute("CREATE TABLE IF NOT EXISTS sessoes_bulk (id INTEGER PRIMARY KEY, area TEXT, "
+                "questoes_feitas INTEGER, data_sessao TEXT)")
+    for cid, quando in linhas:
+        con.execute("INSERT INTO fsrs_revlog (card_id, rating, state, review_time) VALUES (?, 3, 2, ?)",
+                    (cid, quando))
+    con.commit()
+    con.close()
+
+
+def _lote_da_virada():
+    """80 notas as 23h10 de 04/10 e 70 as 00h30 de 05/10 (hora local): o lote 2026-10-04a."""
+    notas, linhas = [], []
+    for i in range(80):
+        notas.append({"card_id": 1 + i, "rating_primeira": 3, "ts": _utc(4, 23, 10, i % 60)})
+        linhas.append((1 + i, "2026-10-04 23:10:%02d" % (i % 60)))
+    for i in range(70):
+        notas.append({"card_id": 81 + i, "rating_primeira": 3, "ts": _utc(5, 0, 30, i % 60)})
+        linhas.append((81 + i, "2026-10-05 00:30:%02d" % (i % 60)))
+    return notas, linhas
+
+
+def _consumos(tmp, raiz, dia=5):
+    import day_plan
+    con = sqlite3.connect(tmp)
+    try:
+        hoje = datetime(2026, 10, dia).date()
+        return (day_plan.realizado_do_dia(con, hoje.isoformat())["cards"],
+                day_plan.consumo_logico(con, hoje, raiz=raiz, fuso=BRT))
+    finally:
+        con.close()
+
+
+def test_lote_que_virou_a_meia_noite_conta_no_dia_da_primeira_nota(tmp_path):
+    notas, linhas = _lote_da_virada()
+    _lote_gravado(tmp_path, "2026-10-04a", notas)
+
+    def corpo(tmp):
+        _revlog_local(tmp, linhas)
+        relogio, logico = _consumos(tmp, tmp_path)
+        assert relogio == 70, "o relogio ve as 70 notas depois da meia-noite"
+        assert logico == 0, "P09: o lote comecou em 04/10 e conta inteiro la"
+        # o dia seguinte de verdade: um lote NOVO, comecado e gravado hoje, entra no consumo de hoje --
+        # e a 2a revisao (de hoje) de um card que tambem estava no lote de ontem conta, pelo horario
+        _revlog_local(tmp, [(500 + i, "2026-10-05 10:00:%02d" % i) for i in range(30)] + [(5, "2026-10-05 10:31:00")])
+        _lote_gravado(tmp_path, "2026-10-05a", [{"card_id": 500 + i, "rating_primeira": 3, "ts": _utc(5, 10, 0, i)}
+                                                for i in range(30)] +
+                      [{"card_id": 5, "rating_primeira": 1, "ts": _utc(5, 10, 31)}])
+        relogio, logico = _consumos(tmp, tmp_path)
+        assert relogio == 70 + 31
+        assert logico == 31, "o marcador ja aponta o 05a; o 04a (comecado ontem) segue fora do consumo de hoje"
+        assert _consumos(tmp, tmp_path, dia=4) == (80, 80), "ontem, pelo relogio, as 80 de antes da meia-noite"
+    _com_db(corpo, ids=())
+
+
+def test_sem_marcador_consumo_logico_e_o_do_relogio(tmp_path):
+    notas, linhas = _lote_da_virada()
+    _lote_gravado(tmp_path, "2026-10-04a", notas, marcar=False)
+
+    def corpo(tmp):
+        _revlog_local(tmp, linhas)
+        assert _consumos(tmp, tmp_path) == (70, 70), "sem marcador (tmp/ limpo): o relogio, sem erro"
+        assert _consumos(tmp, tmp_path / "nao-existe") == (70, 70)
+        _lote_gravado(tmp_path, "2026-10-04a", [], marcar=True)
+        import shutil
+        shutil.rmtree(tmp_path / "tmp" / "player_2026-10-04a_db")
+        assert _consumos(tmp, tmp_path) == (70, 70), "marcador sem as notas: o relogio"
+        _lote_gravado(tmp_path, "2026-10-04a", notas, marcar=True, formato="json")
+        assert _consumos(tmp, tmp_path) == (70, 0), "as notas tambem valem pelo JSON {notas: [...]}"
+    _com_db(corpo, ids=())
+
+
+def test_consumo_do_dia_do_export_e_o_logico(monkeypatch):
+    """O teto do export (`consumo_do_dia`) e o do Painel contam pela MESMA regra (P09)."""
+    import day_plan
+    from tools import fsrs_queue
+    chamadas = []
+    monkeypatch.setattr(day_plan, "consumo_logico", lambda con, hoje, **kw: chamadas.append(hoje) or 42)
+    assert _com_db(lambda tmp: fsrs_queue.consumo_do_dia(), ids=()) == 42 and len(chamadas) == 1
+    assert "def realizado_do_dia(con, data_iso):" in (ROOT / "tools" / "day_plan.py").read_text(encoding="utf-8")

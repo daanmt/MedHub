@@ -1,0 +1,297 @@
+<title>Revisão direcionada · Hérnias da parede abdominal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,380;9..144,480;9..144,600;9..144,680&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EFF3F0; --card:#FAFCFA; --sunk:#E2E9E4;
+  --ink:#18211C; --ink2:#4C5A52; --ink3:#7C8A82;
+  --line:rgba(24,33,28,.13); --line2:rgba(24,33,28,.26);
+  --teal:#1F6B5E; --teal-ink:#154A41; --teal-wash:#DCEBE5;
+  --carmine:#8E2F41; --carmine-ink:#6B2231; --carmine-wash:#F5E2E6;
+  --amber:#8A5A17; --amber-ink:#6B4610; --amber-wash:#F3E6CC;
+  --on:#FFFFFF;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#7E8C84;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  --on:#131A16;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#7E8C84;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  --on:#131A16;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);
+  font:16px/1.6 "Source Sans 3",-apple-system,"Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+h1,h2,h3{margin:0;font-family:Fraunces,Georgia,serif;font-weight:600;letter-spacing:-.01em;text-wrap:balance;line-height:1.16;color:var(--ink)}
+.wrap{max-width:760px;margin:0 auto;padding:0 24px 90px}
+@media(max-width:640px){.wrap{padding:0 16px 72px}}
+:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+strong{font-weight:600;color:var(--ink)}
+.mn{font-family:"IBM Plex Mono",ui-monospace,Consolas,monospace;font-variant-numeric:tabular-nums}
+
+/* masthead */
+.top{padding:44px 0 26px;border-bottom:1px solid var(--line2)}
+.eye{font:600 11px/1.3 "Source Sans 3";letter-spacing:.14em;text-transform:uppercase;color:var(--teal-ink);margin:0 0 13px}
+.top h1{font-size:clamp(28px,5vw,42px);font-weight:680;margin-bottom:14px}
+.top .sub{font-size:clamp(16px,2.2vw,17.5px);line-height:1.6;color:var(--ink2);margin:0}
+
+/* secoes */
+.sec{padding:34px 0;border-bottom:1px solid var(--line)}
+.sec:last-of-type{border-bottom:0}
+.kick{font:600 11px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);display:block;margin-bottom:5px}
+.sec h2{font-size:clamp(21px,3.2vw,26px);margin-bottom:12px}
+.lede{font-size:16.3px;line-height:1.6;color:var(--ink2);margin:0 0 14px;font-style:italic}
+ul.pt{margin:0 0 14px;padding-left:20px}
+ul.pt li{font-size:15.6px;line-height:1.58;color:var(--ink2);margin-bottom:7px}
+ul.pt li:last-child{margin-bottom:0}
+
+/* bloco curto (pilulas) */
+.blk{padding:18px 0 4px;border-top:1px dashed var(--line2)}
+.blk:first-of-type{border-top:0;padding-top:4px}
+.blk h3{font-size:clamp(17px,2.6vw,19px);margin:0 0 8px}
+
+/* onde tropecou */
+.miss{list-style:none;margin:0;padding:0;border:1px solid var(--line2);background:var(--card)}
+.miss li{display:grid;grid-template-columns:28px minmax(0,1fr);gap:10px;padding:11px 14px;font-size:15.3px;line-height:1.5;color:var(--ink2)}
+.miss li+li{border-top:1px solid var(--line)}
+.miss .n{font:600 12px "IBM Plex Mono";color:var(--carmine-ink);padding-top:2px}
+
+/* tabela */
+.tw{overflow-x:auto;margin:16px 0;border:1px solid var(--line2);background:var(--card)}
+table{border-collapse:collapse;width:100%;font-size:14.4px}
+th,td{text-align:left;vertical-align:top;padding:9px 12px;line-height:1.45}
+th{background:var(--sunk);font:600 11.5px "Source Sans 3";letter-spacing:.05em;text-transform:uppercase;color:var(--ink3)}
+td{color:var(--ink2);border-top:1px solid var(--line)}
+td:first-child{font-weight:600;color:var(--ink)}
+td.hi{color:var(--teal-ink);font-weight:600}
+
+/* grade de criterios */
+.crit{border:1px solid var(--line2);background:var(--card);margin:16px 0}
+.crit .row{display:grid;grid-template-columns:150px minmax(0,1fr);gap:12px;padding:10px 14px;font-size:14.6px;line-height:1.5}
+.crit .row+.row{border-top:1px solid var(--line)}
+.crit .k{font-weight:600;color:var(--teal-ink);min-width:0}
+.crit .v{color:var(--ink2);min-width:0}
+@media(max-width:640px){.crit .row{grid-template-columns:minmax(0,1fr);gap:2px}}
+
+/* comparativo */
+.vs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line2);border:1px solid var(--line2);margin:16px 0}
+.vs>div{background:var(--card);padding:13px 15px;min-width:0}
+.vs h3{font:700 11.5px "Source Sans 3";letter-spacing:.05em;text-transform:uppercase;margin:0 0 7px;color:var(--ink3)}
+.vs .a h3{color:var(--carmine-ink)}
+.vs .b h3{color:var(--teal-ink)}
+.vs ul{margin:0;padding-left:17px}
+.vs li{font-size:14.5px;line-height:1.5;color:var(--ink2);margin-bottom:4px}
+@media(max-width:640px){.vs{grid-template-columns:minmax(0,1fr)}}
+
+/* callouts */
+.key{margin:16px 0;padding:12px 16px;border-left:3px solid var(--teal);background:var(--teal-wash);font-size:15.2px;line-height:1.55;color:var(--ink)}
+.trap{margin:16px 0;padding:12px 16px;border-left:3px solid var(--carmine);background:var(--carmine-wash);font-size:15.2px;line-height:1.55;color:var(--ink)}
+.note{margin:16px 0;padding:12px 16px;border-left:3px solid var(--amber);background:var(--amber-wash);font-size:14.8px;line-height:1.55;color:var(--ink)}
+
+/* fonte */
+.src{margin:12px 0 0;font-size:12.6px;line-height:1.45;color:var(--ink3)}
+.src code{font-family:"IBM Plex Mono",Consolas,monospace;font-size:11.6px;background:var(--sunk);padding:1px 5px;border-radius:2px;overflow-wrap:anywhere}
+
+/* teste agora */
+.qs{display:flex;flex-direction:column;gap:10px}
+.q{background:var(--card);border:1px solid var(--line2);padding:13px 15px}
+.q p{margin:0 0 8px;font-size:15.4px;line-height:1.5;color:var(--ink);font-weight:500}
+.q .tag{font:600 10.5px "IBM Plex Mono";color:var(--teal-ink);letter-spacing:.04em;display:block;margin-bottom:4px}
+.q details summary{cursor:pointer;font:600 13px "Source Sans 3";color:var(--teal-ink);list-style:none}
+.q details summary::-webkit-details-marker{display:none}
+.q details summary::before{content:"+ "}
+.q details[open] summary::before{content:"- "}
+.q details div{margin-top:7px;padding-top:7px;border-top:1px dashed var(--line2);font-size:14.8px;line-height:1.5;color:var(--ink2)}
+form.pend{display:grid;gap:8px;min-width:0;background:var(--card);border:1px solid var(--line2);border-radius:6px;padding:12px}
+.pend-item.obrig form.pend{border-left:4px solid var(--carmine)}
+.pend-q{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center;margin:0}
+form.pend label{font-weight:600;line-height:1.4;min-width:0}
+form.pend textarea{font:inherit;font-size:16px;width:100%;min-width:0;min-height:88px;padding:10px 12px;border:1px solid var(--line2);border-radius:6px;background:var(--paper);color:var(--ink);resize:vertical}
+form.pend textarea:disabled{opacity:.6}
+form.pend textarea[readonly]{background:var(--sunk);color:var(--ink2)}
+.pend-pe{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
+.pend-pe [data-pend-estado]{flex:1;min-width:0;font-size:14px;color:var(--ink3)}
+form.pend button{min-height:44px;padding:0 18px;font:inherit;font-weight:600;border:0;border-radius:6px;background:var(--teal);color:var(--paper);cursor:pointer}
+form.pend button:disabled{opacity:.45;cursor:not-allowed}
+form.pend[data-pend-st="respondida"] [data-pend-estado],form.pend[data-pend-st="absorvida"] [data-pend-estado]{color:var(--teal-ink);font-weight:600}
+form.pend[data-pend-st="erro"] [data-pend-estado],form.pend[data-pend-st="leitura"] [data-pend-estado]{color:var(--carmine);font-weight:600;cursor:pointer}
+form.pend[data-pend-st="invalido"] [data-pend-estado]{color:var(--carmine);font-weight:600}
+details.pend-opc{margin-top:12px;border:1px solid var(--line2);border-radius:6px;background:var(--card)}
+details.pend-opc > summary{min-height:44px;display:flex;gap:10px;align-items:center;padding:8px 12px;cursor:pointer;list-style:none;font-weight:600;color:var(--ink2)}
+.pend-opc-tit{display:flex;flex-wrap:wrap;gap:2px 10px;align-items:baseline;min-width:0;flex:1}
+details.pend-opc > summary::-webkit-details-marker{display:none}
+details.pend-opc > summary::after{content:"+";margin-left:auto;color:var(--ink3);font-family:"IBM Plex Mono",monospace;flex:none}
+details.pend-opc[open] > summary::after{content:"-"}
+details.pend-opc > summary .pend-conta{font-size:14px;color:var(--ink3);margin:0}
+details.pend-opc[open] > summary{border-bottom:1px solid var(--line2)}
+details.pend-opc .pend-lista{margin:0;padding:10px}
+details.pend-opc summary:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+form.pend [data-pend-retorno]{margin:0;padding:8px 10px;border-left:3px solid var(--teal);background:var(--teal-wash);border-radius:4px;font-size:15px}
+form.pend.pend-coment{margin-top:14px;background:var(--sunk)}
+form.pend.pend-coment label{font-weight:400;font-size:14px;color:var(--ink3)}
+form.pend.pend-coment textarea{min-height:64px}
+form.pend textarea:focus-visible,form.pend button:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+
+.pend-lista{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <p class="eye">Revisão direcionada · Hérnias da parede abdominal · lista t49 · 05/10</p>
+  <h1>Quando a hérnia dói, a pergunta é uma só: há sinal de sofrimento?</h1>
+  <p class="sub">10 de 21. Dos 11 erros, 3 foram na mesma decisão (encarcerada: reduzir ou operar, e por onde), e 2 deles você marcou como sólidos. O resto são fatos soltos de técnica, nervo e complicação, um corte cada.</p>
+</header>
+
+<section class="sec">
+  <span class="kick">Mapa</span>
+  <h2>Onde você tropeçou</h2>
+  <ul class="miss">
+    <li><span class="n">01</span><span>Encarcerada e estrangulada: reduziu com sinal de sofrimento (Q5), abriu o abdome pela via errada (Q13), mandou a encarcerada aguda para o ambulatório (Q20).</span></li>
+    <li><span class="n">02</span><span>Operar ou observar: USG numa hérnia já diagnosticada (Q1); a mulher assintomática que opera (Q4).</span></li>
+    <li><span class="n">03</span><span>Técnicas e recidiva: ancoragem do Lichtenstein (Q15), o pior tecidual (Q18), causa da recidiva precoce (Q12).</span></li>
+    <li><span class="n">04</span><span>Complicações: nervo por via (Q14), orquite isquêmica (Q11), bexigoma pós-raqui (Q17).</span></li>
+  </ul>
+  <p class="src">Fonte desta revisão: a Solução MedHub da lista t49 (HerniaSurge 2018, WSES 2017, Sabiston, Miller). Limite declarado: não existe resumo local de Hérnias em <code>resumos/</code>; os cards novos ancoram no verso.</p>
+</section>
+
+<section class="sec">
+  <span class="kick">01 · Encarcerada e estrangulada</span>
+  <h2>Sinal de sofrimento decide tudo; a via quase nunca muda</h2>
+  <p class="lede">Nas três questões você identificou o quadro certo (elo 1 declarado Sim nas três) e errou o passo seguinte. É o padrão "vi o discriminador e não converti": o dado estava lido, a regra não veio.</p>
+  <div class="blk">
+    <h3>Reduzir ou operar</h3>
+    <div class="crit">
+      <div class="row"><span class="k">Encarcerada SEM sofrimento</span><span class="v">Dor moderada, sem hiperemia, sem obstrução, sem toxemia. Pode-se tentar <strong>taxe</strong> cuidadosa e programar <strong>reparo precoce</strong>. Nunca "reduzir e acompanhar no ambulatório" (Q20): quem encarcerou vai encarcerar de novo.</span></div>
+      <div class="row"><span class="k">Encarcerada COM sofrimento</span><span class="v"><strong>Hiperemia, dor intensa, obstrução, toxemia</strong> = suspeita de estrangulamento. Taxe contraindicada: devolveria alça isquêmica ao abdome. <strong>Cirurgia já</strong> (Q5).</span></div>
+      <div class="row"><span class="k">A banca USP (Q20)</span><span class="v">Encarcerada aguda e dolorosa há 2 h: opera de urgência por inguinotomia <strong>sem reduzir</strong>. A diretriz aceita taxe sem sofrimento; a prova, não. Marcada como divergente no banco.</span></div>
+    </div>
+    <div class="trap">"Estável, sem peritonismo" (Q5) e "cardiopata com AAS" (Q20) são iscas para adiar. Nenhum dos dois cancela a urgência. O AAS de prevenção secundária se mantém.</div>
+  </div>
+  <div class="blk">
+    <h3>Por onde operar</h3>
+    <ul class="pt">
+      <li><strong>Inguinotomia</strong> é a via da hérnia inguinal estrangulada, <strong>mesmo com necrose</strong>: a alça é avaliada e ressecada pelo próprio saco (Q13).</li>
+      <li><strong>Laparotomia mediana</strong> só com <strong>peritonite difusa</strong> ou alça necrosada que <strong>voltou para a cavidade</strong> e saiu de vista.</li>
+      <li>Correção na adolescência (em geral só ligadura do saco) não impede nova inguinotomia.</li>
+    </ul>
+    <div class="key">"Risco de necrose" não é argumento para laparotomia. Necrose se resolve pelo saco; o que muda a via é peritonite difusa ou alça perdida.</div>
+  </div>
+</section>
+
+<section class="sec">
+  <span class="kick">02 · Operar ou observar</span>
+  <h2>Exame físico positivo fecha; o sexo define a urgência</h2>
+  <div class="blk">
+    <h3>Imagem só na dúvida (Q1)</h3>
+    <ul class="pt">
+      <li>Abaulamento redutível à Valsalva <strong>é diagnóstico</strong>. USG, depois RM dinâmica, só quando a história sugere hérnia e o exame é vago.</li>
+      <li>Homem assintomático ou pouco sintomático: <strong>espera vigilante</strong> é segura (encarceramento ~0,2%/ano). Cardiopatia reforça observar.</li>
+      <li>Antes de qualquer cirurgia: tratar o que eleva a pressão abdominal (prostatismo, tosse do fumante). Você declarou desatenção neste elo.</li>
+    </ul>
+  </div>
+  <div class="blk">
+    <h3>Mulher opera, homem decide pelo sintoma (Q4)</h3>
+    <div class="crit">
+      <div class="row"><span class="k">Mulher</span><span class="v">Hérnia femoral frequente e encarcera muito mais: <strong>opera mesmo assintomática</strong>.</span></div>
+      <div class="row"><span class="k">Homem</span><span class="v">Quem define o momento é a <strong>qualidade de vida</strong>, não o risco de encarceramento.</span></div>
+      <div class="row"><span class="k">Tela e dor crônica</span><span class="v">Com tela, a dor crônica é <strong>igual ou menor</strong> que no reparo tecidual.</span></div>
+    </div>
+    <div class="note">Os 4 itens eram verdadeiros. Você contou 3 e declarou incerteza no elo "cirurgia pelo sexo e pelos sintomas". A pergunta abaixo fecha qual item você negou.</div>
+  </div>
+</section>
+
+<section class="sec">
+  <span class="kick">03 · Técnicas e recidiva</span>
+  <h2>Três fatos, um corte cada</h2>
+  <div class="blk">
+    <h3>Lichtenstein ancora no ligamento inguinal (Q15)</h3>
+    <ul class="pt">
+      <li>Sutura contínua da borda inferior da tela no <strong>ligamento inguinal</strong>, do túbérculo púbico ao anel interno. O tendão conjunto só recebe pontos separados da borda superior.</li>
+      <li>Ligamento de <strong>Cooper</strong> é do <strong>McVay</strong> (fecha o canal femoral). A aponeurose do oblíquo externo fecha por cima da tela.</li>
+    </ul>
+  </div>
+  <div class="blk">
+    <h3>Com tensão: Bassini é o pior, Shouldice o melhor (Q18)</h3>
+    <div class="crit">
+      <div class="row"><span class="k">Teciduais (tensão)</span><span class="v">Bassini, Shouldice, McVay. <strong>Bassini</strong> = maior recidiva; <strong>Shouldice</strong> (4 planos) = menor recidiva sem tela.</span></div>
+      <div class="row"><span class="k">Com tela (sem tensão)</span><span class="v">Lichtenstein, TAPP, TEP.</span></div>
+    </div>
+  </div>
+  <div class="blk">
+    <h3>Recidiva precoce é técnica; tardia é tecido (Q12)</h3>
+    <ul class="pt">
+      <li>Precoce (meses): tela pequena, pouca sobreposição medial, fixação ruim, hérnia não vista.</li>
+      <li>Tardia (anos): colágeno, tabagismo, pressão abdominal.</li>
+      <li>Tela leve x pesada: <strong>recidiva igual</strong>; a leve dá menos dor e menos corpo estranho.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="sec">
+  <span class="kick">04 · Complicações</span>
+  <h2>Primeiro a via, depois o território</h2>
+  <div class="blk">
+    <h3>Nervo em risco por via (Q14)</h3>
+    <div class="crit">
+      <div class="row"><span class="k">Via anterior (aberta)</span><span class="v">Ilioinguinal, ílio-hipogástrico, <strong>ramo genital</strong> do genitofemoral.</span></div>
+      <div class="row"><span class="k">Via posterior (TAPP/TEP)</span><span class="v">"Triângulo da dor": cutâneo femoral lateral, <strong>ramo femoral</strong> do genitofemoral, femoral.</span></div>
+    </div>
+    <div class="trap">Você grifou "TAPP" e "face interna da coxa" e escolheu pelo território. O ilioinguinal também dá a coxa medial, mas corre na parede anterior: no vídeo ele não está no campo.</div>
+  </div>
+  <div class="blk">
+    <h3>Orquite isquêmica é venosa (Q11)</h3>
+    <ul class="pt">
+      <li>Dissecção do cordão, <strong>trombose do plexo pampiniforme</strong>, congestão, isquemia e atrofia em meses.</li>
+      <li>A artéria testicular lesada é compensada pelas colaterais (cremastérica e do deferente).</li>
+    </ul>
+  </div>
+  <div class="blk">
+    <h3>Pós-raqui sem urinar é bexiga, não íleo (Q17)</h3>
+    <ul class="pt">
+      <li>Vômito, distensão e RHA ausentes desenham íleo. O dado que <strong>exclui</strong> o íleo é "não urinou a noite toda": íleo não retém urina.</li>
+      <li>Raqui bloqueia S2-S4: bexiga distendida causa dor hipogástrica, vômito e íleo reflexo. Conduta: <strong>sondagem vesical de alívio</strong>.</li>
+    </ul>
+    <div class="trap">Você grifou "nem urinou durante a noite" e declarou desatenção no elo 1. Grifo sem conversão: a atenção chegou, a regra não.</div>
+  </div>
+</section>
+
+<section class="sec">
+  <span class="kick">Perguntas para você</span>
+  <h2>Dois racionais que só você tem</h2>
+  <ol class="pend-lista"><li class="pend-item"><form class="pend" data-pend="rd-hernias_q4" data-origem="rd-hernias" data-ref="t49_4" data-tipo="pergunta"><p class="pend-q"><strong>Q4 (contagem)</strong></p><label for="pend-rd-hernias_q4" data-pend-pergunta>Qual dos 4 itens você julgou falso? I (mulher opera assintomática), II (qualidade de vida decide o momento), III (USG, depois RM) ou IV (tela não aumenta a dor crônica)?</label><textarea id="pend-rd-hernias_q4" rows="3" maxlength="2000" placeholder="Sua resposta" disabled></textarea><div class="pend-pe"><span data-pend-estado>Abra pelo hub para responder</span><button type="submit" disabled>Enviar</button></div></form></li><li class="pend-item"><form class="pend" data-pend="rd-hernias_q20" data-origem="rd-hernias" data-ref="t49_20" data-tipo="pergunta"><p class="pend-q"><strong>Q20 (sólida)</strong></p><label for="pend-rd-hernias_q20" data-pend-pergunta>Ao marcar "reduzir e acompanhar no ambulatório", você considerou a hérnia resolvida pela redução, ou a cardiopatia e o AAS como motivo para não operar?</label><textarea id="pend-rd-hernias_q20" rows="3" maxlength="2000" placeholder="Sua resposta" disabled></textarea><div class="pend-pe"><span data-pend-estado>Abra pelo hub para responder</span><button type="submit" disabled>Enviar</button></div></form></li></ol>
+  <p class="note">Seu "cadeia com defeito: elo 1 óbvio" na Q4 foi absorvido: em questão de contagem, "julgar cada item antes de contar" deixa de ser elo nas próximas Soluções MedHub.</p>
+</section>
+
+<section class="sec">
+  <span class="kick">Recall</span>
+  <h2>Teste agora</h2>
+  <div class="qs">
+    <div class="q"><span class="tag">01</span><p>Hérnia encarcerada há 6 h, hiperemia e dor intensa, estável. Taxe?</p><details><summary>ver resposta</summary><div>Não. Hiperemia e dor intensa são sinais de sofrimento: inguinotomia de urgência.</div></details></div>
+    <div class="q"><span class="tag">01</span><p>Estrangulada com alça provavelmente necrosada. Via?</p><details><summary>ver resposta</summary><div>Inguinotomia; resseca pelo saco. Laparotomia só com peritonite difusa ou alça que voltou.</div></details></div>
+    <div class="q"><span class="tag">01</span><p>Taxe bem-sucedida numa encarcerada sem sofrimento. E depois?</p><details><summary>ver resposta</summary><div>Reparo precoce. Nunca alta ambulatorial.</div></details></div>
+    <div class="q"><span class="tag">02</span><p>Hérnia inguinal redutível à Valsalva no idoso assintomático. Precisa de USG?</p><details><summary>ver resposta</summary><div>Não: exame físico fecha. Espera vigilante e tratar prostatismo e tabagismo.</div></details></div>
+    <div class="q"><span class="tag">02</span><p>Mulher com hérnia inguinocrural assintomática. Conduta?</p><details><summary>ver resposta</summary><div>Operar: femoral frequente, encarcera mais.</div></details></div>
+    <div class="q"><span class="tag">03</span><p>Onde vai a sutura contínua da tela no Lichtenstein?</p><details><summary>ver resposta</summary><div>Ligamento inguinal, do púbis ao anel interno.</div></details></div>
+    <div class="q"><span class="tag">03</span><p>Reparo tecidual com maior recidiva?</p><details><summary>ver resposta</summary><div>Bassini. Shouldice é o melhor sem tela.</div></details></div>
+    <div class="q"><span class="tag">04</span><p>Dor crônica na coxa anteromedial após TAPP. Nervo?</p><details><summary>ver resposta</summary><div>Ramo femoral do genitofemoral (via posterior).</div></details></div>
+    <div class="q"><span class="tag">04</span><p>Principal causa de atrofia testicular após hernioplastia?</p><details><summary>ver resposta</summary><div>Trombose das veias do plexo pampiniforme (orquite isquêmica).</div></details></div>
+    <div class="q"><span class="tag">04</span><p>1º PO sob raqui: dor hipogástrica, vômito, RHA ausentes, sem urinar. Diagnóstico?</p><details><summary>ver resposta</summary><div>Bexigoma. Sondagem vesical de alívio.</div></details></div>
+  </div>
+</section>
+</div>

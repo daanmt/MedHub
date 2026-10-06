@@ -95,6 +95,8 @@
 .qd-item.qd-chegou .qd-bloco{animation:qd-chegou 700ms ease-out}
 @keyframes qd-chegou{from{border-color:var(--acento);background:var(--acento-fraco)}}
 @media (prefers-reduced-motion: reduce){.qd-item.qd-chegou .qd-bloco{animation:none}}
+/* s216 (part-4): o item que acabou de ser concluido, marcado na aba de origem ao voltar do leitor */
+.qd-item.qd-recente .qd-bloco{border-color:var(--acento);box-shadow:0 0 0 2px var(--acento-fraco)}
 .qd-feitas{margin-top:26px;border-top:1px solid var(--linha);padding-top:6px}
 .qd-feitas summary{cursor:pointer;min-height:44px;padding:11px 0;font-weight:650;color:var(--tinta2)}
 .qd-feitas .qd-lista{margin-top:8px}
@@ -134,6 +136,12 @@
 }
 :root[data-theme="dark"]{--qz-ok:#6fcf8a;--qz-ok-fraco:#16301f;--qz-duv:#e2a94f;--qz-duv-fraco:#3a2c12;--qz-chute:#b3a4e6;--qz-chute-fraco:#2a2340}
 .qz-lista{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.qz-lista li{min-width:0}
+/* s216 (part-2): a aula que prepara a lista, logo abaixo dela (irma do botao, alvo de 44 px) */
+.qz-aula{display:inline-flex;align-items:center;min-height:44px;padding:0 14px;color:var(--acento);font-weight:600;font-size:.88em;text-underline-offset:2px}
+.qz-aula:focus-visible{outline:3px solid var(--acento);outline-offset:2px;border-radius:4px}
+/* s216 (part-4): a lista que acabou de ser concluida, marcada ao voltar para a aba */
+.qz-lista li.qz-recente > button{border-color:var(--acento);box-shadow:0 0 0 2px var(--acento-fraco)}
 .qz-semanas{display:grid;gap:22px}
 .qz-semanas .qd-feitas{margin-top:4px}
 .qz-lista button{width:100%;text-align:left;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;align-items:center;padding:12px 14px;border:1px solid var(--linha);border-radius:12px;background:var(--card);color:var(--tinta);min-height:44px}
@@ -293,9 +301,9 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
 
   <nav class="hub-abas" role="tablist" aria-label="Secoes do MedHub">
     <button type="button" class="hub-aba" role="tab" id="hub-tab-painel" aria-controls="aba-painel" aria-selected="true" data-aba="painel">Painel</button>
-    <button type="button" class="hub-aba" role="tab" id="hub-tab-aulas" aria-controls="aba-aulas" aria-selected="false" data-aba="aulas" tabindex="-1">Aulas</button>
-    <button type="button" class="hub-aba" role="tab" id="hub-tab-cards" aria-controls="aba-cards" aria-selected="false" data-aba="cards" tabindex="-1">Cards</button>
+    <button type="button" class="hub-aba" role="tab" id="hub-tab-aulas" aria-controls="aba-aulas" aria-selected="false" data-aba="aulas" tabindex="-1">Teoria</button>
     <button type="button" class="hub-aba" role="tab" id="hub-tab-questoes" aria-controls="aba-questoes" aria-selected="false" data-aba="questoes" tabindex="-1">Listas</button>
+    <button type="button" class="hub-aba" role="tab" id="hub-tab-cards" aria-controls="aba-cards" aria-selected="false" data-aba="cards" tabindex="-1">Cards</button>
   </nav>
 
   <section class="hub-secao" id="aba-painel" role="tabpanel" aria-labelledby="hub-tab-painel">
@@ -304,17 +312,17 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
 
   <section class="hub-secao" id="aba-aulas" role="tabpanel" aria-labelledby="hub-tab-aulas">
     <div id="hub-aulas-lista">
-      <h2 class="hub-titulo">Aulas</h2>
-      <p class="hub-sub">As tarefas do plano por semana, com as questões de cada uma; a aula abre aqui dentro e, marcada como feita, vai riscada para Concluídas.</p>
+      <h2 class="hub-titulo">Teoria</h2>
+      <p class="hub-sub">As aulas do plano por semana e as listas que elas preparam; a aula abre aqui dentro e, marcada como feita, vai riscada para a Biblioteca, no fim.</p>
       <!-- @hub:aulas -->
     </div>
     <div id="hub-leitor" hidden>
       <div class="hub-leitor-barra">
-        <button type="button" id="hub-leitor-voltar">&lsaquo; Todas as aulas</button>
+        <button type="button" id="hub-leitor-voltar">&lsaquo; Teoria</button>
         <p class="hub-leitor-titulo" id="hub-leitor-titulo"></p>
       </div>
       <p class="hub-aviso" id="hub-leitor-aviso" hidden>Nao consegui abrir a aula aqui dentro. <a id="hub-leitor-link" href="#">Abrir em pagina inteira</a>.</p>
-      <iframe class="hub-quadro" id="hub-leitor-quadro" title="Aula"></iframe>
+      <iframe class="hub-quadro" id="hub-leitor-quadro" title="Teoria"></iframe>
       <div class="hub-assina" id="hub-assina" role="group" aria-labelledby="hub-assina-tit" data-st="sem" hidden>
         <p class="hub-assina-tit" id="hub-assina-tit">Leu? Assine a leitura.</p>
         <textarea class="qz-linha" id="hub-assina-coment" rows="2" maxlength="600" placeholder="Comentário para o agente (opcional)" aria-label="Comentário para o agente (opcional)"></textarea>
@@ -330,6 +338,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
 
   <section class="hub-secao" id="aba-questoes" role="tabpanel" aria-labelledby="hub-tab-questoes">
     <!-- @hub:semanas -->
+    <!-- @hub:ligacoes -->
     <div id="qz-escolha">
       <h2 class="hub-titulo">Listas</h2>
       <div class="qz-elo qz-modo" id="qz-modo" role="tablist" aria-label="Tipo de lista"><button type="button" role="tab" data-m="questoes">Questões</button><button type="button" role="tab" data-m="simulados">Simulados</button></div>
@@ -496,13 +505,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
     Array.prototype.forEach.call(doc.querySelectorAll("a[data-hub-aba], a[data-hub-aula]"), function(a){
       a.addEventListener("click", function(ev){
         ev.preventDefault();
-        var aba = valida(a.getAttribute("data-hub-aba"));
-        qzModoPedido(a.getAttribute("data-hub-modo"));
-        var slug = a.getAttribute("data-hub-aula");
-        var alvo = slug ? document.querySelector('a.hub-aula[href="aulas/' + slug + '.html"]') : null;
-        ir(aba || "aulas", true);
-        window.scrollTo(0, 0);
-        if(alvo){ abrirAula(alvo); }
+        painelAtalho(a);
       });
     });
     Array.prototype.forEach.call(doc.querySelectorAll("a[href]"), function(a){
@@ -531,6 +534,8 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
     try{ pendLigar(doc, quadro); }catch(e){}
     // s214: o marca-texto da aula aberta no leitor (o mesmo R2: falha aqui nunca derruba o leitor)
     if(quadro.id === "hub-leitor-quadro"){ try{ grifoLigar(doc, quadro, GRIFO.slug); }catch(e){} }
+    // s216 (part-2): o Painel pinta a lista resolvida na aba Listas, sem publish (falha aqui nunca o derruba)
+    if(quadro.id === "hub-painel-quadro"){ try{ painelListas(doc, quadro); }catch(e){} }
     medir(quadro);
     [150, 600, 1500, 3000].forEach(function(ms){ setTimeout(function(){ medir(quadro); }, ms); });
     if(doc.fonts && doc.fonts.ready){ doc.fonts.ready.then(function(){ medir(quadro); }); }
@@ -563,9 +568,22 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
   var lista = $("hub-aulas-lista");
   var leitor = $("hub-leitor");
 
-  function abrirAula(link){
-    var href = link.getAttribute("href");
-    $("hub-leitor-titulo").textContent = link.getAttribute("data-titulo") || "";
+  // s216 (part-4, P14): de onde o leitor foi aberto -- a aba e a rolagem de ANTES de abrir. O Painel
+  // grava `medhub.aba = aulas` ao abrir um documento: sem capturar antes do `ir`, a origem seria sempre
+  // a Teoria. Concluir (assinar) e o botao de voltar devolvem o operador para ela.
+  var LEITOR = {origem: null};
+  var ROTULO_ABA = {painel: "Painel", aulas: "Teoria", questoes: "Listas", cards: "Cards"};
+  function leitorOrigem(){ return {aba: valida(raiz.getAttribute("data-aba")) || "painel", y: window.pageYOffset || 0}; }
+
+  // s216 (part-1): abre o leitor a partir do LINK da Teoria (`abrirAula(a)`) ou do par
+  // (`abrirAula(href, titulo)`) que o Painel passa -- o documento nao precisa morar na Teoria.
+  // `origem` (part-4) vem de quem trocou de aba antes; sem ela, a aba de agora (a Teoria).
+  function abrirAula(link, titulo, origem){
+    var par = typeof link === "string";
+    var href = par ? link : link.getAttribute("href");
+    LEITOR.origem = origem || leitorOrigem();
+    $("hub-leitor-voltar").textContent = "‹ " + (ROTULO_ABA[LEITOR.origem.aba] || "Teoria");
+    $("hub-leitor-titulo").textContent = (par ? titulo : link.getAttribute("data-titulo")) || "";
     $("hub-leitor-link").setAttribute("href", href);
     lista.hidden = true;
     leitor.hidden = false;
@@ -574,6 +592,64 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
     assinaAbrir(pendSlug(href));
     GRIFO.slug = pendSlug(href); GRIFO.ctx = null;
     carregar($("hub-leitor-quadro"), href, $("hub-leitor-aviso"));
+  }
+
+  // s216 (part-1, A1): o atalho do Painel. "abrir aula" e "abrir documento" abrem o leitor DIRETO
+  // pelo href do proprio link (titulo = data-titulo; sem ele, o tema do item): procurar o link na
+  // Teoria deixava sem abrir o que nao mora la (o Dossie e a Autopsia, so na Documentacao).
+  function painelAtalho(a){
+    qzModoPedido(a.getAttribute("data-hub-modo"));
+    var slug = a.getAttribute("data-hub-aula");
+    if(!slug){ ir(valida(a.getAttribute("data-hub-aba")) || "aulas", true); window.scrollTo(0, 0); return; }
+    var li = a.closest ? a.closest("li") : null, tema = li ? li.querySelector(".t-tema") : null;
+    abrirNaTeoria(a.getAttribute("href") || "aulas/" + slug + ".html", a.getAttribute("data-titulo") || (tema ? tema.textContent : ""));
+  }
+  // s216: abrir um documento vindo de OUTRA aba (Painel, Listas) -- a Teoria e o leitor, com o titulo dado;
+  // a origem e capturada ANTES do `ir` (part-4)
+  function abrirNaTeoria(href, titulo){
+    var origem = leitorOrigem();
+    ir("aulas", true);
+    window.scrollTo(0, 0);
+    abrirAula(href, titulo, origem);
+  }
+
+  // s216 (part-4, P14; pedido do operador em 05/10: "ao marcar/assinar ... aquela pagina fosse fechada e
+  // voltassemos para a pagina anterior"): fecha o leitor, volta a aba de origem, marca o item concluido
+  // (`slug`) e restaura a rolagem depois do reflow e da medida do iframe; sem origem, volta a Teoria.
+  function voltarOrigem(slug){
+    var o = LEITOR.origem || {aba: "aulas", y: 0};
+    LEITOR.origem = null;
+    fecharAula();
+    ir(o.aba, true);
+    var alvo = slug ? marcarRecente(o.aba, slug) : null;
+    setTimeout(function(){
+      (window.requestAnimationFrame || function(f){ f(); })(function(){
+        window.scrollTo(0, o.y || 0);
+        // na Teoria o item concluido mudou de lugar (foi para a Biblioteca): se ficou fora da tela, aparece
+        if(alvo && o.aba === "aulas" && alvo.getBoundingClientRect){
+          var r = alvo.getBoundingClientRect();
+          if(r.top < 0 || r.bottom > (window.innerHeight || 0)){ try{ alvo.scrollIntoView({block: "nearest"}); }catch(e){} }
+        }
+      });
+    }, 90);
+    return o;
+  }
+  // o item concluido na aba de origem: na Teoria, o do quadro (a Biblioteca abre); no Painel, o li do link
+  function marcarRecente(aba, slug){
+    var li = null;
+    if(aba === "aulas"){
+      li = qd ? qd.querySelector('.qd-item[data-slug="' + slug + '"]') : null;
+      var bib = $("hub-quadro-feitas");
+      if(li && bib && bib.contains(li)){ bib.open = true; }
+    } else if(aba === "painel"){
+      var d = null;
+      try{ d = $("hub-painel-quadro").contentDocument; }catch(e){ d = null; }
+      var a = d ? d.querySelector('a[data-hub-aula="' + slug + '"]') : null;
+      li = a && a.closest ? a.closest("li") : null;
+      if(li){ painelMarcarAssinado(li, true); }
+    }
+    if(li){ li.classList.remove("qd-recente"); void li.offsetWidth; li.classList.add("qd-recente"); }
+    return li;
   }
 
   function fecharAula(){
@@ -593,7 +669,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
       abrirAula(a);
     });
   });
-  $("hub-leitor-voltar").addEventListener("click", fecharAula);
+  $("hub-leitor-voltar").addEventListener("click", function(){ voltarOrigem(); });
 
   // ------------------------------------------------ pendencias (alca fechada v0, s213)
   // Pedido do operador em 04/10/2026: pergunta do agente ganha lugar de resposta dentro do hub, e todo
@@ -902,6 +978,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
       // s214 (pedido do operador, 04/10): assinar = concluir; o quadro marca o item do documento
       quadroMarcarFeito(slug).then(function(ok){
         if(ok && ASSINA.slug === slug){ ASSINA.concluiu = true; assinaPintar(); }
+        assinaVoltar(slug, ok);   // s216 (part-4): concluir = fechar e voltar, so depois do quadro (A10)
       });
       if(ASSINA.slug !== slug){ return; }
       ASSINA.erro = false;
@@ -920,6 +997,17 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
       ASSINA.erro = true;
       assinaPintar();
     });
+  }
+  // s216 (part-4, P14): assinar = concluir = fechar e voltar, so DEPOIS do quadro responder (A10: fechar
+  // antes zera ASSINA.slug e a guarda do .then falha). Gravou no quadro -> volta na hora (a origem mostra o
+  // item marcado); nada a marcar (documento fora do quadro, item ja feito) -> volta em 600 ms, com
+  // "Assinado" a vista; o quadro nao salvou (o item desfeito, sem `data-feito`) -> fica aberta, com o aviso.
+  function assinaVoltar(slug, ok){
+    if(ASSINA.slug !== slug){ return; }
+    if(ok){ voltarOrigem(slug); return; }
+    var li = qd ? qd.querySelector('.qd-item[data-slug="' + slug + '"]') : null;
+    if(li && !li.hasAttribute("data-feito")){ return; }
+    setTimeout(function(){ if(ASSINA.slug === slug){ voltarOrigem(slug); } }, 600);
   }
   // R9: o rodape segue a coluna do documento aberto (margem interna do .wrap/main/article dele)
   function assinaAlinhar(quadro){
@@ -1188,9 +1276,9 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
   // como revisoes direcionadas)". O titulo de cada secao das abas Aulas e Listas vira o controle. A
   // escolha fica POR APARELHO em localStorage["medhub.secoes"] = {"aulas:4": false, "listas:s5": true}
   // e vale so para a secao tocada; a que ele nunca tocou segue o padrao: abertas as revisoes, as
-  // atrasadas e a semana da vez (a 1a >= atual que tem itens); recolhidas as semanas seguintes e "Outras
-  // aulas". Sem storage, a escolha vive na memoria da pagina (sobrevive ao re-render das Listas, nao ao
-  // recarregar). "Concluidas" segue <details>, como era.
+  // atrasadas e a semana da vez (a 1a >= atual que tem itens); recolhidas as semanas seguintes. Sem
+  // storage, a escolha vive na memoria da pagina (sobrevive ao re-render das Listas, nao ao recarregar).
+  // A Biblioteca (s216; era "Outras aulas" + "Concluidas") segue <details>, recolhida.
   var SECOES_CHAVE = "medhub.secoes", SECOES_MEM = {};
   function secoesLer(){
     try{ var v = JSON.parse(localStorage.getItem(SECOES_CHAVE) || "null"); return (v && typeof v === "object" && !Array.isArray(v)) ? v : {}; }catch(e){ return {}; }
@@ -1209,10 +1297,10 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
     var xs = (comItens || []).filter(function(n){ return !atual || n >= atual; }).sort(function(a, b){ return a - b; });
     return xs.length ? xs[0] : (atual || 0);
   }
-  // aberta sem escolha salva? "4" (Aulas) e "s4" (Listas) sao semanas: abre ate a da vez; "outras"
+  // aberta sem escolha salva? "4" (Aulas) e "s4" (Listas) sao semanas: abre ate a da vez; "biblioteca"
   // recolhe; o resto (revisoes, atrasadas, sem semana) abre. PURA.
   function secPadraoAberta(chave, corrente){
-    if(chave === "outras"){ return false; }
+    if(chave === "biblioteca"){ return false; }
     var m = /^s?(\d+)$/.exec(String(chave));
     return m ? parseInt(m[1], 10) <= corrente : true;
   }
@@ -1252,6 +1340,196 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
       '" aria-expanded="' + (aberta ? "true" : "false") + '"><span class="qd-seta" aria-hidden="true"></span>' + miolo + '</h3>';
   }
 
+  // ------------------------------------------------ listas resolvidas: Teoria E Painel (s216, part-2)
+  // Pedido do operador em 05/10/2026 ("integracao, remocao de redundancias"): a lista resolvida na aba
+  // Listas aparecia resolvida na Teoria e ABERTA no Painel ate o proximo tique. Uma assinatura so de
+  // listas/*; cada alvo (o quadro da Teoria, o documento do Painel) pinta o selo "resolvida · registro
+  // pendente". O ultimo estado fica em LISTAS_VIVAS: o Painel que carrega depois do snapshot pinta na
+  // hora. Casa pelo campo `tarefa` do doc, nao pelo id (`t49_1` conta para a 49, A4). So LE; sem leitura
+  // (link compartilhado: a regra `listas` e do dono), fica o build. O plano so registra no backend.
+  var LISTAS_VIVAS = {resolvidas: null, alvos: [], assinou: false};
+  // {tarefa: true} das listas com status resolvida. PURA.
+  function listasResolvidas(docs){
+    var r = {};
+    (docs || []).forEach(function(d){ var x = d && d.data ? d.data() : null;
+      if(x && x.status === "resolvida" && x.tarefa != null && String(x.tarefa) !== ""){ r[String(x.tarefa)] = true; } });
+    return r;
+  }
+  function listasPintar(alvo){
+    var r = LISTAS_VIVAS.resolvidas;
+    if(!r){ return; }
+    var fab = alvo.raiz.nodeType === 9 ? alvo.raiz : document;
+    Array.prototype.forEach.call(alvo.raiz.querySelectorAll(alvo.itens), function(li){
+      var res = !!r[li.getAttribute("data-tarefa")], selo = li.querySelector(".qd-registro"), meta = li.querySelector(alvo.meta);
+      if(res && !selo && meta){
+        selo = fab.createElement("span");
+        selo.className = "qd-registro";
+        selo.textContent = "resolvida · registro pendente";
+        meta.appendChild(selo);
+      }
+      if(!res && selo){ selo.parentNode.removeChild(selo); }
+      alvo.aplicar(li, res);
+    });
+    if(alvo.depois){ try{ alvo.depois(); }catch(e){} }
+  }
+  // raiz = o quadro da Teoria (com `aplicar`, que move o item para a Biblioteca) ou o documento do Painel
+  // (sem `aplicar`: so a classe t-resolvida); `depois` = re-medir o iframe (o Painel cresce ao pintar)
+  function marcarListasEm(raiz, db, aplicar, depois){
+    var alvo = aplicar ? {raiz: raiz, itens: ".qd-item[data-tarefa]:not([data-slug])", meta: ".qd-meta", aplicar: aplicar, depois: depois}
+      : {raiz: raiz, itens: "li.tarefa[data-tarefa]", meta: ".t-meta", depois: depois,
+         aplicar: function(li, res){ if(res){ li.classList.add("t-resolvida"); } else { li.classList.remove("t-resolvida"); } }};
+    LISTAS_VIVAS.alvos.push(alvo);
+    listasPintar(alvo);
+    if(!db || LISTAS_VIVAS.assinou){ return; }
+    LISTAS_VIVAS.assinou = true;
+    db.collection("listas").onSnapshot(function(snap){
+      LISTAS_VIVAS.resolvidas = listasResolvidas(snap && snap.docs);
+      LISTAS_VIVAS.alvos.forEach(function(a){ try{ listasPintar(a); }catch(e){} });
+    }, function(){ LISTAS_VIVAS.assinou = false; /* sem leitura de listas: fica o build */ });
+  }
+  // o Painel (iframe srcdoc de mesma origem): o CSS do selo entra como o do [data-backoffice]
+  function painelListas(doc, quadro){
+    if(doc.head && !doc.getElementById("hub-listas-estilo")){
+      var s = doc.createElement("style");
+      s.id = "hub-listas-estilo";
+      s.textContent = ".qd-registro,.t-assinado{color:var(--acento);font-weight:600}" +
+        ".vivo{margin-left:2px;font-size:1.02rem;font-weight:700;color:var(--acento);white-space:pre}" +
+        "li.tarefa.t-resolvida .t-tema{text-decoration:line-through;text-decoration-thickness:2px;color:var(--tinta3)}" +
+        "li.tarefa.qd-recente{border-color:var(--acento);box-shadow:0 0 0 2px var(--acento-fraco)}";
+      doc.head.appendChild(s);
+    }
+    var depois = function(){ medir(quadro); };
+    try{
+      window.claude.use("db").then(function(db){ marcarListasEm(doc, db, null, depois); painelAssinados(doc, db, depois); painelVivo(doc, db); },
+                                   function(){ marcarListasEm(doc, null, null, depois); });
+    }catch(e){ marcarListasEm(doc, null, null, depois); }
+  }
+  // ------------------------------------------------ Hoje ao vivo no Painel (s216, part-6, P08 v0 = so soma)
+  // Pedido do operador (s214: "desconfio que o dashboard nao esta syncado"): o Painel e foto do publish e
+  // lia "Hoje: 0" depois de 150 cards. A pagina ja grava as notas do lote e as respostas; ao abrir, ela
+  // SOMA ao lado do numero publicado o que gravou depois ("+K", title "desde o publish") -- nunca o
+  // substitui, nunca mexe no teto nem no saldo (o registro oficial segue do tique). Dupla contagem (A16):
+  // o lote no ar ja gravado (sessao == data-sessao-gravada) soma 0 -- comparar sessao, nao horario;
+  // questao de lista ja registrada no plano (a tarefa saiu do Painel) nao soma. Sem db, fica o publicado.
+  // o dia LOGICO (data local) de um instante, por Date.parse -- nunca pela string ISO em UTC (A17). PURA.
+  function vivoDia(t){ var d = new Date(t); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
+  // cards distintos com nota no lote no ar; 0 se ele ja foi gravado (ja esta no publicado). PURA.
+  function vivoCards(notas, lote, sessaoGravada){
+    if(!lote || !lote.sessao || lote.sessao === sessaoGravada){ return 0; }
+    var ids = {};
+    (notas || []).forEach(function(n){ if(n && n.card_id != null && n.rating_primeira != null){ ids[String(n.card_id)] = 1; } });
+    return Object.keys(ids).length;
+  }
+  // questoes distintas respondidas HOJE nas listas ainda nao registradas no plano. PURA.
+  function vivoQuestoes(respostas, listasPendentesDeRegistro, hojeLogico){
+    var abertas = {}, vistas = {};
+    (listasPendentesDeRegistro || []).forEach(function(id){ abertas[String(id)] = 1; });
+    (respostas || []).forEach(function(r){
+      if(!r || !abertas[String(r.lista)] || r.num == null){ return; }
+      var t = Date.parse(r.respondido_em || "");
+      if(!isNaN(t) && vivoDia(t) === hojeLogico){ vistas[String(r.lista) + "_" + r.num] = 1; }
+    });
+    return Object.keys(vistas).length;
+  }
+  // "+K" num span PROPRIO logo depois do numero publicado; K = 0 tira o span
+  function vivoPintar(doc, chave, k){
+    var b = doc.querySelector('b[data-vivo="' + chave + '"]');
+    if(!b || !b.parentNode){ return; }
+    var s = b.parentNode.querySelector('span.vivo[data-vivo-de="' + chave + '"]');
+    if(!k){ if(s){ s.parentNode.removeChild(s); } return; }
+    if(!s){
+      s = (doc.nodeType === 9 ? doc : document).createElement("span");
+      s.className = "vivo";
+      s.setAttribute("data-vivo-de", chave);
+      s.setAttribute("title", "desde o publish");
+      b.parentNode.insertBefore(s, b.nextSibling || null);
+    }
+    s.textContent = "+" + k;
+  }
+  function loteNoAr(){ try{ return JSON.parse(($("lote") || {}).textContent || "{}") || {}; }catch(e){ return {}; } }
+  function painelVivo(doc, db){
+    if(!db){ return; }
+    var lote = loteNoAr(), marca = doc.querySelector("[data-sessao-gravada]");
+    var gravada = marca ? (marca.getAttribute("data-sessao-gravada") || "") : "";
+    if(lote.sessao && lote.sessao !== gravada && doc.querySelector('b[data-vivo="cards"]')){
+      try{
+        db.collection("sessoes/" + lote.sessao + "/notas").onSnapshot(function(s){
+          var notas = ((s && s.docs) || []).map(function(d){ return d.data ? d.data() : null; });
+          vivoPintar(doc, "cards", vivoCards(notas, lote, gravada));
+        }, function(){});
+      }catch(e){}
+    }
+    if(!doc.querySelector('b[data-vivo="questoes"]')){ return; }
+    // A18: uma consulta por lista (where lista ==), so as das tarefas que o Painel mostra (pendentes no plano)
+    var tarefas = {}, resp = {};
+    Array.prototype.forEach.call(doc.querySelectorAll("li.tarefa[data-tarefa]"), function(li){ tarefas[li.getAttribute("data-tarefa")] = 1; });
+    function recontar(){
+      var todas = [];
+      Object.keys(resp).forEach(function(id){ todas = todas.concat(resp[id]); });
+      vivoPintar(doc, "questoes", vivoQuestoes(todas, Object.keys(resp), vivoDia(Date.now())));
+    }
+    try{
+      db.collection("listas").onSnapshot(function(s){
+        ((s && s.docs) || []).forEach(function(d){
+          var x = d.data ? d.data() : null, id = d.id;
+          if(!x || resp[id] || !tarefas[String(x.tarefa)] || x.status === "pendente" || x.status === "bloqueada"){ return; }
+          resp[id] = [];
+          try{
+            db.collection("respostas").where("lista", "==", id).onSnapshot(function(r){
+              resp[id] = ((r && r.docs) || []).map(function(dd){ return dd.data ? dd.data() : null; })
+                .filter(function(y){ return y && y.lista === id; });
+              recontar();
+            }, function(){});
+          }catch(e){}
+        });
+      }, function(){});
+    }catch(e){}
+  }
+  // s216 (part-4): marca "assinado" no li do Painel (a classe e o rotulo junto do link), idempotente
+  function painelMarcarAssinado(li, sim){
+    var m = li.querySelector(".t-assinado"), a = li.querySelector("a[data-hub-aula]");
+    if(sim){ li.classList.add("qd-assinado"); } else { li.classList.remove("qd-assinado"); }
+    if(sim && !m && a && a.parentNode){
+      m = (li.ownerDocument || document).createElement("span");
+      m.className = "t-assinado";
+      m.textContent = " · assinado";
+      a.parentNode.insertBefore(m, a.nextSibling);
+    }
+    if(!sim && m){ m.parentNode.removeChild(m); }
+  }
+  // s216 (part-4): documento assinado no leitor aparece assinado no Painel -- pelo quadro/<slug> quando
+  // ele existe (a aula do quadro: feito) e por analises/pendencias/itens/doc_<slug> quando nao (o documento
+  // fora do quadro, como o Dossie: assinado ou ja lido pelo agente). So o dono le analises/: para quem nao
+  // le, falha calada e o Painel fica como o build (A13). So LE.
+  function painelAssinados(doc, db, depois){
+    if(!db){ return; }
+    var st = {quadro: {}, docs: {}};
+    function pintar(){
+      Array.prototype.forEach.call(doc.querySelectorAll("li.tarefa"), function(li){
+        var a = li.querySelector("a[data-hub-aula]"), slug = a ? a.getAttribute("data-hub-aula") : "";
+        if(!slug){ return; }
+        var sim = Object.prototype.hasOwnProperty.call(st.quadro, slug) ? st.quadro[slug] : !!st.docs[slug];
+        painelMarcarAssinado(li, sim);
+      });
+      if(depois){ try{ depois(); }catch(e){} }
+    }
+    try{
+      db.collection("quadro").onSnapshot(function(s){
+        st.quadro = {};
+        ((s && s.docs) || []).forEach(function(d){ var x = d.data ? d.data() : null; st.quadro[d.id] = !!(x && x.feito); });
+        pintar();
+      }, function(){});
+    }catch(e){}
+    try{
+      db.collection(PEND_COLECAO).where("tipo", "==", "documento").onSnapshot(function(s){
+        st.docs = {};
+        ((s && s.docs) || []).forEach(function(d){ var x = d.data ? d.data() : null;
+          if(x && (x.status === "assinado" || x.status === "absorvida") && /^doc_/.test(d.id)){ st.docs[d.id.slice(4)] = true; } });
+        pintar();
+      }, function(){ /* A13: so o dono le analises/ */ });
+    }catch(e){}
+  }
+
   // --------------------------------------------------------------- quadro
   // O estado "feito" mora no db, em quadro/<slug> = {feito, ts} (regra de escrita "quadro" na
   // declaracao do publish). Sem db, o controle fica desabilitado com uma frase curta.
@@ -1263,13 +1541,11 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
   function iniciarQuadro(){
     // so os itens com controle "feito" (data-slug): tarefa de lista nao tem botao
     var itens = Array.prototype.slice.call(qd.querySelectorAll(".qd-item[data-slug]"));
-    var tarefas = Array.prototype.slice.call(qd.querySelectorAll(".qd-item[data-tarefa]:not([data-slug])"));
     var feitas = qd.querySelector("#hub-quadro-feitas .qd-lista");
     var colecao = null;
 
-    // Cada secao (semana, atrasadas, outras aulas) reconta os seus itens; a de "outras" some
-    // quando esvazia (as fixas ficam, com "Nada em aberto"). As questoes nao mudam: so a aula
-    // que cumpre uma tarefa de aula (0 questoes) e que se move.
+    // Cada secao (semana, atrasadas, revisoes) reconta os seus itens; a nao fixa (revisoes) some
+    // quando esvazia (as fixas ficam, com "Nada em aberto"); a Biblioteca conta tudo o que guarda.
     function recontar(){
       Array.prototype.forEach.call(qd.querySelectorAll(".qd-sem"), function(sec){
         var n = sec.querySelectorAll(".qd-item").length;
@@ -1292,6 +1568,17 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
       lista.insertBefore(li, depois);
     }
 
+    // s216 (part-3): a Biblioteca ordena por data de criacao (mais nova primeiro); item sem data (a
+    // lista resolvida agora) entra no topo
+    function inserirNaBiblioteca(lista, li){
+      var d = li.getAttribute("data-data") || "9999", depois = null;
+      Array.prototype.some.call(lista.children, function(outro){
+        if(outro !== li && (outro.getAttribute("data-data") || "9999") < d){ depois = outro; return true; }
+        return false;
+      });
+      lista.insertBefore(li, depois);
+    }
+
     function aplicar(li, feito){
       var titulo = li.getAttribute("data-titulo") || "";
       var botao = li.querySelector(".qd-feito");
@@ -1304,8 +1591,12 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
       }
       var destino = feito ? feitas
         : qd.querySelector('.qd-sem[data-secao="' + li.getAttribute("data-secao") + '"] .qd-lista');
-      if(destino && li.parentNode !== destino){
-        inserirEmOrdem(destino, li);
+      if(!destino){
+        // s216 (part-3, A7): a aula da Biblioteca nunca teve secao -- fica la, sem riscar, e avisa
+        try{ console.warn("[hub] " + (li.getAttribute("data-slug") || li.getAttribute("data-tarefa") || "item") +
+                          " sem secao de origem: fica na Biblioteca, sem riscar"); }catch(e){}
+      } else if(li.parentNode !== destino){
+        (feito ? inserirNaBiblioteca : inserirEmOrdem)(destino, li);
         li.classList.remove("qd-chegou");
         void li.offsetWidth;
         li.classList.add("qd-chegou");
@@ -1346,31 +1637,14 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
     };
 
     // s214 (pedido do operador, 04/10): lista resolvida na aba Listas sai da semana na hora, com selo;
-    // o plano so registra quando o backend rodar. So LE listas/t<tarefa>; sem leitura, fica o build.
-    function marcarListas(db){
-      if(!tarefas.length){ return; }
-      db.collection("listas").onSnapshot(function(snap){
-        var resolvida = {};
-        (snap.docs || []).forEach(function(d){ var x = d.data && d.data(); resolvida[d.id] = !!(x && x.status === "resolvida"); });
-        tarefas.forEach(function(li){
-          var r = !!resolvida["t" + li.getAttribute("data-tarefa")], selo = li.querySelector(".qd-registro");
-          if(r === li.hasAttribute("data-feito")){ return; }
-          if(r && !selo){
-            selo = document.createElement("span");
-            selo.className = "qd-registro";
-            selo.textContent = "resolvida · registro pendente";
-            li.querySelector(".qd-meta").appendChild(selo);
-          }
-          if(!r && selo){ selo.parentNode.removeChild(selo); }
-          aplicar(li, r);
-        });
-      }, function(){ /* sem leitura de listas (link compartilhado): o quadro fica como o build */ });
-    }
+    // o plano so registra quando o backend rodar. s216 (part-2): a regra mora em `marcarListasEm`, de
+    // topo -- a MESMA pinta o Painel; aqui so o movimento para a Biblioteca.
+    function aplicarLista(li, r){ if(r !== li.hasAttribute("data-feito")){ aplicar(li, r); } }
 
     try{
       window.claude.use("db").then(function(db){
         if(!db){ semArmazenamento(); return; }
-        try{ marcarListas(db); }catch(e){}
+        try{ marcarListasEm(qd, db, aplicarLista); }catch(e){}
         colecao = db.collection("quadro");
         itens.forEach(function(li){ li.querySelector(".qd-feito").disabled = false; });
         colecao.onSnapshot(function(snap){
@@ -1462,8 +1736,16 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
   // s200 (pedido do operador): listas agrupadas por semana do plano, na ordem do plano (seq),
   // como no quadro de Aulas; semana anterior a de hoje = Atrasadas; resolvidas recolhidas no fim.
   var QZ_SEM = (function(){ try{ return JSON.parse(($("hub-semanas") || {}).textContent || "{}") || {}; }catch(e){ return {}; } })();
+  var HUB_LIGACOES = (function(){ try{ return JSON.parse(($("hub-ligacoes") || {}).textContent || "{}") || {}; }catch(e){ return {}; } })();
   function qzItemLista(l, atrasada){ var s = l.status || "capturada";
-    return '<li><button type="button" data-qzl="' + qzEsc(l._id) + '"><p class="qz-tema">' + qzEsc(l.tema) + '</p><span class="qz-chip ' + qzEsc(s) + '">' + qzEsc(ROT_QZ[s] || s) + '</span><p class="qz-meta"><span>' + qzEsc(l.area || "") + '</span><span>' + qzEsc(Math.round(l.q || l.q_previstas || 0)) + ' questões</span>' + (atrasada ? '<span class="qd-atraso">semana ' + qzEsc(l.semana) + '</span>' : '') + '</p></button></li>'; }
+    return '<li' + (QZ.recente && l._id === QZ.recente ? ' class="qz-recente"' : '') + '><button type="button" data-qzl="' + qzEsc(l._id) + '"><p class="qz-tema">' + qzEsc(l.tema) + '</p><span class="qz-chip ' + qzEsc(s) + '">' + qzEsc(ROT_QZ[s] || s) + '</span><p class="qz-meta"><span>' + qzEsc(l.area || "") + '</span><span>' + qzEsc(Math.round(l.q || l.q_previstas || 0)) + ' questões</span>' + (atrasada ? '<span class="qd-atraso">semana ' + qzEsc(l.semana) + '</span>' : '') + '</p></button>' + qzAulasHtml(l) + '</li>'; }
+  // s216 (part-2, pedido do operador em 05/10): a aula que prepara a tarefa da lista, IRMA do botao (um <a>
+  // dentro de <button> e HTML invalido e roubaria o toque); do #hub-ligacoes pelo campo `tarefa` (sem ele,
+  // o t<N> do id). Uma aula = "abrir aula"; varias = o titulo de cada, como na Teoria.
+  function qzAulasHtml(l){
+    var t = l.tarefa != null ? l.tarefa : (/^t(\d+)/.exec(String(l._id || "")) || [])[1], as = HUB_LIGACOES[String(t)] || [];
+    return as.map(function(a){ return '<a class="qz-aula" data-hub-aula href="' + qzEsc(a.href) + '" data-titulo="' + qzEsc(a.titulo) + '">' + (as.length > 1 ? qzEsc(a.titulo) : "abrir aula") + '</a>'; }).join("");
+  }
   // s201 (pedido do operador): o bloco se divide em Questoes (listas da semana) e Simulados (provas
   // UERJ inteiras, do PDF oficial). Simulado = tarefa do plano com area "Simulado".
   // s211 (part-3): cada lista escolhe Estudo (gabarito e cadeia depois de cada questao) ou Prova (tudo
@@ -1504,7 +1786,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
     ls.filter(function(l){ return l.status !== "resolvida"; }).forEach(function(l){
       var atr = !!(atual && l.semana && l.semana < atual), k = atr ? "atrasadas" : (l.semana ? "s" + l.semana : "sem");
       if(!porChave[k]){ var d = datas[String(l.semana)];
-        porChave[k] = {chave: k, semana: atr ? 0 : (l.semana || 0), titulo: atr ? "Atrasadas" : (l.semana ? "Semana " + l.semana + (d ? " · " + d[0] + "–" + d[1] : "") + (l.semana === atual ? " (esta)" : "") : "Sem semana"), itens: [], q: 0, atr: atr};
+        porChave[k] = {chave: k, semana: atr ? 0 : (l.semana || 0), titulo: atr ? "Atrasadas" : (l.semana ? "Semana " + l.semana + (d ? " · " + d[0] + " a " + d[1] : "") + (l.semana === atual ? " (esta)" : "") : "Sem semana"), itens: [], q: 0, atr: atr};
         grupos.push(porChave[k]); }
       porChave[k].itens.push(l); porChave[k].q += Math.round(l.q || l.q_previstas || 0); });
     var feitas = ls.filter(function(l){ return l.status === "resolvida"; });
@@ -1512,13 +1794,18 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
     var corrente = secSemanaAtual(atual, grupos.map(function(g){ return g.semana; }).filter(Boolean));
     $("qz-listas").innerHTML = grupos.map(function(g){ var n = g.itens.length, id = "listas:" + g.chave, alvo = "qz-sec-" + g.chave, ab = secAberta(id, secPadraoAberta(g.chave, corrente));
       return '<section' + (ab ? '' : ' data-recolhida') + '>' + secTituloHtml(id, alvo, ab, qzEsc(g.titulo) + ' <span class="qd-n">' + n + (n === 1 ? " lista" : " listas") + ' · ' + g.q + ' questões</span>') + '<ul class="qz-lista" id="' + qzEsc(alvo) + '">' + g.itens.map(function(l){ return qzItemLista(l, g.atr); }).join("") + '</ul></section>'; }).join("") +
-      (feitas.length ? '<details class="qd-feitas"><summary>Resolvidas <span class="qd-n">' + feitas.length + '</span></summary><ul class="qz-lista">' + feitas.map(function(l){ return qzItemLista(l, false); }).join("") + '</ul></details>' : "") +
+      (feitas.length ? '<details class="qd-feitas"' + (feitas.some(function(l){ return QZ.recente && l._id === QZ.recente; }) ? ' open' : '') + '><summary>Resolvidas <span class="qd-n">' + feitas.length + '</span></summary><ul class="qz-lista">' + feitas.map(function(l){ return qzItemLista(l, false); }).join("") + '</ul></details>' : "") +
       (grupos.length ? "" : '<p class="qd-vazio">Todas as listas capturadas estão resolvidas.</p>');
+    // s216 (part-4): a marca da recem-concluida vale ate ela aparecer JA resolvida (1 rerender la), e rola ate ela
+    if(QZ.recente){ var rec = ls.filter(function(l){ return l._id === QZ.recente; })[0];
+      if(rec && rec.status === "resolvida"){ QZ.recente = null; qzRolarRecente(); } }
   }
   // delegacao: o HTML das Listas e refeito a cada snapshot, o ouvinte fica no conteiner
   function qzListasClique(e){
     var t = e.target.closest("[data-sec]");
     if(t){ secAlternar(t.parentNode, t.getAttribute("data-sec")); return; }
+    var au = e.target.closest("a.qz-aula");   // s216 (part-2): a aula que prepara a lista
+    if(au){ e.preventDefault(); abrirNaTeoria(au.getAttribute("href"), au.getAttribute("data-titulo") || ""); return; }
     var b = e.target.closest("button[data-qzl]"); if(b){ qzAbrir(b.getAttribute("data-qzl")); }
   }
   function qzListasTecla(e){
@@ -1916,12 +2203,28 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
   }
   $("qz-revisao").addEventListener("click", function(e){ var b = e.target.closest("button[data-rev]"); if(b){ QZ.revendo = true; qzRever(parseInt(b.getAttribute("data-rev"), 10)); } });
   $("qz-elos-fim").addEventListener("click", function(e){ var b = e.target.closest("button[data-rev]"); if(b){ QZ.revendo = true; qzRever(parseInt(b.getAttribute("data-rev"), 10)); } });
-  $("qz-concluir").addEventListener("click", function(){
+  function qzConcluir(){
     if(!QZ.db || !QZ.lista || $("qz-concluir").disabled){ return; } var st = $("qz-fim-status"); st.className = "qz-status"; st.textContent = "Gravando…";
-    QZ.db.doc("listas/" + QZ.lista).update({status: "resolvida", resolvida_em: qzAgora(), atualizado_em: qzAgora()})
-      .then(function(){ st.className = "qz-status ok"; st.textContent = "Lista marcada como resolvida."; })
+    var lista = QZ.lista;
+    QZ.db.doc("listas/" + lista).update({status: "resolvida", resolvida_em: qzAgora(), atualizado_em: qzAgora()})
+      .then(function(){ st.className = "qz-status ok"; st.textContent = "Lista marcada como resolvida."; qzConcluiu(lista); })
       .catch(function(e){ st.className = "qz-status ruim"; st.textContent = "Não gravou (" + ((e && e.code) || "erro") + ")."; });
-  });
+  }
+  // s216 (part-4, P14): concluir = fechar e voltar -- a aba Listas, com a lista recem-resolvida marcada por
+  // ESTADO (QZ.recente; o snapshot refaz o HTML e a marca no DOM se perderia, A12). Falha fica na tela de fim.
+  function qzConcluiu(lista){
+    QZ.recente = lista;
+    qzFecharLista();
+    qzRenderListas();
+    qzRolarRecente();
+  }
+  function qzRolarRecente(){
+    setTimeout(function(){
+      var c = $("qz-listas"), el = c && c.querySelector ? c.querySelector(".qz-recente") : null;
+      if(el && el.scrollIntoView){ try{ el.scrollIntoView({block: "center"}); }catch(e){} }
+    }, 60);
+  }
+  $("qz-concluir").addEventListener("click", qzConcluir);
   // s211 (feedback-cadeia-declarada part-2): o ALUNO declara o estado de cada elo; a pagina nao infere
   // nada (a leitura pelas letras -- riscada = elo ok, letra marcada = provavel quebra -- foi revogada:
   // errou em 5 das 7 analises de t26/t96). Vocabulario declarado: docs/SOLUCAO-MEDHUB-BRIEF.md

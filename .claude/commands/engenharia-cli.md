@@ -387,7 +387,7 @@ a posição real, e o derivador do cronograma é `tools/cronograma.py` (assinatu
 ⚰️ **`--set-semana` não move mais o boot (17/09/2026, `plano-ssot-e-cards-v2` Parte 4).** A posição do
 Plano do Dia passou a ser a **semana do PLANO** (menor `semana_plano` com pendência em `plano_tarefas`),
 e `day_plan._resolver_semana_conteudo`/`_semana_conteudo` foram removidos. A chave
-`preparacao_estado.semana_conteudo` sobrevive com **um** leitor: `tools/cobertura_conhecimento.py`.
+`preparacao_estado.semana_conteudo` ficou **sem leitor** desde 06/10/2026 (s216, E06): `tools/cobertura_conhecimento.py` passou a derivar a semana corrente de `plano.panorama()`. ⚰️ *Até a s215 ela era o único leitor.*
 Gravar a posição aqui alimenta só esse check -- para mover a posição do boot: na Fase 1, a camada manual
 da trilha (`core/cronograma/trilha/custom.json` + `python tools/trilha.py --gravar`); na Fase 2,
 `python tools/plano.py --mover ID --semana N`. Norma: `cronograma-contract.md` v1.4.
@@ -589,8 +589,9 @@ regra própria de semana, teto ou ritmo:
   primeiras (e todas as atrasadas) à vista, o resto recolhido.  <!-- CHECK: test_concordancia_painel_x_panorama -->
   **Rota até a prova (s213):** abaixo da corrente, cada semana seguinte até a última da Fase 1 (a chave
   `rota` do mesmo `plano.panorama`), recolhida em `<details>` e com as tarefas no MESMO `<li class="tarefa">`
-  e os mesmos links; a linha "Depois" só sobra sem rota. As semanas e os ids batem com a aba Aulas
-  (`hub.secoes_do_quadro`).  <!-- CHECK: test_rota_concorda_com_a_aba_aulas -->
+  e os mesmos links; a linha "Depois" só sobra sem rota. O cronograma inteiro mora SÓ aqui (s216): a aba
+  Teoria (`hub.secoes_do_quadro`) mostra só a tarefa de aula e a com aula ligada, e toda tarefa de aula da
+  rota está nela, na mesma semana (inclusão, não igualdade).  <!-- CHECK: test_rota_concorda_com_a_aba_aulas -->
   **Ação da tarefa (s213):** lista com questões no banco do hub abre a aba Listas (modo Questões; Simulados
   para simulado) e o link do EMED some -- decisão do operador em 25/09, a mesma precedência do quadro da
   aba Aulas; a aula que CUMPRE ou PREPARA a tarefa (`tarefa_id` e `tarefas` do registro) vem embaixo.  <!-- CHECK: test_lista_no_banco_do_hub_abre_a_aba_listas_e_nao_o_emed -->
@@ -622,13 +623,13 @@ Spec `.vibeflow/specs/plano-ssot-e-cards-v2-part-7.md`.
 
 | Flag | Função |
 |---|---|
-| `--build` | Monta `index.html` (abas **Painel/Aulas/Cards**, nessa ordem, Painel como padrão -- hash e aba lembrada vencem; o player **inline**, composto das 3 regiões marcadas de `core/templates/player.html`) e `manifesto.json` em `--out`; roda o `--check` no fim e sai **1** se ele acusar. |
+| `--build` | Monta `index.html` (abas **Painel/Teoria/Listas/Cards**, nessa ordem desde a s216 -- a Teoria segue com id e hash `aulas` --, Painel como padrão -- hash e aba lembrada vencem; o player **inline**, composto das 3 regiões marcadas de `core/templates/player.html`) e `manifesto.json` em `--out`; roda o `--check` no fim e sai **1** se ele acusar. |
 | `--check` | Confere o manifesto de `--out`: fonte inexistente, `<a href>` relativo do index fora do manifesto (link morto na vitrine), teto de entradas. Exit 1 se acusar. |
 | `--extrair-lote PAGINA.html` | O inverso da injeção: recupera o lote do `<script id="lote">` de uma página salva (a versão viva lida por `Artifact read`). Serve ao `--record-lote --lote` e a remontar sem depender de `tmp/`. |
 | `--confirmar` | **Depois do publish ACEITO** (s193): o `estado_pos_publish.json` do último `--build` de `--out` vira o `registro_publicado.json` -- a base do DIFF. Publish recusado = não confirmar; esquecer é seguro (o próximo build manda de novo). Exit 1 sem build. |
 | `--precisa-publicar` | **A decisão do tique do `/hub-backend`** (s194): compara o lote (drenado?), o painel em disco e o quadro com a **projeção** do último publish confirmado e imprime `sim|nao -- <acao> (<motivo>)`: `nova_fila` (lote drenado ou vazio), `mesmo_lote` (lote em curso e painel/quadro mudou, ou sem projeção registrada: republicar com o MESMO lote), `nada`. Lista também a aula marcada como feita cuja tarefa do plano segue pendente (só relata; quem conclui é o tique, por `plano.py --concluir N --leitura`). Exige `--lote`; `--json` para a saída estruturada. Sempre exit 0. |
 | `--notas DIR\|ARQ` | `--precisa-publicar`: as notas do lote no `db` (o `out_dir` do `ArtifactData list` de `sessoes/<sessao>/notas`, 1 arquivo por card, ou o JSON `{notas: [...]}`). |
-| `--quadro-estado DIR\|ARQ` | `--build`/`--precisa-publicar`: o "feito" do quadro no `db` (o `out_dir` do `ArtifactData list` da coleção `quadro`, 1 arquivo `<slug>.json` = `{feito, ts}`, ou JSON). No build, o feito já sai riscado em "Concluídas". |
+| `--quadro-estado DIR\|ARQ` | `--build`/`--precisa-publicar`: o "feito" do quadro no `db` (o `out_dir` do `ArtifactData list` da coleção `quadro`, 1 arquivo `<slug>.json` = `{feito, ts}`, ou JSON). No build, o feito já sai riscado na Biblioteca (s216; era "Concluídas"). |
 | `--lote ARQ.json` | `--build`/`--precisa-publicar`: o lote de `fsrs_queue.py --export-player` (ou o extraído da página viva). **Trocar o lote troca a sessão da aba Cards** -- ver o rito "DRENAR no player" em `/revisar`. |
 | `--publicado LISTA` | `--build`: a listagem viva do hub -- o `Artifact list scope=files` colado **como sai** (`- "aulas/x.html"  text/html  63060 bytes`; cabeçalho ignorado), 1 path por linha (`#` comenta) ou JSON (`[{"path", "bytes"}]`). O que saiu da seleção e consta aqui vira **`null`**; só fica fora de `files` (mantido) o que está aqui com a hash do registro e o mesmo tamanho. |
 | `--out DIR` | Diretório de saída (default `tmp/hub/`, gitignored). |
@@ -639,7 +640,7 @@ O `manifesto.json` **é** o argumento do publish: `file_path` (a página) + `fil
 fonte | null}`), com painel e aulas **direto das fontes** em `artifacts/` (`aula-<slug>.html` ->
 `aulas/<slug>.html`), sem cópia. 🔴 **Omitir não remove:** no update o runtime mantém o arquivo
 omitido; só `null` remove -- por isso o `--publicado` existe. Limites como dado no módulo: 255
-entradas por versão (contrato do Artifact), 8 reservadas, **cap de 120 aulas** (mais novas primeiro,
+entradas por versão (contrato do Artifact), 8 reservadas, **cap de 200 aulas** (s216; era 120) (mais novas primeiro,
 pela data de criação no git). Aulas e painel **abrem dentro da página** (`fetch` relativo + iframe
 `srcdoc` na própria aba): o frame nunca navega, o drill não perde estado.  <!-- CHECK: test_aula_e_painel_abrem_dentro_da_pagina_sem_navegar -->
 
@@ -648,9 +649,9 @@ pela data de criação no git). Aulas e painel **abrem dentro da página** (`fet
 Revisões, Análises; empilhadas no celular). Slug sem registro entra como `aula` com **WARN no build**;
 tipo inválido falha alto. Cada item tem o controle "feito" (44px): a página grava `quadro/<slug>` =
 `{feito, ts}` no `db` (regra `{path: "quadro", write: "interact"}` na declaração -- texto completo em
-`/revisar`, "Fronteira de escrita") e o item vai riscado para "Concluídas", recolhida; sem `db`, o
+`/revisar`, "Fronteira de escrita") e o item vai riscado para a **Biblioteca** (s216: "Outras aulas" + "Concluídas" numa seção só, recolhida, por data de criação; nada vai para `artifacts/arquivo/`); sem `db`, o
 controle fica desabilitado com uma frase curta. O painel conversa com as abas: "Ir para os cards" e
-"abrir aula" (`data-hub-aba`/`data-hub-aula`) trocam de aba dentro do hub.  <!-- CHECK: test_feito_sai_riscado_em_concluidas_no_build -->
+"abrir aula" (`data-hub-aba`/`data-hub-aula`) trocam de aba dentro do hub.  <!-- CHECK: test_feito_sai_riscado_na_biblioteca_no_build -->
 
 **Projeção (s194):** o `estado_pos_publish.json` e o registro do `--confirmar` guardam também
 `projecao = {painel: sha256 sem o carimbo, quadro: sha256 do quadro montado, sessao}`; é contra ela

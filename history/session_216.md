@@ -4,9 +4,10 @@ layer: history
 status: canonical
 ---
 
-# Sessão 216 -- 2026-10-05/06 -- engenharia do hub (integração e corte de passos) + RD de Hérnias
+# Session 216 -- engenharia do hub (integração e corte de passos) + RD de Hérnias
 
-Modelo: Fable 5.1 (principal) + 3 subagentes Opus. Operador presente até ~23h de 05/10; depois, ordens repassadas pelo /ai-eng (observador na sessão).
+**Data:** 2026-10-05 (noite) a 2026-10-06 (madrugada)
+**Ferramenta:** Claude Code (Fable 5.1, principal) + 3 subagentes Opus. Operador presente até ~23h de 05/10; depois, ordens repassadas pelo /ai-eng (observador na sessão).
 
 ## Produto (decisões dele, todas no `docs/BACKLOG-PRODUTO.md`)
 

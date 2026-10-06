@@ -21,7 +21,7 @@ Uma linha por pedido ou feedback do operador, com origem e estado. Nada sai daqu
 | P06 | Lista resolvida aparecer concluída sem esperar o backend | s214 | feito v0 (Version 67) | -- |
 | P07 | Recolher semanas e blocos, deixando aberta só a que ele quiser | s214 | feito v0 (Version 68) | validar no celular |
 | P08 | **Desconexão dashboard x banco x hub** ("desconfio que o dashboard não está syncado") | s214 | aberto, ENGENHARIA (/ai-eng) | causas medidas: Painel = foto do publish; backend manual; gesto duplicado (P05 resolveu). Falta: "Hoje ao vivo" (opção B aprovada em 28/09; **reafirmada por ele em 05/10, s216:** *"sem um backend dedicado, fazer com que o painel se atualizasse conforme questões/cards são feitos"*) e um desenho de sync sem tique manual. Viável sem backend: a página já grava `sessoes/<sessao>/notas`, `respostas/*` e `listas/*` no `db` do artifact e pode somá-los ao Painel ao abrir; o registro oficial (FSRS, plano) segue do tique |
-| P09 | **Dia de estudo != dia do relógio**: lote começado num dia e terminado depois da meia-noite conta no dia em que começou | s214, 05/10 | aberto, ENGENHARIA (/ai-eng) | caso real: lote `2026-10-04a`, 70 de 150 notas depois de 00h; FSRS gravou o horário real; teto e Painel contam pelo relógio |
+| P09 | **Dia de estudo != dia do relógio**: lote começado num dia e terminado depois da meia-noite conta no dia em que começou | s214, 05/10 | DECIDIDO por ele (s216, 05/10): o lote conta no dia em que COMEÇOU (1ª nota); FSRS guarda o horário real. Vai como regra ao spec do PRD `hub-integracao-cortar-passos` (teto e Painel) | caso real: lote `2026-10-04a`, 70 de 150 notas depois de 00h; FSRS gravou o horário real; teto e Painel contam pelo relógio |
 | P10 | Quadro de pendências (abertas -> respondidas -> absorvidas) no Painel; o ambiente como gestor tipo kanban/GPS | s213 | aberto | spec `alca-fechada-v0` §próximo; memória `feedback_alca_fechada_ambiente_gestor` |
 | P11 | Produto próprio: backend, frontend, APIs, automações | s213-s214 | pós-01/11 | `docs/DISCOVERY-AMBIENTE-AGENTICO-2026-10-02.md` (fases 0-4); gargalos medidos na s214 viram requisitos |
 | P12 | Gestão de produto forte, com o /ai-eng como dono do backlog | s214, 05/10 | aberto | este arquivo + handoff ao /ai-eng |
@@ -35,8 +35,12 @@ Uma linha por pedido ou feedback do operador, com origem e estado. Nada sai daqu
 |---|---|---|
 | E01 | Publish exige ler inteiro todo arquivo novo: `index.html` ~90 mil tokens por publish que muda lote/quadro (gargalo real do protótipo) | aberto (argumento para P11) |
 | E02 | `test_cli_importavel` falha por corrida quando outro agente grava no `ipub.db` (barrou commit) | aberto |
-| E03 | `emed_api.py` recusa lista com questão só em imagem ou certo/errado (t833 t376 t110 t805 t826) | aberto (ele faz no EMED por ora) |
+| E03 | `emed_api.py` recusa lista com questão só em imagem ou certo/errado (t833 t376 t110 t805 t826) | descartado até 01/11 (decisão dele, s216): ele resolve no EMED; volume entra pelo bulk |
 | E04 | Solução MedHub v3 ausente nas 25 listas novas | aberto |
 | E05 | `banco-emed.md` e memória dizem teto de 5.000 docs; a ferramenta informa 25.000 | aberto |
 | E06 | `cobertura_conhecimento.py` chama de "semana corrente" a S17 da grade antiga | aberto |
 | E07 | Grifo das questões e das aulas são dois mecanismos: unificar quando o ambiente próprio existir | pós-01/11 |
+| E08 | Aba Análise (PRD `.vibeflow/prds/hub-aba-analise.md`, s196) | descartado (decisão dele, s216): absorvida por Painel > Documentação (análise = documento com perguntas e assinatura) |
+| E09 | `part-1b` comentário automático no EMED pela API (barrado pelo classificador) | descartado (decisão dele, s216): a Solução MedHub vive no hub; o EMED fica só para resolver |
+| E10 | F141/F142 fila de cards (card de 1 dia servido antes de 24 h; sem trava de 2ª gravação no dia) | aberto, triagem do /ai-eng desde 28/09; evidência em `tmp/f140_auditoria/` |
+| E11 | WARN `CLAUSULA_ORFA_SUBIU` (128 > 127) no 1º commit da s215 sem portador tocado | aberto, não investigado |

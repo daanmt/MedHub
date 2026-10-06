@@ -44,6 +44,7 @@ Fatias F1-F4 da medição (P13), mais F5 (P14) e F6 (P08 v0), em uma sessão de 
 - **F3 Biblioteca daqui em diante:** acaba o `git mv` para `artifacts/arquivo/`; "Outras aulas" + "Concluídas" viram "Biblioteca" (mesmo id `hub-quadro-feitas`); ritos `revisar.md:239`, `aula-base.md:82` e `_doc` do registro atualizados.
 - **F4 Listas -> aula que prepara:** JSON derivado de `ligacoes_do_quadro` num `<script>` próprio; `qzItemLista` ganha "abrir aula".
 - **F5 Concluir = fechar e voltar (P14):** assinatura (`hub.html` ~902) e `qz-concluir` (~1921) chamam, após o `.then` de sucesso, o retorno à aba de origem (guardar a origem ao abrir o leitor; hoje `fecharAula` volta sempre para Aulas). Item recém-concluído marcado ao voltar. ~30 linhas, ~4 testes.
+- **Regra P09 (decisão dele, 05/10):** um lote de cards conta inteiro no dia em que recebeu a 1ª nota, mesmo que termine depois da meia-noite; o FSRS guarda o horário real. Teto do dia e Painel passam a contar por essa regra (`consumo_hoje` do export e `painel.py`). Entra nesta sessão porque F6 mostra o número ao lado do publicado e os dois precisam concordar.
 - **F6 Hoje ao vivo v0 (P08):** o Painel embute `sessao` do lote no ar e o `publicado_em`; ao abrir, a página conta no `db` as notas de `sessoes/<sessao>/notas`, as `respostas/*` de hoje e as `listas/*` resolvidas DEPOIS do `publicado_em` e mostra "+N desde o publish" ao lado do número publicado. Nunca altera teto, saldo nem o número publicado. Regra de dupla contagem = só o que tem timestamp posterior ao publish.
 - **Reordenar as abas** para Painel | Teoria | Listas | Cards (só a ordem dos botões e do `ABAS`; ids e hashes intactos).
 - Conferência em navegador real a 390 px antes do publish (regra s211) e republicação na URL fixa do hub.
@@ -53,8 +54,8 @@ Fatias F1-F4 da medição (P13), mais F5 (P14) e F6 (P08 v0), em uma sessão de 
 - Fusão Cards + Listas numa aba (mexe no player e no teclado do drill).
 - Resumos dentro da Teoria (P03): conteúdo novo, ~160 mil tokens de publish.
 - Pendências no Painel (P10), edição de aulas "como no Notion" (P02), reabrir as 5 aulas arquivadas.
-- "Hoje ao vivo" que SUBSTITUA o número publicado ou recalcule teto/saldo; qualquer decisão sobre o P09.
-- Dado novo no `db`, regra nova de `capabilities`, mudança no `--record-lote`, no export da fila ou no tique do `/hub-backend`.
+- "Hoje ao vivo" que SUBSTITUA o número publicado. (O P09 foi decidido: contar pelo dia em que o lote começou.)
+- Dado novo no `db`, regra nova de `capabilities`, mudança no `--record-lote` ou no tique do `/hub-backend`. (O export da fila muda só no `consumo_hoje`, pela regra P09.)
 - Unificar os grifos de questões e aulas (E07, pós-01/11).
 - Backend próprio (P11, pós-01/11).
 
@@ -68,6 +69,8 @@ Fatias F1-F4 da medição (P13), mais F5 (P14) e F6 (P08 v0), em uma sessão de 
 - Dono do backlog: `/ai-eng` (`~/ai-eng/HANDOFF-MEDHUB-produto-2026-10-05.md`, adendos s215 e s216). Backlog: `docs/BACKLOG-PRODUTO.md` (P08, P13, P14, P15, E01).
 
 ## Open Questions
+
+- Regra P09 no `consumo_hoje`: o dia do lote = dia da 1ª nota gravada na coleção `sessoes/<sessao>/notas` ou o dia do export? Recomendação: 1ª nota.
 
 - F6: o "hoje" das questões respondidas conta pelo `respondida_em` da página; se um dia ele responder no EMED fora do hub, o ao-vivo não vê (já é assim no publicado). Aceito como limite declarado.
 - F5: ao voltar da assinatura de um documento aberto pelo Painel, o iframe do Painel precisa re-marcar o item sem recarregar a foto -- confirmar no spec se `marcarListas` (F2) cobre documentos ou só listas.

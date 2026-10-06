@@ -42,6 +42,8 @@ Executor único (Opus, 627 mil tokens, 225 chamadas, 68 min pelo `usage`): as 6 
 
 ## Fricções
 
+- **Número da suíte (pedido do /ai-eng):** o relatório do executor (`tmp/relatorio_hub_integracao_s216.md`) mede `2 failed, 1445 passed`; as 2 falhas (`test_repo_real_monta_sem_problema`, `test_registro_real_so_com_as_aulas_em_aberto_e_ligadas_ao_plano`) acusavam `aula-rd-hernias.html` sem registro em `core/hub_quadro.json` (arquivo meu, criado em paralelo). O principal registrou `rd-hernias` no quadro e a suíte passou a **1447 passed** (rodada antes do commit e de novo pelo pre-commit de fde9e18). O 1447 prova a suíte com o quadro registrado; não prova o estado em que o executor reportou.
+
 - O publish do hub foi recusado 2x pelo gate "view the live version" mesmo com o build derivado da mesma versão; exigiu ler o fonte salvo por trechos (a linha do quadro tem 45 mil caracteres). Custo real do E01 nesta sessão: ~150 mil tokens só de leitura da página.
 - O harness de navegador copiou um build velho (mtime) e a RD apareceu no lugar errado até o `cp -f` explícito.
 - A questão ao vivo mostrou "+2" com 3 semeadas porque a meia-noite passou no meio da captura: comportamento correto, não defeito.

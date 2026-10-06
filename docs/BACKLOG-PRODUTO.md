@@ -41,6 +41,6 @@ Uma linha por pedido ou feedback do operador, com origem e estado. Nada sai daqu
 | E06 | `cobertura_conhecimento.py` chama de "semana corrente" a S17 da grade antiga | aberto |
 | E07 | Grifo das questões e das aulas são dois mecanismos: unificar quando o ambiente próprio existir | pós-01/11 |
 | E08 | Aba Análise (PRD `.vibeflow/prds/hub-aba-analise.md`, s196) | descartado (decisão dele, s216): absorvida por Painel > Documentação (análise = documento com perguntas e assinatura) |
-| E09 | `part-1b` comentário automático no EMED pela API (barrado pelo classificador) | descartado (decisão dele, s216): a Solução MedHub vive no hub; o EMED fica só para resolver |
+| E09 | `part-1b` comentário do professor do EMED pela API, lido 1 questão por vez para alimentar a NOSSA análise dos elos (barrado pelo classificador na s211) | AUTORIZADO por ele (s216, 05/10, revertendo o descarte de minutos antes): *"utilizamos os comentários para fomentar e contribuir para a nossa própria versão da análise dos elos"*. Depende do bloco `autoMode` em `~/.claude/settings.json` do USUÁRIO (texto em `history/session_212.md` §Texto sugerido); o agente não edita as próprias permissões. Spec: `.vibeflow/specs/feedback-cadeia-declarada-part-1b.md`. Lacuna: simulados UERJ sem `emed_id` |
 | E10 | F141/F142 fila de cards (card de 1 dia servido antes de 24 h; sem trava de 2ª gravação no dia) | aberto, triagem do /ai-eng desde 28/09; evidência em `tmp/f140_auditoria/` |
 | E11 | WARN `CLAUSULA_ORFA_SUBIU` (128 > 127) no 1º commit da s215 sem portador tocado | aberto, não investigado |

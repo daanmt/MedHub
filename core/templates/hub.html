@@ -99,7 +99,11 @@
 .qd-item.qd-recente .qd-bloco{border-color:var(--acento);box-shadow:0 0 0 2px var(--acento-fraco)}
 .qd-feitas{margin-top:26px;border-top:1px solid var(--linha);padding-top:6px}
 .qd-feitas summary{cursor:pointer;min-height:44px;padding:11px 0;font-weight:650;color:var(--tinta2)}
-.qd-feitas .qd-lista{margin-top:8px}
+/* s217 (P17, pedido do operador em 06/10): a Biblioteca por grande area -- CM, CIR, MFC, PED, GO e, no
+   fim, "Varias areas"; cada grupo recolhe como as secoes (o titulo e o controle) */
+.qd-areas{display:grid;gap:18px;margin-top:8px}
+.qd-area{min-width:0}
+.qd-areas > [data-recolhida] + [data-recolhida]{margin-top:-12px}   /* grupos recolhidos = uma lista de titulos */
 .qd-aviso{color:var(--tinta3);font-size:.86em;margin:0 0 14px}
 /* s214 (pedido do operador, 04/10): secao recolhivel nas abas Aulas e Listas -- o titulo e o controle
    (alvo de 44 px), a seta gira; recolhida, fica so o titulo com a contagem */
@@ -634,13 +638,18 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
     }, 90);
     return o;
   }
-  // o item concluido na aba de origem: na Teoria, o do quadro (a Biblioteca abre); no Painel, o li do link
+  // o item concluido na aba de origem: na Teoria, o do quadro (a Biblioteca abre, e o grupo de grande area
+  // dele tambem -- s217, sem gravar no aparelho: nao foi escolha dele); no Painel, o li do link
   function marcarRecente(aba, slug){
     var li = null;
     if(aba === "aulas"){
       li = qd ? qd.querySelector('.qd-item[data-slug="' + slug + '"]') : null;
       var bib = $("hub-quadro-feitas");
-      if(li && bib && bib.contains(li)){ bib.open = true; }
+      if(li && bib && bib.contains(li)){
+        bib.open = true;
+        var grupo = qdGrupoDe(li);
+        if(grupo){ try{ secPintar(grupo, true); }catch(e){} }
+      }
     } else if(aba === "painel"){
       var d = null;
       try{ d = $("hub-painel-quadro").contentDocument; }catch(e){ d = null; }
@@ -1278,7 +1287,8 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
   // e vale so para a secao tocada; a que ele nunca tocou segue o padrao: abertas as revisoes, as
   // atrasadas e a semana da vez (a 1a >= atual que tem itens); recolhidas as semanas seguintes. Sem
   // storage, a escolha vive na memoria da pagina (sobrevive ao re-render das Listas, nao ao recarregar).
-  // A Biblioteca (s216; era "Outras aulas" + "Concluidas") segue <details>, recolhida.
+  // A Biblioteca (s216; era "Outras aulas" + "Concluidas") segue <details>, recolhida; dentro dela, os
+  // grupos por grande area (s217) recolhem como as secoes, todos recolhidos de partida.
   var SECOES_CHAVE = "medhub.secoes", SECOES_MEM = {};
   function secoesLer(){
     try{ var v = JSON.parse(localStorage.getItem(SECOES_CHAVE) || "null"); return (v && typeof v === "object" && !Array.isArray(v)) ? v : {}; }catch(e){ return {}; }
@@ -1315,6 +1325,33 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
   }
   function secTecla(ev, acao){ if(ev.key === "Enter" || ev.key === " " || ev.key === "Spacebar"){ ev.preventDefault(); acao(); } }
   function hubSemanas(){ try{ return JSON.parse(($("hub-semanas") || {}).textContent || "{}") || {}; }catch(e){ return {}; } }
+  // o titulo de uma secao (ou de um grupo da Biblioteca) vira o controle: seta, papel de botao, teclado,
+  // aria-controls na lista; pinta a escolha salva (ou o padrao). Titulo ja ligado nao liga de novo.
+  function secLigar(sec, id, alvo, padrao){
+    var t = sec.querySelector(".qd-titulo"), lista = sec.querySelector(".qd-lista");
+    if(!t || t.hasAttribute("data-sec")){ return; }
+    var seta = document.createElement("span");
+    seta.className = "qd-seta"; seta.setAttribute("aria-hidden", "true");
+    t.insertBefore(seta, t.firstChild);
+    t.setAttribute("role", "button"); t.setAttribute("tabindex", "0"); t.setAttribute("data-sec", id);
+    if(lista){ lista.setAttribute("id", alvo); t.setAttribute("aria-controls", alvo); }
+    secPintar(sec, secAberta(id, padrao));
+    t.addEventListener("click", function(){ secAlternar(sec, id); });
+    t.addEventListener("keydown", function(ev){ secTecla(ev, function(){ secAlternar(sec, id); }); });
+  }
+  // s217 (P17): o grupo de grande area da Biblioteca recolhe como as secoes; padrao recolhido; a escolha
+  // fica no aparelho por area ("aulas:biblioteca:CM"), vale tambem para o grupo criado ao vivo
+  function areaLigar(g){
+    var a = g.getAttribute("data-area") || "";
+    secLigar(g, "aulas:biblioteca:" + a, "qd-lista-biblioteca-" + a, false);
+  }
+  // o grupo de grande area que guarda o item da Biblioteca; fora dela, null
+  function qdGrupoDe(li){
+    for(var p = li ? li.parentNode : null; p && p.getAttribute; p = p.parentNode){
+      if(p.classList && p.classList.contains("qd-area")){ return p; }
+    }
+    return null;
+  }
   // aba Aulas: o HTML vem pronto do build; o titulo ganha aqui o papel de botao (o hub.py nao muda)
   function secoesQuadro(raizQd){
     var secs = Array.prototype.slice.call(raizQd.querySelectorAll(".qd-sem"));
@@ -1322,17 +1359,11 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
       .map(function(s){ return parseInt(s.getAttribute("data-secao"), 10); });
     var corrente = secSemanaAtual(hubSemanas().atual, comItens);
     secs.forEach(function(sec){
-      var chave = sec.getAttribute("data-secao") || "", t = sec.querySelector(".qd-titulo"), lista = sec.querySelector(".qd-lista");
-      if(!chave || !t){ return; }
-      var id = "aulas:" + chave, seta = document.createElement("span");
-      seta.className = "qd-seta"; seta.setAttribute("aria-hidden", "true");
-      t.insertBefore(seta, t.firstChild);
-      t.setAttribute("role", "button"); t.setAttribute("tabindex", "0"); t.setAttribute("data-sec", id);
-      if(lista){ lista.setAttribute("id", "qd-lista-" + chave); t.setAttribute("aria-controls", "qd-lista-" + chave); }
-      secPintar(sec, secAberta(id, secPadraoAberta(chave, corrente)));
-      t.addEventListener("click", function(){ secAlternar(sec, id); });
-      t.addEventListener("keydown", function(ev){ secTecla(ev, function(){ secAlternar(sec, id); }); });
+      var chave = sec.getAttribute("data-secao") || "";
+      if(!chave){ return; }
+      secLigar(sec, "aulas:" + chave, "qd-lista-" + chave, secPadraoAberta(chave, corrente));
     });
+    Array.prototype.forEach.call(raizQd.querySelectorAll(".qd-area"), areaLigar);
   }
   // aba Listas: o HTML e refeito a cada snapshot; o titulo ja nasce controle e o estado e lido na renderizacao
   function secTituloHtml(id, alvo, aberta, miolo){
@@ -1541,11 +1572,47 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
   function iniciarQuadro(){
     // so os itens com controle "feito" (data-slug): tarefa de lista nao tem botao
     var itens = Array.prototype.slice.call(qd.querySelectorAll(".qd-item[data-slug]"));
-    var feitas = qd.querySelector("#hub-quadro-feitas .qd-lista");
+    // s217 (P17, pedido do operador em 06/10): a Biblioteca guarda os itens em grupos por grande area; a
+    // ordem e os rotulos vem do build (`data-areas`, um dono so: o hub.py)
+    var areas = qd.querySelector("#hub-quadro-feitas .qd-areas");
+    var ORDEM = [];
+    try{ ORDEM = JSON.parse(areas.getAttribute("data-areas") || "[]"); }catch(e){ ORDEM = []; }
     var colecao = null;
 
+    function areaPos(chave){
+      for(var i = 0; i < ORDEM.length; i++){ if(ORDEM[i][0] === chave){ return i; } }
+      return ORDEM.length;
+    }
+    // o grupo do item: o `data-area` dele; fora da ordem (ou sem), o "Sem area" -- o build ja acusou
+    function areaDe(li){
+      var a = li.getAttribute("data-area") || "";
+      return areaPos(a) < ORDEM.length ? a : "SEM";
+    }
+    // a lista do grupo da area; o grupo que ainda nao existe nasce aqui, na posicao da ordem, recolhido
+    function grupoLista(chave){
+      var g = areas.querySelector('.qd-area[data-area="' + chave + '"]');
+      if(!g){
+        g = document.createElement("div");
+        g.className = "qd-area"; g.setAttribute("data-area", chave);
+        var t = document.createElement("h4"), n = document.createElement("span"), ul = document.createElement("ul");
+        t.className = "qd-titulo"; t.textContent = (ORDEM[areaPos(chave)] || [chave, chave])[1] + " ";
+        n.className = "qd-n"; n.setAttribute("data-n", ""); n.textContent = "0";
+        ul.className = "qd-lista";
+        t.appendChild(n); g.appendChild(t); g.appendChild(ul);
+        var depois = null;
+        Array.prototype.some.call(areas.children, function(o){
+          if(areaPos(o.getAttribute("data-area")) > areaPos(chave)){ depois = o; return true; }
+          return false;
+        });
+        areas.insertBefore(g, depois);
+        try{ areaLigar(g); }catch(e){}   // falha no controle nunca impede o movimento
+      }
+      return g.querySelector(".qd-lista");
+    }
+
     // Cada secao (semana, atrasadas, revisoes) reconta os seus itens; a nao fixa (revisoes) some
-    // quando esvazia (as fixas ficam, com "Nada em aberto"); a Biblioteca conta tudo o que guarda.
+    // quando esvazia (as fixas ficam, com "Nada em aberto"); a Biblioteca conta tudo o que guarda, e
+    // cada grupo dela, o seu -- o grupo que esvazia sai (s217).
     function recontar(){
       Array.prototype.forEach.call(qd.querySelectorAll(".qd-sem"), function(sec){
         var n = sec.querySelectorAll(".qd-item").length;
@@ -1555,7 +1622,12 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
         sec.querySelector(".qd-vazio").hidden = n > 0;
         if(!sec.hasAttribute("data-fixa")){ sec.hidden = n === 0; }
       });
-      $("hub-quadro-nfeitas").textContent = String(feitas.querySelectorAll(".qd-item").length);
+      Array.prototype.forEach.call(areas.querySelectorAll(".qd-area"), function(g){
+        var n = g.querySelectorAll(".qd-item").length;
+        if(!n){ g.parentNode.removeChild(g); return; }
+        g.querySelector("[data-n]").textContent = String(n);
+      });
+      $("hub-quadro-nfeitas").textContent = String(areas.querySelectorAll(".qd-item").length);
     }
 
     function inserirEmOrdem(lista, li){
@@ -1589,7 +1661,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
         botao.setAttribute("aria-label", rotulo);
         botao.setAttribute("title", rotulo);
       }
-      var destino = feito ? feitas
+      var destino = feito ? grupoLista(areaDe(li))
         : qd.querySelector('.qd-sem[data-secao="' + li.getAttribute("data-secao") + '"] .qd-lista');
       if(!destino){
         // s216 (part-3, A7): a aula da Biblioteca nunca teve secao -- fica la, sem riscar, e avisa

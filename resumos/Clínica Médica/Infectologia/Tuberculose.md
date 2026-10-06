@@ -103,7 +103,8 @@ Após inalação do bacilo, três destinos possíveis:
 
 **Drogas:**
 - **R** -- Rifampicina (600 mg/dia ou 10 mg/kg/dia)
-- **I/H** -- Isoniazida (300 mg/dia ou 10 mg/kg/dia)
+- **I/H** -- Isoniazida
+- ⭐ No adulto, a dose do RIPE sai do comprimido em dose fixa combinada **por faixa de peso** (51-70 kg = 4 comprimidos = 300 mg de isoniazida); 10 mg/kg/dia (7-15) é a dose da isoniazida no esquema de < 10 anos (Guia de Vigilância em Saúde, MS 2024)
 - **P/Z** -- Pirazinamida
 - **E** -- Etambutol
 
@@ -133,9 +134,11 @@ Após inalação do bacilo, três destinos possíveis:
 
 **TB-MDR** = resistência à rifampicina + isoniazida
 
-Esquema *"ALTEPE"*:
-- Amicacina + Levofloxacino + Terizidona + Etionamida + Pirazinamida + Etambutol
-- Fase de ataque: 8 meses; fase de manutenção: 10 meses (levofloxacino + terizidona + etambutol)
+- ⭐ **Vigente (MS, 2024-2025): BPaL por 6 meses** -- bedaquilina + pretomanida + linezolida (pretomanida incorporada pela Portaria SECTICS/MS nº 49/2023; Nota Informativa nº 1/2025-CGTM)
+    - **BPaLM** (+ moxifloxacino) só com sensibilidade à fluoroquinolona comprovada
+    - Elegível: >= 14 anos; excluídos gestante, lactante e TB de SNC, miliar ou osteoarticular
+    - Não elegível ao esquema curto -> esquema longo (cerca de 18 meses), na referência
+- ⚰️ Esquema antigo *"ALTEPE"* (gabarito de questões antigas): amicacina + levofloxacino + terizidona + etionamida + pirazinamida + etambutol; ataque 8 meses, manutenção 10 meses
 
 ### 5.4 Efeitos Adversos
 
@@ -185,6 +188,8 @@ ILTB = contato com bacilo sem doença ativa -> **não transmite**
 - PPD in vitro -- linfócitos T sensibilizados liberam IFN-γ após estímulo antigênico
 - Vantagens: não influenciado por BCG nem por MNT, sem necessidade de retorno em 48-72h, sem viés de leitura
 - Desvantagens: custo elevado, não indicado <2 anos
+- ⭐ **No SUS desde 2020** (Portaria SCTIE/MS nº 50/2020; Conitec nº 573), para grupos: PVHIV com CD4 > 350; crianças de >= 2 e < 10 anos contatos de TB; candidatos a transplante de células-tronco; ampliado em 2023 para uso de imunobiológico ou imunossupressor e pré-transplante de órgão (Nota Informativa nº 1/2023-CGDR)
+- Usar PPD **ou** IGRA, nunca os dois
 
 ### 6.2 Indicações de Tratamento
 
@@ -221,7 +226,7 @@ Por ordem de preferência:
     - **Não usar em gestantes** (falta de estudos)
 2. **4R** -- Rifampicina 600 mg/dia × 4 meses (120 doses)
     - Preferir em hepatopatas, >50 anos
-3. **6H ou 9H** -- Isoniazida 300 mg/dia × 6 (180 doses) ou 9 meses (270 doses)
+3. **6H ou 9H** -- Isoniazida **5-10 mg/kg/dia, máximo 300 mg/dia** × 6 (180 doses) ou 9 meses (270 doses) (Guia de Vigilância em Saúde, MS 2024; Nota Informativa nº 15/2024)
     - Evitar em hepatopatas, <10 anos, >50 anos
 
 **Menores de 10 anos (Notas Informativas nº 6/2024 e nº 15/2024, MS):**
@@ -280,3 +285,8 @@ Nota Informativa nº 6/2024 (MS):
 - ⚠️ A equipe de Consultorio na Rua e ponto de APOIO que compartilha o cuidado com a UBS, nao servico-destino de encaminhamento; transferir o caso para ela reproduz a barreira de acesso que costuma ter causado o abandono.
 - 🔴 **Banca-dependente (TARV na TB-HIV):** o gabarito antigo cobrava CD4 < 50 -> TARV em 2 semanas e CD4 >= 50 -> TARV na 8ª semana; o vigente é TARV em até 7 dias do RIPE para qualquer CD4, e entre a 4ª e a 6ª semana na meningite tuberculosa (PCDT HIV Adultos, Módulo 2, MS 2023). Em questão anterior a 2023, conferir o ano.
 - 🔴 **Banca-dependente (ILTB):** o gabarito antigo cobrava RN coabitante = isoniazida ou rifampicina por 3 meses + PPD, 4R preferencial em menores de 10 anos e 9H na PVHIV; o vigente é 4R sem PPD no RN (BCG ao final), 3RH ou 3HP em menores de 10 anos e 3HP preferencial na PVHIV adulta (Notas Informativas nº 6/2024 e nº 15/2024, MS; PCDT HIV Módulo 2, 2023). Em questão anterior a 2024, conferir o ano.
+- 🔴 **Banca-dependente (TB-MDR):** o gabarito antigo cobrava o esquema longo de 18 meses com injetável (ALTEPE); o vigente é BPaL por 6 meses (bedaquilina + pretomanida + linezolida), BPaLM se sensível à fluoroquinolona, a partir de 14 anos, com o esquema longo só para quem não é elegível (Portaria SECTICS/MS nº 49/2023; Nota Informativa nº 1/2025-CGTM). Em questão anterior a 2025, conferir o ano.
+- ⚠️ "IGRA não está no SUS" é desatualizado: está desde 2020 para grupos definidos (PVHIV com CD4 > 350, contatos de 2 a < 10 anos, transplante; imunobiológico desde 2023), e usa-se PPD ou IGRA, nunca os dois (Portaria SCTIE/MS nº 50/2020; Nota Informativa nº 1/2023-CGDR).
+- ⚠️ Isoniazida na ILTB do adulto = 5-10 mg/kg/dia (máximo 300 mg); 10 mg/kg/dia é faixa pediátrica (Guia de Vigilância em Saúde, MS 2024).
+- 🔴 **Banca-dependente (TB na criança):** o padrão segue 6 meses (2RHZ/4RH); desde 2024 há alternativa de 4 meses (2RHZ/2RH) para TB sensível NÃO GRAVE de 3 meses a 16 anos (gânglio periférico, intratorácica sem obstrução, lesão paucibacilar sem cavidade em 1 lobo e sem miliar, derrame não complicado; bacteriologia negativa ou baixa, sem internação); < 3 meses ou < 4 kg sempre 6 meses (Nota Informativa nº 5/2024-CGTM). Na dúvida, o gabarito é 6 meses.
+- ⚠️ Escore pediátrico do MS: >= 40 muito provável, 30-35 possível, **<= 25** pouco provável (os pontos andam de 5 em 5; "menos de 25" deixa o 25 sem classe); desnutrição grave = peso < percentil 0,1 ou escore-z < -3 (Guia de Vigilância em Saúde, MS 2024).

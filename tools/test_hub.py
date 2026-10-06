@@ -528,7 +528,10 @@ def test_repo_real_monta_sem_problema(tmp_path):
                                                  data_fn=lambda p, r: ("2026-09-22", None))
     assert problemas == []
     assert not [a for a in avisos if "sem tipo" in a or "candidata a arquivo" in a], avisos
+    # s217 (P17): com o plano real, nenhum item da Teoria cai no grupo "Sem area" da Biblioteca
+    assert not [a for a in avisos if "grande area" in a], avisos
     pagina = (tmp_path / "hub" / "index.html").read_text(encoding="utf-8")
+    assert hub.sem_area_na_pagina(pagina) == []
     assert re.search(r'<section class="qd-sem" data-secao="\d+"', pagina), "semanas do plano real"
     assert "questões" in pagina
     reais = sorted(p.name for p in (ROOT / "artifacts").glob("aula-*.html"))

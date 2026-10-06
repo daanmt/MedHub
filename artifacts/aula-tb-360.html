@@ -1,0 +1,686 @@
+<title>Tuberculose 360</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,480;9..144,600;9..144,680&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EFF3F0; --card:#FAFCFA; --sunk:#E2E9E4;
+  --ink:#18211C; --ink2:#4C5A52; --ink3:#6F7D75;
+  --line:rgba(24,33,28,.13); --line2:rgba(24,33,28,.26);
+  --teal:#1F6B5E; --teal-ink:#154A41; --teal-wash:#DCEBE5;
+  --carmine:#8E2F41; --carmine-ink:#6B2231; --carmine-wash:#F5E2E6;
+  --amber:#8A5A17; --amber-ink:#6B4610; --amber-wash:#F3E6CC;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#8A988F;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#8A988F;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font:16px/1.6 "Source Sans 3",-apple-system,"Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+h1,h2,h3{margin:0;font-family:Fraunces,Georgia,serif;font-weight:600;letter-spacing:-.01em;text-wrap:balance;line-height:1.15;color:var(--ink)}
+.wrap{max-width:780px;margin:0 auto;padding:0 16px 70px}
+:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+a{color:var(--teal-ink)}
+strong{font-weight:600;color:var(--ink)}
+
+/* topo */
+.top{padding:36px 0 22px;border-bottom:1px solid var(--line2)}
+.eye{font:600 11px/1.3 "Source Sans 3";letter-spacing:.12em;text-transform:uppercase;color:var(--teal-ink);margin:0 0 14px}
+.top h1{font-size:clamp(28px,6vw,44px);font-weight:680;margin-bottom:14px}
+.top .sub{font-size:16.5px;line-height:1.55;color:var(--ink2);margin:0 0 20px}
+.stats{display:flex;gap:18px;flex-wrap:wrap}
+.stat{display:flex;flex-direction:column;gap:2px;min-width:0}
+.stat b{font:600 21px/1 "IBM Plex Mono";color:var(--teal-ink);font-variant-numeric:tabular-nums}
+.stat span{font-size:11.5px;color:var(--ink3)}
+
+.nav{display:flex;flex-wrap:wrap;gap:6px;padding:20px 0 4px}
+.nav a{font-size:13px;text-decoration:none;color:var(--ink2);border:1px solid var(--line2);border-radius:2px;padding:4px 9px;min-width:0}
+.nav a:hover{color:var(--ink);border-color:var(--teal)}
+
+/* atos */
+.ato{margin:40px 0 0;padding:14px 16px;background:var(--teal-wash);border-left:3px solid var(--teal)}
+.ato span{font:700 10.5px "Source Sans 3";letter-spacing:.12em;text-transform:uppercase;color:var(--teal-ink);display:block;margin-bottom:3px}
+.ato h2{font-size:clamp(21px,4vw,28px)}
+
+/* as quatro portas */
+.trilho-box{margin:18px 0 0;padding:16px 14px 10px;background:var(--card);border:1px solid var(--line2)}
+.trilho-box p{margin:0 0 6px;font-size:14px;color:var(--ink3)}
+.trilho{list-style:none;margin:0;padding:0;display:grid}
+.trilho li{position:relative;min-width:0}
+.trilho a{display:grid;grid-template-columns:30px minmax(0,1fr);gap:11px;align-items:start;padding:6px 0;text-decoration:none}
+.trilho .n{width:30px;height:30px;border-radius:50%;border:1.5px solid var(--teal);background:var(--card);display:flex;align-items:center;justify-content:center;font:600 12px "IBM Plex Mono";color:var(--teal-ink);position:relative;z-index:1}
+.trilho li:not(:last-child)::before{content:"";position:absolute;left:14px;top:36px;bottom:-6px;width:1.5px;background:var(--teal);opacity:.5}
+.trilho .t{min-width:0;padding-top:3px}
+.trilho b{display:block;font-weight:600;font-size:15px;line-height:1.3;color:var(--ink)}
+.trilho small{display:block;font-size:13px;line-height:1.4;color:var(--ink3)}
+.trilho a:hover b{color:var(--teal-ink)}
+
+/* degraus */
+.degrau{padding:30px 0;border-bottom:1px solid var(--line)}
+.dhead{display:flex;gap:13px;align-items:flex-start;margin-bottom:12px}
+.dnum{flex-shrink:0;width:38px;height:38px;border:1.5px solid var(--teal);border-radius:50%;display:flex;align-items:center;justify-content:center;font:600 14px "IBM Plex Mono";color:var(--teal-ink)}
+.dtitle{min-width:0;padding-top:3px}
+.dtitle h3{font-size:clamp(19px,3.4vw,24px)}
+.src{display:block;margin-top:5px;font:500 11.5px/1.4 "IBM Plex Mono";color:var(--ink3)}
+.lede{font-size:16px;line-height:1.55;color:var(--ink2);margin:0 0 14px;font-style:italic}
+.prose ul{margin:0 0 12px;padding-left:20px}
+.prose li{font-size:15.4px;line-height:1.55;color:var(--ink2);margin-bottom:6px}
+.prose li:last-child{margin-bottom:0}
+h4{font:600 14px "Source Sans 3";color:var(--ink);margin:20px 0 8px}
+
+.trap,.banca{margin:16px 0;padding:13px 16px}
+.trap{border-left:3px solid var(--carmine);background:var(--carmine-wash)}
+.banca{border-left:3px solid var(--amber);background:var(--amber-wash)}
+.albl{font:700 10.5px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px}
+.trap .albl{color:var(--carmine-ink)}
+.banca .albl{color:var(--amber-ink)}
+.trap p,.banca p{font-size:15px;line-height:1.55;color:var(--ink);margin:0}
+
+/* lado a lado */
+.vs{display:grid;grid-template-columns:minmax(0,1fr);gap:1px;background:var(--line2);border:1px solid var(--line2);margin:16px 0}
+.vs>div{background:var(--card);padding:12px 14px;min-width:0}
+.vs h5{font:700 12px "Source Sans 3";letter-spacing:.04em;text-transform:uppercase;margin:0 0 6px}
+.vs .a h5{color:var(--carmine-ink)}
+.vs .b h5{color:var(--teal-ink)}
+.vs ul{margin:0;padding-left:17px}
+.vs li{font-size:14.4px;line-height:1.5;color:var(--ink2);margin-bottom:4px;overflow-wrap:break-word}
+
+/* tabelas de critério */
+.crit{border:1px solid var(--line2);margin:16px 0;background:var(--card)}
+.crit .row{display:grid;grid-template-columns:minmax(0,1fr);gap:2px;padding:9px 13px;font-size:14.2px}
+.crit .row+.row{border-top:1px solid var(--line)}
+.crit .row>*{min-width:0}
+.crit .k{font-weight:600;color:var(--teal-ink)}
+.crit .v{color:var(--ink2);line-height:1.48;overflow-wrap:break-word}
+.crit.hd .row:first-child{background:var(--sunk)}
+.crit.hd .row:first-child>*{font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink3);font-weight:600}
+.crit.c3 .row{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:4px 12px}
+.crit.c3 .row .k{grid-column:1 / -1}
+.crit.c3.hd .row:first-child .k{display:none}
+.mal{color:var(--carmine-ink);font-weight:600}
+
+/* fases do esquema e cortes do escore */
+.ext{display:grid;grid-template-columns:minmax(0,1fr);gap:1px;background:var(--line2);border:1px solid var(--line2);margin:16px 0}
+.ext>div{background:var(--card);padding:13px 14px;min-width:0}
+.ext .fv{display:block;font:600 17px/1.25 Fraunces,Georgia,serif;color:var(--teal-ink);margin-bottom:5px}
+.ext .tot .fv{color:var(--carmine-ink)}
+.ext .fk{font-size:14px;line-height:1.48;color:var(--ink2)}
+
+/* escore pediátrico: pontos alinhados */
+.esc{border:1px solid var(--line2);margin:16px 0;background:var(--card)}
+.esc .g{padding:10px 13px}
+.esc .g+.g{border-top:1px solid var(--line)}
+.esc h5{font:700 12px "Source Sans 3";letter-spacing:.04em;text-transform:uppercase;color:var(--teal-ink);margin:0 0 6px}
+.esc .p{display:grid;grid-template-columns:42px minmax(0,1fr);gap:10px;align-items:baseline;padding:2px 0}
+.esc .p b{font:600 14px "IBM Plex Mono";color:var(--teal-ink);text-align:right;font-variant-numeric:tabular-nums}
+.esc .p.neg b{color:var(--carmine-ink)}
+.esc .p span{font-size:14.2px;line-height:1.45;color:var(--ink2);min-width:0}
+
+
+/* síntese */
+.synth{background:var(--card);border:1px solid var(--line2);padding:20px 16px;margin-top:40px}
+.synth h2{font-size:23px;margin-bottom:6px}
+.synth .note{font-size:14px;color:var(--ink3);margin:0 0 14px}
+.trig{display:grid;grid-template-columns:minmax(0,1fr);gap:1px;background:var(--line2);border:1px solid var(--line2)}
+.trig div{background:var(--sunk);padding:10px 13px;min-width:0}
+.trig .tk{font:700 11px "IBM Plex Mono";color:var(--teal-ink);display:block;margin-bottom:3px}
+.trig .tv{font-size:13.8px;line-height:1.45;color:var(--ink2)}
+.trig .tv b{color:var(--carmine-ink)}
+.synth.arm{border-left:3px solid var(--carmine)}
+.synth.arm h2::before{content:"";display:inline-block;width:11px;height:11px;border-radius:50%;background:var(--carmine);margin-right:9px;vertical-align:2px}
+ol.armas{margin:0;padding-left:22px}
+ol.armas li{font-size:15px;line-height:1.5;color:var(--ink2);margin-bottom:8px}
+ol.armas li::marker{font:600 13px "IBM Plex Mono";color:var(--carmine-ink)}
+ol.armas .d{font:500 11.5px "IBM Plex Mono";color:var(--ink3)}
+ol.escada{margin:0;padding-left:22px}
+ol.escada li{font-size:15px;line-height:1.5;color:var(--ink2);margin-bottom:7px}
+ol.escada li::marker{font:600 13px "IBM Plex Mono";color:var(--teal-ink)}
+
+footer{margin-top:46px;padding-top:18px;border-top:1px solid var(--line2)}
+footer p{font-size:12.3px;color:var(--ink3);margin:0 0 7px;line-height:1.5}
+code{font-family:"IBM Plex Mono",Consolas,monospace;font-size:11.5px;background:var(--sunk);padding:1px 4px;border-radius:2px;word-break:break-all}
+
+/* telas maiores: o mesmo conteúdo ganha colunas */
+@media (min-width:560px){
+  .vs{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .crit .row{grid-template-columns:150px minmax(0,1fr);gap:12px}
+  .crit.c3 .row{grid-template-columns:130px minmax(0,1fr) minmax(0,1fr);gap:12px}
+  .crit.c3 .row .k{grid-column:auto}
+  .crit.c3.hd .row:first-child .k{display:block}
+  .trig{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (min-width:640px){
+  .wrap{padding:0 24px 90px}
+  .top{padding:46px 0 26px}
+  .degrau{padding:34px 0}
+  .ext{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .synth{padding:26px 22px}
+  .trilho{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .trilho a{grid-template-columns:minmax(0,1fr);gap:8px;padding:0 10px 4px 0}
+  .trilho li:not(:last-child)::before{left:36px;right:4px;top:15px;bottom:auto;width:auto;height:1.5px}
+  .trilho .t{padding-top:0}
+}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <p class="eye">MedHub · Aula-base · Refresh dirigido · CM, PED, CIR e MFC · tarefa #1797</p>
+  <h1>Tuberculose 360: as quatro portas de entrada</h1>
+  <p class="sub">O tema mais cobrado da UERJ chega pela clínica, pela pediatria, pela cirurgia e pela atenção primária. O bacilo é um só. Em cada porta muda o exame que decide e o esquema que trata.</p>
+  <div class="stats">
+    <div class="stat"><b>6 meses</b><span>esquema básico</span></div>
+    <div class="stat"><b>12 meses</b><span>SNC e osso</span></div>
+    <div class="stat"><b>40</b><span>pontos: tratar a criança</span></div>
+    <div class="stat"><b>5 mm</b><span>PT que trata o contato</span></div>
+    <div class="stat"><b>20</b><span>degraus</span></div>
+  </div>
+</header>
+
+<nav class="nav" aria-label="Atalhos">
+  <a href="#d0">Régua</a><a href="#d1">Diagnóstico</a><a href="#d3">RIPE</a><a href="#d4">Efeitos</a><a href="#d5">TB-HIV</a>
+  <a href="#d8">Escore</a><a href="#d10">BCG</a><a href="#d11">RN</a><a href="#d13">Pleural</a><a href="#d14">Abdome</a>
+  <a href="#d16">Contatos</a><a href="#d18">ILTB</a><a href="#d19">Abandono</a>
+  <a href="#gat">Gatilhos</a><a href="#arm">Armadilhas</a><a href="#esc">Escada</a>
+</nav>
+
+<div class="trilho-box">
+  <p>As quatro portas, na ordem desta aula:</p>
+  <ol class="trilho">
+    <li><a href="#d1"><span class="n">CM</span><span class="t"><b>Adulto</b><small>diagnóstico, RIPE, HIV</small></span></a></li>
+    <li><a href="#d7"><span class="n">PED</span><span class="t"><b>Criança</b><small>escore, RHZ, BCG, RN</small></span></a></li>
+    <li><a href="#d12"><span class="n">CIR</span><span class="t"><b>Órgão</b><small>pleura, abdome, gânglio</small></span></a></li>
+    <li><a href="#d15"><span class="n">MFC</span><span class="t"><b>Território</b><small>busca, contatos, ILTB</small></span></a></li>
+  </ol>
+</div>
+
+<section class="degrau" id="d0">
+  <div class="dhead"><span class="dnum">0</span><div class="dtitle"><h3>A régua: um bacilo, três destinos</h3><span class="src">Inf/12 p5-7, 10; Ped/33 p5-10</span></div></div>
+  <p class="lede">Toda porta parte da mesma história natural. Saber em que ponto dela o paciente está responde se ele transmite e o que se trata.</p>
+  <div class="prose"><ul>
+    <li>Bacilo álcool-ácido resistente (BAAR): parede rica em lipídio (ácido micólico). Resiste ao antibiótico comum; cora no Ziehl-Neelsen.</li>
+    <li>Aeróbio estrito: prefere o ápice, onde há mais oxigênio. A cavidade é a fábrica de bacilos.</li>
+    <li>Transmite por aerossol <strong>só a forma pulmonar e a laríngea</strong>. Pleural, ganglionar e meníngea isoladas não transmitem.</li>
+    <li>Inalou: cerca de 10% adoecem logo (primária); 90% contêm o bacilo em <strong>infecção latente (ILTB)</strong>, sem doença e sem transmissão. Destes, 5-10% reativam ao longo da vida.</li>
+  </ul></div>
+  <div class="crit c3 hd">
+    <div class="row"><span class="k">Forma</span><span class="v">Quem e como</span><span class="v">Imagem</span></div>
+    <div class="row"><span class="k">Primária</span><span class="v">Criança; febre, pouca tosse</span><span class="v">RX normal ou adenomegalia hilar; nódulo de Ghon + linfonodo = complexo de Ranke</span></div>
+    <div class="row"><span class="k">Secundária</span><span class="v">Adulto e adolescente; tosse com ou sem hemoptise, febre vespertina, sudorese, emagrecimento</span><span class="v">Cavidade e infiltrado em lobo superior; árvore em brotamento na tomografia</span></div>
+    <div class="row"><span class="k">Miliar</span><span class="v">Bacilo no sangue; AIDS avançada, criança pequena</span><span class="v">Micronódulos difusos</span></div>
+  </div>
+</section>
+
+<div class="ato" id="cm"><span>Porta 1 · Clínica Médica</span><h2>O adulto</h2></div>
+
+<section class="degrau" id="d1">
+  <div class="dhead"><span class="dnum">1</span><div class="dtitle"><h3>Quem investigar e qual exame decide</h3><span class="src">Inf/12 p10-12</span></div></div>
+  <p class="lede">Diagnóstico = clínica compatível + imagem + bacteriologia. Cada exame bacteriológico responde a uma pergunta diferente.</p>
+  <div class="prose"><ul>
+    <li>Sintomático respiratório (SR): tosse por <strong>3 semanas ou mais</strong> (Ministério da Saúde, MS); 2 semanas ou mais (SBPT). Em população vulnerável, qualquer duração (degrau 15).</li>
+  </ul></div>
+  <div class="crit c3 hd">
+    <div class="row"><span class="k">Exame</span><span class="v">Para que serve</span><span class="v">Limite</span></div>
+    <div class="row"><span class="k">TRM-TB (teste rápido molecular)</span><span class="v">Caso novo pulmonar, laríngeo e extrapulmonar. Já mostra <strong>resistência à rifampicina</strong></span><span class="v">Só acha M. tuberculosis. <span class="mal">Não serve para controle de cura</span>: acha DNA de bacilo morto</span></div>
+    <div class="row"><span class="k">Baciloscopia (Ziehl-Neelsen)</span><span class="v">Busca ativa; 2 amostras (na consulta e na manhã seguinte). <strong>Controle mensal</strong> do tratamento</span><span class="v">Sensibilidade 60-80%. Também cora outras micobactérias e Nocardia</span></div>
+    <div class="row"><span class="k">Cultura + teste de sensibilidade (TS)</span><span class="v">Padrão-ouro. TRM positivo; TRM negativo com clínica persistente; micobactéria não tuberculosa; recidiva; baciloscopia positiva após o 2º mês</span><span class="v">Até 8 semanas</span></div>
+    <div class="row"><span class="k">LF-LAM (urina)</span><span class="v">Só pessoa vivendo com HIV (PVHIV); degrau 5</span><span class="v">Auxiliar: completar com TRM e cultura</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Clínica compatível e baciloscopia negativa: a hipótese continua TB. Próximo passo, cultura.</li>
+    <li>Fechou TB: pedir <strong>anti-HIV</strong> sempre.</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="d2">
+  <div class="dhead"><span class="dnum">2</span><div class="dtitle"><h3>Quando pensar em resistência</h3><span class="src">Inf/12 p12, 15; resumo TB, armadilhas</span></div></div>
+  <p class="lede">Resistência nasce de tratamento irregular. Quem já tomou remédio e voltou é o suspeito.</p>
+  <div class="prose"><ul>
+    <li>Pensar em: <strong>retratamento</strong> (recidiva ou volta após abandono), falência (baciloscopia que segue positiva), contato de caso resistente.</li>
+    <li>Nesses casos, antes de reiniciar: TRM-TB (triagem de rifampicina) <strong>+ cultura com TS</strong>.</li>
+    <li>TB multidroga resistente (MDR) = resistente a rifampicina <strong>e</strong> isoniazida. Trata na referência.</li>
+    <li>Vigente (MS, 2024-2025): <strong>BPaL por 6 meses</strong> (bedaquilina + pretomanida + linezolida); BPaLM (+ moxifloxacino) se sensível a fluoroquinolona. A partir de 14 anos; fora gestante, lactante e TB de SNC, miliar ou osteoarticular.</li>
+    <li>Quem não é elegível ao curto: esquema longo, de 18 meses.</li>
+  </ul></div>
+  <div class="banca"><div class="albl">Depende da banca</div>
+    <p>Questão antiga espera o esquema longo de 18 meses, com injetável. O curto (BPaL) é a regra desde a Portaria SECTICS 49/2023 e a Nota Informativa 1/2025. Confira o ano da questão.</p></div>
+</section>
+
+<section class="degrau" id="d3">
+  <div class="dhead"><span class="dnum">3</span><div class="dtitle"><h3>Esquema básico: 2RHZE/4RH</h3><span class="src">Inf/12 p13-14, 17; Ped/33 p7, 39</span></div></div>
+  <p class="lede">Duas fases, dois alvos. A intensiva derruba a população de bacilos; a manutenção elimina os persistentes e evita a recidiva.</p>
+  <div class="ext">
+    <div><span class="fv">2 meses RHZE</span><span class="fk">Rifampicina (R) + isoniazida (H) + pirazinamida (Z) + etambutol (E)</span></div>
+    <div><span class="fv">4 meses RH</span><span class="fk">Pulmonar e extrapulmonar, a partir de 10 anos: total de 6 meses</span></div>
+    <div class="tot"><span class="fv">SNC ou osso: 12 meses</span><span class="fk">2RHZE + <strong>10RH</strong> (degrau 6)</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Comprimido de dose fixa combinada (4 em 1, depois 2 em 1); o número de comprimidos sai da faixa de peso.</li>
+    <li><strong>Piridoxina (vitamina B6)</strong> junto: alcoolista, PVHIV, diabético, gestante.</li>
+    <li>Seguimento: consulta e baciloscopia mensais; RX no 2º mês e no fim; no 1º mês, HIV, glicemia, função renal e hepática.</li>
+    <li>Com tratamento correto, o adulto deixa de transmitir em cerca de 15 dias.</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="d4">
+  <div class="dhead"><span class="dnum">4</span><div class="dtitle"><h3>Efeitos adversos: o que mantém e o que suspende</h3><span class="src">Inf/12 p14-17; Inf/6 p9</span></div></div>
+  <p class="lede">Menor = maneja sem parar. Maior = suspende. Cada droga tem a sua assinatura.</p>
+  <div class="crit c3 hd">
+    <div class="row"><span class="k">Droga</span><span class="v">Menor (mantém)</span><span class="v">Maior (suspende)</span></div>
+    <div class="row"><span class="k">Rifampicina</span><span class="v">Urina e suor alaranjados: só orientar. Prurido leve</span><span class="v">Nefrite intersticial; citopenias (plaquetopenia); vasculite; hepatite colestática</span></div>
+    <div class="row"><span class="k">Isoniazida</span><span class="v"><strong>Neuropatia periférica: piridoxina</strong></span><span class="v">Psicose, convulsão, encefalopatia; hepatite hepatocelular</span></div>
+    <div class="row"><span class="k">Pirazinamida</span><span class="v">Artralgia; hiperuricemia</span><span class="v">Hepatotoxicidade; rabdomiólise com insuficiência renal</span></div>
+    <div class="row"><span class="k">Etambutol</span><span class="v">Hiperuricemia</span><span class="v mal">Neurite óptica</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Todas: náusea e epigastralgia. Conduta: tomar 2 horas após o café da manhã. Exantema moderado a grave suspende qualquer uma.</li>
+  </ul></div>
+  <h4>Hepatotoxicidade</h4>
+  <div class="prose"><ul>
+    <li>Suspender o esquema com transaminase <strong>5 vezes o normal sem sintoma</strong>, ou <strong>3 vezes com sintoma digestivo ou icterícia</strong>.</li>
+    <li>Normalizou: reintroduzir em etapas de 3-7 dias, conferindo as enzimas a cada uma: <strong>rifampicina + etambutol -&gt; isoniazida -&gt; pirazinamida</strong>.</li>
+    <li>Cirrose: o básico não serve. Amicacina + etambutol + levofloxacino (5 meses), depois etambutol + levofloxacino (7 meses).</li>
+  </ul></div>
+  <h4>Rifampicina e interações</h4>
+  <div class="prose"><ul>
+    <li>Indutora enzimática: derruba o nível de outros fármacos.</li>
+    <li>Dolutegravir: <strong>dobrar a dose</strong> (50 mg de 12/12 h).</li>
+    <li>Inibidor de protease (IP): não associar. Trocar o IP; se impossível, trocar a rifampicina por <strong>rifabutina</strong>.</li>
+    <li>Anticoncepcional hormonal perde eficácia: orientar método de barreira.</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="d5">
+  <div class="dhead"><span class="dnum">5</span><div class="dtitle"><h3>TB-HIV: a porta mais letal</h3><span class="src">Inf/12 p10, 12, 15; Inf/6 p9; resumo TB §5.2 (PCDT HIV 2023)</span></div></div>
+  <p class="lede">TB é a principal causa de morte na PVHIV. A banca cobra o relógio da terapia antirretroviral (TARV) e as interações.</p>
+  <div class="vs">
+    <div class="b"><h5>Achar</h5><ul>
+      <li>Rastrear em toda consulta: tosse de qualquer duração, febre, emagrecimento, sudorese noturna.</li>
+      <li>LF-LAM na urina: sintomático; assintomático com CD4 até 200 internado ou até 100 no ambulatório; doente grave.</li>
+      <li>Mais miliar e mais extrapulmonar.</li>
+      <li>Prova tuberculínica (PT) pode vir falso-negativa.</li></ul></div>
+    <div class="a"><h5>Tratar</h5><ul>
+      <li>RIPE primeiro. <strong>TARV em até 7 dias</strong>, qualquer CD4. Nunca no mesmo dia.</li>
+      <li><strong>Meningite tuberculosa: TARV após 4-6 semanas.</strong> A síndrome inflamatória de reconstituição imune (IRIS) no SNC é grave. Neurocriptococose: mesma janela.</li>
+      <li>TARV: tenofovir + lamivudina + dolutegravir dobrado.</li></ul></div>
+  </div>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p>Gabarito antigo: CD4 abaixo de 50, TARV em 2 semanas; acima, na 8ª semana. O vigente (PCDT HIV 2023) é até 7 dias para qualquer CD4. Em questão anterior a 2023, confira o ano.</p></div>
+</section>
+
+<section class="degrau" id="d6">
+  <div class="dhead"><span class="dnum">6</span><div class="dtitle"><h3>TB meníngea e osteoarticular: 12 meses</h3><span class="src">Inf/1 p28-29; Ped/33 p12, 42; resumo TB §3</span></div></div>
+  <p class="lede">SNC e osso pedem manutenção de 10 meses. No SNC, o corticoide reduz sequela.</p>
+  <div class="prose"><ul>
+    <li>Quadro arrastado: febre, perda de peso, cefaleia, confusão. Gosta da base do crânio: paralisia de nervo craniano, sobretudo o <strong>VI par (abducente)</strong>.</li>
+    <li>Líquor: pressão alta, linfomonocitário, <strong>glicose muito baixa</strong>, proteína alta.</li>
+    <li>Certeza: PCR (teste molecular) no líquor. Baciloscopia quase sempre negativa; cultura demora.</li>
+    <li>Ressonância é a imagem mais sensível: tuberculoma com realce anelar, hidrocefalia, realce meníngeo da base.</li>
+    <li>Tratar: 2RHZE + 10RH + <strong>corticoide por 4 semanas</strong> (prednisona 1-2 mg/kg/dia ou dexametasona), com retirada gradual. Criança: RHZ e fisioterapia precoce.</li>
+    <li>Osteoarticular (mal de Pott): os mesmos 12 meses.</li>
+  </ul></div>
+</section>
+
+<div class="ato" id="ped"><span>Porta 2 · Pediatria</span><h2>A criança abaixo de 10 anos</h2></div>
+
+<section class="degrau" id="d7">
+  <div class="dhead"><span class="dnum">7</span><div class="dtitle"><h3>A criança é outra doença</h3><span class="src">Ped/33 p5-7, 11-19</span></div></div>
+  <p class="lede">Primoinfecção recente, poucos bacilos, escarro difícil. A bacteriologia falha e o diagnóstico vira clínico-epidemiológico.</p>
+  <div class="prose"><ul>
+    <li><strong>Paucibacilífera</strong>: quase não transmite. Volta à escola assim que começa o tratamento.</li>
+    <li>Pegou de um adulto da casa. Criança com TB: procurar o caso índice. Adulto com TB: examinar as crianças.</li>
+    <li>Pensar em TB: <strong>pneumonia que não melhora com antibiótico comum</strong>; tosse por mais de 3 semanas; febre vespertina por mais de 2 semanas (o sinal mais frequente); emagrecimento.</li>
+    <li>RX: o achado mais comum é a <strong>adenomegalia hilar ou paratraqueal</strong>. Dissociação: clínica leve, RX feio.</li>
+    <li>Adolescente = padrão adulto: cavidade no ápice, baciloscopia positiva.</li>
+    <li>Coleta: lavado gástrico em jejum ao acordar (sensibilidade 20-40%); TRM-TB, cerca de 66%. Negativo não exclui.</li>
+    <li>Criança pequena e imunodeprimida: risco de miliar e meníngea.</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="d8">
+  <div class="dhead"><span class="dnum">8</span><div class="dtitle"><h3>O escore do MS: quando a bacteriologia é negativa</h3><span class="src">Ped/33 p30-33 (Manual MS, 5ª ed.)</span></div></div>
+  <p class="lede">Abaixo de 10 anos, com baciloscopia ou TRM-TB negativos, somam-se clínica, imagem, contato, PT e nutrição. A baciloscopia não entra na soma.</p>
+  <div class="esc">
+    <div class="g"><h5>Quadro clínico</h5>
+      <div class="p"><b>+15</b><span>Febre ou tosse, adinamia, expectoração, emagrecimento, sudorese por 2 semanas ou mais</span></div>
+      <div class="p"><b>0</b><span>Assintomático ou sintomas há menos de 2 semanas</span></div>
+      <div class="p neg"><b>-10</b><span>Infecção respiratória que melhorou com antibiótico comum, ou sem antibiótico</span></div></div>
+    <div class="g"><h5>Radiografia</h5>
+      <div class="p"><b>+15</b><span>Adenomegalia hilar ou padrão miliar; ou condensação ou infiltrado (com ou sem cavidade) por 2 semanas ou mais, parado ou piorando com antibiótico comum</span></div>
+      <div class="p"><b>+5</b><span>Condensação ou infiltrado de qualquer tipo há menos de 2 semanas</span></div>
+      <div class="p neg"><b>-5</b><span>Radiografia normal</span></div></div>
+    <div class="g"><h5>Contato com adulto com TB</h5>
+      <div class="p"><b>+10</b><span>Próximo, nos últimos 2 anos (mesma casa, mesmo quarto, creche, escola)</span></div>
+      <div class="p"><b>0</b><span>Ocasional ou ausente</span></div></div>
+    <div class="g"><h5>Prova tuberculínica</h5>
+      <div class="p"><b>+10</b><span>10 mm ou mais</span></div>
+      <div class="p"><b>+5</b><span>5 a 9 mm</span></div>
+      <div class="p"><b>0</b><span>Abaixo de 5 mm</span></div></div>
+    <div class="g"><h5>Estado nutricional</h5>
+      <div class="p"><b>+5</b><span>Desnutrição grave: peso abaixo do percentil 0,1 ou escore-z abaixo de -3 (Guia 2024; a versão antiga dizia percentil 10)</span></div>
+      <div class="p"><b>0</b><span>Sem desnutrição grave</span></div></div>
+  </div>
+  <div class="ext">
+    <div class="tot"><span class="fv">40 ou mais</span><span class="fk">Muito provável: <strong>tratar</strong></span></div>
+    <div><span class="fv">30 a 35</span><span class="fk">Possível: tratar a critério médico</span></div>
+    <div><span class="fv">25 ou menos</span><span class="fk">Pouco provável: investigar (escarro induzido, lavado gástrico, broncoscopia, biópsia)</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Os pontos andam de 5 em 5: não existe 26-29 nem 36-39. O 25 é pouco provável (a apostila escreve "menos de 25"; o Guia de Vigilância 2024 diz 25 ou menos).</li>
+    <li>Mnemônico da apostila, MADEIRAS: Mantoux, Aerossol (contato), DEsnutrição, Imagem RAdiológica, Sintomas.</li>
+  </ul></div>
+  <div class="banca"><div class="albl">Ângulo da banca</div>
+    <p>O caso vem montado para somar 30 ou 40. Some item a item e não esqueça os negativos: RX normal tira 5; melhora com antibiótico tira 10.</p></div>
+</section>
+
+<section class="degrau" id="d9">
+  <div class="dhead"><span class="dnum">9</span><div class="dtitle"><h3>Tratamento abaixo de 10 anos: RHZ, sem etambutol</h3><span class="src">Ped/33 p39-42; resumo Meningites, armadilhas; Nota Informativa MS 5/2024</span></div></div>
+  <p class="lede">O mesmo desenho do adulto, com três drogas na fase intensiva.</p>
+  <div class="ext">
+    <div><span class="fv">2 meses RHZ</span><span class="fk">Rifampicina + isoniazida + pirazinamida</span></div>
+    <div><span class="fv">4 meses RH</span><span class="fk">Total de 6 meses</span></div>
+    <div class="tot"><span class="fv">SNC ou osso</span><span class="fk">2RHZ + 10RH; corticoide na meníngea</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Sem etambutol pela <strong>neurite óptica</strong>: a criança pequena não refere perda de acuidade nem de cor, então o efeito não se monitora.</li>
+    <li>Comprimido dispersível em dose fixa (RHZ 75/50/150; RH 75/50), por faixa de peso. A banca não cobra a dose do tratamento; cobra a da ILTB.</li>
+    <li>10 anos ou mais: esquema do adulto, com etambutol.</li>
+  </ul></div>
+  <div class="banca"><div class="albl">Depende da banca</div>
+    <p>Desde 2024 há uma alternativa de <strong>4 meses (2RHZ/2RH)</strong> para TB sensível <strong>não grave</strong>, de 3 meses a 16 anos: gânglio periférico, intratorácica sem obstrução de via aérea, lesão pequena sem cavidade em 1 lobo e sem miliar, ou derrame não complicado; bacteriologia negativa ou baixa, sem internação. Abaixo de 3 meses ou de 4 kg, sempre 6. O padrão continua 6 meses: na dúvida, é o gabarito.</p></div>
+</section>
+
+<section class="degrau" id="d10">
+  <div class="dhead"><span class="dnum">10</span><div class="dtitle"><h3>BCG: o que protege, o que é esperado, o que é complicação</h3><span class="src">Ped/33 p47-49; resumo Imunizações §6</span></div></div>
+  <p class="lede">Vacina viva de Mycobacterium bovis atenuado. Protege da forma grave, não da infecção.</p>
+  <div class="prose"><ul>
+    <li>Dose única, intradérmica, deltoide direito, ao nascer, com <strong>2 kg ou mais</strong>. Não vacinado: até 4 anos, 11 meses e 29 dias.</li>
+    <li>Protege contra <strong>miliar e meníngea</strong>. Não impede infecção nem a TB pulmonar do adulto. Protege também contra hanseníase.</li>
+    <li><strong>Sem cicatriz: não revacinar.</strong></li>
+    <li>Adiar: abaixo de 2 kg; RN em profilaxia primária; internado com estado geral comprometido; até 3 meses após imunossupressor.</li>
+    <li>Não aplicar: imunodeficiência, neoplasia, corticoide em dose alta; HIV no adulto, mesmo assintomático; criança HIV sintomática. Filho de mãe HIV+ sem sintoma: vacina ao nascer.</li>
+  </ul></div>
+  <div class="crit">
+    <div class="row"><span class="k">Esperado</span><span class="v">Mácula endurecida (1-2 semanas) -&gt; pústula e crosta (3-4) -&gt; úlcera de até 1 cm (4-5) -&gt; cicatriz de 4-7 mm (6-12 semanas; até 6 meses). <strong>Não tratar</strong>: água e sabão.</span></div>
+    <div class="row"><span class="k">Linfonodo abaixo de 3 cm</span><span class="v">Axilar ou supraclavicular do mesmo lado, móvel, indolor: expectante.</span></div>
+    <div class="row"><span class="k">Úlcera acima de 1 cm</span><span class="v">Que não cicatriza: notificar + <strong>isoniazida</strong> até regredir.</span></div>
+    <div class="row"><span class="k">Abscesso frio</span><span class="v">Aplicação subcutânea: notificar + isoniazida.</span></div>
+    <div class="row"><span class="k">Abscesso quente</span><span class="v">Bactéria de pele: notificar + antibiótico.</span></div>
+    <div class="row"><span class="k">Linfonodo acima de 3 cm</span><span class="v">Supurado: notificar + isoniazida se não cicatrizar. Sem supuração: notificar e observar.</span></div>
+    <div class="row"><span class="k">Lupoide</span><span class="v">Notificar + esquema tríplice (isoniazida, rifampicina, etambutol).</span></div>
+    <div class="row"><span class="k">Disseminada</span><span class="v mal">Investigar imunodeficiência.</span></div>
+  </div>
+</section>
+
+<section class="degrau" id="d11">
+  <div class="dhead"><span class="dnum">11</span><div class="dtitle"><h3>RN de mãe bacilífera: rifampicina antes da BCG</h3><span class="src">Inf/12 p23 (Nota Informativa MS 6/2024); Ped/33 p7, 44-45; resumo TB §6.4</span></div></div>
+  <p class="lede">O RN exposto faz forma grave. A profilaxia primária impede a infecção; a BCG espera.</p>
+  <div class="prose"><ul>
+    <li>O gatilho é <strong>bacilífero</strong> em casa, mãe ou outro morador. Mãe tratando com baciloscopia negativa comprovada: vacina normalmente.</li>
+    <li><strong>Não vacinar. Rifampicina por 4 meses (4R), sem PPD.</strong> Ao fim: suspender e aplicar a BCG, também sem PPD.</li>
+    <li>A BCG espera porque a droga mataria o bacilo vivo da vacina.</li>
+    <li>Sem rifampicina: isoniazida por 3 meses -&gt; PPD. Abaixo de 5 mm: suspende e vacina. 5 mm ou mais: mais 3 meses de isoniazida, sem vacina.</li>
+    <li>Amamentação mantida: o bacilo não passa pelo leite. <strong>Máscara cirúrgica</strong> enquanto a mãe for bacilífera. Exceção: mastite tuberculosa.</li>
+  </ul></div>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p>O fluxo antigo (isoniazida ou rifampicina por 3 meses + PPD decidindo a vacina) é o gabarito de questões anteriores a 2024. Hoje: 4R sem PPD e BCG ao final.</p></div>
+</section>
+
+<div class="ato" id="cir"><span>Porta 3 · Cirurgia</span><h2>O órgão: TB extrapulmonar</h2></div>
+
+<section class="degrau" id="d12">
+  <div class="dhead"><span class="dnum">12</span><div class="dtitle"><h3>Pouco bacilo: o diagnóstico vem do tecido</h3><span class="src">Inf/12 p10, 13; Ped/33 p12-14, 23-24; Cardio/15 p9, 17; resumo TB §3</span></div></div>
+  <p class="lede">Fora do pulmão há poucos bacilos. A baciloscopia falha; decidem a biópsia, a cultura do fragmento e a adenosina deaminase (ADA).</p>
+  <div class="prose"><ul>
+    <li>Mais comum: <strong>pleural</strong> na população geral; <strong>ganglionar</strong> na PVHIV e na criança.</li>
+    <li>Histologia: granuloma com <strong>necrose caseosa</strong> e células gigantes.</li>
+    <li>ADA: enzima do linfócito ativado. Alta em líquido pleural, pericárdico ou ascítico aponta TB.</li>
+    <li>Todo extrapulmonar: olhar o pulmão. Forma mista é comum.</li>
+    <li>Tratamento: o mesmo 2RHZE/4RH. Muda só no SNC e no osso.</li>
+  </ul></div>
+  <div class="crit">
+    <div class="row"><span class="k">Ganglionar (escrófula)</span><span class="v">Cervical, endurecido, evolução lenta, pode fistulizar. Punção ou biópsia: granuloma; cultura ou TRM do material.</span></div>
+    <div class="row"><span class="k">Pericárdica</span><span class="v">Principal causa de derrame pericárdico crônico e de <strong>pericardite constritiva no Brasil</strong>. ADA acima de 40 no líquido.</span></div>
+    <div class="row"><span class="k">Urogenital</span><span class="v">Piúria com urocultura negativa repetida e urina ácida. Cultura para micobactéria em 3-6 amostras.</span></div>
+    <div class="row"><span class="k">Osteoarticular</span><span class="v">Mal de Pott: coluna torácica baixa e lombar; dor, posição antálgica, déficit neurológico.</span></div>
+  </div>
+</section>
+
+<section class="degrau" id="d13">
+  <div class="dhead"><span class="dnum">13</span><div class="dtitle"><h3>Pleural: exsudato linfocítico com ADA alta</h3><span class="src">Pneumo/1 p17-21, 29-30, 32</span></div></div>
+  <p class="lede">Jovem com derrame unilateral e febre arrastada. A toracocentese conta a história; a biópsia fecha.</p>
+  <div class="crit hd">
+    <div class="row"><span class="k">Achado</span><span class="v">Na TB pleural</span></div>
+    <div class="row"><span class="k">Tipo</span><span class="v">Exsudato (Light), unilateral</span></div>
+    <div class="row"><span class="k">Células</span><span class="v"><strong>Linfócitos.</strong> Nas 2 primeiras semanas pode predominar neutrófilo</span></div>
+    <div class="row"><span class="k">Proteína</span><span class="v">Alta, em geral acima de 4 g/dL</span></div>
+    <div class="row"><span class="k">ADA</span><span class="v"><strong>Acima de 40 U/L</strong> (algumas bancas: 30). Sensibilidade acima de 95%</span></div>
+    <div class="row"><span class="k">Mesoteliais</span><span class="v">Raras, abaixo de 5%</span></div>
+    <div class="row"><span class="k">Glicose e pH</span><span class="v">Podem cair (glicose abaixo de 40, pH abaixo de 7,2)</span></div>
+    <div class="row"><span class="k">BAAR e cultura do líquido</span><span class="v">BAAR positivo em menos de 10%; cultura em 10-20%</span></div>
+    <div class="row"><span class="k">Biópsia pleural</span><span class="v mal">Padrão-ouro: granuloma caseoso. A cultura do fragmento chega a 60%</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Em 1/3 há lesão pulmonar junto.</li>
+    <li>ADA acima de 40 também na artrite reumatoide (com glicose muito baixa). Linfocitose também em linfoma e neoplasia.</li>
+  </ul></div>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p>BAAR negativo no líquido não exclui: é positivo em menos de 10%. Exsudato linfocítico com ADA alta é TB até prova em contrário.</p></div>
+</section>
+
+<section class="degrau" id="d14">
+  <div class="dhead"><span class="dnum">14</span><div class="dtitle"><h3>Abdome: peritônio e íleo, o diferencial com Crohn</h3><span class="src">Hepato/6 p41-49; Cir/16 p69; Gastro/13 p17-18</span></div></div>
+  <p class="lede">No abdome, a TB imita duas coisas: a ascite de outra causa e a doença de Crohn. Separa-se pelo líquido e pelo granuloma.</p>
+  <h4>Peritoneal: ascite que não é de hipertensão portal</h4>
+  <div class="crit hd">
+    <div class="row"><span class="k">Líquido</span><span class="v">Na TB peritoneal</span></div>
+    <div class="row"><span class="k">GASA</span><span class="v"><strong>Abaixo de 1,1</strong> (gradiente soro-ascite): não é hipertensão portal</span></div>
+    <div class="row"><span class="k">Proteína</span><span class="v">Acima de 2,5 g/dL (em geral acima de 3)</span></div>
+    <div class="row"><span class="k">Células</span><span class="v">150-4.000/mm³, predomínio de linfócitos</span></div>
+    <div class="row"><span class="k">ADA</span><span class="v"><strong>Alta</strong> (corte de 33 U/L: sensibilidade 100%, especificidade 97%). Rende menos no cirrótico</span></div>
+    <div class="row"><span class="k">BAAR e cultura</span><span class="v">BAAR em 2%; cultura em até 50%</span></div>
+    <div class="row"><span class="k">Confirmação</span><span class="v mal">Biópsia peritoneal por laparoscopia (sensibilidade 93%)</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>TB é a 3ª causa de ascite no Brasil. O mesmo perfil de GASA baixo e proteína alta aparece na carcinomatose: a ADA e a citologia separam.</li>
+  </ul></div>
+  <h4>Intestinal: o diferencial com Crohn</h4>
+  <div class="vs">
+    <div class="a"><h5>TB intestinal</h5><ul>
+      <li>Região ileocecal, a mais acometida.</li>
+      <li>Granuloma <strong>caseoso</strong>; BAAR, cultura ou TRM na biópsia.</li>
+      <li>Contexto: PVHIV, contato, febre e emagrecimento, RX de tórax alterado.</li>
+      <li>Complicação mais comum: <strong>obstrução</strong> por estenose.</li></ul></div>
+    <div class="b"><h5>Doença de Crohn</h5><ul>
+      <li>Íleo terminal; lesões descontínuas; reto poupado.</li>
+      <li>Granuloma <strong>não caseoso</strong>; inflamação transmural.</li>
+      <li>Fístulas perianais e entre alças.</li>
+      <li>Trata com corticoide e anti-TNF.</li></ul></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Cirurgia, quando precisa (obstrução), é conservadora como no Crohn: estenoses longas ou múltiplas respondem menos ao esquema.</li>
+  </ul></div>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p>Tratar TB intestinal como Crohn (corticoide, anti-TNF) dissemina a TB. Por isso todo candidato a anti-TNF rastreia ILTB antes (degrau 17).</p></div>
+</section>
+
+<div class="ato" id="mfc"><span>Porta 4 · Medicina de Família e Comunidade</span><h2>O território: APS</h2></div>
+
+<section class="degrau" id="d15">
+  <div class="dhead"><span class="dnum">15</span><div class="dtitle"><h3>Busca ativa: o tempo de tosse depende de quem tosse</h3><span class="src">Inf/12 p11-12; MS, populações vulneráveis (gov.br); resumo Vigilância em Saúde</span></div></div>
+  <p class="lede">Busca ativa é vigilância ativa: a equipe vai atrás do sintomático respiratório, em vez de esperar que ele chegue.</p>
+  <div class="vs">
+    <div class="b"><h5>População geral</h5><ul>
+      <li>Tosse por <strong>3 semanas ou mais</strong> (MS).</li>
+      <li>Escarro para TRM-TB ou 2 baciloscopias + RX.</li></ul></div>
+    <div class="a"><h5>Populações vulneráveis</h5><ul>
+      <li><strong>Tosse de qualquer duração</strong> e/ou RX sugestivo.</li>
+      <li>Privados de liberdade, situação de rua, indígenas, PVHIV, imigrantes, profissionais de saúde.</li>
+      <li>Escarro para TRM-TB ou baciloscopia <strong>e</strong> cultura com TS.</li></ul></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Por quê: nesses grupos a chance de TB é muito maior. Esperar 3 semanas é deixar transmitir.</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="d16">
+  <div class="dhead"><span class="dnum">16</span><div class="dtitle"><h3>Contatos: adulto x criança</h3><span class="src">Inf/12 p18-20, 24; Ped/33 p24-27</span></div></div>
+  <p class="lede">Todo caso pulmonar gera investigação dos contatos. A primeira pergunta é sempre a mesma: tem sintoma? Se tem, investigar TB doença, não ILTB.</p>
+  <div class="vs">
+    <div class="b"><h5>Assintomático de 10 anos ou mais</h5><ul>
+      <li><strong>PT primeiro</strong> (ou IGRA).</li>
+      <li>PT 5 mm ou mais -&gt; RX. Normal: tratar ILTB. Alterado: investigar TB.</li>
+      <li>PT abaixo de 5 mm -&gt; repetir em 8 semanas. Converteu (subiu 10 mm ou mais): RX e tratar ILTB. Não converteu: alta.</li></ul></div>
+    <div class="a"><h5>Assintomático abaixo de 10 anos</h5><ul>
+      <li><strong>PT e RX juntos.</strong></li>
+      <li>RX normal + PT 5 mm ou mais = ILTB, <strong>qualquer que seja o tempo desde a BCG</strong>.</li>
+      <li>RX suspeito: investigar TB.</li>
+      <li>PT abaixo de 5 mm: repetir em 8 semanas; conversão, tratar.</li></ul></div>
+  </div>
+  <div class="prose"><ul>
+    <li>PVHIV contato de TB pulmonar ou laríngea: trata ILTB <strong>sem PT</strong>, depois de excluir doença. A PT dela mente para baixo.</li>
+    <li>PT (Mantoux, PPD): intradérmica, leitura em 48-72 h. Mede-se só a <strong>enduração</strong>, em mm.</li>
+    <li>Falso-positivo: BCG (após o 1º ano de vida), micobactéria não tuberculosa. Falso-negativo: imunossupressão, desnutrição, gestação, diabetes, técnica ruim.</li>
+    <li>IGRA (liberação de interferon-gama): sangue, sem retorno, não sofre efeito da BCG. <strong>Não usar abaixo de 2 anos</strong>.</li>
+    <li>IGRA <strong>está no SUS desde 2020</strong> para grupos: PVHIV com CD4 acima de 350; criança de 2 a menos de 10 anos contato de TB; candidato a transplante; desde 2023, também quem vai usar imunobiológico ou imunossupressor. Usa-se PT <strong>ou</strong> IGRA, nunca os dois.</li>
+    <li>PT documentada de 5 mm ou mais: não repetir, mesmo com nova exposição.</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="d17">
+  <div class="dhead"><span class="dnum">17</span><div class="dtitle"><h3>Quem trata ILTB</h3><span class="src">Inf/12 p18-21; resumo TB §6.2</span></div></div>
+  <p class="lede">Antes de tratar ILTB, excluir doença ativa: anamnese, exame e RX. O corte da PT cai quanto maior o risco de reativar.</p>
+  <div class="crit">
+    <div class="row"><span class="k">PT 5 mm ou mais, ou IGRA positivo</span><span class="v">CINCO: <strong>C</strong>ontato de TB pulmonar ou laríngea, criança inclusive; <strong>IN</strong>ibidor de TNF-alfa e <strong>I</strong>munossuprimido (HIV, corticoide); <strong>C</strong>icatriz de TB no RX; <strong>O</strong>rgão (pré-transplante)</span></div>
+    <div class="row"><span class="k">PT 10 mm ou mais</span><span class="v">Silicose; neoplasia de cabeça e pescoço, hematológica ou em quimioterapia; diabetes; doença renal crônica em diálise; peso abaixo de 85% do ideal; tabagismo acima de 1 maço/dia; calcificação isolada no RX</span></div>
+    <div class="row"><span class="k">Sem exame</span><span class="v mal">PVHIV com CD4 até 350; PVHIV contato de TB pulmonar ou laríngea</span></div>
+  </div>
+</section>
+
+<section class="degrau" id="d18">
+  <div class="dhead"><span class="dnum">18</span><div class="dtitle"><h3>Esquemas de ILTB: qual para quem</h3><span class="src">Inf/12 p21-22; Ped/33 p37-38; resumo TB §6.3 (Notas Informativas MS 6 e 15/2024; PCDT HIV 2023)</span></div></div>
+  <p class="lede">Os esquemas com rifamicina são mais curtos e mais completados. A escolha segue idade, fígado, gestação e antirretroviral.</p>
+  <div class="crit c3 hd">
+    <div class="row"><span class="k">Esquema</span><span class="v">Para quem</span><span class="v">Evitar</span></div>
+    <div class="row"><span class="k">3HP: rifapentina + isoniazida, semanal, 12 doses</span><span class="v"><strong>Preferencial no adulto e na PVHIV adulta</strong> (vai bem com tenofovir, efavirenz, dolutegravir, raltegravir). Criança acima de 2 anos, sem HIV, que engole comprimido</span><span class="v">Gestante; contato de TB resistente à isoniazida; IP, nevirapina ou tenofovir alafenamida (TAF)</span></div>
+    <div class="row"><span class="k">3RH: rifampicina + isoniazida, diário, 90 doses</span><span class="v"><strong>Criança abaixo de 10 anos, de 4 a 25 kg</strong>, comprimido dispersível</span><span class="v">Hepatopatia grave; IP, nevirapina, TAF</span></div>
+    <div class="row"><span class="k">4R: rifampicina, diário, 120 doses</span><span class="v">Hepatopata; acima de 50 anos; contraindicação à isoniazida; <strong>RN coabitante</strong>; criança abaixo de 4 kg</span><span class="v">IP, nevirapina, TAF</span></div>
+    <div class="row"><span class="k">6H ou 9H: isoniazida, 180 ou 270 doses</span><span class="v">Quando nenhum outro serve. Criança com HIV em IP, inibidor de integrase ou nevirapina</span><span class="v">Hepatopata; acima de 50 anos; contato de TB resistente à isoniazida</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Abaixo de 10 anos: <strong>3RH ou 3HP</strong>. Isoniazida isolada só se nenhum dos dois for possível.</li>
+    <li>Dose da isoniazida no 6H/9H: adulto <strong>5-10 mg/kg/dia, máximo 300 mg</strong>; criança 10 mg/kg/dia (7-15), máximo 300 mg. No tratamento da doença, a dose sai do comprimido combinado por faixa de peso.</li>
+    <li>1HP (rifapentina + isoniazida diárias, 28 doses): esquema da OMS a partir de 13 anos. Não aparece nas apostilas nem nas notas do MS lidas; na prova brasileira, o leque é 3HP, 3RH, 4R e 6H/9H.</li>
+  </ul></div>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p>Gabarito antigo: isoniazida preferencial na criança e 9H na PVHIV. Vigente: 3RH ou 3HP na criança, 3HP na PVHIV adulta. Em questão anterior a 2024, confira o ano.</p></div>
+</section>
+
+<section class="degrau" id="d19">
+  <div class="dhead"><span class="dnum">19</span><div class="dtitle"><h3>Do diagnóstico à alta: notificação, TDO, abandono, retratamento</h3><span class="src">Inf/12 p12, 17; Ped/33 p38; resumo TB §5.5, §8 e armadilhas; resumo Sistemas de Informação</span></div></div>
+  <p class="lede">A APS é dona do caso: notifica, observa a dose, busca quem falta e reinicia sem barreira.</p>
+  <div class="crit">
+    <div class="row"><span class="k">Notificação</span><span class="v">Compulsória, <strong>semanal</strong>, do caso confirmado (SINAN). A ILTB tratada tem ficha própria.</span></div>
+    <div class="row"><span class="k">TDO</span><span class="v">Tratamento diretamente observado: o profissional vê o paciente tomar a dose. Reduz abandono e resistência.</span></div>
+    <div class="row"><span class="k">Abandono</span><span class="v">Sem medicação por <strong>30 dias consecutivos ou mais</strong>.</span></div>
+    <div class="row"><span class="k">Recidiva</span><span class="v">TB de novo depois de alta por cura.</span></div>
+    <div class="row"><span class="k">Retratamento</span><span class="v mal">Recidiva ou volta após abandono: TRM-TB ou baciloscopia + cultura com TS antes de reiniciar.</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Pessoa em situação de rua: reinicia no serviço onde está. Documento ou endereço não condiciona o atendimento.</li>
+    <li>O Consultório na Rua compartilha o cuidado com a UBS; não é destino de encaminhamento.</li>
+  </ul></div>
+</section>
+
+<section class="synth" id="gat">
+  <h2>Gatilhos de prova</h2>
+  <p class="note">Uma linha por degrau. Vermelho = onde a banca derruba.</p>
+  <div class="trig">
+    <div><span class="tk">D0 Régua</span><span class="tv">Só pulmonar e laríngea transmitem; <b>ILTB não transmite</b></span></div>
+    <div><span class="tk">D1 Diagnóstico</span><span class="tv">TRM-TB acha TB e resistência a R; <b>não serve para controle de cura</b></span></div>
+    <div><span class="tk">D2 Resistência</span><span class="tv">Retratamento = TRM + cultura com TS antes de reiniciar; <b>MDR hoje = BPaL 6 meses</b></span></div>
+    <div><span class="tk">D3 Esquema</span><span class="tv">2RHZE/4RH; B6 para álcool, HIV, DM, gestante</span></div>
+    <div><span class="tk">D4 Fígado</span><span class="tv">Suspende com 5x sem sintoma ou 3x com; volta RE -&gt; H -&gt; Z</span></div>
+    <div><span class="tk">D4 Assinaturas</span><span class="tv">Etambutol = olho; isoniazida = nervo (<b>B6 sem suspender</b>); rifampicina = urina laranja</span></div>
+    <div><span class="tk">D5 TB-HIV</span><span class="tv">TARV em até 7 dias, qualquer CD4; <b>meníngea espera 4-6 semanas</b></span></div>
+    <div><span class="tk">D5 Interações</span><span class="tv">Dolutegravir dobrado; IP: troca o IP ou usa rifabutina</span></div>
+    <div><span class="tk">D6 SNC</span><span class="tv">VI par, glicose baixa; 12 meses + corticoide</span></div>
+    <div><span class="tk">D7 Criança</span><span class="tv">Pneumonia que não melhora com antibiótico; adenomegalia hilar</span></div>
+    <div><span class="tk">D8 Escore</span><span class="tv">40 trata; 30-35 a critério; 25 ou menos investiga; <b>RX normal -5, melhora com antibiótico -10</b></span></div>
+    <div><span class="tk">D9 RHZ</span><span class="tv"><b>Sem etambutol abaixo de 10 anos</b> (neurite óptica não monitorável); 4 meses só no não grave</span></div>
+    <div><span class="tk">D10 BCG</span><span class="tv">Protege miliar e meníngea; <b>sem cicatriz não revacina</b></span></div>
+    <div><span class="tk">D11 RN</span><span class="tv"><b>4R sem PPD</b>, BCG ao final; amamenta com máscara cirúrgica</span></div>
+    <div><span class="tk">D12 Extrapulmonar</span><span class="tv">Pleural na geral; ganglionar no HIV e na criança</span></div>
+    <div><span class="tk">D13 Pleura</span><span class="tv">Exsudato linfocítico, ADA acima de 40; <b>biópsia é o padrão-ouro</b></span></div>
+    <div><span class="tk">D14 Abdome</span><span class="tv">Ascite GASA baixo + ADA alta; <b>caseoso = TB, não caseoso = Crohn</b></span></div>
+    <div><span class="tk">D15 Busca</span><span class="tv">Geral 3 semanas; <b>vulnerável, qualquer duração</b></span></div>
+    <div><span class="tk">D16 Contatos</span><span class="tv">Adulto: PT primeiro; <b>criança: PT e RX juntos</b>; 5 mm qualquer BCG; IGRA no SUS para grupos</span></div>
+    <div><span class="tk">D17 Quem trata</span><span class="tv">CINCO com 5 mm; PVHIV com CD4 até 350 ou contato sem PT</span></div>
+    <div><span class="tk">D18 Esquemas</span><span class="tv">3HP adulto e PVHIV; <b>3RH ou 3HP abaixo de 10 anos</b>; 4R no hepatopata e no RN</span></div>
+    <div><span class="tk">D19 APS</span><span class="tv">Abandono = 30 dias; notificação semanal; TDO</span></div>
+  </div>
+</section>
+
+<section class="synth arm" id="arm">
+  <h2>Armadilhas de banca</h2>
+  <p class="note">Cada uma aponta o degrau onde o fato mora.</p>
+  <ol class="armas">
+    <li>TRM-TB positivo depois da alta não é recidiva: ele acha DNA de bacilo morto. Controle de cura é baciloscopia. <span class="d">D1</span></li>
+    <li>Neuropatia periférica não suspende a isoniazida: dá piridoxina. Neurite óptica suspende o etambutol. <span class="d">D4</span></li>
+    <li>Reintroduzir as quatro drogas juntas depois da hepatite: errado. Uma a uma, pirazinamida por último. <span class="d">D4</span></li>
+    <li>Esperar CD4 ou a fase de manutenção para começar a TARV: errado, até 7 dias. A exceção é a meningite tuberculosa (e a criptocócica). <span class="d">D5</span></li>
+    <li>RIPE e TARV no mesmo dia: errado. RIPE primeiro. <span class="d">D5</span></li>
+    <li>Etambutol na criança abaixo de 10 anos: errado, mesmo na meníngea. <span class="d">D6, D9</span></li>
+    <li>Baciloscopia como item do escore pediátrico: não entra na soma. <span class="d">D8</span></li>
+    <li>Revacinar BCG porque não ficou cicatriz: errado. <span class="d">D10</span></li>
+    <li>RN de mãe bacilífera: vacinar ao nascer ou fazer PPD antes da rifampicina é o fluxo errado. Contraindicar a amamentação também. <span class="d">D11</span></li>
+    <li>Máscara N95 para a mãe que amamenta: a recomendação é a máscara cirúrgica. <span class="d">D11</span></li>
+    <li>BAAR negativo no líquido pleural ou ascítico não exclui TB. <span class="d">D13, D14</span></li>
+    <li>Granuloma caseoso em biópsia ileal não é Crohn. Imunossuprimir piora. <span class="d">D14</span></li>
+    <li>Esperar 3 semanas de tosse em preso, morador de rua, indígena ou PVHIV: errado, qualquer duração. <span class="d">D15</span></li>
+    <li>Criança contato com PT de 5 mm ou mais e BCG recente: é ILTB, trata. O tempo desde a BCG não importa. <span class="d">D16</span></li>
+    <li>PVHIV contato com PT abaixo de 5 mm: não repete em 8 semanas, trata. <span class="d">D16, D17</span></li>
+    <li>Isoniazida isolada como primeira escolha na ILTB da criança: gabarito antigo. <span class="d">D18</span></li>
+    <li>"IGRA não está no SUS": desatualizado. Está desde 2020, para grupos definidos. <span class="d">D16</span></li>
+    <li>TB-MDR com esquema de 18 meses e injetável como primeira escolha: gabarito antigo. Hoje, BPaL por 6 meses. <span class="d">D2</span></li>
+  </ol>
+</section>
+
+<section class="synth" id="esc">
+  <h2>A escada inteira em uma respirada</h2>
+  <p class="note">As quatro portas são um caminho só.</p>
+  <ol class="escada">
+    <li>O bacilo inalado vira doença primária, latência ou nada. Só pulmão e laringe transmitem.</li>
+    <li>Adulto: tosse, RX e TRM-TB; cultura com TS quando já tratou. Todo caso faz anti-HIV.</li>
+    <li>Trata com 2RHZE/4RH; SNC e osso, 12 meses. Vigia fígado, olho e nervo. Na PVHIV, TARV em até 7 dias, menos na meníngea.</li>
+    <li>Criança: poucos bacilos, então escore. Trata com RHZ, sem etambutol. A BCG protege da forma grave.</li>
+    <li>RN de bacilífero: 4R, depois BCG, sem PPD.</li>
+    <li>Fora do pulmão: tecido, granuloma e ADA. Pleura, peritônio e gânglio tratam 6 meses.</li>
+    <li>APS: busca o sintomático, examina os contatos, trata a ILTB depois de excluir doença.</li>
+    <li>Notifica, observa a dose e recupera quem abandonou.</li>
+  </ol>
+</section>
+
+<footer>
+  <p><strong>Fontes:</strong> <code>resumos/Clínica Médica/Infectologia/12. Tuberculose.pdf</code> (EMED 2026, Profa. Clarissa Cerqueira), citada como Inf/12; <code>resumos/Pediatria/33. Tuberculose na Infância.pdf</code> (EMED 2024, Profa. Andrea Makssoudian), Ped/33; <code>resumos/Clínica Médica/Infectologia/Tuberculose.md</code> (resumo TB, com as correções aprovadas na s214). Degraus de órgão: <code>Pneumologia/1. Derrame Pleural.pdf</code> (Pneumo/1), <code>Hepatologia/6. Complicações da Cirrose Hepática.pdf</code> (Hepato/6), <code>Cirurgia/16. Abdome agudo obstrutivo.pdf</code> (Cir/16), <code>Gastroenterologia/13. Doença Inflamatória Intestinal.pdf</code> (Gastro/13), <code>Cardiologia/15. Pericardiopatias.pdf</code> (Cardio/15), <code>Infectologia/1. Meningites.pdf</code> (Inf/1) e <code>6. HIV.pdf</code> (Inf/6); resumos de Imunizações, Meningites, Vigilância em Saúde e Sistemas de Informação.</p>
+  <p>Fora das fontes locais: busca ativa em populações vulneráveis (página do MS sobre populações em situação de vulnerabilidade, gov.br/aids); região ileocecal como sítio preferencial da TB intestinal; anticoncepcional hormonal com rifampicina; o esquema 1HP (OMS).</p>
+  <p><strong>Correções aprovadas pelo aluno em 06/10/2026 (s217):</strong> Guia de Vigilância em Saúde, 6ª ed., 2024 (escore pediátrico, dose da isoniazida); Nota Informativa MS 5/2024 (4 meses na TB não grave da criança); Portaria SCTIE 50/2020 e Nota Informativa 1/2023 (IGRA no SUS); Portaria SECTICS 49/2023 e Nota Informativa 1/2025 (BPaL na TB-MDR).</p>
+  <p>Prepara a tarefa #1797 do plano (refresh dirigido de tuberculose, bloco CM, semana 4).</p>
+</footer>
+</div>

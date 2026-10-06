@@ -875,8 +875,8 @@ PLANO_SEC = [_tarefa(26, 1, "Diabetes na Gestação", 19, URL_SEC),
              _tarefa(71, 5, "Tireoide", 18, URL_SEC, bloco="CM")]
 AULAS_SEC = [hub.Aula(s, s, "2026-10-0%d" % (i + 1), "artifacts/aula-%s.html" % s)
              for i, s in enumerate(("rd-hepato", "avulsa-x", "aorta", "prep-x"))]
-REGISTRO_SEC = {"rd-hepato": {"tipo": "revisao", "titulo": "Revisão direcionada hepato"},
-                "avulsa-x": {"tipo": "aula", "titulo": "Aula avulsa"},
+REGISTRO_SEC = {"rd-hepato": {"tipo": "revisao", "titulo": "Revisão direcionada hepato", "bloco": "CM"},
+                "avulsa-x": {"tipo": "aula", "titulo": "Aula avulsa", "bloco": "GO"},
                 "aorta": {"tipo": "aula", "titulo": "A aorta", "tarefa_id": 70},
                 "prep-x": {"tipo": "aula", "titulo": "Aula que prepara", "tarefas": [26, 49, 68, 71]}}
 
@@ -890,7 +890,8 @@ SECOES_JS = "\n".join([_var("SECOES_CHAVE"), _funcs(
     "function secoesLer(){", "function secAberta(id, padrao){", "function secGuardar(id, aberta){",
     "function secSemanaAtual(atual, comItens){", "function secPadraoAberta(chave, corrente){",
     "function secPintar(sec, aberta){", "function secAlternar(sec, id){", "function secTecla(ev, acao){",
-    "function hubSemanas(){", "function secoesQuadro(raizQd){")])
+    "function hubSemanas(){", "function secLigar(sec, id, alvo, padrao){", "function areaLigar(g){",
+    "function secoesQuadro(raizQd){")])
 
 ACAO_SECOES = r"""
 function espera(){ return new Promise(function(ok){ setTimeout(ok, 0); }); }
@@ -921,12 +922,12 @@ espera().then(function(){ __ACAO__ return espera(); }).then(espera).then(functio
 """
 
 
-def _rodar_secoes(acao="", ls=None, quebrado=False, plano=PLANO_SEC, cfg=None):
+def _rodar_secoes(acao="", ls=None, quebrado=False, plano=PLANO_SEC, cfg=None, extra=""):
     # tardio: test_hub_quadro importa deste arquivo (NODE, extrair_funcao) -- no topo seria import circular
     from tools.test_hub_quadro import BANCO_QD, DOM_QD, FUNCS_QD, _arvore
     prog = (DOM_QD.replace("__ARVORE__", json.dumps(_arvore(_pagina_quadro(plano)), ensure_ascii=False)) +
             BANCO_QD.replace("__CFG__", json.dumps(cfg or {}, ensure_ascii=False)) + _aparelho(ls, quebrado) +
-            FUNCS_QD + "\n" + SECOES_JS + "\n" + ACAO_SECOES.replace("__ACAO__", acao))
+            FUNCS_QD + "\n" + SECOES_JS + "\n" + extra + "\n" + ACAO_SECOES.replace("__ACAO__", acao))
     return _node(prog)
 
 
@@ -1014,6 +1015,83 @@ def test_desmarcar_sem_secao_de_origem_fica_na_biblioteca():
     assert len(out["avisos"]) == 1 and "avulsa-x" in out["avisos"][0] and "Biblioteca" in out["avisos"][0]
     volta = _rodar_secoes('feito("aorta"); return espera().then(function(){ feito("aorta"); });')
     assert volta["avisos"] == [], "com origem (a semana 4), volta sem aviso"
+
+
+# s217 (P17, pedido do operador em 06/10/2026: "organize por grande area (CM, Cir, MFC, Ped ou GO)"): a
+# Biblioteca em grupos por area. O cliente move o feito para o grupo do `data-area` do item, CRIA o grupo
+# que ainda nao existe na posicao da ordem (a ordem e os rotulos vem do build, em `data-areas`), reconta
+# o grupo e o total e tira o grupo que esvazia. Cada grupo recolhe como as secoes (titulo = controle,
+# teclado, estado por aparelho em medhub.secoes); padrao: recolhido.
+GRUPOS_JS = r"""
+function grupos(){ return qd.querySelectorAll("#hub-quadro-feitas .qd-area").map(function(g){ var t = g.querySelector(".qd-titulo"), l = g.querySelector(".qd-lista");
+  return {area: g.getAttribute("data-area"), n: g.querySelector("[data-n]").textContent, titulo: t.textContent,
+    itens: g.querySelectorAll(".qd-item").map(function(li){ return li.getAttribute("data-slug") || "t" + li.getAttribute("data-tarefa"); }),
+    aberta: !g.hasAttribute("data-recolhida"), expanded: t.getAttribute("aria-expanded"), role: t.getAttribute("role"),
+    tab: t.getAttribute("tabindex"), controls: t.getAttribute("aria-controls"), lista: l.getAttribute("id"), seta: !!t.querySelector(".qd-seta")}; }); }
+function tituloGrupo(a){ return qd.querySelector('#hub-quadro-feitas .qd-area[data-area="' + a + '"] .qd-titulo'); }
+function nfeitas(){ return $("hub-quadro-nfeitas").textContent; }
+"""
+
+
+def test_feito_cai_no_grupo_da_area_criado_na_ordem_e_desmarcar_devolve():
+    """No build so ha o grupo GO (a aula avulsa). A RD de hepato (CM) feita: o grupo CM nasce ANTES do GO,
+    recolhido e ja com o titulo-controle; a aorta (tarefa 70, CM) cai no mesmo grupo, o mais recente
+    primeiro; desmarcar devolve cada uma a sua secao e o grupo que esvazia sai."""
+    acao = GRUPOS_JS + r"""
+SAIDA.g0 = grupos(); SAIDA.n0 = nfeitas();
+feito("rd-hepato"); SAIDA.g1 = grupos(); SAIDA.n1 = nfeitas();
+return espera().then(function(){ feito("aorta"); SAIDA.g2 = grupos(); SAIDA.n2 = nfeitas(); return espera(); })
+  .then(function(){ feito("rd-hepato"); SAIDA.g3 = grupos(); SAIDA.onde3 = onde("rd-hepato"); return espera(); })
+  .then(function(){ feito("aorta"); SAIDA.g4 = grupos(); SAIDA.onde4 = onde("aorta"); SAIDA.n4 = nfeitas(); });"""
+    out = _rodar_secoes(acao)
+    go = {"area": "GO", "n": "1", "titulo": "Ginecologia e Obstetrícia 1", "itens": ["avulsa-x"], "aberta": False,
+          "expanded": "false", "role": "button", "tab": "0", "controls": "qd-lista-biblioteca-GO",
+          "lista": "qd-lista-biblioteca-GO", "seta": True}
+    assert out["g0"] == [go] and out["n0"] == "1"
+    cm = dict(go, area="CM", titulo="Clínica Médica 1", itens=["rd-hepato"], controls="qd-lista-biblioteca-CM",
+              lista="qd-lista-biblioteca-CM")
+    assert out["g1"] == [cm, go], "o grupo que nao existia nasce na posicao da ordem, recolhido e controlavel"
+    assert out["n1"] == "2"
+    assert out["g2"][0]["itens"] == ["aorta", "rd-hepato"] and out["g2"][0]["n"] == "2", "o mais recente primeiro"
+    assert out["n2"] == "3" and out["fim"]["4"]["n"] == "2", "a semana 4 volta a contar a aorta"
+    assert out["onde3"] == "revisoes" and out["g3"][0]["itens"] == ["aorta"] and out["g3"][0]["n"] == "1"
+    assert out["onde4"] == "4" and out["g4"] == [go] and out["n4"] == "1", "o grupo que esvaziou saiu"
+    assert out["avisos"] == []
+
+
+def test_grupo_da_biblioteca_recolhe_como_as_secoes_e_o_aparelho_lembra():
+    acao = GRUPOS_JS + r"""
+tituloGrupo("GO").click(); SAIDA.toque = grupos()[0];
+(tituloGrupo("GO")._ouv.keydown || []).forEach(function(f){ f({key: "Enter", preventDefault: function(){ TECLAS++; }}); });
+SAIDA.tecla = grupos()[0];
+tituloGrupo("GO").click();
+feito("rd-hepato"); tituloGrupo("CM").click(); SAIDA.criado = grupos()[0];"""
+    out = _rodar_secoes(acao)
+    assert out["toque"]["aberta"] is True and out["toque"]["expanded"] == "true"
+    assert out["tecla"]["aberta"] is False and out["teclas"] == 1
+    assert out["criado"]["area"] == "CM" and out["criado"]["aberta"] is True, "o grupo criado ao vivo tambem e controle"
+    assert json.loads(out["ls"]["medhub.secoes"]) == {"aulas:biblioteca:GO": True, "aulas:biblioteca:CM": True}
+    de_novo = _rodar_secoes(GRUPOS_JS + "SAIDA.g = grupos();", ls=out["ls"])
+    assert [(g["area"], g["aberta"]) for g in de_novo["g"]] == [("GO", True)], "recarregar: vale a escolha dele"
+    css = TEMPLATE[TEMPLATE.index("<style>"):TEMPLATE.index("</style>")]
+    assert "min-width:0" in re.search(r"\.qd-area\{([^}]*)\}", css).group(1)
+    assert re.search(r"\.qd-areas\{[^}]*display:grid", css)
+
+
+def test_voltar_ao_item_concluido_abre_a_biblioteca_e_o_grupo_dele():
+    """Part-4 (P14): ao voltar do leitor, o item concluido e marcado na Teoria e a Biblioteca abre; com
+    os grupos (s217), o grupo dele abre tambem -- sem gravar no aparelho (nao foi escolha dele)."""
+    acao = GRUPOS_JS + r"""
+El.prototype.contains = function(n){ for(var p = n; p; p = p.parentNode){ if(p === this){ return true; } } return false; };
+feito("rd-hepato"); var li = marcarRecente("aulas", "rd-hepato");
+SAIDA.recente = {slug: li.getAttribute("data-slug"), marca: li.classList.contains("qd-recente"),
+  bib: !!$("hub-quadro-feitas").open, grupo: grupos()[0]};"""
+    extra = _funcs("function qdGrupoDe(li){", "function marcarRecente(aba, slug){")
+    out = _rodar_secoes(acao, extra=extra)
+    assert out["recente"]["slug"] == "rd-hepato" and out["recente"]["marca"] is True
+    assert out["recente"]["bib"] is True and out["recente"]["grupo"]["area"] == "CM"
+    assert out["recente"]["grupo"]["aberta"] is True and out["recente"]["grupo"]["expanded"] == "true"
+    assert "aulas:biblioteca:CM" not in json.loads(out["ls"].get("medhub.secoes", "{}"))
 
 
 # ======================================================================== 2. secoes da aba Listas

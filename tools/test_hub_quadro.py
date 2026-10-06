@@ -23,6 +23,7 @@ e fora do hub. O que esta suite trava:
 
 Repo sintetico em tmp_path; o `ipub.db` nunca e tocado (o plano e o calendario entram injetados).
 """
+import html
 import json
 import os
 import re
@@ -48,7 +49,7 @@ TEMPLATE_PLAYER_REAL = TEMPLATE_PLAYER.read_text(encoding="utf-8")
 QUADRO = {"hernias": {"tipo": "aula", "titulo": "A Escada das Hernias", "tarefas": [49]},
           "autopsia": {"tipo": "analise", "titulo": "Autopsia UERJ 2023"},
           "bayes": {"tipo": "aula", "titulo": "A Escada de Bayes", "tarefa_id": 877},
-          "rd-renal": {"tipo": "revisao", "titulo": "Revisao direcionada renal"}}
+          "rd-renal": {"tipo": "revisao", "titulo": "Revisao direcionada renal", "bloco": "CM"}}
 #: Calendario da trilha (a mesma regua do `plano.panorama`): AGORA cai na semana 2.
 CAL = {1: (date(2026, 9, 14), date(2026, 9, 20)), 2: (date(2026, 9, 21), date(2026, 9, 27)),
        3: (date(2026, 9, 28), date(2026, 10, 4))}
@@ -153,18 +154,20 @@ def test_registro_real_so_com_as_aulas_em_aberto_e_ligadas_ao_plano():
     (tipo analise), o documento do bloco Documentacao do painel; s213: entram autopsia-uerj-2021
     (analise, a Autopsia mora no hub) e remit-cicatrizacao, que CUMPRE a tarefa #530; s214: entram
     as aulas-base da S4 que CUMPREM as tarefas sem lista #768, #367 e #590 (como a REMIT) e a RD
-    rd-ventilacao-degrau-0, prometida ao operador na assinatura da rd-intensiva-sepse."""
+    rd-ventilacao-degrau-0, prometida ao operador na assinatura da rd-intensiva-sepse; s217: entra
+    tb-360, que CUMPRE a tarefa custom #1797 (Tuberculose 360)."""
     reg = hub.ler_quadro(ROOT / hub.QUADRO_REG)
     rds = {k for k, v in reg.items() if v["tipo"] == "revisao"}
     docs = {k for k, v in reg.items() if v["tipo"] == "analise"}
     assert docs == {"dossie-uerj", "autopsia-uerj-2021"}
     assert set(reg) - rds - docs == {"dmg", "topicos-pediatria", "prevencao-quaternaria",
                                      "remit-cicatrizacao", "aorta-cardiomiopatias-pericardio",
-                                     "tireoide-nodulo-cancer", "vulva-vagina-anatomia"}
+                                     "tireoide-nodulo-cancer", "vulva-vagina-anatomia", "tb-360"}
     assert all(k.startswith("rd-") for k in rds), "s210: revisao direcionada = slug rd-*"
     assert reg["dmg"]["tarefas"] == [26, 40] and reg["topicos-pediatria"]["tarefas"] == [96, 100]
     assert reg["prevencao-quaternaria"]["tarefa_id"] == 875
     assert reg["remit-cicatrizacao"]["tarefa_id"] == 530
+    assert reg["tb-360"]["tarefa_id"] == 1797
     assert [reg[s]["tarefa_id"] for s in ("aorta-cardiomiopatias-pericardio",
                                           "tireoide-nodulo-cancer", "vulva-vagina-anatomia")] == [768, 367, 590]
     reais = {hub.slug_de(p.name) for p in (ROOT / "artifacts").glob("aula-*.html")}
@@ -324,7 +327,7 @@ def test_feito_sai_riscado_na_biblioteca_no_build(tmp_path):
     # "Concluidas" virou a Biblioteca -- o feito vai riscado para la, e a aula avulsa (sem tarefa
     # pendente) mora la desde o build, sem riscar; ordem = data de criacao, mais nova primeiro.
     raiz, data_fn = _repo(tmp_path)
-    quadro = dict(QUADRO, autopsia=dict(QUADRO["autopsia"], tipo="aula"),
+    quadro = dict(QUADRO, autopsia=dict(QUADRO["autopsia"], tipo="aula", bloco="VARIAS"),
                   hernias=dict(QUADRO["hernias"], tarefas=[26, 49]))
     _construir(raiz, data_fn, quadro=quadro, estado={"bayes": {"feito": True, "ts": "x"},
                                                      "rd-renal": {"feito": True, "ts": "y"},
@@ -840,7 +843,10 @@ function estado(){
       {onde: onde, feito: li.hasAttribute("data-feito"), marca: marca ? marca.textContent : null};
   });
   var secoes = {}; DOC.querySelectorAll(".qd-sem").forEach(function(s){ secoes[s.getAttribute("data-secao")] = s.querySelector("[data-n]").textContent; });
-  return {itens: itens, secoes: secoes, escritas: ESCRITAS, gravadas: GRAVADAS, st: $("hub-assina-st").textContent, voltou: VOLTOU,
+  // s217 (P17): os grupos de grande area da Biblioteca, na ordem da pagina, com os itens de cada um
+  var grupos = DOC.querySelectorAll(".qd-area").map(function(g){ return [g.getAttribute("data-area"),
+    g.querySelectorAll(".qd-item").map(function(li){ return li.getAttribute("data-slug") || "t" + li.getAttribute("data-tarefa"); })]; });
+  return {itens: itens, secoes: secoes, grupos: grupos, escritas: ESCRITAS, gravadas: GRAVADAS, st: $("hub-assina-st").textContent, voltou: VOLTOU,
           nfeitas: $("hub-quadro-nfeitas").textContent, aviso_oculto: $("hub-quadro-aviso").hidden};
 }
 var qd = $("hub-quadro");
@@ -1072,3 +1078,170 @@ def test_assinar_fecha_e_volta_para_a_aba_de_origem(cfg, voltou):
     assert [v[0] for v in out["voltou"]] == [v[0] for v in voltou]
     for v, esperado in zip(out["voltou"], voltou):
         assert v[1].startswith(esperado[1]), v
+
+
+# ------------------------------------------------ 8. s217 (P17): a Biblioteca por grande area
+# Pedido do operador em 06/10/2026: "a biblioteca nao tem como ser desorganizada. preciso que voce
+# organize por grande area (CM, Cir, MFC, Ped ou GO)". Grupos na ordem dele, vazio nao aparece, o mais
+# recente primeiro dentro do grupo. A aula herda o bloco da tarefa do plano (a de `tarefa_id` vence;
+# senao a primeira de `tarefas`); o item sem tarefa (a RD) declara `bloco` no registro; VARIAS (as
+# pilulas) = grupo final "Varias areas", so com item. Sem area resolvivel = defeito ACUSADO pelo build
+# e pelo --check, nomeando o slug (WARN, padrao warn-first: o hub do dia nao trava), e o item aparece em
+# "Sem area", no fim -- nunca some.
+
+PLANO_BIB = [_t(530, 1, "REMIT", 0, None, fonte="custom", status="feita", bloco="CIR"),
+             _t(26, 1, "DMG", 19, URL, status="feita", bloco="GO"),
+             _t(40, 2, "DMG II", 19, URL, status="feita", bloco="GO"),
+             _t(96, 1, "Topicos em Pediatria", 20, URL, status="feita", bloco="PED"),
+             _t(367, 2, "Tireoide", 0, None, fonte="custom", status="feita", bloco="CM"),
+             _t(590, 2, "Vulva", 0, None, fonte="custom", status="feita", bloco="GO"),
+             _t(875, 3, "Prevencao Quaternaria", 0, None, fonte="custom", bloco="MFC")]
+REG_BIB = {"remit": {"tipo": "aula", "titulo": "REMIT", "tarefa_id": 530, "bloco": "CM"},   # o plano vence
+           "dmg": {"tipo": "aula", "titulo": "DMG", "tarefas": [26, 40]},
+           "mista": {"tipo": "aula", "titulo": "Mista", "tarefa_id": 96, "tarefas": [26]},   # tarefa_id vence
+           "tireoide": {"tipo": "aula", "titulo": "Tireoide", "tarefas": [367, 590]},        # a primeira
+           "prevq": {"tipo": "aula", "titulo": "Prevencao Quaternaria", "tarefa_id": 875},
+           "rd-hepato": {"tipo": "revisao", "titulo": "Hepato", "bloco": "CM"},
+           "rd-hernias": {"tipo": "revisao", "titulo": "Hernias", "bloco": "CIR"},
+           "rd-pilulas": {"tipo": "revisao", "titulo": "Pilulas", "bloco": "VARIAS"},
+           "dossie": {"tipo": "analise", "titulo": "Dossie"}}
+DATAS_BIB = {"remit": "2026-10-01", "dmg": "2026-09-20", "mista": "2026-09-25", "tireoide": "2026-10-02",
+             "prevq": "2026-10-03", "rd-hepato": "2026-10-04", "rd-hernias": "2026-10-05",
+             "rd-pilulas": "2026-10-06", "dossie": "2026-10-06"}
+AULAS_BIB = [hub.Aula(s, s, d, "artifacts/aula-%s.html" % s) for s, d in DATAS_BIB.items()]
+FEITOS_BIB = {s: FEITA for s in ("prevq", "rd-hernias", "rd-pilulas", "rd-hepato")}
+
+
+def _grupos(pagina):
+    """[(area, rotulo, n, [ids de tarefa | slugs])] dos grupos da Biblioteca, na ordem da pagina; confere
+    que cada item carrega o `data-area` do grupo em que esta."""
+    bib = pagina.split('id="hub-quadro-feitas"', 1)[1].split("</details>", 1)[0]
+    saida = []
+    for m in re.finditer(r'<div class="qd-area" data-area="([A-Z]+)"><h4 class="qd-titulo">([^<]+) '
+                         r'<span class="qd-n" data-n>(\d+)</span></h4><ul class="qd-lista">(.*?)</ul></div>',
+                         bib, re.S):
+        lis = re.findall(r'<li class="qd-item[^"]*"[^>]*>', m.group(4))
+        assert all('data-area="%s"' % m.group(1) in li for li in lis), (m.group(1), lis)
+        itens = [a or b for a, b in re.findall(
+            r'<li class="qd-item[^"]*"[^>]*?(?:data-tarefa="(\d+)"|data-slug="([\w-]+)")', m.group(4))]
+        assert int(m.group(3)) == len(itens), "a contagem do grupo e a dos itens dele"
+        saida.append((m.group(1), m.group(2), int(m.group(3)), itens))
+    return saida
+
+
+def test_biblioteca_agrupa_por_grande_area_na_ordem_do_operador():
+    """CM, CIR, MFC, PED, GO e, no fim, "Varias areas"; dentro do grupo, o mais recente primeiro (a
+    data de criacao que a Biblioteca ja usava); o feito vem riscado no grupo da tarefa que cumpre."""
+    pagina, avisos = hub.html_quadro_de(AULAS_BIB, REG_BIB, FEITOS_BIB, PLANO_BIB, CAL, HOJE)
+    assert _grupos(pagina) == [
+        ("CM", "Clínica Médica", 2, ["rd-hepato", "tireoide"]),
+        ("CIR", "Cirurgia", 2, ["rd-hernias", "remit"]),
+        ("MFC", "Medicina de Família e Comunidade", 1, ["875"]),
+        ("PED", "Pediatria", 1, ["mista"]),
+        ("GO", "Ginecologia e Obstetrícia", 1, ["dmg"]),
+        ("VARIAS", "Várias áreas", 1, ["rd-pilulas"])]
+    assert '<summary>Biblioteca <span class="qd-n" id="hub-quadro-nfeitas">8</span></summary>' in pagina
+    assert 'data-slug="dossie"' not in pagina, "a analise segue fora da Teoria"
+    assert not [a for a in avisos if "grande area" in a], avisos
+    prevq = _item(pagina, 'data-tarefa="875"')
+    assert 'data-feito="1"' in prevq and 'data-secao="3"' in prevq, "riscado, com a origem para desmarcar"
+    # a ordem e os rotulos dos grupos vem do build, para a pagina criar o grupo que ainda nao existe
+    areas = re.search(r'<div class="qd-areas" data-areas="([^"]+)">', pagina).group(1)
+    assert json.loads(html.unescape(areas)) == [list(p) for p in hub.AREAS_BIBLIOTECA]
+    assert [p[0] for p in hub.AREAS_BIBLIOTECA] == ["CM", "CIR", "MFC", "PED", "GO", "VARIAS", "SEM"]
+
+
+def test_grupo_vazio_nao_aparece_e_todo_item_da_teoria_carrega_a_area():
+    """Nada feito: as RDs ficam em Revisoes e a Prevencao Quaternaria na semana -- MFC e "Varias areas"
+    nao aparecem. Todo item (secao ou Biblioteca) leva `data-area`: e o que o cliente le para mover o
+    feito para o grupo certo sem publish."""
+    pagina, _ = hub.html_quadro_de(AULAS_BIB, REG_BIB, {}, PLANO_BIB, CAL, HOJE)
+    assert [g[0] for g in _grupos(pagina)] == ["CM", "CIR", "PED", "GO"]
+    assert 'class="qd-area" data-area="MFC"' not in pagina and 'class="qd-area" data-area="VARIAS"' not in pagina
+    assert 'data-area="VARIAS"' in _item(pagina, 'data-slug="rd-pilulas"'), "a RD em Revisoes ja sabe o grupo"
+    assert 'data-area="MFC"' in _item(pagina, 'data-tarefa="875"')
+    assert all("data-area=" in li for li in re.findall(r'<li class="qd-item[^"]*"[^>]*>', pagina))
+    vazia, _ = hub.html_quadro_de(AULAS_BIB[:1], REG_BIB, {}, [_t(530, 3, "REMIT", fonte="custom", bloco="CIR")],
+                                  CAL, HOJE)
+    assert _grupos(vazia) == [] and '<div class="qd-areas" data-areas=' in vazia, \
+        "Biblioteca vazia: sem grupo, mas com a ordem para o primeiro feito"
+
+
+def test_area_da_aula_vem_da_tarefa_do_plano_e_a_da_rd_do_registro():
+    blocos = {530: "CIR", 26: "GO", 96: "PED", 367: "CM", 590: "GO"}
+    assert hub.grande_area(REG_BIB["remit"], blocos) == "CIR", "o plano vence o `bloco` do registro"
+    assert hub.grande_area(REG_BIB["mista"], blocos) == "PED", "tarefas discordam: a de tarefa_id"
+    assert hub.grande_area(REG_BIB["tireoide"], blocos) == "CM", "sem tarefa_id: a primeira de `tarefas`"
+    assert hub.grande_area(REG_BIB["rd-pilulas"], blocos) == "VARIAS"
+    assert hub.grande_area({"tipo": "aula", "tarefa_id": 999, "bloco": "GO"}, blocos) == "GO", \
+        "tarefa fora do plano: vale o `bloco` declarado"
+    assert hub.grande_area({"tipo": "revisao"}, blocos) is None
+    assert hub.grande_area({"tipo": "aula", "tarefas": [999]}, {}) is None
+
+
+def test_item_sem_area_cai_em_sem_area_e_o_build_e_o_check_acusam_o_slug(tmp_path, capsys):
+    reg = dict(REG_BIB, **{"rd-sem": {"tipo": "revisao", "titulo": "RD sem bloco"},
+                           "orfa": {"tipo": "aula", "titulo": "Orfa", "tarefa_id": 999},
+                           "orfa-com-bloco": {"tipo": "aula", "titulo": "Orfa GO", "tarefa_id": 998, "bloco": "GO"}})
+    aulas = AULAS_BIB + [hub.Aula(s, s, d, "artifacts/aula-%s.html" % s) for s, d in
+                         (("rd-sem", "2026-10-06"), ("orfa", "2026-09-01"), ("orfa-com-bloco", "2026-09-02"))]
+    pagina, avisos = hub.html_quadro_de(aulas, reg, dict(FEITOS_BIB, **{"rd-sem": FEITA}), PLANO_BIB, CAL, HOJE)
+    grupos = _grupos(pagina)
+    assert grupos[-1] == ("SEM", "Sem área", 2, ["rd-sem", "orfa"]), "no fim, depois de Varias areas"
+    assert ("GO", "Ginecologia e Obstetrícia", 2, ["dmg", "orfa-com-bloco"]) in grupos
+    sem = [a for a in avisos if "grande area" in a]
+    assert len(sem) == 2 and "rd-sem" in sem[0] and "orfa" in sem[1] and "#999" in sem[1], sem
+    assert all("bloco" in a and hub.QUADRO_REG in a for a in sem)
+    # plano fora (o build ja avisa "plano indisponivel"): a aula com tarefa nao vira defeito de registro
+    _p, degradado = hub.html_quadro_de([a for a in AULAS_BIB if a.slug == "dmg"], REG_BIB, {}, [], {}, HOJE)
+    assert not [a for a in degradado if "grande area" in a], degradado
+    # o --check le a pagina montada e acusa pelo slug, sem mudar o exit (warn-first)
+    assert hub.sem_area_na_pagina(pagina) == ["rd-sem", "orfa"]
+    (tmp_path / "index.html").write_text(pagina, encoding="utf-8")
+    manifesto = {"file_path": "index.html", "files": {}, "mantidos": sorted(hub.hrefs_relativos(pagina))}
+    (tmp_path / "manifesto.json").write_text(json.dumps(manifesto), encoding="utf-8")
+    capsys.readouterr()
+    assert hub.main(["--check", "--out", str(tmp_path)]) == 0
+    saida = capsys.readouterr().out
+    assert "AVISO" in saida and "rd-sem" in saida and "orfa" in saida, saida
+
+
+def test_bloco_fora_do_vocabulario_falha_alto(tmp_path):
+    arq = tmp_path / "q.json"
+    for ruim in ("Clinica", "SEM"):
+        arq.write_text(json.dumps({"itens": {"rd-x": {"tipo": "revisao", "bloco": ruim}}}), encoding="utf-8")
+        with pytest.raises(ValueError, match="bloco"):
+            hub.ler_quadro(arq)
+
+
+def test_registro_real_toda_rd_declara_bloco_e_nada_cai_em_sem_area():
+    """O registro real (06/10): a area de cada RD pelo tema (conferida no <title>/h1 de cada
+    artifacts/aula-rd-*.html). A guarda que alcanca a PROXIMA RD: item da Teoria sem tarefa tem `bloco`
+    -- a suite do commit acusa antes do hub."""
+    reg = hub.ler_quadro(ROOT / hub.QUADRO_REG)
+    esperado = {"rd-dii-polipos": "CM", "rd-dm-cronicas": "CM", "rd-hemostasia": "CM", "rd-hemostasia-2": "CM",
+                "rd-hepato": "CM", "rd-intensiva-sepse": "CM", "rd-lupus-saf": "CM", "rd-meningites": "CM",
+                "rd-neoplasias-tgi": "CM", "rd-ventilacao-degrau-0": "CM", "rd-hernias": "CIR",
+                "rd-ortopedia-cirurgia": "CIR", "rd-vias-biliares": "CIR", "rd-pediatria": "PED",
+                "rd-pilulas": "VARIAS", "rd-pilulas-0510": "VARIAS"}
+    assert {s: reg[s].get("bloco") for s in esperado} == esperado
+    sem_rota = [s for s, v in reg.items() if v["tipo"] != "analise" and v.get("tarefa_id") is None
+                and not v.get("tarefas") and not v.get("bloco")]
+    assert sem_rota == [], "item da Teoria sem tarefa e sem `bloco`: %s" % sem_rota
+    doc = json.loads((ROOT / hub.QUADRO_REG).read_text(encoding="utf-8"))["_doc"]
+    assert "bloco" in doc and "VARIAS" in doc
+    linhas, aviso = hub._ler_plano()
+    if aviso or not linhas:
+        pytest.skip("plano real indisponivel: area das aulas com tarefa nao conferida (skip declarado)")
+    aulas = [hub.Aula(s, s, "2026-10-01", "artifacts/aula-%s.html" % s) for s in reg]
+    pagina, avisos = hub.html_quadro_de(aulas, reg, {}, linhas, {}, date(2026, 10, 6))
+    assert not [a for a in avisos if "grande area" in a], avisos
+    assert 'data-area="SEM"' not in pagina
+
+
+def test_lista_resolvida_vai_para_o_grupo_do_bloco_da_tarefa():
+    """A lista resolvida na aba Listas sai da semana na hora para o grupo do BLOCO dela (a 26 e GO; o
+    simulado 1793 tem area "Simulado", que o plano le como CM) -- o grupo nasce na ordem."""
+    out = _rodar_qd(listas=LISTAS)
+    assert out["grupos"] == [["CM", ["t1793"]], ["GO", ["t26"]]], out["grupos"]
+    assert out["nfeitas"] == "2"

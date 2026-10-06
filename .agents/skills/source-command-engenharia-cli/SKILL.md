@@ -660,6 +660,12 @@ tipo inválido falha alto. Cada item tem o controle "feito" (44px): a página gr
 `/revisar`, "Fronteira de escrita") e o item vai riscado para a **Biblioteca** (s216: "Outras aulas" + "Concluídas" numa seção só, recolhida, por data de criação; nada vai para `artifacts/arquivo/`); sem `db`, o
 controle fica desabilitado com uma frase curta. O painel conversa com as abas: "Ir para os cards" e
 "abrir aula" (`data-hub-aba`/`data-hub-aula`) trocam de aba dentro do hub.  <!-- CHECK: test_feito_sai_riscado_na_biblioteca_no_build -->
+**Biblioteca por grande área (s217, P17):** grupos CM, CIR, MFC, PED, GO e, no fim, "Várias áreas"
+(vazio não sai; dentro do grupo, a mais recente primeiro), cada um recolhível como as seções. A aula
+herda o bloco da tarefa do plano (`tarefa_id` vence; senão a 1a de `tarefas`); o item sem tarefa (a RD)
+declara `bloco` (`CM|CIR|MFC|PED|GO|VARIAS`) no registro; `bloco` fora disso falha alto. Sem área
+resolvível o item cai em "Sem área" e o `--build` e o `--check` dão AVISO pelo slug (warn-first: o exit
+não muda). O "feito" move o item para o grupo do `data-area` dele na hora, criando o grupo na ordem.  <!-- CHECK: test_biblioteca_agrupa_por_grande_area_na_ordem_do_operador -->
 
 **Projeção (s194):** o `estado_pos_publish.json` e o registro do `--confirmar` guardam também
 `projecao = {painel: sha256 sem o carimbo, quadro: sha256 do quadro montado, sessao}`; é contra ela

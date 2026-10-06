@@ -16,7 +16,9 @@ O que ele monta, em `--out` (default `tmp/hub/`):
   `tarefa_id`) entra no bloco da tarefa. s216 (hub-integracao part-1): a aba se chama TEORIA (id
   `aulas` intacto) e mostra so a tarefa de aula e a tarefa com aula ligada -- o cronograma inteiro
   mora no Painel. s216 (part-3): nada concluido sai mais do hub -- a aula feita e a aula sem tarefa
-  pendente moram na BIBLIOTECA da Teoria (o `git mv` para a pasta de arquivo acabou);
+  pendente moram na BIBLIOTECA da Teoria (o `git mv` para a pasta de arquivo acabou); s217 (P17): a
+  Biblioteca em grupos por grande area (CM, CIR, MFC, PED, GO, "Varias areas"), a area pelo bloco da
+  tarefa no plano ou, sem tarefa, pelo `bloco` do registro;
 - `manifesto.json` = exatamente os argumentos do `Artifact publish`: `file_path` (a pagina) e
   `files` ({path publicado: fonte | null}). Painel e aulas vao DIRETO das fontes em `artifacts/`
   (sem copia). Arquivo OMITIDO num update e MANTIDO pelo runtime; so `null` remove -- por isso o que
@@ -74,11 +76,22 @@ from tools.plano import (  # noqa: E402
     AREA_SIMULADO, SEMANAS_FASE1, calendario_trilha, classe_da_tarefa)
 
 TEMPLATE_HUB = RAIZ / "core" / "templates" / "hub.html"
-#: Registro do quadro da aba Aulas (s194): slug -> {tipo, titulo, tarefa_id?}.
+#: Registro do quadro da aba Aulas (s194): slug -> {tipo, titulo, tarefa_id?, tarefas?, bloco?}.
 QUADRO_REG = "core/hub_quadro.json"
 #: Tipos de aula do registro (validacao + etiqueta no bloco). Rotulos curtos (celular).
 TIPOS_QUADRO = (("aula", "Aulas-base"), ("revisao", "Revisões"), ("analise", "Análises"))
 TIPO_PADRAO = "aula"
+#: Grandes areas da Biblioteca da Teoria (s217, P17; pedido do operador em 06/10/2026: "a biblioteca
+#: nao tem como ser desorganizada. preciso que voce organize por grande area (CM, Cir, MFC, Ped ou
+#: GO)"): chave e rotulo de tela, NA ORDEM DOS GRUPOS. As cinco primeiras sao os blocos do plano
+#: (`db.bloco_de`); VARIAS = item de varias areas (as pilulas), grupo final so com item; SEM = defeito
+#: (item sem area resolvivel), acusado pelo build e pelo --check -- valor do build, nunca do registro.
+AREAS_BIBLIOTECA = (("CM", "Clínica Médica"), ("CIR", "Cirurgia"),
+                    ("MFC", "Medicina de Família e Comunidade"), ("PED", "Pediatria"),
+                    ("GO", "Ginecologia e Obstetrícia"), ("VARIAS", "Várias áreas"), ("SEM", "Sem área"))
+AREA_SEM = "SEM"
+#: O vocabulario do campo `bloco` do registro (o SEM e do build).
+BLOCOS_REGISTRO = tuple(a for a, _r in AREAS_BIBLIOTECA if a != AREA_SEM)
 #: Quadro por semanas (s195): a ultima secao e a semana da PROVA (`plano.SEMANAS_FASE1`); a Fase 2
 #: nao entra na aba -- e panorama de execucao, nao inventario.
 SEMANA_FINAL_QUADRO = max(SEMANAS_FASE1)
@@ -300,8 +313,9 @@ def _data_curta(iso):
 
 
 def ler_quadro(caminho):
-    """{slug: {"tipo", "titulo"?, "tarefa_id"?}} do registro versionado. Arquivo ausente = {}.
-    Tipo fora de TIPOS_QUADRO falha ALTO: registro errado nao vira coluna inventada."""
+    """{slug: {"tipo", "titulo"?, "tarefa_id"?, "tarefas"?, "bloco"?}} do registro versionado.
+    Arquivo ausente = {}. Tipo fora de TIPOS_QUADRO ou `bloco` fora de BLOCOS_REGISTRO (s217) falha
+    ALTO: registro errado nao vira coluna nem grupo inventado."""
     caminho = Path(caminho)
     if not caminho.is_file():
         return {}
@@ -316,7 +330,40 @@ def ler_quadro(caminho):
                                     or not all(isinstance(t, int) for t in tarefas)):
             raise ValueError("%s: `tarefas` da aula %r tem de ser lista de ids inteiros, veio %r"
                              % (caminho.name, slug, tarefas))
+        bloco = (item or {}).get("bloco")
+        if bloco is not None and bloco not in BLOCOS_REGISTRO:
+            raise ValueError("%s: `bloco` %r da aula %r fora de %s"
+                             % (caminho.name, bloco, slug, list(BLOCOS_REGISTRO)))
     return itens
+
+
+def _bloco_da_linha(linha):
+    """O bloco UERJ de uma linha do plano: o `bloco` que `db.plano_listar` deriva da area; linha sem
+    ele (ou fora do vocabulario) deriva da `area` pela MESMA funcao (`db.bloco_de`); sem area, None."""
+    bloco = linha.get("bloco")
+    if bloco in BLOCOS_REGISTRO:
+        return bloco
+    return db.bloco_de(linha.get("area")) if linha.get("area") else None
+
+
+def _tarefas_do_registro(reg):
+    """Os ids de tarefa de um item do registro, a de `tarefa_id` primeiro (a que ele CUMPRE)."""
+    return (([reg["tarefa_id"]] if reg.get("tarefa_id") is not None else [])
+            + list(reg.get("tarefas") or []))
+
+
+def grande_area(reg, blocos):
+    """A grande area (chave de AREAS_BIBLIOTECA) de um item do registro, ou None. PURA. s217 (P17):
+    a aula com tarefa herda o bloco da tarefa no plano -- a de `tarefa_id` (a que ela CUMPRE) vence;
+    senao, a primeira de `tarefas` que o plano conhece. O `bloco` declarado no registro vale so sem
+    tarefa resolvivel (a RD, que nao tem tarefa; a tarefa fora do plano). `blocos` = {tarefa_id:
+    bloco} do plano INTEIRO (a tarefa concluida tambem conta)."""
+    reg = reg or {}
+    for tid in _tarefas_do_registro(reg):
+        bloco = (blocos or {}).get(int(tid))
+        if bloco in BLOCOS_REGISTRO:
+            return bloco
+    return reg.get("bloco") if reg.get("bloco") in BLOCOS_REGISTRO else None
 
 
 def classificar(aulas_sel, quadro):
@@ -417,13 +464,21 @@ def secoes_do_quadro(classificadas, plano_linhas=None, calendario=None, hoje=Non
     "Concluidas" viram UMA secao, a BIBLIOTECA -- os itens feitos (riscados) e as aulas sem tarefa
     pendente, por data de criacao (mais nova primeiro). Nada vai mais para a pasta de arquivo: a aula
     concluida fica a um toque. A aula da Biblioteca tem `secao = "biblioteca"` (sem secao de origem:
-    desmarcada, fica la). Devolve (secoes, biblioteca, avisos)."""
+    desmarcada, fica la). Devolve (secoes, biblioteca, avisos).
+
+    s217 (P17, pedido do operador em 06/10: "organize por grande area"): todo item leva `grupo` = a
+    grande area -- a tarefa, o bloco dela no plano; a aula, `grande_area` (o bloco da tarefa; sem
+    tarefa, o `bloco` do registro). A pagina le dele o grupo da Biblioteca para onde o feito vai. Item
+    sem area = AVISO nomeando o slug (o --check repete pela pagina); com o plano fora, a aula com tarefa
+    nao e defeito de registro (o build ja avisa "plano indisponivel")."""
     feitos = {s for s, v in (estado or {}).items() if v.get("feito")}
     hoje = hoje or date.today()
     pendentes = [l for l in plano_linhas or [] if l.get("status") == "pendente"
                  and l.get("semana_plano") is not None and int(l["semana_plano"]) <= semana_final]
     atual = semana_atual(calendario, hoje, pendentes)
     por_tarefa = ligacoes_do_quadro(classificadas, quadro)
+    # o plano INTEIRO (a aula cuja tarefa ja foi feita tambem herda o bloco dela)
+    blocos = {int(l["id"]): _bloco_da_linha(l) for l in plano_linhas or [] if l.get("id") is not None}
 
     def na_teoria(l):
         return classe_da_tarefa(l) == "aula" or int(l["id"]) in por_tarefa
@@ -453,7 +508,7 @@ def secoes_do_quadro(classificadas, plano_linhas=None, calendario=None, hoje=Non
                 "slug": cumpre[0].slug if cumpre else None,
                 "tipo_aula": TIPO_PADRAO, "titulo": cumpre[1] if cumpre else None,
                 "data": cumpre[0].data if cumpre else None,
-                "secao": secao, "ordem": ordem()}
+                "grupo": blocos.get(tid), "secao": secao, "ordem": ordem()}
 
     def secao(chave, titulo, linhas, rotulo="tarefa", fixa=True):
         itens = [item_tarefa(l, chave) for l in linhas]
@@ -487,13 +542,37 @@ def secoes_do_quadro(classificadas, plano_linhas=None, calendario=None, hoje=Non
             continue
         chave = "revisoes" if tipo == "revisao" else "biblioteca"
         item = {"tipo": "aula", "slug": a.slug, "aula": a, "titulo": titulo, "tipo_aula": tipo,
-                "data": a.data, "secao": chave, "ordem": ordem(), "feito": a.slug in feitos}
+                "data": a.data, "grupo": grande_area((quadro or {}).get(a.slug), blocos),
+                "secao": chave, "ordem": ordem(), "feito": a.slug in feitos}
         (avulsas if (a.slug in feitos or chave == "biblioteca") else revisoes).append(item)
     biblioteca = sorted(concluidas + avulsas, key=lambda i: i.get("data") or "", reverse=True)
     if any(i["tipo_aula"] == "revisao" for i in revisoes + biblioteca):
         secoes.insert(0, {"chave": "revisoes", "titulo": "Revisões direcionadas", "rotulo": "aula",
                           "fixa": False, "q": None, "itens": revisoes})
+    for i in [i for s in secoes for i in s["itens"]] + biblioteca:
+        aviso = _aviso_sem_area(i, quadro, blocos)
+        if aviso:
+            avisos.append(aviso)
     return secoes, biblioteca, avisos
+
+
+def _aviso_sem_area(item, quadro, blocos):
+    """O AVISO do item da Teoria sem grande area (s217), nomeando o slug e o motivo; None se tem area
+    ou se a falta e do plano fora (aula com tarefa e plano vazio: degradado ja declarado)."""
+    if item.get("grupo"):
+        return None
+    if item["tipo"] == "tarefa":
+        nome = item.get("slug") or "tarefa #%d" % item["id"]
+        motivo = "tarefa #%d sem bloco no plano" % item["id"]
+    else:
+        ids = _tarefas_do_registro((quadro or {}).get(item["slug"]) or {})
+        if ids and not blocos:
+            return None
+        nome = item["slug"]
+        motivo = ("tarefa %s fora do plano, sem `bloco`" % ", ".join("#%d" % int(t) for t in ids) if ids
+                  else "sem tarefa e sem `bloco`")
+    return ("item sem grande area na Biblioteca: %s (%s) -- registre `bloco` (%s) em %s; ate la ele "
+            "fica no grupo 'Sem área'" % (nome, motivo, "|".join(BLOCOS_REGISTRO), QUADRO_REG))
 
 
 def _html_item(item, feito=False):
@@ -506,6 +585,8 @@ def _html_item(item, feito=False):
     attrs = ' data-secao="%s" data-ordem="%d"' % (_e(item["secao"]), item["ordem"])
     if item.get("data"):   # s216 (part-3): a Biblioteca ordena por data de criacao, tambem ao vivo
         attrs += ' data-data="%s"' % _e(item["data"])
+    # s217 (P17): o grupo da Biblioteca para onde o feito vai, tambem ao vivo (sem area = SEM, avisado)
+    attrs += ' data-area="%s"' % _e(item.get("grupo") or AREA_SEM)
     if item["tipo"] == "tarefa":
         attrs += ' data-tarefa="%d" data-classe="%s"' % (item["id"], _e(item["classe"]))
     botao = ""
@@ -565,11 +646,29 @@ def _html_item(item, feito=False):
             % (" ".join(classes), attrs, botao, _e(tema), "".join(meta), "".join(acoes)))
 
 
+def html_biblioteca(biblioteca):
+    """O miolo da Biblioteca POR GRANDE AREA (s217, P17; pedido do operador em 06/10: "a biblioteca nao
+    tem como ser desorganizada"): um grupo por area de AREAS_BIBLIOTECA, nessa ordem; grupo vazio nao
+    sai; dentro do grupo, a ordem que a lista ja traz (data de criacao, a mais nova primeiro). A ordem
+    e os rotulos vao em `data-areas`: a pagina cria, ao vivo, o grupo que o feito pede."""
+    por_area = {}
+    for i in biblioteca:
+        por_area.setdefault(i.get("grupo") or AREA_SEM, []).append(i)
+    grupos = "".join(
+        '<div class="qd-area" data-area="%s"><h4 class="qd-titulo">%s <span class="qd-n" data-n>%d</span>'
+        '</h4><ul class="qd-lista">%s</ul></div>'
+        % (_e(chave), _e(rotulo), len(por_area[chave]),
+           "".join(_html_item(i, i.get("feito", True)) for i in por_area[chave]))
+        for chave, rotulo in AREAS_BIBLIOTECA if por_area.get(chave))
+    ordem = json.dumps([list(p) for p in AREAS_BIBLIOTECA], ensure_ascii=False)
+    return '<div class="qd-areas" data-areas="%s">%s</div>' % (_e(ordem), grupos)
+
+
 def html_quadro(secoes, biblioteca=()):
     """A aba Teoria: secoes por semana (empilhadas), cada tarefa um bloco; a BIBLIOTECA (s216,
     part-3; era "Outras aulas" + "Concluidas"), recolhida, guarda o que esta feito no `db` (riscado)
-    e as aulas sem tarefa pendente. O estado do build e o do `db` no momento do tique; a pagina
-    reconcilia ao vivo quando o `db` abre."""
+    e as aulas sem tarefa pendente, em grupos por grande area (s217, `html_biblioteca`). O estado do
+    build e o do `db` no momento do tique; a pagina reconcilia ao vivo quando o `db` abre."""
     if not any(s["itens"] for s in secoes) and not biblioteca:
         return '<p class="hub-vazio">Nada no quadro ainda: nem tarefa pendente, nem aula.</p>'
     partes = []
@@ -586,15 +685,14 @@ def html_quadro(secoes, biblioteca=()):
             % (_e(s["chave"]), _e(s["rotulo"]), _e(s["titulo"]), ' data-fixa="1"' if s["fixa"] else "",
                "" if (s["itens"] or s["fixa"]) else " hidden", _e(s["titulo"]), contagem,
                "".join(_html_item(i) for i in s["itens"]), " hidden" if s["itens"] else ""))
-    feitas = "".join(_html_item(i, i.get("feito", True)) for i in biblioteca)
     return ('<div class="qd" id="hub-quadro">\n'
             '<p class="qd-aviso" id="hub-quadro-aviso" hidden>Marcar como feita não funciona '
             'nesta visualização.</p>\n'
             '<div class="qd-semanas">%s</div>\n'
             '<details class="qd-feitas" id="hub-quadro-feitas"><summary>Biblioteca '
             '<span class="qd-n" id="hub-quadro-nfeitas">%d</span></summary>'
-            '<ul class="qd-lista">%s</ul></details>\n</div>'
-            % ("".join(partes), len(biblioteca), feitas))
+            '%s</details>\n</div>'
+            % ("".join(partes), len(biblioteca), html_biblioteca(biblioteca)))
 
 
 def html_quadro_de(aulas_sel, quadro=None, estado=None, plano_linhas=None, calendario=None,
@@ -733,6 +831,27 @@ def hrefs_relativos(pagina_html):
         if href:
             saida.add(normalizar_path(href))
     return saida
+
+
+class _ColetorSemArea(HTMLParser):
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.itens = []
+
+    def handle_starttag(self, tag, attrs):
+        a = dict(attrs)
+        if tag == "li" and "qd-item" in (a.get("class") or "").split() and a.get("data-area") == AREA_SEM:
+            self.itens.append(a.get("data-slug") or "tarefa #%s" % a.get("data-tarefa"))
+
+
+def sem_area_na_pagina(pagina_html):
+    """Os itens do quadro da pagina MONTADA que cairam no grupo 'Sem área' (s217): slug, ou
+    `tarefa #N` sem slug, na ordem da pagina. O --check os acusa como AVISO (warn-first: o exit nao
+    muda); o --build ja os disse, com o motivo, ao montar."""
+    coletor = _ColetorSemArea()
+    coletor.feed(pagina_html)
+    coletor.close()
+    return coletor.itens
 
 
 def checar(pagina_html, files, raiz=RAIZ, mantidos=()):
@@ -1201,8 +1320,11 @@ def main(argv=None):
                   % (PAGINA, MANIFESTO, out))
             return 1
         manifesto = json.loads(man_path.read_text(encoding="utf-8"))
-        problemas = checar((out / PAGINA).read_text(encoding="utf-8"), manifesto["files"], RAIZ,
-                           manifesto.get("mantidos") or ())
+        pagina = (out / PAGINA).read_text(encoding="utf-8")
+        problemas = checar(pagina, manifesto["files"], RAIZ, manifesto.get("mantidos") or ())
+        for nome in sem_area_na_pagina(pagina):
+            print("[hub] AVISO: item sem grande area na Biblioteca: %s -- registre `bloco` (%s) em %s "
+                  "(o --build diz o motivo)" % (nome, "|".join(BLOCOS_REGISTRO), QUADRO_REG))
         for p in problemas:
             print("[hub] PROBLEMA: %s" % p)
         print("[hub] --check: %s" % ("OK" if not problemas else "%d problema(s)" % len(problemas)))

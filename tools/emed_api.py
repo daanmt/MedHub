@@ -22,7 +22,10 @@ dry-run (busca, valida e resume; nada gravado). `--apply` exige `--expect` confi
 
 TUDO OU NADA (as regras do prova_pdf): contagem != --expect; questao com 1-3 ou 6+ alternativas;
 gabarito ausente ou duplo; enunciado ou alternativa vazia; emed_id repetido (inclusive API que
-ignora `page`) -> recusa nomeada e a pasta nem e criada. DISCURSIVA (zero alternativas; a real vem
+ignora `page`) -> recusa nomeada e a pasta nem e criada. s218 (07/10/2026): duas FORMAS que o hub nao
+desenha saem DECLARADAS como a discursiva, em vez de derrubar a lista -- certo/errado (2 alternativas,
+gabarito unico) e alternativa feita so de imagem (`FORA_DO_FORMATO`); achadas = gravadas +
+discursivas + fora = --expect. DISCURSIVA (zero alternativas; a real vem
 SEM a chave `alternatives` e com `answer_type` DISCURSIVE) SAI e e DECLARADA por numero (decisao (b)
 do /ai-eng): achadas = gravadas + declaradas = --expect. Alternativa sai em UMA linha (`uma_linha`).
 
@@ -70,7 +73,14 @@ CHAVES_PUBLICAS = ("emed_id", "num", "banca", "ano", "enunciado", "alternativas"
 #: ... e os metadados do pipeline, que nao vem da API (`figura` e derivado do enunciado).
 CHAVES_META = ("lista", "tarefa", "capturado_em", "executor", "figura")
 #: O que `extrair` devolve (antes de virar doc): `gabaritos` e a lista, para a recusa contar.
-CHAVES_EXTRAIDAS = ("emed_id", "banca", "ano", "enunciado", "alternativas", "gabaritos", "tags", "figura")
+CHAVES_EXTRAIDAS = ("emed_id", "banca", "ano", "enunciado", "alternativas", "gabaritos", "tags", "figura",
+                    "alt_so_figura")
+#: Formas que o hub NAO desenha e que saem DECLARADAS por numero, como a discursiva (s218, 07/10/2026):
+#: 5 listas da Fase 1 -- t833 t376 t110 t805 t826, ~200 questoes -- eram recusadas inteiras por 1-2
+#: questoes assim. Motivo -> rotulo da declaracao. O resto (texto vazio SEM imagem, 1/3/6+
+#: alternativas, gabarito ausente ou duplo) segue tudo ou nada.
+FORA_DO_FORMATO = {"certo_errado": "certo/errado (2 alternativas)",
+                   "alt_so_figura": "alternativa so com imagem"}
 
 RX_CADERNO = re.compile(r"([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})", re.I)
 
@@ -156,22 +166,27 @@ def extrair(item):
     ref = str(item.get("id", "?")) if isinstance(item, dict) else "?"
     emed_id = str(_campo(item, "id", ref))
     enunciado, figura = html_para_texto(_campo(item, "statement_text", ref))
-    alternativas, gabaritos = [], []
+    alternativas, gabaritos, so_figura = [], [], False
     # a discursiva REAL vem SEM a chave, com `answer_type` DISCURSIVE (t3 Q24, 27/09/2026); objetiva
     # sem a chave segue sendo recusa
     brutas = [] if item.get("answer_type") == "DISCURSIVE" and "alternatives" not in item \
         else _campo(item, "alternatives", ref) or []
     for i, alt in enumerate(brutas):
         texto, fig_alt = html_para_texto(_campo(alt, "sanitized_body", ref))
+        if not texto and not fig_alt:
+            # s218: a alternativa-imagem real chega com `sanitized_body` VAZIO e o <img> so no `body`
+            # (t833 Q34, t376 Q19, t110 Q34); do `body` sai so o SE ha imagem -- o texto morre aqui
+            fig_alt = html_para_texto(alt.get("body"))[1]
         letra = "ABCDEFGHIJ"[i] if i < 10 else "?"
         alternativas.append((letra, uma_linha(texto)))
         figura = figura or fig_alt
+        so_figura = so_figura or (fig_alt and not texto)
         if _campo(alt, "correct", ref) is True:
             gabaritos.append(letra)
     banca, ano = _banca_ano(_campo(item, "exams", ref), ref)
     return {"emed_id": emed_id, "banca": banca, "ano": ano, "enunciado": enunciado,
             "alternativas": alternativas, "gabaritos": gabaritos,
-            "tags": _tags(item.get("topics")), "figura": figura}
+            "tags": _tags(item.get("topics")), "figura": figura, "alt_so_figura": so_figura}
 
 
 def esquema(resposta):
@@ -257,13 +272,30 @@ def coletar(caderno, headers, per_page=PER_PAGE, pausa=2.0):
 
 # ------------------------------------------------------------------ validacao e docs
 
+def fora_do_formato(q):
+    """A chave de `FORA_DO_FORMATO` da questao, ou None. So vale com gabarito UNICO: certo/errado
+    sem gabarito, ou com dois, segue recusa. PURA."""
+    if len(q["gabaritos"]) != 1 or not q["enunciado"]:
+        return None
+    if len(q["alternativas"]) == 2 and all(t for _, t in q["alternativas"]):
+        return "certo_errado"
+    if q.get("alt_so_figura") and 4 <= len(q["alternativas"]) <= 5:
+        return "alt_so_figura"
+    return None
+
+
 def problemas(qs, esperado=None):
-    """Recusas nomeadas (lista vazia = ok) e as discursivas declaradas. PURA."""
-    probs, discursivas = [], []
+    """(recusas nomeadas -- lista vazia = ok --, discursivas declaradas, {num: motivo} das questoes
+    FORA DO FORMATO do hub, declaradas). PURA."""
+    probs, discursivas, fora = [], [], {}
     for num, q in enumerate(qs, 1):
         n = len(q["alternativas"])
         if n == 0:
             discursivas.append(num)
+            continue
+        motivo = fora_do_formato(q)
+        if motivo:
+            fora[num] = FORA_DO_FORMATO[motivo]
             continue
         if not 4 <= n <= 5:
             probs.append(f"Q{num}: {n} alternativas (emed_id {q['emed_id']})")
@@ -272,17 +304,19 @@ def problemas(qs, esperado=None):
         if not q["enunciado"] or any(not t for _, t in q["alternativas"]):
             probs.append(f"Q{num}: enunciado ou alternativa vazia (emed_id {q['emed_id']})")
     if esperado is not None and len(qs) != esperado:
-        probs.append(f"achadas {len(qs)} ({len(qs) - len(discursivas)} gravaveis + "
-                     f"{len(discursivas)} discursiva(s) declarada(s)) != --expect {esperado}")
-    return probs, discursivas
+        probs.append(f"achadas {len(qs)} ({len(qs) - len(discursivas) - len(fora)} gravaveis + "
+                     f"{len(discursivas)} discursiva(s) + {len(fora)} fora do formato, declarada(s)) "
+                     f"!= --expect {esperado}")
+    return probs, discursivas, fora
 
 
-def montar_docs(qs, lista, tarefa, agora=None):
-    """Docs `questoes/*` so com `CHAVES_PUBLICAS` + `CHAVES_META`; discursivas ficam fora. PURA."""
+def montar_docs(qs, lista, tarefa, agora=None, pular=()):
+    """Docs `questoes/*` so com `CHAVES_PUBLICAS` + `CHAVES_META`; discursivas e os numeros de `pular`
+    (as fora do formato) ficam fora. PURA."""
     agora = agora or datetime.datetime.now().replace(microsecond=0).isoformat()
     docs = []
     for num, q in enumerate(qs, 1):
-        if not q["alternativas"]:
+        if not q["alternativas"] or num in pular:
             continue
         doc = {"lista": lista, "tarefa": tarefa, "num": num, "emed_id": q["emed_id"],
                "banca": q["banca"], "ano": q["ano"], "enunciado": q["enunciado"],
@@ -412,10 +446,10 @@ def main(argv=None):
                 print(linha)
             return 0
         qs, paginas = coletar(caderno, headers, pausa=args.pausa)
-        probs, discursivas = problemas(qs, args.expect)
+        probs, discursivas, fora = problemas(qs, args.expect)
         if probs:
             raise Recusa("; ".join(probs[:8]) + (f" (+{len(probs) - 8})" if len(probs) > 8 else ""))
-        docs = montar_docs(qs, lista, tarefa)
+        docs = montar_docs(qs, lista, tarefa, pular=fora)
         conf = conferir(docs, db.emed_listar_questoes(lista)) if args.conferir else None
         out = args.out or os.path.join(OUT_PADRAO, lista)
         pasta = _gravar(docs, lista, out) if args.apply else None
@@ -424,6 +458,7 @@ def main(argv=None):
         return 2
     resumo = {"lista": lista, "caderno": caderno, "paginas": paginas, "achadas": len(qs),
               "gravadas": len(docs), "discursivas": discursivas,
+              "fora": {str(n): m for n, m in sorted(fora.items())},
               "figuras": [d["num"] for d in docs if d.get("figura")],
               "aplicado": bool(args.apply), "out": pasta, "conferencia": conf}
     if args.json:
@@ -432,6 +467,7 @@ def main(argv=None):
     print(("" if args.apply else "dry-run (nada gravado; use --apply --expect N): ")
           + f"{len(qs)} achadas em {paginas} pagina(s) = {len(docs)} gravaveis"
           + (f" + discursivas declaradas {discursivas}" if discursivas else "")
+          + (f" + fora do formato declaradas {resumo['fora']}" if fora else "")
           + (f"; com figura: {resumo['figuras']}" if resumo["figuras"] else ""))
     if conf is not None:
         print(f"conferencia com o ipub.db: {len(conf['iguais'])} iguais; divergentes {conf['divergentes'] or '-'}; "

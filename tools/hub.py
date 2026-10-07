@@ -18,10 +18,24 @@ O que ele monta, em `--out` (default `tmp/hub/`):
   mora no Painel. s216 (part-3): nada concluido sai mais do hub -- a aula feita e a aula sem tarefa
   pendente moram na BIBLIOTECA da Teoria (o `git mv` para a pasta de arquivo acabou); s217 (P17): a
   Biblioteca em grupos por grande area (CM, CIR, MFC, PED, GO, "Varias areas"), a area pelo bloco da
-  tarefa no plano ou, sem tarefa, pelo `bloco` do registro;
+  tarefa no plano ou, sem tarefa, pelo `bloco` do registro; s218 (pedido do operador em 07/10: "a
+  biblioteca deveria cobrir os resumos, que sao as fontes de fato mais densas dos conteudos"): a
+  Biblioteca vira o CORPO da aba, depois das semanas, por grande area (`<details>` com contagem) e,
+  dentro dela, por DISCIPLINA (A-Z); dentro da disciplina, resumos (A-Z), aulas e revisoes (a mais
+  nova primeiro; a RD ainda nao lida leva "nova" e sobe ao topo). Os RESUMOS do lote em
+  `core/hub_resumos.json` viram paginas de leitura `resumos/<slug>.html` (conversor md -> HTML
+  deste modulo, deterministico, todo texto escapado), no mesmo manifesto com diff por hash, e cada
+  semana lista os "Resumos desta semana". A RD declara `disciplinas` (aparece em cada uma) e
+  `resumos` (de onde saiu); o item de resumo mostra quem o cita (aula da tarefa, RD), tipo Obsidian.
+  O cabecalho da semana conta o que a Teoria mostra e diz o total REAL de questoes pendentes da
+  semana no plano (a regua `_q_de` do Painel), com atalho para a aba Listas. ⚰️ s218: a secao
+  "Revisoes direcionadas" no topo da aba (a RD mora so na Biblioteca); ⚰️ "Varias areas" como destino
+  de RD (o `bloco` VARIAS so vale como leitura antiga); ⚰️ o "N questoes" do cabecalho da semana, que
+  somava so as tarefas mostradas ("69 questoes" para 2.750 pendentes, 07/10);
+- `resumos/<slug>.html` (s218): a pagina de leitura de cada resumo do registro, gerada em `--out`;
 - `manifesto.json` = exatamente os argumentos do `Artifact publish`: `file_path` (a pagina) e
   `files` ({path publicado: fonte | null}). Painel e aulas vao DIRETO das fontes em `artifacts/`
-  (sem copia). Arquivo OMITIDO num update e MANTIDO pelo runtime; so `null` remove -- por isso o que
+  (sem copia); os resumos, da pagina gerada em `--out/resumos/`. Arquivo OMITIDO num update e MANTIDO pelo runtime; so `null` remove -- por isso o que
   saiu da selecao e consta em `--publicado` (a listagem do artifact) vira `null`.
 - DIFF (v1, s193, spec `medhub-hub-v1-manifesto-diff`): `files` leva so o que e NOVO ou MUDOU. O
   que ja esta no ar e intocado fica em `manifesto["mantidos"]` -- nao sobe e nao precisa ser relido
@@ -31,7 +45,9 @@ O que ele monta, em `--out` (default `tmp/hub/`):
 
 Limites como DADO: 255 entradas por versao (contrato do Artifact), 8 reservadas, cap de 200 aulas
 (mais novas primeiro, pela data de criacao no git; era 120 ate a s216, quando a Biblioteca passou a
-guardar tudo o que foi concluido).
+guardar tudo o que foi concluido). Os resumos (s218) nao tem cap proprio: aulas + resumos + painel +
+pagina acima do teto = erro NOMEADO no build (nunca corte silencioso) -- o lote de resumos entra por
+semana do plano justamente para caber.
 
 O CLI NAO fala com a API de Artifact: ler a versao viva, listar os arquivos publicados, publicar e
 ler o `db` sao atos do agente (rito em `.claude/commands/revisar.md`, "DRENAR no player").
@@ -54,10 +70,11 @@ import json
 import re
 import subprocess
 import sys
-from dataclasses import dataclass
+import unicodedata
+from dataclasses import dataclass, field
 from datetime import date, datetime
 from html.parser import HTMLParser
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
 RAIZ = Path(__file__).resolve().parents[1]
 if str(RAIZ) not in sys.path:
@@ -90,8 +107,41 @@ AREAS_BIBLIOTECA = (("CM", "Clínica Médica"), ("CIR", "Cirurgia"),
                     ("MFC", "Medicina de Família e Comunidade"), ("PED", "Pediatria"),
                     ("GO", "Ginecologia e Obstetrícia"), ("VARIAS", "Várias áreas"), ("SEM", "Sem área"))
 AREA_SEM = "SEM"
-#: O vocabulario do campo `bloco` do registro (o SEM e do build).
+#: O vocabulario do campo `bloco` do registro (o SEM e do build). s218: o `bloco` vale so como leitura
+#: antiga (a RD declara `disciplinas`); VARIAS fica no vocabulario por isso, sem item no registro real.
 BLOCOS_REGISTRO = tuple(a for a, _r in AREAS_BIBLIOTECA if a != AREA_SEM)
+
+# s218 (pedido do operador em 07/10/2026): a Biblioteca por grande area -> DISCIPLINA, com os RESUMOS.
+#: Registro dos resumos que entram no hub (lote por semana do plano; mapa resumo -> tarefas a mao).
+RESUMOS_REG = "core/hub_resumos.json"
+#: Pasta-fonte dos resumos e prefixo publicado das paginas de leitura geradas.
+DIR_RESUMOS = "resumos"
+PREFIXO_RESUMO = "resumos/"
+#: Grande area do resumo pela pasta de topo de `resumos/`.
+AREA_DA_PASTA = {"Clínica Médica": "CM", "Otorrino": "CM", "Cirurgia": "CIR", "Preventiva": "MFC",
+                 "Pediatria": "PED", "GO": "GO"}
+#: Disciplina do resumo pela pasta, quando o registro nao a declara (`Clínica Médica/<Esp>` -> <Esp>).
+DISC_DA_PASTA = {"Cirurgia": "Cirurgia", "Pediatria": "Pediatria", "Preventiva": "Preventiva",
+                 "Otorrino": "Otorrinolaringologia"}
+#: A `area` da tarefa no plano (abreviada) -> o nome cheio da disciplina; as demais ficam iguais.
+DISC_DA_AREA = {"Infecto": "Infectologia", "Hemato": "Hematologia", "Endocrino": "Endocrinologia",
+                "Gastro": "Gastroenterologia", "Hepato": "Hepatologia", "Pneumo": "Pneumologia",
+                "Reumato": "Reumatologia", "Otorrino": "Otorrinolaringologia", "Dermato": "Dermatologia",
+                "Oftalmo": "Oftalmologia"}
+#: Disciplina -> grande area (a RD e o resumo); fora daqui, CM.
+AREA_DA_DISC = {"Obstetrícia": "GO", "Ginecologia": "GO", "Pediatria": "PED", "Cirurgia": "CIR",
+                "Ortopedia": "CIR", "Preventiva": "MFC"}
+#: O vocabulario dos campos `disciplinas` (RD, `core/hub_quadro.json`) e `disciplina` (resumo): nome fora
+#: dele falha ALTO -- disciplina digitada errada viraria um grupo inventado na Biblioteca.
+DISCIPLINAS = ("Cardiologia", "Cirurgia", "Dermatologia", "Endocrinologia", "Gastroenterologia",
+               "Ginecologia", "Hematologia", "Hepatologia", "Infectologia", "Nefrologia", "Neurologia",
+               "Obstetrícia", "Oftalmologia", "Ortopedia", "Otorrinolaringologia", "Pediatria",
+               "Pneumologia", "Preventiva", "Psiquiatria", "Reumatologia")
+#: Disciplina do item sem disciplina resolvivel (tarefa sem `area`, RD so com o `bloco` antigo): fica
+#: por ultimo na grande area, nunca some.
+DISC_OUTROS = "Outros"
+#: O slug do resumo vira `doc_<slug>` (assinatura) e chave do grifo: `pendIdValido` aceita ate 120.
+SLUG_RESUMO_MAX = 96
 #: Quadro por semanas (s195): a ultima secao e a semana da PROVA (`plano.SEMANAS_FASE1`); a Fase 2
 #: nao entra na aba -- e panorama de execucao, nao inventario.
 SEMANA_FINAL_QUADRO = max(SEMANAS_FASE1)
@@ -157,6 +207,22 @@ class Aula:
     @property
     def publicado(self):
         return PREFIXO_AULA + self.slug + ".html"
+
+
+@dataclass(frozen=True)
+class Resumo:
+    """Um resumo do registro `core/hub_resumos.json` (s218), pronto para virar pagina de leitura."""
+    caminho: str       # relativo a `resumos/`, posix (a chave do registro)
+    slug: str          # `resumo-<nome>`: o arquivo publicado e a chave do grifo e da assinatura
+    titulo: str        # o H1 do resumo (ou o nome do arquivo)
+    area: str          # grande area (AREAS_BIBLIOTECA), pela pasta de topo
+    disciplina: str    # a do registro ou a da pasta
+    tarefas: tuple = ()
+    texto: str = field(default="", repr=False, compare=False)
+
+    @property
+    def publicado(self):
+        return PREFIXO_RESUMO + self.slug + ".html"
 
 
 def _exatamente_uma(texto, marca, onde):
@@ -281,19 +347,26 @@ def aplicar_diff(files, fontes, registro, vivos):
     return enviar, sorted(mantidos), estado
 
 
-def montar_manifesto(aulas_sel, painel_fonte=None, publicado=()):
+def montar_manifesto(aulas_sel, painel_fonte=None, publicado=(), resumos=()):
     """O argumento `files` do publish: {publicado: fonte}, + `null` para o que saiu.
 
-    `index.html` e o `file_path` da pagina: nunca entra em `files` e nunca vira `null`."""
+    `index.html` e o `file_path` da pagina: nunca entra em `files` e nunca vira `null`. `resumos`
+    (s218) = pares (publicado, fonte) das paginas geradas. Aulas + resumos + painel + a pagina acima
+    do teto = ValueError que DIZ quanto de cada um -- nunca um corte silencioso."""
     files = {}
     if painel_fonte:
         files[PUB_PAINEL] = normalizar_path(painel_fonte)
     for a in aulas_sel:
         files[a.publicado] = normalizar_path(a.fonte)
+    resumos = list(resumos)
+    for pub, fonte in resumos:
+        files[normalizar_path(pub)] = normalizar_path(fonte)
     if len(files) + 1 > TETO_ENTRADAS:
-        raise ValueError("manifesto com %d arquivos + a pagina estoura o teto de %d entradas "
-                         "(%d do contrato - %d reservadas)"
-                         % (len(files), TETO_ENTRADAS, LIMITE_ENTRADAS, RESERVADAS))
+        raise ValueError("manifesto com %d arquivos (%d aulas, %d resumos, %d painel) + a pagina estoura "
+                         "o teto de %d entradas (%d do contrato - %d reservadas): tire resumos do lote "
+                         "em %s ou aulas da selecao"
+                         % (len(files), len(aulas_sel), len(resumos), 1 if painel_fonte else 0,
+                            TETO_ENTRADAS, LIMITE_ENTRADAS, RESERVADAS, RESUMOS_REG))
     for p in publicado:
         p = normalizar_path(p)
         if p and p != PAGINA and p not in files:
@@ -313,9 +386,11 @@ def _data_curta(iso):
 
 
 def ler_quadro(caminho):
-    """{slug: {"tipo", "titulo"?, "tarefa_id"?, "tarefas"?, "bloco"?}} do registro versionado.
-    Arquivo ausente = {}. Tipo fora de TIPOS_QUADRO ou `bloco` fora de BLOCOS_REGISTRO (s217) falha
-    ALTO: registro errado nao vira coluna nem grupo inventado."""
+    """{slug: {"tipo", "titulo"?, "tarefa_id"?, "tarefas"?, "bloco"?, "disciplinas"?, "resumos"?}} do
+    registro versionado. Arquivo ausente = {}. Tipo fora de TIPOS_QUADRO, `bloco` fora de
+    BLOCOS_REGISTRO (s217), `disciplinas` fora de DISCIPLINAS ou `resumos` que nao e lista de .md (s218)
+    falha ALTO: registro errado nao vira coluna nem grupo inventado. O resumo-fonte que nao existe no
+    disco e AVISO do build (`avisos_fontes_rd`), nao erro de leitura."""
     caminho = Path(caminho)
     if not caminho.is_file():
         return {}
@@ -334,6 +409,17 @@ def ler_quadro(caminho):
         if bloco is not None and bloco not in BLOCOS_REGISTRO:
             raise ValueError("%s: `bloco` %r da aula %r fora de %s"
                              % (caminho.name, bloco, slug, list(BLOCOS_REGISTRO)))
+        # s218: a RD declara as disciplinas (aparece em cada uma) e os resumos de onde saiu
+        discs = (item or {}).get("disciplinas")
+        if discs is not None and (not isinstance(discs, list) or not discs
+                                  or not all(d in DISCIPLINAS for d in discs)):
+            raise ValueError("%s: `disciplinas` da aula %r tem de ser lista nao vazia de %s, veio %r"
+                             % (caminho.name, slug, list(DISCIPLINAS), discs))
+        fontes = (item or {}).get("resumos")
+        if fontes is not None and (not isinstance(fontes, list) or not all(
+                isinstance(f, str) and f.endswith(".md") and ".." not in f.split("/") for f in fontes)):
+            raise ValueError("%s: `resumos` da aula %r tem de ser lista de caminhos .md relativos a "
+                             "resumos/, veio %r" % (caminho.name, slug, fontes))
     return itens
 
 
@@ -352,18 +438,52 @@ def _tarefas_do_registro(reg):
             + list(reg.get("tarefas") or []))
 
 
-def grande_area(reg, blocos):
-    """A grande area (chave de AREAS_BIBLIOTECA) de um item do registro, ou None. PURA. s217 (P17):
-    a aula com tarefa herda o bloco da tarefa no plano -- a de `tarefa_id` (a que ela CUMPRE) vence;
-    senao, a primeira de `tarefas` que o plano conhece. O `bloco` declarado no registro vale so sem
-    tarefa resolvivel (a RD, que nao tem tarefa; a tarefa fora do plano). `blocos` = {tarefa_id:
-    bloco} do plano INTEIRO (a tarefa concluida tambem conta)."""
+def disciplina_da_area(area):
+    """A `area` de uma tarefa do plano -> o nome cheio da disciplina (s218); None/vazia = None. PURA."""
+    if not area:
+        return None
+    return DISC_DA_AREA.get(area, area)
+
+
+def area_da_disciplina(disc):
+    """A grande area de uma disciplina (s218): Obstetricia/Ginecologia -> GO, Pediatria -> PED,
+    Cirurgia/Ortopedia -> CIR, Preventiva -> MFC; o resto -> CM. PURA."""
+    return AREA_DA_DISC.get(disc, "CM")
+
+
+def lugares_do_registro(reg, blocos, discs=None):
+    """[(grande area, disciplina)] de um item do registro na Biblioteca (s218), na ordem. PURA.
+
+    A aula com tarefa resolvivel no plano mora no bloco da tarefa e na disciplina da `area` dela -- a
+    de `tarefa_id` (a que ela CUMPRE) vence; senao, a primeira de `tarefas` que o plano conhece (s217).
+    Sem tarefa resolvivel (a RD): um lugar por `disciplinas` declarada, a area pela disciplina; sem
+    elas, o `bloco` antigo (leitura de fallback) com a disciplina 'Outros'; sem nada, [] (o "Sem
+    area", acusado). `blocos`/`discs` = {tarefa_id: bloco | disciplina} do plano INTEIRO."""
     reg = reg or {}
     for tid in _tarefas_do_registro(reg):
         bloco = (blocos or {}).get(int(tid))
         if bloco in BLOCOS_REGISTRO:
-            return bloco
-    return reg.get("bloco") if reg.get("bloco") in BLOCOS_REGISTRO else None
+            return [(bloco, (discs or {}).get(int(tid)) or DISC_OUTROS)]
+    if reg.get("disciplinas"):
+        lugares = []
+        for d in reg["disciplinas"]:
+            par = (area_da_disciplina(d), d)
+            if par not in lugares:
+                lugares.append(par)
+        return lugares
+    if reg.get("bloco") in BLOCOS_REGISTRO:
+        return [(reg["bloco"], DISC_OUTROS)]
+    return []
+
+
+def grande_area(reg, blocos):
+    """A grande area (chave de AREAS_BIBLIOTECA) de um item do registro, ou None. PURA. s217 (P17):
+    a aula com tarefa herda o bloco da tarefa no plano -- a de `tarefa_id` (a que ela CUMPRE) vence;
+    senao, a primeira de `tarefas` que o plano conhece. Sem tarefa resolvivel (a RD; a tarefa fora do
+    plano): s218, a area da 1a das `disciplinas`; sem elas, o `bloco` declarado (leitura antiga).
+    `blocos` = {tarefa_id: bloco} do plano INTEIRO (a tarefa concluida tambem conta)."""
+    lugares = lugares_do_registro(reg, blocos)
+    return lugares[0][0] if lugares else None
 
 
 def classificar(aulas_sel, quadro):
@@ -442,8 +562,21 @@ def ligacoes_do_quadro(classificadas, quadro):
     return por_tarefa
 
 
+def _chave_alfa(texto):
+    """Chave de ordem A-Z sem acento e sem caixa (Úlceras entre Toxoplasmose e Vitalidade). PURA."""
+    base = unicodedata.normalize("NFKD", str(texto or ""))
+    return "".join(c for c in base if not unicodedata.combining(c)).casefold()
+
+
+def _resumos_de(resumos, linhas):
+    """Os resumos cujas `tarefas` cruzam as tarefas de `linhas`, A-Z pelo titulo. PURA."""
+    ids = {int(l["id"]) for l in linhas if l.get("id") is not None}
+    return sorted((r for r in resumos or () if ids & set(r.tarefas)),
+                  key=lambda r: (_chave_alfa(r.titulo), r.slug))
+
+
 def secoes_do_quadro(classificadas, plano_linhas=None, calendario=None, hoje=None, estado=None,
-                     quadro=None, semana_final=SEMANA_FINAL_QUADRO):
+                     quadro=None, semana_final=SEMANA_FINAL_QUADRO, resumos=()):
     """O quadro por SEMANAS (pedido do operador, s195): (secoes, biblioteca, avisos). PURA.
 
     O defeito que encerra: a aba listava aulas por tipo, sem dizer de que tarefa eram nem quantas
@@ -462,23 +595,33 @@ def secoes_do_quadro(classificadas, plano_linhas=None, calendario=None, hoje=Non
 
     s216 (part-3, decisao do operador em 05/10: "so daqui em diante"): "Outras aulas" e
     "Concluidas" viram UMA secao, a BIBLIOTECA -- os itens feitos (riscados) e as aulas sem tarefa
-    pendente, por data de criacao (mais nova primeiro). Nada vai mais para a pasta de arquivo: a aula
-    concluida fica a um toque. A aula da Biblioteca tem `secao = "biblioteca"` (sem secao de origem:
-    desmarcada, fica la). Devolve (secoes, biblioteca, avisos).
+    pendente. Nada vai mais para a pasta de arquivo: a aula concluida fica a um toque. A aula da
+    Biblioteca tem `secao = "biblioteca"` (sem secao de origem: desmarcada, fica la).
 
     s217 (P17, pedido do operador em 06/10: "organize por grande area"): todo item leva `grupo` = a
-    grande area -- a tarefa, o bloco dela no plano; a aula, `grande_area` (o bloco da tarefa; sem
-    tarefa, o `bloco` do registro). A pagina le dele o grupo da Biblioteca para onde o feito vai. Item
-    sem area = AVISO nomeando o slug (o --check repete pela pagina); com o plano fora, a aula com tarefa
-    nao e defeito de registro (o build ja avisa "plano indisponivel")."""
+    grande area -- a tarefa, o bloco dela no plano; a aula, `grande_area`. Item sem area = AVISO
+    nomeando o slug (o --check repete pela pagina); com o plano fora, a aula com tarefa nao e defeito
+    de registro (o build ja avisa "plano indisponivel").
+
+    s218 (pedido do operador em 07/10): (1) o cabecalho da semana somava so as questoes das tarefas
+    MOSTRADAS ("69 questoes" nas semanas 4 a 7, que tem 2.750 pendentes): cada secao leva `q_plano` =
+    a soma de `_q_de` de TODAS as tarefas pendentes dela (a regua do Painel), e `resumos` = os resumos
+    cujas tarefas estao pendentes nela; semana so com resumos tambem vira secao. (2) Todo item da
+    Biblioteca leva `lugares` = [(grande area, disciplina)]: a tarefa, o bloco e a `area` dela; a aula,
+    `lugares_do_registro` (a RD, um lugar por disciplina declarada). (3) ⚰️ a secao "Revisoes
+    direcionadas" no topo: a RD mora so na Biblioteca; a nao feita leva `nova`. (4) Os `resumos` do
+    lote entram na Biblioteca como itens `tipo: resumo`, com `citado` = as aulas e RDs que apontam para
+    ele (a aula cuja tarefa esta nas `tarefas` dele; a RD que o declara em `resumos`)."""
     feitos = {s for s, v in (estado or {}).items() if v.get("feito")}
     hoje = hoje or date.today()
     pendentes = [l for l in plano_linhas or [] if l.get("status") == "pendente"
                  and l.get("semana_plano") is not None and int(l["semana_plano"]) <= semana_final]
     atual = semana_atual(calendario, hoje, pendentes)
     por_tarefa = ligacoes_do_quadro(classificadas, quadro)
-    # o plano INTEIRO (a aula cuja tarefa ja foi feita tambem herda o bloco dela)
-    blocos = {int(l["id"]): _bloco_da_linha(l) for l in plano_linhas or [] if l.get("id") is not None}
+    # o plano INTEIRO (a aula cuja tarefa ja foi feita tambem herda o bloco e a disciplina dela)
+    linhas_id = {int(l["id"]): l for l in plano_linhas or [] if l.get("id") is not None}
+    blocos = {tid: _bloco_da_linha(l) for tid, l in linhas_id.items()}
+    discs = {tid: disciplina_da_area(l.get("area")) for tid, l in linhas_id.items()}
 
     def na_teoria(l):
         return classe_da_tarefa(l) == "aula" or int(l["id"]) in por_tarefa
@@ -508,47 +651,73 @@ def secoes_do_quadro(classificadas, plano_linhas=None, calendario=None, hoje=Non
                 "slug": cumpre[0].slug if cumpre else None,
                 "tipo_aula": TIPO_PADRAO, "titulo": cumpre[1] if cumpre else None,
                 "data": cumpre[0].data if cumpre else None,
-                "grupo": blocos.get(tid), "secao": secao, "ordem": ordem()}
+                "grupo": blocos.get(tid),
+                "lugares": [(blocos.get(tid), discs.get(tid) or DISC_OUTROS)] if blocos.get(tid) else [],
+                "secao": secao, "ordem": ordem()}
 
-    def secao(chave, titulo, linhas, rotulo="tarefa", fixa=True):
+    def secao(chave, titulo, linhas, todas, q_atrasadas=0):
         itens = [item_tarefa(l, chave) for l in linhas]
         vivos = [i for i in itens if not (i["slug"] and i["slug"] in feitos)]
         concluidas.extend(dict(i, feito=True) for i in itens if i["slug"] and i["slug"] in feitos)
-        secoes.append({"chave": chave, "titulo": titulo, "rotulo": rotulo, "fixa": fixa,
-                       "q": sum(i["q"] for i in itens), "itens": vivos})
+        q = sum(_q_de(l) for l in todas)
+        # s218 (adendo do principal): a semana corrente do Painel (`plano.panorama`, `q_abertas`) soma as
+        # atrasadas; a Teoria as mostra em secao propria -- a corrente diz TAMBEM o total com elas, o
+        # mesmo numero do Painel, para as duas telas nunca discordarem
+        secoes.append({"chave": chave, "titulo": titulo, "rotulo": "tarefa", "fixa": True, "q_plano": q,
+                       "q_com_atrasadas": q + q_atrasadas if q_atrasadas else None,
+                       "resumos": _resumos_de(resumos, todas), "itens": vivos})
 
     if atual is not None:
-        atrasadas = [l for l in pendentes if int(l["semana_plano"]) < atual and na_teoria(l)]
-        if atrasadas:
-            secao("atrasadas", "Atrasadas", atrasadas)
+        atrasadas_todas = [l for l in pendentes if int(l["semana_plano"]) < atual]
+        atrasadas = [l for l in atrasadas_todas if na_teoria(l)]
+        if atrasadas or _resumos_de(resumos, atrasadas_todas):
+            secao("atrasadas", "Atrasadas", atrasadas, atrasadas_todas)
         ultima = max([int(l["semana_plano"]) for l in pendentes] + [atual])
         for s in range(atual, ultima + 1):
-            linhas = [l for l in pendentes if int(l["semana_plano"]) == s and na_teoria(l)]
-            if not linhas and s != atual:
+            todas = [l for l in pendentes if int(l["semana_plano"]) == s]
+            linhas = [l for l in todas if na_teoria(l)]
+            if not linhas and not _resumos_de(resumos, todas) and s != atual:
                 continue
             cal = (calendario or {}).get(s)
             # s216: " a " entre as datas, como no Painel (o travessao e proibido na pagina)
             titulo = "Semana %d" % s + (" · %s a %s" % (cal[0].strftime("%d/%m"),
                                                          cal[1].strftime("%d/%m")) if cal else "")
-            secao(str(s), titulo, linhas)
+            secao(str(s), titulo, linhas, todas,
+                  sum(_q_de(l) for l in atrasadas_todas) if s == atual else 0)
 
-    # s210 (pedido do operador, 01/10): a revisao direcionada avulsa (tipo `revisao`, sem tarefa
-    # pendente) ganha bloco PROPRIO no topo da aba -- em "Outras aulas" ela sumia no fim da lista.
     # s216 (part-3): a aula avulsa (sem tarefa pendente, inclusive a de tarefa ja concluida) mora na
-    # Biblioteca; o aviso "candidata a arquivo" saiu junto com o `git mv`.
-    avulsas, revisoes = [], []
+    # Biblioteca. s218: a RD tambem, sempre (⚰️ a secao "Revisoes direcionadas" do topo, s210-s217).
+    por_caminho = {r.caminho: r for r in resumos or ()}
+    avulsas = []
     for a, tipo, titulo, tid in classificadas:
         if a.slug in usadas or tipo == "analise":   # s216: a analise mora no Painel (Documentacao)
             continue
-        chave = "revisoes" if tipo == "revisao" else "biblioteca"
-        item = {"tipo": "aula", "slug": a.slug, "aula": a, "titulo": titulo, "tipo_aula": tipo,
-                "data": a.data, "grupo": grande_area((quadro or {}).get(a.slug), blocos),
-                "secao": chave, "ordem": ordem(), "feito": a.slug in feitos}
-        (avulsas if (a.slug in feitos or chave == "biblioteca") else revisoes).append(item)
-    biblioteca = sorted(concluidas + avulsas, key=lambda i: i.get("data") or "", reverse=True)
-    if any(i["tipo_aula"] == "revisao" for i in revisoes + biblioteca):
-        secoes.insert(0, {"chave": "revisoes", "titulo": "Revisões direcionadas", "rotulo": "aula",
-                          "fixa": False, "q": None, "itens": revisoes})
+        reg = (quadro or {}).get(a.slug) or {}
+        lugares = lugares_do_registro(reg, blocos, discs)
+        fontes = [_caminho_resumo(f) for f in reg.get("resumos") or []]
+        avulsas.append({"tipo": "aula", "slug": a.slug, "aula": a, "titulo": titulo, "tipo_aula": tipo,
+                        "data": a.data, "grupo": lugares[0][0] if lugares else None, "lugares": lugares,
+                        "secao": "biblioteca", "ordem": ordem(), "feito": a.slug in feitos,
+                        "nova": tipo == "revisao" and a.slug not in feitos, "fontes": fontes,
+                        # s218: a fonte publicada vira link para o leitor; a que nao esta no lote, texto
+                        "fontes_html": [(por_caminho[f].publicado, por_caminho[f].titulo) if f in por_caminho
+                                        else (None, _titulo_de_caminho(f)) for f in fontes]})
+    # s218: o resumo na Biblioteca, com quem aponta para ele (backlinks, tipo Obsidian): a aula cuja
+    # tarefa ele sustenta, depois a RD que o declara como fonte -- so documento publicado (o link abre)
+    leitura = [(a, titulo, tipo, (quadro or {}).get(a.slug) or {}) for a, tipo, titulo, _t in classificadas
+               if tipo != "analise"]
+    itens_resumo = []
+    for r in resumos or ():
+        aulas = [(a, t) for a, t, tipo, reg in leitura if tipo != "revisao"
+                 and {int(x) for x in _tarefas_do_registro(reg)} & set(r.tarefas)]
+        rds = [(a, t) for a, t, tipo, reg in leitura if tipo == "revisao"
+               and r.caminho in [_caminho_resumo(f) for f in reg.get("resumos") or []]]
+        por_data = lambda xs: sorted(sorted(xs, key=lambda p: p[0].slug), key=lambda p: p[0].data, reverse=True)
+        itens_resumo.append({"tipo": "resumo", "resumo": r, "titulo": r.titulo, "slug": None,
+                             "grupo": r.area, "lugares": [(r.area, r.disciplina)],
+                             "citado": por_data(aulas) + por_data(rds),
+                             "secao": "biblioteca", "ordem": ordem()})
+    biblioteca = concluidas + avulsas + itens_resumo
     for i in [i for s in secoes for i in s["itens"]] + biblioteca:
         aviso = _aviso_sem_area(i, quadro, blocos)
         if aviso:
@@ -569,15 +738,94 @@ def _aviso_sem_area(item, quadro, blocos):
         if ids and not blocos:
             return None
         nome = item["slug"]
-        motivo = ("tarefa %s fora do plano, sem `bloco`" % ", ".join("#%d" % int(t) for t in ids) if ids
-                  else "sem tarefa e sem `bloco`")
-    return ("item sem grande area na Biblioteca: %s (%s) -- registre `bloco` (%s) em %s; ate la ele "
-            "fica no grupo 'Sem área'" % (nome, motivo, "|".join(BLOCOS_REGISTRO), QUADRO_REG))
+        motivo = ("tarefa %s fora do plano, sem `disciplinas` nem `bloco`"
+                  % ", ".join("#%d" % int(t) for t in ids) if ids
+                  else "sem tarefa, sem `disciplinas` e sem `bloco`")
+    return ("item sem grande area na Biblioteca: %s (%s) -- registre `disciplinas` (%s) em %s; ate la ele "
+            "fica no grupo 'Sem área'" % (nome, motivo, "|".join(DISCIPLINAS), QUADRO_REG))
 
 
-def _html_item(item, feito=False):
-    """Um bloco do quadro: tarefa (tema, peso, questoes, acao) ou aula avulsa. Botao 'feito' so
-    no item com `slug` (a aula que CUMPRE uma tarefa de aula, ou a aula avulsa)."""
+def _ordem_na_disciplina(itens):
+    """A ordem dentro de uma disciplina da Biblioteca (s218, pedido do operador): a RD nova (nao lida)
+    no topo, a mais nova primeiro; os resumos A-Z; as aulas (e a tarefa feita), a mais nova primeiro;
+    as revisoes ja lidas, a mais nova primeiro. PURA; empate pelo slug/titulo (deterministico)."""
+    def classe(i):
+        if i["tipo"] == "resumo":
+            return 1
+        if i.get("tipo_aula") == "revisao" and i["tipo"] == "aula":
+            return 0 if i.get("nova") else 3
+        return 2
+    grupos = {0: [], 1: [], 2: [], 3: []}
+    for i in itens:
+        grupos[classe(i)].append(i)
+
+    def por_data(xs):
+        base = sorted(xs, key=lambda i: str(i.get("slug") or i.get("id") or ""))
+        return sorted(base, key=lambda i: i.get("data") or "9999", reverse=True)
+    return (por_data(grupos[0]) + sorted(grupos[1], key=lambda i: (_chave_alfa(i["titulo"]), i["resumo"].slug))
+            + por_data(grupos[2]) + por_data(grupos[3]))
+
+
+def _classe_bib(item):
+    """`data-bib` do item (o mesmo criterio de `_ordem_na_disciplina`): a pagina reordena ao vivo."""
+    if item["tipo"] == "resumo":
+        return 1
+    if item["tipo"] == "aula" and item.get("tipo_aula") == "revisao":
+        return 0 if item.get("nova") else 3
+    return 2
+
+
+#: O chip de UM item da Biblioteca por tipo do registro (s218; TIPOS_QUADRO sao os rotulos de coluna).
+ROTULO_ITEM = {"aula": "Aula-base", "revisao": "Revisão", "analise": "Análise"}
+
+
+def _titulo_de_caminho(caminho):
+    """'GO/[OBS] Sífilis na Gestação e Congênita.md' -> 'Sífilis na Gestação e Congênita' (o nome do
+    resumo que nao esta publicado, na linha de fontes da RD). PURA."""
+    stem = PurePosixPath(str(caminho)).stem
+    return re.sub(r"^\[[^\]]*\]\s*", "", stem).strip() or stem
+
+
+def _html_ligacoes_item(rotulo, pares):
+    """A linha discreta de ligacoes do item da Biblioteca (s218, tipo Obsidian): o rotulo e cada
+    documento -- com href, link para o leitor (o mesmo `a.hub-aula` da Teoria); sem, texto."""
+    if not pares:
+        return ""
+    # conferido a 390 px (s218): itens em linha corrida, separados por " · " -- link e texto no mesmo fluxo
+    # (em linhas de 44 px cada um, as 8 fontes da pilula viravam uma escada); o link ganha area de toque
+    # pelo padding vertical, sem empurrar a linha
+    itens = ['<a class="hub-aula" href="%s" data-titulo="%s">%s</a>' % (_e(href), _e(titulo), _e(titulo))
+             if href else '<span>%s</span>' % _e(titulo) for href, titulo in pares]
+    return '<p class="qd-lig"><span class="tenue">%s:</span> %s</p>' % (_e(rotulo), " · ".join(itens))
+
+
+def _lugar_do_item(item, lugar=None):
+    """(grande area, disciplina) do item NESTE lugar da pagina; o 1o dos `lugares` fora da Biblioteca."""
+    if lugar:
+        return lugar
+    lugares = item.get("lugares") or [(item.get("grupo") or AREA_SEM, DISC_OUTROS)]
+    return lugares[0]
+
+
+def _html_resumo(item, lugar=None):
+    """O resumo na Biblioteca (s218): titulo, o chip, "abrir resumo" no leitor e quem o cita."""
+    r = item["resumo"]
+    area, disc = _lugar_do_item(item, lugar)
+    return ('<li class="qd-item qd-resumo" data-resumo="%s" data-area="%s" data-disc="%s" data-bib="1">'
+            '<div class="qd-bloco"><p class="qd-tema">%s</p><p class="qd-meta"><span class="qd-bl">Resumo'
+            '</span></p><p class="qd-acao"><a class="hub-aula" href="%s" data-titulo="%s">abrir resumo</a>'
+            '</p>%s</div></li>'
+            % (_e(r.slug), _e(area or AREA_SEM), _e(disc or DISC_OUTROS), _e(r.titulo), _e(r.publicado),
+               _e(r.titulo), _html_ligacoes_item("Citado em", [(a.publicado, t) for a, t in item.get("citado") or []])))
+
+
+def _html_item(item, feito=False, lugar=None):
+    """Um bloco do quadro: tarefa (tema, peso, questoes, acao), aula avulsa ou RD; o resumo (s218) em
+    `_html_resumo`. Botao 'feito' so no item com `slug` (a aula que CUMPRE uma tarefa de aula, ou a
+    aula avulsa). `lugar` = (area, disciplina) do grupo da Biblioteca onde ele esta (a RD de varias
+    disciplinas sai uma vez em cada); fora dela, o 1o dos `lugares` -- para onde o feito vai ao vivo."""
+    if item["tipo"] == "resumo":
+        return _html_resumo(item, lugar)
     slug = item.get("slug")
     classes = ["qd-item"]
     if item.get("atrasada"):
@@ -585,8 +833,12 @@ def _html_item(item, feito=False):
     attrs = ' data-secao="%s" data-ordem="%d"' % (_e(item["secao"]), item["ordem"])
     if item.get("data"):   # s216 (part-3): a Biblioteca ordena por data de criacao, tambem ao vivo
         attrs += ' data-data="%s"' % _e(item["data"])
-    # s217 (P17): o grupo da Biblioteca para onde o feito vai, tambem ao vivo (sem area = SEM, avisado)
-    attrs += ' data-area="%s"' % _e(item.get("grupo") or AREA_SEM)
+    # s217 (P17): o grupo da Biblioteca para onde o feito vai, tambem ao vivo (sem area = SEM, avisado);
+    # s218: + a disciplina dentro dele e a classe de ordem (0 RD nova, 2 aula, 3 RD lida)
+    area, disc = _lugar_do_item(item, lugar)
+    nova = bool(item.get("nova")) and not feito
+    attrs += ' data-area="%s" data-disc="%s" data-bib="%d"' % (
+        _e(area or AREA_SEM), _e(disc or DISC_OUTROS), _classe_bib(dict(item, nova=nova)))
     if item["tipo"] == "tarefa":
         attrs += ' data-tarefa="%d" data-classe="%s"' % (item["id"], _e(item["classe"]))
     botao = ""
@@ -599,6 +851,7 @@ def _html_item(item, feito=False):
         botao = ('<button type="button" class="qd-feito" aria-pressed="%s" aria-label="%s" '
                  'title="%s" disabled><span aria-hidden="true"></span></button>'
                  % ("true" if feito else "false", _e(rotulo), _e(rotulo)))
+    extra = ""
     if item["tipo"] == "tarefa":
         tema = item["tema"]
         meta = ['<span class="qd-bl">%s</span>' % _e(item["bloco"])] if item.get("bloco") else []
@@ -635,73 +888,151 @@ def _html_item(item, feito=False):
     else:
         a = item["aula"]
         tema = item["titulo"]
-        meta = ['<span class="qd-bl">%s</span>' % _e(dict(TIPOS_QUADRO).get(item["tipo_aula"], "Aula")),
-                '<span>%s</span>' % _e(_data_curta(item["data"]))]
+        # s218: a RD ainda nao lida leva "nova" (o feito a tira, tambem ao vivo)
+        meta = (['<span class="qd-nova">nova</span>'] if nova else []) + [
+            '<span class="qd-bl">%s</span>' % _e(ROTULO_ITEM.get(item["tipo_aula"], "Aula")),
+            '<span>%s</span>' % _e(_data_curta(item["data"]))]
         acoes = ['<a class="hub-aula" href="%s" data-titulo="%s">abrir aula</a>'
                  % (_e(a.publicado), _e(item["titulo"]))]
+        # s218: a RD mostra os resumos de onde saiu (link para o leitor quando o resumo esta publicado)
+        fontes = item.get("fontes_html") or []
+        extra = _html_ligacoes_item("Fonte" if len(fontes) == 1 else "Fontes", fontes)
     # O botao "feito" mora DENTRO do bloco (canto superior direito): fora dele, o item com botao
     # ficava 54 px mais estreito e desalinhado dos demais -- "o bloco de aulas esta bugado" (s195).
     return ('<li class="%s"%s><div class="qd-bloco">%s<p class="qd-tema">%s</p>'
-            '<p class="qd-meta">%s</p><p class="qd-acao">%s</p></div></li>'
-            % (" ".join(classes), attrs, botao, _e(tema), "".join(meta), "".join(acoes)))
+            '<p class="qd-meta">%s</p><p class="qd-acao">%s</p>%s</div></li>'
+            % (" ".join(classes), attrs, botao, _e(tema), "".join(meta), "".join(acoes), extra))
+
+
+def _chave_item(item):
+    """A identidade do item na contagem (a RD de 3 disciplinas conta 1): slug, resumo ou tarefa."""
+    if item["tipo"] == "resumo":
+        return "r:" + item["resumo"].slug
+    return item.get("slug") or "t%d" % item["id"]
+
+
+def _html_novas(n, id_=None):
+    """A etiqueta "N novas" (s218): RDs ainda nao lidas; zero sai escondida (a pagina reconta)."""
+    return '<span class="qd-novas"%s data-novas%s>%s</span>' % (
+        ' id="%s"' % id_ if id_ else "", "" if n else " hidden",
+        ("1 nova" if n == 1 else "%d novas" % n) if n else "")
 
 
 def html_biblioteca(biblioteca):
-    """O miolo da Biblioteca POR GRANDE AREA (s217, P17; pedido do operador em 06/10: "a biblioteca nao
-    tem como ser desorganizada"): um grupo por area de AREAS_BIBLIOTECA, nessa ordem; grupo vazio nao
-    sai; dentro do grupo, a ordem que a lista ja traz (data de criacao, a mais nova primeiro). A ordem
-    e os rotulos vao em `data-areas`: a pagina cria, ao vivo, o grupo que o feito pede."""
+    """O miolo da Biblioteca POR GRANDE AREA -> DISCIPLINA (s218; s217 era so por area). Pedido do
+    operador em 07/10: "as revisoes ... devem estar com a taxonomia correta, integrando os respectivos
+    blocos de disciplinas na biblioteca". Uma grande area por `<details>` (CM, CIR, MFC, PED, GO, e no
+    fim "Varias areas"/"Sem area" so com item), com a contagem e as RDs novas; dentro, uma disciplina
+    por bloco, A-Z ('Outros' por ultimo) -- area de uma disciplina so esconde o subtitulo pelo CSS
+    (`:only-child`), entao a pagina pode criar a 2a ao vivo. A RD de varias disciplinas sai em CADA
+    uma; a contagem da area e a do total contam o documento uma vez. Ordem dentro da disciplina:
+    `_ordem_na_disciplina`. A ordem das areas vai em `data-areas` e a disciplina do fim em
+    `data-disc-fim`: a pagina cria, ao vivo, o grupo que o feito pede."""
+    rotulos = dict(AREAS_BIBLIOTECA)
     por_area = {}
     for i in biblioteca:
-        por_area.setdefault(i.get("grupo") or AREA_SEM, []).append(i)
-    grupos = "".join(
-        '<div class="qd-area" data-area="%s"><h4 class="qd-titulo">%s <span class="qd-n" data-n>%d</span>'
-        '</h4><ul class="qd-lista">%s</ul></div>'
-        % (_e(chave), _e(rotulo), len(por_area[chave]),
-           "".join(_html_item(i, i.get("feito", True)) for i in por_area[chave]))
-        for chave, rotulo in AREAS_BIBLIOTECA if por_area.get(chave))
+        for area, disc in i.get("lugares") or [(AREA_SEM, DISC_OUTROS)]:
+            area = area if area in rotulos else AREA_SEM
+            lista = por_area.setdefault(area, {}).setdefault(disc or DISC_OUTROS, [])
+            if not any(x is i for x in lista):
+                lista.append(i)
+    grupos = []
+    for chave, rotulo in AREAS_BIBLIOTECA:
+        discs = por_area.get(chave)
+        if not discs:
+            continue
+        unicos, partes = {}, []
+        for disc in sorted(discs, key=lambda d: (d == DISC_OUTROS, _chave_alfa(d))):
+            itens = _ordem_na_disciplina(discs[disc])
+            for i in itens:
+                unicos[_chave_item(i)] = i
+            partes.append('<div class="qd-disc" data-disc="%s"><h4 class="qd-disc-tit">%s <span class="qd-n" '
+                          'data-n>%d</span></h4><ul class="qd-lista">%s</ul></div>'
+                          % (_e(disc), _e(disc), len(itens),
+                             "".join(_html_item(i, i.get("feito", True), (chave, disc)) for i in itens)))
+        grupos.append('<details class="qd-area" data-area="%s"><summary class="qd-area-tit"><span class="qd-seta" '
+                      'aria-hidden="true"></span>%s <span class="qd-n" data-n>%d</span>%s</summary>'
+                      '<div class="qd-area-corpo">%s</div></details>'
+                      % (_e(chave), _e(rotulo), len(unicos),
+                         _html_novas(sum(1 for i in unicos.values() if i.get("nova"))), "".join(partes)))
     ordem = json.dumps([list(p) for p in AREAS_BIBLIOTECA], ensure_ascii=False)
-    return '<div class="qd-areas" data-areas="%s">%s</div>' % (_e(ordem), grupos)
+    return '<div class="qd-areas" data-areas="%s" data-disc-fim="%s">%s</div>' % (
+        _e(ordem), _e(DISC_OUTROS), "".join(grupos))
+
+
+def _html_resumos_semana(chave, resumos):
+    """Os "Resumos desta semana" (s218): os resumos cujas tarefas estao pendentes na secao, A-Z, num
+    `<details>` recolhido (31 links abertos empurravam as tarefas para fora da tela no celular)."""
+    if not resumos:
+        return ""
+    return ('<details class="qd-resumos"><summary>%s <span class="qd-n">%d</span></summary>'
+            '<ul class="qd-rlista">%s</ul></details>'
+            % ("Resumos das atrasadas" if chave == "atrasadas" else "Resumos desta semana", len(resumos),
+               "".join('<li><a class="hub-aula" href="%s" data-titulo="%s">%s</a></li>'
+                       % (_e(r.publicado), _e(r.titulo), _e(r.titulo)) for r in resumos)))
 
 
 def html_quadro(secoes, biblioteca=()):
-    """A aba Teoria: secoes por semana (empilhadas), cada tarefa um bloco; a BIBLIOTECA (s216,
-    part-3; era "Outras aulas" + "Concluidas"), recolhida, guarda o que esta feito no `db` (riscado)
-    e as aulas sem tarefa pendente, em grupos por grande area (s217, `html_biblioteca`). O estado do
-    build e o do `db` no momento do tique; a pagina reconcilia ao vivo quando o `db` abre."""
-    if not any(s["itens"] for s in secoes) and not biblioteca:
+    """A aba Teoria: secoes por semana (empilhadas), cada tarefa um bloco; depois, a BIBLIOTECA -- o
+    corpo da aba desde a s218 (era um `<details>` recolhido no fim; s216 part-3 "Outras aulas" +
+    "Concluidas"): o que esta feito no `db` (riscado), as aulas sem tarefa pendente, as RDs e os
+    resumos, por grande area e disciplina (`html_biblioteca`). O estado do build e o do `db` no
+    momento do tique; a pagina reconcilia ao vivo quando o `db` abre.
+
+    s218: o cabecalho da semana conta o que a Teoria MOSTRA (tarefas + resumos) e, dentro, UMA linha
+    com o total REAL de questoes pendentes da semana no plano (`q_plano`), com atalho para a aba
+    Listas; o mapa caminho -> resumo publicado vai num `<script id="hub-resumos">` (a pagina liga a
+    linha "Fonte: resumos/X.md" das RDs abertas no leitor)."""
+    if not any(s["itens"] or s.get("resumos") for s in secoes) and not biblioteca:
         return '<p class="hub-vazio">Nada no quadro ainda: nem tarefa pendente, nem aula.</p>'
     partes = []
     for s in secoes:
         n = len(s["itens"])
         contagem = ('<span data-n>%d</span> <span data-nrot>%s</span>'
                     % (n, s["rotulo"] + ("" if n == 1 else "s")))
-        if s["q"] is not None:
-            contagem += ' · <span data-q>%d</span> questões' % s["q"]
+        nr = len(s.get("resumos") or ())
+        if nr:
+            contagem += " · %d %s" % (nr, "resumo" if nr == 1 else "resumos")
+        q, qa = s.get("q_plano") or 0, s.get("q_com_atrasadas")
+        qsem = ('<p class="qd-qsem">%s: <b>%d</b>%s, na <a href="#questoes" data-hub-aba="questoes" '
+                'data-hub-modo="questoes">aba Listas</a></p>'
+                % ("Questões atrasadas" if s["chave"] == "atrasadas" else "Questões da semana", q,
+                   " · com as atrasadas: <b>%d</b>" % qa if qa else "")) if (q or qa) else ""
         partes.append(
             '<section class="qd-sem" data-secao="%s" data-rotulo="%s" aria-label="%s"%s%s>'
-            '<h3 class="qd-titulo">%s <span class="qd-n">%s</span></h3><ul class="qd-lista">%s</ul>'
-            '<p class="qd-vazio"%s>Nada em aberto.</p></section>'
+            '<h3 class="qd-titulo">%s <span class="qd-n">%s</span></h3>%s<ul class="qd-lista">%s</ul>'
+            '<p class="qd-vazio"%s>Nada em aberto.</p>%s</section>'
             % (_e(s["chave"]), _e(s["rotulo"]), _e(s["titulo"]), ' data-fixa="1"' if s["fixa"] else "",
-               "" if (s["itens"] or s["fixa"]) else " hidden", _e(s["titulo"]), contagem,
-               "".join(_html_item(i) for i in s["itens"]), " hidden" if s["itens"] else ""))
+               "" if (s["itens"] or s["fixa"]) else " hidden", _e(s["titulo"]), contagem, qsem,
+               "".join(_html_item(i) for i in s["itens"]), " hidden" if s["itens"] else "",
+               _html_resumos_semana(s["chave"], s.get("resumos"))))
+    unicos = {_chave_item(i): i for i in biblioteca}
+    mapa = {i["resumo"].caminho: {"href": i["resumo"].publicado, "slug": i["resumo"].slug,
+                                  "titulo": i["resumo"].titulo}
+            for i in biblioteca if i["tipo"] == "resumo"}
     return ('<div class="qd" id="hub-quadro">\n'
             '<p class="qd-aviso" id="hub-quadro-aviso" hidden>Marcar como feita não funciona '
             'nesta visualização.</p>\n'
             '<div class="qd-semanas">%s</div>\n'
-            '<details class="qd-feitas" id="hub-quadro-feitas"><summary>Biblioteca '
-            '<span class="qd-n" id="hub-quadro-nfeitas">%d</span></summary>'
-            '%s</details>\n</div>'
-            % ("".join(partes), len(biblioteca), html_biblioteca(biblioteca)))
+            # s218: a Biblioteca e o corpo da aba (o id `hub-quadro-feitas` e o da s216, que o JS conhece)
+            '<section class="qd-bib" id="hub-quadro-feitas" aria-labelledby="hub-bib-tit">'
+            '<h3 class="qd-bib-tit" id="hub-bib-tit">Biblioteca <span class="qd-n" id="hub-quadro-nfeitas">%d'
+            '</span>%s</h3>%s</section>\n'
+            '<script type="application/json" id="hub-resumos">%s</script>\n</div>'
+            % ("".join(partes), len(unicos),
+               _html_novas(sum(1 for i in unicos.values() if i.get("nova")), "hub-quadro-novas"),
+               html_biblioteca(biblioteca),
+               json.dumps(dict(sorted(mapa.items())), ensure_ascii=False).replace("<", "\\u003c")))
 
 
 def html_quadro_de(aulas_sel, quadro=None, estado=None, plano_linhas=None, calendario=None,
-                   hoje=None):
+                   hoje=None, resumos=()):
     """(html do quadro, avisos) a partir das aulas selecionadas -- o MESMO caminho para a pagina
-    (`montar_index`) e para a projecao (`construir`/`decidir`): um so quadro, nunca dois."""
+    (`montar_index`) e para a projecao (`construir`/`decidir`): um so quadro, nunca dois. `resumos`
+    (s218) = os `Resumo` publicados (`coletar_resumos`)."""
     classificadas, avisos = classificar(aulas_sel, quadro or {})
     secoes, biblioteca, avisos_secoes = secoes_do_quadro(classificadas, plano_linhas, calendario,
-                                                         hoje, estado, quadro)
+                                                         hoje, estado, quadro, resumos=resumos)
     return html_quadro(secoes, biblioteca), avisos + avisos_secoes
 
 
@@ -727,23 +1058,30 @@ def html_semanas(plano_linhas=None, calendario=None, hoje=None, semana_final=SEM
             % json.dumps(dados, ensure_ascii=False).replace("<", "\\u003c"))
 
 
-def dados_ligacoes(aulas_sel, quadro=None):
-    """{str(tarefa_id): [{"href", "titulo"}]} das aulas ligadas a cada tarefa (prepara ou cumpre),
-    pela MESMA regra do quadro (`ligacoes_do_quadro`). PURA. So aula selecionada (o href esta no
-    manifesto). s216 (hub-integracao part-2)."""
+def dados_ligacoes(aulas_sel, quadro=None, resumos=()):
+    """{str(tarefa_id): [{"href", "titulo"[, "tipo": "resumo"]}]} das aulas ligadas a cada tarefa
+    (prepara ou cumpre), pela MESMA regra do quadro (`ligacoes_do_quadro`), e -- s218 (P2) -- dos
+    resumos do lote que a sustentam (`tarefas` do `core/hub_resumos.json`), depois das aulas, A-Z.
+    PURA. So documento publicado (o href esta no manifesto). s216 (hub-integracao part-2)."""
     classificadas, _avisos = classificar(aulas_sel, quadro or {})
-    return {str(tid): [{"href": a.publicado, "titulo": tit} for a, tit, _c in lst]
-            for tid, lst in sorted(ligacoes_do_quadro(classificadas, quadro).items())}
+    saida = {tid: [{"href": a.publicado, "titulo": tit} for a, tit, _c in lst]
+             for tid, lst in ligacoes_do_quadro(classificadas, quadro).items()}
+    for r in sorted(resumos or (), key=lambda r: (_chave_alfa(r.titulo), r.slug)):
+        for tid in r.tarefas:
+            saida.setdefault(int(tid), []).append({"href": r.publicado, "titulo": r.titulo, "tipo": "resumo"})
+    return {str(tid): saida[tid] for tid in sorted(saida)}
 
 
-def html_ligacoes(aulas_sel, quadro=None):
-    """As ligacoes tarefa -> aula como JSON num `<script id="hub-ligacoes">` PROPRIO (s216, part-2).
+def html_ligacoes(aulas_sel, quadro=None, resumos=()):
+    """As ligacoes tarefa -> aula (e resumo, s218) como JSON num `<script id="hub-ligacoes">` PROPRIO
+    (s216, part-2).
 
     Pedido do operador (05/10): a lista da aba Listas leva a aula que a prepara -- antes so a Teoria
     sabia. JSON proprio, nao o `#hub-semanas`: aquele e a regua de semana, com teste de igualdade
     e semantica propria (armadilha A9). O hash entra na projecao: aula nova ligada republica."""
     return ('<script type="application/json" id="hub-ligacoes">%s</script>'
-            % json.dumps(dados_ligacoes(aulas_sel, quadro), ensure_ascii=False).replace("<", "\\u003c"))
+            % json.dumps(dados_ligacoes(aulas_sel, quadro, resumos), ensure_ascii=False)
+            .replace("<", "\\u003c"))
 
 
 def html_painel(tem_painel):
@@ -767,12 +1105,13 @@ def _hoje_de(agora):
 
 
 def montar_index(template_hub, player_html, lote, aulas_sel, tem_painel, agora, quadro=None,
-                 estado=None, plano_linhas=None, calendario=None):
+                 estado=None, plano_linhas=None, calendario=None, resumos=()):
     """A pagina: casca do hub + as 3 regioes do player + aulas/painel + o lote.
 
     `agora` nao vai para a tela (a linha "montado ... lote ... cards" saiu na s194, bastidor;
     o carimbo vive no manifesto): so data a semana do quadro. `plano_linhas`/`calendario` =
-    as tarefas pendentes e as datas das semanas (s195); sem eles, o quadro sai so com as aulas."""
+    as tarefas pendentes e as datas das semanas (s195); sem eles, o quadro sai so com as aulas.
+    `resumos` (s218) = os `Resumo` do lote publicado (Biblioteca, semanas e ligacoes)."""
     regioes = extrair_regioes_player(player_html)
     for _nome, marca in LUGARES_HUB:
         _exatamente_uma(template_hub, marca, "hub.html")
@@ -781,10 +1120,10 @@ def montar_index(template_hub, player_html, lote, aulas_sel, tem_painel, agora, 
         "player-corpo": regioes["corpo"],
         "player-js": regioes["js"],
         "aulas": html_quadro_de(aulas_sel, quadro, estado, plano_linhas, calendario,
-                                _hoje_de(agora))[0],
+                                _hoje_de(agora), resumos)[0],
         "painel": html_painel(tem_painel),
         "semanas": html_semanas(plano_linhas, calendario, _hoje_de(agora)),
-        "ligacoes": html_ligacoes(aulas_sel, quadro),
+        "ligacoes": html_ligacoes(aulas_sel, quadro, resumos),
     }
     pagina = template_hub
     for nome, marca in LUGARES_HUB:
@@ -887,12 +1226,14 @@ def hash_painel(texto):
     return _sha(_RE_GERADO.sub("", texto or ""))
 
 
-def projecao(painel_texto, quadro_html, lote, ligacoes_html=None):
+def projecao(painel_texto, quadro_html, lote, ligacoes_html=None, resumos_hash=None):
     """O que o operador VE e que muda sem lote novo: o painel, o quadro, as ligacoes tarefa -> aula
-    da aba Listas (s216, part-2) e qual lote esta no ar."""
+    da aba Listas (s216, part-2), as paginas de resumo (s218, `hash_resumos`: o `.md` corrigido
+    republica) e qual lote esta no ar."""
     return {"painel": hash_painel(painel_texto) if painel_texto is not None else None,
             "quadro": _sha(quadro_html),
             "ligacoes": _sha(ligacoes_html) if ligacoes_html is not None else None,
+            "resumos": resumos_hash,
             "sessao": (lote or {}).get("sessao")}
 
 
@@ -957,6 +1298,8 @@ def precisa_publicar(registro_projecao, atual, lote, com_nota):
             motivos.append("quadro de aulas mudou")
         if reg.get("ligacoes") != atual.get("ligacoes"):
             motivos.append("ligacoes tarefa -> aula mudaram")
+        if reg.get("resumos") != atual.get("resumos"):
+            motivos.append("resumos mudaram")
     if drenado:
         acao = "nova_fila"
         motivos.insert(0, "lote drenado (%d/%d)" % (feitos, len(cards)) if cards
@@ -984,6 +1327,452 @@ def tarefas_a_concluir(estado, quadro, plano_linhas):
         if linha and linha.get("status") == "pendente":
             saida.append({"slug": slug, "tarefa_id": int(tid), "tema": linha.get("tema")})
     return saida
+
+
+# ----------------------------------------------------------------------------- resumos (s218)
+# Pedido do operador em 07/10/2026: "a biblioteca deveria cobrir os resumos, que sao as fontes de fato
+# mais densas dos conteudos ... podemos fazer de acordo com o cronograma e, quando tivermos mais limite
+# na conta, puxamos o restante". O registro `core/hub_resumos.json` diz QUAIS resumos entram (lote por
+# semana do plano) e a que tarefas cada um serve (mapa feito a mao: o casamento automatico tema ->
+# resumo erra ~metade dos pares, s214). Cada um vira uma pagina de leitura `resumos/<slug>.html`
+# pelo conversor abaixo: Python puro, deterministico (mesma entrada, mesmos bytes: o diff do manifesto
+# e por hash), sem dependencia nova, cobrindo o subconjunto do estilo dos resumos
+# (`.claude/commands/estilo-resumo.md`). TODO texto e escapado antes de qualquer marcacao entrar
+# (F108: "<190" e texto, nunca tag); nenhuma regex extrai tag.
+
+def _nfc(texto):
+    return unicodedata.normalize("NFC", str(texto or ""))
+
+
+def _caminho_resumo(caminho):
+    """Caminho de resumo como chave: posix, relativo a `resumos/`, sem o prefixo, em NFC. PURA."""
+    p = normalizar_path(_nfc(caminho))
+    return p[len(PREFIXO_RESUMO):] if p.startswith(PREFIXO_RESUMO) else p
+
+
+def slug_resumo(caminho):
+    """`Clínica Médica/Infectologia/Tuberculose.md` -> `resumo-tuberculose`. PURA e ESTAVEL: o nome do
+    arquivo em ASCII (acento removido), minusculo, o resto vira hifen; ate SLUG_RESUMO_MAX caracteres,
+    cortado no ultimo hifen. O mesmo nome em pastas diferentes colide -- o build acusa (erro)."""
+    base = unicodedata.normalize("NFKD", PurePosixPath(_caminho_resumo(caminho)).stem)
+    base = "".join(c for c in base if not unicodedata.combining(c)).encode("ascii", "ignore").decode("ascii")
+    slug = "resumo-" + (re.sub(r"[^a-z0-9]+", "-", base.lower()).strip("-") or "sem-nome")
+    if len(slug) > SLUG_RESUMO_MAX:
+        corte = slug[:SLUG_RESUMO_MAX]
+        slug = corte[:corte.rfind("-")] if corte.rfind("-") > len("resumo-") else corte
+    return slug
+
+
+def area_e_disciplina_do_resumo(caminho, disciplina=None):
+    """(grande area, disciplina) de um resumo (s218). PURA. A area pela pasta de topo (`Clínica
+    Médica`/`Otorrino` -> CM, `Cirurgia` -> CIR, `Preventiva` -> MFC, `Pediatria` -> PED, `GO` -> GO);
+    a disciplina, a declarada ou a da pasta (`Clínica Médica/<Esp>` -> <Esp>). ValueError se nao der."""
+    partes = _caminho_resumo(caminho).split("/")
+    topo = partes[0]
+    if topo not in AREA_DA_PASTA or len(partes) < 2:
+        raise ValueError("resumo %r fora das pastas de resumos/ (%s)" % (caminho, ", ".join(AREA_DA_PASTA)))
+    disc = disciplina or (partes[1] if topo == "Clínica Médica" and len(partes) > 2 else DISC_DA_PASTA.get(topo))
+    if disc not in DISCIPLINAS:
+        raise ValueError("resumo %r sem disciplina resolvivel (%r): declare `disciplina` (%s) em %s"
+                         % (caminho, disc, "|".join(DISCIPLINAS), RESUMOS_REG))
+    return AREA_DA_PASTA[topo], disc
+
+
+def ler_resumos(caminho):
+    """{caminho relativo a resumos/: {"tarefas": [int], "disciplina": str | None}} do registro
+    `core/hub_resumos.json` (s218). Arquivo ausente = {}. Falha ALTO (registro errado nao vira grupo
+    inventado nem semana errada): chave que nao e `.md` em pasta conhecida, `tarefas` que nao e lista
+    de inteiros, `disciplina` fora de DISCIPLINAS, resumo de `GO/` sem `disciplina` (Obstetricia |
+    Ginecologia: a pasta nao diz qual). O resumo que NAO existe no disco e AVISO do build
+    (`coletar_resumos`), nao erro: um arquivo renomeado nao derruba o hub do dia."""
+    caminho = Path(caminho)
+    if not caminho.is_file():
+        return {}
+    itens = json.loads(caminho.read_text(encoding="utf-8")).get("itens") or {}
+    saida = {}
+    for rel, item in itens.items():
+        item = item if isinstance(item, dict) else {}
+        chave = _caminho_resumo(rel)
+        if not chave.endswith(".md") or ".." in chave.split("/"):
+            raise ValueError("%s: %r nao e um caminho .md relativo a resumos/" % (caminho.name, rel))
+        tarefas = item.get("tarefas", [])
+        if not isinstance(tarefas, list) or not all(isinstance(t, int) and not isinstance(t, bool)
+                                                    for t in tarefas):
+            raise ValueError("%s: `tarefas` do resumo %r tem de ser lista de ids inteiros, veio %r"
+                             % (caminho.name, rel, tarefas))
+        disc = item.get("disciplina")
+        if chave.split("/", 1)[0] == "GO" and disc not in ("Obstetrícia", "Ginecologia"):
+            raise ValueError("%s: resumo de GO sem `disciplina` (Obstetrícia | Ginecologia): %r, veio %r"
+                             % (caminho.name, rel, disc))
+        if disc is not None and disc not in DISCIPLINAS:
+            raise ValueError("%s: `disciplina` %r do resumo %r fora de %s"
+                             % (caminho.name, disc, rel, list(DISCIPLINAS)))
+        area_e_disciplina_do_resumo(chave, disc)   # pasta desconhecida falha aqui, alto
+        saida[chave] = {"tarefas": list(tarefas), "disciplina": disc}
+    return saida
+
+
+_RE_FRONT_FIM = re.compile(r"^(---|\.\.\.)\s*$")
+_RE_CERCA = re.compile(r"^ {0,3}(`{3,}|~{3,})")
+_RE_TITULO_MD = re.compile(r"^ {0,3}(#{1,6})\s+(.*?)\s*#*\s*$")
+_RE_HR = re.compile(r"^ {0,3}([-*_])(?:\s*\1){2,}\s*$")
+_RE_ITEM_MD = re.compile(r"^([ \t]*)([-*+]|\d{1,3}[.)])\s+(.*)$")
+_RE_SEP_TABELA = re.compile(r"^\s*\|?\s*:?-{3,}:?\s*(\|\s*:?-{3,}:?\s*)*\|?\s*$")
+_RE_COD_INL = re.compile(r"(`+)(.+?)\1")
+_RE_ESCAPE_MD = re.compile(r"\\([\\`*_{}\[\]()#+\-.!|>~])")
+_RE_WIKI = re.compile(r"\[\[([^\[\]|]+?)(?:\|([^\[\]]+?))?\]\]")
+_RE_LINK_MD = re.compile(r"\[([^\[\]]+)\]\(([^()\s]+)\)")
+_RE_NEG_ITAL = re.compile(r"\*\*\*(?=\S)(.+?)(?<=\S)\*\*\*")
+_RE_NEG = re.compile(r"\*\*(?=\S)(.+?)(?<=\S)\*\*")
+_RE_NEG_SUB = re.compile(r"(?<!\w)__(?=\S)(.+?)(?<=\S)__(?!\w)")
+_RE_ITAL = re.compile(r"(?<![*\w])\*(?=[^\s*])(.+?)(?<=[^\s*])\*(?![*\w])")
+_RE_ITAL_SUB = re.compile(r"(?<!\w)_(?=[^\s_])(.+?)(?<=[^\s_])_(?!\w)")
+_RE_RESERVA = re.compile("\x00(\\d+)\x00")
+
+
+def _sem_frontmatter(texto):
+    """As linhas do resumo sem o frontmatter YAML do topo (`---` ... `---`). PURA."""
+    linhas = _nfc(texto).lstrip("﻿").replace("\x00", "").replace("\r\n", "\n").replace("\r", "\n").split("\n")
+    if linhas and linhas[0].strip() == "---":
+        for i in range(1, len(linhas)):
+            if _RE_FRONT_FIM.match(linhas[i]):
+                return linhas[i + 1:]
+    return linhas
+
+
+def titulo_md(texto):
+    """O 1o titulo `# ` do resumo (fora do frontmatter e de cerca de codigo), sem marcacao; '' sem."""
+    cerca = None
+    for linha in _sem_frontmatter(texto):
+        m = _RE_CERCA.match(linha)
+        if m:
+            cerca = None if cerca and m.group(1)[0] == cerca else (cerca or m.group(1)[0])
+            continue
+        if cerca:
+            continue
+        m = _RE_TITULO_MD.match(linha)
+        if m and len(m.group(1)) == 1:
+            return re.sub(r"[*_`]+", "", m.group(2)).strip()
+    return ""
+
+
+def _enfase(texto):
+    """Negrito e italico sobre texto JA escapado (os marcadores nao mudam com o escape). PURA."""
+    texto = _RE_NEG_ITAL.sub(r"<strong><em>\1</em></strong>", texto)
+    texto = _RE_NEG.sub(r"<strong>\1</strong>", texto)
+    texto = _RE_NEG_SUB.sub(r"<strong>\1</strong>", texto)
+    texto = _RE_ITAL.sub(r"<em>\1</em>", texto)
+    return _RE_ITAL_SUB.sub(r"<em>\1</em>", texto)
+
+
+def _inline(texto, links):
+    """Uma linha de markdown -> HTML de linha. PURA. Ordem: codigo (reservado, escapado, sem mais
+    nada), escapes `\\*`, ESCAPE HTML de todo o resto, wikilinks e links (reservados: o `_` de uma URL
+    nao vira italico), enfase; as reservas voltam no fim. `links` = {nome casefold: (href, slug,
+    titulo)} dos resumos publicados: `[[X]]`/`[[X|Y]]` vira link para o leitor (`data-hub-aula`, o
+    atalho que o hub ja intercepta) se X esta publicado, senao texto; `[t](u)` so vira link com u
+    http(s)/mailto -- o resto fica texto (nada de link morto dentro do artifact)."""
+    reservas = []
+
+    def reservar(h):
+        reservas.append(h)
+        return "\x00%d\x00" % (len(reservas) - 1)
+
+    texto = _RE_COD_INL.sub(lambda m: reservar("<code>%s</code>" % html.escape(m.group(2), quote=False)),
+                            str(texto))
+    texto = _RE_ESCAPE_MD.sub(lambda m: reservar(html.escape(m.group(1), quote=False)), texto)
+    texto = html.escape(texto, quote=False)
+
+    def wiki(m):
+        alvo = html.unescape(m.group(1)).split("#", 1)[0].strip()
+        mostra = (m.group(2) or m.group(1)).strip()
+        dest = (links or {}).get(_nfc(alvo).casefold())
+        if not dest:
+            return reservar(mostra)
+        return reservar('<a href="%s" data-hub-aula="%s" data-titulo="%s">%s</a>'
+                        % (_e(dest[0]), _e(dest[1]), _e(dest[2]), mostra))
+
+    def link(m):
+        url = html.unescape(m.group(2))
+        if re.match(r"(?i)^(https?://|mailto:)", url):
+            return reservar('<a href="%s" rel="noopener noreferrer">%s</a>' % (_e(url), _enfase(m.group(1))))
+        return reservar(_enfase(m.group(1)))
+
+    texto = _RE_WIKI.sub(wiki, texto)
+    texto = _RE_LINK_MD.sub(link, texto)
+    texto = _enfase(texto)
+    for _ in range(len(reservas) + 1):
+        if "\x00" not in texto:
+            break
+        texto = _RE_RESERVA.sub(lambda m: reservas[int(m.group(1))], texto)
+    return texto
+
+
+def _celulas(linha):
+    """As celulas de uma linha de tabela pipe; `|` dentro de `[[...]]` ou escapado nao divide. PURA."""
+    s = linha.strip()
+    if s.startswith("|"):
+        s = s[1:]
+    if s.endswith("|") and not s.endswith("\\|"):
+        s = s[:-1]
+    celulas, atual, dentro, i = [], [], 0, 0
+    while i < len(s):
+        c = s[i]
+        if s.startswith("[[", i):
+            dentro += 1
+            atual.append("[[")
+            i += 2
+            continue
+        if s.startswith("]]", i) and dentro:
+            dentro -= 1
+            atual.append("]]")
+            i += 2
+            continue
+        if c == "\\" and i + 1 < len(s) and s[i + 1] == "|":
+            atual.append("|")
+            i += 2
+            continue
+        if c == "|" and not dentro:
+            celulas.append("".join(atual).strip())
+            atual = []
+        else:
+            atual.append(c)
+        i += 1
+    celulas.append("".join(atual).strip())
+    return celulas
+
+
+def _html_lista(itens, links):
+    """[(indent, ordenada, numero, texto)] -> `<ul>`/`<ol>` aninhadas pela indentacao (2 ou 4 espacos,
+    tanto faz: vale o maior/menor que o nivel aberto). PURA."""
+    out, pilha, ultimo = [], [], None
+    for indent, ordenada, numero, texto in itens:
+        tag = "ol" if ordenada else "ul"
+        while pilha and indent < pilha[-1][0]:
+            out.append("</li></%s>" % pilha.pop()[1])
+        if pilha and indent == pilha[-1][0]:
+            if pilha[-1][1] != tag:
+                out.append("</li></%s>" % pilha.pop()[1])
+            else:
+                out.append("</li>")
+        if not pilha or indent > pilha[-1][0]:
+            if pilha and ultimo is not None:
+                # conferido no navegador (s218): o texto do item que tem sublista vai num <div> -- o grifo do
+                # leitor ancora em bloco-FOLHA, e o <li> com <ul> dentro nao e folha (o texto nao grifava)
+                out[ultimo] = "<li><div>%s</div>" % out[ultimo][len("<li>"):]
+            out.append("<%s%s>" % (tag, ' start="%d"' % numero if ordenada and numero != 1 else ""))
+            pilha.append((indent, tag))
+        ultimo = len(out)
+        out.append("<li>" + _inline(texto, links))
+    while pilha:
+        out.append("</li></%s>" % pilha.pop()[1])
+    return "".join(out)
+
+
+def _indent(espacos):
+    return len(espacos.replace("\t", "    "))
+
+
+def _blocos_md(linhas, links):
+    """Linhas de markdown -> [blocos HTML]. PURA. Titulos `#`..`######`, `---` (regua), cerca de codigo
+    (em `div.cod > pre`, rolagem propria e grifavel), `>` citacao (recursiva), tabela pipe (em
+    `div.tab`, rolagem horizontal propria), listas aninhadas (`-`/`*`/`+`/`1.`; a linha recuada que nao
+    e item continua o item; linha em branco entre itens nao quebra a lista) e paragrafos."""
+    out, par, i, n = [], [], 0, len(linhas)
+
+    def fechar_par():
+        if par:
+            out.append("<p>%s</p>" % "\n".join(
+                _inline(l.strip(), links) + ("<br>" if l.endswith("  ") else "") for l in par).rstrip())
+            del par[:]
+
+    while i < n:
+        linha = linhas[i]
+        if not linha.strip():
+            fechar_par()
+            i += 1
+            continue
+        m = _RE_CERCA.match(linha)
+        if m:
+            fechar_par()
+            marca, corpo = m.group(1), []
+            i += 1
+            while i < n and not (linhas[i].strip().startswith(marca[0] * 3) and not linhas[i].strip().strip(marca[0])):
+                corpo.append(linhas[i])
+                i += 1
+            i += 1
+            out.append('<div class="cod"><pre><code>%s</code></pre></div>'
+                       % html.escape("\n".join(corpo), quote=False))
+            continue
+        m = _RE_TITULO_MD.match(linha)
+        if m:
+            fechar_par()
+            nivel = len(m.group(1))
+            out.append("<h%d>%s</h%d>" % (nivel, _inline(m.group(2), links), nivel))
+            i += 1
+            continue
+        if _RE_HR.match(linha):
+            fechar_par()
+            out.append("<hr>")
+            i += 1
+            continue
+        if linha.lstrip().startswith(">"):
+            fechar_par()
+            dentro = []
+            while i < n and linhas[i].lstrip().startswith(">"):
+                dentro.append(re.sub(r"^\s*> ?", "", linhas[i]))
+                i += 1
+            out.append("<blockquote>%s</blockquote>" % "\n".join(_blocos_md(dentro, links)))
+            continue
+        if linha.lstrip().startswith("|") and i + 1 < n and _RE_SEP_TABELA.match(linhas[i + 1]):
+            fechar_par()
+            cab = _celulas(linha)
+            i += 2
+            corpo = []
+            while i < n and linhas[i].strip() and "|" in linhas[i]:
+                corpo.append(_celulas(linhas[i]))
+                i += 1
+            out.append('<div class="tab"><table><thead><tr>%s</tr></thead><tbody>%s</tbody></table></div>'
+                       % ("".join("<th>%s</th>" % _inline(c, links) for c in cab),
+                          "".join("<tr>%s</tr>" % "".join("<td>%s</td>" % _inline(c, links) for c in row)
+                                  for row in corpo)))
+            continue
+        m = _RE_ITEM_MD.match(linha)
+        if m:
+            fechar_par()
+            itens = []
+            while i < n:
+                atual = linhas[i]
+                mi = _RE_ITEM_MD.match(atual)
+                if mi:
+                    marca = mi.group(2)
+                    ordenada = marca[0].isdigit()
+                    itens.append([_indent(mi.group(1)), ordenada, int(marca[:-1]) if ordenada else 0,
+                                  mi.group(3).strip()])
+                    i += 1
+                    continue
+                if not atual.strip():
+                    # linha em branco: a lista segue se a proxima nao vazia e item
+                    j = i
+                    while j < n and not linhas[j].strip():
+                        j += 1
+                    if j < n and _RE_ITEM_MD.match(linhas[j]):
+                        i = j
+                        continue
+                    break
+                if (_indent(re.match(r"^[ \t]*", atual).group(0)) > 0 and not _RE_CERCA.match(atual)
+                        and not atual.lstrip().startswith((">", "|"))):
+                    itens[-1][3] += " " + atual.strip()   # continuacao do item
+                    i += 1
+                    continue
+                break
+            out.append(_html_lista([tuple(x) for x in itens], links))
+            continue
+        par.append(linha)
+        i += 1
+    fechar_par()
+    return out
+
+
+def md_para_html(texto, links=None):
+    """O corpo HTML de um resumo em markdown (s218): sem o frontmatter, todo texto escapado. PURA e
+    deterministica (o diff do manifesto e por hash)."""
+    return "\n".join(_blocos_md(_sem_frontmatter(texto), links or {}))
+
+
+#: A pagina de leitura do resumo (s218): CSS proprio, minimalista, os tokens do hub (claro e escuro;
+#: `data-theme` do hub vence a preferencia do aparelho), UM `.wrap`, nada sem quebra no celular; o
+#: codigo e a tabela rolam na propria caixa. Sem DOCTYPE no leitor o srcdoc cairia em quirks mode.
+CSS_RESUMO = (
+    ":root{--papel:#f6f4f0;--card:#ffffff;--afundado:#edeae4;--tinta:#191817;--tinta2:#54504a;"
+    "--tinta3:#8b857b;--linha:#e0dbd2;--acento:#0e6b5c;--acento-fraco:#d9ece7;color-scheme:light}\n"
+    "@media (prefers-color-scheme:dark){:root:not([data-theme=\"light\"]){--papel:#131519;--card:#1b1e24;"
+    "--afundado:#23272f;--tinta:#edeff3;--tinta2:#b4bac4;--tinta3:#7e8794;--linha:#2d323b;--acento:#4fd0b3;"
+    "--acento-fraco:#123630;color-scheme:dark}}\n"
+    ":root[data-theme=\"dark\"]{--papel:#131519;--card:#1b1e24;--afundado:#23272f;--tinta:#edeff3;"
+    "--tinta2:#b4bac4;--tinta3:#7e8794;--linha:#2d323b;--acento:#4fd0b3;--acento-fraco:#123630;"
+    "color-scheme:dark}\n"
+    "*{box-sizing:border-box}\n"
+    "html,body{margin:0;padding:0}\n"
+    "body{background:var(--papel);color:var(--tinta);font:16px/1.6 ui-sans-serif,system-ui,\"Segoe UI\","
+    "Roboto,Helvetica,Arial,sans-serif;-webkit-text-size-adjust:100%;overflow-wrap:break-word}\n"
+    ".wrap{max-width:46rem;margin:0 auto;padding:18px 16px 40px;min-width:0}\n"
+    ".rs-olho{margin:0 0 6px;font-size:.8rem;font-weight:650;color:var(--acento)}\n"
+    "h1{font-size:clamp(1.4rem,1.15rem + 1.2vw,1.9rem);line-height:1.2;margin:0 0 18px;"
+    "letter-spacing:-.01em;text-wrap:balance}\n"
+    "h2{font-size:1.18rem;line-height:1.3;margin:28px 0 10px}\n"
+    "h3{font-size:1.04rem;line-height:1.35;margin:22px 0 8px}\n"
+    "h4,h5,h6{font-size:1rem;line-height:1.4;margin:18px 0 6px;color:var(--tinta2)}\n"
+    "p{margin:0 0 12px}\n"
+    "ul,ol{margin:0 0 12px;padding-left:1.3em}\n"
+    "li{margin:4px 0}\n"
+    "li > ul,li > ol{margin:4px 0 0}\n"
+    "strong{font-weight:650}\n"
+    "a{color:var(--acento);font-weight:600;text-underline-offset:2px}\n"
+    "code{font:.88em ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:var(--afundado);"
+    "border-radius:4px;padding:1px 5px}\n"
+    "blockquote{margin:0 0 14px;padding:10px 14px;border-left:3px solid var(--acento);"
+    "background:var(--acento-fraco);border-radius:0 8px 8px 0}\n"
+    "blockquote > :last-child{margin-bottom:0}\n"
+    "hr{border:0;border-top:1px solid var(--linha);margin:22px 0}\n"
+    ".cod,.tab{margin:0 0 14px;border:1px solid var(--linha);border-radius:8px;background:var(--card)}\n"
+    ".tab{overflow-x:auto}\n"
+    ".cod pre{margin:0;padding:10px 12px;overflow-x:auto;tab-size:4;"
+    "font:.82em/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}\n"
+    ".cod code{background:none;padding:0;font-size:1em}\n"
+    ".tab table{border-collapse:collapse;min-width:100%;font-size:.92em}\n"
+    ".tab th,.tab td{border-bottom:1px solid var(--linha);padding:8px 10px;text-align:left;"
+    "vertical-align:top;min-width:7rem}\n"
+    ".tab th{background:var(--afundado);font-weight:650}\n")
+
+
+def pagina_resumo(resumo, corpo):
+    """O documento HTML completo da pagina de leitura do resumo (s218). PURA."""
+    return ('<!DOCTYPE html>\n<html lang="pt-BR">\n<head>\n<meta charset="utf-8">\n'
+            '<meta name="viewport" content="width=device-width,initial-scale=1">\n<title>%s</title>\n'
+            '<style>\n%s</style>\n</head>\n<body>\n<main class="wrap">\n<p class="rs-olho">Resumo · %s</p>\n'
+            '%s\n</main>\n</body>\n</html>\n'
+            % (_e(resumo.titulo), CSS_RESUMO, _e(resumo.disciplina), corpo))
+
+
+def links_dos_resumos(resumos):
+    """{nome casefold: (href, slug, titulo)} -- o alvo dos wikilinks: o nome do arquivo (como no
+    Obsidian) e o titulo do resumo publicado; o nome vence o titulo em caso de choque. PURA."""
+    links = {}
+    for r in resumos:
+        links.setdefault(_nfc(r.titulo).casefold(), (r.publicado, r.slug, r.titulo))
+    for r in resumos:
+        links[_nfc(PurePosixPath(r.caminho).stem).casefold()] = (r.publicado, r.slug, r.titulo)
+    return links
+
+
+def paginas_resumos(resumos):
+    """{publicado: html da pagina} dos resumos do lote (s218). PURA."""
+    links = links_dos_resumos(resumos)
+    return {r.publicado: pagina_resumo(r, md_para_html(r.texto, links)) for r in resumos}
+
+
+def hash_resumos(paginas):
+    """sha256 das paginas de resumo (s218) para a PROJECAO: resumo corrigido no `.md` republica sem
+    lote novo. None sem resumo (o hub de antes da s218)."""
+    if not paginas:
+        return None
+    return _sha("\n".join("%s %s" % (pub, _sha(txt)) for pub, txt in sorted(paginas.items())))
+
+
+def avisos_fontes_rd(quadro, raiz):
+    """AVISO nomeado de cada resumo-fonte de RD (`resumos` no registro, s218) que nao existe no disco
+    -- a suite barra o registro real (`test_registro_real_rds_com_disciplinas_e_fontes_no_disco`). Sem a
+    pasta `resumos/` em `raiz` (copia do repo so com as aulas, repo sintetico) nao ha o que conferir."""
+    avisos = []
+    if not (Path(raiz) / DIR_RESUMOS).is_dir():
+        return avisos
+    for slug, reg in sorted((quadro or {}).items()):
+        for f in (reg or {}).get("resumos") or []:
+            if not (Path(raiz) / DIR_RESUMOS / _caminho_resumo(f)).is_file():
+                avisos.append("resumo-fonte inexistente na RD %s: resumos/%s -- corrija `resumos` em %s"
+                              % (slug, _caminho_resumo(f), QUADRO_REG))
+    return avisos
 
 
 # ----------------------------------------------------------------------------- casca
@@ -1055,6 +1844,55 @@ def coletar_aulas(raiz, data_fn=None):
             avisos.append(aviso)
         aulas.append(Aula(slug=slug, titulo=titulo, data=data, fonte=_rel(p, raiz)))
     return aulas, avisos
+
+
+def coletar_resumos(raiz, registro=None, aulas=()):
+    """([Resumo], avisos) do lote em `core/hub_resumos.json` (s218), com o texto, o titulo (o H1) e o
+    lugar na Biblioteca. `registro` injetavel ({caminho: {tarefas, disciplina}}; None = o arquivo de
+    `raiz`, por `ler_resumos`, que falha ALTO no schema). Resumo do registro que nao existe no disco =
+    AVISO nomeado e fora do lote (um arquivo renomeado nao derruba o hub do dia; a suite barra o
+    registro real). Dois resumos com o mesmo slug, ou um slug igual ao de uma aula (`aulas`: o grifo
+    e a assinatura sao por slug), = ValueError: o build nao escolhe qual publicar."""
+    raiz = Path(raiz)
+    if registro is None:
+        registro = ler_resumos(raiz / RESUMOS_REG)
+    resumos, avisos, por_slug = [], [], {}
+    slugs_aula = {a.slug for a in aulas or ()}
+    for rel in sorted(registro):
+        item = registro[rel] or {}
+        caminho = raiz / DIR_RESUMOS / rel
+        if not caminho.is_file():
+            avisos.append("resumo do registro inexistente: resumos/%s -- fora da Biblioteca ate corrigir %s"
+                          % (rel, RESUMOS_REG))
+            continue
+        slug = slug_resumo(rel)
+        if slug in por_slug or slug in slugs_aula:
+            raise ValueError("slug de resumo repetido: %r <- resumos/%s e %s -- renomeie um dos arquivos"
+                             % (slug, rel, "resumos/" + por_slug[slug] if slug in por_slug else "a aula " + slug))
+        por_slug[slug] = rel
+        texto = caminho.read_text(encoding="utf-8")
+        area, disc = area_e_disciplina_do_resumo(rel, item.get("disciplina"))
+        resumos.append(Resumo(caminho=rel, slug=slug, titulo=titulo_md(texto) or _titulo_de_caminho(rel),
+                              area=area, disciplina=disc, tarefas=tuple(int(t) for t in item.get("tarefas") or ()),
+                              texto=texto))
+    return resumos, avisos
+
+
+def escrever_resumos(paginas, out):
+    """Grava as paginas de resumo em `out/resumos/` e apaga a pagina `resumo-*.html` que saiu do lote
+    (so arquivo que este build gera). Devolve {publicado: caminho no disco}."""
+    pasta = Path(out) / DIR_RESUMOS
+    pasta.mkdir(parents=True, exist_ok=True)
+    saida = {}
+    for pub, texto in sorted(paginas.items()):
+        destino = Path(out) / pub
+        if not destino.is_file() or destino.read_text(encoding="utf-8") != texto:
+            destino.write_text(texto, encoding="utf-8", newline="\n")
+        saida[pub] = destino
+    for velho in pasta.glob("resumo-*.html"):
+        if PREFIXO_RESUMO + velho.name not in paginas:
+            velho.unlink()
+    return saida
 
 
 def hash_de(path):
@@ -1138,7 +1976,7 @@ def _ler_calendario():
 
 def construir(lote, raiz=RAIZ, out=None, painel=None, publicado=(), agora=None, data_fn=None,
               template_hub=None, template_player=None, registro=None, quadro=None,
-              estado_quadro=None, plano_linhas=None, calendario=None):
+              estado_quadro=None, plano_linhas=None, calendario=None, resumos=None):
     """Monta `index.html` + `manifesto.json` + `estado_pos_publish.json` em `out`.
 
     `publicado` = a listagem viva: paths, pares (path, bytes) ou {path: bytes}. `registro` =
@@ -1146,6 +1984,8 @@ def construir(lote, raiz=RAIZ, out=None, painel=None, publicado=(), agora=None, 
     aulas (None = `core/hub_quadro.json` de `raiz`); `estado_quadro` = {slug: {feito, ts}} do `db`
     (`ler_estado_quadro`), None = nada feito. `plano_linhas`/`calendario` (s195) = o plano e as
     datas das semanas; None = `db.plano_listar()` / `plano.calendario_trilha()`, read-only.
+    `resumos` (s218) = [Resumo] injetavel; None = `coletar_resumos` do `core/hub_resumos.json` de
+    `raiz` -- as paginas vao para `out/resumos/` e entram no manifesto com o mesmo diff por hash.
     Devolve (manifesto, problemas, avisos)."""
     raiz = Path(raiz)
     out = Path(out) if out else raiz / "tmp" / "hub"
@@ -1171,17 +2011,24 @@ def construir(lote, raiz=RAIZ, out=None, painel=None, publicado=(), agora=None, 
         calendario, aviso = _ler_calendario()
         if aviso:
             avisos.append(aviso)
+    # s218: os resumos do lote viram paginas de leitura em `out/resumos/`, no mesmo manifesto
+    if resumos is None:
+        resumos, avisos_res = coletar_resumos(raiz, aulas=aulas)
+        avisos.extend(avisos_res)
+    avisos.extend(avisos_fontes_rd(quadro, raiz))
+    paginas = paginas_resumos(resumos)
     agora = agora or db.agora()
     quadro_html, avisos_quadro = html_quadro_de(selecionadas, quadro, estado_quadro, plano_linhas,
-                                                calendario, _hoje_de(agora))
+                                                calendario, _hoje_de(agora), resumos)
     avisos.extend(avisos_quadro)
     tem_painel = painel_path.is_file()
     if not tem_painel:
         avisos.append("painel ausente (%s): a aba Painel sai com o aviso de 'nao gerado'"
                       % _rel(painel_path, raiz))
     vivos = _como_vivos(publicado)
+    gravadas = escrever_resumos(paginas, out)
     completo = montar_manifesto(selecionadas, _rel(painel_path, raiz) if tem_painel else None,
-                                list(vivos))
+                                list(vivos), [(pub, _rel(p, raiz)) for pub, p in sorted(gravadas.items())])
     fontes = {pub: hash_de(raiz / fonte) for pub, fonte in completo.items()
               if fonte is not None and (raiz / fonte).is_file()}
     if registro is None:
@@ -1194,9 +2041,10 @@ def construir(lote, raiz=RAIZ, out=None, painel=None, publicado=(), agora=None, 
     tp = (template_player if template_player is not None
           else TEMPLATE_PLAYER.read_text(encoding="utf-8"))
     pagina = montar_index(th, tp, lote, selecionadas, tem_painel, agora, quadro, estado_quadro,
-                          plano_linhas, calendario)
+                          plano_linhas, calendario, resumos)
     proj = projecao(painel_path.read_text(encoding="utf-8") if tem_painel else None,
-                    quadro_html, lote, html_ligacoes(selecionadas, quadro))
+                    quadro_html, lote, html_ligacoes(selecionadas, quadro, resumos),
+                    hash_resumos(paginas))
 
     out.mkdir(parents=True, exist_ok=True)
     (out / PAGINA).write_text(pagina, encoding="utf-8")
@@ -1207,6 +2055,7 @@ def construir(lote, raiz=RAIZ, out=None, painel=None, publicado=(), agora=None, 
         "sessao": lote.get("sessao"),
         "total_cards": len(lote.get("cards") or []),
         "aulas": len(selecionadas),
+        "resumos": len(resumos),
         "montado_em": montado_em,
         "mantidos": mantidos,
     }
@@ -1220,11 +2069,11 @@ def construir(lote, raiz=RAIZ, out=None, painel=None, publicado=(), agora=None, 
 
 
 def decidir(lote, out, raiz=RAIZ, painel=None, notas=None, estado_quadro=None, quadro=None,
-            data_fn=None, plano_linhas=None, calendario=None, agora=None):
-    """O `--precisa-publicar`: a projecao ATUAL (painel em disco + quadro que o build montaria)
-    contra a do registro, mais o estado do lote. Le o plano (`db.plano_listar`, read-only): e o
-    dado do quadro por semanas e, nas aulas feitas com tarefa, o que ha a concluir. Devolve o
-    dict de `precisa_publicar` + "concluir"."""
+            data_fn=None, plano_linhas=None, calendario=None, agora=None, resumos=None):
+    """O `--precisa-publicar`: a projecao ATUAL (painel em disco + quadro que o build montaria +
+    as paginas de resumo, s218) contra a do registro, mais o estado do lote. Le o plano
+    (`db.plano_listar`, read-only): e o dado do quadro por semanas e, nas aulas feitas com tarefa, o
+    que ha a concluir. Devolve o dict de `precisa_publicar` + "concluir"."""
     raiz = Path(raiz)
     painel_path = Path(painel) if painel else raiz / "artifacts" / "painel.html"
     if not painel_path.is_absolute():
@@ -1239,10 +2088,13 @@ def decidir(lote, out, raiz=RAIZ, painel=None, notas=None, estado_quadro=None, q
         calendario, _ = _ler_calendario()
     aulas, _ = coletar_aulas(raiz, data_fn)
     selecionadas = selecionar_aulas(aulas)
+    if resumos is None:
+        resumos, _ = coletar_resumos(raiz, aulas=aulas)
     quadro_html, _ = html_quadro_de(selecionadas, quadro, estado, plano_linhas,
-                                    calendario, _hoje_de(agora or db.agora()))
+                                    calendario, _hoje_de(agora or db.agora()), resumos)
     atual = projecao(painel_path.read_text(encoding="utf-8") if painel_path.is_file() else None,
-                     quadro_html, lote, html_ligacoes(selecionadas, quadro))
+                     quadro_html, lote, html_ligacoes(selecionadas, quadro, resumos),
+                     hash_resumos(paginas_resumos(resumos)))
     decisao = precisa_publicar(ler_projecao_registrada(out), atual, lote, ids_com_nota(notas))
     decisao["concluir"] = tarefas_a_concluir(estado, quadro, plano_linhas)
     return decisao
@@ -1374,8 +2226,9 @@ def main(argv=None):
     kb = (out / PAGINA).stat().st_size / 1024.0
     print("[hub] pagina: %s (%.0f KB) -- lote %s, %d cards"
           % (manifesto["file_path"], kb, manifesto["sessao"], manifesto["total_cards"]))
-    print("[hub] no ar depois do publish: %d arquivo(s) (aulas %d; cap %d) + pagina = %d/%d "
-          "entradas" % (no_ar, manifesto["aulas"], CAP_AULAS, no_ar + 1, TETO_ENTRADAS))
+    print("[hub] no ar depois do publish: %d arquivo(s) (aulas %d; cap %d; resumos %d) + pagina = %d/%d "
+          "entradas" % (no_ar, manifesto["aulas"], CAP_AULAS, manifesto.get("resumos", 0), no_ar + 1,
+                        TETO_ENTRADAS))
     print("[hub] files (novos ou alterados -- LER INTEIROS antes do publish): %d%s"
           % (len(enviados), (" -- " + ", ".join(enviados)) if enviados else ""))
     print("[hub] mantidos (ja no ar, intocados -- fora de files): %d" % len(mantidos))

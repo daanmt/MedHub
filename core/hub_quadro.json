@@ -1,5 +1,5 @@
 {
-  "_doc": "Registro do quadro da aba Teoria (id aulas) do MedHub HUB (s194; por semanas desde a s195; Teoria desde a s216). Chave = slug da aula (artifacts/aula-<slug>.html). tipo: aula (aula-base) | revisao (revisao direcionada) | analise (analise, relatorio ou plano). titulo: o nome no quadro (vence o <title>). tarefas: ids de plano_tarefas que a aula PREPARA (lista ou aula) -- a aula aparece dentro do bloco de cada tarefa. tarefa_id: a tarefa custom de aula que a aula CUMPRE -- so ela ganha o controle 'feito', e marcar no hub vira `plano.py --concluir ID --leitura` no tique do /hub-backend. Aula sem tarefa pendente e aula concluida ficam na Biblioteca da Teoria (s216, decisao do operador em 05/10: so daqui em diante); nada vai para artifacts/arquivo/ e a entrada daqui fica. A analise mora so na Documentacao do Painel. bloco (s217, P17; pedido do operador em 06/10: 'organize por grande area'): a grande area do item na Biblioteca, em CM | CIR | MFC | PED | GO | VARIAS (VARIAS = varias areas, como as pilulas; grupo final 'Varias areas'). OBRIGATORIO no item sem tarefa (a revisao direcionada): a aula com tarefa_id/tarefas herda o bloco da tarefa no plano (a de tarefa_id vence; senao a primeira de tarefas) e o bloco daqui so vale se a tarefa nao estiver no plano. Item sem area resolvivel cai no grupo 'Sem area' e o build e o --check AVISAM pelo slug; a suite (test_registro_real_toda_rd_declara_bloco_e_nada_cai_em_sem_area) barra o commit. A analise nao entra na Teoria e dispensa bloco. Aula sem entrada aqui entra como tipo aula, com WARN no build (tools/hub.py).",
+  "_doc": "Registro do quadro da aba Teoria (id aulas) do MedHub HUB (s194; por semanas desde a s195; Teoria desde a s216). Chave = slug da aula (artifacts/aula-<slug>.html). tipo: aula (aula-base) | revisao (revisao direcionada) | analise (analise, relatorio ou plano). titulo: o nome no quadro (vence o <title>). tarefas: ids de plano_tarefas que a aula PREPARA (lista ou aula) -- a aula aparece dentro do bloco de cada tarefa. tarefa_id: a tarefa custom de aula que a aula CUMPRE -- so ela ganha o controle 'feito', e marcar no hub vira `plano.py --concluir ID --leitura` no tique do /hub-backend. Aula sem tarefa pendente e aula concluida ficam na Biblioteca da Teoria (s216, decisao do operador em 05/10: so daqui em diante); nada vai para artifacts/arquivo/ e a entrada daqui fica. A analise mora so na Documentacao do Painel. bloco (s217, P17; pedido do operador em 06/10: 'organize por grande area'): a grande area do item na Biblioteca, em CM | CIR | MFC | PED | GO | VARIAS (VARIAS = varias areas, como as pilulas; grupo final 'Varias areas'). Era OBRIGATORIO no item sem tarefa ate a s217 (desde a s218 a RD declara disciplinas, abaixo): a aula com tarefa_id/tarefas herda o bloco da tarefa no plano (a de tarefa_id vence; senao a primeira de tarefas) e o bloco daqui so vale se a tarefa nao estiver no plano. Item sem area resolvivel cai no grupo 'Sem area' e o build e o --check AVISAM pelo slug; a suite (test_registro_real_rds_com_disciplinas_e_fontes_no_disco) barra o commit. A analise nao entra na Teoria e dispensa bloco. s218 (pedido do operador em 07/10: 'as revisoes podem entrar na biblioteca, sem problemas, mas devem estar com a taxonomia correta, integrando os respectivos blocos de disciplinas na biblioteca'): a Biblioteca e por grande area -> DISCIPLINA. disciplinas: lista (>= 1) do vocabulario de tools/hub.py (DISCIPLINAS; nome fora dele falha alto), OBRIGATORIA na revisao direcionada: a RD aparece em CADA disciplina listada, dentro da grande area dela (Obstetricia/Ginecologia -> GO; Pediatria -> PED; Cirurgia/Ortopedia -> CIR; Preventiva -> MFC; o resto -> CM), e a ainda nao lida leva 'nova' no topo da disciplina. resumos: lista de caminhos relativos a resumos/ = de onde a RD saiu (o item mostra as fontes, com link para o resumo publicado; o resumo mostra a RD que o cita); caminho inexistente = AVISO do build e a suite barra. O bloco passa a ser DERIVADO das disciplinas e so vale como leitura antiga (item sem disciplinas). ⚰️ s218: VARIAS como destino de RD (a pilula declara as disciplinas de cada ponto); ⚰️ s218: a secao 'Revisoes direcionadas' no topo da Teoria (a RD mora so na Biblioteca). A aula com tarefa segue herdando o bloco e a disciplina (a area) da tarefa no plano. Aula sem entrada aqui entra como tipo aula, com WARN no build (tools/hub.py).",
   "itens": {
     "dmg": {
       "tipo": "aula",
@@ -25,47 +25,112 @@
     "rd-vias-biliares": {
       "tipo": "revisao",
       "titulo": "Vias biliares e apendicite",
-      "bloco": "CIR"
+      "disciplinas": [
+        "Cirurgia"
+      ],
+      "resumos": [
+        "Cirurgia/Abdome Agudo Inflamatório - Colecistite e Colangite Aguda.md"
+      ]
     },
     "rd-hemostasia": {
       "tipo": "revisao",
       "titulo": "Hemostasia",
-      "bloco": "CM"
+      "disciplinas": [
+        "Hematologia"
+      ],
+      "resumos": [
+        "Clínica Médica/Hematologia/Hemostasia.md"
+      ]
     },
     "rd-lupus-saf": {
       "tipo": "revisao",
       "titulo": "Lúpus, SAF e vasculites",
-      "bloco": "CM"
+      "disciplinas": [
+        "Reumatologia"
+      ],
+      "resumos": [
+        "Clínica Médica/Reumatologia/DITC II.md",
+        "Clínica Médica/Reumatologia/DITC.md"
+      ]
     },
     "rd-hepato": {
       "tipo": "revisao",
       "titulo": "Hepatites, icterícia e cirrose",
-      "bloco": "CM"
+      "disciplinas": [
+        "Hepatologia"
+      ],
+      "resumos": [
+        "Clínica Médica/Hepatologia/Hepatites Virais.md",
+        "Clínica Médica/Hepatologia/Introdução à Hepatologia e Icterícia Não obstrutiva.md"
+      ]
     },
     "rd-dii-polipos": {
       "tipo": "revisao",
       "titulo": "DII e pólipos",
-      "bloco": "CM"
+      "disciplinas": [
+        "Gastroenterologia"
+      ],
+      "resumos": [
+        "Clínica Médica/Gastroenterologia/Polipose Intestinal e Câncer Colorretal.md"
+      ]
     },
     "rd-intensiva-sepse": {
       "tipo": "revisao",
       "titulo": "Ventilação, SDRA e sepse",
-      "bloco": "CM"
+      "disciplinas": [
+        "Pneumologia",
+        "Infectologia"
+      ],
+      "resumos": [
+        "Clínica Médica/Pneumologia/Pneumologia Intensiva.md",
+        "Clínica Médica/Infectologia/Sepse.md"
+      ]
     },
     "rd-pediatria": {
       "tipo": "revisao",
       "titulo": "Cardiopatias, emergência e vacinas",
-      "bloco": "PED"
+      "disciplinas": [
+        "Pediatria"
+      ],
+      "resumos": [
+        "Pediatria/Cardiopatias Congênitas.md",
+        "Pediatria/Emergências Pediátricas.md",
+        "Pediatria/Imunizações.md"
+      ]
     },
     "rd-ortopedia-cirurgia": {
       "tipo": "revisao",
       "titulo": "Ortopedia, cicatrização e cir. infantil",
-      "bloco": "CIR"
+      "disciplinas": [
+        "Cirurgia"
+      ],
+      "resumos": [
+        "Cirurgia/Quadril Pediátrico.md",
+        "Cirurgia/Politrauma Ortopédico.md",
+        "Cirurgia/Cirurgia Infantil.md"
+      ]
     },
     "rd-pilulas": {
       "tipo": "revisao",
       "titulo": "Pílulas: pontos soltos",
-      "bloco": "VARIAS"
+      "disciplinas": [
+        "Obstetrícia",
+        "Ginecologia",
+        "Neurologia",
+        "Cardiologia",
+        "Endocrinologia",
+        "Pediatria",
+        "Preventiva"
+      ],
+      "resumos": [
+        "GO/Síndromes Hipertensivas da Gestação.md",
+        "Clínica Médica/Neurologia/Epilepsias.md",
+        "Clínica Médica/Neurologia/Cefaleias.md",
+        "GO/Úlceras Genitais.md",
+        "Clínica Médica/Endocrinologia/Diabetes Mellitus - Complicações Agudas.md",
+        "Pediatria/Diarreia.md",
+        "Preventiva/Medicina de Família e Comunidade.md"
+      ]
     },
     "dossie-uerj": {
       "tipo": "analise",
@@ -103,57 +168,142 @@
     "rd-ventilacao-degrau-0": {
       "tipo": "revisao",
       "titulo": "Ventilação: degrau 0",
-      "bloco": "CM"
+      "disciplinas": [
+        "Pneumologia"
+      ],
+      "resumos": [
+        "Clínica Médica/Pneumologia/Pneumologia Intensiva.md"
+      ]
     },
     "rd-neoplasias-tgi": {
       "tipo": "revisao",
       "titulo": "Pólipos, CCR e câncer gástrico",
-      "bloco": "CM"
+      "disciplinas": [
+        "Gastroenterologia",
+        "Cirurgia"
+      ],
+      "resumos": [
+        "Clínica Médica/Gastroenterologia/Polipose Intestinal e Câncer Colorretal.md",
+        "Cirurgia/Abdome Agudo Inflamatório - Apendicite Aguda.md"
+      ]
     },
     "rd-meningites": {
       "tipo": "revisao",
       "titulo": "Meningites",
-      "bloco": "CM"
+      "disciplinas": [
+        "Infectologia"
+      ],
+      "resumos": [
+        "Clínica Médica/Infectologia/Meningites.md"
+      ]
     },
     "rd-dm-cronicas": {
       "tipo": "revisao",
       "titulo": "DM: complicações crônicas",
-      "bloco": "CM"
+      "disciplinas": [
+        "Endocrinologia"
+      ],
+      "resumos": [
+        "Clínica Médica/Endocrinologia/Diabetes Mellitus - Complicações Crônicas.md",
+        "Clínica Médica/Endocrinologia/Diabetes Mellitus Tipo 2.md"
+      ]
     },
     "rd-hemostasia-2": {
       "tipo": "revisao",
       "titulo": "Hemostasia II: HIT e PTT",
-      "bloco": "CM"
+      "disciplinas": [
+        "Hematologia"
+      ],
+      "resumos": [
+        "Clínica Médica/Hematologia/Hemostasia.md",
+        "Clínica Médica/Hematologia/Anemias Hemolíticas.md"
+      ]
     },
     "rd-pilulas-0510": {
       "tipo": "revisao",
       "titulo": "Pílulas de 05/10",
-      "bloco": "VARIAS"
+      "disciplinas": [
+        "Cirurgia",
+        "Cardiologia",
+        "Hepatologia",
+        "Infectologia",
+        "Nefrologia",
+        "Pneumologia",
+        "Reumatologia"
+      ],
+      "resumos": [
+        "Cirurgia/Urologia.md",
+        "Clínica Médica/Cardiologia/Hipertensão Arterial Sistêmica (Parte 1) - Diagnóstico, Classificação e Estratificação de Risco.md",
+        "Clínica Médica/Hepatologia/Hepatites Virais.md",
+        "Clínica Médica/Infectologia/Arboviroses.md",
+        "Clínica Médica/Infectologia/Sepse.md",
+        "Clínica Médica/Nefrologia/Distúrbios Ácido-Base.md",
+        "Clínica Médica/Pneumologia/Pneumologia Intensiva.md",
+        "Clínica Médica/Reumatologia/DITC II.md"
+      ]
     },
     "rd-hernias": {
       "tipo": "revisao",
       "titulo": "Hérnias da parede abdominal (lista t49)",
-      "bloco": "CIR"
+      "disciplinas": [
+        "Cirurgia"
+      ],
+      "resumos": [
+        "Cirurgia/Hérnia Femoral Encarcerada.md"
+      ]
     },
     "rd-cir-0610": {
       "tipo": "revisao",
       "titulo": "Cirurgia de 06/10: via biliar, plastrão e hérnia",
-      "bloco": "CIR"
+      "disciplinas": [
+        "Cirurgia"
+      ],
+      "resumos": [
+        "Cirurgia/Abdome Agudo Inflamatório - Apendicite Aguda.md",
+        "Cirurgia/Abdome Agudo Inflamatório - Colecistite e Colangite Aguda.md"
+      ]
     },
     "rd-go-0610": {
       "tipo": "revisao",
       "titulo": "Obstetrícia de 06/10: pré-eclâmpsia",
-      "bloco": "GO"
+      "disciplinas": [
+        "Obstetrícia"
+      ],
+      "resumos": [
+        "GO/Síndromes Hipertensivas da Gestação.md"
+      ]
     },
     "rd-ped-0610": {
       "tipo": "revisao",
       "titulo": "Pediatria de 06/10: tiflite, febre no lactente e coreia",
-      "bloco": "PED"
+      "disciplinas": [
+        "Pediatria"
+      ],
+      "resumos": [
+        "Pediatria/Febre Reumática.md",
+        "Cirurgia/Abdome Agudo Inflamatório - Apendicite Aguda.md"
+      ]
     },
     "rd-cm-0610": {
       "tipo": "revisao",
       "titulo": "Clínica Médica de 06/10: laboratório, imune, via aérea e NCC",
-      "bloco": "CM"
+      "disciplinas": [
+        "Endocrinologia",
+        "Hematologia",
+        "Hepatologia",
+        "Infectologia",
+        "Pneumologia",
+        "Reumatologia"
+      ],
+      "resumos": [
+        "Clínica Médica/Endocrinologia/Diabetes Mellitus - Complicações Crônicas.md",
+        "Clínica Médica/Hematologia/Hemostasia.md",
+        "Clínica Médica/Hepatologia/Hepatites Virais.md",
+        "Clínica Médica/Infectologia/Meningites.md",
+        "Clínica Médica/Infectologia/Sepse.md",
+        "Clínica Médica/Pneumologia/Pneumologia Intensiva.md",
+        "Clínica Médica/Reumatologia/DITC II.md"
+      ]
     }
   }
 }

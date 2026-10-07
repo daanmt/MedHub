@@ -210,6 +210,49 @@ def test_expect_errado_recusa_e_nao_cria_a_pasta(ambiente, monkeypatch, capsys):
     assert not (ambiente / "out").exists()
 
 
+def test_certo_errado_e_alternativa_so_imagem_saem_declaradas_e_a_contagem_fecha(ambiente, monkeypatch, capsys):
+    """Regressao da s218 (07/10/2026): 5 listas da Fase 1 (t833 t376 t110 t805 t826, ~200 questoes)
+    eram recusadas INTEIRAS por 1-2 questoes que o hub nao desenha -- certo/errado (2 alternativas) e
+    alternativa feita so de imagem (texto vazio, `<img>`). Saem DECLARADAS por numero e motivo, como a
+    discursiva; a contagem fecha em achadas = gravadas + discursivas + fora."""
+    so_imagem = _item("4000000004")
+    so_imagem["alternatives"][2]["sanitized_body"] = '<p><img src="alt.png"></p>'
+    # a forma REAL (t833 Q34, t376 Q19, t110 Q34, medida em 07/10): `sanitized_body` VAZIO e a imagem
+    # so no `body` -- o `body` e lido so para saber SE ha imagem, nunca para texto
+    real = _item("4000000006")
+    for alt in real["alternatives"]:
+        alt["sanitized_body"], alt["body"] = "", f'<p style="x"><img src="a.png" alt="{PROF}"></p>'
+    itens = [_item("4000000001"), _item("4000000002", n_alts=2), _item("4000000003", n_alts=0),
+             so_imagem, _item("4000000005"), real]
+    monkeypatch.setattr(emed_api, "_get_json", _fake_get(itens))
+    assert _cli(ambiente, "--apply", "--expect", "6", "--json") == 0
+    saida = capsys.readouterr().out
+    r = json.loads(saida)
+    assert (r["achadas"], r["gravadas"], r["discursivas"]) == (6, 2, [3])
+    assert r["fora"] == {"2": "certo/errado (2 alternativas)", "4": "alternativa so com imagem",
+                         "6": "alternativa so com imagem"}
+    assert PROF not in saida
+    nums = sorted(int(p.stem.split("_")[1]) for p in (ambiente / "out" / "questoes").iterdir())
+    assert nums == [1, 5]                                  # a numeracao e a da LISTA: os buracos ficam
+
+
+def test_alternativa_vazia_sem_imagem_segue_recusa(ambiente, monkeypatch, capsys):
+    """O que vira declaracao e so a FORMA que o hub nao desenha; texto vazio sem imagem e defeito de
+    dado (ou mudanca da API) e segue tudo ou nada."""
+    vazia = _item("4000000002")
+    vazia["alternatives"][1]["sanitized_body"] = "<p> </p>"
+    monkeypatch.setattr(emed_api, "_get_json", _fake_get([_item("4000000001"), vazia]))
+    assert _cli(ambiente, "--apply", "--expect", "2") == 2
+    assert "Q2: enunciado ou alternativa vazia" in capsys.readouterr().out
+    assert not (ambiente / "out").exists()
+
+
+def test_expect_errado_conta_as_declaradas_fora(ambiente, monkeypatch, capsys):
+    monkeypatch.setattr(emed_api, "_get_json", _fake_get([_item("4000000001"), _item("4000000002", n_alts=2)]))
+    assert _cli(ambiente, "--apply", "--expect", "1") == 2
+    assert "achadas 2 (1 gravaveis + 0 discursiva(s) + 1 fora do formato" in capsys.readouterr().out
+
+
 def test_apply_sem_expect_recusa_antes_da_rede(ambiente, monkeypatch, capsys):
     chamadas = []
     monkeypatch.setattr(emed_api, "_get_json", _fake_get(_lista(3), chamadas))

@@ -104,6 +104,7 @@ def test_golden_do_manifesto_num_repo_sintetico(tmp_path):
         "sessao": "2026-09-22h",
         "total_cards": 2,
         "aulas": 2,
+        "resumos": 0,          # s218: sem core/hub_resumos.json no repo sintetico, nenhum resumo
         "montado_em": "2026-09-22 20:30:00",
         "mantidos": [],          # DIFF (s193): sem registro, nada fica de fora -- o v0
     }

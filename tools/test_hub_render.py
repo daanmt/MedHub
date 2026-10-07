@@ -917,7 +917,7 @@ secoesQuadro(qd);
 var SAIDA = {inicio: secoes()};
 espera().then(function(){ __ACAO__ return espera(); }).then(espera).then(function(){
   SAIDA.fim = secoes(); SAIDA.ls = LS; SAIDA.teclas = TECLAS; SAIDA.avisos = AVISOS;
-  SAIDA.biblioteca_aberta = $("hub-quadro-feitas").hasAttribute("open");
+  SAIDA.areas_abertas = qd.querySelectorAll(".qd-area").map(function(g){ return !!g.open; });
   console.log(JSON.stringify(SAIDA)); });
 """
 
@@ -935,11 +935,10 @@ def _abertas(estado):
     return {k: v["aberta"] for k, v in estado.items() if not v["oculta"]}
 
 
-def test_padrao_abre_revisoes_atrasadas_e_a_semana_da_vez():
+def test_padrao_abre_atrasadas_e_a_semana_da_vez():
     out = _rodar_secoes()
-    # s216 (part-3): "Outras aulas" virou a Biblioteca (<details> recolhida), fora das secoes de semana
-    assert _abertas(out["inicio"]) == {"revisoes": True, "atrasadas": True, "3": True, "4": False,
-                                       "5": False}
+    # s216 (part-3): "Outras aulas" virou a Biblioteca, fora das secoes de semana; s218: ⚰️ "revisoes"
+    assert _abertas(out["inicio"]) == {"atrasadas": True, "3": True, "4": False, "5": False}
     for chave, s in out["inicio"].items():
         assert (s["role"], s["tab"], s["seta"]) == ("button", "0", True), chave
         assert s["expanded"] == ("true" if s["aberta"] else "false"), chave
@@ -951,8 +950,7 @@ def test_semana_atual_vazia_abre_a_proxima_com_itens():
     """Hoje = semana 3 sem nada pendente: a fixa fica ("Nada em aberto") e a semana 4 vira a da vez."""
     plano = [l for l in PLANO_SEC if l["semana_plano"] != 3]
     out = _rodar_secoes(plano=plano)
-    assert _abertas(out["inicio"]) == {"revisoes": True, "atrasadas": True, "3": True, "4": True,
-                                       "5": False}
+    assert _abertas(out["inicio"]) == {"atrasadas": True, "3": True, "4": True, "5": False}
     puras = _node(SECOES_JS + "\nconsole.log(JSON.stringify({a: secSemanaAtual(3, [5, 4]), b: secSemanaAtual(3, []),"
                   " c: secSemanaAtual(0, [6, 2]), d: [\"revisoes\", \"atrasadas\", \"biblioteca\", \"sem\", \"4\", \"s4\", \"5\", \"s5\"]"
                   ".map(function(k){ return secPadraoAberta(k, 4); })}));")
@@ -960,24 +958,24 @@ def test_semana_atual_vazia_abre_a_proxima_com_itens():
 
 
 def test_toque_e_teclado_alternam_e_o_aparelho_lembra():
-    out = _rodar_secoes('tocar("revisoes"); tocar("5"); tecla("atrasadas", "Enter"); tecla("atrasadas", " ");'
+    out = _rodar_secoes('tocar("atrasadas"); tocar("5"); tecla("3", "Enter"); tecla("3", " ");'
                         ' tecla("4", " "); tecla("3", "a");')
     fim = _abertas(out["fim"])
-    assert fim == {"revisoes": False, "atrasadas": True, "3": True, "4": True, "5": True}
-    assert out["fim"]["5"]["expanded"] == "true" and out["fim"]["revisoes"]["expanded"] == "false"
+    assert fim == {"atrasadas": False, "3": True, "4": True, "5": True}
+    assert out["fim"]["5"]["expanded"] == "true" and out["fim"]["atrasadas"]["expanded"] == "false"
     assert out["teclas"] == 3, "Enter e Espaco viram toque (preventDefault: a pagina nao rola); 'a' nao"
-    assert json.loads(out["ls"]["medhub.secoes"]) == {"aulas:revisoes": False, "aulas:5": True,
-                                                      "aulas:atrasadas": True, "aulas:4": True}
+    assert json.loads(out["ls"]["medhub.secoes"]) == {"aulas:atrasadas": False, "aulas:5": True,
+                                                      "aulas:3": True, "aulas:4": True}
     # recarregar: o mesmo aparelho, uma pagina nova -- vale o que ele escolheu; o resto segue o padrao
     de_novo = _rodar_secoes(ls=out["ls"])
     assert _abertas(de_novo["inicio"]) == fim
 
 
 def test_sem_storage_tudo_funciona_e_so_nao_lembra():
-    out = _rodar_secoes('tocar("revisoes"); tocar("4");', quebrado=True)
-    assert _abertas(out["fim"])["revisoes"] is False and _abertas(out["fim"])["4"] is True
+    out = _rodar_secoes('tocar("atrasadas"); tocar("4");', quebrado=True)
+    assert _abertas(out["fim"])["atrasadas"] is False and _abertas(out["fim"])["4"] is True
     de_novo = _rodar_secoes(quebrado=True)
-    assert _abertas(de_novo["inicio"])["revisoes"] is True and _abertas(de_novo["inicio"])["4"] is False
+    assert _abertas(de_novo["inicio"])["atrasadas"] is True and _abertas(de_novo["inicio"])["4"] is False
 
 
 def test_recontar_e_biblioteca_nao_desfazem_a_secao_recolhida():
@@ -1000,19 +998,21 @@ def test_aula_avulsa_mora_na_biblioteca_recolhida():
     out = _rodar_secoes('SAIDA.antes = {onde: onde("avulsa-x"), feito: feitoEm("avulsa-x"), n: $("hub-quadro-nfeitas").textContent};'
                         ' feito("avulsa-x"); SAIDA.meio = {onde: onde("avulsa-x"), feito: feitoEm("avulsa-x"),'
                         ' n: $("hub-quadro-nfeitas").textContent};')
-    assert out["antes"] == {"onde": "feitas", "feito": False, "n": "1"}
-    assert out["meio"] == {"onde": "feitas", "feito": True, "n": "1"}, "feita, fica na Biblioteca, riscada"
+    # s218: a Biblioteca guarda tambem a RD (rd-hepato): 2 documentos
+    assert out["antes"] == {"onde": "feitas", "feito": False, "n": "2"}
+    assert out["meio"] == {"onde": "feitas", "feito": True, "n": "2"}, "feita, fica na Biblioteca, riscada"
     assert "outras" not in out["inicio"] and "outras" not in out["fim"]
-    assert not _rodar_secoes()["biblioteca_aberta"], "a Biblioteca nasce recolhida"
+    assert _rodar_secoes()["areas_abertas"] == [False, False], "s218: as grandes areas nascem recolhidas"
 
 
 def test_desmarcar_sem_secao_de_origem_fica_na_biblioteca():
-    """s216 (part-3, A7): desmarcar devolve o item a secao de origem gravada no `data-secao` DELE; a aula
-    da Biblioteca nunca teve secao -- fica la, sem riscar, e AVISA no console (nunca erro silencioso)."""
+    """s216 (part-3, A7): desmarcar devolve o item a secao de origem gravada no `data-secao` DELE. s218: o
+    que MORA na Biblioteca (`data-secao="biblioteca"`: a aula avulsa, a RD) fica na sua disciplina, sem
+    riscar e sem aviso -- e o lugar dele, nao uma secao que sumiu."""
     out = _rodar_secoes('feito("avulsa-x"); return espera().then(function(){ feito("avulsa-x");'
                         ' SAIDA.depois = {onde: onde("avulsa-x"), feito: feitoEm("avulsa-x")}; });')
     assert out["depois"] == {"onde": "feitas", "feito": False}
-    assert len(out["avisos"]) == 1 and "avulsa-x" in out["avisos"][0] and "Biblioteca" in out["avisos"][0]
+    assert out["avisos"] == []
     volta = _rodar_secoes('feito("aorta"); return espera().then(function(){ feito("aorta"); });')
     assert volta["avisos"] == [], "com origem (a semana 4), volta sem aviso"
 
@@ -1023,56 +1023,67 @@ def test_desmarcar_sem_secao_de_origem_fica_na_biblioteca():
 # o grupo e o total e tira o grupo que esvazia. Cada grupo recolhe como as secoes (titulo = controle,
 # teclado, estado por aparelho em medhub.secoes); padrao: recolhido.
 GRUPOS_JS = r"""
-function grupos(){ return qd.querySelectorAll("#hub-quadro-feitas .qd-area").map(function(g){ var t = g.querySelector(".qd-titulo"), l = g.querySelector(".qd-lista");
-  return {area: g.getAttribute("data-area"), n: g.querySelector("[data-n]").textContent, titulo: t.textContent,
-    itens: g.querySelectorAll(".qd-item").map(function(li){ return li.getAttribute("data-slug") || "t" + li.getAttribute("data-tarefa"); }),
-    aberta: !g.hasAttribute("data-recolhida"), expanded: t.getAttribute("aria-expanded"), role: t.getAttribute("role"),
-    tab: t.getAttribute("tabindex"), controls: t.getAttribute("aria-controls"), lista: l.getAttribute("id"), seta: !!t.querySelector(".qd-seta")}; }); }
-function tituloGrupo(a){ return qd.querySelector('#hub-quadro-feitas .qd-area[data-area="' + a + '"] .qd-titulo'); }
+function grupos(){ return qd.querySelectorAll("#hub-quadro-feitas .qd-area").map(function(g){ var nv = g.querySelector("[data-novas]");
+  return {area: g.getAttribute("data-area"), n: g.querySelector("[data-n]").textContent, novas: nv && !nv.hidden ? nv.textContent : "",
+    discs: g.querySelectorAll(".qd-disc").map(function(d){ return [d.getAttribute("data-disc"), d.querySelector("[data-n]").textContent,
+      d.querySelectorAll(".qd-item").map(function(li){ return (li.querySelector(".qd-nova") ? "*" : "") + (li.getAttribute("data-slug") || "t" + li.getAttribute("data-tarefa")); })]; }),
+    aberta: !!g.open, tag: g.tagName, sumario: !!g.querySelector("summary")}; }); }
+function tituloGrupo(a){ return qd.querySelector('#hub-quadro-feitas .qd-area[data-area="' + a + '"] summary'); }
 function nfeitas(){ return $("hub-quadro-nfeitas").textContent; }
+function novas(){ var e = $("hub-quadro-novas"); return e.hidden ? "" : e.textContent; }
 """
 
 
-def test_feito_cai_no_grupo_da_area_criado_na_ordem_e_desmarcar_devolve():
-    """No build so ha o grupo GO (a aula avulsa). A RD de hepato (CM) feita: o grupo CM nasce ANTES do GO,
-    recolhido e ja com o titulo-controle; a aorta (tarefa 70, CM) cai no mesmo grupo, o mais recente
-    primeiro; desmarcar devolve cada uma a sua secao e o grupo que esvazia sai."""
+def test_feito_cai_na_disciplina_e_a_rd_nova_perde_a_etiqueta_no_lugar():
+    """s218: a Biblioteca e area -> disciplina. No build: CM (a RD de hepato, nova, 'Outros') e GO (a aula
+    avulsa). A aorta (tarefa 70, CM, `area` Cardiologia) feita cai em CM -> Cardiologia, disciplina que
+    nasce ao vivo ANTES de 'Outros'; a RD lida perde "nova" e desce para depois das aulas, sem sair da
+    disciplina (e o lugar dela); desmarcar a aorta a devolve a semana 4 e a disciplina vazia sai."""
+    plano = [dict(l, area="Cardiologia") if l["id"] == 70 else l for l in PLANO_SEC]
     acao = GRUPOS_JS + r"""
-SAIDA.g0 = grupos(); SAIDA.n0 = nfeitas();
-feito("rd-hepato"); SAIDA.g1 = grupos(); SAIDA.n1 = nfeitas();
-return espera().then(function(){ feito("aorta"); SAIDA.g2 = grupos(); SAIDA.n2 = nfeitas(); return espera(); })
-  .then(function(){ feito("rd-hepato"); SAIDA.g3 = grupos(); SAIDA.onde3 = onde("rd-hepato"); return espera(); })
-  .then(function(){ feito("aorta"); SAIDA.g4 = grupos(); SAIDA.onde4 = onde("aorta"); SAIDA.n4 = nfeitas(); });"""
-    out = _rodar_secoes(acao)
-    go = {"area": "GO", "n": "1", "titulo": "Ginecologia e Obstetrícia 1", "itens": ["avulsa-x"], "aberta": False,
-          "expanded": "false", "role": "button", "tab": "0", "controls": "qd-lista-biblioteca-GO",
-          "lista": "qd-lista-biblioteca-GO", "seta": True}
-    assert out["g0"] == [go] and out["n0"] == "1"
-    cm = dict(go, area="CM", titulo="Clínica Médica 1", itens=["rd-hepato"], controls="qd-lista-biblioteca-CM",
-              lista="qd-lista-biblioteca-CM")
-    assert out["g1"] == [cm, go], "o grupo que nao existia nasce na posicao da ordem, recolhido e controlavel"
-    assert out["n1"] == "2"
-    assert out["g2"][0]["itens"] == ["aorta", "rd-hepato"] and out["g2"][0]["n"] == "2", "o mais recente primeiro"
-    assert out["n2"] == "3" and out["fim"]["4"]["n"] == "2", "a semana 4 volta a contar a aorta"
-    assert out["onde3"] == "revisoes" and out["g3"][0]["itens"] == ["aorta"] and out["g3"][0]["n"] == "1"
-    assert out["onde4"] == "4" and out["g4"] == [go] and out["n4"] == "1", "o grupo que esvaziou saiu"
+SAIDA.g0 = grupos(); SAIDA.n0 = nfeitas(); SAIDA.v0 = novas();
+feito("aorta"); SAIDA.g1 = grupos(); SAIDA.n1 = nfeitas();
+return espera().then(function(){ feito("rd-hepato"); SAIDA.g2 = grupos(); SAIDA.v2 = novas(); SAIDA.onde2 = onde("rd-hepato"); return espera(); })
+  .then(function(){ feito("aorta"); SAIDA.g3 = grupos(); SAIDA.onde3 = onde("aorta"); SAIDA.n3 = nfeitas(); return espera(); })
+  .then(function(){ feito("rd-hepato"); SAIDA.g4 = grupos(); SAIDA.v4 = novas(); });"""
+    out = _rodar_secoes(acao, plano=plano)
+    go = {"area": "GO", "n": "1", "novas": "", "discs": [["Outros", "1", ["avulsa-x"]]], "aberta": False,
+          "tag": "DETAILS", "sumario": True}
+    cm = dict(go, area="CM", novas="1 nova", discs=[["Outros", "1", ["*rd-hepato"]]])
+    assert out["g0"] == [cm, go] and out["n0"] == "2" and out["v0"] == "1 nova"
+    assert out["g1"][0]["discs"] == [["Cardiologia", "1", ["aorta"]], ["Outros", "1", ["*rd-hepato"]]]
+    assert out["g1"][0]["n"] == "2" and out["n1"] == "3" and out["fim"]["4"]["n"] == "2"
+    assert out["g2"][0]["discs"][1] == ["Outros", "1", ["rd-hepato"]] and out["g2"][0]["novas"] == ""
+    assert out["v2"] == "" and out["onde2"] == "feitas", "lida, a RD fica na Biblioteca"
+    assert out["onde3"] == "4" and out["g3"][0]["discs"] == [["Outros", "1", ["rd-hepato"]]] and out["n3"] == "2"
+    assert out["g4"][0]["discs"] == [["Outros", "1", ["*rd-hepato"]]] and out["v4"] == "1 nova", "desmarcada, nova de novo"
     assert out["avisos"] == []
 
 
-def test_grupo_da_biblioteca_recolhe_como_as_secoes_e_o_aparelho_lembra():
+def test_grande_area_que_nao_existia_nasce_na_ordem():
+    """A aorta numa tarefa de PED (o plano diz): a grande area PED nasce ao vivo entre CM e GO, um
+    <details> recolhido com a disciplina dentro; desmarcar a tira de novo."""
+    plano = [dict(l, bloco="PED", area="Pediatria") if l["id"] == 70 else l for l in PLANO_SEC]
     acao = GRUPOS_JS + r"""
-tituloGrupo("GO").click(); SAIDA.toque = grupos()[0];
-(tituloGrupo("GO")._ouv.keydown || []).forEach(function(f){ f({key: "Enter", preventDefault: function(){ TECLAS++; }}); });
-SAIDA.tecla = grupos()[0];
-tituloGrupo("GO").click();
-feito("rd-hepato"); tituloGrupo("CM").click(); SAIDA.criado = grupos()[0];"""
+feito("aorta"); SAIDA.g1 = grupos();
+return espera().then(function(){ feito("aorta"); SAIDA.g2 = grupos(); });"""
+    out = _rodar_secoes(acao, plano=plano)
+    assert [g["area"] for g in out["g1"]] == ["CM", "PED", "GO"]
+    assert out["g1"][1] == {"area": "PED", "n": "1", "novas": "", "discs": [["Pediatria", "1", ["aorta"]]],
+                            "aberta": False, "tag": "DETAILS", "sumario": True}
+    assert [g["area"] for g in out["g2"]] == ["CM", "GO"], "o grupo que esvaziou saiu"
+
+
+def test_grupo_da_biblioteca_recolhe_e_o_aparelho_lembra():
+    """s218: a grande area e um <details> (o pedido); o TOQUE no summary grava a escolha no aparelho (o
+    clique chega antes da troca, entao grava o contrario do estado atual); recarregar abre como ele deixou."""
+    acao = GRUPOS_JS + r"""
+tituloGrupo("GO").click(); SAIDA.ls1 = JSON.parse(LS["medhub.secoes"] || "{}");"""
     out = _rodar_secoes(acao)
-    assert out["toque"]["aberta"] is True and out["toque"]["expanded"] == "true"
-    assert out["tecla"]["aberta"] is False and out["teclas"] == 1
-    assert out["criado"]["area"] == "CM" and out["criado"]["aberta"] is True, "o grupo criado ao vivo tambem e controle"
-    assert json.loads(out["ls"]["medhub.secoes"]) == {"aulas:biblioteca:GO": True, "aulas:biblioteca:CM": True}
+    assert out["ls1"] == {"aulas:biblioteca:GO": True}
     de_novo = _rodar_secoes(GRUPOS_JS + "SAIDA.g = grupos();", ls=out["ls"])
-    assert [(g["area"], g["aberta"]) for g in de_novo["g"]] == [("GO", True)], "recarregar: vale a escolha dele"
+    assert [(g["area"], g["aberta"]) for g in de_novo["g"]] == [("CM", False), ("GO", True)], \
+        "recarregar: vale a escolha dele; a que ele nao tocou nasce recolhida"
     css = TEMPLATE[TEMPLATE.index("<style>"):TEMPLATE.index("</style>")]
     assert "min-width:0" in re.search(r"\.qd-area\{([^}]*)\}", css).group(1)
     assert re.search(r"\.qd-areas\{[^}]*display:grid", css)
@@ -1084,14 +1095,12 @@ def test_voltar_ao_item_concluido_abre_a_biblioteca_e_o_grupo_dele():
     acao = GRUPOS_JS + r"""
 El.prototype.contains = function(n){ for(var p = n; p; p = p.parentNode){ if(p === this){ return true; } } return false; };
 feito("rd-hepato"); var li = marcarRecente("aulas", "rd-hepato");
-SAIDA.recente = {slug: li.getAttribute("data-slug"), marca: li.classList.contains("qd-recente"),
-  bib: !!$("hub-quadro-feitas").open, grupo: grupos()[0]};"""
+SAIDA.recente = {slug: li.getAttribute("data-slug"), marca: li.classList.contains("qd-recente"), grupo: grupos()[0]};"""
     extra = _funcs("function qdGrupoDe(li){", "function marcarRecente(aba, slug){")
     out = _rodar_secoes(acao, extra=extra)
     assert out["recente"]["slug"] == "rd-hepato" and out["recente"]["marca"] is True
-    assert out["recente"]["bib"] is True and out["recente"]["grupo"]["area"] == "CM"
-    assert out["recente"]["grupo"]["aberta"] is True and out["recente"]["grupo"]["expanded"] == "true"
-    assert "aulas:biblioteca:CM" not in json.loads(out["ls"].get("medhub.secoes", "{}"))
+    assert out["recente"]["grupo"]["area"] == "CM" and out["recente"]["grupo"]["aberta"] is True
+    assert "aulas:biblioteca:CM" not in json.loads(out["ls"].get("medhub.secoes", "{}")), "abrir por codigo nao grava"
 
 
 # ======================================================================== 2. secoes da aba Listas
@@ -1200,8 +1209,11 @@ def test_secao_recolhivel_no_celular():
     assert "prefers-reduced-motion: reduce){.qd-seta{transition:none}}" in css
     assert not re.search(r"position\s*:\s*(sticky|fixed)", TEMPLATE) and "nowrap" not in TEMPLATE.lower()
     assert "try{ secoesQuadro(qd); }catch(e){}" in TEMPLATE, "falha nas secoes nunca derruba o quadro"
-    # a Biblioteca (s216; era "Concluidas") segue <details>; nenhuma secao nova depende do hub.py
-    assert '<details class="qd-feitas" id="hub-quadro-feitas">' in hub.html_quadro_de(AULAS_SEC, REGISTRO_SEC, {}, PLANO_SEC, CAL_SEC, HOJE_SEC)[0]
+    # s218: a Biblioteca e o corpo da aba (uma <section>); cada grande area, um <details>
+    quadro = hub.html_quadro_de(AULAS_SEC, REGISTRO_SEC, {}, PLANO_SEC, CAL_SEC, HOJE_SEC)[0]
+    assert '<section class="qd-bib" id="hub-quadro-feitas"' in quadro and '<details class="qd-area" data-area="CM">' in quadro
+    assert re.search(r"\[data-recolhida\] > \.qd-qsem,\[data-recolhida\] > \.qd-resumos\{display:none\}", css)
+    assert ".qd-area-corpo > .qd-disc:only-child > .qd-disc-tit{display:none}" in css
 
 
 # ======================================================================== 3. grifo nas aulas: funcoes puras

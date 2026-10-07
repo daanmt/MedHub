@@ -658,6 +658,15 @@ herda o bloco da tarefa do plano (`tarefa_id` vence; senão a 1a de `tarefas`); 
 declara `bloco` (`CM|CIR|MFC|PED|GO|VARIAS`) no registro; `bloco` fora disso falha alto. Sem área
 resolvível o item cai em "Sem área" e o `--build` e o `--check` dão AVISO pelo slug (warn-first: o exit
 não muda). O "feito" move o item para o grupo do `data-area` dele na hora, criando o grupo na ordem.  <!-- CHECK: test_biblioteca_agrupa_por_grande_area_na_ordem_do_operador -->
+**Resumos + Biblioteca por disciplina (s218):** o `--build` lê `core/hub_resumos.json` (o lote de resumos,
+mapa resumo -> tarefas feito à mão; schema errado falha alto, arquivo inexistente = AVISO e fora do lote) e
+gera `resumos/resumo-<nome>.html` em `--out` (conversor md -> HTML do próprio `hub.py`, determinístico,
+todo texto escapado), que entram no `files` com o mesmo DIFF por hash; aulas + resumos + painel + página
+acima do teto = erro nomeado. A Biblioteca é o corpo da Teoria: grande área (`<details>`) -> disciplina
+(A-Z) -> resumos, aulas e revisões; a RD declara `disciplinas` (sai em cada uma) e `resumos` (fonte
+inexistente = AVISO); a RD não lida leva "nova". Cada semana diz o total REAL de questões pendentes (a
+corrente, também com as atrasadas: o número do Painel) e lista os "Resumos desta semana". A projeção
+ganha `resumos` (o `.md` corrigido republica). ⚰️ a seção "Revisões direcionadas" do topo.  <!-- CHECK: test_rd_de_varias_disciplinas_aparece_em_cada_uma_e_a_nova_no_topo -->
 
 **Projeção (s194):** o `estado_pos_publish.json` e o registro do `--confirmar` guardam também
 `projecao = {painel: sha256 sem o carimbo, quadro: sha256 do quadro montado, sessao}`; é contra ela

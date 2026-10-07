@@ -137,7 +137,11 @@ risco da conta declarado e assumido; o que mudou: o agente não lê o token do n
   imprime. HTTP 401 = sessão expirou: ele recopia. HTTP 429 = parar e relatar.  <!-- CHECK: test_token_rastreado_pelo_git_e_recusa -->
 - **Discursiva** (zero alternativas) sai e é **declarada** por número; a contagem fecha em 3: achadas = gravadas +
   declaradas = `--expect` confirmado pelo operador. `num` = a posição na lista do EMED (o buraco da discursiva fica).  <!-- CHECK: test_discursiva_sai_declarada_e_a_contagem_fecha_em_3 -->
-- **Tudo ou nada:** `--expect` diferente, 1-3 ou 6+ alternativas, gabarito ausente ou duplo, texto vazio, `emed_id` repetido
+- **Fora do formato do hub (s218, 07/10/2026):** questão **certo/errado** (2 alternativas, gabarito único) e questão com
+  **alternativa feita só de imagem** saem **declaradas** por número e motivo (`fora` no `--json`), como a discursiva -- 5 listas
+  da Fase 1 (t833 t376 t110 t805 t826, ~200 questões) eram recusadas inteiras por 1-2 questões assim. A contagem fecha em 4:
+  achadas = gravadas + discursivas + fora = `--expect`.  <!-- CHECK: test_certo_errado_e_alternativa_so_imagem_saem_declaradas_e_a_contagem_fecha -->
+- **Tudo ou nada:** `--expect` diferente, 1, 3 ou 6+ alternativas, gabarito ausente ou duplo, texto vazio sem imagem, `emed_id` repetido
   (API que ignora `page`) = `RECUSA:` nomeada e a pasta nem é criada. Classificador do harness barrou a chamada = parar e
   relatar ao operador; nunca contornar, fatiar ou trocar de ferramenta.  <!-- CHECK: test_perturbado_e_recusa_nomeada_sem_gravar_nada -->
 

@@ -1,0 +1,250 @@
+<title>Revisão direcionada · Clínica Médica · 06/10</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,380;9..144,480;9..144,600;9..144,680&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EFF3F0; --card:#FAFCFA; --sunk:#E2E9E4;
+  --ink:#18211C; --ink2:#4C5A52; --ink3:#7C8A82;
+  --line:rgba(24,33,28,.13); --line2:rgba(24,33,28,.26);
+  --teal:#1F6B5E; --teal-ink:#154A41; --teal-wash:#DCEBE5;
+  --carmine:#8E2F41; --carmine-ink:#6B2231; --carmine-wash:#F5E2E6;
+  --amber:#8A5A17; --amber-ink:#6B4610; --amber-wash:#F3E6CC;
+  --on:#FFFFFF;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#7E8C84;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  --on:#131A16;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#7E8C84;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  --on:#131A16;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);
+  font:16px/1.6 "Source Sans 3",-apple-system,"Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+h1,h2,h3{margin:0;font-family:Fraunces,Georgia,serif;font-weight:600;letter-spacing:-.01em;text-wrap:balance;line-height:1.16;color:var(--ink)}
+.wrap{max-width:760px;margin:0 auto;padding:0 24px 90px}
+@media(max-width:640px){.wrap{padding:0 16px 72px}}
+:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+strong{font-weight:600;color:var(--ink)}
+.mn{font-family:"IBM Plex Mono",ui-monospace,Consolas,monospace;font-variant-numeric:tabular-nums}
+
+/* masthead */
+.top{padding:44px 0 26px;border-bottom:1px solid var(--line2)}
+.eye{font:600 11px/1.3 "Source Sans 3";letter-spacing:.14em;text-transform:uppercase;color:var(--teal-ink);margin:0 0 13px}
+.top h1{font-size:clamp(28px,5vw,42px);font-weight:680;margin-bottom:14px}
+.top .sub{font-size:clamp(16px,2.2vw,17.5px);line-height:1.6;color:var(--ink2);margin:0}
+
+/* secoes */
+.sec{padding:34px 0;border-bottom:1px solid var(--line)}
+.sec:last-of-type{border-bottom:0}
+.kick{font:600 11px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);display:block;margin-bottom:5px}
+.sec h2{font-size:clamp(21px,3.2vw,26px);margin-bottom:12px}
+.lede{font-size:16.3px;line-height:1.6;color:var(--ink2);margin:0 0 14px;font-style:italic}
+ul.pt{margin:0 0 14px;padding-left:20px}
+ul.pt li{font-size:15.6px;line-height:1.58;color:var(--ink2);margin-bottom:7px}
+ul.pt li:last-child{margin-bottom:0}
+
+/* bloco curto (pilulas) */
+.blk{padding:18px 0 4px;border-top:1px dashed var(--line2)}
+.blk:first-of-type{border-top:0;padding-top:4px}
+.blk h3{font-size:clamp(17px,2.6vw,19px);margin:0 0 8px}
+
+/* onde tropecou */
+.miss{list-style:none;margin:0;padding:0;border:1px solid var(--line2);background:var(--card)}
+.miss li{display:grid;grid-template-columns:28px minmax(0,1fr);gap:10px;padding:11px 14px;font-size:15.3px;line-height:1.5;color:var(--ink2)}
+.miss li+li{border-top:1px solid var(--line)}
+.miss .n{font:600 12px "IBM Plex Mono";color:var(--carmine-ink);padding-top:2px}
+
+/* tabela */
+.tw{overflow-x:auto;margin:16px 0;border:1px solid var(--line2);background:var(--card)}
+table{border-collapse:collapse;width:100%;font-size:14.4px}
+th,td{text-align:left;vertical-align:top;padding:9px 12px;line-height:1.45}
+th{background:var(--sunk);font:600 11.5px "Source Sans 3";letter-spacing:.05em;text-transform:uppercase;color:var(--ink3)}
+td{color:var(--ink2);border-top:1px solid var(--line)}
+td:first-child{font-weight:600;color:var(--ink)}
+td.hi{color:var(--teal-ink);font-weight:600}
+
+/* grade de criterios */
+.crit{border:1px solid var(--line2);background:var(--card);margin:16px 0}
+.crit .row{display:grid;grid-template-columns:150px minmax(0,1fr);gap:12px;padding:10px 14px;font-size:14.6px;line-height:1.5}
+.crit .row+.row{border-top:1px solid var(--line)}
+.crit .k{font-weight:600;color:var(--teal-ink);min-width:0}
+.crit .v{color:var(--ink2);min-width:0}
+@media(max-width:640px){.crit .row{grid-template-columns:minmax(0,1fr);gap:2px}}
+
+/* comparativo */
+.vs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line2);border:1px solid var(--line2);margin:16px 0}
+.vs>div{background:var(--card);padding:13px 15px;min-width:0}
+.vs h3{font:700 11.5px "Source Sans 3";letter-spacing:.05em;text-transform:uppercase;margin:0 0 7px;color:var(--ink3)}
+.vs .a h3{color:var(--carmine-ink)}
+.vs .b h3{color:var(--teal-ink)}
+.vs ul{margin:0;padding-left:17px}
+.vs li{font-size:14.5px;line-height:1.5;color:var(--ink2);margin-bottom:4px}
+@media(max-width:640px){.vs{grid-template-columns:minmax(0,1fr)}}
+
+/* callouts */
+.key{margin:16px 0;padding:12px 16px;border-left:3px solid var(--teal);background:var(--teal-wash);font-size:15.2px;line-height:1.55;color:var(--ink)}
+.trap{margin:16px 0;padding:12px 16px;border-left:3px solid var(--carmine);background:var(--carmine-wash);font-size:15.2px;line-height:1.55;color:var(--ink)}
+.note{margin:16px 0;padding:12px 16px;border-left:3px solid var(--amber);background:var(--amber-wash);font-size:14.8px;line-height:1.55;color:var(--ink)}
+
+/* fonte */
+.src{margin:12px 0 0;font-size:12.6px;line-height:1.45;color:var(--ink3)}
+.src code{font-family:"IBM Plex Mono",Consolas,monospace;font-size:11.6px;background:var(--sunk);padding:1px 5px;border-radius:2px;overflow-wrap:anywhere}
+
+/* teste agora */
+.qs{display:flex;flex-direction:column;gap:10px}
+.q{background:var(--card);border:1px solid var(--line2);padding:13px 15px}
+.q p{margin:0 0 8px;font-size:15.4px;line-height:1.5;color:var(--ink);font-weight:500}
+.q .tag{font:600 10.5px "IBM Plex Mono";color:var(--teal-ink);letter-spacing:.04em;display:block;margin-bottom:4px}
+.q details summary{cursor:pointer;font:600 13px "Source Sans 3";color:var(--teal-ink);list-style:none}
+.q details summary::-webkit-details-marker{display:none}
+.q details summary::before{content:"+ "}
+.q details[open] summary::before{content:"- "}
+.q details div{margin-top:7px;padding-top:7px;border-top:1px dashed var(--line2);font-size:14.8px;line-height:1.5;color:var(--ink2)}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <p class="eye">Revisão direcionada · Clínica Médica · 06/10</p>
+  <h1>Clínica Médica: o exame certo para a pergunta certa</h1>
+  <p class="sub">Sete cards, sete temas. Em três deles a resposta errada responde a outra pergunta: dano em vez de filtração, hipotensão em vez de choque, quantidade em vez de função.</p>
+</header>
+
+<section class="sec">
+  <span class="kick">Mapa</span>
+  <h2>Onde você tropeçou hoje</h2>
+  <ul class="miss">
+    <li><span class="n">01</span><span>Laboratório: creatinina x proteinúria; fibrinogênio no politransfundido; cirrótico infectado.</span></li>
+    <li><span class="n">02</span><span>Imune: síndrome de Evans; hepatite B antes do rituximabe.</span></li>
+    <li><span class="n">03</span><span>Via aérea: o limite da máscara laríngea.</span></li>
+    <li><span class="n">04</span><span>Neurocisticercose: a forma que dá meningite.</span></li>
+  </ul>
+  <div class="note">Três caem pela 2ª vez seguida (nota 1 ontem e hoje): hipoglicemia com secretagogo, cirrótico infectado e neurocisticercose. Desta vez, pelo mecanismo.</div>
+</section>
+
+<section class="sec">
+  <span class="kick">01 · Laboratório</span>
+  <h2>Cada exame responde a uma pergunta</h2>
+  <div class="blk">
+    <h3>Hipoglicemia nova com secretagogo: creatinina</h3>
+    <ul class="pt">
+      <li>Secretagogos (sulfonilureias como a gliclazida, glinidas) saem pelo rim. A TFGe (taxa de filtração glomerular estimada) cai, o fármaco acumula e a hipoglicemia aparece sem mudar dose nem hábito.</li>
+    </ul>
+    <div class="crit">
+      <div class="row"><span class="k">"Há lesão glomerular?"</span><span class="v">Albuminúria ou proteinúria</span></div>
+      <div class="row"><span class="k">"Quanto o rim filtra?"</span><span class="v"><strong>Creatinina e TFGe</strong>: é ela que explica o acúmulo</span></div>
+    </div>
+    <div class="trap">Proteinúria mede dano, não clearance.</div>
+    <p class="src">Fonte: <code>resumos/Clínica Médica/Endocrinologia/Diabetes Mellitus - Complicações Crônicas.md</code> (§2.2)</p>
+  </div>
+  <div class="blk">
+    <h3>Politransfundido que sangra: olhe o fibrinogênio</h3>
+    <ul class="pt">
+      <li>Diluição e CIVD (coagulação intravascular disseminada) consomem fibrinogênio: ele é o primeiro a cair.</li>
+      <li>Fibrinogênio normal afasta as duas. Sobra o defeito <strong>funcional</strong> da tríade letal: hipotermia, acidose, hipocalcemia (o citrato das bolsas quela o cálcio).</li>
+      <li>A hipotermia engana: o laboratório processa a 37&nbsp;°C e o coagulograma sai quase normal. Conduta: reaquecer, corrigir cálcio e acidose.</li>
+    </ul>
+    <div class="trap">Ler "muitas transfusões" e fechar dilucional sem olhar o fibrinogênio.</div>
+    <p class="src">Fonte: <code>resumos/Clínica Médica/Hematologia/Hemostasia.md</code> (§8.1 Coagulopatia do Trauma e Tríade Letal)</p>
+  </div>
+  <div class="blk">
+    <h3>Cirrótico infectado que descompensa: ACLF</h3>
+    <ul class="pt">
+      <li>ACLF (insuficiência hepática crônica agudizada) = fígado crônico + gatilho agudo (a pneumonia) + falência fora do fígado (rim, circulação).</li>
+      <li>O cirrótico já vive hipotenso: vasodilatação esplâncnica e hipovolemia relativa. Nele, PA baixa não basta para chamar de choque.</li>
+    </ul>
+    <div class="vs">
+      <div class="b"><h3>ACLF</h3><ul>
+        <li>Cirrose + gatilho</li>
+        <li>Icterícia, creatinina subindo, PA baixa</li>
+      </ul></div>
+      <div class="a"><h3>Choque séptico</h3><ul>
+        <li>Vasopressor para PAM (pressão arterial média) ≥&nbsp;65</li>
+        <li><strong>E</strong> lactato &gt;&nbsp;2 após volume</li>
+      </ul></div>
+    </div>
+    <div class="trap">Pneumonia + hipotensão não fecha choque séptico. Sem vasopressor e lactato, a síndrome é ACLF.</div>
+    <p class="src">Fonte: <code>resumos/Clínica Médica/Infectologia/Sepse.md</code> (§3 Choque Séptico no Adulto, diferencial)</p>
+  </div>
+</section>
+
+<section class="sec">
+  <span class="kick">02 · Imune</span>
+  <h2>Autoimunidade e imunossupressão</h2>
+  <div class="blk">
+    <h3>Síndrome de Evans: citopenias autoimunes</h3>
+    <ul class="pt">
+      <li>AHAI (anemia hemolítica autoimune, Coombs direto positivo) + plaquetopenia imune, com ou sem neutropenia.</li>
+      <li>Autoanticorpos destroem as células na periferia: é citopenia por destruição, não por medula nem por baço grande.</li>
+      <li>O LES (lúpus eritematoso sistêmico) é a principal causa.</li>
+    </ul>
+    <div class="trap">Hepatoesplenomegalia febril com linfopenia soa lúpica, mas não define Evans.</div>
+    <p class="src">Fonte: <code>resumos/Clínica Médica/Reumatologia/DITC II.md</code> (§2.4 Hematológicas)</p>
+  </div>
+  <div class="blk">
+    <h3>Anti-HBc positivo antes do rituximabe: profilaxia sempre</h3>
+    <ul class="pt">
+      <li>O DNA do HBV (vírus da hepatite B) persiste no hepatócito mesmo após a "cura". O rituximabe (anti-CD20) derruba o linfócito B que mantinha o vírus quieto, e ele reativa.</li>
+      <li>Anti-HBc positivo, mesmo com HBsAg negativo: profilaxia <strong>antes</strong> de começar, independentemente do HBV-DNA.</li>
+      <li>Entecavir (preferencial) ou tenofovir, mantido de 6 a 12&nbsp;meses após o fim do tratamento.</li>
+    </ul>
+    <div class="trap">Condicionar a profilaxia ao HBV-DNA.</div>
+    <p class="src">Fonte: <code>resumos/Clínica Médica/Hepatologia/Hepatites Virais.md</code> (§3.9 Reativação)</p>
+  </div>
+</section>
+
+<section class="sec">
+  <span class="kick">03 · Via aérea</span>
+  <h2>Máscara laríngea não protege da aspiração</h2>
+  <ul class="pt">
+    <li>É supraglótica: fica acima da glote, sem balonete na traqueia. Ventila, mas não veda.</li>
+    <li>Via aérea definitiva é o tubo com balonete insuflado na traqueia.</li>
+    <li>Papel da máscara: resgate quando a ventilação com bolsa-válvula-máscara é difícil ou a IOT (intubação orotraqueal) falha; alternativa na parada cardiorrespiratória.</li>
+  </ul>
+  <div class="trap">Chamá-la de via aérea definitiva, ou escolhê-la no estômago cheio.</div>
+  <p class="src">Fonte: <code>resumos/Clínica Médica/Pneumologia/Pneumologia Intensiva.md</code> (§5.6 Manejo avançado)</p>
+</section>
+
+<section class="sec">
+  <span class="kick">04 · Neurocisticercose</span>
+  <h2>Onde está o cisto decide a síndrome</h2>
+  <p class="lede">Em vez de decorar a lista, localize o cisto.</p>
+  <ul class="pt">
+    <li><strong>No parênquima</strong>, o cisto irrita o córtex: crise convulsiva, epilepsia. É o cenário clássico.</li>
+    <li><strong>No espaço subaracnóideo (forma racemosa) ou nos ventrículos</strong>, inflama a meninge e trava a circulação do líquor: síndrome meníngea, hidrocefalia e HIC (hipertensão intracraniana). É a meningite cisticercótica, rara e grave.</li>
+  </ul>
+  <div class="trap">"Neurocisticercose nunca dá quadro meníngeo." Dá, na forma subaracnóidea.</div>
+  <p class="src">Fonte: <code>resumos/Clínica Médica/Infectologia/Meningites.md</code> (§13 e armadilhas)</p>
+</section>
+
+<section class="sec">
+  <span class="kick">Recuperação</span>
+  <h2>Teste agora</h2>
+  <div class="qs">
+    <div class="q"><span class="tag">01</span><p>Diabético antigo com gliclazida e hipoglicemias novas. Que exame?</p><details><summary>ver resposta</summary><div>Creatinina (TFGe). Proteinúria mede dano, não filtração.</div></details></div>
+    <div class="q"><span class="tag">01</span><p>Politransfundido sangrando, fibrinogênio normal. Para onde aponta?</p><details><summary>ver resposta</summary><div>Defeito funcional: hipotermia, acidose, hipocalcemia. Diluição e CIVD baixariam o fibrinogênio.</div></details></div>
+    <div class="q"><span class="tag">01</span><p>Cirrótico com pneumonia, icterícia, creatinina subindo e PA baixa, sem vasopressor e com lactato normal. Síndrome?</p><details><summary>ver resposta</summary><div>ACLF. Choque séptico exige vasopressor e lactato &gt;&nbsp;2.</div></details></div>
+    <div class="q"><span class="tag">02</span><p>O que define a síndrome de Evans?</p><details><summary>ver resposta</summary><div>AHAI (Coombs direto positivo) + plaquetopenia imune, com ou sem neutropenia.</div></details></div>
+    <div class="q"><span class="tag">02</span><p>Anti-HBc positivo, HBsAg negativo, HBV-DNA indetectável, vai receber rituximabe. Conduta?</p><details><summary>ver resposta</summary><div>Profilaxia com entecavir (ou tenofovir) antes, mantida de 6 a 12&nbsp;meses após o fim.</div></details></div>
+    <div class="q"><span class="tag">03</span><p>Por que a máscara laríngea não serve no estômago cheio?</p><details><summary>ver resposta</summary><div>É supraglótica e não veda a traqueia: não protege da aspiração.</div></details></div>
+    <div class="q"><span class="tag">04</span><p>Neurocisticercose com hidrocefalia e síndrome meníngea. Qual forma?</p><details><summary>ver resposta</summary><div>Subaracnóidea (racemosa) ou ventricular.</div></details></div>
+  </div>
+</section>
+</div>

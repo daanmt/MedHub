@@ -1,0 +1,230 @@
+<title>Revisão direcionada · Cirurgia · 06/10</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,380;9..144,480;9..144,600;9..144,680&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EFF3F0; --card:#FAFCFA; --sunk:#E2E9E4;
+  --ink:#18211C; --ink2:#4C5A52; --ink3:#7C8A82;
+  --line:rgba(24,33,28,.13); --line2:rgba(24,33,28,.26);
+  --teal:#1F6B5E; --teal-ink:#154A41; --teal-wash:#DCEBE5;
+  --carmine:#8E2F41; --carmine-ink:#6B2231; --carmine-wash:#F5E2E6;
+  --amber:#8A5A17; --amber-ink:#6B4610; --amber-wash:#F3E6CC;
+  --on:#FFFFFF;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#7E8C84;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  --on:#131A16;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#7E8C84;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  --on:#131A16;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);
+  font:16px/1.6 "Source Sans 3",-apple-system,"Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+h1,h2,h3{margin:0;font-family:Fraunces,Georgia,serif;font-weight:600;letter-spacing:-.01em;text-wrap:balance;line-height:1.16;color:var(--ink)}
+.wrap{max-width:760px;margin:0 auto;padding:0 24px 90px}
+@media(max-width:640px){.wrap{padding:0 16px 72px}}
+:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+strong{font-weight:600;color:var(--ink)}
+.mn{font-family:"IBM Plex Mono",ui-monospace,Consolas,monospace;font-variant-numeric:tabular-nums}
+
+/* masthead */
+.top{padding:44px 0 26px;border-bottom:1px solid var(--line2)}
+.eye{font:600 11px/1.3 "Source Sans 3";letter-spacing:.14em;text-transform:uppercase;color:var(--teal-ink);margin:0 0 13px}
+.top h1{font-size:clamp(28px,5vw,42px);font-weight:680;margin-bottom:14px}
+.top .sub{font-size:clamp(16px,2.2vw,17.5px);line-height:1.6;color:var(--ink2);margin:0}
+
+/* secoes */
+.sec{padding:34px 0;border-bottom:1px solid var(--line)}
+.sec:last-of-type{border-bottom:0}
+.kick{font:600 11px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);display:block;margin-bottom:5px}
+.sec h2{font-size:clamp(21px,3.2vw,26px);margin-bottom:12px}
+.lede{font-size:16.3px;line-height:1.6;color:var(--ink2);margin:0 0 14px;font-style:italic}
+ul.pt{margin:0 0 14px;padding-left:20px}
+ul.pt li{font-size:15.6px;line-height:1.58;color:var(--ink2);margin-bottom:7px}
+ul.pt li:last-child{margin-bottom:0}
+
+/* bloco curto (pilulas) */
+.blk{padding:18px 0 4px;border-top:1px dashed var(--line2)}
+.blk:first-of-type{border-top:0;padding-top:4px}
+.blk h3{font-size:clamp(17px,2.6vw,19px);margin:0 0 8px}
+
+/* onde tropecou */
+.miss{list-style:none;margin:0;padding:0;border:1px solid var(--line2);background:var(--card)}
+.miss li{display:grid;grid-template-columns:28px minmax(0,1fr);gap:10px;padding:11px 14px;font-size:15.3px;line-height:1.5;color:var(--ink2)}
+.miss li+li{border-top:1px solid var(--line)}
+.miss .n{font:600 12px "IBM Plex Mono";color:var(--carmine-ink);padding-top:2px}
+
+/* tabela */
+.tw{overflow-x:auto;margin:16px 0;border:1px solid var(--line2);background:var(--card)}
+table{border-collapse:collapse;width:100%;font-size:14.4px}
+th,td{text-align:left;vertical-align:top;padding:9px 12px;line-height:1.45}
+th{background:var(--sunk);font:600 11.5px "Source Sans 3";letter-spacing:.05em;text-transform:uppercase;color:var(--ink3)}
+td{color:var(--ink2);border-top:1px solid var(--line)}
+td:first-child{font-weight:600;color:var(--ink)}
+td.hi{color:var(--teal-ink);font-weight:600}
+
+/* grade de criterios */
+.crit{border:1px solid var(--line2);background:var(--card);margin:16px 0}
+.crit .row{display:grid;grid-template-columns:150px minmax(0,1fr);gap:12px;padding:10px 14px;font-size:14.6px;line-height:1.5}
+.crit .row+.row{border-top:1px solid var(--line)}
+.crit .k{font-weight:600;color:var(--teal-ink);min-width:0}
+.crit .v{color:var(--ink2);min-width:0}
+@media(max-width:640px){.crit .row{grid-template-columns:minmax(0,1fr);gap:2px}}
+
+/* comparativo */
+.vs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line2);border:1px solid var(--line2);margin:16px 0}
+.vs>div{background:var(--card);padding:13px 15px;min-width:0}
+.vs h3{font:700 11.5px "Source Sans 3";letter-spacing:.05em;text-transform:uppercase;margin:0 0 7px;color:var(--ink3)}
+.vs .a h3{color:var(--carmine-ink)}
+.vs .b h3{color:var(--teal-ink)}
+.vs ul{margin:0;padding-left:17px}
+.vs li{font-size:14.5px;line-height:1.5;color:var(--ink2);margin-bottom:4px}
+@media(max-width:640px){.vs{grid-template-columns:minmax(0,1fr)}}
+
+/* callouts */
+.key{margin:16px 0;padding:12px 16px;border-left:3px solid var(--teal);background:var(--teal-wash);font-size:15.2px;line-height:1.55;color:var(--ink)}
+.trap{margin:16px 0;padding:12px 16px;border-left:3px solid var(--carmine);background:var(--carmine-wash);font-size:15.2px;line-height:1.55;color:var(--ink)}
+.note{margin:16px 0;padding:12px 16px;border-left:3px solid var(--amber);background:var(--amber-wash);font-size:14.8px;line-height:1.55;color:var(--ink)}
+
+/* fonte */
+.src{margin:12px 0 0;font-size:12.6px;line-height:1.45;color:var(--ink3)}
+.src code{font-family:"IBM Plex Mono",Consolas,monospace;font-size:11.6px;background:var(--sunk);padding:1px 5px;border-radius:2px;overflow-wrap:anywhere}
+
+/* teste agora */
+.qs{display:flex;flex-direction:column;gap:10px}
+.q{background:var(--card);border:1px solid var(--line2);padding:13px 15px}
+.q p{margin:0 0 8px;font-size:15.4px;line-height:1.5;color:var(--ink);font-weight:500}
+.q .tag{font:600 10.5px "IBM Plex Mono";color:var(--teal-ink);letter-spacing:.04em;display:block;margin-bottom:4px}
+.q details summary{cursor:pointer;font:600 13px "Source Sans 3";color:var(--teal-ink);list-style:none}
+.q details summary::-webkit-details-marker{display:none}
+.q details summary::before{content:"+ "}
+.q details[open] summary::before{content:"- "}
+.q details div{margin-top:7px;padding-top:7px;border-top:1px dashed var(--line2);font-size:14.8px;line-height:1.5;color:var(--ink2)}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <p class="eye">Revisão direcionada · Cirurgia · 06/10</p>
+  <h1>Cirurgia: o detalhe da lesão escolhe a técnica</h1>
+  <p class="sub">Cinco cards, três temas. Em cada um a conduta sai de um detalhe: o calor da lesão, a circunferência, o tamanho da coleção, o lado da parede.</p>
+</header>
+
+<section class="sec">
+  <span class="kick">Mapa</span>
+  <h2>Onde você tropeçou hoje</h2>
+  <ul class="miss">
+    <li><span class="n">01</span><span>Lesão da via biliar principal: quando basta o Kehr, quando é biliodigestiva.</span></li>
+    <li><span class="n">02</span><span>Plastrão apendicular: o tamanho de abscesso que pede drenagem.</span></li>
+    <li><span class="n">03</span><span>Hérnia inguinal: o nervo lesado em cada via; o reparo sem tela que mais recidiva.</span></li>
+  </ul>
+  <div class="note">Os três já tinham caído antes: biliar e plastrão com nota 2 em 04/10 (hoje 1), hérnias na RD de 05/10. Desta vez, pelo porquê.</div>
+</section>
+
+<section class="sec">
+  <span class="kick">01 · Vias biliares</span>
+  <h2>Lesão da via biliar: o reparo cabe na lesão?</h2>
+  <p class="lede">O Kehr só funciona se sobra ducto vivo e com calibre.</p>
+  <ul class="pt">
+    <li>O dreno de Kehr (tubo em T) molda e descomprime o ducto enquanto uma lesão pequena cicatriza sobre ele.</li>
+    <li>Tudo o que faria a sutura necrosar ou estreitar tira do Kehr e leva à ressecção com biliodigestiva (hepaticojejunostomia em Y de Roux).</li>
+  </ul>
+  <div class="crit">
+    <div class="row"><span class="k">Kehr basta</span><span class="v">Ducto maior, lesão <strong>não térmica</strong> e <strong>&lt;&nbsp;50%</strong> da circunferência</span></div>
+    <div class="row"><span class="k">Biliodigestiva</span><span class="v">Qualquer um: <strong>térmica</strong>, <strong>&gt;&nbsp;50%</strong> da circunferência, <strong>alta</strong> (perto da bifurcação) ou <strong>&gt;&nbsp;1&nbsp;cm</strong></span></div>
+  </div>
+  <ul class="pt">
+    <li>Térmica: a necrose do eletrocautério avança além da borda que se vê; a sutura cai em tecido que vai morrer.</li>
+    <li>&gt;&nbsp;50%: suturar mais da metade da parede fecha o lúmen e estenosa.</li>
+    <li>Alta ou &gt;&nbsp;1&nbsp;cm: falta ducto para aproximar sem tensão.</li>
+  </ul>
+  <div class="trap">Lesão térmica pequena não vai para o Kehr. O calor sozinho já manda para a biliodigestiva.</div>
+  <p class="src">Fonte: verso dos cards 1778 e 1779 + PDF EMED <code>resumos/Cirurgia/19. Vesícula e Vias Biliares.pdf</code> (§6.1). O resumo local de Colecistite e Colangite não cobre o reparo.</p>
+</section>
+
+<section class="sec">
+  <span class="kick">02 · Apendicite</span>
+  <h2>Plastrão: drena a partir de 4&nbsp;cm</h2>
+  <p class="lede">Estável e bloqueado não vai direto para a cirurgia. O tamanho da coleção decide o resto.</p>
+  <div class="crit">
+    <div class="row"><span class="k">Abscesso ≥&nbsp;4&nbsp;cm</span><span class="v"><strong>Drenagem percutânea</strong> guiada por tomografia ou ultrassom + antibiótico endovenoso por 4-7&nbsp;dias</span></div>
+    <div class="row"><span class="k">Fleimão ou &lt;&nbsp;4&nbsp;cm</span><span class="v">Só antibiótico, 4-7&nbsp;dias</span></div>
+    <div class="row"><span class="k">Depois</span><span class="v">Apendicectomia de intervalo; no adulto, colonoscopia em 6-8&nbsp;semanas antes</span></div>
+  </div>
+  <ul class="pt">
+    <li>O antibiótico alcança coleção pequena. Numa cavidade grande de pus ele penetra mal: é preciso esvaziar.</li>
+  </ul>
+  <div class="trap">O corte de 4&nbsp;cm só vale no paciente estável e bloqueado. Instável ou peritonite difusa: cirurgia de emergência.</div>
+  <p class="src">Fonte: <code>resumos/Cirurgia/Abdome Agudo Inflamatório - Apendicite Aguda.md</code> (§9.2 Complicada)</p>
+</section>
+
+<section class="sec">
+  <span class="kick">03 · Hérnias</span>
+  <h2>Hérnia inguinal: a via e a tensão</h2>
+  <p class="lede">Nos dois cards o atalho foi o mesmo: o território ou o nome, sem olhar o mecanismo.</p>
+  <div class="blk">
+    <h3>Nervo lesado: primeiro a via, depois o território</h3>
+    <ul class="pt">
+      <li>A via aberta (Lichtenstein) abre o canal inguinal, onde corre o ilioinguinal.</li>
+      <li>A via por vídeo (TAPP: transabdominal pré-peritoneal; TEP: totalmente extraperitoneal) trabalha por trás da parede. Abaixo do trato iliopúbico fica o <strong>triângulo da dor</strong>, com os nervos que descem para a coxa. Ali não se grampeia.</li>
+    </ul>
+    <div class="vs">
+      <div class="a"><h3>Aberta (anterior)</h3><ul>
+        <li>Ilioinguinal</li>
+        <li>Ílio-hipogástrico</li>
+        <li>Ramo genital do genitofemoral</li>
+      </ul></div>
+      <div class="b"><h3>Vídeo (posterior)</h3><ul>
+        <li>Cutâneo femoral lateral</li>
+        <li>Ramo femoral do genitofemoral</li>
+        <li>Femoral</li>
+      </ul></div>
+    </div>
+    <div class="trap">Face interna da coxa puxa para o ilioinguinal pelo território. Depois de TAPP ele nem estava no campo: é o ramo femoral do genitofemoral.</div>
+  </div>
+  <div class="blk">
+    <h3>Reparo sem tela: a tensão é o que recidiva</h3>
+    <ul class="pt">
+      <li>Sem tela, a parede é suturada sob tensão. Tensão na linha de sutura -&gt; isquemia -&gt; o fio corta o tecido -&gt; recidiva. Por isso a tela, sem tensão, virou o padrão.</li>
+    </ul>
+    <div class="crit">
+      <div class="row"><span class="k">Bassini</span><span class="v">Tendão conjunto ao ligamento inguinal: <strong>maior recidiva</strong></span></div>
+      <div class="row"><span class="k">Shouldice</span><span class="v">Imbricação em 4 planos, que repartem a tensão: <strong>o melhor sem tela</strong></span></div>
+      <div class="row"><span class="k">McVay</span><span class="v">Tendão conjunto ao ligamento de Cooper: único aberto sem tela que corrige a hérnia femoral</span></div>
+    </div>
+    <div class="trap">Shouldice também é tecidual, mas é o melhor deles. "Antigo e com tensão = pior" é o Bassini.</div>
+  </div>
+  <p class="src">Fonte: verso dos cards 1912 e 1914 + PDF EMED <code>resumos/Cirurgia/29. Hérnia da Parede Abdominal.pdf</code> (técnicas e §2.7.2). Não há resumo local de hérnia inguinal.</p>
+</section>
+
+<section class="sec">
+  <span class="kick">Recuperação</span>
+  <h2>Teste agora</h2>
+  <div class="qs">
+    <div class="q"><span class="tag">01</span><p>Lesão de 30% da circunferência do colédoco, feita com o eletrocautério. Reparo?</p><details><summary>ver resposta</summary><div>Ressecção + biliodigestiva. O calor sozinho tira do Kehr.</div></details></div>
+    <div class="q"><span class="tag">01</span><p>Quais quatro achados levam a lesão biliar para a biliodigestiva?</p><details><summary>ver resposta</summary><div>Térmica, &gt;&nbsp;50% da circunferência, alta (perto da bifurcação), &gt;&nbsp;1&nbsp;cm.</div></details></div>
+    <div class="q"><span class="tag">02</span><p>Plastrão, paciente estável, abscesso de 5&nbsp;cm na tomografia. Conduta?</p><details><summary>ver resposta</summary><div>Drenagem percutânea + antibiótico endovenoso; apendicectomia de intervalo depois.</div></details></div>
+    <div class="q"><span class="tag">02</span><p>E se a coleção tiver 3&nbsp;cm?</p><details><summary>ver resposta</summary><div>Só antibiótico.</div></details></div>
+    <div class="q"><span class="tag">03</span><p>Dor neuropática na face interna da coxa após Lichtenstein. Nervo?</p><details><summary>ver resposta</summary><div>Ilioinguinal: a via aberta abre o canal onde ele corre.</div></details></div>
+    <div class="q"><span class="tag">03</span><p>A mesma dor, mas após TAPP. Nervo?</p><details><summary>ver resposta</summary><div>Ramo femoral do genitofemoral (triângulo da dor).</div></details></div>
+    <div class="q"><span class="tag">03</span><p>Reparo sem tela com mais recidiva, e o melhor deles?</p><details><summary>ver resposta</summary><div>Bassini; Shouldice.</div></details></div>
+  </div>
+</section>
+</div>

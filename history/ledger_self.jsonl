@@ -1327,3 +1327,5 @@
 {"ts": "2026-10-06T03:24:54+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "3e301a5a22a2", "alvo": "card#1721", "payload": {"padrao": "duplo-ask/conectivo", "tema": "Transtornos Alimentares"}}
 {"ts": "2026-10-06T03:24:54+00:00", "event": "opened", "check": "card_atomicidade", "fingerprint": "9141fb001b89", "alvo": "card#1727", "payload": {"padrao": "duplo-ask/conectivo", "tema": "Testes Diagnósticos"}}
 {"ts": "2026-10-06T03:24:55+00:00", "event": "opened", "check": "history_integrity", "fingerprint": "bc3d76ddc7d4", "alvo": "session_216.md", "payload": {"detalhe": "header fora do template (esperado '# Session NNN -- ...'); campo `Ferramenta:` ausente (o swap test depende dele)"}}
+{"ts": "2026-10-06T03:36:33+00:00", "event": "resolved", "check": "history_integrity", "fingerprint": "bc3d76ddc7d4", "alvo": "session_216.md"}
+{"ts": "2026-10-06T09:52:53+00:00", "event": "opened", "check": "history_integrity", "fingerprint": "181cf3adee78", "alvo": "session_217.md", "payload": {"detalhe": "header fora do template (esperado '# Session NNN -- ...')"}}

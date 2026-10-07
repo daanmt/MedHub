@@ -134,6 +134,26 @@
       "tipo": "revisao",
       "titulo": "Hérnias da parede abdominal (lista t49)",
       "bloco": "CIR"
+    },
+    "rd-cir-0610": {
+      "tipo": "revisao",
+      "titulo": "Cirurgia de 06/10: via biliar, plastrão e hérnia",
+      "bloco": "CIR"
+    },
+    "rd-go-0610": {
+      "tipo": "revisao",
+      "titulo": "Obstetrícia de 06/10: pré-eclâmpsia",
+      "bloco": "GO"
+    },
+    "rd-ped-0610": {
+      "tipo": "revisao",
+      "titulo": "Pediatria de 06/10: tiflite, febre no lactente e coreia",
+      "bloco": "PED"
+    },
+    "rd-cm-0610": {
+      "tipo": "revisao",
+      "titulo": "Clínica Médica de 06/10: laboratório, imune, via aérea e NCC",
+      "bloco": "CM"
     }
   }
 }

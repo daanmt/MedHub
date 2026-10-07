@@ -249,6 +249,34 @@ def test_exportar_nao_reenvia_spoiler_uerj_de_lista_do_emed(tmp_path, monkeypatc
     assert (out / "questoes" / "t1794_1.json").is_file()
 
 
+def test_contagem_no_hub_por_tarefa_e_a_do_exportar(tmp_path, monkeypatch, capsys):
+    """P20 (s219): a Teoria e o Painel contam as questoes da tarefa pelo MESMO criterio do `--exportar`
+    (o que a aba Listas recebe): o spoiler UERJ 2022-2026 de lista do EMED fica fora; a prova em PDF
+    conta inteira. Uma regra so (`fora_do_hub`), usada pelos dois."""
+    _usar_db(tmp_path, monkeypatch)
+    assert emed_banco.questoes_no_hub_por_tarefa() == {}, "banco sem a tabela = nada no hub"
+    base = tmp_path / "buf"
+    hupe = "RJ - Universidade do Estado do Rio de Janeiro - UERJ (Hospital Universitário Pedro Ernesto - HUPE)"
+    _escrever(base, "questoes", "t26_1", _questao(1))
+    _escrever(base, "questoes", "t26_2", _questao(2, banca=f"{hupe}, 2022", executor="emed_api"))
+    _escrever(base, "questoes", "t26_3", _questao(3, banca=f"{hupe}, 2019", executor="emed_api"))
+    _escrever(base, "questoes", "t1794_1", _questao(1, lista="t1794", tarefa=1794, banca="UERJ 2022",
+                                                     executor="prova_pdf"))
+    _escrever(base, "questoes", "t1794_2", _questao(2, lista="t1794", tarefa=1794, banca="UERJ 2022",
+                                                     executor="prova_pdf"))
+    _escrever(base, "questoes", "t30_1", _questao(1, lista="t30", tarefa=30, banca=f"{hupe}, 2023",
+                                                   executor="emed_api"))
+    assert emed_banco.main(["--ingerir", str(base), "--apply"]) == 0
+    capsys.readouterr()
+    assert emed_banco.questoes_no_hub_por_tarefa() == {26: 2, 1794: 2}, "so spoiler = fora do hub"
+    out = tmp_path / "exp"
+    assert emed_banco.main(["--exportar", "t26", "--out", str(out)]) == 0
+    assert json.loads((out / "listas" / "t26.json").read_text(encoding="utf-8"))["q"] == 2
+    assert emed_banco.fora_do_hub({"banca": f"{hupe}, 2022", "executor": "emed_api"})
+    assert not emed_banco.fora_do_hub({"banca": "UERJ 2022", "executor": "prova_pdf"})
+    assert "fora_do_hub(" in Path(emed_banco.__file__).read_text(encoding="utf-8").split("def cmd_exportar", 1)[1]
+
+
 def test_erros_status_e_leitura_sem_tabela(tmp_path, monkeypatch, capsys):
     """`--status`/`--erros` em banco vazio não quebram; com dados, erro+chute aparecem."""
     caminho = _usar_db(tmp_path, monkeypatch)

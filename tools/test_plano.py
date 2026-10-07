@@ -598,6 +598,24 @@ def test_concluir_leitura_so_para_tarefa_de_aula(tmp_path, monkeypatch):
     assert db.plano_obter(lista["id"])["status"] == "pendente"
 
 
+def test_concluir_leitura_recusa_aula_com_questoes_no_hub(tmp_path, monkeypatch):
+    """Regressao da s219: as tarefas de aula #875 e #1797 ganharam caderno no hub (15 e 20 questoes
+    em `emed_questoes`) sem link nem `q_previstas`. Assinar a aula levaria o tique a conclui-las por
+    leitura com a lista aberta -- leitura nao substitui o bloco, venha a questao do link ou do banco."""
+    import sqlite3
+    caminho, idx = _semeado(tmp_path, monkeypatch)
+    aula = idx[("extensivo", 21, 2)]
+    conn = sqlite3.connect(caminho)
+    conn.execute("UPDATE plano_tarefas SET url_lista=NULL, q_previstas=0 WHERE id=?", (aula["id"],))
+    conn.commit(); conn.close()
+    monkeypatch.setattr(plano, "questoes_no_hub", lambda: {int(aula["id"]): 15})
+    saida = []
+    code, res = plano.concluir_leitura(aula["id"], out=saida.append)
+    assert code == 2 and res is None
+    assert "15 questoes no hub" in "\n".join(saida)
+    assert db.plano_obter(aula["id"])["status"] == "pendente"
+
+
 def test_concluir_recusa_data_malformada(tmp_path, monkeypatch):
     caminho, idx = _semeado(tmp_path, monkeypatch)
     ids = _criar_sessoes_bulk(caminho)
@@ -1327,3 +1345,90 @@ def test_cli_mover_le_a_trilha_do_disco(tmp_path, monkeypatch, capsys):
     alvo = idx[("rf", 17, 2)]
     assert plano.main(["--mover", str(alvo["id"]), "--semana", "3"]) == 2
     assert "RECUSADO" in capsys.readouterr().out
+
+
+# =====================================================================================
+# P20 (s219, print do operador em 07/10): a tarefa na TELA -- uma regra so para a Teoria e o Painel
+# =====================================================================================
+
+#: Formas sem acento que a semeadura do custom deixava passar (F113). Lista curta e de palavra
+#: inteira: o `tema` custom e o titulo que aparece na Teoria, no Painel e na aba Listas.
+SEM_ACENTO = ("prevencao", "quaternaria", "avaliacao", "raciocinio", "diagnostico", "metodo",
+              "clinico", "decisao", "polifarmacia", "desprescricao", "cronica", "cronicas",
+              "criterios", "crianca", "familia", "condicoes", "termometro", "instituicao",
+              "fibrilacao", "pre")
+
+
+def test_tema_custom_tem_acento_e_cedilha():
+    """F113 na semeadura: 'Prevencao Quaternaria', 'criterios', 'crianca' iam para a tela assim. A
+    trava e na FONTE (`plano_custom.json`); id, ordem e o padrao da prova UERJ inteira nao mudam."""
+    import re
+    custom = json.loads(Path(plano.P_CUSTOM).read_text(encoding="utf-8"))["tarefas"]
+    for t in custom:
+        palavras = set(re.findall(r"[a-zA-ZÀ-ÿ]+", t["tema"].lower()))
+        assert not palavras & set(SEM_ACENTO), (t["tarefa_fonte"], t["tema"])
+        assert not re.search(r"[a-z](cao|coes)\b", t["tema"].lower()), (t["tarefa_fonte"], t["tema"])
+    assert [t["tarefa_fonte"] for t in custom] == list(range(1, len(custom) + 1)), "ids e ordem intactos"
+    temas = {t["tarefa_fonte"]: t["tema"] for t in custom}
+    assert temas[1] == "Prevenção Quaternária e sobrediagnóstico"
+    assert temas[7] == "Rastreamento: critérios e programas BR"
+    assert all(re.match(r"^UERJ \d{4} -- prova INTEIRA", temas[n]) for n in (16, 17, 18, 19, 23, 24)), \
+        "o gerador da trilha casa a prova inteira por este padrao"
+
+
+def test_q_da_tarefa_e_a_contagem_do_banco_quando_ha_questoes_la():
+    """s219: 26 tarefas ganharam caderno no hub com `q_previstas` 0 (ou 20/60): a Teoria e o Painel
+    contavam menos que a aba Listas. A tela conta o banco quando a tarefa tem questoes la."""
+    assert plano.q_da_tarefa({"q_previstas": 0.0, "q_hub": 20}) == 20
+    assert plano.q_da_tarefa({"q_previstas": 50.0, "q_hub": 45}) == 45, "o banco vence o previsto"
+    assert plano.q_da_tarefa({"q_previstas": 31.1}) == 31
+    assert plano.q_da_tarefa({"q_previstas": None, "q_hub": None}) == 0
+    linhas = [{"id": 530, "q_previstas": 0.0}, {"id": 19, "q_previstas": 42.0}, {"id": None}]
+    saida = plano.com_q_hub(linhas, {530: 20, 19: 40, 999: 7})
+    assert [l.get("q_hub") for l in saida] == [20, 40, None]
+    assert "q_hub" not in linhas[0], "PURA: nao muta a linha de entrada"
+    assert plano.com_q_hub(linhas, {530: 0})[0].get("q_hub") is None, "zero no banco = sem banco"
+
+
+def test_panorama_conta_o_banco_e_o_boot_e_o_painel_leem_o_mesmo(tmp_path, monkeypatch, capsys):
+    """O `plano.py --panorama` (o boot) le as linhas COM a contagem do banco -- o mesmo numero do
+    Painel e da Teoria (P20)."""
+    linhas = [_linha_pan(1, 2, url_lista=None, q_previstas=0, fonte="extensivo"),
+              _linha_pan(2, 2, q_previstas=50), _linha_pan(3, 3, q_previstas=10)]
+    p = plano.panorama(plano.com_q_hub(linhas, {1: 20, 2: 45}), CAL_PANORAMA, date(2026, 9, 22))
+    assert p["q_abertas"] == 65 and [t["q"] for t in p["abertas"]] == [20, 45]
+    assert p["proxima"]["q"] == 10 and p["fase1"]["q"] == 75
+    monkeypatch.setattr(db, "plano_listar", lambda *a, **k: [dict(l) for l in linhas])
+    monkeypatch.setattr(plano, "questoes_no_hub", lambda: {1: 20, 2: 45})
+    monkeypatch.setattr(plano, "calendario_trilha", lambda trilha=None: dict(CAL_PANORAMA))
+    monkeypatch.setattr(db, "hoje", lambda: date(2026, 9, 22))
+    assert plano.main(["--panorama", "--json"]) == 0
+    assert json.loads(capsys.readouterr().out)["q_abertas"] == 65
+
+
+def test_meta_da_tarefa_uma_regra_questoes_aula_e_classe_por_ultimo():
+    """P20: a linha de meta misturava classe e contagem ('sem lista' x 'aula' x '33 questões'). Uma
+    regra so: N questoes quando ha questoes; o rotulo da classe so sem acao nenhuma (sem questoes no
+    hub, sem lista e sem aula) -- e entao em texto apagado, nunca no lugar de um link."""
+    assert plano.meta_da_tarefa(33, "lista", True) == ["33 questões"]
+    assert plano.meta_da_tarefa(1, "caderno", True) == ["1 questão"]
+    assert plano.meta_da_tarefa(0, "aula", True) == [], "a aula ligada e a acao: a meta nao diz 'aula'"
+    assert plano.meta_da_tarefa(0, "aula", False) == ["aula a preparar"]
+    assert plano.meta_da_tarefa(0, "sem_lista", False) == ["sem lista ainda"]
+    assert plano.meta_da_tarefa(43, "caderno", False) == ["43 questões", "caderno a montar"]
+    assert set(plano.ROTULO_SEM_ACAO) == {"aula", "caderno", "sem_lista"}
+    assert plano.tem_acao({"no_hub": True}) and plano.tem_acao({"url_lista": "x.pdf"})
+    assert plano.tem_acao({"aulas": [("a", "t")]}) and not plano.tem_acao({"aulas": [], "url_lista": None})
+
+
+def test_tema_exibido_junta_o_hifen_quebrado_e_troca_o_pipe():
+    """P20: o titulo herdado do EMED vinha com ' | ' e a palavra composta quebrada pelo PDF
+    ('Resposta Endócrino- | Metabólica-Inflamatória ao Trauma | Cicatrização de Feridas'). Na
+    EXIBICAO: hifen colado antes do separador junta; os demais ' | ' viram ' · '. O banco nao muda."""
+    t = "Resposta Endócrino- | Metabólica-Inflamatória ao Trauma | Cicatrização de Feridas"
+    assert plano.tema_exibido(t) == "Resposta Endócrino-Metabólica-Inflamatória ao Trauma · Cicatrização de Feridas"
+    assert plano.tema_exibido("Arboviroses | HIV | Tuberculose") == "Arboviroses · HIV · Tuberculose"
+    assert plano.tema_exibido("Endocardite Bacteriana - Endocardite Infecciosa") == \
+        "Endocardite Bacteriana - Endocardite Infecciosa", "hifen solto (com espaco) nao e quebra"
+    assert plano.tema_exibido("A |B") == "A · B" and plano.tema_exibido("| A |") == "A"
+    assert plano.tema_exibido(None) == "" and plano.tema_exibido("Pré-Natal; Parto") == "Pré-Natal; Parto"

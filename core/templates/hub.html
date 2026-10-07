@@ -56,7 +56,7 @@
 .hub-vazio{color:var(--tinta3);margin:0}
 
 /* Quadro por semanas (s195): uma secao por semana, empilhadas; cada tarefa e um bloco com o peso,
-   as questoes e a acao; "feito" (so na aula que cumpre uma tarefa de aula) risca e recolhe */
+   as questoes e a acao. P20 (s219): sem o quadrado "feito" -- a assinatura da leitura risca e recolhe */
 .qd-semanas{display:grid;gap:26px}
 .qd-sem{min-width:0}
 .qd-titulo{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;margin:0 0 10px;font-size:.95rem;font-weight:650;color:var(--tinta2)}
@@ -65,7 +65,6 @@
 .qd-vazio{color:var(--tinta3);font-size:.88em;margin:0;padding:12px 0}
 .qd-item{min-width:0}
 .qd-bloco{position:relative;min-width:0;padding:12px 14px;background:var(--card);border:1px solid var(--linha);border-radius:12px}
-.qd-item[data-slug] .qd-bloco{padding-right:66px}   /* lugar do botao "feito", dentro do bloco */
 .qd-prazo{color:var(--tinta2)}
 .qd-item.qd-atrasada .qd-bloco{border-left:4px solid var(--alerta)}
 .qd-tema{min-width:0;margin:0;font-weight:600;line-height:1.35}
@@ -78,18 +77,6 @@
 .qd-acao a{color:var(--acento);font-weight:600;text-underline-offset:2px}
 .qd-acao a:focus-visible{outline:3px solid var(--acento);outline-offset:2px;border-radius:4px}
 .qd-acao .tenue{color:var(--tinta3)}
-.qd-feito{
-  position:absolute;top:10px;right:10px;   /* dentro do bloco (s195) */
-  width:44px;height:44px;padding:0;display:grid;place-items:center;
-  border:2px solid var(--linha);border-radius:10px;background:var(--card);cursor:pointer;
-}
-.qd-feito span{width:12px;height:20px;margin-top:-4px;border:solid transparent;border-width:0 3px 3px 0;transform:rotate(45deg)}
-.qd-feito:hover:not([disabled]){border-color:var(--acento)}
-.qd-feito:hover:not([disabled]) span{border-color:var(--acento-fraco)}
-.qd-feito[aria-pressed="true"]{background:var(--acento);border-color:var(--acento)}
-.qd-feito[aria-pressed="true"] span{border-color:var(--papel)}
-.qd-feito[disabled]{cursor:not-allowed;opacity:.5}
-.qd-feito:focus-visible{outline:3px solid var(--acento);outline-offset:3px}
 .qd-item[data-feito] .qd-bloco{background:transparent}
 .qd-item[data-feito] .qd-tema{text-decoration:line-through;text-decoration-thickness:2px;color:var(--tinta3)}
 .qd-item.qd-chegou .qd-bloco{animation:qd-chegou 700ms ease-out}
@@ -1610,14 +1597,15 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
 
   // --------------------------------------------------------------- quadro
   // O estado "feito" mora no db, em quadro/<slug> = {feito, ts} (regra de escrita "quadro" na
-  // declaracao do publish). Sem db, o controle fica desabilitado com uma frase curta.
+  // declaracao do publish). P20 (s219): quem o grava e a ASSINATURA da leitura (`quadroMarcarFeito`);
+  // o quadrado que so a tarefa de classe aula tinha saiu. Sem db, nada a marcar e nada a avisar.
   var qd = $("hub-quadro");
   // s214: a assinatura do leitor conclui o item do quadro; sem quadro (ou sem banco), nao faz nada
   var quadroMarcarFeito = function(){ return Promise.resolve(false); };
   if(qd){ iniciarQuadro(); try{ secoesQuadro(qd); }catch(e){} }
 
   function iniciarQuadro(){
-    // so os itens com controle "feito" (data-slug): tarefa de lista nao tem botao
+    // os itens com a chave do quadro (data-slug): a aula que cumpre uma tarefa de aula, a avulsa, a RD
     var itens = Array.prototype.slice.call(qd.querySelectorAll(".qd-item[data-slug]"));
     // s217 (P17, pedido do operador em 06/10): a Biblioteca guarda os itens em grupos por grande area; a
     // ordem e os rotulos vem do build (`data-areas`, um dono so: o hub.py)
@@ -1749,15 +1737,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
     }
 
     function aplicar(li, feito){
-      var titulo = li.getAttribute("data-titulo") || "";
-      var botao = li.querySelector(".qd-feito");
-      var rotulo = feito ? "Desmarcar " + titulo : "Marcar " + titulo + " como feita";
       if(feito){ li.setAttribute("data-feito", "1"); } else { li.removeAttribute("data-feito"); }
-      if(botao){   // tarefa de lista (s214) se move sem botao
-        botao.setAttribute("aria-pressed", feito ? "true" : "false");
-        botao.setAttribute("aria-label", rotulo);
-        botao.setAttribute("title", rotulo);
-      }
       etiquetaNova(li, feito);
       // s218: o que MORA na Biblioteca (a RD, a aula avulsa) fica na sua disciplina e so reordena
       var mora = li.getAttribute("data-secao") === "biblioteca" && li.parentNode;
@@ -1779,11 +1759,8 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
       recontar();
     }
 
-    function semArmazenamento(){
-      colecao = null;
-      $("hub-quadro-aviso").hidden = false;
-      itens.forEach(function(li){ li.querySelector(".qd-feito").disabled = true; });
-    }
+    // P20: sem db nao ha o que marcar (a assinatura tambem nao grava) -- e nenhum controle a desabilitar
+    function semArmazenamento(){ colecao = null; }
 
     // s218: a RD de varias disciplinas sai uma vez em cada; o feito vale para todas as copias
     function copias(li){ var s = li.getAttribute("data-slug"); return itens.filter(function(x){ return x.getAttribute("data-slug") === s; }); }
@@ -1799,12 +1776,6 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
           return false;
         });
     }
-
-    itens.forEach(function(li){
-      li.querySelector(".qd-feito").addEventListener("click", function(){
-        if(colecao){ gravar(li, !li.hasAttribute("data-feito")); }
-      });
-    });
 
     // s214: so marca (assinar nunca desmarca) e item ja feito nao e regravado
     quadroMarcarFeito = function(slug){
@@ -1823,7 +1794,6 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
         if(!db){ semArmazenamento(); return; }
         try{ marcarListasEm(qd, db, aplicarLista); }catch(e){}
         colecao = db.collection("quadro");
-        itens.forEach(function(li){ li.querySelector(".qd-feito").disabled = false; });
         colecao.onSnapshot(function(snap){
           var feito = {};
           (snap.docs || []).forEach(function(d){
@@ -1914,8 +1884,14 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
   // como no quadro de Aulas; semana anterior a de hoje = Atrasadas; resolvidas recolhidas no fim.
   var QZ_SEM = (function(){ try{ return JSON.parse(($("hub-semanas") || {}).textContent || "{}") || {}; }catch(e){ return {}; } })();
   var HUB_LIGACOES = (function(){ try{ return JSON.parse(($("hub-ligacoes") || {}).textContent || "{}") || {}; }catch(e){ return {}; } })();
+  // P20 (s219): o titulo herdado do EMED ('Endócrino- | Metabólica ... | Cicatrização') como a Teoria e o
+  // Painel o mostram -- hifen colado antes do ' | ' junta; os demais ' | ' viram ' · '. Paridade com
+  // `plano.tema_exibido` presa por teste; o doc no banco nao muda. PURA.
+  function temaExibido(t){
+    return String(t == null ? "" : t).replace(/(\S)-\s*\|\s*/g, "$1-").replace(/\s*\|\s*/g, " · ").replace(/^[ ·]+|[ ·]+$/g, "");
+  }
   function qzItemLista(l, atrasada){ var s = l.status || "capturada";
-    return '<li' + (QZ.recente && l._id === QZ.recente ? ' class="qz-recente"' : '') + '><button type="button" data-qzl="' + qzEsc(l._id) + '"><p class="qz-tema">' + qzEsc(l.tema) + '</p><span class="qz-chip ' + qzEsc(s) + '">' + qzEsc(ROT_QZ[s] || s) + '</span><p class="qz-meta"><span>' + qzEsc(l.area || "") + '</span><span>' + qzEsc(Math.round(l.q || l.q_previstas || 0)) + ' questões</span>' + (atrasada ? '<span class="qd-atraso">semana ' + qzEsc(l.semana) + '</span>' : '') + '</p></button>' + qzAulasHtml(l) + '</li>'; }
+    return '<li' + (QZ.recente && l._id === QZ.recente ? ' class="qz-recente"' : '') + '><button type="button" data-qzl="' + qzEsc(l._id) + '"><p class="qz-tema">' + qzEsc(temaExibido(l.tema)) + '</p><span class="qz-chip ' + qzEsc(s) + '">' + qzEsc(ROT_QZ[s] || s) + '</span><p class="qz-meta"><span>' + qzEsc(l.area || "") + '</span><span>' + qzEsc(Math.round(l.q || l.q_previstas || 0)) + ' questões</span>' + (atrasada ? '<span class="qd-atraso">semana ' + qzEsc(l.semana) + '</span>' : '') + '</p></button>' + qzAulasHtml(l) + '</li>'; }
   // s216 (part-2, pedido do operador em 05/10): a aula que prepara a tarefa da lista, IRMA do botao (um <a>
   // dentro de <button> e HTML invalido e roubaria o toque); do #hub-ligacoes pelo campo `tarefa` (sem ele,
   // o t<N> do id). Uma aula = "abrir aula"; varias = o titulo de cada, como na Teoria.
@@ -2012,7 +1988,7 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
     QZ.lista = id; QZ.qs = []; QZ.resp = qzLs(qzChave()) || {}; QZ.ana = {}; QZ.pos = -1; QZ.revendo = false; QZ.modoLista = "";
     QZ.grifos = qzLs("medhub.grifos." + id) || {};
     var l = QZ.listas.filter(function(x){ return x._id === id; })[0] || {};
-    $("qz-tema").textContent = (l.tema || id) + (l.area ? " · " + l.area : "");
+    $("qz-tema").textContent = (temaExibido(l.tema) || id) + (l.area ? " · " + l.area : "");
     $("qz-escolha").hidden = true; $("qz-player").hidden = false;
     $("qz-aviso-lista").hidden = true; $("qz-questao").hidden = true; $("qz-fim").hidden = true;
     $("qz-modo-escolha").hidden = true; $("qz-modo-lista").hidden = true; $("qz-trilho").innerHTML = "";

@@ -1,0 +1,492 @@
+<title>Anemias Macrocíticas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,480;9..144,600;9..144,680&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EFF3F0; --card:#FAFCFA; --sunk:#E2E9E4;
+  --ink:#18211C; --ink2:#4C5A52; --ink3:#6F7D75;
+  --line:rgba(24,33,28,.13); --line2:rgba(24,33,28,.26);
+  --teal:#1F6B5E; --teal-ink:#154A41; --teal-wash:#DCEBE5;
+  --carmine:#8E2F41; --carmine-ink:#6B2231; --carmine-wash:#F5E2E6;
+  --amber:#8A5A17; --amber-ink:#6B4610; --amber-wash:#F3E6CC;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#8A988F;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#8A988F;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font:16px/1.6 "Source Sans 3",-apple-system,"Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+h1,h2,h3{margin:0;font-family:Fraunces,Georgia,serif;font-weight:600;letter-spacing:-.01em;text-wrap:balance;line-height:1.15;color:var(--ink)}
+.wrap{max-width:780px;margin:0 auto;padding:0 16px 70px}
+:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+a{color:var(--teal-ink)}
+strong{font-weight:600;color:var(--ink)}
+
+/* topo */
+.top{padding:36px 0 22px;border-bottom:1px solid var(--line2)}
+.eye{font:600 11px/1.3 "Source Sans 3";letter-spacing:.12em;text-transform:uppercase;color:var(--teal-ink);margin:0 0 14px}
+.top h1{font-size:clamp(28px,6vw,44px);font-weight:680;margin-bottom:14px}
+.top .sub{font-size:16.5px;line-height:1.55;color:var(--ink2);margin:0 0 20px}
+.stats{display:flex;gap:18px;flex-wrap:wrap}
+.stat{display:flex;flex-direction:column;gap:2px;min-width:0}
+.stat b{font:600 21px/1 "IBM Plex Mono";color:var(--teal-ink);font-variant-numeric:tabular-nums}
+.stat span{font-size:11.5px;color:var(--ink3)}
+
+.nav{display:flex;flex-wrap:wrap;gap:6px;padding:20px 0 4px}
+.nav a{font-size:13px;text-decoration:none;color:var(--ink2);border:1px solid var(--line2);border-radius:2px;padding:4px 9px;min-width:0}
+.nav a:hover{color:var(--ink);border-color:var(--teal)}
+
+/* atos */
+.ato{margin:40px 0 0;padding:14px 16px;background:var(--teal-wash);border-left:3px solid var(--teal)}
+.ato span{font:700 10.5px "Source Sans 3";letter-spacing:.12em;text-transform:uppercase;color:var(--teal-ink);display:block;margin-bottom:3px}
+.ato h2{font-size:clamp(21px,4vw,28px)}
+
+/* degraus */
+.degrau{padding:30px 0;border-bottom:1px solid var(--line)}
+.dhead{display:flex;gap:13px;align-items:flex-start;margin-bottom:12px}
+.dnum{flex-shrink:0;width:38px;height:38px;border:1.5px solid var(--teal);border-radius:50%;display:flex;align-items:center;justify-content:center;font:600 14px "IBM Plex Mono";color:var(--teal-ink)}
+.dtitle{min-width:0;padding-top:3px}
+.dtitle h3{font-size:clamp(19px,3.4vw,24px)}
+.src{display:block;margin-top:5px;font:500 11.5px/1.4 "IBM Plex Mono";color:var(--ink3)}
+.lede{font-size:16px;line-height:1.55;color:var(--ink2);margin:0 0 14px;font-style:italic}
+.prose ul{margin:0 0 12px;padding-left:20px}
+.prose li{font-size:15.4px;line-height:1.55;color:var(--ink2);margin-bottom:6px}
+.prose li:last-child{margin-bottom:0}
+h4{font:600 14px "Source Sans 3";color:var(--ink);margin:20px 0 8px}
+.ff{display:inline-block;font:600 10.5px/1.5 "Source Sans 3";color:var(--amber-ink);border:1px solid var(--amber);border-radius:2px;padding:0 4px;vertical-align:1px}
+
+.trap,.banca{margin:16px 0;padding:13px 16px}
+.trap{border-left:3px solid var(--carmine);background:var(--carmine-wash)}
+.banca{border-left:3px solid var(--amber);background:var(--amber-wash)}
+.albl{font:700 10.5px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px}
+.trap .albl{color:var(--carmine-ink)}
+.banca .albl{color:var(--amber-ink)}
+.trap p,.banca p{font-size:15px;line-height:1.55;color:var(--ink);margin:0}
+
+/* lado a lado */
+.vs{display:grid;grid-template-columns:minmax(0,1fr);gap:1px;background:var(--line2);border:1px solid var(--line2);margin:16px 0}
+.vs>div{background:var(--card);padding:12px 14px;min-width:0}
+.vs h5{font:700 12px "Source Sans 3";letter-spacing:.04em;text-transform:uppercase;margin:0 0 6px}
+.vs .a h5{color:var(--carmine-ink)}
+.vs .b h5{color:var(--teal-ink)}
+.vs ul{margin:0;padding-left:17px}
+.vs li{font-size:14.4px;line-height:1.5;color:var(--ink2);margin-bottom:4px;overflow-wrap:break-word}
+
+/* tabelas de critério */
+.crit{border:1px solid var(--line2);margin:16px 0;background:var(--card)}
+.crit .row{display:grid;grid-template-columns:minmax(0,1fr);gap:2px;padding:9px 13px;font-size:14.2px}
+.crit .row+.row{border-top:1px solid var(--line)}
+.crit .row>*{min-width:0}
+.crit .k{font-weight:600;color:var(--teal-ink)}
+.crit .v{color:var(--ink2);line-height:1.48;overflow-wrap:break-word}
+.crit.hd .row:first-child{background:var(--sunk)}
+.crit.hd .row:first-child>*{font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink3);font-weight:600}
+.crit.c3 .row{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:4px 12px}
+.crit.c3 .row .k{grid-column:1 / -1}
+.crit.c3.hd .row:first-child .k{display:none}
+.mal{color:var(--carmine-ink);font-weight:600}
+
+/* grade de diferenciais: fichas no celular, tabela em tela larga */
+.grade{border:1px solid var(--line2);margin:16px 0;background:var(--card)}
+.grade .gr{display:grid;grid-template-columns:minmax(0,1fr);gap:3px;padding:10px 13px}
+.grade .gr+.gr{border-top:1px solid var(--line)}
+.grade .gr>*{min-width:0;overflow-wrap:break-word}
+.grade .gh{display:none}
+.grade .gk{font-weight:600;font-size:14.8px;color:var(--teal-ink);line-height:1.35}
+.grade .gc{font-size:14px;line-height:1.45;color:var(--ink2)}
+.grade .gc[data-l]::before{content:attr(data-l) ": ";font-weight:600;color:var(--ink3);font-size:12.5px}
+.grade .gr.hot .gk{color:var(--carmine-ink)}
+
+/* blocos de número */
+.ext{display:grid;grid-template-columns:minmax(0,1fr);gap:1px;background:var(--line2);border:1px solid var(--line2);margin:16px 0}
+.ext>div{background:var(--card);padding:13px 14px;min-width:0}
+.ext .fv{display:block;font:600 17px/1.25 Fraunces,Georgia,serif;color:var(--teal-ink);margin-bottom:5px}
+.ext .tot .fv{color:var(--carmine-ink)}
+.ext .fk{font-size:14px;line-height:1.48;color:var(--ink2)}
+
+/* passos em sequência */
+ol.passo{list-style:none;margin:16px 0;padding:0;border:1px solid var(--line2);background:var(--card);counter-reset:p}
+ol.passo li{counter-increment:p;display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;padding:10px 13px;font-size:14.4px;line-height:1.48;color:var(--ink2)}
+ol.passo li+li{border-top:1px solid var(--line)}
+ol.passo li::before{content:counter(p);width:26px;height:26px;border-radius:50%;border:1.5px solid var(--teal);display:flex;align-items:center;justify-content:center;font:600 12px "IBM Plex Mono";color:var(--teal-ink)}
+ol.passo li>span{min-width:0;overflow-wrap:break-word}
+
+/* referência recolhida */
+details.ref{margin:16px 0;border:1px solid var(--line2);background:var(--card)}
+details.ref>summary{cursor:pointer;list-style:none;padding:12px 16px;font:600 13.5px "Source Sans 3";color:var(--teal-ink);display:flex;align-items:center;gap:9px}
+details.ref>summary::-webkit-details-marker{display:none}
+details.ref>summary::before{content:"+";font:600 15px "IBM Plex Mono";width:16px;flex-shrink:0}
+details.ref[open]>summary::before{content:"-"}
+details.ref .refbody{padding:0 16px 14px}
+details.ref .refbody ul{margin:0;padding-left:18px}
+details.ref .refbody li{font-size:14.2px;line-height:1.5;color:var(--ink2);margin-bottom:5px}
+
+/* síntese */
+.synth{background:var(--card);border:1px solid var(--line2);padding:20px 16px;margin-top:40px}
+.synth h2{font-size:23px;margin-bottom:6px}
+.synth .note{font-size:14px;color:var(--ink3);margin:0 0 14px}
+.trig{display:grid;grid-template-columns:minmax(0,1fr);gap:1px;background:var(--line2);border:1px solid var(--line2)}
+.trig div{background:var(--sunk);padding:10px 13px;min-width:0}
+.trig .tk{font:700 11px "IBM Plex Mono";color:var(--teal-ink);display:block;margin-bottom:3px}
+.trig .tv{font-size:13.8px;line-height:1.45;color:var(--ink2)}
+.trig .tv b{color:var(--carmine-ink)}
+.synth.arm{border-left:3px solid var(--carmine)}
+.synth.arm h2::before{content:"";display:inline-block;width:11px;height:11px;border-radius:50%;background:var(--carmine);margin-right:9px;vertical-align:2px}
+ol.armas{margin:0;padding-left:22px}
+ol.armas li{font-size:15px;line-height:1.5;color:var(--ink2);margin-bottom:8px}
+ol.armas li::marker{font:600 13px "IBM Plex Mono";color:var(--carmine-ink)}
+ol.armas .d{font:500 11.5px "IBM Plex Mono";color:var(--ink3)}
+
+footer{margin-top:46px;padding-top:18px;border-top:1px solid var(--line2)}
+footer p{font-size:12.3px;color:var(--ink3);margin:0 0 7px;line-height:1.5}
+code{font-family:"IBM Plex Mono",Consolas,monospace;font-size:11.5px;background:var(--sunk);padding:1px 4px;border-radius:2px;word-break:break-all}
+
+/* telas maiores: o mesmo conteúdo ganha colunas */
+@media (min-width:560px){
+  .vs{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .crit .row{grid-template-columns:150px minmax(0,1fr);gap:12px}
+  .crit.c3 .row{grid-template-columns:130px minmax(0,1fr) minmax(0,1fr);gap:12px}
+  .crit.c3 .row .k{grid-column:auto}
+  .crit.c3.hd .row:first-child .k{display:block}
+  .trig{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (min-width:640px){
+  .wrap{padding:0 24px 90px}
+  .top{padding:46px 0 26px}
+  .degrau{padding:34px 0}
+  .ext{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .ext.e2{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .ext.e4{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .synth{padding:26px 22px}
+}
+@media (min-width:700px){
+  .grade .gr{grid-template-columns:var(--cols);gap:12px;align-items:start}
+  .grade .gh{display:grid;background:var(--sunk)}
+  .grade .gh>*{font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink3);font-weight:600}
+  .grade .gc[data-l]::before{content:none}
+}
+</style>
+<div class="wrap">
+<header class="top">
+  <p class="eye">MedHub · Aula-base · Clínica Médica · Hematologia · tarefa #811 (parte 1 de 2)</p>
+  <h1>Anemias macrocíticas: quando o núcleo não acompanha</h1>
+  <p class="sub">Hemácia grande nasce de um núcleo que atrasa. A megaloblástica responde por quase 8 em cada 10 questões do tema; o resto da prova mora em separar B12 de folato e em reconhecer a medula vazia.</p>
+  <div class="stats">
+    <div class="stat"><b>78%</b><span>das questões: megaloblástica</span></div>
+    <div class="stat"><b>&gt;100 fL</b><span>VCM que define</span></div>
+    <div class="stat"><b>4-6 anos</b><span>estoque de B12</span></div>
+    <div class="stat"><b>3-6 meses</b><span>estoque de folato</span></div>
+    <div class="stat"><b>13</b><span>degraus</span></div>
+  </div>
+</header>
+
+<nav class="nav" aria-label="Atalhos">
+  <a href="#d0">Régua</a><a href="#d1">Bioquímica</a><a href="#d2">Hemograma</a><a href="#d3">Neuro</a><a href="#d4">Diagnóstico</a>
+  <a href="#d5">Folato</a><a href="#d6">B12</a><a href="#d7">Perniciosa</a><a href="#d8">Tratamento</a>
+  <a href="#d9">Não megaloblásticas</a><a href="#d10">Aplásica</a><a href="#d12">Congênitas</a>
+  <a href="#gat">Gatilhos</a><a href="#arm">Armadilhas</a>
+</nav>
+
+<section class="degrau" id="d0">
+  <div class="dhead"><span class="dnum">0</span><div class="dtitle"><h3>A régua: VCM acima de 100 e um núcleo atrasado</h3><span class="src">Hemato/3 p3, 5; Hemato/5 p12, 15</span></div></div>
+  <p class="lede">Macrocitose é volume corpuscular médio (VCM) acima de 100 fL. Quase sempre o defeito é de maturação: o citoplasma cresce e o núcleo não acompanha.</p>
+  <div class="prose"><ul>
+    <li>Assincronismo núcleo-citoplasma: a célula divide menos vezes e sai grande.</li>
+    <li>Causa mais comum de <strong>macrocitose</strong> na população: <strong>etilismo</strong>. Pode haver macrocitose sem anemia.</li>
+    <li>Causa mais comum de <strong>anemia</strong> macrocítica não megaloblástica: hepatopatia crônica.</li>
+    <li>A mais cobrada: megaloblástica (78% das questões), seguida de longe pela aplásica (14%).</li>
+  </ul></div>
+  <div class="vs">
+    <div class="b"><h5>Reticulócito baixo: falha de produção</h5><ul>
+      <li>Megaloblástica (B12, folato).</li>
+      <li>Álcool e hepatopatia; hipotireoidismo.</li>
+      <li>Síndrome mielodisplásica (SMD); anemia aplásica.</li>
+      <li>Sideroblástica adquirida (álcool, SMD).</li></ul></div>
+    <div class="a"><h5>Reticulócito alto: medula respondendo</h5><ul>
+      <li>Hemólise ou sangramento agudo.</li>
+      <li>O reticulócito é maior que a hemácia madura: o excesso dele sobe o VCM.</li>
+      <li>Tema do livro de anemias hemolíticas.</li></ul></div>
+  </div>
+</section>
+
+<section class="degrau" id="d1">
+  <div class="dhead"><span class="dnum">1</span><div class="dtitle"><h3>Folato e B12 trabalham na mesma reação</h3><span class="src">Hemato/3 p6-8</span></div></div>
+  <p class="lede">Os dois nutrientes fabricam a base do DNA. A B12 tem ainda uma segunda reação, só dela, e é essa reação que explica o neurológico.</p>
+  <div class="prose"><ul>
+    <li>Folato da dieta vira tetraidrofolato (THF), a forma ativa, pela diidrofolato-redutase. O <strong>metotrexato</strong> bloqueia essa enzima.</li>
+    <li>O THF doa carbono para a pirimidina do DNA e sai como 5-metil-THF. Para voltar à ativa, precisa da <strong>B12</strong>, na reação que transforma homocisteína em metionina.</li>
+    <li>Sem B12, o folato fica "preso" na forma inativa: falta DNA mesmo com folato normal.</li>
+    <li>Reação exclusiva da B12: ácido metilmalônico -&gt; succinil-CoA, no metabolismo de ácidos graxos e da <strong>mielina</strong>.</li>
+  </ul></div>
+  <div class="grade" style="--cols:150px minmax(0,1fr) minmax(0,1fr)">
+    <div class="gr gh"><span>Marcador</span><span>Folato</span><span>Vitamina B12</span></div>
+    <div class="gr"><span class="gk">Onde absorve</span><span class="gc" data-l="Folato">Duodeno e jejuno proximal</span><span class="gc" data-l="B12">Íleo terminal, ligada ao fator intrínseco</span></div>
+    <div class="gr"><span class="gk">Fonte</span><span class="gc" data-l="Folato">Folhas verdes, ovo, leite ("FOLHAto")</span><span class="gc" data-l="B12">Proteína animal: carne, leite, ovo</span></div>
+    <div class="gr"><span class="gk">Estoque</span><span class="gc" data-l="Folato">3 a 6 meses</span><span class="gc" data-l="B12">4 a 6 anos (fígado)</span></div>
+    <div class="gr"><span class="gk">Homocisteína</span><span class="gc" data-l="Folato">Alta</span><span class="gc" data-l="B12">Alta</span></div>
+    <div class="gr hot"><span class="gk">Ácido metilmalônico</span><span class="gc" data-l="Folato">Normal</span><span class="gc" data-l="B12"><strong>Alto</strong></span></div>
+    <div class="gr hot"><span class="gk">Neurológico</span><span class="gc" data-l="Folato">Não</span><span class="gc" data-l="B12"><strong>Sim</strong>: desmielinização</span></div>
+  </div>
+</section>
+
+<section class="degrau" id="d2">
+  <div class="dhead"><span class="dnum">2</span><div class="dtitle"><h3>Da medula ao hemograma: eritropoiese ineficaz</h3><span class="src">Hemato/3 p8-9, 14-15; resumo §1-2</span></div></div>
+  <p class="lede">O megaloblasto morre dentro da medula. Por isso o laboratório imita hemólise, mas com reticulócito baixo.</p>
+  <div class="prose"><ul>
+    <li>Megaloblasto: precursor de citoplasma grande e núcleo imaturo, de cromatina frouxa.</li>
+    <li>A maioria sofre <strong>apoptose na própria medula</strong>: libera desidrogenase lática (LDH) e bilirrubina indireta.</li>
+    <li>Falta DNA para todas as linhagens: <strong>pancitopenia</strong> é comum. A eritroide sofre mais.</li>
+    <li>Os poucos que amadurecem saem como <strong>macro-ovalócitos</strong>; VCM pode chegar a 150 fL.</li>
+  </ul></div>
+  <div class="crit">
+    <div class="row"><span class="k">VCM</span><span class="v">Acima de 100 fL; macro-ovalócitos no esfregaço</span></div>
+    <div class="row"><span class="k">RDW</span><span class="v">Alto: hemácias antigas normais misturadas às novas, grandes</span></div>
+    <div class="row"><span class="k">Reticulócitos</span><span class="v">2% ou menos: anemia hipoproliferativa</span></div>
+    <div class="row"><span class="k">Neutrófilo</span><span class="v mal">Hipersegmentado (5 lobos ou mais): patognomônico, na falta de B12 ou de folato</span></div>
+    <div class="row"><span class="k">LDH e bilirrubina indireta</span><span class="v">Altas, pela destruição intramedular</span></div>
+    <div class="row"><span class="k">Perfil de ferro</span><span class="v">Normal</span></div>
+  </div>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p>LDH e bilirrubina indireta altas com reticulócito baixo e Coombs negativo não é hemólise periférica: é eritropoiese ineficaz. Macrocítica + pancitopenia + esse perfil = megaloblástica.</p></div>
+</section>
+
+<section class="degrau" id="d3">
+  <div class="dhead"><span class="dnum">3</span><div class="dtitle"><h3>A clínica e o sinal que separa: neurológico é B12</h3><span class="src">Hemato/3 p8, 11-13</span></div></div>
+  <p class="lede">A anemia é insidiosa e comum às duas carências. O que aponta para a B12 é a lesão da mielina.</p>
+  <div class="prose"><ul>
+    <li>Síndrome anêmica arrastada: fraqueza, palidez, taquicardia.</li>
+    <li>Estigma carencial: glossite atrófica ("língua careca") e queilite angular. Diarreia e dispepsia: o epitélio do tubo digestivo também divide.</li>
+    <li>B12: <strong>neuropatia periférica</strong> (parestesia); perda da sensibilidade vibratória e <strong>ataxia de marcha</strong> pela degeneração combinada dos cordões posterior e lateral da medula.</li>
+    <li>Cognitivo: perda de memória, depressão, <strong>demência</strong>.</li>
+    <li>O neurológico pode chegar <strong>antes da anemia</strong>. No início reverte; tratado tarde, fica.</li>
+  </ul></div>
+  <div class="banca"><div class="albl">Ângulo da banca</div>
+    <p>O caso clássico traz anemia macrocítica com parestesia, marcha atáxica ou demência. A resposta é dosar e repor B12; folato isolado é o distrator.</p></div>
+</section>
+
+<section class="degrau" id="d4">
+  <div class="dhead"><span class="dnum">4</span><div class="dtitle"><h3>Diagnóstico: sangue periférico e dosagem fecham</h3><span class="src">Hemato/3 p14-15, 26; resumo §3</span></div></div>
+  <p class="lede">Hemograma típico + B12 ou folato baixos = diagnóstico. A pergunta seguinte é a causa, não um exame "mais definitivo".</p>
+  <div class="prose"><ul>
+    <li>Primeiro passo: dosar <strong>B12 e folato</strong> séricos.</li>
+    <li>Limítrofes: ácido metilmalônico e homocisteína separam (degrau 1).</li>
+    <li>Mielograma mostra megaloblastos, mas raramente é necessário.</li>
+    <li>Medula fica para o atípico: pancitopenia sem carência confirmada, falha da reposição, suspeita de SMD ou aplasia.</li>
+    <li>B12 baixa confirmada: investigar a etiologia, com a perniciosa à frente (degrau 7).</li>
+  </ul></div>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p>Biópsia de medula como "próximo passo" de uma megaloblástica já caracterizada: errado. O passo é a investigação da causa da deficiência.</p></div>
+</section>
+
+<section class="degrau" id="d5">
+  <div class="dhead"><span class="dnum">5</span><div class="dtitle"><h3>Por que falta folato</h3><span class="src">Hemato/3 p17-19, 24</span></div></div>
+  <p class="lede">Estoque curto e absorção alta no delgado. Falta quem come mal, quem gasta muito e quem não absorve no duodeno.</p>
+  <div class="crit">
+    <div class="row"><span class="k">Carência alimentar</span><span class="v"><strong>A causa mais comum.</strong> Etilista, idoso, dieta restritiva sem acompanhamento; lactente só com leite de cabra</span></div>
+    <div class="row"><span class="k">Demanda alta</span><span class="v">Gestação, criança, anemia hemolítica crônica: muita célula nova pede muito folato</span></div>
+    <div class="row"><span class="k">Má absorção</span><span class="v">Duodeno e jejuno: doença celíaca, enterite, infiltração linfomatosa, esclerodermia, amiloidose; ressecção jejunal</span></div>
+    <div class="row"><span class="k">Anticonvulsivante</span><span class="v">Fenitoína, carbamazepina, fenobarbital: atrapalham a absorção</span></div>
+    <div class="row"><span class="k">Hemodiálise</span><span class="v">O folato é dialisável</span></div>
+    <div class="row"><span class="k">Metotrexato</span><span class="v">Inibe a diidrofolato-redutase: deficiência funcional</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Relógio de prova: anemia macrocítica que aparece cerca de <strong>6 meses</strong> após privação alimentar = folato (o estoque acabou).</li>
+  </ul></div>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p>Gastrite atrófica não causa falta de folato: o estômago não participa da absorção dele. Atrofia gástrica aponta para B12.</p></div>
+</section>
+
+<section class="degrau" id="d6">
+  <div class="dhead"><span class="dnum">6</span><div class="dtitle"><h3>Por que falta B12: siga a cadeia de absorção</h3><span class="src">Hemato/3 p20-21, 23-25; resumo §5</span></div></div>
+  <p class="lede">A B12 passa por cinco etapas até o sangue. Cada elo que quebra é uma etiologia diferente.</p>
+  <ol class="passo">
+    <li><span><strong>Estômago:</strong> ácido clorídrico e pepsina soltam a B12 da proteína. Quebra na hipocloridria: gastrectomia, inibidor de bomba de prótons crônico.</span></li>
+    <li><span><strong>Ligante-R</strong> (haptocorrina), da saliva e do estômago, carrega a B12 até o duodeno.</span></li>
+    <li><span><strong>Duodeno:</strong> proteases pancreáticas desfazem o complexo. Quebra na insuficiência pancreática exócrina.</span></li>
+    <li><span><strong>Fator intrínseco</strong>, das células parietais, se liga à B12. Quebra na anemia perniciosa e na gastrectomia ou bypass gástrico.</span></li>
+    <li><span><strong>Íleo terminal</strong> absorve o complexo. Quebra na doença de Crohn, ressecção ileal, doença celíaca. No sangue, a transcobalamina II leva aos tecidos.</span></li>
+  </ol>
+  <div class="prose"><ul>
+    <li>Consumo concorrente: <strong>supercrescimento bacteriano</strong> e <strong>Diphyllobothrium latum</strong> (tênia do peixe cru; sushi). Ovos nas fezes; praziquantel.</li>
+    <li>Metformina: reduz a absorção (mecanismo não esclarecido).</li>
+    <li>Zollinger-Ellison: a hipercloridria inativa a B12.</li>
+    <li>Vegano estrito: só após anos, porque o estoque dura 4-6 anos.</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="d7">
+  <div class="dhead"><span class="dnum">7</span><div class="dtitle"><h3>Anemia perniciosa: a gastrite que rouba o fator intrínseco</h3><span class="src">Hemato/3 p21-23; resumo §3, §5; Endo/17 p7</span></div></div>
+  <p class="lede">Perniciosa é o nome da megaloblástica por B12 causada por gastrite atrófica autoimune. É a causa mais comum de falta de B12, cerca de 85%.</p>
+  <div class="prose"><ul>
+    <li>Perfil: mulher acima de 60 anos com outra autoimunidade (Hashimoto, Graves, Addison).</li>
+    <li>Autoanticorpos destroem a mucosa do fundo e do corpo: <strong>hipocloridria</strong>, pouco fator intrínseco e <strong>risco maior de carcinoma gástrico</strong>.</li>
+    <li>Quadro de B12 completo: macrocítica, pancitopenia, hipersegmentação, LDH alta e neurológico.</li>
+    <li>Diagnóstico hoje: B12 baixa + gastrite atrófica na endoscopia + autoanticorpo.</li>
+    <li>Tratamento: <strong>B12 parenteral por tempo indeterminado</strong>. Sem fator intrínseco, a via oral não resolve.</li>
+  </ul></div>
+  <div class="vs">
+    <div class="a"><h5>Antifator intrínseco</h5><ul>
+      <li><strong>Mais específico</strong>: praticamente só na perniciosa.</li>
+      <li>Sensibilidade em torno de 50%.</li>
+      <li>O confirmatório de escolha.</li></ul></div>
+    <div class="b"><h5>Anticélula parietal (anti-H+/K+-ATPase)</h5><ul>
+      <li>Mais sensível, em torno de 90%.</li>
+      <li>Menos específico: positivo em outras gastrites e tireoidites autoimunes.</li>
+      <li>Ajuda quando o antifator intrínseco vem negativo e a suspeita persiste.</li></ul></div>
+  </div>
+  <details class="ref">
+    <summary>Teste de Schilling (histórico, em desuso)</summary>
+    <div class="refbody"><ul>
+      <li>B12 marcada por via oral; excreção urinária baixa = não absorve.</li>
+      <li>Repetido com fator intrínseco exógeno: se normaliza, falta fator intrínseco = perniciosa.</li>
+      <li>Complexo e raramente cobrado; o diagnóstico atual é endoscopia + anticorpo.</li>
+    </ul></div>
+  </details>
+</section>
+
+<section class="degrau" id="d8">
+  <div class="dhead"><span class="dnum">8</span><div class="dtitle"><h3>Tratamento: repor o que falta, e nunca folato sozinho</h3><span class="src">Hemato/3 p13, 26; resumo §6</span></div></div>
+  <p class="lede">A reposição devolve o DNA à medula em dias. O cuidado está na mielina e no potássio.</p>
+  <div class="prose"><ul>
+    <li>Repor o nutriente deficiente. Via parenteral quando a absorção falha (perniciosa).</li>
+    <li>Teste terapêutico sem dosagem: <strong>B12 e folato juntos</strong>.</li>
+    <li>Mecanismo: folato em dose alta contorna o bloqueio do DNA e corrige a anemia, mas não toca a reação da mielina. O neurológico segue e pode piorar.</li>
+    <li>Resposta: reticulocitose em poucos dias; anemia corrigida em cerca de 2 meses.</li>
+    <li>Neuropatia periférica costuma reverter; a degeneração combinada da medula muitas vezes fica.</li>
+    <li><strong>Hipocalemia</strong> no início: a onda de células novas, de citoplasma grande, capta potássio. Monitorar.</li>
+  </ul></div>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p>Anemia macrocítica tratada só com ácido fólico que volta com demência e marcha atáxica: era B12. O folato mascarou a anemia e deixou a mielina progredir.</p></div>
+</section>
+
+<section class="degrau" id="d9">
+  <div class="dhead"><span class="dnum">9</span><div class="dtitle"><h3>Macrocíticas não megaloblásticas: a grade</h3><span class="src">Hemato/3 p5, 27; Hemato/5 p12-15; Hemato/9 p20</span></div></div>
+  <p class="lede">B12 e folato normais e ainda macrocítica: a pista está no contexto e no que acompanha a anemia.</p>
+  <div class="grade" style="--cols:140px minmax(0,1fr) minmax(0,1fr)">
+    <div class="gr gh"><span>Causa</span><span>Pista</span><span>O que fecha</span></div>
+    <div class="gr"><span class="gk">Etilismo</span><span class="gc" data-l="Pista">Macrocitose mesmo sem anemia; lesão direta da célula-tronco; folato baixo junto</span><span class="gc" data-l="Fecha">História de consumo, com B12 e folato dosados</span></div>
+    <div class="gr"><span class="gk">Hepatopatia crônica</span><span class="gc" data-l="Pista">A mais comum das não megaloblásticas; multifatorial: varizes, hemólise por lipídio de membrana, folato, álcool</span><span class="gc" data-l="Fecha">Contexto de cirrose; anemia leve a moderada</span></div>
+    <div class="gr"><span class="gk">Hipotireoidismo</span><span class="gc" data-l="Pista">Mais da metade dos hipotireoideos têm anemia; classicamente macrocítica (pode ser micro, por menorragia)</span><span class="gc" data-l="Fecha">TSH; corrige tratando a tireoide</span></div>
+    <div class="gr"><span class="gk">SMD</span><span class="gc" data-l="Pista">Idoso com anemia refratária sem causa; citopenias</span><span class="gc" data-l="Fecha">Medula: displasia em 10% ou mais, blastos abaixo de 20% (aula de onco-hemato crônica)</span></div>
+    <div class="gr hot"><span class="gk">Anemia aplásica</span><span class="gc" data-l="Pista">Pancitopenia "e mais nada": sem baço, sem LDH alta, esfregaço sem achado</span><span class="gc" data-l="Fecha">Biópsia: medula hipocelular (degrau 10)</span></div>
+    <div class="gr"><span class="gk">Hemólise</span><span class="gc" data-l="Pista">Reticulócito alto empurra o VCM</span><span class="gc" data-l="Fecha">LDH e bilirrubina indireta altas com reticulocitose; Coombs</span></div>
+  </div>
+</section>
+
+<section class="degrau" id="d10">
+  <div class="dhead"><span class="dnum">10</span><div class="dtitle"><h3>Anemia aplásica: a medula vazia</h3><span class="src">Hemato/3 p27, 31-36</span></div></div>
+  <p class="lede">Os precursores somem e a gordura ocupa o lugar. Sai pancitopenia com reticulócito baixo, sem nenhuma pista no esfregaço.</p>
+  <div class="prose"><ul>
+    <li>Rara; adquirida na maioria. Pico bimodal: 10-25 anos e acima de 60.</li>
+    <li>Idiopática em 50-70%. Mecanismo provável: <strong>linfócito T citotóxico</strong> autorreativo contra o precursor. Prova indireta: responde à imunossupressão.</li>
+    <li>Gatilhos: cloranfenicol, cimetidina, sulfas, metimazol, propiltiouracil, fenitoína, carbamazepina, quimioterapia; benzeno, arsênico; radiação; hepatite não A-E, EBV.</li>
+    <li>Clínica = a pancitopenia: anemia, <strong>infecção (principal causa de morte)</strong>, sangramento.</li>
+    <li>Não tem hepatoesplenomegalia nem adenomegalia; LDH e bilirrubinas normais.</li>
+    <li>Risco maior de hemoglobinúria paroxística noturna (HPN), SMD e leucemia.</li>
+  </ul></div>
+  <div class="crit">
+    <div class="row"><span class="k">Diagnóstico</span><span class="v">Hb abaixo de 10 g/dL, plaquetas abaixo de 50.000/mm³, neutrófilos abaixo de 1.500/mm³ + reticulócito baixo + <strong>biópsia hipocelular</strong>, sem infiltração, fibrose ou hemofagocitose</span></div>
+    <div class="row"><span class="k">Moderada</span><span class="v">Celularidade abaixo de 30% + citopenia em 2 séries ou mais, sem pancitopenia grave</span></div>
+    <div class="row"><span class="k">Grave</span><span class="v">Celularidade abaixo de 25% (ou abaixo de 50% com menos de 30% de precursores) + 2 de 3: reticulócitos abaixo de 20.000, neutrófilos abaixo de 500, plaquetas abaixo de 20.000</span></div>
+    <div class="row"><span class="k">Muito grave</span><span class="v mal">Critérios de grave + neutrófilos abaixo de 200</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Excluir outras falências: infiltração neoplásica, SMD, mielofibrose. Cariótipo e citometria de fluxo ajudam no diferencial.</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="d11">
+  <div class="dhead"><span class="dnum">11</span><div class="dtitle"><h3>Tratamento da aplásica: idade e doador decidem</h3><span class="src">Hemato/3 p36-38</span></div></div>
+  <p class="lede">Grave ou muito grave trata. A escolha entre transplante e imunossupressão sai de duas perguntas: menos de 40 anos? Irmão HLA-idêntico?</p>
+  <div class="prose"><ul>
+    <li>Moderada simples: suporte. Moderada com neutropenia febril de repetição ou dependência de transfusão: trata.</li>
+    <li>Primeiro gesto: afastar a causa (droga, exposição) e <strong>colher HLA do paciente e da família</strong>.</li>
+  </ul></div>
+  <div class="vs">
+    <div class="b"><h5>Menos de 40 anos com doador aparentado HLA-idêntico</h5><ul>
+      <li><strong>Transplante alogênico de medula</strong>: única terapia curativa.</li>
+      <li>Sobrevida de até 90%.</li></ul></div>
+    <div class="a"><h5>Mais de 40 anos ou sem doador aparentado</h5><ul>
+      <li><strong>Antitimoglobulina (ATG) + ciclosporina</strong> (com prednisona): resposta de até 80%.</li>
+      <li>Custo tardio: HPN, SMD, leucemia.</li>
+      <li>Transplante fica de 2ª linha para quem não responde.</li></ul></div>
+  </div>
+  <div class="banca"><div class="albl">Depende da banca</div>
+    <p>A apostila cita ATG de coelho, ciclosporina e prednisona. Diretrizes recentes preferem ATG de cavalo, quando disponível, e somam eltrombopague à imunossupressão. Na prova, o gabarito é ATG + ciclosporina.</p></div>
+</section>
+
+<section class="degrau" id="d12">
+  <div class="dhead"><span class="dnum">12</span><div class="dtitle"><h3>Aplasias congênitas: a criança com malformação</h3><span class="src">Hemato/3 p28-32</span></div></div>
+  <p class="lede">Pancitopenia na infância com malformação ou pele alterada é falência medular hereditária até prova em contrário. Fanconi é a que cai.</p>
+  <div class="grade" style="--cols:130px minmax(0,1.2fr) minmax(0,1fr)">
+    <div class="gr gh"><span>Síndrome</span><span>Pistas</span><span>Base e conduta</span></div>
+    <div class="gr hot"><span class="gk">Anemia de Fanconi</span><span class="gc" data-l="Pistas">A mais comum. Polegar ou rádio hipoplásico, rim em ferradura ou ectópico, microcefalia, face triangular, manchas café com leite, hipogonadismo; aplasia no meio da 1ª década</span><span class="gc" data-l="Base">Autossômica recessiva; falha no reparo do DNA. Teste de fragilidade cromossômica (diepoxibutano, mitomicina C). Transplante alogênico cura a medula; risco de câncer</span></div>
+    <div class="gr"><span class="gk">Disqueratose congênita</span><span class="gc" data-l="Pistas">Hiperpigmentação reticular de pescoço e tórax, distrofia ungueal, leucoplasia oral; aplasia em 50%</span><span class="gc" data-l="Base">Ligada ao X; telomerase baixa, telômero curto. Transplante</span></div>
+    <div class="gr"><span class="gk">Shwachman-Diamond</span><span class="gc" data-l="Pistas">Neutropenia + insuficiência pancreática exócrina (esteatorreia) + anomalia óssea</span><span class="gc" data-l="Base">Autossômica recessiva, gene SBDS (cromossomo 7); risco de leucemia mieloide aguda. Transplante</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Fanconi pode vir com VCM alto e B12 normal: a macrocitose aqui é da falência medular, não de carência.</li>
+  </ul></div>
+</section>
+
+<section class="synth" id="gat">
+  <h2>Gatilhos de prova</h2>
+  <p class="note">Uma linha por degrau. Vermelho = onde a banca derruba.</p>
+  <div class="trig">
+    <div><span class="tk">D0 Régua</span><span class="tv">Macrocitose mais comum = álcool; anemia macro não megaloblástica mais comum = hepatopatia</span></div>
+    <div><span class="tk">D1 Bioquímica</span><span class="tv">Homocisteína sobe nas duas; <b>metilmalônico só na B12</b></span></div>
+    <div><span class="tk">D2 Hemograma</span><span class="tv">LDH e BI altas + reticulócito baixo = eritropoiese ineficaz; <b>hipersegmentado é patognomônico</b></span></div>
+    <div><span class="tk">D3 Clínica</span><span class="tv">Parestesia, ataxia, demência + macrocítica = <b>B12</b>; pode vir antes da anemia</span></div>
+    <div><span class="tk">D4 Diagnóstico</span><span class="tv">Dosar B12 e folato; <b>medula não é o próximo passo</b></span></div>
+    <div><span class="tk">D5 Folato</span><span class="tv">Privação há 6 meses, álcool, gestação, fenitoína, metotrexato; <b>atrofia gástrica não</b></span></div>
+    <div><span class="tk">D6 B12</span><span class="tv">Hipocloridria, pâncreas, fator intrínseco, íleo; metformina; tênia do peixe</span></div>
+    <div><span class="tk">D7 Perniciosa</span><span class="tv">Mulher idosa autoimune; <b>antifator intrínseco é o específico</b>; B12 parenteral para sempre</span></div>
+    <div><span class="tk">D8 Tratamento</span><span class="tv"><b>Nunca folato sozinho</b>; hipocalemia no início</span></div>
+    <div><span class="tk">D9 Não megalo</span><span class="tv">Hipotireoidismo é classicamente macrocítico; SMD no idoso refratário</span></div>
+    <div><span class="tk">D10 Aplásica</span><span class="tv">Pancitopenia sem baço e sem LDH; <b>biópsia hipocelular</b>; infecção mata</span></div>
+    <div><span class="tk">D11 Aplásica, conduta</span><span class="tv">Menos de 40 com irmão HLA = transplante; resto = ATG + ciclosporina</span></div>
+    <div><span class="tk">D12 Congênitas</span><span class="tv">Polegar + rim + café com leite = <b>Fanconi</b> (fragilidade cromossômica)</span></div>
+  </div>
+</section>
+
+<section class="synth arm" id="arm">
+  <h2>Armadilhas de banca</h2>
+  <p class="note">Cada uma aponta o degrau onde o fato mora.</p>
+  <ol class="armas">
+    <li>Ler LDH e bilirrubina indireta altas como hemólise periférica: com reticulócito baixo, é destruição intramedular. <span class="d">D2</span></li>
+    <li>Atribuir o quadro neurológico à falta de folato: só a B12 lesa a mielina. <span class="d">D1, D3</span></li>
+    <li>Pedir biópsia de medula para "confirmar" a megaloblástica: o passo é a causa da deficiência. <span class="d">D4</span></li>
+    <li>Marcar gastrite atrófica como causa de falta de folato. <span class="d">D5</span></li>
+    <li>Escolher o anticélula parietal como o exame mais específico da perniciosa: é o antifator intrínseco. <span class="d">D7</span></li>
+    <li>Repor B12 por via oral na perniciosa como tratamento definitivo: sem fator intrínseco, a via é parenteral. <span class="d">D7</span></li>
+    <li>Prescrever ácido fólico isolado no teste terapêutico. <span class="d">D8</span></li>
+    <li>Esquecer o potássio nos primeiros dias da reposição. <span class="d">D8</span></li>
+    <li>Esplenomegalia ou adenomegalia num caso de "aplásica": aponta para outra coisa (infiltração, linfoma, mielofibrose). <span class="d">D10</span></li>
+    <li>Imunossupressão primeiro no jovem com irmão HLA-idêntico: o transplante vem antes. <span class="d">D11</span></li>
+  </ol>
+</section>
+
+<footer>
+  <p><strong>Fontes:</strong> <code>resumos/Clínica Médica/Hematologia/3. Anemias Macrocíticas.pdf</code> (EMED 2024, Prof. Hugo Brisolla), citada como Hemato/3; <code>resumos/Clínica Médica/Hematologia/Anemia Megaloblástica e Perniciosa.md</code> (resumo); complementos: <code>5. Anemia Associada a Condições Não Hematológicas.pdf</code> (Hemato/5, hepatopatia e hipotireoidismo), <code>9. Leucemias Crônicas, Linfomas, Mielodisplasias e Mieloproliferações.pdf</code> (Hemato/9, SMD) e <code>Endocrinologia/17. Adrenal - Hipocortisolismo.pdf</code> (Endo/17, Addison com macrocitose).</p>
+  <p>Divergência registrada para o aluno decidir: perfil etário da perniciosa (apostila: acima de 60 anos; resumo: acima de 40); ATG de cavalo e eltrombopague na aplásica (degrau 11).</p>
+  <p>Prepara a tarefa #811 do plano (parte 1: anemias macrocíticas). A parte 2 é a aula de leucemias crônicas, linfomas, SMD e mieloproliferações.</p>
+</footer>
+</div>

@@ -45,6 +45,7 @@ import argparse
 import json
 import math
 import os
+import re
 import sys
 import unicodedata
 from datetime import date, datetime
@@ -910,10 +911,88 @@ def classe_da_tarefa(linha):
 
 
 def _q(linha):
+    """As questoes da tarefa no panorama: `q_da_tarefa` (P20, s219) -- o banco do hub quando a linha
+    o traz (`com_q_hub`), senao `q_previstas`."""
+    return q_da_tarefa(linha)
+
+
+# ------------------------------------------------- a tarefa na TELA (P20, s219)
+# Pedido do operador (print de 07/10, Version 78): a Teoria e o Painel diziam a mesma tarefa de jeitos
+# diferentes -- 'sem lista' x 'aula' x '33 questoes' na mesma linha, 'aula a preparar' com cara de
+# botao, o titulo do EMED com ' | ' e, depois dos 26 cadernos da s219, menos questoes que a aba
+# Listas. As regras moram AQUI, uma vez, e as duas telas (hub.py e painel.py) e o boot as chamam.
+
+#: O que a tela diz da tarefa SEM acao nenhuma (sem questoes no hub, sem lista, sem aula): o ULTIMO
+#: recurso da linha de meta, em texto apagado -- nunca no lugar de um link.
+ROTULO_SEM_ACAO = {"aula": "aula a preparar", "caderno": "caderno a montar", "sem_lista": "sem lista ainda"}
+
+
+def q_da_tarefa(linha):
+    """As questoes que a tela conta para a tarefa. PURA. `q_hub` (a contagem no banco do hub, posta
+    por `com_q_hub`) quando a tarefa tem questoes la -- e o que a aba Listas mostra --; senao
+    `q_previstas` arredondado; ilegivel = 0."""
+    if linha.get("q_hub"):
+        return int(linha["q_hub"])
     try:
         return int(round(float(linha.get("q_previstas") or 0)))
     except (TypeError, ValueError):
         return 0
+
+
+def com_q_hub(linhas, contagem):
+    """Copia das linhas com `q_hub` = questoes da tarefa no banco do hub ({tarefa_id: n}); tarefa
+    fora da contagem (ou com 0) fica sem a chave. PURA: nao muta a entrada."""
+    saida = []
+    for l in linhas or []:
+        n = (contagem or {}).get(int(l["id"])) if l.get("id") is not None else None
+        saida.append(dict(l, q_hub=int(n)) if n else dict(l))
+    return saida
+
+
+def questoes_no_hub():
+    """{tarefa_id: n} -- as questoes de cada tarefa que o banco manda ao hub, pelo criterio do
+    `emed_banco.py --exportar` (`emed_banco.questoes_no_hub_por_tarefa`). Read-only."""
+    import emed_banco
+    return emed_banco.questoes_no_hub_por_tarefa()
+
+
+def linhas_com_q_hub(linhas):
+    """`com_q_hub` sobre a contagem do banco. Banco sem a tabela ou ilegivel = as linhas como estao
+    (a tela conta `q_previstas`, como antes da s219) -- a mesma degradacao do `no_hub` do hub."""
+    try:
+        contagem = questoes_no_hub()
+    except Exception:  # noqa: BLE001 -- leitura de exibicao; o plano nao depende dela
+        contagem = {}
+    return com_q_hub(linhas, contagem)
+
+
+def tem_acao(tarefa):
+    """A tarefa tem o que fazer na tela? Questoes no hub (`no_hub`), lista ou prova (`url_lista`) ou
+    aula ligada (`aulas`). PURA; serve a linha do plano e o item do hub/painel."""
+    return bool(tarefa.get("no_hub") or tarefa.get("url_lista") or tarefa.get("aulas"))
+
+
+def meta_da_tarefa(q, classe, acao):
+    """A linha de meta da tarefa na Teoria E no Painel -- UMA regra (P20). PURA. Devolve os textos:
+    "N questoes" quando ha questoes (no banco do hub ou previstas); o rotulo da classe
+    (`ROTULO_SEM_ACAO`) so como ULTIMO recurso, quando a tarefa nao tem acao nenhuma. Com aula
+    ligada, a acao e o atalho da aula: a meta nao repete 'aula'."""
+    saida = []
+    if q:
+        saida.append("%d %s" % (q, "questão" if q == 1 else "questões"))
+    if not acao:
+        saida.append(ROTULO_SEM_ACAO.get(classe, classe))
+    return saida
+
+
+def tema_exibido(tema):
+    """O `tema` como a tela o mostra (P20). PURA; o banco nao muda. O titulo herdado do EMED junta
+    as partes com ' | ' e, quando o PDF quebrou a palavra composta, deixa o hifen colado antes do
+    separador ('Endócrino- | Metabólica'): ali o separador some ('Endócrino-Metabólica'); os demais
+    ' | ' viram ' · ' (o hifen solto, com espaco, nao e quebra)."""
+    t = re.sub(r"(?<=\S)-\s*\|\s*", "-", str(tema or ""))
+    t = re.sub(r"\s*\|\s*", " · ", t)
+    return t.strip(" ·")
 
 
 def _por_classe(linhas):
@@ -1195,6 +1274,16 @@ def concluir_leitura(tarefa_id, data=None, out=print):
         out(f"[plano] RECUSADO: tarefa {tarefa_id} tem lista ou questoes previstas -- "
             f"--leitura so vale para aula. Registre o bloco e use --concluir "
             f"{tarefa_id} --sessao <id>.")
+        return 2, None
+    # s219: o caderno pode estar so no banco do hub (sem link nem q_previstas, as tarefas de aula
+    # #875 e #1797): a lista aberta tambem barra a leitura
+    try:
+        no_hub = questoes_no_hub().get(int(tarefa_id), 0)
+    except Exception:  # noqa: BLE001 -- banco sem a tabela = sem questoes no hub
+        no_hub = 0
+    if no_hub:
+        out(f"[plano] RECUSADO: tarefa {tarefa_id} tem {no_hub} questoes no hub -- --leitura so "
+            f"vale para aula sem lista. Registre a lista e use --concluir {tarefa_id} --sessao <id>.")
         return 2, None
     try:
         quando = data_valida(data) if data else db.hoje().isoformat()
@@ -1545,7 +1634,8 @@ def main(argv=None):
                   file=sys.stderr)
         return 0
     if modo == "--panorama":
-        pan = panorama(db.plano_listar(), calendario_trilha(), db.hoje(),
+        # P20 (s219): as linhas com a contagem do banco do hub -- o MESMO numero do Painel e da Teoria
+        pan = panorama(linhas_com_q_hub(db.plano_listar()), calendario_trilha(), db.hoje(),
                        prevalencia=ler_prevalencia())
         print(json.dumps(pan, ensure_ascii=False, indent=1) if args.json
               else render_panorama(pan))

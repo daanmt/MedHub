@@ -156,14 +156,25 @@ def test_registro_real_so_com_as_aulas_em_aberto_e_ligadas_ao_plano():
     (analise, a Autopsia mora no hub) e remit-cicatrizacao, que CUMPRE a tarefa #530; s214: entram
     as aulas-base da S4 que CUMPREM as tarefas sem lista #768, #367 e #590 (como a REMIT) e a RD
     rd-ventilacao-degrau-0, prometida ao operador na assinatura da rd-intensiva-sepse; s217: entra
-    tb-360, que CUMPRE a tarefa custom #1797 (Tuberculose 360)."""
+    tb-360, que CUMPRE a tarefa custom #1797 (Tuberculose 360); s219: entram as 10 aulas das tarefas
+    sem aula da S4/S5 (#881 #878 #1796 #811 x2 #310 #777 #5425 #5424 e #876+#879)."""
     reg = hub.ler_quadro(ROOT / hub.QUADRO_REG)
     rds = {k for k, v in reg.items() if v["tipo"] == "revisao"}
     docs = {k for k, v in reg.items() if v["tipo"] == "analise"}
     assert docs == {"dossie-uerj", "autopsia-uerj-2021"}
     assert set(reg) - rds - docs == {"dmg", "topicos-pediatria", "prevencao-quaternaria",
                                      "remit-cicatrizacao", "aorta-cardiomiopatias-pericardio",
-                                     "tireoide-nodulo-cancer", "vulva-vagina-anatomia", "tb-360"}
+                                     "tireoide-nodulo-cancer", "vulva-vagina-anatomia", "tb-360",
+                                     "rastreamento-programas-br", "mccp-decisao-compartilhada",
+                                     "cronicas-aps-metas", "anemias-macrociticas", "oncohemato-cronicas",
+                                     "insuficiencia-adrenal", "iamcsst", "idoso-amg-polifarmacia",
+                                     "rodapes-retorno-alto", "imagem-obstetrica"}
+    assert reg["idoso-amg-polifarmacia"]["tarefas"] == [876, 879]
+    assert [reg[s]["tarefa_id"] for s in ("rastreamento-programas-br", "mccp-decisao-compartilhada",
+                                          "cronicas-aps-metas", "anemias-macrociticas",
+                                          "oncohemato-cronicas", "insuficiencia-adrenal", "iamcsst",
+                                          "rodapes-retorno-alto", "imagem-obstetrica")] == \
+        [881, 878, 1796, 811, 811, 310, 777, 5425, 5424]
     assert all(k.startswith("rd-") for k in rds), "s210: revisao direcionada = slug rd-*"
     assert reg["dmg"]["tarefas"] == [26, 40] and reg["topicos-pediatria"]["tarefas"] == [96, 100]
     assert reg["prevencao-quaternaria"]["tarefa_id"] == 875
@@ -256,14 +267,15 @@ def test_teoria_so_com_tarefas_de_aula_ou_com_aula_ligada(tmp_path):
 def test_revisao_direcionada_mora_na_biblioteca_nova_ate_ser_lida(tmp_path):
     """s210 (01/10) a RD ganhou bloco proprio no topo da aba; s218 (pedido do operador em 07/10: "as
     revisoes podem entrar na biblioteca ... com a taxonomia correta") ⚰️ esse bloco: a RD mora SO na
-    Biblioteca, com o controle 'feito'; a ainda nao lida leva "nova" (classe 0, topo da disciplina) e o
-    cabecalho conta as novas; lida, perde a etiqueta e fica no lugar (classe 3), sem secao de origem."""
+    Biblioteca; a ainda nao lida leva "nova" (classe 0, topo da disciplina) e o cabecalho conta as novas;
+    lida (assinada no leitor), perde a etiqueta e fica no lugar (classe 3), sem secao de origem. P20 (s219):
+    sem o quadrado 'feito' -- o `data-slug` (a chave do `quadro/<slug>` que a assinatura grava) segue."""
     raiz, data_fn = _repo(tmp_path)
     _construir(raiz, data_fn)
     pagina = _index(raiz)
     assert 'data-secao="revisoes"' not in pagina and "Revisões direcionadas" not in pagina
     item = _item(pagina, 'data-slug="rd-renal"')
-    assert 'class="qd-feito"' in item and 'data-secao="biblioteca"' in item and 'data-bib="0"' in item
+    assert "qd-feito" not in item and 'data-secao="biblioteca"' in item and 'data-bib="0"' in item
     assert '<span class="qd-nova">nova</span>' in item
     assert '<span class="qd-novas" id="hub-quadro-novas" data-novas>1 nova</span>' in pagina
     _construir(raiz, data_fn, estado={"rd-renal": {"feito": True, "ts": "x"}})
@@ -317,22 +329,30 @@ def test_bloco_da_tarefa_tem_tema_peso_questoes_e_acao(tmp_path):
     assert "abrir lista" in hernias and "qd-feito" not in hernias
     assert '<span class="qd-prazo">até %s</span>' % CAL[2][1].strftime("%d/%m") in hernias
     preparar = _item(pagina, 'data-tarefa="875"')
-    assert '<span class="tenue">aula a preparar</span>' in preparar and '<span>aula</span>' in preparar
+    # P20 (s219): sem questoes, sem lista e sem aula, a classe e o ultimo recurso -- texto da META (apagada),
+    # nunca no lugar de um link; a linha de acao nem existe
+    assert ('<p class="qd-meta"><span class="qd-bl">MFC</span><span>aula a preparar</span>'
+            '<span class="qd-prazo">até %s</span></p>' % CAL[2][1].strftime("%d/%m")) in preparar
+    assert "qd-acao" not in preparar and "tenue" not in preparar and "<span>aula</span>" not in preparar
     simulado = _item(pagina, 'data-tarefa="1793"')
     assert "prova em PDF no computador" in simulado and "simulados/uerj" not in simulado, \
         "caminho local nunca vira link (morre na pagina publicada)"
 
 
-def test_aula_que_cumpre_tarefa_de_aula_tem_o_botao_feito_no_bloco(tmp_path):
+def test_aula_que_cumpre_tarefa_de_aula_leva_o_slug_e_nao_o_botao(tmp_path):
+    """P20 (s219, print de 07/10: "alguns blocos tendo checkbox, outros nao (pode ate ser removido...,
+    considerando que assinar resolve automaticamente)"): o quadrado so existia na tarefa de classe `aula`
+    -- a `sem_lista` cuja aula a CUMPRE (#530, #768) nao o tinha. Saiu de toda a Teoria; o `data-slug`
+    fica: e por ele que a assinatura no leitor risca o item e o tique conclui a tarefa."""
     raiz, data_fn = _repo(tmp_path)
     _construir(raiz, data_fn)
     bayes = _item(_index(raiz), 'data-tarefa="877"')
     assert 'data-slug="bayes" data-tipo="aula" data-titulo="A Escada de Bayes"' in bayes
-    assert '<div class="qd-bloco"><button type="button" class="qd-feito" aria-pressed="false"' in bayes, \
-        "s195: o botao fica DENTRO do bloco (fora, o bloco com botao saia 54 px mais estreito)"
-    assert 'aria-label="Marcar A Escada de Bayes como feita"' in bayes
+    assert '<div class="qd-bloco"><p class="qd-tema">' in bayes and "qd-feito" not in bayes
+    assert "<button" not in bayes and "aria-pressed" not in bayes
     assert '<a class="hub-aula" href="aulas/bayes.html" data-titulo="A Escada de Bayes">abrir aula</a>' in bayes
-    assert '<span class="qd-bl">MFC</span><span>aula</span>' in bayes
+    assert '<p class="qd-meta"><span class="qd-bl">MFC</span><span class="qd-atraso">' in bayes, \
+        "com a aula como acao, a meta nao repete a classe ('aula')"
 
 
 def test_feito_sai_riscado_na_biblioteca_no_build(tmp_path):
@@ -350,7 +370,7 @@ def test_feito_sai_riscado_na_biblioteca_no_build(tmp_path):
     secoes, feitas = pagina.split('id="hub-quadro-feitas"', 1)
     assert 'data-tarefa="877"' not in secoes and 'data-slug="rd-renal"' not in secoes
     bayes = _item(feitas, 'data-tarefa="877"')
-    assert 'data-feito="1"' in bayes and 'aria-pressed="true"' in bayes and 'data-secao="atrasadas"' in bayes
+    assert 'data-feito="1"' in bayes and 'data-secao="atrasadas"' in bayes and "qd-feito" not in bayes
     assert 'data-slug="rd-renal"' in feitas and 'id="hub-quadro-nfeitas">3<' in feitas
     autopsia = _item(feitas, 'data-slug="autopsia"')
     assert "data-feito" not in autopsia and 'data-secao="biblioteca"' in autopsia, "desmarcado nao risca"
@@ -398,19 +418,24 @@ def test_plano_indisponivel_degrada_declarado(tmp_path, monkeypatch):
     assert [s[0] for s in _secoes(_index(raiz))] == [] and _biblioteca(_index(raiz)) == ["hernias"]
 
 
-def test_sem_db_controle_nasce_desabilitado_com_frase_curta(tmp_path):
+def test_teoria_sem_o_quadrado_feito_e_o_estado_segue_no_db(tmp_path):
+    """P20 (s219): o quadrado 'feito' saiu da pagina inteira (HTML, CSS e JS) e, com ele, o que so
+    existia para ele (o aviso "Marcar como feita nao funciona nesta visualizacao", o `disabled`, o
+    clique). Fica o que a assinatura usa: `quadro/<slug>` no db, o item com `data-slug`, o movimento
+    para a Biblioteca e o aviso de quando o db nao salvou."""
     raiz, data_fn = _repo(tmp_path)
     _construir(raiz, data_fn)
     pagina = _index(raiz)
-    botoes = re.findall(r'<button type="button" class="qd-feito"[^>]*>', pagina)
-    assert len(botoes) == 2 and all(" disabled" in b for b in botoes), "bayes + a RD avulsa (s216: a analise saiu)"
-    aviso = re.search(r'<p class="qd-aviso" id="hub-quadro-aviso" hidden>([^<]+)</p>', pagina)
-    assert aviso and len(aviso.group(1)) <= 80
-    js = pagina.split("function iniciarQuadro()", 1)[1]
+    assert "qd-feito" not in pagina and "Marcar como feita" not in pagina and "como feita\"" not in pagina
+    assert '<p class="qd-aviso" id="hub-quadro-aviso" role="status" hidden></p>' in pagina
+    assert len(re.findall(r'<li class="qd-item[^"]*"[^>]*data-slug=', pagina)) == 2, \
+        "bayes + a RD avulsa (s216: a analise saiu) seguem com a chave do quadro"
+    js = pagina.split("function iniciarQuadro()", 1)[1].split("// ---", 1)[0]
     assert 'db.collection("quadro")' in js and "semArmazenamento" in js
     assert ".set({feito: novo, ts: new Date().toISOString()})" in js
-    assert 'querySelectorAll(".qd-item[data-slug]")' in js, "so item com botao entra no controle"
-    assert '.qd-sem[data-secao="' in js, "o item desmarcado volta para a SUA secao"
+    assert 'querySelectorAll(".qd-item[data-slug]")' in js, "so item com slug entra no estado"
+    assert '.qd-sem[data-secao="' in js, "o item que volta a pendente vai para a SUA secao"
+    assert 'addEventListener("click"' not in js and ".disabled" not in js, "nada a clicar no quadro"
 
 
 def test_quadro_celular_alvo_de_toque_e_grid_item_encolhe(tmp_path):
@@ -418,7 +443,7 @@ def test_quadro_celular_alvo_de_toque_e_grid_item_encolhe(tmp_path):
     _construir(raiz, data_fn)
     pagina = _index(raiz)
     assert "sticky" not in pagina.lower() and "nowrap" not in pagina.lower()
-    assert "width:44px;height:44px" in re.search(r"\.qd-feito\{([^}]*)\}", pagina).group(1)
+    assert ".qd-feito" not in pagina and "padding-right:66px" not in pagina, "P20: o quadrado e a folga dele sairam"
     for regra in (r"\.qd-sem\{([^}]*)\}", r"\.qd-item\{([^}]*)\}", r"\.qd-bloco\{([^}]*)\}",
                   r"\.qd-tema\{([^}]*)\}"):
         assert "min-width:0" in re.search(regra, pagina).group(1), regra
@@ -580,7 +605,7 @@ def test_ids_com_nota_le_o_dump_por_arquivo(tmp_path):
 def test_cli_precisa_publicar_sim_e_nao(tmp_path, capsys, monkeypatch):
     raiz, data_fn = _repo(tmp_path)
     monkeypatch.setattr(hub.db, "plano_listar", lambda: list(PLANO))
-    monkeypatch.setattr(hub.db, "tarefas_com_questoes", lambda: set())   # s201: hermetico (nao ler o banco real)
+    monkeypatch.setattr(hub, "questoes_no_hub", lambda: {})   # s201/P20: hermetico (nao ler o banco real)
     monkeypatch.setattr(hub, "calendario_trilha", lambda: dict(CAL))
     monkeypatch.setattr(hub.db, "agora", lambda: AGORA)
     _publicado(raiz, data_fn)
@@ -686,12 +711,22 @@ def test_painel_remede_ao_abrir_semana():
 
 
 def test_leitor_do_plano_marca_as_tarefas_com_questoes_no_banco(monkeypatch):
+    """P20 (s219): a marca `no_hub` (resolve na aba Listas) e a contagem `q_hub` saem da MESMA leitura
+    (`plano.questoes_no_hub`, o criterio do `--exportar`); sem a leitura, ninguem marcado."""
     monkeypatch.setattr(hub.db, "plano_listar", lambda: [dict(l) for l in PLANO])
-    monkeypatch.setattr(hub.db, "tarefas_com_questoes", lambda: {1793})
+    monkeypatch.setattr(hub, "questoes_no_hub", lambda: {1793: 59, 875: 15})
     linhas, aviso = hub._ler_plano()
     assert aviso is None
-    assert {l["id"]: l.get("no_hub") for l in linhas}[1793] is True
-    assert not any(l.get("no_hub") for l in linhas if l["id"] != 1793)
+    por_id = {l["id"]: l for l in linhas}
+    assert por_id[1793]["no_hub"] is True and por_id[1793]["q_hub"] == 59
+    assert por_id[875]["no_hub"] is True and por_id[875]["q_hub"] == 15
+    assert not any(l.get("no_hub") for l in linhas if l["id"] not in (1793, 875))
+
+    def quebra():
+        raise RuntimeError("sem tabela")
+    monkeypatch.setattr(hub, "questoes_no_hub", quebra)
+    linhas, aviso = hub._ler_plano()
+    assert aviso is None and not any(l.get("no_hub") or l.get("q_hub") for l in linhas)
 
 
 # ------------------------------------------------ 5. o quadro conclui sozinho (s214)
@@ -1277,3 +1312,75 @@ def test_lista_resolvida_vai_para_o_grupo_do_bloco_da_tarefa():
     assert out["grupos"] == [["CM", ["rd-hemostasia", "rd-hepato", "t1793"]], ["CIR", ["rd-vias-biliares"]],
                              ["GO", ["t26"]]], out["grupos"]
     assert out["nfeitas"] == "5"
+
+
+# ------------------------------------------------ 9. P20 (s219): a tarefa na Teoria, uma regra com o Painel
+
+def test_tarefa_sem_link_com_questoes_no_banco_resolve_no_hub_e_conta_o_banco(tmp_path):
+    """s219: 26 tarefas ganharam caderno no hub sem `url_lista` (t530 REMIT, t768 aorta, t875...). O
+    "resolver no hub" exigia o link -- a REMIT mostrava so "abrir aula", e a meta dizia "sem lista"
+    com 20 questoes esperando na aba Listas. Agora: questoes no banco = "resolver no hub" e "N
+    questoes" (a contagem do banco), sem rotulo de classe; o titulo do EMED sai sem o ' | '."""
+    raiz, data_fn = _repo(tmp_path, slugs=("remit", "rd-renal"))
+    remit = dict(_t(530, 2, "Resposta Endócrino- | Metabólica-Inflamatória ao Trauma | Cicatrização de Feridas",
+                    0, None, fonte="extensivo", bloco="CIR", area="Cirurgia"), no_hub=True, q_hub=20)
+    sem_nada = _t(531, 2, "Tema sem nada", 0, None, fonte="extensivo", bloco="CIR", area="Cirurgia")
+    quadro = {"remit": {"tipo": "aula", "titulo": "REMIT", "tarefa_id": 530},
+              "rd-renal": QUADRO["rd-renal"], "x": {"tipo": "aula", "titulo": "X", "tarefas": [531]}}
+    _construir(raiz, data_fn, quadro=quadro, plano=[remit, sem_nada])
+    pagina = _index(raiz)
+    item = _item(pagina, 'data-tarefa="530"')
+    assert ('<p class="qd-tema">Resposta Endócrino-Metabólica-Inflamatória ao Trauma · Cicatrização de '
+            'Feridas</p>') in item, "o titulo na tela; o `tema` do banco nao muda"
+    assert '<span class="qd-bl">CIR</span><span>20 questões</span>' in item
+    assert 'data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a>' in item
+    assert "abrir aula" in item and "sem lista" not in item and "qd-feito" not in item
+    sem = re.search(r'data-secao="2".*?</section>', pagina, re.S).group(0)
+    assert '<p class="qd-qsem">Questões da semana: <b>20</b>' in sem, "o cabecalho conta o banco"
+
+
+def test_aula_a_preparar_some_quando_a_tarefa_tem_questoes_no_hub():
+    """P20 item 4 (decisao declarada): 'aula a preparar' nao tem acao -- vira texto apagado da META, e
+    so aparece quando a tarefa nao tem acao nenhuma; com questoes no hub (a t1797, custom de aula com
+    caderno), some: o que fazer e resolver as questoes."""
+    linhas = [dict(_t(1797, 2, "Tuberculose 360", 0, None, fonte="custom", bloco="CM"), no_hub=True, q_hub=20),
+              _t(1796, 2, "Condições crônicas na APS", 0, None, fonte="custom", bloco="MFC")]
+    secoes, _b, _a = hub.secoes_do_quadro([], plano_linhas=linhas, calendario=CAL, hoje=date(2026, 9, 23))
+    itens = {i["id"]: hub._html_item(i) for s in secoes for i in s["itens"]}
+    assert "aula a preparar" not in itens[1797] and "<span>20 questões</span>" in itens[1797]
+    assert "resolver no hub" in itens[1797]
+    assert '<span>aula a preparar</span>' in itens[1796] and "qd-acao" not in itens[1796]
+
+
+def test_aba_listas_mostra_o_titulo_pela_mesma_regra_da_teoria():
+    """P20 item 5: a aba Listas desenha o `tema` do doc `listas/*` no navegador -- a mesma correcao de
+    exibicao em JS (`temaExibido`), presa a `plano.tema_exibido` caso a caso (paridade, nunca copia
+    divergente). O doc no banco nao muda."""
+    from tools import plano
+    if not NODE:
+        pytest.skip("node ausente no PATH: paridade do titulo na aba Listas nao verificada (skip declarado)")
+    casos = ["Resposta Endócrino- | Metabólica-Inflamatória ao Trauma | Cicatrização de Feridas",
+             "Arboviroses | HIV | Tuberculose | Meningites e Meningoencefalites", "A |B", "| A |", "",
+             "Endocardite Bacteriana - Endocardite Infecciosa", "Pré-Natal; Assistência ao Parto"]
+    fn = extrair_funcao(TEMPLATE_HUB_REAL, "function temaExibido(t){")
+    prog = fn + "\nconsole.log(JSON.stringify(%s.map(temaExibido)));" % json.dumps(casos, ensure_ascii=False)
+    with tempfile.NamedTemporaryFile("w", suffix=".js", delete=False, encoding="utf-8") as f:
+        f.write(prog)
+        caminho = f.name
+    try:
+        out = subprocess.run([NODE, caminho], capture_output=True, text=True, encoding="utf-8", timeout=60)
+    finally:
+        Path(caminho).unlink(missing_ok=True)
+    assert out.returncode == 0, out.stderr
+    assert json.loads(out.stdout) == [plano.tema_exibido(c) for c in casos]
+    lista = extrair_funcao(TEMPLATE_HUB_REAL, "function qzItemLista(l, atrasada){")
+    assert "qzEsc(temaExibido(l.tema))" in lista
+    assert '$("qz-tema").textContent = (temaExibido(l.tema) || id)' in TEMPLATE_HUB_REAL
+
+
+def test_sem_db_o_quadro_nao_acusa_controle_que_nao_existe():
+    """P20: sem o quadrado, a pagina sem `db` nao tem o que desabilitar nem o que avisar (era "Marcar
+    como feita nao funciona nesta visualizacao"); a assinatura sem banco segue sem gravar nada."""
+    out = _rodar_qd(semDb=True)
+    assert out["aviso_oculto"] is True and out["escritas"] == []
+    assert out["itens"]["rd-hepato"] == {"onde": "feitas", "feito": False, "marca": None}

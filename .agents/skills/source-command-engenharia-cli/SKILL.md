@@ -600,7 +600,7 @@ regra própria de semana, teto ou ritmo:
   e os mesmos links; a linha "Depois" só sobra sem rota. O cronograma inteiro mora SÓ aqui (s216): a aba
   Teoria (`hub.secoes_do_quadro`) mostra só a tarefa de aula e a com aula ligada, e toda tarefa de aula da
   rota está nela, na mesma semana (inclusão, não igualdade).  <!-- CHECK: test_rota_concorda_com_a_aba_aulas -->
-  **Ação da tarefa (s213):** lista com questões no banco do hub abre a aba Listas (modo Questões; Simulados
+  **Ação da tarefa (s213; P20, s219: com ou sem link, e a classe só na meta):** lista com questões no banco do hub abre a aba Listas (modo Questões; Simulados
   para simulado) e o link do EMED some -- decisão do operador em 25/09, a mesma precedência do quadro da
   aba Aulas; a aula que CUMPRE ou PREPARA a tarefa (`tarefa_id` e `tarefas` do registro) vem embaixo.  <!-- CHECK: test_lista_no_banco_do_hub_abre_a_aba_listas_e_nao_o_emed -->
 - **Ritmo**: real em 7 e 14 dias (`db.get_ritmo_real`) ao lado do alvo até a UERJ
@@ -655,11 +655,23 @@ pela data de criação no git). Aulas e painel **abrem dentro da página** (`fet
 **Aba Aulas = quadro (s194, pedido do operador):** o registro versionado `core/hub_quadro.json`
 (`slug -> {tipo: aula|revisao|analise, titulo, tarefa_id?}`) põe cada aula numa coluna (Aulas-base,
 Revisões, Análises; empilhadas no celular). Slug sem registro entra como `aula` com **WARN no build**;
-tipo inválido falha alto. Cada item tem o controle "feito" (44px): a página grava `quadro/<slug>` =
+tipo inválido falha alto. O item com `data-slug` (a aula que cumpre uma tarefa de aula, a avulsa, a RD)
+é marcado feito pela **assinatura da leitura** no rodapé do leitor: a página grava `quadro/<slug>` =
 `{feito, ts}` no `db` (regra `{path: "quadro", write: "interact"}` na declaração -- texto completo em
-`/revisar`, "Fronteira de escrita") e o item vai riscado para a **Biblioteca** (s216: "Outras aulas" + "Concluídas" numa seção só, recolhida, por data de criação; nada vai para `artifacts/arquivo/`); sem `db`, o
-controle fica desabilitado com uma frase curta. O painel conversa com as abas: "Ir para os cards" e
+`/revisar`, "Fronteira de escrita") e o item vai riscado para a **Biblioteca** (s216: "Outras aulas" + "Concluídas" numa seção só, recolhida, por data de criação; nada vai para `artifacts/arquivo/`).
+⚰️ P20 (s219, print do operador em 07/10: *"alguns blocos tendo checkbox, outros não (pode até ser
+removido na vdd, considerando que assinar resolve automaticamente)"*): o quadrado "feito" de 44 px (só
+a tarefa de classe `aula` o tinha) e o aviso de "sem `db`"; desmarcar é ato do agente (`ArtifactData`).
+O painel conversa com as abas: "Ir para os cards" e
 "abrir aula" (`data-hub-aba`/`data-hub-aula`) trocam de aba dentro do hub.  <!-- CHECK: test_feito_sai_riscado_na_biblioteca_no_build -->
+**A tarefa na tela (P20, s219):** a Teoria e o Painel seguem UMA regra, em `tools/plano.py`: a meta diz
+"N questões" (`plano.q_da_tarefa`: a contagem do banco do hub, pelo critério do `emed_banco --exportar`,
+quando a tarefa tem questões lá; senão `q_previstas`) e o rótulo da classe (`plano.ROTULO_SEM_ACAO`:
+"aula a preparar", "sem lista ainda", "caderno a montar") só quando a tarefa não tem ação nenhuma -- em
+texto apagado da meta, nunca na linha de ação; questões no banco = "resolver no hub" com ou sem
+`url_lista`; o título herdado do EMED sai sem o " | " (`plano.tema_exibido`, também na aba Listas). O
+"Questões da semana" da Teoria, o Painel, o `plano.py --panorama` do boot e a Fase 1 do `day_plan`
+contam pela mesma linha enriquecida (`plano.linhas_com_q_hub`).  <!-- CHECK: test_teoria_painel_e_boot_contam_o_banco_do_hub -->
 **Biblioteca por grande área (s217, P17):** grupos CM, CIR, MFC, PED, GO e, no fim, "Várias áreas"
 (vazio não sai; dentro do grupo, a mais recente primeiro), cada um recolhível como as seções. A aula
 herda o bloco da tarefa do plano (`tarefa_id` vence; senão a 1a de `tarefas`); o item sem tarefa (a RD)

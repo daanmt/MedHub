@@ -1,0 +1,529 @@
+<title>IAM com Supra de ST</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,480;9..144,600;9..144,680&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EFF3F0; --card:#FAFCFA; --sunk:#E2E9E4;
+  --ink:#18211C; --ink2:#4C5A52; --ink3:#6F7D75;
+  --line:rgba(24,33,28,.13); --line2:rgba(24,33,28,.26);
+  --teal:#1F6B5E; --teal-ink:#154A41; --teal-wash:#DCEBE5;
+  --carmine:#8E2F41; --carmine-ink:#6B2231; --carmine-wash:#F5E2E6;
+  --amber:#8A5A17; --amber-ink:#6B4610; --amber-wash:#F3E6CC;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#8A988F;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#8A988F;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font:16px/1.6 "Source Sans 3",-apple-system,"Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+h1,h2,h3{margin:0;font-family:Fraunces,Georgia,serif;font-weight:600;letter-spacing:-.01em;text-wrap:balance;line-height:1.15;color:var(--ink)}
+.wrap{max-width:780px;margin:0 auto;padding:0 16px 70px}
+:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+a{color:var(--teal-ink)}
+strong{font-weight:600;color:var(--ink)}
+
+/* topo */
+.top{padding:36px 0 22px;border-bottom:1px solid var(--line2)}
+.eye{font:600 11px/1.3 "Source Sans 3";letter-spacing:.12em;text-transform:uppercase;color:var(--teal-ink);margin:0 0 14px}
+.top h1{font-size:clamp(28px,6vw,44px);font-weight:680;margin-bottom:14px}
+.top .sub{font-size:16.5px;line-height:1.55;color:var(--ink2);margin:0 0 20px}
+.stats{display:flex;gap:18px;flex-wrap:wrap}
+.stat{display:flex;flex-direction:column;gap:2px;min-width:0}
+.stat b{font:600 21px/1 "IBM Plex Mono";color:var(--teal-ink);font-variant-numeric:tabular-nums}
+.stat span{font-size:11.5px;color:var(--ink3)}
+
+.nav{display:flex;flex-wrap:wrap;gap:6px;padding:20px 0 4px}
+.nav a{font-size:13px;text-decoration:none;color:var(--ink2);border:1px solid var(--line2);border-radius:2px;padding:4px 9px;min-width:0}
+.nav a:hover{color:var(--ink);border-color:var(--teal)}
+
+/* atos */
+.ato{margin:40px 0 0;padding:14px 16px;background:var(--teal-wash);border-left:3px solid var(--teal)}
+.ato span{font:700 10.5px "Source Sans 3";letter-spacing:.12em;text-transform:uppercase;color:var(--teal-ink);display:block;margin-bottom:3px}
+.ato h2{font-size:clamp(21px,4vw,28px)}
+
+/* degraus */
+.degrau{padding:30px 0;border-bottom:1px solid var(--line)}
+.dhead{display:flex;gap:13px;align-items:flex-start;margin-bottom:12px}
+.dnum{flex-shrink:0;width:38px;height:38px;border:1.5px solid var(--teal);border-radius:50%;display:flex;align-items:center;justify-content:center;font:600 14px "IBM Plex Mono";color:var(--teal-ink)}
+.dtitle{min-width:0;padding-top:3px}
+.dtitle h3{font-size:clamp(19px,3.4vw,24px)}
+.src{display:block;margin-top:5px;font:500 11.5px/1.4 "IBM Plex Mono";color:var(--ink3)}
+.lede{font-size:16px;line-height:1.55;color:var(--ink2);margin:0 0 14px;font-style:italic}
+.prose ul{margin:0 0 12px;padding-left:20px}
+.prose li{font-size:15.4px;line-height:1.55;color:var(--ink2);margin-bottom:6px}
+.prose li:last-child{margin-bottom:0}
+h4{font:600 14px "Source Sans 3";color:var(--ink);margin:20px 0 8px}
+.ff{display:inline-block;font:600 10.5px/1.5 "Source Sans 3";color:var(--amber-ink);border:1px solid var(--amber);border-radius:2px;padding:0 4px;vertical-align:1px}
+
+.trap,.banca{margin:16px 0;padding:13px 16px}
+.trap{border-left:3px solid var(--carmine);background:var(--carmine-wash)}
+.banca{border-left:3px solid var(--amber);background:var(--amber-wash)}
+.albl{font:700 10.5px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px}
+.trap .albl{color:var(--carmine-ink)}
+.banca .albl{color:var(--amber-ink)}
+.trap p,.banca p{font-size:15px;line-height:1.55;color:var(--ink);margin:0}
+
+/* lado a lado */
+.vs{display:grid;grid-template-columns:minmax(0,1fr);gap:1px;background:var(--line2);border:1px solid var(--line2);margin:16px 0}
+.vs>div{background:var(--card);padding:12px 14px;min-width:0}
+.vs h5{font:700 12px "Source Sans 3";letter-spacing:.04em;text-transform:uppercase;margin:0 0 6px}
+.vs .a h5{color:var(--carmine-ink)}
+.vs .b h5{color:var(--teal-ink)}
+.vs ul{margin:0;padding-left:17px}
+.vs li{font-size:14.4px;line-height:1.5;color:var(--ink2);margin-bottom:4px;overflow-wrap:break-word}
+
+/* tabelas de critério */
+.crit{border:1px solid var(--line2);margin:16px 0;background:var(--card)}
+.crit .row{display:grid;grid-template-columns:minmax(0,1fr);gap:2px;padding:9px 13px;font-size:14.2px}
+.crit .row+.row{border-top:1px solid var(--line)}
+.crit .row>*{min-width:0}
+.crit .k{font-weight:600;color:var(--teal-ink)}
+.crit .v{color:var(--ink2);line-height:1.48;overflow-wrap:break-word}
+.crit.hd .row:first-child{background:var(--sunk)}
+.crit.hd .row:first-child>*{font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink3);font-weight:600}
+.crit.c3 .row{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:4px 12px}
+.crit.c3 .row .k{grid-column:1 / -1}
+.crit.c3.hd .row:first-child .k{display:none}
+.mal{color:var(--carmine-ink);font-weight:600}
+
+/* grade de diferenciais: fichas no celular, tabela em tela larga */
+.grade{border:1px solid var(--line2);margin:16px 0;background:var(--card)}
+.grade .gr{display:grid;grid-template-columns:minmax(0,1fr);gap:3px;padding:10px 13px}
+.grade .gr+.gr{border-top:1px solid var(--line)}
+.grade .gr>*{min-width:0;overflow-wrap:break-word}
+.grade .gh{display:none}
+.grade .gk{font-weight:600;font-size:14.8px;color:var(--teal-ink);line-height:1.35}
+.grade .gc{font-size:14px;line-height:1.45;color:var(--ink2)}
+.grade .gc[data-l]::before{content:attr(data-l) ": ";font-weight:600;color:var(--ink3);font-size:12.5px}
+.grade .gr.hot .gk{color:var(--carmine-ink)}
+
+/* blocos de número */
+.ext{display:grid;grid-template-columns:minmax(0,1fr);gap:1px;background:var(--line2);border:1px solid var(--line2);margin:16px 0}
+.ext>div{background:var(--card);padding:13px 14px;min-width:0}
+.ext .fv{display:block;font:600 17px/1.25 Fraunces,Georgia,serif;color:var(--teal-ink);margin-bottom:5px}
+.ext .tot .fv{color:var(--carmine-ink)}
+.ext .fk{font-size:14px;line-height:1.48;color:var(--ink2)}
+
+/* passos em sequência */
+ol.passo{list-style:none;margin:16px 0;padding:0;border:1px solid var(--line2);background:var(--card);counter-reset:p}
+ol.passo li{counter-increment:p;display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;padding:10px 13px;font-size:14.4px;line-height:1.48;color:var(--ink2)}
+ol.passo li+li{border-top:1px solid var(--line)}
+ol.passo li::before{content:counter(p);width:26px;height:26px;border-radius:50%;border:1.5px solid var(--teal);display:flex;align-items:center;justify-content:center;font:600 12px "IBM Plex Mono";color:var(--teal-ink)}
+ol.passo li>span{min-width:0;overflow-wrap:break-word}
+
+/* referência recolhida */
+details.ref{margin:16px 0;border:1px solid var(--line2);background:var(--card)}
+details.ref>summary{cursor:pointer;list-style:none;padding:12px 16px;font:600 13.5px "Source Sans 3";color:var(--teal-ink);display:flex;align-items:center;gap:9px}
+details.ref>summary::-webkit-details-marker{display:none}
+details.ref>summary::before{content:"+";font:600 15px "IBM Plex Mono";width:16px;flex-shrink:0}
+details.ref[open]>summary::before{content:"-"}
+details.ref .refbody{padding:0 16px 14px}
+details.ref .refbody ul{margin:0;padding-left:18px}
+details.ref .refbody li{font-size:14.2px;line-height:1.5;color:var(--ink2);margin-bottom:5px}
+
+/* síntese */
+.synth{background:var(--card);border:1px solid var(--line2);padding:20px 16px;margin-top:40px}
+.synth h2{font-size:23px;margin-bottom:6px}
+.synth .note{font-size:14px;color:var(--ink3);margin:0 0 14px}
+.trig{display:grid;grid-template-columns:minmax(0,1fr);gap:1px;background:var(--line2);border:1px solid var(--line2)}
+.trig div{background:var(--sunk);padding:10px 13px;min-width:0}
+.trig .tk{font:700 11px "IBM Plex Mono";color:var(--teal-ink);display:block;margin-bottom:3px}
+.trig .tv{font-size:13.8px;line-height:1.45;color:var(--ink2)}
+.trig .tv b{color:var(--carmine-ink)}
+.synth.arm{border-left:3px solid var(--carmine)}
+.synth.arm h2::before{content:"";display:inline-block;width:11px;height:11px;border-radius:50%;background:var(--carmine);margin-right:9px;vertical-align:2px}
+ol.armas{margin:0;padding-left:22px}
+ol.armas li{font-size:15px;line-height:1.5;color:var(--ink2);margin-bottom:8px}
+ol.armas li::marker{font:600 13px "IBM Plex Mono";color:var(--carmine-ink)}
+ol.armas .d{font:500 11.5px "IBM Plex Mono";color:var(--ink3)}
+
+footer{margin-top:46px;padding-top:18px;border-top:1px solid var(--line2)}
+footer p{font-size:12.3px;color:var(--ink3);margin:0 0 7px;line-height:1.5}
+code{font-family:"IBM Plex Mono",Consolas,monospace;font-size:11.5px;background:var(--sunk);padding:1px 4px;border-radius:2px;word-break:break-all}
+
+/* telas maiores: o mesmo conteúdo ganha colunas */
+@media (min-width:560px){
+  .vs{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .crit .row{grid-template-columns:150px minmax(0,1fr);gap:12px}
+  .crit.c3 .row{grid-template-columns:130px minmax(0,1fr) minmax(0,1fr);gap:12px}
+  .crit.c3 .row .k{grid-column:auto}
+  .crit.c3.hd .row:first-child .k{display:block}
+  .trig{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (min-width:640px){
+  .wrap{padding:0 24px 90px}
+  .top{padding:46px 0 26px}
+  .degrau{padding:34px 0}
+  .ext{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .ext.e2{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .ext.e4{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .synth{padding:26px 22px}
+}
+@media (min-width:700px){
+  .grade .gr{grid-template-columns:var(--cols);gap:12px;align-items:start}
+  .grade .gh{display:grid;background:var(--sunk)}
+  .grade .gh>*{font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink3);font-weight:600}
+  .grade .gc[data-l]::before{content:none}
+}
+</style>
+<div class="wrap">
+<header class="top">
+  <p class="eye">MedHub · Aula-base · Clínica Médica · Cardiologia · tarefa #777</p>
+  <h1>IAM com supra de ST: tempo é músculo</h1>
+  <p class="sub">O eletrocardiograma decide. Visto o supra, a pergunta deixa de ser "é infarto?" e passa a ser qual artéria, por qual via e em quantos minutos. Depois vem o que pode romper.</p>
+  <div class="stats">
+    <div class="stat"><b>10 min</b><span>porta-ECG</span></div>
+    <div class="stat"><b>30 min</b><span>porta-agulha</span></div>
+    <div class="stat"><b>90 min</b><span>porta-balão</span></div>
+    <div class="stat"><b>12 h</b><span>janela de reperfusão</span></div>
+    <div class="stat"><b>14</b><span>degraus</span></div>
+  </div>
+</header>
+
+<nav class="nav" aria-label="Atalhos">
+  <a href="#d0">Régua</a><a href="#d1">Supra</a><a href="#d2">Paredes</a><a href="#d3">Marcadores</a><a href="#d4">Reperfusão</a>
+  <a href="#d5">Fibrinolítico</a><a href="#d6">Pós-trombólise</a><a href="#d7">Antiagregantes</a><a href="#d8">Anticoagulantes</a>
+  <a href="#d9">Anti-isquêmicos</a><a href="#d10">VD</a><a href="#d11">Killip</a><a href="#d12">Mecânicas</a><a href="#d13">Alta</a>
+  <a href="#gat">Gatilhos</a><a href="#arm">Armadilhas</a>
+</nav>
+
+<section class="degrau" id="d0">
+  <div class="dhead"><span class="dnum">0</span><div class="dtitle"><h3>A régua: o ECG divide a síndrome coronariana aguda</h3><span class="src">Cardio/10 p4, 7, 9</span></div></div>
+  <p class="lede">Na síndrome coronariana aguda (SCA), o primeiro exame já separa os caminhos. Com supra, a artéria está ocluída e o relógio corre.</p>
+  <div class="prose"><ul>
+    <li>ECG com supra de ST + clínica compatível = infarto agudo do miocárdio com supra (IAMCSST). Diagnóstico feito.</li>
+    <li>Sem supra: os marcadores separam IAM sem supra (positivos) de angina instável (negativos).</li>
+    <li>Mecanismo: o supra traduz <strong>oclusão total</strong> da coronária. A necrose avança enquanto a artéria segue fechada.</li>
+    <li>Supra no ECG = reperfusão imediata. <strong>Não esperar troponina.</strong></li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="d1">
+  <div class="dhead"><span class="dnum">1</span><div class="dtitle"><h3>O que conta como supra</h3><span class="src">Cardio/10 p4-5; flashcards EMED IAMCSST</span></div></div>
+  <p class="lede">O supra é medido no ponto J, em pelo menos duas derivações contíguas. O corte muda em V2-V3, por sexo e idade.</p>
+  <div class="crit hd">
+    <div class="row"><span class="k">Derivação</span><span class="v">Supra que conta</span></div>
+    <div class="row"><span class="k">V2 e V3</span><span class="v">Homem de 40 anos ou mais: 2 mm. Homem abaixo de 40: 2,5 mm. Mulher: 1,5 mm</span></div>
+    <div class="row"><span class="k">Demais</span><span class="v">1 mm</span></div>
+    <div class="row"><span class="k">V7-V9 e V3R-V4R</span><span class="v">0,5 mm</span></div>
+    <div class="row"><span class="k">Equivalente</span><span class="v mal">Bloqueio de ramo esquerdo (BRE) completo novo ou presumivelmente novo</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Quanto mais derivações e maior o supra, pior o prognóstico.</li>
+    <li>BRE antigo: critérios de Sgarbossa; 3 pontos ou mais = infarto.</li>
+  </ul></div>
+  <div class="banca"><div class="albl">Depende da banca</div>
+    <p>A apostila (diretriz brasileira de 2015) exige BRE novo. A diretriz europeia desde 2017 trata como IAMCSST qualquer BRE com clínica de isquemia, novo ou não. Questão nacional costuma pedir "novo ou presumivelmente novo".</p></div>
+</section>
+
+<section class="degrau" id="d2">
+  <div class="dhead"><span class="dnum">2</span><div class="dtitle"><h3>Parede, derivação e artéria: a grade</h3><span class="src">Cardio/10 p6-7; flashcards EMED IAMCSST</span></div></div>
+  <p class="lede">Cada parede tem suas derivações e sua artéria. É o assunto do tema que mais cai.</p>
+  <div class="grade" style="--cols:150px minmax(0,1fr) minmax(0,1fr)">
+    <div class="gr gh"><span>Parede</span><span>Derivações</span><span>Artéria culpada</span></div>
+    <div class="gr"><span class="gk">Anterosseptal</span><span class="gc" data-l="Derivações">V1, V2, V3</span><span class="gc" data-l="Artéria">Descendente anterior (DA)</span></div>
+    <div class="gr"><span class="gk">Anterior</span><span class="gc" data-l="Derivações">V1 a V4</span><span class="gc" data-l="Artéria">DA</span></div>
+    <div class="gr"><span class="gk">Anterior localizada</span><span class="gc" data-l="Derivações">V3 e V4 (ou V3 a V5)</span><span class="gc" data-l="Artéria">DA</span></div>
+    <div class="gr"><span class="gk">Anterolateral</span><span class="gc" data-l="Derivações">V4 a V6, DI e aVL</span><span class="gc" data-l="Artéria">DA</span></div>
+    <div class="gr hot"><span class="gk">Anterior extensa</span><span class="gc" data-l="Derivações">V1 a V6, DI e aVL</span><span class="gc" data-l="Artéria">DA</span></div>
+    <div class="gr"><span class="gk">Lateral alta</span><span class="gc" data-l="Derivações">DI e aVL</span><span class="gc" data-l="Artéria">Circunflexa (Cx)</span></div>
+    <div class="gr"><span class="gk">Lateral baixa</span><span class="gc" data-l="Derivações">V5 e V6</span><span class="gc" data-l="Artéria">Cx</span></div>
+    <div class="gr hot"><span class="gk">Inferior</span><span class="gc" data-l="Derivações">DII, DIII e aVF</span><span class="gc" data-l="Artéria"><strong>Coronária direita (CD) se supra DIII &gt; DII</strong>; Cx se DII &gt; DIII</span></div>
+    <div class="gr"><span class="gk">Dorsal (posterior)</span><span class="gc" data-l="Derivações">V7, V8 e V9</span><span class="gc" data-l="Artéria">Cx</span></div>
+    <div class="gr hot"><span class="gk">Ventrículo direito</span><span class="gc" data-l="Derivações">V3R e V4R</span><span class="gc" data-l="Artéria">CD</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>"Dorsal" é termo clássico de prova; a ressonância mostrou que essa área é, na verdade, lateral.</li>
+    <li>Infradesnível de V1-V3 pode ser a imagem em espelho do dorsal: pedir V7-V9. <span class="ff">fora da apostila</span></li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="d3">
+  <div class="dhead"><span class="dnum">3</span><div class="dtitle"><h3>Marcadores de necrose: confirmam, não decidem</h3><span class="src">Cardio/10 p7-8</span></div></div>
+  <p class="lede">No IAMCSST, o marcador serve para prognóstico e para o seguimento. A decisão de reperfundir já foi tomada pelo ECG.</p>
+  <div class="grade" style="--cols:130px minmax(0,1fr) minmax(0,1fr) minmax(0,1fr)">
+    <div class="gr gh"><span>Marcador</span><span>Começa</span><span>Pico</span><span>Some em</span></div>
+    <div class="gr"><span class="gk">Mioglobina</span><span class="gc" data-l="Começa">1-4 h</span><span class="gc" data-l="Pico">6-7 h</span><span class="gc" data-l="Some em">24 h</span></div>
+    <div class="gr"><span class="gk">CK-MB</span><span class="gc" data-l="Começa">3-12 h</span><span class="gc" data-l="Pico">18-24 h</span><span class="gc" data-l="Some em">36-48 h (algumas fontes: 72-96 h)</span></div>
+    <div class="gr"><span class="gk">Troponina I</span><span class="gc" data-l="Começa">3-12 h</span><span class="gc" data-l="Pico">24 h</span><span class="gc" data-l="Some em">5-10 dias</span></div>
+    <div class="gr"><span class="gk">Troponina T</span><span class="gc" data-l="Começa">3-12 h</span><span class="gc" data-l="Pico">12-48 h</span><span class="gc" data-l="Some em">5-14 dias</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Coleta: na admissão e de novo em 6-9 h (9-12 h se a suspeita for forte; 3-6 h com troponina ultrassensível).</li>
+    <li>Troponina seriada é o exame de escolha para diagnosticar infarto.</li>
+    <li>Pela cinética, a CK-MB normaliza em 2-3 dias e a troponina fica 1-2 semanas: reinfarto precoce aparece melhor na CK-MB. <span class="ff">fora da apostila</span></li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="d4">
+  <div class="dhead"><span class="dnum">4</span><div class="dtitle"><h3>Reperfusão: quem, por qual via e em quanto tempo</h3><span class="src">Cardio/10 p9-10; flashcards EMED IAMCSST</span></div></div>
+  <p class="lede">Todo IAMCSST com até 12 horas de sintoma reperfunde. A angioplastia é a escolha; o fibrinolítico entra quando a angioplastia não chega a tempo.</p>
+  <div class="prose"><ul>
+    <li>Indicação: sintomas há 12 h ou menos. Entre 12 e 18 h, considerar se ainda há isquemia clínica ou no ECG.</li>
+    <li><strong>Intervenção coronariana percutânea (ICP) primária</strong> é o tratamento de escolha, com stent farmacológico.</li>
+  </ul></div>
+  <div class="ext e4">
+    <div><span class="fv">Porta-ECG: 10 min</span><span class="fk">Toda dor torácica suspeita</span></div>
+    <div><span class="fv">Porta-agulha: 30 min</span><span class="fk">Quando a via é o fibrinolítico</span></div>
+    <div><span class="fv">Porta-balão: 90 min</span><span class="fk">Hospital com hemodinâmica</span></div>
+    <div class="tot"><span class="fv">Transferência: 120 min</span><span class="fk">Do diagnóstico à ICP, vindo de hospital sem hemodinâmica</span></div>
+  </div>
+  <ol class="passo">
+    <li><span><strong>Hospital com hemodinâmica:</strong> ICP em até 90 min? Sim: ICP primária. Não: fibrinolítico em até 30 min.</span></li>
+    <li><span><strong>Hospital sem hemodinâmica:</strong> transferência + ICP em até 120 min? Sim: transferir. Não: fibrinolítico em até 30 min.</span></li>
+  </ol>
+  <div class="banca"><div class="albl">Depende da banca</div>
+    <p>Os tempos da apostila são os da diretriz brasileira e da americana. A europeia (2017 e 2023) conta do diagnóstico: fibrinolítico em até 10 min e ICP em até 60 min no centro com hemodinâmica, mantendo 120 min como limite para escolher o fibrinolítico. Em prova nacional, 30/90/120.</p></div>
+</section>
+
+<section class="degrau" id="d5">
+  <div class="dhead"><span class="dnum">5</span><div class="dtitle"><h3>Fibrinolítico: as contraindicações</h3><span class="src">Cardio/10 p10; flashcards EMED IAMCSST</span></div></div>
+  <p class="lede">O fibrinolítico dissolve o trombo de fibrina. O risco é sangrar, e o pior sangramento é o intracraniano.</p>
+  <div class="prose"><ul>
+    <li>De escolha: <strong>tenecteplase</strong> (eficaz, bolus único, menos hemorragia intracraniana).</li>
+  </ul></div>
+  <div class="vs">
+    <div class="a"><h5>Absolutas</h5><ul>
+      <li>Qualquer sangramento intracraniano prévio.</li>
+      <li>Lesão ou neoplasia do sistema nervoso central; malformação arteriovenosa cerebral.</li>
+      <li>AVC isquêmico nos últimos 3 meses.</li>
+      <li>Trauma importante de face ou cabeça nos últimos 3 meses.</li>
+      <li>Sangramento ativo (menstruação não conta).</li>
+      <li><strong>Suspeita de dissecção de aorta.</strong></li>
+      <li>Discrasia sanguínea.</li></ul></div>
+    <div class="b"><h5>Relativas</h5><ul>
+      <li>AVC isquêmico há mais de 3 meses.</li>
+      <li><strong>PA sistólica acima de 180 ou diastólica acima de 110 mmHg.</strong></li>
+      <li>Anticoagulante oral; gestação; úlcera péptica ativa.</li>
+      <li>Punção vascular não compressível; cirurgia nas últimas 3 semanas.</li>
+      <li>Reanimação traumática ou com mais de 10 minutos.</li>
+      <li>Estreptoquinase usada há mais de 5 dias ou alergia a ela.</li></ul></div>
+  </div>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p>Hipertensão de 190 x 115 mmHg é contraindicação relativa, não absoluta. AVC isquêmico de 4 meses atrás também é relativa.</p></div>
+</section>
+
+<section class="degrau" id="d6">
+  <div class="dhead"><span class="dnum">6</span><div class="dtitle"><h3>Depois do fibrinolítico: abriu ou não abriu?</h3><span class="src">Cardio/10 p10-11; flashcards EMED IAMCSST</span></div></div>
+  <p class="lede">Em 60-90 minutos se avalia se a artéria abriu. A resposta define se o paciente vai para a sala agora ou nas próximas horas.</p>
+  <div class="crit hd">
+    <div class="row"><span class="k">Critério de reperfusão</span><span class="v">O que se vê</span></div>
+    <div class="row"><span class="k">ECG</span><span class="v"><strong>Supra cai mais de 50%</strong> em 60-90 min</span></div>
+    <div class="row"><span class="k">Dor</span><span class="v">Melhora</span></div>
+    <div class="row"><span class="k">Arritmia de reperfusão</span><span class="v">Ritmo idioventricular acelerado (RIVA): sem onda P, QRS largo, FC 60-120</span></div>
+    <div class="row"><span class="k">Marcadores</span><span class="v">Pico precoce de troponina e CK-MB (lavagem)</span></div>
+  </div>
+  <div class="vs">
+    <div class="a"><h5>Não abriu</h5><ul>
+      <li>Dor persiste e o supra não cai 50%.</li>
+      <li><strong>ICP de resgate</strong>, em menos de 180 min após o fibrinolítico.</li></ul></div>
+    <div class="b"><h5>Abriu</h5><ul>
+      <li>Critérios presentes.</li>
+      <li>Cateterismo com ICP eletiva <strong>em 2 a 24 h</strong> (estratégia fármaco-invasiva).</li></ul></div>
+  </div>
+</section>
+
+<section class="degrau" id="d7">
+  <div class="dhead"><span class="dnum">7</span><div class="dtitle"><h3>Antiagregantes: AAS para todos, o P2Y12 depende da via</h3><span class="src">Cardio/10 p13-15</span></div></div>
+  <p class="lede">Dupla antiagregação é o pilar, por 1 ano para todos. A escolha do segundo antiagregante segue a estratégia de reperfusão.</p>
+  <div class="prose"><ul>
+    <li><strong>AAS</strong>: inibe a COX-1 de forma irreversível e corta o tromboxano A2. Ataque de 160-325 mg mastigado; 100 mg/dia para sempre. Reduz mortalidade (23%).</li>
+    <li>Contraindicações do AAS: alergia, sangramento ativo, distúrbio plaquetário, alto risco de sangramento digestivo ou urinário.</li>
+  </ul></div>
+  <div class="grade" style="--cols:120px minmax(0,1fr) minmax(0,1fr) minmax(0,1fr)">
+    <div class="gr gh"><span>P2Y12</span><span>Dose</span><span>Farmacologia</span><span>Quando usar</span></div>
+    <div class="gr hot"><span class="gk">Clopidogrel</span><span class="gc" data-l="Dose">Fibrinólise: ataque 300 mg (acima de 75 anos, sem ataque). ICP: 600 mg em qualquer idade. Depois 75 mg/dia</span><span class="gc" data-l="Farmacologia">Tienopiridina; irreversível; pró-droga</span><span class="gc" data-l="Quando"><strong>Fibrinólise</strong>, ICP e sem reperfusão</span></div>
+    <div class="gr"><span class="gk">Prasugrel</span><span class="gc" data-l="Dose">60 mg, depois 10 mg/dia (5 mg se 75 anos ou mais, ou abaixo de 60 kg)</span><span class="gc" data-l="Farmacologia">Tienopiridina; irreversível; pró-droga</span><span class="gc" data-l="Quando">Só ICP, dado na sala após o cateterismo. Evitar com AVC ou AIT prévio</span></div>
+    <div class="gr"><span class="gk">Ticagrelor</span><span class="gc" data-l="Dose">180 mg, depois 90 mg de 12/12 h</span><span class="gc" data-l="Farmacologia">Reversível; droga ativa</span><span class="gc" data-l="Quando">Só ICP</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Inibidor da glicoproteína IIb/IIIa (abciximabe, tirofibana): na sala de hemodinâmica, em alta carga de trombo ou complicação trombótica da angioplastia.</li>
+  </ul></div>
+  <div class="banca"><div class="albl">Depende da banca</div>
+    <p>A regra de não pré-tratar com prasugrel vem do IAM sem supra. No IAMCSST que vai para ICP primária, a diretriz europeia aceita pré-tratamento com prasugrel ou ticagrelor. A apostila mantém o prasugrel só na sala.</p></div>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p>Na fibrinólise, o único P2Y12 aprovado é o clopidogrel. Prasugrel e ticagrelor com trombolítico: errado.</p></div>
+</section>
+
+<section class="degrau" id="d8">
+  <div class="dhead"><span class="dnum">8</span><div class="dtitle"><h3>Anticoagulantes: cada via tem o seu</h3><span class="src">Cardio/10 p15-16</span></div></div>
+  <p class="lede">A anticoagulação parenteral entra junto com a dupla antiagregação, qualquer que seja a via de reperfusão.</p>
+  <div class="grade" style="--cols:150px minmax(0,1fr) minmax(0,1fr)">
+    <div class="gr gh"><span>Droga</span><span>Quando</span><span>Detalhe</span></div>
+    <div class="gr hot"><span class="gk">Heparina não fracionada (HNF)</span><span class="gc" data-l="Quando"><strong>Escolha na ICP primária</strong></span><span class="gc" data-l="Detalhe">Inibe trombina e fator Xa (via antitrombina); bomba por 48 h</span></div>
+    <div class="gr"><span class="gk">Enoxaparina</span><span class="gc" data-l="Quando"><strong>Principal na fibrinólise</strong></span><span class="gc" data-l="Detalhe">Até a alta ou 8 dias, o que vier antes</span></div>
+    <div class="gr"><span class="gk">Fondaparinux</span><span class="gc" data-l="Quando">Fibrinólise com estreptoquinase</span><span class="gc" data-l="Detalhe"><span class="mal">Contraindicado na ICP primária: trombose de cateter</span></span></div>
+  </div>
+  <div class="crit hd">
+    <div class="row"><span class="k">Enoxaparina na fibrinólise</span><span class="v">Dose</span></div>
+    <div class="row"><span class="k">Abaixo de 75 anos</span><span class="v">30 mg IV em bolus; após 15 min, 1 mg/kg SC de 12/12 h (máximo de 100 mg nas 2 primeiras doses)</span></div>
+    <div class="row"><span class="k">75 anos ou mais</span><span class="v"><strong>Sem bolus</strong>; 0,75 mg/kg SC de 12/12 h (máximo de 75 mg nas 2 primeiras)</span></div>
+    <div class="row"><span class="k">Clearance abaixo de 30</span><span class="v">Sem bolus; 1 mg/kg SC 1 vez ao dia</span></div>
+  </div>
+</section>
+
+<section class="degrau" id="d9">
+  <div class="dhead"><span class="dnum">9</span><div class="dtitle"><h3>Anti-isquêmicos: o que salva vida e o que só alivia</h3><span class="src">Cardio/10 p12-13, 16-17, 20</span></div></div>
+  <p class="lede">A banca pergunta duas coisas de cada droga: reduz mortalidade? E quando não pode?</p>
+  <div class="grade" style="--cols:120px minmax(0,1.1fr) minmax(0,1fr) 90px">
+    <div class="gr gh"><span>Droga</span><span>Indicação e uso</span><span>Não usar quando</span><span>Mortalidade</span></div>
+    <div class="gr"><span class="gk">Oxigênio</span><span class="gc" data-l="Uso">Só se SatO2 abaixo de 94% (algumas: 90%), dispneia ou insuficiência cardíaca; 2-4 L/min</span><span class="gc" data-l="Não usar">Rotina: o excesso causa vasoconstrição</span><span class="gc" data-l="Mortalidade">Não</span></div>
+    <div class="gr"><span class="gk">Morfina</span><span class="gc" data-l="Uso">Dor intensa e refratária; útil no edema agudo de pulmão. 1-5 mg IV, repetir a cada 5-30 min</span><span class="gc" data-l="Não usar">Hipotensão; <strong>evitar no IAM inferior</strong></span><span class="gc" data-l="Mortalidade">Não</span></div>
+    <div class="gr"><span class="gk">Nitrato</span><span class="gc" data-l="Uso">Dor isquêmica; IV se dor refratária, hipertensão ou congestão</span><span class="gc" data-l="Não usar"><strong>Suspeita de IAM de VD</strong>; PAS abaixo de 90 ou queda acima de 30; sildenafila em 24 h, tadalafila em 48 h</span><span class="gc" data-l="Mortalidade">Não</span></div>
+    <div class="gr hot"><span class="gk">Betabloqueador</span><span class="gc" data-l="Uso">Oral nas primeiras 24 h</span><span class="gc" data-l="Não usar">PR acima de 0,24 s; BAV de 2º ou 3º grau sem marca-passo; PAS abaixo de 100; FC abaixo de 50; congestão; broncoespasmo; isquemia crítica de membro; <strong>cocaína na fase aguda</strong></span><span class="gc" data-l="Mortalidade"><strong>Sim</strong></span></div>
+    <div class="gr"><span class="gk">Diltiazem, verapamil</span><span class="gc" data-l="Uso">Isquemia refratária ou intolerância a betabloqueador e nitrato</span><span class="gc" data-l="Não usar">As mesmas do betabloqueador</span><span class="gc" data-l="Mortalidade">Não</span></div>
+    <div class="gr hot"><span class="gk">IECA ou BRA, antialdosterona, estatina</span><span class="gc" data-l="Uso">Para todos sem contraindicação; podem começar após 12-24 h da admissão</span><span class="gc" data-l="Não usar">Contraindicação própria de cada um</span><span class="gc" data-l="Mortalidade"><strong>Sim</strong></span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>IAM por cocaína: jovem com dor anginosa e hiperadrenergismo cerca de 1 h após o uso. Tratamento igual, <strong>sem betabloqueador</strong>; benzodiazepínico controla agitação, PA e FC.</li>
+  </ul></div>
+  <div class="banca"><div class="albl">Depende da banca</div>
+    <p>A apostila deixa a estatina para depois de 12-24 h. A diretriz europeia de 2023 pede estatina de alta intensidade o mais cedo possível. Se a alternativa disser "estatina de alta potência na internação", está certa nas duas leituras.</p></div>
+</section>
+
+<section class="degrau" id="d10">
+  <div class="dhead"><span class="dnum">10</span><div class="dtitle"><h3>Infarto do ventrículo direito</h3><span class="src">Cardio/10 p13, 16, 18-19</span></div></div>
+  <p class="lede">A complicação mais cobrada. O VD sem força depende de pré-carga: tudo que tira volume derruba a pressão.</p>
+  <div class="prose"><ul>
+    <li>Cerca de 40% dos IAM inferiores ou inferodorsais. Artéria: quase sempre a CD.</li>
+    <li><strong>Tríade</strong>: hipotensão + turgência jugular + pulmão limpo. Muito específica, pouco sensível.</li>
+    <li><strong>Sinal de Kussmaul</strong> (jugular que enche na inspiração): sensível e específico. Pode haver pulso paradoxal.</li>
+    <li>Pensar em VD: supra inferior, DIII &gt; DII, supra em V3R-V4R, BAV de 2º ou 3º grau, bloqueio de ramo direito.</li>
+    <li><strong>Todo IAM inferior pede V3R e V4R.</strong> Supra em V4R tem o maior valor preditivo positivo.</li>
+  </ul></div>
+  <div class="crit hd">
+    <div class="row"><span class="k">Alvo</span><span class="v">Como</span></div>
+    <div class="row"><span class="k">Pré-carga</span><span class="v mal">Volume: a medida mais importante. Evitar diurético, nitrato e morfina</span></div>
+    <div class="row"><span class="k">Contratilidade</span><span class="v">Dobutamina</span></div>
+    <div class="row"><span class="k">Pós-carga</span><span class="v">Nitroprussiato se PA normal; balão intra-aórtico</span></div>
+    <div class="row"><span class="k">Ritmo</span><span class="v">Marca-passo no BAV avançado</span></div>
+    <div class="row"><span class="k">Reperfusão</span><span class="v">ICP primária de preferência; fibrinólise se não houver</span></div>
+  </div>
+</section>
+
+<section class="degrau" id="d11">
+  <div class="dhead"><span class="dnum">11</span><div class="dtitle"><h3>Killip: o prognóstico à beira do leito</h3><span class="src">Fora das fontes locais (Killip e Kimball, 1967)</span></div></div>
+  <p class="lede">A classificação de Killip usa só o exame físico na admissão para medir o quanto o infarto já comprometeu a bomba.</p>
+  <div class="grade" style="--cols:70px minmax(0,1fr) 120px">
+    <div class="gr gh"><span>Classe</span><span>Exame físico</span><span>Mortalidade original</span></div>
+    <div class="gr"><span class="gk">I</span><span class="gc" data-l="Exame">Sem sinal de insuficiência cardíaca</span><span class="gc" data-l="Mortalidade">Cerca de 6%</span></div>
+    <div class="gr"><span class="gk">II</span><span class="gc" data-l="Exame">Estertores em bases, terceira bulha (B3), turgência jugular</span><span class="gc" data-l="Mortalidade">Cerca de 17%</span></div>
+    <div class="gr"><span class="gk">III</span><span class="gc" data-l="Exame">Edema agudo de pulmão</span><span class="gc" data-l="Mortalidade">Cerca de 38%</span></div>
+    <div class="gr hot"><span class="gk">IV</span><span class="gc" data-l="Exame">Choque cardiogênico: hipotensão com má perfusão</span><span class="gc" data-l="Mortalidade">Cerca de 81%</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>As taxas são da era pré-reperfusão; hoje são menores, mas a ordem se mantém.</li>
+    <li>Choque cardiogênico é indicação de revascularização de urgência (degrau 12).</li>
+  </ul></div>
+  <div class="banca"><div class="albl">Fora da apostila</div>
+    <p>Killip não aparece nas apostilas do EMED nem nos flashcards locais. Este degrau foi escrito de fonte externa e precisa da sua conferência.</p></div>
+</section>
+
+<section class="degrau" id="d12">
+  <div class="dhead"><span class="dnum">12</span><div class="dtitle"><h3>Complicações mecânicas e pericárdicas</h3><span class="src">Cardio/10 p11; flashcards EMED IAMCSST; Valvo/14 p22; Peri/15 p10; tempos e pistas fora da apostila</span></div></div>
+  <p class="lede">Na primeira semana, o músculo necrótico amolece e pode romper. A pista é a piora súbita, muitas vezes com sopro novo.</p>
+  <div class="grade" style="--cols:130px minmax(0,1fr) minmax(0,1fr)">
+    <div class="gr gh"><span>Complicação</span><span>Pista</span><span>Conduta</span></div>
+    <div class="gr hot"><span class="gk">Insuficiência mitral aguda (músculo papilar)</span><span class="gc" data-l="Pista">Edema agudo de pulmão súbito, sopro sistólico apical; mais no IAM inferior <span class="ff">fora da apostila</span></span><span class="gc" data-l="Conduta">Ecocardiograma; cirurgia de urgência</span></div>
+    <div class="gr hot"><span class="gk">Ruptura do septo (CIV)</span><span class="gc" data-l="Pista">Sopro holossistólico novo em borda esternal esquerda, frêmito, choque <span class="ff">fora da apostila</span></span><span class="gc" data-l="Conduta">Ecocardiograma; cirurgia (balão intra-aórtico como ponte)</span></div>
+    <div class="gr hot"><span class="gk">Ruptura da parede livre</span><span class="gc" data-l="Pista">Tamponamento e atividade elétrica sem pulso, de repente <span class="ff">fora da apostila</span></span><span class="gc" data-l="Conduta">Cirurgia de emergência</span></div>
+    <div class="gr"><span class="gk">Aneurisma e pseudoaneurisma de VE</span><span class="gc" data-l="Pista">Tardio; supra que não regride, insuficiência cardíaca, arritmia, trombo <span class="ff">fora da apostila</span></span><span class="gc" data-l="Conduta">Pseudoaneurisma (ruptura contida) rompe: cirurgia</span></div>
+    <div class="gr"><span class="gk">Pericardite epistenocárdica</span><span class="gc" data-l="Pista">Primeiros dias após infarto extenso</span><span class="gc" data-l="Conduta">AAS em dose anti-inflamatória</span></div>
+    <div class="gr"><span class="gk">Síndrome de Dressler</span><span class="gc" data-l="Pista">Semanas a meses depois; autoimune; derrame pleural associado</span><span class="gc" data-l="Conduta">AAS em dose anti-inflamatória, como na epistenocárdica <span class="ff">fora da apostila</span></span></div>
+  </div>
+  <h4>Revascularização cirúrgica de urgência no IAMCSST</h4>
+  <div class="prose"><ul>
+    <li>ICP sem sucesso com instabilidade ou grande área em risco.</li>
+    <li>Isquemia recorrente; arritmia ventricular complexa (taquicardia ventricular).</li>
+    <li><strong>Choque cardiogênico</strong>; <strong>complicação mecânica</strong> (ruptura de VE, CIV, ruptura de papilar).</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="d13">
+  <div class="dhead"><span class="dnum">13</span><div class="dtitle"><h3>Alta: o que fica para sempre e as metas</h3><span class="src">Cardio/10 p17; resumo Prevenção Secundária Pós-IAM</span></div></div>
+  <p class="lede">Na receita da alta, a pergunta é a mesma do degrau 9: reduz mortalidade e é para todos?</p>
+  <div class="grade" style="--cols:minmax(0,1.4fr) 110px 110px">
+    <div class="gr gh"><span>Droga</span><span>Reduz mortalidade</span><span>Para todos</span></div>
+    <div class="gr hot"><span class="gk">Dupla antiagregação (AAS + P2Y12)</span><span class="gc" data-l="Mortalidade">Sim</span><span class="gc" data-l="Todos">Sim</span></div>
+    <div class="gr hot"><span class="gk">Betabloqueador</span><span class="gc" data-l="Mortalidade">Sim</span><span class="gc" data-l="Todos">Sim</span></div>
+    <div class="gr hot"><span class="gk">IECA ou BRA</span><span class="gc" data-l="Mortalidade">Sim</span><span class="gc" data-l="Todos">Sim</span></div>
+    <div class="gr hot"><span class="gk">Estatina</span><span class="gc" data-l="Mortalidade">Sim</span><span class="gc" data-l="Todos">Sim</span></div>
+    <div class="gr"><span class="gk">Antagonista da aldosterona</span><span class="gc" data-l="Mortalidade">Sim, sobretudo com FE abaixo de 40%, IC ou diabetes</span><span class="gc" data-l="Todos">Não</span></div>
+    <div class="gr"><span class="gk">Nitrato, bloqueador de cálcio, anticoagulante oral</span><span class="gc" data-l="Mortalidade">Não</span><span class="gc" data-l="Todos">Não</span></div>
+  </div>
+  <div class="crit hd">
+    <div class="row"><span class="k">Meta</span><span class="v">Valor</span></div>
+    <div class="row"><span class="k">PA</span><span class="v">Abaixo de 130 x 80 mmHg; evitar abaixo de 120 x 70</span></div>
+    <div class="row"><span class="k">Glicemia</span><span class="v">HbA1c abaixo de 7%; pré-prandial abaixo de 130, pós-prandial abaixo de 160 mg/dL (mais frouxo no idoso frágil)</span></div>
+    <div class="row"><span class="k">Lipídios (apostila)</span><span class="v">LDL abaixo de 50 e não-HDL abaixo de 80 mg/dL</span></div>
+    <div class="row"><span class="k">Risco extremo (diretriz 2025)</span><span class="v mal">LDL abaixo de 40 mg/dL: múltiplos eventos ateroscleróticos, ou 1 evento + 2 ou mais condições de alto risco</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Estatina de alta potência (atorvastatina 40-80 mg, rosuvastatina 20-40 mg) + ezetimiba; sem meta, inibidor de PCSK9.</li>
+  </ul></div>
+</section>
+
+<section class="synth" id="gat">
+  <h2>Gatilhos de prova</h2>
+  <p class="note">Uma linha por degrau. Vermelho = onde a banca derruba.</p>
+  <div class="trig">
+    <div><span class="tk">D0 Régua</span><span class="tv">Supra + clínica = reperfundir; <b>não esperar troponina</b></span></div>
+    <div><span class="tk">D1 Supra</span><span class="tv">V2-V3: 2 / 2,5 / 1,5 mm; demais 1 mm; V7-V9 e V4R 0,5 mm</span></div>
+    <div><span class="tk">D2 Paredes</span><span class="tv">Anterior = DA; lateral e dorsal = Cx; <b>inferior com DIII &gt; DII = CD</b></span></div>
+    <div><span class="tk">D3 Marcadores</span><span class="tv">Troponina fica 1-2 semanas; prognóstico, não decisão</span></div>
+    <div><span class="tk">D4 Reperfusão</span><span class="tv">ICP de escolha; 10 / 30 / 90 / 120 min; janela de 12 h</span></div>
+    <div><span class="tk">D5 Fibrinolítico</span><span class="tv"><b>Dissecção de aorta é absoluta</b>; PA acima de 180 x 110 é relativa</span></div>
+    <div><span class="tk">D6 Pós-trombólise</span><span class="tv">Supra cai 50%, RIVA; falhou = resgate; abriu = cate em 2-24 h</span></div>
+    <div><span class="tk">D7 Antiagregantes</span><span class="tv"><b>Fibrinólise só com clopidogrel</b>; acima de 75 anos sem ataque</span></div>
+    <div><span class="tk">D8 Anticoagulantes</span><span class="tv">HNF na ICP; enoxaparina na fibrinólise; <b>fondaparinux fora da ICP</b></span></div>
+    <div><span class="tk">D9 Anti-isquêmicos</span><span class="tv">Betabloqueador reduz mortalidade; nitrato e BCC não; <b>cocaína sem betabloqueador</b></span></div>
+    <div><span class="tk">D10 VD</span><span class="tv">Hipotensão + jugular + pulmão limpo; <b>volume, sem nitrato</b>; pedir V4R</span></div>
+    <div><span class="tk">D11 Killip</span><span class="tv">I nada; II B3 e estertor; III edema agudo; IV choque</span></div>
+    <div><span class="tk">D12 Mecânicas</span><span class="tv">Sopro novo + piora súbita na 1ª semana = ruptura; cirurgia</span></div>
+    <div><span class="tk">D13 Alta</span><span class="tv">DAPT, betabloqueador, IECA, estatina para todos; <b>nitrato não reduz mortalidade</b></span></div>
+  </div>
+</section>
+
+<section class="synth arm" id="arm">
+  <h2>Armadilhas de banca</h2>
+  <p class="note">Cada uma aponta o degrau onde o fato mora.</p>
+  <ol class="armas">
+    <li>Esperar o resultado da troponina para indicar reperfusão. <span class="d">D0, D3</span></li>
+    <li>Usar o corte de 1 mm em V2-V3: lá o corte é maior e muda por sexo e idade. <span class="d">D1</span></li>
+    <li>Atribuir o IAM inferior com supra maior em DII à coronária direita: DII &gt; DIII aponta a circunflexa. <span class="d">D2</span></li>
+    <li>Transferir para ICP quando a transferência passa de 120 min: o certo é fibrinolítico em até 30 min. <span class="d">D4</span></li>
+    <li>Contar hipertensão de 190 x 115 como contraindicação absoluta ao fibrinolítico. <span class="d">D5</span></li>
+    <li>Tratar o RIVA após trombólise como arritmia grave: é sinal de reperfusão. <span class="d">D6</span></li>
+    <li>Associar ticagrelor ou prasugrel ao trombolítico. <span class="d">D7</span></li>
+    <li>Fondaparinux como anticoagulante da ICP primária. <span class="d">D8</span></li>
+    <li>Nitrato ou morfina no IAM inferior com hipotensão: suspeitar de VD e dar volume. <span class="d">D9, D10</span></li>
+    <li>Betabloqueador na dor torácica por cocaína. <span class="d">D9</span></li>
+    <li>Escolher o nitrato como droga que reduz mortalidade pós-IAM. <span class="d">D9, D13</span></li>
+    <li>Ler LDL de 45 como "na meta" no paciente com dois eventos: risco extremo pede abaixo de 40. <span class="d">D13</span></li>
+  </ol>
+</section>
+
+<footer>
+  <p><strong>Fontes:</strong> <code>resumos/Clínica Médica/Cardiologia/10. IAMCSSST (Infarto Agudo do Miocárdio com Supradesnivelamento de Segmento ST).pdf</code> (EMED 2024, Prof. Paulo Dalto), citada como Cardio/10, lida inteira; <code>Flashcards - IAMCSSST (...).cards.json</code> (flashcards EMED IAMCSST: tenecteplase, estratégia fármaco-invasiva, lista de complicações mecânicas, Sgarbossa); <code>Prevenção Secundária Pós-IAM (Dislipidemia).md</code> (resumo, diretriz 2025); complementos <code>14. Valvopatias.pdf</code> (Valvo/14, insuficiência mitral aguda) e <code>15. Pericardiopatias.pdf</code> (Peri/15, pericardites pós-IAM).</p>
+  <p>Fora das fontes locais (marcado no texto): classificação de Killip inteira (degrau 11); pistas clínicas das rupturas e do aneurisma (degrau 12); imagem em espelho de V1-V3 (degrau 2); CK-MB no reinfarto (degrau 3). Notas "depende da banca": BRE novo, tempos europeus, pré-tratamento com prasugrel, estatina precoce.</p>
+  <p>Prepara a tarefa #777 do plano (IAMCSST).</p>
+</footer>
+</div>

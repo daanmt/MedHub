@@ -338,14 +338,32 @@ def doc_lista(lista, n_questoes):
             "semeada_em": db.carimbo()}
 
 
+def fora_do_hub(q):
+    """A questão do banco que NÃO vai ao hub. PURA. s219: questão UERJ 2022-2026 de lista do EMED é
+    spoiler dos simulados (a regra de `emed_api.spoiler_uerj`); a prova em si (`prova_pdf`) é o
+    simulado e sai inteira. Uma regra só: o `--exportar` e a contagem da tela (P20) a chamam."""
+    return q.get("executor") != "prova_pdf" and emed_api.spoiler_uerj(q.get("banca"))
+
+
+def questoes_no_hub_por_tarefa(questoes=None):
+    """{tarefa_id: n} -- quantas questões de cada tarefa o `--exportar` manda ao hub (o que a aba
+    Listas conta), pela MESMA regra (`fora_do_hub`). P20 (s219): a Teoria, o Painel e o boot contam
+    por aqui. Read-only; tabela ausente = {}; tarefa só com spoiler não entra."""
+    contagem = {}
+    for q in db.emed_listar_questoes() if questoes is None else questoes:
+        if q.get("tarefa_id") is None or fora_do_hub(q):
+            continue
+        t = int(q["tarefa_id"])
+        contagem[t] = contagem.get(t, 0) + 1
+    return contagem
+
+
 def cmd_exportar(args):
     """`--exportar LISTA`: escreve `OUT/questoes/<lista>_<num>.json` (formato do doc) e
     `OUT/listas/<lista>.json` (cabeçalho da lista), para semear o buffer/hub por ArtifactData."""
     todas = db.emed_listar_questoes(args.exportar)
-    # s219: questao UERJ 2022-2026 de lista do EMED e spoiler dos simulados e nao volta ao hub; a
-    # prova em si (`prova_pdf`) e o simulado e sai inteira
-    spoiler = [q["num"] for q in todas
-               if q.get("executor") != "prova_pdf" and emed_api.spoiler_uerj(q.get("banca"))]
+    # s219: o spoiler UERJ de lista do EMED nao volta ao hub (`fora_do_hub`)
+    spoiler = [q["num"] for q in todas if fora_do_hub(q)]
     linhas = [q for q in todas if q["num"] not in spoiler]
     solucoes = {s["num"]: s for s in db.emed_listar_solucoes(args.exportar)}
     pasta = os.path.join(args.out, "questoes")

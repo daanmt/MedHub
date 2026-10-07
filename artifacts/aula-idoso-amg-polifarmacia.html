@@ -1,0 +1,631 @@
+<title>Idoso: avaliação e polifarmácia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,480;9..144,600;9..144,680&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EFF3F0; --card:#FAFCFA; --sunk:#E2E9E4;
+  --ink:#18211C; --ink2:#4C5A52; --ink3:#6F7D75;
+  --line:rgba(24,33,28,.13); --line2:rgba(24,33,28,.26);
+  --teal:#1F6B5E; --teal-ink:#154A41; --teal-wash:#DCEBE5;
+  --carmine:#8E2F41; --carmine-ink:#6B2231; --carmine-wash:#F5E2E6;
+  --amber:#8A5A17; --amber-ink:#6B4610; --amber-wash:#F3E6CC;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#8A988F;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#8A988F;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font:16px/1.6 "Source Sans 3",-apple-system,"Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+h1,h2,h3{margin:0;font-family:Fraunces,Georgia,serif;font-weight:600;letter-spacing:-.01em;text-wrap:balance;line-height:1.15;color:var(--ink)}
+.wrap{max-width:780px;margin:0 auto;padding:0 16px 70px}
+:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+a{color:var(--teal-ink)}
+strong{font-weight:600;color:var(--ink)}
+
+/* topo */
+.top{padding:36px 0 22px;border-bottom:1px solid var(--line2)}
+.eye{font:600 11px/1.3 "Source Sans 3";letter-spacing:.12em;text-transform:uppercase;color:var(--teal-ink);margin:0 0 14px}
+.top h1{font-size:clamp(28px,6vw,44px);font-weight:680;margin-bottom:14px}
+.top .sub{font-size:16.5px;line-height:1.55;color:var(--ink2);margin:0 0 20px}
+.stats{display:flex;gap:18px;flex-wrap:wrap}
+.stat{display:flex;flex-direction:column;gap:2px;min-width:0}
+.stat b{font:600 21px/1 "IBM Plex Mono";color:var(--teal-ink);font-variant-numeric:tabular-nums}
+.stat span{font-size:11.5px;color:var(--ink3)}
+
+.nav{display:flex;flex-wrap:wrap;gap:6px;padding:20px 0 4px}
+.nav a{font-size:13px;text-decoration:none;color:var(--ink2);border:1px solid var(--line2);border-radius:2px;padding:4px 9px;min-width:0}
+.nav a:hover{color:var(--ink);border-color:var(--teal)}
+
+/* atos */
+.ato{margin:40px 0 0;padding:14px 16px;background:var(--teal-wash);border-left:3px solid var(--teal)}
+.ato span{font:700 10.5px "Source Sans 3";letter-spacing:.12em;text-transform:uppercase;color:var(--teal-ink);display:block;margin-bottom:3px}
+.ato h2{font-size:clamp(21px,4vw,28px)}
+
+/* trilho */
+.trilho-box{margin:18px 0 0;padding:16px 14px 10px;background:var(--card);border:1px solid var(--line2)}
+.trilho-box p{margin:0 0 6px;font-size:14px;color:var(--ink3)}
+.trilho{list-style:none;margin:0;padding:0;display:grid}
+.trilho li{position:relative;min-width:0}
+.trilho a{display:grid;grid-template-columns:30px minmax(0,1fr);gap:11px;align-items:start;padding:6px 0;text-decoration:none}
+.trilho .n{width:30px;height:30px;border-radius:50%;border:1.5px solid var(--teal);background:var(--card);display:flex;align-items:center;justify-content:center;font:600 12px "IBM Plex Mono";color:var(--teal-ink);position:relative;z-index:1}
+.trilho li:not(:last-child)::before{content:"";position:absolute;left:14px;top:36px;bottom:-6px;width:1.5px;background:var(--teal);opacity:.5}
+.trilho .t{min-width:0;padding-top:3px}
+.trilho b{display:block;font-weight:600;font-size:15px;line-height:1.3;color:var(--ink)}
+.trilho small{display:block;font-size:13px;line-height:1.4;color:var(--ink3)}
+.trilho a:hover b{color:var(--teal-ink)}
+
+/* degraus */
+.degrau{padding:30px 0;border-bottom:1px solid var(--line)}
+.dhead{display:flex;gap:13px;align-items:flex-start;margin-bottom:12px}
+.dnum{flex-shrink:0;width:38px;height:38px;border:1.5px solid var(--teal);border-radius:50%;display:flex;align-items:center;justify-content:center;font:600 14px "IBM Plex Mono";color:var(--teal-ink)}
+.dtitle{min-width:0;padding-top:3px}
+.dtitle h3{font-size:clamp(19px,3.4vw,24px)}
+.src{display:block;margin-top:5px;font:500 11.5px/1.4 "IBM Plex Mono";color:var(--ink3)}
+.lede{font-size:16px;line-height:1.55;color:var(--ink2);margin:0 0 14px;font-style:italic}
+.prose ul{margin:0 0 12px;padding-left:20px}
+.prose li{font-size:15.4px;line-height:1.55;color:var(--ink2);margin-bottom:6px}
+.prose li:last-child{margin-bottom:0}
+h4{font:600 14px "Source Sans 3";color:var(--ink);margin:20px 0 8px}
+
+.trap,.banca{margin:16px 0;padding:13px 16px}
+.trap{border-left:3px solid var(--carmine);background:var(--carmine-wash)}
+.banca{border-left:3px solid var(--amber);background:var(--amber-wash)}
+.albl{font:700 10.5px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px}
+.trap .albl{color:var(--carmine-ink)}
+.banca .albl{color:var(--amber-ink)}
+.trap p,.banca p{font-size:15px;line-height:1.55;color:var(--ink);margin:0}
+
+/* lado a lado */
+.vs{display:grid;grid-template-columns:minmax(0,1fr);gap:1px;background:var(--line2);border:1px solid var(--line2);margin:16px 0}
+.vs>div{background:var(--card);padding:12px 14px;min-width:0}
+.vs h5{font:700 12px "Source Sans 3";letter-spacing:.04em;text-transform:uppercase;margin:0 0 6px}
+.vs .a h5{color:var(--carmine-ink)}
+.vs .b h5{color:var(--teal-ink)}
+.vs ul{margin:0;padding-left:17px}
+.vs li{font-size:14.4px;line-height:1.5;color:var(--ink2);margin-bottom:4px;overflow-wrap:break-word}
+.vs p{font-size:13.6px;line-height:1.45;color:var(--ink3);margin:8px 0 0}
+
+/* tabelas de critério */
+.crit{border:1px solid var(--line2);margin:16px 0;background:var(--card)}
+.crit .row{display:grid;grid-template-columns:minmax(0,1fr);gap:2px;padding:9px 13px;font-size:14.2px}
+.crit .row+.row{border-top:1px solid var(--line)}
+.crit .row>*{min-width:0}
+.crit .k{font-weight:600;color:var(--teal-ink)}
+.crit .v{color:var(--ink2);line-height:1.48;overflow-wrap:break-word}
+.crit.hd .row:first-child{background:var(--sunk)}
+.crit.hd .row:first-child>*{font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink3);font-weight:600}
+.crit.c3 .row{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:4px 12px}
+.crit.c3 .row .k{grid-column:1 / -1}
+.crit.c3.hd .row:first-child .k{display:none}
+.mal{color:var(--carmine-ink);font-weight:600}
+
+/* cascata de prescrição */
+.chain{list-style:none;margin:16px 0;padding:12px 13px;display:grid;gap:9px;background:var(--card);border:1px solid var(--line2)}
+.chain li{display:flex;flex-wrap:wrap;align-items:center;gap:6px;min-width:0}
+.chain .c{border:1px solid var(--line2);background:var(--paper);padding:4px 9px;font-size:14px;line-height:1.35;color:var(--ink);min-width:0}
+.chain .c.x{border-color:var(--carmine);color:var(--carmine-ink);background:var(--carmine-wash)}
+.chain .ar{font:600 12.5px "IBM Plex Mono";color:var(--ink3)}
+.chain .cap{flex-basis:100%;font-size:13.4px;color:var(--ink3);line-height:1.45}
+
+/* passos */
+ol.passos{list-style:none;margin:16px 0;padding:0;border:1px solid var(--line2);background:var(--card)}
+ol.passos li{display:grid;grid-template-columns:34px minmax(0,1fr);gap:10px;padding:9px 13px;font-size:14.4px;line-height:1.48;color:var(--ink2)}
+ol.passos li+li{border-top:1px solid var(--line)}
+ol.passos b{font:600 14px "IBM Plex Mono";color:var(--teal-ink)}
+ol.passos strong{color:var(--ink)}
+
+/* referência recolhida */
+details.ref{margin:20px 0;border:1px solid var(--line2);background:var(--card)}
+details.ref>summary{cursor:pointer;list-style:none;padding:12px 16px;font:600 13.5px "Source Sans 3";color:var(--teal-ink);display:flex;align-items:center;gap:9px}
+details.ref>summary::-webkit-details-marker{display:none}
+details.ref>summary::before{content:"+";font:600 15px "IBM Plex Mono";width:16px;flex-shrink:0}
+details.ref[open]>summary::before{content:"-"}
+details.ref .refbody{padding:0 16px 16px}
+details.ref .row{display:grid;grid-template-columns:minmax(0,1fr);gap:2px;padding:8px 0;font-size:13.8px;border-top:1px solid var(--line)}
+details.ref .row:first-child{border-top:0}
+details.ref .row>*{min-width:0}
+details.ref .k{font-weight:600;color:var(--ink)}
+details.ref .v{color:var(--ink2);line-height:1.5;overflow-wrap:break-word}
+details.ref .banca{margin:12px 0 0}
+
+/* síntese */
+.synth{background:var(--card);border:1px solid var(--line2);padding:20px 16px;margin-top:40px}
+.synth h2{font-size:23px;margin-bottom:6px}
+.synth .note{font-size:14px;color:var(--ink3);margin:0 0 14px}
+.trig{display:grid;grid-template-columns:minmax(0,1fr);gap:1px;background:var(--line2);border:1px solid var(--line2)}
+.trig div{background:var(--sunk);padding:10px 13px;min-width:0}
+.trig .tk{font:700 11px "IBM Plex Mono";color:var(--teal-ink);display:block;margin-bottom:3px}
+.trig .tv{font-size:13.8px;line-height:1.45;color:var(--ink2)}
+.trig .tv b{color:var(--carmine-ink)}
+.synth.arm{border-left:3px solid var(--carmine)}
+.synth.arm h2::before{content:"";display:inline-block;width:11px;height:11px;border-radius:50%;background:var(--carmine);margin-right:9px;vertical-align:2px}
+ol.armas{margin:0;padding-left:22px}
+ol.armas li{font-size:15px;line-height:1.5;color:var(--ink2);margin-bottom:8px}
+ol.armas li::marker{font:600 13px "IBM Plex Mono";color:var(--carmine-ink)}
+ol.armas .d{font:500 11.5px "IBM Plex Mono";color:var(--ink3)}
+
+footer{margin-top:46px;padding-top:18px;border-top:1px solid var(--line2)}
+footer p{font-size:12.3px;color:var(--ink3);margin:0 0 7px;line-height:1.5}
+code{font-family:"IBM Plex Mono",Consolas,monospace;font-size:11.5px;background:var(--sunk);padding:1px 4px;border-radius:2px;word-break:break-all}
+
+@media (min-width:560px){
+  .vs{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .crit .row{grid-template-columns:150px minmax(0,1fr);gap:12px}
+  .crit.c3 .row{grid-template-columns:130px minmax(0,1fr) minmax(0,1fr);gap:12px}
+  .crit.c3 .row .k{grid-column:auto}
+  .crit.c3.hd .row:first-child .k{display:block}
+  details.ref .row{grid-template-columns:150px minmax(0,1fr);gap:12px}
+  .trig{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (min-width:640px){
+  .wrap{padding:0 24px 90px}
+  .top{padding:46px 0 26px}
+  .degrau{padding:34px 0}
+  .synth{padding:26px 22px}
+  .trilho{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .trilho a{grid-template-columns:minmax(0,1fr);gap:8px;padding:0 10px 4px 0}
+  .trilho li:not(:last-child)::before{left:36px;right:4px;top:15px;bottom:auto;width:auto;height:1.5px}
+  .trilho .t{padding-top:0}
+}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <p class="eye">MedHub · Aula-base · Bloco MFC · tarefas #876 e #879</p>
+  <h1>O idoso inteiro: avaliação multidimensional e polifarmácia</h1>
+  <p class="sub">A consulta do idoso mede o que ele consegue decidir e fazer, não só as doenças que tem. E todo sintoma novo, até prova em contrário, pode ser efeito de remédio.</p>
+  <div class="stats">
+    <div class="stat"><b>60 anos</b><span>idoso no Brasil</span></div>
+    <div class="stat"><b>7 Is</b><span>grandes síndromes</span></div>
+    <div class="stat"><b>3 de 5</b><span>critérios de Fried: frágil</span></div>
+    <div class="stat"><b>5 passos</b><span>da desprescrição</span></div>
+    <div class="stat"><b>16</b><span>degraus</span></div>
+  </div>
+</header>
+
+<nav class="nav" aria-label="Atalhos">
+  <a href="#d0">Régua</a><a href="#d1">Senescência</a><a href="#d2">Atípica</a><a href="#d3">7 Is</a><a href="#d4">AMG</a>
+  <a href="#d5">Cognição</a><a href="#d6">AVD</a><a href="#d7">Fragilidade</a><a href="#d8">Quedas</a>
+  <a href="#d9">Farmacocinética</a><a href="#d10">Interações</a><a href="#d11">RAM</a><a href="#d12">Cascata</a>
+  <a href="#d13">Beers e STOPP</a><a href="#d14">Desprescrição</a><a href="#d15">Violência</a>
+  <a href="#ref">Referência</a><a href="#gat">Gatilhos</a><a href="#arm">Armadilhas</a>
+</nav>
+
+<div class="trilho-box">
+  <p>O caminho desta aula:</p>
+  <ol class="trilho">
+    <li><a href="#d0"><span class="n">1</span><span class="t"><b>Envelhecer</b><small>régua, fisiologia, quadro atípico</small></span></a></li>
+    <li><a href="#d3"><span class="n">2</span><span class="t"><b>Avaliar</b><small>7 Is, AMG, AVD, fragilidade, quedas</small></span></a></li>
+    <li><a href="#d9"><span class="n">3</span><span class="t"><b>Prescrever</b><small>RAM, cascata, Beers, desprescrição</small></span></a></li>
+    <li><a href="#d15"><span class="n">4</span><span class="t"><b>Proteger</b><small>violência, direitos, vacinas</small></span></a></li>
+  </ol>
+</div>
+
+<div class="ato" id="env"><span>Parte 1 · Envelhecer</span><h2>O que muda e o que não muda</h2></div>
+
+<section class="degrau" id="d0">
+  <div class="dhead"><span class="dnum">0</span><div class="dtitle"><h3>A régua: funcionalidade = decidir + executar</h3><span class="src">Prev/20 p8-9, 86</span></div></div>
+  <p class="lede">Toda a avaliação do idoso protege um desfecho só: a funcionalidade. Ela se apoia em dois pilares, e cada pilar cai por síndromes diferentes.</p>
+  <div class="prose"><ul>
+    <li>Idoso no Brasil: <strong>60 anos ou mais</strong> (Constituição, Estatuto). OMS e países ricos usam 65. O projeto que sobe a idade para 65 não virou lei.</li>
+    <li><strong>Senescência</strong> = envelhecer sem doença. Envelhecer traz vulnerabilidade, não doença obrigatória.</li>
+    <li>Fragilidade = resposta desproporcional a um estressor pequeno (degrau 7). Não é sinônimo de idade.</li>
+  </ul></div>
+  <div class="crit c3 hd">
+    <div class="row"><span class="k">Pilar</span><span class="v">Depende de</span><span class="v">Síndrome que o derruba</span></div>
+    <div class="row"><span class="k">Autonomia (decidir)</span><span class="v">Cognição; humor e comportamento</span><span class="v">Incapacidade cognitiva</span></div>
+    <div class="row"><span class="k">Independência (executar)</span><span class="v">Mobilidade: alcance, preensão, marcha, transferência, continência. Comunicação: visão, audição, fala</span><span class="v">Instabilidade postural, imobilidade, incontinência, incapacidade comunicativa</span></div>
+    <div class="row"><span class="k">Em volta dos dois</span><span class="v">Remédios e família</span><span class="v">Iatrogenia, insuficiência familiar</span></div>
+  </div>
+</section>
+
+<section class="degrau" id="d1">
+  <div class="dhead"><span class="dnum">1</span><div class="dtitle"><h3>Senescência que muda a conduta</h3><span class="src">Prev/20 p22-43</span></div></div>
+  <p class="lede">Cada mudança do envelhecimento explica uma pegadinha: o remédio que acumula, a creatinina que engana, a febre que não vem.</p>
+  <div class="crit c3 hd">
+    <div class="row"><span class="k">Sistema</span><span class="v">O que muda</span><span class="v">O que cai na prova</span></div>
+    <div class="row"><span class="k">Composição corporal</span><span class="v">Água e massa magra caem; gordura sobe, sobretudo visceral</span><span class="v">Sarcopenia. IMC do idoso: baixo peso abaixo de 22; eutrofia 22-27; sobrepeso acima de 27. Muda a distribuição dos remédios (degrau 9)</span></div>
+    <div class="row"><span class="k">Rim</span><span class="v">Perde néfrons (nefroesclerose); a TFG cai cerca de 1 mL/min por ano após os 40</span><span class="v"><strong>Creatinina normal com função reduzida</strong>, porque há menos músculo. Estimar por Cockcroft-Gault ou MDRD. Ureia ou creatinina alta é doença, não idade</span></div>
+    <div class="row"><span class="k">Pulmão</span><span class="v">Pulmão mais complacente; parede rígida; músculo respiratório fraco</span><span class="v">Volume residual sobe; CPT preservada; VEF1/CVF cai; PaO2 cai; tosse fraca facilita aspiração</span></div>
+    <div class="row"><span class="k">Coração e vasos</span><span class="v">Débito cai cerca de 1% ao ano após os 30; aorta rígida; amiloide; calcificação valvar</span><span class="v">PA sistólica sobe mais que a diastólica. Menos células no nó sinusal: mais fibrilação atrial</span></div>
+    <div class="row"><span class="k">Trato digestivo</span><span class="v">Hipocloridria; menos prostaglandina e bicarbonato; trânsito lento</span><span class="v">Absorve menos ferro e B12; úlcera por AINE; esvaziamento lento só para líquidos; constipação. Paladar doce preservado; sal com limiar alto</span></div>
+    <div class="row"><span class="k">Sistema nervoso</span><span class="v">Perda neuronal e atrofia; reflexos lentos; equilíbrio e sensibilidade piores</span><span class="v">Favorece a queda. <span class="mal">Não causa demência nem Parkinson</span></span></div>
+    <div class="row"><span class="k">Endócrino</span><span class="v">GH, DHEA, testosterona e estrogênio caem; TSH pode subir pouco; cortisol não cai</span><span class="v">Hipotireoidismo subclínico no idoso: tratar se TSH acima de 10</span></div>
+    <div class="row"><span class="k">Bexiga</span><span class="v">Capacidade menor; percebe a bexiga cheia mais tarde; detrusor hiperativo</span><span class="v">Incontinência <span class="mal">nunca é da idade</span>: investigar a causa</span></div>
+    <div class="row"><span class="k">Imunidade</span><span class="v">Timo involui; IL-2 cai; menos células virgens; mais autoanticorpos</span><span class="v">Infecção sem febre e sem leucocitose (degrau 2)</span></div>
+  </div>
+  <div class="banca"><div class="albl">Depende da banca</div>
+    <p>Capacidade residual funcional no idoso: livros de pneumologia dizem que não muda; de geriatria, que aumenta. Em "a CRF está aumentada no...", a banca marcou idoso.</p></div>
+</section>
+
+<section class="degrau" id="d2">
+  <div class="dhead"><span class="dnum">2</span><div class="dtitle"><h3>Apresentação atípica e fenômeno iceberg</h3><span class="src">Prev/20 p43-48</span></div></div>
+  <p class="lede">No idoso, a doença costuma chegar pela função que se perde, não pelo sintoma do livro.</p>
+  <div class="prose"><ul>
+    <li><strong>Febre é a grande ausente.</strong> Temperatura basal mais baixa e menos IL-1, IL-6 e TNF (os pirógenos). Sem febre não exclui infecção.</li>
+    <li>Pneumonia no idoso: o sinal forte é a <strong>taquipneia</strong>. Tosse, febre, estertor, leucocitose e desvio podem faltar.</li>
+    <li><strong>Confusão mental aguda</strong> é o sinalizador mais importante. No demenciado, procure outro sinal que mudou de repente.</li>
+    <li>Gigantes da geriatria (sinais constitucionais de doença): confusão, imobilidade, incontinência, instabilidade, autonegligência, apatia, fadiga, dispneia e perda de peso.</li>
+    <li>Leitura rápida: imobilidade, incontinência ou instabilidade <strong>súbitas</strong> sugerem evento neurológico (AVE). Apatia e autonegligência, humor ou cognição. Fadiga e dispneia, coração e pulmão.</li>
+    <li>Perda de peso não intencional é o único sinal constitucional que vale igual no jovem e no idoso.</li>
+    <li><strong>Fenômeno iceberg</strong>: doença presente sem queixa. Omitir, desvalorizar ou supervalorizar sintomas é a regra, e um mesmo sintoma costuma ter mais de uma causa.</li>
+  </ul></div>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p>"Ausência de febre por menos água corporal": errado. A água explica a farmacocinética; a falta de febre é imunossenescência.</p></div>
+</section>
+
+<div class="ato" id="aval"><span>Parte 2 · Avaliar</span><h2>A consulta multidimensional</h2></div>
+
+<section class="degrau" id="d3">
+  <div class="dhead"><span class="dnum">3</span><div class="dtitle"><h3>Os 7 Is: as grandes síndromes geriátricas</h3><span class="src">Prev/20 p45-46</span></div></div>
+  <p class="lede">São eventos-sentinela: quando aparecem, avisam que o desfecho tende a ser ruim.</p>
+  <div class="crit">
+    <div class="row"><span class="k">Incapacidade cognitiva</span><span class="v">Cognição que limita a funcionalidade: demência, depressão, delirium, doença psiquiátrica. Exige teste cognitivo (degrau 5)</span></div>
+    <div class="row"><span class="k">Instabilidade postural</span><span class="v">Equilíbrio e marcha; leva à queda e à dependência. Teste: Timed Up and Go (degrau 7)</span></div>
+    <div class="row"><span class="k">Imobilidade</span><span class="v">Limitação do movimento em qualquer grau</span></div>
+    <div class="row"><span class="k">Incontinência</span><span class="v">Urinária ou fecal; multifatorial; sempre investigar</span></div>
+    <div class="row"><span class="k">Incapacidade comunicativa</span><span class="v">Linguagem, audição, motricidade oral e voz. Isola o idoso</span></div>
+    <div class="row"><span class="k">Insuficiência familiar</span><span class="v">Idoso frágil sem rede de apoio: risco social e mais eventos adversos</span></div>
+    <div class="row"><span class="k">Iatrogenia</span><span class="v">Intervenção ou associação desnecessária. Mais gordura prolonga a meia-vida do lipofílico e aumenta a RAM (degraus 9 a 14)</span></div>
+  </div>
+  <h4>Remédios que derrubam o equilíbrio (Gusso)</h4>
+  <div class="prose"><ul>
+    <li>Anti-hipertensivo de qualquer classe (hipotensão postural); hipoglicemiante e insulina (hipoglicemia); corticoide.</li>
+    <li>Tricíclico, benzodiazepínico, anticonvulsivante; amiodarona.</li>
+    <li>Eritromicina, rifampicina, isoniazida, aminoglicosídeo: atenção ao idoso em tratamento de tuberculose.</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="d4">
+  <div class="dhead"><span class="dnum">4</span><div class="dtitle"><h3>AMG: o roteiro por domínio</h3><span class="src">Prev/20 p19, 85-95 (Gusso, cap. 89)</span></div></div>
+  <p class="lede">A avaliação multidimensional passa por domínios fixos. Cada um tem um teste rápido e um passo seguinte; o produto é um diagnóstico funcional, não uma lista de doenças.</p>
+  <div class="crit c3 hd">
+    <div class="row"><span class="k">Domínio</span><span class="v">Teste</span><span class="v">Se alterado</span></div>
+    <div class="row"><span class="k">Visão</span><span class="v">Snellen: ler até a linha 20/40 = sem disfunção</span><span class="v">Pior que 20/40, ou dificuldade para ler, dirigir, ver TV: oftalmologia. Catarata é a causa principal e soma risco de queda</span></div>
+    <div class="row"><span class="k">Audição</span><span class="v">Teste do sussurro: atrás do idoso, a cerca de 33 cm, pergunta o nome; uma orelha de cada vez</span><span class="v">Não ouviu = positivo. <strong>Otoscopia primeiro</strong> (cerume); se normal, audiometria. Presbiacusia (alta frequência) isola, mas não aumenta queda</span></div>
+    <div class="row"><span class="k">Membros superiores</span><span class="v">Mãos atrás da nuca</span><span class="v">Limitação do ombro: manguito desgastado, muitas vezes sem dor</span></div>
+    <div class="row"><span class="k">Membros inferiores</span><span class="v">Timed Up and Go (degrau 7)</span><span class="v">Lento: risco de queda, fisioterapia</span></div>
+    <div class="row"><span class="k">Estado mental</span><span class="v">Miniexame do estado mental (degrau 5)</span><span class="v">Investigar, incluindo causas reversíveis (B12, sífilis)</span></div>
+    <div class="row"><span class="k">Queda em casa</span><span class="v">Tapete, escada sem corrimão, pouca luz, piso irregular, animal (degrau 8)</span><span class="v">Adaptar o ambiente</span></div>
+    <div class="row"><span class="k">AVD</span><span class="v">Katz (básicas) e instrumentais (degrau 6)</span><span class="v">Grau de dependência; se pode morar sozinho</span></div>
+    <div class="row"><span class="k">Incontinência</span><span class="v">Pergunta direta: "já perdeu urina ou se sentiu molhado?"</span><span class="v">Até 30% têm e não contam sem a pergunta. Investigar</span></div>
+    <div class="row"><span class="k">Nutrição</span><span class="v">Peso em toda consulta; nunca mais de 12 meses entre pesagens; IMC do idoso</span><span class="v">Desnutrição é mais provável que obesidade: nutricionista</span></div>
+    <div class="row"><span class="k">Suporte social</span><span class="v">Com quem mora, quem cuida, que rede tem</span><span class="v">Rede fraca = recuperação lenta e risco de violência (degrau 15)</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li><strong>Caderneta de Saúde da Pessoa Idosa</strong>: preenchimento contínuo na APS (remédios, vacinas, PA, glicemia). Identifica o idoso frágil ou em risco no território e dá longitudinalidade.</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="d5">
+  <div class="dhead"><span class="dnum">5</span><div class="dtitle"><h3>Cognição: MEEM e delirium x demência</h3><span class="src">Prev/20 p92-93; resumo Delirium no Idoso §1-6</span></div></div>
+  <p class="lede">Rastrear a cognição é separar o que é crônico (demência) do que é agudo e reversível (delirium).</p>
+  <div class="prose"><ul>
+    <li>MEEM: <strong>30 pontos</strong>. Orientação (10), memória imediata (3), atenção e cálculo (5), evocação (3), linguagem e praxia (9).</li>
+    <li>Pede ouvir, escrever e desenhar: déficit auditivo, visual ou motor rebaixa o escore sem demência.</li>
+    <li>Cortes do material: acima de 26 normal; 24 a 26 comprometimento cognitivo leve; abaixo de 24 demência.</li>
+  </ul></div>
+  <div class="banca"><div class="albl">Depende da banca</div>
+    <p>No Brasil, o corte do MEEM é ajustado pela escolaridade; o próprio material diz que a acurácia (sensibilidade 82%, especificidade 99%) vale com o ajuste. Em questão com idoso analfabeto ou de pouca escolaridade, desconfie do corte fixo de 24.</p></div>
+  <div class="crit c3 hd">
+    <div class="row"><span class="k">Eixo</span><span class="v">Delirium</span><span class="v">Demência</span></div>
+    <div class="row"><span class="k">Início</span><span class="v">Agudo: horas a dias</span><span class="v">Insidioso</span></div>
+    <div class="row"><span class="k">Curso</span><span class="v">Flutuante no mesmo dia</span><span class="v">Progressivo</span></div>
+    <div class="row"><span class="k">Atenção</span><span class="v mal">Comprometida desde o início</span><span class="v">Preservada nas fases iniciais</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>CAM: início agudo ou curso flutuante <strong>+</strong> desatenção <strong>+</strong> pensamento desorganizado ou alteração do nível de consciência.</li>
+    <li>Delirium = via final comum: predisponente (idade, demência, déficit sensorial, polifarmácia) somado a um precipitante. Quanto mais predisposto, menor o gatilho necessário. Demência e delirium coexistem.</li>
+    <li>Precipitantes: infecção, glicemia (hipo e hiper), sódio e cálcio, hipóxia, anticolinérgico, benzodiazepínico, opioide, abstinência, <strong>retenção urinária e fecaloma</strong>.</li>
+    <li>Conduta: tratar a causa; reorientar; óculos e aparelho auditivo; sono; mobilização; suspender o deliriogênico. Haloperidol só com risco comportamental.</li>
+  </ul></div>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p>Neuroléptico no parkinsoniano ou na demência com corpos de Lewy, e neuroléptico no delirium tremens, são erros. Na abstinência alcoólica, o remédio é benzodiazepínico.</p></div>
+</section>
+
+<section class="degrau" id="d6">
+  <div class="dhead"><span class="dnum">6</span><div class="dtitle"><h3>AVD básicas x instrumentais</h3><span class="src">Prev/20 p95-96</span></div></div>
+  <p class="lede">Básica é cuidar do próprio corpo. Instrumental é dar conta da casa e da cidade.</p>
+  <div class="vs">
+    <div class="b"><h5>Básicas (Katz)</h5><ul>
+      <li>Banho</li><li>Vestir-se</li><li>Higiene: ir ao banheiro e voltar</li><li>Transferência: cama e cadeira</li><li>Continência</li><li>Alimentação</li></ul>
+      <p>Soma dos "sim": 6 independente; 4 dependência parcial; 2 dependência importante. Perder AVD básica = alto risco de internação.</p></div>
+    <div class="a"><h5>Instrumentais</h5><ul>
+      <li>Telefone; transporte</li><li>Compras; preparar a refeição</li><li>Arrumar a casa; pequenos reparos; lavar roupa</li><li>Tomar o remédio na dose e na hora</li><li>Cuidar do dinheiro</li></ul>
+      <p>Respondem se o idoso pode e deve morar sozinho.</p></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Mecanismo: a básica pede o corpo; a instrumental pede cognição e organização. Por isso tomar o remédio certo e cuidar do dinheiro são instrumentais.</li>
+  </ul></div>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p>"Cozinhar é AVD básica": errado, é instrumental. Um trecho do material lista telefone entre as básicas; na escala, telefone é instrumental.</p></div>
+</section>
+
+<section class="degrau" id="d7">
+  <div class="dhead"><span class="dnum">7</span><div class="dtitle"><h3>Fragilidade: diagnosticar, medir, rastrear</h3><span class="src">Prev/20 p80-84</span></div></div>
+  <p class="lede">Frágil é quem desaba diante de um estressor pequeno. A escala muda conforme a pergunta.</p>
+  <div class="prose"><ul>
+    <li>Declínio de múltiplos sistemas com limiar de resposta baixo. Desfechos: queda, delirium, incapacidade, institucionalização, morte.</li>
+    <li>Não é a idade: idoso muito velho e ativo pode ser robusto; idoso jovem pode ser frágil.</li>
+  </ul></div>
+  <div class="crit hd">
+    <div class="row"><span class="k">Escala</span><span class="v">Como funciona</span></div>
+    <div class="row"><span class="k">Fried (Cardiovascular Health Study)</span><span class="v">Fenótipo, 5 critérios: perda de peso não intencional (4,5 kg ou 5% em 1 ano); fraqueza (preensão entre os 20% mais fracos, ajustada a sexo e IMC); exaustão (3-4 dias na semana); baixa atividade física (abaixo de 383 kcal no homem, 270 kcal na mulher); marcha lenta (4,57 m, entre os 20% mais lentos). <strong>0 = robusto; 1-2 = pré-frágil; 3 ou mais = frágil</strong></span></div>
+    <div class="row"><span class="k">Acumulação de déficits</span><span class="v">Índice = déficits presentes / itens avaliados, de 0 a 1. Conta o número de déficits, não o tipo. Quanto maior, mais frágil</span></div>
+    <div class="row"><span class="k">FRAIL</span><span class="v">Rastreio de 5 perguntas: Fadiga; Resistência (subir um lance de escada); Ambulação (andar um quarteirão); Illness (doenças crônicas); Loss of weight (mais de 5% em 1 ano). 3 ou mais = frágil; 1-2 = pré-frágil. Positivo pede confirmação</span></div>
+    <div class="row"><span class="k">Timed Up and Go</span><span class="v">Cadeira firme de 45-48 cm, sem rodas: levanta sem apoiar os braços, anda 3 m, gira 180°, volta e senta. Mede mobilidade e fragilidade</span></div>
+  </div>
+  <div class="banca"><div class="albl">Depende da banca</div>
+    <p>O corte do TUG muda até dentro do material: até 10 s adequado; 10-19 s acompanhar na APS; acima de 12,4 ou 13,5 s risco de queda (fisioterapia); acima de 20 s investigar o equilíbrio. Leia o corte que o enunciado der; sem corte, 20 s ou mais é alterado.</p></div>
+</section>
+
+<section class="degrau" id="d8">
+  <div class="dhead"><span class="dnum">8</span><div class="dtitle"><h3>Quedas: o tema mais cobrado</h3><span class="src">Prev/20 p62-68</span></div></div>
+  <p class="lede">A pergunta de ouro é se ele caiu no último ano. Queda prévia é o maior preditor de nova queda.</p>
+  <div class="prose"><ul>
+    <li>30% dos acima de 65 e 50% dos acima de 80 caem por ano; 60% de quem caiu cai de novo.</li>
+    <li>Mais de 90% das fraturas de quadril vêm de queda; depois dela a mortalidade dobra e metade não recupera a independência.</li>
+    <li>Homem e mulher caem igual; a mulher se machuca mais. Fator de risco: sexo feminino.</li>
+  </ul></div>
+  <div class="crit">
+    <div class="row"><span class="k">Intrínsecos</span><span class="v"><strong>Queda prévia</strong>; acima de 80 anos; sexo feminino; fraqueza de membros; marcha lenta e passo curto; tontura; déficit cognitivo; AVE prévio; psicotrópico; polifarmácia; artrose; hipotensão ortostática e síncope; anemia; déficit visual</span></div>
+    <div class="row"><span class="k">Extrínsecos</span><span class="v">Tapete solto; escada; falta de corrimão; pouca luz à noite; animal doméstico; piso irregular; móvel mudado de lugar</span></div>
+    <div class="row"><span class="k">Avaliar</span><span class="v">Quando, como, sintoma antes (tontura), quantas, lesão, medo de cair. TUG acima de 13,5 s e alcance funcional abaixo de 25,4 cm = alto risco. Exames conforme a clínica: hemograma, eletrólitos, TSH e T4 livre, B12, vitamina D</span></div>
+    <div class="row"><span class="k">Prevenir</span><span class="v">As três mais eficazes: <strong>reduzir remédios</strong> (sobretudo de SNC), <strong>segurança doméstica</strong> e <strong>fisioterapia</strong> (força, marcha, equilíbrio). Corrigir visão; calçado fechado e antiderrapante; ensinar a levantar após a queda</span></div>
+    <div class="row"><span class="k">OMS (2017)</span><span class="v">Três pilares: Awareness (consciência), Assessment (avaliação), Intervention (intervenção)</span></div>
+    <div class="row"><span class="k">Hipotensão postural</span><span class="v">Ajustar remédios; hidratar; levantar devagar; fludrocortisona se falhar</span></div>
+  </div>
+  <div class="banca"><div class="albl">Depende da banca</div>
+    <p>O material indica vitamina D 800 UI/dia no alto risco de queda, mas também diz que a deficiência isolada aumenta fratura, não queda. Evidência recente não recomenda vitamina D para prevenir queda no idoso sem deficiência.</p></div>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p>Benzodiazepínico é a classe que mais aumenta a queda. Depressão não é fator de risco em si: o psicotrópico é. Queda por tropeço não pede investigação cardíaca (prevenção quaternária), e o idoso frágil cai mais dentro de casa.</p></div>
+</section>
+
+<div class="ato" id="presc"><span>Parte 3 · Prescrever</span><h2>Polifarmácia, RAM e desprescrição</h2></div>
+
+<section class="degrau" id="d9">
+  <div class="dhead"><span class="dnum">9</span><div class="dtitle"><h3>Farmacocinética: o caminho do remédio muda</h3><span class="src">Prev/20 p49-50</span></div></div>
+  <p class="lede">O receptor quase não muda com a idade (farmacodinâmica). O que muda é o trajeto do remédio até ele e para fora dele.</p>
+  <div class="crit c3 hd">
+    <div class="row"><span class="k">Etapa</span><span class="v">Mudança</span><span class="v">Consequência</span></div>
+    <div class="row"><span class="k">Absorção</span><span class="v">Mucosa atrófica; pH gástrico alto; motilidade lenta</span><span class="v">Pouco relevante; salicilato absorve menos</span></div>
+    <div class="row"><span class="k">Distribuição: água</span><span class="v">Menos água e massa magra</span><span class="v"><strong>Hidrossolúvel concentra</strong>: lítio, digoxina. Dose menor já dá nível alto</span></div>
+    <div class="row"><span class="k">Distribuição: gordura</span><span class="v">Mais gordura</span><span class="v"><strong>Lipossolúvel acumula e dura mais</strong>: benzodiazepínico, amitriptilina</span></div>
+    <div class="row"><span class="k">Ligação proteica</span><span class="v">Albumina baixa; glicoproteína ácida alta</span><span class="v">Fração livre sobe: fenitoína, diazepam, paracetamol, furosemida. Lidocaína: fração livre cai</span></div>
+    <div class="row"><span class="k">Metabolismo</span><span class="v">Fígado menor; menos fluxo; P450 menos ativo</span><span class="v">Fase I (oxidação) cai; fase II (conjugação) preservada</span></div>
+    <div class="row"><span class="k">Excreção</span><span class="v">TFG e secreção tubular caem</span><span class="v mal">O fator que mais altera. Meia-vida longa: aminoglicosídeo, digoxina, penicilina, tetraciclina. Ajustar pelo clearance</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Regra de prescrição: começar com dose baixa e subir devagar.</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="d10">
+  <div class="dhead"><span class="dnum">10</span><div class="dtitle"><h3>Interações: remédio com remédio, remédio com doença</h3><span class="src">Prev/20 p50-51</span></div></div>
+  <p class="lede">Interação é quando dois remédios juntos fazem algo diferente do que fariam separados.</p>
+  <div class="prose"><ul>
+    <li>Efeito somado: anticoagulante + AINE = sangramento; vários anti-hipertensivos = hipotensão postural.</li>
+    <li>Droga-doença: betabloqueador no asmático = broncoespasmo.</li>
+  </ul></div>
+  <div class="vs">
+    <div class="b"><h5>Indutores do P450: derrubam o outro</h5><ul>
+      <li>Fenobarbital, carbamazepina, fenitoína</li><li>Etanol, prednisona</li><li>Rifampicina</li><li>Isoniazida (no material; ver nota)</li></ul></div>
+    <div class="a"><h5>Inibidores do P450: acumulam o outro</h5><ul>
+      <li>Cetoconazol, itraconazol, fluconazol (com atorvastatina)</li><li>Eritromicina, metronidazol</li><li>Fluoxetina, paroxetina</li><li>Omeprazol</li></ul></div>
+  </div>
+  <div class="banca"><div class="albl">Depende da banca</div>
+    <p>O material põe a isoniazida entre os indutores. Na farmacologia ela é mais conhecida como inibidora (CYP2C19 e 3A4). Se a alternativa disser "isoniazida induz o P450", é o gabarito da apostila.</p></div>
+</section>
+
+<section class="degrau" id="d11">
+  <div class="dhead"><span class="dnum">11</span><div class="dtitle"><h3>Reação adversa: todo sintoma novo é suspeito</h3><span class="src">Prev/20 p51-52</span></div></div>
+  <p class="lede">RAM é dano com dose correta. Responde por 5-10% das internações de idosos e quase sempre é evitável.</p>
+  <div class="prose"><ul>
+    <li><strong>Tipo A</strong>: esperado e dependente da dose (hipotensão com anti-hipertensivo, bradicardia com betabloqueador). <strong>Tipo B</strong>: idiossincrásico (anafilaxia).</li>
+    <li>Os fatores que mais pesam: polifarmácia e doença crônica.</li>
+  </ul></div>
+  <div class="crit hd">
+    <div class="row"><span class="k">Efeito</span><span class="v">Remédios típicos</span></div>
+    <div class="row"><span class="k">Delirium</span><span class="v">Benzodiazepínico, psicotrópicos</span></div>
+    <div class="row"><span class="k">Lesão renal</span><span class="v">AINE, aminoglicosídeo</span></div>
+    <div class="row"><span class="k">Hemorragia digestiva</span><span class="v">AAS, AINE</span></div>
+    <div class="row"><span class="k">Queda</span><span class="v">Diurético, benzodiazepínico, zolpidem, antidepressivo</span></div>
+    <div class="row"><span class="k">Retenção urinária</span><span class="v">Anticolinérgico, agonista alfa-adrenérgico</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Mais risco: acima de 85 anos; TFG abaixo de 50; fragilidade; IMC baixo; 6 ou mais doenças; 9 ou mais remédios; 12 ou mais tomadas por dia; RAM prévia.</li>
+    <li>Prevenir: avisar o efeito esperado, perguntar por RAM em toda consulta, incluir fitoterápico na revisão.</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="d12">
+  <div class="dhead"><span class="dnum">12</span><div class="dtitle"><h3>Polifarmácia e cascata de prescrição</h3><span class="src">Prev/20 p53-54</span></div></div>
+  <p class="lede">Polifarmácia é número; cascata é mecanismo. O efeito adverso é lido como doença nova e ganha remédio próprio.</p>
+  <div class="prose"><ul>
+    <li>Definição varia: mais de 3-4 ou de 5-6 remédios. Até 40% dos idosos usam 5 ou mais; até 60% das receitas têm um remédio desnecessário.</li>
+    <li>Origem: vários especialistas, automedicação, propaganda, venda livre.</li>
+    <li>Efeito: queda, má adesão, interação, RAM (risco 6 vezes maior que no jovem), custo.</li>
+  </ul></div>
+  <ul class="chain" aria-label="Exemplos de cascata de prescrição">
+    <li><span class="c">IECA</span><span class="ar">-&gt;</span><span class="c x">tosse seca</span><span class="ar">-&gt;</span><span class="c">xarope</span></li>
+    <li><span class="c">Pioglitazona</span><span class="ar">-&gt;</span><span class="c x">edema de membros inferiores</span><span class="ar">-&gt;</span><span class="c">diurético</span></li>
+    <li><span class="c">Antipsicótico</span><span class="ar">-&gt;</span><span class="c x">parkinsonismo</span><span class="ar">-&gt;</span><span class="c">antiparkinsoniano</span></li>
+    <li><span class="cap">O vermelho é o efeito adverso tratado como doença. Cortar a cascata é rever o primeiro remédio, não tratar o sintoma.</span></li>
+  </ul>
+  <h4>Seis perguntas antes de prescrever</h4>
+  <div class="prose"><ul>
+    <li>Qual o objetivo? É necessário? É efetivo? Interage? É seguro? Quanto custa?</li>
+    <li>O erro oposto também existe: <strong>subtratamento</strong> por medo de RAM, ageísmo ou sintoma tido como "da idade". Os critérios START existem para ele (degrau 13).</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="d13">
+  <div class="dhead"><span class="dnum">13</span><div class="dtitle"><h3>Beers, STOPP e START</h3><span class="src">Prev/20 p54-58</span></div></div>
+  <p class="lede">Critérios explícitos são listas. Beers diz o que evitar; STOPP, o que evitar naquela doença; START, o que está faltando.</p>
+  <div class="crit c3 hd">
+    <div class="row"><span class="k">Lista</span><span class="v">O que traz</span><span class="v">Exemplos</span></div>
+    <div class="row"><span class="k">Beers</span><span class="v">Inapropriado em qualquer idoso; inapropriado conforme a doença; usar com cautela; associações a evitar. A mais usada</span><span class="v">Anti-histamínico de 1ª geração (difenidramina, clorfeniramina): anticolinérgico. Benzodiazepínico (se usar, meia-vida curta). Zolpidem. Sulfonilureia. Meperidina. AINE. Digoxina acima de 0,125 mg/dia</span></div>
+    <div class="row"><span class="k">STOPP</span><span class="v">O que suspender, conforme a comorbidade</span><span class="v">Diurético de alça para edema sem IC; diltiazem ou verapamil na IC classe III-IV; AAS sem doença vascular; neuroléptico como hipnótico; antimuscarínico vesical na demência</span></div>
+    <div class="row"><span class="k">START</span><span class="v">O que iniciar: omissão de benefício</span><span class="v">Anticoagulante na FA; antiagregante na doença vascular; IECA na IC; broncodilatador na DPOC; bisfosfonato com corticoide há mais de 30 dias</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>20-30% dos idosos atendidos usam ao menos um remédio inapropriado.</li>
+  </ul></div>
+  <details class="ref">
+    <summary>O resto das listas do material: STOPP, START, cautela, outras ferramentas</summary>
+    <div class="refbody">
+      <div class="row"><span class="k">STOPP</span><span class="v">Loperamida, difenoxilato ou codeína na diarreia (constipação com transbordamento, megacólon); teofilina na DPOC; neuroléptico com risco de queda (parkinsonismo); morfina ou fentanil para dor leve a moderada; ISRS com hiponatremia grave prévia; opioide por mais de 2 semanas no constipado sem laxante</span></div>
+      <div class="row"><span class="k">START</span><span class="v">L-dopa no Parkinson; antidepressivo com sintomas há 3 meses ou mais; IBP na DRGE; metformina no DM; IECA ou BRA na nefropatia diabética; beta-agonista ou anticolinérgico na asma</span></div>
+      <div class="row"><span class="k">Cautela</span><span class="v">Varfarina: <strong>principal causa</strong> de ida à emergência por RAM (interage com antibiótico, antiagregante, amiodarona). Insulina: segunda causa (hipoglicemia, pior na IR). Sulfonilureia longa (glibenclamida, clorpropamida). Digoxina: até 0,125 mg/dia; hipocalemia arritmiza; IR acumula (confusão, visão de cores). AINE: úlcera, IR, retenção hídrica com IC, antagoniza o AAS. Opioide: delirium, sintomas digestivos, depressão respiratória</span></div>
+      <div class="row"><span class="k">Outras ferramentas</span><span class="v">Medication Appropriateness Index: 10 critérios por remédio (indicação, efetividade, dose, administração, praticidade, interação droga-droga, droga-doença, duração, custo, duplicidade). MEDRED: reduzir número e dose, estimular adesão, terapia não farmacológica</span></div>
+    </div>
+  </details>
+</section>
+
+<section class="degrau" id="d14">
+  <div class="dhead"><span class="dnum">14</span><div class="dtitle"><h3>Desprescrição e adesão</h3><span class="src">Prev/20 p59-60</span></div></div>
+  <p class="lede">Desprescrever é prevenção quaternária planejada: retirar ou reduzir o que hoje faz mais mal do que bem.</p>
+  <div class="prose"><ul>
+    <li>Processo contínuo: o remédio certo de ontem pode sobrar hoje.</li>
+    <li>Tempo até o benefício contra expectativa de vida: estatina, controle glicêmico e bisfosfonato (fratura evitada só após cerca de 1,5 ano) perdem sentido em quem vive pouco.</li>
+  </ul></div>
+  <ol class="passos" aria-label="Cinco passos da desprescrição">
+    <li><b>A</b><span><strong>Revisão</strong>: listar tudo, ao menos 1 vez ao ano. Indicação, dose, eficácia, interações, tempo, opção mais segura e barata</span></li>
+    <li><b>B</b><span><strong>Avaliação</strong>: adesão, interações, efeitos colaterais, risco-benefício</span></li>
+    <li><b>C</b><span><strong>Ação</strong>: suspender o inadequado, ajustar dose, iniciar o necessário</span></li>
+    <li><b>D</b><span><strong>Ajuste</strong>: ao que o paciente consegue fazer</span></li>
+    <li><b>E</b><span><strong>Monitorização</strong>: RAM, adesão, descompensação da doença de base</span></li>
+  </ol>
+  <div class="prose"><ul>
+    <li>Técnica: agrupar os remédios por doença e cruzar com a lista de problemas. Sobram duplicidade e remédio sem indicação.</li>
+    <li>Barreiras: falta de tempo; família e prescritor relutantes em mexer na receita de outro; medo de estragar a relação; pouca evidência.</li>
+    <li><strong>Retirada gradual</strong>: benzodiazepínico, opioide, antidepressivo, betabloqueador, anticonvulsivante. Síndrome de retirada (cefaleia, náusea, tremor, insônia) é mais comum com remédio de SNC.</li>
+    <li>Adesão = usar o remédio certo pelo tempo combinado. Pior nas doenças sem sintoma (HAS, dislipidemia). Quebram a adesão: crer que é desnecessário ou faz mal, RAM, custo, polifarmácia.</li>
+  </ul></div>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p>Desprescrição é prevenção quaternária, não terciária. E não melhora a adesão em qualquer circunstância.</p></div>
+</section>
+
+<div class="ato" id="prot"><span>Parte 4 · Proteger</span><h2>Violência, direitos e vacinas</h2></div>
+
+<section class="degrau" id="d15">
+  <div class="dhead"><span class="dnum">15</span><div class="dtitle"><h3>Violência contra o idoso</h3><span class="src">Prev/20 p71-79</span></div></div>
+  <p class="lede">De cada 5 maus-tratos, 1 é identificado. O idoso maltratado tem 3 vezes mais chance de morrer em 3 anos.</p>
+  <div class="crit c3 hd">
+    <div class="row"><span class="k">Tipo</span><span class="v">O que é</span><span class="v">Pista</span></div>
+    <div class="row"><span class="k">Física</span><span class="v">Força que causa dor ou lesão; inclui contenção, alimentação forçada e remédio desnecessário</span><span class="v">Hematoma, queimadura, fratura sem explicação; mudança súbita de comportamento</span></div>
+    <div class="row"><span class="k">Sexual</span><span class="v">Ato sexual sem consentimento ou sem capacidade de consentir</span><span class="v">Sangramento ou lesão genital; IST</span></div>
+    <div class="row"><span class="k">Psicológica</span><span class="v">Ação ou omissão que fere identidade e autoestima ("velho imprestável")</span><span class="v">Apatia, labilidade, medo do cuidador</span></div>
+    <div class="row"><span class="k">Financeira</span><span class="v">Uso não autorizado de dinheiro e bens</span><span class="v">Vive mal apesar da renda; contas atrasadas; mudança súbita em documentos</span></div>
+    <div class="row"><span class="k">Negligência</span><span class="v">Responsável <strong>presente</strong> que falha no cuidado</span><span class="v">Desidratação, desnutrição, escara, higiene ruim; sem óculos, prótese ou aparelho auditivo</span></div>
+    <div class="row"><span class="k">Abandono</span><span class="v">Responsável que se <strong>ausenta</strong> conscientemente</span><span class="v">Institucionalizado sem visita nem o cuidador combinado</span></div>
+    <div class="row"><span class="k">Autonegligência</span><span class="v">O próprio idoso não se cuida e recusa ajuda</span><span class="v">Sem terceiro envolvido</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>No idoso, as mais comuns são negligência e abandono.</li>
+    <li>Risco na vítima: dependência (física, mental, financeira), isolamento, comportamento difícil, incontinência. No agressor: estresse, dependência química, despreparo para cuidar, dependência do dinheiro da vítima.</li>
+    <li>Rastreio: 1 pergunta ("está sofrendo abuso ou negligência?") ou 3 ("sente-se seguro onde vive? quem prepara suas refeições? quem cuida do seu dinheiro?"). Idoso e cuidador <strong>separados</strong>.</li>
+    <li>Na consulta: acompanhante que responde tudo e não deixa o idoso a sós; medo do acompanhante; preocupação excessiva com o custo do cuidado.</li>
+    <li>Manejo: equipe multiprofissional; documentar história, exame, exames e impressão; comunicar à autoridade competente. Pelo Estatuto, todo cidadão tem o dever de comunicar.</li>
+    <li>Violência sexual contra mulher idosa: SINAN e também autoridade policial, de forma sintética, sem identificar vítima nem notificador, salvo risco (Portaria 78/2021).</li>
+    <li>Cuidador informal: em geral mulher, escolhida pela família, sem preparo e sobrecarregada.</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="ref">
+  <div class="dhead"><span class="dnum">R</span><div class="dtitle"><h3>Referência: direitos e vacinas</h3><span class="src">Prev/20 p12-21, 68-70</span></div></div>
+  <p class="lede">Lista de consulta. Cai como decoreba no bloco de MFC.</p>
+  <details class="ref">
+    <summary>Legislação e políticas para a pessoa idosa</summary>
+    <div class="refbody">
+      <div class="row"><span class="k">Constituição (1988)</span><span class="v">Art. 230: amparo é dever da família, da sociedade e do Estado. Transporte público gratuito a partir de 65 anos</span></div>
+      <div class="row"><span class="k">Política Nacional do Idoso</span><span class="v">Lei 8.842/1994. Porta de entrada = atenção básica. Atendimento pela própria família em vez do asilar</span></div>
+      <div class="row"><span class="k">Estatuto do Idoso</span><span class="v">Lei 10.741 (o material imprime 2013; a lei é de 2003). Direitos; pune violência por ação ou omissão; todo cidadão deve comunicar violação (art. 6º)</span></div>
+      <div class="row"><span class="k">PNSPI</span><span class="v">Portaria 2.528/2006. Finalidade: recuperar, manter e promover autonomia e independência. 9 diretrizes; a 1ª é o envelhecimento ativo e saudável. Hospitalização especializada não é diretriz</span></div>
+      <div class="row"><span class="k">Brasil Amigo da Pessoa Idosa</span><span class="v">Decreto 9.328/2018. Protagonismo do idoso; foco no inscrito no CadÚnico, mas extensível a todos</span></div>
+      <div class="row"><span class="k">Envelhecimento ativo</span><span class="v">OMS, 2005: otimizar saúde, participação e segurança; começa na vida adulta. 7 determinantes: cultura e gênero (transversais), serviços de saúde e sociais, comportamentais, pessoais, ambiente físico, ambiente social, econômicos</span></div>
+    </div>
+  </details>
+  <details class="ref">
+    <summary>Vacinas do idoso no material</summary>
+    <div class="refbody">
+      <div class="row"><span class="k">Influenza</span><span class="v">Anual, de preferência antes do outono. O PNI oferece a trivalente</span></div>
+      <div class="row"><span class="k">Pneumocócica</span><span class="v">VPC13; VPP23 de 6 a 12 meses depois; reforço da VPP23 em 5 anos. No PNI do idoso: influenza e VPP23</span></div>
+      <div class="row"><span class="k">Tríplice bacteriana</span><span class="v">A cada 10 anos; nunca vacinado = 3 doses com 2 meses de intervalo</span></div>
+      <div class="row"><span class="k">Herpes-zóster</span><span class="v">A partir de 60 anos, dose única (material)</span></div>
+      <div class="row"><span class="k">Outras</span><span class="v">Febre amarela: área endêmica ou viagem. Meningocócica e tríplice viral: viagem ou surto. Hepatites A e B: não imunizados. Adiar só na doença aguda moderada ou grave</span></div>
+      <div class="banca"><div class="albl">Depende da banca</div>
+        <p>O material está atrás do calendário vigente. Zóster hoje é a vacina recombinante, 2 doses, a partir de 50 anos (SBIm), liberada no imunossuprimido; a de vírus vivo não se usa no imunossuprimido. O PNI usa dT a cada 10 anos (dTpa é recomendação SBIm), e a VPP23 do PNI é para idoso acamado ou institucionalizado.</p></div>
+    </div>
+  </details>
+</section>
+
+<section class="synth" id="gat">
+  <h2>Gatilhos de prova</h2>
+  <p class="note">Uma linha por degrau. Vermelho = onde a banca derruba.</p>
+  <div class="trig">
+    <div><span class="tk">D0 Régua</span><span class="tv">Autonomia = decidir; independência = executar; idoso no Brasil = 60</span></div>
+    <div><span class="tk">D1 Senescência</span><span class="tv"><b>Creatinina normal não é rim normal</b>; envelhecer não causa demência nem incontinência</span></div>
+    <div><span class="tk">D2 Atípica</span><span class="tv">Infecção sem febre; pneumonia = taquipneia; <b>confusão aguda é o alarme</b></span></div>
+    <div><span class="tk">D3 7 Is</span><span class="tv">Cognitiva, instabilidade, imobilidade, incontinência, comunicativa, familiar, iatrogenia</span></div>
+    <div><span class="tk">D4 AMG</span><span class="tv">Sussurro positivo: <b>otoscopia antes da audiometria</b>; Snellen até 20/40; peso a cada consulta</span></div>
+    <div><span class="tk">D5 Cognição</span><span class="tv">Delirium = agudo, flutuante, <b>desatento</b>; procurar retenção urinária e fecaloma</span></div>
+    <div><span class="tk">D6 AVD</span><span class="tv">Katz = corpo (6 itens); <b>cozinhar, remédio e dinheiro são instrumentais</b></span></div>
+    <div><span class="tk">D7 Fragilidade</span><span class="tv">Fried: 1-2 pré-frágil, 3 frágil; FRAIL é rastreio; TUG até 10 s normal</span></div>
+    <div><span class="tk">D8 Quedas</span><span class="tv"><b>Queda prévia</b> é o maior preditor; benzodiazepínico é o pior remédio</span></div>
+    <div><span class="tk">D9 Farmacocinética</span><span class="tv">Lítio e digoxina concentram; benzodiazepínico acumula; <b>rim é o que mais altera</b></span></div>
+    <div><span class="tk">D10 Interações</span><span class="tv">Rifampicina induz; azol, macrolídeo, ISRS, omeprazol inibem</span></div>
+    <div><span class="tk">D11 RAM</span><span class="tv">Sintoma novo = RAM até prova contrária; start low, go slow</span></div>
+    <div><span class="tk">D12 Cascata</span><span class="tv">IECA, tosse, xarope: <b>rever o primeiro remédio</b>, não tratar o sintoma</span></div>
+    <div><span class="tk">D13 Critérios</span><span class="tv">Beers evita; STOPP suspende por doença; <b>START inicia o que falta</b></span></div>
+    <div><span class="tk">D14 Desprescrição</span><span class="tv">Prevenção <b>quaternária</b>; 5 passos; retirar SNC devagar</span></div>
+    <div><span class="tk">D15 Violência</span><span class="tv">Negligência = presente que não cuida; abandono = ausente; entrevistar separado</span></div>
+  </div>
+</section>
+
+<section class="synth arm" id="arm">
+  <h2>Armadilhas de banca</h2>
+  <p class="note">Cada uma aponta o degrau onde o fato mora.</p>
+  <ol class="armas">
+    <li>Idoso com creatinina normal não precisa de ajuste de dose: errado. Estime o clearance; ele tem menos músculo. <span class="d">D1, D9</span></li>
+    <li>Atribuir declínio cognitivo ou incontinência ao envelhecimento normal: errado, investigar. <span class="d">D1</span></li>
+    <li>"A febre está presente na maioria das infecções do idoso": falso. E a ausência de febre não vem da menor água corporal. <span class="d">D2</span></li>
+    <li>Encaminhar ao otorrino ou pedir audiometria antes da otoscopia: o cerume vem primeiro. <span class="d">D4</span></li>
+    <li>Corte fixo do MEEM em idoso de pouca escolaridade: o corte brasileiro é ajustado. <span class="d">D5</span></li>
+    <li>Haloperidol no delirium do parkinsoniano ou na abstinência alcoólica: errado. <span class="d">D5</span></li>
+    <li>Cozinhar, telefonar, tomar remédio e cuidar do dinheiro como AVD básicas: são instrumentais. <span class="d">D6</span></li>
+    <li>Fried com 1 critério já é frágil: não, é pré-frágil; frágil a partir de 3. <span class="d">D7</span></li>
+    <li>Depressão como fator de risco de queda em si e sexo masculino como fator de risco: errados. <span class="d">D8</span></li>
+    <li>Investigar causa cardíaca em toda queda: não na queda por tropeço. <span class="d">D8</span></li>
+    <li>Tratar a tosse do IECA com xarope ou o edema da pioglitazona com diurético: cascata de prescrição. <span class="d">D12</span></li>
+    <li>Confundir START (iniciar o benéfico) com STOPP (suspender o inapropriado). <span class="d">D13</span></li>
+    <li>Suspender benzodiazepínico ou betabloqueador de uma vez: retirada gradual. <span class="d">D14</span></li>
+    <li>Chamar desprescrição de prevenção terciária: é quaternária. <span class="d">D14</span></li>
+    <li>Idoso com dinheiro "sumindo" em casa: violência financeira, não negligência. <span class="d">D15</span></li>
+  </ol>
+</section>
+
+<footer>
+  <p><strong>Fontes:</strong> <code>resumos/Preventiva/20. Saúde do Idoso.pdf</code> (EMED, Curso Extensivo 2024, Profs. Bárbara D'Alegria e Giordanne Freitas), lido inteiro e citado como Prev/20; <code>resumos/Clínica Médica/Neurologia/Delirium no Idoso.md</code> (CAM, predisponentes e precipitantes, manejo).</p>
+  <p>Fora das fontes locais: o nome "Lawton" para a escala de AVD instrumentais; a leitura da isoniazida como inibidora do P450; o calendário vacinal vigente (SBIm e PNI) e a evidência recente sobre vitamina D e quedas, citados só nas notas de banca.</p>
+  <p>Prepara as tarefas #876 (Avaliação Multidimensional do Idoso) e #879 (Polifarmácia, desprescrição e RAM no idoso) do plano, bloco MFC.</p>
+</footer>
+</div>

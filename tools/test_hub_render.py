@@ -542,7 +542,8 @@ LISTAS_JS = "\n".join([_declaracao(TEMPLATE, "var ROT_QZ = {"), _declaracao(TEMP
                        # s214: as semanas das Listas recolhem; o estado (secAberta) e lido na renderizacao
                        re.search(r"\n  (var SECOES_CHAVE = [^\n]+;)", TEMPLATE).group(1)] +
                       [extrair_funcao(TEMPLATE, a) for a in (
-                          "function qzEsc(s){", "function qzItemLista(l, atrasada){", "function qzAulasHtml(l){",
+                          "function qzEsc(s){", "function temaExibido(t){",   # P20: o titulo da lista
+                          "function qzItemLista(l, atrasada){", "function qzAulasHtml(l){",
                           "function qzEhSimulado(l){",
                           "function qzNomeSim(l){", "function qzItemSim(l, daVez){", "function qzRenderSimulados(ls){",
                           "function secoesLer(){", "function secAberta(id, padrao){", "function secSemanaAtual(atual, comItens){",
@@ -901,7 +902,14 @@ function feitoEm(slug){ return qd.querySelector('.qd-item[data-slug="' + slug + 
 function titulo(chave){ return qd.querySelector('.qd-sem[data-secao="' + chave + '"] .qd-titulo'); }
 function tocar(chave){ titulo(chave).click(); }
 function tecla(chave, k){ (titulo(chave)._ouv.keydown || []).forEach(function(f){ f({key: k, preventDefault: function(){ TECLAS++; }}); }); }
-function feito(slug){ qd.querySelector('.qd-item[data-slug="' + slug + '"] .qd-feito').click(); }
+// P20 (s219): sem o quadrado, o "feito" chega pelos caminhos REAIS -- marcar = a assinatura da leitura
+// (`quadroMarcarFeito`, grava `quadro/<slug>`); desmarcar = o doc do db muda (so o agente o faz) e o
+// onSnapshot real do quadro aplica, na hora
+function feito(slug){
+  var li = qd.querySelector('.qd-item[data-slug="' + slug + '"]');
+  if(!li.hasAttribute("data-feito")){ quadroMarcarFeito(slug); return; }
+  BANCO.quadro[slug] = {feito: false, ts: "t"}; (OUV.quadro || []).forEach(function(f){ f(foto("quadro")); });
+}
 function secoes(){ var o = {};
   qd.querySelectorAll(".qd-sem").forEach(function(s){ var t = s.querySelector(".qd-titulo"), l = s.querySelector(".qd-lista");
     o[s.getAttribute("data-secao")] = {aberta: !s.hasAttribute("data-recolhida"), expanded: t.getAttribute("aria-expanded"),

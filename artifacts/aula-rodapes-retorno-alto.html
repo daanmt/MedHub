@@ -1,0 +1,480 @@
+<title>Rodapés de retorno alto</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,480;9..144,600;9..144,680&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EFF3F0; --card:#FAFCFA; --sunk:#E2E9E4;
+  --ink:#18211C; --ink2:#4C5A52; --ink3:#6F7D75;
+  --line:rgba(24,33,28,.13); --line2:rgba(24,33,28,.26);
+  --teal:#1F6B5E; --teal-ink:#154A41; --teal-wash:#DCEBE5;
+  --carmine:#8E2F41; --carmine-ink:#6B2231; --carmine-wash:#F5E2E6;
+  --amber:#8A5A17; --amber-ink:#6B4610; --amber-wash:#F3E6CC;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#8A988F;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#8A988F;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font:16px/1.6 "Source Sans 3",-apple-system,"Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+h1,h2,h3{margin:0;font-family:Fraunces,Georgia,serif;font-weight:600;letter-spacing:-.01em;text-wrap:balance;line-height:1.15;color:var(--ink)}
+.wrap{max-width:780px;margin:0 auto;padding:0 16px 70px}
+:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+a{color:var(--teal-ink)}
+strong{font-weight:600;color:var(--ink)}
+
+/* topo */
+.top{padding:36px 0 22px;border-bottom:1px solid var(--line2)}
+.eye{font:600 11px/1.3 "Source Sans 3";letter-spacing:.12em;text-transform:uppercase;color:var(--teal-ink);margin:0 0 14px}
+.top h1{font-size:clamp(28px,6vw,44px);font-weight:680;margin-bottom:14px}
+.top .sub{font-size:16.5px;line-height:1.55;color:var(--ink2);margin:0 0 20px}
+.stats{display:flex;gap:18px;flex-wrap:wrap}
+.stat{display:flex;flex-direction:column;gap:2px;min-width:0}
+.stat b{font:600 21px/1 "IBM Plex Mono";color:var(--teal-ink);font-variant-numeric:tabular-nums}
+.stat span{font-size:11.5px;color:var(--ink3)}
+
+.nav{display:flex;flex-wrap:wrap;gap:6px;padding:20px 0 4px}
+.nav a{font-size:13px;text-decoration:none;color:var(--ink2);border:1px solid var(--line2);border-radius:2px;padding:4px 9px;min-width:0}
+.nav a:hover{color:var(--ink);border-color:var(--teal)}
+
+/* atos */
+.ato{margin:40px 0 0;padding:14px 16px;background:var(--teal-wash);border-left:3px solid var(--teal)}
+.ato span{font:700 10.5px "Source Sans 3";letter-spacing:.12em;text-transform:uppercase;color:var(--teal-ink);display:block;margin-bottom:3px}
+.ato h2{font-size:clamp(21px,4vw,28px)}
+
+/* degraus */
+.degrau{padding:30px 0;border-bottom:1px solid var(--line)}
+.dhead{display:flex;gap:13px;align-items:flex-start;margin-bottom:12px}
+.dnum{flex-shrink:0;width:38px;height:38px;border:1.5px solid var(--teal);border-radius:50%;display:flex;align-items:center;justify-content:center;font:600 14px "IBM Plex Mono";color:var(--teal-ink)}
+.dtitle{min-width:0;padding-top:3px}
+.dtitle h3{font-size:clamp(19px,3.4vw,24px)}
+.src{display:block;margin-top:5px;font:500 11.5px/1.4 "IBM Plex Mono";color:var(--ink3)}
+.lede{font-size:16px;line-height:1.55;color:var(--ink2);margin:0 0 14px;font-style:italic}
+.prose ul{margin:0 0 12px;padding-left:20px}
+.prose li{font-size:15.4px;line-height:1.55;color:var(--ink2);margin-bottom:6px}
+.prose li:last-child{margin-bottom:0}
+h4{font:600 14px "Source Sans 3";color:var(--ink);margin:20px 0 8px}
+
+.trap,.banca{margin:16px 0;padding:13px 16px}
+.trap{border-left:3px solid var(--carmine);background:var(--carmine-wash)}
+.banca{border-left:3px solid var(--amber);background:var(--amber-wash)}
+.albl{font:700 10.5px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px}
+.trap .albl{color:var(--carmine-ink)}
+.banca .albl{color:var(--amber-ink)}
+.trap p,.banca p{font-size:15px;line-height:1.55;color:var(--ink);margin:0}
+
+/* lado a lado */
+.vs{display:grid;grid-template-columns:minmax(0,1fr);gap:1px;background:var(--line2);border:1px solid var(--line2);margin:16px 0}
+.vs>div{background:var(--card);padding:12px 14px;min-width:0}
+.vs h5{font:700 12px "Source Sans 3";letter-spacing:.04em;text-transform:uppercase;margin:0 0 6px}
+.vs .a h5{color:var(--carmine-ink)}
+.vs .b h5{color:var(--teal-ink)}
+.vs ul{margin:0;padding-left:17px}
+.vs li{font-size:14.4px;line-height:1.5;color:var(--ink2);margin-bottom:4px;overflow-wrap:break-word}
+.vs p{font-size:13.6px;line-height:1.45;color:var(--ink3);margin:8px 0 0}
+
+/* tabelas de critério */
+.crit{border:1px solid var(--line2);margin:16px 0;background:var(--card)}
+.crit .row{display:grid;grid-template-columns:minmax(0,1fr);gap:2px;padding:9px 13px;font-size:14.2px}
+.crit .row+.row{border-top:1px solid var(--line)}
+.crit .row>*{min-width:0}
+.crit .k{font-weight:600;color:var(--teal-ink)}
+.crit .v{color:var(--ink2);line-height:1.48;overflow-wrap:break-word}
+.crit.hd .row:first-child{background:var(--sunk)}
+.crit.hd .row:first-child>*{font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink3);font-weight:600}
+.crit.c3 .row{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:4px 12px}
+.crit.c3 .row .k{grid-column:1 / -1}
+.crit.c3.hd .row:first-child .k{display:none}
+.mal{color:var(--carmine-ink);font-weight:600}
+
+
+/* o discriminador do rodapé */
+.disc{margin:14px 0 16px;padding:13px 16px;border-left:3px solid var(--teal);background:var(--teal-wash)}
+.disc .albl{color:var(--teal-ink)}
+.disc p{font-size:15.2px;line-height:1.55;color:var(--ink);margin:0}
+.dnum.r{font-size:13px}
+
+/* passos */
+ol.passos{list-style:none;margin:16px 0;padding:0;border:1px solid var(--line2);background:var(--card)}
+ol.passos li{display:grid;grid-template-columns:34px minmax(0,1fr);gap:10px;padding:9px 13px;font-size:14.4px;line-height:1.48;color:var(--ink2)}
+ol.passos li+li{border-top:1px solid var(--line)}
+ol.passos b{font:600 14px "IBM Plex Mono";color:var(--teal-ink)}
+ol.passos strong{color:var(--ink)}
+
+/* referência recolhida */
+details.ref{margin:20px 0;border:1px solid var(--line2);background:var(--card)}
+details.ref>summary{cursor:pointer;list-style:none;padding:12px 16px;font:600 13.5px "Source Sans 3";color:var(--teal-ink);display:flex;align-items:center;gap:9px}
+details.ref>summary::-webkit-details-marker{display:none}
+details.ref>summary::before{content:"+";font:600 15px "IBM Plex Mono";width:16px;flex-shrink:0}
+details.ref[open]>summary::before{content:"-"}
+details.ref .refbody{padding:0 16px 16px}
+details.ref .row{display:grid;grid-template-columns:minmax(0,1fr);gap:2px;padding:8px 0;font-size:13.8px;border-top:1px solid var(--line)}
+details.ref .row:first-child{border-top:0}
+details.ref .row>*{min-width:0}
+details.ref .k{font-weight:600;color:var(--ink)}
+details.ref .v{color:var(--ink2);line-height:1.5;overflow-wrap:break-word}
+details.ref .banca{margin:12px 0 0}
+
+/* síntese */
+.synth{background:var(--card);border:1px solid var(--line2);padding:20px 16px;margin-top:40px}
+.synth h2{font-size:23px;margin-bottom:6px}
+.synth .note{font-size:14px;color:var(--ink3);margin:0 0 14px}
+.trig{display:grid;grid-template-columns:minmax(0,1fr);gap:1px;background:var(--line2);border:1px solid var(--line2)}
+.trig div{background:var(--sunk);padding:10px 13px;min-width:0}
+.trig .tk{font:700 11px "IBM Plex Mono";color:var(--teal-ink);display:block;margin-bottom:3px}
+.trig .tv{font-size:13.8px;line-height:1.45;color:var(--ink2)}
+.trig .tv b{color:var(--carmine-ink)}
+.synth.arm{border-left:3px solid var(--carmine)}
+.synth.arm h2::before{content:"";display:inline-block;width:11px;height:11px;border-radius:50%;background:var(--carmine);margin-right:9px;vertical-align:2px}
+ol.armas{margin:0;padding-left:22px}
+ol.armas li{font-size:15px;line-height:1.5;color:var(--ink2);margin-bottom:8px}
+ol.armas li::marker{font:600 13px "IBM Plex Mono";color:var(--carmine-ink)}
+ol.armas .d{font:500 11.5px "IBM Plex Mono";color:var(--ink3)}
+
+footer{margin-top:46px;padding-top:18px;border-top:1px solid var(--line2)}
+footer p{font-size:12.3px;color:var(--ink3);margin:0 0 7px;line-height:1.5}
+code{font-family:"IBM Plex Mono",Consolas,monospace;font-size:11.5px;background:var(--sunk);padding:1px 4px;border-radius:2px;word-break:break-all}
+
+@media (min-width:560px){
+  .vs{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .crit .row{grid-template-columns:150px minmax(0,1fr);gap:12px}
+  .crit.c3 .row{grid-template-columns:130px minmax(0,1fr) minmax(0,1fr);gap:12px}
+  .crit.c3 .row .k{grid-column:auto}
+  .crit.c3.hd .row:first-child .k{display:block}
+  details.ref .row{grid-template-columns:150px minmax(0,1fr);gap:12px}
+  .trig{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (min-width:640px){
+  .wrap{padding:0 24px 90px}
+  .top{padding:46px 0 26px}
+  .degrau{padding:34px 0}
+  .synth{padding:26px 22px}
+}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <p class="eye">MedHub · Aula-base · Rodapés · CM, CIR, PED e MFC · tarefa #5425</p>
+  <h1>Sete rodapés de retorno alto</h1>
+  <p class="sub">Temas curtos e independentes que a banca cobra pelo detalhe. Em cada um vem primeiro o discriminador e depois só o que ele precisa para funcionar.</p>
+  <div class="stats">
+    <div class="stat"><b>7</b><span>rodapés independentes</span></div>
+    <div class="stat"><b>6 sem</b><span>lombalgia sem imagem</span></div>
+    <div class="stat"><b>24 h</b><span>violência sexual e suicídio</span></div>
+    <div class="stat"><b>20/10</b><span>petéquias: adulto/criança</span></div>
+    <div class="stat"><b>1 de 3</b><span>critério de Light = exsudato</span></div>
+  </div>
+</header>
+
+<nav class="nav" aria-label="Atalhos">
+  <a href="#r1">Lombalgia</a><a href="#r2">Violência</a><a href="#r3">Dengue</a><a href="#r4">SHU x PTT</a>
+  <a href="#r5">Light</a><a href="#r6">Down</a><a href="#r7">Pele na criança</a><a href="#gat">Gatilhos</a><a href="#arm">Armadilhas</a>
+</nav>
+
+<section class="degrau" id="r1">
+  <div class="dhead"><span class="dnum r">R1</span><div class="dtitle"><h3>Lombalgia na APS</h3><span class="src">Cir/3 p9-21; resumo Coluna e Maus-Tratos §1-3, 6</span></div></div>
+  <p class="lede">Na lombalgia, quem pede o exame é o sinal de alarme, não a intensidade da dor.</p>
+  <div class="disc"><div class="albl">O discriminador</div>
+    <p>Sem sinal de alarme: nenhuma imagem nas primeiras 4-6 semanas, analgesia e manter a atividade. Com sinal de alarme: <strong>radiografia primeiro</strong>. Cauda equina: RM de urgência e cirurgia.</p></div>
+  <div class="crit hd">
+    <div class="row"><span class="k">Alarme: PITTI DOC</span><span class="v">O que significa</span></div>
+    <div class="row"><span class="k">Persistência</span><span class="v">Mais de uma consulta em 30 dias (na preventiva, 6 semanas de dor)</span></div>
+    <div class="row"><span class="k">Idade</span><span class="v">Abaixo de 20 (espondilólise) ou acima de 50 (tumor, fratura)</span></div>
+    <div class="row"><span class="k">Trauma</span><span class="v">Radiografia sempre, sobretudo no idoso com osteoporose</span></div>
+    <div class="row"><span class="k">Tumor</span><span class="v">História ou suspeita: emagrecimento, dor noturna</span></div>
+    <div class="row"><span class="k">Infecção</span><span class="v">Febre, perda de peso; droga injetável, imunossupressão</span></div>
+    <div class="row"><span class="k">Déficit neurológico</span><span class="v">Compressão radicular, por hérnia ou tumor</span></div>
+    <div class="row"><span class="k">Osteoporose</span><span class="v">A fratura osteoporótica mais comum é a vertebral</span></div>
+    <div class="row"><span class="k">Cauda equina</span><span class="v mal">Anestesia em sela e perda de controle esfincteriano: cirurgia de emergência</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Aguda: menos de 6 semanas; subaguda, 6-12; crônica, acima de 12. 90% são primárias (75% musculoligamentar); hérnia e estenose, 3-4%; câncer, 0,7%.</li>
+    <li>Mecânica: dor axial após esforço, sem irradiação por dermátomo, Lasègue negativo; resolve em 4-7 semanas.</li>
+    <li>Toda lombalgia trata igual: analgésico, AINE, relaxante muscular, fortalecer o core, atividade aeróbica; <strong>repouso no máximo 2-3 dias</strong>. Antidepressivo na crônica; anticonvulsivante na radicular.</li>
+    <li>A radiografia exclui causa secundária: pedículo ou processo espinhoso apagado (coruja caolha) = tumor. TC vê osso; RM vê disco e medula, só se a suspeita persiste.</li>
+    <li>Cauda equina: os sintomas mais comuns são lombalgia, dor nas pernas, parestesia perianal e bexiga neurogênica; toque retal alterado. RM e encaminhamento imediato; na UPA sem cirurgião, transferência regulada.</li>
+  </ul></div>
+  <div class="crit c3 hd">
+    <div class="row"><span class="k">Diagnóstico</span><span class="v">Quem</span><span class="v">Pista</span></div>
+    <div class="row"><span class="k">Hérnia discal</span><span class="v">Jovem com dor irradiada por dermátomo</span><span class="v">Lasègue positivo entre 30 e 60°; o cruzado é muito específico</span></div>
+    <div class="row"><span class="k">Inflamatória</span><span class="v">Jovem</span><span class="v">Pior à noite, melhora ao andar; Schober reduzido</span></div>
+    <div class="row"><span class="k">Estenose do canal</span><span class="v">Idoso</span><span class="v">Piora ao andar; melhora ao fletir o tronco ou sentar (carrinho de supermercado); pulsos presentes</span></div>
+    <div class="row"><span class="k">Metástase</span><span class="v">Idoso</span><span class="v">Perda de peso, dor refratária e noturna</span></div>
+    <div class="row"><span class="k">Artrose</span><span class="v">Idoso sem os achados acima</span><span class="v">Mecânica, sem radiculopatia</span></div>
+  </div>
+  <div class="crit c3 hd">
+    <div class="row"><span class="k">Raiz</span><span class="v">Força</span><span class="v">Reflexo e pele</span></div>
+    <div class="row"><span class="k">L4</span><span class="v">Extensão do joelho, dorsiflexão</span><span class="v">Patelar; face medial da perna</span></div>
+    <div class="row"><span class="k">L5 (hérnia L4-L5)</span><span class="v">Extensão do hálux; anda mal nos calcanhares</span><span class="v">Sem reflexo próprio; dorso do pé</span></div>
+    <div class="row"><span class="k">S1 (hérnia L5-S1)</span><span class="v">Flexão plantar; anda mal na ponta dos pés</span><span class="v">Aquileu; borda lateral e planta</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Claudicação neurogênica melhora fletindo o tronco, vai de proximal para distal e tem pulso. A vascular melhora só parando, piora na ladeira e tem pulso fraco.</li>
+    <li>Hérnia opera se refratária ao conservador (o material diz 6 meses), com déficit progressivo ou persistente por mais de 3 meses, ou com cauda equina. A cirurgia melhora a dor radicular, não a lombar.</li>
+  </ul></div>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p>RM na lombalgia aguda sem alarme, repouso prolongado e "RM direto na suspeita de tumor" são erros. A RM vem primeiro só na cauda equina.</p></div>
+</section>
+
+<section class="degrau" id="r2">
+  <div class="dhead"><span class="dnum r">R2</span><div class="dtitle"><h3>Violência e negligência: notificação</h3><span class="src">Prev/1 p21-28; GO/19 p6, 12; Cir/5 p4-6; Prev/20 p73, 79</span></div></div>
+  <p class="lede">Notificar não é denunciar: é registro de vigilância, feito já na suspeita. O que muda com a vítima é a quem mais avisar.</p>
+  <div class="disc"><div class="albl">O discriminador</div>
+    <p>Suspeita basta. <strong>Violência sexual e tentativa de suicídio: imediata</strong> (até 24 h). Violência doméstica e as outras: semanal (até 7 dias). Criança e adolescente: Conselho Tutelar também.</p></div>
+  <div class="crit c3 hd">
+    <div class="row"><span class="k">Vítima</span><span class="v">Além do SINAN</span><span class="v">Detalhe que cai</span></div>
+    <div class="row"><span class="k">Criança e adolescente</span><span class="v">Conselho Tutelar (ECA, art. 13) ou Vara da Infância</span><span class="v">Sem certeza, sem boletim de ocorrência, sem autorização dos pais. Não notificar: multa de 3 a 20 salários</span></div>
+    <div class="row"><span class="k">Pessoa idosa</span><span class="v">Conselho da Pessoa Idosa; autoridade competente</span><span class="v">Pelo Estatuto, todo cidadão deve comunicar</span></div>
+    <div class="row"><span class="k">Mulher</span><span class="v">Autoridade policial em até 24 h (Lei 13.931/2019)</span><span class="v">Comunicação sintética, sem identificar vítima nem notificador; identifica só se houver risco, com ciência da vítima</span></div>
+    <div class="row"><span class="k">Violência sexual</span><span class="v">Atender independe de boletim de ocorrência</span><span class="v">Desde 2023, o aborto legal não exige comunicar a polícia</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Entra na notificação: física, psicológica, sexual, negligência, autoprovocada, tortura, tráfico de pessoas, trabalho infantil e escravo, intervenção legal; qualquer idade e gênero.</li>
+    <li>Semanal vai para a secretaria municipal do local de atendimento; imediata, pelo meio mais rápido.</li>
+  </ul></div>
+  <h4>Criança: quando suspeitar</h4>
+  <div class="prose"><ul>
+    <li>Negligência é o tipo mais comum (negligência, psicológica, física, sexual). O agressor é o cuidador.</li>
+    <li>Pistas: história incompatível com a lesão; lesões em estágios diferentes; regressão do desenvolvimento ou mudança de comportamento; fratura típica.</li>
+  </ul></div>
+  <div class="crit hd">
+    <div class="row"><span class="k">Fratura (Kleinman)</span><span class="v">Exemplos</span></div>
+    <div class="row"><span class="k">Alta especificidade</span><span class="v mal">Metafisária clássica (canto, alça de balde); arco posterior de costela; escápula; processo espinhoso; esterno</span></div>
+    <div class="row"><span class="k">Moderada</span><span class="v">Múltiplas, sobretudo bilaterais; em estágios diferentes de consolidação; descolamento epifisário; corpo vertebral; dedos; crânio complexa</span></div>
+    <div class="row"><span class="k">Baixa</span><span class="v">Clavícula; diáfise de osso longo (mas suspeita em lactente que ainda não anda); fratura linear de crânio</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li><strong>Bebê chacoalhado</strong> (abaixo de 2 anos): hematoma subdural + hemorragia retiniana + lesão de partes moles. Hemorragia retiniana no enunciado: pense maus-tratos.</li>
+    <li>Abaixo de 2 anos com suspeita: radiografia de todo o esqueleto, repetida em 7-10 dias.</li>
+    <li>Conduta: <strong>internar para proteger</strong> (não devolver ao agressor), tratar e notificar. O médico não faz boletim nem investiga o agressor.</li>
+    <li>Diferencial: osteogênese imperfeita (esclera azul, osteopenia), raquitismo, fratura patológica. Münchausen por procuração: o cuidador provoca o sintoma.</li>
+  </ul></div>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p>"Violência doméstica é de notificação imediata": não, é semanal. "Aguardar a confirmação para notificar": não, a suspeita basta.</p></div>
+</section>
+
+<section class="degrau" id="r3">
+  <div class="dhead"><span class="dnum r">R3</span><div class="dtitle"><h3>Dengue e prova do laço</h3><span class="src">Inf/10 p12-23; resumo Arboviroses §1</span></div></div>
+  <p class="lede">A prova do laço mede fragilidade capilar. Positiva, ela muda o grupo, não a gravidade.</p>
+  <div class="disc"><div class="albl">O discriminador</div>
+    <p>Laço positivo ou petéquia, sem sinal de alarme = <strong>grupo B</strong>: hemograma e hidratação oral. Gravidade vem do extravasamento de plasma (sinal de alarme, choque), não do sangramento de pele.</p></div>
+  <ol class="passos" aria-label="Como fazer a prova do laço">
+    <li><b>1</b><span>Só em quem <strong>não</strong> tem sangramento espontâneo</span></li>
+    <li><b>2</b><span>PA média = (PAS + PAD) / 2. Não é a PAM da UTI</span></li>
+    <li><b>3</b><span>Insuflar até esse valor: <strong>5 min no adulto, 3 min na criança</strong></span></li>
+    <li><b>4</b><span>Quadrado de 2,5 cm no antebraço: positiva com <strong>20 ou mais</strong> petéquias no adulto, <strong>10 ou mais</strong> na criança</span></li>
+  </ol>
+  <div class="crit c3 hd">
+    <div class="row"><span class="k">Grupo</span><span class="v">Quem</span><span class="v">Conduta</span></div>
+    <div class="row"><span class="k">A (azul)</span><span class="v">Sem alarme, sem sangramento, sem risco</span><span class="v">Casa; oral 60 mL/kg/dia (1/3 sais de reidratação); sintomáticos</span></div>
+    <div class="row"><span class="k">B (verde)</span><span class="v">Sem alarme, com petéquia ou laço positivo, ou condição de risco: abaixo de 2 ou acima de 65 anos, gestante, HAS ou cardiopatia grave, DM, DPOC, DRC, doença ácido-péptica, hepatopatia, autoimune</span><span class="v">Hemograma; hidratação oral; reavaliar (o material diz 4 h). Ht normal: alta. Ht alto ou alarme: tratar como C</span></div>
+    <div class="row"><span class="k">C (amarelo)</span><span class="v">Sinal de alarme, sem choque</span><span class="v">Internar; <strong>10 mL/kg na 1ª hora</strong>; hemograma, albumina, transaminases, RX de tórax, USG; NS1, PCR ou sorologia</span></div>
+    <div class="row"><span class="k">D (vermelho)</span><span class="v">Choque, sangramento grave ou disfunção grave de órgão</span><span class="v">UTI; <strong>20 mL/kg em 20 min</strong>, até 3 vezes</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Sinais de alarme (SILVA 3H): Sangramento de mucosa; Irritabilidade ou letargia; Líquido acumulado; Vômitos persistentes; Abdome doloroso contínuo; Hipotensão postural; Hepatomegalia; Hematócrito em alta.</li>
+    <li>Mecanismo: com a queda da febre começa a fase crítica (24-48 h). O endotélio vaza plasma, o hematócrito sobe, surgem derrames. O choque é por perda de plasma.</li>
+    <li>Criança nos grupos A e B: até 10 kg, 130 mL/kg/dia; 10-20 kg, 100; acima de 20 kg, 80.</li>
+    <li>Diagnóstico: NS1 ou RT-PCR até o 5º dia; IgM a partir do 6º. Leucopenia é a alteração mais precoce.</li>
+    <li>Proibidos: AINE e AAS (sangramento; AAS e síndrome de Reye). Caso: notificação semanal; óbito: imediata.</li>
+  </ul></div>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p>A banca troca os números: C = 10 mL/kg em 1 hora; D = 20 mL/kg em 20 minutos. E laço positivo não é dengue grave nem grupo C.</p></div>
+</section>
+
+<section class="degrau" id="r4">
+  <div class="dhead"><span class="dnum r">R4</span><div class="dtitle"><h3>SHU x PTT</h3><span class="src">Hemato/4 p31-35; Nefro/1 p18; Ped/48 p24, 35; resumos Hemostasia §8.3 e Lesão Renal Aguda</span></div></div>
+  <p class="lede">As duas são microangiopatias trombóticas: hemácia cortada no capilar, plaqueta consumida, órgão isquêmico. Mudam quem adoece, o gatilho e o órgão que domina.</p>
+  <div class="disc"><div class="albl">O discriminador</div>
+    <p>Criança com diarreia sanguinolenta e lesão renal = SHU: suporte, <strong>sem antibiótico</strong>. Adulta jovem com plaquetopenia, hemólise e sintoma neurológico = PTT: <strong>plasmaférese já</strong>. Coagulograma alterado = CIVD.</p></div>
+  <div class="prose"><ul>
+    <li>O que as une: esquizócitos; Coombs direto negativo; DHL e bilirrubina indireta altas, haptoglobina baixa, reticulocitose; plaquetopenia; <strong>TP e TTPa normais</strong>.</li>
+  </ul></div>
+  <div class="crit c3 hd">
+    <div class="row"><span class="k">Eixo</span><span class="v">SHU típica</span><span class="v">PTT</span></div>
+    <div class="row"><span class="k">Quem</span><span class="v">Criança até 5 anos</span><span class="v">Mulher de 30 a 50 anos</span></div>
+    <div class="row"><span class="k">Gatilho</span><span class="v">E. coli O157:H7 (toxina Shiga): diarreia com sangue 3-12 dias antes</span><span class="v">Autoanticorpo contra a ADAMTS13 (raramente, falta congênita)</span></div>
+    <div class="row"><span class="k">Mecanismo</span><span class="v">A toxina lesa o endotélio, sobretudo o glomerular</span><span class="v">Sem ADAMTS13, o fator de von Willebrand fica em multímeros gigantes que prendem plaquetas</span></div>
+    <div class="row"><span class="k">Órgão que domina</span><span class="v">Rim: lesão renal aguda (a causa mais comum de LRA na criança)</span><span class="v">SNC. Pêntade: febre, alteração neurológica, IR leve, hemólise, plaquetopenia</span></div>
+    <div class="row"><span class="k">Tratamento</span><span class="v">Suporte: hemácias, hidroeletrolítico, diálise se preciso</span><span class="v">Plasmaférese urgente, sem esperar a dosagem de ADAMTS13; corticoide; caplacizumabe só junto da aférese; rituximabe no refratário. Sem aférese: transfundir plasma</span></div>
+    <div class="row"><span class="k">Plaquetas</span><span class="v">Evitar transfusão, salvo sangramento ativo</span><span class="v">Transfusão pode piorar a trombose</span></div>
+    <div class="row"><span class="k">Prognóstico</span><span class="v">Bom; o rim costuma recuperar</span><span class="v mal">Mais de 90% de mortalidade sem tratamento</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>CIVD (sepse, neoplasia, trauma): também esquizócitos e plaquetopenia, mas TP, TTPa e TT longos, fibrinogênio baixo, D-dímero alto. Trata a causa.</li>
+    <li>Outras causas de hemólise microangiopática: pré-eclâmpsia e HELLP, hipertensão maligna, neoplasia disseminada.</li>
+    <li>Na criança, GNDA pós-estreptocócica tem C3 baixo e plaqueta normal.</li>
+  </ul></div>
+  <div class="banca"><div class="albl">Depende da banca</div>
+    <p>SHU atípica (sem diarreia, por desregulação do complemento): o resumo traz plasmaférese. Hoje o tratamento de escolha é o eculizumabe (anticomplemento), com a aférese como ponte.</p></div>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p>Antibiótico ou antidiarreico na disenteria por E. coli entero-hemorrágica (mais toxina, SHU, megacólon), e heparina ou plaqueta na PTT, são erros.</p></div>
+</section>
+
+<section class="degrau" id="r5">
+  <div class="dhead"><span class="dnum r">R5</span><div class="dtitle"><h3>Derrame pleural: critérios de Light</h3><span class="src">Pneumo/1 p7-33</span></div></div>
+  <p class="lede">Light separa o que vem de fora da pleura (transudato) do que nasce nela (exsudato). Um critério basta para exsudato.</p>
+  <div class="disc"><div class="albl">O discriminador</div>
+    <p>Exsudato com <strong>ao menos 1</strong>: proteína líquido/soro acima de 0,5; DHL líquido/soro acima de 0,6; DHL do líquido acima de 2/3 do limite superior sérico. Transudato só sem nenhum dos três.</p></div>
+  <div class="crit c3 hd">
+    <div class="row"><span class="k">Critério</span><span class="v">Transudato</span><span class="v">Exsudato</span></div>
+    <div class="row"><span class="k">Proteína líquido/soro</span><span class="v">até 0,5</span><span class="v">acima de 0,5</span></div>
+    <div class="row"><span class="k">DHL líquido/soro</span><span class="v">até 0,6</span><span class="v">acima de 0,6</span></div>
+    <div class="row"><span class="k">DHL do líquido</span><span class="v">até 2/3 do limite sérico</span><span class="v">acima de 2/3 do limite sérico</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Mecanismo: transudato = pleura sã com pressão hidrostática alta (IC, a principal causa de derrame no mundo) ou oncótica baixa (cirrose, nefrótica, desnutrição). Exsudato = pleura inflamada e permeável.</li>
+    <li>Sem dosagem no sangue: proteína do líquido acima de 3,0 g/dL, DHL acima de 200 UI/L ou colesterol acima de 50 mg/dL = exsudato.</li>
+    <li>IC em uso de diurético vira <strong>falso exsudato</strong>: gradiente de albumina (soro menos líquido) acima de 1,2 g/dL, ou de proteína acima de 3,1, confirma transudato.</li>
+  </ul></div>
+  <div class="crit hd">
+    <div class="row"><span class="k">Exsudato: e agora?</span><span class="v">O que aponta</span></div>
+    <div class="row"><span class="k">Glicose abaixo de 40 (ou 60)</span><span class="v">Parapneumônico complicado, TB, neoplasia, artrite reumatoide (as mais baixas, abaixo de 20: parapneumônico e AR), ruptura de esôfago, hemotórax. LES mantém glicose acima de 80</span></div>
+    <div class="row"><span class="k">pH abaixo de 7,2</span><span class="v">As mesmas causas da glicose baixa; pior prognóstico</span></div>
+    <div class="row"><span class="k">ADA acima de 40 (ou 30)</span><span class="v">Tuberculose pleural</span></div>
+    <div class="row"><span class="k">Amilase acima de 1.000</span><span class="v">Pancreatite (derrame à esquerda); também ruptura de esôfago e neoplasia</span></div>
+    <div class="row"><span class="k">Triglicerídeo / colesterol</span><span class="v">Quilotórax (ducto torácico: trauma, linfoma) / pseudoquilotórax (exsudato crônico: TB, AR)</span></div>
+    <div class="row"><span class="k">Celularidade</span><span class="v">Neutrofílico: parapneumônico, empiema, pancreatite, TEP, TB nas 2 primeiras semanas. Linfocítico: TB, linfoma, neoplasia, colagenose, quilotórax. Eosinofílico: ar ou sangue na pleura, fungo, parasita, droga, asbesto</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Parapneumônico: drenar já se pus, pH abaixo de 7,2, glicose abaixo de 40, DHL acima de 1.000 ou bactéria no Gram ou na cultura. Fase organizada (fibrotórax): decorticação. Antibiótico por 3-4 semanas.</li>
+    <li>TB pleural: exsudato linfocítico, proteína acima de 4, ADA alta, mesoteliais abaixo de 5%. BAAR positivo em menos de 10%; cultura até 20%. <strong>Padrão-ouro: biópsia pleural</strong> (granuloma com caseose).</li>
+    <li>O exame físico só muda com cerca de 300 mL: macicez, murmúrio e frêmito abolidos. Na incidência de Laurell, lâmina acima de 10 mm já punciona.</li>
+    <li>Hemitórax opaco: derrame empurra o mediastino para o lado oposto; atelectasia puxa para o mesmo lado.</li>
+    <li>Toracocentese na borda superior da costela inferior. Alívio de até cerca de 1.500 mL; acima disso, risco de edema de reexpansão.</li>
+  </ul></div>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p>"Exsudato exige os três critérios": não, basta um; é o transudato que precisa da ausência dos três. E o diurético pode transformar o transudato da IC em falso exsudato.</p></div>
+</section>
+
+<section class="degrau" id="r6">
+  <div class="dhead"><span class="dnum r">R6</span><div class="dtitle"><h3>Síndrome de Down</h3><span class="src">Ped/13 p8-14; resumo Síndrome de Down</span></div></div>
+  <p class="lede">O fenótipo já vem no enunciado. A banca testa o calendário de rastreio, que corre mesmo com a criança bem.</p>
+  <div class="disc"><div class="albl">O discriminador</div>
+    <p>Seguimento <strong>programado, nunca reativo</strong>: ecocardiograma em todo recém-nascido; audição, olho, TSH e hemograma seriados; sorologia para doença celíaca, mesmo sem sintoma.</p></div>
+  <div class="prose"><ul>
+    <li>Trissomia livre (95%; sobe com a idade materna), translocação robertsoniana (3-4%; 46 cromossomos com 3 cópias funcionais do 21), mosaico (1-2%; mais leve). <strong>Cariótipo</strong> = padrão-ouro e define o risco de recorrência.</li>
+  </ul></div>
+  <div class="crit hd">
+    <div class="row"><span class="k">Cariótipo</span><span class="v">Risco de repetir</span></div>
+    <div class="row"><span class="k">Trissomia livre</span><span class="v">Acompanha a idade materna: cerca de 1/959 aos 30 e 1/84 aos 40 anos</span></div>
+    <div class="row"><span class="k">Translocação equilibrada na mãe</span><span class="v">43% (material)</span></div>
+    <div class="row"><span class="k">Translocação equilibrada no pai</span><span class="v">28% (material)</span></div>
+    <div class="row"><span class="k">Portador de t(21;21)</span><span class="v mal">100%</span></div>
+    <div class="row"><span class="k">Pais com cariótipo normal</span><span class="v">Desprezível (2/3 das translocações)</span></div>
+  </div>
+  <div class="crit hd">
+    <div class="row"><span class="k">Sistema</span><span class="v">O que procurar</span></div>
+    <div class="row"><span class="k">Recém-nascido</span><span class="v">Hipotonia e Moro fraco chamam atenção primeiro; excesso de pele na nuca</span></div>
+    <div class="row"><span class="k">Coração (40-50%)</span><span class="v"><strong>Defeito do septo atrioventricular total</strong>; também CIV, CIA, Fallot, PCA. Pode não ter sopro</span></div>
+    <div class="row"><span class="k">Intestino (5%)</span><span class="v">Atresia ou estenose duodenal: dupla bolha, vômito bilioso sem distensão. Hirschsprung; doença celíaca</span></div>
+    <div class="row"><span class="k">Endócrino</span><span class="v">Hipotireoidismo; DM1</span></div>
+    <div class="row"><span class="k">Sentidos</span><span class="v">Déficit auditivo (até 78%); erro de refração, estrabismo, catarata, glaucoma</span></div>
+    <div class="row"><span class="k">Sangue</span><span class="v">Leucemias, LLA e LMA. GATA1 marca a mielopoese anormal transitória do RN e a LMA megacarioblástica</span></div>
+    <div class="row"><span class="k">Coluna</span><span class="v">Instabilidade atlantoaxial (13%), a alteração ortopédica mais comum</span></div>
+    <div class="row"><span class="k">Outros</span><span class="v">Baixa estatura (curva própria) e obesidade; defeitos imunes; mulher fértil (50% de prole afetada); homem em geral infértil</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Rastreio pré-natal (11-14 semanas): translucência nucal aumentada (o material usa 2,5 mm ou mais), osso nasal ausente ou pequeno, onda A do ducto venoso ausente ou reversa. Bioquímica: PAPP-A, alfafetoproteína e estriol baixos; beta-hCG e inibina A altos.</li>
+    <li>Calendário: ecocardiograma no RN; triagem auditiva neonatal e reavaliação; olho periódico; TSH e hemograma seriados; sorologia para doença celíaca a partir dos 2 anos; radiografia de coluna cervical em perfil (RM em casos selecionados), sobretudo antes de esporte de contato ou anestesia.</li>
+  </ul></div>
+  <div class="banca"><div class="albl">Depende da banca</div>
+    <p>A diretriz americana de 2022 investiga doença celíaca só com sintomas e não pede radiografia cervical de rotina no assintomático. Na prova brasileira, o gabarito costuma ser o rastreio ativo. O material liga o GATA1 à LLA; o resumo corrigiu para a linhagem mieloide. Na translocação equilibrada, o risco de repetir costuma ser citado como 10-15% com a mãe portadora e até 5% com o pai; o material traz 43% e 28%.</p></div>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p>"Criança com Down bem em tudo: investigar só se surgir sintoma" é a alternativa errada. O calendário vale sem queixa.</p></div>
+</section>
+
+<section class="degrau" id="r7">
+  <div class="dhead"><span class="dnum r">R7</span><div class="dtitle"><h3>Pele na criança</h3><span class="src">Derm/5 p6-16, 24-29; Derm/10 p8-14; Derm/4 p4-16, 35-39, 61-64; Derm/9 p14-15</span></div></div>
+  <p class="lede">A dermatose infantil se resolve com três perguntas: que idade, onde está e o que há em volta.</p>
+  <div class="disc"><div class="albl">O discriminador</div>
+    <p>Fralda que <strong>poupa as dobras</strong> = irritativa; que pega as dobras com pústulas satélites = cândida. Escama amarela no couro cabeludo antes dos 3 meses = seborreica; eczema que poupa o centro da face e a fralda, e depois vai para as dobras = atópica.</p></div>
+  <div class="crit c3 hd">
+    <div class="row"><span class="k">Quadro</span><span class="v">Pista que decide</span><span class="v">Conduta</span></div>
+    <div class="row"><span class="k">Dermatite atópica</span><span class="v">Crônica e pruriginosa. Lactente: face sem o centro, couro cabeludo, extensoras, poupa a fralda. 2-12 anos: dobras poplítea e cubital. Depois: liquenificação. Xerose (filagrina); Dennie-Morgan, Hertoghe, pitiríase alba</span><span class="v">Emoliente + corticoide tópico (baixa potência em face e dobras); tacrolimus ou pimecrolimus. Grave: metotrexato, ciclosporina, dupilumabe. Nunca corticoide sistêmico</span></div>
+    <div class="row"><span class="k">Seborreica do lactente</span><span class="v">Primeiras semanas até 3 meses (hormônio materno). Escama amarela e gordurosa no couro cabeludo, face e dobras</span><span class="v">Antifúngico tópico; ácido salicílico para a escama</span></div>
+    <div class="row"><span class="k">Fralda irritativa</span><span class="v">Áreas convexas; <strong>dobras poupadas</strong></span><span class="v">Trocar com frequência; creme de barreira; sem antibiótico</span></div>
+    <div class="row"><span class="k">Cândida na fralda</span><span class="v">Dobras acometidas; pápulas e pústulas satélites</span><span class="v">Nistatina ou azol tópico</span></div>
+    <div class="row"><span class="k">Escabiose</span><span class="v">Prurido noturno + alguém da casa ou da escola igual. No lactente pega face, couro cabeludo, palmas e plantas</span><span class="v">Permetrina 5% a partir de 2 meses, repetir em 7-10 dias. Enxofre abaixo de 2 meses, gestante, lactante. Ivermectina a partir de 5 anos ou 15 kg. Tratar todos os contatos; escola 24 h após o tratamento</span></div>
+    <div class="row"><span class="k">Prurigo estrófulo</span><span class="v">Seropápula em área exposta (extensoras), no verão, 2-7 anos, ninguém igual em casa</span><span class="v">Repelente e tela; anti-histamínico e corticoide tópico</span></div>
+    <div class="row"><span class="k">Impetigo crostoso</span><span class="v">Crosta melicérica em volta da boca e do nariz; S. aureus, às vezes S. pyogenes</span><span class="v">Remover crostas; mupirocina ou ácido fusídico por 7-10 dias. Extenso: cefalexina</span></div>
+    <div class="row"><span class="k">Impetigo bolhoso e pele escaldada</span><span class="v">Sempre S. aureus: toxina quebra a desmogleína 1. Escaldada: eritema nas dobras, bolhas flácidas, Nikolsky positivo, <strong>mucosas poupadas</strong>; cultura da bolha negativa</span><span class="v">Escaldada: internar, oxacilina, hidratação. Corticoide contraindicado</span></div>
+    <div class="row"><span class="k">Molusco contagioso</span><span class="v">Pápula lisa com umbilicação central; várias crianças da creche</span><span class="v">Expectante ou curetagem. No adulto, genital: rastrear IST</span></div>
+    <div class="row"><span class="k">Tinea capitis</span><span class="v">Alopecia com pelos tonsurados (quebrados) e descamação</span><span class="v"><strong>Sempre sistêmico</strong>: griseofulvina 20-25 mg/kg/dia por 6-12 semanas, ou terbinafina. Kérion é reação ao fungo: antifúngico, não antibiótico</span></div>
+    <div class="row"><span class="k">Hemangioma infantil</span><span class="v">Ausente ao nascer; cresce nas primeiras semanas; involui</span><span class="v">Observar. Ulcerado: timolol. Periocular, ponta nasal, via aérea: propranolol</span></div>
+    <div class="row"><span class="k">Mancha vinho do Porto</span><span class="v">Presente ao nascer; cresce com a criança; não involui. Em V1 (testa, pálpebra): Sturge-Weber</span><span class="v">Investigar olho e SNC</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Impetigo por S. pyogenes pode dar GNPE cerca de 21 dias depois, e o antibiótico não previne. Após infecção de pele, a anti-DNase B sobe mais que a ASLO.</li>
+    <li>A atópica complica com impetiginização (crosta melicérica: antibiótico) e com eczema herpético de Kaposi (vesículas umbilicadas e febre: aciclovir precoce).</li>
+  </ul></div>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p>Fralda com dobras acometidas e sem satélites é seborreica, não irritativa. Tinea capitis com creme ou xampu, e corticoide na pele escaldada, são erros.</p></div>
+</section>
+
+<section class="synth" id="gat">
+  <h2>Gatilhos de prova</h2>
+  <p class="note">Dois por rodapé. Vermelho = onde a banca derruba.</p>
+  <div class="trig">
+    <div><span class="tk">R1 Lombalgia</span><span class="tv">Sem alarme: sem imagem por 4-6 semanas; <b>repouso no máximo 2-3 dias</b></span></div>
+    <div><span class="tk">R1 Alarme</span><span class="tv">PITTI DOC: radiografia primeiro; <b>cauda equina: RM e cirurgia já</b></span></div>
+    <div><span class="tk">R2 Prazo</span><span class="tv"><b>Sexual e tentativa de suicídio: imediata</b>; doméstica: semanal</span></div>
+    <div><span class="tk">R2 Criança</span><span class="tv">Suspeita basta: Conselho Tutelar e internar; hemorragia retiniana = chacoalhado</span></div>
+    <div><span class="tk">R3 Laço</span><span class="tv">(PAS + PAD)/2; 5 min e 20 petéquias no adulto, <b>3 min e 10 na criança</b></span></div>
+    <div><span class="tk">R3 Grupos</span><span class="tv">Laço positivo = B; alarme = C, 10 mL/kg em 1 h; <b>choque = D, 20 mL/kg em 20 min</b></span></div>
+    <div><span class="tk">R4 SHU</span><span class="tv">Criança, disenteria, rim: suporte; <b>sem antibiótico</b></span></div>
+    <div><span class="tk">R4 PTT</span><span class="tv">Mulher, neuro, ADAMTS13: <b>plasmaférese sem esperar exame</b>; coagulograma normal</span></div>
+    <div><span class="tk">R5 Light</span><span class="tv"><b>Um critério = exsudato</b>: 0,5 / 0,6 / 2/3</span></div>
+    <div><span class="tk">R5 Diurético</span><span class="tv">Falso exsudato na IC: gradiente de albumina acima de 1,2 = transudato</span></div>
+    <div><span class="tk">R6 Down</span><span class="tv">DSAV total; atresia duodenal; <b>rastreio por calendário, não por sintoma</b></span></div>
+    <div><span class="tk">R6 Cariótipo</span><span class="tv">Translocação: cariótipo dos pais; t(21;21) = 100%</span></div>
+    <div><span class="tk">R7 Fralda</span><span class="tv"><b>Poupa dobra = irritativa</b>; satélite = cândida; dobra sem satélite = seborreica</span></div>
+    <div><span class="tk">R7 Couro cabeludo</span><span class="tv">Pelo quebrado = tinea capitis, tratamento oral; escama amarela antes dos 3 meses = seborreica</span></div>
+  </div>
+</section>
+
+<section class="synth arm" id="arm">
+  <h2>Armadilhas de banca</h2>
+  <p class="note">Cada uma aponta o rodapé onde o fato mora.</p>
+  <ol class="armas">
+    <li>RM na lombalgia aguda sem sinal de alarme, ou RM antes da radiografia na suspeita de tumor. <span class="d">R1</span></li>
+    <li>Repouso prolongado no leito na lombalgia mecânica. <span class="d">R1</span></li>
+    <li>Hérnia L4-L5 com reflexo aquileu abolido: a raiz é L5, que preserva patelar e aquileu. <span class="d">R1</span></li>
+    <li>Notificar violência doméstica em 24 h ou esperar a confirmação para notificar. <span class="d">R2</span></li>
+    <li>Pedir boletim de ocorrência ou autorização dos pais antes de acionar o Conselho Tutelar. <span class="d">R2</span></li>
+    <li>Dar alta à criança com suspeita de maus-tratos para "retorno ambulatorial": internar. <span class="d">R2</span></li>
+    <li>Usar a PAM, ou 5 min e 20 petéquias na criança, na prova do laço. <span class="d">R3</span></li>
+    <li>Chamar o laço positivo de grupo C ou de dengue grave. <span class="d">R3</span></li>
+    <li>Antibiótico na diarreia sanguinolenta da criança com suspeita de SHU. <span class="d">R4</span></li>
+    <li>Transfundir plaqueta ou dar heparina na PTT; esperar a ADAMTS13 para iniciar a aférese. <span class="d">R4</span></li>
+    <li>Exigir os três critérios de Light para exsudato. <span class="d">R5</span></li>
+    <li>BAAR negativo no líquido pleural exclui TB: não, o padrão-ouro é a biópsia. <span class="d">R5</span></li>
+    <li>Down assintomático: só investigar com sintoma. <span class="d">R6</span></li>
+    <li>Tinea capitis com tratamento tópico; kérion tratado com antibiótico. <span class="d">R7</span></li>
+    <li>Permetrina abaixo de 2 meses ou ivermectina abaixo de 5 anos e 15 kg. <span class="d">R7</span></li>
+  </ol>
+</section>
+
+<footer>
+  <p><strong>Fontes:</strong> R1 <code>Cirurgia/3. Doenças da Coluna Vertebral.pdf</code> (Cir/3) e <code>Cirurgia/Doenças da Coluna Vertebral e Maus-Tratos.md</code>. R2 <code>Preventiva/1. Sistemas de Informação em Saúde.pdf</code> (Prev/1), <code>GO/19. Assistência à Vítima de Violência Sexual.pdf</code> (GO/19), <code>Cirurgia/5. Maus Tratos.pdf</code> (Cir/5), <code>Preventiva/20. Saúde do Idoso.pdf</code> (Prev/20) e o mesmo resumo de coluna e maus-tratos. R3 <code>Clínica Médica/Infectologia/10. Arboviroses (Dengue, Chikungunya e Zika).pdf</code> (Inf/10) e <code>Arboviroses.md</code>. R4 <code>Clínica Médica/Hematologia/4. Anemias Hemolíticas.pdf</code> (Hemato/4), <code>Clínica Médica/Nefrologia/1. Lesão Renal Aguda (LRA).pdf</code> (Nefro/1), <code>Pediatria/48. Diarreia.pdf</code> (Ped/48), <code>Hemostasia.md</code> e <code>Lesão Renal Aguda.md</code>. R5 <code>Clínica Médica/Pneumologia/1. Derrame Pleural.pdf</code> (Pneumo/1). R6 <code>Pediatria/13. Síndromes Genéticas, Erros Inatos do Metabolismo e da Imunidade.pdf</code> (Ped/13) e <code>Pediatria/Síndrome de Down.md</code>. R7 <code>Clínica Médica/Dermatologia/</code> 5. Dermatoses Eczematosas (Derm/5), 10. Piodermites (Derm/10), 4. Dermatoses Infecciosas (Derm/4) e 9. Miscelânea (Derm/9); não há PDF de dermatologia pediátrica separado.</p>
+  <p>Fora das fontes locais: eculizumabe na SHU atípica e a diretriz americana de 2022 para a síndrome de Down, citados só nas notas de banca.</p>
+  <p>Prepara a tarefa #5425 do plano (rodapés de retorno alto).</p>
+</footer>
+</div>

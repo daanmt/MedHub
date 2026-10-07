@@ -304,6 +304,59 @@
         "Clínica Médica/Pneumologia/Pneumologia Intensiva.md",
         "Clínica Médica/Reumatologia/DITC II.md"
       ]
+    },
+    "anemias-macrociticas": {
+      "tipo": "aula",
+      "titulo": "Anemias Macrocíticas",
+      "tarefa_id": 811
+    },
+    "oncohemato-cronicas": {
+      "tipo": "aula",
+      "titulo": "Leucemias Crônicas, Linfomas e Mieloproliferações",
+      "tarefa_id": 811
+    },
+    "insuficiencia-adrenal": {
+      "tipo": "aula",
+      "titulo": "Insuficiência Adrenal",
+      "tarefa_id": 310
+    },
+    "iamcsst": {
+      "tipo": "aula",
+      "titulo": "IAM com Supra de ST",
+      "tarefa_id": 777
+    },
+    "rastreamento-programas-br": {
+      "tipo": "aula",
+      "titulo": "Rastreamento: critérios e programas",
+      "tarefa_id": 881
+    },
+    "mccp-decisao-compartilhada": {
+      "tipo": "aula",
+      "titulo": "MCCP e decisão compartilhada",
+      "tarefa_id": 878
+    },
+    "cronicas-aps-metas": {
+      "tipo": "aula",
+      "titulo": "Crônicas na APS: metas e manejo",
+      "tarefa_id": 1796
+    },
+    "idoso-amg-polifarmacia": {
+      "tipo": "aula",
+      "titulo": "Idoso: avaliação e polifarmácia",
+      "tarefas": [
+        876,
+        879
+      ]
+    },
+    "rodapes-retorno-alto": {
+      "tipo": "aula",
+      "titulo": "Rodapés de retorno alto",
+      "tarefa_id": 5425
+    },
+    "imagem-obstetrica": {
+      "tipo": "aula",
+      "titulo": "Imagem obstétrica",
+      "tarefa_id": 5424
     }
   }
 }

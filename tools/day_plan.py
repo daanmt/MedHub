@@ -423,11 +423,12 @@ def _fase_do_plano(semana):
 
 
 def _q_prevista(linha):
-    """`q_previstas` como inteiro tolerante (a coluna e REAL e aceita NULL)."""
-    try:
-        return int(round(float(linha.get("q_previstas") or 0)))
-    except (TypeError, ValueError):
-        return 0
+    """As questoes da tarefa pela regua do `plano.panorama` (`plano.q_da_tarefa`, P20 -- s219): a
+    contagem do banco do hub quando a linha traz `q_hub` (`_cronograma_hoje` le as linhas com ela),
+    senao `q_previstas` como inteiro tolerante (a coluna e REAL e aceita NULL). A Fase 1 do boot e a
+    do Painel dizem o MESMO numero que o panorama."""
+    import plano
+    return plano.q_da_tarefa(linha)
 
 
 def _plano_pendencia():
@@ -475,6 +476,8 @@ def _cronograma_hoje(total_q, hoje):
         return None
     if not linhas:
         return None      # plano nao semeado: silencio, nunca bloco fabricado
+    import plano
+    linhas = plano.linhas_com_q_hub(linhas)   # P20 (s219): a contagem do banco, a regua do panorama
     pendentes = [l for l in linhas if l.get("status") == "pendente"]
     semanas = sorted({l["semana_plano"] for l in pendentes
                       if l.get("semana_plano") is not None})

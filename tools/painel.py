@@ -5,7 +5,8 @@ READ-ONLY ABSOLUTO. Nao abre `sqlite3` por conta propria (AGENTE.md secao 6: CLI
 direto) e nao aparece na allowlist de writers (F49). Todo numero sai de um leitor que JA existe e
 que outra superficie tambem usa -- o painel nao tem regra propria de semana, de teto nem de ritmo:
 
-    semana e listas   -> `plano.panorama` (o MESMO do `plano.py --panorama` do boot)
+    semana e listas   -> `plano.panorama` (o MESMO do `plano.py --panorama` do boot), sobre as linhas
+                         com a contagem do banco do hub (`plano.linhas_com_q_hub`, P20 -- s219)
     meta do dia       -> `performance.volume_vs_marco` (a MESMA linha Meta do boot; s203)
     saldo de cards    -> `day_plan._fsrs_counts` + `_teto_efetivo` + `consumo_logico` (P09, s216)
     agenda de 7 dias  -> `db.agenda_revisoes` (o MESMO da tela de fim da aba Cards)
@@ -139,17 +140,17 @@ def _tarefa(t, aulas, no_hub):
 
 def _bloco_semana(linhas, hoje):
     """A semana corrente e as abertas pela MESMA funcao do boot (`plano.panorama`); a `rota`
-    (s213) = as semanas seguintes ate a ultima da Fase 1, da mesma funcao."""
+    (s213) = as semanas seguintes ate a ultima da Fase 1, da mesma funcao. `linhas` ja vem com a
+    contagem do banco do hub (`coletar`: `plano.linhas_com_q_hub`, P20)."""
     import plano
     pan = plano.panorama(linhas, plano.calendario_trilha(), hoje)
     if not pan:
         return {"semana": None, "tarefas": [], "total": 0, "q": 0, "atrasadas": 0,
                 "inicio": None, "fim": None, "dias": None, "proxima": None, "rota": []}
     aulas = _aulas_por_tarefa()
-    try:  # s201: tarefa com questoes no banco se resolve na aba Listas do hub
-        no_hub = db.tarefas_com_questoes()
-    except Exception:  # noqa: BLE001
-        no_hub = set()
+    # s201: tarefa com questoes no banco se resolve na aba Listas do hub. P20 (s219): a marca sai da
+    # MESMA leitura que a contagem (`q_hub`), a da Teoria e a do boot
+    no_hub = {int(l["id"]) for l in linhas if l.get("q_hub") and l.get("id") is not None}
     tarefas = [_tarefa(t, aulas, no_hub) for t in pan["abertas"]]
     rota = [{"semana": r["semana"], "inicio": r["inicio"], "fim": r["fim"], "q": r["q"],
              "feitas": r["feitas"], "total": r["total"],
@@ -281,8 +282,11 @@ def _bloco_blocos(linhas):
 def coletar(hoje=None):
     """O contrato do painel. Dict com os 4 blocos de `BLOCOS` + o de Documentacao (`BLOCO_DOCS`)
     + metadados. Read-only."""
+    import plano
     hoje = hoje or db.hoje()
-    linhas = db.plano_listar()
+    # P20 (s219): as questoes de cada tarefa contam o banco do hub quando ela tem questoes la -- o MESMO
+    # numero da Teoria, da aba Listas e do boot (`plano.q_da_tarefa`)
+    linhas = plano.linhas_com_q_hub(db.plano_listar())
     return {
         "gerado_em": db.agora().isoformat(timespec="seconds"),
         "data": hoje.isoformat(),
@@ -359,28 +363,25 @@ def _html_docs(docs):
 
 
 def _acao(t):
-    """O que fazer com a tarefa: a lista (ou o texto da classe) e, embaixo, cada aula ligada.
+    """O que fazer com a tarefa: as questoes (hub, lista ou prova) e, embaixo, cada aula ligada.
 
-    s213 (D4-1, decisao do operador em 25/09: "nao sair do medhub"): lista com questoes no banco do
+    s213 (D4-1, decisao do operador em 25/09: "nao sair do medhub"): tarefa com questoes no banco do
     hub (`no_hub`) abre a aba Listas -- modo Simulados para simulado, Questoes para o resto -- e o
     link do EMED some; so fora do banco o "abrir lista" externo aparece. ⚰️ *Era o EMED primeiro:
-    14 listas ja importadas abriam o site.*"""
+    14 listas ja importadas abriam o site.* P20 (s219): com ou sem link (os 26 cadernos da s219 nao
+    tem `url_lista`); ⚰️ 'montar caderno no banco' / 'sem lista ainda' / 'aula a preparar' nesta
+    coluna -- a tarefa sem acao diz a classe na META, apagada (`plano.meta_da_tarefa`, a regra da
+    Teoria)."""
     from app.utils import areas
-    c = t["classe"]
     partes = []
-    if c == "lista":
-        if t.get("no_hub"):
-            modo = "simulados" if t.get("area") in areas.AREAS_AGREGADAS else "questoes"
-            partes.append('<a href="#questoes" data-hub-aba="questoes" data-hub-modo="%s">'
-                          'resolver no hub</a>' % modo)
-        elif t["url_lista"] and str(t["url_lista"]).startswith(("http://", "https://")):
-            partes.append(_link(t["url_lista"], "abrir lista"))
-        else:
-            partes.append('<span class="tenue">prova em PDF no computador</span>')
-    elif c == "caderno":
-        partes.append('<span class="tenue">montar caderno no banco</span>')
-    elif c == "sem_lista":
-        partes.append('<span class="tenue">sem lista ainda</span>')
+    if t.get("no_hub"):
+        modo = "simulados" if t.get("area") in areas.AREAS_AGREGADAS else "questoes"
+        partes.append('<a href="#questoes" data-hub-aba="questoes" data-hub-modo="%s">'
+                      'resolver no hub</a>' % modo)
+    elif t["url_lista"] and str(t["url_lista"]).startswith(("http://", "https://")):
+        partes.append(_link(t["url_lista"], "abrir lista"))
+    elif t["url_lista"]:
+        partes.append('<span class="tenue">prova em PDF no computador</span>')
     # aula que CUMPRE (tarefa de aula) ou PREPARA (lista) -- o que a aba Aulas ja mostrava
     aulas = t.get("aulas") or ([{"slug": t["aula"], "titulo": None}] if t.get("aula") else [])
     varias = len(aulas) > 1
@@ -389,8 +390,6 @@ def _acao(t):
         partes.append('<a href="aulas/%s.html" data-hub-aula="%s" data-titulo="%s">%s</a>'
                       % (_e(a["slug"]), _e(a["slug"]), _e(a.get("titulo") or a["slug"]),
                          _e(a.get("titulo") or a["slug"]) if varias else "abrir aula"))
-    if c == "aula" and not aulas:
-        partes.append('<span class="tenue">aula a preparar</span>')
     return "<br>".join(partes)
 
 
@@ -458,15 +457,16 @@ def _html_dia(d, data_iso):
 def _html_tarefa(t):
     """Um `<li class="tarefa">`: tema, rotulo, questoes, atraso e acao -- o MESMO na semana
     corrente e na rota. s216 (hub-integracao part-2): carrega `data-tarefa` (o id do plano) -- e
-    por ele que o hub pinta, sem publish, a lista resolvida na aba Listas."""
+    por ele que o hub pinta, sem publish, a lista resolvida na aba Listas. P20 (s219): a meta segue
+    a regra da Teoria (`plano.meta_da_tarefa`) e o titulo, a correcao de exibicao (`plano.tema_exibido`)."""
+    import plano
     meta = ['<span class="t-rot">%s</span>' % _e(t["rotulo"] or "?")]
-    if t["q"]:
-        meta.append("<span>%s questões</span>" % _n(t["q"]))
+    meta += ["<span>%s</span>" % _e(x) for x in plano.meta_da_tarefa(t["q"], t["classe"], plano.tem_acao(t))]
     if t["atrasada"]:
         meta.append('<span class="t-atraso">da semana %s</span>' % _e(t["semana"]))
     return ('<li class="tarefa%s" data-tarefa="%s"><p class="t-tema">%s</p><p class="t-meta">%s</p>'
             '<p class="t-acao">%s</p></li>'
-            % (" atrasada" if t["atrasada"] else "", _e(t["id"]), _e(t["tema"] or "(sem tema)"),
+            % (" atrasada" if t["atrasada"] else "", _e(t["id"]), _e(plano.tema_exibido(t["tema"]) or "(sem tema)"),
                " ".join(meta), _acao(t)))
 
 

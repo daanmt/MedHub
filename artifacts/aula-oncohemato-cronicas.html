@@ -1,0 +1,538 @@
+<title>Leucemias Crônicas, Linfomas e Mieloproliferações</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,480;9..144,600;9..144,680&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EFF3F0; --card:#FAFCFA; --sunk:#E2E9E4;
+  --ink:#18211C; --ink2:#4C5A52; --ink3:#6F7D75;
+  --line:rgba(24,33,28,.13); --line2:rgba(24,33,28,.26);
+  --teal:#1F6B5E; --teal-ink:#154A41; --teal-wash:#DCEBE5;
+  --carmine:#8E2F41; --carmine-ink:#6B2231; --carmine-wash:#F5E2E6;
+  --amber:#8A5A17; --amber-ink:#6B4610; --amber-wash:#F3E6CC;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#8A988F;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#8A988F;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font:16px/1.6 "Source Sans 3",-apple-system,"Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+h1,h2,h3{margin:0;font-family:Fraunces,Georgia,serif;font-weight:600;letter-spacing:-.01em;text-wrap:balance;line-height:1.15;color:var(--ink)}
+.wrap{max-width:780px;margin:0 auto;padding:0 16px 70px}
+:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+a{color:var(--teal-ink)}
+strong{font-weight:600;color:var(--ink)}
+
+/* topo */
+.top{padding:36px 0 22px;border-bottom:1px solid var(--line2)}
+.eye{font:600 11px/1.3 "Source Sans 3";letter-spacing:.12em;text-transform:uppercase;color:var(--teal-ink);margin:0 0 14px}
+.top h1{font-size:clamp(28px,6vw,44px);font-weight:680;margin-bottom:14px}
+.top .sub{font-size:16.5px;line-height:1.55;color:var(--ink2);margin:0 0 20px}
+.stats{display:flex;gap:18px;flex-wrap:wrap}
+.stat{display:flex;flex-direction:column;gap:2px;min-width:0}
+.stat b{font:600 21px/1 "IBM Plex Mono";color:var(--teal-ink);font-variant-numeric:tabular-nums}
+.stat span{font-size:11.5px;color:var(--ink3)}
+
+.nav{display:flex;flex-wrap:wrap;gap:6px;padding:20px 0 4px}
+.nav a{font-size:13px;text-decoration:none;color:var(--ink2);border:1px solid var(--line2);border-radius:2px;padding:4px 9px;min-width:0}
+.nav a:hover{color:var(--ink);border-color:var(--teal)}
+
+/* atos */
+.ato{margin:40px 0 0;padding:14px 16px;background:var(--teal-wash);border-left:3px solid var(--teal)}
+.ato span{font:700 10.5px "Source Sans 3";letter-spacing:.12em;text-transform:uppercase;color:var(--teal-ink);display:block;margin-bottom:3px}
+.ato h2{font-size:clamp(21px,4vw,28px)}
+
+/* degraus */
+.degrau{padding:30px 0;border-bottom:1px solid var(--line)}
+.dhead{display:flex;gap:13px;align-items:flex-start;margin-bottom:12px}
+.dnum{flex-shrink:0;width:38px;height:38px;border:1.5px solid var(--teal);border-radius:50%;display:flex;align-items:center;justify-content:center;font:600 14px "IBM Plex Mono";color:var(--teal-ink)}
+.dtitle{min-width:0;padding-top:3px}
+.dtitle h3{font-size:clamp(19px,3.4vw,24px)}
+.src{display:block;margin-top:5px;font:500 11.5px/1.4 "IBM Plex Mono";color:var(--ink3)}
+.lede{font-size:16px;line-height:1.55;color:var(--ink2);margin:0 0 14px;font-style:italic}
+.prose ul{margin:0 0 12px;padding-left:20px}
+.prose li{font-size:15.4px;line-height:1.55;color:var(--ink2);margin-bottom:6px}
+.prose li:last-child{margin-bottom:0}
+h4{font:600 14px "Source Sans 3";color:var(--ink);margin:20px 0 8px}
+.ff{display:inline-block;font:600 10.5px/1.5 "Source Sans 3";color:var(--amber-ink);border:1px solid var(--amber);border-radius:2px;padding:0 4px;vertical-align:1px}
+
+.trap,.banca{margin:16px 0;padding:13px 16px}
+.trap{border-left:3px solid var(--carmine);background:var(--carmine-wash)}
+.banca{border-left:3px solid var(--amber);background:var(--amber-wash)}
+.albl{font:700 10.5px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px}
+.trap .albl{color:var(--carmine-ink)}
+.banca .albl{color:var(--amber-ink)}
+.trap p,.banca p{font-size:15px;line-height:1.55;color:var(--ink);margin:0}
+
+/* lado a lado */
+.vs{display:grid;grid-template-columns:minmax(0,1fr);gap:1px;background:var(--line2);border:1px solid var(--line2);margin:16px 0}
+.vs>div{background:var(--card);padding:12px 14px;min-width:0}
+.vs h5{font:700 12px "Source Sans 3";letter-spacing:.04em;text-transform:uppercase;margin:0 0 6px}
+.vs .a h5{color:var(--carmine-ink)}
+.vs .b h5{color:var(--teal-ink)}
+.vs ul{margin:0;padding-left:17px}
+.vs li{font-size:14.4px;line-height:1.5;color:var(--ink2);margin-bottom:4px;overflow-wrap:break-word}
+
+/* tabelas de critério */
+.crit{border:1px solid var(--line2);margin:16px 0;background:var(--card)}
+.crit .row{display:grid;grid-template-columns:minmax(0,1fr);gap:2px;padding:9px 13px;font-size:14.2px}
+.crit .row+.row{border-top:1px solid var(--line)}
+.crit .row>*{min-width:0}
+.crit .k{font-weight:600;color:var(--teal-ink)}
+.crit .v{color:var(--ink2);line-height:1.48;overflow-wrap:break-word}
+.crit.hd .row:first-child{background:var(--sunk)}
+.crit.hd .row:first-child>*{font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink3);font-weight:600}
+.crit.c3 .row{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:4px 12px}
+.crit.c3 .row .k{grid-column:1 / -1}
+.crit.c3.hd .row:first-child .k{display:none}
+.mal{color:var(--carmine-ink);font-weight:600}
+
+/* grade de diferenciais: fichas no celular, tabela em tela larga */
+.grade{border:1px solid var(--line2);margin:16px 0;background:var(--card)}
+.grade .gr{display:grid;grid-template-columns:minmax(0,1fr);gap:3px;padding:10px 13px}
+.grade .gr+.gr{border-top:1px solid var(--line)}
+.grade .gr>*{min-width:0;overflow-wrap:break-word}
+.grade .gh{display:none}
+.grade .gk{font-weight:600;font-size:14.8px;color:var(--teal-ink);line-height:1.35}
+.grade .gc{font-size:14px;line-height:1.45;color:var(--ink2)}
+.grade .gc[data-l]::before{content:attr(data-l) ": ";font-weight:600;color:var(--ink3);font-size:12.5px}
+.grade .gr.hot .gk{color:var(--carmine-ink)}
+
+/* blocos de número */
+.ext{display:grid;grid-template-columns:minmax(0,1fr);gap:1px;background:var(--line2);border:1px solid var(--line2);margin:16px 0}
+.ext>div{background:var(--card);padding:13px 14px;min-width:0}
+.ext .fv{display:block;font:600 17px/1.25 Fraunces,Georgia,serif;color:var(--teal-ink);margin-bottom:5px}
+.ext .tot .fv{color:var(--carmine-ink)}
+.ext .fk{font-size:14px;line-height:1.48;color:var(--ink2)}
+
+/* passos em sequência */
+ol.passo{list-style:none;margin:16px 0;padding:0;border:1px solid var(--line2);background:var(--card);counter-reset:p}
+ol.passo li{counter-increment:p;display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;padding:10px 13px;font-size:14.4px;line-height:1.48;color:var(--ink2)}
+ol.passo li+li{border-top:1px solid var(--line)}
+ol.passo li::before{content:counter(p);width:26px;height:26px;border-radius:50%;border:1.5px solid var(--teal);display:flex;align-items:center;justify-content:center;font:600 12px "IBM Plex Mono";color:var(--teal-ink)}
+ol.passo li>span{min-width:0;overflow-wrap:break-word}
+
+/* referência recolhida */
+details.ref{margin:16px 0;border:1px solid var(--line2);background:var(--card)}
+details.ref>summary{cursor:pointer;list-style:none;padding:12px 16px;font:600 13.5px "Source Sans 3";color:var(--teal-ink);display:flex;align-items:center;gap:9px}
+details.ref>summary::-webkit-details-marker{display:none}
+details.ref>summary::before{content:"+";font:600 15px "IBM Plex Mono";width:16px;flex-shrink:0}
+details.ref[open]>summary::before{content:"-"}
+details.ref .refbody{padding:0 16px 14px}
+details.ref .refbody ul{margin:0;padding-left:18px}
+details.ref .refbody li{font-size:14.2px;line-height:1.5;color:var(--ink2);margin-bottom:5px}
+
+/* síntese */
+.synth{background:var(--card);border:1px solid var(--line2);padding:20px 16px;margin-top:40px}
+.synth h2{font-size:23px;margin-bottom:6px}
+.synth .note{font-size:14px;color:var(--ink3);margin:0 0 14px}
+.trig{display:grid;grid-template-columns:minmax(0,1fr);gap:1px;background:var(--line2);border:1px solid var(--line2)}
+.trig div{background:var(--sunk);padding:10px 13px;min-width:0}
+.trig .tk{font:700 11px "IBM Plex Mono";color:var(--teal-ink);display:block;margin-bottom:3px}
+.trig .tv{font-size:13.8px;line-height:1.45;color:var(--ink2)}
+.trig .tv b{color:var(--carmine-ink)}
+.synth.arm{border-left:3px solid var(--carmine)}
+.synth.arm h2::before{content:"";display:inline-block;width:11px;height:11px;border-radius:50%;background:var(--carmine);margin-right:9px;vertical-align:2px}
+ol.armas{margin:0;padding-left:22px}
+ol.armas li{font-size:15px;line-height:1.5;color:var(--ink2);margin-bottom:8px}
+ol.armas li::marker{font:600 13px "IBM Plex Mono";color:var(--carmine-ink)}
+ol.armas .d{font:500 11.5px "IBM Plex Mono";color:var(--ink3)}
+
+footer{margin-top:46px;padding-top:18px;border-top:1px solid var(--line2)}
+footer p{font-size:12.3px;color:var(--ink3);margin:0 0 7px;line-height:1.5}
+code{font-family:"IBM Plex Mono",Consolas,monospace;font-size:11.5px;background:var(--sunk);padding:1px 4px;border-radius:2px;word-break:break-all}
+
+/* telas maiores: o mesmo conteúdo ganha colunas */
+@media (min-width:560px){
+  .vs{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .crit .row{grid-template-columns:150px minmax(0,1fr);gap:12px}
+  .crit.c3 .row{grid-template-columns:130px minmax(0,1fr) minmax(0,1fr);gap:12px}
+  .crit.c3 .row .k{grid-column:auto}
+  .crit.c3.hd .row:first-child .k{display:block}
+  .trig{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (min-width:640px){
+  .wrap{padding:0 24px 90px}
+  .top{padding:46px 0 26px}
+  .degrau{padding:34px 0}
+  .ext{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .ext.e2{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .ext.e4{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .synth{padding:26px 22px}
+}
+@media (min-width:700px){
+  .grade .gr{grid-template-columns:var(--cols);gap:12px;align-items:start}
+  .grade .gh{display:grid;background:var(--sunk)}
+  .grade .gh>*{font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink3);font-weight:600}
+  .grade .gc[data-l]::before{content:none}
+}
+</style>
+<div class="wrap">
+<header class="top">
+  <p class="eye">MedHub · Aula-base · Clínica Médica · Hematologia · tarefa #811 (parte 2 de 2)</p>
+  <h1>Leucemias crônicas, linfomas, SMD e mieloproliferações: o clone que amadurece</h1>
+  <p class="sub">Leucemia aguda é bloqueio de maturação. Aqui o clone amadurece e se acumula, ou amadurece errado. A prova quer o desenho de cada clone no hemograma e o exame que fecha.</p>
+  <div class="stats">
+    <div class="stat"><b>t(9;22)</b><span>Philadelphia: LMC</span></div>
+    <div class="stat"><b>JAK2</b><span>quase toda PV</span></div>
+    <div class="stat"><b>5.000</b><span>B clonais/mm³: LLC</span></div>
+    <div class="stat"><b>15-34</b><span>anos: pico do Hodgkin</span></div>
+    <div class="stat"><b>14</b><span>degraus</span></div>
+  </div>
+</header>
+
+<nav class="nav" aria-label="Atalhos">
+  <a href="#d0">Régua</a><a href="#d1">LLC</a><a href="#d3">LMC</a><a href="#d4">Leucemoide</a><a href="#d6">Grade NMP</a>
+  <a href="#d7">PV</a><a href="#d8">Mielofibrose</a><a href="#d9">SMD</a><a href="#d10">Linfonodo</a><a href="#d11">Estadiamento</a>
+  <a href="#d12">Hodgkin</a><a href="#d13">Não Hodgkin</a><a href="#gat">Gatilhos</a><a href="#arm">Armadilhas</a>
+</nav>
+
+<section class="degrau" id="d0">
+  <div class="dhead"><span class="dnum">0</span><div class="dtitle"><h3>A régua: linhagem, maturação e endereço</h3><span class="src">Hemato/9 p4, 14, 20-21</span></div></div>
+  <p class="lede">Três perguntas classificam tudo desta aula: qual linhagem, se o clone amadurece e onde ele mora.</p>
+  <div class="prose"><ul>
+    <li>Aguda: o clone para em blasto (bloqueio de maturação). Crônica: o clone completa a diferenciação e enche o sangue de células maduras anômalas.</li>
+    <li>Proliferação que amadurece = neoplasia mieloproliferativa (NMP). Maturação defeituosa com morte precoce = síndrome mielodisplásica (SMD).</li>
+    <li>Leucemia nasce na medula e circula. Linfoma nasce no tecido linfoide periférico (linfonodo, baço) e forma massa.</li>
+  </ul></div>
+  <div class="grade" style="--cols:120px minmax(0,1fr) minmax(0,1fr)">
+    <div class="gr gh"><span>Linhagem</span><span>O clone amadurece</span><span>Amadurece mal ou para</span></div>
+    <div class="gr"><span class="gk">Mieloide</span><span class="gc" data-l="Amadurece">NMP: LMC (granulócito), policitemia vera (hemácia), trombocitemia essencial (plaqueta), mielofibrose (fibrose)</span><span class="gc" data-l="Mal ou para">SMD (displasia); leucemia mieloide aguda (bloqueio)</span></div>
+    <div class="gr"><span class="gk">Linfoide</span><span class="gc" data-l="Amadurece">LLC (B maduro no sangue); linfomas (no linfonodo)</span><span class="gc" data-l="Mal ou para">Leucemia linfoide aguda (bloqueio)</span></div>
+  </div>
+</section>
+
+<div class="ato" id="leuc"><span>Bloco 1 · Leucemias crônicas</span><h2>LLC e LMC</h2></div>
+
+<section class="degrau" id="d1">
+  <div class="dhead"><span class="dnum">1</span><div class="dtitle"><h3>LLC: o idoso com linfocitose no exame de rotina</h3><span class="src">Hemato/9 p5-7</span></div></div>
+  <p class="lede">Leucemia linfoide crônica (LLC) é o acúmulo de linfócito B maduro clonal. É a leucemia mais comum do adulto, cerca de 30% de todas.</p>
+  <div class="prose"><ul>
+    <li>Idoso, homem, em média 70 anos. A maioria descobre por <strong>linfocitose em hemograma de rotina</strong>, sem sintoma.</li>
+    <li>Linfocitose pode passar de 100.000/mm³. No esfregaço, núcleo "em casco de tartaruga" e manchas de Gumprecht (célula frágil que se rompe na lâmina).</li>
+    <li>O clone ocupa a medula: anemia, plaquetopenia, até pancitopenia.</li>
+    <li>Infiltra tecido linfoide: <strong>linfonodomegalia difusa e esplenomegalia</strong>. Consome energia: febre, emagrecimento, sudorese noturna.</li>
+    <li>Linfócito clonal não defende: infecções. E gera autoanticorpo: <strong>anemia hemolítica autoimune (AHAI)</strong> e <strong>púrpura trombocitopênica imune (PTI)</strong>.</li>
+    <li>Mecanismo que discrimina: citopenia na LLC pode ser por infiltração da medula ou por autoimunidade periférica. A segunda pede corticoide antes de quimioterapia.</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="d2">
+  <div class="dhead"><span class="dnum">2</span><div class="dtitle"><h3>LLC: citometria fecha, sintoma indica tratar</h3><span class="src">Hemato/9 p6-8</span></div></div>
+  <p class="lede">O diagnóstico é de sangue periférico. A decisão de tratar não depende do estádio: depende de repercussão.</p>
+  <div class="prose"><ul>
+    <li><strong>Imunofenotipagem por citometria de fluxo</strong> no sangue: mais de 5.000 linfócitos B clonais/mm³.</li>
+    <li>Fenótipo: CD5+, CD10-, CD20 fraco, CD23+, CD200+, FMC7-. Basta lembrar o exame.</li>
+    <li>Não precisa de medula para diagnosticar.</li>
+    <li>Estadiamento de Rai e Binet; TP53 mutado e deleção 17p pioram o prognóstico. Pouco cobrado.</li>
+    <li>Doença incurável e muitas vezes indolente. <strong>Assintomático = observação</strong> ("watch and wait").</li>
+  </ul></div>
+  <div class="crit hd">
+    <div class="row"><span class="k">Tratar quando</span><span class="v">Indicações da apostila</span></div>
+    <div class="row"><span class="k">Medula falhando</span><span class="v">Anemia e/ou plaquetopenia progressivas pela LLC</span></div>
+    <div class="row"><span class="k">Órgão sintomático</span><span class="v">Esplenomegalia ou linfonodomegalia sintomáticas</span></div>
+    <div class="row"><span class="k">Autoimune</span><span class="v">Citopenia autoimune refratária ao corticoide</span></div>
+    <div class="row"><span class="k">Constitucional</span><span class="v">Febre, perda de peso, sudorese noturna</span></div>
+    <div class="row"><span class="k">Velocidade</span><span class="v">Linfócitos dobram em menos de 6 meses</span></div>
+  </div>
+  <details class="ref">
+    <summary>Terapias disponíveis (não cobradas)</summary>
+    <div class="refbody"><ul>
+      <li>Quimioimunoterapia FCR: fludarabina, ciclofosfamida, rituximabe.</li>
+      <li>Terapia-alvo: ibrutinibe, venetoclax.</li>
+      <li>Refratário a várias linhas: transplante alogênico.</li>
+    </ul></div>
+  </details>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p>Idoso com linfocitose de LLC confirmada, sem sintoma, sem citopenia e sem órgão aumentado: a conduta é observar, qualquer que seja o número de linfócitos.</p></div>
+</section>
+
+<section class="degrau" id="d3">
+  <div class="dhead"><span class="dnum">3</span><div class="dtitle"><h3>LMC: o cromossomo Philadelphia</h3><span class="src">Hemato/9 p9-11</span></div></div>
+  <p class="lede">A leucemia mieloide crônica (LMC) tem uma causa molecular única: a fusão BCR-ABL1, uma tirosina quinase sempre ligada.</p>
+  <div class="prose"><ul>
+    <li>Translocação t(9;22) entre os braços longos: o gene ABL encosta no BCR. A proteína de fusão fosforila demais e o clone prolifera.</li>
+    <li>Segunda leucemia mais comum do adulto, e a mais cobrada.</li>
+    <li>O Philadelphia também aparece em <strong>leucemia linfoide aguda</strong> de mau prognóstico: sozinho, não fecha LMC.</li>
+    <li>Sintomática na maioria, mas insidiosa: fadiga, anorexia, emagrecimento, desconforto abdominal. <strong>Esplenomegalia em até 90%</strong>.</li>
+  </ul></div>
+  <div class="crit">
+    <div class="row"><span class="k">Leucócitos</span><span class="v">Leucocitose com neutrofilia; acima de 100.000/mm³ em mais da metade</span></div>
+    <div class="row"><span class="k">Desvio</span><span class="v mal">Escalonado à esquerda: todas as formas, do mieloblasto ao segmentado, porque o clone amadurece</span></div>
+    <div class="row"><span class="k">Outras séries</span><span class="v"><strong>Basofilia e eosinofilia</strong>; trombocitose leve; anemia normocítica e normocrômica</span></div>
+    <div class="row"><span class="k">Bioquímica</span><span class="v">Hiperuricemia; fosfatase alcalina leucocitária baixa</span></div>
+    <div class="row"><span class="k">Medula</span><span class="v">Hipercelular, à custa da série mieloide</span></div>
+  </div>
+</section>
+
+<section class="degrau" id="d4">
+  <div class="dhead"><span class="dnum">4</span><div class="dtitle"><h3>LMC x reação leucemoide</h3><span class="src">Hemato/9 p12</span></div></div>
+  <p class="lede">Leucocitose com desvio à esquerda também acontece na infecção grave. Três dados separam.</p>
+  <div class="vs">
+    <div class="a"><h5>LMC</h5><ul>
+      <li>Leucocitose com desvio à esquerda.</li>
+      <li><strong>Basófilo e eosinófilo aumentados.</strong></li>
+      <li><strong>Esplenomegalia.</strong></li>
+      <li>Fosfatase alcalina leucocitária <strong>baixa</strong>.</li></ul></div>
+    <div class="b"><h5>Reação leucemoide</h5><ul>
+      <li>Leucocitose com desvio à esquerda.</li>
+      <li>Basófilo e eosinófilo normais.</li>
+      <li>Sem esplenomegalia.</li>
+      <li>Fosfatase alcalina leucocitária <strong>alta</strong>; há infecção ou inflamação aguda.</li></ul></div>
+  </div>
+</section>
+
+<section class="degrau" id="d5">
+  <div class="dhead"><span class="dnum">5</span><div class="dtitle"><h3>LMC: BCR-ABL fecha, três fases, inibidor de tirosina quinase trata</h3><span class="src">Hemato/9 p12-13</span></div></div>
+  <p class="lede">Diagnóstico = quadro típico + BCR-ABL. Tratamento = bloquear a quinase antes que o clone vire leucemia aguda.</p>
+  <div class="prose"><ul>
+    <li>BCR-ABL por <strong>RT-PCR ou FISH</strong>, no sangue ou na medula.</li>
+    <li>Medula sempre, para <strong>estadiar a fase</strong>.</li>
+    <li>Sem tratamento, mutações secundárias levam da fase crônica à acelerada e à <strong>crise blástica</strong>, que é uma leucemia aguda.</li>
+    <li><strong>Inibidor de tirosina quinase</strong> (o primeiro: imatinibe) ocupa o sítio do ATP na BCR-ABL. Trata todos; sobrevida acima de 90%.</li>
+  </ul></div>
+  <div class="ext">
+    <div><span class="fv">Crônica</span><span class="fk">A maioria ao diagnóstico; poucos blastos; o clone ainda amadurece</span></div>
+    <div><span class="fv">Acelerada</span><span class="fk">Mutações secundárias; blastos aumentam</span></div>
+    <div class="tot"><span class="fv">Crise blástica</span><span class="fk">Diferenciação perdida: leucemia aguda</span></div>
+  </div>
+</section>
+
+<div class="ato" id="nmp"><span>Bloco 2 · Mieloide</span><h2>Mieloproliferações e mielodisplasia</h2></div>
+
+<section class="degrau" id="d6">
+  <div class="dhead"><span class="dnum">6</span><div class="dtitle"><h3>As quatro mieloproliferações em uma grade</h3><span class="src">Hemato/9 p14-19</span></div></div>
+  <p class="lede">Todas vêm de um clone mieloide comum. Cada uma é nomeada pela linhagem que domina, e cada uma tem sua mutação.</p>
+  <div class="grade" style="--cols:110px minmax(0,1fr) minmax(0,1.1fr) minmax(0,1fr)">
+    <div class="gr gh"><span>Doença</span><span>Clone e mutação</span><span>Sangue e pista</span><span>Destino e conduta</span></div>
+    <div class="gr hot"><span class="gk">LMC</span><span class="gc" data-l="Clone">Granulócito; BCR-ABL, Philadelphia positivo</span><span class="gc" data-l="Pista">Leucocitose com desvio escalonado, basofilia; baço grande</span><span class="gc" data-l="Conduta">Inibidor de tirosina quinase para todos; sem ele, crise blástica</span></div>
+    <div class="gr"><span class="gk">Policitemia vera (PV)</span><span class="gc" data-l="Clone">Panmielose com predomínio eritroide; JAK2 em praticamente todos</span><span class="gc" data-l="Pista">Hb acima de 16,5 (homem) ou 16 g/dL (mulher); eritropoetina baixa; prurido após o banho</span><span class="gc" data-l="Conduta">Trombose mata: AAS, sangria, hidroxiureia</span></div>
+    <div class="gr"><span class="gk">Trombocitemia essencial (TE)</span><span class="gc" data-l="Clone">Megacariócito; JAK2 60%, CALR 30%, MPL 3%</span><span class="gc" data-l="Pista">Plaquetas acima de 450.000/mm³ sustentadas; metade assintomática</span><span class="gc" data-l="Conduta">AAS em baixa dose; citorredução se alto risco; sobrevida perto da geral</span></div>
+    <div class="gr"><span class="gk">Mielofibrose primária (MF)</span><span class="gc" data-l="Clone">Megacariócito e granulócito atípicos que fibrosam a medula; JAK2 50%, CALR 30%, MPL 5%</span><span class="gc" data-l="Pista"><strong>Dacriócitos</strong>, leucoeritroblastose, baço enorme</span><span class="gc" data-l="Conduta">Evolui para leucemia mieloide aguda; só o transplante alogênico cura</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>PV, TE e MF são Philadelphia-negativas. Em PV e TE controladas, o comportamento é quase benigno; a MF progride.</li>
+    <li>TE de alto risco = acima de 60 anos e/ou trombose prévia: citorredução com hidroxiureia, interferon ou anagrelida.</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="d7">
+  <div class="dhead"><span class="dnum">7</span><div class="dtitle"><h3>Policitemia vera: a eritropoetina separa primária de secundária</h3><span class="src">Hemato/9 p15-16</span></div></div>
+  <p class="lede">Hematócrito alto quase sempre é secundário, com eritropoetina alta. Na PV, a medula produz sozinha e a eritropoetina cai.</p>
+  <div class="vs">
+    <div class="a"><h5>Policitemia vera (primária)</h5><ul>
+      <li><strong>Eritropoetina baixa</strong>: o precursor prolifera por conta própria.</li>
+      <li>JAK2 mutada; medula com panmielose.</li>
+      <li>Esplenomegalia; trombose.</li>
+      <li><strong>Prurido aquagênico</strong> e eritromelalgia (queimação e vermelhidão de mãos e pés).</li></ul></div>
+    <div class="b"><h5>Poliglobulia secundária</h5><ul>
+      <li><strong>Eritropoetina alta</strong>: a medula foi estimulada.</li>
+      <li>Hipóxia crônica (DPOC).</li>
+      <li>Tumor produtor de eritropoetina (carcinoma renal).</li></ul></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Prurido e eritromelalgia vêm do excesso de hemácias dentro do vaso.</li>
+    <li>Tratamento mira a <strong>trombose, principal causa de morte</strong>: fatores de risco cardiovascular, AAS, sangria periódica, hidroxiureia.</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="d8">
+  <div class="dhead"><span class="dnum">8</span><div class="dtitle"><h3>Mielofibrose: a medula fibrosa e a hemácia em lágrima</h3><span class="src">Hemato/9 p17-19</span></div></div>
+  <p class="lede">O clone fibrosa a medula; baço e fígado voltam a fabricar sangue. Todos os achados saem dessa mudança de endereço.</p>
+  <div class="prose"><ul>
+    <li>Fibrose medular + megacariócito atípico. Anemia e plaquetopenia; série branca alta ou baixa (até pancitopenia).</li>
+    <li>Hematopoiese extramedular: <strong>esplenomegalia</strong> volumosa e formas jovens no sangue (<strong>leucoeritroblastose</strong>).</li>
+    <li><strong>Dacriócito</strong> (hemácia em lágrima): a célula se deforma ao se espremer no sinusoide do baço e do fígado.</li>
+    <li>Sintomas constitucionais: febre, perda de peso, sudorese noturna.</li>
+    <li>Tratamento sintomático: transfusão, alfaepoetina, corticoide; radioterapia esplênica ou esplenectomia; hidroxiureia, interferon, inibidor de JAK2.</li>
+  </ul></div>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p>Dacriócito não é patognomônico: aparece também na talassemia. Lá a anemia é microcítica e leucócitos e plaquetas estão normais.</p></div>
+</section>
+
+<section class="degrau" id="d9">
+  <div class="dhead"><span class="dnum">9</span><div class="dtitle"><h3>SMD: o clone que amadurece errado</h3><span class="src">Hemato/9 p20; Hemato/3 p14-15, 34-35</span></div></div>
+  <p class="lede">Na síndrome mielodisplásica o clone não prolifera: produz células displásicas que morrem cedo. O resultado é citopenia, e a anemia macrocítica é a forma mais comum.</p>
+  <div class="prose"><ul>
+    <li>Idoso com anemia refratária sem outra explicação: pensar em SMD.</li>
+    <li>Citopenia de uma ou mais séries; infecção e sangramento; hepatoesplenomegalia incomum.</li>
+    <li>Diagnóstico pela medula (mielograma + biópsia): <strong>displasia em 10% ou mais</strong> das células de uma linhagem e <strong>blastos abaixo de 20%</strong>. Com 20% ou mais, é leucemia aguda.</li>
+    <li>Ideal provar clonalidade: cariótipo ou teste molecular. Sem isso, diagnóstico presuntivo.</li>
+    <li>Tratamento não é cobrado.</li>
+  </ul></div>
+  <h4>Pancitopenia macrocítica no idoso: três suspeitos</h4>
+  <div class="grade" style="--cols:120px minmax(0,1fr) minmax(0,1fr)">
+    <div class="gr gh"><span>Suspeito</span><span>Sangue</span><span>Medula</span></div>
+    <div class="gr"><span class="gk">Megaloblástica</span><span class="gc" data-l="Sangue">B12 ou folato baixos; neutrófilo hipersegmentado; LDH alta</span><span class="gc" data-l="Medula">Megaloblastos (raramente precisa)</span></div>
+    <div class="gr hot"><span class="gk">SMD</span><span class="gc" data-l="Sangue">B12 e folato normais; anemia refratária</span><span class="gc" data-l="Medula">Displasia em 10% ou mais; blastos abaixo de 20%</span></div>
+    <div class="gr"><span class="gk">Aplásica</span><span class="gc" data-l="Sangue">Pancitopenia "e mais nada"; LDH normal</span><span class="gc" data-l="Medula">Hipocelular, gordura no lugar dos precursores</span></div>
+  </div>
+  <div class="banca"><div class="albl">Depende da banca</div>
+    <p>O corte de 20% de blastos é o clássico da apostila. Classificações de 2022 (OMS e consenso internacional) redesenharam a faixa de 10-19%. Na prova, 20% separa SMD de leucemia aguda.</p></div>
+</section>
+
+<div class="ato" id="linf"><span>Bloco 3 · Linfomas</span><h2>Do linfonodo suspeito ao subtipo</h2></div>
+
+<section class="degrau" id="d10">
+  <div class="dhead"><span class="dnum">10</span><div class="dtitle"><h3>Linfonodo suspeito: quando biopsiar e como</h3><span class="src">Hemato/9 p21-22</span></div></div>
+  <p class="lede">Nem todo linfonodo grande é linfoma. Os critérios de suspeita decidem entre observar e biopsiar, e a biópsia precisa ser excisional.</p>
+  <div class="crit">
+    <div class="row"><span class="k">Tempo</span><span class="v">Mais de 2 semanas de evolução</span></div>
+    <div class="row"><span class="k">Tamanho</span><span class="v">Acima de 2-3 cm</span></div>
+    <div class="row"><span class="k">Consistência</span><span class="v">Endurecido ou pétreo</span></div>
+    <div class="row"><span class="k">Mobilidade</span><span class="v">Aderido a planos profundos</span></div>
+    <div class="row"><span class="k">Localização</span><span class="v">Supraclavicular (a figura da apostila escreve "subclávia") ou epitroclear</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Sem sinal de malignidade: observar 4-6 semanas e tratar infecção associada.</li>
+    <li>Suspeito: <strong>biópsia excisional</strong>. A punção aspirativa por agulha fina (PAAF) tira células soltas e perde a arquitetura do linfonodo.</li>
+    <li>Também elevam o risco: imunossupressão (HIV, imunodeficiência primária) e doença autoimune, sobretudo <strong>Sjögren -&gt; linfoma MALT</strong>.</li>
+  </ul></div>
+  <div class="grade" style="--cols:170px minmax(0,1fr)">
+    <div class="gr gh"><span>Agente</span><span>Linfoma associado</span></div>
+    <div class="gr"><span class="gk">EBV</span><span class="gc">Burkitt, Hodgkin, linfoma T/NK extranodal</span></div>
+    <div class="gr"><span class="gk">HTLV-1</span><span class="gc">Leucemia/linfoma de células T do adulto (ATLL)</span></div>
+    <div class="gr"><span class="gk">HCV</span><span class="gc">Não Hodgkin B, sobretudo zona marginal esplênico</span></div>
+    <div class="gr hot"><span class="gk">Helicobacter pylori</span><span class="gc">MALT gástrico</span></div>
+    <div class="gr"><span class="gk">Chlamydophila psittaci</span><span class="gc">MALT ocular</span></div>
+    <div class="gr"><span class="gk">HHV-8</span><span class="gc">Sarcoma de Kaposi (listado na mesma tabela da apostila)</span></div>
+  </div>
+</section>
+
+<section class="degrau" id="d11">
+  <div class="dhead"><span class="dnum">11</span><div class="dtitle"><h3>Estadiamento e comportamento</h3><span class="src">Hemato/9 p23-24</span></div></div>
+  <p class="lede">O estádio conta regiões em relação ao diafragma. O comportamento diz se o linfoma cresce rápido e, por isso, responde à quimioterapia.</p>
+  <div class="crit hd">
+    <div class="row"><span class="k">Estádio (Lugano)</span><span class="v">Extensão, por tomografia ou PET-CT</span></div>
+    <div class="row"><span class="k">I</span><span class="v">Uma região linfonodal</span></div>
+    <div class="row"><span class="k">II</span><span class="v">Duas ou mais regiões do mesmo lado do diafragma</span></div>
+    <div class="row"><span class="k">III</span><span class="v">Linfonodos dos dois lados do diafragma, ou acima dele com baço acometido</span></div>
+    <div class="row"><span class="k">IV</span><span class="v">Órgão extranodal não contíguo a linfonodo</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Lugano deriva da classificação de Ann Arbor.</li>
+    <li>Sintomas B (letra B no estádio): <strong>febre, sudorese noturna, perda de mais de 10% do peso em 6 meses</strong>.</li>
+  </ul></div>
+  <div class="vs">
+    <div class="b"><h5>Indolente</h5><ul>
+      <li>Baixa proliferação: cresce devagar.</li>
+      <li>Responde pouco à quimioterapia; incurável.</li></ul></div>
+    <div class="a"><h5>Agressivo</h5><ul>
+      <li>Alta proliferação: cresce rápido.</li>
+      <li>Mais sensível à quimioterapia, que mata a célula que divide.</li></ul></div>
+  </div>
+</section>
+
+<section class="degrau" id="d12">
+  <div class="dhead"><span class="dnum">12</span><div class="dtitle"><h3>Linfoma de Hodgkin: o jovem com massa no mediastino</h3><span class="src">Hemato/9 p25-28</span></div></div>
+  <p class="lede">Hodgkin é cerca de 10% dos linfomas e o mais cobrado. A célula de Reed-Sternberg é rara no tumor, mas define o diagnóstico na prova.</p>
+  <div class="prose"><ul>
+    <li><strong>Reed-Sternberg</strong>: grande, binucleada, "olhos de coruja"; CD15+ e CD30+. Menos de 1% da massa, no meio de infiltrado inflamatório (linfócitos, eosinófilos, histiócitos, plasmócitos).</li>
+    <li>Não é patognomônica, mas na prova Reed-Sternberg = Hodgkin.</li>
+    <li>Adulto jovem, <strong>15-34 anos</strong>. Linfonodos supradiafragmáticos (cervicais, supraclaviculares, axilares) que se espalham por <strong>contiguidade</strong>.</li>
+    <li>Massa mediastinal; sintomas B.</li>
+    <li><strong>Dor no linfonodo após álcool</strong>: menos de 10% dos casos, mas bem específica. Linfonodo maligno costuma ser indolor.</li>
+  </ul></div>
+  <div class="grade" style="--cols:150px minmax(0,1fr) minmax(0,1fr)">
+    <div class="gr gh"><span>Subtipo</span><span>Quem e onde</span><span>Marca e prognóstico</span></div>
+    <div class="gr hot"><span class="gk">Esclerose nodular</span><span class="gc" data-l="Quem">O mais comum (70% do clássico); jovem; cervical, supraclavicular, <strong>mediastino</strong></span><span class="gc" data-l="Marca">Nódulos cercados de colágeno; melhor prognóstico</span></div>
+    <div class="gr hot"><span class="gk">Celularidade mista</span><span class="gc" data-l="Quem">25% do clássico; linfonodos periféricos</span><span class="gc" data-l="Marca"><strong>EBV e HIV</strong>; mais adverso</span></div>
+    <div class="gr"><span class="gk">Rico em linfócitos</span><span class="gc" data-l="Quem">5%; linfonodos periféricos</span><span class="gc" data-l="Marca">Infiltrado de linfócitos, sem neutrófilo nem eosinófilo</span></div>
+    <div class="gr"><span class="gk">Depleção linfocitária</span><span class="gc" data-l="Quem">Menos de 2%; retroperitônio; doença avançada e sintomática</span><span class="gc" data-l="Marca">EBV e HIV; mais adverso</span></div>
+    <div class="gr"><span class="gk">Predomínio linfocitário nodular</span><span class="gc" data-l="Quem">10% dos Hodgkin; localizado</span><span class="gc" data-l="Marca">Células em pipoca (popcorn), não Reed-Sternberg clássica; bom prognóstico</span></div>
+  </div>
+  <details class="ref">
+    <summary>Tratamento (raramente cobrado)</summary>
+    <div class="refbody"><ul>
+      <li>Estádios iniciais (I/IIA, I/IIB): ciclos curtos de quimioterapia + radioterapia.</li>
+      <li>Estádio IA muito inicial: a apostila admite radioterapia isolada. <span class="ff">depende da banca</span> Diretrizes atuais reservam a radioterapia isolada ao predomínio linfocitário nodular; no clássico inicial, quimioterapia curta + radioterapia.</li>
+      <li>III e IV: quimioterapia isolada, prolongada, esquema ABVD.</li>
+      <li>Refratário: transplante autólogo, brentuximabe, nivolumabe. Prognóstico muito favorável.</li>
+    </ul></div>
+  </details>
+</section>
+
+<section class="degrau" id="d13">
+  <div class="dhead"><span class="dnum">13</span><div class="dtitle"><h3>Linfomas não Hodgkin: cinco subtipos, cinco assinaturas</h3><span class="src">Hemato/9 p24, 28</span></div></div>
+  <p class="lede">A maioria é de linhagem B; os T e NK são raros e mais agressivos. A prova cobra a translocação e uma pista de cada subtipo.</p>
+  <div class="grade" style="--cols:130px minmax(0,1fr) minmax(0,1fr)">
+    <div class="gr gh"><span>Subtipo</span><span>Assinatura</span><span>Comportamento</span></div>
+    <div class="gr hot"><span class="gk">Difuso de grandes células B</span><span class="gc" data-l="Assinatura"><strong>O mais comum</strong>; linfonodo e áreas extranodais</span><span class="gc" data-l="Comportamento">Evolução variável</span></div>
+    <div class="gr"><span class="gk">Folicular</span><span class="gc" data-l="Assinatura">t(14;18), proteína BCL-2</span><span class="gc" data-l="Comportamento"><strong>Indolente mais comum</strong>; tratar só se sintomático</span></div>
+    <div class="gr"><span class="gk">Células do manto</span><span class="gc" data-l="Assinatura">t(11;14), ciclina D1</span><span class="gc" data-l="Comportamento">Agressivo; prognóstico reservado</span></div>
+    <div class="gr"><span class="gk">Burkitt</span><span class="gc" data-l="Assinatura">t(8;14), MYC; ligado ao EBV</span><span class="gc" data-l="Comportamento">Muito agressivo; responde bem, com <strong>risco de lise tumoral</strong></span></div>
+    <div class="gr"><span class="gk">MALT</span><span class="gc" data-l="Assinatura">Estômago, glândulas salivares e lacrimais; H. pylori e Sjögren</span><span class="gc" data-l="Comportamento">No gástrico, <strong>tratar o H. pylori</strong></span></div>
+  </div>
+  <div class="vs">
+    <div class="b"><h5>Hodgkin</h5><ul>
+      <li>Cerca de 10% dos linfomas.</li>
+      <li>Jovem; supradiafragmático; contiguidade; mediastino.</li>
+      <li>Reed-Sternberg; dor com álcool.</li></ul></div>
+    <div class="a"><h5>Não Hodgkin</h5><ul>
+      <li>Cerca de 90% dos linfomas; maioria B.</li>
+      <li>Linfonodo e sítio extranodal (difuso de grandes células B).</li>
+      <li>Subtipo definido por translocação.</li></ul></div>
+  </div>
+</section>
+
+<section class="synth" id="gat">
+  <h2>Gatilhos de prova</h2>
+  <p class="note">Uma linha por degrau. Vermelho = onde a banca derruba.</p>
+  <div class="trig">
+    <div><span class="tk">D0 Régua</span><span class="tv">Crônica amadurece; aguda bloqueia; SMD amadurece errado</span></div>
+    <div><span class="tk">D1 LLC</span><span class="tv">Idoso, linfocitose de rotina; AHAI e PTI</span></div>
+    <div><span class="tk">D2 LLC, conduta</span><span class="tv">Citometria no sangue; <b>assintomático observa</b></span></div>
+    <div><span class="tk">D3 LMC</span><span class="tv">t(9;22), baço, desvio escalonado, basofilia</span></div>
+    <div><span class="tk">D4 Leucemoide</span><span class="tv"><b>FAL baixa na LMC, alta na leucemoide</b></span></div>
+    <div><span class="tk">D5 LMC, conduta</span><span class="tv">BCR-ABL por PCR ou FISH; imatinibe para todos</span></div>
+    <div><span class="tk">D6 Grade NMP</span><span class="tv">PV hemácia, TE plaqueta, MF fibrose; JAK2 nas três</span></div>
+    <div><span class="tk">D7 PV</span><span class="tv"><b>Eritropoetina baixa</b>; prurido no banho; trombose mata</span></div>
+    <div><span class="tk">D8 Mielofibrose</span><span class="tv">Dacriócito, leucoeritroblastose, baço enorme</span></div>
+    <div><span class="tk">D9 SMD</span><span class="tv">Displasia 10% ou mais; <b>blastos abaixo de 20%</b></span></div>
+    <div><span class="tk">D10 Linfonodo</span><span class="tv"><b>Biópsia excisional, não PAAF</b>; supraclavicular é suspeito</span></div>
+    <div><span class="tk">D11 Estadiamento</span><span class="tv">III = dois lados do diafragma; B = febre, sudorese, 10% do peso</span></div>
+    <div><span class="tk">D12 Hodgkin</span><span class="tv">Reed-Sternberg; esclerose nodular no mediastino; <b>celularidade mista com EBV e HIV</b></span></div>
+    <div><span class="tk">D13 Não Hodgkin</span><span class="tv">Folicular t(14;18); manto t(11;14); Burkitt t(8;14); MALT trata H. pylori</span></div>
+  </div>
+</section>
+
+<section class="synth arm" id="arm">
+  <h2>Armadilhas de banca</h2>
+  <p class="note">Cada uma aponta o degrau onde o fato mora.</p>
+  <ol class="armas">
+    <li>Tratar LLC assintomática pelo número de linfócitos ou pelo estádio. <span class="d">D2</span></li>
+    <li>Pedir medula para diagnosticar LLC: a citometria de sangue periférico basta. <span class="d">D2</span></li>
+    <li>Fechar LMC só com o Philadelphia: ele existe também na leucemia linfoide aguda. <span class="d">D3</span></li>
+    <li>Confundir LMC com reação leucemoide: basofilia, baço e fosfatase alcalina leucocitária baixa são da LMC. <span class="d">D4</span></li>
+    <li>Policitemia com eritropoetina alta não é vera: procurar hipóxia ou tumor renal. <span class="d">D7</span></li>
+    <li>Dacriócito com anemia microcítica e leucócitos normais aponta para talassemia, não mielofibrose. <span class="d">D8</span></li>
+    <li>SMD com 20% ou mais de blastos já é leucemia aguda. <span class="d">D9</span></li>
+    <li>PAAF para diagnosticar linfoma: perde a arquitetura; o exame é a biópsia excisional. <span class="d">D10</span></li>
+    <li>Supor que linfonodo maligno dói: o habitual é indolor; a dor com álcool é a exceção do Hodgkin. <span class="d">D12</span></li>
+    <li>Trocar os subtipos de Hodgkin: o mais comum (e mediastinal) é a esclerose nodular; o de EBV e HIV é a celularidade mista. <span class="d">D12</span></li>
+  </ol>
+</section>
+
+<footer>
+  <p><strong>Fontes:</strong> <code>resumos/Clínica Médica/Hematologia/9. Leucemias Crônicas, Linfomas, Mielodisplasias e Mieloproliferações.pdf</code> (EMED 2024, Prof. Hugo Brisolla), citada como Hemato/9, inclusive as figuras de quadro clínico (p6, 8, 11, 16, 18, 22, 23, 27, 28); <code>3. Anemias Macrocíticas.pdf</code> (Hemato/3) para a grade de pancitopenia macrocítica. Não há resumo <code>.md</code> deste tema em <code>resumos/</code>.</p>
+  <p>Correções de grafia da apostila aplicadas sem mudar conteúdo: "fosfatase alcalina linfocitária" -&gt; leucocitária; "Ann Harbor" -&gt; Ann Arbor; localização "subclávia" do linfonodo suspeito lida como supraclavicular (anotada no degrau 10).</p>
+  <p>Prepara a tarefa #811 do plano (parte 2: leucemias crônicas, linfomas, mielodisplasias e mieloproliferações). A parte 1 é a aula de anemias macrocíticas.</p>
+</footer>
+</div>

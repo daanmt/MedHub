@@ -1,0 +1,479 @@
+<title>Rastreamento: critérios e programas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,480;9..144,600;9..144,680&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EFF3F0; --card:#FAFCFA; --sunk:#E2E9E4;
+  --ink:#18211C; --ink2:#4C5A52; --ink3:#6F7D75;
+  --line:rgba(24,33,28,.13); --line2:rgba(24,33,28,.26);
+  --teal:#1F6B5E; --teal-ink:#154A41; --teal-wash:#DCEBE5;
+  --carmine:#8E2F41; --carmine-ink:#6B2231; --carmine-wash:#F5E2E6;
+  --amber:#8A5A17; --amber-ink:#6B4610; --amber-wash:#F3E6CC;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#8A988F;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#8A988F;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font:16px/1.6 "Source Sans 3",-apple-system,"Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+h1,h2,h3{margin:0;font-family:Fraunces,Georgia,serif;font-weight:600;letter-spacing:-.01em;text-wrap:balance;line-height:1.15;color:var(--ink)}
+.wrap{max-width:780px;margin:0 auto;padding:0 16px 70px}
+:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+a{color:var(--teal-ink)}
+strong{font-weight:600;color:var(--ink)}
+
+/* topo */
+.top{padding:36px 0 22px;border-bottom:1px solid var(--line2)}
+.eye{font:600 11px/1.3 "Source Sans 3";letter-spacing:.12em;text-transform:uppercase;color:var(--teal-ink);margin:0 0 14px}
+.top h1{font-size:clamp(28px,6vw,44px);font-weight:680;margin-bottom:14px}
+.top .sub{font-size:16.5px;line-height:1.55;color:var(--ink2);margin:0 0 20px}
+.stats{display:flex;gap:18px;flex-wrap:wrap}
+.stat{display:flex;flex-direction:column;gap:2px;min-width:0}
+.stat b{font:600 21px/1 "IBM Plex Mono";color:var(--teal-ink);font-variant-numeric:tabular-nums}
+.stat span{font-size:11.5px;color:var(--ink3)}
+
+.nav{display:flex;flex-wrap:wrap;gap:6px;padding:20px 0 4px}
+.nav a{font-size:13px;text-decoration:none;color:var(--ink2);border:1px solid var(--line2);border-radius:2px;padding:4px 9px;min-width:0}
+.nav a:hover{color:var(--ink);border-color:var(--teal)}
+
+/* atos */
+.ato{margin:40px 0 0;padding:14px 16px;background:var(--teal-wash);border-left:3px solid var(--teal)}
+.ato span{font:700 10.5px "Source Sans 3";letter-spacing:.12em;text-transform:uppercase;color:var(--teal-ink);display:block;margin-bottom:3px}
+.ato h2{font-size:clamp(21px,4vw,28px)}
+
+/* trilho dos blocos */
+.trilho-box{margin:18px 0 0;padding:16px 14px 10px;background:var(--card);border:1px solid var(--line2)}
+.trilho-box p{margin:0 0 6px;font-size:14px;color:var(--ink3)}
+.trilho{list-style:none;margin:0;padding:0;display:grid}
+.trilho li{position:relative;min-width:0}
+.trilho a{display:grid;grid-template-columns:30px minmax(0,1fr);gap:11px;align-items:start;padding:6px 0;text-decoration:none}
+.trilho .n{width:30px;height:30px;border-radius:50%;border:1.5px solid var(--teal);background:var(--card);display:flex;align-items:center;justify-content:center;font:600 12px "IBM Plex Mono";color:var(--teal-ink);position:relative;z-index:1}
+.trilho li:not(:last-child)::before{content:"";position:absolute;left:14px;top:36px;bottom:-6px;width:1.5px;background:var(--teal);opacity:.5}
+.trilho .t{min-width:0;padding-top:3px}
+.trilho b{display:block;font-weight:600;font-size:15px;line-height:1.3;color:var(--ink)}
+.trilho small{display:block;font-size:13px;line-height:1.4;color:var(--ink3)}
+.trilho a:hover b{color:var(--teal-ink)}
+
+/* degraus */
+.degrau{padding:30px 0;border-bottom:1px solid var(--line)}
+.dhead{display:flex;gap:13px;align-items:flex-start;margin-bottom:12px}
+.dnum{flex-shrink:0;width:38px;height:38px;border:1.5px solid var(--teal);border-radius:50%;display:flex;align-items:center;justify-content:center;font:600 14px "IBM Plex Mono";color:var(--teal-ink)}
+.dtitle{min-width:0;padding-top:3px}
+.dtitle h3{font-size:clamp(19px,3.4vw,24px)}
+.src{display:block;margin-top:5px;font:500 11.5px/1.4 "IBM Plex Mono";color:var(--ink3)}
+.lede{font-size:16px;line-height:1.55;color:var(--ink2);margin:0 0 14px;font-style:italic}
+.prose ul{margin:0 0 12px;padding-left:20px}
+.prose li{font-size:15.4px;line-height:1.55;color:var(--ink2);margin-bottom:6px}
+.prose li:last-child{margin-bottom:0}
+h4{font:600 14px "Source Sans 3";color:var(--ink);margin:20px 0 8px}
+
+.trap,.banca{margin:16px 0;padding:13px 16px}
+.trap{border-left:3px solid var(--carmine);background:var(--carmine-wash)}
+.banca{border-left:3px solid var(--amber);background:var(--amber-wash)}
+.albl{font:700 10.5px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px}
+.trap .albl{color:var(--carmine-ink)}
+.banca .albl{color:var(--amber-ink)}
+.trap p,.banca p{font-size:15px;line-height:1.55;color:var(--ink);margin:0}
+
+/* lado a lado */
+.vs{display:grid;grid-template-columns:minmax(0,1fr);gap:1px;background:var(--line2);border:1px solid var(--line2);margin:16px 0}
+.vs>div{background:var(--card);padding:12px 14px;min-width:0}
+.vs h5{font:700 12px "Source Sans 3";letter-spacing:.04em;text-transform:uppercase;margin:0 0 6px}
+.vs .a h5{color:var(--carmine-ink)}
+.vs .b h5{color:var(--teal-ink)}
+.vs ul{margin:0;padding-left:17px}
+.vs li{font-size:14.4px;line-height:1.5;color:var(--ink2);margin-bottom:4px;overflow-wrap:break-word}
+
+/* tabelas de critério */
+.crit{border:1px solid var(--line2);margin:16px 0;background:var(--card)}
+.crit .row{display:grid;grid-template-columns:minmax(0,1fr);gap:2px;padding:9px 13px;font-size:14.2px}
+.crit .row+.row{border-top:1px solid var(--line)}
+.crit .row>*{min-width:0}
+.crit .k{font-weight:600;color:var(--teal-ink)}
+.crit .v{color:var(--ink2);line-height:1.48;overflow-wrap:break-word}
+.crit.hd .row:first-child{background:var(--sunk)}
+.crit.hd .row:first-child>*{font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink3);font-weight:600}
+.crit.c3 .row{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:4px 12px}
+.crit.c3 .row .k{grid-column:1 / -1}
+.crit.c3.hd .row:first-child .k{display:none}
+.mal{color:var(--carmine-ink);font-weight:600}
+
+/* blocos de número */
+.ext{display:grid;grid-template-columns:minmax(0,1fr);gap:1px;background:var(--line2);border:1px solid var(--line2);margin:16px 0}
+.ext>div{background:var(--card);padding:13px 14px;min-width:0}
+.ext .fv{display:block;font:600 17px/1.25 Fraunces,Georgia,serif;color:var(--teal-ink);margin-bottom:5px}
+.ext .tot .fv{color:var(--carmine-ink)}
+.ext .fk{font-size:14px;line-height:1.48;color:var(--ink2)}
+
+/* referência recolhida */
+details.ref{margin:18px 0;border:1px solid var(--line2);background:var(--card)}
+details.ref>summary{cursor:pointer;list-style:none;padding:12px 16px;font:600 13.5px "Source Sans 3";color:var(--teal-ink);display:flex;align-items:center;gap:9px}
+details.ref>summary::-webkit-details-marker{display:none}
+details.ref>summary::before{content:"+";font:600 15px "IBM Plex Mono";width:16px;flex-shrink:0}
+details.ref[open]>summary::before{content:"-"}
+details.ref .refbody{padding:0 14px 14px}
+details.ref .crit{margin:4px 0 0}
+
+/* síntese */
+.synth{background:var(--card);border:1px solid var(--line2);padding:20px 16px;margin-top:40px}
+.synth h2{font-size:23px;margin-bottom:6px}
+.synth .note{font-size:14px;color:var(--ink3);margin:0 0 14px}
+.trig{display:grid;grid-template-columns:minmax(0,1fr);gap:1px;background:var(--line2);border:1px solid var(--line2)}
+.trig div{background:var(--sunk);padding:10px 13px;min-width:0}
+.trig .tk{font:700 11px "IBM Plex Mono";color:var(--teal-ink);display:block;margin-bottom:3px}
+.trig .tv{font-size:13.8px;line-height:1.45;color:var(--ink2)}
+.trig .tv b{color:var(--carmine-ink)}
+.synth.arm{border-left:3px solid var(--carmine)}
+.synth.arm h2::before{content:"";display:inline-block;width:11px;height:11px;border-radius:50%;background:var(--carmine);margin-right:9px;vertical-align:2px}
+ol.armas{margin:0;padding-left:22px}
+ol.armas li{font-size:15px;line-height:1.5;color:var(--ink2);margin-bottom:8px}
+ol.armas li::marker{font:600 13px "IBM Plex Mono";color:var(--carmine-ink)}
+ol.armas .d{font:500 11.5px "IBM Plex Mono";color:var(--ink3)}
+
+footer{margin-top:46px;padding-top:18px;border-top:1px solid var(--line2)}
+footer p{font-size:12.3px;color:var(--ink3);margin:0 0 7px;line-height:1.5}
+code{font-family:"IBM Plex Mono",Consolas,monospace;font-size:11.5px;background:var(--sunk);padding:1px 4px;border-radius:2px;word-break:break-all}
+
+/* telas maiores: o mesmo conteúdo ganha colunas */
+@media (min-width:560px){
+  .vs{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .crit .row{grid-template-columns:150px minmax(0,1fr);gap:12px}
+  .crit.c3 .row{grid-template-columns:130px minmax(0,1fr) minmax(0,1fr);gap:12px}
+  .crit.c3 .row .k{grid-column:auto}
+  .crit.c3.hd .row:first-child .k{display:block}
+  .trig{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .ext{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (min-width:640px){
+  .wrap{padding:0 24px 90px}
+  .top{padding:46px 0 26px}
+  .degrau{padding:34px 0}
+  .synth{padding:26px 22px}
+  .trilho{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .trilho a{grid-template-columns:minmax(0,1fr);gap:8px;padding:0 10px 4px 0}
+  .trilho li:not(:last-child)::before{left:36px;right:4px;top:15px;bottom:auto;width:auto;height:1.5px}
+  .trilho .t{padding-top:0}
+}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <p class="eye">MedHub · Aula-base · Medicina de Família e Comunidade · tarefa #881</p>
+  <h1>Rastreamento: quando procurar doença em quem não tem queixa</h1>
+  <p class="sub">Rastrear só vale quando achar cedo muda o desfecho. A aula vai dos critérios que autorizam um programa aos cinco cânceres que a prova cobra, e termina nas leis que obrigam o SUS a confirmar e tratar o que o rastreio achou.</p>
+  <div class="stats">
+    <div class="stat"><b>10</b><span>critérios da OMS</span></div>
+    <div class="stat"><b>3</b><span>vieses que enganam</span></div>
+    <div class="stat"><b>25-64</b><span>anos: colo</span></div>
+    <div class="stat"><b>50-74</b><span>anos: mama (MS)</span></div>
+    <div class="stat"><b>30/60</b><span>dias: diagnosticar, tratar</span></div>
+  </div>
+</header>
+
+<nav class="nav" aria-label="Atalhos">
+  <a href="#d0">Definição</a><a href="#d1">Wilson-Jungner</a><a href="#d2">O teste</a><a href="#d3">Vieses</a>
+  <a href="#d4">Colo</a><a href="#d5">Mama</a><a href="#d6">Próstata</a><a href="#d7">Colorretal</a><a href="#d8">Pulmão</a>
+  <a href="#d9">Leis 30/60</a><a href="#gat">Gatilhos</a><a href="#arm">Armadilhas</a>
+</nav>
+
+<div class="trilho-box">
+  <p>Três blocos, na ordem desta aula:</p>
+  <ol class="trilho">
+    <li><a href="#d0"><span class="n">1</span><span class="t"><b>Os princípios</b><small>definição, critérios, teste, vieses</small></span></a></li>
+    <li><a href="#d4"><span class="n">2</span><span class="t"><b>Os programas</b><small>colo, mama, próstata, colorretal, pulmão</small></span></a></li>
+    <li><a href="#d9"><span class="n">3</span><span class="t"><b>A porta de saída</b><small>leis dos 30 e dos 60 dias</small></span></a></li>
+  </ol>
+</div>
+
+<div class="ato" id="principios"><span>Bloco 1 · Os princípios</span><h2>O que autoriza um rastreio</h2></div>
+
+<section class="degrau" id="d0">
+  <div class="dhead"><span class="dnum">0</span><div class="dtitle"><h3>Rastrear não é diagnosticar cedo quem já tem sintoma</h3><span class="src">Prev/13 p77-78 (Gates; Caderno de Atenção Básica nº 29)</span></div></div>
+  <p class="lede">Rastrear é testar quem não tem queixa. O objetivo final é reduzir doença grave e morte pela condição, não apenas produzir diagnósticos.</p>
+  <div class="prose"><ul>
+    <li>Definição adotada pelo Ministério da Saúde (MS): exames em pessoas <strong>assintomáticas</strong>, para diagnóstico precoce ou controle de risco, com o objetivo de <strong>reduzir a morbidade e a mortalidade</strong> do agravo rastreado.</li>
+    <li>Três palavras que a banca quer ver: assintomático, prevenção secundária, redução de morbimortalidade.</li>
+    <li>É prevenção secundária: a doença já existe, abaixo do horizonte clínico. Os níveis de prevenção e a prevenção quaternária estão na aula da tarefa #875.</li>
+  </ul></div>
+  <div class="vs">
+    <div class="b"><h5>Rastreamento</h5><ul>
+      <li>Pessoa sem sinal nem sintoma.</li>
+      <li>População-alvo definida por idade e risco.</li>
+      <li>Organizado: convite ativo, intervalo fixo, seguimento de quem deu positivo.</li>
+      <li>Oportunístico: exame pedido quando a pessoa vem por outro motivo. Cobre menos e repete mais.</li></ul></div>
+    <div class="a"><h5>Diagnóstico precoce</h5><ul>
+      <li>Pessoa com sinal ou sintoma inicial.</li>
+      <li>Depende de reconhecer o sinal de alerta e de acesso rápido à investigação.</li>
+      <li>É onde age a Lei dos 30 dias (degrau 9).</li>
+      <li>Os dois juntos formam a detecção precoce do câncer (INCA).</li></ul></div>
+  </div>
+</section>
+
+<section class="degrau" id="d1">
+  <div class="dhead"><span class="dnum">1</span><div class="dtitle"><h3>Wilson e Jungner: quando uma doença merece rastreio</h3><span class="src">OMS, 1968 (fora do PDF); Caderno de Atenção Primária nº 29</span></div></div>
+  <p class="lede">Os dez critérios da OMS respondem a uma pergunta: o ganho de achar cedo supera o custo e o dano de procurar? Agrupados, ficam quatro perguntas.</p>
+  <div class="crit hd">
+    <div class="row"><span class="k">Pergunta</span><span class="v">Critérios</span></div>
+    <div class="row"><span class="k">A doença</span><span class="v">É problema de saúde importante; a história natural é conhecida; existe <strong>fase latente ou pré-clínica detectável</strong>.</span></div>
+    <div class="row"><span class="k">O teste</span><span class="v">Existe teste adequado; o teste é aceitável para a população.</span></div>
+    <div class="row"><span class="k">O tratamento</span><span class="v">Há tratamento aceito para quem for achado; há acordo sobre quem tratar como paciente.</span></div>
+    <div class="row"><span class="k">O sistema</span><span class="v">Há estrutura para confirmar e tratar; o custo é equilibrado com o gasto em saúde; a busca é <strong>contínua</strong>, não campanha única.</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Mecanismo: sem fase pré-clínica detectável, não há o que antecipar. Sem tratamento melhor quando feito cedo, antecipar só aumenta o tempo de rótulo.</li>
+    <li>O colo do útero cumpre todos: lesão precursora visível na citologia por anos e tratamento ambulatorial (exérese da zona de transformação) que impede o câncer.</li>
+    <li>O critério do sistema é o que mais falha no SUS. Rastrear sem garantir confirmação e tratamento só produz fila (degrau 9).</li>
+  </ul></div>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p>Doença rara e grave não justifica rastreio populacional. A raridade derruba o critério da importância e o valor preditivo positivo do teste (degrau 2).</p></div>
+</section>
+
+<section class="degrau" id="d2">
+  <div class="dhead"><span class="dnum">2</span><div class="dtitle"><h3>O teste: peneira sensível, depois confirmação específica</h3><span class="src">Prev/13 p37, 71, 79-80</span></div></div>
+  <p class="lede">O rastreio funciona como peneira em série. O primeiro teste pega quase todos os doentes; o segundo separa os falsos positivos.</p>
+  <div class="vs">
+    <div class="b"><h5>1º teste: a peneira</h5><ul>
+      <li><strong>Alta sensibilidade</strong>: poucos falsos negativos.</li>
+      <li>Barato, simples, aceitável.</li>
+      <li>Pergunta "qual teste usar para rastrear?": o sensível.</li></ul></div>
+    <div class="a"><h5>2º teste: a confirmação</h5><ul>
+      <li><strong>Alta especificidade</strong>: poucos falsos positivos.</li>
+      <li>Só é feito se o 1º der positivo: associação em série.</li>
+      <li>Em série, o resultado final ganha valor preditivo positivo (VPP).</li></ul></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Sensibilidade e especificidade são do teste: não mudam com a prevalência. VPP e valor preditivo negativo (VPN) mudam.</li>
+    <li>Mecanismo: na população assintomática a prevalência é baixa. Prevalência baixa derruba o VPP: a maioria dos positivos do rastreio é falso positivo.</li>
+    <li>Por isso todo programa tem etapa de confirmação, e rastrear quem tem baixo risco multiplica exames, biópsias e ansiedade.</li>
+    <li>Quando o positivo leva a procedimento invasivo, caro ou mutilante, a confirmação precisa de especificidade.</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="d3">
+  <div class="dhead"><span class="dnum">3</span><div class="dtitle"><h3>Três vieses: sobreviver mais não prova que rastrear funciona</h3><span class="src">Epidemiologia do rastreamento (fora do PDF; Caderno nº 29)</span></div></div>
+  <p class="lede">Comparar a sobrevida dos casos achados no rastreio com a dos casos sintomáticos sempre favorece o rastreio, mesmo quando ele não salva ninguém.</p>
+  <div class="crit c3 hd">
+    <div class="row"><span class="k">Viés</span><span class="v">O que acontece</span><span class="v">Por que engana</span></div>
+    <div class="row"><span class="k">Tempo de antecipação</span><span class="v">O diagnóstico vem antes; a morte vem na mesma data.</span><span class="v">A sobrevida, contada do diagnóstico, cresce só porque o relógio começou mais cedo.</span></div>
+    <div class="row"><span class="k">Duração</span><span class="v">Tumor lento passa mais tempo na fase pré-clínica e cai mais na peneira. O agressivo surge entre dois exames (câncer de intervalo).</span><span class="v">O grupo rastreado fica cheio de doença indolente, de bom prognóstico natural.</span></div>
+    <div class="row"><span class="k">Sobrediagnóstico</span><span class="v">Acha doença real que nunca daria sintoma nem mataria.</span><span class="v">Esses "curados" inflam a sobrevida e a incidência sem mudar a mortalidade. É a forma extrema do viés de duração.</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Um quarto viés, de seleção: o voluntário saudável. Quem adere ao rastreio já cuida mais da saúde; o desfecho melhor vem de quem a pessoa é, não do exame.</li>
+    <li>Desfecho que prova benefício: <strong>mortalidade pela doença</strong> na população convidada, em ensaio randomizado. Sobrevida em 5 anos não prova.</li>
+    <li>Sinal de sobrediagnóstico: a incidência sobe muito com o rastreio e a mortalidade não cai. É o padrão do câncer de próstata (degrau 6).</li>
+    <li>O dano do sobrediagnóstico (rótulo, tratamento sem benefício) é o terreno da prevenção quaternária, na aula da tarefa #875.</li>
+  </ul></div>
+</section>
+
+<div class="ato" id="programas"><span>Bloco 2 · Os programas</span><h2>Cinco cânceres, duas réguas</h2></div>
+
+<section class="degrau" id="d4">
+  <div class="dhead"><span class="dnum">4</span><div class="dtitle"><h3>Colo do útero: citologia de 2016 e DNA-HPV de 2025</h3><span class="src">GO/21 p9-10, 14-15; resumo Rastreamento Colo §2-3</span></div></div>
+  <p class="lede">O programa mais cobrado. Duas regras convivem: a citologia trienal, base da maioria das questões, e o teste molecular de DNA-HPV, que a substitui desde 2025.</p>
+  <div class="crit c3 hd">
+    <div class="row"><span class="k">Item</span><span class="v">Citologia (MS 2016)</span><span class="v">DNA-HPV (MS 2025)</span></div>
+    <div class="row"><span class="k">Quem</span><span class="v">Mulher que já teve relação sexual, <strong>25 a 64 anos</strong></span><span class="v">A mesma faixa</span></div>
+    <div class="row"><span class="k">Intervalo</span><span class="v">2 primeiros exames anuais; negativos, a cada <strong>3 anos</strong></span><span class="v">Negativo: a cada <strong>5 anos</strong></span></div>
+    <div class="row"><span class="k">Positivo</span><span class="v">Conduta pela atipia (quadro recolhido abaixo)</span><span class="v">HPV 16 ou 18: colposcopia. Outro tipo oncogênico: citologia reflexa; alterada, colposcopia; normal, novo teste em 1 ano</span></div>
+    <div class="row"><span class="k">Parar</span><span class="v">Aos 64, com 2 exames negativos consecutivos nos últimos 5 anos</span><span class="v">Negativo aos 60 já encerra (o próximo cairia aos 65)</span></div>
+    <div class="row"><span class="k">Imunossuprimida</span><span class="v">Começa na sexarca; 2 semestrais, depois anual; HIV com CD4 abaixo de 200 segue semestral</span><span class="v">Começa na sexarca; a cada 3 anos; não para aos 64; qualquer HPV oncogênico vai à colposcopia</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Mais de 64 anos e nunca rastreada: 2 citologias com intervalo de 1 a 3 anos; negativas, sai do programa.</li>
+    <li>Fora do rastreio: quem nunca teve relação sexual; histerectomia total por doença benigna, sem lesão precursora prévia.</li>
+    <li>Gestante rastreia como as demais. Coleta dupla (ectocérvice com espátula de Ayres, endocérvice com escova), fora da menstruação.</li>
+    <li>Mecanismo do DNA-HPV: acha a infecção latente, antes da alteração celular. O negativo protege por mais tempo, por isso o intervalo estica para 5 anos.</li>
+    <li>A vacina quadrivalente (6, 11, 16, 18) é prevenção primária; não dispensa o rastreio.</li>
+  </ul></div>
+  <details class="ref"><summary>Conduta inicial diante da citologia alterada (2016)</summary><div class="refbody">
+    <div class="crit">
+      <div class="row"><span class="k">ASC-US</span><span class="v">Abaixo de 25 anos: repetir em 3 anos. 25 a 29: repetir em 12 meses. 30 ou mais: repetir em 6 meses. Persistiu: colposcopia.</span></div>
+      <div class="row"><span class="k">LSIL (baixo grau)</span><span class="v">Abaixo de 25: repetir em 3 anos. 25 ou mais: repetir em 6 meses. Persistiu: colposcopia.</span></div>
+      <div class="row"><span class="k">ASC-H, AGC, AOI</span><span class="v">Colposcopia. AGC: avaliar também o endométrio conforme idade e sangramento.</span></div>
+      <div class="row"><span class="k">HSIL (alto grau)</span><span class="v">Colposcopia em qualquer idade. "Ver e tratar" exige concordância cito-colposcópica, JEC visível e lesão restrita ao colo; proibido abaixo de 25 anos.</span></div>
+      <div class="row"><span class="k">Imunossuprimida</span><span class="v">Colposcopia já na primeira atipia.</span></div>
+    </div>
+  </div></details>
+  <div class="banca"><div class="albl">Depende da banca</div>
+    <p>A apostila (2016) ainda diz que o DNA-HPV não é diretriz no Brasil. Desde 2025 é (Diretriz MS/INCA). Questão até 2024 cobra a citologia trienal; a partir de 2025, veja se o enunciado fala em teste molecular.</p></div>
+</section>
+
+<section class="degrau" id="d5">
+  <div class="dhead"><span class="dnum">5</span><div class="dtitle"><h3>Mama: a disputa é a idade de início</h3><span class="src">GO/7 p4-6, 8-9; resumo CA de Mama §2</span></div></div>
+  <p class="lede">A mamografia é o único exame de rotina que reduziu a mortalidade por câncer de mama, em cerca de 30%. MS e sociedades concordam no exame e brigam na idade.</p>
+  <div class="crit c3 hd">
+    <div class="row"><span class="k">Fonte</span><span class="v">Faixa</span><span class="v">Intervalo</span></div>
+    <div class="row"><span class="k">MS até 2025 (apostila)</span><span class="v">50 a 69 anos</span><span class="v">Bienal</span></div>
+    <div class="row"><span class="k">MS, Nota Técnica 626/2025</span><span class="v"><strong>50 a 74 anos</strong>, organizado. De 40 a 49 e acima de 74: por demanda, após decisão compartilhada</span><span class="v">Bienal</span></div>
+    <div class="row"><span class="k">FEBRASGO, SBM, CBR</span><span class="v">40 a 74 anos; além, se a expectativa de vida passa de 7 anos</span><span class="v">Anual</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Mecanismo da posição do MS: antes da menopausa a mama é densa. A mamografia perde sensibilidade (mais falso negativo) e irradia sem ganho demonstrado.</li>
+    <li>Lei 11.664/2008: garante mamografia no SUS a partir dos 40 anos. É direito de acesso, não recomendação de rastreio populacional.</li>
+    <li>Alto risco sai da régua habitual: mamografia <strong>anual</strong>, começo precoce e ressonância associada (quadro recolhido).</li>
+    <li>Homem trans sem mastectomia bilateral: régua da mulher cis. Mulher trans: só rastreia se faz ou fez hormonização feminizante (MS: após 20 anos de uso).</li>
+    <li>Autoexame não é método de rastreio. O MS estimula a mulher a conhecer as próprias mamas e procurar a unidade diante de alteração.</li>
+  </ul></div>
+  <details class="ref"><summary>Alto risco e laudo BI-RADS</summary><div class="refbody">
+    <div class="crit hd">
+      <div class="row"><span class="k">Critério</span><span class="v">Mamografia anual a partir de</span></div>
+      <div class="row"><span class="k">Parente de 1º grau, pré-menopausa (risco acima de 20%)</span><span class="v">10 anos antes do diagnóstico da parente mais jovem; nunca antes dos 30</span></div>
+      <div class="row"><span class="k">BRCA1</span><span class="v">Diagnóstico da mutação; não antes dos 35 (ressonância não antes dos 25)</span></div>
+      <div class="row"><span class="k">BRCA2</span><span class="v">Diagnóstico da mutação; não antes dos 30</span></div>
+      <div class="row"><span class="k">Radioterapia de tórax antes dos 30</span><span class="v">8 anos após o tratamento; não antes dos 30</span></div>
+      <div class="row"><span class="k">Li-Fraumeni, Cowden; hiperplasia atípica, carcinoma lobular in situ</span><span class="v">Diagnóstico; não antes dos 30</span></div>
+    </div>
+    <div class="crit hd">
+      <div class="row"><span class="k">BI-RADS</span><span class="v">Risco e conduta</span></div>
+      <div class="row"><span class="k">0</span><span class="v">Inconclusivo: completar com outro exame (ultrassom, comparação)</span></div>
+      <div class="row"><span class="k">1 e 2</span><span class="v">Normal ou benigno: rotina</span></div>
+      <div class="row"><span class="k">3</span><span class="v">Até 2%: controle em 6, 12 e 24 meses; estável, vira 2</span></div>
+      <div class="row"><span class="k">4 (A, B, C)</span><span class="v">Acima de 2% e abaixo de 95%: biópsia</span></div>
+      <div class="row"><span class="k">5</span><span class="v">95% ou mais: biópsia</span></div>
+      <div class="row"><span class="k">6</span><span class="v">Câncer já comprovado</span></div>
+    </div>
+  </div></details>
+  <div class="banca"><div class="albl">Depende da banca</div>
+    <p>Questão que nomeia a fonte cobra a régua dela: MS = bienal a partir dos 50; sociedades = anual a partir dos 40. Não junte a idade de uma com o intervalo da outra. Questão anterior a 2025 usa 50-69 para o MS.</p></div>
+</section>
+
+<section class="degrau" id="d6">
+  <div class="dhead"><span class="dnum">6</span><div class="dtitle"><h3>Próstata: o rastreio que o MS não recomenda</h3><span class="src">Cir/3 p54-55; resumo Urologia §2.6</span></div></div>
+  <p class="lede">Câncer frequente, lento e muitas vezes indolente: o terreno clássico do sobrediagnóstico.</p>
+  <div class="vs">
+    <div class="a"><h5>MS e OMS</h5><ul>
+      <li><strong>Não recomendam</strong> rastreamento populacional.</li>
+      <li>Toque retal e PSA (antígeno prostático específico) quando há sintoma.</li>
+      <li>Caderno nº 29: evidência insuficiente abaixo de 75 anos; a partir de 75, contraindicado.</li>
+      <li>Homem que pede o PSA: explicar riscos e benefícios e decidir junto.</li></ul></div>
+    <div class="b"><h5>Sociedade Brasileira de Urologia</h5><ul>
+      <li>Toque retal + PSA a partir dos <strong>50 anos</strong>.</li>
+      <li><strong>45 anos</strong> no alto risco: homem negro ou parente de 1º grau com câncer de próstata.</li>
+      <li>Até cerca de 70 anos, se a expectativa de vida passa de 10 anos.</li></ul></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Mecanismo do "não" (1): o PSA sobe também na hiperplasia e na prostatite. Baixa especificidade gera biópsias desnecessárias.</li>
+    <li>Mecanismo do "não" (2): acha tumores que nunca matariam. O tratamento traz incontinência e disfunção erétil sem ganho de vida.</li>
+    <li>Homem com sintoma urinário não está em rastreio. Ali, PSA e toque são investigação.</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="d7">
+  <div class="dhead"><span class="dnum">7</span><div class="dtitle"><h3>Colorretal: o rastreio que também previne</h3><span class="src">Gastro/15 p16-17; resumo Polipose e CCR §3.3</span></div></div>
+  <p class="lede">A colonoscopia tira o pólipo antes de ele virar câncer. Por isso reduz a mortalidade e a incidência.</p>
+  <div class="crit c3 hd">
+    <div class="row"><span class="k">Grupo</span><span class="v">Começa</span><span class="v">Como</span></div>
+    <div class="row"><span class="k">Risco médio</span><span class="v">50 anos (apostila); <strong>45</strong> (USPSTF 2021, adotado no resumo)</span><span class="v">Sangue oculto nas fezes (imunoquímico) anual ou colonoscopia a cada 10 anos</span></div>
+    <div class="row"><span class="k">1 parente de 1º grau com câncer ou adenoma aos 60 anos ou mais</span><span class="v">40 anos</span><span class="v">Como o risco médio</span></div>
+    <div class="row"><span class="k">1 parente de 1º grau abaixo de 60 anos, ou 2 parentes de 1º grau em qualquer idade</span><span class="v">40 anos ou 10 anos antes do caso mais jovem, o que vier primeiro</span><span class="v mal">Só colonoscopia, a cada 5 anos</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Mecanismo: a sequência adenoma-carcinoma leva anos. A fase pré-clínica longa cumpre Wilson-Jungner.</li>
+    <li>Sangue oculto reduz mortalidade (acha câncer cedo), mas pouco acha pólipo pequeno. Positivo: colonoscopia obrigatória.</li>
+    <li>Sangramento visível não é rastreio: é colonoscopia diagnóstica.</li>
+    <li>Fora do esquema comum: síndrome hereditária, doença inflamatória intestinal, pólipo prévio, radioterapia abdominal.</li>
+    <li>CEA (antígeno carcinoembrionário) não rastreia: serve ao seguimento pós-operatório.</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="d8">
+  <div class="dhead"><span class="dnum">8</span><div class="dtitle"><h3>Pulmão: tomografia de baixa dose no fumante pesado</h3><span class="src">Pneumo/8 p67-68 (USPSTF 2013 e 2021)</span></div></div>
+  <p class="lede">79% dos cânceres de pulmão chegam em fase avançada. O rastreio mira o tabagista pesado, com tomografia de baixa dose de radiação.</p>
+  <div class="crit hd">
+    <div class="row"><span class="k">Item</span><span class="v">USPSTF 2021 (2013 entre parênteses)</span></div>
+    <div class="row"><span class="k">Idade</span><span class="v"><strong>50 a 80 anos</strong> (55 a 80)</span></div>
+    <div class="row"><span class="k">Carga tabágica</span><span class="v"><strong>20 maços-ano</strong> ou mais (30), fumante atual ou que parou há menos de 15 anos</span></div>
+    <div class="row"><span class="k">Exame</span><span class="v">Tomografia de tórax de baixa dose, anual</span></div>
+    <div class="row"><span class="k">Parar</span><span class="v">15 anos sem fumar, ou doença que limite a expectativa de vida ou a cirurgia curativa</span></div>
+    <div class="row"><span class="k">Não usar</span><span class="v mal">Radiografia de tórax, citologia de escarro, biomarcador sérico</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>NLST (2011): a tomografia de baixa dose reduziu em 20% a mortalidade por câncer de pulmão.</li>
+    <li>Mecanismo: o alvo é o carcinoma não pequenas células. O de pequenas células cresce rápido demais para a janela anual.</li>
+  </ul></div>
+  <div class="banca"><div class="albl">Depende da banca</div>
+    <p>O SUS não tem programa organizado de rastreio de pulmão; a régua cobrada é a americana. Questão anterior a 2021 usa 55 anos e 30 maços-ano.</p></div>
+</section>
+
+<div class="ato" id="saida"><span>Bloco 3 · A porta de saída</span><h2>Rastreio positivo precisa de diagnóstico e tratamento</h2></div>
+
+<section class="degrau" id="d9">
+  <div class="dhead"><span class="dnum">9</span><div class="dtitle"><h3>Leis dos 30 e dos 60 dias</h3><span class="src">Lei 13.896/2019; Lei 12.732/2012 (fora do PDF)</span></div></div>
+  <p class="lede">Rastrear sem confirmar e tratar a tempo descumpre o critério do sistema. Duas leis fixam o relógio do câncer no SUS.</p>
+  <div class="ext">
+    <div><span class="fv">30 dias: diagnosticar</span><span class="fk">Lei 13.896/2019. Exames para esclarecer o diagnóstico quando a <strong>principal hipótese é câncer</strong>, com pedido fundamentado do médico.</span></div>
+    <div class="tot"><span class="fv">60 dias: tratar</span><span class="fk">Lei 12.732/2012. Primeiro tratamento no SUS (cirurgia, quimioterapia ou radioterapia), contado do <strong>laudo patológico</strong> que confirma o câncer. Prazo menor se o caso pedir, registrado em prontuário.</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Sequência: suspeita ou rastreio positivo -&gt; até 30 dias para o diagnóstico -&gt; laudo -&gt; até 60 dias para começar o tratamento.</li>
+    <li>A lei de 2019 alterou a de 2012. Valem juntas.</li>
+    <li>Mecanismo: o atraso entre achar e tratar anula o tempo ganho pelo rastreio. As leis protegem o critério de Wilson-Jungner sobre estrutura para confirmar e tratar.</li>
+  </ul></div>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p>Os 60 dias não contam da primeira consulta nem da suspeita. Contam do diagnóstico firmado em laudo patológico.</p></div>
+</section>
+
+<section class="synth" id="gat">
+  <h2>Gatilhos de prova</h2>
+  <p class="note">Uma linha por degrau. Vermelho = onde a banca derruba.</p>
+  <div class="trig">
+    <div><span class="tk">D0 Definição</span><span class="tv">Assintomático, prevenção secundária, <b>reduzir morbimortalidade</b></span></div>
+    <div><span class="tk">D1 Wilson-Jungner</span><span class="tv">Doença importante, <b>fase pré-clínica detectável</b>, tratamento eficaz, sistema que confirma e trata</span></div>
+    <div><span class="tk">D2 Teste</span><span class="tv">1º sensível, 2º específico, em série; <b>prevalência baixa = VPP baixo</b></span></div>
+    <div><span class="tk">D3 Vieses</span><span class="tv">Antecipação, duração, sobrediagnóstico; <b>só a mortalidade prova benefício</b></span></div>
+    <div><span class="tk">D4 Colo</span><span class="tv">25-64; citologia trienal após 2 anuais; <b>DNA-HPV a cada 5 anos</b>; 16/18 vai à colposcopia</span></div>
+    <div><span class="tk">D5 Mama</span><span class="tv">MS bienal 50-74 (antes 50-69); sociedades anual 40-74; <b>alto risco anual e precoce</b></span></div>
+    <div><span class="tk">D6 Próstata</span><span class="tv"><b>MS não rastreia</b>; SBU 50 (45 se negro ou parente)</span></div>
+    <div><span class="tk">D7 Colorretal</span><span class="tv">50 ou 45; sangue oculto anual ou colonoscopia 10/10; <b>parente abaixo de 60 = colonoscopia 5/5 aos 40</b></span></div>
+    <div><span class="tk">D8 Pulmão</span><span class="tv">50-80, 20 maços-ano, TC de baixa dose anual; <b>nunca RX</b></span></div>
+    <div><span class="tk">D9 Leis</span><span class="tv">30 dias para diagnosticar; <b>60 dias do laudo</b> para tratar</span></div>
+  </div>
+</section>
+
+<section class="synth arm" id="arm">
+  <h2>Armadilhas de banca</h2>
+  <p class="note">Cada uma aponta o degrau onde o fato mora.</p>
+  <ol class="armas">
+    <li>Rastrear quem já tem sintoma: errado. Com sintoma, é investigação diagnóstica. <span class="d">D0, D6</span></li>
+    <li>"Doença grave e rara merece rastreio": a raridade derruba o VPP e o critério da importância. <span class="d">D1, D2</span></li>
+    <li>Mutirão único numa praça: rastreio é processo contínuo, com seguimento dos positivos. <span class="d">D1</span></li>
+    <li>Teste de rastreio escolhido por especificidade: errado. A peneira é sensível; a confirmação é específica. <span class="d">D2</span></li>
+    <li>Sobrevida maior nos rastreados como prova de benefício: viés de antecipação ou de duração. <span class="d">D3</span></li>
+    <li>Sobrediagnóstico confundido com falso positivo: no sobrediagnóstico a doença existe, só nunca faria mal. <span class="d">D3</span></li>
+    <li>Citologia antes dos 25 anos, ou parar aos 64 sem 2 exames negativos recentes: errado. <span class="d">D4</span></li>
+    <li>Rastrear mulher que nunca teve relação sexual ou histerectomizada por doença benigna: desnecessário. <span class="d">D4</span></li>
+    <li>"Mamografia bienal" para mulher de 42 anos de risco habitual pela régua do MS: o bienal organizado começa aos 50. <span class="d">D5</span></li>
+    <li>Alto risco familiar com mamografia bienal: alto risco é anual. <span class="d">D5</span></li>
+    <li>PSA em todo homem acima de 50 "segundo o MS": o MS não recomenda rastreio de próstata. <span class="d">D6</span></li>
+    <li>Parente de 1º grau com câncer colorretal aos 52 anos: colonoscopia aos 40, de 5 em 5 anos, não o esquema comum. <span class="d">D7</span></li>
+    <li>Radiografia de tórax anual no fumante: não rastreia pulmão. <span class="d">D8</span></li>
+    <li>60 dias contados da consulta: contam do laudo patológico. <span class="d">D9</span></li>
+  </ol>
+</section>
+
+<footer>
+  <p><strong>Fontes:</strong> <code>resumos/Preventiva/13. Testes Diagnósticos.pdf</code> (EMED, Prof. David Nordon), citada como Prev/13; <code>resumos/GO/21. Rastreamento do Câncer de Colo Uterino.pdf</code> (GO/21) e <code>7. Rastreamento do Câncer de Mama.pdf</code> (GO/7); <code>resumos/Cirurgia/3. Urologia.pdf</code> (Cir/3); <code>Clínica Médica/Gastroenterologia/15. Polipose Intestinal e Câncer Colorretal.pdf</code> (Gastro/15); <code>Clínica Médica/Pneumologia/8. Neoplasias Pulmonares.pdf</code> (Pneumo/8). Resumos: <code>GO/[GIN] Rastreamento Colo.md</code> (protocolo DNA-HPV 2025), <code>GO/[GIN] CA de Mama.md</code> (Nota Técnica MS 626/2025), <code>Cirurgia/Urologia.md</code>, <code>Clínica Médica/Gastroenterologia/Polipose Intestinal e Câncer Colorretal.md</code>.</p>
+  <p>Fora das fontes locais: os critérios de Wilson e Jungner (OMS, 1968); os vieses de antecipação, duração e voluntário saudável; rastreamento organizado x oportunístico e o conceito de detecção precoce do INCA; Lei 11.664/2008 (mamografia a partir dos 40 no SUS); Lei 12.732/2012 e Lei 13.896/2019; vacina que não dispensa o rastreio; autoexame que não é método de rastreio; ausência de programa organizado de pulmão no SUS.</p>
+  <p>A bibliografia de MFC citada no plano é Gusso (Tratado, parte VII) e Duncan (Medicina Ambulatorial, parte III); esta aula se ancora nos PDFs do EMED. Prevenção quaternária e níveis de prevenção: aula da tarefa #875.</p>
+  <p>Cumpre a tarefa #881 do plano. Marque "feito" no quadro depois de ler.</p>
+</footer>
+</div>

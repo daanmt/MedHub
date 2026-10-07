@@ -31,7 +31,12 @@ O que ele monta, em `--out` (default `tmp/hub/`):
   semana no plano (a regua `_q_de` do Painel), com atalho para a aba Listas. ⚰️ s218: a secao
   "Revisoes direcionadas" no topo da aba (a RD mora so na Biblioteca); ⚰️ "Varias areas" como destino
   de RD (o `bloco` VARIAS so vale como leitura antiga); ⚰️ o "N questoes" do cabecalho da semana, que
-  somava so as tarefas mostradas ("69 questoes" para 2.750 pendentes, 07/10);
+  somava so as tarefas mostradas ("69 questoes" para 2.750 pendentes, 07/10). P20 (s219, print do
+  operador em 07/10): ⚰️ o quadrado "feito" (so a tarefa de classe `aula` o tinha; assinar a leitura ja
+  conclui) -- o estado `quadro/<slug>` e o movimento para a Biblioteca seguem, pela assinatura; a
+  linha de meta e a acao da tarefa seguem UMA regra com o Painel (`plano.meta_da_tarefa`), o titulo
+  sai pela correcao de exibicao (`plano.tema_exibido`) e as questoes contam o banco do hub quando a
+  tarefa tem questoes la (`plano.q_da_tarefa`);
 - `resumos/<slug>.html` (s218): a pagina de leitura de cada resumo do registro, gerada em `--out`;
 - `manifesto.json` = exatamente os argumentos do `Artifact publish`: `file_path` (a pagina) e
   `files` ({path publicado: fonte | null}). Painel e aulas vao DIRETO das fontes em `artifacts/`
@@ -90,7 +95,8 @@ from tools.fsrs_queue import (  # noqa: E402
 # So leitores PUROS do plano (s195): a semana da prova, o calendario da trilha e a classe da
 # tarefa -- a mesma regua do `plano.py --panorama`. O hub nunca grava o plano.
 from tools.plano import (  # noqa: E402
-    AREA_SIMULADO, SEMANAS_FASE1, calendario_trilha, classe_da_tarefa)
+    AREA_SIMULADO, SEMANAS_FASE1, calendario_trilha, classe_da_tarefa, com_q_hub, meta_da_tarefa,
+    q_da_tarefa, questoes_no_hub, tem_acao, tema_exibido)
 
 TEMPLATE_HUB = RAIZ / "core" / "templates" / "hub.html"
 #: Registro do quadro da aba Aulas (s194): slug -> {tipo, titulo, tarefa_id?, tarefas?, bloco?}.
@@ -145,9 +151,11 @@ SLUG_RESUMO_MAX = 96
 #: Quadro por semanas (s195): a ultima secao e a semana da PROVA (`plano.SEMANAS_FASE1`); a Fase 2
 #: nao entra na aba -- e panorama de execucao, nao inventario.
 SEMANA_FINAL_QUADRO = max(SEMANAS_FASE1)
-#: Etiqueta da tarefa sem lista, por classe do `plano.classe_da_tarefa`.
-ROTULO_CLASSE = {"aula": "aula", "caderno": "caderno a criar", "sem_lista": "sem lista"}
-#: Colecao do db onde a pagina grava {feito, ts} por slug (doc `quadro/<slug>`). Regra de escrita
+#: ⚰️ P20 (s219): `ROTULO_CLASSE` ('aula' / 'caderno a criar' / 'sem lista' na meta, ao lado de 'aula a
+#: preparar' / 'sem lista ainda' na acao). O vocabulario da tarefa sem acao e um so, com o Painel:
+#: `plano.ROTULO_SEM_ACAO`, pela regra `plano.meta_da_tarefa`.
+#: Colecao do db onde a pagina grava {feito, ts} por slug (doc `quadro/<slug>`) -- desde a P20 (s219), so
+#: pela assinatura da leitura no rodape do leitor (o quadrado "feito" saiu). Regra de escrita
 #: `{path: "quadro", write: "interact"}` na declaracao de capabilities (revisar.md).
 #: Aba Questoes (s197): `listas/*`, `questoes/*`, `respostas/*` e `analises/*` do MESMO db, com
 #: read/write `admin` (conteudo do EMED nunca legivel por link); semeadas por `emed_banco.py
@@ -530,11 +538,9 @@ def ler_estado_quadro(caminho):
 
 
 def _q_de(linha):
-    """`q_previstas` como inteiro (a mesma leitura do `plano.panorama`); ilegivel = 0."""
-    try:
-        return int(round(float(linha.get("q_previstas") or 0)))
-    except (TypeError, ValueError):
-        return 0
+    """As questoes da tarefa pela regua do `plano.panorama` (P20, s219: `plano.q_da_tarefa` -- o banco
+    do hub quando a linha traz `q_hub`, senao `q_previstas`): Teoria = Painel por construcao."""
+    return q_da_tarefa(linha)
 
 
 def semana_atual(calendario, hoje, pendentes):
@@ -549,8 +555,9 @@ def semana_atual(calendario, hoje, pendentes):
 
 def ligacoes_do_quadro(classificadas, quadro):
     """{tarefa_id: [(Aula, titulo, cumpre)]}: `tarefas` = a aula PREPARA a tarefa (lista ou aula);
-    `tarefa_id` = a aula CUMPRE a tarefa (custom de aula) -- so essa ganha o controle 'feito',
-    que o tique converte em `plano.py --concluir ID --leitura`."""
+    `tarefa_id` = a aula CUMPRE a tarefa (custom de aula) -- so essa leva o `data-slug` no bloco: a
+    assinatura da leitura risca o item e o tique a converte em `plano.py --concluir ID --leitura`
+    (P20, s219: o quadrado 'feito' saiu)."""
     por_tarefa = {}
     for a, _tipo, titulo, tid in classificadas:
         reg = (quadro or {}).get(a.slug) or {}
@@ -821,9 +828,12 @@ def _html_resumo(item, lugar=None):
 
 def _html_item(item, feito=False, lugar=None):
     """Um bloco do quadro: tarefa (tema, peso, questoes, acao), aula avulsa ou RD; o resumo (s218) em
-    `_html_resumo`. Botao 'feito' so no item com `slug` (a aula que CUMPRE uma tarefa de aula, ou a
-    aula avulsa). `lugar` = (area, disciplina) do grupo da Biblioteca onde ele esta (a RD de varias
-    disciplinas sai uma vez em cada); fora dela, o 1o dos `lugares` -- para onde o feito vai ao vivo."""
+    `_html_resumo`. O item com `slug` (a aula que CUMPRE uma tarefa de aula, ou a aula avulsa) leva a
+    chave do `quadro/<slug>` -- a assinatura no leitor o marca feito (P20, s219: sem o quadrado). A
+    meta da tarefa e a do Painel (`plano.meta_da_tarefa`): N questoes; a classe so sem acao nenhuma,
+    em texto apagado -- e entao nao ha linha de acao. `lugar` = (area, disciplina) do grupo da
+    Biblioteca onde ele esta (a RD de varias disciplinas sai uma vez em cada); fora dela, o 1o dos
+    `lugares` -- para onde o feito vai ao vivo."""
     if item["tipo"] == "resumo":
         return _html_resumo(item, lugar)
     slug = item.get("slug")
@@ -841,22 +851,15 @@ def _html_item(item, feito=False, lugar=None):
         _e(area or AREA_SEM), _e(disc or DISC_OUTROS), _classe_bib(dict(item, nova=nova)))
     if item["tipo"] == "tarefa":
         attrs += ' data-tarefa="%d" data-classe="%s"' % (item["id"], _e(item["classe"]))
-    botao = ""
     if slug:
-        titulo = item["titulo"]
-        rotulo = ("Desmarcar %s" if feito else "Marcar %s como feita") % titulo
         attrs += ' data-slug="%s" data-tipo="%s" data-titulo="%s"%s' % (
-            _e(slug), _e(item.get("tipo_aula") or TIPO_PADRAO), _e(titulo),
+            _e(slug), _e(item.get("tipo_aula") or TIPO_PADRAO), _e(item["titulo"]),
             ' data-feito="1"' if feito else "")
-        botao = ('<button type="button" class="qd-feito" aria-pressed="%s" aria-label="%s" '
-                 'title="%s" disabled><span aria-hidden="true"></span></button>'
-                 % ("true" if feito else "false", _e(rotulo), _e(rotulo)))
     extra = ""
     if item["tipo"] == "tarefa":
-        tema = item["tema"]
+        tema = tema_exibido(item["tema"])
         meta = ['<span class="qd-bl">%s</span>' % _e(item["bloco"])] if item.get("bloco") else []
-        meta.append('<span>%s</span>' % ("%d questões" % item["q"] if item["q"]
-                                         else _e(ROTULO_CLASSE.get(item["classe"], item["classe"]))))
+        meta += ['<span>%s</span>' % _e(t) for t in meta_da_tarefa(item["q"], item["classe"], tem_acao(item))]
         prazo = item.get("prazo")
         if item.get("atrasada"):
             meta.append('<span class="qd-atraso">semana %d%s</span>'
@@ -865,10 +868,11 @@ def _html_item(item, feito=False, lugar=None):
             meta.append('<span class="qd-prazo">até %s</span>' % prazo.strftime("%d/%m"))
         acoes = []
         url = item.get("url_lista")
-        if url and item.get("no_hub"):
+        if item.get("no_hub"):
             # s201: as questoes ja estao no banco -> resolve na aba Listas. s213 (D4-1, decisao do
             # operador em 25/09: "nao sair do medhub"): vence o link do EMED, que some; o modo sai
-            # da area (simulado -> Simulados; lista -> Questoes), a mesma regra do painel.
+            # da area (simulado -> Simulados; lista -> Questoes), a mesma regra do painel. P20 (s219):
+            # com ou sem link -- os 26 cadernos da s219 entraram sem `url_lista` (a REMIT, a aorta).
             modo = "simulados" if item.get("area") == AREA_SIMULADO else "questoes"
             acoes.append('<a href="#questoes" data-hub-aba="questoes" data-hub-modo="%s">'
                          'resolver no hub</a>' % modo)
@@ -882,9 +886,9 @@ def _html_item(item, feito=False, lugar=None):
         for a, tit in item["aulas"]:
             acoes.append('<a class="hub-aula" href="%s" data-titulo="%s">%s</a>'
                          % (_e(a.publicado), _e(tit), _e(tit) if varias else "abrir aula"))
-        if not acoes:
-            acoes.append('<span class="tenue">%s</span>'
-                         % ("aula a preparar" if item["classe"] == "aula" else "sem lista ainda"))
+        # P20 (s219, item 4): ⚰️ 'aula a preparar' / 'sem lista ainda' na linha de acao -- com 44 px de
+        # alvo e no lugar de um link, parecia botao e nao fazia nada. A tarefa sem acao diz a classe na
+        # META (apagada) e fica sem linha de acao; com questoes no hub, o rotulo nem aparece.
     else:
         a = item["aula"]
         tema = item["titulo"]
@@ -897,11 +901,11 @@ def _html_item(item, feito=False, lugar=None):
         # s218: a RD mostra os resumos de onde saiu (link para o leitor quando o resumo esta publicado)
         fontes = item.get("fontes_html") or []
         extra = _html_ligacoes_item("Fonte" if len(fontes) == 1 else "Fontes", fontes)
-    # O botao "feito" mora DENTRO do bloco (canto superior direito): fora dele, o item com botao
-    # ficava 54 px mais estreito e desalinhado dos demais -- "o bloco de aulas esta bugado" (s195).
-    return ('<li class="%s"%s><div class="qd-bloco">%s<p class="qd-tema">%s</p>'
-            '<p class="qd-meta">%s</p><p class="qd-acao">%s</p>%s</div></li>'
-            % (" ".join(classes), attrs, botao, _e(tema), "".join(meta), "".join(acoes), extra))
+    # ⚰️ P20 (s219): o botao "feito" que morava DENTRO do bloco (s195) -- todo bloco tem a mesma largura
+    acao = '<p class="qd-acao">%s</p>' % "".join(acoes) if acoes else ""
+    return ('<li class="%s"%s><div class="qd-bloco"><p class="qd-tema">%s</p>'
+            '<p class="qd-meta">%s</p>%s%s</div></li>'
+            % (" ".join(classes), attrs, _e(tema), "".join(meta), acao, extra))
 
 
 def _chave_item(item):
@@ -1011,8 +1015,8 @@ def html_quadro(secoes, biblioteca=()):
                                   "titulo": i["resumo"].titulo}
             for i in biblioteca if i["tipo"] == "resumo"}
     return ('<div class="qd" id="hub-quadro">\n'
-            '<p class="qd-aviso" id="hub-quadro-aviso" hidden>Marcar como feita não funciona '
-            'nesta visualização.</p>\n'
+            # P20 (s219): so o aviso de quando o db nao salvou a assinatura (o texto vem do JS)
+            '<p class="qd-aviso" id="hub-quadro-aviso" role="status" hidden></p>\n'
             '<div class="qd-semanas">%s</div>\n'
             # s218: a Biblioteca e o corpo da aba (o id `hub-quadro-feitas` e o da s216, que o JS conhece)
             '<section class="qd-bib" id="hub-quadro-feitas" aria-labelledby="hub-bib-tit">'
@@ -1957,12 +1961,14 @@ def _ler_plano():
     except Exception as e:  # noqa: BLE001 -- degrada declarado (F60)
         return [], "plano indisponivel (%s): quadro so com as aulas, sem semanas" % e
     # s201: tarefa com questoes no banco se resolve na aba Listas -- o quadro troca o "PDF no
-    # computador" do simulado por um atalho. Banco sem a tabela = ninguem marcado.
+    # computador" do simulado por um atalho. P20 (s219): a marca (`no_hub`) e a contagem (`q_hub`) saem
+    # da MESMA leitura, o criterio do `emed_banco --exportar` (o que a aba Listas recebe), a mesma do
+    # Painel e do boot. Banco sem a tabela = ninguem marcado e a tela conta `q_previstas`.
     try:
-        no_hub = db.tarefas_com_questoes()
+        contagem = questoes_no_hub()
     except Exception:  # noqa: BLE001
-        no_hub = set()
-    return [dict(l, no_hub=int(l["id"]) in no_hub) for l in linhas], None
+        contagem = {}
+    return [dict(l, no_hub=bool(l.get("q_hub"))) for l in com_q_hub(linhas, contagem)], None
 
 
 def _ler_calendario():

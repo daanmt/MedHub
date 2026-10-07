@@ -1,0 +1,519 @@
+<title>Imagem obstétrica</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,480;9..144,600;9..144,680&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EFF3F0; --card:#FAFCFA; --sunk:#E2E9E4;
+  --ink:#18211C; --ink2:#4C5A52; --ink3:#6F7D75;
+  --line:rgba(24,33,28,.13); --line2:rgba(24,33,28,.26);
+  --teal:#1F6B5E; --teal-ink:#154A41; --teal-wash:#DCEBE5;
+  --carmine:#8E2F41; --carmine-ink:#6B2231; --carmine-wash:#F5E2E6;
+  --amber:#8A5A17; --amber-ink:#6B4610; --amber-wash:#F3E6CC;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#8A988F;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#8A988F;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font:16px/1.6 "Source Sans 3",-apple-system,"Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+h1,h2,h3{margin:0;font-family:Fraunces,Georgia,serif;font-weight:600;letter-spacing:-.01em;text-wrap:balance;line-height:1.15;color:var(--ink)}
+.wrap{max-width:780px;margin:0 auto;padding:0 16px 70px}
+:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+a{color:var(--teal-ink)}
+strong{font-weight:600;color:var(--ink)}
+
+/* topo */
+.top{padding:36px 0 22px;border-bottom:1px solid var(--line2)}
+.eye{font:600 11px/1.3 "Source Sans 3";letter-spacing:.12em;text-transform:uppercase;color:var(--teal-ink);margin:0 0 14px}
+.top h1{font-size:clamp(28px,6vw,44px);font-weight:680;margin-bottom:14px}
+.top .sub{font-size:16.5px;line-height:1.55;color:var(--ink2);margin:0 0 20px}
+.stats{display:flex;gap:18px;flex-wrap:wrap}
+.stat{display:flex;flex-direction:column;gap:2px;min-width:0}
+.stat b{font:600 21px/1 "IBM Plex Mono";color:var(--teal-ink);font-variant-numeric:tabular-nums}
+.stat span{font-size:11.5px;color:var(--ink3)}
+
+.nav{display:flex;flex-wrap:wrap;gap:6px;padding:20px 0 4px}
+.nav a{font-size:13px;text-decoration:none;color:var(--ink2);border:1px solid var(--line2);border-radius:2px;padding:4px 9px;min-width:0}
+.nav a:hover{color:var(--ink);border-color:var(--teal)}
+
+/* atos */
+.ato{margin:40px 0 0;padding:14px 16px;background:var(--teal-wash);border-left:3px solid var(--teal)}
+.ato span{font:700 10.5px "Source Sans 3";letter-spacing:.12em;text-transform:uppercase;color:var(--teal-ink);display:block;margin-bottom:3px}
+.ato h2{font-size:clamp(21px,4vw,28px)}
+
+/* trilho */
+.trilho-box{margin:18px 0 0;padding:16px 14px 10px;background:var(--card);border:1px solid var(--line2)}
+.trilho-box p{margin:0 0 6px;font-size:14px;color:var(--ink3)}
+.trilho{list-style:none;margin:0;padding:0;display:grid}
+.trilho li{position:relative;min-width:0}
+.trilho a{display:grid;grid-template-columns:30px minmax(0,1fr);gap:11px;align-items:start;padding:6px 0;text-decoration:none}
+.trilho .n{width:30px;height:30px;border-radius:50%;border:1.5px solid var(--teal);background:var(--card);display:flex;align-items:center;justify-content:center;font:600 10px "IBM Plex Mono";color:var(--teal-ink);position:relative;z-index:1}
+.trilho li:not(:last-child)::before{content:"";position:absolute;left:14px;top:36px;bottom:-6px;width:1.5px;background:var(--teal);opacity:.5}
+.trilho .t{min-width:0;padding-top:3px}
+.trilho b{display:block;font-weight:600;font-size:15px;line-height:1.3;color:var(--ink)}
+.trilho small{display:block;font-size:13px;line-height:1.4;color:var(--ink3)}
+.trilho a:hover b{color:var(--teal-ink)}
+
+/* degraus */
+.degrau{padding:30px 0;border-bottom:1px solid var(--line)}
+.dhead{display:flex;gap:13px;align-items:flex-start;margin-bottom:12px}
+.dnum{flex-shrink:0;width:38px;height:38px;border:1.5px solid var(--teal);border-radius:50%;display:flex;align-items:center;justify-content:center;font:600 14px "IBM Plex Mono";color:var(--teal-ink)}
+.dtitle{min-width:0;padding-top:3px}
+.dtitle h3{font-size:clamp(19px,3.4vw,24px)}
+.src{display:block;margin-top:5px;font:500 11.5px/1.4 "IBM Plex Mono";color:var(--ink3)}
+.lede{font-size:16px;line-height:1.55;color:var(--ink2);margin:0 0 14px;font-style:italic}
+.prose ul{margin:0 0 12px;padding-left:20px}
+.prose li{font-size:15.4px;line-height:1.55;color:var(--ink2);margin-bottom:6px}
+.prose li:last-child{margin-bottom:0}
+h4{font:600 14px "Source Sans 3";color:var(--ink);margin:20px 0 8px}
+
+.trap,.banca{margin:16px 0;padding:13px 16px}
+.trap{border-left:3px solid var(--carmine);background:var(--carmine-wash)}
+.banca{border-left:3px solid var(--amber);background:var(--amber-wash)}
+.albl{font:700 10.5px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px}
+.trap .albl{color:var(--carmine-ink)}
+.banca .albl{color:var(--amber-ink)}
+.trap p,.banca p{font-size:15px;line-height:1.55;color:var(--ink);margin:0}
+
+/* tabelas de critério */
+.crit{border:1px solid var(--line2);margin:16px 0;background:var(--card)}
+.crit .row{display:grid;grid-template-columns:minmax(0,1fr);gap:2px;padding:9px 13px;font-size:14.2px}
+.crit .row+.row{border-top:1px solid var(--line)}
+.crit .row>*{min-width:0}
+.crit .k{font-weight:600;color:var(--teal-ink)}
+.crit .v{color:var(--ink2);line-height:1.48;overflow-wrap:break-word}
+.crit.hd .row:first-child{background:var(--sunk)}
+.crit.hd .row:first-child>*{font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink3);font-weight:600}
+.crit.c3 .row{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:4px 12px}
+.crit.c3 .row .k{grid-column:1 / -1}
+.crit.c3.hd .row:first-child .k{display:none}
+.mal{color:var(--carmine-ink);font-weight:600}
+
+
+/* figuras: SVG inline herda as cores da página */
+figure.fig{margin:18px 0;padding:14px 12px 12px;background:var(--card);border:1px solid var(--line2);color:var(--ink)}
+figure.fig svg{display:block;width:100%;max-width:560px;height:auto;margin:0 auto}
+figure.fig figcaption{font-size:13.4px;line-height:1.45;color:var(--ink3);margin-top:10px}
+.mgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 10px}
+.mini{min-width:0}
+.mini p{margin:4px 0 0;font:600 12.5px/1.3 "Source Sans 3";color:var(--ink);text-align:center}
+.sv-grid{stroke:var(--line);stroke-width:1;fill:none}
+.sv-axis{stroke:var(--line2);stroke-width:1;fill:none}
+.sv-band{fill:var(--teal-wash)}
+.sv-strip{fill:var(--paper);stroke:var(--line)}
+.sv-fhr{stroke:var(--teal);stroke-width:1.9;fill:none;stroke-linejoin:round;stroke-linecap:round}
+.sv-bad{stroke:var(--carmine);stroke-width:1.9;fill:none;stroke-linejoin:round;stroke-linecap:round}
+.sv-amb{stroke:var(--amber);stroke-width:1.9;fill:none;stroke-linejoin:round;stroke-linecap:round}
+.sv-uc{stroke:var(--ink3);stroke-width:1.6;fill:none;stroke-linejoin:round}
+.sv-ink{stroke:currentColor;stroke-width:1.4;fill:none}
+.sv-lead{stroke:var(--ink3);stroke-width:1;fill:none}
+.sv-dash{stroke:var(--ink3);stroke-width:1;stroke-dasharray:3 3;fill:none}
+.sv-alert{stroke:var(--amber);stroke-width:1.6;stroke-dasharray:5 3;fill:none}
+.sv-action{stroke:var(--carmine);stroke-width:1.6;stroke-dasharray:5 3;fill:none}
+.sv-trend{stroke:var(--teal);stroke-width:1;fill:none;opacity:.55}
+.sv-trend2{stroke:var(--ink2);stroke-width:1;fill:none;opacity:.5}
+.sv-tri{fill:var(--teal);stroke:var(--teal-ink);stroke-width:.8}
+.sv-circ{fill:var(--card);stroke:var(--ink);stroke-width:1.5}
+.sv-uterus{fill:var(--paper);stroke:var(--ink2);stroke-width:1.5}
+.sv-fetus{fill:var(--teal-wash);stroke:var(--teal);stroke-width:1.4}
+.sv-back{stroke:var(--teal-ink);stroke-width:3.4;fill:none;stroke-linecap:round}
+.sv-skull{fill:var(--paper);stroke:var(--ink2);stroke-width:1.5}
+.sv-font-b{fill:var(--teal-wash);stroke:var(--teal);stroke-width:1.5}
+.sv-font-l{fill:var(--carmine-wash);stroke:var(--carmine);stroke-width:1.5}
+.sv-pelvis{fill:var(--paper);stroke:var(--ink2);stroke-width:1.5}
+.sv-head{fill:var(--teal-wash);stroke:var(--teal);stroke-width:1.5}
+.sv-dot-c{fill:var(--carmine)}
+.sv-rot{stroke:var(--carmine);stroke-width:1.8;fill:none}
+.sv-rot-h{fill:var(--carmine)}
+.sv-wall{stroke:var(--ink2);stroke-width:2;fill:none}
+.sv-spine{fill:var(--ink2)}
+.sv-hodge{stroke:var(--ink3);stroke-width:1;stroke-dasharray:4 3;fill:none}
+.sv-hodge0{stroke:var(--teal);stroke-width:1.6;fill:none}
+.sv-t{font:500 11.5px "Source Sans 3",sans-serif;fill:var(--ink2)}
+.sv-tb{font:600 12.5px "Source Sans 3",sans-serif;fill:var(--ink)}
+.sv-tm{font:500 10.5px "IBM Plex Mono",monospace;fill:var(--ink3)}
+.sv-tt{fill:var(--teal-ink)}
+.sv-tc{fill:var(--carmine-ink)}
+.sv-ta{fill:var(--amber-ink)}
+
+/* síntese */
+.synth{background:var(--card);border:1px solid var(--line2);padding:20px 16px;margin-top:40px}
+.synth h2{font-size:23px;margin-bottom:6px}
+.synth .note{font-size:14px;color:var(--ink3);margin:0 0 14px}
+.trig{display:grid;grid-template-columns:minmax(0,1fr);gap:1px;background:var(--line2);border:1px solid var(--line2)}
+.trig div{background:var(--sunk);padding:10px 13px;min-width:0}
+.trig .tk{font:700 11px "IBM Plex Mono";color:var(--teal-ink);display:block;margin-bottom:3px}
+.trig .tv{font-size:13.8px;line-height:1.45;color:var(--ink2)}
+.trig .tv b{color:var(--carmine-ink)}
+.synth.arm{border-left:3px solid var(--carmine)}
+.synth.arm h2::before{content:"";display:inline-block;width:11px;height:11px;border-radius:50%;background:var(--carmine);margin-right:9px;vertical-align:2px}
+ol.armas{margin:0;padding-left:22px}
+ol.armas li{font-size:15px;line-height:1.5;color:var(--ink2);margin-bottom:8px}
+ol.armas li::marker{font:600 13px "IBM Plex Mono";color:var(--carmine-ink)}
+ol.armas .d{font:500 11.5px "IBM Plex Mono";color:var(--ink3)}
+
+footer{margin-top:46px;padding-top:18px;border-top:1px solid var(--line2)}
+footer p{font-size:12.3px;color:var(--ink3);margin:0 0 7px;line-height:1.5}
+code{font-family:"IBM Plex Mono",Consolas,monospace;font-size:11.5px;background:var(--sunk);padding:1px 4px;border-radius:2px;word-break:break-all}
+
+@media (min-width:560px){
+  .crit .row{grid-template-columns:150px minmax(0,1fr);gap:12px}
+  .crit.c3 .row{grid-template-columns:130px minmax(0,1fr) minmax(0,1fr);gap:12px}
+  .crit.c3 .row .k{grid-column:auto}
+  .crit.c3.hd .row:first-child .k{display:block}
+  .trig{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (min-width:640px){
+  .wrap{padding:0 24px 90px}
+  .top{padding:46px 0 26px}
+  .degrau{padding:34px 0}
+  .synth{padding:26px 22px}
+  .trilho{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .trilho a{grid-template-columns:minmax(0,1fr);gap:8px;padding:0 10px 4px 0}
+  .trilho li:not(:last-child)::before{left:36px;right:4px;top:15px;bottom:auto;width:auto;height:1.5px}
+  .trilho .t{padding-top:0}
+}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <p class="eye">MedHub · Aula-base · Imagem · GO · tarefa #5424</p>
+  <h1>Imagem obstétrica: o traçado, o gráfico e o toque</h1>
+  <p class="sub">Três imagens que a banca põe no enunciado: a cardiotocografia, o partograma e a estática fetal. Cada uma está desenhada aqui para ser lida em segundos, na ordem em que se lê na prova.</p>
+  <div class="stats">
+    <div class="stat"><b>110-160</b><span>linha de base normal</span></div>
+    <div class="stat"><b>6-25</b><span>variabilidade moderada</span></div>
+    <div class="stat"><b>4 h</b><span>da alerta à ação</span></div>
+    <div class="stat"><b>0</b><span>De Lee = espinhas = Hodge III</span></div>
+    <div class="stat"><b>13</b><span>degraus</span></div>
+  </div>
+</header>
+
+<nav class="nav" aria-label="Atalhos">
+  <a href="#d0">Papel</a><a href="#d1">Variabilidade</a><a href="#d2">Acelerações</a><a href="#d3">Desacelerações</a><a href="#d4">Categorias</a><a href="#d5">Anteparto</a>
+  <a href="#d6">Partograma</a><a href="#d7">Dilatação</a><a href="#d8">Descida</a>
+  <a href="#d9">Estática</a><a href="#d10">Crânio</a><a href="#d11">Variedade</a><a href="#d12">Altura</a>
+  <a href="#gat">Gatilhos</a><a href="#arm">Armadilhas</a>
+</nav>
+
+<div class="trilho-box">
+  <p>As três imagens, na ordem desta aula:</p>
+  <ol class="trilho">
+    <li><a href="#d0"><span class="n">CTG</span><span class="t"><b>O traçado</b><small>linha de base, variabilidade, DIPs, categorias</small></span></a></li>
+    <li><a href="#d6"><span class="n">PTG</span><span class="t"><b>O gráfico</b><small>alerta, ação, distocias</small></span></a></li>
+    <li><a href="#d9"><span class="n">EST</span><span class="t"><b>O toque</b><small>situação, apresentação, variedade, altura</small></span></a></li>
+  </ol>
+</div>
+
+<div class="ato" id="ctg"><span>Imagem 1 · Cardiotocografia</span><h2>O traçado</h2></div>
+
+<section class="degrau" id="d0">
+  <div class="dhead"><span class="dnum">0</span><div class="dtitle"><h3>O papel e quando pedir</h3><span class="src">GO/15 p6-9, 19, 22; resumo Vitalidade Fetal §2.1, 2.7</span></div></div>
+  <p class="lede">Cardiotocografia é o registro simultâneo da frequência cardíaca fetal (FCF) e das contrações. Lê-se sempre na mesma ordem, e só em quem tem risco de hipóxia.</p>
+  <figure class="fig">
+    <svg viewBox="0 0 340 242" role="img" aria-label="Papel de cardiotocografia: frequência cardíaca fetal em cima, com faixa normal de 110 a 160 bpm e uma aceleração junto aos movimentos fetais; contrações uterinas embaixo; escala de tempo de 10 minutos." xmlns="http://www.w3.org/2000/svg"><rect x="40" y="47" width="290" height="55" class="sv-band"/><line x1="40" y1="124" x2="330" y2="124" class="sv-grid"/><line x1="40" y1="113" x2="330" y2="113" class="sv-grid"/><line x1="40" y1="102" x2="330" y2="102" class="sv-axis"/><line x1="40" y1="91" x2="330" y2="91" class="sv-grid"/><line x1="40" y1="80" x2="330" y2="80" class="sv-grid"/><line x1="40" y1="69" x2="330" y2="69" class="sv-grid"/><line x1="40" y1="58" x2="330" y2="58" class="sv-grid"/><line x1="40" y1="47" x2="330" y2="47" class="sv-axis"/><line x1="40" y1="36" x2="330" y2="36" class="sv-grid"/><line x1="40" y1="25" x2="330" y2="25" class="sv-grid"/><line x1="40" y1="14" x2="330" y2="14" class="sv-grid"/><line x1="40" y1="14" x2="40" y2="124" class="sv-grid"/><line x1="40" y1="150" x2="40" y2="206" class="sv-grid"/><line x1="69" y1="14" x2="69" y2="124" class="sv-grid"/><line x1="69" y1="150" x2="69" y2="206" class="sv-grid"/><line x1="98" y1="14" x2="98" y2="124" class="sv-grid"/><line x1="98" y1="150" x2="98" y2="206" class="sv-grid"/><line x1="127" y1="14" x2="127" y2="124" class="sv-grid"/><line x1="127" y1="150" x2="127" y2="206" class="sv-grid"/><line x1="156" y1="14" x2="156" y2="124" class="sv-grid"/><line x1="156" y1="150" x2="156" y2="206" class="sv-grid"/><line x1="185" y1="14" x2="185" y2="124" class="sv-grid"/><line x1="185" y1="150" x2="185" y2="206" class="sv-grid"/><line x1="214" y1="14" x2="214" y2="124" class="sv-grid"/><line x1="214" y1="150" x2="214" y2="206" class="sv-grid"/><line x1="243" y1="14" x2="243" y2="124" class="sv-grid"/><line x1="243" y1="150" x2="243" y2="206" class="sv-grid"/><line x1="272" y1="14" x2="272" y2="124" class="sv-grid"/><line x1="272" y1="150" x2="272" y2="206" class="sv-grid"/><line x1="301" y1="14" x2="301" y2="124" class="sv-grid"/><line x1="301" y1="150" x2="301" y2="206" class="sv-grid"/><line x1="330" y1="14" x2="330" y2="124" class="sv-grid"/><line x1="330" y1="150" x2="330" y2="206" class="sv-grid"/><text x="36" y="51" class="sv-tm" text-anchor="end">160</text><text x="36" y="106" class="sv-tm" text-anchor="end">110</text><text x="36" y="22" class="sv-tm" text-anchor="end">bpm</text><polyline points="40,72 45,72.9 50,70.7 55,67.9 60,68.1 65,70.3 70,70.7 75,68.7 80,67 85,66.9 90,67.2 95,67.3 100,68.3 105,69.7 110,69.4 115,67.4 120,66.8 125,69 130,71.1 135,70.4 140,68.5 145,68.1 150,66.8 155,56.7 160,45.4 165,42.1 170,42.8 175,42.5 180,44.5 185,55.3 190,67.3 195,70.9 200,70.6 205,70.4 210,71.4 215,71.6 220,70.1 225,69.1 230,70 235,70.7 240,68.8 245,66.2 250,65.9 255,67.9 260,69.2 265,69.1 270,69 275,69.4 280,69 285,68.4 290,69.2 295,71 300,70.6 305,67.5 310,65.4 315,66.7 320,69.1 325,69.4 330,68" class="sv-fhr"/><line x1="194" y1="67.9" x2="194" y2="43.7" class="sv-ink"/><line x1="194" y1="43.7" x2="204" y2="30" class="sv-lead"/><text x="208" y="26" class="sv-tb sv-tt">aceleração</text><text x="208" y="39" class="sv-t">mais de 15 bpm, 15 s</text><text x="36" y="142" class="sv-tm" text-anchor="end">mov.</text><line x1="160" y1="132" x2="160" y2="142" class="sv-ink"/><line x1="166" y1="132" x2="166" y2="142" class="sv-ink"/><line x1="174" y1="132" x2="174" y2="142" class="sv-ink"/><line x1="40" y1="204" x2="330" y2="204" class="sv-grid"/><line x1="40" y1="184" x2="330" y2="184" class="sv-grid"/><line x1="40" y1="164" x2="330" y2="164" class="sv-grid"/><polyline points="40,198 45,198 50,198 55,198 60,197.8 65,197.3 70,195.5 75,191.2 80,183.3 85,172.4 90,162.2 95,158 100,162.2 105,172.4 110,183.3 115,191.2 120,195.5 125,197.3 130,197.8 135,198 140,198 145,198 150,198 155,198 160,198 165,198 170,197.8 175,197.3 180,195.5 185,191.2 190,183.3 195,172.4 200,162.2 205,158 210,162.2 215,172.4 220,183.3 225,191.2 230,195.5 235,197.3 240,197.8 245,198 250,198 255,198 260,198 265,197.8 270,197.3 275,195.5 280,191.2 285,183.3 290,172.4 295,162.2 300,158 305,162.2 310,172.4 315,183.3 320,191.2 325,195.5 330,197.3" class="sv-uc"/><text x="36" y="186" class="sv-tm" text-anchor="end">útero</text><line x1="40" y1="220" x2="330" y2="220" class="sv-ink"/><line x1="40" y1="216" x2="40" y2="224" class="sv-ink"/><line x1="69" y1="216" x2="69" y2="224" class="sv-ink"/><line x1="98" y1="216" x2="98" y2="224" class="sv-ink"/><line x1="127" y1="216" x2="127" y2="224" class="sv-ink"/><line x1="156" y1="216" x2="156" y2="224" class="sv-ink"/><line x1="185" y1="216" x2="185" y2="224" class="sv-ink"/><line x1="214" y1="216" x2="214" y2="224" class="sv-ink"/><line x1="243" y1="216" x2="243" y2="224" class="sv-ink"/><line x1="272" y1="216" x2="272" y2="224" class="sv-ink"/><line x1="301" y1="216" x2="301" y2="224" class="sv-ink"/><line x1="330" y1="216" x2="330" y2="224" class="sv-ink"/><text x="40" y="236" class="sv-tm" text-anchor="middle">0</text><text x="69" y="236" class="sv-tm" text-anchor="middle">1 min</text><text x="330" y="236" class="sv-tm" text-anchor="end">10 min</text></svg>
+    <figcaption>Em cima, a FCF com a faixa normal sombreada; no meio, os movimentos que a mãe marca; embaixo, as contrações. A aceleração coincide com o movimento: é o feto bem.</figcaption>
+  </figure>
+  <div class="prose"><ul>
+    <li>No mínimo 20 min; papel a 1 cm/min. Cada quadradinho vertical costuma valer 10 bpm, mas há aparelho de 5 bpm: confira antes de medir.</li>
+    <li>Anteparto a partir de 24-26 semanas, no alto risco: HAS, diabetes, colagenose, doença hemolítica, infecção congênita, restrição de crescimento.</li>
+    <li>Intraparto: ocitocina, prostaglandina, analgesia, mecônio, taquissistolia, febre, ausculta intermitente alterada, sangramento. No risco habitual não ajuda e aumenta cesárea e parto instrumental.</li>
+    <li>Ordem de leitura, Dr. C. O. Ni. V. A. D. O.: Definir o risco; COntrações; NÍvel (linha de base); Variabilidade; Acelerações; Desacelerações; Orientação (conduta).</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="d1">
+  <div class="dhead"><span class="dnum">1</span><div class="dtitle"><h3>Linha de base e variabilidade</h3><span class="src">GO/15 p9-13</span></div></div>
+  <p class="lede">A linha de base diz o ritmo. A variabilidade diz se o sistema nervoso fetal está oxigenado.</p>
+  <div class="crit">
+    <div class="row"><span class="k">Linha de base</span><span class="v">Média da FCF em 10 min, sem acelerações, desacelerações e trechos que variam mais de 25 bpm. <strong>Normal: 110-160 bpm</strong></span></div>
+    <div class="row"><span class="k">Bradicardia (abaixo de 110)</span><span class="v">Pós-datismo, betabloqueador, sedativo, bradiarritmia; hipóxia grave, terminal</span></div>
+    <div class="row"><span class="k">Taquicardia (acima de 160)</span><span class="v">Febre materna, infecção intrauterina, simpatomimético, prematuridade, taquicardia materna; hipóxia</span></div>
+  </div>
+  <figure class="fig">
+    <svg viewBox="0 0 340 322" role="img" aria-label="Cinco faixas de traçado da frequência cardíaca fetal: variabilidade moderada (normal), mínima, ausente, aumentada e padrão sinusoidal." xmlns="http://www.w3.org/2000/svg"><text x="10" y="16" class="sv-tb sv-tt">Moderada, 6 a 25 bpm: normal</text><rect x="10" y="22" width="320" height="40" class="sv-strip"/><polyline points="10,43.8 15,45.3 20,45.5 25,43.5 30,40.3 35,38.5 40,39.3 45,41 50,41 55,39.7 60,38.9 65,38.8 70,38.3 75,38.1 80,40.1 85,44.3 90,47.3 95,46.3 100,43 105,41.4 110,43.1 115,45.4 120,45.9 125,44.8 130,43.4 135,41.8 140,40.1 145,39.5 150,41 155,43.2 160,43.9 165,42.5 170,40.7 175,39.6 180,39 185,39.1 190,40.6 195,42.8 200,43.2 205,40.6 210,37.9 215,38.6 220,42.5 225,45.7 230,45.7 235,44.2 240,43.3 245,42.9 250,42 255,41.1 260,41.8 265,43.5 270,43.8 275,41.6 280,39.3 285,39.2 290,41.1 295,43.4 300,44.9 305,45.4 310,44.3 315,41.8 320,39.9 325,40.5 330,42.7" class="sv-fhr"/><text x="10" y="80" class="sv-tb sv-tc">Mínima, até 5 bpm</text><rect x="10" y="86" width="320" height="40" class="sv-strip"/><polyline points="10,106.7 15,106.6 20,106.6 25,105.9 30,105 35,105.2 40,106.3 45,106.9 50,106.3 55,105.8 60,106 65,106.1 70,105.8 75,105.8 80,106 85,105.7 90,105.1 95,105.3 100,106.1 105,106.3 110,105.9 115,106.2 120,106.9 125,106.7 130,105.9 135,105.6 140,105.9 145,106 150,106.1 155,106.6 160,106.9 165,106.1 170,105.2 175,105.6 180,106.4 185,106.2 190,105.4 195,105.1 200,105.3 205,105.4 210,105.8 215,106.7 220,107.1 225,106.3 230,105.7 235,106 240,106.4 245,106 250,105.7 255,106.1 260,106.5 265,106.3 270,106 275,106.3 280,106.2 285,105.8 290,105.7 295,106.2 300,106 305,105.1 310,104.8 315,105.8 320,106.7 325,106.6 330,106.3" class="sv-bad"/><text x="10" y="144" class="sv-tb sv-tc">Ausente: amplitude indetectável</text><rect x="10" y="150" width="320" height="40" class="sv-strip"/><polyline points="10,170 15,170 20,170.1 25,170.1 30,170 35,170 40,170 45,169.9 50,169.9 55,170 60,170.1 65,170.1 70,170 75,170 80,170.1 85,170.1 90,170 95,169.9 100,169.9 105,169.9 110,170 115,170 120,170.1 125,170.1 130,170.1 135,170 140,170 145,170 150,169.9 155,169.9 160,169.9 165,170 170,170.1 175,170 180,170 185,170 190,170 195,170 200,169.9 205,169.9 210,170 215,170 220,170 225,170.1 230,170.1 235,170.1 240,170 245,170 250,170 255,169.9 260,169.9 265,169.9 270,170 275,170 280,170 285,170.1 290,170.1 295,170 300,170 305,170 310,170 315,170 320,170 325,170 330,170" class="sv-bad"/><text x="10" y="208" class="sv-tb sv-ta">Aumentada, acima de 25 bpm</text><rect x="10" y="214" width="320" height="40" class="sv-strip"/><polyline points="10,226.9 15,232.9 20,237.3 25,235.7 30,234.4 35,236.8 40,237 45,233.1 50,231.5 55,233.7 60,234 65,232.6 70,234.6 75,238.1 80,236.7 85,232.2 90,230.2 95,230.4 100,230.1 105,231.8 110,236.2 115,237.9 120,235.4 125,234.6 130,236.8 135,235.8 140,231.8 145,231.7 150,235.7 155,236.9 160,235.2 165,235.7 170,236.2 175,231.7 180,226.4 185,227.7 190,233 195,235 200,234.2 205,234.5 210,235.4 215,235.8 220,236.9 225,236.6 230,232 235,229.6 240,236.4 245,244.7 250,241.5 255,230.1 260,226.1 265,231.7 270,235.2 275,231.3 280,226.8 285,227.9 290,233.8 295,239.9 300,240.2 305,232.5 310,225.9 315,231.1 320,242.1 325,243.7 330,235.5" class="sv-amb"/><text x="10" y="272" class="sv-tb sv-tc">Sinusoidal: ondas regulares em sino</text><rect x="10" y="278" width="320" height="40" class="sv-strip"/><polyline points="10,298 15,291.8 20,290.2 25,294.2 30,301.1 35,305.7 40,304.7 45,298.8 50,292.3 55,290 60,293.6 65,300.3 70,305.4 75,305.1 80,299.6 85,292.9 90,290 95,292.9 100,299.6 105,305.1 110,305.4 115,300.3 120,293.6 125,290 130,292.3 135,298.8 140,304.7 145,305.7 150,301.1 155,294.2 160,290.2 165,291.8 170,298 175,304.2 180,305.8 185,301.8 190,294.9 195,290.3 200,291.3 205,297.2 210,303.7 215,306 220,302.4 225,295.7 230,290.6 235,290.9 240,296.4 245,303.1 250,306 255,303.1 260,296.4 265,290.9 270,290.6 275,295.7 280,302.4 285,306 290,303.7 295,297.2 300,291.3 305,290.3 310,294.9 315,301.8 320,305.8 325,304.2 330,298" class="sv-bad"/></svg>
+    <figcaption>A variabilidade é a amplitude entre o pico e o vale da FCF na linha de base. Só a moderada tranquiliza.</figcaption>
+  </figure>
+  <div class="prose"><ul>
+    <li>Moderada (6-25 bpm) prediz com segurança a ausência de hipóxia.</li>
+    <li>Mínima ou ausente: suspeitar de hipóxia, mas também de sono fetal, prematuridade extrema, depressor do SNC, infecção ou lesão neurológica prévia.</li>
+    <li>Aumentada: movimentação excessiva, autonômico hiper-reativo.</li>
+    <li>Sinusoidal: feto gravemente comprometido. Clássico da <strong>anemia fetal grave</strong>: doença hemolítica perinatal, hemorragia feto-materna, transfusão feto-fetal, rotura de vasa prévia.</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="d2">
+  <div class="dhead"><span class="dnum">2</span><div class="dtitle"><h3>Acelerações: a marca do feto bem</h3><span class="src">GO/15 p13-14</span></div></div>
+  <p class="lede">Presente, a aceleração exclui hipóxia. Ausente, não a confirma.</p>
+  <div class="prose"><ul>
+    <li>Subida abrupta de <strong>mais de 15 bpm, por 15 s a 2 min</strong>, a partir de 32 semanas. Antes de 32 semanas: 10 bpm por 10 s.</li>
+    <li>De 2 a 10 min = aceleração prolongada, sem significado patológico. Mais de 10 min = nova linha de base.</li>
+    <li>Acompanha o movimento fetal (figura do degrau 0). Sem aceleração: hipóxia, mas também sono fetal ou sedativo materno.</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="d3">
+  <div class="dhead"><span class="dnum">3</span><div class="dtitle"><h3>Desacelerações: a hora da queda</h3><span class="src">GO/15 p14-17</span></div></div>
+  <p class="lede">Desaceleração é queda de mais de 15 bpm por mais de 15 s. O tipo sai de quando ela cai em relação à contração e de quão rápido cai.</p>
+  <figure class="fig">
+    <svg viewBox="0 0 340 458" role="img" aria-label="Três pares de traçado frequência cardíaca fetal sobre contração: desaceleração precoce com o fundo no pico da contração, tardia com o fundo depois do pico, e variável com queda abrupta sem relação com a contração." xmlns="http://www.w3.org/2000/svg"><text x="34" y="17" class="sv-tb sv-tt">Precoce: espelho da contração</text><text x="30" y="46" class="sv-tm" text-anchor="end">FCF</text><text x="30" y="124" class="sv-tm" text-anchor="end">útero</text><line x1="34" y1="42" x2="330" y2="42" class="sv-grid"/><line x1="34" y1="132" x2="330" y2="132" class="sv-grid"/><polyline points="34,41.9 38,41.9 42,42.1 46,42.4 50,42.3 54,42 58,41.9 62,42.1 66,42.3 70,42.1 74,41.5 78,41.3 82,41.7 86,42.5 90,43 94,43 98,43 102,43.5 106,44.8 110,46.3 114,47.6 118,48.8 122,50.6 126,53 130,55.9 134,58.6 138,60.8 142,62.5 146,63.8 150,64.5 154,63.9 158,62.3 162,60.2 166,58.2 170,56.2 174,54 178,51.5 182,49.2 186,47.4 190,46 194,44.7 198,43.1 202,41.9 206,41.6 210,42.4 214,43.3 218,43.6 222,43 226,42.1 230,41.5 234,41.4 238,41.4 242,41.4 246,41.6 250,42.2 254,42.7 258,42.7 262,42.2 266,41.7 270,41.5 274,41.8 278,42.1 282,42 286,41.9 290,42.1 294,42.5 298,42.7 302,42.3 306,41.5 310,41 314,41.3 318,42 322,42.4 326,42.3 330,42.1" class="sv-fhr"/><polyline points="34,132 40,132 46,132 52,132 58,132 64,132 70,132 76,132 82,132 88,131.9 94,131.7 100,131.3 106,130.3 112,128.5 118,125.4 124,121 130,115.4 136,109.6 142,104.7 148,102.2 154,102.7 160,106.1 166,111.5 172,117.3 178,122.6 184,126.6 190,129.2 196,130.7 202,131.5 208,131.8 214,131.9 220,132 226,132 232,132 238,132 244,132 250,132 256,132 262,132 268,132 274,132 280,132 286,132 292,132 298,132 304,132 310,132 316,132 322,132 328,132" class="sv-uc"/><line x1="150" y1="24" x2="150" y2="132" class="sv-dash"/><text x="158" y="72" class="sv-t">fundo = pico</text><text x="150" y="144" class="sv-tm" text-anchor="middle">pico</text><text x="34" y="169" class="sv-tb sv-tc">Tardia: o fundo vem depois do pico</text><text x="30" y="198" class="sv-tm" text-anchor="end">FCF</text><text x="30" y="276" class="sv-tm" text-anchor="end">útero</text><line x1="34" y1="194" x2="330" y2="194" class="sv-grid"/><line x1="34" y1="284" x2="330" y2="284" class="sv-grid"/><polyline points="34,194.2 38,194.1 42,193.8 46,193.8 50,194.2 54,194.7 58,194.9 62,194.7 66,194.6 70,194.6 74,194.2 78,193.8 82,193.7 86,194.3 90,194.7 94,194.4 98,193.6 102,193.2 106,193.5 110,194 114,194.3 118,194.4 122,194.4 126,194.2 130,193.8 134,193.7 138,194.1 142,194.7 146,195 150,195.2 154,196 158,197.6 162,199.5 166,201.2 170,202.8 174,204.9 178,207.7 182,210.6 186,212.6 190,213.7 194,213.9 198,213.5 202,212.5 206,211.5 210,210.3 214,208.8 218,206.3 222,203.2 226,200.7 230,199.3 234,198.7 238,197.9 242,196.7 246,195.7 250,195.2 254,194.9 258,194.6 262,194.2 266,194.1 270,194.1 274,193.9 278,193.9 282,194.1 286,194.4 290,194.1 294,193.6 298,193.4 302,194 306,194.7 310,194.7 314,194.1 318,193.4 322,193.3 326,193.3 330,193.4" class="sv-bad"/><polyline points="34,284 40,284 46,284 52,284 58,284 64,284 70,284 76,284 82,284 88,283.9 94,283.7 100,283.3 106,282.3 112,280.5 118,277.4 124,273 130,267.4 136,261.6 142,256.7 148,254.2 154,254.7 160,258.1 166,263.5 172,269.3 178,274.6 184,278.6 190,281.2 196,282.7 202,283.5 208,283.8 214,283.9 220,284 226,284 232,284 238,284 244,284 250,284 256,284 262,284 268,284 274,284 280,284 286,284 292,284 298,284 304,284 310,284 316,284 322,284 328,284" class="sv-uc"/><line x1="150" y1="176" x2="150" y2="284" class="sv-dash"/><line x1="196" y1="176" x2="196" y2="284" class="sv-dash"/><text x="204" y="224" class="sv-t">fundo depois do pico</text><text x="150" y="296" class="sv-tm" text-anchor="middle">pico</text><text x="34" y="321" class="sv-tb sv-ta">Variável: queda abrupta, fora de hora</text><text x="30" y="350" class="sv-tm" text-anchor="end">FCF</text><text x="30" y="428" class="sv-tm" text-anchor="end">útero</text><line x1="34" y1="346" x2="330" y2="346" class="sv-grid"/><line x1="34" y1="436" x2="330" y2="436" class="sv-grid"/><polyline points="34,346.1 38,346.2 42,346.6 46,346.9 50,346.7 54,346 58,345.4 62,345.4 66,345.8 70,346 74,346 78,345.9 82,345.9 86,346.1 90,345.9 94,345.6 98,345.4 102,345.7 106,346.1 110,346.2 114,345.9 118,345.7 122,345.9 126,346.4 130,346.7 134,346.6 138,346.4 142,346.4 146,346.3 150,346 154,345.5 158,345.4 162,345.9 166,346.5 170,346.6 174,346.1 178,345.7 182,345.5 186,345.5 190,345.4 194,345.3 198,345.6 202,346.2 206,346.6 210,346.5 214,346.1 218,345.9 222,346.1 226,346.3 230,345.5 234,342.9 238,341 242,342.9 246,345.3 250,365.1 254,384.1 258,391.8 262,392.2 266,389.4 270,374.6 274,359.6 278,344.2 282,342.2 286,340.8 290,342.9 294,345.4 298,346.4 302,346.8 306,346.7 310,346.1 314,345.6 318,345.7 322,346.2 326,346.6 330,346.5" class="sv-amb"/><polyline points="34,436 40,436 46,436 52,436 58,436 64,436 70,436 76,436 82,436 88,435.9 94,435.7 100,435.3 106,434.3 112,432.5 118,429.4 124,425 130,419.4 136,413.6 142,408.7 148,406.2 154,406.7 160,410.1 166,415.5 172,421.3 178,426.6 184,430.6 190,433.2 196,434.7 202,435.5 208,435.8 214,435.9 220,436 226,436 232,436 238,436 244,436 250,436 256,436 262,436 268,436 274,436 280,436 286,436 292,436 298,436 304,436 310,436 316,436 322,436 328,436" class="sv-uc"/><line x1="150" y1="328" x2="150" y2="436" class="sv-dash"/><text x="214" y="404" class="sv-t">cordão</text><text x="150" y="448" class="sv-tm" text-anchor="middle">pico</text></svg>
+    <figcaption>A linha tracejada marca o pico da contração. Na precoce o fundo da queda coincide com ele; na tardia vem depois; na variável a queda é em V e não depende da contração.</figcaption>
+  </figure>
+  <div class="crit c3 hd">
+    <div class="row"><span class="k">Tipo</span><span class="v">Relação e forma</span><span class="v">Mecanismo e significado</span></div>
+    <div class="row"><span class="k">Precoce (DIP I)</span><span class="v">Começa com a contração, fundo no pico; queda gradual (30 s ou mais até o fundo), simétrica</span><span class="v">Compressão do polo cefálico, reflexo vagal. <strong>Fisiológica</strong>, sobretudo no expulsivo</span></div>
+    <div class="row"><span class="k">Tardia (DIP II)</span><span class="v">Gradual e simétrica, mas o fundo vem <strong>depois do pico</strong></span><span class="v mal">Pouco O2 no espaço interviloso em feto de baixa reserva. Com variabilidade mínima ou ausente, acidose ao nascer</span></div>
+    <div class="row"><span class="k">Variável (DIP III, umbilical)</span><span class="v">Queda abrupta (menos de 30 s), em V ou U, sem relação fixa com a contração; pode ter "ombros"</span><span class="v">Compressão do cordão. Complicada: abaixo de 70 bpm, mais de 60 s, sem variabilidade, retorno lento</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Mais de 10 min abaixo da linha de base = mudança da linha de base, não desaceleração.</li>
+    <li>Taquissistolia: mais de 5 contrações em 10 min, quase sempre por ocitocina ou misoprostol. Pode gerar desacelerações.</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="d4">
+  <div class="dhead"><span class="dnum">4</span><div class="dtitle"><h3>Categorias intraparto e conduta</h3><span class="src">GO/15 p22-26</span></div></div>
+  <p class="lede">Na sala de parto, a cardiotocografia vira três categorias. A chave é a variabilidade: moderada já tira da categoria III.</p>
+  <div class="crit c3 hd">
+    <div class="row"><span class="k">Categoria</span><span class="v">Critério</span><span class="v">Conduta</span></div>
+    <div class="row"><span class="k">I: normal</span><span class="v">Todos: linha de base 110-160; variabilidade moderada; sem tardias nem variáveis. Aceleração e precoce podem existir ou não</span><span class="v">Seguir o trabalho de parto</span></div>
+    <div class="row"><span class="k">II: indeterminada</span><span class="v">Tudo o que não é I nem III</span><span class="v">Ressuscitação intrauterina; vigilância mais estreita</span></div>
+    <div class="row"><span class="k">III: anormal</span><span class="v">Variabilidade <strong>ausente ou mínima</strong> + bradicardia, tardias recorrentes ou variáveis recorrentes; ou padrão sinusoidal</span><span class="v mal">Ressuscitação intrauterina e ultimar o parto pela via mais rápida</span></div>
+  </div>
+  <div class="crit hd">
+    <div class="row"><span class="k">Ressuscitação intrauterina</span><span class="v">Medidas</span></div>
+    <div class="row"><span class="k">Oxigenar o feto</span><span class="v">Decúbito lateral; suspender uterotônico e puxo dirigido; hidratação venosa; O2 por máscara</span></div>
+    <div class="row"><span class="k">Menos contração</span><span class="v">Suspender ocitocina; hidratar; uterolítico (terbutalina)</span></div>
+    <div class="row"><span class="k">Aliviar o cordão</span><span class="v">Mudar a posição; suspender puxo; amnioinfusão; elevar o polo cefálico</span></div>
+    <div class="row"><span class="k">Hipotensão materna</span><span class="v">Mudar a posição; hidratação; efedrina</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Sem melhora: resolver. No expulsivo, com critérios, fórcipe ou vácuo; senão, cesárea de emergência.</li>
+  </ul></div>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p>Traçado sem nenhuma aceleração e com desacelerações precoces, mas com linha de base e variabilidade normais, é categoria I, não II.</p></div>
+</section>
+
+<section class="degrau" id="d5">
+  <div class="dhead"><span class="dnum">5</span><div class="dtitle"><h3>Cardiotocografia anteparto</h3><span class="src">GO/15 p19-21</span></div></div>
+  <p class="lede">Antes do trabalho de parto, a pergunta é se o feto reage.</p>
+  <div class="crit hd">
+    <div class="row"><span class="k">Teste</span><span class="v">Como ler</span></div>
+    <div class="row"><span class="k">Repouso (basal)</span><span class="v">Reativo: tudo normal + 2 ou mais acelerações, em até 40 min. Na FMUSP: ativo (tudo normal + 2 acelerações), hipoativo (2 parâmetros normais, sem aceleração), inativo (1 ou nenhum normal)</span></div>
+    <div class="row"><span class="k">Estimulada</span><span class="v">Buzina (estímulo vibroacústico): separa sono de hipóxia. Reativo: subida acima de 20 bpm por 3 min ou mais; hiporreativo: menos que isso; não reativo: sem resposta</span></div>
+    <div class="row"><span class="k">Sobrecarga (Pose)</span><span class="v">Ocitocina induz contrações. Positivo: tardias em mais de 50% das contrações. Taquissistolia = equivocado; menos de 3 contrações em 10 min = insatisfatório. Pouco usado</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Alterada: Doppler e perfil biofísico, ou resolver conforme a idade gestacional. Antes de interromper, excluir droga, infecção materna e anomalia fetal.</li>
+  </ul></div>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p>O corte da estimulada (20 bpm por 3 min) não é o corte da aceleração comum (15 bpm por 15 s).</p></div>
+</section>
+
+<div class="ato" id="ptg"><span>Imagem 2 · Partograma</span><h2>O gráfico</h2></div>
+
+<section class="degrau" id="d6">
+  <div class="dhead"><span class="dnum">6</span><div class="dtitle"><h3>Como o partograma se lê</h3><span class="src">GO/5 p4-15; GO/16 p9-13; GO/18 p5</span></div></div>
+  <p class="lede">Cada coluna é uma hora. Triângulo é dilatação; círculo é altura. Leia primeiro os triângulos.</p>
+  <figure class="fig">
+    <svg viewBox="0 0 340 268" role="img" aria-label="Partograma esquemático de parto eutócico: triângulos de dilatação de 5 a 10 cm à esquerda da linha de alerta, círculos de altura descendo de -2 a +3 de De Lee, linha de ação 4 horas à direita da de alerta; escala de Hodge à direita." xmlns="http://www.w3.org/2000/svg"><text x="30" y="12" class="sv-tm" text-anchor="end">cm</text><line x1="34" y1="232" x2="274" y2="232" class="sv-axis"/><line x1="34" y1="211" x2="274" y2="211" class="sv-grid"/><line x1="34" y1="190" x2="274" y2="190" class="sv-grid"/><line x1="34" y1="169" x2="274" y2="169" class="sv-grid"/><line x1="34" y1="148" x2="274" y2="148" class="sv-grid"/><line x1="34" y1="127" x2="274" y2="127" class="sv-grid"/><line x1="34" y1="106" x2="274" y2="106" class="sv-grid"/><line x1="34" y1="85" x2="274" y2="85" class="sv-grid"/><line x1="34" y1="64" x2="274" y2="64" class="sv-grid"/><line x1="34" y1="43" x2="274" y2="43" class="sv-grid"/><line x1="34" y1="22" x2="274" y2="22" class="sv-axis"/><line x1="34" y1="22" x2="34" y2="232" class="sv-axis"/><line x1="54" y1="22" x2="54" y2="232" class="sv-grid"/><line x1="74" y1="22" x2="74" y2="232" class="sv-grid"/><line x1="94" y1="22" x2="94" y2="232" class="sv-grid"/><line x1="114" y1="22" x2="114" y2="232" class="sv-grid"/><line x1="134" y1="22" x2="134" y2="232" class="sv-grid"/><line x1="154" y1="22" x2="154" y2="232" class="sv-grid"/><line x1="174" y1="22" x2="174" y2="232" class="sv-grid"/><line x1="194" y1="22" x2="194" y2="232" class="sv-grid"/><line x1="214" y1="22" x2="214" y2="232" class="sv-grid"/><line x1="234" y1="22" x2="234" y2="232" class="sv-grid"/><line x1="254" y1="22" x2="254" y2="232" class="sv-grid"/><line x1="274" y1="22" x2="274" y2="232" class="sv-axis"/><text x="30" y="214.5" class="sv-tm" text-anchor="end">1</text><text x="30" y="193.5" class="sv-tm" text-anchor="end">2</text><text x="30" y="172.5" class="sv-tm" text-anchor="end">3</text><text x="30" y="151.5" class="sv-tm" text-anchor="end">4</text><text x="30" y="130.5" class="sv-tm" text-anchor="end">5</text><text x="30" y="109.5" class="sv-tm" text-anchor="end">6</text><text x="30" y="88.5" class="sv-tm" text-anchor="end">7</text><text x="30" y="67.5" class="sv-tm" text-anchor="end">8</text><text x="30" y="46.5" class="sv-tm" text-anchor="end">9</text><text x="30" y="25.5" class="sv-tm" text-anchor="end">10</text><line x1="54" y1="127" x2="154" y2="22" class="sv-alert"/><line x1="134" y1="127" x2="234" y2="22" class="sv-action"/><polyline points="34,127 74,85 114,43 134,22" class="sv-trend"/><polyline points="34,85 74,106 114,127 134,148 154,190" class="sv-trend2"/><polygon points="34,121.8 39.2,131.2 28.8,131.2" class="sv-tri"/><polygon points="74,79.8 79.2,89.2 68.8,89.2" class="sv-tri"/><polygon points="114,37.8 119.2,47.2 108.8,47.2" class="sv-tri"/><polygon points="134,16.8 139.2,26.2 128.8,26.2" class="sv-tri"/><circle cx="34" cy="85" r="4.6" class="sv-circ"/><circle cx="74" cy="106" r="4.6" class="sv-circ"/><circle cx="114" cy="127" r="4.6" class="sv-circ"/><circle cx="134" cy="148" r="4.6" class="sv-circ"/><circle cx="154" cy="190" r="4.6" class="sv-circ"/><text x="278" y="12" class="sv-tm">De Lee</text><text x="280" y="46.5" class="sv-tm">-4</text><text x="280" y="67.5" class="sv-tm">-3</text><text x="280" y="88.5" class="sv-tm">-2</text><text x="280" y="109.5" class="sv-tm">-1</text><text x="280" y="130.5" class="sv-tm">0</text><text x="280" y="151.5" class="sv-tm">+1</text><text x="280" y="172.5" class="sv-tm">+2</text><text x="280" y="193.5" class="sv-tm">+3</text><text x="280" y="214.5" class="sv-tm">+4</text><line x1="304" y1="22" x2="304" y2="64" class="sv-ink"/><text x="307" y="47" class="sv-tm">I</text><line x1="304" y1="85" x2="304" y2="106" class="sv-ink"/><text x="307" y="99.5" class="sv-tm">II</text><line x1="301" y1="127" x2="307" y2="127" class="sv-ink"/><text x="309" y="131" class="sv-tm">III</text><line x1="301" y1="211" x2="307" y2="211" class="sv-ink"/><text x="309" y="215" class="sv-tm">IV</text><text x="34" y="246" class="sv-tm" text-anchor="middle">0</text><text x="74" y="246" class="sv-tm" text-anchor="middle">2</text><text x="114" y="246" class="sv-tm" text-anchor="middle">4</text><text x="154" y="246" class="sv-tm" text-anchor="middle">6</text><text x="194" y="246" class="sv-tm" text-anchor="middle">8</text><text x="234" y="246" class="sv-tm" text-anchor="middle">10</text><text x="274" y="246" class="sv-tm" text-anchor="middle">12</text><text x="274" y="258" class="sv-tm" text-anchor="end">horas</text><text x="46" y="49.3" class="sv-tb sv-ta">alerta</text><text x="218" y="66.1" class="sv-tb sv-tc">ação</text></svg>
+    <figcaption>Parto eutócico no partograma clássico: aberto com 5 cm, triângulos sempre à esquerda da linha de alerta, círculos descendo até o desprendimento. A escala da direita é a altura (De Lee) e, ao lado, os planos de Hodge.</figcaption>
+  </figure>
+  <div class="prose"><ul>
+    <li>Abrir na fase ativa: hoje, <strong>5 cm ou mais</strong> com contrações regulares, 3 ou mais em 10 min (OMS 2018). Questão antiga abre com 3-4 cm.</li>
+    <li>Escala da esquerda: dilatação (1-10 cm). Da direita: altura, com o plano 0 de De Lee alinhado aos 5 cm.</li>
+    <li>A variedade de posição vai desenhada dentro do círculo: Y para o lambda (fletida), losango para o bregma.</li>
+    <li>Abaixo do gráfico: FCF, contrações em 10 min (quadrado cheio forte, meio moderada, traço fraca), bolsa (BI, BRE, BRA), líquido (LC, MEC), ocitocina e analgesia.</li>
+    <li>Linha de alerta: começa na hora seguinte ao primeiro toque e sobe 1 cm/h. Linha de ação: <strong>4 h à direita</strong>.</li>
+    <li>Esperado: 2-3 contrações moderadas em 10 min na dilatação; 4-5 fortes no expulsivo. Toque a cada 4 h no risco habitual (2-4 h). BCF a cada 15-30 min na dilatação, durante a contração e no minuto seguinte; a cada 5-10 min no expulsivo.</li>
+  </ul></div>
+  <div class="banca"><div class="albl">Depende da banca</div>
+    <p>As linhas de alerta e ação são do partograma de Friedman, e o MS (2017) ainda as traz. O material de 2026 diz que não se traçam mais e que 1 cm/h deixou de ser critério. Questão que desenha as linhas quer o raciocínio clássico: cruzar a ação é distocia; avaliar a causa e corrigir, não cesárea automática.</p></div>
+</section>
+
+<section class="degrau" id="d7">
+  <div class="dhead"><span class="dnum">7</span><div class="dtitle"><h3>Distocias de dilatação: a forma dos triângulos</h3><span class="src">GO/5 p22-29</span></div></div>
+  <p class="lede">Triângulos que não chegam a 10 cm são distocia do 1º período. A inclinação da curva diz qual.</p>
+  <figure class="fig minis">
+    <div class="mgrid">
+      <div class="mini"><svg viewBox="0 0 170 120" role="img" aria-label="Parto eutócico: triângulos sobem à esquerda da linha de alerta e círculos descem." xmlns="http://www.w3.org/2000/svg"><line x1="22" y1="108" x2="162" y2="108" class="sv-axis"/><line x1="22" y1="58" x2="162" y2="58" class="sv-grid"/><line x1="22" y1="8" x2="162" y2="8" class="sv-axis"/><line x1="22" y1="8" x2="22" y2="108" class="sv-axis"/><line x1="50" y1="8" x2="50" y2="108" class="sv-grid"/><line x1="78" y1="8" x2="78" y2="108" class="sv-grid"/><line x1="106" y1="8" x2="106" y2="108" class="sv-grid"/><line x1="134" y1="8" x2="134" y2="108" class="sv-grid"/><line x1="162" y1="8" x2="162" y2="108" class="sv-axis"/><text x="18" y="11.5" class="sv-tm" text-anchor="end">10</text><text x="18" y="61.5" class="sv-tm" text-anchor="end">5</text><line x1="36" y1="58" x2="106" y2="8" class="sv-alert"/><line x1="92" y1="58" x2="162" y2="8" class="sv-action"/><polyline points="22,58 50,38 78,18 92,8" class="sv-trend"/><polyline points="22,38 50,48 78,58 92,68 106,88" class="sv-trend2"/><polygon points="22,53.6 26.4,61.5 17.6,61.5" class="sv-tri"/><polygon points="50,33.6 54.4,41.5 45.6,41.5" class="sv-tri"/><polygon points="78,13.6 82.4,21.5 73.6,21.5" class="sv-tri"/><polygon points="92,3.6 96.4,11.5 87.6,11.5" class="sv-tri"/><circle cx="22" cy="38" r="3.8" class="sv-circ"/><circle cx="50" cy="48" r="3.8" class="sv-circ"/><circle cx="78" cy="58" r="3.8" class="sv-circ"/><circle cx="92" cy="68" r="3.8" class="sv-circ"/><circle cx="106" cy="88" r="3.8" class="sv-circ"/></svg><p>Eutócico</p></div>
+      <div class="mini"><svg viewBox="0 0 170 120" role="img" aria-label="Parto taquitócico: triângulos quase verticais, parto em menos de 4 horas." xmlns="http://www.w3.org/2000/svg"><line x1="22" y1="108" x2="162" y2="108" class="sv-axis"/><line x1="22" y1="58" x2="162" y2="58" class="sv-grid"/><line x1="22" y1="8" x2="162" y2="8" class="sv-axis"/><line x1="22" y1="8" x2="22" y2="108" class="sv-axis"/><line x1="50" y1="8" x2="50" y2="108" class="sv-grid"/><line x1="78" y1="8" x2="78" y2="108" class="sv-grid"/><line x1="106" y1="8" x2="106" y2="108" class="sv-grid"/><line x1="134" y1="8" x2="134" y2="108" class="sv-grid"/><line x1="162" y1="8" x2="162" y2="108" class="sv-axis"/><text x="18" y="11.5" class="sv-tm" text-anchor="end">10</text><text x="18" y="61.5" class="sv-tm" text-anchor="end">5</text><line x1="36" y1="68" x2="120" y2="8" class="sv-alert"/><line x1="92" y1="68" x2="162" y2="18" class="sv-action"/><polyline points="22,68 36,38 50,8" class="sv-trend"/><polyline points="22,38 36,58 50,78 64,98" class="sv-trend2"/><polygon points="22,63.6 26.4,71.5 17.6,71.5" class="sv-tri"/><polygon points="36,33.6 40.4,41.5 31.6,41.5" class="sv-tri"/><polygon points="50,3.6 54.4,11.5 45.6,11.5" class="sv-tri"/><circle cx="22" cy="38" r="3.8" class="sv-circ"/><circle cx="36" cy="58" r="3.8" class="sv-circ"/><circle cx="50" cy="78" r="3.8" class="sv-circ"/><circle cx="64" cy="98" r="3.8" class="sv-circ"/></svg><p>Taquitócico</p></div>
+      <div class="mini"><svg viewBox="0 0 170 120" role="img" aria-label="Fase ativa prolongada: triângulos inclinados que cruzam as linhas de alerta e de ação." xmlns="http://www.w3.org/2000/svg"><line x1="22" y1="108" x2="162" y2="108" class="sv-axis"/><line x1="22" y1="58" x2="162" y2="58" class="sv-grid"/><line x1="22" y1="8" x2="162" y2="8" class="sv-axis"/><line x1="22" y1="8" x2="22" y2="108" class="sv-axis"/><line x1="50" y1="8" x2="50" y2="108" class="sv-grid"/><line x1="78" y1="8" x2="78" y2="108" class="sv-grid"/><line x1="106" y1="8" x2="106" y2="108" class="sv-grid"/><line x1="134" y1="8" x2="134" y2="108" class="sv-grid"/><line x1="162" y1="8" x2="162" y2="108" class="sv-axis"/><text x="18" y="11.5" class="sv-tm" text-anchor="end">10</text><text x="18" y="61.5" class="sv-tm" text-anchor="end">5</text><line x1="36" y1="58" x2="106" y2="8" class="sv-alert"/><line x1="92" y1="58" x2="162" y2="8" class="sv-action"/><polyline points="22,58 50,48 78,43 106,38 134,28" class="sv-trend"/><polyline points="22,38 78,38 134,48" class="sv-trend2"/><polygon points="22,53.6 26.4,61.5 17.6,61.5" class="sv-tri"/><polygon points="50,43.6 54.4,51.5 45.6,51.5" class="sv-tri"/><polygon points="78,38.6 82.4,46.5 73.6,46.5" class="sv-tri"/><polygon points="106,33.6 110.4,41.5 101.6,41.5" class="sv-tri"/><polygon points="134,23.6 138.4,31.5 129.6,31.5" class="sv-tri"/><circle cx="22" cy="38" r="3.8" class="sv-circ"/><circle cx="78" cy="38" r="3.8" class="sv-circ"/><circle cx="134" cy="48" r="3.8" class="sv-circ"/></svg><p>Fase ativa prolongada</p></div>
+      <div class="mini"><svg viewBox="0 0 170 120" role="img" aria-label="Parada secundária da dilatação: triângulos em platô por dois toques seguidos." xmlns="http://www.w3.org/2000/svg"><line x1="22" y1="108" x2="162" y2="108" class="sv-axis"/><line x1="22" y1="58" x2="162" y2="58" class="sv-grid"/><line x1="22" y1="8" x2="162" y2="8" class="sv-axis"/><line x1="22" y1="8" x2="22" y2="108" class="sv-axis"/><line x1="50" y1="8" x2="50" y2="108" class="sv-grid"/><line x1="78" y1="8" x2="78" y2="108" class="sv-grid"/><line x1="106" y1="8" x2="106" y2="108" class="sv-grid"/><line x1="134" y1="8" x2="134" y2="108" class="sv-grid"/><line x1="162" y1="8" x2="162" y2="108" class="sv-axis"/><text x="18" y="11.5" class="sv-tm" text-anchor="end">10</text><text x="18" y="61.5" class="sv-tm" text-anchor="end">5</text><line x1="36" y1="58" x2="106" y2="8" class="sv-alert"/><line x1="92" y1="58" x2="162" y2="8" class="sv-action"/><polyline points="22,58 50,38 78,28 106,28 134,28" class="sv-trend"/><polyline points="22,38 50,38 78,38 106,38 134,38" class="sv-trend2"/><polygon points="22,53.6 26.4,61.5 17.6,61.5" class="sv-tri"/><polygon points="50,33.6 54.4,41.5 45.6,41.5" class="sv-tri"/><polygon points="78,23.6 82.4,31.5 73.6,31.5" class="sv-tri"/><polygon points="106,23.6 110.4,31.5 101.6,31.5" class="sv-tri"/><polygon points="134,23.6 138.4,31.5 129.6,31.5" class="sv-tri"/><circle cx="22" cy="38" r="3.8" class="sv-circ"/><circle cx="50" cy="38" r="3.8" class="sv-circ"/><circle cx="78" cy="38" r="3.8" class="sv-circ"/><circle cx="106" cy="38" r="3.8" class="sv-circ"/><circle cx="134" cy="38" r="3.8" class="sv-circ"/></svg><p>Parada secundária da dilatação</p></div>
+    </div>
+    <figcaption>Triângulo = dilatação; círculo = altura; tracejado claro = alerta; tracejado escuro = ação. Verticalizada = rápida demais; deitada = lenta; em platô = parada.</figcaption>
+  </figure>
+  <div class="crit c3 hd">
+    <div class="row"><span class="k">Distocia</span><span class="v">No gráfico</span><span class="v">Causa e conduta</span></div>
+    <div class="row"><span class="k">Parto taquitócico</span><span class="v">Triângulos quase verticais, à esquerda da alerta; dilatação, descida e parto em menos de 4 h</span><span class="v">Hiperatividade, às vezes por ocitocina. Não romper a bolsa; analgesia precoce; suspender ocitocina; revisar o canal; vigiar o RN</span></div>
+    <div class="row"><span class="k">Fase ativa prolongada</span><span class="v">Triângulos deitados. Hoje: 6 cm ou mais e menos de 1-2 cm em 2-4 h (antes: menos de 1 cm/h)</span><span class="v">Hipoatividade. Deambular, mudar de posição, amniotomia, ocitocina; ou aguardar com feto bem</span></div>
+    <div class="row"><span class="k">Parada secundária da dilatação</span><span class="v">Triângulos em platô. Hoje: 6 cm ou mais, bolsa rota e nenhuma mudança por 4 h com contração adequada, ou por 6 h de ocitocina com contração inadequada (antes: 2 toques com 2 h de intervalo)</span><span class="v mal">Desproporção cefalopélvica (relativa: defletida, transversa, posterior). Corrigir; se não corrigir, cesárea</span></div>
+  </div>
+</section>
+
+<section class="degrau" id="d8">
+  <div class="dhead"><span class="dnum">8</span><div class="dtitle"><h3>Distocias de descida: a vez dos círculos</h3><span class="src">GO/5 p18-22, 29-36</span></div></div>
+  <p class="lede">Triângulos já em 10 cm e o parto não sai: o problema está no expulsivo, e quem conta a história são os círculos.</p>
+  <figure class="fig minis">
+    <div class="mgrid">
+      <div class="mini"><svg viewBox="0 0 170 120" role="img" aria-label="Parada secundária da descida: dilatação total e círculos em platô no plano zero." xmlns="http://www.w3.org/2000/svg"><line x1="22" y1="108" x2="162" y2="108" class="sv-axis"/><line x1="22" y1="58" x2="162" y2="58" class="sv-grid"/><line x1="22" y1="8" x2="162" y2="8" class="sv-axis"/><line x1="22" y1="8" x2="22" y2="108" class="sv-axis"/><line x1="50" y1="8" x2="50" y2="108" class="sv-grid"/><line x1="78" y1="8" x2="78" y2="108" class="sv-grid"/><line x1="106" y1="8" x2="106" y2="108" class="sv-grid"/><line x1="134" y1="8" x2="134" y2="108" class="sv-grid"/><line x1="162" y1="8" x2="162" y2="108" class="sv-axis"/><text x="18" y="11.5" class="sv-tm" text-anchor="end">10</text><text x="18" y="61.5" class="sv-tm" text-anchor="end">5</text><line x1="36" y1="48" x2="92" y2="8" class="sv-alert"/><line x1="92" y1="48" x2="148" y2="8" class="sv-action"/><polyline points="22,48 50,28 78,8 92,8 106,8 120,8" class="sv-trend"/><polyline points="22,38 50,48 78,58 92,58 106,58 120,58" class="sv-trend2"/><polygon points="22,43.6 26.4,51.5 17.6,51.5" class="sv-tri"/><polygon points="50,23.6 54.4,31.5 45.6,31.5" class="sv-tri"/><polygon points="78,3.6 82.4,11.5 73.6,11.5" class="sv-tri"/><polygon points="92,3.6 96.4,11.5 87.6,11.5" class="sv-tri"/><polygon points="106,3.6 110.4,11.5 101.6,11.5" class="sv-tri"/><polygon points="120,3.6 124.4,11.5 115.6,11.5" class="sv-tri"/><circle cx="22" cy="38" r="3.8" class="sv-circ"/><circle cx="50" cy="48" r="3.8" class="sv-circ"/><circle cx="78" cy="58" r="3.8" class="sv-circ"/><circle cx="92" cy="58" r="3.8" class="sv-circ"/><circle cx="106" cy="58" r="3.8" class="sv-circ"/><circle cx="120" cy="58" r="3.8" class="sv-circ"/></svg><p>Parada secundária da descida</p></div>
+      <div class="mini"><svg viewBox="0 0 170 120" role="img" aria-label="Período pélvico prolongado: dilatação total e círculos que descem devagar." xmlns="http://www.w3.org/2000/svg"><line x1="22" y1="108" x2="162" y2="108" class="sv-axis"/><line x1="22" y1="58" x2="162" y2="58" class="sv-grid"/><line x1="22" y1="8" x2="162" y2="8" class="sv-axis"/><line x1="22" y1="8" x2="22" y2="108" class="sv-axis"/><line x1="50" y1="8" x2="50" y2="108" class="sv-grid"/><line x1="78" y1="8" x2="78" y2="108" class="sv-grid"/><line x1="106" y1="8" x2="106" y2="108" class="sv-grid"/><line x1="134" y1="8" x2="134" y2="108" class="sv-grid"/><line x1="162" y1="8" x2="162" y2="108" class="sv-axis"/><text x="18" y="11.5" class="sv-tm" text-anchor="end">10</text><text x="18" y="61.5" class="sv-tm" text-anchor="end">5</text><line x1="36" y1="48" x2="92" y2="8" class="sv-alert"/><line x1="92" y1="48" x2="148" y2="8" class="sv-action"/><polyline points="22,48 50,28 64,8 78,8 92,8 106,8 120,8" class="sv-trend"/><polyline points="22,38 50,48 64,58 92,68 120,83 134,88" class="sv-trend2"/><polygon points="22,43.6 26.4,51.5 17.6,51.5" class="sv-tri"/><polygon points="50,23.6 54.4,31.5 45.6,31.5" class="sv-tri"/><polygon points="64,3.6 68.4,11.5 59.6,11.5" class="sv-tri"/><polygon points="78,3.6 82.4,11.5 73.6,11.5" class="sv-tri"/><polygon points="92,3.6 96.4,11.5 87.6,11.5" class="sv-tri"/><polygon points="106,3.6 110.4,11.5 101.6,11.5" class="sv-tri"/><polygon points="120,3.6 124.4,11.5 115.6,11.5" class="sv-tri"/><circle cx="22" cy="38" r="3.8" class="sv-circ"/><circle cx="50" cy="48" r="3.8" class="sv-circ"/><circle cx="64" cy="58" r="3.8" class="sv-circ"/><circle cx="92" cy="68" r="3.8" class="sv-circ"/><circle cx="120" cy="83" r="3.8" class="sv-circ"/><circle cx="134" cy="88" r="3.8" class="sv-circ"/></svg><p>Período pélvico prolongado</p></div>
+    </div>
+    <figcaption>Nos dois, a dilatação está completa. Círculos parados no plano 0 = parada; círculos descendo devagar = período pélvico prolongado.</figcaption>
+  </figure>
+  <div class="crit c3 hd">
+    <div class="row"><span class="k">Distocia</span><span class="v">No gráfico</span><span class="v">Causa e conduta</span></div>
+    <div class="row"><span class="k">Parada secundária da descida</span><span class="v">Dilatação total e círculos em platô, quase sempre perto do 0. Hoje: sem descida ou rotação por mais de 3 h na nulípara, 2 h na multípara (mais 1 h com peridural), com contração adequada e bolsa rota</span><span class="v mal">DCP absoluta: cesárea. Edema vulvar, bossa grande; anel de Bandl-Frommel = rotura uterina iminente</span></div>
+    <div class="row"><span class="k">Período pélvico prolongado</span><span class="v">Dilatação total e círculos descendo devagar. Expulsivo acima de 3 h na primípara (4 h com analgesia) e 2 h na multípara (3 h com analgesia)</span><span class="v">Hipoatividade, variedade posterior, macrossomia, assinclitismo. Deambular, amniotomia, ocitocina; fórcipe se aplicável</span></div>
+    <div class="row"><span class="k">Distocia de rotação</span><span class="v">Desceu ao estreito inferior sem chegar a OP (por exemplo, OET)</span><span class="v">Rotação manual ou fórcipe de Kielland, o único que roda</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Fórcipe exige: dilatação total, bolsa rota, cabeça em +2 ou abaixo, feto vivo, variedade conhecida, sem sinal de DCP.</li>
+    <li>Distocia de objeto: macrossomia (acima de 4 kg); córmica e fronte (occipitomentoniano de 13 cm) não passam: cesárea. Distocia de ombro: manobras.</li>
+  </ul></div>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p>Siga os triângulos: não culpe a descida antes de a dilatação estar completa. Círculo parado com dilatação incompleta é distocia de dilatação.</p></div>
+</section>
+
+<div class="ato" id="est"><span>Imagem 3 · Estática fetal</span><h2>O toque</h2></div>
+
+<section class="degrau" id="d9">
+  <div class="dhead"><span class="dnum">9</span><div class="dtitle"><h3>Os cinco parâmetros da estática</h3><span class="src">GO/6 p17-23; GO/25 (Leopold); resumo Pré-Natal</span></div></div>
+  <p class="lede">Estática é como o feto se dispõe no útero e na bacia. Cada parâmetro responde a uma pergunta diferente.</p>
+  <figure class="fig">
+    <svg viewBox="0 0 340 196" role="img" aria-label="Três úteros em vista frontal: feto longitudinal com apresentação cefálica e dorso à esquerda da gestante; longitudinal com apresentação pélvica; e transverso com apresentação córmica. O arco abaixo de cada útero marca o estreito superior." xmlns="http://www.w3.org/2000/svg"><text x="6" y="12" class="sv-tm">direita da gestante</text><text x="334" y="12" class="sv-tm" text-anchor="end">esquerda da gestante</text><ellipse cx="58" cy="88" rx="44" ry="62" class="sv-uterus"/><path d="M 28 160 Q 58 152 88 160" class="sv-ink"/><ellipse cx="56" cy="78" rx="17" ry="30" class="sv-fetus"/><circle cx="58" cy="126" r="14" class="sv-fetus"/><path d="M 66 54 Q 78 78 68 104" class="sv-back"/><text x="58" y="176" class="sv-tb" text-anchor="middle">Longitudinal</text><text x="58" y="190" class="sv-t" text-anchor="middle">cefálica, dorso à esq.</text><ellipse cx="170" cy="88" rx="44" ry="62" class="sv-uterus"/><path d="M 140 160 Q 170 152 200 160" class="sv-ink"/><circle cx="170" cy="46" r="14" class="sv-fetus"/><ellipse cx="171" cy="96" rx="17" ry="32" class="sv-fetus"/><path d="M 180 72 Q 191 98 179 124" class="sv-back"/><text x="170" y="176" class="sv-tb" text-anchor="middle">Longitudinal</text><text x="170" y="190" class="sv-t" text-anchor="middle">pélvica</text><ellipse cx="282" cy="88" rx="44" ry="62" class="sv-uterus"/><path d="M 252 160 Q 282 152 312 160" class="sv-ink"/><circle cx="255" cy="86" r="13" class="sv-fetus"/><ellipse cx="292" cy="92" rx="24" ry="15" class="sv-fetus"/><path d="M 276 79 Q 294 70 312 80" class="sv-back"/><text x="282" y="176" class="sv-tb" text-anchor="middle">Transversa</text><text x="282" y="190" class="sv-t" text-anchor="middle">córmica (acrômio)</text></svg>
+    <figcaption>Vista de frente, como o examinador vê o abdome: a esquerda da gestante fica à direita da figura. O traço grosso no feto é o dorso; o arco embaixo, o estreito superior.</figcaption>
+  </figure>
+  <div class="crit c3 hd">
+    <div class="row"><span class="k">Parâmetro</span><span class="v">Pergunta</span><span class="v">Opções</span></div>
+    <div class="row"><span class="k">Atitude</span><span class="v">Partes fetais entre si</span><span class="v">Flexão generalizada. Extensão contínua: atonia por sofrimento grave</span></div>
+    <div class="row"><span class="k">Situação</span><span class="v">Maior eixo do feto x maior eixo do útero</span><span class="v">Longitudinal (99% no termo); transversa (placenta anômala, gemelar, mioma); oblíqua (transição)</span></div>
+    <div class="row"><span class="k">Posição</span><span class="v">Dorso x lado materno</span><span class="v">Esquerda (a mais comum) ou direita; na transversa, anterior ou posterior</span></div>
+    <div class="row"><span class="k">Apresentação</span><span class="v">Que polo ocupa o estreito superior</span><span class="v">Cefálica (a mais comum), pélvica, córmica</span></div>
+    <div class="row"><span class="k">Variedade de posição</span><span class="v">Ponto de referência fetal x bacia materna</span><span class="v">OP, OEA, OET... (degrau 11)</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Leopold: 1º tempo, fundo (que polo está lá); 2º, dorso (posição); 3º, polo no estreito superior, móvel ou não ("alto e móvel" = não insinuado); 4º, escava: vazia = transversa, parcialmente ocupada = pélvica, cheia = cefálica.</li>
+    <li>Pélvica completa: coxas e pernas fletidas. Incompleta: modo de nádegas (agripina), de pés ou de joelhos. Referência: sacro (S). Córmica: acrômio (A).</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="d10">
+  <div class="dhead"><span class="dnum">10</span><div class="dtitle"><h3>Cefálica: o crânio e os graus de deflexão</h3><span class="src">GO/6 p16-17, 21-23, 26; GO/18 p14</span></div></div>
+  <p class="lede">Quanto mais a cabeça se estende, maior o diâmetro que tenta passar e pior o prognóstico.</p>
+  <figure class="fig">
+    <svg viewBox="0 0 340 204" role="img" aria-label="Crânio fetal visto de cima, fronte acima: a fontanela anterior (bregma) em losango na junção das suturas metópica, coronais e sagital; a posterior (lambda) em Y na junção da sagital com as lambdoides." xmlns="http://www.w3.org/2000/svg"><ellipse cx="104" cy="100" rx="60" ry="84" class="sv-skull"/><line x1="104" y1="18" x2="104" y2="56" class="sv-ink"/><line x1="104" y1="70" x2="104" y2="148" class="sv-ink"/><path d="M 95 63 Q 70 58 48 78" class="sv-ink"/><path d="M 113 63 Q 138 58 160 78" class="sv-ink"/><line x1="100" y1="152" x2="64" y2="172" class="sv-ink"/><line x1="108" y1="152" x2="144" y2="172" class="sv-ink"/><polygon points="104,50 114,63 104,76 94,63" class="sv-font-b"/><polygon points="104,146 110,156 98,156" class="sv-font-l"/><text x="104" y="12" class="sv-tm" text-anchor="middle">fronte</text><text x="104" y="198" class="sv-tm" text-anchor="middle">occipício</text><line x1="115" y1="63" x2="192" y2="54" class="sv-lead"/><text x="196" y="58" class="sv-tb sv-tt">Bregma</text><text x="196" y="72" class="sv-t">losango, anterior</text><line x1="105" y1="110" x2="192" y2="104" class="sv-lead"/><text x="196" y="108" class="sv-tb ">Sutura sagital</text><text x="196" y="122" class="sv-t">linha da fletida</text><line x1="111" y1="154" x2="192" y2="154" class="sv-lead"/><text x="196" y="158" class="sv-tb sv-tc">Lambda</text><text x="196" y="172" class="sv-t">Y, posterior</text></svg>
+    <figcaption>No toque da cefálica fletida, a sutura sagital orienta e o lambda (Y) aponta o occipício. Palpar o bregma (losango) já é deflexão de 1º grau.</figcaption>
+  </figure>
+  <div class="crit c3 hd">
+    <div class="row"><span class="k">Variedade</span><span class="v">Referência e linha</span><span class="v">Diâmetro e saída</span></div>
+    <div class="row"><span class="k">Fletida (vértice), 95%</span><span class="v">Lambda (O); sutura sagital</span><span class="v">Suboccipitobregmático, 9,5 cm, o menor. Melhor prognóstico</span></div>
+    <div class="row"><span class="k">Defletida de 1º grau (bregma)</span><span class="v">Bregma (B); sagitometópica</span><span class="v">Occipitofrontal, 12 cm. Desprende com flexão e deflexão</span></div>
+    <div class="row"><span class="k">Defletida de 2º grau (fronte)</span><span class="v">Glabela, raiz do nariz (N); metópica</span><span class="v mal">Occipitomentoniano, 13 cm, o maior: não passa. Cesárea</span></div>
+    <div class="row"><span class="k">Defletida de 3º grau (face)</span><span class="v">Mento (M); linha facial</span><span class="v">Submentobregmático, 9,5 cm. Mento anterior desprende por flexão; mento posterior, não</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Diâmetro transverso que insinua: biparietal (fletida e 1º grau), bitemporal (fronte), bimalar (face).</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="d11">
+  <div class="dhead"><span class="dnum">11</span><div class="dtitle"><h3>Variedade de posição e rotação interna</h3><span class="src">GO/6 p24-28; GO/18 p4-14</span></div></div>
+  <p class="lede">A bacia é um relógio: o ponto de referência fetal é o ponteiro. O alvo é OP, pelo menor caminho.</p>
+  <figure class="fig">
+    <svg viewBox="0 0 340 292" role="img" aria-label="Bacia materna como relógio, na vista do examinador com a gestante em posição ginecológica: OP no alto junto à pube, OS embaixo junto ao sacro, variedades esquerdas à direita do examinador. Cabeça fetal em OEA, lambda voltado para a esquerda anterior, com seta de 45 graus no sentido anti-horário até OP." xmlns="http://www.w3.org/2000/svg"><circle cx="170" cy="146" r="88" class="sv-pelvis"/><line x1="170" y1="64" x2="170" y2="52" class="sv-ink"/><text x="170" y="38.5" class="sv-tb sv-tt" text-anchor="middle">OP</text><line x1="228" y1="88" x2="236.5" y2="79.5" class="sv-ink"/><text x="249.2" y="71.3" class="sv-tb" text-anchor="middle">OEA</text><line x1="252" y1="146" x2="264" y2="146" class="sv-ink"/><text x="282" y="150.5" class="sv-tb" text-anchor="middle">OET</text><line x1="228" y1="204" x2="236.5" y2="212.5" class="sv-ink"/><text x="249.2" y="229.7" class="sv-tb" text-anchor="middle">OEP</text><line x1="170" y1="228" x2="170" y2="240" class="sv-ink"/><text x="170" y="262.5" class="sv-tb" text-anchor="middle">OS</text><line x1="112" y1="204" x2="103.5" y2="212.5" class="sv-ink"/><text x="90.8" y="229.7" class="sv-tb" text-anchor="middle">ODP</text><line x1="88" y1="146" x2="76" y2="146" class="sv-ink"/><text x="58" y="150.5" class="sv-tb" text-anchor="middle">ODT</text><line x1="112" y1="88" x2="103.5" y2="79.5" class="sv-ink"/><text x="90.8" y="71.3" class="sv-tb" text-anchor="middle">ODA</text><text x="170" y="76" class="sv-tm" text-anchor="middle">pube</text><text x="170" y="224" class="sv-tm" text-anchor="middle">sacro</text><circle cx="170" cy="146" r="34" class="sv-head"/><line x1="191.2" y1="124.8" x2="148.8" y2="167.2" class="sv-ink"/><line x1="191.2" y1="124.8" x2="179.6" y2="127.9" class="sv-ink"/><line x1="191.2" y1="124.8" x2="188.1" y2="136.4" class="sv-ink"/><circle cx="191.2" cy="124.8" r="2.6" class="sv-dot-c"/><polygon points="148.8,160.2 155.8,167.2 148.8,174.2 141.8,167.2" class="sv-font-b"/><path d="M 208.6 100 A 60 60 0 0 0 176.3 86.3" class="sv-rot"/><polygon points="176.3,86.3 170.5,82.3 169.8,89" class="sv-rot-h"/><text x="210" y="82" class="sv-tb sv-tc">45°</text><text x="6" y="286" class="sv-tm">direita da gestante</text><text x="334" y="286" class="sv-tm" text-anchor="end">esquerda da gestante</text></svg>
+    <figcaption>Vista do examinador, gestante em posição ginecológica. A cabeça está em OEA (lambda à esquerda e à frente da mãe) e chega a OP girando 45° no sentido anti-horário.</figcaption>
+  </figure>
+  <div class="prose"><ul>
+    <li>Nome: 1ª letra = ponto fetal (O, B, N, M, S, A); depois E ou D e A, T ou P. Púbica e sacra têm só 2 letras: OP, OS. O P de púbica (2 letras) não é o P de posterior (3 letras).</li>
+    <li>Direita e esquerda são sempre da gestante: na posição ginecológica, a esquerda dela fica à direita do examinador.</li>
+    <li>Rotação interna: anterior 45°, transversa 90°, posterior 135°. <strong>Esquerdas giram no anti-horário; direitas, no horário.</strong></li>
+    <li>Seis tempos do mecanismo de parto: insinuação, descida, rotação interna, desprendimento cefálico (hipomóclio: occipício sob a pube e a cabeça se deflete), rotação externa (restituição, no sentido contrário ao da interna) e desprendimento das espáduas (ombro anterior primeiro).</li>
+  </ul></div>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p>OEP não gira 45°: gira 135° no anti-horário. E o desprendimento cefálico se dá por deflexão, não por flexão.</p></div>
+</section>
+
+<section class="degrau" id="d12">
+  <div class="dhead"><span class="dnum">12</span><div class="dtitle"><h3>Altura: De Lee, Hodge e insinuação</h3><span class="src">GO/6 p7-12; GO/18 p5-8; resumo Assistência ao Parto §12</span></div></div>
+  <p class="lede">Altura é quanto o polo desceu. O marco é a espinha isquiática: plano 0 de De Lee, plano III de Hodge.</p>
+  <figure class="fig">
+    <svg viewBox="0 0 340 226" role="img" aria-label="Esquema frontal da bacia com a escala de De Lee de -4 a +4 cm, zero nas espinhas isquiáticas, e os planos de Hodge I a IV; o plano III coincide com o zero de De Lee. Cabeça fetal com o vértice no zero: insinuada." xmlns="http://www.w3.org/2000/svg"><text x="44" y="18" class="sv-tm" text-anchor="middle">De Lee</text><text x="306" y="18" class="sv-tm" text-anchor="middle">Hodge</text><line x1="56" y1="56" x2="56" y2="208" class="sv-ink"/><line x1="52" y1="56" x2="60" y2="56" class="sv-ink"/><text x="46" y="60" class="sv-tm" text-anchor="end">-4</text><line x1="52" y1="75" x2="60" y2="75" class="sv-ink"/><text x="46" y="79" class="sv-tm" text-anchor="end">-3</text><line x1="52" y1="94" x2="60" y2="94" class="sv-ink"/><text x="46" y="98" class="sv-tm" text-anchor="end">-2</text><line x1="52" y1="113" x2="60" y2="113" class="sv-ink"/><text x="46" y="117" class="sv-tm" text-anchor="end">-1</text><line x1="52" y1="132" x2="60" y2="132" class="sv-ink"/><text x="46" y="136" class="sv-tb sv-tt" text-anchor="end">0</text><line x1="52" y1="151" x2="60" y2="151" class="sv-ink"/><text x="46" y="155" class="sv-tm" text-anchor="end">+1</text><line x1="52" y1="170" x2="60" y2="170" class="sv-ink"/><text x="46" y="174" class="sv-tm" text-anchor="end">+2</text><line x1="52" y1="189" x2="60" y2="189" class="sv-ink"/><text x="46" y="193" class="sv-tm" text-anchor="end">+3</text><line x1="52" y1="208" x2="60" y2="208" class="sv-ink"/><text x="46" y="212" class="sv-tm" text-anchor="end">+4</text><path d="M 96 40 C 104 80 128 110 134 132 C 128 160 118 190 112 214" class="sv-wall"/><path d="M 284 40 C 276 80 252 110 246 132 C 252 160 262 190 268 214" class="sv-wall"/><polygon points="134,126 146,132 134,138" class="sv-spine"/><polygon points="246,126 234,132 246,138" class="sv-spine"/><line x1="66" y1="56" x2="292" y2="56" class="sv-hodge"/><text x="306" y="60" class="sv-tb" text-anchor="middle">I</text><line x1="66" y1="94" x2="292" y2="94" class="sv-hodge"/><text x="306" y="98" class="sv-tb" text-anchor="middle">II</text><line x1="66" y1="132" x2="292" y2="132" class="sv-hodge0"/><text x="306" y="136" class="sv-tb" text-anchor="middle">III</text><line x1="66" y1="208" x2="292" y2="208" class="sv-hodge"/><text x="306" y="212" class="sv-tb" text-anchor="middle">IV</text><circle cx="190" cy="102" r="30" class="sv-head"/><text x="190" y="106" class="sv-t" text-anchor="middle">vértice no 0</text><text x="190" y="150" class="sv-t" text-anchor="middle">espinhas isquiáticas</text><text x="190" y="202" class="sv-tm" text-anchor="middle">saída</text></svg>
+    <figcaption>De Lee conta centímetros a partir das espinhas (acima, negativo; abaixo, positivo). Hodge tem quatro planos; só o III tem equivalência exata (= 0 de De Lee).</figcaption>
+  </figure>
+  <div class="prose"><ul>
+    <li>Hodge: I = borda superior da sínfise (estreito superior); II = borda inferior da sínfise; III = espinhas isquiáticas; IV = ponta do cóccix.</li>
+    <li><strong>Insinuação</strong>: o biparietal passa o estreito superior; no toque, o vértice chega ao plano 0. Fixa não é insinuada: um polo em -2 já não se mobiliza, mas ainda não insinuou.</li>
+    <li>O bi-isquiático (10,5 cm) é o ponto mais estreito do canal: a parada por DCP costuma acontecer perto do 0.</li>
+    <li>Assinclitismo anterior (Naegele): o parietal anterior desce primeiro e a sutura sagital fica perto do sacro. Posterior (Litzmann): sutura perto da pube. Persistente, atrasa a descida.</li>
+    <li>Bacia: ginecoide favorece o parto; androide é a pior (espinhas proeminentes, parada no estreito médio); antropoide dificulta a insinuação; platipeloide insinua em transversa. Smellie: conjugata obstétrica = diagonalis menos 1,5 cm.</li>
+  </ul></div>
+</section>
+
+<section class="synth" id="gat">
+  <h2>Gatilhos de prova</h2>
+  <p class="note">Uma linha por degrau. Vermelho = onde a banca derruba.</p>
+  <div class="trig">
+    <div><span class="tk">D0 Papel</span><span class="tv">Confira se o quadradinho vale 10 ou 5 bpm; CTG só no alto risco</span></div>
+    <div><span class="tk">D1 Variabilidade</span><span class="tv">6-25 tranquiliza; <b>sinusoidal = anemia fetal grave</b></span></div>
+    <div><span class="tk">D2 Aceleração</span><span class="tv">15 bpm por 15 s; presente exclui hipóxia, <b>ausente não confirma</b></span></div>
+    <div><span class="tk">D3 DIPs</span><span class="tv">Precoce = cabeça; <b>tardia = placenta (fundo depois do pico)</b>; variável = cordão</span></div>
+    <div><span class="tk">D4 Categorias</span><span class="tv">Variabilidade moderada exclui III; <b>sem aceleração pode ser I</b></span></div>
+    <div><span class="tk">D5 Anteparto</span><span class="tv">Reativo = 2 acelerações; estimulada = 20 bpm por 3 min</span></div>
+    <div><span class="tk">D6 Partograma</span><span class="tv">Triângulo = dilatação, círculo = altura; <b>ação 4 h após a alerta</b></span></div>
+    <div><span class="tk">D7 Dilatação</span><span class="tv">Vertical = taquitócico; deitado = fase ativa prolongada; <b>platô = parada (DCP)</b></span></div>
+    <div><span class="tk">D8 Descida</span><span class="tv">Dilatação total + círculo parado = parada da descida; <b>DCP absoluta = cesárea</b></span></div>
+    <div><span class="tk">D9 Estática</span><span class="tv">Situação = eixo; posição = dorso; apresentação = polo no estreito superior</span></div>
+    <div><span class="tk">D10 Deflexão</span><span class="tv">Lambda = fletida; bregma = 1º grau; <b>fronte não passa</b></span></div>
+    <div><span class="tk">D11 Variedade</span><span class="tv">Esquerda gira anti-horário; <b>posterior = 135°</b>; meta OP</span></div>
+    <div><span class="tk">D12 Altura</span><span class="tv">0 = espinhas = Hodge III; <b>fixa não é insinuada</b></span></div>
+  </div>
+</section>
+
+<section class="synth arm" id="arm">
+  <h2>Armadilhas de banca</h2>
+  <p class="note">Cada uma aponta o degrau onde o fato mora.</p>
+  <ol class="armas">
+    <li>Ler a FCF sem conferir a escala do papel (10 ou 5 bpm por quadradinho). <span class="d">D0</span></li>
+    <li>CTG intraparto de rotina no risco habitual: não ajuda e aumenta cesárea. <span class="d">D0</span></li>
+    <li>Ausência de aceleração como prova de hipóxia: pode ser sono ou sedativo. <span class="d">D2</span></li>
+    <li>Trocar os mecanismos: tardia não é compressão de cordão; é insuficiência placentária. <span class="d">D3</span></li>
+    <li>Desaceleração precoce como sofrimento fetal: é compressão cefálica, fisiológica. <span class="d">D3</span></li>
+    <li>Classificar como II um traçado normal sem acelerações e com precoces: é I. <span class="d">D4</span></li>
+    <li>Categoria III com variabilidade moderada: impossível. <span class="d">D4</span></li>
+    <li>Usar 15 bpm por 15 s para a CTG estimulada; o corte é 20 bpm por 3 min. <span class="d">D5</span></li>
+    <li>Abrir o partograma na fase latente. <span class="d">D6</span></li>
+    <li>Indicar cesárea só por cruzar a linha de ação ou por dilatar menos de 1 cm/h. <span class="d">D6, D7</span></li>
+    <li>Chamar de parada da descida um platô de círculos com dilatação incompleta. <span class="d">D8</span></li>
+    <li>Fórcipe de Simpson para rodar OET: só o Kielland roda. <span class="d">D8</span></li>
+    <li>Confundir posição (dorso) com variedade de posição (ponto fetal x bacia). <span class="d">D9, D11</span></li>
+    <li>Tentar parto vaginal na apresentação de fronte. <span class="d">D10</span></li>
+    <li>Ler direita e esquerda pelo lado do examinador. <span class="d">D11</span></li>
+    <li>Tomar polo fixo em -2 como insinuado. <span class="d">D12</span></li>
+  </ol>
+</section>
+
+<footer>
+  <p><strong>Fontes:</strong> <code>resumos/GO/15. Vitalidade Fetal.pdf</code> (EMED 2024, Profa. Natália Carvalho), citado como GO/15; <code>GO/5. Distocia e Partograma.pdf</code> (2026), GO/5; <code>GO/18. Mecanismo de Parto e Fases Clínicas do Parto.pdf</code> (2026), GO/18; <code>GO/16. Assistência ao Parto.pdf</code> (GO/16: fases clínicas, intervalos de toque e de ausculta); <code>GO/6. Bacia Obstétrica, Pelvimetria e Estática Fetal.pdf</code> (2024), GO/6; <code>GO/25. Pré-Natal.pdf</code> (manobras de Leopold); resumos <code>GO/Vitalidade Fetal.md</code>, <code>GO/Assistência ao Parto.md</code> e <code>GO/Pré-Natal.md</code>.</p>
+  <p>Figuras desenhadas para esta aula a partir das descrições e figuras dos PDFs. Fora das fontes locais: a definição anatômica dos planos de Hodge I, II e IV (o material só iguala o III ao 0 de De Lee).</p>
+  <p>Prepara a tarefa #5424 do plano (imagem obstétrica: cardiotocografia, partograma e estática fetal).</p>
+</footer>
+</div>

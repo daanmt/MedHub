@@ -1,0 +1,438 @@
+<title>MCCP e decisão compartilhada</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,480;9..144,600;9..144,680&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EFF3F0; --card:#FAFCFA; --sunk:#E2E9E4;
+  --ink:#18211C; --ink2:#4C5A52; --ink3:#6F7D75;
+  --line:rgba(24,33,28,.13); --line2:rgba(24,33,28,.26);
+  --teal:#1F6B5E; --teal-ink:#154A41; --teal-wash:#DCEBE5;
+  --carmine:#8E2F41; --carmine-ink:#6B2231; --carmine-wash:#F5E2E6;
+  --amber:#8A5A17; --amber-ink:#6B4610; --amber-wash:#F3E6CC;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#8A988F;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#131A16; --card:#1B2420; --sunk:#25302A;
+  --ink:#E8EFEA; --ink2:#AEBBB3; --ink3:#8A988F;
+  --line:rgba(232,239,234,.14); --line2:rgba(232,239,234,.28);
+  --teal:#7FC7B6; --teal-ink:#A6DDCF; --teal-wash:#22382F;
+  --carmine:#E19AA8; --carmine-ink:#EDB7C1; --carmine-wash:#3D2229;
+  --amber:#D6A857; --amber-ink:#E8C384; --amber-wash:#3A2E15;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font:16px/1.6 "Source Sans 3",-apple-system,"Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+h1,h2,h3{margin:0;font-family:Fraunces,Georgia,serif;font-weight:600;letter-spacing:-.01em;text-wrap:balance;line-height:1.15;color:var(--ink)}
+.wrap{max-width:780px;margin:0 auto;padding:0 16px 70px}
+:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+a{color:var(--teal-ink)}
+strong{font-weight:600;color:var(--ink)}
+
+/* topo */
+.top{padding:36px 0 22px;border-bottom:1px solid var(--line2)}
+.eye{font:600 11px/1.3 "Source Sans 3";letter-spacing:.12em;text-transform:uppercase;color:var(--teal-ink);margin:0 0 14px}
+.top h1{font-size:clamp(28px,6vw,44px);font-weight:680;margin-bottom:14px}
+.top .sub{font-size:16.5px;line-height:1.55;color:var(--ink2);margin:0 0 20px}
+.stats{display:flex;gap:18px;flex-wrap:wrap}
+.stat{display:flex;flex-direction:column;gap:2px;min-width:0}
+.stat b{font:600 21px/1 "IBM Plex Mono";color:var(--teal-ink);font-variant-numeric:tabular-nums}
+.stat span{font-size:11.5px;color:var(--ink3)}
+
+.nav{display:flex;flex-wrap:wrap;gap:6px;padding:20px 0 4px}
+.nav a{font-size:13px;text-decoration:none;color:var(--ink2);border:1px solid var(--line2);border-radius:2px;padding:4px 9px;min-width:0}
+.nav a:hover{color:var(--ink);border-color:var(--teal)}
+
+/* atos */
+.ato{margin:40px 0 0;padding:14px 16px;background:var(--teal-wash);border-left:3px solid var(--teal)}
+.ato span{font:700 10.5px "Source Sans 3";letter-spacing:.12em;text-transform:uppercase;color:var(--teal-ink);display:block;margin-bottom:3px}
+.ato h2{font-size:clamp(21px,4vw,28px)}
+
+/* trilho dos blocos */
+.trilho-box{margin:18px 0 0;padding:16px 14px 10px;background:var(--card);border:1px solid var(--line2)}
+.trilho-box p{margin:0 0 6px;font-size:14px;color:var(--ink3)}
+.trilho{list-style:none;margin:0;padding:0;display:grid}
+.trilho li{position:relative;min-width:0}
+.trilho a{display:grid;grid-template-columns:30px minmax(0,1fr);gap:11px;align-items:start;padding:6px 0;text-decoration:none}
+.trilho .n{width:30px;height:30px;border-radius:50%;border:1.5px solid var(--teal);background:var(--card);display:flex;align-items:center;justify-content:center;font:600 12px "IBM Plex Mono";color:var(--teal-ink);position:relative;z-index:1}
+.trilho li:not(:last-child)::before{content:"";position:absolute;left:14px;top:36px;bottom:-6px;width:1.5px;background:var(--teal);opacity:.5}
+.trilho .t{min-width:0;padding-top:3px}
+.trilho b{display:block;font-weight:600;font-size:15px;line-height:1.3;color:var(--ink)}
+.trilho small{display:block;font-size:13px;line-height:1.4;color:var(--ink3)}
+.trilho a:hover b{color:var(--teal-ink)}
+
+/* degraus */
+.degrau{padding:30px 0;border-bottom:1px solid var(--line)}
+.dhead{display:flex;gap:13px;align-items:flex-start;margin-bottom:12px}
+.dnum{flex-shrink:0;width:38px;height:38px;border:1.5px solid var(--teal);border-radius:50%;display:flex;align-items:center;justify-content:center;font:600 14px "IBM Plex Mono";color:var(--teal-ink)}
+.dtitle{min-width:0;padding-top:3px}
+.dtitle h3{font-size:clamp(19px,3.4vw,24px)}
+.src{display:block;margin-top:5px;font:500 11.5px/1.4 "IBM Plex Mono";color:var(--ink3)}
+.lede{font-size:16px;line-height:1.55;color:var(--ink2);margin:0 0 14px;font-style:italic}
+.prose ul{margin:0 0 12px;padding-left:20px}
+.prose li{font-size:15.4px;line-height:1.55;color:var(--ink2);margin-bottom:6px}
+.prose li:last-child{margin-bottom:0}
+h4{font:600 14px "Source Sans 3";color:var(--ink);margin:20px 0 8px}
+
+.trap,.banca{margin:16px 0;padding:13px 16px}
+.trap{border-left:3px solid var(--carmine);background:var(--carmine-wash)}
+.banca{border-left:3px solid var(--amber);background:var(--amber-wash)}
+.albl{font:700 10.5px "Source Sans 3";letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px}
+.trap .albl{color:var(--carmine-ink)}
+.banca .albl{color:var(--amber-ink)}
+.trap p,.banca p{font-size:15px;line-height:1.55;color:var(--ink);margin:0}
+
+/* lado a lado */
+.vs{display:grid;grid-template-columns:minmax(0,1fr);gap:1px;background:var(--line2);border:1px solid var(--line2);margin:16px 0}
+.vs>div{background:var(--card);padding:12px 14px;min-width:0}
+.vs h5{font:700 12px "Source Sans 3";letter-spacing:.04em;text-transform:uppercase;margin:0 0 6px}
+.vs .a h5{color:var(--carmine-ink)}
+.vs .b h5{color:var(--teal-ink)}
+.vs ul{margin:0;padding-left:17px}
+.vs li{font-size:14.4px;line-height:1.5;color:var(--ink2);margin-bottom:4px;overflow-wrap:break-word}
+
+/* tabelas de critério */
+.crit{border:1px solid var(--line2);margin:16px 0;background:var(--card)}
+.crit .row{display:grid;grid-template-columns:minmax(0,1fr);gap:2px;padding:9px 13px;font-size:14.2px}
+.crit .row+.row{border-top:1px solid var(--line)}
+.crit .row>*{min-width:0}
+.crit .k{font-weight:600;color:var(--teal-ink)}
+.crit .v{color:var(--ink2);line-height:1.48;overflow-wrap:break-word}
+.crit.hd .row:first-child{background:var(--sunk)}
+.crit.hd .row:first-child>*{font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink3);font-weight:600}
+.crit.c3 .row{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:4px 12px}
+.crit.c3 .row .k{grid-column:1 / -1}
+.crit.c3.hd .row:first-child .k{display:none}
+.mal{color:var(--carmine-ink);font-weight:600}
+
+/* blocos de número */
+.ext{display:grid;grid-template-columns:minmax(0,1fr);gap:1px;background:var(--line2);border:1px solid var(--line2);margin:16px 0}
+.ext>div{background:var(--card);padding:13px 14px;min-width:0}
+.ext .fv{display:block;font:600 17px/1.25 Fraunces,Georgia,serif;color:var(--teal-ink);margin-bottom:5px}
+.ext .tot .fv{color:var(--carmine-ink)}
+.ext .fk{font-size:14px;line-height:1.48;color:var(--ink2)}
+
+/* referência recolhida */
+details.ref{margin:18px 0;border:1px solid var(--line2);background:var(--card)}
+details.ref>summary{cursor:pointer;list-style:none;padding:12px 16px;font:600 13.5px "Source Sans 3";color:var(--teal-ink);display:flex;align-items:center;gap:9px}
+details.ref>summary::-webkit-details-marker{display:none}
+details.ref>summary::before{content:"+";font:600 15px "IBM Plex Mono";width:16px;flex-shrink:0}
+details.ref[open]>summary::before{content:"-"}
+details.ref .refbody{padding:0 14px 14px}
+details.ref .crit{margin:4px 0 0}
+
+/* síntese */
+.synth{background:var(--card);border:1px solid var(--line2);padding:20px 16px;margin-top:40px}
+.synth h2{font-size:23px;margin-bottom:6px}
+.synth .note{font-size:14px;color:var(--ink3);margin:0 0 14px}
+.trig{display:grid;grid-template-columns:minmax(0,1fr);gap:1px;background:var(--line2);border:1px solid var(--line2)}
+.trig div{background:var(--sunk);padding:10px 13px;min-width:0}
+.trig .tk{font:700 11px "IBM Plex Mono";color:var(--teal-ink);display:block;margin-bottom:3px}
+.trig .tv{font-size:13.8px;line-height:1.45;color:var(--ink2)}
+.trig .tv b{color:var(--carmine-ink)}
+.synth.arm{border-left:3px solid var(--carmine)}
+.synth.arm h2::before{content:"";display:inline-block;width:11px;height:11px;border-radius:50%;background:var(--carmine);margin-right:9px;vertical-align:2px}
+ol.armas{margin:0;padding-left:22px}
+ol.armas li{font-size:15px;line-height:1.5;color:var(--ink2);margin-bottom:8px}
+ol.armas li::marker{font:600 13px "IBM Plex Mono";color:var(--carmine-ink)}
+ol.armas .d{font:500 11.5px "IBM Plex Mono";color:var(--ink3)}
+
+footer{margin-top:46px;padding-top:18px;border-top:1px solid var(--line2)}
+footer p{font-size:12.3px;color:var(--ink3);margin:0 0 7px;line-height:1.5}
+code{font-family:"IBM Plex Mono",Consolas,monospace;font-size:11.5px;background:var(--sunk);padding:1px 4px;border-radius:2px;word-break:break-all}
+
+/* telas maiores: o mesmo conteúdo ganha colunas */
+@media (min-width:560px){
+  .vs{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .crit .row{grid-template-columns:150px minmax(0,1fr);gap:12px}
+  .crit.c3 .row{grid-template-columns:130px minmax(0,1fr) minmax(0,1fr);gap:12px}
+  .crit.c3 .row .k{grid-column:auto}
+  .crit.c3.hd .row:first-child .k{display:block}
+  .trig{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .ext{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (min-width:640px){
+  .wrap{padding:0 24px 90px}
+  .top{padding:46px 0 26px}
+  .degrau{padding:34px 0}
+  .synth{padding:26px 22px}
+  .trilho{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .trilho a{grid-template-columns:minmax(0,1fr);gap:8px;padding:0 10px 4px 0}
+  .trilho li:not(:last-child)::before{left:36px;right:4px;top:15px;bottom:auto;width:auto;height:1.5px}
+  .trilho .t{padding-top:0}
+}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <p class="eye">MedHub · Aula-base · Medicina de Família e Comunidade · tarefa #878</p>
+  <h1>Método clínico centrado na pessoa e decisão compartilhada</h1>
+  <p class="sub">É o tópico mais cobrado da MFC. A banca descreve uma cena de consulta e pede o componente, às vezes pela ordem. A aula traz os quatro componentes, as duas versões do método e o jeito de decidir junto sem empurrar nem abandonar a pessoa.</p>
+  <div class="stats">
+    <div class="stat"><b>47%</b><span>das questões de MFC</span></div>
+    <div class="stat"><b>4</b><span>componentes (2017, Gusso)</span></div>
+    <div class="stat"><b>6</b><span>componentes (original, Duncan)</span></div>
+    <div class="stat"><b>SIFE</b><span>a experiência da doença</span></div>
+  </div>
+</header>
+
+<nav class="nav" aria-label="Atalhos">
+  <a href="#d0">O método</a><a href="#d1">1º Explorar</a><a href="#d2">2º Pessoa</a><a href="#d3">3º Plano</a><a href="#d4">4º Relação</a>
+  <a href="#d5">6 x 4</a><a href="#d6">Decidir junto</a><a href="#d7">Na APS</a><a href="#d8">A cena</a>
+  <a href="#gat">Gatilhos</a><a href="#arm">Armadilhas</a>
+</nav>
+
+<div class="trilho-box">
+  <p>Três blocos, na ordem desta aula:</p>
+  <ol class="trilho">
+    <li><a href="#d0"><span class="n">1</span><span class="t"><b>O método</b><small>de onde vem e o que muda</small></span></a></li>
+    <li><a href="#d1"><span class="n">2</span><span class="t"><b>Os componentes</b><small>os quatro, na ordem, e as duas versões</small></span></a></li>
+    <li><a href="#d6"><span class="n">3</span><span class="t"><b>Na prática</b><small>decidir junto, APS, a cena da prova</small></span></a></li>
+  </ol>
+</div>
+
+<div class="ato" id="metodo"><span>Bloco 1 · O método</span><h2>A doença do livro e a pessoa que adoece</h2></div>
+
+<section class="degrau" id="d0">
+  <div class="dhead"><span class="dnum">0</span><div class="dtitle"><h3>Do modelo biomédico ao centrado na pessoa</h3><span class="src">MFC/19 p9; resumo MFC §3</span></div></div>
+  <p class="lede">O modelo biomédico explica o adoecimento só pela biologia. O método clínico centrado na pessoa (MCCP) junta a doença com a vivência de quem adoece.</p>
+  <div class="vs">
+    <div class="a"><h5>Modelo biomédico</h5><ul>
+      <li>Explica tudo por mecanismo biológico.</li>
+      <li>Sem espaço para o psicossocial e o comportamental.</li>
+      <li>Não explica a queixa persistente com exame normal.</li></ul></div>
+    <div class="b"><h5>MCCP</h5><ul>
+      <li>Integra a doença e a perspectiva da pessoa doente.</li>
+      <li>Leva as preferências da pessoa para o plano.</li>
+      <li>O médico compartilha o poder de decidir.</li></ul></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Nome cunhado em 1995 por <strong>Moira Stewart, Ian McWhinney</strong> e colaboradores, no Canadá.</li>
+    <li>Eixo que une os componentes: <strong>autonomia</strong>. O médico renuncia a decidir tudo sozinho e divide a decisão.</li>
+    <li>Não é exclusivo da MFC nem da consulta de doença crônica. Vale para queixa aguda, em qualquer especialidade, e não depende da duração da consulta.</li>
+  </ul></div>
+</section>
+
+<div class="ato" id="componentes"><span>Bloco 2 · Os componentes</span><h2>Explorar, entender, planejar, vincular</h2></div>
+
+<section class="degrau" id="d1">
+  <div class="dhead"><span class="dnum">1</span><div class="dtitle"><h3>1º componente: explorar a saúde, a doença e a experiência da doença</h3><span class="src">MFC/19 p9-10; resumo MFC §3.1</span></div></div>
+  <p class="lede">Começa pela percepção da pessoa. Correm juntas a doença que o médico investiga e a experiência que a pessoa vive.</p>
+  <div class="crit c3 hd">
+    <div class="row"><span class="k">Trilha</span><span class="v">O que é</span><span class="v">Como se colhe</span></div>
+    <div class="row"><span class="k">Doença</span><span class="v">O diagnóstico biomédico</span><span class="v">História, exame físico, exames</span></div>
+    <div class="row"><span class="k">Experiência da doença</span><span class="v">Como a pessoa vive o adoecer</span><span class="v">SIFE (abaixo)</span></div>
+    <div class="row"><span class="k">Saúde</span><span class="v">O que é estar bem para essa pessoa; seus recursos e aspirações</span><span class="v">Perguntar o que ela quer voltar a fazer (entrou na versão de 2017)</span></div>
+  </div>
+  <div class="crit">
+    <div class="row"><span class="k">S · Sentimentos</span><span class="v">Medos e preocupações com o problema</span></div>
+    <div class="row"><span class="k">I · Ideias</span><span class="v">O que a pessoa acha que tem e por quê</span></div>
+    <div class="row"><span class="k">F · Funções</span><span class="v">O efeito do problema no dia a dia: sono, trabalho, cuidar da casa</span></div>
+    <div class="row"><span class="k">E · Expectativas</span><span class="v">O que espera do médico e da consulta</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Em inglês, FIFE: feelings, ideas, function, expectations.</li>
+    <li>Mecanismo: doença e experiência podem divergir. Há doença sem experiência (hipertensão sem sintoma, e a pessoa não adere porque não se sente doente). Há experiência sem doença achada (queixa com exames normais).</li>
+  </ul></div>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p>O SIFE é do 1º componente. "Como a dor tem atrapalhado o trabalho?" pergunta função (1º), não contexto (2º).</p></div>
+</section>
+
+<section class="degrau" id="d2">
+  <div class="dhead"><span class="dnum">2</span><div class="dtitle"><h3>2º componente: entender a pessoa como um todo</h3><span class="src">MFC/19 p10, 12-17; resumo MFC §3.1, §5</span></div></div>
+  <p class="lede">Junta o que o 1º componente achou à vida inteira da pessoa: quem ela é, a família e o lugar onde vive.</p>
+  <div class="crit">
+    <div class="row"><span class="k">A pessoa</span><span class="v">História de vida, personalidade, momento do ciclo de vida</span></div>
+    <div class="row"><span class="k">A família</span><span class="v">Estrutura e ciclo de vida familiar; as transições são os momentos de maior vulnerabilidade</span></div>
+    <div class="row"><span class="k">O contexto</span><span class="v">Trabalho, religião, escola, rede social, comunidade, cultura</span></div>
+  </div>
+  <div class="prose"><ul>
+    <li>Ferramentas que servem a este componente: genograma (estrutura interna da família, no mínimo 3 gerações) e ecomapa (vínculos com o meio externo).</li>
+    <li>Discriminador entre 1º e 2º: o 1º pergunta o efeito <strong>desta doença</strong> na vida; o 2º pergunta sobre <strong>a vida</strong>, com ou sem doença.</li>
+  </ul></div>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p>Inverter 1º e 2º é o erro mais comum. A ordem segue a consulta: explora a vivência -&gt; amplia para a pessoa inteira -&gt; faz o plano junto -&gt; intensifica o vínculo.</p></div>
+</section>
+
+<section class="degrau" id="d3">
+  <div class="dhead"><span class="dnum">3</span><div class="dtitle"><h3>3º componente: elaborar um plano conjunto de manejo</h3><span class="src">MFC/19 p10-11; resumo MFC §3.1, §4; Stewart 2017 (fora do PDF)</span></div></div>
+  <p class="lede">Médico e pessoa buscam um terreno comum. Tuckett chamou isso de encontro entre especialistas.</p>
+  <div class="prose"><ul>
+    <li>Metáfora de Tuckett (1985): o médico é especialista no biomédico; a pessoa, na própria experiência de saúde e de doença.</li>
+    <li>Pede postura ativa da pessoa, não só escuta do médico.</li>
+    <li>Três acordos (Stewart): quais são os <strong>problemas e as prioridades</strong>; quais as <strong>metas</strong>; qual o <strong>papel</strong> de cada um.</li>
+    <li>Plano conjunto não é atender qualquer pedido. É negociar entre a evidência e a preferência. É aqui que mora a decisão compartilhada (degrau 6).</li>
+  </ul></div>
+  <div class="vs">
+    <div class="b"><h5>Plano conjunto (3º componente)</h5><ul>
+      <li>Nasce na consulta.</li>
+      <li>Médico e pessoa.</li>
+      <li>Em toda consulta, simples ou complexa.</li></ul></div>
+    <div class="a"><h5>Projeto Terapêutico Singular</h5><ul>
+      <li>Nasce em reunião da equipe interdisciplinar, com apoio matricial se preciso.</li>
+      <li>Para caso complexo (pessoa, família ou comunidade).</li>
+      <li>Liderado pelo profissional mais vinculado; qualquer um pode indicar o caso.</li></ul></div>
+  </div>
+</section>
+
+<section class="degrau" id="d4">
+  <div class="dhead"><span class="dnum">4</span><div class="dtitle"><h3>4º componente: intensificar a relação entre a pessoa e o médico</h3><span class="src">MFC/19 p7, 10, 22; resumo MFC §2, §7, §9</span></div></div>
+  <p class="lede">A relação faz parte do tratamento. O médico se aproxima da realidade da pessoa, com empatia e vínculo.</p>
+  <div class="prose"><ul>
+    <li>Evitar o distanciamento que transforma a pessoa em tarefa a cumprir.</li>
+    <li>A longitudinalidade (cuidado ao longo do tempo) constrói vínculo e lealdade. Visita domiciliar e abordagem familiar ajudam.</li>
+    <li>Michael Balint (anos 1950): o <strong>efeito droga</strong>. O próprio médico age como medicamento pela qualidade da relação.</li>
+    <li>Grupo Balint: 6 a 12 profissionais, grupo fixo, líder e colíder, 1h30 a 2h. O foco é a relação, não o caso clínico; não é terapia de grupo.</li>
+    <li>Transferência: sentimentos da pessoa dirigidos ao médico. Contratransferência: do médico para a pessoa. Reconhecê-la protege o vínculo.</li>
+  </ul></div>
+</section>
+
+<section class="degrau" id="d5">
+  <div class="dhead"><span class="dnum">5</span><div class="dtitle"><h3>As duas versões: seis componentes ou quatro</h3><span class="src">Resumo MFC §3.2</span></div></div>
+  <p class="lede">A versão original tinha seis componentes. A revisão de 2017 ficou com quatro, porque dois já estavam implícitos nos outros.</p>
+  <div class="crit c3 hd">
+    <div class="row"><span class="k">Nº</span><span class="v">Original (até 2017; Duncan)</span><span class="v">Revisada (2017; Gusso)</span></div>
+    <div class="row"><span class="k">1º</span><span class="v">Explorando a doença e a experiência da doença</span><span class="v">Explorando a <strong>saúde</strong>, a doença e a experiência da doença</span></div>
+    <div class="row"><span class="k">2º</span><span class="v">Entendendo a pessoa como um todo</span><span class="v">Entendendo a pessoa como um todo</span></div>
+    <div class="row"><span class="k">3º</span><span class="v">Elaborando um projeto comum de manejo</span><span class="v">Elaborando um plano conjunto de manejo dos problemas</span></div>
+    <div class="row"><span class="k">4º</span><span class="v mal">Incorporando a prevenção e a promoção da saúde</span><span class="v mal">Intensificando a relação entre a pessoa e o médico</span></div>
+    <div class="row"><span class="k">5º</span><span class="v">Fortalecendo a relação médico-pessoa</span><span class="v">Não existe (virou o 4º)</span></div>
+    <div class="row"><span class="k">6º</span><span class="v">Sendo realista: tempo, recursos, trabalho em equipe</span><span class="v">Retirado: implícito nos demais</span></div>
+  </div>
+  <div class="banca"><div class="albl">Depende da banca</div>
+    <p>O 4º componente muda de versão: prevenção e promoção no Duncan, relação no Gusso. Questão que cita "sendo realista" ou "incorporando a prevenção" está na versão original. Os três primeiros têm o mesmo lugar nas duas.</p></div>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p>"Exercer a compaixão" ou "ser humanista" não é componente em nenhuma versão. Confira contra a lista fechada, não contra o espírito do método.</p></div>
+</section>
+
+<div class="ato" id="pratica"><span>Bloco 3 · Na prática</span><h2>Decidir junto, na APS e na prova</h2></div>
+
+<section class="degrau" id="d6">
+  <div class="dhead"><span class="dnum">6</span><div class="dtitle"><h3>Decisão compartilhada: o 3º componente em ação</h3><span class="src">Resumo MFC §3; exemplos dos resumos citados no rodapé; modelos e passos fora do PDF</span></div></div>
+  <p class="lede">Decidir junto é obrigatório quando há mais de uma opção razoável e a escolha depende do que a pessoa valoriza.</p>
+  <div class="crit c3 hd">
+    <div class="row"><span class="k">Modelo</span><span class="v">Quem decide</span><span class="v">O risco</span></div>
+    <div class="row"><span class="k">Paternalista</span><span class="v">O médico, pelo que acha melhor</span><span class="v">Plano que a pessoa não segue; valores ignorados</span></div>
+    <div class="row"><span class="k">Informativo</span><span class="v">A pessoa, sozinha, diante de uma pilha de dados</span><span class="v">O médico se omite de recomendar: é abandono</span></div>
+    <div class="row"><span class="k">Compartilhado</span><span class="v">Os dois. O médico traz evidência e recomendação; a pessoa traz valores e contexto</span><span class="v">Pede tempo e comunicação clara</span></div>
+  </div>
+  <h4>Os passos</h4>
+  <div class="prose"><ul>
+    <li>Convidar: avisar que há uma escolha e que a opinião da pessoa conta.</li>
+    <li>Apresentar as opções, inclusive esperar ou não fazer, com benefício e risco de cada uma.</li>
+    <li>Explorar a preferência com o SIFE do 1º componente: o que ela teme e o que espera.</li>
+    <li>Decidir junto, ou combinar quando decidir, e registrar.</li>
+  </ul></div>
+  <h4>Onde a decisão compartilhada aparece nas fontes</h4>
+  <div class="crit">
+    <div class="row"><span class="k">Mamografia de 40 a 49 anos</span><span class="v">Por demanda, após orientar riscos e benefícios (MS, Nota Técnica 626/2025). Também acima de 74.</span></div>
+    <div class="row"><span class="k">PSA sem sintoma</span><span class="v">O MS não rastreia. Ao homem que pede: explicar o sobrediagnóstico e decidir junto.</span></div>
+    <div class="row"><span class="k">Depressão leve</span><span class="v">Psicoterapia e atividade física; antidepressivo por decisão compartilhada.</span></div>
+    <div class="row"><span class="k">Abortamento retido</span><span class="v">Misoprostol, aspiração manual intrauterina ou conduta expectante por até 4 semanas.</span></div>
+  </div>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p>"O senhor decide" sem informação não é decisão compartilhada; é o modelo informativo. Convencer a pessoa a aceitar a escolha já feita também não é; é paternalismo. O médico mantém o dever de recomendar.</p></div>
+</section>
+
+<section class="degrau" id="d7">
+  <div class="dhead"><span class="dnum">7</span><div class="dtitle"><h3>O MCCP na Atenção Primária</h3><span class="src">Resumo APS §1.2, §3.2, §7.4, §8; MFC/19 p6-7</span></div></div>
+  <p class="lede">Cuidado centrado na pessoa é diretriz da Atenção Básica. Mas não é o que distingue a Atenção Primária à Saúde (APS) de outro serviço.</p>
+  <div class="prose"><ul>
+    <li>Política Nacional de Atenção Básica (PNAB 2017): "cuidado centrado na pessoa" está entre as nove diretrizes.</li>
+    <li>O que separa a APS do pronto-socorro é <strong>vínculo + longitudinalidade</strong>, somados a acesso de primeiro contato e coordenação do cuidado. MCCP, acolhimento e decisão compartilhada cabem em qualquer serviço.</li>
+    <li>Em MFC, entre uma alternativa programática (protocolo, rastreio sem recomendação) e uma relacional (acolher, vincular, abordar a pessoa), quando as duas são defensáveis a banca premia a relacional.</li>
+    <li>Exemplo: o sofrimento mental específico do diabetes não é diagnóstico. A conduta é abordar as dúvidas e angústias, ou seja, o 1º componente em ação. Remédio só se houver depressão ou ansiedade caracterizada.</li>
+    <li>O médico de família coordena o cuidado mesmo quando a pessoa circula por outros pontos da rede.</li>
+  </ul></div>
+  <details class="ref"><summary>Os quatro princípios da MFC e o contraste com o especialista focal</summary><div class="refbody">
+    <div class="crit hd">
+      <div class="row"><span class="k">Princípio (Gusso)</span><span class="v">O que quer dizer</span></div>
+      <div class="row"><span class="k">Clínico qualificado</span><span class="v">Saber construído para a APS, não soma de outras especialidades; coordena o cuidado na rede</span></div>
+      <div class="row"><span class="k">Influenciado pela comunidade</span><span class="v">Adapta-se às necessidades que mudam; trabalha em equipe, como membro ou líder</span></div>
+      <div class="row"><span class="k">Recurso de população definida</span><span class="v">Responde por um número limitado de pessoas; sobrecarga impede o cuidado personalizado</span></div>
+      <div class="row"><span class="k">Relação médico-pessoa é central</span><span class="v">Construída na longitudinalidade: a base do 4º componente</span></div>
+    </div>
+    <div class="vs">
+      <div class="b"><h5>Médico de família</h5><ul>
+        <li>Recebe a história natural no começo: sintoma pouco específico.</li>
+        <li>Constrói muitas hipóteses; diagnóstico menos específico.</li>
+        <li>Foco na pessoa e na continuidade.</li></ul></div>
+      <div class="a"><h5>Especialista focal</h5><ul>
+        <li>Recebe o caso avançado: sintoma mais definido.</li>
+        <li>Poucas hipóteses; diagnóstico definitivo.</li>
+        <li>Foco na doença; pouca continuidade.</li></ul></div>
+    </div>
+  </div></details>
+  <div class="trap"><div class="albl">Armadilha</div>
+    <p>Na vinheta que compara APS e pronto-socorro, "medicina centrada na pessoa" ou "integralidade" isoladas não são o discriminador. Procure tempo, continuidade e vínculo.</p></div>
+</section>
+
+<section class="degrau" id="d8">
+  <div class="dhead"><span class="dnum">8</span><div class="dtitle"><h3>Lendo a cena: qual componente?</h3><span class="src">Síntese dos degraus 1-5</span></div></div>
+  <p class="lede">Pergunte o que o médico está fazendo naquele momento da consulta. O verbo da cena aponta o componente.</p>
+  <div class="crit hd">
+    <div class="row"><span class="k">Componente</span><span class="v">O médico, na cena...</span></div>
+    <div class="row"><span class="k">1º · Ideias</span><span class="v">pergunta o que a pessoa acha que está causando o sintoma</span></div>
+    <div class="row"><span class="k">1º · Sentimentos</span><span class="v">pergunta o que mais a preocupa ou assusta</span></div>
+    <div class="row"><span class="k">1º · Funções</span><span class="v">pergunta como o problema mudou o sono, o trabalho, a rotina</span></div>
+    <div class="row"><span class="k">1º · Expectativas</span><span class="v">pergunta o que ela espera da consulta</span></div>
+    <div class="row"><span class="k">1º · Saúde</span><span class="v">pergunta o que é estar bem para ela e o que quer voltar a fazer</span></div>
+    <div class="row"><span class="k">2º</span><span class="v">conversa sobre a família, a fase da vida, a fé, o emprego; monta genograma ou ecomapa</span></div>
+    <div class="row"><span class="k">3º</span><span class="v">lista os problemas, combina prioridades e metas, divide tarefas; apresenta opções e decide junto</span></div>
+    <div class="row"><span class="k">4º (Gusso)</span><span class="v">cuida do vínculo e da continuidade; reconhece a própria irritação com a pessoa e trabalha isso</span></div>
+    <div class="row"><span class="k">4º (Duncan)</span><span class="v">aproveita a consulta para vacinas, rastreios devidos e orientação de hábitos</span></div>
+    <div class="row"><span class="k">6º (Duncan)</span><span class="v">ajusta o plano ao tempo, aos recursos e à equipe disponíveis</span></div>
+  </div>
+</section>
+
+<section class="synth" id="gat">
+  <h2>Gatilhos de prova</h2>
+  <p class="note">Uma linha por degrau. Vermelho = onde a banca derruba.</p>
+  <div class="trig">
+    <div><span class="tk">D0 Método</span><span class="tv">Stewart e McWhinney, 1995; autonomia; <b>qualquer consulta, qualquer especialidade</b></span></div>
+    <div><span class="tk">D1 Explorar</span><span class="tv">Doença + experiência + saúde; <b>SIFE é do 1º</b></span></div>
+    <div><span class="tk">D2 Pessoa</span><span class="tv">Pessoa, família, contexto; <b>o 2º não é o 1º</b></span></div>
+    <div><span class="tk">D3 Plano</span><span class="tv">Encontro entre especialistas (Tuckett); problemas, metas, papéis</span></div>
+    <div><span class="tk">D4 Relação</span><span class="tv">Vínculo, longitudinalidade; Balint e o efeito droga</span></div>
+    <div><span class="tk">D5 Versões</span><span class="tv">6 no Duncan, 4 no Gusso; <b>o 4º muda de versão</b></span></div>
+    <div><span class="tk">D6 Decidir junto</span><span class="tv">Opções razoáveis + valores da pessoa; <b>nem paternalista nem informativo</b></span></div>
+    <div><span class="tk">D7 APS</span><span class="tv">Diretriz da PNAB; <b>discriminador da APS é vínculo + longitudinalidade</b></span></div>
+    <div><span class="tk">D8 A cena</span><span class="tv">O verbo do médico aponta o componente</span></div>
+  </div>
+</section>
+
+<section class="synth arm" id="arm">
+  <h2>Armadilhas de banca</h2>
+  <p class="note">Cada uma aponta o degrau onde o fato mora.</p>
+  <ol class="armas">
+    <li>"O MCCP é exclusivo da MFC" ou "só para doença crônica": errado. <span class="d">D0</span></li>
+    <li>Pergunta sobre o efeito da doença no trabalho marcada como 2º componente: é função, 1º. <span class="d">D1, D2</span></li>
+    <li>"Entendendo a pessoa como um todo" como 1º componente: é o 2º. <span class="d">D2</span></li>
+    <li>Plano conjunto confundido com Projeto Terapêutico Singular: um é da consulta, o outro é da equipe para caso complexo. <span class="d">D3</span></li>
+    <li>"4º componente = prevenção e promoção" numa prova que segue o Gusso: lá o 4º é a relação. <span class="d">D5</span></li>
+    <li>"Exercer a compaixão" como componente: distrator inventado. <span class="d">D5</span></li>
+    <li>"O senhor decide" sem explicar as opções: modelo informativo, não compartilhado. <span class="d">D6</span></li>
+    <li>Decisão compartilhada como transferência de responsabilidade: o médico continua devendo recomendação. <span class="d">D6</span></li>
+    <li>"Medicina centrada na pessoa" como o que diferencia a APS do pronto-socorro: o discriminador é vínculo + longitudinalidade. <span class="d">D7</span></li>
+    <li>Rastreio ou protocolo sem recomendação formal, quando a alternativa relacional também cabe: a banca de MFC premia a relacional. <span class="d">D7</span></li>
+  </ol>
+</section>
+
+<footer>
+  <p><strong>Fontes:</strong> <code>resumos/Preventiva/19. Medicina de Família e Comunidade.pdf</code> (EMED 2026, Prof. Camilo Ramos), citada como MFC/19, p6-11 (princípios, MCCP, PTS) e p22 (Balint); <code>resumos/Preventiva/Medicina de Família e Comunidade.md</code> (SIFE, versões de 6 e 4 componentes, transferência e contratransferência); <code>resumos/Preventiva/Atenção Primária à Saúde no Brasil.md</code> (PNAB, discriminador APS x pronto-socorro, sofrimento mental específico do diabetes, alternativa relacional).</p>
+  <p>Exemplos de decisão compartilhada tirados dos resumos <code>GO/[GIN] CA de Mama.md</code>, <code>Cirurgia/Urologia.md</code>, <code>Clínica Médica/Psiquiatria/Transtornos do Humor.md</code> e <code>GO/[OBS] Sangramentos da Primeira Metade.md</code>.</p>
+  <p>Fora das fontes locais: os três acordos do plano conjunto e a inclusão de "saúde" no 1º componente (Stewart, 2017); a sigla FIFE; os modelos paternalista, informativo e compartilhado; os passos da decisão compartilhada. A bibliografia de MFC citada no plano é Gusso (Tratado) e Duncan (Medicina Ambulatorial).</p>
+  <p>Cumpre a tarefa #878 do plano. Marque "feito" no quadro depois de ler.</p>
+</footer>
+</div>

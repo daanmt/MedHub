@@ -729,3 +729,87 @@ def test_hash_do_painel_ignora_o_carimbo_iso(db_sintetico):
     a = painel.render_html(d)
     b = painel.render_html(dict(d, gerado_em="2026-09-23T18:47:00"))
     assert a != b and hub.hash_painel(a) == hub.hash_painel(b)
+
+
+# ------------------------------------------ P20 (s219): a tarefa na tela, uma regra com a Teoria
+
+#: questoes no banco do hub (`emed_questoes`) por tarefa do cenario: a #7 (Raciocinio, custom de aula,
+#: `q_previstas` 0) ganhou caderno de 15; a #5 (HAS, 60 previstas) tem 55 no hub + 2 spoilers UERJ 2022
+#: (ficam no banco, fora do hub); a #11 (Puericultura, S4, 0 previstas) ganhou 12.
+HUPE = "RJ - Universidade do Estado do Rio de Janeiro - UERJ (Hospital Universitário Pedro Ernesto - HUPE)"
+NO_BANCO = [(7, 15, "SES-DF 2024"), (5, 55, "SES-DF 2024"), (5, 2, HUPE + ", 2022"), (11, 12, "SES-DF 2024")]
+
+
+def _com_banco(caminho):
+    con = sqlite3.connect(caminho)
+    con.execute("CREATE TABLE emed_questoes (id INTEGER PRIMARY KEY AUTOINCREMENT, lista TEXT, tarefa_id INTEGER,"
+                " num INTEGER, banca TEXT, executor TEXT)")
+    nums = {}
+    for tarefa, n, banca in NO_BANCO:
+        for _ in range(n):
+            nums[tarefa] = nums.get(tarefa, 0) + 1
+            con.execute("INSERT INTO emed_questoes (lista, tarefa_id, num, banca, executor) VALUES (?,?,?,?,?)",
+                        ("t%d" % tarefa, tarefa, nums[tarefa], banca, "emed_api"))
+    con.commit()
+    con.close()
+
+
+def test_teoria_painel_e_boot_contam_o_banco_do_hub(db_sintetico, capsys):
+    """P20 item 6 (s219): 26 tarefas ganharam caderno no hub com `q_previstas` 0 (ou 20/60), e o
+    "Questoes da semana" da Teoria e o Painel contavam menos que a aba Listas. Uma funcao so
+    (`plano.q_da_tarefa` sobre `plano.com_q_hub`): a contagem do banco -- pelo criterio do
+    `--exportar`, sem o spoiler -- quando a tarefa tem questoes la; senao `q_previstas`. A Teoria, o
+    Painel, o boot (`plano.py --panorama`) e a Fase 1 do `day_plan` dizem o MESMO numero."""
+    import day_plan
+    import plano
+    from tools import hub
+    _com_banco(db_sintetico)
+    d = painel.coletar()
+    s = d["semana"]
+    t = {x["id"]: x for x in s["tarefas"]}
+    assert (t[5]["q"], t[7]["q"], t[1]["q"]) == (55, 15, 32), "banco sem spoiler; fora do banco, o previsto"
+    assert t[7]["no_hub"] and t[5]["no_hub"] and not t[1]["no_hub"]
+    assert s["q"] == 32 + 40 + 55 + 60 + 15
+    assert {r["semana"]: r["q"] for r in s["rota"]} == {3: 45, 4: 25 + 12}
+    # o boot
+    assert plano.main(["--panorama", "--json"]) == 0
+    pan = json.loads(capsys.readouterr().out)
+    assert pan["q_abertas"] == s["q"] and [r["q"] for r in pan["rota"]] == [r["q"] for r in s["rota"]]
+    cron = day_plan._cronograma_hoje(0, HOJE)
+    assert cron["restante_q"] == pan["fase1"]["q"] == d["ritmo"]["fase1_q"], "a Fase 1 do boot e do Painel"
+    # a Teoria: a MESMA leitura do plano (`hub._ler_plano`) e a MESMA regua
+    linhas, aviso = hub._ler_plano()
+    assert aviso is None
+    secoes, _b, _a = hub.secoes_do_quadro([], plano_linhas=linhas, calendario=dict(CALENDARIO), hoje=HOJE)
+    q = {x["chave"]: (x["q_plano"], x["q_com_atrasadas"]) for x in secoes}
+    assert q["2"][1] == s["q"] and q["4"][0] == 37, "a S3 so tem lista sem aula: fora da Teoria"
+    teoria = {i["id"]: i["q"] for x in secoes for i in x["itens"]}
+    assert teoria[7] == t[7]["q"] == 15 and teoria[11] == 12
+    pagina = painel.render_html(d)
+    li7 = re.search(r'<li class="tarefa" data-tarefa="7">.*?</li>', pagina, re.S).group(0)
+    assert "<span>15 questões</span>" in li7 and "resolver no hub" in li7 and "abrir aula" in li7
+
+
+def test_meta_e_acao_da_tarefa_no_painel_seguem_a_regra_da_teoria():
+    """P20 item 3/4: o Painel e a Teoria falam a MESMA lingua (`plano.meta_da_tarefa`): N questoes
+    quando ha questoes; a classe so sem acao nenhuma, em texto apagado da meta -- nunca na coluna de
+    acao. Questoes no banco = "resolver no hub", com ou sem link (a REMIT nao tinha link)."""
+    def t(**kw):
+        base = {"id": 9, "semana": 4, "atrasada": False, "tema": "Tema", "q": 0, "classe": "sem_lista",
+                "url_lista": None, "area": "Cirurgia", "rotulo": "CIR", "aula": None, "aulas": [],
+                "no_hub": False}
+        base.update(kw)
+        return painel._html_tarefa(base)
+    sem_nada = t()
+    assert '<p class="t-meta"><span class="t-rot">CIR</span> <span>sem lista ainda</span></p>' in sem_nada
+    assert '<p class="t-acao"></p>' in sem_nada and "tenue" not in sem_nada
+    aula = t(classe="aula")
+    assert "<span>aula a preparar</span>" in aula and '<p class="t-acao"></p>' in aula
+    remit = t(q=20, no_hub=True, aula="remit", aulas=[{"slug": "remit", "titulo": "REMIT"}],
+              tema="Resposta Endócrino- | Metabólica-Inflamatória ao Trauma | Cicatrização de Feridas")
+    assert "<span>20 questões</span>" in remit and "sem lista" not in remit
+    assert 'data-hub-modo="questoes">resolver no hub</a><br><a href="aulas/remit.html"' in remit
+    assert '<p class="t-tema">Resposta Endócrino-Metabólica-Inflamatória ao Trauma · Cicatrização de Feridas</p>' in remit
+    caderno = t(classe="caderno", q=43)
+    assert '<span>43 questões</span> <span>caderno a montar</span>' in caderno
+    assert '<p class="t-acao"></p>' in caderno, "a classe nunca mais na coluna de acao"

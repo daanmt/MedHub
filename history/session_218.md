@@ -47,4 +47,6 @@ Brief em scratch `brief_teoria.md` (+ 2 adendos: bloco de código cercado; Paine
 ## Fecho
 
 - Publish do hub delegado a subagente (o principal não tinha contexto para ler `index.html` + 31 resumos HTML na íntegra; os 31 `.md`-fonte foram lidos pelo principal). Lote `2026-10-07a` republicado SEM gravar (ele drenou; gravação = abertura da s219).
-- Custo: principal + Teoria (535 mil tokens) + publish (ver HANDOFF linha 3).
+- **Publicado Version 78** (subagente Opus: 365.702 tokens, 52 chamadas, 7,4 min): 32 enviados (painel regenerado por `painel.py --html` + 31 resumos) + página; 30 aulas mantidas; `--confirmar` OK. Publish recusado 2x até ler a V77 no ar (regra da ferramenta). O publicador leu página, painel e 2 resumos; os outros 29 por 4 subagentes dele (o principal já os lera). Nada do EMED, nada da UERJ 2022.
+- **Typos achados nos `.md` (não corrigidos -> s219):** "capacitação ponderada" (capitação, APS), "erltrograma" (Arboviroses), "never cordão" e "UN Teste" (Sífilis), "doênça" e "REABILIATAÇÃO" (Demências); Tuberculose §6.1 sem o título do PPD e "doença funcional" (= ativa).
+- Custo: Teoria 535 mil + publish 366 mil tokens de subagente, além do principal.

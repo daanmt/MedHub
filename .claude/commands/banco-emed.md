@@ -133,6 +133,11 @@ risco da conta declarado e assumido; o que mudou: o agente não lê o token do n
   **alternativa feita só de imagem** saem **declaradas** por número e motivo (`fora` no `--json`), como a discursiva -- 5 listas
   da Fase 1 (t833 t376 t110 t805 t826, ~200 questões) eram recusadas inteiras por 1-2 questões assim. A contagem fecha em 4:
   achadas = gravadas + discursivas + fora = `--expect`.  <!-- CHECK: test_certo_errado_e_alternativa_so_imagem_saem_declaradas_e_a_contagem_fecha -->
+- 🔴 **Spoiler UERJ (s219, 07/10/2026):** questão **UERJ 2022-2026** (as provas que ele faz como simulado no hub) sai
+  **declarada** por número (`spoiler_uerj` no `--json`), olhando **todos** os exames da questão e antes das regras de forma; a
+  contagem fecha em 5: achadas = gravadas + discursivas + fora + spoiler = `--expect`. O filtro do EMED não exclui instituição:
+  36 questões da UERJ 2022 já tinham entrado em 22 listas da Fase 1 e saíram do hub na s219 (ficam no `ipub.db`). O `--exportar`  <!-- CHECK: test_questao_uerj_2022_2026_sai_declarada_em_qualquer_exame -->
+  aplica a mesma regra às listas do EMED (a prova em si, `prova_pdf`, sai inteira).  <!-- CHECK: test_exportar_nao_reenvia_spoiler_uerj_de_lista_do_emed -->
 - **Tudo ou nada:** `--expect` diferente, 1, 3 ou 6+ alternativas, gabarito ausente ou duplo, texto vazio sem imagem, `emed_id` repetido
   (API que ignora `page`) = `RECUSA:` nomeada e a pasta nem é criada. Classificador do harness barrou a chamada = parar e
   relatar ao operador; nunca contornar, fatiar ou trocar de ferramenta.  <!-- CHECK: test_perturbado_e_recusa_nomeada_sem_gravar_nada -->

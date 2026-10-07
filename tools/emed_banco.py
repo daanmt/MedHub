@@ -35,6 +35,9 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from app.utils import db  # noqa: E402
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import emed_api  # noqa: E402  (s219: a regra do spoiler UERJ e a mesma da importacao)
+
 if sys.platform == "win32" and hasattr(sys.stdout, "reconfigure"):
     try:
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -338,7 +341,12 @@ def doc_lista(lista, n_questoes):
 def cmd_exportar(args):
     """`--exportar LISTA`: escreve `OUT/questoes/<lista>_<num>.json` (formato do doc) e
     `OUT/listas/<lista>.json` (cabeçalho da lista), para semear o buffer/hub por ArtifactData."""
-    linhas = db.emed_listar_questoes(args.exportar)
+    todas = db.emed_listar_questoes(args.exportar)
+    # s219: questao UERJ 2022-2026 de lista do EMED e spoiler dos simulados e nao volta ao hub; a
+    # prova em si (`prova_pdf`) e o simulado e sai inteira
+    spoiler = [q["num"] for q in todas
+               if q.get("executor") != "prova_pdf" and emed_api.spoiler_uerj(q.get("banca"))]
+    linhas = [q for q in todas if q["num"] not in spoiler]
     solucoes = {s["num"]: s for s in db.emed_listar_solucoes(args.exportar)}
     pasta = os.path.join(args.out, "questoes")
     os.makedirs(pasta, exist_ok=True)
@@ -365,7 +373,8 @@ def cmd_exportar(args):
         caminho = os.path.join(pasta, f"{q['lista']}_{q['num']}.json")
         with open(caminho, "w", encoding="utf-8") as fh:
             json.dump(doc, fh, ensure_ascii=False, indent=2)
-    print(f"{len(linhas)} arquivos em {pasta} + listas/{args.exportar}.json")
+    print(f"{len(linhas)} arquivos em {pasta} + listas/{args.exportar}.json"
+          + (f"; spoiler UERJ fora: {sorted(spoiler, key=int)}" if spoiler else ""))
     return 0
 
 

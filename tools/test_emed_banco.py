@@ -31,7 +31,8 @@ def _usar_db(tmp_path, monkeypatch):
 
 def _questao(num, **extra):
     """Doc `questoes` sintético com a forma do real."""
-    doc = {"lista": "t26", "tarefa": 26, "num": num, "banca": "UERJ 2024",
+    # s219: a banca era "UERJ 2024" -- spoiler de simulado, que o `--exportar` agora segura
+    doc = {"lista": "t26", "tarefa": 26, "num": num, "banca": "SES-DF 2024",
            "gabarito": "B", "emed_id": f"e{num}",
            "enunciado": f"Gestante de 28 semanas com glicemia de jejum alterada ({num}).",
            "alternativas": "A) Dieta\nB) Insulina\nC) Metformina\nD) Glibenclamida",
@@ -223,6 +224,29 @@ def test_exportar_round_trip(tmp_path, monkeypatch, capsys):
     assert emed_banco.main(["--ingerir", str(out), "--json"]) == 0
     c = _json_saida(capsys)
     assert (c["novas"], c["atualizadas"], c["iguais"]) == (0, 0, 3)
+
+
+def test_exportar_nao_reenvia_spoiler_uerj_de_lista_do_emed(tmp_path, monkeypatch, capsys):
+    """Regressao da s219 (07/10/2026): 37 questoes UERJ 2022-2026 sairam das listas do hub e ficaram
+    no ipub.db; o `--exportar` nao pode semea-las de volta. A prova da UERJ em si (`prova_pdf`) e o
+    simulado e sai inteira."""
+    _usar_db(tmp_path, monkeypatch)
+    base = tmp_path / "buf"
+    hupe = "RJ - Universidade do Estado do Rio de Janeiro - UERJ (Hospital Universitário Pedro Ernesto - HUPE)"
+    _escrever(base, "questoes", "t26_1", _questao(1))
+    _escrever(base, "questoes", "t26_2", _questao(2, banca=f"{hupe}, 2022", executor="emed_api"))
+    _escrever(base, "questoes", "t26_3", _questao(3, banca=f"{hupe}, 2019", executor="emed_api"))
+    _escrever(base, "questoes", "t1794_1", _questao(1, lista="t1794", tarefa=1794, banca="UERJ 2022",
+                                                     executor="prova_pdf"))
+    assert emed_banco.main(["--ingerir", str(base), "--apply"]) == 0
+    capsys.readouterr()
+    out = tmp_path / "exp"
+    assert emed_banco.main(["--exportar", "t26", "--out", str(out)]) == 0
+    assert "spoiler UERJ fora: [2]" in capsys.readouterr().out
+    assert sorted(p.name for p in (out / "questoes").glob("t26_*.json")) == ["t26_1.json", "t26_3.json"]
+    assert json.loads((out / "listas" / "t26.json").read_text(encoding="utf-8"))["q"] == 2
+    assert emed_banco.main(["--exportar", "t1794", "--out", str(out)]) == 0
+    assert (out / "questoes" / "t1794_1.json").is_file()
 
 
 def test_erros_status_e_leitura_sem_tabela(tmp_path, monkeypatch, capsys):

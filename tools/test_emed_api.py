@@ -236,6 +236,53 @@ def test_certo_errado_e_alternativa_so_imagem_saem_declaradas_e_a_contagem_fecha
     assert nums == [1, 5]                                  # a numeracao e a da LISTA: os buracos ficam
 
 
+HUPE = "RJ - Universidade do Estado do Rio de Janeiro - UERJ (Hospital Universitário Pedro Ernesto - HUPE)"
+
+
+def test_spoiler_uerj_le_os_rotulos_reais_do_banco():
+    """As formas de rotulo da UERJ medidas no ipub.db (s219): o ano vem no fim, depois de virgula,
+    de hifen ou de espaco; caixa alta existe. So 2022-2026 e spoiler (os simulados do hub)."""
+    assert emed_api.spoiler_uerj(f"{HUPE}, 2022") and emed_api.spoiler_uerj(f"{HUPE}, 2026")
+    assert not emed_api.spoiler_uerj(f"{HUPE}, 2021") and not emed_api.spoiler_uerj(f"{HUPE}, 2017")
+    assert emed_api.spoiler_uerj("UERJ (Hospital Universitário Pedro Ernesto - HUPE) - RJ 2022")
+    assert emed_api.spoiler_uerj(f"{HUPE.upper()} - 2024")
+    assert emed_api.spoiler_uerj("UERJ (Pró-MFC) (HUPE)", "2025")      # o ano explicito vence o do rotulo
+    assert not emed_api.spoiler_uerj(f"{HUPE}, 2022", "2020")
+    assert not emed_api.spoiler_uerj("SP - Universidade Estadual Paulista - UNESP, 2022")
+    assert emed_api.spoiler_uerj("UERJ")                               # sem ano: conservador, sai
+
+
+def test_questao_uerj_2022_2026_sai_declarada_em_qualquer_exame(ambiente, monkeypatch, capsys):
+    """Regressao da s219 (07/10/2026): 36 questoes da UERJ 2022 -- o simulado da semana -- tinham
+    entrado em 22 listas da Fase 1 (o filtro do EMED nao exclui instituicao). Questao UERJ 2022-2026
+    sai DECLARADA por numero, olhando TODOS os exames da questao (a banca do doc e so a do 1o), e
+    antes das regras de forma: spoiler com 3 alternativas nao derruba a lista."""
+    uerj22 = _item("4000000002")
+    uerj22["exams"] = [_exame(HUPE, 2022)]
+    no_2o = _item("4000000003")
+    no_2o["exams"] = [_exame(), _exame(HUPE, 2025)]
+    antiga = _item("4000000004")
+    antiga["exams"] = [_exame(HUPE, 2019)]
+    torta = _item("4000000005", n_alts=3)
+    torta["exams"] = [_exame(HUPE, 2024)]
+    monkeypatch.setattr(emed_api, "_get_json", _fake_get([_item("4000000001"), uerj22, no_2o, antiga, torta]))
+    assert _cli(ambiente, "--apply", "--expect", "5", "--json") == 0
+    r = json.loads(capsys.readouterr().out)
+    assert (r["achadas"], r["gravadas"], r["spoiler_uerj"]) == (5, 2, [2, 3, 5])
+    pasta = ambiente / "out" / "questoes"
+    assert sorted(int(p.stem.split("_")[1]) for p in pasta.iterdir()) == [1, 4]
+    assert json.loads((pasta / "t9_4.json").read_text(encoding="utf-8"))["banca"] == f"{HUPE}, 2019"
+
+
+def test_expect_errado_conta_os_spoilers_declarados(ambiente, monkeypatch, capsys):
+    uerj = _item("4000000002")
+    uerj["exams"] = [_exame(HUPE, 2026)]
+    monkeypatch.setattr(emed_api, "_get_json", _fake_get([_item("4000000001"), uerj]))
+    assert _cli(ambiente, "--apply", "--expect", "1") == 2
+    assert "+ 1 spoiler UERJ" in capsys.readouterr().out
+    assert not (ambiente / "out").exists()
+
+
 def test_alternativa_vazia_sem_imagem_segue_recusa(ambiente, monkeypatch, capsys):
     """O que vira declaracao e so a FORMA que o hub nao desenha; texto vazio sem imagem e defeito de
     dado (ou mudanca da API) e segue tudo ou nada."""

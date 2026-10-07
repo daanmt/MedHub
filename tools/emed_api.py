@@ -28,6 +28,8 @@ gabarito unico) e alternativa feita so de imagem (`FORA_DO_FORMATO`); achadas = 
 discursivas + fora = --expect. DISCURSIVA (zero alternativas; a real vem
 SEM a chave `alternatives` e com `answer_type` DISCURSIVE) SAI e e DECLARADA por numero (decisao (b)
 do /ai-eng): achadas = gravadas + declaradas = --expect. Alternativa sai em UMA linha (`uma_linha`).
+s219 (07/10/2026): questao UERJ 2022-2026 em qualquer exame dela e SPOILER dos simulados do hub e sai
+DECLARADA (`spoiler_uerj` no JSON), antes das regras de forma; a contagem fecha em 5.
 
 Saida = o formato da Bancada: `<OUT>/questoes/<lista>_<num>.json`, consumido por
 `emed_banco.py --ingerir <OUT> --apply --expect N`. `num` = a posicao na lista do EMED (a mesma
@@ -74,13 +76,20 @@ CHAVES_PUBLICAS = ("emed_id", "num", "banca", "ano", "enunciado", "alternativas"
 CHAVES_META = ("lista", "tarefa", "capturado_em", "executor", "figura")
 #: O que `extrair` devolve (antes de virar doc): `gabaritos` e a lista, para a recusa contar.
 CHAVES_EXTRAIDAS = ("emed_id", "banca", "ano", "enunciado", "alternativas", "gabaritos", "tags", "figura",
-                    "alt_so_figura")
+                    "alt_so_figura", "spoiler")
 #: Formas que o hub NAO desenha e que saem DECLARADAS por numero, como a discursiva (s218, 07/10/2026):
 #: 5 listas da Fase 1 -- t833 t376 t110 t805 t826, ~200 questoes -- eram recusadas inteiras por 1-2
 #: questoes assim. Motivo -> rotulo da declaracao. O resto (texto vazio SEM imagem, 1/3/6+
 #: alternativas, gabarito ausente ou duplo) segue tudo ou nada.
 FORA_DO_FORMATO = {"certo_errado": "certo/errado (2 alternativas)",
                    "alt_so_figura": "alternativa so com imagem"}
+#: SPOILER (s219, 07/10/2026): as provas UERJ 2022-2026 sao os simulados que ele faz no hub, e o
+#: filtro do EMED nao exclui instituicao -- 36 questoes da UERJ 2022 (o simulado da semana) tinham
+#: entrado em 22 listas da Fase 1, medido pelo texto contra o caderno da prova. Questao UERJ destes
+#: anos, em QUALQUER exame dela, sai DECLARADA por numero, como a discursiva (decisao da s218).
+ANOS_SPOILER_UERJ = frozenset(range(2022, 2027))
+RX_UERJ = re.compile(r"\bUERJ\b", re.I)
+RX_ANO = re.compile(r"(?<!\d)((?:19|20)\d\d)(?!\d)")
 
 RX_CADERNO = re.compile(r"([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})", re.I)
 
@@ -155,6 +164,33 @@ def _banca_ano(exames, ref):
     return (f"{nome}, {ano}" if ano else nome), ano
 
 
+def spoiler_uerj(banca, ano=None):
+    """True se a banca e a UERJ (qualquer programa: HUPE, Pro-MFC) e o ano cai em `ANOS_SPOILER_UERJ`.
+    Sem `ano`, vale o ULTIMO ano de 4 digitos do rotulo ('..., 2022', '... - RJ 2022', 'UERJ 2022');
+    UERJ sem ano nenhum e conservador: sai. PURA."""
+    if not RX_UERJ.search(str(banca or "")):
+        return False
+    ano = str(ano or "").strip()
+    if not ano:
+        anos = RX_ANO.findall(str(banca))
+        if not anos:
+            return True
+        ano = anos[-1]
+    return ano.isdigit() and int(ano) in ANOS_SPOILER_UERJ
+
+
+def _algum_exame_spoiler(exames):
+    """Algum dos N exames da questao e UERJ 2022-2026? Leitura branda (exame sem o catalogo nao e
+    recusa aqui: a recusa de forma e do 1o exame, em `_banca_ano`). PURA."""
+    for ex in exames if isinstance(exames, list) else []:
+        if not isinstance(ex, dict):
+            continue
+        inst = (ex.get("catalogs") or {}).get(CATALOGO_INSTITUICAO) or {}
+        if isinstance(inst, dict) and spoiler_uerj(inst.get("name"), ex.get("year")):
+            return True
+    return False
+
+
 def _tags(topicos):
     nomes = [str(t.get("name", "")).strip() for t in (topicos or []) if isinstance(t, dict)]
     return " > ".join(n for n in nomes if n)
@@ -183,10 +219,12 @@ def extrair(item):
         so_figura = so_figura or (fig_alt and not texto)
         if _campo(alt, "correct", ref) is True:
             gabaritos.append(letra)
-    banca, ano = _banca_ano(_campo(item, "exams", ref), ref)
+    exames = _campo(item, "exams", ref)
+    banca, ano = _banca_ano(exames, ref)
     return {"emed_id": emed_id, "banca": banca, "ano": ano, "enunciado": enunciado,
             "alternativas": alternativas, "gabaritos": gabaritos,
-            "tags": _tags(item.get("topics")), "figura": figura, "alt_so_figura": so_figura}
+            "tags": _tags(item.get("topics")), "figura": figura, "alt_so_figura": so_figura,
+            "spoiler": _algum_exame_spoiler(exames)}
 
 
 def esquema(resposta):
@@ -286,9 +324,13 @@ def fora_do_formato(q):
 
 def problemas(qs, esperado=None):
     """(recusas nomeadas -- lista vazia = ok --, discursivas declaradas, {num: motivo} das questoes
-    FORA DO FORMATO do hub, declaradas). PURA."""
-    probs, discursivas, fora = [], [], {}
+    FORA DO FORMATO do hub, declaradas, numeros do SPOILER UERJ, declarados). O spoiler vem antes
+    das regras de forma: questao que sai nao derruba a lista. PURA."""
+    probs, discursivas, fora, spoiler = [], [], {}, []
     for num, q in enumerate(qs, 1):
+        if q.get("spoiler"):
+            spoiler.append(num)
+            continue
         n = len(q["alternativas"])
         if n == 0:
             discursivas.append(num)
@@ -304,10 +346,10 @@ def problemas(qs, esperado=None):
         if not q["enunciado"] or any(not t for _, t in q["alternativas"]):
             probs.append(f"Q{num}: enunciado ou alternativa vazia (emed_id {q['emed_id']})")
     if esperado is not None and len(qs) != esperado:
-        probs.append(f"achadas {len(qs)} ({len(qs) - len(discursivas) - len(fora)} gravaveis + "
-                     f"{len(discursivas)} discursiva(s) + {len(fora)} fora do formato, declarada(s)) "
-                     f"!= --expect {esperado}")
-    return probs, discursivas, fora
+        probs.append(f"achadas {len(qs)} ({len(qs) - len(discursivas) - len(fora) - len(spoiler)} gravaveis + "
+                     f"{len(discursivas)} discursiva(s) + {len(fora)} fora do formato + "
+                     f"{len(spoiler)} spoiler UERJ, declarada(s)) != --expect {esperado}")
+    return probs, discursivas, fora, spoiler
 
 
 def montar_docs(qs, lista, tarefa, agora=None, pular=()):
@@ -446,10 +488,10 @@ def main(argv=None):
                 print(linha)
             return 0
         qs, paginas = coletar(caderno, headers, pausa=args.pausa)
-        probs, discursivas, fora = problemas(qs, args.expect)
+        probs, discursivas, fora, spoiler = problemas(qs, args.expect)
         if probs:
             raise Recusa("; ".join(probs[:8]) + (f" (+{len(probs) - 8})" if len(probs) > 8 else ""))
-        docs = montar_docs(qs, lista, tarefa, pular=fora)
+        docs = montar_docs(qs, lista, tarefa, pular=set(fora) | set(spoiler))
         conf = conferir(docs, db.emed_listar_questoes(lista)) if args.conferir else None
         out = args.out or os.path.join(OUT_PADRAO, lista)
         pasta = _gravar(docs, lista, out) if args.apply else None
@@ -458,7 +500,7 @@ def main(argv=None):
         return 2
     resumo = {"lista": lista, "caderno": caderno, "paginas": paginas, "achadas": len(qs),
               "gravadas": len(docs), "discursivas": discursivas,
-              "fora": {str(n): m for n, m in sorted(fora.items())},
+              "fora": {str(n): m for n, m in sorted(fora.items())}, "spoiler_uerj": spoiler,
               "figuras": [d["num"] for d in docs if d.get("figura")],
               "aplicado": bool(args.apply), "out": pasta, "conferencia": conf}
     if args.json:
@@ -468,6 +510,7 @@ def main(argv=None):
           + f"{len(qs)} achadas em {paginas} pagina(s) = {len(docs)} gravaveis"
           + (f" + discursivas declaradas {discursivas}" if discursivas else "")
           + (f" + fora do formato declaradas {resumo['fora']}" if fora else "")
+          + (f" + spoiler UERJ declaradas {spoiler}" if spoiler else "")
           + (f"; com figura: {resumo['figuras']}" if resumo["figuras"] else ""))
     if conf is not None:
         print(f"conferencia com o ipub.db: {len(conf['iguais'])} iguais; divergentes {conf['divergentes'] or '-'}; "

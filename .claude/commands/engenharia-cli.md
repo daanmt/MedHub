@@ -660,10 +660,17 @@ O painel conversa com as abas: "Ir para os cards" e
 "N questões" (`plano.q_da_tarefa`: a contagem do banco do hub, pelo critério do `emed_banco --exportar`,
 quando a tarefa tem questões lá; senão `q_previstas`) e o rótulo da classe (`plano.ROTULO_SEM_ACAO`:
 "aula a preparar", "sem lista ainda", "caderno a montar") só quando a tarefa não tem ação nenhuma -- em
-texto apagado da meta, nunca na linha de ação; questões no banco = "resolver no hub" com ou sem
+texto apagado da meta, nunca na linha de ação; no Painel, questões no banco = "resolver no hub" com ou sem
 `url_lista`; o título herdado do EMED sai sem o " | " (`plano.tema_exibido`, também na aba Listas). O
 "Questões da semana" da Teoria, o Painel, o `plano.py --panorama` do boot e a Fase 1 do `day_plan`
 contam pela mesma linha enriquecida (`plano.linhas_com_q_hub`).  <!-- CHECK: test_teoria_painel_e_boot_contam_o_banco_do_hub -->
+**Listas = questões; Teoria = aula (P21, s220, pedido do operador em 07/10):** na aba Listas cada item é
+SÓ o botão da lista e o toque abre as questões (a escolha Estudo/Prova da s211 é o 1º passo do player);
+na Teoria a única ação da tarefa é a aula -- 1 aula = o cartão inteiro é o link (`a.qd-bloco.qd-alvo.hub-aula`),
+2+ aulas = cada uma um alvo (`.qd-aulas`), sem aula = cartão apagado sem ação (`qd-sem-aula`) com a classe na
+meta ("aula a preparar", também com questões no banco). ⚰️ o "abrir aula"/resumo debaixo das listas, o
+`<script id="hub-ligacoes">` e o hash `ligacoes` da projeção; na Teoria, "resolver no hub", "abrir lista" e
+"prova em PDF no computador" (seguem no Painel).  <!-- CHECK: test_p21_tarefa_sem_aula_e_cartao_sem_acao_e_diz_aula_a_preparar -->
 **Biblioteca por grande área (s217, P17):** grupos CM, CIR, MFC, PED, GO e, no fim, "Várias áreas"
 (vazio não sai; dentro do grupo, a mais recente primeiro), cada um recolhível como as seções. A aula
 herda o bloco da tarefa do plano (`tarefa_id` vence; senão a 1a de `tarefas`); o item sem tarefa (a RD)

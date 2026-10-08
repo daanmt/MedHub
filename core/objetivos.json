@@ -3,7 +3,10 @@
   "temas": [
     {
       "tema": "Diabetes na gestação",
-      "listas": ["t26", "t40"],
+      "listas": [
+        "t26",
+        "t40"
+      ],
       "objetivos": [
         "Critério diagnóstico (GJ/TOTG)",
         "DM prévio x DMG",
@@ -18,7 +21,11 @@
     },
     {
       "tema": "Hérnias da parede abdominal",
-      "listas": ["t49", "t61", "t65"],
+      "listas": [
+        "t49",
+        "t61",
+        "t65"
+      ],
       "objetivos": [
         "Anatomia e nervos",
         "Classificação",
@@ -33,7 +40,10 @@
     },
     {
       "tema": "Tópicos em Pediatria / puericultura",
-      "listas": ["t96", "t100"],
+      "listas": [
+        "t96",
+        "t100"
+      ],
       "objetivos": [
         "Alimentação e introdução alimentar",
         "Suplementação (ferro, vitaminas)",
@@ -44,6 +54,302 @@
         "Adolescente e ética",
         "Infecções de repetição e imunodeficiência",
         "Acolhimento e consulta"
+      ]
+    },
+    {
+      "tema": "Pré-natal, assistência ao parto e vitalidade fetal",
+      "listas": [
+        "t22"
+      ],
+      "objetivos": [
+        "Rotina e exames do pré-natal",
+        "Imunização na gestação",
+        "Avaliação da vitalidade fetal (CTG, PBF, Doppler)",
+        "Assistência ao parto e fases clínicas",
+        "Parto pélvico",
+        "Analgesia de parto",
+        "Manobras de Leopold e estática fetal"
+      ]
+    },
+    {
+      "tema": "Saúde mental na APS",
+      "listas": [
+        "t882"
+      ],
+      "objetivos": [
+        "RAPS: pontos de atenção e fluxos",
+        "Diagnóstico de depressão",
+        "Tratamento da depressão",
+        "Luto normal x patológico",
+        "Insônia no idoso",
+        "Abstinência alcoólica e delirium tremens",
+        "Rastreio e intervenção breve em álcool"
+      ]
+    },
+    {
+      "tema": "Tuberculose",
+      "listas": [
+        "t1797"
+      ],
+      "objetivos": [
+        "Diagnóstico laboratorial e de imagem",
+        "Esquema básico e fases do tratamento",
+        "Tuberculose na criança",
+        "ILTB: rastreio e tratamento",
+        "Contatos e TDO",
+        "TB extrapulmonar",
+        "TB-HIV e TB na gestante",
+        "Efeitos adversos e resistência"
+      ]
+    },
+    {
+      "tema": "Rastreamento",
+      "listas": [
+        "t881"
+      ],
+      "objetivos": [
+        "Critérios para programa de rastreamento",
+        "Vieses e sobrediagnóstico",
+        "Câncer de colo do útero",
+        "Câncer de mama",
+        "Câncer de próstata",
+        "Câncer colorretal",
+        "Câncer de pulmão",
+        "Rastreamento em alto risco"
+      ]
+    },
+    {
+      "tema": "Aorta, cardiomiopatias e pericárdio",
+      "listas": [
+        "t768"
+      ],
+      "objetivos": [
+        "Dissecção aórtica: diagnóstico",
+        "Dissecção tipo A x tipo B: tratamento",
+        "Cardiomiopatia hipertrófica",
+        "Cardiomiopatia dilatada e restritiva",
+        "Pericardite aguda",
+        "Tamponamento e derrame pericárdico",
+        "Pericardite constritiva",
+        "Exames de imagem (eco, angio-TC)"
+      ]
+    },
+    {
+      "tema": "Imagem obstétrica: estática, partograma e CTG",
+      "listas": [
+        "t5424"
+      ],
+      "objetivos": [
+        "Estática fetal: situação, apresentação, posição e variedade",
+        "Pontos de referência e planos da bacia",
+        "Partograma: leitura e distocias",
+        "Conduta nas distocias do trabalho de parto",
+        "Cardiotocografia: padrões e categorias",
+        "Assinclitismo e mecanismo de parto"
+      ]
+    },
+    {
+      "tema": "Anatomia e embriologia do trato genital; vulva e vagina",
+      "listas": [
+        "t590"
+      ],
+      "objetivos": [
+        "Embriologia dos ductos genitais",
+        "Malformações müllerianas (Rokitansky)",
+        "Desenvolvimento da genitália externa",
+        "Vascularização e drenagem pélvica",
+        "Inervação e anatomia pélvica",
+        "Doenças benignas da vulva",
+        "Neoplasias de vulva e vagina"
+      ]
+    },
+    {
+      "tema": "Infecções congênitas",
+      "listas": [
+        "t819"
+      ],
+      "objetivos": [
+        "Toxoplasmose na gestação",
+        "Toxoplasmose congênita",
+        "Sífilis congênita",
+        "Citomegalovírus",
+        "Rubéola congênita",
+        "Varicela congênita e neonatal",
+        "Zika congênita",
+        "Herpes e hepatite B perinatais"
+      ]
+    },
+    {
+      "tema": "Testes diagnósticos",
+      "listas": [
+        "t832"
+      ],
+      "objetivos": [
+        "Sensibilidade e especificidade",
+        "Valor preditivo positivo e negativo",
+        "Prevalência e valores preditivos",
+        "Razão de verossimilhança",
+        "Curva ROC e ponto de corte",
+        "Testes em série e em paralelo",
+        "Rastreamento x diagnóstico",
+        "Acurácia e padrão-ouro"
+      ]
+    },
+    {
+      "tema": "Temas gerais em cirurgia",
+      "listas": [
+        "t833"
+      ],
+      "objetivos": [
+        "Fios de sutura",
+        "Tipos de sutura",
+        "Instrumental cirúrgico",
+        "Laparoscopia: conceitos e complicações",
+        "Segurança do paciente e checklist",
+        "Classificação de feridas e antibioticoprofilaxia",
+        "Risco cirúrgico e pré-operatório",
+        "Complicações pós-operatórias"
+      ]
+    },
+    {
+      "tema": "Hipertensão arterial sistêmica",
+      "listas": [
+        "t19"
+      ],
+      "objetivos": [
+        "Diagnóstico e medida da PA",
+        "Metas e estratificação de risco",
+        "Tratamento não farmacológico",
+        "Escolha do anti-hipertensivo",
+        "HAS secundária",
+        "Urgência x emergência hipertensiva",
+        "Edema agudo de pulmão",
+        "Efeitos adversos e contraindicações"
+      ]
+    },
+    {
+      "tema": "Sangramento da segunda metade da gestação",
+      "listas": [
+        "t63"
+      ],
+      "objetivos": [
+        "Placenta prévia",
+        "Descolamento prematuro de placenta",
+        "Rotura uterina",
+        "Vasa prévia e rotura de seio marginal",
+        "Diagnóstico diferencial do sangramento",
+        "Conduta e via de parto",
+        "Fatores de risco",
+        "Acretismo placentário"
+      ]
+    },
+    {
+      "tema": "Abdome agudo inflamatório: apendicite, colecistite, diverticulite",
+      "listas": [
+        "t393"
+      ],
+      "objetivos": [
+        "Apendicite: diagnóstico",
+        "Apendicite: tratamento",
+        "Colecistite aguda: diagnóstico",
+        "Colecistite aguda: tratamento e momento",
+        "Colangite aguda",
+        "Diverticulite: classificação e tratamento",
+        "Exames de imagem no abdome agudo",
+        "Situações especiais (gestante, idoso, criança)"
+      ]
+    },
+    {
+      "tema": "Arboviroses, HIV, tuberculose e meningites",
+      "listas": [
+        "t380"
+      ],
+      "objetivos": [
+        "Dengue: classificação e sinais de alarme",
+        "Dengue: manejo por grupo",
+        "Chikungunya e Zika",
+        "HIV: diagnóstico",
+        "HIV: TARV e profilaxias",
+        "Transmissão vertical do HIV",
+        "Tuberculose",
+        "Meningites e meningoencefalite herpética"
+      ]
+    },
+    {
+      "tema": "Gestação múltipla",
+      "listas": [
+        "t112"
+      ],
+      "objetivos": [
+        "Corionicidade e amnionicidade",
+        "Diagnóstico ultrassonográfico",
+        "Complicações maternas",
+        "Síndrome de transfusão feto-fetal",
+        "Gemelar monoamniótica",
+        "Via e momento do parto",
+        "Restrição seletiva e óbito de um gemelar"
+      ]
+    },
+    {
+      "tema": "Infecção do trato urinário na criança",
+      "listas": [
+        "t577"
+      ],
+      "objetivos": [
+        "Fisiopatologia e fatores de risco",
+        "Método de coleta da urina",
+        "Diagnóstico laboratorial",
+        "Tratamento empírico",
+        "Investigação por imagem",
+        "Refluxo vesicoureteral",
+        "Profilaxia e seguimento"
+      ]
+    },
+    {
+      "tema": "Meningites e meningoencefalites",
+      "listas": [
+        "t376"
+      ],
+      "objetivos": [
+        "Etiologia por faixa etária",
+        "Manifestações clínicas",
+        "Líquor: diagnóstico",
+        "Tratamento empírico",
+        "Corticoide e medidas adjuvantes",
+        "Quimioprofilaxia de contatos",
+        "Meningoencefalite herpética",
+        "Complicações e sequelas"
+      ]
+    },
+    {
+      "tema": "Vesícula e vias biliares",
+      "listas": [
+        "t683"
+      ],
+      "objetivos": [
+        "Colelitíase: diagnóstico e indicação cirúrgica",
+        "Colecistectomia e lesão de via biliar",
+        "Colangiografia intraoperatória",
+        "Coledocolitíase: estratificação e conduta",
+        "CPRE, USE e colangiorressonância",
+        "Pancreatite biliar",
+        "Tumores de vias biliares"
+      ]
+    },
+    {
+      "tema": "Nódulo e câncer de tireoide",
+      "listas": [
+        "t367"
+      ],
+      "objetivos": [
+        "Avaliação inicial do nódulo (TSH, USG)",
+        "Indicações de PAAF",
+        "Classificação de Bethesda",
+        "Carcinoma papilífero",
+        "Carcinoma folicular e medular",
+        "Carcinoma anaplásico",
+        "Tireoidectomia e complicações",
+        "Seguimento e radioiodo"
       ]
     }
   ]

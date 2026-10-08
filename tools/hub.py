@@ -95,8 +95,8 @@ from tools.fsrs_queue import (  # noqa: E402
 # So leitores PUROS do plano (s195): a semana da prova, o calendario da trilha e a classe da
 # tarefa -- a mesma regua do `plano.py --panorama`. O hub nunca grava o plano.
 from tools.plano import (  # noqa: E402
-    AREA_SIMULADO, SEMANAS_FASE1, calendario_trilha, classe_da_tarefa, com_q_hub, meta_da_tarefa,
-    q_da_tarefa, questoes_no_hub, tem_acao, tema_exibido)
+    SEMANAS_FASE1, calendario_trilha, classe_da_tarefa, com_q_hub, meta_da_tarefa,
+    q_da_tarefa, questoes_no_hub, tema_exibido)
 
 TEMPLATE_HUB = RAIZ / "core" / "templates" / "hub.html"
 #: Registro do quadro da aba Aulas (s194): slug -> {tipo, titulo, tarefa_id?, tarefas?, bloco?}.
@@ -193,8 +193,8 @@ LUGARES_HUB = (
     ("aulas", "<!-- @hub:aulas -->"),
     ("painel", "<!-- @hub:painel -->"),
     ("semanas", "<!-- @hub:semanas -->"),
-    # s216 (hub-integracao part-2): tarefa -> aulas ligadas, para a aba Listas levar a aula que prepara
-    ("ligacoes", "<!-- @hub:ligacoes -->"),
+    # ⚰️ o lugar "ligacoes" (s216 part-2 -> P21, s220): o JSON tarefa -> aulas/resumos existia so para
+    # os links debaixo das listas da aba Listas, que sairam
 )
 
 _RE_ESQUEMA = re.compile(r"^[A-Za-z][A-Za-z0-9+.-]*:")
@@ -827,13 +827,19 @@ def _html_resumo(item, lugar=None):
 
 
 def _html_item(item, feito=False, lugar=None):
-    """Um bloco do quadro: tarefa (tema, peso, questoes, acao), aula avulsa ou RD; o resumo (s218) em
+    """Um bloco do quadro: tarefa (tema, peso, questoes, a aula), aula avulsa ou RD; o resumo (s218) em
     `_html_resumo`. O item com `slug` (a aula que CUMPRE uma tarefa de aula, ou a aula avulsa) leva a
-    chave do `quadro/<slug>` -- a assinatura no leitor o marca feito (P20, s219: sem o quadrado). A
-    meta da tarefa e a do Painel (`plano.meta_da_tarefa`): N questoes; a classe so sem acao nenhuma,
-    em texto apagado -- e entao nao ha linha de acao. `lugar` = (area, disciplina) do grupo da
-    Biblioteca onde ele esta (a RD de varias disciplinas sai uma vez em cada); fora dela, o 1o dos
-    `lugares` -- para onde o feito vai ao vivo."""
+    chave do `quadro/<slug>` -- a assinatura no leitor o marca feito (P20, s219: sem o quadrado).
+
+    P21 (s220, pedido do operador em 07/10: "se estou na teoria, abro automaticamente a aula"): na
+    tarefa, a unica acao da Teoria e a AULA -- com 1 aula, o bloco inteiro e o link dela
+    (`a.qd-bloco.qd-alvo.hub-aula`); com 2+, o bloco mostra cada aula como alvo proprio (`.qd-aulas`);
+    sem aula, o bloco nao tem acao nenhuma (`qd-sem-aula`, texto apagado) e a meta diz a classe
+    (`plano.meta_da_tarefa` com a acao = ter aula: "aula a preparar"). ⚰️ na Teoria: "resolver no
+    hub", "abrir lista" e "prova em PDF no computador" -- as questoes moram na aba Listas, e o Painel
+    segue com os atalhos dele. `lugar` = (area, disciplina) do grupo da Biblioteca onde ele esta (a RD
+    de varias disciplinas sai uma vez em cada); fora dela, o 1o dos `lugares` -- para onde o feito vai
+    ao vivo."""
     if item["tipo"] == "resumo":
         return _html_resumo(item, lugar)
     slug = item.get("slug")
@@ -855,40 +861,35 @@ def _html_item(item, feito=False, lugar=None):
         attrs += ' data-slug="%s" data-tipo="%s" data-titulo="%s"%s' % (
             _e(slug), _e(item.get("tipo_aula") or TIPO_PADRAO), _e(item["titulo"]),
             ' data-feito="1"' if feito else "")
-    extra = ""
+    extra, acao = "", ""
+    abre, fecha = '<div class="qd-bloco">', "</div>"
     if item["tipo"] == "tarefa":
         tema = tema_exibido(item["tema"])
+        aulas = item["aulas"]
         meta = ['<span class="qd-bl">%s</span>' % _e(item["bloco"])] if item.get("bloco") else []
-        meta += ['<span>%s</span>' % _e(t) for t in meta_da_tarefa(item["q"], item["classe"], tem_acao(item))]
+        # P21: na Teoria a acao e a aula -- sem ela, a classe vai para a meta (com ou sem questoes)
+        meta += ['<span>%s</span>' % _e(t) for t in meta_da_tarefa(item["q"], item["classe"], bool(aulas))]
         prazo = item.get("prazo")
         if item.get("atrasada"):
             meta.append('<span class="qd-atraso">semana %d%s</span>'
                         % (item["semana"], " · venceu %s" % prazo.strftime("%d/%m") if prazo else ""))
         elif prazo:
             meta.append('<span class="qd-prazo">até %s</span>' % prazo.strftime("%d/%m"))
-        acoes = []
-        url = item.get("url_lista")
-        if item.get("no_hub"):
-            # s201: as questoes ja estao no banco -> resolve na aba Listas. s213 (D4-1, decisao do
-            # operador em 25/09: "nao sair do medhub"): vence o link do EMED, que some; o modo sai
-            # da area (simulado -> Simulados; lista -> Questoes), a mesma regra do painel. P20 (s219):
-            # com ou sem link -- os 26 cadernos da s219 entraram sem `url_lista` (a REMIT, a aorta).
-            modo = "simulados" if item.get("area") == AREA_SIMULADO else "questoes"
-            acoes.append('<a href="#questoes" data-hub-aba="questoes" data-hub-modo="%s">'
-                         'resolver no hub</a>' % modo)
-        elif url and str(url).startswith(("http://", "https://")):
-            acoes.append('<a href="%s" rel="noopener noreferrer">abrir lista</a>' % _e(url))
-        elif url:
-            # caminho LOCAL (a prova em PDF): resolve na maquina e morre na pagina publicada
-            # (mesma regra do painel) -- texto, nao link quebrado
-            acoes.append('<span class="tenue">prova em PDF no computador</span>')
-        varias = len(item["aulas"]) > 1
-        for a, tit in item["aulas"]:
-            acoes.append('<a class="hub-aula" href="%s" data-titulo="%s">%s</a>'
-                         % (_e(a.publicado), _e(tit), _e(tit) if varias else "abrir aula"))
-        # P20 (s219, item 4): ⚰️ 'aula a preparar' / 'sem lista ainda' na linha de acao -- com 44 px de
-        # alvo e no lugar de um link, parecia botao e nao fazia nada. A tarefa sem acao diz a classe na
-        # META (apagada) e fica sem linha de acao; com questoes no hub, o rotulo nem aparece.
+        # P21 (s220): ⚰️ na Teoria, "resolver no hub" (s201/s213), "abrir lista" e "prova em PDF no
+        # computador" -- o toque na tarefa abre a AULA; as questoes moram na aba Listas (e no Painel)
+        if len(aulas) == 1:
+            a, tit = aulas[0]
+            abre = ('<a class="qd-bloco qd-alvo hub-aula" href="%s" data-titulo="%s">'
+                    % (_e(a.publicado), _e(tit)))
+            fecha = "</a>"
+        elif aulas:
+            # 2+ aulas (a #811): o bloco nao e alvo; cada aula e um, com o titulo dela
+            acao = '<div class="qd-aulas">%s</div>' % "".join(
+                '<a class="hub-aula" href="%s" data-titulo="%s">%s</a>' % (_e(a.publicado), _e(tit), _e(tit))
+                for a, tit in aulas)
+        else:
+            # sem aula: nada a tocar -- texto apagado, nada que pareca botao (P20 item 4: o rotulo na meta)
+            classes.append("qd-sem-aula")
     else:
         a = item["aula"]
         tema = item["titulo"]
@@ -896,16 +897,14 @@ def _html_item(item, feito=False, lugar=None):
         meta = (['<span class="qd-nova">nova</span>'] if nova else []) + [
             '<span class="qd-bl">%s</span>' % _e(ROTULO_ITEM.get(item["tipo_aula"], "Aula")),
             '<span>%s</span>' % _e(_data_curta(item["data"]))]
-        acoes = ['<a class="hub-aula" href="%s" data-titulo="%s">abrir aula</a>'
-                 % (_e(a.publicado), _e(item["titulo"]))]
+        acao = ('<p class="qd-acao"><a class="hub-aula" href="%s" data-titulo="%s">abrir aula</a></p>'
+                % (_e(a.publicado), _e(item["titulo"])))
         # s218: a RD mostra os resumos de onde saiu (link para o leitor quando o resumo esta publicado)
         fontes = item.get("fontes_html") or []
         extra = _html_ligacoes_item("Fonte" if len(fontes) == 1 else "Fontes", fontes)
     # ⚰️ P20 (s219): o botao "feito" que morava DENTRO do bloco (s195) -- todo bloco tem a mesma largura
-    acao = '<p class="qd-acao">%s</p>' % "".join(acoes) if acoes else ""
-    return ('<li class="%s"%s><div class="qd-bloco"><p class="qd-tema">%s</p>'
-            '<p class="qd-meta">%s</p>%s%s</div></li>'
-            % (" ".join(classes), attrs, _e(tema), "".join(meta), acao, extra))
+    return ('<li class="%s"%s>%s<p class="qd-tema">%s</p><p class="qd-meta">%s</p>%s%s%s</li>'
+            % (" ".join(classes), attrs, abre, _e(tema), "".join(meta), acao, extra, fecha))
 
 
 def _chave_item(item):
@@ -1062,30 +1061,10 @@ def html_semanas(plano_linhas=None, calendario=None, hoje=None, semana_final=SEM
             % json.dumps(dados, ensure_ascii=False).replace("<", "\\u003c"))
 
 
-def dados_ligacoes(aulas_sel, quadro=None, resumos=()):
-    """{str(tarefa_id): [{"href", "titulo"[, "tipo": "resumo"]}]} das aulas ligadas a cada tarefa
-    (prepara ou cumpre), pela MESMA regra do quadro (`ligacoes_do_quadro`), e -- s218 (P2) -- dos
-    resumos do lote que a sustentam (`tarefas` do `core/hub_resumos.json`), depois das aulas, A-Z.
-    PURA. So documento publicado (o href esta no manifesto). s216 (hub-integracao part-2)."""
-    classificadas, _avisos = classificar(aulas_sel, quadro or {})
-    saida = {tid: [{"href": a.publicado, "titulo": tit} for a, tit, _c in lst]
-             for tid, lst in ligacoes_do_quadro(classificadas, quadro).items()}
-    for r in sorted(resumos or (), key=lambda r: (_chave_alfa(r.titulo), r.slug)):
-        for tid in r.tarefas:
-            saida.setdefault(int(tid), []).append({"href": r.publicado, "titulo": r.titulo, "tipo": "resumo"})
-    return {str(tid): saida[tid] for tid in sorted(saida)}
-
-
-def html_ligacoes(aulas_sel, quadro=None, resumos=()):
-    """As ligacoes tarefa -> aula (e resumo, s218) como JSON num `<script id="hub-ligacoes">` PROPRIO
-    (s216, part-2).
-
-    Pedido do operador (05/10): a lista da aba Listas leva a aula que a prepara -- antes so a Teoria
-    sabia. JSON proprio, nao o `#hub-semanas`: aquele e a regua de semana, com teste de igualdade
-    e semantica propria (armadilha A9). O hash entra na projecao: aula nova ligada republica."""
-    return ('<script type="application/json" id="hub-ligacoes">%s</script>'
-            % json.dumps(dados_ligacoes(aulas_sel, quadro, resumos), ensure_ascii=False)
-            .replace("<", "\\u003c"))
+# ⚰️ `dados_ligacoes` / `html_ligacoes` (s216 part-2, s218 P2 -> P21, s220): o `<script id="hub-ligacoes">`
+# (tarefa -> aulas e resumos) so alimentava o "abrir aula" / "resumo: ..." debaixo das listas da aba Listas.
+# Pedido do operador em 07/10: "se estou em listas e clico na tarefa ... devo ir especificamente para as
+# questoes" -- a lista e so a lista; a aula da tarefa mora na Teoria (`ligacoes_do_quadro`).
 
 
 def html_painel(tem_painel):
@@ -1115,7 +1094,7 @@ def montar_index(template_hub, player_html, lote, aulas_sel, tem_painel, agora, 
     `agora` nao vai para a tela (a linha "montado ... lote ... cards" saiu na s194, bastidor;
     o carimbo vive no manifesto): so data a semana do quadro. `plano_linhas`/`calendario` =
     as tarefas pendentes e as datas das semanas (s195); sem eles, o quadro sai so com as aulas.
-    `resumos` (s218) = os `Resumo` do lote publicado (Biblioteca, semanas e ligacoes)."""
+    `resumos` (s218) = os `Resumo` do lote publicado (Biblioteca e semanas)."""
     regioes = extrair_regioes_player(player_html)
     for _nome, marca in LUGARES_HUB:
         _exatamente_uma(template_hub, marca, "hub.html")
@@ -1127,7 +1106,6 @@ def montar_index(template_hub, player_html, lote, aulas_sel, tem_painel, agora, 
                                 _hoje_de(agora), resumos)[0],
         "painel": html_painel(tem_painel),
         "semanas": html_semanas(plano_linhas, calendario, _hoje_de(agora)),
-        "ligacoes": html_ligacoes(aulas_sel, quadro, resumos),
     }
     pagina = template_hub
     for nome, marca in LUGARES_HUB:
@@ -1230,13 +1208,13 @@ def hash_painel(texto):
     return _sha(_RE_GERADO.sub("", texto or ""))
 
 
-def projecao(painel_texto, quadro_html, lote, ligacoes_html=None, resumos_hash=None):
-    """O que o operador VE e que muda sem lote novo: o painel, o quadro, as ligacoes tarefa -> aula
-    da aba Listas (s216, part-2), as paginas de resumo (s218, `hash_resumos`: o `.md` corrigido
-    republica) e qual lote esta no ar."""
+def projecao(painel_texto, quadro_html, lote, resumos_hash=None):
+    """O que o operador VE e que muda sem lote novo: o painel, o quadro, as paginas de resumo (s218,
+    `hash_resumos`: o `.md` corrigido republica) e qual lote esta no ar. ⚰️ `ligacoes` (o hash do
+    `#hub-ligacoes` da aba Listas, s216 part-2 -> P21, s220): o registro antigo que ainda a traz e
+    ignorado por `precisa_publicar`."""
     return {"painel": hash_painel(painel_texto) if painel_texto is not None else None,
             "quadro": _sha(quadro_html),
-            "ligacoes": _sha(ligacoes_html) if ligacoes_html is not None else None,
             "resumos": resumos_hash,
             "sessao": (lote or {}).get("sessao")}
 
@@ -1300,8 +1278,6 @@ def precisa_publicar(registro_projecao, atual, lote, com_nota):
             motivos.append("painel mudou")
         if reg.get("quadro") != atual.get("quadro"):
             motivos.append("quadro de aulas mudou")
-        if reg.get("ligacoes") != atual.get("ligacoes"):
-            motivos.append("ligacoes tarefa -> aula mudaram")
         if reg.get("resumos") != atual.get("resumos"):
             motivos.append("resumos mudaram")
     if drenado:
@@ -2049,8 +2025,7 @@ def construir(lote, raiz=RAIZ, out=None, painel=None, publicado=(), agora=None, 
     pagina = montar_index(th, tp, lote, selecionadas, tem_painel, agora, quadro, estado_quadro,
                           plano_linhas, calendario, resumos)
     proj = projecao(painel_path.read_text(encoding="utf-8") if tem_painel else None,
-                    quadro_html, lote, html_ligacoes(selecionadas, quadro, resumos),
-                    hash_resumos(paginas))
+                    quadro_html, lote, hash_resumos(paginas))
 
     out.mkdir(parents=True, exist_ok=True)
     (out / PAGINA).write_text(pagina, encoding="utf-8")
@@ -2099,8 +2074,7 @@ def decidir(lote, out, raiz=RAIZ, painel=None, notas=None, estado_quadro=None, q
     quadro_html, _ = html_quadro_de(selecionadas, quadro, estado, plano_linhas,
                                     calendario, _hoje_de(agora or db.agora()), resumos)
     atual = projecao(painel_path.read_text(encoding="utf-8") if painel_path.is_file() else None,
-                     quadro_html, lote, html_ligacoes(selecionadas, quadro, resumos),
-                     hash_resumos(paginas_resumos(resumos)))
+                     quadro_html, lote, hash_resumos(paginas_resumos(resumos)))
     decisao = precisa_publicar(ler_projecao_registrada(out), atual, lote, ids_com_nota(notas))
     decisao["concluir"] = tarefas_a_concluir(estado, quadro, plano_linhas)
     return decisao

@@ -77,6 +77,22 @@
 .qd-acao a{color:var(--acento);font-weight:600;text-underline-offset:2px}
 .qd-acao a:focus-visible{outline:3px solid var(--acento);outline-offset:2px;border-radius:4px}
 .qd-acao .tenue{color:var(--tinta3)}
+/* P21 (s220, pedido do operador em 07/10: "se estou na teoria, abro automaticamente a aula"): o cartao da
+   tarefa com 1 aula E o link dela (o bloco inteiro, a seta diz que abre); com 2+ aulas, cada uma e um alvo
+   de 44 px; sem aula, o cartao fica apagado e tracejado -- sem fundo, sem seta, sem nada de botao */
+.qd-alvo{display:block;color:inherit;text-decoration:none;padding-right:38px;-webkit-tap-highlight-color:transparent}
+.qd-alvo::after{content:"\203A";position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:1.5em;line-height:1;color:var(--tinta3)}
+.qd-alvo:hover{background:var(--afundado)}
+.qd-alvo:hover::after{color:var(--acento)}
+.qd-alvo:focus-visible{outline:3px solid var(--acento);outline-offset:2px}
+.qd-aulas{display:grid;margin:8px 0 -4px;border-top:1px solid var(--linha)}
+.qd-aulas a{display:flex;align-items:center;gap:10px;min-height:44px;padding:6px 0;color:var(--acento);font-weight:600;font-size:.9em;line-height:1.3;text-decoration:none;min-width:0}
+.qd-aulas a:hover{background:var(--afundado)}
+.qd-aulas a + a{border-top:1px solid var(--linha)}
+.qd-aulas a::after{content:"\203A";margin-left:auto;font-size:1.4em;line-height:1;color:var(--tinta3)}
+.qd-aulas a:focus-visible{outline:3px solid var(--acento);outline-offset:2px;border-radius:4px}
+.qd-sem-aula .qd-bloco{background:transparent;border-style:dashed}
+.qd-sem-aula .qd-tema{color:var(--tinta3)}
 .qd-item[data-feito] .qd-bloco{background:transparent}
 .qd-item[data-feito] .qd-tema{text-decoration:line-through;text-decoration-thickness:2px;color:var(--tinta3)}
 .qd-item.qd-chegou .qd-bloco{animation:qd-chegou 700ms ease-out}
@@ -154,9 +170,7 @@ details.qd-area[open] > summary .qd-seta{transform:rotate(90deg)}
 :root[data-theme="dark"]{--qz-ok:#6fcf8a;--qz-ok-fraco:#16301f;--qz-duv:#e2a94f;--qz-duv-fraco:#3a2c12;--qz-chute:#b3a4e6;--qz-chute-fraco:#2a2340}
 .qz-lista{list-style:none;margin:0;padding:0;display:grid;gap:10px}
 .qz-lista li{min-width:0}
-/* s216 (part-2): a aula que prepara a lista, logo abaixo dela (irma do botao, alvo de 44 px) */
-.qz-aula{display:inline-flex;align-items:center;min-height:44px;padding:0 14px;color:var(--acento);font-weight:600;font-size:.88em;text-underline-offset:2px}
-.qz-aula:focus-visible{outline:3px solid var(--acento);outline-offset:2px;border-radius:4px}
+/* ⚰️ P21 (s220): os links de aula e de resumo irmaos do botao da lista (s216 part-2, s218 P2) */
 /* s216 (part-4): a lista que acabou de ser concluida, marcada ao voltar para a aba */
 .qz-lista li.qz-recente > button{border-color:var(--acento);box-shadow:0 0 0 2px var(--acento-fraco)}
 .qz-semanas{display:grid;gap:22px}
@@ -355,7 +369,6 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
 
   <section class="hub-secao" id="aba-questoes" role="tabpanel" aria-labelledby="hub-tab-questoes">
     <!-- @hub:semanas -->
-    <!-- @hub:ligacoes -->
     <div id="qz-escolha">
       <h2 class="hub-titulo">Listas</h2>
       <div class="qz-elo qz-modo" id="qz-modo" role="tablist" aria-label="Tipo de lista"><button type="button" role="tab" data-m="questoes">Questões</button><button type="button" role="tab" data-m="simulados">Simulados</button></div>
@@ -1883,7 +1896,6 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
   // s200 (pedido do operador): listas agrupadas por semana do plano, na ordem do plano (seq),
   // como no quadro de Aulas; semana anterior a de hoje = Atrasadas; resolvidas recolhidas no fim.
   var QZ_SEM = (function(){ try{ return JSON.parse(($("hub-semanas") || {}).textContent || "{}") || {}; }catch(e){ return {}; } })();
-  var HUB_LIGACOES = (function(){ try{ return JSON.parse(($("hub-ligacoes") || {}).textContent || "{}") || {}; }catch(e){ return {}; } })();
   // P20 (s219): o titulo herdado do EMED ('Endócrino- | Metabólica ... | Cicatrização') como a Teoria e o
   // Painel o mostram -- hifen colado antes do ' | ' junta; os demais ' | ' viram ' · '. Paridade com
   // `plano.tema_exibido` presa por teste; o doc no banco nao muda. PURA.
@@ -1891,17 +1903,11 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
     return String(t == null ? "" : t).replace(/(\S)-\s*\|\s*/g, "$1-").replace(/\s*\|\s*/g, " · ").replace(/^[ ·]+|[ ·]+$/g, "");
   }
   function qzItemLista(l, atrasada){ var s = l.status || "capturada";
-    return '<li' + (QZ.recente && l._id === QZ.recente ? ' class="qz-recente"' : '') + '><button type="button" data-qzl="' + qzEsc(l._id) + '"><p class="qz-tema">' + qzEsc(temaExibido(l.tema)) + '</p><span class="qz-chip ' + qzEsc(s) + '">' + qzEsc(ROT_QZ[s] || s) + '</span><p class="qz-meta"><span>' + qzEsc(l.area || "") + '</span><span>' + qzEsc(Math.round(l.q || l.q_previstas || 0)) + ' questões</span>' + (atrasada ? '<span class="qd-atraso">semana ' + qzEsc(l.semana) + '</span>' : '') + '</p></button>' + qzAulasHtml(l) + '</li>'; }
-  // s216 (part-2, pedido do operador em 05/10): a aula que prepara a tarefa da lista, IRMA do botao (um <a>
-  // dentro de <button> e HTML invalido e roubaria o toque); do #hub-ligacoes pelo campo `tarefa` (sem ele,
-  // o t<N> do id). Uma aula = "abrir aula"; varias = o titulo de cada, como na Teoria.
-  // s218 (P2): depois das aulas, os resumos da tarefa ("resumo: <titulo>"), do mesmo #hub-ligacoes
-  function qzAulasHtml(l){
-    var t = l.tarefa != null ? l.tarefa : (/^t(\d+)/.exec(String(l._id || "")) || [])[1], todas = HUB_LIGACOES[String(t)] || [];
-    var as = todas.filter(function(a){ return a.tipo !== "resumo"; }), rs = todas.filter(function(a){ return a.tipo === "resumo"; });
-    return as.map(function(a){ return '<a class="qz-aula" data-hub-aula href="' + qzEsc(a.href) + '" data-titulo="' + qzEsc(a.titulo) + '">' + (as.length > 1 ? qzEsc(a.titulo) : "abrir aula") + '</a>'; }).join("") +
-      rs.map(function(a){ return '<a class="qz-aula" data-hub-aula href="' + qzEsc(a.href) + '" data-titulo="' + qzEsc(a.titulo) + '">resumo: ' + qzEsc(a.titulo) + '</a>'; }).join("");
-  }
+    return '<li' + (QZ.recente && l._id === QZ.recente ? ' class="qz-recente"' : '') + '><button type="button" data-qzl="' + qzEsc(l._id) + '"><p class="qz-tema">' + qzEsc(temaExibido(l.tema)) + '</p><span class="qz-chip ' + qzEsc(s) + '">' + qzEsc(ROT_QZ[s] || s) + '</span><p class="qz-meta"><span>' + qzEsc(l.area || "") + '</span><span>' + qzEsc(Math.round(l.q || l.q_previstas || 0)) + ' questões</span>' + (atrasada ? '<span class="qd-atraso">semana ' + qzEsc(l.semana) + '</span>' : '') + '</p></button></li>'; }
+  // ⚰️ P21 (s220, pedido do operador em 07/10, resolvendo listas: "o bloco 'listas' esta bugado, alternando
+  // entre tarefas com e sem hiperlinks abaixo ... se estou em listas e clico na tarefa, naturalmente devo ir
+  // especificamente para as questoes"): os links de aula (s216 part-2) e de resumo (s218 P2) debaixo das
+  // listas que tinham aula ligada, e o JSON que os alimentava. O item e SO o botao da lista; a aula mora na Teoria.
   // s201 (pedido do operador): o bloco se divide em Questoes (listas da semana) e Simulados (provas
   // UERJ inteiras, do PDF oficial). Simulado = tarefa do plano com area "Simulado".
   // s211 (part-3): cada lista escolhe Estudo (gabarito e cadeia depois de cada questao) ou Prova (tudo
@@ -1909,7 +1915,8 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
   var QZ_SUB = {questoes: "As listas da semana: em Estudo o gabarito e a cadeia aparecem depois de cada questão, em Prova só no fim. Nas erradas, dúvidas e chutes você declara cada elo, e cada resposta grava na hora.",
                 simulados: "As provas da UERJ inteiras, na ordem do plano e como no dia: gabarito só no fim, cerca de 3 minutos por questão. No fim, o resultado por bloco; cada resposta grava na hora."};
   function qzEhSimulado(l){ return l.area === "Simulado"; }
-  // atalho "resolver no hub" (painel e quadro, s201): abre a aba Listas ja no modo pedido
+  // atalho "resolver no hub" do Painel (s201; P21: a Teoria nao o tem mais) e o "aba Listas" da linha
+  // "Questoes da semana" da Teoria: abre a aba Listas ja no modo pedido
   function qzModoPedido(m){ if(m !== "simulados" && m !== "questoes"){ return; }
     QZ.modo = m; qzLs("medhub.listas.modo", m); if(QZ.listas && QZ.listas.length){ qzRenderListas(); } }
   document.addEventListener("click", function(e){ var a = e.target.closest && e.target.closest("a[data-hub-aba]"); if(!a){ return; }
@@ -1960,8 +1967,6 @@ details.qz-bloco summary{flex-wrap:wrap;gap:4px 0}
   function qzListasClique(e){
     var t = e.target.closest("[data-sec]");
     if(t){ secAlternar(t.parentNode, t.getAttribute("data-sec")); return; }
-    var au = e.target.closest("a.qz-aula");   // s216 (part-2): a aula que prepara a lista
-    if(au){ e.preventDefault(); abrirNaTeoria(au.getAttribute("href"), au.getAttribute("data-titulo") || ""); return; }
     var b = e.target.closest("button[data-qzl]"); if(b){ qzAbrir(b.getAttribute("data-qzl")); }
   }
   function qzListasTecla(e){

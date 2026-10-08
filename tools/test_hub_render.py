@@ -543,7 +543,7 @@ LISTAS_JS = "\n".join([_declaracao(TEMPLATE, "var ROT_QZ = {"), _declaracao(TEMP
                        re.search(r"\n  (var SECOES_CHAVE = [^\n]+;)", TEMPLATE).group(1)] +
                       [extrair_funcao(TEMPLATE, a) for a in (
                           "function qzEsc(s){", "function temaExibido(t){",   # P20: o titulo da lista
-                          "function qzItemLista(l, atrasada){", "function qzAulasHtml(l){",
+                          "function qzItemLista(l, atrasada){",   # P21 (s220): sem qzAulasHtml
                           "function qzEhSimulado(l){",
                           "function qzNomeSim(l){", "function qzItemSim(l, daVez){", "function qzRenderSimulados(ls){",
                           "function secoesLer(){", "function secAberta(id, padrao){", "function secSemanaAtual(atual, comItens){",
@@ -562,7 +562,6 @@ function $(id){ if(!els[id]){ els[id] = {id: id, innerHTML: "", textContent: "",
   querySelectorAll: function(){ return id === "qz-modo" ? BOT : []; }}; } return els[id]; }
 var QZ = {listas: __LISTAS__, modo: __MODO__};
 var QZ_SEM = {atual: 2, datas: {"2": ["21/09", "27/09"]}};
-var HUB_LIGACOES = {};
 __FUNCS__
 qzRenderListas();
 console.log(JSON.stringify({html: $("qz-listas").innerHTML, sub: $("qz-sub").textContent,
@@ -1138,7 +1137,6 @@ function qzAbrir(id){ ABRIU.push(id); }
 var ABRIU_AULA = []; function abrirNaTeoria(href, titulo){ ABRIU_AULA.push([href, titulo]); }
 var QZ = {listas: __LISTAS__, modo: "questoes"};
 var QZ_SEM = {atual: __ATUAL__, datas: {}};
-var HUB_LIGACOES = __LIG__;
 __FUNCS__
 // a secao renderizada, como o navegador a teria: atributos + o titulo dentro dela
 function secaoDe(chave){
@@ -1161,10 +1159,10 @@ console.log(JSON.stringify(SAIDA));
 """
 
 
-def _rodar_listas(acao="", atual=3, ls=None, quebrado=False, listas=LISTAS_SEC, lig=None):
+def _rodar_listas(acao="", atual=3, ls=None, quebrado=False, listas=LISTAS_SEC):
     prog = (_aparelho(ls, quebrado) + HARNESS_LISTAS_SEC.replace("__FUNCS__", LISTAS_FUNCS)
             .replace("__LISTAS__", json.dumps(listas, ensure_ascii=False)).replace("__ATUAL__", str(atual))
-            .replace("__LIG__", json.dumps(lig or {}, ensure_ascii=False)).replace("__ACAO__", acao))
+            .replace("__ACAO__", acao))
     return _node(prog)
 
 
@@ -1486,37 +1484,31 @@ console.log(JSON.stringify(SAIDA));""")
     assert ["carregar", "hub-leitor-quadro", "aulas/dmg.html"] in out["el"]["chamadas"]
 
 
-LIG_LISTAS = {"49": [{"href": "aulas/hernias.html", "titulo": "A Escada das Hérnias"}],
-              "68": [{"href": "aulas/glom-a.html", "titulo": "Glomerulopatias I"},
-                     {"href": "aulas/glom-b.html", "titulo": "Glomerulopatias <II>"}]}
-
-
-def test_lista_tem_atalho_para_a_aula_que_a_prepara():
-    """Part-2 (F4): a lista da aba Listas leva a aula que a prepara (antes, so pela Teoria). O link e
-    IRMAO do botao da lista (`<a>` dentro de `<button>` e HTML invalido e roubaria o toque), sai do
-    `#hub-ligacoes` pelo id da tarefa (campo `tarefa`; sem ele, o `t<N>` do id) e sobrevive ao
-    re-render do snapshot (delegacao no conteiner). O toque abre a Teoria e o leitor."""
+def test_p21_lista_e_so_a_lista_e_o_toque_abre_as_questoes():
+    """P21 (pedido do operador em 07/10, noite, resolvendo listas: "o bloco 'listas' esta bugado,
+    alternando entre tarefas com e sem hiperlinks abaixo ... se estou em listas e clico na tarefa,
+    naturalmente devo ir especificamente para as questoes"). ⚰️ s216 part-2 / s218 P2: o "abrir aula" e o
+    "resumo: ..." debaixo das listas que tinham aula ligada (daí o alterna). Cada item e SO o botao da
+    lista -- nenhum link irmao --, o toque abre a lista (o player; a escolha Estudo/Prova da s211 e o 1o
+    passo dele) e nada do que existia so para os links sobra na pagina: o `#hub-ligacoes`, o
+    `HUB_LIGACOES`, o `qzAulasHtml`, o CSS `.qz-aula` e o ramo do clique."""
     acao = r"""
 SAIDA.html = $("qz-listas").innerHTML;
-var a = {getAttribute: function(k){ return {href: "aulas/hernias.html", "data-titulo": "A Escada das Hérnias"}[k] || null; }};
-var ev = evento(function(s){ return s === "a.qz-aula" ? a : null; });
-qzListasClique(ev); SAIDA.aula = ABRIU_AULA; SAIDA.lista = ABRIU.slice(); SAIDA.prevenido = ev.prevenido;
+var b = {getAttribute: function(k){ return k === "data-qzl" ? "t68" : null; }};
+var ev = evento(function(s){ return s === "button[data-qzl]" ? b : null; });
+qzListasClique(ev); SAIDA.lista = ABRIU.slice(); SAIDA.aula = ABRIU_AULA.slice();
 QZ.listas[1].status = "resolvendo"; qzRenderListas(); SAIDA.depois = $("qz-listas").innerHTML;"""
-    out = _rodar_listas(acao, lig=LIG_LISTAS)
-    html = out["html"]
-    assert ('</button><a class="qz-aula" data-hub-aula href="aulas/hernias.html" '
-            'data-titulo="A Escada das Hérnias">abrir aula</a></li>') in html
-    assert all("<a " not in b for b in re.findall(r"<button.*?</button>", html, re.S)), "nunca dentro do botao"
-    assert ">Glomerulopatias I</a>" in html and ">Glomerulopatias &lt;II&gt;</a>" in html, "varias: o titulo de cada"
-    assert html.count('class="qz-aula"') == 3, "so as listas com aula ligada"
-    assert out["aula"] == [["aulas/hernias.html", "A Escada das Hérnias"]] and out["lista"] == []
-    assert out["prevenido"] is True
-    assert 'href="aulas/hernias.html"' in out["depois"], "o atalho sobrevive ao re-render"
-    css = TEMPLATE[TEMPLATE.index("<style>"):TEMPLATE.index("</style>")]
-    regra = re.search(r"\.qz-aula\{([^}]*)\}", css).group(1)
-    assert "min-height:44px" in regra
-    assert "min-width:0" in re.search(r"\.qz-lista li\{([^}]*)\}", css).group(1)
-
+    out = _rodar_listas(acao)
+    for html in (out["html"], out["depois"]):
+        itens = re.findall(r"<li[^>]*>(.*?)</li>", html, re.S)
+        assert len(itens) == len(LISTAS_SEC), itens
+        assert all(re.fullmatch(r'<button type="button" data-qzl="[^"]+">.*?</button>', i, re.S) for i in itens),             "cada item e SO o botao da lista: nada debaixo dele"
+        assert "<a " not in html and "abrir aula" not in html and "resumo:" not in html
+    assert out["lista"] == ["t68"] and out["aula"] == [], "o toque abre a lista, nunca a aula"
+    for morto in ("qzAulasHtml", "HUB_LIGACOES", 'id="hub-ligacoes"', "@hub:ligacoes", ".qz-aula", "a.qz-aula"):
+        assert morto not in TEMPLATE, morto
+    clique = extrair_funcao(TEMPLATE, "function qzListasClique(e){")
+    assert "abrirNaTeoria" not in clique and 'closest("button[data-qzl]")' in clique
 
 
 def test_voltar_origem_fecha_volta_para_a_aba_e_restaura_o_scroll():

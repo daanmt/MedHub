@@ -320,13 +320,15 @@ def test_bloco_da_tarefa_tem_tema_peso_questoes_e_acao(tmp_path):
     venceu = "semana 1" + (" · venceu %s" % CAL[1][1].strftime("%d/%m") if 1 in CAL else "")
     assert ('<span class="qd-bl">GO</span><span>19 questões</span><span class="qd-atraso">%s</span>'
             % venceu) in lista
-    assert 'href="%s" rel="noopener noreferrer">abrir lista</a>' % URL in lista
+    # P21 (s220): na Teoria o cartao E a aula -- a lista do EMED mora no Painel e as questoes na aba Listas
+    assert lista.count("<a ") == 1 and '<a class="qd-bloco qd-alvo hub-aula" href="aulas/hernias.html" data-titulo="A Escada das Hernias"><p class="qd-tema">' in lista
+    assert "abrir lista" not in lista and URL not in lista and "qd-acao" not in lista
     assert "qd-atrasada" in lista and "qd-feito" not in lista, "tarefa de lista nao tem botao feito"
     assert "qd-sem-botao" not in lista, "s195: todo bloco tem a mesma largura; o botao mora dentro"
     hernias = _item(pagina, 'data-tarefa="49"')
-    assert '<a class="hub-aula" href="aulas/hernias.html" data-titulo="A Escada das Hernias">abrir aula</a>' \
-        in hernias, "aula que PREPARA a tarefa (tarefas: [49]) entra no bloco dela"
-    assert "abrir lista" in hernias and "qd-feito" not in hernias
+    assert '<a class="qd-bloco qd-alvo hub-aula" href="aulas/hernias.html" data-titulo="A Escada das Hernias">' in hernias, \
+        "aula que PREPARA a tarefa (tarefas: [49]): o toque no cartao a abre (P21)"
+    assert "abrir lista" not in hernias and "abrir aula" not in hernias and "qd-feito" not in hernias
     assert '<span class="qd-prazo">até %s</span>' % CAL[2][1].strftime("%d/%m") in hernias
     preparar = _item(pagina, 'data-tarefa="875"')
     # P20 (s219): sem questoes, sem lista e sem aula, a classe e o ultimo recurso -- texto da META (apagada),
@@ -334,9 +336,11 @@ def test_bloco_da_tarefa_tem_tema_peso_questoes_e_acao(tmp_path):
     assert ('<p class="qd-meta"><span class="qd-bl">MFC</span><span>aula a preparar</span>'
             '<span class="qd-prazo">até %s</span></p>' % CAL[2][1].strftime("%d/%m")) in preparar
     assert "qd-acao" not in preparar and "tenue" not in preparar and "<span>aula</span>" not in preparar
+    assert 'class="qd-item qd-sem-aula"' in preparar and "<a " not in preparar, "P21: sem aula, cartao sem acao"
     simulado = _item(pagina, 'data-tarefa="1793"')
-    assert "prova em PDF no computador" in simulado and "simulados/uerj" not in simulado, \
-        "caminho local nunca vira link (morre na pagina publicada)"
+    # P21: a prova em PDF (texto, nunca link: morre na pagina publicada) mora no Painel; na Teoria, a aula
+    assert "prova em PDF no computador" not in simulado and "simulados/uerj" not in simulado
+    assert '<a class="qd-bloco qd-alvo hub-aula" href="aulas/hernias.html" data-titulo="A Escada das Hernias">' in simulado
 
 
 def test_aula_que_cumpre_tarefa_de_aula_leva_o_slug_e_nao_o_botao(tmp_path):
@@ -348,9 +352,10 @@ def test_aula_que_cumpre_tarefa_de_aula_leva_o_slug_e_nao_o_botao(tmp_path):
     _construir(raiz, data_fn)
     bayes = _item(_index(raiz), 'data-tarefa="877"')
     assert 'data-slug="bayes" data-tipo="aula" data-titulo="A Escada de Bayes"' in bayes
-    assert '<div class="qd-bloco"><p class="qd-tema">' in bayes and "qd-feito" not in bayes
+    assert ('<a class="qd-bloco qd-alvo hub-aula" href="aulas/bayes.html" data-titulo="A Escada de Bayes">'
+            '<p class="qd-tema">') in bayes and "qd-feito" not in bayes
     assert "<button" not in bayes and "aria-pressed" not in bayes
-    assert '<a class="hub-aula" href="aulas/bayes.html" data-titulo="A Escada de Bayes">abrir aula</a>' in bayes
+    assert bayes.count("<a ") == 1 and "abrir aula" not in bayes, "P21: o cartao inteiro e o alvo"
     assert '<p class="qd-meta"><span class="qd-bl">MFC</span><span class="qd-atraso">' in bayes, \
         "com a aula como acao, a meta nao repete a classe ('aula')"
 
@@ -674,33 +679,33 @@ def test_pagina_real_leva_o_calendario_das_semanas_uma_vez():
     assert "@hub:semanas" not in pagina
 
 
-def test_simulado_ja_no_hub_vira_atalho_para_a_aba_listas(tmp_path):
-    """s201 (pedido do operador: listas divididas em Questoes | Simulados): simulado cujas questoes
-    ja estao no banco (`no_hub`, marcado pelo leitor do plano) sai com 'resolver no hub' -- abre a
-    aba Listas em Simulados; sem questoes no banco, segue 'prova em PDF no computador'."""
+def test_simulado_no_hub_na_teoria_abre_a_aula_e_nao_a_lista(tmp_path):
+    """⚰️ s201 na Teoria: o simulado com questoes no banco ganhava 'resolver no hub' (aba Listas em
+    Simulados). P21 (s220, pedido do operador em 07/10: "se estou na teoria, abro automaticamente a
+    aula"): o cartao da Teoria abre a aula; o atalho para as questoes segue no Painel."""
     raiz, data_fn = _repo(tmp_path)
     plano = [dict(l, no_hub=True) if l["id"] == 1793 else l for l in PLANO]
     # s216 (part-1): so com aula ligada o simulado aparece na Teoria
     _construir(raiz, data_fn, plano=plano, quadro=dict(QUADRO, hernias=dict(QUADRO["hernias"], tarefas=[49, 1793])))
     simulado = _item(_index(raiz), 'data-tarefa="1793"')
-    assert 'href="#questoes" data-hub-aba="questoes" data-hub-modo="simulados">resolver no hub</a>' in simulado
+    assert "resolver no hub" not in simulado and "data-hub-aba" not in simulado
     assert "prova em PDF no computador" not in simulado and "simulados/uerj" not in simulado
+    assert '<a class="qd-bloco qd-alvo hub-aula" href="aulas/hernias.html" data-titulo="A Escada das Hernias">' in simulado
 
 
-def test_lista_ja_no_hub_abre_a_aba_listas_e_nao_o_emed(tmp_path):
-    """s213 (D4-1, decisao do operador em 25/09: "nao sair do medhub"): lista do EMED cujas
-    questoes ja estao no banco do hub abre a aba Listas no modo Questoes, e o link externo some --
-    a mesma precedencia do painel. Fora do banco, "abrir lista" segue como era."""
+def test_lista_na_teoria_nao_leva_link_de_lista_nem_do_emed(tmp_path):
+    """⚰️ s213 (D4-1) na Teoria: a lista com questoes no banco abria a aba Listas, e fora do banco o
+    "abrir lista" do EMED. P21 (s220): a Teoria e a aula -- nenhum link de lista, com ou sem banco; a
+    precedencia D4-1 ("nao sair do medhub") segue no Painel (`test_painel`)."""
     raiz, data_fn = _repo(tmp_path)
     plano = [dict(l, no_hub=True) if l["id"] == 49 else l for l in PLANO]
     # s216 (part-1): a 68 so aparece na Teoria com aula ligada
     _construir(raiz, data_fn, plano=plano, quadro=dict(QUADRO, hernias=dict(QUADRO["hernias"], tarefas=[49, 68])))
     pagina = _index(raiz)
-    hernias = _item(pagina, 'data-tarefa="49"')
-    assert 'href="#questoes" data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a>' in hernias
-    assert "abrir lista" not in hernias and URL not in hernias
-    assert "abrir aula" in hernias, "a aula que prepara segue no bloco"
-    assert "abrir lista" in _item(pagina, 'data-tarefa="68"')
+    for tid in (49, 68):
+        item = _item(pagina, 'data-tarefa="%d"' % tid)
+        assert "resolver no hub" not in item and "abrir lista" not in item and URL not in item, tid
+        assert item.count("<a ") == 1 and '<a class="qd-bloco qd-alvo hub-aula" href="aulas/hernias.html" data-titulo="A Escada das Hernias">' in item, "a aula que prepara e o alvo"
 
 
 def test_painel_remede_ao_abrir_semana():
@@ -1090,24 +1095,27 @@ def test_painel_liga_o_selo_ao_carregar():
     assert "marcarListasEm(qd, db," in ini and "function marcarListas(db)" not in ini, "uma regra so, de topo"
 
 
-def test_ligacoes_tarefa_aula_vao_num_json_proprio_e_entram_na_projecao(tmp_path):
-    """Part-2 (F4): a aba Listas leva a aula que prepara a lista. As ligacoes tarefa -> aula vao num
-    `<script id="hub-ligacoes">` PROPRIO (o `#hub-semanas` tem semantica e teste de igualdade proprios,
-    A9) e o hash dele entra na projecao: aula nova ligada a tarefa fora da Teoria tambem republica."""
+def test_p21_sem_ligacoes_da_aba_listas_na_pagina_nem_na_projecao(tmp_path):
+    """⚰️ s216 part-2 (F4) / s218 (P2): o `<script id="hub-ligacoes">` (tarefa -> aulas e resumos) so
+    existia para os links "abrir aula"/"resumo: ..." debaixo das listas da aba Listas, e o hash dele
+    entrava na projecao. P21 (s220): a lista e so a lista -- o JSON, o lugar no template e o motivo
+    "ligacoes tarefa -> aula mudaram" sairam; aula ligada a tarefa FORA da Teoria nao muda nada que o
+    operador veja, entao nao republica."""
     raiz, data_fn = _repo(tmp_path)
     _construir(raiz, data_fn)
     pagina = _index(raiz)
-    m = re.search(r'<script type="application/json" id="hub-ligacoes">(.*?)</script>', pagina)
-    assert json.loads(m.group(1)) == {"49": [{"href": "aulas/hernias.html", "titulo": "A Escada das Hernias"}],
-                                      "877": [{"href": "aulas/bayes.html", "titulo": "A Escada de Bayes"}]}
-    assert pagina.count('id="hub-ligacoes"') == 1 and "@hub:ligacoes" not in pagina
-    assert ("ligacoes", "<!-- @hub:ligacoes -->") in hub.LUGARES_HUB
+    assert 'id="hub-ligacoes"' not in pagina and "@hub:ligacoes" not in pagina
+    assert "ligacoes" not in dict(hub.LUGARES_HUB) and not hasattr(hub, "dados_ligacoes")
+    assert "ligacoes" not in json.loads((raiz / "tmp" / "hub" / hub.ESTADO_POS).read_text(encoding="utf-8"))["projecao"]
     hub.confirmar(raiz / "tmp" / "hub", agora=AGORA)
     assert _decidir(raiz)["acao"] == "nada"
     quadro = dict(QUADRO, hernias=dict(QUADRO["hernias"], tarefas=[49, 903]))   # 903 ja feita: fora da Teoria
     d = hub.decidir(_lote(), raiz / "tmp" / "hub", raiz=raiz, notas=[], estado_quadro={}, quadro=quadro,
                     data_fn=_repo_datas(raiz), plano_linhas=list(PLANO), calendario=CAL, agora=AGORA)
-    assert d["acao"] == "mesmo_lote" and d["motivos"] == ["ligacoes tarefa -> aula mudaram"]
+    assert d["acao"] == "nada", d["motivos"]
+    # o registro de um publish ANTERIOR a P21 (com a chave) nao pede publish por ela
+    reg = dict(hub.ler_projecao_registrada(raiz / "tmp" / "hub"), ligacoes="sha-antigo")
+    assert hub.precisa_publicar(reg, reg, _lote(), set())["acao"] == "nada"
 
 
 
@@ -1316,11 +1324,12 @@ def test_lista_resolvida_vai_para_o_grupo_do_bloco_da_tarefa():
 
 # ------------------------------------------------ 9. P20 (s219): a tarefa na Teoria, uma regra com o Painel
 
-def test_tarefa_sem_link_com_questoes_no_banco_resolve_no_hub_e_conta_o_banco(tmp_path):
+def test_tarefa_sem_link_com_questoes_no_banco_conta_o_banco_e_abre_a_aula(tmp_path):
     """s219: 26 tarefas ganharam caderno no hub sem `url_lista` (t530 REMIT, t768 aorta, t875...). O
     "resolver no hub" exigia o link -- a REMIT mostrava so "abrir aula", e a meta dizia "sem lista"
     com 20 questoes esperando na aba Listas. Agora: questoes no banco = "resolver no hub" e "N
-    questoes" (a contagem do banco), sem rotulo de classe; o titulo do EMED sai sem o ' | '."""
+    questoes" (a contagem do banco), sem rotulo de classe; o titulo do EMED sai sem o ' | '. P21 (s220):
+    o "resolver no hub" saiu da Teoria -- o cartao abre a aula; as questoes moram na aba Listas."""
     raiz, data_fn = _repo(tmp_path, slugs=("remit", "rd-renal"))
     remit = dict(_t(530, 2, "Resposta Endócrino- | Metabólica-Inflamatória ao Trauma | Cicatrização de Feridas",
                     0, None, fonte="extensivo", bloco="CIR", area="Cirurgia"), no_hub=True, q_hub=20)
@@ -1333,23 +1342,29 @@ def test_tarefa_sem_link_com_questoes_no_banco_resolve_no_hub_e_conta_o_banco(tm
     assert ('<p class="qd-tema">Resposta Endócrino-Metabólica-Inflamatória ao Trauma · Cicatrização de '
             'Feridas</p>') in item, "o titulo na tela; o `tema` do banco nao muda"
     assert '<span class="qd-bl">CIR</span><span>20 questões</span>' in item
-    assert 'data-hub-aba="questoes" data-hub-modo="questoes">resolver no hub</a>' in item
-    assert "abrir aula" in item and "sem lista" not in item and "qd-feito" not in item
+    assert "resolver no hub" not in item and "data-hub-aba" not in item
+    assert '<a class="qd-bloco qd-alvo hub-aula" href="aulas/remit.html" data-titulo="REMIT">' in item
+    assert "sem lista" not in item and "qd-feito" not in item
     sem = re.search(r'data-secao="2".*?</section>', pagina, re.S).group(0)
     assert '<p class="qd-qsem">Questões da semana: <b>20</b>' in sem, "o cabecalho conta o banco"
 
 
-def test_aula_a_preparar_some_quando_a_tarefa_tem_questoes_no_hub():
-    """P20 item 4 (decisao declarada): 'aula a preparar' nao tem acao -- vira texto apagado da META, e
-    so aparece quando a tarefa nao tem acao nenhuma; com questoes no hub (a t1797, custom de aula com
-    caderno), some: o que fazer e resolver as questoes."""
+def test_p21_tarefa_sem_aula_e_cartao_sem_acao_e_diz_aula_a_preparar():
+    """P20 item 4: 'aula a preparar' e texto apagado da META, so quando a tarefa nao tem acao. P21 (s220):
+    na Teoria a unica acao e a aula ("resolver no hub" saiu) -- a tarefa sem aula e um cartao SEM acao
+    (`qd-sem-aula`: texto apagado, nenhum link, nada que pareca botao) e a meta diz por que, tambem
+    com questoes no hub (a t1797, custom de aula com caderno: as questoes estao na aba Listas). O
+    Painel segue a regra dele (`test_meta_e_acao_da_tarefa_no_painel_seguem_a_regra_da_teoria`)."""
     linhas = [dict(_t(1797, 2, "Tuberculose 360", 0, None, fonte="custom", bloco="CM"), no_hub=True, q_hub=20),
               _t(1796, 2, "Condições crônicas na APS", 0, None, fonte="custom", bloco="MFC")]
     secoes, _b, _a = hub.secoes_do_quadro([], plano_linhas=linhas, calendario=CAL, hoje=date(2026, 9, 23))
     itens = {i["id"]: hub._html_item(i) for s in secoes for i in s["itens"]}
-    assert "aula a preparar" not in itens[1797] and "<span>20 questões</span>" in itens[1797]
-    assert "resolver no hub" in itens[1797]
-    assert '<span>aula a preparar</span>' in itens[1796] and "qd-acao" not in itens[1796]
+    assert "<span>20 questões</span><span>aula a preparar</span>" in itens[1797]
+    assert '<span>aula a preparar</span>' in itens[1796]
+    for tid, item in itens.items():
+        assert 'class="qd-item qd-sem-aula"' in item and '<div class="qd-bloco"><p class="qd-tema">' in item, tid
+        for fora in ("<a ", "<button", "qd-acao", "qd-alvo", "resolver no hub", "tabindex", "role="):
+            assert fora not in item, (tid, fora)
 
 
 def test_aba_listas_mostra_o_titulo_pela_mesma_regra_da_teoria():
@@ -1384,3 +1399,60 @@ def test_sem_db_o_quadro_nao_acusa_controle_que_nao_existe():
     out = _rodar_qd(semDb=True)
     assert out["aviso_oculto"] is True and out["escritas"] == []
     assert out["itens"]["rd-hepato"] == {"onde": "feitas", "feito": False, "marca": None}
+
+
+# ------------------------------------------------ 10. P21 (s220): Teoria = aula; Listas = questoes
+# Pedido do operador em 07/10/2026, noite, resolvendo listas: "se estou em listas e clico na tarefa,
+# naturalmente devo ir especificamente para as questoes e, por outro lado, se estou na teoria, abro
+# automaticamente a aula." O lado da aba Listas mora em `test_hub_render` (`test_p21_lista_e_so_a_lista...`).
+
+def test_p21_tarefa_com_duas_aulas_mostra_as_duas_como_alvos_e_nenhuma_lista(tmp_path):
+    """2+ aulas (a #811 tem duas): o cartao NAO e alvo -- cada aula e um alvo proprio de 1 toque, com o
+    titulo dela, e nenhum link de lista. A aula dividida por 2 tarefas (#876/#879) e o alvo inteiro de
+    cada cartao."""
+    raiz, data_fn = _repo(tmp_path, slugs=("hernias", "hernias-b", "bayes"))
+    quadro = {"hernias": {"tipo": "aula", "titulo": "A Escada das Hernias", "tarefas": [49, 68]},
+              "hernias-b": {"tipo": "aula", "titulo": "Hernias <II> & cia", "tarefas": [49]},
+              "bayes": QUADRO["bayes"]}
+    plano = [dict(l, no_hub=True) if l["id"] == 49 else l for l in PLANO]
+    _construir(raiz, data_fn, plano=plano, quadro=quadro)
+    pagina = _index(raiz)
+    duas = _item(pagina, 'data-tarefa="49"')
+    assert '<div class="qd-bloco"><p class="qd-tema">Hernias da Parede Abdominal</p>' in duas, "o cartao nao e alvo"
+    # a ordem e a das ligacoes (a aula mais nova primeiro, como sempre foi no bloco)
+    assert re.findall(r'<div class="qd-aulas">(.*?)</div>', duas, re.S) == [
+        '<a class="hub-aula" href="aulas/hernias.html" data-titulo="A Escada das Hernias">A Escada das Hernias</a>'
+        '<a class="hub-aula" href="aulas/hernias-b.html" data-titulo="Hernias &lt;II&gt; &amp; cia">'
+        'Hernias &lt;II&gt; &amp; cia</a>']
+    assert duas.count("<a ") == 2 and "qd-alvo" not in duas
+    for fora in ("resolver no hub", "abrir lista", "abrir aula", URL, "qd-acao"):
+        assert fora not in duas, fora
+    dividida = _item(pagina, 'data-tarefa="68"')   # a mesma aula prepara a 49 e a 68
+    assert dividida.count("<a ") == 1 and '<a class="qd-bloco qd-alvo hub-aula" href="aulas/hernias.html" data-titulo="A Escada das Hernias"><p class="qd-tema">' in dividida
+
+
+def test_p21_cartao_alvo_e_acessivel_e_o_sem_aula_nao_parece_botao(tmp_path):
+    """O cartao-link: bloco inteiro clicavel (alvo >= 44 px pelo proprio bloco), foco visivel, sem
+    sublinhado; o toque cai no ouvinte `a.hub-aula` -> `abrirAula` (o leitor dentro do hub). Cada aula
+    do cartao de 2+ aulas tem 44 px. O cartao sem aula: fundo transparente, texto apagado e nenhum
+    cursor/hover de botao."""
+    raiz, data_fn = _repo(tmp_path)
+    _construir(raiz, data_fn)
+    pagina = _index(raiz)
+    css = pagina[pagina.index("<style>"):pagina.index("</style>")]
+
+    def regra(sel):
+        m = re.search(r"(?:^|[}\n])%s\{([^}]*)\}" % re.escape(sel), css)
+        assert m, sel
+        return m.group(1)
+    alvo = regra(".qd-alvo")
+    for decl in ("display:block", "color:inherit", "text-decoration:none"):
+        assert decl in alvo, decl
+    assert "outline:3px solid var(--acento)" in regra(".qd-alvo:focus-visible")
+    assert "min-height:44px" in regra(".qd-aulas a")
+    assert "outline:3px solid var(--acento)" in regra(".qd-aulas a:focus-visible")
+    assert "color:var(--tinta3)" in regra(".qd-sem-aula .qd-tema")
+    assert "background:transparent" in regra(".qd-sem-aula .qd-bloco")
+    assert not re.search(r"\.qd-sem-aula[^{]*\{[^}]*cursor:pointer", css)
+    liga = re.search(r'querySelectorAll\("a\.hub-aula"\), function\(a\)\{(.*?)\}\);\n  \}\);', TEMPLATE_HUB_REAL, re.S)
+    assert liga and "abrirAula(a)" in liga.group(1), "o cartao e um a.hub-aula: o toque abre o leitor"

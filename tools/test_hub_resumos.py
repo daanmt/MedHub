@@ -320,13 +320,14 @@ def test_teto_de_entradas_conta_os_resumos_e_estoura_com_erro_nomeado():
         hub.montar_manifesto(aulas, "artifacts/painel.html", (), resumos + [("resumos/resumo-x.html", "x")])
 
 
-def test_ligacoes_da_aba_listas_levam_os_resumos_da_tarefa():
-    lig = hub.dados_ligacoes(AULAS, REG, [R_TB, R_HAS])
-    assert lig["1797"] == [{"href": "aulas/tb-360.html", "titulo": "Tuberculose 360"},
-                           {"href": "resumos/resumo-tuberculose.html", "titulo": "Tuberculose", "tipo": "resumo"}]
-    assert lig["19"] == [{"href": "resumos/resumo-has.html", "titulo": "HAS", "tipo": "resumo"}]
+def test_p21_aba_listas_sem_resumo_da_tarefa_e_a_teoria_segue_com_ele():
+    """⚰️ s218 (P2): o "resumo: <titulo>" debaixo das listas da aba Listas (via `dados_ligacoes`). P21
+    (s220, pedido do operador: "se estou em listas e clico na tarefa ... devo ir especificamente para
+    as questoes"): a aba Listas e so a lista. O resumo da tarefa segue na Teoria ("Resumos desta
+    semana") e na Biblioteca; a "Fonte: resumos/X.md" da RD segue virando link no leitor."""
+    assert not hasattr(hub, "dados_ligacoes") and not hasattr(hub, "html_ligacoes")
     js = hub.TEMPLATE_HUB.read_text(encoding="utf-8")
-    assert "'\">resumo: ' + qzEsc(a.titulo)" in js, "a aba Listas rotula o resumo"
+    assert "resumo: " not in js and "qz-aula" not in js, "a aba Listas nao rotula resumo nem aula"
     assert "fonteLigar(doc)" in js and 'id="hub-resumos"' not in js, "o mapa vem do build, a ligacao do leitor"
 
 
